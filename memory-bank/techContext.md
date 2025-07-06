@@ -52,8 +52,8 @@ npm run preview
 
 ### Environment Configuration
 - **Development**: `localhost:4321`
-- **Production**: `https://kythuatdulieu.github.io/kythuatdulieu`
-- **Base path**: `/kythuatdulieu`
+- **Production**: `https://kythuatdulieu.github.io`
+- **Base path**: `/` (root)
 
 ## Dependencies
 
@@ -78,7 +78,6 @@ npm run preview
 ```javascript
 export default defineConfig({
   site: 'https://kythuatdulieu.github.io',
-  base: '/kythuatdulieu',
   output: 'static',
   build: {
     assets: '_astro'

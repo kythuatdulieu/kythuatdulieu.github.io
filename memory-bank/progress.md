@@ -82,13 +82,15 @@
 
 ## Next Milestone
 **Successful GitHub Pages Deployment**
-- Target: Complete GitHub Actions workflow
-- Success Criteria: Site accessible at https://kythuatdulieu.github.io/kythuatdulieu
+- Target: Complete User Pages setup and deployment
+- Success Criteria: Site accessible at https://kythuatdulieu.github.io
 - Timeline: Current session
 
 ## Deployment Checklist
 - [x] Create GitHub Actions workflow
 - [x] Test local build process
+- [x] Update configuration for User Pages
+- [ ] Rename repository to kythuatdulieu.github.io
 - [ ] Push changes to trigger deployment
 - [ ] Verify GitHub Pages settings
 - [ ] Monitor deployment process

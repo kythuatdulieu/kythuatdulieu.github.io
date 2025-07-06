@@ -8,34 +8,37 @@
 - ✅ Created memory bank documentation structure
 - ✅ Created GitHub Actions workflow for deployment
 - ✅ Tested local build process successfully
+- ✅ Updated configuration for User Pages (removed base path)
+- ✅ Updated all documentation to reflect User Pages setup
 
 ## Current Status
-- **Astro Configuration**: Complete and optimized for GitHub Pages
-- **Memory Bank**: Core documentation created
+- **Astro Configuration**: Complete and optimized for User Pages
+- **Memory Bank**: Core documentation created and updated
 - **GitHub Actions**: Complete - deployment workflow created
-- **Deployment**: Ready for GitHub Pages configuration
+- **Deployment**: Ready for User Pages repository setup
 
 ## Active Decisions
 1. **Deployment Strategy**: Using GitHub Actions with artifact-based deployment
 2. **Build Configuration**: Static output with custom assets directory
-3. **Base Path**: `/kythuatdulieu` for repository-based deployment
+3. **Base Path**: `/` (root) for User Pages deployment
 4. **Node.js Version**: 18.x for compatibility and performance
+5. **Repository Type**: User Pages (kythuatdulieu.github.io) for cleaner URLs
 
 ## Next Steps
-1. **Create GitHub Actions Workflow**
-   - Create `.github/workflows/deploy.yml`
-   - Configure build and deployment steps
-   - Set up proper permissions and concurrency
+1. **Repository Setup**
+   - Rename repository to `kythuatdulieu.github.io` for User Pages
+   - Configure GitHub Pages settings
+   - Enable GitHub Actions deployment
 
 2. **Test Deployment Process**
    - Verify workflow syntax
    - Test local build process
    - Validate deployment configuration
 
-3. **Enable GitHub Pages**
-   - Configure repository settings
-   - Enable GitHub Actions deployment
-   - Set up custom domain (if needed)
+3. **Deploy and Monitor**
+   - Push changes to trigger deployment
+   - Monitor deployment process
+   - Test live site functionality
 
 4. **Content Migration**
    - Review existing blog content
@@ -51,9 +54,9 @@
 3. Monitor deployment process and resolve any issues
 
 ## Configuration Details
-- **Repository**: kythuatdulieu
+- **Repository**: kythuatdulieu.github.io (User Pages)
 - **Branch**: main
-- **Deployment URL**: https://kythuatdulieu.github.io/kythuatdulieu
+- **Deployment URL**: https://kythuatdulieu.github.io
 - **Build Output**: ./dist
 - **Assets Directory**: _astro
 

@@ -26,13 +26,13 @@
 5. Provide RSS feed for content syndication
 
 ## Repository Structure
-- Repository name: `kythuatdulieu`
-- GitHub Pages URL: `https://kythuatdulieu.github.io/kythuatdulieu`
-- Base path: `/kythuatdulieu`
+- Repository name: `kythuatdulieu.github.io` (User Pages)
+- GitHub Pages URL: `https://kythuatdulieu.github.io`
+- Base path: `/` (root)
 - Build output: `./dist`
 
 ## Key Configuration
 - Site URL: `https://kythuatdulieu.github.io`
-- Base path: `/kythuatdulieu`
+- Base path: `/` (root - User Pages)
 - Output mode: Static
 - Assets directory: `_astro` 

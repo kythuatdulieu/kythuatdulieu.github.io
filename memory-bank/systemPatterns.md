@@ -65,7 +65,7 @@ src/content/
 ### Routing Strategy
 - **File-based routing**: Astro's automatic route generation
 - **Dynamic routes**: `[slug].astro` for blog posts
-- **Base path**: `/kythuatdulieu` for GitHub Pages compatibility
+- **Base path**: `/` (root) for User Pages deployment
 
 ## Integration Patterns
 
@@ -97,7 +97,6 @@ src/content/
 ```javascript
 export default defineConfig({
   site: 'https://kythuatdulieu.github.io',
-  base: '/kythuatdulieu',
   output: 'static',
   build: {
     assets: '_astro'
