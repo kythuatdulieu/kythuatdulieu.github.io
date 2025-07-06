@@ -1,0 +1,439 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Quiz from '../components/Quiz.astro';
+import { getCollection } from 'astro:content';
+import { getAllTags, getAllCategoriesWithPosts } from '../utils/filters';
+import { CATEGORIES } from '../consts';
+
+// Lấy tất cả bài viết có quiz
+const posts = await getCollection('blog');
+const postsWithQuiz = posts.filter(post => post.data.hasQuiz);
+
+// Lấy tags và categories
+const allTags = await getAllTags();
+const categoriesWithPosts = await getAllCategoriesWithPosts();
+
+// Lấy quiz data từ tất cả bài viết
+const allQuizzes = [];
+for (const post of postsWithQuiz) {
+  try {
+    const quizPath = `../../content/blog/${post.slug}/quiz.json`;
+    const quizData = await import(quizPath);
+    allQuizzes.push({
+      post,
+      quiz: quizData.default,
+      category: post.data.category,
+      tags: post.data.tags,
+      author: post.data.author
+    });
+  } catch (error) {
+    console.warn(`Could not load quiz for ${post.slug}:`, error);
+  }
+}
+
+// Get URL parameters
+const url = new URL(Astro.request.url);
+const selectedCategories = url.searchParams.getAll('category');
+const selectedTags = url.searchParams.getAll('tag');
+const selectedAuthors = url.searchParams.getAll('author');
+const questionCount = parseInt(url.searchParams.get('count') || '10');
+const timeLimit = parseInt(url.searchParams.get('time') || '0');
+const showAnswers = url.searchParams.get('showAnswers') === 'true';
+const shuffleQuestions = url.searchParams.get('shuffle') !== 'false';
+
+// Filter quizzes based on parameters
+let filteredQuizzes = allQuizzes;
+
+if (selectedCategories.length > 0) {
+  filteredQuizzes = filteredQuizzes.filter(q => selectedCategories.includes(q.category));
+}
+
+if (selectedTags.length > 0) {
+  filteredQuizzes = filteredQuizzes.filter(q => 
+    selectedTags.some(tag => q.tags.includes(tag))
+  );
+}
+
+if (selectedAuthors.length > 0) {
+  filteredQuizzes = filteredQuizzes.filter(q => selectedAuthors.includes(q.author));
+}
+
+// Combine all questions from filtered quizzes
+let allQuestions = [];
+filteredQuizzes.forEach(quizData => {
+  quizData.quiz.questions.forEach(question => {
+    allQuestions.push({
+      ...question,
+      source: quizData.post.data.title,
+      category: quizData.category
+    });
+  });
+});
+
+// Shuffle questions if requested
+if (shuffleQuestions) {
+  allQuestions = allQuestions.sort(() => Math.random() - 0.5);
+}
+
+// Limit number of questions
+const finalQuestions = allQuestions.slice(0, questionCount);
+
+const quizData = {
+  questions: finalQuestions
+};
+---
+
+<html lang="en">
+	<head>
+		<BaseHead 
+			title="Quiz Tổng Hợp - Kỹ Thuật Dữ Liệu" 
+			description="Làm quiz để kiểm tra kiến thức về Data Analytics, Engineering, Science và AI"
+		/>
+		<style>
+			.quiz-page {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2rem;
+			}
+			
+			.quiz-header {
+				text-align: center;
+				margin-bottom: 3rem;
+			}
+			
+			.quiz-title {
+				font-size: 2.5rem;
+				font-weight: 700;
+				margin-bottom: 1rem;
+				color: var(--theme-text);
+			}
+			
+			.quiz-subtitle {
+				font-size: 1.125rem;
+				color: var(--theme-text-light);
+				margin-bottom: 2rem;
+			}
+			
+			.quiz-filters {
+				background: var(--theme-bg);
+				border: 1px solid var(--theme-border);
+				border-radius: 0.75rem;
+				padding: 2rem;
+				margin-bottom: 3rem;
+			}
+			
+			.filters-title {
+				font-size: 1.25rem;
+				font-weight: 600;
+				margin-bottom: 1.5rem;
+				color: var(--theme-text);
+			}
+			
+			.filter-section {
+				margin-bottom: 2rem;
+			}
+			
+			.filter-section:last-child {
+				margin-bottom: 0;
+			}
+			
+			.filter-label {
+				display: block;
+				font-weight: 500;
+				margin-bottom: 0.75rem;
+				color: var(--theme-text);
+			}
+			
+			.filter-options {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			
+			.filter-option {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			.filter-option input[type="checkbox"] {
+				margin: 0;
+			}
+			
+			.filter-option label {
+				font-size: 0.875rem;
+				color: var(--theme-text);
+				cursor: pointer;
+			}
+			
+			.filter-controls {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1rem;
+				margin-top: 1.5rem;
+			}
+			
+			.filter-control {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+			
+			.filter-control label {
+				font-weight: 500;
+				color: var(--theme-text);
+			}
+			
+			.filter-control input,
+			.filter-control select {
+				padding: 0.5rem;
+				border: 1px solid var(--theme-border);
+				border-radius: 0.375rem;
+				background: var(--theme-bg);
+				color: var(--theme-text);
+			}
+			
+			.filter-actions {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+				margin-top: 2rem;
+			}
+			
+			.filter-btn {
+				padding: 0.75rem 1.5rem;
+				border: none;
+				border-radius: 0.5rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: all 0.2s ease;
+			}
+			
+			.filter-btn.primary {
+				background: var(--theme-accent);
+				color: white;
+			}
+			
+			.filter-btn.primary:hover {
+				background: var(--theme-accent-hover);
+			}
+			
+			.filter-btn.secondary {
+				background: var(--theme-bg-secondary);
+				color: var(--theme-text);
+				border: 1px solid var(--theme-border);
+			}
+			
+			.filter-btn.secondary:hover {
+				background: var(--theme-bg-accent);
+			}
+			
+			.quiz-stats {
+				display: flex;
+				justify-content: center;
+				gap: 2rem;
+				margin-bottom: 2rem;
+				padding: 1rem;
+				background: var(--theme-bg-secondary);
+				border-radius: 0.5rem;
+			}
+			
+			.stat-item {
+				text-align: center;
+			}
+			
+			.stat-value {
+				font-size: 1.5rem;
+				font-weight: 600;
+				color: var(--theme-accent);
+			}
+			
+			.stat-label {
+				font-size: 0.875rem;
+				color: var(--theme-text-light);
+			}
+			
+			.no-quizzes {
+				text-align: center;
+				padding: 3rem;
+				color: var(--theme-text-light);
+			}
+			
+			@media (max-width: 768px) {
+				.quiz-page {
+					padding: 1rem;
+				}
+				
+				.quiz-title {
+					font-size: 2rem;
+				}
+				
+				.filter-controls {
+					grid-template-columns: 1fr;
+				}
+				
+				.filter-actions {
+					flex-direction: column;
+				}
+				
+				.quiz-stats {
+					flex-direction: column;
+					gap: 1rem;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		
+		<main class="quiz-page">
+			<div class="quiz-header">
+				<h1 class="quiz-title">Quiz Tổng Hợp</h1>
+				<p class="quiz-subtitle">
+					Kiểm tra kiến thức của bạn về Data Analytics, Engineering, Science và AI
+				</p>
+			</div>
+
+			<div class="quiz-filters">
+				<h2 class="filters-title">Tùy chỉnh Quiz</h2>
+				
+				<form method="GET" id="quiz-filters-form">
+					<div class="filter-section">
+						<label class="filter-label">Chủ đề:</label>
+						<div class="filter-options">
+							{Object.entries(CATEGORIES).map(([key, category]) => (
+								<div class="filter-option">
+									<input 
+										type="checkbox" 
+										id={`category-${key}`}
+										name="category" 
+										value={key}
+										checked={selectedCategories.includes(key)}
+									/>
+									<label for={`category-${key}`}>{category.name}</label>
+								</div>
+							))}
+						</div>
+					</div>
+
+					<div class="filter-section">
+						<label class="filter-label">Tags:</label>
+						<div class="filter-options">
+							{allTags.slice(0, 20).map(tag => (
+								<div class="filter-option">
+									<input 
+										type="checkbox" 
+										id={`tag-${tag}`}
+										name="tag" 
+										value={tag}
+										checked={selectedTags.includes(tag)}
+									/>
+									<label for={`tag-${tag}`}>#{tag}</label>
+								</div>
+							))}
+						</div>
+					</div>
+
+					<div class="filter-controls">
+						<div class="filter-control">
+							<label for="count">Số câu hỏi:</label>
+							<select name="count" id="count">
+								<option value="5" selected={questionCount === 5}>5 câu</option>
+								<option value="10" selected={questionCount === 10}>10 câu</option>
+								<option value="15" selected={questionCount === 15}>15 câu</option>
+								<option value="20" selected={questionCount === 20}>20 câu</option>
+								<option value="30" selected={questionCount === 30}>30 câu</option>
+							</select>
+						</div>
+
+						<div class="filter-control">
+							<label for="time">Giới hạn thời gian (giây):</label>
+							<select name="time" id="time">
+								<option value="0" selected={timeLimit === 0}>Không giới hạn</option>
+								<option value="300" selected={timeLimit === 300}>5 phút</option>
+								<option value="600" selected={timeLimit === 600}>10 phút</option>
+								<option value="900" selected={timeLimit === 900}>15 phút</option>
+								<option value="1800" selected={timeLimit === 1800}>30 phút</option>
+							</select>
+						</div>
+
+						<div class="filter-control">
+							<label for="showAnswers">Hiển thị đáp án:</label>
+							<select name="showAnswers" id="showAnswers">
+								<option value="false" selected={!showAnswers}>Sau khi nộp bài</option>
+								<option value="true" selected={showAnswers}>Ngay lập tức</option>
+							</select>
+						</div>
+
+						<div class="filter-control">
+							<label for="shuffle">Xáo trộn câu hỏi:</label>
+							<select name="shuffle" id="shuffle">
+								<option value="true" selected={shuffleQuestions}>Có</option>
+								<option value="false" selected={!shuffleQuestions}>Không</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="filter-actions">
+						<button type="submit" class="filter-btn primary">
+							Áp dụng bộ lọc
+						</button>
+						<button type="button" class="filter-btn secondary" onclick="resetFilters()">
+							Đặt lại
+						</button>
+					</div>
+				</form>
+			</div>
+
+			{finalQuestions.length > 0 ? (
+				<>
+					<div class="quiz-stats">
+						<div class="stat-item">
+							<div class="stat-value">{finalQuestions.length}</div>
+							<div class="stat-label">Câu hỏi</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-value">{filteredQuizzes.length}</div>
+							<div class="stat-label">Bài viết</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-value">{selectedCategories.length || 'Tất cả'}</div>
+							<div class="stat-label">Chủ đề</div>
+						</div>
+						{timeLimit > 0 && (
+							<div class="stat-item">
+								<div class="stat-value">{Math.floor(timeLimit / 60)}m</div>
+								<div class="stat-label">Thời gian</div>
+							</div>
+						)}
+					</div>
+
+					<Quiz 
+						quizData={quizData}
+						title="Quiz Tổng Hợp"
+						description={`${finalQuestions.length} câu hỏi từ ${filteredQuizzes.length} bài viết`}
+						difficulty="mixed"
+						timeLimit={timeLimit || undefined}
+						showAnswersImmediately={showAnswers}
+					/>
+				</>
+			) : (
+				<div class="no-quizzes">
+					<h3>Không tìm thấy câu hỏi nào</h3>
+					<p>Hãy thử điều chỉnh bộ lọc để tìm câu hỏi phù hợp.</p>
+				</div>
+			)}
+		</main>
+
+		<Footer />
+
+		<script>
+			function resetFilters() {
+				window.location.href = '/quiz';
+			}
+		</script>
+	</body>
+</html> 
