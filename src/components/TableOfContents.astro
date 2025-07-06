@@ -1,0 +1,144 @@
+---
+export interface Props {
+  headings: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
+  className?: string;
+}
+
+const { headings, className = "" } = Astro.props;
+
+// Lọc chỉ lấy headings h2, h3, h4
+const tocHeadings = headings.filter(({ depth }) => depth > 1 && depth < 5);
+---
+
+{tocHeadings.length > 0 && (
+  <nav class={`toc ${className}`} aria-label="Table of contents">
+    <h2 class="toc-title">Mục lục</h2>
+    <ul class="toc-list">
+      {tocHeadings.map((heading) => (
+        <li class={`toc-item toc-item-${heading.depth}`}>
+          <a href={`#${heading.slug}`} class="toc-link">
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: var(--theme-bg);
+    border: 1px solid var(--theme-border);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .toc-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--theme-text);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    margin: 0.25rem 0;
+  }
+
+  .toc-item-2 {
+    margin-left: 0;
+  }
+
+  .toc-item-3 {
+    margin-left: 1rem;
+  }
+
+  .toc-item-4 {
+    margin-left: 2rem;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 0.25rem 0;
+    color: var(--theme-text-light);
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+  }
+
+  .toc-link:hover {
+    color: var(--theme-accent);
+  }
+
+  .toc-link.active {
+    color: var(--theme-accent);
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .toc {
+      position: static;
+      max-height: none;
+      margin: 1rem 0;
+    }
+  }
+</style>
+
+<script>
+  // Highlight active section in TOC
+  function updateTOC() {
+    const headings = document.querySelectorAll('h2, h3, h4');
+    const tocLinks = document.querySelectorAll('.toc-link');
+    
+    let currentSection = '';
+    
+    headings.forEach((heading) => {
+      const rect = heading.getBoundingClientRect();
+      if (rect.top <= 100) {
+        currentSection = heading.id;
+      }
+    });
+    
+    tocLinks.forEach((link) => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === `#${currentSection}`) {
+        link.classList.add('active');
+      }
+    });
+  }
+  
+  // Smooth scroll to section
+  document.querySelectorAll('.toc-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href')?.substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+  
+  // Update TOC on scroll
+  window.addEventListener('scroll', updateTOC);
+  updateTOC(); // Initial call
+</script> 
