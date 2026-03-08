@@ -300,7 +300,30 @@
             els.optionsList.appendChild(div);
         });
 
-        // Explanation — hidden (user only needs green/red feedback)
+        // Explanation — shown after answering
+        let explanationDiv = document.getElementById('explanationBox');
+        if (!explanationDiv) {
+            explanationDiv = document.createElement('div');
+            explanationDiv.id = 'explanationBox';
+            explanationDiv.className = 'explanation-box';
+            els.optionsList.parentNode.insertBefore(explanationDiv, els.optionsList.nextSibling);
+        }
+
+        if (answered && q.explanation_vi) {
+            explanationDiv.innerHTML = '';
+            const title = document.createElement('div');
+            title.className = 'explanation-title';
+            title.textContent = '💡 Giải thích';
+            explanationDiv.appendChild(title);
+            const body = document.createElement('pre');
+            body.className = 'explanation-body';
+            body.textContent = q.explanation_vi;
+            explanationDiv.appendChild(body);
+            explanationDiv.style.display = 'block';
+        } else {
+            explanationDiv.style.display = 'none';
+        }
+
 
 
         // Animate card
