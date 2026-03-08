@@ -107,7 +107,9 @@
 /* ===================================
    Reset & Base
    =================================== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -139,15 +141,15 @@ body::before {
   width: 200%;
   height: 200%;
   background: radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
+    radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
   z-index: -1;
   pointer-events: none;
 }
 
 [data-theme="light"] body::before {
   background: radial-gradient(ellipse at 20% 20%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+    radial-gradient(ellipse at 80% 80%, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
 }
 
 button {
@@ -240,7 +242,8 @@ button {
   position: relative;
 }
 
-.icon-btn:hover, .icon-btn:active {
+.icon-btn:hover,
+.icon-btn:active {
   background: var(--bg-glass-hover);
   color: var(--text-primary);
 }
@@ -294,17 +297,27 @@ button {
   background: var(--correct-bg);
   color: var(--correct);
 }
+
 .score-item.incorrect .score-icon {
   background: var(--incorrect-bg);
   color: var(--incorrect);
 }
+
 .score-item.unanswered .score-icon {
   color: var(--text-muted);
 }
 
-.score-item.correct .score-value { color: var(--correct); }
-.score-item.incorrect .score-value { color: var(--incorrect); }
-.score-item.unanswered .score-value { color: var(--text-muted); }
+.score-item.correct .score-value {
+  color: var(--correct);
+}
+
+.score-item.incorrect .score-value {
+  color: var(--incorrect);
+}
+
+.score-item.unanswered .score-value {
+  color: var(--text-muted);
+}
 
 .score-progress {
   flex: 1;
@@ -349,6 +362,7 @@ button {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -562,13 +576,16 @@ button {
   margin-bottom: 10px;
 }
 
-.explanation-content {
+.explanation-content,
+.explanation-body {
   font-size: 0.88rem;
   line-height: 1.7;
   color: var(--text-secondary);
   white-space: pre-wrap;
   word-break: break-word;
+  font-family: var(--font);
 }
+
 
 /* ===================================
    Navigation
@@ -609,7 +626,8 @@ button {
   flex: 1;
 }
 
-.nav-btn:hover, .nav-btn:active {
+.nav-btn:hover,
+.nav-btn:active {
   background: var(--bg-glass-hover);
   color: var(--text-primary);
 }
@@ -741,10 +759,21 @@ button {
   font-weight: 600;
 }
 
-.stat-correct .stat-number { color: var(--correct); }
-.stat-incorrect .stat-number { color: var(--incorrect); }
-.stat-unanswered .stat-number { color: var(--unanswered); }
-.stat-total .stat-number { color: var(--accent-light); }
+.stat-correct .stat-number {
+  color: var(--correct);
+}
+
+.stat-incorrect .stat-number {
+  color: var(--incorrect);
+}
+
+.stat-unanswered .stat-number {
+  color: var(--unanswered);
+}
+
+.stat-total .stat-number {
+  color: var(--accent-light);
+}
 
 /* Settings */
 .setting-row {
@@ -799,12 +828,12 @@ button {
   transition: all 0.3s ease;
 }
 
-.switch input:checked + .slider {
+.switch input:checked+.slider {
   background: var(--accent);
   border-color: var(--accent);
 }
 
-.switch input:checked + .slider::before {
+.switch input:checked+.slider::before {
   transform: translateX(20px);
   background: white;
 }
@@ -831,7 +860,8 @@ button {
   min-height: 44px;
 }
 
-.review-btn:hover, .review-btn:active {
+.review-btn:hover,
+.review-btn:active {
   background: var(--bg-glass-hover);
   color: var(--text-primary);
 }
@@ -866,7 +896,8 @@ button {
   min-height: 44px;
 }
 
-.reset-btn:hover, .reset-btn:active {
+.reset-btn:hover,
+.reset-btn:active {
   background: rgba(239, 68, 68, 0.12);
 }
 
@@ -1127,12 +1158,20 @@ button {
 
 /* Print */
 @media print {
-  .app-header, .score-bar, .quiz-nav, .side-panel, .overlay, .modal-overlay {
+
+  .app-header,
+  .score-bar,
+  .quiz-nav,
+  .side-panel,
+  .overlay,
+  .modal-overlay {
     display: none !important;
   }
+
   .quiz-container {
     padding: 0;
   }
+
   body {
     background: white;
     color: black;
@@ -1143,9 +1182,11 @@ button {
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border-light);
   border-radius: 4px;

@@ -1,4 +1,4 @@
-const QUESTIONS_DATA = [
+[
   {
     "id": 1,
     "topic": 1,
@@ -3451,4 +3451,4 @@ const QUESTIONS_DATA = [
     "explanation_vi": "✅ Đáp án đúng: C\n\n💡 Giải thích chi tiết từ Trợ lý AI:\n(Đính chính PDF lỗi tư duy lầm lạc đáp án thật: Phân Chọn Điểm Z-Order Không Bao Giờ Linh Động Cho Tương Lai - Khuyến Mãi Sửa D Vào C Mới Chuẩn Xác Ngôn Rừng). Gặp Trận Quái Ác Bão Tuyết Dữ Đổ Đè Số Lớn `skew`, Viết Vào Đồng Liên Tục Ngợp Concurrent Nghẽn Cực Ám Mà Lại Bập Bênh Phút Này Chọn Khóa Lọc Chìa Khóa Nào Mai Vứt Nào (Subject to Change Future, Cần Tính Linh Hoạt Flexibility). Gươm Báu Liquid Clustering `CLUSTER BY` LÀ Thế Hệ Tái Hình Không Tốn Óc Chia Bàn Ngõ Kẹt Cho Tương Lai Khách Trộn File Bóng Bỏ Kịp Kịp Trọng Trắng Không Phá Thẳng Rễ Áp Lại Ngay Mất File Níu Oái C.",
     "question_vi": "Nhóm tối ưu bảng 'orders' lớn, tăng trưởng nhanh, cardinality cao, data skew đáng kể, cần ghi đồng thời thường xuyên. Các cột 'user_id', 'event_timestamp', 'product_id' dùng nhiều trong truy vấn và bộ lọc, nhưng có thể thay đổi do yêu cầu kinh doanh. Chiến lược phân vùng nào tối ưu cho data skipping, quản lý tăng dần, và linh hoạt?"
   }
-];
+]
