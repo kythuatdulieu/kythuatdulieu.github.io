@@ -420,6 +420,20 @@ button {
   word-break: break-word;
 }
 
+.question-image {
+  margin: 10px 0 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px;
+}
+
+.question-image img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
 /* ===================================
    Options
    =================================== */

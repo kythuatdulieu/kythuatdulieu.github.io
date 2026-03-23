@@ -8,13 +8,14 @@
     // ========================
     // State
     // ========================
-    const STATE_KEY = 'de_quiz_state_v3';
+    const STATE_KEY = 'de_quiz_state_v4';
 
     let questions = QUESTIONS_DATA.map(q => ({ ...q }));
     let questionOrder = questions.map((_, i) => i);
     let currentIndex = 0;
     let userAnswers = {};
     let showVietnamese = false;
+    let showImage = false;
     let shuffleMode = false;
     let filterMode = 'all';
     let darkTheme = true;
@@ -31,6 +32,10 @@
         questionText: $('questionText'),
         questionTextVi: $('questionTextVi'),
         optionsList: $('optionsList'),
+        btnPdf: $('btnPdf'),
+        btnImage: $('btnImage'),
+        questionImageBox: $('questionImageBox'),
+        questionImage: $('questionImage'),
 
         scoreCorrect: $('scoreCorrect'),
         scoreIncorrect: $('scoreIncorrect'),
@@ -198,6 +203,7 @@
             questionOrder = questions.map((_, i) => i);
         }
         currentIndex = 0;
+        showImage = false;
     }
 
     // ========================
@@ -240,6 +246,27 @@
         const q = questions[qIdx];
         const userAns = userAnswers[q.id];
         const answered = userAns !== undefined;
+
+        if (els.btnPdf) {
+            if (q.page) {
+                els.btnPdf.disabled = false;
+                const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
+                els.btnPdf.onclick = () => window.open(`${pdfPath}#page=${q.page}`, '_blank');
+            } else {
+                els.btnPdf.disabled = true;
+                els.btnPdf.onclick = null;
+            }
+        }
+
+        if (els.questionImageBox && els.questionImage) {
+            if (q.image && showImage) {
+                els.questionImage.src = q.image;
+                els.questionImageBox.style.display = 'block';
+            } else {
+                els.questionImageBox.style.display = 'none';
+                els.questionImage.removeAttribute('src');
+            }
+        }
 
         // Counter
         els.questionCounter.textContent = `${currentIndex + 1} / ${filtered.length}`;
@@ -287,6 +314,17 @@
             const textSpan = document.createElement('div');
             textSpan.className = 'option-text';
             textSpan.textContent = q.options[letter];
+
+            if (showVietnamese) {
+                const viOpt = getVietnameseOption(q, letter);
+                if (viOpt) {
+                    const viSpan = document.createElement('div');
+                    viSpan.className = 'option-text-vi';
+                    viSpan.textContent = viOpt;
+                    viSpan.style.display = 'block';
+                    textSpan.appendChild(viSpan);
+                }
+            }
 
             contentDiv.appendChild(textSpan);
 
@@ -349,6 +387,7 @@
         const filtered = getFilteredIndices();
         if (currentIndex < filtered.length - 1) {
             currentIndex++;
+            showImage = false;
             renderQuestion();
         }
     }
@@ -356,6 +395,7 @@
     function goPrev() {
         if (currentIndex > 0) {
             currentIndex--;
+            showImage = false;
             renderQuestion();
         }
     }
@@ -610,6 +650,12 @@
         els.btnMenu.addEventListener('click', openPanel);
         els.btnClosePanel.addEventListener('click', closePanel);
         els.overlay.addEventListener('click', closePanel);
+        if (els.btnImage) {
+            els.btnImage.addEventListener('click', () => {
+                showImage = !showImage;
+                renderQuestion();
+            });
+        }
 
         // Vietnamese toggle
         els.btnViToggle.addEventListener('click', () => toggleVietnamese(!showVietnamese));

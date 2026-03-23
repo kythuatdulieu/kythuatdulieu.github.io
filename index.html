@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Quiz - Certified Data Engineer Professional</title>
   <meta name="description"
-    content="Databricks Certified Data Engineer Professional Practice Quiz - 238 questions with Vietnamese translation">
+    content="Databricks Certified Data Engineer Professional Practice Quiz - 327 questions with Vietnamese translation">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
         <span class="title-icon">⚡</span>
         <span class="title-text">DE Pro Quiz</span>
       </h1>
-      <span class="question-counter" id="questionCounter">1 / 238</span>
+      <span class="question-counter" id="questionCounter">1 / 327</span>
     </div>
     <div class="header-right">
       <button class="icon-btn" id="btnViToggle" title="Bật/Tắt Tiếng Việt">
@@ -78,7 +78,7 @@
     </div>
     <div class="score-item unanswered">
       <span class="score-icon">○</span>
-      <span class="score-value" id="scoreUnanswered">238</span>
+      <span class="score-value" id="scoreUnanswered">327</span>
     </div>
     <div class="score-progress">
       <div class="progress-bar" id="progressBar"></div>
@@ -92,9 +92,14 @@
       <div class="question-header">
         <span class="question-badge" id="questionBadge">Question #1</span>
         <span class="topic-badge" id="topicBadge">Topic 1</span>
+        <button class="icon-btn pdf-btn" id="btnPdf" title="Mở trang PDF gốc">PDF</button>
+        <button class="icon-btn pdf-btn" id="btnImage" title="Xem ảnh trang PDF">Ảnh</button>
       </div>
       <div class="question-text" id="questionText"></div>
       <div class="question-text-vi" id="questionTextVi" style="display:none"></div>
+      <div class="question-image" id="questionImageBox" style="display:none">
+        <img id="questionImage" alt="Ảnh trích xuất từ PDF">
+      </div>
 
       <!-- Options -->
       <div class="options-list" id="optionsList"></div>
@@ -152,11 +157,11 @@
             <div class="stat-label">Sai</div>
           </div>
           <div class="stat-box stat-unanswered">
-            <div class="stat-number" id="statUnanswered">238</div>
+            <div class="stat-number" id="statUnanswered">327</div>
             <div class="stat-label">Chưa làm</div>
           </div>
           <div class="stat-box stat-total">
-            <div class="stat-number" id="statTotal">238</div>
+            <div class="stat-number" id="statTotal">327</div>
             <div class="stat-label">Tổng</div>
           </div>
         </div>
@@ -195,7 +200,7 @@
           <button class="review-btn review-all" id="btnReviewAll">
             <span class="review-icon">📋</span>
             <span>Tất cả câu hỏi</span>
-            <span class="review-count" id="countAll">238</span>
+            <span class="review-count" id="countAll">327</span>
           </button>
           <button class="review-btn review-incorrect" id="btnReviewIncorrect">
             <span class="review-icon">❌</span>
@@ -210,7 +215,7 @@
           <button class="review-btn review-unanswered" id="btnReviewUnanswered">
             <span class="review-icon">⬜</span>
             <span>Làm câu chưa làm</span>
-            <span class="review-count" id="countUnanswered">238</span>
+            <span class="review-count" id="countUnanswered">327</span>
           </button>
         </div>
       </div>
@@ -250,8 +255,8 @@
     </div>
   </div>
 
-  <script src="questions.js"></script>
-  <script src="app.js"></script>
+  <script src="questions.js?v=20260323"></script>
+  <script src="app.js?v=20260323"></script>
 </body>
 
 </html>
