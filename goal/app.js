@@ -6,9 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
         explanationSection: document.getElementById('explanation-section'),
         completionSection: document.getElementById('completion-section'),
         
-        questionPrompt: document.getElementById('question-prompt'),
+        questionPromptEn: document.getElementById('question-prompt-en'),
+        questionPromptVi: document.getElementById('question-prompt-vi'),
         optionsContainer: document.getElementById('options-container'),
         questionTypeBadge: document.getElementById('question-type-badge'),
+        translateToggleBtn: document.getElementById('translate-toggle-btn'),
         
         explanationContent: document.getElementById('explanation-content'),
         
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedOptions = new Set();
     let score = 0;
     let isAnswerSubmitted = false;
+    let showTranslation = false;
 
     // Initialization
     async function init() {
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Không thể tải dữ liệu');
             
             const data = await response.json();
-            // Shuffle questions for a fresh experience each time
+            // Shuffle questions
             quizData = shuffleArray(data.questions);
             
             elements.loadingState.classList.add('hidden');
@@ -67,18 +70,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update stats
         updateStats();
         
-        // Set question content
+        // Set question type badge
         const isMultiple = question.type === 'multiple_choice';
-        elements.questionTypeBadge.textContent = isMultiple ? 'Chọn nhiều đáp án' : 'Chọn một đáp án';
+        elements.questionTypeBadge.textContent = isMultiple ? 'Multiple Choice' : 'Single Choice';
         elements.questionTypeBadge.style.backgroundColor = isMultiple ? 'rgba(236, 72, 153, 0.2)' : 'rgba(99, 102, 241, 0.2)';
         elements.questionTypeBadge.style.color = isMultiple ? '#f9a8d4' : '#a5b4fc';
         elements.questionTypeBadge.style.borderColor = isMultiple ? 'rgba(236, 72, 153, 0.3)' : 'rgba(99, 102, 241, 0.3)';
         
-        elements.questionPrompt.textContent = question.prompt;
+        // Set Prompts (English by default, Vietnamese hidden unless toggled)
+        elements.questionPromptEn.textContent = question.prompt_en || question.prompt;
+        elements.questionPromptVi.textContent = question.prompt_vi || '';
+        
+        if (showTranslation) {
+            elements.questionPromptVi.classList.remove('hidden');
+        } else {
+            elements.questionPromptVi.classList.add('hidden');
+        }
         
         // Render options
         elements.optionsContainer.innerHTML = '';
-        question.options.forEach((optionText, index) => {
+        const optionsEn = question.options_en || question.options;
+        const optionsVi = question.options_vi || question.options;
+        
+        optionsEn.forEach((optionEnText, index) => {
+            const optionViText = optionsVi[index];
             const optionEl = document.createElement('div');
             optionEl.className = 'option';
             optionEl.dataset.index = index;
@@ -90,7 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="option-checkbox" style="border-radius: ${borderRadius}">
                     <i class="fa-solid ${iconClass}"></i>
                 </div>
-                <div class="option-text">${formatText(optionText)}</div>
+                <div class="option-content">
+                    <div class="option-text-en">${formatText(optionEnText)}</div>
+                    <div class="option-text-vi ${showTranslation ? '' : 'hidden'}">${formatText(optionViText)}</div>
+                </div>
             `;
             
             optionEl.addEventListener('click', () => handleOptionClick(index, optionEl, isMultiple));
@@ -98,9 +116,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Toggle Translation
+    function toggleTranslation() {
+        showTranslation = !showTranslation;
+        
+        if (showTranslation) {
+            elements.translateToggleBtn.classList.add('active');
+            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-language"></i> Ẩn Tiếng Việt';
+            elements.questionPromptVi.classList.remove('hidden');
+            document.querySelectorAll('.option-text-vi').forEach(el => el.classList.remove('hidden'));
+        } else {
+            elements.translateToggleBtn.classList.remove('active');
+            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-language"></i> Hiển thị Tiếng Việt';
+            elements.questionPromptVi.classList.add('hidden');
+            document.querySelectorAll('.option-text-vi').forEach(el => el.classList.add('hidden'));
+        }
+    }
+
     // Handle option selection
     function handleOptionClick(index, optionEl, isMultiple) {
-        if (isAnswerSubmitted) return; // Prevent changes after submission
+        if (isAnswerSubmitted) return;
         
         if (isMultiple) {
             if (selectedOptions.has(index)) {
@@ -112,9 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             selectedOptions.clear();
-            selectedOptions.add(index);
-            
             document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            
+            selectedOptions.add(index);
             optionEl.classList.add('selected');
         }
         
@@ -134,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let isCorrect = true;
         
-        // Check if selected options match correct options perfectly
         if (selectedOptions.size !== correctIndexes.length) {
             isCorrect = false;
         } else {
@@ -148,14 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isCorrect) score++;
         
-        // Highlight correct and incorrect options
+        // Highlight options
         document.querySelectorAll('.option').forEach(el => {
             const idx = parseInt(el.dataset.index);
             const isSelected = selectedOptions.has(idx);
             const isActuallyCorrect = correctIndexes.includes(idx);
             
-            // Change icons for submitted state
-            const icon = el.querySelector('i');
+            const icon = el.querySelector('.option-checkbox i');
             
             if (isActuallyCorrect) {
                 el.classList.add('correct');
@@ -165,15 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 icon.className = 'fa-solid fa-xmark';
             }
             
-            // Dim unselected incorrect options
             if (!isSelected && !isActuallyCorrect) {
                 el.style.opacity = '0.5';
             }
         });
         
-        // Show explanation
         showExplanation(question.explanation_vn, isCorrect);
-        updateStats(); // Update score display
+        updateStats();
     }
 
     // Show Explanation
@@ -193,20 +224,17 @@ document.addEventListener('DOMContentLoaded', () => {
             headerText.style.color = 'var(--danger)';
         }
         
-        // Simple markdown parsing for the explanation
         const formattedText = formatText(text || 'Không có giải thích chi tiết cho câu hỏi này.');
         elements.explanationContent.innerHTML = formattedText;
         
-        // Scroll to explanation smoothly
         setTimeout(() => {
             elements.explanationSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
     }
 
-    // Next Question or Finish
+    // Next Question
     function nextQuestion() {
         currentQuestionIndex++;
-        
         if (currentQuestionIndex < quizData.length) {
             loadQuestion();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -221,8 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.completionSection.classList.remove('hidden');
         
         const percentage = Math.round((score / quizData.length) * 100);
-        
-        // Animate the score counter
         let currentScore = 0;
         const interval = setInterval(() => {
             currentScore += 1;
@@ -257,13 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loadQuestion();
     }
 
-    // Helpers
     function updateStats() {
-        elements.questionCounter.textContent = `Câu hỏi ${currentQuestionIndex + 1} / ${quizData.length}`;
-        elements.scoreCounter.innerHTML = `<i class="fa-solid fa-star" style="color: #fcd34d"></i> Điểm: ${score}`;
-        
+        elements.questionCounter.textContent = \`Câu hỏi \${currentQuestionIndex + 1} / \${quizData.length}\`;
+        elements.scoreCounter.innerHTML = \`<i class="fa-solid fa-star" style="color: #fcd34d"></i> Điểm: \${score}\`;
         const progress = ((currentQuestionIndex) / quizData.length) * 100;
-        elements.progressBar.style.width = `${progress}%`;
+        elements.progressBar.style.width = \`\${progress}%\`;
     }
 
     function shuffleArray(array) {
@@ -277,14 +301,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function formatText(text) {
         if (!text) return '';
-        // Convert basic markdown to HTML
         let html = text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:4px;font-family:monospace;">$1</code>');
+            .replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>')
+            .replace(/\\*(.*?)\\*/g, '<em>$1</em>')
+            .replace(/\`([^\`]+)\`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:4px;font-family:monospace;">$1</code>');
             
-        // Handle paragraphs and lists
-        const lines = html.split('\n');
+        const lines = html.split('\\n');
         let inList = false;
         let result = '';
         
@@ -297,18 +319,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     result += '<ul>';
                     inList = true;
                 }
-                result += `<li>${line.substring(2)}</li>`;
+                result += \`<li>\${line.substring(2)}</li>\`;
             } else {
                 if (inList) {
                     result += '</ul>';
                     inList = false;
                 }
-                result += `<p>${line}</p>`;
+                result += \`<p>\${line}</p>\`;
             }
         }
-        
         if (inList) result += '</ul>';
-        
         return result;
     }
 
@@ -316,8 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.submitBtn.addEventListener('click', submitAnswer);
     elements.nextBtn.addEventListener('click', nextQuestion);
     elements.restartBtn.addEventListener('click', restartQuiz);
+    elements.translateToggleBtn.addEventListener('click', toggleTranslation);
     
-    // Support keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             if (!elements.submitBtn.disabled && !elements.submitBtn.classList.contains('hidden')) {

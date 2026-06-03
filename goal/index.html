@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generative AI Engineer - Ôn tập Chứng chỉ Databricks</title>
-    <meta name="description" content="Nền tảng ôn tập chứng chỉ Databricks Generative AI Engineer với giải thích chi tiết, giúp bạn học sâu và hiểu rõ bản chất.">
+    <meta name="description" content="Nền tảng ôn tập chứng chỉ Databricks Generative AI Engineer.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -42,8 +42,13 @@
             <div class="question-section hidden" id="question-section">
                 <div class="question-header">
                     <span class="question-badge" id="question-type-badge">Multiple Choice</span>
+                    <button id="translate-toggle-btn" class="btn-toggle-lang"><i class="fa-solid fa-language"></i> Hiển thị Tiếng Việt</button>
                 </div>
-                <h2 class="question-prompt" id="question-prompt"></h2>
+                
+                <div class="prompt-container">
+                    <h2 class="question-prompt" id="question-prompt-en"></h2>
+                    <h2 class="question-prompt-vi hidden" id="question-prompt-vi"></h2>
+                </div>
                 
                 <div class="options-container" id="options-container">
                     <!-- Options injected here via JS -->
@@ -57,7 +62,7 @@
 
             <div class="explanation-section hidden" id="explanation-section">
                 <div class="explanation-header">
-                    <h3><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết</h3>
+                    <h3><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết (Tiếng Việt)</h3>
                 </div>
                 <div class="explanation-content" id="explanation-content">
                     <!-- Explanation injected here -->

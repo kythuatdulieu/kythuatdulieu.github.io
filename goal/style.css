@@ -437,5 +437,63 @@ footer {
     .btn {
         width: 100%;
         justify-content: center;
-    }
 }
+
+/* Translation toggle button */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-toggle-lang {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-toggle-lang:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-toggle-lang.active {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #a5b4fc;
+}
+
+/* Translated Text Styles */
+.question-prompt-vi {
+    font-size: 1.15rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    border-left: 3px solid var(--primary);
+    padding-left: 1rem;
+}
+
+.option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option-text-vi {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-style: italic;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-top: 0.5rem;
+}
+

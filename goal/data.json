@@ -1,15 +1,25 @@
 {
   "source_url": "https://en.daypo.com/generative-ai-engineer.html#test",
   "test_id": 46367,
+  "crawled_at": "2026-05-27T13:09:08.873783+00:00",
   "title": "Generative AI Engineer",
-  "description": "Generative AI Engineer Exam - Vietnamese Translated with Explanations",
+  "description": "Databricks Generative AI Engineer Exam",
+  "author": "John Badrun",
   "question_count": 92,
   "questions": [
     {
       "number": 1,
       "type": "multiple_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) đã tạo ra một ứng dụng RAG để tìm kiếm câu trả lời cho các câu hỏi về một loạt tiểu thuyết giả tưởng được hỏi trên diễn đàn web của tác giả. Các văn bản tiểu thuyết giả tưởng được phân tách thành các đoạn (chunked) và nhúng (embedded) vào một cơ sở dữ liệu vector cùng với siêu dữ liệu (số trang, số chương, tiêu đề sách), được truy xuất theo truy vấn của người dùng, và cung cấp cho LLM để tạo phản hồi. Kỹ sư AI Tạo sinh đã dùng trực giác của mình để chọn chiến lược phân tách (chunking) và các cấu hình liên quan nhưng bây giờ muốn chọn các giá trị tốt nhất một cách có phương pháp hơn. Hai chiến lược nào mà Kỹ sư AI Tạo sinh nên thực hiện để tối ưu hóa chiến lược phân tách và các tham số của họ? (Chọn hai.)",
-      "options": [
+      "prompt_en": "A Generative Al Engineer has created a RAG application to look up answers to questions about a series of fantasy novels that are being asked on the author’s web forum. The fantasy novel texts are chunked and embedded into a vector store with metadata (page number, chapter number, book title), retrieved with the user’s query, and provided to an LLM for response generation. The Generative AI Engineer used their intuition to pick the chunking strategy and associated configurations but now wants to more methodically choose the best values. Which TWO strategies should the Generative AI Engineer take to optimize their chunking strategy and parameters? (Choose two.)",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) đã tạo ra một ứng dụng RAG để tìm kiếm câu trả lời cho các câu hỏi về một loạt tiểu thuyết giả tưởng được hỏi trên diễn đàn web của tác giả. Các văn bản tiểu thuyết giả tưởng được phân tách thành các đoạn (chunked) và nhúng (embedded) vào một cơ sở dữ liệu vector cùng với siêu dữ liệu (số trang, số chương, tiêu đề sách), được truy xuất theo truy vấn của người dùng, và cung cấp cho LLM để tạo phản hồi. Kỹ sư AI Tạo sinh đã dùng trực giác của mình để chọn chiến lược phân tách (chunking) và các cấu hình liên quan nhưng bây giờ muốn chọn các giá trị tốt nhất một cách có phương pháp hơn. Hai chiến lược nào mà Kỹ sư AI Tạo sinh nên thực hiện để tối ưu hóa chiến lược phân tách và các tham số của họ? (Chọn hai.)",
+      "options_en": [
+        "Change embedding models and compare performance.",
+        "Add a classifier for user queries that predicts which book will best contain the answer. Use this to filter retrieval.",
+        "Choose an appropriate evaluation metric (such as recall or NDCG) and experiment with changes in the chunking strategy, such as splitting chunks by paragraphs or chapters. Choose the strategy that gives the best performance metric.",
+        "Pass known questions and best answers to an LLM and instruct the LLM to provide the best token count. Use a summary statistic (mean, median, etc.) of the best token counts to choose chunk size.",
+        "Create an LLM-as-a-judge metric to evaluate how well previous questions are answered by the most appropriate chunk. Optimize the chunking parameters based upon the values of the metric."
+      ],
+      "options_vi": [
         "Thay đổi các mô hình nhúng (embedding models) và so sánh hiệu suất.",
         "Thêm một bộ phân loại (classifier) cho các truy vấn của người dùng để dự đoán cuốn sách nào sẽ chứa câu trả lời tốt nhất. Sử dụng điều này để lọc quá trình truy xuất.",
         "Chọn một số liệu đánh giá phù hợp (như recall hoặc NDCG) và thử nghiệm với các thay đổi trong chiến lược phân tách, chẳng hạn như chia các đoạn theo đoạn văn hoặc chương. Chọn chiến lược cho số liệu hiệu suất tốt nhất.",
@@ -26,8 +36,15 @@
     {
       "number": 2,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một ứng dụng RAG để trả lời các câu hỏi của người dùng về các quy định kỹ thuật khi họ học một môn thể thao mới. Các bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is designing a RAG application for answering user questions on technical regulations as they learn a new sport. What are the steps needed to build this RAG application and deploy it?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang thiết kế một ứng dụng RAG để trả lời các câu hỏi của người dùng về các quy định kỹ thuật khi họ học một môn thể thao mới. Các bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
+      "options_en": [
+        "Ingest documents from a source –> Index the documents and saves to Vector Search –> User submits queries against an LLM –> LLM retrieves relevant documents –> Evaluate model –> LLM generates a response –> Deploy it using Model Serving",
+        "Ingest documents from a source –> Index the documents and save to Vector Search –> User submits queries against an LLM –> LLM retrieves relevant documents –> LLM generates a response -> Evaluate model –> Deploy it using Model Serving",
+        "Ingest documents from a source –> Index the documents and save to Vector Search –> Evaluate model –> Deploy it using Model Serving",
+        "User submits queries against an LLM –> Ingest documents from a source –> Index the documents and save to Vector Search –> LLM retrieves relevant documents –> LLM generates a response –> Evaluate model –> Deploy it using Model Serving"
+      ],
+      "options_vi": [
         "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> Đánh giá mô hình -> LLM tạo phản hồi -> Triển khai bằng Model Serving",
         "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> LLM tạo phản hồi -> Đánh giá mô hình -> Triển khai bằng Model Serving",
         "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Đánh giá mô hình -> Triển khai bằng Model Serving",
@@ -42,8 +59,15 @@
     {
       "number": 3,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty tiếp thị kỹ thuật số nhằm hỗ trợ trả lời các câu hỏi về dịch vụ khách hàng. Họ nên theo dõi số liệu (metric) nào cho ứng dụng LLM dịch vụ khách hàng của họ trong môi trường sản xuất (production)?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer just deployed an LLM application at a digital marketing company that assists with answering customer service inquiries.\nWhich metric should they monitor for their customer service LLM application in production?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty tiếp thị kỹ thuật số nhằm hỗ trợ trả lời các câu hỏi về dịch vụ khách hàng. Họ nên theo dõi số liệu (metric) nào cho ứng dụng LLM dịch vụ khách hàng của họ trong môi trường sản xuất (production)?",
+      "options_en": [
+        "Number of customer inquiries processed per unit of time",
+        "Energy usage per query",
+        "Final perplexity scores for the training of the model",
+        "HuggingFace Leaderboard values for the base LLM"
+      ],
+      "options_vi": [
         "Số lượng câu hỏi của khách hàng được xử lý trên một đơn vị thời gian",
         "Năng lượng sử dụng cho mỗi truy vấn",
         "Điểm perplexity cuối cùng khi huấn luyện mô hình",
@@ -58,8 +82,15 @@
     {
       "number": 4,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống AI Tạo sinh gợi ý thành viên nhóm nhân viên phù hợp nhất cho các dự án mới được lập kế hoạch. Thành viên nhóm được chọn từ một đội ngũ rất lớn. Việc lựa chọn phải dựa trên sự sẵn sàng về lịch trình của dự án và mức độ phù hợp giữa hồ sơ của nhân viên với phạm vi dự án. Cả hồ sơ nhân viên và phạm vi dự án đều là văn bản phi cấu trúc (unstructured text). Kỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống của họ như thế nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a Generative AI system that suggests the best matched employee team member to newly scoped projects. The team member is selected from a very large team. The match should be based upon project date availability and how well their employee profile matches the project scope. Both the employee profile and project scope are unstructured text.\nHow should the Generative Al Engineer architect their system?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống AI Tạo sinh gợi ý thành viên nhóm nhân viên phù hợp nhất cho các dự án mới được lập kế hoạch. Thành viên nhóm được chọn từ một đội ngũ rất lớn. Việc lựa chọn phải dựa trên sự sẵn sàng về lịch trình của dự án và mức độ phù hợp giữa hồ sơ của nhân viên với phạm vi dự án. Cả hồ sơ nhân viên và phạm vi dự án đều là văn bản phi cấu trúc (unstructured text). Kỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống của họ như thế nào?",
+      "options_en": [
+        "Create a tool for finding available team members given project dates. Embed all project scopes into a vector store, perform a retrieval using team member profiles to find the best team member.",
+        "Create a tool for finding team member availability given project dates, and another tool that uses an LLM to extract keywords from project scopes. Iterate through available team members’ profiles and perform keyword matching to find the best available team member.",
+        "Create a tool to find available team members given project dates. Create a second tool that can calculate a similarity score for a combination of team member profile and the project scope. Iterate through the team members and rank by best score to select a team member.",
+        "Create a tool for finding available team members given project dates. Embed team profiles into a vector store and use the project scope and filtering to perform retrieval to find the available best matched team members."
+      ],
+      "options_vi": [
         "Tạo một công cụ để tìm các thành viên có sẵn theo ngày của dự án. Nhúng tất cả các phạm vi dự án vào cơ sở dữ liệu vector, thực hiện truy xuất sử dụng hồ sơ nhân viên để tìm thành viên phù hợp nhất.",
         "Tạo một công cụ để tìm tính sẵn sàng của thành viên theo ngày dự án, và một công cụ khác sử dụng LLM để trích xuất từ khóa từ phạm vi dự án. Lặp qua hồ sơ của các thành viên có sẵn và thực hiện khớp từ khóa để tìm thành viên tốt nhất có sẵn.",
         "Tạo một công cụ để tìm các thành viên có sẵn theo ngày dự án. Tạo công cụ thứ hai có thể tính toán điểm tương đồng cho sự kết hợp giữa hồ sơ nhân viên và phạm vi dự án. Lặp qua các thành viên và xếp hạng theo điểm số cao nhất để chọn thành viên.",
@@ -74,8 +105,15 @@
     {
       "number": 5,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một nền tảng bình luận thể thao trực tiếp được hỗ trợ bởi LLM. Nền tảng này cung cấp các cập nhật theo thời gian thực và phân tích do LLM tạo ra cho những người dùng muốn có bản tóm tắt trực tiếp, thay vì đọc một loạt các bài báo tin tức có khả năng lỗi thời. Công cụ nào dưới đây sẽ cho phép nền tảng truy cập dữ liệu theo thời gian thực để tạo các bài phân tích trận đấu dựa trên tỷ số mới nhất?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is designing an LLM-powered live sports commentary platform. The platform provides real-time updates and LLM-generated analyses for any users who would like to have live summaries, rather than reading a series of potentially outdated news articles.\nWhich tool below will give the platform access to real-time data for generating game analyses based on the latest game scores?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang thiết kế một nền tảng bình luận thể thao trực tiếp được hỗ trợ bởi LLM. Nền tảng này cung cấp các cập nhật theo thời gian thực và phân tích do LLM tạo ra cho những người dùng muốn có bản tóm tắt trực tiếp, thay vì đọc một loạt các bài báo tin tức có khả năng lỗi thời. Công cụ nào dưới đây sẽ cho phép nền tảng truy cập dữ liệu theo thời gian thực để tạo các bài phân tích trận đấu dựa trên tỷ số mới nhất?",
+      "options_en": [
+        "DatabricksIQ",
+        "Foundation Model APIs",
+        "Feature Serving",
+        "AutoML"
+      ],
+      "options_vi": [
         "DatabricksIQ",
         "Foundation Model APIs",
         "Feature Serving",
@@ -90,8 +128,15 @@
     {
       "number": 6,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh có một endpoint phục vụ mô hình (model serving endpoint) với thông lượng được cấp phát (provisioned throughput) thuộc một ứng dụng RAG và muốn theo dõi các yêu cầu đến (incoming requests) cũng như phản hồi đi (outgoing responses) của endpoint này. Cách tiếp cận hiện tại là đưa vào một micro-service nằm giữa endpoint và giao diện người dùng để ghi log sang một máy chủ từ xa. Thay vào đó, họ nên sử dụng tính năng nào của Databricks để thực hiện cùng một nhiệm vụ?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has a provisioned throughput model serving endpoint as part of a RAG application and would like to monitor the serving endpoint’s incoming requests and outgoing responses. The current approach is to include a micro-service in between the endpoint and the user interface to write logs to a remote server.\nWhich Databricks feature should they use instead which will perform the same task?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh có một endpoint phục vụ mô hình (model serving endpoint) với thông lượng được cấp phát (provisioned throughput) thuộc một ứng dụng RAG và muốn theo dõi các yêu cầu đến (incoming requests) cũng như phản hồi đi (outgoing responses) của endpoint này. Cách tiếp cận hiện tại là đưa vào một micro-service nằm giữa endpoint và giao diện người dùng để ghi log sang một máy chủ từ xa. Thay vào đó, họ nên sử dụng tính năng nào của Databricks để thực hiện cùng một nhiệm vụ?",
+      "options_en": [
+        "Vector Search",
+        "Lakeview",
+        "DBSQL",
+        "Inference Tables"
+      ],
+      "options_vi": [
         "Vector Search",
         "Lakeview",
         "DBSQL",
@@ -106,8 +151,15 @@
     {
       "number": 7,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ cải thiện chất lượng ứng dụng RAG bằng cách giải quyết các đầu ra có tính chất kích động. Hành động nào sẽ hiệu quả nhất trong việc giảm thiểu vấn đề đầu ra văn bản phản cảm?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is tasked with improving the RAG quality by addressing its inflammatory outputs.\nWhich action would be most effective in mitigating the problem of offensive text outputs?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ cải thiện chất lượng ứng dụng RAG bằng cách giải quyết các đầu ra có tính chất kích động. Hành động nào sẽ hiệu quả nhất trong việc giảm thiểu vấn đề đầu ra văn bản phản cảm?",
+      "options_en": [
+        "Increase the frequency of upstream data updates",
+        "Inform the user of the expected RAG behavior",
+        "Restrict access to the data sources to a limited number of users",
+        "Curate upstream data properly that includes manual review before it is fed into the RAG system"
+      ],
+      "options_vi": [
         "Tăng tần suất cập nhật dữ liệu nguồn (upstream data)",
         "Thông báo cho người dùng về hành vi dự kiến của RAG",
         "Hạn chế quyền truy cập vào các nguồn dữ liệu đối với một số lượng người dùng giới hạn",
@@ -122,8 +174,15 @@
     {
       "number": 8,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một ứng dụng dựa trên LLM. Các tài liệu dành cho bộ truy xuất (retriever) của nó đã được phân tách với tối đa 512 token mỗi đoạn (chunk). Kỹ sư AI Tạo sinh biết rằng chi phí và độ trễ quan trọng hơn chất lượng đối với ứng dụng này. Họ có một số tùy chọn về độ dài ngữ cảnh (context length) để lựa chọn. Tùy chọn nào sẽ đáp ứng nhu cầu của họ?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is creating an LLM-based application. The documents for its retriever have been chunked to a maximum of 512 tokens each. The Generative Al Engineer knows that cost and latency are more important than quality for this application. They have several context length levels to choose from.\nWhich will fulfill their need?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang tạo ra một ứng dụng dựa trên LLM. Các tài liệu dành cho bộ truy xuất (retriever) của nó đã được phân tách với tối đa 512 token mỗi đoạn (chunk). Kỹ sư AI Tạo sinh biết rằng chi phí và độ trễ quan trọng hơn chất lượng đối với ứng dụng này. Họ có một số tùy chọn về độ dài ngữ cảnh (context length) để lựa chọn. Tùy chọn nào sẽ đáp ứng nhu cầu của họ?",
+      "options_en": [
+        "context length 514; smallest model is 0.44GB and embedding dimension 768",
+        "context length 2048: smallest model is 11GB and embedding dimension 2560",
+        "context length 32768: smallest model is 14GB and embedding dimension 4096",
+        "context length 512: smallest model is 0.13GB and embedding dimension 384"
+      ],
+      "options_vi": [
         "độ dài ngữ cảnh 514; mô hình nhỏ nhất là 0.44GB và số chiều nhúng là 768",
         "độ dài ngữ cảnh 2048: mô hình nhỏ nhất là 11GB và số chiều nhúng là 2560",
         "độ dài ngữ cảnh 32768: mô hình nhỏ nhất là 14GB và số chiều nhúng là 4096",
@@ -138,8 +197,15 @@
     {
       "number": 9,
       "type": "single_choice",
-      "prompt": "Một startup quy mô nhỏ và chú trọng về chi phí trong lĩnh vực nghiên cứu ung thư muốn xây dựng một ứng dụng RAG sử dụng Foundation Model APIs. Chiến lược nào sẽ cho phép startup xây dựng một ứng dụng RAG chất lượng tốt trong khi vẫn tiết kiệm chi phí và có thể phục vụ nhu cầu của khách hàng?",
-      "options": [
+      "prompt_en": "A small and cost-conscious startup in the cancer research field wants to build a RAG application using Foundation Model APIs.\nWhich strategy would allow the startup to build a good-quality RAG application while being cost-conscious and able to cater to customer needs?",
+      "prompt_vi": "Một startup quy mô nhỏ và chú trọng về chi phí trong lĩnh vực nghiên cứu ung thư muốn xây dựng một ứng dụng RAG sử dụng Foundation Model APIs. Chiến lược nào sẽ cho phép startup xây dựng một ứng dụng RAG chất lượng tốt trong khi vẫn tiết kiệm chi phí và có thể phục vụ nhu cầu của khách hàng?",
+      "options_en": [
+        "Limit the number of relevant documents available for the RAG application to retrieve from",
+        "Pick a smaller LLM that is domain-specific",
+        "Limit the number of queries a customer can send per day",
+        "Use the largest LLM possible because that gives the best performance for any general queries"
+      ],
+      "options_vi": [
         "Giới hạn số lượng tài liệu liên quan có sẵn để ứng dụng RAG truy xuất",
         "Chọn một LLM nhỏ hơn, chuyên biệt cho lĩnh vực cụ thể (domain-specific)",
         "Giới hạn số lượng truy vấn mà khách hàng có thể gửi mỗi ngày",
@@ -154,8 +220,16 @@
     {
       "number": 10,
       "type": "multiple_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh chịu trách nhiệm phát triển một chatbot để giúp đội ngũ Tổng đài Hỗ trợ nội bộ (HelpDesk Call Center) của công ty tìm kiếm các ticket liên quan nhanh hơn và cung cấp giải pháp. Trong quá trình tạo bảng phân chia công việc cho dự án GenAI này, họ nhận ra cần phải bắt đầu lên kế hoạch chọn các nguồn dữ liệu (Unity Catalog volume hoặc bảng Delta) cho ứng dụng. Họ đã thu thập một số nguồn dữ liệu ứng viên để xem xét:\ncall_rep_history: một bảng Delta với khóa chính representative_id, call_id. Bảng này được duy trì để tính toán thời gian giải quyết cuộc gọi của tổng đài viên từ các trường call_duration và call_start_time.\ntranscript Volume: một Unity Catalog Volume chứa tất cả các bản ghi âm dưới dạng tệp *.wav, và các bản ghi (transcript) văn bản dưới dạng tệp *.txt.\ncall_cust_history: một bảng Delta với khóa chính customer_id, call_id. Bảng này được duy trì để tính toán mức độ sử dụng HelpDesk của khách hàng nội bộ nhằm đảm bảo mô hình tính phí phù hợp với việc sử dụng dịch vụ thực tế.\ncall_detail: một bảng Delta bao gồm ảnh chụp nhanh (snapshot) chi tiết tất cả các cuộc gọi được cập nhật hàng giờ. Nó bao gồm các trường nguyên nhân gốc rễ (root_cause) và giải pháp (resolution), mặc dù các trường này có thể trống đối với các cuộc gọi vẫn đang hoạt động.\nmaintenance_schedule – một bảng Delta bao gồm danh sách các sự cố của ứng dụng HelpDesk cũng như lịch trình bảo trì dự kiến sắp tới.\nHọ cần những nguồn có thể bổ sung ngữ cảnh (context) tốt nhất để xác định nguyên nhân gốc rễ và giải pháp của ticket.\nHai nguồn nào thực hiện điều đó? (Chọn hai.)",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is responsible for developing a chatbot to enable their company’s internal HelpDesk Call Center team to more quickly find related tickets and provide resolution. While creating the GenAI application work breakdown tasks for this project, they realize they need to start planning which data sources (either Unity Catalog volume or Delta table) they could choose for this application. They have collected several candidate data sources for consideration: call_rep_history: a Delta table with primary keys representative_id, call_id. This table is maintained to calculate representatives’ call resolution from fields call_duration and call start_time. transcript Volume: a Unity Catalog Volume of all recordings as a *.wav files, but also a text transcript as *.txt files. call_cust_history: a Delta table with primary keys customer_id, cal1_id. This table is maintained to calculate how much internal customers use the HelpDesk to make sure that the charge back model is consistent with actual service use. call_detail: a Delta table that includes a snapshot of all call details updated hourly. It includes root_cause and resolution fields, but those fields may be empty for calls that are still active. maintenance_schedule – a Delta table that includes a listing of both HelpDesk application outages as well as planned upcoming maintenance downtimes.\nThey need sources that could add context to best identify ticket root cause and resolution.\nWhich TWO sources do that? (Choose two.)",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh chịu trách nhiệm phát triển một chatbot để giúp đội ngũ Tổng đài Hỗ trợ nội bộ (HelpDesk Call Center) của công ty tìm kiếm các ticket liên quan nhanh hơn và cung cấp giải pháp. Trong quá trình tạo bảng phân chia công việc cho dự án GenAI này, họ nhận ra cần phải bắt đầu lên kế hoạch chọn các nguồn dữ liệu (Unity Catalog volume hoặc bảng Delta) cho ứng dụng. Họ đã thu thập một số nguồn dữ liệu ứng viên để xem xét:\ncall_rep_history: một bảng Delta với khóa chính representative_id, call_id. Bảng này được duy trì để tính toán thời gian giải quyết cuộc gọi của tổng đài viên từ các trường call_duration và call_start_time.\ntranscript Volume: một Unity Catalog Volume chứa tất cả các bản ghi âm dưới dạng tệp *.wav, và các bản ghi (transcript) văn bản dưới dạng tệp *.txt.\ncall_cust_history: một bảng Delta với khóa chính customer_id, call_id. Bảng này được duy trì để tính toán mức độ sử dụng HelpDesk của khách hàng nội bộ nhằm đảm bảo mô hình tính phí phù hợp với việc sử dụng dịch vụ thực tế.\ncall_detail: một bảng Delta bao gồm ảnh chụp nhanh (snapshot) chi tiết tất cả các cuộc gọi được cập nhật hàng giờ. Nó bao gồm các trường nguyên nhân gốc rễ (root_cause) và giải pháp (resolution), mặc dù các trường này có thể trống đối với các cuộc gọi vẫn đang hoạt động.\nmaintenance_schedule – một bảng Delta bao gồm danh sách các sự cố của ứng dụng HelpDesk cũng như lịch trình bảo trì dự kiến sắp tới.\nHọ cần những nguồn có thể bổ sung ngữ cảnh (context) tốt nhất để xác định nguyên nhân gốc rễ và giải pháp của ticket.\nHai nguồn nào thực hiện điều đó? (Chọn hai.)",
+      "options_en": [
+        "call_cust_history",
+        "maintenance_schedule",
+        "call_rep_history",
+        "call_detail",
+        "transcript Volume"
+      ],
+      "options_vi": [
         "call_cust_history",
         "maintenance_schedule",
         "call_rep_history",
@@ -172,8 +246,15 @@
     {
       "number": 11,
       "type": "single_choice",
-      "prompt": "Thư viện nào phù hợp nhất để xây dựng một quy trình công việc (workflow) đa bước dựa trên LLM?",
-      "options": [
+      "prompt_en": "What is the most suitable library for building a multi-step LLM-based workflow?",
+      "prompt_vi": "Thư viện nào phù hợp nhất để xây dựng một quy trình công việc (workflow) đa bước dựa trên LLM?",
+      "options_en": [
+        "Pandas",
+        "TensorFlow",
+        "PySpark",
+        "LangChain"
+      ],
+      "options_vi": [
         "Pandas",
         "TensorFlow",
         "PySpark",
@@ -188,8 +269,15 @@
     {
       "number": 12,
       "type": "single_choice",
-      "prompt": "Khi phát triển một ứng dụng LLM, điều cốt yếu là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu về cấp phép (licensing) để tránh rủi ro pháp lý.\nHành động nào KHÔNG phù hợp để tránh rủi ro pháp lý?",
-      "options": [
+      "prompt_en": "When developing an LLM application, it’s crucial to ensure that the data used for training the model complies with licensing requirements to avoid legal risks.\nWhich action is NOT appropriate to avoid legal risks?",
+      "prompt_vi": "Khi phát triển một ứng dụng LLM, điều cốt yếu là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu về cấp phép (licensing) để tránh rủi ro pháp lý.\nHành động nào KHÔNG phù hợp để tránh rủi ro pháp lý?",
+      "options_en": [
+        "Reach out to the data curators directly before you have started using the trained model to let them know.",
+        "Use any available data you personally created which is completely original and you can decide what license to use.",
+        "Only use data explicitly labeled with an open license and ensure the license terms are followed.",
+        "Reach out to the data curators directly after you have started using the trained model to let them know."
+      ],
+      "options_vi": [
         "Liên hệ trực tiếp với người quản lý dữ liệu (data curators) trước khi bạn bắt đầu sử dụng mô hình đã huấn luyện để thông báo cho họ.",
         "Sử dụng bất kỳ dữ liệu có sẵn nào mà bạn tự tạo ra, hoàn toàn là bản gốc và bạn có quyền quyết định sử dụng giấy phép nào.",
         "Chỉ sử dụng dữ liệu được dán nhãn rõ ràng với một giấy phép mở (open license) và đảm bảo các điều khoản giấy phép được tuân thủ.",
@@ -204,8 +292,15 @@
     {
       "number": 13,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang thử nghiệm một mẫu prompt (prompt template) đơn giản trong LangChain bằng đoạn mã dưới đây, nhưng gặp phải lỗi.\n\nfrom langchain.chains import LLMChain\nfrom langchain_community.llms import OpenAI\nfrom langchain_core.prompts import PromptTemplate\n\nprompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])\n\nGiả sử khóa API (API key) đã được định nghĩa chính xác, Kỹ sư AI Tạo sinh cần thực hiện thay đổi nào để sửa chuỗi (chain) của họ?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is testing a simple prompt template in LangChain using the code below, but is getting an error.\n\nfrom langchain.chains import LLMChain\nfrom langchain_community.llms import OpenAI\nfrom langchain_core.prompts import PromptTemplate\n\nprompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])\n\nAssuming the API key was properly defined, what change does the Generative AI Engineer need to make to fix their chain?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang thử nghiệm một mẫu prompt (prompt template) đơn giản trong LangChain bằng đoạn mã dưới đây, nhưng gặp phải lỗi.\n\nfrom langchain.chains import LLMChain\nfrom langchain_community.llms import OpenAI\nfrom langchain_core.prompts import PromptTemplate\n\nprompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])\n\nGiả sử khóa API (API key) đã được định nghĩa chính xác, Kỹ sư AI Tạo sinh cần thực hiện thay đổi nào để sửa chuỗi (chain) của họ?",
+      "options_en": [
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate(\"funny\")",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt.format(\"funny\"))\nllm.generate()",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template,\n    llm=OpenAI()\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(llm=OpenAI(), prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])"
+      ],
+      "options_vi": [
         "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate(\"funny\")",
         "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt.format(\"funny\"))\nllm.generate()",
         "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template,\n    llm=OpenAI()\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])",
@@ -220,8 +315,15 @@
     {
       "number": 14,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM để truy xuất các bài báo từ năm 1918 liên quan đến truy vấn của người dùng và tóm tắt chúng. Kỹ sư nhận thấy rằng các bản tóm tắt được tạo ra rất tốt nhưng thường bao gồm cả một lời giải thích về cách bản tóm tắt đó được tạo ra, điều này là không mong muốn.\nKỹ sư AI Tạo sinh có thể thực hiện thay đổi nào để giảm thiểu vấn đề này?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is creating an LLM system that will retrieve news articles from the year 1918 and related to a user's query and summarize them. The engineer has noticed that the summaries are generated well but often also include an explanation of how the summary was generated, which is undesirable.\nWhich change could the Generative Al Engineer perform to mitigate this issue?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM để truy xuất các bài báo từ năm 1918 liên quan đến truy vấn của người dùng và tóm tắt chúng. Kỹ sư nhận thấy rằng các bản tóm tắt được tạo ra rất tốt nhưng thường bao gồm cả một lời giải thích về cách bản tóm tắt đó được tạo ra, điều này là không mong muốn.\nKỹ sư AI Tạo sinh có thể thực hiện thay đổi nào để giảm thiểu vấn đề này?",
+      "options_en": [
+        "Split the LLM output by newline characters to truncate away the summarization explanation.",
+        "Tune the chunk size of news articles or experiment with different embedding models.",
+        "Revisit their document ingestion logic, ensuring that the news articles are being ingested properly.",
+        "Provide few shot examples of desired output format to the system and/or user prompt."
+      ],
+      "options_vi": [
         "Tách đầu ra của LLM bằng các ký tự xuống dòng để cắt bỏ phần giải thích quá trình tóm tắt.",
         "Điều chỉnh kích thước phân đoạn (chunk size) của các bài báo hoặc thử nghiệm với các mô hình nhúng khác nhau.",
         "Xem xét lại logic thu thập tài liệu (document ingestion) của họ, đảm bảo rằng các bài báo được thu thập đúng cách.",
@@ -236,8 +338,15 @@
     {
       "number": 15,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM để trả lời các câu hỏi về chính sách nội bộ của công ty. Kỹ sư AI Tạo sinh phải đảm bảo rằng ứng dụng không bị ảo giác (hallucinate) hoặc rò rỉ dữ liệu mật.\nPhương pháp nào KHÔNG nên được sử dụng để giảm thiểu ảo giác hoặc rò rỉ dữ liệu mật?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer has developed an LLM application to answer questions about internal company policies. The Generative AI Engineer must ensure that the application doesn’t hallucinate or leak confidential data.\nWhich approach should NOT be used to mitigate hallucination or confidential data leakage?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM để trả lời các câu hỏi về chính sách nội bộ của công ty. Kỹ sư AI Tạo sinh phải đảm bảo rằng ứng dụng không bị ảo giác (hallucinate) hoặc rò rỉ dữ liệu mật.\nPhương pháp nào KHÔNG nên được sử dụng để giảm thiểu ảo giác hoặc rò rỉ dữ liệu mật?",
+      "options_en": [
+        "Add guardrails to filter outputs from the LLM before it is shown to the user",
+        "Fine-tune the model on your data, hoping it will learn what is appropriate and not",
+        "Limit the data available based on the user’s access level",
+        "Use a strong system prompt to ensure the model aligns with your needs."
+      ],
+      "options_vi": [
         "Thêm các rào chắn (guardrails) để lọc đầu ra từ LLM trước khi hiển thị cho người dùng.",
         "Tinh chỉnh (fine-tune) mô hình trên dữ liệu của bạn, với hy vọng nó sẽ học được điều gì là phù hợp và điều gì không.",
         "Giới hạn dữ liệu có sẵn dựa trên cấp độ truy cập của người dùng.",
@@ -252,8 +361,15 @@
     {
       "number": 16,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh tương tác với một LLM thông qua hành vi prompt/phản hồi được huấn luyện trên các cuộc gọi của khách hàng hỏi về tình trạng có sẵn của sản phẩm. LLM được thiết kế để chỉ xuất ra \"In Stock\" nếu sản phẩm có sẵn hoặc chỉ từ \"Out of Stock\" nếu không.\nPrompt nào sẽ hoạt động để cho phép kỹ sư trả lời chính xác các nhãn phân loại cuộc gọi?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer interfaces with an LLM with prompt/response behavior that has been trained on customer calls inquiring about product availability. The LLM is designed to output “In Stock” if the product is available or only the term “Out of Stock” if not.\nWhich prompt will work to allow the engineer to respond to call classification labels correctly?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh tương tác với một LLM thông qua hành vi prompt/phản hồi được huấn luyện trên các cuộc gọi của khách hàng hỏi về tình trạng có sẵn của sản phẩm. LLM được thiết kế để chỉ xuất ra \"In Stock\" nếu sản phẩm có sẵn hoặc chỉ từ \"Out of Stock\" nếu không.\nPrompt nào sẽ hoạt động để cho phép kỹ sư trả lời chính xác các nhãn phân loại cuộc gọi?",
+      "options_en": [
+        "Respond with “In Stock” if the customer asks for a product.",
+        "You will be given a customer call transcript where the customer asks about product availability. The outputs are either “In Stock” or “Out of Stock”. Format the output in JSON, for example: {“call_id”: “123”, “label”: “In Stock”}.",
+        "Respond with “Out of Stock” if the customer asks for a product.",
+        "You will be given a customer call transcript where the customer inquires about product availability. Respond with “In Stock” if the product is available or “Out of Stock” if not."
+      ],
+      "options_vi": [
         "Trả lời \"In Stock\" nếu khách hàng yêu cầu một sản phẩm.",
         "Bạn sẽ được cung cấp một bản ghi (transcript) cuộc gọi của khách hàng, trong đó khách hàng hỏi về sự có sẵn của sản phẩm. Kết quả đầu ra là \"In Stock\" hoặc \"Out of Stock\". Định dạng đầu ra dưới dạng JSON, ví dụ: {\"call_id\": \"123\", \"label\": \"In Stock\"}.",
         "Trả lời \"Out of Stock\" nếu khách hàng yêu cầu một sản phẩm.",
@@ -268,8 +384,15 @@
     {
       "number": 17,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng RAG nhằm giúp một nhóm nhỏ các chuyên gia nội bộ tại công ty trả lời các câu hỏi cụ thể, được hỗ trợ bởi cơ sở tri thức nội bộ. Họ muốn chất lượng câu trả lời tốt nhất có thể, và cả độ trễ lẫn thông lượng đều không phải là mối quan tâm lớn do nhóm người dùng nhỏ và họ sẵn sàng chờ đợi câu trả lời tốt nhất. Các chủ đề có tính chất nhạy cảm và dữ liệu rất bảo mật, do đó, theo các yêu cầu quy định, không có thông tin nào được phép truyền đến các bên thứ ba.\nMô hình nào đáp ứng tất cả các nhu cầu của Kỹ sư AI Tạo sinh trong tình huống này?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is tasked with developing a RAG application that will help a small internal group of experts at their company answer specific questions, augmented by an internal knowledge base. They want the best possible quality in the answers, and neither latency nor throughput is a huge concern given that the user group is small and they’re willing to wait for the best answer. The topics are sensitive in nature and the data is highly confidential and so, due to regulatory requirements, none of the information is allowed to be transmitted to third parties.\nWhich model meets all the Generative Al Engineer’s needs in this situation?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng RAG nhằm giúp một nhóm nhỏ các chuyên gia nội bộ tại công ty trả lời các câu hỏi cụ thể, được hỗ trợ bởi cơ sở tri thức nội bộ. Họ muốn chất lượng câu trả lời tốt nhất có thể, và cả độ trễ lẫn thông lượng đều không phải là mối quan tâm lớn do nhóm người dùng nhỏ và họ sẵn sàng chờ đợi câu trả lời tốt nhất. Các chủ đề có tính chất nhạy cảm và dữ liệu rất bảo mật, do đó, theo các yêu cầu quy định, không có thông tin nào được phép truyền đến các bên thứ ba.\nMô hình nào đáp ứng tất cả các nhu cầu của Kỹ sư AI Tạo sinh trong tình huống này?",
+      "options_en": [
+        "Dolly 1.5B",
+        "OpenAI GPT-4",
+        "BGE-large",
+        "Llama2-70B"
+      ],
+      "options_vi": [
         "Dolly 1.5B",
         "OpenAI GPT-4",
         "BGE-large",
@@ -284,8 +407,15 @@
     {
       "number": 18,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh muốn một LLM tạo dữ liệu JSON có định dạng từ các email. Điều này sẽ yêu cầu phân tích và trích xuất các thông tin sau: order ID (mã đơn hàng), date (ngày), và sender email (email người gửi). Dưới đây là một email mẫu:\n\nDate: April 23, 2024\nTime: 4:22 PM\nFrom: anjali.thayer@computex.org\nTo: cust_service@realtek.com\nSubject: Shipment details\n\nHey there,\n\nI have a shipment (order ID is CD34RFT) can you please send me an update?\n\nThank you,\nAnjali\n\nHọ sẽ cần viết một prompt để trích xuất các thông tin liên quan ở định dạng JSON với mức độ chính xác đầu ra cao nhất.\nPrompt nào sẽ làm được điều đó?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer would like an LLM to generate formatted JSON from emails. This will require parsing and extracting the following information: order ID, date, and sender email. Here’s a sample email:\n\nDate: April 23, 2024\nTime: 4:22 PM\nFrom: anjali.thayer@computex.org\nTo: cust_service@realtek.com\nSubject: Shipment details\n\nHey there,\n\nI have a shipment (order ID is CD34RFT) can you please send me an update?\n\nThank you,\nAnjali\n\nThey will need to write a prompt that will extract the relevant information in JSON format with the highest level of output accuracy.\nWhich prompt will do that?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh muốn một LLM tạo dữ liệu JSON có định dạng từ các email. Điều này sẽ yêu cầu phân tích và trích xuất các thông tin sau: order ID (mã đơn hàng), date (ngày), và sender email (email người gửi). Dưới đây là một email mẫu:\n\nDate: April 23, 2024\nTime: 4:22 PM\nFrom: anjali.thayer@computex.org\nTo: cust_service@realtek.com\nSubject: Shipment details\n\nHey there,\n\nI have a shipment (order ID is CD34RFT) can you please send me an update?\n\nThank you,\nAnjali\n\nHọ sẽ cần viết một prompt để trích xuất các thông tin liên quan ở định dạng JSON với mức độ chính xác đầu ra cao nhất.\nPrompt nào sẽ làm được điều đó?",
+      "options_en": [
+        "You will receive customer emails and need to extract date, sender email, and order ID. You should return the date, sender email, and order ID information in JSON format.",
+        "You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format.\nHere’s an example: {“date”: “April 16, 2024”, “sender_email”: “[email protected]”, “order_id”: “RE987D”}",
+        "You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in a human-readable format.",
+        "You will receive customer emails and need to extract date, sender email, and order IReturn the extracted information in JSON format."
+      ],
+      "options_vi": [
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Bạn nên trả về thông tin ngày, email người gửi và ID đơn hàng ở định dạng JSON.",
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Trả về thông tin được trích xuất ở định dạng JSON.\nDưới đây là một ví dụ: {\"date\": \"April 16, 2024\", \"sender_email\": \"test@test.com\", \"order_id\": \"RE987D\"}",
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Trả về thông tin được trích xuất ở định dạng con người có thể đọc được.",
@@ -300,8 +430,15 @@
     {
       "number": 19,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã được yêu cầu xây dựng một ứng dụng hỏi-đáp (question-answering) dựa trên LLM. Ứng dụng này phải tính đến các tài liệu mới thường xuyên được xuất bản. Kỹ sư muốn xây dựng ứng dụng này với chi phí thấp nhất và công sức phát triển ít nhất, đồng thời vận hành với chi phí thấp nhất có thể.\nSự kết hợp nào của các thành phần chuỗi (chaining components) và cấu hình đáp ứng các yêu cầu này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has been asked to build an LLM-based question-answering application. The application should take into account new documents that are frequently published. The engineer wants to build this application with the least cost and least development effort and have it operate at the lowest cost possible.\nWhich combination of chaining components and configuration meets these requirements?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã được yêu cầu xây dựng một ứng dụng hỏi-đáp (question-answering) dựa trên LLM. Ứng dụng này phải tính đến các tài liệu mới thường xuyên được xuất bản. Kỹ sư muốn xây dựng ứng dụng này với chi phí thấp nhất và công sức phát triển ít nhất, đồng thời vận hành với chi phí thấp nhất có thể.\nSự kết hợp nào của các thành phần chuỗi (chaining components) và cấu hình đáp ứng các yêu cầu này?",
+      "options_en": [
+        "For the application a prompt, a retriever, and an LLM are required. The retriever output is inserted into the prompt which is given to the LLM to generate answers.",
+        "The LLM needs to be frequently with the new documents in order to provide most up-to-date answers.",
+        "For the question-answering application, prompt engineering and an LLM are required to generate answers.",
+        "For the application a prompt, an agent and a fine-tuned LLM are required. The agent is used by the LLM to retrieve relevant content that is inserted into the prompt which is given to the LLM to generate answers."
+      ],
+      "options_vi": [
         "Đối với ứng dụng, cần có một prompt, một bộ truy xuất (retriever) và một LLM. Đầu ra của bộ truy xuất được chèn vào prompt, sau đó được cung cấp cho LLM để tạo câu trả lời.",
         "LLM cần được thường xuyên cập nhật bằng các tài liệu mới (fine-tune) để cung cấp các câu trả lời cập nhật nhất.",
         "Đối với ứng dụng hỏi-đáp, chỉ cần kỹ thuật prompt (prompt engineering) và một LLM để tạo câu trả lời.",
@@ -316,8 +453,15 @@
     {
       "number": 20,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM dựa trên tác tử (agent-based) cho đội xe tải quái vật (monster truck) yêu thích của họ. Hệ thống có thể trả lời các câu hỏi bằng văn bản về đội xe, tra cứu ngày sự kiện thông qua một lệnh gọi API, hoặc truy vấn các bảng về bảng xếp hạng mới nhất của đội.\nKỹ sư AI Tạo sinh nên thiết kế các khả năng này vào hệ thống của họ như thế nào là tốt nhất?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is creating an agent-based LLM system for their favorite monster truck team. The system can answer text based questions about the monster truck team, lookup event dates via an API call, or query tables on the team’s latest standings.\nHow could the Generative AI Engineer best design these capabilities into their system?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM dựa trên tác tử (agent-based) cho đội xe tải quái vật (monster truck) yêu thích của họ. Hệ thống có thể trả lời các câu hỏi bằng văn bản về đội xe, tra cứu ngày sự kiện thông qua một lệnh gọi API, hoặc truy vấn các bảng về bảng xếp hạng mới nhất của đội.\nKỹ sư AI Tạo sinh nên thiết kế các khả năng này vào hệ thống của họ như thế nào là tốt nhất?",
+      "options_en": [
+        "Ingest PDF documents about the monster truck team into a vector store and query it in a RAG architecture.",
+        "Write a system prompt for the agent listing available tools and bundle it into an agent system that runs a number of calls to solve a query.",
+        "Instruct the LLM to respond with “RAG”, “API”, or “TABLE” depending on the query, then use text parsing and conditional statements to resolve the query.",
+        "Build a system prompt with all possible event dates and table information in the system prompt. Use a RAG architecture to lookup generic text questions and otherwise leverage the information in the system prompt."
+      ],
+      "options_vi": [
         "Thu thập các tài liệu PDF về đội xe tải vào một cơ sở dữ liệu vector và truy vấn nó trong kiến trúc RAG.",
         "Viết một system prompt cho agent liệt kê các công cụ có sẵn và gói nó vào một hệ thống agent thực hiện một số bước gọi công cụ để giải quyết một truy vấn.",
         "Hướng dẫn LLM trả lời bằng \"RAG\", \"API\" hoặc \"TABLE\" tùy thuộc vào truy vấn, sau đó sử dụng phân tích văn bản và các câu lệnh điều kiện để giải quyết truy vấn.",
@@ -332,8 +476,15 @@
     {
       "number": 21,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) được yêu cầu thiết kế một ứng dụng dựa trên LLM để hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi về nhân sự của nhân viên bằng cách sử dụng tài liệu PDF nhân sự.\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các tác vụ cấp cao nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has been asked to design an LLM-based application that accomplishes the following business objective: answer employee HR questions using HR PDF documentation.\nWhich set of high level tasks should the Generative AI Engineer's system perform?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) được yêu cầu thiết kế một ứng dụng dựa trên LLM để hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi về nhân sự của nhân viên bằng cách sử dụng tài liệu PDF nhân sự.\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các tác vụ cấp cao nào?",
+      "options_en": [
+        "Calculate averaged embeddings for each HR document, compare embeddings to user query to find the best document. Pass the best document with the user query into an LLM with a large context window to generate a response to the employee.",
+        "Use an LLM to summarize HR documentation. Provide summaries of documentation and user query into an LLM with a large context window to generate a response to the user.",
+        "Create an interaction matrix of historical employee questions and HR documentation. Use ALS to factorize the matrix and create embeddings. Calculate the embeddings of new queries and use them to find the best HR documentation. Use an LLM to generate a response to the employee question based upon the documentation retrieved.",
+        "Split HR documentation into chunks and embed into a vector store. Use the employee question to retrieve best matched chunks of documentation, and use the LLM to generate a response to the employee based upon the documentation retrieved."
+      ],
+      "options_vi": [
         "Tính toán các embedding trung bình cho mỗi tài liệu nhân sự, so sánh các embedding với truy vấn của người dùng để tìm tài liệu phù hợp nhất. Truyền tài liệu phù hợp nhất cùng với truy vấn của người dùng vào một LLM có cửa sổ ngữ cảnh lớn để tạo câu trả lời cho nhân viên.",
         "Sử dụng LLM để tóm tắt tài liệu nhân sự. Cung cấp các bản tóm tắt tài liệu và truy vấn của người dùng vào một LLM có cửa sổ ngữ cảnh lớn để tạo câu trả lời cho người dùng.",
         "Tạo một ma trận tương tác của các câu hỏi lịch sử của nhân viên và tài liệu nhân sự. Sử dụng ALS để nhân tử hóa ma trận và tạo các embedding. Tính toán các embedding của các truy vấn mới và sử dụng chúng để tìm tài liệu nhân sự phù hợp nhất. Sử dụng LLM để tạo câu trả lời cho câu hỏi của nhân viên dựa trên tài liệu được truy xuất.",
@@ -348,8 +499,15 @@
     {
       "number": 22,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty điện tử vừa triển khai một ứng dụng RAG để khách hàng đặt câu hỏi về các sản phẩm mà công ty cung cấp. Tuy nhiên, họ nhận được phản hồi rằng hệ thống RAG thường trả về thông tin về một sản phẩm không liên quan.\nKỹ sư này có thể làm gì để cải thiện mức độ liên quan của câu trả lời từ RAG?",
-      "options": [
+      "prompt_en": "Generative AI Engineer at an electronics company just deployed a RAG application for customers to ask questions about products that the company carries. However, they received feedback that the RAG response often returns information about an irrelevant product.\nWhat can the engineer do to improve the relevance of the RAG’s response?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh tại một công ty điện tử vừa triển khai một ứng dụng RAG để khách hàng đặt câu hỏi về các sản phẩm mà công ty cung cấp. Tuy nhiên, họ nhận được phản hồi rằng hệ thống RAG thường trả về thông tin về một sản phẩm không liên quan.\nKỹ sư này có thể làm gì để cải thiện mức độ liên quan của câu trả lời từ RAG?",
+      "options_en": [
+        "Assess the quality of the retrieved context",
+        "Implement caching for frequently asked questions",
+        "Use a different LLM to improve the generated response",
+        "Use a different semantic similarity search algorithm"
+      ],
+      "options_vi": [
         "Đánh giá chất lượng của ngữ cảnh được truy xuất.",
         "Triển khai bộ nhớ đệm (caching) cho các câu hỏi thường gặp.",
         "Sử dụng một LLM khác để cải thiện câu trả lời được tạo ra.",
@@ -364,8 +522,15 @@
     {
       "number": 23,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot được thiết kế để hỗ trợ người dùng với các truy vấn liên quan đến bảo hiểm. Chatbot được xây dựng trên một mô hình ngôn ngữ lớn (LLM) và có khả năng đàm thoại. Tuy nhiên, để duy trì trọng tâm của chatbot và tuân thủ chính sách của công ty, nó không được cung cấp câu trả lời cho các câu hỏi về chính trị. Thay vào đó, khi gặp các câu hỏi chính trị, chatbot phải trả lời bằng một thông điệp tiêu chuẩn:\n\"Xin lỗi, tôi không thể trả lời điều đó. Tôi là một chatbot chỉ có thể trả lời các câu hỏi xoay quanh bảo hiểm.\"\nLoại framework nào nên được triển khai để giải quyết vấn đề này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing a chatbot designed to assist users with insurance-related queries. The chatbot is built on a large language model (LLM) and is conversational. However, to maintain the chatbot’s focus and to comply with company policy, it must not provide responses to questions about politics. Instead, when presented with political inquiries, the chatbot should respond with a standard message:\n“Sorry, I cannot answer that. I am a chatbot that can only answer questions around insurance.”\nWhich framework type should be implemented to solve this?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot được thiết kế để hỗ trợ người dùng với các truy vấn liên quan đến bảo hiểm. Chatbot được xây dựng trên một mô hình ngôn ngữ lớn (LLM) và có khả năng đàm thoại. Tuy nhiên, để duy trì trọng tâm của chatbot và tuân thủ chính sách của công ty, nó không được cung cấp câu trả lời cho các câu hỏi về chính trị. Thay vào đó, khi gặp các câu hỏi chính trị, chatbot phải trả lời bằng một thông điệp tiêu chuẩn:\n\"Xin lỗi, tôi không thể trả lời điều đó. Tôi là một chatbot chỉ có thể trả lời các câu hỏi xoay quanh bảo hiểm.\"\nLoại framework nào nên được triển khai để giải quyết vấn đề này?",
+      "options_en": [
+        "Safety Guardrail",
+        "Security Guardrail",
+        "Contextual Guardrail",
+        "Compliance Guardrail"
+      ],
+      "options_vi": [
         "Safety Guardrail (Hàng rào an toàn)",
         "Security Guardrail (Hàng rào bảo mật)",
         "Contextual Guardrail (Hàng rào ngữ cảnh)",
@@ -380,8 +545,15 @@
     {
       "number": 24,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang sử dụng đoạn mã dưới đây để thử nghiệm thiết lập một vector store:\n\nfrom databricks.vector_search.client import VectorSearchClient\n\nvsc = VectorSearchClient()\n\nvsc.create_endpoint(\n    name=\"vector_search_test\",\n    endpoint_type=\"STANDARD\"\n)\n\nGiả sử họ dự định sử dụng các embedding được Databricks quản lý (managed embeddings) với mô hình embedding mặc định, lệnh gọi hàm hợp lý tiếp theo sẽ là gì?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer I using the code below to test setting up a vector store:\n\nfrom databricks.vector_search.client import VectorSearchClient\n\nvsc = VectorSearchClient()\n\nvsc.create_endpoint(\n    name=\"vector_search_test\",\n    endpoint_type=\"STANDARD\"\n)\n\nAssuming they intend to use Databricks managed embeddings with the default embedding model, what should be the next logical function call?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang sử dụng đoạn mã dưới đây để thử nghiệm thiết lập một vector store:\n\nfrom databricks.vector_search.client import VectorSearchClient\n\nvsc = VectorSearchClient()\n\nvsc.create_endpoint(\n    name=\"vector_search_test\",\n    endpoint_type=\"STANDARD\"\n)\n\nGiả sử họ dự định sử dụng các embedding được Databricks quản lý (managed embeddings) với mô hình embedding mặc định, lệnh gọi hàm hợp lý tiếp theo sẽ là gì?",
+      "options_en": [
+        "vsc.get_index()",
+        "vsc.create_delta_sync_index()",
+        "vsc.create_direct_access_index()",
+        "vsc.similarity_search()"
+      ],
+      "options_vi": [
         "vsc.get_index()",
         "vsc.create_delta_sync_index()",
         "vsc.create_direct_access_index()",
@@ -396,8 +568,15 @@
     {
       "number": 25,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ triển khai một ứng dụng tận dụng mô hình Pyfunc tùy chỉnh của MLflow để trả về một số kết quả trung gian.\nHọ nên cấu hình endpoint như thế nào để truyền vào các khóa bí mật (secrets) và thông tin xác thực (credentials)?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is tasked with deploying an application that takes advantage of a custom MLflow Pyfunc model to return some interim results.\nHow should they configure the endpoint to pass the secrets and credentials?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ triển khai một ứng dụng tận dụng mô hình Pyfunc tùy chỉnh của MLflow để trả về một số kết quả trung gian.\nHọ nên cấu hình endpoint như thế nào để truyền vào các khóa bí mật (secrets) và thông tin xác thực (credentials)?",
+      "options_en": [
+        "Use spark.conf.set ()",
+        "Pass variables using the Databricks Feature Store API",
+        "Add credentials using environment variables",
+        "Pass the secrets in plain text"
+      ],
+      "options_vi": [
         "Sử dụng spark.conf.set ()",
         "Truyền các biến bằng Databricks Feature Store API",
         "Thêm thông tin xác thực bằng các biến môi trường (environment variables)",
@@ -412,8 +591,15 @@
     {
       "number": 26,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh muốn xây dựng một giải pháp dựa trên LLM để giúp một nhà hàng cải thiện trải nghiệm đặt bàn trực tuyến của khách hàng bằng cách tự động xử lý các câu hỏi phổ biến của khách. Mục tiêu của giải pháp là giảm thiểu việc phải chuyển sự cố sang cho nhân viên can thiệp hoặc gọi điện thoại, trong khi vẫn duy trì tương tác cá nhân hóa. Để thiết kế giải pháp, Kỹ sư AI Tạo sinh cần xác định dữ liệu đầu vào cho LLM và tác vụ mà nó sẽ thực hiện.\nCặp đầu vào/đầu ra nào sẽ hỗ trợ mục tiêu của họ?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer wants to build an LLM-based solution to help a restaurant improve its online customer experience with bookings by automatically handling common customer inquiries. The goal of the solution is to minimize escalations to human intervention and phone calls while maintaining a personalized interaction. To design the solution, the Generative AI Engineer needs to define the input data to the LLM and the task it should perform.\nWhich input/output pair will support their goal?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh muốn xây dựng một giải pháp dựa trên LLM để giúp một nhà hàng cải thiện trải nghiệm đặt bàn trực tuyến của khách hàng bằng cách tự động xử lý các câu hỏi phổ biến của khách. Mục tiêu của giải pháp là giảm thiểu việc phải chuyển sự cố sang cho nhân viên can thiệp hoặc gọi điện thoại, trong khi vẫn duy trì tương tác cá nhân hóa. Để thiết kế giải pháp, Kỹ sư AI Tạo sinh cần xác định dữ liệu đầu vào cho LLM và tác vụ mà nó sẽ thực hiện.\nCặp đầu vào/đầu ra nào sẽ hỗ trợ mục tiêu của họ?",
+      "options_en": [
+        "Input: Online chat logs; Output: Group the chat logs by users, followed by summarizing each user’s interactions",
+        "Input: Online chat logs; Output: Buttons that represent choices for booking details",
+        "Input: Customer reviews; Output: Classify review sentiment",
+        "Input: Online chat logs; Output: Cancellation options"
+      ],
+      "options_vi": [
         "Đầu vào: Nhật ký trò chuyện trực tuyến; Đầu ra: Phân nhóm nhật ký trò chuyện theo người dùng, sau đó tóm tắt các tương tác của từng người dùng",
         "Đầu vào: Nhật ký trò chuyện trực tuyến; Đầu ra: Các nút đại diện cho các lựa chọn về chi tiết đặt bàn",
         "Đầu vào: Các đánh giá của khách hàng; Đầu ra: Phân loại cảm xúc đánh giá",
@@ -428,8 +614,15 @@
     {
       "number": 27,
       "type": "single_choice",
-      "prompt": "Phương pháp nào là hiệu quả để tiền xử lý (preprocess) các prompt bằng mã tùy chỉnh (custom code) trước khi gửi chúng đến LLM?",
-      "options": [
+      "prompt_en": "What is an effective method to preprocess prompts using custom code before sending them to an LLM?",
+      "prompt_vi": "Phương pháp nào là hiệu quả để tiền xử lý (preprocess) các prompt bằng mã tùy chỉnh (custom code) trước khi gửi chúng đến LLM?",
+      "options_en": [
+        "Directly modify the LLM’s internal architecture to include preprocessing steps",
+        "It is better not to introduce custom code to preprocess prompts as the LLM has not been trained with examples of the preprocessed prompts",
+        "Rather than preprocessing prompts, it’s more effective to postprocess the LLM outputs to align the outputs to desired outcomes",
+        "Write a MLflow PyFunc model that has a separate function to process the prompts"
+      ],
+      "options_vi": [
         "Sửa đổi trực tiếp kiến trúc bên trong của LLM để bao gồm các bước tiền xử lý",
         "Tốt hơn là không đưa mã tùy chỉnh vào để tiền xử lý prompt vì LLM chưa được huấn luyện với các ví dụ về các prompt đã tiền xử lý",
         "Thay vì tiền xử lý prompt, sẽ hiệu quả hơn nếu hậu xử lý (postprocess) đầu ra của LLM để căn chỉnh kết quả với mục tiêu mong muốn",
@@ -444,8 +637,15 @@
     {
       "number": 28,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM mà người dùng có thể sử dụng để tạo ra các bài thơ chúc mừng sinh nhật cá nhân hóa dựa trên tên của họ.\nKỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng, với rủi ro từ các đầu vào độc hại của người dùng?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing an LLM application that users can use to generate personalized birthday poems based on their names.\nWhich technique would be most effective in safeguarding the application, given the potential for malicious user inputs?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM mà người dùng có thể sử dụng để tạo ra các bài thơ chúc mừng sinh nhật cá nhân hóa dựa trên tên của họ.\nKỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng, với rủi ro từ các đầu vào độc hại của người dùng?",
+      "options_en": [
+        "Implement a safety filter that detects any harmful inputs and ask the LLM to respond that it is unable to assist",
+        "Reduce the time that the users can interact with the LLM",
+        "Ask the LLM to remind the user that the input is malicious but continue the conversation with the user",
+        "Increase the amount of compute that powers the LLM to process input faster"
+      ],
+      "options_vi": [
         "Triển khai một bộ lọc an toàn (safety filter) để phát hiện bất kỳ đầu vào gây hại nào và yêu cầu LLM phản hồi rằng nó không thể hỗ trợ",
         "Giảm thời gian mà người dùng có thể tương tác với LLM",
         "Yêu cầu LLM nhắc nhở người dùng rằng đầu vào là độc hại nhưng vẫn tiếp tục cuộc trò chuyện với người dùng",
@@ -460,8 +660,15 @@
     {
       "number": 29,
       "type": "single_choice",
-      "prompt": "Chỉ số nào nên được xem xét để đánh giá mức độ an toàn của các đầu ra từ LLM khi đánh giá định tính các phản hồi của LLM cho trường hợp sử dụng dịch thuật?",
-      "options": [
+      "prompt_en": "Which indicator should be considered to evaluate the safety of the LLM outputs when qualitatively assessing LLM responses for a translation use case?",
+      "prompt_vi": "Chỉ số nào nên được xem xét để đánh giá mức độ an toàn của các đầu ra từ LLM khi đánh giá định tính các phản hồi của LLM cho trường hợp sử dụng dịch thuật?",
+      "options_en": [
+        "The ability to generate responses in code",
+        "The similarity to the previous language",
+        "The latency of the response and the length of text generated",
+        "The accuracy and relevance of the responses"
+      ],
+      "options_vi": [
         "Khả năng tạo ra các phản hồi bằng mã lập trình (code)",
         "Sự tương đồng với ngôn ngữ trước đó",
         "Độ trễ của phản hồi và độ dài của văn bản được tạo ra",
@@ -476,8 +683,15 @@
     {
       "number": 30,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot phục vụ bệnh nhân, tập trung vào lĩnh vực chăm sóc sức khỏe. Nếu câu hỏi của bệnh nhân không phải là trường hợp cấp cứu y tế, chatbot nên thu thập thêm thông tin từ bệnh nhân để chuyển cho phòng khám của bác sĩ và đề xuất một vài bài báo y khoa đã được phê duyệt sẵn cho bệnh nhân đọc. Nếu câu hỏi của bệnh nhân là khẩn cấp, hãy hướng dẫn bệnh nhân gọi cho dịch vụ cấp cứu địa phương.\nVới đầu vào của người dùng như sau:\n\"Tôi bị đau đầu dữ dội và chóng mặt trong hai ngày qua.\"\nPhản hồi nào là phù hợp nhất để chatbot tạo ra?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing a patient-facing healthcare-focused chatbot. If the patient’s question is not a medical emergency, the chatbot should solicit more information from the patient to pass to the doctor’s office and suggest a few relevant pre-approved medical articles for reading. If the patient’s question is urgent, direct the patient to calling their local emergency services.\nGiven the following user input:\n“I have been experiencing severe headaches and dizziness for the past two days.”\nWhich response is most appropriate for the chatbot to generate?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot phục vụ bệnh nhân, tập trung vào lĩnh vực chăm sóc sức khỏe. Nếu câu hỏi của bệnh nhân không phải là trường hợp cấp cứu y tế, chatbot nên thu thập thêm thông tin từ bệnh nhân để chuyển cho phòng khám của bác sĩ và đề xuất một vài bài báo y khoa đã được phê duyệt sẵn cho bệnh nhân đọc. Nếu câu hỏi của bệnh nhân là khẩn cấp, hãy hướng dẫn bệnh nhân gọi cho dịch vụ cấp cứu địa phương.\nVới đầu vào của người dùng như sau:\n\"Tôi bị đau đầu dữ dội và chóng mặt trong hai ngày qua.\"\nPhản hồi nào là phù hợp nhất để chatbot tạo ra?",
+      "options_en": [
+        "Here are a few relevant articles for your browsing. Let me know if you have questions after reading them.",
+        "Please call your local emergency services.",
+        "Headaches can be tough. Hope you feel better soon!",
+        "Please provide your age, recent activities, and any other symptoms you have noticed along with your headaches and dizziness."
+      ],
+      "options_vi": [
         "Đây là một vài bài báo liên quan để bạn tham khảo. Hãy cho tôi biết nếu bạn có thắc mắc sau khi đọc chúng.",
         "Vui lòng gọi cho dịch vụ cấp cứu địa phương của bạn.",
         "Đau đầu có thể rất khó chịu. Hy vọng bạn sớm khỏe lại!",
@@ -492,8 +706,16 @@
     {
       "number": 31,
       "type": "multiple_choice",
-      "prompt": "Sau khi thay đổi LLM dùng để sinh câu trả lời trong một pipeline RAG từ GPT-4 sang một mô hình có độ dài ngữ cảnh ngắn hơn mà công ty tự lưu trữ (self-hosts), Kỹ sư AI Tạo sinh nhận được lỗi sau:\n\n{\n  \"error_code\": \"BAD_REQUEST\",\n  \"message\": \"Bad request: rpc error: code = InvalidArgument desc = prompt token count (4595) cannot exceed 4096…\"\n}\n\nHai giải pháp nào Kỹ sư AI Tạo sinh nên thực hiện mà không thay đổi mô hình tạo câu trả lời? (Chọn hai.)",
-      "options": [
+      "prompt_en": "After changing the response generating LLM in a RAG pipeline from GPT-4 to a model with a shorter context length that the company self-hosts, the Generative AI Engineer is getting the following error:\n\n{\n  \"error_code\": \"BAD_REQUEST\",\n  \"message\": \"Bad request: rpc error: code = InvalidArgument desc = prompt token count (4595) cannot exceed 4096…\"\n}\n\nWhat TWO solutions should the Generative AI Engineer implement without changing the response generating model? (Choose two.)",
+      "prompt_vi": "Sau khi thay đổi LLM dùng để sinh câu trả lời trong một pipeline RAG từ GPT-4 sang một mô hình có độ dài ngữ cảnh ngắn hơn mà công ty tự lưu trữ (self-hosts), Kỹ sư AI Tạo sinh nhận được lỗi sau:\n\n{\n  \"error_code\": \"BAD_REQUEST\",\n  \"message\": \"Bad request: rpc error: code = InvalidArgument desc = prompt token count (4595) cannot exceed 4096…\"\n}\n\nHai giải pháp nào Kỹ sư AI Tạo sinh nên thực hiện mà không thay đổi mô hình tạo câu trả lời? (Chọn hai.)",
+      "options_en": [
+        "Use a smaller embedding model to generate embeddings",
+        "Reduce the maximum output tokens of the new model",
+        "Decrease the chunk size of embedded documents",
+        "Reduce the number of records retrieved from the vector database",
+        "Retrain the response generating model using ALiBi"
+      ],
+      "options_vi": [
         "Sử dụng một mô hình embedding nhỏ hơn để tạo các embedding",
         "Giảm số lượng token đầu ra tối đa (max_tokens) của mô hình mới",
         "Giảm kích thước đoạn (chunk size) của các tài liệu được nhúng",
@@ -510,8 +732,15 @@
     {
       "number": 32,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống sẽ trả lời các câu hỏi về các bài báo tin tức chứng khoán mới nhất.\nĐiều nào sẽ KHÔNG giúp đảm bảo các đầu ra có liên quan đến tin tức tài chính?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is building a system which will answer questions on latest stock news articles.\nWhich will NOT help with ensuring the outputs are relevant to financial news?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống sẽ trả lời các câu hỏi về các bài báo tin tức chứng khoán mới nhất.\nĐiều nào sẽ KHÔNG giúp đảm bảo các đầu ra có liên quan đến tin tức tài chính?",
+      "options_en": [
+        "Implement a comprehensive guardrail framework that includes policies for content filters tailored to the finance sector.",
+        "Increase the compute to improve processing speed of questions to allow greater relevancy analysis",
+        "Implement a profanity filter to screen out offensive language.",
+        "Incorporate manual reviews to correct any problematic outputs prior to sending to the users"
+      ],
+      "options_vi": [
         "Triển khai một framework bảo vệ (guardrail) toàn diện bao gồm các chính sách lọc nội dung được tinh chỉnh cho lĩnh vực tài chính.",
         "Tăng tài nguyên tính toán (compute) để cải thiện tốc độ xử lý các câu hỏi nhằm cho phép phân tích mức độ liên quan tốt hơn.",
         "Triển khai bộ lọc ngôn ngữ tục tĩu (profanity filter) để loại bỏ các ngôn ngữ phản cảm.",
@@ -526,8 +755,15 @@
     {
       "number": 33,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về tài liệu nội bộ cho công ty SnoPen AI.\nCác tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin tức thể thao, hoặc tin tức giải trí, hoặc nội dung về các công ty khác.\nPhương pháp nào được khuyến nghị khi xây dựng một ứng dụng RAG để đạt được mục tiêu lọc bỏ thông tin không liên quan này?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is building a RAG application that answers questions about internal documents for the company SnoPen AI.\nThe source documents may contain a significant amount of irrelevant content, such as advertisements, sports news, or entertainment news, or content about other companies.\nWhich approach is advisable when building a RAG application to achieve this goal of filtering irrelevant information?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về tài liệu nội bộ cho công ty SnoPen AI.\nCác tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin tức thể thao, hoặc tin tức giải trí, hoặc nội dung về các công ty khác.\nPhương pháp nào được khuyến nghị khi xây dựng một ứng dụng RAG để đạt được mục tiêu lọc bỏ thông tin không liên quan này?",
+      "options_en": [
+        "Keep all articles because the RAG application needs to understand non-company content to avoid answering questions about them.",
+        "Include in the system prompt that any information it sees will be about SnoPenAI, even if no data filtering is performed.",
+        "Include in the system prompt that the application is not supposed to answer any questions unrelated to SnoPen AI.",
+        "Consolidate all SnoPen AI related documents into a single chunk in the vector database."
+      ],
+      "options_vi": [
         "Giữ nguyên tất cả các bài báo vì ứng dụng RAG cần hiểu nội dung ngoài công ty để tránh trả lời các câu hỏi về chúng.",
         "Thêm vào system prompt rằng bất kỳ thông tin nào hệ thống thấy cũng sẽ là về SnoPenAI, ngay cả khi không thực hiện lọc dữ liệu.",
         "Thêm vào system prompt rằng ứng dụng không được phép trả lời bất kỳ câu hỏi nào không liên quan đến SnoPen AI.",
@@ -542,8 +778,15 @@
     {
       "number": 34,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã trích xuất thành công các tài liệu phi cấu trúc và chia chúng (chunk) theo các phần của tài liệu. Họ muốn lưu trữ các chunk trong một index Vector Search. Định dạng hiện tại của dataframe có hai cột: (i) tên tệp tài liệu gốc (ii) một mảng các đoạn văn bản (chunks) cho mỗi tài liệu.\nCách thức nào có hiệu suất cao nhất để lưu trữ dataframe này?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer has successfully ingested unstructured documents and chunked them by document sections. They would like to store the chunks in a Vector Search index. The current format of the dataframe has two columns: (i) original document file name (ii) an array of text chunks for each document.\nWhat is the most performant way to store this dataframe?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã trích xuất thành công các tài liệu phi cấu trúc và chia chúng (chunk) theo các phần của tài liệu. Họ muốn lưu trữ các chunk trong một index Vector Search. Định dạng hiện tại của dataframe có hai cột: (i) tên tệp tài liệu gốc (ii) một mảng các đoạn văn bản (chunks) cho mỗi tài liệu.\nCách thức nào có hiệu suất cao nhất để lưu trữ dataframe này?",
+      "options_en": [
+        "Split the data into train and test set, create a unique identifier for each document, then save to a Delta table",
+        "Flatten the dataframe to one chunk per row, create a unique identifier for each row, and save to a Delta table",
+        "First create a unique identifier for each document, then save to a Delta table",
+        "Store each chunk as an independent JSON file in Unity Catalog Volume. For each JSON file, the key is the document section name and the value is the array of text chunks for that section"
+      ],
+      "options_vi": [
         "Chia dữ liệu thành tập huấn luyện và tập kiểm tra, tạo một định danh duy nhất cho mỗi tài liệu, sau đó lưu vào một bảng Delta.",
         "Trải phẳng (flatten) dataframe thành một chunk trên mỗi hàng, tạo một định danh duy nhất (unique identifier) cho mỗi hàng, và lưu vào một bảng Delta.",
         "Đầu tiên tạo một định danh duy nhất cho mỗi tài liệu, sau đó lưu vào một bảng Delta.",
@@ -558,8 +801,15 @@
     {
       "number": 35,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã tạo một ứng dụng RAG có thể giúp nhân viên tìm câu trả lời từ một cơ sở tri thức nội bộ, chẳng hạn như các trang Confluence hoặc Google Drive. Ứng dụng nguyên mẫu hiện đang hoạt động và nhận được một số phản hồi tích cực từ những người thử nghiệm nội bộ trong công ty. Bây giờ, Kỹ sư AI Tạo sinh muốn chính thức đánh giá hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has created a RAG application which can help employees retrieve answers from an internal knowledge base, such as Confluence pages or Google Drive. The prototype application is now working with some positive feedback from internal company testers. Now the Generative Al Engineer wants to formally evaluate the system’s performance and understand where to focus their efforts to further improve the system.\nHow should the Generative AI Engineer evaluate the system?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã tạo một ứng dụng RAG có thể giúp nhân viên tìm câu trả lời từ một cơ sở tri thức nội bộ, chẳng hạn như các trang Confluence hoặc Google Drive. Ứng dụng nguyên mẫu hiện đang hoạt động và nhận được một số phản hồi tích cực từ những người thử nghiệm nội bộ trong công ty. Bây giờ, Kỹ sư AI Tạo sinh muốn chính thức đánh giá hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
+      "options_en": [
+        "Use cosine similarity score to comprehensively evaluate the quality of the final generated answers.",
+        "Curate a dataset that can test the retrieval and generation components of the system separately. Use MLflow’s built in evaluation metrics to perform the evaluation on the retrieval and generation components.",
+        "Benchmark multiple LLMs with the same data and pick the best LLM for the job.",
+        "Use an LLM-as-a-judge to evaluate the quality of the final answers generated."
+      ],
+      "options_vi": [
         "Sử dụng điểm số tương đồng cosin (cosine similarity score) để đánh giá toàn diện chất lượng của các câu trả lời cuối cùng được tạo ra.",
         "Giám tuyển (curate) một tập dữ liệu có thể kiểm tra riêng biệt các thành phần truy xuất (retrieval) và sinh văn bản (generation) của hệ thống. Sử dụng các chỉ số đánh giá tích hợp sẵn của MLflow để thực hiện việc đánh giá trên các thành phần này.",
         "Kiểm chuẩn (benchmark) nhiều LLM với cùng một dữ liệu và chọn LLM tốt nhất cho công việc.",
@@ -574,8 +824,15 @@
     {
       "number": 36,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã huấn luyện một LLM trên Databricks và bây giờ nó đã sẵn sàng để được triển khai.\nBước nào sau đây phác thảo đúng quy trình dễ nhất để triển khai một mô hình trên Databricks?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer has already trained an LLM on Databricks and it is now ready to be deployed.\nWhich of the following steps correctly outlines the easiest process for deploying a model on Databricks?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã huấn luyện một LLM trên Databricks và bây giờ nó đã sẵn sàng để được triển khai.\nBước nào sau đây phác thảo đúng quy trình dễ nhất để triển khai một mô hình trên Databricks?",
+      "options_en": [
+        "Log the model as a pickle object, upload the object to Unity Catalog Volume, register it to Unity Catalog using MLflow, and start a serving endpoint",
+        "Log the model using MLflow during training, directly register the model to Unity Catalog using the MLflow API, and start a serving endpoint",
+        "Save the model along with its dependencies in a local directory, build the Docker image, and run the Docker container",
+        "Wrap the LLM’s prediction function into a Flask application and serve using Gunicorn"
+      ],
+      "options_vi": [
         "Ghi log mô hình dưới dạng một đối tượng pickle, tải đối tượng lên Unity Catalog Volume, đăng ký nó với Unity Catalog bằng MLflow và khởi chạy một serving endpoint.",
         "Ghi log mô hình bằng MLflow trong quá trình huấn luyện, trực tiếp đăng ký mô hình với Unity Catalog bằng MLflow API, và khởi chạy một serving endpoint.",
         "Lưu mô hình cùng với các phụ thuộc của nó trong một thư mục cục bộ, build Docker image, và chạy Docker container.",
@@ -590,8 +847,15 @@
     {
       "number": 37,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM bằng cách sử dụng Foundation Model API với thông lượng được cung cấp sẵn (provisioned throughput). Bây giờ khi ứng dụng đã sẵn sàng để triển khai, họ nhận ra rằng khối lượng yêu cầu của mình không đủ cao để tạo một endpoint provisioned throughput của riêng họ. Họ muốn chọn một chiến lược đảm bảo hiệu quả chi phí tốt nhất cho ứng dụng của mình.\nKỹ sư AI Tạo sinh nên sử dụng chiến lược nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer developed an LLM application using the provisioned throughput Foundation Model API. Now that the application is ready to be deployed, they realize their volume of requests are not sufficiently high enough to create their own provisioned throughput endpoint. They want to choose a strategy that ensures the best cost-effectiveness for their application.\nWhat strategy should the Generative AI Engineer use?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM bằng cách sử dụng Foundation Model API với thông lượng được cung cấp sẵn (provisioned throughput). Bây giờ khi ứng dụng đã sẵn sàng để triển khai, họ nhận ra rằng khối lượng yêu cầu của mình không đủ cao để tạo một endpoint provisioned throughput của riêng họ. Họ muốn chọn một chiến lược đảm bảo hiệu quả chi phí tốt nhất cho ứng dụng của mình.\nKỹ sư AI Tạo sinh nên sử dụng chiến lược nào?",
+      "options_en": [
+        "Switch to using External Models instead",
+        "Deploy the model using pay-per-token throughput as it comes with cost guarantees",
+        "Change to a model with a fewer number of parameters in order to reduce hardware constraint issues",
+        "Throttle the incoming batch of requests manually to avoid rate limiting issues"
+      ],
+      "options_vi": [
         "Thay vào đó, chuyển sang sử dụng các Mô hình Bên ngoài (External Models).",
         "Triển khai mô hình sử dụng thông lượng trả tiền theo token (pay-per-token throughput) vì nó đi kèm với các đảm bảo về chi phí.",
         "Chuyển sang một mô hình có số lượng tham số ít hơn để giảm thiểu các vấn đề hạn chế về phần cứng.",
@@ -606,8 +870,15 @@
     {
       "number": 38,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các bản tóm tắt bài báo dưới dạng một thể loại thơ, chẳng hạn như haiku, dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không khớp với giọng điệu hoặc phong cách mong muốn.\nPhương pháp nào sẽ KHÔNG giúp cải thiện phản hồi của LLM để đạt được kết quả như mong muốn?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building an LLM to generate article summaries in the form of a type of poem, such as a haiku, given the article content. However, the initial output from the LLM does not match the desired tone or style.\nWhich approach will NOT improve the LLM’s response to achieve the desired response?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các bản tóm tắt bài báo dưới dạng một thể loại thơ, chẳng hạn như haiku, dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không khớp với giọng điệu hoặc phong cách mong muốn.\nPhương pháp nào sẽ KHÔNG giúp cải thiện phản hồi của LLM để đạt được kết quả như mong muốn?",
+      "options_en": [
+        "Provide the LLM with a prompt that explicitly instructs it to generate text in the desired tone and style",
+        "Use a neutralizer to normalize the tone and style of the underlying documents",
+        "Include few-shot examples in the prompt to the LLM",
+        "Fine-tune the LLM on a dataset of desired tone and style"
+      ],
+      "options_vi": [
         "Cung cấp cho LLM một prompt có hướng dẫn rõ ràng yêu cầu nó tạo văn bản theo giọng điệu và phong cách mong muốn.",
         "Sử dụng một công cụ trung hòa (neutralizer) để chuẩn hóa giọng điệu và phong cách của các tài liệu cơ sở.",
         "Bao gồm các ví dụ (few-shot) trong prompt gửi tới LLM.",
@@ -622,8 +893,15 @@
     {
       "number": 39,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo một ứng dụng được hỗ trợ bởi LLM cần quyền truy cập vào các bài báo tin tức và giá cổ phiếu cập nhật nhất.\nThiết kế yêu cầu sử dụng giá cổ phiếu được lưu trữ trong các bảng Delta và tìm các bài báo tin tức liên quan mới nhất bằng cách tìm kiếm trên internet.\nKỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống LLM của họ như thế nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is creating an LLM-powered application that will need access to up-to-date news articles and stock prices.\nThe design requires the use of stock prices which are stored in Delta tables and finding the latest relevant news articles by searching the internet.\nHow should the Generative AI Engineer architect their LLM system?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang tạo một ứng dụng được hỗ trợ bởi LLM cần quyền truy cập vào các bài báo tin tức và giá cổ phiếu cập nhật nhất.\nThiết kế yêu cầu sử dụng giá cổ phiếu được lưu trữ trong các bảng Delta và tìm các bài báo tin tức liên quan mới nhất bằng cách tìm kiếm trên internet.\nKỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống LLM của họ như thế nào?",
+      "options_en": [
+        "Use an LLM to summarize the latest news articles and lookup stock tickers from the summaries to find stock prices.",
+        "Query the Delta table for volatile stock prices and use an LLM to generate a search query to investigate potential causes of the stock volatility.",
+        "Download and store news articles and stock price information in a vector store. Use a RAG architecture to retrieve and generate at runtime.",
+        "Create an agent with tools for SQL querying of Delta tables and web searching, provide retrieved values to an LLM for generation of response."
+      ],
+      "options_vi": [
         "Sử dụng một LLM để tóm tắt các bài báo tin tức mới nhất và tra cứu mã cổ phiếu từ các bản tóm tắt để tìm giá cổ phiếu.",
         "Truy vấn bảng Delta để tìm giá cổ phiếu biến động và sử dụng một LLM để tạo truy vấn tìm kiếm nhằm điều tra các nguyên nhân tiềm năng gây ra biến động cổ phiếu.",
         "Tải xuống và lưu trữ các bài báo tin tức và thông tin giá cổ phiếu trong một vector store. Sử dụng kiến trúc RAG để truy xuất và sinh văn bản tại thời điểm chạy (runtime).",
@@ -638,8 +916,15 @@
     {
       "number": 40,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một chatbot cho một công ty trò chơi nhằm thu hút người dùng trên nền tảng của mình trong khi người dùng chơi các trò chơi điện tử trực tuyến.\nSố liệu nào sẽ giúp họ tăng mức độ tương tác và giữ chân người dùng cho nền tảng của họ?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is designing a chatbot for a gaming company that aims to engage users on its platform while its users play online video games.\nWhich metric would help them increase user engagement and retention for their platform?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang thiết kế một chatbot cho một công ty trò chơi nhằm thu hút người dùng trên nền tảng của mình trong khi người dùng chơi các trò chơi điện tử trực tuyến.\nSố liệu nào sẽ giúp họ tăng mức độ tương tác và giữ chân người dùng cho nền tảng của họ?",
+      "options_en": [
+        "Randomness",
+        "Diversity of responses",
+        "Lack of relevance",
+        "Repetition of responses"
+      ],
+      "options_vi": [
         "Tính ngẫu nhiên (Randomness)",
         "Sự đa dạng của các phản hồi (Diversity of responses)",
         "Thiếu mức độ liên quan (Lack of relevance)",
@@ -654,8 +939,15 @@
     {
       "number": 41,
       "type": "single_choice",
-      "prompt": "Một công ty có một chatbot điển hình hỗ trợ RAG, hướng tới khách hàng trên trang web của họ.\n\nChọn trình tự các thành phần chính xác mà các câu hỏi của người dùng sẽ đi qua trước khi kết quả cuối cùng được trả về. (Tham khảo sơ đồ nếu có).",
-      "options": [
+      "prompt_en": "A company has a typical RAG-enabled, customer-facing chatbot on its website.\n\nSelect the correct sequence of components a user's questions will go through before the final output is returned. Use the diagram above for reference.",
+      "prompt_vi": "Một công ty có một chatbot điển hình hỗ trợ RAG, hướng tới khách hàng trên trang web của họ.\n\nChọn trình tự các thành phần chính xác mà các câu hỏi của người dùng sẽ đi qua trước khi kết quả cuối cùng được trả về. (Tham khảo sơ đồ nếu có).",
+      "options_en": [
+        "1.embedding model, 2.vector search, 3.context-augmented prompt, 4.response-generating LLM",
+        "1.context-augmented prompt, 2.vector search, 3.embedding model, 4.response-generating LLM",
+        "1.response-generating LLM, 2.vector search, 3.context-augmented prompt, 4.embedding model",
+        "1.response-generating LLM, 2.context-augmented prompt, 3.vector search, 4.embedding model"
+      ],
+      "options_vi": [
         "1. Mô hình nhúng (embedding model), 2. Tìm kiếm vector (vector search), 3. Prompt được tăng cường ngữ cảnh (context-augmented prompt), 4. LLM tạo phản hồi (response-generating LLM)",
         "1. Prompt được tăng cường ngữ cảnh, 2. Tìm kiếm vector, 3. Mô hình nhúng, 4. LLM tạo phản hồi",
         "1. LLM tạo phản hồi, 2. Tìm kiếm vector, 3. Prompt được tăng cường ngữ cảnh, 4. Mô hình nhúng",
@@ -670,8 +962,15 @@
     {
       "number": 42,
       "type": "single_choice",
-      "prompt": "Một nhóm muốn triển khai một mô hình sinh mã (code generation) làm trợ lý cho các nhà phát triển phần mềm của họ. Nó cần hỗ trợ nhiều ngôn ngữ lập trình. Chất lượng là mục tiêu hàng đầu.\nTrong số các API Foundation Model của Databricks, hoặc các mô hình có sẵn trên Marketplace, mô hình nào sẽ phù hợp nhất?",
-      "options": [
+      "prompt_en": "A team wants to serve a code generation model as an assistant for their software developers. It should support multiple programming languages. Quality is the primary objective.\nWhich of the Databricks Foundation Model APIs, or models available in the Marketplace, would be the best fit?",
+      "prompt_vi": "Một nhóm muốn triển khai một mô hình sinh mã (code generation) làm trợ lý cho các nhà phát triển phần mềm của họ. Nó cần hỗ trợ nhiều ngôn ngữ lập trình. Chất lượng là mục tiêu hàng đầu.\nTrong số các API Foundation Model của Databricks, hoặc các mô hình có sẵn trên Marketplace, mô hình nào sẽ phù hợp nhất?",
+      "options_en": [
+        "Llama2-70b",
+        "BGE-large",
+        "MPT-7b",
+        "CodeLlama-34B"
+      ],
+      "options_vi": [
         "Llama2-70b",
         "BGE-large",
         "MPT-7b",
@@ -686,8 +985,15 @@
     {
       "number": 43,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG dựa trên ngữ cảnh truy xuất từ các tài liệu nguồn hiện đang ở định dạng PDF. Các tệp PDF này có thể chứa cả văn bản và hình ảnh. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất có thể.\nGói Python nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a RAG application that will rely on context retrieved from source documents that are currently in PDF format. These PDFs can contain both text and images. They want to develop a solution using the least amount of lines of code.\nWhich Python package should be used to extract the text from the source documents?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG dựa trên ngữ cảnh truy xuất từ các tài liệu nguồn hiện đang ở định dạng PDF. Các tệp PDF này có thể chứa cả văn bản và hình ảnh. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất có thể.\nGói Python nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn này?",
+      "options_en": [
+        "flask",
+        "beautifulsoup",
+        "unstructured",
+        "numpy"
+      ],
+      "options_vi": [
         "flask",
         "beautifulsoup",
         "unstructured",
@@ -702,8 +1008,15 @@
     {
       "number": 44,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu nghiệp vụ sau đây cho một chatbot đối ngoại.\nChatbot cần biết người dùng hỏi loại câu hỏi gì và định tuyến đến các mô hình phù hợp để trả lời các câu hỏi đó. Ví dụ: người dùng có thể hỏi chi tiết về sự kiện sắp tới. Một người dùng khác có thể hỏi mua vé cho một sự kiện cụ thể.\nĐâu là một quy trình làm việc (workflow) lý tưởng cho chatbot như vậy?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer received the following business requirements for an external chatbot.\nThe chatbot needs to know what types of questions the user asks and routes to appropriate models to answer the questions. For example, the user might ask about upcoming event details. Another user might ask about purchasing tickets for a particular event.\nWhat is an ideal workflow for such a chatbot?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu nghiệp vụ sau đây cho một chatbot đối ngoại.\nChatbot cần biết người dùng hỏi loại câu hỏi gì và định tuyến đến các mô hình phù hợp để trả lời các câu hỏi đó. Ví dụ: người dùng có thể hỏi chi tiết về sự kiện sắp tới. Một người dùng khác có thể hỏi mua vé cho một sự kiện cụ thể.\nĐâu là một quy trình làm việc (workflow) lý tưởng cho chatbot như vậy?",
+      "options_en": [
+        "The chatbot should only look at previous event information",
+        "There should be two different chatbots handling different types of user queries.",
+        "The chatbot should be implemented as a multi-step LLM workflow. First, identify the type of question asked, then route the question to the appropriate model. If it’s an upcoming event question, send the query to a text-to-SQL model. If it’s about ticket purchasing, the customer should be redirected to a payment platform.",
+        "The chatbot should only process payments"
+      ],
+      "options_vi": [
         "Chatbot chỉ nên xem xét thông tin các sự kiện trước đó.",
         "Nên có hai chatbot khác nhau xử lý các loại truy vấn khác nhau của người dùng.",
         "Chatbot nên được triển khai dưới dạng quy trình LLM đa bước (multi-step workflow). Đầu tiên, xác định loại câu hỏi được hỏi, sau đó định tuyến câu hỏi đến mô hình phù hợp. Nếu là câu hỏi về sự kiện sắp tới, gửi truy vấn đến một mô hình text-to-SQL. Nếu là câu hỏi về mua vé, khách hàng nên được chuyển hướng đến nền tảng thanh toán.",
@@ -718,8 +1031,15 @@
     {
       "number": 45,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng dựa trên mô hình ngôn ngữ lớn (LLM) mã nguồn mở. Họ cần một LLM nền tảng với cửa sổ ngữ cảnh (context window) lớn.\nMô hình nào phù hợp với nhu cầu này?",
-      "options": [
+      "prompt_en": "A Generative Al Engineer is tasked with developing an application that is based on an open source large language model (LLM). They need a foundation LLM with a large context window.\nWhich model fits this need?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng dựa trên mô hình ngôn ngữ lớn (LLM) mã nguồn mở. Họ cần một LLM nền tảng với cửa sổ ngữ cảnh (context window) lớn.\nMô hình nào phù hợp với nhu cầu này?",
+      "options_en": [
+        "DistilBERT",
+        "MPT-30B",
+        "Llama2-70B",
+        "DBRX"
+      ],
+      "options_vi": [
         "DistilBERT",
         "MPT-30B",
         "Llama2-70B",
@@ -734,8 +1054,15 @@
     {
       "number": 46,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng dựa trên LLM có tác vụ chuyển giọng nói thành văn bản (speech-to-text) quan trọng. Tốc độ là yếu tố thiết yếu cho sự thành công của ứng dụng.\nNên sử dụng mô hình AI Tạo sinh mở nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building an LLM-based application that has an important transcription (speech-to-text) task. Speed is essential for the success of the application.\nWhich open Generative AI models should be used?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng dựa trên LLM có tác vụ chuyển giọng nói thành văn bản (speech-to-text) quan trọng. Tốc độ là yếu tố thiết yếu cho sự thành công của ứng dụng.\nNên sử dụng mô hình AI Tạo sinh mở nào?",
+      "options_en": [
+        "DBRX",
+        "MPT-30B-Instruct",
+        "Llama-2-70b-chat-hf",
+        "whisper-large-v3 (1.6B)"
+      ],
+      "options_vi": [
         "DBRX",
         "MPT-30B-Instruct",
         "Llama-2-70b-chat-hf",
@@ -750,8 +1077,15 @@
     {
       "number": 47,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh có một điểm cuối phục vụ mô hình thông lượng được cung cấp (provisioned throughput model serving endpoint) như một phần của ứng dụng RAG và muốn giám sát các yêu cầu (requests) đầu vào và phản hồi (responses) đầu ra của điểm cuối này.\n\nHọ nên sử dụng tính năng nào của Databricks?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has a provisioned throughput model serving endpoint as part of a RAG application and would like to monitor the serving endpoint’s incoming requests and outgoing responses.\n\nWhich Databricks feature should they use?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh có một điểm cuối phục vụ mô hình thông lượng được cung cấp (provisioned throughput model serving endpoint) như một phần của ứng dụng RAG và muốn giám sát các yêu cầu (requests) đầu vào và phản hồi (responses) đầu ra của điểm cuối này.\n\nHọ nên sử dụng tính năng nào của Databricks?",
+      "options_en": [
+        "AutoML",
+        "Vector Search",
+        "Inference Tables",
+        "Feature Serving"
+      ],
+      "options_vi": [
         "AutoML",
         "Tìm kiếm Vector (Vector Search)",
         "Bảng Suy luận (Inference Tables)",
@@ -766,8 +1100,15 @@
     {
       "number": 48,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang quyết định giữa việc sử dụng LSH (Locality Sensitive Hashing) và HNSW (Hierarchical Navigable Small World) để lập chỉ mục cơ sở dữ liệu vector của họ. Ưu tiên hàng đầu của họ là độ chính xác về ngữ nghĩa.\n\nKỹ sư AI Tạo sinh nên sử dụng phương pháp nào để đánh giá hai kỹ thuật này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is deciding between using LSH (Locality Sensitive Hashing) and HNSW (Hierarchical Navigable Small World) for indexing their vector database. Their top priority is semantic accuracy.\n\nWhich approach should the Generative AI Engineer use to evaluate these two techniques?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang quyết định giữa việc sử dụng LSH (Locality Sensitive Hashing) và HNSW (Hierarchical Navigable Small World) để lập chỉ mục cơ sở dữ liệu vector của họ. Ưu tiên hàng đầu của họ là độ chính xác về ngữ nghĩa.\n\nKỹ sư AI Tạo sinh nên sử dụng phương pháp nào để đánh giá hai kỹ thuật này?",
+      "options_en": [
+        "Compare the cosine similarities of the embeddings of returned results against those of a representative sample of test inputs",
+        "Compare the Bilingual Evaluation Understudy (BLEU) scores of returned results for a representative sample of test inputs",
+        "Compare the Recall-Oriented-Understudy for Gisting Evaluation (ROUGE) scores of returned results for a representative sample of test inputs",
+        "Compare the Levenshtein distances of returned results against a representative sample of test inputs"
+      ],
+      "options_vi": [
         "So sánh độ tương đồng cosine (cosine similarities) giữa các vector nhúng (embeddings) của các kết quả trả về với các đầu vào kiểm thử mẫu đại diện.",
         "So sánh điểm BLEU của kết quả trả về đối với các đầu vào kiểm thử mẫu đại diện.",
         "So sánh điểm ROUGE của kết quả trả về đối với các đầu vào kiểm thử mẫu đại diện.",
@@ -782,8 +1123,15 @@
     {
       "number": 49,
       "type": "single_choice",
-      "prompt": "Khi phát triển một ứng dụng LLM, điều quan trọng là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu cấp phép nhằm tránh rủi ro pháp lý.\n\nHành động nào là thích hợp nhất để tránh rủi ro pháp lý?",
-      "options": [
+      "prompt_en": "When developing an LLM application, it’s crucial to ensure that the data used for training the model complies with licensing requirements to avoid legal risks.\n\nWhich action is most appropriate to avoid legal risks?",
+      "prompt_vi": "Khi phát triển một ứng dụng LLM, điều quan trọng là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu cấp phép nhằm tránh rủi ro pháp lý.\n\nHành động nào là thích hợp nhất để tránh rủi ro pháp lý?",
+      "options_en": [
+        "Only use data explicitly labeled with an open license and ensure the license terms are followed.",
+        "Any LLM outputs are reasonable to use because they do not reveal the original sources of data directly.",
+        "Reach out to the data curators directly to gain written consent for using their data.",
+        "Use any publicly available data as public data does not have legal restrictions."
+      ],
+      "options_vi": [
         "Chỉ sử dụng dữ liệu được dán nhãn rõ ràng với giấy phép mở và đảm bảo tuân thủ các điều khoản cấp phép.",
         "Bất kỳ đầu ra nào của LLM đều hợp lý để sử dụng vì chúng không tiết lộ trực tiếp các nguồn dữ liệu gốc.",
         "Liên hệ trực tiếp với người quản lý dữ liệu để nhận được sự đồng ý bằng văn bản cho việc sử dụng dữ liệu của họ.",
@@ -798,8 +1146,15 @@
     {
       "number": 50,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh giao tiếp với một LLM có khả năng tuân theo chỉ thị, được huấn luyện trên các cuộc gọi của khách hàng hỏi về tính trạng còn hàng của sản phẩm. LLM cần xuất ra chữ “Success” nếu sản phẩm có sẵn hoặc “Fail” nếu không.\n\nPrompt nào cho phép kỹ sư nhận nhãn phân loại cuộc gọi một cách chính xác nhất?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer interfaces with an LLM with instruction-following capabilities trained on customer calls inquiring about product availability. The LLM should output “Success” if the product is available or “Fail” if not.\n\nWhich prompt allows the engineer to receive call classification labels correctly?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh giao tiếp với một LLM có khả năng tuân theo chỉ thị, được huấn luyện trên các cuộc gọi của khách hàng hỏi về tính trạng còn hàng của sản phẩm. LLM cần xuất ra chữ “Success” nếu sản phẩm có sẵn hoặc “Fail” nếu không.\n\nPrompt nào cho phép kỹ sư nhận nhãn phân loại cuộc gọi một cách chính xác nhất?",
+      "options_en": [
+        "You are a helpful assistant that reads customer call transcripts. Walk through the transcript and think step-by-step if the customer’s inquiries are addressed successfully. Answer “Success” if yes; otherwise, answer “Fail”.",
+        "You will be given a customer call transcript where the customer asks about product availability. Classify the call as “Success” if the product is available and “Fail” if the product is unavailable.",
+        "You will be given a customer call transcript where the customer asks about product availability. The outputs are either “Success” or “Fail”. Format the output in JSON, for example: {\"call_id\": \"123\", \"label\": \"Succes\"}.",
+        "You will be given a customer call transcript. Answer “Success” if the customer call has been resolved successfully. Answer “Fail” if the call is redirected or if the question is not resolved."
+      ],
+      "options_vi": [
         "Bạn là một trợ lý hữu ích đọc bản ghi cuộc gọi của khách hàng. Hãy đi qua bản ghi và suy nghĩ từng bước xem câu hỏi của khách hàng đã được giải quyết thành công chưa. Trả lời 'Success' nếu có; nếu không, trả lời 'Fail'.",
         "Bạn sẽ được cung cấp một bản ghi cuộc gọi của khách hàng, nơi khách hàng hỏi về việc còn hàng hay không. Phân loại cuộc gọi là 'Success' nếu sản phẩm có sẵn và 'Fail' nếu sản phẩm không có sẵn.",
         "Bạn sẽ được cung cấp bản ghi cuộc gọi của khách hàng, nơi khách hàng hỏi về tình trạng còn hàng. Đầu ra là 'Success' hoặc 'Fail'. Định dạng đầu ra dưới dạng JSON, ví dụ: {\"call_id\": \"123\", \"label\": \"Succes\"}.",
@@ -814,8 +1169,16 @@
     {
       "number": 51,
       "type": "multiple_choice",
-      "prompt": "Hai thành phần chain nào là cần thiết để xây dựng một ứng dụng trò chuyện (chat) cơ bản bằng LLM bao gồm khả năng giao tiếp, truy xuất kiến thức và bộ nhớ ngữ cảnh? (Chọn hai.)",
-      "options": [
+      "prompt_en": "Which TWO chain components are required for building a basic LLM-enabled chat application that includes conversational capabilities, knowledge retrieval, and contextual memory? (Choose two.)",
+      "prompt_vi": "Hai thành phần chain nào là cần thiết để xây dựng một ứng dụng trò chuyện (chat) cơ bản bằng LLM bao gồm khả năng giao tiếp, truy xuất kiến thức và bộ nhớ ngữ cảnh? (Chọn hai.)",
+      "options_en": [
+        "Vector Stores",
+        "Conversation Buffer Memory",
+        "External tools",
+        "Chat loaders",
+        "React Components"
+      ],
+      "options_vi": [
         "Vector Stores (Kho lưu trữ vector)",
         "Conversation Buffer Memory (Bộ nhớ đệm hội thoại)",
         "External tools (Các công cụ bên ngoài)",
@@ -832,8 +1195,15 @@
     {
       "number": 52,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã viết mã PySpark có khả năng mở rộng để tiếp nhận các tài liệu PDF phi cấu trúc và phân đoạn (chunk) chúng nhằm chuẩn bị lưu trữ vào một chỉ mục của Databricks Vector Search. Hiện tại, hai cột trong dataframe của họ bao gồm tên tệp gốc (chuỗi) và một mảng chứa các phân đoạn văn bản (array of text chunks) từ tài liệu đó.\n\nKỹ sư AI Tạo sinh nên thực hiện những bước nào để lưu trữ các phân đoạn theo định dạng sẵn sàng nạp vào Databricks Vector Search?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has written scalable PySpark code to ingest unstructured PDF documents and chunk them in preparation for storing in a Databricks Vector Search index. Currently, the two columns of their dataframe include the original filename as a string and an array of text chunks from that document.\n\nWhat set of steps should the Generative AI Engineer perform to store the chunks in a ready-to-ingest manner for Databricks Vector Search?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã viết mã PySpark có khả năng mở rộng để tiếp nhận các tài liệu PDF phi cấu trúc và phân đoạn (chunk) chúng nhằm chuẩn bị lưu trữ vào một chỉ mục của Databricks Vector Search. Hiện tại, hai cột trong dataframe của họ bao gồm tên tệp gốc (chuỗi) và một mảng chứa các phân đoạn văn bản (array of text chunks) từ tài liệu đó.\n\nKỹ sư AI Tạo sinh nên thực hiện những bước nào để lưu trữ các phân đoạn theo định dạng sẵn sàng nạp vào Databricks Vector Search?",
+      "options_en": [
+        "Use PySpark’s autoloader to apply a UDF across all chunks, formatting them in a JSON structure for Vector Search ingestion.",
+        "Flatten the dataframe to one chunk per row, create a unique identifier for each row, and enable change feed on the output Delta table.",
+        "Utilize the original filename as the unique identifier and save the dataframe as is.",
+        "Create a unique identifier for each document, flatten the dataframe to one chunk per row and save to an output Delta table."
+      ],
+      "options_vi": [
         "Sử dụng autoloader của PySpark để áp dụng một UDF lên tất cả các phân đoạn, định dạng chúng trong cấu trúc JSON cho việc nạp Vector Search.",
         "Trải phẳng (flatten) dataframe thành một phân đoạn trên mỗi hàng, tạo một định danh duy nhất (unique identifier) cho mỗi hàng, và bật Change Data Feed (CDF) trên bảng Delta đầu ra.",
         "Sử dụng tên tệp gốc làm định danh duy nhất và lưu nguyên trạng dataframe.",
@@ -848,8 +1218,15 @@
     {
       "number": 53,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh được yêu cầu xây dựng một ứng dụng LLM xuất sắc trong việc sinh mã (code generation). Họ cần chọn một mô hình đã được huấn luyện chuyên biệt để sinh mã.\n\nMô hình nào dưới đây có khả năng mang lại kết quả tốt nhất ngay khi sử dụng (out of the box)?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is asked to build an LLM application that would excel at code generation. They need to select a model that has been specifically trained to generate code.\n\nWhich model would likely produce the best results out of the box?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh được yêu cầu xây dựng một ứng dụng LLM xuất sắc trong việc sinh mã (code generation). Họ cần chọn một mô hình đã được huấn luyện chuyên biệt để sinh mã.\n\nMô hình nào dưới đây có khả năng mang lại kết quả tốt nhất ngay khi sử dụng (out of the box)?",
+      "options_en": [
+        "CodeLlama-34b-Instruct-hf",
+        "Mixtral-8x7B-v0.1",
+        "Llama-2-70b-hf",
+        "mpt-7b-8k-instruct"
+      ],
+      "options_vi": [
         "CodeLlama-34b-Instruct-hf",
         "Mixtral-8x7B-v0.1",
         "Llama-2-70b-hf",
@@ -864,8 +1241,15 @@
     {
       "number": 54,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh cần thiết kế một đường ống LLM (LLM pipeline) để tiến hành lập luận đa giai đoạn, có khả năng tận dụng các công cụ bên ngoài. Để làm hiệu quả điều này, LLM sẽ cần phải lập kế hoạch và điều chỉnh hành động trong khi thực hiện các tác vụ suy luận phức tạp.\n\nPhương pháp nào sẽ thực hiện được điều này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer needs to design an LLM pipeline to conduct multi-stage reasoning that leverages external tools. To be effective at this, the LLM will need to plan and adapt actions while performing complex reasoning tasks.\n\nWhich approach will do this?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh cần thiết kế một đường ống LLM (LLM pipeline) để tiến hành lập luận đa giai đoạn, có khả năng tận dụng các công cụ bên ngoài. Để làm hiệu quả điều này, LLM sẽ cần phải lập kế hoạch và điều chỉnh hành động trong khi thực hiện các tác vụ suy luận phức tạp.\n\nPhương pháp nào sẽ thực hiện được điều này?",
+      "options_en": [
+        "Train the LLM to generate a single, comprehensive response without interacting with any external tools, relying solely on its pre-trained knowledge.",
+        "Use a Chain-of-Thought (CoT) prompting technique to guide the LLM through a series of reasoning steps, then manually input the results from external tools for the final answer.",
+        "Implement a framework like ReAct, which allows the LLM to generate reasoning traces and perform task-specific actions that leverage external tools if necessary.",
+        "Encourage the LLM to make multiple API calls in sequence without planning or structuring the calls, allowing the LLM to decide when and how to use external tools spontaneously."
+      ],
+      "options_vi": [
         "Huấn luyện LLM tạo ra một phản hồi toàn diện duy nhất mà không tương tác với bất kỳ công cụ bên ngoài nào, chỉ dựa vào kiến thức được huấn luyện trước.",
         "Sử dụng kỹ thuật prompt Chain-of-Thought (CoT) để hướng dẫn LLM qua một chuỗi các bước lập luận, sau đó nhập thủ công kết quả từ các công cụ bên ngoài cho câu trả lời cuối cùng.",
         "Triển khai một framework như ReAct, cho phép LLM tạo ra các dấu vết lập luận (reasoning traces) và thực hiện các hành động cụ thể để tận dụng công cụ bên ngoài nếu cần thiết.",
@@ -880,8 +1264,15 @@
     {
       "number": 55,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để khách hàng tìm hiểu về phương tiện của họ. Họ có một cơ sở dữ liệu chứa các tài liệu về các hãng xe khác nhau, bộ phận phần cứng và thông tin bảo trì chung.\n\nThành phần nào sau đây sẽ KHÔNG hữu ích trong việc xây dựng một chatbot như vậy?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer at an automotive company would like to build a question-answering chatbot for customers to inquire about their vehicles. They have a database containing various documents of different vehicle makes, their hardware parts, and common maintenance information.\n\nWhich of the following components will NOT be useful in building such a chatbot?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để khách hàng tìm hiểu về phương tiện của họ. Họ có một cơ sở dữ liệu chứa các tài liệu về các hãng xe khác nhau, bộ phận phần cứng và thông tin bảo trì chung.\n\nThành phần nào sau đây sẽ KHÔNG hữu ích trong việc xây dựng một chatbot như vậy?",
+      "options_en": [
+        "Invite users to submit long, rather than concise, questions",
+        "Response-generating LLM",
+        "Embedding model",
+        "Vector database"
+      ],
+      "options_vi": [
         "Yêu cầu người dùng gửi những câu hỏi dài dòng, thay vì những câu hỏi súc tích.",
         "LLM tạo phản hồi (Response-generating LLM)",
         "Mô hình nhúng (Embedding model)",
@@ -896,8 +1287,15 @@
     {
       "number": 56,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các tiêu đề bài báo dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không phù hợp với giọng điệu hoặc phong cách mong muốn.\n\nPhương pháp nào sẽ hiệu quả nhất để điều chỉnh phản hồi của LLM nhằm đạt được kết quả như ý?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building an LLM to generate article headlines given the article content. However, the initial output from the LLM does not match the desired tone or style.\n\nWhich approach would be most effective for adjusting the LLM’s response to achieve the desired response?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các tiêu đề bài báo dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không phù hợp với giọng điệu hoặc phong cách mong muốn.\n\nPhương pháp nào sẽ hiệu quả nhất để điều chỉnh phản hồi của LLM nhằm đạt được kết quả như ý?",
+      "options_en": [
+        "Exclude any article headlines that do not match the desired output",
+        "Fine-tune the LLM on a dataset of desired tone and style",
+        "Provide the LLM with a prompt that explicitly instructs it to generate text in the desired tone and style",
+        "All of the above"
+      ],
+      "options_vi": [
         "Loại trừ bất kỳ tiêu đề bài viết nào không khớp với kết quả mong muốn.",
         "Tinh chỉnh (Fine-tune) LLM trên một tập dữ liệu có giọng điệu và phong cách mong muốn.",
         "Cung cấp cho LLM một prompt hướng dẫn rõ ràng việc tạo văn bản theo giọng điệu và phong cách mong muốn.",
@@ -912,8 +1310,15 @@
     {
       "number": 57,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo một bot hỗ trợ khách hàng cần phản hồi khác nhau với người dùng cuối dựa trên cảm xúc (sentiment) trong tin nhắn ban đầu của họ. Ví dụ: nếu tin nhắn của người dùng thể hiện sự tức giận, bot sẽ cố gắng làm dịu cảm xúc tiêu cực đó trong khi giải quyết vấn đề. Họ muốn đảm bảo phương pháp của mình tuân thủ các thực tiễn tốt nhất (best practices).\n\nPhương pháp nào sẽ thực hiện điều này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is creating a customer support bot that should respond differently to an end user based on the sentiment in their initial message. For example, if the end user’s message was angry, the bot should try to de-escalate their negative sentiments as it solves the customer query. They want to make sure their approach follows best practices.\n\nWhich approach will do this?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang tạo một bot hỗ trợ khách hàng cần phản hồi khác nhau với người dùng cuối dựa trên cảm xúc (sentiment) trong tin nhắn ban đầu của họ. Ví dụ: nếu tin nhắn của người dùng thể hiện sự tức giận, bot sẽ cố gắng làm dịu cảm xúc tiêu cực đó trong khi giải quyết vấn đề. Họ muốn đảm bảo phương pháp của mình tuân thủ các thực tiễn tốt nhất (best practices).\n\nPhương pháp nào sẽ thực hiện điều này?",
+      "options_en": [
+        "Use an encoder-only LLM model to both detect sentiment and generate replies based upon the detected sentiment.",
+        "Implement a RAG architecture for how to respond to users depending on detected sentiment.",
+        "Use linear regression model to classify sentiment and feed the result to a system prompt for the LLM to respond.",
+        "Create a chain which first uses an LLM to classify sentiment, then changes system prompt for the customer interaction LLM based upon the initial customer query sentiment."
+      ],
+      "options_vi": [
         "Sử dụng mô hình LLM dạng encoder-only (chỉ có bộ mã hóa) để vừa phát hiện cảm xúc vừa tạo câu trả lời dựa trên cảm xúc đó.",
         "Triển khai kiến trúc RAG để hướng dẫn cách phản hồi người dùng tùy theo cảm xúc phát hiện được.",
         "Sử dụng mô hình hồi quy tuyến tính để phân loại cảm xúc và đưa kết quả vào system prompt để LLM phản hồi.",
@@ -928,8 +1333,15 @@
     {
       "number": 58,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã sẵn sàng triển khai một ứng dụng LLM được viết bằng Foundation Model APIs. Họ muốn tuân theo các thực tiễn bảo mật tốt nhất cho môi trường sản xuất (production).\n\nHọ nên chọn phương pháp xác thực nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is ready to deploy an LLM application written using Foundation Model APIs. They want to follow security best practices for production scenarios.\n\nWhich authentication method should they choose?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã sẵn sàng triển khai một ứng dụng LLM được viết bằng Foundation Model APIs. Họ muốn tuân theo các thực tiễn bảo mật tốt nhất cho môi trường sản xuất (production).\n\nHọ nên chọn phương pháp xác thực nào?",
+      "options_en": [
+        "Use OAuth machine-to-machine authentication",
+        "Use an access token belonging to service principals",
+        "Use an access token belonging to any workspace user",
+        "Use a frequently rotated access token belonging to either a workspace user or a service principal"
+      ],
+      "options_vi": [
         "Sử dụng xác thực máy-với-máy (machine-to-machine) bằng OAuth",
         "Sử dụng mã thông báo truy cập (access token) thuộc về service principals",
         "Sử dụng access token thuộc về bất kỳ người dùng workspace nào",
@@ -944,8 +1356,16 @@
     {
       "number": 59,
       "type": "multiple_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển hệ thống RAG cho công ty của họ để thực hiện hỏi đáp tài liệu nội bộ về các chính sách nhân sự có cấu trúc. Tuy nhiên, các câu trả lời trả về thường không đầy đủ và thiếu cấu trúc. Có vẻ như bộ truy xuất (retriever) không trả về toàn bộ ngữ cảnh liên quan. Kỹ sư đã thử nghiệm với các mô hình nhúng và LLM tạo phản hồi khác nhau nhưng kết quả không được cải thiện.\n\nHai lựa chọn nào có thể được sử dụng để cải thiện chất lượng phản hồi? (Chọn hai.)",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing a RAG system for their company to perform internal document Q&A for structured HR policies, but the answers returned are frequently incomplete and unstructured. It seems that the retriever is not returning all relevant context. The Generative AI Engineer has experimented with different embedding and response generating LLMs but that did not improve results.\n\nWhich TWO options could be used to improve the response quality? (Choose two.)",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển hệ thống RAG cho công ty của họ để thực hiện hỏi đáp tài liệu nội bộ về các chính sách nhân sự có cấu trúc. Tuy nhiên, các câu trả lời trả về thường không đầy đủ và thiếu cấu trúc. Có vẻ như bộ truy xuất (retriever) không trả về toàn bộ ngữ cảnh liên quan. Kỹ sư đã thử nghiệm với các mô hình nhúng và LLM tạo phản hồi khác nhau nhưng kết quả không được cải thiện.\n\nHai lựa chọn nào có thể được sử dụng để cải thiện chất lượng phản hồi? (Chọn hai.)",
+      "options_en": [
+        "Add the section header as a prefix to chunks",
+        "Split the document by sentence",
+        "Use a larger embedding model",
+        "Increase the document chunk size",
+        "Fine tune the response generation model"
+      ],
+      "options_vi": [
         "Thêm tiêu đề phần (section header) làm tiền tố (prefix) cho các phân đoạn (chunks)",
         "Tách tài liệu theo từng câu",
         "Sử dụng một mô hình nhúng lớn hơn",
@@ -962,8 +1382,15 @@
     {
       "number": 60,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng hệ thống LLM cấp độ sản xuất trả lời trực tiếp khách hàng. Giải pháp này sử dụng Foundation Model API thông qua provisioned throughput. Họ lo ngại rằng LLM có khả năng đưa ra phản hồi độc hại hoặc không an toàn. Họ muốn xử lý vấn đề này với nỗ lực ít nhất có thể.\n\nPhương pháp nào sẽ thực hiện điều này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a production-ready LLM system which replies directly to customers. The solution makes use of the Foundation Model API via provisioned throughput. They are concerned that the LLM could potentially respond in a toxic or otherwise unsafe way. They also wish to perform this with the least amount of effort.\n\nWhich approach will do this?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng hệ thống LLM cấp độ sản xuất trả lời trực tiếp khách hàng. Giải pháp này sử dụng Foundation Model API thông qua provisioned throughput. Họ lo ngại rằng LLM có khả năng đưa ra phản hồi độc hại hoặc không an toàn. Họ muốn xử lý vấn đề này với nỗ lực ít nhất có thể.\n\nPhương pháp nào sẽ thực hiện điều này?",
+      "options_en": [
+        "Ask users to report unsafe responses",
+        "Host Llama Guard on Foundation Model API and use it to detect unsafe responses.",
+        "Add some LLM calls to their chain to detect unsafe content before returning text",
+        "Add a regex expression on inputs and outputs to detect unsafe responses."
+      ],
+      "options_vi": [
         "Yêu cầu người dùng báo cáo các phản hồi không an toàn",
         "Triển khai Llama Guard trên Foundation Model API và sử dụng nó để phát hiện các phản hồi không an toàn.",
         "Thêm một số lệnh gọi LLM vào chain của họ để phát hiện nội dung không an toàn trước khi trả về văn bản",
@@ -978,8 +1405,15 @@
     {
       "number": 61,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) muốn một LLM phân tích và trích xuất các thông tin sau: ngày (date), email người gửi (sender email), và mã đơn hàng (order ID). Đầu ra phải được định dạng theo chuẩn JSON. Dưới đây là một email mẫu:\n\nNgày: 16 tháng 4 năm 2024\nThời gian: 3:45 CH\nTừ: sarah.lee925@gmail.com\nĐến: customer_service@smart_thermostat.com\nChủ đề: Cập nhật đơn hàng\n\nXin chào,\n\nTôi có thể lấy thông tin cập nhật trạng thái đơn hàng của mình không? Mã đơn hàng là RE987D.\n\nCảm ơn bạn,\nSarah\n\nHọ cần một câu lệnh (prompt) có thể trích xuất và xuất ra các thông tin yêu cầu dưới định dạng JSON với mức độ chính xác cao nhất.\n\nCâu lệnh nào sẽ làm được điều đó?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer would like an LLM to parse and extract the following information: date, sender email, and order ID. The output should be formatted into JSON. Here’s an email sample:\n\nDate: April 16, 2024\nTime: 3:45 PM\nFrom: sarah.lee925@gmail.com\nTo: customer_service@smart_thermostat.com\nSubject: Order update\n\nHi,\n\nCan I get a status update on my order? The order ID is RE987D.\n\nThank you,\nSarah\n\n\nThey need a prompt that will extract and output the required information in JSON with the highest level of output accuracy.\n\nWhich prompt will do that?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) muốn một LLM phân tích và trích xuất các thông tin sau: ngày (date), email người gửi (sender email), và mã đơn hàng (order ID). Đầu ra phải được định dạng theo chuẩn JSON. Dưới đây là một email mẫu:\n\nNgày: 16 tháng 4 năm 2024\nThời gian: 3:45 CH\nTừ: sarah.lee925@gmail.com\nĐến: customer_service@smart_thermostat.com\nChủ đề: Cập nhật đơn hàng\n\nXin chào,\n\nTôi có thể lấy thông tin cập nhật trạng thái đơn hàng của mình không? Mã đơn hàng là RE987D.\n\nCảm ơn bạn,\nSarah\n\nHọ cần một câu lệnh (prompt) có thể trích xuất và xuất ra các thông tin yêu cầu dưới định dạng JSON với mức độ chính xác cao nhất.\n\nCâu lệnh nào sẽ làm được điều đó?",
+      "options_en": [
+        "You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in a human-readable format.",
+        "You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format.",
+        "You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format. Here’s an example: {\"date\":\"April 16, 2024\", \"sender_email\":\"[email protected]\", \"order_id\":\"RE987D\"}",
+        "You will receive customer emails and need to extract date, sender email, and order IYou should return the date, sender email, and order ID information in JSON format."
+      ],
+      "options_vi": [
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng dễ đọc cho con người.",
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng JSON.",
         "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng JSON. Dưới đây là một ví dụ: {\"date\":\"April 16, 2024\", \"sender_email\":\"[email protected]\", \"order_id\":\"RE987D\"}",
@@ -994,8 +1428,15 @@
     {
       "number": 62,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã xây dựng một hệ thống dựa trên LLM tự động dịch văn bản của người dùng giữa hai ngôn ngữ. Hiện tại, họ muốn đánh giá (benchmark) nhiều LLM khác nhau trên tác vụ này và chọn ra mô hình tốt nhất. Họ có một tập dữ liệu đánh giá chứa các ví dụ bản dịch chất lượng cao đã biết trước. Họ muốn đánh giá từng LLM bằng tập dữ liệu này với một thang đo (metric) hiệu quả.\n\nHọ nên chọn thang đo nào cho việc đánh giá này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has built an LLM-based system that will automatically translate user text between two languages. They now want to benchmark multiple LLM’s on this task and pick the best one. They have an evaluation set with known high quality translation examples. They want to evaluate each LLM using the evaluation set with a performant metric.\n\nWhich metric should they choose for this evaluation?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã xây dựng một hệ thống dựa trên LLM tự động dịch văn bản của người dùng giữa hai ngôn ngữ. Hiện tại, họ muốn đánh giá (benchmark) nhiều LLM khác nhau trên tác vụ này và chọn ra mô hình tốt nhất. Họ có một tập dữ liệu đánh giá chứa các ví dụ bản dịch chất lượng cao đã biết trước. Họ muốn đánh giá từng LLM bằng tập dữ liệu này với một thang đo (metric) hiệu quả.\n\nHọ nên chọn thang đo nào cho việc đánh giá này?",
+      "options_en": [
+        "BLEU metric",
+        "NDCG metric",
+        "ROUGE metric",
+        "RECALL metric"
+      ],
+      "options_vi": [
         "Thang đo BLEU",
         "Thang đo NDCG",
         "Thang đo ROUGE",
@@ -1010,8 +1451,15 @@
     {
       "number": 63,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang sử dụng LLM để phân loại các loại nấm ăn được dựa trên mô tả văn bản về các đặc điểm nhất định. Mô hình trả về các phản hồi chính xác trong quá trình kiểm thử và Kỹ sư AI Tạo sinh tự tin rằng họ có danh sách nhãn đúng, nhưng đầu ra thường xuyên chứa thêm phần lý luận trong câu trả lời, trong khi Kỹ sư AI Tạo sinh chỉ muốn trả về đúng nhãn mà không có thêm văn bản nào.\n\nHọ nên thực hiện hành động nào để tạo ra hành vi mong muốn từ LLM này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is using an LLM to classify species of edible mushrooms based on text descriptions of certain features. The model is returning accurate responses in testing and the Generative AI Engineer is confident they have the correct list of possible labels, but the output frequently contains additional reasoning in the answer when the Generative AI Engineer only wants to return the label with no additional text.\n\nWhich action should they take to elicit the desired behavior from this LLM?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang sử dụng LLM để phân loại các loại nấm ăn được dựa trên mô tả văn bản về các đặc điểm nhất định. Mô hình trả về các phản hồi chính xác trong quá trình kiểm thử và Kỹ sư AI Tạo sinh tự tin rằng họ có danh sách nhãn đúng, nhưng đầu ra thường xuyên chứa thêm phần lý luận trong câu trả lời, trong khi Kỹ sư AI Tạo sinh chỉ muốn trả về đúng nhãn mà không có thêm văn bản nào.\n\nHọ nên thực hiện hành động nào để tạo ra hành vi mong muốn từ LLM này?",
+      "options_en": [
+        "Use few shot prompting to instruct the model on expected output format",
+        "Use zero shot prompting to instruct the model on expected output format",
+        "Use zero shot chain-of-thought prompting to prevent a verbose output format",
+        "Use a system prompt to instruct the model to be succinct in its answer"
+      ],
+      "options_vi": [
         "Sử dụng \"few shot prompting\" để hướng dẫn mô hình về định dạng đầu ra mong đợi",
         "Sử dụng \"zero shot prompting\" để hướng dẫn mô hình về định dạng đầu ra mong đợi",
         "Sử dụng \"zero shot chain-of-thought prompting\" để ngăn định dạng đầu ra quá dài dòng",
@@ -1026,8 +1474,15 @@
     {
       "number": 64,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang làm việc với một công ty bán lẻ muốn nâng cao trải nghiệm khách hàng bằng cách tự động xử lý các câu hỏi phổ biến. Họ đang nghiên cứu một giải pháp AI dựa trên LLM để cải thiện thời gian phản hồi trong khi vẫn duy trì sự tương tác cá nhân hóa. Họ muốn xác định cặp đầu vào (input) và tác vụ LLM phù hợp để thực hiện điều này.\n\nCặp đầu vào/đầu ra nào sẽ đáp ứng được điều này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is working with a retail company that wants to enhance its customer experience by automatically handling common customer inquiries. They are working on an LLM-powered AI solution that should improve response times while maintaining a personalized interaction. They want to define the appropriate input and LLM task to do this.\n\nWhich input/output pair will do this?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang làm việc với một công ty bán lẻ muốn nâng cao trải nghiệm khách hàng bằng cách tự động xử lý các câu hỏi phổ biến. Họ đang nghiên cứu một giải pháp AI dựa trên LLM để cải thiện thời gian phản hồi trong khi vẫn duy trì sự tương tác cá nhân hóa. Họ muốn xác định cặp đầu vào (input) và tác vụ LLM phù hợp để thực hiện điều này.\n\nCặp đầu vào/đầu ra nào sẽ đáp ứng được điều này?",
+      "options_en": [
+        "Input: Customer service chat logs; Output: Group the chat logs by users, followed by summarizing each user’s interactions, then respond",
+        "Input: Customer service chat logs; Output: Find the answers to similar questions and respond with a summary",
+        "Input: Customer reviews; Output: Classify review sentiment",
+        "Input: Customer reviews; Output: Group the reviews by users and aggregate per-user average rating, then respond"
+      ],
+      "options_vi": [
         "Đầu vào: Nhật ký trò chuyện dịch vụ khách hàng; Đầu ra: Nhóm các nhật ký trò chuyện theo người dùng, sau đó tóm tắt các tương tác của từng người dùng, rồi trả lời",
         "Đầu vào: Nhật ký trò chuyện dịch vụ khách hàng; Đầu ra: Tìm câu trả lời cho các câu hỏi tương tự và phản hồi bằng một bản tóm tắt",
         "Đầu vào: Đánh giá của khách hàng; Đầu ra: Phân loại cảm xúc của bài đánh giá",
@@ -1042,8 +1497,15 @@
     {
       "number": 65,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng RAG và muốn thử nghiệm các mô hình nhúng (embedding models) khác nhau để cải thiện hiệu suất của ứng dụng.\n\nHọ nên chọn chiến lược nào để lựa chọn mô hình nhúng?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing a RAG application and would like to experiment with different embedding models to improve the application performance.\n\nWhich strategy for picking an embedding model should they choose?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng RAG và muốn thử nghiệm các mô hình nhúng (embedding models) khác nhau để cải thiện hiệu suất của ứng dụng.\n\nHọ nên chọn chiến lược nào để lựa chọn mô hình nhúng?",
+      "options_en": [
+        "Pick an embedding model with multilingual support to support potential multilingual user questions",
+        "Pick the most recent and most performant open LLM released at the time",
+        "Pick an embedding model trained on related domain knowledge",
+        "Pick the embedding model ranked highest on the Massive Text Embedding Benchmark (MTEB) leaderboard hosted by HuggingFace"
+      ],
+      "options_vi": [
         "Chọn một mô hình nhúng có hỗ trợ đa ngôn ngữ để hỗ trợ các câu hỏi đa ngôn ngữ tiềm năng của người dùng",
         "Chọn mô hình LLM mã nguồn mở mới nhất và có hiệu năng cao nhất được phát hành tại thời điểm đó",
         "Chọn một mô hình nhúng được huấn luyện trên các kiến thức chuyên ngành liên quan",
@@ -1058,8 +1520,15 @@
     {
       "number": 66,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh muốn các mô hình LLM đã được tinh chỉnh (finetuned LLMs) trong không gian làm việc Databricks môi trường sản xuất (prod Databricks workspace) của họ cũng khả dụng để kiểm thử trong không gian làm việc môi trường phát triển (dev workspace). Tất cả các workspace của họ đều đã bật Unity Catalog và hiện họ đang ghi (logging) các mô hình của mình vào Model Registry trong MLflow.\n\nLựa chọn nào là tiết kiệm chi phí và an toàn nhất để Kỹ sư AI Tạo sinh hoàn thành mục tiêu của mình?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer wants their finetuned LLMs in their prod Databricks workspace available for testing in their dev workspace as well. All of their workspaces are Unity Catalog enabled and they are currently logging their models into the Model Registry in MLflow.\n\nWhat is the most cost-effective and secure option for the Generative AI Engineer to accomplish their goal?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh muốn các mô hình LLM đã được tinh chỉnh (finetuned LLMs) trong không gian làm việc Databricks môi trường sản xuất (prod Databricks workspace) của họ cũng khả dụng để kiểm thử trong không gian làm việc môi trường phát triển (dev workspace). Tất cả các workspace của họ đều đã bật Unity Catalog và hiện họ đang ghi (logging) các mô hình của mình vào Model Registry trong MLflow.\n\nLựa chọn nào là tiết kiệm chi phí và an toàn nhất để Kỹ sư AI Tạo sinh hoàn thành mục tiêu của mình?",
+      "options_en": [
+        "Use an external model registry which can be accessed from all workspaces.",
+        "Use MLflow to log the model directly into Unity Catalog, and enable READ access in the dev workspace to the model.",
+        "Setup a duplicate training pipeline in dev, so that an identical model is available in dev.",
+        "Setup a script to export the model from prod and import it to dev."
+      ],
+      "options_vi": [
         "Sử dụng một model registry bên ngoài có thể truy cập được từ tất cả các workspace.",
         "Sử dụng MLflow để ghi trực tiếp mô hình vào Unity Catalog, đồng thời cấp quyền READ (đọc) trong dev workspace cho mô hình đó.",
         "Thiết lập một đường ống huấn luyện (training pipeline) trùng lặp trong dev, để một mô hình giống hệt khả dụng trong dev.",
@@ -1074,8 +1543,15 @@
     {
       "number": 67,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty sản xuất để hỗ trợ trả lời các câu hỏi dịch vụ khách hàng. Họ cần xác định các số liệu (metrics) doanh nghiệp quan trọng để giám sát ứng dụng trong môi trường sản xuất (production).\n\nĐâu KHÔNG PHẢI là một thước đo họ sẽ triển khai cho ứng dụng LLM dịch vụ khách hàng trong môi trường sản xuất?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has just deployed an LLM application at a manufacturing company that assists with answering customer service inquiries. They need to identity the key enterprise metrics to monitor the application in production.\n\nWhich is NOT a metric they will implement for their customer service LLM application in production?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty sản xuất để hỗ trợ trả lời các câu hỏi dịch vụ khách hàng. Họ cần xác định các số liệu (metrics) doanh nghiệp quan trọng để giám sát ứng dụng trong môi trường sản xuất (production).\n\nĐâu KHÔNG PHẢI là một thước đo họ sẽ triển khai cho ứng dụng LLM dịch vụ khách hàng trong môi trường sản xuất?",
+      "options_en": [
+        "Massive Multi-task Language Understanding (MMLU) score",
+        "Number of customer inquiries processed per unit of time",
+        "Factual accuracy of the response",
+        "Time taken for LLM to generate a response"
+      ],
+      "options_vi": [
         "Điểm số Massive Multi-task Language Understanding (MMLU)",
         "Số lượng câu hỏi của khách hàng được xử lý trên một đơn vị thời gian",
         "Tính chính xác thực tế (Factual accuracy) của câu trả lời",
@@ -1090,8 +1566,15 @@
     {
       "number": 68,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang giúp một rạp chiếu phim mở rộng chatbot trên trang web để có thể trả lời các câu hỏi về lịch chiếu cụ thể của các bộ phim đang chiếu tại rạp địa phương của họ. Họ đã có vị trí của người dùng do dịch vụ định vị cung cấp cho tác tử (agent) và một bảng Delta (Delta table) liên tục được cập nhật thông tin lịch chiếu mới nhất theo vị trí. Họ muốn triển khai khả năng mới này vào ứng dụng RAG của mình.\n\nLựa chọn nào sẽ thực hiện điều này với nỗ lực ít nhất và cách thức đạt hiệu suất cao nhất?",
-      "options": [
+      "prompt_en": "Generative AI Engineer is helping a cinema extend its website’s chat bot to be able to respond to questions about specific showtimes for movies currently playing at their local theater. They already have the location of the user provided by location services to their agent, and a Delta table which is continually updated with the latest showtime information by location. They want to implement this new capability in their RAG application.\n\nWhich option will do this with the least effort and in the most performant way?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang giúp một rạp chiếu phim mở rộng chatbot trên trang web để có thể trả lời các câu hỏi về lịch chiếu cụ thể của các bộ phim đang chiếu tại rạp địa phương của họ. Họ đã có vị trí của người dùng do dịch vụ định vị cung cấp cho tác tử (agent) và một bảng Delta (Delta table) liên tục được cập nhật thông tin lịch chiếu mới nhất theo vị trí. Họ muốn triển khai khả năng mới này vào ứng dụng RAG của mình.\n\nLựa chọn nào sẽ thực hiện điều này với nỗ lực ít nhất và cách thức đạt hiệu suất cao nhất?",
+      "options_en": [
+        "Create a Feature Serving Endpoint from a FeatureSpec that references an online store synced from the Delta table. Query the Feature Serving Endpoint as part of the agent logic / tool implementation.",
+        "Query the Delta table directly via a SQL query constructed from the user’s input using a text-to-SQL LLM in the agent logic / tool implementation.",
+        "Set up a task in Databricks Workflows to write the information in the Delta table periodically to an external database such as MySQL and query the information from there as part of the agent logic / tool implementation.",
+        "Write the Delta table contents to a text column, then embed those texts using an embedding model and store these in the vector index. Look up the information based on the embedding as part of the agent logic / tool implementation."
+      ],
+      "options_vi": [
         "Tạo một Điểm cuối phục vụ đặc trưng (Feature Serving Endpoint) từ một FeatureSpec tham chiếu đến một kho dữ liệu trực tuyến (online store) được đồng bộ hóa từ bảng Delta. Truy vấn Feature Serving Endpoint như một phần của logic tác tử / công cụ.",
         "Truy vấn trực tiếp bảng Delta thông qua truy vấn SQL được xây dựng từ đầu vào của người dùng bằng mô hình text-to-SQL LLM trong logic tác tử / công cụ.",
         "Thiết lập một tác vụ trong Databricks Workflows để định kỳ ghi thông tin từ bảng Delta vào cơ sở dữ liệu bên ngoài như MySQL và truy vấn thông tin từ đó như một phần của logic tác tử / công cụ.",
@@ -1106,8 +1589,15 @@
     {
       "number": 69,
       "type": "single_choice",
-      "prompt": "Kỹ sư AI Tạo sinh cần xây dựng một ứng dụng LLM có thể hiểu các tài liệu y tế, bao gồm cả những tài liệu mới được công bố gần đây. Họ muốn chọn một mô hình mã nguồn mở khả dụng trên model hub của HuggingFace.\n\nBước nào là phù hợp nhất để lựa chọn một LLM?",
-      "options": [
+      "prompt_en": "Generative AI Engineer needs to build an LLM application that can understand medical documents, including recently published ones. They want to select an open model available on HuggingFace’s model hub.\n\nWhich step is most appropriate for selecting an LLM?",
+      "prompt_vi": "Kỹ sư AI Tạo sinh cần xây dựng một ứng dụng LLM có thể hiểu các tài liệu y tế, bao gồm cả những tài liệu mới được công bố gần đây. Họ muốn chọn một mô hình mã nguồn mở khả dụng trên model hub của HuggingFace.\n\nBước nào là phù hợp nhất để lựa chọn một LLM?",
+      "options_en": [
+        "Pick any model in the Mistral family, as Mistral models are good with all types of use cases",
+        "Select a model based on the highest number of downloads, as this indicates popularity, reliability, and general suitability",
+        "Select a model that is most recently uploaded, as this indicates the model is the newest and highly likely to be the most performant",
+        "Check for the model and training data description to identify if the model is trained on any medical data."
+      ],
+      "options_vi": [
         "Chọn bất kỳ mô hình nào thuộc dòng Mistral, vì các mô hình Mistral rất tốt cho mọi loại trường hợp sử dụng",
         "Chọn một mô hình dựa trên số lượng tải xuống cao nhất, vì điều này cho thấy mức độ phổ biến, độ tin cậy và sự phù hợp chung",
         "Chọn mô hình được tải lên gần đây nhất, vì điều này chứng tỏ mô hình là mới nhất và có khả năng cao là có hiệu suất tốt nhất",
@@ -1122,8 +1612,15 @@
     {
       "number": 70,
       "type": "single_choice",
-      "prompt": "Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về các bài báo tin tức liên quan đến công nghệ. Các tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin thể thao hoặc tin giải trí.\n\nCách tiếp cận nào KHÔNG nên dùng khi xây dựng ứng dụng RAG tập trung vào việc trả lời các câu hỏi chỉ về công nghệ?",
-      "options": [
+      "prompt_en": "Generative AI Engineer is building a RAG application that answers questions about technology-related news articles. The source documents may contain a significant amount of irrelevant content, such as advertisements, sports news, or entertainment news.\n\nWhich approach is NOT advisable for building a RAG application focused on answering technology-only questions?",
+      "prompt_vi": "Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về các bài báo tin tức liên quan đến công nghệ. Các tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin thể thao hoặc tin giải trí.\n\nCách tiếp cận nào KHÔNG nên dùng khi xây dựng ứng dụng RAG tập trung vào việc trả lời các câu hỏi chỉ về công nghệ?",
+      "options_en": [
+        "Include in the system prompt that the application is not supposed to answer any questions unrelated to technology.",
+        "Filter out irrelevant news articles in the retrieval process.",
+        "Keep all news articles because the RAG application needs to understand non-technological content to avoid answering questions about them.",
+        "Filter out irrelevant news articles in the upstream document database."
+      ],
+      "options_vi": [
         "Đưa vào system prompt (lời nhắc hệ thống) quy định rằng ứng dụng không được trả lời bất kỳ câu hỏi nào không liên quan đến công nghệ.",
         "Lọc các bài báo không liên quan trong quá trình truy xuất (retrieval).",
         "Giữ lại tất cả các bài báo vì ứng dụng RAG cần hiểu nội dung phi công nghệ để tránh trả lời các câu hỏi về chúng.",
@@ -1138,8 +1635,15 @@
     {
       "number": 71,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG sẽ dựa vào ngữ cảnh được truy xuất từ các tài liệu nguồn hiện đang ở định dạng HTML. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất.\n\nGói Python (Python package) nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a RAG application that will rely on context retrieved from source documents that are currently in HTML format. They want to develop a solution using the least amount of lines of code.\n\nWhich Python package should be used to extract the text from the source documents?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG sẽ dựa vào ngữ cảnh được truy xuất từ các tài liệu nguồn hiện đang ở định dạng HTML. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất.\n\nGói Python (Python package) nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn?",
+      "options_en": [
+        "pytesseract",
+        "numpy",
+        "pypdf2",
+        "beautifulsoup"
+      ],
+      "options_vi": [
         "pytesseract",
         "numpy",
         "pypdf2",
@@ -1154,8 +1658,15 @@
     {
       "number": 72,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG để trả lời các câu hỏi của nhân viên về chính sách của công ty.\n\nCác bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a RAG application for answering employee questions on company policies.\n\nWhat are the steps needed to build this RAG application and deploy it?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG để trả lời các câu hỏi của nhân viên về chính sách của công ty.\n\nCác bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
+      "options_en": [
+        "Ingest documents from a source -> Index the documents and saves to Vector Search -> User submits queries against an LLM -> LLM retrieves relevant documents -> Evaluate model -> LLM generates a response -> Deploy it using Model Serving",
+        "User submits queries against an LLM -> Ingest documents from a source -> Index the documents and save to Vector Search -> LLM retrieves relevant documents -> LLM generates a response -> Evaluate model -> Deploy it using Model Serving",
+        "Ingest documents from a source -> Index the documents and save to Vector Search -> Evaluate model -> Deploy it using Model Serving -> User submits queries against an LLM -> LLM retrieves relevant documents -> LLM generates a response",
+        "Ingest documents from a source -> Index the documents and save to Vector Search -> User submits queries against an LLM -> LLM retrieves relevant documents -> LLM generates a response -> Evaluate model -> Deploy it using Model Serving"
+      ],
+      "options_vi": [
         "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi các truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> Đánh giá mô hình -> LLM tạo ra câu trả lời -> Triển khai bằng Model Serving",
         "Người dùng gửi các truy vấn tới LLM -> Thu thập tài liệu từ một nguồn -> Lập chỉ mục tài liệu và lưu vào Vector Search -> LLM truy xuất tài liệu liên quan -> LLM tạo ra câu trả lời -> Đánh giá mô hình -> Triển khai bằng Model Serving",
         "Thu thập tài liệu từ một nguồn -> Lập chỉ mục tài liệu và lưu vào Vector Search -> Đánh giá mô hình -> Triển khai bằng Model Serving -> Người dùng gửi các truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> LLM tạo ra câu trả lời",
@@ -1170,8 +1681,15 @@
     {
       "number": 73,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng nguyên mẫu một hệ thống LLM đã vô tình chạy hàng nghìn truy vấn suy luận (inference queries) tới endpoint của Mô hình Nền tảng (Foundation Model endpoint) vào cuối tuần. Họ muốn thực hiện một hành động để ngăn chặn điều này vô tình xảy ra trong tương lai.\n\nHọ nên thực hiện hành động nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer who was prototyping an LLM system accidentally ran thousands of inference queries against a Foundation Model endpoint over the weekend. They want to take action to prevent this from unintentionally happening again in the future.\n\nWhat action should they take?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng nguyên mẫu một hệ thống LLM đã vô tình chạy hàng nghìn truy vấn suy luận (inference queries) tới endpoint của Mô hình Nền tảng (Foundation Model endpoint) vào cuối tuần. Họ muốn thực hiện một hành động để ngăn chặn điều này vô tình xảy ra trong tương lai.\n\nHọ nên thực hiện hành động nào?",
+      "options_en": [
+        "Use prompt engineering to instruct the LLM endpoints to refuse too many subsequent queries.",
+        "Require that all development code which interfaces with a Foundation Model endpoint must be reviewed by a Staff level engineer before execution.",
+        "Build a pyfunc model which proxies to the Foundation Model endpoint and add throttling within the pyfune model.",
+        "Configure rate limiting on the Foundation Model endpoints."
+      ],
+      "options_vi": [
         "Sử dụng kỹ thuật prompt engineering để yêu cầu các endpoint LLM từ chối quá nhiều truy vấn liên tiếp.",
         "Yêu cầu tất cả các mã nguồn phát triển có tương tác với endpoint của Mô hình Nền tảng đều phải được kiểm duyệt bởi kỹ sư cấp Staff trước khi thực thi.",
         "Xây dựng một mô hình pyfunc đóng vai trò proxy tới endpoint của Mô hình Nền tảng và thêm cơ chế điều tiết (throttling) bên trong mô hình pyfunc.",
@@ -1186,8 +1704,15 @@
     {
       "number": 74,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết lập Databricks Vector Search để tra cứu các bài báo tin tức theo chủ đề trong vòng 10 ngày so với ngày được chỉ định. Một truy vấn ví dụ có thể là “Hãy kể cho tôi nghe tin tức về xe tải quái vật (monster truck) trong khoảng ngày 5 tháng 1 năm 1992”. Họ muốn thực hiện điều này với nỗ lực ít nhất.\n\nHọ có thể thiết lập chỉ mục (index) Vector Search của mình như thế nào để hỗ trợ trường hợp sử dụng này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is setting up a Databricks Vector Search that will lookup news articles by topic within 10 days of the date specified. An example query might be “Tell me about monster truck news around January 5th 1992”. They want to do this with the least amount of effort.\n\nHow can they set up their Vector Search index to support this use case?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang thiết lập Databricks Vector Search để tra cứu các bài báo tin tức theo chủ đề trong vòng 10 ngày so với ngày được chỉ định. Một truy vấn ví dụ có thể là “Hãy kể cho tôi nghe tin tức về xe tải quái vật (monster truck) trong khoảng ngày 5 tháng 1 năm 1992”. Họ muốn thực hiện điều này với nỗ lực ít nhất.\n\nHọ có thể thiết lập chỉ mục (index) Vector Search của mình như thế nào để hỗ trợ trường hợp sử dụng này?",
+      "options_en": [
+        "Create separate indexes by topic and add a classifier model to appropriately pick the best index.",
+        "Include metadata columns for article date and topic to support metadata filtering.",
+        "Pass the query directly to the vector search index and return the best articles.",
+        "Split articles by 10 day blocks and return the block closest to the query."
+      ],
+      "options_vi": [
         "Tạo các chỉ mục riêng biệt theo chủ đề và thêm một mô hình phân loại để chọn chỉ mục phù hợp nhất.",
         "Bao gồm các cột siêu dữ liệu (metadata columns) cho ngày tháng và chủ đề bài báo để hỗ trợ tính năng lọc siêu dữ liệu (metadata filtering).",
         "Chuyển thẳng truy vấn tới vector search index và trả về các bài báo tốt nhất.",
@@ -1202,8 +1727,15 @@
     {
       "number": 75,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM sử dụng Foundation Model API theo hình thức trả phí theo token (pay-per-token). Hiện tại ứng dụng đã sẵn sàng để triển khai, họ muốn đảm bảo rằng endpoint của mô hình có thể phục vụ khối lượng yêu cầu (requests) lớn trong môi trường sản xuất (production).\n\nKỹ sư AI Tạo sinh nên cân nhắc điều gì?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer developed an LLM application using the pay-per-token Foundation Model API. Now that the application is ready to be deployed, they would like to ensure the model endpoint can serve high incoming volumes of requests in production.\n\nWhat should the Generative AI Engineer consider?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM sử dụng Foundation Model API theo hình thức trả phí theo token (pay-per-token). Hiện tại ứng dụng đã sẵn sàng để triển khai, họ muốn đảm bảo rằng endpoint của mô hình có thể phục vụ khối lượng yêu cầu (requests) lớn trong môi trường sản xuất (production).\n\nKỹ sư AI Tạo sinh nên cân nhắc điều gì?",
+      "options_en": [
+        "Switch to using External Models instead",
+        "Throttle the incoming batch of requests manually to avoid rate limiting issues",
+        "Change to a model with a fewer number of parameters in order to reduce hardware constraint issues",
+        "Deploy the model using provisioned throughput as it comes with performance guarantees"
+      ],
+      "options_vi": [
         "Thay vào đó hãy chuyển sang sử dụng các Mô hình bên ngoài (External Models)",
         "Chủ động điều tiết (Throttle) hàng loạt các yêu cầu gửi đến theo cách thủ công để tránh các vấn đề về giới hạn tốc độ (rate limiting)",
         "Chuyển sang mô hình có số lượng tham số ít hơn để giảm các vấn đề hạn chế về phần cứng",
@@ -1218,8 +1750,15 @@
     {
       "number": 76,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty thiết bị gia dụng đã được yêu cầu thiết kế một ứng dụng dựa trên LLM hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi của khách hàng về thiết bị gia dụng bằng cách sử dụng các sổ tay hướng dẫn tương ứng.\n\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các nhiệm vụ cấp cao nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer at a home appliance company has been asked to design an LLM based application that accomplishes the following business objective: answer customer questions on home appliances using the associated instruction manuals.\n\nWhich set of high-level tasks should the Generative AI Engineer’s system perform?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh tại một công ty thiết bị gia dụng đã được yêu cầu thiết kế một ứng dụng dựa trên LLM hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi của khách hàng về thiết bị gia dụng bằng cách sử dụng các sổ tay hướng dẫn tương ứng.\n\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các nhiệm vụ cấp cao nào?",
+      "options_en": [
+        "Split instruction manuals into chunks and embed into a vector store. Use the question to retrieve best matched chunks of manual, and use the LLM to generate a response to the user based upon the manual retrieved.",
+        "Create an interaction matrix of historical user questions and appliance instruction manuals. Use ALS to factorize the matrix and create embeddings. Calculate the embeddings of new queries and use them to find the best manual. Use an LLM to generate a response to the question based upon the manual retrieved.",
+        "Calculate averaged embeddings for each instruction manual, compare embeddings to user query to find the best manual. Pass the best manual with user query into an LLM with a large context window to generate a response to the employee.",
+        "Use an LLM to summarize all of the instruction manuals. Provide summaries of each manual and user query into an LLM with a large context window to generate a response to the user."
+      ],
+      "options_vi": [
         "Chia sổ tay hướng dẫn thành các đoạn nhỏ (chunks) và nhúng vào kho lưu trữ vector (vector store). Sử dụng câu hỏi để truy xuất các đoạn phù hợp nhất của sổ tay, và sử dụng LLM để tạo câu trả lời cho người dùng dựa trên cuốn sổ tay được truy xuất.",
         "Tạo ma trận tương tác giữa các câu hỏi lịch sử của người dùng và sổ tay hướng dẫn thiết bị. Sử dụng thuật toán ALS để phân tích ma trận và tạo nhúng. Tính toán nhúng của các truy vấn mới và dùng chúng để tìm sổ tay tốt nhất. Sử dụng LLM để tạo phản hồi cho câu hỏi dựa trên cuốn sổ tay được truy xuất.",
         "Tính toán các nhúng trung bình (averaged embeddings) cho mỗi cuốn sổ tay hướng dẫn, so sánh các nhúng này với truy vấn của người dùng để tìm cuốn sổ tay tốt nhất. Đưa toàn bộ cuốn sổ tay tốt nhất cùng truy vấn của người dùng vào LLM có cửa sổ ngữ cảnh lớn để tạo phản hồi cho nhân viên.",
@@ -1234,8 +1773,15 @@
     {
       "number": 77,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM để tương tác với người dùng nhằm cung cấp các đề xuất phim được cá nhân hóa.\n\nTrước rủi ro người dùng nhập vào các dữ liệu đầu vào độc hại (malicious inputs), kỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing an LLM application to interact with users to provide personalized movie recommendations.\n\nGiven the potential for malicious user inputs, which technique would be most effective in safeguarding the application?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM để tương tác với người dùng nhằm cung cấp các đề xuất phim được cá nhân hóa.\n\nTrước rủi ro người dùng nhập vào các dữ liệu đầu vào độc hại (malicious inputs), kỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng?",
+      "options_en": [
+        "Reduce the time that the users can interact with the LLM",
+        "Increase the amount of compute that powers the LLM to process input faster",
+        "Ask the LLM to remind the user that the input is malicious but continue the conversation with the user",
+        "Implement a safety filter that detects any harmful inputs and ask the LLM to respond that it is unable to assist"
+      ],
+      "options_vi": [
         "Giảm bớt thời gian người dùng có thể tương tác với LLM",
         "Tăng cường khả năng tính toán (compute) vận hành LLM để xử lý đầu vào nhanh hơn",
         "Yêu cầu LLM nhắc nhở người dùng rằng đầu vào là độc hại nhưng vẫn tiếp tục cuộc trò chuyện với người dùng",
@@ -1250,8 +1796,15 @@
     {
       "number": 78,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu kinh doanh sau đây cho một chatbot nội bộ. Chatbot nội bộ cần biết người dùng đang hỏi những loại câu hỏi nào và định tuyến (route) chúng đến các mô hình phù hợp để trả lời. Ví dụ: một người dùng có thể hỏi về tỷ lệ hỏng hóc lịch sử của một bộ phận điện cụ thể. Một người khác có thể hỏi về cách khắc phục sự cố (troubleshoot) trên một phần thiết bị điện.\n\nCác nguồn dữ liệu có sẵn bao gồm cơ sở dữ liệu các sổ tay thiết bị điện dạng PDF và một bảng thông tin về thời điểm các bộ phận điện bị hỏng hóc.\n\nQuy trình làm việc (workflow) nào hỗ trợ chatbot như vậy?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer received the following business requirements for an internal chatbot. The internal chatbot needs to know what types of questions the user asks and route them to appropriate models to answer the questions. For example, the user might ask about historical failure rates of a specific electrical part. Another user might ask about how to troubleshoot a piece of electrical equipment.\n\nAvailable data sources include a database of electrical equipment PDF manuals and also a table with information on when an electrical part experiences failure.\n\nWhich workflow supports such a chatbot?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu kinh doanh sau đây cho một chatbot nội bộ. Chatbot nội bộ cần biết người dùng đang hỏi những loại câu hỏi nào và định tuyến (route) chúng đến các mô hình phù hợp để trả lời. Ví dụ: một người dùng có thể hỏi về tỷ lệ hỏng hóc lịch sử của một bộ phận điện cụ thể. Một người khác có thể hỏi về cách khắc phục sự cố (troubleshoot) trên một phần thiết bị điện.\n\nCác nguồn dữ liệu có sẵn bao gồm cơ sở dữ liệu các sổ tay thiết bị điện dạng PDF và một bảng thông tin về thời điểm các bộ phận điện bị hỏng hóc.\n\nQuy trình làm việc (workflow) nào hỗ trợ chatbot như vậy?",
+      "options_en": [
+        "Parse the electrical equipment PDF manuals into a table of question and response pairs. That way, the same chatbot can query tables easily to answer questions about both historical failure rates and equipment troubleshooting.",
+        "The chatbot should be implemented as a multi-step LLM workflow. First, identify the type of question asked, then route the question to the appropriate model. If it’s a historical failure rate question, send the query to a text-to-SQL model. If it’s a troubleshooting question, then send the query to another model that summarizes the equipment-specific document and generates the response.",
+        "There should be two different chatbots handling different types of user queries.",
+        "The table with electrical part failures should be converted into a text document first. That way, the same chatbot can use the same document retrieval process to generate answers regardless of question types."
+      ],
+      "options_vi": [
         "Phân tích cú pháp các sổ tay PDF của thiết bị điện thành bảng các cặp câu hỏi và trả lời. Bằng cách đó, cùng một chatbot có thể truy vấn các bảng một cách dễ dàng để trả lời các câu hỏi về cả tỷ lệ hỏng hóc lịch sử và khắc phục sự cố thiết bị.",
         "Chatbot nên được triển khai như một quy trình làm việc LLM đa bước (multi-step LLM workflow). Đầu tiên, xác định loại câu hỏi được hỏi, sau đó định tuyến câu hỏi đến mô hình thích hợp. Nếu đó là câu hỏi về tỷ lệ hỏng hóc lịch sử, gửi truy vấn đến mô hình text-to-SQL. Nếu đó là câu hỏi khắc phục sự cố, gửi truy vấn đến một mô hình khác chuyên tóm tắt tài liệu cụ thể của thiết bị và tạo câu trả lời.",
         "Nên có hai chatbot khác nhau xử lý các loại truy vấn khác nhau của người dùng.",
@@ -1266,8 +1819,15 @@
     {
       "number": 79,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống để trả lời các câu hỏi về các chủ đề tin tức đang diễn ra. Do đó, hệ thống kéo thông tin từ nhiều nguồn khác nhau bao gồm các bài báo và các bài đăng trên mạng xã hội. Họ lo ngại về việc các bài đăng độc hại (toxic posts) trên mạng xã hội sẽ gây ra các kết quả đầu ra độc hại từ hệ thống của họ.\n\nRào chắn bảo vệ (guardrail) nào sẽ hạn chế các kết quả đầu ra độc hại?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is building a system that will answer questions on currently unfolding news topics. As such, it pulls information from a variety of sources including articles and social media posts. They are concerned about toxic posts on social media causing toxic outputs from their system.\n\nWhich guardrail will limit toxic outputs?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống để trả lời các câu hỏi về các chủ đề tin tức đang diễn ra. Do đó, hệ thống kéo thông tin từ nhiều nguồn khác nhau bao gồm các bài báo và các bài đăng trên mạng xã hội. Họ lo ngại về việc các bài đăng độc hại (toxic posts) trên mạng xã hội sẽ gây ra các kết quả đầu ra độc hại từ hệ thống của họ.\n\nRào chắn bảo vệ (guardrail) nào sẽ hạn chế các kết quả đầu ra độc hại?",
+      "options_en": [
+        "Reduce the amount of context items the system will include in consideration for its response.",
+        "Use only approved social media and news accounts to prevent unexpected toxic data from getting to the LLM.",
+        "Log all LLM system responses and perform a batch toxicity analysis monthly.",
+        "Implement rate limiting."
+      ],
+      "options_vi": [
         "Giảm số lượng các mục ngữ cảnh (context items) mà hệ thống sẽ đưa vào xem xét cho phản hồi của nó.",
         "Chỉ sử dụng các tài khoản mạng xã hội và tin tức đã được phê duyệt để ngăn dữ liệu độc hại không mong muốn tiếp cận với LLM.",
         "Ghi nhật ký (log) tất cả các phản hồi của hệ thống LLM và thực hiện phân tích mức độ độc hại hàng loạt (batch toxicity analysis) mỗi tháng một lần.",
@@ -1282,8 +1842,15 @@
     {
       "number": 80,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư AI Tạo sinh đã tạo ra một ứng dụng RAG có thể giúp nhân viên diễn giải các tài liệu Nhân sự (HR). Ứng dụng nguyên mẫu hiện đang hoạt động với một số phản hồi tích cực từ các người kiểm thử nội bộ trong công ty. Giờ đây, Kỹ sư AI Tạo sinh muốn đánh giá chính thức hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\n\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has created a RAG application which can help employees interpret HR documentation. The prototype application is now working with some positive feedback from internal company testers. Now the Generative AI Engineer wants to formally evaluate the system’s performance and understand where to focus their efforts to further improve the system\n\nHow should the Generative AI Engineer evaluate the system?",
+      "prompt_vi": "Một Kỹ sư AI Tạo sinh đã tạo ra một ứng dụng RAG có thể giúp nhân viên diễn giải các tài liệu Nhân sự (HR). Ứng dụng nguyên mẫu hiện đang hoạt động với một số phản hồi tích cực từ các người kiểm thử nội bộ trong công ty. Giờ đây, Kỹ sư AI Tạo sinh muốn đánh giá chính thức hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\n\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
+      "options_en": [
+        "Use ROUGE score to comprehensively evaluate the quality of the final generated answers.",
+        "Use an LLM-as-a-judge to evaluate the quality of the final answers generated.",
+        "Curate a dataset that can test the retrieval and generation components of the system separately. Use MLflow’s built in evaluation metrics to perform the evaluation on the retrieval and generation components.",
+        "Benchmark multiple LLMs with the same data and pick the best LLM for the job."
+      ],
+      "options_vi": [
         "Sử dụng điểm ROUGE để đánh giá toàn diện chất lượng của các câu trả lời cuối cùng được tạo ra.",
         "Sử dụng LLM-as-a-judge (LLM đóng vai trò làm giám khảo) để đánh giá chất lượng của các câu trả lời cuối cùng được tạo ra.",
         "Xây dựng một bộ dữ liệu có thể kiểm tra riêng biệt hai thành phần Truy xuất (retrieval) và Sinh văn bản (generation) của hệ thống. Sử dụng các số liệu đánh giá tích hợp sẵn của MLflow để thực hiện đánh giá trên các thành phần truy xuất và sinh văn bản này.",
@@ -1298,8 +1865,15 @@
     {
       "number": 81,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang sử dụng LangChain để hỗ trợ một bảo tàng phân loại tài liệu và sử dụng đoạn mã sau:\n\nfrom langchain import PromptTemplate\n\ntemplate_text = \"\"\"\nYou are an automated archeological assistant helping identify documents relevant to ancient Egypt. If the\ndocument is relevant return \"relevant\", else return \"irrelevant\" with no additional text.\nDocument:\" {document_input}\"\nResponse:\n\"\"\"\n\nprompt_template = PromptTemplate(\n    input_variables=[\"document_input\"]\n)\n\ncompleted_prompt = prompt_template.format(\n    document_input=document_input\n)\n\nMã của họ dẫn đến một lỗi.\n\nHọ cần thay đổi điều gì để sửa lỗi mẫu (template) này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is using LangChain to assist a museum in classifying documents and using this code:\n\nfrom langchain import PromptTemplate\n\ntemplate_text = \"\"\"\nYou are an automated archeological assistant helping identify documents relevant to ancient Egypt. If the\ndocument is relevant return \"relevant\", else return \"irrelevant\" with no additional text.\nDocument:\" {document_input}\"\nResponse:\n\"\"\"\n\nprompt_template = PromptTemplate(\n    input_variables=[\"document_input\"]\n)\n\ncompleted_prompt = prompt_template.format(\n    document_input=document_input\n)\n\nTheir code results in an error.\n\nWhat do they need to change in order to fix this template?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang sử dụng LangChain để hỗ trợ một bảo tàng phân loại tài liệu và sử dụng đoạn mã sau:\n\nfrom langchain import PromptTemplate\n\ntemplate_text = \"\"\"\nYou are an automated archeological assistant helping identify documents relevant to ancient Egypt. If the\ndocument is relevant return \"relevant\", else return \"irrelevant\" with no additional text.\nDocument:\" {document_input}\"\nResponse:\n\"\"\"\n\nprompt_template = PromptTemplate(\n    input_variables=[\"document_input\"]\n)\n\ncompleted_prompt = prompt_template.format(\n    document_input=document_input\n)\n\nMã của họ dẫn đến một lỗi.\n\nHọ cần thay đổi điều gì để sửa lỗi mẫu (template) này?",
+      "options_en": [
+        "Provide an LLM argument to PromptTemplate()",
+        "Provide template and LLM arguments to PromptTemplate()",
+        "Omit PromptTemplate(), it is only used for multi-part templates",
+        "Provide a template argument to PromptTemplate()"
+      ],
+      "options_vi": [
         "Cung cấp đối số LLM cho PromptTemplate()",
         "Cung cấp các đối số template và LLM cho PromptTemplate()",
         "Bỏ qua PromptTemplate(), nó chỉ được sử dụng cho các mẫu gồm nhiều phần",
@@ -1314,8 +1888,15 @@
     {
       "number": 82,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang xem xét các vấn đề với trợ lý hỏi đáp dựa trên LLM của công ty và xác định rằng kỹ thuật gọi là chuỗi prompt (prompt chaining) có thể giúp giảm bớt một số lo ngại về hiệu suất. Tuy nhiên, để đề xuất điều này với nhóm, họ phải giải thích rõ cách thức hoạt động và lợi ích của nó đối với trợ lý hỏi đáp.\n\nHọ sẽ truyền đạt lời giải thích nào cho nhóm?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer has been reviewing issues with their company's LLM based question-answering assistant and has determined that a technique called prompt chaining could help alleviate some performance concerns. However, to suggest this to their team, they have to clearly explain how it works and how it can benefit their question-answering assistant.\n\nWhich explanation do they communicate to the team?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang xem xét các vấn đề với trợ lý hỏi đáp dựa trên LLM của công ty và xác định rằng kỹ thuật gọi là chuỗi prompt (prompt chaining) có thể giúp giảm bớt một số lo ngại về hiệu suất. Tuy nhiên, để đề xuất điều này với nhóm, họ phải giải thích rõ cách thức hoạt động và lợi ích của nó đối với trợ lý hỏi đáp.\n\nHọ sẽ truyền đạt lời giải thích nào cho nhóm?",
+      "options_en": [
+        "It allows you to break down complex tasks into multiple independent subtasks. This enables the assistant to generate more comprehensive and accurate responses.",
+        "It allows you to reduce the latency of your applications. By having multiple chains participating in the response as a chain, you increase the rate at which the response is generated.",
+        "It allows you to decrease the effort involved in crafting a prompt. Chains make it possible to reuse prompt text across multiple different use cases.",
+        "It reduces the average cost of a typical request. Chains make more efficient use of the tokens produced to generate higher quality responses with fewer tokens."
+      ],
+      "options_vi": [
         "Nó cho phép bạn chia các tác vụ phức tạp thành nhiều tác vụ phụ độc lập. Điều này giúp trợ lý có thể tạo ra các phản hồi toàn diện và chính xác hơn.",
         "Nó cho phép bạn giảm độ trễ (latency) của các ứng dụng. Bằng cách có nhiều chuỗi (chain) tham gia vào phản hồi, bạn tăng tốc độ phản hồi được tạo ra.",
         "Nó cho phép bạn giảm bớt công sức trong việc tạo prompt. Các chuỗi (chains) giúp có thể tái sử dụng văn bản prompt qua nhiều trường hợp sử dụng khác nhau.",
@@ -1330,8 +1911,16 @@
     {
       "number": 83,
       "type": "multiple_choice",
-      "prompt": "Một nhóm phát triển AI muốn tinh chỉnh (fine-tune) một mô hình có trọng số mở (open-weight model) để đạt hiệu suất xuất sắc trong trường hợp sử dụng sinh mã (code generation). Họ đang cố gắng chọn mô hình tốt nhất để bắt đầu. Họ muốn tối thiểu hóa chi phí lưu trữ/triển khai mô hình (model hosting costs) và đang sử dụng các Huggingface model cards và spaces để khám phá các mô hình.\n\nNhóm nên tập trung vào HAI thuộc tính và chỉ số nào của mô hình để đưa ra lựa chọn? (Chọn hai.)",
-      "options": [
+      "prompt_en": "An AI developer team wants to fine tune an open-weight model to have exceptional performance on a code generation use case. They are trying to choose the best model to start with. They want to minimize model hosting costs, and are using Huggingface model cards and spaces to explore models.\n\nWhich TWO model attributes and metrics should the team focus on to make their selection? (Choose two.)",
+      "prompt_vi": "Một nhóm phát triển AI muốn tinh chỉnh (fine-tune) một mô hình có trọng số mở (open-weight model) để đạt hiệu suất xuất sắc trong trường hợp sử dụng sinh mã (code generation). Họ đang cố gắng chọn mô hình tốt nhất để bắt đầu. Họ muốn tối thiểu hóa chi phí lưu trữ/triển khai mô hình (model hosting costs) và đang sử dụng các Huggingface model cards và spaces để khám phá các mô hình.\n\nNhóm nên tập trung vào HAI thuộc tính và chỉ số nào của mô hình để đưa ra lựa chọn? (Chọn hai.)",
+      "options_en": [
+        "Big Code Models Leaderboard",
+        "Number of model parameters",
+        "MTEB Leaderboard",
+        "Chatbot Arena Leaderboard",
+        "Number of model downloads last month"
+      ],
+      "options_vi": [
         "Bảng xếp hạng Big Code Models Leaderboard",
         "Số lượng tham số của mô hình",
         "Bảng xếp hạng MTEB Leaderboard",
@@ -1348,8 +1937,15 @@
     {
       "number": 84,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để giúp khách hàng trả lời các câu hỏi cụ thể về xe của họ. Họ có:\n• Một danh mục với hàng trăm ngàn chiếc ô tô được sản xuất từ những năm 1960\n• Các tìm kiếm trong quá khứ, với các truy vấn của người dùng và các kết quả khớp thành công\n• Mô tả về các xe của họ bằng nhiều ngôn ngữ\n\nHọ đã chọn một LLM mã nguồn mở và tạo một tập kiểm tra (test set) cho các truy vấn của người dùng. Họ cần loại bỏ những kỹ thuật sẽ không giúp ích cho việc xây dựng chatbot.\n\nHọ nên loại bỏ kỹ thuật nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer at an automotive company would like to build a question-answering chatbot to help customers answer specific questions about their vehicles. They have:\n• A catalog with hundreds of thousands of cars manufactured since the 1960s\n• Historical searches, with user queries and successful matches\n• Descriptions of their own cars in multiple languages\n\nThey have already selected an open source LLM and created a test set of user queries. They need to discard techniques that will not help them build the chatbot.\n\nWhich do they discard?",
+      "prompt_vi": "Một Kỹ sư Generative AI tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để giúp khách hàng trả lời các câu hỏi cụ thể về xe của họ. Họ có:\n• Một danh mục với hàng trăm ngàn chiếc ô tô được sản xuất từ những năm 1960\n• Các tìm kiếm trong quá khứ, với các truy vấn của người dùng và các kết quả khớp thành công\n• Mô tả về các xe của họ bằng nhiều ngôn ngữ\n\nHọ đã chọn một LLM mã nguồn mở và tạo một tập kiểm tra (test set) cho các truy vấn của người dùng. Họ cần loại bỏ những kỹ thuật sẽ không giúp ích cho việc xây dựng chatbot.\n\nHọ nên loại bỏ kỹ thuật nào?",
+      "options_en": [
+        "Setting chunk size to match the model's context window to maximize coverage",
+        "Implementing metadata filtering based on car models and years",
+        "Fine-tuning an embedding model on automotive terminology",
+        "Adding few-shot examples for response generation"
+      ],
+      "options_vi": [
         "Thiết lập kích thước chunk (chunk size) khớp với cửa sổ ngữ cảnh (context window) của mô hình để tối đa hóa độ bao phủ",
         "Triển khai lọc siêu dữ liệu (metadata filtering) dựa trên mẫu xe và năm sản xuất",
         "Tinh chỉnh (fine-tuning) một mô hình embedding trên thuật ngữ ngành ô tô",
@@ -1364,8 +1960,15 @@
     {
       "number": 85,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI tại một công ty luật đang thiết kế hệ thống RAG để phân tích các tiền lệ án lịch sử. Hệ thống cần xử lý hàng triệu ý kiến tòa án và tài liệu pháp lý, đã được tổ chức theo thời gian và chủ đề, để theo dõi cách các diễn giải về các luật cụ thể đã phát triển qua thời gian. Tất cả tài liệu này đều ở định dạng văn bản thuần túy (plain-text). Kỹ sư cần chọn phương pháp phân đoạn (chunking) bảo tồn hiệu quả nhất tính liên tục và bản chất thời gian của các vụ án.\n\nHọ chọn phương pháp nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer at a legal firm is designing a RAG system to analyze historical legal case precedents. The system needs to process millions of court opinions and legal documents, already organized by time and topic, to track how interpretations of specific laws have evolved over time. All of these documents are in plain-text. The engineer needs to choose a chunking method that would most effectively preserve continuity and the temporal nature of the cases.\n\nWhich method do they choose?",
+      "prompt_vi": "Một Kỹ sư Generative AI tại một công ty luật đang thiết kế hệ thống RAG để phân tích các tiền lệ án lịch sử. Hệ thống cần xử lý hàng triệu ý kiến tòa án và tài liệu pháp lý, đã được tổ chức theo thời gian và chủ đề, để theo dõi cách các diễn giải về các luật cụ thể đã phát triển qua thời gian. Tất cả tài liệu này đều ở định dạng văn bản thuần túy (plain-text). Kỹ sư cần chọn phương pháp phân đoạn (chunking) bảo tồn hiệu quả nhất tính liên tục và bản chất thời gian của các vụ án.\n\nHọ chọn phương pháp nào?",
+      "options_en": [
+        "Implement windowed summarization with overlapping chunks.",
+        "Implement a hierarchical tree structure, like RAPTOR, to group similar legal concepts.",
+        "Implement paragraph level embeddings with each chunk.",
+        "Implement sentence level embeddings with each chunk tagged with the time to enable metadata filtering."
+      ],
+      "options_vi": [
         "Triển khai tóm tắt dạng cửa sổ trượt (windowed summarization) với các đoạn chồng lấp (overlapping chunks).",
         "Triển khai cấu trúc cây phân cấp, như RAPTOR, để nhóm các khái niệm pháp lý tương tự.",
         "Triển khai embedding cấp độ đoạn văn (paragraph level) với mỗi chunk.",
@@ -1380,8 +1983,15 @@
     {
       "number": 86,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang phát triển một hệ thống tác tử (agent) sử dụng một thư viện tạo agent phổ biến. Agent này bao gồm nhiều chuỗi (chains) chạy song song và tuần tự. Kỹ sư gặp khó khăn khi agent thất bại ở một trong các bước, khiến việc gỡ lỗi (debug) nguyên nhân gốc rễ trở nên khó khăn. Họ cần tìm một phương pháp tiếp cận phù hợp để nghiên cứu vấn đề này và tìm ra nguyên nhân gây lỗi.\n\nHọ sẽ chọn phương pháp nào?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is developing an agent system using a popular agent-authoring library. The agent comprises multiple parallel and sequential chains. The engineer encounters challenges as the agent fails at one of the steps, making it difficult to debug the root cause. They need to find an appropriate approach to research this issue and discover the cause of failure.\n\nWhich approach do they choose?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang phát triển một hệ thống tác tử (agent) sử dụng một thư viện tạo agent phổ biến. Agent này bao gồm nhiều chuỗi (chains) chạy song song và tuần tự. Kỹ sư gặp khó khăn khi agent thất bại ở một trong các bước, khiến việc gỡ lỗi (debug) nguyên nhân gốc rễ trở nên khó khăn. Họ cần tìm một phương pháp tiếp cận phù hợp để nghiên cứu vấn đề này và tìm ra nguyên nhân gây lỗi.\n\nHọ sẽ chọn phương pháp nào?",
+      "options_en": [
+        "Enable MLflow tracing to gain visibility into each agent's behavior and execution step.",
+        "Run MLflow.evaluate to determine root cause of failed step.",
+        "Implement structured logging within the agent's code to capture detailed execution information.",
+        "Deconstruct the agent into independent steps to simplify debugging."
+      ],
+      "options_vi": [
         "Kích hoạt MLflow tracing để có được khả năng quan sát chi tiết hành vi và từng bước thực thi của agent.",
         "Chạy MLflow.evaluate để xác định nguyên nhân gốc rễ của bước bị lỗi.",
         "Triển khai ghi log có cấu trúc (structured logging) bên trong mã của agent để ghi lại thông tin thực thi chi tiết.",
@@ -1396,8 +2006,15 @@
     {
       "number": 87,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang thử nghiệm việc sử dụng các tham số để cấu hình một agent trong Mosaic Agent Framework (Khung tác tử Mosaic). Tuy nhiên, họ đang gặp khó khăn trong việc làm cho agent phản hồi với thông tin có liên quan bằng cấu hình này:\n\nconfig_dict = {\n    \"prompt_template\": \"You are a trivia bot. Generate a trivia question based on the user's input.\",\n    \"prompt_template_input_vars\": [\"user_input\"],\n    \"model_serving_endpoint\": \"databricks-dbrx-instruct\",\n    \"llm_parameters\": {\"temperature\": 0.01, \"max_tokens\": 500},\n}\n\nLỗi nào đang gây ra vấn đề này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is experimenting with using parameters to configure an agent in Mosaic Agent Framework. However, they are struggling to get the agent to respond with relevant information with this configuration:\n\nconfig_dict = {\n    \"prompt_template\": \"You are a trivia bot. Generate a trivia question based on the user's input.\",\n    \"prompt_template_input_vars\": [\"user_input\"],\n    \"model_serving_endpoint\": \"databricks-dbrx-instruct\",\n    \"llm_parameters\": {\"temperature\": 0.01, \"max_tokens\": 500},\n}\n\nWhich error is causing the problem?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang thử nghiệm việc sử dụng các tham số để cấu hình một agent trong Mosaic Agent Framework (Khung tác tử Mosaic). Tuy nhiên, họ đang gặp khó khăn trong việc làm cho agent phản hồi với thông tin có liên quan bằng cấu hình này:\n\nconfig_dict = {\n    \"prompt_template\": \"You are a trivia bot. Generate a trivia question based on the user's input.\",\n    \"prompt_template_input_vars\": [\"user_input\"],\n    \"model_serving_endpoint\": \"databricks-dbrx-instruct\",\n    \"llm_parameters\": {\"temperature\": 0.01, \"max_tokens\": 500},\n}\n\nLỗi nào đang gây ra vấn đề này?",
+      "options_en": [
+        "The prompt does not parse the user's input vars",
+        "The prompt does not set the retriever schema",
+        "The prompt does not list available agents for the LLM to call",
+        "The prompt is not wrapped in ChatModel"
+      ],
+      "options_vi": [
         "Prompt không parse các biến đầu vào của người dùng (user's input vars)",
         "Prompt không thiết lập lược đồ trình truy xuất (retriever schema)",
         "Prompt không liệt kê các agent khả dụng để LLM có thể gọi",
@@ -1412,8 +2029,15 @@
     {
       "number": 88,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang sử dụng LangGraph để định nghĩa nhiều công cụ trong một ứng dụng agent duy nhất. Họ muốn cho phép LLM điều phối chính (main orchestrator) tự quyết định công cụ nào là phù hợp nhất để gọi cho một prompt nhất định. Để thực hiện điều này, họ phải xác định luồng chung của đoạn mã.\n\nTrình tự nào sẽ thực hiện được điều này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is using LangGraph to define multiple tools in a single agentic application. They want to enable the main orchestrator LLM to decide on its own which tools are most appropriate to call for a given prompt. To do this, they must determine the general flow of the code.\n\nWhich sequence will do this?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang sử dụng LangGraph để định nghĩa nhiều công cụ trong một ứng dụng agent duy nhất. Họ muốn cho phép LLM điều phối chính (main orchestrator) tự quyết định công cụ nào là phù hợp nhất để gọi cho một prompt nhất định. Để thực hiện điều này, họ phải xác định luồng chung của đoạn mã.\n\nTrình tự nào sẽ thực hiện được điều này?",
+      "options_en": [
+        "1. Define or import the tools 2. Add tools and LLM to the agent 3. Create the ReAct agent",
+        "1. Define or import the tools 2. Define the agent 3. Initialize the agent with ReAct, the LLM, and the tools",
+        "1. Define the tools 2. Load each tool into a separate agent 3. Instruct the LLM to use ReAct to call the appropriate agent",
+        "1. Define the tools inside the agents 2. Load the agents into the LLM 3. Instruct the LLM to use CoT reasoning to determine the appropriate agent"
+      ],
+      "options_vi": [
         "1. Định nghĩa hoặc import các công cụ 2. Thêm các công cụ và LLM vào agent 3. Tạo agent ReAct",
         "1. Định nghĩa hoặc import các công cụ 2. Định nghĩa agent 3. Khởi tạo agent với ReAct, LLM và các công cụ",
         "1. Định nghĩa các công cụ 2. Tải từng công cụ vào một agent riêng biệt 3. Chỉ thị cho LLM sử dụng ReAct để gọi agent phù hợp",
@@ -1428,8 +2052,15 @@
     {
       "number": 89,
       "type": "single_choice",
-      "prompt": "Tất cả những lựa chọn sau đều là các API Python được sử dụng để truy vấn các mô hình nền tảng (foundation models) của Databricks. Khi chạy trong một notebook tương tác (interactive notebook), thư viện nào sau đây KHÔNG tự động sử dụng thông tin xác thực (credentials) của phiên làm việc hiện tại?",
-      "options": [
+      "prompt_en": "All of the following are python APIs used to query Databricks foundation models. When running in an interactive notebook, which of the following libraries does not automatically use the current session credentials?",
+      "prompt_vi": "Tất cả những lựa chọn sau đều là các API Python được sử dụng để truy vấn các mô hình nền tảng (foundation models) của Databricks. Khi chạy trong một notebook tương tác (interactive notebook), thư viện nào sau đây KHÔNG tự động sử dụng thông tin xác thực (credentials) của phiên làm việc hiện tại?",
+      "options_en": [
+        "OpenAI client",
+        "REST API via requests library",
+        "MLflow Deployments SDK",
+        "Databricks Python SDK"
+      ],
+      "options_vi": [
         "OpenAI client",
         "REST API thông qua thư viện requests",
         "MLflow Deployments SDK",
@@ -1444,8 +2075,15 @@
     {
       "number": 90,
       "type": "single_choice",
-      "prompt": "Một Kỹ sư Generative AI đang triển khai một LLM đã được tinh chỉnh (fine-tuned) hướng đến khách hàng trên trang web công cộng của họ. Do khoản đầu tư lớn mà công ty đã đổ vào việc tinh chỉnh mô hình này, cũng như tính chất độc quyền của dữ liệu tinh chỉnh, họ lo ngại về các cuộc tấn công đảo ngược mô hình (model inversion attacks).\n\nChiến lược giảm thiểu rủi ro nào sau đây của Khung Bảo mật AI Databricks (DASF) là phù hợp nhất cho trường hợp sử dụng này?",
-      "options": [
+      "prompt_en": "A Generative AI Engineer is deploying a customer-facing, fine-tuned LLM on their public website. Given the large investment the company put into fine tuning this model, and the proprietary nature of the tuning data, they are concerned about model inversion attacks.\n\nWhich of the following Databricks AI Security Framework (DASF) risk mitigation strategies are most relevant to this use case?",
+      "prompt_vi": "Một Kỹ sư Generative AI đang triển khai một LLM đã được tinh chỉnh (fine-tuned) hướng đến khách hàng trên trang web công cộng của họ. Do khoản đầu tư lớn mà công ty đã đổ vào việc tinh chỉnh mô hình này, cũng như tính chất độc quyền của dữ liệu tinh chỉnh, họ lo ngại về các cuộc tấn công đảo ngược mô hình (model inversion attacks).\n\nChiến lược giảm thiểu rủi ro nào sau đây của Khung Bảo mật AI Databricks (DASF) là phù hợp nhất cho trường hợp sử dụng này?",
+      "options_en": [
+        "Implement AI guardrails to allow users to configure and enforce compliance",
+        "Leverage Databricks access control lists (ACLs) to configure permissions for accessing models",
+        "Use secure model features with Databricks Feature Store",
+        "Apply attribute-based access controls (ABAC) to limit unauthorized access"
+      ],
+      "options_vi": [
         "Triển khai các lan can an toàn AI (AI guardrails) để cho phép người dùng cấu hình và thực thi tuân thủ",
         "Tận dụng danh sách kiểm soát truy cập (ACL) của Databricks để cấu hình quyền truy cập vào các mô hình",
         "Sử dụng tính năng bảo mật mô hình với Databricks Feature Store",
@@ -1460,8 +2098,15 @@
     {
       "number": 91,
       "type": "single_choice",
-      "prompt": "Một nhóm sử dụng Mosaic AI Vector Search để truy xuất tài liệu cho pipeline Truy xuất tăng cường sinh (RAG) của họ. Truy vấn tìm kiếm trả về năm tài liệu có liên quan, và ba tài liệu đầu tiên được thêm vào prompt làm ngữ cảnh. Việc đánh giá hiệu suất bằng Agent Evaluation cho thấy một số tài liệu được truy xuất ở thứ hạng thấp lại có điểm số mức độ liên quan ngữ cảnh (context relevancy scores) cao hơn các tài liệu ở thứ hạng cao.\n\nNhóm nên xem xét lựa chọn nào để tối ưu hóa quy trình làm việc này?",
-      "options": [
+      "prompt_en": "A team uses Mosaic AI Vector Search to retrieve documents for their Retrieval-Augmented Generation (RAG) pipeline. The search query returns five relevant documents, and the first three are added to the prompt as context. Performance evaluation with Agent Evaluation shows that some lower-ranked retrieved documents have higher context relevancy scores than higher-ranked documents.\n\nWhich option should the team consider to optimize this workflow?",
+      "prompt_vi": "Một nhóm sử dụng Mosaic AI Vector Search để truy xuất tài liệu cho pipeline Truy xuất tăng cường sinh (RAG) của họ. Truy vấn tìm kiếm trả về năm tài liệu có liên quan, và ba tài liệu đầu tiên được thêm vào prompt làm ngữ cảnh. Việc đánh giá hiệu suất bằng Agent Evaluation cho thấy một số tài liệu được truy xuất ở thứ hạng thấp lại có điểm số mức độ liên quan ngữ cảnh (context relevancy scores) cao hơn các tài liệu ở thứ hạng cao.\n\nNhóm nên xem xét lựa chọn nào để tối ưu hóa quy trình làm việc này?",
+      "options_en": [
+        "Use a reranker to order the documents based on the relevance scores.",
+        "Modify the prompt to instruct the LLM to order the documents based on the relevance scores.",
+        "Use a different embedding model for computing document embeddings.",
+        "Increase the number of documents added to the prompt to improve context relevance."
+      ],
+      "options_vi": [
         "Sử dụng bộ xếp hạng lại (reranker) để sắp xếp thứ tự các tài liệu dựa trên điểm số mức độ liên quan.",
         "Sửa đổi prompt để chỉ thị cho LLM sắp xếp các tài liệu dựa trên điểm số mức độ liên quan.",
         "Sử dụng một mô hình embedding khác để tính toán các embedding tài liệu.",
@@ -1476,8 +2121,15 @@
     {
       "number": 92,
       "type": "single_choice",
-      "prompt": "Một kỹ sư generative AI đang triển khai một tác tử AI (AI agent) được tạo bằng giao diện ChatAgent của MLflow cho hệ thống hỗ trợ khách hàng của một công ty bán lẻ trên Databricks. Agent này phải xử lý hàng nghìn câu hỏi mỗi ngày, và kỹ sư cần theo dõi hiệu suất và chất lượng của nó theo thời gian thực để đảm bảo nó đáp ứng các thỏa thuận cấp độ dịch vụ (SLA).\n\nNhững chỉ số nào được tự động nắm bắt (capture) theo mặc định và có sẵn để giám sát khi tác tử được triển khai sử dụng Mosaic AI Agent Framework?",
-      "options": [
+      "prompt_en": "A generative AI engineer is deploying an AI agent authored with MLflow's ChatAgent interface for a retail company's customer support system on Databricks. The agent must handle thousands of inquiries daily, and the engineer needs to track its performance and quality in real-time to ensure it meets service-level agreements.\n\nWhich metrics are automatically captured by default and made available for monitoring when the agent is deployed using the Mosaic AI Agent Framework?",
+      "prompt_vi": "Một kỹ sư generative AI đang triển khai một tác tử AI (AI agent) được tạo bằng giao diện ChatAgent của MLflow cho hệ thống hỗ trợ khách hàng của một công ty bán lẻ trên Databricks. Agent này phải xử lý hàng nghìn câu hỏi mỗi ngày, và kỹ sư cần theo dõi hiệu suất và chất lượng của nó theo thời gian thực để đảm bảo nó đáp ứng các thỏa thuận cấp độ dịch vụ (SLA).\n\nNhững chỉ số nào được tự động nắm bắt (capture) theo mặc định và có sẵn để giám sát khi tác tử được triển khai sử dụng Mosaic AI Agent Framework?",
+      "options_en": [
+        "Operational metrics like request volume, latency, and errors",
+        "Quality metrics like correctness and guideline adherence",
+        "Both operational and quality metrics",
+        "No metrics are automatically captured"
+      ],
+      "options_vi": [
         "Các chỉ số vận hành (Operational metrics) như khối lượng yêu cầu, độ trễ và lỗi",
         "Các chỉ số chất lượng (Quality metrics) như tính chính xác và mức độ tuân thủ hướng dẫn",
         "Cả chỉ số vận hành và chỉ số chất lượng",
@@ -1489,5 +2141,9 @@
       ],
       "explanation_vn": "Khi triển khai một LLM hoặc Agent thông qua Model Serving và Mosaic AI Agent Framework trên Databricks, nền tảng tự động thu thập và ghi lại các chỉ số vận hành cơ bản (operational metrics) như số lượng request, độ trễ (latency), và tỷ lệ lỗi (error rates) vào các bảng inference tables. Trong khi đó, các chỉ số đo lường chất lượng (quality metrics) như tính chính xác (correctness), mức độ liên quan hay độ an toàn thì không thể được suy luận tự động; bạn phải chủ động chạy các đánh giá ngoại tuyến hoặc trực tuyến (như sử dụng LLM-as-a-judge qua MLflow Evaluate) đối chiếu với dữ liệu ground truth."
     }
-  ]
+  ],
+  "final_message": {
+    "passing_score": "50",
+    "text": "\"Thanks for giving it a shot, and good luck on your exam!\""
+  }
 }
