@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialization
     async function init() {
         try {
-            const response = await fetch('data.json');
+            // Use absolute path with cache buster to avoid GitHub Pages stale cache issues
+            const response = await fetch('/goal/data.json?v=' + new Date().getTime());
             if (!response.ok) throw new Error('Không thể tải dữ liệu');
             
             const data = await response.json();
@@ -122,12 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (showTranslation) {
             elements.translateToggleBtn.classList.add('active');
-            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-language"></i> Ẩn Tiếng Việt';
+            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-lightbulb"></i> Ẩn Gợi ý';
             elements.questionPromptVi.classList.remove('hidden');
             document.querySelectorAll('.option-text-vi').forEach(el => el.classList.remove('hidden'));
         } else {
             elements.translateToggleBtn.classList.remove('active');
-            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-language"></i> Hiển thị Tiếng Việt';
+            elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-lightbulb"></i> Gợi ý & Dịch thuật';
             elements.questionPromptVi.classList.add('hidden');
             document.querySelectorAll('.option-text-vi').forEach(el => el.classList.add('hidden'));
         }
