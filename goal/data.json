@@ -1,0 +1,1493 @@
+{
+  "source_url": "https://en.daypo.com/generative-ai-engineer.html#test",
+  "test_id": 46367,
+  "title": "Generative AI Engineer",
+  "description": "Generative AI Engineer Exam - Vietnamese Translated with Explanations",
+  "question_count": 92,
+  "questions": [
+    {
+      "number": 1,
+      "type": "multiple_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) đã tạo ra một ứng dụng RAG để tìm kiếm câu trả lời cho các câu hỏi về một loạt tiểu thuyết giả tưởng được hỏi trên diễn đàn web của tác giả. Các văn bản tiểu thuyết giả tưởng được phân tách thành các đoạn (chunked) và nhúng (embedded) vào một cơ sở dữ liệu vector cùng với siêu dữ liệu (số trang, số chương, tiêu đề sách), được truy xuất theo truy vấn của người dùng, và cung cấp cho LLM để tạo phản hồi. Kỹ sư AI Tạo sinh đã dùng trực giác của mình để chọn chiến lược phân tách (chunking) và các cấu hình liên quan nhưng bây giờ muốn chọn các giá trị tốt nhất một cách có phương pháp hơn. Hai chiến lược nào mà Kỹ sư AI Tạo sinh nên thực hiện để tối ưu hóa chiến lược phân tách và các tham số của họ? (Chọn hai.)",
+      "options": [
+        "Thay đổi các mô hình nhúng (embedding models) và so sánh hiệu suất.",
+        "Thêm một bộ phân loại (classifier) cho các truy vấn của người dùng để dự đoán cuốn sách nào sẽ chứa câu trả lời tốt nhất. Sử dụng điều này để lọc quá trình truy xuất.",
+        "Chọn một số liệu đánh giá phù hợp (như recall hoặc NDCG) và thử nghiệm với các thay đổi trong chiến lược phân tách, chẳng hạn như chia các đoạn theo đoạn văn hoặc chương. Chọn chiến lược cho số liệu hiệu suất tốt nhất.",
+        "Chuyển các câu hỏi đã biết và câu trả lời tốt nhất cho một LLM và hướng dẫn LLM cung cấp số lượng token tốt nhất. Sử dụng một số liệu thống kê tóm tắt (trung bình, trung vị, v.v.) của các số lượng token tốt nhất để chọn kích thước phân tách.",
+        "Tạo một số liệu LLM-làm-giám-khảo (LLM-as-a-judge) để đánh giá mức độ trả lời tốt của các câu hỏi trước đó bởi đoạn phù hợp nhất. Tối ưu hóa các tham số phân tách dựa trên các giá trị của số liệu này."
+      ],
+      "answer_code": "11212",
+      "correct_option_indexes": [
+        2,
+        4
+      ],
+      "explanation_vn": "Chiến lược 1 (tùy chọn 3) là đúng vì việc sử dụng một số liệu đánh giá chuẩn (như recall, NDCG) để đánh giá hệ thống truy xuất thông tin (IR) là một phương pháp có hệ thống để tinh chỉnh và so sánh các chiến lược phân tách khác nhau (như chia theo đoạn văn, theo chương). Chiến lược 2 (tùy chọn 5) là đúng vì sử dụng LLM-as-a-judge là một kỹ thuật tiên tiến và phù hợp để đánh giá chất lượng của các đoạn văn bản được truy xuất dựa trên ngữ cảnh, từ đó giúp tối ưu hóa cấu hình chunking dựa trên điểm số đánh giá tự động. Thay đổi mô hình nhúng (tùy chọn 1) không liên quan trực tiếp đến việc tối ưu hóa chiến lược chunking. Thêm bộ phân loại (tùy chọn 2) giúp lọc dữ liệu nhưng không giúp xác định tham số chunking tốt nhất. Yêu cầu LLM dự đoán số lượng token (tùy chọn 4) là không khả thi và thiếu cơ sở vững chắc vì LLM không giỏi đếm hoặc tối ưu hóa tham số độ dài một cách chính xác."
+    },
+    {
+      "number": 2,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một ứng dụng RAG để trả lời các câu hỏi của người dùng về các quy định kỹ thuật khi họ học một môn thể thao mới. Các bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
+      "options": [
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> Đánh giá mô hình -> LLM tạo phản hồi -> Triển khai bằng Model Serving",
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> LLM tạo phản hồi -> Đánh giá mô hình -> Triển khai bằng Model Serving",
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Đánh giá mô hình -> Triển khai bằng Model Serving",
+        "Người dùng gửi truy vấn tới LLM -> Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> LLM truy xuất tài liệu liên quan -> LLM tạo phản hồi -> Đánh giá mô hình -> Triển khai bằng Model Serving"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Quy trình tiêu chuẩn để xây dựng và triển khai ứng dụng RAG (Retrieval-Augmented Generation) là: (1) Thu thập và xử lý tài liệu từ nguồn, (2) Lập chỉ mục và lưu trữ vào Vector Search, (3) Cho phép hệ thống (hoặc người dùng thử nghiệm) gửi truy vấn để (4) LLM truy xuất các tài liệu liên quan và (5) tạo phản hồi dựa trên tài liệu đó. (6) Đánh giá toàn bộ pipeline (cả truy xuất và tạo sinh) để đảm bảo chất lượng, và cuối cùng (7) Triển khai hệ thống thông qua Model Serving. Tùy chọn đúng sắp xếp 'Đánh giá mô hình' sau bước 'LLM tạo phản hồi' vì bạn cần phải đánh giá phản hồi đầu ra hoàn chỉnh trước khi triển khai hệ thống."
+    },
+    {
+      "number": 3,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty tiếp thị kỹ thuật số nhằm hỗ trợ trả lời các câu hỏi về dịch vụ khách hàng. Họ nên theo dõi số liệu (metric) nào cho ứng dụng LLM dịch vụ khách hàng của họ trong môi trường sản xuất (production)?",
+      "options": [
+        "Số lượng câu hỏi của khách hàng được xử lý trên một đơn vị thời gian",
+        "Năng lượng sử dụng cho mỗi truy vấn",
+        "Điểm perplexity cuối cùng khi huấn luyện mô hình",
+        "Các giá trị trên Bảng xếp hạng HuggingFace cho mô hình LLM cơ sở"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Trong môi trường sản xuất, việc giám sát hiệu suất và độ tin cậy của ứng dụng là rất quan trọng. Số lượng câu hỏi được xử lý trên một đơn vị thời gian (thông lượng - throughput) phản ánh trực tiếp hiệu năng hoạt động của hệ thống và trải nghiệm người dùng, do đó đây là metric quan trọng cần theo dõi. Điểm perplexity và giá trị HuggingFace Leaderboard là các metric trong giai đoạn đánh giá mô hình tĩnh, không phải metric hoạt động của hệ thống production. Năng lượng sử dụng cũng không phải là metric ưu tiên hàng đầu so với thông lượng trong ngữ cảnh dịch vụ khách hàng."
+    },
+    {
+      "number": 4,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống AI Tạo sinh gợi ý thành viên nhóm nhân viên phù hợp nhất cho các dự án mới được lập kế hoạch. Thành viên nhóm được chọn từ một đội ngũ rất lớn. Việc lựa chọn phải dựa trên sự sẵn sàng về lịch trình của dự án và mức độ phù hợp giữa hồ sơ của nhân viên với phạm vi dự án. Cả hồ sơ nhân viên và phạm vi dự án đều là văn bản phi cấu trúc (unstructured text). Kỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống của họ như thế nào?",
+      "options": [
+        "Tạo một công cụ để tìm các thành viên có sẵn theo ngày của dự án. Nhúng tất cả các phạm vi dự án vào cơ sở dữ liệu vector, thực hiện truy xuất sử dụng hồ sơ nhân viên để tìm thành viên phù hợp nhất.",
+        "Tạo một công cụ để tìm tính sẵn sàng của thành viên theo ngày dự án, và một công cụ khác sử dụng LLM để trích xuất từ khóa từ phạm vi dự án. Lặp qua hồ sơ của các thành viên có sẵn và thực hiện khớp từ khóa để tìm thành viên tốt nhất có sẵn.",
+        "Tạo một công cụ để tìm các thành viên có sẵn theo ngày dự án. Tạo công cụ thứ hai có thể tính toán điểm tương đồng cho sự kết hợp giữa hồ sơ nhân viên và phạm vi dự án. Lặp qua các thành viên và xếp hạng theo điểm số cao nhất để chọn thành viên.",
+        "Tạo một công cụ để tìm các thành viên có sẵn theo ngày dự án. Nhúng hồ sơ của các thành viên vào cơ sở dữ liệu vector và sử dụng phạm vi dự án cùng với việc lọc (filtering) để thực hiện truy xuất nhằm tìm các thành viên có sẵn phù hợp nhất."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Cách tiếp cận tối ưu nhất cho bài toán kết hợp (matching) văn bản phi cấu trúc ở quy mô lớn là sử dụng Vector Search kết hợp với bộ lọc siêu dữ liệu (metadata filtering). Hồ sơ nhân viên (dữ liệu tĩnh hơn và lớn hơn) nên được nhúng vào vector store. Sau đó, hệ thống có thể sử dụng thông tin dự án mới (project scope) làm truy vấn, đồng thời áp dụng bộ lọc (filter) trên Vector Search để chỉ truy xuất các nhân viên có thời gian rảnh (availability) phù hợp. Điều này hiệu quả và có thể mở rộng tốt hơn nhiều so với việc tính toán điểm tương đồng bằng cách lặp qua từng thành viên một (cách 3) hoặc nhúng dự án thay vì nhân viên (cách 1)."
+    },
+    {
+      "number": 5,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một nền tảng bình luận thể thao trực tiếp được hỗ trợ bởi LLM. Nền tảng này cung cấp các cập nhật theo thời gian thực và phân tích do LLM tạo ra cho những người dùng muốn có bản tóm tắt trực tiếp, thay vì đọc một loạt các bài báo tin tức có khả năng lỗi thời. Công cụ nào dưới đây sẽ cho phép nền tảng truy cập dữ liệu theo thời gian thực để tạo các bài phân tích trận đấu dựa trên tỷ số mới nhất?",
+      "options": [
+        "DatabricksIQ",
+        "Foundation Model APIs",
+        "Feature Serving",
+        "AutoML"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Feature Serving (Đặc trưng phục vụ) trong Databricks cho phép cung cấp các dữ liệu đặc trưng (features) được cập nhật liên tục với độ trễ thấp (low-latency) đến các mô hình hoặc ứng dụng (như LLM). Đối với dữ liệu thời gian thực như tỷ số trận đấu thể thao trực tiếp, Feature Serving là công cụ thích hợp để hệ thống LLM có thể tra cứu trạng thái mới nhất ngay tại thời điểm suy luận (inference). Các tuỳ chọn khác như DatabricksIQ (trợ lý AI của Databricks), Foundation Model APIs (API để gọi LLM), hoặc AutoML (tự động hóa huấn luyện mô hình học máy) không phải là dịch vụ dùng để cung cấp dữ liệu theo thời gian thực."
+    },
+    {
+      "number": 6,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh có một endpoint phục vụ mô hình (model serving endpoint) với thông lượng được cấp phát (provisioned throughput) thuộc một ứng dụng RAG và muốn theo dõi các yêu cầu đến (incoming requests) cũng như phản hồi đi (outgoing responses) của endpoint này. Cách tiếp cận hiện tại là đưa vào một micro-service nằm giữa endpoint và giao diện người dùng để ghi log sang một máy chủ từ xa. Thay vào đó, họ nên sử dụng tính năng nào của Databricks để thực hiện cùng một nhiệm vụ?",
+      "options": [
+        "Vector Search",
+        "Lakeview",
+        "DBSQL",
+        "Inference Tables"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Trong Databricks, Inference Tables là tính năng được thiết kế đặc biệt để tự động lưu trữ và theo dõi (log) các yêu cầu đầu vào (requests) và dự đoán đầu ra (responses) từ các model serving endpoints vào các bảng Delta trong Unity Catalog. Điều này loại bỏ sự cần thiết của một micro-service trung gian tự xây dựng, giúp đơn giản hóa kiến trúc và dễ dàng theo dõi, đánh giá cũng như phát hiện data drift (sự thay đổi dữ liệu)."
+    },
+    {
+      "number": 7,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ cải thiện chất lượng ứng dụng RAG bằng cách giải quyết các đầu ra có tính chất kích động. Hành động nào sẽ hiệu quả nhất trong việc giảm thiểu vấn đề đầu ra văn bản phản cảm?",
+      "options": [
+        "Tăng tần suất cập nhật dữ liệu nguồn (upstream data)",
+        "Thông báo cho người dùng về hành vi dự kiến của RAG",
+        "Hạn chế quyền truy cập vào các nguồn dữ liệu đối với một số lượng người dùng giới hạn",
+        "Quản lý và chọn lọc dữ liệu nguồn đúng cách, bao gồm cả việc kiểm duyệt thủ công trước khi đưa vào hệ thống RAG"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Ứng dụng RAG lấy thông tin từ kho dữ liệu (Vector Search) để làm ngữ cảnh trả lời. Nếu hệ thống đưa ra các phản hồi mang tính kích động hoặc phản cảm, nguyên nhân gốc rễ thường là do tài liệu gốc chứa nội dung như vậy. Do đó, việc quản lý và làm sạch dữ liệu nguồn (curate upstream data), bao gồm cả việc kiểm tra và loại bỏ nội dung độc hại trước khi đưa vào hệ thống, là biện pháp trực tiếp và hiệu quả nhất để ngăn chặn RAG phát sinh các phản hồi không mong muốn."
+    },
+    {
+      "number": 8,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một ứng dụng dựa trên LLM. Các tài liệu dành cho bộ truy xuất (retriever) của nó đã được phân tách với tối đa 512 token mỗi đoạn (chunk). Kỹ sư AI Tạo sinh biết rằng chi phí và độ trễ quan trọng hơn chất lượng đối với ứng dụng này. Họ có một số tùy chọn về độ dài ngữ cảnh (context length) để lựa chọn. Tùy chọn nào sẽ đáp ứng nhu cầu của họ?",
+      "options": [
+        "độ dài ngữ cảnh 514; mô hình nhỏ nhất là 0.44GB và số chiều nhúng là 768",
+        "độ dài ngữ cảnh 2048: mô hình nhỏ nhất là 11GB và số chiều nhúng là 2560",
+        "độ dài ngữ cảnh 32768: mô hình nhỏ nhất là 14GB và số chiều nhúng là 4096",
+        "độ dài ngữ cảnh 512: mô hình nhỏ nhất là 0.13GB và số chiều nhúng là 384"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Vì yêu cầu chính là tối ưu hóa chi phí (cost) và độ trễ (latency) hơn là chất lượng, nên cần chọn một mô hình càng nhỏ càng tốt và có độ dài ngữ cảnh vừa đủ. Đoạn văn bản (chunk) có độ dài tối đa là 512 tokens, do đó, một mô hình có giới hạn context length là 512 là đủ để xử lý. Tùy chọn có mô hình kích thước 0.13GB và chiều nhúng 384 là mô hình nhỏ nhất trong các lựa chọn, giúp giảm thiểu đáng kể tài nguyên tính toán (chi phí) và tăng tốc độ xử lý (độ trễ thấp)."
+    },
+    {
+      "number": 9,
+      "type": "single_choice",
+      "prompt": "Một startup quy mô nhỏ và chú trọng về chi phí trong lĩnh vực nghiên cứu ung thư muốn xây dựng một ứng dụng RAG sử dụng Foundation Model APIs. Chiến lược nào sẽ cho phép startup xây dựng một ứng dụng RAG chất lượng tốt trong khi vẫn tiết kiệm chi phí và có thể phục vụ nhu cầu của khách hàng?",
+      "options": [
+        "Giới hạn số lượng tài liệu liên quan có sẵn để ứng dụng RAG truy xuất",
+        "Chọn một LLM nhỏ hơn, chuyên biệt cho lĩnh vực cụ thể (domain-specific)",
+        "Giới hạn số lượng truy vấn mà khách hàng có thể gửi mỗi ngày",
+        "Sử dụng LLM lớn nhất có thể vì nó mang lại hiệu suất tốt nhất cho mọi truy vấn chung"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Trong các ứng dụng chuyên ngành như nghiên cứu y học/ung thư, các LLM nhỏ gọn nhưng được huấn luyện chuyên biệt (domain-specific LLM) thường mang lại hiệu suất và chất lượng rất tốt so với các LLM tổng quát khổng lồ, đồng thời có chi phí vận hành (inference) thấp hơn đáng kể. Việc giới hạn tài liệu truy xuất (tùy chọn 0) hoặc giới hạn số truy vấn của người dùng (tùy chọn 2) sẽ làm giảm chất lượng trải nghiệm của khách hàng. Sử dụng LLM lớn nhất (tùy chọn 3) sẽ mâu thuẫn trực tiếp với mục tiêu tiết kiệm chi phí."
+    },
+    {
+      "number": 10,
+      "type": "multiple_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh chịu trách nhiệm phát triển một chatbot để giúp đội ngũ Tổng đài Hỗ trợ nội bộ (HelpDesk Call Center) của công ty tìm kiếm các ticket liên quan nhanh hơn và cung cấp giải pháp. Trong quá trình tạo bảng phân chia công việc cho dự án GenAI này, họ nhận ra cần phải bắt đầu lên kế hoạch chọn các nguồn dữ liệu (Unity Catalog volume hoặc bảng Delta) cho ứng dụng. Họ đã thu thập một số nguồn dữ liệu ứng viên để xem xét:\ncall_rep_history: một bảng Delta với khóa chính representative_id, call_id. Bảng này được duy trì để tính toán thời gian giải quyết cuộc gọi của tổng đài viên từ các trường call_duration và call_start_time.\ntranscript Volume: một Unity Catalog Volume chứa tất cả các bản ghi âm dưới dạng tệp *.wav, và các bản ghi (transcript) văn bản dưới dạng tệp *.txt.\ncall_cust_history: một bảng Delta với khóa chính customer_id, call_id. Bảng này được duy trì để tính toán mức độ sử dụng HelpDesk của khách hàng nội bộ nhằm đảm bảo mô hình tính phí phù hợp với việc sử dụng dịch vụ thực tế.\ncall_detail: một bảng Delta bao gồm ảnh chụp nhanh (snapshot) chi tiết tất cả các cuộc gọi được cập nhật hàng giờ. Nó bao gồm các trường nguyên nhân gốc rễ (root_cause) và giải pháp (resolution), mặc dù các trường này có thể trống đối với các cuộc gọi vẫn đang hoạt động.\nmaintenance_schedule – một bảng Delta bao gồm danh sách các sự cố của ứng dụng HelpDesk cũng như lịch trình bảo trì dự kiến sắp tới.\nHọ cần những nguồn có thể bổ sung ngữ cảnh (context) tốt nhất để xác định nguyên nhân gốc rễ và giải pháp của ticket.\nHai nguồn nào thực hiện điều đó? (Chọn hai.)",
+      "options": [
+        "call_cust_history",
+        "maintenance_schedule",
+        "call_rep_history",
+        "call_detail",
+        "transcript Volume"
+      ],
+      "answer_code": "11122",
+      "correct_option_indexes": [
+        3,
+        4
+      ],
+      "explanation_vn": "Mục tiêu là cung cấp cho RAG ngữ cảnh tốt nhất để tìm 'nguyên nhân gốc rễ (root cause)' và 'giải pháp (resolution)'. Bảng `call_detail` chứa thông tin tóm tắt có sẵn các trường `root_cause` và `resolution` từ các cuộc gọi trước, do đó đây là nguồn dữ liệu trực tiếp và vô cùng quý giá. `transcript Volume` chứa bản sao chép văn bản (.txt) nội dung chi tiết của các cuộc trò chuyện, giúp LLM có thể đọc và hiểu ngữ cảnh thực tế của vấn đề cũng như cách hỗ trợ viên đã giải quyết nó. Các nguồn dữ liệu khác chỉ chứa dữ liệu siêu mô tả về thời gian, khách hàng hoặc lịch bảo trì, không mang lại kiến thức trực tiếp về cách giải quyết sự cố."
+    },
+    {
+      "number": 11,
+      "type": "single_choice",
+      "prompt": "Thư viện nào phù hợp nhất để xây dựng một quy trình công việc (workflow) đa bước dựa trên LLM?",
+      "options": [
+        "Pandas",
+        "TensorFlow",
+        "PySpark",
+        "LangChain"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "LangChain là một khung (framework) được thiết kế đặc biệt để phát triển các ứng dụng dựa trên các mô hình ngôn ngữ lớn (LLM). Nó cung cấp các công cụ và thành phần (chains, agents) để dễ dàng kết nối LLM với các nguồn dữ liệu bên ngoài, bộ nhớ, và xây dựng các quy trình công việc (workflow) phức tạp, đa bước. Pandas dùng để xử lý dữ liệu bảng, TensorFlow là framework huấn luyện học sâu (deep learning), và PySpark dùng cho xử lý dữ liệu phân tán quy mô lớn."
+    },
+    {
+      "number": 12,
+      "type": "single_choice",
+      "prompt": "Khi phát triển một ứng dụng LLM, điều cốt yếu là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu về cấp phép (licensing) để tránh rủi ro pháp lý.\nHành động nào KHÔNG phù hợp để tránh rủi ro pháp lý?",
+      "options": [
+        "Liên hệ trực tiếp với người quản lý dữ liệu (data curators) trước khi bạn bắt đầu sử dụng mô hình đã huấn luyện để thông báo cho họ.",
+        "Sử dụng bất kỳ dữ liệu có sẵn nào mà bạn tự tạo ra, hoàn toàn là bản gốc và bạn có quyền quyết định sử dụng giấy phép nào.",
+        "Chỉ sử dụng dữ liệu được dán nhãn rõ ràng với một giấy phép mở (open license) và đảm bảo các điều khoản giấy phép được tuân thủ.",
+        "Liên hệ trực tiếp với người quản lý dữ liệu sau khi bạn đã bắt đầu sử dụng mô hình đã huấn luyện để thông báo cho họ."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Việc liên hệ với chủ sở hữu dữ liệu *sau* khi bạn đã sử dụng mô hình (đã huấn luyện từ dữ liệu của họ) là quá muộn và không phù hợp. Nếu dữ liệu có bản quyền, việc sử dụng nó để huấn luyện mà chưa có sự cho phép đã cấu thành hành vi vi phạm. Tất cả các bước kiểm tra bản quyền, xin phép hoặc xác minh giấy phép mở phải được thực hiện *trước* khi dữ liệu được đưa vào huấn luyện mô hình."
+    },
+    {
+      "number": 13,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang thử nghiệm một mẫu prompt (prompt template) đơn giản trong LangChain bằng đoạn mã dưới đây, nhưng gặp phải lỗi.\n\nfrom langchain.chains import LLMChain\nfrom langchain_community.llms import OpenAI\nfrom langchain_core.prompts import PromptTemplate\n\nprompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])\n\nGiả sử khóa API (API key) đã được định nghĩa chính xác, Kỹ sư AI Tạo sinh cần thực hiện thay đổi nào để sửa chuỗi (chain) của họ?",
+      "options": [
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate(\"funny\")",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(prompt=prompt.format(\"funny\"))\nllm.generate()",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template,\n    llm=OpenAI()\n)\n\nllm = LLMChain(prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])",
+        "prompt_template = \"Tell me a {adjective} joke\"\n\nprompt = PromptTemplate(\n    input_variables=[\"adjective\"],\n    template=prompt_template\n)\n\nllm = LLMChain(llm=OpenAI(), prompt=prompt)\nllm.generate([{\"adjective\": \"funny\"}])"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Lỗi trong đoạn mã ban đầu nằm ở việc khởi tạo `LLMChain` nhưng không truyền đối tượng LLM vào. Lớp `LLMChain` yêu cầu hai tham số bắt buộc để hoạt động: một `llm` (mô hình ngôn ngữ) và một `prompt` (mẫu prompt). Ở tùy chọn 3, đối tượng mô hình ngôn ngữ `OpenAI()` đã được truyền vào tham số `llm=OpenAI()` khi khởi tạo `LLMChain`, giúp hoàn thiện cấu trúc chuỗi (chain) một cách chính xác."
+    },
+    {
+      "number": 14,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM để truy xuất các bài báo từ năm 1918 liên quan đến truy vấn của người dùng và tóm tắt chúng. Kỹ sư nhận thấy rằng các bản tóm tắt được tạo ra rất tốt nhưng thường bao gồm cả một lời giải thích về cách bản tóm tắt đó được tạo ra, điều này là không mong muốn.\nKỹ sư AI Tạo sinh có thể thực hiện thay đổi nào để giảm thiểu vấn đề này?",
+      "options": [
+        "Tách đầu ra của LLM bằng các ký tự xuống dòng để cắt bỏ phần giải thích quá trình tóm tắt.",
+        "Điều chỉnh kích thước phân đoạn (chunk size) của các bài báo hoặc thử nghiệm với các mô hình nhúng khác nhau.",
+        "Xem xét lại logic thu thập tài liệu (document ingestion) của họ, đảm bảo rằng các bài báo được thu thập đúng cách.",
+        "Cung cấp một vài ví dụ (few-shot examples) về định dạng đầu ra mong muốn cho prompt hệ thống (system prompt) và/hoặc prompt của người dùng."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Việc LLM thêm các phần giải thích thừa (ví dụ: 'Dưới đây là tóm tắt dựa trên tài liệu...') là một hiện tượng phổ biến (chatty model). Cách tiếp cận tốt nhất trong Prompt Engineering để điều chỉnh định dạng và văn phong đầu ra của LLM là sử dụng kỹ thuật Few-shot prompting. Bằng cách cung cấp các ví dụ về câu hỏi và câu trả lời lý tưởng (chỉ chứa tóm tắt, không có phần giải thích), LLM sẽ học được khuôn mẫu (pattern) và tuân thủ chặt chẽ định dạng đầu ra mong muốn. Cắt bỏ chuỗi (tùy chọn 0) là cứng nhắc và dễ lỗi. Điều chỉnh chunk size hay quá trình ingestion (1, 2) sẽ không giải quyết được vấn đề về định dạng sinh văn bản."
+    },
+    {
+      "number": 15,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM để trả lời các câu hỏi về chính sách nội bộ của công ty. Kỹ sư AI Tạo sinh phải đảm bảo rằng ứng dụng không bị ảo giác (hallucinate) hoặc rò rỉ dữ liệu mật.\nPhương pháp nào KHÔNG nên được sử dụng để giảm thiểu ảo giác hoặc rò rỉ dữ liệu mật?",
+      "options": [
+        "Thêm các rào chắn (guardrails) để lọc đầu ra từ LLM trước khi hiển thị cho người dùng.",
+        "Tinh chỉnh (fine-tune) mô hình trên dữ liệu của bạn, với hy vọng nó sẽ học được điều gì là phù hợp và điều gì không.",
+        "Giới hạn dữ liệu có sẵn dựa trên cấp độ truy cập của người dùng.",
+        "Sử dụng một system prompt mạnh mẽ để đảm bảo mô hình bám sát nhu cầu của bạn."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Tinh chỉnh (fine-tuning) một LLM bằng dữ liệu nội bộ không phải là một cơ chế kiểm soát truy cập (access control) đáng tin cậy. Mô hình có thể ghi nhớ dữ liệu mật trong quá trình huấn luyện và sau đó vô tình sinh ra (rò rỉ) dữ liệu đó khi người dùng đặt câu hỏi khéo léo. Bạn không thể 'hy vọng' mô hình học được phân quyền truy cập thông qua tinh chỉnh. Các phương pháp đúng đắn để bảo mật là lọc đầu ra (guardrails), áp dụng kiểm soát truy cập trên tài liệu truy xuất ở hệ thống RAG (giới hạn theo người dùng), và sử dụng prompt nghiêm ngặt."
+    },
+    {
+      "number": 16,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh tương tác với một LLM thông qua hành vi prompt/phản hồi được huấn luyện trên các cuộc gọi của khách hàng hỏi về tình trạng có sẵn của sản phẩm. LLM được thiết kế để chỉ xuất ra \"In Stock\" nếu sản phẩm có sẵn hoặc chỉ từ \"Out of Stock\" nếu không.\nPrompt nào sẽ hoạt động để cho phép kỹ sư trả lời chính xác các nhãn phân loại cuộc gọi?",
+      "options": [
+        "Trả lời \"In Stock\" nếu khách hàng yêu cầu một sản phẩm.",
+        "Bạn sẽ được cung cấp một bản ghi (transcript) cuộc gọi của khách hàng, trong đó khách hàng hỏi về sự có sẵn của sản phẩm. Kết quả đầu ra là \"In Stock\" hoặc \"Out of Stock\". Định dạng đầu ra dưới dạng JSON, ví dụ: {\"call_id\": \"123\", \"label\": \"In Stock\"}.",
+        "Trả lời \"Out of Stock\" nếu khách hàng yêu cầu một sản phẩm.",
+        "Bạn sẽ được cung cấp một bản ghi (transcript) cuộc gọi của khách hàng, trong đó khách hàng hỏi về sự có sẵn của sản phẩm. Trả lời \"In Stock\" nếu sản phẩm có sẵn hoặc \"Out of Stock\" nếu không."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Câu hỏi chỉ định rằng hệ thống cần xuất ra ĐÚNG cụm từ 'In Stock' hoặc 'Out of Stock' phụ thuộc vào tính sẵn có. Tùy chọn 3 là một prompt rõ ràng, mô tả ngữ cảnh, cung cấp quy tắc điều kiện chính xác ('nếu có sẵn -> In Stock', 'nếu không -> Out of Stock'). Tùy chọn 1 yêu cầu mô hình xuất ra định dạng JSON phức tạp, trái với yêu cầu thiết kế là 'chỉ xuất ra thuật ngữ In Stock / Out of Stock' (output ONLY the term). Các tùy chọn 0 và 2 hoàn toàn bỏ qua điều kiện đánh giá."
+    },
+    {
+      "number": 17,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng RAG nhằm giúp một nhóm nhỏ các chuyên gia nội bộ tại công ty trả lời các câu hỏi cụ thể, được hỗ trợ bởi cơ sở tri thức nội bộ. Họ muốn chất lượng câu trả lời tốt nhất có thể, và cả độ trễ lẫn thông lượng đều không phải là mối quan tâm lớn do nhóm người dùng nhỏ và họ sẵn sàng chờ đợi câu trả lời tốt nhất. Các chủ đề có tính chất nhạy cảm và dữ liệu rất bảo mật, do đó, theo các yêu cầu quy định, không có thông tin nào được phép truyền đến các bên thứ ba.\nMô hình nào đáp ứng tất cả các nhu cầu của Kỹ sư AI Tạo sinh trong tình huống này?",
+      "options": [
+        "Dolly 1.5B",
+        "OpenAI GPT-4",
+        "BGE-large",
+        "Llama2-70B"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Yêu cầu khắt khe về việc 'không truyền dữ liệu cho bên thứ ba' đồng nghĩa với việc không thể sử dụng các mô hình thương mại qua API bên ngoài (như OpenAI GPT-4). Do đó, cần một mô hình mã nguồn mở có thể được tự lưu trữ và chạy nội bộ (self-hosted). Vì chất lượng trả lời là yếu tố tối quan trọng và độ trễ không phải là vấn đề, mô hình Llama2-70B (một mô hình rất lớn và mạnh mẽ) là sự lựa chọn hoàn hảo. Dolly 1.5B là quá nhỏ và sẽ không cho chất lượng tối ưu. BGE-large là một mô hình nhúng (embedding model), không phải là LLM để sinh văn bản."
+    },
+    {
+      "number": 18,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh muốn một LLM tạo dữ liệu JSON có định dạng từ các email. Điều này sẽ yêu cầu phân tích và trích xuất các thông tin sau: order ID (mã đơn hàng), date (ngày), và sender email (email người gửi). Dưới đây là một email mẫu:\n\nDate: April 23, 2024\nTime: 4:22 PM\nFrom: anjali.thayer@computex.org\nTo: cust_service@realtek.com\nSubject: Shipment details\n\nHey there,\n\nI have a shipment (order ID is CD34RFT) can you please send me an update?\n\nThank you,\nAnjali\n\nHọ sẽ cần viết một prompt để trích xuất các thông tin liên quan ở định dạng JSON với mức độ chính xác đầu ra cao nhất.\nPrompt nào sẽ làm được điều đó?",
+      "options": [
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Bạn nên trả về thông tin ngày, email người gửi và ID đơn hàng ở định dạng JSON.",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Trả về thông tin được trích xuất ở định dạng JSON.\nDưới đây là một ví dụ: {\"date\": \"April 16, 2024\", \"sender_email\": \"test@test.com\", \"order_id\": \"RE987D\"}",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và ID đơn hàng. Trả về thông tin được trích xuất ở định dạng con người có thể đọc được.",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi, và ID đơn hàng. Trả về thông tin được trích xuất ở định dạng JSON."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Để đảm bảo 'mức độ chính xác đầu ra cao nhất' đối với cấu trúc dữ liệu JSON, việc cung cấp một ví dụ trực quan về định dạng mong muốn (Few-shot prompting) là kỹ thuật hiệu quả nhất. Tùy chọn 1 cung cấp rõ ràng một ví dụ về cấu trúc JSON cần thiết, bao gồm chính xác tên các trường (keys), giúp LLM tuân thủ nghiêm ngặt định dạng mà không tự ý sáng tạo. Các tùy chọn khác mô tả yêu cầu một cách chung chung (Zero-shot) dễ dẫn đến đầu ra không nhất quán."
+    },
+    {
+      "number": 19,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã được yêu cầu xây dựng một ứng dụng hỏi-đáp (question-answering) dựa trên LLM. Ứng dụng này phải tính đến các tài liệu mới thường xuyên được xuất bản. Kỹ sư muốn xây dựng ứng dụng này với chi phí thấp nhất và công sức phát triển ít nhất, đồng thời vận hành với chi phí thấp nhất có thể.\nSự kết hợp nào của các thành phần chuỗi (chaining components) và cấu hình đáp ứng các yêu cầu này?",
+      "options": [
+        "Đối với ứng dụng, cần có một prompt, một bộ truy xuất (retriever) và một LLM. Đầu ra của bộ truy xuất được chèn vào prompt, sau đó được cung cấp cho LLM để tạo câu trả lời.",
+        "LLM cần được thường xuyên cập nhật bằng các tài liệu mới (fine-tune) để cung cấp các câu trả lời cập nhật nhất.",
+        "Đối với ứng dụng hỏi-đáp, chỉ cần kỹ thuật prompt (prompt engineering) và một LLM để tạo câu trả lời.",
+        "Đối với ứng dụng, cần có một prompt, một tác tử (agent) và một LLM đã được tinh chỉnh (fine-tuned). Agent được LLM sử dụng để truy xuất nội dung liên quan, nội dung này được chèn vào prompt để LLM sinh ra câu trả lời."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Mục tiêu là xử lý 'dữ liệu mới thường xuyên cập nhật' với 'chi phí và công sức thấp nhất'. Kiến trúc RAG (Retrieval-Augmented Generation) mô tả trong tùy chọn 0, sử dụng một bộ truy xuất (retriever) để tìm kiếm các tài liệu mới từ cơ sở dữ liệu và tiêm vào prompt của LLM, là phương pháp hiệu quả và chi phí thấp nhất. Việc cập nhật mô hình thông qua tinh chỉnh (fine-tuning - tùy chọn 1, 3) liên tục đòi hỏi chi phí tính toán cực lớn và công sức kỹ thuật cao. Tùy chọn 2 không có bộ truy xuất nên không thể truy cập dữ liệu mới được xuất bản ngoài dữ liệu huấn luyện sẵn có của mô hình."
+    },
+    {
+      "number": 20,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo ra một hệ thống LLM dựa trên tác tử (agent-based) cho đội xe tải quái vật (monster truck) yêu thích của họ. Hệ thống có thể trả lời các câu hỏi bằng văn bản về đội xe, tra cứu ngày sự kiện thông qua một lệnh gọi API, hoặc truy vấn các bảng về bảng xếp hạng mới nhất của đội.\nKỹ sư AI Tạo sinh nên thiết kế các khả năng này vào hệ thống của họ như thế nào là tốt nhất?",
+      "options": [
+        "Thu thập các tài liệu PDF về đội xe tải vào một cơ sở dữ liệu vector và truy vấn nó trong kiến trúc RAG.",
+        "Viết một system prompt cho agent liệt kê các công cụ có sẵn và gói nó vào một hệ thống agent thực hiện một số bước gọi công cụ để giải quyết một truy vấn.",
+        "Hướng dẫn LLM trả lời bằng \"RAG\", \"API\" hoặc \"TABLE\" tùy thuộc vào truy vấn, sau đó sử dụng phân tích văn bản và các câu lệnh điều kiện để giải quyết truy vấn.",
+        "Xây dựng một system prompt với tất cả các ngày sự kiện có thể và thông tin bảng được đưa sẵn vào prompt. Sử dụng kiến trúc RAG để tra cứu các câu hỏi văn bản chung và tận dụng thông tin trong system prompt cho các việc khác."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Mô hình agent-based LLM (như ReAct) hoạt động tốt nhất khi bạn cung cấp cho LLM một system prompt mô tả các công cụ (tools) mà nó có thể sử dụng (ví dụ: công cụ RAG cho tài liệu văn bản, công cụ API cho sự kiện, công cụ SQL để truy vấn bảng). Sau đó, agent framework (như LangChain) sẽ điều phối vòng lặp suy luận - hành động (thought-action loop) để tự động quyết định gọi công cụ nào và tổng hợp kết quả để trả lời người dùng. Việc tự code parser (tùy chọn 2) rất phức tạp và không linh hoạt, trong khi nhồi nhét tất cả dữ liệu vào prompt (tùy chọn 3) sẽ vượt quá giới hạn token và gây tốn kém."
+    },
+    {
+      "number": 21,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) được yêu cầu thiết kế một ứng dụng dựa trên LLM để hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi về nhân sự của nhân viên bằng cách sử dụng tài liệu PDF nhân sự.\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các tác vụ cấp cao nào?",
+      "options": [
+        "Tính toán các embedding trung bình cho mỗi tài liệu nhân sự, so sánh các embedding với truy vấn của người dùng để tìm tài liệu phù hợp nhất. Truyền tài liệu phù hợp nhất cùng với truy vấn của người dùng vào một LLM có cửa sổ ngữ cảnh lớn để tạo câu trả lời cho nhân viên.",
+        "Sử dụng LLM để tóm tắt tài liệu nhân sự. Cung cấp các bản tóm tắt tài liệu và truy vấn của người dùng vào một LLM có cửa sổ ngữ cảnh lớn để tạo câu trả lời cho người dùng.",
+        "Tạo một ma trận tương tác của các câu hỏi lịch sử của nhân viên và tài liệu nhân sự. Sử dụng ALS để nhân tử hóa ma trận và tạo các embedding. Tính toán các embedding của các truy vấn mới và sử dụng chúng để tìm tài liệu nhân sự phù hợp nhất. Sử dụng LLM để tạo câu trả lời cho câu hỏi của nhân viên dựa trên tài liệu được truy xuất.",
+        "Chia tài liệu nhân sự thành các đoạn (chunks) và nhúng vào một cơ sở dữ liệu vector. Sử dụng câu hỏi của nhân viên để truy xuất các đoạn tài liệu khớp nhất, và sử dụng LLM để tạo câu trả lời cho nhân viên dựa trên tài liệu được truy xuất."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3 vì đây là kiến trúc chuẩn của Hệ thống Retrieval-Augmented Generation (RAG). Quá trình này bao gồm việc chia nhỏ tài liệu lớn thành các đoạn nhỏ (chunking), nhúng chúng vào vector store, sau đó truy xuất các đoạn phù hợp nhất với truy vấn của người dùng và dùng LLM để sinh câu trả lời. Đáp án 0 sai vì tính embedding trung bình cho cả tài liệu sẽ làm mất đi ý nghĩa ngữ nghĩa chi tiết. Đáp án 1 sai vì tóm tắt toàn bộ tài liệu rồi đưa vào LLM sẽ không mang lại thông tin chi tiết và gặp giới hạn về context window. Đáp án 2 sai vì thuật toán ALS thường dùng cho hệ thống gợi ý (Recommendation systems) dựa trên ma trận tương tác, không phù hợp cho truy vấn văn bản ngữ nghĩa."
+    },
+    {
+      "number": 22,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty điện tử vừa triển khai một ứng dụng RAG để khách hàng đặt câu hỏi về các sản phẩm mà công ty cung cấp. Tuy nhiên, họ nhận được phản hồi rằng hệ thống RAG thường trả về thông tin về một sản phẩm không liên quan.\nKỹ sư này có thể làm gì để cải thiện mức độ liên quan của câu trả lời từ RAG?",
+      "options": [
+        "Đánh giá chất lượng của ngữ cảnh được truy xuất.",
+        "Triển khai bộ nhớ đệm (caching) cho các câu hỏi thường gặp.",
+        "Sử dụng một LLM khác để cải thiện câu trả lời được tạo ra.",
+        "Sử dụng một thuật toán tìm kiếm tương đồng ngữ nghĩa khác."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0 vì vấn đề nằm ở việc RAG trả về \"thông tin về một sản phẩm không liên quan\", điều này chỉ ra rằng bước truy xuất (Retrieval) đang không hoạt động tốt. Đánh giá chất lượng ngữ cảnh truy xuất sẽ giúp xác định nguyên nhân (ví dụ: kích thước chunk chưa phù hợp, embedding model kém, hoặc chiến lược tìm kiếm). Đáp án 1 sai vì caching chỉ cải thiện tốc độ, không giải quyết vấn đề truy xuất sai. Đáp án 2 sai vì thay đổi LLM chỉ giúp sinh câu trả lời mượt hơn nhưng LLM vẫn sẽ dựa trên ngữ cảnh sai. Đáp án 3 là một giải pháp tiềm năng, nhưng bước đầu tiên và tổng quát nhất cần làm là phải đánh giá chất lượng truy xuất trước khi quyết định thay đổi thuật toán."
+    },
+    {
+      "number": 23,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot được thiết kế để hỗ trợ người dùng với các truy vấn liên quan đến bảo hiểm. Chatbot được xây dựng trên một mô hình ngôn ngữ lớn (LLM) và có khả năng đàm thoại. Tuy nhiên, để duy trì trọng tâm của chatbot và tuân thủ chính sách của công ty, nó không được cung cấp câu trả lời cho các câu hỏi về chính trị. Thay vào đó, khi gặp các câu hỏi chính trị, chatbot phải trả lời bằng một thông điệp tiêu chuẩn:\n\"Xin lỗi, tôi không thể trả lời điều đó. Tôi là một chatbot chỉ có thể trả lời các câu hỏi xoay quanh bảo hiểm.\"\nLoại framework nào nên được triển khai để giải quyết vấn đề này?",
+      "options": [
+        "Safety Guardrail (Hàng rào an toàn)",
+        "Security Guardrail (Hàng rào bảo mật)",
+        "Contextual Guardrail (Hàng rào ngữ cảnh)",
+        "Compliance Guardrail (Hàng rào tuân thủ)"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Các framework \"Safety Guardrail\" (như NeMo Guardrails) được sử dụng để định tuyến, kiểm duyệt và chặn các chủ đề không mong muốn (ví dụ: chính trị, bạo lực) nhằm đảm bảo LLM hoạt động an toàn và trong phạm vi cho phép. Các khái niệm như Contextual hay Compliance Guardrail không phải là tên gọi chuẩn trong các framework Guardrail phổ biến. Security Guardrail thường đề cập đến việc chống lại prompt injection hoặc các lỗ hổng bảo mật, chứ không phải chặn các chủ đề hội thoại cụ thể."
+    },
+    {
+      "number": 24,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang sử dụng đoạn mã dưới đây để thử nghiệm thiết lập một vector store:\n\nfrom databricks.vector_search.client import VectorSearchClient\n\nvsc = VectorSearchClient()\n\nvsc.create_endpoint(\n    name=\"vector_search_test\",\n    endpoint_type=\"STANDARD\"\n)\n\nGiả sử họ dự định sử dụng các embedding được Databricks quản lý (managed embeddings) với mô hình embedding mặc định, lệnh gọi hàm hợp lý tiếp theo sẽ là gì?",
+      "options": [
+        "vsc.get_index()",
+        "vsc.create_delta_sync_index()",
+        "vsc.create_direct_access_index()",
+        "vsc.similarity_search()"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Databricks Vector Search hỗ trợ hai loại index: Delta Sync Index (tự động đồng bộ từ một bảng Delta sang vector index) và Direct Access Index. Để sử dụng tính năng \"managed embeddings\" (Databricks tự động tính toán và cập nhật các vector từ văn bản thô), ta phải sử dụng `create_delta_sync_index` để cấu hình đồng bộ hóa với bảng Delta chứa dữ liệu nguồn. Direct Access Index (Đáp án 2) đòi hỏi người dùng tự quản lý và đẩy dữ liệu đã được nhúng qua API, không hỗ trợ managed embeddings tự động. Đáp án 0 và 3 là các hàm dùng sau khi index đã được tạo."
+    },
+    {
+      "number": 25,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ triển khai một ứng dụng tận dụng mô hình Pyfunc tùy chỉnh của MLflow để trả về một số kết quả trung gian.\nHọ nên cấu hình endpoint như thế nào để truyền vào các khóa bí mật (secrets) và thông tin xác thực (credentials)?",
+      "options": [
+        "Sử dụng spark.conf.set ()",
+        "Truyền các biến bằng Databricks Feature Store API",
+        "Thêm thông tin xác thực bằng các biến môi trường (environment variables)",
+        "Truyền các khóa bí mật dưới dạng văn bản gốc (plain text)"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2. Trong Databricks Model Serving, cách tiêu chuẩn và an toàn nhất để truyền thông tin xác thực (API keys, secrets) vào một mô hình đang chạy (như MLflow Pyfunc) là thông qua biến môi trường (Environment Variables). Người dùng có thể gắn Databricks Secrets vào các biến môi trường này khi cấu hình endpoint. Đáp án 0 sai vì endpoint Model Serving không chạy môi trường Spark thông thường. Đáp án 1 sai vì Feature Store dùng để tra cứu đặc trưng chứ không phải lưu secrets. Đáp án 3 sai vì việc lưu trữ thông tin nhạy cảm dưới dạng plain text vi phạm nghiêm trọng các quy tắc bảo mật."
+    },
+    {
+      "number": 26,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh muốn xây dựng một giải pháp dựa trên LLM để giúp một nhà hàng cải thiện trải nghiệm đặt bàn trực tuyến của khách hàng bằng cách tự động xử lý các câu hỏi phổ biến của khách. Mục tiêu của giải pháp là giảm thiểu việc phải chuyển sự cố sang cho nhân viên can thiệp hoặc gọi điện thoại, trong khi vẫn duy trì tương tác cá nhân hóa. Để thiết kế giải pháp, Kỹ sư AI Tạo sinh cần xác định dữ liệu đầu vào cho LLM và tác vụ mà nó sẽ thực hiện.\nCặp đầu vào/đầu ra nào sẽ hỗ trợ mục tiêu của họ?",
+      "options": [
+        "Đầu vào: Nhật ký trò chuyện trực tuyến; Đầu ra: Phân nhóm nhật ký trò chuyện theo người dùng, sau đó tóm tắt các tương tác của từng người dùng",
+        "Đầu vào: Nhật ký trò chuyện trực tuyến; Đầu ra: Các nút đại diện cho các lựa chọn về chi tiết đặt bàn",
+        "Đầu vào: Các đánh giá của khách hàng; Đầu ra: Phân loại cảm xúc đánh giá",
+        "Đầu vào: Nhật ký trò chuyện trực tuyến; Đầu ra: Các tùy chọn hủy đặt bàn"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1 vì mục tiêu là \"xử lý các câu hỏi phổ biến của khách\" và cải thiện quá trình \"đặt bàn trực tuyến\" mà không cần nhân viên can thiệp. Việc dựa vào nhật ký trò chuyện (chat logs) của người dùng làm đầu vào và trích xuất/đề xuất các tùy chọn (buttons) chi tiết đặt bàn sẽ dẫn dắt người dùng đặt bàn tự động, đáp ứng được mục tiêu. Đáp án 0 (tóm tắt) và 2 (phân tích cảm xúc đánh giá) không giúp trả lời và thực hiện tác vụ đặt bàn. Đáp án 3 chỉ hỗ trợ hủy bàn, không giúp ích nhiều cho việc đặt bàn mới (mục tiêu chính)."
+    },
+    {
+      "number": 27,
+      "type": "single_choice",
+      "prompt": "Phương pháp nào là hiệu quả để tiền xử lý (preprocess) các prompt bằng mã tùy chỉnh (custom code) trước khi gửi chúng đến LLM?",
+      "options": [
+        "Sửa đổi trực tiếp kiến trúc bên trong của LLM để bao gồm các bước tiền xử lý",
+        "Tốt hơn là không đưa mã tùy chỉnh vào để tiền xử lý prompt vì LLM chưa được huấn luyện với các ví dụ về các prompt đã tiền xử lý",
+        "Thay vì tiền xử lý prompt, sẽ hiệu quả hơn nếu hậu xử lý (postprocess) đầu ra của LLM để căn chỉnh kết quả với mục tiêu mong muốn",
+        "Viết một mô hình MLflow PyFunc có một hàm riêng biệt để xử lý các prompt"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Trong hệ sinh thái Databricks/MLflow, để đưa các logic tiền xử lý và hậu xử lý tùy chỉnh cùng với mô hình AI (như lọc dữ liệu PII, định dạng template), bạn có thể tạo một custom MLflow PyFunc model. Trong PyFunc, bạn định nghĩa quá trình xử lý đầu vào trước khi gọi LLM. Đáp án 0 không khả thi vì kiến trúc LLM không dễ dàng thay đổi ở cấp độ mạng. Đáp án 1 và 2 sai vì tiền xử lý thường rất cần thiết cho việc đảm bảo tính an toàn và cung cấp định dạng chuẩn cho mô hình sinh văn bản."
+    },
+    {
+      "number": 28,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM mà người dùng có thể sử dụng để tạo ra các bài thơ chúc mừng sinh nhật cá nhân hóa dựa trên tên của họ.\nKỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng, với rủi ro từ các đầu vào độc hại của người dùng?",
+      "options": [
+        "Triển khai một bộ lọc an toàn (safety filter) để phát hiện bất kỳ đầu vào gây hại nào và yêu cầu LLM phản hồi rằng nó không thể hỗ trợ",
+        "Giảm thời gian mà người dùng có thể tương tác với LLM",
+        "Yêu cầu LLM nhắc nhở người dùng rằng đầu vào là độc hại nhưng vẫn tiếp tục cuộc trò chuyện với người dùng",
+        "Tăng lượng tài nguyên tính toán cung cấp năng lượng cho LLM để xử lý đầu vào nhanh hơn"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Việc sử dụng các bộ lọc an toàn (safety filters / guardrails) để đánh giá prompt trước khi xử lý nhằm từ chối các câu lệnh độc hại (như prompt injection, toxic content) là phương pháp tiêu chuẩn trong bảo mật ứng dụng GenAI. Đáp án 1 và 3 không giải quyết được vấn đề bảo mật. Đáp án 2 rất nguy hiểm vì tiếp tục xử lý lệnh độc hại có thể dẫn đến việc tiết lộ thông tin hệ thống hoặc bị chiếm quyền (Jailbreak)."
+    },
+    {
+      "number": 29,
+      "type": "single_choice",
+      "prompt": "Chỉ số nào nên được xem xét để đánh giá mức độ an toàn của các đầu ra từ LLM khi đánh giá định tính các phản hồi của LLM cho trường hợp sử dụng dịch thuật?",
+      "options": [
+        "Khả năng tạo ra các phản hồi bằng mã lập trình (code)",
+        "Sự tương đồng với ngôn ngữ trước đó",
+        "Độ trễ của phản hồi và độ dài của văn bản được tạo ra",
+        "Tính chính xác và mức độ liên quan của các phản hồi"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Mặc dù câu hỏi có đề cập đến 'mức độ an toàn' (safety), trong bài toán dịch thuật, an toàn đồng nghĩa với việc giữ đúng ý nghĩa ban đầu mà không tạo ra 'ảo giác' (hallucinations), không thêm bớt nội dung làm sai lệch ý đồ. Do đó 'tính chính xác và mức độ liên quan' (Accuracy and relevance) là thước đo quan trọng nhất để đánh giá xem bản dịch có đáng tin cậy không. Đáp án 0 không liên quan đến dịch ngôn ngữ tự nhiên. Đáp án 2 (độ trễ) là về hiệu năng, không phải đánh giá định tính nội dung."
+    },
+    {
+      "number": 30,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một chatbot phục vụ bệnh nhân, tập trung vào lĩnh vực chăm sóc sức khỏe. Nếu câu hỏi của bệnh nhân không phải là trường hợp cấp cứu y tế, chatbot nên thu thập thêm thông tin từ bệnh nhân để chuyển cho phòng khám của bác sĩ và đề xuất một vài bài báo y khoa đã được phê duyệt sẵn cho bệnh nhân đọc. Nếu câu hỏi của bệnh nhân là khẩn cấp, hãy hướng dẫn bệnh nhân gọi cho dịch vụ cấp cứu địa phương.\nVới đầu vào của người dùng như sau:\n\"Tôi bị đau đầu dữ dội và chóng mặt trong hai ngày qua.\"\nPhản hồi nào là phù hợp nhất để chatbot tạo ra?",
+      "options": [
+        "Đây là một vài bài báo liên quan để bạn tham khảo. Hãy cho tôi biết nếu bạn có thắc mắc sau khi đọc chúng.",
+        "Vui lòng gọi cho dịch vụ cấp cứu địa phương của bạn.",
+        "Đau đầu có thể rất khó chịu. Hy vọng bạn sớm khỏe lại!",
+        "Vui lòng cung cấp tuổi của bạn, các hoạt động gần đây và bất kỳ triệu chứng nào khác mà bạn nhận thấy cùng với triệu chứng đau đầu và chóng mặt."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1 vì triệu chứng \"đau đầu dữ dội và chóng mặt\" (severe headaches and dizziness) tiềm ẩn rủi ro đột quỵ hoặc các tình trạng thần kinh nghiêm trọng, được phân loại là một trường hợp cấp cứu y tế (medical emergency). Theo quy tắc được đặt ra trong mô tả, đối với các trường hợp khẩn cấp, chatbot phải lập tức hướng dẫn bệnh nhân gọi cho cấp cứu. Các câu trả lời 0, 2 và 3 có thể làm chậm trễ việc điều trị y tế khẩn cấp, vi phạm nguyên tắc an toàn nghiêm ngặt đối với ứng dụng y tế."
+    },
+    {
+      "number": 31,
+      "type": "multiple_choice",
+      "prompt": "Sau khi thay đổi LLM dùng để sinh câu trả lời trong một pipeline RAG từ GPT-4 sang một mô hình có độ dài ngữ cảnh ngắn hơn mà công ty tự lưu trữ (self-hosts), Kỹ sư AI Tạo sinh nhận được lỗi sau:\n\n{\n  \"error_code\": \"BAD_REQUEST\",\n  \"message\": \"Bad request: rpc error: code = InvalidArgument desc = prompt token count (4595) cannot exceed 4096…\"\n}\n\nHai giải pháp nào Kỹ sư AI Tạo sinh nên thực hiện mà không thay đổi mô hình tạo câu trả lời? (Chọn hai.)",
+      "options": [
+        "Sử dụng một mô hình embedding nhỏ hơn để tạo các embedding",
+        "Giảm số lượng token đầu ra tối đa (max_tokens) của mô hình mới",
+        "Giảm kích thước đoạn (chunk size) của các tài liệu được nhúng",
+        "Giảm số lượng bản ghi được truy xuất từ cơ sở dữ liệu vector",
+        "Huấn luyện lại mô hình sinh văn bản bằng ALiBi"
+      ],
+      "answer_code": "12121",
+      "correct_option_indexes": [
+        1,
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 1 và 3. Lỗi này xảy ra do số lượng token của prompt vượt quá giới hạn cửa sổ ngữ cảnh. Để giảm kích thước của prompt mà không phải xử lý lại toàn bộ dữ liệu, cách trực tiếp nhất là cấu hình giảm số lượng đoạn văn bản (top-K) được truy xuất từ cơ sở dữ liệu vector đưa vào prompt (Đáp án 3). Ngoài ra, ở nhiều API LLM, giới hạn token áp dụng cho TỔNG SỐ token (prompt + max_tokens). Do đó, việc giảm giá trị max_tokens sẽ giải phóng không gian cho phép prompt dài hơn (Đáp án 1). Đổi mô hình embedding (Đáp án 0) không thay đổi số token văn bản. Giảm kích thước chunk (Đáp án 2) đòi hỏi phải chia lại và nhúng lại toàn bộ dữ liệu rất tốn kém. Huấn luyện lại bằng ALiBi (Đáp án 4) vi phạm yêu cầu 'không thay đổi mô hình'."
+    },
+    {
+      "number": 32,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống sẽ trả lời các câu hỏi về các bài báo tin tức chứng khoán mới nhất.\nĐiều nào sẽ KHÔNG giúp đảm bảo các đầu ra có liên quan đến tin tức tài chính?",
+      "options": [
+        "Triển khai một framework bảo vệ (guardrail) toàn diện bao gồm các chính sách lọc nội dung được tinh chỉnh cho lĩnh vực tài chính.",
+        "Tăng tài nguyên tính toán (compute) để cải thiện tốc độ xử lý các câu hỏi nhằm cho phép phân tích mức độ liên quan tốt hơn.",
+        "Triển khai bộ lọc ngôn ngữ tục tĩu (profanity filter) để loại bỏ các ngôn ngữ phản cảm.",
+        "Kết hợp đánh giá thủ công (manual reviews) để sửa chữa bất kỳ đầu ra có vấn đề nào trước khi gửi tới người dùng."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Việc tăng tài nguyên tính toán (compute) chỉ giúp hệ thống chạy nhanh hơn (giảm độ trễ) chứ không liên quan đến việc nâng cao chất lượng hay mức độ liên quan của nội dung trả lời đối với lĩnh vực tài chính. Các đáp án 0, 2 và 3 đều cung cấp các cơ chế kiểm soát trực tiếp nội dung đầu ra (guardrails, profanity filters, manual reviews), qua đó thực sự giúp đảm bảo câu trả lời được kiểm duyệt, liên quan và an toàn."
+    },
+    {
+      "number": 33,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về tài liệu nội bộ cho công ty SnoPen AI.\nCác tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin tức thể thao, hoặc tin tức giải trí, hoặc nội dung về các công ty khác.\nPhương pháp nào được khuyến nghị khi xây dựng một ứng dụng RAG để đạt được mục tiêu lọc bỏ thông tin không liên quan này?",
+      "options": [
+        "Giữ nguyên tất cả các bài báo vì ứng dụng RAG cần hiểu nội dung ngoài công ty để tránh trả lời các câu hỏi về chúng.",
+        "Thêm vào system prompt rằng bất kỳ thông tin nào hệ thống thấy cũng sẽ là về SnoPenAI, ngay cả khi không thực hiện lọc dữ liệu.",
+        "Thêm vào system prompt rằng ứng dụng không được phép trả lời bất kỳ câu hỏi nào không liên quan đến SnoPen AI.",
+        "Gộp tất cả các tài liệu liên quan đến SnoPen AI thành một chunk duy nhất trong cơ sở dữ liệu vector."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2. Trong các ứng dụng RAG, cách tốt nhất để đảm bảo mô hình không tạo câu trả lời cho các chủ đề ngoài luồng là thiết lập các quy tắc rõ ràng trong system prompt. Chỉ dẫn LLM chỉ trả lời các câu hỏi về \"SnoPen AI\" và từ chối các câu hỏi không liên quan sẽ hoạt động như một lớp bảo vệ (guardrail). Đáp án 0 sai vì việc đưa nội dung rác vào vector store làm tăng chi phí và dễ gây nhiễu. Đáp án 1 sai vì nó cung cấp thông tin sai lệch cho LLM, dễ dẫn đến ảo giác (hallucination). Đáp án 3 sai vì nhồi tất cả vào một chunk sẽ phá vỡ giới hạn độ dài ngữ cảnh."
+    },
+    {
+      "number": 34,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã trích xuất thành công các tài liệu phi cấu trúc và chia chúng (chunk) theo các phần của tài liệu. Họ muốn lưu trữ các chunk trong một index Vector Search. Định dạng hiện tại của dataframe có hai cột: (i) tên tệp tài liệu gốc (ii) một mảng các đoạn văn bản (chunks) cho mỗi tài liệu.\nCách thức nào có hiệu suất cao nhất để lưu trữ dataframe này?",
+      "options": [
+        "Chia dữ liệu thành tập huấn luyện và tập kiểm tra, tạo một định danh duy nhất cho mỗi tài liệu, sau đó lưu vào một bảng Delta.",
+        "Trải phẳng (flatten) dataframe thành một chunk trên mỗi hàng, tạo một định danh duy nhất (unique identifier) cho mỗi hàng, và lưu vào một bảng Delta.",
+        "Đầu tiên tạo một định danh duy nhất cho mỗi tài liệu, sau đó lưu vào một bảng Delta.",
+        "Lưu từng chunk dưới dạng một tệp JSON độc lập trong Unity Catalog Volume. Đối với mỗi tệp JSON, khóa (key) là tên phần tài liệu và giá trị (value) là mảng các đoạn văn bản cho phần đó."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Để Databricks Vector Search hoạt động tối ưu, dữ liệu trong bảng Delta nguồn cần có định dạng: mỗi bản ghi (hàng) là một đoạn văn bản (chunk) riêng biệt, kèm theo một khóa chính (primary key/ID duy nhất). Do dataframe đang chứa một mảng các chunks trong một hàng, ta phải làm phẳng (flatten/explode) dataframe đó để mỗi hàng chứa đúng một chunk, cấp ID duy nhất trước khi ghi vào Delta Table. Đáp án 2 thiếu bước flatten khiến Vector Search khó ánh xạ ở cấp độ chunk. Đáp án 3 sử dụng tệp JSON rời rạc sẽ làm mất đi hiệu năng và khả năng đồng bộ tự động của Databricks Delta Sync."
+    },
+    {
+      "number": 35,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã tạo một ứng dụng RAG có thể giúp nhân viên tìm câu trả lời từ một cơ sở tri thức nội bộ, chẳng hạn như các trang Confluence hoặc Google Drive. Ứng dụng nguyên mẫu hiện đang hoạt động và nhận được một số phản hồi tích cực từ những người thử nghiệm nội bộ trong công ty. Bây giờ, Kỹ sư AI Tạo sinh muốn chính thức đánh giá hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
+      "options": [
+        "Sử dụng điểm số tương đồng cosin (cosine similarity score) để đánh giá toàn diện chất lượng của các câu trả lời cuối cùng được tạo ra.",
+        "Giám tuyển (curate) một tập dữ liệu có thể kiểm tra riêng biệt các thành phần truy xuất (retrieval) và sinh văn bản (generation) của hệ thống. Sử dụng các chỉ số đánh giá tích hợp sẵn của MLflow để thực hiện việc đánh giá trên các thành phần này.",
+        "Kiểm chuẩn (benchmark) nhiều LLM với cùng một dữ liệu và chọn LLM tốt nhất cho công việc.",
+        "Sử dụng một LLM-as-a-judge (LLM đóng vai trò giám khảo) để đánh giá chất lượng của các câu trả lời cuối cùng được tạo ra."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Hệ thống RAG bao gồm hai giai đoạn quan trọng: Truy xuất (Retrieval) và Sinh câu trả lời (Generation). Để biết chính xác cần cải thiện ở đâu, bạn phải đánh giá cả hai thành phần một cách độc lập (dùng metrics cho truy xuất như Recall/NDCG và metrics cho sinh văn bản như tính trung thực/mức độ liên quan). Việc giám tuyển tập dữ liệu chuẩn và sử dụng công cụ MLflow Evaluate là cách tiếp cận bài bản nhất. Đáp án 0 sai vì cosine similarity giữa câu trả lời và câu hỏi không phản ánh độ chính xác thực tế. Đáp án 3 chỉ xem xét đầu ra cuối cùng mà không cô lập được nguyên nhân do truy xuất sai hay sinh văn bản kém."
+    },
+    {
+      "number": 36,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã huấn luyện một LLM trên Databricks và bây giờ nó đã sẵn sàng để được triển khai.\nBước nào sau đây phác thảo đúng quy trình dễ nhất để triển khai một mô hình trên Databricks?",
+      "options": [
+        "Ghi log mô hình dưới dạng một đối tượng pickle, tải đối tượng lên Unity Catalog Volume, đăng ký nó với Unity Catalog bằng MLflow và khởi chạy một serving endpoint.",
+        "Ghi log mô hình bằng MLflow trong quá trình huấn luyện, trực tiếp đăng ký mô hình với Unity Catalog bằng MLflow API, và khởi chạy một serving endpoint.",
+        "Lưu mô hình cùng với các phụ thuộc của nó trong một thư mục cục bộ, build Docker image, và chạy Docker container.",
+        "Gói hàm dự đoán của LLM vào một ứng dụng Flask và phục vụ bằng Gunicorn."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Trong hệ sinh thái Databricks, quy trình triển khai (MLOps) chuẩn mực và tự động nhất là sử dụng MLflow để ghi log (log model) trong lúc huấn luyện, sau đó đăng ký (register) trực tiếp vào Unity Catalog, và cuối cùng dùng Databricks Model Serving để tạo endpoint một cách liền mạch. Đáp án 0 tạo thêm bước trung gian pickle thủ công không cần thiết và dễ gây lỗi. Đáp án 2 và 3 là các cách tiếp cận triển khai hoàn toàn thủ công bên ngoài hệ sinh thái, làm mất đi lợi thế quản lý tự động, bảo mật và khả năng co giãn của Databricks."
+    },
+    {
+      "number": 37,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM bằng cách sử dụng Foundation Model API với thông lượng được cung cấp sẵn (provisioned throughput). Bây giờ khi ứng dụng đã sẵn sàng để triển khai, họ nhận ra rằng khối lượng yêu cầu của mình không đủ cao để tạo một endpoint provisioned throughput của riêng họ. Họ muốn chọn một chiến lược đảm bảo hiệu quả chi phí tốt nhất cho ứng dụng của mình.\nKỹ sư AI Tạo sinh nên sử dụng chiến lược nào?",
+      "options": [
+        "Thay vào đó, chuyển sang sử dụng các Mô hình Bên ngoài (External Models).",
+        "Triển khai mô hình sử dụng thông lượng trả tiền theo token (pay-per-token throughput) vì nó đi kèm với các đảm bảo về chi phí.",
+        "Chuyển sang một mô hình có số lượng tham số ít hơn để giảm thiểu các vấn đề hạn chế về phần cứng.",
+        "Điều tiết thủ công đợt yêu cầu đầu vào để tránh các vấn đề giới hạn tốc độ (rate limiting)."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Trên Databricks, Foundation Model API cung cấp hai tùy chọn: Pay-per-token (trả tiền theo số lượng token thực tế sử dụng) và Provisioned Throughput (trả chi phí cố định thuê máy chủ chuyên dụng theo giờ). Khi ứng dụng có lưu lượng truy cập thấp, Pay-per-token là phương pháp tối ưu chi phí tốt nhất vì bạn chỉ trả tiền cho những gì bạn thực sự dùng. Provisioned Throughput chỉ hiệu quả khi có lưu lượng lớn và ổn định. Các đáp án khác không phải là giải pháp tốt nhất cho bài toán tối ưu chi phí cung cấp cơ sở hạ tầng (infrastructure tier)."
+    },
+    {
+      "number": 38,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các bản tóm tắt bài báo dưới dạng một thể loại thơ, chẳng hạn như haiku, dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không khớp với giọng điệu hoặc phong cách mong muốn.\nPhương pháp nào sẽ KHÔNG giúp cải thiện phản hồi của LLM để đạt được kết quả như mong muốn?",
+      "options": [
+        "Cung cấp cho LLM một prompt có hướng dẫn rõ ràng yêu cầu nó tạo văn bản theo giọng điệu và phong cách mong muốn.",
+        "Sử dụng một công cụ trung hòa (neutralizer) để chuẩn hóa giọng điệu và phong cách của các tài liệu cơ sở.",
+        "Bao gồm các ví dụ (few-shot) trong prompt gửi tới LLM.",
+        "Tinh chỉnh (fine-tune) LLM trên một tập dữ liệu có giọng điệu và phong cách mong muốn."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Bài toán yêu cầu LLM tạo đầu ra với một phong cách đặc biệt (thơ haiku). Việc \"chuẩn hóa\" (neutralize) tài liệu đầu vào thành văn bản trung tính sẽ làm mất đi các đặc trưng ngôn ngữ và không đóng góp gì vào việc dạy cho mô hình cách sinh thơ haiku ở đầu ra. Các đáp án 0 (Prompt Engineering), 2 (Few-shot prompting), và 3 (Fine-tuning) đều là những phương pháp chuẩn mực và cực kỳ hiệu quả để hướng dẫn LLM chuyển đổi phong cách văn bản (style transfer)."
+    },
+    {
+      "number": 39,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo một ứng dụng được hỗ trợ bởi LLM cần quyền truy cập vào các bài báo tin tức và giá cổ phiếu cập nhật nhất.\nThiết kế yêu cầu sử dụng giá cổ phiếu được lưu trữ trong các bảng Delta và tìm các bài báo tin tức liên quan mới nhất bằng cách tìm kiếm trên internet.\nKỹ sư AI Tạo sinh nên thiết kế kiến trúc hệ thống LLM của họ như thế nào?",
+      "options": [
+        "Sử dụng một LLM để tóm tắt các bài báo tin tức mới nhất và tra cứu mã cổ phiếu từ các bản tóm tắt để tìm giá cổ phiếu.",
+        "Truy vấn bảng Delta để tìm giá cổ phiếu biến động và sử dụng một LLM để tạo truy vấn tìm kiếm nhằm điều tra các nguyên nhân tiềm năng gây ra biến động cổ phiếu.",
+        "Tải xuống và lưu trữ các bài báo tin tức và thông tin giá cổ phiếu trong một vector store. Sử dụng kiến trúc RAG để truy xuất và sinh văn bản tại thời điểm chạy (runtime).",
+        "Tạo một agent (tác tử) với các công cụ (tools) để truy vấn SQL trên bảng Delta và tìm kiếm web, cung cấp các giá trị truy xuất được cho LLM để tạo câu trả lời."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Để giải quyết các tác vụ phức tạp đòi hỏi lấy dữ liệu từ nhiều nguồn khác biệt tại thời gian thực (như truy vấn dữ liệu có cấu trúc từ bảng SQL/Delta và tìm kiếm dữ liệu phi cấu trúc trên Web), kiến trúc Agentic (Tác tử AI) là phù hợp nhất. Agent được cung cấp các công cụ (Tools/Function Calling), cho phép nó tự động suy luận và quyết định khi nào cần gọi truy vấn SQL và khi nào cần Search Web. Đáp án 2 sai vì giá cổ phiếu thay đổi liên tục, đưa vào vector store không khả thi và không thể đáp ứng tính real-time. Các đáp án 0 và 1 mang tính tuyến tính cố định, không linh hoạt trong mọi truy vấn của người dùng."
+    },
+    {
+      "number": 40,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết kế một chatbot cho một công ty trò chơi nhằm thu hút người dùng trên nền tảng của mình trong khi người dùng chơi các trò chơi điện tử trực tuyến.\nSố liệu nào sẽ giúp họ tăng mức độ tương tác và giữ chân người dùng cho nền tảng của họ?",
+      "options": [
+        "Tính ngẫu nhiên (Randomness)",
+        "Sự đa dạng của các phản hồi (Diversity of responses)",
+        "Thiếu mức độ liên quan (Lack of relevance)",
+        "Sự lặp lại của các phản hồi (Repetition of responses)"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Trong môi trường trò chơi trực tuyến, người chơi kỳ vọng có những trải nghiệm phong phú và tự nhiên. Sự đa dạng của các phản hồi (Diversity of responses) từ chatbot (ví dụ: các đoạn hội thoại NPC không bị rập khuôn) sẽ làm tăng tính sống động và thú vị, từ đó cải thiện mức độ tương tác (engagement) và tỉ lệ giữ chân (retention). Đáp án 0 (tính ngẫu nhiên) nếu quá cao sẽ tạo ra nội dung vô nghĩa hoặc ảo giác. Đáp án 3 (sự lặp lại) gây nhàm chán. Đáp án 2 (thiếu liên quan) làm hỏng hoàn toàn trải nghiệm."
+    },
+    {
+      "number": 41,
+      "type": "single_choice",
+      "prompt": "Một công ty có một chatbot điển hình hỗ trợ RAG, hướng tới khách hàng trên trang web của họ.\n\nChọn trình tự các thành phần chính xác mà các câu hỏi của người dùng sẽ đi qua trước khi kết quả cuối cùng được trả về. (Tham khảo sơ đồ nếu có).",
+      "options": [
+        "1. Mô hình nhúng (embedding model), 2. Tìm kiếm vector (vector search), 3. Prompt được tăng cường ngữ cảnh (context-augmented prompt), 4. LLM tạo phản hồi (response-generating LLM)",
+        "1. Prompt được tăng cường ngữ cảnh, 2. Tìm kiếm vector, 3. Mô hình nhúng, 4. LLM tạo phản hồi",
+        "1. LLM tạo phản hồi, 2. Tìm kiếm vector, 3. Prompt được tăng cường ngữ cảnh, 4. Mô hình nhúng",
+        "1. LLM tạo phản hồi, 2. Prompt được tăng cường ngữ cảnh, 3. Tìm kiếm vector, 4. Mô hình nhúng"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Trong kiến trúc RAG tiêu chuẩn, câu hỏi của người dùng trước tiên sẽ đi qua một **Mô hình nhúng (embedding model)** để chuyển đổi thành vector. Sau đó, vector này được dùng để **Tìm kiếm vector (vector search)** trong cơ sở dữ liệu nhằm truy xuất các tài liệu liên quan (ngữ cảnh). Ngữ cảnh này được kết hợp với câu hỏi gốc để tạo thành một **Prompt được tăng cường ngữ cảnh (context-augmented prompt)**. Cuối cùng, prompt này được gửi tới một **LLM tạo phản hồi (response-generating LLM)** để sinh ra câu trả lời cuối cùng. Các trình tự khác bị sai thứ tự logic của RAG."
+    },
+    {
+      "number": 42,
+      "type": "single_choice",
+      "prompt": "Một nhóm muốn triển khai một mô hình sinh mã (code generation) làm trợ lý cho các nhà phát triển phần mềm của họ. Nó cần hỗ trợ nhiều ngôn ngữ lập trình. Chất lượng là mục tiêu hàng đầu.\nTrong số các API Foundation Model của Databricks, hoặc các mô hình có sẵn trên Marketplace, mô hình nào sẽ phù hợp nhất?",
+      "options": [
+        "Llama2-70b",
+        "BGE-large",
+        "MPT-7b",
+        "CodeLlama-34B"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "**CodeLlama-34B** là một mô hình ngôn ngữ lớn được thiết kế chuyên biệt và tinh chỉnh cho các tác vụ lập trình (sinh mã, giải thích mã). Do yêu cầu hỗ trợ nhiều ngôn ngữ lập trình và ưu tiên chất lượng mã nguồn, CodeLlama-34B là lựa chọn tốt nhất. Llama2-70b và MPT-7b là các mô hình ngôn ngữ tổng quát, không tối ưu cho mã bằng CodeLlama. BGE-large là một mô hình nhúng (embedding model), không phải mô hình sinh ngôn ngữ."
+    },
+    {
+      "number": 43,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG dựa trên ngữ cảnh truy xuất từ các tài liệu nguồn hiện đang ở định dạng PDF. Các tệp PDF này có thể chứa cả văn bản và hình ảnh. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất có thể.\nGói Python nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn này?",
+      "options": [
+        "flask",
+        "beautifulsoup",
+        "unstructured",
+        "numpy"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Thư viện **unstructured** là công cụ mã nguồn mở phổ biến nhất được thiết kế chuyên biệt để phân tích cú pháp và trích xuất dữ liệu từ các định dạng tài liệu phi cấu trúc phức tạp như PDF (chứa văn bản, bảng, hình ảnh) với ít dòng mã nhất, rất phù hợp cho 파이프라인 tiền xử lý dữ liệu RAG. Flask dùng để xây dựng web API. BeautifulSoup dùng để phân tích cú pháp HTML/XML từ các trang web. Numpy dùng cho tính toán ma trận và mảng."
+    },
+    {
+      "number": 44,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu nghiệp vụ sau đây cho một chatbot đối ngoại.\nChatbot cần biết người dùng hỏi loại câu hỏi gì và định tuyến đến các mô hình phù hợp để trả lời các câu hỏi đó. Ví dụ: người dùng có thể hỏi chi tiết về sự kiện sắp tới. Một người dùng khác có thể hỏi mua vé cho một sự kiện cụ thể.\nĐâu là một quy trình làm việc (workflow) lý tưởng cho chatbot như vậy?",
+      "options": [
+        "Chatbot chỉ nên xem xét thông tin các sự kiện trước đó.",
+        "Nên có hai chatbot khác nhau xử lý các loại truy vấn khác nhau của người dùng.",
+        "Chatbot nên được triển khai dưới dạng quy trình LLM đa bước (multi-step workflow). Đầu tiên, xác định loại câu hỏi được hỏi, sau đó định tuyến câu hỏi đến mô hình phù hợp. Nếu là câu hỏi về sự kiện sắp tới, gửi truy vấn đến một mô hình text-to-SQL. Nếu là câu hỏi về mua vé, khách hàng nên được chuyển hướng đến nền tảng thanh toán.",
+        "Chatbot chỉ nên xử lý thanh toán."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Quy trình **LLM đa bước với định tuyến (routing)** là giải pháp lý tưởng cho kịch bản này. LLM đóng vai trò như một bộ phân loại (router) ở bước đầu tiên để xác định ý định của người dùng, sau đó chuyển hướng truy vấn đến các quy trình hoặc mô hình phù hợp nhất (như Text-to-SQL để tra cứu cơ sở dữ liệu sự kiện, hoặc một luồng thanh toán API cho việc mua vé). Các phương án khác không giải quyết được yêu cầu định tuyến động dựa trên nhiều mục đích của người dùng."
+    },
+    {
+      "number": 45,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh được giao nhiệm vụ phát triển một ứng dụng dựa trên mô hình ngôn ngữ lớn (LLM) mã nguồn mở. Họ cần một LLM nền tảng với cửa sổ ngữ cảnh (context window) lớn.\nMô hình nào phù hợp với nhu cầu này?",
+      "options": [
+        "DistilBERT",
+        "MPT-30B",
+        "Llama2-70B",
+        "DBRX"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "**DBRX** là mô hình có cửa sổ ngữ cảnh lên tới 32k token, được Databricks phát triển theo kiến trúc MoE (Mixture of Experts) và rất phù hợp để xử lý một lượng lớn ngữ cảnh, giúp cho các tác vụ RAG hoặc phân tích tài liệu dài hiệu quả. Llama2-70B có cửa sổ ngữ cảnh gốc nhỏ hơn nhiều (4k token). MPT-30B có cửa sổ 8k. DistilBERT là mô hình nhỏ chỉ xử lý 512 token."
+    },
+    {
+      "number": 46,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng dựa trên LLM có tác vụ chuyển giọng nói thành văn bản (speech-to-text) quan trọng. Tốc độ là yếu tố thiết yếu cho sự thành công của ứng dụng.\nNên sử dụng mô hình AI Tạo sinh mở nào?",
+      "options": [
+        "DBRX",
+        "MPT-30B-Instruct",
+        "Llama-2-70b-chat-hf",
+        "whisper-large-v3 (1.6B)"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "**whisper-large-v3** là một mô hình mã nguồn mở của OpenAI chuyên dùng cho tác vụ nhận dạng giọng nói tự động (speech-to-text) và có chất lượng/tốc độ rất tốt. Các mô hình như DBRX, MPT-30B và Llama-2 là các mô hình ngôn ngữ dạng văn bản (text-to-text LLMs), không thể xử lý trực tiếp âm thanh để chuyển thành văn bản."
+    },
+    {
+      "number": 47,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh có một điểm cuối phục vụ mô hình thông lượng được cung cấp (provisioned throughput model serving endpoint) như một phần của ứng dụng RAG và muốn giám sát các yêu cầu (requests) đầu vào và phản hồi (responses) đầu ra của điểm cuối này.\n\nHọ nên sử dụng tính năng nào của Databricks?",
+      "options": [
+        "AutoML",
+        "Tìm kiếm Vector (Vector Search)",
+        "Bảng Suy luận (Inference Tables)",
+        "Phục vụ Đặc trưng (Feature Serving)"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Trên Databricks, **Bảng Suy luận (Inference Tables)** tự động ghi lại dữ liệu về các yêu cầu đầu vào (requests) và các dự đoán/phản hồi đầu ra (responses) từ các điểm cuối Model Serving vào một bảng Delta Lake để giám sát và phân tích, giúp theo dõi chất lượng và gỡ lỗi dễ dàng. Các tính năng khác không có chức năng log lại payload của endpoint."
+    },
+    {
+      "number": 48,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang quyết định giữa việc sử dụng LSH (Locality Sensitive Hashing) và HNSW (Hierarchical Navigable Small World) để lập chỉ mục cơ sở dữ liệu vector của họ. Ưu tiên hàng đầu của họ là độ chính xác về ngữ nghĩa.\n\nKỹ sư AI Tạo sinh nên sử dụng phương pháp nào để đánh giá hai kỹ thuật này?",
+      "options": [
+        "So sánh độ tương đồng cosine (cosine similarities) giữa các vector nhúng (embeddings) của các kết quả trả về với các đầu vào kiểm thử mẫu đại diện.",
+        "So sánh điểm BLEU của kết quả trả về đối với các đầu vào kiểm thử mẫu đại diện.",
+        "So sánh điểm ROUGE của kết quả trả về đối với các đầu vào kiểm thử mẫu đại diện.",
+        "So sánh khoảng cách Levenshtein của kết quả trả về so với các đầu vào kiểm thử mẫu đại diện."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Để đánh giá độ chính xác của tìm kiếm vector (như LSH và HNSW), cách chuẩn xác nhất là tính **độ tương đồng Cosine (Cosine Similarity)** giữa vector nhúng của câu truy vấn và vector nhúng của các kết quả được truy xuất. Phương pháp nào mang lại điểm cosine trung bình cao hơn (với các tài liệu thực sự liên quan) sẽ chính xác hơn về mặt ngữ nghĩa. BLEU và ROUGE là các thang đo dành cho tác vụ dịch máy và tóm tắt văn bản. Khoảng cách Levenshtein đo khoảng cách ký tự (chính tả), không phản ánh khoảng cách ngữ nghĩa."
+    },
+    {
+      "number": 49,
+      "type": "single_choice",
+      "prompt": "Khi phát triển một ứng dụng LLM, điều quan trọng là phải đảm bảo rằng dữ liệu được sử dụng để huấn luyện mô hình tuân thủ các yêu cầu cấp phép nhằm tránh rủi ro pháp lý.\n\nHành động nào là thích hợp nhất để tránh rủi ro pháp lý?",
+      "options": [
+        "Chỉ sử dụng dữ liệu được dán nhãn rõ ràng với giấy phép mở và đảm bảo tuân thủ các điều khoản cấp phép.",
+        "Bất kỳ đầu ra nào của LLM đều hợp lý để sử dụng vì chúng không tiết lộ trực tiếp các nguồn dữ liệu gốc.",
+        "Liên hệ trực tiếp với người quản lý dữ liệu để nhận được sự đồng ý bằng văn bản cho việc sử dụng dữ liệu của họ.",
+        "Sử dụng bất kỳ dữ liệu nào có sẵn công khai vì dữ liệu công khai không có hạn chế pháp lý."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Hành động an toàn và thực tế nhất là **chỉ sử dụng dữ liệu có giấy phép mở rõ ràng (như MIT, Apache 2.0, Creative Commons) và tuân thủ chặt chẽ các điều khoản của giấy phép đó**. Việc xin phép từng tác giả (phương án 3) là không khả thi về mặt quy mô khi huấn luyện LLM. Việc sử dụng dữ liệu công khai (phương án 4) là sai lầm vì không phải dữ liệu công khai nào cũng được phép sử dụng thương mại (nhiều dữ liệu vẫn có bản quyền). Phương án 2 cũng sai vì LLM vẫn có thể tái tạo nguyên văn dữ liệu có bản quyền."
+    },
+    {
+      "number": 50,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh giao tiếp với một LLM có khả năng tuân theo chỉ thị, được huấn luyện trên các cuộc gọi của khách hàng hỏi về tính trạng còn hàng của sản phẩm. LLM cần xuất ra chữ “Success” nếu sản phẩm có sẵn hoặc “Fail” nếu không.\n\nPrompt nào cho phép kỹ sư nhận nhãn phân loại cuộc gọi một cách chính xác nhất?",
+      "options": [
+        "Bạn là một trợ lý hữu ích đọc bản ghi cuộc gọi của khách hàng. Hãy đi qua bản ghi và suy nghĩ từng bước xem câu hỏi của khách hàng đã được giải quyết thành công chưa. Trả lời 'Success' nếu có; nếu không, trả lời 'Fail'.",
+        "Bạn sẽ được cung cấp một bản ghi cuộc gọi của khách hàng, nơi khách hàng hỏi về việc còn hàng hay không. Phân loại cuộc gọi là 'Success' nếu sản phẩm có sẵn và 'Fail' nếu sản phẩm không có sẵn.",
+        "Bạn sẽ được cung cấp bản ghi cuộc gọi của khách hàng, nơi khách hàng hỏi về tình trạng còn hàng. Đầu ra là 'Success' hoặc 'Fail'. Định dạng đầu ra dưới dạng JSON, ví dụ: {\"call_id\": \"123\", \"label\": \"Succes\"}.",
+        "Bạn sẽ được cung cấp bản ghi cuộc gọi của khách hàng. Trả lời 'Success' nếu cuộc gọi của khách hàng đã được giải quyết thành công. Trả lời 'Fail' nếu cuộc gọi bị chuyển hướng hoặc nếu câu hỏi chưa được giải quyết."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Prompt số 2 (**phân loại cuộc gọi là 'Success' nếu sản phẩm có sẵn và 'Fail' nếu không có sẵn**) mô tả chính xác yêu cầu bài toán (phân loại tính trạng còn hàng). Các prompt khác đo lường việc cuộc gọi có được giải quyết hay không, thay vì tính trạng sẵn có của sản phẩm. Một prompt có JSON sai chính tả chữ 'Succes' và cũng không định nghĩa rõ khi nào trả về Success/Fail dựa vào tình trạng sản phẩm."
+    },
+    {
+      "number": 51,
+      "type": "multiple_choice",
+      "prompt": "Hai thành phần chain nào là cần thiết để xây dựng một ứng dụng trò chuyện (chat) cơ bản bằng LLM bao gồm khả năng giao tiếp, truy xuất kiến thức và bộ nhớ ngữ cảnh? (Chọn hai.)",
+      "options": [
+        "Vector Stores (Kho lưu trữ vector)",
+        "Conversation Buffer Memory (Bộ nhớ đệm hội thoại)",
+        "External tools (Các công cụ bên ngoài)",
+        "Chat loaders",
+        "React Components"
+      ],
+      "answer_code": "22111",
+      "correct_option_indexes": [
+        0,
+        1
+      ],
+      "explanation_vn": "Để một ứng dụng chat LLM có khả năng truy xuất kiến thức, nó cần **Vector Stores** để lưu trữ và tìm kiếm các tài liệu theo độ tương đồng ngữ nghĩa. Để có bộ nhớ ngữ cảnh trong suốt cuộc trò chuyện, nó cần **Conversation Buffer Memory** để lưu trữ lịch sử tin nhắn. Các công cụ ngoại vi (External tools) dùng cho mô hình Agent. Chat loaders và React Components không phải là thành phần chain cốt lõi cho RAG có bộ nhớ."
+    },
+    {
+      "number": 52,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã viết mã PySpark có khả năng mở rộng để tiếp nhận các tài liệu PDF phi cấu trúc và phân đoạn (chunk) chúng nhằm chuẩn bị lưu trữ vào một chỉ mục của Databricks Vector Search. Hiện tại, hai cột trong dataframe của họ bao gồm tên tệp gốc (chuỗi) và một mảng chứa các phân đoạn văn bản (array of text chunks) từ tài liệu đó.\n\nKỹ sư AI Tạo sinh nên thực hiện những bước nào để lưu trữ các phân đoạn theo định dạng sẵn sàng nạp vào Databricks Vector Search?",
+      "options": [
+        "Sử dụng autoloader của PySpark để áp dụng một UDF lên tất cả các phân đoạn, định dạng chúng trong cấu trúc JSON cho việc nạp Vector Search.",
+        "Trải phẳng (flatten) dataframe thành một phân đoạn trên mỗi hàng, tạo một định danh duy nhất (unique identifier) cho mỗi hàng, và bật Change Data Feed (CDF) trên bảng Delta đầu ra.",
+        "Sử dụng tên tệp gốc làm định danh duy nhất và lưu nguyên trạng dataframe.",
+        "Tạo một định danh duy nhất cho mỗi tài liệu, trải phẳng dataframe thành một phân đoạn trên mỗi hàng và lưu vào bảng Delta đầu ra."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Databricks Vector Search yêu cầu dữ liệu nguồn nằm trong một bảng Delta Table. Dữ liệu này cần được trải phẳng (**một chunk văn bản mỗi dòng**), và mỗi chunk cần một khóa chính (**định danh duy nhất**). Hơn nữa, để Vector Search có thể tự động đồng bộ hóa khi có dữ liệu mới, tính năng **Change Data Feed (CDF)** phải được kích hoạt trên bảng Delta đầu ra. Phương án cuối thiếu thao tác bật Change Data Feed."
+    },
+    {
+      "number": 53,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh được yêu cầu xây dựng một ứng dụng LLM xuất sắc trong việc sinh mã (code generation). Họ cần chọn một mô hình đã được huấn luyện chuyên biệt để sinh mã.\n\nMô hình nào dưới đây có khả năng mang lại kết quả tốt nhất ngay khi sử dụng (out of the box)?",
+      "options": [
+        "CodeLlama-34b-Instruct-hf",
+        "Mixtral-8x7B-v0.1",
+        "Llama-2-70b-hf",
+        "mpt-7b-8k-instruct"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "**CodeLlama-34b-Instruct-hf** là mô hình thuộc họ Llama được tinh chỉnh đặc biệt cho việc lập trình và hiểu mã nguồn. Hậu tố 'Instruct' cho thấy nó có khả năng làm theo chỉ dẫn (hỏi đáp lập trình). Do đó, nó mang lại kết quả tốt nhất 'out of the box' cho tác vụ code generation so với các mô hình ngôn ngữ chung chung như Mixtral, Llama-2 hay MPT."
+    },
+    {
+      "number": 54,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh cần thiết kế một đường ống LLM (LLM pipeline) để tiến hành lập luận đa giai đoạn, có khả năng tận dụng các công cụ bên ngoài. Để làm hiệu quả điều này, LLM sẽ cần phải lập kế hoạch và điều chỉnh hành động trong khi thực hiện các tác vụ suy luận phức tạp.\n\nPhương pháp nào sẽ thực hiện được điều này?",
+      "options": [
+        "Huấn luyện LLM tạo ra một phản hồi toàn diện duy nhất mà không tương tác với bất kỳ công cụ bên ngoài nào, chỉ dựa vào kiến thức được huấn luyện trước.",
+        "Sử dụng kỹ thuật prompt Chain-of-Thought (CoT) để hướng dẫn LLM qua một chuỗi các bước lập luận, sau đó nhập thủ công kết quả từ các công cụ bên ngoài cho câu trả lời cuối cùng.",
+        "Triển khai một framework như ReAct, cho phép LLM tạo ra các dấu vết lập luận (reasoning traces) và thực hiện các hành động cụ thể để tận dụng công cụ bên ngoài nếu cần thiết.",
+        "Khuyến khích LLM thực hiện nhiều lệnh gọi API theo trình tự mà không cần lập kế hoạch hoặc cấu trúc, cho phép LLM quyết định khi nào và làm thế nào để sử dụng các công cụ bên ngoài một cách tự phát."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "**ReAct (Reasoning and Acting)** là framework được thiết kế chuyên biệt để cho phép các LLM Agent thực hiện luồng tư duy xen kẽ với hành động. LLM sẽ suy nghĩ về tình huống hiện tại (Reason), quyết định gọi một công cụ bên ngoài (Act), nhận kết quả trả về từ công cụ (Observation), và tiếp tục quá trình này cho đến khi giải quyết được vấn đề phức tạp. Kỹ thuật này tốt hơn nhiều so với CoT thuần túy vì nó có khả năng linh hoạt truy xuất thông tin thực tế từ công cụ."
+    },
+    {
+      "number": 55,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để khách hàng tìm hiểu về phương tiện của họ. Họ có một cơ sở dữ liệu chứa các tài liệu về các hãng xe khác nhau, bộ phận phần cứng và thông tin bảo trì chung.\n\nThành phần nào sau đây sẽ KHÔNG hữu ích trong việc xây dựng một chatbot như vậy?",
+      "options": [
+        "Yêu cầu người dùng gửi những câu hỏi dài dòng, thay vì những câu hỏi súc tích.",
+        "LLM tạo phản hồi (Response-generating LLM)",
+        "Mô hình nhúng (Embedding model)",
+        "Cơ sở dữ liệu vector (Vector database)"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Trong ứng dụng RAG, các truy vấn (câu hỏi) quá dài dòng, không có trọng tâm thường làm giảm độ chính xác của quá trình tìm kiếm vector, vì các từ dư thừa có thể làm lệch vị trí vector nhúng, khiến mô hình trả về sai tài liệu. Do đó, **yêu cầu câu hỏi dài dòng là một việc làm không hữu ích**. Ba thành phần còn lại (LLM tạo phản hồi, Embedding model, Vector database) là cấu trúc cốt lõi của kiến trúc RAG."
+    },
+    {
+      "number": 56,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một LLM để tạo các tiêu đề bài báo dựa trên nội dung bài báo. Tuy nhiên, đầu ra ban đầu từ LLM không phù hợp với giọng điệu hoặc phong cách mong muốn.\n\nPhương pháp nào sẽ hiệu quả nhất để điều chỉnh phản hồi của LLM nhằm đạt được kết quả như ý?",
+      "options": [
+        "Loại trừ bất kỳ tiêu đề bài viết nào không khớp với kết quả mong muốn.",
+        "Tinh chỉnh (Fine-tune) LLM trên một tập dữ liệu có giọng điệu và phong cách mong muốn.",
+        "Cung cấp cho LLM một prompt hướng dẫn rõ ràng việc tạo văn bản theo giọng điệu và phong cách mong muốn.",
+        "Tất cả các phương án trên."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Trong thực tiễn Prompt Engineering, cách nhanh chóng, hiệu quả và ít tốn kém nhất để thay đổi giọng điệu (tone/style) của mô hình ngôn ngữ là **sửa đổi system prompt hoặc user prompt để hướng dẫn rõ ràng giọng điệu mong muốn**. Fine-tuning (phương án 2) cũng giải quyết được vấn đề nhưng rất tốn kém thời gian và chi phí, không phải là lựa chọn ưu tiên. Loại bỏ các tiêu đề sai (phương án 1) không cải thiện khả năng sinh văn bản của LLM."
+    },
+    {
+      "number": 57,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang tạo một bot hỗ trợ khách hàng cần phản hồi khác nhau với người dùng cuối dựa trên cảm xúc (sentiment) trong tin nhắn ban đầu của họ. Ví dụ: nếu tin nhắn của người dùng thể hiện sự tức giận, bot sẽ cố gắng làm dịu cảm xúc tiêu cực đó trong khi giải quyết vấn đề. Họ muốn đảm bảo phương pháp của mình tuân thủ các thực tiễn tốt nhất (best practices).\n\nPhương pháp nào sẽ thực hiện điều này?",
+      "options": [
+        "Sử dụng mô hình LLM dạng encoder-only (chỉ có bộ mã hóa) để vừa phát hiện cảm xúc vừa tạo câu trả lời dựa trên cảm xúc đó.",
+        "Triển khai kiến trúc RAG để hướng dẫn cách phản hồi người dùng tùy theo cảm xúc phát hiện được.",
+        "Sử dụng mô hình hồi quy tuyến tính để phân loại cảm xúc và đưa kết quả vào system prompt để LLM phản hồi.",
+        "Tạo một chuỗi (chain), đầu tiên sử dụng một LLM để phân loại cảm xúc, sau đó thay đổi system prompt cho LLM tương tác với khách hàng dựa trên cảm xúc từ truy vấn ban đầu."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Thực tiễn tốt nhất (Best Practice) cho bài toán đa nhiệm xử lý luồng logic là **sử dụng kỹ thuật chaining (chuỗi)**. Đầu tiên, sử dụng một cuộc gọi LLM nhanh để phân loại cảm xúc của câu hỏi. Sau đó, dựa vào phân loại này, có thể linh hoạt nhúng kết quả vào system prompt của một tác vụ LLM tiếp theo để hướng dẫn cách sinh câu trả lời phù hợp (Ví dụ: kích hoạt persona 'Nhân viên xoa dịu' nếu người dùng tức giận). Hồi quy tuyến tính (Linear Regression) không phù hợp cho phân loại văn bản phức tạp. Encoder-only (như BERT) chỉ tốt cho phân loại chứ không sinh được văn bản."
+    },
+    {
+      "number": 58,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã sẵn sàng triển khai một ứng dụng LLM được viết bằng Foundation Model APIs. Họ muốn tuân theo các thực tiễn bảo mật tốt nhất cho môi trường sản xuất (production).\n\nHọ nên chọn phương pháp xác thực nào?",
+      "options": [
+        "Sử dụng xác thực máy-với-máy (machine-to-machine) bằng OAuth",
+        "Sử dụng mã thông báo truy cập (access token) thuộc về service principals",
+        "Sử dụng access token thuộc về bất kỳ người dùng workspace nào",
+        "Sử dụng access token được thay đổi thường xuyên, thuộc về người dùng workspace hoặc service principal"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Trong các môi trường sản xuất hiện đại (như Databricks), **sử dụng xác thực máy-với-máy (M2M) qua OAuth bằng Service Principal** được coi là best practice. Khác với các Personal Access Tokens (PAT) tĩnh có thể bị lộ và cần phải quản lý lịch luân chuyển, OAuth M2M cấp phát các token tự động hết hạn, đảm bảo tính an toàn cao, và không gắn liền với tài khoản của người dùng thực."
+    },
+    {
+      "number": 59,
+      "type": "multiple_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển hệ thống RAG cho công ty của họ để thực hiện hỏi đáp tài liệu nội bộ về các chính sách nhân sự có cấu trúc. Tuy nhiên, các câu trả lời trả về thường không đầy đủ và thiếu cấu trúc. Có vẻ như bộ truy xuất (retriever) không trả về toàn bộ ngữ cảnh liên quan. Kỹ sư đã thử nghiệm với các mô hình nhúng và LLM tạo phản hồi khác nhau nhưng kết quả không được cải thiện.\n\nHai lựa chọn nào có thể được sử dụng để cải thiện chất lượng phản hồi? (Chọn hai.)",
+      "options": [
+        "Thêm tiêu đề phần (section header) làm tiền tố (prefix) cho các phân đoạn (chunks)",
+        "Tách tài liệu theo từng câu",
+        "Sử dụng một mô hình nhúng lớn hơn",
+        "Tăng kích thước của các phân đoạn tài liệu (chunk size)",
+        "Tinh chỉnh (Fine-tune) mô hình sinh phản hồi"
+      ],
+      "answer_code": "21121",
+      "correct_option_indexes": [
+        0,
+        3
+      ],
+      "explanation_vn": "Khi kết quả RAG bị thiếu thông tin hoặc bộ truy xuất không lấy đủ ngữ cảnh từ các tài liệu có cấu trúc dài, vấn đề thường nằm ở chiến lược phân đoạn dữ liệu (chunking strategy). **Tăng kích thước chunk** sẽ giúp bao hàm nhiều ngữ cảnh và thông tin đầy đủ hơn trong mỗi truy xuất. **Thêm tiêu đề vào đầu mỗi chunk** giúp mô hình nhúng giữ được ngữ cảnh toàn cục của đoạn văn bản đó thuộc phần nào của chính sách, giúp tìm kiếm vector chính xác hơn. Việc chia nhỏ theo câu sẽ làm vỡ vụn ngữ cảnh. Thay đổi mô hình LLM đã được thử và chứng minh là không hiệu quả trong trường hợp này."
+    },
+    {
+      "number": 60,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng hệ thống LLM cấp độ sản xuất trả lời trực tiếp khách hàng. Giải pháp này sử dụng Foundation Model API thông qua provisioned throughput. Họ lo ngại rằng LLM có khả năng đưa ra phản hồi độc hại hoặc không an toàn. Họ muốn xử lý vấn đề này với nỗ lực ít nhất có thể.\n\nPhương pháp nào sẽ thực hiện điều này?",
+      "options": [
+        "Yêu cầu người dùng báo cáo các phản hồi không an toàn",
+        "Triển khai Llama Guard trên Foundation Model API và sử dụng nó để phát hiện các phản hồi không an toàn.",
+        "Thêm một số lệnh gọi LLM vào chain của họ để phát hiện nội dung không an toàn trước khi trả về văn bản",
+        "Thêm biểu thức chính quy (regex) vào đầu vào và đầu ra để phát hiện các phản hồi không an toàn."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Với nền tảng Databricks và Foundation Model API, **sử dụng Llama Guard (một mô hình chuyên biệt cho kiểm duyệt độ an toàn)** là phương pháp tiêu chuẩn, tối ưu và tốn ít công sức nhất để thiết lập AI Guardrails. Nó có thể đánh giá tính an toàn của cả input (prompt) và output (response) một cách tự động. Việc dùng Regex không hiệu quả do ngôn ngữ tự nhiên rất đa dạng. Thêm các lệnh gọi LLM chung chung (prompt-based safety check) sẽ làm tăng độ trễ và không đáng tin cậy bằng mô hình chuyên biệt."
+    },
+    {
+      "number": 61,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh (Generative AI Engineer) muốn một LLM phân tích và trích xuất các thông tin sau: ngày (date), email người gửi (sender email), và mã đơn hàng (order ID). Đầu ra phải được định dạng theo chuẩn JSON. Dưới đây là một email mẫu:\n\nNgày: 16 tháng 4 năm 2024\nThời gian: 3:45 CH\nTừ: sarah.lee925@gmail.com\nĐến: customer_service@smart_thermostat.com\nChủ đề: Cập nhật đơn hàng\n\nXin chào,\n\nTôi có thể lấy thông tin cập nhật trạng thái đơn hàng của mình không? Mã đơn hàng là RE987D.\n\nCảm ơn bạn,\nSarah\n\nHọ cần một câu lệnh (prompt) có thể trích xuất và xuất ra các thông tin yêu cầu dưới định dạng JSON với mức độ chính xác cao nhất.\n\nCâu lệnh nào sẽ làm được điều đó?",
+      "options": [
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng dễ đọc cho con người.",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng JSON.",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Trả về thông tin được trích xuất dưới định dạng JSON. Dưới đây là một ví dụ: {\"date\":\"April 16, 2024\", \"sender_email\":\"[email protected]\", \"order_id\":\"RE987D\"}",
+        "Bạn sẽ nhận được email của khách hàng và cần trích xuất ngày, email người gửi và mã đơn hàng. Bạn nên trả về thông tin ngày, email người gửi và mã đơn hàng dưới định dạng JSON."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2 (tùy chọn thứ ba) vì nó sử dụng kỹ thuật \"few-shot prompting\" (cung cấp một ví dụ minh họa cụ thể về định dạng JSON mong muốn). Việc cung cấp cấu trúc mẫu như `{\"date\":..., \"sender_email\":..., \"order_id\":...}` sẽ giúp LLM đảm bảo định dạng đầu ra luôn ổn định và chính xác nhất, tránh các lỗi phổ biến về khóa (keys) hay cú pháp khi so với việc chỉ yêu cầu \"trả về định dạng JSON\" một cách chung chung (zero-shot) như các tùy chọn khác."
+    },
+    {
+      "number": 62,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã xây dựng một hệ thống dựa trên LLM tự động dịch văn bản của người dùng giữa hai ngôn ngữ. Hiện tại, họ muốn đánh giá (benchmark) nhiều LLM khác nhau trên tác vụ này và chọn ra mô hình tốt nhất. Họ có một tập dữ liệu đánh giá chứa các ví dụ bản dịch chất lượng cao đã biết trước. Họ muốn đánh giá từng LLM bằng tập dữ liệu này với một thang đo (metric) hiệu quả.\n\nHọ nên chọn thang đo nào cho việc đánh giá này?",
+      "options": [
+        "Thang đo BLEU",
+        "Thang đo NDCG",
+        "Thang đo ROUGE",
+        "Thang đo RECALL"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0 (BLEU). BLEU (Bilingual Evaluation Understudy) là thang đo tiêu chuẩn và phổ biến nhất được thiết kế chuyên biệt để đánh giá chất lượng của các hệ thống dịch máy tự động bằng cách so sánh chuỗi n-gram của bản dịch từ mô hình với bản dịch tham chiếu do con người thực hiện. ROUGE thường được dùng cho tóm tắt văn bản (summarization). NDCG là thang đo cho bài toán xếp hạng (ranking/search). RECALL là một độ đo chung cho phân loại và truy xuất, không phản ánh trực tiếp chất lượng dịch thuật."
+    },
+    {
+      "number": 63,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang sử dụng LLM để phân loại các loại nấm ăn được dựa trên mô tả văn bản về các đặc điểm nhất định. Mô hình trả về các phản hồi chính xác trong quá trình kiểm thử và Kỹ sư AI Tạo sinh tự tin rằng họ có danh sách nhãn đúng, nhưng đầu ra thường xuyên chứa thêm phần lý luận trong câu trả lời, trong khi Kỹ sư AI Tạo sinh chỉ muốn trả về đúng nhãn mà không có thêm văn bản nào.\n\nHọ nên thực hiện hành động nào để tạo ra hành vi mong muốn từ LLM này?",
+      "options": [
+        "Sử dụng \"few shot prompting\" để hướng dẫn mô hình về định dạng đầu ra mong đợi",
+        "Sử dụng \"zero shot prompting\" để hướng dẫn mô hình về định dạng đầu ra mong đợi",
+        "Sử dụng \"zero shot chain-of-thought prompting\" để ngăn định dạng đầu ra quá dài dòng",
+        "Sử dụng \"system prompt\" để hướng dẫn mô hình trả lời ngắn gọn"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Bằng cách sử dụng \"few-shot prompting\", kỹ sư có thể cung cấp vài ví dụ minh họa cụ thể nơi đầu vào là mô tả nấm và đầu ra CHỈ LÀ nhãn phân loại (không có lý luận). LLM sẽ học theo khuôn mẫu này và loại bỏ các phần giải thích thừa. Các phương pháp zero-shot hoặc system prompt yêu cầu sự ngắn gọn đôi khi vẫn khiến mô hình sinh thêm các từ như \"Nhãn là...\" hoặc một chút giải thích, trong khi few-shot thiết lập một giới hạn cấu trúc đầu ra vô cùng nghiêm ngặt."
+    },
+    {
+      "number": 64,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang làm việc với một công ty bán lẻ muốn nâng cao trải nghiệm khách hàng bằng cách tự động xử lý các câu hỏi phổ biến. Họ đang nghiên cứu một giải pháp AI dựa trên LLM để cải thiện thời gian phản hồi trong khi vẫn duy trì sự tương tác cá nhân hóa. Họ muốn xác định cặp đầu vào (input) và tác vụ LLM phù hợp để thực hiện điều này.\n\nCặp đầu vào/đầu ra nào sẽ đáp ứng được điều này?",
+      "options": [
+        "Đầu vào: Nhật ký trò chuyện dịch vụ khách hàng; Đầu ra: Nhóm các nhật ký trò chuyện theo người dùng, sau đó tóm tắt các tương tác của từng người dùng, rồi trả lời",
+        "Đầu vào: Nhật ký trò chuyện dịch vụ khách hàng; Đầu ra: Tìm câu trả lời cho các câu hỏi tương tự và phản hồi bằng một bản tóm tắt",
+        "Đầu vào: Đánh giá của khách hàng; Đầu ra: Phân loại cảm xúc của bài đánh giá",
+        "Đầu vào: Đánh giá của khách hàng; Đầu ra: Nhóm các đánh giá theo người dùng và tổng hợp đánh giá trung bình trên mỗi người dùng, sau đó phản hồi"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Mục tiêu là \"tự động xử lý các câu hỏi phổ biến\" và \"duy trì sự tương tác cá nhân hóa\". Tùy chọn 0 đáp ứng cả hai: Đầu vào từ nhật ký trò chuyện (chat logs) chứa lịch sử thực tế của khách hàng. Việc nhóm và tóm tắt theo từng người dùng cho phép AI hiểu được bối cảnh cá nhân của khách hàng đó, từ đó đưa ra câu trả lời cá nhân hóa. Tùy chọn 1 không có sự cá nhân hóa. Tùy chọn 2 và 3 liên quan đến đánh giá (reviews), không trực tiếp giải quyết vấn đề hỗ trợ dịch vụ khách hàng theo thời gian thực (inquiries)."
+    },
+    {
+      "number": 65,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng RAG và muốn thử nghiệm các mô hình nhúng (embedding models) khác nhau để cải thiện hiệu suất của ứng dụng.\n\nHọ nên chọn chiến lược nào để lựa chọn mô hình nhúng?",
+      "options": [
+        "Chọn một mô hình nhúng có hỗ trợ đa ngôn ngữ để hỗ trợ các câu hỏi đa ngôn ngữ tiềm năng của người dùng",
+        "Chọn mô hình LLM mã nguồn mở mới nhất và có hiệu năng cao nhất được phát hành tại thời điểm đó",
+        "Chọn một mô hình nhúng được huấn luyện trên các kiến thức chuyên ngành liên quan",
+        "Chọn mô hình nhúng xếp hạng cao nhất trên bảng xếp hạng Massive Text Embedding Benchmark (MTEB) do HuggingFace lưu trữ"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2. Trong các ứng dụng RAG (Retrieval-Augmented Generation), chất lượng tìm kiếm phụ thuộc rất lớn vào khả năng nắm bắt ngữ nghĩa chuyên ngành của mô hình nhúng. Một mô hình nhúng được tinh chỉnh hoặc huấn luyện trên lĩnh vực (domain) tương ứng sẽ biểu diễn vector tốt hơn cho các thuật ngữ và khái niệm đặc thù, dẫn đến kết quả truy xuất (retrieval) chính xác hơn nhiều so với việc chỉ chọn mô hình đứng đầu trên bảng xếp hạng chung (MTEB) vốn chỉ được đánh giá trên dữ liệu tổng quát."
+    },
+    {
+      "number": 66,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh muốn các mô hình LLM đã được tinh chỉnh (finetuned LLMs) trong không gian làm việc Databricks môi trường sản xuất (prod Databricks workspace) của họ cũng khả dụng để kiểm thử trong không gian làm việc môi trường phát triển (dev workspace). Tất cả các workspace của họ đều đã bật Unity Catalog và hiện họ đang ghi (logging) các mô hình của mình vào Model Registry trong MLflow.\n\nLựa chọn nào là tiết kiệm chi phí và an toàn nhất để Kỹ sư AI Tạo sinh hoàn thành mục tiêu của mình?",
+      "options": [
+        "Sử dụng một model registry bên ngoài có thể truy cập được từ tất cả các workspace.",
+        "Sử dụng MLflow để ghi trực tiếp mô hình vào Unity Catalog, đồng thời cấp quyền READ (đọc) trong dev workspace cho mô hình đó.",
+        "Thiết lập một đường ống huấn luyện (training pipeline) trùng lặp trong dev, để một mô hình giống hệt khả dụng trong dev.",
+        "Thiết lập một tập lệnh (script) để xuất mô hình từ prod và nhập nó vào dev."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Databricks khuyến nghị mạnh mẽ việc sử dụng Models in Unity Catalog để chia sẻ mô hình xuyên suốt các workspace. Vì Unity Catalog đóng vai trò là một kho dữ liệu/mô hình quản trị tập trung (centralized governance), việc log thẳng model vào Unity Catalog và chỉ cấp quyền `READ` cho workspace dev là phương pháp an toàn nhất, tự nhiên nhất, tránh việc phải sao chép dữ liệu phức tạp (như option 2, 3) hoặc dựa vào các công cụ bên ngoài (option 0) gây tăng chi phí và rủi ro bảo mật."
+    },
+    {
+      "number": 67,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh vừa triển khai một ứng dụng LLM tại một công ty sản xuất để hỗ trợ trả lời các câu hỏi dịch vụ khách hàng. Họ cần xác định các số liệu (metrics) doanh nghiệp quan trọng để giám sát ứng dụng trong môi trường sản xuất (production).\n\nĐâu KHÔNG PHẢI là một thước đo họ sẽ triển khai cho ứng dụng LLM dịch vụ khách hàng trong môi trường sản xuất?",
+      "options": [
+        "Điểm số Massive Multi-task Language Understanding (MMLU)",
+        "Số lượng câu hỏi của khách hàng được xử lý trên một đơn vị thời gian",
+        "Tính chính xác thực tế (Factual accuracy) của câu trả lời",
+        "Thời gian để LLM tạo ra phản hồi"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0 (MMLU score). MMLU là một benchmark dùng để đánh giá năng lực suy luận tổng quát của mô hình nền tảng (foundation model) trên nhiều lĩnh vực kiến thức trong quá trình nghiên cứu hoặc trước khi phát hành. Nó không phải là một thước đo đo lường hiệu suất hoạt động hay mức độ hiệu quả của ứng dụng kinh doanh cụ thể trong môi trường sản xuất. Ngược lại, thông lượng (throughput), tính chính xác của phản hồi (accuracy), và độ trễ (latency) là các metric bắt buộc phải theo dõi trong production."
+    },
+    {
+      "number": 68,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang giúp một rạp chiếu phim mở rộng chatbot trên trang web để có thể trả lời các câu hỏi về lịch chiếu cụ thể của các bộ phim đang chiếu tại rạp địa phương của họ. Họ đã có vị trí của người dùng do dịch vụ định vị cung cấp cho tác tử (agent) và một bảng Delta (Delta table) liên tục được cập nhật thông tin lịch chiếu mới nhất theo vị trí. Họ muốn triển khai khả năng mới này vào ứng dụng RAG của mình.\n\nLựa chọn nào sẽ thực hiện điều này với nỗ lực ít nhất và cách thức đạt hiệu suất cao nhất?",
+      "options": [
+        "Tạo một Điểm cuối phục vụ đặc trưng (Feature Serving Endpoint) từ một FeatureSpec tham chiếu đến một kho dữ liệu trực tuyến (online store) được đồng bộ hóa từ bảng Delta. Truy vấn Feature Serving Endpoint như một phần của logic tác tử / công cụ.",
+        "Truy vấn trực tiếp bảng Delta thông qua truy vấn SQL được xây dựng từ đầu vào của người dùng bằng mô hình text-to-SQL LLM trong logic tác tử / công cụ.",
+        "Thiết lập một tác vụ trong Databricks Workflows để định kỳ ghi thông tin từ bảng Delta vào cơ sở dữ liệu bên ngoài như MySQL và truy vấn thông tin từ đó như một phần của logic tác tử / công cụ.",
+        "Ghi nội dung bảng Delta vào một cột văn bản, sau đó nhúng các văn bản đó bằng mô hình nhúng và lưu vào vector index. Tra cứu thông tin dựa trên nhúng (embedding) như một phần của logic tác tử / công cụ."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Lịch chiếu phim yêu cầu truy xuất dữ liệu có cấu trúc với độ trễ siêu thấp (low latency) theo khóa tra cứu (ở đây là vị trí rạp chiếu). Trên Databricks, Feature Serving là công cụ tốt nhất cho mục đích này vì nó cung cấp API truy xuất với độ trễ mili-giây được đồng bộ trực tiếp (online lookup) từ bảng Delta. Sử dụng text-to-SQL (tùy chọn 1) sẽ chậm và kém ổn định. Đưa ra CSDL bên ngoài (tùy chọn 2) đòi hỏi nhiều công sức bảo trì hạ tầng phụ. Đưa vào cơ sở dữ liệu Vector (tùy chọn 3) không phù hợp vì lịch chiếu phim là tìm kiếm khớp thông tin cấu trúc dạng khóa-giá trị, chứ không phải tìm kiếm ngữ nghĩa mờ (semantic search)."
+    },
+    {
+      "number": 69,
+      "type": "single_choice",
+      "prompt": "Kỹ sư AI Tạo sinh cần xây dựng một ứng dụng LLM có thể hiểu các tài liệu y tế, bao gồm cả những tài liệu mới được công bố gần đây. Họ muốn chọn một mô hình mã nguồn mở khả dụng trên model hub của HuggingFace.\n\nBước nào là phù hợp nhất để lựa chọn một LLM?",
+      "options": [
+        "Chọn bất kỳ mô hình nào thuộc dòng Mistral, vì các mô hình Mistral rất tốt cho mọi loại trường hợp sử dụng",
+        "Chọn một mô hình dựa trên số lượng tải xuống cao nhất, vì điều này cho thấy mức độ phổ biến, độ tin cậy và sự phù hợp chung",
+        "Chọn mô hình được tải lên gần đây nhất, vì điều này chứng tỏ mô hình là mới nhất và có khả năng cao là có hiệu suất tốt nhất",
+        "Kiểm tra mô tả mô hình và dữ liệu huấn luyện để xác định xem mô hình có được huấn luyện trên bất kỳ dữ liệu y tế nào không."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Để xử lý các tài liệu y tế với mức độ am hiểu chuyên sâu, các LLM tổng quát (general-purpose) có thể không đủ vốn từ vựng hoặc kiến thức lĩnh vực chuyên môn (domain knowledge). Vì thế, bước quan trọng nhất là đọc Data Card và Model Card trên HuggingFace để đảm bảo rằng tập dữ liệu huấn luyện hoặc finetuning của mô hình có bao gồm dữ liệu chuyên ngành y tế (như PubMed, dữ liệu lâm sàng). Các tiêu chí tải xuống nhiều hay dòng mô hình nổi tiếng không đảm bảo hiệu suất tốt ở một domain đặc thù."
+    },
+    {
+      "number": 70,
+      "type": "single_choice",
+      "prompt": "Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG trả lời các câu hỏi về các bài báo tin tức liên quan đến công nghệ. Các tài liệu nguồn có thể chứa một lượng đáng kể nội dung không liên quan, chẳng hạn như quảng cáo, tin thể thao hoặc tin giải trí.\n\nCách tiếp cận nào KHÔNG nên dùng khi xây dựng ứng dụng RAG tập trung vào việc trả lời các câu hỏi chỉ về công nghệ?",
+      "options": [
+        "Đưa vào system prompt (lời nhắc hệ thống) quy định rằng ứng dụng không được trả lời bất kỳ câu hỏi nào không liên quan đến công nghệ.",
+        "Lọc các bài báo không liên quan trong quá trình truy xuất (retrieval).",
+        "Giữ lại tất cả các bài báo vì ứng dụng RAG cần hiểu nội dung phi công nghệ để tránh trả lời các câu hỏi về chúng.",
+        "Lọc bỏ các bài báo không liên quan ở cấp cơ sở dữ liệu tài liệu nguồn (upstream document database)."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2 (Cách KHÔNG nên làm). Trong RAG, mục tiêu của việc quản lý tài liệu nguồn là tối ưu hóa kho lưu trữ để vector search có thể tìm ra những context hữu ích nhất. Đưa dữ liệu rác (quảng cáo, thể thao) vào database chỉ làm loãng dữ liệu, tốn chi phí lưu trữ, tăng thời gian truy xuất và có nguy cơ trả về context sai lệnh khiến LLM sinh ra thông tin sai (hallucination). LLM có đủ kiến thức chung để biết từ chối các câu hỏi không đúng chuyên môn nhờ vào system prompt (như tùy chọn 0), không cần thiết phải \"dạy\" nó cách từ chối bằng cách nạp rác vào vector database."
+    },
+    {
+      "number": 71,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG sẽ dựa vào ngữ cảnh được truy xuất từ các tài liệu nguồn hiện đang ở định dạng HTML. Họ muốn phát triển một giải pháp sử dụng ít dòng mã nhất.\n\nGói Python (Python package) nào nên được sử dụng để trích xuất văn bản từ các tài liệu nguồn?",
+      "options": [
+        "pytesseract",
+        "numpy",
+        "pypdf2",
+        "beautifulsoup"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. `beautifulsoup` (cụ thể là BeautifulSoup4) là thư viện tiêu chuẩn trong Python được thiết kế chuyên biệt cho việc phân tích cú pháp (parsing) các tài liệu HTML/XML và trích xuất dữ liệu, text một cách rất ngắn gọn và dễ dàng. `pytesseract` được dùng để nhận dạng ký tự quang học (OCR) trên hình ảnh, `pypdf2` dùng cho việc đọc file PDF, và `numpy` là thư viện tính toán toán học không liên quan đến xử lý HTML."
+    },
+    {
+      "number": 72,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một ứng dụng RAG để trả lời các câu hỏi của nhân viên về chính sách của công ty.\n\nCác bước cần thiết để xây dựng và triển khai ứng dụng RAG này là gì?",
+      "options": [
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục các tài liệu và lưu vào Vector Search -> Người dùng gửi các truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> Đánh giá mô hình -> LLM tạo ra câu trả lời -> Triển khai bằng Model Serving",
+        "Người dùng gửi các truy vấn tới LLM -> Thu thập tài liệu từ một nguồn -> Lập chỉ mục tài liệu và lưu vào Vector Search -> LLM truy xuất tài liệu liên quan -> LLM tạo ra câu trả lời -> Đánh giá mô hình -> Triển khai bằng Model Serving",
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục tài liệu và lưu vào Vector Search -> Đánh giá mô hình -> Triển khai bằng Model Serving -> Người dùng gửi các truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> LLM tạo ra câu trả lời",
+        "Thu thập tài liệu từ một nguồn -> Lập chỉ mục tài liệu và lưu vào Vector Search -> Người dùng gửi các truy vấn tới LLM -> LLM truy xuất tài liệu liên quan -> LLM tạo ra câu trả lời -> Đánh giá mô hình -> Triển khai bằng Model Serving"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Để xây dựng, đánh giá và triển khai RAG, quy trình đúng là: (1) Chuẩn bị dữ liệu (Ingest & Index vào Vector database). (2) Xây dựng quy trình cho ứng dụng: nhận câu hỏi, truy xuất ngữ cảnh từ DB, và đưa vào LLM để sinh câu trả lời. (3) Sau khi quy trình RAG đã hoạt động, kỹ sư sẽ thực hiện các truy vấn thử nghiệm để lấy phản hồi từ hệ thống, từ đó *Đánh giá (Evaluate)* chất lượng của hệ thống RAG tổng thể. (4) Cuối cùng, nếu kết quả đánh giá đạt yêu cầu, ứng dụng mới được *Triển khai (Deploy)* lên Model Serving."
+    },
+    {
+      "number": 73,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng nguyên mẫu một hệ thống LLM đã vô tình chạy hàng nghìn truy vấn suy luận (inference queries) tới endpoint của Mô hình Nền tảng (Foundation Model endpoint) vào cuối tuần. Họ muốn thực hiện một hành động để ngăn chặn điều này vô tình xảy ra trong tương lai.\n\nHọ nên thực hiện hành động nào?",
+      "options": [
+        "Sử dụng kỹ thuật prompt engineering để yêu cầu các endpoint LLM từ chối quá nhiều truy vấn liên tiếp.",
+        "Yêu cầu tất cả các mã nguồn phát triển có tương tác với endpoint của Mô hình Nền tảng đều phải được kiểm duyệt bởi kỹ sư cấp Staff trước khi thực thi.",
+        "Xây dựng một mô hình pyfunc đóng vai trò proxy tới endpoint của Mô hình Nền tảng và thêm cơ chế điều tiết (throttling) bên trong mô hình pyfunc.",
+        "Cấu hình giới hạn tốc độ (rate limiting) trên các endpoint của Mô hình Nền tảng."
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Trong quản lý API và Model Serving của Databricks (hoặc các nền tảng đám mây khác), cách thực hành tốt nhất (best practice) và mạnh mẽ nhất để ngăn chặn việc lạm dụng hoặc vô ý gửi quá nhiều yêu cầu là cấu hình \"Rate Limiting\" (giới hạn tốc độ) trực tiếp ở cấp độ cấu hình của endpoint. Việc sử dụng prompt engineering (0) không giải quyết được vấn đề ở cấp hệ thống. Yêu cầu xét duyệt mã (1) gây tắc nghẽn quy trình phát triển. Xây dựng pyfunc proxy (2) là tạo thêm độ phức tạp không cần thiết khi hệ thống đã có sẵn tính năng rate limiting mặc định."
+    },
+    {
+      "number": 74,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang thiết lập Databricks Vector Search để tra cứu các bài báo tin tức theo chủ đề trong vòng 10 ngày so với ngày được chỉ định. Một truy vấn ví dụ có thể là “Hãy kể cho tôi nghe tin tức về xe tải quái vật (monster truck) trong khoảng ngày 5 tháng 1 năm 1992”. Họ muốn thực hiện điều này với nỗ lực ít nhất.\n\nHọ có thể thiết lập chỉ mục (index) Vector Search của mình như thế nào để hỗ trợ trường hợp sử dụng này?",
+      "options": [
+        "Tạo các chỉ mục riêng biệt theo chủ đề và thêm một mô hình phân loại để chọn chỉ mục phù hợp nhất.",
+        "Bao gồm các cột siêu dữ liệu (metadata columns) cho ngày tháng và chủ đề bài báo để hỗ trợ tính năng lọc siêu dữ liệu (metadata filtering).",
+        "Chuyển thẳng truy vấn tới vector search index và trả về các bài báo tốt nhất.",
+        "Chia các bài báo thành các khối 10 ngày và trả về khối gần nhất với truy vấn."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. RAG hiện đại trên Databricks Vector Search cho phép lưu trữ siêu dữ liệu (metadata) đi kèm với các vector nhúng. Khi có nhu cầu truy vấn với điều kiện thời gian cứng (ví dụ: trong vòng 10 ngày kể từ 05/01/1992) và theo chuyên mục, cách tốt nhất là sử dụng Hybrid Search (tìm kiếm kết hợp). Tức là, trích xuất bộ lọc thời gian và chủ đề để lọc (pre-filter) metadata trước, sau đó mới dùng vector search trên các văn bản đã vượt qua vòng lọc này. Cách tiếp cận này hiệu quả, chính xác tuyệt đối đối với điều kiện thời gian thay vì mong chờ AI phân tích ngữ nghĩa (semantic search) thời gian một cách mơ hồ."
+    },
+    {
+      "number": 75,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã phát triển một ứng dụng LLM sử dụng Foundation Model API theo hình thức trả phí theo token (pay-per-token). Hiện tại ứng dụng đã sẵn sàng để triển khai, họ muốn đảm bảo rằng endpoint của mô hình có thể phục vụ khối lượng yêu cầu (requests) lớn trong môi trường sản xuất (production).\n\nKỹ sư AI Tạo sinh nên cân nhắc điều gì?",
+      "options": [
+        "Thay vào đó hãy chuyển sang sử dụng các Mô hình bên ngoài (External Models)",
+        "Chủ động điều tiết (Throttle) hàng loạt các yêu cầu gửi đến theo cách thủ công để tránh các vấn đề về giới hạn tốc độ (rate limiting)",
+        "Chuyển sang mô hình có số lượng tham số ít hơn để giảm các vấn đề hạn chế về phần cứng",
+        "Triển khai mô hình bằng cách sử dụng thông lượng cung cấp trước (provisioned throughput) vì nó đi kèm với sự đảm bảo về hiệu suất"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Trong Databricks Model Serving, khi triển khai các hệ thống production chịu tải cao (high concurrency), việc chuyển từ chế độ \"pay-per-token\" sang \"Provisioned Throughput\" (Thông lượng được cung cấp trước) là quy chuẩn thiết yếu. Provisioned Throughput cấp phát trước GPU/compute dành riêng cho endpoint, giúp cung cấp SLA được bảo đảm, độ trễ ổn định và tránh bị rate limiting khi lưu lượng tăng đột biến so với tài nguyên dùng chung (shared endpoints)."
+    },
+    {
+      "number": 76,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh tại một công ty thiết bị gia dụng đã được yêu cầu thiết kế một ứng dụng dựa trên LLM hoàn thành mục tiêu kinh doanh sau: trả lời các câu hỏi của khách hàng về thiết bị gia dụng bằng cách sử dụng các sổ tay hướng dẫn tương ứng.\n\nHệ thống của Kỹ sư AI Tạo sinh nên thực hiện tập hợp các nhiệm vụ cấp cao nào?",
+      "options": [
+        "Chia sổ tay hướng dẫn thành các đoạn nhỏ (chunks) và nhúng vào kho lưu trữ vector (vector store). Sử dụng câu hỏi để truy xuất các đoạn phù hợp nhất của sổ tay, và sử dụng LLM để tạo câu trả lời cho người dùng dựa trên cuốn sổ tay được truy xuất.",
+        "Tạo ma trận tương tác giữa các câu hỏi lịch sử của người dùng và sổ tay hướng dẫn thiết bị. Sử dụng thuật toán ALS để phân tích ma trận và tạo nhúng. Tính toán nhúng của các truy vấn mới và dùng chúng để tìm sổ tay tốt nhất. Sử dụng LLM để tạo phản hồi cho câu hỏi dựa trên cuốn sổ tay được truy xuất.",
+        "Tính toán các nhúng trung bình (averaged embeddings) cho mỗi cuốn sổ tay hướng dẫn, so sánh các nhúng này với truy vấn của người dùng để tìm cuốn sổ tay tốt nhất. Đưa toàn bộ cuốn sổ tay tốt nhất cùng truy vấn của người dùng vào LLM có cửa sổ ngữ cảnh lớn để tạo phản hồi cho nhân viên.",
+        "Sử dụng LLM để tóm tắt tất cả các sổ tay hướng dẫn. Cung cấp các bản tóm tắt của từng sổ tay cùng với truy vấn của người dùng vào LLM có cửa sổ ngữ cảnh lớn để tạo phản hồi cho người dùng."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Đáp án đúng là 0. Đây chính là kiến trúc tiêu chuẩn và cơ bản nhất của hệ thống RAG (Retrieval-Augmented Generation). Sổ tay hướng dẫn thường rất dài, vì vậy chúng ta cần phân chia (chunking) thành các đoạn văn bản có ý nghĩa, lưu dưới dạng vector nhúng để tìm kiếm đoạn nội dung chính xác. Việc đưa nguyên cả sổ tay vào (tùy chọn 2), hay tóm tắt toàn bộ (tùy chọn 3) sẽ tốn kém chi phí token lớn, có thể vượt qua giới hạn ngữ cảnh (context window) và làm LLM mất đi các chi tiết nhỏ. Tùy chọn 1 sử dụng thuật toán hệ thống gợi ý truyền thống (ALS) không phù hợp cho tìm kiếm ngữ nghĩa văn bản chuyên sâu."
+    },
+    {
+      "number": 77,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang phát triển một ứng dụng LLM để tương tác với người dùng nhằm cung cấp các đề xuất phim được cá nhân hóa.\n\nTrước rủi ro người dùng nhập vào các dữ liệu đầu vào độc hại (malicious inputs), kỹ thuật nào sẽ hiệu quả nhất trong việc bảo vệ ứng dụng?",
+      "options": [
+        "Giảm bớt thời gian người dùng có thể tương tác với LLM",
+        "Tăng cường khả năng tính toán (compute) vận hành LLM để xử lý đầu vào nhanh hơn",
+        "Yêu cầu LLM nhắc nhở người dùng rằng đầu vào là độc hại nhưng vẫn tiếp tục cuộc trò chuyện với người dùng",
+        "Triển khai một bộ lọc an toàn (safety filter) nhằm phát hiện các đầu vào có hại và yêu cầu LLM phản hồi rằng nó không thể hỗ trợ"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Đáp án đúng là 3. Để ngăn chặn rủi ro tấn công hệ thống LLM (như jailbreak, prompt injection) và đảm bảo an toàn AI, việc triển khai một Safety Filter (Bộ lọc an toàn) ở vòng ngoài (trước khi tới LLM) hoặc trong bước kiểm duyệt kết quả đầu ra là phương pháp hiệu quả nhất. Khi hệ thống phát hiện hành vi độc hại, nó phải chặn yêu cầu và từ chối trả lời, thay vì chỉ \"nhắc nhở nhưng tiếp tục\" như tùy chọn 2 (điều này vẫn để lộ khả năng bị lợi dụng). Tùy chọn 0 và 1 giải quyết vấn đề hiệu suất và độ trễ, không giúp tăng cường bảo mật dữ liệu."
+    },
+    {
+      "number": 78,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh nhận được các yêu cầu kinh doanh sau đây cho một chatbot nội bộ. Chatbot nội bộ cần biết người dùng đang hỏi những loại câu hỏi nào và định tuyến (route) chúng đến các mô hình phù hợp để trả lời. Ví dụ: một người dùng có thể hỏi về tỷ lệ hỏng hóc lịch sử của một bộ phận điện cụ thể. Một người khác có thể hỏi về cách khắc phục sự cố (troubleshoot) trên một phần thiết bị điện.\n\nCác nguồn dữ liệu có sẵn bao gồm cơ sở dữ liệu các sổ tay thiết bị điện dạng PDF và một bảng thông tin về thời điểm các bộ phận điện bị hỏng hóc.\n\nQuy trình làm việc (workflow) nào hỗ trợ chatbot như vậy?",
+      "options": [
+        "Phân tích cú pháp các sổ tay PDF của thiết bị điện thành bảng các cặp câu hỏi và trả lời. Bằng cách đó, cùng một chatbot có thể truy vấn các bảng một cách dễ dàng để trả lời các câu hỏi về cả tỷ lệ hỏng hóc lịch sử và khắc phục sự cố thiết bị.",
+        "Chatbot nên được triển khai như một quy trình làm việc LLM đa bước (multi-step LLM workflow). Đầu tiên, xác định loại câu hỏi được hỏi, sau đó định tuyến câu hỏi đến mô hình thích hợp. Nếu đó là câu hỏi về tỷ lệ hỏng hóc lịch sử, gửi truy vấn đến mô hình text-to-SQL. Nếu đó là câu hỏi khắc phục sự cố, gửi truy vấn đến một mô hình khác chuyên tóm tắt tài liệu cụ thể của thiết bị và tạo câu trả lời.",
+        "Nên có hai chatbot khác nhau xử lý các loại truy vấn khác nhau của người dùng.",
+        "Bảng thông tin lỗi bộ phận điện trước tiên phải được chuyển đổi thành tài liệu văn bản. Bằng cách đó, cùng một chatbot có thể sử dụng cùng một quy trình truy xuất tài liệu để tạo câu trả lời bất kể loại câu hỏi là gì."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Đây là hình mẫu của một tác tử thông minh (AI Agent) hoặc quy trình định tuyến thông minh (LLM Routing / Multi-Agent). Việc phân loại câu hỏi (intent classification) để sử dụng công cụ phù hợp là tối ưu nhất. Cơ sở dữ liệu SQL dạng bảng phù hợp với Text-to-SQL để tra cứu chính xác số liệu, trong khi dữ liệu hướng dẫn (PDF) phù hợp với quy trình RAG xử lý văn bản. Ép buộc chuyển SQL thành Text (tùy chọn 3) hay chuyển PDF thành bảng Hỏi-Đáp cứng nhắc (tùy chọn 0) đều gây mất thông tin nghiêm trọng và không thể bao quát mọi câu hỏi. Tùy chọn 2 bắt người dùng tự chọn chatbot gây ra trải nghiệm kém."
+    },
+    {
+      "number": 79,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đang xây dựng một hệ thống để trả lời các câu hỏi về các chủ đề tin tức đang diễn ra. Do đó, hệ thống kéo thông tin từ nhiều nguồn khác nhau bao gồm các bài báo và các bài đăng trên mạng xã hội. Họ lo ngại về việc các bài đăng độc hại (toxic posts) trên mạng xã hội sẽ gây ra các kết quả đầu ra độc hại từ hệ thống của họ.\n\nRào chắn bảo vệ (guardrail) nào sẽ hạn chế các kết quả đầu ra độc hại?",
+      "options": [
+        "Giảm số lượng các mục ngữ cảnh (context items) mà hệ thống sẽ đưa vào xem xét cho phản hồi của nó.",
+        "Chỉ sử dụng các tài khoản mạng xã hội và tin tức đã được phê duyệt để ngăn dữ liệu độc hại không mong muốn tiếp cận với LLM.",
+        "Ghi nhật ký (log) tất cả các phản hồi của hệ thống LLM và thực hiện phân tích mức độ độc hại hàng loạt (batch toxicity analysis) mỗi tháng một lần.",
+        "Triển khai giới hạn tốc độ (rate limiting)."
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Đáp án đúng là 1. Cách ngăn chặn hiệu quả nhất việc hệ thống sinh ra nội dung độc hại bắt nguồn từ RAG là kiểm soát chặt chẽ \"nguồn thông tin\" (data provenance). Việc lập danh sách trắng (whitelist) các nguồn tin tức và tài khoản mạng xã hội uy tín sẽ đảm bảo LLM chỉ đọc các context sạch, từ đó giảm rủi ro phát sinh ngôn từ kích động, độc hại. Việc ghi log (tùy chọn 2) chỉ mang tính phân tích hậu kỳ, không có tác dụng ngăn chặn theo thời gian thực. Giới hạn số lượng context (tùy chọn 0) hay rate limiting (tùy chọn 3) không giúp chọn lọc thông tin sạch."
+    },
+    {
+      "number": 80,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư AI Tạo sinh đã tạo ra một ứng dụng RAG có thể giúp nhân viên diễn giải các tài liệu Nhân sự (HR). Ứng dụng nguyên mẫu hiện đang hoạt động với một số phản hồi tích cực từ các người kiểm thử nội bộ trong công ty. Giờ đây, Kỹ sư AI Tạo sinh muốn đánh giá chính thức hiệu suất của hệ thống và hiểu cần tập trung nỗ lực vào đâu để cải thiện hệ thống hơn nữa.\n\nKỹ sư AI Tạo sinh nên đánh giá hệ thống như thế nào?",
+      "options": [
+        "Sử dụng điểm ROUGE để đánh giá toàn diện chất lượng của các câu trả lời cuối cùng được tạo ra.",
+        "Sử dụng LLM-as-a-judge (LLM đóng vai trò làm giám khảo) để đánh giá chất lượng của các câu trả lời cuối cùng được tạo ra.",
+        "Xây dựng một bộ dữ liệu có thể kiểm tra riêng biệt hai thành phần Truy xuất (retrieval) và Sinh văn bản (generation) của hệ thống. Sử dụng các số liệu đánh giá tích hợp sẵn của MLflow để thực hiện đánh giá trên các thành phần truy xuất và sinh văn bản này.",
+        "Đo kiểm (Benchmark) nhiều LLM bằng cùng một dữ liệu và chọn LLM tốt nhất cho công việc."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Đáp án đúng là 2. Trong một ứng dụng RAG, lỗi có thể đến từ việc tìm kiếm thông tin không chuẩn xác (retrieval) HOẶC LLM tổng hợp thông tin yếu (generation). Do đó, để biết cần \"tập trung nỗ lực vào đâu để cải thiện\", kỹ sư bắt buộc phải chia nhỏ đánh giá (component-wise evaluation). MLflow Evaluate hỗ trợ đánh giá riêng phần Retrieval (như metric NDCG, Precision@K) và phần Generation (thường dùng LLM-as-a-judge để tính độ chính xác/hallucination dựa trên context đã cấp). Các tùy chọn 0, 1 chỉ đánh giá đầu ra cuối cùng (end-to-end), không cho biết lỗi xuất phát từ quá trình tìm kiếm hay sinh văn bản."
+    },
+    {
+      "number": 81,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang sử dụng LangChain để hỗ trợ một bảo tàng phân loại tài liệu và sử dụng đoạn mã sau:\n\nfrom langchain import PromptTemplate\n\ntemplate_text = \"\"\"\nYou are an automated archeological assistant helping identify documents relevant to ancient Egypt. If the\ndocument is relevant return \"relevant\", else return \"irrelevant\" with no additional text.\nDocument:\" {document_input}\"\nResponse:\n\"\"\"\n\nprompt_template = PromptTemplate(\n    input_variables=[\"document_input\"]\n)\n\ncompleted_prompt = prompt_template.format(\n    document_input=document_input\n)\n\nMã của họ dẫn đến một lỗi.\n\nHọ cần thay đổi điều gì để sửa lỗi mẫu (template) này?",
+      "options": [
+        "Cung cấp đối số LLM cho PromptTemplate()",
+        "Cung cấp các đối số template và LLM cho PromptTemplate()",
+        "Bỏ qua PromptTemplate(), nó chỉ được sử dụng cho các mẫu gồm nhiều phần",
+        "Cung cấp đối số template cho PromptTemplate()"
+      ],
+      "answer_code": "1112",
+      "correct_option_indexes": [
+        3
+      ],
+      "explanation_vn": "Trong LangChain, khi khởi tạo một đối tượng `PromptTemplate`, bạn cần truyền tham số `template` (nội dung chuỗi của mẫu prompt chứa các biến đầu vào). Đoạn mã trong câu hỏi đã khởi tạo `PromptTemplate` chỉ với tham số `input_variables` mà thiếu mất `template=template_text`. Vì vậy, để sửa lỗi này, kỹ sư cần cung cấp thêm đối số `template` cho hàm khởi tạo `PromptTemplate()`."
+    },
+    {
+      "number": 82,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang xem xét các vấn đề với trợ lý hỏi đáp dựa trên LLM của công ty và xác định rằng kỹ thuật gọi là chuỗi prompt (prompt chaining) có thể giúp giảm bớt một số lo ngại về hiệu suất. Tuy nhiên, để đề xuất điều này với nhóm, họ phải giải thích rõ cách thức hoạt động và lợi ích của nó đối với trợ lý hỏi đáp.\n\nHọ sẽ truyền đạt lời giải thích nào cho nhóm?",
+      "options": [
+        "Nó cho phép bạn chia các tác vụ phức tạp thành nhiều tác vụ phụ độc lập. Điều này giúp trợ lý có thể tạo ra các phản hồi toàn diện và chính xác hơn.",
+        "Nó cho phép bạn giảm độ trễ (latency) của các ứng dụng. Bằng cách có nhiều chuỗi (chain) tham gia vào phản hồi, bạn tăng tốc độ phản hồi được tạo ra.",
+        "Nó cho phép bạn giảm bớt công sức trong việc tạo prompt. Các chuỗi (chains) giúp có thể tái sử dụng văn bản prompt qua nhiều trường hợp sử dụng khác nhau.",
+        "Nó làm giảm chi phí trung bình của một yêu cầu thông thường. Các chuỗi sử dụng hiệu quả hơn các token được tạo ra để sinh phản hồi chất lượng cao hơn với ít token hơn."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Prompt chaining (chuỗi prompt) là kỹ thuật chia một tác vụ lớn và phức tạp thành một chuỗi các bước nhỏ (subtasks) và tuần tự. Kết quả đầu ra của bước trước sẽ được dùng làm đầu vào cho bước tiếp theo. Điều này giúp LLM tập trung vào từng phần nhỏ của vấn đề, từ đó giảm thiểu ảo giác (hallucinations) và tạo ra các câu trả lời chính xác, logic và toàn diện hơn. Kỹ thuật này tập trung vào độ chính xác thay vì làm giảm độ trễ hay chi phí."
+    },
+    {
+      "number": 83,
+      "type": "multiple_choice",
+      "prompt": "Một nhóm phát triển AI muốn tinh chỉnh (fine-tune) một mô hình có trọng số mở (open-weight model) để đạt hiệu suất xuất sắc trong trường hợp sử dụng sinh mã (code generation). Họ đang cố gắng chọn mô hình tốt nhất để bắt đầu. Họ muốn tối thiểu hóa chi phí lưu trữ/triển khai mô hình (model hosting costs) và đang sử dụng các Huggingface model cards và spaces để khám phá các mô hình.\n\nNhóm nên tập trung vào HAI thuộc tính và chỉ số nào của mô hình để đưa ra lựa chọn? (Chọn hai.)",
+      "options": [
+        "Bảng xếp hạng Big Code Models Leaderboard",
+        "Số lượng tham số của mô hình",
+        "Bảng xếp hạng MTEB Leaderboard",
+        "Bảng xếp hạng Chatbot Arena Leaderboard",
+        "Số lượt tải xuống mô hình trong tháng trước"
+      ],
+      "answer_code": "22111",
+      "correct_option_indexes": [
+        0,
+        1
+      ],
+      "explanation_vn": "1) 'Big Code Models Leaderboard' là bảng xếp hạng chuyên biệt trên Huggingface đánh giá hiệu suất của các mô hình LLM trên các tác vụ lập trình. Đây là tiêu chí lý tưởng nhất để chọn mô hình có sẵn khả năng code tốt. 2) 'Số lượng tham số của mô hình' (Number of model parameters) ảnh hưởng trực tiếp đến kích thước mô hình, bộ nhớ VRAM yêu cầu và chi phí triển khai (hosting costs). Vì mục tiêu của nhóm là giảm thiểu chi phí hosting, họ cần đặc biệt chú ý đến số lượng tham số để chọn mô hình gọn nhẹ nhưng hiệu quả."
+    },
+    {
+      "number": 84,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI tại một công ty ô tô muốn xây dựng một chatbot hỏi đáp để giúp khách hàng trả lời các câu hỏi cụ thể về xe của họ. Họ có:\n• Một danh mục với hàng trăm ngàn chiếc ô tô được sản xuất từ những năm 1960\n• Các tìm kiếm trong quá khứ, với các truy vấn của người dùng và các kết quả khớp thành công\n• Mô tả về các xe của họ bằng nhiều ngôn ngữ\n\nHọ đã chọn một LLM mã nguồn mở và tạo một tập kiểm tra (test set) cho các truy vấn của người dùng. Họ cần loại bỏ những kỹ thuật sẽ không giúp ích cho việc xây dựng chatbot.\n\nHọ nên loại bỏ kỹ thuật nào?",
+      "options": [
+        "Thiết lập kích thước chunk (chunk size) khớp với cửa sổ ngữ cảnh (context window) của mô hình để tối đa hóa độ bao phủ",
+        "Triển khai lọc siêu dữ liệu (metadata filtering) dựa trên mẫu xe và năm sản xuất",
+        "Tinh chỉnh (fine-tuning) một mô hình embedding trên thuật ngữ ngành ô tô",
+        "Thêm các ví dụ few-shot cho việc sinh phản hồi (response generation)"
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Lưu ý: Có sự tranh cãi về đáp án của câu hỏi này trong các bộ đề (thiết lập chunk size bằng context window cũng là một thực hành sai vì không còn chỗ trống cho prompt). Tuy nhiên, theo đáp án chuẩn của nguồn (tùy chọn 'Tinh chỉnh mô hình embedding'), lý do là: Tinh chỉnh (fine-tuning) một mô hình embedding cho thuật ngữ cụ thể thường tốn kém, phức tạp và không cần thiết trong giai đoạn đầu. Đối với hầu hết các trường hợp RAG có dữ liệu đa ngôn ngữ, một mô hình embedding đa ngôn ngữ có sẵn (pre-trained) kết hợp với kỹ thuật lọc metadata và few-shot prompting đã đủ để cung cấp kết quả cực kỳ chính xác. Vì vậy, tinh chỉnh embedding là bước nên bị loại bỏ khỏi kế hoạch ban đầu để tiết kiệm nguồn lực."
+    },
+    {
+      "number": 85,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI tại một công ty luật đang thiết kế hệ thống RAG để phân tích các tiền lệ án lịch sử. Hệ thống cần xử lý hàng triệu ý kiến tòa án và tài liệu pháp lý, đã được tổ chức theo thời gian và chủ đề, để theo dõi cách các diễn giải về các luật cụ thể đã phát triển qua thời gian. Tất cả tài liệu này đều ở định dạng văn bản thuần túy (plain-text). Kỹ sư cần chọn phương pháp phân đoạn (chunking) bảo tồn hiệu quả nhất tính liên tục và bản chất thời gian của các vụ án.\n\nHọ chọn phương pháp nào?",
+      "options": [
+        "Triển khai tóm tắt dạng cửa sổ trượt (windowed summarization) với các đoạn chồng lấp (overlapping chunks).",
+        "Triển khai cấu trúc cây phân cấp, như RAPTOR, để nhóm các khái niệm pháp lý tương tự.",
+        "Triển khai embedding cấp độ đoạn văn (paragraph level) với mỗi chunk.",
+        "Triển khai embedding cấp độ câu (sentence level) với mỗi chunk được gắn thẻ thời gian để kích hoạt lọc siêu dữ liệu."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Các tài liệu pháp lý thường rất dài và các lập luận được liên kết chặt chẽ ở nhiều phần khác nhau. Việc tóm tắt dạng cửa sổ (windowed summarization) kết hợp với các chunk chồng lấp (overlapping chunks) giúp đảm bảo ngữ cảnh ở ranh giới giữa các chunk không bị đứt gãy, duy trì tính liên tục của luồng tư duy và diễn giải pháp lý. Các phương pháp khác như chia theo từng đoạn văn hay từng câu riêng lẻ sẽ quá nhỏ, làm mất đi ngữ cảnh rộng hơn cần thiết để hiểu sự phát triển và tính liên tục của vụ án."
+    },
+    {
+      "number": 86,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang phát triển một hệ thống tác tử (agent) sử dụng một thư viện tạo agent phổ biến. Agent này bao gồm nhiều chuỗi (chains) chạy song song và tuần tự. Kỹ sư gặp khó khăn khi agent thất bại ở một trong các bước, khiến việc gỡ lỗi (debug) nguyên nhân gốc rễ trở nên khó khăn. Họ cần tìm một phương pháp tiếp cận phù hợp để nghiên cứu vấn đề này và tìm ra nguyên nhân gây lỗi.\n\nHọ sẽ chọn phương pháp nào?",
+      "options": [
+        "Kích hoạt MLflow tracing để có được khả năng quan sát chi tiết hành vi và từng bước thực thi của agent.",
+        "Chạy MLflow.evaluate để xác định nguyên nhân gốc rễ của bước bị lỗi.",
+        "Triển khai ghi log có cấu trúc (structured logging) bên trong mã của agent để ghi lại thông tin thực thi chi tiết.",
+        "Chia nhỏ agent thành các bước độc lập để đơn giản hóa việc gỡ lỗi."
+      ],
+      "answer_code": "1121",
+      "correct_option_indexes": [
+        2
+      ],
+      "explanation_vn": "Trong môi trường lập trình truyền thống và khi làm việc với các thư viện bên thứ ba, việc triển khai ghi log có cấu trúc (structured logging) giúp ghi lại trạng thái cụ thể về đầu vào, đầu ra, và các lỗi tại từng bước (chain) một cách rõ ràng. Điều này giúp theo dõi chính xác dữ liệu nào đang được truyền đi và phát hiện chuỗi nào gây ra sự cố. (Lưu ý: Trên hệ sinh thái Databricks, tính năng 'MLflow Tracing' cũng là công cụ cực kỳ mạnh mẽ tự động hóa việc này, nhưng ở góc độ tổng quát và theo đáp án chỉ định, ghi log có cấu trúc vào mã trực tiếp là giải pháp gốc rễ cần thực hiện)."
+    },
+    {
+      "number": 87,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang thử nghiệm việc sử dụng các tham số để cấu hình một agent trong Mosaic Agent Framework (Khung tác tử Mosaic). Tuy nhiên, họ đang gặp khó khăn trong việc làm cho agent phản hồi với thông tin có liên quan bằng cấu hình này:\n\nconfig_dict = {\n    \"prompt_template\": \"You are a trivia bot. Generate a trivia question based on the user's input.\",\n    \"prompt_template_input_vars\": [\"user_input\"],\n    \"model_serving_endpoint\": \"databricks-dbrx-instruct\",\n    \"llm_parameters\": {\"temperature\": 0.01, \"max_tokens\": 500},\n}\n\nLỗi nào đang gây ra vấn đề này?",
+      "options": [
+        "Prompt không parse các biến đầu vào của người dùng (user's input vars)",
+        "Prompt không thiết lập lược đồ trình truy xuất (retriever schema)",
+        "Prompt không liệt kê các agent khả dụng để LLM có thể gọi",
+        "Prompt không được bọc trong ChatModel"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Trong đoạn cấu hình trên, danh sách biến đầu vào (`prompt_template_input_vars`) được định nghĩa là `[\"user_input\"]`. Tuy nhiên, trong chuỗi văn bản của `prompt_template` lại không hề chứa placeholder `{user_input}` để parse biến này. Cụ thể, mẫu prompt chỉ ghi câu tĩnh mà không có chỗ trống định dạng. Vì tham số truyền vào không được đưa vào văn bản prompt, LLM sẽ không nhận được thông tin đầu vào thực tế từ người dùng, dẫn đến các phản hồi không khớp với mong đợi."
+    },
+    {
+      "number": 88,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang sử dụng LangGraph để định nghĩa nhiều công cụ trong một ứng dụng agent duy nhất. Họ muốn cho phép LLM điều phối chính (main orchestrator) tự quyết định công cụ nào là phù hợp nhất để gọi cho một prompt nhất định. Để thực hiện điều này, họ phải xác định luồng chung của đoạn mã.\n\nTrình tự nào sẽ thực hiện được điều này?",
+      "options": [
+        "1. Định nghĩa hoặc import các công cụ 2. Thêm các công cụ và LLM vào agent 3. Tạo agent ReAct",
+        "1. Định nghĩa hoặc import các công cụ 2. Định nghĩa agent 3. Khởi tạo agent với ReAct, LLM và các công cụ",
+        "1. Định nghĩa các công cụ 2. Tải từng công cụ vào một agent riêng biệt 3. Chỉ thị cho LLM sử dụng ReAct để gọi agent phù hợp",
+        "1. Định nghĩa các công cụ bên trong các agent 2. Tải các agent vào LLM 3. Chỉ thị cho LLM sử dụng lý luận CoT để xác định agent phù hợp"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Luồng tiêu chuẩn khi xây dựng agent có khả năng sử dụng công cụ (tool-calling agent) với mô hình ReAct trong LangChain/LangGraph bao gồm: 1. Định nghĩa hoặc import các công cụ (ví dụ: các hàm Python). 2. Định nghĩa/cấu hình tác tử (agent node/workflow). 3. Khởi tạo/biên dịch (compile) agent bằng cách kết hợp chiến lược ReAct (Reason + Act), LLM cốt lõi và danh sách các công cụ đã định ra. Trình tự này thiết lập một vòng lặp suy luận cho phép tác tử tự động quyết định công cụ nào cần gọi dựa trên prompt của người dùng."
+    },
+    {
+      "number": 89,
+      "type": "single_choice",
+      "prompt": "Tất cả những lựa chọn sau đều là các API Python được sử dụng để truy vấn các mô hình nền tảng (foundation models) của Databricks. Khi chạy trong một notebook tương tác (interactive notebook), thư viện nào sau đây KHÔNG tự động sử dụng thông tin xác thực (credentials) của phiên làm việc hiện tại?",
+      "options": [
+        "OpenAI client",
+        "REST API thông qua thư viện requests",
+        "MLflow Deployments SDK",
+        "Databricks Python SDK"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Trong môi trường Databricks Notebook, các SDK chính thức như Databricks Python SDK, MLflow Deployments SDK đều có khả năng tự động nhận diện và sử dụng token xác thực của phiên làm việc hiện tại mà không cần thiết lập thủ công. Thậm chí OpenAI client khi được cấu hình đúng cũng có thể sử dụng credential môi trường. Tuy nhiên, `requests` là một thư viện HTTP thuần túy của Python; nó không có sự tích hợp riêng biệt nào với Databricks, do đó bạn bắt buộc phải trích xuất thủ công Databricks Personal Access Token (PAT) và gắn vào Header (Authorization: Bearer) thì mới gọi được API."
+    },
+    {
+      "number": 90,
+      "type": "single_choice",
+      "prompt": "Một Kỹ sư Generative AI đang triển khai một LLM đã được tinh chỉnh (fine-tuned) hướng đến khách hàng trên trang web công cộng của họ. Do khoản đầu tư lớn mà công ty đã đổ vào việc tinh chỉnh mô hình này, cũng như tính chất độc quyền của dữ liệu tinh chỉnh, họ lo ngại về các cuộc tấn công đảo ngược mô hình (model inversion attacks).\n\nChiến lược giảm thiểu rủi ro nào sau đây của Khung Bảo mật AI Databricks (DASF) là phù hợp nhất cho trường hợp sử dụng này?",
+      "options": [
+        "Triển khai các lan can an toàn AI (AI guardrails) để cho phép người dùng cấu hình và thực thi tuân thủ",
+        "Tận dụng danh sách kiểm soát truy cập (ACL) của Databricks để cấu hình quyền truy cập vào các mô hình",
+        "Sử dụng tính năng bảo mật mô hình với Databricks Feature Store",
+        "Áp dụng kiểm soát truy cập dựa trên thuộc tính (ABAC) để hạn chế truy cập trái phép"
+      ],
+      "answer_code": "1211",
+      "correct_option_indexes": [
+        1
+      ],
+      "explanation_vn": "Tấn công đảo ngược mô hình (model inversion attack) là nỗ lực trích xuất dữ liệu huấn luyện hoặc thông tin nội bộ thông qua việc lạm dụng quyền truy cập vào mô hình. Chiến lược nền tảng trong Databricks AI Security Framework (DASF) để bảo vệ tài sản mô hình là áp dụng nghiêm ngặt các Danh sách kiểm soát truy cập (Access Control Lists - ACLs). Bằng cách sử dụng ACLs chặt chẽ cho Model Endpoint, nhóm kỹ sư có thể đảm bảo chỉ những service identity (như ứng dụng web backend trung gian) hợp lệ mới có quyền gọi mô hình, từ đó ngăn chặn những kẻ tấn công (hoặc người dùng bên ngoài) tương tác trực tiếp hoặc đánh cắp chính file trọng số (weights) của mô hình từ registry."
+    },
+    {
+      "number": 91,
+      "type": "single_choice",
+      "prompt": "Một nhóm sử dụng Mosaic AI Vector Search để truy xuất tài liệu cho pipeline Truy xuất tăng cường sinh (RAG) của họ. Truy vấn tìm kiếm trả về năm tài liệu có liên quan, và ba tài liệu đầu tiên được thêm vào prompt làm ngữ cảnh. Việc đánh giá hiệu suất bằng Agent Evaluation cho thấy một số tài liệu được truy xuất ở thứ hạng thấp lại có điểm số mức độ liên quan ngữ cảnh (context relevancy scores) cao hơn các tài liệu ở thứ hạng cao.\n\nNhóm nên xem xét lựa chọn nào để tối ưu hóa quy trình làm việc này?",
+      "options": [
+        "Sử dụng bộ xếp hạng lại (reranker) để sắp xếp thứ tự các tài liệu dựa trên điểm số mức độ liên quan.",
+        "Sửa đổi prompt để chỉ thị cho LLM sắp xếp các tài liệu dựa trên điểm số mức độ liên quan.",
+        "Sử dụng một mô hình embedding khác để tính toán các embedding tài liệu.",
+        "Tăng số lượng tài liệu được thêm vào prompt để cải thiện mức độ liên quan của ngữ cảnh."
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Hiện tượng các tài liệu ở vị trí thấp (trong danh sách trả về của vector database) lại có liên quan chặt chẽ hơn tới câu hỏi so với tài liệu trên cùng là một hạn chế khá phổ biến của thuật toán tìm kiếm vector (vốn chỉ so sánh sự tương đồng ngữ nghĩa bằng khoảng cách toán học). Phương pháp tối ưu và tiêu chuẩn để giải quyết vấn đề này là áp dụng bộ xếp hạng lại (reranker, ví dụ như Cross-Encoder). Bộ reranker sẽ đánh giá chi tiết và chấm điểm chính xác mức độ phù hợp giữa câu hỏi gốc với từng tài liệu được truy xuất, sau đó sắp xếp lại (re-rank) để đẩy các tài liệu thực sự liên quan lên đầu, trước khi cấp chúng cho LLM."
+    },
+    {
+      "number": 92,
+      "type": "single_choice",
+      "prompt": "Một kỹ sư generative AI đang triển khai một tác tử AI (AI agent) được tạo bằng giao diện ChatAgent của MLflow cho hệ thống hỗ trợ khách hàng của một công ty bán lẻ trên Databricks. Agent này phải xử lý hàng nghìn câu hỏi mỗi ngày, và kỹ sư cần theo dõi hiệu suất và chất lượng của nó theo thời gian thực để đảm bảo nó đáp ứng các thỏa thuận cấp độ dịch vụ (SLA).\n\nNhững chỉ số nào được tự động nắm bắt (capture) theo mặc định và có sẵn để giám sát khi tác tử được triển khai sử dụng Mosaic AI Agent Framework?",
+      "options": [
+        "Các chỉ số vận hành (Operational metrics) như khối lượng yêu cầu, độ trễ và lỗi",
+        "Các chỉ số chất lượng (Quality metrics) như tính chính xác và mức độ tuân thủ hướng dẫn",
+        "Cả chỉ số vận hành và chỉ số chất lượng",
+        "Không có chỉ số nào được tự động ghi lại"
+      ],
+      "answer_code": "2111",
+      "correct_option_indexes": [
+        0
+      ],
+      "explanation_vn": "Khi triển khai một LLM hoặc Agent thông qua Model Serving và Mosaic AI Agent Framework trên Databricks, nền tảng tự động thu thập và ghi lại các chỉ số vận hành cơ bản (operational metrics) như số lượng request, độ trễ (latency), và tỷ lệ lỗi (error rates) vào các bảng inference tables. Trong khi đó, các chỉ số đo lường chất lượng (quality metrics) như tính chính xác (correctness), mức độ liên quan hay độ an toàn thì không thể được suy luận tự động; bạn phải chủ động chạy các đánh giá ngoại tuyến hoặc trực tuyến (như sử dụng LLM-as-a-judge qua MLflow Evaluate) đối chiếu với dữ liệu ground truth."
+    }
+  ]
+}
