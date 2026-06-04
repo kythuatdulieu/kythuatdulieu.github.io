@@ -31,7 +31,7 @@
         2,
         4
       ],
-      "explanation_vn": "Chiến lược 1 (tùy chọn 3) là đúng vì việc sử dụng một số liệu đánh giá chuẩn (như recall, NDCG) để đánh giá hệ thống truy xuất thông tin (IR) là một phương pháp có hệ thống để tinh chỉnh và so sánh các chiến lược phân tách khác nhau (như chia theo đoạn văn, theo chương). Chiến lược 2 (tùy chọn 5) là đúng vì sử dụng LLM-as-a-judge là một kỹ thuật tiên tiến và phù hợp để đánh giá chất lượng của các đoạn văn bản được truy xuất dựa trên ngữ cảnh, từ đó giúp tối ưu hóa cấu hình chunking dựa trên điểm số đánh giá tự động. Thay đổi mô hình nhúng (tùy chọn 1) không liên quan trực tiếp đến việc tối ưu hóa chiến lược chunking. Thêm bộ phân loại (tùy chọn 2) giúp lọc dữ liệu nhưng không giúp xác định tham số chunking tốt nhất. Yêu cầu LLM dự đoán số lượng token (tùy chọn 4) là không khả thi và thiếu cơ sở vững chắc vì LLM không giỏi đếm hoặc tối ưu hóa tham số độ dài một cách chính xác.",
+      "explanation_vn": "**Chiến lược 1 (tùy chọn 3)** là đúng vì việc sử dụng một số liệu đánh giá chuẩn (như recall, NDCG) để đánh giá hệ thống truy xuất thông tin (IR) là một phương pháp có hệ thống để tinh chỉnh và so sánh các chiến lược phân tách khác nhau (như chia theo đoạn văn, theo chương).\n\n**Chiến lược 2 (tùy chọn 5)** là đúng vì sử dụng LLM-as-a-judge là một kỹ thuật tiên tiến và phù hợp để đánh giá chất lượng của các đoạn văn bản được truy xuất dựa trên ngữ cảnh, từ đó giúp tối ưu hóa cấu hình chunking dựa trên điểm số đánh giá tự động.\n\nCác tùy chọn khác không phù hợp:\n- **Thay đổi mô hình nhúng (tùy chọn 1):** Không liên quan trực tiếp đến việc tối ưu hóa chiến lược chunking.\n- **Thêm bộ phân loại (tùy chọn 2):** Giúp lọc dữ liệu nhưng không giúp xác định tham số chunking tốt nhất.\n- **Yêu cầu LLM dự đoán số lượng token (tùy chọn 4):** Không khả thi và thiếu cơ sở vững chắc vì LLM không giỏi đếm hoặc tối ưu hóa tham số độ dài một cách chính xác.",
       "references": [
         {
           "title": "Databricks Agent Evaluation",
@@ -60,7 +60,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Quy trình tiêu chuẩn để xây dựng và triển khai ứng dụng RAG (Retrieval-Augmented Generation) là: (1) Thu thập và xử lý tài liệu từ nguồn, (2) Lập chỉ mục và lưu trữ vào Vector Search, (3) Cho phép hệ thống (hoặc người dùng thử nghiệm) gửi truy vấn để (4) LLM truy xuất các tài liệu liên quan và (5) tạo phản hồi dựa trên tài liệu đó. (6) Đánh giá toàn bộ pipeline (cả truy xuất và tạo sinh) để đảm bảo chất lượng, và cuối cùng (7) Triển khai hệ thống thông qua Model Serving. Tùy chọn đúng sắp xếp 'Đánh giá mô hình' sau bước 'LLM tạo phản hồi' vì bạn cần phải đánh giá phản hồi đầu ra hoàn chỉnh trước khi triển khai hệ thống.",
+      "explanation_vn": "Quy trình tiêu chuẩn để xây dựng và triển khai ứng dụng RAG (Retrieval-Augmented Generation) là:\n\n- **(1) Thu thập và xử lý tài liệu từ nguồn**\n- **(2) Lập chỉ mục và lưu trữ vào Vector Search**\n- **(3) Cho phép hệ thống (hoặc người dùng thử nghiệm) gửi truy vấn**\n- **(4) LLM truy xuất các tài liệu liên quan**\n- **(5) LLM tạo phản hồi dựa trên tài liệu đó**\n- **(6) Đánh giá toàn bộ pipeline** (cả truy xuất và tạo sinh) để đảm bảo chất lượng.\n- **(7) Triển khai hệ thống** thông qua Model Serving.\n\nTùy chọn đúng sắp xếp **'Đánh giá mô hình'** sau bước **'LLM tạo phản hồi'** vì bạn cần phải đánh giá phản hồi đầu ra hoàn chỉnh trước khi triển khai hệ thống.",
       "references": [
         {
           "title": "Databricks RAG Tutorial",
@@ -89,7 +89,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Trong môi trường sản xuất, việc giám sát hiệu suất và độ tin cậy của ứng dụng là rất quan trọng. Số lượng câu hỏi được xử lý trên một đơn vị thời gian (thông lượng - throughput) phản ánh trực tiếp hiệu năng hoạt động của hệ thống và trải nghiệm người dùng, do đó đây là metric quan trọng cần theo dõi. Điểm perplexity và giá trị HuggingFace Leaderboard là các metric trong giai đoạn đánh giá mô hình tĩnh, không phải metric hoạt động của hệ thống production. Năng lượng sử dụng cũng không phải là metric ưu tiên hàng đầu so với thông lượng trong ngữ cảnh dịch vụ khách hàng.",
+      "explanation_vn": "Trong môi trường sản xuất, việc giám sát hiệu suất và độ tin cậy của ứng dụng là rất quan trọng. **Số lượng câu hỏi được xử lý trên một đơn vị thời gian (thông lượng - throughput)** phản ánh trực tiếp hiệu năng hoạt động của hệ thống và trải nghiệm người dùng, do đó đây là metric quan trọng cần theo dõi.\n\nCác metric khác không phù hợp:\n- **Điểm perplexity và giá trị HuggingFace Leaderboard:** Là các metric trong giai đoạn đánh giá mô hình tĩnh, không phải metric hoạt động của hệ thống production.\n- **Năng lượng sử dụng:** Không phải là metric ưu tiên hàng đầu so với thông lượng trong ngữ cảnh dịch vụ khách hàng.",
       "references": [
         {
           "title": "Monitor Model Serving Endpoints",
@@ -118,7 +118,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Cách tiếp cận tối ưu nhất cho bài toán kết hợp (matching) văn bản phi cấu trúc ở quy mô lớn là sử dụng Vector Search kết hợp với bộ lọc siêu dữ liệu (metadata filtering). Hồ sơ nhân viên (dữ liệu tĩnh hơn và lớn hơn) nên được nhúng vào vector store. Sau đó, hệ thống có thể sử dụng thông tin dự án mới (project scope) làm truy vấn, đồng thời áp dụng bộ lọc (filter) trên Vector Search để chỉ truy xuất các nhân viên có thời gian rảnh (availability) phù hợp. Điều này hiệu quả và có thể mở rộng tốt hơn nhiều so với việc tính toán điểm tương đồng bằng cách lặp qua từng thành viên một (cách 3) hoặc nhúng dự án thay vì nhân viên (cách 1).",
+      "explanation_vn": "Cách tiếp cận tối ưu nhất cho bài toán kết hợp (matching) văn bản phi cấu trúc ở quy mô lớn là sử dụng **Vector Search** kết hợp với **bộ lọc siêu dữ liệu (metadata filtering)**.\n\n- Hồ sơ nhân viên (dữ liệu tĩnh hơn và lớn hơn) nên được **nhúng vào vector store**.\n- Sau đó, hệ thống có thể sử dụng thông tin dự án mới (project scope) làm **truy vấn**, đồng thời áp dụng **bộ lọc (filter)** trên Vector Search để chỉ truy xuất các nhân viên có thời gian rảnh (availability) phù hợp.\n\nĐiều này hiệu quả và có thể mở rộng tốt hơn nhiều so với việc tính toán điểm tương đồng bằng cách lặp qua từng thành viên một (cách 3) hoặc nhúng dự án thay vì nhân viên (cách 1).",
       "references": [
         {
           "title": "Databricks Vector Search Metadata Filtering",
@@ -147,7 +147,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Feature Serving (Đặc trưng phục vụ) trong Databricks cho phép cung cấp các dữ liệu đặc trưng (features) được cập nhật liên tục với độ trễ thấp (low-latency) đến các mô hình hoặc ứng dụng (như LLM). Đối với dữ liệu thời gian thực như tỷ số trận đấu thể thao trực tiếp, Feature Serving là công cụ thích hợp để hệ thống LLM có thể tra cứu trạng thái mới nhất ngay tại thời điểm suy luận (inference). Các tuỳ chọn khác như DatabricksIQ (trợ lý AI của Databricks), Foundation Model APIs (API để gọi LLM), hoặc AutoML (tự động hóa huấn luyện mô hình học máy) không phải là dịch vụ dùng để cung cấp dữ liệu theo thời gian thực.",
+      "explanation_vn": "**Feature Serving (Đặc trưng phục vụ)** trong Databricks cho phép cung cấp các dữ liệu đặc trưng (features) được cập nhật liên tục với độ trễ thấp (low-latency) đến các mô hình hoặc ứng dụng (như LLM).\n\nĐối với dữ liệu thời gian thực như tỷ số trận đấu thể thao trực tiếp, Feature Serving là công cụ thích hợp để hệ thống LLM có thể tra cứu trạng thái mới nhất ngay tại thời điểm suy luận (inference).\n\nCác tuỳ chọn khác không phù hợp:\n- **DatabricksIQ** (trợ lý AI của Databricks), **Foundation Model APIs** (API để gọi LLM), hoặc **AutoML** (tự động hóa huấn luyện mô hình học máy) không phải là dịch vụ dùng để cung cấp dữ liệu theo thời gian thực.",
       "references": [
         {
           "title": "Databricks Feature Serving",
@@ -176,7 +176,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Trong Databricks, Inference Tables là tính năng được thiết kế đặc biệt để tự động lưu trữ và theo dõi (log) các yêu cầu đầu vào (requests) và dự đoán đầu ra (responses) từ các model serving endpoints vào các bảng Delta trong Unity Catalog. Điều này loại bỏ sự cần thiết của một micro-service trung gian tự xây dựng, giúp đơn giản hóa kiến trúc và dễ dàng theo dõi, đánh giá cũng như phát hiện data drift (sự thay đổi dữ liệu).",
+      "explanation_vn": "Trong Databricks, **Inference Tables** là tính năng được thiết kế đặc biệt để tự động lưu trữ và theo dõi (log) các yêu cầu đầu vào (requests) và dự đoán đầu ra (responses) từ các model serving endpoints vào các bảng Delta trong Unity Catalog.\n\nĐiều này mang lại các lợi ích:\n- Loại bỏ sự cần thiết của một micro-service trung gian tự xây dựng.\n- Giúp đơn giản hóa kiến trúc.\n- Dễ dàng theo dõi, đánh giá cũng như phát hiện data drift (sự thay đổi dữ liệu).",
       "references": [
         {
           "title": "Databricks Inference Tables",
@@ -205,7 +205,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Ứng dụng RAG lấy thông tin từ kho dữ liệu (Vector Search) để làm ngữ cảnh trả lời. Nếu hệ thống đưa ra các phản hồi mang tính kích động hoặc phản cảm, nguyên nhân gốc rễ thường là do tài liệu gốc chứa nội dung như vậy. Do đó, việc quản lý và làm sạch dữ liệu nguồn (curate upstream data), bao gồm cả việc kiểm tra và loại bỏ nội dung độc hại trước khi đưa vào hệ thống, là biện pháp trực tiếp và hiệu quả nhất để ngăn chặn RAG phát sinh các phản hồi không mong muốn.",
+      "explanation_vn": "Ứng dụng RAG lấy thông tin từ kho dữ liệu (Vector Search) để làm ngữ cảnh trả lời. Nếu hệ thống đưa ra các phản hồi mang tính kích động hoặc phản cảm, nguyên nhân gốc rễ thường là do tài liệu gốc chứa nội dung như vậy.\n\nDo đó, việc **quản lý và làm sạch dữ liệu nguồn (curate upstream data)**, bao gồm cả việc kiểm tra và loại bỏ nội dung độc hại trước khi đưa vào hệ thống, là biện pháp trực tiếp và hiệu quả nhất để ngăn chặn RAG phát sinh các phản hồi không mong muốn.",
       "references": [
         {
           "title": "Databricks AI Gateway and Guardrails",
@@ -234,7 +234,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Vì yêu cầu chính là tối ưu hóa chi phí (cost) và độ trễ (latency) hơn là chất lượng, nên cần chọn một mô hình càng nhỏ càng tốt và có độ dài ngữ cảnh vừa đủ. Đoạn văn bản (chunk) có độ dài tối đa là 512 tokens, do đó, một mô hình có giới hạn context length là 512 là đủ để xử lý. Tùy chọn có mô hình kích thước 0.13GB và chiều nhúng 384 là mô hình nhỏ nhất trong các lựa chọn, giúp giảm thiểu đáng kể tài nguyên tính toán (chi phí) và tăng tốc độ xử lý (độ trễ thấp).",
+      "explanation_vn": "Vì yêu cầu chính là tối ưu hóa chi phí (cost) và độ trễ (latency) hơn là chất lượng, nên cần chọn một mô hình càng nhỏ càng tốt và có độ dài ngữ cảnh vừa đủ.\n\n- Đoạn văn bản (chunk) có độ dài tối đa là **512 tokens**, do đó, một mô hình có giới hạn context length là 512 là đủ để xử lý.\n- Tùy chọn có mô hình kích thước **0.13GB** và chiều nhúng **384** là mô hình nhỏ nhất trong các lựa chọn.\n\nĐiều này giúp giảm thiểu đáng kể tài nguyên tính toán (chi phí) và tăng tốc độ xử lý (độ trễ thấp).",
       "references": [
         {
           "title": "LLM Inference Performance Engineering",
@@ -263,7 +263,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Trong các ứng dụng chuyên ngành như nghiên cứu y học/ung thư, các LLM nhỏ gọn nhưng được huấn luyện chuyên biệt (domain-specific LLM) thường mang lại hiệu suất và chất lượng rất tốt so với các LLM tổng quát khổng lồ, đồng thời có chi phí vận hành (inference) thấp hơn đáng kể. Việc giới hạn tài liệu truy xuất (tùy chọn 0) hoặc giới hạn số truy vấn của người dùng (tùy chọn 2) sẽ làm giảm chất lượng trải nghiệm của khách hàng. Sử dụng LLM lớn nhất (tùy chọn 3) sẽ mâu thuẫn trực tiếp với mục tiêu tiết kiệm chi phí.",
+      "explanation_vn": "Trong các ứng dụng chuyên ngành như nghiên cứu y học/ung thư, các **LLM nhỏ gọn nhưng được huấn luyện chuyên biệt (domain-specific LLM)** thường mang lại hiệu suất và chất lượng rất tốt so với các LLM tổng quát khổng lồ, đồng thời có chi phí vận hành (inference) thấp hơn đáng kể.\n\nCác tùy chọn khác không phù hợp:\n- **Giới hạn tài liệu truy xuất (tùy chọn 0) hoặc giới hạn số truy vấn (tùy chọn 2):** Sẽ làm giảm chất lượng trải nghiệm của khách hàng.\n- **Sử dụng LLM lớn nhất (tùy chọn 3):** Sẽ mâu thuẫn trực tiếp với mục tiêu tiết kiệm chi phí.",
       "references": [
         {
           "title": "Databricks Foundation Model APIs",
@@ -295,7 +295,7 @@
         3,
         4
       ],
-      "explanation_vn": "Mục tiêu là cung cấp cho RAG ngữ cảnh tốt nhất để tìm 'nguyên nhân gốc rễ (root cause)' và 'giải pháp (resolution)'. Bảng `call_detail` chứa thông tin tóm tắt có sẵn các trường `root_cause` và `resolution` từ các cuộc gọi trước, do đó đây là nguồn dữ liệu trực tiếp và vô cùng quý giá. `transcript Volume` chứa bản sao chép văn bản (.txt) nội dung chi tiết của các cuộc trò chuyện, giúp LLM có thể đọc và hiểu ngữ cảnh thực tế của vấn đề cũng như cách hỗ trợ viên đã giải quyết nó. Các nguồn dữ liệu khác chỉ chứa dữ liệu siêu mô tả về thời gian, khách hàng hoặc lịch bảo trì, không mang lại kiến thức trực tiếp về cách giải quyết sự cố.",
+      "explanation_vn": "Mục tiêu là cung cấp cho RAG ngữ cảnh tốt nhất để tìm 'nguyên nhân gốc rễ (root cause)' và 'giải pháp (resolution)'.\n\nHai nguồn dữ liệu phù hợp nhất là:\n- **`call_detail`**: Chứa thông tin tóm tắt có sẵn các trường `root_cause` và `resolution` từ các cuộc gọi trước, do đó đây là nguồn dữ liệu trực tiếp và vô cùng quý giá.\n- **`transcript Volume`**: Chứa bản sao chép văn bản (.txt) nội dung chi tiết của các cuộc trò chuyện, giúp LLM có thể đọc và hiểu ngữ cảnh thực tế của vấn đề cũng như cách hỗ trợ viên đã giải quyết nó.\n\nCác nguồn dữ liệu khác chỉ chứa dữ liệu siêu mô tả về thời gian, khách hàng hoặc lịch bảo trì, không mang lại kiến thức trực tiếp về cách giải quyết sự cố.",
       "references": [
         {
           "title": "Unity Catalog Volumes",
@@ -324,7 +324,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "LangChain là một khung (framework) được thiết kế đặc biệt để phát triển các ứng dụng dựa trên các mô hình ngôn ngữ lớn (LLM). Nó cung cấp các công cụ và thành phần (chains, agents) để dễ dàng kết nối LLM với các nguồn dữ liệu bên ngoài, bộ nhớ, và xây dựng các quy trình công việc (workflow) phức tạp, đa bước. Pandas dùng để xử lý dữ liệu bảng, TensorFlow là framework huấn luyện học sâu (deep learning), và PySpark dùng cho xử lý dữ liệu phân tán quy mô lớn.",
+      "explanation_vn": "**LangChain** là một khung (framework) được thiết kế đặc biệt để phát triển các ứng dụng dựa trên các mô hình ngôn ngữ lớn (LLM). Nó cung cấp các công cụ và thành phần (chains, agents) để dễ dàng kết nối LLM với các nguồn dữ liệu bên ngoài, bộ nhớ, và xây dựng các quy trình công việc (workflow) phức tạp, đa bước.\n\nCác thư viện khác có mục đích sử dụng khác:\n- **Pandas:** Dùng để xử lý dữ liệu bảng.\n- **TensorFlow:** Là framework huấn luyện học sâu (deep learning).\n- **PySpark:** Dùng cho xử lý dữ liệu phân tán quy mô lớn.",
       "references": [
         {
           "title": "LangChain Chains",
@@ -353,7 +353,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Việc liên hệ với chủ sở hữu dữ liệu *sau* khi bạn đã sử dụng mô hình (đã huấn luyện từ dữ liệu của họ) là quá muộn và không phù hợp. Nếu dữ liệu có bản quyền, việc sử dụng nó để huấn luyện mà chưa có sự cho phép đã cấu thành hành vi vi phạm. Tất cả các bước kiểm tra bản quyền, xin phép hoặc xác minh giấy phép mở phải được thực hiện *trước* khi dữ liệu được đưa vào huấn luyện mô hình.",
+      "explanation_vn": "Việc liên hệ với chủ sở hữu dữ liệu *sau* khi bạn đã sử dụng mô hình (đã huấn luyện từ dữ liệu của họ) là quá muộn và không phù hợp. Nếu dữ liệu có bản quyền, việc sử dụng nó để huấn luyện mà chưa có sự cho phép đã cấu thành hành vi vi phạm.\n\nTất cả các bước kiểm tra bản quyền, xin phép hoặc xác minh giấy phép mở phải được thực hiện **trước** khi dữ liệu được đưa vào huấn luyện mô hình.",
       "references": [
         {
           "title": "Open Source Models and Commercial Use",
@@ -382,7 +382,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Lỗi trong đoạn mã ban đầu nằm ở việc khởi tạo `LLMChain` nhưng không truyền đối tượng LLM vào. Lớp `LLMChain` yêu cầu hai tham số bắt buộc để hoạt động: một `llm` (mô hình ngôn ngữ) và một `prompt` (mẫu prompt). Ở tùy chọn 3, đối tượng mô hình ngôn ngữ `OpenAI()` đã được truyền vào tham số `llm=OpenAI()` khi khởi tạo `LLMChain`, giúp hoàn thiện cấu trúc chuỗi (chain) một cách chính xác.",
+      "explanation_vn": "Lỗi trong đoạn mã ban đầu nằm ở việc khởi tạo `LLMChain` nhưng không truyền đối tượng LLM vào. Lớp `LLMChain` yêu cầu hai tham số bắt buộc để hoạt động:\n- Một `llm` (mô hình ngôn ngữ)\n- Một `prompt` (mẫu prompt)\n\nỞ tùy chọn 3, đối tượng mô hình ngôn ngữ `OpenAI()` đã được truyền vào tham số `llm=OpenAI()` khi khởi tạo `LLMChain`, giúp hoàn thiện cấu trúc chuỗi (chain) một cách chính xác.",
       "references": [
         {
           "title": "LangChain LLMChain",
@@ -411,7 +411,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Việc LLM thêm các phần giải thích thừa (ví dụ: 'Dưới đây là tóm tắt dựa trên tài liệu...') là một hiện tượng phổ biến (chatty model). Cách tiếp cận tốt nhất trong Prompt Engineering để điều chỉnh định dạng và văn phong đầu ra của LLM là sử dụng kỹ thuật Few-shot prompting. Bằng cách cung cấp các ví dụ về câu hỏi và câu trả lời lý tưởng (chỉ chứa tóm tắt, không có phần giải thích), LLM sẽ học được khuôn mẫu (pattern) và tuân thủ chặt chẽ định dạng đầu ra mong muốn. Cắt bỏ chuỗi (tùy chọn 0) là cứng nhắc và dễ lỗi. Điều chỉnh chunk size hay quá trình ingestion (1, 2) sẽ không giải quyết được vấn đề về định dạng sinh văn bản.",
+      "explanation_vn": "Việc LLM thêm các phần giải thích thừa (ví dụ: 'Dưới đây là tóm tắt dựa trên tài liệu...') là một hiện tượng phổ biến (chatty model).\n\nCách tiếp cận tốt nhất trong Prompt Engineering để điều chỉnh định dạng và văn phong đầu ra của LLM là sử dụng kỹ thuật **Few-shot prompting**. Bằng cách cung cấp các ví dụ về câu hỏi và câu trả lời lý tưởng (chỉ chứa tóm tắt, không có phần giải thích), LLM sẽ học được khuôn mẫu (pattern) và tuân thủ chặt chẽ định dạng đầu ra mong muốn.\n\nCác cách tiếp cận khác không phù hợp:\n- **Cắt bỏ chuỗi (tùy chọn 0):** Là cứng nhắc và dễ lỗi.\n- **Điều chỉnh chunk size hay quá trình ingestion (tùy chọn 1, 2):** Sẽ không giải quyết được vấn đề về định dạng sinh văn bản.",
       "references": [
         {
           "title": "Prompt Engineering - Few Shot",
@@ -440,7 +440,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Tinh chỉnh (fine-tuning) một LLM bằng dữ liệu nội bộ không phải là một cơ chế kiểm soát truy cập (access control) đáng tin cậy. Mô hình có thể ghi nhớ dữ liệu mật trong quá trình huấn luyện và sau đó vô tình sinh ra (rò rỉ) dữ liệu đó khi người dùng đặt câu hỏi khéo léo. Bạn không thể 'hy vọng' mô hình học được phân quyền truy cập thông qua tinh chỉnh. Các phương pháp đúng đắn để bảo mật là lọc đầu ra (guardrails), áp dụng kiểm soát truy cập trên tài liệu truy xuất ở hệ thống RAG (giới hạn theo người dùng), và sử dụng prompt nghiêm ngặt.",
+      "explanation_vn": "**Tinh chỉnh (fine-tuning)** một LLM bằng dữ liệu nội bộ không phải là một cơ chế kiểm soát truy cập (access control) đáng tin cậy. Mô hình có thể ghi nhớ dữ liệu mật trong quá trình huấn luyện và sau đó vô tình sinh ra (rò rỉ) dữ liệu đó khi người dùng đặt câu hỏi khéo léo.\n\nBạn không thể 'hy vọng' mô hình học được phân quyền truy cập thông qua tinh chỉnh.\n\nCác phương pháp đúng đắn để bảo mật là:\n- Lọc đầu ra (guardrails).\n- Áp dụng kiểm soát truy cập trên tài liệu truy xuất ở hệ thống RAG (giới hạn theo người dùng).\n- Sử dụng prompt nghiêm ngặt.",
       "references": [
         {
           "title": "Vector Search Access Control",
@@ -469,7 +469,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Câu hỏi chỉ định rằng hệ thống cần xuất ra ĐÚNG cụm từ 'In Stock' hoặc 'Out of Stock' phụ thuộc vào tính sẵn có. Tùy chọn 3 là một prompt rõ ràng, mô tả ngữ cảnh, cung cấp quy tắc điều kiện chính xác ('nếu có sẵn -> In Stock', 'nếu không -> Out of Stock'). Tùy chọn 1 yêu cầu mô hình xuất ra định dạng JSON phức tạp, trái với yêu cầu thiết kế là 'chỉ xuất ra thuật ngữ In Stock / Out of Stock' (output ONLY the term). Các tùy chọn 0 và 2 hoàn toàn bỏ qua điều kiện đánh giá.",
+      "explanation_vn": "Câu hỏi chỉ định rằng hệ thống cần xuất ra ĐÚNG cụm từ 'In Stock' hoặc 'Out of Stock' phụ thuộc vào tính sẵn có.\n\n- **Tùy chọn 3** là một prompt rõ ràng, mô tả ngữ cảnh, cung cấp quy tắc điều kiện chính xác ('nếu có sẵn -> In Stock', 'nếu không -> Out of Stock').\n\nCác tùy chọn khác không phù hợp:\n- **Tùy chọn 1:** Yêu cầu mô hình xuất ra định dạng JSON phức tạp, trái với yêu cầu thiết kế là 'chỉ xuất ra thuật ngữ In Stock / Out of Stock' (output ONLY the term).\n- **Tùy chọn 0 và 2:** Hoàn toàn bỏ qua điều kiện đánh giá.",
       "references": [
         {
           "title": "Prompt Engineering for Classification",
@@ -498,7 +498,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Yêu cầu khắt khe về việc 'không truyền dữ liệu cho bên thứ ba' đồng nghĩa với việc không thể sử dụng các mô hình thương mại qua API bên ngoài (như OpenAI GPT-4). Do đó, cần một mô hình mã nguồn mở có thể được tự lưu trữ và chạy nội bộ (self-hosted). Vì chất lượng trả lời là yếu tố tối quan trọng và độ trễ không phải là vấn đề, mô hình Llama2-70B (một mô hình rất lớn và mạnh mẽ) là sự lựa chọn hoàn hảo. Dolly 1.5B là quá nhỏ và sẽ không cho chất lượng tối ưu. BGE-large là một mô hình nhúng (embedding model), không phải là LLM để sinh văn bản.",
+      "explanation_vn": "Yêu cầu khắt khe về việc 'không truyền dữ liệu cho bên thứ ba' đồng nghĩa với việc không thể sử dụng các mô hình thương mại qua API bên ngoài (như OpenAI GPT-4). Do đó, cần một mô hình mã nguồn mở có thể được tự lưu trữ và chạy nội bộ (self-hosted).\n\nVì chất lượng trả lời là yếu tố tối quan trọng và độ trễ không phải là vấn đề, mô hình **Llama2-70B** (một mô hình rất lớn và mạnh mẽ) là sự lựa chọn hoàn hảo.\n\nCác tùy chọn khác không phù hợp:\n- **Dolly 1.5B:** Quá nhỏ và sẽ không cho chất lượng tối ưu.\n- **BGE-large:** Là một mô hình nhúng (embedding model), không phải là LLM để sinh văn bản.",
       "references": [
         {
           "title": "Databricks RAG Best Practices",
@@ -527,7 +527,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Để đảm bảo 'mức độ chính xác đầu ra cao nhất' đối với cấu trúc dữ liệu JSON, việc cung cấp một ví dụ trực quan về định dạng mong muốn (Few-shot prompting) là kỹ thuật hiệu quả nhất. Tùy chọn 1 cung cấp rõ ràng một ví dụ về cấu trúc JSON cần thiết, bao gồm chính xác tên các trường (keys), giúp LLM tuân thủ nghiêm ngặt định dạng mà không tự ý sáng tạo. Các tùy chọn khác mô tả yêu cầu một cách chung chung (Zero-shot) dễ dẫn đến đầu ra không nhất quán.",
+      "explanation_vn": "Để đảm bảo 'mức độ chính xác đầu ra cao nhất' đối với cấu trúc dữ liệu JSON, việc cung cấp một ví dụ trực quan về định dạng mong muốn (**Few-shot prompting**) là kỹ thuật hiệu quả nhất.\n\n**Tùy chọn 1** cung cấp rõ ràng một ví dụ về cấu trúc JSON cần thiết, bao gồm chính xác tên các trường (keys), giúp LLM tuân thủ nghiêm ngặt định dạng mà không tự ý sáng tạo.\n\nCác tùy chọn khác mô tả yêu cầu một cách chung chung (Zero-shot) dễ dẫn đến đầu ra không nhất quán.",
       "references": [
         {
           "title": "LangChain JSON Output Parsers",
@@ -556,7 +556,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Mục tiêu là xử lý 'dữ liệu mới thường xuyên cập nhật' với 'chi phí và công sức thấp nhất'. Kiến trúc RAG (Retrieval-Augmented Generation) mô tả trong tùy chọn 0, sử dụng một bộ truy xuất (retriever) để tìm kiếm các tài liệu mới từ cơ sở dữ liệu và tiêm vào prompt của LLM, là phương pháp hiệu quả và chi phí thấp nhất. Việc cập nhật mô hình thông qua tinh chỉnh (fine-tuning - tùy chọn 1, 3) liên tục đòi hỏi chi phí tính toán cực lớn và công sức kỹ thuật cao. Tùy chọn 2 không có bộ truy xuất nên không thể truy cập dữ liệu mới được xuất bản ngoài dữ liệu huấn luyện sẵn có của mô hình.",
+      "explanation_vn": "**Mục tiêu:** Xử lý 'dữ liệu mới thường xuyên cập nhật' với 'chi phí và công sức thấp nhất'.\n\n- **Kiến trúc RAG** (Retrieval-Augmented Generation) mô tả trong tùy chọn 0, sử dụng một bộ truy xuất (retriever) để tìm kiếm các tài liệu mới từ cơ sở dữ liệu và tiêm vào prompt của LLM, là phương pháp hiệu quả và chi phí thấp nhất.\n\n- Việc cập nhật mô hình thông qua tinh chỉnh (fine-tuning - tùy chọn 1, 3) liên tục đòi hỏi chi phí tính toán cực lớn và công sức kỹ thuật cao.\n\n- **Tùy chọn 2 không** có bộ truy xuất nên không thể truy cập dữ liệu mới được xuất bản ngoài dữ liệu huấn luyện sẵn có của mô hình.",
       "references": [
         {
           "title": "Databricks Vector Search with Delta Sync",
@@ -585,7 +585,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Mô hình agent-based LLM (như ReAct) hoạt động tốt nhất khi bạn cung cấp cho LLM một system prompt mô tả các công cụ (tools) mà nó có thể sử dụng (ví dụ: công cụ RAG cho tài liệu văn bản, công cụ API cho sự kiện, công cụ SQL để truy vấn bảng). Sau đó, agent framework (như LangChain) sẽ điều phối vòng lặp suy luận - hành động (thought-action loop) để tự động quyết định gọi công cụ nào và tổng hợp kết quả để trả lời người dùng. Việc tự code parser (tùy chọn 2) rất phức tạp và không linh hoạt, trong khi nhồi nhét tất cả dữ liệu vào prompt (tùy chọn 3) sẽ vượt quá giới hạn token và gây tốn kém.",
+      "explanation_vn": "Mô hình agent-based LLM (như ReAct) hoạt động tốt nhất khi bạn cung cấp cho LLM một system prompt mô tả các công cụ (tools) mà nó có thể sử dụng (ví dụ: công cụ RAG cho tài liệu văn bản, công cụ API cho sự kiện, công cụ SQL để truy vấn bảng). Sau đó, agent framework (như LangChain) sẽ điều phối vòng lặp suy luận - hành động (thought-action loop) để tự động quyết định gọi công cụ nào và tổng hợp kết quả để trả lời người dùng.\n\n- Việc tự code parser (tùy chọn 2) rất phức tạp và không linh hoạt, trong khi nhồi nhét tất cả dữ liệu vào prompt (tùy chọn 3) sẽ vượt quá giới hạn token và gây tốn kém.",
       "references": [
         {
           "title": "Agent System Prompts on Databricks",
@@ -614,7 +614,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3 vì đây là kiến trúc chuẩn của Hệ thống Retrieval-Augmented Generation (RAG). Quá trình này bao gồm việc chia nhỏ tài liệu lớn thành các đoạn nhỏ (chunking), nhúng chúng vào vector store, sau đó truy xuất các đoạn phù hợp nhất với truy vấn của người dùng và dùng LLM để sinh câu trả lời. Đáp án 0 sai vì tính embedding trung bình cho cả tài liệu sẽ làm mất đi ý nghĩa ngữ nghĩa chi tiết. Đáp án 1 sai vì tóm tắt toàn bộ tài liệu rồi đưa vào LLM sẽ không mang lại thông tin chi tiết và gặp giới hạn về context window. Đáp án 2 sai vì thuật toán ALS thường dùng cho hệ thống gợi ý (Recommendation systems) dựa trên ma trận tương tác, không phù hợp cho truy vấn văn bản ngữ nghĩa.",
+      "explanation_vn": "**Đáp án đúng là 3 vì đây là kiến trúc chuẩn của Hệ thống Retrieval-Augmented Generation (RAG).**\n Quá trình này bao gồm việc chia nhỏ tài liệu lớn thành các đoạn nhỏ (chunking), nhúng chúng vào vector store, sau đó truy xuất các đoạn phù hợp nhất với truy vấn của người dùng và dùng LLM để sinh câu trả lời.\n\n- **Đáp án 0 sai vì** tính embedding trung bình cho cả tài liệu sẽ làm mất đi ý nghĩa ngữ nghĩa chi tiết.\n\n- **Đáp án 1 sai vì** tóm tắt toàn bộ tài liệu rồi đưa vào LLM sẽ không mang lại thông tin chi tiết và gặp giới hạn về context window.\n\n- **Đáp án 2 sai vì** thuật toán ALS thường dùng cho hệ thống gợi ý (Recommendation systems) dựa trên ma trận tương tác, không phù hợp cho truy vấn văn bản ngữ nghĩa.",
       "references": [
         {
           "title": "Databricks RAG and Document Chunking",
@@ -643,7 +643,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0 vì vấn đề nằm ở việc RAG trả về \"thông tin về một sản phẩm không liên quan\", điều này chỉ ra rằng bước truy xuất (Retrieval) đang không hoạt động tốt. Đánh giá chất lượng ngữ cảnh truy xuất sẽ giúp xác định nguyên nhân (ví dụ: kích thước chunk chưa phù hợp, embedding model kém, hoặc chiến lược tìm kiếm). Đáp án 1 sai vì caching chỉ cải thiện tốc độ, không giải quyết vấn đề truy xuất sai. Đáp án 2 sai vì thay đổi LLM chỉ giúp sinh câu trả lời mượt hơn nhưng LLM vẫn sẽ dựa trên ngữ cảnh sai. Đáp án 3 là một giải pháp tiềm năng, nhưng bước đầu tiên và tổng quát nhất cần làm là phải đánh giá chất lượng truy xuất trước khi quyết định thay đổi thuật toán.",
+      "explanation_vn": "**Đáp án đúng là 0 vì vấn đề nằm ở việc RAG trả về \"thông tin về một sản phẩm không liên quan\", điều này chỉ ra rằng bước truy xuất (Retrieval) đang không hoạt động tốt.**\n Đánh giá chất lượng ngữ cảnh truy xuất sẽ giúp xác định nguyên nhân (ví dụ: kích thước chunk chưa phù hợp, embedding model kém, hoặc chiến lược tìm kiếm).\n\n- **Đáp án 1 sai vì** caching chỉ cải thiện tốc độ, không giải quyết vấn đề truy xuất sai.\n\n- **Đáp án 2 sai vì** thay đổi LLM chỉ giúp sinh câu trả lời mượt hơn nhưng LLM vẫn sẽ dựa trên ngữ cảnh sai.\n\n- **Đáp án 3 là** là một giải pháp tiềm năng, nhưng bước đầu tiên và tổng quát nhất cần làm là phải đánh giá chất lượng truy xuất trước khi quyết định thay đổi thuật toán.",
       "references": [
         {
           "title": "Assessing RAG Retrieval Quality",
@@ -672,7 +672,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Các framework \"Safety Guardrail\" (như NeMo Guardrails) được sử dụng để định tuyến, kiểm duyệt và chặn các chủ đề không mong muốn (ví dụ: chính trị, bạo lực) nhằm đảm bảo LLM hoạt động an toàn và trong phạm vi cho phép. Các khái niệm như Contextual hay Compliance Guardrail không phải là tên gọi chuẩn trong các framework Guardrail phổ biến. Security Guardrail thường đề cập đến việc chống lại prompt injection hoặc các lỗ hổng bảo mật, chứ không phải chặn các chủ đề hội thoại cụ thể.",
+      "explanation_vn": "**Đáp án đúng là 0.**\n Các framework \"Safety Guardrail\" (như NeMo Guardrails) được sử dụng để định tuyến, kiểm duyệt và chặn các chủ đề không mong muốn (ví dụ: chính trị, bạo lực) nhằm đảm bảo LLM hoạt động an toàn và trong phạm vi cho phép.\n\n- Các khái niệm như Contextual hay Compliance Guardrail không phải là tên gọi chuẩn trong các framework Guardrail phổ biến.\n\n- Security Guardrail thường đề cập đến việc chống lại prompt injection hoặc các lỗ hổng bảo mật, chứ không phải chặn các chủ đề hội thoại cụ thể.",
       "references": [
         {
           "title": "Databricks Unity AI Gateway Guardrails",
@@ -701,7 +701,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Databricks Vector Search hỗ trợ hai loại index: Delta Sync Index (tự động đồng bộ từ một bảng Delta sang vector index) và Direct Access Index. Để sử dụng tính năng \"managed embeddings\" (Databricks tự động tính toán và cập nhật các vector từ văn bản thô), ta phải sử dụng `create_delta_sync_index` để cấu hình đồng bộ hóa với bảng Delta chứa dữ liệu nguồn. Direct Access Index (Đáp án 2) đòi hỏi người dùng tự quản lý và đẩy dữ liệu đã được nhúng qua API, không hỗ trợ managed embeddings tự động. Đáp án 0 và 3 là các hàm dùng sau khi index đã được tạo.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n Databricks Vector Search hỗ trợ hai loại index: Delta Sync Index (tự động đồng bộ từ một bảng Delta sang vector index) và Direct Access Index. Để sử dụng tính năng \"managed embeddings\" (Databricks tự động tính toán và cập nhật các vector từ văn bản thô), ta phải sử dụng `create_delta_sync_index` để cấu hình đồng bộ hóa với bảng Delta chứa dữ liệu nguồn. Direct Access Index (Đáp án 2) đòi hỏi người dùng tự quản lý và đẩy dữ liệu đã được nhúng qua API, không hỗ trợ managed embeddings tự động.\n\n- **Đáp án 0 và 3 là** là các hàm dùng sau khi index đã được tạo.",
       "references": [
         {
           "title": "VectorSearchClient create_delta_sync_index API",
@@ -730,7 +730,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2. Trong Databricks Model Serving, cách tiêu chuẩn và an toàn nhất để truyền thông tin xác thực (API keys, secrets) vào một mô hình đang chạy (như MLflow Pyfunc) là thông qua biến môi trường (Environment Variables). Người dùng có thể gắn Databricks Secrets vào các biến môi trường này khi cấu hình endpoint. Đáp án 0 sai vì endpoint Model Serving không chạy môi trường Spark thông thường. Đáp án 1 sai vì Feature Store dùng để tra cứu đặc trưng chứ không phải lưu secrets. Đáp án 3 sai vì việc lưu trữ thông tin nhạy cảm dưới dạng plain text vi phạm nghiêm trọng các quy tắc bảo mật.",
+      "explanation_vn": "**Đáp án đúng là 2.**\n Trong Databricks Model Serving, cách tiêu chuẩn và an toàn nhất để truyền thông tin xác thực (API keys, secrets) vào một mô hình đang chạy (như MLflow Pyfunc) là thông qua biến môi trường (Environment Variables). Người dùng có thể gắn Databricks Secrets vào các biến môi trường này khi cấu hình endpoint.\n\n- **Đáp án 0 sai vì** endpoint Model Serving không chạy môi trường Spark thông thường.\n\n- **Đáp án 1 sai vì** Feature Store dùng để tra cứu đặc trưng chứ không phải lưu secrets.\n\n- **Đáp án 3 sai vì** việc lưu trữ thông tin nhạy cảm dưới dạng plain text vi phạm nghiêm trọng các quy tắc bảo mật.",
       "references": [
         {
           "title": "Databricks MLflow Pyfunc Environment Variables",
@@ -759,7 +759,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1 vì mục tiêu là \"xử lý các câu hỏi phổ biến của khách\" và cải thiện quá trình \"đặt bàn trực tuyến\" mà không cần nhân viên can thiệp. Việc dựa vào nhật ký trò chuyện (chat logs) của người dùng làm đầu vào và trích xuất/đề xuất các tùy chọn (buttons) chi tiết đặt bàn sẽ dẫn dắt người dùng đặt bàn tự động, đáp ứng được mục tiêu. Đáp án 0 (tóm tắt) và 2 (phân tích cảm xúc đánh giá) không giúp trả lời và thực hiện tác vụ đặt bàn. Đáp án 3 chỉ hỗ trợ hủy bàn, không giúp ích nhiều cho việc đặt bàn mới (mục tiêu chính).",
+      "explanation_vn": "**Đáp án đúng là 1 vì mục tiêu là \"xử lý các câu hỏi phổ biến của khách\" và cải thiện quá trình \"đặt bàn trực tuyến\" mà không cần nhân viên can thiệp.**\n Việc dựa vào nhật ký trò chuyện (chat logs) của người dùng làm đầu vào và trích xuất/đề xuất các tùy chọn (buttons) chi tiết đặt bàn sẽ dẫn dắt người dùng đặt bàn tự động, đáp ứng được mục tiêu. Đáp án 0 (tóm tắt) và 2 (phân tích cảm xúc đánh giá) không giúp trả lời và thực hiện tác vụ đặt bàn. Đáp án 3 chỉ hỗ trợ hủy bàn, không giúp ích nhiều cho việc đặt bàn mới (mục tiêu chính).",
       "references": [
         {
           "title": "Databricks LLM extraction and AI Functions",
@@ -788,7 +788,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Trong hệ sinh thái Databricks/MLflow, để đưa các logic tiền xử lý và hậu xử lý tùy chỉnh cùng với mô hình AI (như lọc dữ liệu PII, định dạng template), bạn có thể tạo một custom MLflow PyFunc model. Trong PyFunc, bạn định nghĩa quá trình xử lý đầu vào trước khi gọi LLM. Đáp án 0 không khả thi vì kiến trúc LLM không dễ dàng thay đổi ở cấp độ mạng. Đáp án 1 và 2 sai vì tiền xử lý thường rất cần thiết cho việc đảm bảo tính an toàn và cung cấp định dạng chuẩn cho mô hình sinh văn bản.",
+      "explanation_vn": "**Đáp án đúng là 3.**\n Trong hệ sinh thái Databricks/MLflow, để đưa các logic tiền xử lý và hậu xử lý tùy chỉnh cùng với mô hình AI (như lọc dữ liệu PII, định dạng template), bạn có thể tạo một custom MLflow PyFunc model. Trong PyFunc, bạn định nghĩa quá trình xử lý đầu vào trước khi gọi LLM.\n\n- **Đáp án 0 không** khả thi vì kiến trúc LLM không dễ dàng thay đổi ở cấp độ mạng.\n\n- **Đáp án 1 và 2 sai vì** tiền xử lý thường rất cần thiết cho việc đảm bảo tính an toàn và cung cấp định dạng chuẩn cho mô hình sinh văn bản.",
       "references": [
         {
           "title": "MLflow Pyfunc Prompt Preprocessing",
@@ -817,7 +817,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Việc sử dụng các bộ lọc an toàn (safety filters / guardrails) để đánh giá prompt trước khi xử lý nhằm từ chối các câu lệnh độc hại (như prompt injection, toxic content) là phương pháp tiêu chuẩn trong bảo mật ứng dụng GenAI. Đáp án 1 và 3 không giải quyết được vấn đề bảo mật. Đáp án 2 rất nguy hiểm vì tiếp tục xử lý lệnh độc hại có thể dẫn đến việc tiết lộ thông tin hệ thống hoặc bị chiếm quyền (Jailbreak).",
+      "explanation_vn": "**Đáp án đúng là 0.**\n Việc sử dụng các bộ lọc an toàn (safety filters / guardrails) để đánh giá prompt trước khi xử lý nhằm từ chối các câu lệnh độc hại (như prompt injection, toxic content) là phương pháp tiêu chuẩn trong bảo mật ứng dụng GenAI.\n\n- **Đáp án 1 và 3 không** giải quyết được vấn đề bảo mật. Đáp án 2 rất nguy hiểm vì tiếp tục xử lý lệnh độc hại có thể dẫn đến việc tiết lộ thông tin hệ thống hoặc bị chiếm quyền (Jailbreak).",
       "references": [
         {
           "title": "Databricks AI Gateway Safety Filters",
@@ -846,7 +846,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Mặc dù câu hỏi có đề cập đến 'mức độ an toàn' (safety), trong bài toán dịch thuật, an toàn đồng nghĩa với việc giữ đúng ý nghĩa ban đầu mà không tạo ra 'ảo giác' (hallucinations), không thêm bớt nội dung làm sai lệch ý đồ. Do đó 'tính chính xác và mức độ liên quan' (Accuracy and relevance) là thước đo quan trọng nhất để đánh giá xem bản dịch có đáng tin cậy không. Đáp án 0 không liên quan đến dịch ngôn ngữ tự nhiên. Đáp án 2 (độ trễ) là về hiệu năng, không phải đánh giá định tính nội dung.",
+      "explanation_vn": "**Đáp án đúng là 3.**\n Mặc dù câu hỏi có đề cập đến 'mức độ an toàn' (safety), trong bài toán dịch thuật, an toàn đồng nghĩa với việc giữ đúng ý nghĩa ban đầu mà không tạo ra 'ảo giác' (hallucinations), không thêm bớt nội dung làm sai lệch ý đồ.\n\n- Do đó 'tính chính xác và mức độ liên quan' (Accuracy and relevance) là thước đo quan trọng nhất để đánh giá xem bản dịch có đáng tin cậy không.\n\n- **Đáp án 0 không** liên quan đến dịch ngôn ngữ tự nhiên. Đáp án 2 (độ trễ) là về hiệu năng, không phải đánh giá định tính nội dung.",
       "references": [
         {
           "title": "Databricks LLM-as-a-Judge Evaluation",
@@ -875,7 +875,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1 vì triệu chứng \"đau đầu dữ dội và chóng mặt\" (severe headaches and dizziness) tiềm ẩn rủi ro đột quỵ hoặc các tình trạng thần kinh nghiêm trọng, được phân loại là một trường hợp cấp cứu y tế (medical emergency). Theo quy tắc được đặt ra trong mô tả, đối với các trường hợp khẩn cấp, chatbot phải lập tức hướng dẫn bệnh nhân gọi cho cấp cứu. Các câu trả lời 0, 2 và 3 có thể làm chậm trễ việc điều trị y tế khẩn cấp, vi phạm nguyên tắc an toàn nghiêm ngặt đối với ứng dụng y tế.",
+      "explanation_vn": "**Đáp án đúng là 1 vì triệu chứng \"đau đầu dữ dội và chóng mặt\" (severe headaches and dizziness) tiềm ẩn rủi ro đột quỵ hoặc các tình trạng thần kinh nghiêm trọng, được phân loại là một trường hợp cấp cứu y tế (medical emergency).**\n\n- Theo quy tắc được đặt ra trong mô tả, đối với các trường hợp khẩn cấp, chatbot phải lập tức hướng dẫn bệnh nhân gọi cho cấp cứu.\n\n- **Các câu trả lời 0, 2 và 3** có thể làm chậm trễ việc điều trị y tế khẩn cấp, vi phạm nguyên tắc an toàn nghiêm ngặt đối với ứng dụng y tế.",
       "references": [
         {
           "title": "Databricks Healthcare Chatbot and Compliance",
@@ -907,7 +907,7 @@
         1,
         3
       ],
-      "explanation_vn": "Đáp án đúng là 1 và 3. Lỗi này xảy ra do số lượng token của prompt vượt quá giới hạn cửa sổ ngữ cảnh. Để giảm kích thước của prompt mà không phải xử lý lại toàn bộ dữ liệu, cách trực tiếp nhất là cấu hình giảm số lượng đoạn văn bản (top-K) được truy xuất từ cơ sở dữ liệu vector đưa vào prompt (Đáp án 3). Ngoài ra, ở nhiều API LLM, giới hạn token áp dụng cho TỔNG SỐ token (prompt + max_tokens). Do đó, việc giảm giá trị max_tokens sẽ giải phóng không gian cho phép prompt dài hơn (Đáp án 1). Đổi mô hình embedding (Đáp án 0) không thay đổi số token văn bản. Giảm kích thước chunk (Đáp án 2) đòi hỏi phải chia lại và nhúng lại toàn bộ dữ liệu rất tốn kém. Huấn luyện lại bằng ALiBi (Đáp án 4) vi phạm yêu cầu 'không thay đổi mô hình'.",
+      "explanation_vn": "**Đáp án đúng là 1 và 3.**\n Lỗi này xảy ra do số lượng token của prompt vượt quá giới hạn cửa sổ ngữ cảnh. Để giảm kích thước của prompt mà không phải xử lý lại toàn bộ dữ liệu, cách trực tiếp nhất là cấu hình giảm số lượng đoạn văn bản (top-K) được truy xuất từ cơ sở dữ liệu vector đưa vào prompt (Đáp án 3).\n\n- Ngoài ra, ở nhiều API LLM, giới hạn token áp dụng cho TỔNG SỐ token (prompt + max_tokens). Do đó, việc giảm giá trị max_tokens sẽ giải phóng không gian cho phép prompt dài hơn (Đáp án 1).\n\n- Đổi mô hình embedding (Đáp án 0) không thay đổi số token văn bản.\n\n- Giảm kích thước chunk (Đáp án 2) đòi hỏi phải chia lại và nhúng lại toàn bộ dữ liệu rất tốn kém.\n\n- Huấn luyện lại bằng ALiBi (Đáp án 4) vi phạm yêu cầu 'không thay đổi mô hình'.",
       "references": [
         {
           "title": "Managing LLM Token Limits in Databricks",
@@ -936,7 +936,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Việc tăng tài nguyên tính toán (compute) chỉ giúp hệ thống chạy nhanh hơn (giảm độ trễ) chứ không liên quan đến việc nâng cao chất lượng hay mức độ liên quan của nội dung trả lời đối với lĩnh vực tài chính. Các đáp án 0, 2 và 3 đều cung cấp các cơ chế kiểm soát trực tiếp nội dung đầu ra (guardrails, profanity filters, manual reviews), qua đó thực sự giúp đảm bảo câu trả lời được kiểm duyệt, liên quan và an toàn.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n Việc tăng tài nguyên tính toán (compute) chỉ giúp hệ thống chạy nhanh hơn (giảm độ trễ) chứ không liên quan đến việc nâng cao chất lượng hay mức độ liên quan của nội dung trả lời đối với lĩnh vực tài chính.\n\n- **Các đáp án 0, 2 và 3 đều** cung cấp các cơ chế kiểm soát trực tiếp nội dung đầu ra (guardrails, profanity filters, manual reviews), qua đó thực sự giúp đảm bảo câu trả lời được kiểm duyệt, liên quan và an toàn.",
       "references": [
         {
           "title": "Databricks Unity AI Gateway Content Filters",
@@ -965,7 +965,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2. Trong các ứng dụng RAG, cách tốt nhất để đảm bảo mô hình không tạo câu trả lời cho các chủ đề ngoài luồng là thiết lập các quy tắc rõ ràng trong system prompt. Chỉ dẫn LLM chỉ trả lời các câu hỏi về \"SnoPen AI\" và từ chối các câu hỏi không liên quan sẽ hoạt động như một lớp bảo vệ (guardrail). Đáp án 0 sai vì việc đưa nội dung rác vào vector store làm tăng chi phí và dễ gây nhiễu. Đáp án 1 sai vì nó cung cấp thông tin sai lệch cho LLM, dễ dẫn đến ảo giác (hallucination). Đáp án 3 sai vì nhồi tất cả vào một chunk sẽ phá vỡ giới hạn độ dài ngữ cảnh.",
+      "explanation_vn": "**Đáp án đúng là 2.**\n Trong các ứng dụng RAG, cách tốt nhất để đảm bảo mô hình không tạo câu trả lời cho các chủ đề ngoài luồng là thiết lập các quy tắc rõ ràng trong system prompt. Chỉ dẫn LLM chỉ trả lời các câu hỏi về \"SnoPen AI\" và từ chối các câu hỏi không liên quan sẽ hoạt động như một lớp bảo vệ (guardrail).\n\n- **Đáp án 0 sai vì** việc đưa nội dung rác vào vector store làm tăng chi phí và dễ gây nhiễu.\n\n- **Đáp án 1 sai vì** nó cung cấp thông tin sai lệch cho LLM, dễ dẫn đến ảo giác (hallucination).\n\n- **Đáp án 3 sai vì** nhồi tất cả vào một chunk sẽ phá vỡ giới hạn độ dài ngữ cảnh.",
       "references": [
         {
           "title": "RAG System Prompts and Grounding",
@@ -994,7 +994,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Để Databricks Vector Search hoạt động tối ưu, dữ liệu trong bảng Delta nguồn cần có định dạng: mỗi bản ghi (hàng) là một đoạn văn bản (chunk) riêng biệt, kèm theo một khóa chính (primary key/ID duy nhất). Do dataframe đang chứa một mảng các chunks trong một hàng, ta phải làm phẳng (flatten/explode) dataframe đó để mỗi hàng chứa đúng một chunk, cấp ID duy nhất trước khi ghi vào Delta Table. Đáp án 2 thiếu bước flatten khiến Vector Search khó ánh xạ ở cấp độ chunk. Đáp án 3 sử dụng tệp JSON rời rạc sẽ làm mất đi hiệu năng và khả năng đồng bộ tự động của Databricks Delta Sync.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n Để Databricks Vector Search hoạt động tối ưu, dữ liệu trong bảng Delta nguồn cần có định dạng: mỗi bản ghi (hàng) là một đoạn văn bản (chunk) riêng biệt, kèm theo một khóa chính (primary key/ID duy nhất). Do dataframe đang chứa một mảng các chunks trong một hàng, ta phải làm phẳng (flatten/explode) dataframe đó để mỗi hàng chứa đúng một chunk, cấp ID duy nhất trước khi ghi vào Delta Table. Đáp án 2 thiếu bước flatten khiến Vector Search khó ánh xạ ở cấp độ chunk. Đáp án 3 sử dụng tệp JSON rời rạc sẽ làm mất đi hiệu năng và khả năng đồng bộ tự động của Databricks Delta Sync.",
       "references": [
         {
           "title": "Exploding Arrays for Vector Search in Databricks",
@@ -1023,7 +1023,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Hệ thống RAG bao gồm hai giai đoạn quan trọng: Truy xuất (Retrieval) và Sinh câu trả lời (Generation). Để biết chính xác cần cải thiện ở đâu, bạn phải đánh giá cả hai thành phần một cách độc lập (dùng metrics cho truy xuất như Recall/NDCG và metrics cho sinh văn bản như tính trung thực/mức độ liên quan). Việc giám tuyển tập dữ liệu chuẩn và sử dụng công cụ MLflow Evaluate là cách tiếp cận bài bản nhất. Đáp án 0 sai vì cosine similarity giữa câu trả lời và câu hỏi không phản ánh độ chính xác thực tế. Đáp án 3 chỉ xem xét đầu ra cuối cùng mà không cô lập được nguyên nhân do truy xuất sai hay sinh văn bản kém.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n Hệ thống RAG bao gồm hai giai đoạn quan trọng: Truy xuất (Retrieval) và Sinh câu trả lời (Generation). Để biết chính xác cần cải thiện ở đâu, bạn phải đánh giá cả hai thành phần một cách độc lập (dùng metrics cho truy xuất như Recall/NDCG và metrics cho sinh văn bản như tính trung thực/mức độ liên quan).\n\n- Việc giám tuyển tập dữ liệu chuẩn và sử dụng công cụ MLflow Evaluate là cách tiếp cận bài bản nhất.\n\n- **Đáp án 0 sai vì** cosine similarity giữa câu trả lời và câu hỏi không phản ánh độ chính xác thực tế. Đáp án 3 chỉ xem xét đầu ra cuối cùng mà không cô lập được nguyên nhân do truy xuất sai hay sinh văn bản kém.",
       "references": [
         {
           "title": "MLflow Evaluation for RAG Pipelines",
@@ -1052,7 +1052,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Trong hệ sinh thái Databricks, quy trình triển khai (MLOps) chuẩn mực và tự động nhất là sử dụng MLflow để ghi log (log model) trong lúc huấn luyện, sau đó đăng ký (register) trực tiếp vào Unity Catalog, và cuối cùng dùng Databricks Model Serving để tạo endpoint một cách liền mạch. Đáp án 0 tạo thêm bước trung gian pickle thủ công không cần thiết và dễ gây lỗi. Đáp án 2 và 3 là các cách tiếp cận triển khai hoàn toàn thủ công bên ngoài hệ sinh thái, làm mất đi lợi thế quản lý tự động, bảo mật và khả năng co giãn của Databricks.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n Trong hệ sinh thái Databricks, quy trình triển khai (MLOps) chuẩn mực và tự động nhất là sử dụng MLflow để ghi log (log model) trong lúc huấn luyện, sau đó đăng ký (register) trực tiếp vào Unity Catalog, và cuối cùng dùng Databricks Model Serving để tạo endpoint một cách liền mạch. Đáp án 0 tạo thêm bước trung gian pickle thủ công không cần thiết và dễ gây lỗi.\n\n- **Đáp án 2 và 3 là** là các cách tiếp cận triển khai hoàn toàn thủ công bên ngoài hệ sinh thái, làm mất đi lợi thế quản lý tự động, bảo mật và khả năng co giãn của Databricks.",
       "references": [
         {
           "title": "Deploying MLflow Models to Unity Catalog",
@@ -1081,7 +1081,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Trên Databricks, Foundation Model API cung cấp hai tùy chọn: Pay-per-token (trả tiền theo số lượng token thực tế sử dụng) và Provisioned Throughput (trả chi phí cố định thuê máy chủ chuyên dụng theo giờ). Khi ứng dụng có lưu lượng truy cập thấp, Pay-per-token là phương pháp tối ưu chi phí tốt nhất vì bạn chỉ trả tiền cho những gì bạn thực sự dùng. Provisioned Throughput chỉ hiệu quả khi có lưu lượng lớn và ổn định. Các đáp án khác không phải là giải pháp tốt nhất cho bài toán tối ưu chi phí cung cấp cơ sở hạ tầng (infrastructure tier).",
+      "explanation_vn": "Đáp án đúng là **1**.\n\nTrên Databricks, Foundation Model API cung cấp hai tùy chọn:\n- **Pay-per-token** (trả tiền theo số lượng token thực tế sử dụng).\n- **Provisioned Throughput** (trả chi phí cố định thuê máy chủ chuyên dụng theo giờ).\n\nKhi ứng dụng có lưu lượng truy cập thấp, Pay-per-token là phương pháp tối ưu chi phí tốt nhất vì bạn chỉ trả tiền cho những gì bạn thực sự dùng. Provisioned Throughput chỉ hiệu quả khi có lưu lượng lớn và ổn định.\n\nCác đáp án khác không phải là giải pháp tốt nhất cho bài toán tối ưu chi phí cung cấp cơ sở hạ tầng (infrastructure tier).",
       "references": [
         {
           "title": "Databricks Foundation Model APIs: Pay-per-token",
@@ -1114,7 +1114,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Bài toán yêu cầu LLM tạo đầu ra với một phong cách đặc biệt (thơ haiku). Việc \"chuẩn hóa\" (neutralize) tài liệu đầu vào thành văn bản trung tính sẽ làm mất đi các đặc trưng ngôn ngữ và không đóng góp gì vào việc dạy cho mô hình cách sinh thơ haiku ở đầu ra. Các đáp án 0 (Prompt Engineering), 2 (Few-shot prompting), và 3 (Fine-tuning) đều là những phương pháp chuẩn mực và cực kỳ hiệu quả để hướng dẫn LLM chuyển đổi phong cách văn bản (style transfer).",
+      "explanation_vn": "Đáp án đúng là **1**.\n\nBài toán yêu cầu LLM tạo đầu ra với một phong cách đặc biệt (thơ haiku). Việc \"chuẩn hóa\" (neutralize) tài liệu đầu vào thành văn bản trung tính sẽ làm mất đi các đặc trưng ngôn ngữ và không đóng góp gì vào việc dạy cho mô hình cách sinh thơ haiku ở đầu ra.\n\nCác đáp án khác đều là những phương pháp chuẩn mực và cực kỳ hiệu quả để hướng dẫn LLM chuyển đổi phong cách văn bản (style transfer):\n- **Đáp án 0** (Prompt Engineering)\n- **Đáp án 2** (Few-shot prompting)\n- **Đáp án 3** (Fine-tuning)",
       "references": [
         {
           "title": "Style Transfer in Large Language Models",
@@ -1143,7 +1143,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Để giải quyết các tác vụ phức tạp đòi hỏi lấy dữ liệu từ nhiều nguồn khác biệt tại thời gian thực (như truy vấn dữ liệu có cấu trúc từ bảng SQL/Delta và tìm kiếm dữ liệu phi cấu trúc trên Web), kiến trúc Agentic (Tác tử AI) là phù hợp nhất. Agent được cung cấp các công cụ (Tools/Function Calling), cho phép nó tự động suy luận và quyết định khi nào cần gọi truy vấn SQL và khi nào cần Search Web. Đáp án 2 sai vì giá cổ phiếu thay đổi liên tục, đưa vào vector store không khả thi và không thể đáp ứng tính real-time. Các đáp án 0 và 1 mang tính tuyến tính cố định, không linh hoạt trong mọi truy vấn của người dùng.",
+      "explanation_vn": "Đáp án đúng là **3**.\n\nĐể giải quyết các tác vụ phức tạp đòi hỏi lấy dữ liệu từ nhiều nguồn khác biệt tại thời gian thực (như truy vấn dữ liệu có cấu trúc từ bảng SQL/Delta và tìm kiếm dữ liệu phi cấu trúc trên Web), kiến trúc **Agentic (Tác tử AI)** là phù hợp nhất.\n\nAgent được cung cấp các công cụ (Tools/Function Calling), cho phép nó tự động suy luận và quyết định khi nào cần gọi truy vấn SQL và khi nào cần Search Web.\n\nTại sao các đáp án khác không phù hợp?\n- **Đáp án 2** sai vì giá cổ phiếu thay đổi liên tục, đưa vào vector store không khả thi và không thể đáp ứng tính real-time.\n- **Đáp án 0 và 1** mang tính tuyến tính cố định, không linh hoạt trong mọi truy vấn của người dùng.",
       "references": [
         {
           "title": "Introduction to Mosaic AI Agent Framework",
@@ -1172,7 +1172,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Trong môi trường trò chơi trực tuyến, người chơi kỳ vọng có những trải nghiệm phong phú và tự nhiên. Sự đa dạng của các phản hồi (Diversity of responses) từ chatbot (ví dụ: các đoạn hội thoại NPC không bị rập khuôn) sẽ làm tăng tính sống động và thú vị, từ đó cải thiện mức độ tương tác (engagement) và tỉ lệ giữ chân (retention). Đáp án 0 (tính ngẫu nhiên) nếu quá cao sẽ tạo ra nội dung vô nghĩa hoặc ảo giác. Đáp án 3 (sự lặp lại) gây nhàm chán. Đáp án 2 (thiếu liên quan) làm hỏng hoàn toàn trải nghiệm.",
+      "explanation_vn": "Đáp án đúng là **1**.\n\nTrong môi trường trò chơi trực tuyến, người chơi kỳ vọng có những trải nghiệm phong phú và tự nhiên. Sự đa dạng của các phản hồi (Diversity of responses) từ chatbot (ví dụ: các đoạn hội thoại NPC không bị rập khuôn) sẽ làm tăng tính sống động và thú vị, từ đó cải thiện mức độ tương tác (engagement) và tỉ lệ giữ chân (retention).\n\nTại sao các đáp án khác không phù hợp?\n- **Đáp án 0** (tính ngẫu nhiên) nếu quá cao sẽ tạo ra nội dung vô nghĩa hoặc ảo giác.\n- **Đáp án 3** (sự lặp lại) gây nhàm chán.\n- **Đáp án 2** (thiếu liên quan) làm hỏng hoàn toàn trải nghiệm.",
       "references": [
         {
           "title": "Enhancing NPC Interactions with LLMs",
@@ -1201,7 +1201,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Trong kiến trúc RAG tiêu chuẩn, câu hỏi của người dùng trước tiên sẽ đi qua một **Mô hình nhúng (embedding model)** để chuyển đổi thành vector. Sau đó, vector này được dùng để **Tìm kiếm vector (vector search)** trong cơ sở dữ liệu nhằm truy xuất các tài liệu liên quan (ngữ cảnh). Ngữ cảnh này được kết hợp với câu hỏi gốc để tạo thành một **Prompt được tăng cường ngữ cảnh (context-augmented prompt)**. Cuối cùng, prompt này được gửi tới một **LLM tạo phản hồi (response-generating LLM)** để sinh ra câu trả lời cuối cùng. Các trình tự khác bị sai thứ tự logic của RAG.",
+      "explanation_vn": "Trong kiến trúc RAG tiêu chuẩn, câu hỏi của người dùng sẽ đi qua các trình tự sau:\n\n- **Bước 1**: Đi qua một **Mô hình nhúng (embedding model)** để chuyển đổi thành vector.\n- **Bước 2**: Vector này được dùng để **Tìm kiếm vector (vector search)** trong cơ sở dữ liệu nhằm truy xuất các tài liệu liên quan (ngữ cảnh).\n- **Bước 3**: Ngữ cảnh này được kết hợp với câu hỏi gốc để tạo thành một **Prompt được tăng cường ngữ cảnh (context-augmented prompt)**.\n- **Bước 4**: Cuối cùng, prompt này được gửi tới một **LLM tạo phản hồi (response-generating LLM)** để sinh ra câu trả lời cuối cùng.\n\nCác trình tự khác bị sai thứ tự logic của RAG.",
       "references": [
         {
           "title": "RAG architecture on Databricks",
@@ -1230,7 +1230,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "**CodeLlama-34B** là một mô hình ngôn ngữ lớn được thiết kế chuyên biệt và tinh chỉnh cho các tác vụ lập trình (sinh mã, giải thích mã). Do yêu cầu hỗ trợ nhiều ngôn ngữ lập trình và ưu tiên chất lượng mã nguồn, CodeLlama-34B là lựa chọn tốt nhất. Llama2-70b và MPT-7b là các mô hình ngôn ngữ tổng quát, không tối ưu cho mã bằng CodeLlama. BGE-large là một mô hình nhúng (embedding model), không phải mô hình sinh ngôn ngữ.",
+      "explanation_vn": "**CodeLlama-34B** là một mô hình ngôn ngữ lớn được thiết kế chuyên biệt và tinh chỉnh cho các tác vụ lập trình (sinh mã, giải thích mã).\n\nDo yêu cầu hỗ trợ nhiều ngôn ngữ lập trình và ưu tiên chất lượng mã nguồn, CodeLlama-34B là lựa chọn tốt nhất.\n\nTại sao các đáp án khác không phù hợp?\n- **Llama2-70b** và **MPT-7b** là các mô hình ngôn ngữ tổng quát, không tối ưu cho mã bằng CodeLlama.\n- **BGE-large** là một mô hình nhúng (embedding model), không phải mô hình sinh ngôn ngữ.",
       "references": [
         {
           "title": "Code Llama on Databricks Marketplace",
@@ -1259,7 +1259,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Thư viện **unstructured** là công cụ mã nguồn mở phổ biến nhất được thiết kế chuyên biệt để phân tích cú pháp và trích xuất dữ liệu từ các định dạng tài liệu phi cấu trúc phức tạp như PDF (chứa văn bản, bảng, hình ảnh) với ít dòng mã nhất, rất phù hợp cho 파이프라인 tiền xử lý dữ liệu RAG. Flask dùng để xây dựng web API. BeautifulSoup dùng để phân tích cú pháp HTML/XML từ các trang web. Numpy dùng cho tính toán ma trận và mảng.",
+      "explanation_vn": "Thư viện **unstructured** là công cụ mã nguồn mở phổ biến nhất được thiết kế chuyên biệt để phân tích cú pháp và trích xuất dữ liệu từ các định dạng tài liệu phi cấu trúc phức tạp như PDF (chứa văn bản, bảng, hình ảnh) với ít dòng mã nhất, rất phù hợp cho pipeline tiền xử lý dữ liệu RAG.\n\nCông dụng của các thư viện khác:\n- **Flask** dùng để xây dựng web API.\n- **BeautifulSoup** dùng để phân tích cú pháp HTML/XML từ các trang web.\n- **Numpy** dùng cho tính toán ma trận và mảng.",
       "references": [
         {
           "title": "Unstructured Data Preprocessing for RAG",
@@ -1288,7 +1288,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Quy trình **LLM đa bước với định tuyến (routing)** là giải pháp lý tưởng cho kịch bản này. LLM đóng vai trò như một bộ phân loại (router) ở bước đầu tiên để xác định ý định của người dùng, sau đó chuyển hướng truy vấn đến các quy trình hoặc mô hình phù hợp nhất (như Text-to-SQL để tra cứu cơ sở dữ liệu sự kiện, hoặc một luồng thanh toán API cho việc mua vé). Các phương án khác không giải quyết được yêu cầu định tuyến động dựa trên nhiều mục đích của người dùng.",
+      "explanation_vn": "Quy trình **LLM đa bước với định tuyến (routing)** là giải pháp lý tưởng cho kịch bản này.\n\nLLM đóng vai trò như một bộ phân loại (router) ở bước đầu tiên để xác định ý định của người dùng, sau đó chuyển hướng truy vấn đến các quy trình hoặc mô hình phù hợp nhất (như Text-to-SQL để tra cứu cơ sở dữ liệu sự kiện, hoặc một luồng thanh toán API cho việc mua vé).\n\nCác phương án khác không giải quyết được yêu cầu định tuyến động dựa trên nhiều mục đích của người dùng.",
       "references": [
         {
           "title": "Multi-Step LLM Workflows and Routing",
@@ -1317,7 +1317,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "**DBRX** là mô hình có cửa sổ ngữ cảnh lên tới 32k token, được Databricks phát triển theo kiến trúc MoE (Mixture of Experts) và rất phù hợp để xử lý một lượng lớn ngữ cảnh, giúp cho các tác vụ RAG hoặc phân tích tài liệu dài hiệu quả. Llama2-70B có cửa sổ ngữ cảnh gốc nhỏ hơn nhiều (4k token). MPT-30B có cửa sổ 8k. DistilBERT là mô hình nhỏ chỉ xử lý 512 token.",
+      "explanation_vn": "**DBRX** là mô hình có cửa sổ ngữ cảnh lên tới 32k token, được Databricks phát triển theo kiến trúc MoE (Mixture of Experts) và rất phù hợp để xử lý một lượng lớn ngữ cảnh, giúp cho các tác vụ RAG hoặc phân tích tài liệu dài hiệu quả.\n\nCác mô hình khác:\n- **Llama2-70B** có cửa sổ ngữ cảnh gốc nhỏ hơn nhiều (4k token).\n- **MPT-30B** có cửa sổ 8k.\n- **DistilBERT** là mô hình nhỏ chỉ xử lý 512 token.",
       "references": [
         {
           "title": "DBRX: A New Standard for Efficient Open LLMs",
@@ -1346,7 +1346,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "**whisper-large-v3** là một mô hình mã nguồn mở của OpenAI chuyên dùng cho tác vụ nhận dạng giọng nói tự động (speech-to-text) và có chất lượng/tốc độ rất tốt. Các mô hình như DBRX, MPT-30B và Llama-2 là các mô hình ngôn ngữ dạng văn bản (text-to-text LLMs), không thể xử lý trực tiếp âm thanh để chuyển thành văn bản.",
+      "explanation_vn": "**whisper-large-v3** là một mô hình mã nguồn mở của OpenAI chuyên dùng cho tác vụ nhận dạng giọng nói tự động (speech-to-text) và có chất lượng/tốc độ rất tốt.\n\nCác mô hình như **DBRX**, **MPT-30B** và **Llama-2** là các mô hình ngôn ngữ dạng văn bản (text-to-text LLMs), không thể xử lý trực tiếp âm thanh để chuyển thành văn bản.",
       "references": [
         {
           "title": "Deploying Whisper-large-v3 on Databricks",
@@ -1375,7 +1375,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Trên Databricks, **Bảng Suy luận (Inference Tables)** tự động ghi lại dữ liệu về các yêu cầu đầu vào (requests) và các dự đoán/phản hồi đầu ra (responses) từ các điểm cuối Model Serving vào một bảng Delta Lake để giám sát và phân tích, giúp theo dõi chất lượng và gỡ lỗi dễ dàng. Các tính năng khác không có chức năng log lại payload của endpoint.",
+      "explanation_vn": "Trên Databricks, **Bảng Suy luận (Inference Tables)** tự động ghi lại dữ liệu về các yêu cầu đầu vào (requests) và các dự đoán/phản hồi đầu ra (responses) từ các điểm cuối Model Serving vào một bảng Delta Lake để giám sát và phân tích, giúp theo dõi chất lượng và gỡ lỗi dễ dàng.\n\nCác tính năng khác không có chức năng log lại payload của endpoint.",
       "references": [
         {
           "title": "Inference Tables for Model Serving Monitoring",
@@ -1404,7 +1404,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Để đánh giá độ chính xác của tìm kiếm vector (như LSH và HNSW), cách chuẩn xác nhất là tính **độ tương đồng Cosine (Cosine Similarity)** giữa vector nhúng của câu truy vấn và vector nhúng của các kết quả được truy xuất. Phương pháp nào mang lại điểm cosine trung bình cao hơn (với các tài liệu thực sự liên quan) sẽ chính xác hơn về mặt ngữ nghĩa. BLEU và ROUGE là các thang đo dành cho tác vụ dịch máy và tóm tắt văn bản. Khoảng cách Levenshtein đo khoảng cách ký tự (chính tả), không phản ánh khoảng cách ngữ nghĩa.",
+      "explanation_vn": "Để đánh giá độ chính xác của tìm kiếm vector (như LSH và HNSW), cách chuẩn xác nhất là tính **độ tương đồng Cosine (Cosine Similarity)** giữa vector nhúng của câu truy vấn và vector nhúng của các kết quả được truy xuất. Phương pháp nào mang lại điểm cosine trung bình cao hơn (với các tài liệu thực sự liên quan) sẽ chính xác hơn về mặt ngữ nghĩa.\n\nCác thang đo khác:\n- **BLEU** và **ROUGE** là các thang đo dành cho tác vụ dịch máy và tóm tắt văn bản.\n- **Khoảng cách Levenshtein** đo khoảng cách ký tự (chính tả), không phản ánh khoảng cách ngữ nghĩa.",
       "references": [
         {
           "title": "Evaluating Vector Search Accuracy with Cosine Similarity",
@@ -1433,7 +1433,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Hành động an toàn và thực tế nhất là **chỉ sử dụng dữ liệu có giấy phép mở rõ ràng (như MIT, Apache 2.0, Creative Commons) và tuân thủ chặt chẽ các điều khoản của giấy phép đó**. Việc xin phép từng tác giả (phương án 3) là không khả thi về mặt quy mô khi huấn luyện LLM. Việc sử dụng dữ liệu công khai (phương án 4) là sai lầm vì không phải dữ liệu công khai nào cũng được phép sử dụng thương mại (nhiều dữ liệu vẫn có bản quyền). Phương án 2 cũng sai vì LLM vẫn có thể tái tạo nguyên văn dữ liệu có bản quyền.",
+      "explanation_vn": "Hành động an toàn và thực tế nhất là **chỉ sử dụng dữ liệu có giấy phép mở rõ ràng** (như MIT, Apache 2.0, Creative Commons) và tuân thủ chặt chẽ các điều khoản của giấy phép đó.\n\nTại sao các phương án khác không khả thi?\n- Việc xin phép từng tác giả (phương án 3) là không khả thi về mặt quy mô khi huấn luyện LLM.\n- Việc sử dụng dữ liệu công khai (phương án 4) là sai lầm vì không phải dữ liệu công khai nào cũng được phép sử dụng thương mại (nhiều dữ liệu vẫn có bản quyền).\n- Phương án 2 cũng sai vì LLM vẫn có thể tái tạo nguyên văn dữ liệu có bản quyền.",
       "references": [
         {
           "title": "Legal Risks and Open Licensing in LLM Training",
@@ -1462,7 +1462,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Prompt số 2 (**phân loại cuộc gọi là 'Success' nếu sản phẩm có sẵn và 'Fail' nếu không có sẵn**) mô tả chính xác yêu cầu bài toán (phân loại tính trạng còn hàng). Các prompt khác đo lường việc cuộc gọi có được giải quyết hay không, thay vì tính trạng sẵn có của sản phẩm. Một prompt có JSON sai chính tả chữ 'Succes' và cũng không định nghĩa rõ khi nào trả về Success/Fail dựa vào tình trạng sản phẩm.",
+      "explanation_vn": "Prompt số 2 (**phân loại cuộc gọi là 'Success' nếu sản phẩm có sẵn và 'Fail' nếu không có sẵn**) mô tả chính xác yêu cầu bài toán (phân loại tính trạng còn hàng).\n\nTại sao các prompt khác không phù hợp?\n- Các prompt khác đo lường việc cuộc gọi có được giải quyết hay không, thay vì tính trạng sẵn có của sản phẩm.\n- Một prompt có JSON sai chính tả chữ 'Succes' và cũng không định nghĩa rõ khi nào trả về Success/Fail dựa vào tình trạng sản phẩm.",
       "references": [
         {
           "title": "Prompt Engineering for Instruction Following",
@@ -1494,7 +1494,7 @@
         0,
         1
       ],
-      "explanation_vn": "Để một ứng dụng chat LLM có khả năng truy xuất kiến thức, nó cần **Vector Stores** để lưu trữ và tìm kiếm các tài liệu theo độ tương đồng ngữ nghĩa. Để có bộ nhớ ngữ cảnh trong suốt cuộc trò chuyện, nó cần **Conversation Buffer Memory** để lưu trữ lịch sử tin nhắn. Các công cụ ngoại vi (External tools) dùng cho mô hình Agent. Chat loaders và React Components không phải là thành phần chain cốt lõi cho RAG có bộ nhớ.",
+      "explanation_vn": "Để một ứng dụng chat LLM có đầy đủ các tính năng cơ bản, nó cần:\n- **Vector Stores**: Để lưu trữ và tìm kiếm các tài liệu theo độ tương đồng ngữ nghĩa (truy xuất kiến thức).\n- **Conversation Buffer Memory**: Để lưu trữ lịch sử tin nhắn, tạo bộ nhớ ngữ cảnh trong suốt cuộc trò chuyện.\n\nCác thành phần khác:\n- Các công cụ ngoại vi (External tools) dùng cho mô hình Agent.\n- Chat loaders và React Components không phải là thành phần chain cốt lõi cho RAG có bộ nhớ.",
       "references": [
         {
           "title": "LangChain Conversational Retrieval Chain",
@@ -1523,7 +1523,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Databricks Vector Search yêu cầu dữ liệu nguồn nằm trong một bảng Delta Table. Dữ liệu này cần được trải phẳng (**một chunk văn bản mỗi dòng**), và mỗi chunk cần một khóa chính (**định danh duy nhất**). Hơn nữa, để Vector Search có thể tự động đồng bộ hóa khi có dữ liệu mới, tính năng **Change Data Feed (CDF)** phải được kích hoạt trên bảng Delta đầu ra. Phương án cuối thiếu thao tác bật Change Data Feed.",
+      "explanation_vn": "Databricks Vector Search yêu cầu dữ liệu nguồn nằm trong một bảng Delta Table.\n\nDữ liệu này cần phải đáp ứng các điều kiện:\n- Được **trải phẳng (flatten)** (mỗi chunk văn bản nằm trên một dòng).\n- Mỗi chunk cần một khóa chính (**định danh duy nhất**).\n- Tính năng **Change Data Feed (CDF)** phải được kích hoạt trên bảng Delta đầu ra để Vector Search có thể tự động đồng bộ hóa khi có dữ liệu mới.\n\nPhương án cuối cùng bị thiếu thao tác bật Change Data Feed.",
       "references": [
         {
           "title": "Databricks Vector Search with Change Data Feed",
@@ -1552,7 +1552,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "**CodeLlama-34b-Instruct-hf** là mô hình thuộc họ Llama được tinh chỉnh đặc biệt cho việc lập trình và hiểu mã nguồn. Hậu tố 'Instruct' cho thấy nó có khả năng làm theo chỉ dẫn (hỏi đáp lập trình). Do đó, nó mang lại kết quả tốt nhất 'out of the box' cho tác vụ code generation so với các mô hình ngôn ngữ chung chung như Mixtral, Llama-2 hay MPT.",
+      "explanation_vn": "**CodeLlama-34b-Instruct-hf** là mô hình thuộc họ Llama được tinh chỉnh đặc biệt cho việc lập trình và hiểu mã nguồn.\n\nHậu tố 'Instruct' cho thấy nó có khả năng làm theo chỉ dẫn (hỏi đáp lập trình). Do đó, nó mang lại kết quả tốt nhất 'out of the box' cho tác vụ code generation so với các mô hình ngôn ngữ chung chung như Mixtral, Llama-2 hay MPT.",
       "references": [
         {
           "title": "CodeLlama-34b-Instruct for Code Generation",
@@ -1581,7 +1581,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "**ReAct (Reasoning and Acting)** là framework được thiết kế chuyên biệt để cho phép các LLM Agent thực hiện luồng tư duy xen kẽ với hành động. LLM sẽ suy nghĩ về tình huống hiện tại (Reason), quyết định gọi một công cụ bên ngoài (Act), nhận kết quả trả về từ công cụ (Observation), và tiếp tục quá trình này cho đến khi giải quyết được vấn đề phức tạp. Kỹ thuật này tốt hơn nhiều so với CoT thuần túy vì nó có khả năng linh hoạt truy xuất thông tin thực tế từ công cụ.",
+      "explanation_vn": "**ReAct (Reasoning and Acting)** là framework được thiết kế chuyên biệt để cho phép các LLM Agent thực hiện luồng tư duy xen kẽ với hành động.\n\nQuá trình này diễn ra như sau:\n1. LLM suy nghĩ về tình huống hiện tại (**Reason**).\n2. Quyết định gọi một công cụ bên ngoài (**Act**).\n3. Nhận kết quả trả về từ công cụ (**Observation**).\n4. Tiếp tục quá trình này cho đến khi giải quyết được vấn đề phức tạp.\n\nKỹ thuật này tốt hơn nhiều so với CoT thuần túy vì nó có khả năng linh hoạt truy xuất thông tin thực tế từ công cụ.",
       "references": [
         {
           "title": "ReAct Framework for LLM Reasoning",
@@ -1610,7 +1610,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Trong ứng dụng RAG, các truy vấn (câu hỏi) quá dài dòng, không có trọng tâm thường làm giảm độ chính xác của quá trình tìm kiếm vector, vì các từ dư thừa có thể làm lệch vị trí vector nhúng, khiến mô hình trả về sai tài liệu. Do đó, **yêu cầu câu hỏi dài dòng là một việc làm không hữu ích**. Ba thành phần còn lại (LLM tạo phản hồi, Embedding model, Vector database) là cấu trúc cốt lõi của kiến trúc RAG.",
+      "explanation_vn": "Trong ứng dụng RAG, các truy vấn (câu hỏi) quá dài dòng, không có trọng tâm thường làm giảm độ chính xác của quá trình tìm kiếm vector, vì các từ dư thừa có thể làm lệch vị trí vector nhúng, khiến mô hình trả về sai tài liệu.\n\nDo đó, **yêu cầu câu hỏi dài dòng là một việc làm không hữu ích**.\n\nBa thành phần còn lại (LLM tạo phản hồi, Embedding model, Vector database) là cấu trúc cốt lõi của kiến trúc RAG.",
       "references": [
         {
           "title": "Retrieval Augmented Generation (RAG) on Databricks",
@@ -1639,7 +1639,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Trong thực tiễn Prompt Engineering, cách nhanh chóng, hiệu quả và ít tốn kém nhất để thay đổi giọng điệu (tone/style) của mô hình ngôn ngữ là **sửa đổi system prompt hoặc user prompt để hướng dẫn rõ ràng giọng điệu mong muốn**. Fine-tuning (phương án 2) cũng giải quyết được vấn đề nhưng rất tốn kém thời gian và chi phí, không phải là lựa chọn ưu tiên. Loại bỏ các tiêu đề sai (phương án 1) không cải thiện khả năng sinh văn bản của LLM.",
+      "explanation_vn": "Trong thực tiễn Prompt Engineering, cách nhanh chóng, hiệu quả và ít tốn kém nhất để thay đổi giọng điệu (tone/style) của mô hình ngôn ngữ là **sửa đổi system prompt hoặc user prompt để hướng dẫn rõ ràng giọng điệu mong muốn**.\n\n- Fine-tuning (phương án 2) cũng giải quyết được vấn đề nhưng rất tốn kém thời gian và chi phí, không phải là lựa chọn ưu tiên.\n- Loại bỏ các tiêu đề sai (phương án 1) không cải thiện khả năng sinh văn bản của LLM.",
       "references": [
         {
           "title": "Prompt engineering on Databricks",
@@ -1668,7 +1668,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Thực tiễn tốt nhất (Best Practice) cho bài toán đa nhiệm xử lý luồng logic là **sử dụng kỹ thuật chaining (chuỗi)**. Đầu tiên, sử dụng một cuộc gọi LLM nhanh để phân loại cảm xúc của câu hỏi. Sau đó, dựa vào phân loại này, có thể linh hoạt nhúng kết quả vào system prompt của một tác vụ LLM tiếp theo để hướng dẫn cách sinh câu trả lời phù hợp (Ví dụ: kích hoạt persona 'Nhân viên xoa dịu' nếu người dùng tức giận). Hồi quy tuyến tính (Linear Regression) không phù hợp cho phân loại văn bản phức tạp. Encoder-only (như BERT) chỉ tốt cho phân loại chứ không sinh được văn bản.",
+      "explanation_vn": "Thực tiễn tốt nhất (Best Practice) cho bài toán đa nhiệm xử lý luồng logic là **sử dụng kỹ thuật chaining (chuỗi)**.\n\n- Đầu tiên, sử dụng một cuộc gọi LLM nhanh để phân loại cảm xúc của câu hỏi.\n- Sau đó, dựa vào phân loại này, có thể linh hoạt nhúng kết quả vào system prompt của một tác vụ LLM tiếp theo để hướng dẫn cách sinh câu trả lời phù hợp (Ví dụ: kích hoạt persona 'Nhân viên xoa dịu' nếu người dùng tức giận).\n\nCác phương pháp khác:\n- Hồi quy tuyến tính (Linear Regression) không phù hợp cho phân loại văn bản phức tạp.\n- Encoder-only (như BERT) chỉ tốt cho phân loại chứ không sinh được văn bản.",
       "references": [
         {
           "title": "Mosaic AI Agent Framework",
@@ -1697,7 +1697,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Trong các môi trường sản xuất hiện đại (như Databricks), **sử dụng xác thực máy-với-máy (M2M) qua OAuth bằng Service Principal** được coi là best practice. Khác với các Personal Access Tokens (PAT) tĩnh có thể bị lộ và cần phải quản lý lịch luân chuyển, OAuth M2M cấp phát các token tự động hết hạn, đảm bảo tính an toàn cao, và không gắn liền với tài khoản của người dùng thực.",
+      "explanation_vn": "Trong các môi trường sản xuất hiện đại (như Databricks), **sử dụng xác thực máy-với-máy (M2M) qua OAuth bằng Service Principal** được coi là best practice.\n\nKhác với các Personal Access Tokens (PAT) tĩnh có thể bị lộ và cần phải quản lý lịch luân chuyển, OAuth M2M cấp phát các token tự động hết hạn, đảm bảo tính an toàn cao, và không gắn liền với tài khoản của người dùng thực.",
       "references": [
         {
           "title": "OAuth machine-to-machine (M2M) authentication",
@@ -1729,7 +1729,7 @@
         0,
         3
       ],
-      "explanation_vn": "Khi kết quả RAG bị thiếu thông tin hoặc bộ truy xuất không lấy đủ ngữ cảnh từ các tài liệu có cấu trúc dài, vấn đề thường nằm ở chiến lược phân đoạn dữ liệu (chunking strategy). **Tăng kích thước chunk** sẽ giúp bao hàm nhiều ngữ cảnh và thông tin đầy đủ hơn trong mỗi truy xuất. **Thêm tiêu đề vào đầu mỗi chunk** giúp mô hình nhúng giữ được ngữ cảnh toàn cục của đoạn văn bản đó thuộc phần nào của chính sách, giúp tìm kiếm vector chính xác hơn. Việc chia nhỏ theo câu sẽ làm vỡ vụn ngữ cảnh. Thay đổi mô hình LLM đã được thử và chứng minh là không hiệu quả trong trường hợp này.",
+      "explanation_vn": "Khi kết quả RAG bị thiếu thông tin hoặc bộ truy xuất không lấy đủ ngữ cảnh từ các tài liệu có cấu trúc dài, vấn đề thường nằm ở chiến lược phân đoạn dữ liệu (chunking strategy).\n\n- **Tăng kích thước chunk** sẽ giúp bao hàm nhiều ngữ cảnh và thông tin đầy đủ hơn trong mỗi truy xuất.\n- **Thêm tiêu đề vào đầu mỗi chunk** giúp mô hình nhúng giữ được ngữ cảnh toàn cục của đoạn văn bản đó thuộc phần nào của chính sách, giúp tìm kiếm vector chính xác hơn.\n\nViệc chia nhỏ theo câu sẽ làm vỡ vụn ngữ cảnh. Thay đổi mô hình LLM đã được thử và chứng minh là không hiệu quả trong trường hợp này.",
       "references": [
         {
           "title": "Build an unstructured data pipeline for RAG",
@@ -1758,7 +1758,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Với nền tảng Databricks và Foundation Model API, **sử dụng Llama Guard (một mô hình chuyên biệt cho kiểm duyệt độ an toàn)** là phương pháp tiêu chuẩn, tối ưu và tốn ít công sức nhất để thiết lập AI Guardrails. Nó có thể đánh giá tính an toàn của cả input (prompt) và output (response) một cách tự động. Việc dùng Regex không hiệu quả do ngôn ngữ tự nhiên rất đa dạng. Thêm các lệnh gọi LLM chung chung (prompt-based safety check) sẽ làm tăng độ trễ và không đáng tin cậy bằng mô hình chuyên biệt.",
+      "explanation_vn": "Với nền tảng Databricks và Foundation Model API, **sử dụng Llama Guard (một mô hình chuyên biệt cho kiểm duyệt độ an toàn)** là phương pháp tiêu chuẩn, tối ưu và tốn ít công sức nhất để thiết lập AI Guardrails.\n\nNó có thể đánh giá tính an toàn của cả input (prompt) và output (response) một cách tự động.\n\nCác phương pháp khác:\n- Việc dùng Regex không hiệu quả do ngôn ngữ tự nhiên rất đa dạng.\n- Thêm các lệnh gọi LLM chung chung (prompt-based safety check) sẽ làm tăng độ trễ và không đáng tin cậy bằng mô hình chuyên biệt.",
       "references": [
         {
           "title": "Model Serving - Databricks",
@@ -1787,7 +1787,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2 (tùy chọn thứ ba) vì nó sử dụng kỹ thuật \"few-shot prompting\" (cung cấp một ví dụ minh họa cụ thể về định dạng JSON mong muốn). Việc cung cấp cấu trúc mẫu như `{\"date\":..., \"sender_email\":..., \"order_id\":...}` sẽ giúp LLM đảm bảo định dạng đầu ra luôn ổn định và chính xác nhất, tránh các lỗi phổ biến về khóa (keys) hay cú pháp khi so với việc chỉ yêu cầu \"trả về định dạng JSON\" một cách chung chung (zero-shot) như các tùy chọn khác.",
+      "explanation_vn": "Đáp án đúng là 2 (tùy chọn thứ ba) vì nó sử dụng kỹ thuật \"few-shot prompting\" (cung cấp một ví dụ minh họa cụ thể về định dạng JSON mong muốn).\n\nViệc cung cấp cấu trúc mẫu như `{\"date\":..., \"sender_email\":..., \"order_id\":...}` sẽ giúp LLM đảm bảo định dạng đầu ra luôn ổn định và chính xác nhất, tránh các lỗi phổ biến về khóa (keys) hay cú pháp khi so với việc chỉ yêu cầu \"trả về định dạng JSON\" một cách chung chung (zero-shot) như các tùy chọn khác.",
       "references": [
         {
           "title": "Prompt engineering on Databricks",
@@ -1816,7 +1816,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0 (BLEU). BLEU (Bilingual Evaluation Understudy) là thang đo tiêu chuẩn và phổ biến nhất được thiết kế chuyên biệt để đánh giá chất lượng của các hệ thống dịch máy tự động bằng cách so sánh chuỗi n-gram của bản dịch từ mô hình với bản dịch tham chiếu do con người thực hiện. ROUGE thường được dùng cho tóm tắt văn bản (summarization). NDCG là thang đo cho bài toán xếp hạng (ranking/search). RECALL là một độ đo chung cho phân loại và truy xuất, không phản ánh trực tiếp chất lượng dịch thuật.",
+      "explanation_vn": "Đáp án đúng là 0 (BLEU).\n\nBLEU (Bilingual Evaluation Understudy) là thang đo tiêu chuẩn và phổ biến nhất được thiết kế chuyên biệt để đánh giá chất lượng của các hệ thống dịch máy tự động bằng cách so sánh chuỗi n-gram của bản dịch từ mô hình với bản dịch tham chiếu do con người thực hiện.\n\nCác thang đo khác:\n- ROUGE thường được dùng cho tóm tắt văn bản (summarization).\n- NDCG là thang đo cho bài toán xếp hạng (ranking/search).\n- RECALL là một độ đo chung cho phân loại và truy xuất, không phản ánh trực tiếp chất lượng dịch thuật.",
       "references": [
         {
           "title": "MLflow LLM Evaluate",
@@ -1845,7 +1845,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Bằng cách sử dụng \"few-shot prompting\", kỹ sư có thể cung cấp vài ví dụ minh họa cụ thể nơi đầu vào là mô tả nấm và đầu ra CHỈ LÀ nhãn phân loại (không có lý luận). LLM sẽ học theo khuôn mẫu này và loại bỏ các phần giải thích thừa. Các phương pháp zero-shot hoặc system prompt yêu cầu sự ngắn gọn đôi khi vẫn khiến mô hình sinh thêm các từ như \"Nhãn là...\" hoặc một chút giải thích, trong khi few-shot thiết lập một giới hạn cấu trúc đầu ra vô cùng nghiêm ngặt.",
+      "explanation_vn": "Đáp án đúng là 0.\n\nBằng cách sử dụng \"few-shot prompting\", kỹ sư có thể cung cấp vài ví dụ minh họa cụ thể nơi đầu vào là mô tả nấm và đầu ra CHỈ LÀ nhãn phân loại (không có lý luận). LLM sẽ học theo khuôn mẫu này và loại bỏ các phần giải thích thừa.\n\nCác phương pháp zero-shot hoặc system prompt yêu cầu sự ngắn gọn đôi khi vẫn khiến mô hình sinh thêm các từ như \"Nhãn là...\" hoặc một chút giải thích, trong khi few-shot thiết lập một giới hạn cấu trúc đầu ra vô cùng nghiêm ngặt.",
       "references": [
         {
           "title": "Prompt engineering on Databricks",
@@ -1874,7 +1874,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Mục tiêu là \"tự động xử lý các câu hỏi phổ biến\" và \"duy trì sự tương tác cá nhân hóa\". Tùy chọn 0 đáp ứng cả hai: Đầu vào từ nhật ký trò chuyện (chat logs) chứa lịch sử thực tế của khách hàng. Việc nhóm và tóm tắt theo từng người dùng cho phép AI hiểu được bối cảnh cá nhân của khách hàng đó, từ đó đưa ra câu trả lời cá nhân hóa. Tùy chọn 1 không có sự cá nhân hóa. Tùy chọn 2 và 3 liên quan đến đánh giá (reviews), không trực tiếp giải quyết vấn đề hỗ trợ dịch vụ khách hàng theo thời gian thực (inquiries).",
+      "explanation_vn": "Đáp án đúng là 0. Mục tiêu là \"tự động xử lý các câu hỏi phổ biến\" và \"duy trì sự tương tác cá nhân hóa\".\n\nTùy chọn 0 đáp ứng cả hai:\n- Đầu vào từ nhật ký trò chuyện (chat logs) chứa lịch sử thực tế của khách hàng.\n- Việc nhóm và tóm tắt theo từng người dùng cho phép AI hiểu được bối cảnh cá nhân của khách hàng đó, từ đó đưa ra câu trả lời cá nhân hóa.\n\nCác tùy chọn khác:\n- Tùy chọn 1 không có sự cá nhân hóa.\n- Tùy chọn 2 và 3 liên quan đến đánh giá (reviews), không trực tiếp giải quyết vấn đề hỗ trợ dịch vụ khách hàng theo thời gian thực (inquiries).",
       "references": [
         {
           "title": "AI Functions on Databricks",
@@ -1903,7 +1903,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2. Trong các ứng dụng RAG (Retrieval-Augmented Generation), chất lượng tìm kiếm phụ thuộc rất lớn vào khả năng nắm bắt ngữ nghĩa chuyên ngành của mô hình nhúng. Một mô hình nhúng được tinh chỉnh hoặc huấn luyện trên lĩnh vực (domain) tương ứng sẽ biểu diễn vector tốt hơn cho các thuật ngữ và khái niệm đặc thù, dẫn đến kết quả truy xuất (retrieval) chính xác hơn nhiều so với việc chỉ chọn mô hình đứng đầu trên bảng xếp hạng chung (MTEB) vốn chỉ được đánh giá trên dữ liệu tổng quát.",
+      "explanation_vn": "Đáp án đúng là 2.\n\nTrong các ứng dụng RAG (Retrieval-Augmented Generation), chất lượng tìm kiếm phụ thuộc rất lớn vào khả năng nắm bắt ngữ nghĩa chuyên ngành của mô hình nhúng.\n\nMột mô hình nhúng được tinh chỉnh hoặc huấn luyện trên lĩnh vực (domain) tương ứng sẽ biểu diễn vector tốt hơn cho các thuật ngữ và khái niệm đặc thù, dẫn đến kết quả truy xuất (retrieval) chính xác hơn nhiều so với việc chỉ chọn mô hình đứng đầu trên bảng xếp hạng chung (MTEB) vốn chỉ được đánh giá trên dữ liệu tổng quát.",
       "references": [
         {
           "title": "Retrieval Augmented Generation (RAG) on Databricks",
@@ -1932,7 +1932,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Databricks khuyến nghị mạnh mẽ việc sử dụng Models in Unity Catalog để chia sẻ mô hình xuyên suốt các workspace. Vì Unity Catalog đóng vai trò là một kho dữ liệu/mô hình quản trị tập trung (centralized governance), việc log thẳng model vào Unity Catalog và chỉ cấp quyền `READ` cho workspace dev là phương pháp an toàn nhất, tự nhiên nhất, tránh việc phải sao chép dữ liệu phức tạp (như option 2, 3) hoặc dựa vào các công cụ bên ngoài (option 0) gây tăng chi phí và rủi ro bảo mật.",
+      "explanation_vn": "Đáp án đúng là 1. Databricks khuyến nghị mạnh mẽ việc sử dụng Models in Unity Catalog để chia sẻ mô hình xuyên suốt các workspace.\n\nVì Unity Catalog đóng vai trò là một kho dữ liệu/mô hình quản trị tập trung (centralized governance), việc log thẳng model vào Unity Catalog và chỉ cấp quyền `READ` cho workspace dev là phương pháp an toàn nhất, tự nhiên nhất.\n\nCách này tránh việc phải sao chép dữ liệu phức tạp (như option 2, 3) hoặc dựa vào các công cụ bên ngoài (option 0) gây tăng chi phí và rủi ro bảo mật.",
       "references": [
         {
           "title": "Manage model lifecycle in Unity Catalog",
@@ -1961,7 +1961,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0 (MMLU score). MMLU là một benchmark dùng để đánh giá năng lực suy luận tổng quát của mô hình nền tảng (foundation model) trên nhiều lĩnh vực kiến thức trong quá trình nghiên cứu hoặc trước khi phát hành. Nó không phải là một thước đo đo lường hiệu suất hoạt động hay mức độ hiệu quả của ứng dụng kinh doanh cụ thể trong môi trường sản xuất. Ngược lại, thông lượng (throughput), tính chính xác của phản hồi (accuracy), và độ trễ (latency) là các metric bắt buộc phải theo dõi trong production.",
+      "explanation_vn": "Đáp án đúng là 0 (MMLU score).\n\nMMLU là một benchmark dùng để đánh giá năng lực suy luận tổng quát của mô hình nền tảng (foundation model) trên nhiều lĩnh vực kiến thức trong quá trình nghiên cứu hoặc trước khi phát hành. Nó không phải là một thước đo đo lường hiệu suất hoạt động hay mức độ hiệu quả của ứng dụng kinh doanh cụ thể trong môi trường sản xuất.\n\nNgược lại, thông lượng (throughput), tính chính xác của phản hồi (accuracy), và độ trễ (latency) là các metric bắt buộc phải theo dõi trong production.",
       "references": [
         {
           "title": "Mosaic AI Agent Evaluation",
@@ -1990,7 +1990,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Lịch chiếu phim yêu cầu truy xuất dữ liệu có cấu trúc với độ trễ siêu thấp (low latency) theo khóa tra cứu (ở đây là vị trí rạp chiếu). Trên Databricks, Feature Serving là công cụ tốt nhất cho mục đích này vì nó cung cấp API truy xuất với độ trễ mili-giây được đồng bộ trực tiếp (online lookup) từ bảng Delta. Sử dụng text-to-SQL (tùy chọn 1) sẽ chậm và kém ổn định. Đưa ra CSDL bên ngoài (tùy chọn 2) đòi hỏi nhiều công sức bảo trì hạ tầng phụ. Đưa vào cơ sở dữ liệu Vector (tùy chọn 3) không phù hợp vì lịch chiếu phim là tìm kiếm khớp thông tin cấu trúc dạng khóa-giá trị, chứ không phải tìm kiếm ngữ nghĩa mờ (semantic search).",
+      "explanation_vn": "Đáp án đúng là 0.\n\nLịch chiếu phim yêu cầu truy xuất dữ liệu có cấu trúc với độ trễ siêu thấp (low latency) theo khóa tra cứu (ở đây là vị trí rạp chiếu).\n\nTrên Databricks, Feature Serving là công cụ tốt nhất cho mục đích này vì nó cung cấp API truy xuất với độ trễ mili-giây được đồng bộ trực tiếp (online lookup) từ bảng Delta.\n\nCác phương án khác:\n- Sử dụng text-to-SQL (tùy chọn 1) sẽ chậm và kém ổn định.\n- Đưa ra CSDL bên ngoài (tùy chọn 2) đòi hỏi nhiều công sức bảo trì hạ tầng phụ.\n- Đưa vào cơ sở dữ liệu Vector (tùy chọn 3) không phù hợp vì lịch chiếu phim là tìm kiếm khớp thông tin cấu trúc dạng khóa-giá trị, chứ không phải tìm kiếm ngữ nghĩa mờ (semantic search).",
       "references": [
         {
           "title": "Databricks Feature Serving",
@@ -2019,7 +2019,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Để xử lý các tài liệu y tế với mức độ am hiểu chuyên sâu, các LLM tổng quát (general-purpose) có thể không đủ vốn từ vựng hoặc kiến thức lĩnh vực chuyên môn (domain knowledge). Vì thế, bước quan trọng nhất là đọc Data Card và Model Card trên HuggingFace để đảm bảo rằng tập dữ liệu huấn luyện hoặc finetuning của mô hình có bao gồm dữ liệu chuyên ngành y tế (như PubMed, dữ liệu lâm sàng). Các tiêu chí tải xuống nhiều hay dòng mô hình nổi tiếng không đảm bảo hiệu suất tốt ở một domain đặc thù.",
+      "explanation_vn": "Đáp án đúng là 3.\n\nĐể xử lý các tài liệu y tế với mức độ am hiểu chuyên sâu, các LLM tổng quát (general-purpose) có thể không đủ vốn từ vựng hoặc kiến thức lĩnh vực chuyên môn (domain knowledge).\n\nVì thế, bước quan trọng nhất là đọc Data Card và Model Card trên HuggingFace để đảm bảo rằng tập dữ liệu huấn luyện hoặc finetuning của mô hình có bao gồm dữ liệu chuyên ngành y tế (như PubMed, dữ liệu lâm sàng).\n\nCác tiêu chí tải xuống nhiều hay dòng mô hình nổi tiếng không đảm bảo hiệu suất tốt ở một domain đặc thù.",
       "references": [
         {
           "title": "Hugging Face Model Hub",
@@ -2048,7 +2048,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2 (Cách KHÔNG nên làm). Trong RAG, mục tiêu của việc quản lý tài liệu nguồn là tối ưu hóa kho lưu trữ để vector search có thể tìm ra những context hữu ích nhất. Đưa dữ liệu rác (quảng cáo, thể thao) vào database chỉ làm loãng dữ liệu, tốn chi phí lưu trữ, tăng thời gian truy xuất và có nguy cơ trả về context sai lệnh khiến LLM sinh ra thông tin sai (hallucination). LLM có đủ kiến thức chung để biết từ chối các câu hỏi không đúng chuyên môn nhờ vào system prompt (như tùy chọn 0), không cần thiết phải \"dạy\" nó cách từ chối bằng cách nạp rác vào vector database.",
+      "explanation_vn": "Đáp án đúng là 2 (Cách KHÔNG nên làm).\n\nTrong RAG, mục tiêu của việc quản lý tài liệu nguồn là tối ưu hóa kho lưu trữ để vector search có thể tìm ra những context hữu ích nhất. Đưa dữ liệu rác (quảng cáo, thể thao) vào database chỉ làm loãng dữ liệu, tốn chi phí lưu trữ, tăng thời gian truy xuất và có nguy cơ trả về context sai lệnh khiến LLM sinh ra thông tin sai (hallucination).\n\nLLM có đủ kiến thức chung để biết từ chối các câu hỏi không đúng chuyên môn nhờ vào system prompt (như tùy chọn 0), không cần thiết phải \"dạy\" nó cách từ chối bằng cách nạp rác vào vector database.",
       "references": [
         {
           "title": "Build an unstructured data pipeline for RAG",
@@ -2077,7 +2077,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. `beautifulsoup` (cụ thể là BeautifulSoup4) là thư viện tiêu chuẩn trong Python được thiết kế chuyên biệt cho việc phân tích cú pháp (parsing) các tài liệu HTML/XML và trích xuất dữ liệu, text một cách rất ngắn gọn và dễ dàng. `pytesseract` được dùng để nhận dạng ký tự quang học (OCR) trên hình ảnh, `pypdf2` dùng cho việc đọc file PDF, và `numpy` là thư viện tính toán toán học không liên quan đến xử lý HTML.",
+      "explanation_vn": "Đáp án đúng là 3.\n\n- `beautifulsoup` (cụ thể là BeautifulSoup4) là thư viện tiêu chuẩn trong Python được thiết kế chuyên biệt cho việc phân tích cú pháp (parsing) các tài liệu HTML/XML và trích xuất dữ liệu, text một cách rất ngắn gọn và dễ dàng.\n- `pytesseract` được dùng để nhận dạng ký tự quang học (OCR) trên hình ảnh.\n- `pypdf2` dùng cho việc đọc file PDF.\n- `numpy` là thư viện tính toán toán học không liên quan đến xử lý HTML.",
       "references": [
         {
           "title": "Build an unstructured data pipeline for RAG",
@@ -2106,7 +2106,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Để xây dựng, đánh giá và triển khai RAG, quy trình đúng là: (1) Chuẩn bị dữ liệu (Ingest & Index vào Vector database). (2) Xây dựng quy trình cho ứng dụng: nhận câu hỏi, truy xuất ngữ cảnh từ DB, và đưa vào LLM để sinh câu trả lời. (3) Sau khi quy trình RAG đã hoạt động, kỹ sư sẽ thực hiện các truy vấn thử nghiệm để lấy phản hồi từ hệ thống, từ đó *Đánh giá (Evaluate)* chất lượng của hệ thống RAG tổng thể. (4) Cuối cùng, nếu kết quả đánh giá đạt yêu cầu, ứng dụng mới được *Triển khai (Deploy)* lên Model Serving.",
+      "explanation_vn": "Đáp án đúng là 3.\n\nĐể xây dựng, đánh giá và triển khai RAG, quy trình đúng là:\n- (1) Chuẩn bị dữ liệu (Ingest & Index vào Vector database).\n- (2) Xây dựng quy trình cho ứng dụng: nhận câu hỏi, truy xuất ngữ cảnh từ DB, và đưa vào LLM để sinh câu trả lời.\n- (3) Sau khi quy trình RAG đã hoạt động, kỹ sư sẽ thực hiện các truy vấn thử nghiệm để lấy phản hồi từ hệ thống, từ đó *Đánh giá (Evaluate)* chất lượng của hệ thống RAG tổng thể.\n- (4) Cuối cùng, nếu kết quả đánh giá đạt yêu cầu, ứng dụng mới được *Triển khai (Deploy)* lên Model Serving.",
       "references": [
         {
           "title": "Retrieval Augmented Generation (RAG) on Databricks",
@@ -2135,7 +2135,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Trong quản lý API và Model Serving của Databricks (hoặc các nền tảng đám mây khác), cách thực hành tốt nhất (best practice) và mạnh mẽ nhất để ngăn chặn việc lạm dụng hoặc vô ý gửi quá nhiều yêu cầu là cấu hình \"Rate Limiting\" (giới hạn tốc độ) trực tiếp ở cấp độ cấu hình của endpoint. Việc sử dụng prompt engineering (0) không giải quyết được vấn đề ở cấp hệ thống. Yêu cầu xét duyệt mã (1) gây tắc nghẽn quy trình phát triển. Xây dựng pyfunc proxy (2) là tạo thêm độ phức tạp không cần thiết khi hệ thống đã có sẵn tính năng rate limiting mặc định.",
+      "explanation_vn": "**Đáp án đúng là 3.**\n\nTrong quản lý API và Model Serving của Databricks (hoặc các nền tảng đám mây khác), cách thực hành tốt nhất (best practice) và mạnh mẽ nhất để ngăn chặn việc lạm dụng hoặc vô ý gửi quá nhiều yêu cầu là cấu hình \"Rate Limiting\" (giới hạn tốc độ) trực tiếp ở cấp độ cấu hình của endpoint.\n\n- Việc sử dụng prompt engineering (0) không giải quyết được vấn đề ở cấp hệ thống.\n\n- Yêu cầu xét duyệt mã (1) gây tắc nghẽn quy trình phát triển.\n\n- Xây dựng pyfunc proxy (2) là tạo thêm độ phức tạp không cần thiết khi hệ thống đã có sẵn tính năng rate limiting mặc định.",
       "references": [
         {
           "title": "Configuring Model Serving Rate Limits",
@@ -2164,7 +2164,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. RAG hiện đại trên Databricks Vector Search cho phép lưu trữ siêu dữ liệu (metadata) đi kèm với các vector nhúng. Khi có nhu cầu truy vấn với điều kiện thời gian cứng (ví dụ: trong vòng 10 ngày kể từ 05/01/1992) và theo chuyên mục, cách tốt nhất là sử dụng Hybrid Search (tìm kiếm kết hợp). Tức là, trích xuất bộ lọc thời gian và chủ đề để lọc (pre-filter) metadata trước, sau đó mới dùng vector search trên các văn bản đã vượt qua vòng lọc này. Cách tiếp cận này hiệu quả, chính xác tuyệt đối đối với điều kiện thời gian thay vì mong chờ AI phân tích ngữ nghĩa (semantic search) thời gian một cách mơ hồ.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n\nRAG hiện đại trên Databricks Vector Search cho phép lưu trữ siêu dữ liệu (metadata) đi kèm với các vector nhúng.\n\nKhi có nhu cầu truy vấn với điều kiện thời gian cứng (ví dụ: trong vòng 10 ngày kể từ 05/01/1992) và theo chuyên mục, cách tốt nhất là sử dụng Hybrid Search (tìm kiếm kết hợp).\n\nTức là, trích xuất bộ lọc thời gian và chủ đề để lọc (pre-filter) metadata trước, sau đó mới dùng vector search trên các văn bản đã vượt qua vòng lọc này.\n\nCách tiếp cận này hiệu quả, chính xác tuyệt đối đối với điều kiện thời gian thay vì mong chờ AI phân tích ngữ nghĩa (semantic search) thời gian một cách mơ hồ.",
       "references": [
         {
           "title": "Use metadata filtering in Databricks Vector Search",
@@ -2193,7 +2193,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Trong Databricks Model Serving, khi triển khai các hệ thống production chịu tải cao (high concurrency), việc chuyển từ chế độ \"pay-per-token\" sang \"Provisioned Throughput\" (Thông lượng được cung cấp trước) là quy chuẩn thiết yếu. Provisioned Throughput cấp phát trước GPU/compute dành riêng cho endpoint, giúp cung cấp SLA được bảo đảm, độ trễ ổn định và tránh bị rate limiting khi lưu lượng tăng đột biến so với tài nguyên dùng chung (shared endpoints).",
+      "explanation_vn": "**Đáp án đúng là 3.**\n\nTrong Databricks Model Serving, khi triển khai các hệ thống production chịu tải cao (high concurrency), việc chuyển từ chế độ \"pay-per-token\" sang \"Provisioned Throughput\" (Thông lượng được cung cấp trước) là quy chuẩn thiết yếu.\n\nProvisioned Throughput cấp phát trước GPU/compute dành riêng cho endpoint, giúp cung cấp SLA được bảo đảm, độ trễ ổn định và tránh bị rate limiting khi lưu lượng tăng đột biến so với tài nguyên dùng chung (shared endpoints).",
       "references": [
         {
           "title": "Provisioned Throughput for Foundation Model APIs",
@@ -2222,7 +2222,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Đáp án đúng là 0. Đây chính là kiến trúc tiêu chuẩn và cơ bản nhất của hệ thống RAG (Retrieval-Augmented Generation). Sổ tay hướng dẫn thường rất dài, vì vậy chúng ta cần phân chia (chunking) thành các đoạn văn bản có ý nghĩa, lưu dưới dạng vector nhúng để tìm kiếm đoạn nội dung chính xác. Việc đưa nguyên cả sổ tay vào (tùy chọn 2), hay tóm tắt toàn bộ (tùy chọn 3) sẽ tốn kém chi phí token lớn, có thể vượt qua giới hạn ngữ cảnh (context window) và làm LLM mất đi các chi tiết nhỏ. Tùy chọn 1 sử dụng thuật toán hệ thống gợi ý truyền thống (ALS) không phù hợp cho tìm kiếm ngữ nghĩa văn bản chuyên sâu.",
+      "explanation_vn": "**Đáp án đúng là 0.**\n\nĐây chính là kiến trúc tiêu chuẩn và cơ bản nhất của hệ thống RAG (Retrieval-Augmented Generation).\n\nSổ tay hướng dẫn thường rất dài, vì vậy chúng ta cần phân chia (chunking) thành các đoạn văn bản có ý nghĩa, lưu dưới dạng vector nhúng để tìm kiếm đoạn nội dung chính xác.\n\nViệc đưa nguyên cả sổ tay vào (tùy chọn 2), hay tóm tắt toàn bộ (tùy chọn 3) sẽ tốn kém chi phí token lớn, có thể vượt qua giới hạn ngữ cảnh (context window) và làm LLM mất đi các chi tiết nhỏ.\n\n- **Tùy chọn 1** sử dụng thuật toán hệ thống gợi ý truyền thống (ALS) không phù hợp cho tìm kiếm ngữ nghĩa văn bản chuyên sâu.",
       "references": [
         {
           "title": "Build a Retrieval Augmented Generation (RAG) Application",
@@ -2251,7 +2251,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Đáp án đúng là 3. Để ngăn chặn rủi ro tấn công hệ thống LLM (như jailbreak, prompt injection) và đảm bảo an toàn AI, việc triển khai một Safety Filter (Bộ lọc an toàn) ở vòng ngoài (trước khi tới LLM) hoặc trong bước kiểm duyệt kết quả đầu ra là phương pháp hiệu quả nhất. Khi hệ thống phát hiện hành vi độc hại, nó phải chặn yêu cầu và từ chối trả lời, thay vì chỉ \"nhắc nhở nhưng tiếp tục\" như tùy chọn 2 (điều này vẫn để lộ khả năng bị lợi dụng). Tùy chọn 0 và 1 giải quyết vấn đề hiệu suất và độ trễ, không giúp tăng cường bảo mật dữ liệu.",
+      "explanation_vn": "**Đáp án đúng là 3.**\n\nĐể ngăn chặn rủi ro tấn công hệ thống LLM (như jailbreak, prompt injection) và đảm bảo an toàn AI, việc triển khai một Safety Filter (Bộ lọc an toàn) ở vòng ngoài (trước khi tới LLM) hoặc trong bước kiểm duyệt kết quả đầu ra là phương pháp hiệu quả nhất.\n\nKhi hệ thống phát hiện hành vi độc hại, nó phải chặn yêu cầu và từ chối trả lời, thay vì chỉ \"nhắc nhở nhưng tiếp tục\" như tùy chọn 2 (điều này vẫn để lộ khả năng bị lợi dụng).\n\n- **Tùy chọn 0** và 1 giải quyết vấn đề hiệu suất và độ trễ, không giúp tăng cường bảo mật dữ liệu.",
       "references": [
         {
           "title": "AI Guardrails on Databricks Model Serving",
@@ -2280,7 +2280,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Đây là hình mẫu của một tác tử thông minh (AI Agent) hoặc quy trình định tuyến thông minh (LLM Routing / Multi-Agent). Việc phân loại câu hỏi (intent classification) để sử dụng công cụ phù hợp là tối ưu nhất. Cơ sở dữ liệu SQL dạng bảng phù hợp với Text-to-SQL để tra cứu chính xác số liệu, trong khi dữ liệu hướng dẫn (PDF) phù hợp với quy trình RAG xử lý văn bản. Ép buộc chuyển SQL thành Text (tùy chọn 3) hay chuyển PDF thành bảng Hỏi-Đáp cứng nhắc (tùy chọn 0) đều gây mất thông tin nghiêm trọng và không thể bao quát mọi câu hỏi. Tùy chọn 2 bắt người dùng tự chọn chatbot gây ra trải nghiệm kém.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n\nĐây là hình mẫu của một tác tử thông minh (AI Agent) hoặc quy trình định tuyến thông minh (LLM Routing / Multi-Agent).\n\nViệc phân loại câu hỏi (intent classification) để sử dụng công cụ phù hợp là tối ưu nhất.\n\nCơ sở dữ liệu SQL dạng bảng phù hợp với Text-to-SQL để tra cứu chính xác số liệu, trong khi dữ liệu hướng dẫn (PDF) phù hợp với quy trình RAG xử lý văn bản.\n\nÉp buộc chuyển SQL thành Text (tùy chọn 3) hay chuyển PDF thành bảng Hỏi-Đáp cứng nhắc (tùy chọn 0) đều gây mất thông tin nghiêm trọng và không thể bao quát mọi câu hỏi.\n\n- **Tùy chọn 2** bắt người dùng tự chọn chatbot gây ra trải nghiệm kém.",
       "references": [
         {
           "title": "Mosaic AI Agent Framework",
@@ -2309,7 +2309,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Đáp án đúng là 1. Cách ngăn chặn hiệu quả nhất việc hệ thống sinh ra nội dung độc hại bắt nguồn từ RAG là kiểm soát chặt chẽ \"nguồn thông tin\" (data provenance). Việc lập danh sách trắng (whitelist) các nguồn tin tức và tài khoản mạng xã hội uy tín sẽ đảm bảo LLM chỉ đọc các context sạch, từ đó giảm rủi ro phát sinh ngôn từ kích động, độc hại. Việc ghi log (tùy chọn 2) chỉ mang tính phân tích hậu kỳ, không có tác dụng ngăn chặn theo thời gian thực. Giới hạn số lượng context (tùy chọn 0) hay rate limiting (tùy chọn 3) không giúp chọn lọc thông tin sạch.",
+      "explanation_vn": "**Đáp án đúng là 1.**\n\nCách ngăn chặn hiệu quả nhất việc hệ thống sinh ra nội dung độc hại bắt nguồn từ RAG là kiểm soát chặt chẽ \"nguồn thông tin\" (data provenance).\n\nViệc lập danh sách trắng (whitelist) các nguồn tin tức và tài khoản mạng xã hội uy tín sẽ đảm bảo LLM chỉ đọc các context sạch, từ đó giảm rủi ro phát sinh ngôn từ kích động, độc hại.\n\nViệc ghi log (tùy chọn 2) chỉ mang tính phân tích hậu kỳ, không có tác dụng ngăn chặn theo thời gian thực.\n\nGiới hạn số lượng context (tùy chọn 0) hay rate limiting (tùy chọn 3) không giúp chọn lọc thông tin sạch.",
       "references": [
         {
           "title": "Data pipeline for RAG: Ingest and prepare data",
@@ -2338,7 +2338,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Đáp án đúng là 2. Trong một ứng dụng RAG, lỗi có thể đến từ việc tìm kiếm thông tin không chuẩn xác (retrieval) HOẶC LLM tổng hợp thông tin yếu (generation). Do đó, để biết cần \"tập trung nỗ lực vào đâu để cải thiện\", kỹ sư bắt buộc phải chia nhỏ đánh giá (component-wise evaluation). MLflow Evaluate hỗ trợ đánh giá riêng phần Retrieval (như metric NDCG, Precision@K) và phần Generation (thường dùng LLM-as-a-judge để tính độ chính xác/hallucination dựa trên context đã cấp). Các tùy chọn 0, 1 chỉ đánh giá đầu ra cuối cùng (end-to-end), không cho biết lỗi xuất phát từ quá trình tìm kiếm hay sinh văn bản.",
+      "explanation_vn": "**Đáp án đúng là 2.**\n\nTrong một ứng dụng RAG, lỗi có thể đến từ việc tìm kiếm thông tin không chuẩn xác (retrieval) HOẶC LLM tổng hợp thông tin yếu (generation).\n\nDo đó, để biết cần \"tập trung nỗ lực vào đâu để cải thiện\", kỹ sư bắt buộc phải chia nhỏ đánh giá (component-wise evaluation).\n\nMLflow Evaluate hỗ trợ đánh giá riêng phần Retrieval (như metric NDCG, Precision@K) và phần Generation (thường dùng LLM-as-a-judge để tính độ chính xác/hallucination dựa trên context đã cấp).\n\n- Các tùy chọn 0, 1 chỉ đánh giá đầu ra cuối cùng (end-to-end), không cho biết lỗi xuất phát từ quá trình tìm kiếm hay sinh văn bản.",
       "references": [
         {
           "title": "Evaluate RAG applications with MLflow",
@@ -2367,7 +2367,7 @@
       "correct_option_indexes": [
         3
       ],
-      "explanation_vn": "Trong LangChain, khi khởi tạo một đối tượng `PromptTemplate`, bạn cần truyền tham số `template` (nội dung chuỗi của mẫu prompt chứa các biến đầu vào). Đoạn mã trong câu hỏi đã khởi tạo `PromptTemplate` chỉ với tham số `input_variables` mà thiếu mất `template=template_text`. Vì vậy, để sửa lỗi này, kỹ sư cần cung cấp thêm đối số `template` cho hàm khởi tạo `PromptTemplate()`.",
+      "explanation_vn": "Trong LangChain, khi khởi tạo một đối tượng `PromptTemplate`, bạn cần truyền tham số `template` (nội dung chuỗi của mẫu prompt chứa các biến đầu vào).\n\nĐoạn mã trong câu hỏi đã khởi tạo `PromptTemplate` chỉ với tham số `input_variables` mà thiếu mất `template=template_text`. Vì vậy, để sửa lỗi này, kỹ sư cần cung cấp thêm đối số `template` cho hàm khởi tạo `PromptTemplate()`.",
       "references": [
         {
           "title": "LangChain Prompt Templates",
@@ -2396,7 +2396,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Prompt chaining (chuỗi prompt) là kỹ thuật chia một tác vụ lớn và phức tạp thành một chuỗi các bước nhỏ (subtasks) và tuần tự. Kết quả đầu ra của bước trước sẽ được dùng làm đầu vào cho bước tiếp theo. Điều này giúp LLM tập trung vào từng phần nhỏ của vấn đề, từ đó giảm thiểu ảo giác (hallucinations) và tạo ra các câu trả lời chính xác, logic và toàn diện hơn. Kỹ thuật này tập trung vào độ chính xác thay vì làm giảm độ trễ hay chi phí.",
+      "explanation_vn": "Prompt chaining (chuỗi prompt) là kỹ thuật chia một tác vụ lớn và phức tạp thành một chuỗi các bước nhỏ (subtasks) và tuần tự.\n\nKết quả đầu ra của bước trước sẽ được dùng làm đầu vào cho bước tiếp theo.\n\nĐiều này giúp LLM tập trung vào từng phần nhỏ của vấn đề, từ đó giảm thiểu ảo giác (hallucinations) và tạo ra các câu trả lời chính xác, logic và toàn diện hơn.\n\nKỹ thuật này tập trung vào độ chính xác thay vì làm giảm độ trễ hay chi phí.",
       "references": [
         {
           "title": "Prompt Chaining Guide",
@@ -2428,7 +2428,7 @@
         0,
         1
       ],
-      "explanation_vn": "1) 'Big Code Models Leaderboard' là bảng xếp hạng chuyên biệt trên Huggingface đánh giá hiệu suất của các mô hình LLM trên các tác vụ lập trình. Đây là tiêu chí lý tưởng nhất để chọn mô hình có sẵn khả năng code tốt. 2) 'Số lượng tham số của mô hình' (Number of model parameters) ảnh hưởng trực tiếp đến kích thước mô hình, bộ nhớ VRAM yêu cầu và chi phí triển khai (hosting costs). Vì mục tiêu của nhóm là giảm thiểu chi phí hosting, họ cần đặc biệt chú ý đến số lượng tham số để chọn mô hình gọn nhẹ nhưng hiệu quả.",
+      "explanation_vn": "1) 'Big Code Models Leaderboard' là bảng xếp hạng chuyên biệt trên Huggingface đánh giá hiệu suất của các mô hình LLM trên các tác vụ lập trình.\n\nĐây là tiêu chí lý tưởng nhất để chọn mô hình có sẵn khả năng code tốt.\n\n2) 'Số lượng tham số của mô hình' (Number of model parameters) ảnh hưởng trực tiếp đến kích thước mô hình, bộ nhớ VRAM yêu cầu và chi phí triển khai (hosting costs).\n\nVì mục tiêu của nhóm là giảm thiểu chi phí hosting, họ cần đặc biệt chú ý đến số lượng tham số để chọn mô hình gọn nhẹ nhưng hiệu quả.",
       "references": [
         {
           "title": "Big Code Models Leaderboard - Hugging Face",
@@ -2457,7 +2457,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Lưu ý: Có sự tranh cãi về đáp án của câu hỏi này trong các bộ đề (thiết lập chunk size bằng context window cũng là một thực hành sai vì không còn chỗ trống cho prompt). Tuy nhiên, theo đáp án chuẩn của nguồn (tùy chọn 'Tinh chỉnh mô hình embedding'), lý do là: Tinh chỉnh (fine-tuning) một mô hình embedding cho thuật ngữ cụ thể thường tốn kém, phức tạp và không cần thiết trong giai đoạn đầu. Đối với hầu hết các trường hợp RAG có dữ liệu đa ngôn ngữ, một mô hình embedding đa ngôn ngữ có sẵn (pre-trained) kết hợp với kỹ thuật lọc metadata và few-shot prompting đã đủ để cung cấp kết quả cực kỳ chính xác. Vì vậy, tinh chỉnh embedding là bước nên bị loại bỏ khỏi kế hoạch ban đầu để tiết kiệm nguồn lực.",
+      "explanation_vn": "Lưu ý: Có sự tranh cãi về đáp án của câu hỏi này trong các bộ đề (thiết lập chunk size bằng context window cũng là một thực hành sai vì không còn chỗ trống cho prompt).\n\nTuy nhiên, theo đáp án chuẩn của nguồn (tùy chọn 'Tinh chỉnh mô hình embedding'), lý do là: Tinh chỉnh (fine-tuning) một mô hình embedding cho thuật ngữ cụ thể thường tốn kém, phức tạp và không cần thiết trong giai đoạn đầu.\n\nĐối với hầu hết các trường hợp RAG có dữ liệu đa ngôn ngữ, một mô hình embedding đa ngôn ngữ có sẵn (pre-trained) kết hợp với kỹ thuật lọc metadata và few-shot prompting đã đủ để cung cấp kết quả cực kỳ chính xác.\n\nVì vậy, tinh chỉnh embedding là bước nên bị loại bỏ khỏi kế hoạch ban đầu để tiết kiệm nguồn lực.",
       "references": [
         {
           "title": "When to fine-tune an embedding model",
@@ -2486,7 +2486,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Các tài liệu pháp lý thường rất dài và các lập luận được liên kết chặt chẽ ở nhiều phần khác nhau. Việc tóm tắt dạng cửa sổ (windowed summarization) kết hợp với các chunk chồng lấp (overlapping chunks) giúp đảm bảo ngữ cảnh ở ranh giới giữa các chunk không bị đứt gãy, duy trì tính liên tục của luồng tư duy và diễn giải pháp lý. Các phương pháp khác như chia theo từng đoạn văn hay từng câu riêng lẻ sẽ quá nhỏ, làm mất đi ngữ cảnh rộng hơn cần thiết để hiểu sự phát triển và tính liên tục của vụ án.",
+      "explanation_vn": "Các tài liệu pháp lý thường rất dài và các lập luận được liên kết chặt chẽ ở nhiều phần khác nhau.\n\nViệc tóm tắt dạng cửa sổ (windowed summarization) kết hợp với các chunk chồng lấp (overlapping chunks) giúp đảm bảo ngữ cảnh ở ranh giới giữa các chunk không bị đứt gãy, duy trì tính liên tục của luồng tư duy và diễn giải pháp lý.\n\nCác phương pháp khác như chia theo từng đoạn văn hay từng câu riêng lẻ sẽ quá nhỏ, làm mất đi ngữ cảnh rộng hơn cần thiết để hiểu sự phát triển và tính liên tục của vụ án.",
       "references": [
         {
           "title": "Chunking strategies for RAG",
@@ -2515,7 +2515,7 @@
       "correct_option_indexes": [
         2
       ],
-      "explanation_vn": "Trong môi trường lập trình truyền thống và khi làm việc với các thư viện bên thứ ba, việc triển khai ghi log có cấu trúc (structured logging) giúp ghi lại trạng thái cụ thể về đầu vào, đầu ra, và các lỗi tại từng bước (chain) một cách rõ ràng. Điều này giúp theo dõi chính xác dữ liệu nào đang được truyền đi và phát hiện chuỗi nào gây ra sự cố. (Lưu ý: Trên hệ sinh thái Databricks, tính năng 'MLflow Tracing' cũng là công cụ cực kỳ mạnh mẽ tự động hóa việc này, nhưng ở góc độ tổng quát và theo đáp án chỉ định, ghi log có cấu trúc vào mã trực tiếp là giải pháp gốc rễ cần thực hiện).",
+      "explanation_vn": "Trong môi trường lập trình truyền thống và khi làm việc với các thư viện bên thứ ba, việc triển khai ghi log có cấu trúc (structured logging) giúp ghi lại trạng thái cụ thể về đầu vào, đầu ra, và các lỗi tại từng bước (chain) một cách rõ ràng.\n\nĐiều này giúp theo dõi chính xác dữ liệu nào đang được truyền đi và phát hiện chuỗi nào gây ra sự cố. (Lưu ý: Trên hệ sinh thái Databricks, tính năng 'MLflow Tracing' cũng là công cụ cực kỳ mạnh mẽ tự động hóa việc này, nhưng ở góc độ tổng quát và theo đáp án chỉ định, ghi log có cấu trúc vào mã trực tiếp là giải pháp gốc rễ cần thực hiện).",
       "references": [
         {
           "title": "MLflow Tracing for AI Agents",
@@ -2544,7 +2544,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Trong đoạn cấu hình trên, danh sách biến đầu vào (`prompt_template_input_vars`) được định nghĩa là `[\"user_input\"]`. Tuy nhiên, trong chuỗi văn bản của `prompt_template` lại không hề chứa placeholder `{user_input}` để parse biến này. Cụ thể, mẫu prompt chỉ ghi câu tĩnh mà không có chỗ trống định dạng. Vì tham số truyền vào không được đưa vào văn bản prompt, LLM sẽ không nhận được thông tin đầu vào thực tế từ người dùng, dẫn đến các phản hồi không khớp với mong đợi.",
+      "explanation_vn": "Trong đoạn cấu hình trên, danh sách biến đầu vào (`prompt_template_input_vars`) được định nghĩa là `[\"user_input\"]`. Tuy nhiên, trong chuỗi văn bản của `prompt_template` lại không hề chứa placeholder `{user_input}` để parse biến này.\n\nCụ thể, mẫu prompt chỉ ghi câu tĩnh mà không có chỗ trống định dạng.\n\nVì tham số truyền vào không được đưa vào văn bản prompt, LLM sẽ không nhận được thông tin đầu vào thực tế từ người dùng, dẫn đến các phản hồi không khớp với mong đợi.",
       "references": [
         {
           "title": "Create and log AI agents",
@@ -2573,7 +2573,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Luồng tiêu chuẩn khi xây dựng agent có khả năng sử dụng công cụ (tool-calling agent) với mô hình ReAct trong LangChain/LangGraph bao gồm: 1. Định nghĩa hoặc import các công cụ (ví dụ: các hàm Python). 2. Định nghĩa/cấu hình tác tử (agent node/workflow). 3. Khởi tạo/biên dịch (compile) agent bằng cách kết hợp chiến lược ReAct (Reason + Act), LLM cốt lõi và danh sách các công cụ đã định ra. Trình tự này thiết lập một vòng lặp suy luận cho phép tác tử tự động quyết định công cụ nào cần gọi dựa trên prompt của người dùng.",
+      "explanation_vn": "Luồng tiêu chuẩn khi xây dựng agent có khả năng sử dụng công cụ (tool-calling agent) với mô hình ReAct trong LangChain/LangGraph bao gồm:\n\n- **1.** Định nghĩa hoặc import các công cụ (ví dụ: các hàm Python).\n\n- **2.** Định nghĩa/cấu hình tác tử (agent node/workflow).\n\n- **3.** Khởi tạo/biên dịch (compile) agent bằng cách kết hợp chiến lược ReAct (Reason + Act), LLM cốt lõi và danh sách các công cụ đã định ra.\n\nTrình tự này thiết lập một vòng lặp suy luận cho phép tác tử tự động quyết định công cụ nào cần gọi dựa trên prompt của người dùng.",
       "references": [
         {
           "title": "LangGraph: Multi-agent workflows",
@@ -2602,7 +2602,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Trong môi trường Databricks Notebook, các SDK chính thức như Databricks Python SDK, MLflow Deployments SDK đều có khả năng tự động nhận diện và sử dụng token xác thực của phiên làm việc hiện tại mà không cần thiết lập thủ công. Thậm chí OpenAI client khi được cấu hình đúng cũng có thể sử dụng credential môi trường. Tuy nhiên, `requests` là một thư viện HTTP thuần túy của Python; nó không có sự tích hợp riêng biệt nào với Databricks, do đó bạn bắt buộc phải trích xuất thủ công Databricks Personal Access Token (PAT) và gắn vào Header (Authorization: Bearer) thì mới gọi được API.",
+      "explanation_vn": "Trong môi trường Databricks Notebook, các SDK chính thức như Databricks Python SDK, MLflow Deployments SDK đều có khả năng tự động nhận diện và sử dụng token xác thực của phiên làm việc hiện tại mà không cần thiết lập thủ công.\n\nThậm chí OpenAI client khi được cấu hình đúng cũng có thể sử dụng credential môi trường.\n\nTuy nhiên, `requests` là một thư viện HTTP thuần túy của Python; nó không có sự tích hợp riêng biệt nào với Databricks, do đó bạn bắt buộc phải trích xuất thủ công Databricks Personal Access Token (PAT) và gắn vào Header (Authorization: Bearer) thì mới gọi được API.",
       "references": [
         {
           "title": "Authentication for Databricks SDK for Python",
@@ -2631,7 +2631,7 @@
       "correct_option_indexes": [
         1
       ],
-      "explanation_vn": "Tấn công đảo ngược mô hình (model inversion attack) là nỗ lực trích xuất dữ liệu huấn luyện hoặc thông tin nội bộ thông qua việc lạm dụng quyền truy cập vào mô hình. Chiến lược nền tảng trong Databricks AI Security Framework (DASF) để bảo vệ tài sản mô hình là áp dụng nghiêm ngặt các Danh sách kiểm soát truy cập (Access Control Lists - ACLs). Bằng cách sử dụng ACLs chặt chẽ cho Model Endpoint, nhóm kỹ sư có thể đảm bảo chỉ những service identity (như ứng dụng web backend trung gian) hợp lệ mới có quyền gọi mô hình, từ đó ngăn chặn những kẻ tấn công (hoặc người dùng bên ngoài) tương tác trực tiếp hoặc đánh cắp chính file trọng số (weights) của mô hình từ registry.",
+      "explanation_vn": "Tấn công đảo ngược mô hình (model inversion attack) là nỗ lực trích xuất dữ liệu huấn luyện hoặc thông tin nội bộ thông qua việc lạm dụng quyền truy cập vào mô hình.\n\nChiến lược nền tảng trong Databricks AI Security Framework (DASF) để bảo vệ tài sản mô hình là áp dụng nghiêm ngặt các Danh sách kiểm soát truy cập (Access Control Lists - ACLs).\n\nBằng cách sử dụng ACLs chặt chẽ cho Model Endpoint, nhóm kỹ sư có thể đảm bảo chỉ những service identity (như ứng dụng web backend trung gian) hợp lệ mới có quyền gọi mô hình, từ đó ngăn chặn những kẻ tấn công (hoặc người dùng bên ngoài) tương tác trực tiếp hoặc đánh cắp chính file trọng số (weights) của mô hình từ registry.",
       "references": [
         {
           "title": "Databricks AI Security Framework (DASF)",
@@ -2660,7 +2660,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Hiện tượng các tài liệu ở vị trí thấp (trong danh sách trả về của vector database) lại có liên quan chặt chẽ hơn tới câu hỏi so với tài liệu trên cùng là một hạn chế khá phổ biến của thuật toán tìm kiếm vector (vốn chỉ so sánh sự tương đồng ngữ nghĩa bằng khoảng cách toán học). Phương pháp tối ưu và tiêu chuẩn để giải quyết vấn đề này là áp dụng bộ xếp hạng lại (reranker, ví dụ như Cross-Encoder). Bộ reranker sẽ đánh giá chi tiết và chấm điểm chính xác mức độ phù hợp giữa câu hỏi gốc với từng tài liệu được truy xuất, sau đó sắp xếp lại (re-rank) để đẩy các tài liệu thực sự liên quan lên đầu, trước khi cấp chúng cho LLM.",
+      "explanation_vn": "Hiện tượng các tài liệu ở vị trí thấp (trong danh sách trả về của vector database) lại có liên quan chặt chẽ hơn tới câu hỏi so với tài liệu trên cùng là một hạn chế khá phổ biến của thuật toán tìm kiếm vector (vốn chỉ so sánh sự tương đồng ngữ nghĩa bằng khoảng cách toán học).\n\nPhương pháp tối ưu và tiêu chuẩn để giải quyết vấn đề này là áp dụng bộ xếp hạng lại (reranker, ví dụ như Cross-Encoder).\n\nBộ reranker sẽ đánh giá chi tiết và chấm điểm chính xác mức độ phù hợp giữa câu hỏi gốc với từng tài liệu được truy xuất, sau đó sắp xếp lại (re-rank) để đẩy các tài liệu thực sự liên quan lên đầu, trước khi cấp chúng cho LLM.",
       "references": [
         {
           "title": "Use reranking models with Databricks Vector Search",
@@ -2689,7 +2689,7 @@
       "correct_option_indexes": [
         0
       ],
-      "explanation_vn": "Khi triển khai một LLM hoặc Agent thông qua Model Serving và Mosaic AI Agent Framework trên Databricks, nền tảng tự động thu thập và ghi lại các chỉ số vận hành cơ bản (operational metrics) như số lượng request, độ trễ (latency), và tỷ lệ lỗi (error rates) vào các bảng inference tables. Trong khi đó, các chỉ số đo lường chất lượng (quality metrics) như tính chính xác (correctness), mức độ liên quan hay độ an toàn thì không thể được suy luận tự động; bạn phải chủ động chạy các đánh giá ngoại tuyến hoặc trực tuyến (như sử dụng LLM-as-a-judge qua MLflow Evaluate) đối chiếu với dữ liệu ground truth.",
+      "explanation_vn": "Khi triển khai một LLM hoặc Agent thông qua Model Serving và Mosaic AI Agent Framework trên Databricks, nền tảng tự động thu thập và ghi lại các chỉ số vận hành cơ bản (operational metrics) như số lượng request, độ trễ (latency), và tỷ lệ lỗi (error rates) vào các bảng inference tables.\n\nTrong khi đó, các chỉ số đo lường chất lượng (quality metrics) như tính chính xác (correctness), mức độ liên quan hay độ an toàn thì không thể được suy luận tự động; bạn phải chủ động chạy các đánh giá ngoại tuyến hoặc trực tuyến (như sử dụng LLM-as-a-judge qua MLflow Evaluate) đối chiếu với dữ liệu ground truth.",
       "references": [
         {
           "title": "Monitor AI agents with Databricks Model Serving",
