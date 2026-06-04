@@ -10,15 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
         questionPromptVi: document.getElementById('question-prompt-vi'),
         optionsContainer: document.getElementById('options-container'),
         questionTypeBadge: document.getElementById('question-type-badge'),
+        questionNumberBadge: document.getElementById('question-number-badge'),
         translateToggleBtn: document.getElementById('translate-toggle-btn'),
         
         explanationContent: document.getElementById('explanation-content'),
+        referencesContainer: document.getElementById('references-container'),
+        referencesList: document.getElementById('references-list'),
         
         submitBtn: document.getElementById('submit-btn'),
         nextBtn: document.getElementById('next-btn'),
-        restartBtn: document.getElementById('restart-btn'),
+        prevBtn: document.getElementById('prev-btn'),
+        resetProgressBtn: document.getElementById('reset-progress-btn'),
         
-        questionCounter: document.getElementById('question-counter'),
+        questionJump: document.getElementById('question-jump'),
         scoreCounter: document.getElementById('score-counter'),
         progressBar: document.getElementById('progress-bar'),
         finalScoreValue: document.getElementById('final-score-value')
@@ -26,22 +30,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State
     let quizData = [];
-    let currentQuestionIndex = 0;
-    let selectedOptions = new Set();
-    let score = 0;
-    let isAnswerSubmitted = false;
-    let showTranslation = false;
+    let state = {
+        currentQuestionIndex: 0,
+        score: 0,
+        answers: {}, // index -> Set of selected options
+        submitted: {}, // index -> boolean
+        showTranslation: false
+    };
 
     // Initialization
     async function init() {
         try {
-            // Use path relative to root
+            // Load state from cache if exists
+            const cachedState = localStorage.getItem('genai_quiz_state');
+            if (cachedState) {
+                const parsed = JSON.parse(cachedState);
+                state.currentQuestionIndex = parsed.currentQuestionIndex || 0;
+                state.score = parsed.score || 0;
+                state.showTranslation = parsed.showTranslation || false;
+                
+                // Reconstruct Sets
+                state.answers = {};
+                for (const [k, v] of Object.entries(parsed.answers || {})) {
+                    state.answers[k] = new Set(v);
+                }
+                state.submitted = parsed.submitted || {};
+            }
+
             const response = await fetch('data.json?v=' + new Date().getTime());
             if (!response.ok) throw new Error('Không thể tải dữ liệu');
             
             const data = await response.json();
-            // Shuffle questions
-            quizData = shuffleArray(data.questions);
+            // We do NOT shuffle to keep navigation indices consistent with cache
+            quizData = data.questions;
+            
+            initJumpSelect();
             
             elements.loadingState.classList.add('hidden');
             elements.questionSection.classList.remove('hidden');
@@ -51,42 +74,101 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading data:', error);
             elements.loadingState.innerHTML = `
                 <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: var(--danger)"></i>
-                <p>Lỗi tải dữ liệu. Vui lòng thử lại sau.</p>
+                <p>Lỗi tải dữ liệu: ${error.message}</p>
+                <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 1rem;">Hãy xóa Cache trình duyệt và thử lại.</p>
             `;
         }
     }
 
+    function initJumpSelect() {
+        elements.questionJump.innerHTML = '';
+        quizData.forEach((_, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = `Câu hỏi ${index + 1} / ${quizData.length}`;
+            elements.questionJump.appendChild(opt);
+        });
+        
+        elements.questionJump.addEventListener('change', (e) => {
+            state.currentQuestionIndex = parseInt(e.target.value);
+            loadQuestion();
+        });
+    }
+
+    function saveState() {
+        const stateToSave = {
+            currentQuestionIndex: state.currentQuestionIndex,
+            score: state.score,
+            showTranslation: state.showTranslation,
+            answers: {},
+            submitted: state.submitted
+        };
+        
+        for (const [k, v] of Object.entries(state.answers)) {
+            stateToSave.answers[k] = Array.from(v);
+        }
+        
+        localStorage.setItem('genai_quiz_state', JSON.stringify(stateToSave));
+    }
+
+    function resetState() {
+        localStorage.removeItem('genai_quiz_state');
+        state = {
+            currentQuestionIndex: 0,
+            score: 0,
+            answers: {},
+            submitted: {},
+            showTranslation: false
+        };
+        elements.completionSection.classList.add('hidden');
+        elements.questionSection.classList.remove('hidden');
+        loadQuestion();
+    }
+
     // Load a question
     function loadQuestion() {
-        const question = quizData[currentQuestionIndex];
-        isAnswerSubmitted = false;
-        selectedOptions.clear();
+        if (state.currentQuestionIndex >= quizData.length) {
+            showCompletion();
+            return;
+        }
+
+        const question = quizData[state.currentQuestionIndex];
+        const isSubmitted = state.submitted[state.currentQuestionIndex] || false;
+        
+        if (!state.answers[state.currentQuestionIndex]) {
+            state.answers[state.currentQuestionIndex] = new Set();
+        }
+        
+        const selectedOptions = state.answers[state.currentQuestionIndex];
         
         // Update UI state
-        elements.submitBtn.disabled = true;
-        elements.submitBtn.classList.remove('hidden');
-        elements.nextBtn.classList.add('hidden');
+        elements.questionJump.value = state.currentQuestionIndex;
+        elements.prevBtn.disabled = state.currentQuestionIndex === 0;
+        
+        if (isSubmitted) {
+            elements.submitBtn.classList.add('hidden');
+            elements.nextBtn.classList.remove('hidden');
+        } else {
+            elements.submitBtn.classList.remove('hidden');
+            elements.nextBtn.classList.add('hidden');
+            elements.submitBtn.disabled = selectedOptions.size === 0;
+        }
+        
         elements.explanationSection.classList.add('hidden');
         
         // Update stats
         updateStats();
         
-        // Set question type badge
+        // Set question badge
+        elements.questionNumberBadge.textContent = `Câu ${state.currentQuestionIndex + 1}`;
         const isMultiple = question.type === 'multiple_choice';
         elements.questionTypeBadge.textContent = isMultiple ? 'Multiple Choice' : 'Single Choice';
-        elements.questionTypeBadge.style.backgroundColor = isMultiple ? 'rgba(236, 72, 153, 0.2)' : 'rgba(99, 102, 241, 0.2)';
-        elements.questionTypeBadge.style.color = isMultiple ? '#f9a8d4' : '#a5b4fc';
-        elements.questionTypeBadge.style.borderColor = isMultiple ? 'rgba(236, 72, 153, 0.3)' : 'rgba(99, 102, 241, 0.3)';
         
-        // Set Prompts (English by default, Vietnamese hidden unless toggled)
-        elements.questionPromptEn.textContent = question.prompt_en || question.prompt;
-        elements.questionPromptVi.textContent = question.prompt_vi || '';
+        // Set Prompts using marked.js
+        elements.questionPromptEn.innerHTML = marked.parse(question.prompt_en || question.prompt || '');
+        elements.questionPromptVi.innerHTML = marked.parse(question.prompt_vi || '');
         
-        if (showTranslation) {
-            elements.questionPromptVi.classList.remove('hidden');
-        } else {
-            elements.questionPromptVi.classList.add('hidden');
-        }
+        applyTranslationState();
         
         // Render options
         elements.optionsContainer.innerHTML = '';
@@ -99,6 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
             optionEl.className = 'option';
             optionEl.dataset.index = index;
             
+            if (selectedOptions.has(index)) {
+                optionEl.classList.add('selected');
+            }
+            
             const iconClass = isMultiple ? 'fa-check' : 'fa-circle';
             const borderRadius = isMultiple ? '6px' : '50%';
             
@@ -107,21 +193,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid ${iconClass}"></i>
                 </div>
                 <div class="option-content">
-                    <div class="option-text-en">${formatText(optionEnText)}</div>
-                    <div class="option-text-vi ${showTranslation ? '' : 'hidden'}">${formatText(optionViText)}</div>
+                    <div class="option-text-en markdown-body">${marked.parseInline(optionEnText)}</div>
+                    <div class="option-text-vi markdown-body ${state.showTranslation ? '' : 'hidden'}">${marked.parseInline(optionViText)}</div>
                 </div>
             `;
             
-            optionEl.addEventListener('click', () => handleOptionClick(index, optionEl, isMultiple));
+            if (!isSubmitted) {
+                optionEl.addEventListener('click', () => handleOptionClick(index, optionEl, isMultiple));
+            }
             elements.optionsContainer.appendChild(optionEl);
         });
+
+        if (isSubmitted) {
+            highlightCorrectOptions(question, selectedOptions);
+            showExplanation(question, true);
+        }
+
+        saveState();
     }
 
-    // Toggle Translation
-    function toggleTranslation() {
-        showTranslation = !showTranslation;
-        
-        if (showTranslation) {
+    function applyTranslationState() {
+        if (state.showTranslation) {
             elements.translateToggleBtn.classList.add('active');
             elements.translateToggleBtn.innerHTML = '<i class="fa-solid fa-lightbulb"></i> Ẩn Gợi ý';
             elements.questionPromptVi.classList.remove('hidden');
@@ -134,9 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Handle option selection
+    function toggleTranslation() {
+        state.showTranslation = !state.showTranslation;
+        applyTranslationState();
+        saveState();
+    }
+
     function handleOptionClick(index, optionEl, isMultiple) {
-        if (isAnswerSubmitted) return;
+        const selectedOptions = state.answers[state.currentQuestionIndex];
         
         if (isMultiple) {
             if (selectedOptions.has(index)) {
@@ -149,27 +246,26 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             selectedOptions.clear();
             document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
-            
             selectedOptions.add(index);
             optionEl.classList.add('selected');
         }
         
         elements.submitBtn.disabled = selectedOptions.size === 0;
+        saveState();
     }
 
-    // Submit answer
     function submitAnswer() {
-        if (selectedOptions.size === 0 || isAnswerSubmitted) return;
+        const selectedOptions = state.answers[state.currentQuestionIndex];
+        if (selectedOptions.size === 0 || state.submitted[state.currentQuestionIndex]) return;
         
-        isAnswerSubmitted = true;
+        state.submitted[state.currentQuestionIndex] = true;
         elements.submitBtn.classList.add('hidden');
         elements.nextBtn.classList.remove('hidden');
         
-        const question = quizData[currentQuestionIndex];
+        const question = quizData[state.currentQuestionIndex];
         const correctIndexes = question.correct_option_indexes;
         
         let isCorrect = true;
-        
         if (selectedOptions.size !== correctIndexes.length) {
             isCorrect = false;
         } else {
@@ -181,9 +277,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        if (isCorrect) score++;
+        if (isCorrect) state.score++;
         
-        // Highlight options
+        highlightCorrectOptions(question, selectedOptions);
+        showExplanation(question, false); // false = scroll to it
+        updateStats();
+        saveState();
+    }
+
+    function highlightCorrectOptions(question, selectedOptions) {
+        const correctIndexes = question.correct_option_indexes;
+        
         document.querySelectorAll('.option').forEach(el => {
             const idx = parseInt(el.dataset.index);
             const isSelected = selectedOptions.has(idx);
@@ -202,15 +306,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isSelected && !isActuallyCorrect) {
                 el.style.opacity = '0.5';
             }
+            
+            // disable pointer events
+            el.style.pointerEvents = 'none';
         });
-        
-        showExplanation(question.explanation_vn, isCorrect);
-        updateStats();
     }
 
-    // Show Explanation
-    function showExplanation(text, isCorrect) {
+    function showExplanation(question, isRestoring) {
         elements.explanationSection.classList.remove('hidden');
+        
+        const selectedOptions = state.answers[state.currentQuestionIndex];
+        const correctIndexes = question.correct_option_indexes;
+        let isCorrect = selectedOptions.size === correctIndexes.length && Array.from(selectedOptions).every(idx => correctIndexes.includes(idx));
         
         const headerIcon = elements.explanationSection.querySelector('.explanation-header i');
         const headerText = elements.explanationSection.querySelector('h3');
@@ -225,22 +332,40 @@ document.addEventListener('DOMContentLoaded', () => {
             headerText.style.color = 'var(--danger)';
         }
         
-        const formattedText = formatText(text || 'Không có giải thích chi tiết cho câu hỏi này.');
-        elements.explanationContent.innerHTML = formattedText;
+        const text = question.explanation_vn || 'Không có giải thích chi tiết cho câu hỏi này.';
+        elements.explanationContent.innerHTML = marked.parse(text);
         
-        setTimeout(() => {
-            elements.explanationSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+        // Handle References
+        if (question.references && question.references.length > 0) {
+            elements.referencesContainer.classList.remove('hidden');
+            elements.referencesList.innerHTML = '';
+            question.references.forEach(ref => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${ref.url}" target="_blank" rel="noopener noreferrer">${ref.title || ref.url}</a>`;
+                elements.referencesList.appendChild(li);
+            });
+        } else {
+            elements.referencesContainer.classList.add('hidden');
+        }
+        
+        if (!isRestoring) {
+            setTimeout(() => {
+                elements.explanationSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
     }
 
-    // Next Question
     function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizData.length) {
+        state.currentQuestionIndex++;
+        loadQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function prevQuestion() {
+        if (state.currentQuestionIndex > 0) {
+            state.currentQuestionIndex--;
             loadQuestion();
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            showCompletion();
         }
     }
 
@@ -249,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.explanationSection.classList.add('hidden');
         elements.completionSection.classList.remove('hidden');
         
-        const percentage = Math.round((score / quizData.length) * 100);
+        const percentage = Math.round((state.score / quizData.length) * 100);
         let currentScore = 0;
         const interval = setInterval(() => {
             currentScore += 1;
@@ -263,80 +388,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const scoreEl = document.querySelector('.final-score');
         if (percentage >= 80) {
             scoreEl.style.color = 'var(--success)';
-            scoreEl.style.textShadow = '0 0 30px rgba(16, 185, 129, 0.4)';
         } else if (percentage >= 50) {
             scoreEl.style.color = 'var(--warning)';
-            scoreEl.style.textShadow = '0 0 30px rgba(245, 158, 11, 0.4)';
         } else {
             scoreEl.style.color = 'var(--danger)';
-            scoreEl.style.textShadow = '0 0 30px rgba(239, 68, 68, 0.4)';
         }
-    }
-
-    function restartQuiz() {
-        currentQuestionIndex = 0;
-        score = 0;
-        quizData = shuffleArray(quizData);
-        
-        elements.completionSection.classList.add('hidden');
-        elements.questionSection.classList.remove('hidden');
-        
-        loadQuestion();
     }
 
     function updateStats() {
-        elements.questionCounter.textContent = `Câu hỏi ${currentQuestionIndex + 1} / ${quizData.length}`;
-        elements.scoreCounter.innerHTML = `<i class="fa-solid fa-star" style="color: #fcd34d"></i> Điểm: ${score}`;
-        const progress = ((currentQuestionIndex) / quizData.length) * 100;
+        elements.scoreCounter.innerHTML = `<i class="fa-solid fa-star" style="color: var(--warning)"></i> Điểm: ${state.score}`;
+        const progress = (state.currentQuestionIndex / quizData.length) * 100;
         elements.progressBar.style.width = `${progress}%`;
-    }
-
-    function shuffleArray(array) {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-        }
-        return newArray;
-    }
-    
-    function formatText(text) {
-        if (!text) return '';
-        let html = text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:4px;font-family:monospace;">$1</code>');
-            
-        const lines = html.split('\n');
-        let inList = false;
-        let result = '';
-        
-        for (let line of lines) {
-            line = line.trim();
-            if (!line) continue;
-            
-            if (line.startsWith('- ') || line.startsWith('* ')) {
-                if (!inList) {
-                    result += '<ul>';
-                    inList = true;
-                }
-                result += `<li>${line.substring(2)}</li>`;
-            } else {
-                if (inList) {
-                    result += '</ul>';
-                    inList = false;
-                }
-                result += `<p>${line}</p>`;
-            }
-        }
-        if (inList) result += '</ul>';
-        return result;
     }
 
     // Event Listeners
     elements.submitBtn.addEventListener('click', submitAnswer);
     elements.nextBtn.addEventListener('click', nextQuestion);
-    elements.restartBtn.addEventListener('click', restartQuiz);
+    elements.prevBtn.addEventListener('click', prevQuestion);
+    elements.resetProgressBtn.addEventListener('click', resetState);
     elements.translateToggleBtn.addEventListener('click', toggleTranslation);
     
     document.addEventListener('keydown', (e) => {
