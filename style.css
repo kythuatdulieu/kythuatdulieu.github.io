@@ -40,9 +40,10 @@ body {
 .markdown-body {
     font-size: 1rem;
     color: var(--text-main);
+    line-height: 1.7;
 }
 .markdown-body p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 .markdown-body p:last-child {
     margin-bottom: 0;
@@ -77,8 +78,11 @@ body {
     padding: 0;
 }
 .markdown-body ul, .markdown-body ol {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     padding-left: 1.5rem;
+}
+.markdown-body li {
+    margin-bottom: 0.5rem;
 }
 
 .app-container {
