@@ -285,10 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateStats() {
-        elements.questionCounter.textContent = \`Câu hỏi \${currentQuestionIndex + 1} / \${quizData.length}\`;
-        elements.scoreCounter.innerHTML = \`<i class="fa-solid fa-star" style="color: #fcd34d"></i> Điểm: \${score}\`;
+        elements.questionCounter.textContent = `Câu hỏi ${currentQuestionIndex + 1} / ${quizData.length}`;
+        elements.scoreCounter.innerHTML = `<i class="fa-solid fa-star" style="color: #fcd34d"></i> Điểm: ${score}`;
         const progress = ((currentQuestionIndex) / quizData.length) * 100;
-        elements.progressBar.style.width = \`\${progress}%\`;
+        elements.progressBar.style.width = `${progress}%`;
     }
 
     function shuffleArray(array) {
@@ -303,11 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatText(text) {
         if (!text) return '';
         let html = text
-            .replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>')
-            .replace(/\\*(.*?)\\*/g, '<em>$1</em>')
-            .replace(/\`([^\`]+)\`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:4px;font-family:monospace;">$1</code>');
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:4px;font-family:monospace;">$1</code>');
             
-        const lines = html.split('\\n');
+        const lines = html.split('\n');
         let inList = false;
         let result = '';
         
@@ -320,13 +320,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     result += '<ul>';
                     inList = true;
                 }
-                result += \`<li>\${line.substring(2)}</li>\`;
+                result += `<li>${line.substring(2)}</li>`;
             } else {
                 if (inList) {
                     result += '</ul>';
                     inList = false;
                 }
-                result += \`<p>\${line}</p>\`;
+                result += `<p>${line}</p>`;
             }
         }
         if (inList) result += '</ul>';
