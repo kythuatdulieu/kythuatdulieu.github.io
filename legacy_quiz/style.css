@@ -511,3 +511,136 @@ footer {
         order: 1;
     }
 }
+
+/* Concept Link/Highlight Style */
+.concept-link {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--primary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.concept-link:hover {
+    color: var(--primary-hover);
+    background-color: var(--accent-light);
+    border-bottom-style: solid;
+}
+
+/* Concept Popover Card Style */
+.concept-popover {
+    position: absolute;
+    z-index: 1000;
+    width: 340px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 16px -6px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none; /* Ignore pointer events when invisible */
+}
+
+.concept-popover.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto; /* Enable pointer events when visible */
+}
+
+.popover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.popover-header h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+    padding-right: 8px;
+}
+
+.popover-badge {
+    background-color: var(--accent-light);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.popover-body {
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+}
+
+.popover-body p {
+    margin-bottom: 0.5rem;
+}
+
+.popover-body ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.popover-body li {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.popover-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.popover-tip {
+    font-style: italic;
+}
+
+.popover-close-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.popover-close-btn:hover {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    border-color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .concept-popover {
+        width: calc(100vw - 32px);
+        max-width: 320px;
+    }
+}
+
