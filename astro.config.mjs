@@ -18,7 +18,7 @@ export default defineConfig({
 			head: [
 				{ tag: 'script', attrs: { src: '/glossary.js', defer: true } }
 			],
-			social: { github: 'https://github.com/kythuatdulieu/kythuatdulieu.github.io' },
+			social: { github: 'https://github.com/kythuatdulieu' },
 			sidebar: [
 				{
 					label: 'Khái niệm (Concepts)',
