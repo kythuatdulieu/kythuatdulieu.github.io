@@ -159,7 +159,7 @@ GROUP BY signup_date;
 ## Tài liệu tham khảo
 
 1. [What is a Data Lakehouse?](https://www.databricks.com/glossary/data-lakehouse) - Databricks Glossary page on the hybrid data lakehouse paradigm.
-2. [What is Data Architecture?](https://www.snowflake.com/en/resources/guides/data-architecture/) - Snowflake comprehensive guide on enterprise data platform design.
+2. What is Data Architecture? - Snowflake comprehensive guide on enterprise data platform design.
 3. [Modern Data Architecture on AWS](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/modern-data-architecture.html) - AWS Well-Architected Analytics Lens documentation for designing scalable data architectures.
 4. [Big Data Architecture Style](https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/big-data) - Microsoft Azure Architecture Center guide for designing large-scale big data architectures.
 5. [Data Mesh Book](https://www.oreilly.com/library/view/data-mesh/9781492092384/) - O'Reilly page for Zhamak Dehghani's foundational book on decentralized data platform design.

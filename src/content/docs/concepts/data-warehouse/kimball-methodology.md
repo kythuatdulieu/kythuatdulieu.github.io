@@ -183,7 +183,7 @@ CREATE TABLE fact_sales (
 2. [Kimball Dimensional Modeling Techniques](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/) - Official Kimball Group registry of dimensional modeling design techniques.
 3. [Dimensional Modeling](https://en.wikipedia.org/wiki/Dimensional_modeling) - Wikipedia's overview of dimensional modeling design concepts, star schemas, and Kimball's data warehouse bus architecture.
 4. [Difference between Kimball and Inmon](https://www.geeksforgeeks.org/difference-between-kimball-and-inmon/) - Comparison of Kimball and Inmon data warehouse architectures on GeeksforGeeks.
-5. [Kimball vs. Inmon: Two School of Thoughts](https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/) - Structured comparison of the two leading data warehousing schools of thought in the Holistics Analytics Setup Guide.
+5. Kimball vs. Inmon: Two School of Thoughts - Structured comparison of the two leading data warehousing schools of thought in the Holistics Analytics Setup Guide.
 
 ## English Summary
 

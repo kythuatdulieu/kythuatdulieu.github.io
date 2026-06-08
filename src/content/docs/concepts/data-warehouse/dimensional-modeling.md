@@ -162,9 +162,9 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 
 1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic book introducing dimensional modeling techniques.
 2. [Snowflake: Star Schema Modeling Guide](https://www.snowflake.com/trending/data-vault) - Overview of star schema structures and modeling approaches on Snowflake.
-3. [Databricks Documentation: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Documentation on implementing Gold layer dimensional models in a Lakehouse.
-4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Comprehensive introduction to the components of dimensional modeling (facts and dimensions).
-5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Modern deployment patterns for building star schemas using Spark and Delta Lake.
+3. Databricks Documentation: Medallion Architecture - Documentation on implementing Gold layer dimensional models in a Lakehouse.
+4. Monte Carlo Data: Dimensional Modeling 101 - Comprehensive introduction to the components of dimensional modeling (facts and dimensions).
+5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Modern deployment patterns for building star schemas using Spark and Delta Lake.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

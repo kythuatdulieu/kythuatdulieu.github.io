@@ -161,7 +161,7 @@ Khi chạy tệp tin này, dbt sẽ tự động đối chiếu dữ liệu ngu�
 1. [The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's definitive guide to dimensional modeling and SCD patterns on O'Reilly.
 2. [dbt Snapshots Documentation](https://docs.getdbt.com/docs/build/snapshots) - Official dbt guide on implementing SCD Type 2 using snapshots.
 3. [Change Data Capture with Delta Live Tables](https://docs.databricks.com/en/delta-live-tables/cdc.html) - Official Databricks guide on applying changes (SCD Type 1 & Type 2) natively using Delta Live Tables.
-4. [Slowly Changing Dimensions in Snowflake with dbt](https://www.snowflake.com/blog/slowly-changing-dimensions-snowflake-dbt/) - Snowflake blog post outlining design patterns for tracking historical dimension changes.
+4. Slowly Changing Dimensions in Snowflake with dbt - Snowflake blog post outlining design patterns for tracking historical dimension changes.
 5. [Slowly Changing Dimension](https://en.wikipedia.org/wiki/Slowly_changing_dimension) - Wikipedia's overview of Slowly Changing Dimension types (Type 0 through Type 6).
 
 ## English Summary

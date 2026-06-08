@@ -1,37 +1,18 @@
 ---
 import { getCollection } from 'astro:content';
+import { conceptCategories } from '../config/categories.js';
 
 const allDocs = await getCollection('docs');
 const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
 
-// Map category folder names to clean display names, ordered logically
-const categoryNames = {
-  "foundation": "Foundation (Nền Tảng)",
-  "system-architecture": "Data Architectures & Stacks",
-  "database-storage": "Database & Storage",
-  "data-warehouse": "Data Warehouse & Modeling",
-  "data-lake-lakehouse": "Data Lake & Lakehouse",
-  "cloud-data-platform": "Cloud Data Platform",
-  "batch-processing": "Batch Processing",
-  "streaming-processing": "Streaming Processing",
-  "etl-elt": "ETL & ELT",
-  "transformation-analytics": "Transformation & Analytics",
-  "orchestration": "Orchestration",
-  "data-quality": "Data Quality",
-  "governance-metadata": "Governance & Metadata",
-  "observability-reliability": "Observability & Reliability",
-  "genai-ml": "GenAI & Machine Learning"
-};
-
-const orderedCategories = Object.keys(categoryNames);
 const dynamicMOC = [];
 
-orderedCategories.forEach(catSlug => {
-   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${catSlug}/`));
+conceptCategories.forEach(cat => {
+   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
    if (docsInCat.length > 0) {
        dynamicMOC.push({
-           categorySlug: catSlug,
-           category: categoryNames[catSlug],
+           categorySlug: cat.slug,
+           category: cat.label,
            concepts: docsInCat.map(doc => {
                // Extract clean title without prefixes like "Concept -" if they exist
                let title = doc.data.title;
@@ -48,7 +29,7 @@ orderedCategories.forEach(catSlug => {
 });
 
 // Any other categories not listed in the ordered list?
-const existingCatSlugs = new Set(orderedCategories);
+const existingCatSlugs = new Set(conceptCategories.map(c => c.slug));
 const otherDocs = existingConcepts.filter(doc => {
     const parts = doc.id.split('/');
     if (parts.length >= 3) {

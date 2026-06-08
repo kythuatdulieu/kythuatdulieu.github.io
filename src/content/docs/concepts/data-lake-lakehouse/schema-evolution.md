@@ -118,8 +118,8 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 1. [Apache Iceberg Schema Evolution](https://iceberg.apache.org/docs/latest/evolution/) - Official Apache Iceberg documentation detailing Column ID tracking and schema evolution.
 2. [Delta Lake Schema Enforcement](https://docs.delta.io/latest/delta-batch.html#schema-enforcement) - Official Delta Lake documentation on how Delta Lake guards table schemas against incompatible data formats.
 3. [Delta Lake Schema Evolution](https://docs.delta.io/latest/delta-batch.html#schema-evolution) - Official Delta Lake documentation on enabling automatic schema evolution.
-4. [Diving into Delta Lake Schema Enforcement & Evolution](https://www.databricks.com/blog/2019/09/24/diving-into-delta-lake-schema-enforcement-protection.html) - Databricks engineering blog post exploring schema management patterns in production.
-5. [Apache Iceberg Internals Guide](https://www.dremio.com/resources/guide/apache-iceberg-internals/) - Dremio's deep dive into Iceberg metadata, schema mapping, and manifest structure.
+4. Diving into Delta Lake Schema Enforcement & Evolution - Databricks engineering blog post exploring schema management patterns in production.
+5. Apache Iceberg Internals Guide - Dremio's deep dive into Iceberg metadata, schema mapping, and manifest structure.
 
 ## English Summary
 

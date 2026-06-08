@@ -137,7 +137,7 @@ if not results["success"]:
 1. [Great Expectations Documentation](https://docs.greatexpectations.io/docs/) - Official documentation for building and executing data assertions in Python.
 2. [dbt Documentation: Data Tests](https://docs.getdbt.com/docs/build/tests) - Guide to defining schema tests and custom SQL data quality checks in dbt.
 3. [Monte Carlo Data: Data Observability vs. Data Testing](https://www.montecarlodata.com/blog-data-observability-vs-data-testing/) - Technical blog comparing static testing assertions against automated data monitoring.
-4. [Datafold: Automated Data Testing in CI](https://www.datafold.com/blog/automated-data-testing-in-ci) - Overview of regression testing and continuous data validation within software development workflows.
+4. Datafold: Automated Data Testing in CI - Overview of regression testing and continuous data validation within software development workflows.
 5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Reference book discussing data pipeline design, circuit breaker patterns, and data quality architectures.
 
 ## English Summary

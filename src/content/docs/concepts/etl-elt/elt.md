@@ -151,7 +151,7 @@ Toàn bộ logic biến đổi này hoàn toàn được viết bằng SQL và �
 ## Tài liệu tham khảo
 
 1. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley detail-oriented on the evolution of ETL into ELT and the Modern Data Stack.
-2. [dbt Labs Blog: What is the Modern Data Stack?](https://www.getdbt.com/blog/what-is-the-modern-data-stack) - Verified engineering resource detailing the role of ELT and SQL-based transformations.
+2. dbt Labs Blog: What is the Modern Data Stack? - Verified engineering resource detailing the role of ELT and SQL-based transformations.
 3. [Fivetran: ETL vs. ELT - The Complete Guide](https://www.fivetran.com/blog/etl-vs-elt) - Extensive industry blog comparing operational architectures, performance, and scaling between ETL and ELT.
 4. [Snowflake: Extract, Load, Transform (ELT) Resource Guide](https://www.snowflake.com/guides/elt) - Official guide on loading raw data and leveraging Snowflake's virtual warehouses for in-database transformation.
 5. [AWS: What's the Difference Between ETL and ELT?](https://aws.amazon.com/compare/the-difference-between-etl-and-elt/) - AWS comparison guide detailing performance, security, and storage trade-offs in cloud environments.

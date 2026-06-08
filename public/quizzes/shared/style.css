@@ -1439,10 +1439,24 @@ button {
   color: var(--text-primary);
 }
 
+.home-btn {
+  width: auto !important;
+  padding: 0 12px;
+  display: flex;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 600px) {
+  .home-btn {
+    width: 40px !important;
+    padding: 0 !important;
+  }
   .home-text {
     display: none;
   }
 }
+
 
 

@@ -135,7 +135,7 @@ Sau đó, sự kiện này được đẩy vào Kafka và cuối cùng lưu vào
 ## Tài liệu tham khảo
 
 1. [Debezium Documentation](https://debezium.io/documentation/reference/stable/) - Red Hat open source platform for monitoring database transaction logs and capturing change data.
-2. [Databricks Lakeflow Connect](https://www.databricks.com/product/lakeflow/lakeflow-connect) - Databricks product page explaining managed database replication and source system connectivity.
+2. Databricks Lakeflow Connect - Databricks product page explaining managed database replication and source system connectivity.
 3. [AWS Database Migration Service Welcome Guide](https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html) - AWS official guide on migrating and replicating data from source databases.
 4. [What is Data Integration?](https://www.ibm.com/topics/data-integration) - IBM guide to consolidating and integrating diverse data sources.
 5. [What is Change Data Capture (CDC)?](https://www.confluent.io/learn/change-data-capture/) - Confluent learning center article on the mechanics of CDC for streaming data ingestion.

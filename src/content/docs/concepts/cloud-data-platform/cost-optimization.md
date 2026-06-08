@@ -161,7 +161,7 @@ WHERE event_date BETWEEN '2026-06-01' AND '2026-06-30'
 1. [FinOps Foundation Framework](https://www.finops.org/) - The official framework and standard definitions for cloud financial operations and cost management.
 2. [AWS Well-Architected Framework - Cost Optimization](https://aws.amazon.com/architecture/well-architected/) - Key concepts, design principles, and architectural best practices for cost optimization on AWS.
 3. [Google Cloud Architecture Framework: Cost Optimization](https://cloud.google.com/architecture/framework/cost-optimization) - Strategies and best practices for monitoring, control, and optimization of cloud costs on Google Cloud Platform.
-4. [Snowflake: Understanding and Optimizing Cost](https://docs.snowflake.com/en/user-guide/cost-understanding-optimizing) - Best practices and tools for managing and optimizing virtual warehouse compute and storage consumption.
+4. Snowflake: Understanding and Optimizing Cost - Best practices and tools for managing and optimizing virtual warehouse compute and storage consumption.
 5. [Databricks Lakehouse Cost Optimization](https://docs.databricks.com/en/lakehouse-architecture/cost-optimization/) - Best practices for optimizing workload compute, using serverless options, and governing DBUs.
 
 ## English Summary

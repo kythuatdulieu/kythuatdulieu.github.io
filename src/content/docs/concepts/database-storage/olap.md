@@ -143,10 +143,10 @@ Nếu chạy trên một database dạng hàng thông thường, câu lệnh nà
 
 ## Tài liệu tham khảo
 
-1. [The Data Warehouse Toolkit](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-toolkit/) - The definitive guide to dimensional modeling by Ralph Kimball and Margy Ross.
+1. The Data Warehouse Toolkit - The definitive guide to dimensional modeling by Ralph Kimball and Margy Ross.
 2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann analyzing storage engines, column-oriented storage, and OLAP.
 3. [Snowflake Documentation: OLAP vs. OLTP](https://www.snowflake.com/guides/olap-vs-oltp) - Detailed guide explaining the differences between transactional and analytical processing.
-4. [ClickHouse Documentation: What is OLAP?](https://clickhouse.com/docs/en/about/olap) - High-level introduction to analytical database systems and columnar storage principles.
+4. ClickHouse Documentation: What is OLAP? - High-level introduction to analytical database systems and columnar storage principles.
 5. [Microsoft Learn: Online Analytical Processing (OLAP)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/online-analytical-processing) - Overview of analytical data store architecture and dimensional modeling in Azure.
 
 

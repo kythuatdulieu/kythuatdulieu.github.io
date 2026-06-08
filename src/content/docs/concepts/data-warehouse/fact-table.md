@@ -176,9 +176,9 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 
 1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic textbook detailing fact table designs, grain specifications, and additive/non-additive metrics.
 2. [Snowflake Documentation: Designing Fact Tables](https://docs.snowflake.com/) - Best practices and patterns for building highly performant fact tables on Snowflake.
-3. [Databricks Documentation: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Guide to structuring raw ingestions into Gold-layer fact and dimension tables.
-4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Comprehensive guide on how fact tables aggregate quantitative metrics for BI tools.
-5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Integrating classic Kimball dimensional designs, surrogate keys, and fact tables within the Databricks Lakehouse.
+3. Databricks Documentation: Medallion Architecture - Guide to structuring raw ingestions into Gold-layer fact and dimension tables.
+4. Monte Carlo Data: Dimensional Modeling 101 - Comprehensive guide on how fact tables aggregate quantitative metrics for BI tools.
+5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Integrating classic Kimball dimensional designs, surrogate keys, and fact tables within the Databricks Lakehouse.
 
 ## English Summary
 

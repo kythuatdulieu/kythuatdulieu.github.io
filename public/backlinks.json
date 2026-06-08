@@ -5881,10 +5881,6 @@
       "title": "Đối soát dữ liệu - Data Reconciliation"
     },
     {
-      "url": "/concepts/etl-elt/backfill/",
-      "title": "Backfill"
-    },
-    {
       "url": "/concepts/foundation/data-engineer-role/",
       "title": "Vai trò Kỹ sư Dữ liệu - Data Engineer Role"
     },

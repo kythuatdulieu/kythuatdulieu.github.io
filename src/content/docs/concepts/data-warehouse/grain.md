@@ -144,7 +144,7 @@ Khi cần lập báo cáo so sánh, chúng ta sẽ thực hiện tổng hợp (R
 
 1. [Declaring the Grain](https://www.kimballgroup.com/2003/03/declaring-the-grain/) - Ralph Kimball's guide on declaring the grain of a fact table on Kimball Group.
 2. [Grain - Kimball Dimensional Modeling Techniques](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/grain/) - Official Kimball Group techniques index definition for dimensional grain.
-3. [Fact Table Grain](https://www.holistics.io/books/setup-analytics-database/fact-table-grain/) - Conceptual chapter on data granularity in Holistics Analytics Setup Guide.
+3. Fact Table Grain - Conceptual chapter on data granularity in Holistics Analytics Setup Guide.
 4. [Granularity in Data Warehouse](https://www.geeksforgeeks.org/granularity-in-data-warehouse/) - Educational article on data warehouse granularity and its design implications on GeeksforGeeks.
 5. [The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross, definitive guide to dimensional modeling on O'Reilly.
 

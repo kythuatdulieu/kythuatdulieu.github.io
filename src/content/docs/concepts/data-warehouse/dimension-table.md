@@ -139,9 +139,9 @@ Nếu không có bảng `dim_date`, bạn sẽ phải viết một câu lệnh S
 
 1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's foundational book on dimensional modeling and dimension table design.
 2. [Snowflake Documentation: Designing Dimension Tables](https://docs.snowflake.com/) - Best practices and modeling principles for optimized dimensions in Snowflake.
-3. [Databricks Documentation: Slowly Changing Dimensions (SCD)](https://docs.databricks.com/en/delta/scd.html) - Technical guide to implementing and running SCD Type 1 and Type 2 updates in Delta Lake.
-4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Detailed blog post explaining how dimensions provide descriptive context to metrics in modern data architectures.
-5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Strategic guide on deploying star schemas and dimension tables on modern cloud lakehouses.
+3. Databricks Documentation: Slowly Changing Dimensions (SCD) - Technical guide to implementing and running SCD Type 1 and Type 2 updates in Delta Lake.
+4. Monte Carlo Data: Dimensional Modeling 101 - Detailed blog post explaining how dimensions provide descriptive context to metrics in modern data architectures.
+5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Strategic guide on deploying star schemas and dimension tables on modern cloud lakehouses.
 
 ## English Summary
 

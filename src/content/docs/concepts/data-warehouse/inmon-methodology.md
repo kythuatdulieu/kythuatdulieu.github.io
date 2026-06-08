@@ -186,7 +186,7 @@ Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình E
 2. [Corporate Information Factory, 2nd Edition](https://www.oreilly.com/library/view/corporate-information-factory/9780471399612/) - W.H. Inmon, Claudia Imhoff, and Ryan Sousa's guide to the CIF framework on O'Reilly.
 3. [What is a Data Warehouse?](https://www.databricks.com/glossary/data-warehouse) - An entry in the Databricks Glossary outlining the Inmon Top-Down methodology and Corporate Information Factory design.
 4. [Difference between Kimball and Inmon](https://www.geeksforgeeks.org/difference-between-kimball-and-inmon/) - Comparison of architecture, deployment, and data modeling between the two schools of thought on GeeksforGeeks.
-5. [Kimball vs. Inmon: Two School of Thoughts](https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/) - Structured comparison of the two classic approaches to data warehouse design from the Holistics Analytics Setup Guide.
+5. Kimball vs. Inmon: Two School of Thoughts - Structured comparison of the two classic approaches to data warehouse design from the Holistics Analytics Setup Guide.
 
 ## English Summary
 

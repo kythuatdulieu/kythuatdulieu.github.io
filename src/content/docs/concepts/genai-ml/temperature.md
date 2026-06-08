@@ -136,7 +136,7 @@ Khi áp dụng phép toán Softmax, mọi token đều có xác suất xuất hi
 
 1. [OpenAI API Reference - Chat Completions](https://platform.openai.com/docs/api-reference/chat) - Tài liệu tham khảo chính thức về các thông số cấu hình API Chat của OpenAI bao gồm `temperature`.
 2. [How to generate text - Hugging Face Blog](https://huggingface.co/blog/how-to-generate) - Bài viết hướng dẫn các phương pháp giải mã và sinh văn bản trong Transformer (coi nhiệt độ, top-k, top-p).
-3. [Advanced Generation Parameters - Cohere Documentation](https://docs.cohere.com/docs/advanced-generation-parameters) - Hướng dẫn chi tiết từ Cohere giải thích các thông số nâng cao như Temperature, Top-k và Top-p.
+3. Advanced Generation Parameters - Cohere Documentation - Hướng dẫn chi tiết từ Cohere giải thích các thông số nâng cao như Temperature, Top-k và Top-p.
 4. [Deep Learning Book](https://www.deeplearningbook.org/) - Cuốn sách giáo khoa kinh điển về Học Sâu của Ian Goodfellow, Yoshua Bengio và Aaron Courville.
 5. [Anthropic Claude Messages API Reference](https://docs.anthropic.com/en/api/messages) - Tài liệu đặc tả kỹ thuật API Messages của Anthropic, hướng dẫn cách thiết lập temperature cho dòng mô hình Claude.
 

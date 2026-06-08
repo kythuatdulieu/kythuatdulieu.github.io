@@ -137,7 +137,7 @@ Dưới nền, dbt sẽ tự động chuyển hóa câu lệnh và gửi xuống
 
 ## Tài liệu tham khảo
 
-1. [Apache Airflow Documentation: Catchup and Backfill](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag.html#catchup-and-backfill) - Official guide detailing execution dates, catchup parameter, and command-line backfill execution.
+1. Apache Airflow Documentation: Catchup and Backfill - Official guide detailing execution dates, catchup parameter, and command-line backfill execution.
 2. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley describing idempotency, reprocessing, and data pipeline backfilling principles.
 3. [dbt Documentation: Incremental Models and Full-Refresh](https://docs.getdbt.com/docs/build/incremental-models) - Official dbt guide explaining how to handle backfills using the `--full-refresh` flag and custom incremental strategies.
 4. [Monte Carlo: How to Backfill Data Pipelines](https://www.montecarloquality.com/blog/how-to-backfill-data-pipelines/) - Best practices and patterns for safely backfilling data warehouses without causing downtime or schema breakages.

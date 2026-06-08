@@ -118,11 +118,11 @@ Báo cáo `report.html` sinh ra sẽ cho bạn biết chính xác:
 
 ## Tài liệu tham khảo
 
-1. [ydata-profiling Official Documentation](https://ydata-profiling.ydata.ai/docs/v4/index.html) - Official guides and API documentation for ydata-profiling (formerly pandas-profiling).
+1. ydata-profiling Official Documentation - Official guides and API documentation for ydata-profiling (formerly pandas-profiling).
 2. [Great Expectations: Profiling Data](https://docs.greatexpectations.io/) - Official documentation on configuring rule-based profilers to automate testing suites.
 3. [Databricks Lakehouse Monitoring Overview](https://docs.databricks.com/en/lakehouse-monitoring/index.html) - Documentation on Databricks' native data profiling and quality monitoring tools.
-4. [Data Quality: The Accuracy Dimension](https://www.oreilly.com/library/view/data-quality-the/9780123701091/) - Jack E. Olson's seminal book on data profiling methodologies and operational frameworks.
-5. [What is Data Profiling? Techniques and Tools](https://www.montecarlodata.com/blog-what-is-data-profiling/) - Monte Carlo Data's detailed technical blog post on data profiling best practices in the modern data stack.
+4. Data Quality: The Accuracy Dimension - Jack E. Olson's seminal book on data profiling methodologies and operational frameworks.
+5. What is Data Profiling? Techniques and Tools - Monte Carlo Data's detailed technical blog post on data profiling best practices in the modern data stack.
 
 ## English Summary
 

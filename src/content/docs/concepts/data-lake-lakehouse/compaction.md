@@ -149,11 +149,11 @@ SparkActions
 
 ## Tài liệu tham khảo
 
-1. [Databricks: Optimize Data File Layout](https://docs.databricks.com/en/optimizations/optimize.html) - Official guide on using the OPTIMIZE command to compact Delta Lake files.
+1. Databricks: Optimize Data File Layout - Official guide on using the OPTIMIZE command to compact Delta Lake files.
 2. [Apache Hudi Compaction Guide](https://hudi.apache.org/docs/compaction/) - Technical documentation explaining compaction execution and tuning for Hudi tables.
 3. [Apache Iceberg Spark Procedures: rewrite_data_files](https://iceberg.apache.org/docs/latest/spark-procedures/) - Official Iceberg guide on compaction procedures using Spark.
 4. [Snowflake Automatic Clustering and Compaction](https://docs.snowflake.com/en/user-guide/tables-auto-reclustering) - Explanation of Snowflake's background services that automatically cluster and compact micro-partitions.
-5. [Hadoop: The Definitive Guide](https://www.oreilly.com/library/view/hadoop-the-definitive/9781491901625/) - Tom White's authoritative book covering HDFS block sizing and the small files problem.
+5. [Hadoop: The Definitive Guide](https://www.oreilly.com/library/view/hadoop-the-definitive/9781491901687/) - Tom White's authoritative book covering HDFS block sizing and the small files problem.
 
 ## English Summary
 

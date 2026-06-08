@@ -120,7 +120,7 @@ Sau khi thực thi, kết quả trả về sẽ chỉ còn duy nhất 2 dòng: B
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining at-least-once message delivery, message deduplication, and idempotency.
 2. [SQL Cookbook](https://www.oreilly.com/library/view/sql-cookbook-2nd/9781492077435/) - Book by Anthony Molinaro and Robert de Graaf containing recipe patterns for finding and removing duplicate records in SQL.
-3. [Apache Spark Documentation: dropDuplicates](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.DataFrame.dropDuplicates.html) - Official API reference for PySpark's dropDuplicates method, a standard data engineering tool for row deduplication.
+3. Apache Spark Documentation: dropDuplicates - Official API reference for PySpark's dropDuplicates method, a standard data engineering tool for row deduplication.
 4. [Delta Lake Documentation: Upserting data using merge](https://docs.delta.io/latest/delta-update.html#upsert-into-a-table-using-merge) - Official Delta Lake guide showing how to deduplicate and merge CDC records.
 5. [Dedupe Python Library Documentation](https://github.com/dedupeio/dedupe) - Open-source library documentation for Dedupe.io, demonstrating machine-learning-based deduplication and entity resolution.
 

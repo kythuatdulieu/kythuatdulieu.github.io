@@ -152,7 +152,7 @@ Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành 
 
 ## Tài liệu tham khảo
 
-1. [Incremental Sync Modes](https://docs.airbyte.com/understanding-airbyte/connections/incremental-deduped-history) - Airbyte Documentation explaining incremental sync configurations and modes.
+1. Incremental Sync Modes - Airbyte Documentation explaining incremental sync configurations and modes.
 2. [Configure incremental models](https://docs.getdbt.com/docs/build/incremental-models) - dbt Developer Hub guide on building and configuring incremental models.
 3. [Building Efficient Data Pipelines With Incremental Updates](https://fivetran.com/blog/building-efficient-data-pipelines-with-incremental-updates) - Fivetran Blog post detailing incremental sync patterns and strategies.
 4. [AWS Glue ETL Jobs Incremental Load](https://docs.aws.amazon.com/glue/latest/dg/glue-etl-jobs-incremental-load.html) - AWS Glue official documentation on managing incremental data loading.

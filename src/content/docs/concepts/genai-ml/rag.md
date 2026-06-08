@@ -185,7 +185,7 @@ print(answer)
 2. [LangChain RAG Tutorial](https://python.langchain.com/v0.2/docs/tutorials/rag/) - Hướng dẫn chi tiết cách xây dựng và thiết lập các thành phần của một RAG pipeline bằng LangChain.
 3. [LlamaIndex Documentation](https://docs.llamaindex.ai/en/stable/) - Tài liệu chính thức của LlamaIndex, framework chuyên dụng tối ưu hóa quản lý và truy xuất dữ liệu cho LLM.
 4. [Retrieval-Augmented Generation (RAG) - Pinecone Learning Center](https://www.pinecone.io/learn/retrieval-augmented-generation/) - Hướng dẫn sâu rộng về khái niệm RAG và vai trò của cơ sở dữ liệu Vector trong kiến trúc này.
-5. [Creating High Quality RAG Applications with Databricks](https://www.databricks.com/blog/creating-high-quality-rag-applications-databricks) - Bài viết từ Databricks chia sẻ các phương pháp thiết kế và đánh giá hệ thống RAG chất lượng cao trong thực tế.
+5. Creating High Quality RAG Applications with Databricks - Bài viết từ Databricks chia sẻ các phương pháp thiết kế và đánh giá hệ thống RAG chất lượng cao trong thực tế.
 
 ---
 

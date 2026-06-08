@@ -134,7 +134,7 @@ Với cấu trúc chi tiết như thế này, hệ thống nhận dữ liệu c�
 1. [Debezium Documentation: Architecture](https://debezium.io/documentation/reference/stable/architecture.html) - Official reference explaining Debezium connectors, snapshotting process, and Kafka integration.
 2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann discussing write-ahead logs, replication logs, and change data capture.
 3. [AWS Database Migration Service (DMS): Using Change Data Capture](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html) - AWS guide on enabling CDC for continuous replication from source databases to target endpoints.
-4. [Google Cloud Datastream Documentation: Change Data Capture Overview](https://cloud.google.com/datastream/docs/change-data-capture) - Official GCP documentation on serverless, log-based CDC architecture and replication.
+4. Google Cloud Datastream Documentation: Change Data Capture Overview - Official GCP documentation on serverless, log-based CDC architecture and replication.
 5. [Confluent Blog: What is Change Data Capture?](https://www.confluent.io/learn/change-data-capture/) - An industry-verified engineering resource by Confluent explaining log-based CDC patterns, Kafka Connect, and stream processing.
 
 

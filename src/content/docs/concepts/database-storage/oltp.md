@@ -167,7 +167,7 @@ Tất cả các câu lệnh trên đều tận dụng chỉ mục (Index) trên 
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann analyzing transactional database internals, locking, and ACID constraints.
 2. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley describing transactional systems as data sources.
-3. [AWS: What is OLTP?](https://aws.amazon.com/what-is/oltp/) - Detailed explanation of OLTP systems, their characteristics, and transactional database architecture.
+3. AWS: What is OLTP? - Detailed explanation of OLTP systems, their characteristics, and transactional database architecture.
 4. [IBM Topic: Online Transaction Processing (OLTP)](https://www.ibm.com/topics/oltp) - Core reference guide detailing ACID compliance, multi-tier architectures, and operational databases.
 5. [Microsoft Learn: Online Transaction Processing (OLTP)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/online-transaction-processing) - Reference architecture for transactional processing systems and database patterns.
 

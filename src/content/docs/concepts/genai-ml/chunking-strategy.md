@@ -162,7 +162,7 @@ for i, chunk in enumerate(chunks):
 1. [Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/) - Pinecone Learning Center guide to text splitting methods and parameters.
 2. [LangChain Text Splitters Concept Guide](https://python.langchain.com/docs/concepts/text_splitters/) - LangChain documentation explaining character and token splitters.
 3. [LlamaIndex Node Parsers and Text Splitters](https://docs.llamaindex.ai/en/stable/module_guides/loading/node_parsers/) - LlamaIndex guide on transforming documents into searchable nodes.
-4. [Effective Chunking Strategies for RAG](https://docs.cohere.com/docs/effective-chunking-strategies-for-rag) - Cohere official documentation explaining best practices for text chunking.
+4. Effective Chunking Strategies for RAG - Cohere official documentation explaining best practices for text chunking.
 5. [How to count tokens with tiktoken](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) - OpenAI Cookbook guide for precise token counting when preprocessing text.
 
 ## English Summary

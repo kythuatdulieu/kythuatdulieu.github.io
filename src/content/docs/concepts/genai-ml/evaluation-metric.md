@@ -104,7 +104,7 @@ Tính toán chỉ số:
 2. [Ragas Documentation](https://docs.ragas.io/en/stable/) - The official documentation for the RAGAS evaluation framework.
 3. [Google Machine Learning Crash Course: Classification Metrics](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall) - An educational guide explaining Precision, Recall, and Accuracy.
 4. [Pattern Recognition and Machine Learning](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf) - Christopher M. Bishop. A classic textbook containing deep details on ML theory and evaluation.
-5. [Qdrant Blog: How to Evaluate RAG Pipelines](https://qdrant.tech/articles/rag-evaluation/) - A practical guide on measuring the retrieval and generation phases of RAG systems.
+5. Qdrant Blog: How to Evaluate RAG Pipelines - A practical guide on measuring the retrieval and generation phases of RAG systems.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

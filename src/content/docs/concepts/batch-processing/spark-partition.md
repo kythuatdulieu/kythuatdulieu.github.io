@@ -130,9 +130,9 @@ Khi muốn thay đổi số lượng phân vùng của DataFrame, Spark cung c�
 
 1. [Apache Spark Programming Guide: Key-Value Pairs](https://spark.apache.org/docs/latest/rdd-programming-guide.html#working-with-key-value-pairs) - Official guide detailing data partitioning, custom partitioners, and key-value transformations.
 2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Reference book by Bill Chambers and Matei Zaharia with chapters dedicated to partitioning and performance tuning.
-3. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/) - Resource detailing Spark's physical data distribution, repartition, and coalesce behaviors by Jules S. Damji, Brooke Wenig, and Tathagata Das.
+3. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/) - Resource detailing Spark's physical data distribution, repartition, and coalesce behaviors by Jules S. Damji, Brooke Wenig, and Tathagata Das.
 4. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Hands-on book on Spark internals and distributed file handling by Jean-Georges Perrin.
-5. [Databricks Performance and Optimization Guide](https://docs.databricks.com/en/performance/index.html) - Databricks documentation explaining partition sizing, shuffling strategies, and adaptive query execution.
+5. Databricks Performance and Optimization Guide - Databricks documentation explaining partition sizing, shuffling strategies, and adaptive query execution.
 
 ## English Summary
 

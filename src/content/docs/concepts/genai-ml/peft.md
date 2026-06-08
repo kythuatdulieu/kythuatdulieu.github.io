@@ -164,7 +164,7 @@ merged_model.save_pretrained("./llama-3-pirate-final")
 2. [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314) - Bài báo nghiên cứu giới thiệu phương pháp QLoRA tối ưu hóa bộ nhớ khi tinh chỉnh.
 3. [Hugging Face PEFT Documentation](https://huggingface.co/docs/peft/index) - Tài liệu chính thức về thư viện Parameter-Efficient Fine-Tuning (PEFT) của Hugging Face.
 4. [Parameter-Efficient Fine-Tuning using Hugging Face PEFT](https://huggingface.co/blog/peft) - Bài viết trên Hugging Face Blog hướng dẫn thực hành sử dụng thư viện PEFT.
-5. [Efficient Fine-Tuning with LoRA: A Guide to Optimal Parameter Selection](https://www.databricks.com/blog/efficient-fine-tuning-lora-guide-optimal-parameter-selection) - Hướng dẫn từ Databricks về cách chọn tham số tối ưu (như rank và alpha) khi tinh chỉnh với LoRA.
+5. Efficient Fine-Tuning with LoRA: A Guide to Optimal Parameter Selection - Hướng dẫn từ Databricks về cách chọn tham số tối ưu (như rank và alpha) khi tinh chỉnh với LoRA.
 
 ---
 

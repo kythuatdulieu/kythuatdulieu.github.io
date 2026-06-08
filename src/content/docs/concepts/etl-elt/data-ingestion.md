@@ -175,7 +175,7 @@ print("Ingestion completed.")
 1. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley detail-oriented on the ingestion phase, batch vs. streaming ingestion, and decoupling.
 2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining stream processing, message brokers, and bulk data loading patterns.
 3. [AWS Whitepaper: Streaming Data Ingestion Patterns](https://docs.aws.amazon.com/whitepapers/latest/streaming-data-solutions-amazon-kinesis/streaming-data-solutions-amazon-kinesis.html) - Official AWS architectural guidance on stream ingestion using Amazon Kinesis and Apache Kafka.
-4. [Airbyte Documentation: Data Ingestion Architecture](https://docs.airbyte.com/understanding-airbyte/high-level-architecture/) - Guide explaining Airbyte's scheduler, source/destination adapters, and data replication process.
+4. Airbyte Documentation: Data Ingestion Architecture - Guide explaining Airbyte's scheduler, source/destination adapters, and data replication process.
 5. [Confluent: What is Data Ingestion?](https://www.confluent.io/learn/data-ingestion/) - Comprehensive overview of real-time vs. batch ingestion, event streaming, and architectural best practices.
 
 

@@ -147,8 +147,8 @@ WHEN NOT MATCHED THEN
 
 1. [Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) - AWS Builder's Library article on designing systems with safe retries and idempotency keys.
 2. [Designing Robust APIs with Idempotency](https://stripe.com/blog/idempotency) - Stripe Engineering Blog post explaining how they implement and handle idempotency in API requests.
-3. [Transactions in Apache Kafka: Exactly-Once Semantics](https://www.confluent.io/blog/idempotence-exactly-once-semantics-apache-kafka/) - Confluent Blog post on idempotence and exactly-once processing in Kafka.
-4. [SQL MERGE Statement](https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-dml-merge.html) - Databricks SQL reference documentation for performing idempotent upserts.
+3. Transactions in Apache Kafka: Exactly-Once Semantics - Confluent Blog post on idempotence and exactly-once processing in Kafka.
+4. SQL MERGE Statement - Databricks SQL reference documentation for performing idempotent upserts.
 5. [What is Idempotency?](https://docs.getdbt.com/terms/idempotency) - dbt Labs definition and explanation of idempotency in data modeling.
 
 ## English Summary

@@ -159,7 +159,7 @@ df.to_parquet('data.parquet')
 2. [Apache Avro Documentation](https://avro.apache.org/docs/current/) - Official documentation for Apache Avro serialization system.
 3. [Apache ORC Documentation](https://orc.apache.org/docs/) - Official documentation for the Optimized Row Columnar file format.
 4. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's book detailing encoding, schemas, and file evolution patterns on O'Reilly.
-5. [What is Apache Parquet?](https://www.databricks.com/glossary/parquet) - Entry in the Databricks Glossary discussing Parquet's columnar compression and metadata architecture.
+5. What is Apache Parquet? - Entry in the Databricks Glossary discussing Parquet's columnar compression and metadata architecture.
 
 ## English Summary
 

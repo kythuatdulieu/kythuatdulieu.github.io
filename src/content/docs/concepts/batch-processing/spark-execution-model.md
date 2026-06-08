@@ -114,8 +114,8 @@ Quá trình thực thi diễn ra ở hậu trường như sau:
 1. [Apache Spark Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html) - Official Apache Spark documentation describing cluster architectures, driver-executor coordination, and cluster managers.
 2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Essential book by Bill Chambers and Matei Zaharia covering Spark's application architecture and execution model.
 3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
-4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/) - Introduction to Spark structural APIs, architecture, and distributed execution mechanics by Jules S. Damji, Brooke Wenig, and Tathagata Das.
-5. [Databricks Cluster Resource Management](https://docs.databricks.com/en/archive/legacy/resource-management.html) - Technical documentation detailing hardware provisioning, executor allocation, and performance considerations.
+4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/) - Introduction to Spark structural APIs, architecture, and distributed execution mechanics by Jules S. Damji, Brooke Wenig, and Tathagata Das.
+5. Databricks Cluster Resource Management - Technical documentation detailing hardware provisioning, executor allocation, and performance considerations.
 
 ## English Summary
 

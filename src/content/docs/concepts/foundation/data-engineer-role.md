@@ -169,7 +169,7 @@ Không phải doanh nghiệp nào cũng cần đầu tư xây dựng đội ngũ
 1. [The Rise of the Data Engineer](https://medium.com/@maximebeauchemin/the-rise-of-the-data-engineer-91be18f42650) - Seminal article by Maxime Beauchemin detailing the evolution of data engineering.
 2. [What is a Data Engineer?](https://www.ibm.com/topics/data-engineer) - IBM guide outlining the role, responsibilities, and skill set of a data engineer.
 3. [IBM Data Engineering Professional Certificate](https://www.coursera.org/professional-certificates/ibm-data-engineer) - Coursera professional certification curriculum for data engineering foundations.
-4. [What is a Data Engineer?](https://www.databricks.com/glossary/data-engineer) - Databricks Glossary explanation of the data engineering role in modern data architecture.
+4. What is a Data Engineer? - Databricks Glossary explanation of the data engineering role in modern data architecture.
 5. [Fundamentals of Data Engineering Book](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - O'Reilly page for the comprehensive guide book by Joe Reis and Matt Housley.
 
 ## Góc phỏng vấn: Các câu hỏi thường gặp

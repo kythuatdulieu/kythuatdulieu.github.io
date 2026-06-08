@@ -140,7 +140,7 @@ result_df = sales_salted.join(cust_salted, ["city", "salt"]).drop("salt")
 2. [Adaptive Query Execution: Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html) - Databricks engineering blog post detailing the mechanics of Spark's AQE framework, including skew joins.
 3. [Apache Spark SQL Performance Tuning Guide](https://spark.apache.org/docs/latest/sql-performance-tuning.html) - Official documentation covering memory structures, join strategies, and adaptive query configurations.
 4. [High Performance Spark](https://www.oreilly.com/library/view/high-performance-spark/9781491943199/) - Practical guide to optimizing and troubleshooting distributed Spark code, specifically addressing data skew and custom partitioning, by Holden Karau and Rachel Warren.
-5. [Detecting and Solving Data Skew in Spark SQL](https://www.databricks.com/blog/2019/04/24/detecting-and-solving-data-skew-in-spark-sql.html) - Comprehensive guide on diagnosing and resolving data skew issues in production Spark applications.
+5. Detecting and Solving Data Skew in Spark SQL - Comprehensive guide on diagnosing and resolving data skew issues in production Spark applications.
 
 ## English Summary
 

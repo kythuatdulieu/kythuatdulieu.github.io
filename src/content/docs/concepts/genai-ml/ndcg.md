@@ -172,11 +172,11 @@ print(f"NDCG@3 Score: {ndcg:.3f}")
 
 ## Tài liệu tham khảo
 
-1. [Evaluation of Ranked Retrieval Results - Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/html/htmldoc/evaluation-of-ranked-retrieval-results-1.html) - Tài liệu giới thiệu chi tiết về cách đánh giá xếp hạng kết quả tìm kiếm của Đại học Stanford.
+1. Evaluation of Ranked Retrieval Results - Introduction to Information Retrieval - Tài liệu giới thiệu chi tiết về cách đánh giá xếp hạng kết quả tìm kiếm của Đại học Stanford.
 2. [Scikit-learn ndcg_score API](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html) - Tài liệu hướng dẫn sử dụng hàm tính NDCG của thư viện Scikit-learn.
 3. [Discounted Cumulative Gain - Wikipedia](https://en.wikipedia.org/wiki/Discounted_cumulative_gain) - Bài viết tổng quan về lý thuyết và công thức toán học của DCG và NDCG trên Wikipedia.
 4. [Learning a Personalized Homepage - Netflix Tech Blog](https://netflixtechblog.com/learning-a-personalized-homepage-5ea2ec70cf2a) - Bài viết của Netflix về cách áp dụng NDCG cho hệ thống cá nhân hóa trang chủ.
-5. [Evaluation Metrics for Information Retrieval - Evidently AI](https://evidentlyai.com/ml-in-production/ranking-metrics) - Bài viết hướng dẫn chi tiết về các metric đánh giá hệ thống xếp hạng bao gồm NDCG, MAP, và MRR.
+5. Evaluation Metrics for Information Retrieval - Evidently AI - Bài viết hướng dẫn chi tiết về các metric đánh giá hệ thống xếp hạng bao gồm NDCG, MAP, và MRR.
 
 ---
 

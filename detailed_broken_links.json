@@ -1,0 +1,873 @@
+{
+  "scanTime": "2026-06-08T04:59:28.820Z",
+  "totalLinksScanned": 898,
+  "brokenInternalCount": 0,
+  "brokenExternalCount": 108,
+  "brokenInternal": [],
+  "brokenExternal": [
+    {
+      "file": "src/content/docs/concepts/batch-processing/apache-spark.md",
+      "line": 139,
+      "text": "Learning Spark, 2nd Edition",
+      "url": "https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/data-skew.md",
+      "line": 143,
+      "text": "Detecting and Solving Data Skew in Spark SQL",
+      "url": "https://www.databricks.com/blog/2019/04/24/detecting-and-solving-data-skew-in-spark-sql.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-execution-model.md",
+      "line": 117,
+      "text": "Learning Spark, 2nd Edition",
+      "url": "https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-execution-model.md",
+      "line": 118,
+      "text": "Databricks Cluster Resource Management",
+      "url": "https://docs.databricks.com/en/archive/legacy/resource-management.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-jobs-stages-tasks.md",
+      "line": 124,
+      "text": "Learning Spark, 2nd Edition",
+      "url": "https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-jobs-stages-tasks.md",
+      "line": 125,
+      "text": "Mastering Apache Spark: DAGScheduler",
+      "url": "https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-dag-scheduler.html",
+      "error": "Status 401",
+      "status": 401
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-joins.md",
+      "line": 121,
+      "text": "Detecting and Solving Data Skew in Spark SQL",
+      "url": "https://www.databricks.com/blog/2019/04/24/detecting-and-solving-data-skew-in-spark-sql.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-partition.md",
+      "line": 133,
+      "text": "Learning Spark, 2nd Edition",
+      "url": "https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/batch-processing/spark-partition.md",
+      "line": 135,
+      "text": "Databricks Performance and Optimization Guide",
+      "url": "https://docs.databricks.com/en/performance/index.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/amazon-redshift.md",
+      "line": 182,
+      "text": "Amazon Redshift RA3 Nodes Under the Hood",
+      "url": "https://aws.amazon.com/blogs/big-data/amazon-redshift-ra3-nodes-with-managed-storage-under-the-hood/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/amazon-redshift.md",
+      "line": 185,
+      "text": "AWS in Action, Third Edition",
+      "url": "https://www.manning.com/books/aws-in-action-third-edition",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/azure-synapse.md",
+      "line": 163,
+      "text": "Azure Synapse SQL Architecture",
+      "url": "https://learn.microsoft.com/azure/synapse-analytics/sql/concepts-sql-architecture",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/azure-synapse.md",
+      "line": 164,
+      "text": "Learning Azure Synapse Analytics",
+      "url": "https://www.oreilly.com/library/view/learning-azure-synapse/9781098105303/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/cost-optimization.md",
+      "line": 164,
+      "text": "Snowflake: Understanding and Optimizing Cost",
+      "url": "https://docs.snowflake.com/en/user-guide/cost-understanding-optimizing",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/google-bigquery.md",
+      "line": 149,
+      "text": "BigQuery Cost Optimization Techniques",
+      "url": "https://cloud.google.com/architecture/bigquery-cost-optimization",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/snowflake.md",
+      "line": 129,
+      "text": "The Snowflake Elastic Data Warehouse",
+      "url": "https://doi.org/10.1145/2882903.2903741",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/acid-transactions-on-lake.md",
+      "line": 175,
+      "text": "Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores",
+      "url": "https://doi.org/10.14778/3415478.3415560",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/acid-transactions-on-lake.md",
+      "line": 178,
+      "text": "Introducing Delta Lake: ACID Transactions on Spark",
+      "url": "https://www.databricks.com/blog/2019/08/21/introducing-delta-lake-acid-transactions-on-spark.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/apache-hudi.md",
+      "line": 191,
+      "text": "Building a Large-scale Transactional Data Lake at Uber Using Apache Hudi",
+      "url": "https://www.uber.com/blog/building-a-large-scale-transactional-data-lake-at-uber-using-apache-hudi/",
+      "error": "Status 406",
+      "status": 406
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/apache-hudi.md",
+      "line": 193,
+      "text": "Apache Hudi AWS Integrations",
+      "url": "https://hudi.apache.org/docs/hoodie_aws",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/apache-iceberg.md",
+      "line": 170,
+      "text": "Incremental Processing using Netflix Maestro and Apache Iceberg",
+      "url": "https://netflixtechblog.com/incremental-processing-using-netflix-maestro-and-apache-iceberg-e4c19460a876",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/compaction.md",
+      "line": 152,
+      "text": "Databricks: Optimize Data File Layout",
+      "url": "https://docs.databricks.com/en/optimizations/optimize.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/compaction.md",
+      "line": 156,
+      "text": "Hadoop: The Definitive Guide",
+      "url": "https://www.oreilly.com/library/view/hadoop-the-definitive/9781491901625/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/data-lake.md",
+      "line": 177,
+      "text": "Databricks Data Lake Guide",
+      "url": "https://www.databricks.com/discover/pages/what-is-a-data-lake",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/delta-lake.md",
+      "line": 150,
+      "text": "Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores",
+      "url": "https://doi.org/10.14778/3415478.3415560",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/medallion-architecture.md",
+      "line": 137,
+      "text": "Databricks Medallion Architecture Guide",
+      "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/medallion-architecture.md",
+      "line": 138,
+      "text": "Azure Databricks Lakehouse: Medallion Architecture",
+      "url": "https://learn.microsoft.com/en-us/azure/databricks/lakehouse/medallion-architecture",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/medallion-architecture.md",
+      "line": 141,
+      "text": "Data Engineering with Databricks",
+      "url": "https://www.oreilly.com/library/view/data-engineering-with/9781835081198/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/schema-evolution.md",
+      "line": 121,
+      "text": "Diving into Delta Lake Schema Enforcement & Evolution",
+      "url": "https://www.databricks.com/blog/2019/09/24/diving-into-delta-lake-schema-enforcement-protection.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/schema-evolution.md",
+      "line": 122,
+      "text": "Apache Iceberg Internals Guide",
+      "url": "https://www.dremio.com/resources/guide/apache-iceberg-internals/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/table-format.md",
+      "line": 131,
+      "text": "Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores",
+      "url": "https://www.vldb.org/pvldb/vol13/p3411-armbrust.pdf",
+      "error": "Timeout",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/table-format.md",
+      "line": 133,
+      "text": "Building a Large-scale Transactional Data Lake at Uber Using Apache Hudi",
+      "url": "https://www.uber.com/blog/building-a-large-scale-transactional-data-lake-at-uber-using-apache-hudi/",
+      "error": "Status 406",
+      "status": 406
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/time-travel.md",
+      "line": 118,
+      "text": "Querying Iceberg Tables with Time Travel on AWS EMR",
+      "url": "https://docs.aws.amazon.com/emr/latest/EMR-Developer-Guide/emr-iceberg-time-travel.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-lake-lakehouse/time-travel.md",
+      "line": 119,
+      "text": "Introducing Delta Lake Time Travel for Data Lakes",
+      "url": "https://www.databricks.com/blog/2019/02/04/introducing-delta-lake-time-travel-for-data-lakes.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/anomaly-detection.md",
+      "line": 130,
+      "text": "Monte Carlo Data: How to Detect Data Anomalies with SQL",
+      "url": "https://www.montecarlodata.com/blog-how-to-detect-data-anomalies-with-sql/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/anomaly-detection.md",
+      "line": 132,
+      "text": "Netflix Tech Blog: RAD Outlier Detection on Big Data",
+      "url": "https://netflixtechblog.com/rad-outlier-detection-on-big-data-d6b0494371cc",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/anomaly-detection.md",
+      "line": 133,
+      "text": "Uber Engineering Blog: uVitals Anomaly Detection & Alerting System",
+      "url": "https://www.uber.com/blog/uvitals-an-anomaly-detection-alerting-system/",
+      "error": "Status 406",
+      "status": 406
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-profiling.md",
+      "line": 121,
+      "text": "ydata-profiling Official Documentation",
+      "url": "https://ydata-profiling.ydata.ai/docs/v4/index.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-profiling.md",
+      "line": 124,
+      "text": "Data Quality: The Accuracy Dimension",
+      "url": "https://www.oreilly.com/library/view/data-quality-the/9780123701091/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-profiling.md",
+      "line": 125,
+      "text": "What is Data Profiling? Techniques and Tools",
+      "url": "https://www.montecarlodata.com/blog-what-is-data-profiling/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-quality-dimensions.md",
+      "line": 153,
+      "text": "Monte Carlo Data: What are Data Quality Dimensions?",
+      "url": "https://www.montecarlodata.com/blog-what-are-data-quality-dimensions/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-quality-dimensions.md",
+      "line": 154,
+      "text": "DAMA International Official Site",
+      "url": "https://www.dama.org/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-quality-dimensions.md",
+      "line": 155,
+      "text": "DAMA-DMBOK: Data Management Body of Knowledge",
+      "url": "https://www.oreilly.com/library/view/dama-dmbok-data-management/9781634622349/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-quality.md",
+      "line": 158,
+      "text": "Monte Carlo Data: What is Data Quality?",
+      "url": "https://www.montecarlodata.com/blog-what-is-data-quality/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-quality.md",
+      "line": 161,
+      "text": "DAMA International Official Site",
+      "url": "https://www.dama.org/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-reconciliation.md",
+      "line": 145,
+      "text": "Netflix Tech Blog: Netflix Billing Migration to AWS — Part II",
+      "url": "https://netflixtechblog.com/netflix-billing-migration-to-aws-part-ii-834f6358126",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-reconciliation.md",
+      "line": 147,
+      "text": "Monte Carlo Data: What is Data Reconciliation?",
+      "url": "https://www.montecarlodata.com/blog-what-is-data-reconciliation/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-reconciliation.md",
+      "line": 148,
+      "text": "Datafold: Reconciling Databases and Warehouses",
+      "url": "https://www.datafold.com/blog/data-reconciliation-at-scale",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-quality/data-testing.md",
+      "line": 140,
+      "text": "Datafold: Automated Data Testing in CI",
+      "url": "https://www.datafold.com/blog/automated-data-testing-in-ci",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/data-warehouse.md",
+      "line": 193,
+      "text": "Databricks: Medallion Architecture",
+      "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/data-warehouse.md",
+      "line": 195,
+      "text": "DAMA International Official Site",
+      "url": "https://www.dama.org/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimension-table.md",
+      "line": 142,
+      "text": "Databricks Documentation: Slowly Changing Dimensions (SCD)",
+      "url": "https://docs.databricks.com/en/delta/scd.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimension-table.md",
+      "line": 143,
+      "text": "Monte Carlo Data: Dimensional Modeling 101",
+      "url": "https://www.montecarlodata.com/blog-dimensional-modeling/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimension-table.md",
+      "line": 144,
+      "text": "Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse",
+      "url": "https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimensional-modeling.md",
+      "line": 165,
+      "text": "Databricks Documentation: Medallion Architecture",
+      "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimensional-modeling.md",
+      "line": 166,
+      "text": "Monte Carlo Data: Dimensional Modeling 101",
+      "url": "https://www.montecarlodata.com/blog-dimensional-modeling/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/dimensional-modeling.md",
+      "line": 167,
+      "text": "Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse",
+      "url": "https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/fact-table.md",
+      "line": 179,
+      "text": "Databricks Documentation: Medallion Architecture",
+      "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/fact-table.md",
+      "line": 180,
+      "text": "Monte Carlo Data: Dimensional Modeling 101",
+      "url": "https://www.montecarlodata.com/blog-dimensional-modeling/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/fact-table.md",
+      "line": 181,
+      "text": "Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse",
+      "url": "https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/grain.md",
+      "line": 147,
+      "text": "Fact Table Grain",
+      "url": "https://www.holistics.io/books/setup-analytics-database/fact-table-grain/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/inmon-methodology.md",
+      "line": 189,
+      "text": "Kimball vs. Inmon: Two School of Thoughts",
+      "url": "https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/kimball-methodology.md",
+      "line": 186,
+      "text": "Kimball vs. Inmon: Two School of Thoughts",
+      "url": "https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/slowly-changing-dimension.md",
+      "line": 164,
+      "text": "Slowly Changing Dimensions in Snowflake with dbt",
+      "url": "https://www.snowflake.com/blog/slowly-changing-dimensions-snowflake-dbt/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/surrogate-key.md",
+      "line": 141,
+      "text": "Surrogate Keys Keep Control",
+      "url": "https://www.kimballgroup.com/2004/03/surrogate-keys-keep-control/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/surrogate-key.md",
+      "line": 142,
+      "text": "Generating surrogate keys with dbt",
+      "url": "https://docs.getdbt.com/blog/generating-surrogate-keys-with-dbt",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/data-warehouse/unity-catalog.md",
+      "line": 115,
+      "text": "Introducing Unity Catalog: Fine-grained Governance for Data and AI on the Lakehouse",
+      "url": "https://www.databricks.com/blog/introducing-unity-catalog-fine-grained-governance-data-and-ai-lakehouse",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/columnar-storage.md",
+      "line": 151,
+      "text": "What is a Column-Oriented Database?",
+      "url": "https://clickhouse.com/docs/en/about-us/column-oriented-database/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/compression-algorithms.md",
+      "line": 141,
+      "text": "Compression in Apache Kafka: Gzip, Snappy, LZ4, Zstd",
+      "url": "https://www.confluent.io/blog/compression-in-apache-kafka-gzip-snappy-lz4-zstd/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/file-formats.md",
+      "line": 162,
+      "text": "What is Apache Parquet?",
+      "url": "https://www.databricks.com/glossary/parquet",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/olap.md",
+      "line": 146,
+      "text": "The Data Warehouse Toolkit",
+      "url": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-toolkit/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/olap.md",
+      "line": 149,
+      "text": "ClickHouse Documentation: What is OLAP?",
+      "url": "https://clickhouse.com/docs/en/about/olap",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/oltp.md",
+      "line": 170,
+      "text": "AWS: What is OLTP?",
+      "url": "https://aws.amazon.com/what-is/oltp/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/relational-database.md",
+      "line": 159,
+      "text": "Database System Concepts",
+      "url": "https://db-book.com/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/relational-database.md",
+      "line": 162,
+      "text": "Codd's Seminal Paper: A Relational Model of Data for Large Shared Data Banks",
+      "url": "https://dl.acm.org/doi/10.1145/362384.362685",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/row-based-storage.md",
+      "line": 118,
+      "text": "C-Store: A Column-Oriented DBMS",
+      "url": "https://dl.acm.org/doi/10.1145/1083592.1083658",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/row-based-storage.md",
+      "line": 119,
+      "text": "ClickHouse Documentation: Column-oriented DBMS",
+      "url": "https://clickhouse.com/docs/en/about/olap",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/database-storage/row-based-storage.md",
+      "line": 121,
+      "text": "AWS: Row-Oriented vs. Column-Oriented Databases",
+      "url": "https://aws.amazon.com/compare/the-difference-between-row-oriented-and-column-oriented-databases/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/backfill.md",
+      "line": 140,
+      "text": "Apache Airflow Documentation: Catchup and Backfill",
+      "url": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag.html#catchup-and-backfill",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/backfill.md",
+      "line": 143,
+      "text": "Monte Carlo: How to Backfill Data Pipelines",
+      "url": "https://www.montecarloquality.com/blog/how-to-backfill-data-pipelines/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/change-data-capture.md",
+      "line": 137,
+      "text": "Google Cloud Datastream Documentation: Change Data Capture Overview",
+      "url": "https://cloud.google.com/datastream/docs/change-data-capture",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/data-ingestion.md",
+      "line": 178,
+      "text": "Airbyte Documentation: Data Ingestion Architecture",
+      "url": "https://docs.airbyte.com/understanding-airbyte/high-level-architecture/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/data-loading.md",
+      "line": 171,
+      "text": "Databricks Documentation: MERGE INTO",
+      "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-dml-merge-into.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/deduplication.md",
+      "line": 123,
+      "text": "Apache Spark Documentation: dropDuplicates",
+      "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.DataFrame.dropDuplicates.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/elt.md",
+      "line": 154,
+      "text": "dbt Labs Blog: What is the Modern Data Stack?",
+      "url": "https://www.getdbt.com/blog/what-is-the-modern-data-stack",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/idempotency.md",
+      "line": 150,
+      "text": "Transactions in Apache Kafka: Exactly-Once Semantics",
+      "url": "https://www.confluent.io/blog/idempotence-exactly-once-semantics-apache-kafka/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/idempotency.md",
+      "line": 151,
+      "text": "SQL MERGE Statement",
+      "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-dml-merge.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/etl-elt/incremental-load.md",
+      "line": 155,
+      "text": "Incremental Sync Modes",
+      "url": "https://docs.airbyte.com/understanding-airbyte/connections/incremental-deduped-history",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/foundation/data-engineer-role.md",
+      "line": 169,
+      "text": "The Rise of the Data Engineer",
+      "url": "https://medium.com/@maximebeauchemin/the-rise-of-the-data-engineer-91be18f42650",
+      "error": "Timeout",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/foundation/data-engineer-role.md",
+      "line": 172,
+      "text": "What is a Data Engineer?",
+      "url": "https://www.databricks.com/glossary/data-engineer",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/foundation/data-lifecycle.md",
+      "line": 144,
+      "text": "DAMA International DMBOK",
+      "url": "https://www.dama.org/cpages/dmbok",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/foundation/data-platform-architecture.md",
+      "line": 162,
+      "text": "What is Data Architecture?",
+      "url": "https://www.snowflake.com/en/resources/guides/data-architecture/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/foundation/source-systems.md",
+      "line": 138,
+      "text": "Databricks Lakeflow Connect",
+      "url": "https://www.databricks.com/product/lakeflow/lakeflow-connect",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/chunking-strategy.md",
+      "line": 165,
+      "text": "Effective Chunking Strategies for RAG",
+      "url": "https://docs.cohere.com/docs/effective-chunking-strategies-for-rag",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/embedding-models.md",
+      "line": 123,
+      "text": "Cohere Blog: What Are Text Embeddings?",
+      "url": "https://txt.cohere.com/what-are-text-embeddings/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/embeddings.md",
+      "line": 141,
+      "text": "GloVe: Global Vectors for Word Representation",
+      "url": "https://nlp.stanford.edu/pubs/glove.pdf",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/embeddings.md",
+      "line": 143,
+      "text": "Stanford CS224N: Natural Language Processing with Deep Learning",
+      "url": "https://web.stanford.edu/class/cs224n/",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/evaluation-metric.md",
+      "line": 107,
+      "text": "Qdrant Blog: How to Evaluate RAG Pipelines",
+      "url": "https://qdrant.tech/articles/rag-evaluation/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/model-serving.md",
+      "line": 165,
+      "text": "Ray Serve Documentation",
+      "url": "https://docs.ray.io/en/latest/serve/index.html",
+      "error": "Status 403",
+      "status": 403
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/ndcg.md",
+      "line": 175,
+      "text": "Evaluation of Ranked Retrieval Results - Introduction to Information Retrieval",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmldoc/evaluation-of-ranked-retrieval-results-1.html",
+      "error": "fetch failed",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/ndcg.md",
+      "line": 178,
+      "text": "Learning a Personalized Homepage - Netflix Tech Blog",
+      "url": "https://netflixtechblog.com/learning-a-personalized-homepage-5ea2ec70cf2a",
+      "error": "fetch failed",
+      "status": null
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/ndcg.md",
+      "line": 179,
+      "text": "Evaluation Metrics for Information Retrieval - Evidently AI",
+      "url": "https://evidentlyai.com/ml-in-production/ranking-metrics",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/peft.md",
+      "line": 167,
+      "text": "Efficient Fine-Tuning with LoRA: A Guide to Optimal Parameter Selection",
+      "url": "https://www.databricks.com/blog/efficient-fine-tuning-lora-guide-optimal-parameter-selection",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/rag.md",
+      "line": 188,
+      "text": "Creating High Quality RAG Applications with Databricks",
+      "url": "https://www.databricks.com/blog/creating-high-quality-rag-applications-databricks",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/recall.md",
+      "line": 144,
+      "text": "Evaluation of Ranked Retrieval Results - Introduction to Information Retrieval",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmldoc/evaluation-of-ranked-retrieval-results-1.html",
+      "error": "fetch failed",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/reranking.md",
+      "line": 144,
+      "text": "Introduction to Information Retrieval",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmldoc/irbook.html",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/reranking.md",
+      "line": 146,
+      "text": "Reranking for Better Search - Qdrant Blog",
+      "url": "https://qdrant.tech/blog/reranking/",
+      "error": "Status 404",
+      "status": 404
+    },
+    {
+      "file": "src/content/docs/concepts/genai-ml/temperature.md",
+      "line": 139,
+      "text": "Advanced Generation Parameters - Cohere Documentation",
+      "url": "https://docs.cohere.com/docs/advanced-generation-parameters",
+      "error": "Status 404",
+      "status": 404
+    }
+  ]
+}

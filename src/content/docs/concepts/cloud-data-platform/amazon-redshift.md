@@ -179,10 +179,10 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 ## Tài liệu tham khảo
 
 1. [Amazon Redshift Database Developer Guide](https://docs.aws.amazon.com/redshift/latest/dg/welcome.html) - Official developer documentation for designing tables, queries, and managing cluster performance.
-2. [Amazon Redshift RA3 Nodes Under the Hood](https://aws.amazon.com/blogs/big-data/amazon-redshift-ra3-nodes-with-managed-storage-under-the-hood/) - AWS Engineering blog post detailing decoupled compute and managed S3 storage architecture.
+2. Amazon Redshift RA3 Nodes Under the Hood - AWS Engineering blog post detailing decoupled compute and managed S3 storage architecture.
 3. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Comprehensive book by Joe Reis and Matt Housley comparing modern cloud data warehouses like Redshift, BigQuery, and Snowflake.
 4. [Choosing a Data Distribution Style in Redshift](https://docs.aws.amazon.com/redshift/latest/dg/c_choosing_dist_style.html) - AWS documentation guidance on selecting KEY, ALL, EVEN, or AUTO distribution styles for table optimization.
-5. [AWS in Action, Third Edition](https://www.manning.com/books/aws-in-action-third-edition) - Practical book covering core AWS services including Amazon Redshift cluster deployments and IAM integrations by Andreas Wittig and Michael Wittig.
+5. AWS in Action, Third Edition - Practical book covering core AWS services including Amazon Redshift cluster deployments and IAM integrations by Andreas Wittig and Michael Wittig.
 
 ## English Summary
 

@@ -175,7 +175,7 @@ deltaTable.update(
 1. [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores](https://doi.org/10.14778/3415478.3415560) - VLDB 2020 paper outlining Delta Lake's design and transactional model.
 2. [Apache Iceberg Table Spec](https://iceberg.apache.org/spec/) - Official specification of the Iceberg table format, detailing isolation and transaction model.
 3. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's guide to system architecture and database transactions (Chapter 7).
-4. [Introducing Delta Lake: ACID Transactions on Spark](https://www.databricks.com/blog/2019/08/21/introducing-delta-lake-acid-transactions-on-spark.html) - Databricks blog introducing ACID transactions to Apache Spark workloads.
+4. Introducing Delta Lake: ACID Transactions on Spark - Databricks blog introducing ACID transactions to Apache Spark workloads.
 5. [Querying Apache Iceberg Tables in Amazon Athena](https://docs.aws.amazon.com/athena/latest/ug/querying-iceberg.html) - AWS documentation on using Athena to query transactional Iceberg tables stored on Amazon S3.
 
 ## English Summary

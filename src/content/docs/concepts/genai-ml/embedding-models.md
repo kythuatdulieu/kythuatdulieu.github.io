@@ -120,7 +120,7 @@ print(f"Độ tương đồng giữa câu 1 và câu 3: {cosine_scores[0][2]:.4f
 1. [Speech and Language Processing (3rd ed. draft)](https://web.stanford.edu/~jurafsky/slp3/) - Dan Jurafsky and James H. Martin. A comprehensive book on NLP, including vector semantics and word embeddings.
 2. [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://aclanthology.org/D19-1410/) - Nils Reimers and Iryna Gurevych (EMNLP 2019). The publication detailing SBERT.
 3. [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781) - Tomas Mikolov et al. (Google). The original paper presenting Word2Vec.
-4. [Cohere Blog: What Are Text Embeddings?](https://txt.cohere.com/what-are-text-embeddings/) - A high-quality introduction to embeddings and how they represent meaning.
+4. Cohere Blog: What Are Text Embeddings? - A high-quality introduction to embeddings and how they represent meaning.
 5. [Hugging Face Blog: Getting Started with Embeddings](https://huggingface.co/blog/getting-started-with-embeddings) - An engineering guide on embedding models, semantic search, and open-source models.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)

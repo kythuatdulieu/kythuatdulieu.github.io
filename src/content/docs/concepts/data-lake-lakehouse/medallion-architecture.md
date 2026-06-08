@@ -134,11 +134,11 @@ Các nhà phân tích không muốn đọc hàng triệu dòng dữ liệu theo 
 
 ## Tài liệu tham khảo
 
-1. [Databricks Medallion Architecture Guide](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Official design pattern documentation detailing Bronze, Silver, and Gold layer structures.
-2. [Azure Databricks Lakehouse: Medallion Architecture](https://learn.microsoft.com/en-us/azure/databricks/lakehouse/medallion-architecture) - Microsoft guide on configuring Bronze, Silver, and Gold tables in an Azure environment.
+1. Databricks Medallion Architecture Guide - Official design pattern documentation detailing Bronze, Silver, and Gold layer structures.
+2. Azure Databricks Lakehouse: Medallion Architecture - Microsoft guide on configuring Bronze, Silver, and Gold tables in an Azure environment.
 3. [AWS Big Data Blog](https://aws.amazon.com/blogs/big-data/) - Official blog featuring case studies, tutorials, and best practices for building multi-hop data lake architectures on AWS.
 4. [Apache Hudi Overview](https://hudi.apache.org/docs/overview) - Hudi guide on building incremental, multi-hop medallion data pipelines.
-5. [Data Engineering with Databricks](https://www.oreilly.com/library/view/data-engineering-with/9781835081198/) - O'Reilly book on implementing medallion pipelines, data governance, and analytics in Databricks.
+5. Data Engineering with Databricks - O'Reilly book on implementing medallion pipelines, data governance, and analytics in Databricks.
 
 ## English summary
 

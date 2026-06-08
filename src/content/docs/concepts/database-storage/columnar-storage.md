@@ -148,7 +148,7 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's book detailing storage models, column-oriented layouts, and analytical schemas on O'Reilly.
 2. [Apache Parquet Documentation](https://parquet.apache.org/docs/) - Official documentation for Apache Parquet, the industry-standard open source columnar file format.
-3. [What is a Column-Oriented Database?](https://clickhouse.com/docs/en/about-us/column-oriented-database/) - ClickHouse's conceptual guide to columnar database storage and its performance benefits for analytical workloads.
+3. What is a Column-Oriented Database? - ClickHouse's conceptual guide to columnar database storage and its performance benefits for analytical workloads.
 4. [Column-oriented DBMS](https://en.wikipedia.org/wiki/Column-oriented_DBMS) - Wikipedia's comprehensive overview of column-oriented database management systems.
 5. [What is a Columnar Database?](https://www.snowflake.com/guides/columnar-database/) - Snowflake Guide describing how columnar database storage structures and speeds up OLAP queries.
 

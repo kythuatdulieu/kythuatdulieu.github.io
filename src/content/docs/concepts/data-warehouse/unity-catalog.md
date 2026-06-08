@@ -112,7 +112,7 @@ Khi một nhân viên thuộc chi nhánh Hà Nội chạy lệnh `SELECT * FROM 
 ## Tài liệu tham khảo
 
 1. [What is Unity Catalog?](https://docs.databricks.com/en/data-governance/unity-catalog/index.html) - Official Databricks overview and documentation of Unity Catalog concepts.
-2. [Introducing Unity Catalog: Fine-grained Governance for Data and AI on the Lakehouse](https://www.databricks.com/blog/introducing-unity-catalog-fine-grained-governance-data-and-ai-lakehouse) - Databricks blog announcement detailing Unity Catalog's architecture and capabilities.
+2. Introducing Unity Catalog: Fine-grained Governance for Data and AI on the Lakehouse - Databricks blog announcement detailing Unity Catalog's architecture and capabilities.
 3. [Delta Sharing](https://www.databricks.com/product/delta-sharing) - Secure data sharing protocol integrated into Databricks Unity Catalog.
 4. [Unity Catalog on Azure Databricks](https://learn.microsoft.com/en-us/azure/databricks/data-governance/unity-catalog/) - Official Microsoft Azure guide on implementing Unity Catalog governance.
 5. [Open Source Unity Catalog](https://github.com/unitycatalog/unitycatalog) - The official open-source GitHub repository for the Unity Catalog project.

@@ -141,9 +141,9 @@ for idx, result in enumerate(response.results):
 
 ## Tài liệu tham khảo
 
-1. [Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/html/htmldoc/irbook.html) - Sách giáo khoa kinh điển về thu hồi thông tin từ Đại học Stanford.
+1. Introduction to Information Retrieval - Sách giáo khoa kinh điển về thu hồi thông tin từ Đại học Stanford.
 2. [Cohere Rerank API Documentation](https://docs.cohere.com/docs/rerank) - Tài liệu hướng dẫn sử dụng mô hình Cohere Rerank chính thức.
-3. [Reranking for Better Search - Qdrant Blog](https://qdrant.tech/blog/reranking/) - Bài viết phân tích của Qdrant về cách ứng dụng Reranking để tối ưu hóa kết quả tìm kiếm vector.
+3. Reranking for Better Search - Qdrant Blog - Bài viết phân tích của Qdrant về cách ứng dụng Reranking để tối ưu hóa kết quả tìm kiếm vector.
 4. [Node Postprocessors (Reranking) - LlamaIndex](https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/node_postprocessors/) - Hướng dẫn sử dụng các bộ lọc Postprocessor và Reranker trong framework LlamaIndex.
 5. [Rerankers for RAG - Pinecone Learning Center](https://www.pinecone.io/learn/series/rag/rerankers/) - Bài viết hướng dẫn thiết lập hệ thống tái xếp hạng để cải tiến chất lượng ứng dụng RAG của Pinecone.
 

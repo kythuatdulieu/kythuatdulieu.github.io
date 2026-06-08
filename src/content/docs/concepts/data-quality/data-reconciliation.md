@@ -144,8 +144,8 @@ WHERE tx_date = '2026-06-07';
 
 1. [Netflix Tech Blog: Netflix Billing Migration to AWS — Part II](https://netflixtechblog.com/netflix-billing-migration-to-aws-part-ii-834f6358126) - Case study detailing datastore migration and financial reconciliation strategies under high consistency constraints.
 2. [Stripe: Reconciliation Documentation](https://stripe.com/docs/reconciliation) - Official Stripe documentation on automated transaction matching and payout audit loops.
-3. [Monte Carlo Data: What is Data Reconciliation?](https://www.montecarlodata.com/blog-what-is-data-reconciliation/) - Practical guide on why and how to build automated cross-system data checks in the modern data stack.
-4. [Datafold: Reconciling Databases and Warehouses](https://www.datafold.com/blog/data-reconciliation-at-scale) - Technical engineering post explaining row-by-row data reconciliation using data diffing tools.
+3. Monte Carlo Data: What is Data Reconciliation? - Practical guide on why and how to build automated cross-system data checks in the modern data stack.
+4. Datafold: Reconciling Databases and Warehouses - Technical engineering post explaining row-by-row data reconciliation using data diffing tools.
 5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Chapter on data verification, auditing, and reconciliation patterns across end-to-end pipelines.
 
 ## English Summary

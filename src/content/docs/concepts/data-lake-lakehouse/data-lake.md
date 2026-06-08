@@ -174,7 +174,7 @@ df_structured.write \
 
 1. [AWS: What is a Data Lake?](https://aws.amazon.com/big-data/datalakes-and-analytics/what-is-a-data-lake/) - Concept overview, benefits, and architectural patterns of data lakes on AWS.
 2. [Google Cloud: What is a Data Lake?](https://cloud.google.com/learn/what-is-a-data-lake) - Definitions and learning resources comparing data lakes to data warehouses.
-3. [Databricks Data Lake Guide](https://www.databricks.com/discover/pages/what-is-a-data-lake) - In-depth guide on data lake structures, technologies, and lakehouse evolution.
+3. Databricks Data Lake Guide - In-depth guide on data lake structures, technologies, and lakehouse evolution.
 4. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Comprehensive book by Joe Reis and Matt Housley covering storage tiering and data lake designs.
 5. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's guide on data modeling, serialization formats (Parquet/Avro), and storage internals.
 

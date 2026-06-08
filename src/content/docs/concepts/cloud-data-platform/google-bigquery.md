@@ -146,7 +146,7 @@ WHERE date BETWEEN '2026-01-01' AND '2026-12-31'
 2. [Dremel: Interactive Analysis of Web-Scale Datasets](https://research.google/pubs/dremel-interactive-analysis-of-web-scale-datasets/) - The seminal Google research paper detailing Dremel, the query execution engine behind BigQuery.
 3. [BigQuery Under the Hood](https://cloud.google.com/blog/products/gcp/bigquery-under-the-hood-google-serverless-cloud-data-warehouse) - An in-depth engineering blog from Google explaining the separation of compute and storage.
 4. [Google BigQuery: The Definitive Guide](https://www.oreilly.com/library/view/google-bigquery-the/9781492044451/) - Comprehensive O'Reilly book on warehousing, analytics, and machine learning using BigQuery.
-5. [BigQuery Cost Optimization Techniques](https://cloud.google.com/architecture/bigquery-cost-optimization) - Google Cloud Architecture Center guide for monitoring and minimizing BigQuery query and storage costs.
+5. BigQuery Cost Optimization Techniques - Google Cloud Architecture Center guide for monitoring and minimizing BigQuery query and storage costs.
 
 ## English Summary
 

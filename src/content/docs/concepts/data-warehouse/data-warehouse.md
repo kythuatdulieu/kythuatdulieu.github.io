@@ -190,7 +190,7 @@ ORDER BY total_revenue DESC;
 ## Tài liệu tham khảo
 
 1. [Snowflake: Data Warehousing Guide](https://www.snowflake.com/trending/data-warehousing) - Overview of cloud data warehouse features, storage mechanisms, and design methodologies.
-2. [Databricks: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Documentation on organizing data warehouse layers (Bronze, Silver, Gold) in the Lakehouse.
+2. Databricks: Medallion Architecture - Documentation on organizing data warehouse layers (Bronze, Silver, Gold) in the Lakehouse.
 3. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's definitive guide on dimensional modeling and star schema design.
 4. [DAMA International Official Site](https://www.dama.org/) - Official resources from the Data Management Association outlining the DMBOK standards for corporate data warehousing.
 5. [Databricks Blog: What is a Data Lakehouse?](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html) - Foundational post detailing the evolution of data warehouses towards unified lakehouse designs.
