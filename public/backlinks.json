@@ -2175,7 +2175,7 @@
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
     },
     {
-      "url": "/interview/",
+      "url": "/interview/overview/",
       "title": "Ngân hàng Phỏng vấn (Interview)"
     },
     {
@@ -7127,49 +7127,49 @@
   ],
   "/learning-paths/beginner-de/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/junior-to-middle-de/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/middle-to-senior-de/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/cloud-data-engineer/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/analytics-engineer/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/streaming-data-engineer/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/data-platform-engineer/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
   "/learning-paths/interview-prep/": [
     {
-      "url": "/learning-paths/",
+      "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],

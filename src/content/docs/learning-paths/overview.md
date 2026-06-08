@@ -1,6 +1,9 @@
 ---
 title: Lộ trình học (Learning Paths)
 description: Tổng hợp các lộ trình học Data Engineering
+sidebar:
+  label: Tổng quan
+  order: 1
 ---
 
 Dưới đây là các lộ trình học tập được thiết kế chuyên sâu dành cho Kỹ sư Dữ liệu, từ người mới bắt đầu đến các chuyên gia thiết kế kiến trúc phân tán.

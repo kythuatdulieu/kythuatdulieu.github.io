@@ -59,6 +59,10 @@ export default defineConfig({
 				},
 				{
 					tag: 'link',
+					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/dist/tippy.css' },
+				},
+				{
+					tag: 'link',
 					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/animations/shift-away.css' },
 				}
 			],

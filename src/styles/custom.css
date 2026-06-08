@@ -3,28 +3,70 @@
    ========================================================== */
 .sidebar-pane details > summary {
     font-weight: 700 !important;
-    color: var(--sl-color-white);
-    padding-bottom: 0.2rem;
+    color: var(--sl-color-white) !important;
+    font-size: 1.05rem;
+    padding-bottom: 0.3rem;
+}
+
+/* Bullet / Arrow caret colors */
+.sidebar-pane details > summary .caret {
+    color: var(--sl-color-gray-3) !important;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.sidebar-pane details[open] > summary .caret {
+    color: var(--sl-color-white) !important;
 }
 
 /* Add indentation and left borders to nested groups to easily distinguish levels */
-.sidebar-pane details ul {
-    border-left: 1px solid var(--sl-color-hairline);
+/* Border for Level 1 list (contains Level 2 items) */
+.sidebar-pane details > ul {
+    border-left: 1px solid rgba(var(--sl-color-accent-rgb), 0.35) !important;
+    margin-left: 0.6rem;
+    padding-left: 0.6rem !important;
+}
+
+/* Level 2 Group (Sub-categories like "Cơ sở & Kiến trúc (Foundation)") */
+.sidebar-pane details details > summary {
+    font-weight: 600 !important;
+    color: var(--sl-color-text-accent) !important;
+    font-size: 0.95rem;
+    padding-bottom: 0.2rem;
+}
+.sidebar-pane details details[open] > summary .caret {
+    color: var(--sl-color-text-accent) !important;
+}
+
+/* Border for Level 2 list (contains Level 3 items) */
+.sidebar-pane details details > ul {
+    border-left: 1px solid var(--sl-color-hairline) !important;
     margin-left: 0.5rem;
     padding-left: 0.5rem !important;
 }
 
-/* Secondary level groups */
-.sidebar-pane details details summary {
-    font-weight: 600 !important;
-    color: var(--sl-color-gray-2);
+/* Level 2 Direct Links (pages directly under Level 1 groups) */
+.sidebar-pane details > ul > li > a:not([aria-current="page"]) {
+    color: var(--sl-color-gray-1) !important;
+    font-weight: 500;
     font-size: 0.95rem;
 }
+.sidebar-pane details > ul > li > a:not([aria-current="page"]):hover {
+    color: var(--sl-color-white) !important;
+}
 
-/* Active links highlight */
+/* Level 3 Links (pages inside Level 2 groups) */
+.sidebar-pane details details > ul > li > a:not([aria-current="page"]) {
+    color: var(--sl-color-gray-2) !important;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+.sidebar-pane details details > ul > li > a:not([aria-current="page"]):hover {
+    color: var(--sl-color-white) !important;
+}
+
+/* Active links highlight (preserves the accent background) */
 .sidebar-pane a[aria-current="page"] {
     font-weight: 700 !important;
-    background-color: var(--sl-color-text-accent);
+    background-color: var(--sl-color-text-accent) !important;
     color: var(--sl-color-text-invert) !important;
     border-radius: 4px;
 }
@@ -225,6 +267,125 @@ body.focus-mode .main-pane {
         width: calc(100vw - 32px);
         max-width: 320px;
     }
+}
+
+/* ==========================================================
+   TIPPY PREMIUM POPOVER STYLES
+   ========================================================== */
+.tippy-box[data-theme~='starlight'] {
+    background: var(--sl-color-bg-nav) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid var(--sl-color-hairline) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), 0 8px 20px -6px rgba(0, 0, 0, 0.2) !important;
+    color: var(--sl-color-text) !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.tippy-box[data-theme~='starlight'] .tippy-content {
+    padding: 1rem !important;
+}
+
+.popover-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.popover-header {
+    border-bottom: 1px solid var(--sl-color-hairline);
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.popover-category {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-accent);
+    font-weight: 700;
+}
+
+.popover-title {
+    margin: 0.15rem 0 0 0 !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+}
+
+.popover-title a {
+    color: var(--sl-color-white) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+
+.popover-title a:hover {
+    color: var(--sl-color-accent) !important;
+}
+
+.popover-body {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-2);
+}
+
+.popover-body p {
+    margin: 0 !important;
+}
+
+.popover-body ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.popover-body li {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    margin-bottom: 0.2rem;
+}
+
+.popover-footer {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.popover-more {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sl-color-accent) !important;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.popover-more:hover {
+    color: var(--sl-color-accent-high) !important;
+    transform: translateX(3px);
+}
+
+.popover-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+}
+
+.popover-error {
+    color: var(--sl-color-red);
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 0.5rem 0;
 }
 
 

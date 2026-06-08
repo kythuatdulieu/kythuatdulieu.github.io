@@ -1,6 +1,9 @@
 ---
 title: Ngân hàng Phỏng vấn (Interview)
 description: Các câu hỏi phỏng vấn Data Engineering từ cơ bản đến nâng cao
+sidebar:
+  label: Tổng quan
+  order: 1
 ---
 
 Tuyển tập các câu hỏi phỏng vấn [Data Engineering](/concepts/foundation/data-engineering/) chất lượng cao được thiết kế theo format chuẩn bị phỏng vấn, tập trung vào:
