@@ -1,4 +1,6 @@
 :root {
+    --sl-content-width: 65rem;
+    --sl-content-pad-x: 2rem;
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --secondary: #64748b;
