@@ -125,6 +125,25 @@ Một công ty bán lẻ có dữ liệu kho ở MySQL và chi phí quảng cáo
 
 Toàn bộ quy trình có thể được setup chỉ bởi 1 Kỹ sư Dữ liệu/Phân tích viên trong 1-2 tuần làm việc.
 
+**Mã nguồn SQL mẫu trong dbt (Tầng Transform):**
+
+```sql
+-- models/marts/marketing/fct_campaign_roi.sql
+WITH facebook_ads AS (
+    SELECT campaign_id, spend FROM {{ ref('stg_facebook_ads') }}
+),
+sales AS (
+    SELECT campaign_id, SUM(revenue) as total_revenue FROM {{ ref('stg_sales') }} GROUP BY 1
+)
+SELECT 
+    f.campaign_id,
+    f.spend,
+    COALESCE(s.total_revenue, 0) as revenue,
+    (COALESCE(s.total_revenue, 0) - f.spend) / NULLIF(f.spend, 0) AS roi_percentage
+FROM facebook_ads f
+LEFT JOIN sales s ON f.campaign_id = s.campaign_id
+```
+
 ---
 
 ## Best practices

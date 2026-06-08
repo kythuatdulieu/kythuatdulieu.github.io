@@ -21,6 +21,25 @@ Trong Apache Spark, Partition (phân vùng) là một khối logical (logic) cá
 
 **Partition** là một tập con (subset) của RDD (Resilient Distributed Dataset) hoặc DataFrame. Thay vì thao tác trên toàn bộ bảng dữ liệu hàng Terabytes, Spark chia bảng đó thành hàng nghìn khối nhỏ (Partitions) dung lượng vài chục hoặc vài trăm Megabytes. Mỗi khối này được giao cho **một Task duy nhất**, tương ứng với **một CPU Core**, để xử lý độc lập hoàn toàn trong bộ nhớ máy chủ (Executor).
 
+```mermaid
+flowchart LR
+    subgraph Data
+        D1[Partition 1]
+        D2[Partition 2]
+        D3[Partition 3]
+    end
+    
+    subgraph Cluster
+        T1((CPU Core 1\nTask 1))
+        T2((CPU Core 2\nTask 2))
+        T3((CPU Core 3\nTask 3))
+    end
+    
+    D1 --> T1
+    D2 --> T2
+    D3 --> T3
+```
+
 *Công thức nền tảng*: `1 Partition = 1 Task = 1 CPU Core (tại cùng một thời điểm)`
 
 ---

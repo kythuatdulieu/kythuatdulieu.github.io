@@ -109,6 +109,38 @@ Họ xây dựng hệ thống Feature Store nội bộ có tên là Michelangelo
 Khi gọi API huấn luyện, hệ thống tự động xuất ra file parquet lịch sử hoàn hảo 3 năm qua. Khi ứng dụng app thực tế của Uber gọi dự đoán ETA, hệ thống backend gọi API của Feature Store để lấy đúng giá trị `traffic_density_10m` của chính giây phút đó từ Redis. 
 Chỉ định nghĩa 1 lần, áp dụng cho cả Model Train và App Production.
 
+Dưới đây là ví dụ minh họa cách một Data Scientist sử dụng Python SDK của công cụ mã nguồn mở **Feast** để kéo dữ liệu huấn luyện một cách chính xác theo thời gian (Point-in-time correctness):
+
+```python
+import feast
+import pandas as pd
+
+# 1. Kết nối với Feature Store
+fs = feast.FeatureStore(repo_path=".")
+
+# 2. Tập dữ liệu thô ban đầu (chỉ có user_id và timestamp sự kiện mua hàng)
+orders_df = pd.DataFrame({
+    "user_id": [1001, 1002, 1003],
+    "event_timestamp": [
+        pd.Timestamp("2023-10-01 10:00:00"),
+        pd.Timestamp("2023-10-05 15:30:00"),
+        pd.Timestamp("2023-10-10 08:15:00")
+    ]
+})
+
+# 3. Yêu cầu Feature Store "JOIN" thêm 2 cột đặc trưng vào tập thô
+training_df = fs.get_historical_features(
+    entity_df=orders_df,
+    features=[
+        "driver_hourly_stats:conv_rate",    # Tỷ lệ chuyển đổi
+        "driver_hourly_stats:acc_rate"      # Tỷ lệ chấp nhận cuốc
+    ]
+).to_df()
+
+# training_df lúc này sẽ có 4 cột, dữ liệu được khớp chính xác tại thời điểm event_timestamp
+print(training_df.head())
+```
+
 ---
 
 ## Best practices

@@ -97,6 +97,22 @@ Một hệ thống giới thiệu sản phẩm của E-commerce cần tính toá
 * **Speed Layer**: Trong ngày hôm nay, người dùng A vừa click vào 3 đôi giày Nike mới. Spark Streaming nhận các event này ngay lập tức và tính toán điểm sở thích tạm thời cho nhãn hiệu Nike.
 * **Serving Layer**: Khi người dùng A tải trang chủ lúc 3h chiều, ứng dụng web sẽ query kết hợp (merge) dữ liệu từ hồ sơ Batch (sở thích lâu dài) cộng thêm dữ liệu từ Speed view (sự quan tâm tức thời đến giày Nike) để đưa ra đề xuất cập nhật ngay lúc đó. Đêm hôm sau, dữ liệu về giày Nike sẽ được trộn vào đợt Batch mới và Speed view tạm thời sẽ được xóa bỏ.
 
+**Mã giả (Pseudo-code) cho lớp Serving:**
+
+```python
+def get_recommendations(user_id):
+    # 1. Truy vấn kết quả tính toán chính xác từ Batch Layer (đến 2h sáng hôm nay)
+    batch_views = db.query("SELECT recs FROM batch_layer WHERE user = ?", user_id)
+    
+    # 2. Truy vấn kết quả tạm thời từ Speed Layer (từ 2h sáng đến hiện tại)
+    realtime_views = db.query("SELECT recs FROM speed_layer WHERE user = ?", user_id)
+    
+    # 3. Merge (Hợp nhất) hai luồng kết quả
+    final_recommendations = merge_logic(batch_views, realtime_views)
+    
+    return final_recommendations
+```
+
 ---
 
 ## Best practices

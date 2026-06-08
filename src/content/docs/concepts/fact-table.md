@@ -54,6 +54,13 @@ Fact Table tồn tại để gom toàn bộ các kết quả đo lường phân 
 ## How it works
 
 Dưới góc nhìn của cơ sở dữ liệu: Fact Table là một bảng cực "dài" nhưng rất "hẹp". 
+
+```mermaid
+flowchart LR
+    A[Dimension Tables<br/>Chứa ngữ cảnh: Ai, Ở đâu?] -- "1:N<br/>Lọc & Nhóm" --> B[(Fact Table<br/>Chứa số liệu & Khóa ngoại)]
+    B -- "Tính toán<br/>SUM, AVG, COUNT" --> C[Báo cáo BI]
+```
+
 Nó "hẹp" vì nó chỉ chứa các cột kiểu dữ liệu Integer (cho Foreign Key) và Decimal/Float (cho Metrics). Không chứa chuỗi văn bản dài (VARCHAR).
 Nó "dài" vì mỗi sự kiện kinh doanh tạo ra một dòng mới (INSERT-only) theo thời gian.
 

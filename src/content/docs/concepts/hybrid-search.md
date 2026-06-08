@@ -56,6 +56,21 @@ Tài liệu nào vừa nằm ở Top đầu của Vector Search, VÀ nằm ở T
 
 Luồng kiến trúc Hybrid Search trong một Vector Database (như Milvus, Qdrant, Pinecone) hỗ trợ native hybrid:
 
+```mermaid
+flowchart TD
+    A[Câu truy vấn<br/>User Query] --> B[Embedding Model<br/>Dense Vector]
+    A --> C[Tokenizer / BM25<br/>Sparse Vector]
+    
+    B --> D[(Vector Database)]
+    C --> D
+    
+    D --> E[Top-K Dense Results]
+    D --> F[Top-K Sparse Results]
+    
+    E & F --> G{Thuật toán Trộn<br/>RRF Fusion}
+    G --> H[Kết quả Hybrid<br/>Top-K Final]
+```
+
 **1. Giai đoạn Lập chỉ mục (Indexing)**
 * Văn bản gốc được chia chunk.
 * Chunk đi qua Embedding Model sinh ra Dense Vector (ví dụ mảng 768 chiều).

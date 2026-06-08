@@ -41,6 +41,18 @@ Mô hình Xử lý phân tán ra đời (tiên phong bởi Google MapReduce, sau
 
 Hệ thống xử lý phân tán thường hoạt động theo mô hình **Master-Worker** (hoặc Driver-Executor):
 
+```mermaid
+flowchart TD
+    A[Người dùng gửi Job] --> B[Master Node<br/>Lập kế hoạch & Chia Task]
+    B -- "Giao Task 1" --> C[Worker Node 1]
+    B -- "Giao Task 2" --> D[Worker Node 2]
+    B -- "Giao Task N" --> E[Worker Node N]
+    
+    C <--> F((Mạng lưới Cluster<br/>Data Shuffle))
+    D <--> F
+    E <--> F
+```
+
 1. **Master Node (Node điều khiển)**:
    Nhận yêu cầu của người dùng, phân tích khối lượng công việc, lập kế hoạch thực thi (Execution Plan), và chia nhỏ công việc thành các tác vụ (Tasks) rời rạc.
 2. **Worker Nodes (Các node tính toán)**:
@@ -59,10 +71,30 @@ Giả sử bạn có 1 tỷ file text và cần đếm tần suất xuất hiệ
 **Cách tiếp cận đơn máy (Single-node)**:
 Máy sẽ đọc từng file một, duyệt qua từng từ, cộng vào biến đếm. Mất 100 giờ.
 
-**Cách tiếp cận phân tán (Distributed MapReduce)**:
+**Cách tiếp cận phân tán (Distributed MapReduce với Apache Spark):**
 * Có cụm 100 máy tính.
 * **Bước Map**: Master giao cho mỗi máy đọc 10 triệu file. Từng máy đếm song song và tạo ra kết quả cục bộ: Máy 1: `(Data: 500)`, Máy 2: `(Data: 600)`, v.v.
 * **Bước Reduce**: Master tập hợp kết quả của 100 máy và tính tổng: `500 + 600 + ...`. Tổng thời gian hoàn thành rút xuống còn 1 giờ.
+
+Sử dụng PySpark, ta có thể viết vài dòng code để Master node tự động chia nhỏ công việc trên cụm Cluster:
+
+```python
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("WordCount").getOrCreate()
+
+# Master chỉ đạo các Worker đọc song song 1 tỷ file text
+text_file = spark.sparkContext.textFile("hdfs://cluster/data/1_billion_files/*.txt")
+
+# Worker thực hiện chia tách từ (Map) và cộng dồn (Reduce)
+counts = text_file.flatMap(lambda line: line.split(" ")) \
+             .map(lambda word: (word, 1)) \
+             .reduceByKey(lambda a, b: a + b)
+
+# Thu thập kết quả về Master (Chỉ hiển thị từ 'Data')
+data_word_count = counts.filter(lambda x: x[0] == "Data").collect()
+print(f"Từ 'Data' xuất hiện: {data_word_count[0][1]} lần")
+```
 
 ---
 

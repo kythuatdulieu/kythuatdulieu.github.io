@@ -44,6 +44,20 @@ Do đó, các kỹ sư tạo ra phương pháp chia nhỏ theo **Sub-word (Một
 ## How it works
 
 Hầu hết các LLM hiện đại (như GPT-4, LLaMA) sử dụng thuật toán **BPE (Byte-Pair Encoding)**:
+
+```mermaid
+flowchart TD
+    A[Raw Text: 'unbelievable'] --> B[Characters: u, n, b, e, l, i, e, v, a, b, l, e]
+    B --> C{Frequency Analysis}
+    C --> D[Merge 'a' + 'b' + 'l' + 'e' -> 'able']
+    C --> E[Merge 'b' + 'e' + 'l' + 'i' + 'e' + 'v' -> 'believ']
+    C --> F[Merge 'u' + 'n' -> 'un']
+    D & E & F --> G[Final Tokens: 'un', 'believ', 'able']
+    
+    style A fill:#f9f9f9,stroke:#333
+    style G fill:#d4edda,stroke:#333
+```
+
 1. Ban đầu, coi mọi byte ký tự riêng lẻ là một token.
 2. Thống kê dữ liệu huấn luyện: Tìm cặp byte xuất hiện cạnh nhau nhiều nhất (ví dụ: `e` và `r` hay đi cùng nhau thành `er`). Gộp chúng lại thành một token mới `er`.
 3. Lặp lại quá trình này (ví dụ ghép `t` và `h` thành `th`, rồi `th` và `e` thành `the`) cho đến khi kích thước từ điển đạt một số lượng cố định (ví dụ: 50,000 hoặc 100,000 tokens).
@@ -66,6 +80,25 @@ Xét câu tiếng Việt và tiếng Anh đi qua bộ Tokenizer `tiktoken` (cl10
 * Số lượng từ: 7
 * Tokens (11): `["Tr", "í", " tu", "ệ", " nhân", " t", "ạo", " th", "ật", " tuyệt", " vời!"]`
 * Đánh giá: Không tối ưu bằng tiếng Anh, nhiều từ tiếng Việt bị cắt nát thành 2-3 tokens vì chúng không xuất hiện nhiều trong dữ liệu huấn luyện gốc của BPE.
+
+**Đoạn mã Python minh họa đếm Token bằng thư viện `tiktoken`:**
+
+```python
+import tiktoken
+
+# Lấy bộ mã hóa mặc định dùng cho các mô hình như GPT-4 (cl100k_base)
+encoder = tiktoken.get_encoding("cl100k_base")
+
+text_en = "Artificial Intelligence is amazing!"
+text_vi = "Trí tuệ nhân tạo thật tuyệt vời!"
+
+# Hàm encode biến văn bản thành danh sách Integer IDs
+tokens_en = encoder.encode(text_en)
+tokens_vi = encoder.encode(text_vi)
+
+print(f"Tiếng Anh: {len(tokens_en)} tokens -> {tokens_en}")
+print(f"Tiếng Việt: {len(tokens_vi)} tokens -> {tokens_vi}")
+```
 
 ---
 

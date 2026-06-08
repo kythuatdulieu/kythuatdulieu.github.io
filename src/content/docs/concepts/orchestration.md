@@ -93,6 +93,39 @@ graph TD
 
 ---
 
+## Practical example
+
+Đây là ví dụ mã nguồn Python định nghĩa một luồng công việc (DAG) cơ bản trong Apache Airflow. Pipeline này sẽ chạy lệnh extract dữ liệu, sau đó transform và cuối cùng báo cáo.
+
+```python
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from datetime import datetime
+
+with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 1), schedule_interval='@daily') as dag:
+    
+    extract_task = BashOperator(
+        task_id='extract_sales_data',
+        bash_command='python extract_sales.py --date {{ ds }}'
+    )
+    
+    transform_task = BashOperator(
+        task_id='transform_data_in_dbt',
+        bash_command='dbt run --models sales_mart'
+    )
+    
+    notify_task = PythonOperator(
+        task_id='send_slack_notification',
+        python_callable=lambda: print("Pipeline đã hoàn thành!")
+    )
+    
+    # Định nghĩa luồng phụ thuộc (Dependency)
+    extract_task >> transform_task >> notify_task
+```
+
+---
+
 ## Best practices
 
 * **Thiết kế tác vụ Idempotent (Lũy đẳng)**: Đây là nguyên tắc sống còn. Đảm bảo rằng nếu một tác vụ bị lỗi nửa chừng và được Orchestrator thử chạy lại (retry) hoặc chạy bù (backfill), kết quả cuối cùng ở kho dữ liệu vẫn giống hệt như chạy 1 lần (không bị duplicate dữ liệu). Hãy dùng lệnh `UPSERT/MERGE` hoặc nguyên lý Xóa trước khi Chèn (`DELETE WHERE date = X; INSERT`).

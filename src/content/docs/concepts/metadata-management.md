@@ -114,6 +114,25 @@ Hệ thống Metadata Management sẽ cung cấp bức tranh toàn cảnh:
 
 Nhà phân tích đọc bức tranh này sẽ hoàn toàn nắm quyền chủ động mà không cần nhắn tin hỏi ai.
 
+**Ví dụ khai báo Metadata trực tiếp trong mã nguồn (dbt schema.yml):**
+
+```yaml
+version: 2
+
+models:
+  - name: fct_customer_profiles
+    description: "Bảng tổng hợp thông tin hồ sơ và tài chính của khách hàng. Chủ sở hữu: Nguyễn Văn A."
+    meta:
+      owner: "Nguyễn Văn A"
+      department: "Risk Management"
+    columns:
+      - name: yearly_income
+        description: "Thu nhập kê khai hàng năm của khách hàng (Đơn vị: USD)."
+        meta:
+          sensitivity: "PII-Tier2"
+          contains_pii: true
+```
+
 ---
 
 ## Best practices

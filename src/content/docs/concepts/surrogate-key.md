@@ -63,6 +63,26 @@ Dòng chảy dữ liệu xử lý Surrogate Key qua quy trình ETL:
 
 Bảng dưới minh họa việc dùng Surrogate Key để xử lý lịch sử chuyển nhà (SCD Type 2) của cùng một Natural Key (`K-001`):
 
+```mermaid
+erDiagram
+    DIM_CUSTOMER ||--o{ FACT_SALES : "One-to-Many via SK"
+    
+    DIM_CUSTOMER {
+        int customer_sk PK "Surrogate Key (101, 102)"
+        string natural_key "System ID (K-001)"
+        string name 
+        string city 
+        boolean is_current
+    }
+    
+    FACT_SALES {
+        string sales_id PK
+        int date_key
+        int customer_sk FK "Points to specific historical context"
+        float revenue
+    }
+```
+
 | customer_sk (PK) | natural_key | name | city | is_current |
 | :--- | :--- | :--- | :--- | :--- |
 | **101** | K-001 | Alice | Hanoi | FALSE |

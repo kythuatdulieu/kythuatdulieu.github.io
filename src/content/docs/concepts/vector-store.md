@@ -85,6 +85,37 @@ graph TD
 
 ---
 
+## Practical example
+
+Mã SQL dưới đây minh họa việc sử dụng **PostgreSQL** kết hợp với extension **pgvector** để lưu trữ và tìm kiếm vector trực tiếp trong cơ sở dữ liệu quan hệ.
+
+```sql
+-- 1. Kích hoạt extension pgvector
+CREATE EXTENSION vector;
+
+-- 2. Tạo bảng lưu trữ tài liệu với cột vector (ví dụ 3 chiều)
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    content TEXT,
+    embedding vector(3)
+);
+
+-- 3. Thêm tài liệu (Vector đã được tính toán từ ứng dụng)
+INSERT INTO documents (content, embedding) VALUES 
+('Mèo thích ăn cá', '[0.1, 0.2, 0.8]'),
+('Chó thích gặm xương', '[0.2, 0.1, 0.3]');
+
+-- 4. Tìm kiếm ngữ nghĩa (Tìm tài liệu có vector gần nhất với truy vấn)
+-- Toán tử <=> dùng để tính khoảng cách Cosine
+SELECT content, embedding 
+FROM documents
+ORDER BY embedding <=> '[0.11, 0.22, 0.79]' 
+LIMIT 1;
+-- Kết quả trả về dòng "Mèo thích ăn cá"
+```
+
+---
+
 ## Best practices
 
 * **Lưu Metadata cẩn thận**: Đừng chỉ lưu vector. Hãy lưu kèm Metadata (ID tài liệu gốc, tác giả, ngày tạo). Metadata cho phép bạn thực hiện **Hybrid Search** (Lọc kết quả Vector kết hợp với lọc SQL truyền thống kiểu `WHERE author='Alice'`).

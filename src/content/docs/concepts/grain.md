@@ -89,6 +89,13 @@ Giả sử doanh nghiệp có 2 luồng dữ liệu liên quan:
 1. Mục tiêu kinh doanh (Target) được giao theo cấp độ **Khu vực (Region)** và **Tháng (Month)**.
 2. Doanh thu thực tế (Actual) chảy về theo cấp độ **Cửa hàng (Store)** và **Phút (Minute)**.
 
+```mermaid
+flowchart TD
+    A[(fact_actual_sales<br/>Grain: Cửa hàng - Phút)] -->|ROLLUP theo Tháng/Khu vực| B{Công cụ BI<br/>Data Blending}
+    C[(fact_target_sales<br/>Grain: Khu vực - Tháng)] --> B
+    B --> D[Báo cáo So sánh<br/>Target vs Actual]
+```
+
 Ta KHÔNG ĐƯỢC thiết kế chung 1 Fact Table. Phải tách làm 2 bảng với 2 Grain khác nhau:
 
 **1. Bảng Doanh thu thực tế (Atomic Grain)**

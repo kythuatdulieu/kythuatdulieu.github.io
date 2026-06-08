@@ -29,6 +29,26 @@ Khi người dùng viết logical plan là "Kết hợp Bảng A và Bảng B", 
 
 ## How it works
 
+```mermaid
+graph TD
+    A{Table Sizes} --> B[One Tiny Table < 10MB]
+    A --> C[Both Large Tables]
+    
+    B --> D[Broadcast Hash Join]
+    D --> E[Replicate tiny table to all nodes\nNO SHUFFLE]
+    
+    C --> F{Can partitions fit in RAM?}
+    F -->|Yes| G[Shuffle Hash Join]
+    G --> H[Shuffle both tables\nHash partitions in memory]
+    
+    F -->|No| I[Sort Merge Join]
+    I --> J[Shuffle both tables\nSort data\nMerge sequentially]
+    
+    style D fill:#cce5ff,stroke:#333
+    style G fill:#fff3cd,stroke:#333
+    style I fill:#d4edda,stroke:#333
+```
+
 ### 1. Broadcast Hash Join (BHJ)
 **Khi nào xảy ra:** Khi một bảng có kích thước bé hơn biến `spark.sql.autoBroadcastJoinThreshold` (Mặc định là 10MB).
 **Cơ chế:** 

@@ -85,6 +85,39 @@ graph TD
 
 ---
 
+## Practical example
+
+Dưới đây là mã giả (Python) minh họa việc gọi API Cohere để thực hiện Reranking trên danh sách các tài liệu trả về từ hệ thống tìm kiếm thô.
+
+```python
+import cohere
+
+# Khởi tạo client Cohere
+co = cohere.Client('YOUR_API_KEY')
+
+query = "Làm sao để cấu hình VPN?"
+# Kết quả từ Vector DB (BM25 hoặc Cosine Similarity) chứa 100 tài liệu
+docs = [
+    "VPN là mạng riêng ảo giúp bảo mật...",
+    "Để cấu hình VPN trên Windows, vào Settings -> Network -> VPN...",
+    "Bảng giá dịch vụ VPN mới nhất năm 2025..."
+]
+
+# Gọi API Rerank của Cohere
+response = co.rerank(
+    model='rerank-multilingual-v3.0',
+    query=query,
+    documents=docs,
+    top_n=2 # Chỉ lấy 2 tài liệu tốt nhất
+)
+
+# In kết quả đã được sắp xếp lại
+for idx, result in enumerate(response.results):
+    print(f"Rank {idx+1} (Score: {result.relevance_score:.2f}): {docs[result.document_index]}")
+```
+
+---
+
 ## Best practices
 
 * **Số lượng tài liệu đưa vào Reranking (K)**: Không đưa quá nhiều. K tối ưu thường là từ $50$ đến $150$. Nếu $K = 1000$, Reranker sẽ chạy rất chậm và tiêu tốn nhiều tài nguyên GPU/API.

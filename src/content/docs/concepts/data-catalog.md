@@ -111,6 +111,35 @@ Một Data Analyst (Nhân viên mới vào làm tuần đầu tiên) cần lập
 4. Có một cảnh báo nhỏ (Data Warning): "Lưu ý, dữ liệu chỉ cập nhật đến ngày hôm qua".
 5. Cô sử dụng ngay và hoàn thành báo cáo trong 2 tiếng thay vì 1 tuần.
 
+Dưới đây là một ví dụ code Python sử dụng thư viện `datahub` (một hệ thống Data Catalog mã nguồn mở phổ biến) để tự động hóa việc cập nhật mô tả và metadata cho một bảng dữ liệu:
+
+```python
+from datahub.emitter.rest_emitter import DatahubRestEmitter
+from datahub.metadata.com.linkedin.pegasus2avro.dataset import DatasetProperties
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+
+emitter = DatahubRestEmitter("http://localhost:8080")
+
+# Định nghĩa thuộc tính mới (mô tả bảng)
+properties = DatasetProperties(
+    description="Bảng dim_subscription_churn: Chứa cờ đánh dấu khách hàng hủy dịch vụ (is_churn_flg).",
+    customProperties={"verified": "true", "owner": "Finance Team"}
+)
+
+# Gói dữ liệu vào MCP (Metadata Change Proposal)
+mcp = MetadataChangeProposalWrapper(
+    entityType="dataset",
+    changeType="UPSERT",
+    urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,my_project.my_dataset.dim_subscription_churn,PROD)",
+    aspectName="datasetProperties",
+    aspect=properties
+)
+
+# Gửi siêu dữ liệu (metadata) lên DataHub
+emitter.emit(mcp)
+print("Đã cập nhật mô tả lên Data Catalog thành công!")
+```
+
 ---
 
 ## Best practices

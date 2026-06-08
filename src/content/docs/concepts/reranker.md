@@ -88,6 +88,37 @@ graph TD
 
 ---
 
+## Practical example
+
+Đoạn mã Python dưới đây sử dụng thư viện `sentence-transformers` (Cross-Encoder) để chấm điểm và sắp xếp lại tài liệu.
+
+```python
+from sentence_transformers import CrossEncoder
+
+# Tải mô hình Reranker (Cross-Encoder)
+model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+query = "Thủ đô của nước Pháp là gì?"
+documents = [
+    "Paris là thủ đô và thành phố đông dân nhất của Pháp.",
+    "Bánh mì Baguette là một biểu tượng ẩm thực của Pháp.",
+    "Lyon là một thành phố lớn ở miền trung đông nước Pháp."
+]
+
+# Reranker yêu cầu đầu vào là các CẶP (Query, Document)
+pairs = [[query, doc] for doc in documents]
+
+# Mô hình trực tiếp trả về mảng điểm số cho từng cặp
+scores = model.predict(pairs)
+
+for i, score in enumerate(scores):
+    print(f"Doc {i+1} Score: {score:.4f} -> {documents[i]}")
+    
+# Output kỳ vọng: Doc 1 sẽ có điểm vượt trội so với Doc 2 và 3
+```
+
+---
+
 ## Best practices
 
 * **Sử dụng mô hình nhỏ nhẹ**: Vì Reranker phải chạy lúc runtime trên (ví dụ) 100 tài liệu, đừng dùng mô hình quá to (như 70B parameters). Các Reranker mã nguồn mở cực tốt hiện nay thường chỉ nặng khoảng 250M - 2B parameters (như họ mô hình `BGE-Reranker`, `MiniLM`).

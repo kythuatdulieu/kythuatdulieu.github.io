@@ -95,6 +95,23 @@ Quá trình chọn từ cuối cùng phụ thuộc vào tham số **Temperature*
 * Nếu Temperature = 0: Luôn chọn từ xác suất cao nhất (`ô`). Văn bản sinh ra cứng nhắc, máy móc.
 * Nếu Temperature > 0 (vd 0.7): Có cơ hội chọn "áo_mưa" để câu văn sáng tạo, bay bổng hơn.
 
+**Mã ví dụ cấu hình LLM API bằng Python:**
+
+```python
+import openai
+
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "Bạn là một nhà thơ sáng tạo."},
+        {"role": "user", "content": "Trời mưa, tôi phải mang theo cái..."}
+    ],
+    temperature=0.7, # Tăng tính sáng tạo
+    max_tokens=50
+)
+print(response.choices[0].message.content)
+```
+
 ---
 
 ## Best practices

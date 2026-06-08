@@ -100,6 +100,25 @@ graph LR
   * Từ Producer đến Kafka: Dùng mô hình **Push**. Hệ thống IoT cảm biến cực kỳ nhiều và liên tục. Cứ có tín hiệu là nó "nhổ" (Push) ngay vào cụm Kafka cực lớn mà không cần đợi Kafka đi xin xỏ. Tránh rớt gói tin tại biên (Edge).
   * Từ Kafka đến Consumer (Data Processing Engine): Dùng mô hình **Pull**. Engine phân tích (như Flink, Spark Streaming) sẽ chủ động "Kéo" (Poll) sự kiện từ Kafka về. Việc này giúp Consumer tự quản lý được sức mạnh CPU của nó. Nếu dữ liệu dội về quá đông, Consumer cứ thong thả kéo theo năng lực tối đa, phần còn lại Kafka giữ hộ. Điều này sinh ra một cơ chế sống còn gọi là **Kháng áp suất ngược (Backpressure handling)**.
 
+**Mã giả (Python) minh họa Push và Pull trong Kafka:**
+
+```python
+# --- PUSH MODEL (Producer đẩy dữ liệu vào Kafka ngay khi có sự kiện) ---
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+def on_sensor_event(event_data):
+    # Chủ động Push không cần chờ ai hỏi
+    producer.send('iot_topic', value=event_data)
+
+# --- PULL MODEL (Consumer chủ động kéo dữ liệu về theo nhịp độ riêng) ---
+consumer = KafkaConsumer('iot_topic', bootstrap_servers='localhost:9092')
+while True:
+    # Consumer chủ động Pull (kéo) mỗi 100ms
+    # Nếu hệ thống quá tải, nó có thể ngủ (sleep) 1 giây rồi mới Pull tiếp (Backpressure)
+    records = consumer.poll(timeout_ms=100)
+    for record in records:
+        process_data(record.value)
+```
+
 ---
 
 ## Best practices

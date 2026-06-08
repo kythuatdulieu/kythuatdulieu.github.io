@@ -103,6 +103,27 @@ graph TD
 **Hệ thống giám sát (bằng code Python/Evidently):**
 Hệ thống giám sát chạy vào cuối ngày, so sánh phân phối của Tháng 4 với Tháng 1. Thuật toán phát hiện sự trượt phân phối về phía trái (Left skew drift).
 
+```python
+import pandas as pd
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset
+
+# 1. Tải dữ liệu tham chiếu (Tháng 1) và dữ liệu hiện tại (Tháng 4)
+reference_data = pd.read_parquet("data/january_baseline.parquet")
+current_data = pd.read_parquet("data/april_current.parquet")
+
+# 2. Khởi tạo báo cáo Drift bằng thư viện Evidently
+drift_report = Report(metrics=[DataDriftPreset()])
+drift_report.run(reference_data=reference_data, current_data=current_data)
+
+# 3. Trích xuất kết quả dưới dạng JSON (để bắn Alert)
+results = drift_report.as_dict()
+
+# Nếu phát hiện trượt dữ liệu lớn trên các cột quan trọng
+if results["metrics"][0]["result"]["dataset_drift"]:
+    print("CẢNH BÁO: Phát hiện Distribution Drift! Cần kiểm tra lại dữ liệu và mô hình.")
+```
+
 **Hậu quả nếu không bắt được:** Mô hình AI cũ sẽ từ chối 95% khách hàng sinh viên này vì nghĩ họ rủi ro cao (do chỉ quen với điểm >650), làm chiến dịch Marketing thất bại thảm hại.
 
 **Hành động (Resolution):** Hệ thống bắn cảnh báo Drift. Data Scientist vào phân tích, xác nhận đây là thay đổi "thực tế", do đó kích hoạt Retrain lại model với dữ liệu của tháng 4 để mô hình học hành vi mới.

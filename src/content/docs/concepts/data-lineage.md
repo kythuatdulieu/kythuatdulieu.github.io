@@ -103,6 +103,39 @@ Các ngân hàng toàn cầu chịu sự giám sát của chuẩn BCBS 239. Khi 
 * "Các anh đã dùng công thức gì, cộng trừ từ những bảng dữ liệu gốc nào để ra được con số 5 tỷ này?"
 Nếu không có hệ thống Data Lineage (Provenance - nguồn gốc xuất xứ), ngân hàng sẽ không thể chứng minh (audit-proof) được đường đi của thuật toán, dẫn đến rủi ro bị phạt hoặc đình chỉ hoạt động. Nhờ Data Lineage, chỉ cần 1 cú click chuột truy ngược (trace-back), ngân hàng in ra ngay một biểu đồ minh chứng rõ ràng mọi bước Transformation mà con số 5 tỷ đó đã đi qua từ hệ thống chi nhánh lên trung tâm.
 
+Dưới đây là ví dụ về một gói tin (payload) JSON theo chuẩn **OpenLineage** do một tác vụ Spark hoặc Airflow sinh ra để thông báo việc bảng Đầu ra được tính toán từ bảng Đầu vào. Metadata này sau đó được hệ thống Lineage thu thập để vẽ bản đồ tự động:
+
+```json
+{
+  "eventType": "COMPLETE",
+  "eventTime": "2026-06-08T00:00:00.000Z",
+  "run": {
+    "runId": "12345678-1234-5678-1234-567812345678"
+  },
+  "job": {
+    "namespace": "my_airflow_cluster",
+    "name": "daily_risk_calculation.compute_risk_assets"
+  },
+  "inputs": [{
+    "namespace": "postgresql://eu-branch-db",
+    "name": "public.raw_transactions",
+    "facets": {
+      "schema": {
+        "fields": [
+          {"name": "tx_id", "type": "VARCHAR"},
+          {"name": "amount", "type": "NUMERIC"}
+        ]
+      }
+    }
+  }],
+  "outputs": [{
+    "namespace": "bigquery://central-data-warehouse",
+    "name": "finance_mart.risk_assets",
+    "facets": {}
+  }]
+}
+```
+
 ---
 
 ## Best practices

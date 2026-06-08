@@ -54,6 +54,20 @@ Sức mạnh của System Prompt xoay quanh 4 nhiệm vụ cốt lõi mà một 
 
 Dưới góc độ lập trình API (Ví dụ: Python với OpenAI SDK), System Prompt được chèn vào vị trí đầu tiên (Index 0) của danh sách (Array) các tin nhắn:
 
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as Application (API)
+    participant M as LLM (GPT-4)
+    
+    U->>A: "Machine Learning is fascinating."
+    Note over A: Appends System Prompt at Index 0
+    A->>M: [System: "Translate to Vietnamese"]<br/>[User: "Machine Learning..."]
+    Note over M: Applies strong attention to System rules
+    M-->>A: "Học máy thật thú vị."
+    A-->>U: "Học máy thật thú vị."
+```
+
 ```python
 response = openai.ChatCompletion.create(
   model="gpt-4",

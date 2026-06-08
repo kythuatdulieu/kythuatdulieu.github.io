@@ -42,6 +42,15 @@ Delta Lake sinh ra để giải quyết triệt để cả 3 bài toán trên.
 
 Cơ chế sức mạnh cốt lõi của Delta Lake chính là **Transaction Log (Tệp nhật ký giao dịch)**.
 
+```mermaid
+flowchart TD
+    A[Lệnh UPDATE / INSERT] --> B[Ghi file Parquet MỚI<br/>(Copy-on-write)]
+    B --> C[Tạo file JSON log trong<br/>thư mục _delta_log]
+    C --> D{Nội dung file JSON}
+    D --> E[Đánh dấu Tombstone<br/>hủy file Parquet cũ]
+    D --> F[Xác nhận bổ sung<br/>file Parquet mới]
+```
+
 Cơ chế này hoạt động dựa trên nguyên tắc **Thỏa thuận kiểm soát phiên bản (Optimistic Concurrency Control)**. 
 Khi bạn gọi lệnh `UPDATE` hoặc ghi dữ liệu mới:
 1. Delta Lake không sửa trực tiếp vào file Parquet cũ. Nó ghi một file Parquet MỚI tinh chứa dữ liệu đã được sửa (Copy-on-write).

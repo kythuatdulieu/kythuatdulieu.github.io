@@ -91,6 +91,29 @@ Kết luận: Hệ thống của bạn đạt hiệu suất xếp hạng khoản
 
 ---
 
+## Practical example
+
+Trong thực tế, bạn không cần phải tính toán NDCG bằng tay. Thư viện `scikit-learn` trong Python cung cấp sẵn hàm tính toán này để đánh giá kết quả mô hình.
+
+```python
+from sklearn.metrics import ndcg_score
+import numpy as np
+
+# Điểm relevance thực tế (Ground Truth) của 3 tài liệu
+true_relevance = np.asarray([[2, 1, 0]]) # D2=2, D1=1, D3=0
+
+# Điểm số mô hình search của bạn dự đoán cho 3 tài liệu
+# Mô hình rank D1 cao nhất, D2 thứ hai, D3 bét
+predicted_scores = np.asarray([[0.8, 0.5, 0.1]]) 
+
+# Tính NDCG@3
+ndcg = ndcg_score(true_relevance, predicted_scores, k=3)
+print(f"NDCG@3 Score: {ndcg:.3f}")
+# Output: NDCG@3 Score: 0.859
+```
+
+---
+
 ## Best practices
 
 * **Định nghĩa thang điểm cẩn thận**: NDCG yêu cầu dữ liệu phải có phân cấp độ (Graded relevance) thay vì nhị phân. Hãy xây dựng guideline chấm điểm cho người gán nhãn (ví dụ: 0 = Irrelevant, 1 = Partially Relevant, 2 = Highly Relevant, 3 = Perfect Match).

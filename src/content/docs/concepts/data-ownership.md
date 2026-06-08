@@ -83,6 +83,21 @@ Có một thực tập sinh mới vào phòng Phân tích. Cậu ta muốn chạ
 
 Mọi thứ diễn ra theo đúng quy trình pháp lý với sự đồng thuận của Chủ sở hữu thực sự, kiểm toán (Auditing) ghi lại rõ ràng không sai một ly.
 
+Trong các hệ thống Data Warehouse hiện đại như Snowflake, quyền sở hữu (Ownership) được thực thi cực kỳ nghiêm ngặt bằng mã lệnh phân quyền (RBAC - Role-Based Access Control). Ví dụ:
+
+```sql
+-- 1. Tạo một Role đại diện cho Data Owner của phòng Marketing
+CREATE ROLE marketing_data_owner;
+GRANT ROLE marketing_data_owner TO USER ms_lan_marketing_director;
+
+-- 2. Chuyển giao quyền "Sở hữu" (OWNERSHIP) của bảng cho Role này
+GRANT OWNERSHIP ON TABLE crm_db.public.dim_customer_behavior 
+TO ROLE marketing_data_owner REVOKE CURRENT GRANTS;
+
+-- Kể từ bây giờ, đội IT (sysadmin) cũng không thể tự tiện cấp quyền đọc bảng này cho người khác.
+-- Mọi câu lệnh GRANT SELECT trên bảng này BẮT BUỘC phải do tài khoản của Ms. Lan thực thi.
+```
+
 ---
 
 ## Best practices

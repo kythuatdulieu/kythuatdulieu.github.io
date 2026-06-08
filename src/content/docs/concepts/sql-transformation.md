@@ -70,6 +70,33 @@ Quy trình áp dụng SQL Transformation chuẩn:
 
 Một pattern cực kỳ phổ biến và chuẩn mực trong viết SQL Transformation là CTE (Common Table Expression), nó thay thế hoàn toàn sub-queries lồng nhau.
 
+```mermaid
+flowchart TD
+    subgraph Import Layer
+        A[(raw_orders)]
+        B[(raw_customers)]
+    end
+    
+    subgraph Cleaning Layer
+        C[cleaned_orders\n- Cast Date\n- Filter Status\n- Abs Revenue]
+        D[cleaned_customers\n- Upper Country]
+    end
+    
+    subgraph Assembly Layer
+        E[final_mart\nLEFT JOIN]
+    end
+    
+    A --> C
+    B --> D
+    C --> E
+    D --> E
+    E --> F[(Output Table / View)]
+    
+    style C fill:#fff3cd,stroke:#333
+    style D fill:#fff3cd,stroke:#333
+    style E fill:#d4edda,stroke:#333
+```
+
 ```sql
 -- Pattern chuẩn mực Analytics Engineering (Sử dụng CTE)
 

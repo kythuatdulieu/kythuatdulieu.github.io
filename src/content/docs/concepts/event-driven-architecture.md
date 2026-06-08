@@ -100,6 +100,45 @@ Hệ thống ứng dụng gọi xe (Ride Hailing).
 
 Mọi thứ chạy độc lập, song song, cực kỳ nhanh. Nếu `Rating_Service` đang bị sập bảo trì 1 tiếng, sự kiện vẫn nằm an toàn trên Kafka. Khi nó bật lên lại, nó sẽ lấy sự kiện ra xử lý bù.
 
+Dưới đây là mã giả lập (Python) cách một Producer phát hành sự kiện và Consumer tiêu thụ nó qua Kafka:
+
+```python
+# --- BÊN PRODUCER (Driver_Service) ---
+from kafka import KafkaProducer
+import json
+
+producer = KafkaProducer(
+    bootstrap_servers=['kafka-broker:9092'],
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+# Phát hành (Produce) sự kiện khi chuyến đi hoàn thành
+event_payload = {
+    "event_name": "TripCompleted",
+    "trip_id": 99,
+    "driver_id": "DRV_123",
+    "fare_amount": 150.0
+}
+producer.send('trip_events_topic', event_payload)
+print("Đã gửi sự kiện lên Broker thành công!")
+
+# --- BÊN CONSUMER (Payment_Service) ---
+from kafka import KafkaConsumer
+
+consumer = KafkaConsumer(
+    'trip_events_topic',
+    bootstrap_servers=['kafka-broker:9092'],
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
+
+# Lắng nghe (Subscribe) liên tục không ngừng nghỉ
+for message in consumer:
+    event = message.value
+    if event["event_name"] == "TripCompleted":
+        print(f"Bắt đầu trừ {event['fare_amount']}$ từ tài khoản khách cho chuyến đi {event['trip_id']}...")
+        # Lập trình logic thanh toán ở đây
+```
+
 ---
 
 ## Best practices

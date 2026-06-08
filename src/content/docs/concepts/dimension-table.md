@@ -49,6 +49,18 @@ Thay vì gộp chung các thuộc tính mô tả vào bảng giao dịch - làm 
 ## How it works
 
 Dòng chảy dữ liệu của Dimension Table trong kiến trúc Data Warehouse:
+
+```mermaid
+flowchart TD
+    A[1. Nguồn thay đổi<br/>(OLTP)] --> B[2. Quá trình ETL<br/>Phát hiện thay đổi]
+    B --> C[3. Gán Khóa thay thế<br/>(Surrogate Key)]
+    C --> D{4. Chính sách SCD}
+    D -- "Ghi đè" --> E[SCD Type 1]
+    D -- "Thêm dòng" --> F[SCD Type 2<br/>Lưu lịch sử]
+    E --> G[5. Dimension Table<br/>(Sẵn sàng cho BI)]
+    F --> G
+```
+
 1. Hệ thống nguồn (OLTP CRM, ERP) thay đổi thông tin khách hàng.
 2. Hệ thống ETL phát hiện sự thay đổi.
 3. ETL gán một Khóa thay thế (Surrogate Key - ví dụ: INT tự tăng) cho bản ghi khách hàng đó.

@@ -114,6 +114,22 @@ Ngày 15, dev backend sửa ứng dụng, thay vì lưu tỷ giá `currency_rate
 4. **Tìm nguyên nhân (Root Cause)**: Dựa vào Lineage, DE mở biểu đồ, thấy ngay thay đổi Schema từ hệ thống nguồn ứng dụng PostgreSQL.
 5. **Khắc phục**: Sự cố được sửa xong vào 8h sáng, báo cáo đúng được gửi đi. Ban giám đốc không hề hay biết về thảm họa suýt xảy ra.
 
+Dưới đây là một ví dụ sử dụng tệp cấu hình YAML của công cụ mã nguồn mở **Soda** (một nền tảng Data Observability) để tự động giám sát "Độ phân phối" (Distribution) và "Độ tươi" (Freshness) của dữ liệu:
+
+```yaml
+# checks_dim_exchange.yml
+checks for dim_exchange:
+  # 1. Freshness: Cảnh báo nếu dữ liệu không được nạp mới trong vòng 24 giờ
+  - freshness(updated_at) < 24h
+
+  # 2. Distribution/Anomaly: Sử dụng Machine Learning để cảnh báo nếu tỷ giá trung bình bị lệch bất thường
+  - anomaly score for avg_currency_rate < 0.5:
+      avg_currency_rate: avg(currency_rate)
+
+  # 3. Volume: Cảnh báo nếu số dòng bị tụt giảm đột ngột so với tuần trước
+  - row_count = last_week_count * 0.9
+```
+
 ---
 
 ## Best practices

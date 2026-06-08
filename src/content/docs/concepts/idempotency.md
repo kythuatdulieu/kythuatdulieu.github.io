@@ -45,6 +45,18 @@ Idempotency ra đời nhằm giải phóng Data Engineer khỏi quá trình dọ
 
 Để đạt được Idempotency, các Data Engineers thường áp dụng hai cơ chế phổ biến nhất:
 
+```mermaid
+flowchart TD
+    A[Dữ liệu mới<br/>New Data] --> B{Chiến lược<br/>Idempotent}
+    
+    B -- "Ghi đè hoàn toàn<br/>(Overwrite)" --> C[Xóa dữ liệu cũ<br/>DELETE Partition]
+    C --> D[Chèn toàn bộ lại<br/>INSERT]
+    
+    B -- "Cập nhật điều kiện<br/>(Upsert / Merge)" --> E{Kiểm tra ID tồn tại?}
+    E -- "Đã tồn tại" --> F[Cập nhật dòng cũ<br/>UPDATE]
+    E -- "Chưa tồn tại" --> G[Thêm dòng mới<br/>INSERT]
+```
+
 1. **Ghi đè hoàn toàn (Overwrite / Replace)**
    Thay vì lệnh `INSERT` dữ liệu (append), pipeline sẽ xóa (DROP/DELETE) phân vùng (partition) của khoảng thời gian đó và ghi đè bằng toàn bộ dữ liệu mới tính toán. 
 

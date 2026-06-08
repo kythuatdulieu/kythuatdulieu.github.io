@@ -111,6 +111,23 @@ Một ứng dụng Ngân hàng cần cảnh báo giao dịch gian lận.
 5. Flink lập tức phát một sự kiện `FraudAlert(Card=123)` vào một Kafka topic khác, để hệ thống bảo mật tự động khóa thẻ và gửi SMS cho khách hàng.
 Toàn bộ quá trình diễn ra trong 200 mili-giây.
 
+**Mã nguồn Flink SQL (Mô phỏng phát hiện gian lận bằng Window):**
+
+```sql
+-- Dùng Flink SQL để đếm số giao dịch bất thường trong vòng 5 phút (Sliding Window)
+SELECT 
+    card_id, 
+    COUNT(*) as transaction_count,
+    SUM(amount) as total_amount
+FROM card_transactions
+-- Cửa sổ trượt dài 5 phút, cập nhật mỗi 1 phút
+GROUP BY 
+    HOP(transaction_time, INTERVAL '1' MINUTE, INTERVAL '5' MINUTE),
+    card_id
+HAVING COUNT(*) > 3 AND SUM(amount) > 10000;
+-- Nếu thỏa mãn điều kiện, dòng kết quả này lập tức được đẩy sang Kafka Fraud Topic
+```
+
 ---
 
 ## Best practices

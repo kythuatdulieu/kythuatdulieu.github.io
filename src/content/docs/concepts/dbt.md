@@ -96,6 +96,34 @@ graph LR
 
 ---
 
+## Practical example
+
+Một trong những tính năng mạnh mẽ nhất của dbt là kiểm thử dữ liệu (Data Testing). Bạn không cần viết code SQL dài dòng, chỉ cần cấu hình file `schema.yml` để dbt tự sinh ra code kiểm thử:
+
+```yaml
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Bảng dữ liệu khách hàng đã được làm sạch."
+    columns:
+      - name: customer_id
+        description: "Khóa chính của khách hàng."
+        tests:
+          - unique
+          - not_null
+      
+      - name: status
+        description: "Trạng thái tài khoản."
+        tests:
+          - accepted_values:
+              values: ['active', 'pending', 'deleted']
+```
+
+Khi chạy lệnh `dbt test`, dbt sẽ tự động tạo các câu lệnh SQL phía sau màn hình để đếm xem có `customer_id` nào bị trùng lặp hoặc NULL hay không.
+
+---
+
 ## Best practices
 
 * **Kiến trúc nhiều tầng (Multi-layer)**: Tuân thủ cấu trúc chuẩn của cộng đồng dbt:

@@ -66,6 +66,17 @@ Thêm một cột phụ vào bảng để giữ trạng thái ngay trước đó
 
 Cùng minh họa SCD Type 2 (Loại phổ biến nhất) bằng SQL và Data flow.
 
+```mermaid
+flowchart TD
+    A[New Event / Change Detected\nAlice moves to Saigon] --> B{Record Exists?}
+    B -->|No| C[Insert New Record\nis_active=TRUE]
+    B -->|Yes| D[Update Old Record\nis_active=FALSE\nend_date=NOW]
+    D --> E[Insert New Version\nis_active=TRUE\nstart_date=NOW]
+    
+    style D fill:#ffcccb,stroke:#333
+    style E fill:#ccffcc,stroke:#333
+```
+
 **1. Trạng thái ban đầu:** Khách hàng tên Alice sống ở "Hanoi".
 
 | customer_sk (Surrogate PK) | customer_id (Natural Key) | name | city | is_active | start_date | end_date |
@@ -88,6 +99,31 @@ Kết quả bảng `dim_customer` sẽ như sau:
 | **102** | CUS-99 | Alice | Saigon | **TRUE** | **2026-06-07** | 9999-12-31 |
 
 *(Từ ngày này trở đi, giao dịch mới của Alice sẽ trỏ vào khóa `customer_sk = 102`. Giao dịch cũ trong quá khứ vẫn trỏ vào khóa `101`. Lịch sử được bảo toàn tuyệt đối!).*
+
+**Mã nguồn SQL (dbt Snapshot) tự động hóa SCD Type 2:**
+
+```sql
+{% snapshot dim_customer_snapshot %}
+
+{{
+    config(
+      target_schema='snapshots',
+      unique_key='customer_id',
+      strategy='check',
+      # Cấu hình theo dõi sự thay đổi trên cột 'city' (hoặc dùng 'all' cho mọi cột)
+      check_cols=['city'],
+    )
+}}
+
+SELECT
+    customer_id,
+    name,
+    city
+FROM {{ source('raw_data', 'customers') }}
+
+{% endsnapshot %}
+```
+*Ghi chú: Khi chạy file snapshot này, dbt sẽ ngầm tự động tạo và cập nhật các cột `dbt_valid_from` và `dbt_valid_to` giống như `start_date` và `end_date` ở trên.*
 
 ---
 

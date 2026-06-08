@@ -581,6 +581,10 @@
       "title": "Xử lý dữ liệu theo lô - Batch Processing"
     },
     {
+      "url": "/concepts/data-engineer-role/",
+      "title": "Vai trò Kỹ sư Dữ liệu - Data Engineer Role"
+    },
+    {
       "url": "/concepts/data-lineage/",
       "title": "Phả hệ dữ liệu - Data Lineage"
     },
@@ -1219,6 +1223,10 @@
     {
       "url": "/concepts/dbt-testing/",
       "title": "Kiểm thử tự động - dbt Testing"
+    },
+    {
+      "url": "/concepts/dbt/",
+      "title": "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
     },
     {
       "url": "/learning-paths/analytics-engineer/",
@@ -2051,6 +2059,10 @@
     {
       "url": "/concepts/data-mesh/",
       "title": "Data Mesh"
+    },
+    {
+      "url": "/concepts/data-ownership/",
+      "title": "Quyền sở hữu dữ liệu - Data Ownership"
     },
     {
       "url": "/concepts/medallion-architecture/",
@@ -2951,6 +2963,10 @@
     {
       "url": "/concepts/llm/",
       "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     },
     {
       "url": "/concepts/reranking/",
@@ -4827,6 +4843,10 @@
     {
       "url": "/concepts/data-lineage/",
       "title": "Phả hệ dữ liệu - Data Lineage"
+    },
+    {
+      "url": "/concepts/data-mesh/",
+      "title": "Data Mesh"
     },
     {
       "url": "/concepts/data-ownership/",
@@ -6941,6 +6961,10 @@
     {
       "url": "/concepts/real-time-architecture/",
       "title": "Real-time Architecture"
+    },
+    {
+      "url": "/concepts/streaming-processing/",
+      "title": "Xử lý thời gian thực - Streaming Processing"
     }
   ],
   "/concepts/top-p/": [
@@ -7011,6 +7035,10 @@
     {
       "url": "/concepts/mlflow/",
       "title": "Quản lý vòng đời Machine Learning với MLflow"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     },
     {
       "url": "/concepts/zero-shot/",

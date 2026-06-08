@@ -105,7 +105,30 @@ Hãy trích xuất thông tin khách hàng từ [Email] dưới đây và trả 
 }
 ```
 
-Với Good Prompt, hệ thống pipeline có thể parse chuỗi JSON một cách dễ dàng và an toàn hơn hẳn.
+Với Good Prompt, hệ thống pipeline có thể parse chuỗi JSON một cách dễ dàng và an toàn hơn hẳn. Bạn có thể tự động hóa pipeline này bằng thư viện `langchain` hay `openai` trong Python.
+
+**Ví dụ mã Python sử dụng Prompt Template (LangChain):**
+
+```python
+from langchain.prompts import PromptTemplate
+
+template = """
+Bạn là một AI Data Extractor chuyên nghiệp.
+Hãy trích xuất thông tin khách hàng từ email dưới đây và trả về định dạng JSON:
+
+Email:
+{email_content}
+"""
+
+prompt = PromptTemplate(
+    input_variables=["email_content"],
+    template=template,
+)
+
+final_prompt = prompt.format(email_content="Tôi là Nguyễn Văn A. Máy giặt bị hỏng nguồn.")
+print(final_prompt)
+# Gửi final_prompt này tới LLM để nhận về chuỗi JSON
+```
 
 ---
 

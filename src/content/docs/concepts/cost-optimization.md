@@ -97,6 +97,24 @@ Mỗi lần truy vấn, BigQuery sẽ quét toàn bộ 50TB (với giá khoảng
 Data Engineer chuyển đổi bảng `user_events` thành bảng phân vùng theo ngày (Partition by Date). 
 Khi nhà phân tích chạy SQL với điều kiện `WHERE event_date BETWEEN '2026-06-01' AND '2026-06-30'`, hệ thống sẽ chỉ quét các phân vùng của tháng 6 (khoảng 1.5TB), tiêu tốn chỉ $7.5. Tiết kiệm 97% chi phí.
 
+Dưới đây là ví dụ lệnh SQL (trên Google BigQuery) để tạo bảng có phân vùng và cụm (clustering) nhằm tối ưu chi phí và tốc độ:
+
+```sql
+-- Tạo bảng phân vùng theo ngày và cluster theo event_type
+CREATE TABLE `my_project.my_dataset.user_events_partitioned`
+PARTITION BY DATE(event_date)
+CLUSTER BY event_type
+AS
+SELECT * FROM `my_project.my_dataset.user_events_raw`;
+
+-- Truy vấn lấy MAU của tháng 6, chi phí cực rẻ vì chỉ quét 30 partitions
+SELECT 
+    COUNT(DISTINCT user_id) as mau
+FROM `my_project.my_dataset.user_events_partitioned`
+WHERE event_date BETWEEN '2026-06-01' AND '2026-06-30'
+  AND event_type = 'login';
+```
+
 ---
 
 ## Best practices

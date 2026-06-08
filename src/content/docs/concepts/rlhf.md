@@ -95,6 +95,45 @@ graph TD
 
 ---
 
+## Practical example
+
+Trong thực tế, thư viện `trl` (Transformer Reinforcement Learning) của Hugging Face thường được sử dụng để huấn luyện RLHF bằng thuật toán PPO. Dưới đây là mã giả minh họa luồng cấu hình cơ bản:
+
+```python
+from trl import PPOTrainer, PPOConfig, AutoModelForCausalLMWithValueHead
+from transformers import AutoTokenizer
+
+# 1. Cấu hình PPO
+config = PPOConfig(
+    model_name="gpt2",
+    learning_rate=1.41e-5,
+    mini_batch_size=16
+)
+
+# 2. Tải mô hình đã qua bước SFT (kèm theo một Value Head để tính Reward)
+model = AutoModelForCausalLMWithValueHead.from_pretrained(config.model_name)
+ref_model = AutoModelForCausalLMWithValueHead.from_pretrained(config.model_name)
+tokenizer = AutoTokenizer.from_pretrained(config.model_name)
+
+# 3. Khởi tạo PPOTrainer
+ppo_trainer = PPOTrainer(config, model, ref_model, tokenizer)
+
+# 4. Vòng lặp huấn luyện PPO
+for epoch, batch in enumerate(dataloader):
+    query_tensors = batch["input_ids"]
+    
+    # Model sinh câu trả lời
+    response_tensors = ppo_trainer.generate(query_tensors, max_new_tokens=20)
+    
+    # Giả lập: Một Reward Model bên ngoài chấm điểm câu trả lời (thành danh sách tensors)
+    rewards = reward_model.compute_scores(query_tensors, response_tensors)
+    
+    # Cập nhật trọng số của Policy Model bằng PPO
+    stats = ppo_trainer.step(query_tensors, response_tensors, rewards)
+```
+
+---
+
 ## Best practices
 
 * **Đảm bảo tính đa dạng và trung lập của Labelers**: Chất lượng của RLHF phụ thuộc 100% vào chất lượng dán nhãn của con người. Đội ngũ labelers cần đa dạng về văn hóa, độ tuổi và được hướng dẫn bằng các guideline (rubrics) cực kỳ chi tiết, nhất quán để tránh thiên kiến (bias).

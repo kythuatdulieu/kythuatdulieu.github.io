@@ -40,6 +40,35 @@ Streaming Processing ra đời nhằm giải quyết triệt để tính chóp n
 
 Hệ thống Streaming hoạt động theo ba chặng (Pub/Sub Model):
 
+```mermaid
+flowchart LR
+    subgraph Producers
+        A[Mobile App]
+        B[IoT Sensors]
+        C[Web Clicks]
+    end
+    
+    subgraph Message Broker
+        D[(Kafka / PubSub\nTopic)]
+    end
+    
+    subgraph Consumers
+        E[Spark Streaming /\nFlink Engine]
+    end
+    
+    subgraph Sinks
+        F[Real-time Dashboard]
+        G[Alert System]
+    end
+    
+    A & B & C -->|Publish Events| D
+    D -->|Subscribe / Pull| E
+    E -->|Filter & Aggregate| F & G
+    
+    style D fill:#cce5ff,stroke:#333
+    style E fill:#d4edda,stroke:#333
+```
+
 1. **Producers (Người sản xuất)**: Các ứng dụng, cảm biến gửi sự kiện (Event) liên tục vào một hệ thống môi giới thông điệp trung tâm.
 2. **Message Broker / Event Streaming Platform**: Cốt lõi của hệ thống, thường là Apache Kafka, Amazon Kinesis hoặc Google Pub/Sub. Nó đóng vai trò là ống nước khổng lồ bền bỉ, nhận hàng triệu sự kiện mỗi giây, xếp hàng và giữ chúng không bị rớt mạng.
 3. **Consumers / Stream Processing Engine**: Các động cơ xử lý phân tích (Apache Flink, Spark Structured Streaming, Kafka Streams) đọc dữ liệu ra khỏi ống nước. Tại đây, nó làm các tác vụ:

@@ -43,6 +43,30 @@ mà không dồn các dữ liệu có chung thuộc tính Khóa (Key) về chung
 
 Quá trình Shuffle trong Spark gồm 2 pha chính (giữa 2 Stages):
 
+```mermaid
+flowchart LR
+    subgraph Stage 1: Map
+        M1[Mapper 1] --> W1[(Local Disk)]
+        M2[Mapper 2] --> W2[(Local Disk)]
+    end
+    
+    subgraph Network
+        W1 -.->|Shuffle Read| R1
+        W1 -.->|Shuffle Read| R2
+        W2 -.->|Shuffle Read| R1
+        W2 -.->|Shuffle Read| R2
+    end
+    
+    subgraph Stage 2: Reduce
+        R1[Reducer 1] --> O1[Output Partition 1]
+        R2[Reducer 2] --> O2[Output Partition 2]
+    end
+    
+    style Stage 1 fill:#f9f9f9,stroke:#333
+    style Stage 2 fill:#f9f9f9,stroke:#333
+    style Network fill:#e6f2ff,stroke:#333,stroke-dasharray: 5 5
+```
+
 1. **Shuffle Write (Pha Map / Viết xuống đĩa)**:
    * Các Executor đang giữ dữ liệu gốc duyệt qua dữ liệu, tính toán mã băm (Hash) dựa trên cột Khóa (ví dụ `Hash(customer_id) % num_partitions`).
    * Phân loại dữ liệu thành các thùng (buckets) trong bộ nhớ đệm (buffer).

@@ -128,6 +128,37 @@ graph LR
 
 ---
 
+## Practical example
+
+Dưới đây là một ví dụ thực tế về mã nguồn của một file Staging Model (`stg_stripe__payments.sql`). Lưu ý cách sử dụng hàm `{{ source() }}` và các thao tác làm sạch dữ liệu cơ bản:
+
+```sql
+WITH raw_payments AS (
+    SELECT * 
+    FROM {{ source('stripe', 'payment') }}
+),
+
+renamed_and_casted AS (
+    SELECT
+        -- Đổi tên cột cho chuẩn Snake_case
+        id AS payment_id,
+        orderid AS order_id,
+        paymentmethod AS payment_method,
+        
+        -- Ép kiểu và quy đổi đơn vị (cents -> dollars)
+        status,
+        amount / 100.0 AS payment_amount_usd,
+        
+        -- Chuyển đổi Timestamp (nếu có)
+        created AS created_at
+    FROM raw_payments
+)
+
+SELECT * FROM renamed_and_casted
+```
+
+---
+
 ## Best practices
 
 * **Tiếp cận mô hình Phễu (The DAG Funnel)**: Tầng Staging có thể có 100 bảng. Intermediate gom lại còn 30 bảng. Tầng Marts đưa ra cho người dùng BI xem chỉ nên có 5-10 bảng lớn (Mô hình Star Schema). Đừng bắt người dùng BI tự đi JOIN 100 cái bảng staging.

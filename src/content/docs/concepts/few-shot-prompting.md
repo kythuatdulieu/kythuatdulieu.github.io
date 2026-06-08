@@ -45,13 +45,22 @@ Sự bất định này làm sập toàn bộ các pipeline tự động (API) v
 ## Core idea
 
 Cấu trúc của một Few-shot Prompt thường bao gồm 3 phần rạch ròi:
+
+```mermaid
+flowchart TD
+    A[1. Chỉ thị<br/>Task Description] --> B[2. Các ví dụ mẫu<br/>Input 1 -> Output 1<br/>Input 2 -> Output 2]
+    B --> C[3. Đầu vào thực tế<br/>Input 3 -> ?]
+    A & B & C --> D{Mô hình LLM<br/>In-context Learning}
+    D --> E[Output 3 chuẩn định dạng]
+```
+
 1. **Task Description (Chỉ thị)**: Mô tả tổng quan nhiệm vụ.
 2. **Demonstrations (Các ví dụ)**: Chuỗi các cặp `[Input] -> [Output]` mẫu.
 3. **Target Input (Đầu vào thực tế)**: Dữ liệu bạn cần mô hình xử lý, với phần `[Output]` để trống chờ mô hình sinh ra.
 
 ---
 
-## How it works (Ví dụ thực tiễn)
+## Practical example
 
 **Bài toán: Trích xuất tên viết tắt của công ty.**
 
@@ -78,6 +87,32 @@ META
 ```
 
 Mô hình tự nhìn vào 3 ví dụ trên, nhận ra pattern: "A, output chỉ chứa đúng mã cổ phiếu viết hoa 4-5 chữ cái", và nó sinh ra kết quả tương ứng.
+
+Để áp dụng Few-shot Prompting trong code thực tế (ví dụ dùng Python và OpenAI API), các lập trình viên thường nhúng các ví dụ này vào mảng `messages` với các role `user` và `assistant` luân phiên nhau:
+
+```python
+import openai
+
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "Trích xuất tên viết tắt của các công ty công nghệ trong câu sau."},
+        
+        # Các ví dụ (Few-shot demonstrations)
+        {"role": "user", "content": "Văn bản: Apple Inc. vừa phát hành điện thoại mới."},
+        {"role": "assistant", "content": "AAPL"},
+        
+        {"role": "user", "content": "Văn bản: Cổ phiếu của Microsoft Corporation đang tăng giá."},
+        {"role": "assistant", "content": "MSFT"},
+        
+        # Câu hỏi thực tế
+        {"role": "user", "content": "Văn bản: Tập đoàn Meta Platforms ra mắt kính thực tế ảo."}
+    ]
+)
+
+print(response.choices[0].message.content)
+# Output: META
+```
 
 ---
 

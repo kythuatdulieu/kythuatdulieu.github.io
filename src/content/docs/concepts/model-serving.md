@@ -124,6 +124,26 @@ Lệnh trên khởi động một Inference Server mạnh mẽ. Khi Web App gọ
 2. Áp dụng kỹ thuật PagedAttention để quản lý bộ nhớ KV Cache, cho phép nhiều người dùng chat cùng lúc mà VRAM không bị phình to.
 3. Stream kết quả trả về từng Token một (hiệu ứng typing).
 
+**Ví dụ ứng dụng Web (Client) gọi API vLLM vừa khởi tạo:**
+
+```python
+import openai
+
+# Trỏ thư viện OpenAI client về server vLLM local của bạn
+client = openai.OpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key="empty" # vLLM không yêu cầu API key mặc định
+)
+
+response = client.chat.completions.create(
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
+    messages=[
+        {"role": "user", "content": "Giải thích Model Serving là gì trong 2 câu."}
+    ]
+)
+print(response.choices[0].message.content)
+```
+
 ---
 
 ## Best practices

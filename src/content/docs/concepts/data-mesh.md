@@ -103,6 +103,29 @@ Thay vì một team Kỹ sư Dữ liệu trung gian phải tải data từ 2 nơ
 
 Một Data Scientist thuộc bộ phận Marketing muốn dự đoán ai sắp hủy gói cước. Họ vào **Data Catalog (Data Portal)** của nội bộ công ty, tìm kiếm 2 Product trên, "đăng ký" (Subscribe) đọc dữ liệu từ hai Product đó và tự viết model máy học mà không cần nhờ vả và chờ đợi đội Data Engineer trung tâm vài tháng. Nếu schema của Billing thay đổi, đội Kỹ sư Billing phải chịu trách nhiệm báo trước vì Data Product là sản phẩm họ cam kết với cả công ty.
 
+Để hiện thực hóa khái niệm "Data as a Product", các kỹ sư thường dùng một tệp định nghĩa bằng YAML (giống như Data Contract) đính kèm cùng kho lưu trữ mã nguồn để khai báo sản phẩm dữ liệu này với hệ thống Catalog trung tâm:
+
+```yaml
+# data_product_descriptor.yml
+name: User_Watch_Time_Dataset
+domain: Streaming_Experience
+owner: 
+  name: "John Doe"
+  email: "johndoe@netflix.example.com"
+  slack_channel: "#data-streaming-support"
+description: "Bảng tổng hợp thời gian xem phim của người dùng theo từng ngày."
+
+dataset:
+  platform: snowflake
+  database: PRD_STREAMING
+  schema: ANALYTICS
+  table: user_watch_time_daily
+
+sla:
+  freshness: "Tối đa 2 giờ trễ"
+  uptime: "99.9%"
+```
+
 ---
 
 ## Best practices

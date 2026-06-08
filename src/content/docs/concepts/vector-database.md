@@ -52,6 +52,26 @@ Nguyên lý cốt lõi của Vector Database xoay quanh 3 khái niệm:
 
 Luồng xử lý (Data Flow) trong một hệ thống ứng dụng Vector Database gồm hai quá trình chính:
 
+```mermaid
+flowchart TD
+    subgraph Ingestion Phase
+        A[Raw Documents] --> B[Chunking]
+        B --> C[Embedding Model]
+        C --> D[(Vector Database\n+ Metadata Index)]
+    end
+    
+    subgraph Query Phase
+        E[User Query] --> F[Same Embedding Model]
+        F --> G{ANN Search\nCosine / L2}
+        D -.->|Search Space| G
+        G --> H[Top K Results]
+    end
+    
+    style Ingestion Phase fill:#f9f9f9,stroke:#333
+    style Query Phase fill:#f9f9f9,stroke:#333
+    style D fill:#cce5ff,stroke:#333
+```
+
 **1. Giai đoạn Ingestion (Ghi dữ liệu):**
 1. Ứng dụng đọc dữ liệu phi cấu trúc (ví dụ: các tài liệu PDF).
 2. Dữ liệu được chia nhỏ thành các đoạn (Chunking).
@@ -80,6 +100,36 @@ Xét hệ thống hỏi đáp (RAG) về sổ tay nhân viên nội bộ:
 * Câu hỏi được chuyển thành vector: `[0.10, -0.04, 0.85, ...]`
 * Vector DB tính toán Cosine Similarity và thấy khoảng cách góc rất nhỏ (độ tương đồng cao, ví dụ `0.92`), dù câu hỏi không chứa chính xác cụm từ "có lương" hay "nhân viên".
 * Vector DB trả về đoạn văn bản gốc ở Bước 1.
+
+**Mã Python minh họa lưu và tìm kiếm với Pinecone:**
+
+```python
+from pinecone import Pinecone
+
+# Khởi tạo Pinecone client
+pc = Pinecone(api_key="YOUR_API_KEY")
+index = pc.Index("hr-documents")
+
+# --- BƯỚC 1: Lưu trữ (Ingestion) ---
+# Dữ liệu đã được chuyển thành vector bởi mô hình OpenAI
+index.upsert(
+    vectors=[
+        {"id": "doc_1", "values": [0.12, -0.05, 0.88, ...], "metadata": {"text": "Nhân viên được nghỉ phép năm 12 ngày có lương."}}
+    ]
+)
+
+# --- BƯỚC 2: Tìm kiếm (Query) ---
+# Vector của câu hỏi "Tôi có bao nhiêu ngày nghỉ ốm và nghỉ phép?"
+query_vector = [0.10, -0.04, 0.85, ...]
+
+response = index.query(
+    vector=query_vector,
+    top_k=1,
+    include_metadata=True
+)
+
+print(response['matches'][0]['metadata']['text'])
+```
 
 ---
 

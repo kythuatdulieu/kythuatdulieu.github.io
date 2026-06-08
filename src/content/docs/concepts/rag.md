@@ -107,6 +107,32 @@ Báo cáo tài chính nội bộ ngày 10/10/2025: Dự án Alpha đạt tổng 
 ```
 4. LLM trả lời (Generate): `"Theo báo cáo nội bộ ngày 10/10/2025, dự án Alpha đạt doanh thu 4.5 triệu USD trong Quý 3/2025."`
 
+**Mã Python cơ bản mô phỏng luồng RAG bằng LangChain:**
+
+```python
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.llms import OpenAI
+from langchain.chains import RetrievalQA
+
+# 1. Khởi tạo kết nối tới Vector DB (nơi đã lưu sẵn tài liệu)
+vector_db = Chroma(persist_directory="./chroma_db", embedding_function=OpenAIEmbeddings())
+
+# 2. Khởi tạo LLM (Generator)
+llm = OpenAI(temperature=0)
+
+# 3. Kết hợp thành RAG Chain (Retrieval + Generation)
+rag_chain = RetrievalQA.from_chain_type(
+    llm=llm, 
+    chain_type="stuff", # Nhét các chunks tìm được vào Prompt
+    retriever=vector_db.as_retriever(search_kwargs={"k": 3}) # Lấy Top-3 tài liệu
+)
+
+# 4. Trả lời câu hỏi
+answer = rag_chain.run("Dự án Alpha có doanh thu quý 3/2025 là bao nhiêu?")
+print(answer)
+```
+
 ---
 
 ## Best practices

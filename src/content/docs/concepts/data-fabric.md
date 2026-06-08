@@ -102,6 +102,30 @@ Một ngân hàng đa quốc gia có chi nhánh tại Châu Âu và Việt Nam. 
 Họ áp dụng công nghệ Data Fabric (sử dụng công cụ ảo hóa như Denodo). Kỹ sư dữ liệu không cần viết ETL để tải data Châu Âu về trung tâm.
 Khi nhà quản trị muốn biết "Tổng tài sản rủi ro toàn cầu", họ viết một câu truy vấn SQL lên lớp ảo hóa của Data Fabric. Data Fabric sẽ sử dụng siêu dữ liệu, tự động biên dịch câu truy vấn đó thành 2 phần, gửi một truy vấn tới server ở Châu Âu, gửi một truy vấn tới server Việt Nam. Việc thực thi tính toán diễn ra tại nguồn, Data Fabric chỉ thu nhận kết quả cuối cùng (các con số vô danh) và ghép (JOIN) lại thành báo cáo tổng.
 
+Ví dụ, người dùng chỉ cần viết một câu truy vấn hợp nhất duy nhất trên giao diện ảo hóa của Data Fabric (như Trino hoặc Denodo) mà không cần quan tâm dữ liệu thực sự đang nằm ở đâu:
+
+```sql
+-- Truy vấn hợp nhất trên Data Fabric
+-- Người dùng không cần biết 'customer_eu' nằm ở PostgreSQL (Châu Âu) 
+-- và 'customer_vn' nằm ở Oracle (Việt Nam). Lớp ảo hóa sẽ lo việc định tuyến.
+
+SELECT 
+    'Europe' as region,
+    COUNT(*) as total_high_risk_customers,
+    SUM(credit_exposure) as total_risk_asset
+FROM fabric_virtual_schema.customer_eu
+WHERE risk_score > 80
+
+UNION ALL
+
+SELECT 
+    'Vietnam' as region,
+    COUNT(*) as total_high_risk_customers,
+    SUM(credit_exposure) as total_risk_asset
+FROM fabric_virtual_schema.customer_vn
+WHERE risk_score > 80;
+```
+
 ---
 
 ## Best practices

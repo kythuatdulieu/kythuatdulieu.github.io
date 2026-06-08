@@ -37,6 +37,14 @@ Bản chất của LLM là một cỗ máy xác suất (probabilistic machine) d
 
 Có hai loại ảo giác chính mà các kỹ sư cần nhận biết để tìm hướng khắc phục:
 
+```mermaid
+flowchart TD
+    A[Ảo giác LLM<br/>Hallucination] --> B[Intrinsic<br/>Mâu thuẫn logic]
+    A --> C[Extrinsic<br/>Bịa thông tin]
+    B --> D[Nội dung trái ngược<br/>với Prompt / Context]
+    C --> E[Tạo ra sự kiện, link,<br/>trích dẫn giả mạo]
+```
+
 1. **Intrinsic Hallucination (Ảo giác Nội tại / Mâu thuẫn logic)**: Mô hình sinh ra thông tin trái ngược hoàn toàn với dữ liệu thực tế (factual knowledge) hoặc trái ngược với chính ngữ cảnh (context) người dùng vừa cung cấp. 
    * *Ví dụ*: Prompt nói: *"Bệnh nhân A không dị ứng với Penicillin"*. LLM phản hồi: *"Cần tránh kê đơn Penicillin cho bệnh nhân A vì lý do dị ứng."* (Mâu thuẫn ngữ cảnh).
 2. **Extrinsic Hallucination (Ảo giác Ngoại lai / Bịa thông tin)**: Mô hình tự bịa thêm các chi tiết, sự kiện, đường link, hoặc trích dẫn không hề tồn tại trong tự nhiên (nhưng cũng không thể chứng minh là sai thông qua prompt).

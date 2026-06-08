@@ -91,6 +91,32 @@ Xét một bản ghi dữ liệu khách hàng từ hệ thống:
 * **Accuracy**: Khó đo lường bằng máy móc. Máy không thể biết người đó có thực sự tên là "Maria" ngoài đời thực hay không, phải xác thực đối chiếu với chứng minh nhân dân.
 * **Consistency**: Giả sử trường `is_active` là "Y" nhưng trường `email_confirmed` (giả sử có) là "N". Điều này mâu thuẫn quy tắc kinh doanh (chưa xác nhận email thì không được kích hoạt).
 
+Trong thực tế, các Kỹ sư Dữ liệu thường sử dụng công cụ **dbt (Data Build Tool)** để lập trình các bài kiểm tra tự động (Data Tests) đo lường các chiều chất lượng này trên kho dữ liệu:
+
+```yaml
+# schema.yml
+version: 2
+
+models:
+  - name: dim_customers
+    columns:
+      - name: user_id
+        tests:
+          - not_null       # Đảm bảo Completeness (Tính đầy đủ)
+          - unique         # Đảm bảo Uniqueness (Tính duy nhất)
+
+      - name: age
+        tests:
+          - accepted_values: # Đảm bảo Validity (Tính hợp lệ)
+              values: ['18-25', '26-35', '36-50', '50+']
+              
+      - name: email
+        tests:
+          - not_null       # Đảm bảo Completeness
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$" # Validity cho định dạng Email
+```
+
 ---
 
 ## Best practices

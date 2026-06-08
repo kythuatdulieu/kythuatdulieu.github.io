@@ -118,6 +118,31 @@ Thay vì Full Fine-tuning tốn kém, kỹ sư quyết định dùng LoRA:
 4. **Kết quả**: Kỹ sư thu được một thư mục Adapter nặng khoảng `80MB`. 
 5. **Triển khai**: Khi deploy, kỹ sư tải model Llama-3-8B (nặng 16GB), sau đó tiêm `80MB` Adapter này vào. Bot giờ đây viết SQL xuất sắc mà phần cứng huấn luyện chỉ bằng một góc nhỏ.
 
+**Ví dụ thiết lập LoRA với thư viện PEFT của HuggingFace:**
+
+```python
+from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM
+
+# Tải mô hình gốc (Base Model)
+base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B")
+
+# Định nghĩa cấu hình LoRA
+lora_config = LoraConfig(
+    r=16,               # Hạng của ma trận (Rank)
+    lora_alpha=32,      # Hệ số scale
+    target_modules=["q_proj", "v_proj"], # Các lớp Attention để tiêm LoRA vào
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+# Bọc mô hình gốc với cấu hình LoRA (Chỉ huấn luyện adapter)
+peft_model = get_peft_model(base_model, lora_config)
+peft_model.print_trainable_parameters()
+# Output: trainable params: 6,815,744 || all params: 8,037,076,992 || trainable%: 0.0848%
+```
+
 ---
 
 ## Best practices
