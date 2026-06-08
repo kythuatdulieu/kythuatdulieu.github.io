@@ -127,3 +127,82 @@ body.focus-mode .main-pane {
     }
 }
 
+/* ==========================================================
+   GLOSSARY POPUP & HIGHLIGHT STYLES
+   Adapts to Starlight Dark/Light themes.
+   ========================================================== */
+.concept-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--sl-color-accent);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.concept-link:hover {
+    color: var(--sl-color-accent-high);
+    background-color: rgba(var(--sl-color-accent-rgb), 0.15);
+    border-bottom-style: solid;
+}
+
+.concept-popover {
+    position: absolute;
+    z-index: 1000;
+    width: 340px;
+    background: var(--sl-color-bg-nav);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 16px -6px rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--sl-color-text);
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.concept-popover.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.popover-body {
+    color: var(--sl-color-text);
+}
+
+.popover-body p {
+    margin-bottom: 0.5rem;
+}
+
+.popover-body ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.popover-body li {
+    font-size: 0.825rem;
+    color: var(--sl-color-gray-3);
+    margin-bottom: 0.25rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 640px) {
+    .concept-popover {
+        width: calc(100vw - 32px);
+        max-width: 320px;
+    }
+}
+
+
