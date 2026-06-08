@@ -127,7 +127,7 @@ If câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó có 
 
 ## Tài liệu tham khảo
 
-1. [Monte Carlo Data: How to Detect Data Anomalies with SQL](https://www.montecarlodata.com/blog-how-to-detect-data-anomalies-with-sql/) - Practical guide on implementing Z-score and rolling average calculations in SQL for data quality metrics.
+1. [Monte Carlo Data: How to Detect Data Anomalies with SQL](https://www.montecarlodata.com/blog/data-observability-in-practice-using-sql/) - Practical guide on implementing Z-score and rolling average calculations in SQL for data quality metrics.
 2. [Meta Prophet Documentation Quick Start](https://facebook.github.io/prophet/docs/quick_start.html) - Documentation for Meta's Prophet library, used for forecasting seasonal time-series data.
 3. [Netflix Tech Blog: RAD Outlier Detection on Big Data](https://netflixtechblog.com/rad-outlier-detection-on-big-data-d6b0494371cc) - Netflix's engineering approach to detecting anomalies in high-volume, multi-dimensional stream processing.
 4. [Uber Engineering Blog: uVitals Anomaly Detection & Alerting System](https://www.uber.com/blog/uvitals-an-anomaly-detection-alerting-system/) - Overview of Uber's real-time, multi-dimensional unsupervised anomaly detection system.

@@ -172,7 +172,7 @@ GROUP BY 1, 2;
 
 1. [What is Data Engineering?](https://www.ibm.com/topics/data-engineering) - IBM comprehensive topic guide on data engineering definition and lifecycle.
 2. [What is Data Engineering?](https://www.databricks.com/glossary/data-engineering) - Databricks Glossary definition of data engineering and modern cloud lakehouse solutions.
-3. [What is Data Engineering?](https://cloud.google.com/learn/what-is-data-engineering) - Google Cloud Learn page for data engineering concepts, tools, and certifications.
+3. [What is Data Engineering?](https://cloud.google.com/discover/what-is-data-engineering) - Google Cloud Learn page for data engineering concepts, tools, and certifications.
 4. [Fundamentals of Data Engineering Book](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - O'Reilly page for the comprehensive guide book by Joe Reis and Matt Housley.
 5. [Designing Data-Intensive Applications Book](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - O'Reilly page for Martin Kleppmann's classic book on distributed systems and data design.
 

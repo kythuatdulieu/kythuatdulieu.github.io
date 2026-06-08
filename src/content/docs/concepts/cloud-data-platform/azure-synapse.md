@@ -161,7 +161,7 @@ Hệ thống sẽ tự động quét các file Parquet trực tiếp trên Data 
 
 1. [What is Azure Synapse Analytics?](https://learn.microsoft.com/azure/synapse-analytics/overview-what-is) - Official Microsoft documentation introducing the unified Synapse analytics workspace.
 2. Azure Synapse SQL Architecture - Microsoft Learn reference guide on dedicated and serverless SQL query processing.
-3. [Learning Azure Synapse Analytics](https://www.oreilly.com/library/view/learning-azure-synapse/9781098127688/) - Practical guide by Paul Andrew and Richard Swinbank on data warehousing, lakehouses, and pipelines in Azure.
+3. [Azure Synapse Analytics Cookbook](https://www.amazon.com/Azure-Synapse-Analytics-Cookbook-enterprise-level/dp/1800207525/) - Practical recipes by Packt on data warehousing, lakehouses, and pipelines in Azure.
 4. [Serverless SQL Pool in Azure Synapse](https://learn.microsoft.com/azure/synapse-analytics/sql/on-demand-workspace-overview) - Official guide on using the on-demand query endpoint to scan files directly on Azure Data Lake Storage.
 5. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Authoritative book by Joe Reis and Matt Housley comparing cloud analytics engines and data architectures.
 

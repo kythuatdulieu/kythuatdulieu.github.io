@@ -155,9 +155,9 @@ else:
 
 ## Tài liệu tham khảo
 
-1. [Monte Carlo Data: What is Data Quality?](https://www.montecarlodata.com/blog-what-is-data-quality/) - In-depth guide discussing the shift from reactive monitoring to end-to-end data observability.
+1. [Monte Carlo Data: What is Data Quality?](https://www.montecarlodata.com/blog/what-is-data-quality-identify-prevent-fix-common-issues/) - In-depth guide discussing the shift from reactive monitoring to end-to-end data observability.
 2. [O'Reilly: Data Quality Fundamentals](https://www.oreilly.com/library/view/data-quality-fundamentals/9781098112035/) - Handbook by Barr Moses, Lior Gavish, and Molly Vorwerck on designing reliable data architectures.
-3. [Great Expectations Documentation](https://docs.greatexpectations.io/docs/) - Official reference for building and configuring pipeline-based data assertions in Python.
+3. [Great Expectations Documentation](https://docs.greatexpectations.io/) - Official reference for building and configuring pipeline-based data assertions in Python.
 4. [DAMA International Official Site](https://www.dama.org/) - Official resources and publications from the Data Management Association.
 5. [Collibra: What is Data Quality?](https://www.collibra.com/us/en/blog/what-is-data-quality) - Article covering governance frameworks, key indicators, and data catalog integrations.
 

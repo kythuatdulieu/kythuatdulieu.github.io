@@ -150,7 +150,7 @@ models:
 ## Tài liệu tham khảo
 
 1. [Collibra: The 6 Dimensions of Data Quality](https://www.collibra.com/us/en/blog/the-6-dimensions-of-data-quality) - Guide exploring DAMA-aligned dimensions of data quality and validation.
-2. [Monte Carlo Data: What are Data Quality Dimensions?](https://www.montecarlodata.com/blog-what-are-data-quality-dimensions/) - Detailed breakdown of the foundational dimensions with real-world technical implementation examples.
+2. [Monte Carlo Data: What are Data Quality Dimensions?](https://www.montecarlodata.com/blog/the-6-data-quality-dimensions-plus-1-you-cant-ignore/) - Detailed breakdown of the foundational dimensions with real-world technical implementation examples.
 3. [DAMA International Official Site](https://www.dama.org/) - Official web page of the Data Management Association, authors of the DMBOK framework.
 4. DAMA-DMBOK: Data Management Body of Knowledge - O'Reilly reference guide specifying standards for data quality dimensions.
 5. [Great Expectations Official Documentation](https://docs.greatexpectations.io/) - Open-source validation library that automates testing for validity, completeness, and uniqueness.

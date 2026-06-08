@@ -170,7 +170,7 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
 
 1. [What is a Data Pipeline?](https://www.ibm.com/topics/data-pipeline) - IBM guide detailing definitions, components, and best practices of data pipelines.
 2. [What is a Data Pipeline?](https://www.databricks.com/glossary/data-pipeline) - Databricks Glossary explaining different data pipeline architectures.
-3. [What is a Data Pipeline?](https://cloud.google.com/learn/what-is-a-data-pipeline) - Google Cloud Learn page explaining stages and technologies for building data pipelines.
+3. [What is a Data Pipeline?](https://cloud.google.com/discover/what-is-a-data-pipeline) - Google Cloud Learn page explaining stages and technologies for building data pipelines.
 4. [What is a Data Pipeline?](https://aws.amazon.com/what-is/data-pipeline/) - AWS page introducing the concepts, benefits, and use cases of data pipelines.
 5. [Apache Airflow Documentation](https://airflow.apache.org/docs/) - Official documentation for the industry-standard workflow orchestration platform.
 
