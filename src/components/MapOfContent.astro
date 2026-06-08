@@ -1,78 +1,91 @@
 ---
 import { getCollection } from 'astro:content';
 
-// Dynamically fetch all concepts from the content folder
 const allDocs = await getCollection('docs');
-const concepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
-// Group concepts by category
-const groupedConcepts = {};
+const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
 
-concepts.forEach(concept => {
-    const category = concept.data.category || 'Uncategorized';
-    if (!groupedConcepts[category]) {
-        groupedConcepts[category] = [];
+// Create a lookup map for existing concepts by slug or title
+const conceptMap = new Map();
+existingConcepts.forEach(doc => {
+    const rawSlug = doc.id.replace('concepts/', '').replace('.md', '').replace('.mdx', '');
+    const title = doc.data.title.toLowerCase();
+    conceptMap.set(rawSlug, `/${doc.slug}/`);
+    conceptMap.set(title, `/${doc.slug}/`);
+    
+    // Also map by extracting trailing title parts (e.g. "Concept - Parquet")
+    const match = title.match(/-\s*([a-z0-9\s]+)$/);
+    if (match && match[1]) {
+        conceptMap.set(match[1].trim(), `/${doc.slug}/`);
     }
-    
-    // Create a clean English title from the slug if not provided, for the tag cloud
-    // E.g., 'apache-kafka' -> 'Apache Kafka'
-    const rawSlug = concept.id.replace('concepts/', '').replace('.md', '').replace('.mdx', '');
-    let shortTitle = rawSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    
-    // Some acronyms should be fully uppercase ideally, but Title Case is safe enough
-    // We can also extract English terms if they are inside the main title (e.g., "- OLAP")
-    const titleMatch = concept.data.title.match(/-\s*([A-Za-z0-9\s]+)$/);
-    if (titleMatch && titleMatch[1]) {
-        shortTitle = titleMatch[1].trim();
-    }
-    
-    groupedConcepts[category].push({
-        url: `/${concept.slug}/`,
-        title: shortTitle,
-        dataConcept: rawSlug
-    });
 });
 
-// Define a preferred order for known categories (to match the logical learning path)
-const categoryOrder = [
-    "Foundation",
-    "Database & Storage",
-    "Data Warehouse",
-    "Data Lake & Lakehouse",
-    "ETL / ELT",
-    "Transformation & Analytics",
-    "System Architecture",
-    "Batch Processing",
-    "Streaming Processing",
-    "Orchestration",
-    "Observability & Reliability",
-    "Data Quality",
-    "Governance & Metadata",
-    "Cloud Data Platform",
-    "GenAI & Machine Learning"
+// Helper to find URL
+function getConceptUrl(name) {
+    const searchName = name.toLowerCase();
+    const slugName = searchName.replace(/[^a-z0-9]+/g, '-');
+    return conceptMap.get(searchName) || conceptMap.get(slugName) || null;
+}
+
+const hardcodedMOC = [
+  {
+    category: "Storage & Warehousing",
+    concepts: ["OLTP", "OLAP", "ACID Transactions", "Data Warehouse", "Data Lake", "Data Lakehouse", "Cloud Data Warehouses", "Compute and Storage Separation", "Storage Layer", "Three Vs"]
+  },
+  {
+    category: "Open Table & File Formats",
+    concepts: ["Data Lake File Formats", "Data Lake Table Format", "Apache Parquet", "Apache Arrow", "Apache Avro", "Apache Iceberg", "Delta Lake", "Time Travel"]
+  },
+  {
+    category: "Data Architectures & Stacks",
+    concepts: ["Data Engineering Architecture", "Modern Data Stack", "Open Data Stack", "Declarative Data Stack", "Medallion Architecture", "Data Mesh", "Microsoft Fabric", "Inmon vs Kimball"]
+  },
+  {
+    category: "Data Modeling",
+    concepts: ["Data Modeling", "Different Levels of Data Modeling", "Entity Relationship Diagram (ERD)", "Dimensional Modeling", "Data Vault", "Anchor Modeling", "Entity-Centric Data Modeling (ECM)", "Activity Schema", "Relational Model", "Normalization", "Denormalization", "Fact Table", "Dimensions", "Slowly Changing Dimension", "Bus Matrix", "Granularity", "Cardinality"]
+  },
+  {
+    category: "Ingestion, Movement & CDC",
+    concepts: ["ETL", "ELT", "EtLT", "Reverse ETL", "ETL vs ELT", "Change Data Capture (CDC)", "Delta-Load Options", "Stream Processing", "Apache Kafka", "Backfill", "MapReduce", "Hadoop"]
+  },
+  {
+    category: "Transformation, Orchestration & Pipelines",
+    concepts: ["Data Orchestration", "DAG", "Software-Defined Asset", "Functional Data Engineering", "Declarative vs Imperative", "Apache Airflow", "Dagster", "dbt", "SQLMesh", "Notebooks", "Idempotency", "AI Orchestrators"]
+  },
+  {
+    category: "Data Management & Governance",
+    concepts: ["Data Governance", "Data Catalog", "Data Contracts", "Data Lineage", "Data Product", "Master Data Management", "Schema Evolution", "Schema Registry", "Schema Drift", "DataOps"]
+  },
+  {
+    category: "Semantic Layer, Metrics & Federation",
+    concepts: ["Semantic Layer", "Modern Semantic Layer", "Metrics Layer", "Metrics", "SQL Query Engine", "Analytics API", "Semantic SQL", "Data Federation"]
+  },
+  {
+    category: "OLAP, BI & Analytics Evolution",
+    concepts: ["Traditional OLAP Cubes", "Modern OLAP Systems", "Cube", "Business Intelligence", "BI Tools", "Pivot Table"]
+  },
+  {
+    category: "Performance & Engine Internals",
+    concepts: ["CAP Theorem", "Push-downs", "Materialized Views", "CTE", "Full Table Scan"]
+  },
+  {
+    category: "Practice, Role & Career",
+    concepts: ["Data Engineering Lifecycle", "Data Engineering Approaches", "The Role of a Data Engineer", "Data Engineer vs Software Engineer", "Retrieval-Augmented Generation (RAG)"]
+  }
 ];
-
-// Sort categories based on predefined order, unknown categories go to the end
-const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
-    let indexA = categoryOrder.findIndex(cat => a.toLowerCase().includes(cat.toLowerCase()));
-    let indexB = categoryOrder.findIndex(cat => b.toLowerCase().includes(cat.toLowerCase()));
-    if (indexA === -1) indexA = 999;
-    if (indexB === -1) indexB = 999;
-    return indexA - indexB;
-});
 ---
 
 <div class="moc-layout">
     <!-- Cột Category (Danh mục) -->
     <aside class="moc-sidebar">
         <div class="moc-sidebar-sticky">
-            <h3 class="moc-sidebar-title">Danh mục</h3>
+            <h3 class="moc-sidebar-title">Danh mục (101 Concepts)</h3>
             <ul class="moc-category-list" id="moc-category-list">
-                {sortedCategories.map(category => {
-                    const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                {hardcodedMOC.map(group => {
+                    const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
                     return (
-                        <li class="moc-category-item" data-category={category}>
+                        <li class="moc-category-item" data-category={group.category}>
                             <span class="drag-handle" title="Kéo thả để sắp xếp">⠿</span>
-                            <a href={`#cat-${catSlug}`} class="moc-category-link">{category}</a>
+                            <a href={`#cat-${catSlug}`} class="moc-category-link">{group.category}</a>
                         </li>
                     );
                 })}
@@ -82,18 +95,26 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
 
     <!-- Cột Content Map (Nội dung) -->
     <div class="moc-content" id="moc-content-map">
-        {sortedCategories.map(category => {
-            const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        {hardcodedMOC.map(group => {
+            const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
             return (
-                <section class="moc-section" id={`cat-${catSlug}`} data-category={category}>
-                    <h2 class="moc-section-title">{category}</h2>
+                <section class="moc-section" id={`cat-${catSlug}`} data-category={group.category}>
+                    <h2 class="moc-section-title">{group.category}</h2>
                     <div class="moc-grid">
-                        {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map(concept => (
-                            <a href={concept.url} class="concept-card" data-concept={concept.dataConcept}>
-                                <span class="concept-card-title">{concept.title}</span>
-                                <svg class="concept-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </a>
-                        ))}
+                        {group.concepts.map(concept => {
+                            const url = getConceptUrl(concept);
+                            return url ? (
+                                <a href={url} class="concept-card active">
+                                    <span class="concept-card-title">{concept}</span>
+                                    <svg class="concept-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                </a>
+                            ) : (
+                                <div class="concept-card inactive" title="Bài viết đang được cập nhật">
+                                    <span class="concept-card-title">{concept}</span>
+                                    <span class="concept-badge-soon">Sắp có</span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </section>
             );
@@ -227,9 +248,33 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
     transform: translateX(-10px);
     transition: all 0.2s ease-in-out;
 }
-.concept-card:hover .concept-card-icon {
+.concept-card:hover.active .concept-card-icon {
     opacity: 1;
     transform: translateX(0);
+}
+.concept-card.inactive {
+    background-color: transparent;
+    border-style: dashed;
+    border-color: var(--sl-color-gray-5);
+    opacity: 0.6;
+    cursor: default;
+}
+.concept-card.inactive:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: var(--sl-color-bg-inline-code);
+}
+.concept-card.inactive .concept-card-title {
+    color: var(--sl-color-gray-4);
+}
+.concept-badge-soon {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 .sortable-ghost {
     opacity: 0.4;
