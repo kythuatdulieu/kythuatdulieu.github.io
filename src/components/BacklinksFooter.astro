@@ -41,6 +41,20 @@ const pageBacklinks = backlinks[currentPath] || [];
   </div>
 )}
 
+<div class="comments-container" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--sl-color-hairline);">
+  <h3 style="font-size: var(--sl-text-h4); margin-bottom: 1rem; font-weight: 600; color: var(--sl-color-white);">Bình luận & Thảo luận</h3>
+  <script is:inline src="https://utteranc.es/client.js"
+        repo="kythuatdulieu/kythuatdulieu.github.io"
+        issue-term="pathname"
+        theme="preferred-color-scheme"
+        crossorigin="anonymous"
+        async>
+  </script>
+  <p style="font-size: 0.85rem; color: var(--sl-color-gray-4); margin-top: 0.5rem; text-align: center;">
+    <em>(Lưu ý: Bạn cần đăng nhập GitHub để bình luận. Nếu lỗi, vui lòng đảm bảo đã cài đặt Utterances App trên Github Repo)</em>
+  </p>
+</div>
+
 <Default {...Astro.props}>
   <slot />
 </Default>
