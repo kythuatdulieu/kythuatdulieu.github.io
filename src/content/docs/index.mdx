@@ -8,7 +8,7 @@ import MapOfContent from '../../components/MapOfContent.astro';
 
 <div class="scroll-action-container">
   <a href="#quizzes" class="scroll-to-quizzes-btn">
-    <span>📝 Luyện Đề Thi Thử</span>
+    <span>📝 Ôn Thi Certificate</span>
     <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
   </a>
 </div>
@@ -16,12 +16,12 @@ import MapOfContent from '../../components/MapOfContent.astro';
 <MapOfContent />
 
 <div id="quizzes" class="quiz-section">
-  <h2 class="quiz-title">📝 Luyện Đề Thi Thử</h2>
+  <h2 class="quiz-title">📝 Ôn Thi Certificate</h2>
   <p class="quiz-desc">Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến.</p>
   
   <div class="quiz-links-container">
     <a href="/quizzes/databricks-de-advanced/" data-astro-reload class="quiz-link-card">
-      <div class="quiz-icon">💻</div>
+      <img src="https://www.databricks.com/sites/default/files/2025-10/professional-badge-de.png?v=1761143167" alt="Databricks Certified Data Engineer Professional" class="quiz-badge-img" />
       <div class="quiz-info">
         <h3>Databricks Certified Data Engineer Professional</h3>
         <p>327 câu hỏi sát đề thi thực tế</p>
@@ -30,7 +30,7 @@ import MapOfContent from '../../components/MapOfContent.astro';
     </a>
     
     <a href="/quizzes/databricks-genai-associate/" data-astro-reload class="quiz-link-card">
-      <div class="quiz-icon">🤖</div>
+      <img src="https://www.databricks.com/sites/default/files/2025-10/associate-badge-gen-ai.png?v=1761153880" alt="Databricks Certified Generative AI Engineer Associate" class="quiz-badge-img" />
       <div class="quiz-info">
         <h3>Databricks Certified Generative AI Engineer Associate</h3>
         <p>92 câu hỏi chuyên sâu</p>
@@ -86,9 +86,12 @@ import MapOfContent from '../../components/MapOfContent.astro';
     transform: translateY(-2px);
   }
   
-  .quiz-icon {
-    font-size: 2rem;
+  .quiz-badge-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
     margin-right: 1.5rem;
+    flex-shrink: 0;
   }
   
   .quiz-info {

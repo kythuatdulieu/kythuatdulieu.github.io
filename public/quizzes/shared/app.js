@@ -228,12 +228,24 @@
 
     // Helper to append text with bold and inline code formatted
     function appendFormattedText(element, text) {
-        const parts = text.split(/(\*\*.*?\*\*|`.*?`)/);
+        const parts = text.split(/(\*\*.*?\*\*|`{3,}[\s\S]*?`{3,}|``.*?``|`.*?`)/);
         parts.forEach(part => {
             if (part.startsWith('**') && part.endsWith('**')) {
                 const bold = document.createElement('strong');
                 bold.textContent = part.slice(2, -2);
                 element.appendChild(bold);
+            } else if (part.startsWith('```') && part.endsWith('```')) {
+                const code = document.createElement('code');
+                code.className = 'code-block';
+                let codeContent = part.slice(3, -3);
+                // Clean up language prefix if present (e.g. "python\n")
+                codeContent = codeContent.replace(/^(python|yaml|sql|bash|json)\n/, '');
+                code.textContent = codeContent;
+                element.appendChild(code);
+            } else if (part.startsWith('``') && part.endsWith('``')) {
+                const code = document.createElement('code');
+                code.textContent = part.slice(2, -2);
+                element.appendChild(code);
             } else if (part.startsWith('`') && part.endsWith('`')) {
                 const code = document.createElement('code');
                 code.textContent = part.slice(1, -1);

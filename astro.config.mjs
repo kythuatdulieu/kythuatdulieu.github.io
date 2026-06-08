@@ -95,7 +95,7 @@ export default defineConfig({
 					autogenerate: { directory: 'interview' },
 				},
 				{
-					label: 'Luyện đề thi thử (Quizzes)',
+					label: 'Ôn thi Certificate (Quizzes)',
 
 					collapsed: true,
 
