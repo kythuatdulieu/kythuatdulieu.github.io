@@ -704,7 +704,8 @@
             } else {
                 const response = await fetch('questions.json');
                 const data = await response.json();
-                questions = data.map(q => ({ ...q }));
+                const questionsArray = Array.isArray(data) ? data : (data.questions || []);
+                questions = questionsArray.map(q => ({ ...q }));
             }
         } catch (err) {
             console.error('Failed to load questions.json:', err);
