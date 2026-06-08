@@ -57,6 +57,13 @@ Dữ liệu di chuyển qua Data Lake thường được tổ chức theo các p
 
 ## Architecture / Flow
 
+```mermaid
+flowchart LR
+    A[Nguồn dữ liệu<br/>APIs/DBs] --> B[(Raw Zone<br/>Dữ liệu thô)]
+    B -- "Làm sạch &<br/>Chuyển đổi" --> C[(Structured Zone<br/>Parquet/ORC)]
+    C -- "Tính toán &<br/>Tổng hợp" --> D[(Curated Zone<br/>Báo cáo/ML)]
+```
+
 Dưới đây là sơ đồ kiến trúc tổ chức thư mục vật lý điển hình trên Object Storage của một Data Lake:
 
 ```text

@@ -55,6 +55,16 @@ Là các bài test được viết bằng mã SQL thuần túy lưu vào các fi
 ## How it works
 
 Quy trình hoạt động:
+
+```mermaid
+flowchart TD
+    A[1. Khai báo Tests<br/>schema.yml / thư mục tests] --> B[2. Biên dịch<br/>Lệnh dbt test]
+    B --> C[3. Gửi SQL Queries<br/>đến Data Warehouse]
+    C --> D{4. Đếm số dòng<br/>vi phạm}
+    D -- "Count = 0" --> E[PASS<br/>(Xanh)]
+    D -- "Count > 0" --> F[FAIL / WARN<br/>(Đỏ / Vàng)]
+```
+
 1. Bạn khai báo tests trong file `schema.yml` hoặc viết các file SQL trong thư mục `tests`.
 2. Khi chạy lệnh `dbt test`, công cụ sẽ tự động biên dịch cấu hình của bạn thành các câu truy vấn SQL tường minh.
 3. dbt gửi các câu lệnh SQL đó lên nền tảng Data Warehouse (Snowflake, BigQuery, PostgreSQL) để thực thi.

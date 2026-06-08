@@ -111,6 +111,28 @@ Thay vì lưu chuỗi text dài lặp đi lặp lại hàng triệu lần (tốn
 Và dữ liệu thực sự ghi trên đĩa chỉ là một mảng các bit nhỏ xíu: `0, 0, 1, 2, 0, 1, 1...`
 Khi truy vấn tính toán, CPU có thể đếm các con số `0, 1, 2` cực nhanh trong RAM mà không cần phải giải mã text, giúp tăng tốc độ xử lý lên mức không tưởng.
 
+Dưới đây là một ví dụ bằng Python (sử dụng Pandas và PyArrow) minh họa cách ghi một bảng dữ liệu xuống định dạng Parquet (columnar storage) với chuẩn nén:
+
+```python
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+# Tạo DataFrame mẫu
+df = pd.DataFrame({
+    'ID': [1, 2, 3],
+    'Name': ['Alice', 'Bob', 'Carol'],
+    'Age': [25, 25, 30],
+    'City': ['Hanoi', 'HCM', 'Hanoi']
+})
+
+# Chuyển đổi Pandas DataFrame thành PyArrow Table
+table = pa.Table.from_pandas(df)
+
+# Ghi xuống đĩa dưới dạng Columnar Storage (Parquet) kèm nén Snappy
+pq.write_table(table, 'users.parquet', compression='snappy')
+```
+
 ---
 
 ## Best practices

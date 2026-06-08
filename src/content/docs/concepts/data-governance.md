@@ -70,6 +70,15 @@ Triển khai Data Governance thường bắt đầu từ sự ủy quyền của
 4. **Thực thi bằng Công nghệ (Execution)**: Đội ngũ Data Engineering áp dụng Dynamic Data Masking bằng SQL trên BigQuery/Snowflake theo đúng chính sách đã viết.
 5. **Giám sát (Monitoring)**: Đo lường chất lượng dữ liệu liên tục và kiểm toán (Audit) việc cấp quyền truy cập.
 
+```mermaid
+flowchart TD
+    A[1. Thành lập hội đồng<br/>Governance Council] --> B[2. Khảo sát hiện trạng<br/>Discovery & Catalog]
+    B --> C[3. Ban hành chính sách<br/>Policy Creation]
+    C --> D[4. Thực thi kỹ thuật<br/>Execution/Masking]
+    D --> E[5. Giám sát & Audit<br/>Monitoring]
+    E -. "Phản hồi/Cập nhật" .-> C
+```
+
 ---
 
 ## Practical example

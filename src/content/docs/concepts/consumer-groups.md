@@ -99,6 +99,46 @@ Nếu một máy trong Group bị cháy nổ (Crash), kết nối bị ngắt, K
 
 ---
 
+## Practical example
+
+Dưới đây là ví dụ mã Python sử dụng thư viện `confluent_kafka` để thiết lập một Consumer thuộc về một nhóm tên là `fraud-detection-service`:
+
+```python
+from confluent_kafka import Consumer
+
+# Cấu hình Consumer
+conf = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'fraud-detection-service', # Định nghĩa Consumer Group
+    'auto.offset.reset': 'earliest'        # Đọc từ đầu nếu chưa có offset
+}
+
+# Khởi tạo Consumer
+consumer = Consumer(conf)
+
+# Đăng ký lắng nghe Topic
+consumer.subscribe(['transactions'])
+
+# Vòng lặp nhận dữ liệu (Polling)
+try:
+    while True:
+        msg = consumer.poll(timeout=1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print(f"Lỗi: {msg.error()}")
+            continue
+            
+        print(f"Nhận được message: {msg.value().decode('utf-8')} từ partition {msg.partition()}")
+except KeyboardInterrupt:
+    pass
+finally:
+    # Đóng consumer sẽ kích hoạt Rebalance để nhường partition cho máy khác
+    consumer.close()
+```
+
+---
+
 ## Best practices
 
 * **Số lượng Partition phải lớn hơn Consumer**: Luôn thiết kế Topic với số lượng Partition nhiều dư dả (ví dụ 30-50). Đây là giới hạn "trần" cho việc bạn mở rộng số máy chủ Consumer sau này nếu Traffic bùng nổ.

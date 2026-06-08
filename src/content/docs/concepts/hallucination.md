@@ -61,6 +61,22 @@ Một ví dụ kinh điển về thảm họa ảo giác ngoài thực tế:
 Tháng 6/2023, hai luật sư tại New York bị thẩm phán phạt 5,000 USD vì đã dùng ChatGPT để soạn thảo tài liệu bào chữa gửi nộp tòa án. Trong tài liệu có viện dẫn 6 án lệ (case laws). 
 Khi đối phương kiểm tra, họ phát hiện toàn bộ 6 vụ án này (như vụ *Varghese v. China Southern Airlines*) đều do ChatGPT **tự bịa ra 100%**. Nó bịa cả tên nguyên đơn, bị đơn, số hồ sơ vụ án, và tự nghĩ ra bản tóm tắt bản án một cách đầy tính thuyết phục về mặt ngôn ngữ tư pháp. Khi luật sư chat hỏi ChatGPT: *"Vụ này có thật không?"*, mô hình tự tin đáp: *"Có thật, bạn có thể tra trên hệ thống LexisNexis."* (Lại tiếp tục là một ảo giác).
 
+**Đoạn mã cấu hình API giúp giảm thiểu ảo giác (Grounding & Temperature=0):**
+
+```python
+import openai
+
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "Bạn là một trợ lý luật. Chỉ trả lời dựa trên tài liệu pháp lý nội bộ được cung cấp ở dưới. Nếu thông tin không có trong tài liệu, bắt buộc phải trả lời 'Tôi không biết'."},
+        {"role": "user", "content": "Tóm tắt án lệ Varghese v. China Southern Airlines."}
+    ],
+    temperature=0.0, # Giảm tính sáng tạo, ưu tiên tính xác định (deterministic)
+    top_p=0.1
+)
+```
+
 ---
 
 ## Best practices

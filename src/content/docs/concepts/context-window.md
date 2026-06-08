@@ -80,6 +80,29 @@ Giả sử bạn đang dùng mô hình có Context Window là **4096 tokens**:
 
 Nếu câu trả lời mô hình muốn viết dài tới 2500 tokens, nó sẽ đột ngột dừng lại (cut off) ở token thứ 1996 vì đã chạm đỉnh Context Window.
 
+Để kiểm soát số lượng token thực tế (tránh vượt giới hạn), các kỹ sư thường dùng thư viện mã hóa token trước khi gửi đi. Dưới đây là ví dụ bằng Python sử dụng `tiktoken` (chuẩn của OpenAI):
+
+```python
+import tiktoken
+
+# Tải bộ mã hóa (encoding) cho mô hình GPT-4
+enc = tiktoken.encoding_for_model("gpt-4")
+
+# Đoạn văn bản đầu vào
+text = "Context Window là cửa sổ ngữ cảnh của LLM."
+
+# Đếm số lượng tokens
+tokens = enc.encode(text)
+print(f"Số lượng tokens: {len(tokens)}")
+# Kết quả: Số lượng tokens có thể lớn hơn số từ (ví dụ: 15 tokens)
+
+# Kiểm tra nếu vượt quá giới hạn thì cắt bớt
+MAX_TOKENS = 8192
+if len(tokens) > MAX_TOKENS:
+    tokens = tokens[:MAX_TOKENS]
+    text = enc.decode(tokens)
+```
+
 ---
 
 ## Best practices

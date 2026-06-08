@@ -40,6 +40,15 @@ Deduplication tồn tại để giải quyết bài toán này, bảo vệ tính
 
 Deduplication thường được giải quyết bằng ba cách phổ biến, phụ thuộc vào công cụ và loại dữ liệu:
 
+```mermaid
+flowchart TD
+    A[Dữ liệu thô trùng lặp] --> B{Phương pháp Deduplication}
+    B --> C[1. DISTINCT<br/>Loại bỏ giống 100%]
+    B --> D[2. GROUP BY<br/>Dùng Aggregation MAX/MIN]
+    B --> E[3. Window Functions<br/>Chia nhóm & Gán số thứ tự]
+    E -. "Cách tối ưu nhất" .-> F[ROW_NUMBER = 1<br/>Giữ dòng mới nhất]
+```
+
 1. **DISTINCT**: Lọc bỏ những dòng giống nhau 100% trên toàn bộ các cột. Kỹ thuật này đơn giản nhưng kém linh hoạt.
 2. **GROUP BY**: Gom nhóm dữ liệu theo các trường khóa (Key) và dùng các hàm tập hợp (Aggregation Functions) như `MAX()`, `MIN()` để giữ lại giá trị cần thiết.
 3. **Window Functions (Hàm cửa sổ)**: Đây là phương pháp phổ biến và tối ưu nhất. Sử dụng hàm `ROW_NUMBER()` chia nhóm theo các cột Khóa (Partition By) và sắp xếp (Order By) theo tiêu chí (như thời gian mới nhất `updated_at DESC`), sau đó chỉ lấy dòng có số thứ tự bằng 1.

@@ -82,6 +82,21 @@ Luồng kiến trúc Hybrid Search trong một Vector Database (như Milvus, Qdr
 * **Hybrid Search trộn lại**: Tài liệu C (vừa nằm top 3 của BM25 vì chứa "47/2014", vừa nằm top 2 của Vector vì mang nặng ý nghĩa "thu hồi bồi thường nông nghiệp"). Tài liệu C được đẩy lên vị trí số 1.
 * LLM nhận Tài liệu C để tạo câu trả lời hoàn hảo.
 
+**Mã giả cấu hình Hybrid Search (ví dụ với Weaviate):**
+
+```python
+response = (
+    client.query
+    .get("PhapLuat", ["noi_dung", "nghi_dinh"])
+    .with_hybrid(
+        query="Điều kiện bồi thường khi thu hồi đất nông nghiệp theo Nghị định 47/2014",
+        alpha=0.5 # Alpha = 0.5 là cân bằng 50/50 giữa Vector Search và Keyword Search
+    )
+    .with_limit(3)
+    .do()
+)
+```
+
 ---
 
 ## Best practices

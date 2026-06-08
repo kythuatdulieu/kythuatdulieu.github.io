@@ -21,6 +21,16 @@ Các chiều chất lượng dữ liệu (Data Quality Dimensions) là những k
 
 **Data Quality Dimensions** là một hệ thống phân loại tiêu chuẩn giúp phân tách khái niệm trừu tượng "chất lượng dữ liệu" thành các thuộc tính có thể đo lường bằng số liệu (metrics) cụ thể. 
 
+```mermaid
+flowchart TD
+    A[Chất lượng Dữ liệu<br/>Data Quality] --> B[Completeness<br/>Đầy đủ]
+    A --> C[Accuracy<br/>Chính xác]
+    A --> D[Consistency<br/>Nhất quán]
+    A --> E[Validity<br/>Hợp lệ]
+    A --> F[Uniqueness<br/>Duy nhất]
+    A --> G[Timeliness<br/>Kịp thời]
+```
+
 ### 1. Tính đầy đủ (Completeness)
 Dữ liệu có bị khuyết thiếu (NULL, rỗng) những trường thông tin quan trọng hay không?
 * *Ví dụ*: Một bảng danh sách khách hàng nhưng 30% bị trống số điện thoại.

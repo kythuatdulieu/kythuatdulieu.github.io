@@ -20,6 +20,15 @@ Data Skew (Lệch dữ liệu) là hiện tượng dữ liệu không được p
 ## Definition
 
 Trong lý thuyết cơ sở dữ liệu phân tán, **Data Skew** xảy ra khi khóa chia dữ liệu (Partition Key / Join Key) có phân phối xác suất không đồng đều (như phân phối Zipfian thay vì phân phối chuẩn hay đều). 
+
+```mermaid
+flowchart LR
+    A[Dữ liệu gốc] --> B{Hash Partitioner}
+    B -->|Key bình thường| C[Node 1: 10 records]
+    B -->|Key bình thường| D[Node 2: 12 records]
+    B -->|SKEW KEY| E[Node 3: 10,000,000 records<br/>⚠️ OOM Crash]
+```
+
 Khi tiến hành gom nhóm (`GROUP BY`) hoặc kết nối (`JOIN`) sử dụng khóa đó làm định tuyến, hàng triệu bản ghi mang cùng một giá trị Khóa sẽ bị hệ thống băm (Hash) và đẩy dồn về duy nhất **MỘT** phân vùng (Partition), được giao cho một Executor cụ thể.
 
 Do tài nguyên RAM và CPU trên máy Executor đó là có hạn, việc nhận cục dữ liệu khổng lồ sẽ gây ra độ trễ cực lớn hoặc làm Crash tiến trình do OOM (Out Of Memory).

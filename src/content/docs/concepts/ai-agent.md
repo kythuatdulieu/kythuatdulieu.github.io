@@ -82,6 +82,23 @@ Chu trình hoạt động phổ biến nhất của Agent là **ReAct (Reasoning
 
 Hệ thống sẽ tự động quay vòng (loop) qua các bước Suy luận - Hành động - Quan sát cho đến khi điều kiện dừng (Final Answer) được thỏa mãn.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant LLM
+    participant Tools
+    
+    User->>Agent: Giao nhiệm vụ (Task)
+    loop ReAct Loop
+        Agent->>LLM: Phân tích ngữ cảnh (Thought)
+        LLM-->>Agent: Kế hoạch & Chọn công cụ
+        Agent->>Tools: Thực thi (Action/Tool Use)
+        Tools-->>Agent: Kết quả (Observation)
+    end
+    Agent->>User: Kết quả cuối cùng (Final Answer)
+```
+
 ---
 
 ## Practical example
@@ -97,6 +114,31 @@ Hệ thống sẽ tự động quay vòng (loop) qua các bước Suy luận - H
   5. Nhận diện lỗi (Reflection), Agent dùng terminal gõ `npm install canvas`.
   6. Chạy lại thấy thành công, viết script deploy lên Vercel.
 Người dùng có thể đi uống cà phê và quay lại nhận link trang web hoàn chỉnh.
+
+Dưới đây là một ví dụ code Python đơn giản sử dụng LangChain để tạo một Agent có khả năng tìm kiếm Google và tính toán:
+
+```python
+from langchain.agents import load_tools
+from langchain.agents import initialize_agent
+from langchain.agents import AgentType
+from langchain.llms import OpenAI
+
+llm = OpenAI(temperature=0)
+
+# Cung cấp cho Agent 2 công cụ: serpapi (Google Search) và llm-math (Máy tính)
+tools = load_tools(["serpapi", "llm-math"], llm=llm)
+
+# Khởi tạo Agent với chiến lược Zero-shot ReAct
+agent = initialize_agent(
+    tools, 
+    llm, 
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, 
+    verbose=True
+)
+
+# Chạy Agent
+agent.run("Ai là vợ của Leonardo DiCaprio? Tuổi của cô ấy cộng thêm 15 là bao nhiêu?")
+```
 
 ---
 

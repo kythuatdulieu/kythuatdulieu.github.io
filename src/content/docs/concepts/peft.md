@@ -57,6 +57,31 @@ Do đó, ta có thể xấp xỉ ma trận $\Delta W$ khổng lồ này bằng t
 
 Quy trình huấn luyện và sử dụng với LoRA:
 
+```mermaid
+flowchart TD
+    subgraph Original Model
+        W[Frozen Weights W\nd x d]
+    end
+    
+    subgraph LoRA Adapter
+        A[Matrix A\nd x r] --> B[Matrix B\nr x d]
+    end
+    
+    X[Input] --> W
+    X --> A
+    
+    W --> Y1[Output 1]
+    B --> Y2[Output 2]
+    
+    Y1 --> Z((+))
+    Y2 --> Z
+    Z --> Final[Final Output]
+    
+    style W fill:#ffcccc,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    style A fill:#ccffcc,stroke:#333,stroke-width:2px
+    style B fill:#ccffcc,stroke:#333,stroke-width:2px
+```
+
 **Giai đoạn Huấn luyện (Training):**
 1. Tải LLM gốc vào VRAM và khóa hoàn toàn các tham số lại (`requires_grad = False`).
 2. Chèn các ma trận nhỏ $A$ và $B$ (Adapter) song song với các lớp Attention của mô hình gốc. Khởi tạo $A$ ngẫu nhiên, khởi tạo $B$ bằng $0$ (để lúc ban đầu adapter không làm thay đổi hành vi mô hình gốc).

@@ -56,6 +56,17 @@ Hệ thống Data Observability (như Monte Carlo, re_data) thường triển kh
 3. Mô hình tính toán đường Baseline (Cơ sở) và ngưỡng Upper Bound (Giới hạn trên), Lower Bound (Giới hạn dưới).
 4. Khớp dữ liệu của giờ hiện tại vào mô hình. Nếu nó nằm ngoài đường giới hạn, một cảnh báo Slack được kích hoạt tự động với biểu đồ minh họa.
 
+```mermaid
+flowchart TD
+    A[Quét Metadata<br/>Định kỳ] --> B[(Kho Metadata)]
+    B --> C{Machine Learning<br/>Model}
+    C -- "Dữ liệu lịch sử<br/>(14-30 ngày)" --> D[Xây dựng Baseline<br/>& Bounds]
+    C -- "Dữ liệu hiện tại" --> E{So khớp với Baseline}
+    E -- "Nằm trong ngưỡng" --> F[Bình thường]
+    E -- "Vượt ngưỡng<br/>(Upper/Lower)" --> G[Phát hiện Bất thường]
+    G --> H[Gửi cảnh báo<br/>Slack/Email]
+```
+
 ---
 
 ## Practical example

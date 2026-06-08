@@ -56,6 +56,14 @@ Sự dịch chuyển tư duy từ **IT Ownership** sang **Business Domain Owners
 ## How it works
 
 Quy trình gán quyền và vận hành Ownership:
+
+```mermaid
+flowchart TD
+    A[1. Định danh Domain<br/>Phân chia nghiệp vụ] --> B[2. Chỉ định Data Owner<br/>C-Level / Trưởng phòng]
+    B --> C[3. Thiết lập Data Stewards<br/>Business Analysts]
+    C --> D[4. Giải quyết sự cố<br/>Resolution Workflow]
+    D -. "Báo cáo / Ủy quyền" .-> B
+```
 1. **Định danh Domain**: Phân chia công ty thành các khối dữ liệu chuyên biệt (Tài chính, Marketing, Logistic, Nhân sự).
 2. **Chỉ định Owner**: C-Level (CDO/CEO) chỉ định các Trưởng phòng tương ứng làm Data Owner cho các Domain đó. Tên/Email của họ được ghi cứng (hard-coded) vào thẻ Metadata trên hệ thống Data Catalog.
 3. **Thiết lập Data Stewards**: Data Owner cắt cử các Business Analyst (BA) hoặc Data Analyst trong phòng mình làm Steward. Steward là người cầm tài khoản điền Business Glossary và xử lý các Ticket yêu cầu cấp quyền hàng ngày.

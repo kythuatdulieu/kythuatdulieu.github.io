@@ -70,6 +70,27 @@ graph LR
 
 ---
 
+## Practical example
+
+Để đảm bảo các sự kiện của cùng một người dùng luôn được xử lý tuần tự (vào cùng một Partition), ta cần thiết lập `Message Key` khi gửi tin nhắn từ Producer.
+
+```python
+from kafka import KafkaProducer
+import json
+
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+
+# Gửi message với Key để đảm bảo thứ tự trong cùng 1 partition
+producer.send(
+    topic='page_views',
+    key=b'user_Bob', # Khoá quyết định Partition đích
+    value=json.dumps({"action": "login"}).encode('utf-8')
+)
+producer.flush()
+```
+
+---
+
 ## Best practices
 
 * **Tính toán số lượng Partition chuẩn xác ngay từ đầu**: Số lượng Partition định nghĩa số lượng Consumer tối đa có thể chạy song song (xem bài [Consumer Groups](/concepts/consumer-groups)). Khuyên dùng theo công thức: *Expected Throughput (MB/s) chia cho Tốc độ xử lý của 1 Consumer (MB/s)*. (Thường để 30-50 partitions cho hệ thống lớn).

@@ -55,6 +55,18 @@ Trong đó:
 
 ## How it works (Ví dụ tính toán NDCG@3)
 
+```mermaid
+flowchart TD
+    A[Search Results] --> B[Calculate Gain\nRelevance Score]
+    B --> C[Apply Discount\nDivide by log of Position]
+    C --> D[Sum for DCG]
+    A --> E[Sort by Ideal Relevance]
+    E --> F[Calculate Ideal DCG\niDCG]
+    D --> G{NDCG = DCG / iDCG}
+    F --> G
+    G --> H((Final Score\n0.0 to 1.0))
+```
+
 Truy vấn: "Sửa máy tính không lên nguồn".
 Giả sử ta chấm điểm dữ liệu (Ground Truth) theo thang: 0 (Sai), 1 (Liên quan ít), 2 (Giải quyết triệt để vấn đề).
 Hệ thống của bạn trả về 3 tài liệu theo thứ tự điểm thực tế là: **D1 (rel=1), D2 (rel=2), D3 (rel=0)**.

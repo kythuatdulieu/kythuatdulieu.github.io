@@ -52,6 +52,16 @@ Hệ thống lưu trữ áp dụng nén thông qua các giai đoạn:
 3. **Nén (Compressing)**: Block dữ liệu được đưa qua thuật toán như Snappy hoặc Zstd để tạo ra block nén.
 4. **Giải nén (Decompressing)**: Khi có truy vấn đọc, hệ thống (như Spark/Presto) sẽ nạp block nén vào RAM và giải nén ngay tức thì bằng CPU trước khi xử lý.
 
+```mermaid
+flowchart LR
+    A[Raw Data] --> B[Chia khối<br/>Block/Chunking]
+    B --> C[Tiền xử lý<br/>Bit-packing/RLE]
+    C --> D[Thuật toán Nén<br/>Snappy/Zstd/Gzip]
+    D --> E[(Dữ liệu Nén)]
+    E --> F[Giải nén CPU<br/>Decompressing]
+    F --> G[Xử lý truy vấn]
+```
+
 ---
 
 ## Algorithm Comparison

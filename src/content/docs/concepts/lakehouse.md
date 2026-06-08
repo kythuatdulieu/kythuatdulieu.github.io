@@ -98,6 +98,26 @@ graph LR
 
 ---
 
+## Practical example
+
+Một trong những sức mạnh cốt lõi của Lakehouse (như Delta Lake hoặc Iceberg) là khả năng quản lý dữ liệu với SQL, hỗ trợ Time-Travel và tối ưu hóa file.
+
+```sql
+-- Đọc dữ liệu tại bảng lưu trữ trên S3
+SELECT * FROM gold_sales_fact;
+
+-- Time-Travel: Truy vấn lại trạng thái dữ liệu chính xác vào ngày hôm qua
+SELECT * FROM gold_sales_fact TIMESTAMP AS OF '2026-06-07 00:00:00';
+
+-- Xóa dữ liệu (Điều không thể làm dễ dàng với Data Lake truyền thống)
+DELETE FROM gold_sales_fact WHERE customer_id = 'C123';
+
+-- Tối ưu hóa: Gộp các file Parquet nhỏ thành file lớn để tăng tốc độ truy vấn
+OPTIMIZE gold_sales_fact ZORDER BY (date_id);
+```
+
+---
+
 ## Best practices
 
 * **Tiêu chuẩn hóa Open Table Formats**: Khi xây dựng Lakehouse, bắt buộc phải chọn một định dạng bảng mã nguồn mở chuẩn (Apache Iceberg, Delta Lake hoặc Hudi) làm xương sống. Đừng bao giờ xây dựng Lakehouse trên các file Parquet trần trụi (bare Parquet) - bạn sẽ chết chìm trong "Đầm lầy dữ liệu".

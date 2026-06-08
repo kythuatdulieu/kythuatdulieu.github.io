@@ -6997,6 +6997,10 @@
       "title": "Nucleus Sampling - Top-p"
     },
     {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
       "url": "/concepts/hallucination/",
       "title": "Ảo giác LLM (Hallucination)"
     },

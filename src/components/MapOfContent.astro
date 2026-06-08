@@ -1,180 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+
+// Dynamically fetch all concepts from the content folder
+const allDocs = await getCollection('docs');
+const concepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
+
+// Group concepts by category
+const groupedConcepts = {};
+
+concepts.forEach(concept => {
+    const category = concept.data.category || 'Uncategorized';
+    if (!groupedConcepts[category]) {
+        groupedConcepts[category] = [];
+    }
+    
+    // Create a clean English title from the slug if not provided, for the tag cloud
+    // E.g., 'apache-kafka' -> 'Apache Kafka'
+    const rawSlug = concept.id.replace('concepts/', '').replace('.md', '').replace('.mdx', '');
+    let shortTitle = rawSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    
+    // Some acronyms should be fully uppercase ideally, but Title Case is safe enough
+    // We can also extract English terms if they are inside the main title (e.g., "- OLAP")
+    const titleMatch = concept.data.title.match(/-\s*([A-Za-z0-9\s]+)$/);
+    if (titleMatch && titleMatch[1]) {
+        shortTitle = titleMatch[1].trim();
+    }
+    
+    groupedConcepts[category].push({
+        url: `/${concept.slug}/`,
+        title: shortTitle,
+        dataConcept: rawSlug
+    });
+});
+
+// Define a preferred order for known categories (to match the logical learning path)
+const categoryOrder = [
+    "Foundation",
+    "Database & Storage",
+    "Data Warehouse",
+    "Data Lake & Lakehouse",
+    "ETL / ELT",
+    "Batch Processing",
+    "Streaming Processing",
+    "Orchestration",
+    "Data Quality & Governance",
+    "Data Architecture & Paradigms",
+    "Modern Data Stack",
+    "System Design & Cloud",
+    "Vector Database & Search",
+    "Large Language Models (LLMs)",
+    "LLMOps & Real-world AI"
+];
+
+// Sort categories based on predefined order, unknown categories go to the end
+const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
+    let indexA = categoryOrder.findIndex(cat => a.toLowerCase().includes(cat.toLowerCase()));
+    let indexB = categoryOrder.findIndex(cat => b.toLowerCase().includes(cat.toLowerCase()));
+    if (indexA === -1) indexA = 999;
+    if (indexB === -1) indexB = 999;
+    return indexA - indexB;
+});
+---
+
 <div class="moc-container">
-  <h3 class="moc-category">Nhóm 1: Foundation (Nền tảng - 6 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-engineering/" class="concept-tag" data-concept="data-engineering">Data Engineering</a>
-    <a href="/concepts/data-engineer-role/" class="concept-tag" data-concept="data-engineer-role">Data Engineer Role</a>
-    <a href="/concepts/data-lifecycle/" class="concept-tag" data-concept="data-lifecycle">Data Lifecycle</a>
-    <a href="/concepts/source-systems/" class="concept-tag" data-concept="source-systems">Source Systems</a>
-    <a href="/concepts/data-pipeline/" class="concept-tag" data-concept="data-pipeline">Data Pipeline</a>
-    <a href="/concepts/data-platform-architecture/" class="concept-tag" data-concept="data-platform-architecture">Data Platform Architecture</a>
-  </div>
-  <h3 class="moc-category">Nhóm 2: Database & Storage (Cơ sở dữ liệu & Lưu trữ - 10 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/relational-database/" class="concept-tag" data-concept="relational-database">Relational Database</a>
-    <a href="/concepts/oltp/" class="concept-tag" data-concept="oltp">Oltp</a>
-    <a href="/concepts/olap/" class="concept-tag" data-concept="olap">Olap</a>
-    <a href="/concepts/columnar-storage/" class="concept-tag" data-concept="columnar-storage">Columnar Storage</a>
-    <a href="/concepts/row-based-storage/" class="concept-tag" data-concept="row-based-storage">Row Based Storage</a>
-    <a href="/concepts/indexing/" class="concept-tag" data-concept="indexing">Indexing</a>
-    <a href="/concepts/partitioning/" class="concept-tag" data-concept="partitioning">Partitioning</a>
-    <a href="/concepts/clustering/" class="concept-tag" data-concept="clustering">Clustering</a>
-    <a href="/concepts/file-formats/" class="concept-tag" data-concept="file-formats">File Formats</a>
-    <a href="/concepts/compression-algorithms/" class="concept-tag" data-concept="compression-algorithms">Compression Algorithms</a>
-  </div>
-  <h3 class="moc-category">Nhóm 3: Data Warehouse (Kho dữ liệu - 11 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-warehouse/" class="concept-tag" data-concept="data-warehouse">Data Warehouse</a>
-    <a href="/concepts/kimball-methodology/" class="concept-tag" data-concept="kimball-methodology">Kimball Methodology</a>
-    <a href="/concepts/inmon-methodology/" class="concept-tag" data-concept="inmon-methodology">Inmon Methodology</a>
-    <a href="/concepts/dimensional-modeling/" class="concept-tag" data-concept="dimensional-modeling">Dimensional Modeling</a>
-    <a href="/concepts/star-schema/" class="concept-tag" data-concept="star-schema">Star Schema</a>
-    <a href="/concepts/snowflake-schema/" class="concept-tag" data-concept="snowflake-schema">Snowflake Schema</a>
-    <a href="/concepts/fact-table/" class="concept-tag" data-concept="fact-table">Fact Table</a>
-    <a href="/concepts/dimension-table/" class="concept-tag" data-concept="dimension-table">Dimension Table</a>
-    <a href="/concepts/slowly-changing-dimension/" class="concept-tag" data-concept="slowly-changing-dimension">Slowly Changing Dimension</a>
-    <a href="/concepts/surrogate-key/" class="concept-tag" data-concept="surrogate-key">Surrogate Key</a>
-    <a href="/concepts/grain/" class="concept-tag" data-concept="grain">Grain</a>
-  </div>
-  <h3 class="moc-category">Nhóm 4: Data Lake & Lakehouse (Hồ dữ liệu & Lakehouse - 11 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-lake/" class="concept-tag" data-concept="data-lake">Data Lake</a>
-    <a href="/concepts/lakehouse/" class="concept-tag" data-concept="lakehouse">Lakehouse</a>
-    <a href="/concepts/medallion-architecture/" class="concept-tag" data-concept="medallion-architecture">Medallion Architecture</a>
-    <a href="/concepts/delta-lake/" class="concept-tag" data-concept="delta-lake">Delta Lake</a>
-    <a href="/concepts/apache-iceberg/" class="concept-tag" data-concept="apache-iceberg">Apache Iceberg</a>
-    <a href="/concepts/apache-hudi/" class="concept-tag" data-concept="apache-hudi">Apache Hudi</a>
-    <a href="/concepts/table-format/" class="concept-tag" data-concept="table-format">Table Format</a>
-    <a href="/concepts/acid-transactions-on-lake/" class="concept-tag" data-concept="acid-transactions-on-lake">Acid Transactions On Lake</a>
-    <a href="/concepts/schema-evolution/" class="concept-tag" data-concept="schema-evolution">Schema Evolution</a>
-    <a href="/concepts/time-travel/" class="concept-tag" data-concept="time-travel">Time Travel</a>
-    <a href="/concepts/compaction/" class="concept-tag" data-concept="compaction">Compaction</a>
-  </div>
-  <h3 class="moc-category">Nhóm 5: ETL / ELT (Tích hợp dữ liệu - 11 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/etl/" class="concept-tag" data-concept="etl">Etl</a>
-    <a href="/concepts/elt/" class="concept-tag" data-concept="elt">Elt</a>
-    <a href="/concepts/data-ingestion/" class="concept-tag" data-concept="data-ingestion">Data Ingestion</a>
-    <a href="/concepts/data-extraction/" class="concept-tag" data-concept="data-extraction">Data Extraction</a>
-    <a href="/concepts/data-transformation/" class="concept-tag" data-concept="data-transformation">Data Transformation</a>
-    <a href="/concepts/data-loading/" class="concept-tag" data-concept="data-loading">Data Loading</a>
-    <a href="/concepts/incremental-load/" class="concept-tag" data-concept="incremental-load">Incremental Load</a>
-    <a href="/concepts/change-data-capture/" class="concept-tag" data-concept="change-data-capture">Change Data Capture</a>
-    <a href="/concepts/backfill/" class="concept-tag" data-concept="backfill">Backfill</a>
-    <a href="/concepts/idempotency/" class="concept-tag" data-concept="idempotency">Idempotency</a>
-    <a href="/concepts/deduplication/" class="concept-tag" data-concept="deduplication">Deduplication</a>
-  </div>
-  <h3 class="moc-category">Nhóm 6: Batch Processing (Xử lý theo lô - 10 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/batch-processing/" class="concept-tag" data-concept="batch-processing">Batch Processing</a>
-    <a href="/concepts/distributed-processing/" class="concept-tag" data-concept="distributed-processing">Distributed Processing</a>
-    <a href="/concepts/apache-spark/" class="concept-tag" data-concept="apache-spark">Apache Spark</a>
-    <a href="/concepts/spark-sql/" class="concept-tag" data-concept="spark-sql">Spark Sql</a>
-    <a href="/concepts/spark-execution-model/" class="concept-tag" data-concept="spark-execution-model">Spark Execution Model</a>
-    <a href="/concepts/shuffle/" class="concept-tag" data-concept="shuffle">Shuffle</a>
-    <a href="/concepts/spark-partition/" class="concept-tag" data-concept="spark-partition">Spark Partition</a>
-    <a href="/concepts/spark-jobs-stages-tasks/" class="concept-tag" data-concept="spark-jobs-stages-tasks">Spark Jobs Stages Tasks</a>
-    <a href="/concepts/data-skew/" class="concept-tag" data-concept="data-skew">Data Skew</a>
-    <a href="/concepts/spark-joins/" class="concept-tag" data-concept="spark-joins">Spark Joins</a>
-  </div>
-  <h3 class="moc-category">Nhóm 7: Streaming Processing (Xử lý dòng - 9 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/streaming-processing/" class="concept-tag" data-concept="streaming-processing">Streaming Processing</a>
-    <a href="/concepts/apache-kafka/" class="concept-tag" data-concept="apache-kafka">Apache Kafka</a>
-    <a href="/concepts/kafka-topics-partitions/" class="concept-tag" data-concept="kafka-topics-partitions">Kafka Topics Partitions</a>
-    <a href="/concepts/consumer-groups/" class="concept-tag" data-concept="consumer-groups">Consumer Groups</a>
-    <a href="/concepts/event-time-processing-time/" class="concept-tag" data-concept="event-time-processing-time">Event Time Processing Time</a>
-    <a href="/concepts/watermark/" class="concept-tag" data-concept="watermark">Watermark</a>
-    <a href="/concepts/windowing/" class="concept-tag" data-concept="windowing">Windowing</a>
-    <a href="/concepts/exactly-once-semantics/" class="concept-tag" data-concept="exactly-once-semantics">Exactly Once Semantics</a>
-    <a href="/concepts/stream-table-duality/" class="concept-tag" data-concept="stream-table-duality">Stream Table Duality</a>
-  </div>
-  <h3 class="moc-category">Nhóm 8: Orchestration (Điều phối - 7 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/orchestration/" class="concept-tag" data-concept="orchestration">Orchestration</a>
-    <a href="/concepts/apache-airflow/" class="concept-tag" data-concept="apache-airflow">Apache Airflow</a>
-    <a href="/concepts/dag/" class="concept-tag" data-concept="dag">Dag</a>
-    <a href="/concepts/task-dependency/" class="concept-tag" data-concept="task-dependency">Task Dependency</a>
-    <a href="/concepts/airflow-scheduler/" class="concept-tag" data-concept="airflow-scheduler">Airflow Scheduler</a>
-    <a href="/concepts/sensors/" class="concept-tag" data-concept="sensors">Sensors</a>
-    <a href="/concepts/retries-sla/" class="concept-tag" data-concept="retries-sla">Retries Sla</a>
-  </div>
-  <h3 class="moc-category">Nhóm 9: Transformation & Analytics Engineering (7 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/dbt/" class="concept-tag" data-concept="dbt">Dbt</a>
-    <a href="/concepts/sql-transformation/" class="concept-tag" data-concept="sql-transformation">Sql Transformation</a>
-    <a href="/concepts/dbt-models/" class="concept-tag" data-concept="dbt-models">Dbt Models</a>
-    <a href="/concepts/materialization/" class="concept-tag" data-concept="materialization">Materialization</a>
-    <a href="/concepts/data-contract/" class="concept-tag" data-concept="data-contract">Data Contract</a>
-    <a href="/concepts/metrics-layer/" class="concept-tag" data-concept="metrics-layer">Metrics Layer</a>
-    <a href="/concepts/dbt-testing/" class="concept-tag" data-concept="dbt-testing">Dbt Testing</a>
-  </div>
-  <h3 class="moc-category">Nhóm 10: Data Quality (Chất lượng dữ liệu - 6 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-quality/" class="concept-tag" data-concept="data-quality">Data Quality</a>
-    <a href="/concepts/data-quality-dimensions/" class="concept-tag" data-concept="data-quality-dimensions">Data Quality Dimensions</a>
-    <a href="/concepts/data-testing/" class="concept-tag" data-concept="data-testing">Data Testing</a>
-    <a href="/concepts/data-reconciliation/" class="concept-tag" data-concept="data-reconciliation">Data Reconciliation</a>
-    <a href="/concepts/anomaly-detection/" class="concept-tag" data-concept="anomaly-detection">Anomaly Detection</a>
-    <a href="/concepts/data-profiling/" class="concept-tag" data-concept="data-profiling">Data Profiling</a>
-  </div>
-  <h3 class="moc-category">Nhóm 11: Governance & Metadata (Quản trị & Metadata - 8 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-governance/" class="concept-tag" data-concept="data-governance">Data Governance</a>
-    <a href="/concepts/metadata-management/" class="concept-tag" data-concept="metadata-management">Metadata Management</a>
-    <a href="/concepts/data-catalog/" class="concept-tag" data-concept="data-catalog">Data Catalog</a>
-    <a href="/concepts/data-lineage/" class="concept-tag" data-concept="data-lineage">Data Lineage</a>
-    <a href="/concepts/data-ownership/" class="concept-tag" data-concept="data-ownership">Data Ownership</a>
-    <a href="/concepts/data-classification/" class="concept-tag" data-concept="data-classification">Data Classification</a>
-    <a href="/concepts/access-control/" class="concept-tag" data-concept="access-control">Access Control</a>
-    <a href="/concepts/audit-logging/" class="concept-tag" data-concept="audit-logging">Audit Logging</a>
-  </div>
-  <h3 class="moc-category">Nhóm 12: Observability & Reliability (Khả năng quan sát - 7 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/data-observability/" class="concept-tag" data-concept="data-observability">Data Observability</a>
-    <a href="/concepts/freshness-monitoring/" class="concept-tag" data-concept="freshness-monitoring">Freshness Monitoring</a>
-    <a href="/concepts/volume-anomalies/" class="concept-tag" data-concept="volume-anomalies">Volume Anomalies</a>
-    <a href="/concepts/schema-drift/" class="concept-tag" data-concept="schema-drift">Schema Drift</a>
-    <a href="/concepts/distribution-drift/" class="concept-tag" data-concept="distribution-drift">Distribution Drift</a>
-    <a href="/concepts/alerting-incident-response/" class="concept-tag" data-concept="alerting-incident-response">Alerting Incident Response</a>
-    <a href="/concepts/root-cause-analysis/" class="concept-tag" data-concept="root-cause-analysis">Root Cause Analysis</a>
-  </div>
-  <h3 class="moc-category">Nhóm 13: Cloud Data Platform (Nền tảng đám mây - 8 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/cloud-storage/" class="concept-tag" data-concept="cloud-storage">Cloud Storage</a>
-    <a href="/concepts/serverless-data/" class="concept-tag" data-concept="serverless-data">Serverless Data</a>
-    <a href="/concepts/google-bigquery/" class="concept-tag" data-concept="google-bigquery">Google Bigquery</a>
-    <a href="/concepts/snowflake/" class="concept-tag" data-concept="snowflake">Snowflake</a>
-    <a href="/concepts/amazon-redshift/" class="concept-tag" data-concept="amazon-redshift">Amazon Redshift</a>
-    <a href="/concepts/azure-synapse/" class="concept-tag" data-concept="azure-synapse">Azure Synapse</a>
-    <a href="/concepts/databricks-platform/" class="concept-tag" data-concept="databricks-platform">Databricks Platform</a>
-    <a href="/concepts/cost-optimization/" class="concept-tag" data-concept="cost-optimization">Cost Optimization</a>
-  </div>
-  <h3 class="moc-category">Nhóm 14: System Architecture (Kiến trúc hệ thống - 10 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/lambda-architecture/" class="concept-tag" data-concept="lambda-architecture">Lambda Architecture</a>
-    <a href="/concepts/kappa-architecture/" class="concept-tag" data-concept="kappa-architecture">Kappa Architecture</a>
-    <a href="/concepts/data-mesh/" class="concept-tag" data-concept="data-mesh">Data Mesh</a>
-    <a href="/concepts/data-fabric/" class="concept-tag" data-concept="data-fabric">Data Fabric</a>
-    <a href="/concepts/modern-data-stack/" class="concept-tag" data-concept="modern-data-stack">Modern Data Stack</a>
-    <a href="/concepts/real-time-architecture/" class="concept-tag" data-concept="real-time-architecture">Real Time Architecture</a>
-    <a href="/concepts/feature-store/" class="concept-tag" data-concept="feature-store">Feature Store</a>
-    <a href="/concepts/event-driven-architecture/" class="concept-tag" data-concept="event-driven-architecture">Event Driven Architecture</a>
-    <a href="/concepts/zero-copy-cloning/" class="concept-tag" data-concept="zero-copy-cloning">Zero Copy Cloning</a>
-    <a href="/concepts/push-pull-delivery/" class="concept-tag" data-concept="push-pull-delivery">Push Pull Delivery</a>
-  </div>
-  <h3 class="moc-category">Nhóm 15: Interview Preparation (Chuẩn bị phỏng vấn - 10 khái niệm)</h3>
-  <div class="moc-grid">
-    <a href="/concepts/sql-interview-patterns/" class="concept-tag" data-concept="sql-interview-patterns">Sql Interview Patterns</a>
-    <a href="/concepts/python-de-interview/" class="concept-tag" data-concept="python-de-interview">Python De Interview</a>
-    <a href="/concepts/spark-optimization-interview/" class="concept-tag" data-concept="spark-optimization-interview">Spark Optimization Interview</a>
-    <a href="/concepts/kafka-design-interview/" class="concept-tag" data-concept="kafka-design-interview">Kafka Design Interview</a>
-    <a href="/concepts/data-modeling-interview/" class="concept-tag" data-concept="data-modeling-interview">Data Modeling Interview</a>
-    <a href="/concepts/pipeline-design-interview/" class="concept-tag" data-concept="pipeline-design-interview">Pipeline Design Interview</a>
-    <a href="/concepts/cloud-platform-interview/" class="concept-tag" data-concept="cloud-platform-interview">Cloud Platform Interview</a>
-    <a href="/concepts/production-incident-qa/" class="concept-tag" data-concept="production-incident-qa">Production Incident Qa</a>
-    <a href="/concepts/performance-tuning-qa/" class="concept-tag" data-concept="performance-tuning-qa">Performance Tuning Qa</a>
-    <a href="/concepts/de-behavioral-interview/" class="concept-tag" data-concept="de-behavioral-interview">De Behavioral Interview</a>
-  </div>
+    {sortedCategories.map(category => (
+        <h3 class="moc-category">{category}</h3>
+        <div class="moc-grid">
+            {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map(concept => (
+                <a href={concept.url} class="concept-tag" data-concept={concept.dataConcept}>
+                    {concept.title}
+                </a>
+            ))}
+        </div>
+    ))}
 </div>
 
 <style>

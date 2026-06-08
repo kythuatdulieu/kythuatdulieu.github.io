@@ -54,6 +54,20 @@ Quá trình RCA dựa trên 2 yếu tố hỗ trợ mạnh mẽ:
 
 Một quy trình RCA hoàn chỉnh cho sự cố dữ liệu diễn ra theo 4 bước:
 
+```mermaid
+flowchart TD
+    A[Incident Occurs] --> B(1. Mitigation\nFirefighting)
+    B --> C(2. Data Lineage Analysis\nIsolate the node)
+    C --> D{3. The 5 Whys\nDrill down to root cause}
+    D --> E[Human Error / Symptom]
+    D --> F[Process / System Flaw]
+    F --> G(4. Action Items\nJira Tickets, Tests, Alerts)
+    
+    style B fill:#ffcccb,stroke:#333
+    style F fill:#90ee90,stroke:#333
+    style G fill:#add8e6,stroke:#333
+```
+
 1. **Khảo sát hiện trạng (What happened?)**:
    * Mô tả lại sự cố một cách rõ ràng. Ví dụ: "Dashboard doanh thu tháng 5 báo cáo $0, trong khi thực tế là $5M".
    * Xác định thời gian (Timeline) sự cố bắt đầu và kết thúc.

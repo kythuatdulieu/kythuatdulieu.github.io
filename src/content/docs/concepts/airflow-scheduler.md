@@ -80,6 +80,26 @@ graph TD
 
 ---
 
+## Practical example
+
+Mặc dù Scheduler chủ yếu hoạt động ngầm, người kỹ sư Dữ liệu thường phải cấu hình nó thông qua file `airflow.cfg` để tối ưu hiệu năng. Dưới đây là ví dụ về các tham số quan trọng cần tinh chỉnh cho Scheduler:
+
+```ini
+[scheduler]
+# Số giây giữa các lần quét thư mục DAG để tìm file mới
+dag_dir_list_interval = 30
+
+# Số lượng tiến trình phân tích (parser) chạy song song
+parsing_processes = 2
+
+# Khoảng thời gian tối thiểu trước khi một file DAG được phân tích lại
+min_file_process_interval = 30
+
+# Bật tính năng dọn dẹp các task mồ côi (Zombie tasks)
+job_heartbeat_sec = 5
+zombie_detection_interval = 10
+```
+
 ## Best practices
 
 * **KHÔNG viết Top-level code trong file DAG**: Đây là lỗi tối kỵ ảnh hưởng trực tiếp đến Scheduler. Bất kỳ lệnh gọi API bên ngoài (Request) hoặc lệnh SQL (Connect Database) nào nằm ngoài ngữ cảnh Operator đều bị chạy MỖI LẦN Scheduler quét file (mặc định 30 giây/lần). Nó sẽ làm Scheduler quá tải CPU, gây ra lỗi "Scheduler Timeout" và làm sập Database. Mọi logic xử lý phải nằm bên trong các hàm được gọi bởi Operator.

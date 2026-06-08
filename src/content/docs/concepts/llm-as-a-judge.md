@@ -49,6 +49,18 @@ Giám khảo sẽ được lập trình bằng một System Prompt đặc biệt
 
 Quá trình chạy LLM-as-a-judge bao gồm 3 thành phần đầu vào và 1 đầu ra:
 
+```mermaid
+flowchart TD
+    A[Question / Query] --> E
+    B[System Response] --> E
+    C[Reference Context] -.->|Optional| E
+    D[Evaluation Rubric] --> E
+    E[Evaluation Framework\nRagas / TruLens] --> F[LLM Judge\nGPT-4 / Claude 3]
+    F --> G{Output JSON}
+    G --> H[Score\n1-5]
+    G --> I[Rationale\nChain-of-Thought]
+```
+
 **Đầu vào:**
 1. **Dữ liệu đánh giá**: Bao gồm Câu hỏi người dùng (Query), Câu trả lời của hệ thống (Response), và (tùy chọn) Ngữ cảnh tham chiếu (Reference Context / Ground Truth).
 2. **Tiêu chí (Rubric)**: Một đoạn prompt định nghĩa các mức điểm. Ví dụ: "Điểm 1 nếu sai hoàn toàn. Điểm 5 nếu hoàn hảo và đầy đủ. Điểm 3 nếu đúng nhưng thiếu chi tiết."

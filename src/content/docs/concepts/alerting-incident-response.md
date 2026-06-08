@@ -106,6 +106,33 @@ graph TD
 * **SEV-4 (Low)**: Pipeline staging của môi trường Dev chạy lỗi.
   * *Hành động*: Ghi Log, không thông báo cho con người. Ai rảnh thì xem.
 
+Dưới đây là ví dụ cấu hình cảnh báo bằng YAML trong **Prometheus Alertmanager** cho một pipeline dữ liệu:
+
+```yaml
+groups:
+- name: DataPipelineAlerts
+  rules:
+  - alert: PipelineDowntime_SEV1
+    expr: data_pipeline_status{job="core_finance_etl"} == 0
+    for: 15m
+    labels:
+      severity: critical
+      team: data-platform
+    annotations:
+      summary: "Pipeline cốt lõi đã ngừng hoạt động hơn 15 phút!"
+      description: "Job core_finance_etl đã fail. Kích hoạt PagerDuty gọi on-call ngay lập tức."
+
+  - alert: HighNullRate_SEV3
+    expr: data_quality_null_percentage{table="marketing_events"} > 5
+    for: 1h
+    labels:
+      severity: warning
+      team: data-analytics
+    annotations:
+      summary: "Tỷ lệ NULL cao bất thường."
+      description: "Cảnh báo chất lượng dữ liệu. Hãy tạo ticket Jira để kiểm tra."
+```
+
 ---
 
 ## Best practices

@@ -52,6 +52,25 @@ RAG hoạt động như một "thủ thư" tìm sách chứa thông tin liên qu
 
 Kiến trúc RAG tiêu chuẩn bao gồm hai luồng (pipelines) hoạt động song song:
 
+```mermaid
+flowchart TD
+    subgraph Offline: Data Ingestion Pipeline
+        A[Documents\nPDF, Confluence] --> B[Chunking\nSplit into fragments]
+        B --> C[Embedding Model]
+        C --> D[(Vector Database)]
+    end
+
+    subgraph Online: Retrieval & Generation Pipeline
+        E[User Query] --> F[Embedding Model]
+        F --> G{Similarity Search}
+        D -.-> G
+        G -->|Top-K Chunks| H[Prompt Augmentation]
+        E --> H
+        H --> I[LLM Generation]
+        I --> J[Final Answer w/ Citations]
+    end
+```
+
 ### 1. Luồng Lập chỉ mục dữ liệu (Data Ingestion/Indexing Pipeline)
 Chạy nền (offline) để chuẩn bị kho tri thức:
 1. **Load**: Trích xuất dữ liệu từ nhiều nguồn (PDF, Confluence, Jira, Notion).

@@ -50,6 +50,20 @@ Sự vĩ đại của LLM được xây dựng trên 3 trụ cột cốt lõi:
 
 Hành trình ra đời của một LLM hiện đại (như ChatGPT, Llama) trải qua 3 giai đoạn huấn luyện (Training Pipeline):
 
+```mermaid
+flowchart LR
+    A[(Massive Internet Text)] --> B[Pre-training]
+    B --> C(Base Model)
+    C -->|Next-token prediction| D[Supervised Fine-Tuning\nSFT]
+    D --> E(Instruction-Tuned Model)
+    E --> F[RLHF / DPO\nHuman Feedback]
+    F --> G(Aligned Chatbot)
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style G fill:#bfb,stroke:#333,stroke-width:2px
+```
+
 **Giai đoạn 1: Pre-training (Tiền huấn luyện - Sinh ra con quái vật)**
 * **Mục tiêu**: Đọc cả Internet (Wikipedia, Reddit, Sách, Code GitHub) và đoán từ bị thiếu/từ tiếp theo.
 * **Chi phí**: Hàng chục triệu đô la, tốn hàng vạn GPU trong nhiều tháng.

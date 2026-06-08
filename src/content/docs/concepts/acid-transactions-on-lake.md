@@ -110,6 +110,31 @@ Xét tình huống một tài khoản ngân hàng được lưu trên Data Lake.
 
 * Xung đột: A commit thành công phiên bản V2 (80$). Khi B commit phiên bản V2, hệ thống từ chối (Concurrency check). B phải làm mới trạng thái (đọc được V2 là 80$), áp dụng phép logic cộng 50$ lên 80$, tạo file mới chứa số dư = 130$ và commit thành công phiên bản V3. Dữ liệu vẹn toàn. Nếu không có ACID, bản ghi của B sẽ ghi đè A và số dư sẽ thành 150$ (sai).
 
+Ví dụ cấu hình Delta Lake bằng PySpark để thực hiện các thao tác ACID:
+
+```python
+from delta.tables import *
+
+# 1. Khởi tạo bảng Delta
+df = spark.createDataFrame([("acc_01", 100)], ["account_id", "balance"])
+df.write.format("delta").save("/data/accounts")
+
+deltaTable = DeltaTable.forPath(spark, "/data/accounts")
+
+# 2. Update (Writer A trừ tiền, Writer B cộng tiền - Delta tự động xử lý ACID)
+deltaTable.update(
+    condition = "account_id = 'acc_01'",
+    set = { "balance": "balance - 20" }
+)
+
+deltaTable.update(
+    condition = "account_id = 'acc_01'",
+    set = { "balance": "balance + 50" }
+)
+
+# Kết quả balance = 130
+```
+
 ---
 
 ## Best practices

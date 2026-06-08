@@ -37,6 +37,21 @@ Materialization ra đời để trao quyền linh hoạt cấu hình các chiế
 ## Core idea
 
 Có 4 loại materialization cốt lõi được xây dựng sẵn trong dbt:
+
+```mermaid
+graph TD
+    A[dbt Model SQL] --> B{Materialization Type}
+    B -->|View| C[Virtual Layer\nNo Storage, Slow Query]
+    B -->|Table| D[Physical Table\nStorage Used, Fast Query]
+    B -->|Incremental| E[Delta Updates\nMerge/Insert new data only]
+    B -->|Ephemeral| F[CTE Injection\nNo DB Object Created]
+    
+    style C fill:#fdfd96,stroke:#333
+    style D fill:#77dd77,stroke:#333
+    style E fill:#ffb347,stroke:#333
+    style F fill:#aec6cf,stroke:#333
+```
+
 1. **View**: Mô hình được tạo dưới dạng một logic ảo (`CREATE VIEW AS`). Không tốn dung lượng đĩa, nhưng mỗi khi truy vấn, toàn bộ logic bên trong sẽ phải chạy lại.
 2. **Table**: Mô hình được tạo dưới dạng bảng vật lý (`CREATE TABLE AS`). Chạy chậm lúc build, tốn dung lượng đĩa, nhưng đọc dữ liệu rất nhanh. Dữ liệu được tính toán và lưu sẵn.
 3. **Incremental**: Tương tự Table nhưng dbt chỉ chèn (insert) hoặc cập nhật (update/merge) những dòng dữ liệu mới hoặc có thay đổi kể từ lần chạy trước, thay vì xóa và tạo lại toàn bộ bảng.

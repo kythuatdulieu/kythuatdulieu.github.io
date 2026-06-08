@@ -77,6 +77,41 @@ Chunk 1: "Data Engineering là một ngành phát triển mạnh. Nó tập trun
 Chunk 2 (có Overlap): "xây dựng hạ tầng dữ liệu. Các kỹ sư dữ liệu sử dụng Spark và Kafka."
 ```
 
+```mermaid
+flowchart TD
+    A[Văn bản gốc] -->|Chunk Size: 20 từ<br>Overlap: 5 từ| B{Chunking Process}
+    B --> C[Chunk 1: ... xây dựng hạ tầng dữ liệu.]
+    B --> D[Chunk 2: xây dựng hạ tầng dữ liệu. Các kỹ sư ...]
+    C -. "Overlap 5 từ" .-> D
+```
+
+---
+
+## Practical example
+
+Dưới đây là một ví dụ thực tế sử dụng Python và thư viện LangChain để áp dụng chiến lược Recursive Character Chunking cho một đoạn văn bản:
+
+```python
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+text = """Data Engineering là một ngành phát triển mạnh. Nó tập trung vào việc xây dựng hạ tầng dữ liệu. 
+Các kỹ sư dữ liệu sử dụng Spark và Kafka. RAG kết hợp LLM với Vector Database để tạo ra hệ thống thông minh."""
+
+# Khởi tạo text splitter với chunk_size và chunk_overlap
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=100,
+    chunk_overlap=20,
+    length_function=len,
+    separators=["\n\n", "\n", " ", ""]
+)
+
+# Chia văn bản thành các khối (chunks)
+chunks = text_splitter.split_text(text)
+
+for i, chunk in enumerate(chunks):
+    print(f"Chunk {i+1}: {chunk}")
+```
+
 ---
 
 ## Best practices

@@ -43,6 +43,23 @@ Thử nghiệm: Bạn gọi API lấy dữ liệu quảng cáo từ Facebook và
 
 ## How it works (Theo Airflow)
 
+```mermaid
+sequenceDiagram
+    participant S as Scheduler
+    participant T as Task
+    participant M as Monitor (SLA)
+    
+    S->>T: Trigger Execution (Attempt 1)
+    T-->>S: Error / Exception
+    S->>S: Wait (Exponential Backoff)
+    S->>T: Trigger Execution (Attempt 2)
+    Note over M: Check if (Now > StartTime + SLA)
+    M-->>M: Condition Met!
+    M->>S: Trigger sla_miss_callback
+    S-->>Slack: Send Alert: SLA Missed!
+    T-->>S: Success
+```
+
 1. **Vòng đời Task với Retries**:
    * Task chạy lần 1 $\rightarrow$ Gặp lỗi Exception.
    * Cấu hình có `retries=3`. Trạng thái chuyển thành `UP_FOR_RETRY` (chứ không phải FAILED).

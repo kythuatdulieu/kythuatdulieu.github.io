@@ -39,6 +39,16 @@ Nếu Kỹ sư nhắm mắt tin tài liệu và tạo bảng Data Warehouse vớ
 
 Quá trình Profiling thường thực hiện ở 3 cấp độ:
 
+```mermaid
+flowchart TD
+    A[Khám phá cấu trúc<br/>Cấp độ Cột] --> B[Khám phá nội dung<br/>Cấp độ Định dạng]
+    B --> C[Khám phá quan hệ<br/>Cấp độ Bảng]
+    
+    A -. "Kiểu dữ liệu, Nulls,<br/>Cardinality" .-> A
+    B -. "Regex, Patterns,<br/>Outliers" .-> B
+    C -. "Khóa ngoại,<br/>Orphan records" .-> C
+```
+
 1. **Structure Discovery (Khám phá cấu trúc / Cấp độ Cột)**
    * Xem xét từng cột độc lập. Tính toán các chỉ số: Kiểu dữ liệu thực sự (Số, Chữ, Ngày tháng), chiều dài cực đại/cực tiểu (Max/Min length), giá trị lớn nhất/nhỏ nhất (Max/Min value), Tỷ lệ NULL (Null percentage), số lượng giá trị duy nhất (Cardinality / Distinct count).
 
