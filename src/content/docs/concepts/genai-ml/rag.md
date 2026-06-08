@@ -9,7 +9,7 @@ seoTitle: "RAG là gì? Tổng quan về Retrieval-Augmented Generation"
 metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG), cách RAG giảm thiểu ảo giác của LLM, quy trình tích hợp Vector Database và thiết kế luồng xử lý RAG nâng cao."
 ---
 
-Các mô hình ngôn ngữ lớn (LLM) ngày nay sở hữu khả năng hành văn và suy luận logic vô cùng ấn tượng. Tuy nhiên, khi đưa vào môi trường doanh nghiệp, chúng thường bộc lộ những điểm yếu chết người như tự bịa đặt thông tin (ảo giác) hay không biết gì về các tài liệu bảo mật nội bộ. Để giải quyết bài toán này mà không phải tiêu tốn hàng triệu USD cho việc huấn luyện lại mô hình, cộng đồng công nghệ đã phát triển một kiến trúc đột phá mang tên **RAG (Retrieval-Augmented Generation)**.
+Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng ngôn ngữ và suy luận logic tốt. Tuy nhiên, trong môi trường doanh nghiệp, các LLM thường gặp hạn chế như tự bịa đặt thông tin (ảo giác - hallucination) hoặc không có quyền truy cập vào tài liệu nội bộ. Để khắc phục vấn đề này mà không cần tốn chi phí huấn luyện lại mô hình, kiến trúc **RAG (Retrieval-Augmented Generation)** được phát triển như một giải pháp thay thế hiệu quả.
 
 ## Đưa "sách giáo khoa" cho AI: RAG là gì?
 
@@ -19,16 +19,16 @@ Quy trình RAG bao gồm hai giai đoạn chính:
 1. **Truy xuất (Retrieval)**: Khi nhận được câu hỏi từ người dùng, hệ thống sẽ tự động tìm kiếm trên kho dữ liệu của doanh nghiệp (sách hướng dẫn, wiki nội bộ, cơ sở dữ liệu) để chọn lọc ra những đoạn văn bản chứa thông tin liên quan nhất.
 2. **Tạo lập tăng cường (Augmented Generation)**: Hệ thống ghép các đoạn thông tin tìm được vào câu hỏi gốc của người dùng tạo thành một ngữ cảnh (context) đầy đủ. LLM sau đó chỉ cần đọc kỹ phần ngữ cảnh này và viết ra câu trả lời cuối cùng một cách chính xác, có căn cứ rõ ràng.
 
-## Tại sao RAG lại là cứu cảnh cho các LLM?
+## Vai trò của RAG trong việc khắc phục hạn chế của LLM
 
 Dù thông minh đến đâu, các LLM thương mại vẫn phải đối mặt với 3 thách thức lớn khi áp dụng vào thực tế:
 * **Ảo giác (Hallucination)**: LLM có xu hướng tự tạo ra thông tin nghe có vẻ rất thuyết phục khi gặp câu hỏi khó hoặc thông tin không có sẵn trong bộ nhớ của nó.
-* **Thời điểm đóng băng tri thức (Knowledge Cut-off)**: Mô hình chỉ biết những gì diễn ra trước thời điểm nó hoàn thành huấn luyện. Nó hoàn toàn mù tịt về những sự kiện hay tài liệu mới cập nhật ngày hôm qua.
+* **Thời điểm đóng băng tri thức (Knowledge Cut-off)**: Mô hình chỉ có thông tin tại thời điểm huấn luyện (knowledge cutoff) và không thể tự cập nhật các sự kiện hoặc tài liệu mới phát sinh.
 * **Mất dấu dữ liệu nội bộ (Private Data)**: Rõ ràng, các mô hình công cộng như GPT-4 không thể tiếp cận các báo cáo tài chính bảo mật hay quy chế làm việc nội bộ của riêng công ty bạn.
 
-Trước đây, phương pháp truyền thống để giải quyết vấn đề này là **Fine-tuning** (tinh chỉnh mô hình). Tuy nhiên, việc Fine-tuning lại cực kỳ tốn kém tiền bạc và thời gian, yêu cầu chuẩn bị dữ liệu gán nhãn rất phức tạp và không thể cập nhật tri thức mới mỗi ngày. 
+Trước đây, phương pháp truyền thống để giải quyết vấn đề này là **Fine-tuning** (tinh chỉnh mô hình). Tuy nhiên, phương pháp này đòi hỏi tài nguyên tính toán lớn, quy trình chuẩn bị dữ liệu phức tạp và không thể cập nhật tri thức mới liên tục theo ngày. 
 
-RAG ra đời như một giải pháp thay thế hoàn hảo: Nó cho phép doanh nghiệp liên tục cập nhật dữ liệu mới vào hệ thống mà không cần đụng vào trọng số của LLM, đồng thời cung cấp khả năng trích dẫn nguồn tài liệu (citations) rõ ràng để người dùng dễ dàng kiểm chứng thông tin.
+RAG giải quyết các hạn chế này bằng cách cho phép cập nhật dữ liệu mới vào hệ thống lưu trữ ngoài mà không cần thay đổi trọng số (weights) của LLM, đồng thời hỗ trợ trích dẫn nguồn tài liệu (citations) để người dùng kiểm chứng.
 
 ## Triết lý thiết kế: Tách biệt tư duy logic và tri thức
 
@@ -127,25 +127,25 @@ print(answer)
 
 ## Những kinh nghiệm thực chiến để tối ưu hóa RAG
 
-### Các nguyên tắc thiết kế quan trọng (Best Practices)
-* **Chiến lược Chunking thông minh**: Tránh cắt văn bản một cách cơ học dựa trên số ký tự. Nên áp dụng Semantic Chunking hoặc cắt theo cấu trúc tài liệu (phần, mục, đoạn văn) để mỗi chunk chứa một ý nghĩa trọn vẹn. Đồng thời, cấu hình khoảng gối đầu (overlap) từ 10% đến 15% để tránh mất thông tin ở ranh giới giữa hai chunk.
-* **Làm sạch dữ liệu đầu vào**: RAG tuân thủ triệt để nguyên lý "Garbage in, Garbage out". Dữ liệu thô trước khi nạp vào Vector DB cần được bóc tách kỹ các thẻ HTML thừa, các ký tự rác và định dạng sai để tránh làm lệch hướng mô hình Embedding.
-* **Bắt buộc trích dẫn nguồn (Citations)**: Thiết kế prompt yêu cầu LLM bắt buộc phải ghi rõ tên file tài liệu hoặc phần mục cụ thể mà nó sử dụng để tạo câu trả lời. Điều này giúp nâng cao tính minh bạch và xây dựng lòng tin với người dùng cuối.
-* **Ứng dụng mô hình Re-ranking**: Trong các kiến trúc RAG nâng cao, thay vì chỉ lấy Top-K từ Vector DB đổ trực tiếp vào LLM, ta nên lấy dư ra một chút (ví dụ Top 20), sau đó chạy qua một mô hình Cross-Encoder (như Cohere Rerank) để chấm điểm và sắp xếp lại độ liên quan ngữ nghĩa chi tiết hơn, rồi mới lọc lấy Top 5 tốt nhất gửi cho LLM.
+### Các nguyên tắc thiết kế quan trọng
+* **Chiến lược phân mảnh (Chunking)**: Tránh cắt văn bản theo số ký tự cố định một cách cơ học. Nên áp dụng Semantic Chunking hoặc cắt theo cấu trúc logic của tài liệu (tiêu đề, phân đoạn) để đảm bảo mỗi chunk chứa ý nghĩa trọn vẹn, kết hợp cấu hình khoảng gối đầu (overlap) từ 10% đến 15% để bảo toàn thông tin giáp ranh.
+* **Làm sạch dữ liệu nguồn**: Áp dụng nguyên lý "Garbage in, Garbage out", dữ liệu thô cần loại bỏ các thẻ HTML, ký tự nhiễu và định dạng sai trước khi đưa vào mô hình Embedding nhằm tránh làm giảm chất lượng biểu diễn vector.
+* **Thiết kế Prompt yêu cầu trích dẫn nguồn**: Yêu cầu LLM chỉ ra tên tài liệu hoặc phân đoạn cụ thể được sử dụng để trả lời nhằm tăng tính minh bạch.
+* **Sử dụng mô hình Re-ranking**: Đối với các luồng RAG nâng cao, thay vì gửi trực tiếp kết quả tìm kiếm của Vector DB cho LLM, hệ thống có thể truy xuất số lượng lớn hơn (ví dụ Top 20), sau đó dùng mô hình Re-ranker (Cross-Encoder) để đánh giá lại độ liên quan ngữ nghĩa và chọn ra Top 5 tối ưu nhất.
 
-### Những cái bẫy cần tránh
-* **Quá tin vào Vector Search đơn thuần**: Tìm kiếm vector ([Semantic Search](/concepts/genai-ml/semantic-search/)) đôi khi xử lý rất tệ với các truy vấn chứa từ khóa đặc thù như tên người, mã số sản phẩm hoặc viết tắt. Bạn nên thiết kế hệ thống **Hybrid Search** (kết hợp cả Vector Search ngữ nghĩa và Keyword Search truyền thống như BM25) để có kết quả tìm kiếm tối ưu nhất.
-* **Nhồi nhét quá nhiều ngữ cảnh (Context Stuffing)**: Việc cố nhét hàng chục chunk vào prompt sẽ gây ra hiện tượng "lạc lối giữa dòng" (Lost in the middle). LLM sẽ chú ý tốt đến phần đầu và phần cuối prompt mà bỏ qua mất các chi tiết cốt lõi nằm ở giữa, đồng thời làm tăng chi phí API và tăng độ trễ phản hồi.
-* **Bỏ quên phân quyền dữ liệu ([Access Control](/concepts/governance-metadata/access-control/))**: Mỗi tài liệu trong công ty đều có mức độ bảo mật khác nhau. Nếu bạn nạp tất cả vào một Vector DB chung mà không gắn metadata phân quyền truy cập, hệ thống có thể vô tình trích xuất thông tin bảng lương của ban giám đốc để trả lời cho câu hỏi của một nhân viên bình thường.
+### Hạn chế và lỗi cần tránh
+* **Lạm dụng Tìm kiếm Vector đơn thuần**: Tìm kiếm vector có thể cho kết quả kém chính xác đối với các truy vấn chứa từ khóa đặc thù (mã số, tên riêng, thuật ngữ viết tắt). Cần kết hợp phương pháp tìm kiếm lai (**Hybrid Search**) giữa Vector Search (ngữ nghĩa) và BM25 (từ khóa).
+* **Nhồi nhét ngữ cảnh (Context Stuffing)**: Việc đưa quá nhiều chunk vào prompt gây ra hiện tượng "Lost in the middle" (LLM chỉ tập trung vào thông tin ở đầu và cuối prompt, bỏ qua thông tin ở giữa), đồng thời làm tăng chi phí token và độ trễ.
+* **Không phân quyền truy cập dữ liệu (Access Control)**: Cần gắn siêu dữ liệu (metadata) phân quyền trên từng chunk trong Vector DB để lọc kết quả truy xuất theo quyền hạn của tài khoản người dùng, tránh rò rỉ thông tin bảo mật.
 
-## Cân nhắc các điểm đánh đổi
+## Đánh giá trade-off
 
-### Điểm cộng lớn
+### Ưu điểm
 * **Hạn chế tối đa ảo giác**: Câu trả lời được neo chặt vào các tài liệu thực tế của doanh nghiệp.
 * **Tiết kiệm tài chính**: Chi phí triển khai và lưu trữ Vector DB rẻ hơn hàng chục lần so với việc huấn luyện hay fine-tune một LLM riêng.
 * **Cập nhật tức thời**: Khi tài liệu thay đổi, bạn chỉ cần sửa đổi file trong Vector DB. Chatbot sẽ lập tức cập nhật kiến thức mới mà không cần bất kỳ công đoạn huấn luyện lại nào.
 
-### Điểm trừ cần lưu ý
+### Nhược điểm
 * **Độ trễ hệ thống tăng lên**: Quy trình RAG đòi hỏi thêm thời gian để mã hóa câu hỏi, truy vấn DB vật lý và ghép nối prompt trước khi LLM thực sự bắt đầu sinh chữ.
 * **Độ phức tạp trong vận hành**: Bạn phải quản lý và giám sát đồng thời nhiều thành phần: luồng [data pipeline](/concepts/foundation/data-pipeline/), cơ sở dữ liệu vector, mô hình embedding và mô hình sinh ngôn ngữ.
 * **Sự phụ thuộc vào chất lượng truy xuất**: Nếu bộ phận tìm kiếm (Retrieval) lấy sai tài liệu ở bước đầu, LLM chắc chắn sẽ đưa ra câu trả lời sai lệch bất kể nó có thông minh đến đâu.
@@ -157,7 +157,7 @@ print(answer)
 * [Ảo giác LLM (Hallucination)](/concepts/genai-ml/hallucination/)
 * [Large Language Model (LLM)](/concepts/genai-ml/llm/)
 
-## Góc phỏng vấn: Những thử thách thực tế khi xây dựng RAG
+## Góc phỏng vấn
 
 ### 1. RAG giải quyết được những bài toán cụ thể nào mà việc Fine-tuning mô hình không thể thực hiện được hoặc thực hiện rất kém?
 * **Gợi ý trả lời**: RAG vượt trội hơn Fine-tuning ở 3 điểm cốt lõi:

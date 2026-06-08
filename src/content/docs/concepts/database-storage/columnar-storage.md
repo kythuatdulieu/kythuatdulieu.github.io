@@ -9,19 +9,19 @@ seoTitle: "Lưu trữ dạng Cột (Columnar Storage) - Cốt lõi của Data Wa
 metaDescription: "Tìm hiểu chi tiết về Lưu trữ dạng cột (Column-oriented storage), cách thức nén dữ liệu, tối ưu hóa truy vấn phân tích (OLAP) và sự khác biệt với dạng dòng."
 ---
 
-Nếu bạn từng trầm trồ khi thấy một truy vấn SQL quét qua hàng tỷ dòng dữ liệu trên [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/) hay [Snowflake](/concepts/cloud-data-platform/snowflake/) trả về kết quả chỉ trong vài giây, bạn đang chứng kiến sức mạnh của **Columnar Storage (Lưu trữ dạng cột)**. Đây chính là "vũ khí bí mật" định hình nên tốc độ kinh ngạc của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
+Columnar Storage (Lưu trữ dạng cột) là yếu tố kỹ thuật cốt lõi quyết định hiệu năng xử lý của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
 
-## Columnar Storage: Khởi nguồn của tốc độ truy vấn phân tích kinh ngạc
+## Khái niệm Columnar Storage
 
 Trong các cơ sở dữ liệu truyền thống (Row-oriented Database như MySQL hay PostgreSQL), dữ liệu được lưu trữ vật lý trên đĩa theo từng hàng (dòng) liên tiếp. Điều này có nghĩa là nếu một bảng có 100 cột, toàn bộ 100 cột của hàng thứ nhất sẽ được ghi trước, rồi mới đến hàng thứ hai, thứ ba. 
 
 Ngược lại, **Columnar Storage** đảo ngược cách tiếp cận này hoàn toàn. Nó gom tất cả các giá trị của một cột và lưu trữ chúng sát cạnh nhau trên đĩa cứng. Nhờ cách sắp đặt này, nếu câu truy vấn của bạn chỉ cần tính tổng doanh thu từ cột `Doanh_thu`, ổ đĩa chỉ cần đọc chính xác phân đoạn chứa cột `Doanh_thu` và bỏ qua hoàn toàn các phân đoạn chứa các cột thông tin không liên quan khác như `Ten_khach_hang` hay `Dia_chi`.
 
-## Sự lãng phí âm thầm của lưu trữ dạng dòng truyền thống
+## Hạn chế của lưu trữ dạng dòng đối với tác vụ phân tích
 
 Trong thế giới phân tích (Analytics), các bảng dữ liệu `(Fact tables)` thường được thiết kế rất rộng, chứa hàng trăm cột để lưu lại mọi góc độ thông tin. Tuy nhiên, các báo cáo kinh doanh thông thường chỉ quan tâm đến một vài chỉ số cụ thể (ví dụ: ngày bán, nhóm sản phẩm, doanh số) để tính toán các phép toán gộp như `SUM`, `AVG` hay `COUNT`.
 
-Nếu chúng ta tiếp tục sử dụng hệ thống lưu trữ dạng dòng, ổ đĩa sẽ phải đọc lên toàn bộ bảng dữ liệu lớn, sau đó hệ thống mới lọc lấy các cột cần thiết trong bộ nhớ. Điều này đồng nghĩa với việc bạn đang lãng phí đến 90-95% tài nguyên đọc ghi ổ đĩa `(I/O)` cho những dữ liệu thừa thãi. Columnar Storage sinh ra để giải quyết triệt để nút thắt cổ chai lãng phí này.
+Nếu sử dụng hệ thống lưu trữ dạng dòng, ổ đĩa phải đọc toàn bộ bảng dữ liệu lớn trước khi hệ thống lọc lấy các cột cần thiết trong bộ nhớ. Điều này dẫn đến việc lãng phí tài nguyên đọc ghi đĩa `(I/O)` cho các dữ liệu không cần thiết. Columnar Storage giải quyết nút thắt cổ chai này bằng cách chỉ đọc các cột được yêu cầu.
 
 ## Khám phá cơ chế hoạt động bên dưới lớp đĩa
 
@@ -59,7 +59,7 @@ graph TD
     ExtractAge --> Compute[Compute AVG]
 ```
 
-## Sức mạnh của nén dữ liệu và ví dụ thực tế
+## Cơ chế nén dữ liệu trong Columnar Storage
 
 Vì tất cả dữ liệu trong một cột đều có chung một kiểu dữ liệu (như toàn bộ là số, toàn bộ là chuỗi văn bản) và thường có nhiều giá trị lặp đi lặp lại, hệ thống có thể áp dụng các kỹ thuật nén cực kỳ hiệu quả như **Dictionary Encoding (Nén từ điển)** hay **Run-Length Encoding (RLE)**.
 
@@ -94,18 +94,18 @@ table = pa.Table.from_pandas(df)
 pq.write_table(table, 'users.parquet', compression='snappy')
 ```
 
-## Thiết kế và sử dụng Columnar Storage hiệu quả (Best Practices)
+## Hướng dẫn tối ưu hóa khi sử dụng Columnar Storage
 
 * **Sắp xếp dữ liệu thông minh trước khi lưu**: Để tối đa hóa tỷ lệ nén của thuật toán RLE, hãy sắp xếp bảng theo các cột có nhiều giá trị trùng lặp cao trước khi ghi xuống đĩa (ví dụ: `ORDER BY date, category`).
 * **Sử dụng định dạng tệp tin tối ưu**: Khi làm việc trên [Data Lake](/concepts/data-lake-lakehouse/data-lake/), hãy chuyển dữ liệu từ các định dạng thô (như JSON, CSV) sang các định dạng cột mở như **Apache Parquet** để tận dụng tối đa tốc độ truy vấn.
 * **Chỉ SELECT những cột thực sự cần thiết**: Việc viết lệnh `SELECT *` một cách vô tội vạ trên các hệ thống Columnar Storage sẽ bắt hệ thống phải thực hiện quy trình ghép các cột lại thành từng hàng trong bộ nhớ `(Row reconstruction)`. Điều này hoàn toàn phá vỡ ưu thế thiết kế của kiến trúc cột.
 
-## Những điểm yếu chí mạng và sai lầm thường gặp
+## Các hạn chế và sai lầm thường gặp
 
-* **Cố gắng thực hiện cập nhật từng dòng (Row-level UPDATE)**: Đây là điểm yếu lớn nhất của Columnar storage. Để cập nhật một thông tin nhỏ của một người, hệ thống bắt buộc phải giải nén toàn bộ tệp cột đó, thực hiện sửa đổi rồi nén lại từ đầu. Do đó, các hệ thống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hiện đại thường được thiết kế theo mô hình ghi chèn thêm dữ liệu mới `(APPEND)` thay vì cập nhật trực tiếp.
-* **Sử dụng Columnar Storage cho hệ thống giao dịch ([OLTP](/concepts/database-storage/oltp/))**: Đưa các định dạng Parquet hoặc Data Warehouse làm cơ sở dữ liệu backend cho một website thương mại điện tử là một sai lầm nghiêm trọng. Việc tạo mới một đơn hàng (chèn 1 dòng mới chứa nhiều cột thông tin) sẽ buộc hệ thống phải xé lẻ dòng đó ra thành hàng chục mảnh để chèn vào các file cột độc lập, làm hệ thống bị nghẽn nghiêm trọng.
+* **Cập nhật dữ liệu theo dòng (Row-level UPDATE)**: Đây là hạn chế lớn của Columnar Storage. Để cập nhật một trường dữ liệu của một bản ghi, hệ thống phải giải nén các tệp cột tương ứng, thực hiện thay đổi và nén lại toàn bộ. Do đó, các hệ thống Data Warehouse thường ưu tiên mô hình chỉ ghi chèn (`APPEND`) và thực hiện xử lý theo lô (batch update).
+* **Sử dụng Columnar Storage cho hệ thống giao dịch (OLTP)**: Áp dụng định dạng Parquet hoặc cơ sở dữ liệu OLAP làm backend cho ứng dụng giao dịch (như tạo đơn hàng) sẽ gây suy giảm hiệu năng nghiêm trọng. Phép chèn một dòng mới chứa nhiều thuộc tính buộc hệ thống phải phân mảnh dữ liệu đó để ghi vào nhiều tệp cột độc lập.
 
-## Bức tranh hai mặt: Ưu và nhược điểm
+## Đánh giá trade-off: Ưu và nhược điểm
 
 ### Ưu điểm
 * Giảm thiểu tối đa chi phí đọc ghi ổ đĩa cho các tác vụ phân tích dữ liệu lớn.
@@ -116,13 +116,13 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 * Hiệu năng cực kỳ kém khi phải thực hiện các thao tác ghi dữ liệu lẻ tẻ theo từng dòng.
 * Tiêu tốn thêm tài nguyên CPU để ghép nối các cột riêng rẽ thành cấu trúc dòng khi người dùng truy xuất toàn bộ cột.
 
-## Khi nào là sự lựa chọn đúng đắn?
+## Trường hợp áp dụng
 
-**Nên chọn khi:**
+### Nên chọn khi:
 * Bạn xây dựng kiến trúc Data Warehouse, Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) hoặc các hệ thống OLAP phục vụ báo cáo phân tích.
 * Lưu trữ các dữ liệu lịch sử dài hạn (như logs, sự kiện hành vi người dùng) cần lưu trữ tối ưu và truy vấn nhanh.
 
-**Không nên chọn khi:**
+### Không nên chọn khi:
 * Hệ thống của bạn phục vụ các tác vụ giao dịch trực tuyến (OLTP) cần đọc/ghi nhanh toàn bộ thuộc tính của một bản ghi đơn lẻ (ví dụ: hiển thị trang cá nhân của người dùng, hệ thống ngân hàng).
 
 ## Góc phỏng vấn: Thử thách tư duy thực tế

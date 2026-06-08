@@ -563,10 +563,6 @@
       "title": "Khóa thay thế - Surrogate Key"
     },
     {
-      "url": "/concepts/database-storage/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage"
-    },
-    {
       "url": "/concepts/database-storage/file-formats/",
       "title": "Định dạng Tệp Dữ liệu - File Formats"
     },
@@ -625,6 +621,10 @@
     {
       "url": "/learning-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
+    },
+    {
+      "url": "/concepts/database-storage/columnar-storage/",
+      "title": "Lưu trữ dạng Cột - Columnar Storage"
     },
     {
       "url": "/concepts/etl-elt/data-ingestion/",
@@ -1189,10 +1189,6 @@
       "title": "Phân cụm Dữ liệu - Clustering"
     },
     {
-      "url": "/concepts/database-storage/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage"
-    },
-    {
       "url": "/concepts/database-storage/file-formats/",
       "title": "Định dạng Tệp Dữ liệu - File Formats"
     },
@@ -1417,6 +1413,10 @@
       "title": "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
     },
     {
+      "url": "/concepts/database-storage/columnar-storage/",
+      "title": "Lưu trữ dạng Cột - Columnar Storage"
+    },
+    {
       "url": "/concepts/database-storage/oltp/",
       "title": "Xử lý Giao dịch Trực tuyến - OLTP"
     },
@@ -1585,10 +1585,6 @@
       "title": "Bảng sự kiện - Fact Table"
     },
     {
-      "url": "/concepts/data-warehouse/kimball-methodology/",
-      "title": "Kimball Methodology - Dimensional Modeling"
-    },
-    {
       "url": "/concepts/data-warehouse/slowly-changing-dimension/",
       "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
     },
@@ -1607,6 +1603,10 @@
     {
       "url": "/concepts/data-warehouse/data-warehouse/",
       "title": "Kho dữ liệu phân tích - Data Warehouse"
+    },
+    {
+      "url": "/concepts/data-warehouse/kimball-methodology/",
+      "title": "Kimball Methodology - Dimensional Modeling"
     }
   ],
   "/concepts/data-lake-lakehouse/compaction/": [
@@ -1891,10 +1891,6 @@
       "title": "Độ mịn dữ liệu - Grain"
     },
     {
-      "url": "/concepts/data-warehouse/kimball-methodology/",
-      "title": "Kimball Methodology - Dimensional Modeling"
-    },
-    {
       "url": "/concepts/data-warehouse/slowly-changing-dimension/",
       "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
     },
@@ -1921,6 +1917,10 @@
     {
       "url": "/concepts/data-warehouse/data-warehouse/",
       "title": "Kho dữ liệu phân tích - Data Warehouse"
+    },
+    {
+      "url": "/concepts/data-warehouse/kimball-methodology/",
+      "title": "Kimball Methodology - Dimensional Modeling"
     },
     {
       "url": "/interview/data-modeling-interview/",
@@ -2523,10 +2523,6 @@
       "title": "Phân cụm Dữ liệu - Clustering"
     },
     {
-      "url": "/concepts/database-storage/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage"
-    },
-    {
       "url": "/concepts/database-storage/file-formats/",
       "title": "Định dạng Tệp Dữ liệu - File Formats"
     },
@@ -2643,10 +2639,6 @@
     {
       "url": "/concepts/database-storage/clustering/",
       "title": "Phân cụm Dữ liệu - Clustering"
-    },
-    {
-      "url": "/concepts/database-storage/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage"
     },
     {
       "url": "/concepts/etl-elt/backfill/",
@@ -2785,8 +2777,8 @@
       "title": "Lập hồ sơ dữ liệu - Data Profiling"
     },
     {
-      "url": "/concepts/data-warehouse/kimball-methodology/",
-      "title": "Kimball Methodology - Dimensional Modeling"
+      "url": "/concepts/database-storage/columnar-storage/",
+      "title": "Lưu trữ dạng Cột - Columnar Storage"
     },
     {
       "url": "/concepts/database-storage/olap/",
@@ -3743,6 +3735,10 @@
     {
       "url": "/concepts/foundation/data-engineering/",
       "title": "Kỹ thuật Dữ liệu - Data Engineering"
+    },
+    {
+      "url": "/concepts/streaming-processing/exactly-once-semantics/",
+      "title": "Exactly-Once Semantics (EOS) - Xử lý chính xác một lần"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -5263,10 +5259,6 @@
       "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
     },
     {
-      "url": "/concepts/data-warehouse/kimball-methodology/",
-      "title": "Kimball Methodology - Dimensional Modeling"
-    },
-    {
       "url": "/concepts/data-warehouse/star-schema/",
       "title": "Lược đồ hình sao - Star Schema"
     },
@@ -5301,10 +5293,6 @@
       "title": "Unity Catalog"
     },
     {
-      "url": "/concepts/genai-ml/rag/",
-      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
-    },
-    {
       "url": "/concepts/governance-metadata/audit-logging/",
       "title": "Nhật ký kiểm toán - Audit Logging"
     },
@@ -5319,6 +5307,10 @@
     {
       "url": "/learning-paths/data-platform-engineer/",
       "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
+    },
+    {
+      "url": "/concepts/genai-ml/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     }
   ],
   "/concepts/database-storage/row-based-storage/": [
@@ -5633,6 +5625,10 @@
     {
       "url": "/concepts/data-warehouse/unity-catalog/",
       "title": "Unity Catalog"
+    },
+    {
+      "url": "/concepts/genai-ml/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     }
   ],
   "/concepts/etl-elt/data-extraction/": [
@@ -6383,12 +6379,12 @@
       "title": "Chỉ số đánh giá - Evaluation Metric"
     },
     {
-      "url": "/concepts/genai-ml/rag/",
-      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
-    },
-    {
       "url": "/concepts/genai-ml/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/concepts/genai-ml/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     }
   ],
   "/concepts/genai-ml/embedding-model/": [
