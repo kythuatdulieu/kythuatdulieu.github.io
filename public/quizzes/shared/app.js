@@ -123,7 +123,7 @@
     // ========================
     function applyTheme() {
         if (darkTheme) {
-            document.documentElement.removeAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', 'dark');
             els.themeIconSun.style.display = '';
             els.themeIconMoon.style.display = 'none';
         } else {
