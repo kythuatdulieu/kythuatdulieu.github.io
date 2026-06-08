@@ -47,89 +47,46 @@ if (otherDocs.length > 0) {
 ---
 
 <div class="moc-container">
-    <div class="moc-layout">
-        <!-- Sidebar -->
-        <aside class="moc-sidebar">
-            <h3 class="moc-sidebar-title">Danh mục (Categories)</h3>
-            <ul class="moc-nav-list" id="moc-nav-list">
-                {dynamicMOC.map(group => (
-                    <li class="moc-nav-item" data-target={`row-${group.categorySlug}`}>
-                        <div class="drag-handle">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line></svg>
-                        </div>
-                        <span class="moc-nav-text">{group.category}</span>
-                    </li>
-                ))}
-            </ul>
-        </aside>
-        
-        <!-- Main Content -->
-        <div class="moc-main">
-            <!-- Details / Header -->
-            <details class="moc-header-details">
-                <summary>Chỉ mục Trang chủ (Mục lục)</summary>
-                <ul>
-                    <li><a href="#how-to-use-this-map">1 Hướng dẫn sử dụng Bản đồ</a></li>
-                    <li><a href="#quizzes">2 Luyện Đề Thi Thử (Practice Quizzes)</a></li>
-                </ul>
-            </details>
-            
-            <!-- Description -->
-            <p class="moc-description">
-                Bạn muốn tìm hiểu hoặc củng cố kiến thức về Data Engineering? Bản đồ tri thức (Map of Content - MOC) dưới đây hệ thống hóa 100+ khái niệm cốt lõi nhất được chia thành 15 hạng mục chuẩn mực. Mọi khái niệm đều là các bài viết chuyên sâu có sẵn trong Cẩm nang.
-            </p>
-            
-            <!-- The Table -->
-            <div class="moc-table-wrapper" id="concept-table">
-                <table class="moc-table">
-                    <thead>
-                        <tr>
-                            <th class="col-category">Category</th>
-                            <th class="col-concepts">Data Engineering Concepts</th>
+    <!-- The Table -->
+    <div class="moc-table-wrapper" id="concept-table">
+        <table class="moc-table">
+            <thead>
+                <tr>
+                    <th class="col-category">Category</th>
+                    <th class="col-concepts">Data Engineering Concepts</th>
+                </tr>
+            </thead>
+            <tbody>
+                {dynamicMOC.map(group => {
+                    return (
+                        <tr id={`row-${group.categorySlug}`}>
+                            <td class="cat-cell">
+                                <strong>{group.category}</strong>
+                            </td>
+                            <td class="concepts-cell">
+                                <div class="concepts-list">
+                                    {group.concepts.map((concept, index) => {
+                                        const isLast = index === group.concepts.length - 1;
+                                        return (
+                                            <span class="concept-item-wrapper">
+                                                <a href={concept.url} class="concept-tag active">
+                                                    {concept.title}
+                                                </a>
+                                                {!isLast && <span class="comma">, </span>}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {dynamicMOC.map(group => {
-                            return (
-                                <tr id={`row-${group.categorySlug}`}>
-                                    <td class="cat-cell">
-                                        <strong>{group.category}</strong>
-                                    </td>
-                                    <td class="concepts-cell">
-                                        <div class="concepts-list">
-                                            {group.concepts.map((concept, index) => {
-                                                const isLast = index === group.concepts.length - 1;
-                                                return (
-                                                    <span class="concept-item-wrapper">
-                                                        <a href={concept.url} class="concept-tag active">
-                                                            {concept.title}
-                                                        </a>
-                                                        {!isLast && <span class="comma">, </span>}
-                                                    </span>
-                                                );
-                                            })}
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- How to Use Section -->
-            <section class="moc-section" id="how-to-use-this-map">
-                <h2>💡 Hướng dẫn sử dụng Bản đồ</h2>
-                <ul>
-                    <li><strong>Học theo lộ trình:</strong> Đọc bảng phân loại từ trên xuống dưới. Các khái niệm được sắp xếp từ cơ bản (Lưu trữ, Định dạng dữ liệu) đến nâng cao (Điều phối, Quản trị, GenAI/ML).</li>
-                    <li><strong>Tra cứu thần tốc:</strong> Kéo thả các danh mục ở thanh menu bên trái để cá nhân hóa thứ tự học tập của bạn. Click vào các từ khóa để đi thẳng tới bài viết chuyên sâu.</li>
-                </ul>
-            </section>
-
-            <!-- Slot for Quizzes (which are passed from index.mdx) -->
-            <slot />
-        </div>
+                    );
+                })}
+            </tbody>
+        </table>
     </div>
+
+    <!-- Slot for Quizzes (which are passed from index.mdx) -->
+    <slot />
 </div>
 
 <style>
@@ -151,176 +108,6 @@ if (otherDocs.length > 0) {
     width: 100%;
     margin: 2rem auto;
     font-family: var(--sl-font), sans-serif;
-}
-
-.moc-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: start;
-}
-
-@media (min-width: 768px) {
-    .moc-layout {
-        grid-template-columns: 260px 1fr;
-    }
-}
-
-/* Typography */
-.moc-title {
-    font-size: 2.5rem !important;
-    font-weight: 800 !important;
-    margin-bottom: 0.5rem !important;
-    line-height: 1.2 !important;
-}
-
-.moc-meta {
-    font-size: 0.85rem;
-    color: var(--moc-text-muted);
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.meta-dot {
-    opacity: 0.5;
-}
-
-.moc-description {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: var(--moc-text);
-    margin-bottom: 2rem;
-}
-
-.moc-section {
-    margin-top: 3rem;
-}
-
-.moc-section h2 {
-    font-size: 1.5rem !important;
-    margin-bottom: 1rem !important;
-    font-weight: 700 !important;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--moc-border);
-}
-
-.moc-section ul {
-    padding-left: 1.5rem;
-}
-
-.moc-section li {
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-}
-
-/* Sidebar & Navigation */
-.moc-sidebar {
-    position: sticky;
-    top: 5rem; /* Adjust based on your header height */
-    background: var(--moc-bg-alt);
-    border: 1px solid var(--moc-border);
-    border-radius: var(--moc-radius);
-    padding: 1rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
-}
-
-.moc-sidebar-title {
-    font-size: 0.9rem !important;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--moc-text-muted);
-    margin-bottom: 1rem !important;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--moc-border);
-}
-
-.moc-nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.moc-nav-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    margin-bottom: 0.25rem;
-    border-radius: 4px;
-    cursor: grab;
-    transition: background-color 0.2s, transform 0.1s;
-    user-select: none;
-    background: var(--moc-bg);
-    border: 1px solid transparent;
-}
-
-.moc-nav-item:hover {
-    background-color: var(--moc-hover-bg);
-}
-
-.moc-nav-item.is-active {
-    border-color: var(--moc-primary);
-    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
-}
-
-.moc-nav-item.is-dragging {
-    opacity: 0.5;
-    background-color: var(--moc-hover-bg);
-    cursor: grabbing;
-}
-
-.moc-nav-item.drag-over {
-    border-top: 2px solid var(--moc-primary);
-}
-
-.drag-handle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--moc-text-muted);
-    margin-right: 0.5rem;
-    cursor: grab;
-}
-
-.moc-nav-item:active .drag-handle {
-    cursor: grabbing;
-}
-
-.moc-nav-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-/* Details Component */
-.moc-header-details {
-    background: var(--moc-bg-alt);
-    border: 1px solid var(--moc-border);
-    border-radius: var(--moc-radius);
-    margin-bottom: 2rem;
-    overflow: hidden;
-}
-
-.moc-header-details summary {
-    padding: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    user-select: none;
-    background: rgba(0,0,0,0.02);
-}
-
-.moc-header-details summary:hover {
-    background: rgba(0,0,0,0.04);
-}
-
-.moc-header-details ul {
-    padding: 0 1rem 1rem 2.5rem;
-    margin: 0;
-}
-
-.moc-header-details li {
-    margin-bottom: 0.5rem;
 }
 
 /* The Table */
@@ -422,120 +209,4 @@ if (otherDocs.length > 0) {
 }
 </style>
 
-<script>
-// Logic to handle Drag and Drop for Categories
-document.addEventListener('astro:page-load', () => {
-    const list = document.getElementById('moc-nav-list');
-    if (!list) return;
 
-    let draggedItem = null;
-
-    list.addEventListener('dragstart', (e) => {
-        const target = e.target as HTMLElement;
-        if (target.classList.contains('moc-nav-item')) {
-            draggedItem = target;
-            setTimeout(() => target.classList.add('is-dragging'), 0);
-        }
-    });
-
-    list.addEventListener('dragend', (e) => {
-        const target = e.target as HTMLElement;
-        target.classList.remove('is-dragging');
-        draggedItem = null;
-        
-        // Remove all drag-over visual cues
-        document.querySelectorAll('.moc-nav-item').forEach(item => {
-            item.classList.remove('drag-over');
-        });
-        
-        reorderTableRows();
-    });
-
-    list.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const target = (e.target as HTMLElement).closest('.moc-nav-item');
-        if (target && target !== draggedItem) {
-            target.classList.add('drag-over');
-        }
-    });
-
-    list.addEventListener('dragleave', (e) => {
-        const target = (e.target as HTMLElement).closest('.moc-nav-item');
-        if (target) {
-            target.classList.remove('drag-over');
-        }
-    });
-
-    list.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const target = (e.target as HTMLElement).closest('.moc-nav-item');
-        if (target && target !== draggedItem && draggedItem) {
-            target.classList.remove('drag-over');
-            
-            // Determine if we should insert before or after based on mouse position relative to target
-            const bounding = target.getBoundingClientRect();
-            const offset = bounding.y + (bounding.height / 2);
-            
-            if (e.clientY - offset > 0) {
-                target.after(draggedItem);
-            } else {
-                target.before(draggedItem);
-            }
-        }
-    });
-
-    // Reorder the actual table rows to match the sidebar order
-    function reorderTableRows() {
-        const tbody = document.querySelector('#concept-table tbody');
-        if (!tbody) return;
-        
-        const items = document.querySelectorAll('.moc-nav-item');
-        items.forEach(item => {
-            const targetId = item.getAttribute('data-target');
-            if (targetId) {
-                const row = document.getElementById(targetId);
-                if (row) {
-                    tbody.appendChild(row); // Appending moves it to the end, effectively sorting them
-                }
-            }
-        });
-    }
-
-    // Scroll highlighting logic
-    const navItems = document.querySelectorAll('.moc-nav-item');
-    const rows = document.querySelectorAll('.moc-table tbody tr');
-    
-    // Highlight sidebar item when clicking it
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const targetId = item.getAttribute('data-target');
-            if (!targetId) return;
-            
-            const row = document.getElementById(targetId);
-            if (row) {
-                // Remove highlight from all
-                rows.forEach(r => r.classList.remove('highlight'));
-                navItems.forEach(n => n.classList.remove('is-active'));
-                
-                // Highlight target
-                row.classList.add('highlight');
-                item.classList.add('is-active');
-                
-                // Scroll to row
-                const y = row.getBoundingClientRect().top + window.scrollY - 100;
-                window.scrollTo({top: y, behavior: 'smooth'});
-                
-                // Remove highlight after animation
-                setTimeout(() => {
-                    row.classList.remove('highlight');
-                }, 2000);
-            }
-        });
-    });
-    
-    // Set up drag attributes
-    navItems.forEach(item => {
-        item.setAttribute('draggable', 'true');
-    });
-});
-</script>

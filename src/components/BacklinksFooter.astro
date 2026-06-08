@@ -26,6 +26,32 @@ if (!currentPath.endsWith('/')) {
 
 const pageBacklinks = backlinks[currentPath] || [];
 const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPath === '/';
+
+// Parse category from URL to construct smart homepage backlink
+const pathParts = currentPath.split('/').filter(Boolean);
+let categorySlug = '';
+let categoryName = '';
+if (pathParts[0] === 'concepts' && pathParts[1]) {
+  categorySlug = pathParts[1];
+  const categoryNames = {
+    "foundation": "Foundation (Nền Tảng)",
+    "system-architecture": "Data Architectures & Stacks",
+    "database-storage": "Database & Storage",
+    "data-warehouse": "Data Warehouse & Modeling",
+    "data-lake-lakehouse": "Data Lake & Lakehouse",
+    "cloud-data-platform": "Cloud Data Platform",
+    "batch-processing": "Batch Processing",
+    "streaming-processing": "Streaming Processing",
+    "etl-elt": "ETL & ELT",
+    "transformation-analytics": "Transformation & Analytics",
+    "orchestration": "Orchestration",
+    "data-quality": "Data Quality",
+    "governance-metadata": "Governance & Metadata",
+    "observability-reliability": "Observability & Reliability",
+    "genai-ml": "GenAI & Machine Learning"
+  };
+  categoryName = categoryNames[categorySlug] || '';
+}
 ---
 
 {!isSplashPage && pageBacklinks.length > 0 && (
@@ -39,6 +65,21 @@ const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPa
         </li>
       ))}
     </ul>
+  </div>
+)}
+
+{!isSplashPage && (
+  <div class="navigation-hub">
+    <a href="/" class="nav-hub-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; display: inline-block; vertical-align: middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      Trang chủ (Bản đồ tri thức)
+    </a>
+    {categorySlug && categoryName && (
+      <span class="nav-hub-separator">/</span>
+      <a href={`/#row-${categorySlug}`} class="nav-hub-link category-link">
+        Chuyên mục: {categoryName}
+      </a>
+    )}
   </div>
 )}
 
@@ -145,5 +186,32 @@ const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPa
   .backlinks-list li a:hover {
     color: var(--sl-color-white);
     text-decoration: underline;
+  }
+  .navigation-hub {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+  }
+  .nav-hub-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-hub-link:hover {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+  }
+  .nav-hub-separator {
+    color: var(--sl-color-gray-4);
+  }
+  .category-link {
+    font-weight: 600;
   }
 </style>
