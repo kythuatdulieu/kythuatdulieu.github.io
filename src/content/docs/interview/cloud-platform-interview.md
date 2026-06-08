@@ -137,8 +137,8 @@ graph LR
 ## Related concepts
 
 * [Data Lake](/concepts/data-lake)
-* [Serverless Computing](/concepts/serverless)
-* [Separation of Compute and Storage](/concepts/separation-compute-storage)
+* Serverless Computing
+* Separation of Compute and Storage
 
 ---
 

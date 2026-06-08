@@ -187,7 +187,7 @@ Mặc dù Kimball (người tạo ra Dimensional Modeling) khuyên nên tránh S
 * [Star Schema](/concepts/star-schema)
 * [Dimensional Modeling](/concepts/dimensional-modeling)
 * [Outrigger Dimension](#)
-* [Third Normal Form (3NF)](/concepts/normalization)
+* Third Normal Form (3NF)
 
 ---
 

@@ -164,10 +164,10 @@ Một ứng dụng SaaS cung cấp Dashboard cho khách hàng xem số lượt c
 
 ## Related concepts
 
-* [Analytics Engineering](/concepts/analytics-engineering)
+* Analytics Engineering
 * [Data Warehouse](/concepts/data-warehouse)
 * [Data Governance](/concepts/data-governance)
-* [Business Intelligence](/concepts/business-intelligence)
+* Business Intelligence
 
 ---
 

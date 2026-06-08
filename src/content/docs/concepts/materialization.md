@@ -147,10 +147,10 @@ FROM {{ source('web_tracking', 'raw_pageviews') }}
 
 ## Related concepts
 
-* [Analytics Engineering](/concepts/analytics-engineering)
+* Analytics Engineering
 * [Data Transformation](/concepts/data-transformation)
-* [ETL vs ELT](/concepts/etl-vs-elt)
-* [Staging Area](/concepts/staging-area)
+* ETL vs ELT
+* Staging Area
 
 ---
 

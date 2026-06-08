@@ -63,29 +63,29 @@ Dưới đây là một chu kỳ hoạt động Compaction trong Apache Hudi (lo
 
 ```mermaid
 graph TD
-    subgraph Data Ingestion (Streaming/Micro-batch)
-        Stream[Kafka Streams] --> WriteEngine[Spark/Flink]
-        WriteEngine -->|Writes every 1 min| File1[File: 2MB]
-        WriteEngine -->|Writes every 1 min| File2[File: 3MB]
-        WriteEngine -->|Writes every 1 min| File3[File: 1.5MB]
-        WriteEngine -->|Writes every 1 min| FileN[File: ... 2MB]
+    subgraph "Data Ingestion  (Streaming/Micro-batch)"
+        Stream["Kafka Streams"] --> WriteEngine["Spark/Flink"]
+        WriteEngine -->|"Writes every 1 min"| File1["File: 2MB"]
+        WriteEngine -->|"Writes every 1 min"| File2["File: 3MB"]
+        WriteEngine -->|"Writes every 1 min"| File3["File: 1.5MB"]
+        WriteEngine -->|"Writes every 1 min"| FileN["File: ... 2MB"]
     end
     
-    subgraph Background Compaction Service
-        Compactor[Compaction Job]
+    subgraph "Background Compaction Service"
+        Compactor["Compaction Job"]
         File1 --> Compactor
         File2 --> Compactor
         File3 --> Compactor
         FileN --> Compactor
     end
     
-    subgraph Optimized Storage
-        Compactor -->|Merges and Writes| OptFile[Optimized File: 128MB Parquet]
+    subgraph "Optimized Storage"
+        Compactor -->|"Merges and Writes"| OptFile["Optimized File: 128MB Parquet"]
     end
     
-    subgraph Query Execution
-        Reader[Trino / Spark SQL] -->|Reads 1 big file<br/>Fast!| OptFile
-        Reader -.->|Avoids reading 100 small files| File1
+    subgraph "Query Execution"
+        Reader["Trino / Spark SQL"] -->|"Reads 1 big file<br/>Fast!"| OptFile
+        Reader -.->|"Avoids reading 100 small files"| File1
     end
 ```
 
@@ -158,7 +158,7 @@ SparkActions
 
 ## Related concepts
 
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 * [Apache Hudi](/concepts/apache-hudi) (Table Format mạnh mẽ nhất về cơ chế Auto-Compaction)
 * [Delta Lake](/concepts/delta-lake)
 * [Data Ingestion](/concepts/data-ingestion)

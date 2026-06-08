@@ -164,9 +164,9 @@ result.sinkTo(sink);
 
 ## Related concepts
 
-* [State Management](/concepts/state-management)
+* State Management
 * [Apache Kafka](/concepts/apache-kafka)
-* [Apache Flink](/concepts/apache-flink)
+* Apache Flink
 
 ---
 

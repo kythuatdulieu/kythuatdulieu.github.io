@@ -66,28 +66,28 @@ Hệ thống cung cấp Data Lineage tự động (như DataHub, OpenLineage, db
 
 ```mermaid
 graph LR
-    subgraph Upstream (Sources)
-        A[(Kafka Topic: Clicks)]
-        B[(Postgres: Users)]
+    subgraph "Upstream  (Sources)"
+        A["(Kafka Topic: Clicks)"]
+        B["(Postgres: Users)"]
     end
 
-    subgraph Transformation Engine
-        A --> C(Spark Job: Extract)
-        B --> D(Fivetran: Replicate)
-        C --> E[(Staging: raw_clicks)]
-        D --> F[(Staging: raw_users)]
-        E --> G(dbt: JOIN & Aggregate)
+    subgraph "Transformation Engine"
+        A --> C(["Spark Job: Extract"])
+        B --> D(["Fivetran: Replicate"])
+        C --> E["(Staging: raw_clicks)"]
+        D --> F["(Staging: raw_users)"]
+        E --> G(["dbt: JOIN & Aggregate"])
         F --> G
-        G --> H[(Data Mart: user_engagement)]
+        G --> H["(Data Mart: user_engagement)"]
     end
 
-    subgraph Downstream (Consumers)
-        H --> I(Looker Dashboard: Daily Active Users)
-        H --> J(ML Model: Churn Prediction)
+    subgraph "Downstream  (Consumers)"
+        H --> I(["Looker Dashboard: Daily Active Users"])
+        H --> J(["ML Model: Churn Prediction"])
     end
 
-    subgraph OpenLineage / Metadata Graph
-        Z[Central Lineage UI: Automatically visualizes all connections from Kafka to Dashboard]
+    subgraph "OpenLineage / Metadata Graph"
+        Z["Central Lineage UI: Automatically visualizes all connections from Kafka to Dashboard"]
     end
 
     C -. "Emits run event" .-> Z

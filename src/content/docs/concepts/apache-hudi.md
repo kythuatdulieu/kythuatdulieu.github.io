@@ -187,7 +187,7 @@ dfUpdates.write.format("hudi").
 ## Related concepts
 
 * [Data Lake](/concepts/data-lake)
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 * [Change Data Capture (CDC)](/concepts/change-data-capture)
 * [Table Format](/concepts/table-format)
 * [Compaction](/concepts/compaction)

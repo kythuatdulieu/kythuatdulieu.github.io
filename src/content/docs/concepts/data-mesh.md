@@ -61,37 +61,10 @@ Hệ thống Data Mesh hoạt động thông qua các "Data Products" kết nố
 
 ```mermaid
 graph TD
-    subgraph Self-Serve Data Infrastructure
-        Platform[Data Platform (Storage, Compute, Access Control)]
-    end
-
-    subgraph Federated Governance
-        Gov[Global Policies, Security, Quality Rules, Data Catalog]
-    end
-
-    subgraph Domain A: Sales
-        A1[(Sales DB)] --> A2[Transform Logic]
-        A2 --> A3[[Data Product: Processed Orders]]
-    end
-
-    subgraph Domain B: Inventory
-        B1[(Inventory DB)] --> B2[Transform Logic]
-        B2 --> B3[[Data Product: Stock Levels]]
-    end
-
-    subgraph Domain C: Customer Support
-        C1[(Support DB)] --> C2[Transform Logic]
-        C2 --> C3[[Data Product: Churn Risk]]
-    end
-
-    A3 -.->|API / Query| C2
-    B3 -.->|API / Query| A2
-    
-    A3 --- Platform
-    B3 --- Platform
-    C3 --- Platform
-    
-    Platform --- Gov
+    DomainA[Domain A] --> ProductA[Data Product A]
+    DomainB[Domain B] --> ProductB[Data Product B]
+    ProductA --> Governance[Federated Governance]
+    ProductB --> Governance
 ```
 
 ---

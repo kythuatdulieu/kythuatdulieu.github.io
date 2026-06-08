@@ -187,7 +187,7 @@ Vì cả hai bảng dùng chung `DISTKEY`, tất cả đơn hàng của `custome
 * [Google BigQuery](/concepts/google-bigquery)
 * [Snowflake](/concepts/snowflake)
 * [OLAP vs OLTP](/concepts/olap)
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 
 ---
 

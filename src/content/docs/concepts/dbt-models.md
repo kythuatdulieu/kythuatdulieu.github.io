@@ -95,22 +95,22 @@ Mô phỏng mối quan hệ phụ thuộc tuyến tính (DAG) được dbt tự 
 
 ```mermaid
 graph LR
-    subgraph 1. RAW SOURCES (Thô)
-        A[(stripe.raw_payments)]
-        B[(shopify.raw_orders)]
+    subgraph "1. RAW SOURCES (Thô)"
+        A["(stripe.raw_payments)"]
+        B["(shopify.raw_orders)"]
     end
 
-    subgraph 2. STAGING LAYER (Màng lọc 1-1)
-        C[stg_stripe__payments]
-        D[stg_shopify__orders]
+    subgraph "2. STAGING LAYER (Màng lọc 1-1)"
+        C["stg_stripe__payments"]
+        D["stg_shopify__orders"]
     end
 
-    subgraph 3. INTERMEDIATE LAYER (Xào nấu)
-        E[int_payments_pivoted]
+    subgraph "3. INTERMEDIATE LAYER (Xào nấu)"
+        E["int_payments_pivoted"]
     end
 
-    subgraph 4. MARTS LAYER (Hiển thị)
-        F[fct_orders]
+    subgraph "4. MARTS LAYER (Hiển thị)"
+        F["fct_orders"]
     end
 
     A -. source() .-> C

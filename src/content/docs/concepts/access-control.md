@@ -70,19 +70,19 @@ Hệ thống Access Control thường hoạt động kết hợp với Identity 
 
 ```mermaid
 graph TD
-    User[Data Analyst] -->|Request: SELECT * FROM Finance_DB| APIGateway[API / Query Gateway]
+    User["Data Analyst"] -->|"Request: SELECT * FROM Finance_DB"| APIGateway["API / Query Gateway"]
     
-    subgraph IAM & Access Control
-        APIGateway -->|Evaluate Request| PDP[Policy Decision Point / Engine]
-        PDP -->|Fetch Roles| Directory[Active Directory / Okta]
-        PDP -->|Fetch Attributes & Tags| DataCatalog[Data Catalog]
-        PDP -->|Evaluate Rule| PolicyStore[Policy Store (RBAC/ABAC rules)]
+    subgraph "IAM & Access Control"
+        APIGateway -->|"Evaluate Request"| PDP["Policy Decision Point / Engine"]
+        PDP -->|"Fetch Roles"| Directory["Active Directory / Okta"]
+        PDP -->|"Fetch Attributes & Tags"| DataCatalog["Data Catalog"]
+        PDP -->|"Evaluate Rule"| PolicyStore["Policy Store (RBAC/ABAC rules)"]
     end
 
-    PDP -->|Decision: ALLOW/DENY| APIGateway
-    APIGateway -->|DENY| UserError[Return Permission Denied]
-    APIGateway -->|ALLOW| DB[(Finance Database)]
-    DB -->|Return Data| User
+    PDP -->|"Decision: ALLOW/DENY"| APIGateway
+    APIGateway -->|"DENY"| UserError["Return Permission Denied"]
+    APIGateway -->|"ALLOW"| DB["(Finance Database)"]
+    DB -->|"Return Data"| User
 ```
 
 ---

@@ -149,7 +149,7 @@ deltaTable.update(
 
 ## Related concepts
 
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 * [Apache Iceberg](/concepts/apache-iceberg)
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Hudi](/concepts/apache-hudi)

@@ -155,7 +155,7 @@ Trong thực tế, file gốc 10GB có thể thành:
 ## Related concepts
 
 * [Columnar Storage](/concepts/columnar-storage)
-* [Parquet](/concepts/parquet)
+* Parquet
 * [Data Lake](/concepts/data-lake)
 
 ---

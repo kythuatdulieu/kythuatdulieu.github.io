@@ -196,7 +196,7 @@ peft_model.print_trainable_parameters()
 * [Large Language Models (LLM)](/concepts/llm)
 * [Fine-Tuning](/concepts/fine-tuning)
 * [Model Serving](/concepts/model-serving)
-* [Quantization (Lượng tử hóa)](/concepts/quantization)
+* Quantization (Lượng tử hóa)
 
 ---
 

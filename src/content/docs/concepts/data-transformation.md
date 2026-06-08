@@ -69,23 +69,23 @@ Dưới đây là một số kỹ thuật (Thao tác) phổ biến nhất trong 
 
 ```mermaid
 graph TD
-    subgraph 1. Raw Data Layer
-        R1[(Stripe Raw: JSON)]
-        R2[(Salesforce Raw: CRM)]
+    subgraph "1. Raw Data Layer"
+        R1["(Stripe Raw: JSON)"]
+        R2["(Salesforce Raw: CRM)"]
     end
     
-    subgraph 2. Staging Layer (Light Transformation)
-        S1(Clean Stripe:<br/>Extract JSON, Cast Date)
-        S2(Clean Salesforce:<br/>Trim Spaces, Lowercase Emails)
+    subgraph "2. Staging Layer (Light Transformation)"
+        S1(["Clean Stripe:<br/>Extract JSON, Cast Date"])
+        S2(["Clean Salesforce:<br/>Trim Spaces, Lowercase Emails"])
     end
     
-    subgraph 3. Integration Layer (Join & Derive)
-        I1(Map Accounts:<br/>Join Stripe + Salesforce on Email)
+    subgraph "3. Integration Layer (Join & Derive)"
+        I1(["Map Accounts:<br/>Join Stripe + Salesforce on Email"])
     end
     
-    subgraph 4. Data Mart Layer (Heavy Transformation)
-        M1[(Fact_Revenue:<br/>Aggregated by Month)]
-        M2[(Dim_Customer:<br/>VIP Status, Lifetime Value)]
+    subgraph "4. Data Mart Layer (Heavy Transformation)"
+        M1["(Fact_Revenue:<br/>Aggregated by Month)"]
+        M2["(Dim_Customer:<br/>VIP Status, Lifetime Value)"]
     end
 
     R1 --> S1
@@ -193,7 +193,7 @@ FROM customer_behavior
 * [ETL](/concepts/etl)
 * [ELT](/concepts/elt)
 * [Dimensional Modeling](/concepts/dimensional-modeling)
-* [Data Mart](/concepts/data-mart)
+* Data Mart
 
 ---
 

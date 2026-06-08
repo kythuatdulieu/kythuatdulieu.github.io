@@ -181,44 +181,6 @@
       "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
     }
   ],
-  "/concepts/data-lakehouse/": [
-    {
-      "url": "/concepts/acid-transactions-on-lake/",
-      "title": "ACID Transactions trên Data Lake"
-    },
-    {
-      "url": "/concepts/amazon-redshift/",
-      "title": "Amazon Redshift"
-    },
-    {
-      "url": "/concepts/apache-hudi/",
-      "title": "Apache Hudi"
-    },
-    {
-      "url": "/concepts/compaction/",
-      "title": "Compaction"
-    },
-    {
-      "url": "/concepts/schema-drift/",
-      "title": "Trôi dạt cấu trúc - Schema Drift"
-    },
-    {
-      "url": "/concepts/schema-evolution/",
-      "title": "Schema Evolution"
-    },
-    {
-      "url": "/concepts/snowflake/",
-      "title": "Snowflake Data Cloud"
-    },
-    {
-      "url": "/concepts/table-format/",
-      "title": "Table Format"
-    },
-    {
-      "url": "/concepts/time-travel/",
-      "title": "Time Travel"
-    }
-  ],
   "/concepts/llm/": [
     {
       "url": "/concepts/ai-agent/",
@@ -1913,24 +1875,6 @@
       "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
     }
   ],
-  "/concepts/parquet/": [
-    {
-      "url": "/concepts/apache-iceberg/",
-      "title": "Apache Iceberg - Định dạng bảng thế hệ mới"
-    },
-    {
-      "url": "/concepts/compression-algorithms/",
-      "title": "Thuật toán nén dữ liệu - Compression Algorithms"
-    },
-    {
-      "url": "/concepts/data-lake/",
-      "title": "Hồ dữ liệu - Data Lake"
-    },
-    {
-      "url": "/concepts/delta-lake/",
-      "title": "Delta Lake - Bảng dữ liệu giao dịch mở"
-    }
-  ],
   "/concepts/streaming-processing/": [
     {
       "url": "/concepts/apache-kafka/",
@@ -2055,10 +1999,6 @@
     {
       "url": "/concepts/data-governance/",
       "title": "Quản trị dữ liệu - Data Governance"
-    },
-    {
-      "url": "/concepts/data-mesh/",
-      "title": "Data Mesh"
     },
     {
       "url": "/concepts/data-ownership/",
@@ -2885,10 +2825,6 @@
       "title": "Tạo lập Truy xuất Tăng cường (RAG)"
     },
     {
-      "url": "/concepts/schema-drift/",
-      "title": "Trôi dạt cấu trúc - Schema Drift"
-    },
-    {
       "url": "/concepts/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
     },
@@ -3127,16 +3063,6 @@
     {
       "url": "/concepts/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
-    }
-  ],
-  "/concepts/columnar-formats/": [
-    {
-      "url": "/concepts/cloud-storage/",
-      "title": "Lưu trữ đối tượng trên đám mây - Cloud Object Storage"
-    },
-    {
-      "url": "/concepts/serverless-data/",
-      "title": "Xử lý dữ liệu không máy chủ - Serverless Data Processing"
     }
   ],
   "/concepts/serverless-data/": [
@@ -3555,16 +3481,6 @@
       "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
     }
   ],
-  "/concepts/data-discovery/": [
-    {
-      "url": "/concepts/data-catalog/",
-      "title": "Danh mục dữ liệu - Data Catalog"
-    },
-    {
-      "url": "/concepts/data-profiling/",
-      "title": "Lập hồ sơ dữ liệu - Data Profiling"
-    }
-  ],
   "/concepts/data-governance/": [
     {
       "url": "/concepts/data-catalog/",
@@ -3821,10 +3737,6 @@
       "title": "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
     },
     {
-      "url": "/concepts/medallion-architecture/",
-      "title": "Kiến trúc Medallion - Medallion Architecture"
-    },
-    {
       "url": "/concepts/orchestration/",
       "title": "Orchestration - Lập lịch và điều phối dữ liệu"
     },
@@ -3847,22 +3759,6 @@
     {
       "url": "/learning-paths/middle-to-senior-de/",
       "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
-  "/concepts/schema-registry/": [
-    {
-      "url": "/concepts/data-contract/",
-      "title": "Hợp đồng dữ liệu - Data Contract"
-    }
-  ],
-  "/concepts/data-as-a-product/": [
-    {
-      "url": "/concepts/data-contract/",
-      "title": "Hợp đồng dữ liệu - Data Contract"
-    },
-    {
-      "url": "/concepts/data-ownership/",
-      "title": "Quyền sở hữu dữ liệu - Data Ownership"
     }
   ],
   "/concepts/data-engineering/": [
@@ -4729,12 +4625,6 @@
       "title": "Nhiệt độ - Temperature"
     }
   ],
-  "/concepts/small-files-problem/": [
-    {
-      "url": "/concepts/data-lake/",
-      "title": "Hồ dữ liệu - Data Lake"
-    }
-  ],
   "/concepts/data-fabric/": [
     {
       "url": "/concepts/data-mesh/",
@@ -4763,12 +4653,6 @@
     {
       "url": "/concepts/data-observability/",
       "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
-    }
-  ],
-  "/concepts/data-stewardship/": [
-    {
-      "url": "/concepts/data-ownership/",
-      "title": "Quyền sở hữu dữ liệu - Data Ownership"
     }
   ],
   "/concepts/source-systems/": [
@@ -4867,20 +4751,6 @@
     {
       "url": "/learning-paths/analytics-engineer/",
       "title": "Analytics Engineer (Kỹ sư phân tích dữ liệu)"
-    }
-  ],
-  "/concepts/etl-vs-elt/": [
-    {
-      "url": "/concepts/data-reconciliation/",
-      "title": "Đối soát dữ liệu - Data Reconciliation"
-    },
-    {
-      "url": "/concepts/materialization/",
-      "title": "Phương thức lưu trữ kết quả dbt - Materialization"
-    },
-    {
-      "url": "/interview/pipeline-design-interview/",
-      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     }
   ],
   "/concepts/spark-joins/": [
@@ -4997,12 +4867,6 @@
     {
       "url": "/learning-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
-    }
-  ],
-  "/concepts/data-mart/": [
-    {
-      "url": "/concepts/data-transformation/",
-      "title": "Data Transformation"
     }
   ],
   "/concepts/slowly-changing-dimension/": [
@@ -5285,20 +5149,6 @@
     {
       "url": "/concepts/data-transformation/",
       "title": "Data Transformation"
-    }
-  ],
-  "/concepts/analytics-engineering/": [
-    {
-      "url": "/concepts/dbt-testing/",
-      "title": "Kiểm thử tự động - dbt Testing"
-    },
-    {
-      "url": "/concepts/materialization/",
-      "title": "Phương thức lưu trữ kết quả dbt - Materialization"
-    },
-    {
-      "url": "/concepts/metrics-layer/",
-      "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
     }
   ],
   "/concepts/data-reconciliation/": [
@@ -5585,12 +5435,6 @@
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
     }
   ],
-  "/concepts/map-reduce/": [
-    {
-      "url": "/concepts/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    }
-  ],
   "/concepts/schema-drift/": [
     {
       "url": "/concepts/distribution-drift/",
@@ -5663,10 +5507,6 @@
     {
       "url": "/concepts/recall/",
       "title": "Độ phủ - Recall trong Máy học"
-    },
-    {
-      "url": "/concepts/reranker/",
-      "title": "Mô hình tái sắp xếp - Reranker"
     },
     {
       "url": "/concepts/semantic-search/",
@@ -5835,22 +5675,6 @@
       "title": "Watermark - Dấu chuẩn thời gian"
     }
   ],
-  "/concepts/state-management/": [
-    {
-      "url": "/concepts/exactly-once-semantics/",
-      "title": "Exactly-Once Semantics (EOS) - Xử lý chính xác một lần"
-    }
-  ],
-  "/concepts/apache-flink/": [
-    {
-      "url": "/concepts/exactly-once-semantics/",
-      "title": "Exactly-Once Semantics (EOS) - Xử lý chính xác một lần"
-    },
-    {
-      "url": "/interview/kafka-design-interview/",
-      "title": "Thiết kế Kafka (Phỏng vấn) - Kafka Design Interview"
-    }
-  ],
   "/concepts/grain/": [
     {
       "url": "/concepts/fact-table/",
@@ -5985,12 +5809,6 @@
     {
       "url": "/concepts/zero-shot/",
       "title": "Học không cần ví dụ (Zero-shot)"
-    }
-  ],
-  "/concepts/data-orchestration/": [
-    {
-      "url": "/concepts/freshness-monitoring/",
-      "title": "Giám sát độ trễ dữ liệu - Freshness Monitoring"
     }
   ],
   "/concepts/amazon-redshift/": [
@@ -6349,16 +6167,6 @@
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
     }
   ],
-  "/concepts/normalization/": [
-    {
-      "url": "/concepts/inmon-methodology/",
-      "title": "Inmon Methodology - Corporate Information Factory"
-    },
-    {
-      "url": "/concepts/snowflake-schema/",
-      "title": "Lược đồ bông tuyết - Snowflake Schema"
-    }
-  ],
   "/concepts/event-driven-architecture/": [
     {
       "url": "/concepts/kappa-architecture/",
@@ -6473,36 +6281,6 @@
       "title": "Low-Rank Adaptation (LoRA)"
     }
   ],
-  "/concepts/quantization/": [
-    {
-      "url": "/concepts/lora/",
-      "title": "Low-Rank Adaptation (LoRA)"
-    }
-  ],
-  "/concepts/staging-area/": [
-    {
-      "url": "/concepts/materialization/",
-      "title": "Phương thức lưu trữ kết quả dbt - Materialization"
-    }
-  ],
-  "/concepts/business-intelligence/": [
-    {
-      "url": "/concepts/metrics-layer/",
-      "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
-    }
-  ],
-  "/concepts/llmops/": [
-    {
-      "url": "/concepts/mlflow/",
-      "title": "Quản lý vòng đời Machine Learning với MLflow"
-    }
-  ],
-  "/concepts/mlops/": [
-    {
-      "url": "/concepts/model-serving/",
-      "title": "Phục vụ mô hình (Model Serving)"
-    }
-  ],
   "/concepts/lora/": [
     {
       "url": "/concepts/model-serving/",
@@ -6523,12 +6301,6 @@
     {
       "url": "/concepts/peft/",
       "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
-    }
-  ],
-  "/concepts/microservices/": [
-    {
-      "url": "/concepts/model-serving/",
-      "title": "Phục vụ mô hình (Model Serving)"
     }
   ],
   "/concepts/cost-optimization/": [
@@ -6799,12 +6571,6 @@
       "title": "Chỉ số đánh giá - Evaluation Metric"
     }
   ],
-  "/concepts/dpo/": [
-    {
-      "url": "/concepts/rlhf/",
-      "title": "Học tăng cường từ phản hồi của con người - RLHF"
-    }
-  ],
   "/concepts/alerting-incident-response/": [
     {
       "url": "/concepts/root-cause-analysis/",
@@ -6907,20 +6673,6 @@
       "title": "Jobs, Stages, và Tasks trong Spark"
     }
   ],
-  "/concepts/cdc/": [
-    {
-      "url": "/concepts/slowly-changing-dimension/",
-      "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
-    },
-    {
-      "url": "/interview/kafka-design-interview/",
-      "title": "Thiết kế Kafka (Phỏng vấn) - Kafka Design Interview"
-    },
-    {
-      "url": "/interview/pipeline-design-interview/",
-      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
-    }
-  ],
   "/concepts/spark-jobs-stages-tasks/": [
     {
       "url": "/concepts/spark-execution-model/",
@@ -6949,10 +6701,6 @@
     {
       "url": "/concepts/dag/",
       "title": "DAG (Đồ thị có hướng không chu trình) trong Data Engineering"
-    },
-    {
-      "url": "/concepts/medallion-architecture/",
-      "title": "Kiến trúc Medallion - Medallion Architecture"
     },
     {
       "url": "/concepts/orchestration/",
@@ -7063,72 +6811,6 @@
     {
       "url": "/concepts/windowing/",
       "title": "Windowing - Phân nhóm dữ liệu luồng theo thời gian"
-    }
-  ],
-  "/concepts/serverless/": [
-    {
-      "url": "/interview/cloud-platform-interview/",
-      "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
-    }
-  ],
-  "/concepts/separation-compute-storage/": [
-    {
-      "url": "/interview/cloud-platform-interview/",
-      "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
-    }
-  ],
-  "/concepts/fact-vs-dimension/": [
-    {
-      "url": "/interview/data-modeling-interview/",
-      "title": "Mô hình hóa dữ liệu (Phỏng vấn) - Data Modeling Interview"
-    }
-  ],
-  "/concepts/agile-data/": [
-    {
-      "url": "/interview/de-behavioral-interview/",
-      "title": "Phỏng vấn Hành vi DE (Phỏng vấn) - DE Behavioral Interview"
-    }
-  ],
-  "/concepts/event-sourcing/": [
-    {
-      "url": "/interview/kafka-design-interview/",
-      "title": "Thiết kế Kafka (Phỏng vấn) - Kafka Design Interview"
-    }
-  ],
-  "/concepts/message-queue/": [
-    {
-      "url": "/interview/kafka-design-interview/",
-      "title": "Thiết kế Kafka (Phỏng vấn) - Kafka Design Interview"
-    }
-  ],
-  "/concepts/index-vs-partition/": [
-    {
-      "url": "/interview/performance-tuning-qa/",
-      "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
-    }
-  ],
-  "/concepts/approximate-computing/": [
-    {
-      "url": "/interview/performance-tuning-qa/",
-      "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
-    }
-  ],
-  "/concepts/distributed-computing/": [
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    }
-  ],
-  "/concepts/aqe/": [
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    }
-  ],
-  "/concepts/broadcast-join/": [
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
     }
   ],
   "/learning-paths/beginner-de/": [
@@ -7295,10 +6977,6 @@
     {
       "url": "/concepts/llm-as-a-judge/",
       "title": "LLM làm giám khảo (LLM-as-a-judge)"
-    },
-    {
-      "url": "/concepts/model-serving/",
-      "title": "Phục vụ mô hình (Model Serving)"
     },
     {
       "url": "/concepts/unity-catalog/",

@@ -63,22 +63,22 @@ Quy trình vòng đời Metadata Management hiện đại (Active Metadata Manag
 
 ```mermaid
 graph TD
-    subgraph Data & Pipeline Tools (Sources)
-        A[(Snowflake / DWH)]
-        B[dbt / Transformation]
-        C[Airflow / Orchestration]
+    subgraph "Data & Pipeline Tools (Sources)"
+        A["(Snowflake / DWH)"]
+        B["dbt / Transformation"]
+        C["Airflow / Orchestration"]
     end
 
-    subgraph Active Metadata Platform
-        D[Metadata Crawlers / Push APIs]
-        E[(Central Metadata Graph DB)]
-        F[Auto Classification & Lineage Engine]
+    subgraph "Active Metadata Platform"
+        D["Metadata Crawlers / Push APIs"]
+        E["(Central Metadata Graph DB)"]
+        F["Auto Classification & Lineage Engine"]
     end
 
-    subgraph Metadata Consumers
-        G[Data Catalog UI for Analysts]
-        H[Data Governance / Privacy Policies]
-        I[Automated CI/CD Checks]
+    subgraph "Metadata Consumers"
+        G["Data Catalog UI for Analysts"]
+        H["Data Governance / Privacy Policies"]
+        I["Automated CI/CD Checks"]
     end
 
     A --> D

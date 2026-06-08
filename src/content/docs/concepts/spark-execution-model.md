@@ -29,32 +29,32 @@ Mô hình thực thi Spark gồm các thành phần sau:
 
 ```mermaid
 graph TD
-    User[User Script / spark-submit] --> Driver[Driver Program (SparkContext)]
-    Driver <-->|Yêu cầu tài nguyên| CM[Cluster Manager: YARN / K8s / Standalone]
+    User["User Script / spark-submit"] --> Driver["Driver Program (SparkContext)"]
+    Driver <-->|"Yêu cầu tài nguyên"| CM["Cluster Manager: YARN / K8s / Standalone"]
     
-    CM -.->|Khởi tạo| Node1[Worker Node 1]
-    CM -.->|Khởi tạo| Node2[Worker Node 2]
+    CM -.->|"Khởi tạo"| Node1["Worker Node 1"]
+    CM -.->|"Khởi tạo"| Node2["Worker Node 2"]
     
-    subgraph Node 1
-        Exec1[Executor]
-        Exec1_Task[Tasks (Cores)]
-        Exec1_Cache[In-Memory Cache]
+    subgraph "Node 1"
+        Exec1["Executor"]
+        Exec1_Task["Tasks (Cores)"]
+        Exec1_Cache["In-Memory Cache"]
         Exec1 --> Exec1_Task
         Exec1 --> Exec1_Cache
     end
 
-    subgraph Node 2
-        Exec2[Executor]
-        Exec2_Task[Tasks (Cores)]
-        Exec2_Cache[In-Memory Cache]
+    subgraph "Node 2"
+        Exec2["Executor"]
+        Exec2_Task["Tasks (Cores)"]
+        Exec2_Cache["In-Memory Cache"]
         Exec2 --> Exec2_Task
         Exec2 --> Exec2_Cache
     end
     
     Driver ==>|Phân phối Tasks| Exec1
     Driver ==>|Phân phối Tasks| Exec2
-    Exec1 -.->|Trả kết quả / Trạng thái| Driver
-    Exec2 -.->|Trả kết quả / Trạng thái| Driver
+    Exec1 -.->|"Trả kết quả / Trạng thái"| Driver
+    Exec2 -.->|"Trả kết quả / Trạng thái"| Driver
 ```
 
 1. **Driver Program (Master)**: Là tiến trình khởi tạo biến `SparkContext` hoặc `SparkSession`. Nhiệm vụ của nó là dịch mã nguồn của bạn thành các Job, tạo DAG (Directed Acyclic Graph), chia nhỏ thành các Stage/Task, và giao việc cho Executor.

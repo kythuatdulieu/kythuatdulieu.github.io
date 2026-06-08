@@ -61,29 +61,9 @@ Dưới đây là chu trình dữ liệu chảy qua một hệ thống CDC phổ
 ## Architecture / Flow
 
 ```mermaid
-graph TD
-    subgraph Operational Database
-        App[Web App] -->|INSERT/UPDATE/DELETE| DB[(MySQL / Postgres)]
-        DB -->|Writes internal log| WAL[(Binlog / WAL)]
-    end
-    
-    subgraph Change Data Capture (CDC Layer)
-        CDCConnector[Debezium Source Connector]
-        WAL -.->|Replication Stream| CDCConnector
-    end
-    
-    subgraph Event Streaming Platform
-        Kafka(Apache Kafka)
-        Topic[Topic: db.schema.table]
-        CDCConnector -->|Publishes JSON Event| Topic
-    end
-    
-    subgraph Target Destinations
-        SnowPipe[Target Connector / Flink]
-        Topic -->|Subscribes| SnowPipe
-        SnowPipe -->|Applies mutations| DWH[(Data Warehouse / Data Lakehouse)]
-        Topic -->|Real-time alerts| FraudModel[Fraud Detection System]
-    end
+graph LR
+    Source[(Source DB)] -->|CDC Connector| Kafka[Apache Kafka]
+    Kafka -->|Consumer| Sink[(Data Warehouse)]
 ```
 
 ---

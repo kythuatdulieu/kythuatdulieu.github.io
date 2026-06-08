@@ -171,7 +171,7 @@ for epoch, batch in enumerate(dataloader):
 
 * [Fine-tuning](/concepts/fine-tuning)
 * [LLM (Large Language Model)](/concepts/llm)
-* [DPO (Direct Preference Optimization)](/concepts/dpo)
+* DPO (Direct Preference Optimization)
 
 ---
 

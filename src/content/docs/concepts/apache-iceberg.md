@@ -65,30 +65,30 @@ Iceberg theo dõi một bảng qua 3 tầng (Layers):
 
 ```mermaid
 graph TD
-    subgraph Catalog Layer
-        A[Iceberg Catalog\nNessie, Hive Metastore, AWS Glue]
+    subgraph "Catalog Layer"
+        A["Iceberg Catalog\nNessie, Hive Metastore, AWS Glue"]
     end
 
-    subgraph Metadata Layer (Tracking)
-        B[Metadata JSON\nTable schema, Current Snapshot ID]
-        C[Manifest List\nList of manifests for a snapshot]
-        D1[Manifest File 1\nTracks files, partition bounds]
-        D2[Manifest File 2\nTracks files, column min/max]
+    subgraph "Metadata Layer  (Tracking)"
+        B["Metadata JSON\nTable schema, Current Snapshot ID"]
+        C["Manifest List\nList of manifests for a snapshot"]
+        D1["Manifest File 1\nTracks files, partition bounds"]
+        D2["Manifest File 2\nTracks files, column min/max"]
     end
 
-    subgraph Data Layer (Storage on S3/GCS)
-        E[Data File: Parquet 1]
-        F[Data File: Parquet 2]
-        G[Data File: ORC 3]
+    subgraph "Data Layer  (Storage on S3/GCS)"
+        E["Data File: Parquet 1"]
+        F["Data File: Parquet 2"]
+        G["Data File: ORC 3"]
     end
 
-    A -->|Pointers to latest| B
-    B -->|Contains| C
-    C -->|Points to| D1
-    C -->|Points to| D2
-    D1 -->|Points to| E
-    D1 -->|Points to| F
-    D2 -->|Points to| G
+    A -->|"Pointers to latest"| B
+    B -->|"Contains"| C
+    C -->|"Points to"| D1
+    C -->|"Points to"| D2
+    D1 -->|"Points to"| E
+    D1 -->|"Points to"| F
+    D2 -->|"Points to"| G
 ```
 
 *Trong quá trình đọc, câu lệnh SQL sẽ đi qua Catalog $\rightarrow$ Metadata JSON $\rightarrow$ Manifest List $\rightarrow$ Lọc ra Manifest Files cần thiết dựa trên min/max $\rightarrow$ Cuối cùng mới chạm vào file Parquet thực tế. Cực kỳ tối ưu.*
@@ -174,7 +174,7 @@ FOR SYSTEM_VERSION AS OF 10963874102873;
 * [Data Lakehouse](/concepts/lakehouse)
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Spark](/concepts/apache-spark)
-* [Parquet](/concepts/parquet)
+* Parquet
 
 ---
 

@@ -64,20 +64,20 @@ Chu trình ELT hiện đại điển hình (Sử dụng Airbyte + BigQuery + dbt
 
 ```mermaid
 graph LR
-    subgraph Data Sources
-        S1[(PostgreSQL)]
-        S2[Hubspot API]
-        S3[Google Ads]
+    subgraph "Data Sources"
+        S1["(PostgreSQL)"]
+        S2["Hubspot API"]
+        S3["Google Ads"]
     end
     
-    subgraph Automated Ingestion (Extract & Load)
-        Ingest[Fivetran / Airbyte<br/>*Replicate data as-is*]
+    subgraph "Automated Ingestion  (Extract & Load)"
+        Ingest["Fivetran / Airbyte<br/>*Replicate data as-is*"]
     end
     
-    subgraph Cloud Data Warehouse (Snowflake / BigQuery)
-        Raw[(Raw Data Layer)]
-        TransformEngine[Transform via SQL<br/>(e.g., dbt)]
-        Clean[(Curated Data Marts)]
+    subgraph "Cloud Data Warehouse  (Snowflake / BigQuery)"
+        Raw["(Raw Data Layer)"]
+        TransformEngine["Transform via SQL<br/>(e.g., dbt)"]
+        Clean["(Curated Data Marts)"]
         
         Raw --> TransformEngine
         TransformEngine --> Clean

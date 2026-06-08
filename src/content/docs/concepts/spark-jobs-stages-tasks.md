@@ -45,24 +45,8 @@ Mô phỏng cấu trúc DAG cho ứng dụng đơn giản: Đọc dữ liệu ->
 
 ```mermaid
 graph TD
-    subgraph Application
-        subgraph Job 1 (Kích hoạt bởi hàm .write)
-            subgraph Stage 1 (Narrow Dependency)
-                T1[Task 1: Read + Filter]
-                T2[Task 2: Read + Filter]
-                T3[Task 3: Read + Filter]
-            end
-            
-            S[--- SHUFFLE --- Trao đổi dữ liệu qua mạng ---]
-            Stage 1 --> S
-            S --> Stage 2
-            
-            subgraph Stage 2 (Wide Dependency)
-                T4[Task 4: GroupBy + Count + Write]
-                T5[Task 5: GroupBy + Count + Write]
-            end
-        end
-    end
+    Stage1[Stage 1] --> Shuffle[Shuffle]
+    Shuffle --> Stage2[Stage 2]
 ```
 
 ---

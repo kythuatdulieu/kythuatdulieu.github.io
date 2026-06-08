@@ -72,34 +72,9 @@ Mô phỏng đường ống dữ liệu (Pipeline) trong Medallion Architecture:
 
 ```mermaid
 graph LR
-    subgraph Sources
-        A(IoT Sensors)
-        B(CRM Database)
-        C(Web Logs)
-    end
-
-    subgraph Data Lakehouse (Cloud Storage)
-        D[Bronze Zone\nRaw JSON/CSV]
-        E[Silver Zone\nCleaned Delta/Iceberg]
-        F[Gold Zone\nAggregated Star Schema]
-        
-        D -->|Data Quality / Parsing| E
-        E -->|Joins / Aggregations| F
-    end
-
-    subgraph Consumers
-        G(Data Engineers)
-        H(Data Scientists)
-        I(Data Analysts & BI)
-    end
-
-    A -->|Ingest| D
-    B -->|Ingest| D
-    C -->|Ingest| D
-    
-    D -.-> G
-    E -.-> H
-    F -.-> I
+    Source[Sources] --> Bronze[(Bronze)]
+    Bronze --> Silver[(Silver)]
+    Silver --> Gold[(Gold)]
 ```
 
 ---

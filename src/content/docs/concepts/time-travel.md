@@ -155,7 +155,7 @@ RESTORE TABLE customer_table TO TIMESTAMP AS OF '2026-06-07 10:00:00';
 * [Table Format](/concepts/table-format)
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Iceberg](/concepts/apache-iceberg)
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 
 ---
 

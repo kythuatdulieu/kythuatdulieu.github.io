@@ -50,22 +50,9 @@ Quá trình chia luồng dữ liệu vào các Partition:
 ## Architecture / Flow
 
 ```mermaid
-graph LR
-    subgraph Topic: page_views
-        subgraph Partition 0 (Broker 1)
-            P0_0[Offset 0] --> P0_1[Offset 1] --> P0_2[Offset 2]
-        end
-        subgraph Partition 1 (Broker 2)
-            P1_0[Offset 0] --> P1_1[Offset 1] --> P1_2[Offset 2] --> P1_3[Offset 3]
-        end
-        subgraph Partition 2 (Broker 3)
-            P2_0[Offset 0] --> P2_1[Offset 1]
-        end
-    end
-
-    Producer(Producer App) -->|Key: UserID| Partition 0
-    Producer(Producer App) -->|Key: UserID| Partition 1
-    Producer(Producer App) -->|Key: UserID| Partition 2
+graph TD
+    Producer[Producer] -->|Hash UserID| P0[Partition 0]
+    Producer -->|Hash UserID| P1[Partition 1]
 ```
 
 ---

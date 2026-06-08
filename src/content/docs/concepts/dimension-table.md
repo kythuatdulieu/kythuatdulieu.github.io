@@ -52,12 +52,12 @@ Dòng chảy dữ liệu của Dimension Table trong kiến trúc Data Warehouse
 
 ```mermaid
 flowchart TD
-    A[1. Nguồn thay đổi<br/>(OLTP)] --> B[2. Quá trình ETL<br/>Phát hiện thay đổi]
-    B --> C[3. Gán Khóa thay thế<br/>(Surrogate Key)]
-    C --> D{4. Chính sách SCD}
-    D -- "Ghi đè" --> E[SCD Type 1]
-    D -- "Thêm dòng" --> F[SCD Type 2<br/>Lưu lịch sử]
-    E --> G[5. Dimension Table<br/>(Sẵn sàng cho BI)]
+    A["1. Nguồn thay đổi<br/>(OLTP)"] --> B["2. Quá trình ETL<br/>Phát hiện thay đổi"]
+    B --> C["3. Gán Khóa thay thế<br/>(Surrogate Key)"]
+    C --> D{"4. Chính sách SCD"}
+    D -- "Ghi đè" --> E["SCD Type 1"]
+    D -- "Thêm dòng" --> F["SCD Type 2<br/>Lưu lịch sử"]
+    E --> G["5. Dimension Table<br/>(Sẵn sàng cho BI)"]
     F --> G
 ```
 

@@ -167,8 +167,8 @@ df_structured.write \
 
 * [Data Warehouse](/concepts/data-warehouse)
 * [Lakehouse](/concepts/lakehouse)
-* [Apache Parquet](/concepts/parquet)
-* [Small Files Problem](/concepts/small-files-problem)
+* Apache Parquet
+* Small Files Problem
 
 ---
 

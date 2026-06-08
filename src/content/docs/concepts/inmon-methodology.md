@@ -193,7 +193,7 @@ Từ 3 bảng 3NF trung tâm này, quá trình *ETL 2* mới tổng hợp chúng
 
 * [Kimball Methodology](/concepts/kimball-methodology)
 * [Data Warehouse](/concepts/data-warehouse)
-* [Third Normal Form (3NF)](/concepts/normalization)
+* Third Normal Form (3NF)
 * [Corporate Information Factory (CIF)](#)
 
 ---

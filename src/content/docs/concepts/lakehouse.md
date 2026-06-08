@@ -64,30 +64,30 @@ Mô phỏng kiến trúc hệ thống Lakehouse với nguyên tắc **Medallion 
 
 ```mermaid
 graph LR
-    subgraph Data Sources
-        A[Kafka Streams]
-        B[RDBMS (CDC)]
-        C[Logs & Images]
+    subgraph "Data Sources"
+        A["Kafka Streams"]
+        B["RDBMS (CDC)"]
+        C["Logs & Images"]
     end
 
-    subgraph Data Lakehouse (S3 / ADLS / GCS)
-        D[(Bronze Layer\nRaw Data)]
-        E[(Silver Layer\nCleaned, Filtered)]
-        F[(Gold Layer\nAggregated, Star Schema)]
+    subgraph "Data Lakehouse  (S3 / ADLS / GCS)"
+        D["(Bronze Layer\nRaw Data)"]
+        E["(Silver Layer\nCleaned, Filtered)"]
+        F["(Gold Layer\nAggregated, Star Schema)"]
     end
 
-    subgraph Compute & Consumption
-        G[Databricks Spark / Trino]
-        H[Machine Learning]
-        I[BI Dashboards]
+    subgraph "Compute & Consumption"
+        G["Databricks Spark / Trino"]
+        H["Machine Learning"]
+        I["BI Dashboards"]
     end
 
     A --> D
     B --> D
     C --> D
     
-    D -->|Spark/Delta| E
-    E -->|Spark/Delta| F
+    D -->|"Spark/Delta"| E
+    E -->|"Spark/Delta"| F
     
     E --> H
     F --> I

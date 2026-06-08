@@ -65,14 +65,14 @@ Quy trình hoạt động trong một đường ống dữ liệu CI/CD chuẩn:
 
 ```mermaid
 graph LR
-    A[Raw Data Arrival] --> B(Ingestion Tool)
-    B --> C[(Staging Area)]
-    C --> D{Source Tests <br/> (Null, Unique)}
-    D --"Fail"--> E[Alert Slack & Stop]
-    D --"Pass"--> F[Data Transformation]
-    F --> G{Logic Tests <br/> (Business Rules)}
+    A["Raw Data Arrival"] --> B(["Ingestion Tool"])
+    B --> C["(Staging Area)"]
+    C --> D{"Source Tests <br/> (Null, Unique)"}
+    D --"Fail"--> E["Alert Slack & Stop"]
+    D --"Pass"--> F["Data Transformation"]
+    F --> G{"Logic Tests <br/> (Business Rules)"}
     G --"Fail"--> E
-    G --"Pass"--> H[(Data Marts / BI)]
+    G --"Pass"--> H["(Data Marts / BI)"]
 ```
 
 ---

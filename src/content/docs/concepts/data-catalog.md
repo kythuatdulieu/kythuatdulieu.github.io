@@ -68,27 +68,27 @@ Hầu hết các công cụ Data Catalog hiện đại (như Atlan, Alation, Col
 
 ```mermaid
 graph TD
-    subgraph Data Sources & Tools
-        A[Data Warehouse / BigQuery]
-        B[BI Tools / PowerBI]
-        C[Orchestration / Airflow]
+    subgraph "Data Sources & Tools"
+        A["Data Warehouse / BigQuery"]
+        B["BI Tools / PowerBI"]
+        C["Orchestration / Airflow"]
     end
 
-    subgraph Data Catalog Engine
-        D[Metadata Extractors / Crawlers]
-        E[Search Engine / Elasticsearch]
-        F[Graph Database / Lineage Map]
+    subgraph "Data Catalog Engine"
+        D["Metadata Extractors / Crawlers"]
+        E["Search Engine / Elasticsearch"]
+        F["Graph Database / Lineage Map"]
     end
 
-    subgraph User Interface (Data Catalog Portal)
-        G[Business Glossary]
-        H[Search Bar]
-        I[Data Quality Scorecard]
+    subgraph "User Interface  (Data Catalog Portal)"
+        G["Business Glossary"]
+        H["Search Bar"]
+        I["Data Quality Scorecard"]
     end
 
-    A -.->|Schema, Queries| D
-    B -.->|Dashboards Info| D
-    C -.->|Job Logs| D
+    A -.->|"Schema, Queries"| D
+    B -.->|"Dashboards Info"| D
+    C -.->|"Job Logs"| D
 
     D --> E
     D --> F
@@ -184,7 +184,7 @@ print("Đã cập nhật mô tả lên Data Catalog thành công!")
 ## Related concepts
 
 * [Metadata Management](/concepts/metadata-management)
-* [Data Discovery](/concepts/data-discovery)
+* Data Discovery
 * [Data Governance](/concepts/data-governance)
 * [Data Mesh](/concepts/data-mesh)
 

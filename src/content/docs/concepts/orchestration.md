@@ -70,24 +70,24 @@ Dưới đây là một luồng Orchestration điển hình:
 
 ```mermaid
 graph TD
-    subgraph Lập lịch & Điều phối
-        Scheduler[Orchestrator Scheduler]
+    subgraph "Lập lịch & Điều phối"
+        Scheduler["Orchestrator Scheduler"]
     end
 
-    subgraph Các hệ thống thực thi
-        A[Extract Postgres]
-        B[Extract Salesforce API]
-        C[Load to S3 (Data Lake)]
-        D[Transform in Snowflake]
-        E[Run Data Quality Test]
+    subgraph "Các hệ thống thực thi"
+        A["Extract Postgres"]
+        B["Extract Salesforce API"]
+        C["Load to S3 (Data Lake)"]
+        D["Transform in Snowflake"]
+        E["Run Data Quality Test"]
     end
 
-    Scheduler -->|1. Gọi| A
-    Scheduler -->|1. Gọi| B
-    A -->|2. Đợi xong, gọi| C
-    B -->|2. Đợi xong, gọi| C
-    C -->|3. Gọi tính toán| D
-    D -->|4. Kiểm tra| E
+    Scheduler -->|"1. Gọi"| A
+    Scheduler -->|"1. Gọi"| B
+    A -->|"2. Đợi xong, gọi"| C
+    B -->|"2. Đợi xong, gọi"| C
+    C -->|"3. Gọi tính toán"| D
+    D -->|"4. Kiểm tra"| E
 ```
 *Ghi chú: Mũi tên là logic phụ thuộc. Scheduler chỉ huy toàn bộ chứ không để các hệ thống tự gọi nhau.*
 

@@ -65,22 +65,9 @@ Khi câu lệnh `SELECT * FROM users WHERE ID = 1` được gọi, thông qua In
 ## Architecture / Flow
 
 ```mermaid
-graph LR
-    subgraph Client Application
-        App(Web App: Insert/Select 1 User)
-    end
-
-    subgraph Row-Oriented Database
-        Index(B-Tree Index)
-        subgraph Disk Blocks
-            B1[1 | Alice | 25 | Hanoi]
-            B2[2 | Bob | 25 | HCM]
-        end
-    end
-
-    App -->|SELECT WHERE ID=2| Index
-    Index -->|Pointer| B2
-    B2 -->|Return complete row| App
+graph TD
+    App[Web App] --> RowDB[(Row-oriented DB)]
+    RowDB --> Disk[Read complete row from disk]
 ```
 
 ---

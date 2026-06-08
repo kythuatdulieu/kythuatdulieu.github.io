@@ -133,7 +133,7 @@ Kết quả báo cáo `report.html` sẽ cung cấp giao diện trực quan cho 
 ## Related concepts
 
 * [Data Quality Dimensions](/concepts/data-quality-dimensions)
-* [Data Discovery](/concepts/data-discovery)
+* Data Discovery
 * [Data Catalog](/concepts/data-catalog)
 * [Exploratory Data Analysis (EDA) - mảng Data Science]
 

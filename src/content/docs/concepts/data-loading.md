@@ -68,28 +68,9 @@ Dưới đây là một số cơ chế "vật lý" để thực hiện Data Load
 
 ```mermaid
 graph TD
-    subgraph Transformed Data (Memory / Staging File)
-        T[Data Ready to Load<br/>(1,000 new rows)]
-    end
-    
-    subgraph Data Warehouse Tables
-        Target[Target Table in DWH]
-    end
-    
-    subgraph Loading Strategies
-        Strat1((1. Append))
-        Strat2((2. Overwrite))
-        Strat3((3. Upsert / Merge))
-    end
-
-    T --> Strat1
-    Strat1 -->|Simply adds new rows<br/>Target: 1,000,000 + 1,000| Target
-
-    T --> Strat2
-    Strat2 -->|Drops Target Table<br/>Target: 1,000| Target
-    
-    T --> Strat3
-    Strat3 -->|Matches Primary Keys<br/>Updates 200, Inserts 800| Target
+    Source[Source Data] --> Strat1[1. Append]
+    Source --> Strat2[2. Upsert/Merge]
+    Source --> Strat3[3. Full Overwrite]
 ```
 
 ---

@@ -171,7 +171,7 @@ FROM {{ source('raw_data', 'customers') }}
 * [Dimension Table](/concepts/dimension-table)
 * [Surrogate Key](/concepts/surrogate-key)
 * [Data Warehouse](/concepts/data-warehouse)
-* [Change Data Capture (CDC)](/concepts/cdc)
+* Change Data Capture (CDC)
 
 ---
 

@@ -80,22 +80,22 @@ Dưới đây là cách hoạt động chi tiết của từng phương pháp:
 
 ```mermaid
 graph TD
-    subgraph Operational Systems (Sources)
-        DB[(Database<br/>MySQL/Postgres)]
-        API[SaaS Apps<br/>Facebook/Salesforce]
+    subgraph "Operational Systems  (Sources)"
+        DB["(Database<br/>MySQL/Postgres)"]
+        API["SaaS Apps<br/>Facebook/Salesforce"]
     end
     
-    subgraph Data Extraction Layer
-        Full[Full Load Engine<br/>SELECT *]
-        Incr[Incremental Engine<br/>SELECT ... WHERE updated > X]
-        CDC[Log-based Reader<br/>Debezium / Binlog]
-        APIPull[API Worker<br/>Pagination & Retry]
+    subgraph "Data Extraction Layer"
+        Full["Full Load Engine<br/>SELECT *"]
+        Incr["Incremental Engine<br/>SELECT ... WHERE updated > X"]
+        CDC["Log-based Reader<br/>Debezium / Binlog"]
+        APIPull["API Worker<br/>Pagination & Retry"]
     end
 
-    DB -.->|Tables < 100MB| Full
-    DB -.->|Large Tables with Timestamps| Incr
-    DB -.->|Critical Realtime Tables| CDC
-    API -.->|JSON / REST| APIPull
+    DB -.->|"Tables < 100MB"| Full
+    DB -.->|"Large Tables with Timestamps"| Incr
+    DB -.->|"Critical Realtime Tables"| CDC
+    API -.->|"JSON / REST"| APIPull
 ```
 
 ---

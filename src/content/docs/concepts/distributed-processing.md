@@ -142,7 +142,7 @@ print(f"Từ 'Data' xuất hiện: {data_word_count[0][1]} lần")
 * [Apache Spark](/concepts/apache-spark)
 * [Shuffle](/concepts/shuffle)
 * [Data Skew](/concepts/data-skew)
-* [MapReduce](/concepts/map-reduce)
+* MapReduce
 
 ---
 

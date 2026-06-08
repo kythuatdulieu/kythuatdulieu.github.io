@@ -71,29 +71,29 @@ Dưới đây là chu trình Incremental sử dụng mô hình Upsert (Merge) ph
 
 ```mermaid
 graph TD
-    subgraph State Management
-        Watermark[(High Watermark<br/>Last_Run = T1)]
+    subgraph "State Management"
+        Watermark["(High Watermark<br/>Last_Run = T1)"]
     end
     
-    subgraph Operational Source
-        SourceDB[(Source Database<br/>Includes updated_at column)]
+    subgraph "Operational Source"
+        SourceDB["(Source Database<br/>Includes updated_at column)"]
     end
     
-    subgraph ETL Pipeline
-        Extract[1. Extract: SELECT * WHERE updated_at > T1]
-        Merge[3. Load: MERGE into Target (Upsert)]
-        UpdateState[4. Update State: Last_Run = T2]
+    subgraph "ETL Pipeline"
+        Extract["1. Extract: SELECT * WHERE updated_at > T1"]
+        Merge["3. Load: MERGE into Target (Upsert)"]
+        UpdateState["4. Update State: Last_Run = T2"]
     end
     
-    subgraph Target DWH
-        TargetDB[(Data Warehouse)]
+    subgraph "Target DWH"
+        TargetDB["(Data Warehouse)"]
     end
 
-    Watermark -.->|Inject Parameter| Extract
-    SourceDB -->|Returns Delta Data| Extract
-    Extract -->|Staging Data| Merge
+    Watermark -.->|"Inject Parameter"| Extract
+    SourceDB -->|"Returns Delta Data"| Extract
+    Extract -->|"Staging Data"| Merge
     Merge --> TargetDB
-    Merge -.->|On Success| UpdateState
+    Merge -.->|"On Success"| UpdateState
 ```
 
 ---

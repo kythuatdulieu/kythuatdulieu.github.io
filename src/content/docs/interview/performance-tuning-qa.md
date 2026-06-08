@@ -55,14 +55,8 @@ Sơ đồ quá trình Cắt tỉa Partition (Partition Pruning) trên nền tả
 
 ```mermaid
 graph TD
-    A[Truy vấn: SELECT SUM(doanh_thu) <br> FROM sales <br> WHERE nam = 2026] --> B(Trình phân tích truy vấn)
-    
-    B --> C{Xác định thư mục quét}
-    C -. "Bỏ qua" .-> D[S3/ year=2024/]
-    C -. "Bỏ qua" .-> E[S3/ year=2025/]
-    C == "Chỉ đọc thư mục này" ==> F[S3/ year=2026/]
-    
-    F --> G(Tính tổng nhanh chóng và siêu rẻ)
+    Query[Query Engine] --> S3_2026[Scan S3 year=2026]
+    S3_2026 --> Sum[Compute SUM]
 ```
 
 ---
@@ -118,9 +112,9 @@ Hầu hết các kỹ thuật tối ưu (như Indexing, Materialized View, Cachi
 
 ## Related concepts
 
-* [Index vs Partition](/concepts/index-vs-partition)
+* Index vs Partition
 * [Columnar Storage](/concepts/columnar-storage)
-* [HyperLogLog (Approximate Computing)](/concepts/approximate-computing)
+* HyperLogLog (Approximate Computing)
 
 ---
 

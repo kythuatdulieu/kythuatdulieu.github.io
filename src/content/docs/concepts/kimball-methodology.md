@@ -62,29 +62,29 @@ Kiến trúc Kimball bao gồm 4 tầng (Layer):
 
 ```mermaid
 graph LR
-    subgraph Source Systems
-        A[CRM]
-        B[ERP]
-        C[Flat Files]
+    subgraph "Source Systems"
+        A["CRM"]
+        B["ERP"]
+        C["Flat Files"]
     end
 
-    subgraph ETL System
-        D[Extract]
-        E[Cleanse & Conform]
-        F[Load]
+    subgraph "ETL System"
+        D["Extract"]
+        E["Cleanse & Conform"]
+        F["Load"]
     end
 
-    subgraph Presentation Area (Dimensional)
-        G[(Data Mart: Sales\nStar Schema)]
-        H[(Data Mart: Inventory\nStar Schema)]
-        I(Conformed Dimensions\nDate, Product)
+    subgraph "Presentation Area  (Dimensional)"
+        G["(Data Mart: Sales\nStar Schema)"]
+        H["(Data Mart: Inventory\nStar Schema)"]
+        I(["Conformed Dimensions\nDate, Product"])
         I --> G
         I --> H
     end
 
-    subgraph BI Applications
-        J[Dashboards]
-        K[Ad-hoc Queries]
+    subgraph "BI Applications"
+        J["Dashboards"]
+        K["Ad-hoc Queries"]
     end
 
     A --> D

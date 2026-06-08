@@ -67,28 +67,28 @@ Quy trình làm việc cơ bản với dbt (dbt Core qua CLI):
 
 ```mermaid
 graph LR
-    subgraph 1. EL Tools (Fivetran / Airbyte)
-        API[Stripe API] -->|Extract/Load| Raw[(Raw DB Schema)]
+    subgraph "1. EL Tools (Fivetran / Airbyte)"
+        API["Stripe API"] -->|"Extract/Load"| Raw["(Raw DB Schema)"]
     end
 
-    subgraph 2. Data Warehouse (Snowflake)
+    subgraph "2. Data Warehouse (Snowflake)"
         Raw
-        Stg[(Staging Schema)]
-        Mart[(Marts Schema)]
+        Stg["(Staging Schema)"]
+        Mart["(Marts Schema)"]
         Raw -. "Đọc thô" .-> Stg
         Stg -. "JOIN / Agg" .-> Mart
     end
 
-    subgraph 3. dbt (Chỉ chứa Code - Gửi Lệnh)
-        C[dbt Models SQL + Jinja]
-        T[dbt Tests]
+    subgraph "3. dbt (Chỉ chứa Code - Gửi Lệnh)"
+        C["dbt Models SQL + Jinja"]
+        T["dbt Tests"]
         C == "Gửi lệnh CREATE TABLE/VIEW" ==> Raw
         C == "Tạo tự động" ==> Stg
         C == "Tạo tự động" ==> Mart
     end
 
-    subgraph 4. BI (PowerBI)
-        Mart --> Dash[Dashboards]
+    subgraph "4. BI (PowerBI)"
+        Mart --> Dash["Dashboards"]
     end
     
     style 3 fill:#ffe0b2,stroke:#ff9800

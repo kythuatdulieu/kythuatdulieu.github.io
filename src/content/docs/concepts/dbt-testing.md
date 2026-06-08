@@ -58,11 +58,11 @@ Quy trình hoạt động:
 
 ```mermaid
 flowchart TD
-    A[1. Khai báo Tests<br/>schema.yml / thư mục tests] --> B[2. Biên dịch<br/>Lệnh dbt test]
-    B --> C[3. Gửi SQL Queries<br/>đến Data Warehouse]
-    C --> D{4. Đếm số dòng<br/>vi phạm}
-    D -- "Count = 0" --> E[PASS<br/>(Xanh)]
-    D -- "Count > 0" --> F[FAIL / WARN<br/>(Đỏ / Vàng)]
+    A["1. Khai báo Tests<br/>schema.yml / thư mục tests"] --> B["2. Biên dịch<br/>Lệnh dbt test"]
+    B --> C["3. Gửi SQL Queries<br/>đến Data Warehouse"]
+    C --> D{"4. Đếm số dòng<br/>vi phạm"}
+    D -- "Count = 0" --> E["PASS<br/>(Xanh)"]
+    D -- "Count > 0" --> F["FAIL / WARN<br/>(Đỏ / Vàng)"]
 ```
 
 1. Bạn khai báo tests trong file `schema.yml` hoặc viết các file SQL trong thư mục `tests`.
@@ -157,7 +157,7 @@ WHERE sum_amount < 0
 ## Related concepts
 
 * [Data Quality](/concepts/data-quality)
-* [Analytics Engineering](/concepts/analytics-engineering)
+* Analytics Engineering
 * [Data Transformation](/concepts/data-transformation)
 * [Data Reconciliation](/concepts/data-reconciliation)
 

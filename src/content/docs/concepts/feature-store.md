@@ -62,40 +62,40 @@ Cả hai kho lưu trữ này được đồng bộ hóa và định nghĩa bằn
 
 ```mermaid
 graph TD
-    subgraph Data Sources
-        A[Data Warehouse/Data Lake]
-        B[Kafka / Stream Brokers]
+    subgraph "Data Sources"
+        A["Data Warehouse/Data Lake"]
+        B["Kafka / Stream Brokers"]
     end
 
-    subgraph Feature Engine
-        C[Batch Pipeline (Spark/SQL)]
-        D[Stream Pipeline (Flink)]
+    subgraph "Feature Engine"
+        C["Batch Pipeline (Spark/SQL)"]
+        D["Stream Pipeline (Flink)"]
     end
 
-    subgraph Dual Storage Feature Store
-        E[(Offline Store \n e.g. S3, BigQuery \n Terabytes of historical data)]
-        F[(Online Store \n e.g. Redis, DynamoDB \n Millisecond latest snapshot)]
-        G[Feature Registry / Catalog]
+    subgraph "Dual Storage Feature Store"
+        E["(Offline Store \n e.g. S3, BigQuery \n Terabytes of historical data)"]
+        F["(Online Store \n e.g. Redis, DynamoDB \n Millisecond latest snapshot)"]
+        G["Feature Registry / Catalog"]
     end
 
     A --> C
     B --> D
     
-    C -->|Batch Sync| E
-    C -->|Push Updates| F
-    D -->|Realtime updates| F
-    D -->|Log history| E
+    C -->|"Batch Sync"| E
+    C -->|"Push Updates"| F
+    D -->|"Realtime updates"| F
+    D -->|"Log history"| E
     
     E <--> G
     F <--> G
 
     subgraph Consumers
-        H[ML Model Training \n (Jupyter/Airflow)]
-        I[Real-time Inference Service \n (Web API / Model Endpoint)]
+        H["ML Model Training \n (Jupyter/Airflow)"]
+        I["Real-time Inference Service \n (Web API / Model Endpoint)"]
     end
 
-    E -->|Extract Training Data \n (Point-in-time correct)| H
-    F -->|Low-latency feature vector lookup| I
+    E -->|"Extract Training Data \n (Point-in-time correct)"| H
+    F -->|"Low-latency feature vector lookup"| I
 ```
 
 ---

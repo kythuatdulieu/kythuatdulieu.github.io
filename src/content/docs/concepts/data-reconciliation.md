@@ -70,24 +70,24 @@ Quy trình tự động hóa đối soát trong Data Engineering:
 
 ```mermaid
 graph TD
-    subgraph Operational DB (Source)
-        A[(PostgreSQL)] -->|1. Generate Control Totals| B[Source Audit Table]
+    subgraph "Operational DB  (Source)"
+        A["(PostgreSQL)"] -->|"1. Generate Control Totals"| B["Source Audit Table"]
     end
 
-    A -->|2. Data Extraction via ETL| C[(Data Warehouse)]
+    A -->|"2. Data Extraction via ETL"| C["(Data Warehouse)"]
     
-    subgraph Analytical DB (Target)
-        C --> D[Target Fact Table]
-        D -->|3. Generate Control Totals| E[Target Audit Table]
+    subgraph "Analytical DB  (Target)"
+        C --> D["Target Fact Table"]
+        D -->|"3. Generate Control Totals"| E["Target Audit Table"]
     end
 
-    subgraph Recon Engine
-        B --> F{Reconciliation Logic}
+    subgraph "Recon Engine"
+        B --> F{"Reconciliation Logic"}
         E --> F
     end
 
-    F --"Delta = 0"--> G[Pass - OK for BI]
-    F --"Delta > Threshold"--> H[Alert: Data Discrepancy]
+    F --"Delta = 0"--> G["Pass - OK for BI"]
+    F --"Delta > Threshold"--> H["Alert: Data Discrepancy"]
 ```
 
 ---
@@ -171,7 +171,7 @@ WHERE tx_date = '2026-06-07';
 
 * [Data Testing](/concepts/data-testing)
 * [Data Quality](/concepts/data-quality)
-* [ETL vs ELT](/concepts/etl-vs-elt)
+* ETL vs ELT
 
 ---
 

@@ -67,33 +67,9 @@ Nền tảng Observability tự động lấy lịch sử cập nhật trong qu�
 ## Architecture / Flow
 
 ```mermaid
-graph LR
-    subgraph Data Warehouse
-        T1[Table: Sales_Daily]
-        T2[Table: Users_Events_Realtime]
-    end
-
-    subgraph Freshness Monitor Engine
-        Query[MAX(timestamp) Checker]
-        ML[ML Baseline Engine]
-        Rules[SLA Policy Store]
-    end
-
-    subgraph Incident Response
-        Alert[Alerting System]
-        Slack[Slack: #data-alerts]
-    end
-
-    T1 -. "last_updated=06:00" .-> Query
-    T2 -. "last_updated=10:00" .-> Query
-    
-    Query --> ML
-    Query --> Rules
-    
-    Rules -- "SLA Missed (>24h)" --> Alert
-    ML -- "Anomalous delay" --> Alert
-    
-    Alert --> Slack
+graph TD
+    DWH[(Data Warehouse)] --> Checker[MAX timestamp Checker]
+    Checker -->|Too old?| Alert[Alerting System]
 ```
 
 ---
@@ -171,7 +147,7 @@ Sau đó dbt so sánh khoảng thời gian. Nếu quá 24 tiếng, job CI/CD s�
 
 * [Giám sát khả năng quan sát dữ liệu - Data Observability](/concepts/data-observability)
 * [Data Quality](/concepts/data-quality)
-* [Airflow / Orchestration](/concepts/data-orchestration)
+* Airflow / Orchestration
 
 ---
 

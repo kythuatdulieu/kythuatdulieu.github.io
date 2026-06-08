@@ -182,7 +182,7 @@ deltaTable.update(
 * [Table Format](/concepts/table-format)
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Iceberg](/concepts/apache-iceberg)
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 
 ---
 

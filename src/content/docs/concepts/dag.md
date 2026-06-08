@@ -66,17 +66,17 @@ Dưới đây là một ví dụ trực quan về DAG hợp lệ và DAG không 
 
 ```mermaid
 graph TD
-    subgraph Hợp lệ (DAG)
-        A1(Extract MySQL) --> C1(Load to Data Warehouse)
-        B1(Extract API) --> C1
-        C1 --> D1(Transform using dbt)
-        D1 --> E1(Generate Report)
-        D1 --> F1(Send Alert)
+    subgraph "Hợp lệ (DAG)"
+        A1(["Extract MySQL"]) --> C1(["Load to Data Warehouse"])
+        B1(["Extract API"]) --> C1
+        C1 --> D1(["Transform using dbt"])
+        D1 --> E1(["Generate Report"])
+        D1 --> F1(["Send Alert"])
     end
 
-    subgraph KHÔNG Hợp lệ (Có chu trình)
-        A2(Task A) --> B2(Task B)
-        B2 --> C2(Task C)
+    subgraph "KHÔNG Hợp lệ (Có chu trình)"
+        A2(["Task A"]) --> B2(["Task B"])
+        B2 --> C2(["Task C"])
         C2 -. Lỗi vòng lặp .-> A2
     end
     

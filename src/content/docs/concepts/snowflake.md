@@ -68,20 +68,20 @@ Doanh nghiệp có thể chia sẻ trực tiếp các bảng dữ liệu cho đ�
 
 ```mermaid
 graph TD
-    subgraph Layer 3: Cloud Services (The Brain)
-        Auth[Security & Auth]
-        Meta[Metadata Manager]
-        Opt[Query Optimizer]
+    subgraph "Layer 3: Cloud Services (The Brain)"
+        Auth["Security & Auth"]
+        Meta["Metadata Manager"]
+        Opt["Query Optimizer"]
     end
 
-    subgraph Layer 2: Compute (Virtual Warehouses)
-        VW1[Marketing Warehouse \n Size: Small]
-        VW2[Data Science Warehouse \n Size: X-Large]
-        VW3[ETL Loading Warehouse \n Size: Medium]
+    subgraph "Layer 2: Compute (Virtual Warehouses)"
+        VW1["Marketing Warehouse \n Size: Small"]
+        VW2["Data Science Warehouse \n Size: X-Large"]
+        VW3["ETL Loading Warehouse \n Size: Medium"]
     end
 
-    subgraph Layer 1: Storage
-        S3[(Central Storage \n Amazon S3 / GCS / Azure \n Micro-partitions)]
+    subgraph "Layer 1: Storage"
+        S3["(Central Storage \n Amazon S3 / GCS / Azure \n Micro-partitions)"]
     end
 
     Auth --> Opt
@@ -168,7 +168,7 @@ Sự cố được giải quyết mà không cần tải file backup nào.
 
 * [Google BigQuery](/concepts/google-bigquery)
 * [Amazon Redshift](/concepts/amazon-redshift)
-* [Data Lakehouse](/concepts/data-lakehouse)
+* Data Lakehouse
 * [OLAP vs OLTP](/concepts/olap)
 
 ---

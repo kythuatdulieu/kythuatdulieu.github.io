@@ -1,0 +1,287 @@
+[
+  {
+    "file": "/src/content/docs/concepts/acid-transactions-on-lake.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/amazon-redshift.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/apache-hudi.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/apache-iceberg.md",
+    "target": "/concepts/parquet",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/parquet/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/cloud-storage.md",
+    "target": "/concepts/columnar-formats",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/columnar-formats/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/compaction.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/compression-algorithms.md",
+    "target": "/concepts/parquet",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/parquet/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-catalog.md",
+    "target": "/concepts/data-discovery",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-discovery/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-contract.md",
+    "target": "/concepts/schema-registry",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/schema-registry/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-contract.md",
+    "target": "/concepts/data-as-a-product",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-as-a-product/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-lake.md",
+    "target": "/concepts/parquet",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/parquet/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-lake.md",
+    "target": "/concepts/small-files-problem",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/small-files-problem/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-ownership.md",
+    "target": "/concepts/data-stewardship",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-stewardship/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-ownership.md",
+    "target": "/concepts/data-as-a-product",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-as-a-product/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-profiling.md",
+    "target": "/concepts/data-discovery",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-discovery/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-reconciliation.md",
+    "target": "/concepts/etl-vs-elt",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/etl-vs-elt/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/data-transformation.md",
+    "target": "/concepts/data-mart",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-mart/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/dbt-testing.md",
+    "target": "/concepts/analytics-engineering",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/analytics-engineering/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/delta-lake.md",
+    "target": "/concepts/parquet",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/parquet/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/distributed-processing.md",
+    "target": "/concepts/map-reduce",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/map-reduce/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/exactly-once-semantics.md",
+    "target": "/concepts/state-management",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/state-management/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/exactly-once-semantics.md",
+    "target": "/concepts/apache-flink",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/apache-flink/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/freshness-monitoring.md",
+    "target": "/concepts/data-orchestration",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-orchestration/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/inmon-methodology.md",
+    "target": "/concepts/normalization",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/normalization/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/lora.md",
+    "target": "/concepts/quantization",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/quantization/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/materialization.md",
+    "target": "/concepts/analytics-engineering",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/analytics-engineering/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/materialization.md",
+    "target": "/concepts/etl-vs-elt",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/etl-vs-elt/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/materialization.md",
+    "target": "/concepts/staging-area",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/staging-area/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/metrics-layer.md",
+    "target": "/concepts/analytics-engineering",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/analytics-engineering/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/metrics-layer.md",
+    "target": "/concepts/business-intelligence",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/business-intelligence/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/mlflow.md",
+    "target": "/concepts/llmops",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/llmops/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/model-serving.md",
+    "target": "/concepts/mlops",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/mlops/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/model-serving.md",
+    "target": "/concepts/microservices",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/microservices/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/rlhf.md",
+    "target": "/concepts/dpo",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/dpo/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/schema-drift.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/schema-evolution.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/serverless-data.md",
+    "target": "/concepts/columnar-formats",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/columnar-formats/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/slowly-changing-dimension.md",
+    "target": "/concepts/cdc",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/cdc/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/snowflake-schema.md",
+    "target": "/concepts/normalization",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/normalization/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/snowflake.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/table-format.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/concepts/time-travel.md",
+    "target": "/concepts/data-lakehouse",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/data-lakehouse/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/cloud-platform-interview.md",
+    "target": "/concepts/serverless",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/serverless/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/cloud-platform-interview.md",
+    "target": "/concepts/separation-compute-storage",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/separation-compute-storage/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/data-modeling-interview.md",
+    "target": "/concepts/fact-vs-dimension",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/fact-vs-dimension/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/de-behavioral-interview.md",
+    "target": "/concepts/agile-data",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/agile-data/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/kafka-design-interview.md",
+    "target": "/concepts/event-sourcing",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/event-sourcing/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/kafka-design-interview.md",
+    "target": "/concepts/cdc",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/cdc/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/kafka-design-interview.md",
+    "target": "/concepts/apache-flink",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/apache-flink/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/kafka-design-interview.md",
+    "target": "/concepts/message-queue",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/message-queue/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/performance-tuning-qa.md",
+    "target": "/concepts/index-vs-partition",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/index-vs-partition/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/performance-tuning-qa.md",
+    "target": "/concepts/approximate-computing",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/approximate-computing/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/pipeline-design-interview.md",
+    "target": "/concepts/cdc",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/cdc/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/pipeline-design-interview.md",
+    "target": "/concepts/etl-vs-elt",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/etl-vs-elt/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/spark-optimization-interview.md",
+    "target": "/concepts/distributed-computing",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/distributed-computing/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/spark-optimization-interview.md",
+    "target": "/concepts/aqe",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/aqe/index.mdx"
+  },
+  {
+    "file": "/src/content/docs/interview/spark-optimization-interview.md",
+    "target": "/concepts/broadcast-join",
+    "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/broadcast-join/index.mdx"
+  }
+]

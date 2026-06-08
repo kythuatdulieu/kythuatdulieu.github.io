@@ -44,11 +44,11 @@ Cơ chế sức mạnh cốt lõi của Delta Lake chính là **Transaction Log 
 
 ```mermaid
 flowchart TD
-    A[Lệnh UPDATE / INSERT] --> B[Ghi file Parquet MỚI<br/>(Copy-on-write)]
-    B --> C[Tạo file JSON log trong<br/>thư mục _delta_log]
-    C --> D{Nội dung file JSON}
-    D --> E[Đánh dấu Tombstone<br/>hủy file Parquet cũ]
-    D --> F[Xác nhận bổ sung<br/>file Parquet mới]
+    A["Lệnh UPDATE / INSERT"] --> B["Ghi file Parquet MỚI<br/>(Copy-on-write)"]
+    B --> C["Tạo file JSON log trong<br/>thư mục _delta_log"]
+    C --> D{"Nội dung file JSON"}
+    D --> E["Đánh dấu Tombstone<br/>hủy file Parquet cũ"]
+    D --> F["Xác nhận bổ sung<br/>file Parquet mới"]
 ```
 
 Cơ chế này hoạt động dựa trên nguyên tắc **Thỏa thuận kiểm soát phiên bản (Optimistic Concurrency Control)**. 
@@ -155,7 +155,7 @@ RESTORE TABLE delta.`s3://bucket/bronze/users` TO VERSION AS OF 0;
 
 * [Data Lakehouse](/concepts/lakehouse)
 * [Apache Iceberg](/concepts/apache-iceberg)
-* [Parquet](/concepts/parquet)
+* Parquet
 * [Apache Spark](/concepts/apache-spark)
 
 ---

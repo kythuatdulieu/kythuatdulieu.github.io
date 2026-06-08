@@ -73,20 +73,20 @@ Cách hoạt động của 2 mô hình trong bối cảnh Data Engineering:
 
 ```mermaid
 graph LR
-    subgraph PUSH MODEL
-        A1[Producer (Active)] -->|Webhook / POST (Instantly)| B1[Consumer (Passive/Waiting)]
+    subgraph "PUSH MODEL"
+        A1["Producer (Active)"] -->|"Webhook / POST (Instantly)"| B1["Consumer (Passive/Waiting)"]
         style A1 fill:#cce5ff
     end
 
-    subgraph PULL MODEL
-        A2[Producer (Passive/Storing)] -.->|Returns Data| B2[Consumer (Active/Polling)]
-        B2 -->|Cron Job: GET Request (Every 5m)| A2
+    subgraph "PULL MODEL"
+        A2["Producer (Passive/Storing)"] -.->|"Returns Data"| B2["Consumer (Active/Polling)"]
+        B2 -->|"Cron Job: GET Request (Every 5m)"| A2
         style B2 fill:#cce5ff
     end
 
-    subgraph MESSAGE BROKER (Hybrid)
-        A3[Producer] -->|Push to Topic| C[(Kafka / Broker)]
-        B3[Consumer] -->|Pull/Fetch at own pace| C
+    subgraph "MESSAGE BROKER  (Hybrid)"
+        A3["Producer"] -->|"Push to Topic"| C["(Kafka / Broker)"]
+        B3["Consumer"] -->|"Pull/Fetch at own pace"| C
     end
 ```
 

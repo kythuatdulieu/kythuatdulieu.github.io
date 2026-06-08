@@ -66,28 +66,9 @@ Quy trình tự động hóa xử lý Schema Drift (sử dụng Fivetran / Snowf
 
 ```mermaid
 graph TD
-    subgraph App Team
-        App[Backend App] -->|Dev adds new field 'phone'| SourceDB[(MySQL Source)]
-    end
-
-    subgraph Data Ingestion (ELT)
-        CDC[CDC Tool \n Fivetran/Debezium]
-        CDC -->|Read Binlog| SchemaCheck{Match DWH Schema?}
-    end
-
-    subgraph Data Warehouse
-        DWH[(Snowflake / BigQuery)]
-    end
-
-    subgraph Observability
-        Slack[Slack Alert]
-    end
-
-    SourceDB --> CDC
-    SchemaCheck -- "Yes" --> DWH
-    SchemaCheck -- "No: New Column" -->|Auto ADD COLUMN| DWH
-    SchemaCheck -- "No: Type Change" -->|Auto ALTER TYPE| DWH
-    SchemaCheck -- "No: Destructive Change" -->|Halt Pipeline| Slack
+    App[Backend] --> Source[(Source DB)]
+    Source --> CDC[CDC Tool]
+    CDC -->|Check Schema| DWH[(Data Warehouse)]
 ```
 
 ---
@@ -156,7 +137,7 @@ Với `mergeSchema=true`, khi Delta Lake nhận thấy kiểu dữ liệu của 
 ## Related concepts
 
 * [Data Observability](/concepts/data-observability)
-* [Data Lakehouse (Delta Lake, Iceberg)](/concepts/data-lakehouse)
+* Data Lakehouse (Delta Lake, Iceberg)
 * [Data Quality](/concepts/data-quality)
 
 ---

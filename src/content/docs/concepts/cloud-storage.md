@@ -61,21 +61,21 @@ Hành trình của một tệp (Object) đi vào hệ thống:
 
 ```mermaid
 graph TD
-    subgraph Data Producers
-        App[Web Apps/Mobile]
-        DB[Database CDC]
-        IoT[IoT Devices]
+    subgraph "Data Producers"
+        App["Web Apps/Mobile"]
+        DB["Database CDC"]
+        IoT["IoT Devices"]
     end
 
-    subgraph Cloud Object Storage (S3 / GCS / ADLS)
-        Raw[Raw Bucket / Bronze \n s3://data-raw/]
-        Clean[Cleaned Bucket / Silver \n s3://data-clean/]
-        Agg[Aggregated Bucket / Gold \n s3://data-gold/]
+    subgraph "Cloud Object Storage  (S3 / GCS / ADLS)"
+        Raw["Raw Bucket / Bronze \n s3://data-raw/"]
+        Clean["Cleaned Bucket / Silver \n s3://data-clean/"]
+        Agg["Aggregated Bucket / Gold \n s3://data-gold/"]
     end
 
-    subgraph Compute / Processing
-        Spark[Apache Spark / Databricks]
-        Athena[Amazon Athena / Trino]
+    subgraph "Compute / Processing"
+        Spark["Apache Spark / Databricks"]
+        Athena["Amazon Athena / Trino"]
     end
 
     App -- JSON --> Raw
@@ -167,7 +167,7 @@ WHERE year = 2026 AND month = 05;
 ## Related concepts
 
 * [Data Lake](/concepts/data-lake)
-* [Định dạng dữ liệu cột - Columnar Data Formats (Parquet)](/concepts/columnar-formats)
+* Định dạng dữ liệu cột - Columnar Data Formats (Parquet)
 * [Kiến trúc Serverless Data](/concepts/serverless-data)
 
 ---

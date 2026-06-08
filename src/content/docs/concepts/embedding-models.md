@@ -57,13 +57,8 @@ Sơ đồ luồng xử lý văn bản qua Embedding Model:
 
 ```mermaid
 graph TD
-    A[Văn bản đầu vào: "Tìm kiếm thông tin"] --> B[Tokenizer]
-    B --> C["Tokens: ['Tìm', 'kiếm', 'thông', 'tin']"]
-    C --> D[Embedding Model Layer - e.g. BERT]
-    D --> E[Contextualized Token Embeddings]
-    E --> F[Pooling Layer]
-    F --> G["Sentence Embedding Vector (ví dụ: 768 chiều)"]
-    G --> H[Lưu trữ Vector DB / Tính khoảng cách]
+    Text[Input Text] --> Model[Embedding Model]
+    Model --> Vector[Dense Vector Array]
 ```
 
 ---

@@ -54,34 +54,16 @@ Kafka cấp phát công việc dựa trên cấp độ (Granularity) là Partiti
 
 ```mermaid
 graph TD
-    subgraph Kafka Cluster
-        Topic[Topic: click_events - 3 Partitions]
-        P0((Partition 0))
-        P1((Partition 1))
-        P2((Partition 2))
-        Topic --> P0
-        Topic --> P1
-        Topic --> P2
+    subgraph Kafka Topic
+        P0[Partition 0]
+        P1[Partition 1]
     end
-
-    subgraph Consumer Group A: "Email-Service"
+    subgraph Consumer Group
+        C0[Consumer 0]
         C1[Consumer 1]
-        C2[Consumer 2]
     end
-
-    subgraph Consumer Group B: "Hadoop-Backup"
-        C3[Consumer 3]
-    end
-
-    %% Routing
-    P0 -->|Group A| C1
-    P1 -->|Group A| C1
-    P2 -->|Group A| C2
-    
-    %% Pub/Sub broadcast mode
-    P0 -->|Group B| C3
-    P1 -->|Group B| C3
-    P2 -->|Group B| C3
+    P0 --> C0
+    P1 --> C1
 ```
 *Nhận xét:* 
 - Group A phân chia công việc để xử lý gửi email nhanh (Message Queuing Mode).

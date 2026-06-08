@@ -141,10 +141,10 @@ graph LR
 
 ## Related concepts
 
-* [Event Sourcing](/concepts/event-sourcing)
-* [Change Data Capture (CDC)](/concepts/cdc)
-* [Apache Flink](/concepts/apache-flink)
-* [Message Queue](/concepts/message-queue)
+* Event Sourcing
+* Change Data Capture (CDC)
+* Apache Flink
+* Message Queue
 
 ---
 

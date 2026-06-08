@@ -58,19 +58,19 @@ Có 3 mô hình Windowing cốt lõi dựa trên thời gian được sử dụn
 
 ```mermaid
 graph TD
-    subgraph Tumbling Window (Kích thước: 5m)
-        A1[10:00 - 10:05] --- B1[10:05 - 10:10] --- C1[10:10 - 10:15]
+    subgraph "Tumbling Window  (Kích thước: 5m)"
+        A1["10:00 - 10:05"] --- B1["10:05 - 10:10"] --- C1["10:10 - 10:15"]
     end
 
-    subgraph Sliding Window (Kích thước: 10m, Trượt: 5m)
-        A2[10:00 - 10:10]
-        B2[10:05 - 10:15]
-        C2[10:10 - 10:20]
+    subgraph "Sliding Window  (Kích thước: 10m, Trượt: 5m)"
+        A2["10:00 - 10:10"]
+        B2["10:05 - 10:15"]
+        C2["10:10 - 10:20"]
     end
 
-    subgraph Session Window (Gap: 10m)
-        A3[User1 Click... 5m ...Click] -->|Gap 10m| B3[Đóng Window 1]
-        C3[User1 Click mới] --> D3[Mở Window 2]
+    subgraph "Session Window  (Gap: 10m)"
+        A3["User1 Click... 5m ...Click"] -->|"Gap 10m"| B3["Đóng Window 1"]
+        C3["User1 Click mới"] --> D3["Mở Window 2"]
     end
 ```
 

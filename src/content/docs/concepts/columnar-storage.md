@@ -70,30 +70,9 @@ Khi chạy `SELECT SUM(Age) FROM table`, hệ thống chỉ chạm vào "Khối 
 
 ```mermaid
 graph TD
-    subgraph Logical Table
-        T[ID | Name | Age | City]
-    end
-
-    subgraph Columnar Files on Disk
-        F1[(File: ID.col)]
-        F2[(File: Name.col)]
-        F3[(File: Age.col)]
-        F4[(File: City.col)]
-    end
-
-    subgraph Query Execution
-        Q(SELECT AVG(Age) FROM Table)
-    end
-
-    T -.-> F1
-    T -.-> F2
-    T -.-> F3
-    T -.-> F4
-
-    Q ==>|Only reads| F3
-    Q -.->|Ignores| F1
-    Q -.->|Ignores| F2
-    Q -.->|Ignores| F4
+    Query[SELECT AVG Age FROM Table] --> ColumnStorage[(Column-oriented Storage)]
+    ColumnStorage --> ExtractAge[Extract only Age Column]
+    ExtractAge --> Compute[Compute AVG]
 ```
 
 ---

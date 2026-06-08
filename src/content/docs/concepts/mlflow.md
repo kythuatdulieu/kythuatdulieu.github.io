@@ -81,21 +81,21 @@ Phần mềm Backend chỉ cần gọi API tới MLflow để tải về model �
 
 ```mermaid
 graph TD
-    subgraph Data Scientist Environment
-        A[Jupyter Notebook / Python Script] -->|mlflow.log_param()| B(MLflow Tracking Server)
-        A -->|mlflow.log_metric()| B
-        A -->|mlflow.log_model()| C[(Artifact Store: S3/GCS)]
+    subgraph "Data Scientist Environment"
+        A["Jupyter Notebook / Python Script"] -->|"mlflow.log_param()"| B(["MLflow Tracking Server"])
+        A -->|"mlflow.log_metric()"| B
+        A -->|"mlflow.log_model()"| C["(Artifact Store: S3/GCS)"]
     end
 
-    subgraph Central MLflow Server
-        B --> D[(Backend Store: PostgreSQL)]
-        B --> E[MLflow UI]
-        E --> F[Model Registry]
+    subgraph "Central MLflow Server"
+        B --> D["(Backend Store: PostgreSQL)"]
+        B --> E["MLflow UI"]
+        E --> F["Model Registry"]
     end
 
     subgraph Deployment
-        F -->|Fetch Production Model| G[REST API / Docker]
-        C -->|Download Model Files| G
+        F -->|"Fetch Production Model"| G["REST API / Docker"]
+        C -->|"Download Model Files"| G
     end
 ```
 
@@ -140,7 +140,7 @@ graph TD
 
 * MLOps (Machine Learning Operations)
 * Model Registry
-* [LLMOps](/concepts/llmops)
+* LLMOps
 
 ---
 

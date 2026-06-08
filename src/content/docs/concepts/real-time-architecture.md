@@ -65,37 +65,37 @@ Kiến trúc chuẩn của hệ thống Real-time Data thường chia làm 3-4 t
 
 ```mermaid
 graph TD
-    subgraph Data Sources / Producers
-        A[Mobile App SDK (Clickstream)]
-        B[IoT Sensors (Telemetry)]
-        C[OLTP DB (CDC via Debezium)]
+    subgraph "Data Sources / Producers"
+        A["Mobile App SDK (Clickstream)"]
+        B["IoT Sensors (Telemetry)"]
+        C["OLTP DB (CDC via Debezium)"]
     end
 
-    subgraph Streaming Backbone
-        D[(Distributed Event Log \n e.g., Apache Kafka / Kinesis)]
+    subgraph "Streaming Backbone"
+        D["(Distributed Event Log \n e.g., Apache Kafka / Kinesis)"]
     end
 
-    subgraph Stream Processing Layer
-        E[Stream Engine \n e.g., Apache Flink / Spark Streaming]
-        F[(Fast Key-Value Store \n e.g., Redis for Enriching)]
+    subgraph "Stream Processing Layer"
+        E["Stream Engine \n e.g., Apache Flink / Spark Streaming"]
+        F["(Fast Key-Value Store \n e.g., Redis for Enriching)"]
     end
 
-    subgraph Real-time Analytics & Serving
-        G[(Real-time OLAP \n e.g., Apache Druid / ClickHouse)]
-        H[Live Alerting System]
+    subgraph "Real-time Analytics & Serving"
+        G["(Real-time OLAP \n e.g., Apache Druid / ClickHouse)"]
+        H["Live Alerting System"]
     end
 
-    A -->|Events| D
-    B -->|Events| D
-    C -->|Events| D
+    A -->|"Events"| D
+    B -->|"Events"| D
+    C -->|"Events"| D
     
     D --> E
-    E <-->|Lookups/Joins| F
+    E <-->|"Lookups/Joins"| F
     
-    E -->|Processed Streams| G
-    E -->|Critical Alerts| H
+    E -->|"Processed Streams"| G
+    E -->|"Critical Alerts"| H
     
-    G --> I[Live Dashboards]
+    G --> I["Live Dashboards"]
 ```
 
 ---

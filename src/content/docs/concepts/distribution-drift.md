@@ -69,21 +69,21 @@ Cách thức triển khai một hệ thống giám sát Distribution Drift (MLOp
 
 ```mermaid
 graph TD
-    subgraph Data Pipeline
-        DB[(Production DWH)]
+    subgraph "Data Pipeline"
+        DB["(Production DWH)"]
     end
 
-    subgraph Drift Monitoring Engine (Evidently / Monte Carlo)
-        Ref[Reference Data Profile \n Baseline (Past 30d)]
-        Cur[Current Data Profile \n Today]
+    subgraph "Drift Monitoring Engine  (Evidently / Monte Carlo)"
+        Ref["Reference Data Profile \n Baseline (Past 30d)"]
+        Cur["Current Data Profile \n Today"]
         
-        Ref --> Test{Statistical Tests \n PSI, K-S Test}
+        Ref --> Test{"Statistical Tests \n PSI, K-S Test"}
         Cur --> Test
     end
 
     subgraph Actions
-        Alert[Slack Alert: Distribution Drift]
-        MLOps[Trigger ML Pipeline to Retrain Model]
+        Alert["Slack Alert: Distribution Drift"]
+        MLOps["Trigger ML Pipeline to Retrain Model"]
     end
 
     DB -- "Daily Extract/Sample" --> Cur

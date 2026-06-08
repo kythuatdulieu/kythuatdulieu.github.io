@@ -56,31 +56,31 @@ Kiến trúc ELT Pipeline điển hình áp dụng Medallion Architecture:
 
 ```mermaid
 graph LR
-    subgraph Data Sources
-        A[PostgreSQL OLTP]
-        B[Third-party API]
+    subgraph "Data Sources"
+        A["PostgreSQL OLTP"]
+        B["Third-party API"]
     end
 
-    subgraph Data Ingestion
-        C[Airbyte / Fivetran]
+    subgraph "Data Ingestion"
+        C["Airbyte / Fivetran"]
     end
 
-    subgraph Cloud Data Warehouse
-        D[(Bronze: Raw Data)]
-        E[(Silver: Clean & Join)]
-        F[(Gold: Data Marts)]
+    subgraph "Cloud Data Warehouse"
+        D["(Bronze: Raw Data)"]
+        E["(Silver: Clean & Join)"]
+        F["(Gold: Data Marts)"]
         D -. "dbt (Transform)" .-> E
         E -. "dbt (Transform)" .-> F
     end
 
-    subgraph Orchestration & Monitoring
-        G[Apache Airflow]
-        H[Great Expectations / dbt tests]
+    subgraph "Orchestration & Monitoring"
+        G["Apache Airflow"]
+        H["Great Expectations / dbt tests"]
     end
 
-    A -->|CDC| C
-    B -->|REST / Batch| C
-    C -->|Load (EL)| D
+    A -->|"CDC"| C
+    B -->|"REST / Batch"| C
+    C -->|"Load (EL)"| D
     G -. "Trigger Ingestion" .-> C
     G -. "Trigger Transform" .-> D
     H -. "Data Quality Check" .-> E
@@ -134,9 +134,9 @@ graph LR
 ## Related concepts
 
 * [Medallion Architecture](/concepts/medallion-architecture)
-* [Change Data Capture (CDC)](/concepts/cdc)
+* Change Data Capture (CDC)
 * [Idempotency trong Data Engineering](/concepts/idempotency)
-* [ETL vs ELT](/concepts/etl-vs-elt)
+* ETL vs ELT
 
 ---
 

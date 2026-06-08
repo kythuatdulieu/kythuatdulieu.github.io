@@ -184,8 +184,8 @@ quality:
 
 * [Data Mesh](/concepts/data-mesh)
 * [Data Quality](/concepts/data-quality)
-* [Schema Registry](/concepts/schema-registry)
-* [Data as a Product](/concepts/data-as-a-product)
+* Schema Registry
+* Data as a Product
 
 ---
 

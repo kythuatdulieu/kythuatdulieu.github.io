@@ -133,9 +133,9 @@ graph TD
 ## Related concepts
 
 * [Data Skew](/concepts/data-skew)
-* [Distributed Computing](/concepts/distributed-computing)
-* [Adaptive Query Execution (AQE)](/concepts/aqe)
-* [Broadcast Join](/concepts/broadcast-join)
+* Distributed Computing
+* Adaptive Query Execution (AQE)
+* Broadcast Join
 
 ---
 

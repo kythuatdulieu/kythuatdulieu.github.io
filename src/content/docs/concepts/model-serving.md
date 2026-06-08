@@ -69,37 +69,9 @@ Sơ đồ dưới đây mô tả một kiến trúc Model Serving chuẩn với 
 
 ```mermaid
 graph TD
-    Client1[Client Web]
-    Client2[Mobile App]
-    
-    subgraph K8s Cluster / Serving Infrastructure
-        API[API Gateway / Load Balancer]
-        
-        subgraph Model Server Pod
-            Queue[Request Queue <br> Dynamic Batcher]
-            
-            subgraph Inference Engine
-                Prep[Tokenizer / Pre-processing]
-                Engine[GPU Compute <br> TensorRT / vLLM]
-                Post[De-Tokenizer / Post-processing]
-            end
-        end
-    end
-    
-    Registry[(Model Registry <br> S3 / MLflow)]
-    
-    Client1 -- "REST / gRPC" --> API
-    Client2 -- "REST / gRPC" --> API
-    API --> Queue
-    
-    Queue -- "Batched Tensors" --> Prep
-    Prep --> Engine
-    Engine --> Post
-    Post -- "Response" --> API
-    API -- "Result" --> Client1
-    API -- "Result" --> Client2
-    
-    Registry -. "Pull weights on startup" .-> Model Server Pod
+    Client[Client App] --> API[API Gateway]
+    API --> ModelPod[Model Server Pod]
+    ModelPod --> Compute[GPU Inference]
 ```
 
 ---
@@ -193,10 +165,10 @@ print(response.choices[0].message.content)
 
 ## Related concepts
 
-* [MLOps](/concepts/mlops)
+* MLOps
 * [LLM (Large Language Models)](/concepts/llm)
 * [Low-Rank Adaptation (LoRA)](/concepts/lora)
-* [Microservices Architecture](/concepts/microservices)
+* Microservices Architecture
 
 ---
 

@@ -142,8 +142,8 @@ TO ROLE marketing_data_owner REVOKE CURRENT GRANTS;
 
 * [Data Governance](/concepts/data-governance)
 * [Data Mesh](/concepts/data-mesh)
-* [Data Stewardship](/concepts/data-stewardship)
-* [Data as a Product](/concepts/data-as-a-product)
+* Data Stewardship
+* Data as a Product
 
 ---
 

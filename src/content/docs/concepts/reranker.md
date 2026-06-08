@@ -69,21 +69,10 @@ Khi bạn gọi một API Reranker (ví dụ Cohere Rerank, BAAI/bge-reranker-la
 
 ```mermaid
 graph TD
-    subgraph Bi-Encoder (Embedding Model)
-        Q1[Query] -->|BERT| V1[Vector Q]
-        D1[Document] -->|BERT| V2[Vector D]
-        V1 --> Cosine((Cosine))
-        V2 --> Cosine
-        Cosine --> S1[Score]
-    end
-
-    subgraph Cross-Encoder (Reranker Model)
-        Q2[Query] --> Concat[Query + SEP + Document]
-        D2[Document] --> Concat
-        Concat --> BERT[Deep Transformer Layers <br> with Cross-Attention]
-        BERT -->|CLS Token| Linear[Linear + Sigmoid]
-        Linear --> S2[Score]
-    end
+    Q[Query] --> V1[Vector Q]
+    D[Document] --> V2[Vector D]
+    V1 --> Cosine[Cosine Similarity]
+    V2 --> Cosine
 ```
 
 ---

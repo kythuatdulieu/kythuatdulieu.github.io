@@ -62,23 +62,23 @@ Một nền tảng Data Observability (như Monte Carlo, Databand, Metaplane) ho
 
 ```mermaid
 graph TD
-    subgraph Data Stack
-        Sources[PostgreSQL / APIs / Kafka]
-        Storage[Snowflake / BigQuery DWH]
-        Transform[dbt / Airflow]
-        BI[Tableau / Looker]
+    subgraph "Data Stack"
+        Sources["PostgreSQL / APIs / Kafka"]
+        Storage["Snowflake / BigQuery DWH"]
+        Transform["dbt / Airflow"]
+        BI["Tableau / Looker"]
     end
 
-    subgraph Data Observability Platform
-        Meta[Metadata Extractor]
-        ML[Anomaly Detection Engine (ML)]
-        Lineage[Data Lineage Engine]
-        UI[Root Cause Analysis Dashboard]
+    subgraph "Data Observability Platform"
+        Meta["Metadata Extractor"]
+        ML["Anomaly Detection Engine (ML)"]
+        Lineage["Data Lineage Engine"]
+        UI["Root Cause Analysis Dashboard"]
     end
 
-    subgraph Incident Response
-        Slack[Slack Alerts]
-        Jira[Jira Tickets]
+    subgraph "Incident Response"
+        Slack["Slack Alerts"]
+        Jira["Jira Tickets"]
     end
 
     Sources --> Transform

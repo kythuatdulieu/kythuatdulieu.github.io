@@ -61,28 +61,28 @@ Dưới đây là vòng đời khi sử dụng tính năng Clone trên Snowflake
 
 ```mermaid
 graph TD
-    subgraph Logical Tables (Metadata)
-        A[Table A: Original]
-        B[Table B: Cloned]
+    subgraph "Logical Tables  (Metadata)"
+        A["Table A: Original"]
+        B["Table B: Cloned"]
     end
 
-    subgraph Physical Storage (Micro-partitions)
-        P1[(Block 1)]
-        P2[(Block 2)]
-        P3[(Block 3 - Newly Inserted via Table B)]
-        P4[(Block 4 - Updated version of Block 1 via Table B)]
+    subgraph "Physical Storage  (Micro-partitions)"
+        P1["(Block 1)"]
+        P2["(Block 2)"]
+        P3["(Block 3 - Newly Inserted via Table B)"]
+        P4["(Block 4 - Updated version of Block 1 via Table B)"]
     end
 
     %% State 1: Just Cloned
-    A -->|Pointer| P1
-    A -->|Pointer| P2
+    A -->|"Pointer"| P1
+    A -->|"Pointer"| P2
     
-    B -->|Pointer| P1
-    B -->|Pointer| P2
+    B -->|"Pointer"| P1
+    B -->|"Pointer"| P2
     
     %% State 2: Table B diverges (Insert & Update)
-    B -.->|Pointer shifts to new| P4
-    B -->|New Data Pointer| P3
+    B -.->|"Pointer shifts to new"| P4
+    B -->|"New Data Pointer"| P3
     
     %% Table A keeps original pointers
 ```

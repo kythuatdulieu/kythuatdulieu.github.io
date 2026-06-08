@@ -158,7 +158,7 @@ erDiagram
 
 * [Data Warehouse](/concepts/data-warehouse)
 * [Slowly Changing Dimension (SCD)](/concepts/slowly-changing-dimension)
-* [Fact Table vs Dimension Table](/concepts/fact-vs-dimension)
+* Fact Table vs Dimension Table
 
 ---
 
