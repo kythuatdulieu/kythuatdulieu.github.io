@@ -179,6 +179,10 @@
       "title": "Phân vùng Dữ liệu - Partitioning"
     },
     {
+      "url": "/concepts/etl-elt/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
+    },
+    {
       "url": "/concepts/etl-elt/elt/",
       "title": "ELT (Extract, Load, Transform)"
     },
@@ -529,6 +533,10 @@
     {
       "url": "/concepts/data-warehouse/dimensional-modeling/",
       "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/data-warehouse/fact-table/",
+      "title": "Bảng sự kiện - Fact Table"
     },
     {
       "url": "/concepts/data-warehouse/slowly-changing-dimension/",
@@ -1429,6 +1437,10 @@
       "title": "Google BigQuery - Nền tảng phân tích Serverless"
     },
     {
+      "url": "/concepts/etl-elt/etl/",
+      "title": "ETL (Extract, Transform, Load)"
+    },
+    {
       "url": "/learning-paths/cloud-data-engineer/",
       "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
     }
@@ -1529,8 +1541,16 @@
       "title": "Bảng chiều - Dimension Table"
     },
     {
+      "url": "/concepts/data-warehouse/dimensional-modeling/",
+      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
       "url": "/concepts/etl-elt/data-loading/",
       "title": "Data Loading"
+    },
+    {
+      "url": "/concepts/etl-elt/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
     },
     {
       "url": "/concepts/etl-elt/idempotency/",
@@ -1569,6 +1589,10 @@
     {
       "url": "/concepts/database-storage/clustering/",
       "title": "Phân cụm Dữ liệu - Clustering"
+    },
+    {
+      "url": "/concepts/etl-elt/data-loading/",
+      "title": "Data Loading"
     },
     {
       "url": "/concepts/system-architecture/modern-data-stack/",
@@ -1715,10 +1739,6 @@
       "title": "Time Travel"
     },
     {
-      "url": "/concepts/etl-elt/change-data-capture/",
-      "title": "Change Data Capture (CDC)"
-    },
-    {
       "url": "/concepts/data-lake-lakehouse/apache-iceberg/",
       "title": "Apache Iceberg - Định dạng bảng thế hệ mới"
     },
@@ -1787,10 +1807,6 @@
       "title": "Apache Hudi"
     },
     {
-      "url": "/concepts/etl-elt/data-extraction/",
-      "title": "Data Extraction"
-    },
-    {
       "url": "/concepts/etl-elt/incremental-load/",
       "title": "Incremental Load"
     },
@@ -1829,6 +1845,10 @@
     {
       "url": "/concepts/data-warehouse/slowly-changing-dimension/",
       "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
+    },
+    {
+      "url": "/concepts/etl-elt/data-extraction/",
+      "title": "Data Extraction"
     },
     {
       "url": "/concepts/etl-elt/data-ingestion/",
@@ -1937,6 +1957,14 @@
       "title": "Bảng chiều - Dimension Table"
     },
     {
+      "url": "/concepts/data-warehouse/dimensional-modeling/",
+      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/data-warehouse/fact-table/",
+      "title": "Bảng sự kiện - Fact Table"
+    },
+    {
       "url": "/concepts/data-warehouse/unity-catalog/",
       "title": "Unity Catalog"
     },
@@ -2041,20 +2069,12 @@
       "title": "Compaction"
     },
     {
-      "url": "/concepts/etl-elt/change-data-capture/",
-      "title": "Change Data Capture (CDC)"
-    },
-    {
       "url": "/concepts/etl-elt/elt/",
       "title": "ELT (Extract, Load, Transform)"
     },
     {
       "url": "/concepts/foundation/data-lifecycle/",
       "title": "Vòng đời Dữ liệu - Data Lifecycle"
-    },
-    {
-      "url": "/concepts/foundation/data-pipeline/",
-      "title": "Đường ống Dữ liệu - Data Pipeline"
     },
     {
       "url": "/concepts/data-quality/data-quality/",
@@ -2071,6 +2091,10 @@
     {
       "url": "/concepts/foundation/data-engineering/",
       "title": "Kỹ thuật Dữ liệu - Data Engineering"
+    },
+    {
+      "url": "/concepts/foundation/source-systems/",
+      "title": "Hệ thống Nguồn - Source Systems"
     },
     {
       "url": "/concepts/genai-ml/chunking/",
@@ -2115,6 +2139,18 @@
       "title": "Kho dữ liệu phân tích - Data Warehouse"
     },
     {
+      "url": "/concepts/data-warehouse/dimensional-modeling/",
+      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/data-warehouse/fact-table/",
+      "title": "Bảng sự kiện - Fact Table"
+    },
+    {
+      "url": "/concepts/etl-elt/data-transformation/",
+      "title": "Data Transformation"
+    },
+    {
       "url": "/concepts/foundation/data-platform-architecture/",
       "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
     },
@@ -2149,10 +2185,6 @@
       "title": "Lược đồ hình sao - Star Schema"
     },
     {
-      "url": "/concepts/etl-elt/data-transformation/",
-      "title": "Data Transformation"
-    },
-    {
       "url": "/concepts/transformation-analytics/dbt-models/",
       "title": "dbt Models - Tầng biến đổi và cấu trúc dự án"
     },
@@ -2175,6 +2207,14 @@
     {
       "url": "/concepts/data-warehouse/surrogate-key/",
       "title": "Khóa thay thế - Surrogate Key"
+    },
+    {
+      "url": "/concepts/database-storage/olap/",
+      "title": "Xử lý Phân tích Trực tuyến - OLAP"
+    },
+    {
+      "url": "/concepts/etl-elt/data-transformation/",
+      "title": "Data Transformation"
     },
     {
       "url": "/concepts/foundation/data-engineer-role/",
@@ -2377,10 +2417,6 @@
       "title": "Kiểm thử dữ liệu động - Data Testing"
     },
     {
-      "url": "/concepts/etl-elt/deduplication/",
-      "title": "Loại bỏ trùng lặp - Deduplication"
-    },
-    {
       "url": "/concepts/observability-reliability/distribution-drift/",
       "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
     },
@@ -2419,6 +2455,10 @@
     {
       "url": "/concepts/etl-elt/data-transformation/",
       "title": "Data Transformation"
+    },
+    {
+      "url": "/concepts/etl-elt/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
     },
     {
       "url": "/concepts/foundation/data-engineer-role/",
@@ -2857,6 +2897,10 @@
       "title": "ELT (Extract, Load, Transform)"
     },
     {
+      "url": "/concepts/etl-elt/idempotency/",
+      "title": "Tính lũy đẳng - Idempotency"
+    },
+    {
       "url": "/concepts/etl-elt/incremental-load/",
       "title": "Incremental Load"
     },
@@ -3123,10 +3167,6 @@
     {
       "url": "/concepts/database-storage/file-formats/",
       "title": "Định dạng Tệp Dữ liệu - File Formats"
-    },
-    {
-      "url": "/concepts/etl-elt/data-loading/",
-      "title": "Data Loading"
     },
     {
       "url": "/concepts/etl-elt/idempotency/",
@@ -3501,6 +3541,10 @@
       "title": "Phân vùng Dữ liệu - Partitioning"
     },
     {
+      "url": "/concepts/genai-ml/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
       "url": "/concepts/genai-ml/embedding-model/",
       "title": "Mô hình nhúng - Embedding Model"
     },
@@ -3607,10 +3651,6 @@
       "title": "Backfill"
     },
     {
-      "url": "/concepts/etl-elt/data-extraction/",
-      "title": "Data Extraction"
-    },
-    {
       "url": "/concepts/etl-elt/etl/",
       "title": "ETL (Extract, Transform, Load)"
     },
@@ -3671,8 +3711,8 @@
       "title": "Khóa thay thế - Surrogate Key"
     },
     {
-      "url": "/concepts/etl-elt/change-data-capture/",
-      "title": "Change Data Capture (CDC)"
+      "url": "/concepts/etl-elt/data-extraction/",
+      "title": "Data Extraction"
     },
     {
       "url": "/concepts/etl-elt/data-ingestion/",
@@ -3772,18 +3812,6 @@
     }
   ],
   "/concepts/etl-elt/etl/": [
-    {
-      "url": "/concepts/etl-elt/data-extraction/",
-      "title": "Data Extraction"
-    },
-    {
-      "url": "/concepts/etl-elt/data-loading/",
-      "title": "Data Loading"
-    },
-    {
-      "url": "/concepts/etl-elt/data-transformation/",
-      "title": "Data Transformation"
-    },
     {
       "url": "/concepts/etl-elt/elt/",
       "title": "ELT (Extract, Load, Transform)"
@@ -3925,8 +3953,20 @@
       "title": "Change Data Capture (CDC)"
     },
     {
+      "url": "/concepts/etl-elt/data-extraction/",
+      "title": "Data Extraction"
+    },
+    {
       "url": "/concepts/etl-elt/data-ingestion/",
       "title": "Data Ingestion"
+    },
+    {
+      "url": "/concepts/etl-elt/data-loading/",
+      "title": "Data Loading"
+    },
+    {
+      "url": "/concepts/etl-elt/data-transformation/",
+      "title": "Data Transformation"
     },
     {
       "url": "/concepts/etl-elt/deduplication/",
@@ -4053,60 +4093,6 @@
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
     }
   ],
-  "/concepts/etl-elt/idempotency/": [
-    {
-      "url": "/concepts/etl-elt/data-loading/",
-      "title": "Data Loading"
-    },
-    {
-      "url": "/concepts/etl-elt/backfill/",
-      "title": "Backfill"
-    },
-    {
-      "url": "/concepts/etl-elt/deduplication/",
-      "title": "Loại bỏ trùng lặp - Deduplication"
-    },
-    {
-      "url": "/concepts/etl-elt/etl/",
-      "title": "ETL (Extract, Transform, Load)"
-    },
-    {
-      "url": "/concepts/foundation/data-engineering/",
-      "title": "Kỹ thuật Dữ liệu - Data Engineering"
-    },
-    {
-      "url": "/concepts/foundation/data-pipeline/",
-      "title": "Đường ống Dữ liệu - Data Pipeline"
-    },
-    {
-      "url": "/concepts/orchestration/orchestration/",
-      "title": "Orchestration - Lập lịch và điều phối dữ liệu"
-    },
-    {
-      "url": "/concepts/orchestration/retries-sla/",
-      "title": "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
-    },
-    {
-      "url": "/concepts/streaming-processing/exactly-once-semantics/",
-      "title": "Exactly-Once Semantics (EOS) - Xử lý chính xác một lần"
-    },
-    {
-      "url": "/concepts/system-architecture/event-driven-architecture/",
-      "title": "Event-Driven Architecture"
-    },
-    {
-      "url": "/concepts/system-architecture/real-time-architecture/",
-      "title": "Real-time Architecture"
-    },
-    {
-      "url": "/interview/pipeline-design-interview/",
-      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
-    },
-    {
-      "url": "/interview/production-incident-qa/",
-      "title": "Xử lý sự cố Production (Phỏng vấn) - Production Incident QA"
-    }
-  ],
   "/concepts/etl-elt/data-extraction/": [
     {
       "url": "/concepts/etl-elt/etl/",
@@ -4175,6 +4161,10 @@
     {
       "url": "/concepts/data-lake-lakehouse/delta-lake/",
       "title": "Delta Lake - Bảng dữ liệu giao dịch mở"
+    },
+    {
+      "url": "/concepts/etl-elt/data-transformation/",
+      "title": "Data Transformation"
     },
     {
       "url": "/concepts/genai-ml/model-serving/",
@@ -4271,10 +4261,6 @@
       "title": "Kiểm thử dữ liệu động - Data Testing"
     },
     {
-      "url": "/concepts/data-warehouse/fact-table/",
-      "title": "Bảng sự kiện - Fact Table"
-    },
-    {
       "url": "/concepts/database-storage/compression-algorithms/",
       "title": "Thuật toán nén dữ liệu - Compression Algorithms"
     },
@@ -4299,8 +4285,16 @@
       "title": "Data Ingestion"
     },
     {
+      "url": "/concepts/etl-elt/data-loading/",
+      "title": "Data Loading"
+    },
+    {
       "url": "/concepts/etl-elt/data-transformation/",
       "title": "Data Transformation"
+    },
+    {
+      "url": "/concepts/etl-elt/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
     },
     {
       "url": "/concepts/etl-elt/elt/",
@@ -4313,14 +4307,6 @@
     {
       "url": "/concepts/etl-elt/idempotency/",
       "title": "Tính lũy đẳng - Idempotency"
-    },
-    {
-      "url": "/concepts/etl-elt/incremental-load/",
-      "title": "Incremental Load"
-    },
-    {
-      "url": "/concepts/foundation/data-pipeline/",
-      "title": "Đường ống Dữ liệu - Data Pipeline"
     },
     {
       "url": "/concepts/foundation/source-systems/",
@@ -4383,10 +4369,6 @@
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/",
       "title": "Ngân hàng Phỏng vấn (Interview)"
     },
@@ -4431,76 +4413,6 @@
     {
       "url": "/interview/cloud-platform-interview/",
       "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
-    }
-  ],
-  "/concepts/orchestration/orchestration/": [
-    {
-      "url": "/concepts/foundation/data-pipeline/",
-      "title": "Đường ống Dữ liệu - Data Pipeline"
-    },
-    {
-      "url": "/concepts/orchestration/apache-airflow/",
-      "title": "Apache Airflow - Nền tảng điều phối dữ liệu"
-    },
-    {
-      "url": "/concepts/orchestration/dag/",
-      "title": "DAG (Đồ thị có hướng không chu trình) trong Data Engineering"
-    },
-    {
-      "url": "/concepts/orchestration/sensors/",
-      "title": "Sensors - Tác vụ cảm biến chờ đợi"
-    },
-    {
-      "url": "/concepts/foundation/data-engineer-role/",
-      "title": "Vai trò Kỹ sư Dữ liệu - Data Engineer Role"
-    },
-    {
-      "url": "/concepts/foundation/data-engineering/",
-      "title": "Kỹ thuật Dữ liệu - Data Engineering"
-    },
-    {
-      "url": "/concepts/foundation/data-platform-architecture/",
-      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
-    },
-    {
-      "url": "/concepts/governance-metadata/data-catalog/",
-      "title": "Danh mục dữ liệu - Data Catalog"
-    },
-    {
-      "url": "/concepts/governance-metadata/metadata-management/",
-      "title": "Quản lý siêu dữ liệu - Metadata Management"
-    },
-    {
-      "url": "/concepts/observability-reliability/data-observability/",
-      "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
-    },
-    {
-      "url": "/concepts/orchestration/airflow-scheduler/",
-      "title": "Airflow Scheduler - Bộ não điều phối"
-    },
-    {
-      "url": "/concepts/orchestration/retries-sla/",
-      "title": "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
-    },
-    {
-      "url": "/concepts/orchestration/task-dependency/",
-      "title": "Task Dependency - Quản lý sự phụ thuộc tác vụ"
-    },
-    {
-      "url": "/concepts/system-architecture/data-fabric/",
-      "title": "Data Fabric"
-    },
-    {
-      "url": "/concepts/system-architecture/event-driven-architecture/",
-      "title": "Event-Driven Architecture"
-    },
-    {
-      "url": "/concepts/system-architecture/modern-data-stack/",
-      "title": "Modern Data Stack"
-    },
-    {
-      "url": "/interview/pipeline-design-interview/",
-      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     }
   ],
   "/concepts/observability-reliability/schema-drift/": [
@@ -4660,7 +4572,7 @@
     },
     {
       "url": "/",
-      "title": "Data Engineering Handbook"
+      "title": "Kỹ Thuật Dữ Liệu"
     }
   ],
   "/concepts/genai-ml/rag/": [
@@ -4766,7 +4678,7 @@
     },
     {
       "url": "/",
-      "title": "Data Engineering Handbook"
+      "title": "Kỹ Thuật Dữ Liệu"
     }
   ],
   "/concepts/genai-ml/system-prompt/": [
@@ -4841,6 +4753,10 @@
     {
       "url": "/concepts/genai-ml/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/concepts/genai-ml/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
     },
     {
       "url": "/concepts/genai-ml/few-shot/",
@@ -5401,10 +5317,6 @@
     {
       "url": "/concepts/genai-ml/peft/",
       "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
-    },
-    {
-      "url": "/concepts/genai-ml/reranker/",
-      "title": "Mô hình tái sắp xếp - Reranker"
     }
   ],
   "/concepts/genai-ml/reranking/": [
@@ -5977,6 +5889,10 @@
       "title": "Đối soát dữ liệu - Data Reconciliation"
     },
     {
+      "url": "/concepts/etl-elt/backfill/",
+      "title": "Backfill"
+    },
+    {
       "url": "/concepts/foundation/data-engineer-role/",
       "title": "Vai trò Kỹ sư Dữ liệu - Data Engineer Role"
     },
@@ -6045,6 +5961,80 @@
     {
       "url": "/concepts/orchestration/sensors/",
       "title": "Sensors - Tác vụ cảm biến chờ đợi"
+    }
+  ],
+  "/concepts/orchestration/orchestration/": [
+    {
+      "url": "/concepts/orchestration/apache-airflow/",
+      "title": "Apache Airflow - Nền tảng điều phối dữ liệu"
+    },
+    {
+      "url": "/concepts/orchestration/dag/",
+      "title": "DAG (Đồ thị có hướng không chu trình) trong Data Engineering"
+    },
+    {
+      "url": "/concepts/orchestration/sensors/",
+      "title": "Sensors - Tác vụ cảm biến chờ đợi"
+    },
+    {
+      "url": "/concepts/etl-elt/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/foundation/data-engineer-role/",
+      "title": "Vai trò Kỹ sư Dữ liệu - Data Engineer Role"
+    },
+    {
+      "url": "/concepts/foundation/data-engineering/",
+      "title": "Kỹ thuật Dữ liệu - Data Engineering"
+    },
+    {
+      "url": "/concepts/foundation/data-pipeline/",
+      "title": "Đường ống Dữ liệu - Data Pipeline"
+    },
+    {
+      "url": "/concepts/foundation/data-platform-architecture/",
+      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
+    },
+    {
+      "url": "/concepts/governance-metadata/data-catalog/",
+      "title": "Danh mục dữ liệu - Data Catalog"
+    },
+    {
+      "url": "/concepts/governance-metadata/metadata-management/",
+      "title": "Quản lý siêu dữ liệu - Metadata Management"
+    },
+    {
+      "url": "/concepts/observability-reliability/data-observability/",
+      "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
+    },
+    {
+      "url": "/concepts/orchestration/airflow-scheduler/",
+      "title": "Airflow Scheduler - Bộ não điều phối"
+    },
+    {
+      "url": "/concepts/orchestration/retries-sla/",
+      "title": "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
+    },
+    {
+      "url": "/concepts/orchestration/task-dependency/",
+      "title": "Task Dependency - Quản lý sự phụ thuộc tác vụ"
+    },
+    {
+      "url": "/concepts/system-architecture/data-fabric/",
+      "title": "Data Fabric"
+    },
+    {
+      "url": "/concepts/system-architecture/event-driven-architecture/",
+      "title": "Event-Driven Architecture"
+    },
+    {
+      "url": "/concepts/system-architecture/modern-data-stack/",
+      "title": "Modern Data Stack"
+    },
+    {
+      "url": "/interview/pipeline-design-interview/",
+      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     }
   ],
   "/concepts/orchestration/airflow-scheduler/": [
@@ -6163,8 +6153,16 @@
       "title": "Change Data Capture (CDC)"
     },
     {
+      "url": "/concepts/etl-elt/data-ingestion/",
+      "title": "Data Ingestion"
+    },
+    {
       "url": "/concepts/etl-elt/deduplication/",
       "title": "Loại bỏ trùng lặp - Deduplication"
+    },
+    {
+      "url": "/concepts/etl-elt/idempotency/",
+      "title": "Tính lũy đẳng - Idempotency"
     },
     {
       "url": "/concepts/system-architecture/event-driven-architecture/",
@@ -6601,6 +6599,10 @@
       "title": "Định dạng Tệp Dữ liệu - File Formats"
     },
     {
+      "url": "/concepts/etl-elt/data-transformation/",
+      "title": "Data Transformation"
+    },
+    {
       "url": "/concepts/foundation/data-engineering/",
       "title": "Kỹ thuật Dữ liệu - Data Engineering"
     },
@@ -6673,8 +6675,70 @@
       "title": "Kho dữ liệu phân tích - Data Warehouse"
     },
     {
+      "url": "/concepts/etl-elt/data-ingestion/",
+      "title": "Data Ingestion"
+    },
+    {
+      "url": "/concepts/etl-elt/incremental-load/",
+      "title": "Incremental Load"
+    },
+    {
       "url": "/concepts/observability-reliability/volume-anomalies/",
       "title": "Phát hiện bất thường về khối lượng dữ liệu - Volume Anomalies"
+    }
+  ],
+  "/concepts/etl-elt/idempotency/": [
+    {
+      "url": "/concepts/etl-elt/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/etl-elt/data-loading/",
+      "title": "Data Loading"
+    },
+    {
+      "url": "/concepts/etl-elt/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
+    },
+    {
+      "url": "/concepts/etl-elt/etl/",
+      "title": "ETL (Extract, Transform, Load)"
+    },
+    {
+      "url": "/concepts/foundation/data-engineering/",
+      "title": "Kỹ thuật Dữ liệu - Data Engineering"
+    },
+    {
+      "url": "/concepts/foundation/data-pipeline/",
+      "title": "Đường ống Dữ liệu - Data Pipeline"
+    },
+    {
+      "url": "/concepts/orchestration/orchestration/",
+      "title": "Orchestration - Lập lịch và điều phối dữ liệu"
+    },
+    {
+      "url": "/concepts/orchestration/retries-sla/",
+      "title": "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
+    },
+    {
+      "url": "/concepts/streaming-processing/exactly-once-semantics/",
+      "title": "Exactly-Once Semantics (EOS) - Xử lý chính xác một lần"
+    },
+    {
+      "url": "/concepts/system-architecture/event-driven-architecture/",
+      "title": "Event-Driven Architecture"
+    },
+    {
+      "url": "/concepts/system-architecture/real-time-architecture/",
+      "title": "Real-time Architecture"
+    },
+    {
+      "url": "/interview/pipeline-design-interview/",
+      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
+    },
+    {
+      "url": "/interview/production-incident-qa/",
+      "title": "Xử lý sự cố Production (Phỏng vấn) - Production Incident QA"
     }
   ],
   "/concepts/transformation-analytics/sql-transformation/": [

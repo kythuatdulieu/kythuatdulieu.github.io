@@ -68,20 +68,24 @@ const pageBacklinks = backlinks[currentPath] || [];
       container.appendChild(script);
     }
 
-    // Run when the page content is fully swapped by Astro ViewTransitions
-    document.addEventListener('astro:page-load', () => {
-      loadUtterances();
-      
-      // Watch for Starlight dark/light mode toggles
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'data-theme') {
-            loadUtterances();
-          }
+    // Run immediately since Starlight might not use ViewTransitions
+    // Use requestAnimationFrame to ensure the DOM element is fully ready
+    requestAnimationFrame(() => {
+        loadUtterances();
+        
+        // Watch for Starlight dark/light mode toggles
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-theme') {
+              loadUtterances();
+            }
+          });
         });
-      });
-      observer.observe(document.documentElement, { attributes: true });
+        observer.observe(document.documentElement, { attributes: true });
     });
+
+    // Also keep the astro:page-load hook just in case ViewTransitions is enabled later
+    document.addEventListener('astro:page-load', loadUtterances);
   </script>
 
   <p style="font-size: 0.85rem; color: var(--sl-color-gray-4); margin-top: 0.5rem; text-align: center;">

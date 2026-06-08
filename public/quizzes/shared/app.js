@@ -222,6 +222,87 @@
         return null;
     }
 
+    // Helper to append text with bold and inline code formatted
+    function appendFormattedText(element, text) {
+        const parts = text.split(/(\*\*.*?\*\*|`.*?`)/);
+        parts.forEach(part => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+                const bold = document.createElement('strong');
+                bold.textContent = part.slice(2, -2);
+                element.appendChild(bold);
+            } else if (part.startsWith('`') && part.endsWith('`')) {
+                const code = document.createElement('code');
+                code.textContent = part.slice(1, -1);
+                element.appendChild(code);
+            } else if (part) {
+                element.appendChild(document.createTextNode(part));
+            }
+        });
+    }
+
+    // Helper to render markdown-like text to a container safely
+    function renderMarkdownSafely(container, markdownText) {
+        container.replaceChildren();
+        if (!markdownText) return;
+
+        const lines = markdownText.split('\n');
+        let currentList = null;
+
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) {
+                currentList = null;
+                return;
+            }
+
+            // Bullet list item
+            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                if (!currentList || currentList.tagName !== 'UL') {
+                    currentList = document.createElement('ul');
+                    currentList.className = 'explanation-list';
+                    container.appendChild(currentList);
+                }
+                const li = document.createElement('li');
+                appendFormattedText(li, trimmed.substring(2));
+                currentList.appendChild(li);
+            }
+            // Numbered list item
+            else if (/^(?:\-\s*)?\d+\.\s+/.test(trimmed)) {
+                const match = trimmed.match(/^(?:\-\s*)?(\d+\.\s+)(.*)/);
+                if (!currentList || currentList.tagName !== 'OL') {
+                    currentList = document.createElement('ol');
+                    currentList.className = 'explanation-list';
+                    container.appendChild(currentList);
+                }
+                const li = document.createElement('li');
+                appendFormattedText(li, match[2]);
+                currentList.appendChild(li);
+            }
+            // Headings
+            else if (trimmed.startsWith('### ')) {
+                currentList = null;
+                const h4 = document.createElement('h4');
+                h4.className = 'explanation-heading';
+                appendFormattedText(h4, trimmed.substring(4));
+                container.appendChild(h4);
+            } else if (trimmed.startsWith('## ')) {
+                currentList = null;
+                const h3 = document.createElement('h3');
+                h3.className = 'explanation-heading';
+                appendFormattedText(h3, trimmed.substring(3));
+                container.appendChild(h3);
+            }
+            // Paragraph
+            else {
+                currentList = null;
+                const p = document.createElement('p');
+                p.className = 'explanation-paragraph';
+                appendFormattedText(p, trimmed);
+                container.appendChild(p);
+            }
+        });
+    }
+
     // ========================
     // Rendering
     // ========================
@@ -362,15 +443,49 @@
         }
 
         if (answered && q.explanation_vi) {
-            explanationDiv.innerHTML = '';
+            explanationDiv.replaceChildren();
+
             const title = document.createElement('div');
             title.className = 'explanation-title';
             title.textContent = '💡 Giải thích';
             explanationDiv.appendChild(title);
-            const body = document.createElement('pre');
-            body.className = 'explanation-body';
-            body.textContent = q.explanation_vi;
-            explanationDiv.appendChild(body);
+
+            const contentContainer = document.createElement('div');
+            contentContainer.className = 'explanation-content';
+            renderMarkdownSafely(contentContainer, q.explanation_vi);
+            explanationDiv.appendChild(contentContainer);
+
+            // References (Citations)
+            if (q.references && q.references.length > 0) {
+                const refBox = document.createElement('div');
+                refBox.className = 'references-box';
+
+                const refTitle = document.createElement('div');
+                refTitle.className = 'references-title';
+                refTitle.textContent = '📚 Tài liệu tham khảo:';
+                refBox.appendChild(refTitle);
+
+                const refList = document.createElement('ul');
+                refList.className = 'references-list';
+
+                q.references.forEach(ref => {
+                    if (ref.title && ref.url) {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.setAttribute('href', ref.url);
+                        a.setAttribute('target', '_blank');
+                        a.setAttribute('rel', 'noopener noreferrer');
+                        a.className = 'reference-link';
+                        a.textContent = ref.title;
+                        li.appendChild(a);
+                        refList.appendChild(li);
+                    }
+                });
+
+                refBox.appendChild(refList);
+                explanationDiv.appendChild(refBox);
+            }
+
             explanationDiv.style.display = 'block';
         } else {
             explanationDiv.style.display = 'none';

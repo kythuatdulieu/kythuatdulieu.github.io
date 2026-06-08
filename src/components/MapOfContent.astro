@@ -72,262 +72,413 @@ const hardcodedMOC = [
     concepts: ["Data Engineering Lifecycle", "Data Engineering Approaches", "The Role of a Data Engineer", "Data Engineer vs Software Engineer", "Retrieval-Augmented Generation (RAG)"]
   }
 ];
+
+const defaultBacklinks = [
+  { url: "/concepts/foundation/data-platform-architecture/", title: "The Data Engineering Toolkit" },
+  { url: "/concepts/foundation/data-engineering/", title: "What is Data Engineering" },
+  { url: "/concepts/foundation/data-engineer-role/", title: "Book: The History and State of Data Engineering" }
+];
 ---
 
-<div class="moc-layout">
-    <!-- Cột Category (Danh mục) -->
+<div class="moc-container">
+    <div class="moc-main-content">
+        <!-- Title and Metadata -->
+        <h1 class="moc-title">Data Engineering Concepts</h1>
+        
+        <div class="moc-meta">
+            <span>Last updated Jun 8, 2026</span>
+            <span class="meta-dot">·</span>
+            <span>Created Aug 21, 2023</span>
+            <span class="meta-dot">·</span>
+            <span>5 min read</span>
+        </div>
+        
+        <!-- Table of Contents -->
+        <details class="moc-toc" open>
+            <summary>Table of Contents</summary>
+            <ul>
+                <li><a href="#how-to-use-this-map">1 How to Use This Map</a></li>
+                <li><a href="#quizzes">2 Luyện Đề Thi Thử (Practice Quizzes)</a></li>
+            </ul>
+        </details>
+        
+        <!-- Description -->
+        <p class="moc-description">
+            Nếu bạn muốn trở thành một kỹ sư dữ liệu (Data Engineer), hãy học các khái niệm này. Bảng phân loại dưới đây là Bản đồ nội dung (Map of Content - MOC) với 101 ý tưởng đầu vào cốt lõi kết nối tới toàn bộ Cẩm nang Kỹ thuật Dữ liệu. Đọc từ trên xuống dưới theo lộ trình học tập, hoặc nhảy vào bất kỳ chủ đề nào bạn cần đào sâu.
+        </p>
+        
+        <!-- The Table -->
+        <div class="moc-table-wrapper" id="concept-table">
+            <table class="moc-table">
+                <thead>
+                    <tr>
+                        <th class="col-category">Category</th>
+                        <th class="col-concepts">Data Engineering Concepts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {hardcodedMOC.map(group => {
+                        const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                        return (
+                            <tr id={`row-${catSlug}`}>
+                                <td class="cat-cell">
+                                    <strong>{group.category}</strong>
+                                </td>
+                                <td class="concepts-cell">
+                                    <div class="concepts-list">
+                                        {group.concepts.map((concept, index) => {
+                                            const url = getConceptUrl(concept);
+                                            const isLast = index === group.concepts.length - 1;
+                                            return (
+                                                <span class="concept-item-wrapper">
+                                                    {url ? (
+                                                        <a href={url} class="concept-tag active">
+                                                            {concept}
+                                                        </a>
+                                                    ) : (
+                                                        <span class="concept-tag inactive" title="Bài viết đang được cập nhật (Sắp có)">
+                                                            {concept}
+                                                        </span>
+                                                    )}
+                                                    {!isLast && <span class="comma">, </span>}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- How to Use Section -->
+        <section class="moc-section" id="how-to-use-this-map">
+            <h2>💡 How to Use This Map (Hướng dẫn sử dụng)</h2>
+            <ul>
+                <li><strong>Học theo lộ trình:</strong> Đọc bảng phân loại từ trên xuống dưới. Các khái niệm được sắp xếp từ cơ bản (Lưu trữ, Định dạng dữ liệu) đến nâng cao (Điều phối, Quản trị, GenAI/ML).</li>
+                <li><strong>Liên kết màu đỏ:</strong> Click vào các từ khóa có nền hồng, chữ đỏ để xem chi tiết bài học chi tiết của khái niệm đó.</li>
+                <li><strong>Khái niệm chưa có màu đỏ:</strong> Các khái niệm có viền xám đứt nét đang được soạn thảo và sẽ sớm xuất hiện.</li>
+                <li><strong>Xem liên kết ngược (Backlinks):</strong> Ở cuối mỗi bài viết sẽ có phần Liên kết ngược giúp bạn biết khái niệm đó được tham chiếu từ những bài học nào khác, tạo thành một mạng lưới kiến thức liên kết chặt chẽ.</li>
+            </ul>
+        </section>
+
+        <!-- Slot for Quizzes (which are passed from index.mdx) -->
+        <slot />
+    </div>
+    
+    <!-- Sidebar Column -->
     <aside class="moc-sidebar">
         <div class="moc-sidebar-sticky">
-            <h3 class="moc-sidebar-title">Danh mục (101 Concepts)</h3>
-            <ul class="moc-category-list" id="moc-category-list">
-                {hardcodedMOC.map(group => {
-                    const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                    return (
-                        <li class="moc-category-item" data-category={group.category}>
-                            <span class="drag-handle" title="Kéo thả để sắp xếp">⠿</span>
-                            <a href={`#cat-${catSlug}`} class="moc-category-link">{group.category}</a>
-                        </li>
-                    );
-                })}
-            </ul>
+            <h3 class="moc-sidebar-title">Backlinks</h3>
+            <div class="moc-backlinks-list">
+                {defaultBacklinks.map(link => (
+                    <a href={link.url} class="moc-backlink-card">
+                        <span class="moc-backlink-text">{link.title}</span>
+                    </a>
+                ))}
+            </div>
         </div>
     </aside>
-
-    <!-- Cột Content Map (Nội dung) -->
-    <div class="moc-content" id="moc-content-map">
-        {hardcodedMOC.map(group => {
-            const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-            return (
-                <section class="moc-section" id={`cat-${catSlug}`} data-category={group.category}>
-                    <h2 class="moc-section-title">{group.category}</h2>
-                    <div class="moc-grid">
-                        {group.concepts.map(concept => {
-                            const url = getConceptUrl(concept);
-                            return url ? (
-                                <a href={url} class="concept-card active">
-                                    <span class="concept-card-title">{concept}</span>
-                                    <svg class="concept-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                </a>
-                            ) : (
-                                <div class="concept-card inactive" title="Bài viết đang được cập nhật">
-                                    <span class="concept-card-title">{concept}</span>
-                                    <span class="concept-badge-soon">Sắp có</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </section>
-            );
-        })}
-    </div>
 </div>
 
 <style>
-.moc-layout {
+/* Theme Variables */
+:root {
+    --moc-bg: var(--sl-color-bg);
+    --moc-text: var(--sl-color-text);
+    --moc-meta-text: var(--sl-color-gray-3);
+    --moc-border: var(--sl-color-hairline);
+    --moc-th-bg: var(--sl-color-bg-nav);
+    --moc-tag-active-bg: #fff0f0;
+    --moc-tag-active-text: #c92a2a;
+    --moc-tag-active-border: #ffc9c9;
+    --moc-tag-inactive-bg: var(--sl-color-bg-inline-code);
+    --moc-tag-inactive-text: var(--sl-color-gray-4);
+    --moc-tag-inactive-border: var(--sl-color-hairline);
+    --moc-backlink-border: #ffc9c9;
+    --moc-backlink-bg: rgba(255, 240, 240, 0.4);
+    --moc-backlink-text: #c92a2a;
+}
+
+:root[data-theme="dark"] {
+    --moc-tag-active-bg: #2b1414;
+    --moc-tag-active-text: #ff8787;
+    --moc-tag-active-border: #5c2020;
+    --moc-backlink-border: #5c2020;
+    --moc-backlink-bg: rgba(43, 20, 20, 0.4);
+    --moc-backlink-text: #ff8787;
+}
+
+/* CSS Grid Container */
+.moc-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
-    margin: 2rem 0;
+    gap: 3rem;
+    margin: 1.5rem 0;
     font-family: var(--sl-font);
 }
 
-@media (min-width: 768px) {
-    .moc-layout {
-        grid-template-columns: 260px 1fr;
-        align-items: start;
+@media (min-width: 1024px) {
+    .moc-container {
+        grid-template-columns: 3.2fr 1fr;
     }
 }
 
-/* Sidebar Categories */
-.moc-sidebar-sticky {
-    position: sticky;
-    top: 6rem; /* Starlight header offset */
-    background: var(--sl-color-bg-nav);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--sl-color-hairline);
-    box-shadow: var(--sl-shadow-sm);
-}
-.moc-sidebar-title {
-    margin-top: 0 !important;
-    margin-bottom: 1rem !important;
-    font-size: 1.2rem;
-    color: var(--sl-color-white);
-    font-weight: 600;
-    border-bottom: 1px solid var(--sl-color-hairline);
-    padding-bottom: 0.5rem;
-}
-.moc-category-list {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-.moc-category-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid transparent;
-    transition: all 0.2s;
-}
-.moc-category-item:hover {
-    background-color: var(--sl-color-bg-inline-code);
-    border-radius: 6px;
-}
-.drag-handle {
-    cursor: grab;
-    color: var(--sl-color-gray-4);
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-    font-size: 1.1rem;
-    opacity: 0.3;
-    user-select: none;
-}
-.moc-category-item:hover .drag-handle {
-    opacity: 1;
-}
-.moc-category-link {
-    color: var(--sl-color-text-accent);
-    text-decoration: none !important;
-    font-size: 0.95rem;
-    font-weight: 500;
-    flex: 1;
-}
-.moc-category-link:hover {
-    color: var(--sl-color-accent);
-}
-
-/* Content Map Sections */
-.moc-content {
+/* Main Column Styles */
+.moc-main-content {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 1.5rem;
 }
-.moc-section {
-    scroll-margin-top: 6rem;
-}
-.moc-section-title {
-    font-size: 1.8rem;
+
+.moc-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
     color: var(--sl-color-white);
-    border-bottom: 2px solid var(--sl-color-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem !important;
-    margin-top: 0 !important;
+    margin: 0 !important;
+    line-height: 1.2;
 }
-.moc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
-}
-.concept-card {
+
+.moc-meta {
+    font-size: 0.9rem;
+    color: var(--moc-meta-text);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.2rem;
-    background-color: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
+    gap: 0.5rem;
+    margin-top: -0.5rem;
+    border-bottom: 1px solid var(--moc-border);
+    padding-bottom: 1rem;
+}
+
+.meta-dot {
+    opacity: 0.5;
+}
+
+/* Collapsible Table of Contents */
+.moc-toc {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--moc-border);
     border-radius: 8px;
-    text-decoration: none !important;
-    transition: all 0.2s ease-in-out;
+    padding: 1rem;
+    transition: all 0.3s ease;
 }
-.concept-card:hover {
-    background-color: var(--sl-color-bg-inline-code);
-    border-color: var(--sl-color-accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+.moc-toc summary {
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--sl-color-white);
+    outline: none;
+    user-select: none;
 }
-.concept-card-title {
-    color: var(--sl-color-text-accent);
+
+.moc-toc ul {
+    list-style: none !important;
+    padding-left: 1.5rem !important;
+    margin: 0.5rem 0 0 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.moc-toc li a {
+    color: var(--moc-tag-active-text);
+    text-decoration: none;
     font-weight: 500;
+}
+
+.moc-toc li a:hover {
+    text-decoration: underline;
+}
+
+.moc-description {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 !important;
+    color: var(--moc-text);
+}
+
+/* MOC Table Styles */
+.moc-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--moc-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.moc-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
     font-size: 0.95rem;
 }
-.concept-card-icon {
-    width: 16px;
-    height: 16px;
-    color: var(--sl-color-accent);
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.2s ease-in-out;
+
+.moc-table th {
+    background-color: var(--moc-th-bg);
+    color: var(--sl-color-white);
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid var(--moc-border);
 }
-.concept-card:hover.active .concept-card-icon {
-    opacity: 1;
-    transform: translateX(0);
+
+.col-category {
+    width: 25%;
+    min-width: 180px;
 }
-.concept-card.inactive {
-    background-color: transparent;
-    border-style: dashed;
-    border-color: var(--sl-color-gray-5);
-    opacity: 0.6;
-    cursor: default;
+
+.col-concepts {
+    width: 75%;
 }
-.concept-card.inactive:hover {
-    transform: none;
-    box-shadow: none;
-    background-color: var(--sl-color-bg-inline-code);
+
+.moc-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--moc-border);
+    vertical-align: top;
 }
-.concept-card.inactive .concept-card-title {
-    color: var(--sl-color-gray-4);
+
+.cat-cell {
+    color: var(--sl-color-white);
+    font-weight: 700;
 }
-.concept-badge-soon {
-    font-size: 0.7rem;
+
+.concepts-cell {
+    line-height: 2.1;
+}
+
+.concepts-list {
+    word-break: break-word;
+}
+
+.concept-item-wrapper {
+    display: inline;
+}
+
+/* Concept Tags */
+.concept-tag {
+    display: inline-block;
     padding: 0.1rem 0.4rem;
-    background: var(--sl-color-gray-5);
-    color: var(--sl-color-gray-2);
+    font-size: 0.88rem;
+    font-weight: 500;
     border-radius: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0.15rem 0;
+    text-decoration: none !important;
 }
-.sortable-ghost {
-    opacity: 0.4;
-    background-color: var(--sl-color-gray-5) !important;
+
+.concept-tag.active {
+    background-color: var(--moc-tag-active-bg);
+    color: var(--moc-tag-active-text);
+    border: 1px solid var(--moc-tag-active-border);
+}
+
+.concept-tag.active:hover {
+    background-color: var(--moc-tag-active-text);
+    color: var(--sl-color-bg);
+    border-color: var(--moc-tag-active-text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.concept-tag.inactive {
+    background-color: var(--moc-tag-inactive-bg);
+    color: var(--moc-tag-inactive-text);
+    border: 1px dashed var(--moc-tag-inactive-border);
+    cursor: not-allowed;
+}
+
+.comma {
+    color: var(--moc-text);
+    margin-right: 0.25rem;
+    opacity: 0.5;
+}
+
+/* Sidebar Column Styles */
+.moc-sidebar {
+    display: block;
+}
+
+.moc-sidebar-sticky {
+    position: sticky;
+    top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.moc-sidebar-title {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    font-family: monospace;
+    color: var(--sl-color-white);
+    margin: 0 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--moc-border);
+    padding-bottom: 0.5rem;
+}
+
+.moc-backlinks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.moc-backlink-card {
+    display: block;
+    border: 1px solid var(--moc-backlink-border);
+    background-color: var(--moc-backlink-bg);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.moc-backlink-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: var(--moc-tag-active-text);
+}
+
+.moc-backlink-card:hover .moc-backlink-text {
+    color: var(--sl-color-bg);
+}
+
+.moc-backlink-text {
+    color: var(--moc-backlink-text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+/* Section Styles */
+.moc-section {
+    margin-top: 2rem;
+    border-top: 1px solid var(--moc-border);
+    padding-top: 1.5rem;
+}
+
+.moc-section h2 {
+    font-size: 1.5rem !important;
+    color: var(--sl-color-white);
+    margin-bottom: 1rem !important;
+    font-weight: 600;
+}
+
+.moc-section ul {
+    list-style: disc !important;
+    padding-left: 1.5rem !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.moc-section li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--moc-text);
 }
 </style>
-
-<script>
-import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/+esm';
-
-function initSortable() {
-    const list = document.getElementById('moc-category-list');
-    const contentMap = document.getElementById('moc-content-map');
-    if (!list || !contentMap) return;
-
-    // Load saved category order
-    const savedOrder = JSON.parse(localStorage.getItem('moc-layout-order') || 'null');
-    if (savedOrder) {
-        // Sort sidebar list
-        const listItems = Array.from(list.querySelectorAll('.moc-category-item'));
-        savedOrder.forEach(cat => {
-            const el = listItems.find(i => i.dataset.category === cat);
-            if (el) list.appendChild(el);
-        });
-        
-        // Sort content sections to match
-        const sections = Array.from(contentMap.querySelectorAll('.moc-section'));
-        savedOrder.forEach(cat => {
-            const el = sections.find(s => s.dataset.category === cat);
-            if (el) contentMap.appendChild(el);
-        });
-    }
-
-    // Initialize Sortable on Sidebar List
-    new Sortable(list, {
-        handle: '.drag-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        onEnd: function () {
-            // Save new order
-            const newOrder = Array.from(list.querySelectorAll('.moc-category-item')).map(el => el.dataset.category);
-            localStorage.setItem('moc-layout-order', JSON.stringify(newOrder));
-            
-            // Reorder content sections live
-            const sections = Array.from(contentMap.querySelectorAll('.moc-section'));
-            newOrder.forEach(cat => {
-                const el = sections.find(s => s.dataset.category === cat);
-                if (el) contentMap.appendChild(el);
-            });
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', initSortable);
-document.addEventListener('astro:page-load', initSortable);
-</script>

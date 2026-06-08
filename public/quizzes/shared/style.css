@@ -1312,3 +1312,105 @@ button {
     color: var(--text-muted);
     border-top: 1px dashed var(--border);
     padding-top: 0.5rem;
+}
+
+/* Custom styling for formatted explanations */
+.explanation-content {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.explanation-paragraph {
+  margin-bottom: 12px;
+}
+
+.explanation-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.explanation-list {
+  margin-bottom: 12px;
+  padding-left: 20px;
+}
+
+.explanation-list li {
+  margin-bottom: 6px;
+}
+
+.explanation-list li strong {
+  color: var(--text-primary);
+}
+
+.explanation-content code {
+  background: var(--bg-glass-hover);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85em;
+  border: 1px solid var(--border);
+}
+
+/* References section */
+.references-box {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+}
+
+.references-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-theme="light"] .references-title,
+[data-theme="light"] .explanation-title {
+  color: var(--accent);
+}
+
+.references-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.references-list li {
+  margin-bottom: 6px;
+  padding-left: 14px;
+  position: relative;
+}
+
+.references-list li::before {
+  content: '•';
+  color: var(--accent);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.reference-link {
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  word-break: break-all;
+}
+
+.reference-link:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+[data-theme="light"] .reference-link:hover {
+  color: #1d4ed8; /* darker blue */
+}
+
