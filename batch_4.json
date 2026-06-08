@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "event-time-processing-time",
+    "title": "event-time-processing-time",
+    "category": "Streaming Processing",
+    "definition": "Thời gian xảy ra sự kiện thực tế vs Thời gian sự kiện được xử lý trong hệ thống.",
+    "bullets": []
+  },
+  {
+    "slug": "watermark",
+    "title": "watermark",
+    "category": "Streaming Processing",
+    "definition": "Cơ chế theo dõi tiến trình thời gian thực tế để xử lý dữ liệu đến muộn.",
+    "bullets": []
+  },
+  {
+    "slug": "windowing",
+    "title": "windowing",
+    "category": "Streaming Processing",
+    "definition": "Phân nhóm dòng dữ liệu theo các khung thời gian (Tumbling, Sliding, Session).",
+    "bullets": []
+  },
+  {
+    "slug": "exactly-once-semantics",
+    "title": "exactly-once-semantics",
+    "category": "Streaming Processing",
+    "definition": "Đảm bảo mỗi thông điệp được xử lý chính xác một lần duy nhất.",
+    "bullets": []
+  },
+  {
+    "slug": "stream-table-duality",
+    "title": "stream-table-duality",
+    "category": "Streaming Processing",
+    "definition": "Tính lưỡng tính dòng - bảng (Mối quan hệ biến đổi qua lại giữa Stream và Table).",
+    "bullets": []
+  },
+  {
+    "slug": "orchestration",
+    "title": "orchestration",
+    "category": "Orchestration",
+    "definition": "Quản lý, lập lịch và điều phối các tác vụ trong hệ thống dữ liệu.",
+    "bullets": []
+  },
+  {
+    "slug": "apache-airflow",
+    "title": "apache-airflow",
+    "category": "Orchestration",
+    "definition": "Công cụ điều phối và lập lịch pipeline viết bằng Python.",
+    "bullets": []
+  },
+  {
+    "slug": "dag",
+    "title": "dag",
+    "category": "Orchestration",
+    "definition": "Đồ thị có hướng không chu trình biểu diễn dòng công việc của pipeline.",
+    "bullets": []
+  },
+  {
+    "slug": "task-dependency",
+    "title": "task-dependency",
+    "category": "Orchestration",
+    "definition": "Thiết lập mối quan hệ phụ thuộc thứ tự thực thi giữa các tác vụ.",
+    "bullets": []
+  },
+  {
+    "slug": "airflow-scheduler",
+    "title": "airflow-scheduler",
+    "category": "Orchestration",
+    "definition": "Bộ não lập lịch và điều phối tác vụ thực thi của Airflow.",
+    "bullets": []
+  },
+  {
+    "slug": "sensors",
+    "title": "sensors",
+    "category": "Orchestration",
+    "definition": "Tác vụ đặc biệt dùng để chờ một điều kiện bên ngoài thỏa mãn trước khi chạy tiếp.",
+    "bullets": []
+  },
+  {
+    "slug": "retries-sla",
+    "title": "retries-sla",
+    "category": "Orchestration",
+    "definition": "Cơ chế tự động thử lại khi lỗi và cảnh báo vi phạm thời gian hoàn thành (SLA).",
+    "bullets": []
+  },
+  {
+    "slug": "dbt",
+    "title": "dbt",
+    "category": "Transformation & Analytics Engineering",
+    "definition": "Công cụ quản lý và thực thi mã biến đổi dữ liệu SQL trong kho lưu trữ dữ liệu.",
+    "bullets": []
+  },
+  {
+    "slug": "sql-transformation",
+    "title": "sql-transformation",
+    "category": "Transformation & Analytics Engineering",
+    "definition": "Lập trình biến đổi dữ liệu chuyên nghiệp bằng SQL chuẩn hóa.",
+    "bullets": []
+  },
+  {
+    "slug": "dbt-models",
+    "title": "dbt-models",
+    "category": "Transformation & Analytics Engineering",
+    "definition": "Quản lý các tầng biến đổi (Source, Staging, Intermediate, Marts).",
+    "bullets": []
+  }
+]

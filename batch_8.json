@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "spark-optimization-interview",
+    "title": "spark-optimization-interview",
+    "category": "Interview Preparation",
+    "definition": "Các câu hỏi gỡ lỗi Spark Job, tối ưu cấu hình phân cụm.",
+    "bullets": []
+  },
+  {
+    "slug": "kafka-design-interview",
+    "title": "kafka-design-interview",
+    "category": "Interview Preparation",
+    "definition": "Thiết kế luồng sự kiện chịu lỗi tốt và đảm bảo thứ tự ghi nhận.",
+    "bullets": []
+  },
+  {
+    "slug": "data-modeling-interview",
+    "title": "data-modeling-interview",
+    "category": "Interview Preparation",
+    "definition": "Thiết kế lược đồ kho dữ liệu cho các mô hình kinh doanh cụ thể.",
+    "bullets": []
+  },
+  {
+    "slug": "pipeline-design-interview",
+    "title": "pipeline-design-interview",
+    "category": "Interview Preparation",
+    "definition": "Thiết kế đường ống tích hợp dữ liệu chịu lỗi và tự phục hồi từ đầu.",
+    "bullets": []
+  },
+  {
+    "slug": "cloud-platform-interview",
+    "title": "cloud-platform-interview",
+    "category": "Interview Preparation",
+    "definition": "So sánh lựa chọn công nghệ đám mây và tối ưu chi phí hạ tầng.",
+    "bullets": []
+  },
+  {
+    "slug": "production-incident-qa",
+    "title": "production-incident-qa",
+    "category": "Interview Preparation",
+    "definition": "Trả lời câu hỏi xử lý sự cố thực tế khi hệ thống bị sập vào lúc nửa đêm.",
+    "bullets": []
+  },
+  {
+    "slug": "performance-tuning-qa",
+    "title": "performance-tuning-qa",
+    "category": "Interview Preparation",
+    "definition": "Tối ưu hóa hiệu năng truy vấn trên các bảng dữ liệu hàng tỷ dòng.",
+    "bullets": []
+  },
+  {
+    "slug": "de-behavioral-interview",
+    "title": "de-behavioral-interview",
+    "category": "Interview Preparation",
+    "definition": "Các câu hỏi hành vi, phối hợp làm việc giữa nhóm Kỹ thuật và Nghiệp vụ.",
+    "bullets": []
+  }
+]

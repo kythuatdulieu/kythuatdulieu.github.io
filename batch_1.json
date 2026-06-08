@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "compression-algorithms",
+    "title": "compression-algorithms",
+    "category": "Database & Storage",
+    "definition": "Snappy, Gzip, Zstandard (Zstd).",
+    "bullets": []
+  },
+  {
+    "slug": "kimball-methodology",
+    "title": "kimball-methodology",
+    "category": "Data Warehouse",
+    "definition": "Triết lý xây dựng DWH hướng Business, Star Schema của Ralph Kimball.",
+    "bullets": []
+  },
+  {
+    "slug": "inmon-methodology",
+    "title": "inmon-methodology",
+    "category": "Data Warehouse",
+    "definition": "Triết lý xây dựng DWH tập trung 3NF của Bill Inmon.",
+    "bullets": []
+  },
+  {
+    "slug": "dimensional-modeling",
+    "title": "dimensional-modeling",
+    "category": "Data Warehouse",
+    "definition": "Kỹ thuật mô hình hóa dữ liệu đa chiều.",
+    "bullets": []
+  },
+  {
+    "slug": "star-schema",
+    "title": "star-schema",
+    "category": "Data Warehouse",
+    "definition": "Lược đồ hình sao (Fact nằm giữa, Dimension xung quanh).",
+    "bullets": []
+  },
+  {
+    "slug": "snowflake-schema",
+    "title": "snowflake-schema",
+    "category": "Data Warehouse",
+    "definition": "Lược đồ bông tuyết (Chuẩn hóa các bảng Dimension).",
+    "bullets": []
+  },
+  {
+    "slug": "fact-table",
+    "title": "fact-table",
+    "category": "Data Warehouse",
+    "definition": "Bảng sự kiện chứa các chỉ số đo lường (metrics).",
+    "bullets": []
+  },
+  {
+    "slug": "dimension-table",
+    "title": "dimension-table",
+    "category": "Data Warehouse",
+    "definition": "Bảng chiều dữ liệu chứa ngữ cảnh mô tả.",
+    "bullets": []
+  },
+  {
+    "slug": "slowly-changing-dimension",
+    "title": "slowly-changing-dimension",
+    "category": "Data Warehouse",
+    "definition": "Kỹ thuật xử lý Dimension thay đổi chậm (SCD Type 0, 1, 2, 3, 4, 6).",
+    "bullets": []
+  },
+  {
+    "slug": "surrogate-key",
+    "title": "surrogate-key",
+    "category": "Data Warehouse",
+    "definition": "Khóa thay thế (thường là số tự tăng hoặc hash) thay cho Natural Key.",
+    "bullets": []
+  },
+  {
+    "slug": "grain",
+    "title": "grain",
+    "category": "Data Warehouse",
+    "definition": "Độ mịn/Mức độ chi tiết của dữ liệu trong bảng Fact.",
+    "bullets": []
+  },
+  {
+    "slug": "lakehouse",
+    "title": "lakehouse",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Kiến trúc hợp nhất hiệu năng của Data Warehouse và dung lượng của Data Lake.",
+    "bullets": []
+  },
+  {
+    "slug": "medallion-architecture",
+    "title": "medallion-architecture",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng (Bronze, Silver, Gold).",
+    "bullets": []
+  },
+  {
+    "slug": "delta-lake",
+    "title": "delta-lake",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Định dạng bảng lưu trữ mã nguồn mở hỗ trợ ACID trên Data Lake.",
+    "bullets": []
+  },
+  {
+    "slug": "apache-iceberg",
+    "title": "apache-iceberg",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Định dạng bảng thế hệ mới cho dữ liệu cực lớn, tối ưu hóa truy cập siêu dữ liệu.",
+    "bullets": []
+  }
+]

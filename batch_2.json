@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "apache-hudi",
+    "title": "apache-hudi",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Định dạng bảng tối ưu hóa cho các tác vụ ghi đè nhanh và CDC trên Data Lake.",
+    "bullets": []
+  },
+  {
+    "slug": "table-format",
+    "title": "table-format",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Khái niệm về định dạng bảng lưu trữ (khác với định dạng tệp tin vật lý).",
+    "bullets": []
+  },
+  {
+    "slug": "acid-transactions-on-lake",
+    "title": "acid-transactions-on-lake",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Cơ chế đảm bảo tính đồng nhất ACID trên Object Storage.",
+    "bullets": []
+  },
+  {
+    "slug": "schema-evolution",
+    "title": "schema-evolution",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Khả năng tự động thay đổi cấu trúc bảng mà không làm hỏng dữ liệu cũ.",
+    "bullets": []
+  },
+  {
+    "slug": "time-travel",
+    "title": "time-travel",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Cơ chế truy vấn dữ liệu tại một mốc thời gian trong quá khứ.",
+    "bullets": []
+  },
+  {
+    "slug": "compaction",
+    "title": "compaction",
+    "category": "Data Lake & Lakehouse",
+    "definition": "Quá trình dọn dẹp và gộp các tệp tin nhỏ để tối ưu hóa hiệu năng đọc (Small Files Problem).",
+    "bullets": []
+  },
+  {
+    "slug": "etl",
+    "title": "etl",
+    "category": "ETL / ELT",
+    "definition": "Trích xuất, Biến đổi tại vùng đệm, rồi Nạp vào đích.",
+    "bullets": []
+  },
+  {
+    "slug": "elt",
+    "title": "elt",
+    "category": "ETL / ELT",
+    "definition": "Trích xuất, Nạp trực tiếp vào đích, rồi dùng hiệu năng của đích để Biến đổi.",
+    "bullets": []
+  },
+  {
+    "slug": "data-ingestion",
+    "title": "data-ingestion",
+    "category": "ETL / ELT",
+    "definition": "Quá trình thu nạp dữ liệu từ các nguồn vào hệ thống lưu trữ.",
+    "bullets": []
+  },
+  {
+    "slug": "data-extraction",
+    "title": "data-extraction",
+    "category": "ETL / ELT",
+    "definition": "Các phương pháp trích xuất dữ liệu (Full, Incremental, API, Database log).",
+    "bullets": []
+  },
+  {
+    "slug": "data-transformation",
+    "title": "data-transformation",
+    "category": "ETL / ELT",
+    "definition": "Kỹ thuật làm sạch, chuẩn hóa, gộp và biến đổi cấu trúc dữ liệu.",
+    "bullets": []
+  },
+  {
+    "slug": "data-loading",
+    "title": "data-loading",
+    "category": "ETL / ELT",
+    "definition": "Kỹ thuật nạp dữ liệu (Append, Upsert, Overwrite).",
+    "bullets": []
+  },
+  {
+    "slug": "incremental-load",
+    "title": "incremental-load",
+    "category": "ETL / ELT",
+    "definition": "Cơ chế nạp dữ liệu tăng trưởng (chỉ lấy phần dữ liệu mới thay đổi).",
+    "bullets": []
+  },
+  {
+    "slug": "change-data-capture",
+    "title": "change-data-capture",
+    "category": "ETL / ELT",
+    "definition": "Công nghệ tự động ghi nhận các thay đổi ở mức log của database.",
+    "bullets": []
+  },
+  {
+    "slug": "backfill",
+    "title": "backfill",
+    "category": "ETL / ELT",
+    "definition": "Quy trình chạy lại pipeline lịch sử để sửa lỗi hoặc cập nhật logic mới.",
+    "bullets": []
+  }
+]

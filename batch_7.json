@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "azure-synapse",
+    "title": "azure-synapse",
+    "category": "Cloud Data Platform",
+    "definition": "Giải pháp tích hợp phân tích dữ liệu lớn của Microsoft.",
+    "bullets": []
+  },
+  {
+    "slug": "databricks-platform",
+    "title": "databricks-platform",
+    "category": "Cloud Data Platform",
+    "definition": "Nền tảng Lakehouse dựa trên công cụ Apache Spark được tối ưu hóa.",
+    "bullets": []
+  },
+  {
+    "slug": "cost-optimization",
+    "title": "cost-optimization",
+    "category": "Cloud Data Platform",
+    "definition": "Các kỹ thuật tối ưu hóa chi phí vận hành trên Cloud Data Platform.",
+    "bullets": []
+  },
+  {
+    "slug": "lambda-architecture",
+    "title": "lambda-architecture",
+    "category": "System Architecture",
+    "definition": "Kiến trúc kết hợp xử lý lô (Batch) và xử lý nhanh (Speed/Streaming).",
+    "bullets": []
+  },
+  {
+    "slug": "kappa-architecture",
+    "title": "kappa-architecture",
+    "category": "System Architecture",
+    "definition": "Kiến trúc loại bỏ xử lý lô, coi mọi dữ liệu là một dòng sự kiện.",
+    "bullets": []
+  },
+  {
+    "slug": "data-mesh",
+    "title": "data-mesh",
+    "category": "System Architecture",
+    "definition": "Kiến trúc dữ liệu phân tán hướng miền nghiệp vụ (Domain-driven data design).",
+    "bullets": []
+  },
+  {
+    "slug": "data-fabric",
+    "title": "data-fabric",
+    "category": "System Architecture",
+    "definition": "Kiến trúc tích hợp dữ liệu sử dụng AI để kết nối các nguồn siêu dữ liệu phân tán.",
+    "bullets": []
+  },
+  {
+    "slug": "modern-data-stack",
+    "title": "modern-data-stack",
+    "category": "System Architecture",
+    "definition": "Hệ sinh thái các công cụ dữ liệu đám mây thế hệ mới (Fivetran, Snowflake, dbt, Airflow).",
+    "bullets": []
+  },
+  {
+    "slug": "real-time-architecture",
+    "title": "real-time-architecture",
+    "category": "System Architecture",
+    "definition": "Kiến trúc phục vụ phân tích dữ liệu thời gian thực độ trễ thấp.",
+    "bullets": []
+  },
+  {
+    "slug": "feature-store",
+    "title": "feature-store",
+    "category": "System Architecture",
+    "definition": "Hệ thống lưu trữ và quản lý các đặc trưng dữ liệu phục vụ huấn luyện Machine Learning.",
+    "bullets": []
+  },
+  {
+    "slug": "event-driven-architecture",
+    "title": "event-driven-architecture",
+    "category": "System Architecture",
+    "definition": "Kiến trúc hệ thống phản hồi theo các sự kiện.",
+    "bullets": []
+  },
+  {
+    "slug": "zero-copy-cloning",
+    "title": "zero-copy-cloning",
+    "category": "System Architecture",
+    "definition": "Kỹ thuật nhân bản dữ liệu tức thời mà không tốn tài nguyên lưu trữ vật lý.",
+    "bullets": []
+  },
+  {
+    "slug": "push-pull-delivery",
+    "title": "push-pull-delivery",
+    "category": "System Architecture",
+    "definition": "Cơ chế đẩy dữ liệu (Push) vs kéo dữ liệu (Pull) trong tích hợp hệ thống.",
+    "bullets": []
+  },
+  {
+    "slug": "sql-interview-patterns",
+    "title": "sql-interview-patterns",
+    "category": "Interview Preparation",
+    "definition": "Các dạng bài SQL kinh điển trong phỏng vấn (Window functions, CTEs, self-joins).",
+    "bullets": []
+  },
+  {
+    "slug": "python-de-interview",
+    "title": "python-de-interview",
+    "category": "Interview Preparation",
+    "definition": "Lập trình Python giải quyết bài toán xử lý file lớn, tối ưu hóa bộ nhớ (`yield`, generators).",
+    "bullets": []
+  }
+]

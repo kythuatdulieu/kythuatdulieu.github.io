@@ -12,6 +12,9 @@ export default defineConfig({
 			locales: {
 				root: { label: 'Tiếng Việt', lang: 'vi' }
 			},
+			components: {
+				PageSidebar: './src/components/InteractiveGraphSidebar.astro',
+			},
 			customCss: [
 				'./src/styles/custom.css'
 			],
