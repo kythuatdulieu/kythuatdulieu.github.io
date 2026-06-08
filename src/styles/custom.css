@@ -752,3 +752,34 @@ body.focus-mode .main-pane {
 }
 
 
+
+/* ====== ENHANCED SIDEBAR HIERARCHY ====== */
+/* Make top-level groups stand out */
+.sidebar-pane > .sidebar-content > ul > li > details > summary {
+    font-weight: 700 !important;
+    font-size: 1.05rem;
+    color: var(--sl-color-white);
+    padding-bottom: 0.2rem;
+}
+
+/* Add indentation and left borders to nested groups to easily distinguish levels */
+.sidebar-pane details ul {
+    border-left: 1px solid var(--sl-color-hairline);
+    margin-left: 0.5rem;
+    padding-left: 0.5rem !important;
+}
+
+/* Secondary level groups */
+.sidebar-pane details details summary {
+    font-weight: 600 !important;
+    color: var(--sl-color-gray-2);
+    font-size: 0.95rem;
+}
+
+/* Active links highlight */
+.sidebar-pane a[aria-current="page"] {
+    font-weight: 700 !important;
+    background-color: var(--sl-color-text-accent);
+    color: var(--sl-color-text-invert) !important;
+    border-radius: 4px;
+}
