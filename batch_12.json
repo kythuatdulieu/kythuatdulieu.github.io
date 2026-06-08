@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "lora",
+    "title": "Low-Rank Adaptation (LoRA)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "model-serving",
+    "title": "Phục vụ mô hình (Model Serving)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  }
+]

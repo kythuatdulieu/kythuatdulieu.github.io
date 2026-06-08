@@ -1,0 +1,79 @@
+[
+  {
+    "slug": "prompt-engineering",
+    "title": "Kỹ nghệ Gợi ý (Prompt Engineering)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "rlhf",
+    "title": "Học tăng cường từ phản hồi của con người (RLHF)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "recall",
+    "title": "Độ phủ (Recall)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "vector-store",
+    "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "fine-tuning",
+    "title": "Tinh chỉnh mô hình (Fine-tuning)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "reranking",
+    "title": "Tái sắp xếp kết quả (Reranking)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "few-shot-prompting",
+    "title": "Học qua vài ví dụ (Few-shot Prompting)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "mlflow",
+    "title": "MLflow",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "reranker",
+    "title": "Mô hình tái sắp xếp (Reranker / Reranking)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "chunking-strategy",
+    "title": "Chiến lược phân tách (Chunking Strategy)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  },
+  {
+    "slug": "ndcg",
+    "title": "Normalized Discounted Cumulative Gain (NDCG)",
+    "category": "GenAI / Data Engineering",
+    "definition": "",
+    "bullets": []
+  }
+]

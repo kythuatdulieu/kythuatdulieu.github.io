@@ -167,18 +167,13 @@
     }
 
     function handleConceptClick(e) {
-        e.preventDefault();
+        // e.preventDefault(); // allow navigation
         e.stopPropagation();
         
         const link = e.currentTarget;
         const conceptKey = link.dataset.concept;
-        const concept = conceptsData[conceptKey];
-        if (!concept) return;
-        
-        clearTimeout(hoverTimeout);
-        clearTimeout(hideTimeout);
-        
-        showPopover(link, concept, true);
+        const slug = conceptKey.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+        window.location.href = `/concepts/${slug}/`;
     }
 
     function showPopover(link, concept, isSticky = false) {
