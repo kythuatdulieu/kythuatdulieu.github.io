@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
     let conceptsData = {};
     let sortedKeys = [];
     let popoverEl = null;
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const escapedKeys = sortedKeys.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-        const pattern = \`(?<![\\p{L}\\p{N}_])(\${escapedKeys.join('|')})(?![\\p{L}\\p{N}_])\`;
+        const pattern = `(^|[^\\p{L}\\p{N}_])(${escapedKeys.join('|')})(?=[^\\p{L}\\p{N}_]|$)`;
         const regex = new RegExp(pattern, 'gui');
 
         for (const node of textNodes) {
@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let match;
                 
                 while ((match = regex.exec(text)) !== null) {
-                    const matchedText = match[0];
-                    const matchIndex = match.index;
+                    const matchedText = match[2];
+                    const matchIndex = match.index + match[1].length;
                     
                     if (matchIndex > lastIndex) {
                         fragment.appendChild(document.createTextNode(text.substring(lastIndex, matchIndex)));
@@ -116,7 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     span.textContent = matchedText;
                     fragment.appendChild(span);
                     
-                    lastIndex = regex.lastIndex;
+                    lastIndex = matchIndex + matchedText.length;
+                    // reset regex lastIndex to match correctly in case of consecutive matches
+                    regex.lastIndex = lastIndex;
                 }
                 
                 if (lastIndex < text.length) {
@@ -188,9 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const bodyEl = document.getElementById('popover-body');
         let bulletsHtml = '';
         if (concept.bullets && concept.bullets.length > 0) {
-            bulletsHtml = '<ul>' + concept.bullets.map(b => \`<li>\${b}</li>\`).join('') + '</ul>';
+            bulletsHtml = '<ul>' + concept.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
         }
-        bodyEl.innerHTML = \`<p>\${concept.definition}</p>\${bulletsHtml}\`;
+        bodyEl.innerHTML = `<p>${concept.definition}</p>${bulletsHtml}`;
         
         const closeBtn = document.getElementById('popover-close');
         const tipEl = popoverEl.querySelector('.popover-tip');
@@ -233,9 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (rect.top - popoverHeight - 12 < 10) top = rect.bottom + window.scrollY + 12;
         
-        popoverEl.style.left = \`\${left}px\`;
-        popoverEl.style.top = \`\${top}px\`;
+        popoverEl.style.left = `${left}px`;
+        popoverEl.style.top = `${top}px`;
     }
 
-    init();
-});
+    // Run init on initial load and view transitions
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    document.addEventListener('astro:page-load', init);
+})();
