@@ -165,14 +165,7 @@
                     }
                 });
 
-                // Intercept click: show preview on first click (prevent navigation), navigate on second click
-                link.addEventListener('click', (e) => {
-                    const isVisible = link._tippy && link._tippy.state.isVisible;
-                    if (!isVisible) {
-                        e.preventDefault();
-                        link._tippy.show();
-                    }
-                });
+
             });
         });
     }
