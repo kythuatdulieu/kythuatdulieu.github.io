@@ -219,6 +219,280 @@
       "title": "Time Travel"
     }
   ],
+  "/concepts/llm/": [
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/lora/",
+      "title": "Low-Rank Adaptation (LoRA)"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    },
+    {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/token/",
+      "title": "Token - Đơn vị từ vựng"
+    },
+    {
+      "url": "/concepts/top-p/",
+      "title": "Nucleus Sampling - Top-p"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/metrics-layer/",
+      "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
+    },
+    {
+      "url": "/concepts/mlflow/",
+      "title": "Quản lý vòng đời Machine Learning với MLflow"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
+    }
+  ],
+  "/concepts/rag/": [
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
+      "url": "/concepts/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/ndcg/",
+      "title": "Normalized Discounted Cumulative Gain - NDCG"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    },
+    {
+      "url": "/concepts/token/",
+      "title": "Token - Đơn vị từ vựng"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
+    }
+  ],
+  "/concepts/system-prompt/": [
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    }
+  ],
   "/concepts/apache-airflow/": [
     {
       "url": "/concepts/airflow-scheduler/",
@@ -531,6 +805,10 @@
       "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
     },
     {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
+    },
+    {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     },
@@ -787,6 +1065,10 @@
       "title": "Time Travel"
     },
     {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
+    },
+    {
       "url": "/concepts/zero-copy-cloning/",
       "title": "Zero-Copy Cloning"
     },
@@ -891,6 +1173,10 @@
     {
       "url": "/concepts/star-schema/",
       "title": "Lược đồ hình sao - Star Schema"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
     },
     {
       "url": "/interview/data-modeling-interview/",
@@ -1101,6 +1387,10 @@
     {
       "url": "/concepts/lakehouse/",
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -1505,6 +1795,10 @@
       "title": "Unity Catalog"
     },
     {
+      "url": "/",
+      "title": "Data Engineering Handbook"
+    },
+    {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     },
@@ -1589,6 +1883,14 @@
     {
       "url": "/concepts/lambda-architecture/",
       "title": "Lambda Architecture"
+    },
+    {
+      "url": "/concepts/mlflow/",
+      "title": "Quản lý vòng đời Machine Learning với MLflow"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
     },
     {
       "url": "/concepts/shuffle/",
@@ -1771,8 +2073,16 @@
       "title": "Kiến trúc Medallion - Medallion Architecture"
     },
     {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
       "url": "/concepts/snowflake/",
       "title": "Snowflake Data Cloud"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -1861,6 +2171,10 @@
     {
       "url": "/concepts/sql-transformation/",
       "title": "SQL Transformation - Biến đổi dữ liệu bằng SQL"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     },
     {
       "url": "/concepts/zero-copy-cloning/",
@@ -2095,6 +2409,10 @@
       "title": "Quản lý siêu dữ liệu - Metadata Management"
     },
     {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    },
+    {
       "url": "/concepts/oltp/",
       "title": "Xử lý Giao dịch Trực tuyến - OLTP"
     },
@@ -2173,6 +2491,10 @@
     {
       "url": "/concepts/windowing/",
       "title": "Windowing - Phân nhóm dữ liệu luồng theo thời gian"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -2459,6 +2781,10 @@
       "title": "Loại bỏ trùng lặp - Deduplication"
     },
     {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
       "url": "/interview/performance-tuning-qa/",
       "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
     },
@@ -2543,6 +2869,10 @@
       "title": "ELT (Extract, Load, Transform)"
     },
     {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
       "url": "/concepts/data-engineering/",
       "title": "Kỹ thuật Dữ liệu - Data Engineering"
     },
@@ -2559,8 +2889,16 @@
       "title": "Kho dữ liệu phân tích - Data Warehouse"
     },
     {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
       "url": "/concepts/schema-drift/",
       "title": "Trôi dạt cấu trúc - Schema Drift"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -2573,6 +2911,226 @@
     {
       "url": "/learning-paths/data-platform-engineer/",
       "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
+    }
+  ],
+  "/concepts/vector-store/": [
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    }
+  ],
+  "/concepts/embeddings/": [
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
+  "/concepts/token/": [
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    },
+    {
+      "url": "/concepts/top-p/",
+      "title": "Nucleus Sampling - Top-p"
+    },
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/alerting-incident-response/",
+      "title": "Cảnh báo và phản ứng sự cố - Alerting & Incident Response"
+    },
+    {
+      "url": "/concepts/apache-airflow/",
+      "title": "Apache Airflow - Nền tảng điều phối dữ liệu"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/data-extraction/",
+      "title": "Data Extraction"
+    },
+    {
+      "url": "/concepts/data-observability/",
+      "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    },
+    {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
+    },
+    {
+      "url": "/concepts/volume-anomalies/",
+      "title": "Phát hiện bất thường về khối lượng dữ liệu - Volume Anomalies"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
+  "/concepts/semantic-search/": [
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
+      "url": "/concepts/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
     }
   ],
   "/concepts/columnar-formats/": [
@@ -2859,6 +3417,60 @@
       "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
     }
   ],
+  "/concepts/chunking/": [
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/token/",
+      "title": "Token - Đơn vị từ vựng"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/compression-algorithms/",
+      "title": "Thuật toán nén dữ liệu - Compression Algorithms"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/interview/python-de-interview/",
+      "title": "Python Data Engineering Interview Patterns"
+    },
+    {
+      "url": "/learning-paths/interview-prep/",
+      "title": "Interview Preparation (Chinh phục phỏng vấn Kỹ sư Dữ liệu)"
+    }
+  ],
   "/concepts/modern-data-stack/": [
     {
       "url": "/concepts/cost-optimization/",
@@ -3007,6 +3619,10 @@
       "title": "Inmon Methodology - Corporate Information Factory"
     },
     {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
+    },
+    {
       "url": "/learning-paths/data-platform-engineer/",
       "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
     }
@@ -3113,6 +3729,10 @@
     {
       "url": "/concepts/modern-data-stack/",
       "title": "Modern Data Stack"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     },
     {
       "url": "/learning-paths/data-platform-engineer/",
@@ -3295,6 +3915,10 @@
       "title": "Change Data Capture (CDC)"
     },
     {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
       "url": "/concepts/cloud-storage/",
       "title": "Lưu trữ đối tượng trên đám mây - Cloud Object Storage"
     },
@@ -3451,6 +4075,10 @@
       "title": "Orchestration - Lập lịch và điều phối dữ liệu"
     },
     {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    },
+    {
       "url": "/concepts/push-pull-delivery/",
       "title": "Push vs Pull Delivery"
     },
@@ -3507,10 +4135,6 @@
       "title": "Zero-Copy Cloning"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/cloud-platform-interview/",
       "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
     },
@@ -3563,6 +4187,10 @@
     {
       "url": "/concepts/partitioning/",
       "title": "Phân vùng Dữ liệu - Partitioning"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -3679,6 +4307,10 @@
     {
       "url": "/concepts/medallion-architecture/",
       "title": "Kiến trúc Medallion - Medallion Architecture"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
     },
     {
       "url": "/concepts/modern-data-stack/",
@@ -4045,6 +4677,10 @@
       "title": "Zero-Copy Cloning"
     },
     {
+      "url": "/",
+      "title": "Data Engineering Handbook"
+    },
+    {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     },
@@ -4091,6 +4727,10 @@
     {
       "url": "/concepts/source-systems/",
       "title": "Hệ thống Nguồn - Source Systems"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
     }
   ],
   "/concepts/small-files-problem/": [
@@ -4277,12 +4917,24 @@
       "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
     },
     {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
       "url": "/concepts/freshness-monitoring/",
       "title": "Giám sát độ trễ dữ liệu - Freshness Monitoring"
     },
     {
       "url": "/concepts/metadata-management/",
       "title": "Quản lý siêu dữ liệu - Metadata Management"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
     },
     {
       "url": "/concepts/volume-anomalies/",
@@ -4953,6 +5605,148 @@
       "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
     }
   ],
+  "/concepts/embedding-models/": [
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    }
+  ],
+  "/concepts/embedding-model/": [
+    {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    }
+  ],
+  "/concepts/vector-database/": [
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
+    }
+  ],
   "/concepts/real-time-architecture/": [
     {
       "url": "/concepts/event-driven-architecture/",
@@ -5095,6 +5889,108 @@
       "title": "Mô hình hóa dữ liệu (Phỏng vấn) - Data Modeling Interview"
     }
   ],
+  "/concepts/fine-tuning/": [
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/lora/",
+      "title": "Low-Rank Adaptation (LoRA)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
+    }
+  ],
+  "/concepts/prompt-engineering/": [
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
+  "/concepts/zero-shot/": [
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    }
+  ],
+  "/concepts/peft/": [
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/lora/",
+      "title": "Low-Rank Adaptation (LoRA)"
+    }
+  ],
+  "/concepts/rlhf/": [
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
   "/concepts/data-orchestration/": [
     {
       "url": "/concepts/freshness-monitoring/",
@@ -5139,6 +6035,12 @@
     {
       "url": "/concepts/inmon-methodology/",
       "title": "Inmon Methodology - Corporate Information Factory"
+    }
+  ],
+  "/concepts/llm-as-a-judge/": [
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
     }
   ],
   "/concepts/deduplication/": [
@@ -5199,6 +6101,10 @@
     {
       "url": "/concepts/lambda-architecture/",
       "title": "Lambda Architecture"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
     },
     {
       "url": "/concepts/modern-data-stack/",
@@ -5419,6 +6325,10 @@
       "title": "Khóa thay thế - Surrogate Key"
     },
     {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
       "url": "/interview/cloud-platform-interview/",
       "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
     },
@@ -5509,6 +6419,70 @@
       "title": "Interview Preparation (Chinh phục phỏng vấn Kỹ sư Dữ liệu)"
     }
   ],
+  "/concepts/hallucination/": [
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    },
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/context-window/",
+      "title": "Cửa sổ ngữ cảnh - Context Window"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
+    },
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    }
+  ],
+  "/concepts/ai-agent/": [
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
+    }
+  ],
+  "/concepts/model-serving/": [
+    {
+      "url": "/concepts/lora/",
+      "title": "Low-Rank Adaptation (LoRA)"
+    }
+  ],
+  "/concepts/quantization/": [
+    {
+      "url": "/concepts/lora/",
+      "title": "Low-Rank Adaptation (LoRA)"
+    }
+  ],
   "/concepts/staging-area/": [
     {
       "url": "/concepts/materialization/",
@@ -5519,6 +6493,46 @@
     {
       "url": "/concepts/metrics-layer/",
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
+    }
+  ],
+  "/concepts/llmops/": [
+    {
+      "url": "/concepts/mlflow/",
+      "title": "Quản lý vòng đời Machine Learning với MLflow"
+    }
+  ],
+  "/concepts/mlops/": [
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    }
+  ],
+  "/concepts/lora/": [
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    },
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/fine-tuning/",
+      "title": "Tinh chỉnh mô hình - Fine-tuning"
+    },
+    {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    }
+  ],
+  "/concepts/microservices/": [
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
     }
   ],
   "/concepts/cost-optimization/": [
@@ -5553,6 +6567,54 @@
       "title": "Modern Data Stack"
     }
   ],
+  "/concepts/reranking/": [
+    {
+      "url": "/concepts/ndcg/",
+      "title": "Normalized Discounted Cumulative Gain - NDCG"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    }
+  ],
+  "/concepts/recall/": [
+    {
+      "url": "/concepts/ndcg/",
+      "title": "Normalized Discounted Cumulative Gain - NDCG"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    }
+  ],
   "/concepts/clustering/": [
     {
       "url": "/concepts/partitioning/",
@@ -5575,6 +6637,14 @@
       "title": "Tối ưu hóa chi phí (Cost Optimization)"
     },
     {
+      "url": "/concepts/embedding-models/",
+      "title": "Các mô hình nhúng - Embedding Models"
+    },
+    {
+      "url": "/concepts/embeddings/",
+      "title": "Vectơ nhúng - Embeddings"
+    },
+    {
       "url": "/concepts/google-bigquery/",
       "title": "Google BigQuery - Nền tảng phân tích Serverless"
     },
@@ -5583,12 +6653,72 @@
       "title": "Snowflake Data Cloud"
     },
     {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
       "url": "/interview/performance-tuning-qa/",
       "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
     },
     {
       "url": "/learning-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
+    }
+  ],
+  "/concepts/few-shot/": [
+    {
+      "url": "/concepts/peft/",
+      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
+  "/concepts/few-shot-prompting/": [
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    }
+  ],
+  "/concepts/hybrid-search/": [
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
+    }
+  ],
+  "/concepts/chunking-strategy/": [
+    {
+      "url": "/concepts/recall/",
+      "title": "Độ phủ - Recall trong Máy học"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
     }
   ],
   "/concepts/indexing/": [
@@ -5601,12 +6731,44 @@
       "title": "Apache Hudi"
     },
     {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
       "url": "/concepts/data-catalog/",
       "title": "Danh mục dữ liệu - Data Catalog"
     },
     {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    },
+    {
       "url": "/concepts/partitioning/",
       "title": "Phân vùng Dữ liệu - Partitioning"
+    },
+    {
+      "url": "/concepts/rag/",
+      "title": "Tạo lập Truy xuất Tăng cường (RAG)"
+    },
+    {
+      "url": "/concepts/reranker/",
+      "title": "Mô hình tái sắp xếp - Reranker"
+    },
+    {
+      "url": "/concepts/semantic-search/",
+      "title": "Tìm kiếm ngữ nghĩa - Semantic Search"
+    },
+    {
+      "url": "/concepts/vector-database/",
+      "title": "Cơ sở dữ liệu Vector (Vector Database)"
+    },
+    {
+      "url": "/concepts/vector-store/",
+      "title": "Cơ sở dữ liệu Vector - Vector Database"
     },
     {
       "url": "/interview/performance-tuning-qa/",
@@ -5615,6 +6777,36 @@
     {
       "url": "/learning-paths/beginner-de/",
       "title": "Beginner Data Engineer (Kỹ sư dữ liệu nhập môn)"
+    }
+  ],
+  "/concepts/reranker/": [
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/embedding-model/",
+      "title": "Mô hình nhúng - Embedding Model"
+    },
+    {
+      "url": "/concepts/hybrid-search/",
+      "title": "Tìm kiếm kết hợp (Hybrid Search)"
+    }
+  ],
+  "/concepts/ndcg/": [
+    {
+      "url": "/concepts/reranking/",
+      "title": "Tái sắp xếp kết quả - Reranking"
+    },
+    {
+      "url": "/concepts/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric"
+    }
+  ],
+  "/concepts/dpo/": [
+    {
+      "url": "/concepts/rlhf/",
+      "title": "Học tăng cường từ phản hồi của con người - RLHF"
     }
   ],
   "/concepts/alerting-incident-response/": [
@@ -5689,8 +6881,16 @@
       "title": "Kiến trúc Medallion - Medallion Architecture"
     },
     {
+      "url": "/concepts/mlflow/",
+      "title": "Quản lý vòng đời Machine Learning với MLflow"
+    },
+    {
       "url": "/concepts/spark-partition/",
       "title": "Spark Partition"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     },
     {
       "url": "/learning-paths/cloud-data-engineer/",
@@ -5743,6 +6943,10 @@
       "title": "Task Dependency - Quản lý sự phụ thuộc tác vụ"
     },
     {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
       "url": "/concepts/apache-kafka/",
       "title": "Apache Kafka"
     },
@@ -5761,6 +6965,80 @@
     {
       "url": "/concepts/real-time-architecture/",
       "title": "Real-time Architecture"
+    }
+  ],
+  "/concepts/top-p/": [
+    {
+      "url": "/concepts/temperature/",
+      "title": "Nhiệt độ - Temperature"
+    }
+  ],
+  "/concepts/context-window/": [
+    {
+      "url": "/concepts/token/",
+      "title": "Token - Đơn vị từ vựng"
+    },
+    {
+      "url": "/concepts/ai-agent/",
+      "title": "Tác nhân AI (AI Agent)"
+    },
+    {
+      "url": "/concepts/chunking-strategy/",
+      "title": "Chiến lược phân tách văn bản - Chunking Strategy"
+    },
+    {
+      "url": "/concepts/chunking/",
+      "title": "Phân tách văn bản - Chunking"
+    },
+    {
+      "url": "/concepts/few-shot-prompting/",
+      "title": "Học qua vài ví dụ - Few-shot Prompting"
+    },
+    {
+      "url": "/concepts/few-shot/",
+      "title": "Học qua vài ví dụ (Few-shot Prompting)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/prompt-engineering/",
+      "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/concepts/system-prompt/",
+      "title": "Gợi ý hệ thống (System Prompt)"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    }
+  ],
+  "/concepts/temperature/": [
+    {
+      "url": "/concepts/top-p/",
+      "title": "Nucleus Sampling - Top-p"
+    },
+    {
+      "url": "/concepts/hallucination/",
+      "title": "Ảo giác LLM (Hallucination)"
+    },
+    {
+      "url": "/concepts/llm/",
+      "title": "Mô hình Ngôn ngữ Lớn (Large Language Model)"
+    },
+    {
+      "url": "/concepts/mlflow/",
+      "title": "Quản lý vòng đời Machine Learning với MLflow"
+    },
+    {
+      "url": "/concepts/zero-shot/",
+      "title": "Học không cần ví dụ (Zero-shot)"
+    },
+    {
+      "url": "/interview/sql-interview-patterns/",
+      "title": "SQL Interview Patterns"
     }
   ],
   "/concepts/event-time-processing-time/": [
@@ -5893,138 +7171,6 @@
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/concepts/llm/": [
-    {
-      "url": "/concepts/ai-agent/",
-      "title": "Tác nhân AI (AI Agent)"
-    },
-    {
-      "url": "/concepts/chunking/",
-      "title": "Phân tách văn bản (Chunking)"
-    },
-    {
-      "url": "/concepts/few-shot-prompting/",
-      "title": "Học qua vài ví dụ (Few-shot Prompting)"
-    },
-    {
-      "url": "/concepts/few-shot/",
-      "title": "Học qua vài ví dụ (Few-shot Prompting)"
-    },
-    {
-      "url": "/concepts/fine-tuning/",
-      "title": "Tinh chỉnh mô hình (Fine-tuning)"
-    },
-    {
-      "url": "/concepts/hallucination/",
-      "title": "Ảo giác LLM (Hallucination)"
-    },
-    {
-      "url": "/concepts/llm-as-a-judge/",
-      "title": "LLM làm giám khảo (LLM-as-a-judge)"
-    },
-    {
-      "url": "/concepts/metrics-layer/",
-      "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
-    },
-    {
-      "url": "/concepts/mlflow/",
-      "title": "MLflow"
-    },
-    {
-      "url": "/concepts/model-serving/",
-      "title": "Phục vụ mô hình (Model Serving)"
-    },
-    {
-      "url": "/concepts/peft/",
-      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
-    },
-    {
-      "url": "/concepts/prompt-engineering/",
-      "title": "Kỹ nghệ Gợi ý (Prompt Engineering)"
-    },
-    {
-      "url": "/concepts/rag/",
-      "title": "Retrieval-Augmented Generation (Tạo lập Truy xuất Tăng cường)"
-    },
-    {
-      "url": "/concepts/recall/",
-      "title": "Độ phủ (Recall)"
-    },
-    {
-      "url": "/concepts/reranker/",
-      "title": "Mô hình tái sắp xếp (Reranker / Reranking)"
-    },
-    {
-      "url": "/concepts/reranking/",
-      "title": "Tái sắp xếp kết quả (Reranking)"
-    },
-    {
-      "url": "/concepts/rlhf/",
-      "title": "Học tăng cường từ phản hồi của con người (RLHF)"
-    },
-    {
-      "url": "/concepts/system-prompt/",
-      "title": "Gợi ý hệ thống (System Prompt / System Message)"
-    },
-    {
-      "url": "/concepts/temperature/",
-      "title": "Nhiệt độ (Temperature)"
-    },
-    {
-      "url": "/concepts/token/",
-      "title": "Token (Đơn vị từ vựng)"
-    },
-    {
-      "url": "/concepts/unity-catalog/",
-      "title": "Unity Catalog"
-    },
-    {
-      "url": "/concepts/zero-shot/",
-      "title": "Học không cần ví dụ (Zero-shot)"
-    }
-  ],
-  "/concepts/token/": [
-    {
-      "url": "/concepts/alerting-incident-response/",
-      "title": "Cảnh báo và phản ứng sự cố - Alerting & Incident Response"
-    },
-    {
-      "url": "/concepts/apache-airflow/",
-      "title": "Apache Airflow - Nền tảng điều phối dữ liệu"
-    },
-    {
-      "url": "/concepts/chunking-strategy/",
-      "title": "Chiến lược phân tách (Chunking Strategy)"
-    },
-    {
-      "url": "/concepts/context-window/",
-      "title": "Cửa sổ ngữ cảnh (Context Window)"
-    },
-    {
-      "url": "/concepts/data-extraction/",
-      "title": "Data Extraction"
-    },
-    {
-      "url": "/concepts/data-observability/",
-      "title": "Giám sát khả năng quan sát dữ liệu - Data Observability"
-    },
-    {
-      "url": "/concepts/few-shot-prompting/",
-      "title": "Học qua vài ví dụ (Few-shot Prompting)"
-    },
-    {
-      "url": "/concepts/temperature/",
-      "title": "Nhiệt độ (Temperature)"
-    },
-    {
-      "url": "/concepts/top-p/",
-      "title": "Nucleus Sampling (Top-p)"
-    },
-    {
-      "url": "/concepts/volume-anomalies/",
-      "title": "Phát hiện bất thường về khối lượng dữ liệu - Volume Anomalies"
-    }
-  ],
   "/concepts/backfill/": [
     {
       "url": "/concepts/alerting-incident-response/",
@@ -6127,108 +7273,6 @@
       "title": "Table Format"
     }
   ],
-  "/concepts/rag/": [
-    {
-      "url": "/concepts/chunking-strategy/",
-      "title": "Chiến lược phân tách (Chunking Strategy)"
-    },
-    {
-      "url": "/concepts/embedding-models/",
-      "title": "Mô hình nhúng (Embedding Models)"
-    },
-    {
-      "url": "/concepts/embeddings/",
-      "title": "Vectơ nhúng (Embeddings)"
-    },
-    {
-      "url": "/concepts/evaluation-metric/",
-      "title": "Chỉ số đánh giá (Evaluation Metric)"
-    },
-    {
-      "url": "/concepts/fine-tuning/",
-      "title": "Tinh chỉnh mô hình (Fine-tuning)"
-    },
-    {
-      "url": "/concepts/hallucination/",
-      "title": "Ảo giác LLM (Hallucination)"
-    },
-    {
-      "url": "/concepts/hybrid-search/",
-      "title": "Tìm kiếm kết hợp (Hybrid Search)"
-    },
-    {
-      "url": "/concepts/llm-as-a-judge/",
-      "title": "LLM làm giám khảo (LLM-as-a-judge)"
-    },
-    {
-      "url": "/concepts/mlflow/",
-      "title": "MLflow"
-    },
-    {
-      "url": "/concepts/ndcg/",
-      "title": "Normalized Discounted Cumulative Gain (NDCG)"
-    },
-    {
-      "url": "/concepts/recall/",
-      "title": "Độ phủ (Recall)"
-    },
-    {
-      "url": "/concepts/reranker/",
-      "title": "Mô hình tái sắp xếp (Reranker / Reranking)"
-    },
-    {
-      "url": "/concepts/reranking/",
-      "title": "Tái sắp xếp kết quả (Reranking)"
-    },
-    {
-      "url": "/concepts/semantic-search/",
-      "title": "Tìm kiếm ngữ nghĩa (Semantic Search)"
-    },
-    {
-      "url": "/concepts/unity-catalog/",
-      "title": "Unity Catalog"
-    },
-    {
-      "url": "/concepts/vector-database/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    },
-    {
-      "url": "/concepts/vector-store/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    }
-  ],
-  "/concepts/chunking/": [
-    {
-      "url": "/concepts/chunking-strategy/",
-      "title": "Chiến lược phân tách (Chunking Strategy)"
-    },
-    {
-      "url": "/concepts/compression-algorithms/",
-      "title": "Thuật toán nén dữ liệu - Compression Algorithms"
-    },
-    {
-      "url": "/interview/python-de-interview/",
-      "title": "Python Data Engineering Interview Patterns"
-    },
-    {
-      "url": "/learning-paths/interview-prep/",
-      "title": "Interview Preparation (Chinh phục phỏng vấn Kỹ sư Dữ liệu)"
-    }
-  ],
-  "/concepts/vector-store/": [
-    {
-      "url": "/concepts/chunking/",
-      "title": "Phân tách văn bản (Chunking)"
-    },
-    {
-      "url": "/concepts/reranking/",
-      "title": "Tái sắp xếp kết quả (Reranking)"
-    },
-    {
-      "url": "/concepts/vector-database/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    }
-  ],
   "/concepts/distribution-drift/": [
     {
       "url": "/concepts/data-observability/",
@@ -6239,6 +7283,18 @@
     {
       "url": "/concepts/databricks-platform/",
       "title": "Databricks Platform"
+    },
+    {
+      "url": "/concepts/llm-as-a-judge/",
+      "title": "LLM làm giám khảo (LLM-as-a-judge)"
+    },
+    {
+      "url": "/concepts/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving)"
+    },
+    {
+      "url": "/concepts/unity-catalog/",
+      "title": "Unity Catalog"
     }
   ],
   "/concepts/unity-catalog/": [
@@ -6263,100 +7319,6 @@
     {
       "url": "/concepts/sql-transformation/",
       "title": "SQL Transformation - Biến đổi dữ liệu bằng SQL"
-    }
-  ],
-  "/concepts/embedding-model/": [
-    {
-      "url": "/concepts/embeddings/",
-      "title": "Vectơ nhúng (Embeddings)"
-    }
-  ],
-  "/concepts/recall/": [
-    {
-      "url": "/concepts/evaluation-metric/",
-      "title": "Chỉ số đánh giá (Evaluation Metric)"
-    },
-    {
-      "url": "/concepts/reranking/",
-      "title": "Tái sắp xếp kết quả (Reranking)"
-    }
-  ],
-  "/concepts/ndcg/": [
-    {
-      "url": "/concepts/evaluation-metric/",
-      "title": "Chỉ số đánh giá (Evaluation Metric)"
-    }
-  ],
-  "/concepts/system-prompt/": [
-    {
-      "url": "/concepts/hallucination/",
-      "title": "Ảo giác LLM (Hallucination)"
-    }
-  ],
-  "/concepts/semantic-search/": [
-    {
-      "url": "/concepts/hybrid-search/",
-      "title": "Tìm kiếm kết hợp (Hybrid Search)"
-    },
-    {
-      "url": "/concepts/vector-database/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    }
-  ],
-  "/concepts/peft/": [
-    {
-      "url": "/concepts/lora/",
-      "title": "Low-Rank Adaptation (LoRA)"
-    }
-  ],
-  "/concepts/lora/": [
-    {
-      "url": "/concepts/peft/",
-      "title": "Tinh chỉnh hiệu quả tham số (PEFT)"
-    }
-  ],
-  "/concepts/hallucination/": [
-    {
-      "url": "/concepts/rag/",
-      "title": "Retrieval-Augmented Generation (Tạo lập Truy xuất Tăng cường)"
-    }
-  ],
-  "/concepts/reranker/": [
-    {
-      "url": "/concepts/recall/",
-      "title": "Độ phủ (Recall)"
-    }
-  ],
-  "/concepts/reranking/": [
-    {
-      "url": "/concepts/reranker/",
-      "title": "Mô hình tái sắp xếp (Reranker / Reranking)"
-    }
-  ],
-  "/concepts/temperature/": [
-    {
-      "url": "/concepts/top-p/",
-      "title": "Nucleus Sampling (Top-p)"
-    },
-    {
-      "url": "/interview/sql-interview-patterns/",
-      "title": "SQL Interview Patterns"
-    }
-  ],
-  "/concepts/embeddings/": [
-    {
-      "url": "/concepts/vector-database/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    },
-    {
-      "url": "/concepts/vector-store/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
-    }
-  ],
-  "/concepts/vector-database/": [
-    {
-      "url": "/concepts/vector-store/",
-      "title": "Cơ sở dữ liệu Vector (Vector Database / Vector Store)"
     }
   ],
   "/concepts/cloud-platform-interview/": [
