@@ -196,12 +196,16 @@ export default defineConfig({
 					collapsed: true,
 
 					items: [
-						{ label: 'Databricks DE Professional',
- collapsed: true,
- link: '/quizzes/databricks-de-advanced/' },
-						{ label: 'Databricks GenAI Associate',
- collapsed: true,
- link: '/quizzes/databricks-genai-associate/' }
+						{ 
+							label: 'Databricks DE Professional',
+							link: '/quizzes/databricks-de-advanced/',
+							attrs: { 'data-astro-reload': true }
+						},
+						{ 
+							label: 'Databricks GenAI Associate',
+							link: '/quizzes/databricks-genai-associate/',
+							attrs: { 'data-astro-reload': true }
+						}
 					]
 				}
 			],
