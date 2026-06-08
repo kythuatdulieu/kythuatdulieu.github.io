@@ -153,11 +153,11 @@
                     
                     const conceptKey = sortedKeys.find(key => key.toLowerCase() === matchedText.toLowerCase());
                     
-                    const span = document.createElement('span');
-                    span.className = 'concept-link';
-                    span.dataset.concept = conceptKey;
-                    span.textContent = matchedText;
-                    fragment.appendChild(span);
+                    const a = document.createElement('a');
+                    a.className = 'concept-link';
+                    a.dataset.concept = conceptKey;
+                    a.textContent = matchedText;
+                    fragment.appendChild(a);
                     
                     lastIndex = matchIndex + matchedText.length;
                     regex.lastIndex = lastIndex;
@@ -190,6 +190,7 @@
 
                 const slug = conceptKey.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
                 const url = concept.url || `/concepts/${slug}/`;
+                link.href = url;
 
                 tippy(link, {
                     content: '<div class="popover-loading"><div class="spinner"></div> Đang tải...</div>',
