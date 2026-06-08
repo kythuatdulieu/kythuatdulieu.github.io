@@ -310,7 +310,7 @@
     // ========================
     // Rendering
     // ========================
-    function renderQuestion() {
+    function renderQuestion(animate = true) {
         const filtered = getFilteredIndices();
         if (filtered.length === 0) {
             els.questionBadge.textContent = 'Không có câu hỏi';
@@ -408,14 +408,26 @@
                     div.classList.add('wrong-answer');
                 }
             } else if (q.isMulti && window.currentSelection.has(letter)) {
-                div.classList.add('selected-answer'); // Needs CSS
-                div.style.border = '2px solid var(--primary)';
-                div.style.backgroundColor = 'var(--bg-glass-hover)';
+                div.classList.add('selected'); // Use the selected class from style.css
             }
 
             const letterSpan = document.createElement('span');
             letterSpan.className = 'option-letter';
-            letterSpan.textContent = letter;
+            
+            if (answered) {
+                const userAnsArr = userAns.split(',');
+                const correctAnsArr = q.answer ? q.answer.split(',') : [];
+                
+                if (correctAnsArr.includes(letter)) {
+                    letterSpan.textContent = '✓';
+                } else if (userAnsArr.includes(letter)) {
+                    letterSpan.textContent = '✗';
+                } else {
+                    letterSpan.textContent = letter;
+                }
+            } else {
+                letterSpan.textContent = letter;
+            }
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'option-content';
@@ -446,6 +458,28 @@
 
             els.optionsList.appendChild(div);
         });
+
+        // Render Submit Button for Multi-choice if not answered
+        if (q.isMulti && !answered) {
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'multi-submit-btn';
+            const requiredCount = q.answer ? q.answer.split(',').length : 1;
+            submitBtn.textContent = `Xác nhận (${window.currentSelection.size}/${requiredCount})`;
+            
+            if (window.currentSelection.size === requiredCount) {
+                submitBtn.disabled = false;
+                submitBtn.addEventListener('click', () => {
+                    userAnswers[q.id] = Array.from(window.currentSelection).sort().join(',');
+                    window.currentSelection.clear();
+                    updateScores();
+                    saveState();
+                    renderQuestion();
+                });
+            } else {
+                submitBtn.disabled = true;
+            }
+            els.optionsList.appendChild(submitBtn);
+        }
 
         // Explanation — shown after answering
         let explanationDiv = document.getElementById('explanationBox');
@@ -507,11 +541,13 @@
 
 
 
-        // Animate card
-        els.questionCard.style.animation = 'none';
-        requestAnimationFrame(() => {
-            els.questionCard.style.animation = 'fadeInUp 0.3s ease';
-        });
+        if (animate) {
+            // Animate card
+            els.questionCard.style.animation = 'none';
+            requestAnimationFrame(() => {
+                els.questionCard.style.animation = 'fadeInUp 0.3s ease';
+            });
+        }
 
         saveState();
     }
@@ -523,20 +559,18 @@
             if (window.currentSelection.has(letter)) {
                 window.currentSelection.delete(letter);
             } else {
-                window.currentSelection.add(letter);
+                if (window.currentSelection.size < requiredCount) {
+                    window.currentSelection.add(letter);
+                } else {
+                    showToast(`Chỉ được chọn tối đa ${requiredCount} đáp án`);
+                }
             }
-            if (window.currentSelection.size === requiredCount) {
-                userAnswers[qId] = Array.from(window.currentSelection).sort().join(',');
-                window.currentSelection.clear();
-                updateScores();
-                saveState();
-            }
-            renderQuestion();
+            renderQuestion(false);
         } else {
             userAnswers[qId] = letter;
             updateScores();
             saveState();
-            renderQuestion();
+            renderQuestion(false);
         }
     }
 

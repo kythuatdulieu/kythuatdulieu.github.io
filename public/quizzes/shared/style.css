@@ -503,7 +503,7 @@ button {
 /* Selected state */
 .option-item.selected {
   border-color: var(--accent);
-  background: rgba(99, 102, 241, 0.1);
+  background: var(--accent-glow);
 }
 
 .option-item.selected .option-letter {
@@ -1457,6 +1457,38 @@ button {
     display: none;
   }
 }
+
+/* Multi-choice Submit Button */
+.multi-submit-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.multi-submit-btn:not(:disabled) {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.multi-submit-btn:not(:disabled):hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
 
 
 
