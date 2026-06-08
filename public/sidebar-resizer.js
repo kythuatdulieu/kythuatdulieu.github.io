@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Starlight uses a specific DOM structure. The sidebar is inside a grid.
   // We attach the resizer to the sidebar pane.
-  sidebar.style.position = 'relative';
+  const computedPosition = window.getComputedStyle(sidebar).position;
+  if (computedPosition === 'static') {
+    sidebar.style.position = 'relative';
+  }
   sidebar.appendChild(resizer);
 
   let isResizing = false;

@@ -30,15 +30,7 @@
         popoverEl.id = 'concept-popover';
         popoverEl.className = 'concept-popover hidden';
         popoverEl.innerHTML = `
-            <div class="popover-header">
-                <h4 id="popover-title">Khái niệm</h4>
-                <span class="popover-badge" id="popover-category">Danh mục</span>
-            </div>
             <div class="popover-body" id="popover-body"></div>
-            <div class="popover-footer">
-                <span class="popover-tip">Chạm bên ngoài hoặc nhấn nút để đóng</span>
-                <button class="popover-close-btn" id="popover-close">Đóng</button>
-            </div>
         `;
         
         document.body.appendChild(popoverEl);
@@ -53,10 +45,13 @@
             }, 300);
         });
         
-        document.getElementById('popover-close').addEventListener('click', (e) => {
-            e.preventDefault();
-            hidePopover();
-        });
+        const closeBtn = document.getElementById('popover-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                hidePopover();
+            });
+        }
         
         document.addEventListener('click', (e) => {
             if (popoverEl && !popoverEl.classList.contains('hidden') && !popoverEl.contains(e.target) && !e.target.classList.contains('concept-link')) {
@@ -184,25 +179,34 @@
     function showPopover(link, concept, isSticky = false) {
         if (!popoverEl) return;
         
-        document.getElementById('popover-title').textContent = concept.title || conceptKey;
-        document.getElementById('popover-category').textContent = concept.category || 'Khái niệm';
+        const titleEl = document.getElementById('popover-title');
+        if (titleEl) {
+            titleEl.textContent = concept.title || '';
+        }
+        
+        const categoryEl = document.getElementById('popover-category');
+        if (categoryEl) {
+            categoryEl.textContent = concept.category || 'Khái niệm';
+        }
         
         const bodyEl = document.getElementById('popover-body');
-        let bulletsHtml = '';
-        if (concept.bullets && concept.bullets.length > 0) {
-            bulletsHtml = '<ul>' + concept.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+        if (bodyEl) {
+            let bulletsHtml = '';
+            if (concept.bullets && concept.bullets.length > 0) {
+                bulletsHtml = '<ul>' + concept.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+            }
+            bodyEl.innerHTML = `<p>${concept.definition}</p>${bulletsHtml}`;
         }
-        bodyEl.innerHTML = `<p>${concept.definition}</p>${bulletsHtml}`;
         
         const closeBtn = document.getElementById('popover-close');
         const tipEl = popoverEl.querySelector('.popover-tip');
         
         if (isSticky) {
-            closeBtn.style.display = 'block';
-            tipEl.innerHTML = 'Đã ghim khái niệm';
+            if (closeBtn) closeBtn.style.display = 'block';
+            if (tipEl) tipEl.innerHTML = 'Đã ghim khái niệm';
         } else {
-            closeBtn.style.display = 'none';
-            tipEl.innerHTML = 'Di chuột ra ngoài để đóng';
+            if (closeBtn) closeBtn.style.display = 'none';
+            if (tipEl) tipEl.innerHTML = 'Di chuột ra ngoài để đóng';
         }
         
         popoverEl.classList.remove('hidden');

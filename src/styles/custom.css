@@ -87,3 +87,43 @@ body.focus-mode .main-pane {
         display: none;
     }
 }
+
+/* ==========================================================
+   STARLIGHT LAYOUT BUG FIX (BREAKPOINT MISMATCH)
+   Aligns the two-column grid layout to activate at 62rem (lg)
+   matching when the right sidebar (Table of Contents) becomes visible.
+   This prevents the main content panel from being pushed below the sidebars.
+   ========================================================== */
+@media (min-width: 62rem) {
+    .right-sidebar-container {
+        order: 2 !important;
+        position: relative !important;
+        width: calc(
+            var(--sl-sidebar-width) + (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2
+        ) !important;
+    }
+
+    .right-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        border-inline-start: 1px solid var(--sl-color-gray-6) !important;
+        padding-top: var(--sl-nav-height) !important;
+        width: 100% !important;
+        height: 100vh !important;
+        overflow-y: auto !important;
+        scrollbar-width: none !important;
+    }
+
+    .main-pane {
+        width: 100% !important;
+    }
+
+    [data-has-sidebar][data-has-toc] .main-pane {
+        --sl-content-margin-inline: auto 0 !important;
+        order: 1 !important;
+        width: calc(
+            var(--sl-content-width) + (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2
+        ) !important;
+    }
+}
+

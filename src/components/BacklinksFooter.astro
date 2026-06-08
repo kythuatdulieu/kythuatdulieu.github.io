@@ -83,59 +83,7 @@ if (pathParts[0] === 'concepts' && pathParts[1]) {
   </div>
 )}
 
-{!isSplashPage && (
-<div class="comments-container" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--sl-color-hairline);">
-  <h3 style="font-size: var(--sl-text-h4); margin-bottom: 1rem; font-weight: 600; color: var(--sl-color-white);">Bình luận & Thảo luận</h3>
-  
-  <div id="utterances-container"></div>
-  
-  <script is:inline>
-    function loadUtterances() {
-      const container = document.getElementById('utterances-container');
-      if (!container) return;
-      
-      // Remove old script/iframe to prevent duplicates
-      container.innerHTML = '';
-      
-      const script = document.createElement('script');
-      script.src = 'https://utteranc.es/client.js';
-      script.setAttribute('repo', 'kythuatdulieu/kythuatdulieu.github.io');
-      script.setAttribute('issue-term', 'pathname');
-      
-      // Detect Starlight's current theme
-      const isDark = document.documentElement.dataset.theme === 'dark';
-      script.setAttribute('theme', isDark ? 'github-dark' : 'github-light');
-      script.setAttribute('crossorigin', 'anonymous');
-      script.async = true;
-      
-      container.appendChild(script);
-    }
 
-    // Run immediately since Starlight might not use ViewTransitions
-    // Use requestAnimationFrame to ensure the DOM element is fully ready
-    requestAnimationFrame(() => {
-        loadUtterances();
-        
-        // Watch for Starlight dark/light mode toggles
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'data-theme') {
-              loadUtterances();
-            }
-          });
-        });
-        observer.observe(document.documentElement, { attributes: true });
-    });
-
-    // Also keep the astro:page-load hook just in case ViewTransitions is enabled later
-    document.addEventListener('astro:page-load', loadUtterances);
-  </script>
-
-  <p style="font-size: 0.85rem; color: var(--sl-color-gray-4); margin-top: 0.5rem; text-align: center;">
-    <em>(Lưu ý: Bạn cần đăng nhập GitHub để bình luận. Nếu lỗi, vui lòng đảm bảo đã cài đặt Utterances App trên Github Repo)</em>
-  </p>
-</div>
-)}
 
 <Default {...Astro.props}>
   <slot />
