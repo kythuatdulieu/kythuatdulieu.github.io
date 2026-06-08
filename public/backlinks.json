@@ -339,10 +339,6 @@
     {
       "url": "/concepts/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/rag/": [
@@ -449,10 +445,6 @@
     {
       "url": "/concepts/token/",
       "title": "Token - Đơn vị từ vựng"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/system-prompt/": [
@@ -1175,10 +1167,6 @@
       "title": "Lược đồ hình sao - Star Schema"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/data-modeling-interview/",
       "title": "Mô hình hóa dữ liệu (Phỏng vấn) - Data Modeling Interview"
     },
@@ -1793,10 +1781,6 @@
     {
       "url": "/concepts/unity-catalog/",
       "title": "Unity Catalog"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     },
     {
       "url": "/interview/pipeline-design-interview/",
@@ -2491,10 +2475,6 @@
     {
       "url": "/concepts/windowing/",
       "title": "Windowing - Phân nhóm dữ liệu luồng theo thời gian"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -4681,10 +4661,6 @@
       "title": "Zero-Copy Cloning"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     },
@@ -5745,10 +5721,6 @@
     {
       "url": "/concepts/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/real-time-architecture/": [

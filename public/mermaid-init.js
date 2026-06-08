@@ -16,16 +16,25 @@ document.addEventListener('astro:page-load', async () => {
 });
 
 async function renderMermaid() {
-    const mermaidBlocks = document.querySelectorAll('pre.language-mermaid > code, pre.mermaid > code, div.mermaid');
+    // Find Astro Starlight Expressive Code blocks that are mermaid
+    const mermaidPres = document.querySelectorAll('pre[data-language="mermaid"]');
     
-    for (let i = 0; i < mermaidBlocks.length; i++) {
-        const block = mermaidBlocks[i];
-        // If it's a code block inside pre
-        const parent = block.tagName === 'CODE' ? block.parentElement : block;
+    for (let i = 0; i < mermaidPres.length; i++) {
+        const pre = mermaidPres[i];
+        const figure = pre.closest('figure.frame');
         
-        if (parent.dataset.mermaidRendered) continue;
+        if (pre.dataset.mermaidRendered) continue;
         
-        const text = block.textContent;
+        // Extract text line by line to preserve newlines
+        const lines = pre.querySelectorAll('.ec-line');
+        let text = '';
+        if (lines.length > 0) {
+            text = Array.from(lines).map(line => line.textContent).join('\n');
+        } else {
+            // Fallback for regular unstyled pre>code
+            text = pre.textContent;
+        }
+        
         const id = `mermaid-${Date.now()}-${i}`;
         
         try {
@@ -34,16 +43,33 @@ async function renderMermaid() {
             container.style.display = 'flex';
             container.style.justifyContent = 'center';
             container.style.margin = '2rem 0';
+            container.style.padding = '1rem';
+            container.style.backgroundColor = 'var(--sl-color-bg-nav)';
+            container.style.borderRadius = '0.5rem';
             
             const { svg } = await mermaid.render(id, text);
             container.innerHTML = svg;
             
-            parent.parentNode.insertBefore(container, parent);
-            parent.style.display = 'none'; // hide the code block
-            parent.dataset.mermaidRendered = 'true';
+            // Insert the rendered SVG
+            if (figure) {
+                figure.parentNode.insertBefore(container, figure);
+                figure.style.display = 'none'; // Hide original code block
+            } else {
+                pre.parentNode.insertBefore(container, pre);
+                pre.style.display = 'none';
+            }
+            
+            pre.dataset.mermaidRendered = 'true';
         } catch (e) {
             console.error('Mermaid render error:', e);
             // Leave the code block visible if error
+            
+            // Optionally, show a small error banner
+            const errorDiv = document.createElement('div');
+            errorDiv.style.color = 'var(--sl-color-red)';
+            errorDiv.style.fontSize = '0.8rem';
+            errorDiv.innerText = 'Mermaid syntax error';
+            pre.parentNode.insertBefore(errorDiv, pre);
         }
     }
 }

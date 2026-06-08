@@ -684,3 +684,69 @@ footer {
 .tippy-box[data-theme~='starlight'] .popover-content p:last-child {
     margin-bottom: 0;
 }
+
+/* Focus Mode (Zen Mode) & Typography Alignment */
+.sl-markdown-content {
+    line-height: 1.75;
+    font-size: 1.05rem;
+}
+
+.sl-markdown-content p {
+    text-align: left;
+    margin-bottom: 1.2rem;
+}
+
+body.focus-mode .sidebar-pane,
+body.focus-mode right-sidebar,
+body.focus-mode .right-sidebar-container,
+body.focus-mode .sl-sidebar,
+body.focus-mode .interactive-graph-container {
+    display: none !important;
+}
+
+body.focus-mode .main-frame {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    display: flex;
+    justify-content: center;
+}
+
+body.focus-mode .main-pane {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Floating Focus Toggle Button */
+.focus-toggle-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+    border: none;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.focus-toggle-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--sl-color-accent-high);
+}
+
+@media (max-width: 1024px) {
+    .focus-toggle-btn {
+        display: none; /* Hide on mobile where sidebar is already collapsible */
+    }
+}

@@ -41,6 +41,10 @@ export default defineConfig({
 					attrs: { src: '/popover.js', defer: true },
 				},
 				{
+					tag: 'script',
+					attrs: { src: '/focus.js', defer: true },
+				},
+				{
 					tag: 'link',
 					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/animations/shift-away.css' },
 				}

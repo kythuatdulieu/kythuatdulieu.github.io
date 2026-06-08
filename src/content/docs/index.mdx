@@ -1,149 +1,33 @@
 ---
 title: Data Engineering Handbook
-description: Cẩm nang Kỹ thuật Dữ liệu song ngữ Anh - Việt dành cho kỹ sư Việt Nam.
-template: splash
-hero:
-  title: Data Engineering <br/> <span class="text-gradient">Handbook</span>
-  tagline: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho kỹ sư Việt Nam. Nơi xây dựng "Bộ Não Thứ Hai" cho sự nghiệp Data của bạn.
-  image:
-    file: ../../assets/hero_data_engineering.png
-  actions:
-    - text: Khám phá ngay
-      link: /learning-paths/beginner-de/
-      icon: right-arrow
-      variant: primary
-    - text: Tra cứu Thuật ngữ
-      link: /concepts/data-warehouse/
-      icon: open-book
-      variant: secondary
+description: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho kỹ sư Việt Nam. Nơi xây dựng "Bộ Não Thứ Hai" cho sự nghiệp Data của bạn.
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import MapOfContent from '../../components/MapOfContent.astro';
 
-## Khởi đầu Lộ trình
-
-<div class="interactive-grid">
-  <a href="/learning-paths/beginner-de/" class="topic-card fade-in">
-    <div class="icon">🚀</div>
-    <h3>Beginner Data Engineer</h3>
-    <p>Nhập môn DE: SQL, Python, ETL cơ bản</p>
-  </a>
-  <a href="/learning-paths/junior-to-middle-de/" class="topic-card fade-in" style="animation-delay: 0.1s">
-    <div class="icon">⚙️</div>
-    <h3>Junior to Middle DE</h3>
-    <p>Data Warehouse, Spark, Airflow</p>
-  </a>
-  <a href="/learning-paths/middle-to-senior-de/" class="topic-card fade-in" style="animation-delay: 0.2s">
-    <div class="icon">🏗️</div>
-    <h3>Middle to Senior DE</h3>
-    <p>System Design, Data Lakehouse, Optimization</p>
-  </a>
-  <a href="/learning-paths/streaming-data-engineer/" class="topic-card fade-in" style="animation-delay: 0.3s">
-    <div class="icon">⚡</div>
-    <h3>Streaming & Real-time</h3>
-    <p>Kafka, Flink, Event-Driven Architecture</p>
-  </a>
+<div class="content-focus-header">
+  <p>Chào mừng đến với hệ thống tri thức (Second Brain) chuyên sâu về Kỹ thuật Dữ liệu (Data Engineering) dành cho cộng đồng kỹ sư Việt Nam.</p>
+  <p>Đây là một cuốn cẩm nang "sống" với hơn 150 thuật ngữ lõi và các lộ trình học tập từ cơ bản đến chuyên sâu. Sử dụng màn hình <strong>Đồ thị Tri thức (Interactive Graph)</strong> ở thanh bên hoặc di chuột qua bất kỳ liên kết nội bộ nào để khám phá.</p>
 </div>
 
-## Khám phá Nền tảng
-
-<CardGrid stagger>
-	<Card title="Hơn 150+ Khái niệm Chuyên sâu" icon="document">
-		Từ **Data Warehouse**, **OLAP**, **ACID** cho đến **Vector Database**, **RAG**, **LLM**. Giải thích cặn kẽ, trực quan, có ví dụ thực tế.
-	</Card>
-	<Card title="Tính năng Mạng lưới Tương tác" icon="puzzle">
-		Sử dụng màn hình Mạng lưới Kiến thức (Knowledge Graph) ở thanh bên phải để xem trực quan mối quan hệ giữa các khái niệm.
-	</Card>
-	<Card title="Chuẩn bị Phỏng vấn (Interview)" icon="list-format">
-		Bộ câu hỏi phỏng vấn System Design thực chiến từ các công ty công nghệ lớn: **Kafka Design**, **Spark Optimization**, **Pipeline Design**.
-	</Card>
-	<Card title="Popovers & Liên kết ngược" icon="information">
-		Di chuột qua bất kỳ thuật ngữ nào để xem thẻ nhớ (Flashcard) tóm tắt. Xem tính năng Liên kết ngược (Backlinks) cuối mỗi trang.
-	</Card>
-</CardGrid>
-
-## Bản đồ Khái niệm (Map of Content)
-
-Dưới đây là danh sách toàn bộ các khái niệm cốt lõi trong Data Engineering, được phân loại theo từng nhóm chuyên môn:
+---
 
 <MapOfContent />
 
 <style>{`
-  .text-gradient {
-    background: linear-gradient(315deg, var(--sl-color-accent-high), var(--sl-color-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .content-focus-header {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-2);
+    margin-bottom: 2rem;
   }
-  
-  .interactive-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0 4rem 0;
-  }
-
-  .topic-card {
-    background: var(--sl-color-black);
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    text-decoration: none !important;
-    color: var(--sl-color-white) !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .topic-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
-    transform: skewX(-20deg);
-    transition: 0.5s;
-  }
-
-  .topic-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--sl-color-accent);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-  }
-
-  .topic-card:hover::before {
-    left: 150%;
-  }
-
-  .topic-card .icon {
-    font-size: 2.5rem;
+  .content-focus-header p {
     margin-bottom: 1rem;
   }
-
-  .topic-card h3 {
-    margin: 0 0 0.5rem 0 !important;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-
-  .topic-card p {
-    margin: 0 !important;
-    font-size: 0.9rem;
-    color: var(--sl-color-gray-3);
-  }
-
-  .fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  
+  /* Make the content centrally aligned for focus reading mode */
+  .sl-markdown-content {
+    max-width: 768px !important;
+    margin: 0 auto;
   }
 `}</style>
