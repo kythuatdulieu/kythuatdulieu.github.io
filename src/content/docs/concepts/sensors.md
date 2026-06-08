@@ -11,61 +11,43 @@ metaDescription: "Tìm hiểu về Sensors trong Apache Airflow. Cách thiết l
 
 # Sensors - Tác vụ cảm biến chờ đợi
 
-## Summary
+Trong công việc của một Data Engineer, việc lập lịch chạy job dựa trên thời gian cứng nhắc (ví dụ: cứ đúng 1 giờ sáng là chạy) thường tiềm ẩn rất nhiều rủi ro. Thực tế, luồng dữ liệu của bạn thường phụ thuộc vào các yếu tố ngoại cảnh: chờ đối tác tải file báo cáo lên AWS S3, chờ hệ thống CRM xuất dữ liệu xong, hoặc chờ một API bên thứ ba phản hồi thành công. 
 
-Trong hệ thống điều phối (Orchestration) như Apache Airflow, đôi khi việc kích hoạt một luồng dữ liệu không dựa trên đồng hồ thời gian cứng nhắc, mà dựa trên sự sẵn sàng của một sự kiện bên ngoài (Ví dụ: Chờ đối tác upload file `.csv` lên S3, chờ một API trả về mã trạng thái `200`). **Sensors** (Tác vụ cảm biến) được sinh ra để giải quyết chính xác bài toán này. Chúng là một loại Operator đặc biệt, được thiết kế để liên tục theo dõi, kiểm tra (polling) một điều kiện nhất định và chỉ cho phép luồng công việc (DAG) tiếp tục chạy khi điều kiện đó được thỏa mãn.
+Nếu hệ thống nguồn bị chậm trễ, pipeline của bạn chắc chắn sẽ sập vì không tìm thấy dữ liệu. Để giải quyết bài toán "chờ đợi" này một cách thông minh, các công cụ điều phối (Orchestration) như Apache Airflow đã cung cấp một tính năng cực kỳ hữu ích: **Sensors (Tác vụ cảm biến)**.
 
----
+## Sensors là gì? Người lính gác cổng cho các luồng dữ liệu
 
-## Definition
+Nói một cách đơn giản, **Sensor** là một loại Operator đặc biệt trong Airflow nhưng có vòng đời duy nhất: **Chờ đợi (Wait)**. Thay vì thực thi một tác vụ tính toán rồi kết thúc ngay, Sensor đóng vai trò như một người lính gác cổng. Nó liên tục kiểm tra một điều kiện cụ thể (quá trình này gọi là *polling*) và chỉ cho phép các tác vụ tiếp theo (downstream tasks) chạy khi điều kiện đó được thỏa mãn (trả về `True`).
 
-**Sensor** là một lớp con (Subclass) của Operator. Khác với Operator thông thường thực thi một công việc tĩnh rồi kết thúc ngay, Sensor có một vòng đời duy nhất: **Chờ đợi (Wait)**.
+Quy trình kiểm tra diễn ra theo vòng lặp:
+1. Sensor "thức dậy" và kiểm tra điều kiện (Ví dụ: File đã có trên S3 chưa?).
+2. Nếu chưa có (`False`): Nó sẽ đi ngủ một lát (khoảng thời gian do bạn cấu hình). Sau đó lặp lại bước 1.
+3. Nếu đã có (`True`): Sensor báo trạng thái thành công (`Success`) và nhường đường cho các tác vụ tiếp theo hoạt động.
 
-Nó hoạt động theo cơ chế Vòng lặp kiểm tra (Polling loop):
-1. Đánh giá một biểu thức điều kiện (trả về True hoặc False).
-2. Nếu `False`: Ngủ (sleep) một khoảng thời gian ngắn (ví dụ 60 giây). Sau đó lặp lại bước 1.
-3. Nếu `True`: Kết thúc trạng thái `Running` bằng `Success` và nhả khóa (lock) để các Downstream Tasks chạy tiếp.
+## Tại sao chúng ta cần Sensors?
 
----
+Hãy tưởng tượng bạn thỏa thuận với đối tác rằng họ sẽ gửi file dữ liệu vào lúc 1h sáng. Bạn đặt lịch DAG chạy lúc `01:05`. Nhưng thực tế, có hôm đối tác gặp sự cố và file chỉ đến lúc `01:30`.
 
-## Why it exists
+* **Nếu dùng Operator thông thường (như BashOperator)**: Lúc 01:05, tác vụ chạy kiểm tra, không thấy file, pipeline lập tức báo lỗi đỏ (`Failed`). Bạn sẽ bị đánh thức lúc nửa đêm và phải bấm chạy lại bằng tay.
+* **Nếu tự viết vòng lặp `while/sleep` trong Python**: Tác vụ sẽ "treo" và giữ chặt tài nguyên của Worker Slot trong suốt 30 phút chờ đợi. Nếu hệ thống có nhiều DAG cùng chờ như vậy, toàn bộ hạ tầng sẽ bị nghẽn vì không còn chỗ cho các tác vụ thực sự xử lý dữ liệu.
+* **Dùng Sensors chuyên dụng (ví dụ: S3KeySensor)**: Hệ thống được tích hợp sẵn khả năng quản lý trạng thái chờ đợi, biết cách tự động giải phóng tài nguyên khi ngủ, và biết khi nào nên bỏ cuộc nếu quá thời gian chờ (timeout).
 
-Thử thách thường gặp trong Data Engineering: Bạn thỏa thuận với đối tác rằng họ sẽ gửi file dữ liệu vào S3 lúc 1h sáng. Bạn đặt lịch DAG chạy lúc `01:05`. Nhưng có hôm đối tác trễ, file đến lúc `01:30`.
-* Nếu dùng BashOperator thuần túy: Nó chạy lúc 01:05, không thấy file, lập tức văng lỗi thất bại (Failed). Bạn phải tự vào bấm chạy lại bằng tay.
-* Nếu dùng BashOperator kèm vòng lặp `while/sleep` trong Python: Tác vụ sẽ "treo" (hold) mãi mãi một Worker Slot (giữ tài nguyên của hệ thống) trong suốt 30 phút chờ đợi, làm lãng phí RAM/CPU vô ích.
-* Dùng **S3KeySensor**: Nó được sinh ra với cơ chế quản lý trạng thái chờ đợi ưu việt, biết cách kiểm tra, biết cách nhả tài nguyên, biết khi nào hết hạn (timeout).
+## Poke vs Reschedule: Cuộc chiến tối ưu tài nguyên
 
----
+Cách Sensor tiêu thụ tài nguyên của hệ thống phụ thuộc hoàn toàn vào chế độ (mode) hoạt động mà bạn cấu hình:
 
-## Core idea
+### 1. Chế độ `poke` (Mặc định)
+* **Cơ chế**: Worker nhận task $\rightarrow$ Kiểm tra điều kiện $\rightarrow$ Nếu chưa đạt, Sensor bắt luồng xử lý (thread) ngủ trong khoảng thời gian `poke_interval` $\rightarrow$ Thức dậy kiểm tra tiếp.
+* **Vấn đề**: Trong suốt thời gian ngủ, Sensor **giữ khư khư Worker Slot**. Nếu cluster của bạn chỉ giới hạn 10 task chạy đồng thời mà có 10 Sensors đang chạy ở chế độ `poke` để chờ file, toàn bộ hệ thống Airflow sẽ rơi vào trạng thái bế tắc (**Deadlock**). Không một task nào khác có thể bắt đầu chạy.
+* **Lời khuyên**: Chỉ dùng `poke` khi bạn chắc chắn thời gian chờ đợi cực kỳ ngắn (vài chục giây).
 
-Sensors cung cấp một cách thanh lịch để biến các hệ thống dựa trên lịch trình tĩnh (Time-based scheduling) có khả năng tiệm cận với việc điều phối hướng sự kiện (Event-driven Orchestration). 
+### 2. Chế độ `reschedule`
+* **Cơ chế**: Worker nhận task $\rightarrow$ Kiểm tra điều kiện $\rightarrow$ Nếu chưa đạt, Sensor **ngay lập tức giải phóng Worker Slot**, chuyển trạng thái của mình thành `UP_FOR_RESCHEDULE` và trả quyền kiểm soát lại cho Scheduler. 
+* Khi hết thời gian chờ (`poke_interval`), Scheduler sẽ bốc task này nạp lại vào hàng đợi để một Worker rảnh rỗi kiểm tra lần tiếp theo.
+* **Lợi ích**: Tiết kiệm tài nguyên tối đa. Bạn có thể treo hàng trăm Sensors chờ đợi mà không làm nghẽn hệ thống.
+* **Lời khuyên**: Luôn ưu tiên dùng `reschedule` cho các tác vụ chờ đợi lâu (vài phút đến vài giờ).
 
-Các thông số cốt lõi định nghĩa vòng lặp của một Sensor bao gồm:
-* `poke_interval`: Khoảng thời gian (giây) giữa mỗi lần "thức dậy" kiểm tra.
-* `timeout`: Tổng thời gian tối đa được phép chờ đợi trước khi bỏ cuộc và ném ra cờ thất bại (hoặc skip).
-* `mode`: Cơ chế chờ đợi (Cực kỳ quan trọng: `poke` hoặc `reschedule`).
-
----
-
-## How it works (Poke vs Reschedule)
-
-Cách Sensor ngốn tài nguyên hệ thống (Worker Slots) phụ thuộc hoàn toàn vào thông số `mode`:
-
-1. **Chế độ `poke` (Mặc định)**:
-   * **Cách hoạt động**: Worker nhận tác vụ $\rightarrow$ Chạy kiểm tra (False) $\rightarrow$ Lệnh cho luồng (thread) ngủ trong `poke_interval` $\rightarrow$ Thức dậy kiểm tra tiếp.
-   * **Vấn đề**: Tác vụ này **giữ nguyên Worker Slot** trong toàn bộ quá trình ngủ. Hệ thống có 10 slots mà có 10 Sensors đang chạy ở mode poke, toàn bộ Airflow sẽ bị tê liệt (Deadlock), không có tác vụ nào khác chạy được. 
-   * **Khi nào dùng**: Chỉ dùng khi khoảng thời gian chờ dự kiến rất ngắn (vài chục giây).
-
-2. **Chế độ `reschedule`**:
-   * **Cách hoạt động**: Worker nhận tác vụ $\rightarrow$ Chạy kiểm tra (False) $\rightarrow$ Sensor **ngay lập tức tự ngắt (thả Worker Slot ra)**, đổi trạng thái thành `UP_FOR_RESCHEDULE` và trả quyền điều khiển về cho Scheduler. 
-   * Khi hết thời gian `poke_interval`, Scheduler bốc task này ném lại vào Worker (có thể là một Worker Node khác) để kiểm tra lần 2.
-   * **Lợi ích**: Tiết kiệm tài nguyên tuyệt đối. 100 Sensors chờ đợi cũng không chiếm một Slot Worker nào.
-   * **Khi nào dùng**: Dùng khi thời gian chờ dự kiến lâu (nhiều phút, hàng giờ).
-
----
-
-## Architecture / Flow
+### Luồng hoạt động của chế độ Reschedule:
 
 ```mermaid
 sequenceDiagram
@@ -73,15 +55,15 @@ sequenceDiagram
     participant W as Worker Node
     participant DB as Metadata DB
     participant API as External Service
-
-    Note over S, API: Chế độ RESCHEDULE (poke_interval=60s)
+ 
+    Note over S, API: Chế độ RESCHEDULE (poke_interval=5 phút)
     S->>W: Gửi Sensor Task
     W->>API: Kiểm tra dữ liệu (Poke)
-    API-->>W: False (Chưa có)
+    API-->>W: False (Chưa có file)
     W->>DB: Cập nhật trạng thái 'UP_FOR_RESCHEDULE'
     Note over W: Worker hoàn tất, rảnh tay làm task khác!
     
-    Note over S: ... Chờ 60 giây ...
+    Note over S: ... Chờ 5 phút ...
     
     S->>W: Gửi lại Sensor Task (Lần 2)
     W->>API: Kiểm tra dữ liệu (Poke)
@@ -90,11 +72,9 @@ sequenceDiagram
     S->>W: Đẩy Task tiếp theo của DAG chạy!
 ```
 
----
+## Ví dụ thực tế: Thiết lập S3KeySensor trong Airflow
 
-## Practical example
-
-Ví dụ Airflow chờ một tệp tin xuất hiện trên AWS S3 Bucket, kiểm tra mỗi 5 phút, nếu sau 2 tiếng không thấy thì báo lỗi:
+Dưới đây là một ví dụ thực tế cấu hình một Sensor chờ đợi file báo cáo từ đối tác xuất hiện trên AWS S3. Hệ thống sẽ kiểm tra mỗi 5 phút, nếu sau 2 tiếng vẫn không thấy file thì sẽ tự động bỏ qua (skip) thay vì báo lỗi đỏ:
 
 ```python
 from airflow import DAG
@@ -104,110 +84,65 @@ from datetime import datetime, timedelta
 
 with DAG(dag_id="wait_for_partner_data", start_date=datetime(2026, 6, 1)) as dag:
 
-    # Khởi tạo Sensor
+    # Khởi tạo Sensor chờ file
     wait_for_file = S3KeySensor(
         task_id="check_s3_file_exists",
         bucket_key="s3://partner-data-bucket/daily_dump/{{ ds }}/data.csv",
         aws_conn_id="aws_default",
         
-        # Cấu hình Vòng lặp
-        poke_interval=60 * 5,        # Đợi 5 phút giữa các lần kiểm tra
-        timeout=60 * 60 * 2,         # Tổng thời gian tối đa: 2 giờ
-        mode="reschedule",           # CỰC KỲ QUAN TRỌNG: Thả Worker trong lúc đợi
-        soft_fail=True               # Nếu hết 2h (timeout), đánh dấu Skipped thay vì Failed
+        # Cấu hình vòng lặp chờ đợi
+        poke_interval=60 * 5,        # Chờ 5 phút giữa mỗi lần kiểm tra
+        timeout=60 * 60 * 2,         # Giới hạn thời gian chờ tối đa: 2 giờ
+        mode="reschedule",           # TỐI ƯU: Giải phóng worker trong lúc đợi
+        soft_fail=True               # Nếu quá 2h, chuyển sang Skipped thay vì Failed
     )
 
     process_data = EmptyOperator(task_id="process_data")
 
-    # Mối quan hệ: Chỉ process khi tệp đã tồn tại
+    # Mối quan hệ: Chỉ xử lý khi tệp đã tồn tại
     wait_for_file >> process_data
 ```
 
-Các Sensor thông dụng khác:
-* `ExternalTaskSensor`: Đợi một Task trong một DAG KHÁC hoàn thành. Rất hữu ích để liên kết nhiều DAG.
-* `SqlSensor`: Chạy lệnh `SELECT COUNT(1)`. Nếu đếm $>0$ thì cho qua.
-* `HttpSensor`: Gọi API, chờ nhận Response Code `200`.
+Bên cạnh kiểm tra file, Airflow còn cung cấp rất nhiều loại Sensor tiện ích khác:
+* `ExternalTaskSensor`: Chờ một tác vụ ở một DAG **khác** hoàn thành xong rồi mới chạy. Rất thích hợp để liên kết các luồng dữ liệu độc lập.
+* `SqlSensor`: Chạy một câu lệnh SQL (ví dụ: `SELECT COUNT(1) FROM staging_table`). Nếu kết quả trả về lớn hơn 0 thì coi như thành công.
+* `HttpSensor`: Gọi một API endpoint và chờ cho đến khi nhận được mã phản hồi `200 OK`.
 
----
+## Những kinh nghiệm xương máu khi làm việc với Sensors
 
-## Best practices
+* **Luôn thiết lập Timeout hợp lý**: Mặc định, timeout của Sensor trong Airflow là... 7 ngày! Nếu bạn không cấu hình, một Sensor bị kẹt có thể chạy hoài trong một tuần, làm nghẽn hàng loạt tài nguyên quản lý. Hãy đặt timeout sát với yêu cầu nghiệp vụ thực tế (ví dụ: 2 đến 3 tiếng).
+* **Sử dụng `soft_fail=True` khi cần thiết**: Đôi khi việc không có dữ liệu là bình thường (ví dụ: ngày lễ hệ thống không phát sinh giao dịch). Đặt `soft_fail=True` giúp Sensor khi bị quá giờ (timeout) sẽ đổi sang màu hồng (`Skipped`) thay vì báo lỗi đỏ (`Failed`), giúp bạn không bị làm phiền bởi những cảnh báo ảo.
+* **Nâng cấp lên Deferrable Operators (Async Sensors)**: Nếu bạn dùng các phiên bản Airflow mới (2.2+), hãy tìm hiểu **Deferrable Operators**. Thay vì tạo ra các task chạy đi chạy lại trên Worker, Deferrable Operators sử dụng thư viện lập trình bất đồng bộ (`asyncio`) để đẩy toàn bộ tác vụ chờ đợi vào một tiến trình siêu nhẹ gọi là `Triggerer`. Một Triggerer có thể gánh hàng ngàn luồng chờ với chi phí CPU/RAM gần như bằng không.
+* **Hạn chế Polling bằng cách chuyển sang mô hình Push**: Bản chất của Sensor là đi hỏi liên tục (Polling), dẫn đến độ trễ (ví dụ: file đến ở phút thứ 1 nhưng đến phút thứ 5 Sensor mới kiểm tra). Nếu có thể, hãy chuyển sang mô hình đẩy (Push): Cấu hình một sự kiện trên AWS S3 (S3 Event Notification) kích hoạt một AWS Lambda, gõ trực tiếp vào REST API của Airflow để kích hoạt DAG ngay lập tức khi file vừa cập bến.
 
-* **LUÔN LUÔN dùng `mode='reschedule'`**: Trừ khi bạn chắc chắn việc chờ đợi chỉ tính bằng giây. Nếu không, kiến trúc Sensor sẽ nhanh chóng đánh sập hệ thống (Deadlock) vì cạn kiệt Worker Slots.
-* **Thay thế Sensor bằng Deferrable Operators (Async/Await)**: Ở các bản Airflow hiện đại (2.2+), bạn nên dùng Deferrable Operators. Nó dùng kiến trúc bất đồng bộ (Asynchronous) của Python (`asyncio`) và chạy trên một tiến trình riêng gọi là `Triggerer`. Nó tiết kiệm RAM còn hơn cả mode `reschedule` (không phải liên tục khởi động lại task trên worker).
-* **Luôn thiết lập Timeout hợp lý**: Mặc định timeout của Sensor là 7 ngày! Nếu bạn quên set, Sensor sẽ nằm kẹt ở trạng thái Reschedule nguyên một tuần, tích tụ hàng trăm task ma trên UI. Hãy set timeout sát với SLA nghiệp vụ (ví dụ 3 giờ).
+## Khái niệm liên quan
 
----
+* [Apache Airflow](/concepts/apache-airflow): Nền tảng điều phối dữ liệu mã nguồn mở.
+* [Orchestration](/concepts/orchestration): Quy trình tự động hóa các luồng công việc.
+* [Task Dependency](/concepts/task-dependency): Thiết lập sự phụ thuộc giữa các tác vụ.
 
-## Common mistakes
+## Góc phỏng vấn: Vượt qua các câu hỏi hóc búa về Sensors
 
-* **Sensor Deadlock (Bế tắc cảm biến)**: Sử dụng mode `poke`, có 16 task slots. Lịch chạy 16 DAGs đồng thời, tạo ra 16 Sensors đang Poke ngủ chờ file. Tất cả 16 Slots bị chiếm dụng hoàn toàn. Các Task tải file thực sự (đáng lẽ tạo ra file để Sensor check) bị kẹt trong Queue vì không còn Slot để chạy. Cả hệ thống đứng hình vĩnh viễn (Deadlock) cho đến khi Timeout bị kích hoạt.
-* **Lỗi tham chiếu ExternalTaskSensor**: Dùng `ExternalTaskSensor` để chờ DAG khác, nhưng không đồng bộ được "Execution Date". Sensor chỉ mặc định kiểm tra Task của DAG B có TRÙNG `execution_date` với DAG A hay không. Nếu hai DAG lệch giờ lập lịch, Sensor sẽ báo lỗi mãi mãi. Cần dùng cấu hình `execution_date_fn` để ánh xạ mốc thời gian.
+### 1. Phân biệt cơ chế hoạt động của `mode="poke"` và `mode="reschedule"`.
+* **Gợi ý trả lời**: 
+  * Chế độ `poke` giữ nguyên Worker Slot trong suốt toàn bộ chu kỳ sống của Sensor (kể cả lúc nó đang sleep). Cách này chỉ phù hợp cho các task chờ cực ngắn (dưới 1 phút).
+  * Chế độ `reschedule` sau khi kiểm tra thấy điều kiện chưa đạt sẽ lập tức giải phóng Worker Slot, cập nhật trạng thái tác vụ lên database và kết thúc phiên chạy hiện tại. Khi hết thời gian giãn cách (`poke_interval`), Scheduler sẽ kích hoạt và phân bổ Sensor chạy lại. Đây là cách tối ưu để tránh tình trạng cạn kiệt tài nguyên của hệ thống Airflow khi phải chờ đợi lâu.
 
----
+### 2. Sensor Deadlock là gì? Làm cách nào để phát hiện và phòng tránh?
+* **Gợi ý trả lời**: Sensor Deadlock xảy ra khi số lượng Sensor chạy ở chế độ `poke` hoạt động đồng thời lớn hơn hoặc bằng tổng số Worker Slots khả dụng của hệ thống Airflow. Lúc này, toàn bộ worker đều bị chiếm dụng bởi các Sensor đang ngủ chờ đợi. Hệ thống rơi vào trạng thái bế tắc vì không còn worker nào rảnh để chạy các task sinh ra dữ liệu (thứ giúp giải phóng Sensor).
+  Để phòng tránh, chúng ta có thể:
+  1. Chuyển tất cả Sensors sang chế độ `reschedule` hoặc sử dụng Deferrable Operators.
+  2. Gom nhóm các Sensors vào một `Pool` riêng biệt và giới hạn số lượng chạy đồng thời nhỏ hơn dung lượng của hệ thống.
 
-## Trade-offs
+### 3. Tại sao ExternalTaskSensor thường xuyên bị kẹt ở trạng thái chờ mặc dù DAG mục tiêu đã chạy thành công?
+* **Gợi ý trả lời**: Nguyên nhân phổ biến nhất là do sự không đồng nhất về **Execution Date (Logical Date)**. Mặc định, `ExternalTaskSensor` yêu cầu DAG đích phải có thời điểm chạy (`logical_date`) trùng khớp chính xác từng mili-giây với DAG hiện tại. 
+  Nếu hai DAG được lập lịch chạy lệch giờ nhau (ví dụ: DAG nguồn chạy lúc 0h, DAG đích chạy lúc 1h), Sensor sẽ không thể tìm thấy phiên bản thành công của DAG nguồn. Để xử lý, ta cần định cấu hình tham số `execution_delta` hoặc truyền một hàm logic vào `execution_date_fn` để dịch chuyển thời gian đối chiếu của Sensor về đúng mốc chạy của DAG nguồn.
 
-### Ưu điểm
-* Mở khóa khả năng Event-driven một phần cho kiến trúc Batch Scheduler.
-* Dễ sử dụng, được xây dựng sẵn hàng chục Sensors kết nối thẳng vào Cloud providers.
-
-### Nhược điểm
-* **Trì hoãn giả tạo (Polling Latency)**: Bản chất của Sensor vẫn là Polling (hỏi liên tục). Nếu file đến lúc phút thứ 1, mà `poke_interval` là 5 phút, thì ở phút thứ 5 hệ thống mới nhận ra và chạy tiếp. Nó không thể là "Real-time" như Push model (Event-driven xịn như AWS Lambda).
-* Tốn tài nguyên điều phối (Scheduler Overhead) khi dùng `reschedule` do việc ném task ra/vào Database lặp đi lặp lại hàng trăm lần.
-
----
-
-## When to use
-
-* Chờ dữ liệu bên ngoài từ đối tác FTP, S3, API.
-* Thiết lập phụ thuộc liên-DAG (Inter-DAG Dependencies) khi bạn chia nhỏ Mega-DAG thành nhiều Sub-DAGs. DAG B dùng ExternalTaskSensor đợi DAG A tải Staging xong thì mới chạy dbt models.
-
-## When not to use
-
-* Khi hệ thống nguồn có khả năng "Push" (đẩy thông báo sự kiện). Thay vì dùng Airflow tạo Sensor hỏi liên tục 24/7, hãy thiết lập một AWS Lambda (kích hoạt bởi S3 ObjectCreated) gõ thẳng vào `REST API của Airflow` để Trigger DAG ngay tức thì. Mô hình Push luôn ưu việt hơn Polling.
-
----
-
-## Related concepts
-
-* [Apache Airflow](/concepts/apache-airflow)
-* [Orchestration](/concepts/orchestration)
-* [Task Dependency](/concepts/task-dependency)
-
----
-
-## Interview questions
-
-### 1. Sự khác biệt giữa `mode="poke"` và `mode="reschedule"` trong Airflow Sensor là gì?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sống còn để thiết kế hệ thống Airflow chống ngập tài nguyên.
-* **Gợi ý trả lời (Strong Answer)**: Chế độ `poke` (mặc định) khi chờ đợi (sleep) vẫn sẽ khóa (hold) chặt một Worker Slot của hệ thống, điều này tốt cho các task chờ cực ngắn (vài giây), nhưng gây cạn kiệt tài nguyên (Deadlock) nếu chờ lâu. Chế độ `reschedule` thông minh hơn, khi kiểm tra thấy điều kiện chưa thỏa mãn, nó lập tức giải phóng Worker Slot, ném trạng thái tác vụ ngược lại cho Database, và nhờ Scheduler hẹn giờ gọi lại sau `poke_interval`. Reschedule tiết kiệm tài nguyên tuyệt đối cho các cảm biến chờ hàng giờ liền.
-* **Lỗi cần tránh**: Trả lời mơ hồ không nhắc đến từ khóa "Worker Slot".
-
-### 2. Sensor Deadlock (Bế tắc hệ thống do Sensor) xảy ra như thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm gỡ rối (Troubleshooting) khi hệ thống sập.
-* **Gợi ý trả lời (Strong Answer)**: Deadlock xảy ra khi số lượng Sensor (chạy bằng mode `poke`) được sinh ra cùng lúc LỚN HƠN hoặc BẰNG tổng số Worker Slots khả dụng của toàn bộ cluster Airflow. Lúc này, toàn bộ công nhân của hệ thống đều đang đứng "Ngủ" chờ đợi. Không còn công nhân nào rảnh rỗi để thực thi các tác vụ tạo ra dữ liệu (nhằm giải phóng Sensor). Hệ thống đứng cứng ngắc cho đến khi Timeout xảy ra. Cách phòng ngừa là đổi sang mode `reschedule` hoặc áp dụng Sensor Pool (giới hạn số lượng Sensor được chạy tối đa).
-
-### 3. Deferrable Operators (hay Async Sensors) giải quyết nhược điểm gì của Reschedule Sensors?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức cập nhật về phiên bản Airflow mới (2.2+).
-* **Gợi ý trả lời (Strong Answer)**: Tuy `reschedule` không giữ Worker, nhưng mỗi lần nó thức dậy kiểm tra (ví dụ mỗi phút), Scheduler lại tốn công đẩy nó vào Queue, Worker mất thời gian cấp phát container, load thư viện Python, chỉ để chạy hàm kiểm tra trong 0.1 giây rồi tắt. Nó gây ra chi phí quản lý (Overhead) DB cực lớn. Kiến trúc Async/Deferrable chuyển phần việc "chờ đợi" cho một tiến trình trung tâm gọi là `Triggerer` viết bằng `asyncio`. Một Triggerer duy nhất dùng luồng bất đồng bộ có thể gánh hàng trăm ngàn tác vụ chờ I/O mạng cùng lúc với chi phí phần cứng gần bằng không, loại bỏ hoàn toàn gánh nặng cấp phát lại task của Reschedule.
-
-### 4. Thông số `soft_fail=True` dùng để làm gì trong Sensor?
-* **Người phỏng vấn muốn kiểm tra**: Xử lý logic nghiệp vụ ngoại lệ.
-* **Gợi ý trả lời (Strong Answer)**: Mặc định, nếu Sensor chờ hết thời gian `timeout` mà điều kiện vẫn False, nó sẽ đánh dấu là Failed (lỗi màu đỏ), làm các Downstream bị hủy, sinh ra cảnh báo gửi mail đến trực ban. Đôi khi, việc file không xuất hiện là bình thường (ví dụ hôm nay là ngày lễ, không có giao dịch). Thiết lập `soft_fail=True` làm cho Sensor khi timeout sẽ đổi màu sang Skipped (màu hồng). Các task phía sau tự động bị skip gọn gàng mà không tạo ra bất kỳ cảnh báo lỗi giả (False Alarm) nào làm phiền kỹ sư.
-
-### 5. Tại sao ExternalTaskSensor thường hay thất bại dù DAG nguồn đã chạy thành công?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu sâu về khái niệm thời gian thực thi (Execution Date Alignment).
-* **Gợi ý trả lời (Strong Answer)**: ExternalTaskSensor dùng Execution Date làm khóa liên kết. Mặc định, DAG B (Sensor) kỳ vọng DAG A (Mục tiêu) có *chính xác cùng một mốc Execution Date (đến từng mili-giây)*. Nếu DAG A lịch `@daily` kích hoạt lúc 00:00, nhưng DAG B lịch `0 1 * * *` kích hoạt lúc 01:00. Sensor của DAG B sẽ tìm kiếm Task thành công lúc 01:00 của DAG A và dĩ nhiên không thấy, dẫn đến Fail. Để khắc phục, ta phải dùng tham số `execution_delta` hoặc `execution_date_fn` trong Sensor để trừ lùi 1 giờ, ép Sensor nhìn đúng mốc 00:00 của DAG A.
-
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Airflow Official Documentation** - Sensors & Deferrable Operators.
 2. **Astronomer Guides** - Airflow Sensors overview.
 
----
-
-## English summary
+## English Summary
 
 In Apache Airflow, **Sensors** are a specialized subclass of Operators designed to continuously poll for an external event (e.g., a file landing in an S3 bucket or an API endpoint returning data) before allowing the downstream DAG to proceed. Crucially, sensors must be configured properly using the `mode` parameter. Using the default `poke` mode blocks an execution worker slot entirely while sleeping, which can quickly lead to cluster deadlock. Using `reschedule` mode frees the worker slot between checks, drastically saving resources for long-running waits. Modern Airflow pushes this further with Deferrable (Async) Operators, using asynchronous Python to handle thousands of idle waits on a single thread without overloading the scheduler database.

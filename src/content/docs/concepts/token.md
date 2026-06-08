@@ -9,41 +9,37 @@ seoTitle: "Token là gì? Đơn vị từ vựng trong LLM và NLP"
 metaDescription: "Tìm hiểu Token là gì trong ngữ cảnh AI/LLM, cách tính token, thuật toán BPE (Byte-Pair Encoding) và ảnh hưởng đến chi phí API."
 ---
 
-# Token - Đơn vị từ vựng
+# Token - Đơn vị từ vựng: Những mảnh ghép ngôn ngữ mà AI thấu hiểu
 
-## Summary
+Khi bắt đầu lập trình hoặc sử dụng các Mô hình Ngôn ngữ Lớn (LLM) như GPT-4 hay Claude, bạn sẽ liên tục bắt gặp từ khóa **Token**. Nhà cung cấp API tính tiền dựa trên "1 triệu token", mô hình giới hạn độ dài dựa trên "Cửa sổ ngữ cảnh (Context Window) 128k token". 
 
-Trong Xử lý ngôn ngữ tự nhiên (NLP) và các Mô hình ngôn ngữ lớn (LLM), **Token** là đơn vị nhỏ nhất của văn bản mà mô hình có thể đọc và hiểu. Một token không nhất thiết phải là một từ hoàn chỉnh; nó có thể là một từ, một phần của từ (âm tiết), hoặc thậm chí chỉ là một ký tự duy nhất. Quá trình chia nhỏ văn bản thành các token được gọi là Tokenization.
+Vậy Token thực chất là gì? Tại sao các mô hình AI không đọc chữ cái hoặc nguyên cả từ như con người, mà lại bắt buộc phải dịch mọi thứ ra thành Token?
 
----
+## Token là gì? Mảnh ghép lego của ngôn ngữ
 
-## Definition
+Trong Xử lý ngôn ngữ tự nhiên (NLP) và Trí tuệ nhân tạo, **Token** là đơn vị dữ liệu nhỏ nhất của văn bản mà mô hình máy tính có thể tiếp nhận, xử lý và hiểu được. 
 
-**Token** là khối xây dựng cơ bản (building block) của dữ liệu văn bản đối với máy học. Thay vì nhận văn bản thô dạng chuỗi ký tự (string), các mô hình mạng nơ-ron nhận đầu vào là một mảng các số nguyên (Integer IDs), trong đó mỗi số nguyên đại diện cho một token duy nhất trong một từ điển (Vocabulary) đã được định nghĩa trước.
+Điều quan trọng cần nhớ: một token không nhất thiết phải tương đương với một từ hoàn chỉnh. Nó có thể là một từ nguyên vẹn, một phần của từ (như âm tiết hoặc hậu tố), hoặc thậm chí chỉ là một ký tự đơn lẻ. Quá trình băm nhỏ một đoạn văn bản thô thành các mảnh ghép token được gọi là **Tokenization**.
 
----
+## Tại sao mô hình AI không đọc chữ cái hay nguyên cả từ?
 
-## Why it exists
+Máy tính về bản chất không hiểu ngôn ngữ hay chữ viết của con người. Để mạng nơ-ron có thể tính toán, chúng ta bắt buộc phải số hóa văn bản thô. Tuy nhiên, việc lựa chọn chia nhỏ văn bản ở mức độ nào là một bài toán đánh đổi đau đầu:
 
-Máy tính không hiểu chữ cái. Để mô hình ngôn ngữ xử lý văn bản, chúng ta phải số hóa nó.
-* **Tại sao không token hóa theo Từng ký tự (Character-level)?**: Nếu mỗi ký tự là một token (a, b, c...), số lượng token sẽ quá dài cho một câu ngắn, làm cạn kiệt Cửa sổ ngữ cảnh (Context Window) rất nhanh và mô hình rất khó học được ngữ nghĩa của từ.
-* **Tại sao không token hóa theo Từng từ (Word-level)?**: Có hàng triệu từ khác nhau trên đời, chưa kể tên riêng, từ viết tắt và các từ bị viết sai chính tả. Từ điển sẽ phình to khổng lồ (Out-Of-Vocabulary - OOV problem).
+* **Nếu chia nhỏ theo từng chữ cái (Character-level):** Mỗi chữ cái (a, b, c...) là một token. Cách này giúp từ điển của AI cực kỳ gọn nhẹ (chỉ khoảng dưới 100 token cho bảng chữ cái). Tuy nhiên, một câu ngắn cũng sẽ bị xẻ thành một chuỗi ký tự siêu dài, khiến bộ nhớ của AI (Context Window) bị cạn kiệt rất nhanh, đồng thời mô hình rất khó học được mối liên hệ ngữ nghĩa giữa các chữ cái ở xa nhau.
+* **Nếu chia nhỏ theo từng từ nguyên vẹn (Word-level):** Mỗi từ đầy đủ là một token. Cách này giúp chuỗi dữ liệu đầu vào ngắn gọn và dễ hiểu ngữ nghĩa. Nhưng nhược điểm là kho từ điển của AI sẽ phình to ra tới hàng triệu từ (do có từ ghép, tên riêng, tiếng lóng, viết tắt, viết sai chính tả). Nếu gặp một từ mới lạ chưa có trong từ điển, AI sẽ bị "đơ" và báo lỗi Out-Of-Vocabulary (OOV).
 
-Do đó, các kỹ sư tạo ra phương pháp chia nhỏ theo **Sub-word (Một phần của từ)**, tạo ra mức cân bằng hoàn hảo giữa kích thước từ điển và độ dài chuỗi token.
+Để giải quyết bài toán này, các nhà khoa học đã tạo ra giải pháp lai thông minh: **Token hóa theo bộ phận của từ (Sub-word Tokenization)**. Những từ phổ biến sẽ được giữ nguyên, còn những từ dài hoặc lạ sẽ bị tách nhỏ thành các mảnh ghép nhỏ hơn. Ví dụ, từ `"unbelievable"` có thể được tách làm ba token: `["un", "believ", "able"]`. Nếu AI chưa từng gặp từ này, nó vẫn có thể tự dịch nghĩa dựa trên ba mảnh ghép lego quen thuộc đó.
 
----
+## Thuật toán Byte-Pair Encoding (BPE) hoạt động thế nào?
 
-## Core idea
+Hầu hết các mô hình ngôn ngữ lớn hiện đại đều sử dụng thuật toán **BPE (Byte-Pair Encoding)** để xây dựng bộ Tokenizer. Cơ chế hoạt động như sau:
 
-* **Quy tắc ngón tay cái (Rule of thumb)**: Trong tiếng Anh, 1 token xấp xỉ bằng khoảng 4 ký tự (tương đương 0.75 từ).
-* **Mảnh ghép của từ (Subword)**: Từ "unbelievable" có thể được cắt thành 3 token: `un`, `believ`, và `able`. Nhờ vậy, nếu mô hình chưa từng thấy từ "unbelievable", nó vẫn có thể nội suy ý nghĩa từ 3 mảnh ghép này.
-* **Định vị khoảng trắng**: Trong nhiều bộ tokenizer (như tiktoken của OpenAI), khoảng trắng (space) thường được gắn liền với phần đầu của token tiếp theo (ví dụ: `_hello`).
+1. **Khởi tạo:** Coi mọi ký tự hoặc byte độc lập trong kho dữ liệu huấn luyện là các token cơ sở ban đầu.
+2. **Thống kê và Gom nhóm:** Tìm cặp token xuất hiện cạnh nhau nhiều nhất (ví dụ: chữ `e` và `r` thường đi liền thành `er`). Tiến hành ghép chúng lại để tạo thành một token mới là `er`.
+3. **Lặp lại:** Tiếp tục quá trình gom nhóm này (ghép `t` và `h` thành `th`, ghép tiếp `th` và `e` thành `the`...) cho đến khi bộ từ điển đạt kích thước mong muốn (ví dụ: 100,000 token).
+4. **Áp dụng:** Khi người dùng gửi một đoạn văn mới lên, bộ Tokenizer sẽ ưu tiên cắt văn bản đó thành các token lớn nhất có sẵn trong từ điển của nó.
 
----
-
-## How it works
-
-Hầu hết các LLM hiện đại (như GPT-4, LLaMA) sử dụng thuật toán **BPE (Byte-Pair Encoding)**:
+Sơ đồ quy trình biến đổi:
 
 ```mermaid
 flowchart TD
@@ -58,41 +54,40 @@ flowchart TD
     style G fill:#d4edda,stroke:#333
 ```
 
-1. Ban đầu, coi mọi byte ký tự riêng lẻ là một token.
-2. Thống kê dữ liệu huấn luyện: Tìm cặp byte xuất hiện cạnh nhau nhiều nhất (ví dụ: `e` và `r` hay đi cùng nhau thành `er`). Gộp chúng lại thành một token mới `er`.
-3. Lặp lại quá trình này (ví dụ ghép `t` và `h` thành `th`, rồi `th` và `e` thành `the`) cho đến khi kích thước từ điển đạt một số lượng cố định (ví dụ: 50,000 hoặc 100,000 tokens).
-4. Khi đưa văn bản mới vào, thuật toán sẽ cắt văn bản thành các token lớn nhất có mặt trong từ điển.
+## Bất bình đẳng ngôn ngữ: Câu chuyện token Việt vs Anh
 
----
+Do hầu hết các LLM toàn cầu được huấn luyện trên kho dữ liệu Internet mà tiếng Anh chiếm đa số, thuật toán BPE học được rất nhiều cụm từ tiếng Anh hoàn chỉnh. Nhờ đó, từ điển token của AI cực kỳ tối ưu cho tiếng Anh (quy tắc ngón tay cái: **1 token $\approx$ 4 ký tự $\approx$ 0.75 từ**).
 
-## Practical example
+Tuy nhiên, với các ngôn ngữ ít dữ liệu huấn luyện hơn như tiếng Việt, thuật toán BPE không thể học hết các từ ghép hoàn chỉnh. Vì thế, các từ tiếng Việt thường bị chẻ nhỏ thành các mảnh vụn nhỏ hơn hoặc thậm chí là cấp độ từng ký tự đơn lẻ.
 
-Xét câu tiếng Việt và tiếng Anh đi qua bộ Tokenizer `tiktoken` (cl100k_base) của OpenAI:
+Hãy so sánh hai câu có nghĩa tương đương đi qua bộ Tokenizer `tiktoken` (cl100k_base) của OpenAI:
 
-**Tiếng Anh:**
-`"Artificial Intelligence is amazing!"`
-* Số lượng từ: 4
-* Tokens (5): `["Artificial", " Intelligence", " is", " amazing", "!"]`
-* Đánh giá: Rất tối ưu, hầu như 1 từ = 1 token.
+* **Tiếng Anh:** `"Artificial Intelligence is amazing!"`
+  * Số lượng từ: 4 từ.
+  * Danh sách Token (5 tokens): `["Artificial", " Intelligence", " is", " amazing", "!"]`
+  * Đánh giá: Cực kỳ tối ưu, trung bình 1 từ chỉ tốn 1.25 token.
+* **Tiếng Việt:** `"Trí tuệ nhân tạo thật tuyệt vời!"`
+  * Số lượng từ: 7 từ.
+  * Danh sách Token (11 tokens): `["Tr", "í", " tu", "ệ", " nhân", " t", "ạo", " th", "ật", " tuyệt", " vời!"]`
+  * Đánh giá: Bị băm nát thành các âm tiết và chữ cái đơn. Chi phí token đắt gấp đôi dù cùng một lượng thông tin truyền tải.
 
-**Tiếng Việt:**
-`"Trí tuệ nhân tạo thật tuyệt vời!"`
-* Số lượng từ: 7
-* Tokens (11): `["Tr", "í", " tu", "ệ", " nhân", " t", "ạo", " th", "ật", " tuyệt", " vời!"]`
-* Đánh giá: Không tối ưu bằng tiếng Anh, nhiều từ tiếng Việt bị cắt nát thành 2-3 tokens vì chúng không xuất hiện nhiều trong dữ liệu huấn luyện gốc của BPE.
+> [!WARNING]
+> Sự bất bình đẳng này khiến người dùng các ngôn ngữ không phải tiếng Anh phải trả nhiều tiền API hơn cho cùng một câu hỏi và làm cạn kiệt Cửa sổ ngữ cảnh (Context Window) của mô hình nhanh hơn nhiều.
 
-**Đoạn mã Python minh họa đếm Token bằng thư viện `tiktoken`:**
+## Ví dụ thực tế: Đo đạc số token bằng Python
+
+Để quản lý chi phí API, bạn có thể tự đếm số lượng token trước khi gửi đi bằng thư viện mã nguồn mở `tiktoken` của OpenAI:
 
 ```python
 import tiktoken
 
-# Lấy bộ mã hóa mặc định dùng cho các mô hình như GPT-4 (cl100k_base)
+# Sử dụng bộ mã hóa cl100k_base (dành cho GPT-4)
 encoder = tiktoken.get_encoding("cl100k_base")
 
 text_en = "Artificial Intelligence is amazing!"
 text_vi = "Trí tuệ nhân tạo thật tuyệt vời!"
 
-# Hàm encode biến văn bản thành danh sách Integer IDs
+# Chuyển đổi văn bản thành mảng các số nguyên ID
 tokens_en = encoder.encode(text_en)
 tokens_vi = encoder.encode(text_vi)
 
@@ -100,64 +95,39 @@ print(f"Tiếng Anh: {len(tokens_en)} tokens -> {tokens_en}")
 print(f"Tiếng Việt: {len(tokens_vi)} tokens -> {tokens_vi}")
 ```
 
----
+## Best Practices quản lý chi phí API và Cửa sổ ngữ cảnh
 
-## Best practices
+* **Đếm token trước khi gọi API:** Luôn sử dụng thư viện như `tiktoken` trong code để kiểm soát độ dài prompt. Nếu prompt vượt quá hạn mức cho phép, hệ thống sẽ tự động báo lỗi gây gián đoạn dịch vụ.
+* **Sử dụng đúng Tokenizer tương ứng:** Mỗi mô hình (GPT, LLaMA, Claude) có một bộ Tokenizer riêng với từ điển khác nhau. Hãy đảm bảo bạn dùng đúng thư viện đếm token của nhà cung cấp mô hình đó để có số liệu chính xác.
+* **Quản lý Token đầu ra (Output):** Các nhà cung cấp API tính phí cho cả Input tokens (câu hỏi của bạn) và Output tokens (câu trả lời của AI). Trong đó, giá của Output tokens thường đắt gấp 2 - 3 lần. Hãy thiết lập tham số `max_tokens` hợp lý để giới hạn AI không viết dông dài gây tốn kém chi phí vô ích.
 
-* **Kiểm tra Token trước khi gửi API**: Chi phí API của OpenAI hay Anthropic được tính bằng đơn vị "1000 tokens". Hãy dùng các thư viện như `tiktoken` (Python) để đếm chính xác số token trước khi gọi API để tránh vượt quá giới hạn và quản lý chi phí.
-* **Sử dụng Tokenizer đúng với LLM**: Mỗi LLM có một từ điển token riêng. Đếm token của GPT-4 bằng công cụ đếm token của BERT sẽ cho ra kết quả hoàn toàn sai lệch.
+## Khái niệm liên quan & Tài liệu tham khảo
 
----
-
-## Common mistakes
-
-* **Nhầm lẫn Token với Từ (Word)**: Cứ nghĩ 4000 tokens = 4000 từ. Đối với tiếng Việt, 4000 tokens thường chỉ tương đương 1500 - 2000 từ.
-* **Không tính Token đầu ra (Output)**: API tính tiền cả phần prompt bạn gửi đi (Input tokens) và câu trả lời mô hình sinh ra (Output tokens/Generated tokens). Hơn nữa, giá tiền cho Output tokens thường đắt gấp 2 đến 3 lần Input tokens.
-
----
-
-## Trade-offs
-
-### Ưu điểm của phương pháp Subword Tokenization (BPE)
-* Giải quyết triệt để lỗi Out-Of-Vocabulary (OOV). Không một chuỗi ký tự nào không thể bị token hóa (cùng lắm là chẻ nhỏ về mức từng ký tự một).
-* Nén dữ liệu tốt, giảm chi phí tính toán cho mạng nơ-ron.
-
-### Nhược điểm
-* **Bất bình đẳng ngôn ngữ**: Do thuật toán thống kê trên dữ liệu tiếng Anh là chủ yếu, các ngôn ngữ khác (tiếng Việt, tiếng Hàn, Arabic) bị chia thành nhiều tokens hơn. Điều này dẫn đến người dùng không phải tiếng Anh sẽ phải trả nhiều tiền API hơn và nhận lại Context Window ít hơn khi truyền cùng một khối lượng thông tin.
-
----
-
-## When to use
-
-* Tính toán chi phí hệ thống Generative AI.
-* Tối ưu hóa độ dài của chunk khi thiết kế hệ thống RAG (ví dụ: giới hạn mỗi đoạn văn là 512 tokens).
-
----
-
-## Related concepts
-
+**Khái niệm liên quan:**
 * [Cửa sổ ngữ cảnh (Context Window)](/concepts/context-window)
 * [Phân tách văn bản (Chunking)](/concepts/chunking)
 * [Mô hình ngôn ngữ lớn (LLMs)](/concepts/llm)
 
----
-
-## Interview questions
-
-### 1. Thuật toán Byte-Pair Encoding (BPE) giải quyết vấn đề gì trong NLP?
-* **Người phỏng vấn muốn kiểm tra**: Sự hiểu biết về nền tảng xử lý dữ liệu của LLM.
-* **Gợi ý trả lời (Strong Answer)**: BPE giải quyết bài toán cân bằng giữa kích thước từ điển (Vocabulary size) và khả năng xử lý từ mới (Out-Of-Vocabulary). Nếu tokenize theo từ (Word-level), từ điển sẽ quá lớn và vẫn bị sót tên riêng. Nếu tokenize theo ký tự (Character-level), chuỗi đầu vào sẽ quá dài làm sập Context Window. BPE là cách tiếp cận Sub-word: nó học các cụm ký tự phổ biến để biến chúng thành 1 token, trong khi vẫn giữ lại khả năng phân tách các từ lạ thành các token nhỏ hơn, đảm bảo mọi văn bản đều có thể được xử lý với độ dài chuỗi tối ưu.
-
-### 2. Tại sao gọi API LLM bằng tiếng Việt lại thường đắt hơn gọi bằng tiếng Anh?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm thực chiến và hiểu biết về Tokenizer đa ngữ.
-* **Gợi ý trả lời (Strong Answer)**: Các LLM toàn cầu như GPT-4 sử dụng thuật toán tạo tokenizer (như BPE) được huấn luyện chủ yếu trên kho dữ liệu tiếng Anh. Do đó, từ điển token của chúng chứa sẵn hầu hết các từ tiếng Anh hoàn chỉnh (1 từ = 1 token). Đối với tiếng Việt, do tần suất xuất hiện trong tập huấn luyện ít hơn, các từ tiếng Việt không được gom thành một token nguyên vẹn mà bị chẻ nhỏ thành các âm tiết hoặc ký tự (1 từ = 2, 3 tokens). Vì nhà cung cấp API tính tiền dựa trên số lượng token xử lý, cùng một câu có độ dài ngữ nghĩa tương đương, câu tiếng Việt sẽ sinh ra nhiều token hơn tiếng Anh, dẫn đến chi phí cao hơn và chiếm dụng nhiều Context Window hơn.
+**Tài liệu tham khảo:**
+1. **Neural Machine Translation of Rare Words with Subword Units** - *Sennrich et al.* (Nghiên cứu đặt nền móng cho thuật toán BPE trong NLP).
+2. **OpenAI Tiktoken Repository** - *Mã nguồn mở công cụ tokenizer của OpenAI*.
 
 ---
 
-## References
+## Góc phỏng vấn: Câu hỏi thường gặp
 
-1. **Neural Machine Translation of Rare Words with Subword Units** - Sennrich et al. (2015) - Nền tảng của BPE trong NLP.
-2. **OpenAI Tiktoken repository** - Thư viện mã nguồn mở minh họa cách thức hoạt động của Tokenizer hiện đại.
+### 1. Thuật toán Byte-Pair Encoding (BPE) giải quyết được vấn đề gì trong xử lý ngôn ngữ tự nhiên (NLP)?
+**Gợi ý trả lời:**
+BPE là một thuật toán token hóa theo mức độ bộ phận của từ (Sub-word). Nó giải quyết được bài toán cân bằng giữa:
+* **Kích thước từ điển (Vocabulary Size):** Giúp từ điển không bị phình to quá lớn như phương pháp Word-level (vốn dễ bị bỏ sót tên riêng, từ viết tắt).
+* **Độ dài chuỗi đầu vào:** Giúp chuỗi token truyền vào mạng nơ-ron ngắn hơn và giàu ngữ nghĩa hơn nhiều so với phương pháp Character-level (vốn chia nhỏ về mức chữ cái đơn lẻ, làm cạn kiệt Context Window rất nhanh).
+Đặc biệt, BPE giải quyết triệt để lỗi từ lạ Out-Of-Vocabulary (OOV) vì bất kỳ từ lạ nào cũng có thể bị chẻ nhỏ thành các mảnh ghép ký tự có sẵn trong từ điển.
+
+### 2. Tại sao chi phí khi phát triển ứng dụng GenAI bằng tiếng Việt lại thường cao hơn nhiều so với tiếng Anh?
+**Gợi ý trả lời:**
+Hầu hết các LLM lớn trên thế giới hiện nay đều sử dụng bộ Tokenizer được huấn luyện chủ yếu dựa trên các tài liệu tiếng Anh. Do đó, từ điển của chúng chứa sẵn phần lớn các từ tiếng Anh hoàn chỉnh (1 từ thường tương đương 1 token). 
+
+Trong khi đó, do dữ liệu tiếng Việt ít hơn, các từ tiếng Việt không được nhận diện nguyên vẹn mà bị băm nhỏ thành các âm tiết hoặc ký tự đơn lẻ (1 từ tiếng Việt có thể tốn 2 đến 3 token). Vì nhà cung cấp API tính tiền dựa trên số lượng token xử lý, cùng một câu có nghĩa tương đương, phiên bản tiếng Việt sẽ sinh ra số lượng token lớn hơn nhiều, dẫn đến chi phí vận hành đắt hơn và chiếm dụng bộ nhớ ngữ cảnh nhiều hơn.
 
 ---
 

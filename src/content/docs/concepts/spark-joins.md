@@ -11,38 +11,30 @@ metaDescription: "Phân tích 3 chiến lược kết nối dữ liệu (Joins) 
 
 # Các loại Join trong Spark
 
-## Summary
+Trong lập trình cơ sở dữ liệu nói chung và xử lý dữ liệu lớn (Big Data) nói riêng, phép nối bảng (Join) luôn là một trong những hoạt động phổ biến nhưng lại ngốn nhiều tài nguyên CPU, RAM và băng thông mạng nhất. 
 
-Trong Apache Spark, việc kết nối hai bảng dữ liệu khổng lồ (Joins) là hoạt động phức tạp nhất và tiêu hao nhiều tài nguyên nhất. Khi bạn gõ lệnh `df1.join(df2)`, Spark SQL không thực thi một cách ngây thơ. Thông qua Catalyst Optimizer, Spark quyết định sử dụng một trong các chiến lược (Strategy) kết nối vật lý khác nhau để tìm ra phương án tốn ít bộ nhớ và mạng nhất. Ba chiến lược quan trọng nhất cần nắm là: **Broadcast Hash Join (BHJ)**, **Shuffle Hash Join (SHJ)**, và **Sort Merge Join (SMJ)**.
+Khi bạn gõ câu lệnh đơn giản `df1.join(df2)`, ở hậu trường, bộ tối ưu hóa Catalyst Optimizer của Spark sẽ không thực thi một cách ngây thơ. Nó sẽ dựa trên kích thước dữ liệu và cấu hình hệ thống để lựa chọn một chiến lược (Physical Join Strategy) phù hợp nhất. 
 
----
+Hãy cùng tìm hiểu ba chiến lược Join vật lý cốt lõi trong Spark: **Broadcast Hash Join (BHJ)**, **Shuffle Hash Join (SHJ)**, và **Sort Merge Join (SMJ)**.
 
-## Definition
+## Ba chiến lược Join vật lý cốt lõi
 
-Khi người dùng viết logical plan là "Kết hợp Bảng A và Bảng B", quá trình kết nối vật lý (Physical Join Strategies) sẽ quyết định cách thức dữ liệu di chuyển qua các node trong cụm để so khớp (matching). Mỗi chiến lược có thế mạnh và điểm yếu riêng phụ thuộc vào **kích thước của bảng dữ liệu** và **có cần sắp xếp hay không**.
-
-1. **Broadcast Hash Join (BHJ)**: Dành cho bảng siêu nhỏ join với bảng khổng lồ.
-2. **Shuffle Hash Join (SHJ)**: Dành cho hai bảng có kích thước vừa và lớn.
-3. **Sort Merge Join (SMJ)**: Dành cho hai bảng khổng lồ. (Là mặc định truyền thống của Spark).
-
----
-
-## How it works
+Tùy thuộc vào kích thước của các bảng và khả năng chứa dữ liệu của RAM, Spark sẽ lựa chọn một trong ba con đường sau:
 
 ```mermaid
 graph TD
-    A{Table Sizes} --> B[One Tiny Table < 10MB]
-    A --> C[Both Large Tables]
+    A{Kích thước bảng?} --> B[Một bảng nhỏ < 10MB]
+    A --> C[Cả hai bảng đều lớn]
     
     B --> D[Broadcast Hash Join]
-    D --> E[Replicate tiny table to all nodes\nNO SHUFFLE]
+    D --> E[Sao chép bảng nhỏ tới mọi node\nKHÔNG CẦN SHUFFLE]
     
-    C --> F{Can partitions fit in RAM?}
-    F -->|Yes| G[Shuffle Hash Join]
-    G --> H[Shuffle both tables\nHash partitions in memory]
+    C --> F{Phân vùng vừa bộ nhớ RAM?}
+    F -->|Vừa| G[Shuffle Hash Join]
+    G --> H[Shuffle hai bảng\nTạo bảng băm trên RAM]
     
-    F -->|No| I[Sort Merge Join]
-    I --> J[Shuffle both tables\nSort data\nMerge sequentially]
+    F -->|Không vừa| I[Sort Merge Join]
+    I --> J[Shuffle hai bảng\nSắp xếp dữ liệu\nGộp tuần tự]
     
     style D fill:#cce5ff,stroke:#333
     style G fill:#fff3cd,stroke:#333
@@ -50,108 +42,83 @@ graph TD
 ```
 
 ### 1. Broadcast Hash Join (BHJ)
-**Khi nào xảy ra:** Khi một bảng có kích thước bé hơn biến `spark.sql.autoBroadcastJoinThreshold` (Mặc định là 10MB).
-**Cơ chế:** 
-* Thay vì băm (hash) và xáo trộn (shuffle) cả 2 bảng. Spark Master (Driver) kéo bảng nhỏ về, tạo ra một bảng băm (Hash Table) trong RAM. 
-* Sau đó, nó "phát sóng" (Broadcast) toàn bộ bảng nhỏ này tới từng Worker Node đang chứa bảng lớn.
-* Các Worker tự dò bảng lớn cục bộ với bản sao bảng nhỏ trên RAM mà không cần xáo trộn dữ liệu qua mạng.
-**Hiệu năng:** Cực kì nhanh, KHÔNG CÓ SHUFFLE (Narrow Dependency).
+* **Kịch bản**: Một bảng cực kỳ lớn và một bảng siêu nhỏ (mặc định nhỏ hơn 10MB - cấu hình qua biến `spark.sql.autoBroadcastJoinThreshold`).
+* **Cơ chế hoạt động**: Thay vì xáo trộn cả hai bảng qua mạng, máy chủ điều phối (Driver) sẽ tải toàn bộ bảng nhỏ về, xây dựng một bảng băm (Hash Table) ngay trên RAM, sau đó "phát sóng" (Broadcast) bản sao này tới tất cả các Worker Nodes đang chứa phân mảnh của bảng lớn. Các Worker chỉ việc dò bảng lớn cục bộ với bảng băm trên RAM.
+* **Đặc điểm**: Tốc độ cực nhanh vì loại bỏ hoàn toàn quá trình Shuffle (Narrow Dependency).
+* **Hạn chế**: Bảng được broadcast bắt buộc phải đủ nhỏ để chứa vừa trong RAM của cả Driver và tất cả các Executor. Nếu cố ép broadcast bảng lớn, bạn sẽ làm sập RAM của hệ thống.
 
 ### 2. Shuffle Hash Join (SHJ)
-**Khi nào xảy ra:** Khi cả 2 bảng đều lớn (vượt ngưỡng Broadcast) nhưng vẫn có thể chia nhỏ ra và đẩy vừa vào RAM của từng Executor.
-**Cơ chế:** 
-* Cả hai bảng bị băm (Hash) bằng một hàm chung trên khóa Join và xáo trộn (Shuffle) qua mạng. Các bản ghi có chung khóa của cả 2 bảng sẽ hội tụ về cùng một Node.
-* Tại mỗi Node, Spark lấy bảng nhỏ hơn (trong 2 bảng lớn) để xây dựng Hash Table nhét vào RAM. Sau đó quét qua bảng còn lại để so khớp.
-**Hiệu năng:** Nhanh nhưng rủi ro Out-Of-Memory (OOM) nếu Hash Table xây dựng không vừa RAM của Executor.
+* **Kịch bản**: Cả hai bảng đều có kích thước lớn (vượt ngưỡng broadcast) nhưng khi chia nhỏ thành các phân vùng (partitions) thì từng phân vùng vẫn có thể chứa vừa trong bộ nhớ RAM của một Executor.
+* **Cơ chế hoạt động**: Spark thực hiện băm (hash) khóa Join của cả hai bảng và xáo trộn (shuffle) dữ liệu qua mạng để đưa các dòng có cùng khóa về chung một node. Tại mỗi node, Spark sẽ lấy bảng có kích thước nhỏ hơn để xây dựng bảng băm trên RAM, sau đó duyệt qua bảng lớn để tìm các dòng khớp khóa.
+* **Đặc điểm**: Nhanh hơn Sort Merge Join vì không mất thời gian sắp xếp dữ liệu.
+* **Hạn chế**: Dễ xảy ra lỗi tràn bộ nhớ (Out Of Memory - OOM) nếu dữ liệu bị lệch (Data Skew), khiến phân vùng của một node bự đột biến và vượt quá dung lượng RAM khả dụng.
 
 ### 3. Sort Merge Join (SMJ)
-**Khi nào xảy ra:** Là chiến lược mặc định của Spark khi join hai bảng khổng lồ (Big x Big Join).
-**Cơ chế:** 
-* Hai bảng cũng bị băm và xáo trộn (Shuffle) qua mạng như SHJ.
-* *Điểm khác biệt*: Tại mỗi Node, thay vì cố nhét toàn bộ bảng vào RAM để làm Hash Table (dễ gây OOM), Spark tiến hành **sắp xếp (Sort)** cả 2 bảng theo khóa Join.
-* Sau khi sắp xếp, Spark dùng 2 con trỏ quét song song từ trên xuống dưới trên 2 bảng. Bằng cách này, nó chỉ cần giữ 1 bản ghi trong RAM tại một thời điểm.
-**Hiệu năng:** Chậm hơn do tốn thêm bước Sắp xếp (Sort), nhưng cực kì an toàn. Bạn có thể join 2 bảng Petabytes mà không bao giờ bị OOM.
+* **Kịch bản**: Đây là chiến lược mặc định và là "chiếc phao cứu sinh" của Spark khi tiến hành nối hai bảng dữ liệu khổng lồ (Big-on-Big Join).
+* **Cơ chế hoạt động**: 
+  1. **Shuffle**: Spark xáo trộn cả hai bảng qua mạng dựa trên mã băm của khóa Join để đưa dữ liệu cùng khóa về chung một node.
+  2. **Sort**: Tại mỗi node, thay vì nhồi dữ liệu vào RAM làm bảng băm, Spark tiến hành sắp xếp (Sort) dữ liệu của cả hai bảng theo thứ tự tăng dần của khóa Join.
+  3. **Merge**: Spark sử dụng hai con trỏ lướt song song từ trên xuống dưới trên hai bảng đã được sắp xếp để đối chiếu và ghép cặp.
+* **Đặc điểm**: Do dữ liệu đã được sắp xếp, Spark chỉ cần giữ một vài dòng dữ liệu trong bộ nhớ tại một thời điểm để so khớp, giúp loại bỏ hoàn toàn nguy cơ sập RAM.
+* **Hạn chế**: Tốc độ chậm hơn hai phương án trên do phải trả chi phí CPU và Disk I/O cho bước sắp xếp (Sort) dữ liệu.
 
----
+## Ví dụ thực tế: Cách ép Spark sử dụng Broadcast Hash Join
 
-## Practical example
+Trong thực tế, nếu bạn biết chắc chắn một bảng là bảng danh mục rất nhỏ (ví dụ bảng thông tin chi nhánh cửa hàng chỉ nặng 5MB), bạn có thể chủ động sử dụng hàm `broadcast()` để hướng dẫn Spark sử dụng chiến lược Broadcast Hash Join, tránh việc hệ thống tự động chọn Sort Merge Join gây lãng phí tài nguyên:
 
 ```python
-# Kích hoạt Broadcast Hash Join chủ động (Ép Spark dùng Broadcast)
 from pyspark.sql.functions import broadcast
 
-fact_sales = spark.read.parquet("s3://data/sales/")    # 100GB
-dim_store = spark.read.parquet("s3://data/stores/")    # 5MB
+# Đọc bảng doanh số khổng lồ (100GB) và bảng chi nhánh nhỏ (5MB)
+fact_sales = spark.read.parquet("s3://data/sales/")    
+dim_store = spark.read.parquet("s3://data/stores/")    
 
-# Bằng cách bọc hàm broadcast(), Spark sẽ bỏ qua Sort Merge và dùng BHJ
+# Sử dụng hàm broadcast để tối ưu hóa phép nối
 optimized_df = fact_sales.join(broadcast(dim_store), "store_id")
 
-# Kiểm tra Physical Plan:
+# Kiểm tra kế hoạch thực thi vật lý:
 optimized_df.explain()
-# Bạn sẽ thấy Output ghi chữ: BroadcastHashJoin
+# Trong log hiển thị, bạn sẽ thấy từ khóa: BroadcastHashJoin
 ```
 
----
+## Những kinh nghiệm vàng để tối ưu hóa phép Join trong Spark
 
-## Best practices
+* **Kích hoạt AQE (Adaptive Query Execution)**: Kể từ Spark 3.0, hãy luôn bật cấu hình `spark.sql.adaptive.enabled = true`. AQE cho phép Spark tự động tối ưu hóa trong thời gian chạy (run-time). Ví dụ, nếu ban đầu Spark dự kiến hai bảng rất lớn nên chọn Sort Merge Join, nhưng sau khi đi qua bước lọc (`filter`), một bảng co lại chỉ còn 5MB, AQE sẽ tự động "quay xe" chuyển sang Broadcast Hash Join để tăng tốc độ.
+* **Điều chỉnh ngưỡng tự động Broadcast**: Nếu cụm máy chủ của bạn có bộ nhớ RAM dư dả, bạn có thể tăng giới hạn tự động broadcast từ 10MB lên 100MB bằng cách cấu hình:
+  `spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 100 * 1024 * 1024)`.
+* **Áp dụng Bucketing cho các bảng khổng lồ**: Nếu bạn phải join hai bảng kích thước Petabytes lặp đi lặp lại hàng ngày, hãy lưu chúng dưới dạng Bucketing (chia sẵn các file theo khóa Join). Khi đọc lên, Spark sẽ bỏ qua bước Shuffle và bước Sort, trực tiếp thực hiện phép Merge (Sort-free SMJ), giúp tăng tốc độ join lên hàng chục lần.
+* **Xử lý giá trị rỗng (NULL) trước khi Join**: Trong Sort Merge Join, tất cả các khóa mang giá trị `NULL` sẽ bị băm và đổ dồn về cùng một phân vùng duy nhất, gây ra hiện tượng lệch phân phối dữ liệu nghiêm trọng (Data Skew). Hãy lọc bỏ các dòng có khóa `NULL` hoặc thay thế chúng bằng các giá trị ngẫu nhiên trước khi thực hiện phép Join.
 
-* **Mở rộng kích thước Broadcast**: Mặc định là 10MB. Nếu cụm máy tính của bạn rất mạnh, có thể tự tin tăng lên `spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 104857600)` (tương đương 100MB) để tận dụng lợi thế của BHJ nhiều hơn.
-* **Tận dụng AQE (Adaptive Query Execution)**: Trên Spark 3+, nhớ bật `spark.sql.adaptive.enabled = true`. Trình tối ưu hóa sẽ đo đạc kích thước dữ liệu trong thời gian chạy (run-time) thay vì chỉ phỏng đoán. Nếu thấy một bảng sau khi Filter đột nhiên bé lại dưới 10MB, nó sẽ "quay xe" tự động chuyển SMJ thành BHJ ngay lập tức để tiết kiệm chi phí.
-* **Bucketing**: Nếu bạn thường xuyên Join 2 bảng khổng lồ (SMJ) ngày qua ngày, hãy cân nhắc kỹ thuật Bucketing (phân lô) khi lưu file lúc viết. Spark sẽ sắp xếp và lưu sẵn thứ tự vào file. Ở lần đọc lên sau, pha "Sort" trong SMJ sẽ bị bỏ qua (Sort-free SMJ), nhanh gấp hàng chục lần.
+| Đặc điểm | Broadcast Hash Join | Shuffle Hash Join | Sort Merge Join |
+| :--- | :--- | :--- | :--- |
+| **Shuffle qua mạng** | Không | Có | Có |
+| **Sắp xếp dữ liệu** | Không | Không | Có |
+| **Yêu cầu bộ nhớ** | Cao (Bảng nhỏ phải chứa vừa RAM) | Trung bình (Bảng băm phân vùng phải vừa RAM) | Thấp (Chỉ cần giữ vài dòng tại một thời điểm) |
+| **Độ ổn định** | Rất cao | Thấp (Dễ sập OOM khi Skew) | Cực kỳ cao (Khử hoàn toàn lỗi OOM) |
+| **Phù hợp nhất** | Bảng lớn Join bảng nhỏ | Hai bảng kích thước vừa phải | Hai bảng siêu khổng lồ |
 
----
+## Khái niệm liên quan
 
-## Common mistakes
+* [Shuffle](/concepts/shuffle): Cơ chế xáo trộn dữ liệu vật lý qua mạng.
+* [Data Skew](/concepts/data-skew): Hiện tượng mất cân bằng phân phối dữ liệu.
+* [Spark SQL](/concepts/spark-sql): Bộ máy xử lý truy vấn cấu trúc của Spark.
 
-* **Ép Broadcast bảng quá lớn**: Bạn thấy Broadcast nhanh nên ép `broadcast(df_to)` cho bảng 1GB. Driver sẽ kéo 1GB về (có thể vỡ RAM) rồi nhồi 1GB gửi cho hàng ngàn Executor qua mạng (nghẽn cổ chai mạng cục bộ), khiến toàn bộ Application chết đứng.
-* **Không làm sạch khóa rỗng (NULL Keys)**: Trong SMJ hay SHJ, dữ liệu rỗng ở khóa JOIN sẽ bị Hash về cùng 1 vách partition gây ra Data Skew nghiêm trọng.
+## Góc phỏng vấn: Chinh phục các câu hỏi về Spark Joins
 
----
-
-## Trade-offs
-
-| Chiến lược | Ưu điểm | Nhược điểm |
-|------------|---------|------------|
-| **Broadcast Hash Join** | Không Shuffle mạng, cực siêu tốc. | Bảng nhỏ phải để vừa RAM của tất cả Node và Driver. |
-| **Shuffle Hash Join** | Nhanh hơn Sort Merge vì không cần pha Sắp xếp (Sort). | Dễ bị Crash (OOM) nếu một mảnh Shuffle lớn bất thường không nhét vừa RAM. |
-| **Sort Merge Join** | Ổn định tuyệt đối với mọi dung lượng khổng lồ. | Rất chậm do phải trả chi phí CPU và Disk I/O cho thuật toán Sort mệt mỏi. |
-
----
-
-## When to use
-
-Kiến thức này cực kỳ quan trọng để điều chỉnh (tuning) các bài toán SQL Pipeline chạy quá chậm. Đọc bản kế hoạch vật lý `df.explain()` là yêu cầu bắt buộc của Senior Data Engineer.
-
----
-
-## Related concepts
-
-* [Shuffle](/concepts/shuffle)
-* [Data Skew](/concepts/data-skew)
-* [Spark SQL](/concepts/spark-sql)
-
----
-
-## Interview questions
-
-### 1. Phân biệt Broadcast Hash Join và Sort Merge Join?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết lõi về phương thức kết hợp dữ liệu trong Big Data.
+### 1. Phân biệt cơ chế hoạt động và trường hợp ứng dụng của Broadcast Hash Join và Sort Merge Join?
 * **Gợi ý trả lời**: 
-  * Broadcast Join gửi nguyên bản sao của bảng siêu nhỏ đến mọi node đang chứa bảng to, KHÔNG gây xáo trộn (shuffle) phân vùng của bảng to. Giúp join tốc độ ánh sáng.
-  * Sort Merge Join xáo trộn toàn mạng lưới cả 2 bảng bự. Sau đó nó sắp xếp (sort) dữ liệu rồi lướt đối chiếu. Giúp join lượng dữ liệu vô hạn không sợ sập RAM.
+  * **Broadcast Hash Join** hoạt động bằng cách sao chép và gửi toàn bộ bảng nhỏ tới tất cả các node chứa phân mảnh của bảng lớn. Chiến lược này loại bỏ hoàn toàn pha xáo trộn dữ liệu qua mạng (Shuffle) nên có tốc độ thực thi rất nhanh. Nó chỉ ứng dụng được khi một trong hai bảng có kích thước đủ nhỏ để chứa vừa bộ nhớ RAM.
+  * **Sort Merge Join** là giải pháp dành cho hai bảng lớn. Nó xáo trộn cả hai bảng qua mạng dựa trên khóa Join, tiến hành sắp xếp dữ liệu theo thứ tự, rồi dùng con trỏ duyệt song song để so khớp. SMJ chậm hơn do tốn tài nguyên sắp xếp dữ liệu, nhưng có độ ổn định tuyệt đối và không sợ bị tràn bộ nhớ RAM (OOM) khi xử lý các bảng dữ liệu khổng lồ.
 
-### 2. Tại sao Sort Merge Join (SMJ) lại là thiết lập mặc định trong Spark kể từ phiên bản 2.3 thay cho Shuffle Hash Join?
-* **Gợi ý trả lời**: Hash Join yêu cầu toàn bộ phân vùng (partition) của bảng nhỏ hơn (tại mỗi node) phải được tải lên thành một bảng băm trong bộ nhớ (RAM). Nếu dữ liệu lệch (Skew) làm phân vùng đó bự đột biến, node đó sẽ văng Out Of Memory. Ngược lại, Sort Merge Join sau khi sắp xếp chỉ cần duyệt qua dữ liệu bằng con trỏ mà không cần giữ toàn cục trong RAM. SMJ hy sinh tốc độ để lấy sự ỔN ĐỊNH - tiêu chí tối cao nhất cho mọi job Big Data chạy production.
+### 2. Tại sao Sort Merge Join lại là lựa chọn mặc định thay thế cho Shuffle Hash Join khi xử lý các bảng lớn trong Spark?
+* **Gợi ý trả lời**: Shuffle Hash Join yêu cầu toàn bộ một phân vùng dữ liệu của bảng nhỏ hơn (tại mỗi node) phải được tải lên thành một bảng băm trong bộ nhớ RAM. Nếu dữ liệu bị lệch (Data Skew), một phân vùng bị phình to đột biến sẽ lập tức làm sập node đó vì lỗi tràn bộ nhớ (OOM). 
+  Trong khi đó, Sort Merge Join sau khi sắp xếp dữ liệu chỉ cần duyệt qua từng dòng một cách tuần tự bằng con trỏ, không đòi hỏi phải giữ toàn bộ phân vùng trong RAM. Việc chọn SMJ làm mặc định là sự đánh đổi tốc độ để lấy **độ ổn định** – tiêu chí hàng đầu khi vận hành các đường ống dữ liệu lớn (Big Data pipelines) trên môi trường Production.
 
----
+## Tài liệu tham khảo
 
-## References
+1. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Chương Joins).
+2. Databricks Blogs on Spark SQL Physical Plans.
 
-* **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Chương Joins).
-* Databricks Blogs on Spark SQL Physical Plans.
-
----
-
-## English summary
+## English Summary
 
 In Apache Spark, logical join operations are translated into distinct physical execution strategies by the Catalyst Optimizer based on dataset sizes. The **Broadcast Hash Join (BHJ)** bypasses the network shuffle entirely by replicating a small table to all nodes, making it phenomenally fast but bounded by memory. For massive datasets, Spark defaults to **Sort Merge Join (SMJ)**, which shuffles both tables by key, sorts them, and iterates sequentially. While SMJ is slower due to the expensive sorting phase, it provides exceptional robustness against Out-Of-Memory errors compared to the riskier **Shuffle Hash Join (SHJ)**.

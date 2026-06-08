@@ -9,55 +9,52 @@ seoTitle: "Apache Hudi - Định dạng bảng tối ưu cho Data Lakehouse"
 metaDescription: "Tìm hiểu về Apache Hudi: định dạng bảng mã nguồn mở giúp quản lý dữ liệu lớn trên Data Lake với khả năng update, delete và incremental processing."
 ---
 
-# Apache Hudi
+# Apache Hudi: Giải pháp quản lý dữ liệu lớn linh hoạt trên Data Lake
 
-## Summary
+Trong thế giới Kỹ thuật Dữ liệu, Data Lake (Hồ dữ liệu) luôn là lựa chọn hàng đầu nhờ khả năng lưu trữ lượng thông tin khổng lồ với chi phí cực thấp. Thế nhưng, việc vận hành một Data Lake truyền thống chứa đầy file Parquet thô lại là một câu chuyện đau đầu: làm sao để cập nhật một vài dòng dữ liệu bị sai? Làm sao để xóa thông tin người dùng theo luật bảo mật mà không cần ghi đè lại toàn bộ phân vùng (partition) khổng lồ? Và làm cách nào để đồng bộ dữ liệu thay đổi liên tục từ cơ sở dữ liệu nguồn (CDC) theo thời gian thực?
 
-Apache Hudi (Hadoop Upserts Deletes and Incrementals) là một định dạng bảng (table format) mã nguồn mở được thiết kế để quản lý việc lưu trữ dữ liệu lớn trên các hệ thống lưu trữ phân tán (như HDFS, S3, GCS). Hudi mang lại các tính năng quan trọng như giao dịch ACID, cập nhật (upserts), xóa (deletes) và xử lý dữ liệu gia tăng (incremental processing) ngay trên nền tảng Data Lake.
+Để giải quyết những câu hỏi hóc búa này, Uber đã phát triển và đóng góp cho cộng đồng mã nguồn mở **Apache Hudi** (viết tắt của Hadoop Upserts Deletes and Incrementals). 
 
----
+Đóng vai trò là một định dạng bảng (Table Format) hiện đại, Hudi mang lại các tính năng quan trọng như giao dịch ACID, cập nhật (Upserts), xóa (Deletes) và xử lý dữ liệu gia tăng (Incremental Processing) trực tiếp trên các hệ thống lưu trữ phân tán như AWS S3, Google Cloud Storage hay HDFS, biến Data Lake của bạn thành một Data Lakehouse tin cậy.
 
-## Definition
+## Tại sao Data Lake truyền thống cần đến Hudi?
 
-**Apache Hudi** là một tầng quản lý dữ liệu (data management layer) nằm giữa các engine tính toán (như Apache Spark, Flink, Presto, Trino) và các hệ thống lưu trữ phân tán hoặc đám mây (như Amazon S3, Google Cloud Storage, HDFS). Hudi cho phép thực hiện các thao tác thay đổi dữ liệu (mutations) ở cấp độ bản ghi (record-level) trên Data Lake, vốn dĩ trước đây chỉ được hỗ trợ tốt trên các cơ sở dữ liệu quan hệ hoặc Data Warehouse truyền thống.
+Trước khi có sự xuất hiện của các Table Format như Apache Hudi, việc quản lý dữ liệu trên Data Lake giống như cố gắng chỉnh sửa một cuốn sách được in trên giấy đá:
+1. **Không hỗ trợ cập nhật và xóa (Upsert/Delete):** Các file dữ liệu trên Data Lake thường ở dạng chỉ thêm mới (Append-only). Nếu bạn muốn sửa đổi hoặc xóa chỉ một vài bản ghi, cách duy nhất là dùng Spark đọc toàn bộ file Parquet chứa bản ghi đó lên, lọc bỏ/chỉnh sửa dữ liệu, rồi ghi đè file mới. Quy trình này cực kỳ tốn tài nguyên và thời gian.
+2. **Khó khăn khi đồng bộ CDC (Change Data Capture):** Khi dữ liệu ở các cơ sở dữ liệu giao dịch (như MySQL, Postgres) thay đổi liên tục, việc đồng bộ các thay đổi đó vào Data Lake theo thời gian thực gần như là điều bất khả thi nếu không có cơ chế ghi đè thông minh.
+3. **Không hỗ trợ truy vấn gia tăng (Incremental Query):** Rất khó để một ứng dụng phía sau biết được từ lần quét cuối cùng, những bản ghi nào đã bị thay đổi để chỉ lấy phần dữ liệu mới đó đi xử lý tiếp, thay vì quét lại toàn bộ bảng.
 
----
+Hudi ra đời như một vị cứu tinh, cung cấp khả năng thao tác ở cấp độ bản ghi (record-level), giúp việc đồng bộ CDC diễn ra mượt mà và hỗ trợ truy vấn gia tăng hiệu quả.
 
-## Why it exists
+## Ba cột trụ công nghệ làm nên sức mạnh của Hudi
 
-Trước khi có các table format như Hudi, việc quản lý dữ liệu trên Data Lake gặp rất nhiều khó khăn:
-1. **Không hỗ trợ Upsert/Delete**: Dữ liệu trên Data Lake thường ở dạng append-only (chỉ thêm mới). Để cập nhật hoặc xóa một vài bản ghi, kỹ sư dữ liệu phải ghi lại toàn bộ tệp tin chứa dữ liệu đó hoặc toàn bộ một phân vùng (partition), gây tốn kém tài nguyên và thời gian vô ích.
-2. **Khó khăn trong xử lý CDC (Change Data Capture)**: Khi tích hợp dữ liệu từ các database nguồn có những thay đổi liên tục, việc đồng bộ các thay đổi đó vào Data Lake gần như không thể thực hiện hiệu quả theo thời gian thực (real-time) hoặc gần thời gian thực (near real-time).
-3. **Quản lý dữ liệu gia tăng kém**: Việc xác định dữ liệu nào mới được thêm vào hoặc thay đổi để chạy các pipeline hạ nguồn đòi hỏi logic rất phức tạp.
+Kiến trúc độc đáo của Apache Hudi xoay quanh ba khái niệm cốt lõi:
 
-Hudi được Uber tạo ra để giải quyết chính những vấn đề này: khả năng cập nhật bản ghi nhanh chóng, đáp ứng yêu cầu đồng bộ CDC và hỗ trợ truy vấn gia tăng (incremental queries) mạnh mẽ.
+### 1. Record-level Indexing (Chỉ mục cấp bản ghi)
+Hudi sử dụng các cơ chế chỉ mục tiên tiến (như Bloom Filter, HBase Index hoặc Bucket Index) để nhanh chóng định vị xem bản ghi cần cập nhật hoặc xóa đang nằm ở tệp tin Parquet vật lý nào trên ổ đĩa. Nhờ đó, Hudi tránh được việc phải quét toàn bộ bảng dữ liệu để tìm kiếm bản ghi cần sửa.
 
----
+### 2. Timeline (Dòng thời gian hoạt động)
+Hudi duy trì một dòng thời gian ghi lại lịch sử của mọi thao tác diễn ra trên bảng (như commit mới, rollback lỗi, compaction gộp file). Dòng thời gian này chính là điểm tựa giúp Hudi hỗ trợ các giao dịch ACID, đồng thời cho phép người dùng xem lại trạng thái của bảng ở một thời điểm bất kỳ trong quá khứ (Time Travel).
 
-## Core idea
+### 3. Hai loại hình lưu trữ dữ liệu (Table Types)
+Để cân bằng giữa hiệu suất ghi dữ liệu và tốc độ đọc dữ liệu, Hudi cung cấp hai lựa chọn cấu trúc bảng:
+* **Copy-on-Write (CoW):** Đúng như tên gọi, khi có bất kỳ cập nhật nào, Hudi sẽ đọc file Parquet cũ lên, cập nhật bản ghi mới, sao chép dữ liệu cũ và ghi ra một file Parquet mới hoàn chỉnh. Cách này giúp việc đọc dữ liệu luôn đạt tốc độ tối đa (vì dữ liệu luôn nằm trong các file Parquet sạch sẽ), phù hợp cho các bảng đọc nhiều (Read-heavy).
+* **Merge-on-Read (MoR):** Khi có cập nhật mới, Hudi không đụng vào file Parquet cũ mà ghi nhanh các thay đổi đó vào một file log định dạng Avro nằm ngay bên cạnh. Khi người dùng truy vấn, Hudi sẽ tự động gộp (merge) dữ liệu từ file Parquet cơ sở và file Avro log lại để trả về kết quả mới nhất. Cơ chế này giúp ghi dữ liệu cực nhanh, rất phù hợp cho các luồng dữ liệu thời gian thực (Write-heavy). Các file log Avro sau đó sẽ được tự động gộp vào file Parquet cơ sở thông qua tiến trình Compaction chạy ngầm định kỳ.
 
-Ý tưởng cốt lõi của Hudi xoay quanh 3 khái niệm:
-1. **Record-level Indexing**: Hudi sử dụng các chỉ mục (indexes) như Bloom Filter hoặc HBase để nhanh chóng xác định vị trí của một bản ghi cần cập nhật hoặc xóa mà không cần quét toàn bộ tệp tin.
-2. **Timeline (Dòng thời gian)**: Hudi duy trì một dòng thời gian cốt lõi lưu trữ tất cả các hành động (commits, rollbacks, compactions) thực hiện trên bảng. Điều này cho phép phục hồi trạng thái dữ liệu (time travel) và hỗ trợ giao dịch ACID.
-3. **Table Types (Loại bảng)**: Hudi cung cấp hai loại hình lưu trữ dữ liệu khác nhau để cân bằng giữa hiệu suất ghi và đọc:
-   - **Copy-on-Write (CoW)**: Dữ liệu được lưu trữ hoàn toàn trong các tệp tin cột (Parquet). Khi có cập nhật, tệp Parquet sẽ được sao chép và tạo mới kèm với bản ghi đã thay đổi. Phù hợp cho workload đọc nhiều (read-heavy).
-   - **Merge-on-Read (MoR)**: Dữ liệu cập nhật được ghi nhanh vào các tệp tin dòng (Avro logs). Khi truy vấn, engine đọc sẽ hợp nhất dữ liệu từ Parquet và Avro. Các log sau đó sẽ được gộp (compacted) lại định kỳ. Phù hợp cho workload ghi nhanh/streaming (write-heavy).
+## Cơ chế hoạt động: Khi luồng cập nhật và ghi đè phối hợp
 
----
+Hãy cùng xem quy trình hoạt động của Hudi khi thực hiện cập nhật hoặc thêm mới (Upsert) dữ liệu trên một bảng cấu trúc Merge-on-Read (MoR):
 
-## How it works
+1. **Nhận dữ liệu (Ingestion):** Dữ liệu mới (ví dụ từ Kafka thông qua Spark Streaming) được nạp vào Hudi.
+2. **Kiểm tra chỉ mục (Indexing):** Hudi quét chỉ mục Bloom Filter để xác định xem các bản ghi đi vào đã từng tồn tại trong hệ thống chưa.
+3. **Thực thi ghi (Writing):**
+   * Nếu là bản ghi mới tinh (Insert): Hudi ghi chúng vào các tệp tin Parquet cơ sở mới.
+   * Nếu là bản ghi cập nhật (Update): Hudi chỉ ghi phần thay đổi vào tệp log Avro tương ứng với file Parquet chứa bản ghi cũ.
+4. **Hợp nhất dữ liệu (Compaction):** Định kỳ, tiến trình Compaction sẽ chạy để gộp tất cả các tệp log Avro vào tệp Parquet cơ sở để tạo ra phiên bản tệp Parquet mới sạch sẽ, sẵn sàng cho các câu truy vấn phân tích tiếp theo diễn ra nhanh hơn.
 
-Quá trình hoạt động cơ bản của Hudi khi thực hiện Upsert (Cập nhật hoặc Thêm mới) trong bảng MoR:
-1. **Ingestion**: Dữ liệu từ nguồn (ví dụ Kafka thông qua Spark Streaming) đi vào Hudi.
-2. **Indexing**: Hudi kiểm tra chỉ mục để xem các khóa (keys) của dữ liệu đến đã tồn tại trong các tệp lưu trữ hay chưa.
-3. **Writing**:
-   - Đối với các bản ghi mới (Inserts), Hudi ghi chúng vào các tệp Parquet cơ sở mới.
-   - Đối với các bản ghi đã tồn tại (Updates), Hudi ghi sự thay đổi vào tệp log (Avro) liên kết với tệp Parquet cơ sở chứa bản ghi đó.
-4. **Compaction**: Định kỳ (ví dụ mỗi giờ), một tiến trình nền sẽ chạy để hợp nhất (merge) dữ liệu từ tệp log vào một phiên bản tệp Parquet cơ sở mới để tối ưu tốc độ đọc ở các lần sau.
+## Sơ đồ kiến trúc tổng quan của Apache Hudi
 
----
-
-## Architecture / Flow
+Dưới đây là sơ đồ mô tả cách dữ liệu chảy từ các nguồn giao dịch vào kho lưu trữ Hudi và được truy vấn bởi các công cụ phân tích:
 
 ```mermaid
 graph TD
@@ -93,13 +90,11 @@ graph TD
     Storage --> Hive
 ```
 
----
+## Bắt tay vào code: Thao tác cơ bản với Hudi bằng Spark
 
-## Practical example
+Dưới đây là ví dụ sử dụng Spark Shell (ngôn ngữ Scala) để thực hiện các thao tác Insert và Upsert dữ liệu vào bảng Hudi:
 
-Sử dụng Spark Shell (Scala) để thao tác với Apache Hudi:
-
-**1. Tạo dữ liệu mẫu và ghi (Insert) vào Hudi table:**
+### 1. Khởi tạo dữ liệu mẫu và ghi mới (Insert)
 ```scala
 import org.apache.hudi.QuickstartUtils._
 import scala.collection.JavaConversions._
@@ -111,9 +106,11 @@ val tableName = "hudi_trips_cow"
 val basePath = "file:///tmp/hudi_trips_cow"
 val dataGen = new DataGenerator
 
+// Tạo 10 bản ghi ngẫu nhiên dưới dạng DataFrame
 val inserts = convertToStringList(dataGen.generateInserts(10))
 val df = spark.read.json(spark.sparkContext.parallelize(inserts, 2))
 
+// Ghi dữ liệu vào đường dẫn vật lý theo định dạng Hudi
 df.write.format("hudi").
   options(getQuickstartWriteConfigs).
   option(PRECOMBINE_FIELD_OPT_KEY, "ts").
@@ -124,100 +121,75 @@ df.write.format("hudi").
   save(basePath)
 ```
 
-**2. Cập nhật dữ liệu (Upsert):**
+### 2. Cập nhật dữ liệu hiện tại (Upsert)
 ```scala
+// Sinh ra dữ liệu cập nhật cho các bản ghi vừa tạo
 val updates = convertToStringList(dataGen.generateUpdates(10))
 val dfUpdates = spark.read.json(spark.sparkContext.parallelize(updates, 2))
 
+// Thực hiện ghi đè thông minh (Upsert) sử dụng chế độ ghi Append
 dfUpdates.write.format("hudi").
   options(getQuickstartWriteConfigs).
   option(PRECOMBINE_FIELD_OPT_KEY, "ts").
   option(RECORDKEY_FIELD_OPT_KEY, "uuid").
   option(PARTITIONPATH_FIELD_OPT_KEY, "partitionpath").
   option(TABLE_NAME, tableName).
-  mode(Append). // Sử dụng Append thay vì Overwrite cho Upsert
+  mode(Append). 
   save(basePath)
 ```
 
----
+## Những "bí kíp" giúp tối ưu hóa hiệu năng Hudi
 
-## Best practices
+* **Chọn đúng loại bảng (Table Type):** Hãy chọn Copy-on-Write (CoW) cho các bảng dữ liệu ít khi cập nhật (ví dụ: chạy batch hàng ngày) để ưu tiên tối đa cho tốc độ đọc. Chọn Merge-on-Read (MoR) khi bạn có nguồn dữ liệu CDC liên tục từ Kafka đổ về để tránh nghẽn luồng ghi.
+* **Cấu hình Compaction hợp lý:** Nếu chọn bảng MoR, bạn cần thiết lập cấu hình Compaction chạy đều đặn để tránh việc các tệp log Avro phình to quá mức, khiến câu truy vấn đọc bị chậm do phải gộp quá nhiều file cùng lúc.
+* **Thiết kế phân vùng (Partitioning) thông minh:** Phân chia thư mục lưu trữ theo ngày tháng (`year/month/day`) hoặc khu vực giúp khoanh vùng dữ liệu cần quét khi truy vấn, cải thiện tốc độ xử lý rõ rệt.
 
-* **Lựa chọn đúng Table Type**: Sử dụng Copy-on-Write (CoW) cho các bảng có tần suất cập nhật thấp (batch jobs hàng ngày) và Merge-on-Read (MoR) cho các luồng dữ liệu thay đổi liên tục, độ trễ thấp (streaming CDC).
-* **Quản lý Compaction**: Đối với MoR, hãy lập lịch Compaction thường xuyên để đảm bảo hiệu suất truy vấn không bị chậm do phải đọc và hợp nhất quá nhiều file log (delta files).
-* **Partitioning**: Thiết kế chiến lược phân vùng hợp lý (ví dụ: theo ngày tạo) để giới hạn số lượng dữ liệu phải quét, đồng thời quản lý kích thước tệp (file sizing) tốt hơn.
-* **Sử dụng Indexing hiệu quả**: Bloom Index là lựa chọn mặc định và phổ biến nhất, cung cấp hiệu suất tốt trong đa số trường hợp. Nếu dùng HBase Index, cần phải bảo trì cụm HBase độc lập.
+## Những sai lầm thường gặp khi vận hành Hudi
 
----
+* **Quên cấu hình chính sách dọn dẹp (Cleaner Policy):** Mỗi khi thực hiện cập nhật hoặc compaction, Hudi sẽ tạo ra các phiên bản file Parquet mới và giữ lại file cũ để hỗ trợ tính năng Time Travel. Nếu bạn không thiết lập số lượng phiên bản cũ tối đa cần giữ lại, kho lưu trữ của bạn sẽ nhanh chóng bị tràn và phát sinh chi phí lưu trữ khổng lồ.
+* **Gặp lỗi file nhỏ (Small Files Problem):** Nếu bạn liên tục ghi dữ liệu streaming với lượng bản ghi quá nhỏ, Hudi sẽ sinh ra vô số file Parquet nhỏ lẻ trên đĩa. Việc này làm nghẽn hệ thống tìm kiếm file của hệ điều hành. Hãy bật cấu hình tự động tối ưu hóa kích thước file (`hoodie.keep.min.commits` và `hoodie.keep.max.commits`) để Hudi tự gom các file nhỏ lại.
 
-## Common mistakes
+## Đánh đổi: Điểm mạnh và điểm yếu của Hudi
 
-* **Quên dọn dẹp các version cũ**: Không cấu hình các chính sách dọn dẹp (Cleaner policies), khiến hệ thống lưu trữ toàn bộ lịch sử file Parquet dẫn đến tốn kém chi phí lưu trữ S3/HDFS rất lớn.
-* **Kích thước file quá nhỏ (Small files problem)**: Việc ghi theo streaming hoặc cập nhật lượng dữ liệu quá nhỏ liên tục dẫn đến việc tạo ra hàng ngàn file nhỏ, làm chậm quá trình liệt kê (listing) và truy vấn của Hudi. Cần kích hoạt tính năng tự động tối ưu hóa kích thước file.
+### Điểm mạnh (Pros):
+* Hỗ trợ cập nhật (Upsert) và xóa (Delete) dữ liệu ở cấp bản ghi cực kỳ mạnh mẽ.
+* Cung cấp cơ chế Incremental Query xuất sắc, giúp tối ưu các pipeline xử lý dữ liệu tiếp nối.
+* Cho phép quay ngược thời gian (Time Travel) để kiểm tra lịch sử dữ liệu.
+* Tích hợp cực kỳ sâu sắc với hệ sinh thái Hadoop và các engine tính toán lớn như Apache Spark, Flink.
 
----
+### Điểm yếu (Cons):
+* **Cấu hình cực kỳ phức tạp:** Hudi cung cấp hàng trăm tham số cấu hình liên quan đến Index, Compaction, Cleaning, Clustering... Việc này đòi hỏi kỹ sư vận hành phải có kiến thức sâu rộng để tránh cấu hình sai gây sập hệ thống.
+* **Chi phí tài nguyên tính toán:** Tiến trình duy trì index Bloom Filter và chạy Compaction định kỳ sẽ tiêu tốn một phần năng lực xử lý đáng kể của cụm máy chủ.
 
-## Trade-offs
+## Khi nào Hudi là sự lựa chọn tối ưu?
 
-### Ưu điểm
-* Hỗ trợ tuyệt vời cho Upserts, Deletes ở mức bản ghi.
-* Hỗ trợ Incremental Queries, cho phép luồng dữ liệu xử lý theo chuỗi nhẹ nhàng hơn.
-* Hỗ trợ Time Travel: xem lại trạng thái của bảng ở một mốc thời gian quá khứ.
-* Tích hợp sâu với hệ sinh thái Hadoop/Spark.
+* Bạn cần xây dựng một đường ống dẫn dữ liệu CDC để đồng bộ liên tục dữ liệu từ các cơ sở dữ liệu quan hệ (OLTP) của doanh nghiệp lên Data Lake với độ trễ thấp (vài phút).
+* Bạn phải tuân thủ nghiêm ngặt các quy định về bảo mật dữ liệu cá nhân như GDPR hay CCPA (đòi hỏi phải xóa sạch thông tin người dùng khi có yêu cầu).
+* Bạn muốn xây dựng một Data Lakehouse hiện đại hỗ trợ cả hai mô hình xử lý batch truyền thống và streaming thời gian thực.
 
-### Nhược điểm
-* **Độ phức tạp trong cấu hình**: Hudi có hàng tá cấu hình về write, index, compaction, clean, clustering... đòi hỏi hiểu biết sâu để tinh chỉnh tối ưu.
-* **Overhead**: Quá trình indexing và compaction tiêu tốn một lượng tài nguyên tính toán không nhỏ.
-
----
-
-## When to use
-
-* Xây dựng luồng dữ liệu tích hợp CDC từ Database (MySQL, Postgres, Oracle) lên Data Lake với độ trễ từ vài phút đến vài chục phút.
-* Đảm bảo tính tuân thủ quy định xóa dữ liệu (như GDPR, CCPA) trên môi trường phân tán lớn.
-* Khi cần tạo pipeline xử lý dữ liệu liên tục và chỉ phân tích các bản ghi thay đổi từ lần truy vấn cuối (incremental processing).
-
-## When not to use
-
-* Nếu hệ thống chỉ chạy luồng dữ liệu hoàn toàn là ghi thêm (append-only logs), ví dụ như lưu nhật ký truy cập (web logs). Khi đó việc ghi trực tiếp ra Parquet truyền thống sẽ đơn giản và nhẹ nhàng hơn.
-* Khi dữ liệu có kích thước nhỏ và có thể dễ dàng quản lý trọn vẹn trong một RDBMS thông thường mà không cần Data Lake.
-
----
-
-## Related concepts
+## Các khái niệm liên quan
 
 * [Data Lake](/concepts/data-lake)
 * Data Lakehouse
 * [Change Data Capture (CDC)](/concepts/change-data-capture)
 * [Table Format](/concepts/table-format)
-* [Compaction](/concepts/compaction)
 
----
+## Góc phỏng vấn: Chinh phục các thử thách về Apache Hudi
 
-## Interview questions
+### 1. Hãy so sánh sự khác biệt và trường hợp sử dụng của hai loại bảng Copy-on-Write (CoW) và Merge-on-Read (MoR) trong Hudi.
+* **Gợi ý trả lời:** 
+  * **CoW (Copy-on-Write):** Khi có thay đổi, Hudi sẽ sao chép file dữ liệu cũ, ghi đè các thay đổi và lưu ra một file Parquet mới hoàn chỉnh. Cách này gây tốn thời gian khi ghi dữ liệu (Write Amplification) nhưng lại giúp tốc độ đọc dữ liệu cực nhanh vì dữ liệu luôn ở dạng Parquet sạch sẽ. Phù hợp cho các bảng phân tích dữ liệu dạng batch hàng ngày.
+  * **MoR (Merge-on-Read):** Khi có thay đổi, Hudi ghi các bản ghi mới hoặc thay đổi vào các file log Avro riêng biệt nằm cạnh file Parquet gốc. Khi người dùng truy vấn, Hudi mới tiến hành gộp dữ liệu lại để trả kết quả. Cách này giúp ghi dữ liệu cực nhanh (phù hợp cho streaming) nhưng sẽ làm chậm tốc độ đọc (Read Amplification). Hệ thống cần cấu hình thêm tiến trình Compaction để định kỳ gộp file log vào file Parquet cơ sở.
 
-### 1. Phân biệt sự khác nhau giữa hai loại bảng Copy-on-Write (CoW) và Merge-on-Read (MoR) trong Hudi.
-* **Người phỏng vấn muốn kiểm tra**: Sự am hiểu về cách Hudi quản lý lưu trữ và thiết kế kiến trúc hệ thống.
-* **Gợi ý trả lời (Strong Answer)**: 
-  * **CoW (Copy-on-Write)**: Mọi thao tác ghi (insert/update) sẽ trực tiếp tạo ra tệp cơ sở (Parquet) mới. Điều này làm cho việc ghi (write) diễn ra chậm hơn và tốn tài nguyên do chi phí sao chép lại những dữ liệu không đổi trong cùng file, nhưng bù lại, tác vụ đọc (read) là tối ưu nhất vì nó không cần hợp nhất gì cả. Phù hợp với ETL dạng lô (batch).
-  * **MoR (Merge-on-Read)**: Các thay đổi (updates/deletes) được ghi nhanh vào các file log (Avro). Engine truy vấn sẽ đọc các file base (Parquet) và kết hợp chúng với các log on-the-fly (tại thời điểm truy vấn). Việc ghi cực kỳ nhanh (latency thấp, phù hợp cho streaming) nhưng việc đọc chậm hơn. Có cơ chế compaction nền để gom log vào base định kỳ.
-* **Lỗi cần tránh**: Không nhắc đến cơ chế compaction trong MoR hoặc không phân biệt rõ tác động lên Write Amplification (CoW) và Read Amplification (MoR).
+### 2. Làm thế nào để xây dựng một đường ống đồng bộ dữ liệu CDC từ MySQL lên Data Lake sử dụng Apache Hudi?
+* **Gợi ý trả lời:** Chúng ta sử dụng một công cụ Change Data Capture chuyên dụng (như Debezium) để theo dõi transaction log (binlog) của MySQL. Debezium sẽ đẩy các sự kiện thay đổi dữ liệu (insert, update, delete) vào các topic của Apache Kafka. Tiếp theo, một ứng dụng Spark Streaming hoặc Flink Streaming sẽ đọc dữ liệu từ Kafka và sử dụng thư viện ghi của Hudi (thường dùng bảng MoR) cấu hình theo khóa chính (`Record Key`) để tự động cập nhật hoặc xóa dữ liệu trên Data Lake, đảm bảo tính nhất quán dữ liệu thời gian thực.
 
-### 2. Làm thế nào Apache Hudi xử lý CDC từ một nguồn RDBMS vào Data Lake?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức tổng quát về pipeline ETL hiện đại và kỹ năng kết hợp công cụ.
-* **Gợi ý trả lời (Strong Answer)**: 
-  Sử dụng một công cụ như Debezium theo dõi nhật ký transaction log (ví dụ binlog MySQL) để tạo ra các sự kiện thay đổi dữ liệu (insert, update, delete). Các sự kiện này được đẩy vào Kafka. Dùng Spark Streaming hoặc Flink đọc từ Kafka, sau đó sử dụng khả năng Upsert của Hudi (bảng MoR) với khóa chính (Record Key) và trường thời gian (Precombine Key) để tự động cập nhật hoặc xóa các bản ghi trên Data Lake, đảm bảo trạng thái dữ liệu nhất quán với nguồn RDBMS.
-
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Apache Hudi Documentation**: (https://hudi.apache.org/docs/overview) - Tài liệu chính thức kiến trúc và hướng dẫn.
 2. **"Data Engineering with Apache Spark, Delta Lake, and Lakehouse"** - Phân tích so sánh Hudi, Iceberg và Delta Lake.
 3. **Uber Engineering Blog**: "Hudi: Uber Engineering’s Incremental Processing Framework on Hadoop".
 
----
-
-## English summary
+## English Summary
 
 Apache Hudi (Hadoop Upserts Deletes and Incrementals) is an open-source data management framework and table format that simplifies incremental data processing and data pipeline development by providing record-level insert, update, delete, and upsert capabilities on data lakes (like HDFS or cloud object storage). It introduces ACID transactions and offers two table types—Copy-on-Write (optimized for read-heavy analytical workloads) and Merge-on-Read (optimized for write-heavy streaming scenarios). Core features like time travel, schema evolution, and automated compaction make Hudi essential for building modern Data Lakehouses and managing massive CDC pipelines.

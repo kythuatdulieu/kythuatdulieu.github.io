@@ -9,66 +9,57 @@ seoTitle: "ACID Transactions trên Data Lake - Kiến trúc Lakehouse"
 metaDescription: "Tìm hiểu cơ chế thực thi giao dịch ACID (Atomicity, Consistency, Isolation, Durability) trên Data Lake và Object Storage qua các công nghệ Table Format."
 ---
 
-# ACID Transactions trên Data Lake
+# ACID Transactions trên Data Lake: Mang tính năng Data Warehouse lên Object Storage
 
-## Summary
+Hãy tưởng tượng bạn đang vận hành một hệ thống dữ liệu lớn phục vụ báo cáo tài chính cho doanh nghiệp. Vào lúc 2 giờ sáng, đường ống dẫn dữ liệu (data pipeline) đang cập nhật hàng triệu bản ghi giao dịch mới vào Data Lake. Cùng lúc đó, đội ngũ phân tích chạy các truy vấn SQL để kết xuất báo cáo. Nếu hệ thống đột ngột gặp sự cố mất điện hoặc lỗi mạng, liệu dữ liệu của bạn sẽ ra sao? Báo cáo xuất ra có bị sai lệch, chắp vá hay không?
 
-ACID Transactions (Giao dịch ACID) trên Data Lake là tập hợp các cơ chế đảm bảo tính toàn vẹn của dữ liệu trên các hệ thống lưu trữ phân tán (như AWS S3, Google Cloud Storage, HDFS), vốn bản chất không hỗ trợ giao dịch. Bằng cách sử dụng các định dạng bảng hiện đại (Table Formats như Delta Lake, Apache Iceberg, Apache Hudi) kết hợp với kỹ thuật kiểm soát luồng đồng thời (Optimistic Concurrency Control), Data Lake giờ đây có thể hỗ trợ nhiều luồng ghi và đọc đồng thời một cách an toàn mà không làm hỏng dữ liệu.
+Để giải quyết những bài toán hóc búa này, chúng ta cần đến **ACID Transactions (Giao dịch ACID)**. Trước đây, ACID vốn là "đặc sản" độc quyền của các cơ sở dữ liệu quan hệ truyền thống hoặc các Data Warehouse đắt đỏ. Giờ đây, nhờ sự phát triển của các Table Format hiện đại, chúng ta hoàn toàn có thể chạy các giao dịch ACID trực tiếp trên các hệ thống Object Storage giá rẻ như AWS S3, Google Cloud Storage hay HDFS.
 
----
+## Nhắc lại một chút: ACID là gì?
 
-## Definition
+ACID là bộ bốn tiêu chuẩn vàng để bảo vệ tính toàn vẹn của dữ liệu:
 
-**ACID** là viết tắt của 4 đặc tính quan trọng trong cơ sở dữ liệu:
-* **Atomicity (Tính nguyên tử)**: Một thao tác thay đổi (commit) gồm nhiều file hoặc thành công toàn bộ, hoặc không lưu lại bất cứ gì (không có trạng thái thành công một nửa).
-* **Consistency (Tính nhất quán)**: Dữ liệu luôn tuân thủ các quy tắc đã định (ví dụ: lược đồ schema đúng chuẩn).
-* **Isolation (Tính cô lập)**: Các truy vấn đọc sẽ không nhìn thấy dữ liệu đang được ghi dở dang. Các truy vấn ghi đồng thời không dẫm chân lên nhau.
-* **Durability (Tính bền vững)**: Một khi thay đổi đã được xác nhận (commit), dữ liệu sẽ được an toàn dù hệ thống có sập.
+* **Atomicity (Tính nguyên tử):** Triết lý "được ăn cả, ngã về không". Một giao dịch gồm nhiều bước hoặc là thành công toàn bộ, hoặc không để lại bất kỳ dấu vết nào. Không có trạng thái "thành công một nửa".
+* **Consistency (Tính nhất quán):** Dữ liệu sau khi giao dịch phải luôn tuân thủ các ràng buộc và quy tắc đã định trước (chẳng hạn như đúng định dạng schema).
+* **Isolation (Tính cô lập):** Các giao dịch chạy song song không được ảnh hưởng lẫn nhau. Người đọc sẽ không nhìn thấy dữ liệu đang được ghi dở dang của người khác.
+* **Durability (Tính bền vững):** Một khi giao dịch đã được xác nhận (commit), dữ liệu sẽ được lưu trữ an toàn lâu dài, bất chấp việc hệ thống có bị sập hay mất điện ngay sau đó.
 
-**ACID Transactions trên Data Lake** ám chỉ khả năng cung cấp 4 đặc tính này khi nhiều Engine tính toán (Spark, Flink, Trino) cùng thao tác trên các tệp tin thô (Parquet/ORC) lưu tại nền tảng đám mây (Object Storage).
+## Tại sao Data Lake truyền thống lại "kỵ" ACID?
 
----
+Các dịch vụ Object Storage như Amazon S3 hay GCS được thiết kế để lưu trữ lượng dữ liệu khổng lồ với chi phí cực thấp, nhưng chúng lại **không hỗ trợ khóa tệp tin (file locking)** và chỉ cung cấp tính nhất quán cuối cùng (eventual consistency - dù S3 đã cải tiến lên strong consistency từ cuối năm 2020).
 
-## Why it exists
+Trong các hệ thống Data Lake thế hệ cũ sử dụng Hadoop/Hive:
+1. **Lỗi ghi dở dang:** Nếu một tiến trình đang ghi hàng trăm file Parquet vào thư mục mà bị lỗi giữa chừng, một nửa số file lỗi vẫn sẽ nằm lại đó, khiến dữ liệu bị sai lệch (vi phạm tính Atomicity).
+2. **Đọc dữ liệu rác:** Khi một phân tích viên truy vấn dữ liệu đúng lúc đường ống dẫn dữ liệu đang ghi đè file, họ sẽ đọc được dữ liệu chắp vá, không hoàn chỉnh (vi phạm tính Isolation).
+3. **Ghi đè lẫn nhau:** Hai tiến trình ETL cùng cập nhật vào một phân vùng dữ liệu sẽ dễ dàng ghi đè và làm mất mát dữ liệu của nhau.
 
-Các hệ thống Object Storage như Amazon S3 được thiết kế cho khả năng mở rộng vô hạn và tính sẵn sàng cao, nhưng chúng chỉ cung cấp ngữ nghĩa "eventual consistency" (trước năm 2020) và hoàn toàn **không hỗ trợ khóa tệp tin (file locking)**. 
+Sự phát triển mạnh mẽ của mô hình **Data Lakehouse** đòi hỏi hệ thống vừa phải lưu trữ rẻ, vừa phải phục vụ trực tiếp các báo cáo BI thời gian thực lẫn các luồng cập nhật liên tục (Streaming, CDC). Đó là lý do vì sao cơ chế ACID trên Data Lake ra đời.
 
-Trong Data Lake thế hệ cũ (Hadoop/Hive):
-1. Khi có một tác vụ đang chạy để thêm dữ liệu (viết nhiều file vào thư mục), nếu tác vụ này sập giữa chừng, sẽ có một nửa số file nằm lại trên thư mục (vi phạm Atomicity).
-2. Nếu một User chạy truy vấn (Read) đúng lúc dữ liệu đang được ghi vào, họ sẽ đọc được dữ liệu rác, chắp vá (vi phạm Isolation).
-3. Hai tác vụ cùng cập nhật một phân vùng sẽ dễ dàng đè mất dữ liệu của nhau.
+## Triết lý cốt lõi: Quản lý qua Metadata và Transaction Logs
 
-Sự trỗi dậy của kiến trúc **Data Lakehouse** buộc hệ thống phải phục vụ trực tiếp các báo cáo BI và cập nhật liên tục (Streaming, CDC), yêu cầu độ tin cậy như Data Warehouse truyền thống. Do đó, cơ chế ACID trên Data Lake được phát triển.
+Chìa khóa để mang ACID lên Data Lake là **không bao giờ sửa đổi trực tiếp các file dữ liệu hiện tại**, thay vào đó chúng ta sử dụng **Nhật ký giao dịch (Transaction Logs)** và **Siêu dữ liệu (Metadata)**.
 
----
+1. **Ghi trước, xác nhận sau (Write-then-Commit):** Khi có dữ liệu mới, hệ thống sẽ ghi chúng dưới dạng các file vật lý mới hoàn toàn. Những file này nằm im hơi lặng tiếng và hoàn toàn vô hình với người đọc cho đến khi bước "commit" diễn ra.
+2. **Commit nguyên tử (Atomic Commits):** Bước commit thực chất chỉ là việc ghi nhận một file metadata nhỏ (chứa danh sách các file dữ liệu hợp lệ). Thao tác này dựa vào tính nguyên tử của hệ thống lưu trữ bên dưới (như atomic rename trong HDFS hoặc conditional put trong S3).
+3. **Kiểm soát đồng thời lạc quan (Optimistic Concurrency Control - OCC):** 
+   * Cả hai tiến trình ghi (Writer A và Writer B) cùng đọc phiên bản hiện tại của bảng (phiên bản X).
+   * Cả hai chuẩn bị và ghi các file dữ liệu mới một cách độc lập.
+   * Cả hai cố gắng đẩy file commit mới lên để nâng phiên bản bảng lên X+1.
+   * Hệ thống sẽ cho phép người nhanh chân hơn (ví dụ Writer A) commit thành công. Writer B bị từ chối, buộc phải đọc lại phiên bản X+1 mới của Writer A, kiểm tra xem có xung đột logic nào không. Nếu không, Writer B sẽ chuẩn bị lại và thử commit phiên bản X+2.
 
-## Core idea
+## Cơ chế hoạt động: Khi Spark và Delta Lake bắt tay
 
-Ý tưởng chủ đạo để tạo ra ACID trên file system phân tán là **không sửa đổi dữ liệu trực tiếp**, mà dựa vào **Transaction Logs (Nhật ký giao dịch) và Metadata (Siêu dữ liệu)**.
+Hãy cùng phân tích một kịch bản ghi dữ liệu (Append) sử dụng Delta Lake làm đại diện:
 
-1. **Write data, then commit**: Dữ liệu luôn được ghi vào các tệp tin vật lý mới (không bao giờ ghi đè lên file cũ). Các tệp này chưa hiển thị với người dùng cho đến khi một tệp siêu dữ liệu (metadata/log) được tạo ra.
-2. **Atomic Commits**: Bước ghi siêu dữ liệu là thao tác duy nhất được coi là "commit". Thao tác này dựa vào các cơ chế nguyên tử của hệ thống file lưu trữ bên dưới (ví dụ: HDFS atomic rename hoặc S3 conditional put).
-3. **Optimistic Concurrency Control (OCC)**: Kiểm soát đồng thời lạc quan. Khi hai quy trình cùng muốn ghi dữ liệu:
-   * Cả hai đều đọc trạng thái hiện tại (version X).
-   * Cả hai tạo ra file dữ liệu mới độc lập.
-   * Cả hai cố gắng commit phiên bản mới là X+1.
-   * Hệ thống sẽ cho phép một quá trình (A) chiến thắng. Quá trình kia (B) sẽ thất bại, phải load lại phiên bản X+1 từ quá trình (A), kiểm tra xung đột logic, và thử commit lại X+2.
+1. **Khởi tạo:** Spark chuẩn bị ghi một lô dữ liệu mới vào bảng.
+2. **Ghi dữ liệu vật lý (Data Write):** Spark ghi các file Parquet (ví dụ: `part-0001.parquet`) lên S3. Lúc này, các truy vấn đọc (Reader) đang chạy song song vẫn chỉ nhìn vào các file cũ và không hề biết đến sự tồn tại của file mới này.
+3. **Tạo nhật ký (Log Write):** Spark tạo một file JSON mô tả hành động: `"thêm file part-0001.parquet"`. Giả sử bảng đang ở phiên bản 4, Spark sẽ cố gắng tạo file nhật ký tên là `00000005.json`.
+4. **Xác thực nguyên tử:** Nếu việc ghi file `00000005.json` thành công (chưa có ai tạo file này trước đó), giao dịch hoàn tất và dữ liệu mới chính thức hiển thị. Nếu có một Writer khác đã nhanh tay tạo file `00000005.json` trước đó 1 mili-giây, giao dịch của Spark sẽ thất bại.
+5. **Thử lại tự động:** Spark sẽ tự động tải phiên bản 5 mới cập nhật, kiểm tra xem thay đổi của mình có xung đột với phiên bản 5 hay không. Nếu không, nó sẽ tiến hành thử commit lại với tên file `00000006.json`.
 
----
+### Kiến trúc luồng xử lý đồng thời (Concurrency Flow)
 
-## How it works
-
-Quy trình hoạt động của một giao dịch thay đổi dữ liệu (ví dụ: ghi thêm dữ liệu) trên Delta Lake:
-
-1. **Bắt đầu**: Máy khách yêu cầu ghi một lô dữ liệu mới.
-2. **Ghi dữ liệu (Data Write)**: Engine (ví dụ Spark) ghi các tệp `part-0001.parquet`, `part-0002.parquet` lên S3. Giai đoạn này, mọi máy khách đọc dữ liệu (Reader) vẫn chỉ đọc theo phiên bản cũ, hoàn toàn không biết đến sự tồn tại của các file này.
-3. **Ghi Nhật ký (Log Write)**: Spark tạo ra một file JSON mô tả thao tác: `"add file part-0001, add file part-0002"`. Sau đó cố gắng đặt tên nó là `00000005.json` (giả sử bảng đang ở phiên bản 4).
-4. **Kiểm tra nguyên tử (Atomicity Test)**: Nếu tạo file `00000005.json` thành công (không có file nào tên đó đã tồn tại), giao dịch hoàn tất. Nếu có một người khác vừa tạo `00000005.json` trước đó 1 mili-giây, giao dịch của Spark bị từ chối.
-5. **Thử lại (Retry)**: Nếu bị từ chối, Spark cập nhật bảng lên phiên bản 5 của người kia, đánh giá xem dữ liệu mình định ghi có xung đột (conflict) không, nếu không, cố gắng ghi ra file nhật ký tên là `00000006.json`.
-
----
-
-## Architecture / Flow
+Sơ đồ dưới đây minh họa cách hai Writer chạy song song tương tác với Object Storage và cách Reader luôn có góc nhìn nhất quán:
 
 ```mermaid
 sequenceDiagram
@@ -99,29 +90,29 @@ sequenceDiagram
     Storage-->>Reader: Trả về dữ liệu V3 (Consistency)
 ```
 
----
+## Ví dụ thực tế: Bài toán số dư tài khoản ngân hàng
 
-## Practical example
+Hãy tưởng tượng một bảng lưu trữ số dư tài khoản ngân hàng trên Data Lake. Số dư ban đầu (V1) của tài khoản `acc_01` là 100$.
 
-Xét tình huống một tài khoản ngân hàng được lưu trên Data Lake. Số dư ban đầu (V1) = 100$.
+* **Writer A (Giao dịch trừ tiền):** Muốn trừ 20$. A đọc số dư V1 (100$), tính toán và ghi file mới với số dư = 80$.
+* **Writer B (Giao dịch cộng tiền):** Muốn cộng 50$. B đọc số dư V1 (100$), tính toán và ghi file mới với số dư = 150$.
 
-* **Writer A (Giao dịch trừ tiền)**: Muốn trừ 20$. A đọc V1 (100$). A ghi file chứa số dư = 80$.
-* **Writer B (Giao dịch cộng tiền)**: Muốn cộng 50$. B đọc V1 (100$). B ghi file chứa số dư = 150$.
+Nếu không có ACID, bản ghi của B có thể ghi đè lên A và khiến số dư tài khoản kết thúc ở mức 150$ (hoàn toàn sai thực tế!). 
 
-* Xung đột: A commit thành công phiên bản V2 (80$). Khi B commit phiên bản V2, hệ thống từ chối (Concurrency check). B phải làm mới trạng thái (đọc được V2 là 80$), áp dụng phép logic cộng 50$ lên 80$, tạo file mới chứa số dư = 130$ và commit thành công phiên bản V3. Dữ liệu vẹn toàn. Nếu không có ACID, bản ghi của B sẽ ghi đè A và số dư sẽ thành 150$ (sai).
+Nhờ có OCC trong các Table Format, kịch bản sẽ diễn ra như sau: Writer A commit thành công phiên bản V2 (80$). Khi Writer B cố gắng commit phiên bản V2, hệ thống sẽ từ chối. B buộc phải cập nhật lại trạng thái (đọc số dư mới từ V2 là 80$), cộng thêm 50$ để ra 130$, ghi file mới và commit thành công phiên bản V3. Dữ liệu tài chính được bảo vệ vẹn toàn.
 
-Ví dụ cấu hình Delta Lake bằng PySpark để thực hiện các thao tác ACID:
+Dưới đây là cách chúng ta hiện thực hóa điều này bằng mã nguồn PySpark với Delta Lake:
 
 ```python
 from delta.tables import *
 
-# 1. Khởi tạo bảng Delta
+# 1. Khởi tạo bảng Delta ban đầu
 df = spark.createDataFrame([("acc_01", 100)], ["account_id", "balance"])
 df.write.format("delta").save("/data/accounts")
 
 deltaTable = DeltaTable.forPath(spark, "/data/accounts")
 
-# 2. Update (Writer A trừ tiền, Writer B cộng tiền - Delta tự động xử lý ACID)
+# 2. Thực hiện cập nhật đồng thời (Delta Lake tự động xử lý ACID dưới nền)
 deltaTable.update(
     condition = "account_id = 'acc_01'",
     set = { "balance": "balance - 20" }
@@ -132,82 +123,61 @@ deltaTable.update(
     set = { "balance": "balance + 50" }
 )
 
-# Kết quả balance = 130
+# Số dư cuối cùng nhận được luôn là 130
 ```
 
----
+## Những "bí kíp" giúp tối ưu giao dịch ACID
 
-## Best practices
+* **Tránh các giao dịch quá nhỏ (Small Files Problem):** Đừng liên tục commit các giao dịch siêu nhỏ (ví dụ ghi dữ liệu từng giây một). Việc này sẽ tạo ra vô số file JSON metadata nhỏ lẻ, gây tắc nghẽn hệ thống và tăng tỷ lệ xung đột. Hãy gom dữ liệu thành các đợt nhỏ (Micro-batch) khoảng 1 đến 5 phút một lần.
+* **Tận dụng Phân vùng (Partitioning) để giảm xung đột:** Nếu hai luồng ETL ghi vào hai phân vùng khác nhau (chẳng hạn Writer A ghi dữ liệu ngày 01/06, Writer B ghi dữ liệu ngày 02/06), các Table Format đủ thông minh để nhận biết không có xung đột logic và cho phép cả hai commit song song mà không cần retry.
+* **Chọn Catalog hỗ trợ khóa tốt:** Đảm bảo bạn sử dụng một Metadata Catalog đáng tin cậy (như AWS Glue, Nessie hoặc Hive Metastore có bật khóa) để làm điểm tựa nguyên tử cho các giao dịch trên môi trường Object Storage đám mây.
 
-* **Quản lý kích thước giao dịch**: Không nên commit quá nhiều giao dịch tí hon (ví dụ ghi từng file một mỗi giây). Điều này tạo ra quá nhiều file metadata và tăng nguy cơ xung đột (conflict). Nêm gom các thay đổi thành các Micro-batch (ví dụ 1-5 phút/lần).
-* **Partitioning để giảm xung đột**: Nếu hai Writer ghi vào hai phân vùng (partition) khác nhau (ví dụ: Writer A ghi dữ liệu ngày 1, Writer B ghi dữ liệu ngày 2), Engine có thể đánh giá không có xung đột logic và cho phép tiến hành song song.
-* **Sử dụng Engine hỗ trợ tốt**: Sử dụng đúng Catalog System (AWS Glue, Nessie, Hive Metastore) với chức năng khóa mạnh mẽ để đảm bảo tính nguyên tử tuyệt đối trên S3.
+## Những sai lầm kinh điển cần né tránh
 
----
+* **Can thiệp vật lý bỏ qua Table Format:** Sử dụng các công cụ như AWS CLI hay lệnh Hadoop shell để trực tiếp xóa các file Parquet trong thư mục nhằm "tiết kiệm dung lượng" thay vì chạy lệnh `DELETE FROM table`. Việc này sẽ phá vỡ liên kết metadata và trực tiếp gây lỗi hư hỏng dữ liệu (Data Corruption).
+* **Quá lạc quan vào OCC ở quy mô cực lớn:** Optimistic Concurrency Control chỉ hoạt động hiệu quả khi tần suất ghi trùng lặp thấp. Nếu bạn có hàng trăm worker cùng liên tục ghi đè lên một phân vùng dữ liệu nhỏ, OCC sẽ dẫn đến tỷ lệ retry cực cao, gây lãng phí tài nguyên tính toán và làm chậm đường ống dẫn dữ liệu.
 
-## Common mistakes
+## Những điều phải đánh đổi khi chọn ACID trên Data Lake
 
-* **Thao tác vật lý bỏ qua Table Format**: Dùng công cụ bên ngoài (ví dụ: AWS CLI hoặc Hadoop fs) xóa trực tiếp các tệp tin Parquet trong Data Lake thay vì dùng lệnh `DELETE FROM table`. Điều này phá vỡ tính nguyên tử, làm mất đồng bộ giữa metadata và dữ liệu vật lý (Data Corruption).
-* **Tin tưởng tuyệt đối vào OCC trong hệ thống siêu lớn**: Optimistic Concurrency Control hoạt động cực tốt khi tần suất xung đột thấp. Nếu có 100 workers cùng update chung một file Parquet liên tục, OCC sẽ sinh ra tỷ lệ retry rất cao và gây nghẽn toàn bộ hệ thống.
+### Điểm cộng (Pros):
+* Cho phép các pipeline ETL phức tạp và các công cụ BI của doanh nghiệp cùng làm việc đồng thời trên một kho dữ liệu mà không sợ xung đột.
+* Mang lại độ tin cậy của Data Warehouse truyền thống trên hạ tầng lưu trữ Object Storage giá rẻ.
+* Hỗ trợ tính năng quay ngược thời gian (Time Travel) để khôi phục dữ liệu về các phiên bản cũ khi có sự cố.
 
----
+### Điểm trừ (Cons):
+* **Chi phí tài nguyên:** Việc quản lý file metadata, kiểm tra xung đột logic và thực hiện retry tự động sẽ tiêu tốn thêm một phần năng lực tính toán của hệ thống.
+* **Sinh ra file rác:** Do cơ chế Copy-on-Write hoặc Merge-on-Read, các phiên bản cũ của dữ liệu vẫn nằm lại trên ổ đĩa. Bạn cần phải định kỳ chạy lệnh `VACUUM` để dọn dẹp các file cũ này và tối ưu hóa không gian lưu trữ.
 
-## Trade-offs
+## Khi nào nên áp dụng (và khi nào không)?
 
-### Ưu điểm
-* Cho phép nhiều pipeline ETL phức tạp và người dùng BI làm việc song tương trên cùng một kho dữ liệu.
-* Độ tin cậy ngang bằng Data Warehouse nhưng chi phí lưu trữ thấp của Data Lake.
-* Cho phép Rollback (quay ngược giao dịch) nếu có lỗi xảy ra.
+* **Nên dùng khi:**
+  * Bạn xây dựng các Data Lakehouse hiện đại phục vụ báo cáo BI trực tiếp.
+  * Đường ống dẫn dữ liệu của bạn có yêu cầu xóa hoặc cập nhật dữ liệu thường xuyên (ví dụ: tuân thủ GDPR yêu cầu xóa thông tin người dùng).
+  * Bạn triển khai CDC (Change Data Capture) để đồng bộ dữ liệu từ các cơ sở dữ liệu giao dịch (OLTP) vào Data Lake.
 
-### Nhược điểm
-* **Chi phí tính toán tăng**: Việc kiểm tra xung đột, quản lý lock và retry gây tốn tài nguyên và tăng thời gian thực thi đôi chút.
-* **Yêu cầu dọn dẹp hệ thống**: Cấu trúc copy-on-write tạo ra "rác" (các tệp tin dữ liệu cũ không còn hiệu lực) yêu cầu việc chạy lệnh `VACUUM` thường xuyên để giải phóng không gian.
+* **Không nên dùng khi:**
+  * Hệ thống của bạn chỉ ghi dữ liệu dạng log (Append-only) với tần suất khổng lồ và không bao giờ sửa đổi dữ liệu lịch sử. Việc áp dụng ACID lúc này chỉ mang lại độ trễ (overhead) không cần thiết.
 
----
-
-## When to use
-
-* Bất cứ Data Lake hiện đại nào phục vụ phân tích nghiệp vụ nghiêm túc.
-* Ứng dụng các quy tắc bảo mật quyền riêng tư (như GDPR) đòi hỏi cập nhật, xóa bản ghi người dùng thường xuyên và chính xác.
-* Chạy các pipeline CDC (Change Data Capture) đổ trực tiếp từ DB vào Data Lake.
-
-## When not to use
-
-* Với các luồng log append-only cực lớn và không ai cần đọc dữ liệu realtime, việc thiết lập ACID có thể đem lại một chút độ trễ (overhead) không đáng có.
-
----
-
-## Related concepts
+## Các khái niệm liên quan
 
 * [Table Format](/concepts/table-format)
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Iceberg](/concepts/apache-iceberg)
-* Data Lakehouse
 
----
-
-## Interview questions
+## Góc phỏng vấn: Thử thách tư duy phân tán
 
 ### 1. Giải thích Optimistic Concurrency Control (OCC) là gì và làm thế nào Delta/Iceberg dùng nó để giải quyết nhiều người viết (multi-writers)?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết cơ chế nền tảng của hệ thống phân tán và database.
-* **Gợi ý trả lời (Strong Answer)**: 
-  OCC (Kiểm soát đồng thời lạc quan) là cơ chế giả định rằng xung đột ghi rất hiếm khi xảy ra. Thay vì khóa bảng (Locking/Pessimistic) trước khi xử lý, các hệ thống Table Format cho phép các engine chuẩn bị dữ liệu mới thoải mái song song. Khi tiến hành thao tác commit, nó sẽ kiểm tra phiên bản bảng. Nếu phiên bản vẫn giống lúc nó bắt đầu đọc, commit thành công. Nếu phiên bản đã bị tăng lên bởi worker khác, nó sẽ lấy metadata mới để kiểm tra xem thao tác của worker kia có chạm đến file mà worker này định sửa hay không. Nếu độc lập phân vùng (không đụng nhau), commit tiếp tục; nếu xung đột, worker sẽ thử lại hoặc báo lỗi.
+* **Gợi ý trả lời:** OCC giả định rằng các giao dịch ghi đồng thời ít khi đụng độ nhau. Thay vì khóa cứng bảng dữ liệu từ đầu (gây tắc nghẽn), các Table Format cho phép nhiều tiến trình chuẩn bị dữ liệu độc lập. Khi commit, hệ thống sẽ kiểm tra phiên bản hiện tại. Nếu phiên bản đã bị thay đổi bởi người khác, nó sẽ đối chiếu xem thay đổi đó có đụng chạm đến phần dữ liệu mình vừa ghi hay không. Nếu không trùng phân vùng, commit được chấp nhận; nếu có xung đột thực sự, tiến trình ghi sau sẽ phải tải lại metadata mới và thử thực hiện lại quy trình.
 
 ### 2. AWS S3 trước đây không hỗ trợ Atomic Put/Rename. Các Table Format đã xử lý tính toán ACID (Atomicity) trên S3 như thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức sâu về đặc thù đám mây và catalog.
-* **Gợi ý trả lời (Strong Answer)**: 
-  S3 truyền thống thiếu tính toàn vẹn (mới được thêm tính năng Strongly Consistent gần đây). Do đó, để đảm bảo tính nguyên tử cho thao tác ghi siêu dữ liệu trên AWS S3, Iceberg hoặc Delta Lake phải nhờ vào một thành phần lưu trữ thứ ba hỗ trợ khóa cấp độ bản ghi. Thông thường, họ sử dụng **AWS DynamoDB** hoặc **AWS Glue Data Catalog**. Khi commit, engine sẽ khóa một dòng trong DynamoDB/Glue. Bất kỳ ai đến sau sẽ bị chặn (lock fail) và biết rằng phiên bản đã bị cập nhật, nhờ đó S3 "có được" tính ACID một cách gián tiếp. (Lưu ý: S3 hiện tại đã cung cấp conditional write, giúp đơn giản hóa đáng kể quy trình này).
+* **Gợi ý trả lời:** Trước khi S3 hỗ trợ Strong Consistency và Conditional Writes, các Table Format phải mượn một dịch vụ bên ngoài hỗ trợ tính năng khóa nguyên tử làm điểm tựa (chẳng hạn như AWS DynamoDB hoặc AWS Glue Data Catalog). Mỗi khi thực hiện commit, tiến trình ghi sẽ cố gắng khóa một dòng trạng thái trong DynamoDB/Glue. Tiến trình nào giành được khóa mới được phép hoàn tất việc commit file metadata trên S3, từ đó giúp S3 đạt được tính nguyên tử một cách gián tiếp.
 
----
-
-## References
+## Tài liệu tham khảo
 
 1. **"Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores"** - (VLDB Paper 2020) Mô tả cách Delta Lake cung cấp ACID.
 2. **"Designing Data-Intensive Applications"** - Martin Kleppmann (Chương 7: Transactions).
 3. **Apache Iceberg Documentation** (iceberg.apache.org/reliability) - Đặc tả về OCC và Atomicity.
 
----
-
-## English summary
+## English Summary
 
 ACID Transactions on a Data Lake guarantee Atomicity, Consistency, Isolation, and Durability over distributed object storage (like S3/GCS) which natively lacks file-locking and transactional support. Modern table formats (Delta Lake, Apache Iceberg, Apache Hudi) achieve this using a combination of metadata management, transaction logs, and Optimistic Concurrency Control (OCC). Instead of mutating physical data files directly, engines write new data files hidden from readers until a successful atomic commit updates the metadata snapshot. This allows concurrent readers and writers to operate reliably without data corruption or dirty reads, unlocking Data Warehouse capabilities directly on cheap Data Lake storage.

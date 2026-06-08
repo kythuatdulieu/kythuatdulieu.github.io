@@ -11,36 +11,31 @@ metaDescription: "Khám phá Delta Lake: Định dạng Open Table Format mã ng
 
 # Delta Lake - Bảng dữ liệu giao dịch mở
 
-## Summary
+Nếu bạn từng làm việc với Data Lake truyền thống (sử dụng các tệp tin Parquet hay CSV lưu trên S3/GCS), chắc hẳn bạn đã quen với những tình huống dở khóc dở cười: Pipeline đang ghi dữ liệu thì bị sập nguồn giữa chừng, để lại một đống tệp tin hỏng nửa vời và bạn không cách nào biết cái nào đúng cái nào sai; hay mỗi lần cần xóa một khách hàng theo luật bảo mật thông tin (GDPR), bạn phải viết một đoạn code cồng kềnh đọc toàn bộ dữ liệu lên RAM, lọc dòng rồi ghi đè lại.
 
-Delta Lake là một lớp lưu trữ mã nguồn mở (Open Table Format) được phát triển ban đầu bởi Databricks (và hiện đã được trao tặng cho Linux Foundation) nhằm giải quyết các lỗ hổng chết người của Data Lake truyền thống. Bằng cách phủ một tầng ghi nhận nhật ký giao dịch (Transaction Log) lên trên các tệp Parquet thông thường, Delta Lake mang những "siêu năng lực" vốn chỉ có ở cơ sở dữ liệu quan hệ (như giao dịch ACID, khả năng UPDATE/DELETE dữ liệu, Schema Enforcement và Time Travel) đến với kho lưu trữ Data Lake giá rẻ khổng lồ, tạo thành nền tảng vững chắc nhất cho kiến trúc Lakehouse.
+Để giải quyết triệt để những điểm yếu chí mạng này và biến một Data Lake hỗn độn (Data Swamp) thành một hệ thống đáng tin cậy, Databricks đã phát triển và giới thiệu **Delta Lake**.
 
----
+## Delta Lake thực chất là gì?
 
-## Definition
+**Delta Lake** là một lớp lưu trữ mã nguồn mở (thuộc định dạng Open Table Format) nằm trên vùng lưu trữ đám mây giá rẻ của bạn (như Amazon S3, Google Cloud Storage, hay Azure Blob Storage). 
 
-Về mặt vật lý, **Delta Lake** không phải là một "hệ quản trị cơ sở dữ liệu" (RDBMS) hay một máy chủ phần mềm. Nó chỉ đơn giản là một bộ định dạng dữ liệu và thư viện lập trình (có thể cài vào Spark, Pandas, Trino...).
+Về mặt vật lý, Delta Lake không phải là một máy chủ cơ sở dữ liệu hay một phần mềm cài đặt phức tạp. Nó chỉ đơn giản là một đặc tả định dạng dữ liệu (Data Format Specification) đi kèm các thư viện hỗ trợ tích hợp sâu vào các công cụ tính toán như Apache Spark, Pandas, hay Trino.
 
-Dữ liệu của một bảng Delta được lưu hoàn toàn trên Object Storage (S3/GCS/ADLS) bao gồm 2 phần:
-1. **Dữ liệu (Data Files)**: Các tệp định dạng Apache Parquet tiêu chuẩn.
-2. **Siêu dữ liệu (Delta Log)**: Một thư mục `_delta_log` chứa các file JSON (và file Checkpoint) ghi lại lịch sử thao tác của mọi hành động từng xảy ra trên bảng dữ liệu đó (Thêm tệp A, Xóa tệp B).
+Một bảng Delta Lake được lưu trữ dưới dạng thư mục gồm hai thành phần cốt lõi:
+1. **Tệp tin dữ liệu (Data Files)**: Các tệp Parquet tiêu chuẩn chứa dữ liệu thực tế.
+2. **Tệp tin nhật ký giao dịch (Delta Log)**: Một thư mục đặc biệt có tên `_delta_log` chứa các file JSON ghi lại lịch sử chi tiết của mọi giao dịch từng xảy ra trên bảng (ví dụ: *Thêm file A, hủy file B ở transaction số 1*).
 
----
+## Cơn ác mộng Data Swamp trước thời Delta Lake
 
-## Why it exists
+Trước khi Delta Lake xuất hiện vào năm 2019, các kỹ sư làm việc với dữ liệu lớn trên Data Lake thường xuyên phải đối mặt với các vấn đề:
 
-Trước năm 2019, các kỹ sư làm việc với Data Lake bằng Apache Spark phải đối mặt với một loạt ác mộng (Được gọi là bài toán "Data Swamp" - Đầm lầy dữ liệu):
-1. **Thiếu vắng ACID**: Nếu một job Spark đang ghi dở 100 file Parquet vào S3 thì máy chủ bị sập nguồn. Kết quả là S3 xuất hiện 50 file Parquet lỗi và không ai biết file nào đúng file nào sai. Người đọc dữ liệu sẽ đọc phải dữ liệu rác.
-2. **Không thể UPDATE/DELETE**: Data Lake dùng Parquet là dạng file tĩnh (immutable). Để tuân thủ luật xóa dữ liệu người dùng (GDPR), kỹ sư phải viết đoạn mã kinh khủng: Đọc toàn bộ thư mục S3 vào RAM, lọc bỏ người dùng cần xóa, và ghi đè lại toàn bộ hệ thống file. Quá tốn kém và nguy hiểm.
-3. **Mất kiểm soát Schema**: Ai đó vô tình ghi một file Parquet trong đó cột `Age` là kiểu `STRING` vào chung thư mục chứa các file Parquet có cột `Age` kiểu `INT`. Khi Spark đọc lên, toàn bộ pipeline sẽ đổ vỡ tung tóe (Schema mismatch).
+* **Thiếu tính toàn vẹn giao dịch (ACID)**: Nếu job ghi dữ liệu của bạn đang chạy và chép được 50% số tệp Parquet xuống S3 rồi bị crash, bạn sẽ phải tự đi tìm và dọn dẹp các tệp tin rác đó. Người dùng truy vấn vào thời điểm đó cũng sẽ đọc phải dữ liệu bị lỗi nửa vời.
+* **Không hỗ trợ UPDATE/DELETE**: Parquet là định dạng file tĩnh, không thể sửa đổi nội dung bên trong sau khi đã ghi. Muốn thay đổi dù chỉ 1 dòng, bạn bắt buộc phải đọc cả bảng lên, sửa rồi ghi đè lại toàn bộ, cực kỳ tốn chi phí và tài nguyên.
+* **Lỗi cấu trúc dữ liệu (Schema Drift)**: Khi một job vô tình ghi một tệp Parquet chứa cột `age` kiểu `STRING` vào chung thư mục chứa các tệp cũ có cột `age` kiểu `INT`, toàn bộ các job đọc dữ liệu phía sau sẽ bị đổ vỡ (Crash) lập tức do bất đồng nhất kiểu dữ liệu.
 
-Delta Lake sinh ra để giải quyết triệt để cả 3 bài toán trên.
+## Trái tim của Delta Lake: Transaction Log hoạt động như thế nào?
 
----
-
-## Core idea
-
-Cơ chế sức mạnh cốt lõi của Delta Lake chính là **Transaction Log (Tệp nhật ký giao dịch)**.
+Để mang các tính năng của một cơ sở dữ liệu quan hệ truyền thống lên Data Lake, Delta Lake sử dụng cơ chế ghi nhật ký giao dịch (Transaction Log) thông minh:
 
 ```mermaid
 flowchart TD
@@ -51,42 +46,42 @@ flowchart TD
     D --> F["Xác nhận bổ sung<br/>file Parquet mới"]
 ```
 
-Cơ chế này hoạt động dựa trên nguyên tắc **Thỏa thuận kiểm soát phiên bản (Optimistic Concurrency Control)**. 
-Khi bạn gọi lệnh `UPDATE` hoặc ghi dữ liệu mới:
-1. Delta Lake không sửa trực tiếp vào file Parquet cũ. Nó ghi một file Parquet MỚI tinh chứa dữ liệu đã được sửa (Copy-on-write).
-2. Sau khi ghi thành công file mới, nó tạo một file JSON (`0000X.json`) vào thư mục `_delta_log` ghi nhận giao dịch: "Hủy bỏ file Parquet cũ (đánh dấu Tombstone), Bổ sung file Parquet mới".
+Khi bạn thực hiện một lệnh thay đổi dữ liệu (ví dụ `UPDATE`):
+1. Delta Lake áp dụng nguyên tắc **Copy-on-write**: Nó không sửa trực tiếp vào tệp Parquet cũ (vì file Parquet là bất biến). Thay vào đó, nó đọc file chứa dòng dữ liệu cần sửa lên, cập nhật giá trị mới và ghi ra một tệp Parquet mới hoàn toàn.
+2. Sau khi ghi thành công file mới, nó tạo một file log định dạng JSON (ví dụ `000001.json`) trong thư mục `_delta_log`. File này ghi rõ: *"Hủy kích hoạt file Parquet cũ (đánh dấu Tombstone) và kích hoạt file Parquet mới"*.
 
-*Nhờ đó, một người dùng đang đọc dữ liệu (đọc theo trạng thái trước thay đổi) sẽ không hề bị gián đoạn hay bị block bởi người đang ghi dữ liệu. Đây là nền tảng của giao dịch ACID (Atomicity, Consistency, Isolation, Durability).*
-
----
-
-## Key Features (Các tính năng nổi bật)
-
-1. **ACID Transactions**: Đảm bảo an toàn dữ liệu nhiều người dùng. Một thao tác chạy sẽ thành công toàn bộ hoặc không thành công tí nào (Không có trạng thái file lỗi lửng lơ).
-2. **Time Travel (Du hành thời gian)**: Vì các file Parquet cũ không bị xóa lập tức (mà chỉ bị đánh dấu gạch ngang trong Log), bạn có thể đọc chính xác trạng thái của bảng ở bất kỳ phiên bản nào trong quá khứ.
-   `SELECT * FROM my_table TIMESTAMP AS OF '2026-06-01'`
-3. **Schema Enforcement & Evolution**: 
-   * **Enforcement**: Ngăn chặn (ném lỗi) ngay lập tức nếu bạn cố ghi dữ liệu sai kiểu (INT vs STRING) vào bảng.
-   * **Evolution**: Hỗ trợ cú pháp `mergeSchema = "true"` để tự động thêm cột mới vào cấu trúc bảng nếu nguồn dữ liệu có thêm trường mới một cách chủ ý.
-4. **DML Support**: Cho phép chạy trực tiếp các lệnh SQL chuẩn `UPDATE`, `DELETE`, và đặc biệt là `MERGE INTO` (Upsert dữ liệu) y hệt như đang dùng PostgreSQL.
-5. **Thống nhất Batch và Streaming**: Cùng một bảng Delta, bạn vừa có thể ghi dữ liệu Streaming bằng Kafka, vừa chạy các tác vụ truy vấn Batch bằng SQL song song cùng lúc mà không sợ đụng độ.
+Nhờ cơ chế này, một người dùng đang đọc bảng tại thời điểm đó vẫn sẽ đọc được dữ liệu nhất quán từ các file cũ mà không hề bị chặn (Block) bởi người đang ghi. Điều này mang lại khả năng đọc ghi đồng thời (giao dịch ACID) cực kỳ an toàn.
 
 ---
 
-## Practical example
+## Những "siêu năng lực" không thể bỏ qua của Delta Lake
 
-Một vòng đời ngắn của bảng Delta bằng PySpark:
+* **Giao dịch ACID**: Đảm bảo các job ghi dữ liệu hoạt động theo nguyên tắc "hoặc thành công hoàn toàn, hoặc không thay đổi gì cả", loại bỏ hoàn toàn tình trạng file rác lửng lơ.
+* **Du hành thời gian (Time Travel)**: Vì các file Parquet cũ không bị xóa ngay lập tức mà chỉ bị đánh dấu hủy trong file Log, bạn có thể dễ dàng truy vấn lại trạng thái của bảng tại một mốc thời gian hoặc số phiên bản cụ thể trong quá khứ:
+  ```sql
+  SELECT * FROM my_table TIMESTAMP AS OF '2026-06-01';
+  ```
+* **Kiểm soát cấu trúc bảng (Schema Enforcement & Evolution)**:
+  * **Enforcement**: Tự động chặn và báo lỗi nếu có dữ liệu sai cấu trúc hoặc kiểu dữ liệu cố tình ghi vào bảng.
+  * **Evolution**: Cho phép tự động cập nhật, mở rộng thêm các cột mới vào bảng một cách an toàn thông qua cấu hình `mergeSchema = True`.
+* **Hỗ trợ đầy đủ DML**: Bạn có thể viết các câu lệnh SQL tiêu chuẩn như `UPDATE`, `DELETE` và đặc biệt là `MERGE INTO` (Upsert dữ liệu) dễ dàng như trên database quan hệ.
 
-**1. Khởi tạo và ghi dữ liệu (Batch):**
+---
+
+## Thực hành cơ bản với Delta Lake
+
+Dưới đây là ví dụ sử dụng thư viện PySpark để thao tác cơ bản với bảng Delta:
+
+### 1. Khởi tạo và ghi dữ liệu thô
 ```python
 df = spark.createDataFrame([("Alice", 25), ("Bob", 30)], ["Name", "Age"])
 
-# Ghi ra định dạng delta (thay thế cho .parquet)
+# Ghi dữ liệu ra định dạng delta (thay thế cho Parquet truyền thống)
 df.write.format("delta").save("s3://bucket/bronze/users")
 ```
 
-**2. Thực hiện MERGE INTO (Upsert):**
-Khi có dữ liệu khách hàng mới (Alice đổi tuổi thành 26, Charlie là khách mới).
+### 2. Thực hiện cập nhật dữ liệu (Upsert - MERGE INTO)
+Khi có dữ liệu khách hàng mới (Alice đổi tuổi thành 26, Charlie là khách hàng mới đăng ký):
 ```python
 from delta.tables import DeltaTable
 
@@ -99,95 +94,57 @@ deltaTable.alias("target").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-# Kết quả bảng: Alice(26), Bob(30), Charlie(22). 
-# Đây là cách làm SCD Type 1 cực kỳ dễ dàng trên Lakehouse.
 ```
 
-**3. Khôi phục thảm họa (Time Travel):**
-Lỡ tay xóa nhầm bảng? Phục hồi nó về phiên bản số 0.
+### 3. Phục hồi dữ liệu về phiên bản cũ (Time Travel)
+Lỡ tay chạy nhầm câu lệnh xóa hay làm hỏng dữ liệu? Khôi phục lại phiên bản ban đầu chỉ với 1 câu lệnh:
 ```sql
 RESTORE TABLE delta.`s3://bucket/bronze/users` TO VERSION AS OF 0;
 ```
 
 ---
 
-## Best practices
+## "Bí kíp" vận hành & Những sự đánh đổi thực chiến
 
-* **Thường xuyên dọn dẹp bằng VACUUM**: Tính năng Time Travel lưu trữ các file Parquet cũ. Theo thời gian, rác sẽ ngập tràn ổ S3 và bạn sẽ mất rất nhiều tiền lưu trữ. Hãy chạy câu lệnh `VACUUM delta_table RETAIN 168 HOURS` (Dọn dẹp các file rác cũ hơn 7 ngày) định kỳ mỗi tuần. (Lưu ý: Sau khi Vacuum, bạn không thể Time Travel xa hơn mốc thời gian đó).
-* **Tối ưu hóa file nhỏ bằng OPTIMIZE**: Khi luồng dữ liệu liên tục đổ về (streaming), bảng sẽ chứa hàng ngàn file Parquet dung lượng winRAR (1-2 MB). Tình trạng này làm CPU tốn thời gian mở nắp file hơn là đọc file. Hãy chạy câu lệnh `OPTIMIZE delta_table` thường xuyên để tự động gom (compact) các file nhỏ thành 1 file 1GB lý tưởng.
-* **Dùng Z-Ordering cho cột tra cứu thường xuyên**: Lệnh `OPTIMIZE delta_table ZORDER BY (customer_id)` sắp xếp các giá trị trong bảng theo vùng đa chiều (Z-order). Khi bạn query tìm `customer_id`, Delta Lake sẽ bỏ qua 99% các file rác (Data Skipping) và mang lại tốc độ truy vấn gần như ngay lập tức.
+### Thói quen tốt cần có (Best Practices)
+* **Dọn dẹp định kỳ bằng lệnh `VACUUM`**: Vì Delta Lake giữ lại các file Parquet cũ để phục vụ tính năng Time Travel, ổ cứng đám mây của bạn sẽ ngày càng phình to và tốn kém chi phí. Hãy lên lịch chạy lệnh `VACUUM delta_table RETAIN 168 HOURS` định kỳ hàng tuần để xóa vĩnh viễn các file rác cũ hơn 7 ngày. *(Lưu ý: Sau khi VACUUM, bạn sẽ không thể du hành thời gian về mốc trước 7 ngày nữa).*
+* **Hợp nhất tệp nhỏ bằng lệnh `OPTIMIZE`**: Chạy ghi dữ liệu dạng streaming hoặc batch nhỏ sẽ sinh ra hàng ngàn file Parquet kích thước cực nhỏ (vài MB). Hãy chạy lệnh `OPTIMIZE delta_table` thường xuyên để dồn các tệp nhỏ này thành các file 1GB chuẩn, tăng tốc độ quét dữ liệu.
+* **Z-Ordering cho các cột thường xuyên tìm kiếm**: Kết hợp `OPTIMIZE delta_table ZORDER BY (customer_id)` để sắp xếp vật lý dữ liệu theo cột hay dùng lọc, giúp tăng tốc độ truy vấn lên hàng chục lần nhờ cơ chế bỏ qua file (Data Skipping).
 
----
+### Cạm bẫy dễ vấp phải
+* **Đọc bảng bằng công cụ không tương thích**: Sử dụng các công cụ cũ không hiểu thư mục `_delta_log` để đọc trực tiếp thư mục chứa các file Parquet. Hệ thống sẽ đọc luôn cả những file cũ đã bị đánh dấu xóa trong log, dẫn đến hiện tượng trùng lặp và sai số nghiêm trọng.
+* **Cập nhật từng dòng đơn lẻ**: Chạy các lệnh `UPDATE` hay `INSERT` liên tục cho từng ID đơn lẻ trong vòng lặp `for`. Do tính chất Copy-on-write, việc này sẽ sinh ra hàng triệu file Parquet tí hon. Hãy gom các cập nhật thành một lô (Batch) lớn và dùng lệnh `MERGE INTO`.
 
-## Common mistakes
-
-* **Đọc trực tiếp thư mục bằng Engine không tương thích**: Dùng một engine hoặc thư viện đời cũ (không hiểu được giao thức `_delta_log`) trỏ thẳng vào thư mục S3 đọc file Parquet. Kết quả là nó sẽ đọc TẤT CẢ các file (Bao gồm cả các file đã bị xóa/tombstone trong log và file cũ), dẫn đến dữ liệu bị nhân ba nhân bốn và gây sai lệch nghiêm trọng. Luôn phải dùng thư viện Delta reader.
-* **Update từng dòng đơn lẻ**: Chạy câu lệnh `UPDATE` liên tục theo vòng lặp (For loop) trên từng ID. Vì Delta Lake sử dụng Copy-on-write, mỗi lệnh Update nhỏ xíu sẽ tạo ra 1 file Parquet mới. Hãy dồn hàng ngàn update lại thành 1 cục (Batch) và dùng lệnh `MERGE INTO`.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* **Mã nguồn mở (Open Source)**: Miễn phí, không phụ thuộc hoàn toàn vào Databricks (Dù Databricks sở hữu phiên bản tối ưu riêng của họ).
-* **Độ tin cậy dữ liệu (Data Reliability)**: Gần như không thể làm hỏng file dữ liệu với cấu trúc ACID.
-* **Hệ sinh thái Spark tích hợp sâu**: Nếu công ty bạn đang sử dụng Spark (Data Engineering mạnh mẽ), Delta Lake là hệ sinh thái tự nhiên và dễ dùng nhất.
-
-### Nhược điểm
-* **Overhead của Copy-on-write**: Đối với bảng khổng lồ, việc thay đổi 1 dòng dữ liệu yêu cầu phải chép lại toàn bộ 1 file Parquet (có thể lên tới 1GB). Điều này làm cho tốc độ `UPDATE` chậm hơn so với Data Warehouse truyền thống (Mặc dù các phiên bản Delta mới đã ra mắt tính năng Merge-on-read nhưng vẫn phức tạp).
-* **Quản trị Metadata cồng kềnh**: Nếu bảng có hàng triệu transaction, thư mục `_delta_log` chứa triệu file JSON. Dù có kỹ thuật Checkpoint gộp log, nhưng thời gian để engine tải bảng (parse metadata) lần đầu tiên vẫn có thể bị chậm. (Iceberg giải quyết bài toán Metadata tốt hơn Delta).
+### Điểm đánh đổi (Trade-offs)
+* **Copy-on-write tốn tài nguyên**: Việc cập nhật chỉ một dòng dữ liệu trong một tệp Parquet lớn 1GB yêu cầu hệ thống phải đọc file đó lên và ghi ra một file mới 1GB khác. Do đó, tốc độ cập nhật dữ liệu của Delta Lake sẽ chậm hơn so với các kho dữ liệu (Data Warehouse) truyền thống.
+* **Tải metadata ban đầu chậm**: Khi một bảng Delta có lịch sử giao dịch quá dài, thư mục `_delta_log` sẽ chứa hàng triệu file JSON nhỏ. Engine tính toán sẽ mất một khoảng thời gian đáng kể (Metadata Overhead) để phân tích đống file log này trước khi thực sự đọc dữ liệu.
+* **Khó tích hợp với các hạ tầng không dùng Spark**: Delta Lake hoạt động mượt mà và tối ưu nhất trong hệ sinh thái Databricks hoặc các công cụ viết bằng Spark. Nếu tổ chức của bạn dùng các công cụ tính toán khác, các định dạng bảng khác như Apache Iceberg có thể sẽ được hỗ trợ tốt hơn.
 
 ---
 
-## When to use
-
-* Delta Lake là lựa chọn mặc định và tốt nhất khi bạn đang xây dựng Lakehouse trên hệ sinh thái phần mềm **Databricks** hoặc dùng **Apache Spark** làm công cụ ETL cốt lõi.
-* Bạn cần lưu trữ một lượng dữ liệu vô hạn trên Cloud (S3/ADLS/GCS) nhưng yêu cầu tính năng Data Warehouse (ACID, Update, Delete) để phục vụ Data Engineers và BI Tools (PowerBI, Tableau).
-
-## When not to use
-
-* Với các CSDL yêu cầu giao dịch Online (OLTP) tính bằng mili-giây.
-* Nếu Data Stack của bạn thiên về Data Warehouse độc quyền (như BigQuery hoặc Snowflake thuần túy), việc thêm Delta Lake vào giữa có thể gây cồng kềnh hệ thống (Snowflake có Iceberg hỗ trợ native tốt hơn).
-
----
-
-## Related concepts
-
-* [Data Lakehouse](/concepts/lakehouse)
-* [Apache Iceberg](/concepts/apache-iceberg)
-* Parquet
-* [Apache Spark](/concepts/apache-spark)
-
----
-
-## Interview questions
+## Góc phỏng vấn
 
 ### 1. Hãy giải thích cơ chế Optimistic Concurrency Control (Kiểm soát đồng thời lạc quan) trong Delta Lake hoạt động ra sao khi có 2 người cùng UPDATE 1 bảng?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sâu sắc về cấu trúc phân tán và cơ chế Conflict Resolution.
-* **Gợi ý trả lời**: Cơ chế "Lạc quan" (Optimistic) cho rằng xác suất 2 giao dịch đụng chạm vào cùng một file dữ liệu là rất nhỏ, do đó nó không dùng cơ chế Lock (Khóa) cứng toàn bộ bảng như cơ sở dữ liệu truyền thống. 
-Khi User A và User B cùng submit lệnh UPDATE:
-  1. Cả 2 đều đọc phiên bản hiện tại của bảng (Ví dụ Version 10).
-  2. Cả 2 thực hiện tính toán trên bộ nhớ máy tính riêng và ghi file Parquet dữ liệu mới của họ xuống đĩa.
-  3. Khi bắt đầu ghi file Log (Để tăng version lên 11), Delta dựa vào nguyên tắc "Mutual Exclusion" (loại trừ lẫn nhau) của hệ thống lưu trữ S3. Nếu User A ghi tệp `0011.json` thành công trước chớp nhoáng, giao dịch của A thành công (Version 11).
-  4. User B cố gắng ghi `0011.json` nhưng phát hiện file đã tồn tại. Thao tác bị văng lỗi.
-  5. User B (engine của Delta) sẽ tự động kiểm tra xem thay đổi của A ở version 11 có đụng chạm gì đến các file mà B muốn sửa không. Nếu KHÔNG đụng chạm (Ví dụ A sửa khách ở HN, B sửa khách ở SG), Delta sẽ tự động chèn kết quả của B thành Version 12. Nếu CÓ đụng chạm, giao dịch của B thất bại và văng Exception báo cho người dùng biết.
+* **Gợi ý trả lời**: Cơ chế "Lạc quan" (Optimistic) hoạt động dựa trên giả định rằng xác suất hai giao dịch ghi dữ liệu đụng độ vào cùng một file vật lý là rất nhỏ, do đó hệ thống không khóa cứng (Lock) toàn bộ bảng như các database truyền thống. 
+  * Khi User A và User B cùng gửi lệnh cập nhật: Cả hai đều đọc cấu trúc bảng hiện tại (ví dụ: phiên bản số 10), thực hiện tính toán trên bộ nhớ của máy trạm riêng và ghi các file Parquet mới xuống đĩa.
+  * Đến giai đoạn ghi nhận vào Transaction Log để tăng phiên bản lên 11: Delta dựa vào cơ chế ghi file độc quyền (Mutual Exclusion) của Cloud Storage. Nếu A ghi file log `0011.json` thành công trước B chỉ một mili-giây, giao dịch của A được chấp nhận (Version 11).
+  * Lúc này B cố gắng ghi file `0011.json` nhưng hệ thống báo lỗi vì file đã tồn tại. Engine của Delta sẽ tự động kiểm tra xem thay đổi của A ở Version 11 có trùng lặp file vật lý nào mà B vừa sửa hay không. 
+  * Nếu không trùng (ví dụ A sửa khách hàng ở Hà Nội, B sửa khách hàng ở Sài Gòn), Delta sẽ tự động ghép thay đổi của B thành Version 12 (Auto-resolve). Nếu có trùng lặp file vật lý, giao dịch của B sẽ bị báo lỗi và hoàn tác (Rollback) để bảo vệ tính nhất quán.
 
 ### 2. Time Travel trong Delta Lake là một tính năng tuyệt vời. Nhưng làm thế nào tôi có thể duy trì dữ liệu của 10 năm quá khứ mà không tốn chi phí ổ cứng khổng lồ cho các file Parquet bị thay thế?
-* **Người phỏng vấn muốn kiểm tra**: Khả năng phân tích kinh phí lưu trữ thực tế và hiểu biết về tính năng cốt lõi.
-* **Gợi ý trả lời**: Câu trả lời là: **Bạn không nên và không thể dùng Time Travel để lưu trữ lịch sử dài hạn (10 năm)**. 
-Time Travel sinh ra với mục đích khắc phục thảm họa (Disaster Recovery - lỡ tay xóa nhầm, rollback lại hôm qua) hoặc tái lập trạng thái của model Machine Learning trong ngắn hạn. Giữ toàn bộ file cũ sẽ tiêu tốn chi phí S3 khủng khiếp.
-Để quản lý chi phí, ta bắt buộc phải chạy lệnh `VACUUM` thường xuyên để xóa vĩnh viễn các file cũ (từ bỏ tính năng Time Travel sau 7-30 ngày). Nếu doanh nghiệp muốn phân tích dữ liệu lịch sử 10 năm, giải pháp là phải sử dụng thiết kế **SCD Type 2 (Slowly Changing Dimension)** ở lớp cấp liệu Data Modeling, nơi lịch sử được lưu dưới dạng dòng (row) mới trong cùng 1 file, thay vì trông cậy vào tính năng Time Travel của hạ tầng.
+* **Gợi ý trả lời**: Thực tế, chúng ta không nên dùng tính năng Time Travel của hạ tầng Delta Lake để lưu trữ lịch sử dài hạn (ví dụ 10 năm). Việc giữ lại toàn bộ các file cũ của 10 năm qua sẽ làm phình to dung lượng lưu trữ trên cloud cực kỳ khủng khiếp và tốn kém. 
+  * Để quản lý chi phí tối ưu, chúng ta bắt buộc phải chạy lệnh `VACUUM` thường xuyên để xóa sạch các file rác cũ hơn 7 hoặc 30 ngày (tức là chỉ giữ khả năng Time Travel trong ngắn hạn để khắc phục sự cố).
+  * Đối với bài toán lưu giữ lịch sử phân tích 10 năm của doanh nghiệp, giải pháp chuẩn mực là phải thiết kế mô hình dữ liệu **SCD Type 2 (Slowly Changing Dimension)** ở lớp Data Modeling. Khi đó, lịch sử thay đổi của thực thể được lưu thành các dòng dữ liệu mới trong cùng một tệp tin Parquet hiện tại, thay vì trông cậy vào tính năng Time Travel vật lý của hệ thống lưu trữ.
 
 ---
 
-## References
+## Đọc thêm & Tài liệu tham khảo
 
-1. **Databricks Lakehouse Documentation** - "What is Delta Lake?".
-2. **Delta.io** (Trang chủ của open-source project, tài liệu về Delta format).
-3. **Fundamentals of Data Engineering** - Joe Reis.
+1. **[Data Lakehouse](/concepts/lakehouse)** - Kiến trúc kết hợp Data Lake và Data Warehouse.
+2. **[Apache Spark](/concepts/apache-spark)** - Công cụ tính toán phân tán đi liền với Delta Lake.
+3. **Delta.io** - Trang chủ dự án mã nguồn mở Delta Lake.
+4. **Fundamentals of Data Engineering** - Cuốn sách của Joe Reis, chương viết về Data Storage và các Table Formats.
 
----
+## English Summary
 
-## English summary
-
-Delta Lake is an open-source storage layer (an open table format) initially developed by Databricks that brings relational database "superpowers"—such as ACID transactions, scalable metadata handling, Schema Enforcement, DML support (UPDATE/DELETE/MERGE), and Time Travel—to massive, low-cost Data Lakes. It achieves this by overlaying a transaction log (`_delta_log`) on top of static Apache Parquet files, utilizing Optimistic Concurrency Control to manage concurrent reads and writes safely. Acting as the foundational building block for the Data Lakehouse architecture, Delta Lake eliminates the "data swamp" problem, enabling organizations to unify batch processing, streaming, Machine Learning, and Business Intelligence workloads on a single, highly reliable data copy.
+**Delta Lake** is an open-source storage layer (an open table format) initially developed by Databricks that brings relational database "superpowers"—such as ACID transactions, scalable metadata handling, Schema Enforcement, DML support (UPDATE/DELETE/MERGE), and Time Travel—to massive, low-cost Data Lakes. It achieves this by overlaying a transaction log (`_delta_log`) on top of static Apache Parquet files, utilizing Optimistic Concurrency Control to manage concurrent reads and writes safely. Acting as the foundational building block for the Data Lakehouse architecture, Delta Lake eliminates the "data swamp" problem, enabling organizations to unify batch processing, streaming, Machine Learning, and Business Intelligence workloads on a single, highly reliable data copy.

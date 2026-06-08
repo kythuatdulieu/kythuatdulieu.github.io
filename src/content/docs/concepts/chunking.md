@@ -11,54 +11,38 @@ metaDescription: "Tìm hiểu Chunking trong Xử lý ngôn ngữ tự nhiên (N
 
 # Phân tách văn bản - Chunking
 
-## Summary
+Nếu bạn đang bước chân vào thế giới của Trí tuệ nhân tạo tạo sinh (GenAI) hoặc đang xây dựng các hệ thống tìm kiếm thông minh dựa trên dữ liệu doanh nghiệp (RAG), có một thuật ngữ bạn sẽ nghe thấy hàng ngày: **Chunking (Phân tách văn bản)**. Mặc dù nghe có vẻ đơn giản là "cắt nhỏ văn bản", nhưng đây lại là bước tiền xử lý mang tính quyết định đến việc AI của bạn trả lời thông minh hay ngây ngô.
 
-Phân tách văn bản (Chunking) là quá trình tiền xử lý chia nhỏ một tài liệu lớn (như một cuốn sách, báo cáo PDF, hay bài báo) thành các phần nhỏ hơn, có kích thước vừa phải (gọi là chunks) trước khi đưa chúng qua mô hình nhúng (Embedding Model) để lưu vào Vector Database. Kỹ thuật này đóng vai trò sống còn trong việc cải thiện độ chính xác của hệ thống Tìm kiếm ngữ nghĩa (Semantic Search) và RAG (Retrieval-Augmented Generation).
+## Chunking: Nghệ thuật "chẻ nhỏ" văn bản cho trí tuệ nhân tạo
 
----
+Trong bối cảnh hệ thống tìm kiếm ngữ nghĩa `(Semantic Search)` và các mô hình ngôn ngữ lớn (LLM), **Chunking** là thuật toán phân chia nhỏ các nguồn dữ liệu phi cấu trúc (như sách, file PDF, trang web) thành các đoạn văn ngắn gọn hơn, có kích thước vừa phải và hợp lý (gọi là các *chunks*).
 
-## Definition
+Mỗi mảnh nhỏ (chunk) sau khi được cắt ra sẽ đại diện cho một ý tưởng cụ thể và được gửi qua mô hình Embedding để chuyển đổi thành một vector độc lập trước khi lưu vào Vector Database. Khi người dùng đặt câu hỏi, hệ thống sẽ chỉ tìm kiếm và trả về các đoạn thông tin nhỏ liên quan trực tiếp đến câu hỏi đó, thay vì cố gắng đọc toàn bộ tài liệu khổng lồ.
 
-Trong bối cảnh Hệ thống Thông tin và LLM, **Chunking** là thuật toán phân nhỏ dữ liệu phi cấu trúc dựa trên các quy tắc định sẵn (đếm số ký tự, đếm số token) hoặc dựa trên cấu trúc ngữ nghĩa (dấu câu, phân đoạn, thẻ HTML). 
-Mỗi "Chunk" sau khi cắt ra sẽ đại diện cho một ý tưởng cục bộ và được gán một Vectơ nhúng riêng rẽ. Khi hệ thống tìm kiếm, nó sẽ truy xuất các chunk nhỏ lẻ thay vì toàn bộ tài liệu khổng lồ.
+## Tại sao không thể nhồi nhét tài liệu nguyên bản vào Vector DB?
 
----
+Có hai lý do vật lý và kỹ thuật cốt lõi buộc chúng ta phải thực hiện bước chia nhỏ này:
 
-## Why it exists
+1. **Giới hạn đầu vào của mô hình Embedding**: Hầu hết các mô hình nhúng (như BERT hay các dòng Sentence-Transformers) đều có một giới hạn cứng về độ dài chuỗi ký tự đầu vào `(Max Sequence Length)`, thường dao động từ 512 đến 8192 tokens. Nếu bạn đưa vào một bài báo dài 10.000 từ, mô hình sẽ tự động cắt bỏ phần đuôi mà không hề báo trước, gây mất mát dữ liệu nghiêm trọng.
+2. **Hiện tượng "loãng" ngữ nghĩa (Semantic Dilution)**: Một vector nhúng (ví dụ 768 chiều) giống như một cái bình nước. Bạn có thể đổ đầy thông tin của một câu ngắn: *"Cách đổi mật khẩu Wi-Fi"* và bình nước sẽ giữ nguyên vị ngọt đậm đà của ý tưởng đó. Nhưng nếu bạn cố ép mô hình nhúng cả một cuốn sách hướng dẫn IT dài 50 trang vào đúng một vector đó, hương vị ban đầu sẽ bị hòa tan hoàn toàn. Câu hỏi truy vấn của người dùng về mật khẩu Wi-Fi sẽ bị chìm nghỉm giữa hàng ngàn chủ đề khác và không thể tìm thấy.
 
-Có 2 lý do kỹ thuật và vật lý bắt buộc chúng ta phải thực hiện Chunking:
-1. **Giới hạn kỹ thuật của Embedding Models**: Hầu hết các mô hình nhúng (ví dụ: BERT, Sentence-Transformers) có độ dài đầu vào tối đa cố định (Max Sequence Length), thường là 512 hoặc 8192 tokens. Nếu đưa một tài liệu dài 10,000 tokens vào, mô hình sẽ tự động cắt cụt (truncate) phần đuôi, làm mất hoàn toàn dữ liệu.
-2. **Sự pha loãng ngữ nghĩa (Semantic Dilution)**: Một Vectơ nhúng (ví dụ 768 chiều) chỉ chứa được một lượng thông tin hữu hạn. Nếu bạn nhúng một câu duy nhất: "Cách reset mật khẩu", vectơ sẽ biểu diễn ý nghĩa này rất sắc nét. Nhưng nếu bạn ép mô hình nhúng toàn bộ Sách hướng dẫn IT dài 50 trang vào một vectơ duy nhất, ý nghĩa của việc "reset mật khẩu" sẽ bị loãng ra và chìm lấp giữa hàng ngàn chủ đề khác. Câu hỏi truy vấn của người dùng sẽ không bao giờ tìm khớp được với vectơ khổng lồ này.
+## Những nguyên tắc vàng để tạo nên một Chunk chất lượng
 
----
+Để chia nhỏ tài liệu một cách hiệu quả, bạn cần ghi nhớ ba quy tắc vàng sau:
 
-## Core idea
+* **Nguyên tắc Goldilocks (Sự cân bằng)**: Đừng cắt chunk quá to, vì ngữ nghĩa sẽ bị loãng và tìm kiếm kém chính xác. Nhưng cũng đừng cắt chunk quá nhỏ (ví dụ chỉ 1 câu đơn), vì khi đó đoạn văn sẽ bị mất bối cảnh ngữ cảnh `(Context)` cần thiết để LLM có thể đọc hiểu và trả lời trôi chảy.
+* **Vùng đệm gối đầu (Overlap/Stride)**: Khi chia cắt tài liệu, luôn giữ lại một phần cuối của đoạn trước để lặp lại ở đầu đoạn sau. Cơ chế này giống như một dải keo dính giúp nối liền các mạch ý tưởng bị cắt ngang, bảo vệ ngữ cảnh ở ranh giới vết cắt.
+* **Tôn trọng cấu trúc ngữ pháp**: Một thuật toán chia cắt thông minh sẽ luôn ưu tiên cắt ở dấu xuống dòng, dấu chấm câu, thay vì cắt ngang xương giữa một từ hoặc một cụm từ.
 
-* **Sự cân bằng (Goldilocks Rule)**: Chunk quá lớn -> Ý nghĩa bị loãng, Vector mất độ tập trung. Chunk quá nhỏ (ví dụ 1 câu) -> Thiếu bối cảnh ngữ cảnh (Context) để LLM đọc hiểu khi được truy xuất.
-* **Vùng gối đầu (Overlap/Stride)**: Khi cắt tài liệu thành các khúc, ta luôn giữ lại một phần đuôi của chunk trước nối vào phần đầu của chunk sau. Điều này đảm bảo rằng các ý tưởng bị cắt ngay giữa câu/đoạn không bị đứt gãy ngữ cảnh.
-* **Tôn trọng cấu trúc (Structural awareness)**: Thuật toán chunking tốt sẽ cố gắng cắt ở dấu chấm câu, dấu xuống dòng hoặc thẻ tiêu đề thay vì cắt ngang giữa một từ.
+## Các lát cắt điển hình: Bạn sẽ chia nhỏ văn bản như thế nào?
 
----
+* **Cắt theo kích thước cố định (Fixed-size Chunking)**: Thuật toán cứ đếm đủ số lượng ký tự hoặc token cấu hình sẵn là cắt. Rất nhanh và đơn giản, nhưng điểm trừ lớn là dễ cắt ngang giữa một câu đang dang dở.
+* **Cắt đệ quy (Recursive Character Chunking)**: Thuật toán thông minh thử cắt ở các ranh giới lớn như dấu xuống dòng kép `\n\n` (để giữ nguyên cấu trúc đoạn văn). Nếu đoạn văn vẫn quá lớn, nó chuyển sang cắt ở dấu xuống dòng đơn `\n`, rồi dấu chấm `. `, khoảng trắng ` `, và cuối cùng mới là ký tự thô. Đây là cách làm chuẩn mực và hiệu quả nhất hiện nay.
+* **Cắt theo cấu trúc tài liệu (Document/Semantic Chunking)**: Thích hợp với các file Markdown, HTML hay PDF. Hệ thống sẽ phát hiện các thẻ tiêu đề (H1, H2, H3) để thực hiện vết cắt, đảm bảo mỗi chunk chứa trọn vẹn một tiểu mục nội dung.
 
-## How it works
+## Sơ đồ hóa quy trình cắt và lưu trữ Vector
 
-Dưới đây là một số chiến lược Chunking phổ biến:
-
-1. **Fixed-size Chunking (Cắt theo kích thước cố định)**:
-   * Thuật toán đơn giản nhất. Đếm đủ N tokens (ví dụ: 500) hoặc N ký tự (ví dụ: 1000) thì cắt.
-   * *Ưu điểm*: Nhanh, dễ cài đặt.
-   * *Nhược điểm*: Dễ cắt ngang giữa câu hoặc giữa một từ (nếu cắt theo ký tự).
-
-2. **Recursive Character Chunking (Cắt đệ quy)**:
-   * Thử cắt theo phân đoạn (đoạn văn `\n\n`). Nếu đoạn văn vẫn dài hơn giới hạn, tiếp tục cắt theo câu (dấu chấm `. `). Nếu câu vẫn quá dài, mới cắt theo từ (dấu cách ` `).
-   * Đây là chiến lược mặc định và hiệu quả nhất trong thư viện LangChain.
-
-3. **Document/Semantic Chunking (Cắt theo cấu trúc/ngữ nghĩa)**:
-   * Dành cho Markdown, HTML hoặc PDF. Cắt khi gặp các Header (H1, H2, H3), đảm bảo mỗi chunk chứa trọn vẹn một mục nội dung (Section).
-
----
-
-## Architecture / Flow
+Dưới đây là mô hình minh họa cách một tài liệu dài được cắt nhỏ thành các chunk có overlap, sau đó chuyển hóa thành vector và lưu trữ:
 
 ```mermaid
 graph TD
@@ -75,22 +59,20 @@ graph TD
     H --> I
 ```
 
----
+## Bắt tay vào code với Python và LangChain
 
-## Practical example
-
-Sử dụng thư viện `langchain` bằng Python để thực hiện Recursive Character Text Splitter với kích thước chunk 1000 và overlap là 200:
+Hãy cùng xem cách hiện thực hóa chiến lược `RecursiveCharacterTextSplitter` bằng Python với thư viện LangChain:
 
 ```python
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-text = """... (Một bài viết siêu dài) ..."""
+text = """... (Một bài viết siêu dài của bạn ở đây) ..."""
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,     # Số lượng ký tự tối đa trong một chunk
-    chunk_overlap=200,   # Giữ lại 200 ký tự từ chunk trước đó để duy trì ngữ cảnh
-    length_function=len, # Hàm tính độ dài (có thể đổi thành bộ đếm token)
-    separators=["\n\n", "\n", ".", " ", ""] # Thứ tự ưu tiên cắt (Đoạn -> Câu -> Từ)
+    chunk_size=1000,     # Giới hạn tối đa 1000 ký tự cho mỗi chunk
+    chunk_overlap=200,   # Giữ lại 200 ký tự giao nhau để bảo toàn bối cảnh
+    length_function=len, # Đo độ dài bằng số ký tự
+    separators=["\n\n", "\n", ".", " ", ""] # Mức độ ưu tiên cắt từ lớn đến nhỏ
 )
 
 chunks = text_splitter.split_text(text)
@@ -99,69 +81,57 @@ print(f"Tổng số chunks tạo ra: {len(chunks)}")
 print(f"Kích thước chunk đầu tiên: {len(chunks[0])} ký tự")
 ```
 
----
+## Kinh nghiệm thực chiến khi làm việc với Chunking (Best Practices)
 
-## Best practices
+* **Thiết lập dựa trên Context Window của LLM**: Nếu ứng dụng RAG của bạn cần tổng hợp ý kiến từ nhiều tài liệu khác nhau, hãy chọn kích thước chunk nhỏ (256-512 tokens) để có thể nhồi được nhiều chunk khác nhau vào prompt của LLM. Ngược lại, nếu cần LLM phân tích sâu một chủ đề phức tạp, hãy chọn chunk lớn (1000-2000 tokens).
+* **Đừng quên cài đặt Overlap**: Tỉ lệ overlap an toàn và hiệu quả nhất thường dao động trong khoảng **10% - 20%** kích thước chunk. Ví dụ, với kích thước chunk là 500 tokens, bạn nên đặt overlap từ 50 đến 100 tokens.
+* **Gắn kèm Metadata**: Khi chia cắt tài liệu lớn thành hàng trăm mảnh nhỏ, hãy luôn đính kèm các thông tin bổ sung (siêu dữ liệu) cho từng chunk như `{"source": "tai_lieu_ky_thuat.pdf", "page": 15, "chapter": 3}`. Điều này giúp bạn dễ dàng lọc kết quả hoặc truy ngược lại nguồn gốc văn bản khi cần thiết.
 
-* **Điều chỉnh theo LLM Context Window**: Độ dài tối ưu của Chunk phụ thuộc vào bài toán. Nếu RAG của bạn cần đọc lướt qua nhiều tài liệu để tổng hợp, hãy để Chunk nhỏ (256-512 tokens) để chứa được nhiều Chunk Top-K vào prompt. Nếu cần LLM hiểu sâu một bối cảnh rộng, dùng Chunk lớn hơn (1000-2000 tokens).
-* **Luôn sử dụng Overlap**: Tỉ lệ overlap an toàn thường nằm ở mức **10% - 20%** kích thước chunk. (Ví dụ: Size 500 thì Overlap 50-100). Đừng bỏ qua overlap vì nó cứu vớt những thông tin bị cắt phạm.
-* **Giữ lại Metadata**: Khi cắt một tài liệu thành 100 chunk, hãy nhúng thêm siêu dữ liệu (metadata) vào từng chunk như `{"source": "book.pdf", "page": 4, "chapter": 2}` để hỗ trợ việc lọc kết quả trước khi đưa vào LLM.
+## Những sai lầm kinh điển dễ làm sập pipeline
 
----
+* **Đếm size bằng ký tự nhưng mô hình đọc bằng token**: Đây là lỗi cực kỳ phổ biến. Các mô hình nhúng chỉ hiểu khái niệm token. Nếu bạn đặt `chunk_size = 2000` ký tự cho văn bản tiếng Việt, do đặc thù ngôn ngữ có dấu, số lượng token thực tế có thể vượt quá 1000 tokens, làm tràn giới hạn của các mô hình BERT cũ (giới hạn 512 tokens) và gây ra lỗi. Hãy sử dụng các thư viện như `tiktoken` để đếm chính xác số token trước khi cắt.
+* **Mất kết nối thông tin toàn cục**: Việc cắt nhỏ làm đứt mạch liên kết các đại từ. Ví dụ, chunk 1 viết: *"Google đã phát hành mô hình AI mới"*, chunk 2 bị cắt ra chỉ còn câu: *"Họ hy vọng nó sẽ thay đổi cuộc chơi"*. Nếu Vector DB chỉ tìm thấy chunk 2, LLM sẽ hoàn toàn chịu thua không biết "Họ" và "nó" ở đây là ai. Để khắc phục, bạn nên tham khảo kỹ thuật *Parent Document Retrieval* để liên kết các chunk nhỏ với tài liệu mẹ chứa nó.
 
-## Common mistakes
+## Bức tranh hai mặt: Được gì và mất gì?
 
-* **Cắt theo số ký tự mà không dùng token**: Các mô hình nhúng nhận giới hạn đầu vào bằng token, không phải ký tự. Nếu cấu hình `chunk_size = 2000` (ký tự) đối với tiếng Việt, đôi khi nó quy đổi thành hơn 1000 tokens và vượt giới hạn của một số Embedding models (như giới hạn 512 tokens của các mô hình BERT cũ), gây ra lỗi. Hãy ưu tiên đếm bằng `tiktoken`.
-* **Mất Context toàn cục**: Chunking làm tách rời đại từ nhân xưng. Ví dụ, chunk 1 ghi "Công ty Google ra mắt sản phẩm mới", chunk 2 bị cắt ra chỉ còn ghi "Họ hi vọng nó sẽ thành công". Khi truy xuất trúng chunk 2, LLM không biết "Họ" là ai. Giải pháp nâng cao là thêm kỹ thuật Parent Document Retrieval.
+### Điểm cộng
+* **Độ tập trung ngữ nghĩa tối đa**: Giúp Vector Database tìm đúng phân đoạn trả lời chính xác cho câu hỏi của người dùng.
+* **Tiết kiệm chi phí**: Chỉ gửi các phần văn bản liên quan nhất cho LLM thay vì bắt nó đọc cả cuốn sách dày cộp, giúp giảm đáng kể chi phí gọi API.
 
----
+### Điểm trừ
+* **Chia cắt cấu trúc tổng thể**: Các mối quan hệ mang tính hệ thống bắc cầu nằm rải rác ở đầu và cuối tài liệu sẽ bị chặt đứt.
+* **Tăng gánh nặng cơ sở dữ liệu**: Một tài liệu gốc duy nhất có thể biến thành hàng ngàn bản ghi vector, đòi hỏi dung lượng lưu trữ lớn hơn cho Vector DB.
 
-## Trade-offs
+## Khi nào cần ứng dụng và khi nào nên bỏ qua?
 
-### Ưu điểm
-* Giữ được sự tập trung ngữ nghĩa tối đa (Semantic clarity), giúp Vector DB tìm kiếm cực kỳ chính xác các đoạn văn trả lời trực tiếp cho câu hỏi.
-* Tối ưu hóa chi phí API: Chỉ nhét phần nội dung (chunk) liên quan nhất vào Prompt của LLM thay vì cả quyển sách.
+* **Nên dùng**: Khi bạn đang xây dựng các pipeline nạp dữ liệu (Data Ingestion) cho các ứng dụng hỏi đáp tài liệu RAG, hoặc chuẩn bị lập chỉ mục tìm kiếm ngữ nghĩa cho Vector DB.
+* **Nên tránh**: Đừng áp dụng cho các dữ liệu bảng biểu có cấu trúc rõ ràng (như Database SQL, file CSV). Với loại dữ liệu này, hãy chuyển đổi nguyên vẹn từng dòng thành một đoạn văn bản hoặc JSON và mang đi tạo vector, không nên chia nhỏ thêm.
 
-### Nhược điểm
-* Phá vỡ cấu trúc toàn cục của tài liệu. Các mối quan hệ bắc cầu (nằm ở đầu sách và cuối sách) bị cắt đứt.
-* Tăng số lượng bản ghi trong CSDL: Một tài liệu có thể nở ra thành hàng ngàn bản ghi vectơ, yêu cầu dung lượng RAM và đĩa lớn hơn cho Vector DB.
+## Góc phỏng vấn: Thử thách kiến thức hệ thống
 
----
+### 1. Tại sao chúng ta cần tham số "Chunk Overlap" khi phân tách văn bản? Điều gì xảy ra nếu Overlap = 0?
+* **Mục đích câu hỏi**: Kiểm tra hiểu biết thực tế và tư duy xử lý dữ liệu NLP của ứng viên.
+* **Gợi ý trả lời**:
+  * Chunk Overlap tạo ra một vùng đệm giao nhau giữa hai khối văn bản kế tiếp. Vì ngôn ngữ con người có tính liên kết chặt chẽ, việc đặt Overlap = 0 có thể dẫn đến việc các câu văn quan trọng bị chia cắt cơ học làm đôi. Khi đó, chủ ngữ nằm ở chunk 1 còn vị ngữ lại nằm ở chunk 2, làm mất đi ý nghĩa trọn vẹn của cả hai chunk khi chuyển đổi thành vector. 
+  * Overlap giúp bảo toàn mạch ngữ cảnh liền mạch tại các điểm cắt, đảm bảo khi Vector DB tìm kiếm độc lập từng chunk, bối cảnh thông tin vẫn đầy đủ để LLM trả lời tốt nhất.
 
-## When to use
+### 2. Kỹ thuật "Parent Document Retrieval" khắc phục nhược điểm gì của Fixed-size Chunking?
+* **Mục đích câu hỏi**: Đánh giá kiến thức về các kiến trúc RAG nâng cao (Advanced RAG).
+* **Gợi ý trả lời**:
+  * Kỹ thuật này giải quyết nghịch lý về kích thước chunk: Chunk nhỏ thì tìm kiếm vector chính xác nhưng thiếu bối cảnh cho LLM, chunk lớn thì giàu ngữ cảnh nhưng tìm kiếm vector kém nhạy.
+  * Parent Document Retrieval khắc phục bằng cách tách biệt hai quá trình: Chúng ta cắt nhỏ tài liệu thành các Child Chunks để lập chỉ mục và tìm kiếm vector hiệu quả. Nhưng khi gửi dữ liệu cho LLM, hệ thống sẽ tự động đối chiếu ID của Child Chunk tìm được để lấy toàn bộ đoạn văn lớn gốc chứa nó (Parent Document). Kết quả là chúng ta đạt được cả hai mục tiêu: tìm kiếm cực nhạy và trả lời cực kỳ đầy đủ bối cảnh.
 
-* Bước bắt buộc phải có trong mọi quy trình xây dựng Data Ingestion Pipeline cho các ứng dụng RAG (Retrieval-Augmented Generation).
-* Tiền xử lý dữ liệu để lập chỉ mục (Indexing) cho Vector Databases.
+## Khái niệm liên quan & Tài liệu tham khảo
 
----
-
-## Related concepts
-
+**Khái niệm liên quan:**
 * [Token (Đơn vị từ vựng)](/concepts/token)
 * [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/semantic-search)
 * [Mô hình ngôn ngữ lớn (LLMs)](/concepts/llm)
 
----
-
-## Interview questions
-
-### 1. Tại sao chúng ta cần tham số "Chunk Overlap" khi phân tách văn bản? Điều gì xảy ra nếu Overlap = 0?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết thực tiễn về kỹ thuật xử lý dữ liệu RAG.
-* **Gợi ý trả lời (Strong Answer)**: Tham số Chunk Overlap tạo ra một vùng đệm giao nhau giữa chunk trước và chunk sau. Tài liệu của con người mang tính liền mạch, một ý tưởng (context) thường bắc cầu qua nhiều câu. Nếu đặt Overlap = 0, bộ chia cắt bằng máy móc có thể chặt đứt đôi một câu quan trọng hoặc phân tách phần mở bài của một khái niệm với phần giải thích của nó sang 2 chunk khác nhau. Khi đó, nếu Vector DB truy xuất độc lập từng chunk lên cho LLM đọc, LLM sẽ nhận được một văn bản thiếu đầu thiếu đuôi. Overlap giúp đoạn cuối của chunk này trùng lặp với đoạn đầu của chunk kia, đảm bảo mạch ngữ cảnh được bảo toàn nguyên vẹn tại điểm cắt.
-
-### 2. Kỹ thuật "Parent Document Retrieval" khắc phục nhược điểm gì của Fixed-size Chunking?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức kiến trúc RAG nâng cao (Advanced RAG).
-* **Gợi ý trả lời (Strong Answer)**: Fixed-size Chunking gặp nghịch lý: Chunk nhỏ thì tìm kiếm vector rất chính xác (vì ngữ nghĩa cô đặc), nhưng khi đẩy cho LLM đọc thì lại thiếu bối cảnh (context). Chunk lớn thì LLM đọc hiểu tốt bối cảnh, nhưng Vector DB tìm kiếm kém (ngữ nghĩa bị loãng). Kỹ thuật Parent Document Retrieval khắc phục bằng cách tách biệt bộ nhớ: Ta cắt tài liệu thành các Child Chunks rất nhỏ để sinh Vectơ và tìm kiếm. Nhưng thay vì trả Child Chunk cho LLM, ta ánh xạ (map) nó ngược về lại Parent Document (đoạn văn lớn gốc chứa child chunk đó). Hệ quả là hệ thống vừa tìm kiếm chính xác cao, vừa cung cấp bối cảnh đầy đủ cho LLM tạo ra câu trả lời xuất sắc.
-
----
-
-## References
-
+**Tài liệu tham khảo:**
 1. **LangChain Documentation** - Text Splitters module.
 2. **Pinecone Learn** - Chunking Strategies for Vector Databases.
 
----
-
-## English summary
+## English Summary
 
 Chunking is a critical data preprocessing step in NLP and RAG pipelines where large documents are split into smaller, manageable segments (chunks) prior to being passed into an Embedding Model. This is mandatory because embedding models have strict maximum sequence lengths (token limits) and embedding a massive document into a single vector leads to "semantic dilution," severely harming search accuracy. Modern chunking strategies (like Recursive Character Splitting) rely on natural separators (paragraphs, sentences) and employ a "chunk overlap" to preserve local context at the boundaries. Advanced architectures decouple the retrieval chunk size from the generation context size via techniques like Parent Document Retrieval.

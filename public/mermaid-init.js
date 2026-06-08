@@ -1,33 +1,43 @@
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 
 function getTheme() {
-    return document.documentElement.dataset.theme === 'light' ? 'default' : 'dark';
+    // The neutral theme has high contrast shapes and text that work well on both dark and light backgrounds.
+    // It prevents the "invisible nodes" bug where default themes clash with site CSS.
+    return 'neutral';
 }
 
 mermaid.initialize({
   startOnLoad: false,
   theme: getTheme(),
-  fontFamily: 'var(--sl-font)'
+  fontFamily: 'Inter, sans-serif',
+  securityLevel: 'loose'
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await renderMermaid();
-});
+async function initAndRender() {
+    // Crucial: Wait for fonts to load so Mermaid can accurately measure text bounding boxes!
+    // Otherwise nodes will have 0 width/height and arrows will be scattered.
+    if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+    }
+    // Give a tiny extra delay for expressive code to finish DOM manipulation
+    setTimeout(async () => {
+        await renderMermaid();
+    }, 100);
+}
+
+document.addEventListener('DOMContentLoaded', initAndRender);
 
 document.addEventListener('astro:page-load', async () => {
-    // Re-init theme if it changed across navigation (though usually handled by Starlight)
     mermaid.initialize({ theme: getTheme() });
-    await renderMermaid();
+    await initAndRender();
 });
 
-// Observe theme changes
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-theme') {
-            // Theme changed, we might need to re-render or just let the user refresh
-            // Full re-render is complex because original text is hidden, 
-            // but we can at least update the init for future renders.
             mermaid.initialize({ theme: getTheme() });
+            // Cannot reliably re-render without storing original text, 
+            // but next page load will have the correct theme.
         }
     });
 });
@@ -50,26 +60,29 @@ async function renderMermaid() {
             text = pre.textContent;
         }
         
+        // Remove zero-width spaces or weird characters that expressive code might inject
+        text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        
         const id = `mermaid-${Date.now()}-${i}`;
         
         try {
             const container = document.createElement('div');
             container.className = 'mermaid-rendered';
             container.style.width = '100%';
-            container.style.overflowX = 'auto'; // CRITICAL: allows scrolling instead of shrinking
+            container.style.overflowX = 'auto';
             container.style.margin = '2rem 0';
-            container.style.padding = '1rem';
+            container.style.padding = '1.5rem';
             container.style.backgroundColor = 'var(--sl-color-bg-nav)';
             container.style.borderRadius = '0.5rem';
-            container.style.textAlign = 'center'; // Center the SVG if it's smaller than container
+            container.style.textAlign = 'center';
+            container.style.border = '1px solid var(--sl-color-hairline)';
             
             const { svg } = await mermaid.render(id, text);
             container.innerHTML = svg;
             
             const svgEl = container.querySelector('svg');
             if (svgEl) {
-                // Ensure SVG doesn't strictly scale down to unreadable sizes
-                svgEl.style.minWidth = '600px'; 
+                svgEl.style.minWidth = '500px'; 
                 svgEl.style.maxWidth = 'max-content';
                 svgEl.style.height = 'auto';
                 svgEl.style.margin = '0 auto';
@@ -85,7 +98,8 @@ async function renderMermaid() {
             
             pre.dataset.mermaidRendered = 'true';
         } catch (e) {
-            console.error('Mermaid render error:', e);
+            console.error('Mermaid render error for block:', text);
+            console.error(e);
             const errorDiv = document.createElement('div');
             errorDiv.style.color = 'var(--sl-color-red)';
             errorDiv.style.fontSize = '0.8rem';

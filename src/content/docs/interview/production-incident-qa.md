@@ -11,48 +11,55 @@ metaDescription: "Cẩm nang xử lý sự cố hệ thống dữ liệu (Produc
 
 # Xử lý sự cố Production (Phỏng vấn) - Production Incident QA
 
-## Summary
-
-**Production Incident QA** (Hỏi đáp xử lý sự cố thực tế) là vòng phỏng vấn đặc biệt đánh giá kinh nghiệm "thực chiến", tư duy giải quyết vấn đề dưới áp lực cao (troubleshooting under pressure) và kỹ năng giao tiếp khi hệ thống dữ liệu bị sập hoặc trả về dữ liệu sai lệch trên môi trường production. Nó đánh giá xem ứng viên có phải là một On-call Engineer đáng tin cậy hay không.
+Trong các buổi phỏng vấn Data Engineer (đặc biệt là các vị trí từ Senior trở lên), vòng phỏng vấn **Xử lý sự cố Production** (Production Incident QA) là một thử thách vô cùng thực tế. Vòng này được thiết kế để đánh giá khả năng chẩn đoán lỗi, tư duy giải quyết vấn đề dưới áp lực cao (troubleshooting under pressure), kỹ năng giao tiếp liên phòng ban và tinh thần trách nhiệm của ứng viên khi đóng vai trò là một kỹ sư trực gác (On-call Engineer).
 
 ---
 
-## Definition
+## Khi chuông điện thoại réo vang lúc 2 giờ sáng
 
-Trong Data Engineering, một "Production Incident" có thể là: Data Pipeline ngừng chạy (Failure), Pipeline chạy nhưng quá lâu (SLA Violation), hệ thống Kafka bị mất kết nối mạng, hoặc nghiêm trọng nhất là dữ liệu rác/dữ liệu trùng lặp chảy vào các báo cáo doanh thu tài chính (Data Quality Issue). Vòng phỏng vấn này yêu cầu ứng viên đóng vai người trực gác (On-call) để điều tra và xử lý sự cố mô phỏng theo thời gian thực.
-
----
-
-## Why it exists
-
-Mọi hệ thống phần mềm dù hoàn hảo đến đâu cũng sẽ có lúc sập. Công ty muốn biết bạn phản ứng thế nào khi điện thoại réo lên lúc 2h sáng: Bạn hoảng loạn chạy code sửa trực tiếp trên production? Bạn phớt lờ để sáng mai giải quyết? Hay bạn có một quy trình khôi phục nhanh chóng, thông báo cho các bên liên quan và tìm ra được Root Cause (Nguyên nhân gốc rễ)?
+Mọi hệ thống phần mềm dù có được thiết kế hoàn hảo đến đâu thì sớm muộn gì cũng sẽ xảy ra lỗi. Khi hệ thống gặp sự cố lúc nửa đêm, nhà tuyển dụng muốn biết bạn sẽ phản ứng như thế nào:
+* Bạn hoảng loạn chạy lệnh sửa code trực tiếp trên Production?
+* Bạn phớt lờ cảnh báo để chờ đến sáng mai lên văn phòng xử lý?
+* Hay bạn có một quy trình ứng phó bài bản: nhanh chóng khôi phục hệ thống tạm thời để giảm thiểu thiệt hại, thông báo cho các bên liên quan, rồi bình tĩnh truy tìm nguyên nhân gốc rễ (Root Cause) để đảm bảo lỗi đó không bao giờ lặp lại?
 
 ---
 
-## Core idea
+## Bản chất của các câu hỏi xử lý sự cố
 
-Một quy trình xử lý sự cố chuẩn mực (Incident Response Lifecycle) gồm 5 bước cốt lõi:
-1. **Triage & Acknowledge (Xác nhận & Phân loại)**: Tiếp nhận cảnh báo (Alert) từ hệ thống giám sát (Datadog, PagerDuty), xác định mức độ nghiêm trọng (Severity - từ Sev 1 đến Sev 4).
-2. **Mitigation (Giảm nhẹ rủi ro)**: Mục tiêu số 1 là khôi phục hệ thống (ngừng chảy máu) càng nhanh càng tốt, chưa cần tìm nguyên nhân triệt để. (Ví dụ: Rollback về phiên bản code cũ, khởi động lại server).
-3. **Communication (Giao tiếp)**: Thông báo trạng thái sự cố cho các bên liên quan (Business stakeholders, Product Managers) để họ không bị bất ngờ.
-4. **Resolution & Root Cause Analysis (RCA)**: Đào sâu tìm nguyên nhân gốc rễ (5 Whys) khiến hệ thống bị lỗi.
-5. **Post-mortem (Hậu kiểm)**: Viết tài liệu rút kinh nghiệm và tạo các Action Items (Tạo thêm Alert, sửa lại code) để sự cố này vĩnh viễn không lặp lại.
-
----
-
-## How it works
-
-Khi người phỏng vấn đưa ra tình huống (Ví dụ: "Pipeline của bạn báo lỗi OOM lúc nửa đêm. Bạn làm gì?"), hãy trả lời theo cấu trúc quy trình thay vì chỉ tập trung vào kỹ thuật:
-* **Bước 1**: "Đầu tiên, tôi sẽ kiểm tra Logs trên Airflow/Spark UI để xác nhận tác vụ nào đang sập và ảnh hưởng đến Data Mart nào."
-* **Bước 2**: "Tiếp theo, tôi thông báo trên kênh Slack chung rằng 'Hệ thống đang gặp sự cố, báo cáo doanh thu sáng nay sẽ bị trễ', để team kinh doanh nắm thông tin."
-* **Bước 3**: "Để khôi phục ngay (Mitigate), tôi thử tăng bộ nhớ cấp phát (Memory) lên gấp đôi và chạy lại Pipeline (Retry) vì có thể hôm nay là ngày Sale nên lượng dữ liệu tăng đột biến."
-* **Bước 4**: "Sau khi hệ thống đã xanh trở lại, tôi bắt đầu mở Grafana để soi metrics CPU/Memory, phân tích DAG và tìm ra dòng code gây OOM để sửa triệt để vào hôm sau (RCA)."
+Trong thế giới dữ liệu, một sự cố Production thường diễn ra dưới nhiều hình thức đa dạng:
+* Đường ống dẫn dữ liệu (Data Pipeline) đột ngột bị sập (Job Failure).
+* Pipeline chạy thành công nhưng mất quá nhiều thời gian, vi phạm cam kết thời gian hoàn thành (SLA Violation).
+* Hệ thống truyền tin Kafka bị mất kết nối mạng, gây ùn ứ dữ liệu.
+* Nghiêm trọng nhất: dữ liệu rác hoặc dữ liệu trùng lặp trôi vào kho dữ liệu (Data Warehouse) khiến các báo cáo doanh thu tài chính bị sai lệch mà không có Job nào báo đỏ.
 
 ---
 
-## Architecture / Flow
+## Quy trình 5 bước ứng phó sự cố chuẩn SRE
 
-Sơ đồ quá trình phản ứng khi có Alert (Cảnh báo Data Quality) từ hệ thống:
+Để thể hiện sự chuyên nghiệp của một kỹ sư giàu kinh nghiệm, bạn hãy bám sát quy trình ứng phó sự cố 5 bước chuẩn mực sau:
+
+1. **Xác nhận và Phân loại (Triage & Acknowledge)**: Tiếp nhận cảnh báo từ các hệ thống giám sát (Datadog, PagerDuty...), nhanh chóng xác định mức độ nghiêm trọng của sự cố (Severity - từ Sev-1 cực kỳ nghiêm trọng đến Sev-4 ít ảnh hưởng).
+2. **Giảm nhẹ thiệt hại (Mitigation)**: Mục tiêu hàng đầu là làm sao cho hệ thống hoạt động bình thường trở lại nhanh nhất có thể để "ngừng chảy máu", chưa cần thiết phải tìm ra nguyên nhân sâu xa ngay lập tức (ví dụ: thực hiện rollback mã nguồn về phiên bản cũ ổn định, khởi động lại server hoặc tạm tăng tài nguyên RAM).
+3. **Giao tiếp chủ động (Communication)**: Thông báo tình hình sự cố cho các bên liên quan (đội ngũ kinh doanh, Product Managers...) để họ nắm được thông tin báo cáo sẽ bị chậm trễ, tránh rơi vào thế bị động.
+4. **Phân tích nguyên nhân gốc rễ (RCA - Root Cause Analysis)**: Sau khi hệ thống đã tạm thời ổn định, tiến hành phân tích sâu (sử dụng phương pháp *5 Whys*) để tìm ra nguyên nhân cốt lõi gây lỗi.
+5. **Viết Post-mortem (Hậu kiểm)**: Soạn thảo tài liệu phân tích chi tiết sự cố, rút ra bài học kinh nghiệm và đưa ra các đầu việc cần làm (Action Items) để cải tiến hệ thống, ngăn chặn sự cố tương tự tái diễn trong tương lai.
+
+---
+
+## Hướng dẫn từng bước trả lời phỏng vấn khi hệ thống gặp sự cố
+
+Khi người phỏng vấn đưa ra tình huống: *"Pipeline của bạn báo lỗi tràn bộ nhớ (OOM) lúc nửa đêm. Bạn sẽ làm gì?"*, hãy trình bày câu trả lời của mình theo các bước hành động cụ thể thay vì chỉ tập trung vào kỹ thuật sửa lỗi:
+
+* **Bước 1**: *"Trước tiên, tôi sẽ kiểm tra Logs trên Airflow hoặc Spark UI để xác nhận chính xác task nào đang sập và tầm ảnh hưởng của nó tới các bảng dữ liệu hạ lưu."*
+* **Bước 2**: *"Tiếp theo, tôi sẽ gửi thông báo lên kênh Slack chung để báo cho các bên kinh doanh biết rằng hệ thống dữ liệu đang gặp sự cố và báo cáo doanh thu sáng nay có thể bị trễ."*
+* **Bước 3**: *"Để khôi phục hệ thống nhanh nhất, tôi sẽ tạm thời cấu hình tăng bộ nhớ RAM cấp phát lên gấp đôi và chạy lại (Retry) pipeline. Vì trong các ngày đặc biệt như Flash Sale, lượng dữ liệu tăng đột biến rất dễ gây ra lỗi OOM tạm thời."*
+* **Bước 4**: *"Sau khi pipeline đã chạy xanh trở lại, tôi sẽ mở Grafana để phân tích chi tiết các chỉ số sử dụng CPU/RAM của job đó, rà soát lại code để tìm ra đoạn logic gây rò rỉ bộ nhớ nhằm tối ưu hóa triệt để vào ngày hôm sau."*
+
+---
+
+## Sơ đồ quy trình ứng phó và khắc phục sự cố hệ thống
+
+Dưới đây là sơ đồ mô tả luồng xử lý chuẩn khi hệ thống phát đi cảnh báo sự cố nghiêm trọng:
 
 ```mermaid
 graph TD
@@ -72,86 +79,78 @@ graph TD
 
 ---
 
-## Practical example
+## Tình huống thực tế: Doanh thu trên báo cáo đột ngột tăng gấp đôi
 
-**Tình huống phỏng vấn**: "Báo cáo doanh thu sáng nay bị đội lên gấp đôi so với thực tế. Giám đốc đang rất tức giận. Bạn là Data Engineer phụ trách, hãy tìm nguyên nhân."
+**Đề bài từ người phỏng vấn**: *"Sáng nay, báo cáo hiển thị doanh thu của công ty đột ngột tăng vọt lên gấp đôi so với thực tế. Giám đốc tài chính đang rất tức giận. Bạn là Data Engineer chịu trách nhiệm hệ thống này, bạn sẽ điều tra lỗi như thế nào?"*
 
-**Giải quyết (Tư duy điều tra)**:
-1. **Khoanh vùng**: Kiểm tra câu lệnh SQL truy vấn báo cáo. Phát hiện doanh thu được tính từ `fact_sales`.
-2. **Kiểm tra Metadata (Lineage)**: Xem Data Lineage để truy ngược quá trình nạp. `fact_sales` được nạp từ Airflow job A.
-3. **Truy vết Logs**: Phát hiện Airflow job A đêm qua bị lỗi mạng giữa chừng, mất kết nối với DB. Airflow tự động Retry job A.
-4. **Xác định Root Cause**: Job A được thiết kế theo dạng *Append-only* (chỉ chèn thêm) mà không có tính Lũy Đẳng (Idempotency). Do đó, lần chạy đầu thành công 50% dữ liệu, lần Retry tiếp theo nó lại copy toàn bộ 100% dữ liệu thêm vào DB một lần nữa, tạo ra bản ghi trùng lặp (Duplicates).
-5. **Khắc phục (Fix)**: Xóa các bản ghi của ngày hôm đó, sửa lại Job A thành cơ chế *Delete-then-Insert* (hoặc UPSERT) và chạy lại (Backfill).
+**Cách phân tích và giải quyết bài bản**:
 
----
-
-## Best practices
-
-* **Mọi thứ phải được tự động cảnh báo (Alerting)**: Một sự cố chỉ được phát hiện khi Business User gọi điện mắng chửi là một sự cố tồi tệ. Kỹ sư giỏi phải thiết lập hệ thống phát hiện lỗi trước người dùng thông qua các Data Quality Checks hoặc SLA Timeout Alerts.
-* **Blameless Post-mortem (Hậu kiểm không đổ lỗi)**: Trong văn hóa kỹ thuật tốt, tài liệu hậu kiểm tập trung vào câu hỏi "Quy trình nào đã thất bại khiến lỗi này lọt qua hệ thống?" thay vì "Tại sao anh A lại code ngu như vậy?".
-* **Rollback over Fix-forward**: Khi deploy code mới gây lỗi, ưu tiên việc `git revert` và rollback hạ tầng về bản ổn định gần nhất thay vì cố gắng vội vã fix bug trực tiếp trên production (Hotfix).
+1. **Khoanh vùng phạm vi ảnh hưởng**: Tôi sẽ kiểm tra câu lệnh SQL tính toán báo cáo đó để xác định bảng dữ liệu nguồn. Phát hiện số liệu được lấy trực tiếp từ bảng `fact_sales`.
+2. **Truy vết nguồn gốc dữ liệu (Data Lineage)**: Sử dụng bản đồ Lineage để truy tìm nguồn gốc nạp dữ liệu. Bảng `fact_sales` được cập nhật bởi một Airflow Job mang tên `sales_ingestion`.
+3. **Kiểm tra nhật ký hệ thống (Logs)**: Rà soát log của Job `sales_ingestion` đêm qua. Phát hiện job đã bị mất kết nối mạng giữa chừng khi đang nạp dữ liệu từ database nguồn. Hệ thống Airflow sau đó đã tự động kích hoạt cơ chế chạy lại (Retry).
+4. **Xác định nguyên nhân gốc rễ (Root Cause)**: Do Job `sales_ingestion` được thiết kế theo dạng chỉ ghi thêm dữ liệu (Append-only) mà không có tính lũy đẳng (Idempotency). Ở lần chạy đầu tiên, job đã nạp thành công 50% dữ liệu rồi sập. Ở lần chạy lại sau đó, job lại tiếp tục tải toàn bộ 100% dữ liệu đè lên, dẫn đến việc trùng lặp dữ liệu giao dịch của ngày hôm đó.
+5. **Khắc phục sự cố**: Xóa toàn bộ các bản ghi bị lỗi của ngày hôm đó trong bảng `fact_sales`. Chỉnh sửa lại thiết kế của Job sang cơ chế ghi đè (Delete-then-Insert hoặc UPSERT) để đảm bảo tính lũy đẳng, sau đó thực hiện chạy lại (Backfill) dữ liệu ngày hôm đó.
 
 ---
 
-## Common mistakes
+## Những nguyên tắc vàng và Best Practices
 
-* **Mất bình tĩnh và lặn mất tăm**: Gặp sự cố nhưng im lặng điều tra một mình. Sau 3 tiếng, PM không biết tiến độ thế nào dẫn đến hoảng loạn toàn công ty. Hãy liên tục cập nhật trạng thái (Update Status).
-* **Tự tin thái quá vào Alert**: Đặt ngưỡng cảnh báo (Threshold) quá nhạy khiến điện thoại rung mỗi 5 phút. Hậu quả là hội chứng *Alert Fatigue* (Mệt mỏi vì cảnh báo) và kỹ sư sẽ bắt đầu làm ngơ (ignore) ngay cả các cảnh báo thực sự nghiêm trọng.
-* **Xóa luôn dữ liệu lỗi mà không backup**: Trong nỗ lực cứu vãn tình thế, tự tay gõ lệnh `DELETE` các dòng dữ liệu bị lỗi trên production mà quên backup lại. Nếu bạn xóa nhầm dữ liệu thật, thảm họa sẽ nhân lên gấp 10.
-
----
-
-## Trade-offs
-
-### Rollback (Quay lui) vs Roll-forward (Tiến lên)
-* **Rollback**: Trả hệ thống về trạng thái cũ an toàn ngay lập tức, nhưng phải tốn thời gian hoàn tác các thao tác DDL (thay đổi bảng) nếu đã lỡ áp dụng.
-* **Roll-forward**: Cố gắng viết đoạn code vá lỗi (patch) đè lên hệ thống hiện tại. Nhanh nếu bug dễ, nhưng cực kỳ rủi ro nếu viết sai thêm trong lúc đang buồn ngủ hoặc hoảng loạn.
+* **Chủ động phát hiện lỗi bằng hệ thống cảnh báo (Alerting)**: Một sự cố tồi tệ nhất là khi chỉ được phát hiện sau khi khách hàng hoặc người dùng kinh doanh gọi điện phàn nàn. Hãy thiết lập các chốt chặn chất lượng dữ liệu tự động (Data Quality Checks) và cảnh báo trễ hạn hoàn thành (SLA Timeout Alerts) để phát hiện lỗi trước khi người dùng kịp mở báo cáo.
+* **Văn hóa Post-mortem không đổ lỗi (Blameless)**: Khi viết tài liệu phân tích sự cố, hãy tập trung vào câu hỏi: *"Quy trình kiểm soát nào đã bị bỏ sót khiến lỗi này lọt qua được môi trường Production?"* chứ tuyệt đối không tập trung chỉ trích cá nhân kỹ sư nào đã viết đoạn code đó.
+* **Ưu tiên Rollback hơn là cố gắng sửa đè (Fix-forward)**: Khi deploy code mới lên Production và phát hiện lỗi, phương án an toàn nhất luôn là thực hiện `git revert` và rollback hạ tầng về trạng thái ổn định gần nhất, thay vì cố gắng vội vã viết code sửa lỗi trực tiếp trên Production trong tình trạng căng thẳng.
 
 ---
 
-## When to use
+## Những sai lầm kinh điển dễ làm trầm trọng thêm sự cố
 
-* Kỹ năng xử lý sự cố được đánh giá cực kỳ khắt khe cho mọi vị trí từ Senior trở lên (những người được giao trọng trách nắm giữ "chìa khóa" hệ thống).
-
----
-
-## Related concepts
-
-* [Idempotency](/concepts/idempotency)
-* [Data Lineage](/concepts/data-lineage)
-* [Data Quality & Observability](/concepts/data-observability)
+* **Mất bình tĩnh và âm thầm tự sửa lỗi**: Nhiều kỹ sư khi gặp sự cố thường âm thầm tìm cách tự sửa lỗi một mình mà không cập nhật trạng thái cho mọi người. Việc này khiến quản lý dự án (PM) hoang mang không biết tiến độ khắc phục ra sao để thông báo cho khách hàng. Hãy luôn cập nhật thông tin thường xuyên.
+* **Hội chứng mệt mỏi vì cảnh báo (Alert Fatigue)**: Việc cấu hình ngưỡng cảnh báo quá nhạy (ví dụ: hệ thống rung chuông liên tục cho các lỗi cảnh báo nhỏ) sẽ khiến các kỹ sư dần trở nên chai lì và dễ bỏ qua cả những cảnh báo đỏ cực kỳ nghiêm trọng.
+* **Tự ý xóa dữ liệu lỗi mà không sao lưu (Backup)**: Trong lúc vội vã khắc phục sự cố, nhiều kỹ sư gõ trực tiếp lệnh xóa (`DELETE`) dữ liệu lỗi trên Production mà quên tạo bản sao lưu dự phòng. Nếu chẳng may gõ nhầm điều kiện lọc, bạn có thể xóa mất dữ liệu thật và khiến thảm họa nhân lên gấp nhiều lần.
 
 ---
 
-## Interview questions
+## Bài toán đánh đổi: Rollback (Quay lui) hay Roll-forward (Sửa đè)?
 
-### 1. SLA, SLO và SLI khác nhau thế nào trong bối cảnh Data Pipeline?
+* **Rollback**: Giúp đưa hệ thống trở lại trạng thái an toàn trước đó gần như ngay lập tức, giảm thiểu tối đa rủi ro phát sinh thêm lỗi mới. Tuy nhiên, nó sẽ tốn thời gian để hoàn tác (revert) các thay đổi cấu trúc bảng (DDL) nếu bạn đã lỡ chạy deploy trước đó.
+* **Roll-forward**: Cố gắng viết mã vá lỗi (hotfix) trực tiếp đè lên hệ thống hiện tại. Cách này sẽ nhanh chóng nếu lỗi cực kỳ đơn giản, nhưng lại tiềm ẩn rủi ro rất cao vì dễ viết sai code trong lúc đang hoảng loạn hoặc thiếu ngủ.
+
+---
+
+## Bộ câu hỏi phỏng vấn thực tế và Cách trả lời ghi điểm
+
+### 1. Hãy phân biệt các khái niệm SLA, SLO và SLI trong bối cảnh quản lý Data Pipeline.
 * **Gợi ý trả lời**: 
-  * **SLI (Service Level Indicator)**: Thước đo thực tế tại một thời điểm (Ví dụ: "Hôm nay báo cáo chạy xong trong 45 phút").
-  * **SLO (Service Level Objective)**: Mục tiêu nội bộ đội Kỹ thuật đặt ra (Ví dụ: "99% số báo cáo trong tháng phải chạy xong trước 8:00 AM"). Nếu vi phạm SLO, team dev sẽ phải ưu tiên fix bug thay vì làm tính năng mới.
-  * **SLA (Service Level Agreement)**: Hợp đồng cam kết với khách hàng có ràng buộc pháp lý/tài chính (Ví dụ: "Nếu báo cáo trễ quá 9:00 AM, công ty sẽ hoàn tiền dịch vụ tháng này").
+  * **SLI (Service Level Indicator)**: Chỉ số đo lường hiệu suất thực tế của hệ thống tại một thời điểm (Ví dụ: *"Thời gian chạy của pipeline hôm nay là 40 phút"*).
+  * **SLO (Service Level Objective)**: Mục tiêu hiệu suất nội bộ do đội ngũ kỹ thuật tự đặt ra để phấn đấu (Ví dụ: *"99% số báo cáo trong tháng phải chạy xong trước 8:00 sáng hàng ngày"*).
+  * **SLA (Service Level Agreement)**: Cam kết mức độ dịch vụ giữa công ty và khách hàng có ràng buộc về mặt pháp lý hoặc tài chính (Ví dụ: *"Nếu dữ liệu báo cáo gửi chậm hơn 9:00 sáng, công ty sẽ phải hoàn trả 10% phí dịch vụ của tháng đó"*).
 
-### 2. Mô tả phương pháp "5 Whys" (5 câu hỏi Tại sao) trong quá trình RCA?
-* **Gợi ý trả lời**: Đây là kỹ thuật hỏi "Tại sao" liên tục để bóc tách hiện tượng bề mặt nhằm tìm ra nguyên nhân gốc rễ hệ thống.
-  Ví dụ: Doanh thu tính sai (Tại sao?) -> Vì job Spark sinh ra dữ liệu trùng (Tại sao?) -> Vì job bị chạy lại 2 lần (Tại sao?) -> Vì Airflow mất kết nối DB nên kích hoạt Auto-retry (Tại sao?) -> Vì DB đang trong khung giờ backup tự động (Tại sao?) -> Vì lịch backup DB trùng với lịch chạy pipeline lớn nhất (Root Cause: Sai lầm trong cấu hình lập lịch hạ tầng).
+### 2. Hãy mô tả phương pháp phân tích "5 Whys" (5 câu hỏi Tại sao) để tìm nguyên nhân gốc rễ (RCA).
+* **Gợi ý trả lời**: Đây là phương pháp đặt câu hỏi "Tại sao" liên tiếp để bóc tách dần các hiện tượng bề mặt nhằm tìm ra nguyên nhân sâu xa nhất của lỗi hệ thống.
+  * *Ví dụ thực tế*: Số liệu doanh thu hiển thị sai. 
+    1. *Tại sao?* Vì Job Spark nạp dữ liệu bị trùng lặp. 
+    2. *Tại sao?* Vì Job đó bị kích hoạt chạy lại 2 lần liên tiếp. 
+    3. *Tại sao?* Vì Airflow bị mất kết nối mạng với database nguồn nên tự động kích hoạt chạy lại (Auto-retry). 
+    4. *Tại sao?* Vì database nguồn đang chạy tác vụ sao lưu (backup) tự động định kỳ gây quá tải cổng kết nối. 
+    5. *Tại sao?* Vì lịch chạy backup tự động của database nguồn đang được cấu hình trùng khít với khung giờ chạy pipeline dữ liệu.
+    $\rightarrow$ *Root Cause*: Cấu hình sai lịch hoạt động của các hệ thống hạ tầng.
 
-### 3. Bạn sẽ làm gì nếu một lỗi Data Quality bị rò rỉ vào Data Warehouse và ảnh hưởng đến dữ liệu của 3 tháng qua?
-* **Gợi ý trả lời**: Trình bày chiến lược "Backfill" (Nạp lại dữ liệu quá khứ).
-  1. Freeze (Đóng băng) bảng dữ liệu, đặt banner cảnh báo trên công cụ BI để người dùng không lấy dữ liệu sai.
-  2. Xác định mốc thời gian bắt đầu xảy ra lỗi bằng cách đối chiếu log.
-  3. Xóa các phân vùng dữ liệu (partitions) lỗi (hoặc chuẩn bị script UPSERT).
-  4. Viết code sửa lỗi, review cẩn thận, chạy trên môi trường Staging/Dev.
-  5. Chạy pipeline nạp lại (Backfill) dữ liệu từ source (Kafka, S3 raw) cho 3 tháng vừa qua.
+### 3. Bạn sẽ xử lý thế nào nếu phát hiện một lỗi chất lượng dữ liệu (Data Quality) đã âm thầm xảy ra trong kho dữ liệu suốt 3 tháng qua?
+* **Gợi ý trả lời**: Tôi sẽ tiến hành quy trình chạy lại dữ liệu lịch sử (Backfill) theo các bước:
+  1. **Đóng băng (Freeze)** bảng dữ liệu bị lỗi, tạm thời vô hiệu hóa quyền ghi mới và đặt thông báo cảnh báo trên các dashboard BI để người dùng biết số liệu đang được sửa đổi, tránh lấy số liệu sai để phân tích.
+  2. **Xác định thời điểm bắt đầu lỗi** bằng cách rà soát log hệ thống và đối chiếu dữ liệu gốc.
+  3. **Xóa các phân vùng dữ liệu** (partitions) bị lỗi trong 3 tháng qua (hoặc chuẩn bị sẵn các script `MERGE INTO` để cập nhật đè).
+  4. **Viết mã sửa lỗi**, kiểm thử kỹ lưỡng trên môi trường Staging/Dev để đảm bảo code hoạt động hoàn hảo.
+  5. **Kích hoạt pipeline nạp lại (Backfill)** dữ liệu thô từ nguồn (như Kafka hoặc S3 raw storage) cho khoảng thời gian 3 tháng bị ảnh hưởng.
 
 ---
 
-## References
+## Sách hay và tài liệu tham khảo
 
-1. **Site Reliability Engineering (SRE)** - Google (Cuốn sách kinh điển về văn hóa Incident Response và Post-mortem).
-2. **Fundamentals of Data Engineering** - Chương 10: Data Operations (DataOps) & Incident Management.
+1. **Site Reliability Engineering (SRE)** - Google (Cuốn sách kinh điển nhất thế giới về văn hóa trực gác, ứng phó sự cố và viết tài liệu hậu kiểm).
+2. **Fundamentals of Data Engineering** - Chương 10 chia sẻ sâu sắc về Data Operations (DataOps) và cách thức quản lý sự cố dữ liệu.
 
 ---
 
-## English summary
+## English Summary
 
 The Production Incident QA interview assesses a candidate's operational maturity, ability to troubleshoot complex issues under pressure, and adherence to Incident Response protocols. Employers look for structured thinking: starting with Triage and Acknowledge, prioritizing immediate Mitigation (e.g., rolling back instead of hotfixing) to stop the bleeding, ensuring proactive Communication with stakeholders, and ultimately performing Root Cause Analysis (RCA) using frameworks like the '5 Whys'. Strong candidates emphasize Idempotency to enable easy backfills, implement blameless post-mortems, and establish robust observability mechanisms rather than relying on manual checks or user complaints.

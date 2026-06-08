@@ -9,65 +9,44 @@ seoTitle: "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipelin
 metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) trong ETL/ELT: cách sử dụng High Watermark, quản lý trạng thái (State) và khác biệt so với Full Load."
 ---
 
-# Incremental Load
+# Tối ưu hóa đường ống dữ liệu với phương pháp Nạp gia tăng (Incremental Load)
 
-## Summary
+Khi bắt đầu xây dựng một kho dữ liệu (Data Warehouse), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).
 
-Incremental Load (Nạp gia tăng) là một cơ chế trích xuất và nạp dữ liệu trong quy trình ETL/ELT, nơi hệ thống chỉ kéo về (pull) những bản ghi đã được tạo mới hoặc bị thay đổi kể từ lần chạy cuối cùng của Data Pipeline. Trái ngược với Full Load (kéo toàn bộ dữ liệu lại từ đầu), Incremental Load là giải pháp tối thượng để xây dựng các đường ống dữ liệu hiệu năng cao, giảm tải áp lực cho hệ thống nguồn và tiết kiệm chi phí tính toán đám mây cho doanh nghiệp.
+## Chỉ kéo và xử lý phần thay đổi
 
----
+Incremental Load (Nạp dữ liệu gia tăng) là một cơ chế trích xuất và nạp dữ liệu trong quy trình ETL/ELT. Thay vì tải lại toàn bộ kho dữ liệu khổng lồ từ thuở sơ khai, hệ thống chỉ chủ động kéo về phần dữ liệu "Delta" — tức là những bản ghi mới được tạo hoặc vừa bị chỉnh sửa trạng thái kể từ lần chạy thành công gần nhất của đường ống dữ liệu (Data Pipeline).
 
-## Definition
+Để nhận diện được phần Delta này, luồng Ingestion (thu thập dữ liệu) cần được thiết kế dựa trên hai cột mốc quan trọng:
+1. **Cột theo dõi thời gian (Tracking Column) ở hệ thống nguồn**: Có thể là cột `created_at`, `updated_at` hoặc một chuỗi số ID tăng dần (`auto_increment_id`). Cột này giúp hệ thống xác định dòng dữ liệu nào vừa xuất hiện hoặc vừa thay đổi.
+2. **Khóa chính (Primary Key) ở hệ thống đích**: Đóng vai trò là mốc đối chiếu giúp hệ thống phân biệt bản ghi nào cần được thêm mới hoàn toàn (`INSERT`) và bản ghi nào cần được cập nhật trạng thái mới (`UPDATE` đè lên bản ghi cũ).
 
-**Incremental Load** hoạt động dựa trên việc nhận diện phần **"Delta" (Sự thay đổi)**. Để nhận diện được Delta, luồng Ingestion phải được thiết kế một cách có chủ ý dựa trên hai yếu tố bắt buộc:
-1. **Cột theo dõi thời gian (Tracking column)** ở cơ sở dữ liệu nguồn: Ví dụ các cột `created_at`, `updated_at`, hoặc một chuỗi số ID tăng dần (`auto_increment_id`).
-2. **Khóa chính (Primary Key)** ở cơ sở dữ liệu đích: Để hệ thống biết bản ghi nào cần Thêm mới (Insert) và bản ghi nào cần Cập nhật (Update - Ghi đè trạng thái cũ).
+## Tại sao chúng ta không thể mãi dùng Full Load?
 
-Khái niệm Incremental Load áp dụng cho cả quá trình Extract (Chỉ trích xuất dòng mới từ nguồn) lẫn quá trình Load/Transform (Chỉ xử lý tính toán lại phần dữ liệu mới thay vì tính toán lại báo cáo của 10 năm trước).
+Hãy hình dung một bảng ghi nhận lịch sử giao dịch của một ngân hàng lớn có dung lượng khoảng 2 Terabytes (tương đương 5 tỷ dòng). Trung bình mỗi ngày hệ thống chỉ phát sinh thêm khoảng 1 triệu giao dịch mới (chỉ nặng khoảng 50 Megabytes).
 
----
+* Nếu áp dụng **Full Load**: Mỗi ngày, hệ thống ETL của bạn bắt buộc phải đọc và truyền tải toàn bộ 2 Terabytes dữ liệu qua đường truyền mạng chỉ để cập nhật thêm 50 Megabytes dữ liệu mới. Quá trình này sẽ ngốn băng thông mạng khủng khiếp, mất hàng chục giờ để hoàn thành, và có nguy cơ cao làm sập cơ sở dữ liệu vận hành (Production DB) của doanh nghiệp.
+* Nếu áp dụng **Incremental Load**: Đường ống dữ liệu chỉ gửi một yêu cầu truy vấn nhỏ để lấy đúng 50 Megabytes dữ liệu phát sinh trong ngày hôm nay. Thời gian xử lý lập tức được rút ngắn từ 10 tiếng xuống còn vỏn vẹn 2 phút.
 
-## Why it exists
+Incremental Load ra đời như một vị cứu tinh giúp kho dữ liệu của doanh nghiệp luôn duy trì tốc độ cập nhật nhanh chóng mà không làm phình to hóa đơn chi phí tính toán đám mây.
 
-Hãy tưởng tượng một bảng ghi nhận lịch sử giao dịch ngân hàng có kích thước 2 Terabytes (khoảng 5 tỷ dòng). Mỗi ngày có khoảng 1 triệu giao dịch mới (chỉ khoảng 50 Megabytes).
-* Nếu dùng phương pháp Full Load (Lấy toàn bộ): Kỹ sư dữ liệu sẽ phải bắt hệ thống truyền 2 Terabytes dữ liệu qua mạng mỗi ngày chỉ để cập nhật thêm 50 MB dữ liệu mới. Điều này tốn băng thông, mất hàng chục giờ đồng hồ để chạy, và làm sập Database vận hành.
-* Nếu dùng Incremental Load: Hệ thống chỉ hỏi xin 50 MB dữ liệu của riêng ngày hôm nay. Thời gian chạy rút xuống từ 10 giờ xuống còn 2 phút.
+## Dấu mực nước: Khái niệm then chốt High Watermark
 
-Incremental Load sinh ra để giúp hệ thống Data Warehouse có thể theo kịp sự phình to của Big Data mà không làm nổ hóa đơn tiền điện toán (Compute Costs).
+Ý tưởng cốt lõi giúp Incremental Load vận hành trơn tru nằm ở khái niệm **High Watermark (Dấu mực nước cao nhất)**.
 
----
+Hãy tưởng tượng bạn đang đọc một cuốn sách dày 1,000 trang. Thay vì mỗi ngày mở sách ra đọc lại từ trang 1, bạn dùng một chiếc kẹp sách (Bookmark) để đánh dấu trang 100 mà bạn vừa đọc xong. Ngày hôm sau, bạn chỉ việc mở đúng trang 101 để đọc tiếp.
 
-## Core idea
+Trong kỹ thuật dữ liệu, High Watermark chính là chiếc kẹp sách đó:
+1. Hệ thống ETL duy trì một bảng quản lý trạng thái (State Storage). Bảng này ghi nhận: *"Lần chạy gần nhất cho bảng X hoàn thành lúc `2026-06-05 23:59:59`"*. Dấu mốc thời gian này chính là High Watermark.
+2. Ở lần chạy tiếp theo, hệ thống ETL sẽ tự động gửi câu lệnh truy vấn kèm bộ lọc:
+   ```sql
+   SELECT * FROM table_X WHERE updated_at > '2026-06-05 23:59:59';
+   ```
+3. Sau khi xử lý và ghi dữ liệu thành công, hệ thống tiến hành cập nhật High Watermark mới (ví dụ: `2026-06-06 23:59:59`) để chuẩn bị cho chu kỳ tiếp theo.
 
-Ý tưởng cốt lõi của Incremental Load là việc sử dụng và quản lý **High Watermark (Dấu mực nước cao nhất)**. 
+## Quy trình vận hành của Incremental Load
 
-Giống như cách bạn đọc một cuốn sách dày, bạn kẹp một chiếc Đánh dấu trang (Bookmark) ở trang 100. Ngày mai đọc tiếp, bạn chỉ cần mở ra và đọc từ trang 101, không phải đọc lại từ trang 1. 
-
-Trong Data Engineering:
-1. Máy chủ ETL có một kho lưu trữ trạng thái (State/Metadata storage). Nó ghi lại: Lần cuối cùng tao chạy thành công cho bảng X là lúc `2026-06-05 23:59:59`. Dấu thời gian này chính là High Watermark (hoặc Cursor/Bookmark).
-2. Lần chạy kế tiếp, máy chủ ETL phát ra lệnh truy vấn: `SELECT * FROM table_X WHERE updated_at > '2026-06-05 23:59:59'`.
-3. Nhận về dữ liệu, xử lý xong xuôi. Lưu High Watermark mới: `2026-06-06 23:59:59`.
-
----
-
-## How it works
-
-Dưới đây là chu trình Incremental sử dụng mô hình Upsert (Merge) phổ biến nhất:
-
-1. **Extract (Trích xuất theo Watermark)**: 
-   Sử dụng Cursor cuối cùng (vd: Hôm qua) để truy vấn CSDL nguồn. Hệ thống trả về 100 bản ghi mới tạo, và 20 bản ghi cũ nhưng vừa mới bị chỉnh sửa trạng thái ngày hôm nay. (Tổng cộng 120 dòng Delta).
-2. **Transform (Biến đổi)**: 
-   Làm sạch 120 dòng dữ liệu này tại vùng Staging.
-3. **Load (Nạp Upsert)**:
-   Tại Data Warehouse, engine (vd: Snowflake) lấy 120 dòng Staging này ra so sánh với bảng chính dựa trên ID.
-   - Với 100 dòng mới tạo (ID chưa từng xuất hiện) -> INSERT.
-   - Với 20 dòng bị chỉnh sửa (ID đã có sẵn ở DWH) -> UPDATE đè lên trạng thái cũ.
-4. **Cập nhật State**: 
-   Cập nhật Watermark thành thời gian mới nhất (hoặc MAX(updated_at) của tập dữ liệu vừa nạp).
-
----
-
-## Architecture / Flow
+Dưới đây là sơ đồ kiến trúc minh họa một chu trình nạp dữ liệu gia tăng sử dụng mô hình Upsert (Merge) phổ biến:
 
 ```mermaid
 graph TD
@@ -96,13 +75,18 @@ graph TD
     Merge -.->|"On Success"| UpdateState
 ```
 
----
+1. **Extract (Trích xuất theo Watermark)**: Lấy giá trị kẹp sách cuối cùng (T1) để truy vấn Database nguồn. Hệ thống bốc ra phần Delta dữ liệu (ví dụ 100 dòng mới tạo và 20 dòng cũ vừa được chỉnh sửa trạng thái).
+2. **Transform (Biến đổi)**: Tiến hành làm sạch và chuẩn hóa 120 dòng dữ liệu Delta này tại vùng đệm Staging.
+3. **Load (Nạp dữ liệu dạng Upsert)**: Thực hiện lệnh so sánh 120 dòng Staging với bảng dữ liệu chính trên Data Warehouse dựa trên Khóa chính:
+   * Đối với 100 dòng mới tinh (ID chưa từng xuất hiện) -> thực hiện `INSERT`.
+   * Đối với 20 dòng đã có sẵn nhưng bị thay đổi -> thực hiện `UPDATE` đè lên bản ghi cũ để cập nhật trạng thái mới nhất.
+4. **Cập nhật State**: Sau khi nạp thành công, ghi nhận mốc thời gian mới (T2) vào kho lưu trữ Watermark.
 
-## Practical example
+## Thực chiến: Triển khai Incremental Model với dbt
 
-Triển khai cấu hình Incremental bằng công cụ **dbt (data build tool)**. Đây là cách cực kỳ thanh lịch để xử lý Incremental Load bằng mã SQL thuần túy.
+Công cụ dbt (Data Build Tool) cung cấp giải pháp thiết lập Incremental Load cực kỳ thanh lịch thông qua mã SQL kết hợp với Jinja template.
 
-File `daily_sales.sql`:
+Dưới đây là ví dụ cấu hình cho file `daily_sales.sql`:
 
 ```sql
 -- Khai báo cho dbt biết đây là model Incremental, và khóa chính là order_id
@@ -126,80 +110,54 @@ FROM raw_orders
 { % endif % }
 ```
 
-Bên dưới nền, dbt sẽ dịch khối lệnh này thành một câu lệnh MERGE (Upsert) khổng lồ và xử lý phần Watermark tự động qua hàm `MAX(updated_at)`.
+Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành một câu lệnh `MERGE` (Upsert) phức tạp và xử lý việc so sánh Watermark hoàn toàn tự động.
 
----
+## Những quy tắc "vàng" chống mất mát dữ liệu
 
-## Best practices
+* **Thiết lập Cửa sổ lùi thời gian (Look-back Window)**: Trong môi trường thực tế, các Database nguồn có thể gặp độ trễ khi commit giao dịch (ví dụ: giao dịch A bắt đầu lúc 10:00 nhưng đến 10:02 mới ghi xong đĩa; trong khi giao dịch B bắt đầu lúc 10:01 và ghi xong ngay lập tức). Nếu Watermark lấy mốc 10:01, bạn sẽ bỏ sót hoàn toàn giao dịch A ở chu kỳ sau. Hãy luôn cấu hình quét lùi lại quá khứ một khoảng ngắn: `WHERE updated_at >= (watermark - interval '1 hour')` để đảm bảo không bỏ sót dữ liệu. Việc quét trùng một chút dữ liệu cũ sẽ được xử lý an toàn bởi cơ chế Upsert mà không gây trùng lặp.
+* **Đánh chỉ mục (Index) cho cột thời gian**: Đảm bảo các cột `updated_at` hoặc `created_at` ở cơ sở dữ liệu nguồn được đánh chỉ mục. Nếu không, mỗi câu lệnh truy vấn lọc theo Watermark sẽ ép DB nguồn phải quét toàn bộ bảng (Full Table Scan), gây nghẽn hệ thống không khác gì Full Load.
+* **Xử lý các trường hợp xóa vật lý (Hard Deletes)**: Cơ chế lọc theo cột `updated_at` hoàn toàn bất lực trước các bản ghi bị xóa vật lý (xóa bay khỏi ổ cứng ở hệ thống nguồn). Hãy yêu cầu đội ngũ phát triển ứng dụng sử dụng phương pháp xóa mềm (Soft Delete - đánh dấu cột `is_deleted = true` thay vì DELETE dòng). Khi đó cột `updated_at` sẽ thay đổi và hệ thống ETL có thể nhận diện để đồng bộ.
 
-* **Look-back Window (Cửa sổ lùi thời gian)**: Các Database có thể bị trễ một chút khi commit giao dịch (ví dụ transaction A bắt đầu lúc 10:00 nhưng 10:02 mới ghi xong. Transaction B chạy lúc 10:01 và ghi xong luôn). Nếu Watermark lấy đúng mốc 10:01, thì ở lần chạy sau bạn sẽ bị lọt mất transaction A. Luôn thiết lập Look-back window: `WHERE updated_at >= (watermark - interval '1 hour')` để quét lùi lại quá khứ một chút. Khi kết hợp với câu lệnh Upsert, việc lấy trùng lại một chút dữ liệu giờ cũ sẽ không gây ra lỗi trùng lặp (Idempotent).
-* **Index cột thời gian**: Đảm bảo cột `updated_at` hoặc `created_at` ở hệ thống nguồn (MySQL/Postgres) đã được đánh Index. Nếu không, câu lệnh `WHERE updated_at > X` của luồng ETL sẽ kích hoạt một cuộc quét toàn bộ bảng (Full Table Scan), làm sập DB nguồn không khác gì phương pháp Full Load.
-* **Xử lý Xóa (Hard Deletes)**: Incremental thông thường dựa trên cột `updated_at` là vô phương cứu chữa với các dòng dữ liệu bị xóa cứng (hard delete - xóa bay khỏi ổ đĩa). Bạn phải yêu cầu bên phần mềm chuyển sang Soft Delete (thêm cột `is_deleted = true`), lúc này bản ghi sẽ bị cập nhật lại cột `updated_at` và được ETL kéo về.
+## Những sai lầm kinh điển cần né tránh
 
----
+* **Sử dụng ID tự tăng làm Watermark**: Một số kỹ sư thiết lập lọc theo kiểu `WHERE id > last_id`. Cơ chế này hoạt động rất tốt đối với các bản ghi được thêm mới (`INSERT`), nhưng nó sẽ bỏ lỡ hoàn toàn các bản ghi cũ được cập nhật trạng thái (`UPDATE`), vì ID của chúng không hề thay đổi.
+* **Thiếu khóa chính đáng tin cậy**: Việc cố gắng thiết lập nạp gia tăng Upsert trên các bảng dữ liệu không có Khóa chính (như bảng log click chuột của người dùng) sẽ khiến cơ sở dữ liệu đích không có mốc đối chiếu, dẫn đến việc dữ liệu bị nhân đôi vô tội vạ sau mỗi lần chạy.
 
-## Common mistakes
+## Ưu và nhược điểm khi chuyển sang Incremental (Trade-offs)
 
-* **Sử dụng ID tự tăng thay cho Updated_at**: Một số kỹ sư dùng Auto-increment ID làm Watermark (`WHERE id > last_id`). Cơ chế này lấy được dòng thêm mới (Insert) rất tốt, nhưng nó vĩnh viễn không bao giờ bắt được các dòng dữ liệu cũ bị Cập nhật (Update) trạng thái. Vì ID của chúng không đổi, nó sẽ luôn nhỏ hơn `last_id`.
-* **Thiếu trường Primary Key đáng tin cậy**: Cố gắng chạy chế độ Incremental Upsert trên một bảng (như Log Clicks) không có ID duy nhất. Kết quả là DWH không biết so sánh dựa trên điều kiện gì, dẫn đến dữ liệu cứ đắp đống (nhân đôi) mỗi khi có một khoảng Look-back lặp lại.
+### Điểm cộng
+* Rút gọn dung lượng truyền tải mạng và giảm tải chi phí I/O đi hàng trăm lần.
+* Rút ngắn thời gian chạy job, cho phép tăng tần suất nạp dữ liệu (ví dụ 15 phút một lần thay vì chờ qua đêm), đáp ứng nhu cầu phân tích thời gian thực (Near Real-time).
+* Tiết kiệm đáng kể chi phí điện toán trên các kho dữ liệu đám mây (như Snowflake hay BigQuery).
 
----
+### Điểm trừ
+* **Độ phức tạp kiến trúc tăng cao**: Bạn phải thiết lập và duy trì một hệ thống quản lý trạng thái (Watermark Storage). Nếu file cấu hình này bị hỏng, đường ống dữ liệu sẽ bị gián đoạn.
+* **Rủi ro sai lệch dữ liệu tích tụ (Data Drift)**: Do là luồng dữ liệu ghép nối theo từng ngày, nếu một ngày job gặp lỗi mà không được phát hiện kịp thời, sự sai lệch thông tin sẽ tích tụ dần theo thời gian. Giải pháp khắc phục là hãy lên lịch chạy Full Refresh định kỳ (ví dụ mỗi tháng một lần) để đồng bộ hoàn toàn bảng đích với bảng nguồn.
 
-## Trade-offs
+## Các khái niệm liên quan
 
-### Ưu điểm
-* Giảm băng thông (Network Traffic) và chi phí I/O đi hàng trăm, ngàn lần.
-* Tốc độ chạy Job nhanh, cho phép chạy với tần suất cao (vd: mỗi 15 phút một lần thay vì mỗi đêm một lần), đáp ứng nhu cầu báo cáo thời gian thực (Near real-time).
-* Tiết kiệm hàng ngàn USD tiền Compute (Snowflake/BigQuery) hàng tháng.
+* [Trích xuất dữ liệu (Data Extraction)](/concepts/data-extraction)
+* [Change Data Capture (CDC - Ghi nhận sự thay đổi dữ liệu)](/concepts/change-data-capture)
+* [ELT (Extract, Load, Transform)](/concepts/elt)
 
-### Nhược điểm
-* **Kiến trúc phức tạp**: Đòi hỏi phải cài đặt kho lưu trữ State (Watermark). Nếu file State bị hỏng, luồng pipeline bị hỏng.
-* **Nguy cơ sai lệch dữ liệu (Data Drift)**: Do bản chất là luồng nối ghép, nếu có một ngày Job bị lỗi, một số dòng bị sót, sự sai lệch này sẽ tích tụ dần. Cần định kỳ (vd: mỗi tháng 1 lần) chạy một luồng "Full Refresh" để đồng bộ chuẩn lại bảng đích so với nguồn.
+## Góc phỏng vấn: Thử thách tư duy thiết kế hệ thống
 
----
+### 1. Hãy nêu ra nhược điểm lớn nhất của phương pháp Incremental Load dựa trên cột thời gian `updated_at`. Bạn đề xuất giải pháp công nghệ nào để khắc phục hoàn toàn nhược điểm đó?
+* **Mục đích câu hỏi**: Đánh giá khả năng nhận diện điểm yếu hệ thống và sự hiểu biết của ứng viên về các công nghệ Change Data Capture (CDC) hiện đại.
+* **Gợi ý trả lời**: Nhược điểm chí mạng của phương pháp dùng cột `updated_at` là không thể phát hiện các bản ghi bị xóa cứng (Hard Deletes) ở hệ thống nguồn. Khi một dòng dữ liệu bị xóa trực tiếp khỏi database, không còn cột `updated_at` nào để kiểm tra, dẫn đến việc kho dữ liệu đích vẫn lưu trữ các bản ghi "ma" này.
+  Để xử lý triệt để, tôi sẽ đề xuất chuyển sang giải pháp **Change Data Capture dựa trên Log (Log-based CDC)** sử dụng các công cụ như Debezium hoặc Fivetran. Các công cụ này đọc trực tiếp file nhật ký giao dịch (Transaction Logs như Binlog của MySQL hay WAL của Postgres). Bất kỳ hành động nào, kể cả câu lệnh `DELETE` vật lý, đều được ghi nhận vào nhật ký và truyền đi ngay lập tức dưới dạng sự kiện (event) để đồng bộ xóa ở bảng đích.
 
-## When to use
+### 2. Định nghĩa khái niệm "Look-back window" và giải thích lý do vì sao nó lại cần thiết trong quy trình Incremental Load?
+* **Mục đích câu hỏi**: Đánh giá kinh nghiệm thực tế của ứng viên khi xử lý các lỗi bất đồng bộ dữ liệu trong môi trường sản xuất (Production).
+* **Gợi ý trả lời**: Look-back window (Cửa sổ lùi thời gian) là kỹ thuật chủ động trừ đi một khoảng thời gian ngắn (ví dụ lùi lại 30 phút hoặc 1 tiếng) vào giá trị High Watermark khi thực hiện câu lệnh trích xuất dữ liệu ở chu kỳ tiếp theo.
+  Kỹ thuật này cần thiết vì trong thực tế, các Database vận hành thường có những giao dịch chạy dài (long-running transactions). Giao dịch A có thể bắt đầu lúc 10:00 (được cấp timestamp lúc 10:00) nhưng do xử lý chậm nên đến 10:02 mới hoàn thành ghi đĩa (commit). Trong khi đó, giao dịch B bắt đầu lúc 10:01 và ghi xong ngay. Nếu job ETL chạy lúc 10:01.5 và lấy watermark dựa trên giao dịch B, ở chu kỳ chạy tiếp theo hệ thống sẽ quét từ mốc 10:01 trở đi và bỏ qua hoàn toàn giao dịch A. Thiết lập cửa sổ lùi sẽ giúp hệ thống quét vớt lại các giao dịch bị trễ này, đảm bảo tính toàn vẹn của dữ liệu.
 
-* Là tiêu chuẩn vàng cho bất kỳ bảng dữ liệu vận hành nào (Transactions, Users, Inventory) có kích thước vượt quá vài chục triệu dòng.
-* Khi hệ thống nguồn có sẵn cấu trúc tốt (Có cột `updated_at` đáng tin cậy).
-
-## When not to use
-
-* Với các bảng Category, Mapping nhỏ (như bảng chứa 50 Bang của Mỹ, hay 200 Quốc gia). Cứ dùng Full Load vì chi phí quản lý logic Incremental cho các bảng này đắt hơn chi phí chạy thẳng Full Load.
-
----
-
-## Related concepts
-
-* [Data Extraction](/concepts/data-extraction)
-* [Data Loading](/concepts/data-loading)
-* [Change Data Capture (CDC)](/concepts/change-data-capture)
-* [ELT](/concepts/elt)
-
----
-
-## Interview questions
-
-### 1. Nêu ra nhược điểm lớn nhất của phương pháp Incremental Load dựa trên High Watermark (Cột `updated_at`). Bạn đề xuất giải pháp thay thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Tư duy tìm lỗ hổng hệ thống và hiểu biết về CDC.
-* **Gợi ý trả lời (Strong Answer)**: 
-  Nhược điểm lớn nhất là nó không thể phát hiện được "Hard Deletes" (Các bản ghi bị xóa vật lý). Vì khi một dòng bị xóa khỏi Database, nó không để lại dấu vết gì, cột `updated_at` của nó biến mất. Pipeline ETL kéo Incremental sẽ không biết để gửi lệnh `DELETE` sang Data Warehouse, dẫn đến DWH lưu trữ dữ liệu "ma" (Ghost data). Để khắc phục, giải pháp tốt nhất là chuyển sang sử dụng công nghệ Log-based CDC (Change Data Capture như Debezium). CDC đọc trực tiếp transaction log của Database, nên dù hệ thống gọi lệnh `DELETE`, sự kiện đó vẫn được ghi vào log và được luồng CDC bắt lấy truyền sang DWH.
-
-### 2. "Look-back window" là gì và tại sao chúng ta nên sử dụng nó trong quá trình trích xuất Incremental?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm thực chiến với độ trễ giao dịch (Transaction Latency).
-* **Gợi ý trả lời (Strong Answer)**:
-  Look-back window (Cửa sổ lùi) là việc cố tình trừ đi một khoảng thời gian (ví dụ 30 phút hoặc 1 tiếng) khỏi High Watermark khi thực hiện câu lệnh Extract ở lần chạy tiếp theo. Chúng ta dùng nó vì trong các Database thực tế, một giao dịch (Transaction A) có thể bắt đầu trước, được cấp timestamp trước, nhưng bị "treo" hoặc chạy lâu (Long-running transaction) và commit sau một Giao dịch B (bắt đầu sau và timestamp muộn hơn). Nếu Job ETL lấy Watermark dựa trên timestamp lớn nhất của giao dịch B, nó sẽ vô tình bỏ qua giao dịch A (đang chạy ngầm và mới commit xong). Việc lùi cửa sổ lại 30 phút giúp ta quét vớt lại (sweep) các transaction chạy chậm này. Bù lại, ta sẽ bị lấy trùng dữ liệu cũ một chút, nhưng ta dễ dàng xử lý trùng lặp ở đích bằng lệnh `UPSERT`.
-
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Airbyte Documentation** - Incremental Sync (https://docs.airbyte.com/understanding-airbyte/connections/incremental-deduped-history/)
 2. **dbt Labs** - About Incremental Models.
 3. **Fundamentals of Data Engineering** - Joe Reis.
 
----
-
-## English summary
+## English Summary
 
 Incremental Load is a highly efficient data pipeline strategy that extracts and loads only new or updated records rather than pulling the entire dataset from the source (Full Load). By utilizing a tracking column (like `updated_at`) and maintaining a state cursor (High Watermark), pipelines query only the delta changes since the last run. Combined with an Upsert/Merge strategy at the destination (Data Warehouse), incremental loading dramatically reduces network bandwidth, execution time, and cloud computing costs. However, it requires careful handling of edge cases such as long-running transactions (solved by look-back windows) and struggles to detect physical hard deletes (often requiring CDC as an alternative).

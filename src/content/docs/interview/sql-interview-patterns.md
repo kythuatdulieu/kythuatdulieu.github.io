@@ -9,25 +9,24 @@ seoTitle: "Các dạng bài SQL kinh điển trong phỏng vấn Data Engineer"
 metaDescription: "Tổng hợp các dạng bài tập SQL (SQL Patterns) thường gặp nhất trong phỏng vấn kỹ sư dữ liệu: Window functions, CTEs đệ quy, Self-joins và Gaps & Islands."
 ---
 
-# SQL Interview Patterns (Các mẫu bài SQL Phỏng vấn)
+# Các dạng bài SQL kinh điển trong phỏng vấn Data Engineering
 
-## Summary
+Trong các buổi phỏng vấn cho vị trí Data Engineer, Data Analyst hay Analytics Engineer, bài kiểm tra Live Coding SQL là một cửa ải bắt buộc và vô cùng quan trọng. 
 
-Trong các cuộc phỏng vấn vị trí Data Engineer, Data Analyst hoặc Analytics Engineer tại các công ty công nghệ, bài kiểm tra SQL là rào cản bắt buộc. Thay vì các câu truy vấn `SELECT` hay `JOIN` cơ bản, người phỏng vấn sẽ tập trung vào các mẫu bài toán (Patterns) nhằm kiểm tra tư duy xử lý logic phức tạp, khả năng phân tích chuỗi thời gian, và kỹ thuật tối ưu hóa mã lệnh.
+Khi phỏng vấn các vị trí đòi hỏi chuyên môn cao, nhà tuyển dụng sẽ không đưa ra các câu hỏi truy vấn `SELECT` hay `JOIN` cơ bản. Họ sẽ tập trung vào các dạng bài toán (SQL Patterns) có độ phức tạp cao nhằm kiểm tra khả năng tư duy logic, kỹ năng phân tích chuỗi thời gian và tư duy tối ưu hóa hiệu năng câu lệnh của bạn.
 
-Bài viết này tổng hợp các nhóm mẫu thiết kế SQL "kinh điển" nhất mà bạn chắc chắn sẽ gặp trong vòng Live Coding.
+Dưới đây là các dạng bài SQL "kinh điển" nhất được chọn lọc từ thực tế phỏng vấn mà bạn chắc chắn sẽ gặp phải.
 
 ---
 
-## Pattern 1: Window Functions (Hàm Cửa Sổ)
+## Dạng 1: Hàm cửa sổ (Window Functions) - Vũ khí tối thượng
 
-Hàm cửa sổ là "vũ khí tối thượng" trong phỏng vấn SQL. Nó cho phép bạn thực hiện các phép tính tổng hợp trên một tập hợp các dòng (cửa sổ) liên quan đến dòng hiện tại, mà KHÔNG làm gộp (collapse) các dòng đó lại như `GROUP BY`.
+Hàm cửa sổ chính là công cụ mạnh mẽ nhất giúp bạn xử lý các bài toán phân tích phức tạp. Điểm đặc biệt của hàm cửa sổ là cho phép thực hiện các phép toán tổng hợp trên một nhóm các dòng liên quan đến dòng hiện tại, nhưng **không làm gộp dòng** lại như mệnh đề `GROUP BY`.
 
-### 1.1 Bài toán Top N per Group (Top N mỗi nhóm)
-**Yêu cầu**: Tìm 3 nhân viên có mức lương cao nhất trong *mỗi* phòng ban.
-**Tư duy**: Bạn không thể dùng `LIMIT 3` vì nó chỉ lấy 3 dòng của toàn công ty. Bạn phải dùng hàm xếp hạng `DENSE_RANK()` (hoặc `ROW_NUMBER()`) và chia nhóm (partition) theo phòng ban.
+### 1.1 Bài toán Tìm Top N phần tử đứng đầu mỗi nhóm (Top N per Group)
+* **Yêu cầu**: Tìm 3 nhân viên có mức lương cao nhất trong *mỗi* phòng ban.
+* **Tư duy giải quyết**: Chúng ta không thể sử dụng `LIMIT 3` thông thường vì nó sẽ giới hạn kết quả của toàn bộ công ty. Thay vào đó, hãy sử dụng hàm xếp hạng `DENSE_RANK()` (hoặc `ROW_NUMBER()`) kết hợp chia nhóm (`PARTITION BY`) theo phòng ban.
 
-**Giải pháp SQL:**
 ```sql
 WITH RankedSalaries AS (
     SELECT 
@@ -41,13 +40,17 @@ SELECT department_id, employee_name, salary
 FROM RankedSalaries
 WHERE rank_salary <= 3;
 ```
-*Ghi chú*: Phân biệt `ROW_NUMBER()` (1, 2, 3 - luôn tăng), `RANK()` (1, 1, 3 - nhảy cóc khi trùng), và `DENSE_RANK()` (1, 1, 2 - không nhảy cóc).
 
-### 1.2 Bài toán So sánh với ngày hôm trước (Lag/Lead)
-**Yêu cầu**: Tìm những ngày có nhiệt độ (hoặc doanh thu) cao hơn ngày hôm trước.
-**Tư duy**: Bạn cần mang dữ liệu của "dòng trước đó" (yesterday) ghép ngang vào "dòng hiện tại" (today) để so sánh (toán tử >) trên cùng một dòng.
+> [!NOTE]
+> Hãy chủ động phân biệt sự khác nhau giữa các hàm xếp hạng trong phòng phỏng vấn:
+> * `ROW_NUMBER()`: Trả về số thứ tự liên tục (1, 2, 3...) tăng dần không trùng lặp.
+> * `RANK()`: Xếp hạng trùng nhau sẽ nhận cùng thứ hạng và nhảy cóc (ví dụ: 1, 1, 3...).
+> * `DENSE_RANK()`: Xếp hạng trùng nhau nhận cùng thứ hạng nhưng không nhảy cóc (ví dụ: 1, 1, 2...).
 
-**Giải pháp SQL:**
+### 1.2 Bài toán So sánh với ngày hôm trước (Lag / Lead)
+* **Yêu cầu**: Tìm những ngày có nhiệt độ (hoặc doanh thu) cao hơn ngày hôm trước.
+* **Tư duy giải quyết**: Bạn cần mang dữ liệu của "dòng trước đó" (ngày hôm qua) ghép ngang vào dòng dữ liệu của "ngày hôm nay" để thực hiện so sánh trên cùng một dòng.
+
 ```sql
 WITH PrevDayData AS (
     SELECT 
@@ -63,15 +66,14 @@ WHERE temperature > prev_temperature;
 
 ---
 
-## Pattern 2: CTEs (Common Table Expressions) và Subqueries
+## Dạng 2: Biểu thức bảng tạm (CTEs) và Truy vấn đệ quy
 
-Sử dụng `WITH` (CTEs) để chia nhỏ một bài toán phức tạp thành các bước logic dễ đọc.
+Việc sử dụng biểu thức bảng tạm (Common Table Expressions - CTE) với từ khóa `WITH` giúp bạn phân tách một bài toán SQL phức tạp thành các khối logic nhỏ gọn, rõ ràng và cực kỳ dễ đọc.
 
-### 2.1 CTE đệ quy (Recursive CTE) - Phân cấp Cây (Hierarchical)
-**Yêu cầu**: Cho bảng nhân viên gồm `id` và `manager_id`. In ra cấu trúc sơ đồ tổ chức (ai là sếp của ai từ trên xuống dưới, tính luôn cấp độ bậc).
-**Tư duy**: Dùng từ khóa `RECURSIVE`. Base case (trường hợp cơ sở) là các Giám đốc (CEO) không có sếp (`manager_id IS NULL`). Sau đó đệ quy JOIN lại chính bảng CTE để tìm nhân viên cấp dưới.
+### 2.1 Truy vấn đệ quy (Recursive CTE) - Phân tích cấu trúc dạng cây
+* **Yêu cầu**: Cho một bảng nhân sự gồm hai cột `id` và `manager_id` (ID của người quản lý trực tiếp). Hãy in ra sơ đồ tổ chức của toàn công ty thể hiện rõ ai là sếp của ai và cấp độ (level) của từng người.
+* **Tư duy giải quyết**: Sử dụng từ khóa `RECURSIVE`. Điểm xuất phát (Base case) là những người cấp cao nhất không có sếp (`manager_id IS NULL`). Sau đó, tiến hành kết hợp đệ quy (`JOIN`) bảng nhân viên với chính CTE để duyệt dần xuống các cấp dưới.
 
-**Giải pháp SQL (PostgreSQL/Snowflake):**
 ```sql
 WITH RECURSIVE OrgChart AS (
     -- Base case: Tìm CEO
@@ -91,15 +93,14 @@ SELECT * FROM OrgChart ORDER BY level;
 
 ---
 
-## Pattern 3: Self-Joins (Tự kết nối)
+## Dạng 3: Tự liên kết bảng (Self-Joins) cho bài toán tương tác
 
-Nhiều ứng viên quên rằng một bảng có thể `JOIN` với chính nó để giải quyết các bài toán cặp đôi hoặc quan hệ nội tại.
+Nhiều lập trình viên thường quên mất rằng một bảng hoàn toàn có thể thực hiện phép `JOIN` với chính nó để giải quyết các bài toán tìm cặp đôi hoặc phân tích hành vi tương tác liên tiếp.
 
-### 3.1 Bài toán Phân tích tỷ lệ giữ chân (Retention / Churn)
-**Yêu cầu**: Cho bảng `user_logins(user_id, login_date)`. Tính tỷ lệ người dùng quay lại vào ngày hôm sau (Day 1 Retention).
-**Tư duy**: JOIN bảng `user_logins` vào chính nó (L1 và L2). Điều kiện JOIN là cùng user và ngày L2 = ngày L1 + 1 ngày.
+### 3.1 Bài toán Phân tích tỷ lệ giữ chân khách hàng (Retention / Churn Rate)
+* **Yêu cầu**: Cho bảng lưu lịch sử đăng nhập của người dùng `user_logins(user_id, login_date)`. Hãy tính tỷ lệ người dùng quay trở lại hệ thống vào ngày hôm sau (Day 1 Retention).
+* **Tư duy giải quyết**: Thực hiện phép `LEFT JOIN` bảng `user_logins` với chính nó. Điều kiện kết hợp là trùng mã `user_id` và ngày đăng nhập của bảng thứ hai phải lớn hơn ngày đăng nhập của bảng thứ nhất đúng 1 ngày.
 
-**Giải pháp SQL:**
 ```sql
 SELECT 
     L1.login_date,
@@ -115,19 +116,18 @@ GROUP BY L1.login_date;
 
 ---
 
-## Pattern 4: Gaps and Islands (Khoảng trống và Hòn đảo)
+## Dạng 4: Khoảng trống và Hòn đảo (Gaps and Islands) - Thử thách Senior
 
-Đây là dạng câu hỏi "khó nhằn" nhất, thường dành cho các vị trí Senior.
-**Bài toán tổng quát**: Tìm các chuỗi dữ liệu liên tiếp nhau (Islands) và tìm các khoảng đứt gãy (Gaps) của chuỗi thời gian hoặc chuỗi số nguyên.
+Đây là dạng câu hỏi hóc búa nhất trong các buổi phỏng vấn SQL, thường dùng để kiểm tra tư duy của các ứng viên cấp độ Senior/Lead.
+* **Mục tiêu của bài toán**: Tìm các chuỗi dữ liệu liên tục nhau (Islands - Hòn đảo) và xác định các điểm đứt gãy (Gaps - Khoảng trống) của một chuỗi thời gian hoặc chuỗi số nguyên.
 
-### 4.1 Tìm chuỗi ngày đăng nhập liên tiếp dài nhất (Longest streak)
-**Yêu cầu**: Cho bảng người dùng và ngày đăng nhập. Tìm chuỗi ngày đăng nhập liên tiếp dài nhất của từng user.
-**Tư duy "Hòn đảo"**:
-1. Đánh số thứ tự (`ROW_NUMBER`) các ngày đăng nhập của user theo ngày tăng dần.
-2. Trừ ngày đăng nhập (`login_date`) cho cái số thứ tự vừa tạo. 
-3. Nếu các ngày liên tiếp nhau, khoảng cách trừ sẽ tạo ra MỘT HẰNG SỐ (Group ID chung). Đây chính là "hòn đảo".
+### 4.1 Tìm chuỗi ngày đăng nhập liên tiếp dài nhất (Longest Streak)
+* **Yêu cầu**: Tìm chuỗi ngày đăng nhập liên tiếp dài nhất của từng người dùng.
+* **Tư duy giải quyết**:
+  1. Sử dụng `ROW_NUMBER()` để đánh số thứ tự các ngày đăng nhập tăng dần của từng người dùng.
+  2. Lấy ngày đăng nhập trừ đi số thứ tự vừa tạo. 
+  3. Nếu các ngày đăng nhập liên tiếp nhau, kết quả của phép trừ sẽ luôn trả về **cùng một giá trị ngày cố định** (đóng vai trò là ID của hòn đảo). Từ đó, ta có thể gom nhóm (`GROUP BY`) theo ID hòn đảo này để đếm số ngày liên tiếp.
 
-**Giải pháp SQL:**
 ```sql
 WITH RankedLogins AS (
     -- Dùng DISTINCT để bỏ qua trường hợp đăng nhập 2 lần 1 ngày
@@ -154,15 +154,14 @@ GROUP BY user_id;
 
 ---
 
-## Pattern 5: Rolling Aggregations (Tính tổng lũy kế / Trung bình trượt)
+## Dạng 5: Tổng lũy kế và Trung bình động (Rolling Aggregations)
 
-Phân tích chuỗi thời gian yêu cầu tính toán mượt (smoothing) các dữ liệu.
+Phân tích chuỗi thời gian đòi hỏi bạn phải làm mượt (smoothing) các điểm dữ liệu biến động để nhìn ra xu hướng tổng quan.
 
-### 5.1 Trung bình động 7 ngày (7-day Moving Average)
-**Yêu cầu**: Tính trung bình doanh thu của 7 ngày liên tiếp tính đến ngày hiện tại.
-**Tư duy**: Sử dụng Window Function, nhưng cấu hình cụ thể phần "Frame Clause" (Cửa sổ chi tiết: Khung dữ liệu). Khung là từ 6 dòng trước đến dòng hiện tại (`ROWS BETWEEN 6 PRECEDING AND CURRENT ROW`).
+### 5.1 Tính toán Trung bình động 7 ngày (7-day Moving Average)
+* **Yêu cầu**: Tính trung bình doanh thu của 7 ngày liên tiếp tính đến ngày hiện tại.
+* **Tư duy giải quyết**: Sử dụng hàm cửa sổ, nhưng cấu hình cụ thể thuộc tính Frame Clause (`ROWS BETWEEN 6 PRECEDING AND CURRENT ROW`) để giới hạn cửa sổ tính toán chỉ gồm 6 dòng trước và dòng hiện tại.
 
-**Giải pháp SQL:**
 ```sql
 SELECT 
     date,
@@ -176,14 +175,13 @@ FROM daily_sales;
 
 ---
 
-## Pattern 6: Pivot / Unpivot (Chuyển đổi Dòng - Cột)
+## Dạng 6: Kỹ thuật xoay bảng (Pivot / Unpivot)
 
-### 6.1 Xoay bảng (Pivot) không dùng hàm xây sẵn
-Trong phỏng vấn, đôi khi DB không hỗ trợ lệnh `PIVOT`. Bạn phải biết cách xây dựng nó thủ công.
-**Yêu cầu**: Bảng `sales` có cột `month` và `product_category`. Tính tổng doanh thu và tách mỗi Category thành 1 cột riêng biệt.
-**Tư duy**: Sử dụng sự kết hợp giữa hàm Aggregation (`SUM`) và câu lệnh điều kiện (`CASE WHEN`).
+### 6.1 Xoay bảng (Pivot) thủ công không dùng hàm xây dựng sẵn
+Nhiều công cụ cơ sở dữ liệu không hỗ trợ sẵn hàm `PIVOT`. Nhà tuyển dụng muốn xem bạn có biết cách xoay dữ liệu từ dòng thành cột một cách thủ công hay không.
+* **Yêu cầu**: Bảng dữ liệu bán hàng `sales` có cột `month` và `product_category`. Hãy tính tổng doanh thu và tách mỗi phân khúc sản phẩm thành một cột riêng biệt.
+* **Tư duy giải quyết**: Kết hợp hàm tổng hợp `SUM` và câu lệnh điều kiện `CASE WHEN`.
 
-**Giải pháp SQL:**
 ```sql
 SELECT 
     month,
@@ -196,15 +194,15 @@ GROUP BY month;
 
 ---
 
-## Tips and Best Practices during Interview
+## Những kinh nghiệm vàng giúp bạn ghi điểm tuyệt đối
 
-1. **Giao tiếp trước khi viết code**: Khi nhận đề, hãy làm rõ các edge cases (trường hợp góc). "Điều gì xảy ra nếu có người hòa nhau ở vị trí Top 3 lương?", "Bảng này có thể có trùng lặp dữ liệu không?". Điều này cho thấy tư duy kỹ thuật sâu sắc.
-2. **Sử dụng CTE thay vì Subqueries lồng nhau**: Phỏng vấn viên đánh giá rất cao code sạch. Đừng viết 3 vòng `SELECT` lồng nhau (Nested queries). Hãy tách chúng ra bằng 3 khối `WITH` liên tiếp.
-3. **Format Code rõ ràng**: Luôn viết hoa từ khóa SQL (`SELECT`, `FROM`), lùi đầu dòng cho các điều kiện `ON` trong `JOIN` hoặc `WHERE`. Code gọn gàng chứng tỏ bạn là người làm việc có kỷ luật.
-4. **Luôn nhớ GROUP BY**: Lỗi phổ biến nhất của ứng viên là sử dụng hàm SUM, COUNT nhưng quên cho các cột còn lại vào phần `GROUP BY`.
+1. **Trao đổi rõ các trường hợp đặc biệt (Edge Cases) trước khi code**: Khi nhận đề bài, đừng vội gõ code ngay. Hãy hỏi người phỏng vấn làm rõ: *"Nếu có hai người có cùng mức lương cao thứ 3 thì lấy cả hai hay chỉ lấy một?"* hoặc *"Dữ liệu đầu vào có bị trùng lặp không?"*. Việc này chứng tỏ tư duy kỹ thuật cẩn trọng của bạn.
+2. **Ưu tiên sử dụng CTE thay vì truy vấn con (Subqueries) lồng nhau**: Người phỏng vấn cực kỳ đánh giá cao mã nguồn sạch sẽ, dễ đọc. Hãy tránh viết 3-4 tầng `SELECT` lồng nhau phức tạp. Hãy tách chúng ra thành các khối `WITH` tường minh.
+3. **Định dạng code rõ ràng, chuyên nghiệp**: Viết hoa toàn bộ các từ khóa SQL (`SELECT`, `FROM`, `WHERE`, `JOIN`). Thụt lề dòng cho các điều kiện kết hợp `ON` hoặc bộ lọc `WHERE`. Một đoạn code trình bày khoa học phản ánh một kỹ sư có tính kỷ luật cao.
+4. **Không bao giờ quên `GROUP BY`**: Đây là lỗi sai ngớ ngẩn và phổ biến nhất của các ứng viên. Khi bạn sử dụng các hàm tổng hợp như `SUM`, `COUNT`, `AVG` đi kèm với các cột thuộc tính thông thường, hãy luôn nhớ đưa tất cả các cột thuộc tính đó vào mệnh đề `GROUP BY`.
 
 ---
 
-## English summary
+## English Summary
 
 SQL interviews for Data roles heavily test a candidate's ability to manipulate data structures efficiently. Mastering specific patterns is crucial. The most important patterns include **Window Functions** (using `DENSE_RANK`, `LAG/LEAD` for Top-N and comparative analysis), **CTEs** (breaking down logic and using `RECURSIVE` for hierarchical data), **Self-Joins** (useful for retention and pairwise analytics), **Gaps and Islands** (solving consecutive sequence problems by subtracting row numbers from dates), and **Conditional Aggregation** (using `SUM(CASE WHEN...)` for pivoting). A strong candidate not only solves the logic but ensures the code is highly readable using CTEs and actively communicates edge-cases prior to coding.

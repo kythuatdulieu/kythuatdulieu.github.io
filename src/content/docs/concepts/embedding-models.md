@@ -11,162 +11,117 @@ metaDescription: "Tìm hiểu các mô hình nhúng (Embedding Models), kiến t
 
 # Các mô hình nhúng - Embedding Models
 
-## Summary
+Máy tính là một cỗ máy xử lý số học thuần túy. Nó không thể trực tiếp đọc hiểu các văn bản, ngắm nhìn các bức ảnh hay lắng nghe các file âm thanh theo cách tự nhiên của con người. Để máy tính có thể "hiểu" và xử lý được các dạng dữ liệu phi cấu trúc này, chúng ta cần một chiếc cầu nối dịch thuật đặc biệt. 
 
-Các mô hình nhúng (Embedding Models) là các thuật toán Machine Learning / Deep Learning có chức năng chuyển đổi dữ liệu phi cấu trúc (văn bản, hình ảnh, âm thanh) thành các biểu diễn dạng số học dưới dạng các vectơ đa chiều (embeddings) trong một không gian liên tục. Các mô hình này được huấn luyện sao cho các dữ liệu có ý nghĩa (ngữ nghĩa) tương đồng sẽ nằm gần nhau trong không gian vectơ.
+Chiếc cầu nối đó chính là **Các mô hình nhúng (Embedding Models)** – một trong những mảnh ghép công nghệ quan trọng nhất đứng sau sự bùng nổ của Trí tuệ Nhân tạo thế hệ mới (GenAI), các hệ thống tìm kiếm ngữ nghĩa (Semantic Search) và RAG (Retrieval-Augmented Generation).
 
----
+## Từ thế giới phi cấu trúc đến những con số biết nói
 
-## Definition
+Về cơ bản, **Embedding Models** là các thuật toán Machine Learning hoặc Deep Learning làm nhiệm vụ chuyển đổi (ánh xạ) các thực thể rời rạc từ thế giới thực (như từ ngữ, câu văn, hình ảnh, hoặc thậm chí là một sơ đồ đồ thị) thành các chuỗi số thực có độ dài cố định, được gọi là các **vectơ nhúng (embeddings)**.
 
-**Embedding Models** là các mô hình trí tuệ nhân tạo chuyên biệt dùng để ánh xạ (map) các đối tượng rời rạc (từ, câu, tài liệu, hình ảnh, hoặc đồ thị) vào một không gian vectơ số thực (continuous vector space) n-chiều. Đầu ra của mô hình là một vectơ, đại diện cho "ý nghĩa" hoặc "đặc trưng" của đối tượng đầu vào. Không gian này cho phép máy tính đo lường khoảng cách hoặc độ tương đồng giữa các đối tượng bằng các phép toán học (ví dụ: Cosine Similarity, Dot Product).
+Điểm kỳ diệu ở đây là: không gian vectơ này là một không gian liên tục đa chiều (continuous vector space). Mô hình nhúng được huấn luyện sao cho những thực thể có mối quan hệ tương đồng về mặt ngữ nghĩa hoặc hình ảnh trong thực tế sẽ được xếp nằm rất gần nhau trong không gian hình học này. Từ đó, máy tính có thể dễ dàng đo lường mức độ tương đồng giữa chúng bằng các phép toán học đơn giản (như khoảng cách Cosine hay tích vô hướng Dot Product).
 
----
+## Lịch sử tiến hóa: Từ One-Hot Encoding đến Contextual Embedding
 
-## Why it exists
+Để thấy rõ tầm quan trọng của Embedding Models, chúng ta hãy cùng nhìn lại chặng đường tiến hóa của các phương pháp biểu diễn ngôn ngữ cho máy tính:
 
-Máy tính không thể hiểu trực tiếp dữ liệu dạng text, hình ảnh hay âm thanh như con người. Trong lịch sử xử lý ngôn ngữ tự nhiên (NLP):
-1. **One-Hot Encoding**: Biểu diễn mỗi từ bằng một vectơ chứa toàn số 0 và một số 1. Phương pháp này gây ra bùng nổ số chiều (sparse vector) và không nắm bắt được mối quan hệ ngữ nghĩa giữa các từ (ví dụ: "chó" và "mèo" hoàn toàn độc lập trực giao).
-2. **TF-IDF / Bag of Words**: Dựa trên tần suất xuất hiện của từ, nhưng bỏ qua thứ tự từ ngữ và ngữ cảnh, không giải quyết được vấn đề từ đồng nghĩa (synonyms) hay hiện tượng đa nghĩa (polysemy).
+1. **One-Hot Encoding**: Phương pháp sơ khai nhất, coi mỗi từ trong từ điển là một vectơ độc lập chứa toàn số 0 và duy nhất một số 1 (Ví dụ: `chó = [1, 0, 0]`, `mèo = [0, 1, 0]`). Cách này khiến kích thước vectơ bùng nổ cực lớn khi từ điển phình to. Nghiêm trọng hơn, các vectơ này hoàn toàn trực giao với nhau, khiến máy tính không cách nào biết được "chó" và "mèo" có mối liên quan mật thiết hơn là "chó" và "máy bay".
+2. **TF-IDF / Bag of Words**: Phương pháp đếm tần suất xuất hiện của từ. Dù cải tiến hơn, nhưng nó hoàn toàn bỏ qua thứ tự của từ ngữ và ngữ cảnh xung quanh câu văn. Nó bất lực trước các hiện tượng từ đồng nghĩa (synonyms) hoặc từ đa nghĩa (polysemy).
+3. **Word2Vec / GloVe (Static Word Embedding)**: Thế hệ mô hình nhúng tĩnh đầu tiên ra đời. Chúng nén thông tin vào các vectơ dày đặc (Dense Vectors) chỉ khoảng vài trăm chiều nhưng chứa đầy số thực. Đây là lúc máy tính bắt đầu thực hiện được các phép toán ngữ nghĩa kinh điển: *vectơ("Vua") - vectơ("Đàn ông") + vectơ("Đàn bà") $\approx$ vectơ("Nữ hoàng")*.
+4. **Transformer-based (Contextual Embedding)**: Các mô hình hiện đại ngày nay như BERT hay các API của OpenAI. Chúng tạo ra các vectơ nhúng động dựa trên ngữ cảnh. Từ "bank" trong cụm "river bank" (bờ sông) sẽ có một vectơ nhúng hoàn toàn khác với từ "bank" trong cụm "bank account" (tài khoản ngân hàng), phản ánh chính xác đa nghĩa của từ tùy thuộc vào các từ bao quanh nó.
 
-Embedding Models ra đời nhằm tạo ra **Dense Vectors** (Vectơ đặc, ít chiều hơn nhưng chứa số thực) giúp nén thông tin ngữ nghĩa, giải quyết được bài toán bùng nổ số chiều và giúp máy tính "hiểu" được rằng "vua" - "đàn ông" + "phụ nữ" $\approx$ "nữ hoàng".
+## Thế giới kỳ diệu bên trong Không gian Tiềm ẩn (Latent Space)
 
----
+Khi một văn bản đi qua Embedding Model, nó sẽ được chuyển đổi thành một vectơ (ví dụ 1536 chiều). Mỗi chiều trong không gian này đại diện cho một đặc trưng tiềm ẩn (latent feature) của dữ liệu. 
 
-## Core idea
+Con người không thể đặt tên rõ ràng cho từng chiều (ví dụ: chiều thứ 23 không đại diện cho riêng thuộc tính "giới tính", chiều thứ 114 không đại diện riêng cho "màu sắc"). Nhưng khi kết hợp toàn bộ 1536 chiều số thực này lại, chúng tạo nên một "dấu vân tay" số học độc nhất vô nhị đại diện cho ý nghĩa của thực thể đó.
 
-Nguyên lý hoạt động cốt lõi của các Embedding Models:
-* **Học biểu diễn (Representation Learning)**: Dùng các mạng nơ-ron để học cách biểu diễn dữ liệu dựa trên bối cảnh. Từ "bank" trong "river bank" (bờ sông) sẽ có vectơ khác với "bank" trong "bank account" (tài khoản ngân hàng) đối với các mô hình theo ngữ cảnh (Contextualized models).
-* **Không gian tiềm ẩn (Latent Space)**: Các đặc trưng ẩn của dữ liệu được trải ra trên nhiều chiều. Không một chiều cụ thể nào (ví dụ chiều thứ 17) mang một ý nghĩa rõ ràng đối với con người, nhưng sự kết hợp của toàn bộ các chiều sẽ tạo nên ý nghĩa của đối tượng.
-* **Tương đồng hình học**: Ý nghĩa tương đồng đồng nghĩa với khoảng cách hình học gần nhau.
+## Cách thức một mô hình nhúng hoạt động
 
----
-
-## How it works
-
-Quá trình hoạt động phụ thuộc vào thế hệ của mô hình, nhưng nhìn chung qua 2 giai đoạn:
-1. **Tiền xử lý (Tokenization)**: Đầu vào (ví dụ: văn bản) được chia nhỏ thành các token.
-2. **Truyền qua mạng nơ-ron (Forward Pass)**: Các token đi qua mô hình (có thể là Word2Vec, LSTM, hoặc Transformer). Trong các mô hình Transformer (như BERT), cơ chế Attention tính toán mức độ ảnh hưởng của các từ xung quanh đối với từ hiện tại.
-3. **Tổng hợp (Pooling/Aggregation)**: Để lấy được một vectơ đại diện cho toàn bộ câu, các vectơ của từng token sẽ được gộp lại (ví dụ: Mean Pooling, hoặc lấy vectơ của token `[CLS]`).
-
----
-
-## Architecture / Flow
-
-Sơ đồ luồng xử lý văn bản qua Embedding Model:
+Mặc dù có nhiều kiến trúc khác nhau, nhưng quy trình chuyển đổi văn bản của các mô hình nhúng hiện đại thường trải qua 3 bước chính:
 
 ```mermaid
 graph TD
-    Text[Input Text] --> Model[Embedding Model]
-    Model --> Vector[Dense Vector Array]
+    Text["Input Text (Văn bản đầu vào)"] --> Tokenizer["1. Tokenization (Phân tách từ)"]
+    Tokenizer --> Transformer["2. Transformer Network (Chú ý ngữ cảnh)"]
+    Transformer --> Pooling["3. Pooling/Aggregation (Gom cụm)"]
+    Pooling --> Vector["Dense Vector Array (Vectơ nhúng tĩnh)"]
 ```
 
----
+1. **Phân tách từ (Tokenization)**: Văn bản đầu vào được chia nhỏ thành các mảnh nhỏ gọi là token (có thể là từ hoặc cụm ký tự).
+2. **Transformer Network**: Các token được đưa qua các lớp Transformer. Tại đây, cơ chế Self-Attention sẽ giúp các token "giao tiếp" và ảnh hưởng lẫn nhau để xác định ngữ cảnh chính xác của toàn câu.
+3. **Gom cụm (Pooling)**: Mô hình sẽ tổng hợp các vectơ riêng lẻ của từng token thành một vectơ duy nhất đại diện cho cả câu (ví dụ: lấy trung bình cộng - Mean Pooling, hoặc lấy vectơ của token đặc biệt `[CLS]` đứng ở đầu câu).
 
-## Practical example
+## Thực hành nhanh: Sinh vectơ nhúng bằng Sentence-Transformers
 
-Sử dụng thư viện `sentence-transformers` trong Python để sinh vectơ nhúng cho câu:
+Với thư viện `sentence-transformers` trong Python, bạn chỉ cần vài dòng code để tạo ra các vectơ nhúng ngữ nghĩa chất lượng cao bằng các mô hình mã nguồn mở:
 
 ```python
 from sentence_transformers import SentenceTransformer, util
 
-# Tải mô hình nhúng
+# Tải mô hình nhúng mã nguồn mở phổ biến
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# Văn bản đầu vào
-sentences = ["Mèo đang ngủ", "Chó đang chạy", "Con mèo nhắm mắt ngủ"]
+# Các câu văn đầu vào
+sentences = ["Mèo đang ngủ trên ghế", "Chó đang chạy ngoài sân", "Con mèo đang lim dim ngủ"]
 
-# Sinh embeddings
+# Sinh các vectơ nhúng (embeddings)
 embeddings = model.encode(sentences)
 
-# Kích thước vectơ
-print("Shape:", embeddings.shape) # Output: (3, 384) -> 3 câu, mỗi câu là vectơ 384 chiều
+# Kiểm tra kích thước vectơ
+print("Kích thước:", embeddings.shape) # Kết quả: (3, 384) -> 3 câu, mỗi câu là 1 vectơ 384 chiều
 
-# Tính toán độ tương đồng (Cosine Similarity)
+# Tính toán độ tương đồng ngữ nghĩa (Cosine Similarity)
 cosine_scores = util.cos_sim(embeddings, embeddings)
 
-print(f"Độ tương đồng giữa câu 1 và 3: {cosine_scores[0][2]:.4f}")
-# Output: Độ tương đồng rất cao (gần 1.0) dù từ ngữ có khác nhau chút ít.
+print(f"Độ tương đồng giữa câu 1 và câu 3: {cosine_scores[0][2]:.4f}")
+# Kết quả sẽ rất cao (gần 1.0) vì hai câu có ý nghĩa tương đồng lớn mặc dù từ ngữ sử dụng khác nhau.
 ```
 
----
+## Bí kíp chọn mô hình và những sai lầm thường gặp
 
-## Best practices
+### Bí kíp chọn mô hình (Best Practices)
+* **Chọn đúng mô hình ngôn ngữ**: Hãy cẩn thận khi dùng các mô hình nhúng chỉ được huấn luyện bằng tiếng Anh cho các ứng dụng tiếng Việt. Kết quả tìm kiếm sẽ rất tệ. Bạn nên ưu tiên chọn các mô hình đa ngôn ngữ (Multilingual như `paraphrase-multilingual-mpnet-base-v2`) hoặc các mô hình được huấn luyện tối ưu riêng cho tiếng Việt.
+* **Cân bằng giữa Kích thước vectơ và Hiệu năng**: Vectơ có số chiều càng lớn thì khả năng biểu diễn ngữ nghĩa càng chi tiết, nhưng nó cũng ngốn nhiều dung lượng lưu trữ trên Vector DB và làm chậm tốc độ tính toán khoảng cách. Các kích thước từ 384 đến 1536 chiều thường là điểm ngọt (sweet spot) cho hầu hết các dự án.
+* **Xử lý độ dài văn bản (Chunking)**: Hầu hết các mô hình nhúng đều có giới hạn độ dài đầu vào (ví dụ 512 tokens). Nếu bạn đưa nguyên một bài báo dài vào, mô hình sẽ cắt cụt phần đuôi. Hãy chia nhỏ văn bản thành các đoạn (chunks) hợp lý trước khi nhúng.
 
-* **Lựa chọn đúng mô hình cho ngôn ngữ**: Nếu bạn xử lý tiếng Việt, hãy chọn các mô hình Multilingual (như `paraphrase-multilingual-mpnet-base-v2` hoặc các mô hình dành riêng cho tiếng Việt như `bkai-foundation-models/vietnamese-bi-encoder`) thay vì mô hình chỉ tiếng Anh.
-* **Kích thước vectơ vs. Hiệu năng**: Kích thước vectơ càng lớn (ví dụ: OpenAI `text-embedding-3-large` với 3072 chiều) thì độ biểu diễn càng tốt, nhưng tốn nhiều dung lượng lưu trữ (Vector DB) và thời gian tính toán. Chọn kích thước đủ dùng (384 - 1536) cho đa số ứng dụng.
-* **Chú ý đến Sequence Length (Độ dài đầu vào tối đa)**: Các mô hình như BERT thường giới hạn ở 512 tokens. Đưa văn bản dài hơn vào sẽ bị cắt cụt (truncate). Hãy thực hiện Chunking trước khi nhúng văn bản dài.
+### Sai lầm dễ mắc phải (Common Mistakes)
+* **Dùng Word2Vec tính trung bình cộng cho câu dài**: Việc lấy trung bình cộng vectơ của từng từ độc lập từ các mô hình cũ để đại diện cho một câu dài sẽ làm "loãng" và mất đi hầu hết cấu trúc ngữ pháp cũng như ý nghĩa ngữ cảnh. Hãy dùng các mô hình Sentence Embedding chuyên dụng.
+* **Chọn sai hàm đo khoảng cách**: Mỗi mô hình nhúng khi huấn luyện thường được tối ưu hóa cho một loại metric cụ thể (như Cosine Similarity, Dot Product, hoặc L2 Euclidean). Hãy đọc kỹ tài liệu của mô hình để thiết lập đúng cấu hình tìm kiếm trên Vector DB của bạn.
 
----
+## Được và mất: Phân tích khách quan
 
-## Common mistakes
+### Điểm mạnh
+* Giải quyết triệt để bài toán tìm kiếm ngữ nghĩa, hiểu được các từ đồng nghĩa, trái nghĩa hoặc diễn đạt khác nhau mà các hệ thống tìm kiếm từ khóa truyền thống chào thua.
+* Cho phép tìm kiếm xuyên ngôn ngữ (ví dụ người dùng gõ câu hỏi tiếng Việt nhưng hệ thống vẫn tìm ra câu trả lời nằm ở tài liệu tiếng Anh).
+* Nền tảng cốt lõi giúp các ứng dụng GenAI/LLM trả lời câu hỏi dựa trên tài nguyên nội bộ mà không bị ảo tưởng (hallucination).
 
-* **Sử dụng mô hình Word Embedding cho câu dài**: Dùng các mô hình cũ như Word2Vec tính trung bình cộng để nhúng cả đoạn văn dài thường làm mất ngữ nghĩa. Hãy dùng các mô hình Sentence/Document Embedding (như Sentence-BERT).
-* **Bỏ qua chuẩn hóa văn bản**: Đưa các chuỗi chứa nhiều ký tự đặc biệt, HTML tags hay viết sai chính tả vào thẳng Embedding Model làm giảm chất lượng biểu diễn.
-* **Sử dụng sai hàm khoảng cách**: Mỗi mô hình được huấn luyện để tối ưu với một loại metric cụ thể (Cosine Similarity hoặc Dot Product). Sử dụng sai metric lúc tìm kiếm (như dùng Euclidean cho mô hình tối ưu Cosine mà không chuẩn hóa độ dài) sẽ dẫn đến kết quả sai lệch.
+### Điểm yếu
+* **Tính hộp đen (Black-box)**: Rất khó để giải thích chi tiết về mặt toán học tại sao mô hình lại xếp hai câu văn cụ thể có độ tương đồng 0.85.
+* **Làm mờ thông tin chính xác**: Các từ khóa cực kỳ đặc thù như mã sản phẩm (SKU), tên riêng, số điện thoại hay mã lỗi hệ thống thường bị hòa tan vào không gian ngữ nghĩa tổng thể. Vì vậy, tìm kiếm bằng mô hình nhúng nên được kết hợp với tìm kiếm từ khóa truyền thống (gọi là *Hybrid Search*) để có kết quả tốt nhất.
 
----
-
-## Trade-offs
-
-### Ưu điểm
-* Giải quyết xuất sắc bài toán tìm kiếm ngữ nghĩa, khắc phục nhược điểm từ đồng nghĩa/đa nghĩa của tìm kiếm dựa trên từ khóa (keyword search).
-* Là nền tảng bắt buộc cho Retrieval-Augmented Generation (RAG) và các ứng dụng phân tích dữ liệu phi cấu trúc.
-* Cho phép thực hiện cross-lingual search (tìm kiếm bằng tiếng Việt ra tài liệu tiếng Anh).
-
-### Nhược điểm
-* **Tính hộp đen (Black-box)**: Rất khó để giải thích tại sao mô hình lại trả về hai đoạn văn bản này là giống nhau (không giải thích được bằng từ khóa trực tiếp).
-* **Mất mát thông tin chính xác**: Các từ khóa hiếm, mã SKU, tên riêng có thể bị làm mờ đi trong quá trình nhúng ngữ nghĩa. Tìm kiếm bằng nhúng thường kém ở các truy vấn cần khớp chính xác 100% (exact match).
-* Tốn kém tính toán so với các bộ đếm từ thống kê truyền thống.
-
----
-
-## When to use
-
-* Xây dựng hệ thống tìm kiếm ngữ nghĩa (Semantic Search), hệ thống gợi ý (Recommender Systems).
-* Triển khai kiến trúc RAG cho Large Language Models.
-* Phân loại văn bản, gom cụm dữ liệu phi cấu trúc (Clustering).
-* Image/Audio-to-text mapping (Sử dụng các mô hình Multimodal như CLIP).
-
-## When not to use
-
-* Bài toán yêu cầu tìm kiếm chính xác (exact match) trên mã số, log, số điện thoại, tên riêng (nên dùng ElasticSearch / Keyword search).
-* Hệ thống có tài nguyên tính toán (CPU/Memory) cực kì hạn hẹp, không thể chạy các mô hình Deep Learning.
-
----
-
-## Related concepts
+## Khái niệm liên quan
 
 * [Vectơ nhúng (Embeddings)](/concepts/embeddings)
 * [Phân tách văn bản (Chunking)](/concepts/chunking)
 * [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/semantic-search)
 * [Mô hình nhúng đơn lẻ (Embedding Model)](/concepts/embedding-model)
 
----
+## Góc phỏng vấn
 
-## Interview questions
+### 1. Phân biệt sự khác nhau giữa Word Embeddings tĩnh (Word2Vec) và Contextual Embeddings động (BERT).
+* **Gợi ý trả lời**: Word Embeddings tĩnh như Word2Vec gán cố định cho mỗi từ duy nhất một vectơ số thực, không quan tâm đến ngữ cảnh sử dụng từ đó (ví dụ từ "đường" trong "đường ăn" và "đường đi" có chung một vectơ giống hệt nhau). Trong khi đó, Contextual Embeddings động như BERT sử dụng cơ chế Attention để liên tục cập nhật và tính toán vectơ của từ dựa trên các từ xung quanh. Nhờ vậy, từ "đường" trong hai ngữ cảnh trên sẽ có hai vectơ hoàn toàn khác nhau, giúp máy tính nắm bắt ngữ nghĩa chính xác hơn.
 
-### 1. Phân biệt giữa Word Embeddings (Word2Vec) và Contextual Embeddings (BERT).
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết lịch sử phát triển và bản chất của các thế hệ embedding.
-* **Gợi ý trả lời (Strong Answer)**: Word Embeddings như Word2Vec là "Static" (Tĩnh). Mỗi từ chỉ có duy nhất một vectơ, không quan tâm ngữ cảnh (ví dụ: "bank" trong bờ sông hay ngân hàng đều cùng 1 vectơ). Contextual Embeddings như BERT là "Dynamic" (Động), tính toán vectơ cho mỗi từ dựa vào các từ xung quanh thông qua cơ chế Attention, do đó từ "bank" sẽ có 2 vectơ hoàn toàn khác nhau tùy văn cảnh.
-* **Lỗi cần tránh**: Trả lời mơ hồ rằng BERT lớn hơn nên tốt hơn mà không nhắc đến đặc tính "Contextual".
+### 2. Sự khác biệt giữa Asymmetric Semantic Search (Tìm kiếm ngữ nghĩa bất đối xứng) và Symmetric Semantic Search (Tìm kiếm ngữ nghĩa đối xứng) là gì?
+* **Gợi ý trả lời**: 
+  * **Symmetric Search (Đối xứng)**: Diễn ra khi câu truy vấn và tài liệu đích có độ dài và cấu trúc tương đương nhau (ví dụ: tìm các câu hỏi tương tự nhau trong kho FAQ). Với bài toán này, ta nên chọn các mô hình nhúng đối xứng thông thường (như `all-MiniLM`).
+  * **Asymmetric Search (Bất đối xứng)**: Diễn ra khi câu truy vấn của người dùng rất ngắn (chỉ vài từ) nhưng tài liệu cần tìm lại là một đoạn văn dài. Với bài toán này, ta bắt buộc phải chọn các mô hình nhúng bất đối xứng (như các mô hình được huấn luyện trên tập dữ liệu MS MARCO) để đảm bảo mô hình hiểu được cách ánh xạ một câu hỏi ngắn vào một đoạn văn dài chứa câu trả lời.
 
-### 2. Sự khác biệt giữa Asymmetric Semantic Search và Symmetric Semantic Search khi chọn Embedding Model là gì?
-* **Người phỏng vấn muốn kiểm tra**: Kỹ năng lựa chọn mô hình cho đúng bài toán thực tế.
-* **Gợi ý trả lời (Strong Answer)**: 
-  * Symmetric Search: Câu truy vấn và tài liệu có độ dài và cấu trúc tương tự nhau (ví dụ: tìm các câu hỏi tương tự nhau trong FAQ). Nên dùng mô hình được huấn luyện đối xứng (như `all-MiniLM`).
-  * Asymmetric Search: Câu truy vấn ngắn (như từ khóa), nhưng tài liệu là những đoạn văn dài. Cần dùng mô hình bất đối xứng (như các mô hình `msmarco` hoặc Dense Passage Retrieval). Chọn sai sẽ khiến mô hình không tìm được đoạn văn phù hợp cho câu hỏi ngắn.
+## Tài liệu tham khảo
 
----
+1. **Speech and Language Processing** - Dan Jurafsky and James H. Martin.
+2. **Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks** - Reimers & Gurevych (2019).
 
-## References
-
-1. **Deep Learning** - Ian Goodfellow, Yoshua Bengio, Aaron Courville.
-2. **Speech and Language Processing** - Dan Jurafsky and James H. Martin (Chương 6: Vector Semantics and Embeddings).
-3. **Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks** - Reimers & Gurevych (2019).
-
----
-
-## English summary
+## Tóm tắt bằng tiếng Anh (English Summary)
 
 Embedding Models are Deep Learning models (such as Word2Vec, BERT, or text-embedding-ada-002) that transform unstructured data (text, images) into dense numeric vectors in a high-dimensional, continuous space. They capture the underlying semantic meaning of the inputs, ensuring that conceptually similar objects are mapped geometrically close to one another. These models overcome the limitations of sparse representations (like TF-IDF or One-Hot Encoding) by capturing context and synonyms, making them a foundational component for Semantic Search, Recommender Systems, and Retrieval-Augmented Generation (RAG). However, they can act as "black boxes" and often struggle with exact keyword matching.

@@ -9,64 +9,52 @@ seoTitle: "Task Dependency là gì? Quản lý sự phụ thuộc trong DAG Airf
 metaDescription: "Tìm hiểu Task Dependency (Sự phụ thuộc tác vụ) trong điều phối dữ liệu. Các quy tắc Trigger Rules (all_success, all_done) và cách kiểm soát luồng điều khiển."
 ---
 
-# Task Dependency - Quản lý sự phụ thuộc tác vụ
+# Task Dependency - Quản lý sự phụ thuộc tác vụ: Điều khiển giao thông trong Data Pipeline
 
-## Summary
+Trong thế giới điều phối dữ liệu (Data Orchestration) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** đóng vai trò như một hệ thống đèn tín hiệu giao thông. Nó quyết định trình tự thực thi (Control Flow) của các bước trong đường ống dữ liệu, chỉ rõ: Tác vụ A phải kết thúc với trạng thái như thế nào thì Tác vụ B mới được phép khởi chạy. 
 
-Trong kiến trúc điều phối dữ liệu (Data Orchestration) dựa trên mô hình DAG, **Task Dependency** (Sự phụ thuộc tác vụ) là cơ chế cốt lõi để thiết lập trình tự thực thi (Control Flow). Nó định nghĩa rõ ràng: Tác vụ A phải kết thúc với trạng thái nào thì Tác vụ B mới được phép bắt đầu. Quản lý phụ thuộc tốt không chỉ đảm bảo luồng nghiệp vụ chạy đúng thứ tự, ngăn chặn thảm họa sử dụng dữ liệu rác, mà còn cho phép áp dụng các chiến lược phục hồi lỗi phức tạp bằng các quy tắc kích hoạt (Trigger Rules) nâng cao.
+Quản lý phụ thuộc tốt không chỉ giúp dữ liệu được xử lý đúng thứ tự, ngăn chặn thảm họa sử dụng dữ liệu rác, mà còn cho phép chúng ta xây dựng các kịch bản ứng phó sự cố (Exception Handling) cực kỳ linh hoạt và thông minh.
 
----
+## Khái niệm Upstream và Downstream: Ai đi trước, ai theo sau?
 
-## Definition
+Task Dependency thực chất là một mối liên kết có hướng (mũi tên chỉ đường) giữa hai tác vụ (Nodes) trong một sơ đồ DAG. Về mặt thuật ngữ chuyên ngành, chúng ta phân chia thành hai vai trò rõ rệt:
 
-**Task Dependency** là mối liên kết có hướng giữa hai tác vụ (Nodes) trong một DAG. 
-Thuật ngữ chuyên ngành chia làm 2 vai trò:
-* **Upstream Task (Tác vụ thượng nguồn / Tác vụ cha)**: Là tác vụ đứng trước, cần phải được thực thi và hoàn tất trước.
-* **Downstream Task (Tác vụ hạ nguồn / Tác vụ con)**: Là tác vụ đứng sau, bị khóa và phải chờ đợi kết quả từ Upstream.
+* **Upstream Task (Tác vụ thượng nguồn / Tác vụ cha):** Là tác vụ đứng trước mũi tên. Nó cần phải được thực hiện và hoàn tất trước để chuẩn bị tài nguyên hoặc dữ liệu.
+* **Downstream Task (Tác vụ hạ nguồn / Tác vụ con):** Là tác vụ đứng sau mũi tên. Nó bị khóa lại và bắt buộc phải chờ đợi tín hiệu trạng thái từ Upstream Task mới được phép chạy.
 
-Sự phụ thuộc này tạo ra "Cạnh có hướng" (Mũi tên) trong Đồ thị DAG.
+## Tại sao chúng ta phải thiết lập sự phụ thuộc tác vụ?
 
----
+Hãy tưởng tượng một đường ống dữ liệu cuối ngày có nhiệm vụ tính toán doanh thu báo cáo cho Ban Giám đốc:
+* **Task 1:** Tải tệp dữ liệu giao dịch từ API của ngân hàng về server.
+* **Task 2:** Chạy lệnh SQL tính tổng doanh thu từ tệp vừa tải.
 
-## Why it exists
+Nếu bạn không thiết lập sự phụ thuộc giữa hai tác vụ này, hệ thống sẽ chạy song song cả hai cùng lúc để tối ưu thời gian. Kết quả là Task 2 sẽ chạy xong ngay lập tức và báo cáo doanh thu ngày hôm nay bằng... 0 đồng (vì lúc đó Task 1 vẫn đang loay hoay tải file chưa xong). Báo cáo 0 đồng này được tự động gửi đi và cả công ty sẽ rơi vào trạng thái hoảng loạn.
 
-Thử hình dung một đường ống dữ liệu (Pipeline) tính toán doanh thu báo cáo cho Ban Giám Đốc cuối ngày:
-* Task 1: Tải dữ liệu giao dịch từ API ngân hàng.
-* Task 2: Chạy lệnh SQL tính tổng doanh thu.
+Task Dependency tồn tại như một "người gác cổng" nghiêm ngặt. Nó đảm bảo dữ liệu ở bước trước phải được chuẩn bị sẵn sàng và chính xác trước khi bước sau được phép tiêu thụ nó. Nếu bước trước bị lỗi (Failed), các bước sau sẽ tự động bị hủy bỏ (Skipped) để bảo vệ tính toàn vẹn của hệ thống báo cáo.
 
-Nếu không có Task Dependency, công cụ sẽ chạy song song cả 2 tác vụ. Task 2 chạy xong ngay lập tức nhưng ra kết quả là 0 đồng (vì Task 1 chưa tải dữ liệu về kịp). Báo cáo 0 đồng được gửi cho sếp và công ty hoảng loạn.
+## Mở rộng kiểm soát luồng với Trigger Rules (Quy tắc kích hoạt)
 
-Task Dependency tồn tại như một "khóa gác cổng". Nó đảm bảo rằng dữ liệu phải được chuẩn bị sẵn sàng và đúng đắn ở bước trước, trước khi bước sau (các phép tính toán tốn kém hoặc báo cáo người dùng) được phép tiêu thụ nó. Nếu bước trước thất bại, bước sau sẽ bị hủy bỏ (Skipped) để bảo vệ tính toàn vẹn.
+Kiểm soát sự phụ thuộc không đơn thuần chỉ là quy luật tuyến tính *"A thành công thì B mới chạy"*. Các công cụ điều phối hiện đại đã nâng cấp nó lên thành khái niệm **Trigger Rules (Quy tắc kích hoạt)**.
 
----
+Trigger Rules cho phép nhà phát triển định nghĩa các logic rẽ nhánh phức tạp tại các giao điểm. Một tác vụ Downstream sẽ đánh giá trạng thái của tất cả các tác vụ Upstream kết nối với nó để đưa ra quyết định:
+* **all_success (Mặc định):** Chỉ chạy khi tất cả các tác vụ cha đều thành công.
+* **one_failed:** Chỉ cần có ít nhất một tác vụ cha bị lỗi là lập tức kích hoạt (thường dùng để chạy tác vụ gửi cảnh báo lên Slack/Teams).
+* **all_done:** Cứ chờ tất cả các tác vụ cha hoàn thành (bất kể thành công hay thất bại) là chạy (thường dùng cho các tác vụ dọn dẹp tài nguyên).
 
-## Core idea
+## Cách thức vận hành (Theo cơ chế Airflow)
 
-Ý tưởng cốt lõi của Task Dependency không chỉ dừng lại ở quy luật cơ bản: *"A thành công thì B mới chạy"*. Nó mở rộng thành khái niệm **Trigger Rules (Quy tắc kích hoạt)**.
+Quy trình đánh giá sự phụ thuộc diễn ra như sau:
+1. **Khai báo:** Kỹ sư sử dụng code (ví dụ toán tử `>>` trong Airflow) để thiết lập: `A >> B`.
+2. **Khởi chạy:** Trình điều phối (Scheduler) quét qua B. Nhận thấy B phụ thuộc vào A, nó đánh dấu B ở trạng thái chờ (`None`).
+3. **Cập nhật trạng thái:** Khi A chạy xong, nó ghi nhận trạng thái (`Success`, `Failed` hoặc `Skipped`) vào cơ sở dữ liệu của hệ thống điều phối.
+4. **Đánh giá quy tắc:** Scheduler quay lại kiểm tra B, áp dụng Trigger Rule của B (ví dụ `all_success`) lên kết quả của A.
+5. **Quyết định hành động:**
+   * Nếu A thành công $\rightarrow$ Trigger Rule thỏa mãn $\rightarrow$ B chuyển sang trạng thái `Scheduled` để chuẩn bị chạy.
+   * Nếu A thất bại $\rightarrow$ Trigger Rule bị vỡ $\rightarrow$ B tự động chuyển sang trạng thái `Upstream_Failed` và dừng lại.
 
-Trigger Rules cho phép lập trình viên định nghĩa các điều kiện rẽ nhánh (Control Flow Logic) phức tạp tại các giao điểm. Một tác vụ Downstream đánh giá trạng thái của TẤT CẢ các tác vụ Upstream của nó để quyết định có chạy hay không. 
-Ví dụ:
-* Mặc định: Chờ tất cả Upstream báo "Thành công" thì chạy.
-* Rẽ nhánh lỗi: Nếu có bất kỳ Upstream nào báo "Thất bại", hãy chạy tôi (để tôi gửi thông báo lỗi lên Slack).
-* Bỏ qua lỗi: Dù Upstream có thất bại hay thành công, cứ chạy tôi đi (Clean up data).
+## Sơ đồ minh họa các quy tắc Trigger Rules phổ biến
 
----
-
-## How it works (Theo cơ chế Airflow)
-
-1. **Định nghĩa**: Kỹ sư dùng code (Toán tử `>>` trong Airflow) để khai báo A là Upstream của B.
-2. **Khởi chạy**: Scheduler đánh giá trạng thái của B. Vì B có phụ thuộc vào A, trạng thái của B bị đánh dấu là `None` (chưa sẵn sàng).
-3. **Thay đổi trạng thái**: Khi A chạy xong, nó gửi cờ trạng thái (Success / Failed / Skipped) vào Database.
-4. **Kiểm tra Trigger Rule**: Trình Scheduler vòng lại kiểm tra B. Nó áp dụng quy tắc kích hoạt của B (Mặc định là `all_success`) lên kết quả của A.
-5. **Ra quyết định**: 
-   * Nếu A = Success $\rightarrow$ Quy tắc `all_success` thỏa mãn $\rightarrow$ B chuyển trạng thái thành `Scheduled` và được đẩy đi chạy.
-   * Nếu A = Failed $\rightarrow$ Quy tắc `all_success` bị phá vỡ $\rightarrow$ B chuyển trạng thái thành `Upstream_Failed` và dừng lại hoàn toàn.
-
----
-
-## Architecture / Flow (Trigger Rules)
-
-Biểu đồ sau mô phỏng luồng kiểm soát phụ thuộc với các Trigger Rules khác nhau:
+Dưới đây là một số kịch bản rẽ nhánh và hội tụ dựa trên Trigger Rules trong DAG:
 
 ```mermaid
 graph TD
@@ -84,11 +72,9 @@ graph TD
     D3 --> E3(Chạy tác vụ gom nhánh)
 ```
 
----
+## Ví dụ thực tế: Viết DAG Airflow thiết lập sự phụ thuộc
 
-## Practical example
-
-Trong Apache Airflow, cách phổ biến nhất để viết Task Dependency là sử dụng **Bitwise shift operators (`>>` và `<<`)**:
+Trong Apache Airflow, cách phổ biến nhất để thiết lập Task Dependency là sử dụng các toán tử dịch bit (`>>` và `<<`):
 
 ```python
 from airflow import DAG
@@ -102,103 +88,81 @@ with DAG(...) as dag:
     
     t_alert = EmptyOperator(
         task_id='alert_error',
-        trigger_rule=TriggerRule.ONE_FAILED # Chỉ chạy nếu có ít nhất 1 Upstream bị lỗi
+        trigger_rule=TriggerRule.ONE_FAILED # Chỉ chạy nếu có ít nhất 1 bước ở trên bị lỗi
     )
     
     t_cleanup = EmptyOperator(
         task_id='cleanup_temp_files',
-        trigger_rule=TriggerRule.ALL_DONE  # Chạy bất chấp Upstream thành công hay thất bại
+        trigger_rule=TriggerRule.ALL_DONE  # Luôn chạy bất kể các bước trước thành công hay thất bại
     )
 
-    # 1. Linear Dependency (Tuyến tính)
+    # 1. Liên kết tuyến tính (Linear Dependency)
     t1 >> t2 >> t3
     
     # 2. Rẽ nhánh báo lỗi (Fan-out)
     [t1, t2, t3] >> t_alert  
-    # Nếu bất kỳ t1, t2, t3 nào lỗi, t_alert sẽ chạy.
     
     # 3. Gom nhánh dọn dẹp (Fan-in)
     [t3, t_alert] >> t_cleanup
-    # t_cleanup đứng cuối cùng gác cổng, chờ mọi thứ kết thúc (xong hoặc lỗi) để xóa file tạm
 ```
-*(Trong các công cụ khác như dbt, dependency được ngầm định tự động qua hàm `{{ ref() }}`)*.
+
+> [!NOTE]
+> Trong một số công cụ transform dữ liệu như dbt, sự phụ thuộc giữa các bảng thường được tự động nhận diện thông qua hàm tham chiếu `{{ ref('ten_bang') }}` thay vì phải khai báo thủ công.
+
+## Nghệ thuật viết DAG: Best Practices và những lỗi sơ đẳng
+
+### Các nguyên tắc thiết kế tốt (Best Practices)
+* **Giữ sơ đồ đơn giản:** Hãy cố gắng giữ luồng dữ liệu theo dạng tuyến tính hoặc dạng cây đơn giản. Việc lạm dụng các mối quan hệ đan chéo phức tạp kèm theo nhiều Trigger Rules khác nhau sẽ khiến việc debug khi xảy ra sự cố trở thành một cơn ác mộng.
+* **Sử dụng Dummy Node (EmptyOperator) làm điểm trung chuyển:** Nếu bạn có 5 tác vụ nạp dữ liệu song song cần kết nối tới 5 tác vụ biến đổi song song (mô hình All-to-All), việc nối trực tiếp sẽ tạo ra $5 \times 5 = 25$ mũi tên đan chéo trên giao diện. Hãy chèn một `EmptyOperator` ở giữa làm trạm trung chuyển (`[T1..T5] >> Dummy >> [T6..T10]`). Số lượng kết nối giảm xuống chỉ còn 10 đường, giúp giao diện DAG cực kỳ gọn gàng và dễ nhìn.
+* **Tận dụng Setup/Teardown logic:** Đối với các tác vụ dọn dẹp tài nguyên hệ thống (như tắt cụm máy chủ ảo sau khi tính toán xong), hãy sử dụng cơ chế Setup/Teardown chuyên dụng được hỗ trợ trong các phiên bản Airflow mới thay vì lạm dụng trigger rule `all_done` thô sơ.
+
+### Bẫy rẽ nhánh (Branching Trap) - Sai lầm kinh điển
+Một lỗi cực kỳ phổ biến khi sử dụng toán tử rẽ nhánh `BranchPythonOperator`: Giả sử bạn có logic rẽ nhánh: ngày thường đi Nhánh A, ngày cuối tuần đi Nhánh B. Nhánh không được chọn sẽ mang trạng thái `Skipped`. 
+
+Nếu ở cuối DAG, bạn hội tụ hai nhánh này về Task C bằng Trigger Rule mặc định (`all_success`), Task C sẽ **không bao giờ được chạy**. Lý do là vì `all_success` yêu cầu cả A và B bắt buộc phải thành công, trong khi thực tế luôn có một nhánh bị bỏ qua (`Skipped`). 
+* *Cách sửa:* Hãy đổi Trigger Rule của Task C thành `none_failed_min_one_success` (Không có nhánh nào bị lỗi, và có ít nhất một nhánh thành công).
+
+## Điểm mạnh và điểm yếu của các Trigger Rules
+
+### Quy tắc mặc định (`all_success`)
+* **Điểm mạnh:** Cực kỳ an toàn. Chặn đứng tuyệt đối các lỗi dây chuyền, không cho phép dữ liệu sai lệch đi sâu vào hệ thống.
+* **Điểm yếu:** Gây ra hiệu ứng domino (Cascading failure). Một lỗi nhỏ không đáng kể (như lỗi gửi email thông báo thành công ở đầu luồng) cũng sẽ kéo sập và dừng toàn bộ các tác vụ xử lý dữ liệu quan trọng phía sau.
+
+### Quy tắc xử lý ngoại lệ (`all_done`, `one_failed`)
+* **Điểm mạnh:** Rất linh hoạt, cho phép tự động hóa quy trình xử lý lỗi (Exception Handling) và dọn dẹp tài nguyên.
+* **Điểm yếu:** Dễ làm sai lệch trạng thái báo cáo của DAG. Ví dụ: Một task chính bị lỗi, kích hoạt task báo lỗi Slack chạy thành công. Vì task cuối cùng (Slack) thành công, hệ thống điều phối có thể đánh dấu toàn bộ lượt chạy DAG đó là màu Xanh (Success), làm đánh lừa mắt của các kỹ sư trực ca vận hành.
+
+## Khái niệm liên quan & Tài liệu tham khảo
+
+**Khái niệm liên quan:**
+* [Directed Acyclic Graph (DAG) - Đồ thị có hướng không chu trình](/concepts/dag)
+* [Apache Airflow - Công cụ điều phối dữ liệu](/concepts/apache-airflow)
+* [Sensors - Bộ cảm biến kích hoạt](/concepts/sensors)
+
+**Tài liệu tham khảo:**
+1. **Apache Airflow Documentation** - *Control Flow & Trigger Rules*.
+2. **Data Pipelines with Apache Airflow** - *Bas P. Harenslak*.
 
 ---
 
-## Best practices
-
-* **Giữ dependency đơn giản (KISS)**: Cố gắng duy trì thiết kế tuyến tính (Linear) hoặc Cây đơn giản. Nếu bạn dùng mảng lồng nhau chi chít `[A, B] >> C >> [D, E]` kết hợp nhiều Trigger Rules, khi có một lỗi nhỏ xảy ra ở giữa, việc xác định luồng dữ liệu tiếp theo sẽ chạy thế nào là cực kỳ mệt mỏi.
-* **Sử dụng EmptyOperator làm điểm hội tụ (Dummy node)**: Nếu bạn có 5 tasks song song cần hội tụ vào 5 tasks song song khác (Mô hình lưới 5x5 sẽ tạo ra 25 cạnh mũi tên), giao diện sẽ biến thành mớ bòng bong. Hãy tạo một `EmptyOperator` (hoặc DummyOperator) ở giữa làm "trạm trung chuyển": `[T1..T5] >> Dummy >> [T6..T10]`. Nó giảm số lượng kết nối xuống còn 10 cạnh.
-* **Dùng Setup/Teardown logic thay vì All_Done**: Ở các phiên bản Airflow mới, sử dụng khái niệm Setup/Teardown tasks giúp hệ thống quản lý việc dọn dẹp rác (Temp files, drop cluster) tự động và báo cáo trạng thái đúng chuẩn hơn là dùng trigger rule `all_done` thô sơ.
-
----
-
-## Common mistakes
-
-* **Quên thiết lập phụ thuộc**: Tạo 2 Task trong code nhưng quên viết dòng `A >> B`. Hậu quả: Hệ thống chạy song song 2 task cùng lúc phá hỏng logic dữ liệu.
-* **Rẽ nhánh và Gom nhánh sai (Branching Trap)**: Airflow có toán tử `BranchPythonOperator` để rẽ nhánh (Nếu là cuối tuần rẽ hướng A, ngày thường rẽ hướng B). Nhánh không được chọn sẽ mang trạng thái `Skipped`. Nếu bạn nối cả A và B vào một Task C ở cuối bằng luật mặc định (`all_success`), Task C sẽ **không bao giờ chạy** vì nó đòi hỏi cả A và B đều báo Success, trong khi thực tế 1 nhánh đã bị Skipped. (Cách sửa: Task C phải dùng Trigger Rule `none_failed_min_one_success`).
-
----
-
-## Trade-offs
-
-### Cơ chế mặc định (all_success)
-* **Ưu điểm**: An toàn tuyệt đối. Luôn chặn đứng thảm họa dữ liệu nếu luồng trên bị đứt.
-* **Nhược điểm**: Có tính hiệu ứng domino (Cascading failure). Một task nhỏ xíu (như gửi email) ở đầu luồng bị lỗi mạng sẽ làm hệ thống đánh rớt hàng chục task xử lý lớn quan trọng ở phía dưới. (Cách xử lý: Chuyển task gửi email xuống cuối cùng nhánh phụ).
-
-### Các Trigger Rule phức tạp (all_done, one_failed)
-* **Ưu điểm**: Linh hoạt cao, cho phép thiết kế mô hình Exception Handling (bắt lỗi) tinh vi ngay trong Data Pipeline.
-* **Nhược điểm**: Khó đọc code. Trạng thái cuối cùng của DAG (DAG Run State) bị ảnh hưởng. Ví dụ: Task lỗi, kích hoạt Task báo lỗi Slack thành công. Do task cuối (Slack) thành công, toàn bộ DAG hiển thị màu Xanh lá (Success), làm lừa mắt kỹ sư trực ca. Cần phải có kỹ năng cấu hình để đánh dấu failed chính xác.
-
----
-
-## When to use
-
-* Bất cứ khi nào tác vụ sau sử dụng dữ liệu đầu ra, hay dựa vào tác động hạ tầng của tác vụ trước (Ví dụ: Chờ EMR Cluster bật lên xong thì mới Submit job).
-* Thiết lập Trigger Rules khi cần dọn dẹp tài nguyên Cloud (Tắt cụm máy chủ ảo) ngay cả khi tác vụ tính toán bị lỗi.
-
-## When not to use
-
-* Với các tác vụ thực thi định kỳ không liên quan đến nhau. Ví dụ: Tải tỷ giá ngoại tệ và Tải thời tiết. Đừng móc chúng vào nhau `A >> B` chỉ để code gọn lại. Hãy tách chúng ra để nếu Tỷ giá lỗi, nó không chặn (block) việc Tải thời tiết.
-
----
-
-## Related concepts
-
-* [Directed Acyclic Graph (DAG)](/concepts/dag)
-* [Apache Airflow](/concepts/apache-airflow)
-* [Sensors](/concepts/sensors)
-
----
-
-## Interview questions
+## Góc phỏng vấn: Những câu hỏi hay gặp
 
 ### 1. Ý nghĩa của "Upstream" và "Downstream" trong Task Dependency là gì?
-* **Người phỏng vấn muốn kiểm tra**: Nắm vững thuật ngữ giao tiếp chuyên ngành.
-* **Gợi ý trả lời (Strong Answer)**: Đây là khái niệm luồng (Flow). Upstream (Thượng nguồn) là các tác vụ cha nằm trước mũi tên, sản xuất ra kết quả hoặc làm điều kiện tiên quyết. Downstream (Hạ nguồn) là các tác vụ con nằm ở đầu nhọn mũi tên, tiêu thụ dữ liệu và bị phụ thuộc vào Upstream. Một tác vụ bị lỗi ở Upstream sẽ gây ra một chuỗi "Upstream_Failed" kéo theo các Downstream bị hủy bỏ để bảo vệ an toàn hệ thống.
+**Gợi ý trả lời:**
+Đây là các khái niệm mô tả dòng chảy của dữ liệu và logic điều khiển trong đường ống. 
+* **Upstream (Thượng nguồn):** Là các tác vụ cha nằm ở phần gốc của mũi tên, thực hiện công việc trước và tạo ra tiền đề hoặc dữ liệu đầu vào.
+* **Downstream (Hạ nguồn):** Là các tác vụ con nằm ở đầu nhọn của mũi tên, chạy sau và phụ thuộc hoàn toàn vào kết quả của các tác vụ Upstream. Nếu một tác vụ Upstream bị lỗi, nó sẽ tạo ra làn sóng hủy bỏ các tác vụ Downstream phía sau để bảo vệ hệ thống.
 
-### 2. Trong Airflow, Trigger Rule `all_success` (mặc định) hoạt động như thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết cơ chế mặc định của Orchestrator.
-* **Gợi ý trả lời (Strong Answer)**: Cờ `all_success` yêu cầu TẤT CẢ các tác vụ Upstream trực tiếp của tác vụ hiện tại phải hoàn thành với trạng thái 'Success'. Nếu có bất kỳ Upstream nào bị 'Failed' (thất bại) hoặc 'Skipped' (bỏ qua do rẽ nhánh), tác vụ hiện tại sẽ không được kích hoạt và tự động chuyển sang trạng thái 'Upstream_Failed' (hiển thị màu cam trên UI Airflow).
+### 2. Sự khác biệt giữa Trigger Rule `all_success` và `all_done` là gì? Cho ví dụ thực tế.
+**Gợi ý trả lời:**
+* `all_success` (mặc định) yêu cầu tất cả các tác vụ cha trực tiếp phải hoàn thành thành công. Chỉ cần một tác vụ cha bị lỗi hoặc bị bỏ qua, tác vụ con sẽ không chạy. Ví dụ: Chỉ chạy bước tính toán doanh thu khi bước tải dữ liệu từ API thành công hoàn toàn.
+* `all_done` chỉ yêu cầu tất cả các tác vụ cha hoàn thành việc chạy, không quan tâm kết quả là thành công hay thất bại. Ví dụ: Luôn luôn chạy tác vụ tắt cụm máy chủ ảo Spark EMR để tối ưu chi phí, bất kể công việc tính toán trước đó chạy thành công hay bị văng lỗi.
 
-### 3. Bạn có một DAG rẽ nhánh thành Nhánh A và Nhánh B. Cuối cùng cả A và B hội tụ về Task C. Task C không chạy khi nhánh A bị skip. Lỗi ở đâu?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm giải quyết bug (Troubleshooting) kinh điển của Branching.
-* **Gợi ý trả lời (Strong Answer)**: Lỗi nằm ở Trigger Rule mặc định của Task C là `all_success`. Khi rẽ nhánh, Nhánh A bị skip, sinh ra trạng thái Skipped truyền xuống C. Vì `all_success` đòi cả A và B phải Success, việc có một nhánh Skipped làm vỡ quy tắc này, nên C tự động bị Skipped theo. Để sửa, ta phải cấu hình Trigger Rule của Task C thành `none_failed_min_one_success` (Không có ai lỗi, và có ít nhất 1 người thành công).
+### 3. Tại sao việc chèn một "Dummy node" (EmptyOperator) lại được coi là một Best Practice khi liên kết nhiều task song song?
+**Gợi ý trả lời:**
+Khi chúng ta có nhiều tác vụ ở tầng trước (ví dụ 10 tác vụ tải dữ liệu) và nhiều tác vụ ở tầng sau (10 tác vụ lưu dữ liệu), nếu nối trực tiếp All-to-All, hệ thống phải quản lý $10 \times 10 = 100$ mối quan hệ phụ thuộc. Điều này làm rối loạn giao diện đồ thị (thành một mạng nhện chằng chịt) và gây tải cho Scheduler Database. 
 
-### 4. Hãy giải thích tại sao sử dụng "Dummy node" (EmptyOperator) lại là best practice khi ánh xạ nhiều task song song?
-* **Người phỏng vấn muốn kiểm tra**: Tư duy tối ưu hóa kiến trúc (Optimization & Clean architecture).
-* **Gợi ý trả lời (Strong Answer)**: Nếu bạn có 10 Tasks Extract kết nối thẳng tới 10 Tasks Transform dưới dạng All-to-All. Engine phải tính toán $10 \times 10 = 100$ dependency edges (cạnh). Điều này làm rối loạn giao diện UI (thành lưới nhện) và tốn tài nguyên bộ đệm bộ định tuyến (Scheduler DB Overhead). Chèn một Dummy Node ở giữa (10 Extract $\rightarrow$ Dummy $\rightarrow$ 10 Transform) sẽ giảm số cạnh xuống còn $10 + 10 = 20$. Giúp UI cực kỳ gọn gàng, chia hệ thống thành các Checkpoint rõ rệt, dễ theo dõi lỗi cụm hơn.
-
-### 5. Trigger Rule `all_done` thường được ứng dụng trong trường hợp thực tế nào nhất?
-* **Người phỏng vấn muốn kiểm tra**: Ứng dụng lý thuyết vào Use case thực tiễn.
-* **Gợi ý trả lời (Strong Answer)**: Ứng dụng phổ biến nhất là dọn dẹp tài nguyên (Resource Teardown / Clean up). Ví dụ, tác vụ đầu tiên khởi tạo cụm Spark EMR tốn rất nhiều tiền, ở giữa là tác vụ tính toán. Dù tác vụ tính toán ở giữa thành công hay văng lỗi Exception (Failed), ta cũng PHẢI tắt cụm Spark đi để không bị Cloud provider trừ tiền oan. Tác vụ "Tắt cụm" sẽ được gán `all_done`, đảm bảo nó luôn được chạy như một mệnh đề `finally` trong khối `try-catch` của lập trình thông thường.
-
----
-
-## References
-
-1. **Apache Airflow Documentation** - Control Flow & Trigger Rules.
-2. **Data Pipelines with Apache Airflow** - Bas P. Harenslak.
+Bằng cách chèn một Dummy Node ở giữa làm trạm trung chuyển, chúng ta giảm số lượng liên kết xuống còn $10 + 10 = 20$. Thiết kế này giúp giao diện DAG trực quan, gọn gàng, đồng thời tạo ra một điểm chốt chặn (Checkpoint) rõ ràng giúp việc theo dõi trạng thái hệ thống dễ dàng hơn rất nhiều.
 
 ---
 

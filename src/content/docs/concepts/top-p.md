@@ -9,57 +9,53 @@ seoTitle: "Top-p (Nucleus Sampling) là gì? - Tinh chỉnh thông số LLM"
 metaDescription: "Tìm hiểu chi tiết về Nucleus Sampling (Top-p) trong quá trình sinh văn bản của LLM, cách hoạt động và sự khác biệt giữa Top-p và Temperature."
 ---
 
-# Nucleus Sampling - Top-p
+# Nucleus Sampling - Top-p: Nghệ thuật chọn lọc từ vựng của AI
 
-## Summary
+Hãy tưởng tượng bạn đang chơi trò chơi nối chữ với một nhà thông thái. Tại mỗi lượt đi, thay vì lôi toàn bộ cuốn từ điển tiếng Việt ra để chọn từ tiếp theo (dễ dẫn đến việc bốc nhầm các từ cổ hoặc từ hiếm gây tối nghĩa câu), nhà thông thái chỉ liệt kê ra một danh sách ngắn các từ phù hợp nhất với ngữ cảnh hiện tại. Sau đó, ông tính tổng mức độ "tự tin" của nhóm từ này sao cho vừa tròn một ngưỡng nhất định (ví dụ 90%) và chỉ bốc ngẫu nhiên một từ trong nhóm đó. 
 
-Top-p (hay Nucleus Sampling) là một tham số giải mã (decoding parameter) được sử dụng trong các Mô hình Ngôn ngữ Lớn (LLM) để kiểm soát độ đa dạng và tính ngẫu nhiên của văn bản được sinh ra. Bằng cách chỉ lấy ngẫu nhiên từ một nhóm các từ vựng tiềm năng nhất (có tổng xác suất bằng với giá trị $p$), Top-p giúp cắt bỏ "cái đuôi dài" (long tail) chứa các từ vô nghĩa hoặc lạc đề, đảm bảo câu văn sinh ra vừa có tính sáng tạo, vừa duy trì tính mạch lạc.
+Trong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), kỹ thuật chọn lọc thông minh này được gọi là **Top-p** hay **Nucleus Sampling (Lấy mẫu hạt nhân)**.
 
----
+## Top-p là gì? Tập hợp hạt nhân động
 
-## Definition
+**Top-p (Nucleus Sampling)** là một thuật toán giải mã (decoding strategy) được sử dụng để kiểm soát độ ngẫu nhiên và tính mạch lạc của văn bản do AI tạo ra. 
 
-**Top-p (Nucleus Sampling)** là thuật toán chọn lọc từ vựng ở đầu ra của LLM. Thay vì xem xét toàn bộ từ điển (có thể lên tới hàng chục nghìn token), thuật toán sẽ sắp xếp các token theo xác suất xuất hiện giảm dần, sau đó chọn một tập hợp con nhỏ nhất các token sao cho tổng xác suất của chúng vừa vượt quá hoặc bằng ngưỡng $p$ ($0 \le p \le 1$). Token tiếp theo sẽ chỉ được bốc ngẫu nhiên (sampling) từ tập hợp "hạt nhân" (nucleus) này.
+Thay vì bốc ngẫu nhiên trên toàn bộ từ điển (vốn chứa hàng trăm ngàn token), thuật toán sẽ:
+1. Sắp xếp tất cả các token tiềm năng theo xác suất xuất hiện giảm dần.
+2. Cộng dồn xác suất từ cao xuống thấp.
+3. Chỉ giữ lại nhóm token hàng đầu có tổng xác suất tích lũy vừa vượt quá hoặc bằng ngưỡng $p$ ($0 \le p \le 1$) đã thiết lập.
+4. Chọn ngẫu nhiên token tiếp theo chỉ trong phạm vi nhóm "hạt nhân" (nucleus) này.
 
----
+## Tại sao chúng ta cần đến Nucleus Sampling?
 
-## Why it exists
+Bản chất của việc AI viết văn là lấy mẫu từ một phân phối xác suất từ vựng. 
+* Nếu chúng ta luôn bắt AI chọn từ có xác suất cao nhất (Greedy Decoding), câu văn sinh ra sẽ rất đơn điệu, lặp đi lặp lại và thiếu sức sống.
+* Tuy nhiên, nếu cho phép AI lấy mẫu hoàn toàn tự do trên toàn bộ từ điển, mô hình sẽ thỉnh thoảng bốc nhầm các từ có xác suất cực thấp nằm ở "phần đuôi dài" (long tail). Điều này dẫn đến các lỗi ngớ ngẩn như câu văn bị sai ngữ pháp, vô nghĩa, hoặc phát sinh ảo giác (hallucination).
 
-Quá trình sinh văn bản của LLM là lấy mẫu từ một phân phối xác suất. Nếu chỉ luôn chọn token có xác suất cao nhất (Greedy Decoding), câu văn sẽ trở nên vô hồn, lặp đi lặp lại và thiếu sáng tạo.
-Tuy nhiên, nếu lấy mẫu ngẫu nhiên trên toàn bộ từ điển (Random Sampling), mô hình thỉnh thoảng sẽ chọn trúng những từ ở "phần đuôi" (tail) có xác suất rất thấp, dẫn đến việc sinh ra câu vô nghĩa, sai ngữ pháp, hoặc ảo giác (hallucinations).
+Top-p ra đời để giải quyết dứt điểm bài toán này bằng cách cắt bỏ phần đuôi từ vựng không an toàn một cách linh hoạt theo ngữ cảnh, đảm bảo AI vừa viết văn tự nhiên, vừa không nói những điều nhảm nhí.
 
-Nucleus Sampling ra đời để giải quyết vấn đề này một cách linh hoạt (dynamic) thay vì cắt cứng theo số lượng từ như thuật toán Top-k.
+## Cơ chế vận hành từng bước của thuật toán Top-p
 
----
+Hãy xem ví dụ thực tế: Chúng ta đặt cấu hình **Top-p = 0.9**. 
+AI đang cần tìm từ tiếp theo cho câu: *"Con mèo thích ăn..."*. Phân phối xác suất của các từ vựng tiềm năng được tính ra như sau:
 
-## Core idea
+1. `"cá"` (xác suất 0.50)
+2. `"chuột"` (xác suất 0.20)
+3. `"hạt"` (xác suất 0.15)
+4. `"cỏ"` (xác suất 0.07)
+5. `"đất"` (xác suất 0.03)
+6. ... các từ khác (tổng xác suất 0.05)
 
-* **Tập hợp động (Dynamic Vocabulary)**: Khác với tham số Top-k (luôn cố định chỉ nhìn vào $k$ từ cao nhất), Top-p điều chỉnh linh hoạt số lượng từ được xem xét. Nếu mô hình rất tự tin (từ số 1 có xác suất 90%), tập hạt nhân có thể chỉ chứa 1-2 từ. Nếu mô hình không chắc chắn (nhiều từ có xác suất ngang nhau), tập hạt nhân sẽ phình to ra để bao gồm 10, 20 hoặc nhiều từ hơn để tăng độ sáng tạo.
-* **Cắt bỏ đuôi (Truncating the tail)**: Loại bỏ triệt để các token lạ hoặc không phù hợp để đảm bảo an toàn cho câu sinh ra.
+Thuật toán tiến hành cộng dồn xác suất từ trên xuống dưới:
+* `"cá"`: 0.50 (chưa đạt 0.9)
+* `"cá"` + `"chuột"` = 0.70 (chưa đạt 0.9)
+* `"cá"` + `"chuột"` + `"hạt"` = 0.85 (chưa đạt 0.9)
+* `"cá"` + `"chuột"` + `"hạt"` + `"cỏ"` = 0.92 (đã vượt ngưỡng 0.9)
 
----
+Tại điểm này, hệ thống sẽ dừng lại và khóa nhóm "hạt nhân" gồm bốn từ: `["cá", "chuột", "hạt", "cỏ"]`. Xác suất của bốn từ này được quy đổi để tổng bằng 1. Từ tiếp theo sẽ được bốc ngẫu nhiên trong bốn từ này. Từ `"đất"` và các từ phía sau bị loại bỏ hoàn toàn khỏi cuộc chơi.
 
-## How it works
+## Sơ đồ thuật toán tính tổng xác suất tích lũy
 
-Giả sử chúng ta thiết lập tham số **Top-p = 0.9**. Mô hình dự đoán token tiếp theo cho câu "Con mèo thích ăn..." với phân phối xác suất như sau:
-1. "cá" (0.50)
-2. "chuột" (0.20)
-3. "hạt" (0.15)
-4. "cỏ" (0.07)
-5. "đất" (0.03)
-6. ... các từ khác (Tổng = 0.05)
-
-Hệ thống sẽ sắp xếp và cộng dồn xác suất (Cumulative Probability):
-* "cá": 0.50 (< 0.9)
-* "cá" + "chuột" = 0.70 (< 0.9)
-* "cá" + "chuột" + "hạt" = 0.85 (< 0.9)
-* "cá" + "chuột" + "hạt" + "cỏ" = 0.92 (Đạt và vượt ngưỡng 0.9)
-
-Lúc này, tập hợp "Nucleus" sẽ là: ["cá", "chuột", "hạt", "cỏ"]. Toàn bộ xác suất được chuẩn hóa lại để tổng bằng 1. Token tiếp theo sẽ được chọn ngẫu nhiên từ 4 từ này. Từ "đất" và các từ phía sau sẽ bị loại bỏ hoàn toàn (cắt đuôi).
-
----
-
-## Architecture / Flow
+Dưới đây là sơ đồ luồng lọc từ vựng bằng thuật toán Top-p:
 
 ```mermaid
 graph TD
@@ -74,11 +70,9 @@ graph TD
     H --> I[Token sinh ra]
 ```
 
----
+## Ví dụ thực tế: Cấu hình Top-p bằng Python
 
-## Practical example
-
-Chỉnh tham số `top_p` khi gọi API của OpenAI:
+Bạn có thể dễ dàng thiết lập tham số `top_p` khi gọi API của OpenAI:
 
 ```python
 import openai
@@ -87,78 +81,67 @@ response = openai.ChatCompletion.create(
     model="gpt-4",
     messages=[{"role": "user", "content": "Viết một bài thơ về biển."}],
     temperature=0.8,
-    top_p=0.5, # Chỉ lấy ngẫu nhiên từ top các từ chiếm 50% tổng xác suất
+    top_p=0.5, # Chỉ lấy ngẫu nhiên trong nhóm từ chiếm 50% tổng xác suất
     max_tokens=100
 )
 
 print(response.choices[0].message.content)
 ```
-Trong cấu hình này, dù `temperature` cao (khuyến khích tính ngẫu nhiên), nhưng `top_p` là 0.5 giới hạn mạnh mẽ nhóm từ vựng mô hình được phép dùng, nên câu trả lời vẫn duy trì cấu trúc an toàn và logic.
 
----
+> [!TIP]
+> Trong ví dụ này, dù chúng ta đặt `temperature = 0.8` (khuyến khích tính ngẫu nhiên), nhưng việc siết `top_p = 0.5` đã giới hạn mạnh mẽ nhóm từ vựng an toàn mà mô hình được phép sử dụng. Nhờ đó, bài thơ sinh ra vẫn giữ được cấu trúc chặt chẽ và không bị bay bổng quá đà.
 
-## Best practices
+## So sánh tương quan giữa Top-k và Top-p
 
-* **Top-p thấp (0.1 - 0.3)**: Dùng cho các tác vụ cần độ chính xác cao, đòi hỏi sự logic và không cần sáng tạo (ví dụ: lập trình, viết truy vấn SQL, dịch thuật, trích xuất dữ liệu).
-* **Top-p cao (0.7 - 0.95)**: Dùng cho các tác vụ cần sự đa dạng, sáng tạo, giọng văn tự nhiên (ví dụ: viết truyện, sáng tác thơ, brainstorming).
-* **Top-p = 1.0**: Chế độ mặc định. Mô hình sẽ xét tất cả các token.
-* **Quy tắc vàng**: Theo lời khuyên từ OpenAI, bạn **không nên** điều chỉnh cả `Temperature` và `Top-p` cùng một lúc. Thường thì chúng chi cố định một cái và thay đổi cái kia (ví dụ: giữ `top_p = 1` và điều chỉnh `temperature`, hoặc ngược lại).
+Trước khi Top-p ra đời, người ta thường dùng thuật toán **Top-k** để kiểm soát từ vựng. Hãy đặt hai thuật toán này lên bàn cân để hiểu tại sao Top-p lại được ưa chuộng hơn:
 
----
+* **Top-k (Cố định số lượng):** Luôn chỉ xem xét đúng $k$ từ có xác suất cao nhất (ví dụ: $k=50$). Thiết kế này gặp vấn đề khi phân phối xác suất thay đổi:
+  * Nếu phân phối xác suất rất "phẳng" (nhiều từ có cơ hội ngang nhau), giới hạn 50 từ sẽ làm mất đi nhiều từ thú vị.
+  * Nếu phân phối xác suất rất "nhọn" (chỉ có 1 từ chiếm 95% xác suất), việc xét tiếp 49 từ còn lại vô tình đưa các từ vô nghĩa vào danh sách lấy mẫu ngẫu nhiên.
+* **Top-p (Tự động co giãn):** Thay vì cố định số lượng từ, Top-p tự động thích ứng với độ tin cậy của mô hình:
+  * Khi mô hình phân vân, nhóm từ vựng (hạt nhân) tự động phình to ra để chứa nhiều từ hơn, tăng tính sáng tạo.
+  * Khi mô hình rất tự tin, nhóm hạt nhân tự động co hẹp lại (có khi chỉ còn 1-2 từ), đảm bảo an toàn tuyệt đối cho câu văn.
 
-## Common mistakes
+## Quy tắc vàng và cạm bẫy thiết kế
 
-* **Thay đổi cùng lúc cả Temperature và Top-p**: Làm cho việc gỡ lỗi hành vi của LLM trở nên khó khăn vì cả hai tham số đều thay đổi tính ngẫu nhiên của mô hình và có thể xung đột với nhau.
-* **Đẩy Top-p xuống 0**: Tương đương với Greedy Decoding (luôn chọn từ xác suất cao nhất), câu văn sẽ mất hoàn toàn tính ngẫu nhiên.
+* **Quy tắc vàng của OpenAI:** Bạn **không nên** điều chỉnh đồng thời cả `temperature` và `top_p` trong cùng một câu lệnh gọi mô hình. Điều chỉnh cả hai biến số ngẫu nhiên này sẽ làm hành vi của AI trở nên vô cùng khó đoán và khó gỡ lỗi. Tốt nhất, hãy giữ cố định một bên (ví dụ đặt `top_p = 1.0` mặc định) và tinh chỉnh bên còn lại (`temperature`), hoặc ngược lại.
+* **Thiết lập theo mục đích công việc:**
+  * **Top-p thấp ($0.1 \rightarrow 0.3$):** Phù hợp cho các tác vụ cần độ chính xác cao, đòi hỏi tư duy logic (như viết code, sinh câu lệnh SQL, dịch thuật hoặc trích xuất thông tin).
+  * **Top-p cao ($0.7 \rightarrow 0.95$):** Phù hợp cho các tác vụ cần sự đa dạng ngôn từ, sáng tạo nghệ thuật (như viết blog, lên ý tưởng, viết truyện).
 
----
+## Đánh đổi và giới hạn
 
-## Trade-offs
+### Điểm mạnh
+* Giúp cân bằng hoàn hảo giữa tính sáng tạo và sự logic của văn bản.
+* Tự động co giãn số lượng từ vựng dựa trên mức độ tự tin của mô hình theo từng ngữ cảnh cụ thể.
 
-### Ưu điểm
-* Giữ được sự cân bằng hoàn hảo giữa tính sáng tạo và sự logic.
-* Linh hoạt hơn Top-k rất nhiều vì tự động thích ứng với mức độ "tự tin" của mô hình ở từng ngữ cảnh cụ thể.
+### Điểm yếu
+* Đòi hỏi thêm bước tính toán (sắp xếp và cộng dồn xác suất tích lũy) trên toàn bộ từ điển sau khi chạy lớp Softmax. Việc này tạo ra một khoản chi phí tính toán nhỏ (overhead) trong quá trình sinh từ.
 
-### Nhược điểm
-* Đòi hỏi thêm bước tính toán (sắp xếp và cộng dồn) trên toàn bộ từ điển sau lớp Softmax, tạo ra overhead nhỏ trong quá trình sinh (so với Greedy Decoding).
+## Khái niệm liên quan & Tài liệu tham khảo
 
----
-
-## When to use
-
-* Tinh chỉnh phong cách trả lời của các ứng dụng Generative AI.
-* Là phương pháp decoding mặc định ưu việt nhất hiện nay (thay thế cho Top-k) trong các hệ sinh thái như HuggingFace, OpenAI, Anthropic.
-
-## When not to use
-
-* Tác vụ yêu cầu tính tất định tuyệt đối (Deterministic) như sinh mã JSON theo schema chặt chẽ. Lúc này nên đưa Temperature về 0, do đó Top-p mất tác dụng.
-
----
-
-## Related concepts
-
+**Khái niệm liên quan:**
 * [Nhiệt độ (Temperature)](/concepts/temperature)
 * [Token (Đơn vị từ vựng)](/concepts/token)
 * [Mô hình ngôn ngữ lớn (LLMs)](/concepts/llm)
 
----
-
-## Interview questions
-
-### 1. Hãy so sánh sự khác biệt cơ bản giữa Top-k và Top-p (Nucleus Sampling). Tại sao Top-p lại được ưa chuộng hơn?
-* **Người phỏng vấn muốn kiểm tra**: Khả năng phân biệt các kỹ thuật sinh văn bản (decoding).
-* **Gợi ý trả lời (Strong Answer)**: Top-k luôn cắt cứng ở số lượng k từ có xác suất cao nhất (ví dụ: k=50). Nếu phân phối xác suất rất "phẳng" (không có từ nào nổi trội), 50 từ là không đủ để tạo sự đa dạng. Ngược lại, nếu phân phối rất "nhọn" (1 từ chiếm 90% xác suất), việc xét 50 từ vô tình đưa cả những từ "rác" vào xác suất được lấy mẫu. Top-p (Nucleus) linh hoạt dựa trên khối lượng xác suất tích lũy. Phân phối phẳng sẽ tự động lấy nhiều từ, phân phối nhọn sẽ lấy ít từ. Tính linh hoạt này giúp Top-p tránh được lỗi sinh từ ngớ ngẩn mà vẫn duy trì độ sáng tạo tự nhiên, do đó được ưa chuộng hơn.
-
-### 2. Nếu tôi đặt Temperature = 0, thông số Top-p có còn tác dụng không?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu rõ về bản chất phân phối xác suất của mô hình.
-* **Gợi ý trả lời (Strong Answer)**: Hoàn toàn không. Khi Temperature tiếp cận 0, lớp Softmax sẽ chuyển thành hàm argmax. Token có xác suất cao nhất ban đầu sẽ được khuếch đại thành xác suất 1.0 (hoặc 100%), và mọi token khác trở thành 0. Do đó, việc áp dụng Top-p lúc này trở nên vô nghĩa vì luôn luôn chỉ có một token duy nhất đạt tới mọi mức $p > 0$. Đây được gọi là Greedy Decoding.
+**Tài liệu tham khảo:**
+1. **The Curious Case of Neural Text Degeneration** - *Holtzman et al.* (2019) (Nghiên cứu khai sinh ra khái niệm Nucleus Sampling).
+2. **Hugging Face Generation Documentation** - *Tài liệu chi tiết về các hàm giải mã trong NLP*.
 
 ---
 
-## References
+## Góc phỏng vấn: Câu hỏi thường gặp
 
-1. **The Curious Case of Neural Text Degeneration** - Holtzman et al. (2019) - Bài báo khai sinh ra khái niệm Nucleus Sampling.
-2. **Hugging Face Generation Documentation** - Giải thích chi tiết các hàm Sampling trong Transformers.
+### 1. Hãy so sánh sự khác biệt cơ bản giữa Top-k và Top-p (Nucleus Sampling). Tại sao hiện nay các LLM lại chuộng Top-p hơn?
+**Gợi ý trả lời:**
+Sự khác biệt cốt lõi nằm ở tính linh hoạt của tập từ vựng được xem xét:
+* **Top-k** sử dụng một ngưỡng cắt cứng dựa trên số lượng từ (luôn lấy đúng $k$ từ hàng đầu). Nó không thích ứng tốt khi mức độ tự tin của mô hình thay đổi theo từng từ khác nhau trong câu.
+* **Top-p (Nucleus)** sử dụng một ngưỡng cắt động dựa trên tổng xác suất tích lũy ($p$). Nhờ vậy, tập hợp từ vựng sẽ tự động phình to khi mô hình phân vân và co hẹp lại khi mô hình đã rất chắc chắn về từ tiếp theo. Sự linh hoạt này giúp Top-p loại bỏ hiệu quả các từ ngớ ngẩn ở phần đuôi xác suất mà vẫn giữ được tính tự nhiên của câu văn, vì thế nó được ưa chuộng hơn trong các hệ thống GenAI hiện đại.
+
+### 2. Nếu tôi đặt tham số Temperature = 0, liệu thông số Top-p có còn tác dụng gì không?
+**Gợi ý trả lời:**
+Hoàn toàn không. Khi thiết lập `temperature = 0`, phân phối xác suất sau hàm Softmax sẽ bị biến thành hàm `argmax` (tất định). Lúc này, token có xác suất cao nhất ban đầu sẽ được khuếch đại thành xác suất 1.0 (hoặc 100%), trong khi tất cả các token khác đều có xác suất bằng 0. Do đó, việc áp dụng ngưỡng Top-p (dù đặt bằng bao nhiêu) cũng chỉ thu được một token duy nhất này mà thôi. Đây chính là cơ chế giải mã tham lam (Greedy Decoding).
 
 ---
 

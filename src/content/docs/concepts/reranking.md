@@ -11,62 +11,45 @@ metaDescription: "Tìm hiểu Reranking (Tái sắp xếp kết quả): Quy trì
 
 # Tái sắp xếp kết quả - Reranking
 
-## Summary
+Khi xây dựng các hệ thống tìm kiếm thông tin lớn hoặc các ứng dụng RAG (Retrieval-Augmented Generation), việc lấy được những tài liệu thực sự chất lượng và liên quan nhất để đưa vào prompt cho LLM là yếu tố quyết định sự thành bại của giải pháp. Để giải quyết triệt để bài toán này, các kỹ sư thường áp dụng một kỹ thuật tối ưu hóa thứ hạng cực kỳ hiệu quả gọi là **Reranking (Tái sắp xếp kết quả)**.
 
-Reranking (Tái sắp xếp kết quả) là giai đoạn thứ hai trong các hệ thống Truy xuất thông tin (Information Retrieval) hiện đại, đặc biệt là trong kiến trúc RAG (Retrieval-Augmented Generation). Sau khi giai đoạn một (Retrieval) truy xuất ra một tập hợp lớn các tài liệu có khả năng liên quan với tốc độ nhanh, Reranking sử dụng một mô hình trí tuệ nhân tạo (Reranker) chậm hơn nhưng thông minh hơn để chấm điểm và sắp xếp lại tập hợp này, đẩy các tài liệu thực sự liên quan nhất lên trên cùng. 
+## Bước lọc tinh tế cho hệ thống tìm kiếm: Reranking là gì?
 
----
+Reranking là giai đoạn thứ hai trong quy trình truy xuất thông tin hiện đại. Nhiệm vụ của nó là nhận vào một danh sách các tài liệu ứng viên tiềm năng đã được lọc thô từ giai đoạn một (Retrieval), sau đó sử dụng một mô hình AI thông minh hơn (Reranker) để chấm điểm lại mức độ liên quan ngữ nghĩa chi tiết giữa câu hỏi của người dùng và từng tài liệu, từ đó sắp xếp lại thứ tự và đẩy những tài liệu thực sự hữu ích nhất lên trên cùng.
 
-## Definition
+Thay vì tin tưởng tuyệt đối vào kết quả xếp hạng thô sơ ban đầu của Vector Database (dựa trên khoảng cách vector) hay Keyword Search (dựa trên tần suất từ khóa BM25), hệ thống sẽ lấy Top-K tài liệu ứng viên (ví dụ: 100 tài liệu), truyền toàn bộ cặp `(Câu hỏi, Tài liệu)` vào mô hình Reranker để tính toán lại điểm số liên quan một cách chính xác nhất. Cuối cùng, hệ thống sắp xếp lại danh sách và chỉ lọc lấy Top-N tài liệu tốt nhất (ví dụ: 5 tài liệu) để hiển thị cho người dùng hoặc chuyển tiếp vào LLM làm ngữ cảnh.
 
-**Reranking** là kỹ thuật cải thiện thứ hạng (ranking) của một danh sách tài liệu ứng viên. 
+## Tại sao hệ thống tìm kiếm cần đến hai giai đoạn?
 
-Thay vì tin tưởng hoàn toàn vào điểm số của hệ thống Vector Database (Cosine Similarity) hay Keyword Search (BM25) trả về ban đầu, Reranking lấy Top-K (ví dụ: 100 tài liệu) từ các hệ thống trên, truyền toàn bộ cặp `(Câu hỏi, Tài liệu)` vào một mô hình Học sâu (Deep Learning) chuyên biệt để tính toán lại điểm liên quan (Relevance Score) một cách chính xác tuyệt đối, sau đó sắp xếp giảm dần và chỉ giữ lại Top-N (ví dụ: 5 tài liệu) để hiển thị cho người dùng hoặc đưa vào LLM.
+Hệ thống tìm kiếm thông tin quy mô lớn luôn phải đối mặt với sự giằng co kinh điển giữa **Tốc độ (Speed)** và **Độ chính xác sâu (Deep Semantic Precision)**.
 
----
+* Nếu chúng ta mang một mô hình ngôn ngữ lớn cực kỳ thông minh đi đọc chi tiết và so khớp từng tài liệu một trong số hàng triệu tài liệu trong database, hệ thống sẽ mất hàng giờ mới có thể đưa ra kết quả. Điều này hoàn toàn bất khả thi cho các ứng dụng thực tế.
+* Ngược lại, nếu chỉ dùng Vector Database (Bi-Encoder) hoặc BM25, chúng ta sẽ có kết quả cực nhanh (chỉ mất khoảng 10ms). Thế nhưng, các hệ thống này phân tích ngữ nghĩa ở mức độ khá nông. Chúng có thể dễ dàng bị đánh lừa bởi các tài liệu chứa từ khóa trùng khớp nhưng ngữ cảnh thực tế lại hoàn toàn khác biệt.
 
-## Why it exists
+Reranking ra đời như một **bước lọc tinh** để dung hòa cả hai yếu tố trên thông qua mô hình **Truy xuất hai giai đoạn (Two-stage Retrieval)**:
+* **Giai đoạn 1 (Lọc thô - Retrieval)**: Sử dụng Vector DB hoặc Keyword Search để nhanh chóng quét và thu hẹp phạm vi dữ liệu, lấy ra khoảng 100 tài liệu ứng viên tiềm năng nhất (đảm bảo độ phủ - Recall cao).
+* **Giai đoạn 2 (Lọc tinh - Reranking)**: Sử dụng mô hình Reranker đọc kỹ 100 tài liệu đó để đánh giá ngữ nghĩa và sắp xếp lại thứ hạng (đảm bảo độ chính xác - Precision cao). Vì Reranker chỉ cần xử lý 100 tài liệu chứ không phải hàng triệu, tốc độ phản hồi của hệ thống vẫn được đảm bảo dưới 100ms.
 
-Hệ thống tìm kiếm luôn phải đối mặt với bài toán đánh đổi giữa **Tốc độ (Speed)** và **Độ chính xác sâu (Deep Semantic Precision)**.
+## Bản chất hoạt động của Reranking
 
-* Nếu dùng mô hình cực kỳ thông minh để đọc từng tài liệu trong số 1 tỷ tài liệu và so sánh với câu hỏi, bạn sẽ mất vài ngày để có kết quả tìm kiếm.
-* Nếu dùng Vector Database (Bi-Encoder) hoặc BM25, bạn có kết quả trong 10ms, nhưng các hệ thống này "nhìn" văn bản rất nông. Chúng có thể trả về các tài liệu chứa từ khóa đúng, hoặc có vector gần giống, nhưng ngữ cảnh thực sự bị sai lệch. 
+Cốt lõi của Reranking là việc chuyển dịch từ so sánh khoảng cách hình học đơn thuần (Vector Distance) sang so sánh mức độ tương tác ngữ nghĩa sâu sắc (Semantic Attention).
 
-Reranking ra đời như một **bước lọc tinh**. Nó giải quyết vấn đề này bằng mô hình **Retrieval 2 giai đoạn (Two-stage Retrieval)**:
-* *Giai đoạn 1 (Lọc thô)*: Dùng Vector DB lấy nhanh 100 tài liệu (Recall cao).
-* *Giai đoạn 2 (Lọc tinh)*: Dùng Reranking đọc kỹ 100 tài liệu đó để sắp xếp lại (Precision cao). Vì chỉ đọc 100 tài liệu, tốc độ vẫn đảm bảo dưới 100ms.
+Trong giai đoạn lọc thô, câu hỏi và tài liệu được mã hóa độc lập thành vector nên mô hình không có cơ hội giao thoa ngữ nghĩa trực tiếp. Còn trong giai đoạn Reranking, câu hỏi và từng tài liệu được nối lại với nhau và đưa vào chung một mạng nơ-ron Cross-encoder. Cơ chế Self-Attention cho phép các từ trong câu hỏi tương tác chéo trực tiếp với các từ trong tài liệu. Nhờ vậy, mô hình có thể hiểu chính xác từ "Apple" trong câu hỏi của người dùng là đang nói về công ty công nghệ chứ không phải quả táo quả cây, từ đó chấm điểm tương đồng ngữ nghĩa chuẩn xác hơn.
 
----
+## Quy trình tích hợp Reranking vào luồng RAG
 
-## Core idea
+1. **Nhận câu hỏi**: Người dùng gửi yêu cầu (ví dụ: *"Làm sao để cấu hình VPN?"*).
+2. **Lọc thô (First-stage Retrieval)**:
+   * Chạy Vector Search lấy ra 50 tài liệu liên quan ngữ nghĩa.
+   * Chạy Keyword Search (BM25) lấy ra 50 tài liệu chứa từ khóa chính xác.
+   * Gộp và loại bỏ trùng lặp để tạo thành một nhóm 100 tài liệu ứng viên.
+3. **Tái sắp xếp (Reranking)**:
+   * Hệ thống gửi danh sách gồm câu hỏi và 100 tài liệu ứng viên tới mô hình Reranker (như Cohere Rerank hay BGE-Reranker).
+   * Reranker thực hiện chấm điểm từng cặp câu hỏi - tài liệu theo thang điểm từ $0.0$ đến $1.0$.
+4. **Sắp xếp và Lọc**: Sắp xếp lại danh sách tài liệu theo điểm số Rerank giảm dần và chỉ giữ lại Top 5 tài liệu đứng đầu bảng.
+5. **Sinh câu trả lời**: Nhét 5 tài liệu chất lượng nhất này vào prompt ngữ cảnh gửi cho LLM để tạo câu trả lời cuối cùng.
 
-Cốt lõi của Reranking là sự dịch chuyển từ việc so sánh khoảng cách hình học đơn thuần (Vector Distance) sang so sánh mức độ giao thoa ngữ nghĩa (Semantic Attention).
-
-Trong giai đoạn 1, câu hỏi và tài liệu không bao giờ "nhìn thấy" nhau cho đến khi thành vector (Bi-encoder). 
-Trong giai đoạn Reranking, câu hỏi và tài liệu được nối lại với nhau và đưa vào cùng một mạng Nơ-ron (Cross-encoder). Các từ trong câu hỏi có thể trực tiếp "tương tác" (attention) với các từ trong tài liệu, giúp mô hình hiểu được chính xác rằng "Apple" trong câu hỏi đang nói về công ty công nghệ chứ không phải quả táo, từ đó cho điểm Relevance cao.
-
----
-
-## How it works
-
-Quy trình hoạt động của hệ thống RAG có Reranking:
-
-1. **User Query**: Người dùng hỏi "Làm sao để cấu hình VPN?".
-2. **First-stage Retrieval**: 
-   * Vector Search lấy 50 tài liệu.
-   * Keyword Search (BM25) lấy 50 tài liệu.
-   * Gom lại thành tập hợp 100 tài liệu ứng viên (Candidate pool).
-3. **Reranking**:
-   * Hệ thống gọi API của mô hình Reranker (ví dụ: `Cohere Rerank`, `BGE-Reranker`).
-   * Gửi danh sách: `Query` + `[Doc 1, Doc 2, ..., Doc 100]`.
-   * Mô hình chấm điểm từng cặp `(Query, Doc_i)` từ $0.0 \rightarrow 1.0$.
-4. **Sorting**: Sắp xếp 100 tài liệu theo điểm Reranker giảm dần.
-5. **Truncation**: Chỉ lấy Top 5 tài liệu đứng đầu.
-6. **Generation**: Nhồi 5 tài liệu này vào Prompt cho LLM (GPT-4) để sinh câu trả lời cuối cùng.
-
----
-
-## Architecture / Flow
+## Sơ đồ luồng xử lý Reranking hai giai đoạn
 
 ```mermaid
 graph TD
@@ -83,106 +66,84 @@ graph TD
     F -->|Take Top 5| G[Final Context for LLM]
 ```
 
----
+## Ví dụ thực tế: Tích hợp API Cohere Rerank
 
-## Practical example
-
-Dưới đây là mã giả (Python) minh họa việc gọi API Cohere để thực hiện Reranking trên danh sách các tài liệu trả về từ hệ thống tìm kiếm thô.
+Dưới đây là đoạn code Python minh họa cách gọi dịch vụ Cohere Rerank để sắp xếp lại danh sách các tài liệu thô được trả về từ database:
 
 ```python
 import cohere
 
-# Khởi tạo client Cohere
+# Khởi tạo client kết nối với API của Cohere
 co = cohere.Client('YOUR_API_KEY')
 
 query = "Làm sao để cấu hình VPN?"
-# Kết quả từ Vector DB (BM25 hoặc Cosine Similarity) chứa 100 tài liệu
+# Danh sách tài liệu thô lấy ra từ database (có thể lẫn lộn nhiều nội dung không liên quan trực tiếp)
 docs = [
-    "VPN là mạng riêng ảo giúp bảo mật...",
-    "Để cấu hình VPN trên Windows, vào Settings -> Network -> VPN...",
-    "Bảng giá dịch vụ VPN mới nhất năm 2025..."
+    "VPN là mạng riêng ảo giúp bảo mật đường truyền internet...",
+    "Để cấu hình VPN trên hệ điều hành Windows, bạn vào Settings -> Network -> VPN...",
+    "Bảng so sánh giá dịch vụ VPN mới nhất năm 2025..."
 ]
 
-# Gọi API Rerank của Cohere
+# Gọi API Rerank để sắp xếp và chọn lọc tài liệu
 response = co.rerank(
     model='rerank-multilingual-v3.0',
     query=query,
     documents=docs,
-    top_n=2 # Chỉ lấy 2 tài liệu tốt nhất
+    top_n=2 # Chỉ lấy ra 2 tài liệu tốt nhất
 )
 
-# In kết quả đã được sắp xếp lại
+# Hiển thị kết quả sau khi đã tái sắp xếp
 for idx, result in enumerate(response.results):
     print(f"Rank {idx+1} (Score: {result.relevance_score:.2f}): {docs[result.document_index]}")
 ```
 
----
+## Những kinh nghiệm vàng để tối ưu hóa Reranking
 
-## Best practices
+* **Đặt số lượng ứng viên ($K$) hợp lý**: Đừng tham lam đưa quá nhiều tài liệu vào bước Reranking. Ngưỡng tối ưu cho $K$ thường nằm trong khoảng từ 50 đến 150 tài liệu. Việc bắt Reranker xử lý hàng nghìn tài liệu cho một truy vấn sẽ làm tăng đáng kể độ trễ phản hồi của hệ thống và tiêu tốn nhiều tài nguyên GPU.
+* **Kết hợp Hybrid Search**: Hãy luôn chạy Reranker trên tập hợp kết quả gộp của cả Vector Search và Keyword Search. Sự kết hợp này giúp Reranker có cái nhìn toàn diện để lọc ra tài liệu tốt nhất, tận dụng được cả thế mạnh tìm kiếm ngữ nghĩa lẫn tìm kiếm từ khóa chính xác.
+* **Tận dụng Reranker làm bộ lọc trước LLM**: Đừng ném hàng chục tài liệu thô trực tiếp vào prompt của LLM để mong nó tự tìm kiếm thông tin. Việc này không chỉ gây lãng phí chi phí token gửi lên API mà còn dễ làm LLM bị nhiễu thông tin. Hãy dùng Reranker để lọc lấy vài tài liệu tinh túy nhất trước khi gửi cho LLM.
 
-* **Số lượng tài liệu đưa vào Reranking (K)**: Không đưa quá nhiều. K tối ưu thường là từ $50$ đến $150$. Nếu $K = 1000$, Reranker sẽ chạy rất chậm và tiêu tốn nhiều tài nguyên GPU/API.
-* **Hybrid Search là bạn thân của Reranking**: Đừng chỉ Rerank kết quả của Vector Search. Hãy Rerank tập hợp gộp (Union) của cả Vector Search và Keyword Search. Reranker sẽ tự biết cách đánh giá xem tài liệu nào (dù tìm bằng từ khóa hay ngữ nghĩa) thực sự tốt nhất.
-* **Đừng nhồi tất cả vào LLM**: Tránh việc ném cả 50 tài liệu vào LLM "mặc kệ nó tự tìm". Việc này gây lãng phí token khổng lồ và làm LLM bị "Lost in the middle" (quên thông tin ở giữa). Reranker rẻ và nhanh hơn LLM rất nhiều trong việc lọc tài liệu.
+## Đánh đổi thực tế: Được và mất gì khi dùng Reranking?
 
----
+### Lợi thế vượt trội
+* **Nâng cao chất lượng câu trả lời**: Cải thiện rõ rệt độ chính xác của ngữ cảnh đầu vào RAG chỉ với vài dòng code tích hợp mô hình Rerank.
+* **Bù đắp điểm yếu của Vector Search**: Reranker xử lý rất tốt các tình huống mà tìm kiếm vector thường thất bại, như tìm kiếm các đoạn văn chứa mã lỗi kỹ thuật cụ thể hoặc các tên riêng viết tắt.
 
-## Trade-offs
+### Điểm hạn chế
+* **Tăng độ trễ hệ thống (Latency)**: Do phải thực hiện tính toán online ngay khi nhận câu hỏi từ người dùng. Quá trình này thường cộng thêm khoảng 50ms đến 200ms vào tổng thời gian xử lý của pipeline.
+* **Phát sinh chi phí vận hành**: Bạn cần đầu tư tài nguyên GPU để tự vận hành mô hình Rerank hoặc trả phí sử dụng API của các nhà cung cấp bên thứ ba.
 
-### Ưu điểm
-* **Tăng vọt chất lượng RAG**: Cải thiện chỉ số Precision@K và NDCG một cách đáng kinh ngạc chỉ bằng việc thêm 1 dòng code gọi API Reranker.
-* **Sửa lỗi cho Vector Search**: Vector Search thường thất bại thảm hại khi người dùng tìm kiếm mã lỗi (error codes) hoặc tên riêng, Reranker sẽ kéo lại độ chính xác cho các trường hợp này.
+### Khi nào nên áp dụng?
+* Các hệ thống RAG doanh nghiệp phục vụ người dùng nội bộ hoặc khách hàng yêu cầu độ chính xác thông tin tuyệt đối.
+* Khi hệ thống tìm kiếm vector của bạn thường xuyên trả về các kết quả có độ tương đồng ngữ nghĩa ảo nhưng nội dung thực tế không giải quyết được vấn đề.
 
-### Nhược điểm
-* **Tăng độ trễ (Latency)**: Reranking yêu cầu mô hình phải tính toán trực tiếp lúc người dùng đặt câu hỏi. Nó sẽ cộng thêm từ 50ms - 200ms vào tổng thời gian phản hồi.
-* **Tốn thêm chi phí Compute**: Chạy Reranker tốn CPU/GPU (nếu tự host) hoặc tốn tiền gọi API (như của Cohere/Jina).
+### Khi nào không nên áp dụng?
+* Các tính năng tìm kiếm tức thì (như gợi ý từ khóa Autocomplete khi người dùng đang gõ phím) yêu cầu độ trễ phản hồi siêu thấp (dưới 20ms).
+* Khi dữ liệu của bạn đơn giản và các câu truy vấn cơ bản từ Vector Search hoặc BM25 đã đạt độ chính xác 100%.
 
----
-
-## When to use
-
-* Hệ thống RAG doanh nghiệp yêu cầu độ chính xác cao nhất có thể.
-* Khi kết quả của Vector Search thường xuyên trả về các tài liệu "nghe có vẻ giống" nhưng thực chất nội dung không đáp ứng được câu hỏi.
-* Các hệ thống E-commerce tìm kiếm sản phẩm cần sắp xếp lại kết quả không chỉ theo ngữ nghĩa mà còn theo điểm cá nhân hóa (Personalized Reranking).
-
-## When not to use
-
-* Các ứng dụng yêu cầu độ trễ cực thấp (Ultra-low latency < 20ms) như tìm kiếm Autocomplete/Suggest khi đang gõ.
-* Khi dữ liệu của bạn quá đơn giản và Vector Search / BM25 cơ bản đã trả về kết quả chính xác 100%.
-
----
-
-## Related concepts
+## Các khái niệm liên quan
 
 * [Reranker (Mô hình)](/concepts/reranker)
 * [Vector Database](/concepts/vector-store)
 * [NDCG](/concepts/ndcg)
-* [Recall](/concepts/recall)
 
----
+## Góc phỏng vấn: Thử thách thiết kế hệ thống Reranking
 
-## Interview questions
+### 1. Tại sao chúng ta không áp dụng trực tiếp mô hình Reranker cho toàn bộ cơ sở dữ liệu ngay từ đầu để có độ chính xác cao nhất, thay vì phải qua bước lọc thô của Vector DB?
+* **Gợi ý trả lời**: Vì mô hình Reranker (Cross-encoder) đòi hỏi chi phí tính toán cực kỳ lớn. Nó bắt buộc phải nhận vào đồng thời cả câu hỏi và tài liệu để chạy qua hàng tỷ tham số của mạng Transformer. Nếu database của bạn có 1 triệu tài liệu, việc chạy Reranker trực tiếp sẽ yêu cầu thực hiện suy luận mạng nơ-ron 1 triệu lần cho mỗi câu hỏi của người dùng, khiến thời gian phản hồi kéo dài hàng tiếng đồng hồ. 
+  Do đó, thiết kế chuẩn là dùng Vector DB (Bi-encoder) để tính toán trước các vector tĩnh offline. Khi truy vấn, hệ thống chỉ cần thực hiện so khớp khoảng cách vector (phép nhân ma trận cơ bản) mất vài mili-giây để nhanh chóng lọc ra 100 ứng viên, rồi mới dùng Reranker đắt đỏ để lọc tinh trên tập nhỏ này.
 
-### 1. Tại sao không dùng luôn Reranker cho toàn bộ cơ sở dữ liệu thay vì phải qua Vector DB lấy Top 100 trước?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về độ phức tạp tính toán (Time Complexity) và System Design.
-* **Gợi ý trả lời (Strong Answer)**:
-  * Vì Reranker (Cross-encoder) cực kỳ đắt đỏ về mặt tính toán. Nó phải nhận vào TỔNG hợp của (Câu hỏi + Tài liệu) để chạy qua hàng tỷ tham số Transformer. Nếu database có 1 triệu tài liệu, ta phải chạy suy luận mạng Nơ-ron 1 triệu lần cho MỖI câu hỏi. Tốc độ sẽ tính bằng giờ.
-  * Vector DB (Bi-encoder) đã tính toán trước vector của 1 triệu tài liệu (Offline). Khi truy vấn, nó chỉ tính khoảng cách Cosine (phép nhân ma trận đơn giản) mất vài ms. Do đó, ta phải dùng Vector DB làm phễu lọc thô để giảm số lượng ứng viên xuống 100, rồi mới dùng Reranker đắt tiền để lọc tinh.
+### 2. Sự khác biệt bản chất giữa Reranking và kiến trúc RAG (Retrieval-Augmented Generation) là gì?
+* **Gợi ý trả lời**: RAG là một kiến trúc hệ thống tổng thể kết hợp giữa hai quá trình: Tìm kiếm thông tin liên quan (Retrieval) và Sử dụng LLM để sinh câu trả lời (Generation). Trong khi đó, Reranking chỉ là một bước tối ưu hóa hiệu năng xếp hạng tài liệu nằm trong phần Retrieval của hệ thống RAG. Reranking đứng ở giữa giai đoạn lọc thô tài liệu và giai đoạn nạp ngữ cảnh vào prompt cho LLM. Bản thân Reranking không tạo ra nội dung mới, nó chỉ sắp xếp lại trật tự hiển thị của các tài liệu đã được tìm thấy.
 
-### 2. Sự khác biệt giữa Reranking và RAG (Retrieval-Augmented Generation) là gì?
-* **Người phỏng vấn muốn kiểm tra**: Khả năng phân biệt các bước trong pipeline AI.
-* **Gợi ý trả lời (Strong Answer)**:
-  * RAG là một kiến trúc hệ thống tổng thể gồm 2 phần: Retrieval (Tìm kiếm) và Generation (Sinh văn bản).
-  * Reranking chỉ là một "bước tối ưu hóa" nằm bên trong cục Retrieval của RAG. Nó nằm giữa bước truy xuất ban đầu và bước nhồi prompt vào LLM. Reranking không "sinh ra" văn bản mới, nó chỉ sắp xếp lại các văn bản đã có.
+### 3. Chúng ta có thể sử dụng chính các LLM lớn (như GPT-4) đóng vai trò làm mô hình Reranker được không?
+* **Gợi ý trả lời**: Hoàn toàn có thể. Kỹ thuật này thường được gọi là "LLM-as-a-Judge" (sử dụng prompt yêu cầu LLM chấm điểm mức độ liên quan của từng tài liệu). Tuy nhiên, trong môi trường sản xuất (production), cách tiếp cận này rất ít khi được áp dụng do chi phí API cực kỳ đắt đỏ, tốn lượng lớn token, tốc độ phản hồi chậm và rủi ro LLM trả về sai định dạng kết quả khiến hệ thống không thể parse được. Thực tế, người ta thường sử dụng các mô hình Reranker chuyên dụng cỡ nhỏ (khoảng 200M đến 2B tham số) được huấn luyện riêng biệt bằng các hàm loss xếp hạng, mang lại hiệu năng tương đương nhưng nhanh và rẻ hơn hàng chục lần.
 
-### 3. Có thể dùng chính LLM (như GPT-4) làm Reranker được không?
-* **Người phỏng vấn muốn kiểm tra**: Tư duy thực tiễn và hiểu biết về LLM-as-a-Judge.
-* **Gợi ý trả lời (Strong Answer)**:
-  * Có thể. Phương pháp này gọi là "LLM as a Reranker" (ví dụ: Prompt LLM chấm điểm từng tài liệu).
-  * *Nhược điểm*: Cực kỳ đắt đỏ, tốn token, chậm và có thể gặp lỗi phân tích JSON nếu LLM trả về sai format.
-  * *Thực tế*: Không ai dùng LLM lớn để Rerank trong production. Người ta dùng các mô hình Reranker chuyên biệt (cỡ nhỏ, khoảng 200M - 2B tham số) được huấn luyện riêng biệt bằng hàm loss phân loại/xếp hạng, giúp chạy nhanh gấp hàng chục lần và rẻ hơn rất nhiều mà chất lượng xếp hạng tương đương.
+## Tài liệu tham khảo
 
----
+1. **"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"** - Lewis et al. (Facebook AI Research, 2020).
+2. **LangChain Documentation** - Hướng dẫn xây dựng luồng RAG và tích hợp Reranker.
 
-## English summary
+## English Summary
 
 Reranking is the crucial second stage in modern two-stage Information Retrieval and RAG pipelines. After a fast but coarse first-stage retrieval (e.g., Vector Search or BM25) fetches a broad candidate pool of documents (high recall), a Reranker model evaluates the exact query-document pairs to compute highly accurate semantic relevance scores. It then reorders the candidates, surfacing the most relevant documents to the top (high precision) before feeding them into an LLM. While it adds a slight latency overhead, Reranking dramatically improves the final answer quality by overcoming the shallow matching limitations of standalone vector embeddings.

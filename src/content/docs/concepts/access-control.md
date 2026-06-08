@@ -11,62 +11,51 @@ metaDescription: "Tìm hiểu chi tiết về Kiểm soát truy cập (Access Co
 
 # Kiểm soát truy cập - Access Control (RBAC & ABAC)
 
-## Summary
+Hãy tưởng tượng bạn đang quản lý một kho dữ liệu khổng lồ của một tập đoàn lớn. Một ngày nọ, một kỹ sư dữ liệu vô tình chạy lệnh `DROP TABLE` nhầm trên môi trường Production, hoặc dữ liệu thẻ tín dụng nhạy cảm của khách hàng bị hiển thị công khai cho toàn bộ đội ngũ Marketing. Đây chính là những kịch bản "ác mộng" mà bất kỳ hệ thống dữ liệu nào cũng muốn tránh. 
 
-Kiểm soát truy cập (Access Control) là hệ thống các quy định, chính sách và cơ chế kỹ thuật để quản lý việc ai (người dùng, ứng dụng) được phép thực hiện hành động gì (đọc, ghi, sửa, xóa) trên tài nguyên dữ liệu nào (database, bảng, cột, hàng). Hai mô hình kiểm soát truy cập phổ biến nhất trong hệ sinh thái kỹ thuật dữ liệu là Role-Based Access Control (RBAC) và Attribute-Based Access Control (ABAC).
+Để giải quyết bài toán này, chúng ta cần một cơ chế bảo vệ vững chắc: **Kiểm soát truy cập (Access Control)**. Đây là hệ thống quản lý nhằm xác định ai (người dùng, ứng dụng) được phép làm gì (đọc, ghi, sửa, xóa) trên tài nguyên dữ liệu nào (cơ sở dữ liệu, bảng, cột, hàng). 
 
----
+Trong bài viết này, chúng ta sẽ cùng đi sâu vào hai mô hình kiểm soát truy cập phổ biến và mạnh mẽ nhất hiện nay: **RBAC (Role-Based Access Control)** và **ABAC (Attribute-Based Access Control)**.
 
-## Definition
+## Tại sao chúng ta cần kiểm soát truy cập chặt chẽ?
 
-**Access Control (Kiểm soát truy cập)** là xương sống của bảo mật hệ thống thông tin, đảm bảo tính bảo mật (Confidentiality) và tính toàn vẹn (Integrity) của dữ liệu.
+Trong thế giới Data Engineering, dữ liệu không chỉ là tài sản mà còn đi kèm với trách nhiệm pháp lý và bảo mật. Nếu không có một hệ thống phân quyền rõ ràng, hệ thống của bạn sẽ phải đối mặt với ba rủi ro lớn:
 
-Trong thế giới Data Engineering, kiểm soát truy cập giải quyết bài toán: *Làm thế nào để cho phép Data Scientist chạy mô hình Machine Learning trên toàn bộ kho dữ liệu, trong khi chỉ cho phép nhân viên Marketing xem dữ liệu khách hàng thuộc khu vực mà họ phụ trách, và cấm cả hai truy cập vào cột mã pin thẻ tín dụng?*
+1. **Lộ lọt dữ liệu nhạy cảm (Data Breach):** Nhân viên không có phận sự hoặc tin tặc (thông qua tài khoản bị xâm nhập) có thể dễ dàng tải xuống toàn bộ cơ sở dữ liệu khách hàng.
+2. **Sai sót do con người (Human Error):** Một câu lệnh `DELETE` hay `DROP` vô tình từ một Data Analyst mới vào nghề có thể phá hủy cả hệ thống dữ liệu lịch sử.
+3. **Vi phạm quy định pháp lý:** Các tiêu chuẩn nghiêm ngặt như SOC2, GDPR, HIPAA yêu cầu kiểm soát truy cập cực kỳ chặt chẽ và tuân thủ nghiêm ngặt nguyên tắc **Least Privilege** (Đặc quyền tối thiểu).
 
-Có hai mô hình phân quyền chính:
-1. **RBAC (Role-Based Access Control)**: Phân quyền dựa trên **Vai trò**.
-2. **ABAC (Attribute-Based Access Control)**: Phân quyền dựa trên **Thuộc tính** (của người dùng, tài nguyên và môi trường).
+## Hai trường phái phân quyền: RBAC và ABAC
 
----
+Để giải quyết những bài toán trên, các kỹ sư thường tiếp cận theo hai hướng đi khác nhau: phân quyền theo vai trò hoặc phân quyền theo thuộc tính.
 
-## Why it exists
+### 1. RBAC (Role-Based Access Control) - Phân quyền theo vai trò
+Với RBAC, quyền truy cập không được cấp trực tiếp cho từng cá nhân mà được gán cho các **Vai trò (Roles)**. Người dùng sau đó sẽ được đưa vào các vai trò tương ứng.
+* **Cách hoạt động:** Rất trực quan và tương thích với cơ cấu phòng ban của doanh nghiệp. Ví dụ: Bạn tạo ra vai trò `DATA_ANALYST` và cấp quyền `SELECT` trên bảng `sales`. Mọi thành viên thuộc nhóm Analyst sẽ được gán vai trò này.
+* **Ưu điểm:** Dễ hiểu, dễ quản lý ở quy mô nhỏ và vừa.
+* **Hạn chế:** Khi tổ chức phình to, số lượng vai trò tăng lên chóng mặt (hiện tượng **Role Explosion** - Bùng nổ vai trò). Ví dụ: Khi bạn có 10 phòng ban và 5 cấp bậc quản lý khác nhau, số lượng vai trò cần duy trì có thể lên tới hàng chục hoặc hàng trăm.
 
-Không có kiểm soát truy cập, mọi người dùng kết nối vào hệ thống sẽ có toàn quyền (admin) dẫn đến những thảm họa:
-1. **Lộ lọt dữ liệu (Data Breach)**: Nhân viên không phận sự hoặc hacker (thông qua tài khoản bị thỏa hiệp) có thể tải xuống toàn bộ dữ liệu khách hàng.
-2. **Xóa/Sửa dữ liệu nhầm lẫn**: Một câu lệnh `DROP TABLE` hoặc `DELETE` vô tình từ một Data Analyst mới vào nghề có thể phá hủy cả hệ thống.
-3. **Vi phạm pháp luật**: Các tiêu chuẩn như SOC2, HIPAA yêu cầu kiểm soát truy cập cực kỳ nghiêm ngặt và theo nguyên tắc *Least Privilege* (Đặc quyền tối thiểu).
+### 2. ABAC (Attribute-Based Access Control) - Phân quyền theo thuộc tính
+Khác với sự tĩnh lặng của RBAC, ABAC là một mô hình động, đánh giá quyền truy cập theo thời gian thực (dynamically) dựa trên sự kết hợp của nhiều **Thuộc tính (Attributes/Tags)**:
+* **Thuộc tính người dùng (User Attributes):** Vị trí địa lý, chức vụ, phòng ban, cấp độ bảo mật (Clearance level).
+* **Thuộc tính tài nguyên (Resource Attributes):** Nhãn dữ liệu (ví dụ: `PII`, `Public`), mức độ nhạy cảm của bảng/cột.
+* **Thuộc tính môi trường (Environment Attributes):** Thời gian truy cập trong ngày, địa chỉ IP của thiết bị.
 
----
+*Ví dụ về một quy tắc ABAC:* Cho phép đọc bảng `customers` NẾU `User.department == 'Sales'` VÀ `User.region == Resource.region` VÀ `Environment.time` nằm trong giờ hành chính.
 
-## Core idea
+## Cơ chế vận hành của một hệ thống Access Control
 
-### 1. RBAC (Role-Based Access Control)
-Quyền truy cập không được cấp trực tiếp cho từng người dùng, mà được cấp cho một **Role (Vai trò)**. Người dùng sau đó được gán vào Role này.
-* *Ưu điểm*: Dễ hiểu, dễ cài đặt cho các tổ chức có cấu trúc phòng ban rõ ràng. (Ví dụ: Role `DATA_ANALYST` được quyền `SELECT` trên bảng `sales`, Role `DATA_ENGINEER` được quyền `INSERT/UPDATE`).
-* *Nhược điểm*: Gây ra tình trạng "Role Explosion" (Bùng nổ vai trò). Ví dụ: Khi bạn có 10 phòng ban và 5 cấp bậc, bạn phải tạo ra 50 Roles khác nhau.
+Một quy trình kiểm soát truy cập chuẩn thường kết hợp chặt chẽ với hệ thống Quản lý định danh (IAM) qua ba bước cốt lõi:
 
-### 2. ABAC (Attribute-Based Access Control)
-Quyền truy cập được đánh giá theo thời gian thực (dynamically) dựa trên sự kết hợp của các **Thuộc tính (Attributes/Tags)**:
-* Thuộc tính người dùng (User Attributes): Vị trí địa lý, Chức vụ, Phòng ban, Cấp độ bảo mật (Clearance level).
-* Thuộc tính tài nguyên (Resource Attributes): Thẻ nhãn dữ liệu (PII, Public), Mức độ nhạy cảm.
-* Thuộc tính môi trường (Environment Attributes): Thời gian trong ngày, Địa chỉ IP truy cập.
+1. **Authentication (Xác thực):** Xác nhận danh tính của bạn (bạn là ai?) qua Password, SSO hoặc MFA.
+2. **Authorization (Ủy quyền):** Đánh giá xem bạn được phép làm gì. 
+   * Với **RBAC**, hệ thống đối chiếu vai trò của bạn với các quyền tĩnh được thiết lập trước.
+   * Với **ABAC**, một công cụ Policy Engine (như OPA - Open Policy Agent, AWS IAM) sẽ thu thập các thẻ nhãn dữ liệu, đánh giá logic Boolean để đưa ra quyết định Allow (Cho phép) hoặc Deny (Từ chối).
+3. **Auditing (Kiểm toán):** Ghi lại toàn bộ hành động (dù thành công hay thất bại) vào hệ thống log để phục vụ mục đích kiểm tra sau này.
 
-*Quy tắc ABAC ví dụ*: Cho phép đọc bảng `customers` NẾU `User.department == 'Sales'` VÀ `User.region == Resource.region` VÀ `Environment.time` nằm trong giờ hành chính.
+### Kiến trúc tổng quan của hệ thống
 
----
-
-## How it works
-
-Hệ thống Access Control thường hoạt động kết hợp với Identity and Access Management (IAM) thông qua các bước:
-1. **Authentication (Xác thực)**: Xác nhận danh tính người dùng (qua Password, SSO, Multi-Factor Authentication).
-2. **Authorization (Ủy quyền)**: Đánh giá yêu cầu truy cập.
-   * *Với RBAC*: Hệ thống kiểm tra xem User có Role nào, và Role đó có đặc quyền (privileges) trên Resource được yêu cầu hay không.
-   * *Với ABAC*: Hệ thống Policy Engine (như OPA - Open Policy Agent, AWS IAM) thu thập các tags, đánh giá logic Boolean (IF-THEN) và ra quyết định Allow/Deny.
-3. **Auditing (Kiểm toán)**: Ghi lại hành động (được phép hoặc bị từ chối) vào log.
-
----
-
-## Architecture / Flow
+Hãy cùng xem sơ đồ dưới đây để hình dung cách một yêu cầu truy xuất dữ liệu được xử lý:
 
 ```mermaid
 graph TD
@@ -85,36 +74,35 @@ graph TD
     DB -->|"Return Data"| User
 ```
 
----
+## Bắt tay vào thực hành: Cấu hình phân quyền trong thực tế
 
-## Practical example
+Chúng ta hãy cùng xem cách triển khai kiểm soát truy cập trong Snowflake, kết hợp cả Row-level Security (RLS) và Column-level Security (CLS).
 
-Triển khai kiểm soát truy cập trong Snowflake kết hợp Row-level Security (RLS) và Column-level Security (CLS).
+### 1. Phân quyền theo cột sử dụng RBAC (Column-Level Security)
+Giả sử chúng ta có yêu cầu: Chỉ nhóm quản trị nhân sự `HR_ADMIN` mới được phép xem cột lương nhân viên (`salary`), các tài khoản khác khi truy vấn chỉ nhận về kết quả `NULL`.
 
-**1. Mô hình RBAC (Column-Level Security)**
-Yêu cầu: Chỉ nhóm `HR_ADMIN` mới được xem lương nhân viên (`salary`), các nhân viên khác chỉ thấy `NULL`.
 ```sql
--- Tạo Role
+-- Bước 1: Tạo vai trò chuyên biệt
 CREATE ROLE HR_ADMIN;
 GRANT ROLE HR_ADMIN TO USER alice;
 
--- Tạo Masking Policy (ABAC kết hợp RBAC)
+-- Bước 2: Tạo chính sách ẩn dữ liệu (Masking Policy)
 CREATE OR REPLACE MASKING POLICY hide_salary AS (val NUMBER) RETURNS NUMBER ->
   CASE
     WHEN CURRENT_ROLE() IN ('HR_ADMIN') THEN val
     ELSE NULL
   END;
 
--- Áp dụng cho cột
+-- Bước 3: Áp dụng chính sách lên cột salary của bảng employees
 ALTER TABLE employees MODIFY COLUMN salary SET MASKING POLICY hide_salary;
 ```
 
-**2. Mô hình ABAC (Row-Level Security / Đọc dữ liệu theo vùng)**
-Yêu cầu: Người dùng chỉ được xem doanh thu của cửa hàng thuộc khu vực (region) mà họ quản lý.
-Thay vì tạo hàng chục Role như `MANAGER_US`, `MANAGER_EU`, ta sử dụng ABAC thông qua bảng Mapping và Row Access Policy.
+### 2. Phân quyền theo dòng sử dụng ABAC (Row-Level Security)
+Yêu cầu: Mỗi quản lý chỉ được phép xem dữ liệu doanh thu của các cửa hàng thuộc khu vực (region) mà họ phụ trách.
+Thay vì tạo ra hàng loạt vai trò tĩnh như `MANAGER_US`, `MANAGER_EU`, chúng ta sẽ sử dụng phương pháp ABAC thông qua một bảng ánh xạ (Mapping Table) và Row Access Policy.
 
 ```sql
--- Bảng Mapping (Lưu thuộc tính user)
+-- Giả sử bảng mapping lưu thuộc tính của người dùng như sau:
 -- manager_name | region
 -- bob          | US
 -- charlie      | EU
@@ -127,85 +115,62 @@ CREATE OR REPLACE ROW ACCESS POLICY region_policy AS (region_col VARCHAR) RETURN
       AND region = region_col
   );
 
--- Áp dụng cho bảng
+-- Áp dụng chính sách này cho bảng dữ liệu bán hàng
 ALTER TABLE sales ADD ROW ACCESS POLICY region_policy ON (region);
 ```
 
-Khi Bob (Quản lý US) chạy `SELECT * FROM sales`, anh ấy chỉ thấy các dòng có `region = 'US'`, mặc dù anh ấy sử dụng chung câu lệnh SQL với những người khác.
+Khi Bob (Quản lý khu vực US) chạy lệnh `SELECT * FROM sales`, hệ thống sẽ tự động lọc và chỉ trả về các dòng dữ liệu có `region = 'US'`. Bob sử dụng chung một câu lệnh SQL giống hệt đồng nghiệp của mình, nhưng kết quả trả về đã được cá nhân hóa một cách an toàn.
 
----
+## Những nguyên tắc vàng và sai lầm cần tránh
 
-## Best practices
+### Nguyên tắc thiết kế (Best Practices)
+* **Luôn tuân thủ Least Privilege (Đặc quyền tối thiểu):** Hãy thiết lập mặc định là `DENY` cho mọi truy cập. Chỉ cấp đúng và đủ quyền cần thiết để hoàn thành công việc.
+* **Phân quyền theo chức năng, không theo cá nhân:** Đừng bao giờ gán quyền trực tiếp cho một tài khoản cụ thể (ví dụ: `GRANT SELECT TO USER alice`). Thay vào đó, hãy gán quyền cho vai trò và gán người dùng vào vai trò đó.
+* **Tách biệt Control Plane và Data Plane:** Sử dụng các công cụ quản trị tập trung (như Apache Ranger, AWS Lake Formation) để quản lý các chính sách bảo mật ở một nơi duy nhất, tránh việc rải rác các lệnh GRANT/REVOKE trên từng database.
+* **Đánh giá và kiểm duyệt định kỳ (Access Review):** Thường xuyên rà soát lại danh sách phân quyền để thu hồi quyền từ những nhân sự đã chuyển bộ phận hoặc nghỉ việc.
 
-* **Nguyên tắc Đặc quyền tối thiểu (Principle of Least Privilege)**: Chỉ cấp quyền vừa đủ để người dùng hoàn thành công việc. Mặc định là `DENY` cho mọi truy cập.
-* **Quy hoạch Role theo chức năng, không theo người**: Không bao giờ gán quyền trực tiếp cho User (ví dụ: `GRANT SELECT TO USER alice`). Hãy gán quyền cho Role (ví dụ: `GRANT SELECT TO ROLE data_analyst`) và gán Role cho User.
-* **Tách bạch Control Plane và Data Plane**: Sử dụng các công cụ quản trị tập trung (như Apache Ranger, AWS Lake Formation) để quản lý Policy (ABAC/RBAC) ở một nơi duy nhất thay vì code rải rác các lệnh GRANT/REVOKE trên từng Database riêng rẽ.
-* **Kiểm duyệt định kỳ (Access Review)**: Thường xuyên rà soát lại các quyền truy cập, loại bỏ quyền của các nhân viên đã nghỉ việc hoặc chuyển bộ phận.
+### Những sai lầm "xương máu" thường gặp (Common Mistakes)
+* **Rơi vào bẫy "Bùng nổ vai trò" (Role Explosion):** Tạo quá nhiều vai trò siêu nhỏ (ví dụ: `Role_Read_Table_A`, `Role_Read_Table_B`). Điều này biến hệ thống RBAC thành một mớ bòng bong không thể quản lý. Hãy cân nhắc chuyển dịch sang ABAC khi gặp trường hợp này.
+* **Dùng chung tài khoản (Shared Accounts):** Việc cả team Data Engineer dùng chung tài khoản `admin_prod` là một lỗ hổng bảo mật cực lớn. Khi có sự cố xảy ra, bạn sẽ hoàn toàn mất khả năng truy vết (Audit) xem ai đã thực hiện hành động phá hoại.
+* **Cài cắm logic phân quyền vào mã nguồn ứng dụng (Hardcoding):** Viết những dòng code kiểu như `if (user == 'admin')` trực tiếp trong API. Khi cấu trúc tổ chức thay đổi, bạn sẽ phải chỉnh sửa và deploy lại toàn bộ ứng dụng. Hãy để tầng Database hoặc Policy Engine lo việc này.
 
----
+## So sánh và đánh đổi (Trade-offs)
 
-## Common mistakes
+| Tiêu chí | RBAC | ABAC |
+| :--- | :--- | :--- |
+| **Độ phức tạp** | Thấp, dễ cấu hình và làm quen. | Cao, đòi hỏi thiết kế chính sách chặt chẽ. |
+| **Tính linh hoạt** | Kém linh hoạt hơn, mang tính chất tĩnh. | Cực kỳ linh hoạt, phản ứng động theo ngữ cảnh. |
+| **Hiệu năng** | Tốc độ kiểm tra nhanh vì là các ánh xạ tĩnh. | Có thể gây trễ (latency) khi phải đánh giá nhiều thuộc tính động. |
+| **Khả năng mở rộng** | Dễ gặp tình trạng bùng nổ vai trò ở quy mô lớn. | Rất tốt cho hệ thống lớn, giảm số lượng vai trò cần quản lý. |
 
-* **Role Explosion (Bùng nổ Role)**: Tạo quá nhiều Role cụ thể (ví dụ: `Role_Read_Table_A_Only`, `Role_Read_Table_B_Only`). Điều này làm hệ thống RBAC trở nên không thể quản lý. Lúc này cần chuyển sang ABAC.
-* **Sử dụng tài khoản chia sẻ (Shared Accounts)**: Cả team Data Engineer dùng chung một tài khoản `admin_prod`. Khi có lỗi hoặc mất dữ liệu, không thể truy vết (Audit) được ai là người thực hiện.
-* **Hardcode Logic phân quyền trong ứng dụng**: Viết logic `if (user == 'admin')` trực tiếp trong mã nguồn API thay vì đưa xuống tầng cơ sở dữ liệu hoặc Policy Engine. Khi cấu trúc tổ chức thay đổi, phải viết lại code ứng dụng.
+## Khi nào nên chọn mô hình nào?
 
----
+* **Lựa chọn RBAC khi:** Dự án của bạn ở quy mô vừa và nhỏ, cấu trúc nhân sự và phân chia công việc rõ ràng (ví dụ: Data Engineer viết dữ liệu, Analyst đọc dữ liệu).
+* **Lựa chọn ABAC khi:** Bạn làm việc trong môi trường Enterprise lớn, đa khách hàng (Multi-tenant) hoặc các ngành đặc thù có yêu cầu khắt khe về bảo mật dữ liệu cá nhân (PII, y tế, tài chính), nơi cần phân quyền chi tiết đến từng dòng/cột dựa trên ngữ cảnh người dùng và vị trí địa lý.
+* **Lưu ý:** Không nên lạm dụng ABAC cho các hệ thống nội bộ nhỏ vì chi phí thiết lập và bảo trì các công cụ Policy Engine đôi khi vượt quá lợi ích thực tế mà nó mang lại.
 
-## Trade-offs
-
-### Ưu điểm
-* **RBAC**: Dễ triển khai, dễ giải thích, phù hợp cho hầu hết các tổ chức quy mô nhỏ và vừa. Hệ thống tĩnh, tốc độ kiểm tra quyền nhanh.
-* **ABAC**: Cực kỳ linh hoạt, có thể định nghĩa các luật phức tạp. Giảm thiểu số lượng Role phải quản lý, hỗ trợ mở rộng không giới hạn cho các hệ thống lớn.
-
-### Nhược điểm
-* **RBAC**: Thiếu linh hoạt, khó áp dụng Row-level/Column-level security theo ngữ cảnh động. Dẫn đến bùng nổ Role ở quy mô lớn.
-* **ABAC**: Phức tạp để thiết kế và cài đặt. Việc đánh giá hàng tá thuộc tính tại thời điểm chạy (runtime) có thể gây ra độ trễ (latency) cho các câu lệnh truy vấn nếu Policy Engine không được tối ưu.
-
----
-
-## When to use
-
-* **RBAC**: Phù hợp cho 80% trường hợp sử dụng, nơi cấu trúc công việc rõ ràng (Data Engineer viết dữ liệu, Data Analyst đọc dữ liệu).
-* **ABAC**: Cần thiết cho các doanh nghiệp Enterprise, môi trường Cloud nhiều tenant (Multi-tenant), nơi dữ liệu nhạy cảm (PII, y tế) yêu cầu phân quyền chi tiết tới từng hàng/cột dựa trên ngữ cảnh người dùng và vị trí địa lý.
-
-## When not to use
-
-* Không nên dùng ABAC cho các hệ thống nội bộ nhỏ lẻ vì chi phí thiết lập và bảo trì các công cụ Policy Engine cao hơn giá trị mang lại.
-
----
-
-## Related concepts
+## Các khái niệm liên quan
 
 * [Phân loại dữ liệu - Data Classification](/concepts/data-classification)
 * [Nhật ký kiểm toán - Audit Logging](/concepts/audit-logging)
 
----
-
-## Interview questions
+## Góc phỏng vấn: Những câu hỏi thường gặp
 
 ### 1. Sự khác biệt cốt lõi giữa RBAC và ABAC là gì?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết cơ bản về mô hình phân quyền bảo mật.
-* **Gợi ý trả lời**: RBAC dựa trên Vai trò (Role) tĩnh, phù hợp cho tổ chức quy mô nhỏ, dễ thiết lập nhưng dễ bị bùng nổ vai trò. ABAC dựa trên Thuộc tính (Attribute) động (như tags của dữ liệu, phòng ban của user, thời gian truy cập), cho phép phân quyền mịn màng và linh hoạt hơn nhưng phức tạp để triển khai. ABAC giải quyết bài toán "Role Explosion" của RBAC.
+* **Gợi ý trả lời:** Sự khác biệt lớn nhất nằm ở tính chất tĩnh và động. RBAC phân quyền dựa trên Vai trò (Role) tĩnh của người dùng, phù hợp cho quy mô nhỏ nhưng dễ bị bùng nổ vai trò khi hệ thống phức tạp lên. ABAC phân quyền dựa trên Thuộc tính (Attribute) động (như tag dữ liệu, phòng ban, thời gian, IP truy cập), mang lại khả năng phân quyền mịn và linh hoạt hơn nhưng đòi hỏi công cụ quản lý phức tạp hơn.
 
 ### 2. Làm thế nào để triển khai Row-Level Security (RLS) để giới hạn người dùng theo khu vực mà không tạo ra hàng trăm Role khác nhau?
-* **Người phỏng vấn muốn kiểm tra**: Kỹ năng tư duy giải quyết vấn đề ABAC bằng SQL thực tế.
-* **Gợi ý trả lời**: Không dùng RBAC mà dùng một biến thể của ABAC. Tạo một bảng Mapping (Entitlement table) ánh xạ `user_id` với `region`. Sau đó áp dụng một Policy (Row Access Policy) ở cấp độ bảng, ép hệ thống tự động chèn thêm điều kiện `WHERE region = (SELECT region FROM mapping_table WHERE user = current_user())` một cách vô hình vào mọi truy vấn.
+* **Gợi ý trả lời:** Thay vì tạo hàng trăm vai trò tĩnh, ta ứng dụng tư duy ABAC bằng cách tạo một bảng ánh xạ (Entitlement table) giữa tài khoản người dùng (`user_id`) và khu vực (`region`). Sau đó, thiết lập một Row Access Policy ở cấp độ bảng để tự động chèn thêm điều kiện lọc dữ liệu một cách vô hình (ví dụ: `WHERE region = (SELECT region FROM mapping_table WHERE user = current_user())`) cho mỗi truy vấn của người dùng.
 
 ### 3. Nguyên tắc Least Privilege (Đặc quyền tối thiểu) là gì và làm sao để áp dụng nó trong Data Engineering pipeline?
-* **Người phỏng vấn muốn kiểm tra**: Tư duy bảo mật hệ thống đường ống dữ liệu (Pipeline security).
-* **Gợi ý trả lời**: Least Privilege là chỉ cấp quyền đúng mức cần thiết để hoàn thành công việc. Trong pipeline, nghĩa là Service Account chạy Airflow DAG chỉ được quyền `SELECT` từ bảng nguồn, `INSERT/UPDATE` vào bảng đích, và tuyệt đối không có quyền `DROP TABLE`, `ALTER SCHEMA` hay đọc các bảng không liên quan đến tác vụ của DAG đó.
+* **Gợi ý trả lời:** Least Privilege là việc chỉ cấp quyền tối thiểu cần thiết để hoàn thành một tác vụ cụ thể. Trong Data pipeline, điều này đồng nghĩa với việc Service Account chạy Airflow DAG chỉ được cấp quyền đọc (`SELECT`) trên bảng nguồn và ghi (`INSERT/UPDATE`) trên bảng đích, tuyệt đối không được cấp các quyền nguy hiểm như `DROP TABLE`, `ALTER SCHEMA` hoặc quyền truy cập vào các bảng nằm ngoài phạm vi xử lý của pipeline đó.
 
----
-
-## References
+## Tài liệu tham khảo
 
 1. **NIST Special Publication 800-162** - Guide to Attribute Based Access Control (ABAC) Definition and Considerations.
 2. **Snowflake Documentation** - Row-Level Security & Column-Level Security.
 3. **AWS IAM Best Practices** - Hướng dẫn chi tiết về RBAC, ABAC và Least Privilege.
 
----
-
-## English summary
+## English Summary
 
 Access Control governs who can interact with what data resources and how. The two primary models are Role-Based Access Control (RBAC), which grants permissions based on static roles (e.g., Analyst, Engineer), and Attribute-Based Access Control (ABAC), which evaluates dynamic attributes of the user, resource, and environment (e.g., department, data tags, time of day). While RBAC is simpler to implement, it often leads to "Role Explosion" in large organizations. ABAC solves this by offering granular, context-aware permissions, enabling advanced features like Row-Level Security (RLS) and Column-Level Security (CLS) to secure PII without duplicating roles.

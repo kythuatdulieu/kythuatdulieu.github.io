@@ -9,57 +9,35 @@ seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake"
 metaDescription: "Tìm hiểu Schema Evolution là gì: cơ chế tự động thích ứng với thay đổi cấu trúc bảng (thêm, xóa, đổi tên cột) mà không cần ghi lại dữ liệu cũ trên Data Lake."
 ---
 
-# Schema Evolution
+# Schema Evolution (Tiến hóa lược đồ)
 
-## Summary
+Trong thế giới Data Engineering, có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn thêm một cột để theo dõi hành vi người dùng; ngày mai, họ đổi kiểu dữ liệu của trường số điện thoại từ số sang chuỗi để hỗ trợ mã quốc gia. 
 
-Schema Evolution (Tiến hóa lược đồ) là một tính năng mạnh mẽ của các hệ thống quản lý dữ liệu hiện đại (đặc biệt là các Table Formats như Apache Iceberg, Delta Lake) cho phép thay đổi cấu trúc của một bảng (thêm cột, đổi kiểu dữ liệu, đổi tên cột, xóa cột) một cách an toàn mà không cần phải ghi lại (rewrite) toàn bộ dữ liệu lịch sử đã lưu trước đó. Điều này giúp các Data Pipeline trở nên linh hoạt và bền bỉ trước sự thay đổi liên tục của dữ liệu từ các hệ thống nguồn.
+Nếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như vậy sẽ là một lần pipeline bị sập, kéo theo hàng giờ cày cuốc để sửa code và chạy lại dữ liệu lịch sử. Để giải quyết vấn đề này, các công nghệ lưu trữ hiện đại đã giới thiệu một khái niệm cứu cánh: **Schema Evolution (Tiến hóa lược đồ)**.
 
----
+## Schema Evolution là gì? Khi dữ liệu không bao giờ đứng yên
 
-## Definition
+**Schema Evolution** là khả năng tự động theo dõi, quản lý và áp dụng các thay đổi cấu trúc bảng (như thêm cột, đổi tên, xóa cột hoặc đổi kiểu dữ liệu) theo thời gian. 
 
-**Schema Evolution** là quá trình tự động theo dõi, quản lý và áp dụng các thay đổi trong định nghĩa của một lược đồ dữ liệu (schema) theo thời gian. Khi lược đồ thay đổi, hệ thống đảm bảo rằng các truy vấn vẫn có thể đọc cả dữ liệu cũ (được ghi bằng lược đồ cũ) và dữ liệu mới (được ghi bằng lược đồ mới) một cách liền mạch, không gây ra lỗi tương thích (compatibility errors) hay yêu cầu việc thực hiện các thao tác DDL tốn kém như `ALTER TABLE ...` rồi `UPDATE` toàn bộ hệ thống.
+Điểm kỳ diệu của tính năng này là hệ thống đảm bảo các truy vấn vẫn hoạt động bình thường, đọc mượt mà cả dữ liệu cũ (được ghi bằng cấu trúc cũ) lẫn dữ liệu mới (được ghi bằng cấu trúc mới) mà không đòi hỏi bạn phải ghi đè (`rewrite`) lại hàng petabyte dữ liệu lịch sử đã lưu trữ. Đây là một tính năng cốt lõi của các Table Format hiện đại như Apache Iceberg hay Delta Lake.
 
----
+## Tại sao chúng ta cần Schema Evolution?
 
-## Why it exists
+Hãy thử nhớ lại cách chúng ta xử lý khi hệ thống nguồn (OLTP) thay đổi cấu trúc trước đây:
 
-Trong quá trình phát triển phần mềm, cấu trúc dữ liệu ở hệ thống vận hành (OLTP) thay đổi liên tục: một tính năng mới yêu cầu thêm cột `user_tier`, hoặc một cột `phone_number` bị đổi từ kiểu `INT` sang `VARCHAR`.
+1. **Pipeline đổ vỡ hàng loạt**: Chỉ cần nguồn gửi thêm một trường mới hoặc thiếu một trường so với cấu trúc bảng đích, job ETL/ELT sẽ lập tức báo lỗi và dừng hoạt động.
+2. **Chi phí vận hành đắt đỏ**: Với các định dạng lưu trữ cũ trên Data Lake (như file Parquet thô qua Hive), nếu muốn đổi tên một cột hoặc xóa một trường, cách duy nhất là dùng Spark đọc toàn bộ dữ liệu lịch sử lên, biến đổi cấu trúc, rồi ghi đè lại toàn bộ. Quá trình này không chỉ tốn hàng ngày trời mà còn ngốn hàng ngàn đô la chi phí tính toán của máy chủ.
+3. **Mất an toàn dữ liệu**: Đôi khi hệ thống tự động ép kiểu dữ liệu mới vào cấu trúc cũ (ví dụ: chuyển kiểu `FLOAT` thành `INT`) dẫn đến việc dữ liệu bị làm tròn và mất mát thông tin quan trọng một cách âm thầm.
 
-Trước đây, khi đẩy dữ liệu này vào Data Warehouse hoặc Data Lake dựa trên Hive:
-1. **Lỗi Pipeline**: Nếu Schema của dữ liệu đến không khớp chính xác 100% với Schema của bảng đích, job ETL/ELT sẽ "crash" (đổ vỡ).
-2. **Chi phí cập nhật khổng lồ**: Để đổi tên một cột hoặc xóa một cột trong Data Lake truyền thống (sử dụng Parquet trơn), kỹ sư dữ liệu phải đọc toàn bộ petabytes dữ liệu, biến đổi, và ghi lại thành các tệp Parquet mới. Quá trình này có thể mất hàng ngày và tốn hàng ngàn đô la chi phí máy chủ.
-3. **Mất an toàn dữ liệu**: Đôi khi dữ liệu mới được ép kiểu (cast) tự động vào kiểu cũ gây mất mát thông tin (ví dụ FLOAT thành INT) mà không có cảnh báo.
+Schema Evolution ra đời để biến những thay đổi cấu trúc phức tạp này thành một **thao tác cập nhật siêu dữ liệu (metadata) tức thì**, giúp giảm thiểu tối đa công sức bảo trì của kỹ sư dữ liệu.
 
-Schema Evolution ra đời để biến việc thay đổi cấu trúc trở thành một **thao tác metadata (siêu dữ liệu) tức thì**, giải phóng kỹ sư dữ liệu khỏi những cơn ác mộng bảo trì pipeline.
+## Cơ chế hoạt động: Phép thuật từ Column ID Tracking
 
----
+Làm sao hệ thống có thể đọc file cũ và file mới cùng lúc dù chúng có cấu trúc khác nhau? Bí quyết nằm ở cách quản lý metadata. Hãy lấy ví dụ về cơ chế **Column ID Tracking** cực kỳ thông minh của Apache Iceberg:
 
-## Core idea
-
-Cơ chế cốt lõi của Schema Evolution khác nhau tùy vào công nghệ, nhưng ý tưởng chung tốt nhất (được áp dụng bởi Apache Iceberg) là **Sử dụng ID cột duy nhất (Column ID Tracking)** thay vì dựa vào Tên cột (Column Name).
-
-1. **Gán ID cho cột**: Khi một bảng được tạo, mỗi cột được gán một ID duy nhất và bất biến. Ví dụ: cột `id` có ID=1, cột `name` có ID=2.
-2. **Bản đồ Metadata**: Table Format duy trì một tệp metadata ánh xạ Tên Cột hiện tại vào ID của nó. Dữ liệu vật lý (tệp Parquet) bên dưới luôn được tham chiếu bằng ID.
-3. **Đổi tên / Thay đổi không chạm vào file vật lý**:
-   - Nếu bạn đổi `name` thành `full_name`, hệ thống chỉ cập nhật bản đồ trong metadata: `full_name` -> ID=2. Các tệp Parquet cũ vẫn giữ nguyên, khi engine đọc, nó thấy yêu cầu đọc `full_name`, nó tra metadata ra ID=2, và đọc dữ liệu của ID=2 trong file cũ trả về.
-4. **Cấp phát giá trị mặc định**: Nếu thêm cột `age` (ID=3), hệ thống cập nhật metadata. Khi đọc các file Parquet cũ (chưa có ID=3), engine tự động trả về `NULL` cho cột `age` mà không bị lỗi.
-
----
-
-## How it works
-
-Cách các quy tắc tiến hóa cơ bản được xử lý khi đọc dữ liệu:
-
-* **Thêm cột (Add column)**: Engine đọc dữ liệu cũ, không thấy cột đó, sẽ trả về giá trị mặc định (thường là NULL).
-* **Xóa cột (Drop column)**: Metadata đánh dấu cột đó (ví dụ ID=2) bị ẩn đi. Engine đọc file cũ sẽ bỏ qua không lấy dữ liệu của cột ID=2 lên bộ nhớ. (Dữ liệu rác vẫn nằm trong file cũ cho đến khi bị compact, nhưng người dùng không thấy).
-* **Đổi tên cột (Rename column)**: Engine dùng ánh xạ từ metadata (như mô tả ở trên). Dựa vào Column ID, engine đọc được đúng dữ liệu dù file cũ có lưu tên cột là gì.
-* **Đổi kiểu (Type promotion/Upcasting)**: Nâng cấp kiểu dữ liệu an toàn (ví dụ `INT` -> `BIGINT`, `FLOAT` -> `DOUBLE`). Khi đọc file cũ có chứa `INT`, engine tự động ép kiểu thành `BIGINT` trên bộ nhớ (on-the-fly) trước khi trả về.
-
----
-
-## Architecture / Flow
+* **Không dựa vào tên cột**: Thay vì dùng tên cột để đối chiếu dữ liệu (rất dễ lỗi nếu đổi tên), Iceberg gán cho mỗi cột một ID duy nhất và bất biến khi bảng được tạo (ví dụ: `id` -> ID=1, `name` -> ID=2).
+* **Ánh xạ qua Metadata**: Hệ thống lưu trữ một file metadata đóng vai trò là "bản đồ". Khi bạn đổi tên cột từ `name` thành `full_name`, hệ thống chỉ đơn giản cập nhật bản đồ metadata: `full_name` -> ID=2. File Parquet vật lý bên dưới hoàn toàn không bị đụng tới!
+* **Truy vấn thông minh**: Khi Engine truy vấn yêu cầu cột `full_name`, nó sẽ nhìn vào metadata để biết cần tìm dữ liệu của ID=2. Khi quét qua các file Parquet cũ (nơi cột vẫn được đặt tên là `name`), nó vẫn đọc đúng dữ liệu nhờ khớp ID=2.
 
 ```mermaid
 graph TD
@@ -67,110 +45,81 @@ graph TD
     V2 --> Query[Query Engine]
 ```
 
----
+### Các quy tắc tiến hóa cơ bản được xử lý thế nào?
 
-## Practical example
+* **Thêm cột**: Khi bạn thêm một cột mới, engine đọc dữ liệu từ các file cũ (chưa có cột này) sẽ tự động trả về giá trị `NULL`.
+* **Xóa cột**: Metadata chỉ cần đánh dấu ẩn cột đó đi. Khi đọc, engine sẽ bỏ qua không tải cột đó lên bộ nhớ nữa. Dữ liệu vật lý cũ vẫn nằm đó cho đến khi bảng được dọn dẹp (compact), nhưng người dùng hoàn toàn không nhìn thấy nó nữa.
+* **Đổi tên cột**: Như đã giải thích ở trên, nhờ liên kết qua Column ID, việc đổi tên diễn ra trong tích tắc mà không ảnh hưởng tới dữ liệu cũ.
+* **Nâng cấp kiểu dữ liệu (Type promotion)**: Hệ thống cho phép tự động nâng lên kiểu dữ liệu rộng hơn (ví dụ: từ `INT` lên `BIGINT`, từ `FLOAT` lên `DOUBLE`). Engine sẽ tự động ép kiểu ngay trên bộ nhớ (on-the-fly) khi trả kết quả truy vấn.
 
-Ví dụ sử dụng Spark với **Delta Lake** để tự động tiến hóa schema khi có thêm cột mới trong quá trình ghi dữ liệu:
+## Thực hành: Tự động hóa tiến hóa cấu trúc với Delta Lake
+
+Dưới đây là ví dụ minh họa cách Apache Spark kết hợp với **Delta Lake** tự động cập nhật cấu trúc bảng khi phát hiện dữ liệu mới có thêm cột:
 
 ```python
-# DataFrame cũ có 2 cột
+# Ghi DataFrame ban đầu với 2 cột
 df_v1 = spark.createDataFrame([(1, "Alice")], ["id", "name"])
 df_v1.write.format("delta").save("/tmp/my_table")
 
-# DataFrame mới có thêm cột 'age'
+# DataFrame mới xuất hiện thêm cột 'age'
 df_v2 = spark.createDataFrame([(2, "Bob", 30)], ["id", "name", "age"])
 
-# Nếu lưu bình thường sẽ báo lỗi Schema Mismatch.
-# Sử dụng mergeSchema để kích hoạt Schema Evolution:
+# Nếu ghi đè thông thường, Spark sẽ báo lỗi cấu trúc không khớp (Schema Mismatch).
+# Bằng cách bật mergeSchema, ta kích hoạt tính năng Schema Evolution:
 df_v2.write.format("delta") \
      .mode("append") \
      .option("mergeSchema", "true") \
      .save("/tmp/my_table")
 
-# Khi đọc lại:
+# Kiểm tra kết quả sau khi tiến hóa lược đồ:
 spark.read.format("delta").load("/tmp/my_table").show()
-# Kết quả:
+# Kết quả hiển thị:
 # +---+-----+----+
 # | id| name| age|
 # +---+-----+----+
-# |  1|Alice|null| -> File cũ tự động nhận NULL cho cột age
+# |  1|Alice|null| -> Dữ liệu cũ tự động nhận giá trị NULL cho cột age mới thêm
 # |  2|  Bob|  30|
 # +---+-----+----+
 ```
 
----
+## Những lưu ý để tránh biến Data Lake thành "bãi rác"
 
-## Best practices
+Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể dẫn đến những hệ quả khôn lường:
 
-* **Thiết lập cảnh báo / Validation**: Dù hệ thống cho phép tự động tiến hóa, bạn vẫn nên có cơ chế validation ở đầu vào (ví dụ dùng thư viện Great Expectations). Đôi khi sự thay đổi schema ở nguồn là một lỗi do con người (ví dụ typo tên cột) chứ không phải thay đổi nghiệp vụ.
-* **Tránh Downcasting**: Schema evolution chỉ hỗ trợ "nâng cấp" kiểu dữ liệu (widening). Không thể tự động thay đổi từ kiểu dữ liệu rộng sang kiểu hẹp (ví dụ `STRING` thành `INT`) vì có thể gây mất hoặc lỗi dữ liệu. Trong trường hợp này, hãy tạo cột mới hoặc ghi đè (overwrite) lại bảng.
-* **Sử dụng Column ID Tracking (Iceberg)**: Nếu đang thiết kế Data Lake mới từ đầu, Apache Iceberg có hệ thống theo dõi Schema Evolution ưu việt hơn nhờ Column IDs so với một số Table Format khác vẫn còn phụ thuộc một phần vào việc khớp tên cột.
+* **Đừng lạm dụng `mergeSchema = true`**: Nếu tự động chấp nhận mọi thay đổi cấu trúc từ nguồn đổ về, bảng của bạn sẽ nhanh chóng tích tụ hàng chục cột rác do lỗi gõ phím (typo) hoặc dữ liệu sai định dạng của hệ thống nguồn. Đối với các môi trường Production quan trọng, hãy thực hiện thay đổi schema một cách chủ động thông qua các lệnh `ALTER TABLE` có kiểm soát.
+* **Tránh hạ cấp kiểu dữ liệu (Downcasting)**: Schema Evolution chỉ hỗ trợ nâng cấp (widening). Bạn không thể tự động chuyển một cột từ `STRING` về lại `INT` vì điều này chắc chắn gây ra lỗi đọc dữ liệu hoặc mất mát thông tin. Nếu bắt buộc phải hạ cấp, bạn phải tạo cột mới hoặc ghi đè lại toàn bộ bảng.
+* **Sự khác biệt giữa các Table Format**: Nếu bạn đang xây dựng Data Lakehouse từ đầu, hãy cân nhắc chọn Apache Iceberg. Cơ chế quản lý qua Column ID của Iceberg hoạt động độc lập và an toàn hơn hẳn so với một số format vẫn còn phụ thuộc một phần vào tên cột.
 
----
+### So sánh các hướng tiếp cận xử lý:
 
-## Common mistakes
+| Tiêu chí | Cố định Schema (Strict Schema) | Tiến hóa Schema (Schema Evolution) |
+| :--- | :--- | :--- |
+| **Độ ổn định** | Rất cao, tránh tuyệt đối lỗi ở các Dashboard cuối. | Trung bình, có thể gây lỗi logic cho hạ nguồn. |
+| **Độ linh hoạt** | Kém, dễ làm sập pipeline khi nguồn thay đổi. | Cực tốt, dữ liệu thô luôn được lưu giữ đầy đủ. |
+| **Phù hợp cho** | Tầng dữ liệu cuối (Data Marts/Gold layer). | Tầng dữ liệu thô (Raw/Bronze layer). |
 
-* **Xóa cột vô tội vạ**: Mặc dù thao tác xóa cột diễn ra nhanh chóng trên metadata, nhưng bản chất file vật lý cũ chưa được làm sạch. Nếu một bảng bị thêm/xóa cột liên tục hàng ngàn lần, file metadata sẽ trở nên quá cồng kềnh.
-* **Lạm dụng "mergeSchema = true"**: Bật tự động merge schema cho tất cả các job có thể khiến bảng lưu trữ tích tụ hàng chục cột "rác" do các nguồn dữ liệu gửi sai định dạng vào. Tốt nhất nên để thao tác Schema Evolution là chủ động (Explicit DDL) qua các lệnh `ALTER TABLE` có kiểm soát.
+## Khái niệm liên quan
 
----
+* [Table Format](/concepts/table-format): Định dạng bảng dữ liệu.
+* Data Lakehouse: Kiến trúc kết hợp Data Lake và Data Warehouse.
+* [Delta Lake](/concepts/delta-lake): Định dạng lưu trữ mã nguồn mở của Databricks.
+* [Apache Iceberg](/concepts/apache-iceberg): Định dạng bảng phân tích hiệu năng cao.
 
-## Trade-offs
+## Góc phỏng vấn: Đào sâu về Schema Evolution
 
-### Ưu điểm
-* Giải phóng nguồn lực Data Engineer khỏi việc phải bảo trì thủ công các lỗi pipeline do đổi cấu trúc.
-* Cho phép dữ liệu liên tục chảy vào hệ thống mà không có downtime.
-* Không phải thực hiện các tác vụ backfill/rewrite tốn hàng giờ/ngày để sửa schema cũ.
+### 1. Tại sao Apache Iceberg được nhận xét là hỗ trợ Schema Evolution tốt hơn Apache Hive truyền thống?
+* **Gợi ý trả lời**: Apache Hive quản lý cột dựa trên **tên cột** hoặc **vị trí vật lý** trong file. Điều này dẫn đến việc đổi tên hoặc xóa cột ở giữa bảng sẽ làm Hive đọc sai lệch dữ liệu hoặc bị lỗi crash khi quét các file cũ. Ngược lại, Apache Iceberg sử dụng cơ chế **Column ID Tracking** – gán cho mỗi cột một ID bất biến. Dù bạn đổi tên hay thay đổi vị trí, truy vấn của Iceberg vẫn ánh xạ chính xác đến ID của cột đó trong file vật lý cũ, giúp quá trình tiến hóa lược đồ diễn ra an toàn và chỉ tốn chi phí cập nhật metadata cực kỳ nhỏ ($O(1)$).
 
-### Nhược điểm
-* **Nguy cơ tích tụ nợ kỹ thuật (Technical Debt)**: Lược đồ bảng có thể trở thành một bãi rác các cột với hàng chục cột null nếu không được quản trị cẩn thận.
-* **Phức tạp ở tầng đọc**: Engine phải thực hiện nhiều phép toán kiểm tra và ánh xạ metadata khi đọc dữ liệu, gây ra một chút độ trễ nhỏ so với việc đọc một tệp có cấu trúc cố định từ đầu đến cuối.
+### 2. Sự khác biệt giữa Upcasting và Downcasting trong tiến hóa cấu trúc là gì?
+* **Gợi ý trả lời**: 
+  * **Upcasting (Widening)** là việc chuyển đổi kiểu dữ liệu sang một định dạng rộng hơn (như từ `INT` lên `BIGINT`, `FLOAT` lên `DOUBLE`). Việc này rất an toàn vì kiểu dữ liệu mới bao hàm hoàn toàn kiểu dữ liệu cũ, hệ thống có thể tự động ép kiểu (cast) ngay khi đọc dữ liệu mà không lo mất mát thông tin.
+  * **Downcasting (Narrowing)** là chiều ngược lại (ví dụ từ `BIGINT` xuống `INT`, hoặc `STRING` về `DATE`). Việc này không được hỗ trợ tự động vì tiềm ẩn nguy cơ tràn số (overflow) hoặc lỗi phân tích định dạng (parse error) trên dữ liệu cũ, làm hỏng toàn bộ luồng xử lý phía sau.
 
----
-
-## When to use
-
-* Pipeline ETL/ELT lấy dữ liệu từ các API bên thứ 3 (Facebook Ads, Google Analytics) nơi cấu trúc JSON trả về có thể thay đổi liên tục không báo trước.
-* Kiến trúc Data Lakehouse sử dụng các Table Formats (Iceberg, Delta, Hudi).
-* Môi trường phát triển ứng dụng linh hoạt (Agile) nơi schema của database OLTP thay đổi mỗi tuần.
-
-## When not to use
-
-* Các Core Data Warehouse (như mô hình Kimball Star Schema) cần tính tuân thủ và độ chính xác cấu trúc tuyệt đối. Tại đây, mọi thay đổi schema phải được phê duyệt và quy hoạch cẩn thận chứ không được tự động tiến hóa.
-
----
-
-## Related concepts
-
-* [Table Format](/concepts/table-format)
-* Data Lakehouse
-* [Delta Lake](/concepts/delta-lake)
-* [Apache Iceberg](/concepts/apache-iceberg)
-
----
-
-## Interview questions
-
-### 1. Tại sao Apache Iceberg được cho là hỗ trợ Schema Evolution tốt hơn Apache Hive truyền thống?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sâu về cách hệ thống theo dõi metadata.
-* **Gợi ý trả lời (Strong Answer)**: 
-  Apache Hive theo dõi cột dựa vào **Tên Cột (Column Name)** hoặc **Vị trí (Position)** trong file. Do đó, nếu đổi tên cột hoặc xóa cột ở giữa, Hive sẽ bị nhầm lẫn dữ liệu hoặc báo lỗi khi đọc file cũ. Ngược lại, Apache Iceberg gán cho mỗi cột một **ID duy nhất và bất biến**. Bất kể bạn đổi tên hay thứ tự cột, hệ thống vẫn dùng ID này để tham chiếu vào dữ liệu bên trong file Parquet. Nhờ vậy, Iceberg xử lý việc Rename và Drop cột một cách hoàn hảo và an toàn (O(1) metadata operation).
-
-### 2. Upcasting (Widening) trong Schema Evolution là gì? Tại sao hệ thống thường không hỗ trợ Downcasting?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về kiểu dữ liệu và rủi ro mất mát dữ liệu.
-* **Gợi ý trả lời (Strong Answer)**:
-  Upcasting là việc thay đổi kiểu dữ liệu của một cột sang một kiểu rộng hơn có thể bao hàm hoàn toàn kiểu cũ (ví dụ: `INT` -> `BIGINT` hoặc `FLOAT` -> `DOUBLE`). Điều này an toàn và được hệ thống thực hiện tự động khi đọc. Downcasting (ví dụ: `BIGINT` -> `INT` hoặc `STRING` -> `DATE`) không được hỗ trợ tự động vì nguy cơ tràn bộ nhớ (overflow) hoặc lỗi phân tích chuỗi (parse error) trên dữ liệu cũ đang tồn tại, gây ra hỏng hóc dữ liệu hoặc sai lệch tính toán ở hạ nguồn.
-
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Apache Iceberg Documentation**: Schema Evolution (iceberg.apache.org/evolution) - Giải thích chi tiết về Column ID tracking.
 2. **Delta Lake Documentation**: Schema Validation & Evolution.
 
----
-
-## English summary
+## English Summary
 
 Schema Evolution is a critical feature in modern Data Lakehouse architectures (via table formats like Iceberg, Delta Lake, and Hudi) that allows users to modify a table's structure—such as adding, dropping, renaming, or upcasting columns—without the need to rewrite historical data files. By utilizing metadata mapping and unique column ID tracking, query engines can seamlessly read old data formats alongside new ones. This eliminates costly pipeline breakages and rewrite operations when upstream source schemas change, significantly enhancing the agility and reliability of data engineering workflows.

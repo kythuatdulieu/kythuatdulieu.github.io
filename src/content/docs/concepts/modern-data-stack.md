@@ -9,70 +9,26 @@ seoTitle: "Modern Data Stack (MDS) - Hệ sinh thái dữ liệu hiện đại"
 metaDescription: "Tìm hiểu Modern Data Stack (MDS): định nghĩa, các thành phần công cụ như Fivetran, Snowflake, dbt, sự chuyển dịch từ ETL sang ELT và câu hỏi phỏng vấn."
 ---
 
-# Modern Data Stack
+# Modern Data Stack (MDS): Hệ Sinh Thái Dữ Liệu Hiện Đại Trên Đám Mây
 
-## Summary
+Cách đây khoảng một thập kỷ, việc xây dựng một hệ thống phân tích dữ liệu lớn (Big Data) cho doanh nghiệp là một nhiệm vụ vô cùng gian nan. Bạn cần một đội ngũ kỹ sư phần mềm hùng hậu để vận hành các cụm máy chủ vật lý On-premise chạy Hadoop, viết hàng ngàn dòng code Java/Scala phức tạp để xử lý dữ liệu và tự tay viết code kết nối với API của các dịch vụ như Facebook Ads hay Salesforce. 
 
-Modern Data Stack (MDS) là một tập hợp các công cụ và nền tảng dữ liệu dựa trên điện toán đám mây (Cloud-native), được sử dụng để giảm bớt độ phức tạp trong việc xây dựng hệ thống phân tích doanh nghiệp. Thay vì xây dựng hoặc bảo trì phần mềm nội bộ tùy chỉnh, MDS cung cấp các giải pháp Phần mềm dạng dịch vụ (SaaS) lắp ghép được thiết kế cho người dùng chú trọng vào SQL và lấy Kho dữ liệu đám mây (Cloud Data Warehouse) làm trung tâm.
+Hôm nay, mọi thứ đã thay đổi hoàn toàn nhờ sự xuất hiện của **Modern Data Stack (MDS) - Hệ sinh thái dữ liệu hiện đại**.
 
----
+Modern Data Stack không phải là một công cụ đơn lẻ, mà là một triết lý thiết kế hệ thống dữ liệu xoay quanh các dịch vụ đám mây (Cloud-native SaaS). MDS giúp đơn giản hóa tối đa quy trình thu thập, lưu trữ và biến đổi dữ liệu, cho phép các doanh nghiệp từ startup nhỏ đến tập đoàn lớn có thể xây dựng một hệ thống báo cáo BI hoàn chỉnh chỉ trong vòng vài tuần (thậm chí vài ngày) thay vì mất nhiều tháng như trước.
 
-## Definition
+## Từ ETL truyền thống sang mô hình ELT hiện đại
 
-**Modern Data Stack (MDS)** không phải là một công nghệ đơn lẻ, mà là một thuật ngữ chỉ hệ sinh thái các công cụ (Data tools) chuyên biệt, thường được kết nối với nhau xoay quanh một Cloud Data Warehouse trung tâm. 
+Đặc trưng lớn nhất phân biệt Modern Data Stack với các kiến trúc cũ là sự dịch chuyển từ mô hình **ETL** (Extract - Transform - Load) sang **ELT** (Extract - Load - Transform).
 
-Đặc trưng cốt lõi của MDS là sự thay đổi mô hình từ **ETL** (Trích xuất -> Chuyển đổi -> Nạp) sang mô hình **ELT** (Trích xuất -> Nạp -> Chuyển đổi), nơi sức mạnh tính toán khổng lồ của Cloud Data Warehouse được sử dụng để thực hiện việc chuyển đổi dữ liệu bằng ngôn ngữ SQL.
-
----
-
-## Why it exists
-
-Những năm 2010, xây dựng một hệ thống dữ liệu Hadoop On-premise đòi hỏi một đội ngũ kỹ sư phần mềm viết mã Java/Scala phức tạp, quản lý máy chủ Linux vật lý và điều phối các hệ thống phân tán khó hiểu. Việc tích hợp API từ Facebook Ads hay Salesforce đòi hỏi hàng tháng code tay.
-
-Modern Data Stack xuất hiện nhằm **"dân chủ hóa dữ liệu" (Democratize Data)**:
-1. Cho phép bất kỳ công ty nào cũng có thể có một hệ thống phân tích dữ liệu chuyên nghiệp trong vòng vài tuần (thậm chí vài ngày) thông qua các dịch vụ SaaS chỉ việc trả tiền và cấu hình.
-2. Cho phép các **Data Analysts** (những người chỉ biết SQL) có thể làm công việc chuyển đổi dữ liệu của Data Engineers mà không cần biết code Python/Scala.
+* **ETL truyền thống**: Dữ liệu được trích xuất (Extract), đưa qua một máy chủ trung gian để làm sạch, biến đổi logic (Transform), rồi mới nạp (Load) vào kho dữ liệu. Nguyên nhân là do phần cứng của các Data Warehouse thế hệ cũ rất đắt đỏ và hữu hạn, không thể gánh nổi các tác vụ biến đổi dữ liệu nặng nề.
+* **ELT hiện đại**: Dữ liệu thô từ các nguồn được trích xuất và nạp thẳng vào **Cloud Data Warehouse** (như Snowflake, BigQuery) mà không cần chế biến trước. Sau đó, chúng ta tận dụng sức mạnh tính toán phân tán gần như vô hạn và rẻ tiền của đám mây để thực hiện toàn bộ việc biến đổi dữ liệu bằng ngôn ngữ SQL trực tiếp bên trong kho dữ liệu.
 
 ---
 
-## Core idea
+## Các thành phần cốt lõi của Modern Data Stack
 
-Ý tưởng cốt lõi của MDS là **Modularity (Tính module hóa) và Cloud-native**:
-Thay vì dùng một bộ công cụ "tất cả trong một" của hãng Oracle hay IBM, MDS chia cắt quy trình ra thành các công cụ tinh gọn nhất, làm tốt nhất một nhiệm vụ duy nhất và dễ dàng kết nối với nhau.
-
-Quy trình chuẩn của MDS (Mô hình ELT):
-* **Extract & Load (EL)**: Lấy dữ liệu thô và thả thẳng vào Data Warehouse càng nhanh càng tốt.
-* **Transform (T)**: Dùng SQL viết bên trong Data Warehouse để làm sạch và tổ chức dữ liệu.
-
----
-
-## How it works (Các thành phần cấu trúc)
-
-Một Modern Data Stack tiêu chuẩn bao gồm 4-5 tầng thành phần chính:
-
-1. **Data Integration (Thu thập & Nạp dữ liệu tự động)**:
-   - Các công cụ SaaS có sẵn hàng ngàn đầu nối (connectors) tới các cơ sở dữ liệu và API phổ biến. Chỉ cần điền API key, nó sẽ tự động đồng bộ data.
-   - *Công cụ tiêu biểu*: Fivetran, Airbyte, Stitch.
-
-2. **Cloud Data Warehouse (Kho lưu trữ trung tâm)**:
-   - Trái tim của hệ thống. Tự động mở rộng quy mô tính toán mà không cần cấu hình cụm máy chủ phức tạp.
-   - *Công cụ tiêu biểu*: Snowflake, Google BigQuery, Amazon Redshift.
-
-3. **Data Transformation (Chuyển đổi bằng SQL)**:
-   - Một công cụ quản lý các câu lệnh SQL để biến đổi dữ liệu thô thành dữ liệu mô hình báo cáo. Tích hợp kiểm soát phiên bản (Git), kiểm thử dữ liệu (Testing) theo phương pháp kỹ thuật phần mềm (Software Engineering).
-   - *Công cụ tiêu biểu*: dbt (Data Build Tool), Dataform.
-
-4. **Business Intelligence (Trực quan hóa)**:
-   - Công cụ truy cập vào các bảng đã được làm sạch để vẽ biểu đồ và tạo báo cáo self-service cho quản lý kinh doanh.
-   - *Công cụ tiêu biểu*: Looker, Tableau, Metabase, Superset.
-
-5. **Data Orchestration & Observability (Điều phối và Giám sát)**:
-   - Công cụ lập lịch chạy tuần tự các tác vụ trên (ví dụ chạy Fivetran trước, xong rồi chạy dbt).
-   - *Công cụ tiêu biểu*: Apache Airflow, Dagster, Prefect.
-
----
-
-## Architecture / Flow
+Một hệ thống Modern Data Stack tiêu chuẩn được xây dựng theo kiến trúc module hóa (lắp ghép các công cụ tốt nhất cho từng nhiệm vụ riêng biệt) và thường bao gồm các tầng sau:
 
 ```mermaid
 graph LR
@@ -113,19 +69,37 @@ graph LR
     G --> I
 ```
 
+### 1. Data Integration (Thu thập & Nạp dữ liệu tự động)
+Thay vì tự viết code kết nối API, bạn sử dụng các công cụ SaaS có sẵn hàng ngàn cổng kết nối (connectors). Chỉ cần điền thông tin tài khoản và click chuột, dữ liệu sẽ tự động được đồng bộ vào kho.
+* *Công cụ tiêu biểu*: Fivetran, Airbyte, Stitch.
+
+### 2. Cloud Data Warehouse (Kho lưu trữ đám mây trung tâm)
+Trái tim của toàn bộ hệ thống, nơi lưu trữ toàn bộ dữ liệu thô lẫn dữ liệu đã qua xử lý. Hệ thống tự động scale tài nguyên tính toán theo nhu cầu thực tế và tính phí theo lượng sử dụng.
+* *Công cụ tiêu biểu*: Snowflake, Google BigQuery, Amazon Redshift.
+
+### 3. Data Transformation (Chuyển đổi dữ liệu bằng SQL)
+Công cụ quản lý các câu lệnh SQL để làm sạch và tổ chức dữ liệu thô thành các bảng báo cáo. Nó mang các tiêu chuẩn của kỹ nghệ phần mềm (quản lý mã nguồn bằng Git, viết test case kiểm tra chất lượng dữ liệu) áp dụng vào việc viết SQL.
+* *Công cụ tiêu biểu*: dbt (Data Build Tool), Dataform.
+
+### 4. Business Intelligence (Trực quan hóa dữ liệu)
+Nơi người dùng cuối (nhân viên, ban giám đốc) truy cập để kéo thả, vẽ biểu đồ và tự phục vụ (self-service) nhu cầu phân tích số liệu của mình.
+* *Công cụ tiêu biểu*: Looker, Tableau, Metabase, Superset.
+
+### 5. Data Orchestration & Observability (Điều phối và Giám sát)
+Nhạc trưởng điều phối lịch chạy tuần tự của toàn bộ hệ thống (ví dụ: kích hoạt Airbyte nạp dữ liệu xong, tự động gọi dbt chạy biến đổi, rồi gửi thông báo sang Slack nếu có lỗi).
+* *Công cụ tiêu biểu*: Apache Airflow, Dagster, Prefect.
+
 ---
 
-## Practical example
+## Minh họa thực tế: Đường ống tính ROI quảng cáo
 
-Một công ty bán lẻ có dữ liệu kho ở MySQL và chi phí quảng cáo ở Facebook Ads. 
-1. Họ dùng **Airbyte (EL)**: Cấu hình tài khoản Facebook và thông tin kết nối MySQL. Airbyte tự động đồng bộ hóa (replica) dữ liệu thô này vào BigQuery định kỳ 1 tiếng 1 lần.
-2. Dữ liệu nằm trong **BigQuery** ở dạng JSON thô hoặc các bảng lộn xộn.
-3. Kỹ sư phân tích (Analytics Engineer) viết các file SQL bằng **dbt (T)** để: JOIN bảng chi phí của Facebook với doanh thu đơn hàng kho để tính ra ROI, kiểm tra tính toàn vẹn khóa chính. dbt biên dịch và đẩy SQL vào BigQuery chạy.
-4. Giám đốc xem báo cáo tỷ suất hoàn vốn ROI trực tiếp trên **Metabase (BI)** nối với bảng Data Mart cuối cùng của dbt.
+Hãy tưởng tượng bạn có dữ liệu bán hàng nằm ở database MySQL và chi phí chạy quảng cáo nằm ở tài khoản Facebook Ads.
+1. Bạn cấu hình kết nối Facebook Ads và MySQL trên giao diện **Airbyte (EL)**. Airbyte sẽ tự động copy toàn bộ dữ liệu thô này thả vào **BigQuery (Warehouse)** sau mỗi một tiếng.
+2. Tại BigQuery, dữ liệu Facebook Ads ban đầu nằm dưới dạng JSON thô rất khó đọc.
+3. Analytics Engineer sẽ viết các đoạn mã SQL trong **dbt (T)** để thực hiện việc bóc tách JSON, JOIN bảng chi phí quảng cáo với bảng doanh số đơn hàng để tính toán tỷ suất hoàn vốn (ROI). dbt sẽ biên dịch đoạn code này và đẩy xuống BigQuery thực thi.
+4. Cuối cùng, Giám đốc Marketing có thể mở dashboard trên **Metabase (BI)** để theo dõi hiệu quả chiến dịch một cách trực quan mà không cần biết viết một dòng code nào.
 
-Toàn bộ quy trình có thể được setup chỉ bởi 1 Kỹ sư Dữ liệu/Phân tích viên trong 1-2 tuần làm việc.
-
-**Mã nguồn SQL mẫu trong dbt (Tầng Transform):**
+Dưới đây là một đoạn code dbt mẫu để tính toán ROI:
 
 ```sql
 -- models/marts/marketing/fct_campaign_roi.sql
@@ -146,49 +120,37 @@ LEFT JOIN sales s ON f.campaign_id = s.campaign_id
 
 ---
 
-## Best practices
+## Cân nhắc ưu nhược điểm và kinh nghiệm thực chiến
 
-* **Tiêu chuẩn hóa với dbt**: Áp dụng quy trình kỹ thuật phần mềm vào phân tích dữ liệu: code SQL phải được quản lý trên Git, review qua Pull Request, CI/CD và viết test cases. dbt là công cụ bắt buộc phải có cho sự thành công của Modern Data Stack.
-* **Tách biệt EL và T**: Tuyệt đối không viết logic xử lý dữ liệu (Transform) lồng vào trong các công cụ thu nạp (Airbyte/Fivetran). Hãy nạp dữ liệu thuần nguyên bản (raw data) vào Data Warehouse, sau đó dùng dbt xử lý để đảm bảo việc sửa lỗi logic dễ dàng.
-* **Theo dõi chi phí Warehouse**: MDS dựa rất lớn vào sức mạnh tính toán của Cloud Data Warehouse. Nếu SQL viết kém hoặc lịch chạy dbt quá dày đặc (5 phút 1 lần dù báo cáo chỉ xem vào cuối ngày) sẽ sinh ra hóa đơn Cloud khổng lồ.
+### Những ưu điểm vượt trội (Pros)
+* **Triển khai cực nhanh (Time-to-market)**: Rất phù hợp cho startup và các công ty vừa và nhỏ (SME) cần xây dựng nhanh hệ thống BI để ra quyết định kinh doanh.
+* **Hạn chế tối đa nợ bảo trì**: Mọi công cụ cốt lõi đều là SaaS đám mây. Bạn không cần lo lắng về việc sập nguồn máy chủ hay hỏng ổ đĩa cứng.
+* **Dân chủ hóa vai trò (Analytics Engineering)**: Trao quyền cho các nhà phân tích dữ liệu (chỉ cần thạo SQL) tự mình xây dựng các đường ống dữ liệu hoàn chỉnh mà không nhất thiết phải cần đến kỹ sư lập trình Python/Scala.
 
----
+### Những hạn chế cần lưu ý (Cons)
+* **Nguy cơ hóa đơn tăng vọt**: Vì tính phí theo lượng sử dụng, nếu bạn viết SQL cẩu thả hoặc cấu hình dbt chạy full-refresh quá liên tục (ví dụ chạy 5 phút một lần dù báo cáo chỉ xem cuối ngày) sẽ sinh ra hóa đơn Cloud khổng lồ vào cuối tháng.
+* **Quá tải số lượng công cụ (Vendor Lock-in)**: Việc chia nhỏ quy trình thành nhiều công cụ chuyên biệt có thể dẫn đến việc doanh nghiệp phải trả phí bản quyền cho quá nhiều nhà cung cấp khác nhau và gặp khó khăn khi đồng bộ thông tin giữa chúng.
 
-## Common mistakes
-
-* **Quá tải SaaS (Công cụ chồng chéo)**: Có quá nhiều nhà cung cấp trong MDS khiến công ty mua hàng loạt công cụ (Reverse ETL, Data Catalog, Data Observability, Metrics Store...) dẫn đến chi phí bản quyền khổng lồ và dữ liệu bị phân mảnh.
-* **Bỏ qua quản lý chi phí Compute**: Tầm nhìn của dbt là khuyến khích việc tạo bảng/views liên tục thông qua SQL (bản chất của dbt run). Nếu không có chính sách làm sạch, DWH sẽ chứa hàng ngàn view rác và sinh ra phí quét dữ liệu tốn kém.
-* **Áp dụng MDS cho Real-time**: MDS là kiến trúc thiết kế để xử lý theo lô (Batch Processing). Việc cố ép Airbyte/dbt phải chạy streaming (trễ từng giây) là sai thiết kế.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* **Triển khai thần tốc (Time-to-market)**: Rất dễ dàng thiết lập, phù hợp cho các doanh nghiệp vừa và nhỏ, Startup cần số liệu gấp.
-* **Giảm nợ bảo trì (Low maintenance)**: Kỹ sư không phải đau đầu lo việc database server sập hay hỏng ổ đĩa, mọi thứ là SaaS và Cloud-managed.
-* **Mở rộng vai trò của Data Analyst (Analytics Engineer)**: Nhà phân tích biết SQL có thể tự mình thực hiện end-to-end data pipeline.
-
-### Nhược điểm
-* **Chi phí tỷ lệ thuận với quy mô**: Khi dữ liệu lên đến ngưỡng Terabytes/Petabytes, chi phí chạy SQL trên BigQuery/Snowflake và phí trả cho Fivetran sẽ đội lên chóng mặt.
-* **Vendor Lock-in (Ràng buộc nhà cung cấp)**: Bạn hoàn toàn phụ thuộc vào roadmap cập nhật của các công ty cung cấp SaaS.
+### Lời khuyên xương máu khi triển khai (Best Practices)
+* **Tách biệt hoàn toàn nạp và biến đổi**: Đừng bao giờ viết logic làm sạch hay xử lý dữ liệu phức tạp bên trong các công cụ thu nạp như Airbyte hay Fivetran. Hãy luôn nạp dữ liệu thô nguyên bản (raw data) vào warehouse trước, sau đó mới dùng dbt để biến đổi. Điều này giúp bạn dễ dàng chạy lại (re-run) hệ thống khi có lỗi logic xảy ra.
+* **Kiểm soát chi phí tính toán**: Lên lịch chạy pipeline phù hợp với nhu cầu thực tế của doanh nghiệp. Thiết lập các cảnh báo giới hạn chi phí trên Snowflake hay BigQuery để phát hiện kịp thời các truy vấn "ngốn" tiền.
 
 ---
 
-## When to use
+## Khi nào nên và không nên chọn Modern Data Stack?
 
-* Các Startup, công ty quy mô vừa (SME) và lớn, muốn nhanh chóng thiết lập hệ thống BI và báo cáo.
-* Đội ngũ Kỹ thuật Dữ liệu mỏng nhưng có đội Data Analyst thạo SQL đông đảo.
-* Ngân sách có thể đầu tư linh hoạt cho chi phí vận hành (OpEx) các gói SaaS đám mây.
+### Nên chọn khi:
+* Doanh nghiệp đang chuyển dịch hệ thống lên Cloud hoặc xây dựng hạ tầng dữ liệu mới từ đầu.
+* Bạn có đội ngũ Data Analyst thạo SQL đông đảo nhưng số lượng Kỹ sư dữ liệu (Data Engineer) còn mỏng.
+* Cần tích hợp nhanh chóng hàng chục nguồn dữ liệu SaaS khác nhau để phục vụ báo cáo.
 
-## When not to use
-
-* Doanh nghiệp có yêu cầu cực gắt về bảo mật, không được phép đưa dữ liệu lên Cloud (Government, Banking siêu bảo mật).
-* Yêu cầu tính toán học máy phân tán khổng lồ (Spark/Databricks phù hợp hơn) hoặc xử lý thời gian thực độ trễ mili-giây (Kappa architecture, Kafka/Flink).
+### Không nên chọn khi:
+* Doanh nghiệp có yêu cầu cực kỳ khắt khe về bảo mật thông tin, không được phép đưa dữ liệu ra ngoài On-premise (như ngân hàng, quốc phòng).
+* Hệ thống bắt buộc phải xử lý dữ liệu theo thời gian thực (độ trễ dưới 1 giây). MDS bản chất được thiết kế để xử lý dữ liệu theo lô (Batch Processing).
 
 ---
 
-## Related concepts
+## Khái niệm liên quan
 
 * [Data Warehouse](/concepts/data-warehouse)
 * [Cost Optimization](/concepts/cost-optimization)
@@ -196,22 +158,26 @@ LEFT JOIN sales s ON f.campaign_id = s.campaign_id
 
 ---
 
-## Interview questions
+## Góc phỏng vấn: Câu hỏi thường gặp
 
-### 1. Sự chuyển dịch từ kiến trúc ETL truyền thống sang ELT trong Modern Data Stack giải quyết vấn đề gì?
-* **Người phỏng vấn muốn kiểm tra**: Sự hiểu biết về kiến trúc phần mềm và động lực thị trường Cloud.
-* **Gợi ý trả lời (Strong Answer)**: Trước đây hệ thống kho dữ liệu (On-premise) có phần cứng hữu hạn, do đó việc Transform (T) phải được làm bằng một máy chủ bên ngoài bằng Spark/Java để giảm tải cho kho dữ liệu (ETL). Ngày nay, nhờ Cloud Data Warehouse (Snowflake, BigQuery) tách biệt khả năng tính toán và lưu trữ, đồng thời sức mạnh xử lý song song khổng lồ, việc tải thẳng dữ liệu thô vào DWH và dùng ngay SQL của DWH để Transform (ELT) trở nên cực nhanh và rẻ. ELT còn bảo tồn toàn bộ dữ liệu gốc để có thể dễ dàng chạy lại logic bất cứ lúc nào.
+### 1. Tại sao Modern Data Stack lại thúc đẩy sự chuyển dịch từ ETL sang ELT?
+* **Mục đích của người phỏng vấn**: Đánh giá sự thấu hiểu của bạn về sự thay đổi kiến trúc phần mềm dữ liệu dưới tác động của công nghệ đám mây.
+* **Gợi ý trả lời**:
+  * Trước đây, tài nguyên lưu trữ và tính toán của các kho dữ liệu On-premise rất đắt đỏ và khó mở rộng. Do đó, chúng ta buộc phải trích xuất dữ liệu ra một máy chủ trung gian để lọc và biến đổi (Transform) trước khi nạp vào kho để tiết kiệm dung lượng (ETL).
+  * Hiện nay, các Cloud Data Warehouse (Snowflake, BigQuery) đã tách biệt hoàn toàn bộ nhớ lưu trữ (rất rẻ) và bộ xử lý tính toán (có thể co giãn linh hoạt tức thì). Do đó, việc nạp trực tiếp dữ liệu thô vào kho rồi dùng chính SQL của kho để biến đổi (ELT) trở nên nhanh hơn, rẻ hơn và an toàn hơn rất nhiều. ELT cũng giúp bảo toàn dữ liệu gốc, giúp việc thay đổi logic kinh doanh sau này dễ dàng hơn mà không cần nạp lại dữ liệu từ nguồn.
 
-### 2. dbt (Data Build Tool) là gì và tại sao nó đóng vai trò cốt lõi trong MDS?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức về vai trò Analytics Engineer và công cụ Transform thế hệ mới.
-* **Gợi ý trả lời (Strong Answer)**: dbt là công cụ cho phép các nhà phân tích sử dụng SQL thuần túy (với Jinja template) để thực hiện các phép biến đổi dữ liệu (Transform) bên trong kho dữ liệu. Nó quan trọng vì nó mang các phương pháp Software Engineering (như version control/Git, viết test cases kiểm tra null/unique, modularity, tự động tạo documentation lineage) vào thế giới lập trình SQL – điều mà trước đây các data analyst làm việc một cách tự do, thiếu kiểm soát.
+### 2. dbt (Data Build Tool) đóng vai trò gì trong Modern Data Stack và tại sao nó lại được đánh giá cao như vậy?
+* **Mục đích của người phỏng vấn**: Kiểm tra kiến thức của bạn về công cụ biến đổi dữ liệu tiêu chuẩn hiện nay.
+* **Gợi ý trả lời**:
+  * dbt đóng vai trò làm trung tâm của tầng biến đổi (Transform - chữ T trong ELT). Nó cho phép viết các câu truy vấn SQL lồng nhau một cách có tổ chức (nhờ cấu trúc modularity và hàm `ref()`).
+  * dbt được đánh giá cao vì nó đã mang các tiêu chuẩn chất lượng của kỹ nghệ phần mềm (Software Engineering) áp dụng vào việc phân tích dữ liệu: quản lý mã nguồn bằng Git, viết test case tự động kiểm tra chất lượng dữ liệu (kiểm tra trùng lặp, giá trị null), tự động vẽ bản đồ dòng chảy dữ liệu (Data Lineage) và tự động tạo tài liệu hướng dẫn (documentation).
 
 ---
 
-## References
+## Tài liệu tham khảo
 
-1. **dbt Labs Blog** - Nơi đặt nền móng và định nghĩa về Analytics Engineering và Modern Data Stack.
-2. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley (Chương 2 về vòng đời kỹ thuật dữ liệu).
+1. **dbt Labs Blog** - *Các bài viết định hình khái niệm Analytics Engineering và MDS*.
+2. **"Fundamentals of Data Engineering"** - Joe Reis & Matt Housley.
 
 ---
 

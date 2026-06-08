@@ -11,54 +11,38 @@ metaDescription: "Tìm hiểu về Phân loại dữ liệu (Data Classification
 
 # Phân loại dữ liệu - Data Classification
 
-## Summary
+Khi dữ liệu trở thành nguồn tài sản chiến lược của doanh nghiệp, việc bảo vệ nó khỏi các cuộc tấn công bảo mật và rò rỉ thông tin là nhiệm vụ quan trọng hàng đầu. Tuy nhiên, nếu bạn cố gắng bảo vệ mọi byte dữ liệu với cùng một tiêu chuẩn an ninh nghiêm ngặt nhất, bạn sẽ nhanh chóng cạn kiệt ngân sách. **Data Classification (Phân loại dữ liệu)** chính là nghệ thuật gán nhãn và phân cấp thông tin, giúp doanh nghiệp tập trung nguồn lực để bảo vệ những gì thực sự nhạy cảm và giá trị nhất.
 
-Phân loại dữ liệu (Data Classification) là quá trình nhận diện, gán nhãn và phân nhóm dữ liệu dựa trên mức độ nhạy cảm, giá trị nghiệp vụ và yêu cầu tuân thủ pháp lý. Việc phân loại giúp doanh nghiệp áp dụng các chính sách bảo mật, lưu trữ và quyền truy cập phù hợp, đặc biệt là trong việc bảo vệ dữ liệu nhận dạng cá nhân (PII - Personally Identifiable Information).
+## Phân loại dữ liệu (Data Classification): Khiên bảo vệ tài sản thông tin
 
----
+Về cơ bản, **Phân loại dữ liệu** là quy trình nhận diện, gán nhãn và phân nhóm dữ liệu dựa trên mức độ nhạy cảm, giá trị nghiệp vụ cũng như các yêu cầu tuân thủ pháp luật. 
 
-## Definition
+Hệ thống này giúp gán các siêu dữ liệu `(Metadata/Tags)` cho từng tập dữ liệu trong hệ thống nhằm xác định rõ ràng:
+1. Dữ liệu này đang chứa loại thông tin gì?
+2. Mức độ nhạy cảm của nó ra sao? (Ví dụ phân chia thành 4 cấp độ: *Public - Công khai*, *Internal - Nội bộ*, *Confidential - Bảo mật*, *Restricted - Tuyệt mật*).
+3. Những quy định pháp lý nào đang điều chỉnh (ví dụ: luật bảo vệ dữ liệu cá nhân GDPR, HIPAA trong y tế, hay PCI-DSS trong thanh toán thẻ).
 
-**Data Classification (Phân loại dữ liệu)** là hệ thống các quy trình và công cụ để đánh giá, gắn siêu dữ liệu (metadata/tags) cho các tập dữ liệu trong hệ thống nhằm xác định:
-1. Dữ liệu này chứa thông tin gì?
-2. Mức độ nhạy cảm của dữ liệu (Public, Internal, Confidential, Restricted).
-3. Các quy định pháp lý nào đang điều chỉnh dữ liệu này (GDPR, HIPAA, PCI-DSS).
+Quy trình phân loại này có thể được thiết lập từ cấp độ vĩ mô như toàn bộ database, bảng dữ liệu, cho tới cấp độ vi mô như từng cột thông tin hoặc từng tệp tin riêng lẻ.
 
-Việc phân loại được thực hiện ở nhiều cấp độ, từ cấp độ cơ sở dữ liệu (database), bảng (table), cột (column) cho đến từng tệp tin. Quá trình này có thể thực hiện thủ công hoặc tự động hóa bằng Machine Learning / Regex.
+## Tại sao bảo mật cào bằng lại là một sai lầm đắt đỏ?
 
----
+Khi quy mô dữ liệu chạm ngưỡng hàng Terabytes hay Petabytes, việc áp dụng các cơ chế mã hóa phức tạp `(encryption at rest/in transit)` và kiểm toán gắt gao cho mọi bảng dữ liệu là điều bất khả thi và gây lãng phí tài nguyên tính toán cực kỳ lớn. Phân loại dữ liệu ra đời để giải quyết ba bài toán thực tế sau:
 
-## Why it exists
+* **Tuân thủ pháp luật (Compliance)**: Các đạo luật bảo vệ quyền riêng tư (như GDPR hay Nghị định 13 tại Việt Nam) yêu cầu doanh nghiệp phải biết chính xác dữ liệu định danh cá nhân `(PII - Personally Identifiable Information)` của khách hàng đang nằm ở đâu để có thể thực hiện quyền được xóa bỏ dữ liệu hoặc mã hóa bảo vệ khi có yêu cầu.
+* **Tối ưu hóa chi phí an ninh**: Việc biết rõ bảng nào là thông tin công cộng, bảng nào chứa dữ liệu thẻ tín dụng giúp doanh nghiệp phân bổ ngân sách bảo mật một cách thông minh nhất vào những khu vực trọng yếu.
+* **Đánh giá thiệt hại khi xảy ra sự cố (Data Breach)**: Nếu chẳng may hệ thống bị tấn công, việc sở hữu bản đồ phân loại dữ liệu rõ ràng giúp ban lãnh đạo lập tức xác định được mức độ nghiêm trọng của phần dữ liệu bị lộ lọt để đưa ra các biện pháp ứng phó kịp thời.
 
-Khi khối lượng dữ liệu trong doanh nghiệp tăng theo cấp số nhân (Big Data), việc bảo vệ toàn bộ dữ liệu với cùng một tiêu chuẩn an ninh là điều **bất khả thi và cực kỳ tốn kém**. Data Classification ra đời để giải quyết các vấn đề:
-1. **Tuân thủ pháp lý (Compliance)**: Các quy định như GDPR yêu cầu doanh nghiệp phải biết chính xác dữ liệu người dùng (PII) đang nằm ở đâu để có thể xóa (Right to be Forgotten) hoặc mã hóa đúng chuẩn.
-2. **Tối ưu chi phí bảo mật**: Không phải dữ liệu nào cũng cần mã hóa nhiều lớp (encryption at rest/in transit) và sao lưu liên tục. Phân loại giúp dồn ngân sách bảo mật vào những dữ liệu thực sự quan trọng.
-3. **Giảm thiểu rủi ro rò rỉ (Data Breach)**: Khi xảy ra sự cố bảo mật, việc biết được loại dữ liệu nào bị lộ giúp doanh nghiệp đánh giá được mức độ thiệt hại và có biện pháp ứng phó kịp thời.
+## Các trụ cột của quy trình phân loại dữ liệu
 
----
+Một chiến lược Phân loại dữ liệu hiệu quả được xây dựng dựa trên ba trụ cột chính:
 
-## Core idea
+* **Khám phá dữ liệu (Data Discovery)**: Quét tự động toàn bộ kho lưu trữ (Data Warehouse, Data Lake) để nhận diện các mẫu dữ liệu nhạy cảm thông qua các thuật toán so khớp chuỗi (Regex) hoặc Học máy (Machine Learning).
+* **Phân cấp bảo mật (Security Tiering)**: Thiết lập các quy chuẩn phân cấp rõ ràng. Mô hình phổ biến nhất thường chia thành 4 lớp: Public (Dữ liệu công cộng), Internal (Dữ liệu nội bộ của nhân viên), Confidential (Dữ liệu tài chính, chiến lược kinh doanh) và Restricted (Dữ liệu tuyệt mật liên quan trực tiếp đến thông tin cá nhân khách hàng PII).
+* **Quản lý siêu dữ liệu (Metadata Management)**: Lưu trữ các nhãn phân loại này tập trung trong các hệ thống Data Catalog để làm cơ sở cho việc phân quyền tự động `(Access Control)` và che giấu dữ liệu `(Data Masking)`.
 
-Nguyên lý cốt lõi của Data Classification bao gồm 3 khía cạnh:
-* **Khám phá (Data Discovery)**: Quét toàn bộ kho dữ liệu (Data Warehouse, Data Lake, RDBMS) để tự động nhận diện các mẫu dữ liệu nhạy cảm (như email, số thẻ tín dụng, SSN).
-* **Phân cấp bảo mật (Security Tiering)**: Định nghĩa rõ ràng các cấp độ bảo mật. Phổ biến nhất là 4 cấp độ: Public (Công khai), Internal (Nội bộ), Confidential (Bảo mật) và Restricted (Tuyệt mật/PII).
-* **Gắn thẻ và Quản lý siêu dữ liệu (Tagging & Metadata Management)**: Lưu trữ các nhãn phân loại trong các Data Catalog (ví dụ: Amundsen, DataHub) để làm cơ sở cho các hệ thống kiểm soát truy cập (Access Control) và ẩn danh dữ liệu (Data Masking).
+## Luồng vận hành của hệ thống tự động phân loại và bảo vệ dữ liệu
 
----
-
-## How it works
-
-Quy trình phân loại dữ liệu thường trải qua các bước sau:
-1. **Định nghĩa chính sách (Policy Definition)**: Xác định các loại dữ liệu cần bảo vệ (PII, PHI, Financial Data) và các regex/rules để nhận diện.
-2. **Quét dữ liệu tự động (Automated Scanning)**: Các công cụ Data Catalog hoặc Security Tool sẽ định kỳ quét schema, tên cột, và lấy mẫu (sample) nội dung dữ liệu để phân tích.
-3. **Gán nhãn (Tagging/Labeling)**: Nếu cột dữ liệu khớp với mẫu (ví dụ: cột `email_address` hoặc chứa chuỗi dạng `*@*.*`), hệ thống sẽ gán tag `PII` và `Confidential`.
-4. **Thực thi chính sách (Enforcement)**: Dựa trên tag, hệ thống phân quyền sẽ tự động từ chối truy cập từ các user không đủ thẩm quyền, hoặc thực hiện che giấu dữ liệu (Dynamic Data Masking) trước khi trả kết quả truy vấn.
-
----
-
-## Architecture / Flow
-
-Dưới đây là sơ đồ luồng hoạt động của một hệ thống Data Classification kết hợp Dynamic Masking:
+Sơ đồ dưới đây mô tả hành trình từ lúc dữ liệu thô được quét phân loại, gán nhãn cho đến khi được che giấu động trước khi hiển thị cho người dùng cuối:
 
 ```mermaid
 graph LR
@@ -93,126 +77,116 @@ graph LR
     I -->|Query| G
 ```
 
----
+1. **Định nghĩa quy tắc**: Đội ngũ bảo mật thiết lập các mẫu nhận diện (ví dụ: định dạng email, số điện thoại, số thẻ ngân hàng).
+2. **Quét dữ liệu**: Các công cụ bảo mật quét tự động qua cấu trúc bảng và lấy mẫu dữ liệu để phân tích.
+3. **Gán nhãn**: Nếu phát hiện cột dữ liệu chứa cấu trúc giống email (ví dụ: `*@*.*`), hệ thống tự động gán nhãn `PII` và `Restricted`.
+4. **Áp dụng chính sách**: Dựa trên nhãn đã gán, hệ thống phân quyền sẽ tự động kích hoạt tính năng ẩn danh dữ liệu `(Dynamic Data Masking)` trước khi trả kết quả truy vấn cho người dùng không có thẩm quyền đặc biệt.
 
-## Practical example
+## Thực tế triển khai chính sách ẩn danh dữ liệu (Data Masking) bằng SQL
 
-Xét trường hợp bảng dữ liệu `customers` trong Data Warehouse:
+Hãy xem kịch bản thực tế với bảng dữ liệu khách hàng `customers`:
 
 ```sql
 CREATE TABLE customers (
     id UUID PRIMARY KEY,
-    full_name VARCHAR(100), -- PII (Tên)
-    email VARCHAR(100),     -- PII (Email)
-    phone VARCHAR(20),      -- PII (Số điện thoại)
-    segment VARCHAR(50),    -- Non-PII (Nhóm khách hàng)
-    lifetime_value FLOAT    -- Non-PII (Giá trị vòng đời)
+    full_name VARCHAR(100), -- Dữ liệu nhạy cảm PII
+    email VARCHAR(100),     -- Dữ liệu nhạy cảm PII
+    phone VARCHAR(20),      -- Dữ liệu nhạy cảm PII
+    segment VARCHAR(50),    -- Dữ liệu thông thường
+    lifetime_value FLOAT    -- Dữ liệu thông thường
 );
 ```
 
-**Bước 1: Gán nhãn (Tagging)**
-Hệ thống Data Catalog quét và gán tag:
-- Cột `full_name`, `email`, `phone`: Gán tag `classification: PII` và `security_level: Restricted`.
-- Cột `segment`, `lifetime_value`: Gán tag `classification: Business_Metric` và `security_level: Internal`.
+**Bước 1: Gán nhãn trên Data Catalog**
+Hệ thống quét và tự động gán nhãn bảo mật:
+* Cột `full_name`, `email`, `phone` -> Gán nhãn `PII` và cấp độ `Restricted`.
+* Cột `segment`, `lifetime_value` -> Gán nhãn `Business_Metric` và cấp độ `Internal`.
 
-**Bước 2: Thực thi chính sách (Masking Policy trong Snowflake)**
+**Bước 2: Thiết lập chính sách che giấu dữ liệu động (Ví dụ trên Snowflake DWH)**
 ```sql
--- Tạo chính sách ẩn danh
+-- Khởi tạo chính sách ẩn danh thông tin Email
 CREATE OR REPLACE MASKING POLICY email_mask AS (val VARCHAR) RETURNS VARCHAR ->
   CASE
+    -- Nếu là Data Engineer hoặc Cán bộ Pháp chế thì hiển thị rõ
     WHEN CURRENT_ROLE() IN ('DATA_ENGINEER', 'COMPLIANCE_OFFICER') THEN val
-    ELSE REGEXP_REPLACE(val, '(.).*@(.*)', '\\1***@\\2') -- Ẩn 1 phần email
+    -- Các vai trò khác chỉ hiển thị ký tự đầu của email kèm dấu hoa thị
+    ELSE REGEXP_REPLACE(val, '(.).*@(.*)', '\\1***@\\2')
   END;
 
--- Áp dụng chính sách dựa trên tag PII
+-- Áp dụng chính sách che giấu lên cột email của bảng customers
 ALTER TABLE customers MODIFY COLUMN email SET MASKING POLICY email_mask;
 ```
 
-Kết quả khi Data Analyst truy vấn: `email` sẽ trả về `j***@gmail.com` thay vì email gốc, đảm bảo quyền riêng tư.
+Khi một nhân viên phân tích thông thường chạy câu lệnh `SELECT email FROM customers;`, giá trị trả về sẽ là `j***@gmail.com` thay vì địa chỉ email thật, giúp ngăn ngừa việc lộ lọt thông tin cá nhân vô ý.
 
----
+## Cẩm nang quản trị phân loại dữ liệu (Best Practices)
 
-## Best practices
+* **Ưu tiên tự động hóa**: Dữ liệu trong doanh nghiệp biến động từng giờ. Việc phân loại thủ công bằng sức người chắc chắn sẽ thất bại. Hãy sử dụng các dịch vụ quét tự động như AWS Macie, Google Cloud DLP để liên tục phát hiện dữ liệu nhạy cảm mới phát sinh.
+* **Liên kết chặt chẽ với Data Catalog**: Hãy đảm bảo các thẻ phân loại bảo mật hiển thị rõ ràng trên Data Catalog để các nhà phân tích biết trước cột nào chứa dữ liệu nhạy cảm trước khi gửi yêu cầu xin quyền.
+* **Áp dụng nguyên tắc quyền hạn tối thiểu (Least Privilege)**: Thiết lập mặc định chặn quyền truy cập vào các dữ liệu phân loại cấp độ `Restricted/PII` đối với tất cả người dùng, chỉ phê duyệt cấp quyền khi có lý do nghiệp vụ thực sự rõ ràng.
+* **Quy trình xử lý lỗi nhận diện nhầm**: Các quy tắc Regex tự động đôi khi có thể nhận diện nhầm các ID hệ thống thành số thẻ tín dụng. Hãy xây dựng quy trình cho phép các quản trị viên dữ liệu `(Data Stewards)` ghi đè và điều chỉnh nhãn bằng tay một cách dễ dàng.
 
-* **Tự động hóa tối đa**: Dữ liệu thay đổi từng ngày, việc phân loại thủ công không thể theo kịp. Sử dụng các công cụ như AWS Macie, Google Cloud DLP, hoặc Monte Carlo để quét và gán nhãn liên tục.
-* **Tích hợp chặt chẽ với Data Catalog**: Tag phân loại phải có thể tìm kiếm được trong Data Catalog để người dùng biết được cột nào nhạy cảm trước khi xin quyền.
-* **Nguyên tắc ít đặc quyền nhất (Least Privilege)**: Mặc định từ chối truy cập vào các dữ liệu được phân loại là Restricted/PII đối với mọi vai trò, trừ khi có lý do nghiệp vụ chính đáng được phê duyệt.
-* **Xử lý False Positives (Dương tính giả)**: Các thuật toán regex có thể nhận diện nhầm ID hệ thống thành Số thẻ tín dụng. Cần có quy trình để Data Steward (Người quản lý dữ liệu) ghi đè và sửa nhãn thủ công.
+## Những sai lầm kinh điển dễ làm rò rỉ thông tin
 
----
+* **Quét toàn bộ dữ liệu trực tiếp trên Database Production**: Việc chạy các câu lệnh truy vấn quét qua hàng Terabytes dữ liệu vận hành để tìm kiếm PII sẽ làm sập hệ thống. Hãy chỉ thực hiện quét cấu trúc `(schema)` hoặc thực hiện lấy mẫu `(sampling)` một lượng nhỏ dòng dữ liệu (ví dụ 1000 dòng).
+* **Thiết lập quá nhiều cấp độ phân loại**: Việc tạo ra hàng chục cấp độ bảo mật rườm rà (PII-1, PII-2, Private-A, Private-B) chỉ làm người dùng bối rối và gây khó khăn cho việc quản trị chính sách phân quyền. Hãy tối giản cấu trúc trong khoảng 3 đến 4 cấp độ bảo mật.
+* **Phân loại mang tính chất minh họa**: Rất nhiều doanh nghiệp chỉ dừng lại ở việc dán nhãn bảng dữ liệu trên trang tài liệu Excel hoặc Data Catalog mà không hề cấu hình các rule bảo mật thực tế ở tầng database, khiến việc phân loại không có giá trị bảo vệ thực tế.
 
-## Common mistakes
+## Sự đánh đổi giữa an toàn bảo mật và tốc độ phân tích
 
-* **Quá tải hệ thống nguồn do quét toàn bộ dữ liệu**: Quét (scan) trực tiếp toàn bộ dữ liệu OLTP để phân loại sẽ làm sập hệ thống. Chỉ nên quét schema, metadata hoặc chạy lấy mẫu (sampling 1000 dòng).
-* **Phân loại quá nhiều cấp độ**: Tạo ra hàng chục cấp độ bảo mật (như PII-1, PII-2, Secret-A, Secret-B) gây bối rối cho người dùng và làm phức tạp hóa hệ thống phân quyền (Access Control). Nên giữ tối đa 3-4 cấp độ.
-* **"Phân loại xong để đấy"**: Chỉ gắn tag trong Data Catalog nhưng không cấu hình chính sách chặn/masking ở tầng database, dẫn đến phân loại chỉ mang tính chất minh họa, không có giá trị bảo mật.
+### Điểm cộng
+* Đảm bảo tuân thủ tuyệt đối các quy định pháp luật khắt khe về quyền riêng tư.
+* Giảm thiểu tối đa tác hại và trách nhiệm pháp lý khi có sự cố rò rỉ dữ liệu.
+* Tối ưu hóa chi phí đầu tư cho hạ tầng an ninh thông tin.
 
----
+### Điểm trừ
+* **Làm chậm tiến trình phân tích**: Các nhà phân tích phải vượt qua nhiều quy trình phê duyệt rườm rà để tiếp cận dữ liệu thô phục vụ nghiên cứu.
+* **Tốn kém tài nguyên tính toán**: Việc liên tục thực hiện quét phân loại và chạy các hàm ẩn danh động `(Dynamic Masking)` khi truy vấn sẽ tiêu tốn thêm năng lượng CPU của Data Warehouse.
 
-## Trade-offs
+## Khi nào tổ chức cần ưu tiên triển khai phân loại dữ liệu?
 
-### Ưu điểm
-* Tuân thủ các quy định khắt khe về bảo mật dữ liệu (GDPR, CCPA).
-* Giảm thiểu thiệt hại khi xảy ra rò rỉ dữ liệu (vì hacker lấy được dữ liệu đã bị masking hoặc mã hóa).
-* Tối ưu hóa chi phí lưu trữ và bảo mật.
+**Cần áp dụng khi:**
+* Doanh nghiệp của bạn hoạt động trong các lĩnh vực xử lý trực tiếp nhiều thông tin cá nhân khách hàng, tài chính, hoặc y tế (như Thương mại điện tử B2C, Fintech, Ngân hàng, Bệnh viện).
+* Tổ chức chuẩn bị thực hiện các đợt đánh giá chứng chỉ an ninh thông tin quốc tế (như ISO 27001, SOC 2).
 
-### Nhược điểm
-* **Trì hoãn quá trình phân tích**: Data Analysts phải vượt qua nhiều rào cản phê duyệt để truy cập dữ liệu thô.
-* **Chi phí xử lý (Compute Cost)**: Việc quét liên tục và áp dụng Dynamic Data Masking tiêu tốn tài nguyên tính toán của Data Warehouse.
-* **Độ phức tạp quản trị**: Đòi hỏi sự phối hợp chặt chẽ giữa Security Team, Data Engineering và Business.
+**Chưa cần thiết khi:**
+* Hệ thống của bạn chủ yếu xử lý các dữ liệu máy móc phi cá nhân (như log hệ thống server, dữ liệu cảm biến thời tiết, dữ liệu IoT).
+* Các startup ở giai đoạn đầu xây dựng sản phẩm thử nghiệm (MVP), cần ưu tiên tốc độ phát triển và phân tích nhanh hơn là các quy trình bảo mật phức tạp.
 
----
+## Góc phỏng vấn: Thử thách tư duy bảo mật dữ liệu
 
-## When to use
+### 1. Sự khác biệt cốt lõi giữa Data Classification và Data Cataloging là gì?
+* **Mục đích câu hỏi**: Đánh giá sự hiểu biết của ứng viên về bức tranh tổng thể của quản trị dữ liệu (Data Governance).
+* **Gợi ý trả lời**:
+  * *Data Cataloging* là quá trình thu thập siêu dữ liệu tổng thể để giúp người dùng dễ dàng tìm kiếm và hiểu ngữ cảnh kinh doanh của bảng (ví dụ: bảng này chứa thông tin gì, phục vụ phòng ban nào, ai sở hữu).
+  * *Data Classification* là một phần việc chuyên biệt nằm trong Data Cataloging, tập trung sâu vào khía cạnh đánh giá mức độ nhạy cảm và gán nhãn bảo mật (như PII, Confidential) để làm cơ sở thiết lập các chính sách bảo vệ và tuân thủ pháp luật.
 
-* Các tổ chức xử lý dữ liệu người dùng cuối, tài chính, y tế (B2C, Fintech, Healthcare).
-* Khi triển khai Data Catalog và muốn tự động hóa việc cấp quyền truy cập.
-* Khi tổ chức cần vượt qua các đợt kiểm toán chứng chỉ bảo mật (ISO 27001, SOC 2).
+### 2. Làm thế nào để tự động hóa quy trình phát hiện PII trên một Data Lake có dung lượng hàng Petabytes một cách tối ưu chi phí?
+* **Mục đích câu hỏi**: Kiểm tra tư duy thiết kế hệ thống dữ liệu lớn và tối ưu hóa tài nguyên của ứng viên.
+* **Gợi ý trả lời**:
+  * Việc quét trực tiếp hàng Petabytes dữ liệu thô sẽ tốn kém chi phí cực kỳ lớn. Do đó, chúng ta nên kết hợp ba giải pháp sau:
+    1. *Quét Metadata trước*: Chỉ quét tên các cột dữ liệu. Nếu cột có tên chứa các từ khóa như `email`, `phone`, `ssn`, hệ thống sẽ lập tức đánh dấu nhạy cảm mà không cần đọc dữ liệu bên trong.
+    2. *Quét lấy mẫu (Sampling)*: Thay vì quét toàn bộ file, chúng ta chỉ lấy mẫu ngẫu nhiên 1% dữ liệu mới nạp vào để chạy qua các engine phát hiện PII (như AWS Macie hay Google Cloud DLP).
+    3. *Kế thừa phả hệ (Lineage Inheritance)*: Nếu bảng gốc `(Upstream)` đã được xác định chứa PII, các bảng phái sinh `(Downstream)` được tạo ra từ nó sẽ tự động được hệ thống gán nhãn PII mà không cần thực hiện quét lại.
 
-## When not to use
+### 3. Hãy phân biệt cơ chế hoạt động của Dynamic Data Masking và Static Data Masking.
+* **Mục đích câu hỏi**: Kiểm tra kiến thức thực hành bảo mật cơ sở dữ liệu.
+* **Gợi ý trả lời**:
+  * *Static Data Masking (SDM)* thực hiện thay đổi vĩnh viễn dữ liệu gốc trên đĩa lưu trữ. Dữ liệu thật sẽ bị xóa bỏ hoàn toàn và thay bằng dữ liệu giả lập. Phương pháp này thường được dùng khi sao chép dữ liệu từ môi trường Production sang môi trường Dev/Test để lập trình viên chạy thử code.
+  * *Dynamic Data Masking (DDM)* thực hiện che giấu dữ liệu tức thời ngay trong quá trình trả kết quả truy vấn. Dữ liệu gốc lưu trên ổ đĩa vẫn giữ nguyên vẹn 100%. Việc dữ liệu hiển thị rõ hay bị ẩn đi phụ thuộc hoàn toàn vào quyền hạn `(Role)` của người đang thực hiện câu lệnh truy vấn đó. Phương pháp này thích hợp dùng trực tiếp trên môi trường Production để phân quyền xem dữ liệu giữa các bộ phận.
 
-* Các hệ thống nội bộ chỉ lưu trữ log máy chủ, dữ liệu chuỗi thời gian của thiết bị IoT (không có dữ liệu con người).
-* Startup ở giai đoạn MVP (Minimum Viable Product) cần tốc độ phân tích và phát triển tính năng hơn là tuân thủ bảo mật khắt khe.
+## Khái niệm liên quan & Tài liệu tham khảo
 
----
-
-## Related concepts
-
-* [Kiểm soát truy cập - Access Control](/concepts/access-control)
-* [Nhật ký kiểm toán - Audit Logging](/concepts/audit-logging)
+**Khái niệm liên quan:**
+* [Access Control (Kiểm soát truy cập)](/concepts/access-control)
+* [Audit Logging (Nhật ký kiểm toán)](/concepts/audit-logging)
 * [Data Catalog](/concepts/data-catalog)
 
----
+**Tài liệu tham khảo:**
+1. **DAMA-DMBOK: Data Management Body of Knowledge** - Chương phân tích về bảo mật và quản trị dữ liệu.
+2. **AWS Macie Documentation** - Tài liệu hướng dẫn quét và phát hiện dữ liệu nhạy cảm tự động.
+3. **Snowflake Security Guide** - Hướng dẫn xây dựng Masking Policies.
 
-## Interview questions
-
-### 1. Sự khác biệt giữa Data Classification và Data Cataloging là gì?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về hệ sinh thái Data Governance.
-* **Gợi ý trả lời**: Data Cataloging là quá trình tổng hợp metadata để giúp người dùng tìm kiếm và hiểu ngữ cảnh kinh doanh của dữ liệu (ví dụ: bảng này dùng để làm gì, ai sở hữu). Data Classification là một tập con trong Data Cataloging, tập trung vào việc đánh giá mức độ nhạy cảm và gán nhãn bảo mật (PII, Confidential) để phục vụ tuân thủ và phân quyền.
-
-### 2. Làm thế nào để tự động hóa quá trình nhận diện PII trong một Data Lake có hàng Petabytes dữ liệu?
-* **Người phỏng vấn muốn kiểm tra**: Kỹ năng thiết kế hệ thống quy mô lớn (System Design) và tối ưu chi phí.
-* **Gợi ý trả lời**: Không thể quét toàn bộ khối lượng Petabytes vì chi phí rất cao. Giải pháp là quét theo cơ chế lấy mẫu (Sampling) kết hợp Event-driven. 
-  1. Chỉ quét metadata (tên cột có chứa "email", "ssn", "phone").
-  2. Áp dụng lấy mẫu ngẫu nhiên 1% dữ liệu mới được đưa vào (qua Kafka/EventBridge) và dùng regex hoặc ML/NLP Cloud services (như AWS Macie, GCP DLP) để quét mẫu. 
-  3. Áp dụng kế thừa (Lineage inheritance): Nếu một bảng upstream đã được đánh dấu PII, các bảng downstream được tạo ra từ nó tự động kế thừa nhãn PII.
-
-### 3. Giải thích khái niệm Dynamic Data Masking và sự khác biệt với Static Data Masking.
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức về bảo mật cơ sở dữ liệu thực hành.
-* **Gợi ý trả lời**: 
-  * Static Data Masking (SDM) là việc thay đổi vĩnh viễn dữ liệu gốc trên ổ đĩa. Dữ liệu thực sự bị xóa và thay thế bằng chuỗi giả. Phù hợp khi clone dữ liệu từ Production sang môi trường Dev/Test.
-  * Dynamic Data Masking (DDM) là việc biến đổi dữ liệu *on-the-fly* trong quá trình trả về kết quả truy vấn. Dữ liệu gốc trên ổ đĩa vẫn nguyên vẹn. Mức độ che dấu phụ thuộc vào vai trò (Role) của người chạy truy vấn. Phù hợp cho môi trường Production khi nhiều phòng ban khác nhau cần truy cập cùng một bảng.
-
----
-
-## References
-
-1. **DAMA-DMBOK: Data Management Body of Knowledge** - Chapter on Data Security and Data Governance.
-2. **AWS Macie Documentation** - Hướng dẫn tự động hóa khám phá dữ liệu nhạy cảm trên S3.
-3. **Snowflake Documentation** - Dynamic Data Masking Policies.
-
----
-
-## English summary
+## English Summary
 
 Data Classification is the process of discovering, categorizing, and tagging data based on its sensitivity, business value, and compliance requirements (e.g., GDPR, HIPAA). Its primary goal is to protect Personally Identifiable Information (PII) and optimize security costs by applying appropriate access controls and masking policies (Dynamic Data Masking). The workflow involves automated discovery using regex or ML models, tagging metadata in a Data Catalog, and enforcing security policies down to the column level. While it ensures regulatory compliance and minimizes data breach risks, it adds computational overhead and administrative complexity.

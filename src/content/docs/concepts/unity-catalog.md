@@ -9,52 +9,38 @@ seoTitle: "Unity Catalog là gì? Giải pháp Data Governance của Databricks"
 metaDescription: "Tìm hiểu Unity Catalog, giải pháp quản trị dữ liệu (Data Governance) và AI thống nhất trên nền tảng Databricks Lakehouse."
 ---
 
-# Unity Catalog
+# Unity Catalog: Người gác đền thông minh cho Data Lakehouse
 
-## Summary
+Trong kiến trúc dữ liệu hiện đại, việc lưu trữ hàng Petabyte dữ liệu trên Data Lake giờ đây đã trở nên đơn giản và tiết kiệm. Thế nhưng, câu hỏi hóc búa đặt ra là: Làm thế nào để kiểm soát được ai có quyền xem bảng nào? Làm sao che đi các thông tin nhạy cảm của khách hàng như số điện thoại, số thẻ tín dụng mà không phải copy ra bảng khác? Và làm thế nào để biết một bảng dữ liệu báo cáo được tạo ra từ những nguồn nào? 
 
-Unity Catalog là giải pháp quản trị dữ liệu (Data Governance) tập trung dành cho cấu trúc Data Lakehouse, được phát triển bởi Databricks. Nó cung cấp một giao diện quản lý duy nhất để cấu hình quyền truy cập (Access Control), theo dõi dòng chảy dữ liệu (Data Lineage), và khám phá tài sản (Data Discovery) cho cả dữ liệu có cấu trúc (Tables), phi cấu trúc (Files) lẫn các tài sản AI (ML Models, Dashboards) trên mọi không gian làm việc (Workspaces).
+Để trả lời những câu hỏi đó, Databricks đã cho ra đời **Unity Catalog** – giải pháp quản trị dữ liệu (Data Governance) và tài sản AI tập trung, đóng vai trò như một "người gác đền" thông minh và tin cậy cho cấu trúc Data Lakehouse.
 
----
+## Unity Catalog là gì? Tấm khiên quản trị dữ liệu tập trung
 
-## Definition
+Về mặt kiến trúc, **Unity Catalog** là một lớp quản trị (Governance Layer) thống nhất nằm ngay phía trên kho lưu trữ đám mây (như AWS S3, Azure ADLS, hay Google Cloud Storage). 
 
-Trong kiến trúc dữ liệu hiện đại, **Unity Catalog** đóng vai trò là một lớp quản trị (Governance Layer) đặt phía trên kho lưu trữ đám mây (Cloud Storage). Thay vì quản lý quyền truy cập rời rạc trên từng cụm tính toán (cluster) hoặc từng thư mục S3/ADLS bằng các quyền IAM phức tạp, Unity Catalog cung cấp chuẩn ANSI SQL để cấp quyền (GRANT/REVOKE) ở cấp độ bảng, cột, hoặc hàng. 
+Thay vì phải cấu hình các quyền truy cập tệp tin phức tạp và rời rạc trên Cloud IAM của từng nhà cung cấp đám mây, hoặc quản lý quyền truy cập riêng rẽ trên từng Workspace độc lập, Unity Catalog cho phép bạn sử dụng cú pháp ANSI SQL tiêu chuẩn để cấp quyền (`GRANT`/`REVOKE`) chi tiết đến tận cấp độ bảng, dòng, cột hoặc thậm chí là các mô hình Machine Learning và các Dashboard báo cáo.
 
----
+## Tại sao quản trị dữ liệu trên Data Lake từng là một cơn ác mộng?
 
-## Why it exists
+Trước khi Unity Catalog và các công cụ quản trị dữ liệu hiện đại xuất hiện, việc thiết lập bảo mật trên Data Lake là nỗi ám ảnh của các Data Engineer và Cloud Admin:
 
-Trước khi có Unity Catalog (và các Data Catalog hiện đại khác), quản trị dữ liệu trên Data Lake / Lakehouse là một cơn ác mộng:
-1. **Phân mảnh quyền truy cập**: Quản trị viên phải cấp quyền truy cập file trên Cloud IAM (AWS IAM, Azure RBAC) và đồng thời quản lý quyền trên các Workspace độc lập.
-2. **Không có quyền cấp độ cột (Column/Row-level security)**: Rất khó để chia sẻ một bảng dữ liệu mà che đi (masking) cột số điện thoại hoặc mã thẻ tín dụng của khách hàng. Phải tạo ra các bảng copy rất tốn kém.
-3. **Mất dấu dòng chảy dữ liệu (No Lineage)**: Khi một bảng báo cáo bị sai số, Data Engineer không biết bảng này được sinh ra từ những bảng nguồn nào, do ai viết và ảnh hưởng đến những Dashboard nào (Impact Analysis).
-4. **Quản lý AI Model rời rạc**: Mô hình Machine Learning và dữ liệu dùng để huấn luyện mô hình đó không được kết nối với nhau.
+1. **Quyền truy cập bị phân mảnh:** Quản trị viên phải cấu hình quyền đọc file trên Cloud IAM (như AWS IAM, Azure RBAC) và đồng thời phải quản lý tài khoản, quyền hạn trên nhiều Workspace khác nhau của doanh nghiệp.
+2. **Không hỗ trợ bảo mật cấp độ dòng/cột (Row/Column-level security):** Nếu bạn muốn chia sẻ bảng Khách hàng cho bộ phận Marketing nhưng cần che đi cột số điện thoại, giải pháp duy nhất lúc đó là nhân bản dữ liệu, tạo ra một bảng copy đã lược bỏ cột nhạy cảm. Việc này làm phình to chi phí lưu trữ và rất khó đồng bộ.
+3. **Mất dấu vết dòng chảy dữ liệu (Data Lineage):** Khi một con số trên báo cáo BI bị sai lệch, các kỹ sư dữ liệu phải tốn hàng giờ, thậm chí hàng ngày để rà soát thủ công xem bảng báo cáo đó được tổng hợp từ những nguồn nào (Lineage), do ai viết logic và việc sửa đổi sẽ ảnh hưởng đến những hệ thống nào phía sau.
+4. **Sự tách rời giữa Dữ liệu và AI:** Các mô hình Machine Learning (ML Models) được huấn luyện một nơi, còn tập dữ liệu dùng để huấn luyện lại được lưu trữ ở một nẻo, không có sự liên kết chặt chẽ nào về mặt quản trị.
 
-Unity Catalog ra đời để giải quyết bài toán: **Một nơi duy nhất (Single Pane of Glass)** để quản lý bảo mật và khám phá cho toàn bộ tài nguyên Dữ liệu và AI.
+Unity Catalog ra đời để giải quyết triệt để tất cả các nút thắt trên bằng cách cung cấp một giao diện quản lý duy nhất (Single Pane of Glass) cho toàn bộ tài sản Dữ liệu và AI của doanh nghiệp.
 
----
+## Những trụ cột cốt lõi của Unity Catalog
 
-## Core idea
+* **Cấu trúc đặt tên 3 tầng (3-level Namespace):** Khác với các hệ thống cũ chỉ có 2 cấp tên (`schema.table`), Unity Catalog nâng cấp lên mô hình 3 cấp: `catalog.schema.table`. Cấu trúc này giúp doanh nghiệp dễ dàng phân tách dữ liệu theo môi trường phát triển (`dev`, `staging`, `prod`) hoặc phân chia theo các phòng ban nghiệp vụ một cách mạch lạc.
+* **Tách biệt tuyệt đối giữa Storage và Compute:** Các chính sách bảo mật và quyền hạn của Unity Catalog được thực thi đồng bộ, bất kể người dùng truy cập dữ liệu thông qua Spark Cluster, SQL Warehouse hay gọi qua các API bên ngoài.
+* **Tự động theo dõi dòng chảy dữ liệu (Automated Lineage):** Hệ thống sẽ tự động ghi chép và vẽ sơ đồ mối quan hệ giữa các bảng dữ liệu mỗi khi có các câu lệnh SQL như `INSERT`, `MERGE` hay `CREATE TABLE AS SELECT` chạy qua.
 
-* **Namespace 3 tầng (3-level Namespace)**: Unity Catalog tổ chức dữ liệu theo mô hình 3 cấp `catalog.schema.table` thay vì mô hình 2 cấp truyền thống. Điều này cho phép tách biệt dữ liệu môi trường (Dev/Prod) hoặc phòng ban (Marketing/HR) cực kỳ rõ ràng.
-* **Tách biệt Storage và Compute**: Tính năng quản trị được thực thi bất kể bạn dùng SQL Warehouse, Spark Cluster hay truy cập qua API.
-* **Lineage tự động**: Tự động bắt và vẽ sơ đồ mối quan hệ giữa các bảng dữ liệu mỗi khi có câu lệnh SQL `INSERT`, `MERGE` hoặc `CREATE TABLE AS` được thực thi.
+## Sơ đồ kiến trúc hoạt động
 
----
-
-## How it works
-
-Hệ thống Unity Catalog bao gồm các thành phần chính:
-
-1. **Metastore**: Kho lưu trữ siêu dữ liệu (metadata) cao nhất, thường mỗi khu vực địa lý (Cloud Region) có một Metastore. Nó liên kết với nhiều Databricks Workspaces.
-2. **Storage Credentials & External Locations**: Thay vì cấp quyền IAM cho từng người dùng, Quản trị viên cấp một IAM Role cho Unity Catalog (Storage Credential). Unity Catalog sau đó thay mặt người dùng để đọc/ghi vào các External Location (thư mục S3/GCS).
-3. **Mô hình cấp quyền ANSI SQL**: 
-   Khi người dùng chạy `SELECT * FROM prod.sales.transactions`, cụm tính toán sẽ hỏi Unity Catalog: "Người dùng này có quyền SELECT không?". Nếu có, Unity sẽ cung cấp token ngắn hạn để cụm tính toán xuống Cloud Storage đọc dữ liệu.
-
----
-
-## Architecture / Flow
+Dưới đây là mô hình hoạt động của Unity Catalog kiểm soát luồng truy cập dữ liệu từ nhiều đối tượng người dùng khác nhau:
 
 ```mermaid
 graph TD
@@ -72,92 +58,78 @@ graph TD
     E -->|Quản lý Models| J[MLflow Model Registry]
 ```
 
----
+## Ví dụ thực tế: Che giấu dữ liệu nhạy cảm ở cấp độ dòng (Row-level security)
 
-## Practical example
+Giả sử bạn có bảng giao dịch `transactions` chứa dữ liệu của toàn quốc. Bạn chỉ muốn các nhân viên thuộc chi nhánh Hà Nội xem được các giao dịch phát sinh ở khu vực Hà Nội. 
 
-**Cấp quyền bảo mật cấp độ hàng (Row-level security):**
-Giả sử bạn có bảng `sales`, bạn chỉ muốn nhân viên chi nhánh ở "Hanoi" nhìn thấy dữ liệu bán hàng của Hà Nội. Trong Unity Catalog, bạn tạo một Dynamic View hoặc Filter:
+Với Unity Catalog, bạn có thể giải quyết bài toán này cực kỳ thanh lịch bằng cách tạo một Function lọc dữ liệu và gắn nó trực tiếp vào bảng:
 
 ```sql
--- Tạo function kiểm tra user hiện tại
+-- 1. Tạo một function kiểm tra quyền của người dùng hiện tại
 CREATE FUNCTION region_filter(region_name STRING)
-RETURN IF(IS_ACCOUNT_GROUP_MEMBER('admin'), true, region_name = CURRENT_USER_REGION());
+RETURN IF(
+    IS_ACCOUNT_GROUP_MEMBER('admin'), 
+    true, 
+    region_name = CURRENT_USER_REGION()
+);
 
--- Gắn filter vào bảng
+-- 2. Gắn function lọc này vào cột region của bảng transactions
 ALTER TABLE main.sales.transactions 
 SET ROW FILTER region_filter ON (region);
 
--- Cấp quyền đọc cho nhóm sales
+-- 3. Cấp quyền truy cập cho nhóm sales
 GRANT SELECT ON TABLE main.sales.transactions TO `sales_team`;
 ```
-Khi nhân viên ở Hà Nội `SELECT * FROM main.sales.transactions`, họ chỉ thấy các dòng có `region = 'Hanoi'` mà không cần tạo bảng riêng.
+
+Khi một nhân viên thuộc chi nhánh Hà Nội chạy lệnh `SELECT * FROM main.sales.transactions`, Unity Catalog sẽ tự động lọc và chỉ hiển thị các dòng dữ liệu có `region = 'Hanoi'` mà không cần phải nhân bản dữ liệu hay tạo thêm các bảng phụ.
+
+## Thiết lập Unity Catalog chuẩn: Best Practices và lỗi cần tránh
+
+### Các Best Practices nên áp dụng
+* **Cấu trúc Catalog theo môi trường (SDLC):** Hãy thiết kế các Catalog ở cấp độ cao nhất tương ứng với các môi trường làm việc: `dev_catalog`, `staging_catalog`, và `prod_catalog`. Các Schema bên trong Catalog sẽ được chia theo các miền nghiệp vụ (ví dụ: `prod_catalog.marketing.campaigns`).
+* **Sử dụng Managed Tables cho dữ liệu lõi:** Hãy để Unity Catalog chịu trách nhiệm quản lý hoàn toàn vòng đời của các bảng quan trọng (Managed Tables). Khi bạn chạy lệnh `DROP TABLE`, Unity Catalog sẽ tự động dọn dẹp sạch sẽ các tệp tin dữ liệu vật lý tương ứng trên Cloud Storage.
+* **Chăm viết Comment và gắn Tag cho dữ liệu:** Hãy tận dụng lệnh `COMMENT ON COLUMN` để giải thích ý nghĩa các cột dữ liệu. Unity Catalog sở hữu bộ tìm kiếm thông minh tích hợp AI, cho phép người dùng chỉ cần gõ "Doanh thu quý 1" là hệ thống tự động tìm ra đúng bảng đích dù tên bảng được viết tắt dạng `q1_rev_fct`.
+
+### Những sai lầm phổ biến
+* **Cấp quyền trực tiếp cho từng cá nhân:** Tuyệt đối không sử dụng lệnh `GRANT` trực tiếp cho một địa chỉ email cụ thể (ví dụ: `GRANT SELECT ... TO 'john@company.com'`). Việc này sẽ khiến hệ thống cấp quyền trở nên hỗn loạn và rất khó thu hồi khi nhân sự nghỉ việc. Hãy luôn tạo các Group (như `data_engineers`, `marketing_analysts`) và cấp quyền thông qua Group.
+* **Mập mờ giữa Hive Metastore cũ và Unity Catalog:** Các hệ thống Databricks đời cũ sử dụng Hive Metastore cục bộ (chỉ hỗ trợ 2 cấp tên). Khi nâng cấp lên Unity Catalog, nếu không dọn dẹp hoặc khóa Hive Metastore cũ, các Data Analyst sẽ rất dễ bị bối rối và truy vấn nhầm vào các bảng dữ liệu cũ không còn chuẩn xác.
+
+## Những đánh đổi khi áp dụng Unity Catalog
+
+### Điểm mạnh
+* Loại bỏ triệt để các ốc đảo dữ liệu (Data Silos), quản lý tập trung toàn bộ tài sản dữ liệu từ một nơi duy nhất.
+* Nhật ký kiểm toán (Audit Log) chi tiết và tập trung: Ghi nhận chính xác ai đã đọc/ghi vào cột dữ liệu nhạy cảm nào vào lúc nào, giúp doanh nghiệp dễ dàng vượt qua các kỳ kiểm tra tuân thủ bảo mật (GDPR, HIPAA).
+* Hỗ trợ chia sẻ dữ liệu ra bên ngoài doanh nghiệp một cách an toàn và nhanh chóng bằng cơ chế Delta Sharing mà không cần thực hiện copy dữ liệu.
+
+### Điểm yếu
+* **Sự ràng buộc hệ sinh thái (Vendor Lock-in):** Mặc dù Databricks đã mã nguồn mở một phần của Unity Catalog, nhưng trải nghiệm tối ưu nhất của công cụ này vẫn nằm gọn trong hệ sinh thái của Databricks.
+* Việc thiết lập ban đầu (setup Storage Credentials, kết nối IAM Roles) khá phức tạp, đòi hỏi sự phối hợp chặt chẽ giữa đội ngũ Data Engineer và các quản trị viên Cloud/DevOps.
+
+## Khái niệm liên quan & Tài liệu tham khảo
+
+**Khái niệm liên quan:**
+* [Data Warehouse - Kho dữ liệu](/concepts/data-warehouse)
+* [Data Lake - Hồ dữ liệu](/concepts/data-lake)
+
+**Tài liệu tham khảo:**
+1. **Databricks Documentation** - *What is Unity Catalog?*
+2. **Data Governance: The Definitive Guide** - *Evren Eryurek et al.*
 
 ---
 
-## Best practices
+## Góc phỏng vấn: Câu hỏi thường gặp
 
-* **Thiết kế Catalog theo môi trường (Môi trường)**: Cấu trúc tốt nhất là chia Catalog theo SDLC: `dev_catalog`, `staging_catalog`, `prod_catalog`. Schema bên trong Catalog sẽ chia theo Data Domain (ví dụ: `prod_catalog.marketing.campaigns`).
-* **Sử dụng Managed Tables cho dữ liệu lõi**: Hãy để Unity Catalog quản lý hoàn toàn vòng đời lưu trữ của các bảng quan trọng (Managed Tables). Khi bạn `DROP TABLE`, dữ liệu thực tế trên Cloud Storage cũng sẽ bị xóa gọn định.
-* **Gắn Tag và Comment**: Luôn dùng câu lệnh `COMMENT ON COLUMN` để giải nghĩa dữ liệu. Unity Catalog có tính năng tìm kiếm (Discovery) cực mạnh, người dùng có thể gõ "Doanh thu khách hàng" và Unity sẽ dùng AI để tìm ra đúng bảng dù tên bảng là `cust_rev_fct`.
+### 1. Sự khác biệt cốt lõi giữa Hive Metastore truyền thống và Unity Catalog trong Databricks là gì?
+**Gợi ý trả lời:**
+* **Hive Metastore (HMS):** Là giải pháp quản trị cũ gắn liền với từng Workspace độc lập. Nó chỉ hỗ trợ cấu trúc đặt tên 2 cấp (`schema.table`) và không có cơ chế quản lý bảo mật chi tiết cấp độ hàng/cột, không hỗ trợ theo dõi dòng chảy dữ liệu (Data Lineage) và phụ thuộc hoàn toàn vào cấu hình IAM của đám mây.
+* **Unity Catalog:** Là giải pháp quản trị cấp độ tài khoản (Account-level), hoạt động xuyên suốt qua tất cả các Workspace. Nó nâng cấp lên cấu trúc đặt tên 3 cấp (`catalog.schema.table`), cho phép quản lý quyền truy cập chi tiết đến cấp độ hàng/cột bằng SQL, tự động vẽ sơ đồ dòng chảy dữ liệu (Lineage) và quản trị tập trung cả các mô hình Machine Learning lẫn tài sản AI.
 
----
-
-## Common mistakes
-
-* **Trộn lẫn Workspace-local Hive Metastore với Unity Catalog**: Databricks cũ dùng Hive Metastore (chỉ có 2 cấp `schema.table`). Quá trình chuyển đổi (migration) lên Unity Catalog nếu không xóa sạch Hive Metastore cũ sẽ gây ra nhầm lẫn lớn cho Data Analyst khi họ không biết bảng nào là bảng chuẩn xác.
-* **Cấp quyền trực tiếp cho User**: Đừng bao giờ `GRANT` quyền cho một email cụ thể (như `john@company.com`). Hãy tạo các Group (ví dụ: `data_engineers`, `marketing_analysts`) và cấp quyền cho Group.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* Giải quyết triệt để vấn đề "Data Silos" (ốc đảo dữ liệu) giữa các Workspaces và các nhóm làm việc.
-* Audit Log (Nhật ký kiểm toán) tập trung: Biết chính xác ai đã truy cập cột dữ liệu nhạy cảm vào thời điểm nào để phục vụ tuân thủ (GDPR, HIPAA).
-* Hỗ trợ Data Sharing (Delta Sharing) an toàn ra ngoài công ty mà không cần copy dữ liệu.
-
-### Nhược điểm
-* **Vendor Lock-in**: Dù có nguồn mở một phần, trải nghiệm Unity Catalog tuyệt vời nhất vẫn nằm trọn trong hệ sinh thái của Databricks.
-* Quy trình thiết lập ban đầu (setup IAM, Storage Credentials) phức tạp và đòi hỏi sự phối hợp chặt chẽ với Cloud Administrator (Đội ngũ Cloud / DevOps).
-
----
-
-## When to use
-
-* Doanh nghiệp sử dụng Databricks làm Data Platform chính thức (Data Lakehouse).
-* Các tổ chức lớn (Tài chính, Y tế) yêu cầu khắt khe về bảo mật, che giấu dữ liệu (PII masking) và truy xuất nguồn gốc dữ liệu (Lineage).
-
-## When not to use
-
-* Nếu bạn không dùng Databricks mà dùng Snowflake (Snowflake có giải pháp governance riêng) hoặc thuần AWS (nên dùng AWS Lake Formation).
-* Tổ chức quá nhỏ, dữ liệu không có tính nhạy cảm và mọi người đều có quyền xem mọi thứ.
-
----
-
-## Related concepts
-
-* [Data Warehouse](/concepts/data-warehouse)
-* [Data Lake](/concepts/data-lake)
-
----
-
-## Interview questions
-
-### 1. Phân biệt Hive Metastore truyền thống và Unity Catalog trong Databricks. Unity Catalog mang lại lợi ích gì nổi trội?
-* **Người phỏng vấn muốn kiểm tra**: Sự am hiểu về lịch sử phát triển của kiến trúc dữ liệu và Data Governance.
-* **Gợi ý trả lời (Strong Answer)**: Hive Metastore (HMS) là giải pháp quản trị cũ, gắn chặt với từng Workspace. Cấu trúc của HMS là 2 cấp (`schema.table`) và quản lý bảo mật rất yếu, phụ thuộc vào IAM của Cloud, không hỗ trợ bảo mật mức độ hàng/cột (Row/Column-level security) và Data Lineage. Unity Catalog được thiết kế cho cấp độ toàn tổ chức (Account-level), vượt qua ranh giới Workspace. Nó nâng cấp lên cấu trúc 3 cấp (`catalog.schema.table`), sử dụng cú pháp ANSI SQL quen thuộc để quản lý quyền chi tiết đến từng cột dữ liệu, và tự động vẽ sơ đồ dòng chảy dữ liệu (Automated Lineage) kết hợp quản lý cả ML Models.
-
-### 2. Làm thế nào để áp dụng Data Masking (che giấu dữ liệu nhạy cảm) trong Unity Catalog mà không làm thay đổi bảng gốc?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức thực hành bảo mật dữ liệu PII trong Data Lakehouse.
-* **Gợi ý trả lời (Strong Answer)**: Ta có thể sử dụng tính năng **Dynamic View** hoặc **Column Masking** của Unity Catalog. Bằng cách viết một SQL Function kiểm tra quyền của người dùng (ví dụ sử dụng hàm `IS_ACCOUNT_GROUP_MEMBER('hr_team')`), nếu người dùng không thuộc nhóm HR, hàm sẽ tự động che đi số CMND thành chuỗi ẩn `***-***-****`, còn nếu đúng là HR thì trả về chuỗi thật. Sau đó, ta gán function này vào cột của bảng thông qua lệnh `ALTER TABLE`. Dữ liệu vật lý ở dưới Cloud Storage không hề bị thay đổi, nhưng dữ liệu hiển thị (khi chạy lệnh SELECT) sẽ tự động ẩn/hiện tùy vào danh tính người gọi.
-
----
-
-## References
-
-1. **Databricks Documentation** - What is Unity Catalog?
-2. **Data Governance: The Definitive Guide** - Evren Eryurek et al.
+### 2. Làm thế nào để triển khai tính năng che giấu dữ liệu (Data Masking) cho các cột chứa thông tin PII nhạy cảm trong Unity Catalog?
+**Gợi ý trả lời:**
+Chúng ta có thể sử dụng tính năng **Column Masking** của Unity Catalog. Quy trình thực hiện gồm hai bước:
+* Tạo một SQL Function kiểm tra quyền của người dùng hiện tại (ví dụ: dùng hàm `IS_ACCOUNT_GROUP_MEMBER('hr_team')`). Nếu người dùng thuộc nhóm HR, trả về giá trị thực; nếu không, trả về chuỗi đã được che giấu như `***-***-****`.
+* Sử dụng lệnh `ALTER TABLE` để gắn function này vào cột dữ liệu nhạy cảm cần bảo vệ.
+Dữ liệu vật lý lưu trữ bên dưới Cloud Storage hoàn toàn không bị thay đổi, nhưng khi người dùng thực hiện lệnh `SELECT`, Unity Catalog sẽ tự động kiểm tra danh tính của họ để ẩn hoặc hiện dữ liệu tương ứng theo thời gian thực.
 
 ---
 

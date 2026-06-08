@@ -11,50 +11,37 @@ metaDescription: "Khám phá kỹ thuật Phân vùng (Partitioning) trong cơ s
 
 # Phân vùng Dữ liệu - Partitioning
 
-## Summary
+Khi cơ sở dữ liệu của bạn phình to từ vài triệu dòng lên hàng tỷ dòng, những câu truy vấn SQL từng chạy trong chớp mắt bỗng trở nên chậm chạp và ì ạch. Bạn đã thử tạo index (chỉ mục), nhưng khi dữ liệu quá khổng lồ, bộ index cũng lớn đến mức không thể nhét vừa vào bộ nhớ RAM. Đây chính là lúc chúng ta cần đến **Partitioning** (Phân vùng dữ liệu) - một nghệ thuật "chia để trị" kinh điển trong ngành kỹ thuật dữ liệu.
 
-Phân vùng dữ liệu (Partitioning) là kỹ thuật chia một bảng dữ liệu logic khổng lồ thành các phần nhỏ hơn (gọi là các partitions) trên ổ đĩa vật lý dựa trên một bộ quy tắc nhất định (thường là theo thời gian). Đối với người dùng, họ vẫn truy vấn trên một bảng duy nhất, nhưng hệ thống cơ sở dữ liệu sẽ thông minh chỉ quét các "phân vùng" chứa dữ liệu liên quan, giúp giảm đột biến lượng I/O ổ đĩa và tăng tốc độ truy vấn lên hàng chục lần.
+## Nghệ thuật "chia để trị" trong thế giới dữ liệu lớn
 
----
+Về mặt khái niệm, phân vùng dữ liệu là việc chia nhỏ một bảng dữ liệu logic khổng lồ thành các phần vật lý nhỏ hơn (gọi là các partition) lưu trữ trên đĩa cứng. Điểm hay là đối với người dùng cuối hoặc các ứng dụng, họ vẫn nhìn thấy và truy vấn trên một bảng duy nhất. Nhưng ở bên dưới, hệ thống cơ sở dữ liệu sẽ thông minh chỉ quét các phân vùng thực sự chứa dữ liệu cần thiết, giúp giảm thiểu đáng kể lượng dữ liệu phải đọc ghi (I/O) và tăng tốc độ truy vấn lên gấp nhiều lần.
 
-## Definition
+Khác với Index (chỉ tạo ra một cấu trúc phụ để tra cứu nhanh), Partitioning trực tiếp phân chia tệp tin dữ liệu gốc thành các thư mục hoặc tệp tin nhỏ riêng biệt. 
 
-**Partitioning** là quá trình chia tách mặt vật lý của dữ liệu. Khác với Index (tạo ra một bản sao phụ để tra cứu), Partitioning chia chính dữ liệu gốc thành các thư mục hoặc tệp tin nhỏ biệt lập. 
+Có hai cách phân vùng chính:
+* **Horizontal Partitioning (Phân vùng ngang)**: Chia bảng theo dòng. Ví dụ, các dòng dữ liệu của năm 2025 được cất ở phân vùng A, dòng của năm 2026 cất ở phân vùng B. Đây là phương pháp phổ biến nhất trong các Data Warehouse.
+* **Vertical Partitioning (Phân vùng dọc)**: Chia bảng theo cột. Những cột ít khi dùng tới hoặc có kích thước lớn sẽ được tách riêng sang một vùng lưu trữ khác để giữ cho bảng chính luôn gọn nhẹ.
 
-Ví dụ: Thay vì lưu 10 năm dữ liệu bán hàng vào một file khổng lồ `sales_data`, hệ thống sẽ chia nó thành các phân vùng theo năm `sales_2024`, `sales_2025`, `sales_2026`.
+## Tại sao chúng ta cần phân vùng dữ liệu?
 
-Có hai loại phân vùng chính:
-* **Horizontal Partitioning (Phân vùng ngang)**: Chia theo dòng (Ví dụ: Dòng của năm 2025 vào vùng A, dòng 2026 vào vùng B). Đây là loại phổ biến nhất trong Data Warehouse.
-* **Vertical Partitioning (Phân vùng dọc)**: Chia theo cột (Tách các cột ít dùng sang một bảng/vùng khác).
+Hãy tưởng tượng bạn là một nhà phân tích muốn chạy báo cáo doanh thu của tháng này từ một bảng lưu trữ lịch sử bán hàng suốt 10 năm qua (nặng hàng Terabytes).
 
----
+* **Nếu không có Partitioning**: Cơ sở dữ liệu bắt buộc phải quét toàn bộ tập tin khổng lồ chứa dữ liệu của cả 10 năm chỉ để lọc ra đúng 30 ngày gần nhất (Full Table Scan). Điều này cực kỳ lãng phí thời gian và tài nguyên máy tính.
+* **Khi đã được Partitioning**: Hệ thống sẽ bỏ qua dữ liệu của 9 năm 11 tháng trước đó, đi thẳng vào thư mục chứa dữ liệu của riêng "Tháng này" để tính toán. Hành động thông minh này được gọi là **Partition Pruning (Tỉa phân vùng)**.
 
-## Why it exists
+## Các chiến lược phân vùng phổ biến
 
-Khi một bảng dữ liệu đạt đến kích thước hàng tỷ dòng (hàng Terabytes), ngay cả việc sử dụng Index (Chỉ mục) cũng trở nên kém hiệu quả vì cây B-Tree quá lớn, không thể nằm gọn trong RAM.
-Nếu một Data Analyst muốn chạy báo cáo doanh thu của "Tháng này":
-* Không có Partitioning: Database phải quét (Full scan) toàn bộ file khổng lồ chứa dữ liệu 10 năm để lọc ra 30 ngày gần nhất.
-* Có Partitioning: Database bỏ qua dữ liệu của 9 năm 11 tháng trước, nhảy thẳng vào phân vùng của "Tháng này" và chỉ quét lượng dữ liệu nhỏ xíu đó. Cơ chế này gọi là **Partition Pruning (Tỉa phân vùng)**.
+Để chia nhỏ dữ liệu, trước tiên bạn cần chọn ra một cột làm **Partition Key (Khóa phân vùng)**. Cột thời gian (`Date` hoặc `Timestamp`) thường là ứng cử viên hàng đầu vì hầu hết các câu lệnh phân tích dữ liệu đều đi kèm điều kiện lọc thời gian (`WHERE date >= ...`).
 
----
+Tùy thuộc vào đặc thù dữ liệu, bạn có thể áp dụng các chiến lược sau:
+1. **Range Partitioning (Phân vùng theo khoảng)**: Chia dữ liệu dựa trên các khoảng giá trị liên tục. Ví dụ như chia theo từng tháng hoặc từng năm. Đây là lựa chọn hoàn hảo cho dữ liệu chuỗi thời gian (time-series).
+2. **List Partitioning (Phân vùng theo danh sách)**: Chia dữ liệu theo các giá trị cụ thể, cố định. Ví dụ: phân vùng theo quốc gia (`country` là 'VN', 'US', 'JP').
+3. **Hash Partitioning (Phân vùng theo mã băm)**: Dùng thuật toán Hash biến đổi giá trị của một cột (như `user_id`) rồi chia đều dữ liệu vào $N$ phân vùng cố định. Kỹ thuật này giúp phân tán đều tải trọng ghi dữ liệu, tránh tình trạng nghẽn cổ chai (load balancing).
 
-## Core idea
+### Cách lưu trữ vật lý trong Data Lake (ví dụ Amazon S3)
 
-**1. Partition Key (Khóa phân vùng)**
-Bạn phải chọn một cột để làm mốc chia dữ liệu. Cột thời gian (Date/Timestamp) là lựa chọn kinh điển nhất vì 90% các truy vấn phân tích đều có giới hạn thời gian (`WHERE date >= ...`).
-
-**2. Các chiến lược phân vùng phổ biến**:
-* **Range Partitioning**: Chia theo khoảng (Ví dụ: `date` từ 1/1 đến 31/1). Phổ biến nhất cho dữ liệu chuỗi thời gian (time-series).
-* **List Partitioning**: Chia theo danh sách giá trị cố định (Ví dụ: `country` = 'VN', 'US', 'JP').
-* **Hash Partitioning**: Áp dụng hàm Hash lên cột ID, chia đều dữ liệu vào $N$ vùng. Dùng để phân tán đều tải trọng (Load balancing).
-
----
-
-## How it works
-
-Hãy xem cách dữ liệu được tổ chức trong Data Lake (như Amazon S3):
-
-Khi bạn lưu file Parquet có sử dụng Partitioning theo `year` và `month`, cấu trúc thư mục thực tế sẽ trông như sau:
+Nếu bạn lưu trữ dữ liệu dưới định dạng Parquet trong một Data Lake và thực hiện phân vùng theo `year` và `month`, cấu trúc thư mục thực tế sẽ được tổ chức rất rõ ràng như thế này:
 
 ```text
 s3://my-data-lake/sales/
@@ -66,14 +53,13 @@ s3://my-data-lake/sales/
     └── month=02/ -> chứa data_part4.parquet
 ```
 
-Khi bạn chạy truy vấn SQL (thông qua AWS Athena hoặc Trino):
-`SELECT SUM(revenue) FROM sales WHERE year=2026 AND month=01;`
+Khi bạn thực hiện câu lệnh SQL:
+```sql
+SELECT SUM(revenue) FROM sales WHERE year=2026 AND month=01;
+```
+Bộ máy truy vấn (Query Engine như Athena hoặc Trino) sẽ bỏ qua toàn bộ các thư mục khác, chỉ đọc đúng file `data_part3.parquet` nằm trong thư mục `year=2026/month=01/`. Nhờ vậy, hóa đơn Cloud của doanh nghiệp được giảm đáng kể vì phí dịch vụ thường tính trên lượng dữ liệu được quét.
 
-Hệ thống sẽ **Prune (cắt tỉa)** tất cả các thư mục khác, và chỉ tải đúng file `data_part3.parquet` vào RAM để tính toán. Số tiền bạn phải trả cho Cloud dựa trên số byte được quét giảm đi đáng kể.
-
----
-
-## Architecture / Flow
+## Sơ đồ kiến trúc phân vùng
 
 ```mermaid
 graph TD
@@ -102,14 +88,12 @@ graph TD
     PK ==>|Pruning: Only reads Q2| P2
 ```
 
----
+## Ví dụ thực tế: Cài đặt phân vùng trong PostgreSQL
 
-## Practical example
-
-Ví dụ tạo một bảng được phân vùng trong PostgreSQL:
+Dưới đây là cách bạn có thể khai báo một bảng phân vùng theo khoảng thời gian trong cơ sở dữ liệu PostgreSQL:
 
 ```sql
--- 1. Tạo bảng cha (Master table)
+-- 1. Định nghĩa bảng cha (Master table) và chỉ định khóa phân vùng
 CREATE TABLE measurement (
     city_id         int not null,
     logdate         date not null,
@@ -117,85 +101,67 @@ CREATE TABLE measurement (
     unitsales       int
 ) PARTITION BY RANGE (logdate);
 
--- 2. Tạo các bảng phân vùng con (Child tables)
+-- 2. Tạo các bảng phân vùng con (Child tables) để hứng dữ liệu cụ thể
 CREATE TABLE measurement_y2026m01 PARTITION OF measurement
     FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');
 
 CREATE TABLE measurement_y2026m02 PARTITION OF measurement
     FOR VALUES FROM ('2026-02-01') TO ('2026-03-01');
 
--- 3. Ghi dữ liệu
--- Khi bạn INSERT vào bảng 'measurement', PostgreSQL tự động đẩy dòng dữ liệu 
--- vào đúng bảng con dựa trên cột logdate.
+-- 3. Sử dụng dữ liệu
+-- Từ nay, khi bạn thực hiện câu lệnh INSERT vào bảng chung 'measurement', 
+-- PostgreSQL sẽ tự động định tuyến (routing) dữ liệu vào đúng bảng con dựa trên giá trị của cột 'logdate'.
 ```
 
----
+## Thiết kế phân vùng thế nào cho đúng?
 
-## Best practices
+### Các nguyên tắc thiết kế quan trọng (Best Practices)
+* **Chọn đúng chìa khóa**: Hãy chọn cột thường xuyên xuất hiện nhất trong điều kiện lọc của các câu truy vấn. Nếu bạn phân vùng bảng theo quốc gia nhưng thói quen truy vấn của nhóm phân tích luôn lọc theo ngày tháng, tính năng cắt tỉa phân vùng (Partition Pruning) sẽ bị vô hiệu hóa, và hệ thống vẫn phải quét toàn bộ bảng.
+* **Chú ý đến độ mịn của phân vùng (Granularity)**: Tránh chia dữ liệu quá nhỏ (ví dụ phân vùng theo từng giờ). Việc tạo ra hàng chục nghìn thư mục nhỏ sẽ tạo ra gánh nặng quản lý (metadata overhead) cho hệ thống khi lập kế hoạch truy vấn. Kích thước tối ưu cho mỗi phân vùng trên các nền tảng Data Lake thường dao động từ 1GB đến vài chục GB.
 
-* **Lựa chọn Partition Key cẩn thận**: Chọn cột mà hầu hết các truy vấn đều dùng trong mệnh đề `WHERE`. Nếu bạn phân vùng theo `country` nhưng query luôn tìm theo `date` mà không nhắc đến `country`, hệ thống sẽ phải quét MỌI phân vùng, làm chậm thêm.
-* **Độ lớn của phân vùng (Granularity)**: Đừng phân vùng quá nhỏ (ví dụ chia theo Giờ). Nếu có quá nhiều thư mục/phân vùng (hàng chục ngàn thư mục), hệ thống sẽ bị chậm (Overhead) trong giai đoạn lên kế hoạch truy vấn (Planning phase) để duyệt qua danh sách các thư mục. Kích thước lý tưởng cho 1 phân vùng trên BigQuery/S3 là khoảng từ 1GB đến vài chục GB.
+### Những cái bẫy thường gặp (Common Mistakes)
+* **Lệch dữ liệu (Data Skew)**: Chẳng hạn bạn phân vùng theo mã cửa hàng (`store_id`), nhưng có một cửa hàng flagship mang lại 90% doanh thu trong khi hàng trăm cửa hàng khác cộng lại chỉ chiếm 10%. Phân vùng chứa cửa hàng flagship này sẽ cực kỳ khổng lồ, làm mất đi hoàn toàn lợi ích của việc chia nhỏ dữ liệu để xử lý song song.
+* **Quên lọc theo khóa phân vùng**: Mặc dù bảng đã được phân vùng theo `date_key`, nhưng người viết truy vấn lại sử dụng cột `created_at` để lọc dữ liệu. Do không khớp khóa phân vùng, hệ thống buộc phải thực hiện quét toàn bảng (Full Scan), gây tốn kém chi phí và tài nguyên hệ thống.
 
----
+## Cân nhắc hai mặt của đồng xu: Ưu và nhược điểm
 
-## Common mistakes
+### Điểm cộng lớn
+* **Tăng tốc độ truy vấn vượt trội**: Nhờ cơ chế cắt tỉa phân vùng thông minh, lượng dữ liệu cần đọc giảm đi tối đa.
+* **Vòng đời dữ liệu dễ quản lý (Data Lifecycle Management)**: Khi dữ liệu của 5 năm trước đã lỗi thời và cần xóa bỏ, thay vì chạy lệnh `DELETE` quét từng dòng cực kỳ chậm chạp và khóa bảng, bạn chỉ cần thực hiện lệnh hủy phân vùng (`DROP PARTITION`). Hệ thống sẽ xóa bỏ file vật lý tương ứng chỉ trong vòng 1 giây.
 
-* **Mất cân bằng dữ liệu (Data Skew)**: Phân vùng theo Cửa hàng (`store_id`), nhưng có cửa hàng trung tâm tạo ra 90% doanh số, còn 100 cửa hàng khác gộp lại chỉ 10%. Phân vùng của cửa hàng trung tâm sẽ trở nên khổng lồ, làm mất đi ý nghĩa của việc chia nhỏ.
-* **Quên thêm cột Partition vào truy vấn**: Thiết kế bảng chia theo `date_key`, nhưng Data Analyst viết query `SELECT * FROM table WHERE created_at = ...` (dùng nhầm cột). Hệ thống không nhận diện được Partition Key và quét toàn bảng (Full scan), gây tốn hàng ngàn đô la trên Cloud DWH.
+### Điểm trừ cần lưu ý
+* **Ràng buộc thói quen viết code**: Người dùng cuối bắt buộc phải luôn nhớ đưa khóa phân vùng vào điều kiện lọc trong mệnh đề `WHERE`.
+* **Rủi ro thiếu phân vùng**: Nếu một dòng dữ liệu mới không khớp với bất kỳ khoảng phân vùng nào đã định trước (và bạn quên cấu hình phân vùng mặc định - `DEFAULT`), câu lệnh ghi dữ liệu sẽ bị lỗi ngay lập tức.
 
----
+### Khi nào nên áp dụng?
+* Bắt buộc phải có cho các bảng sự kiện lớn (Fact tables) trong Data Warehouse hoặc các kho nhật ký sự kiện (Event logs) trong Data Lake.
+* Các bảng chứa dữ liệu chuỗi thời gian liên tục tăng trưởng nhanh chóng theo ngày tháng.
 
-## Trade-offs
+### Khi nào không nên áp dụng?
+* Các bảng danh mục, cấu hình nhỏ (Dimension tables) ví dụ như danh sách phòng ban, quốc gia. Việc phân vùng các bảng này chỉ làm tăng độ phức tạp không đáng có.
+* Tổng dung lượng dữ liệu của bảng chưa vượt quá ngưỡng 10GB.
 
-### Ưu điểm
-* **Partition Pruning**: Cắt giảm lượng dữ liệu đọc từ đĩa cứng xuống cực thấp, truy vấn siêu nhanh.
-* **Quản trị dữ liệu (Data Lifecycle)**: Khi dữ liệu của năm 2020 không còn cần thiết, thay vì chạy lệnh `DELETE` hàng triệu dòng (rất chậm), quản trị viên chỉ cần `DROP PARTITION y2020` (xóa luôn file vật lý, diễn ra trong 1 giây).
-
-### Nhược điểm
-* **Ràng buộc truy vấn**: Buộc người dùng cuối (Analyst) phải luôn nhớ đưa Partition Key vào mệnh đề `WHERE`.
-* Gây lỗi nếu dữ liệu rơi vào khoảng không có phân vùng định trước (nếu không định nghĩa phân vùng `DEFAULT`).
-
----
-
-## When to use
-
-* Là tiêu chuẩn vàng (Golden Standard) cho các bảng Fact (Fact tables) khổng lồ trong Data Warehouse hoặc Event logs trong Data Lake.
-* Bảng lưu trữ theo kiểu chuỗi thời gian (Time-series) liên tục phình to không điểm dừng.
-
-## When not to use
-
-* Với các bảng Dimension nhỏ (Ví dụ bảng Danh sách 50 Quốc gia), việc tạo Partitioning là thừa thãi và làm hệ thống chậm thêm.
-* Khi khối lượng dữ liệu toàn bảng chưa vượt quá mức 10GB.
-
----
-
-## Related concepts
+## Các khái niệm liên quan
 
 * [Clustering](/concepts/clustering)
 * [Data Warehouse](/concepts/data-warehouse)
 
----
+## Góc phỏng vấn: Những thử thách thường gặp
 
-## Interview questions
-
-### 1. Phân biệt Partitioning và Indexing. Khi nào dùng cái nào?
+### 1. Hãy phân biệt rõ Partitioning và Indexing. Khi nào thì dùng loại nào?
 * **Gợi ý trả lời**: 
-  * Indexing là tạo cấu trúc thư mục phụ (B-Tree) để trỏ đến dữ liệu. Nó tốt nhất cho các truy vấn tìm kiếm **độ chọn lọc cao (High Selectivity)**, tức là lấy ra một hoặc vài chục dòng trong hàng triệu dòng (ví dụ: tìm User ID).
-  * Partitioning là cắt đứt vật lý dữ liệu gốc thành các khối riêng biệt. Nó tốt nhất cho các truy vấn **quét diện rộng (Scan)** nhưng giới hạn trong một ranh giới nhất định (ví dụ: quét tính tổng doanh thu của toàn bộ 1 tháng).
-  * Thực tế, chúng thường kết hợp: Ta Partition bảng theo Tháng, và trong từng phân vùng Tháng đó, ta đánh Index cột `user_id`.
+  - **Indexing** giống như phần mục lục của cuốn sách. Nó tạo ra một cấu trúc tìm kiếm phụ (thường là B-Tree) chỉ đến vị trí vật lý của dữ liệu. Indexing cực kỳ thích hợp cho các truy vấn có độ chọn lọc cao (High Selectivity) - tức là bạn cần tìm một hoặc vài dòng cụ thể trong hàng triệu dòng (ví dụ: tìm thông tin người dùng theo `user_id`).
+  - **Partitioning** giống như việc chia một cuốn sách dày thành nhiều tập mỏng độc lập. Nó thích hợp cho các truy vấn quét diện rộng (Scan) nhưng trong một phạm vi giới hạn (ví dụ: tính doanh thu cả tháng).
+  - Trong thực tế, chúng ta thường kết hợp cả hai: phân vùng bảng theo thời gian (Tháng), và trong mỗi phân vùng đó, ta tiếp tục đánh chỉ mục (Index) theo mã người dùng.
 
-### 2. Sự cố "Data Skew" (Lệch dữ liệu) trong Partitioning là gì và cách xử lý?
-* **Gợi ý trả lời**: Data Skew xảy ra khi một phân vùng nhận được lượng dữ liệu khổng lồ (ví dụ phân vùng ngày "Black Friday"), trong khi các phân vùng khác trống rỗng. Khi chạy xử lý song song (như Spark), Node chịu trách nhiệm xử lý phân vùng Black Friday sẽ chạy rất lâu, làm chậm toàn bộ hệ thống (Straggler problem). Cách giải quyết là sử dụng "Salting" (thêm một tiền tố ngẫu nhiên vào Partition Key) hoặc đổi sang Hash Partitioning thay vì List/Range để ép dữ liệu phân tán đều ra các ổ đĩa vật lý.
+### 2. Sự cố "Data Skew" (Lệch dữ liệu) trong Partitioning là gì và bạn giải quyết thế nào?
+* **Gợi ý trả lời**: Lệch dữ liệu xảy ra khi lượng dữ liệu phân bố không đồng đều giữa các phân vùng (ví dụ phân vùng của ngày lễ mua sắm lớn nhận lượng bản ghi khổng lồ so với ngày thường). Khi chạy các tác vụ xử lý song song (như Apache Spark), phân vùng bị lệch sẽ khiến một Node phải làm việc quá tải trong khi các Node khác đã rảnh rỗi (hiện tượng Straggler). Để giải quyết, ta có thể áp dụng kỹ thuật "Salting" (thêm một giá trị ngẫu nhiên vào khóa phân vùng để chia nhỏ tiếp) hoặc chuyển sang phân vùng theo mã băm (Hash Partitioning) để đảm bảo dữ liệu được rải đều trên mặt vật lý.
 
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Google Cloud BigQuery Documentation** - Introduction to partitioned tables.
 2. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 6 - Partitioning).
 
----
-
-## English summary
+## English Summary
 
 Partitioning is the database optimization technique of dividing a large logical table into smaller, physically separate parts (partitions) based on a specific key, usually a date or timestamp. Its primary analytical benefit is "Partition Pruning": when a query filters by the partition key, the database engine skips scanning irrelevant partitions, massively reducing disk I/O and query costs. While highly effective for managing large time-series data and enforcing data lifecycle policies (by simply dropping old partitions), it requires careful selection of the partition key to avoid data skew and scanning overhead.

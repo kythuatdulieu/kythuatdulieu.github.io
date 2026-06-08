@@ -11,46 +11,38 @@ metaDescription: "Tìm hiểu chi tiết về các thuật toán nén dữ liệ
 
 # Thuật toán nén dữ liệu - Compression Algorithms
 
-## Summary
+Trong thiết kế hệ thống dữ liệu lớn (Big Data), việc tối ưu hóa dung lượng lưu trữ và tốc độ truyền tải thông tin là một bài toán sống còn. Khi lưu trữ hàng Terabytes hay Petabytes dữ liệu trên Cloud, hóa đơn thanh toán sẽ nhanh chóng vượt tầm kiểm soát nếu bạn không có một chiến lược nén dữ liệu tốt. **Compression Algorithms (Thuật toán nén dữ liệu)** chính là chìa khóa vàng giúp doanh nghiệp tiết kiệm hàng ngàn đô-la chi phí lưu trữ, đồng thời đẩy nhanh tốc độ truy vấn lên gấp nhiều lần.
 
-Compression Algorithms (Các thuật toán nén dữ liệu) trong ngữ cảnh Hệ thống cơ sở dữ liệu (Database) và Lưu trữ dữ liệu lớn (Big Data Storage) là tập hợp các kỹ thuật mã hóa dữ liệu nhằm giảm kích thước vật lý của dữ liệu trên đĩa cứng hoặc trên đường truyền mạng. Bằng cách giảm thiểu kích thước dữ liệu (storage footprint), các hệ thống phân tán không chỉ tiết kiệm chi phí lưu trữ mà còn tối ưu hóa đáng kể tốc độ đọc/ghi (I/O) và băng thông mạng (Network I/O) - những nút thắt cổ chai (bottlenecks) phổ biến nhất trong hệ thống dữ liệu.
+## Nén dữ liệu: Nghệ thuật hóa giải nút thắt I/O trong Big Data
 
----
+Về mặt khái niệm, **Thuật toán nén dữ liệu** trong Big Data là tập hợp các kỹ thuật mã hóa dữ liệu nhằm giảm kích thước vật lý của dữ liệu trên đĩa cứng hoặc trên đường truyền mạng. Khác với nén ảnh hay nén video có thể chấp nhận mất mát một phần chi tiết nhỏ (lossy), các thuật toán dùng cho cơ sở dữ liệu bắt buộc phải là **nén không mất dữ liệu (lossless compression)**. Điều này đảm bảo dữ liệu sau khi giải nén phải khôi phục chính xác 100% so với dữ liệu nguyên bản.
 
-## Definition
+Các thuật toán nén phổ biến nhất trong Data Engineering ngày nay bao gồm: **Snappy** (do Google phát triển), **Gzip** (chuẩn nén GNU kinh điển), **Zstandard/Zstd** (do Facebook phát triển) và **LZ4**. Hầu hết chúng đều dựa trên các biến thể của thuật toán từ điển nổi tiếng LZ77/LZ78 kết hợp với kỹ thuật mã hóa entropy (như Huffman coding).
 
-**Thuật toán nén dữ liệu** trong Big Data thường đề cập đến các thuật toán nén không mất dữ liệu (lossless compression) giúp chuyển đổi một khối dữ liệu lớn thành một định dạng nhỏ gọn hơn mà từ đó có thể khôi phục lại dữ liệu nguyên bản một cách chính xác 100%.
+## Tại sao chúng ta cần nén dữ liệu? (Khi CPU không còn là điểm nghẽn)
 
-Các thuật toán phổ biến trong Data Engineering bao gồm: Snappy (do Google phát triển), Gzip (chuẩn GNU nén tốt), Zstandard/Zstd (do Facebook phát triển) và LZ4. Chúng đều dựa trên các biến thể của thuật toán từ điển (dictionary-based) như LZ77/LZ78 kết hợp với mã hóa entropy (Huffman coding).
+Trong các hệ thống tính toán phân tán hiện đại (như Apache Spark, Hadoop, Kafka), CPU rất ít khi là nút thắt cổ chai làm chậm hệ thống. Thay vào đó, giới hạn lớn nhất về mặt hiệu năng thường nằm ở:
+1. **Tốc độ đọc ghi ổ đĩa (Disk I/O)**: Tốc độ đọc dữ liệu thô từ ổ cứng HDD hoặc SSD vào RAM.
+2. **Băng thông mạng (Network I/O)**: Quá trình truyền tải dữ liệu giữa các máy chủ trong mạng (ví dụ trong giai đoạn Shuffle của Spark).
 
----
+Nén dữ liệu giải quyết cả hai bài toán này theo cách cực kỳ thông minh:
+* **Tiết kiệm chi phí lưu trữ**: Giảm dung lượng file trên Cloud Storage (như Amazon S3 hay GCS) xuống nhiều lần, giảm trực tiếp hóa đơn lưu trữ hàng tháng.
+* **Đẩy nhanh tốc độ đọc dữ liệu**: Việc đọc 1GB dữ liệu đã nén từ đĩa vào RAM rồi dùng CPU giải nén ra thành 3GB thường diễn ra **nhanh hơn rất nhiều** so với việc bắt ổ đĩa phải đọc thô trực tiếp 3GB dữ liệu chưa nén. Tốc độ tính toán của CPU hiện đại ngày nay vượt trội hơn hẳn so với tốc độ truyền tải vật lý của đĩa cứng.
 
-## Why it exists
+## Ý tưởng cốt lõi của các thuật toán nén hiện đại
 
-Trong các hệ thống phân tán quy mô lớn (Hadoop, Spark, Kafka) và kiến trúc lưu trữ cột (Column-oriented storage như Parquet, ORC), CPU hiếm khi là điểm nghẽn (bottleneck). Thay vào đó, tốc độ đọc dữ liệu từ ổ cứng (Disk I/O) và thời gian truyền tải dữ liệu qua mạng giữa các node (Network I/O) là những yếu tố giới hạn hiệu năng.
+Hầu hết các thuật toán nén lossless hoạt động dựa trên hai nguyên lý cốt lõi:
 
-Các thuật toán nén ra đời trong ngữ cảnh này để:
-1. **Giảm chi phí lưu trữ (Storage Cost)**: Dữ liệu nén nhỏ hơn giúp tiết kiệm tiền thuê Cloud Storage (S3, GCS) hoặc đĩa cứng vật lý.
-2. **Đẩy nhanh tốc độ truy xuất (I/O Speed)**: Đọc 1GB dữ liệu nén từ đĩa vào RAM và giải nén (bằng CPU) thường nhanh hơn nhiều so với việc đọc 5GB dữ liệu chưa nén từ đĩa. Tốc độ CPU để giải nén hiện đại vượt trội hơn so với thông lượng đĩa cứng.
-3. **Giảm Network Bandwidth**: Trong quá trình xử lý song song (ví dụ: giai đoạn Shuffle trong MapReduce/Spark), dữ liệu nén giúp giảm đáng kể lượng traffic mạng giữa các node.
+* **Sử dụng từ điển (Dictionary-based / Lempel-Ziv)**: Thuật toán quét văn bản và tìm kiếm các chuỗi ký tự lặp lại, sau đó thay thế chúng bằng các tham chiếu ngắn hơn. Ví dụ, nếu từ `"database"` xuất hiện 100 lần trong file, nó chỉ được lưu đầy đủ ở lần đầu tiên. 99 lần xuất hiện tiếp theo sẽ được thay thế bằng một con trỏ tham chiếu cực nhẹ. (Các thuật toán như LZ4, Snappy áp dụng nguyên lý này rất triệt để nhằm đạt tốc độ tối đa).
+* **Mã hóa Entropy (Entropy Encoding / Huffman)**: Thuật toán biểu diễn các ký tự xuất hiện thường xuyên bằng số lượng bit ít nhất có thể, và dùng nhiều bit hơn cho các ký tự hiếm gặp. (Gzip kết hợp cả hai kỹ thuật LZ77 và Huffman để đạt tỷ lệ nén cao nhất).
 
----
+## Luồng xử lý nén dữ liệu diễn ra như thế nào?
 
-## Core idea
-
-Nguyên lý hoạt động của hầu hết các thuật toán nén dựa trên hai khái niệm chính:
-* **Từ điển (Dictionary / Lempel-Ziv)**: Tìm kiếm và thay thế các chuỗi ký tự/byte lặp lại bằng các tham chiếu (references) ngắn hơn. Nếu từ 'database' xuất hiện 100 lần, nó chỉ được lưu đầy đủ ở lần đầu, 99 lần sau được thay bằng con trỏ tham chiếu. (LZ4, Snappy, LZO áp dụng rất mạnh điều này để đạt tốc độ cao).
-* **Mã hóa Entropy (Entropy Encoding / Huffman)**: Biểu diễn các ký tự hoặc byte xuất hiện thường xuyên bằng số lượng bit ít hơn, và những ký tự hiếm gặp bằng nhiều bit hơn. (Gzip kết hợp cả LZ77 và Huffman để đạt tỉ lệ nén cao).
-
----
-
-## How it works
-
-Hệ thống lưu trữ áp dụng nén thông qua các giai đoạn:
-1. **Chia khối (Block/Chunking)**: Dữ liệu (ví dụ file Parquet) được chia thành các row groups hoặc blocks nhỏ (ví dụ 64MB hoặc 128MB). Nén được thực hiện độc lập trên từng block.
-2. **Lọc/Tiền xử lý (Filtering/Pre-processing)**: Tùy chọn áp dụng các thuật toán như Bit-packing, Run-Length Encoding (RLE) hoặc Delta Encoding trước để làm dữ liệu đồng nhất hơn (đặc biệt hữu ích với lưu trữ dạng cột).
-3. **Nén (Compressing)**: Block dữ liệu được đưa qua thuật toán như Snappy hoặc Zstd để tạo ra block nén.
-4. **Giải nén (Decompressing)**: Khi có truy vấn đọc, hệ thống (như Spark/Presto) sẽ nạp block nén vào RAM và giải nén ngay tức thì bằng CPU trước khi xử lý.
+Hệ thống lưu trữ áp dụng nén dữ liệu qua các giai đoạn tuần tự sau:
+1. **Chia khối (Block/Chunking)**: File dữ liệu lớn được chia thành các nhóm dòng (row groups) hoặc các block nhỏ (ví dụ 64MB hoặc 128MB). Việc nén sẽ được thực hiện độc lập trên từng block này.
+2. **Tiền xử lý (Filtering)**: Áp dụng các thuật toán như Bit-packing, Run-Length Encoding (RLE) hay Delta Encoding để biến đổi dữ liệu thành dạng đồng nhất (đặc biệt hiệu quả với dữ liệu dạng cột Parquet).
+3. **Nén dữ liệu (Compressing)**: Block dữ liệu đã lọc được đưa qua các engine nén như Snappy hoặc Zstd để tạo ra block nén vật lý ghi xuống đĩa.
+4. **Giải nén (Decompressing)**: Khi người dùng truy vấn, hệ thống đọc block nén vào RAM và dùng CPU giải nén tức thì trước khi thực hiện tính toán.
 
 ```mermaid
 flowchart LR
@@ -62,135 +54,94 @@ flowchart LR
     F --> G[Xử lý truy vấn]
 ```
 
----
+## Đặt lên bàn cân các thuật toán nén phổ biến
 
-## Algorithm Comparison
+Mỗi thuật toán nén đều có những ưu và nhược điểm riêng phù hợp cho từng hoàn cảnh cụ thể:
 
-| Thuật toán | Tỉ lệ nén (Compression Ratio) | Tốc độ nén (Compression Speed) | Tốc độ giải nén (Decompression Speed) | CPU Usage | Best for |
+| Thuật toán | Tỉ lệ nén (Compression Ratio) | Tốc độ nén (Compression Speed) | Tốc độ giải nén (Decompression Speed) | CPU Usage | Phù hợp nhất cho |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Snappy** | Thấp (Khoảng 1.5x - 2x) | Rất nhanh (~500 MB/s) | Cực nhanh (~1.5 GB/s) | Thấp | Dữ liệu trung gian (Shuffle), Cache, Kafka |
 | **LZ4** | Rất thấp (Gần bằng Snappy) | Nhanh nhất (~800 MB/s) | Nhanh nhất (~4.0 GB/s) | Rất thấp | In-memory storage, Caching |
 | **Gzip** | Cao (Khoảng 3x - 4x) | Chậm (~50 MB/s) | Chậm (~150 MB/s) | Cao | Lưu trữ Cold Data, Logs, JSON/CSV dài hạn |
 | **Zstandard (Zstd)** | Rất cao (Tương đương Gzip) | Nhanh (~250 MB/s) | Rất nhanh (~750 MB/s) | Trung bình | Lưu trữ Data Lake (Parquet), Hầu hết mọi Use case hiện nay |
 
----
+## Ví dụ thực chiến: Cấu hình chuẩn nén trong PySpark
 
-## Practical example
-
-Xét một file Parquet chứa dữ liệu Clickstream với cấu trúc dạng cột. Cột `country` chỉ có vài chục giá trị lặp lại hàng triệu lần ("VN", "US", "UK").
-
-Nếu lưu trữ dưới dạng text thông thường (Uncompressed), nó sẽ chiếm một lượng dung lượng khổng lồ.
-Áp dụng nén bằng PySpark:
+Hãy xem cách cấu hình các định dạng nén khác nhau khi ghi file Parquet bằng PySpark:
 
 ```python
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("CompressionExample").getOrCreate()
 
-# Đọc dữ liệu lớn
+# Đọc tập dữ liệu lớn từ nguồn
 df = spark.read.csv("s3://bucket/raw_data/*.csv", header=True)
 
-# 1. Lưu với Snappy (Tốc độ cao, dung lượng vừa) - Thường là default của Parquet cũ
+# 1. Lưu với Snappy: Ưu tiên tốc độ tối đa (lựa chọn mặc định của nhiều hệ thống cũ)
 df.write.parquet("s3://bucket/processed/snappy_data/", compression="snappy")
 
-# 2. Lưu với Gzip (Tỉ lệ nén tốt, tốc độ chậm)
+# 2. Lưu với Gzip: Ưu tiên dung lượng nhỏ nhất, chấp nhận tốc độ chậm
 df.write.parquet("s3://bucket/processed/gzip_data/", compression="gzip")
 
-# 3. Lưu với Zstandard (Cân bằng xuất sắc giữa Tỉ lệ nén và Tốc độ) - Lựa chọn tối ưu nhất
+# 3. Lưu với Zstandard: Sự kết hợp hoàn hảo giữa tốc độ và khả năng nén (Lựa chọn tối ưu nhất)
 df.write.parquet("s3://bucket/processed/zstd_data/", compression="zstd")
 ```
 
-Trong thực tế, file gốc 10GB có thể thành:
-* Snappy: ~4GB
-* Zstd: ~2.5GB (nhưng tốc độ đọc/ghi nhanh gấp đôi Gzip)
-* Gzip: ~2.4GB
+Trong thực tế, một file thô dung lượng ban đầu 10GB sau khi xử lý có thể cho ra kết quả:
+* **Snappy**: ~4GB
+* **Zstd**: ~2.5GB (nhưng tốc độ đọc ghi nhanh gấp đôi Gzip)
+* **Gzip**: ~2.4GB
 
----
+## Cẩm nang áp dụng nén dữ liệu (Best Practices)
 
-## Best practices
+* **Zstandard (Zstd) là ưu tiên số một**: Ở thời điểm hiện tại, hãy luôn chọn Zstd làm cấu hình mặc định cho các file lưu trữ dài hạn trên Data Lake (như Parquet, ORC). Nó mang lại tỷ lệ nén gần như tương đương Gzip nhưng tốc độ nén/giải nén nhanh hơn gấp 3 - 5 lần.
+* **Tránh dùng Gzip cho các file text lớn**: Gzip là thuật toán không thể chia nhỏ `(not splittable)`. Nếu bạn lưu một file CSV nén Gzip dung lượng 10GB trên HDFS, Spark chỉ có thể giao file đó cho đúng 1 CPU core duy nhất xử lý từ đầu đến cuối, làm mất đi hoàn toàn lợi thế của tính toán song song. Hãy dùng định dạng hỗ trợ block-level compression như Parquet, ORC, hoặc dùng định dạng nén splittable như Bzip2 (dù tốc độ nén rất chậm).
+* **Tận dụng định dạng lưu trữ dạng cột**: Thiết kế dữ liệu theo cột (Parquet) giúp các dữ liệu cùng loại đứng cạnh nhau, nâng cao hiệu suất của các thuật toán tiền xử lý như Run-Length Encoding trước khi chạy nén tổng thể.
 
-* **Zstandard là Vua hiện tại**: Luôn coi Zstd là lựa chọn mặc định khi cấu hình lưu trữ Data Lake (Parquet/ORC) vì nó cung cấp mức nén tương đương Gzip nhưng tốc độ nén/giải nén nhanh hơn gấp 3-5 lần.
-* **Sử dụng Splittable Compression**: Khi làm việc với hệ sinh thái Hadoop/Spark và file văn bản (CSV/JSON), tránh dùng Gzip thông thường vì nó không thể chia cắt (not splittable). Một file Gzip 10GB chỉ được xử lý bởi 1 CPU core. Hãy dùng định dạng file hỗ trợ block-level compression như Parquet, ORC, Avro (chúng chia file thành các block nén độc lập), hoặc dùng bzip2 (tốc độ siêu chậm nhưng splittable).
-* **Kết hợp Cột (Column-oriented) và Nén**: Thiết kế dữ liệu theo cột (Parquet) giúp các dữ liệu có cùng kiểu đứng cạnh nhau. Điều này kết hợp cực tốt với RLE (Run-Length Encoding) và Dictionary Encoding trước khi đưa vào thuật toán nén tổng thể.
+## Những sai lầm kinh điển cần tránh
 
----
+* **Cố nén dữ liệu đã được nén sẵn**: Đưa các file hình ảnh (JPEG), video (MP4) hay nhạc (MP3) qua các thuật toán nén Snappy/Gzip. Bản chất các định dạng này đã được nén bằng thuật toán chuyên dụng. Việc cố nén thêm chỉ làm tiêu tốn CPU của hệ thống một cách vô ích mà không giúp file nhỏ lại.
+* **Chọn Gzip cho giai đoạn Spark Shuffle**: Giai đoạn Shuffle yêu cầu tốc độ đọc ghi dữ liệu trung gian liên tục. Sử dụng Gzip lúc này sẽ làm nghẽn CPU nghiêm trọng. Hãy dùng Snappy hoặc LZ4 để đạt tốc độ tốt nhất.
+* **Cấu hình cấp độ nén quá cao (Over-compression)**: Việc tăng cấu hình nén của Zstd lên mức tối đa (ví dụ level 19) để cố gắng tiết kiệm thêm vài Megabytes dữ liệu là không cần thiết. Nó sẽ làm tăng thời gian xử lý của CPU lên gấp 10 lần, kéo dài thời gian hoàn thành của toàn bộ pipeline ETL.
 
-## Common mistakes
+## Sự đánh đổi thực tế giữa các thuật toán
 
-* **Cố nén dữ liệu đã được nén**: Dùng Snappy/Gzip để nén các tệp hình ảnh (JPEG), video (MP4) hoặc âm thanh (MP3). Những tệp này bản chất đã bị nén bằng thuật toán lossy. Nén thêm không làm giảm kích thước mà chỉ lãng phí CPU.
-* **Lựa chọn Gzip cho Spark Shuffle**: Gzip quá tốn CPU và chậm cho các công đoạn trung gian cần tốc độ I/O liên tục. Shuffle data nên dùng Snappy hoặc LZ4.
-* **Đánh đổi quá nhiều cho Tỉ lệ nén**: Chỉnh mức nén Zstd lên level quá cao (ví dụ level 19) để cố ép dung lượng thêm vài MB, nhưng lại tiêu tốn gấp 10 lần thời gian CPU, gây chậm toàn bộ pipeline ETL.
+* **Snappy / LZ4**: Đánh đổi dung lượng lưu trữ (tốn đĩa hơn) để lấy tốc độ xử lý siêu nhanh và mức tiêu hao CPU cực thấp.
+* **Gzip**: Đánh đổi tốc độ và CPU (xử lý rất chậm, tốn CPU) để đạt được khả năng nén tối đa. Ngoài ra, việc không thể xử lý song song trên một file là một nhược điểm lớn trong môi trường phân tán.
+* **Zstd**: Điểm ngọt `(sweet spot)` của công nghệ nén hiện đại. Khắc phục được hầu hết các nhược điểm của hai nhóm trên: nén tốt như Gzip và tốc độ tiệm cận Snappy.
 
----
+## Góc phỏng vấn: Những câu hỏi hóc búa
 
-## Trade-offs
+### 1. Tại sao nén dữ liệu lại làm TĂNG tốc độ của các truy vấn phân tích (OLAP) dù hệ thống phải tốn thêm tài nguyên CPU để giải nén?
+* **Mục đích câu hỏi**: Kiểm tra hiểu biết của ứng viên về bản chất các điểm nghẽn (bottleneck) trong hệ thống dữ liệu lớn.
+* **Gợi ý trả lời**:
+  * Trong các hệ thống phân tán xử lý hàng tỷ dòng dữ liệu, tốc độ CPU thường rất dư thừa. Nút thắt cổ chai thực sự làm chậm hệ thống chính là tốc độ đọc dữ liệu từ đĩa cứng (Disk I/O) và tốc độ truyền dữ liệu qua mạng (Network I/O).
+  * Tốc độ giải nén của CPU hiện đại cực kỳ nhanh (đạt tới hàng GB/s). Do đó, việc hệ thống đọc 1GB dữ liệu đã nén từ đĩa vào RAM rồi dùng CPU giải nén ra thành 3GB sẽ tốn ít thời gian hơn rất nhiều so với việc bắt ổ đĩa phải đọc thô trực tiếp 3GB dữ liệu chưa nén.
 
-### Snappy / LZ4
-* **Pros**: Tốc độ siêu việt, ít tải CPU.
-* **Cons**: Tỉ lệ nén kém, tốn nhiều ổ đĩa hơn.
+### 2. Sự khác biệt giữa Block-level Compression (trong Parquet/ORC) và File-level Compression (như file CSV nén đuôi .csv.gz) là gì?
+* **Mục đích câu hỏi**: Kiểm tra kiến thức về khả năng chia nhỏ dữ liệu (Splittability) trong môi trường tính toán phân tán.
+* **Gợi ý trả lời**:
+  * Với *File-level Compression* (như `.csv.gz`), toàn bộ file dữ liệu được nén thành một khối liên tục từ đầu đến cuối. Gzip không hỗ trợ cơ chế đánh chỉ mục nội bộ, vì vậy Spark buộc phải giao toàn bộ file đó cho một Executor duy nhất xử lý, làm mất hoàn toàn khả năng tính toán song song.
+  * Với *Block-level Compression* (trong Parquet/ORC), file dữ liệu lớn được chia thành nhiều block độc lập (ví dụ 128MB) và mỗi block được nén riêng biệt. Spark có thể dễ dàng phân chia 10 blocks cho 10 Executors khác nhau để giải nén và tính toán song song cùng một lúc.
 
-### Gzip
-* **Pros**: Khả năng nén mạnh mẽ, tiêu chuẩn được hỗ trợ ở mọi nơi.
-* **Cons**: Tốc độ xử lý rùa bò, tốn kém tài nguyên CPU, không hỗ trợ xử lý song song trên một file (not splittable).
+### 3. Bạn sẽ chọn thuật toán nén nào cho hệ thống Data Lake hiện đại và tại sao?
+* **Mục đích câu hỏi**: Đánh giá khả năng cập nhật xu hướng công nghệ mới của ứng viên.
+* **Gợi ý trả lời**:
+  * Tôi sẽ ưu tiên lựa chọn **Zstandard (Zstd)** làm thuật toán nén mặc định cho Data Lake.
+  * Lý do là Zstd giải quyết được bài toán đánh đổi kinh điển giữa tốc độ và dung lượng nén. Nó mang lại tỷ lệ nén tốt ngang ngửa Gzip nhưng tốc độ đọc ghi tiệm cận Snappy. Điều này giúp doanh nghiệp vừa tối ưu được chi phí lưu trữ trên S3/GCS, vừa đảm bảo tốc độ truy vấn vượt trội cho các engine như Athena, Trino hay Spark SQL.
 
-### Zstandard (Zstd)
-* **Pros**: Điểm ngọt (Sweet spot) hoàn hảo. Nén tốt như Gzip nhưng tốc độ tiệm cận Snappy. Hỗ trợ nhiều cấp độ (levels) linh hoạt. Có tính năng "Train with dictionary" cho các file JSON nhỏ.
-* **Cons**: Ít tích hợp mặc định trên các hệ thống cũ kỹ so với Gzip/Snappy.
+## Khái niệm liên quan & Tài liệu tham khảo
 
----
-
-## When to use
-
-* **Dùng LZ4/Snappy**: Khi xử lý stream (Kafka, Flink), dữ liệu cache trong RAM, hoặc ghi/đọc dữ liệu trung gian (Shuffle) trong Spark. Ở đây Tốc độ I/O quan trọng hơn Không gian.
-* **Dùng Zstd**: Dành cho lưu trữ dài hạn trên Data Lake (Parquet/Iceberg), data warehouse, tối ưu cả lưu trữ lẫn chi phí đọc.
-* **Dùng Gzip**: Khi yêu cầu bắt buộc xuất file Text/CSV/JSON chuẩn hóa cho bên thứ ba, hoặc lưu trữ archival data không bao giờ chạm tới.
-
-## When not to use
-
-* Không dùng thuật toán nén lossless cho dữ liệu multimedia (Hình ảnh, Video, Âm thanh).
-* Tránh nén các tệp tin đã được mã hóa (Encrypted data), vì dữ liệu mã hóa là ngẫu nhiên và entropy cực đại, dẫn đến tỉ lệ nén gần bằng không hoặc thậm chí làm tăng kích thước tệp.
-
----
-
-## Related concepts
-
+**Khái niệm liên quan:**
 * [Columnar Storage](/concepts/columnar-storage)
-* Parquet
+* Định dạng lưu trữ Parquet
 * [Data Lake](/concepts/data-lake)
 
----
-
-## Interview questions
-
-### 1. Tại sao nén dữ liệu lại làm TĂNG tốc độ của các truy vấn phân tích (OLAP) dù phải mất thêm thời gian CPU để giải nén?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về Bottleneck của hệ thống: Disk/Network I/O vs CPU.
-* **Gợi ý trả lời (Strong Answer)**:
-  * Trong các truy vấn phân tích quét khối lượng dữ liệu khổng lồ (table scan), nút thắt cổ chai lớn nhất là tốc độ đọc từ đĩa (Disk I/O throughput) và băng thông mạng (Network bandwidth), không phải CPU.
-  * Tốc độ giải nén của CPU (ví dụ LZ4/Snappy đạt hàng GB/s) nhanh hơn nhiều so với tốc độ đọc đĩa (HDD chỉ khoảng 100-200 MB/s, SSD SATA ~500 MB/s). Do đó, đọc 1GB dữ liệu đã nén từ đĩa vào RAM rồi giải nén ra 3GB sẽ hoàn thành nhanh hơn việc phải đọc thô 3GB từ đĩa cứng.
-
-### 2. Sự khác biệt giữa Block-level Compression (trong Parquet/ORC) và File-level Compression (như .csv.gz) là gì?
-* **Người phỏng vấn muốn kiểm tra**: Khái niệm Splittability (khả năng chia cắt dữ liệu) trong xử lý phân tán.
-* **Gợi ý trả lời (Strong Answer)**:
-  * File `.csv.gz` nén toàn bộ tệp thành một khối liên tục. Gzip không có chỉ mục (index) và trạng thái giải nén phụ thuộc vào chuỗi byte trước đó. Khi Spark đọc file này, nó buộc phải nạp toàn bộ file vào 1 executor (1 CPU core) để giải nén từ đầu đến cuối, mất đi sức mạnh xử lý song song.
-  * Định dạng Parquet sử dụng Block-level compression. File lớn được chia thành các blocks (ví dụ 128MB), và mỗi block được nén độc lập. Spark có thể cấp phát 10 executors để đọc 10 blocks cùng lúc từ nhiều node khác nhau, giữ được khả năng xử lý phân tán song song.
-
-### 3. Bạn sẽ chọn thuật toán nén nào cho Data Lake hiện đại và tại sao?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức cập nhật về công nghệ (Zstandard).
-* **Gợi ý trả lời (Strong Answer)**:
-  * Lựa chọn Zstandard (Zstd) cho Data Lake.
-  * Zstd giải quyết được bài toán đánh đổi kinh điển giữa "Tốc độ" và "Tỉ lệ nén". Nó cung cấp tỉ lệ nén ngang ngửa Gzip nhưng tốc độ đọc/ghi nhanh hơn gấp nhiều lần. Nhờ vậy, ta vừa giảm thiểu được chi phí lưu trữ S3, vừa đảm bảo hiệu năng tối ưu cho các công cụ query như Athena, Trino hoặc Spark.
-
----
-
-## References
-
+**Tài liệu tham khảo:**
 1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 3: Bàn về Column Compression, Run-Length Encoding).
-2. **Zstandard Documentation** (Facebook) - Whitepapers về hiệu năng của Zstd.
-3. **Apache Parquet Documentation** - Các chuẩn nén hỗ trợ cho Row Group.
-4. **Fundamentals of Data Engineering** - Joe Reis (Chương 7: Storage - Compression tradeoff).
+2. **Zstandard Github & Documentation** - Các báo cáo so sánh hiệu năng của Zstd từ Facebook.
+3. **Fundamentals of Data Engineering** - Joe Reis (Chương 7: Storage - Compression tradeoff).
 
----
-
-## English summary
+## English Summary
 
 Compression algorithms in data engineering (like Snappy, Gzip, Zstd, LZ4) are critical techniques for reducing storage footprint and mitigating I/O bottlenecks. In distributed systems, CPU cycles are relatively abundant while disk and network throughput are scarce; thus, compressing data accelerates query execution by trading fast CPU decompression for minimized Disk/Network I/O. Modern architectures heavily favor Zstandard (Zstd) for analytical storage (Parquet/ORC) as it strikes a perfect balance—achieving Gzip-level compression ratios with speeds approaching Snappy—while Snappy or LZ4 remains ideal for ephemeral operations like streaming and Spark shuffle. Splittability, achieved via block-level compression in formats like Parquet, is essential to enable parallel distributed processing.

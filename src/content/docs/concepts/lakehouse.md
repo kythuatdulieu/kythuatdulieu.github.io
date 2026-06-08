@@ -11,56 +11,48 @@ metaDescription: "Tìm hiểu toàn diện về Data Lakehouse: Kiến trúc lai
 
 # Kiến trúc Lakehouse - Data Lakehouse
 
-## Summary
+Hãy tưởng tượng bạn đang phải quản lý một hệ thống dữ liệu khổng lồ. Một mặt, bạn cần sự linh hoạt của **Data Lake (Hồ dữ liệu)** để đổ tất cả các loại file (từ log, ảnh đến JSON, CSV) vào một kho lưu trữ giá rẻ như Amazon S3 hay Google Cloud Storage. Mặt khác, ban giám đốc và các nhà phân tích BI lại yêu cầu tốc độ truy vấn SQL cực nhanh, tính toàn vẹn dữ liệu và các giao dịch ACID mạnh mẽ vốn là đặc quyền của **Data Warehouse (Kho dữ liệu)**.
 
-Lakehouse (hay Data Lakehouse) là một hệ thống kiến trúc quản trị dữ liệu hiện đại, được thiết kế để kết hợp các tính năng tốt nhất của cả hai thế giới: Data Lake (Hồ dữ liệu) và Data Warehouse (Kho dữ liệu). Nó cho phép tổ chức lưu trữ mọi loại dữ liệu (có cấu trúc, bán cấu trúc, phi cấu trúc) trên nền tảng lưu trữ đám mây giá rẻ (như Amazon S3, Google Cloud Storage) - tính năng của Data Lake; nhưng đồng thời cung cấp tính năng quản trị giao dịch ACID, schema enforcement và hiệu năng truy vấn SQL tốc độ cao - đặc quyền vốn chỉ có ở Data Warehouse. 
+Trước đây, giải pháp duy nhất là xây dựng và vận hành song song cả hai hệ thống. Nhưng điều này giống như việc bạn phải nuôi hai con quái vật cùng một lúc: chi phí nhân đôi, dữ liệu bị phân mảnh và liên tục gặp lỗi đồng bộ. 
 
----
+Đó chính là lý do **Lakehouse (hay Data Lakehouse)** ra đời — một kiến trúc lai (hybrid architecture) hợp nhất những gì tốt nhất của hai thế giới này.
 
-## Definition
+## Data Lakehouse là gì và hoạt động như thế nào?
 
-**Lakehouse** là một kiến trúc hệ thống mở, nơi dữ liệu được lưu trữ trên một lớp bộ nhớ Object Storage rẻ tiền, nhưng được phủ lên bởi một **lớp siêu dữ liệu (metadata layer) thông minh**. 
+Về bản chất, **Lakehouse** là một kiến trúc hệ thống mở, lưu trữ dữ liệu thô trên một lớp Object Storage giá rẻ, nhưng phủ lên đó một **lớp siêu dữ liệu (metadata layer) thông minh**. 
 
-Thay vì phải duy trì 2 hệ thống song song (Đổ dữ liệu rác vào Data Lake, sau đó ETL phần dữ liệu sạch sang hệ quản trị cơ sở dữ liệu quan hệ đắt đỏ của Data Warehouse để báo cáo), kiến trúc Lakehouse cho phép các công cụ BI (Business Intelligence) và Machine Learning truy xuất và phân tích trực tiếp trên cùng một bản sao dữ liệu duy nhất đang nằm ở Data Lake.
+Thay vì phải chạy các đường ống ETL phức tạp để chuyển dữ liệu từ Data Lake sang một hệ quản trị cơ sở dữ liệu quan hệ đắt đỏ của Data Warehouse để làm báo cáo, Lakehouse cho phép các công cụ BI và các mô hình Machine Learning trực tiếp truy cập và phân tích trên cùng một bản sao dữ liệu duy nhất.
 
-Các công nghệ cốt lõi tạo nên lớp siêu dữ liệu của Lakehouse hiện nay là: **Delta Lake** (của Databricks), **Apache Iceberg** (của Netflix) và **Apache Hudi** (của Uber).
+Lớp metadata layer thông minh này thường được quản lý bởi các công nghệ định dạng bảng mở (Open Table Formats) nổi tiếng như **Delta Lake** (được khởi xướng bởi Databricks), **Apache Iceberg** (từ Netflix) hoặc **Apache Hudi** (từ Uber).
 
----
+### Động lực đằng sau sự ra đời của Lakehouse
 
-## Why it exists
+Trong suốt thập kỷ 2010, mô hình kiến trúc hai tầng truyền thống (Two-Tier: Data Lake + Data Warehouse) đã gây ra không ít "nỗi đau" cho các kỹ sư dữ liệu:
+* **Chi phí đội lên gấp bội**: Bạn phải trả tiền lưu trữ dữ liệu hai lần (một lần trên S3/ADLS dưới dạng file thô, một lần trong các đĩa lưu trữ đắt đỏ của Snowflake hay Redshift) và tốn thêm chi phí compute khổng lồ cho các tác vụ ETL trung gian.
+* **Dữ liệu bị trễ (Data Staleness)**: Quy trình đồng bộ dữ liệu giữa hai lớp thường chạy theo lô (batch) qua đêm. Điều này có nghĩa là các báo cáo BI luôn sử dụng dữ liệu của ngày hôm qua chứ không thể phản ánh thời gian thực.
+* **Đầm lầy dữ liệu (Data Swamp)**: Trên Data Lake, dữ liệu thường được lưu dưới dạng file Parquet hoặc CSV tĩnh. Khi cần cập nhật dữ liệu hoặc xóa thông tin người dùng theo luật bảo mật (GDPR/CCPA), việc thực hiện `UPDATE` hay `DELETE` trực tiếp lên các file tĩnh này gần như là không thể. Kết quả là hồ dữ liệu nhanh chóng biến thành một đầm lầy lộn xộn.
 
-Suốt thập kỷ 2010s, mô hình kiến trúc song song "Two-Tier" (Data Lake + Data Warehouse) gây ra vô số nỗi đau cho các kỹ sư dữ liệu:
-1. **Chi phí đội lên gấp đôi**: Dữ liệu vừa được lưu trữ trên S3 (Data Lake), sau đó lại phải copy vào Amazon Redshift hoặc Snowflake (Data Warehouse). Bạn phải trả tiền lưu trữ 2 lần, cộng thêm tiền điện toán khổng lồ cho việc sao chép (ETL).
-2. **Độ trễ dữ liệu (Data Staleness)**: Phải mất nhiều giờ hoặc qua đêm để dữ liệu chảy từ Lake vào Warehouse. Báo cáo BI luôn là dữ liệu của ngày hôm qua.
-3. **Data Swamp (Đầm lầy dữ liệu)**: Dữ liệu trên Data Lake thường ở dạng Parquet/CSV. Khi có tác vụ xóa hoặc cập nhật luật bảo mật GDPR, việc UPDATE/DELETE trực tiếp các file Parquet tĩnh là bất khả thi. Data Lake bị rác hóa nhanh chóng.
+Sự xuất hiện của Lakehouse vào khoảng năm 2020 đã giải quyết triệt để những bất cập này bằng cách tạo ra một nguồn chân lý duy nhất (Single Source of Truth).
 
-Kiến trúc Lakehouse ra đời (được Databricks thương mại hóa mạnh mẽ từ năm 2020) nhằm phá bỏ bức tường giữa 2 hệ thống này, tạo ra một nguồn chân lý duy nhất (Single Source of Truth).
+### Ý tưởng cốt lõi và cơ chế vận hành
 
----
+Triết lý cốt lõi của Lakehouse là: **Mang năng lực quản lý bảng (Table Management) từ bên trong Động cơ cơ sở dữ liệu (Database Engine) đặt trực tiếp xuống định dạng File (Open Table Formats)**.
 
-## Core idea
+Trong các Data Warehouse truyền thống, cơ sở dữ liệu đóng vai trò là "kẻ giam giữ dữ liệu" (Vendor Lock-in). Bạn không thể mang Apache Spark vào đọc trực tiếp các file dữ liệu nằm trong hệ thống lưu trữ đóng của Oracle hay Teradata. 
 
-Ý tưởng cốt lõi của Lakehouse là: **Chuyển năng lực quản lý bảng (Table Management) từ Động cơ cơ sở dữ liệu (Database Engine) xuống thẳng định dạng File (Open Table Formats)**.
+Với Lakehouse, dữ liệu của bạn vẫn nằm ở đó, dưới dạng các file Parquet mở trên Cloud Object Storage. Tuy nhiên, lớp Table Format (như Iceberg hay Delta Lake) sẽ tạo ra một tập hợp các file metadata (JSON/Avro) để ghi nhận xem file Parquet nào thuộc về phiên bản nào của bảng. Nhờ vậy, Spark, Trino, Flink hay Python đều có thể đồng thời đọc/ghi dữ liệu một cách an toàn nhờ tính năng kiểm soát giao dịch (ACID).
 
-Trong Data Warehouse truyền thống, Data Engine là kẻ giam giữ dữ liệu (Vendor Lock-in). Bạn không thể dùng Spark để đọc trực tiếp file dữ liệu nằm sâu trong đĩa cứng của Oracle hay Teradata.
-Trong Lakehouse, dữ liệu được lưu dưới định dạng tệp mở (Parquet). Lớp Table Format (như Iceberg) chỉ là một tập hợp các file JSON theo dõi xem file Parquet nào thuộc về version nào của bảng. Do đó, Spark, Trino, Flink, hay Python đều có thể trực tiếp đọc cùng một bảng với tốc độ chóng mặt, và hỗ trợ UPDATE/DELETE y hệt một cơ sở dữ liệu thực thụ nhờ cơ chế kiểm soát giao dịch (ACID).
-
----
-
-## How it works
-
-Cách một truy vấn hoạt động trong Lakehouse:
-1. **Lưu trữ**: File Parquet gốc nằm tại AWS S3.
-2. **Metadata Layer**: Hệ thống (như Delta Lake) có một tệp `_delta_log` ghi lại nhật ký: "Ở version 2, thêm file A, xóa file B". 
-3. **Truy vấn**: Engine xử lý (như Databricks Photon) nhận câu SQL `SELECT * FROM sales`.
-4. Nó đọc tệp Log trước. Tìm ra các file Parquet mới nhất cấu thành nên bảng `sales`. (Bỏ qua các file rác).
-5. Engine đẩy các lệnh lọc (WHERE) xuống trực tiếp tầng lưu trữ S3 để chỉ đọc các vùng dữ liệu nhỏ (Data Skipping), sau đó trả kết quả về bộ nhớ cho công cụ BI.
+**Một truy vấn SQL trong Lakehouse hoạt động như thế nào?**
+1. **Lưu trữ**: Dữ liệu thực tế được lưu dưới dạng các file Parquet trên S3.
+2. **Metadata Layer**: Một thư mục log (ví dụ: `_delta_log` của Delta Lake) sẽ lưu lại lịch sử thay đổi: *"Tại transaction số 5, file A được thêm vào, file B bị đánh dấu xóa"*.
+3. **Đọc dữ liệu**: Khi một công cụ truy vấn (query engine) như Trino hay Spark nhận câu lệnh SQL `SELECT * FROM sales`, nó không quét mù toàn bộ thư mục. Nó sẽ đọc file Log trước để biết chính xác những file Parquet nào là phiên bản mới nhất và hợp lệ.
+4. **Tối ưu hóa**: Query Engine chỉ đọc đúng những file đó, đồng thời tận dụng tính năng đẩy bộ lọc xuống (Filter Pushdown / Data Skipping) trực tiếp ở tầng lưu trữ để giảm thiểu tối đa băng thông mạng.
 
 ---
 
-## Architecture / Flow
+## Kiến trúc Medallion trong Lakehouse
 
-Mô phỏng kiến trúc hệ thống Lakehouse với nguyên tắc **Medallion Architecture (Đồng - Bạc - Vàng)**:
+Để tổ chức dữ liệu một cách khoa học và tối ưu hiệu năng, kiến trúc Lakehouse thường áp dụng mô hình **Medallion Architecture** (Đồng - Bạc - Vàng):
 
 ```mermaid
 graph LR
@@ -94,13 +86,16 @@ graph LR
     F --> G
 ```
 
-*Trong sơ đồ này, toàn bộ Bronze, Silver và Gold đều nằm chung trên một lớp lưu trữ Cloud rẻ tiền. Dữ liệu Gold đã được tổ chức thành Star Schema (Fact/Dimension) cho BI, trong khi dữ liệu Silver được dùng thẳng cho việc train AI/ML.*
+Trong mô hình này:
+- **Bronze Layer (Raw)**: Nơi chứa dữ liệu thô y hệt như nguồn được đưa vào, đóng vai trò lưu trữ lịch sử để có thể tái tạo lại bất cứ lúc nào.
+- **Silver Layer (Cleaned)**: Dữ liệu đã được chuẩn hóa, lọc sạch lỗi, làm giàu (enriched) và sẵn sàng cho các bài toán phân tích ad-hoc hoặc huấn luyện Machine Learning.
+- **Gold Layer (Curated)**: Dữ liệu được tổng hợp (aggregated) và tổ chức theo các mô hình chuẩn như Star Schema (Fact/Dimension) để phục vụ trực tiếp cho các báo cáo BI với hiệu năng cao nhất.
 
 ---
 
-## Practical example
+## Trải nghiệm thực tế với Lakehouse
 
-Một trong những sức mạnh cốt lõi của Lakehouse (như Delta Lake hoặc Iceberg) là khả năng quản lý dữ liệu với SQL, hỗ trợ Time-Travel và tối ưu hóa file.
+Điểm tuyệt vời của Lakehouse là bạn có thể thực hiện những câu lệnh SQL nâng cao vốn trước đây chỉ có ở Data Warehouse, ngay trên các file lưu trữ phân tán:
 
 ```sql
 -- Đọc dữ liệu tại bảng lưu trữ trên S3
@@ -118,50 +113,45 @@ OPTIMIZE gold_sales_fact ZORDER BY (date_id);
 
 ---
 
-## Best practices
+## Cân nhắc các điểm cộng, điểm trừ và lưu ý khi triển khai
 
-* **Tiêu chuẩn hóa Open Table Formats**: Khi xây dựng Lakehouse, bắt buộc phải chọn một định dạng bảng mã nguồn mở chuẩn (Apache Iceberg, Delta Lake hoặc Hudi) làm xương sống. Đừng bao giờ xây dựng Lakehouse trên các file Parquet trần trụi (bare Parquet) - bạn sẽ chết chìm trong "Đầm lầy dữ liệu".
-* **Tách biệt Storage và Compute**: Luôn giữ dữ liệu của bạn trên các kho lưu trữ Object Storage (S3/GCS) và thuê các Engine tính toán (Databricks, Snowflake, Athena) dưới dạng Serverless hoặc tắt mở linh hoạt để tiết kiệm tối đa chi phí.
-* **Tối ưu hóa File Size (Compaction)**: Dữ liệu stream liên tục sẽ tạo ra hàng vạn file Parquet nhỏ (Small Files Problem), làm chậm quá trình quét. Hãy chạy các tác vụ dọn dẹp định kỳ (Ví dụ: `OPTIMIZE` trong Delta Lake) để gộp các file nhỏ thành các file lớn (128MB - 1GB).
+Bất kỳ một kiến trúc nào cũng có những mặt lợi và hại riêng. Hãy cùng đặt lên bàn cân trước khi quyết định áp dụng Lakehouse cho dự án của bạn.
 
----
+### Những điểm cộng lớn (Pros)
+* **Tiết kiệm chi phí vượt trội**: Bạn chỉ cần duy trì một lớp lưu trữ duy nhất trên Cloud Object Storage (rẻ hơn hàng chục lần so với lưu trữ chuyên dụng của Data Warehouse).
+* **Đơn giản hóa hạ tầng**: Giảm bớt số lượng đường ống ETL di chuyển qua lại giữa Lake và Warehouse, từ đó giảm thiểu các điểm dễ lỗi (point of failure) trong hệ thống.
+* **Hợp nhất Analytics và Data Science**: Các Data Scientist có thể dùng Python đọc trực tiếp dữ liệu ở lớp Silver để train model, trong khi các Data Analyst chạy SQL trên lớp Gold mà không hề gây xung đột hay tranh chấp tài nguyên.
+* **Khả năng du hành thời gian (Time-Travel)**: Nhờ cơ chế Transaction Log, bạn có thể dễ dàng rollback hoặc truy vấn dữ liệu tại một thời điểm chính xác trong quá khứ để debug hoặc kiểm toán.
 
-## Common mistakes
+### Những hạn chế cần lưu ý (Cons)
+* **Hiệu năng truy vấn điểm (Point Lookups)**: Đối với các truy vấn siêu nhỏ yêu cầu độ trễ tính bằng mili-giây (như tìm kiếm thông tin của đúng một khách hàng duy nhất), Lakehouse vẫn khó lòng bì kịp các Data Warehouse truyền thống do giới hạn về việc đọc file qua môi trường mạng mạng của Object Storage.
+* **Gánh nặng vận hành Metadata**: Bạn sẽ phải chủ động quản lý các tác vụ bảo trì định kỳ như dọn dẹp file cũ (`VACUUM`), gộp file nhỏ (`Compaction`) để duy trì hiệu năng tốt nhất.
 
-* **Xem Lakehouse như một "Phép thuật" (Magic Bullet)**: Nghĩ rằng chỉ cần cài Delta Lake là xong. Một Lakehouse nếu không được quy hoạch mô hình dữ liệu (Data Modeling - như Kimball Star Schema ở tầng Gold) thì truy vấn BI vẫn sẽ chậm thảm hại.
-* **Gắn chặt vào công nghệ độc quyền (Vendor Lock-in)**: Thay vì dùng phiên bản mã nguồn mở của Delta/Iceberg, doanh nghiệp bị mắc kẹt vào các tính năng đóng của nhà cung cấp dịch vụ đám mây, làm mất đi đặc tính linh hoạt "Open" vốn có của Lakehouse.
-* **Cập nhật dữ liệu quá nhỏ (Micro-updates)**: Lakehouse dùng Parquet (cấu trúc cột tĩnh). Việc chạy liên tục hàng ngàn câu lệnh `UPDATE` sửa từng dòng nhỏ sẽ gây ra Overhead (quá tải) tạo file mới liên tục. Nên dùng Batch UPDATE hoặc CDC.
+### Lời khuyên thiết thực khi triển khai (Best Practices)
+* **Bắt buộc dùng Open Table Format**: Đừng bao giờ lưu trữ các file Parquet trần trụi. Hãy bọc chúng bằng Delta Lake, Iceberg hoặc Hudi để có ACID và khả năng quản lý schema.
+* **Tách biệt hoàn toàn Storage và Compute**: Lưu trữ dữ liệu cố định trên Object Storage và cấu hình các công cụ truy vấn (Databricks, Trino, Snowflake Serverless) tự động scale hoặc tắt đi khi không sử dụng để tối ưu hóa ngân sách.
+* **Giải quyết vấn nạn file nhỏ (Small Files Problem)**: Các tác vụ streaming liên tục sẽ tạo ra hàng nghìn file Parquet nhỏ dung lượng vài KB, làm nghẽn quá trình quét dữ liệu. Hãy lên lịch chạy `OPTIMIZE` định kỳ để gộp chúng lại thành các file lớn (từ 128MB đến 1GB).
 
----
-
-## Trade-offs
-
-### Ưu điểm
-* **Chi phí rẻ (Cost Efficiency)**: Gộp chung 2 hệ thống làm 1. Lưu trữ trên S3 rẻ hơn hàng chục lần so với lưu trữ trên đĩa cứng của các Data Warehouse truyền thống.
-* **Đơn giản hóa hạ tầng (Simplicity)**: Ít đường ống ETL di chuyển dữ liệu hơn. Ít rủi ro hỏng hóc giữa các hệ thống (point of failure).
-* **AI/ML + BI tích hợp**: Data Scientist có thể dùng Python/Tensorflow đọc dữ liệu Silver trực tiếp song song với Data Analyst dùng SQL đọc dữ liệu Gold mà không tranh chấp tài nguyên.
-* **Hỗ trợ Time-Travel**: Nhờ Transaction Log, Lakehouse lưu trữ các phiên bản của bảng. Ta có thể viết query: `SELECT * FROM sales VERSION AS OF 10` để xem dữ liệu ngày hôm qua, cực kỳ tiện cho việc Debug.
-
-### Nhược điểm
-* **Hiệu suất cho các truy vấn siêu nhỏ**: Đối với báo cáo yêu cầu độ trễ tính bằng vài chục mili-giây, hoặc các query tìm kiếm đúng 1 bản ghi (Point lookup), Lakehouse vẫn chậm hơn Data Warehouse đích thực (bởi giới hạn đọc file trên mạng của S3).
-* **Độ phức tạp trong vận hành Metadata**: Các kỹ sư phải học cách làm quen với việc bảo trì bảng (Vacuuming, Compaction, Z-Ordering), thứ mà Data Warehouse thường tự làm ẩn phía sau.
+### Những sai lầm phổ biến cần tránh
+* **Xem Lakehouse là "chiếc đũa thần"**: Nhiều đội ngũ nghĩ rằng chỉ cần chuyển sang Delta Lake là dữ liệu tự động chạy nhanh. Thực tế, nếu bạn không tổ chức mô hình dữ liệu (như Star Schema ở tầng Gold) một cách chuẩn chỉ, các câu truy vấn BI của bạn vẫn sẽ rất chậm.
+* **Lạm dụng Micro-updates**: Parquet là định dạng lưu trữ cột tĩnh. Việc chạy liên tục các câu lệnh `UPDATE` nhỏ lẻ cho từng dòng dữ liệu sẽ tạo ra một lượng file rác khổng lồ và gây quá tải cho metadata layer. Hãy chuyển sang cơ chế CDC hoặc cập nhật theo Batch.
 
 ---
 
-## When to use
+## Khi nào nên và không nên chọn Lakehouse?
 
-* Được coi là xu hướng kiến trúc tiêu chuẩn (Standard Architecture) hiện tại cho các hệ thống dữ liệu đám mây (Modern Data Stack) khởi tạo mới.
-* Doanh nghiệp có khối lượng dữ liệu khổng lồ, bao gồm cả dữ liệu bán cấu trúc (JSON, Logs) và phi cấu trúc (Images/Audio), muốn kết hợp khai thác AI và BI.
-* Doanh nghiệp muốn kiểm soát 100% dữ liệu gốc của mình bằng định dạng mã nguồn mở thay vì trao nó cho các hãng phần mềm.
+### Nên chọn khi:
+* Doanh nghiệp của bạn đang xây dựng một hệ thống dữ liệu hiện đại trên Cloud (Modern Data Stack) từ đầu.
+* Bạn có lượng dữ liệu khổng lồ bao gồm cả dữ liệu có cấu trúc (SQL), bán cấu trúc (JSON, Logs) và phi cấu trúc (ảnh, video) cần khai thác song song cho cả BI và AI/ML.
+* Bạn muốn nắm giữ toàn quyền kiểm soát dữ liệu gốc dưới định dạng mở, tránh việc bị phụ thuộc vào một nhà cung cấp cơ sở dữ liệu cụ thể (Vendor Lock-in).
 
-## When not to use
-
-* Doanh nghiệp chỉ có thuần túy dữ liệu quan hệ từ ERP/CRM, dung lượng nhỏ (< 1TB) và chỉ có nhu cầu làm báo cáo tài chính nội bộ. (Trường hợp này, một Data Warehouse truyền thống như PostgreSQL hoặc BigQuery sẽ chạy nhanh và dễ cài đặt hơn nhiều).
-* Các hệ thống cần xử lý hàng triệu transaction nhỏ lẻ mỗi giây (Đó là nhiệm vụ của OLTP Database).
+### Không nên chọn khi:
+* Nhu cầu của doanh nghiệp rất đơn giản: chỉ có dữ liệu dạng bảng từ ERP/CRM với dung lượng nhỏ (dưới 1TB) và chỉ cần làm các báo cáo tài chính cơ bản. Khi đó, một Data Warehouse truyền thống như PostgreSQL hoặc BigQuery sẽ gọn nhẹ và nhanh chóng hơn nhiều.
+* Hệ thống của bạn phục vụ các ứng dụng OLTP cần xử lý hàng ngàn giao dịch ghi/đọc siêu nhỏ mỗi giây.
 
 ---
 
-## Related concepts
+## Khái niệm liên quan
 
 * [Data Lake](/concepts/data-lake)
 * [Data Warehouse](/concepts/data-warehouse)
@@ -171,27 +161,27 @@ OPTIMIZE gold_sales_fact ZORDER BY (date_id);
 
 ---
 
-## Interview questions
+## Góc phỏng vấn: Câu hỏi thường gặp
 
 ### 1. Tại sao không thể chạy lệnh UPDATE trực tiếp lên một file Parquet trong Data Lake thông thường, và Lakehouse giải quyết bài toán đó như thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sâu sắc về cấu trúc lưu trữ và nguyên lý hoạt động của Table Formats.
+* **Mục đích của người phỏng vấn**: Đánh giá sự hiểu biết của bạn về cách lưu trữ vật lý của tệp tin và cơ chế hoạt động của Table Formats.
 * **Gợi ý trả lời**: 
-  * Parquet là định dạng lưu trữ bất biến (Immutable). Một khi file Parquet đã ghi xuống ổ đĩa, ta không thể tìm đến dòng thứ 100 và chèn đè ký tự vào đó mà không viết lại toàn bộ file. Trong Data Lake truyền thống, việc update yêu cầu phải tải toàn bộ file lên RAM, sửa dòng đó, và lưu thành file mới đè lên file cũ, rất dễ gây lỗi mất dữ liệu nếu đang ghi thì mất điện (thiếu ACID).
-  * Lakehouse (như Delta Lake) không sửa file cũ. Nó dùng kỹ thuật **Copy-on-Write** (Tạo file Parquet mới chứa dữ liệu đã sửa) hoặc **Merge-on-Read** (Lưu phần dữ liệu sửa vào một file phụ). Sau đó nó cập nhật Tệp nhật ký siêu dữ liệu (Transaction Log), đánh dấu file cũ là "đã xóa" (tombstone) và trỏ con trỏ đọc vào file mới. Điều này đảm bảo tính nhất quán (ACID) mà hệ thống không bao giờ bị corrupt (hỏng).
+  * Định dạng Parquet là bất biến (immutable). Một khi file Parquet đã được ghi xuống đĩa, ta không thể nhảy vào giữa file để sửa đổi một dòng dữ liệu mà không làm hỏng cấu trúc cột của nó. Ở Data Lake thông thường, muốn sửa một dòng, ta buộc phải đọc toàn bộ file lên bộ nhớ, chỉnh sửa, rồi ghi đè file mới. Quy trình này không có cơ chế giao dịch (ACID), nên rất dễ dẫn đến mất mát hoặc sai lệch dữ liệu nếu hệ thống gặp sự cố giữa chừng.
+  * Lakehouse (như Delta Lake hay Apache Iceberg) giải quyết việc này bằng hai cơ chế: **Copy-on-Write** (tạo file Parquet mới chứa dữ liệu đã cập nhật) hoặc **Merge-on-Read** (ghi nhận các dòng thay đổi vào một file nhật ký phụ). Sau đó, metadata layer sẽ cập nhật vào file Log để thông báo rằng file cũ đã hết hạn và hệ thống cần đọc file mới. Việc này giúp đảm bảo tính nhất quán của dữ liệu (ACID transactions) mà không làm ảnh hưởng đến các truy vấn đang chạy.
 
-### 2. Sự khác biệt giữa Data Warehouse, Data Lake và Data Lakehouse trong 1 câu là gì?
+### 2. Sự khác biệt cốt lõi giữa Data Warehouse, Data Lake và Data Lakehouse trong một câu ngắn gọn là gì?
 * **Gợi ý trả lời**:
-  * **Data Warehouse**: Nơi cấu trúc, quản lý và tối ưu truy vấn cực mạnh cho dữ liệu có cấu trúc, nhưng đắt đỏ và khép kín.
-  * **Data Lake**: Nơi đổ mọi loại dữ liệu (cấu trúc đến phi cấu trúc) vào lưu trữ rẻ tiền vô hạn, nhưng lộn xộn và không hỗ trợ giao dịch (ACID).
-  * **Data Lakehouse**: Phủ một lớp quản trị thông minh lên trên Data Lake, mang lại khả năng quản lý ACID và hiệu năng truy vấn của Warehouse trên nền lưu trữ rẻ tiền và mở của Lake.
+  * **Data Warehouse**: Tối ưu cực mạnh cho truy vấn SQL trên dữ liệu có cấu trúc, nhưng đắt đỏ, khép kín và khó tích hợp với Machine Learning.
+  * **Data Lake**: Nơi lưu trữ mọi định dạng dữ liệu thô với chi phí cực rẻ, nhưng thiếu tính quản trị, dễ biến thành "đầm lầy dữ liệu" và không hỗ trợ ACID.
+  * **Data Lakehouse**: Mang các tính năng quản trị mạnh mẽ (ACID, Schema) và hiệu năng truy vấn SQL của Data Warehouse đặt trực tiếp lên trên lớp lưu trữ mở, giá rẻ của Data Lake.
 
 ---
 
-## References
+## Tài liệu tham khảo
 
-1. **Databricks Research Papers** - "Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics" (Tài liệu định nghĩa kiến trúc).
-2. **Fundamentals of Data Engineering** - Joe Reis.
-3. **Apache Iceberg / Delta Lake Documentation**.
+1. **Databricks Research Papers** - *"Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics"*.
+2. **Fundamentals of Data Engineering** - Joe Reis & Matt Housley.
+3. **Tài liệu hướng dẫn (Documentation) của Apache Iceberg và Delta Lake**.
 
 ---
 

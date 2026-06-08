@@ -11,54 +11,48 @@ metaDescription: "Đi sâu vào kiến trúc bên trong của một Embedding Mo
 
 # Mô hình nhúng - Embedding Model
 
-## Summary
+Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng RAG (Retrieval-Augmented Generation) hay tìm kiếm ngữ nghĩa (Semantic Search), chúng ta thường nghe rất nhiều về thuật ngữ "nhúng" (embedding). Nhưng dưới góc nhìn của một kỹ sư thiết kế hệ thống, một **Mô hình nhúng (Embedding Model)** thực chất hoạt động như thế nào ở tầng kiến trúc sâu (architecture-level)? 
 
-Một **Mô hình nhúng (Embedding Model)** độc lập là một kiến trúc mạng nơ-ron học sâu (Deep Neural Network) chuyên làm nhiệm vụ ánh xạ đầu vào phi cấu trúc thành các vectơ dày đặc (dense vectors). Mặc dù các loại mô hình này đã được trình bày tổng quan trong bài *Các mô hình nhúng*, bài viết này sẽ đi sâu vào kỹ thuật huấn luyện (Contrastive Learning), cách thiết kế hàm mất mát (Loss Function) và kiến trúc bên trong của một mô hình nhúng hiện đại như Bi-Encoder.
+Làm sao để một mạng nơ-ron học sâu (Deep Neural Network) có thể biến những đoạn văn bản phi cấu trúc, những bức ảnh hay âm thanh thành các vectơ số học nhưng vẫn giữ nguyên vẹn "ý nghĩa" của chúng? Chúng ta hãy cùng bóc tách kiến trúc bên trong, phương pháp huấn luyện cũng như cách tối ưu hóa các mô hình này.
 
----
+## Bản chất toán học của một mô hình nhúng
 
-## Definition
+Về mặt toán học, một **Embedding Model** là một hàm số phi tuyến tính $f(x) \rightarrow \mathbb{R}^d$. Trong đó, đầu vào $x$ là một chuỗi các ký tự (tokens) và đầu ra là một không gian vectơ dày đặc (dense vector) có số chiều cố định $d$ (thường là 384, 768 hoặc 1536 chiều tùy mô hình).
 
-Trong khía cạnh kiến trúc sâu (architecture-level), **Embedding Model** là một hàm toán học phi tuyến tính $f(x) \rightarrow \mathbb{R}^d$, trong đó $x$ là dữ liệu đầu vào (một chuỗi tokens) và $\mathbb{R}^d$ là không gian vectơ $d$ chiều. Mô hình này sở hữu hàng triệu hoặc hàng tỷ tham số (weights) được tối ưu hóa thông qua quá trình lan truyền ngược (backpropagation) để đảm bảo rằng khoảng cách giữa $f(x_1)$ và $f(x_2)$ tỉ lệ nghịch với độ tương đồng ngữ nghĩa giữa $x_1$ và $x_2$.
+Mô hình này sở hữu hàng triệu hoặc hàng tỷ tham số (weights) được tối ưu hóa thông qua quá trình lan truyền ngược (backpropagation). Mục tiêu tối thượng của quá trình này là đảm bảo rằng: nếu hai đoạn văn bản $x_1$ và $x_2$ có nội dung tương đồng về mặt ngữ nghĩa, thì khoảng cách hình học giữa hai vectơ đầu ra $f(x_1)$ và $f(x_2)$ trong không gian đa chiều phải cực kỳ gần nhau. Ngược lại, nếu chúng không liên quan, chúng sẽ bị đẩy ra xa nhau.
 
----
+## Tại sao chúng ta cần tách biệt Embedding Model thành một thành phần độc lập?
 
-## Why it exists
+Vào thời kỳ đầu của NLP (Xử lý ngôn ngữ tự nhiên) sử dụng Deep Learning, người ta thường dùng chung một mạng nơ-ron khổng lồ để làm mọi tác vụ từ dịch thuật, phân loại cho đến sinh văn bản. Tuy nhiên, khi đối mặt với bài toán tìm kiếm thông tin trong một kho tài liệu khổng lồ lên tới hàng chục triệu bản ghi, cách tiếp cận này vấp phải rào cản hiệu năng vô cùng lớn. 
 
-Khởi nguyên của Deep Learning cho NLP, người ta dùng chung một mạng nơ-ron khổng lồ để làm mọi việc (dịch thuật, sinh văn bản, phân loại). Tuy nhiên, việc trích xuất đặc trưng (Feature Extraction) cho các hệ thống tìm kiếm ở quy mô hàng chục triệu tài liệu yêu cầu một giải pháp nhẹ hơn, có khả năng tính toán trước (pre-compute) biểu diễn của tài liệu.
+Việc chạy một mô hình ngôn ngữ lớn (LLM) để so sánh câu hỏi của người dùng với từng tài liệu trong database là điều không tưởng vì chi phí tính toán ($O(N)$ độ phức tạp) quá lớn và độ trễ quá cao.
 
-Embedding Model tách biệt ra thành một mô hình chuyên biệt, chỉ nhận đầu vào và nhả ra vectơ tĩnh. Điều này cho phép chúng ta tính toán vectơ của toàn bộ tài liệu một lần duy nhất (Offline Indexing) và lưu vào Vector DB, khi truy vấn chỉ cần chạy mô hình một lần duy nhất cho câu hỏi, giảm độ phức tạp từ $O(N)$ xuống $O(1)$ cho việc suy luận mô hình.
+Để giải quyết bài toán này, Embedding Model được tách ra thành một thành phần độc lập. Nó chỉ làm đúng một nhiệm vụ duy nhất: nhận đầu vào và nhả ra một vectơ tĩnh đại diện cho nội dung đó. Nhờ vậy, chúng ta có thể:
+1. Tính toán trước (pre-compute) vectơ cho toàn bộ tài liệu trong hệ thống (gọi là *Offline Indexing*) và lưu trữ chúng vào một Vector Database.
+2. Khi người dùng nhập câu hỏi, hệ thống chỉ cần chạy Embedding Model đúng một lần duy nhất để lấy vectơ câu hỏi.
+3. Sau đó, việc tìm kiếm tài liệu tương thích chỉ đơn giản là các phép toán so sánh vectơ (như Cosine Similarity) diễn ra với tốc độ micro-giây trực tiếp trên Vector DB.
 
----
+## Contrastive Learning và nghệ thuật "học từ sự đối chiếu"
 
-## Core idea
+Làm thế nào để dạy cho một mô hình nơ-ron biết rằng "quả táo" thì gần gũi với "trái cây" hơn là "điện thoại" (hoặc ngược lại, tùy ngữ cảnh hãng Apple)? Cách tốt nhất không phải là dạy cho nó định nghĩa của từng từ, mà là áp dụng phương pháp **Học đối chiếu (Contrastive Learning)**.
 
-* **Học đối chiếu (Contrastive Learning)**: Cách tốt nhất để dạy mô hình hiểu ý nghĩa không phải là dạy nó định nghĩa của từ, mà là dạy nó phân biệt: "Kéo x và y lại gần nhau vì chúng giống nhau, đẩy x và z ra xa nhau vì chúng khác nhau".
-* **Triplet Loss / InfoNCE Loss**: Các hàm mất mát (Loss functions) được thiết kế đặc biệt để tối ưu hóa trực tiếp khoảng cách Cosine hoặc khoảng cách Euclidean giữa các điểm dữ liệu trong không gian.
-* **Bi-Encoder Architecture**: Kiến trúc mạng Siamese (Sinh đôi) phổ biến nhất hiện nay, trong đó Câu A và Câu B được đưa qua mạng nơ-ron độc lập để lấy ra 2 vectơ, sau đó mới so sánh.
+Triết lý của Contrastive Learning rất đơn giản: *"Dạy mô hình bằng cách kéo những thứ giống nhau lại gần và đẩy những thứ khác nhau ra xa"*. 
 
----
+Để làm được điều này, chúng ta sử dụng các hàm mất mát (loss functions) đặc biệt như **Triplet Loss** hoặc **InfoNCE Loss**. Quá trình huấn luyện mô hình sẽ trải qua các bước sau:
 
-## How it works (Huấn luyện Mô hình)
+1. **Chuẩn bị dữ liệu dạng bộ ba (Triplets)**:
+   * **Anchor (Neo)**: Câu gốc cần so sánh (ví dụ: *"Làm sao để nấu phở?"*).
+   * **Positive (Tích cực)**: Câu có cùng ý nghĩa (ví dụ: *"Công thức nấu phở bò ngon tại nhà."*).
+   * **Negative (Tiêu cực)**: Câu không liên quan (ví dụ: *"Dự báo thời tiết Hà Nội hôm nay."*).
+2. **Truyền thuận (Forward Pass)**: Cả 3 câu này được đưa qua cùng một mạng Transformer (như BERT). Mạng sẽ xuất ra 3 vectơ nhúng tương ứng: $V_A$, $V_P$, và $V_N$.
+3. **Tính toán Loss**: Sử dụng công thức Triplet Loss:
+   $$L = \max(0, \text{Distance}(V_A, V_P) - \text{Distance}(V_A, V_N) + \text{margin})$$
+   Hàm này sẽ phạt nặng mô hình nếu khoảng cách giữa câu Neo ($V_A$) và câu Tiêu cực ($V_N$) nhỏ hơn khoảng cách giữa câu Neo ($V_A$) và câu Tích cực ($V_P$) cộng với một khoảng biên an toàn (`margin`).
+4. **Cập nhật trọng số**: Thuật toán Gradient Descent sẽ cập nhật các trọng số của mạng Transformer sao cho ở các vòng lặp tiếp theo, $V_A$ và $V_P$ xích lại gần nhau hơn, còn $V_N$ bị đẩy xa hơn.
 
-Để tạo ra một Embedding Model như `all-MiniLM` hoặc `text-embedding-ada-002`, các nhà nghiên cứu thực hiện:
+## So sánh kiến trúc: Bi-Encoder vs Cross-Encoder
 
-1. **Chuẩn bị dữ liệu**: Tạo ra hàng trăm triệu cặp (Pairs) hoặc bộ ba (Triplets) dữ liệu.
-   * *Anchor (Neo)*: "Làm sao để nấu phở?"
-   * *Positive (Tích cực)*: "Công thức nấu phở bò ngon."
-   * *Negative (Tiêu cực)*: "Dự báo thời tiết Hà Nội hôm nay."
-
-2. **Truyền thuận (Forward Pass)**: Cả 3 câu được đưa qua cùng một mạng Transformer (ví dụ BERT). Mạng xuất ra 3 vectơ nhúng: $V_A, V_P, V_N$.
-
-3. **Tính Loss**: Sử dụng Triplet Loss: 
-   $L = \max(0, \text{Distance}(V_A, V_P) - \text{Distance}(V_A, V_N) + \text{margin})$
-   Thuật toán sẽ phạt mô hình nếu khoảng cách từ câu Neo tới câu Tiêu cực nhỏ hơn khoảng cách tới câu Tích cực cộng với một lề (margin).
-
-4. **Cập nhật trọng số**: Sử dụng Gradient Descent để cập nhật các trọng số của lớp Attention trong Transformer, sao cho vòng lặp sau, $V_A$ và $V_P$ sẽ bị hút lại gần nhau, còn $V_N$ bị đẩy ra xa.
-
----
-
-## Architecture / Flow: Bi-Encoder vs Cross-Encoder
+Trong thực tế thiết kế hệ thống tìm kiếm thông tin, chúng ta thường phân biệt hai loại kiến trúc mô hình chính: **Bi-Encoder** (Mô hình nhúng tiêu chuẩn) và **Cross-Encoder** (Mô hình chấm điểm tương tác chéo).
 
 ```mermaid
 graph TD
@@ -76,96 +70,74 @@ graph TD
     end
 ```
 
----
+* **Bi-Encoder**: Xử lý độc lập Câu A và Câu B qua mạng nơ-ron để tạo ra hai vectơ tĩnh, sau đó mới tính độ tương đồng bằng Cosine Similarity. Đây chính là kiến trúc của các Embedding Model. Nó cực kỳ nhanh vì có thể tính toán trước và lưu trữ vectơ.
+* **Cross-Encoder**: Nạp đồng thời cả Câu A và Câu B nối liền nhau vào mạng Transformer. Điều này cho phép cơ chế Attention của mô hình phân tích mối quan hệ chéo sâu sắc giữa từng từ của Câu A với từng từ của Câu B (*Cross-Attention*). Mô hình này cho kết quả chính xác vượt trội nhưng không tạo ra vectơ tĩnh để lưu trữ. Mọi so sánh phải chạy trực tiếp qua mạng nơ-ron tại thời điểm tìm kiếm, khiến nó rất chậm và không thể dùng để tìm kiếm trên hàng triệu tài liệu. Do đó, Cross-Encoder thường chỉ được dùng làm mô hình xếp hạng lại (**Reranker**) cho Top-50 hay Top-100 kết quả tìm được từ Vector DB.
 
-## Practical example
+## Thực hành: Tự fine-tune Embedding Model với Sentence-Transformers
 
-Thay vì dùng mô hình đóng của OpenAI, ta có thể tự fine-tune (huấn luyện tinh chỉnh) một Embedding Model bằng thư viện `sentence-transformers` trên dữ liệu chuyên ngành nội bộ:
+Nếu bạn đang xây dựng một ứng dụng cho các lĩnh vực đặc thù có nhiều thuật ngữ chuyên ngành (như Y tế, Luật, hoặc mã sản phẩm nội bộ), các mô hình nhúng thông thường sẽ hoạt động rất kém. Lúc này, bạn có thể tự tinh chỉnh (fine-tune) lại mô hình bằng thư viện `sentence-transformers` của Python:
 
 ```python
 from sentence_transformers import SentenceTransformer, InputExample, losses
 from torch.utils.data import DataLoader
 
-# 1. Load mô hình cơ sở pre-trained
+# 1. Load mô hình cơ sở pre-trained từ HuggingFace
 model = SentenceTransformer('distilbert-base-nli-mean-tokens')
 
-# 2. Tạo tập dữ liệu nội bộ (Anchor, Positive)
+# 2. Tạo tập dữ liệu huấn luyện nội bộ dạng cặp (Anchor, Positive)
 train_examples = [
-    InputExample(texts=['Lỗi 404', 'Không tìm thấy trang web']),
-    InputExample(texts=['Lỗi 500', 'Máy chủ gặp sự cố nội bộ']),
+    InputExample(texts=['Lỗi 404', 'Không tìm thấy trang web yêu cầu']),
+    InputExample(texts=['Lỗi 500', 'Máy chủ gặp sự cố nội bộ hệ thống']),
 ]
 train_dataloader = DataLoader(train_examples, shuffle=True, batch_size=2)
 
-# 3. Chọn hàm Loss (MultipleNegativesRankingLoss rất hiệu quả cho việc huấn luyện)
+# 3. Chọn hàm Loss (MultipleNegativesRankingLoss cực kỳ hiệu quả cho bài toán này)
 train_loss = losses.MultipleNegativesRankingLoss(model=model)
 
-# 4. Huấn luyện (Fine-tune)
+# 4. Huấn luyện tinh chỉnh mô hình
 model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=3, warmup_steps=10)
 
-# Mô hình giờ đã học được "Lỗi 404" và "Không tìm thấy trang" là rất giống nhau
+# Mô hình sau khi huấn luyện đã hiểu rõ "Lỗi 404" và "Không tìm thấy trang" có ý nghĩa tương đồng
 ```
 
----
+## Những chỉ dẫn thiết kế và sai lầm thường gặp
 
-## Best practices
+### Chỉ dẫn thiết kế (Best Practices)
+* **Kiên định với phương pháp Pooling**: Một mạng Transformer sẽ xuất ra vectơ cho từng từ (token) một. Để gộp tất cả thành một vectơ tĩnh đại diện cho toàn bộ câu, chúng ta phải dùng phương pháp gom cụm: lấy trung bình cộng tất cả các token (Mean Pooling) hoặc lấy riêng vectơ của token đặc biệt `[CLS]` ở đầu. Hãy đảm bảo bạn sử dụng đúng phương pháp Pooling mà mô hình đó đã được thiết kế và huấn luyện.
+* **Huấn luyện với Hard Negatives**: Khi tự huấn luyện mô hình, nếu bạn chỉ đưa vào những ví dụ tiêu cực (Negative) quá dễ phân biệt (ví dụ: Anchor="Nấu phở bò", Negative="Thời tiết hôm nay"), mô hình sẽ học rất hời hợt. Hãy đưa vào các mẫu **Hard Negatives** – những câu trông rất giống nhưng thực tế lại khác nghĩa (ví dụ: Anchor="Cách nấu phở bò", Hard Negative="Cách nấu phở gà"). Điều này ép buộc mô hình phải học cách phân biệt những chi tiết ngữ nghĩa tinh vi nhất.
 
-* **Ưu tiên Pooling `MEAN` hoặc `CLS`**: Trong Transformer có rất nhiều token đầu ra. Để gộp chúng thành 1 vectơ tĩnh, ta thường dùng trung bình cộng của tất cả các token (Mean Pooling) hoặc lấy riêng vectơ của token `[CLS]` đứng đầu. Hãy kiên định với phương pháp Pooling mà mô hình được thiết kế.
-* **Sử dụng Cross-Encoder để tinh chỉnh**: Embedding Model (Bi-Encoder) chạy rất nhanh nhưng độ chính xác không tuyệt đối. Quy trình chuẩn (RAG Pipeline) là: Dùng Bi-Encoder tìm ra Top-100 kết quả từ Vector DB (siêu nhanh). Sau đó dùng mô hình **Cross-Encoder** đánh giá lại Top-100 này để lấy ra Top-5 (chậm hơn nhưng cực kỳ chính xác vì Cross-Encoder cho phép các từ của 2 câu Attention lẫn nhau).
+### Sai lầm dễ mắc phải (Common Mistakes)
+* **Lấy lớp cuối cùng của mô hình phân loại làm Embedding**: Nhiều người thường lấy lớp phân loại cuối cùng (sau hàm Softmax) của các mạng nơ-ron phân loại để làm vectơ nhúng. Đây là sai lầm vì lớp Softmax chỉ chứa xác suất phân loại nhãn, đã làm mất đi không gian tiềm ẩn (Latent space) đa chiều chứa các đặc trưng phong phú của dữ liệu. Thay vào đó, hãy lấy dữ liệu từ lớp áp chót (Penultimate layer).
 
----
+## Được và mất giữa Bi-Encoder và Cross-Encoder
 
-## Common mistakes
+### Kiến trúc Bi-Encoder (Embedding Model)
+* **Điểm cộng**: Có thể tính toán trước và lưu trữ vectơ tĩnh. Tốc độ truy vấn trên Vector DB cực kỳ nhanh (milli-giây) trên quy mô hàng triệu bản ghi.
+* **Điểm trừ**: Do hai văn bản được xử lý độc lập qua mạng nơ-ron và không thể tương tác trực tiếp với nhau ở bước Attention, mô hình đôi khi bỏ sót các mối liên hệ ngữ nghĩa sâu sắc.
 
-* **Sử dụng mô hình phân loại (Classification Layer) làm Embedding**: Lấy lớp cuối cùng của mạng ResNet (sau hàm Softmax) làm vectơ nhúng thay vì lấy lớp áp chót (Penultimate layer). Lớp Softmax chỉ chứa xác suất phân loại, không chứa không gian tiềm ẩn (Latent space) đa chiều về đặc trưng vật lý của ảnh.
-* **Huấn luyện không có Hard Negatives**: Nếu tập dữ liệu huấn luyện chỉ chứa những câu Negative quá dễ (không liên quan chút nào), mô hình sẽ không học được những tiểu tiết. Phải thêm "Hard Negatives" (Ví dụ: Anchor="Nấu phở gà", Positive="Cách làm phở gà", Hard Negative="Cách làm phở bò") để ép mô hình phân biệt sự khác biệt nhỏ xíu.
+### Kiến trúc Cross-Encoder
+* **Điểm cộng**: Độ chính xác vượt trội nhờ cơ chế Attention hai chiều giữa hai văn bản.
+* **Điểm trừ**: Chi phí tính toán cực kỳ lớn, không thể lưu trữ trước kết quả, không phù hợp cho tìm kiếm quy mô lớn.
 
----
-
-## Trade-offs
-
-### Bi-Encoder (Embedding Model)
-* **Ưu điểm**: Tính toán trước (Pre-computable). Tốc độ so sánh ở runtime cực nhanh (tính bằng milli-giây cho hàng triệu bản ghi thông qua Vector DB).
-* **Nhược điểm**: Hai câu văn không được "nhìn thấy nhau" trong quá trình truyền qua mạng nơ-ron (không có cross-attention), nên đôi lúc bỏ lỡ các ý nghĩa tương tác sâu.
-
-### Cross-Encoder
-* **Ưu điểm**: Độ chính xác cao nhất. Thường được dùng làm Re-ranker.
-* **Nhược điểm**: Không thể tạo ra Vector để lưu vào Database. Mọi so sánh phải chạy trực tiếp qua mạng nơ-ron tại thời điểm query. Độ phức tạp $O(N)$, không thể dùng để tìm kiếm trên hàng triệu tài liệu.
-
----
-
-## When to use
-
-* Tự huấn luyện (Fine-tune) mô hình nhúng riêng khi dữ liệu của bạn có quá nhiều từ lóng, mã sản phẩm hoặc ngôn ngữ đặc thù mà các mô hình mã nguồn mở trên HuggingFace không hiểu được.
-
----
-
-## Related concepts
+## Khái niệm liên quan
 
 * [Các mô hình nhúng (Embedding Models)](/concepts/embedding-models)
 * [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/semantic-search)
 * [Vectơ nhúng (Embeddings)](/concepts/embeddings)
 
----
-
-## Interview questions
+## Góc phỏng vấn
 
 ### 1. Giải thích sự khác biệt kiến trúc giữa Bi-Encoder và Cross-Encoder. Tại sao trong Vector Database chúng ta chỉ dùng Bi-Encoder?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sâu về thiết kế hệ thống tìm kiếm hiện đại.
-* **Gợi ý trả lời (Strong Answer)**: Bi-Encoder nạp độc lập câu A và câu B qua mạng nơ-ron để nhả ra 2 vectơ riêng biệt. Vectơ này là "tĩnh" đối với văn bản, do đó có thể chạy trước cho toàn bộ CSDL và lưu vào Vector DB. Khi tìm kiếm, ta chỉ cần so sánh bằng Cosine Similarity rất nhẹ nhàng. Cross-Encoder nạp *cùng lúc* câu A và câu B nối liền nhau vào mạng nơ-ron, cho phép cơ chế Attention của câu A đánh giá chéo (cross-attention) với câu B. Nó xuất ra một điểm số chính xác, nhưng **không sinh ra vectơ độc lập**. Vì không có vectơ tĩnh để lưu trữ, ta không thể dùng Cross-Encoder với Vector DB. Thay vào đó, Cross-Encoder được dùng ở bước Re-ranking sau khi Vector DB đã lọc ra top kết quả.
+* **Gợi ý trả lời**: Bi-Encoder xử lý độc lập hai văn bản đầu vào thông qua mạng nơ-ron để tạo ra hai vectơ tĩnh riêng biệt. Do các vectơ này là cố định và độc lập, chúng ta có thể tính toán trước cho toàn bộ kho dữ liệu lớn và lưu trữ vào Vector DB để tìm kiếm nhanh bằng Cosine Similarity. Ngược lại, Cross-Encoder nhận đồng thời cả hai văn bản nối liền nhau vào mô hình và sử dụng cơ chế Cross-Attention để phân tích mối quan hệ chéo giữa từng từ của hai câu. Điều này giúp Cross-Encoder có độ chính xác rất cao nhưng lại không sinh ra các vectơ độc lập để lưu trữ trước. Vì lý do hiệu năng và yêu cầu lưu trữ, chúng ta chỉ có thể dùng Bi-Encoder để lưu vào Vector DB, còn Cross-Encoder chỉ được dùng làm bước xếp hạng lại (Re-ranker) sau khi đã lọc ra một nhóm nhỏ kết quả tiềm năng.
 
-### 2. Contrastive Learning và Triplet Loss hoạt động như thế nào để huấn luyện Embedding Model?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về toán học và hàm mất mát trong huấn luyện AI.
-* **Gợi ý trả lời (Strong Answer)**: Contrastive Learning là phương pháp học qua sự so sánh. Thay vì học đoán từ tiếp theo như LLM, nó học cách gom cụm. Bằng cách sử dụng Triplet Loss, mô hình nhận vào 1 bộ 3: Anchor (câu gốc), Positive (câu tương đồng), Negative (câu không liên quan). Hàm mất mát sẽ tính Gradient để cập nhật trọng số mạng nơ-ron sao cho trong không gian vectơ, khoảng cách (Anchor - Positive) ngày càng co hẹp lại, trong khi khoảng cách (Anchor - Negative) bị đẩy dãn ra xa quá một khoảng Margin nhất định. Trải qua hàng triệu bước lặp, mô hình sẽ tự động sắp xếp không gian ngữ nghĩa một cách trật tự.
+### 2. Triplet Loss hoạt động như thế nào trong việc huấn luyện một Embedding Model?
+* **Gợi ý trả lời**: Triplet Loss huấn luyện mô hình bằng cách so sánh một bộ ba dữ liệu gồm: Anchor (câu gốc), Positive (câu tương đồng ngữ nghĩa) và Negative (câu không liên quan). Hàm mất mát Triplet Loss sẽ tính toán khoảng cách hình học trong không gian đa chiều giữa các vectơ đầu ra. Mục tiêu của nó là cập nhật trọng số của mạng nơ-ron sao cho khoảng cách giữa Anchor và Positive ngày càng thu hẹp lại, đồng thời đẩy khoảng cách giữa Anchor và Negative ra xa hơn một khoảng biên an toàn (`margin`) được thiết lập trước. Qua hàng triệu lượt tối ưu hóa, mô hình sẽ tự động định hình một không gian ngữ nghĩa trật tự và chính xác.
 
----
-
-## References
+## Tài liệu tham khảo
 
 1. **Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks** - Reimers & Gurevych (2019).
-2. **Supervised Learning of Universal Sentence Representations from Natural Language Inference Data** - Conneau et al. (2017).
+2. **Supervised Learning of Universal Sentence Representations** - Conneau et al. (2017).
 
----
-
-## English summary
+## Tóm tắt bằng tiếng Anh (English Summary)
 
 While Embedding Models generally refer to the models mapping text to dense vectors, diving into an individual Embedding Model reveals an architecture often based on Siamese Networks (Bi-Encoders) optimized via Contrastive Learning (e.g., Triplet Loss or InfoNCE). By training the model to minimize the distance between conceptually similar anchor-positive pairs and maximize the distance from negative samples, the network learns an intrinsic geometric representation of semantics. Unlike Cross-Encoders which evaluate pairs jointly for high accuracy at a steep computational cost, Bi-Encoders produce independent, pre-computable vectors, making them the strictly required architecture for indexing massive datasets in Vector Databases.

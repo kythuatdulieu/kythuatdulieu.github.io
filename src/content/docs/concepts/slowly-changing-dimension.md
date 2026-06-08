@@ -11,60 +11,55 @@ metaDescription: "Tìm hiểu toàn tập về Slowly Changing Dimension (SCD): 
 
 # Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)
 
-## Summary
+Trong quá trình xây dựng Data Warehouse, một trong những thách thức lớn nhất đối với Data Engineer là làm thế nào để lưu trữ và phân tích chính xác lịch sử thay đổi của dữ liệu. Khách hàng có thể chuyển địa chỉ nhà, nhân viên được thăng chức hoặc chuyển chi nhánh, sản phẩm được cập nhật công thức đóng gói mới. 
 
-Slowly Changing Dimension (SCD) là một tập hợp các kỹ thuật thiết kế trong Data Warehousing nhằm giải quyết vấn đề quản lý dữ liệu lịch sử. Khi các thuộc tính mô tả trong bảng chiều (Dimension Table) bị thay đổi theo thời gian (ví dụ: khách hàng chuyển chỗ ở, sản phẩm thay đổi công thức), SCD định nghĩa cách thức hệ thống ETL phải phản ứng như thế nào. Các phương pháp phổ biến nhất là SCD Type 1 (Ghi đè - mất lịch sử), SCD Type 2 (Tạo phiên bản mới - giữ lịch sử hoàn chỉnh), và SCD Type 3 (Lưu trạng thái hiện tại và trạng thái trước đó).
+Những thông tin mô tả này không thay đổi liên tục từng giây từng phút, mà chúng thay đổi một cách từ từ theo thời gian. Kỹ thuật quản lý những thay đổi này được gọi là **Slowly Changing Dimension (SCD - Chiều thay đổi chậm)**.
 
----
+## Kiến trúc và Nguyên lý hoạt động của Slowly Changing Dimension
 
-## Definition
+**Slowly Changing Dimension (SCD)** là tập hợp các phương pháp thiết kế trong Data Warehouse nhằm quản lý và lưu trữ thông tin lịch sử của các thuộc tính trong bảng chiều (Dimension Table). 
 
-Trong thế giới thực, các thuộc tính mô tả thực thể (Dimension attributes) hiếm khi tĩnh hoàn toàn, mà chúng "thay đổi chậm" (Slowly Changing). Ví dụ: một khách hàng thường ở một địa chỉ trong vài năm trước khi chuyển nhà.
+Khi dữ liệu nguồn thay đổi, SCD định nghĩa cách thức hệ thống ETL/ELT ghi nhận sự thay đổi đó vào kho dữ liệu. Mục tiêu tối thượng của SCD là đảm bảo tính chính xác theo thời gian (point-in-time accuracy), giúp các báo cáo phân tích phản ánh đúng ngữ cảnh lịch sử tại thời điểm sự kiện diễn ra.
 
-**Slowly Changing Dimension (SCD)** là phương pháp luận được thiết kế để kiểm soát những thay đổi này trong Data Warehouse, nhằm đảm bảo các báo cáo chỉ ra số liệu đúng với ngữ cảnh thời điểm xảy ra sự kiện đó (Point-in-time accuracy).
+## Tại sao chúng ta cần SCD? Bài toán "John chuyển vùng công tác"
 
----
+Hãy tưởng tượng một kịch bản thực tế sau:
 
-## Why it exists
+Anh **John** là một nhân viên bán hàng xuất sắc của công ty. Trong tháng 1, anh làm việc tại khu vực **Hà Nội** và mang về 100 đơn hàng. Sang tháng 2, anh được điều chuyển công tác vào chi nhánh **TP.HCM** và bán thêm được 50 đơn hàng.
 
-Thử tưởng tượng kịch bản sau: 
-Nhân viên bán hàng (Sales) tên **John** làm việc ở khu vực **Hà Nội** và bán được 100 đơn hàng vào tháng 1. Đến tháng 2, John được điều chuyển công tác vào khu vực **TP.HCM** và bán thêm 50 đơn hàng.
-* Nếu chúng ta chỉ đơn giản là UPDATE thuộc tính khu vực của John thành "TP.HCM" (như cơ sở dữ liệu OLTP làm).
-* Hệ quả: Khi sếp mở báo cáo BI lên xem tổng doanh số theo Khu vực, toàn bộ 100 đơn hàng tháng 1 (vốn bán ở Hà Nội) sẽ bị tính gộp vào doanh số của TP.HCM. Báo cáo lịch sử đã bị hỏng hoàn toàn.
+* **Nếu chúng ta làm như database nguồn (OLTP)**: Chỉ đơn giản chạy lệnh `UPDATE` cập nhật khu vực của John thành "TP.HCM".
+* **Hậu quả**: Khi ban giám đốc mở báo cáo doanh thu lũy kế theo khu vực, toàn bộ 100 đơn hàng của tháng 1 (vốn được bán ở Hà Nội) sẽ bị tính gộp vào doanh số của TP.HCM. Báo cáo lịch sử của Hà Nội lập tức bị hụt số liệu và sai lệch hoàn toàn.
 
-SCD ra đời để cấp công cụ cho Data Engineers lưu giữ chính xác "phiên bản" của chiều dữ liệu tại thời điểm sự kiện diễn ra.
+SCD ra đời để ngăn chặn thảm họa báo cáo này bằng cách lưu giữ các "phiên bản" khác nhau của dữ liệu bảng chiều tương ứng với từng thời kỳ lịch sử.
 
----
+## Các phương pháp SCD phổ biến: Từ đơn giản đến nâng cao
 
-## Core Types (Phân loại các phương pháp SCD)
+Tùy thuộc vào nhu cầu phân tích của doanh nghiệp, chúng ta có nhiều cách để xử lý thay đổi:
 
-### SCD Type 0: Retain Original (Giữ nguyên gốc)
-Tuyệt đối không thay đổi. Khi dữ liệu nguồn cập nhật, Data Warehouse vẫn giữ nguyên dữ liệu gốc ban đầu và bỏ qua sự thay đổi.
-* *Sử dụng*: Các thuộc tính bất di bất dịch như Ngày tháng năm sinh, ID khách hàng gốc.
+### SCD Type 0: Giữ nguyên gốc (Retain Original)
+Hệ thống hoàn toàn bỏ qua mọi thay đổi từ nguồn. Dữ liệu ghi nhận lần đầu tiên sẽ được giữ nguyên mãi mãi.
+* *Ứng dụng*: Phù hợp cho các thông tin bất biến như Ngày sinh, ID khách hàng gốc, Ngày đăng ký tài khoản.
 
-### SCD Type 1: Overwrite (Ghi đè)
-Cập nhật trực tiếp dữ liệu mới đè lên dữ liệu cũ. Lịch sử thay đổi bị mất vĩnh viễn. Mọi báo cáo cũ liên quan đến đối tượng sẽ mang diện mạo mới.
-* *Sử dụng*: Sửa lỗi chính tả, hoặc các thuộc tính mà doanh nghiệp xác nhận "không có giá trị để phân tích lịch sử" (ví dụ: cập nhật số điện thoại cá nhân).
+### SCD Type 1: Ghi đè (Overwrite)
+Hệ thống cập nhật đè dữ liệu mới trực tiếp lên dữ liệu cũ. Toàn bộ lịch sử thay đổi trước đó sẽ bị xóa bỏ vĩnh viễn. Mọi báo cáo chạy từ trước đến nay sẽ tự động cập nhật theo giá trị mới nhất.
+* *Ứng dụng*: Dùng khi cần sửa lỗi chính tả (ví dụ gõ sai tên từ "Alise" thành "Alice") hoặc các thuộc tính không có giá trị phân tích lịch sử như số điện thoại, email cá nhân.
 
-### SCD Type 2: Add New Row (Thêm dòng mới) - *Quan trọng nhất*
-Bảo lưu toàn bộ lịch sử. Khi có thay đổi, hệ thống "hết hạn" (expire) dòng cũ và chèn (INSERT) một dòng mới hoàn toàn với Surrogate Key mới.
-* *Đặc điểm*: Yêu cầu thêm các cột theo dõi thời gian (`start_date`, `end_date`, `is_active`). Bất kỳ Fact mới nào sinh ra sẽ được gắn với Surrogate Key mới nhất.
-* *Sử dụng*: Hầu hết mọi Dimension quan trọng yêu cầu tính chính xác lịch sử (Khu vực của nhân viên, Phân khúc khách hàng).
+### SCD Type 2: Thêm dòng mới (Add New Row) - *Trọng tâm thiết kế*
+Đây là loại SCD quan trọng nhất và được sử dụng rộng rãi nhất. Khi phát hiện thay đổi, hệ thống sẽ đánh dấu hết hạn dòng dữ liệu hiện tại và chèn thêm một dòng dữ liệu mới hoàn toàn với một Surrogate Key (khóa thay thế) mới.
+* *Đặc điểm*: Yêu cầu bảng dimension có thêm các trường quản lý như `start_date`, `end_date`, và cờ `is_active`.
+* *Ứng dụng*: Áp dụng cho hầu hết các chiều dữ liệu cốt lõi cần theo dõi lịch sử chuẩn xác như địa chỉ khách hàng, phòng ban nhân viên, giá sản phẩm.
 
-### SCD Type 3: Add New Column (Thêm cột mới)
-Thêm một cột phụ vào bảng để giữ trạng thái ngay trước đó. Chỉ lưu được 1 thế hệ lịch sử gần nhất.
-* *Đặc điểm*: Bảng có thêm cột `previous_value`. Không làm tăng số dòng.
-* *Sử dụng*: Khi doanh nghiệp muốn dễ dàng so sánh "Giá trị hiện hành" và "Giá trị trước thay đổi" trong cùng 1 báo cáo (Ví dụ: So sánh tổ chức phòng ban mới và phòng ban cũ của nhân sự).
+### SCD Type 3: Thêm cột mới (Add New Column)
+Hệ thống thêm một cột phụ vào bảng để lưu giá trị ngay trước đó. Cách này chỉ cho phép lưu giữ duy nhất một thế hệ lịch sử gần nhất mà không làm tăng số dòng trong bảng.
+* *Ứng dụng*: Thường dùng khi doanh nghiệp muốn so sánh trực tiếp kết quả theo cấu trúc mới và cấu trúc cũ (ví dụ: doanh số theo mã phòng ban mới vs mã phòng ban cũ).
 
 ### Các loại nâng cao (Hybrid)
-* **SCD Type 4 (History Table)**: Tách dữ liệu hiện tại vào bảng chính (như Type 1) và đẩy toàn bộ lịch sử thay đổi vào một bảng History riêng biệt. (Lấy ý tưởng từ CDC).
-* **SCD Type 6 (1 + 2 + 3)**: Kết hợp cả 3 kỹ thuật. Giữ dòng lịch sử mới (Type 2), cập nhật cờ hiện tại ở dòng cũ (Type 1), và lưu thuộc tính lịch sử ngang (Type 3).
+* **SCD Type 4**: Giữ thông tin hiện tại ở bảng chính (như Type 1) và đẩy toàn bộ lịch sử thay đổi vào một bảng riêng biệt (History Table) để tối ưu hóa kích thước bảng chính.
+* **SCD Type 6 (1 + 2 + 3)**: Kết hợp cả ba kỹ thuật chính. Nó vừa thêm dòng mới (Type 2), vừa cập nhật thông tin hiện hành ở tất cả dòng cũ (Type 1), và lưu thông tin lịch sử ngang qua cột (Type 3).
 
----
+## Chi tiết SCD Type 2: Trọng tâm của quản trị lịch sử
 
-## Architecture / Flow & Practical Example
-
-Cùng minh họa SCD Type 2 (Loại phổ biến nhất) bằng SQL và Data flow.
+Hãy cùng xem cơ chế hoạt động của SCD Type 2 qua sơ đồ tư duy:
 
 ```mermaid
 flowchart TD
@@ -77,30 +72,29 @@ flowchart TD
     style E fill:#ccffcc,stroke:#333
 ```
 
-**1. Trạng thái ban đầu:** Khách hàng tên Alice sống ở "Hanoi".
+### Minh họa bằng dữ liệu thực tế:
+**1. Trạng thái ban đầu:** Khách hàng Alice sống ở Hanoi.
 
-| customer_sk (Surrogate PK) | customer_id (Natural Key) | name | city | is_active | start_date | end_date |
+| customer_sk (Surrogate Key) | customer_id (Natural Key) | name | city | is_active | start_date | end_date |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **101** | CUS-99 | Alice | Hanoi | TRUE | 2025-01-01 | 9999-12-31 |
 
-*(Bất kỳ Fact giao dịch nào của Alice lúc này sẽ trỏ vào `customer_sk = 101`)*.
+*(Mọi hóa đơn mua hàng của Alice trong giai đoạn này sẽ được liên kết với `customer_sk = 101`)*.
 
-**2. Sự kiện:** Ngày `2026-06-07`, Alice chuyển nhà sang "Saigon".
+**2. Sự kiện:** Ngày `2026-06-07`, Alice chuyển nhà vào Saigon.
 
-**3. Xử lý ETL SCD Type 2:**
-Bước A: Update (hết hạn) dòng cũ.
-Bước B: Insert dòng phiên bản mới.
+**3. Kết quả bảng `dim_customer` sau khi chạy ETL SCD Type 2:**
 
-Kết quả bảng `dim_customer` sẽ như sau:
-
-| customer_sk (PK) | customer_id | name | city | is_active | start_date | end_date |
+| customer_sk (Surrogate Key) | customer_id (Natural Key) | name | city | is_active | start_date | end_date |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **101** | CUS-99 | Alice | Hanoi | FALSE | 2025-01-01 | **2026-06-07** |
 | **102** | CUS-99 | Alice | Saigon | **TRUE** | **2026-06-07** | 9999-12-31 |
 
-*(Từ ngày này trở đi, giao dịch mới của Alice sẽ trỏ vào khóa `customer_sk = 102`. Giao dịch cũ trong quá khứ vẫn trỏ vào khóa `101`. Lịch sử được bảo toàn tuyệt đối!).*
+*(Kể từ ngày 2026-06-07, các giao dịch mua hàng mới của Alice sẽ liên kết với khóa mới `customer_sk = 102`. Các hóa đơn cũ trước đó vẫn giữ nguyên liên kết với khóa `101`. Lịch sử mua hàng theo khu vực được bảo toàn chính xác tuyệt đối!).*
 
-**Mã nguồn SQL (dbt Snapshot) tự động hóa SCD Type 2:**
+### Công thức tự động hóa SCD Type 2 với dbt Snapshot
+
+Viết code SQL thuần để xử lý logic Update dòng cũ và Insert dòng mới rất phức tạp và dễ nhầm lẫn. Trong Modern Data Stack, công cụ **dbt (Data Build Tool)** hỗ trợ giải quyết việc này vô cùng ngắn gọn thông qua tính năng **dbt Snapshots**:
 
 ```sql
 {% snapshot dim_customer_snapshot %}
@@ -110,7 +104,7 @@ Kết quả bảng `dim_customer` sẽ như sau:
       target_schema='snapshots',
       unique_key='customer_id',
       strategy='check',
-      # Cấu hình theo dõi sự thay đổi trên cột 'city' (hoặc dùng 'all' cho mọi cột)
+      # Theo dõi sự thay đổi trên cột 'city'
       check_cols=['city'],
     )
 }}
@@ -123,80 +117,54 @@ FROM {{ source('raw_data', 'customers') }}
 
 {% endsnapshot %}
 ```
-*Ghi chú: Khi chạy file snapshot này, dbt sẽ ngầm tự động tạo và cập nhật các cột `dbt_valid_from` và `dbt_valid_to` giống như `start_date` và `end_date` ở trên.*
 
----
+Khi chạy tệp tin này, dbt sẽ tự động đối chiếu dữ liệu nguồn và đích, sinh ra mã SQL MERGE để cập nhật các trường thời gian hiệu lực (mặc định là `dbt_valid_from` và `dbt_valid_to`) mà không cần bạn phải can thiệp thủ công.
 
-## Best practices
+## Sai lầm thường gặp và Best Practices
 
-* **Mặc định sử dụng SCD Type 2 cho các Dimension cốt lõi**: Trừ khi có lý do chính đáng để bỏ qua lịch sử (như thiếu Storage hoặc nghiệp vụ không quan tâm), hãy coi Type 2 là quy chuẩn mặc định.
-* **Cột "Hiệu lực tương lai"**: Thay vì để `end_date` của dòng hiện tại là `NULL`, hãy dùng một mốc thời gian viễn tưởng xa xôi như `9999-12-31`. Việc này giúp tối ưu hóa thuật toán BETWEEN của engine SQL khi JOIN, tránh các lỗi xử lý NULL.
-* **Kết hợp Hash Key để phát hiện thay đổi**: Để ETL biết dòng nào bị thay đổi, thay vì so sánh từng cột (Tên, Địa chỉ, SĐT...), hãy tạo một cột `row_hash` (MD5 hoặc SHA-256) chứa chuỗi mã hóa của toàn bộ dòng. Chỉ cần so sánh `hash_source` và `hash_target` để kích hoạt logic SCD.
+* **Bắt buộc sử dụng Surrogate Key (Khóa thay thế)**: SCD Type 2 không thể tồn tại nếu thiếu Surrogate Key. Nếu bạn dùng Natural Key (như mã định danh gốc `customer_id = CUS-99`) làm khóa chính, cơ sở dữ liệu sẽ báo lỗi trùng lặp khóa chính (Primary Key Violation) ngay khi bạn insert dòng phiên bản thứ hai của khách hàng đó.
+* **Đặt mốc thời gian kết thúc mặc định**: Thay vì để `end_date` của bản ghi đang hoạt động là `NULL`, hãy dùng một mốc thời gian xa xôi trong tương lai (ví dụ: `9999-12-31`). Kỹ thuật này giúp tối ưu hóa hiệu năng của câu lệnh `JOIN` khi dùng điều kiện `BETWEEN start_date AND end_date`, tránh các lỗi so sánh với giá trị `NULL`.
+* **Tránh áp dụng Type 2 cho các thuộc tính thay đổi quá nhanh (Fast Changing)**: Nếu một thuộc tính thay đổi liên tục hàng ngày hoặc hàng giờ (như điểm tích lũy của khách hàng, số dư tài khoản), việc tạo dòng mới bằng SCD Type 2 sẽ khiến bảng Dimension phình to khủng khiếp. Trong trường hợp này, hãy tách thuộc tính đó ra một bảng Dimension phụ (Mini-Dimension) hoặc lưu trữ trực tiếp dưới dạng Fact Table.
+* **Sử dụng Hash Key để tăng tốc độ đối chiếu**: Thay vì so sánh từng cột riêng lẻ để phát hiện sự thay đổi, hãy tạo một cột băm `row_hash` (ví dụ sử dụng thuật toán MD5 hoặc SHA-256) gộp tất cả các thuộc tính lại. Khi chạy ETL, bạn chỉ cần so sánh giá trị mã băm này giữa nguồn và đích để phát hiện nhanh chóng bản ghi nào có sự biến động.
 
----
+### So sánh nhanh các loại SCD:
 
-## Common mistakes
+| Tiêu chí | SCD Type 1 (Ghi đè) | SCD Type 2 (Dòng mới) | SCD Type 3 (Cột mới) |
+| :--- | :--- | :--- | :--- |
+| **Theo dõi lịch sử** | Không | Đầy đủ, không giới hạn | Hạn chế (chỉ 1 phiên bản trước) |
+| **Ảnh hưởng báo cáo** | Thay đổi toàn bộ lịch sử | Giữ đúng ngữ cảnh lịch sử | Cho phép so sánh song song |
+| **Dung lượng lưu trữ** | Thấp, không đổi | Tăng liên tục theo biến động | Thấp, chỉ tăng nhẹ theo cột |
+| **Mức độ phức tạp** | Rất thấp | Cao, yêu cầu Surrogate Key | Trung bình |
 
-* **Quên cấp Surrogate Key**: SCD Type 2 không thể tồn tại nếu không có Surrogate Key (Khóa thay thế). Nếu cố tình dùng Natural Key (`customer_id = CUS-99`) làm khóa chính, khi INSERT dòng thay đổi thứ 2, Database sẽ báo lỗi trùng lặp Khóa chính (Primary Key Violation).
-* **Áp dụng SCD Type 2 cho các thuộc tính "Fast Changing" (Thay đổi nhanh)**: Nếu bạn áp dụng SCD Type 2 cho một cột như "Điểm tín dụng" (Credit Score - dao động liên tục hàng ngày), bảng Dimension sẽ phát nổ về dung lượng. Hãy cân nhắc đẩy các thuộc tính thay đổi liên tục này ra thành Fact hoặc Mini-Dimension (kỹ thuật SCD Type 4).
-* **Xử lý trễ thời gian (Late arriving data)**: Sự thay đổi diễn ra tháng 1, nhưng đến tháng 3 hệ thống mới nhận được (Backfill). Hệ thống ETL ngây thơ có thể chèn phiên bản mới với `start_date` là tháng 3, làm hỏng các Fact sinh ra ở tháng 2. Cần viết luồng ETL đặc biệt để "nhét" (weave) các sự kiện trễ hạn vào đúng trình tự thời gian.
+## Khái niệm liên quan
 
----
+* [Dimension Table](/concepts/dimension-table): Bảng chiều chứa các thông tin mô tả ngữ cảnh.
+* [Surrogate Key](/concepts/surrogate-key): Khóa thay thế nhân tạo trong thiết kế kho dữ liệu.
+* [Data Warehouse](/concepts/data-warehouse): Kho dữ liệu tổng hợp phục vụ phân tích.
 
-## Trade-offs
+## Góc phỏng vấn: Chinh phục các câu hỏi về SCD
 
-### SCD Type 1 (Ghi đè)
-* **Ưu điểm**: Dễ cài đặt, Data pipeline chạy cực nhanh, không tốn thêm ổ cứng. Bảng Dimension luôn nhỏ gọn.
-* **Nhược điểm**: Bóp méo toàn bộ báo cáo lịch sử.
+### 1. Tại sao Surrogate Key lại là điều kiện tiên quyết để triển khai SCD Type 2?
+* **Gợi ý trả lời**: Trong SCD Type 2, một thực thể dữ liệu thực tế (ví dụ: một khách hàng cụ thể) sẽ có nhiều dòng dữ liệu trong bảng Dimension để mô tả các trạng thái của họ qua từng thời kỳ. Nếu dùng Natural Key (như mã ID khách hàng được sinh ra từ ứng dụng nguồn) làm khóa chính, hệ thống sẽ từ chối chèn dòng thứ hai do vi phạm ràng buộc duy nhất (Unique Constraint). 
+  Vì vậy, chúng ta bắt buộc phải sinh ra một Surrogate Key (Khóa thay thế nhân tạo tự tăng) để làm khóa chính. Khóa này đảm bảo mỗi phiên bản lịch sử của khách hàng là một dòng duy nhất, giúp bảng Fact có thể tham chiếu chính xác đến đúng phiên bản của khách hàng tại thời điểm phát sinh giao dịch.
 
-### SCD Type 2 (Giữ lịch sử - Tạo dòng mới)
-* **Ưu điểm**: Bức tranh dữ liệu hoàn hảo. Cho phép phân tích chính xác tại bất kỳ mốc thời gian nào trong quá khứ ("As-was" vs "As-is" reporting).
-* **Nhược điểm**: 
-  * Tốn rất nhiều không gian lưu trữ do sinh ra dòng mới liên tục.
-  * Logic đường ống dbt / ETL phức tạp (Phải quản lý Upsert / Merge).
-  * Kích thước Dimension phình to làm chậm tốc độ JOIN với Fact Table.
+### 2. dbt hỗ trợ xử lý SCD Type 2 như thế nào? Nêu ưu điểm của nó.
+* **Gợi ý trả lời**: dbt hỗ trợ triển khai SCD Type 2 tự động thông qua tính năng **dbt Snapshots**. Chúng ta chỉ cần khai báo bảng nguồn, khóa duy nhất và chiến lược theo dõi thay đổi (ví dụ: theo dõi cột `updated_at` hoặc quét tất cả các cột). 
+  Ưu điểm lớn nhất là dbt tự động biên dịch và thực thi toàn bộ logic SQL MERGE/UPDATE/INSERT phức tạp bên dưới cơ sở dữ liệu. Nó tự động quản lý các cột mốc thời gian hiệu lực (`dbt_valid_from`, `dbt_valid_to`), giúp kỹ sư dữ liệu tiết kiệm thời gian viết và bảo trì các đường ống ETL rườm rà.
 
----
+### 3. SCD Type 4 và SCD Type 6 khác nhau như thế nào? Khi nào nên chọn loại nào?
+* **Gợi ý trả lời**: 
+  * **SCD Type 4** tách biệt hoàn toàn dữ liệu hiện tại (nằm ở bảng chính) và lịch sử thay đổi (nằm ở một bảng lịch sử riêng). Điều này giữ cho bảng chính luôn gọn nhẹ và truy vấn nhanh.
+  * **SCD Type 6 (1 + 2 + 3)** kết hợp cả 3 loại: thêm dòng mới (Type 2) để lưu lịch sử, ghi đè giá trị hiện tại lên tất cả các dòng cũ của khách hàng đó (Type 1), và dùng cột phụ để lưu giá trị trước đó (Type 3).
+  * **Lựa chọn**: Chọn Type 4 khi bảng dimension thay đổi tương đối nhanh và bạn muốn bảo vệ hiệu năng đọc của bảng chính. Chọn Type 6 khi người dùng BI vừa muốn phân tích doanh số theo thuộc tính tại thời điểm mua (point-in-time), vừa muốn tổng hợp nhanh theo thuộc tính hiện tại mà không cần viết câu lệnh JOIN phức tạp.
 
-## When to use
+## Tài liệu tham khảo
 
-* **Type 1**: Khi sửa lỗi chính tả (nhập sai tên khách từ "Alise" thành "Alice"), cập nhật email cá nhân.
-* **Type 2**: Bắt buộc dùng cho Địa lý (Khu vực, Tỉnh/Thành phố), Phân cấp nhân sự (Chuyển phòng ban, Thăng chức sếp), Cấu trúc sản phẩm.
-* **Type 3**: Doanh nghiệp chỉ quan tâm đến thay đổi hiện tại và duy nhất một trạng thái trước đó để so sánh nhanh. Thường dùng trong báo cáo Bán hàng khi thay đổi cấu trúc Kênh phân phối.
-
----
-
-## Related concepts
-
-* [Dimension Table](/concepts/dimension-table)
-* [Surrogate Key](/concepts/surrogate-key)
-* [Data Warehouse](/concepts/data-warehouse)
-* Change Data Capture (CDC)
-
----
-
-## Interview questions
-
-### 1. Tại sao Surrogate Key là yếu tố sống còn để triển khai SCD Type 2?
-* **Người phỏng vấn muốn kiểm tra**: Sự liên kết kiến thức giữa Surrogate Key và quản lý lịch sử.
-* **Gợi ý trả lời**: Trong SCD Type 2, một thực thể duy nhất (ví dụ nhân viên John có mã `EMP-01`) sẽ có nhiều phiên bản theo thời gian mỗi khi anh ta chuyển phòng ban. Nếu ta dùng Natural Key (`EMP-01`) làm Primary Key cho bảng Dimension, ta không thể insert dòng thứ 2 cho John vì sẽ vi phạm luật duy nhất (Unique Constraint). Surrogate Key (các số tự tăng ngẫu nhiên như `100`, `101`) cho phép ta tạo ra vô số dòng đại diện cho John trong các thời kỳ khác nhau, mỗi dòng có một Surrogate Key riêng để Fact Table liên kết chính xác với ngữ cảnh phòng ban của thời kỳ đó.
-
-### 2. Kỹ sư dbt (Data Build Tool) thường xử lý SCD Type 2 bằng tính năng gì? Giải thích ngắn gọn cách hoạt động của nó.
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức công nghệ thực chiến hiện đại (Modern Data Stack).
-* **Gợi ý trả lời**: dbt xử lý SCD Type 2 một cách tự động thông qua tính năng **dbt Snapshots**. 
-Cách hoạt động: Cấu hình dbt Snapshot theo dõi một bảng nguồn bằng chiến lược `timestamp` (dựa trên cột updated_at của nguồn) hoặc `check` (so sánh giá trị các cột). Mỗi lần chạy dbt, nó ngầm biên dịch ra câu lệnh MERGE khổng lồ ở phía Database: Nó tìm các bản ghi bị thay đổi, tự động thêm timestamp vào cột `dbt_valid_to` (hết hạn dòng cũ) và Insert dòng mới với `dbt_valid_from` bằng thời gian hiện tại, miễn nhiễm người dùng khỏi việc viết các câu lệnh SQL UPDATE/INSERT thủ công rườm rà.
-
----
-
-## References
-
-1. **The Data Warehouse Toolkit** - Ralph Kimball (Chương chuyên sâu về SCD).
-2. **dbt Documentation** - Snapshots (Tài liệu về cách triển khai SCD Type 2 trong thực tế).
+1. **The Data Warehouse Toolkit** - Ralph Kimball (Cuốn sách gối đầu giường về thiết kế kho dữ liệu và SCD).
+2. **dbt Documentation** - Snapshots (Tài liệu triển khai SCD Type 2 bằng dbt).
 3. **Fundamentals of Data Engineering** - Joe Reis.
 
----
-
-## English summary
+## English Summary
 
 Slowly Changing Dimensions (SCD) define the strategic methodologies used in Data Warehousing to manage and track changes to dimension attributes over time. 
 * **SCD Type 1** simply overwrites existing data, destroying historical context but keeping the architecture simple. 

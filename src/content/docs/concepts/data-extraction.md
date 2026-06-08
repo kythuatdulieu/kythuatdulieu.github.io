@@ -9,74 +9,29 @@ seoTitle: "Data Extraction - Các phương pháp trích xuất dữ liệu"
 metaDescription: "Trích xuất dữ liệu (Data Extraction) là gì? Tìm hiểu các kỹ thuật trích xuất phổ biến như Full Load, Incremental Load, API và Database Log (CDC)."
 ---
 
-# Data Extraction
+# Trích xuất dữ liệu (Data Extraction): Chốt chặn đầu tiên của hành trình ETL/ELT
 
-## Summary
+Trong quy trình ETL/ELT kinh điển, chữ cái đầu tiên "**E**" chính là đại diện cho **Extraction (Trích xuất dữ liệu)**. Đây là bước đi chập chững đầu tiên nhưng lại đóng vai trò quyết định: làm thế nào để kết nối, đọc và rút dữ liệu thô ra khỏi các hệ thống nguồn (như cơ sở dữ liệu vận hành, hệ thống SaaS của bên thứ ba, hay các tệp nhật ký hoạt động) rồi mang về nhà kho trung tâm.
 
-Data Extraction (Trích xuất dữ liệu) là chữ "E" trong quy trình ETL/ELT. Đây là bước đầu tiên để thu thập, đọc và lấy dữ liệu thô ra khỏi các hệ thống lưu trữ gốc (như Cơ sở dữ liệu vận hành, hệ thống SaaS, tệp tin nhật ký). Do dữ liệu nguồn rất đa dạng và thường xuyên thay đổi, kỹ sư dữ liệu phải lựa chọn phương pháp trích xuất phù hợp (như Full Extraction, Incremental Extraction, hoặc CDC) để cân bằng giữa độ tươi mới của dữ liệu và áp lực hiệu năng đặt lên hệ thống vận hành.
-
----
-
-## Definition
-
-**Data Extraction** là quá trình kết nối tới một hệ thống nguồn, xác định phần dữ liệu cần thiết và kéo (pull/read) dữ liệu đó ra để đưa vào một hệ thống trung gian (như vùng Staging, luồng Kafka, hoặc trực tiếp vào Data Warehouse). 
-
-Nhiệm vụ khó nhất của Extraction không phải là viết code kết nối, mà là trả lời câu hỏi: *"Làm thế nào để lấy được đúng dữ liệu cần thiết mà không làm gián đoạn hay làm chậm hệ thống phần mềm đang phục vụ khách hàng?"*
+Một thách thức lớn đặt ra cho các kỹ sư dữ liệu là: hệ thống nguồn vô cùng đa dạng và liên tục thay đổi. Nhiệm vụ của chúng ta không chỉ đơn thuần là viết code kết nối, mà phải tìm ra câu trả lời cho bài toán hóc búa: *“Làm sao lấy được đúng và đủ dữ liệu cần thiết mà không làm quá tải hay làm sập hệ thống đang trực tiếp phục vụ khách hàng?”*
 
 ---
 
-## Why it exists
+## Dữ liệu phân mảnh - Lý do Data Extraction tồn tại
 
-Dữ liệu không bao giờ nằm sẵn ở nơi bạn muốn phân tích. Nó nằm rải rác ở:
-* Postgres / MySQL (Nơi lưu đơn hàng, thông tin người dùng).
-* API của Salesforce, Hubspot, Zendesk (Nơi lưu CRM khách hàng).
-* Tệp tin CSV, Excel do đối tác gửi qua SFTP.
-* Logs (Nơi lưu vết click chuột của người dùng trên web).
+Trong thực tế, dữ liệu của doanh nghiệp không bao giờ nằm tập trung một nơi sạch sẽ cho chúng ta khai thác. Chúng phân tán ở khắp mọi ngóc ngách:
+* Hệ quản trị cơ sở dữ liệu như Postgres, MySQL (nơi lưu trữ thông tin giao dịch, đơn hàng, khách hàng).
+* Các nền tảng SaaS như Salesforce, Hubspot, Zendesk (nơi vận hành các hoạt động CRM, chăm sóc khách hàng).
+* Các tệp tin CSV, Excel thô sơ được đối tác gửi định kỳ qua máy chủ SFTP.
+* Hệ thống lưu trữ Log hoạt động (nơi ghi lại từng cú click chuột, lượt xem trang của người dùng).
 
-Mỗi hệ thống này có một ngôn ngữ truy vấn, giao thức (HTTP, TCP, FTP) và giới hạn bảo mật riêng. Data Extraction tồn tại để "nói" cùng ngôn ngữ với các hệ thống này, tuân thủ các quy tắc của chúng (như giới hạn Rate Limit của API) để rút dữ liệu ra một cách an toàn.
-
----
-
-## Core idea
-
-Việc trích xuất dữ liệu xoay quanh việc lựa chọn giữa hai thái cực (Phương pháp): **Lấy toàn bộ** hay **Chỉ lấy những gì thay đổi**.
-
-Các mô hình trích xuất cơ bản:
-1. **Full Extraction (Trích xuất toàn bộ)**: Kéo toàn bộ bảng dữ liệu từ nguồn mỗi khi chạy job.
-2. **Incremental Extraction (Trích xuất gia tăng)**: Dựa vào một cột mốc (như cột `updated_at`) để chỉ lấy những dòng dữ liệu mới thêm hoặc mới sửa kể từ lần trích xuất trước đó.
-3. **Log-based Extraction (Trích xuất dựa trên Nhật ký)**: Đọc thẳng từ các file nhật ký giao dịch (như Binlog của MySQL) để nhận biết mọi sự kiện thay đổi (Insert/Update/Delete) theo thời gian thực.
+Mỗi nguồn này sử dụng một ngôn ngữ truy vấn, một giao thức truyền tin (HTTP, TCP, FTP) và các cơ chế bảo mật hoàn toàn khác nhau. Data Extraction sinh ra để đóng vai trò như một thông dịch viên đa năng, giao tiếp trôi chảy với từng nguồn này theo đúng quy tắc của chúng nhằm đưa dữ liệu ra ngoài một cách an toàn.
 
 ---
 
-## How it works
+## Kiến trúc và Các phương pháp trích xuất dữ liệu
 
-Dưới đây là cách hoạt động chi tiết của từng phương pháp:
-
-### 1. Full Extraction (Trích xuất toàn bộ)
-* Cơ chế: `SELECT * FROM table`.
-* Cách thức: Mỗi đêm, hệ thống ETL kết nối tới DB và tải về tất cả 10 triệu dòng của bảng `products`. Ở đích (Warehouse), bảng cũ bị xóa toàn bộ (`TRUNCATE`) và nạp lại bằng 10 triệu dòng mới này.
-* Đặc điểm: Rất đơn giản để code, không cần logic theo dõi phức tạp. Nó luôn đảm bảo dữ liệu ở đích giống hệt với nguồn. Tuy nhiên, nó lãng phí băng thông mạng cực kỳ nghiêm trọng và làm chậm DB nguồn. Chỉ dùng cho các bảng danh mục nhỏ (vd: Bảng `country`, `status_code`).
-
-### 2. Incremental Extraction (Trích xuất gia tăng)
-* Cơ chế: `SELECT * FROM table WHERE updated_at > {last_run_time}`.
-* Cách thức: Lần chạy đầu tiên lấy tất cả. Lần chạy thứ 2 (ví dụ ngày hôm sau), hệ thống ETL ghi nhớ con trỏ thời gian (High Watermark). Nó chỉ gửi truy vấn xin những dòng nào có cột `updated_at` lớn hơn thời điểm lưu trữ. 
-* Đặc điểm: Tiết kiệm băng thông, nhanh chóng. Nhưng nó bị mù tịt đối với **Dữ liệu bị xóa (Hard deletes)**. Nếu một nhân viên xóa một dòng trong bảng gốc, bản ghi đó biến mất, cột `updated_at` không còn tồn tại để báo cho hệ thống ETL biết. Data Warehouse sẽ vẫn giữ bản ghi đó mãi mãi (Ghost data).
-
-### 3. Log-based Extraction (Hay Change Data Capture - CDC)
-* Cơ chế: Hệ thống ETL giả làm một bản sao cơ sở dữ liệu dự phòng (replica) và đọc trực tiếp file nhật ký giao dịch (Write-Ahead Log / Binlog).
-* Cách thức: Mọi thao tác trên DB (INSERT, UPDATE, DELETE) đều được ghi vào Log trước. Hệ thống trích xuất đọc log này và truyền đi thành luồng sự kiện (stream).
-* Đặc điểm: Khắc phục hoàn toàn nhược điểm của Incremental (bắt được cả sự kiện Delete). Tốc độ cực nhanh (real-time). Tuy nhiên, thiết lập hệ thống CDC (như Debezium + Kafka) rất phức tạp và đòi hỏi quyền truy cập quản trị (Admin) vào DB nguồn.
-
-### 4. API Extraction (Trích xuất qua API)
-* Cơ chế: Gửi các HTTP GET requests (`curl https://api.stripe.com/v1/charges`).
-* Cách thức: Các hệ thống SaaS (Software as a Service) không cho phép bạn truy cập thẳng vào Database của họ. Bạn phải dùng API.
-* Đặc điểm: Cực kỳ phức tạp vì phải xử lý:
-  - **Pagination (Phân trang)**: Dữ liệu trả về hàng chục nghìn kết quả phải được bóc tách từng trang (Limit, Offset, Next Token).
-  - **Rate Limiting**: Nếu gọi API quá 50 lần/giây, bên nguồn sẽ chặn kết nối (Error 429 Too Many Requests). Bạn phải code logic Retry và Backoff (chờ đợi rồi gọi lại).
-
----
-
-## Architecture / Flow
+Để trích xuất dữ liệu, chúng ta thường phải cân nhắc lựa chọn giữa các phương pháp từ đơn giản đến phức tạp, tùy thuộc vào kích thước dữ liệu và yêu cầu hệ thống.
 
 ```mermaid
 graph TD
@@ -98,11 +53,33 @@ graph TD
     API -.->|"JSON / REST"| APIPull
 ```
 
+### 1. Trích xuất toàn bộ (Full Extraction)
+* **Cơ chế hoạt động**: Gửi câu lệnh đơn giản nhất `SELECT * FROM table`.
+* **Cách thực hiện**: Định kỳ (ví dụ mỗi đêm), hệ thống sẽ kết nối đến cơ sở dữ liệu và tải về toàn bộ nội dung của bảng (ví dụ bảng `products` có 10 triệu dòng). Ở kho lưu trữ đích, bảng cũ sẽ bị xóa sạch hoàn toàn (`TRUNCATE`) và nạp đè bằng dữ liệu mới tải về.
+* **Đánh giá**: Cách này cực kỳ dễ viết code, không cần logic theo dõi phức tạp và đảm bảo dữ liệu ở kho lưu trữ luôn khớp 100% với nguồn. Tuy nhiên, nó cực kỳ lãng phí băng thông và gây áp lực lớn lên ổ cứng (I/O) cũng như CPU của cơ sở dữ liệu nguồn. Do đó, phương pháp này chỉ nên áp dụng cho các bảng danh mục nhỏ, ít biến động (như danh sách tỉnh thành, mã trạng thái).
+
+### 2. Trích xuất gia tăng (Incremental Extraction)
+* **Cơ chế hoạt động**: Sử dụng câu lệnh lọc theo mốc thời gian: `SELECT * FROM table WHERE updated_at > {last_run_time}`.
+* **Cách thực hiện**: Ở lần chạy đầu tiên, hệ thống sẽ lấy toàn bộ dữ liệu. Ở các lần chạy tiếp theo, hệ thống sẽ ghi nhớ thời điểm cuối cùng đã trích xuất thành công (gọi là mốc chặn - *High Watermark*) và chỉ yêu cầu lấy những dòng dữ liệu có cột `updated_at` lớn hơn mốc này.
+* **Đánh giá**: Phương pháp này rất nhanh và tiết kiệm băng thông. Tuy nhiên, điểm yếu chí mạng của nó là **"bị mù" trước các lệnh xóa dữ liệu vật lý (Hard deletes)**. Nếu một bản ghi bị xóa hoàn toàn ở cơ sở dữ liệu nguồn, bản ghi đó biến mất nên cột `updated_at` cũng không còn tồn tại để báo cho pipeline biết. Kết quả là kho dữ liệu đích vẫn giữ bản ghi cũ đó mãi mãi (tạo ra dữ liệu ma - *Ghost data*).
+
+### 3. Trích xuất dựa trên Nhật ký (Log-based Extraction / Change Data Capture - CDC)
+* **Cơ chế hoạt động**: Hệ thống trích xuất sẽ đóng vai trò như một bản sao (replica) của cơ sở dữ liệu và đọc trực tiếp tệp nhật ký giao dịch ghi trên đĩa cứng (như Binlog của MySQL hoặc WAL của Postgres).
+* **Cách thực hiện**: Mọi hành động ghi dữ liệu (INSERT, UPDATE, DELETE) đều được ghi nhận vào file log trước khi cập nhật vào bảng. Hệ thống CDC sẽ liên tục đọc file log này và đẩy các sự kiện thay đổi đi dưới dạng luồng sự kiện (stream).
+* **Đánh giá**: Phương pháp này giải quyết triệt để bài toán Hard Deletes và hỗ trợ cập nhật dữ liệu theo thời gian thực (real-time). Tuy nhiên, việc cài đặt và vận hành hệ thống CDC (như Debezium kết hợp Kafka) lại cực kỳ phức tạp và đòi hỏi quyền quản trị cao nhất (Admin) trên cơ sở dữ liệu nguồn.
+
+### 4. Trích xuất qua cổng API (API Extraction)
+* **Cơ chế hoạt động**: Gửi yêu cầu HTTP GET đến dịch vụ (ví dụ: `GET https://api.stripe.com/v1/charges`).
+* **Cách thực hiện**: Đối với các ứng dụng SaaS bên thứ ba, chúng ta không thể truy cập trực tiếp vào cơ sở dữ liệu của họ mà bắt buộc phải đi qua cổng API do họ cung cấp.
+* **Đánh giá**: Việc viết code trích xuất qua API khá phức tạp vì phải xử lý:
+  - **Phân trang (Pagination)**: Dữ liệu lớn phải được chia nhỏ ra thành nhiều trang. Code phải tự động lặp để lấy từng trang thông qua các tham số như Limit, Offset hoặc Token.
+  - **Giới hạn lượt gọi (Rate Limiting)**: Nếu gọi API quá tần suất cho phép, hệ thống nguồn sẽ chặn kết nối và trả về lỗi `429 Too Many Requests`. Bạn phải thiết kế cơ chế tự động chờ đợi (Backoff) và thử lại (Retry).
+
 ---
 
-## Practical example
+## Ví dụ thực tế: Code trích xuất phân trang từ API bằng Python
 
-Ví dụ một hàm trích xuất dữ liệu phân trang từ API sử dụng Python:
+Dưới đây là một đoạn code Python minh họa cách trích xuất dữ liệu từ một API có phân trang, đồng thời xử lý lỗi giới hạn lượt gọi (Rate Limit):
 
 ```python
 import requests
@@ -141,75 +118,57 @@ def extract_users_from_api(api_key):
 
 ---
 
-## Best practices
+## Sai lầm thường gặp và Best Practices
 
-* **Ưu tiên Incremental và CDC**: Trừ khi bảng dữ liệu là bảng danh mục tĩnh có kích thước rất nhỏ (như Danh sách quốc gia, tỷ giá), hãy luôn sử dụng phương pháp Incremental hoặc CDC để tiết kiệm thời gian chạy job và giảm chi phí I/O.
-* **Theo dõi (Monitor) hệ thống nguồn**: Khi chạy lệnh trích xuất khối lượng lớn (Batch Extract), hãy theo dõi xem chỉ số CPU và I/O của cơ sở dữ liệu nguồn có bị tăng vọt (spike) không. Luôn đọc dữ liệu từ một bản sao (Read Replica) thay vì cơ sở dữ liệu chính yếu (Primary DB) để tránh làm sập hệ thống thanh toán của khách hàng.
-* **Xử lý khóa chính (Primary Key)**: Luôn phải đảm bảo rằng nguồn bạn trích xuất có một hoặc nhiều cột đóng vai trò là Khóa Chính duy nhất. Nếu không có, bạn sẽ không thể thực hiện Upsert/Merge ở bước Load và dữ liệu của bạn ở DWH sẽ bị nhân đôi.
+### Các nguyên tắc vàng (Best Practices)
+* **Ưu tiên phương pháp Incremental và CDC**: Ngoại trừ các bảng cấu hình nhỏ, hãy cố gắng áp dụng trích xuất gia tăng hoặc CDC để giảm tải tối đa cho hệ thống nguồn và tiết kiệm tài nguyên mạng.
+* **Đọc dữ liệu từ bản sao (Read Replica)**: Luôn kết nối công cụ trích xuất dữ liệu đến máy chủ Read Replica thay vì máy chủ chính (Primary DB) nhằm tránh nguy cơ làm chậm hoặc sập hệ thống ứng dụng đang chạy thực tế.
+* **Kiểm tra Khóa chính (Primary Key)**: Đảm bảo bảng nguồn có các khóa chính rõ ràng để ở bước nạp dữ liệu (Load), hệ thống đích có thể thực hiện so khớp dữ liệu (`Upsert/Merge`), tránh tình trạng trùng lặp bản ghi.
 
----
-
-## Common mistakes
-
-* **Tin tưởng tuyệt đối vào API bên thứ ba**: Cấu trúc JSON trả về từ các API của Facebook, Shopify có thể thay đổi âm thầm bất cứ lúc nào (Schema drift). Code trích xuất cứng nhắc sẽ bị vỡ. Cần phải trích xuất và nạp dữ liệu dưới dạng chuỗi JSON thô (Raw string) vào Data Warehouse trước, rồi mới dùng SQL để bung JSON ra ở bước Transform (Mô hình ELT).
-* **Bỏ qua Hard Deletes**: Dùng phương pháp Incremental `updated_at` nhưng khách hàng có tính năng xóa tài khoản vĩnh viễn trên web. Kết quả là DB nguồn xóa tài khoản, nhưng báo cáo BI vẫn hiện tài khoản đó đang có doanh thu vì lệnh Extract không biết việc xóa đã diễn ra. (Giải pháp: Chuyển DB sang Soft Delete - thêm cột `is_deleted = true`, hoặc dùng CDC).
+### Những sai lầm thường gặp (Common Pitfalls)
+* **Quá tin tưởng vào cấu trúc API bên thứ ba**: Cấu trúc dữ liệu JSON trả về từ các API (như Facebook hay Shopify) có thể thay đổi bất ngờ mà không báo trước (`Schema drift`). Nếu viết code bóc tách quá cứng nhắc, pipeline sẽ bị lỗi ngay lập tức. Cách tiếp cận tốt hơn là trích xuất và nạp nguyên bản chuỗi JSON thô vào Data Warehouse, sau đó mới dùng SQL để xử lý ở bước Transform sau (mô hình ELT).
+* **Bỏ quên việc xử lý xóa dữ liệu (Hard Deletes)**: Sử dụng Incremental dựa vào mốc `updated_at` nhưng lại không xử lý trường hợp người dùng xóa tài khoản trên hệ thống. Hậu quả là tài khoản bị xóa trên nguồn nhưng báo cáo phân tích vẫn hiển thị họ tạo ra doanh thu vì hệ thống trích xuất không nhận biết được hành động xóa.
 
 ---
 
-## Trade-offs
+## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-* **Full Extraction**:
-  * *Ưu điểm*: Đơn giản nhất, an toàn, giải quyết bài toán Hard Deletes triệt để (bảng đích luôn giống bảng nguồn 100%).
-  * *Nhược điểm*: Chạy quá chậm, tốn băng thông, không thể áp dụng cho các bảng có hàng tỷ dòng.
-* **Incremental Extraction**:
-  * *Ưu điểm*: Nhanh, nhẹ, dễ cài đặt bằng SQL.
-  * *Nhược điểm*: Mù lòa với Hard Deletes, phụ thuộc vào việc hệ thống nguồn bắt buộc phải có và cập nhật đúng cột `updated_at`.
-* **Log-based CDC**:
-  * *Ưu điểm*: Tốc độ real-time, lấy được trạng thái mọi thao tác (Insert/Update/Delete).
-  * *Nhược điểm*: Phức tạp nhất để thiết lập, yêu cầu cài đặt phần mềm trực tiếp lên máy chủ DB.
+| Phương pháp | Ưu điểm | Nhược điểm | Trường hợp sử dụng |
+| :--- | :--- | :--- | :--- |
+| **Full Extraction** | Đơn giản, an toàn, xử lý Hard Deletes triệt để. | Chậm, tốn băng thông, không khả thi với dữ liệu lớn. | Bảng cấu hình, danh mục nhỏ (< 100MB). |
+| **Incremental Extraction** | Nhanh, nhẹ, dễ cài đặt bằng các câu lệnh SQL. | "Mù" trước Hard Deletes, phụ thuộc vào cột timestamp nguồn. | Bảng dữ liệu lớn có cột thời gian rõ ràng. |
+| **Log-based CDC** | Tốc độ thời gian thực, bắt được mọi hành vi bao gồm cả Delete. | Cài đặt và vận hành rất phức tạp, đòi hỏi quyền Admin DB. | Hệ thống giao dịch lớn cần độ trễ thấp. |
 
 ---
 
-## When to use
-
-* Bước khởi đầu bắt buộc của mọi Data Pipeline trước khi thực hiện Transform hay Load.
-
-## When not to use
-
-* Nếu một hệ thống chia sẻ cùng một môi trường Data Warehouse với hệ thống ứng dụng (ví dụ cả App và BI cùng đọc chung một database), không cần bước Extract vật lý qua mạng. Có thể thực hiện Transform thẳng qua View (Tuy nhiên mô hình này rất hiếm và dễ sập ở các hệ thống lớn).
-
----
-
-## Related concepts
-
-* [Incremental Load](/concepts/incremental-load)
-* [Change Data Capture (CDC)](/concepts/change-data-capture)
-* [Data Ingestion](/concepts/data-ingestion)
-* [ETL](/concepts/etl)
-
----
-
-## Interview questions
+## Góc phỏng vấn: Những câu hỏi thường gặp
 
 ### 1. Nêu 3 chiến lược chính để trích xuất dữ liệu từ một cơ sở dữ liệu quan hệ. Bạn sẽ chọn chiến lược nào cho một bảng có 500 triệu dòng?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức tổng quát về Data Extraction và khả năng chọn giải pháp cho Big Data.
-* **Gợi ý trả lời (Strong Answer)**: 
-  3 chiến lược là Full Load (Lấy toàn bộ), Incremental Load qua cột thời gian (Watermark), và Log-based CDC (Bắt thay đổi qua Binlog). Đối với bảng 500 triệu dòng, **Tuyệt đối không dùng Full Load** vì việc quét 500 triệu dòng mỗi ngày sẽ làm sập DB và tốn hàng chục giờ. Tùy theo yêu cầu độ trễ: Nếu yêu cầu batch hàng ngày, tôi sẽ dùng Incremental Load qua cột `updated_at`. Nếu bảng có tính năng hard delete hoặc yêu cầu near real-time, tôi sẽ sử dụng Log-based CDC (như Debezium) để đọc binlog.
+* **Mục đích của người phỏng vấn**: Đánh giá hiểu biết tổng quan về Data Extraction và khả năng lựa chọn kiến trúc phù hợp cho các bài toán dữ liệu lớn.
+* **Gợi ý trả lời**: Ba chiến lược chính là Full Load (Lấy toàn bộ), Incremental Load qua cột thời gian (Watermark), và Log-based CDC. Đối với một bảng có kích thước lên đến 500 triệu dòng, **tuyệt đối không dùng Full Load** vì việc quét toàn bộ bảng mỗi ngày sẽ làm tê liệt cơ sở dữ liệu nguồn. Tùy thuộc vào yêu cầu nghiệp vụ: Nếu chỉ cần cập nhật dữ liệu dạng lô (batch) hàng ngày, tôi chọn Incremental Load dựa trên cột mốc `updated_at`. Nếu hệ thống yêu cầu độ trễ cực thấp (near real-time) hoặc có nhiều thao tác xóa vật lý (hard delete), tôi sẽ triển khai Log-based CDC (như Debezium) để đọc trực tiếp file nhật ký giao dịch.
 
-### 2. API Pagination là gì? Tại sao nó là một thách thức lớn trong Data Extraction?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm thực chiến làm việc với API.
-* **Gợi ý trả lời (Strong Answer)**:
-  Pagination (phân trang) là cơ chế API chia nhỏ khối lượng dữ liệu khổng lồ thành các trang nhỏ (ví dụ 100 kết quả/trang) để tránh quá tải máy chủ. Thách thức lớn là kỹ sư dữ liệu phải viết một vòng lặp (while-loop) theo dõi khóa trang tiếp theo (next cursor/offset). Nếu trong lúc vòng lặp đang chạy ở trang 50 mà kết nối mạng bị rớt (timeout), hệ thống extraction nếu code không tốt sẽ phải gọi lại API từ trang 1, dẫn tới trùng lặp dữ liệu hoặc bị API chặn vì gọi quá nhiều lần. Việc quản lý trạng thái (state management) khi lặp qua API là bài toán phức tạp nhất khi viết các Custom Connector.
+### 2. API Pagination là gì và tại sao nó lại là thử thách lớn đối với kỹ sư dữ liệu?
+* **Mục đích của người phỏng vấn**: Kiểm tra kinh nghiệm thực tế khi làm việc với các hệ thống SaaS API bên ngoài.
+* **Gợi ý trả lời**: Phân trang (Pagination) là cơ chế các nhà cung cấp API chia nhỏ lượng dữ liệu khổng lồ thành nhiều trang kết quả nhỏ hơn (ví dụ 100 dòng mỗi trang) để tránh làm quá tải máy chủ của họ. Thách thức lớn nhất là kỹ sư dữ liệu phải viết một vòng lặp theo dõi con trỏ trang kế tiếp (next cursor/offset). Nếu trong lúc vòng lặp đang chạy ở trang thứ 50 mà kết nối mạng bị ngắt quãng, nếu code xử lý trạng thái (state management) không tốt, hệ thống sẽ phải chạy lại từ trang 1, gây ra trùng lặp dữ liệu hoặc bị khóa tài khoản do vượt giới hạn Rate Limit.
 
----
+### 3. Làm thế nào để bạn phát hiện sự thay đổi cấu trúc bảng (Schema Drift) từ hệ thống nguồn khi thực hiện Data Extraction?
+* **Gợi ý trả lời**:
+  * **Giải pháp 1 (Schema Validation)**: Sử dụng một lớp Schema Validation (như JSON Schema hoặc Great Expectations) để kiểm tra tính hợp lệ của schema trước khi tải. Nếu phát hiện trường dữ liệu mới hoặc kiểu dữ liệu bị thay đổi, hệ thống sẽ gửi cảnh báo (Alert) cho kỹ sư dữ liệu hoặc tự động cách ly (Quarantine) các bản ghi lỗi.
+  * **Giải pháp 2 (ELT Pattern)**: Áp dụng mô hình ELT bằng cách trích xuất dữ liệu thô (Raw Data) dưới định dạng bán cấu trúc như JSON/semi-structured, lưu trữ nguyên trạng vào Landing Zone (Data Lake hoặc Stage Table của DWH). Việc phân tích cấu trúc cụ thể sẽ được trì hoãn và xử lý bằng các công cụ biến đổi dữ liệu (như dbt) trong Data Warehouse. Điều này giúp Pipeline trích xuất không bị gián đoạn khi có Schema Drift nhẹ.
 
-## References
+## Đọc thêm và Tài liệu tham khảo
 
+### Các khái niệm liên quan
+* [ETL (Extract - Transform - Load)](/concepts/etl) - Quy trình tích hợp dữ liệu truyền thống.
+* [ELT (Extract - Load - Transform)](/concepts/elt) - Quy trình tích hợp dữ liệu hiện đại trên Cloud DWH.
+* [Change Data Capture (CDC)](/concepts/change-data-capture) - Phương pháp trích xuất dữ liệu real-time qua nhật ký.
+
+### Tài liệu tham khảo chính thống
 1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley.
-2. **Airbyte Documentation** - "Understanding Full Refresh vs Incremental Syncs".
+2. **Airbyte Documentation** - Tài liệu hướng dẫn chi tiết về "Full Refresh vs Incremental Syncs".
 
 ---
 
-## English summary
+## Tóm tắt bằng tiếng Anh (English Summary)
 
-Data Extraction is the initial phase in the ETL/ELT pipeline where raw data is pulled from source systems (Databases, SaaS APIs, Logs) to a centralized storage. Depending on data volume and latency requirements, engineers choose between Full Extraction (replicating the entire table, suitable for small reference data), Incremental Extraction (querying only new/updated rows using timestamps, efficient but misses hard deletes), and Log-based Change Data Capture (CDC) (reading database transaction logs for real-time, exact replica streams). Working with external APIs presents additional extraction challenges such as pagination and rate-limiting.
+**Data Extraction** is the initial phase in the ETL/ELT pipeline where raw data is pulled from source systems (Databases, SaaS APIs, Logs) to a centralized storage. Depending on data volume and latency requirements, engineers choose between Full Extraction (replicating the entire table, suitable for small reference data), Incremental Extraction (querying only new/updated rows using timestamps, efficient but misses hard deletes), and Log-based Change Data Capture (CDC) (reading database transaction logs for real-time, exact replica streams). Working with external APIs presents additional extraction challenges such as pagination and rate-limiting.

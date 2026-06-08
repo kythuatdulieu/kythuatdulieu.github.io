@@ -9,58 +9,46 @@ seoTitle: "Data Pipeline là gì? Cấu trúc và Kiến trúc Đường ống D
 metaDescription: "Khám phá Data Pipeline: định nghĩa, các thành phần cốt lõi (Extract, Transform, Load), và sự khác biệt giữa xử lý Batch vs Streaming."
 ---
 
-# Đường ống Dữ liệu - Data Pipeline
+# Đường ống dữ liệu (Data Pipeline): Hệ tuần hoàn nuôi dưỡng hệ sinh thái thông tin
 
-## Summary
+Hãy tưởng tượng dữ liệu trong doanh nghiệp giống như những dòng nước. Nếu không có hệ thống đường ống dẫn nước tự động, sạch sẽ và an toàn, nhân viên của bạn sẽ phải xách từng xô nước từ các nguồn sông hồ khác nhau về nhà để tự lọc và sử dụng. Quá trình thủ công này không chỉ tốn thời gian, dễ gây ô nhiễm mà còn không thể đáp ứng được nhu cầu sử dụng quy mô lớn của cả một thành phố.
 
-Đường ống dữ liệu (Data Pipeline) là một tập hợp các quy trình và công cụ tự động để vận chuyển dữ liệu từ hệ thống nguồn (Source) đến hệ thống đích (Destination), đồng thời thực hiện các thao tác làm sạch, biến đổi và tổng hợp trên đường đi. Data pipeline chính là "hệ tuần hoàn" trong mọi kiến trúc nền tảng dữ liệu, đảm bảo dữ liệu đến đúng nơi, đúng lúc và đúng định dạng.
-
----
-
-## Definition
-
-**Data Pipeline** là chuỗi các bước xử lý dữ liệu tự động. Mỗi bước trong pipeline nhận dữ liệu đầu vào (input) từ bước trước, áp dụng một hoặc nhiều thao tác xử lý, và chuyển kết quả (output) sang bước tiếp theo. Quá trình nổi tiếng nhất trong Data Pipeline là ETL (Extract, Transform, Load) hoặc biến thể của nó là ELT.
-
-Một pipeline không chỉ vận chuyển dữ liệu mà còn bao gồm các cơ chế kiểm tra lỗi, xử lý lại (retry logic), và cảnh báo (alerting) để đảm bảo độ tin cậy.
+**Đường ống dữ liệu (Data Pipeline)** chính là hệ thống dẫn nước tự động hóa đó, đóng vai trò như "hệ tuần hoàn" bơm dòng máu thông tin đi nuôi dưỡng toàn bộ các hoạt động phân tích và ra quyết định của doanh nghiệp.
 
 ---
 
-## Why it exists
+## Data Pipeline thực chất là gì?
 
-Dữ liệu thô từ hệ thống nguồn hiếm khi ở trạng thái sẵn sàng để phân tích ngay lập tức. 
-1. **Thiếu sự tự động hóa**: Nếu không có pipeline, một chuyên viên phân tích sẽ phải tự tải file CSV hàng ngày, làm sạch thủ công bằng Excel, và tạo báo cáo. Quá trình này dễ sai sót và không thể mở rộng.
-2. **Nhu cầu đồng bộ (Integration)**: Để có báo cáo kinh doanh toàn cảnh, dữ liệu từ CRM (Salesforce) phải được hợp nhất (Join) với dữ liệu thanh toán (Stripe). Data pipeline tự động hóa sự tích hợp này.
-3. **Độ tin cậy và Khả năng chịu lỗi**: Máy chủ nguồn có thể sập mạng, file tải về có thể lỗi định dạng. Một Pipeline chuẩn có cơ chế tự phục hồi (resilience) mà việc copy-paste thủ công không thể có được.
+**Đường ống dữ liệu (Data Pipeline)** là một tập hợp các quy trình tự động hóa được thiết lập để vận chuyển dữ liệu từ các hệ thống nguồn (Sources - nơi sinh ra dữ liệu ban đầu) đến hệ thống đích (Destination - nơi lưu trữ dữ liệu phân tích), đồng thời thực hiện các bước lọc sạch, biến đổi định dạng và tổng hợp thông tin trên đường đi.
 
----
-
-## Core idea
-
-Các thành phần cốt lõi của một Data Pipeline:
-* **Extract (Trích xuất)**: Kéo dữ liệu ra khỏi hệ thống vận hành.
-* **Transform (Biến đổi)**: Làm sạch, lọc bỏ dữ liệu rỗng, chuyển đổi múi giờ, che dấu dữ liệu nhạy cảm (data masking), và kết hợp nhiều bảng lại với nhau.
-* **Load (Nạp)**: Lưu dữ liệu đã xử lý vào Data Warehouse hoặc Data Lake.
-* **Orchestration (Điều phối)**: "Bộ não" quản lý luồng chạy, quy định khi nào task A chạy, nếu A xong thì chạy B, nếu B lỗi thì chạy C. (Tiêu biểu: Apache Airflow, Dagster).
-
-Hai mô hình thời gian chạy:
-* **Batch Pipeline**: Chạy định kỳ (mỗi giờ, mỗi ngày). Phù hợp cho báo cáo lịch sử.
-* **Streaming Pipeline**: Xử lý dữ liệu liên tục theo thời gian thực (real-time). Phù hợp cho hệ thống phát hiện gian lận (Fraud detection).
+Trái tim của hầu hết các Data Pipeline là quy trình **Trích xuất, biến đổi và nạp dữ liệu (ETL - Extract, Transform, Load)** hoặc biến thể hiện đại của nó là **ELT (Extract, Load, Transform)**. Một đường ống dẫn dữ liệu chuẩn chỉnh không chỉ làm nhiệm vụ di chuyển các byte thông tin, mà còn phải tích hợp sẵn các cơ chế kiểm tra chất lượng, tự động thử lại khi mất mạng (retry logic) và cảnh báo tức thì khi xảy ra lỗi.
 
 ---
 
-## How it works
+## Tại sao doanh nghiệp cần xây dựng Data Pipeline?
 
-Cách thức hoạt động của một Batch ETL Pipeline điển hình:
-1. **Trigger**: Bộ điều phối (Scheduler) kích hoạt pipeline vào 2:00 AM mỗi ngày.
-2. **Extract Task**: Chạy script Python kết nối vào cơ sở dữ liệu MySQL, trích xuất các bản ghi của ngày hôm trước, và lưu tạm dưới dạng file `.parquet` vào một bucket S3 (Staging Area).
-3. **Load Task**: Nạp dữ liệu thô từ file Parquet vào một bảng thô (Raw Table) trong Snowflake.
-4. **Transform Task**: Sử dụng công cụ như `dbt` chạy câu lệnh SQL biến đổi dữ liệu từ bảng thô, ghép với bảng danh mục, tính tổng doanh thu, và đẩy kết quả vào bảng phục vụ (Data Mart).
-5. **Quality Check**: Chạy một truy vấn để kiểm tra xem có trường hợp nào `doanh_thu < 0` không. Nếu có, gửi cảnh báo qua Slack.
-6. **Completion**: Đánh dấu pipeline hoàn thành.
+Nếu thiếu đi hệ thống đường ống tự động, doanh nghiệp sẽ phải đối mặt với nhiều rào cản lớn:
+
+* **Sự thiếu hiệu quả của các quy trình thủ công**: Nhân viên phân tích phải tải các file Excel/CSV từ nhiều hệ thống hàng ngày, dùng hàm Excel để gộp dữ liệu bằng tay rồi mới vẽ biểu đồ báo cáo. Quy trình này tốn hàng giờ làm việc lặp đi lặp lại và cực kỳ dễ xảy ra sai sót do con người.
+* **Nhu cầu hợp nhất dữ liệu từ nhiều nguồn**: Để có được bức tranh toàn cảnh về hiệu quả kinh doanh, bạn cần kết hợp dữ liệu giao dịch từ cơ sở dữ liệu MySQL với dữ liệu chiến dịch quảng cáo từ API của Facebook Ads. Data Pipeline giúp tự động hóa việc kết nối và ghép nối (JOIN) các nguồn dữ liệu này lại với nhau.
+* **Khả năng chịu lỗi và tự khôi phục**: Hệ thống nguồn có thể bị mất mạng đột ngột hoặc file gửi qua API bị sai định dạng. Việc copy-paste thủ công không thể tự phát hiện lỗi, trong khi một pipeline kỹ thuật sẽ tự động cách ly dữ liệu lỗi, ghi nhận log và cảnh báo cho kỹ sư vào cuộc xử lý.
 
 ---
 
-## Architecture / Flow
+## Các thành phần cốt lõi của một Data Pipeline
+
+Một đường ống dữ liệu hoàn chỉnh thường được cấu thành từ 4 mảnh ghép chính:
+
+* **Trích xuất (Extract)**: Kết nối và rút dữ liệu ra khỏi các hệ thống vận hành.
+* **Biến đổi (Transform)**: Làm sạch dữ liệu, xử lý giá trị rỗng, chuẩn hóa định dạng thời gian, che giấu thông tin nhạy cảm (data masking) và gộp các bảng dữ liệu lại.
+* **Nạp dữ liệu (Load)**: Ghi dữ liệu sạch vào kho lưu trữ (Kho dữ liệu - Data Warehouse hoặc Hồ dữ liệu - Data Lake).
+* **Điều phối (Orchestration)**: Bộ não điều khiển toàn bộ luồng chạy của pipeline. Nó quyết định công việc A chạy lúc nào, sau khi A chạy xong thì kích hoạt công việc B, và nếu công việc B bị lỗi thì gửi thông báo cảnh báo về hệ thống Slack của đội dữ liệu (ví dụ dùng Apache Airflow hoặc Dagster).
+
+---
+
+## Kiến trúc và Cơ chế hoạt động
+
+Dưới đây là mô hình sơ đồ dòng chảy dữ liệu được điều phối bởi công cụ Apache Airflow:
 
 ```mermaid
 graph LR
@@ -82,10 +70,10 @@ graph LR
         O[Apache Airflow]
     end
 
-    O -.->|Schedules & Monitors| E
-    O -.->|Schedules & Monitors| T1
-    O -.->|Schedules & Monitors| T2
-    O -.->|Schedules & Monitors| L
+    O -.->|Schedules and Monitors| E
+    O -.->|Schedules and Monitors| T1
+    O -.->|Schedules and Monitors| T2
+    O -.->|Schedules and Monitors| L
 
     subgraph Destination
         DWH[Data Warehouse]
@@ -98,106 +86,98 @@ graph LR
 
 ---
 
-## Practical example
+## Ví dụ thực tế: Cấu hình DAG trong Apache Airflow bằng Python
 
-Một ví dụ mã nguồn (Python giả mã) sử dụng Airflow (DAG) định nghĩa Pipeline:
+Đoạn code Python dưới đây định nghĩa một quy trình điều phối pipeline hàng ngày (daily sales pipeline) bao gồm 3 bước: Extract, Transform và Load:
 
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
-# Định nghĩa các hàm xử lý
+# Định nghĩa các hàm xử lý cho từng Task
 def extract_data():
     print("Extracting data from API...")
-    # Code kéo API
+    # Code kết nối API và trích xuất dữ liệu thô
 
 def transform_data():
     print("Cleaning and standardizing data...")
-    # Code xử lý pandas hoặc Spark
+    # Code xử lý dữ liệu bằng pandas hoặc Spark
 
 def load_data():
     print("Loading data into PostgreSQL DWH...")
-    # Code INSERT vào Database
+    # Code nạp dữ liệu sạch vào Data Warehouse
 
-# Khởi tạo DAG
+# Khởi tạo luồng điều phối DAG
 with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_interval='@daily') as dag:
     
     t1 = PythonOperator(task_id='extract', python_callable=extract_data)
     t2 = PythonOperator(task_id='transform', python_callable=transform_data)
     t3 = PythonOperator(task_id='load', python_callable=load_data)
 
-    # Định nghĩa luồng phụ thuộc (Dependency)
+    # Thiết lập thứ tự chạy: t1 -> t2 -> t3
     t1 >> t2 >> t3
 ```
-Đoạn code trên định nghĩa `t1` chạy trước, thành công mới chạy `t2`, và sau đó là `t3`.
 
 ---
 
-## Best practices
+## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-* **Thiết kế theo Module (Modularity)**: Tách các bước Extract, Transform, Load thành các module độc lập. Nếu phần Transform bị lỗi, ta chỉ cần chạy lại Transform mà không phải đi trích xuất (Extract) lại từ đầu.
-* **Idempotency**: Như đã nhắc ở bài trước, pipeline phải có khả năng chạy lại nhiều lần an toàn, tạo ra kết quả y hệt thay vì nhân đôi dữ liệu.
-* **Quản lý cấu hình (Configuration-driven)**: Không hard-code các thông tin như database credentials, đường dẫn file vào trong code pipeline. Hãy dùng biến môi trường (Environment Variables) hoặc file cấu hình (YAML/JSON).
-* **Logging & Alerting đầy đủ**: Ghi log mọi thứ (bắt đầu lúc mấy giờ, xử lý bao nhiêu dòng) và gắn cảnh báo tự động khi pipeline fail.
+### Ưu điểm (Pros):
+* **Tự động hóa quy trình**: Giúp loại bỏ hoàn toàn các bước lặp đi lặp lại bằng tay, tiết kiệm nguồn lực cho doanh nghiệp.
+* **Nhất quán và chất lượng dữ liệu**: Việc tự động hóa tích hợp các bước kiểm thử dữ liệu (Data Quality) đảm bảo dữ liệu đưa vào kho phân tích luôn sạch và chuẩn hóa.
+* **Hợp nhất dữ liệu toàn diện**: Phá vỡ các silo dữ liệu, kết nối và tổng hợp thông tin từ nhiều nguồn ứng dụng khác nhau về một nơi duy nhất.
+* **Tính mở rộng và tin cậy**: Dễ dàng nâng cấp để xử lý lượng dữ liệu lớn hơn mà không cần thay đổi cấu trúc cốt lõi của đường ống.
 
----
-
-## Common mistakes
-
-* **Quên xử lý Late Data**: Trong môi trường thực tế, dữ liệu có thể đến trễ (ví dụ: người dùng dùng app offline, 2 ngày sau mới có mạng để đồng bộ dữ liệu về server). Nếu pipeline chỉ quét dữ liệu sinh ra của ngày hôm qua (dựa trên giờ server nhận) mà không xử lý các luồng dữ liệu trễ hạn này, báo cáo sẽ bị sai.
-* **Chạy các truy vấn nặng trực tiếp trên Source**: Thiết kế pipeline làm cho quá trình Extract ngốn quá nhiều CPU làm chậm hệ thống nguồn.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* Tính tự động hóa cao, mở khóa sức mạnh phân tích liên tục.
-* Đảm bảo tính nhất quán của số liệu qua nhiều bộ phận kinh doanh.
-
-### Nhược điểm
-* Việc bảo trì pipeline tốn rất nhiều công sức (Maintenance Hell). Khi hệ thống nguồn đổi cấu trúc (schema change), pipeline sẽ bị "gãy" và cần Kỹ sư can thiệp ngay lập tức.
-* Sự gia tăng phức tạp: Khi số lượng pipeline lên tới hàng trăm, việc quản lý sự phụ thuộc (dependency) giữa chúng là một ác mộng nếu không có hệ thống Orchestration tốt.
+### Đánh đổi và Thách thức (Cons & Trade-offs):
+* **Chi phí hạ tầng và vận hành**: Việc duy trì các máy chủ điều phối (Orchestrator) và cơ sở hạ tầng mạng, tính toán cần một khoản đầu tư định kỳ đáng kể.
+* **Độ phức tạp khi gỡ lỗi (Debugging)**: Khi một pipeline lớn bị lỗi, việc dò tìm nguyên nhân trong một mạng lưới các tác vụ phụ thuộc lẫn nhau có thể tốn nhiều thời gian.
+* **Yêu cầu kỹ năng chuyên môn**: Đòi hỏi kỹ sư dữ liệu phải có kiến thức lập trình tốt và hiểu sâu về hệ thống cơ sở dữ liệu phân tán.
 
 ---
 
-## When to use
+## Sai lầm thường gặp và Best Practices
 
-* Luôn luôn cần thiết trong bất kỳ tổ chức nào muốn xây dựng kho dữ liệu (Data Warehouse/Lake) và báo cáo BI tự động.
+### Những sai lầm phổ biến (Common Pitfalls)
+* **Bỏ quên dữ liệu đến trễ (Late Data)**: Trong thực tế, nhiều hệ thống ngoại tuyến (như ứng dụng ghi nhận đơn hàng trên thiết bị cầm tay của shipper) có thể hoạt động offline và chỉ đồng bộ dữ liệu về máy chủ sau 1-2 ngày khi có mạng. Nếu pipeline của bạn chỉ quét dữ liệu dựa trên thời gian server nhận, bạn sẽ bỏ sót các đơn hàng đến trễ này, dẫn đến báo cáo doanh thu bị sai lệch.
+* **Gây tải nặng lên hệ thống nguồn khi trích xuất**: Chạy các câu truy vấn SELECT JOIN quá nặng nề trên cơ sở dữ liệu giao dịch của ứng dụng trong giờ cao điểm, làm chậm hoặc sập trang web bán hàng của công ty.
 
-## When not to use
-
-* Khi tổ chức chỉ cần xem các báo cáo trực tiếp từ một ứng dụng độc lập (ví dụ: xem dashboard có sẵn bên trong Google Analytics mà không cần kết hợp dữ liệu ngoài).
-
----
-
-## Related concepts
-
-* [Source Systems](/concepts/source-systems)
-* [Data Engineering](/concepts/data-engineering)
+### Best Practices khi thiết kế Pipeline
+* **Thiết kế dạng Module hóa (Modularity)**: Tách biệt hoàn toàn các bước Extract, Transform và Load thành các tác vụ độc lập. Nếu bước Transform bị lỗi logic, bạn chỉ cần sửa code và chạy lại riêng bước Transform đó chứ không cần phải mất thời gian kết nối API để trích xuất (Extract) lại dữ liệu thô từ đầu.
+* **Đảm bảo tính lũy đẳng (Idempotency)**: Pipeline của bạn phải được thiết kế sao cho dù có bị lỗi mạng giữa chừng và chạy lại nhiều lần, kết quả cuối cùng trong bảng đích vẫn không đổi và không bị trùng lặp số liệu.
+* **Quản lý cấu hình linh hoạt (Configuration-driven)**: Tuyệt đối không ghi cứng (hard-code) tài khoản đăng nhập database, IP máy chủ hay đường dẫn file trực tiếp vào code. Hãy sử dụng các biến môi trường hoặc các file cấu hình như YAML/JSON.
+* **Ghi nhận Log và Cảnh báo chi tiết**: Luôn lưu log cho mọi bước chạy (chạy từ mấy giờ, xử lý bao nhiêu dòng, có cảnh báo nào không) để dễ dàng gỡ lỗi khi gặp sự cố.
 
 ---
 
-## Interview questions
+## Góc phỏng vấn
 
-### 1. Phân biệt Batch Pipeline và Streaming Pipeline.
+### 1. Hãy phân biệt sự khác nhau giữa Batch Pipeline và Streaming Pipeline?
 * **Gợi ý trả lời**:
-  * **Batch Pipeline**: Thu thập và xử lý một khối lượng lớn dữ liệu (một "lô") tại các khoảng thời gian cố định (ví dụ: mỗi đêm lúc 2h sáng). Nó có độ trễ (latency) cao tính bằng giờ/ngày nhưng tối ưu tốt về băng thông và dễ quản lý.
-  * **Streaming Pipeline**: Xử lý các dòng dữ liệu nhỏ lẻ (event) ngay khi chúng vừa được tạo ra. Nó có độ trễ cực thấp (tính bằng milliseconds) nhưng thiết kế phức tạp hơn, đòi hỏi công cụ đặc thù như Kafka, Flink và xử lý khó khăn hơn trong việc join dữ liệu và late data.
+  * **Batch Pipeline**: Thu thập và xử lý dữ liệu theo từng lô lớn tại các thời điểm định sẵn trong ngày (ví dụ: mỗi đêm lúc 2h sáng). Phương pháp này có độ trễ cao (vài giờ đến 1 ngày) nhưng tối ưu băng thông mạng tốt, dễ thiết kế, quản lý lỗi và khôi phục khi gặp sự cố.
+  * **Streaming Pipeline**: Xử lý dữ liệu liên tục theo từng bản ghi (event-by-event) ngay khi chúng phát sinh. Phương pháp này có độ trễ cực thấp (tính bằng mili-giây) nhưng thiết kế rất phức tạp, đòi hỏi các công cụ chuyên dụng như Kafka, Flink và gặp nhiều thử thách khi xử lý dữ liệu đến trễ hay việc ghép nối (JOIN) các luồng dữ liệu thời gian thực.
 
-### 2. DAG là gì trong ngữ cảnh của Data Pipeline?
-* **Gợi ý trả lời**: DAG viết tắt của Directed Acyclic Graph (Đồ thị có hướng không có chu trình). Trong các công cụ Orchestration như Airflow, DAG được dùng để biểu diễn các tác vụ (tasks) trong pipeline. Có hướng (Directed) nghĩa là task A phải chạy trước task B. Không có chu trình (Acyclic) nghĩa là không được phép xảy ra vòng lặp vô tận (ví dụ A phụ thuộc B, B lại phụ thuộc A), đảm bảo pipeline luôn có điểm khởi đầu và điểm kết thúc.
+### 2. Khái niệm DAG có nghĩa là gì trong các công cụ điều phối đường ống dữ liệu (Orchestration)?
+* **Gợi ý trả lời**: DAG viết tắt của **Directed Acyclic Graph** (Đồ thị có hướng không chu trình).
+  * **Directed (Có hướng)**: Chỉ ra rằng các tác vụ trong pipeline có thứ tự thực thi rõ ràng, ví dụ tác vụ A phải hoàn thành thành công thì tác vụ B mới được bắt đầu.
+  * **Acyclic (Không chu trình)**: Đảm bảo luồng chạy không bao giờ bị rơi vào vòng lặp vô hạn (ví dụ tác vụ A đợi B, tác vụ B lại đợi A). Một DAG bắt buộc phải có điểm bắt đầu và điểm kết thúc rõ ràng để đảm bảo hệ thống có thể hoàn thành luồng công việc.
+
+### 3. Làm thế nào bạn xử lý việc thay đổi cấu trúc bảng dữ liệu (Schema Evolution) của hệ thống nguồn mà không làm sập pipeline?
+* **Gợi ý trả lời**: Để giải quyết việc thay đổi cấu trúc bảng (schema drift), tôi áp dụng các giải pháp sau:
+  1) **Sử dụng Schema Registry**: Quản lý và kiểm soát tính tương thích của schema giữa các phiên bản dữ liệu.
+  2) **Lưu trữ dữ liệu bán cấu trúc**: Ở vùng nạp thô (Staging/Landing Zone), sử dụng định dạng linh hoạt như JSON (ở PostgreSQL/Snowflake) để nạp toàn bộ thuộc tính mới mà nguồn gửi về mà không cần thay đổi cấu trúc bảng ngay lập tức.
+  3) **Thiết lập cảnh báo tự động**: Giám sát schema drift và kích hoạt cảnh báo cho đội kỹ sư dữ liệu để họ chủ động cập nhật các bảng ở hạ nguồn trước khi các báo cáo BI bị lỗi dữ liệu.
 
 ---
 
-## References
-
-1. **Fundamentals of Data Engineering** - Joe Reis.
-2. **Apache Airflow Documentation**.
+## Đọc thêm và Tài liệu tham khảo
+* [Data Ingestion (Nạp dữ liệu vào hệ thống)](/concepts/data-ingestion) - Quá trình thu thập và đưa dữ liệu thô vào hệ thống lưu trữ đệm.
+* [Orchestration (Điều phối quy trình)](/concepts/orchestration) - Tự động hóa và quản lý sự phụ thuận giữa các công việc dữ liệu.
+* **Fundamentals of Data Engineering** - Joe Reis.
+* **Apache Airflow Documentation** - Tài liệu hướng dẫn sử dụng và lập trình luồng công việc trên Airflow.
 
 ---
 
-## English summary
+## English Summary
 
-A Data Pipeline is an automated set of processes that extracts data from various sources, transforms it to ensure quality and compatibility, and loads it into a destination system such as a Data Warehouse or Data Lake (ETL/ELT). Orchestration tools (like Apache Airflow) manage the scheduling and dependencies of these pipelines using Directed Acyclic Graphs (DAGs). Pipelines can operate in batch mode (processing data in chunks at scheduled intervals) or streaming mode (processing events in real-time), and they are essential for eliminating manual data wrangling and ensuring reliable, scalable analytics.
+A **Data Pipeline** is an automated set of processes that extracts data from various sources, transforms it to ensure quality and compatibility, and loads it into a destination system such as a Data Warehouse or Data Lake (ETL/ELT). Orchestration tools (like Apache Airflow) manage the scheduling and dependencies of these pipelines using Directed Acyclic Graphs (DAGs). Pipelines can operate in batch mode (processing data in chunks at scheduled intervals) or streaming mode (processing events in real-time), and they are essential for eliminating manual data wrangling and ensuring reliable, scalable analytics.

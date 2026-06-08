@@ -9,69 +9,51 @@ seoTitle: "Grain (Độ mịn dữ liệu) là gì? Khái niệm sống còn tro
 metaDescription: "Tìm hiểu Grain (Granularity - Độ mịn dữ liệu) trong Data Warehouse. Tại sao việc xác định Grain là bước quan trọng nhất khi thiết kế Fact Table và Dimensional Model."
 ---
 
-# Độ mịn dữ liệu - Grain
+# Làm chủ độ mịn của dữ liệu: Khái niệm Grain trong thiết kế Data Warehouse
 
-## Summary
+Trong thiết kế kiến trúc dữ liệu, có những quyết định tuy nhỏ nhưng lại mang tính sống còn đối với sự thành bại của cả dự án. Một trong số đó là việc xác định **Grain** (Độ mịn hay Độ hạt dữ liệu). Nếu bạn định nghĩa Grain một cách hời hợt hoặc tệ hơn là trộn lẫn các mức độ chi tiết khác nhau vào cùng một bảng, hệ thống báo cáo của bạn sẽ nhanh chóng hiển thị những con số sai lệch, đánh mất hoàn toàn niềm tin từ phía người dùng kinh doanh.
 
-Trong Data Warehousing và Dimensional Modeling, Độ mịn (Grain hoặc Granularity) định nghĩa mức độ chi tiết chính xác mà một dòng dữ liệu (record) trong Bảng sự kiện (Fact Table) đại diện. Đây là quyết định thiết kế quan trọng và không thể nhân nhượng nhất của một Data Engineer. Một Fact Table phải có một "Grain" thống nhất và rõ ràng. Nếu định nghĩa Grain lỏng lẻo hoặc trộn lẫn các dòng dữ liệu có mức độ chi tiết khác nhau vào cùng một bảng, toàn bộ hệ thống báo cáo (Business Intelligence) sẽ cho ra những con số tính toán sai lệch, dẫn tới sự sụp đổ niềm tin của người dùng vào Data Warehouse.
+## Câu hỏi sống còn: Một dòng dữ liệu đại diện cho cái gì?
 
----
+Trong phương pháp mô hình hóa chiều (Dimensional Modeling) và xây dựng kho dữ liệu (Data Warehouse), Độ mịn (Grain hoặc Granularity) định nghĩa mức độ chi tiết vật lý chính xác mà một dòng dữ liệu (record) trong Bảng sự kiện (Fact Table) đại diện.
 
-## Definition
+Để xác định Grain của một bảng, bạn chỉ cần trả lời duy nhất một câu hỏi: *"Một dòng dữ liệu trong bảng Fact này mô tả chính xác sự kiện thực tế gì?"*
 
-**Grain (Độ mịn / Độ hạt)** là câu trả lời duy nhất cho câu hỏi: *"Một dòng dữ liệu trong bảng Fact này diễn tả chính xác sự kiện gì?"*
+Dưới đây là một số ví dụ về việc phát biểu Grain rõ ràng:
+* *"Mỗi dòng đại diện cho một sản phẩm cụ thể được quét mã vạch trên một hóa đơn mua sắm."* (Grain: Dòng sản phẩm / Line item).
+* *"Mỗi dòng đại diện cho tổng doanh số của một cửa hàng cụ thể thu được trong một ngày."* (Grain: Cửa hàng - Ngày).
+* *"Mỗi dòng đại diện cho số dư tài khoản ngân hàng của một khách hàng vào cuối mỗi tháng."* (Grain: Tài khoản - Tháng).
 
-Ví dụ về định nghĩa Grain rõ ràng:
-* *"Một dòng trong bảng Fact đại diện cho 1 sản phẩm được quét mã vạch trên 1 tờ biên lai thanh toán."* (Grain: Dòng hóa đơn / Line item).
-* *"Một dòng trong bảng Fact đại diện cho tổng doanh số của 1 cửa hàng vào 1 ngày."* (Grain: Cửa hàng - Ngày).
-* *"Một dòng trong bảng Fact đại diện cho số dư ngân hàng của 1 tài khoản vào cuối mỗi tháng."* (Grain: Tài khoản - Tháng).
+Dữ liệu được lưu trữ ở mức độ chi tiết càng cao (ví dụ: từng giao dịch đơn lẻ), chúng ta gọi là **Fine Grain** (Độ mịn cao). Ngược lại, dữ liệu được gom nhóm hoặc tổng hợp trước khi lưu trữ (ví dụ: tổng doanh thu theo tuần/tháng), chúng ta gọi là **Coarse Grain** (Độ mịn thô/thấp).
 
-Càng lưu dữ liệu ở mức độ chi tiết (Ví dụ: Từng giao dịch), ta gọi là **Fine Grain** (Độ mịn cao). Ngược lại, dữ liệu bị tổng hợp theo cụm (Ví dụ: Tổng theo ngày, tổng theo tuần), ta gọi là **Coarse Grain** (Độ mịn thấp / thô).
+## Tại sao việc bỏ quên "độ mịn" lại khiến hệ thống báo cáo đổ vỡ?
 
----
+Dữ liệu doanh nghiệp đến từ rất nhiều nguồn và phục vụ các nhóm đối tượng khác nhau. Phòng Marketing có thể chỉ quan tâm đến ngân sách ở mức "Tháng", trong khi quản lý cửa hàng lại cần giám sát hiệu năng bán hàng theo "Từng hóa đơn". 
 
-## Why it exists
+Nếu bạn thiết kế các bảng dữ liệu mà không thống nhất và công bố rõ ràng về độ mịn từ trước, hệ thống sẽ phải gánh chịu hai hệ quả tai hại:
 
-Dữ liệu kinh doanh đến từ nhiều quy trình khác nhau. Nhân viên Marketing xem ngân sách ở mức "Tháng". Nhân viên cửa hàng xem doanh thu ở mức "Từng hóa đơn". 
+1. **Lỗi Nhân đôi số liệu (Double-counting)**: Nếu bạn vô tình nhét dòng tổng hợp doanh thu ngày Thứ Hai và Thứ Ba vào chung một bảng với dòng tổng doanh thu của cả tuần đó, khi người dùng thực hiện hàm tính tổng `SUM(revenue)`, con số tổng thu về sẽ bị nhân lên gấp đôi.
+2. **Mất khả năng phân tích sâu (Drill-down)**: Nếu bạn nạp dữ liệu vào kho đã qua xử lý gom nhóm theo ngày, bạn sẽ mãi mãi không thể giúp sếp trả lời câu hỏi: *"Vào khung giờ vàng 9:00 - 10:00 sáng hôm qua, chúng ta đã bán được bao nhiêu ly trà sữa?"*.
 
-Nếu Data Engineer thiết kế các bảng vô tội vạ mà không tuyên bố độ mịn (Grain) từ trước, hệ quả là:
-1. **Lỗi Double-counting (Nhân đôi số liệu)**: Nếu nhét dòng "Tổng doanh thu thứ 2" và dòng "Tổng doanh thu thứ 3" cùng chung một bảng với dòng "Tổng doanh thu của tuần đó". Khi chạy hàm `SUM(revenue)`, doanh thu sẽ bị nhân đôi.
-2. **Không thể khoan xuống dữ liệu (Drill-down)**: Nếu chỉ nạp dữ liệu vào Data Warehouse ở dạng tổng hợp (đã Group By theo Ngày), sếp sẽ không bao giờ trả lời được câu hỏi: *"Vào lúc 9 giờ sáng hôm đó chúng ta bán được mấy sản phẩm?"*.
+Khái niệm Grain sinh ra như một bộ quy tắc chặt chẽ giúp các kỹ sư dữ liệu định hình cấu trúc trước khi đặt những viên gạch đầu tiên xây dựng bảng.
 
-Khái niệm Grain sinh ra để ép buộc kiến trúc sư dữ liệu phải có một bộ khung quy tắc thép trước khi tạo bảng.
+## Quy tắc thép của Kimball và cách nó định hình Fact Table
 
----
+Triết lý của Ralph Kimball, cha đẻ của Dimensional Modeling, nhấn mạnh quy trình thiết kế gồm 4 bước:
+1. Chọn quy trình nghiệp vụ (Business Process).
+2. **Khai báo độ mịn dữ liệu (Declare the Grain)** — *Bước then chốt nhất!*
+3. Xác định các chiều (Dimensions).
+4. Xác định các chỉ số (Facts).
 
-## Core idea
+Quy tắc bất di dịch của Kimball là: **"Mọi dòng dữ liệu trong một Fact Table bắt buộc phải có cùng một mức Grain duy nhất."** Không có bất kỳ ngoại lệ nào.
 
-Ý tưởng trọng tâm của Grain xoay quanh quy trình thiết kế 4 bước của Ralph Kimball:
-1. Chọn quy trình nghiệp vụ.
-2. **Khai báo Grain (Declare the Grain)** - *Bước quan trọng nhất!*
-3. Chọn các Chiều (Dimensions).
-4. Chọn các Chỉ số (Facts).
+Khi đã tuyên bố Grain ở Bước 2, tất cả các chiều dữ liệu (Dimensions) ở Bước 3 phải hoàn toàn tương thích với mức Grain đó. Ví dụ: Nếu Grain được chọn là "Doanh số cấp độ Cửa hàng - Ngày", bạn không thể chèn khóa ngoại khách hàng (`customer_key`) vào bảng Fact này. Lý do rất đơn giản: Trong một ngày, một cửa hàng có thể đón tiếp hàng ngàn khách hàng khác nhau, một khóa ngoại duy nhất không thể đại diện cho toàn bộ họ.
 
-Quy tắc bất di bất dịch của Kimball: **"Mọi dòng trong một Fact Table phải thuộc về cùng một Grain duy nhất."** Không có ngoại lệ.
+## Minh họa thực tế: Khi sự lẫn lộn phá hủy con số
 
-Khi đã tuyên bố Grain ở Bước 2, tất cả các Dimensions (Bước 3) thêm vào Fact Table phải hoàn toàn tuân theo và tương thích với mức Grain đó. Ví dụ: Nếu Grain là "Doanh số cấp độ Cửa hàng - Ngày", bạn không thể thêm một cột `customer_key` vào Fact Table, vì trong 1 ngày 1 cửa hàng có tới hàng trăm khách hàng, 1 cột `customer_key` không thể đại diện cho họ được.
+Hãy xem xét một bảng dữ liệu vi phạm nguyên tắc thiết kế Grain:
 
----
-
-## How it works
-
-Quy trình thiết lập và đảm bảo Grain hoạt động:
-1. Data Architect phỏng vấn Business User để hiểu nhu cầu. User luôn hỏi: *"Tôi muốn báo cáo tổng hợp theo Tháng"* (Coarse Grain).
-2. Data Architect từ chối làm theo yêu cầu trên. Architect quyết định thiết kế bảng `fact_sales` ở mức sâu nhất có thể (Atomic Grain) - ví dụ: Từng sản phẩm trên hóa đơn.
-3. Architect viết tài liệu rõ ràng: Bảng `fact_sales` có Grain là `Date + Store + Ticket ID + Product ID`.
-4. Trong quá trình ETL, pipeline được lập trình để ném văng ra lỗi (Error) và dừng xử lý nếu hệ thống nguồn đẩy nhầm vào một dòng dữ liệu là tổng của cả hóa đơn.
-5. Khi làm báo cáo, công cụ BI sẽ quét bảng `fact_sales` (mức chi tiết) và tự động tính `SUM` lại để ra báo cáo theo Tháng mà Business User yêu cầu.
-
----
-
-## Architecture / Flow
-
-Dưới đây là một ví dụ về việc vi phạm Grain gây tai họa:
-
-**Bảng `fact_sales_bad` (Lẫn lộn Grain: Vừa lưu chi tiết, vừa lưu tổng hóa đơn)**
+**Bảng `fact_sales_bad` (Lẫn lộn Grain: Vừa lưu chi tiết sản phẩm, vừa lưu dòng tổng hóa đơn)**
 
 | order_id | product_name | quantity | revenue |
 | :--- | :--- | :--- | :--- |
@@ -79,15 +61,13 @@ Dưới đây là một ví dụ về việc vi phạm Grain gây tai họa:
 | O-01 | Banana | 2 | 50 |
 | **O-01** | **(TỔNG ĐƠN HÀNG O-01)** | **3** | **150** |
 
-*Nếu Business Analyst thực hiện `SELECT SUM(revenue)`, kết quả sẽ là **300**, thay vì **150**! Sự nghiệp phân tích dữ liệu kết thúc.*
+Nếu một chuyên viên phân tích chạy câu lệnh `SELECT SUM(revenue)` trên bảng này, kết quả nhận được sẽ là **300** thay vì doanh thu thực tế là **150**. Điều này sẽ phá hủy hoàn toàn độ tin cậy của báo cáo.
 
----
+### Xử lý chênh lệch Grain (Drill Across)
 
-## Practical example
-
-Giả sử doanh nghiệp có 2 luồng dữ liệu liên quan:
-1. Mục tiêu kinh doanh (Target) được giao theo cấp độ **Khu vực (Region)** và **Tháng (Month)**.
-2. Doanh thu thực tế (Actual) chảy về theo cấp độ **Cửa hàng (Store)** và **Phút (Minute)**.
+Giả sử doanh nghiệp của bạn có 2 luồng dữ liệu nghiệp vụ:
+1. Mục tiêu doanh thu (Target) được giao theo cấp độ **Khu vực (Region)** và **Tháng (Month)**.
+2. Doanh thu thực tế (Actual) đổ về chi tiết theo **Cửa hàng (Store)** và **Phút (Minute)**.
 
 ```mermaid
 flowchart TD
@@ -96,7 +76,7 @@ flowchart TD
     B --> D[Báo cáo So sánh<br/>Target vs Actual]
 ```
 
-Ta KHÔNG ĐƯỢC thiết kế chung 1 Fact Table. Phải tách làm 2 bảng với 2 Grain khác nhau:
+Chúng ta tuyệt đối không được gộp chung 2 luồng này vào một bảng duy nhất. Giải pháp chuẩn mực là tách làm 2 Fact Table riêng biệt với 2 mức Grain tương ứng:
 
 **1. Bảng Doanh thu thực tế (Atomic Grain)**
 ```sql
@@ -121,72 +101,52 @@ CREATE TABLE fact_target_sales (
 -- Grain: 1 dòng = Mục tiêu giao cho 1 khu vực trong 1 tháng.
 ```
 
-Khi làm báo cáo so sánh Target vs Actual, ta sẽ ROLLUP (tổng hợp) dữ liệu từ `fact_actual_sales` lên mức (Tháng + Khu vực) trong công cụ BI, sau đó mới khớp (JOIN/Blend) với `fact_target_sales`. Việc này gọi là "Drill Across".
+Khi cần lập báo cáo so sánh, chúng ta sẽ thực hiện tổng hợp (Roll-up) dữ liệu thực tế từ bảng `fact_actual_sales` lên cấp độ (Tháng + Khu vực) bằng các công cụ BI hoặc SQL trước, rồi mới ghép (JOIN) với bảng `fact_target_sales`.
 
----
+## Quy tắc "vàng" cho kỹ sư dữ liệu
 
-## Best practices
+* **Ưu tiên hàng đầu cho dữ liệu nguyên bản (Atomic Grain)**: Hãy luôn cố gắng lưu trữ dữ liệu ở mức độ chi tiết nguyên bản, sâu nhất có thể từ hệ thống nguồn. Dữ liệu thô ở cấp độ nguyên tử có khả năng đáp ứng mọi câu hỏi phân tích phát sinh (Ad-hoc queries). Nếu bạn tự ý tổng hợp dữ liệu quá sớm, bạn sẽ tước đi cơ hội phân tích sâu của doanh nghiệp sau này.
+* **Mô tả Grain bằng câu văn rõ nghĩa**: Để tránh mơ hồ, hãy ghi chép lại định nghĩa Grain bằng một câu văn hoàn chỉnh thay vì các từ khóa rời rạc. Ví dụ: *"Một dòng tương đương với một lần giao dịch quẹt thẻ tín dụng thành công tại một thiết bị POS"*.
+* **Tận dụng Bảng tổng hợp (Aggregation Tables)**: Lưu trữ dữ liệu quá chi tiết đôi khi sẽ khiến tốc độ truy vấn báo cáo bị chậm lại do phải quét qua quá nhiều dòng. Để giải quyết, hãy giữ bảng chi tiết làm cốt lõi, đồng thời tạo thêm các bảng tổng hợp (ví dụ `fact_sales_daily_summary` - mức độ mịn thô hơn) để phục vụ riêng cho các Dashboard tổng quan cần tải dữ liệu cực nhanh.
 
-* **Atomic Grain là vua**: Luôn cố gắng lưu trữ dữ liệu ở mức độ chi tiết sâu nhất, vi mô nhất (Atomic level). Dữ liệu atomic có sức chống chịu trước mọi câu hỏi phát sinh (Ad-hoc queries). Nếu bạn gộp nhóm (Aggregated) ngay từ vòng gửi xe (Ví dụ: Lưu tổng doanh thu theo tuần), bạn không bao giờ có thể trả lời được câu hỏi "Doanh thu Thứ 2 cao hơn Thứ 3 bao nhiêu?".
-* **Phát biểu bằng câu hoàn chỉnh**: Để không bao giờ nhầm lẫn, hãy ghi chú lại định nghĩa Grain bằng văn xuôi. Đừng dùng danh từ rời rạc. Hãy viết: *"1 dòng = 1 giao dịch thẻ tín dụng thành công tại 1 trạm POS"*.
-* **Bổ sung Aggregation Tables**: Atomic Data xử lý mọi câu hỏi nhưng có thể chạy chậm vì quá nhiều dòng. Cách giải quyết: Giữ lại bảng Atomic làm cốt lõi, nhưng tạo thêm một bảng `fact_sales_daily_summary` (Aggregated Grain) cho các dashboard chỉ xem tổng quát để báo cáo load nhanh hơn.
+## Bẫy kinh điển: Những sai lầm cần tránh
 
----
+* **Thiết kế trước, xác định Grain sau**: Nhiều kỹ sư có thói quen đưa bừa các cột Dimension vào bảng Fact rồi mới quay lại suy nghĩ xem dòng dữ liệu đó đại diện cho cái gì. Điều này sẽ dẫn đến việc các khóa ngoại chứa đầy giá trị rỗng (`NULL`) hoặc dữ liệu bị nhân đôi vô tội vạ.
+* **Cái bẫy Header và Line Item**: Cố gắng nhét thông tin ở cấp độ bao quát (Header - ví dụ: chi phí vận chuyển của cả một chuyến xe) vào bảng chi tiết từng món hàng (Line Item). Kết quả là phí vận chuyển bị nhân lên tương ứng với số lượng mặt hàng có trong chuyến xe đó. Cách khắc phục là chia đều (allocate) chi phí này xuống các mặt hàng theo tỷ lệ, hoặc tách thành 2 bảng Fact riêng biệt.
 
-## Common mistakes
+## Cân đo đong đếm giữa chi tiết và hiệu năng (Trade-offs)
 
-* **Khai báo Grain quá muộn**: Thêm các Dimension ngẫu nhiên vào Fact Table trước, sau đó mới quay lại suy nghĩ xem bảng này rốt cuộc đang chứa dữ liệu gì. Điều này thường dẫn đến các cột khóa ngoại (Foreign Keys) chứa giá trị Null hoặc gây trùng lặp dòng.
-* **Header / Line Item Trap**: Cố gắng đưa thông tin ở mức Header (Ví dụ: Chi phí vận chuyển của cả chuyến xe) vào bảng Fact cấp độ Line Item (Chi tiết các món hàng trên xe). Phí vận chuyển 500k bị ghi lặp lại ở cả 10 món hàng, khiến SUM chi phí vận chuyển thành 5 triệu. (Nên phân bổ đều - allocate - 500k cho 10 món, hoặc tạo 2 bảng Fact riêng biệt).
+### Lưu trữ mức chi tiết (Atomic Grain)
+* **Ưu điểm**: Mang lại sự linh hoạt tuyệt đối. Người dùng có thể thoải mái cắt lát (slice-and-dice), phân tích sâu (drill-down) theo mọi khía cạnh.
+* **Nhược điểm**: Kích thước bảng cực kỳ lớn, đòi hỏi tài nguyên tính toán mạnh mẽ để thực hiện các phép tính tổng hợp trên diện rộng.
 
----
+### Lưu trữ mức tổng hợp (Aggregated Grain)
+* **Ưu điểm**: Tốc độ truy vấn nhanh vượt trội (tính bằng mili-giây), tiết kiệm không gian lưu trữ đĩa cứng.
+* **Nhược điểm**: Mất đi các thông tin chi tiết. Bạn sẽ không thể trả lời được nguyên nhân sâu xa vì sao doanh số sụt giảm tại một khung giờ cụ thể trong ngày.
 
-## Trade-offs
+## Các khái niệm liên quan
 
-### Atomic Grain (Mức độ cực kỳ chi tiết)
-* **Ưu điểm**: Linh hoạt tuyệt đối (Maximum flexibility). Có thể xoay (slice-and-dice), khoan sâu (drill-down), cuộn lên (roll-up) theo mọi chiều hướng.
-* **Nhược điểm**: Bảng sẽ có dung lượng khổng lồ. Yêu cầu sức mạnh tính toán (Compute) rất lớn để tổng hợp báo cáo hàng ngày (Table Scan tốn kém).
+* [Fact Table (Bảng sự kiện)](/concepts/fact-table)
+* [Dimensional Modeling (Mô hình hóa chiều)](/concepts/dimensional-modeling)
+* [Kimball Methodology (Phương pháp luận Kimball)](/concepts/kimball-methodology)
 
-### Aggregated Grain (Mức độ đã tổng hợp)
-* **Ưu điểm**: Query chạy cực nhanh (Tính bằng mili-giây). Tốn ít ổ cứng. Rất tốt cho các Dashboard lãnh đạo cấp cao (chỉ nhìn các con số lớn).
-* **Nhược điểm**: Mất đi các chiều dữ liệu chi tiết. Không thể trả lời các câu hỏi tại sao doanh thu sụt giảm vào giờ nghỉ trưa.
+## Góc phỏng vấn: Đối diện thách thức thiết kế
 
----
+### 1. Nếu hệ thống hiện tại đang lưu trữ số liệu bán hàng ở mức Grain là "Ngày". Sếp đột ngột yêu cầu xuất báo cáo theo "Giờ". Bạn sẽ giải quyết bài toán này như thế nào?
+* **Mục đích câu hỏi**: Đánh giá sự hiểu biết của ứng viên về giới hạn vật lý của dữ liệu và tư duy thiết kế đường ống ETL.
+* **Gợi ý trả lời**: Từ dữ liệu có độ hạt thô (coarse-grained) như "Ngày", chúng ta hoàn toàn không có cách nào dùng thuật toán để phân rã ngược lại thành mức chi tiết hơn là "Giờ", vì thông tin thời gian chi tiết đã bị lược bỏ trong quá trình tổng hợp trước đó. Để giải quyết yêu cầu này, tôi bắt buộc phải quay lại hệ thống nguồn, điều chỉnh hoặc xây dựng một luồng ETL mới để trích xuất dữ liệu ở mức nguyên bản (Atomic Grain - chi tiết từng giao dịch kèm mốc giờ cụ thể) và lưu vào một Fact Table mới. Bảng cũ có thể được giữ lại để làm bảng tổng hợp (Summary Table) giúp tăng tốc cho các báo cáo ngày.
 
-## When to use
+### 2. Làm thế nào để xử lý chi phí vận chuyển (Freight) phát sinh ở mức "Đơn hàng" (Header), trong khi Fact Table của bạn lại được thiết kế ở mức "Chi tiết sản phẩm" (Line Item)?
+* **Mục đích câu hỏi**: Đánh giá kỹ năng xử lý bài toán lệch pha về độ mịn (Grain mismatch) trong các dự án thực tế.
+* **Gợi ý trả lời**: Đây là một bài toán rất phổ biến trong thiết kế Data Warehouse. Tôi có hai hướng giải quyết tùy thuộc vào nhu cầu phân tích của doanh nghiệp:
+  * *Cách 1 - Tách bảng*: Xây dựng 2 Fact Table riêng biệt. Một bảng `fact_order_header` chứa các chỉ số ở cấp độ đơn hàng (như phí vận chuyển, mã giảm giá của cả đơn). Một bảng `fact_order_line` chứa chi tiết từng sản phẩm. Cách này đảm bảo dữ liệu sạch sẽ, không bị lặp lại, nhưng khi cần tính lợi nhuận ròng chi tiết cho từng sản phẩm thì việc viết câu lệnh JOIN sẽ phức tạp hơn.
+  * *Cách 2 - Phân bổ (Allocation)*: Giữ nguyên một Fact Table ở mức Line Item, nhưng tại khâu ETL, tôi sẽ dùng một thuật toán phân bổ hợp lý để chia nhỏ chi phí vận chuyển từ cấp đơn hàng xuống từng sản phẩm. Tiêu chí phân bổ có thể dựa trên tỷ trọng giá trị sản phẩm hoặc trọng lượng của chúng. Ví dụ, phí vận chuyển đơn hàng là 100k, sản phẩm A chiếm 70% giá trị đơn hàng thì nó sẽ được gán 70k phí vận chuyển. Cách này giúp phân tích lợi nhuận sản phẩm rất nhanh chóng và tránh được lỗi nhân đôi chi phí khi chạy hàm `SUM`.
 
-* Khái niệm Grain bắt buộc phải được khai báo bằng văn bản (Documentation) trước khi thiết kế bất kỳ bảng dữ liệu nào trong mọi Data Warehouse.
-
----
-
-## Related concepts
-
-* [Fact Table](/concepts/fact-table)
-* [Dimensional Modeling](/concepts/dimensional-modeling)
-* [Kimball Methodology](/concepts/kimball-methodology)
-
----
-
-## Interview questions
-
-### 1. Nếu bạn đang có một Fact Table lưu trữ số liệu ở mức "Ngày". Sếp yêu cầu báo cáo doanh thu theo "Giờ". Bạn sẽ xử lý thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về giới hạn vật lý của dữ liệu và tư duy Grain.
-* **Gợi ý trả lời**: Dữ liệu từ mức độ thô (Coarse) không bao giờ có thể "khoan" (Drill-down) ngược xuống mức độ mịn (Fine) được. Do bảng Fact hiện tại Grain là "Ngày", toàn bộ thông tin về Giờ đã bị mất trong quá trình tổng hợp (Aggregated) ở khâu ETL. Để đáp ứng yêu cầu của sếp, tôi không thể sửa bảng hiện tại. Tôi bắt buộc phải xây dựng lại luồng ETL (từ nguồn) để tạo ra một bảng `fact_sales` mới với Atomic Grain (chi tiết từng giao dịch kèm thời gian). Sau đó thay thế bảng cũ, hoặc giữ lại bảng cũ làm Summary Table.
-
-### 2. Làm thế nào để giải quyết bài toán Chi phí vận chuyển (Freight) ở mức độ "Hóa đơn", trong khi Fact Table của bạn lại được thiết kế ở mức độ "Chi tiết sản phẩm" (Line Item)?
-* **Người phỏng vấn muốn kiểm tra**: Kỹ thuật phân bổ (Allocation) và hiểu biết về sự chênh lệch Grain.
-* **Gợi ý trả lời**: Đây là một cái bẫy phổ biến của thiết kế Grain. Tôi có 2 cách giải quyết:
-  1. Tách bảng: Tạo một Fact Table riêng (`fact_invoice_header`) để lưu riêng chi phí vận chuyển. (Cách này an toàn nhưng rườm rà khi phân tích lợi nhuận thuần cho từng mặt hàng).
-  2. Phân bổ (Allocation): Tại khâu ETL, tôi sẽ dùng toán học để chia nhỏ chi phí vận chuyển của hóa đơn đó xuống từng dòng Line Item. Tiêu chí chia có thể dựa trên Trọng lượng sản phẩm, hoặc Đơn giá sản phẩm. Ví dụ phí xe là 100k, sản phẩm A nặng chiếm 80% tải trọng xe, tôi sẽ ghi đè 80k phí vận chuyển vào dòng của sản phẩm A. Bằng cách này, toàn bộ dữ liệu vẫn duy trì thống nhất ở Line Item Grain mà không bị lỗi nhân đôi khi tính tổng.
-
----
-
-## References
+## Tài liệu tham khảo
 
 1. **The Data Warehouse Toolkit** - Ralph Kimball (Tuyên bố Bước 2: "Declare the Grain" là bước thiết kế tối thượng).
 2. **Data Modeling for the Business** - Steve Hoberman.
 
----
-
-## English summary
+## English Summary
 
 In dimensional modeling, "Grain" (or Granularity) defines the exact level of detail represented by a single row within a Fact Table. Establishing the grain is the most critical and uncompromisable step in Data Warehouse design (Step 2 of the Kimball methodology). A fact table must strictly adhere to a single, uniform grain. Mixing different grains (e.g., storing both individual transaction lines and daily summary totals in the same table) will inevitably lead to catastrophic double-counting and data integrity failures. Best practice strongly advocates designing fact tables at the lowest possible atomic grain to preserve maximum flexibility for unpredictable ad-hoc queries, handling aggregation dynamically at the BI layer.

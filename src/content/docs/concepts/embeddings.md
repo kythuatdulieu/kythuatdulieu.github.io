@@ -11,51 +11,39 @@ metaDescription: "Tìm hiểu Vectơ nhúng (Embeddings) là gì trong AI, tính
 
 # Vectơ nhúng - Embeddings
 
-## Summary
+Hãy tưởng tượng bạn đang cố gắng giải thích cho một người nước ngoài không biết tiếng Việt hiểu thế nào là "xe hơi". Thay vì cố gắng định nghĩa bằng các từ ngữ phức tạp, bạn đưa cho họ một loạt các tấm thẻ ghi điểm số:
+* Mức độ có bánh xe: **9/10**
+* Mức độ chạy bằng động cơ: **10/10**
+* Mức độ bay được trên trời: **0/10**
 
-Vectơ nhúng (Embeddings) là các mảng (arrays) chứa các số thực (ví dụ: `[0.12, -0.45, 0.88, ...]`) biểu diễn ngữ nghĩa của dữ liệu phi cấu trúc như từ ngữ, câu văn, hình ảnh hoặc âm thanh. Các vectơ này tồn tại trong một không gian toán học đa chiều (thường từ hàng trăm đến hàng nghìn chiều), nơi mà khoảng cách giữa hai vectơ phản ánh mức độ tương đồng về mặt ý nghĩa giữa hai đối tượng dữ liệu đó.
+Từ những điểm số đó, người kia có thể dễ dàng hình dung ra hình dáng và chức năng của chiếc xe hơi, thậm chí so sánh nó với "ô tô" hay "xe đạp".
 
----
+Trong thế giới của Trí tuệ Nhân tạo, **Vectơ nhúng (Embeddings)** chính là những "tấm thẻ điểm số" như thế. Chúng là các mảng chứa các số thực (ví dụ: `[0.12, -0.45, 0.88, ...]`) dùng để biểu diễn ngữ nghĩa của các dữ liệu phi cấu trúc (như từ ngữ, câu văn, hình ảnh hay âm thanh) dưới dạng mà máy tính có thể hiểu và tính toán được.
 
-## Definition
+## Bản dịch số học của thế giới phi cấu trúc
 
-**Embeddings** là một dạng biểu diễn dữ liệu dày đặc (dense representation). Thay vì lưu trữ từ vựng dưới dạng các chuỗi ký tự (strings) rời rạc, máy học sử dụng Embedding Models để chuyển đổi chúng thành các vectơ trong không gian Euclid n-chiều. Mỗi chiều trong vectơ không có ý nghĩa cụ thể đối với con người, nhưng tổ hợp của tất cả các chiều sẽ mã hóa các thuộc tính về ngữ pháp, ngữ nghĩa, cảm xúc, hoặc tính chất của đối tượng.
+Về mặt kỹ thuật, **Embeddings** là một dạng biểu diễn dữ liệu dày đặc (dense representation). Thay vì lưu trữ từ vựng dưới dạng các chuỗi ký tự (strings) rời rạc vốn không mang giá trị toán học, chúng ta chuyển đổi chúng thành các tọa độ điểm trong một không gian hình học đa chiều (thường từ hàng trăm đến hàng nghìn chiều).
 
----
+Mặc dù con người không thể trực tiếp giải nghĩa xem con số tại chiều thứ 15 đại diện cho điều gì, nhưng sự kết hợp tổng hòa của tất cả các chiều số thực này sẽ tạo nên một "dấu vân tay ngữ nghĩa" độc nhất vô nhị cho thực thể đó.
 
-## Why it exists
+## Tại sao chúng ta cần nén thông tin thành những vectơ đặc?
 
-Thuật toán máy tính, đặc biệt là mạng nơ-ron (Neural Networks), chỉ có thể xử lý các con số toán học, không thể hiểu trực tiếp văn bản như chữ "vua" hay "hoàng hậu".
-Trước khi có embeddings, người ta dùng:
-1. **One-Hot Vectors**: Mỗi từ là một mảng có độ dài bằng toàn bộ từ vựng, chứa toàn số 0 và một số 1. Yếu điểm: kích thước cực kỳ lớn, lãng phí bộ nhớ và quan trọng nhất là "vua" và "hoàng hậu" sẽ có khoảng cách toán học bằng hệt "vua" và "máy tính" (trực giao, dot product = 0).
-2. Tần suất từ (TF-IDF): Mất ngữ cảnh, không bắt được từ đồng nghĩa (Ví dụ "xe hơi" và "ô tô").
+Thuật toán máy tính và mạng nơ-ron hoạt động hoàn toàn bằng các phép tính đại số. Chúng không thể thực hiện phép cộng, trừ, nhân, chia trên các chuỗi ký tự chữ cái trực tiếp được.
 
-Embeddings khắc phục tất cả: Chúng có kích thước cố định (ví dụ 768 hoặc 1536 chiều, nhỏ hơn nhiều so với từ điển) và quan trọng nhất, chúng bảo tồn **mối quan hệ ngữ nghĩa**.
+Trước khi kỹ thuật nhúng ra đời, các kỹ sư thường sử dụng hai giải pháp:
 
----
+1. **One-Hot Vectors**: Mỗi từ trong từ điển được đại diện bằng một mảng khổng lồ có chiều dài bằng tổng số từ vựng hiện có, chứa toàn số 0 và duy nhất một số 1 ở vị trí của từ đó. Cách này gây ra hai nhược điểm chí mạng:
+   * **Bùng nổ bộ nhớ**: Nếu từ điển có 100.000 từ, mỗi từ sẽ là một vectơ 100.000 chiều cực kỳ lãng phí tài nguyên lưu trữ.
+   * **Mất thông tin mối quan hệ**: Về mặt toán học, khoảng cách giữa vectơ "vua" và "hoàng hậu" cũng trực giao và bằng đúng khoảng cách giữa "vua" và "máy tính" (tích vô hướng bằng 0). Máy tính không có cách nào biết được "vua" và "hoàng hậu" có mối liên hệ mật thiết với nhau.
+2. **Tần suất từ (TF-IDF)**: Dựa trên việc đếm tần suất xuất hiện của từ. Tuy nhiên, phương pháp này làm mất hoàn toàn cấu trúc ngữ cảnh và không nhận diện được các từ đồng nghĩa (như "xe hơi" và "ô tô").
 
-## Core idea
+Vectơ nhúng (Embeddings) ra đời để giải quyết triệt để các hạn chế trên. Chúng có kích thước cố định vừa phải (thường từ 384 đến 1536 chiều) và bảo tồn nguyên vẹn các mối quan hệ ngữ nghĩa trong thực tế.
 
-* **Sự tương đồng về hình học = Sự tương đồng về ngữ nghĩa**: Nếu hai từ đồng nghĩa (ví dụ: "chó" và "cún"), vectơ của chúng sẽ nằm sát nhau trong không gian. Từ "mèo" cũng sẽ nằm gần đó, trong khi từ "ô tô" sẽ nằm cách rất xa.
-* **Các phép toán đại số với ý nghĩa**: Đặc tính nổi tiếng nhất của embeddings là khả năng làm toán với từ ngữ: 
-  $\vec{Vua} - \vec{Đàn\_ông} + \vec{Phụ\_nữ} \approx \vec{Nữ\_hoàng}$.
-* **Dense Vectors (Vectơ đặc)**: Hầu hết mọi giá trị trong mảng đều khác 0 (khác với sparse vector của One-Hot), giúp nén được một lượng thông tin khổng lồ vào các con số thập phân.
+## Kiến trúc và Nguyên lý hoạt động của Embeddings
 
----
+Nguyên lý cốt lõi của embeddings dựa trên một định lý trực quan: **Sự tương đồng về hình học phản ánh sự tương đồng về ngữ nghĩa**.
 
-## How it works
-
-Dữ liệu thô trải qua một mô hình nhúng (Embedding Model). Cụ thể, kiến trúc học sâu (Deep Learning) sẽ liên tục điều chỉnh các con số trong vectơ thông qua hàng triệu văn bản mẫu. 
-Nó học được rằng các từ xuất hiện trong cùng một bối cảnh (ví dụ: "uống ___" thường đi với "nước", "trà", "cà phê") sẽ có ý nghĩa tương tự nhau, do đó nó cập nhật trọng số để kéo các vectơ của "nước", "trà", "cà phê" lại gần nhau.
-
-Sự tương đồng giữa hai vectơ được đo bằng các hàm toán học:
-* **Cosine Similarity**: Đo góc giữa hai vectơ (từ -1 đến 1). Góc càng hẹp (gần 1) thì ngữ nghĩa càng giống nhau. Đây là chuẩn phổ biến nhất.
-* **Dot Product**: Tích vô hướng của hai vectơ.
-* **L2 (Euclidean Distance)**: Khoảng cách đường thẳng nối 2 ngọn vectơ.
-
----
-
-## Architecture / Flow
+Nếu hai thực thể có ý nghĩa giống hoặc liên quan chặt chẽ đến nhau (như "chó" và "cún"), vectơ của chúng sẽ nằm rất sát nhau trong không gian đa chiều. Ngược lại, những từ hoàn toàn không liên quan (như "ô tô" và "quả táo") sẽ nằm ở các góc rất xa nhau.
 
 ```mermaid
 graph LR
@@ -71,22 +59,30 @@ graph LR
     classDef similar stroke:#333,stroke-width:4px;
 ```
 
-Trong đó, `[0.1, 0.5, -0.2, ...]` và `[0.12, 0.48, -0.19, ...]` có các giá trị rất sát nhau, minh họa cho việc "Xe hơi" và "Ô tô" đồng nghĩa.
+Đặc tính thú vị nhất của không gian nhúng là khả năng thực hiện các phép toán đại số mang ý nghĩa thực tế:
+$$\vec{\text{Vua}} - \vec{\text{Đàn ông}} + \vec{\text{Phụ nữ}} \approx \vec{\text{Nữ hoàng}}$$
 
----
+## Cách đo lường sự tương đồng ngữ nghĩa
 
-## Practical example
+Khi đã chuyển đổi các thực thể thành vectơ, chúng ta có thể sử dụng các công thức toán học quen thuộc để đo lường khoảng cách giữa chúng:
 
-Một ví dụ hình tượng hóa (trong không gian 2 chiều để con người dễ hiểu, thực tế là nghìn chiều). Giả sử chiều x là mức độ "Thú cưng" và chiều y là mức độ "Dã thú":
+* **Cosine Similarity (Độ tương đồng Cosine)**: Đo góc giữa hai vectơ (giá trị từ -1 đến 1). Góc càng nhỏ (Cosine càng gần 1) chứng tỏ hướng của hai vectơ càng giống nhau, tức ngữ nghĩa càng tương đồng. Đây là phép đo phổ biến nhất trong thực tế.
+* **Dot Product (Tích vô hướng)**: Thể hiện sự kết hợp giữa góc và độ dài của hai vectơ.
+* **Euclidean Distance (Khoảng cách L2)**: Đo khoảng cách đường thẳng nối giữa hai điểm đầu mút của vectơ trong không gian.
 
-* Mèo = [0.9, 0.1]
-* Hổ = [0.1, 0.9]
-* Sư tử = [0.1, 0.85]
-* Cún = [0.95, 0.1]
+## Nhìn trực quan: Ví dụ cụ thể trong không gian 2D
 
-Khoảng cách Cosine giữa Mèo và Cún rất gần nhau. Hổ và Sư tử ở thành một cụm khác.
+Để con người dễ hình dung, hãy đơn giản hóa không gian nhúng về chỉ còn 2 chiều: Chiều ngang (mức độ là Thú cưng) và Chiều dọc (mức độ là Dã thú). Khi đó, các loài động vật sẽ có các vectơ tọa độ như sau:
 
-Trong code Python tính Cosine Similarity:
+* **Mèo** = `[0.9, 0.1]` (Rất thân thiện, ít hoang dã)
+* **Cún** = `[0.95, 0.1]` (Rất thân thiện, ít hoang dã)
+* **Hổ** = `[0.1, 0.9]` (Ít thân thiện, rất hoang dã)
+* **Sư tử** = `[0.1, 0.85]` (Ít thân thiện, rất hoang dã)
+
+Bạn có thể dễ dàng nhận thấy tọa độ của Mèo và Cún rất sát nhau, tạo thành một nhóm. Hổ và Sư tử nằm ở một góc khác.
+
+Dưới đây là đoạn code Python ngắn sử dụng thư viện `numpy` để tính toán độ tương đồng Cosine giữa hai vectơ Mèo và Hổ:
+
 ```python
 import numpy as np
 from numpy.linalg import norm
@@ -94,80 +90,58 @@ from numpy.linalg import norm
 vec_meo = np.array([0.9, 0.1])
 vec_ho = np.array([0.1, 0.9])
 
+# Công thức tính Cosine Similarity
 cosine = np.dot(vec_meo, vec_ho) / (norm(vec_meo) * norm(vec_ho))
-print(f"Cosine Similarity: {cosine:.2f}") 
-# Kết quả rất thấp (khoảng 0.19), nghĩa là không giống nhau.
+print(f"Độ tương đồng Cosine: {cosine:.2f}") 
+# Kết quả trả về khoảng 0.19, xác nhận hai thực thể này rất khác nhau
 ```
 
----
+## Sai lầm thường gặp và Best Practices
 
-## Best practices
+### Best Practices
+* **Lập chỉ mục chuyên biệt (Vector Indexing)**: Các vectơ nhúng có dung lượng lưu trữ khá lớn. Khi số lượng bản ghi lên tới hàng triệu, việc quét tuần tự để so sánh khoảng cách là bất khả thi. Bạn bắt buộc phải sử dụng các cơ sở dữ liệu vectơ chuyên dụng (Vector Databases) như pgvector, Qdrant, Pinecone hoặc Milvus để lập chỉ mục và tìm kiếm nhanh chóng.
+* **Chuẩn hóa vectơ (Normalization)**: Hãy luôn chuẩn hóa độ dài của các vectơ nhúng về bằng 1 (L2 Normalization). Khi độ dài đã được đưa về 1, phép tính Dot Product phức tạp sẽ tương đương hoàn toàn với phép Cosine Similarity, giúp GPU xử lý các câu lệnh tìm kiếm nhanh hơn gấp nhiều lần.
 
-* **Lưu trữ chuẩn**: Embeddings là các mảng dữ liệu cực kỳ nặng. Cần sử dụng các Hệ quản trị Cơ sở dữ liệu Vectơ (Vector Databases) chuyên dụng như Pinecone, Milvus, Qdrant, hoặc pgvector để lưu trữ và lập chỉ mục (index) thay vì dùng CSDL quan hệ thông thường.
-* **Chuẩn hóa (Normalization)**: Luôn chuẩn hóa (normalize độ dài vectơ về 1) các embeddings để việc tính toán khoảng cách Dot Product tương đương với Cosine Similarity, giúp các thuật toán tìm kiếm chạy nhanh hơn theo cấp số nhân (đặc biệt khi dùng chip GPU).
+### Sai lầm thường gặp (Common Pitfalls)
+* **So sánh chéo các mô hình khác nhau**: Mỗi mô hình nhúng (ví dụ mô hình của OpenAI và mô hình của Cohere) tự định hình một không gian toán học hoàn toàn khác nhau. Bạn không bao giờ được phép tính khoảng cách giữa một vectơ được tạo bởi mô hình của OpenAI với một vectơ tạo bởi mô hình của Cohere.
+* **Can thiệp thủ công vào các chiều số**: Việc tự ý sửa đổi một vài con số cụ thể trong vectơ nhúng với hy vọng cải thiện độ chính xác là hoàn toàn vô nghĩa. Các thuộc tính trong không gian nhúng là thuộc tính ẩn, không thể diễn giải đơn lẻ theo cách hiểu của con người.
 
----
+## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-## Common mistakes
+### Ưu điểm (Pros)
+* Diễn đạt xuất sắc ý nghĩa ngữ nghĩa của dữ liệu, tự động liên kết các từ đồng nghĩa mà không cần định nghĩa trước.
+* Là cầu nối đa phương thức (Multimodal): Có thể nhúng cả văn bản lẫn hình ảnh vào chung một không gian vectơ (ví dụ mô hình CLIP), cho phép tìm kiếm hình ảnh bằng các câu lệnh mô tả.
 
-* **Trộn lẫn các nguồn Embedding**: Các vectơ sinh ra từ các mô hình khác nhau (ví dụ: OpenAI `ada-002` và Google `text-embedding-gecko`) tồn tại ở các không gian hoàn toàn khác biệt. Không thể tính toán khoảng cách hoặc độ tương đồng giữa hai vectơ sinh ra từ hai mô hình khác nhau.
-* **Chỉnh sửa thủ công**: Cố gắng thay đổi thủ công một con số ở chiều thứ 5 của vectơ để mong đợi kết quả tốt hơn. Các chiều này là thông tin ẩn (latent), con người không thể giải mã được ý nghĩa trực tiếp của chúng.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* Đại diện hoàn hảo cho ý nghĩa (ngữ nghĩa) của dữ liệu.
-* Cho phép thực hiện các phép tìm kiếm mờ (Fuzzy/Semantic Search), tìm từ đồng nghĩa tự động.
-* Là cầu nối đa phương thức (Multimodal): Có thể nhúng cả chữ và hình ảnh vào cùng một không gian (mô hình CLIP), giúp tìm kiếm hình ảnh bằng câu văn.
-
-### Nhược điểm
-* Rất "khát" phần cứng để sinh và tính toán.
-* Mất tính diễn giải (Interpretability).
-* Cần cơ sở hạ tầng đặc biệt (Vector DB) để mở rộng quy mô.
+### Nhược điểm & Đánh đổi (Cons & Trade-offs)
+* Đòi hỏi năng lực xử lý phần cứng cao (CPU/GPU) để chuyển đổi dữ liệu thô thành vectơ thông qua các mô hình học sâu.
+* **Mất tính diễn giải (Interpretability)**: Chúng ta chỉ biết hai vectơ ở gần nhau chứ không thể giải thích rõ ràng tại sao mô hình lại tính ra như vậy.
+* Kém hiệu quả đối với các bài toán tìm kiếm chính xác tuyệt đối (Exact Match) như tìm mã lỗi hệ thống, số điện thoại hay số tài khoản.
 
 ---
 
-## When to use
-
-* Xây dựng lõi của Retrieval-Augmented Generation (RAG).
-* Recommendation systems (đưa user, item về cùng một không gian vectơ để xem khoảng cách).
-* Phân tích cảm xúc, gom cụm (Clustering), phát hiện bất thường (Anomaly detection) ở dữ liệu text.
-
-## When not to use
-
-* Dữ liệu dạng bảng (Tabular data, số liệu tài chính) – không cần nhúng ngữ nghĩa vì bản thân chúng đã là các giá trị toán học định lượng rõ ràng.
-
----
-
-## Related concepts
-
-* [Mô hình nhúng (Embedding Models)](/concepts/embedding-models)
-* [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/semantic-search)
-* [Vector Database](/concepts/vector-database)
-
----
-
-## Interview questions
+## Góc phỏng vấn
 
 ### 1. Tại sao One-Hot Encoding lại gặp vấn đề về "Curse of Dimensionality" (Bùng nổ số chiều), và Embeddings giải quyết nó như thế nào?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết căn bản về cách máy tính biểu diễn dữ liệu thô.
-* **Gợi ý trả lời (Strong Answer)**: Trong One-Hot Encoding, kích thước của mỗi vectơ bằng chính kích thước của từ vựng (ví dụ 100,000 từ). Điều này tạo ra một ma trận cực kỳ khổng lồ nhưng thưa thớt (Sparse - toàn số 0), gây cạn kiệt RAM và không biểu diễn được mối liên hệ giữa các từ vì khoảng cách giữa mọi cặp từ đều trực giao (như nhau). Embeddings giải quyết bằng cách nén không gian này thành Dense Vectors (số chiều cố định nhỏ, ví dụ 768), thông qua quá trình học sâu, các giá trị số thực trong 768 chiều này chứa đặc trưng tiềm ẩn, không bị phình to khi thêm từ mới, và bảo toàn được quan hệ hình học (từ đồng nghĩa ở gần nhau).
+* **Gợi ý trả lời**: Trong One-Hot Encoding, mỗi từ vựng được đại diện bởi một chiều độc lập. Khi số lượng từ vựng của hệ thống lên tới hàng trăm nghìn từ, kích thước vectơ của mỗi từ sẽ phình to tương ứng, tạo thành một ma trận vô cùng thưa thớt (Sparse Matrix - chứa hầu hết các số 0) làm cạn kiệt bộ nhớ RAM. Đồng thời, do các vectơ này trực giao hoàn toàn với nhau, máy tính không thể đo lường độ tương đồng ngữ nghĩa giữa các từ. Embeddings giải quyết vấn đề này bằng cách nén không gian biểu diễn thành các vectơ đặc (Dense Vectors) có kích thước cố định nhỏ (như 768 chiều). Thông qua quá trình học sâu, các giá trị số thực trong các chiều này biểu diễn các đặc trưng ẩn, giúp giữ nguyên vẹn mối quan hệ hình học giữa các từ đồng nghĩa mà không bị phình to kích thước khi thêm từ mới.
 
-### 2. Sự khác biệt giữa Dot Product và Cosine Similarity là gì? Khi nào chuẩn hóa (normalize) vectơ có lợi?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức toán học cơ bản áp dụng trong AI.
-* **Gợi ý trả lời (Strong Answer)**: Cosine Similarity chỉ đo "góc" giữa hai vectơ (chỉ quan tâm hướng), trong khi Dot Product đo sự kết hợp giữa cả "góc" và "độ dài" (magnitude) của vectơ. Khi ta chia vectơ cho chính độ dài của nó (L2 Normalization), độ dài vectơ trở thành 1. Lúc này, tính Dot Product sẽ cho ra kết quả hoàn toàn giống với Cosine Similarity. Điều này mang lại lợi ích khổng lồ về mặt điện toán: phép Dot Product chạy nhanh và dễ tối ưu phần cứng (như matrix multiplication ở GPU/TPU) hơn phép chia căn bậc hai phức tạp trong công thức Cosine.
+### 2. Sự khác biệt giữa phép toán Dot Product và Cosine Similarity là gì? Việc chuẩn hóa (normalize) vectơ mang lại lợi ích gì?
+* **Gợi ý trả lời**: Cosine Similarity chỉ quan tâm đến "góc" giữa hai vectơ (độ hướng của chúng), trong khi Dot Product tính toán kết hợp cả góc lẫn độ dài của hai vectơ. Khi chúng ta thực hiện chuẩn hóa độ dài của các vectơ về bằng 1 (L2 Normalization), độ dài của mọi vectơ trong không gian đều bằng nhau. Lúc này, phép tính Dot Product sẽ cho ra kết quả hoàn toàn trùng khớp với Cosine Similarity. Điều này mang lại lợi thế cực kỳ lớn về mặt điện toán vì phép toán nhân ma trận vô hướng (Dot Product) được các phần cứng như GPU/TPU tối ưu hóa để chạy nhanh hơn rất nhiều so với phép tính căn bậc hai phức tạp trong công thức Cosine Similarity truyền thống.
 
----
-
-## References
-
-1. **Word2Vec Parameter Learning Explained** - Xin Rong.
-2. **Deep Learning for Natural Language Processing** - Jason Brownlee.
+### 3. Làm thế nào để giải quyết vấn đề từ vựng nằm ngoài từ điển (Out-Of-Vocabulary - OOV) khi tạo Embeddings?
+* **Gợi ý trả lời**: Đối với các mô hình nhúng cổ điển như Word2Vec hay GloVe, các từ nằm ngoài từ điển huấn luyện sẽ không có vectơ và thường được gán cho một vectơ mặc định (ví dụ `<UNK>`), làm mất đi ngữ nghĩa thực. Để khắc phục điều này, các kiến trúc hiện đại sử dụng thuật toán phân tách từ con (Subword Tokenization) như Byte-Pair Encoding (BPE) hay WordPiece (được dùng trong BERT/GPT). Các thuật toán này chia nhỏ các từ mới hoặc từ hiếm gặp thành các gốc từ hoặc tiền tố/hậu tố quen thuộc (ví dụ "unhappy" thành "un" và "happy"), từ đó vẫn biểu diễn được ngữ nghĩa của từ mới dựa trên tổ hợp của các từ con đã biết.
 
 ---
 
-## English summary
+## Đọc thêm và Tài liệu tham khảo
+
+1. [Mô hình nhúng (Embedding Models)](/concepts/embedding-models) - Khám phá các loại mô hình nhúng phổ biến.
+2. [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/semantic-search) - Ứng dụng embeddings trong việc tìm kiếm thông tin theo ngữ nghĩa.
+3. [Vector Database](/concepts/vector-database) - Cách lưu trữ và truy vấn hiệu quả hàng triệu vectơ nhúng.
+4. **Word2Vec Parameter Learning Explained** - Xin Rong.
+5. **Deep Learning for Natural Language Processing** - Jason Brownlee.
+
+---
+
+## English Summary
 
 Embeddings are dense, numerical vectors residing in a high-dimensional continuous space, representing the latent semantic features of unstructured data (text, images, audio). Created by deep learning models, they replace inefficient one-hot encoding by capturing context and synonyms—words with similar meanings are mapped geometrically close to one another. The similarity between embeddings is typically calculated using Cosine Similarity or Dot Product. They are the backbone of modern NLP, forming the foundation for Semantic Search, Retrieval-Augmented Generation (RAG), and Recommender Systems.

@@ -89,7 +89,7 @@ graph LR
 
 ---
 
-## Practical example
+## Ví dụ thực tế (Practical example)
 
 Giả sử hệ thống nguồn của bạn là MySQL chứa bảng `orders`. Để không làm chậm hệ thống khi khách hàng đang mua sắm, bạn cấu hình công cụ **Debezium** (một công cụ CDC) để đọc file `binlog` của MySQL.
 
@@ -109,50 +109,34 @@ Sau đó, sự kiện này được đẩy vào Kafka và cuối cùng lưu vào
 
 ---
 
-## Best practices
+## Sai lầm thường gặp và Best Practices
 
 * **Bảo vệ hệ thống nguồn là ưu tiên số 1**: Tuyệt đối không viết các câu lệnh SELECT quá phức tạp (ví dụ: JOIN nhiều bảng) trực tiếp lên hệ thống OLTP để trích xuất dữ liệu. Nếu cần dùng Batch, hãy trích xuất từ bản sao (Read Replica) thay vì Primary DB.
 * **Sử dụng CDC thay vì Batch nếu có thể**: CDC giúp giảm thiểu độ trễ dữ liệu (latency) và không gây tải lên CPU/RAM của hệ thống nguồn.
 * **Xử lý API Rate Limits**: Khi gọi SaaS API, phải thiết kế cơ chế back-off (chờ đợi và thử lại) để không bị block vì vượt quá giới hạn số lượng request.
 
----
-
-## Common mistakes
-
 * **Quét toàn bảng (Full Table Scan) liên tục**: Dùng lệnh `SELECT * FROM table` chạy mỗi 5 phút trên một bảng có hàng triệu dòng của hệ thống đang chạy. Điều này sẽ làm sập (crash) hệ thống kinh doanh.
 * **Tin tưởng tuyệt đối vào hệ thống nguồn**: Mặc định rằng dữ liệu từ hệ thống nguồn luôn sạch. Thực tế, APIs thỉnh thoảng trả về JSON sai định dạng, logs bị thiếu dòng, DB có lỗi nhập liệu do human error.
 
----
+## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-## Trade-offs
+### Ưu điểm
+* **Lấy dữ liệu nguyên bản nhất**: Trích xuất trực tiếp giúp lấy được dữ liệu thô, chưa qua xử lý hay biến đổi, đảm bảo tính toàn vẹn thông tin gốc.
+* **Hỗ trợ thời gian thực**: Sử dụng cơ chế CDC giúp hệ thống cập nhật dữ liệu với độ trễ cực thấp mà không gây quá tải cho nguồn.
 
-### Ưu điểm của việc kết nối trực tiếp hệ thống nguồn
-* Lấy được dữ liệu nguyên bản nhất, chưa bị bóp méo hay biến đổi.
+### Nhược điểm & Đánh đổi
+* **Rủi ro Schema Drift**: Hệ thống nguồn có thể thay đổi cấu trúc bảng (Schema changes) bất kỳ lúc nào mà không báo trước cho Data Team (ví dụ: đổi tên cột `user_id` thành `customer_id`), làm gãy vỡ (break) các đường ống dữ liệu (Data Pipelines).
+* **Quản trị phức tạp**: Cần phải quản lý rất nhiều loại credential (tài khoản đăng nhập, API keys) bảo mật khác nhau cho nhiều hệ thống nguồn khác nhau.
 
-### Nhược điểm
-* Hệ thống nguồn có thể thay đổi cấu trúc bảng (Schema changes) bất kỳ lúc nào mà không báo trước cho Data Team (ví dụ: đổi tên cột `user_id` thành `customer_id`), làm gãy vỡ (break) các đường ống dữ liệu (Data Pipelines).
-* Cần phải quản lý rất nhiều loại credential (tài khoản đăng nhập, API keys) bảo mật khác nhau.
+## Khái niệm liên quan
 
----
-
-## When to use
-
-* Bất cứ khi nào bạn xây dựng Data Warehouse hoặc Data Lake, bạn đều phải tương tác với hệ thống nguồn.
-
-## When not to use
-
-* (Không áp dụng) Không thể có Data Platform nếu không kết nối với ít nhất một hệ thống nguồn.
+* [OLTP (Hệ thống giao dịch)](/concepts/oltp) - Hệ thống xử lý giao dịch trực tuyến.
+* [Data Pipeline (Đường ống dữ liệu)](/concepts/data-pipeline) - Đường ống luân chuyển dữ liệu.
+* [Schema Drift (Trôi dạt cấu trúc)](/concepts/schema-drift) - Hiện tượng thay đổi cấu trúc dữ liệu nguồn.
 
 ---
 
-## Related concepts
-
-* [OLTP](/concepts/oltp)
-* [Data Pipeline](/concepts/data-pipeline)
-
----
-
-## Interview questions
+## Góc phỏng vấn: Xử lý các bài toán về Hệ thống nguồn
 
 ### 1. Change Data Capture (CDC) là gì? Khác gì với Incremental Load dựa trên cột `updated_at`?
 * **Gợi ý trả lời**: 
@@ -162,15 +146,23 @@ Sau đó, sự kiện này được đẩy vào Kafka và cuối cùng lưu vào
 ### 2. Bạn làm gì khi hệ thống nguồn là một API của bên thứ 3 và họ áp đặt giới hạn (Rate Limit) chỉ 100 requests / phút?
 * **Gợi ý trả lời**: Tôi sẽ áp dụng cơ chế điều tiết (Throttling) trong code trích xuất. Đồng thời xử lý HTTP Status Code `429 Too Many Requests` bằng kỹ thuật Exponential Backoff (chờ 1s, rồi 2s, rồi 4s... trước khi thử lại). Tôi cũng sẽ tận dụng cơ chế Webhook (nếu API có hỗ trợ) để bên thứ 3 chủ động đẩy dữ liệu sang hệ thống của tôi thay vì tôi phải liên tục gọi API để hỏi.
 
+### 3. Làm thế nào để trích xuất dữ liệu từ các hệ thống SaaS API (như Salesforce, Shopify) một cách hiệu quả và xử lý vấn đề thay đổi cấu trúc API (API Versioning)?
+* **Gợi ý trả lời**: 
+  * Để trích xuất hiệu quả, ta nên sử dụng các bộ connector chuẩn hóa (như Fivetran, Airbyte) hoặc tự viết client client hỗ trợ phân trang (pagination) và xử lý rate limit tự động.
+  * Để đối phó với API Versioning, cần lưu cấu hình phiên bản API đang gọi ở lớp biến môi trường. Trước khi nâng cấp phiên bản API mới của đối tác lên Production, cần chạy các bài kiểm thử độ tương thích schema trong môi trường Staging.
+  * Luôn lưu trữ dữ liệu thô (Raw JSON response) vào Bronze layer của Data Lake trước khi biến đổi, giúp dễ dàng chạy lại (replay) pipeline từ đầu nếu API thay đổi cấu trúc phản hồi.
+
 ---
 
-## References
+## Đọc thêm và Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann.
-2. **Debezium Documentation** - Red Hat.
+1. [OLTP (Hệ thống giao dịch)](/concepts/oltp) - Hệ thống xử lý giao dịch trực tuyến.
+2. [Data Pipeline (Đường ống dữ liệu)](/concepts/data-pipeline) - Đường ống luân chuyển dữ liệu.
+3. **Designing Data-Intensive Applications** - Martin Kleppmann.
+4. **Debezium Documentation** - Red Hat.
 
 ---
 
-## English summary
+## English Summary
 
 Source Systems are the operational applications, databases, APIs, and logs where data originates. In data engineering, extracting data safely from these systems is critical. Methods range from periodic batch extraction (Full or Incremental) using API polling or SQL queries, to real-time Change Data Capture (CDC) that reads database transaction logs. Best practices mandate protecting the performance of source systems, often by extracting from read replicas or using log-based CDC rather than heavy direct queries.

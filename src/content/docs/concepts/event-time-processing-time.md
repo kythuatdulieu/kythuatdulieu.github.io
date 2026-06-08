@@ -11,47 +11,37 @@ metaDescription: "Tìm hiểu sự khác biệt giữa Event Time (Thời gian s
 
 # Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time
 
-## Summary
+Khi chúng ta chuyển đổi từ mô hình xử lý dữ liệu theo lô (Batch Processing) sang xử lý dữ liệu luồng (Streaming Processing), có một khái niệm tưởng chừng rất đơn giản nhưng lại trở nên vô cùng phức tạp: **Thời gian**. 
 
-Trong xử lý dữ liệu luồng (Streaming Processing), việc định nghĩa "thời gian" là vô cùng quan trọng. **Event Time** (Thời gian sự kiện) là thời điểm thực tế mà một sự kiện xảy ra tại thiết bị nguồn, trong khi **Processing Time** (Thời gian xử lý) là thời điểm mà sự kiện đó được máy chủ streaming xử lý. Sự chênh lệch giữa hai mốc thời gian này tạo ra những thách thức lớn trong việc đảm bảo tính chính xác của dữ liệu, đặc biệt là trong các bài toán phân nhóm dữ liệu theo thời gian (windowing) hoặc dữ liệu đến muộn (late data).
+Trong một hệ thống streaming hoạt động liên tục 24/7, việc định nghĩa "khi nào một sự kiện thực sự xảy ra" là chìa khóa để đảm bảo tính đúng đắn của toàn bộ báo cáo phân tích. Nếu không phân biệt rõ ràng giữa **Thời gian sự kiện (Event Time)** và **Thời gian xử lý (Processing Time)**, bạn sẽ rất dễ rơi vào bẫy sai lệch số liệu mà không thể nào tìm ra nguyên nhân.
 
----
+## Kiến trúc và Sự khác biệt giữa Event Time và Processing Time
 
-## Definition
+Hãy cùng làm rõ hai khái niệm này thông qua một ví dụ đơn giản:
 
-* **Event Time**: Là mốc thời gian (timestamp) được thiết bị hoặc hệ thống sinh ra sự kiện đính kèm vào dữ liệu tại thời điểm sự kiện thực sự diễn ra. Ví dụ: thời điểm người dùng bấm nút "Mua hàng" trên điện thoại lúc 10:00:00.
-* **Processing Time**: Là mốc thời gian của đồng hồ hệ thống trên máy chủ đang chạy engine xử lý luồng (như Apache Flink, Spark Streaming) tại thời điểm nó thực sự nhận và xử lý sự kiện đó. Ví dụ: do nghẽn mạng, sự kiện "Mua hàng" ở trên đến server và được xử lý lúc 10:00:15.
+* **Event Time (Thời gian sự kiện)**: Là mốc thời gian (timestamp) được ghi nhận trực tiếp tại thiết bị nguồn (như điện thoại của người dùng, cảm biến IoT) tại đúng thời điểm sự kiện đó thực sự diễn ra. Ví dụ: Khách hàng nhấn nút "Mua hàng" trên ứng dụng di động vào lúc **10:00:00**.
+* **Processing Time (Thời gian xử lý)**: Là mốc thời gian hiển thị trên đồng hồ hệ thống của máy chủ xử lý dữ liệu (như cụm Apache Flink hoặc Spark Streaming) tại thời điểm nó thực sự nhận và xử lý bản ghi dữ liệu đó. Ví dụ: Do điện thoại của khách hàng bị mất sóng mạng tạm thời, sự kiện mua hàng lúc 10:00:00 chỉ thực sự được gửi tới máy chủ xử lý vào lúc **10:00:15**. Mốc 10:00:15 chính là Processing Time.
 
----
+## Tại sao mạng internet làm phức tạp hóa khái niệm thời gian?
 
-## Why it exists
+Trong một thế giới lý thuyết lý tưởng, mạng internet có tốc độ truyền tải vô hạn và không bao giờ gặp sự cố. Khi đó, Event Time và Processing Time sẽ hoàn toàn trùng khớp nhau. 
 
-Sự phân biệt này tồn tại vì **độ trễ mạng (network latency)** và **sự cố gián đoạn kết nối (disconnects)**. Trong thế giới thực, dữ liệu không bao giờ đến hệ thống xử lý ngay lập tức và theo đúng thứ tự.
-1. **Dữ liệu đến muộn (Late Data)**: Một thiết bị di động mất mạng có thể gửi các sự kiện của ngày hôm qua lên server vào ngày hôm nay khi có mạng trở lại.
-2. **Sai lệch thứ tự (Out-of-order Data)**: Do độ trễ định tuyến mạng khác nhau, sự kiện B xảy ra sau sự kiện A nhưng có thể đến server và được xử lý trước sự kiện A.
+Thế nhưng, trong thế giới thực tế, dữ liệu truyền đi qua mạng luôn phải đối mặt với hai vấn đề lớn:
+1. **Dữ liệu đến muộn (Late Data)**: Một chiếc điện thoại chui vào tầng hầm mất sóng mạng suốt 1 tiếng. Trong 1 tiếng đó, người dùng vẫn thực hiện các thao tác trên app (các sự kiện vẫn được ghi nhận Event Time đều đặn). Khi người dùng ra khỏi tầng hầm và có sóng mạng trở lại, điện thoại sẽ đồng loạt gửi bù tất cả các sự kiện này lên server.
+2. **Sai lệch thứ tự (Out-of-order Data)**: Do các gói tin đi qua các con đường định tuyến mạng khác nhau, sự kiện xảy ra sau có thể đến server trước sự kiện xảy ra trước.
 
-Nếu hệ thống tính toán doanh thu theo giờ dựa vào Processing Time, các sự kiện của ngày hôm qua gửi bù sẽ bị tính nhầm vào doanh thu của ngày hôm nay, làm sai lệch hoàn toàn kết quả phân tích.
+Hãy tưởng tượng bạn đang viết một chương trình tính toán doanh thu từng giờ của doanh nghiệp. Nếu bạn sử dụng Processing Time (đồng hồ của server), các sự kiện mua hàng của ngày hôm qua (do điện thoại mất sóng gửi bù lên hôm nay) sẽ bị tính gộp vào doanh thu của ngày hôm nay. Điều này làm sai lệch hoàn toàn biểu đồ báo cáo tài chính.
 
----
+## Sự đánh đổi cốt lõi: Độ trễ (Latency) vs Độ chính xác (Accuracy)
 
-## Core idea
+Để giải quyết triệt để vấn đề dữ liệu đến muộn, các engine xử lý luồng hiện đại cho phép chúng ta tách rời hoàn toàn kết quả tính toán khỏi thời điểm dữ liệu được xử lý bằng cách cấu hình hệ thống chạy theo **Event Time**:
 
-Ý tưởng cốt lõi của việc hỗ trợ Event Time trong các engine streaming là tách rời hoàn toàn kết quả tính toán khỏi thời điểm dữ liệu được xử lý. 
-* Khi xử lý theo **Processing Time**: Hệ thống chạy nhanh, độ trễ thấp, không cần chờ đợi, nhưng kết quả không mang tính tất định (non-deterministic) và không chính xác nếu có độ trễ.
-* Khi xử lý theo **Event Time**: Hệ thống đảm bảo tính chính xác tuyệt đối và kết quả tất định bất kể sự kiện đến trễ bao lâu, nhưng bù lại phải quản lý trạng thái (state) phức tạp hơn và dùng cơ chế Watermark để biết khi nào nên chốt sổ tính toán.
+* **Xử lý theo Processing Time**: Hệ thống chạy cực nhanh, có dữ liệu đổ về là xử lý ngay lập tức (độ trễ bằng 0), không cần tốn bộ nhớ để chờ đợi. Tuy nhiên, kết quả thu được sẽ không mang tính tất định (non-deterministic) – nghĩa là nếu bạn chạy lại luồng dữ liệu đó lần thứ hai, kết quả thu được sẽ khác lần thứ nhất do độ trễ mạng tại mỗi thời điểm là khác nhau.
+* **Xử lý theo Event Time**: Hệ thống đảm bảo tính chính xác tuyệt đối và kết quả là tất định (chạy lại 100 lần vẫn ra một kết quả duy nhất). Để làm được điều này, hệ thống phải sử dụng một cơ chế gọi là **Watermark** để ước lượng và "chờ đợi" các dữ liệu đến muộn trước khi chính thức chốt sổ tính toán. Việc chờ đợi này vô tình làm tăng độ trễ của kết quả đầu ra.
 
----
+## Minh họa luồng dữ liệu đến muộn và bị lệch thứ tự
 
-## How it works
-
-1. **Gắn Timestamp**: Mỗi bản ghi (record) ngay từ lúc sinh ra (tại client/sensor) sẽ được gắn một trường thời gian (ví dụ: `event_timestamp`).
-2. **Trích xuất (Extraction)**: Engine streaming (như Flink) sẽ có một bộ giải mã để đọc trường `event_timestamp` này và coi đó là mốc thời gian hợp lệ cho bản ghi.
-3. **Phân nhóm (Windowing)**: Các dữ liệu sẽ được phân vào các cửa sổ thời gian dựa trên Event Time thay vì đồng hồ server.
-4. **Theo dõi tiến trình (Watermarking)**: Hệ thống sử dụng Watermark để ước lượng xem liệu còn dữ liệu nào của quá khứ chưa đến hay không, từ đó quyết định đóng cửa sổ thời gian và xuất kết quả.
-
----
-
-## Architecture / Flow
+Dưới đây là sơ đồ minh họa sự khác biệt khi xử lý dữ liệu:
 
 ```mermaid
 graph TD
@@ -71,113 +61,101 @@ graph TD
     end
 ```
 
----
+Nếu chạy theo Processing Time, hệ thống sẽ gom nhóm và tính toán các sự kiện theo đúng thứ tự thời gian thực tế nhận được (Event 2 $\rightarrow$ Event 1 $\rightarrow$ Event 3). Chỉ khi chạy theo Event Time, hệ thống mới có khả năng sắp xếp lại dữ liệu về đúng vị trí thời gian gốc của chúng.
 
-## Practical example
+## Thực hành: Thiết lập Event Time và Watermark trong PySpark
 
-Xét bài toán tính tổng số lượt click quảng cáo mỗi phút. Dưới đây là cách định nghĩa Event Time trong Apache Flink (Java):
+Dưới đây là đoạn code Python minh họa cách cấu hình trích xuất Event Time từ bản ghi sự kiện, thiết lập Watermark chờ tối đa 5 giây cho dữ liệu đến muộn, và thực hiện gom nhóm (aggregation) theo cửa sổ thời gian (Windowing) trong PySpark Structured Streaming:
 
-```java
-DataStream<ClickEvent> clicks = env.addSource(new KafkaSource());
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, window, from_json
 
-DataStream<ClickEvent> withEventTime = clicks.assignTimestampsAndWatermarks(
-    WatermarkStrategy
-        .<ClickEvent>forBoundedOutOfOrderness(Duration.ofSeconds(5))
-        .withTimestampAssigner((event, timestamp) -> event.getClickTimestamp()) // Trích xuất Event Time
-);
+spark = SparkSession.builder \
+    .appName("EventTimeWatermarkingExample") \
+    .getOrCreate()
 
-// Tính toán dựa trên Event Time Window
-withEventTime
-    .keyBy(event -> event.getAdId())
-    .window(TumblingEventTimeWindows.of(Time.minutes(1)))
-    .process(new CountClicksProcessFunction());
+# Đọc luồng dữ liệu từ Kafka
+# Giả sử nhận message payload dạng JSON từ Kafka topic
+df_kafka = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "user_clicks") \
+    .load()
+
+# Giải mã dữ liệu JSON từ trường 'value'
+# Định dạng payload: {"ad_id": "ad_123", "click_timestamp": "2026-06-08T10:00:00Z"}
+clicks_df = df_kafka.selectExpr("CAST(value AS STRING) as json_payload") \
+    .select(from_json(col("json_payload"), "ad_id STRING, click_timestamp TIMESTAMP").alias("data")) \
+    .select("data.*")
+
+# Cấu hình Watermark (chờ tối đa 5 giây cho dữ liệu đến muộn)
+# và thực hiện đếm số lượt click theo cửa sổ thời gian 1 phút (Tumbling Window)
+windowed_counts = clicks_df \
+    .withWatermark("click_timestamp", "5 seconds") \
+    .groupBy(
+        window(col("click_timestamp"), "1 minute"),
+        col("ad_id")
+    ).count()
+
+# Ghi kết quả ra console ở chế độ Append
+query = windowed_counts.writeStream \
+    .format("console") \
+    .outputMode("append") \
+    .start()
+
+query.awaitTermination()
 ```
 
-Nếu dùng Processing Time, đoạn code window sẽ đổi thành `TumblingProcessingTimeWindows.of(Time.minutes(1))`, và hệ thống sẽ không quan tâm đến `getClickTimestamp()` nữa.
+---
+
+## Sai lầm thường gặp và Best Practices
+
+### Best Practices
+* **Kinh doanh dùng Event Time, Giám sát dùng Processing Time**: Hãy luôn ưu tiên dùng Event Time cho các số liệu báo cáo nghiệp vụ (doanh thu, lượt chuyển đổi khách hàng) để đảm bảo tính chính xác tuyệt đối. Ngược lại, đối với các hệ thống giám sát hạ tầng kỹ thuật (như đo lường CPU/RAM, đo số lượng request lỗi của máy chủ), hãy dùng Processing Time vì bạn cần phát hiện cảnh báo lỗi ngay lập tức mà không muốn chờ đợi dữ liệu đến muộn.
+* **Luôn cấu hình Side-Output**: Dù đã thiết lập Watermark chờ đợi, vẫn có những sự kiện đến siêu muộn (ví dụ thiết bị tắt mạng cả tuần). Hãy cấu hình một đường dẫn phụ (Side-Output) để hứng và xử lý riêng lượng dữ liệu siêu muộn này, tránh việc hệ thống âm thầm vứt bỏ chúng làm mất mát dữ liệu.
+
+### Sai lầm thường gặp (Common Pitfalls)
+* **Dùng Processing Time cho việc nạp Data Warehouse**: Ghi nhận dữ liệu vào bảng tính toán dựa trên Processing Time sẽ khiến bạn không thể nào chạy lại dữ liệu lịch sử (re-process) khi hệ thống gặp lỗi phần mềm, vì toàn bộ dữ liệu lịch sử khi chạy lại sẽ bị gán mốc thời gian của ngày hôm nay.
+* **Bẫy đồng hồ thiết bị nguồn bị lệch (Clock Skew)**: Rất nhiều thiết bị người dùng (điện thoại) bị sai giờ hệ thống do người dùng chỉnh tay hoặc lỗi pin. Điều này dẫn đến Event Time gửi lên bị lệch hàng tháng trời. Hãy thiết lập bộ lọc tại API Gateway để đối chiếu Event Time với thời điểm nhận (Ingestion Time). Nếu độ lệch vượt quá một ngưỡng an toàn (ví dụ: quá 24 tiếng), hãy dùng Ingestion Time làm mốc thời gian thay thế.
 
 ---
 
-## Best practices
-
-* **Ưu tiên Event Time cho phân tích kinh doanh**: Luôn sử dụng Event Time cho mọi báo cáo, tính toán metics cần tính chính xác lịch sử (doanh thu, số lượt truy cập).
-* **Sử dụng Processing Time cho giám sát hệ thống**: Khi cần tính toán các metrics của hệ thống như "Số requests server nhận được trong 1 phút qua" để cảnh báo tải, Processing Time là lựa chọn tốt nhất vì độ trễ thấp và không bị block bởi late data.
-* **Xử lý cẩn thận Late Data**: Luôn đi kèm cấu hình side-output để hứng các dữ liệu đến quá trễ (vượt qua giới hạn Watermark) thay vì vứt bỏ chúng âm thầm.
-
----
-
-## Common mistakes
-
-* **Dùng Processing Time cho Data Warehouse/BI**: Nạp dữ liệu vào các bảng tính toán doanh thu hàng ngày dựa trên Processing Time, dẫn đến số liệu biến động không thể tái lập (non-reproducible) nếu hệ thống ETL bị chết và phải chạy lại dữ liệu ngày hôm trước.
-* **Không đồng bộ đồng hồ thiết bị nguồn (NTP)**: Thiết bị di động của người dùng bị sai đồng hồ hệ thống (chạy trước/sau giờ chuẩn), dẫn đến Event Time bị sai lệch nghiêm trọng. Cần có cơ chế đối chiếu hoặc sử dụng thời gian server tại thời điểm nhận (Ingestion Time) làm fallback nếu Event Time lệch quá xa thực tế.
-
----
-
-## Trade-offs
+## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
 ### Event Time
-* **Ưu điểm**: Kết quả chính xác tuyệt đối, tất định, phản ánh đúng thực tế, có thể tái lập lại (recompute) kết quả cũ nếu chạy lại dữ liệu.
-* **Nhược điểm**: Phải chờ đợi dữ liệu đến muộn (tăng độ trễ tính toán), tốn nhiều bộ nhớ hơn để duy trì trạng thái (state) cho các cửa sổ thời gian đang chờ.
+* **Ưu điểm (Pros)**: Chính xác tuyệt đối, kết quả có tính tất định, có khả năng tái lập lại dữ liệu lịch sử khi cần sửa code.
+* **Nhược điểm & Đánh đổi (Cons & Trade-offs)**: Hệ thống phải chờ đợi dữ liệu muộn nên kết quả bị trễ, tốn nhiều RAM của server để duy trì trạng thái của các cửa sổ thời gian đang mở.
 
 ### Processing Time
-* **Ưu điểm**: Độ trễ cực thấp (có dữ liệu là tính ngay), tốn ít bộ nhớ state, triển khai đơn giản không cần Watermark.
-* **Nhược điểm**: Kết quả không chính xác nếu có nghẽn mạng, không thể tái lập lại kết quả nếu chạy lại dữ liệu trong quá khứ.
+* **Ưu điểm (Pros)**: Tốc độ xử lý tức thì, độ trễ bằng 0, tiết kiệm bộ nhớ RAM tối đa vì không cần lưu trạng thái chờ đợi.
+* **Nhược điểm & Đánh đổi (Cons & Trade-offs)**: Kết quả không chính xác nếu xảy ra nghẽn mạng, không thể chạy lại dữ liệu cũ để phục hồi số liệu lịch sử.
 
 ---
 
-## When to use
-
-* **Event Time**: Thanh toán, tính toán doanh thu, user session analysis, tái hiện chuỗi sự kiện người dùng (funnel analysis).
-* **Processing Time**: Dashboard giám sát hạ tầng (CPU/RAM/Traffic), cảnh báo lỗi hệ thống theo thời gian thực.
-
-## When not to use
-
-* Không dùng Event Time khi hệ thống nguồn không đáng tin cậy về mặt đồng hồ (ví dụ thiết bị IoT không có Internet để cập nhật giờ chuẩn) và độ chính xác của timestamp là vô nghĩa.
-
----
-
-## Related concepts
-
-* [Watermark](/concepts/watermark)
-* [Windowing](/concepts/windowing)
-* [Exactly-Once Semantics](/concepts/exactly-once-semantics)
-* [Apache Kafka](/concepts/apache-kafka)
-
----
-
-## Interview questions
+## Góc phỏng vấn
 
 ### 1. Sự khác biệt cốt lõi giữa Event Time và Processing Time là gì?
-* **Người phỏng vấn muốn kiểm tra**: Sự hiểu biết về khái niệm thời gian trong hệ thống phân tán.
-* **Gợi ý trả lời (Strong Answer)**: Event Time là thời gian sự kiện thực sự xảy ra ở nguồn phát sinh, còn Processing Time là thời gian đồng hồ của máy chủ xử lý khi nó nhận được sự kiện. Processing Time bị ảnh hưởng bởi độ trễ mạng và thứ tự thông điệp không được đảm bảo, dẫn đến kết quả tính toán không tất định. Event Time giải quyết triệt để vấn đề này bằng cách neo tính toán vào đúng mốc thời gian xảy ra, dùng kèm Watermark để quản lý dữ liệu đến trễ, đảm bảo kết quả chính xác tuyệt đối nhưng phải hi sinh một chút độ trễ tính toán (latency).
-* **Lỗi cần tránh**: Giải thích lấp lửng và không nhắc đến các từ khóa như "độ trễ mạng" (network latency) hay "tính tất định" (determinism).
+* **Gợi ý trả lời**: Event Time là mốc thời gian xảy ra sự kiện được ghi nhận trực tiếp từ thiết bị nguồn phát sinh dữ liệu, trong khi Processing Time là thời gian ghi nhận bởi đồng hồ hệ thống của máy chủ xử lý dữ liệu tại thời điểm nó nhận được bản ghi. Processing Time phụ thuộc vào điều kiện mạng vật lý và tải của server nên kết quả tính toán sẽ không mang tính tất định. Event Time khắc phục điều này bằng cách neo chặt tính toán vào mốc thời gian gốc của sự kiện, kết hợp với cơ chế Watermark để quản lý dữ liệu đến muộn, đảm bảo tính đúng đắn tuyệt đối của dữ liệu.
 
-### 2. Nếu một hệ thống chạy lại (re-process) dữ liệu của ngày hôm qua, điều gì xảy ra nếu dùng Processing Time?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về khả năng tái tạo dữ liệu (Reproducibility).
-* **Gợi ý trả lời (Strong Answer)**: Nếu dùng Processing Time, mọi sự kiện của ngày hôm qua sẽ bị hệ thống gán cho mốc thời gian của ngày hôm nay (thời điểm đang chạy lại dữ liệu). Kết quả là dữ liệu của ngày hôm qua sẽ bị tính nhầm vào các cửa sổ thời gian của ngày hôm nay, làm hỏng hoàn toàn logic nghiệp vụ. Chỉ Event Time mới đảm bảo kết quả re-process giống hệt như chạy realtime.
-* **Lỗi cần tránh**: Trả lời sai rằng hệ thống vẫn nhận biết được dữ liệu cũ.
+### 2. Ingestion Time là gì và nó đứng ở đâu giữa Event Time và Processing Time?
+* **Gợi ý trả lời**: Ingestion Time là mốc thời gian được ghi nhận khi sự kiện đi vào hệ thống trung gian đầu tiên (ví dụ như khi đi vào Kafka Broker). Ingestion Time nằm ở giữa hai khái niệm kia: nó chính xác và ít bị biến động hơn Processing Time vì không phụ thuộc vào hàng đợi hay độ trễ của worker xử lý phía sau, nhưng nó vẫn không phản ánh đúng hoàn toàn thời điểm xảy ra sự kiện nếu đường truyền mạng từ client lên Kafka bị tắc nghẽn. Ingestion Time thường được dùng làm giải pháp thay thế (fallback) khi thiết bị nguồn không thể tạo ra mốc thời gian Event Time đáng tin cậy.
 
-### 3. Ingestion Time là gì và nó đứng ở đâu giữa Event Time và Processing Time?
-* **Người phỏng vấn muốn kiểm tra**: Kiến thức sâu hơn về các mốc thời gian trung gian.
-* **Gợi ý trả lời (Strong Answer)**: Ingestion Time là thời điểm sự kiện đi vào hệ thống luồng dữ liệu (ví dụ: thời điểm Kafka broker nhận được message). Nó là mức trung gian: chính xác và ổn định hơn Processing Time vì nó được sinh ra gần nguồn hơn và không phụ thuộc vào độ trễ của worker xử lý, nhưng vẫn không chính xác bằng Event Time nếu mạng từ client lên Kafka bị trễ. Thường dùng khi client không thể tự tạo timestamp đáng tin cậy.
-
-### 4. Làm sao để xử lý tình trạng Event Time từ thiết bị người dùng (Client) bị sai (Clock Skew)?
-* **Người phỏng vấn muốn kiểm tra**: Kinh nghiệm xử lý dữ liệu thực tế (Real-world data messiness).
-* **Gợi ý trả lời (Strong Answer)**: Đây là vấn đề rất phổ biến. Cách giải quyết là ở tầng Ingestion (như API Gateway), ta ghi nhận Ingestion Time. Sau đó, so sánh Event Time do client gửi lên với Ingestion Time. Nếu độ lệch vượt quá một ngưỡng cho phép (ví dụ: lệch quá 24 giờ do user chỉnh giờ điện thoại), ta có thể bác bỏ Event Time của client và dùng fallback là Ingestion Time, hoặc loại bỏ bản ghi đó vào một Dead Letter Queue để điều tra thêm.
-
-### 5. Sự đánh đổi lớn nhất khi sử dụng Event Time so với Processing Time là gì?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về trade-off trong thiết kế hệ thống.
-* **Gợi ý trả lời (Strong Answer)**: Sự đánh đổi lớn nhất là giữa Độ chính xác (Accuracy) và Độ trễ (Latency) cùng với Chi phí bộ nhớ (State size). Event Time đảm bảo tính chính xác nhưng buộc hệ thống phải "chờ đợi" dữ liệu đến muộn thông qua Watermark, làm chậm quá trình chốt kết quả và phải giữ state của các Window trong bộ nhớ lâu hơn. Processing Time tính ra kết quả ngay lập tức nhưng có thể sai lệch logic kinh doanh.
+### 3. Điều gì sẽ xảy ra nếu chúng ta dùng Processing Time để chạy lại (re-process) dữ liệu lịch sử của tuần trước?
+* **Gợi ý trả lời**: Nếu dùng Processing Time để chạy lại dữ liệu, toàn bộ các sự kiện của tuần trước khi đi qua hệ thống sẽ bị gán mốc thời gian của ngày hôm nay (thời điểm chúng ta đang chạy lại job). Kết quả là dữ liệu tuần trước sẽ bị tính dồn vào các cửa sổ thời gian của ngày hôm nay, làm sai lệch và hỏng hoàn toàn toàn bộ số liệu thống kê. Chỉ có Event Time mới giúp việc chạy lại dữ liệu lịch sử cho ra kết quả chính xác giống hệt như khi chạy thực tế ban đầu.
 
 ---
 
-## References
+## Đọc thêm và Tài liệu tham khảo
 
-1. **Streaming Systems** - Tyler Akidau (Sách cực kỳ chuyên sâu về Event Time và cơ chế Dataflow Model).
-2. **Apache Flink Documentation** - Event Time and Watermarks.
-3. **Google Cloud Dataflow Documentation** - Handling Late Data.
+1. [Watermark](/concepts/watermark) - Khái niệm cốt lõi để theo dõi tiến trình của Event Time.
+2. [Batch Processing](/concepts/batch-processing) - Mô hình xử lý dữ liệu theo lô truyền thống.
+3. [Exactly-Once Semantics](/concepts/exactly-once-semantics) - Đảm bảo tính nhất quán dữ liệu trong Streaming.
+4. **Streaming Systems** - Tyler Akidau (Sách gối đầu giường về xử lý dữ liệu luồng).
+5. **Apache Flink & Spark Structured Streaming Documentation** - Hướng dẫn chi tiết cấu hình Event Time và Windowing.
 
 ---
 
-## English summary
+## English Summary
 
 In stream processing, understanding the concept of time is critical. **Event Time** is the timestamp assigned to an event when it actually occurs at the source device. **Processing Time** is the system clock time of the streaming engine when it processes the event. Due to network latency and disconnections, events often arrive out-of-order or late. Using Processing Time yields low latency but non-deterministic and inaccurate results for business logic. Event Time guarantees correctness and reproducibility by placing events into their correct temporal context, albeit requiring mechanisms like Watermarks to handle late data and increasing state memory usage.

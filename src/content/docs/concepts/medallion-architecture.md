@@ -9,66 +9,39 @@ seoTitle: "Medallion Architecture là gì? Kiến trúc Bronze - Silver - Gold t
 metaDescription: "Tìm hiểu chi tiết về Medallion Architecture (Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng) phổ biến trong Data Lakehouse và Databricks. Vai trò của từng lớp dữ liệu."
 ---
 
-# Kiến trúc Medallion - Medallion Architecture
+# Kiến trúc Medallion (Bronze - Silver - Gold) trong Data Lakehouse
 
-## Summary
+Khi phong trào xây dựng **Data Lake (Hồ dữ liệu)** bùng nổ, nhiều doanh nghiệp đã hào hứng đổ tất cả mọi nguồn dữ liệu họ có vào một nơi lưu trữ tập trung duy nhất (như Amazon S3 hay Google Cloud Storage). Tuy nhiên, chỉ sau một thời gian ngắn, hồ dữ liệu nhanh chóng biến thành một **Đầm lầy dữ liệu (Data Swamp)**. Lý do rất đơn giản: không ai biết file nào là dữ liệu thô, file nào đã được làm sạch, và bảng nào là bảng chuẩn xác để làm báo cáo.
 
-Medallion Architecture (Kiến trúc Huy chương) là một mô hình thiết kế logic để tổ chức dữ liệu trong các hệ thống Data Lakehouse. Được phổ biến rộng rãi bởi Databricks, kiến trúc này mô tả hành trình dòng chảy dữ liệu (Data Pipeline) qua 3 lớp phân cấp chính: Đồng (Bronze), Bạc (Silver), và Vàng (Gold). Tại mỗi bước chuyển giao giữa các lớp, chất lượng và cấu trúc của dữ liệu được nâng cấp dần dần (từ thô ráp đến hoàn thiện) nhằm phục vụ các cấp độ nhu cầu phân tích khác nhau của doanh nghiệp.
+Để lập lại trật tự cho hồ dữ liệu, Databricks đã đề xuất **Kiến trúc Medallion (Medallion Architecture)** — hay còn gọi là kiến trúc phân tầng dữ liệu Đồng, Bạc, Vàng. Đây là một mẫu thiết kế logic giúp tổ chức dữ liệu một cách khoa học, nâng cấp dần chất lượng dữ liệu qua từng chặng để phục vụ tốt nhất cho mọi nhu cầu phân tích của doanh nghiệp.
 
----
+## Lộ trình dòng chảy dữ liệu qua Ba lớp Huy chương
 
-## Definition
+Kiến trúc Medallion chia nhỏ quy trình xử lý dữ liệu (ETL/ELT) thành ba lớp (zones) với các vai trò và mức độ tinh sạch khác nhau:
 
-**Medallion Architecture** là một mẫu thiết kế quản trị dữ liệu (Data Design Pattern) phân tầng dữ liệu thành 3 khu vực lưu trữ (Zones) riêng biệt dựa trên mức độ tinh sạch và sẵn sàng của dữ liệu:
-* **Bronze Layer (Lớp Đồng - Raw/Ingestion Zone)**: Nơi chứa dữ liệu thô (Raw) nguyên bản, được thu thập trực tiếp từ các hệ thống nguồn mà chưa qua bất kỳ quá trình biến đổi nào.
-* **Silver Layer (Lớp Bạc - Cleansed/Filtered Zone)**: Dữ liệu đã được làm sạch, đồng nhất kiểu dữ liệu, lọc bỏ rác và chuẩn hóa, sẵn sàng cho các công việc khai phá hoặc đào tạo AI/Machine Learning.
-* **Gold Layer (Lớp Vàng - Aggregated/Business Zone)**: Dữ liệu đã được tổng hợp, biến đổi theo các quy tắc nghiệp vụ kinh doanh phức tạp (thường được thiết kế theo mô hình Star Schema: Fact và Dimension) để phục vụ trực tiếp cho báo cáo BI và Dashboards.
+### 1. Bronze Layer (Lớp Đồng - Ingestion Zone)
+Đây là điểm dừng chân đầu tiên của mọi dữ liệu đổ về từ các nguồn khác nhau (APIs, cơ sở dữ liệu quan hệ, IoT logs,...).
+* **Nhiệm vụ**: Đón nhận và lưu trữ dữ liệu thô (raw data) nhanh nhất có thể.
+* **Đặc điểm**: Dữ liệu được lưu trữ nguyên bản, không qua bất kỳ bộ lọc hay biến đổi logic nào (chỉ thêm mới - append-only). Chúng thường được tổ chức dưới dạng file thô (JSON, CSV, Avro) kèm theo một vài cột metadata kỹ thuật (như thời gian nạp dữ liệu, ID của batch chạy).
+* **Mục đích**: Đóng vai trò là bản sao lưu lịch sử vĩnh viễn. Nếu sau này các bước xử lý phía sau gặp lỗi, chúng ta luôn có thể quay lại lớp Bronze để chạy lại hệ thống từ đầu mà không cần phải kết nối lại vào cơ sở dữ liệu gốc của doanh nghiệp.
 
----
+### 2. Silver Layer (Lớp Bạc - Cleansed/Filtered Zone)
+Ở chặng tiếp theo, dữ liệu từ lớp Bronze sẽ được gột rửa và chuẩn hóa.
+* **Nhiệm vụ**: Làm sạch, lọc nhiễu, đồng nhất kiểu dữ liệu và khử trùng lặp (deduplication).
+* **Đặc điểm**: Dữ liệu được ép vào một schema chung rõ ràng (schema enforcement), các bản ghi bị thiếu thông tin quan trọng hoặc có giá trị vô lý sẽ bị lọc bỏ. Định dạng lưu trữ thường được chuyển sang các tệp cột tối ưu như Parquet, Delta Lake hoặc Iceberg.
+* **Mục đích**: Cung cấp một nguồn chân lý chung cho toàn doanh nghiệp (Enterprise View). Đây là khu vực yêu thích của các kỹ sư Machine Learning và Data Scientist vì họ cần dữ liệu chi tiết, đã được làm sạch nhưng chưa bị tổng hợp làm mất đi các đặc trưng tự nhiên.
 
-## Why it exists
-
-Khi khái niệm Data Lake mới ra đời, nhiều công ty đơn giản là "đổ" tất cả mọi thứ họ có vào một Bucket duy nhất (như Amazon S3). Rất nhanh chóng, hồ dữ liệu biến thành một "Đầm lầy dữ liệu" (Data Swamp) vì không ai biết file nào là dữ liệu nháp, file nào đã được làm sạch, file nào đã sẵn sàng làm báo cáo.
-
-Kiến trúc Medallion ra đời để áp đặt kỷ luật lên Data Lakehouse. Nó đảm bảo:
-1. **Lưu vết (Traceability)**: Nếu báo cáo ở lớp Gold bị sai, kỹ sư luôn có thể lùi về lớp Silver hoặc Bronze để tìm ra nguyên nhân, và chạy lại đường ống biến đổi mà không phải kết nối lại vào hệ thống nguồn.
-2. **Quản trị quyền truy cập (Access Control)**: Các nhà phân tích BI chỉ được cấp quyền đọc ở lớp Gold. Data Scientists được cấp quyền ở lớp Silver. Lớp Bronze bị khóa kín, chỉ có hệ thống kỹ thuật ETL mới được chạm vào.
-3. **Mô-đun hóa (Modularity)**: Việc tách các pipeline làm sạch riêng khỏi pipeline tính toán doanh số giúp hệ thống dễ debug và phát triển hơn.
-
----
-
-## Core idea
-
-Cốt lõi của Medallion Architecture là nguyên lý: **"Ghi dữ liệu một lần từ hệ thống nguồn, sau đó liên tục tinh chỉnh giá trị từ Đồng lên Vàng."**
-
-Cách tiếp cận này còn được gọi là Multi-hop Architecture (Kiến trúc nhiều bước nhảy). 
-
-Thay vì viết một kịch bản ETL khổng lồ (và cực kỳ rủi ro): đọc từ API, parse JSON, đổi định dạng ngày, join 5 bảng, tính doanh thu, và ghi vào Data Warehouse... thì ta chia nhỏ ra. Tác vụ Ingest chỉ làm đúng 1 việc là lưu JSON (Bronze). Tác vụ Clean chỉ làm đúng 1 việc là đổi JSON sang Parquet và sửa ngày tháng (Silver). Tác vụ Business làm đúng 1 việc là JOIN và tính doanh thu (Gold).
+### 3. Gold Layer (Lớp Vàng - Curated/Business Zone)
+Đây là chặng cuối cùng của dòng chảy dữ liệu, nơi dữ liệu được chế biến thành món ăn sẵn sàng phục vụ thực khách.
+* **Nhiệm vụ**: Tổng hợp và mô hình hóa dữ liệu theo các quy tắc nghiệp vụ kinh doanh (Business Rules).
+* **Đặc điểm**: Dữ liệu tại đây được tổ chức theo các mô hình chuẩn hóa cho phân tích như Star Schema (Fact và Dimension tables) hoặc được tổng hợp sẵn (aggregated) theo ngày, tháng, phòng ban.
+* **Mục đích**: Tối ưu hóa tốc độ truy vấn cao nhất cho các công cụ BI (Tableau, PowerBI) và phục vụ trực tiếp cho các báo cáo của ban giám đốc.
 
 ---
 
-## The Three Layers (Chi tiết 3 lớp dữ liệu)
+## Luồng xử lý dữ liệu tổng quan
 
-### 1. Bronze Layer (Lớp Đồng)
-* **Nhiệm vụ**: "Hạ cánh" dữ liệu an toàn và nhanh nhất có thể.
-* **Đặc điểm**: Giữ nguyên trạng thái thô. Dữ liệu thường được lưu dưới dạng Append-only (Chỉ thêm mới). Có thể là file JSON, CSV, hoặc định dạng nhị phân Kafka. Có lưu thêm các thông tin metadata của quá trình nạp (thời gian nạp, tên file nguồn, batch ID).
-* **Mục đích**: Làm một bản sao lưu (Archive) vĩnh viễn của hệ thống nguồn. Nếu lỗi logic xảy ra ở các bước sau, ta luôn có thể chạy lại từ lớp Bronze.
-
-### 2. Silver Layer (Lớp Bạc)
-* **Nhiệm vụ**: Làm sạch (Cleanse), Lọc (Filter), và Đồng nhất (Conform).
-* **Đặc điểm**: Loại bỏ các bản ghi bị thiếu thông tin hoặc sai định dạng. Ánh xạ dữ liệu về đúng schema chung của tổ chức (Schema enforcement). Chuyển hóa tất cả các định dạng lộn xộn (JSON, CSV) về định dạng tối ưu lưu trữ như Parquet, Delta Lake hoặc Iceberg. Giải quyết việc trùng lặp dữ liệu (Deduplication).
-* **Mục đích**: Cung cấp một Single Source of Truth ở mức độ doanh nghiệp (Enterprise view). Data Scientists rất thích lớp này vì họ cần dữ liệu chi tiết, đã được làm sạch để tìm kiếm pattern, chứ không cần dữ liệu đã bị tổng hợp mất đi chi tiết.
-
-### 3. Gold Layer (Lớp Vàng)
-* **Nhiệm vụ**: Mô hình hóa để tiêu thụ (Consumption).
-* **Đặc điểm**: Tổ chức dữ liệu theo kiến trúc Dimensional Modeling (Star Schema - Fact/Dimension Tables). Dữ liệu có thể được tổng hợp (Aggregated - tính tổng theo ngày, theo khu vực) tùy theo yêu cầu của Business.
-* **Mục đích**: Tối ưu hóa tốc độ cao nhất cho các công cụ BI (Tableau, PowerBI). Chỉ những ai hiểu rõ nghiệp vụ kinh doanh mới biết cách thiết kế lớp Vàng.
-
----
-
-## Architecture / Flow
-
-Mô phỏng đường ống dữ liệu (Pipeline) trong Medallion Architecture:
+Dưới đây là sơ đồ dòng chảy dữ liệu tuần tự của kiến trúc Medallion:
 
 ```mermaid
 graph LR
@@ -79,97 +52,92 @@ graph LR
 
 ---
 
-## Practical example
+## Minh họa thực tế: Hệ thống IoT đo lường không khí
 
-Xét một hệ thống đo lường chất lượng không khí từ thiết bị IoT.
+Hãy xem cách dữ liệu của một thiết bị đo chất lượng không khí thay đổi qua 3 tầng:
 
-**1. Bronze (Raw): `bronze_iot_readings`**
-Lưu y xì chuỗi JSON bắn về từ thiết bị, cộng thêm thời gian nhận.
+**1. Tại tầng Bronze (Thô)**:
+Hệ thống lưu lại nguyên vẹn chuỗi JSON nhận được từ thiết bị cảm biến:
 ```json
 {"device_id": "A-123", "temp_f": "75.2", "pm25": "12", "timestamp": "1686090000"}
--- Có thể chứa các dòng lỗi như "temp_f": "NULL"
 ```
+*(Lưu ý: Tầng này có thể chứa cả các bản ghi bị lỗi do thiết bị mất sóng như `"temp_f": "NULL"`)*.
 
-**2. Silver (Cleaned): `silver_iot_metrics`**
-Chuyển đổi thành dạng Cột (Delta Lake). Chuyển `temp_f` sang `temp_c`. Lọc bỏ các dòng có giá trị nhiệt độ âm vô lý. Loại bỏ các dòng trùng lặp do thiết bị lỗi gửi 2 lần.
+**2. Tại tầng Silver (Làm sạch)**:
+Dữ liệu được chuyển sang dạng bảng Delta Lake tối ưu. Nhiệt độ độ F (`temp_f`) được đổi sang độ C (`temp_c`). Lọc bỏ các dòng bị lỗi NULL hoặc các thiết bị gửi trùng lặp dữ liệu:
+
 | device_id | temp_c | pm25 | event_time |
 | :--- | :--- | :--- | :--- |
 | A-123 | 24.0 | 12 | 2026-06-07 08:00:00 |
 
-**3. Gold (Business): `gold_daily_city_air_quality`**
-Nhà phân tích không quan tâm từng giây của 1 cái máy. Họ muốn xem chất lượng trung bình theo Ngày và theo Thành phố. Ta JOIN `silver_iot_metrics` với `dim_device` để lấy thành phố, tính AVG theo ngày.
+**3. Tại tầng Gold (N nghiệp vụ)**:
+Các nhà phân tích không muốn đọc hàng triệu dòng dữ liệu theo từng giây. Họ cần báo cáo trung bình theo ngày và theo thành phố. Ta thực hiện JOIN bảng Silver với bảng danh mục thiết bị (`dim_device`) để lấy thông tin thành phố và tính toán:
+
 | date | city | avg_temp_c | avg_pm25 | alert_level |
 | :--- | :--- | :--- | :--- | :--- |
 | 2026-06-07 | Hanoi | 30.5 | 45 | High |
 
 ---
 
-## Best practices
+## Điểm cộng, điểm trừ và lưu ý khi áp dụng
 
-* **Đừng quá cứng nhắc với 3 lớp**: Kiến trúc Medallion là Guideline, không phải Luật lệ. Tùy công ty, bạn có thể thiết kế thêm lớp "Landing/Staging" trước Bronze, hoặc tách lớp Gold thành nhiều Data Marts.
-* **Lớp Silver là lõi tích hợp**: Khi tích hợp nhiều nguồn dữ liệu (Ví dụ dữ liệu khách hàng từ cả Salesforce và Shopify), hãy thực hiện việc hợp nhất và khử trùng (deduplication) tại lớp Silver để tạo ra một "Enterprise Customer View" duy nhất.
-* **Không cấp quyền sửa/xóa thủ công**: Người dùng không bao giờ được phép can thiệp bằng câu lệnh Update/Delete thủ công vào bất kỳ lớp nào (kể cả Gold). Mọi sự thay đổi phải được thực hiện thông qua mã code (Git) của ETL pipeline.
+### Ưu điểm vượt trội (Pros)
+* **Quy hoạch rõ ràng (Organizational Clarity)**: Phân định rạch ròi vai trò của từng tầng dữ liệu. Đội ngũ kỹ sư, phân tích và khoa học dữ liệu đều biết chính xác họ cần kết nối vào đâu để lấy dữ liệu phù hợp với công việc của mình.
+* **Traceability & Easy Debugging**: Nếu báo cáo PowerBI ở lớp Gold hiển thị sai số, bạn có thể dễ dàng kiểm tra ngược lại lớp Silver xem dữ liệu sạch có bị sai không. Nếu Silver đúng, lỗi nằm ở code biến đổi lên Gold. Nếu Silver sai, lỗi nằm ở khâu làm sạch. Việc khoanh vùng sự cố trở nên cực kỳ đơn giản.
+* **Bảo vệ hệ thống nguồn**: Các báo cáo BI chạy liên tục trên lớp Gold hoàn toàn độc lập và không gây ảnh hưởng gì đến hiệu năng của các cơ sở dữ liệu vận hành (RDBMS) của công ty.
 
----
+### Hạn chế cần cân nhắc (Cons)
+* **Độ trễ dữ liệu (Latency)**: Vì dữ liệu phải đi qua 3 trạm trung chuyển tuần tự, nếu bạn chạy pipeline theo lô (batch) thì người dùng cuối sẽ phải chấp nhận một độ trễ nhất định trước khi thấy dữ liệu mới trên dashboard.
+* **Tăng chi phí lưu trữ**: Một bộ dữ liệu được sao lưu ở 3 trạng thái khác nhau trên cùng hệ thống. Tuy nhiên, với chi phí Cloud Storage (S3, GCS) cực rẻ hiện nay, đây thường không phải là rào cản quá lớn đối với hầu hết doanh nghiệp.
 
-## Common mistakes
-
-* **Quên lưu dữ liệu gốc ở lớp Bronze**: Lọc và bỏ ngay lập tức các dòng JSON "có vẻ lỗi" ở ngay lúc Ingest (tải) dữ liệu xuống Data Lake. Hai tháng sau, Business thông báo đó là một loại giao dịch mới cần phân tích, nhưng dữ liệu gốc đã bị bạn xóa vĩnh viễn. (Nguyên tắc: Bronze là một bản ghi bất di bất dịch của vạn vật).
-* **Thiết kế lớp Silver như một Star Schema**: Dùng Star Schema (Fact/Dimension) ở lớp Silver là sai lầm. Ở lớp Silver, dữ liệu chỉ cần được làm sạch và chuẩn hóa schema, giữ nguyên cấu trúc phẳng (Flat) gốc của thực thể. Star Schema chỉ nên được áp dụng ở tầng Gold phục vụ BI.
-
----
-
-## Trade-offs
-
-### Ưu điểm
-* **Dễ tổ chức (Organizational Clarity)**: Mọi nhân viên (Data Engineer, Data Scientist, Data Analyst) đều biết họ nên kết nối và lấy dữ liệu từ đâu (Silver cho Machine Learning, Gold cho Báo cáo).
-* **Bảo vệ hệ thống nguồn**: Các tác vụ tính toán nặng của lớp Gold không đụng gì đến Database thực tế của công ty. Nó chỉ lấy data từ lớp Silver/Bronze vốn nằm trên S3/GCS.
-* **Rất dễ bảo trì và gỡ lỗi (Easy Debugging)**: Nếu một báo cáo Gold bị lỗi, ta có thể kiểm tra xem dữ liệu ở Silver có sai không. Nếu Silver đúng thì lỗi do code biến đổi từ Silver sang Gold. Rất dễ khoanh vùng sự cố.
-
-### Nhược điểm
-* **Trễ thời gian (Latency)**: Dữ liệu phải đi qua 3 trạm (Bronze $\rightarrow$ Silver $\rightarrow$ Gold) mới đến được tay người dùng cuối. Nếu pipeline được cấu hình chạy theo lô (Batch) thì độ trễ có thể lên đến hàng giờ.
-* **Nhân bản dữ liệu (Data Duplication)**: Cùng một bộ dữ liệu nhưng tồn tại ở 3 trạng thái trên cùng 1 hệ thống lưu trữ, gây tốn kém ổ cứng (Mặc dù Cloud Storage hiện tại khá rẻ).
+### Lời khuyên thiết thực (Best Practices)
+* **Đừng quá máy móc**: Medallion is a guideline, không phải là luật lệ bắt buộc. Tùy thuộc vào quy mô dự án, bạn có thể tạo thêm một tầng đệm Landing/Staging trước Bronze hoặc chia lớp Gold thành nhiều Data Mart nhỏ cho từng phòng ban.
+* **Khử trùng lặp tại lớp Silver**: Khi bạn tích hợp dữ liệu khách hàng từ nhiều nguồn (như CRM Salesforce và hệ thống bán hàng Shopify), hãy biến lớp Silver thành "lõi tích hợp" để tạo ra một bản ghi khách hàng duy nhất đã được chuẩn hóa.
+* **Cấm chỉnh sửa thủ công**: Tuyệt đối không cho phép bất kỳ ai (kể cả quản trị viên) dùng các lệnh `UPDATE` hay `DELETE` thủ công trực tiếp lên cơ sở dữ liệu. Mọi thay đổi về mặt dữ liệu phải được thực hiện thông qua mã nguồn được quản lý bằng Git của pipeline.
 
 ---
 
-## When to use
+## Khi nào nên và không nên chọn kiến trúc Medallion?
 
-* Khi bạn đang xây dựng kiến trúc **Data Lakehouse** (Đặc biệt là hệ sinh thái Databricks hoặc Spark).
-* Doanh nghiệp có đội ngũ đa dạng: vừa có team Data Science cần data sạch chưa tổng hợp, vừa có team BI cần data tổng hợp theo báo cáo.
-* Đường ống ETL phức tạp cần chia nhỏ thành các module để dễ quản lý.
+### Nên chọn khi:
+* Bạn đang xây dựng một kiến trúc **Data Lakehouse** hiện đại (đặc biệt là sử dụng hệ sinh thái Databricks hoặc Apache Spark).
+* Công ty bạn có nhiều nhóm khai thác dữ liệu khác nhau với các mục đích từ báo cáo BI truyền thống đến nghiên cứu AI/ML chuyên sâu.
+* Hệ thống có nhiều đường ống xử lý dữ liệu phức tạp cần được module hóa để dễ quản trị và bảo trì.
 
-## When not to use
-
-* Với các startup siêu nhỏ dùng trực tiếp cơ sở dữ liệu OLTP làm nguồn báo cáo, hoặc dùng kiến trúc ELT ném thẳng vào Data Warehouse (như BigQuery) làm nơi biến đổi thì chỉ cần lớp Staging và Core/Mart (tương tự như tư duy truyền thống).
+### Không nên chọn khi:
+* Doanh nghiệp có quy mô nhỏ, dữ liệu chủ yếu là dạng bảng có cấu trúc và có thể ném thẳng vào một Data Warehouse (như BigQuery hoặc Snowflake) để xử lý trực tiếp. Khi đó, các mô hình phân tầng đơn giản như Staging -> Core sẽ gọn nhẹ hơn nhiều.
 
 ---
 
-## Related concepts
+## Khái niệm liên quan
 
 * [Data Lakehouse](/concepts/lakehouse)
 * [Delta Lake](/concepts/delta-lake)
 * [Dimensional Modeling](/concepts/dimensional-modeling)
-* [ETL / ELT](#)
 
 ---
 
-## Interview questions
+## Góc phỏng vấn: Câu hỏi thường gặp
 
-### 1. Tại sao các Data Scientists / Machine Learning Engineers thường lấy dữ liệu từ lớp Silver (Bạc) thay vì lấy dữ liệu từ lớp Gold (Vàng) vốn đã được thiết kế tối ưu rất đẹp?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết về sự khác biệt giữa Data Science/Machine Learning (Predictive) và Business Intelligence (Descriptive).
-* **Gợi ý trả lời**: Mục tiêu của Machine Learning là tìm kiếm các "Patterns" (mẫu số bí ẩn) ở cấp độ hành vi chi tiết. Lớp Gold đã bị biến đổi cấu trúc thành Star Schema và đã bị "Aggregated" (tổng hợp/gom nhóm theo nhận thức của con người) để phục vụ cho các câu hỏi kinh doanh cụ thể. Khi dữ liệu bị tổng hợp, tính nhiễu (noise) và đặc trưng gốc của dữ liệu biến mất, làm mất đi "tín hiệu" để mô hình AI học hỏi. Lớp Silver cung cấp một lượng dữ liệu khổng lồ, chi tiết đến từng sự kiện (atomic grain), đã được dọn sạch rác, là nguyên liệu hoàn hảo nhất cho các thuật toán Machine Learning.
+### 1. Tại sao các Data Scientists thường lấy dữ liệu từ lớp Silver (Bạc) thay vì lấy ở lớp Gold (Vàng) vốn đã được gom nhóm rất đẹp đẽ?
+* **Mục đích của người phỏng vấn**: Kiểm tra xem bạn có hiểu sự khác biệt về bản chất công việc giữa Data Science (mang tính dự báo) và Business Intelligence (mang tính mô tả).
+* **Gợi ý trả lời**:
+  * Các thuật toán Machine Learning cần tìm kiếm các mẫu hành vi vi mô trong một lượng lớn dữ liệu chi tiết (atomic grain). Lớp Gold thường là dữ liệu đã bị tổng hợp (aggregated) theo các chiều cụ thể (ví dụ: tổng doanh số theo ngày). 
+  * Khi dữ liệu bị tổng hợp, các biến động tự nhiên và chi tiết của từng sự kiện sẽ bị biến mất, làm mất đi các tín hiệu (features) quan trọng giúp mô hình AI học hỏi. Do đó, lớp Silver — nơi dữ liệu đã được lọc sạch nhiễu nhưng vẫn giữ nguyên cấu trúc phẳng và chi tiết ban đầu — mới là nguồn nguyên liệu hoàn hảo cho Data Scientists.
 
-### 2. Nếu logic kinh doanh để tính toán Doanh thu bị thay đổi (ví dụ: giờ Doanh thu phải trừ đi phần hoàn tiền), bạn sẽ áp dụng sửa đổi này ở lớp nào trong Medallion Architecture và tại sao?
-* **Người phỏng vấn muốn kiểm tra**: Hiểu biết sâu sắc về vai trò của từng lớp dữ liệu.
-* **Gợi ý trả lời**: Logic nghiệp vụ (Business logic/metrics calculation) luôn phải được áp dụng và sửa đổi ở đoạn biến đổi từ **Silver lên Gold**, tức là nằm gọn trong khu vực lớp Gold. 
-*Lý do*: Lớp Silver có nhiệm vụ làm sạch kỹ thuật (Technical cleansing: xóa NULL, ép kiểu dữ liệu), nó phải phản ánh trung thực thực thể (Doanh thu gộp là A, Hoàn tiền là B). Việc quyết định "Net Revenue = A - B" là nhận thức của bộ phận kinh doanh. Việc sửa logic ở Silver sẽ vô tình bóp méo nguyên liệu đầu vào chung của cả hệ thống (bao gồm cả phòng ban khác có thể không đồng ý với công thức này). Lớp Gold mới là nơi dành cho các Business Rules.
+### 2. Nếu logic kinh doanh để tính toán Doanh thu bị thay đổi (ví dụ: Doanh thu thực tế phải trừ đi phần phí hoàn tiền), bạn sẽ áp dụng sửa đổi này ở lớp nào trong Medallion Architecture? Tại sao?
+* **Mục đích của người phỏng vấn**: Kiểm tra xem bạn có hiểu rõ ranh giới trách nhiệm giữa các tầng dữ liệu không.
+* **Gợi ý trả lời**:
+  * Logic nghiệp vụ này bắt buộc phải được áp dụng và chỉnh sửa ở bước biến đổi từ **Silver lên Gold**.
+  * Bởi vì lớp Silver có nhiệm vụ làm sạch về mặt kỹ thuật (loại bỏ null, chuẩn hóa kiểu dữ liệu). Nó phải phản ánh trung thực thực tế khách quan (doanh thu là bao nhiêu, phí hoàn tiền là bao nhiêu dưới dạng các cột riêng biệt). 
+  * Việc định nghĩa công thức *"Doanh thu thực tế = Doanh thu - Phí hoàn tiền"* là một Business Rule. Nếu chúng ta sửa đổi trực tiếp ở Silver, chúng ta sẽ bóp méo dữ liệu đầu vào chung của toàn doanh nghiệp, gây ảnh hưởng đến các phòng ban khác vốn có thể sử dụng công thức tính toán doanh thu khác. Lớp Gold mới là nơi dành riêng cho các Business Rules này.
 
 ---
 
-## References
+## Tài liệu tham khảo
 
-1. **Databricks Documentation**: "What is a Medallion Architecture?".
-2. **Data Engineering with Databricks** (Các khóa học chứng chỉ của Databricks giải thích cực sâu về mô hình này).
+1. **Databricks Documentation**: *"What is a Medallion Architecture?"*.
+2. **Data Engineering with Databricks Certification guide**.
 
 ---
 
