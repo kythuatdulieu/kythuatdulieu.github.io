@@ -14,6 +14,7 @@ export default defineConfig({
 			},
 			components: {
 				PageSidebar: './src/components/InteractiveGraphSidebar.astro',
+				Footer: './src/components/BacklinksFooter.astro',
 			},
 			customCss: [
 				'./src/styles/custom.css'

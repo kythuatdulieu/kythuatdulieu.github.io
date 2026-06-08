@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "dev": "node generate_backlinks.cjs && astro dev",
+    "start": "node generate_backlinks.cjs && astro dev",
+    "build": "node generate_backlinks.cjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

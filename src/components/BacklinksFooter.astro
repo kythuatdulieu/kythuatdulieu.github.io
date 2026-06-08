@@ -1,0 +1,94 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+import fs from 'fs';
+import path from 'path';
+
+let backlinks = {};
+try {
+  const filePath = path.join(process.cwd(), 'public', 'backlinks.json');
+  if (fs.existsSync(filePath)) {
+    const file = fs.readFileSync(filePath, 'utf-8');
+    backlinks = JSON.parse(file);
+  }
+} catch (e) {
+  console.error("Error loading backlinks:", e);
+}
+
+let currentPath = Astro.url.pathname;
+// Ensure consistent trailing slash
+if (!currentPath.endsWith('/')) {
+  currentPath += '/';
+}
+
+// Remove base path if applicable
+// For kythuatdulieu.github.io, the base path is / so we're good.
+
+const pageBacklinks = backlinks[currentPath] || [];
+---
+
+{pageBacklinks.length > 0 && (
+  <div class="backlinks-container">
+    <h3>Liên kết ngược (Backlinks)</h3>
+    <p>Các trang khác có nhắc đến chủ đề này:</p>
+    <ul class="backlinks-list">
+      {pageBacklinks.map((link: any) => (
+        <li>
+          <a href={link.url}>{link.title}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<Default {...Astro.props}>
+  <slot />
+</Default>
+
+<style>
+  .backlinks-container {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--sl-color-hairline);
+    margin-bottom: 2rem;
+  }
+  .backlinks-container h3 {
+    font-size: var(--sl-text-h4);
+    margin-bottom: 0.5rem;
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+  .backlinks-container p {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+    margin-bottom: 1rem;
+  }
+  .backlinks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .backlinks-list li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  .backlinks-list li::before {
+    content: "↳";
+    position: absolute;
+    left: 0;
+    color: var(--sl-color-gray-4);
+  }
+  .backlinks-list li a {
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .backlinks-list li a:hover {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+  }
+</style>
