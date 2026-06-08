@@ -1,52 +1,36 @@
 ---
-title: Kỹ Thuật Dữ Liệu
+title: Kỹ Thuật Dữ Liệu - Data Engineering Concepts
 description: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho cộng đồng kỹ sư dữ liệu Việt Nam.
 template: splash
-hero:
-  tagline: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho cộng đồng kỹ sư dữ liệu Việt Nam. Khám phá lộ trình học, ngân hàng phỏng vấn và bản đồ tri thức được cấu trúc bài bản.
-  actions:
-    - text: Xem Lộ Trình Học
-      link: /learning-paths/
-      icon: right-arrow
-      variant: primary
-    - text: Tra Cứu Khái Niệm
-      link: /concepts/data-warehouse/
-      icon: external
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 import MapOfContent from '../../components/MapOfContent.astro';
 
-<div style="margin-top: 4rem;"></div>
-
-## 📝 Luyện Đề Thi Thử (Practice Quizzes)
-
-Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.
-
-<CardGrid stagger>
-	<Card title="Databricks DE Professional" icon="laptop">
-		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Data Engineer Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế. 
-        
-        <br/>
-        <a href="/quizzes/databricks-de-advanced/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
-	</Card>
-	<Card title="Databricks GenAI Associate" icon="rocket">
-		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG, Vector Search và LLM.
-        
-        <br/>
-        <a href="/quizzes/databricks-genai-associate/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
-	</Card>
-</CardGrid>
-
-<div style="margin-top: 5rem;"></div>
-
-<div id="concepts-map">
-  ## 📚 Bản Đồ Tri Thức (Map of Content)
+<MapOfContent>
+  <div style="margin-top: 4rem;"></div>
   
-  Tra cứu 101 khái niệm kỹ thuật cốt lõi phân chia theo 11 danh mục theo lộ trình chuẩn. Kéo thả danh mục để tùy chỉnh không gian học tập của bạn.
-  
-  <MapOfContent />
-</div>
+  <div id="quizzes">
+    ## 📝 Luyện Đề Thi Thử (Practice Quizzes)
+    
+    Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.
+    
+    <CardGrid stagger>
+    	<Card title="Databricks DE Professional" icon="laptop">
+    		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Data Engineer Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế. 
+            
+            <br/>
+            <a href="/quizzes/databricks-de-advanced/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
+    	</Card>
+    	<Card title="Databricks GenAI Associate" icon="rocket">
+    		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG, Vector Search và LLM.
+            
+            <br/>
+            <a href="/quizzes/databricks-genai-associate/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
+    	</Card>
+    </CardGrid>
+  </div>
+</MapOfContent>
 
 <style>{`
   .sl-markdown-content {
@@ -60,11 +44,5 @@ Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ D
   .sl-link-card:hover, .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  
-  /* Căn chỉnh lại Hero Section */
-  .hero {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
   }
 `}</style>
