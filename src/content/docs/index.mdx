@@ -36,10 +36,21 @@ import MapOfContent from '../../components/MapOfContent.astro';
   <h2 class="homepage-section-title">📝 Luyện Đề Thi Thử (Practice Quizzes)</h2>
   <p class="section-subtitle">Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.</p>
   
-  <CardGrid>
-    <LinkCard title="Databricks Certified Data Engineer Professional" href="/quizzes/databricks-de-advanced/" description="Thi thử bộ câu hỏi ôn tập Databricks DE Professional nâng cao gồm 238 câu hỏi thực chiến." />
-    <LinkCard title="Databricks Generative AI Engineer Associate" href="/quizzes/databricks-genai-associate/" description="Thi thử bộ câu hỏi ôn tập Databricks Generative AI Engineer gồm 92 câu hỏi về RAG và LLM." />
-  </CardGrid>
+  <div class="pillars-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+    <div class="pillar-card">
+      <div class="pillar-icon">🏆</div>
+      <h3>Databricks Data Engineer Professional</h3>
+      <p>Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks DE Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế.</p>
+      <a href="/quizzes/databricks-de-advanced/" class="pillar-cta">Bắt đầu thi thử →</a>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">🤖</div>
+      <h3>Databricks GenAI Engineer Associate</h3>
+      <p>Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG và LLM.</p>
+      <a href="/quizzes/databricks-genai-associate/" class="pillar-cta">Bắt đầu thi thử →</a>
+    </div>
+  </div>
 
   <hr class="section-divider" />
 
