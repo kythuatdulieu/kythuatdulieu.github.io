@@ -1,10 +1,18 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import rehypeMermaidLite from 'rehype-mermaid-lite';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
+	markdown: {
+		rehypePlugins: [
+			[rehypeMermaidLite, { 
+				// By default it turns ```mermaid into <pre class="mermaid">
+			}]
+		],
+	},
 	integrations: [
 		starlight({
 			title: 'Data Engineering Handbook',
@@ -123,6 +131,13 @@ export default defineConfig({
 				{
 					label: 'Phỏng vấn (Interview)',
 					autogenerate: { directory: 'interview' },
+				},
+				{
+					label: 'Luyện đề thi thử (Quizzes)',
+					items: [
+						{ label: 'Databricks DE Professional', link: '/quizzes/databricks-de-advanced/' },
+						{ label: 'Databricks GenAI Associate', link: '/quizzes/databricks-genai-associate/' }
+					]
 				}
 			],
 		}),

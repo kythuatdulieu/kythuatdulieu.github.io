@@ -16,55 +16,41 @@ hero:
       icon: document
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 import MapOfContent from '../../components/MapOfContent.astro';
 
 <div class="welcome-container">
-  <div class="content-focus-header">
-    <p>Chào mừng bạn đến với **Hệ thống Tri thức (Second Brain)** chuyên sâu về **Kỹ thuật Dữ liệu (Data Engineering)**.</p>
-    <p>Tài liệu này hệ thống hóa các thuật ngữ cốt lõi và lộ trình phát triển năng lực thực chiến trong ngành Data. Bạn có thể sử dụng các liên kết nội bộ giữa các bài viết để liên kết kiến thức và tra cứu khái niệm nhanh chóng.</p>
+  <div class="pillars-grid">
+    <div class="pillar-card">
+      <div class="pillar-icon">🚀</div>
+      <h3>Lộ trình học tập</h3>
+      <p>Định hướng phát triển năng lực Data Engineering từ con số 0 lên cấp độ Senior và Specialist chuyên sâu thông qua 8 lộ trình chi tiết.</p>
+      <a href="/learning-paths/" class="pillar-cta">Khám phá lộ trình →</a>
+    </div>
+    
+    <div class="pillar-card">
+      <div class="pillar-icon">🎯</div>
+      <h3>Ngân hàng phỏng vấn</h3>
+      <p>Tuyển tập các câu hỏi phỏng vấn thực chiến chuyên sâu kèm gợi ý trả lời chi tiết chia theo từng nhóm kỹ năng kỹ thuật và hành vi.</p>
+      <a href="/interview/" class="pillar-cta">Luyện phỏng vấn →</a>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">📚</div>
+      <h3>Khái niệm kỹ thuật</h3>
+      <p>Tra cứu hệ thống 156 định nghĩa và thuật ngữ cốt lõi được cấu trúc mạch lạc thành các danh mục để xây dựng bộ não thứ hai của bạn.</p>
+      <a href="#concepts-map" class="pillar-cta">Tra cứu khái niệm ↓</a>
+    </div>
   </div>
 
   <hr class="section-divider" />
 
-  <h2 class="homepage-section-title">🚀 8 Lộ Trình Học Tập (Learning Paths)</h2>
-  <p class="section-subtitle">Định hướng con đường sự nghiệp Data Engineering từ con số 0 lên cấp độ Senior và Cloud/Streaming Specialist.</p>
+  <h2 class="homepage-section-title">📝 Luyện Đề Thi Thử (Practice Quizzes)</h2>
+  <p class="section-subtitle">Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.</p>
   
   <CardGrid>
-    <Card title="Foundation & Beginners" icon="rocket">
-      Dành cho người mới bắt đầu hoặc chuyển ngành.
-      <LinkCard title="Lộ trình 1: Beginner Data Engineer" href="/learning-paths/beginner-de/" />
-    </Card>
-    <Card title="Professional Growth" icon="open-book">
-      Nâng cao kỹ năng thực chiến và tối ưu hệ thống lớn.
-      <LinkCard title="Lộ trình 2: Junior to Middle DE" href="/learning-paths/junior-to-middle-de/" />
-      <LinkCard title="Lộ trình 3: Middle to Senior DE" href="/learning-paths/middle-to-senior-de/" />
-    </Card>
-    <Card title="Specialized Careers" icon="star">
-      Định hướng vai trò chuyên sâu trong doanh nghiệp.
-      <LinkCard title="Lộ trình 4: Cloud Data Engineer" href="/learning-paths/cloud-data-engineer/" />
-      <LinkCard title="Lộ trình 5: Analytics Engineer" href="/learning-paths/analytics-engineer/" />
-      <LinkCard title="Lộ trình 6: Streaming Data Engineer" href="/learning-paths/streaming-data-engineer/" />
-    </Card>
-    <Card title="Platform & Interview" icon="setting">
-      Kiến trúc nền tảng và chuẩn bị phỏng vấn.
-      <LinkCard title="Lộ trình 7: Data Platform Engineer" href="/learning-paths/data-platform-engineer/" />
-      <LinkCard title="Lộ trình 8: Interview Preparation" href="/learning-paths/interview-prep/" />
-    </Card>
-  </CardGrid>
-
-  <hr class="section-divider" />
-
-  <h2 class="homepage-section-title">🎯 Ngân Hàng Câu Hỏi Phỏng Vấn (Interview Bank)</h2>
-  <p class="section-subtitle">Tổng hợp các câu hỏi phỏng vấn thực chiến chuyên sâu kèm gợi ý trả lời chi tiết chia theo nhóm kỹ năng.</p>
-  
-  <CardGrid>
-    <LinkCard title="Lập trình Python & SQL" href="/interview/sql-interview-patterns/" description="Window functions, CTE, self-joins và tối ưu hóa bộ nhớ Python." />
-    <LinkCard title="Mô hình hóa dữ liệu (Data Modeling)" href="/interview/data-modeling-interview/" description="Thiết kế Star/Snowflake Schema, SCD và Data Warehouse." />
-    <LinkCard title="Hệ thống Spark & Kafka lớn" href="/interview/spark-optimization-interview/" description="Tối ưu Spark Shuffle, partitions và Event Streaming Kafka." />
-    <LinkCard title="Thiết kế Đường ống (Pipeline)" href="/interview/pipeline-design-interview/" description="Thiết kế đường ống chịu lỗi, idempotency và tự phục hồi." />
-    <LinkCard title="Xử lý Sự Cố & Vận Hành" href="/interview/production-incident-qa/" description="Cách troubleshoot sự cố pipeline lúc nửa đêm và tối ưu chi phí Cloud." />
-    <LinkCard title="Hành Vi & Kinh Nghiệm (Behavioral)" href="/interview/de-behavioral-interview/" description="Cách trả lời câu hỏi ứng xử và phối hợp liên phòng ban." />
+    <LinkCard title="Databricks Certified Data Engineer Professional" href="/quizzes/databricks-de-advanced/" description="Thi thử bộ câu hỏi ôn tập Databricks DE Professional nâng cao gồm 238 câu hỏi thực chiến." />
+    <LinkCard title="Databricks Generative AI Engineer Associate" href="/quizzes/databricks-genai-associate/" description="Thi thử bộ câu hỏi ôn tập Databricks Generative AI Engineer gồm 92 câu hỏi về RAG và LLM." />
   </CardGrid>
 
   <hr class="section-divider" />
@@ -83,22 +69,71 @@ import MapOfContent from '../../components/MapOfContent.astro';
     margin: 0 auto;
     padding: 0 1.5rem;
   }
-  .content-focus-header {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: var(--sl-color-gray-2);
-    margin-top: 1.5rem;
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
     margin-bottom: 2rem;
+  }
+  @media (min-width: 768px) {
+    .pillars-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .pillar-card {
     background: var(--sl-color-bg-nav);
-    padding: 1.5rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 16px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pillar-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  }
+  .pillar-icon {
+    font-size: 2.25rem;
+    margin-bottom: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--sl-color-bg-inline-code);
     border-radius: 12px;
     border: 1px solid var(--sl-color-hairline);
   }
-  .content-focus-header p {
-    margin-bottom: 1rem;
+  .pillar-card h3 {
+    font-size: 1.35rem !important;
+    font-weight: 700;
+    color: var(--sl-color-white);
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
   }
-  .content-focus-header p:last-child {
-    margin-bottom: 0;
+  .pillar-card p {
+    font-size: 0.95rem;
+    color: var(--sl-color-gray-3);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  .pillar-cta {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+  .pillar-card:hover .pillar-cta {
+    color: var(--sl-color-accent);
+    transform: translateX(4px);
   }
   .homepage-section-title {
     font-size: 1.8rem !important;

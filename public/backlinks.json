@@ -281,10 +281,6 @@
       "title": "Mô hình nhúng - Embedding Model"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/performance-tuning-qa/",
       "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
     },
@@ -1369,10 +1365,6 @@
     {
       "url": "/concepts/transformation-analytics/dbt/",
       "title": "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     },
     {
       "url": "/interview/cloud-platform-interview/",
@@ -2613,10 +2605,6 @@
     {
       "url": "/concepts/data-warehouse/kimball-methodology/",
       "title": "Kimball Methodology - Dimensional Modeling"
-    },
-    {
-      "url": "/",
-      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/data-warehouse/dimension-table/": [
@@ -4029,10 +4017,6 @@
       "title": "Real-time Architecture"
     },
     {
-      "url": "/",
-      "title": "Data Engineering Handbook"
-    },
-    {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
     },
@@ -4631,6 +4615,10 @@
     {
       "url": "/concepts/transformation-analytics/metrics-layer/",
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/genai-ml/rag/": [
@@ -4733,6 +4721,10 @@
     {
       "url": "/concepts/genai-ml/temperature/",
       "title": "Nhiệt độ - Temperature"
+    },
+    {
+      "url": "/",
+      "title": "Data Engineering Handbook"
     }
   ],
   "/concepts/genai-ml/system-prompt/": [

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI Engineer - Ôn tập Chứng chỉ Databricks</title>
+    <meta name="description" content="Nền tảng ôn tập chứng chỉ Databricks Generative AI Engineer.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-brain"></i>
+                <h1>GenAI <span class="highlight">Mastery</span></h1>
+            </div>
+            
+            <div class="nav-controls">
+                <select id="question-jump" class="jump-select">
+                    <!-- Options injected via JS -->
+                </select>
+                <div class="progress-stats">
+                    <span id="score-counter"><i class="fa-solid fa-star"></i> Điểm: 0</span>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <main id="quiz-container" class="glass-panel">
+            <div class="loading-state" id="loading-state">
+                <div class="spinner"></div>
+                <p>Đang tải dữ liệu câu hỏi...</p>
+            </div>
+
+            <div class="question-section hidden" id="question-section">
+                <div class="question-header">
+                    <div class="badge-group">
+                        <span class="question-badge" id="question-number-badge">Câu 1</span>
+                        <span class="question-badge type-badge" id="question-type-badge">Multiple Choice</span>
+                    </div>
+                    <button id="translate-toggle-btn" class="btn-toggle-lang"><i class="fa-solid fa-lightbulb"></i> Gợi ý & Dịch thuật</button>
+                </div>
+                
+                <div class="prompt-container">
+                    <div class="question-prompt markdown-body" id="question-prompt-en"></div>
+                    <div class="question-prompt-vi markdown-body hidden" id="question-prompt-vi"></div>
+                </div>
+                
+                <div class="options-container" id="options-container">
+                    <!-- Options injected here via JS -->
+                </div>
+
+                <div class="action-buttons">
+                    <button id="prev-btn" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Câu trước</button>
+                    <button id="submit-btn" class="btn btn-primary" disabled>Kiểm tra Đáp án</button>
+                    <button id="next-btn" class="btn btn-secondary">Câu tiếp theo <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="explanation-section hidden" id="explanation-section">
+                <div class="explanation-header">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết</h3>
+                </div>
+                <div class="explanation-content markdown-body" id="explanation-content">
+                    <!-- Explanation injected here -->
+                </div>
+                <div class="references-container hidden" id="references-container">
+                    <h4><i class="fa-solid fa-book-open"></i> Tài liệu tham khảo</h4>
+                    <ul id="references-list"></ul>
+                </div>
+            </div>
+            
+            <div class="completion-section hidden" id="completion-section">
+                <h2>Chúc mừng bạn đã hoàn thành!</h2>
+                <div class="final-score">
+                    <span id="final-score-value">0</span>%
+                </div>
+                <p>Kết quả ôn tập của bạn</p>
+                <div class="completion-actions">
+                    <button id="reset-progress-btn" class="btn btn-outline"><i class="fa-solid fa-trash-can"></i> Xóa lịch sử & Làm lại từ đầu</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Xây dựng để <strong>hiểu sâu</strong>, không chỉ là học thuộc.</p>
+        </footer>
+    </div>
+    
+    <script src="app.js?v=4"></script>
+</body>
+</html>
