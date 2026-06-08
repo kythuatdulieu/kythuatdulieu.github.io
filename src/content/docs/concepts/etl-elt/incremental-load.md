@@ -45,7 +45,6 @@ Trong kỹ thuật dữ liệu, High Watermark chính là chiếc kẹp sách đ
 ## Quy trình vận hành của Incremental Load
 
 Dưới đây là sơ đồ kiến trúc minh họa một chu trình nạp dữ liệu gia tăng sử dụng mô hình Upsert (Merge) phổ biến:
-
 ```mermaid
 graph TD
     subgraph "State Management"
@@ -85,7 +84,6 @@ graph TD
 Công cụ [dbt](/concepts/transformation-analytics/dbt/) (Data Build Tool) cung cấp giải pháp thiết lập Incremental Load cực kỳ thanh lịch thông qua mã SQL kết hợp với Jinja template.
 
 Dưới đây là ví dụ cấu hình cho file `daily_sales.sql`:
-
 ```sql
 -- Khai báo cho dbt biết đây là model Incremental, và khóa chính là order_id
 {{ config(
@@ -123,12 +121,12 @@ Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành 
 
 ## Ưu và nhược điểm khi chuyển sang Incremental (Trade-offs)
 
-### Điểm cộng
+### Ưu điểm
 * Rút gọn dung lượng truyền tải mạng và giảm tải chi phí I/O đi hàng trăm lần.
 * Rút ngắn thời gian chạy job, cho phép tăng tần suất nạp dữ liệu (ví dụ 15 phút một lần thay vì chờ qua đêm), đáp ứng nhu cầu phân tích thời gian thực (Near Real-time).
 * Tiết kiệm đáng kể chi phí điện toán trên các kho dữ liệu đám mây (như [Snowflake](/concepts/cloud-data-platform/snowflake/) hay BigQuery).
 
-### Điểm trừ
+### Nhược điểm
 * **Độ phức tạp kiến trúc tăng cao**: Bạn phải thiết lập và duy trì một hệ thống quản lý trạng thái (Watermark Storage). Nếu file cấu hình này bị hỏng, đường ống dữ liệu sẽ bị gián đoạn.
 * **Rủi ro sai lệch dữ liệu tích tụ (Data Drift)**: Do là luồng dữ liệu ghép nối theo từng ngày, nếu một ngày job gặp lỗi mà không được phát hiện kịp thời, sự sai lệch thông tin sẽ tích tụ dần theo thời gian. Giải pháp khắc phục là hãy lên lịch chạy Full Refresh định kỳ (ví dụ mỗi tháng một lần) để đồng bộ hoàn toàn bảng đích với bảng nguồn.
 

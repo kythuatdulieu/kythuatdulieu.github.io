@@ -58,7 +58,6 @@ Hệ thống thêm một cột phụ vào bảng để lưu giá trị ngay trư
 ## Chi tiết SCD Type 2: Trọng tâm của quản trị lịch sử
 
 Hãy cùng xem cơ chế hoạt động của SCD Type 2 qua sơ đồ tư duy:
-
 ```mermaid
 flowchart TD
     A["New Event / Change Detected<br/>Alice moves to Saigon"] --> B{Record Exists?}
@@ -93,7 +92,6 @@ flowchart TD
 ### Công thức tự động hóa SCD Type 2 với dbt Snapshot
 
 Viết code SQL thuần để xử lý logic Update dòng cũ và Insert dòng mới rất phức tạp và dễ nhầm lẫn. Trong [Modern Data Stack](/concepts/system-architecture/modern-data-stack/), công cụ **[dbt](/concepts/transformation-analytics/dbt/) (Data Build Tool)** hỗ trợ giải quyết việc này vô cùng ngắn gọn thông qua tính năng **dbt Snapshots**:
-
 ```sql
 {% snapshot dim_customer_snapshot %}
 

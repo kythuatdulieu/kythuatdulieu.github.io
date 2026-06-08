@@ -61,7 +61,6 @@ Khi bạn thực hiện gọi API hoặc chạy mô hình Reranker:
 ## Sơ đồ luồng hoạt động Bi-Encoder truyền thống
 
 Sơ đồ dưới đây mô tả cách thức so khớp vector độc lập thường thấy ở các mô hình Bi-Encoder:
-
 ```mermaid
 graph TD
     Q[Query] --> V1["Vector Q"]
@@ -75,7 +74,6 @@ graph TD
 ## Ví dụ thực chiến: Chấm điểm độ tương đồng bằng Python
 
 Dưới đây là đoạn code Python minh họa cách sử dụng thư viện `sentence-transformers` để tải một mô hình Cross-Encoder và thực hiện chấm điểm, sắp xếp lại các tài liệu:
-
 ```python
 from sentence_transformers import CrossEncoder
 

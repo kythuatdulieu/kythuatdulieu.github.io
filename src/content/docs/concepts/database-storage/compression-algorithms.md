@@ -41,7 +41,6 @@ Hệ thống lưu trữ áp dụng nén dữ liệu qua các giai đoạn tuần
 2. **Tiền xử lý (Filtering)**: Áp dụng các thuật toán như Bit-packing, Run-Length Encoding (RLE) hay Delta Encoding để biến đổi dữ liệu thành dạng đồng nhất (đặc biệt hiệu quả với dữ liệu dạng cột Parquet).
 3. **Nén dữ liệu (Compressing)**: Block dữ liệu đã lọc được đưa qua các engine nén như Snappy hoặc Zstd để tạo ra block nén vật lý ghi xuống đĩa.
 4. **Giải nén (Decompressing)**: Khi người dùng truy vấn, hệ thống đọc block nén vào RAM và dùng CPU giải nén tức thì trước khi thực hiện tính toán.
-
 ```mermaid
 flowchart LR
     A[Raw Data] --> B[Chia khối<br/>Block/Chunking]
@@ -66,7 +65,6 @@ Mỗi thuật toán nén đều có những ưu và nhược điểm riêng phù
 ## Ví dụ thực chiến: Cấu hình chuẩn nén trong PySpark
 
 Hãy xem cách cấu hình các định dạng nén khác nhau khi ghi file Parquet bằng PySpark:
-
 ```python
 from pyspark.sql import SparkSession
 

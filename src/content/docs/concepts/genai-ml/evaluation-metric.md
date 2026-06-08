@@ -44,7 +44,6 @@ Trong các bài toán phân loại, có 3 chỉ số vô cùng quan trọng mà 
 Đánh giá các mô hình ngôn ngữ lớn sinh văn bản (LLM) là một bài toán khó vì ngôn ngữ có tính linh hoạt rất cao. Trước đây, người ta thường dùng các chỉ số như BLEU hoặc ROUGE để đếm số từ trùng khớp giữa câu của máy sinh ra và câu đáp án của con người. Tuy nhiên, cách này đã lỗi thời vì hai câu có từ vựng hoàn toàn khác nhau vẫn có thể mang cùng một ý nghĩa ngữ nghĩa hoàn hảo.
 
 Xu hướng hiện nay là áp dụng phương pháp **LLM-as-a-Judge**. Chúng ta sử dụng một mô hình LLM cực mạnh (như GPT-4) để chấm điểm câu trả lời của mô hình nhỏ hơn dựa trên các tiêu chí khoa học, tiêu biểu là framework **RAGAS**:
-
 ```mermaid
 graph TD
     A["Câu hỏi User"] --> B["RAG Pipeline"]

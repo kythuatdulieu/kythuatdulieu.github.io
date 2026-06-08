@@ -41,7 +41,6 @@ Quy trình tìm kiếm nguyên nhân gốc rễ được nâng đỡ bởi hai y
 * **Nhật ký truy vấn (Query Logs) & Lịch sử Git**: Giúp tra cứu xem ai đã thực hiện lệnh SQL nào, đoạn code cấu hình nào vừa được merge vào nhánh production vào thời điểm xảy ra sự cố.
 
 ## Bốn bước triển khai quy trình RCA chuẩn chỉnh
-
 ```mermaid
 flowchart TD
     A[Incident Occurs] --> B(1. Mitigation\nFirefighting)
@@ -82,7 +81,6 @@ flowchart TD
 2. Làm việc với team Backend để thống nhất áp dụng **[Data Contract](/concepts/transformation-analytics/data-contract/) (Hợp đồng dữ liệu)** – ràng buộc không tự ý thay đổi cấu trúc bảng nguồn khi chưa có sự đồng ý của các team tiêu thụ dữ liệu.
 
 Dưới đây là file cấu hình dbt test để thực thi Action Item số 1:
-
 ```yaml
 # models/staging/schema.yml
 version: 2

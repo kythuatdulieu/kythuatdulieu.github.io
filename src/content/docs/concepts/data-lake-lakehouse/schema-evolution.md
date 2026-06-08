@@ -36,7 +36,6 @@ Làm sao hệ thống có thể đọc file cũ và file mới cùng lúc dù ch
 * **Không dựa vào tên cột**: Thay vì dùng tên cột để đối chiếu dữ liệu (rất dễ lỗi nếu đổi tên), Iceberg gán cho mỗi cột một ID duy nhất và bất biến khi bảng được tạo (ví dụ: `id` -> ID=1, `name` -> ID=2).
 * **Ánh xạ qua Metadata**: Hệ thống lưu trữ một file metadata đóng vai trò là "bản đồ". Khi bạn đổi tên cột từ `name` thành `full_name`, hệ thống chỉ đơn giản cập nhật bản đồ metadata: `full_name` -> ID=2. File Parquet vật lý bên dưới hoàn toàn không bị đụng tới!
 * **Truy vấn thông minh**: Khi Engine truy vấn yêu cầu cột `full_name`, nó sẽ nhìn vào metadata để biết cần tìm dữ liệu của ID=2. Khi quét qua các file Parquet cũ (nơi cột vẫn được đặt tên là `name`), nó vẫn đọc đúng dữ liệu nhờ khớp ID=2.
-
 ```mermaid
 graph TD
     V1[Schema V1] --> V2[Schema V2]
@@ -53,7 +52,6 @@ graph TD
 ## Thực hành: Tự động hóa tiến hóa cấu trúc với Delta Lake
 
 Dưới đây là ví dụ minh họa cách [Apache Spark](/concepts/batch-processing/apache-spark/) kết hợp với **Delta Lake** tự động cập nhật cấu trúc bảng khi phát hiện dữ liệu mới có thêm cột:
-
 ```python
 # Ghi DataFrame ban đầu với 2 cột
 df_v1 = spark.createDataFrame([(1, "Alice")], ["id", "name"])

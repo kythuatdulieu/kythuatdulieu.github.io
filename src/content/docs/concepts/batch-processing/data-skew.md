@@ -16,7 +16,6 @@ Trong thế giới Big Data, hiện tượng tréo ngoe này được gọi là 
 ## Data Skew thực chất là gì?
 
 Trong các hệ thống tính toán phân tán như [Apache Spark](/concepts/batch-processing/apache-spark/), dữ liệu được chia nhỏ thành nhiều phần gọi là các phân vùng (partitions) và phân phối xuống các node xử lý khác nhau. **Data Skew** xảy ra khi dữ liệu phân bố không đồng đều giữa các phân vùng này.
-
 ```mermaid
 flowchart LR
     A[Dữ liệu gốc] --> B{Hash Partitioner}
@@ -52,7 +51,6 @@ Khi pipeline của bạn chạy chậm một cách bất thường hoặc đột
 ## Các phương pháp "chữa trị" Data Skew hiệu quả
 
 Giả sử bạn có một bảng hóa đơn (`sales`) 10 tỷ dòng muốn JOIN với bảng khách hàng (`customers`) dựa trên trường thành phố (`city`). Tuy nhiên, có tới 80% khách hàng sống ở `"Ho Chi Minh"`.
-
 ```python
 # Phép JOIN thông thường dễ gây sập hệ thống do Data Skew
 result_df = sales_df.join(customers_df, "city", "inner")
@@ -61,14 +59,12 @@ result_df = sales_df.join(customers_df, "city", "inner")
 Dưới đây là các kỹ thuật giúp bạn giải quyết vấn đề này:
 
 ### 1. Lọc bỏ các giá trị rác hoặc NULL (Filter Nulls)
-Nếu các bản ghi có khóa NULL không thực sự đóng góp vào kết quả JOIN (như trong phép INNER JOIN), hãy lọc sạch chúng trước khi tiến hành JOIN. Điều này ngăn không cho hàng triệu dòng NULL dồn về một máy.
-```python
+Nếu các bản ghi có khóa NULL không thực sự đóng góp vào kết quả JOIN (như trong phép INNER JOIN), hãy lọc sạch chúng trước khi tiến hành JOIN. Điều này ngăn không cho hàng triệu dòng NULL dồn về một máy.```python
 sales_valid = sales_df.filter(col("city").isNotNull())
 ```
 
 ### 2. Kỹ thuật Broadcast Join (Tuyệt chiêu tốt nhất)
-Nếu bảng khách hàng (`customers`) có kích thước nhỏ (ví dụ dưới 1GB, có thể nhét vừa bộ nhớ của một máy), hãy bắt Spark gửi bản sao của toàn bộ bảng này đến tất cả các node (Broadcast). Khi đó, Spark sẽ thực hiện JOIN trực tiếp trên từng node mà không cần phải thực hiện quá trình Shuffle dữ liệu của bảng `sales` khổng lồ nữa.
-```python
+Nếu bảng khách hàng (`customers`) có kích thước nhỏ (ví dụ dưới 1GB, có thể nhét vừa bộ nhớ của một máy), hãy bắt Spark gửi bản sao của toàn bộ bảng này đến tất cả các node (Broadcast). Khi đó, Spark sẽ thực hiện JOIN trực tiếp trên từng node mà không cần phải thực hiện quá trình Shuffle dữ liệu của bảng `sales` khổng lồ nữa.```python
 from pyspark.sql.functions import broadcast
 
 result_df = sales_df.join(broadcast(customers_df), "city")
@@ -80,7 +76,6 @@ Nếu cả hai bảng đều quá lớn và không thể dùng Broadcast, chúng
 * **Bên bảng Sales (bảng bị lệch)**: Thêm một cột `salt` chứa số nguyên ngẫu nhiên từ 0 đến $N-1$ (ví dụ $N = 5$). Giá trị `"Ho Chi Minh"` sẽ bị chia nhỏ thành `"Ho Chi Minh_0"`, `"Ho Chi Minh_1"`, ..., `"Ho Chi Minh_4"`. Dữ liệu sẽ được phân tán đều ra 5 máy khác nhau.
 * **Bên bảng Customers**: Nhân bản mỗi dòng thành $N$ dòng (dùng hàm `explode`) với các hậu tố từ 0 đến $N-1$.
 * **Thực hiện JOIN** trên cả khóa chính và khóa salt mới.
-
 ```python
 import pyspark.sql.functions as F
 

@@ -43,7 +43,6 @@ Trong khi Batch Layer đang bận rộn xử lý dữ liệu của ngày hôm qu
 ## Luồng xử lý dữ liệu trong kiến trúc Lambda
 
 Để hình dung rõ hơn cách dữ liệu di chuyển, chúng ta có sơ đồ kiến trúc tổng quan sau:
-
 ```mermaid
 graph TD
     A[New Data / Events] -->|Immutable Store| B(Batch Layer)
@@ -80,7 +79,6 @@ Hãy tưởng tượng bạn đang xây dựng một tính năng gợi ý sản 
 * **Tại Serving Layer**: Lúc 3 giờ chiều, khách hàng A truy cập trang chủ. Ứng dụng web sẽ truy vấn đồng thời cả hồ sơ sở thích dài hạn (từ `batch_layer`) và hành vi nóng hổi trong ngày (từ `speed_layer`), gộp chúng lại để đề xuất ngay các mẫu giày Nike mới nhất. Đến 2 giờ sáng hôm sau, toàn bộ hành vi click trong ngày hôm nay sẽ được gom vào luồng xử lý Batch, và bảng `speed_layer` tạm thời của khách hàng A sẽ được reset để bắt đầu một ngày mới.
 
 Dưới đây là đoạn mã giả minh họa cách lớp Serving gộp dữ liệu từ hai nguồn:
-
 ```python
 def get_recommendations(user_id):
     # 1. Truy vấn kết quả tính toán chính xác từ Batch Layer (đến 2h sáng hôm nay)

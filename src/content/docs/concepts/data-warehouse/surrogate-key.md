@@ -44,7 +44,6 @@ Quy trình xử lý Surrogate Key thông qua đường ống ETL diễn ra như 
 ## Kiến trúc và Mô phỏng lưu trữ lịch sử (SCD Type 2)
 
 Sơ đồ dưới đây minh họa việc sử dụng Surrogate Key để xử lý lịch sử chuyển nhà của khách hàng Alice (`K-001`):
-
 ```mermaid
 erDiagram
     DIM_CUSTOMER ||--o{ FACT_SALES : "One-to-Many via SK"
@@ -87,7 +86,6 @@ Trong môi trường Cloud Data Warehouse hiện đại (như BigQuery, [Snowfla
 Để giải quyết, các kỹ sư dữ liệu hiện nay thường sử dụng hàm băm (Hash functions như `MD5` hoặc `SHA256`) trên khóa tự nhiên để sinh ra Surrogate Key.
 
 Đoạn code dbt dưới đây minh họa việc sinh Surrogate Key bằng mã băm:
-
 ```sql
 SELECT
     -- Tạo Hashed Surrogate Key bằng hàm MD5

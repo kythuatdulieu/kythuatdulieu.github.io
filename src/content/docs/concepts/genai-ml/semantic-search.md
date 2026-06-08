@@ -39,7 +39,6 @@ Làm sao máy tính có thể hiểu được "ý nghĩa"? Câu trả lời là:
 ### Quy trình hoạt động của hệ thống Semantic Search
 
 Hệ thống hoạt động qua hai giai đoạn chính:
-
 ```mermaid
 sequenceDiagram
     participant User
@@ -78,7 +77,6 @@ sequenceDiagram
 ## Thử nghiệm thực tế: Tìm kiếm ngữ nghĩa bằng Python
 
 Bạn có thể tự xây dựng một công cụ tìm kiếm ngữ nghĩa đơn giản chỉ với vài dòng code Python bằng cách sử dụng thư viện `FAISS` của Meta và mô hình `sentence-transformers`:
-
 ```python
 import faiss
 from sentence_transformers import SentenceTransformer

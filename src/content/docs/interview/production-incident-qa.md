@@ -58,7 +58,6 @@ Khi người phỏng vấn đưa ra tình huống: *"Pipeline của bạn báo l
 ## Sơ đồ quy trình ứng phó và khắc phục sự cố hệ thống
 
 Dưới đây là sơ đồ mô tả luồng xử lý chuẩn khi hệ thống phát đi cảnh báo sự cố nghiêm trọng:
-
 ```mermaid
 graph TD
     A["PagerDuty Alert: Doanh thu = 0"] --> B("Triage: Sev-1 Critical")

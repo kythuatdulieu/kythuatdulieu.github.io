@@ -23,7 +23,7 @@ Hybrid Search sẽ chạy song song một câu truy vấn của người dùng q
 
 ## Tại sao Vector Search không thể hoàn toàn thay thế tìm kiếm từ khóa?
 
-Khi công nghệ Vector Search ra đời, nhiều người từng nghĩ rằng thuật toán BM25 truyền thống sẽ sớm đi vào quên lãng. Tuy nhiên, khi triển khai các hệ thống RAG trong môi trường doanh nghiệp thực tế, các kỹ sư nhận ra Vector Search có một "gót chân Achilles" chí mạng: **Nó xử lý rất tệ các truy vấn chứa từ khóa đặc thù**.
+Khi công nghệ Vector Search ra đời, nhiều người từng nghĩ rằng thuật toán BM25 truyền thống sẽ sớm đi vào quên lãng. Tuy nhiên, khi triển khai các hệ thống RAG trong môi trường doanh nghiệp thực tế, các kỹ sư nhận ra Vector Search có một "hạn chế lớn" chí mạng: **Nó xử lý rất tệ các truy vấn chứa từ khóa đặc thù**.
 
 Hãy lấy một ví dụ thực tế khi người dùng gõ câu hỏi: *"Đánh giá hiệu năng của bộ vi xử lý Intel Core i7-13700K trong năm 2023"*.
 * **Vector Search** sẽ phân tích ngữ nghĩa và hiểu rằng người dùng đang tìm kiếm các bài viết đánh giá về vi xử lý máy tính. Do đó, nó có thể trả về bài viết về chip "AMD Ryzen 9" hoặc "Intel Core i5" vì trong không gian vector, các khái niệm này rất gần nhau. Tuy nhiên, nó lại bỏ qua cụm từ khóa cực kỳ quan trọng là mã sản phẩm "i7-13700K" vì cụm từ đó bị loãng ngữ nghĩa.
@@ -48,7 +48,6 @@ Nhờ công thức này, một tài liệu vừa nằm ở top đầu của danh
 ## Quy trình hoạt động của Hybrid Search dưới góc nhìn kiến trúc
 
 Dưới đây là luồng xử lý truy vấn trong một Vector Database hỗ trợ tìm kiếm kết hợp (như Qdrant, Milvus hay Pinecone):
-
 ```mermaid
 flowchart TD
     A["Câu truy vấn<br/>User Query"] --> B["Embedding Model<br/>Dense Vector"]
@@ -89,7 +88,6 @@ Người dùng đặt câu hỏi: *"Điều kiện bồi thường khi thu hồi
 * **Hybrid Search** sẽ kết hợp cả hai và ưu tiên đưa tài liệu đáp ứng được cả hai tiêu chí (vừa liên quan đến đền bù đất nông nghiệp, vừa thuộc Nghị định 47/2014) lên vị trí đầu tiên để nạp vào LLM.
 
 Đoạn code dưới đây minh họa cách cấu hình Hybrid Search bằng thư viện Client của Weaviate:
-
 ```python
 response = (
     client.query
@@ -116,11 +114,11 @@ response = (
 
 ## Được và mất khi chọn giải pháp Hybrid (Trade-offs)
 
-### Điểm cộng
+### Ưu điểm
 * **Độ bao phủ dữ liệu tối đa (High [Recall](/concepts/genai-ml/recall/))**: Giải quyết tốt cả bài toán hiểu ngữ nghĩa mơ hồ lẫn bài toán tìm kiếm mã số chính xác tuyệt đối.
 * **Độ ổn định hệ thống cao**: Nếu mô hình Embedding của bạn hoạt động chưa tốt ở một lĩnh vực chuyên môn sâu, thuật toán BM25 sẽ đóng vai trò bệ đỡ kéo lại độ chính xác cho kết quả.
 
-### Điểm trừ
+### Nhược điểm
 * **Tiêu tốn dung lượng lưu trữ**: Cơ sở dữ liệu bắt buộc phải duy trì hai bộ chỉ mục (index) khác nhau, làm tăng dung lượng đĩa cứng và RAM lên gấp rưỡi hoặc gấp đôi.
 * **Tăng nhẹ độ trễ truy vấn (Latency)**: Do phải thực hiện hai câu truy vấn song song và chạy thuật toán trộn điểm RRF, thời gian phản hồi của hệ thống sẽ chậm hơn vài chục mili-giây so với truy vấn đơn lẻ.
 

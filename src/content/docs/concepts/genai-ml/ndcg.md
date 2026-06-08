@@ -50,7 +50,6 @@ $$NDCG = \frac{DCG}{iDCG}$$
 ## Quy trình tính toán NDCG trong thực tế
 
 Để hình dung cách NDCG được tính toán, chúng ta có quy trình tổng quan sau:
-
 ```mermaid
 flowchart TD
     A["Search Results"] --> B["Calculate Gain<br/>Relevance Score"]
@@ -93,7 +92,6 @@ Hệ thống của bạn đạt hiệu suất xếp hạng khoảng **86%** so v
 ## Triển khai đánh giá với Python
 
 Trong thực tế, bạn không cần phải tự viết lại các phép tính logarit này. Thư viện `scikit-learn` đã hỗ trợ sẵn hàm `ndcg_score` để đánh giá mô hình:
-
 ```python
 from sklearn.metrics import ndcg_score
 import numpy as np

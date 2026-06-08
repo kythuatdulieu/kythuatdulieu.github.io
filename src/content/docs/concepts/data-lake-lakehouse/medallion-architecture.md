@@ -9,8 +9,6 @@ seoTitle: "Medallion Architecture là gì? Kiến trúc Bronze - Silver - Gold t
 metaDescription: "Tìm hiểu chi tiết về Medallion Architecture (Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng) phổ biến trong Data Lakehouse và Databricks. Vai trò của từng lớp dữ liệu."
 ---
 
-# Kiến trúc Medallion - Medallion Architecture
-
 Khi phong trào xây dựng **[Data Lake](/concepts/data-lake-lakehouse/data-lake/) (Hồ dữ liệu)** bùng nổ, nhiều doanh nghiệp đã hào hứng đổ tất cả mọi nguồn dữ liệu họ có vào một nơi lưu trữ tập trung duy nhất (như Amazon S3 hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/)). Tuy nhiên, chỉ sau một thời gian ngắn, hồ dữ liệu nhanh chóng biến thành một **Đầm lầy dữ liệu (Data Swamp)**. Lý do rất đơn giản: không ai biết file nào là dữ liệu thô, file nào đã được làm sạch, và bảng nào là bảng chuẩn xác để làm báo cáo.
 
 Để lập lại trật tự cho hồ dữ liệu, Databricks đã đề xuất **Kiến trúc Medallion (Medallion Architecture)** — hay còn gọi là kiến trúc phân tầng dữ liệu Đồng, Bạc, Vàng. Đây là một mẫu thiết kế logic giúp tổ chức dữ liệu một cách khoa học, nâng cấp dần chất lượng dữ liệu qua từng chặng để phục vụ tốt nhất cho mọi nhu cầu phân tích của doanh nghiệp.
@@ -42,7 +40,6 @@ Kiến trúc Medallion chia nhỏ quy trình xử lý dữ liệu ([ETL](/concep
 ## Luồng xử lý dữ liệu tổng quan
 
 Dưới đây là sơ đồ dòng chảy dữ liệu tuần tự của kiến trúc Medallion:
-
 ```mermaid
 graph LR
     Source[Sources] --> Bronze[(Bronze)]
@@ -57,8 +54,7 @@ graph LR
 Hãy xem cách dữ liệu của một thiết bị đo chất lượng không khí thay đổi qua 3 tầng:
 
 **1. Tại tầng Bronze (Thô)**:
-Hệ thống lưu lại nguyên vẹn chuỗi JSON nhận được từ thiết bị cảm biến:
-```json
+Hệ thống lưu lại nguyên vẹn chuỗi JSON nhận được từ thiết bị cảm biến:```json
 {"device_id": "A-123", "temp_f": "75.2", "pm25": "12", "timestamp": "1686090000"}
 ```
 *(Lưu ý: Tầng này có thể chứa cả các bản ghi bị lỗi do thiết bị mất sóng như `"temp_f": "NULL"`)*.
@@ -79,7 +75,7 @@ Các nhà phân tích không muốn đọc hàng triệu dòng dữ liệu theo 
 
 ---
 
-## Điểm cộng, điểm trừ và lưu ý khi áp dụng
+## Đánh giá trade-off và lưu ý
 
 ### Ưu điểm vượt trội (Pros)
 * **Quy hoạch rõ ràng (Organizational Clarity)**: Phân định rạch ròi vai trò của từng tầng dữ liệu. Đội ngũ kỹ sư, phân tích và khoa học dữ liệu đều biết chính xác họ cần kết nối vào đâu để lấy dữ liệu phù hợp với công việc của mình.

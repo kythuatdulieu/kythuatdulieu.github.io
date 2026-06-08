@@ -31,7 +31,6 @@ Về mặt vật lý, một Fact Table tiêu chuẩn sở hữu một cấu trú
 Tập hợp tất cả các Khóa ngoại (Foreign Keys) trong bảng Fact thường được kết hợp lại để làm Khóa chính tổng hợp (Composite Primary Key) cho chính bảng đó.
 
 Dưới đây là sơ đồ mối quan hệ giữa Fact Table (`fact_sales`) và các Dimension Tables trong mô hình Hình sao (Star Schema):
-
 ```mermaid
 erDiagram
     fact_sales {
@@ -99,7 +98,6 @@ Dưới đây là minh họa cấu trúc của một bảng `fact_sales` dạng 
 *Ghi chú: Cột `order_id` ở đây được gọi là **Degenerate Dimension (Chiều suy biến)**. Nó là một thông tin ngữ cảnh (mã hóa đơn) nhưng do không cần tạo một bảng Dimension riêng nên được lưu trữ trực tiếp ngay trong bảng Fact.*
 
 Dưới đây là câu lệnh SQL để khởi tạo bảng Fact này trên Data Warehouse:
-
 ```sql
 CREATE TABLE fact_sales (
     -- Khóa chính thay thế cho dòng Fact

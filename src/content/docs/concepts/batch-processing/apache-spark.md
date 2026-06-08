@@ -32,7 +32,6 @@ Sức mạnh vượt trội của Apache Spark được xây dựng dựa trên 
 ## Sơ đồ kiến trúc vận hành của ứng dụng Spark
 
 Một ứng dụng Spark hoạt động theo mô hình Master-Slave (Chủ - Tớ) với sự phân chia vai trò rõ ràng:
-
 ```mermaid
 graph TD
     A[Driver Program] -->|Tạo ra SparkContext| B(Cluster Manager)
@@ -60,7 +59,6 @@ graph TD
 ## Thực hành nhanh: Viết script PySpark lọc dữ liệu đơn giản
 
 Dưới đây là một đoạn code PySpark đơn giản để lọc ra danh sách các khách hàng VIP chi tiêu trên 1000$ và lưu kết quả xuống hồ dữ liệu dưới định dạng Parquet:
-
 ```python
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col

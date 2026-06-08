@@ -44,7 +44,6 @@ Ngược lại, EDA đi theo triết lý **Choreography (Tự biên đạo)**. G
 ## Cách thức vận hành của một hệ thống hướng sự kiện
 
 Mô hình hướng sự kiện cơ bản được cấu thành từ 3 thành phần chính:
-
 ```mermaid
 graph TD
     subgraph Event Producers
@@ -94,7 +93,6 @@ Hãy hình dung ứng dụng gọi xe công nghệ (như Grab hay Gojek) khi tà
 Nếu lúc này `Notification Service` đang gặp sự cố bảo trì, sự kiện gửi yêu cầu đánh giá vẫn được Kafka lưu giữ an toàn. Ngay khi dịch vụ này hoạt động trở lại, nó sẽ tự động đọc các tin nhắn tồn đọng và gửi bù thông báo cho khách hàng mà không làm mất mát bất kỳ thông tin nào.
 
 Dưới đây là đoạn code giả lập bằng Python minh họa cách một Producer gửi sự kiện lên Kafka và Consumer nhận dữ liệu:
-
 ```python
 # --- BÊN SENDER (Driver_Service) ---
 from kafka import KafkaProducer
@@ -145,12 +143,12 @@ for message in consumer:
 
 ## Được và mất: Sự đánh đổi cần thiết
 
-### Điểm cộng (Pros)
+### Ưu điểm
 * **Loose Coupling (Liên kết lỏng lẻo) tuyệt đối**: Các đội phát triển có thể tự do viết code bằng các ngôn ngữ khác nhau (Go, Java, Python), triển khai độc lập mà không lo sợ làm ảnh hưởng đến các dịch vụ khác.
 * **Tính chống chịu lỗi cao**: Một dịch vụ sụp đổ không kéo theo sự đổ vỡ của toàn bộ hệ thống. Khách hàng vẫn có thể trải nghiệm dịch vụ chính, các sự kiện phân tích sẽ được xử lý bù sau khi hệ thống hồi phục.
 * **Khả năng hấp thụ tải tốt**: Đóng vai trò như một bộ giảm xóc giúp hệ thống đứng vững trước các đợt lưu lượng tăng đột biến (như ngày hội mua sắm Black Friday hay Flash Sales).
 
-### Điểm trừ (Cons)
+### Nhược điểm
 * **Khó khăn khi theo dõi dấu vết (Debugging)**: Do các luồng xử lý chạy bất đồng bộ và rải rác ở nhiều dịch vụ, việc theo dõi đường đi của một yêu cầu là rất phức tạp. Bạn bắt buộc phải gắn mã định danh giao dịch chung (`Correlation ID`) vào mọi sự kiện để phục vụ việc trace log.
 * **Độ trễ nhất quán (Eventual Consistency)**: Hệ thống không còn duy trì tính nhất quán tức thì (ACID). Sẽ có độ trễ ngắn (vài phần mười giây hoặc vài giây) để dữ liệu được đồng bộ hoàn toàn giữa các dịch vụ. Đây là bài toán đau đầu cần giải quyết đối với các giao dịch tài chính yêu cầu độ chính xác tuyệt đối ngay lập tức.
 

@@ -58,7 +58,6 @@ Nhờ sự phân tách này, bản thân Orchestrator luôn nhẹ nhàng vì nó
 ## Kiến trúc và luồng đi của dữ liệu
 
 Sơ đồ dưới đây minh họa cách một Orchestrator điều phối các hệ thống thực thi mà không trực tiếp can thiệp vào dữ liệu:
-
 ```mermaid
 graph TD
     subgraph "Lập lịch & Điều phối"
@@ -85,7 +84,6 @@ graph TD
 ## Hãy bắt tay vào viết một DAG thực tế
 
 Dưới đây là một ví dụ đơn giản viết bằng Python để định nghĩa một luồng công việc (DAG) cơ bản trong Apache Airflow. Pipeline này sẽ trích xuất dữ liệu, thực hiện biến đổi thông qua dbt và cuối cùng gửi thông báo kết quả.
-
 ```python
 from airflow import DAG
 from airflow.operators.bash import BashOperator

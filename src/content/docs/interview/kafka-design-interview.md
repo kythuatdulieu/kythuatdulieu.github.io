@@ -57,7 +57,6 @@ Khi nhận đề bài thiết kế hệ thống, hãy bình tĩnh dẫn dắt ng
 ## Trực quan hóa kiến trúc xử lý thanh toán Exactly-Once
 
 Sơ đồ dưới đây minh họa luồng xử lý giao dịch thanh toán đảm bảo Exactly-Once từ khâu gửi tin đến lưu trữ vào cơ sở dữ liệu:
-
 ```mermaid
 graph LR
     subgraph Producers

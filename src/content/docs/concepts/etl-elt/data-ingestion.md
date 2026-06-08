@@ -53,7 +53,6 @@ Dựa trên yêu cầu về thời gian và độ trễ, Data Ingestion được
 ## Quy trình hoạt động của một công cụ Ingestion tự động
 
 Dưới đây là sơ đồ kiến trúc tổng quan của luồng thu nạp dữ liệu:
-
 ```mermaid
 graph TD
     subgraph "Data Sources"
@@ -94,7 +93,6 @@ Khi sử dụng một công cụ Ingestion hiện đại (như Airbyte hoặc Fi
 ## Ví dụ thực tế: Code Ingest dữ liệu thời tiết bằng Python
 
 Đoạn code Python dưới đây minh họa việc thu nạp dữ liệu thời tiết từ một API nguồn (chạy theo lô) và ghi trực tiếp dữ liệu thô đó vào Data Lake (Amazon S3):
-
 ```python
 import requests
 import boto3

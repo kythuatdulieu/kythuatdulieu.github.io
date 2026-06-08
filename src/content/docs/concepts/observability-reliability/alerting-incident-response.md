@@ -48,7 +48,6 @@ Một sự cố dữ liệu chuẩn từ khi phát hiện đến lúc giải quy
 ### Sơ đồ luồng xử lý và định tuyến cảnh báo
 
 Sơ đồ dưới đây thể hiện quy trình khép kín từ khi phát hiện lỗi đến khi điều phối kỹ sư ứng phó:
-
 ```mermaid
 graph TD
     subgraph Detection Layer
@@ -92,7 +91,6 @@ Dưới đây là một mô hình phân cấp độ nghiêm trọng phổ biến
   * *Hành động:* Ghi log hệ thống, không cần thông báo làm phiền kỹ sư.
 
 Ví dụ về cấu hình cảnh báo trong **Prometheus Alertmanager** bằng file YAML:
-
 ```yaml
 groups:
 - name: DataPipelineAlerts
@@ -131,12 +129,12 @@ groups:
 
 ## Được và mất khi xây dựng quy trình ứng phó bài bản
 
-### Điểm cộng (Pros):
+### Ưu điểm:
 * Giảm đáng kể chỉ số TTR (Time-to-Resolution - Thời gian trung bình để khắc phục sự cố) từ vài ngày xuống còn vài giờ hoặc vài phút.
 * Giữ gìn uy tín và tính chuyên nghiệp của đội ngũ Data trong mắt các phòng ban kinh doanh nhờ sự minh bạch và chủ động thông báo.
 * Giúp tích lũy tri thức tập thể thông qua các tài liệu hướng dẫn xử lý sự cố (Playbooks) và biên bản họp rút kinh nghiệm.
 
-### Điểm trừ (Cons):
+### Nhược điểm:
 * Yêu cầu văn hóa tổ chức phải cởi mở, chuyên nghiệp và có sự đầu tư nghiêm túc về mặt thời gian cũng như công cụ.
 * Có thể gây áp lực tâm lý (on-call anxiety) cho các kỹ sư dữ liệu nếu hệ thống hiện tại còn quá nhiều lỗi và nợ kỹ thuật (technical debt) chưa được giải quyết triệt để.
 

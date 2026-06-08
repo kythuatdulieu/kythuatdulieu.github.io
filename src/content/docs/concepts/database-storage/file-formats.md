@@ -54,7 +54,6 @@ Khi thế giới bước vào kỷ nguyên Big Data với các công cụ xử l
 ## Sơ đồ kiến trúc: Dữ liệu đi đâu về đâu?
 
 Trong một Data Lake điển hình, việc lựa chọn định dạng tệp sẽ thay đổi tùy theo từng phân vùng (zone) của dữ liệu:
-
 ```mermaid
 graph LR
     subgraph Data Sources
@@ -95,7 +94,6 @@ Hãy tưởng tượng một ngày, đội ngũ phát triển Backend quyết đ
 ## Thực chiến: Đo đạc hiệu năng nén của Parquet bằng Python
 
 Đoạn code Python dưới đây (sử dụng thư viện `pandas` và `pyarrow`) sẽ minh họa rõ nét sự chênh lệch đáng kinh ngạc về kích thước lưu trữ giữa CSV và Parquet khi xử lý 1 triệu dòng dữ liệu:
-
 ```python
 import pandas as pd
 import numpy as np

@@ -48,7 +48,6 @@ Kiến trúc dữ liệu hiện đại ngày càng phức tạp với hàng tră
 ## Kiến trúc và Nguyên lý hoạt động
 
 Dưới đây là mô hình sơ đồ dòng chảy dữ liệu được điều phối và giám sát bởi hệ thống Data Observability chuyên dụng (như Monte Carlo hay Metaplane):
-
 ```mermaid
 graph TD
     subgraph "Data Stack"
@@ -97,7 +96,6 @@ graph TD
 ## Ví dụ thực tế: Cấu hình giám sát dữ liệu bằng Soda
 
 Dưới đây là một tệp YAML cấu hình cho công cụ giám sát mã nguồn mở **Soda** để tự động kiểm tra độ tươi mới, độ phân phối và khối lượng dữ liệu cho bảng giao dịch:
-
 ```yaml
 # checks_dim_exchange.yml
 checks for dim_exchange:
@@ -116,7 +114,7 @@ checks for dim_exchange:
 
 ## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-### Ưu điểm (Pros):
+### Ưu điểm:
 * **Chủ động phát hiện sự cố (Proactive Detection)**: Đội ngũ dữ liệu nhận diện lỗi trước khi người dùng cuối hoặc ban giám đốc phát hiện ra trên các dashboard BI.
 * **Giảm thiểu thời gian chết dữ liệu (Data Downtime)**: Nhờ có các cảnh báo tự động, thời gian từ lúc phát sinh lỗi đến lúc khắc phục được rút ngắn tối đa.
 * **Phân tích nguyên nhân gốc rễ nhanh chóng ([Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/))**: Tích hợp phả hệ dữ liệu (Data Lineage) giúp kỹ sư khoanh vùng ngay lập tức bảng nguồn nào gây ra lỗi.

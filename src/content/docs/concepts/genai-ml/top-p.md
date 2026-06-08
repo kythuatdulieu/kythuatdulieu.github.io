@@ -54,7 +54,6 @@ Tại điểm này, hệ thống sẽ dừng lại và khóa nhóm "hạt nhân"
 ## Sơ đồ thuật toán tính tổng xác suất tích lũy
 
 Dưới đây là sơ đồ luồng lọc từ vựng bằng thuật toán Top-p:
-
 ```mermaid
 graph TD
     A["Logits đầu ra từ LLM"] --> B["Áp dụng Softmax để lấy Probabilities"]
@@ -73,7 +72,6 @@ graph TD
 ## Ví dụ thực tế: Cấu hình Top-p bằng Python
 
 Bạn có thể dễ dàng thiết lập tham số `top_p` khi gọi API của OpenAI:
-
 ```python
 import openai
 

@@ -35,7 +35,6 @@ Cách tổ chức này phản ánh chính xác cách con người suy nghĩ khi 
 ## Kiến trúc Star Schema (Lược đồ hình sao)
 
 Khi chúng ta đặt bảng Fact ở giữa và liên kết trực tiếp với các bảng Dimension xung quanh, chúng ta có một mô hình trông giống như một ngôi sao. Đây chính là **Star Schema** – cấu trúc phổ biến nhất của Dimensional Modeling.
-
 ```mermaid
 erDiagram
     FACT_SALES {
@@ -89,8 +88,7 @@ erDiagram
 Hãy xem sự khác biệt rõ rệt khi viết câu lệnh truy vấn giữa hai mô hình chuẩn hóa giao dịch và mô hình đa chiều.
 
 **Với hệ thống OLTP (chuẩn hóa 3NF):**
-Bạn phải thực hiện rất nhiều phép JOIN chỉ để lấy tên Danh mục sản phẩm (CategoryName):
-```sql
+Bạn phải thực hiện rất nhiều phép JOIN chỉ để lấy tên Danh mục sản phẩm (CategoryName):```sql
 -- Cần JOIN tới 4 bảng để lấy thông tin phân tích
 SELECT c.CategoryName, SUM(s.Amount) 
 FROM Sales s
@@ -101,8 +99,7 @@ GROUP BY c.CategoryName;
 ```
 
 **Với Dimensional Modeling (Star Schema):**
-Mọi thông tin phân cấp của sản phẩm đã được "bẻ phẳng" và đưa trực tiếp vào bảng `dim_product`. Câu lệnh SQL trở nên cực kỳ gọn nhẹ:
-```sql
+Mọi thông tin phân cấp của sản phẩm đã được "bẻ phẳng" và đưa trực tiếp vào bảng `dim_product`. Câu lệnh SQL trở nên cực kỳ gọn nhẹ:```sql
 -- Dữ liệu CategoryName đã nằm sẵn trong dim_product
 SELECT p.CategoryName, SUM(f.Revenue)
 FROM fact_sales f

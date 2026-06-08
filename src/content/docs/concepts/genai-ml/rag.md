@@ -41,7 +41,6 @@ RAG hoạt động giống như việc bạn cử một thủ thư đi lục tì
 ## RAG hoạt động chi tiết như thế nào?
 
 Kiến trúc RAG tiêu chuẩn bao gồm hai luồng quy trình vận hành song song:
-
 ```mermaid
 flowchart TD
     subgraph "Offline: Data Ingestion Pipeline"
@@ -100,7 +99,6 @@ Quy trình này kích hoạt ngay khi người dùng gửi câu hỏi (real-time
 4. LLM xử lý prompt và trả lời: *"Dựa theo báo cáo tài chính tháng 10/2025, doanh thu Quý 3/2025 của dự án Alpha là 4.5 triệu USD."*
 
 Bạn có thể dễ dàng triển khai luồng RAG cơ bản này bằng Python và thư viện LangChain:
-
 ```python
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings

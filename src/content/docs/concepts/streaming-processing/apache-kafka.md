@@ -41,7 +41,6 @@ Hệ sinh thái hoạt động của Apache Kafka được xây dựng từ bố
 ## Sơ đồ kiến trúc luồng dữ liệu của Kafka
 
 Dưới đây là sơ đồ trực quan minh họa cách Kafka làm trung gian điều phối dữ liệu từ nhiều nguồn khác nhau đến các hệ thống tiêu thụ phía sau:
-
 ```mermaid
 graph LR
     subgraph Producers
@@ -78,7 +77,6 @@ graph LR
 ## Practical example
 
 Dưới đây là một đoạn code Python đơn giản sử dụng thư viện `kafka-python` để định nghĩa một Producer gửi dữ liệu giao dịch vào Kafka:
-
 ```python
 from kafka import KafkaProducer
 import json

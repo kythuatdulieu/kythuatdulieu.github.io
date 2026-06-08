@@ -51,7 +51,6 @@ Chúng ta có 4 thao tác cơ bản trên khối dữ liệu này:
 ## Vị trí của OLAP trong đường ống dữ liệu
 
 Dưới đây là sơ đồ mô tả cách dữ liệu được trích xuất từ các nguồn giao dịch, đưa qua đường ống làm sạch để nạp vào hệ thống OLAP phục vụ báo cáo:
-
 ```mermaid
 graph LR
     Source[Sources] --> Batch[ETL Process]
@@ -65,7 +64,6 @@ graph LR
 ## Minh họa thực tế: Truy vấn báo cáo trên Data Warehouse
 
 Hãy xem một câu lệnh SQL đặc trưng của hệ thống OLAP. Truy vấn này quét qua hàng triệu dòng dữ liệu để so sánh doanh số theo phân khúc sản phẩm giữa các quý:
-
 ```sql
 SELECT 
     d_date.year,

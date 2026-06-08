@@ -44,7 +44,6 @@ Cấu trúc DAG giúp bộ điều phối tự động trả lời hai câu hỏ
 ## Bản thiết kế DAG: Sự khác biệt giữa Hợp lệ và Bất hợp lệ
 
 Hãy quan sát sơ đồ dưới đây để thấy sự khác biệt trực quan giữa một đồ thị DAG chuẩn mực và một đồ thị lỗi có chứa chu trình:
-
 ```mermaid
 graph TD
     subgraph "Hợp lệ (DAG)"
@@ -77,7 +76,6 @@ Khi bạn khởi chạy một DAG, bộ điều phối (ví dụ như Airflow) s
 ## Bắt tay vào định nghĩa DAG trong thực tế
 
 Dưới đây là ví dụ minh họa cách định nghĩa một DAG trong Apache Airflow bằng Python, sử dụng toán tử `>>` để thiết lập mối quan hệ phụ thuộc:
-
 ```python
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
@@ -98,8 +96,7 @@ with DAG(dag_id="example_dag", start_date=datetime(2026, 6, 1)) as dag:
 
 Trong công cụ biến đổi dữ liệu **dbt (data build tool)**, bạn không cần tự tay viết các toán tử vẽ mũi tên. Thay vào đó, dbt sẽ tự phân tích cú pháp hàm tham chiếu `{{ ref() }}` trong các file SQL để tự động xây dựng nên một DAG khổng lồ.
 
-Ví dụ trong file SQL `marts_revenue.sql`:
-```sql
+Ví dụ trong file SQL `marts_revenue.sql`:```sql
 SELECT * 
 FROM {{ ref('stg_sales') }} 
 JOIN {{ ref('stg_users') }} ON ...

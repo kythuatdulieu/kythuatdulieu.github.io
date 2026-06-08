@@ -43,7 +43,6 @@ Quá trình chia cắt này được thực hiện bởi một bộ phận đầ
 2. Ngay khi gặp một hàm ghi dữ liệu `df.write.parquet()`, Spark lập tức kích hoạt một **Job**.
 3. DAG Scheduler nhìn ngược lại biểu đồ biến đổi dữ liệu. Cứ mỗi lần gặp một phép toán cần gom nhóm Key qua mạng (như `groupBy`), nó sẽ dùng chiếc kéo "cắt" sơ đồ DAG tại đó để tạo thành một ranh giới Stage mới.
 4. Trong mỗi Stage, hệ thống đếm số lượng Partitions của dữ liệu hiện tại, phân rã Stage thành các **Tasks** tương ứng rồi phân bổ chúng xuống các Core của Executor để thực thi song song.
-
 ```mermaid
 graph TD
     Stage1[Stage 1: Đọc & Lọc dữ liệu thô] -->|Mạng lưới: Shuffle| Stage2[Stage 2: Gom nhóm & Tính tổng]
@@ -52,7 +51,6 @@ graph TD
 ## Phân tích qua ví dụ thực tế
 
 Hãy cùng giải phẫu một đoạn mã PySpark đơn giản để xem cách hệ thống phân chia công việc:
-
 ```python
 # 1. Kích hoạt Spark Application trên cụm máy chủ
 df = spark.read.csv("s3://data/users/")

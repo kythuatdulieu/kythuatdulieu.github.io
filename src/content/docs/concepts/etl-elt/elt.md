@@ -42,7 +42,6 @@ Sự thay đổi này đã khai sinh ra một vai trò mới trong các doanh ng
 ## Một chu trình ELT hoạt động như thế nào trong thực tế?
 
 Hãy cùng xem luồng đi của dữ liệu từ nguồn đến đích thông qua kiến trúc ELT:
-
 ```mermaid
 graph LR
     subgraph "Data Sources"
@@ -77,8 +76,7 @@ graph LR
 
 Dưới đây là ví dụ minh họa cách viết các file SQL trong dbt để thực hiện bước Transform ngay trong Data Warehouse.
 
-Đầu tiên, chúng ta tạo một file `stg_customers.sql` để làm sạch dữ liệu từ bảng thô:
-```sql
+Đầu tiên, chúng ta tạo một file `stg_customers.sql` để làm sạch dữ liệu từ bảng thô:```sql
 WITH raw_customers AS (
     SELECT * FROM {{ source('raw_postgres', 'customers') }}
 )
@@ -91,8 +89,7 @@ FROM raw_customers
 WHERE email IS NOT NULL
 ```
 
-Sau đó, chúng ta tạo file `dim_customers.sql` để định hình bảng chiều phân tích cuối cùng:
-```sql
+Sau đó, chúng ta tạo file `dim_customers.sql` để định hình bảng chiều phân tích cuối cùng:```sql
 SELECT 
     customer_id,
     first_name,

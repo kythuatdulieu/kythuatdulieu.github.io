@@ -53,7 +53,6 @@ Quy trình đánh giá sự phụ thuộc diễn ra như sau:
 ## Sơ đồ minh họa các quy tắc Trigger Rules phổ biến
 
 Dưới đây là một số kịch bản rẽ nhánh và hội tụ dựa trên Trigger Rules trong DAG:
-
 ```mermaid
 graph TD
     A1(Task A: Extract DB) -->|Success| B1(Task B: Transform Data)
@@ -73,7 +72,6 @@ graph TD
 ## Ví dụ thực tế: Viết DAG Airflow thiết lập sự phụ thuộc
 
 Trong Apache Airflow, cách phổ biến nhất để thiết lập Task Dependency là sử dụng các toán tử dịch bit (`>>` và `<<`):
-
 ```python
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator

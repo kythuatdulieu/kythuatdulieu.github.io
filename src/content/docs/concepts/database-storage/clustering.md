@@ -53,7 +53,6 @@ Hãy quan sát sự thay đổi của các khối lưu trữ trước và sau kh
 *(Giờ đây, nếu cần tìm User 99, hệ thống kiểm tra metadata và biết chắc chỉ cần đọc Block C).*
 
 Sơ đồ hóa quy trình quét dữ liệu thông minh này:
-
 ```mermaid
 graph TD
     subgraph Storage Blocks Before Clustering
@@ -77,7 +76,6 @@ graph TD
 ## Thực tế áp dụng trên Google BigQuery
 
 Trong thực tế dự án, bạn sẽ thường kết hợp cả hai kỹ thuật này khi thiết kế bảng dữ liệu. Dưới đây là câu lệnh SQL tạo bảng mẫu trên [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/):
-
 ```sql
 CREATE TABLE sales_data.transactions
 (
@@ -93,8 +91,7 @@ PARTITION BY DATE_TRUNC(transaction_date, MONTH)
 CLUSTER BY customer_id, product_category;
 ```
 
-Khi một nhà phân tích chạy câu lệnh:
-```sql
+Khi một nhà phân tích chạy câu lệnh:```sql
 SELECT SUM(amount) 
 FROM sales_data.transactions 
 WHERE transaction_date = '2026-06-07' AND customer_id = 'CUST-123';

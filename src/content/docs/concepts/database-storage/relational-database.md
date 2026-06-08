@@ -58,7 +58,6 @@ Khi bạn gửi một câu lệnh SQL đến cơ sở dữ liệu, RDBMS sẽ th
 ## Sơ đồ Thực thể - Liên kết (ERD)
 
 Sơ đồ ERD cơ bản dưới đây mô tả mối quan hệ 1-Nhiều kinh điển giữa thực thể Khách hàng (Customer) và Đơn hàng (Order):
-
 ```mermaid
 erDiagram
     CUSTOMER {
@@ -77,7 +76,6 @@ erDiagram
 ## Minh họa thực tế: Thiết kế bảng và giao dịch SQL
 
 Dưới đây là ví dụ về cách tạo bảng, thiết lập khóa ngoại và thực thi một giao dịch an toàn trong cơ sở dữ liệu:
-
 ```sql
 -- 1. Khởi tạo bảng Khách hàng
 CREATE TABLE Customers (
@@ -117,11 +115,11 @@ COMMIT;
 
 ## Đánh đổi thực tế: Khi nào nên và không nên chọn RDBMS?
 
-### Điểm cộng lớn
+### Ưu điểm lớn
 * Bảo vệ tính toàn vẹn và đồng nhất của dữ liệu ở mức tối đa nhờ tuân thủ chặt chẽ ACID.
 * Ngôn ngữ SQL cực kỳ mạnh mẽ, linh hoạt và được chuẩn hóa toàn cầu, giúp xử lý các bài toán truy vấn phức tạp một cách dễ dàng.
 
-### Điểm trừ cần lưu ý
+### Nhược điểm cần lưu ý
 * **Khó mở rộng theo chiều ngang (Horizontal Scaling)**: RDBMS được thiết kế tốt nhất để chạy trên một máy chủ đơn lẻ (Scale Up). Khi dữ liệu quá lớn và cần phân tán ra nhiều máy (Sharding), việc quản trị và bảo toàn tính ACID trở nên rất phức tạp.
 * **Cấu trúc bảng cứng nhắc**: Việc thay đổi cấu trúc bảng (như thêm cột) trên một bảng chứa hàng tỷ dòng dữ liệu có thể làm khóa bảng và treo hệ thống trong thời gian dài.
 

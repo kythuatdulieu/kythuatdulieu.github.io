@@ -49,7 +49,6 @@ Bạn viết một hàm Python (ví dụ: đọc file JSON, trích xuất thông
 ### 2. Serverless SQL Engines cho phân tích Dữ liệu Lớn (Big Data Analytics)
 *Tiêu biểu: Google BigQuery, Amazon Athena.*
 Bạn chỉ cần viết một câu lệnh SQL phức tạp trên giao diện web và ấn Run. Ở phía sau, nhà cung cấp đám mây tự động huy động hàng nghìn CPU nhàn rỗi để quét song song hàng tỷ dòng dữ liệu, trả kết quả cho bạn sau vài giây và chỉ thu phí dựa trên lượng Terabytes dữ liệu mà câu SQL đó quét qua.
-
 ```mermaid
 graph LR
     subgraph "Data Sources"
@@ -91,8 +90,7 @@ Hãy tưởng tượng bạn cần đếm số lượng người dùng truy cậ
 Bạn phải lên AWS tạo một cụm máy ảo EMR (Elastic MapReduce) gồm 1 node chính và 5 node phụ. Bạn phải chờ khoảng 15 phút để các máy ảo khởi động xong rồi mới submit job Spark lên chạy. Khi job chạy xong sau 30 phút, **nếu bạn quên tắt cụm máy ảo**, chúng sẽ tiếp tục chạy vô ích suốt ngày nghỉ cuối tuần và gửi cho bạn một hóa đơn trị giá 500 USD.
 
 ### Hướng đi Serverless (Dùng Amazon Athena)
-Bạn chỉ cần mở giao diện Athena và gõ trực tiếp câu lệnh SQL:
-```sql
+Bạn chỉ cần mở giao diện Athena và gõ trực tiếp câu lệnh SQL:```sql
 SELECT country, COUNT(*) as visits 
 FROM s3_web_logs_table 
 GROUP BY country;

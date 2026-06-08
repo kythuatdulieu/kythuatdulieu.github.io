@@ -50,7 +50,6 @@ Mô hình dữ liệu đa chiều được thiết kế theo quy trình 4 bướ
 ## Kiến trúc hệ thống Kimball
 
 Kiến trúc hệ thống dữ liệu theo Kimball được chia thành 4 tầng rõ rệt:
-
 ```mermaid
 graph LR
     subgraph "Source Systems"
@@ -99,7 +98,6 @@ graph LR
 ## Thực chiến: Thiết kế Data Mart Bán hàng dạng Star Schema
 
 Dưới đây là đoạn code SQL thiết kế bảng Fact Bán hàng (`fact_sales`) tuân thủ nghiêm ngặt theo triết lý Kimball:
-
 ```sql
 -- Dimensional Modeling / Star Schema
 CREATE TABLE fact_sales (

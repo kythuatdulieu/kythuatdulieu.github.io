@@ -43,7 +43,6 @@ Nguyên lý hoạt động của một Vector Database được xây dựng trê
 ## Hai luồng hoạt động chính: Ingestion và Query
 
 Kiến trúc luồng dữ liệu (Data Flow) trong một hệ thống ứng dụng Vector Database điển hình:
-
 ```mermaid
 flowchart TD
     subgraph "Ingestion Phase"
@@ -81,7 +80,6 @@ flowchart TD
 ## Ví dụ thực tế: Tích hợp Pinecone trong Python
 
 Đoạn code minh họa cách khởi tạo, nạp dữ liệu và thực hiện tìm kiếm ngữ nghĩa sử dụng Pinecone:
-
 ```python
 from pinecone import Pinecone
 

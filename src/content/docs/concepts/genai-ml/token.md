@@ -38,7 +38,6 @@ Hầu hết các mô hình ngôn ngữ lớn hiện đại đều sử dụng th
 4. **Áp dụng:** Khi người dùng gửi một đoạn văn mới lên, bộ Tokenizer sẽ ưu tiên cắt văn bản đó thành các token lớn nhất có sẵn trong từ điển của nó.
 
 Sơ đồ quy trình biến đổi:
-
 ```mermaid
 flowchart TD
     A["Raw Text: 'unbelievable'"] --> B["Characters: u, n, b, e, l, i, e, v, a, b, l, e"]
@@ -74,7 +73,6 @@ Hãy so sánh hai câu có nghĩa tương đương đi qua bộ Tokenizer `tikto
 ## Ví dụ thực tế: Đo đạc số token bằng Python
 
 Để quản lý chi phí API, bạn có thể tự đếm số lượng token trước khi gửi đi bằng thư viện mã nguồn mở `tiktoken` của OpenAI:
-
 ```python
 import tiktoken
 

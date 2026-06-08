@@ -48,7 +48,6 @@ Một buổi sáng, Giám đốc tài chính phát hiện biểu đồ "Doanh th
 ## Kiến trúc luồng hoạt động của Data Lineage
 
 Dưới đây là sơ đồ minh họa cách dữ liệu chảy từ nguồn qua các lớp biến đổi và được hệ thống Lineage ghi nhận tự động:
-
 ```mermaid
 graph LR
     subgraph "Upstream  (Sources)"
@@ -88,7 +87,6 @@ Trong ngành ngân hàng, các tổ chức tài chính bắt buộc phải tuân
 Nếu không có Data Lineage chứng minh nguồn gốc (Provenance), ngân hàng có thể đối mặt với những khoản phạt khổng lồ do không minh bạch được quy trình.
 
 Dưới đây là ví dụ về một gói tin JSON theo tiêu chuẩn mở **OpenLineage** do một tác vụ Spark hoặc Airflow sinh ra sau khi chạy xong để báo cáo phả hệ cho máy chủ thu thập:
-
 ```json
 {
   "eventType": "COMPLETE",

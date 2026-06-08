@@ -66,7 +66,6 @@ Nếu một chuyên viên phân tích chạy câu lệnh `SELECT SUM(revenue)` t
 Giả sử doanh nghiệp của bạn có 2 luồng dữ liệu nghiệp vụ:
 1. Mục tiêu doanh thu (Target) được giao theo cấp độ **Khu vực (Region)** và **Tháng (Month)**.
 2. Doanh thu thực tế (Actual) đổ về chi tiết theo **Cửa hàng (Store)** và **Phút (Minute)**.
-
 ```mermaid
 flowchart TD
     A[(fact_actual_sales<br/>Grain: Cửa hàng - Phút)] -->|ROLLUP theo Tháng/Khu vực| B{Công cụ BI<br/>Data Blending}
@@ -76,8 +75,7 @@ flowchart TD
 
 Chúng ta tuyệt đối không được gộp chung 2 luồng này vào một bảng duy nhất. Giải pháp chuẩn mực là tách làm 2 Fact Table riêng biệt với 2 mức Grain tương ứng:
 
-**1. Bảng Doanh thu thực tế (Atomic Grain)**
-```sql
+**1. Bảng Doanh thu thực tế (Atomic Grain)**```sql
 CREATE TABLE fact_actual_sales (
     date_key INT,
     time_key INT,
@@ -89,8 +87,7 @@ CREATE TABLE fact_actual_sales (
 -- Grain: 1 dòng = 1 sản phẩm bán ra tại 1 cửa hàng vào 1 phút cụ thể.
 ```
 
-**2. Bảng Mục tiêu kinh doanh (Aggregated Grain)**
-```sql
+**2. Bảng Mục tiêu kinh doanh (Aggregated Grain)**```sql
 CREATE TABLE fact_target_sales (
     month_key INT,
     region_key INT,

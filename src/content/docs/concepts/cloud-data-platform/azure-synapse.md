@@ -45,7 +45,6 @@ Azure Synapse hoạt động dựa trên nguyên tắc phân tách hoàn toàn g
 ## Sơ đồ kiến trúc tổng quan của Azure Synapse Analytics
 
 Sơ đồ dưới đây minh họa cách dữ liệu được thu thập từ các nguồn khác nhau, điều phối qua pipeline, xử lý bằng các công cụ tính toán và cuối cùng được tiêu thụ bởi Power BI hay Azure Machine Learning:
-
 ```mermaid
 graph TD
     subgraph "Data Sources"
@@ -95,7 +94,6 @@ graph TD
 ## Thực hành nhanh: Truy vấn file Parquet trên Data Lake bằng Serverless SQL Pool
 
 Giả sử doanh nghiệp của bạn có các tệp tin Parquet lưu trữ lịch sử giao dịch mua sắm trên Azure Data Lake Storage (ADLS) Gen2. Thay vì phải tốn công xây dựng pipeline nạp dữ liệu vào database, bạn có thể mở Synapse Studio lên và chạy ngay câu lệnh T-SQL sau để tính tổng doanh thu theo ngày:
-
 ```sql
 SELECT
     CAST(transaction_date AS DATE) AS date,
@@ -128,12 +126,12 @@ Hệ thống sẽ tự động quét các file Parquet trực tiếp trên Data 
 
 ## Đánh đổi: Được và mất khi lựa chọn Azure Synapse
 
-### Điểm cộng (Pros):
+### Ưu điểm:
 * Khả năng hợp nhất tuyệt vời giữa Data Warehouse, Data Lake, Spark và các đường ống ETL kéo thả trên cùng một giao diện quản trị.
 * Cho phép lựa chọn linh hoạt giữa mô hình tính phí theo năng lượng thực tế sử dụng (Serverless) và mô hình cấu hình phần cứng chuyên dụng cố định (Dedicated).
 * Khả năng bảo mật chuẩn doanh nghiệp nhờ sự tích hợp chặt chẽ với Azure Active Directory (Entra ID), Microsoft Purview và Azure Monitor.
 
-### Điểm trừ (Cons):
+### Nhược điểm:
 * **Ràng buộc nhà cung cấp (Vendor Lock-in):** Hệ thống được thiết kế tối ưu hóa riêng cho hạ tầng Azure. Nếu doanh nghiệp của bạn định hướng xây dựng kiến trúc đa đám mây (Multi-cloud) sử dụng kết hợp cả AWS và Google Cloud, việc dịch chuyển Azure Synapse sẽ gặp rất nhiều khó khăn.
 * **Độ phức tạp ban đầu cao:** Do tích hợp quá nhiều tính năng trong một, giao diện Synapse Workspace có thể gây bối rối cho người dùng mới so với các giải pháp đơn giản chuyên biệt như [Snowflake](/concepts/cloud-data-platform/snowflake/).
 

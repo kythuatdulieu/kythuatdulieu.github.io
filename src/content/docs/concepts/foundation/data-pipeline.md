@@ -47,7 +47,6 @@ Một đường ống dữ liệu hoàn chỉnh thường được cấu thành 
 ## Kiến trúc và Cơ chế hoạt động
 
 Dưới đây là mô hình sơ đồ dòng chảy dữ liệu được điều phối bởi công cụ [Apache Airflow](/concepts/orchestration/apache-airflow/):
-
 ```mermaid
 graph LR
     subgraph Sources
@@ -87,7 +86,6 @@ graph LR
 ## Ví dụ thực tế: Cấu hình DAG trong Apache Airflow bằng Python
 
 Đoạn code Python dưới đây định nghĩa một quy trình điều phối pipeline hàng ngày (daily sales pipeline) bao gồm 3 bước: Extract, Transform và Load:
-
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -121,7 +119,7 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
 
 ## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-### Ưu điểm (Pros):
+### Ưu điểm:
 * **Tự động hóa quy trình**: Giúp loại bỏ hoàn toàn các bước lặp đi lặp lại bằng tay, tiết kiệm nguồn lực cho doanh nghiệp.
 * **Nhất quán và chất lượng dữ liệu**: Việc tự động hóa tích hợp các bước kiểm thử dữ liệu ([Data Quality](/concepts/data-quality/data-quality/)) đảm bảo dữ liệu đưa vào kho phân tích luôn sạch và chuẩn hóa.
 * **Hợp nhất dữ liệu toàn diện**: Phá vỡ các silo dữ liệu, kết nối và tổng hợp thông tin từ nhiều nguồn ứng dụng khác nhau về một nơi duy nhất.

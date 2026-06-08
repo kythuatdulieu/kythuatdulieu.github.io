@@ -26,7 +26,6 @@ Nếu chúng ta ép LLM chỉ được phép nói những câu đã ghi nhớ ch
 ## Phân loại ảo giác: Hai bộ mặt của sự sai lệch
 
 Các kỹ sư dữ liệu và chuyên gia AI thường phân chia ảo giác thành hai loại chính:
-
 ```mermaid
 flowchart TD
     A["Ảo giác LLM<br/>Hallucination"] --> B["Intrinsic<br/>Mâu thuẫn logic"]
@@ -56,7 +55,6 @@ flowchart TD
 Tháng 6/2023, hai luật sư tại New York đã phải gánh chịu hình phạt 5,000 USD từ thẩm phán vì đã sử dụng ChatGPT để soạn thảo tài liệu bào chữa gửi lên tòa án. Trong văn bản bào chữa, ChatGPT đã tự tin viện dẫn 6 án lệ lịch sử trông rất uy tín. Tuy nhiên, khi đối phương tiến hành kiểm tra trên hệ thống pháp lý, họ phát hiện toàn bộ 6 vụ án này đều do ChatGPT tự bịa ra 100%, bao gồm cả tên nguyên đơn, bị đơn, số hồ sơ vụ án lẫn nội dung tóm tắt bản án. Khi luật sư quay lại chat hỏi ChatGPT: *"Vụ án này có thật không?"*, mô hình vẫn điềm nhiên trả lời: *"Có thật, bạn có thể tra cứu nó trên hệ thống LexisNexis"*.
 
 Đoạn mã Python dưới đây minh họa cách cấu hình API để thiết lập hệ thống hạn chế tối đa ảo giác thông qua việc neo thông tin (Grounding) và hạ thấp tham số sáng tạo về 0:
-
 ```python
 import openai
 

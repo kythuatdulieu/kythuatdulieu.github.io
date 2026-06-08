@@ -49,7 +49,6 @@ Sự vĩ đại của LLM được xây dựng trên ba thành phần nền tả
 ## Hành trình huấn luyện một LLM hiện đại
 
 Để biến một tập hợp các file ma trận trống rỗng thành một trợ lý AI thông minh như ngày nay, mô hình phải trải qua một quy trình huấn luyện gồm 3 giai đoạn chính:
-
 ```mermaid
 flowchart LR
     A["Massive Internet Text"] --> B["Pre-training"]
@@ -96,7 +95,6 @@ Việc chọn từ nào tiếp theo sẽ phụ thuộc vào tham số **Temperat
 * **Temperature cao (ví dụ 0.7 - 1.0)**: Mô hình sẽ có cơ hội lựa chọn các từ có xác suất thấp hơn như `áo_mưa` để câu văn trở nên tự nhiên, sáng tạo và đa dạng hơn.
 
 Dưới đây là một đoạn code ví dụ cách gọi API của OpenAI và cấu hình tham số này:
-
 ```python
 import openai
 

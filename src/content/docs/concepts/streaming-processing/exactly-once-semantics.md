@@ -44,7 +44,6 @@ Việc kích hoạt cấu hình Exactly-Once trên engine xử lý (như Apache 
 ## Cơ chế hoạt động của Apache Flink và Kafka
 
 Sự kết hợp giữa Apache Flink (Processor) và Apache Kafka (Source & Sink) là mô hình phổ biến để đạt được Exactly-Once nhờ giao thức **Two-Phase Commit (Giao dịch 2 pha - 2PC)**:
-
 ```mermaid
 sequenceDiagram
     participant JM as JobManager
@@ -74,7 +73,6 @@ Nếu xảy ra lỗi trước khi hoàn tất Pha 2, Flink sẽ hủy bỏ (abor
 ## Thực hành: Cấu hình Exactly-Once trong Java API
 
 Dưới đây là cách bạn kích hoạt ngữ nghĩa xử lý chính xác một lần trong ứng dụng Java chạy trên Apache Flink kết nối với Kafka:
-
 ```java
 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 

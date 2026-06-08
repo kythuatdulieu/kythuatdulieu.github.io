@@ -30,7 +30,6 @@ Mỗi nguồn này sử dụng một ngôn ngữ truy vấn, một giao thức t
 ## Kiến trúc và Các phương pháp trích xuất dữ liệu
 
 Để trích xuất dữ liệu, chúng ta thường phải cân nhắc lựa chọn giữa các phương pháp từ đơn giản đến phức tạp, tùy thuộc vào kích thước dữ liệu và yêu cầu hệ thống.
-
 ```mermaid
 graph TD
     subgraph "Operational Systems  (Sources)"
@@ -78,7 +77,6 @@ graph TD
 ## Ví dụ thực tế: Code trích xuất phân trang từ API bằng Python
 
 Dưới đây là một đoạn code Python minh họa cách trích xuất dữ liệu từ một API có phân trang, đồng thời xử lý lỗi giới hạn lượt gọi (Rate Limit):
-
 ```python
 import requests
 import time

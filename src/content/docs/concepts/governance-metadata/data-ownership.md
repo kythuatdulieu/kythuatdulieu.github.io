@@ -47,7 +47,6 @@ Data Ownership đánh dấu một sự thay đổi lớn trong tư duy quản tr
 ## Kiến trúc và Cơ chế vận hành
 
 Để hiện thực hóa Data Ownership, tổ chức thường đi qua 4 bước cơ bản sau:
-
 ```mermaid
 flowchart TD
     A[1. Định danh Domain<br/>Phân chia nghiệp vụ] --> B[2. Chỉ định Data Owner<br/>C-Level / Trưởng phòng]
@@ -66,7 +65,6 @@ flowchart TD
 ## Ví dụ thực tế: Phân quyền sở hữu nghiêm ngặt trên Snowflake
 
 Trong các kho dữ liệu hiện đại như Snowflake, quyền sở hữu dữ liệu được cụ thể hóa bằng các câu lệnh phân quyền theo vai trò (RBAC - Role-Based [Access Control](/concepts/governance-metadata/access-control/)) nghiêm ngặt để đảm bảo phòng IT không thể tự tiện can thiệp vào dữ liệu nhạy cảm của phòng ban khác:
-
 ```sql
 -- 1. Tạo một Role đại diện cho Data Owner của phòng Marketing
 CREATE ROLE marketing_data_owner;
@@ -84,7 +82,7 @@ TO ROLE marketing_data_owner REVOKE CURRENT GRANTS;
 
 ## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-### Ưu điểm (Pros):
+### Ưu điểm:
 * **Phân định rõ ràng trách nhiệm (Clear Accountability)**: Triệt tiêu tình trạng đùn đẩy trách nhiệm về chất lượng dữ liệu giữa các phòng ban nghiệp vụ và IT.
 * **Chất lượng dữ liệu được cải thiện tận gốc**: Người sở hữu dữ liệu là người hiểu rõ nghiệp vụ nhất, giúp các quy tắc làm sạch dữ liệu sát thực tế hơn.
 * **Tự chủ hóa nghiệp vụ (Domain Empowerment)**: Các bộ phận nghiệp vụ có thể chủ động ra quyết định và cung cấp dữ liệu phục vụ mục tiêu riêng mà không phải xếp hàng chờ phòng IT.

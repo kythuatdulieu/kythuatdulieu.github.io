@@ -44,7 +44,6 @@ Few-shot Prompting ra đời để giải quyết vấn đề này. Khi mô hìn
 ## Công thức thiết kế một câu lệnh Few-shot tiêu chuẩn
 
 Một câu lệnh Few-shot chuẩn chỉnh thường được thiết kế gồm 3 phần rõ rệt:
-
 ```mermaid
 flowchart TD
     A["1. Chỉ thị<br/>Task Description"] --> B["2. Các ví dụ mẫu<br/>Input 1 -> Output 1<br/>Input 2 -> Output 2"]
@@ -63,8 +62,7 @@ flowchart TD
 
 **Bài toán: Trích xuất tên viết tắt của công ty (Ticker) từ một đoạn văn bản.**
 
-Dưới đây là một prompt Few-shot mẫu bạn gửi cho mô hình:
-```text
+Dưới đây là một prompt Few-shot mẫu bạn gửi cho mô hình:```text
 Trích xuất tên mã viết tắt của các công ty công nghệ trong câu sau.
 
 Văn bản: Apple Inc. vừa phát hành điện thoại mới.
@@ -80,14 +78,12 @@ Văn bản: Tập đoàn Meta Platforms ra mắt kính thực tế ảo.
 Viết tắt: 
 ```
 
-*Kết quả sinh ra bởi mô hình:*
-```text
+*Kết quả sinh ra bởi mô hình:*```text
 META
 ```
 Mô hình tự động học được quy luật: chỉ trả về mã viết tắt dạng viết hoa 4-5 chữ cái, loại bỏ hoàn toàn các câu từ dẫn dắt rườm rà.
 
 Trong code thực tế (ví dụ sử dụng thư viện Python kết nối với OpenAI API), lập trình viên thường nhúng các ví dụ này vào mảng `messages` với các vai trò (`role`) `user` và `assistant` luân phiên nhau để mô hình học ngữ cảnh một cách tự nhiên nhất:
-
 ```python
 import openai
 
@@ -113,7 +109,7 @@ print(response.choices[0].message.content)
 # Kết quả hiển thị: META
 ```
 
-## Những quy tắc vàng để tối ưu hóa hiệu quả
+## Các nguyên tắc tối ưu hóa hiệu quả
 
 ### Quy tắc thiết kế (Best Practices)
 * **Nhất quán tuyệt đối về định dạng**: Các ví dụ mẫu phải giống hệt nhau về cấu trúc, cách sử dụng dấu câu, khoảng trắng và các từ khóa dẫn dắt (ví dụ: luôn dùng `Văn bản:` và `Viết tắt:`). Sự lộn xộn trong định dạng ví dụ sẽ khiến mô hình bị bối rối.
@@ -126,12 +122,12 @@ print(response.choices[0].message.content)
 
 ## Được và mất: Liệu có nên lạm dụng Few-shot?
 
-### Điểm cộng (Pros)
+### Ưu điểm
 * Cực kỳ dễ triển khai: Bạn không cần huấn luyện lại mô hình, không cần chuẩn bị hạ tầng kỹ thuật phức tạp, chỉnh sửa text và thấy ngay kết quả.
 * Rất linh hoạt: Muốn thay đổi logic đầu ra? Bạn chỉ cần cập nhật lại nội dung các ví dụ mẫu trong file config của prompt là xong.
 * Kiểm soát tốt định dạng đầu ra, loại bỏ hoàn toàn các câu từ thừa thãi như *"Chắc chắn rồi, đây là kết quả của bạn..."*.
 
-### Điểm trừ (Cons)
+### Nhược điểm
 * **Tốn token**: Việc đính kèm thêm các ví dụ mẫu làm phình to kích thước của prompt. Do các API tính tiền theo số lượng token và độ dài prompt cũng ảnh hưởng đến thời gian phản hồi (latency), Few-shot sẽ tốn chi phí và chậm hơn so với Zero-shot.
 * **Không cải thiện được tư duy logic gốc**: Few-shot chủ yếu giúp mô hình bắt chước khuôn mẫu định dạng, chứ không giúp mô hình trở nên thông minh hơn trước các bài toán suy luận logic phức tạp. (Để giải quyết bài toán suy luận phức tạp, bạn cần chuyển sang kỹ thuật Chain-of-Thought - CoT).
 

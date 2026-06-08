@@ -42,7 +42,6 @@ Data Testing sinh ra để bắt lỗi ngay từ thời điểm nó xuất hiệ
 ## Quy trình hoạt động và kiến trúc "cầu dao tự động"
 
 Trong một pipeline dữ liệu hiện đại, kiểm thử dữ liệu được tích hợp như một bước không thể thiếu:
-
 ```mermaid
 graph LR
     A["Raw Data Arrival"] --> B(["Ingestion Tool"])
@@ -66,7 +65,6 @@ graph LR
 ## Hiện thực hóa Data Testing bằng Great Expectations
 
 Một trong những thư viện Python nổi tiếng nhất để triển khai kiểm thử dữ liệu là **Great Expectations (GX)**. Thư viện này giúp bạn định nghĩa các bài test dưới dạng những "kỳ vọng" cực kỳ trực quan và dễ hiểu:
-
 ```python
 import great_expectations as ge
 

@@ -49,7 +49,6 @@ Trong một buổi phỏng vấn trực tiếp (Whiteboard Interview), hãy dẫ
 ## Thiết kế mô hình dữ liệu cho ứng dụng gọi xe (Ride-Hailing)
 
 Dưới đây là một sơ đồ ERD mẫu thiết kế theo mô hình [Star Schema](/concepts/data-warehouse/star-schema/) cho dịch vụ gọi xe công nghệ:
-
 ```mermaid
 erDiagram
     FACT_RIDES {

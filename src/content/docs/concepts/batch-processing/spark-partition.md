@@ -22,7 +22,6 @@ Trong mô hình thực thi của Spark, phân vùng là đơn vị cơ bản và
 $$\text{1 Partition} = \text{1 Task} = \text{1 CPU Core (tại cùng một thời điểm)}$$
 
 Nếu cụm máy chủ của bạn sở hữu tổng cộng 100 CPU Cores, nhưng dữ liệu của bạn chỉ được chia thành 10 Partitions, hệ thống sẽ chỉ có 10 CPU hoạt động, còn 90 CPU còn lại sẽ ngồi chơi xơi nước. Ngược lại, nếu dữ liệu được phân chia hợp lý, tất cả các CPU sẽ hoạt động hết công suất để hoàn thành công việc nhanh nhất.
-
 ```mermaid
 flowchart LR
     subgraph Dữ liệu phân mảnh
@@ -62,7 +61,6 @@ Dữ liệu của bạn được phân vùng ở hai thời điểm chính:
 ## Ví dụ thực tế: Vắt kiệt sức mạnh của cụm máy chủ với Repartition
 
 Hãy xem kịch bản thực tế dưới đây:
-
 ```python
 # 1. Đọc dữ liệu từ S3
 df = spark.read.parquet("s3://sales_data/")
@@ -75,7 +73,6 @@ print("Số lượng partition ban đầu: ", df.rdd.getNumPartitions())
 Nếu cụm máy chủ của bạn có tới 50 CPU Cores, việc chỉ có 10 phân vùng đồng nghĩa với việc bạn đang lãng phí 80% tài nguyên tính toán của cụm. 
 
 Để giải quyết, bạn có thể ép Spark phân chia lại dữ liệu thành 100 phân vùng để tận dụng tối đa sức mạnh của tất cả các CPU Cores:
-
 ```python
 # Ép Spark phân chia lại dữ liệu thành 100 phân vùng
 df_repartitioned = df.repartition(100)

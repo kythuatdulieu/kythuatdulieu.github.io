@@ -9,8 +9,6 @@ seoTitle: "Hồ dữ liệu - Hướng dẫn chuyên sâu về Data Lake"
 metaDescription: "Tìm hiểu toàn diện về Data Lake (Hồ dữ liệu): định nghĩa, cấu trúc tổ chức dữ liệu thô, định dạng Parquet/Avro, sự cố tệp nhỏ và cách phân biệt DWH vs Data Lake."
 ---
 
-# Hồ dữ liệu (Data Lake)
-
 Trong kỷ nguyên bùng nổ thông tin, dữ liệu được sinh ra với tốc độ chóng mặt và đa dạng về chủng loại. Khi các mô hình Kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) truyền thống bắt đầu bộc lộ những giới hạn về mặt chi phí và khả năng lưu trữ các định dạng phi cấu trúc, **Hồ dữ liệu (Data Lake)** đã xuất hiện như một cuộc cách mạng, mở ra một không gian lưu trữ không giới hạn với chi phí cực kỳ tối ưu cho các doanh nghiệp.
 
 ---
@@ -50,7 +48,6 @@ Data Lake giải quyết triệt để các vấn đề này bằng cách tận 
 ## Tổ chức các phân vùng dữ liệu trong Data Lake
 
 Dữ liệu trong một Data Lake chuẩn mực không được để lộn xộn mà cần được tổ chức thành các vùng (Zones) logic đại diện cho các trạng thái xử lý:
-
 ```mermaid
 flowchart LR
     A[Nguồn dữ liệu<br/>APIs/DBs] --> B[(Raw Zone<br/>Dữ liệu thô)]
@@ -63,7 +60,6 @@ flowchart LR
 3. **Vùng tinh chọn (Curated Zone / Analytics Zone)**: Nơi lưu trữ dữ liệu đã qua tính toán, tổng hợp chỉ số và tổ chức bài bản, sẵn sàng phục vụ cho các dashboard BI hoặc mô hình học máy.
 
 Dưới đây là một sơ đồ thư mục vật lý điển hình trên Object Storage:
-
 ```text
 s3://my-company-data-lake/
 ├── raw/ (Raw Zone)
@@ -86,14 +82,12 @@ s3://my-company-data-lake/
 ## Ví dụ thực tế: Xử lý Log người dùng từ JSON sang Parquet bằng PySpark
 
 Giả sử chúng ta thu thập dữ liệu nhật ký hoạt động (clickstream logs) của khách hàng lướt web dưới dạng JSON thô đổ vào vùng Raw Zone:
-
 ```json
 {"user_id": "U109", "event": "click_product", "product_id": "P99", "timestamp": "2026-05-27T10:15:30Z"}
 {"user_id": "U110", "event": "add_to_cart", "product_id": "P102", "timestamp": "2026-05-27T10:17:12Z"}
 ```
 
 Đoạn code PySpark dưới đây sẽ đọc dữ liệu thô này, định kiểu lại thời gian và ghi xuống vùng Structured Zone dưới dạng file Parquet nén Snappy:
-
 ```python
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, to_timestamp

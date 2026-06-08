@@ -49,7 +49,6 @@ Khi bạn kéo thả một biểu đồ trên công cụ BI hoặc chạy một 
 ## Kiến trúc và Sơ đồ quan hệ (ERD) điển hình
 
 Hãy cùng quan sát sơ đồ ERD của một Star Schema tiêu chuẩn dưới đây:
-
 ```mermaid
 erDiagram
     FACT_SALES {
@@ -107,7 +106,6 @@ erDiagram
 Hãy xem một ví dụ thực tế khi chúng ta cần tính: *"Tổng doanh thu bán các sản phẩm Apple tại cửa hàng khu vực Hà Nội trong năm 2026"*.
 
 Câu SQL tương ứng trên Star Schema sẽ cực kỳ gọn gàng và trực quan:
-
 ```sql
 SELECT 
     d.month,

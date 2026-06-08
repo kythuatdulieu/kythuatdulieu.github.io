@@ -27,7 +27,6 @@ Modern Data Stack không phải là một công cụ đơn lẻ, mà là một t
 ## Các thành phần cốt lõi của Modern Data Stack
 
 Một hệ thống Modern Data Stack tiêu chuẩn được xây dựng theo kiến trúc module hóa (lắp ghép các công cụ tốt nhất cho từng nhiệm vụ riêng biệt) và thường bao gồm các tầng sau:
-
 ```mermaid
 graph LR
     subgraph Data Sources
@@ -98,7 +97,6 @@ Hãy tưởng tượng bạn có dữ liệu bán hàng nằm ở database MySQL
 4. Cuối cùng, Giám đốc Marketing có thể mở dashboard trên **Metabase (BI)** để theo dõi hiệu quả chiến dịch một cách trực quan mà không cần biết viết một dòng code nào.
 
 Dưới đây là một đoạn code dbt mẫu để tính toán ROI:
-
 ```sql
 -- models/marts/marketing/fct_campaign_roi.sql
 WITH facebook_ads AS (

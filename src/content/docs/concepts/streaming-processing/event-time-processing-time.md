@@ -40,7 +40,6 @@ Hãy tưởng tượng bạn đang viết một chương trình tính toán doan
 ## Minh họa luồng dữ liệu đến muộn và bị lệch thứ tự
 
 Dưới đây là sơ đồ minh họa sự khác biệt khi xử lý dữ liệu:
-
 ```mermaid
 graph TD
     subgraph Client/Device
@@ -64,7 +63,6 @@ Nếu chạy theo Processing Time, hệ thống sẽ gom nhóm và tính toán c
 ## Thực hành: Thiết lập Event Time và Watermark trong PySpark
 
 Dưới đây là đoạn code Python minh họa cách cấu hình trích xuất Event Time từ bản ghi sự kiện, thiết lập Watermark chờ tối đa 5 giây cho dữ liệu đến muộn, và thực hiện gom nhóm (aggregation) theo cửa sổ thời gian ([Windowing](/concepts/streaming-processing/windowing/)) trong PySpark Structured Streaming:
-
 ```python
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, window, from_json

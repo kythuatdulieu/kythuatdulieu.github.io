@@ -39,7 +39,6 @@ Unity Catalog ra đời để giải quyết triệt để tất cả các nút 
 ## Sơ đồ kiến trúc hoạt động
 
 Dưới đây là mô hình hoạt động của Unity Catalog kiểm soát luồng truy cập dữ liệu từ nhiều đối tượng người dùng khác nhau:
-
 ```mermaid
 graph TD
     A[Data Scientist] -->|Query| B(Databricks Workspace 1)
@@ -61,7 +60,6 @@ graph TD
 Giả sử bạn có bảng giao dịch `transactions` chứa dữ liệu của toàn quốc. Bạn chỉ muốn các nhân viên thuộc chi nhánh Hà Nội xem được các giao dịch phát sinh ở khu vực Hà Nội. 
 
 Với Unity Catalog, bạn có thể giải quyết bài toán này cực kỳ thanh lịch bằng cách tạo một Function lọc dữ liệu và gắn nó trực tiếp vào bảng:
-
 ```sql
 -- 1. Tạo một function kiểm tra quyền của người dùng hiện tại
 CREATE FUNCTION region_filter(region_name STRING)

@@ -56,7 +56,6 @@ Dữ liệu được chia sẻ ra bên ngoài không phải là các file thô v
 ## Cách các Data Product kết nối trong Lưới dữ liệu
 
 Hãy tưởng tượng luồng hoạt động trong một hệ thống Data Mesh:
-
 ```mermaid
 graph TD
     DomainA[Domain A] --> ProductA[Data Product A]
@@ -66,7 +65,6 @@ graph TD
 ```
 
 Để hiện thực hóa khái niệm "Dữ liệu như một Sản phẩm", các kỹ sư nghiệp vụ sẽ đính kèm một file khai báo cấu trúc (Descriptor) dạng YAML cùng kho lưu trữ mã nguồn để công bố sản phẩm dữ liệu này lên hệ thống [Data Catalog](/concepts/governance-metadata/data-catalog/) chung của công ty:
-
 ```yaml
 # data_product_descriptor.yml
 name: User_Watch_Time_Dataset

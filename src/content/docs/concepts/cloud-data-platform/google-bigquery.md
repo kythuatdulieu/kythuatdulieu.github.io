@@ -26,7 +26,6 @@ Vào những năm 2000, khi Google bùng nổ với các dịch vụ toàn cầu
 ## Giải phẫu kiến trúc: Điều gì tạo nên sức mạnh vô song của BigQuery?
 
 Sức mạnh vượt trội của BigQuery nằm ở triết lý **tách rời tính toán và lưu trữ (Decoupled Compute & Storage)**. Thay vì đặt ổ cứng và vi xử lý chung một chỗ, BigQuery tách chúng ra hai lớp riêng biệt và kết nối bằng mạng cáp quang siêu tốc.
-
 ```mermaid
 graph TD
     subgraph Client
@@ -69,16 +68,14 @@ Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công n
 
 Giả sử bạn đang có một bảng dữ liệu lịch sử Wikipedia (`wikipedia_views`) với dung lượng 10TB. Bạn cần thống kê số lượt xem các bài viết liên quan đến chủ đề "Vietnam" trong năm 2026.
 
-### Cách viết tồi (Làm bay đứt $62.5 của công ty):
-```sql
+### Cách viết tồi (Làm bay đứt $62.5 của công ty):```sql
 -- Dùng SELECT * bắt BigQuery quét toàn bộ các cột của bảng 10TB
 SELECT * FROM `bigquery-public-data.wikipedia.views`
 WHERE title = 'Vietnam' AND date LIKE '2026-%';
 ```
 *Vì BigQuery tính tiền dựa trên lượng dữ liệu quét qua chứ không tính trên số dòng kết quả trả về. Việc bạn lạm dụng `SELECT *` sẽ bắt hệ thống quét qua toàn bộ 10TB dữ liệu trên đĩa, ngay cả khi kết quả trả về chỉ có vài dòng.*
 
-### Cách viết tối ưu (Có thể chỉ tốn $0.01):
-```sql
+### Cách viết tối ưu (Có thể chỉ tốn $0.01):```sql
 -- Chỉ bóc tách duy nhất 2 cột cần thiết là (views) và (date)
 SELECT sum(views) 
 FROM `bigquery-public-data.wikipedia.views`
@@ -102,12 +99,12 @@ WHERE date BETWEEN '2026-01-01' AND '2026-12-31'
 
 ## Cân nhắc được và mất (Trade-offs)
 
-### Điểm cộng
+### Ưu điểm
 * **Trải nghiệm Zero-Ops thực sự**: Bạn hoàn toàn không cần quan tâm đến việc nâng cấp phần mềm, cấu hình RAM, CPU hay dọn dẹp bộ nhớ. Tất cả những gì bạn cần làm là nạp dữ liệu và viết SQL.
 * Hiệu suất truy vấn vượt trội trên các tập dữ liệu khổng lồ cấp độ Petabyte.
 * Hỗ trợ học máy trực tiếp (BigQuery ML): Bạn có thể xây dựng và huấn luyện các mô hình dự đoán ngay bằng các câu lệnh SQL quen thuộc (`CREATE MODEL`).
 
-### Điểm trừ
+### Nhược điểm
 * **Vendor Lock-in (Ràng buộc nhà cung cấp)**: Mã nguồn của BigQuery là độc quyền của Google. Bạn không thể mang hệ thống này về chạy trên máy chủ nội bộ hoặc các đám mây khác.
 * Không phù hợp cho các ứng dụng yêu cầu độ trễ cực thấp (<100ms) để truy xuất ngẫu nhiên từng dòng dữ liệu (Point lookups).
 * Dễ gây sốc chi phí nếu đội ngũ phân tích dữ liệu không được đào tạo bài bản về cách tối ưu hóa câu lệnh SQL.

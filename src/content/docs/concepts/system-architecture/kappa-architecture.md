@@ -36,7 +36,6 @@ Kiến trúc Kappa vận hành dựa trên ba nguyên lý nền tảng:
 ## Quy trình hoạt động và cơ chế tính toán lại (Reprocessing)
 
 Về mặt kiến trúc, Kappa cực kỳ tinh giản khi chỉ bao gồm hai thành phần cốt lõi:
-
 ```mermaid
 graph TD
     A[New Data / Events] -->|Append-only| B[(Immutable Event Log Store \n e.g., Kafka with long retention)]
@@ -57,7 +56,6 @@ graph TD
 ### Cơ chế xử lý lại (Reprocessing) khi logic nghiệp vụ thay đổi
 
 Khi bạn phát hiện ra code của phiên bản cũ (V1) có lỗi, hoặc khi cần áp dụng một công thức tính toán mới (V2):
-
 ```mermaid
 graph LR
     A[(Event Log Store)] -->|Read from Offset 0| B(Stream Job V2)
@@ -75,7 +73,6 @@ graph LR
 4. Khi ứng dụng V2 đã hoàn tất việc tính toán lại dữ liệu lịch sử và bắt kịp dòng chảy thời gian thực, kỹ sư chỉ việc chuyển hướng truy cập (Traffic Switch) của ứng dụng hoặc Dashboard sang bảng dữ liệu mới của V2, rồi tắt nhẹ nhàng ứng dụng V1. Tiến trình chuyển đổi diễn ra êm đẹp và không gây ra bất kỳ thời gian gián đoạn (zero-downtime) nào.
 
 Dưới đây là đoạn mã Java minh họa cách cấu hình cho một consumer trong Apache Flink tua lại dữ liệu lịch sử từ đầu để phục vụ reprocessing:
-
 ```java
 // Khởi tạo Kafka Consumer đọc luồng sự kiện
 FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>(
@@ -106,12 +103,12 @@ DataStream<String> stream = env.addSource(consumer);
 
 ## Cân đo đong đếm được và mất (Trade-offs)
 
-### Điểm cộng
+### Ưu điểm
 * **Chỉ duy trì một mã nguồn duy nhất**: Rút ngắn thời gian phát triển, kiểm thử và đồng bộ hóa logic hệ thống.
 * **Kiến trúc tinh gọn**: Cắt giảm đáng kể chi phí vận hành và quản lý hạ tầng do không phải duy trì các cụm máy chủ Hadoop hay Spark Batch.
 * **Dễ dàng thử nghiệm**: Bạn có thể triển khai chạy thử nghiệm thuật toán mới song song với thuật toán cũ trên cùng một luồng dữ liệu thực tế mà không sợ làm ảnh hưởng đến người dùng hiện tại.
 
-### Điểm trừ
+### Nhược điểm
 * **Chi phí lưu trữ log sự kiện đắt đỏ**: Việc lưu giữ hàng Petabytes dữ liệu lịch sử lâu dài trong Kafka tốn kém hơn nhiều so với việc lưu trữ các tệp tĩnh trên các [Data Lake](/concepts/data-lake-lakehouse/data-lake/) giá rẻ (như Amazon S3 hay HDFS).
 * **Hiệu năng xử lý Batch thuần túy**: Mặc dù Flink xử lý luồng rất mạnh mẽ, nhưng đối với các truy vấn phân tích yêu cầu JOIN hàng chục bảng dữ liệu khổng lồ (Heavy [OLAP](/concepts/database-storage/olap/)), các công cụ chạy Batch truyền thống (như [Spark SQL](/concepts/batch-processing/spark-sql/) hay [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/)) vẫn cho thấy sự vượt trội về mặt tốc độ và tối ưu hóa bộ nhớ.
 

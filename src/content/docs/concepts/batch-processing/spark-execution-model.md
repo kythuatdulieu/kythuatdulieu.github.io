@@ -22,7 +22,6 @@ Mô hình thực thi này tổ chức ứng dụng theo kiến trúc **Master-Sl
 ## Bộ ba quyền lực: Driver, Cluster Manager và Executor
 
 Kiến trúc thực thi của Spark được cấu thành từ ba thành phần cốt lõi hoạt động ăn ý với nhau:
-
 ```mermaid
 graph TD
     User["User Script / spark-submit"] --> Driver["Driver Program (SparkContext)"]
@@ -65,8 +64,7 @@ graph TD
 
 ## Ví dụ thực tế: Điều gì xảy ra khi bạn chạy lệnh đếm số dòng?
 
-Hãy xem một câu lệnh đếm số dòng rất quen thuộc:
-```python
+Hãy xem một câu lệnh đếm số dòng rất quen thuộc:```python
 # 1. Đoạn code này được thực thi tại máy Driver
 df = spark.read.parquet("s3://huge-logs/")
 count = df.count()

@@ -18,7 +18,6 @@ Hiểu rõ **Vòng đời Dữ liệu (Data Lifecycle)** giúp chúng ta biết 
 ## Kiến trúc và Vòng đời của dữ liệu
 
 Quản lý Vòng đời Dữ liệu không chỉ là một kỹ thuật lập trình mà là một phần quan trọng của chiến lược Quản trị Dữ liệu (`Data Governance`). Một vòng đời dữ liệu tiêu chuẩn thường trải qua 6 chặng đường:
-
 ```mermaid
 graph TD
     A(1. Data Generation) --> B(2. Data Storage)
@@ -56,7 +55,6 @@ Việc giữ lại tất cả mọi thứ mãi mãi là một tư duy sai lầm 
 Trong thực tế, Kỹ sư dữ liệu không thực hiện việc dọn dẹp dữ liệu bằng tay mà thiết lập các quy tắc tự động hóa trên hạ tầng đám mây. 
 
 Ví dụ dưới đây là cấu hình chính sách vòng đời dữ liệu (Lifecycle Rules) trên dịch vụ lưu trữ đối tượng **AWS S3**:
-
 ```json
 {
     "Rules": [

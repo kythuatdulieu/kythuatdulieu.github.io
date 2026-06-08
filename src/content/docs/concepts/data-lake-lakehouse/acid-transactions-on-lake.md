@@ -58,7 +58,6 @@ Hãy cùng phân tích một kịch bản ghi dữ liệu (Append) sử dụng D
 ### Kiến trúc luồng xử lý đồng thời (Concurrency Flow)
 
 Sơ đồ dưới đây minh họa cách hai Writer chạy song song tương tác với Object Storage và cách Reader luôn có góc nhìn nhất quán:
-
 ```mermaid
 sequenceDiagram
     participant Writer1 as Spark (Writer A)
@@ -100,7 +99,6 @@ Nếu không có ACID, bản ghi của B có thể ghi đè lên A và khiến s
 Nhờ có OCC trong các Table Format, kịch bản sẽ diễn ra như sau: Writer A commit thành công phiên bản V2 (80$). Khi Writer B cố gắng commit phiên bản V2, hệ thống sẽ từ chối. B buộc phải cập nhật lại trạng thái (đọc số dư mới từ V2 là 80$), cộng thêm 50$ để ra 130$, ghi file mới và commit thành công phiên bản V3. Dữ liệu tài chính được bảo vệ vẹn toàn.
 
 Dưới đây là cách chúng ta hiện thực hóa điều này bằng mã nguồn PySpark với Delta Lake:
-
 ```python
 from delta.tables import *
 
@@ -137,12 +135,12 @@ deltaTable.update(
 
 ## Những điều phải đánh đổi khi chọn ACID trên Data Lake
 
-### Điểm cộng (Pros):
+### Ưu điểm:
 * Cho phép các pipeline ETL phức tạp và các công cụ BI của doanh nghiệp cùng làm việc đồng thời trên một kho dữ liệu mà không sợ xung đột.
 * Mang lại độ tin cậy của Data Warehouse truyền thống trên hạ tầng lưu trữ Object Storage giá rẻ.
 * Hỗ trợ tính năng quay ngược thời gian ([Time Travel](/concepts/data-lake-lakehouse/time-travel/)) để khôi phục dữ liệu về các phiên bản cũ khi có sự cố.
 
-### Điểm trừ (Cons):
+### Nhược điểm:
 * **Chi phí tài nguyên:** Việc quản lý file metadata, kiểm tra xung đột logic và thực hiện retry tự động sẽ tiêu tốn thêm một phần năng lực tính toán của hệ thống.
 * **Sinh ra file rác:** Do cơ chế Copy-on-Write hoặc Merge-on-Read, các phiên bản cũ của dữ liệu vẫn nằm lại trên ổ đĩa. Bạn cần phải định kỳ chạy lệnh `VACUUM` để dọn dẹp các file cũ này và tối ưu hóa không gian lưu trữ.
 

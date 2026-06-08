@@ -42,7 +42,6 @@ Quy trình FinOps tập trung cải thiện hiệu quả trên ba khía cạnh v
 3. **Data Processing (Xử lý dữ liệu)**: Thiết kế phân vùng `(Partitioning)` và gom cụm `(Clustering)` trên bảng dữ liệu để giới hạn tối đa lượng dữ liệu đĩa cần quét.
 
 Sơ đồ hóa luồng vận hành tối ưu hóa chi phí:
-
 ```mermaid
 graph TD
     subgraph "1. Inform & Monitor"
@@ -83,7 +82,6 @@ Hãy tưởng tượng một bảng dữ liệu chứa lịch sử sự kiện `
 * **Giải pháp tối ưu**: Người kỹ sư dữ liệu chuyển đổi bảng này thành bảng phân vùng theo ngày `(Partition by Date)`. Khi truy vấn lọc theo tháng cụ thể, BigQuery chỉ quét các phân vùng tương ứng (khoảng 1.5TB), giảm chi phí xuống chỉ còn **$7.5 cho mỗi lượt truy vấn** (tiết kiệm 97%).
 
 Dưới đây là câu lệnh SQL minh họa cách tạo bảng phân vùng và gom cụm trên [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/):
-
 ```sql
 -- Tạo bảng phân vùng theo ngày và gom cụm theo loại sự kiện
 CREATE TABLE `my_project.my_dataset.user_events_partitioned`

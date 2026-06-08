@@ -12,7 +12,6 @@ metaDescription: "Tìm hiểu chi tiết về 6 chiều (dimensions) đo lườn
 Khi sếp hoặc khách hàng yêu cầu: *"Hãy đảm bảo dữ liệu trong bảng Doanh thu có chất lượng tốt"*, bạn sẽ bắt đầu từ đâu? Định nghĩa thế nào là "tốt"? Với một lập trình viên, mơ hồ là kẻ thù số một. Đó là lý do tại sao chúng ta cần đến **Data Quality Dimensions (Các chiều chất lượng dữ liệu)**. Đây là hệ thống phân loại tiêu chuẩn giúp phân tách khái niệm trừu tượng "chất lượng dữ liệu" thành các thuộc tính có thể định lượng và đo lường bằng các con số cụ thể.
 
 Theo tổ chức quản trị dữ liệu danh tiếng DAMA (Data Management Association), có 6 chiều chất lượng dữ liệu cốt lõi giúp bạn đánh giá sức khỏe của một tập dữ liệu.
-
 ```mermaid
 flowchart TD
     A[Chất lượng Dữ liệu<br/>Data Quality] --> B[Completeness<br/>Đầy đủ]
@@ -86,7 +85,6 @@ Trong thực tế, bạn có thể dễ dàng viết các câu lệnh SQL để 
 ### Áp dụng dbt để tự động hóa việc kiểm thử
 
 Nếu bạn đang sử dụng **[dbt](/concepts/transformation-analytics/dbt/) (Data Build Tool)** trong [Modern Data Stack](/concepts/system-architecture/modern-data-stack/), việc thiết lập các bài kiểm tra này trở nên cực kỳ tinh gọn thông qua file cấu hình YAML:
-
 ```yaml
 version: 2
 

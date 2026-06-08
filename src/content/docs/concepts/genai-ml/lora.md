@@ -40,7 +40,6 @@ Nếu áp dụng LoRA với hạng $r = 8$:
 ## Cơ chế hoạt động của LoRA
 
 Quy trình tiêm và huấn luyện LoRA diễn ra theo các bước cực kỳ logic:
-
 ```mermaid
 graph TD
     Input["Input Feature: x"]
@@ -88,7 +87,6 @@ Giả sử bạn cần tinh chỉnh mô hình Llama-3-8B để viết câu lện
 3. **Huấn luyện**: Bạn chỉ cần sử dụng 1 chiếc GPU RTX 4090 (24GB VRAM) chạy trong 3 giờ là xong. Kết quả thu được là một tệp adapter siêu nhẹ chỉ khoảng **80MB** (thay vì 16GB của mô hình gốc).
 
 Dưới đây là ví dụ thiết lập cấu hình LoRA sử dụng thư viện `peft` của Hugging Face:
-
 ```python
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM

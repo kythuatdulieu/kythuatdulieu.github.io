@@ -34,7 +34,6 @@ Cơ sở khoa học của Few-shot Prompting nằm ở khái niệm **In-Context
 Khi nhận được các ví dụ mẫu, các lớp Transformer không hề tiến hành cập nhật tham số thuật toán Gradient Descent như cách huấn luyện truyền thống. Thay vào đó, qua cơ chế **Attention** (Chú ý), mô hình sẽ tự động xây dựng một ánh xạ tuyến tính nội bộ giữa không gian Input và Output, tạo ra một "rãnh trượt" ngữ nghĩa. Khi từ khóa câu hỏi cuối cùng xuất hiện, xác suất dự đoán các [token](/concepts/genai-ml/token/) tiếp theo sẽ bị uốn nắn mạnh mẽ đi vào quỹ đạo cấu trúc của các ví dụ phía trên.
 
 Quy trình hoạt động này có thể được hình dung như sau:
-
 ```mermaid
 flowchart TD
     A["1. Instruction<br/>Chỉ dẫn chung"] --> B["2. Demonstrations<br/>Ví dụ mẫu 1, 2, 3"]
@@ -54,8 +53,7 @@ Một prompt Few-shot tuyển chuẩn luôn gồm 3 phần rõ rệt:
 
 Hãy xem xét một tác vụ trích xuất thực thể từ tin nhắn đặt hàng của khách hàng sang định dạng JSON.
 
-**Prompt (Few-shot) gửi lên LLM:**
-```text
+**Prompt (Few-shot) gửi lên LLM:**```text
 Trích xuất Món ăn và Số lượng từ tin nhắn. Chỉ trả về JSON, không thêm chữ nào khác.
 
 ---
@@ -82,8 +80,7 @@ Tin nhắn: Em ơi cho 5 phần cơm sườn nướng và 2 lon coca giao qua qu
 Output:
 ```
 
-**Kết quả sinh ra từ LLM:**
-```json
+**Kết quả sinh ra từ LLM:**```json
 {
   "items": [
     {"name": "cơm sườn nướng", "quantity": 5},
@@ -95,7 +92,6 @@ Output:
 Nhờ các ví dụ trực quan, mô hình lập tức hiểu được cách loại bỏ thông tin thừa (không lấy giá, giao qua quận 1) và trả về JSON chuẩn xác 100%.
 
 Để triển khai Few-shot Prompting một cách chuyên nghiệp trong mã nguồn Python, bạn có thể sử dụng thư viện **LangChain** như sau:
-
 ```python
 from langchain.prompts import FewShotPromptTemplate, PromptTemplate
 

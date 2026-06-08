@@ -48,7 +48,6 @@ Khi người phỏng vấn đưa ra một câu SQL đang chạy rất chậm và
 ## Trực quan hóa cơ chế Cắt tỉa Phân vùng (Partition Pruning)
 
 Sơ đồ dưới đây minh họa cách một Query Engine thông minh chỉ quét qua đúng phân vùng dữ liệu của năm 2026 trên Amazon S3 và bỏ qua toàn bộ các thư mục của các năm khác, giúp tiết kiệm tối đa tài nguyên:
-
 ```mermaid
 graph TD
     Query["Query Engine"] --> S3_2026["Scan S3 year=2026"]
@@ -62,7 +61,6 @@ graph TD
 ## Tình huống thực tế: Tối ưu câu SQL "đếm người dùng duy nhất" cồng kềnh
 
 **Đề bài từ người phỏng vấn**: *"Câu truy vấn dưới đây đang mất tới 5 phút để hoàn thành trên kho dữ liệu của chúng tôi. Bạn hãy chỉ ra các điểm chưa tối ưu và cách khắc phục."*
-
 ```sql
 SELECT product_id, COUNT(DISTINCT user_id)
 FROM events

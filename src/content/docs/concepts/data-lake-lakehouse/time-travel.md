@@ -40,7 +40,6 @@ Bí mật đằng sau khả năng "du hành thời gian" của dữ liệu dựa
 ## Sơ đồ quy trình thực thi truy vấn Time Travel
 
 Dưới đây là cách mà Engine tính toán phối hợp với lớp Metadata để lấy dữ liệu quá khứ cho người dùng:
-
 ```mermaid
 sequenceDiagram
     participant User
@@ -62,21 +61,18 @@ sequenceDiagram
 
 Dưới đây là một số câu lệnh thực tế mà bạn có thể dùng để kiểm tra và khôi phục dữ liệu trên Snowflake hoặc Databricks:
 
-**Truy vấn dữ liệu tại một mốc thời gian cụ thể:**
-```sql
+**Truy vấn dữ liệu tại một mốc thời gian cụ thể:**```sql
 SELECT * 
 FROM customer_table TIMESTAMP AS OF '2026-06-01 09:00:00'
 WHERE customer_id = 12345;
 ```
 
-**Truy vấn dữ liệu tại một số hiệu phiên bản (Version):**
-```sql
+**Truy vấn dữ liệu tại một số hiệu phiên bản (Version):**```sql
 SELECT * 
 FROM customer_table VERSION AS OF 10;
 ```
 
-**Khôi phục lại dữ liệu sau khi lỡ tay xóa nhầm:**
-```sql
+**Khôi phục lại dữ liệu sau khi lỡ tay xóa nhầm:**```sql
 -- Cách 1: Chèn lại dữ liệu từ trạng thái cách đây 1 giờ
 INSERT INTO customer_table
 SELECT * FROM customer_table TIMESTAMP AS OF (CURRENT_TIMESTAMP() - INTERVAL 1 HOUR);

@@ -18,7 +18,6 @@ Hãy cùng tìm hiểu ba chiến lược Join vật lý cốt lõi trong Spark:
 ## Ba chiến lược Join vật lý cốt lõi
 
 Tùy thuộc vào kích thước của các bảng và khả năng chứa dữ liệu của RAM, Spark sẽ lựa chọn một trong ba con đường sau:
-
 ```mermaid
 graph TD
     A{Kích thước bảng?} --> B[Một bảng nhỏ < 10MB]
@@ -63,7 +62,6 @@ graph TD
 ## Ví dụ thực tế: Cách ép Spark sử dụng Broadcast Hash Join
 
 Trong thực tế, nếu bạn biết chắc chắn một bảng là bảng danh mục rất nhỏ (ví dụ bảng thông tin chi nhánh cửa hàng chỉ nặng 5MB), bạn có thể chủ động sử dụng hàm `broadcast()` để hướng dẫn Spark sử dụng chiến lược Broadcast Hash Join, tránh việc hệ thống tự động chọn Sort Merge Join gây lãng phí tài nguyên:
-
 ```python
 from pyspark.sql.functions import broadcast
 

@@ -52,7 +52,6 @@ Khi làm việc với các hệ thống stream processing hiện đại như Apa
 ---
 
 ## Trực quan hóa các loại Window
-
 ```mermaid
 graph TD
     subgraph "Tumbling Window  (Kích thước: 5m)"
@@ -77,24 +76,21 @@ graph TD
 
 Dưới đây là cách sử dụng Java API của Apache Flink để định nghĩa và cấu hình 3 loại cửa sổ thời gian phổ biến:
 
-### 1. Cấu hình Tumbling Window (Tính tổng doanh thu mỗi phút)
-```java
+### 1. Cấu hình Tumbling Window (Tính tổng doanh thu mỗi phút)```java
 stream
     .keyBy(event -> event.getStoreId())
     .window(TumblingEventTimeWindows.of(Time.minutes(1)))
     .sum("revenue");
 ```
 
-### 2. Cấu hình Sliding Window (Đếm số lượt truy cập URL trong 1 giờ qua, cập nhật kết quả mỗi 10 phút)
-```java
+### 2. Cấu hình Sliding Window (Đếm số lượt truy cập URL trong 1 giờ qua, cập nhật kết quả mỗi 10 phút)```java
 stream
     .keyBy(event -> event.getUrl())
     .window(SlidingEventTimeWindows.of(Time.hours(1), Time.minutes(10)))
     .process(new CountAccessFunction());
 ```
 
-### 3. Cấu hình Session Window (Gom nhóm hành vi người dùng, ngắt phiên nếu không có hoạt động trong 30 phút)
-```java
+### 3. Cấu hình Session Window (Gom nhóm hành vi người dùng, ngắt phiên nếu không có hoạt động trong 30 phút)```java
 stream
     .keyBy(event -> event.getUserId())
     .window(EventTimeSessionWindows.withGap(Time.minutes(30)))

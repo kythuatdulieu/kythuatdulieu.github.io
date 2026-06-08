@@ -43,7 +43,6 @@ Trong một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundat
 ## Kiến trúc luồng dữ liệu chuẩn mực với CTE Pattern
 
 Một trong những thiết kế kinh điển và chuẩn mực nhất khi viết SQL Transformation là sử dụng **CTE (Common Table Expression)** thay thế hoàn toàn cho các sub-query lồng nhau. Hãy xem sơ đồ luồng dữ liệu dưới đây:
-
 ```mermaid
 flowchart TD
     subgraph "Import Layer"
@@ -72,7 +71,6 @@ flowchart TD
 ```
 
 Dưới đây là mã SQL minh họa cho luồng biến đổi trên bằng cách áp dụng CTE:
-
 ```sql
 -- Pattern chuẩn mực Analytics Engineering (Sử dụng CTE)
 

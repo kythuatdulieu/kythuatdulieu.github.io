@@ -45,7 +45,6 @@ Trong đó:
 ## LoRA hoạt động chi tiết như thế nào?
 
 Sơ đồ dưới đây minh họa cách dữ liệu đi qua mô hình nền tảng được đóng băng song song với adapter LoRA:
-
 ```mermaid
 flowchart TD
     subgraph "Original Model"
@@ -94,7 +93,6 @@ Giả sử bạn cần xây dựng một chatbot nội bộ trả lời theo pho
 4. Khi chạy chatbot, bạn chỉ việc tải mô hình Llama-3 gốc lên và đính kèm file adapter 35MB này vào. Chatbot sẽ lập tức nói chuyện kiểu "Ahoy matey!" cực kỳ tự nhiên.
 
 Dưới đây là đoạn code Python minh họa cách hợp nhất vĩnh viễn trọng số của Adapter vào mô hình gốc:
-
 ```python
 from peft import PeftModel
 from transformers import AutoModelForCausalLM

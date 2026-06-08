@@ -35,7 +35,6 @@ Snowflake ra đời để giải quyết triệt để hai bài toán này bằn
 ## Kiến trúc 3 lớp: Bí mật đằng sau sự thành công của Snowflake
 
 Trọng tâm thiết kế của Snowflake nằm ở kiến trúc ba lớp tách biệt và được kết nối thông qua mạng lưới hiệu năng cao:
-
 ```mermaid
 graph TD
     subgraph "Layer 3: Cloud Services (The Brain)"
@@ -79,13 +78,11 @@ graph TD
 
 ## Ví dụ thực tế: Cứu nguy dữ liệu bị xóa nhầm bằng Time Travel
 
-Lúc 10:00 sáng, một nhà phân tích chạy nhầm lệnh xóa sạch dữ liệu khách hàng:
-```sql
+Lúc 10:00 sáng, một nhà phân tích chạy nhầm lệnh xóa sạch dữ liệu khách hàng:```sql
 DELETE FROM production.customers WHERE status = 'active'; 
 ```
 
 Thay vì phải hoảng loạn tìm các bản backup từ đêm qua và chấp nhận mất mát dữ liệu phát sinh trong buổi sáng, Data Engineer có thể khôi phục lại bảng dữ liệu về trạng thái trước đó đúng 1 phút (lúc 09:59) cực kỳ nhanh chóng:
-
 ```sql
 -- Bước 1: Tạo bảng phụ chứa dữ liệu lúc 09:59 sáng
 CREATE TABLE customers_restored AS

@@ -43,7 +43,6 @@ Một hệ thống Real-time hoàn chỉnh thường được cấu thành từ 
 4. **Lớp Phục vụ và Phân tích (Real-time Serving & Analytics)**: Kết quả sau khi xử lý được đẩy trực tiếp qua WebSockets lên màn hình người dùng, hoặc lưu vào các database In-memory / [OLAP](/concepts/database-storage/olap/) hỗ trợ chỉ mục cao như Redis, Apache Druid, ClickHouse hay Apache Pinot để phục vụ báo cáo trực tiếp.
 
 ## Sơ đồ kiến trúc luồng dữ liệu thời gian thực
-
 ```mermaid
 graph TD
     subgraph "Data Sources / Producers"
@@ -91,7 +90,6 @@ Hãy xem cách một ngân hàng số phát hiện thẻ tín dụng bị đánh
 Toàn bộ chuỗi hành động trên diễn ra chỉ trong vòng **200 mili-giây**.
 
 Dưới đây là một đoạn truy vấn Flink SQL minh họa cách gom nhóm các giao dịch bất thường trong vòng 5 phút (Sliding Window):
-
 ```sql
 SELECT 
     card_id, 

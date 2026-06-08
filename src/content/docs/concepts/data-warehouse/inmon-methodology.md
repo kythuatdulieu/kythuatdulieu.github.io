@@ -37,7 +37,6 @@ Phương pháp luận Inmon được xây dựng trên ba trụ cột chính:
 ## Sơ đồ kiến trúc Nhà máy thông tin doanh nghiệp (CIF)
 
 Kiến trúc Corporate Information Factory (CIF) theo triết lý Inmon được mô tả qua sơ đồ dưới đây:
-
 ```mermaid
 graph LR
     subgraph Source Systems
@@ -86,8 +85,7 @@ graph LR
 
 Thay vì tạo một bảng khách hàng phẳng và rộng chứa đầy đủ thông tin địa chỉ (`dim_customer` theo phong cách Kimball), Inmon yêu cầu tách biệt hoàn toàn các thực thể để triệt tiêu sự trùng lặp dữ liệu:
 
-**1. Bảng Khách Hàng cốt lõi (`edw_customer`)**
-```sql
+**1. Bảng Khách Hàng cốt lõi (`edw_customer`)**```sql
 CREATE TABLE edw_customer (
     customer_id INT PRIMARY KEY,
     first_name VARCHAR(50),
@@ -97,8 +95,7 @@ CREATE TABLE edw_customer (
 );
 ```
 
-**2. Bảng Địa chỉ (`edw_address`)**
-```sql
+**2. Bảng Địa chỉ (`edw_address`)**```sql
 CREATE TABLE edw_address (
     address_id INT PRIMARY KEY,
     street VARCHAR(255),
@@ -108,8 +105,7 @@ CREATE TABLE edw_address (
 );
 ```
 
-**3. Bảng Ánh xạ trung gian (`edw_customer_address`) để giải quyết quan hệ nhiều-nhiều (N-N)**
-```sql
+**3. Bảng Ánh xạ trung gian (`edw_customer_address`) để giải quyết quan hệ nhiều-nhiều (N-N)**```sql
 CREATE TABLE edw_customer_address (
     customer_id INT,
     address_id INT,
@@ -135,12 +131,12 @@ Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình [
 
 ## Cân đo đong đếm được và mất (Trade-offs)
 
-### Điểm cộng
+### Ưu điểm
 * **Nguồn chân lý duy nhất vững chãi**: Dữ liệu có tính toàn vẹn và độ tin cậy tuyệt đối, loại bỏ hoàn toàn sự trùng lặp và dư thừa thông tin.
 * **Dễ dàng bảo trì và mở rộng dài hạn**: Việc chỉnh sửa logic hoặc tích hợp thêm một hệ thống nghiệp vụ mới vào kiến trúc 3NF diễn ra rất tự nhiên và ít gây xáo trộn cho cấu trúc tổng thể.
 * **Khai thác tối đa năng lực Data Science**: Lưu giữ trọn vẹn dữ liệu ở mức độ chi tiết nguyên tử sâu nhất.
 
-### Điểm trừ
+### Nhược điểm
 * **Thời gian triển khai lâu (High Time-to-Value)**: Do yêu cầu thiết kế tổng thể bài bản ngay từ đầu, doanh nghiệp sẽ phải chờ đợi một khoảng thời gian khá dài (có thể lên tới hàng năm) trước khi nhận được các báo cáo đầu tiên.
 * **Đòi hỏi đội ngũ nhân sự chất lượng cao**: Yêu cầu các kỹ sư dữ liệu và kiến trúc sư hệ thống phải có trình độ chuyên môn rất sâu sắc.
 * **Gánh nặng chi phí ETL**: Bạn phải xây dựng và vận hành song song hai quy trình ETL độc lập (Nguồn $\rightarrow$ EDW 3NF và EDW 3NF $\rightarrow$ Data Marts).

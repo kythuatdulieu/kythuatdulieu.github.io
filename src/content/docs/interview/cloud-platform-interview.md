@@ -50,7 +50,6 @@ Khi nhận được một câu hỏi thiết kế hệ thống trên Cloud, thay
 ## Mô hình tham chiếu Modern Data Stack trên AWS
 
 Sơ đồ dưới đây minh họa một kiến trúc [Modern Data Stack](/concepts/system-architecture/modern-data-stack/) chuẩn mực được thiết kế an toàn trong mạng ảo VPC của AWS:
-
 ```mermaid
 graph LR
     subgraph "Data Sources"

@@ -37,7 +37,6 @@ Con người không thể đặt tên rõ ràng cho từng chiều (ví dụ: ch
 ## Cách thức một mô hình nhúng hoạt động
 
 Mặc dù có nhiều kiến trúc khác nhau, nhưng quy trình chuyển đổi văn bản của các mô hình nhúng hiện đại thường trải qua 3 bước chính:
-
 ```mermaid
 graph TD
     Text["Input Text (Văn bản đầu vào)"] --> Tokenizer["1. Tokenization (Phân tách từ)"]
@@ -55,7 +54,6 @@ graph TD
 ## Thực hành nhanh: Sinh vectơ nhúng bằng Sentence-Transformers
 
 Với thư viện `sentence-transformers` trong Python, bạn chỉ cần vài dòng code để tạo ra các vectơ nhúng ngữ nghĩa chất lượng cao bằng các mô hình mã nguồn mở:
-
 ```python
 from sentence_transformers import SentenceTransformer, util
 

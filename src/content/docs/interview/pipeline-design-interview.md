@@ -59,7 +59,6 @@ Khi nhận được đề bài thiết kế hệ thống, hãy bình tĩnh dẫn
 ## Trực quan hóa kiến trúc Medallion trong mô hình ELT
 
 Sơ đồ dưới đây mô tả luồng di chuyển dữ liệu áp dụng kiến trúc Medallion kết hợp mô hình ELT hiện đại:
-
 ```mermaid
 graph LR
     subgraph "Data Sources"

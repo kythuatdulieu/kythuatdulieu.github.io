@@ -53,7 +53,6 @@ Hãy cùng xem các bước thực thi một chiến dịch Backfill dữ liệu
 ## Sơ đồ kiến trúc và luồng xử lý Backfill
 
 Sơ đồ dưới đây minh họa cơ chế hoạt động của quá trình Backfill: hệ thống điều phối chia nhỏ khoảng thời gian quá khứ cần xử lý và thực hiện ghi đè dữ liệu lũy đẳng vào Data Warehouse:
-
 ```mermaid
 graph TD
     subgraph "Execution Timeline"
@@ -81,7 +80,6 @@ graph TD
 Nếu bạn sử dụng công cụ biến đổi dữ liệu **[dbt](/concepts/transformation-analytics/dbt/)** (data build tool), việc thực hiện Backfill cho toàn bộ lịch sử cực kỳ đơn giản nhờ tính năng `Full Refresh`.
 
 Khi bạn thay đổi một logic tính toán hoặc thêm một cột mới vào model (ví dụ: `fact_orders`) và muốn áp dụng cho toàn bộ dữ liệu từ trước tới nay, bạn chỉ cần chạy duy nhất dòng lệnh sau:
-
 ```bash
 # Chạy dbt kèm theo cờ full-refresh để xây dựng lại toàn bộ bảng
 dbt run --select fact_orders --full-refresh
@@ -103,11 +101,11 @@ Dưới nền, dbt sẽ tự động chuyển hóa câu lệnh và gửi xuống
 
 ## Được và mất khi thực hiện Backfill
 
-### Điểm cộng (Pros):
+### Ưu điểm:
 * Khả năng sửa chữa hoàn toàn mọi sai sót về logic tính toán và sự cố hạ tầng trong quá khứ.
 * Mang lại sự linh hoạt tuyệt vời cho hệ thống phân tích: bạn có quyền sai lầm trong thiết kế hôm nay, và ngày mai bạn có thể viết lại code để sửa đổi toàn bộ lịch sử một cách nhất quán.
 
-### Điểm trừ (Cons):
+### Nhược điểm:
 * **Rủi ro quá tải hệ thống:** Việc chạy lại đồng loạt nhiều tác vụ quá khứ song song (Massive Parallelism) sẽ tiêu tốn 100% tài nguyên CPU/RAM của cụm Data Warehouse, có thể khóa bảng (table lock) và làm gián đoạn các truy vấn báo cáo hiện hành của người dùng.
 * **Cực kỳ phức tạp đối với môi trường Streaming:** Việc Backfill trên các luồng dữ liệu thời gian thực (như Apache Flink, Kafka) phức tạp hơn rất nhiều so với chạy batch truyền thống do phải xử lý các khái niệm đặc thù như Watermarks, Event-time và Processing-time.
 

@@ -50,7 +50,6 @@ Khi bạn chạy một câu truy vấn SQL:
 ## Sơ đồ kiến trúc tầng Table Format
 
 Dưới đây là mô hình hoạt động của một Table Format (như Delta Lake hoặc Iceberg) quản lý các tệp tin Parquet vật lý:
-
 ```mermaid
 flowchart TD
     subgraph Data Lake Storage
@@ -78,7 +77,6 @@ flowchart TD
 ## Ví dụ thực tế: Cập nhật dữ liệu với Delta Lake
 
 Trong thực tế, khi bạn làm việc với Spark hay Trino, các thao tác này diễn ra rất tự nhiên. Đoạn code Python dưới đây minh họa việc ghi và cập nhật dữ liệu bằng Delta Lake format:
-
 ```python
 # 1. Ghi dữ liệu dưới định dạng Delta Lake
 df.write.format("delta").save("s3://bucket/my_table/")

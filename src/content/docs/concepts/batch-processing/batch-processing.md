@@ -46,7 +46,6 @@ Nhờ cơ chế **Lazy Evaluation** (đánh giá lười biếng), Spark không 
 ## Cuộc hành trình của một Batch Job diễn ra như thế nào?
 
 Để hình dung rõ hơn, chúng ta hãy xem sơ đồ kiến trúc điều phối và thực thi của một Apache Spark Batch Job dưới đây:
-
 ```mermaid
 graph TD
     subgraph Driver Node
@@ -91,7 +90,6 @@ Khi bạn nhấn nút kích hoạt một Spark Job, chuỗi sự kiện sau sẽ
 Hãy cùng xem một ví dụ thực tế: Đọc tệp dữ liệu giao dịch khổng lồ định dạng CSV từ [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) (S3), tính tổng doanh thu theo từng cửa hàng `(store_id)` và lưu lại kết quả dưới định dạng tối ưu Parquet.
 
 Dưới đây là mã nguồn Batch Job (`process_sales.py`):
-
 ```python
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, sum

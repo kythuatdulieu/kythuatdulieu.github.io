@@ -52,7 +52,6 @@ Object Storage ra đời để giải quyết triệt để những vấn đề 
 ## Bức tranh kiến trúc Data Lake dựa trên Object Storage
 
 Dưới đây là sơ đồ minh họa cách Cloud Object Storage đóng vai trò làm trung tâm lưu trữ cho toàn bộ hệ thống Data Lake:
-
 ```mermaid
 graph TD
     subgraph "Data Producers"
@@ -91,21 +90,18 @@ graph TD
 
 Dưới đây là một số câu lệnh thực tế mà các Data Engineer thường dùng để tương tác với Amazon S3:
 
-**1. Sao chép tệp tin dữ liệu thô lên Raw Zone của Data Lake**
-```bash
+**1. Sao chép tệp tin dữ liệu thô lên Raw Zone của Data Lake**```bash
 aws s3 cp sales_2026_05.csv s3://my-company-datalake/raw/sales/year=2026/month=05/
 ```
 
-**2. Gán nhãn Metadata bảo mật để phân quyền truy cập tự động**
-```bash
+**2. Gán nhãn Metadata bảo mật để phân quyền truy cập tự động**```bash
 aws s3api put-object-tagging \
     --bucket my-company-datalake \
     --key raw/sales/year=2026/month=05/sales_2026_05.csv \
     --tagging '{"TagSet": [{"Key": "security", "Value": "confidential"}]}'
 ```
 
-**3. Truy vấn SQL trực tiếp trên file lưu trữ S3 bằng Amazon Athena**
-```sql
+**3. Truy vấn SQL trực tiếp trên file lưu trữ S3 bằng Amazon Athena**```sql
 SELECT sum(revenue) 
 FROM s3_sales_table 
 WHERE year = 2026 AND month = 05;

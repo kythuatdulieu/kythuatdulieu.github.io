@@ -40,7 +40,6 @@ Cách thức phân công công việc của Consumer Group dựa hoàn toàn và
 * **Kịch bản 3 (Thừa Consumers - Cần tránh)**: Topic có 4 Partitions nhưng bạn lại bật tới 5 Consumers. Kafka sẽ chia 4 partitions cho 4 máy đầu tiên. **Consumer thứ 5 sẽ rơi vào trạng thái hoàn toàn nhàn rỗi (Idle)** và không nhận được bất kỳ tin nhắn nào, bởi vì Kafka quy định một partition không bao giờ được chia cho 2 consumers trong cùng một nhóm.
 
 Sơ đồ dưới đây minh họa cách phân bổ dữ liệu của Consumer Group:
-
 ```mermaid
 graph TD
     subgraph Kafka Topic
@@ -69,7 +68,6 @@ Nếu một máy chủ Consumer trong nhóm bị sập do mất điện hoặc r
 ## Viết mã Python thiết lập Consumer Group thực tế
 
 Dưới đây là ví dụ minh họa cách sử dụng thư viện `confluent_kafka` trong Python để cấu hình một Consumer tham gia vào nhóm `fraud-detection-service`:
-
 ```python
 from confluent_kafka import Consumer
 

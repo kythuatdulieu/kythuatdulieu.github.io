@@ -43,7 +43,6 @@ Quản lý siêu dữ liệu ra đời để giải quyết hai bài toán cốt
 ## Cơ chế hoạt động của Metadata Management hiện đại
 
 Trong các hệ thống hiện đại, việc quản lý metadata không còn là việc các kỹ sư dữ liệu phải ngồi viết tài liệu thủ công vào các file Excel hay trang Wiki (vốn sẽ bị lỗi thời chỉ sau vài ngày). Thay vào đó, quy trình này được tự động hóa hoàn toàn thông qua cơ chế **Active Metadata Management (Quản lý siêu dữ liệu chủ động)**.
-
 ```mermaid
 graph TD
     subgraph "Data & Pipeline Tools (Sources)"
@@ -85,7 +84,6 @@ Quy trình tự động này diễn ra qua 4 bước:
 ## Minh họa thực tế trong dbt
 
 Hãy xem cách chúng ta khai báo siêu dữ liệu trực tiếp trong mã nguồn bằng file cấu hình YAML của dbt. Cách tiếp cận này giúp tài liệu luôn đi kèm với mã nguồn (Code as Documentation) và dễ dàng được đồng bộ lên các công cụ Data Catalog:
-
 ```yaml
 version: 2
 
@@ -105,7 +103,7 @@ models:
 
 ---
 
-## Điểm cộng, điểm trừ và kinh nghiệm thực chiến
+## Đánh giá trade-off và kinh nghiệm thực tế
 
 ### Những ưu điểm vượt trội (Pros)
 * **Tiết kiệm thời gian tìm kiếm**: Các nhà phân tích không còn phải tốn từ 30% đến 40% thời gian làm việc hàng ngày chỉ để đi tìm xem dữ liệu nằm ở đâu và có ý nghĩa gì.

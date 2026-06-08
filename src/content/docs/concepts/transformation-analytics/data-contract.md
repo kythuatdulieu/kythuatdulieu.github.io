@@ -70,7 +70,6 @@ Một Data Contract thường trải qua các bước vận hành chuẩn chỉ 
 ## Mô hình kiến trúc luồng dữ liệu
 
 Dưới đây là sơ đồ trực quan hóa luồng hoạt động của Data Contract từ lúc kiểm tra code đến khi dữ liệu được tiêu thụ an toàn:
-
 ```mermaid
 graph TD
     subgraph "Software Engineering / Producers"
@@ -103,7 +102,6 @@ graph TD
 ## Ví dụ thực tế về một Data Contract
 
 Dưới đây là một tệp YAML khai báo Data Contract chuẩn chỉnh (dựa trên tiêu chuẩn mở tại `datacontract.com`):
-
 ```yaml
 dataContractSpecification: 0.9.2
 id: urn:datacontract:checkout:orders

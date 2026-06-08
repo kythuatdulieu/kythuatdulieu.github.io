@@ -40,7 +40,6 @@ Sức mạnh của Zero-shot Prompting dựa trên hai trụ cột công nghệ 
 * **Semantic Abstraction (Trừu tượng hóa ngữ nghĩa)**: Khả năng liên kết các khái niệm trong câu lệnh với không gian vector tiềm ẩn (latent space), giúp LLM tự động áp dụng các quy luật ngữ pháp, logic toán học vào bài toán mới mà không cần xem mẫu.
 
 Quy trình xử lý một Zero-shot Prompt diễn ra rất đơn giản:
-
 ```mermaid
 graph TD
     Prompt["User Prompt"] --> LLM["LLM Engine"]
@@ -60,23 +59,20 @@ graph TD
 
 Giả sử bạn cần phân tích cảm xúc từ các phản hồi của khách hàng gửi về hệ thống.
 
-**Prompt (Zero-shot)**:
-```text
+**Prompt (Zero-shot)**:```text
 Classify the sentiment of the following customer review into exactly one of these categories: [Positive, Negative, Neutral].
 
 Review: "The delivery was incredibly fast, but the packaging was severely damaged."
 Sentiment:
 ```
 
-**Output mong đợi từ LLM**:
-```text
+**Output mong đợi từ LLM**:```text
 Neutral
 ```
 
 Trong prompt này, bạn không hề đưa ra ví dụ nào kiểu như *"Review A là Positive, Review B là Negative"*. LLM tự hiểu nghĩa của "Positive", "Negative", "Neutral" và tự phân tích cấu trúc tương phản trong câu để đưa ra nhãn chính xác nhất.
 
 Dưới đây là đoạn code Python mẫu gọi API của OpenAI để xử lý tác vụ này:
-
 ```python
 from openai import OpenAI
 

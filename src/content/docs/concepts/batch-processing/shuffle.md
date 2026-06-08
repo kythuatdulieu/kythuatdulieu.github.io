@@ -31,7 +31,6 @@ Vì phải ghi chép dữ liệu xuống ổ đĩa, nén và giải nén dữ li
 ## Cơ chế hoạt động: Shuffle Write và Shuffle Read
 
 Quá trình Shuffle chia tách các tác vụ của Spark thành các giai đoạn vật lý (Stages) độc lập và diễn ra qua hai pha chính:
-
 ```mermaid
 flowchart LR
     subgraph Stage 1: Map
@@ -69,7 +68,6 @@ flowchart LR
 ## Ví dụ thực tế: Đoạn code đơn giản kích hoạt hàng tỷ byte di chuyển
 
 Hãy xem một đoạn code PySpark rất phổ biến dưới đây:
-
 ```python
 # 1. Đọc 10GB file log máy chủ từ S3, tự động chia thành các partitions nội bộ
 logs_df = spark.read.text("s3://server-logs/") 

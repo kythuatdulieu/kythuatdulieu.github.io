@@ -49,7 +49,6 @@ Data Engineering xuất hiện để mở ra một "đường cao tốc" kết n
 ## Quy trình xử lý dữ liệu thực tế diễn ra như thế nào?
 
 Một dự án Data Engineering thông thường sẽ đi qua các bước sau:
-
 ```mermaid
 graph LR
     subgraph Data Sources
@@ -95,7 +94,6 @@ Giả sử bạn cần tính tổng doanh thu mỗi ngày từ một hệ thốn
 
 ### Bước 1: Thu nạp dữ liệu (Data Ingestion) bằng Python
 Đoạn code Python này sẽ lấy dữ liệu giao dịch từ API và lưu trực tiếp vào Data Lake (S3) dưới dạng file Parquet:
-
 ```python
 import requests
 import pandas as pd
@@ -109,7 +107,6 @@ df_raw.to_parquet("s3://data-lake/raw/sales/2026-06-07.parquet")
 
 ### Bước 2: Biến đổi dữ liệu (Data Transformation) bằng SQL
 Sử dụng SQL để làm sạch, lọc các giao dịch thành công và tính tổng doanh thu trên Data Warehouse:
-
 ```sql
 -- Chạy trên Data Warehouse (ví dụ: BigQuery / Snowflake)
 CREATE TABLE data_mart.daily_revenue AS

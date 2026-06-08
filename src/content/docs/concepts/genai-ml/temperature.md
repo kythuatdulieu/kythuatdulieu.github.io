@@ -56,7 +56,6 @@ Giả sử hệ thống đang cân nhắc giữa từ "A" (điểm thô 2.0) và
 ## Sơ đồ luồng xử lý logits
 
 Dưới đây là cách mà tham số Temperature can thiệp vào quá trình tạo từ vựng của AI:
-
 ```mermaid
 graph TD
     A["Logits từ Transformer"] --> B{"Tham số Temperature T"}
@@ -73,7 +72,6 @@ graph TD
 ## Ví dụ thực tế bằng Python
 
 Đoạn code minh họa việc điều chỉnh Temperature bằng OpenAI API:
-
 ```python
 import openai
 

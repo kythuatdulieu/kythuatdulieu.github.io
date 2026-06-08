@@ -55,7 +55,6 @@ OLTP tồn tại để giải quyết bài toán: **Làm sao để phục vụ h
 ## Kiến trúc tổng quan của hệ thống OLTP
 
 Dưới đây là sơ đồ mô tả cách người dùng tương tác với cơ sở dữ liệu OLTP thông qua ứng dụng backend:
-
 ```mermaid
 graph TD
     subgraph Users
@@ -84,7 +83,6 @@ graph TD
 ## Minh họa thực tế: Quy trình đặt vé máy bay
 
 Dưới đây là một ví dụ điển hình về một giao dịch OLTP thực hiện việc đặt vé máy bay của người dùng:
-
 ```sql
 BEGIN;
 

@@ -45,7 +45,6 @@ Nguyên lý hoạt động của LoRA rất trực quan:
 4. **Gộp trọng số (Merging)**: Khi đưa mô hình ra chạy thực tế (inference), ta chỉ cần nhân ma trận $A$ và $B$ lại rồi cộng trực tiếp vào ma trận gốc ($W_{new} = W + A \times B$). Nhờ vậy, mô hình sau khi fine-tune không hề phát sinh thêm độ trễ (latency) khi phản hồi.
 
 Sơ đồ dưới đây minh họa cách LoRA hoạt động song song với mô hình gốc:
-
 ```mermaid
 graph TD
     subgraph "Pre-trained Model"
@@ -69,7 +68,6 @@ graph TD
 ## Thực hành: Cấu hình Fine-tuning với Hugging Face Trainer
 
 Dưới đây là đoạn code Python mẫu sử dụng thư viện `transformers` và `peft` để thiết lập tinh chỉnh mô hình ngôn ngữ lớn bằng kỹ thuật LoRA (PEFT):
-
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer
 from datasets import load_dataset
@@ -143,12 +141,12 @@ trainer.train()
 
 ## Ưu nhược điểm và Đánh đổi (Pros & Cons)
 
-### Ưu điểm (Pros)
+### Ưu điểm
 * **Hiệu năng vượt trội trong ngách hẹp**: Một mô hình nhỏ (khoảng 8B tham số) được tinh chỉnh tốt hoàn toàn có thể vượt mặt một mô hình khổng lồ (70B tham số) chưa qua tinh chỉnh ở một tác vụ cụ thể.
 * **Tiết kiệm chi phí suy luận**: Việc loại bỏ các ví dụ dài dòng trong prompt giúp giảm thiểu lượng token đầu vào, tối ưu chi phí API về lâu dài.
 * **Bảo mật thông tin tối đa**: Doanh nghiệp có thể tải các mô hình mã nguồn mở về hạ tầng nội bộ (On-premise) để fine-tune mà không lo sợ rò rỉ dữ liệu nhạy cảm ra ngoài Internet.
 
-### Nhược điểm & Đánh đổi (Cons & Trade-offs)
+### Nhược điểm
 * **Dữ liệu mang tính tĩnh**: Kiến thức học được qua Fine-tuning bị khóa chặt tại thời điểm huấn luyện. Nếu bạn muốn mô hình trả lời về những sự kiện thời sự diễn ra vào ngày hôm sau, Fine-tuning sẽ bất lực (đây là lúc [RAG](/concepts/genai-ml/rag/) phát huy thế mạnh).
 * **Chi phí chuẩn bị dữ liệu đắt đỏ**: Việc xây dựng một bộ dữ liệu huấn luyện chất lượng cao đòi hỏi sự tham gia trực tiếp của các chuyên gia trong ngành để viết và kiểm định các câu trả lời mẫu.
 * **Nguy cơ mất khả năng tổng quát**: Nếu không được kiểm soát tốt, mô hình có thể quá tập trung vào tác vụ mới mà quên đi các năng lực logic cơ bản khác.

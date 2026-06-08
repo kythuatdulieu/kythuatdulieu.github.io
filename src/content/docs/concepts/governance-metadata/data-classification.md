@@ -41,7 +41,6 @@ Một chiến lược Phân loại dữ liệu hiệu quả được xây dựng
 ## Luồng vận hành của hệ thống tự động phân loại và bảo vệ dữ liệu
 
 Sơ đồ dưới đây mô tả hành trình từ lúc dữ liệu thô được quét phân loại, gán nhãn cho đến khi được che giấu động trước khi hiển thị cho người dùng cuối:
-
 ```mermaid
 graph LR
     subgraph Data Sources
@@ -83,7 +82,6 @@ graph LR
 ## Thực tế triển khai chính sách ẩn danh dữ liệu (Data Masking) bằng SQL
 
 Hãy xem kịch bản thực tế với bảng dữ liệu khách hàng `customers`:
-
 ```sql
 CREATE TABLE customers (
     id UUID PRIMARY KEY,
@@ -100,8 +98,7 @@ Hệ thống quét và tự động gán nhãn bảo mật:
 * Cột `full_name`, `email`, `phone` -> Gán nhãn `PII` và cấp độ `Restricted`.
 * Cột `segment`, `lifetime_value` -> Gán nhãn `Business_Metric` và cấp độ `Internal`.
 
-**Bước 2: Thiết lập chính sách che giấu dữ liệu động (Ví dụ trên [Snowflake](/concepts/cloud-data-platform/snowflake/) DWH)**
-```sql
+**Bước 2: Thiết lập chính sách che giấu dữ liệu động (Ví dụ trên [Snowflake](/concepts/cloud-data-platform/snowflake/) DWH)**```sql
 -- Khởi tạo chính sách ẩn danh thông tin Email
 CREATE OR REPLACE MASKING POLICY email_mask AS (val VARCHAR) RETURNS VARCHAR ->
   CASE
@@ -132,12 +129,12 @@ Khi một nhân viên phân tích thông thường chạy câu lệnh `SELECT em
 
 ## Sự đánh đổi giữa an toàn bảo mật và tốc độ phân tích
 
-### Điểm cộng
+### Ưu điểm
 * Đảm bảo tuân thủ tuyệt đối các quy định pháp luật khắt khe về quyền riêng tư.
 * Giảm thiểu tối đa tác hại và trách nhiệm pháp lý khi có sự cố rò rỉ dữ liệu.
 * Tối ưu hóa chi phí đầu tư cho hạ tầng an ninh thông tin.
 
-### Điểm trừ
+### Nhược điểm
 * **Làm chậm tiến trình phân tích**: Các nhà phân tích phải vượt qua nhiều quy trình phê duyệt rườm rà để tiếp cận dữ liệu thô phục vụ nghiên cứu.
 * **Tốn kém tài nguyên tính toán**: Việc liên tục thực hiện quét phân loại và chạy các hàm ẩn danh động `(Dynamic Masking)` khi truy vấn sẽ tiêu tốn thêm năng lượng CPU của Data Warehouse.
 

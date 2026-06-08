@@ -53,7 +53,6 @@ Cụ thể, quy trình này diễn ra như sau:
 ## Trực quan hóa luồng đi của Watermark
 
 Dưới đây là biểu đồ mô tả cách một Watermark với quy tắc trễ 2 phút (`Watermark = MaxEventTime - 2 mins`) di chuyển và kích hoạt cửa sổ thời gian `[10:00 - 10:05)`:
-
 ```mermaid
 sequenceDiagram
     participant Stream as Data Stream
@@ -88,7 +87,6 @@ sequenceDiagram
 ## Ví dụ thực tiễn: Cấu hình Watermark trong Apache Flink
 
 Đoạn code Java dưới đây minh họa cách định nghĩa một chiến lược Watermark chấp nhận độ trễ tối đa 5 giây (Bounded out-of-orderness) và cách cấu hình bắt dữ liệu đến muộn (Late Data) trong Apache Flink:
-
 ```java
 DataStream<MyEvent> stream = ...;
 

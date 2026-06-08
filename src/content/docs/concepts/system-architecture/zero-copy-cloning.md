@@ -39,7 +39,6 @@ Chỉ khi bạn bắt đầu thực hiện các thao tác ghi dữ liệu (UPDAT
 ## Trực quan hóa cơ chế chia sẻ con trỏ vật lý
 
 Sơ đồ dưới đây mô tả cách hai bảng logic chia sẻ chung các file vật lý và phân tách khi bảng clone (Table B) bắt đầu có sự thay đổi dữ liệu:
-
 ```mermaid
 graph TD
     subgraph "Logical Tables  (Metadata)"
@@ -75,7 +74,6 @@ graph TD
 Giả sử công ty bạn sở hữu bảng `PROD_DB.SALES.ORDERS` chứa lịch sử đơn hàng khổng lồ lên tới 50 Terabytes. Một bạn Data Analyst mới gia nhập đội ngũ và cần chạy thử một số câu lệnh cập nhật dữ liệu rất phức tạp để làm sạch dữ liệu. Rõ ràng, việc cấp quyền chỉnh sửa trực tiếp trên Production cho người mới là quá mạo hiểm.
 
 Với Zero-Copy Cloning, Trưởng nhóm dữ liệu chỉ cần thực thi một câu lệnh SQL duy nhất:
-
 ```sql
 CREATE DATABASE SANDBOX_DB CLONE PROD_DB;
 GRANT ALL ON DATABASE SANDBOX_DB TO ROLE junior_analyst;

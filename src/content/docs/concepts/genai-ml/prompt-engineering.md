@@ -33,7 +33,6 @@ Prompt Engineering đóng vai trò như một lớp biên dịch (compiler) trun
 Tương tự như nguyên lý **Garbage In, Garbage Out (GIGO)** trong khoa học máy tính, chất lượng đầu vào của prompt sẽ quyết định hoàn toàn chất lượng đầu ra của AI. 
 
 Một cấu trúc prompt chuyên nghiệp thường được xây dựng từ các thành phần sau:
-
 ```mermaid
 graph TD
     A["System Prompt / Input"] --> B[Role]
@@ -72,14 +71,12 @@ Tùy vào độ phức tạp của bài toán, các kỹ sư thường áp dụn
 
 Hãy xem xét bài toán trích xuất thông tin từ email phản hồi của khách hàng thành cấu trúc dữ liệu JSON để tự động hóa quy trình CRM.
 
-### Cách viết tệ (Mơ hồ, không có cấu trúc):
-```text
+### Cách viết tệ (Mơ hồ, không có cấu trúc):```text
 Đọc email này và lấy ra tên, số điện thoại, lý do phàn nàn giúp tôi:
 "Chào công ty, tôi là Nguyễn Văn A. Số của tôi là 0901234567. Tôi mua cái máy giặt hôm qua mà nay nó không lên nguồn. Đổi cho tôi nhanh lên."
 ```
 
-### Cách viết chuẩn (Áp dụng các thành phần cốt lõi):
-```text
+### Cách viết chuẩn (Áp dụng các thành phần cốt lõi):```text
 [Role]
 Bạn là một trợ lý AI chuyên trích xuất dữ liệu thô thành cấu trúc hệ thống.
 
@@ -99,7 +96,6 @@ Hãy phân tích email khiếu nại dưới đây và trích xuất các thông
 ```
 
 Bằng cách áp dụng prompt chuẩn hóa này, đầu ra của AI sẽ luôn đồng nhất và an toàn để đưa trực tiếp vào các đoạn code xử lý của phần mềm. Dưới đây là cách bạn có thể tích hợp mẫu prompt này vào Python bằng thư viện LangChain:
-
 ```python
 from langchain.prompts import PromptTemplate
 

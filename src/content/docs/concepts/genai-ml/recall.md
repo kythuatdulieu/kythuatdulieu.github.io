@@ -64,7 +64,6 @@ Hệ thống Vector Search trả về Top 5 kết quả. Trong 5 kết quả nà
 ## Ví dụ lập trình: Tính toán Recall với Scikit-Learn
 
 Dưới đây là cách tính toán nhanh chỉ số Recall và Precision bằng thư viện `scikit-learn` trong Python:
-
 ```python
 from sklearn.metrics import recall_score, precision_score
 
@@ -82,7 +81,6 @@ print(f"Precision: {precision:.2f}") # 1/2 = 0.50 (Trong các email báo rác, c
 ## Cuộc chiến giằng co giữa Precision và Recall
 
 Sự giằng co giữa Precision (Độ chuẩn xác) và Recall (Độ phủ) là một trong những bài toán đánh đổi kinh điển nhất của ngành học máy:
-
 ```mermaid
 graph LR
     A["Focus on Recall"] -->|"Cast a wide net"| B("Low FN, High FP")

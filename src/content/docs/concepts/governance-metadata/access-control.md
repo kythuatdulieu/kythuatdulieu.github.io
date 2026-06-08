@@ -54,7 +54,6 @@ Một quy trình kiểm soát truy cập chuẩn thường kết hợp chặt ch
 ### Kiến trúc tổng quan của hệ thống
 
 Hãy cùng xem sơ đồ dưới đây để hình dung cách một yêu cầu truy xuất dữ liệu được xử lý:
-
 ```mermaid
 graph TD
     User["Data Analyst"] -->|"Request: SELECT * FROM Finance_DB"| APIGateway["API / Query Gateway"]
@@ -78,7 +77,6 @@ Chúng ta hãy cùng xem cách triển khai kiểm soát truy cập trong [Snowf
 
 ### 1. Phân quyền theo cột sử dụng RBAC (Column-Level Security)
 Giả sử chúng ta có yêu cầu: Chỉ nhóm quản trị nhân sự `HR_ADMIN` mới được phép xem cột lương nhân viên (`salary`), các tài khoản khác khi truy vấn chỉ nhận về kết quả `NULL`.
-
 ```sql
 -- Bước 1: Tạo vai trò chuyên biệt
 CREATE ROLE HR_ADMIN;
@@ -98,7 +96,6 @@ ALTER TABLE employees MODIFY COLUMN salary SET MASKING POLICY hide_salary;
 ### 2. Phân quyền theo dòng sử dụng ABAC (Row-Level Security)
 Yêu cầu: Mỗi quản lý chỉ được phép xem dữ liệu doanh thu của các cửa hàng thuộc khu vực (region) mà họ phụ trách.
 Thay vì tạo ra hàng loạt vai trò tĩnh như `MANAGER_US`, `MANAGER_EU`, chúng ta sẽ sử dụng phương pháp ABAC thông qua một bảng ánh xạ (Mapping Table) và Row Access Policy.
-
 ```sql
 -- Giả sử bảng mapping lưu thuộc tính của người dùng như sau:
 -- manager_name | region

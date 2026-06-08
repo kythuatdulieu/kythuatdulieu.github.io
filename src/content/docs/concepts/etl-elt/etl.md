@@ -41,7 +41,6 @@ Vì vậy, họ xây dựng một máy chủ ETL riêng biệt (chạy các côn
 ## Giải phẫu một chu trình ETL điển hình
 
 Dưới đây là sơ đồ luồng đi của dữ liệu thông qua kiến trúc ETL:
-
 ```mermaid
 graph LR
     subgraph "Data Sources"
@@ -72,7 +71,6 @@ Hãy hình dung một Job ETL chạy vào lúc 2 giờ sáng mỗi ngày:
 ## Ví dụ thực tế: Dựng pipeline ETL bằng Python Pandas
 
 Bạn hoàn toàn có thể tự tay xây dựng một luồng ETL cơ bản bằng thư viện `pandas` trong Python:
-
 ```python
 import pandas as pd
 import sqlite3

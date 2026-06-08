@@ -50,7 +50,6 @@ Dữ liệu được chia thành các Block vật lý liên tiếp nhau:
 Khi bạn chạy truy vấn `SELECT * FROM users WHERE ID = 1`, Database sử dụng Index để xác định bản ghi nằm ở Block 1. Nó lập tức tải toàn bộ Block 1 lên bộ nhớ RAM chỉ trong một lượt đọc đĩa và trả kết quả về cho ứng dụng.
 
 ## Sơ đồ luồng truy xuất dữ liệu
-
 ```mermaid
 graph TD
     App[Web App] --> RowDB[(Row-oriented DB)]
@@ -60,7 +59,6 @@ graph TD
 ## Ví dụ thực tế: Thao tác mua hàng trên E-commerce
 
 Khi bạn bấm nút mua hàng trên một trang thương mại điện tử, hệ thống sẽ thực thi lệnh chèn một đơn hàng mới vào cơ sở dữ liệu:
-
 ```sql
 INSERT INTO orders (id, user_id, total, status, created_at, shipping_addr)
 VALUES (1001, 5, 250.00, 'PENDING', '2026-06-07 10:00:00', '123 P. Hue');

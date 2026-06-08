@@ -53,7 +53,6 @@ Thông thường, chỉ số PSI được đánh giá như sau:
 ## Kiến trúc hệ thống giám sát Drift tự động
 
 Dưới đây là luồng hoạt động điển hình của một công cụ giám sát trôi dạt phân phối trong thực tế:
-
 ```mermaid
 graph TD
     subgraph "Data Pipeline"
@@ -87,7 +86,6 @@ graph TD
 Nếu không phát hiện kịp thời, mô hình AI (vẫn nghĩ tệp khách hàng phải đạt chuẩn >650) sẽ tự động từ chối hầu hết các hồ sơ của sinh viên, khiến chiến dịch Marketing thất bại.
 
 Dưới đây là cách dùng thư viện `Evidently AI` trong Python để tự động hóa việc phát hiện hiện tượng này:
-
 ```python
 import pandas as pd
 from evidently.report import Report
@@ -119,11 +117,11 @@ if results["metrics"][0]["result"]["dataset_drift"]:
 
 ## Được và mất khi triển khai giám sát Drift
 
-### Điểm cộng (Pros)
+### Ưu điểm
 * Là tấm lá chắn bảo vệ, duy trì hiệu năng ổn định cho các mô hình Machine Learning trên môi trường Production.
 * Giúp phát hiện sớm các lỗi logic nghiệp vụ ngầm từ phía Backend trước khi chúng kịp làm sai lệch toàn bộ hệ thống báo cáo.
 
-### Điểm trừ (Cons)
+### Nhược điểm
 * Đòi hỏi năng lực tính toán lớn từ hệ thống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) khi phải liên tục quét và phân tích lượng dữ liệu lớn.
 * Khá trừu tượng để giải thích cho các phòng ban kinh doanh hiểu tại sao các chỉ số thống kê như PSI hay K-S test lại quan trọng và cần được xử lý ngay lập tức.
 

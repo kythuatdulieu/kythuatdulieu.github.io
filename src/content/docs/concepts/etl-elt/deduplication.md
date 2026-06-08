@@ -30,7 +30,6 @@ Dữ liệu bị trùng lặp không tự nhiên sinh ra, nó thường là kế
 ## 3 Con đường khử trùng lặp dữ liệu
 
 Tùy vào công cụ và cấu trúc dữ liệu, các kỹ sư dữ liệu thường sử dụng 3 kỹ thuật SQL cơ bản để làm sạch trùng lặp:
-
 ```mermaid
 flowchart TD
     A[Dữ liệu thô trùng lặp] --> B{Phương pháp Deduplication}
@@ -58,8 +57,7 @@ Xét một bảng dữ liệu người dùng (`users`) ở vùng Staging đang b
 
 Mục tiêu của chúng ta là lọc bỏ dòng trạng thái cũ (`pending`) của Bob và giữ lại dòng trạng thái mới nhất (`active`) dựa trên mốc thời gian `updated_at`.
 
-### Câu lệnh SQL sử dụng hàm cửa sổ `ROW_NUMBER()`
-```sql
+### Câu lệnh SQL sử dụng hàm cửa sổ `ROW_NUMBER()````sql
 WITH ranked_users AS (
     SELECT 
         user_id,

@@ -46,7 +46,6 @@ Mỗi chu kỳ (Tick) của vòng lặp Scheduler (từ phiên bản Airflow 2.0
 ## Sơ đồ kiến trúc và luồng điều phối của Airflow
 
 Hãy cùng nhìn vào sơ đồ dưới đây để hình dung đường đi của một tác vụ từ khi còn là code Python cho đến khi được Worker thực thi:
-
 ```mermaid
 graph TD
     subgraph Scheduler Node
@@ -68,7 +67,6 @@ graph TD
 ## Cấu hình Scheduler thực tế qua file airflow.cfg
 
 Mặc dù Scheduler chủ yếu chạy ngầm, bạn hoàn toàn có thể tinh chỉnh hiệu năng của nó thông qua tệp cấu hình `airflow.cfg`. Dưới đây là một số cấu hình phổ biến:
-
 ```ini
 [scheduler]
 # Khoảng thời gian (giây) quét thư mục DAG để phát hiện file mới

@@ -45,7 +45,6 @@ Hãy hình dung qua một kịch bản đơn giản: Cửa hàng bán lẻ (Hệ
 ## Mô phỏng luồng giao tiếp dữ liệu
 
 Sơ đồ dưới đây trực quan hóa sự khác biệt về quyền khởi xướng luồng truyền dữ liệu giữa hai cơ chế và cách chúng kết hợp trong mô hình Hybrid:
-
 ```mermaid
 graph LR
     subgraph "PUSH MODEL"
@@ -74,7 +73,6 @@ Trong hệ sinh thái Kafka:
 * **Từ Kafka đến Consumer (Pull)**: Các động cơ xử lý dữ liệu (như Spark Streaming, Flink) hoặc các ứng dụng tiêu thụ sẽ chủ động **Pull (Kéo)** dữ liệu từ Kafka về. Thiết kế này giúp consumer kiểm soát hoàn toàn tải trọng của mình. Nếu lượng dữ liệu đẩy vào Kafka tăng vọt (ví dụ ngày Black Friday), consumer vẫn cứ thong thả kéo dữ liệu về theo đúng công suất tối đa của nó. Kafka đóng vai trò như một hồ chứa khổng lồ giữ hộ phần dữ liệu chưa kịp xử lý mà không làm sập consumer.
 
 Dưới đây là đoạn code Python minh họa cách triển khai cơ chế kết hợp này:
-
 ```python
 # --- MÔ HÌNH PUSH (Producer chủ động bắn dữ liệu lên Broker ngay khi có sự kiện) ---
 producer = KafkaProducer(bootstrap_servers='localhost:9092')

@@ -57,7 +57,6 @@ Thay vì phải tốn thời gian và chi phí thiết lập các đường ốn
 ## Sơ đồ kiến trúc tổng quan của Amazon Redshift
 
 Hãy cùng xem sơ đồ dưới đây để hình dung cách các thành phần trong Redshift phối hợp xử lý yêu cầu:
-
 ```mermaid
 graph TD
     subgraph "Client Apps"
@@ -96,7 +95,6 @@ graph TD
 ## Bắt tay vào tối ưu: Sức mạnh của Distribution Style trong thực tế
 
 Giả sử bạn có hai bảng: `orders` (1 tỷ dòng) và `customers` (10 triệu dòng) và bạn thường xuyên phải chạy câu lệnh JOIN sau để tính doanh thu theo khu vực:
-
 ```sql
 SELECT c.region, SUM(o.total_amount) 
 FROM orders o 
@@ -109,7 +107,6 @@ Nếu bạn không khai báo kiểu phân phối, Redshift sẽ mặc định ph
 
 **Cách thiết kế tối ưu (Chỉ định DISTKEY):**
 Bằng cách chỉ định phân phối dữ liệu dựa trên một khóa chung, bạn có thể gom dữ liệu liên quan về cùng một vị trí vật lý:
-
 ```sql
 CREATE TABLE orders (
     order_id INT,
@@ -139,11 +136,11 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 
 ## Được và mất khi lựa chọn Redshift
 
-### Điểm cộng (Pros):
+### Ưu điểm:
 * Nằm sâu trong hệ sinh thái của AWS, tích hợp hoàn hảo với các dịch vụ bảo mật (IAM, VPC) và các công cụ xử lý dữ liệu khác như AWS Glue, Kinesis, Athena.
 * Cho phép các kỹ sư dữ liệu kiểm soát cực kỳ chi tiết cấu trúc vật lý của cơ sở dữ liệu để tinh chỉnh hiệu năng tối đa trên mỗi đồng chi phí bỏ ra.
 
-### Điểm trừ (Cons):
+### Nhược điểm:
 * **Chi phí vận hành cao (High Maintenance):** Ngoại trừ bản Serverless mới, phiên bản Provisioned truyền thống đòi hỏi kỹ sư phải có kiến thức sâu về quản trị hệ thống (Database Administration) để liên tục cấu hình, chạy Vacuum và giám sát tài nguyên cụm máy.
 * Trải nghiệm giao diện quản trị Web UI và các công cụ bổ trợ đôi khi cho cảm giác hơi thô ráp và kém mượt mà hơn so với đối thủ trực tiếp là Snowflake.
 
