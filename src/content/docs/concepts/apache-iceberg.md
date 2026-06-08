@@ -153,7 +153,7 @@ FOR SYSTEM_VERSION AS OF 10963874102873;
 * [Delta Lake](/concepts/delta-lake)
 * [Apache Spark](/concepts/apache-spark)
 
-## Góc phỏng vấn: Chinh phục các câu hỏi hóc búa về Iceberg
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Hãy giải thích sự khác biệt giữa cơ chế phân vùng dựa trên thư mục (Folder-based partition) của Hive và phân vùng ẩn (Hidden Partition) của Iceberg. Tại sao Hidden Partition lại giúp ngăn chặn lỗi Full Table Scan?
 * **Gợi ý trả lời:** Trong Hive, logic phân vùng gắn chặt với cấu trúc thư mục vật lý (ví dụ: `month=06`). Người dùng bắt buộc phải biết rõ cấu trúc này và viết đúng cột phân vùng trong câu lệnh `WHERE month=06`. Nếu họ lọc theo cột ngày gốc `WHERE order_date = '2026-06-01'`, Hive sẽ không hiểu và buộc phải quét toàn bộ bảng (Full Table Scan) để tìm dữ liệu. 

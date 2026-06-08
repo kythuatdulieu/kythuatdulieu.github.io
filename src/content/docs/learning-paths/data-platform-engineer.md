@@ -3,7 +3,7 @@ title: "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
 description: "Lộ trình học tập trở thành Data Platform Engineer, làm chủ Data Governance, Metadata management, và Data Platform tự phục vụ."
 ---
 
-Vai trò **Data Platform Engineer** là một nấc thang phát triển cao cấp trong sự nghiệp dữ liệu. Thay vì tập trung xây dựng các đường ống dẫn dữ liệu phục vụ riêng cho một bài toán nghiệp vụ cụ thể, bạn sẽ chịu trách nhiệm thiết kế, xây dựng và duy trì các nền tảng hạ tầng dùng chung mạnh mẽ, an toàn và có khả năng mở rộng cao. Đây chính là xương sống giúp toàn bộ doanh nghiệp có thể khai thác và tự phục vụ dữ liệu (self-service) một cách dễ dàng và hiệu quả nhất.
+Lộ trình **Data Platform Engineer** định hướng xây dựng và quản trị hạ tầng dữ liệu dùng chung (Data Platform) cho tổ chức. Nội dung chính tập trung vào các giải pháp quản trị dữ liệu (Data Governance), quản lý siêu dữ liệu (Metadata Management), kiểm soát truy cập phân quyền nâng cao (Access Control) và vận hành hệ thống trên môi trường Kubernetes.
 
 ## Đối tượng hướng tới
 
@@ -18,7 +18,7 @@ Lộ trình chuyên sâu này được thiết kế dành riêng cho:
 
 ## Từng bước xây dựng nền tảng dữ liệu hiện đại
 
-Để kiến tạo nên một Data Platform toàn diện, bạn sẽ cần từng bước chinh phục các mảnh ghép công nghệ và tư duy thiết kế sau:
+Để xây dựng một Data Platform toàn diện, bạn cần làm quen với các khái niệm công nghệ và tư duy thiết kế sau:
 
 ### Bước 1: Quản trị Dữ liệu (Data Governance)
 Khi dữ liệu phình to, việc kiểm soát ai đang dùng cái gì và dữ liệu có chuẩn chỉnh hay không trở nên sống còn. Bạn cần học cách triển khai và vận hành các giải pháp Data Governance hiện đại hàng đầu như **Unity Catalog** (Databricks), **Apache Atlas**, hoặc **AWS Lake Formation**. Qua đó, bạn sẽ giúp tổ chức quản lý định danh dữ liệu, áp đặt các quy định về chuẩn hóa dữ liệu, biến kho dữ liệu thô lộn xộn thành một tài sản chung đáng tin cậy.
@@ -47,7 +47,7 @@ Hãy bắt đầu hiện thực hóa kiến thức qua các dự án thực tế
 * **Thiết lập Unity Catalog hoặc AWS Lake Formation quy mô lớn**: Thiết kế kiến trúc và phân quyền dòng chảy dữ liệu thực tế cho ít nhất 5 phòng ban khác nhau (Sales, Marketing, HR, Finance, Data Science) để đảm bảo dữ liệu phòng ban nào chỉ phòng ban đó và những người được cấp quyền mới có thể truy cập.
 * **Hệ thống theo dõi Data Lineage tự động**: Cài đặt OpenLineage hoặc DataHub để tự động theo dõi dòng chảy của dữ liệu từ hệ thống nguồn PostgreSQL OLTP xuyên suốt qua các bước biến đổi cho đến kho dữ liệu phân tích BigQuery hoặc Snowflake.
 
-## Vượt qua các thử thách tuyển dụng (Góc phỏng vấn)
+## Trọng tâm ôn luyện phỏng vấn
 
 Ở cấp độ Platform, các buổi phỏng vấn sẽ tập trung nhiều vào tư duy kiến trúc hệ thống và khả năng giải quyết các bài toán quy mô lớn:
 * **System Design Access Control**: Bạn sẽ thiết kế hệ thống kiểm soát và phân quyền tự động như thế nào cho một doanh nghiệp có hàng nghìn nhân sự với hàng petabyte dữ liệu?

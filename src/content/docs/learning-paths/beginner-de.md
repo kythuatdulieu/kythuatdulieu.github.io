@@ -3,7 +3,7 @@ title: Beginner Data Engineer (Kỹ sư dữ liệu nhập môn)
 description: Lộ trình học tập cơ bản dành cho người mới bắt đầu làm quen với kỹ thuật dữ liệu, từ SQL, Python đến Data Pipelines.
 ---
 
-Chào mừng bạn đến với thế giới của dữ liệu! Nếu bạn đang tò mò không biết những luồng dữ liệu khổng lồ ngoài kia được thu thập, xử lý và vận hành như thế nào, thì đây chính là điểm xuất phát dành cho bạn. Lộ trình **Beginner Data Engineer** được thiết kế để giúp bạn xây dựng một nền tảng vững chắc nhất trước khi bước chân vào các hệ thống dữ liệu quy mô lớn.
+Lộ trình **Beginner Data Engineer** được xây dựng nhằm cung cấp nền tảng kiến thức cơ bản về SQL, lập trình Python, cơ sở dữ liệu quan hệ và quy trình quản lý mã nguồn (Git) trước khi tiếp cận các hệ thống dữ liệu lớn.
 
 ## Lộ trình này dành cho ai?
 

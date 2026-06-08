@@ -174,7 +174,7 @@ dfUpdates.write.format("hudi").
 * [Change Data Capture (CDC)](/concepts/change-data-capture)
 * [Table Format](/concepts/table-format)
 
-## Góc phỏng vấn: Chinh phục các thử thách về Apache Hudi
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Hãy so sánh sự khác biệt và trường hợp sử dụng của hai loại bảng Copy-on-Write (CoW) và Merge-on-Read (MoR) trong Hudi.
 * **Gợi ý trả lời:** 

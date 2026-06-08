@@ -1,9 +1,9 @@
 ---
-title: "Interview Preparation (Chinh phục phỏng vấn Kỹ sư Dữ liệu)"
+title: "Interview Preparation (Chuẩn bị phỏng vấn Kỹ sư Dữ liệu)"
 description: "Lộ trình ôn tập tập trung kỹ năng giải đề, kiến trúc hệ thống và xử lý sự cố để vượt qua phỏng vấn Data Engineer."
 ---
 
-Vượt qua các vòng phỏng vấn kỹ thuật (Technical Interviews) cho vị trí Data Engineer chưa bao giờ là điều dễ dàng. Lộ trình **Interview Preparation** này ra đời như một cuốn cẩm nang chiến lược giúp bạn hệ thống hóa toàn bộ kiến thức kỹ thuật, rèn luyện tư duy thực chiến và chuẩn bị một tâm lý vững vàng nhất để chinh phục những nhà tuyển dụng khắt khe nhất.
+Lộ trình **Interview Preparation** hệ thống hóa các kiến thức kỹ thuật trọng tâm, hỗ trợ ôn luyện tư duy thiết kế hệ thống và rèn luyện kỹ năng xử lý tình huống thực tế nhằm chuẩn bị tốt nhất cho các vòng phỏng vấn tuyển dụng.
 
 ## Đối tượng của lộ trình này
 
@@ -42,7 +42,7 @@ Nhà tuyển dụng rất thích hỏi về kinh nghiệm xử lý khủng hoả
 
 ---
 
-**Quả ngọt bạn nhận được**: Sau khi hoàn thành quá trình ôn luyện này, bạn sẽ tự tin làm chủ tốc độ viết code dưới áp lực thời gian, sở hữu khả năng thuyết trình kiến trúc (System Design) trôi chảy và sẵn sàng vượt qua các vòng phỏng vấn chuyên sâu của cả những doanh nghiệp công nghệ hàng đầu thế giới.
+**Kết quả đạt được**: Sau khi hoàn thành quá trình ôn tập này, bạn sẽ củng cố khả năng lập trình tối ưu dưới áp lực thời gian, chuẩn bị sẵn sàng cho các bài toán thiết kế kiến trúc hệ thống và giao tiếp hiệu quả với hội đồng tuyển dụng.
 
 ## Luyện tập thực chiến
 

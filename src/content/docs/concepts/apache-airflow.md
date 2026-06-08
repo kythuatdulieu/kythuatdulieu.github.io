@@ -155,7 +155,7 @@ with DAG(
 * [Task Dependency](/concepts/task-dependency)
 * [Airflow Scheduler](/concepts/airflow-scheduler)
 
-## Góc phỏng vấn: Chinh phục các câu hỏi hóc búa về Airflow
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Nếu một DAG có lịch chạy hàng ngày (`@daily`) và start_date bắt đầu từ ngày 2026-06-01, thì lượt chạy đầu tiên của DAG này sẽ được Scheduler kích hoạt vào thời điểm nào?
 * **Gợi ý trả lời:** Lượt chạy đầu tiên sẽ được kích hoạt vào lúc `00:00:00 ngày 2026-06-02`. Trong Airflow, một lượt chạy cho một khoảng thời gian cụ thể (Data Interval) chỉ được bắt đầu khi khoảng thời gian đó kết thúc hoàn toàn. Do đó, lượt chạy của ngày 01/06 (khoảng thời gian từ 01/06 đến hết ngày 01/06) chỉ có thể chạy từ giây đầu tiên của ngày 02/06.

@@ -3,7 +3,7 @@ title: Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)
 description: Lộ trình nâng cao năng lực thực chiến, từ kỹ sư sơ cấp lên trung cấp với Dimensional Modeling, ETL/ELT và Cloud Data Warehouse.
 ---
 
-Khi đã nắm vững những kiến thức cơ bản về lập trình và SQL, bước tiếp theo trong hành trình của bạn là nâng cao tư duy thiết kế hệ thống và khả năng giải quyết các bài toán dữ liệu thực tế của doanh nghiệp. Lộ trình **Junior to Middle Data Engineer** được thiết kế như một bệ phóng giúp bạn chuyển mình từ một kỹ sư dữ liệu sơ cấp (Junior) trở thành một kỹ sư thực chiến (Middle) tự tin vận hành các kho dữ liệu (Data Warehouse) hiện đại.
+Lộ trình **Junior to Middle Data Engineer** tập trung vào việc phát triển tư duy thiết kế hệ thống và giải quyết các bài toán dữ liệu thực tế tại doanh nghiệp. Nội dung chính bao gồm thiết kế mô hình dữ liệu đa chiều (Dimensional Modeling), tích hợp dữ liệu (ETL/ELT), phân vùng dữ liệu và làm việc với các kho dữ liệu đám mây (Cloud Data Warehouse).
 
 ## Đối tượng của lộ trình
 
@@ -47,7 +47,7 @@ Hãy chứng minh sự tiến bộ của mình bằng cách xây dựng dự án
   * **Mô tả:** Bạn sẽ thiết lập một quy trình trích xuất dữ liệu giao dịch từ cơ sở dữ liệu PostgreSQL (hệ thống OLTP). Sau đó, thiết kế một kiến trúc lược đồ hình sao (`Star Schema`) tối ưu trên Google BigQuery. Dùng công cụ biến đổi dữ liệu chuyên nghiệp `dbt` (data build tool) để viết các script SQL làm sạch, chuẩn hóa và tổng hợp dữ liệu thô thành các bảng Fact và Dimension hoàn chỉnh phục vụ cho việc dựng các báo cáo doanh thu kinh doanh.
   * **Kết quả đạt được:** Tự tin thiết kế mô hình dữ liệu đa chiều phục vụ BI từ đầu, làm chủ tư duy ELT hiện đại và viết các pipeline tải dữ liệu lớn đảm bảo tính toàn vẹn và nhất quán.
 
-## Chinh phục vòng phỏng vấn kỹ thuật (Interview Focus)
+## Trọng tâm ôn luyện phỏng vấn
 
 Ở cấp độ này, nhà tuyển dụng sẽ đánh giá rất kỹ tư duy thiết kế và sự am hiểu bản chất công nghệ của bạn:
 * **Thiết kế Star Schema**: Khả năng phác thảo nhanh sơ đồ thực thể mối quan hệ cho các bài toán nghiệp vụ thực tế (ví dụ: mô hình E-commerce, quản lý kho bãi Logistics, hay chuỗi cửa hàng bán lẻ).

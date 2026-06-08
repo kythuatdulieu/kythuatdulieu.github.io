@@ -164,7 +164,7 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 * [Snowflake](/concepts/snowflake)
 * [OLAP vs OLTP](/concepts/olap)
 
-## Góc phỏng vấn: Chinh phục nhà tuyển dụng với kiến thức Redshift
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Hãy phân biệt ba kiểu phân phối dữ liệu (Distribution Styles) trong Redshift: EVEN, KEY và ALL.
 * **Gợi ý trả lời:** 

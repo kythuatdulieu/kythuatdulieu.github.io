@@ -3,7 +3,7 @@ title: Cloud Data Engineer (Kỹ sư dữ liệu đám mây)
 description: Lộ trình chuyên biệt hóa năng lực thiết kế, triển khai và vận hành hệ thống dữ liệu lớn trên môi trường Public Cloud (AWS, GCP, Azure).
 ---
 
-Lộ trình **Cloud Data Engineer** được thiết kế để nâng tầm kỹ năng của bạn, giúp bạn làm chủ việc thiết kế, triển khai và vận hành các hệ thống dữ liệu quy mô lớn ngay trên môi trường đám mây công cộng (Public Cloud) phổ biến như AWS, Google Cloud Platform (GCP) hay Microsoft Azure. Thay vì tự dựng và quản trị hạ tầng vật lý phức tạp, bạn sẽ học cách tận dụng sức mạnh của các dịch vụ đám mây để xây dựng những đường ống dữ liệu bền bỉ và tối ưu.
+Lộ trình **Cloud Data Engineer** hướng dẫn thiết kế, triển khai và vận hành hệ thống dữ liệu quy mô lớn trên các môi trường điện toán đám mây công cộng (AWS, GCP, Azure). Trọng tâm của lộ trình là việc tận dụng các dịch vụ đám mây được quản trị (Managed Services) để xây dựng đường ống dẫn dữ liệu ổn định và tối ưu chi phí.
 
 ## Ai nên theo đuổi lộ trình này?
 
@@ -39,9 +39,9 @@ Môi trường Cloud cực kỳ tiện lợi nhưng cũng sẽ là một "cỗ m
 
 * **Dự án: Đường ống ELT Serverless phản ứng theo sự kiện (Event-driven)**
   * **Mô tả chi tiết:** Triển khai một đường ống dữ liệu tự động hóa hoàn toàn trên nền tảng AWS. Mỗi khi có tệp dữ liệu thô mới tải lên AWS S3 bucket, một sự kiện (event) sẽ lập tức được kích hoạt để gọi hàm `AWS Lambda`. Hàm Lambda này sẽ chịu trách nhiệm gọi một `AWS Glue Job` để thực hiện làm sạch dữ liệu, sau đó tải dữ liệu đã chuẩn hóa vào kho dữ liệu phân tích `AWS Redshift`. Toàn bộ nhật ký hoạt động (logs) và các chỉ số hiệu năng sẽ được giám sát tập trung thông qua `AWS CloudWatch`.
-  * **Kết quả kỳ vọng:** Dự án này không chỉ giúp bạn hiểu rõ cơ chế event-driven mà còn là bước đệm tuyệt vời để bạn chinh phục các chứng chỉ chuyên nghiệp danh giá như *AWS Certified Data Engineer* hay *GCP Professional Data Engineer*.
+  * **Kết quả kỳ vọng:** Hiểu rõ cơ chế kiến trúc hướng sự kiện (Event-driven) trên đám mây và chuẩn bị nền tảng kiến thức cho các chứng chỉ chuyên môn như AWS Certified Data Engineer hoặc GCP Professional Data Engineer.
 
-## Chinh phục nhà tuyển dụng (Góc phỏng vấn)
+## Trọng tâm ôn luyện phỏng vấn
 
 Khi phỏng vấn cho các vị trí Cloud Data Engineer, hãy chuẩn bị tinh thần trả lời các câu hỏi tình huống thực tế sau:
 * **Thiết kế phân quyền**: Bạn sẽ áp dụng cơ chế đặc quyền tối thiểu (Least Privilege) trong `IAM` như thế nào để đảm bảo an toàn cho toàn bộ hệ thống dữ liệu?

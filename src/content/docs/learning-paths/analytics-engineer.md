@@ -3,7 +3,7 @@ title: "Analytics Engineer (Kỹ sư phân tích dữ liệu)"
 description: "Lộ trình chi tiết trở thành Analytics Engineer, nắm vững dbt, mô hình hóa dữ liệu, Semantic Layer và CI/CD tự động."
 ---
 
-Lộ trình **Analytics Engineer** là chiếc cầu nối vững chắc và quan trọng giữa thế giới của Data Engineering (Kỹ nghệ dữ liệu) và Data Analysis (Phân tích dữ liệu). Vai trò này tập trung vào việc biến đổi dữ liệu thô (raw data) thành những thông tin sạch sẽ, có cấu trúc, đáng tin cậy và luôn sẵn sàng để phục vụ các quyết định kinh doanh.
+Lộ trình **Analytics Engineer** định hình vai trò trung gian giữa Kỹ thuật dữ liệu (Data Engineering) và Phân tích dữ liệu (Data Analysis). Lộ trình tập trung vào việc chuyển đổi dữ liệu thô thành các mô hình dữ liệu sạch, có cấu trúc, phục vụ trực tiếp cho hoạt động phân tích nghiệp vụ.
 
 ## Lộ trình này dành cho ai?
 
@@ -58,7 +58,7 @@ Trăm hay không bằng tay quen, hãy thử thách bản thân với các dự 
 * **Mã hóa và Bảo mật tự động**: Viết một `dbt macro` thông minh để tự động che (masking) hoặc mã hóa thông tin cá nhân nhạy cảm của người dùng (PII - Personally Identifiable Information).
 * **Ứng dụng Data Contract**: Thiết lập và chạy thử một mô hình Data Contract giả lập giữa một dịch vụ nguồn phát sinh dữ liệu và kho dbt của bạn.
 
-## Chinh phục nhà tuyển dụng (Góc phỏng vấn)
+## Trọng tâm ôn luyện phỏng vấn
 
 Khi đi phỏng vấn vị trí Analytics Engineer, hãy chuẩn bị kỹ các chủ đề sau:
 
