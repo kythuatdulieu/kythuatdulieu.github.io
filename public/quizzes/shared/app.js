@@ -8,17 +8,19 @@
     // ========================
     // State
     // ========================
-    const STATE_KEY = 'de_quiz_state_v4';
+    // Dynamically load the STATE_KEY based on the path
+    const quizId = window.location.pathname.split('/').filter(Boolean).pop() || 'quiz';
+    const STATE_KEY = `quiz_state_${quizId}_v1`;
 
-    let questions = QUESTIONS_DATA.map(q => ({ ...q }));
-    let questionOrder = questions.map((_, i) => i);
+    let questions = [];
+    let questionOrder = [];
     let currentIndex = 0;
     let userAnswers = {};
     let showVietnamese = false;
     let showImage = false;
     let shuffleMode = false;
     let filterMode = 'all';
-    let darkTheme = true;
+    let darkTheme = false; // Default to Light theme as per GenAI Associate style
 
     // ========================
     // DOM References
@@ -694,7 +696,24 @@
     // ========================
     // Init
     // ========================
-    function init() {
+    async function init() {
+        try {
+            // Check if questions are already embedded (legacy support) or if we need to fetch
+            if (typeof QUESTIONS_DATA !== 'undefined') {
+                questions = QUESTIONS_DATA.map(q => ({ ...q }));
+            } else {
+                const response = await fetch('questions.json');
+                const data = await response.json();
+                questions = data.map(q => ({ ...q }));
+            }
+        } catch (err) {
+            console.error('Failed to load questions.json:', err);
+            els.questionText.innerHTML = '<span style="color:red">Lỗi tải dữ liệu câu hỏi. Vui lòng thử lại.</span>';
+            return;
+        }
+
+        questionOrder = questions.map((_, i) => i);
+        
         loadState();
 
         // Apply saved UI states
