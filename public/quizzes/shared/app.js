@@ -373,11 +373,13 @@
         els.topicBadge.textContent = `Topic ${q.topic}`;
 
         // Question text
-        els.questionText.textContent = q.question;
+        els.questionText.replaceChildren();
+        appendFormattedText(els.questionText, q.question);
 
         // Vietnamese question text
         if (showVietnamese && q.question_vi) {
-            els.questionTextVi.textContent = q.question_vi;
+            els.questionTextVi.replaceChildren();
+            appendFormattedText(els.questionTextVi, q.question_vi);
             els.questionTextVi.style.display = 'block';
         } else {
             els.questionTextVi.style.display = 'none';
@@ -434,14 +436,14 @@
 
             const textSpan = document.createElement('div');
             textSpan.className = 'option-text';
-            textSpan.textContent = q.options[letter];
+            appendFormattedText(textSpan, q.options[letter]);
 
             if (showVietnamese) {
                 const viOpt = getVietnameseOption(q, letter);
                 if (viOpt) {
                     const viSpan = document.createElement('div');
                     viSpan.className = 'option-text-vi';
-                    viSpan.textContent = viOpt;
+                    appendFormattedText(viSpan, viOpt);
                     viSpan.style.display = 'block';
                     textSpan.appendChild(viSpan);
                 }
