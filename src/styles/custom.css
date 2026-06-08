@@ -1,6 +1,6 @@
 :root {
-    /* Mở rộng tối đa không gian hiển thị nội dung, giúp sidebar ép sát lề trái và tận dụng màn hình rộng */
-    --sl-content-width: 85rem; 
+    /* Mở rộng không gian hiển thị nội dung, tận dụng hết không gian còn lại */
+    --sl-content-width: 100%; 
 }
 
 /* ==========================================================
