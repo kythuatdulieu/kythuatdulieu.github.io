@@ -9,7 +9,7 @@ seoTitle: "Cloud Object Storage là gì? (Amazon S3, Google Cloud Storage, Azure
 metaDescription: "Tìm hiểu toàn diện về Cloud Object Storage (Lưu trữ hướng đối tượng trên đám mây): Khái niệm, kiến trúc, sự khác biệt với File Storage và vai trò làm nền tảng cho Data Lake."
 ---
 
-Trong kỷ nguyên của Big Data và Điện toán đám mây, việc tìm kiếm một nơi lưu trữ dữ liệu vừa rẻ, vừa an toàn, lại có khả năng mở rộng vô hạn là mong muốn của mọi doanh nghiệp. **Cloud Object Storage (Lưu trữ đối tượng trên đám mây)** chính là lời giải hoàn hảo cho bài toán đó. Từ những cái tên quen thuộc như Amazon S3, Google Cloud Storage (GCS) cho đến Azure Blob Storage, công nghệ này đã trở thành xương sống vững chắc cho các kiến trúc Data Lake và Data Lakehouse hiện đại ngày nay.
+Trong kỷ nguyên của Big Data và Điện toán đám mây, việc tìm kiếm một nơi lưu trữ dữ liệu vừa rẻ, vừa an toàn, lại có khả năng mở rộng vô hạn là mong muốn của mọi doanh nghiệp. **Cloud Object Storage (Lưu trữ đối tượng trên đám mây)** chính là lời giải hoàn hảo cho bài toán đó. Từ những cái tên quen thuộc như Amazon S3, Google Cloud Storage (GCS) cho đến Azure Blob Storage, công nghệ này đã trở thành xương sống vững chắc cho các kiến trúc Data Lake và Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) hiện đại ngày nay.
 
 ## Cloud Object Storage: Xương sống thầm lặng của Data Lake hiện đại
 
@@ -62,9 +62,9 @@ graph TD
     end
 
     subgraph "Cloud Object Storage  (S3 / GCS / ADLS)"
-        Raw["Raw Bucket / Bronze \n s3://data-raw/"]
-        Clean["Cleaned Bucket / Silver \n s3://data-clean/"]
-        Agg["Aggregated Bucket / Gold \n s3://data-gold/"]
+        Raw["Raw Bucket / Bronze <br/> s3://data-raw/"]
+        Clean["Cleaned Bucket / Silver <br/> s3://data-clean/"]
+        Agg["Aggregated Bucket / Gold <br/> s3://data-gold/"]
     end
 
     subgraph "Compute / Processing"
@@ -83,6 +83,8 @@ graph TD
 
     Clean -- "Query" --> Athena
     Agg -- "Query directly" --> Athena
+
+
 ```
 
 ## Thực hành quản trị dữ liệu thông qua AWS CLI và SQL
@@ -111,7 +113,7 @@ WHERE year = 2026 AND month = 05;
 
 ## Thiết kế và tối ưu hóa Object Storage (Best Practices)
 
-* **Thiết kế phân vùng logic (Partitioning)**: Hãy đặt tên Key chứa các tiền tố thời gian một cách khoa học, ví dụ: `s3://bucket/data/year=2026/month=05/day=08/`. Khi bạn truy vấn, các công cụ như Spark hay Athena sẽ tự động bỏ qua các phân vùng không liên quan `(Partition Pruning)`, giúp tiết kiệm tới 99% chi phí đọc dữ liệu.
+* **Thiết kế phân vùng logic ([Partitioning](/concepts/database-storage/partitioning/))**: Hãy đặt tên Key chứa các tiền tố thời gian một cách khoa học, ví dụ: `s3://bucket/data/year=2026/month=05/day=08/`. Khi bạn truy vấn, các công cụ như Spark hay Athena sẽ tự động bỏ qua các phân vùng không liên quan `(Partition Pruning)`, giúp tiết kiệm tới 99% chi phí đọc dữ liệu.
 * **Tối ưu hóa kích thước tệp tin (File Sizing)**: Object Storage cực kỳ không thích việc lưu trữ hàng triệu file nhỏ (vài KB). Việc truy xuất hàng triệu file nhỏ sẽ làm phát sinh hàng triệu lệnh gọi API HTTP, gây trễ mạng và tốn tiền. Hãy gộp chúng lại thành các file Parquet có kích thước tối ưu từ `128MB đến 1GB`.
 * **Thiết lập quy tắc vòng đời (Lifecycle Policies)**: Đặt cấu hình tự động để tối ưu hóa chi phí. Ví dụ: Dữ liệu thô sau 30 ngày sẽ tự động được chuyển xuống lớp lưu trữ siêu rẻ `(S3 Glacier Cold Storage)` và tự động xóa bỏ hoàn toàn sau 3 năm.
 
@@ -139,7 +141,7 @@ WHERE year = 2026 AND month = 05;
 * Lưu trữ tài nguyên tĩnh (hình ảnh, video, file tải về) cho các ứng dụng web.
 
 **Không nên sử dụng khi:**
-* Cần lưu trữ cho các ứng dụng giao dịch yêu cầu cập nhật từng mili-giây (như cơ sở dữ liệu giỏ hàng, hệ thống OLTP).
+* Cần lưu trữ cho các ứng dụng giao dịch yêu cầu cập nhật từng mili-giây (như cơ sở dữ liệu giỏ hàng, hệ thống [OLTP](/concepts/database-storage/oltp/)).
 * Lưu trữ làm ổ cứng chạy hệ điều hành cho máy ảo.
 
 ## Góc phỏng vấn: Những câu hỏi thực chiến
@@ -166,7 +168,7 @@ WHERE year = 2026 AND month = 05;
 ## Các khái niệm liên quan
 
 * [Data Lake](/concepts/data-lake-lakehouse/data-lake/)
-* Định dạng dữ liệu cột Parquet (Columnar Storage)
+* Định dạng dữ liệu cột Parquet ([Columnar Storage](/concepts/database-storage/columnar-storage/))
 * [Kiến trúc Serverless Data](/concepts/cloud-data-platform/serverless-data/)
 
 ## Tài liệu tham khảo
@@ -179,4 +181,4 @@ WHERE year = 2026 AND month = 05;
 
 ## English Summary
 
-Cloud Object Storage (e.g., AWS S3, Google Cloud Storage, Azure Blob Storage) is a distributed architecture that manages data as discrete "objects" (containing data, rich metadata, and a unique global identifier/URI) within a flat namespace, abandoning the hierarchical directory tree of traditional file systems. It offers practically infinite scalability, supreme durability (11 nines), and low cost via RESTful APIs. It is fundamentally immutable—objects must be fully overwritten rather than partially modified. By allowing the complete decoupling of storage capacity from compute power, Cloud Object Storage serves as the foundational, highly cost-effective storage layer for modern Data Lakes and Data Lakehouses, though it requires specific best practices like partitioning and file compaction to overcome latency and API call overheads.
+Cloud Object Storage (e.g., AWS S3, Google Cloud Storage, Azure Blob Storage) is a distributed architecture that manages data as discrete "objects" (containing data, rich metadata, and a unique global identifier/URI) within a flat namespace, abandoning the hierarchical directory tree of traditional file systems. It offers practically infinite scalability, supreme durability (11 nines), and low cost via RESTful APIs. It is fundamentally immutable—objects must be fully overwritten rather than partially modified. By allowing the complete decoupling of storage capacity from compute power, Cloud Object Storage serves as the foundational, highly cost-effective storage layer for modern Data Lakes and Data Lakehouses, though it requires specific best practices like partitioning and file [compaction](/concepts/data-lake-lakehouse/compaction/) to overcome latency and API call overheads.

@@ -29,7 +29,7 @@ Nếu thiếu đi hệ thống đường ống tự động, doanh nghiệp sẽ
 
 * **Sự thiếu hiệu quả của các quy trình thủ công**: Nhân viên phân tích phải tải các file Excel/CSV từ nhiều hệ thống hàng ngày, dùng hàm Excel để gộp dữ liệu bằng tay rồi mới vẽ biểu đồ báo cáo. Quy trình này tốn hàng giờ làm việc lặp đi lặp lại và cực kỳ dễ xảy ra sai sót do con người.
 * **Nhu cầu hợp nhất dữ liệu từ nhiều nguồn**: Để có được bức tranh toàn cảnh về hiệu quả kinh doanh, bạn cần kết hợp dữ liệu giao dịch từ cơ sở dữ liệu MySQL với dữ liệu chiến dịch quảng cáo từ API của Facebook Ads. Data Pipeline giúp tự động hóa việc kết nối và ghép nối (JOIN) các nguồn dữ liệu này lại với nhau.
-* **Khability chịu lỗi và tự khôi phục**: Hệ thống nguồn có thể bị mất mạng đột ngột hoặc file gửi qua API bị sai định dạng. Việc copy-paste thủ công không thể tự phát hiện lỗi, trong khi một pipeline kỹ thuật sẽ tự động cách ly dữ liệu lỗi, ghi nhận log và cảnh báo cho kỹ sư vào cuộc xử lý.
+* **Khả năng chịu lỗi và tự khôi phục**: Hệ thống nguồn có thể bị mất mạng đột ngột hoặc file gửi qua API bị sai định dạng. Việc copy-paste thủ công không thể tự phát hiện lỗi, trong khi một pipeline kỹ thuật sẽ tự động cách ly dữ liệu lỗi, ghi nhận log và cảnh báo cho kỹ sư vào cuộc xử lý.
 
 ---
 
@@ -46,7 +46,7 @@ Một đường ống dữ liệu hoàn chỉnh thường được cấu thành 
 
 ## Kiến trúc và Cơ chế hoạt động
 
-Dưới đây là mô hình sơ đồ dòng chảy dữ liệu được điều phối bởi công cụ Apache Airflow:
+Dưới đây là mô hình sơ đồ dòng chảy dữ liệu được điều phối bởi công cụ [Apache Airflow](/concepts/orchestration/apache-airflow/):
 
 ```mermaid
 graph LR
@@ -123,7 +123,7 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
 
 ### Ưu điểm (Pros):
 * **Tự động hóa quy trình**: Giúp loại bỏ hoàn toàn các bước lặp đi lặp lại bằng tay, tiết kiệm nguồn lực cho doanh nghiệp.
-* **Nhất quán và chất lượng dữ liệu**: Việc tự động hóa tích hợp các bước kiểm thử dữ liệu (Data Quality) đảm bảo dữ liệu đưa vào kho phân tích luôn sạch và chuẩn hóa.
+* **Nhất quán và chất lượng dữ liệu**: Việc tự động hóa tích hợp các bước kiểm thử dữ liệu ([Data Quality](/concepts/data-quality/data-quality/)) đảm bảo dữ liệu đưa vào kho phân tích luôn sạch và chuẩn hóa.
 * **Hợp nhất dữ liệu toàn diện**: Phá vỡ các silo dữ liệu, kết nối và tổng hợp thông tin từ nhiều nguồn ứng dụng khác nhau về một nơi duy nhất.
 * **Tính mở rộng và tin cậy**: Dễ dàng nâng cấp để xử lý lượng dữ liệu lớn hơn mà không cần thay đổi cấu trúc cốt lõi của đường ống.
 
@@ -156,14 +156,14 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
   * **Streaming Pipeline**: Xử lý dữ liệu liên tục theo từng bản ghi (event-by-event) ngay khi chúng phát sinh. Phương pháp này có độ trễ cực thấp (tính bằng mili-giây) nhưng thiết kế rất phức tạp, đòi hỏi các công cụ chuyên dụng như Kafka, Flink và gặp nhiều thử thách khi xử lý dữ liệu đến trễ hay việc ghép nối (JOIN) các luồng dữ liệu thời gian thực.
 
 ### 2. Khái niệm DAG có nghĩa là gì trong các công cụ điều phối đường ống dữ liệu (Orchestration)?
-* **Gợi ý trả lời**: DAG viết tắt của **Directed Acyclic Graph** (Đồ thị có hướng không chu trình).
+* **Gợi ý trả lời**: [DAG](/concepts/orchestration/dag/) viết tắt của **Directed Acyclic Graph** (Đồ thị có hướng không chu trình).
   * **Directed (Có hướng)**: Chỉ ra rằng các tác vụ trong pipeline có thứ tự thực thi rõ ràng, ví dụ tác vụ A phải hoàn thành thành công thì tác vụ B mới được bắt đầu.
   * **Acyclic (Không chu trình)**: Đảm bảo luồng chạy không bao giờ bị rơi vào vòng lặp vô hạn (ví dụ tác vụ A đợi B, tác vụ B lại đợi A). Một DAG bắt buộc phải có điểm bắt đầu và điểm kết thúc rõ ràng để đảm bảo hệ thống có thể hoàn thành luồng công việc.
 
 ### 3. Làm thế nào bạn xử lý việc thay đổi cấu trúc bảng dữ liệu (Schema Evolution) của hệ thống nguồn mà không làm sập pipeline?
-* **Gợi ý trả lời**: Để giải quyết việc thay đổi cấu trúc bảng (schema drift), tôi áp dụng các giải pháp sau:
+* **Gợi ý trả lời**: Để giải quyết việc thay đổi cấu trúc bảng ([schema drift](/concepts/observability-reliability/schema-drift/)), tôi áp dụng các giải pháp sau:
   1) **Sử dụng Schema Registry**: Quản lý và kiểm soát tính tương thích của schema giữa các phiên bản dữ liệu.
-  2) **Lưu trữ dữ liệu bán cấu trúc**: Ở vùng nạp thô (Staging/Landing Zone), sử dụng định dạng linh hoạt như JSON (ở PostgreSQL/Snowflake) để nạp toàn bộ thuộc tính mới mà nguồn gửi về mà không cần thay đổi cấu trúc bảng ngay lập tức.
+  2) **Lưu trữ dữ liệu bán cấu trúc**: Ở vùng nạp thô (Staging/Landing Zone), sử dụng định dạng linh hoạt như JSON (ở PostgreSQL/[Snowflake](/concepts/cloud-data-platform/snowflake/)) để nạp toàn bộ thuộc tính mới mà nguồn gửi về mà không cần thay đổi cấu trúc bảng ngay lập tức.
   3) **Thiết lập cảnh báo tự động**: Giám sát schema drift và kích hoạt cảnh báo cho đội kỹ sư dữ liệu để họ chủ động cập nhật các bảng ở hạ nguồn trước khi các báo cáo BI bị lỗi dữ liệu.
 
 ## Tài liệu tham khảo
@@ -172,8 +172,8 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
 2. [What is a Data Pipeline?](https://www.databricks.com/glossary/data-pipeline) - Databricks Glossary explaining different data pipeline architectures.
 3. [What is a Data Pipeline?](https://cloud.google.com/discover/what-is-a-data-pipeline) - Google Cloud Learn page explaining stages and technologies for building data pipelines.
 4. [What is a Data Pipeline?](https://aws.amazon.com/what-is/data-pipeline/) - AWS page introducing the concepts, benefits, and use cases of data pipelines.
-5. [Apache Airflow Documentation](https://airflow.apache.org/docs/) - Official documentation for the industry-standard workflow orchestration platform.
+5. [Apache Airflow Documentation](https://airflow.apache.org/docs/) - Official documentation for the industry-standard workflow [orchestration](/concepts/orchestration/orchestration/) platform.
 
 ## English Summary
 
-A **Data Pipeline** is an automated set of processes that extracts data from various sources, transforms it to ensure quality and compatibility, and loads it into a destination system such as a Data Warehouse or Data Lake (ETL/ELT). Orchestration tools (like Apache Airflow) manage the scheduling and dependencies of these pipelines using Directed Acyclic Graphs (DAGs). Pipelines can operate in batch mode (processing data in chunks at scheduled intervals) or streaming mode (processing events in real-time), and they are essential for eliminating manual data wrangling and ensuring reliable, scalable analytics.
+A **Data Pipeline** is an automated set of processes that extracts data from various sources, transforms it to ensure quality and compatibility, and loads it into a destination system such as a [Data Warehouse](/concepts/data-warehouse/data-warehouse/) or [Data Lake](/concepts/data-lake-lakehouse/data-lake/) ([ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/)). Orchestration tools (like Apache Airflow) manage the scheduling and dependencies of these pipelines using Directed Acyclic Graphs (DAGs). Pipelines can operate in batch mode (processing data in chunks at scheduled intervals) or streaming mode (processing events in real-time), and they are essential for eliminating manual data wrangling and ensuring reliable, scalable analytics.

@@ -37,7 +37,7 @@ Các phép toán tính toán nội bộ (như `map`, `filter`) không cần chuy
 
 ## Sức mạnh của DAG: Spark phân chia công việc ra sao?
 
-Quá trình chia cắt này được thực hiện bởi một bộ phận đầu não gọi là **DAG Scheduler (Directed Acyclic Graph)**:
+Quá trình chia cắt này được thực hiện bởi một bộ phận đầu não gọi là **[DAG](/concepts/orchestration/dag/) Scheduler (Directed Acyclic Graph)**:
 
 1. Bạn viết mã nguồn PySpark và áp dụng các phép biến đổi (Transformations). Do cơ chế trì hoãn thực thi (Lazy Evaluation), Spark chỉ ghi chép lại các bước này vào sơ đồ DAG chứ chưa chạy thực tế.
 2. Ngay khi gặp một hàm ghi dữ liệu `df.write.parquet()`, Spark lập tức kích hoạt một **Job**.
@@ -114,7 +114,7 @@ city_count_df.write.save("s3://output/")
   Thay vì khởi chạy hàng trăm Task để quét toàn bộ dữ liệu trên HDFS/S3, Spark sẽ tạo ra một Job nhỏ và chỉ kích hoạt một vài Task trên phân vùng đầu tiên. Nếu thu thập đủ 20 dòng, Spark sẽ lập tức dừng công việc và hiển thị kết quả, giúp tiết kiệm tối đa tài nguyên CPU và băng thông mạng.
 
 ### 3. Làm thế nào để giải quyết tình trạng Executor bị lỗi OOM (Out of Memory) do "Task quá lớn" trong Spark?
-* **Gợi ý trả lời**: Lỗi này xảy ra khi dung lượng của một phân vùng dữ liệu (Partition) vượt quá dung lượng bộ nhớ khả dụng của Executor Core được cấp phát. Để xử lý, ta có thể: (1) Tăng số lượng phân vùng bằng cách gọi `.repartition(N)` để chia nhỏ dữ liệu hơn, từ đó giảm dung lượng dữ liệu cho mỗi Task. (2) Kiểm tra xem dữ liệu có bị lệch (data skew) hay không, nếu có thì áp dụng kỹ thuật salting hoặc phát sóng các bảng nhỏ (Broadcast Join) để tránh shuffle mất cân bằng.
+* **Gợi ý trả lời**: Lỗi này xảy ra khi dung lượng của một phân vùng dữ liệu (Partition) vượt quá dung lượng bộ nhớ khả dụng của Executor Core được cấp phát. Để xử lý, ta có thể: (1) Tăng số lượng phân vùng bằng cách gọi `.repartition(N)` để chia nhỏ dữ liệu hơn, từ đó giảm dung lượng dữ liệu cho mỗi Task. (2) Kiểm tra xem dữ liệu có bị lệch ([data skew](/concepts/batch-processing/data-skew/)) hay không, nếu có thì áp dụng kỹ thuật salting hoặc phát sóng các bảng nhỏ (Broadcast Join) để tránh shuffle mất cân bằng.
 
 ## Tài liệu tham khảo
 

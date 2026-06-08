@@ -13,9 +13,9 @@ Trong thế giới phân tích dữ liệu, việc phải quản lý hạ tầng
 
 ## Khi dữ liệu phình to đến mức không tưởng
 
-Google BigQuery (BQ) là hệ thống kho dữ liệu doanh nghiệp (Enterprise Data Warehouse) được xây dựng hoàn toàn trên nền tảng điện toán đám mây Google Cloud Platform (GCP). Điểm tạo nên sự khác biệt tuyệt đối của BigQuery so với các cơ sở dữ liệu truyền thống chính là mô hình **Serverless hoàn toàn (Fully-managed Serverless)**.
+Google BigQuery (BQ) là hệ thống kho dữ liệu doanh nghiệp (Enterprise [Data Warehouse](/concepts/data-warehouse/data-warehouse/)) được xây dựng hoàn toàn trên nền tảng điện toán đám mây Google Cloud Platform (GCP). Điểm tạo nên sự khác biệt tuyệt đối của BigQuery so với các cơ sở dữ liệu truyền thống chính là mô hình **Serverless hoàn toàn (Fully-managed Serverless)**.
 
-BigQuery không phải là cơ sở dữ liệu quan hệ tối ưu cho việc ghi/sửa từng dòng (như PostgreSQL hay MySQL). Nó được thiết kế như một **Cơ sở dữ liệu phân tích dạng cột (Columnar OLAP Database)**. Mục tiêu duy nhất của nó là giải quyết bài toán: *Làm thế nào để một nhà phân tích viết một câu truy vấn SQL tiêu chuẩn và nhận về kết quả tổng hợp dữ liệu khổng lồ chỉ trong tích tắc mà không cần thiết lập hạ tầng?*
+BigQuery không phải là cơ sở dữ liệu quan hệ tối ưu cho việc ghi/sửa từng dòng (như PostgreSQL hay MySQL). Nó được thiết kế như một **Cơ sở dữ liệu phân tích dạng cột (Columnar [OLAP](/concepts/database-storage/olap/) Database)**. Mục tiêu duy nhất của nó là giải quyết bài toán: *Làm thế nào để một nhà phân tích viết một câu truy vấn SQL tiêu chuẩn và nhận về kết quả tổng hợp dữ liệu khổng lồ chỉ trong tích tắc mà không cần thiết lập hạ tầng?*
 
 ## Google BigQuery ra đời như thế nào?
 
@@ -35,17 +35,19 @@ graph TD
     end
 
     subgraph BigQuery Architecture
-        Dremel[Dremel Engine \n Compute Nodes / Query Parser]
+        DremelMaster[Dremel Coordinator]
+        DremelWorkers[Dremel Workers \n Slots]
         Jupiter[Jupiter Network \n 1 Petabit/sec]
         Colossus[(Colossus Storage \n Capacitor Columnar Format)]
     end
 
     BI --> SQL
-    SQL -- "Submit Query" --> Dremel
-    Dremel -- "Distribute Task to 1000s Workers" --> Jupiter
-    Jupiter -- "Fetch Columns" --> Colossus
-    Colossus -- "Return Aggregated Data" --> Dremel
-    Dremel -- "Return Result" --> SQL
+    SQL -- "Submit Query" --> DremelMaster
+    DremelMaster -- "Distribute Query Tree" --> DremelWorkers
+    DremelWorkers -- "Read via Jupiter" --> Colossus
+    Colossus -- "Return Columns" --> DremelWorkers
+    DremelWorkers -- "Aggregate & Return" --> DremelMaster
+    DremelMaster -- "Return Result" --> SQL
 ```
 
 Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công nghệ độc quyền của Google:
@@ -58,7 +60,7 @@ Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công n
 
 Để không bị sốc khi nhận hóa đơn GCP cuối tháng, bạn cần hiểu rõ cách BigQuery tính tiền. Về cơ bản, Google tách biệt chi phí thành hai phần:
 
-1. **Chi phí lưu trữ (Storage Pricing)**: Rất rẻ, chỉ khoảng $0.02 cho mỗi GB dữ liệu lưu trữ một tháng (tương đương với việc lưu file thô trên Amazon S3 hay Google Cloud Storage). Đặc biệt, nếu một phân vùng dữ liệu không bị chỉnh sửa trong vòng 90 ngày liên tiếp, Google sẽ tự động giảm 50% chi phí lưu trữ cho phân vùng đó (Long-term storage).
+1. **Chi phí lưu trữ (Storage Pricing)**: Rất rẻ, chỉ khoảng $0.02 cho mỗi GB dữ liệu lưu trữ một tháng (tương đương với việc lưu file thô trên Amazon S3 hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/)). Đặc biệt, nếu một phân vùng dữ liệu không bị chỉnh sửa trong vòng 90 ngày liên tiếp, Google sẽ tự động giảm 50% chi phí lưu trữ cho phân vùng đó (Long-term storage).
 2. **Chi phí truy vấn (Compute/Query Pricing)**: Có hai tùy chọn chính tùy thuộc vào quy mô doanh nghiệp:
    * **On-demand (Trả theo dung lượng quét - Phổ biến nhất)**: Google tính phí khoảng **$6.25 cho mỗi Terabyte (TB)** dữ liệu mà câu lệnh SQL của bạn thực tế quét qua. Nếu bạn không chạy câu lệnh nào, bạn hoàn toàn không mất phí tính toán.
    * **Capacity Pricing (Mua khoán slots)**: Phù hợp cho các doanh nghiệp lớn muốn kiểm soát chi phí cố định. Bạn sẽ thuê một lượng tài nguyên tính toán cố định (tính bằng Slots, tối thiểu là 100 slots) với mức giá cố định hàng tháng để thỏa sức chạy các câu lệnh SQL mà không lo chi phí phát sinh.
@@ -88,10 +90,10 @@ WHERE date BETWEEN '2026-01-01' AND '2026-12-31'
 ## Những chỉ dẫn "vàng" và sai lầm "đốt tiền" kinh điển
 
 ### Chỉ dẫn "vàng" cho kỹ sư dữ liệu
-* **Thiết lập Phân vùng (Partitioning)**: Luôn chia nhỏ các bảng lớn theo thời gian (ví dụ: chia theo cột ngày `DATE`). Đây là tấm khiên bảo vệ túi tiền của doanh nghiệp, giúp giới hạn phạm vi quét dữ liệu của các câu truy vấn.
-* **Cấu hình Phân cụm (Clustering)**: Sau khi phân vùng, hãy tiến hành phân cụm dữ liệu theo các cột thường dùng để lọc (`WHERE`) hoặc gom nhóm (`GROUP BY`), ví dụ như `customer_id` hoặc `product_category`. BigQuery sẽ sắp xếp vật lý các dòng dữ liệu có cùng thuộc tính nằm gần nhau để tìm kiếm nhanh hơn.
+* **Thiết lập Phân vùng ([Partitioning](/concepts/database-storage/partitioning/))**: Luôn chia nhỏ các bảng lớn theo thời gian (ví dụ: chia theo cột ngày `DATE`). Đây là tấm khiên bảo vệ túi tiền của doanh nghiệp, giúp giới hạn phạm vi quét dữ liệu của các câu truy vấn.
+* **Cấu hình Phân cụm ([Clustering](/concepts/database-storage/clustering/))**: Sau khi phân vùng, hãy tiến hành phân cụm dữ liệu theo các cột thường dùng để lọc (`WHERE`) hoặc gom nhóm (`GROUP BY`), ví dụ như `customer_id` hoặc `product_category`. BigQuery sẽ sắp xếp vật lý các dòng dữ liệu có cùng thuộc tính nằm gần nhau để tìm kiếm nhanh hơn.
 * **Nói KHÔNG với `SELECT *`**: Luôn chỉ định rõ tên các cột cần lấy. Đây là luật bất thành văn đối với bất kỳ cơ sở dữ liệu dạng cột nào.
-* **Tránh các câu lệnh ghi/sửa vụn vặt**: BigQuery không được tối ưu cho các tác vụ OLTP. Thay vì chạy hàng ngàn câu lệnh `UPDATE` hay `DELETE` riêng lẻ, hãy gom dữ liệu thành các lô (batch) lớn rồi sử dụng câu lệnh `MERGE` để xử lý định kỳ.
+* **Tránh các câu lệnh ghi/sửa vụn vặt**: BigQuery không được tối ưu cho các tác vụ [OLTP](/concepts/database-storage/oltp/). Thay vì chạy hàng ngàn câu lệnh `UPDATE` hay `DELETE` riêng lẻ, hãy gom dữ liệu thành các lô (batch) lớn rồi sử dụng câu lệnh `MERGE` để xử lý định kỳ.
 
 ### Sai lầm "đốt tiền" kinh điển
 * **Tìm kiếm nút tạo Index**: Các lập trình viên chuyển từ thế giới quan hệ (MySQL/PostgreSQL) sang thường mất nhiều thời gian đi tìm cách tạo chỉ mục (index). Hãy nhớ rằng BigQuery không dùng Index. Nó sử dụng sức mạnh tính toán song song phân tán cực lớn để quét nhanh toàn bộ dữ liệu. Kỹ thuật thay thế cho Index ở đây chính là Partitioning và Clustering.
@@ -146,7 +148,7 @@ WHERE date BETWEEN '2026-01-01' AND '2026-12-31'
 2. [Dremel: Interactive Analysis of Web-Scale Datasets](https://research.google/pubs/dremel-interactive-analysis-of-web-scale-datasets/) - The seminal Google research paper detailing Dremel, the query execution engine behind BigQuery.
 3. [BigQuery Under the Hood](https://cloud.google.com/blog/products/gcp/bigquery-under-the-hood-google-serverless-cloud-data-warehouse) - An in-depth engineering blog from Google explaining the separation of compute and storage.
 4. [Google BigQuery: The Definitive Guide](https://www.oreilly.com/library/view/google-bigquery-the/9781492044451/) - Comprehensive O'Reilly book on warehousing, analytics, and machine learning using BigQuery.
-5. BigQuery Cost Optimization Techniques - Google Cloud Architecture Center guide for monitoring and minimizing BigQuery query and storage costs.
+5. BigQuery [Cost Optimization](/concepts/cloud-data-platform/cost-optimization/) Techniques - Google Cloud Architecture Center guide for monitoring and minimizing BigQuery query and storage costs.
 
 ## English Summary
 

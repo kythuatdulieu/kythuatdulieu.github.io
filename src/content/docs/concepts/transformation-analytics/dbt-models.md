@@ -15,7 +15,7 @@ Nếu bạn đã từng làm việc trong một dự án dữ liệu lớn sử 
 
 ## dbt Model thực chất là gì?
 
-Trong thế giới dbt, một **Model** đơn giản là một file `.sql` chứa duy nhất một câu lệnh `SELECT` (có thể kết hợp với các mã Jinja để tối ưu hóa). Mỗi Model này khi chạy sẽ được dbt biên dịch và tạo thành một bảng vật lý (Table) hoặc một khung nhìn ảo (View) tương ứng trên Data Warehouse của bạn.
+Trong thế giới dbt, một **Model** đơn giản là một file `.sql` chứa duy nhất một câu lệnh `SELECT` (có thể kết hợp với các mã Jinja để tối ưu hóa). Mỗi Model này khi chạy sẽ được dbt biên dịch và tạo thành một bảng vật lý (Table) hoặc một khung nhìn ảo (View) tương ứng trên [Data Warehouse](/concepts/data-warehouse/data-warehouse/) của bạn.
 
 Để quản lý hàng trăm, hàng ngàn Models một cách khoa học, chúng ta áp dụng mô hình phân tầng dữ liệu — cho phép dữ liệu chảy tuần tự từ thô đến thành phẩm. Quy tắc vàng là: *Một model ở tầng trên chỉ được phép đọc dữ liệu từ các tầng thấp hơn hoặc cùng cấp, tuyệt đối không được gọi ngược (Circular dependency) hoặc gọi tắt (Bypass).*
 
@@ -28,7 +28,7 @@ Hãy tưởng tượng một kịch bản: Bạn Analyst thứ nhất cần làm
 Kiến trúc phân tầng ra đời để đóng vai trò như một "tấm khiên" bảo vệ hệ thống:
 1. **Lớp trừu tượng (Staging)** giúp cô lập các thay đổi ở nguồn. Nếu nguồn đổi cấu trúc, bạn chỉ cần sửa ở duy nhất một nơi.
 2. **Loại bỏ trùng lặp code (DRY - Don't Repeat Yourself)**: Các logic dùng chung được đưa vào các bảng trung gian để tái sử dụng.
-3. **Đồ thị luồng dữ liệu (DAG)** rõ ràng, giúp dễ dàng kiểm tra nguồn gốc và debug khi có sự cố.
+3. **Đồ thị luồng dữ liệu ([DAG](/concepts/orchestration/dag/))** rõ ràng, giúp dễ dàng kiểm tra nguồn gốc và debug khi có sự cố.
 
 ---
 
@@ -38,21 +38,21 @@ Một thư mục dự án dbt tiêu chuẩn được tổ chức thành 3 lớp 
 
 ```mermaid
 graph LR
-    subgraph "1. RAW SOURCES (Thô)"
+    subgraph RawLayer ["1. RAW SOURCES (Thô)"]
         A["(stripe.raw_payments)"]
         B["(shopify.raw_orders)"]
     end
 
-    subgraph "2. STAGING LAYER (Màng lọc 1-1)"
+    subgraph StagingLayer ["2. STAGING LAYER (Màng lọc 1-1)"]
         C["stg_stripe__payments"]
         D["stg_shopify__orders"]
     end
 
-    subgraph "3. INTERMEDIATE LAYER (Xào nấu)"
+    subgraph IntermediateLayer ["3. INTERMEDIATE LAYER (Xào nấu)"]
         E["int_payments_pivoted"]
     end
 
-    subgraph "4. MARTS LAYER (Hiển thị)"
+    subgraph MartsLayer ["4. MARTS LAYER (Hiển thị)"]
         F["fct_orders"]
     end
 
@@ -64,9 +64,9 @@ graph LR
     E -. ref() .-> F
     D -. ref() .-> F
 
-    style 2 fill:#e1f5fe,stroke:#01579b
-    style 3 fill:#fff3e0,stroke:#e65100
-    style 4 fill:#e8f5e9,stroke:#2e7d32
+    style StagingLayer fill:#e1f5fe,stroke:#01579b
+    style IntermediateLayer fill:#fff3e0,stroke:#e65100
+    style MartsLayer fill:#e8f5e9,stroke:#2e7d32
 ```
 
 ### 1. Tầng Staging (Làm sạch cơ bản)
@@ -195,4 +195,4 @@ SELECT * FROM renamed_and_casted
 
 ## English Summary
 
-In the dbt ecosystem, organizing SQL transformation code into a structured, tiered **Layering Architecture** is vital for maintainability and preventing "spaghetti dependency" graphs. The standard pattern divides models into three core layers: **Staging** (1-to-1 with raw sources, focused strictly on cleaning, renaming, and type-casting without JOINs), **Intermediate** (for complex, modular business logic manipulations), and **Marts** (business-ready facts and dimensions optimized for BI tools). Strictly enforcing the rule that data must flow downstream (e.g., Marts can only reference Staging or Intermediate models, never raw sources directly) creates a robust abstraction layer. This allows teams to adapt to upstream schema changes by updating just a single staging file, keeping the rest of the enterprise data warehouse untouched and error-free.
+In the dbt ecosystem, organizing [SQL transformation](/concepts/transformation-analytics/sql-transformation/) code into a structured, tiered **Layering Architecture** is vital for maintainability and preventing "spaghetti dependency" graphs. The standard pattern divides models into three core layers: **Staging** (1-to-1 with raw sources, focused strictly on cleaning, renaming, and type-casting without JOINs), **Intermediate** (for complex, modular business logic manipulations), and **Marts** (business-ready facts and dimensions optimized for BI tools). Strictly enforcing the rule that data must flow downstream (e.g., Marts can only reference Staging or Intermediate models, never raw sources directly) creates a robust abstraction layer. This allows teams to adapt to upstream schema changes by updating just a single staging file, keeping the rest of the enterprise data warehouse untouched and error-free.

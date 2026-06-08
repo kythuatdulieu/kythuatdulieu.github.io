@@ -11,7 +11,7 @@ metaDescription: "Tìm hiểu các mô hình nhúng (Embedding Models), kiến t
 
 Máy tính là một cỗ máy xử lý số học thuần túy. Nó không thể trực tiếp đọc hiểu các văn bản, ngắm nhìn các bức ảnh hay lắng nghe các file âm thanh theo cách tự nhiên của con người. Để máy tính có thể "hiểu" và xử lý được các dạng dữ liệu phi cấu trúc này, chúng ta cần một chiếc cầu nối dịch thuật đặc biệt. 
 
-Chiếc cầu nối đó chính là **Các mô hình nhúng (Embedding Models)** – một trong những mảnh ghép công nghệ quan trọng nhất đứng sau sự bùng nổ của Trí tuệ Nhân tạo thế hệ mới (GenAI), các hệ thống tìm kiếm ngữ nghĩa (Semantic Search) và RAG (Retrieval-Augmented Generation).
+Chiếc cầu nối đó chính là **Các mô hình nhúng (Embedding Models)** – một trong những mảnh ghép công nghệ quan trọng nhất đứng sau sự bùng nổ của Trí tuệ Nhân tạo thế hệ mới (GenAI), các hệ thống tìm kiếm ngữ nghĩa (Semantic Search) và [RAG](/concepts/genai-ml/rag/) (Retrieval-Augmented Generation).
 
 ## Từ thế giới phi cấu trúc đến những con số biết nói
 
@@ -44,9 +44,11 @@ graph TD
     Tokenizer --> Transformer["2. Transformer Network (Chú ý ngữ cảnh)"]
     Transformer --> Pooling["3. Pooling/Aggregation (Gom cụm)"]
     Pooling --> Vector["Dense Vector Array (Vectơ nhúng tĩnh)"]
+
+
 ```
 
-1. **Phân tách từ (Tokenization)**: Văn bản đầu vào được chia nhỏ thành các mảnh nhỏ gọi là token (có thể là từ hoặc cụm ký tự).
+1. **Phân tách từ (Tokenization)**: Văn bản đầu vào được chia nhỏ thành các mảnh nhỏ gọi là [token](/concepts/genai-ml/token/) (có thể là từ hoặc cụm ký tự).
 2. **Transformer Network**: Các token được đưa qua các lớp Transformer. Tại đây, cơ chế Self-Attention sẽ giúp các token "giao tiếp" và ảnh hưởng lẫn nhau để xác định ngữ cảnh chính xác của toàn câu.
 3. **Gom cụm (Pooling)**: Mô hình sẽ tổng hợp các vectơ riêng lẻ của từng token thành một vectơ duy nhất đại diện cho cả câu (ví dụ: lấy trung bình cộng - Mean Pooling, hoặc lấy vectơ của token đặc biệt `[CLS]` đứng ở đầu câu).
 
@@ -92,11 +94,11 @@ print(f"Độ tương đồng giữa câu 1 và câu 3: {cosine_scores[0][2]:.4f
 ### Điểm mạnh
 * Giải quyết triệt để bài toán tìm kiếm ngữ nghĩa, hiểu được các từ đồng nghĩa, trái nghĩa hoặc diễn đạt khác nhau mà các hệ thống tìm kiếm từ khóa truyền thống chào thua.
 * Cho phép tìm kiếm xuyên ngôn ngữ (ví dụ người dùng gõ câu hỏi tiếng Việt nhưng hệ thống vẫn tìm ra câu trả lời nằm ở tài liệu tiếng Anh).
-* Nền tảng cốt lõi giúp các ứng dụng GenAI/LLM trả lời câu hỏi dựa trên tài nguyên nội bộ mà không bị ảo tưởng (hallucination).
+* Nền tảng cốt lõi giúp các ứng dụng GenAI/[LLM](/concepts/genai-ml/llm/) trả lời câu hỏi dựa trên tài nguyên nội bộ mà không bị ảo tưởng ([hallucination](/concepts/genai-ml/hallucination/)).
 
 ### Điểm yếu
 * **Tính hộp đen (Black-box)**: Rất khó để giải thích chi tiết về mặt toán học tại sao mô hình lại xếp hai câu văn cụ thể có độ tương đồng 0.85.
-* **Làm mờ thông tin chính xác**: Các từ khóa cực kỳ đặc thù như mã sản phẩm (SKU), tên riêng, số điện thoại hay mã lỗi hệ thống thường bị hòa tan vào không gian ngữ nghĩa tổng thể. Vì vậy, tìm kiếm bằng mô hình nhúng nên được kết hợp với tìm kiếm từ khóa truyền thống (gọi là *Hybrid Search*) để có kết quả tốt nhất.
+* **Làm mờ thông tin chính xác**: Các từ khóa cực kỳ đặc thù như mã sản phẩm (SKU), tên riêng, số điện thoại hay mã lỗi hệ thống thường bị hòa tan vào không gian ngữ nghĩa tổng thể. Vì vậy, tìm kiếm bằng mô hình nhúng nên được kết hợp với tìm kiếm từ khóa truyền thống (gọi là *[Hybrid Search](/concepts/genai-ml/hybrid-search/)*) để có kết quả tốt nhất.
 
 ## Khái niệm liên quan
 

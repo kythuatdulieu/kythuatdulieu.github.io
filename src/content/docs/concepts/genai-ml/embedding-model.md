@@ -9,7 +9,7 @@ seoTitle: "Cấu trúc và cách huấn luyện Embedding Model (Mô hình nhún
 metaDescription: "Đi sâu vào kiến trúc bên trong của một Embedding Model, phương pháp học đối chiếu (Contrastive Learning) và các kiến trúc như Bi-Encoder, Cross-Encoder."
 ---
 
-Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng RAG (Retrieval-Augmented Generation) hay tìm kiếm ngữ nghĩa (Semantic Search), chúng ta thường nghe rất nhiều về thuật ngữ "nhúng" (embedding). Nhưng dưới góc nhìn của một kỹ sư thiết kế hệ thống, một **Mô hình nhúng (Embedding Model)** thực chất hoạt động như thế nào ở tầng kiến trúc sâu (architecture-level)? 
+Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng [RAG](/concepts/genai-ml/rag/) (Retrieval-Augmented Generation) hay tìm kiếm ngữ nghĩa (Semantic Search), chúng ta thường nghe rất nhiều về thuật ngữ "nhúng" (embedding). Nhưng dưới góc nhìn của một kỹ sư thiết kế hệ thống, một **Mô hình nhúng (Embedding Model)** thực chất hoạt động như thế nào ở tầng kiến trúc sâu (architecture-level)? 
 
 Làm sao để một mạng nơ-ron học sâu (Deep Neural Network) có thể biến những đoạn văn bản phi cấu trúc, những bức ảnh hay âm thanh thành các vectơ số học nhưng vẫn giữ nguyên vẹn "ý nghĩa" của chúng? Chúng ta hãy cùng bóc tách kiến trúc bên trong, phương pháp huấn luyện cũng như cách tối ưu hóa các mô hình này.
 
@@ -23,10 +23,10 @@ Mô hình này sở hữu hàng triệu hoặc hàng tỷ tham số (weights) đ
 
 Vào thời kỳ đầu của NLP (Xử lý ngôn ngữ tự nhiên) sử dụng Deep Learning, người ta thường dùng chung một mạng nơ-ron khổng lồ để làm mọi tác vụ từ dịch thuật, phân loại cho đến sinh văn bản. Tuy nhiên, khi đối mặt với bài toán tìm kiếm thông tin trong một kho tài liệu khổng lồ lên tới hàng chục triệu bản ghi, cách tiếp cận này vấp phải rào cản hiệu năng vô cùng lớn. 
 
-Việc chạy một mô hình ngôn ngữ lớn (LLM) để so sánh câu hỏi của người dùng với từng tài liệu trong database là điều không tưởng vì chi phí tính toán ($O(N)$ độ phức tạp) quá lớn và độ trễ quá cao.
+Việc chạy một mô hình ngôn ngữ lớn ([LLM](/concepts/genai-ml/llm/)) để so sánh câu hỏi của người dùng với từng tài liệu trong database là điều không tưởng vì chi phí tính toán ($O(N)$ độ phức tạp) quá lớn và độ trễ quá cao.
 
 Để giải quyết bài toán này, Embedding Model được tách ra thành một thành phần độc lập. Nó chỉ làm đúng một nhiệm vụ duy nhất: nhận đầu vào và nhả ra một vectơ tĩnh đại diện cho nội dung đó. Nhờ vậy, chúng ta có thể:
-1. Tính toán trước (pre-compute) vectơ cho toàn bộ tài liệu trong hệ thống (gọi là *Offline Indexing*) và lưu trữ chúng vào một Vector Database.
+1. Tính toán trước (pre-compute) vectơ cho toàn bộ tài liệu trong hệ thống (gọi là *Offline [Indexing](/concepts/database-storage/indexing/)*) và lưu trữ chúng vào một [Vector Database](/concepts/genai-ml/vector-database/).
 2. Khi người dùng nhập câu hỏi, hệ thống chỉ cần chạy Embedding Model đúng một lần duy nhất để lấy vectơ câu hỏi.
 3. Sau đó, việc tìm kiếm tài liệu tương thích chỉ đơn giản là các phép toán so sánh vectơ (như Cosine Similarity) diễn ra với tốc độ micro-giây trực tiếp trên Vector DB.
 
@@ -66,10 +66,12 @@ graph TD
     D1["Câu A + Câu B"] --> E1["Transformer với Cross-Attention"]
     E1 --> F1["Điểm số Tương đồng 0.0 - 1.0"]
     end
+
+
 ```
 
 * **Bi-Encoder**: Xử lý độc lập Câu A và Câu B qua mạng nơ-ron để tạo ra hai vectơ tĩnh, sau đó mới tính độ tương đồng bằng Cosine Similarity. Đây chính là kiến trúc của các Embedding Model. Nó cực kỳ nhanh vì có thể tính toán trước và lưu trữ vectơ.
-* **Cross-Encoder**: Nạp đồng thời cả Câu A và Câu B nối liền nhau vào mạng Transformer. Điều này cho phép cơ chế Attention của mô hình phân tích mối quan hệ chéo sâu sắc giữa từng từ của Câu A với từng từ của Câu B (*Cross-Attention*). Mô hình này cho kết quả chính xác vượt trội nhưng không tạo ra vectơ tĩnh để lưu trữ. Mọi so sánh phải chạy trực tiếp qua mạng nơ-ron tại thời điểm tìm kiếm, khiến nó rất chậm và không thể dùng để tìm kiếm trên hàng triệu tài liệu. Do đó, Cross-Encoder thường chỉ được dùng làm mô hình xếp hạng lại (**Reranker**) cho Top-50 hay Top-100 kết quả tìm được từ Vector DB.
+* **Cross-Encoder**: Nạp đồng thời cả Câu A và Câu B nối liền nhau vào mạng Transformer. Điều này cho phép cơ chế Attention của mô hình phân tích mối quan hệ chéo sâu sắc giữa từng từ của Câu A với từng từ của Câu B (*Cross-Attention*). Mô hình này cho kết quả chính xác vượt trội nhưng không tạo ra vectơ tĩnh để lưu trữ. Mọi so sánh phải chạy trực tiếp qua mạng nơ-ron tại thời điểm tìm kiếm, khiến nó rất chậm và không thể dùng để tìm kiếm trên hàng triệu tài liệu. Do đó, Cross-Encoder thường chỉ được dùng làm mô hình xếp hạng lại (**[Reranker](/concepts/genai-ml/reranker/)**) cho Top-50 hay Top-100 kết quả tìm được từ Vector DB.
 
 ## Thực hành: Tự fine-tune Embedding Model với Sentence-Transformers
 
@@ -101,7 +103,7 @@ model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=3, warmup_st
 ## Những chỉ dẫn thiết kế và sai lầm thường gặp
 
 ### Chỉ dẫn thiết kế (Best Practices)
-* **Kiên định với phương pháp Pooling**: Một mạng Transformer sẽ xuất ra vectơ cho từng từ (token) một. Để gộp tất cả thành một vectơ tĩnh đại diện cho toàn bộ câu, chúng ta phải dùng phương pháp gom cụm: lấy trung bình cộng tất cả các token (Mean Pooling) hoặc lấy riêng vectơ của token đặc biệt `[CLS]` ở đầu. Hãy đảm bảo bạn sử dụng đúng phương pháp Pooling mà mô hình đó đã được thiết kế và huấn luyện.
+* **Kiên định với phương pháp Pooling**: Một mạng Transformer sẽ xuất ra vectơ cho từng từ ([token](/concepts/genai-ml/token/)) một. Để gộp tất cả thành một vectơ tĩnh đại diện cho toàn bộ câu, chúng ta phải dùng phương pháp gom cụm: lấy trung bình cộng tất cả các token (Mean Pooling) hoặc lấy riêng vectơ của token đặc biệt `[CLS]` ở đầu. Hãy đảm bảo bạn sử dụng đúng phương pháp Pooling mà mô hình đó đã được thiết kế và huấn luyện.
 * **Huấn luyện với Hard Negatives**: Khi tự huấn luyện mô hình, nếu bạn chỉ đưa vào những ví dụ tiêu cực (Negative) quá dễ phân biệt (ví dụ: Anchor="Nấu phở bò", Negative="Thời tiết hôm nay"), mô hình sẽ học rất hời hợt. Hãy đưa vào các mẫu **Hard Negatives** – những câu trông rất giống nhưng thực tế lại khác nghĩa (ví dụ: Anchor="Cách nấu phở bò", Hard Negative="Cách nấu phở gà"). Điều này ép buộc mô hình phải học cách phân biệt những chi tiết ngữ nghĩa tinh vi nhất.
 
 ### Sai lầm dễ mắc phải (Common Mistakes)

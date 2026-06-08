@@ -19,12 +19,12 @@ Phương pháp luận Inmon (thường gắn liền với mô hình **Corporate 
 
 ## Tại sao triết lý Inmon lại ra đời?
 
-Hãy tưởng tượng một tập đoàn đa quốc gia có hàng trăm hệ thống giao dịch (OLTP) khác nhau hoạt động độc lập. Nếu cho phép mỗi phòng ban tự định nghĩa các bảng dữ liệu (Data Mart) theo nhu cầu riêng (Bottom-up), về lâu dài hệ thống sẽ rơi vào trạng thái mâu thuẫn thông tin nghiêm trọng. Phòng Marketing báo cáo số lượng khách hàng hoạt động một kiểu, phòng Tài chính lại ra một con số hoàn toàn khác do cách định nghĩa logic lệch nhau.
+Hãy tưởng tượng một tập đoàn đa quốc gia có hàng trăm hệ thống giao dịch ([OLTP](/concepts/database-storage/oltp/)) khác nhau hoạt động độc lập. Nếu cho phép mỗi phòng ban tự định nghĩa các bảng dữ liệu (Data Mart) theo nhu cầu riêng (Bottom-up), về lâu dài hệ thống sẽ rơi vào trạng thái mâu thuẫn thông tin nghiêm trọng. Phòng Marketing báo cáo số lượng khách hàng hoạt động một kiểu, phòng Tài chính lại ra một con số hoàn toàn khác do cách định nghĩa logic lệch nhau.
 
 Tư duy kiến trúc của Inmon ra đời để giải quyết triệt để hai bài toán lớn ở quy mô doanh nghiệp lớn:
 
-1. **Quản trị dữ liệu chặt chẽ (Data Governance)**: Do tính chất không trùng lặp của chuẩn hóa 3NF, mọi thay đổi về cấu trúc kinh doanh của doanh nghiệp chỉ cần được khai báo và cập nhật tại một điểm duy nhất (Core EDW) mà không sợ ảnh hưởng dây chuyền đến các bảng khác.
-2. **Bảo toàn dữ liệu nguyên tử (Atomic Data)**: Dữ liệu được lưu trữ ở mức độ chi tiết nguyên bản nhất. Điều này cực kỳ quan trọng cho các hoạt động kiểm toán, đối soát tài chính hoặc khai phá dữ liệu (Data Mining) của các nhà khoa học dữ liệu — những tác vụ mà cấu trúc tổng hợp của Star Schema (Kimball) đôi khi vô tình làm mất mát thông tin.
+1. **Quản trị dữ liệu chặt chẽ ([Data Governance](/concepts/governance-metadata/data-governance/))**: Do tính chất không trùng lặp của chuẩn hóa 3NF, mọi thay đổi về cấu trúc kinh doanh của doanh nghiệp chỉ cần được khai báo và cập nhật tại một điểm duy nhất (Core EDW) mà không sợ ảnh hưởng dây chuyền đến các bảng khác.
+2. **Bảo toàn dữ liệu nguyên tử (Atomic Data)**: Dữ liệu được lưu trữ ở mức độ chi tiết nguyên bản nhất. Điều này cực kỳ quan trọng cho các hoạt động kiểm toán, đối soát tài chính hoặc khai phá dữ liệu (Data Mining) của các nhà khoa học dữ liệu — những tác vụ mà cấu trúc tổng hợp của [Star Schema](/concepts/data-warehouse/star-schema/) (Kimball) đôi khi vô tình làm mất mát thông tin.
 
 ## Triết lý cốt lõi: Top-down và Chuẩn hóa 3NF
 
@@ -51,7 +51,7 @@ graph LR
     end
 
     subgraph Corporate Information Factory
-        E[(Enterprise Data Warehouse\nNormalized 3NF)]
+        E["Enterprise Data Warehouse<br/>Normalized 3NF"]
     end
 
     subgraph ETL 2
@@ -59,8 +59,8 @@ graph LR
     end
 
     subgraph Departmental Data Marts
-        G[(Sales Mart\nStar Schema)]
-        H[(HR Mart\nStar Schema)]
+        G["Sales Mart<br/>Star Schema"]
+        H["HR Mart<br/>Star Schema"]
     end
 
     subgraph Consumption
@@ -120,7 +120,7 @@ CREATE TABLE edw_customer_address (
 );
 ```
 
-Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình ETL thứ hai (ETL 2) mới tiến hành tổng hợp, nối các bảng này lại thành một bảng duy nhất để đẩy ra Sales Data Mart cho nhân viên kinh doanh làm báo cáo doanh thu.
+Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình [ETL](/concepts/etl-elt/etl/) thứ hai (ETL 2) mới tiến hành tổng hợp, nối các bảng này lại thành một bảng duy nhất để đẩy ra Sales Data Mart cho nhân viên kinh doanh làm báo cáo doanh thu.
 
 ## Quy tắc thực thi thành công
 
@@ -174,7 +174,7 @@ Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình E
   * Theo phương pháp luận **Inmon (Top-down)**: Data Mart là sản phẩm thứ cấp (Dependent Data Mart). Bạn bắt buộc phải xây dựng thành công Core EDW theo chuẩn 3NF trước. Sau đó, dữ liệu của các Data Mart phòng ban mới được trích xuất và tổng hợp ra từ lõi EDW này, tuyệt đối không lấy trực tiếp từ nguồn thô.
 
 ### 3. Trong kiến trúc Inmon, khi phát sinh nhu cầu xây dựng một Data Mart mới cho phòng ban, quy trình triển khai của đội ngũ dữ liệu sẽ diễn ra như thế nào?
-* **Mục đích câu hỏi**: Đánh giá khả năng quy hoạch và thiết lập quy trình ETL/ELT hai tầng theo đúng chuẩn Corporate Information Factory.
+* **Mục đích câu hỏi**: Đánh giá khả năng quy hoạch và thiết lập quy trình ETL/[ELT](/concepts/etl-elt/elt/) hai tầng theo đúng chuẩn Corporate Information Factory.
 * **Gợi ý trả lời**: Luồng công việc sẽ được thực hiện tuần tự theo các bước:
   1. Đội ngũ dữ liệu sẽ kiểm tra xem các trường thông tin cần thiết phục vụ cho phòng ban đó đã có sẵn trong Core EDW (3NF) chưa.
   2. Nếu chưa có, chúng tôi sẽ tiến hành viết luồng ETL thứ nhất (ETL 1) để kéo dữ liệu thô từ hệ thống nguồn vào vùng Staging, làm sạch và nạp vào Core EDW dưới dạng mô hình chuẩn hóa 3NF.
@@ -186,7 +186,7 @@ Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình E
 2. [Corporate Information Factory, 2nd Edition](https://www.oreilly.com/library/view/corporate-information-factory/9780471399612/) - W.H. Inmon, Claudia Imhoff, and Ryan Sousa's guide to the CIF framework on O'Reilly.
 3. [What is a Data Warehouse?](https://www.databricks.com/glossary/data-warehouse) - An entry in the Databricks Glossary outlining the Inmon Top-Down methodology and Corporate Information Factory design.
 4. [Difference between Kimball and Inmon](https://www.geeksforgeeks.org/difference-between-kimball-and-inmon/) - Comparison of architecture, deployment, and data modeling between the two schools of thought on GeeksforGeeks.
-5. Kimball vs. Inmon: Two School of Thoughts - Structured comparison of the two classic approaches to data warehouse design from the Holistics Analytics Setup Guide.
+5. [Kimball vs. Inmon: Two School of Thoughts](https://www.holistics.io/books/setup-analytics/kimball-vs-inmon-two-schools-of-thought/) - Structured comparison of the two classic approaches to data warehouse design from the Holistics Analytics Setup Guide.
 
 ## English Summary
 

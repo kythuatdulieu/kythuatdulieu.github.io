@@ -76,7 +76,7 @@ graph TD
 ```
 
 1. **Producer (Người phát hành sự kiện)**: Các dịch vụ nghiệp vụ ghi nhận sự thay đổi trạng thái. Chúng đóng gói thông tin vào một định dạng tin nhắn chuẩn (như JSON) và gửi vào một chủ đề (Topic) trên Event Broker.
-2. **Event Broker / Router (Trạm trung chuyển)**: Một hệ thống phần mềm cực kỳ bền bỉ (ví dụ Apache Kafka, RabbitMQ, AWS EventBridge). Broker có nhiệm vụ nhận tin nhắn, ghi an toàn xuống đĩa cứng và phân phối chúng đến các dịch vụ đăng ký theo dõi.
+2. **Event Broker / Router (Trạm trung chuyển)**: Một hệ thống phần mềm cực kỳ bền bỉ (ví dụ [Apache Kafka](/concepts/streaming-processing/apache-kafka/), RabbitMQ, AWS EventBridge). Broker có nhiệm vụ nhận tin nhắn, ghi an toàn xuống đĩa cứng và phân phối chúng đến các dịch vụ đăng ký theo dõi.
 3. **Consumer (Người tiêu thụ)**: Các dịch vụ nghiệp vụ độc lập đăng ký lắng nghe một Topic cụ thể. Khi có sự kiện mới, Broker sẽ đẩy gói tin xuống để Consumer tự động thực thi logic nghiệp vụ của nó.
 
 ## Ví dụ thực tế: Hệ thống gọi xe công nghệ vận hành ra sao?
@@ -171,7 +171,7 @@ Không nên áp dụng EDA cho các ứng dụng nhỏ nguyên khối (Monolith)
 ## Góc phỏng vấn
 
 ### 1. Phân biệt sự khác nhau giữa Choreography và Orchestration trong Microservices. Kiến trúc hướng sự kiện đi theo mô hình nào?
-* **Gợi ý trả lời**: Orchestration (Chỉ huy) là mô hình giao tiếp có một dịch vụ trung tâm đóng vai trò nhạc trưởng (Orchestrator) ra lệnh tuần tự cho các dịch vụ khác thực hiện công việc. Mô hình này giúp kiểm soát luồng nghiệp vụ chặt chẽ nhưng lại tạo ra điểm nghẽn và rủi ro Single Point of Failure tại Orchestrator. Ngược lại, Choreography (Tự biên đạo) là mô hình phân tán, không có ai chỉ huy. Mỗi dịch vụ tự lắng nghe các tín hiệu (sự kiện) và tự động thực thi logic nghiệp vụ của riêng mình. Kiến trúc hướng sự kiện (EDA) là biểu hiện rõ nét nhất của mô hình Choreography, mang lại sự linh hoạt và khả năng mở rộng tối đa cho hệ thống.
+* **Gợi ý trả lời**: [Orchestration](/concepts/orchestration/orchestration/) (Chỉ huy) là mô hình giao tiếp có một dịch vụ trung tâm đóng vai trò nhạc trưởng (Orchestrator) ra lệnh tuần tự cho các dịch vụ khác thực hiện công việc. Mô hình này giúp kiểm soát luồng nghiệp vụ chặt chẽ nhưng lại tạo ra điểm nghẽn và rủi ro Single Point of Failure tại Orchestrator. Ngược lại, Choreography (Tự biên đạo) là mô hình phân tán, không có ai chỉ huy. Mỗi dịch vụ tự lắng nghe các tín hiệu (sự kiện) và tự động thực thi logic nghiệp vụ của riêng mình. Kiến trúc hướng sự kiện (EDA) là biểu hiện rõ nét nhất của mô hình Choreography, mang lại sự linh hoạt và khả năng mở rộng tối đa cho hệ thống.
 
 ### 2. Sự khác biệt giữa Event Notification và Event-carried State Transfer là gì?
 * **Gợi ý trả lời**: 
@@ -180,9 +180,9 @@ Không nên áp dụng EDA cho các ứng dụng nhỏ nguyên khối (Monolith)
 
 ## Tài liệu tham khảo
 
-1. **Designing Event-Driven Systems** - Ben Stopford.
-2. **Building Microservices** - Sam Newman.
+1. [Designing Event-Driven Systems](https://www.confluent.io/designing-event-driven-systems/) - Ben Stopford
+2. [Building Microservices](https://www.oreilly.com/library/view/building-microservices-2nd/9781492034018/) - Sam Newman
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 
-Event-Driven Architecture (EDA) is an asynchronous software design pattern where decoupled services communicate by producing and consuming events—records of state changes—via an event broker (like Kafka). By replacing synchronous API calls with event choreography, EDA prevents cascading failures, eliminates rigid service dependencies, and acts as a shock-absorber during traffic spikes. While it provides unmatched scalability and organizational flexibility (enabling teams to develop and deploy independently), it introduces challenges such as eventual consistency, the necessity for robust idempotency handling, and the complexity of debugging distributed workflows without centralized control.
+Event-Driven Architecture (EDA) is an asynchronous software design pattern where decoupled services communicate by producing and consuming events—records of state changes—via an event broker (like Kafka). By replacing synchronous API calls with event choreography, EDA prevents cascading failures, eliminates rigid service dependencies, and acts as a shock-absorber during traffic spikes. While it provides unmatched scalability and organizational flexibility (enabling teams to develop and deploy independently), it introduces challenges such as eventual consistency, the necessity for robust [idempotency](/concepts/etl-elt/idempotency/) handling, and the complexity of debugging distributed workflows without centralized control.

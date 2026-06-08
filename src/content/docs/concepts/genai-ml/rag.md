@@ -44,27 +44,29 @@ Kiến trúc RAG tiêu chuẩn bao gồm hai luồng quy trình vận hành song
 
 ```mermaid
 flowchart TD
-    subgraph Offline: Data Ingestion Pipeline
-        A[Documents\nPDF, Confluence] --> B[Chunking\nSplit into fragments]
-        B --> C[Embedding Model]
-        C --> D[(Vector Database)]
+    subgraph "Offline: Data Ingestion Pipeline"
+        A["Documents<br/>PDF, Confluence"] --> B["Chunking<br/>Split into fragments"]
+        B --> C["Embedding Model"]
+        C --> D["Vector Database"]
     end
 
-    subgraph Online: Retrieval & Generation Pipeline
-        E[User Query] --> F[Embedding Model]
-        F --> G{Similarity Search}
+    subgraph "Online: Retrieval & Generation Pipeline"
+        E["User Query"] --> F["Embedding Model"]
+        F --> G{"Similarity Search"}
         D -.-> G
-        G -->|Top-K Chunks| H[Prompt Augmentation]
+        G -->|"Top-K Chunks"| H["Prompt Augmentation"]
         E --> H
-        H --> I[LLM Generation]
-        I --> J[Final Answer w/ Citations]
+        H --> I["LLM Generation"]
+        I --> J["Final Answer w/ Citations"]
     end
+
+
 ```
 
 ### 1. Luồng Lập chỉ mục dữ liệu (Offline Data Ingestion)
 Đây là quy trình chạy ngầm để chuẩn bị và số hóa kho tri thức:
 1. **Thu thập (Load)**: Trích xuất nội dung từ các nguồn tài liệu thô như file PDF, trang Confluence, Notion hoặc Jira.
-2. **Cắt nhỏ (Chunking)**: Cắt văn bản dài thành các đoạn nhỏ (chunk) có kích thước tối ưu (ví dụ 512 hoặc 1024 tokens) và có một phần nội dung gối đầu (overlap) để giữ tính liên tục của ngữ cảnh.
+2. **Cắt nhỏ ([Chunking](/concepts/genai-ml/chunking/))**: Cắt văn bản dài thành các đoạn nhỏ (chunk) có kích thước tối ưu (ví dụ 512 hoặc 1024 tokens) và có một phần nội dung gối đầu (overlap) để giữ tính liên tục của ngữ cảnh.
 3. **Mã hóa (Embedding)**: Chạy các đoạn text nhỏ này qua một mô hình Embedding để chuyển đổi chúng thành các vector toán học đa chiều biểu diễn ngữ nghĩa.
 4. **Lưu trữ (Store)**: Lưu các vector này kèm theo siêu dữ liệu (metadata như tên file, đường dẫn URL) vào cơ sở dữ liệu vector (Vector Database).
 
@@ -132,9 +134,9 @@ print(answer)
 * **Ứng dụng mô hình Re-ranking**: Trong các kiến trúc RAG nâng cao, thay vì chỉ lấy Top-K từ Vector DB đổ trực tiếp vào LLM, ta nên lấy dư ra một chút (ví dụ Top 20), sau đó chạy qua một mô hình Cross-Encoder (như Cohere Rerank) để chấm điểm và sắp xếp lại độ liên quan ngữ nghĩa chi tiết hơn, rồi mới lọc lấy Top 5 tốt nhất gửi cho LLM.
 
 ### Những cái bẫy cần tránh
-* **Quá tin vào Vector Search đơn thuần**: Tìm kiếm vector (Semantic Search) đôi khi xử lý rất tệ với các truy vấn chứa từ khóa đặc thù như tên người, mã số sản phẩm hoặc viết tắt. Bạn nên thiết kế hệ thống **Hybrid Search** (kết hợp cả Vector Search ngữ nghĩa và Keyword Search truyền thống như BM25) để có kết quả tìm kiếm tối ưu nhất.
+* **Quá tin vào Vector Search đơn thuần**: Tìm kiếm vector ([Semantic Search](/concepts/genai-ml/semantic-search/)) đôi khi xử lý rất tệ với các truy vấn chứa từ khóa đặc thù như tên người, mã số sản phẩm hoặc viết tắt. Bạn nên thiết kế hệ thống **Hybrid Search** (kết hợp cả Vector Search ngữ nghĩa và Keyword Search truyền thống như BM25) để có kết quả tìm kiếm tối ưu nhất.
 * **Nhồi nhét quá nhiều ngữ cảnh (Context Stuffing)**: Việc cố nhét hàng chục chunk vào prompt sẽ gây ra hiện tượng "lạc lối giữa dòng" (Lost in the middle). LLM sẽ chú ý tốt đến phần đầu và phần cuối prompt mà bỏ qua mất các chi tiết cốt lõi nằm ở giữa, đồng thời làm tăng chi phí API và tăng độ trễ phản hồi.
-* **Bỏ quên phân quyền dữ liệu (Access Control)**: Mỗi tài liệu trong công ty đều có mức độ bảo mật khác nhau. Nếu bạn nạp tất cả vào một Vector DB chung mà không gắn metadata phân quyền truy cập, hệ thống có thể vô tình trích xuất thông tin bảng lương của ban giám đốc để trả lời cho câu hỏi của một nhân viên bình thường.
+* **Bỏ quên phân quyền dữ liệu ([Access Control](/concepts/governance-metadata/access-control/))**: Mỗi tài liệu trong công ty đều có mức độ bảo mật khác nhau. Nếu bạn nạp tất cả vào một Vector DB chung mà không gắn metadata phân quyền truy cập, hệ thống có thể vô tình trích xuất thông tin bảng lương của ban giám đốc để trả lời cho câu hỏi của một nhân viên bình thường.
 
 ## Cân nhắc các điểm đánh đổi
 
@@ -145,7 +147,7 @@ print(answer)
 
 ### Điểm trừ cần lưu ý
 * **Độ trễ hệ thống tăng lên**: Quy trình RAG đòi hỏi thêm thời gian để mã hóa câu hỏi, truy vấn DB vật lý và ghép nối prompt trước khi LLM thực sự bắt đầu sinh chữ.
-* **Độ phức tạp trong vận hành**: Bạn phải quản lý và giám sát đồng thời nhiều thành phần: luồng data pipeline, cơ sở dữ liệu vector, mô hình embedding và mô hình sinh ngôn ngữ.
+* **Độ phức tạp trong vận hành**: Bạn phải quản lý và giám sát đồng thời nhiều thành phần: luồng [data pipeline](/concepts/foundation/data-pipeline/), cơ sở dữ liệu vector, mô hình embedding và mô hình sinh ngôn ngữ.
 * **Sự phụ thuộc vào chất lượng truy xuất**: Nếu bộ phận tìm kiếm (Retrieval) lấy sai tài liệu ở bước đầu, LLM chắc chắn sẽ đưa ra câu trả lời sai lệch bất kể nó có thông minh đến đâu.
 
 ## Các khái niệm liên quan

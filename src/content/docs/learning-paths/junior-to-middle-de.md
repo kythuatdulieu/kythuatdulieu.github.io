@@ -3,7 +3,7 @@ title: Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)
 description: Lộ trình nâng cao năng lực thực chiến, từ kỹ sư sơ cấp lên trung cấp với Dimensional Modeling, ETL/ELT và Cloud Data Warehouse.
 ---
 
-Lộ trình **Junior to Middle Data Engineer** tập trung vào việc phát triển tư duy thiết kế hệ thống và giải quyết các bài toán dữ liệu thực tế tại doanh nghiệp. Nội dung chính bao gồm thiết kế mô hình dữ liệu đa chiều (Dimensional Modeling), tích hợp dữ liệu (ETL/ELT), phân vùng dữ liệu và làm việc với các kho dữ liệu đám mây (Cloud Data Warehouse).
+Lộ trình **Junior to Middle Data Engineer** tập trung vào việc phát triển tư duy thiết kế hệ thống và giải quyết các bài toán dữ liệu thực tế tại doanh nghiệp. Nội dung chính bao gồm thiết kế mô hình dữ liệu đa chiều ([Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/)), tích hợp dữ liệu ([ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/)), phân vùng dữ liệu và làm việc với các kho dữ liệu đám mây (Cloud [Data Warehouse](/concepts/data-warehouse/data-warehouse/)).
 
 ## Đối tượng của lộ trình
 
@@ -22,7 +22,7 @@ Lộ trình này dành riêng cho:
 Để tự tin gánh vác các hệ thống dữ liệu tiêu chuẩn trong doanh nghiệp, bạn cần tập trung phát triển các kỹ năng cốt lõi sau:
 
 ### Bước 1: Làm chủ mô hình hóa đa chiều (Dimensional Modeling)
-Đây là triết lý thiết kế nền tảng cho mọi kho dữ liệu. Bạn cần thấm nhuần các khái niệm kinh điển của Ralph Kimball: từ cách thiết kế **Star Schema** (Lược đồ hình sao) tinh gọn, phân biệt giữa **Fact table** (Bảng chứa các chỉ số đo lường) và **Dimension table** (Bảng chứa các thông tin mô tả ngữ nghĩa). Tư duy thiết kế tốt ở bước này sẽ giúp hệ thống chạy nhanh hơn và người dùng cuối dễ dàng khai thác hơn.
+Đây là triết lý thiết kế nền tảng cho mọi kho dữ liệu. Bạn cần thấm nhuần các khái niệm kinh điển của Ralph Kimball: từ cách thiết kế **[Star Schema](/concepts/data-warehouse/star-schema/)** (Lược đồ hình sao) tinh gọn, phân biệt giữa **[Fact table](/concepts/data-warehouse/fact-table/)** (Bảng chứa các chỉ số đo lường) và **[Dimension table](/concepts/data-warehouse/dimension-table/)** (Bảng chứa các thông tin mô tả ngữ nghĩa). Tư duy thiết kế tốt ở bước này sẽ giúp hệ thống chạy nhanh hơn và người dùng cuối dễ dàng khai thác hơn.
 
 ### Bước 2: Kỹ nghệ tích hợp dữ liệu (ETL vs ELT)
 Hãy hiểu sâu sắc và phân biệt rõ hai tư duy tích hợp dữ liệu phổ biến:
@@ -31,13 +31,13 @@ Hãy hiểu sâu sắc và phân biệt rõ hai tư duy tích hợp dữ liệu 
 Bên cạnh đó, bạn cần học cách tối ưu hóa hiệu năng khi nạp dữ liệu với số lượng lớn (Bulk Loading) để tránh làm nghẽn hệ thống.
 
 ### Bước 3: Phân vùng và Phân cụm dữ liệu (Partitioning & Clustering)
-Khi lượng dữ liệu lên tới hàng triệu hay hàng tỷ dòng, việc quét toàn bộ bảng để lấy thông tin là một "thảm họa" về chi phí và thời gian. Bạn cần làm chủ kỹ thuật chia nhỏ dữ liệu thành các phân vùng vật lý (**Partitioning**) và phân cụm thông minh (**Clustering**) trên cả hệ cơ sở dữ liệu lẫn các định dạng tệp tin lưu trữ tối ưu như Parquet.
+Khi lượng dữ liệu lên tới hàng triệu hay hàng tỷ dòng, việc quét toàn bộ bảng để lấy thông tin là một "thảm họa" về chi phí và thời gian. Bạn cần làm chủ kỹ thuật chia nhỏ dữ liệu thành các phân vùng vật lý (**[Partitioning](/concepts/database-storage/partitioning/)**) và phân cụm thông minh (**[Clustering](/concepts/database-storage/clustering/)**) trên cả hệ cơ sở dữ liệu lẫn các định dạng tệp tin lưu trữ tối ưu như Parquet.
 
 ### Bước 4: Đồng bộ dữ liệu thời gian thực với Change Data Capture (CDC)
-Trong thực tế, bạn không thể cứ quét toàn bộ bảng nguồn để lấy dữ liệu mới mỗi giờ. Bạn cần tìm hiểu cơ chế **CDC (Change Data Capture)** giúp lắng nghe và thu thập các sự thay đổi dữ liệu (thêm, sửa, xóa) từ hệ thống vận hành (OLTP) theo thời gian thực để đồng bộ liên tục về kho dữ liệu phân tích.
+Trong thực tế, bạn không thể cứ quét toàn bộ bảng nguồn để lấy dữ liệu mới mỗi giờ. Bạn cần tìm hiểu cơ chế **CDC ([Change Data Capture](/concepts/etl-elt/change-data-capture/))** giúp lắng nghe và thu thập các sự thay đổi dữ liệu (thêm, sửa, xóa) từ hệ thống vận hành ([OLTP](/concepts/database-storage/oltp/)) theo thời gian thực để đồng bộ liên tục về kho dữ liệu phân tích.
 
 ### Bước 5: Làm chủ kho dữ liệu đám mây (Cloud Data Warehouse)
-Hãy bắt tay vào thực hành trên các nền tảng kho dữ liệu hiện đại và phổ biến nhất hiện nay như Google BigQuery hoặc Snowflake. Học cách vận hành, phân quyền và tối ưu hóa các câu truy vấn phân tích (OLAP) trên các kiến trúc tính toán phân tán này.
+Hãy bắt tay vào thực hành trên các nền tảng kho dữ liệu hiện đại và phổ biến nhất hiện nay như [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/) hoặc [Snowflake](/concepts/cloud-data-platform/snowflake/). Học cách vận hành, phân quyền và tối ưu hóa các câu truy vấn phân tích ([OLAP](/concepts/database-storage/olap/)) trên các kiến trúc tính toán phân tán này.
 
 ## Dự án thực hành nâng tầm kỹ năng
 

@@ -133,7 +133,7 @@ Dưới đây là ví dụ về một gói tin JSON theo tiêu chuẩn mở **Op
 ## Những sai lầm dễ mắc phải
 
 * **Vẽ phả hệ bằng tay**: Thuê nhân sự vẽ lại sơ đồ luồng dữ liệu bằng các công cụ thiết kế đồ họa như Visio hay Lucidchart. Bản vẽ này sẽ nhanh chóng trở nên lạc hậu chỉ sau vài tuần vì hệ thống dữ liệu thực tế luôn biến động liên tục.
-* **Quên mất chặng cuối (The Last Mile)**: Nhiều đội ngũ xây dựng phả hệ rất đẹp từ nguồn thô đến Data Warehouse nhưng lại không kết nối được với các công cụ BI (Tableau, PowerBI). Khi xảy ra sự cố, bạn vẫn không biết báo cáo nào của người dùng cuối đang bị ảnh hưởng.
+* **Quên mất chặng cuối (The Last Mile)**: Nhiều đội ngũ xây dựng phả hệ rất đẹp từ nguồn thô đến [Data Warehouse](/concepts/data-warehouse/data-warehouse/) nhưng lại không kết nối được với các công cụ BI (Tableau, PowerBI). Khi xảy ra sự cố, bạn vẫn không biết báo cáo nào của người dùng cuối đang bị ảnh hưởng.
 * **SQL quá phức tạp làm mù bộ phân tích cú pháp**: Các câu lệnh SQL động (Dynamic SQL), hoặc các đoạn code lồng nhau quá nhiều lớp qua Stored Procedures có thể khiến các công cụ phân tích cú pháp tĩnh đọc sai phả hệ. Hãy cố gắng viết code tường minh và đơn giản hóa logic truy vấn.
 
 ---
@@ -156,11 +156,11 @@ Dưới đây là ví dụ về một gói tin JSON theo tiêu chuẩn mở **Op
 ### 1. Hãy phân biệt Forward Lineage và Backward Lineage. Cho ví dụ thực tế khi sử dụng mỗi loại?
 * **Gợi ý trả lời**: 
   * **Forward Lineage (Truy xuôi)**: Theo dõi đường đi của dữ liệu từ Nguồn đến Đích. Ứng dụng phổ biến nhất là *Phân tích tác động (Impact Analysis)*. Ví dụ: Trước khi xóa một cột trong cơ sở dữ liệu Backend, ta chạy Forward Lineage để kiểm tra xem hành động này sẽ ảnh hưởng đến những bảng dữ liệu và dashboard báo cáo nào ở hạ nguồn để chủ động sửa đổi trước.
-  * **Backward Lineage (Truy ngược)**: Dò ngược đường đi từ Đích về Nguồn. Ứng dụng phổ biến nhất là *Tìm nguyên nhân gốc rễ (Root Cause Analysis)*. Ví dụ: Khi sếp báo cáo số liệu doanh thu trên Dashboard bị sai lệch, ta chạy Backward Lineage để truy tìm ngược lại xem bước biến đổi dữ liệu nào trong pipeline đã tính toán sai, hoặc bảng nguồn nào chưa được cập nhật dữ liệu mới.
+  * **Backward Lineage (Truy ngược)**: Dò ngược đường đi từ Đích về Nguồn. Ứng dụng phổ biến nhất là *Tìm nguyên nhân gốc rễ ([Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/))*. Ví dụ: Khi sếp báo cáo số liệu doanh thu trên Dashboard bị sai lệch, ta chạy Backward Lineage để truy tìm ngược lại xem bước biến đổi dữ liệu nào trong pipeline đã tính toán sai, hoặc bảng nguồn nào chưa được cập nhật dữ liệu mới.
 
 ### 2. Sự khác biệt giữa việc tạo Lineage bằng "Static SQL Parsing" (Phân tích tĩnh) và "Runtime Execution Logs" (Phân tích động) là gì?
 * **Gợi ý trả lời**:
-  * **Static SQL Parsing (Phân tích tĩnh)**: Công cụ sẽ đọc trực tiếp các file code SQL (như dbt models) trước khi chúng được thực thi để xây dựng bản đồ quan hệ. Ưu điểm là lập bản đồ nhanh, biết trước sơ đồ mà không cần chạy code. Nhược điểm là không nhận biết được các logic động sinh ra trong quá trình chạy (như Dynamic SQL hay code Python biến đổi dữ liệu runtime).
+  * **Static SQL Parsing (Phân tích tĩnh)**: Công cụ sẽ đọc trực tiếp các file code SQL (như [dbt models](/concepts/transformation-analytics/dbt-models/)) trước khi chúng được thực thi để xây dựng bản đồ quan hệ. Ưu điểm là lập bản đồ nhanh, biết trước sơ đồ mà không cần chạy code. Nhược điểm là không nhận biết được các logic động sinh ra trong quá trình chạy (như Dynamic SQL hay code Python biến đổi dữ liệu runtime).
   * **Runtime Execution Logs (Phân tích động)**: Hệ thống phân tích log thực tế được ghi nhận trên cơ sở dữ liệu khi câu lệnh được chạy. Ưu điểm là độ chính xác tuyệt đối 100%, ghi nhận đúng những gì thực sự diễn ra tại thời điểm đó. Nhược điểm là code bắt buộc phải được thực thi thành công thì hệ thống mới có thể ghi nhận dữ liệu để vẽ đường phả hệ.
   * *Tóm lại*: Một hệ thống phả hệ dữ liệu hoàn chỉnh nên kết hợp cả hai phương pháp này.
 
@@ -174,4 +174,4 @@ Dưới đây là ví dụ về một gói tin JSON theo tiêu chuẩn mở **Op
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 
-**Data Lineage** is the discipline of mapping and visualizing the lifecycle and flow of data—tracking its provenance from source operational systems, through various ETL/ELT transformation layers, down to its final consumption in BI dashboards or ML models. Represented technically as a Directed Acyclic Graph (DAG), automated lineage (both at table and column levels) is indispensable for Root Cause Analysis (tracing backward to fix pipeline bugs when a dashboard shows corrupted metrics) and Impact Analysis (tracing forward to alert downstream consumers when upstream schemas change). It serves as the definitive map for auditing, regulatory compliance, and maintaining trust in a complex data ecosystem.
+**Data Lineage** is the discipline of mapping and visualizing the lifecycle and flow of data—tracking its provenance from source operational systems, through various [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/) transformation layers, down to its final consumption in BI dashboards or ML models. Represented technically as a Directed Acyclic Graph ([DAG](/concepts/orchestration/dag/)), automated lineage (both at table and column levels) is indispensable for Root Cause Analysis (tracing backward to fix pipeline bugs when a dashboard shows corrupted metrics) and Impact Analysis (tracing forward to alert downstream consumers when upstream schemas change). It serves as the definitive map for auditing, regulatory compliance, and maintaining trust in a complex data ecosystem.

@@ -9,15 +9,15 @@ seoTitle: "Databricks Platform - Nền tảng Lakehouse dữ liệu"
 metaDescription: "Tìm hiểu chi tiết về Nền tảng Databricks: khái niệm Lakehouse, kiến trúc, Apache Spark tối ưu và các câu hỏi phỏng vấn thực tế."
 ---
 
-Nếu bạn từng làm việc trong một dự án dữ liệu lớn (Big Data), chắc hẳn bạn đã quen với cảnh tượng: Đội ngũ Data Engineer loay hoay viết Spark code trên các cụm máy chủ phức tạp; đội ngũ Data Scientist dùng các file Jupyter Notebook rời rạc trên máy cá nhân để train model; còn các Data Analyst lại mệt mỏi chờ đợi dữ liệu được chuyển đổi từ Data Lake sang Data Warehouse để chạy SQL báo cáo. Sự phân mảnh này không chỉ làm chậm tiến độ mà còn tạo ra những bức tường vô hình ngăn cách các phòng ban.
+Nếu bạn từng làm việc trong một dự án dữ liệu lớn (Big Data), chắc hẳn bạn đã quen với cảnh tượng: Đội ngũ Data Engineer loay hoay viết Spark code trên các cụm máy chủ phức tạp; đội ngũ Data Scientist dùng các file Jupyter Notebook rời rạc trên máy cá nhân để train model; còn các Data Analyst lại mệt mỏi chờ đợi dữ liệu được chuyển đổi từ [Data Lake](/concepts/data-lake-lakehouse/data-lake/) sang [Data Warehouse](/concepts/data-warehouse/data-warehouse/) để chạy SQL báo cáo. Sự phân mảnh này không chỉ làm chậm tiến độ mà còn tạo ra những bức tường vô hình ngăn cách các phòng ban.
 
-Đó là lý do **Databricks** ra đời — nền tảng đám mây thống nhất tiên phong đưa ra khái niệm **Lakehouse**, giúp kết hợp hoàn hảo những gì tốt nhất của Data Lake và Data Warehouse vào chung một mái nhà.
+Đó là lý do **Databricks** ra đời — nền tảng đám mây thống nhất tiên phong đưa ra khái niệm **[Lakehouse](/concepts/data-lake-lakehouse/lakehouse/)**, giúp kết hợp hoàn hảo những gì tốt nhất của Data Lake và Data Warehouse vào chung một mái nhà.
 
 ## Databricks thực chất là gì?
 
-**Databricks** là một nền tảng dữ liệu, phân tích và trí tuệ nhân tạo (AI) chạy trên các dịch vụ đám mây lớn (AWS, Azure, GCP). Nền tảng này được sáng lập bởi chính những người cha đẻ của Apache Spark. 
+**Databricks** là một nền tảng dữ liệu, phân tích và trí tuệ nhân tạo (AI) chạy trên các dịch vụ đám mây lớn (AWS, Azure, GCP). Nền tảng này được sáng lập bởi chính những người cha đẻ của [Apache Spark](/concepts/batch-processing/apache-spark/). 
 
-Bằng cách sử dụng công nghệ lưu trữ Delta Lake cùng động cơ tính toán Apache Spark đã được tối ưu hóa vượt bậc, Databricks cho phép doanh nghiệp quản lý toàn bộ vòng đời của dữ liệu trên một hệ thống duy nhất: từ thu nạp dữ liệu thô, xử lý ETL/ELT, phân tích BI, cho đến huấn luyện các mô hình học máy (Machine Learning) và AI.
+Bằng cách sử dụng công nghệ lưu trữ Delta Lake cùng động cơ tính toán Apache Spark đã được tối ưu hóa vượt bậc, Databricks cho phép doanh nghiệp quản lý toàn bộ vòng đời của dữ liệu trên một hệ thống duy nhất: từ thu nạp dữ liệu thô, xử lý [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/), phân tích BI, cho đến huấn luyện các mô hình học máy (Machine Learning) và AI.
 
 ## Giải mã sự trỗi dậy của mô hình Lakehouse
 
@@ -35,33 +35,33 @@ Databricks giải quyết triệt các vấn đề này bằng cách đặt mộ
 Sức mạnh của Databricks được xây dựng dựa trên ba trụ cột công nghệ chính:
 
 * **Apache Spark**: Động cơ tính toán phân tán bộ nhớ trong (in-memory) cực mạnh. Trên Databricks, Spark được tinh chỉnh sâu sắc (dưới tên gọi Photon Engine) để đạt tốc độ xử lý nhanh hơn gấp nhiều lần bản nguồn mở.
-* **Delta Lake**: Lớp định dạng lưu trữ mang lại khả năng giao dịch ACID, quản lý phiên bản dữ liệu (Time Travel) và hỗ trợ xử lý cả dạng lô (Batch) lẫn dạng luồng (Streaming) đồng thời.
-* **MLflow**: Công cụ tiêu chuẩn để quản lý vòng đời phát triển Machine Learning, giúp theo dõi các thí nghiệm, lưu vết tham số và đóng gói mô hình để triển khai dễ dàng.
+* **Delta Lake**: Lớp định dạng lưu trữ mang lại khả năng giao dịch ACID, quản lý phiên bản dữ liệu ([Time Travel](/concepts/data-lake-lakehouse/time-travel/)) và hỗ trợ xử lý cả dạng lô (Batch) lẫn dạng luồng (Streaming) đồng thời.
+* **[MLflow](/concepts/genai-ml/mlflow/)**: Công cụ tiêu chuẩn để quản lý vòng đời phát triển Machine Learning, giúp theo dõi các thí nghiệm, lưu vết tham số và đóng gói mô hình để triển khai dễ dàng.
 
 ## Databricks vận hành như thế nào trong thực tế?
 
-Databricks hoạt động như một tầng tính toán linh hoạt (Compute Layer) nằm trên các dịch vụ lưu trữ đám mây của bạn (như Amazon S3, Azure Data Lake Storage, hay Google Cloud Storage):
+Databricks hoạt động như một tầng tính toán linh hoạt (Compute Layer) nằm trên các dịch vụ lưu trữ đám mây của bạn (như Amazon S3, Azure Data Lake Storage, hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/)):
 
 ```mermaid
 graph TD
-    subgraph Storage Layer
-        A[Amazon S3 / ADLS / GCS]
+    subgraph "Storage Layer"
+        A["Amazon S3 / ADLS / GCS"]
     end
 
-    subgraph Databricks Platform
-        subgraph Storage Foundation
-            B[Delta Lake]
+    subgraph "Databricks Platform"
+        subgraph "Storage Foundation"
+            B["Delta Lake"]
         end
         subgraph Governance
-            C[Unity Catalog]
+            C["Unity Catalog"]
         end
-        subgraph Compute Layer
-            D[Photon Engine / Apache Spark]
+        subgraph "Compute Layer"
+            D["Photon Engine / Apache Spark"]
         end
         subgraph Workspaces
-            E[Data Science & Engineering]
-            F[Databricks SQL]
-            G[Machine Learning]
+            E["Data Science & Engineering"]
+            F["Databricks SQL"]
+            G["Machine Learning"]
         end
     end
 
@@ -71,11 +71,13 @@ graph TD
     D <--> E
     D <--> F
     D <--> G
+
+
 ```
 
 * **Không gian làm việc chung (Workspace)**: Mọi người cộng tác qua giao diện Notebooks hỗ trợ đa ngôn ngữ (Python, SQL, Scala, R). Bạn có thể viết code Python ở ô này và viết SQL ở ô ngay dưới để truy vấn cùng một bảng dữ liệu.
 * **Quản lý cụm tính toán (Clusters)**: Databricks tự động cấp phát, mở rộng hoặc tắt các cụm máy chủ (Clusters) tùy theo tải thực tế. Có hai loại cụm: *Interactive Clusters* (phục vụ lập trình, thử nghiệm) và *Job Clusters* (tự động bật lên để chạy pipeline định kỳ rồi tự tắt đi để tiết kiệm chi phí).
-* **Quản trị tập trung với Unity Catalog**: Tầng quản trị giúp phân quyền bảo mật chi tiết đến từng dòng, từng cột dữ liệu và tự động vẽ lại phả hệ dữ liệu (Data Lineage) giúp bạn biết bảng này được sinh ra từ những nguồn nào.
+* **Quản trị tập trung với [Unity Catalog](/concepts/data-warehouse/unity-catalog/)**: Tầng quản trị giúp phân quyền bảo mật chi tiết đến từng dòng, từng cột dữ liệu và tự động vẽ lại phả hệ dữ liệu ([Data Lineage](/concepts/governance-metadata/data-lineage/)) giúp bạn biết bảng này được sinh ra từ những nguồn nào.
 
 ---
 
@@ -161,4 +163,4 @@ Sau khi ghi, bảng `clickstream_gold` này lập tức hiển thị trong hệ 
 
 ## English Summary
 
-The Databricks Platform is a unified cloud-native analytics environment that pioneers the Lakehouse architecture, combining the scalability and low cost of a Data Lake with the ACID transactions and performance of a Data Warehouse. Built on an optimized Apache Spark engine and Delta Lake, it provides an integrated ecosystem for data engineering, real-time analytics, data science, and machine learning, fostering seamless collaboration across technical teams while managing massive datasets efficiently.
+The Databricks Platform is a unified cloud-native analytics environment that pioneers the Lakehouse architecture, combining the scalability and low cost of a Data Lake with the ACID transactions and performance of a Data Warehouse. Built on an optimized Apache Spark engine and Delta Lake, it provides an integrated ecosystem for [data engineering](/concepts/foundation/data-engineering/), real-time analytics, data science, and machine learning, fostering seamless collaboration across technical teams while managing massive datasets efficiently.

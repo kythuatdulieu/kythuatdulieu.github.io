@@ -11,7 +11,7 @@ metaDescription: "Khám phá khái niệm OLTP (Online Transaction Processing): 
 
 Mỗi khi bạn thực hiện một hành động như thêm hàng vào giỏ trên Shopee, chuyển khoản ngân hàng qua ứng dụng di động, hay đặt mua một vé máy bay trực tuyến, bạn đang trực tiếp tương tác với một hệ thống **OLTP (Online Transaction Processing - Xử lý Giao dịch Trực tuyến)**.
 
-Nếu như các hệ thống phân tích (OLAP) đóng vai trò là "bộ não" giúp doanh nghiệp nhìn nhận lại quá khứ để ra quyết định, thì OLTP chính là "hệ tuần hoàn" giữ cho các ứng dụng vận hành hàng ngày sống sót. 
+Nếu như các hệ thống phân tích ([OLAP](/concepts/database-storage/olap/)) đóng vai trò là "bộ não" giúp doanh nghiệp nhìn nhận lại quá khứ để ra quyết định, thì OLTP chính là "hệ tuần hoàn" giữ cho các ứng dụng vận hành hàng ngày sống sót. 
 
 Nhiệm vụ tối thượng của OLTP là xử lý một lượng khổng lồ các giao dịch (transactions) ngắn, diễn ra liên tục với yêu cầu tốc độ phản hồi cực nhanh (tính bằng mili-giây) và độ chính xác tuyệt đối.
 
@@ -153,7 +153,7 @@ Tất cả các câu lệnh trên đều tận dụng chỉ mục (Index) trên 
 * **Mục đích của người phỏng vấn**: Đánh giá tầm nhìn tổng quan của bạn về cách phân chia hạ tầng dữ liệu trong doanh nghiệp.
 * **Gợi ý trả lời**:
   * **OLTP (Online Transaction Processing)** phục vụ cho các ứng dụng vận hành hàng ngày (Operational). Nó được tối ưu hóa cho tốc độ ghi và cập nhật các giao dịch nhỏ lẻ, ngắn gọn của hàng triệu người dùng đồng thời. Dữ liệu thường được tổ chức theo cấu trúc chuẩn hóa cao (như 3NF) để tránh trùng lặp thông tin.
-  * **OLAP (Online Analytical Processing)** phục vụ cho các ứng dụng phân tích báo cáo (Analytical). Nó được tối ưu hóa cho tốc độ đọc và tính toán tổng hợp dữ liệu trên tập dữ liệu lịch sử khổng lồ. Dữ liệu thường được tổ chức theo cấu trúc phi chuẩn hóa (như Star Schema) để hạn chế các phép JOIN khi truy vấn.
+  * **OLAP (Online Analytical Processing)** phục vụ cho các ứng dụng phân tích báo cáo (Analytical). Nó được tối ưu hóa cho tốc độ đọc và tính toán tổng hợp dữ liệu trên tập dữ liệu lịch sử khổng lồ. Dữ liệu thường được tổ chức theo cấu trúc phi chuẩn hóa (như [Star Schema](/concepts/data-warehouse/star-schema/)) để hạn chế các phép JOIN khi truy vấn.
 
 ### 2. Tại sao lưu trữ dạng dòng (Row-oriented storage) lại là lựa chọn tối ưu cho hệ thống OLTP?
 * **Mục đích của người phỏng vấn**: Đánh giá hiểu biết sâu sắc của bạn về cơ chế lưu trữ vật lý của cơ sở dữ liệu.
@@ -167,7 +167,7 @@ Tất cả các câu lệnh trên đều tận dụng chỉ mục (Index) trên 
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann analyzing transactional database internals, locking, and ACID constraints.
 2. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley describing transactional systems as data sources.
-3. AWS: What is OLTP? - Detailed explanation of OLTP systems, their characteristics, and transactional database architecture.
+3. [AWS: What is OLTP?](https://aws.amazon.com/what-is/oltp/) - Detailed explanation of OLTP systems, their characteristics, and transactional database architecture.
 4. [IBM Topic: Online Transaction Processing (OLTP)](https://www.ibm.com/topics/oltp) - Core reference guide detailing ACID compliance, multi-tier architectures, and operational databases.
 5. [Microsoft Learn: Online Transaction Processing (OLTP)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/online-transaction-processing) - Reference architecture for transactional processing systems and database patterns.
 

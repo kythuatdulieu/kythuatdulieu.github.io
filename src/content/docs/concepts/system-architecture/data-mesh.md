@@ -9,7 +9,7 @@ seoTitle: "Data Mesh - Kiến trúc dữ liệu phân tán theo hướng miền"
 metaDescription: "Tìm hiểu kiến trúc Data Mesh, 4 nguyên tắc cốt lõi của Zhamak Dehghani, sự thay đổi từ Data Lake/Data Warehouse tập trung sang tư duy phi tập trung."
 ---
 
-Trong nhiều thập kỷ, giải pháp kinh điển cho mọi bài toán dữ liệu lớn của doanh nghiệp luôn là: gom tất cả về một kho chứa tập trung – cho dù đó là Data Warehouse hay Data Lake. Thế nhưng, khi quy trình kinh doanh ngày càng phức tạp, việc nhồi nhét hàng vạn luồng dữ liệu từ hàng chục phòng ban khác nhau vào một nơi duy nhất đã vô tình tạo ra một "nút thắt cổ chai" nhân lực và công nghệ khủng khiếp.
+Trong nhiều thập kỷ, giải pháp kinh điển cho mọi bài toán dữ liệu lớn của doanh nghiệp luôn là: gom tất cả về một kho chứa tập trung – cho dù đó là [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hay [Data Lake](/concepts/data-lake-lakehouse/data-lake/). Thế nhưng, khi quy trình kinh doanh ngày càng phức tạp, việc nhồi nhét hàng vạn luồng dữ liệu từ hàng chục phòng ban khác nhau vào một nơi duy nhất đã vô tình tạo ra một "nút thắt cổ chai" nhân lực và công nghệ khủng khiếp.
 
 **Data Mesh** xuất hiện như một làn gió mới, định hình lại toàn bộ cách chúng ta tổ chức con người và hạ tầng kỹ thuật thông qua tư duy phi tập trung (decentralization).
 
@@ -27,7 +27,7 @@ Thay vì giao toàn bộ trách nhiệm lưu trữ và xử lý dữ liệu cho 
 
 Hệ thống lưu trữ tập trung bộc lộ 3 điểm nghẽn lớn khi doanh nghiệp phát triển vượt một ngưỡng quy mô nhất định:
 
-1. **Sự quá tải của đội ngũ trung tâm**: Đội Data Engineering trung tâm phải gánh vác việc xử lý hàng ngàn luồng dữ liệu mà họ không thực sự hiểu sâu về nghiệp vụ kinh doanh thực tế. Họ dễ làm sai lệch ý nghĩa các con số khi viết code biến đổi.
+1. **Sự quá tải của đội ngũ trung tâm**: Đội [Data Engineering](/concepts/foundation/data-engineering/) trung tâm phải gánh vác việc xử lý hàng ngàn luồng dữ liệu mà họ không thực sự hiểu sâu về nghiệp vụ kinh doanh thực tế. Họ dễ làm sai lệch ý nghĩa các con số khi viết code biến đổi.
 2. **Hiện tượng "Garbage In, Garbage Out"**: Đội Backend phát triển ứng dụng (người tạo ra dữ liệu nguồn) không hề có trách nhiệm đối với chất lượng dữ liệu họ tạo ra. Chỉ cần họ âm thầm đổi tên cột trong database, toàn bộ pipeline phân tích ở hạ nguồn sẽ sập, và đội Data trung tâm lại phải đi dọn dẹp hậu quả.
 3. **Giới hạn khả năng mở rộng (Scaling bottleneck)**: Kiến trúc kho dữ liệu nguyên khối (Monolith) ngày càng nặng nề và phức tạp. Mỗi khi có một yêu cầu báo cáo mới, phòng ban nghiệp vụ phải xếp hàng chờ đợi đội Data xử lý trong nhiều tuần, thậm chí nhiều tháng.
 
@@ -65,7 +65,7 @@ graph TD
     ProductB --> Governance
 ```
 
-Để hiện thực hóa khái niệm "Dữ liệu như một Sản phẩm", các kỹ sư nghiệp vụ sẽ đính kèm một file khai báo cấu trúc (Descriptor) dạng YAML cùng kho lưu trữ mã nguồn để công bố sản phẩm dữ liệu này lên hệ thống Data Catalog chung của công ty:
+Để hiện thực hóa khái niệm "Dữ liệu như một Sản phẩm", các kỹ sư nghiệp vụ sẽ đính kèm một file khai báo cấu trúc (Descriptor) dạng YAML cùng kho lưu trữ mã nguồn để công bố sản phẩm dữ liệu này lên hệ thống [Data Catalog](/concepts/governance-metadata/data-catalog/) chung của công ty:
 
 ```yaml
 # data_product_descriptor.yml
@@ -126,7 +126,7 @@ Khi phòng ban Marketing cần phân tích dữ liệu xem phim của khách hà
 ### 1. Sự khác biệt cốt lõi giữa Data Mesh và Data Fabric là gì?
 * **Gợi ý trả lời**:
   * **Data Mesh** tiếp cận bài toán dữ liệu chủ yếu từ góc độ **tổ chức và văn hóa con người**. Nó chia nhỏ quyền sở hữu dữ liệu theo miền nghiệp vụ và coi dữ liệu như sản phẩm phân tán.
-  * **Data Fabric** ngược lại tiếp cận từ góc độ **công nghệ tự động hóa**. Nó sử dụng Trí tuệ nhân tạo (AI/ML) và Siêu dữ liệu chủ động (Active Metadata) để tự động hóa việc phát hiện, kết nối các nguồn dữ liệu vật lý nằm phân tán lại với nhau thành một lớp lưới ảo hóa thống nhất.
+  * **[Data Fabric](/concepts/system-architecture/data-fabric/)** ngược lại tiếp cận từ góc độ **công nghệ tự động hóa**. Nó sử dụng Trí tuệ nhân tạo (AI/ML) và Siêu dữ liệu chủ động (Active Metadata) để tự động hóa việc phát hiện, kết nối các nguồn dữ liệu vật lý nằm phân tán lại với nhau thành một lớp lưới ảo hóa thống nhất.
   * *Tóm lại*: Data Mesh giải quyết bài toán bằng cách thay đổi hành vi và phân chia vai trò con người; Data Fabric giải quyết bằng cách áp dụng công nghệ tự động hóa của máy móc.
 
 ### 2. Định nghĩa khái niệm "Dữ liệu như một Sản phẩm" (Data as a Product) trong mô hình Data Mesh?
@@ -135,11 +135,11 @@ Khi phòng ban Marketing cần phân tích dữ liệu xem phim của khách hà
 ---
 
 ## Tài liệu tham khảo hữu ích
-1. **Data Mesh: Delivering Data-Driven Value at Scale** - Zhamak Dehghani (Cuốn sách nền tảng khai sinh ra khái niệm).
-2. **MartinFowler.com** - Bài viết chuyên sâu: "How to Move Beyond a Monolithic Data Lake to a Distributed Data Mesh".
+1. [Data Mesh: Delivering Data-Driven Value at Scale](https://www.oreilly.com/library/view/data-mesh/9781492092384/) - Zhamak Dehghani
+2. [MartinFowler.com - How to Move Beyond a Monolithic Data Lake to a Distributed Data Mesh](https://martinfowler.com/articles/data-monolith-to-mesh.html)
 
 ---
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 
-**Data Mesh** is a decentralized, socio-technical architectural paradigm proposed by Zhamak Dehghani that shifts data ownership from a centralized data team to domain-oriented business teams. Built on four core pillars—domain ownership, data as a product, self-serve data infrastructure, and federated computational governance—it treats data similarly to microservices. This approach resolves the bottleneck of a centralized Data Engineering team, empowering domains that best understand their data to create, maintain, and share high-quality data products across the enterprise.
+**Data Mesh** is a decentralized, socio-technical architectural paradigm proposed by Zhamak Dehghani that shifts [data ownership](/concepts/governance-metadata/data-ownership/) from a centralized data team to domain-oriented business teams. Built on four core pillars—domain ownership, data as a product, self-serve data infrastructure, and federated computational governance—it treats data similarly to microservices. This approach resolves the bottleneck of a centralized Data Engineering team, empowering domains that best understand their data to create, maintain, and share high-quality data products across the enterprise.

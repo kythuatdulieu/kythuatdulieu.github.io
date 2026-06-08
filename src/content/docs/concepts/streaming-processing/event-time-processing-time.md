@@ -9,7 +9,7 @@ seoTitle: "Event Time vs Processing Time trong Streaming Processing"
 metaDescription: "Tìm hiểu sự khác biệt giữa Event Time (Thời gian sự kiện) và Processing Time (Thời gian xử lý) trong hệ thống Streaming, tại sao lại cần phân biệt và cách xử lý độ trễ."
 ---
 
-Khi chúng ta chuyển đổi từ mô hình xử lý dữ liệu theo lô (Batch Processing) sang xử lý dữ liệu luồng (Streaming Processing), có một khái niệm tưởng chừng rất đơn giản nhưng lại trở nên vô cùng phức tạp: **Thời gian**. 
+Khi chúng ta chuyển đổi từ mô hình xử lý dữ liệu theo lô (Batch Processing) sang xử lý dữ liệu luồng ([Streaming Processing](/concepts/streaming-processing/streaming-processing/)), có một khái niệm tưởng chừng rất đơn giản nhưng lại trở nên vô cùng phức tạp: **Thời gian**. 
 
 Trong một hệ thống streaming hoạt động liên tục 24/7, việc định nghĩa "khi nào một sự kiện thực sự xảy ra" là chìa khóa để đảm bảo tính đúng đắn của toàn bộ báo cáo phân tích. Nếu không phân biệt rõ ràng giữa **Thời gian sự kiện (Event Time)** và **Thời gian xử lý (Processing Time)**, bạn sẽ rất dễ rơi vào bẫy sai lệch số liệu mà không thể nào tìm ra nguyên nhân.
 
@@ -63,7 +63,7 @@ Nếu chạy theo Processing Time, hệ thống sẽ gom nhóm và tính toán c
 
 ## Thực hành: Thiết lập Event Time và Watermark trong PySpark
 
-Dưới đây là đoạn code Python minh họa cách cấu hình trích xuất Event Time từ bản ghi sự kiện, thiết lập Watermark chờ tối đa 5 giây cho dữ liệu đến muộn, và thực hiện gom nhóm (aggregation) theo cửa sổ thời gian (Windowing) trong PySpark Structured Streaming:
+Dưới đây là đoạn code Python minh họa cách cấu hình trích xuất Event Time từ bản ghi sự kiện, thiết lập Watermark chờ tối đa 5 giây cho dữ liệu đến muộn, và thực hiện gom nhóm (aggregation) theo cửa sổ thời gian ([Windowing](/concepts/streaming-processing/windowing/)) trong PySpark Structured Streaming:
 
 ```python
 from pyspark.sql import SparkSession
@@ -149,8 +149,9 @@ query.awaitTermination()
 1. [Watermark](/concepts/streaming-processing/watermark/) - Khái niệm cốt lõi để theo dõi tiến trình của Event Time.
 2. [Batch Processing](/concepts/batch-processing/batch-processing/) - Mô hình xử lý dữ liệu theo lô truyền thống.
 3. [Exactly-Once Semantics](/concepts/streaming-processing/exactly-once-semantics/) - Đảm bảo tính nhất quán dữ liệu trong Streaming.
-4. **Streaming Systems** - Tyler Akidau (Sách gối đầu giường về xử lý dữ liệu luồng).
-5. **Apache Flink & Spark Structured Streaming Documentation** - Hướng dẫn chi tiết cấu hình Event Time và Windowing.
+4. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
+5. [Apache Flink Documentation - Event Time](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/)
+6. [Spark Structured Streaming Programming Guide](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
 
 ---
 

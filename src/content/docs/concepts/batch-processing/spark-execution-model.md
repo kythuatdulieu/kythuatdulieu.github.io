@@ -53,7 +53,7 @@ graph TD
     Exec2 -.->|"Trả kết quả / Trạng thái"| Driver
 ```
 
-1. **Driver Program (Tiến trình Master - Người điều hành)**: Đây chính là nơi khởi tạo đối tượng `SparkSession` hoặc `SparkContext`. Driver chịu trách nhiệm dịch mã nguồn của bạn thành các công việc (Jobs), xây dựng biểu đồ DAG (Directed Acyclic Graph), chia nhỏ chúng thành các Stage/Task và phân bổ các Task này đến các máy con.
+1. **Driver Program (Tiến trình Master - Người điều hành)**: Đây chính là nơi khởi tạo đối tượng `SparkSession` hoặc `SparkContext`. Driver chịu trách nhiệm dịch mã nguồn của bạn thành các công việc (Jobs), xây dựng biểu đồ [DAG](/concepts/orchestration/dag/) (Directed Acyclic Graph), chia nhỏ chúng thành các Stage/Task và phân bổ các Task này đến các máy con.
 2. **Cluster Manager (Trình quản lý tài nguyên)**: Một hệ thống độc lập bên ngoài (như Hadoop YARN, Kubernetes hoặc Spark Standalone). Nó đóng vai trò như phòng nhân sự: Driver sẽ yêu cầu: *"Tôi cần 10 máy, mỗi máy 4 CPU và 16GB RAM"*, Cluster Manager có nhiệm vụ đi tìm các máy chủ vật lý đang rảnh rỗi để cấp phát tài nguyên cho Driver.
 3. **Executors (Tiến trình Slave - Những người công nhân)**: Đây là các tiến trình JVM được khởi chạy trên các máy con (Worker Nodes). Executors có nhiệm vụ nhận các công việc nhỏ (Tasks) được giao từ Driver, thực hiện tính toán trên các mảnh dữ liệu, lưu trữ kết quả tạm thời trên RAM (In-Memory Cache) và báo cáo tiến độ về cho Driver.
 
@@ -115,7 +115,7 @@ Quá trình thực thi diễn ra ở hậu trường như sau:
 2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Essential book by Bill Chambers and Matei Zaharia covering Spark's application architecture and execution model.
 3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
 4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/) - Introduction to Spark structural APIs, architecture, and distributed execution mechanics by Jules S. Damji, Brooke Wenig, and Tathagata Das.
-5. Databricks Cluster Resource Management - Technical documentation detailing hardware provisioning, executor allocation, and performance considerations.
+5. [Databricks Compute Documentation](https://docs.databricks.com/en/compute/index.html) - Technical documentation detailing hardware provisioning, executor allocation, and performance considerations.
 
 ## English Summary
 

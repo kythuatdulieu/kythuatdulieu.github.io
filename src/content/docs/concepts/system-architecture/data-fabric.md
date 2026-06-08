@@ -9,9 +9,9 @@ seoTitle: "Data Fabric - Kiến trúc dệt dữ liệu tự động"
 metaDescription: "Tìm hiểu kiến trúc Data Fabric, giải pháp tích hợp siêu dữ liệu (metadata) sử dụng AI để tự động hóa quản lý và truy cập dữ liệu đa đám mây."
 ---
 
-Trong những năm gần đây, dữ liệu doanh nghiệp không chỉ bùng nổ về mặt kích thước mà còn phân mảnh mạnh mẽ theo chiều ngang. Bạn sẽ dễ dàng bắt gặp những kịch bản mà dữ liệu giao dịch nằm ở hệ thống On-premises (máy chủ vật lý tại công ty), dữ liệu phân tích nằm trên Google BigQuery, tệp log người dùng lưu trên AWS S3, còn thông tin khách hàng lại nằm rải rác trong các ứng dụng SaaS như Salesforce.
+Trong những năm gần đây, dữ liệu doanh nghiệp không chỉ bùng nổ về mặt kích thước mà còn phân mảnh mạnh mẽ theo chiều ngang. Bạn sẽ dễ dàng bắt gặp những kịch bản mà dữ liệu giao dịch nằm ở hệ thống On-premises (máy chủ vật lý tại công ty), dữ liệu phân tích nằm trên [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/), tệp log người dùng lưu trên AWS S3, còn thông tin khách hàng lại nằm rải rác trong các ứng dụng SaaS như Salesforce.
 
-Việc cố gắng gom (ingest) toàn bộ dữ liệu khổng lồ này về một Data Lake duy nhất bằng sức người đang trở nên cực kỳ tốn thời gian, tốn kém chi phí đường truyền và thường xuyên vấp phải các rào cản pháp lý về biên giới dữ liệu. Trước thực tế đó, **Data Fabric (Lưới dệt dữ liệu)** xuất hiện như một giải pháp cứu cánh giúp kết nối thế giới dữ liệu phân mảnh này mà không cần dịch chuyển vật lý.
+Việc cố gắng gom (ingest) toàn bộ dữ liệu khổng lồ này về một [Data Lake](/concepts/data-lake-lakehouse/data-lake/) duy nhất bằng sức người đang trở nên cực kỳ tốn thời gian, tốn kém chi phí đường truyền và thường xuyên vấp phải các rào cản pháp lý về biên giới dữ liệu. Trước thực tế đó, **Data Fabric (Lưới dệt dữ liệu)** xuất hiện như một giải pháp cứu cánh giúp kết nối thế giới dữ liệu phân mảnh này mà không cần dịch chuyển vật lý.
 
 ---
 
@@ -89,7 +89,7 @@ graph TD
 
 Giả sử một ngân hàng đa quốc gia có chi nhánh tại Châu Âu và Việt Nam. Luật GDPR nghiêm cấm việc di chuyển thông tin cá nhân của khách hàng Châu Âu ra ngoài lãnh thổ của họ.
 
-Bằng cách áp dụng công nghệ Data Fabric (sử dụng các công cụ ảo hóa dữ liệu như Denodo hoặc Trino), kỹ sư dữ liệu không cần phải viết code ETL chuyển dữ liệu từ Châu Âu về máy chủ trung tâm tại Việt Nam. Khi giám đốc rủi ro muốn xem báo cáo "Tổng tài sản rủi ro toàn cầu", họ chỉ cần viết một câu truy vấn SQL lên lớp ảo hóa của Data Fabric. 
+Bằng cách áp dụng công nghệ Data Fabric (sử dụng các công cụ ảo hóa dữ liệu như Denodo hoặc Trino), kỹ sư dữ liệu không cần phải viết code [ETL](/concepts/etl-elt/etl/) chuyển dữ liệu từ Châu Âu về máy chủ trung tâm tại Việt Nam. Khi giám đốc rủi ro muốn xem báo cáo "Tổng tài sản rủi ro toàn cầu", họ chỉ cần viết một câu truy vấn SQL lên lớp ảo hóa của Data Fabric. 
 
 Hệ thống Data Fabric sẽ tự động phân tích câu SQL, tách nó thành hai truy vấn con gửi đến máy chủ tại Châu Âu và Việt Nam. Việc tính toán sẽ diễn ra ngay tại nguồn, Data Fabric chỉ thu nhận kết quả cuối cùng (các con số tổng hợp phi định danh) rồi ghép chúng lại thành báo cáo tổng hợp.
 
@@ -128,8 +128,8 @@ WHERE risk_score > 80;
 
 ## Những sai lầm dễ mắc phải
 
-* **Coi Data Fabric là một phần mềm mua sẵn**: Rất nhiều nhà cung cấp quảng cáo giải pháp "Data Fabric trọn gói". Thực tế, Data Fabric là một tư duy và kiến trúc thiết kế kết hợp từ nhiều công cụ (Catalog, Virtualization, Orchestration, AI/ML).
-* **Bỏ qua bài toán hiệu năng hệ thống nguồn**: Khi bạn chạy các câu lệnh ảo hóa trực tiếp trên cơ sở dữ liệu vận hành (OLTP) của doanh nghiệp, nó có thể làm chậm toàn bộ ứng dụng chính nếu câu truy vấn không được tối ưu hoặc thiếu cơ chế lưu trữ đệm (caching).
+* **Coi Data Fabric là một phần mềm mua sẵn**: Rất nhiều nhà cung cấp quảng cáo giải pháp "Data Fabric trọn gói". Thực tế, Data Fabric là một tư duy và kiến trúc thiết kế kết hợp từ nhiều công cụ (Catalog, Virtualization, [Orchestration](/concepts/orchestration/orchestration/), AI/ML).
+* **Bỏ qua bài toán hiệu năng hệ thống nguồn**: Khi bạn chạy các câu lệnh ảo hóa trực tiếp trên cơ sở dữ liệu vận hành ([OLTP](/concepts/database-storage/oltp/)) của doanh nghiệp, nó có thể làm chậm toàn bộ ứng dụng chính nếu câu truy vấn không được tối ưu hoặc thiếu cơ chế lưu trữ đệm (caching).
 
 ---
 
@@ -153,7 +153,7 @@ WHERE risk_score > 80;
 * Có hàng ngàn nguồn dữ liệu phân tán nhưng chi phí truyền tải (Egress cost) quá lớn để có thể gom tất cả về một chỗ.
 
 ### Chưa nên chọn khi:
-* Doanh nghiệp của bạn là một công ty khởi nghiệp hoặc chỉ sử dụng một hệ sinh thái đám mây duy nhất (ví dụ chỉ dùng AWS). Khi đó, kiến trúc Data Warehouse hoặc Data Lakehouse tập trung truyền thống sẽ hoạt động nhanh hơn, rẻ hơn và dễ quản lý hơn nhiều.
+* Doanh nghiệp của bạn là một công ty khởi nghiệp hoặc chỉ sử dụng một hệ sinh thái đám mây duy nhất (ví dụ chỉ dùng AWS). Khi đó, kiến trúc [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hoặc Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) tập trung truyền thống sẽ hoạt động nhanh hơn, rẻ hơn và dễ quản lý hơn nhiều.
 
 ---
 
@@ -173,8 +173,8 @@ WHERE risk_score > 80;
 ---
 
 ## Tài liệu tham khảo hữu ích
-1. **Gartner Research** - Hướng dẫn chi tiết về các xu hướng công nghệ chiến lược: Data Fabric.
-2. **O'Reilly Media** - Tập sách phân tích sự giao thoa và kết hợp giữa Data Fabric và Data Mesh.
+1. [Gartner - What is Data Fabric?](https://www.gartner.com/en/information-technology/glossary/data-fabric-architecture)
+2. [O'Reilly Media - Data Mesh vs. Data Fabric: Understanding the Differences](https://www.oreilly.com/library/view/data-management-at/9781098106201/ch01.html)
 
 ---
 

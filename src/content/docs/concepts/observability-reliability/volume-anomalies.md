@@ -31,9 +31,9 @@ Trong thực tế, bất thường về khối lượng dữ liệu thường ch
 
 Biến động về khối lượng chính là những "cờ đỏ" (red flag) trực quan nhất báo hiệu hệ thống của bạn đang gặp vấn đề. Dưới đây là những tình huống thực tế thường gặp:
 
-1. **Mất mát dữ liệu do thay đổi kỹ thuật (Data Loss)**: Đội ngũ Backend vô tình phát hành một bản cập nhật ứng dụng làm mất đi 50% sự kiện tracking click của người dùng. Hệ thống Data Pipeline vẫn chạy thành công, dữ liệu vẫn mới (Freshness bình thường), cấu trúc không đổi (Schema ổn), nhưng khối lượng giảm sút nghiêm trọng.
-2. **Trùng lặp dữ liệu (Data Duplication)**: Do thiết lập cấu hình chạy Airflow backfill sai, một khoảng thời gian dữ liệu bị tải lại 2 lần (sử dụng append thay vì merge/upsert), khiến khối lượng tăng gấp đôi.
-3. **Sự cố API / Giới hạn Rate Limit**: Khi kéo dữ liệu từ API bên thứ 3 (như Facebook Ads, Salesforce), việc chạm ngưỡng rate limit hoặc token bị hết hạn giữa chừng khiến pipeline chỉ lấy được một phần dữ liệu rồi tự ngắt (Partial Load) nhưng vẫn báo hoàn thành.
+1. **Mất mát dữ liệu do thay đổi kỹ thuật (Data Loss)**: Đội ngũ Backend vô tình phát hành một bản cập nhật ứng dụng làm mất đi 50% sự kiện tracking click của người dùng. Hệ thống [Data Pipeline](/concepts/foundation/data-pipeline/) vẫn chạy thành công, dữ liệu vẫn mới (Freshness bình thường), cấu trúc không đổi (Schema ổn), nhưng khối lượng giảm sút nghiêm trọng.
+2. **Trùng lặp dữ liệu (Data Duplication)**: Do thiết lập cấu hình chạy Airflow [backfill](/concepts/etl-elt/backfill/) sai, một khoảng thời gian dữ liệu bị tải lại 2 lần (sử dụng append thay vì merge/upsert), khiến khối lượng tăng gấp đôi.
+3. **Sự cố API / Giới hạn Rate Limit**: Khi kéo dữ liệu từ API bên thứ 3 (như Facebook Ads, Salesforce), việc chạm ngưỡng rate limit hoặc [token](/concepts/genai-ml/token/) bị hết hạn giữa chừng khiến pipeline chỉ lấy được một phần dữ liệu rồi tự ngắt (Partial Load) nhưng vẫn báo hoàn thành.
 
 Nếu không có cơ chế phát hiện sớm, những lỗi "ngầm" này sẽ trôi tuột vào các báo cáo phân tích, dẫn đến việc đưa ra các quyết định kinh doanh sai lệch dựa trên dữ liệu không hoàn chỉnh.
 
@@ -82,7 +82,7 @@ graph TD
     Threshold -- "Drop/Spike Detected!" --> Slack
 ```
 
-1. **Thu thập Metrics (Telemetry Collection)**: Mỗi khi một Data Job (Airflow, dbt, Fivetran) kết thúc, hệ thống sẽ log lại thông tin `rows_inserted`, `rows_updated`, `rows_deleted` hoặc truy vấn Metadata DWH để lấy tổng số dòng hiện tại của bảng (`COUNT(*)`).
+1. **Thu thập Metrics (Telemetry Collection)**: Mỗi khi một Data Job (Airflow, [dbt](/concepts/transformation-analytics/dbt/), Fivetran) kết thúc, hệ thống sẽ log lại thông tin `rows_inserted`, `rows_updated`, `rows_deleted` hoặc truy vấn Metadata DWH để lấy tổng số dòng hiện tại của bảng (`COUNT(*)`).
 2. **Lưu trữ chuỗi thời gian (Time-Series Storage)**: Các metrics này được lưu thành chuỗi thời gian (ví dụ: `[Day 1: 1M], [Day 2: 1.1M], [Day 3: 1.05M]...`).
 3. **Dự báo (Forecasting / Baseline Generation)**: Hệ thống sử dụng mô hình dự báo (như ARIMA, Prophet, hoặc Isolation Forest) để dự đoán dải giá trị kỳ vọng cho "Day 4".
 4. **So sánh & Cảnh báo (Alerting)**: Khi dữ liệu Day 4 được nạp vào là `0.3M` (rơi ra ngoài dải kỳ vọng dưới), hệ thống kích hoạt Volume Drop Alert.
@@ -192,7 +192,7 @@ Giả sử vào ngày lễ Giáng Sinh, lượng truy cập website tự nhiên 
 
 1. **Monte Carlo Blog** - The 5 Pillars of Data Observability.
 2. **dbt Expectations Package** - Các macro hỗ trợ kiểm tra Volume và Data Quality tĩnh bằng SQL.
-3. **Prophet by Meta (Facebook)** - Thuật toán Time-Series Forecasting phổ biến được ứng dụng nhiều trong Volume Anomaly Detection.
+3. **Prophet by Meta (Facebook)** - Thuật toán Time-Series Forecasting phổ biến được ứng dụng nhiều trong Volume [Anomaly Detection](/concepts/data-quality/anomaly-detection/).
 
 ---
 

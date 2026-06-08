@@ -9,7 +9,7 @@ seoTitle: "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking"
 metaDescription: "Tìm hiểu chi tiết Normalized Discounted Cumulative Gain (NDCG). Metric cốt lõi để đánh giá hiệu năng xếp hạng (ranking) trong hệ thống Tìm kiếm và RAG."
 ---
 
-Khi xây dựng một công cụ tìm kiếm (Search Engine), hệ thống gợi ý (Recommender System) hay bước tái xếp hạng (Reranking) trong kiến trúc RAG, các chỉ số đo lường truyền thống như Precision (Độ chính xác) hay Recall (Độ bao phủ) thường không đủ để đánh giá chất lượng trải nghiệm của người dùng. 
+Khi xây dựng một công cụ tìm kiếm (Search Engine), hệ thống gợi ý (Recommender System) hay bước tái xếp hạng ([Reranking](/concepts/genai-ml/reranking/)) trong kiến trúc [RAG](/concepts/genai-ml/rag/), các chỉ số đo lường truyền thống như Precision (Độ chính xác) hay [Recall](/concepts/genai-ml/recall/) (Độ bao phủ) thường không đủ để đánh giá chất lượng trải nghiệm của người dùng. 
 
 Lây do rất đơn giản: Precision và Recall chỉ quan tâm đến việc kết quả trả về là Có liên quan hay Không (nhị phân). Tuy nhiên, trong thế giới thực, chúng ta đối mặt với hai bài toán phức tạp hơn nhiều:
 1. **Mức độ liên quan khác nhau**: Tài liệu này có thể "rất liên quan", trong khi tài liệu khác chỉ "hơi liên quan".
@@ -53,14 +53,16 @@ $$NDCG = \frac{DCG}{iDCG}$$
 
 ```mermaid
 flowchart TD
-    A[Search Results] --> B[Calculate Gain\nRelevance Score]
-    B --> C[Apply Discount\nDivide by log of Position]
-    C --> D[Sum for DCG]
-    A --> E[Sort by Ideal Relevance]
-    E --> F[Calculate Ideal DCG\niDCG]
-    D --> G{NDCG = DCG / iDCG}
+    A["Search Results"] --> B["Calculate Gain<br/>Relevance Score"]
+    B --> C["Apply Discount<br/>Divide by log of Position"]
+    C --> D["Sum for DCG"]
+    A --> E["Sort by Ideal Relevance"]
+    E --> F["Calculate Ideal DCG<br/>iDCG"]
+    D --> G{"NDCG = DCG / iDCG"}
     F --> G
-    G --> H((Final Score\n0.0 to 1.0))
+    G --> H("Final Score<br/>0.0 to 1.0")
+
+
 ```
 
 Hãy cùng làm một ví dụ thực tế với câu truy vấn: *"Sửa máy tính không lên nguồn"*. 

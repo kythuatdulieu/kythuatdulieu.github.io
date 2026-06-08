@@ -13,7 +13,7 @@ Nếu bạn đã từng trầm trồ trước khả năng làm thơ, viết code
 
 Nhưng thực chất, LLM hoạt động như thế nào? Liệu nó có thực sự "suy nghĩ" như con người hay chỉ là một cỗ máy tính toán cơ học?
 
-Về bản chất, LLM là một hệ thống Trí tuệ Nhân tạo (AI) học sâu (Deep Learning) được thiết kế để hiểu, tạo lập và tương tác bằng ngôn ngữ tự nhiên. Sức mạnh thực sự của LLM không nằm ở một trí thông minh có ý thức, mà là khả năng toán học siêu việt trong việc dự đoán từ ngữ tiếp theo (next-token prediction) dựa trên ngữ cảnh được cung cấp.
+Về bản chất, LLM là một hệ thống Trí tuệ Nhân tạo (AI) học sâu (Deep Learning) được thiết kế để hiểu, tạo lập và tương tác bằng ngôn ngữ tự nhiên. Sức mạnh thực sự của LLM không nằm ở một trí thông minh có ý thức, mà là khả năng toán học siêu việt trong việc dự đoán từ ngữ tiếp theo (next-[token](/concepts/genai-ml/token/) prediction) dựa trên ngữ cảnh được cung cấp.
 
 ## LLM là gì dưới góc nhìn kỹ thuật?
 
@@ -52,15 +52,17 @@ Sự vĩ đại của LLM được xây dựng trên ba thành phần nền tả
 
 ```mermaid
 flowchart LR
-    A[(Massive Internet Text)] --> B[Pre-training]
-    B --> C(Base Model)
-    C -->|Next-token prediction| D[Supervised Fine-Tuning\nSFT]
-    D --> E(Instruction-Tuned Model)
-    E --> F[RLHF / DPO\nHuman Feedback]
-    F --> G(Aligned Chatbot)
+    A["Massive Internet Text"] --> B["Pre-training"]
+    B --> C("Base Model")
+    C -->|"Next-token prediction"| D["Supervised Fine-Tuning<br/>SFT"]
+    D --> E("Instruction-Tuned Model")
+    E --> F["RLHF / DPO<br/>Human Feedback"]
+    F --> G("Aligned Chatbot")
     
     style C fill:#f9f,stroke:#333,stroke-width:2px
     style E fill:#bbf,stroke:#333,stroke-width:2px
+
+
 ```
 
 ### Giai đoạn 1: Pre-training (Tiền huấn luyện)
@@ -125,8 +127,8 @@ print(response.choices[0].message.content)
 
 ### Kinh nghiệm xương máu khi làm việc với LLM (Best Practices)
 * **Bảo vệ System Prompt**: Luôn xây dựng các rào chắn (guardrails) xung quanh System Prompt để ngăn chặn các cuộc tấn công chèn câu lệnh (Prompt Injection) từ phía người dùng.
-* **Sử dụng RAG thay vì Fine-tuning để dạy kiến thức mới**: Kiến thức của LLM bị đóng băng tại thời điểm nó được huấn luyện. Đừng cố fine-tune mô hình chỉ để nhồi nhét thông tin mới của công ty. Hãy kết nối nó với một Vector Database thông qua kiến trúc RAG (Retrieval-Augmented Generation).
-* **Cài đặt Temperature phù hợp**: Đặt `Temperature = 0` cho các tác vụ cần tính chính xác cao như trích xuất dữ liệu JSON hay phân tích log hệ thống. Ngược lại, hãy tăng `Temperature` lên `0.7 - 0.9` cho các tác vụ sáng tạo nội dung, viết bài PR.
+* **Sử dụng RAG thay vì Fine-tuning để dạy kiến thức mới**: Kiến thức của LLM bị đóng băng tại thời điểm nó được huấn luyện. Đừng cố fine-tune mô hình chỉ để nhồi nhét thông tin mới của công ty. Hãy kết nối nó với một [Vector Database](/concepts/genai-ml/vector-database/) thông qua kiến trúc RAG (Retrieval-Augmented Generation).
+* **Cài đặt [Temperature](/concepts/genai-ml/temperature/) phù hợp**: Đặt `Temperature = 0` cho các tác vụ cần tính chính xác cao như trích xuất dữ liệu JSON hay phân tích log hệ thống. Ngược lại, hãy tăng `Temperature` lên `0.7 - 0.9` cho các tác vụ sáng tạo nội dung, viết bài PR.
 
 ### Các sai lầm phổ biến cần tránh
 * **Nhân hóa AI**: Tin rằng chatbot có linh hồn hoặc cảm xúc thực sự. Việc quá tin tưởng vào AI có thể dẫn đến những quyết định sai lầm nghiêm trọng trong công việc.
@@ -183,11 +185,11 @@ print(response.choices[0].message.content)
 
 1. **"Attention Is All You Need"** - Vaswani et al. (2017).
 2. **"Language Models are Few-Shot Learners"** - Brown et al. (2020) (Nghiên cứu nền tảng về GPT-3).
-3. **"Training language models to follow instructions with human feedback"** - Ouyang et al. (2022) (Nền tảng của RLHF).
+3. **"Training language models to follow instructions with human feedback"** - Ouyang et al. (2022) (Nền tảng của [RLHF](/concepts/genai-ml/rlhf/)).
 4. **Hugging Face NLP Course**.
 
 ---
 
 ## English summary
 
-A **Large Language Model (LLM)** is a sophisticated Deep Learning system based on the Transformer architecture, characterized by billions of parameter weights and trained on massive corpus of text data. Fundamentally, an LLM is a probabilistic engine optimized for next-token prediction via self-attention mechanisms and dense word embeddings. The lifecycle of modern conversational LLMs involves massive unsupervised Pre-training to acquire general world knowledge, followed by Supervised Fine-Tuning (SFT) and Reinforcement Learning from Human Feedback (RLHF) to align their behavior with human instructions and safety guidelines, enabling unparalleled zero-shot capabilities across diverse natural language processing tasks.
+A **Large Language Model (LLM)** is a sophisticated Deep Learning system based on the Transformer architecture, characterized by billions of parameter weights and trained on massive corpus of text data. Fundamentally, an LLM is a probabilistic engine optimized for next-token prediction via self-attention mechanisms and dense word [embeddings](/concepts/genai-ml/embeddings/). The lifecycle of modern conversational LLMs involves massive unsupervised Pre-training to acquire general world knowledge, followed by Supervised Fine-Tuning (SFT) and Reinforcement Learning from Human Feedback (RLHF) to align their behavior with human instructions and safety guidelines, enabling unparalleled zero-shot capabilities across diverse natural language processing tasks.

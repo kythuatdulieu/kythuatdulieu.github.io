@@ -9,7 +9,7 @@ seoTitle: "Watermark là gì? Xử lý Late Data trong Streaming"
 metaDescription: "Tìm hiểu chi tiết về Watermark trong kiến trúc Streaming, cách nó giải quyết bài toán dữ liệu đến muộn (late data) và cân bằng giữa độ trễ và tính chính xác."
 ---
 
-Trong lập trình xử lý luồng dữ liệu (Stream Processing), một trong những thử thách lớn nhất là kiểm soát yếu tố thời gian. Không giống như xử lý theo lô (Batch Processing) nơi mọi dữ liệu đã nằm yên vị trong kho, dữ liệu Streaming chảy liên tục và thường xuyên đến lệch giờ, mất trật tự do độ trễ mạng hoặc lỗi kết nối từ các thiết bị ngoại vi. Để giải quyết bài toán này khi sử dụng thời gian xảy ra sự kiện (Event Time), các kỹ sư dữ liệu sử dụng một công cụ vô cùng mạnh mẽ: **Watermark** (Dấu chuẩn thời gian).
+Trong lập trình xử lý luồng dữ liệu (Stream Processing), một trong những thử thách lớn nhất là kiểm soát yếu tố thời gian. Không giống như xử lý theo lô ([Batch Processing](/concepts/batch-processing/batch-processing/)) nơi mọi dữ liệu đã nằm yên vị trong kho, dữ liệu Streaming chảy liên tục và thường xuyên đến lệch giờ, mất trật tự do độ trễ mạng hoặc lỗi kết nối từ các thiết bị ngoại vi. Để giải quyết bài toán này khi sử dụng thời gian xảy ra sự kiện (Event Time), các kỹ sư dữ liệu sử dụng một công cụ vô cùng mạnh mẽ: **Watermark** (Dấu chuẩn thời gian).
 
 ---
 
@@ -119,7 +119,7 @@ DataStream<MyEvent> lateStream = result.getSideOutput(lateDataTag);
 ## Những nguyên tắc thiết kế và Best Practices cần nhớ
 
 * **Không lạm dụng Allowed Lateness quá lớn**: Việc cấu hình thời gian chờ đợi quá dài (ví dụ: chờ 1 tiếng hoặc vài tiếng) bắt buộc hệ thống phải giữ toàn bộ dữ liệu thô của khoảng thời gian đó trong bộ nhớ đệm (State Store). Điều này cực kỳ ngốn RAM hoặc RocksDB và làm chậm tiến trình xử lý chung của ứng dụng.
-* **Luôn có phương án dự phòng cho Late Data**: Đừng để hệ thống âm thầm loại bỏ dữ liệu muộn mà không có dấu vết. Hãy chủ động định tuyến các dữ liệu đến trễ này vào các Side Output (như lưu trữ tạm trên Amazon S3, Google Cloud Storage hoặc đẩy vào Kafka Dead Letter Queue) để chạy các job xử lý bù (batch correction) sau này.
+* **Luôn có phương án dự phòng cho Late Data**: Đừng để hệ thống âm thầm loại bỏ dữ liệu muộn mà không có dấu vết. Hãy chủ động định tuyến các dữ liệu đến trễ này vào các Side Output (như lưu trữ tạm trên Amazon S3, Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) hoặc đẩy vào Kafka Dead Letter Queue) để chạy các job xử lý bù (batch correction) sau này.
 * **Cân bằng giữa Độ trễ (Latency) và Độ chính xác (Completeness)**: Đây là bài toán nghiệp vụ. Với các bài toán phát hiện gian lận (Fraud Detection), bạn cần Watermark cực kỳ ngắn để đưa ra quyết định gần như ngay lập tức. Nhưng với bài toán đối soát doanh thu hoặc tính lương, bạn cần cấu hình Watermark đủ rộng để đảm bảo dữ liệu không bị thiếu hụt.
 
 ---
@@ -181,8 +181,8 @@ DataStream<MyEvent> lateStream = result.getSideOutput(lateDataTag);
 
 ## Tài liệu tham khảo
 
-1. **Streaming Systems** - Tyler Akidau (Chương 2 và 3 giải thích sâu sắc về Watermark).
-2. **Apache Flink Documentation** - Generating Watermarks.
+1. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
+2. [Apache Flink Documentation - Generating Watermarks](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/event-time/generating_watermarks/)
 
 ---
 

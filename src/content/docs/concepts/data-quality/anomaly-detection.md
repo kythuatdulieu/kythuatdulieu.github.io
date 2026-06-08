@@ -17,7 +17,7 @@ Trong thế giới Kỹ thuật Dữ liệu, có một câu nói nổi tiếng: 
 
 ## Tại sao các bài kiểm thử tĩnh (Rule-based Tests) là chưa đủ?
 
-Các công cụ kiểm thử chất lượng dữ liệu truyền thống (như dbt tests hay Great Expectations) hoạt động dựa trên các bộ quy tắc cố định (Rule-based). Bạn chỉ viết được kiểm thử cho những lỗi mà bạn **lường trước được** nó sẽ xảy ra.
+Các công cụ kiểm thử chất lượng dữ liệu truyền thống (như [dbt](/concepts/transformation-analytics/dbt/) tests hay Great Expectations) hoạt động dựa trên các bộ quy tắc cố định (Rule-based). Bạn chỉ viết được kiểm thử cho những lỗi mà bạn **lường trước được** nó sẽ xảy ra.
 
 Hãy xem hai ví dụ thực tế dưới đây để thấy lỗ hổng của phương pháp này:
 
@@ -28,7 +28,7 @@ Việc ngồi cập nhật các ngưỡng kiểm thử thủ công này mỗi ng
 
 ## Triết lý cốt lõi: Ngưỡng động và Phân tích chuỗi thời gian
 
-Về bản chất, Anomaly Detection trong Data Quality là bài toán **Phân tích chuỗi thời gian (Time-series Forecasting)**:
+Về bản chất, Anomaly Detection trong [Data Quality](/concepts/data-quality/data-quality/) là bài toán **Phân tích chuỗi thời gian (Time-series Forecasting)**:
 
 1. **Ghi nhận chỉ số (Metrics):** Hệ thống liên tục đo đạc và ghi nhận một chỉ số cụ thể (ví dụ: Số lượng bản ghi mới nạp vào mỗi giờ).
 2. **Vạch ra dải ruy-băng dự đoán (Confidence Interval):** Các thuật toán (như ARIMA, Prophet hoặc phân phối Z-score) sẽ phân tích dữ liệu quá khứ để đưa ra dự đoán hợp lý: *"Vào khoảng 12 giờ trưa thứ Sáu, số lượng dòng mới nạp vào thông thường sẽ dao động trong khoảng từ 8.000 đến 12.000 dòng"*.
@@ -104,7 +104,7 @@ If câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó có 
 
 ### Điểm trừ (Cons):
 * **Hộp đen khó giải thích (Black Box):** Khi hệ thống báo động đỏ, nó chỉ có thể nói cho bạn biết dữ liệu đang có bất thường, chứ không thể giải thích cụ thể *"tại sao"* tỷ lệ NULL hay thể tích dữ liệu lại biến động như vậy. Bạn vẫn phải tự lần theo bản đồ Lineage để debug thủ công.
-* **Cảnh báo mang tính phản ứng (Reactive):** Cảnh báo chỉ được đưa ra sau khi dữ liệu đã được nạp vào Data Warehouse và mô hình chạy xong. Có nghĩa là dữ liệu lỗi có thể đã hiển thị lên biểu đồ của người dùng trong một khoảng thời gian ngắn trước khi bị phát hiện. Nó không mang tính ngăn chặn ngay từ cửa ngõ (Preventative) như cơ chế Data Contract.
+* **Cảnh báo mang tính phản ứng (Reactive):** Cảnh báo chỉ được đưa ra sau khi dữ liệu đã được nạp vào [Data Warehouse](/concepts/data-warehouse/data-warehouse/) và mô hình chạy xong. Có nghĩa là dữ liệu lỗi có thể đã hiển thị lên biểu đồ của người dùng trong một khoảng thời gian ngắn trước khi bị phát hiện. Nó không mang tính ngăn chặn ngay từ cửa ngõ (Preventative) như cơ chế [Data Contract](/concepts/transformation-analytics/data-contract/).
 
 ## Khi nào bạn thực sự cần đến nó?
 
@@ -131,7 +131,7 @@ If câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó có 
 2. [Meta Prophet Documentation Quick Start](https://facebook.github.io/prophet/docs/quick_start.html) - Documentation for Meta's Prophet library, used for forecasting seasonal time-series data.
 3. [Netflix Tech Blog: RAD Outlier Detection on Big Data](https://netflixtechblog.com/rad-outlier-detection-on-big-data-d6b0494371cc) - Netflix's engineering approach to detecting anomalies in high-volume, multi-dimensional stream processing.
 4. [Uber Engineering Blog: uVitals Anomaly Detection & Alerting System](https://www.uber.com/blog/uvitals-an-anomaly-detection-alerting-system/) - Overview of Uber's real-time, multi-dimensional unsupervised anomaly detection system.
-5. [Databricks Blog: Near Real-Time Anomaly Detection with Delta Live Tables](https://www.databricks.com/blog/2022/08/29/near-real-time-anomaly-detection-delta-live-tables-and-databricks-machine-learning.html) - Implementing unsupervised anomaly detection pipelines on data lakes using MLflow and Spark.
+5. [Databricks Blog: Near Real-Time Anomaly Detection with Delta Live Tables](https://www.databricks.com/blog/2022/08/29/near-real-time-anomaly-detection-delta-live-tables-and-databricks-machine-learning.html) - Implementing unsupervised anomaly detection pipelines on data lakes using [MLflow](/concepts/genai-ml/mlflow/) and Spark.
 
 ## English Summary
 

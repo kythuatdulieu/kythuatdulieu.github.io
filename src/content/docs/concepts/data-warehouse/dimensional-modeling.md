@@ -11,13 +11,13 @@ metaDescription: "Tìm hiểu Dimensional Modeling là gì: Kỹ thuật thiết
 
 Hãy tưởng tượng bạn là một chuyên viên phân tích dữ liệu (Data Analyst) hoặc một nhà quản lý kinh doanh. Mỗi sáng thức dậy, câu hỏi đầu tiên xuất hiện trong đầu bạn thường sẽ là: *"Doanh thu tháng này tăng trưởng ra sao so với tháng trước?"*, *"Sản phẩm nào đang bán chạy nhất ở khu vực miền Nam?"*, hay *"Khách hàng thành viên đóng góp bao nhiêu phần trăm vào tổng lợi nhuận?"*. 
 
-Để trả lời những câu hỏi mang tính chất "bức tranh toàn cảnh" này một cách nhanh chóng, chúng ta không thể dựa vào các cấu trúc dữ liệu giao dịch thông thường. Đó là lý do **Dimensional Modeling** (Mô hình hóa dữ liệu đa chiều) ra đời. Đây là một nghệ thuật thiết kế cơ sở dữ liệu chuyên biệt dành cho Kho dữ liệu (Data Warehouse) và Data Mart, giúp biến những bảng dữ liệu phức tạp thành một cấu trúc trực quan, dễ hiểu và cực kỳ nhanh khi truy vấn.
+Để trả lời những câu hỏi mang tính chất "bức tranh toàn cảnh" này một cách nhanh chóng, chúng ta không thể dựa vào các cấu trúc dữ liệu giao dịch thông thường. Đó là lý do **Dimensional Modeling** (Mô hình hóa dữ liệu đa chiều) ra đời. Đây là một nghệ thuật thiết kế cơ sở dữ liệu chuyên biệt dành cho Kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) và Data Mart, giúp biến những bảng dữ liệu phức tạp thành một cấu trúc trực quan, dễ hiểu và cực kỳ nhanh khi truy vấn.
 
 ## Tại sao chúng ta cần Dimensional Modeling?
 
-Trước đây, khi các công nghệ lưu trữ còn sơ khai, hầu hết các hệ thống báo cáo đều truy vấn trực tiếp vào cơ sở dữ liệu giao dịch (OLTP). Các cơ sở dữ liệu này được thiết kế theo mô hình ER (Entity-Relationship) chuẩn hóa dạng 3 (3NF) với mục tiêu tối thượng là: **đảm bảo dữ liệu không bị trùng lặp**, từ đó giúp việc ghi dữ liệu (insert, update) diễn ra trơn tru nhất.
+Trước đây, khi các công nghệ lưu trữ còn sơ khai, hầu hết các hệ thống báo cáo đều truy vấn trực tiếp vào cơ sở dữ liệu giao dịch ([OLTP](/concepts/database-storage/oltp/)). Các cơ sở dữ liệu này được thiết kế theo mô hình ER (Entity-Relationship) chuẩn hóa dạng 3 (3NF) với mục tiêu tối thượng là: **đảm bảo dữ liệu không bị trùng lặp**, từ đó giúp việc ghi dữ liệu (insert, update) diễn ra trơn tru nhất.
 
-Tuy nhiên, khi mang mô hình 3NF này đi làm phân tích dữ liệu (OLAP), các kỹ sư lập tức vấp phải hai "cơn ác mộng":
+Tuy nhiên, khi mang mô hình 3NF này đi làm phân tích dữ liệu ([OLAP](/concepts/database-storage/olap/)), các kỹ sư lập tức vấp phải hai "cơn ác mộng":
 1. **Mã SQL quá phức tạp**: Để làm một báo cáo doanh thu đơn giản, bạn có thể phải viết một câu lệnh SQL dài dằng dặc với 15 đến 20 phép `JOIN` (từ Hóa đơn qua Chi tiết hóa đơn, nối tiếp đến Sản phẩm, Nhóm sản phẩm, Danh mục, Cửa hàng, v.v.). Chỉ cần viết sai một phép JOIN, số liệu báo cáo sẽ đi tông.
 2. **Hiệu năng ì ạch**: Hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) sẽ phải gồng mình để khớp (join) hàng chục bảng chứa hàng triệu dòng dữ liệu cùng lúc. Kết quả là báo cáo chạy mất vài tiếng, thậm chí làm nghẽn luôn cả hệ thống giao dịch đang chạy.
 
@@ -80,7 +80,7 @@ erDiagram
 Để thiết kế một mô hình đa chiều chuẩn chỉnh, Ralph Kimball đã đưa ra quy trình 4 bước đơn giản nhưng vô cùng mạnh mẽ:
 
 1. **Chọn Quy trình nghiệp vụ (Business Process)**: Xác định hoạt động cụ thể của doanh nghiệp mà bạn muốn đo lường và phân tích (ví dụ: Quá trình đặt phòng khách sạn, giao dịch bán hàng tại quầy).
-2. **Xác định Độ mịn (Grain)**: Đây là bước cực kỳ quan trọng. Bạn phải quyết định một dòng dữ liệu trong bảng Fact đại diện cho cái gì ở mức chi tiết nhất. Ví dụ: *"Mỗi dòng đại diện cho một đêm nghỉ của một phòng"* (Nightly room grain).
+2. **Xác định Độ mịn ([Grain](/concepts/data-warehouse/grain/))**: Đây là bước cực kỳ quan trọng. Bạn phải quyết định một dòng dữ liệu trong bảng Fact đại diện cho cái gì ở mức chi tiết nhất. Ví dụ: *"Mỗi dòng đại diện cho một đêm nghỉ của một phòng"* (Nightly room grain).
 3. **Xác định các Chiều (Dimensions)**: Thiết lập các ngữ cảnh xung quanh độ mịn đó. Với mỗi đêm nghỉ, ta có các chiều như: Ngày nghỉ (`dim_date`), Phòng (`dim_room`), Khách hàng (`dim_customer`), Kênh đặt phòng (`dim_channel`).
 4. **Xác định các Chỉ số (Facts)**: Xác định các con số đo lường cụ thể cho từng dòng dữ liệu. Ví dụ: số tiền phòng thu được, số lượng khách thực tế, số dịch vụ phát sinh.
 
@@ -109,7 +109,7 @@ FROM fact_sales f
 JOIN dim_product p ON f.ProductKey = p.ProductKey
 GROUP BY p.CategoryName;
 ```
-Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các hệ quản trị phân tích như BigQuery, Snowflake, Redshift) sẽ xử lý câu lệnh này với tốc độ đáng kinh ngạc.
+Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các hệ quản trị phân tích như BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/), Redshift) sẽ xử lý câu lệnh này với tốc độ đáng kinh ngạc.
 
 ## Những nguyên tắc vàng và sai lầm dễ mắc phải
 
@@ -131,7 +131,7 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 
 ### Điểm yếu (Cons)
 * **Tốn dung lượng lưu trữ (Redundancy)**: Việc bẻ phẳng dữ liệu khiến các chuỗi văn bản (như tên Quốc gia) bị lặp lại hàng triệu lần trong bảng Dimension rộng.
-* **Bảo trì phức tạp khi dữ liệu thay đổi**: Nếu một thuộc tính thay đổi (như tên tỉnh thành bị đổi), hệ thống ETL sẽ phải cập nhật rất nhiều dòng dữ liệu bị trùng lặp. (Để giải quyết, bạn sẽ cần áp dụng kỹ thuật Slowly Changing Dimension - SCD).
+* **Bảo trì phức tạp khi dữ liệu thay đổi**: Nếu một thuộc tính thay đổi (như tên tỉnh thành bị đổi), hệ thống [ETL](/concepts/etl-elt/etl/) sẽ phải cập nhật rất nhiều dòng dữ liệu bị trùng lặp. (Để giải quyết, bạn sẽ cần áp dụng kỹ thuật [Slowly Changing Dimension](/concepts/data-warehouse/slowly-changing-dimension/) - SCD).
 
 ## Khi nào nên (và không nên) áp dụng?
 
@@ -142,7 +142,7 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 
 **Không nên dùng khi:**
 * Thiết kế các hệ thống giao dịch trực tuyến (OLTP) đòi hỏi tần suất ghi đọc cực cao và tính toàn vẹn dữ liệu tuyệt đối (ACID).
-* Dữ liệu dạng phi cấu trúc như hình ảnh, âm thanh, video hay text log thô (đối với nhóm này, Data Lake hoặc các giải pháp hồ dữ liệu sẽ phù hợp hơn).
+* Dữ liệu dạng phi cấu trúc như hình ảnh, âm thanh, video hay text log thô (đối với nhóm này, [Data Lake](/concepts/data-lake-lakehouse/data-lake/) hoặc các giải pháp hồ dữ liệu sẽ phù hợp hơn).
 
 ## Khái niệm liên quan
 * [Star Schema](/concepts/data-warehouse/star-schema/)
@@ -162,9 +162,9 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 
 1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic book introducing dimensional modeling techniques.
 2. [Snowflake: Star Schema Modeling Guide](https://www.snowflake.com/trending/data-vault) - Overview of star schema structures and modeling approaches on Snowflake.
-3. Databricks Documentation: Medallion Architecture - Documentation on implementing Gold layer dimensional models in a Lakehouse.
-4. Monte Carlo Data: Dimensional Modeling 101 - Comprehensive introduction to the components of dimensional modeling (facts and dimensions).
-5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Modern deployment patterns for building star schemas using Spark and Delta Lake.
+3. [Databricks Documentation: Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture) - Documentation on implementing Gold layer dimensional models in a [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/).
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling-101/) - Comprehensive introduction to the components of dimensional modeling (facts and dimensions).
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Modern deployment patterns for building star schemas using Spark and [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/).
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

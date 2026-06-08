@@ -17,7 +17,7 @@ Hãy tưởng tượng bạn là Giám đốc Công nghệ của một chuỗi s
 
 **Data Warehouse** là một hệ thống cơ sở dữ liệu chuyên biệt, nơi tích hợp dữ liệu từ nhiều nguồn khác nhau, thực hiện làm sạch, biến đổi và lưu trữ lịch sử lâu dài để tối ưu hóa cho các truy vấn phân tích (Analytical Queries), báo cáo (Reporting) và hỗ trợ ra quyết định (Business Intelligence - BI).
 
-Khác với các cơ sở dữ liệu vận hành (OLTP - Online Transaction Processing) được thiết kế tối ưu cho việc ghi nhận giao dịch nhanh chóng với độ trễ cực thấp, Data Warehouse sử dụng kiến trúc OLAP (Online Analytical Processing) tối ưu cho việc đọc dữ liệu quy mô lớn và tổng hợp thông tin (Aggregation) trên hàng triệu, hàng tỷ dòng.
+Khác với các cơ sở dữ liệu vận hành ([OLTP](/concepts/database-storage/oltp/) - Online Transaction Processing) được thiết kế tối ưu cho việc ghi nhận giao dịch nhanh chóng với độ trễ cực thấp, Data Warehouse sử dụng kiến trúc [OLAP](/concepts/database-storage/olap/) (Online Analytical Processing) tối ưu cho việc đọc dữ liệu quy mô lớn và tổng hợp thông tin (Aggregation) trên hàng triệu, hàng tỷ dòng.
 
 ## Tại sao chúng ta cần một Kho dữ liệu riêng biệt?
 
@@ -78,10 +78,10 @@ graph LR
     F --> J
 ```
 
-1. **Thu nạp dữ liệu (Data Ingestion)**: Trích xuất dữ liệu từ các nguồn thông qua CDC (Change Data Capture) hoặc các công cụ ETL/ELT theo lô (Batch).
+1. **Thu nạp dữ liệu ([Data Ingestion](/concepts/etl-elt/data-ingestion/))**: Trích xuất dữ liệu từ các nguồn thông qua CDC ([Change Data Capture](/concepts/etl-elt/change-data-capture/)) hoặc các công cụ [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/) theo lô (Batch).
 2. **Vùng đệm (Staging Area)**: Lưu trữ tạm thời dữ liệu thô để xử lý mà không làm ảnh hưởng đến hiệu năng kết nối của database nguồn.
-3. **Biến đổi dữ liệu (Data Transformation)**: Thực hiện lọc rác, khử trùng lặp, giải quyết lịch sử thay đổi (SCD - Slowly Changing Dimensions) và gán khóa thay thế (Surrogate Keys).
-4. **Nạp dữ liệu (Data Loading)**: Ghi dữ liệu sạch vào các mô hình đa chiều (Dimensional Model) của kho dữ liệu.
+3. **Biến đổi dữ liệu ([Data Transformation](/concepts/etl-elt/data-transformation/))**: Thực hiện lọc rác, khử trùng lặp, giải quyết lịch sử thay đổi (SCD - Slowly Changing Dimensions) và gán khóa thay thế (Surrogate Keys).
+4. **Nạp dữ liệu ([Data Loading](/concepts/etl-elt/data-loading/))**: Ghi dữ liệu sạch vào các mô hình đa chiều (Dimensional Model) của kho dữ liệu.
 5. **Cung cấp dữ liệu (Serving)**: Phân phối dữ liệu qua các phân kho nhỏ hơn phục vụ riêng cho từng phòng ban (Data Marts) hoặc cho các công cụ BI vẽ dashboard.
 
 ## Thiết kế thực tế: Fact Table và Dimension Table
@@ -163,7 +163,7 @@ ORDER BY total_revenue DESC;
 * **Gợi ý trả lời**:
   * **Star Schema** phi chuẩn hóa (denormalize) các Dimension. Mọi thông tin chi tiết của dimension nằm chung trong một bảng duy nhất. Ưu điểm là giảm số lượng phép JOIN, tối ưu cho tốc độ đọc và dễ hiểu cho người dùng.
   * **Snowflake Schema** chuẩn hóa (normalize) các bảng Dimension bằng cách tách chúng thành các bảng phân cấp nhỏ hơn (ví dụ tách Category ra khỏi Product). Ưu điểm là tiết kiệm dung lượng lưu trữ, nhưng làm tăng độ phức tạp của câu lệnh SQL và giảm hiệu năng đọc do phải thực hiện nhiều phép JOIN vật lý hơn.
-  * **Lựa chọn**: Trong thời đại ngày nay, chi phí lưu trữ đĩa cứng đã rất rẻ. Do đó, hầu hết các DWH hiện đại đều ưu tiên chọn **Star Schema** để đổi dung lượng lưu trữ lấy tốc độ truy vấn tối đa. Chỉ chọn Snowflake khi dimension quá lớn và việc cập nhật dữ liệu trùng lặp gặp khó khăn nghiêm trọng về mặt quản trị.
+  * **Lựa chọn**: Trong thời đại ngày nay, chi phí lưu trữ đĩa cứng đã rất rẻ. Do đó, hầu hết các DWH hiện đại đều ưu tiên chọn **Star Schema** để đổi dung lượng lưu trữ lấy tốc độ truy vấn tối đa. Chỉ chọn [Snowflake](/concepts/cloud-data-platform/snowflake/) khi dimension quá lớn và việc cập nhật dữ liệu trùng lặp gặp khó khăn nghiêm trọng về mặt quản trị.
 
 ### 3. Giải thích khái niệm Slowly Changing Dimension (SCD) và phân tích sự khác biệt giữa Type 1 và Type 2.
 * **Gợi ý trả lời**:
@@ -190,11 +190,11 @@ ORDER BY total_revenue DESC;
 ## Tài liệu tham khảo
 
 1. [Snowflake: Data Warehousing Guide](https://www.snowflake.com/trending/data-warehousing) - Overview of cloud data warehouse features, storage mechanisms, and design methodologies.
-2. Databricks: Medallion Architecture - Documentation on organizing data warehouse layers (Bronze, Silver, Gold) in the Lakehouse.
+2. [Databricks: Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture) - Documentation on organizing data warehouse layers (Bronze, Silver, Gold) in the [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/).
 3. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's definitive guide on dimensional modeling and star schema design.
 4. [DAMA International Official Site](https://www.dama.org/) - Official resources from the Data Management Association outlining the DMBOK standards for corporate data warehousing.
 5. [Databricks Blog: What is a Data Lakehouse?](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html) - Foundational post detailing the evolution of data warehouses towards unified lakehouse designs.
 
 ## English Summary
 
-A Data Warehouse (DWH) is a centralized, integrated, non-volatile, and time-variant database optimized for analytical processing (OLAP) rather than transactional workloads (OLTP). By consolidating data from disparate source systems, resolving formatting inconsistencies, and maintaining historical changes (using techniques like Slowly Changing Dimensions), a DWH serves as the single source of truth for business intelligence, reporting, and ad-hoc analytics. The architecture typically relies on dimensional modeling (Star or Snowflake Schema) consisting of Fact Tables for metrics and Dimension Tables for descriptive context, utilizing surrogate keys to ensure data integrity and optimal join performance.
+A Data Warehouse (DWH) is a centralized, integrated, non-volatile, and time-variant database optimized for analytical processing (OLAP) rather than transactional workloads (OLTP). By consolidating data from disparate [source systems](/concepts/foundation/source-systems/), resolving formatting inconsistencies, and maintaining historical changes (using techniques like Slowly Changing Dimensions), a DWH serves as the single source of truth for business intelligence, reporting, and ad-hoc analytics. The architecture typically relies on dimensional modeling (Star or Snowflake Schema) consisting of Fact Tables for metrics and Dimension Tables for descriptive context, utilizing surrogate keys to ensure data integrity and optimal join performance.

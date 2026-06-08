@@ -107,7 +107,7 @@ stream
 
 Để vận hành hệ thống Windowing ổn định ở quy mô sản xuất, bạn nên lưu ý các điểm sau:
 
-* **Luôn thực hiện `keyBy` trước khi phân cửa sổ**: Hãy chia nhỏ dữ liệu theo khóa (partitioning) trước khi gọi hàm Window. Việc gọi trực tiếp `stream.windowAll()` buộc toàn bộ dữ liệu từ mọi nguồn phải dồn về một nút xử lý duy nhất, làm mất đi khả năng tính toán song song (parallelism) và biến nút này thành điểm nghẽn cổ chai (bottleneck) của toàn bộ hệ thống.
+* **Luôn thực hiện `keyBy` trước khi phân cửa sổ**: Hãy chia nhỏ dữ liệu theo khóa ([partitioning](/concepts/database-storage/partitioning/)) trước khi gọi hàm Window. Việc gọi trực tiếp `stream.windowAll()` buộc toàn bộ dữ liệu từ mọi nguồn phải dồn về một nút xử lý duy nhất, làm mất đi khả năng tính toán song song (parallelism) và biến nút này thành điểm nghẽn cổ chai (bottleneck) của toàn bộ hệ thống.
 * **Cực kỳ thận trọng với bước trượt (slide step) siêu nhỏ**: Nếu bạn đặt Window kích thước 1 giờ nhưng cấu hình bước trượt là 1 giây, mỗi sự kiện đi vào sẽ phải nhân bản và đưa vào 3,600 cửa sổ khác nhau đang đồng thời mở trong bộ nhớ. Điều này rất dễ gây ra thảm họa bùng nổ trạng thái (State Explosion) làm cạn kiệt RAM.
 * **Tận dụng tối đa Incremental Aggregation (Tính toán lũy tiến)**: Nếu nghiệp vụ chỉ yêu cầu các phép toán đơn giản như SUM, MIN, MAX, hãy sử dụng các hàm `ReduceFunction` hoặc `AggregateFunction`. Chúng giúp hệ thống tính gộp dữ liệu dần dần ngay khi bản ghi vừa tới, thay vì phải lưu trữ toàn bộ dữ liệu thô vào bộ nhớ và chỉ tính toán một lần khi cửa sổ đóng (như `ProcessWindowFunction` làm).
 
@@ -183,9 +183,9 @@ stream
 
 ## Tài liệu tham khảo
 
-1. **Streaming Systems** - Tyler Akidau (Chương 2, "Windowing" - Trình bày mô hình cốt lõi của Google Dataflow).
-2. **Apache Flink Documentation** - Windows.
-3. **Kafka Streams Documentation** - Windowing data.
+1. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
+2. [Apache Flink Documentation - Windows](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/)
+3. [Kafka Streams Documentation - Windowing Data](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#windowing)
 
 ---
 

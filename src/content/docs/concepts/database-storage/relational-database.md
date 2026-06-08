@@ -131,7 +131,7 @@ COMMIT;
 
 ### Khi nào nên cân nhắc giải pháp khác?
 * Dữ liệu hoàn toàn không có cấu trúc cố định hoặc thay đổi liên tục theo từng bản ghi (nên chọn NoSQL như MongoDB).
-* Yêu cầu lưu trữ khối lượng dữ liệu khổng lồ (hàng Petabytes) phục vụ cho việc phân tích dữ liệu lớn hoặc huấn luyện Machine Learning (nên chọn Data Lake).
+* Yêu cầu lưu trữ khối lượng dữ liệu khổng lồ (hàng Petabytes) phục vụ cho việc phân tích dữ liệu lớn hoặc huấn luyện Machine Learning (nên chọn [Data Lake](/concepts/data-lake-lakehouse/data-lake/)).
 
 ## Các khái niệm liên quan
 

@@ -23,7 +23,7 @@ Nếu dùng con người để ngồi đọc và chấm điểm hàng ngàn câu
 
 1. **Sự bất lực của các chỉ số truyền thống**: Các chỉ số như ROUGE (thường dùng cho tóm tắt văn bản) hay BLEU (dùng cho dịch thuật) chỉ hoạt động bằng cách đếm xem có bao nhiêu từ ngữ trùng khớp chính xác giữa câu trả lời sinh ra và câu trả lời mẫu. Nếu chatbot trả về một câu có nghĩa tương đương nhưng dùng các từ đồng nghĩa khác hoàn toàn, các chỉ số này sẽ chấm 0 điểm.
 2. **Nghẽn cổ chai khi dùng con người (Human Eval)**: Việc thuê các chuyên gia ngồi đánh giá thủ công từng câu trả lời là một quy trình vô cùng chậm chạp và đắt đỏ. Hơn nữa, con người cũng dễ bị ảnh hưởng bởi các yếu tố chủ quan và định kiến cá nhân.
-3. **Nhu cầu tự động hóa trong quy trình CI/CD**: Khi bạn thay đổi một câu Prompt hoặc cập nhật lại cơ sở dữ liệu Vector DB, làm sao để biết chắc chắn hệ thống đang tốt lên hay tệ đi? Bạn cần một quy trình chạy tự động hàng đêm để kiểm thử hàng ngàn test case và trả về kết quả ngay lập tức. LLM-as-a-judge giải quyết được việc này với chi phí token rẻ hơn nhiều so với việc thuê nhân sự.
+3. **Nhu cầu tự động hóa trong quy trình CI/CD**: Khi bạn thay đổi một câu Prompt hoặc cập nhật lại cơ sở dữ liệu Vector DB, làm sao để biết chắc chắn hệ thống đang tốt lên hay tệ đi? Bạn cần một quy trình chạy tự động hàng đêm để kiểm thử hàng ngàn test case và trả về kết quả ngay lập tức. LLM-as-a-judge giải quyết được việc này với chi phí [token](/concepts/genai-ml/token/) rẻ hơn nhiều so với việc thuê nhân sự.
 
 ## Ý tưởng cốt lõi và cách thức vận hành
 
@@ -38,14 +38,16 @@ Chúng ta có thể lập trình cho "LLM giám khảo" bằng một System Prom
 
 ```mermaid
 flowchart TD
-    A[Question / Query] --> E
-    B[System Response] --> E
-    C[Reference Context] -.->|Optional| E
-    D[Evaluation Rubric] --> E
-    E[Evaluation Framework\nRagas / TruLens] --> F[LLM Judge\nGPT-4 / Claude 3]
-    F --> G{Output JSON}
-    G --> H[Score\n1-5]
-    G --> I[Rationale\nChain-of-Thought]
+    A["Question / Query"] --> E
+    B["System Response"] --> E
+    C["Reference Context"] -.->|Optional| E
+    D["Evaluation Rubric"] --> E
+    E["Evaluation Framework<br/>Ragas / TruLens"] --> F["LLM Judge<br/>GPT-4 / Claude 3"]
+    F --> G{"Output JSON"}
+    G --> H["Score<br/>1-5"]
+    G --> I["Rationale<br/>Chain-of-Thought"]
+
+
 ```
 
 Để quá trình đánh giá diễn ra chính xác, chúng ta thường cung cấp cho LLM giám khảo:

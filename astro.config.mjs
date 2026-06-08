@@ -62,7 +62,7 @@ export default defineConfig({
 					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/animations/shift-away.css' },
 				}
 			],
-			social: { github: 'https://github.com/kythuatdulieu' },
+			social: { github: 'https://github.com/kythuatdulieu/kythuatdulieu.github.io' },
 			sidebar: [
 				{
 					label: 'Cẩm nang (Handbook)',

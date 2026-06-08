@@ -17,7 +17,7 @@ Trong số các công cụ tính toán phân tán hiện nay, **Apache Spark** c
 
 Trước khi Spark ra đời và thống trị thế giới Big Data, chuẩn mực công nghệ thời đó là **Hadoop MapReduce**. Mặc dù Hadoop giải quyết tốt bài toán lưu trữ và xử lý phân tán, nó lại gặp một điểm nghẽn chí mạng về mặt hiệu năng:
 
-Trong một chuỗi xử lý gồm nhiều bước (ETL hoặc chạy thuật toán học máy lặp đi lặp lại), sau khi kết thúc mỗi bước Map hoặc Reduce, Hadoop bắt buộc phải ghi toàn bộ dữ liệu trung gian xuống ổ đĩa cứng (HDFS) để đảm bảo an toàn dữ liệu, rồi bước tiếp theo lại phải đọc dữ liệu từ đĩa lên. Việc liên tục thực hiện các thao tác đọc/ghi file (Disk I/O) chậm chạp này khiến hệ thống mất rất nhiều thời gian chờ đợi.
+Trong một chuỗi xử lý gồm nhiều bước ([ETL](/concepts/etl-elt/etl/) hoặc chạy thuật toán học máy lặp đi lặp lại), sau khi kết thúc mỗi bước Map hoặc Reduce, Hadoop bắt buộc phải ghi toàn bộ dữ liệu trung gian xuống ổ đĩa cứng (HDFS) để đảm bảo an toàn dữ liệu, rồi bước tiếp theo lại phải đọc dữ liệu từ đĩa lên. Việc liên tục thực hiện các thao tác đọc/ghi file (Disk I/O) chậm chạp này khiến hệ thống mất rất nhiều thời gian chờ đợi.
 
 Spark xuất hiện vào năm 2009 tại UC Berkeley và thay đổi hoàn toàn luật chơi. Thay vì ghi dữ liệu xuống đĩa sau mỗi bước, Spark giữ toàn bộ dữ liệu trung gian trên bộ nhớ RAM của cụm máy tính. Nhờ giảm thiểu được tối đa việc đọc ghi đĩa và truyền tải qua mạng, Spark đạt tốc độ xử lý nhanh hơn Hadoop MapReduce tới 100 lần đối với nhiều tác vụ.
 
@@ -26,7 +26,7 @@ Spark xuất hiện vào năm 2009 tại UC Berkeley và thay đổi hoàn toàn
 Sức mạnh vượt trội của Apache Spark được xây dựng dựa trên ba trụ cột kỹ thuật chính:
 
 1. **Tính toán trong bộ nhớ (In-Memory Computing):** Dữ liệu được tải lên RAM và xử lý song song trên các node con. Spark chỉ ghi dữ liệu xuống đĩa cứng vật lý khi bộ nhớ RAM thực sự bị quá tải, hoặc khi người dùng gọi lệnh ghi kết quả cuối cùng ra file.
-2. **Cơ chế đánh giá lười biếng (Lazy Evaluation):** Khi bạn viết các câu lệnh biến đổi dữ liệu (Transformations như `map`, `filter`, `join`), Spark sẽ không thực thi chúng ngay lập tức. Nó chỉ ghi nhận và vẽ ra một sơ đồ các bước thực thi dưới dạng đồ thị có hướng không chu trình (DAG). Chỉ khi bạn gọi một câu lệnh hành động yêu cầu xuất kết quả (Actions như `count()`, `collect()`, `write()`), Spark mới kích hoạt trình tối ưu hóa (Catalyst Optimizer) để gộp và sắp xếp các bước chạy một cách thông minh nhất rồi mới bắt đầu tính toán thực tế.
+2. **Cơ chế đánh giá lười biếng (Lazy Evaluation):** Khi bạn viết các câu lệnh biến đổi dữ liệu (Transformations như `map`, `filter`, `join`), Spark sẽ không thực thi chúng ngay lập tức. Nó chỉ ghi nhận và vẽ ra một sơ đồ các bước thực thi dưới dạng đồ thị có hướng không chu trình ([DAG](/concepts/orchestration/dag/)). Chỉ khi bạn gọi một câu lệnh hành động yêu cầu xuất kết quả (Actions như `count()`, `collect()`, `write()`), Spark mới kích hoạt trình tối ưu hóa (Catalyst Optimizer) để gộp và sắp xếp các bước chạy một cách thông minh nhất rồi mới bắt đầu tính toán thực tế.
 3. **Tập dữ liệu phân tán có khả năng tự phục hồi (Resilient Distributed Dataset - RDD):** RDD là cấu trúc dữ liệu nền tảng của Spark. Nếu một máy tính trong cụm bị sập nguồn giữa chừng làm mất mát một phần dữ liệu, Spark không cần phải chạy lại toàn bộ chương trình từ đầu. Nó chỉ cần nhìn vào đồ thị DAG để biết mảnh dữ liệu bị mất được tạo ra từ những bước nào, và tự động tính toán lại duy nhất mảnh dữ liệu đó trên một máy tính khác.
 
 ## Sơ đồ kiến trúc vận hành của ứng dụng Spark
@@ -83,7 +83,7 @@ high_value_df.write.parquet("s3://data-lake/processed/high_value_customers/")
 ## Những "bí kíp" giúp Spark chạy mượt mà, tối ưu chi phí
 
 * **Ưu tiên sử dụng DataFrame/Dataset API thay vì RDD:** Mặc dù RDD là nền tảng, việc viết code trực tiếp bằng RDD đòi hỏi bạn phải tự tối ưu hóa bằng tay rất vất vả. Khi bạn dùng DataFrame API, trình tối ưu hóa Catalyst Optimizer của Spark sẽ tự động phân tích cú pháp và chuyển dịch mã nguồn của bạn thành ngôn ngữ máy cấp thấp cực kỳ tối ưu.
-* **Điều chỉnh số lượng phân vùng dữ liệu (Partitions):** Mặc định khi thực hiện các tác vụ xáo trộn dữ liệu (Shuffle) như `join` hay `groupBy`, Spark tự động chia dữ liệu thành 200 phân vùng (thông qua cấu hình `spark.sql.shuffle.partitions`). Nếu dữ liệu của bạn quá nhỏ, việc chia 200 phân vùng sẽ tạo ra nhiều tác vụ rác gây chậm hệ thống. Ngược lại, nếu dữ liệu quá lớn, 200 phân vùng sẽ khiến RAM của từng máy bị tràn. Quy tắc chung là hãy đặt số lượng phân vùng gấp 2 đến 3 lần tổng số nhân CPU (cores) của toàn bộ cụm máy chủ.
+* **Điều chỉnh số lượng phân vùng dữ liệu (Partitions):** Mặc định khi thực hiện các tác vụ xáo trộn dữ liệu ([Shuffle](/concepts/batch-processing/shuffle/)) như `join` hay `groupBy`, Spark tự động chia dữ liệu thành 200 phân vùng (thông qua cấu hình `spark.sql.shuffle.partitions`). Nếu dữ liệu của bạn quá nhỏ, việc chia 200 phân vùng sẽ tạo ra nhiều tác vụ rác gây chậm hệ thống. Ngược lại, nếu dữ liệu quá lớn, 200 phân vùng sẽ khiến RAM của từng máy bị tràn. Quy tắc chung là hãy đặt số lượng phân vùng gấp 2 đến 3 lần tổng số nhân CPU (cores) của toàn bộ cụm máy chủ.
 * **Sử dụng Cache đúng lúc, đúng chỗ:** Nếu một DataFrame phải tham gia vào nhiều bước tính toán độc lập phía sau, hãy sử dụng lệnh `df.cache()` hoặc `df.persist()` để lưu tạm nó vào RAM. Việc này giúp Spark không phải tốn công đọc và tính toán lại DataFrame đó từ đầu ở các bước sau.
 
 ## Những sai lầm kinh điển dễ làm sập cụm Spark
@@ -101,11 +101,11 @@ high_value_df.write.parquet("s3://data-lake/processed/high_value_customers/")
 ### Điểm yếu (Cons):
 * **Cực kỳ ngốn RAM:** Việc giữ dữ liệu trên bộ nhớ đòi hỏi cấu hình phần cứng đắt đỏ hơn nhiều so với việc tính toán ghi đĩa truyền thống.
 * **Độ phức tạp vận hành cao:** Việc cấu hình các tham số phân bổ bộ nhớ JVM, xử lý lỗi OutOfMemory đòi hỏi kỹ sư phải có kinh nghiệm sâu sắc.
-* Không phù hợp cho các cơ sở dữ liệu giao dịch (OLTP) yêu cầu phản hồi lập tức, hoặc các luồng streaming có độ trễ cực thấp dưới mức mili-giây.
+* Không phù hợp cho các cơ sở dữ liệu giao dịch ([OLTP](/concepts/database-storage/oltp/)) yêu cầu phản hồi lập tức, hoặc các luồng streaming có độ trễ cực thấp dưới mức mili-giây.
 
 ## Khi nào Spark là lựa chọn số một?
 
-* Bạn cần xử lý các tác vụ ETL hàng ngày, hàng giờ trên lượng dữ liệu khổng lồ (từ hàng trăm Gigabyte đến Terabyte) trong hồ dữ liệu (Data Lake).
+* Bạn cần xử lý các tác vụ ETL hàng ngày, hàng giờ trên lượng dữ liệu khổng lồ (từ hàng trăm Gigabyte đến Terabyte) trong hồ dữ liệu ([Data Lake](/concepts/data-lake-lakehouse/data-lake/)).
 * Bạn cần thực thi các thuật toán lặp đi lặp lại như huấn luyện mô hình Machine Learning quy mô lớn.
 * Bạn muốn xây dựng một hệ thống phân tích dữ liệu thống nhất xử lý cả batch và stream.
 

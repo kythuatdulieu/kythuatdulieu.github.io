@@ -101,7 +101,7 @@ zombie_detection_interval = 10
 Cơ chế liên tục quét thư mục DAG giúp hệ thống hỗ trợ tính năng tải nóng (Hot Reload). Khi bạn thay đổi code thông qua Git, Airflow sẽ tự động cập nhật cấu trúc DAG mới lên Web UI sau vài chục giây mà không yêu cầu bạn phải khởi động lại bất kỳ dịch vụ nào.
 
 ### Nhược điểm
-Cơ chế này tiêu tốn khá nhiều tài nguyên CPU. Kể cả khi hệ thống của bạn hoàn toàn rảnh rỗi (không có tác vụ nào đang chạy), Scheduler vẫn phải liên tục đọc và biên dịch lại các file `.py` lặp đi lặp lại. So với các hệ thống dịch code một lần (như dbt hoặc Spark), Airflow yêu cầu một khoản chi phí tài nguyên duy trì (overhead) lớn hơn nhiều.
+Cơ chế này tiêu tốn khá nhiều tài nguyên CPU. Kể cả khi hệ thống của bạn hoàn toàn rảnh rỗi (không có tác vụ nào đang chạy), Scheduler vẫn phải liên tục đọc và biên dịch lại các file `.py` lặp đi lặp lại. So với các hệ thống dịch code một lần (như [dbt](/concepts/transformation-analytics/dbt/) hoặc Spark), Airflow yêu cầu một khoản chi phí tài nguyên duy trì (overhead) lớn hơn nhiều.
 
 ## Khi nào Scheduler là bắt buộc?
 
@@ -137,4 +137,4 @@ Scheduler là thành phần **bắt buộc phải có** khi vận hành Apache A
 
 ## English Summary
 
-The **Airflow Scheduler** is the persistent brain of the Apache Airflow platform. Running as an infinite loop, it decouples the heavy lifting of continuously parsing Python DAG files (handled by the DagFileProcessor) from the rapid, database-driven process of scheduling task instances. By evaluating DAG schedules, verifying upstream dependencies, and queueing ready tasks for executors, it dictates the entire flow of data orchestration. A critical best practice is to strictly avoid placing any heavy processing, external API calls, or database connection requests at the "top-level" of DAG files; doing so forces the Scheduler to re-execute them every parsing cycle, which can quickly exhaust system CPU and crash the orchestrator.
+The **Airflow Scheduler** is the persistent brain of the Apache Airflow platform. Running as an infinite loop, it decouples the heavy lifting of continuously parsing Python DAG files (handled by the DagFileProcessor) from the rapid, database-driven process of scheduling task instances. By evaluating DAG schedules, verifying upstream dependencies, and queueing ready tasks for executors, it dictates the entire flow of data [orchestration](/concepts/orchestration/orchestration/). A critical best practice is to strictly avoid placing any heavy processing, external API calls, or database connection requests at the "top-level" of DAG files; doing so forces the Scheduler to re-execute them every parsing cycle, which can quickly exhaust system CPU and crash the orchestrator.

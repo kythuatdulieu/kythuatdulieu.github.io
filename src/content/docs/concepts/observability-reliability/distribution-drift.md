@@ -9,7 +9,7 @@ seoTitle: "Data Drift / Distribution Drift là gì? Cách giám sát phân phố
 metaDescription: "Distribution Drift (Data Drift) là sự thay đổi phân phối giá trị thống kê của dữ liệu theo thời gian. Tìm hiểu tác động và cách cấu hình Data Observability để xử lý."
 ---
 
-Hãy tưởng tượng bạn đang vận hành một đường ống dữ liệu (data pipeline) rất mượt mà. Schema của các bảng không hề thay đổi, số lượng bản ghi đổ về mỗi ngày vẫn đều đặn, không có lỗi hệ thống nào xảy ra. Bạn thở phào nhẹ nhõm vì nghĩ mọi thứ đang hoàn hảo. 
+Hãy tưởng tượng bạn đang vận hành một đường ống dữ liệu ([data pipeline](/concepts/foundation/data-pipeline/)) rất mượt mà. Schema của các bảng không hề thay đổi, số lượng bản ghi đổ về mỗi ngày vẫn đều đặn, không có lỗi hệ thống nào xảy ra. Bạn thở phào nhẹ nhõm vì nghĩ mọi thứ đang hoàn hảo. 
 
 Nhưng ở đầu ra, mô hình Machine Learning dự báo tỷ lệ khách hàng rời bỏ dịch vụ (Churn Prediction) vốn rất chính xác nay đột ngột đưa ra những dự báo sai lệch hoàn toàn. Các báo cáo phân tích kinh doanh hiển thị các con số doanh thu trung bình giảm mạnh một cách bất thường mà không rõ nguyên nhân. 
 
@@ -124,7 +124,7 @@ if results["metrics"][0]["result"]["dataset_drift"]:
 * Giúp phát hiện sớm các lỗi logic nghiệp vụ ngầm từ phía Backend trước khi chúng kịp làm sai lệch toàn bộ hệ thống báo cáo.
 
 ### Điểm trừ (Cons)
-* Đòi hỏi năng lực tính toán lớn từ hệ thống Data Warehouse khi phải liên tục quét và phân tích lượng dữ liệu lớn.
+* Đòi hỏi năng lực tính toán lớn từ hệ thống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) khi phải liên tục quét và phân tích lượng dữ liệu lớn.
 * Khá trừu tượng để giải thích cho các phòng ban kinh doanh hiểu tại sao các chỉ số thống kê như PSI hay K-S test lại quan trọng và cần được xử lý ngay lập tức.
 
 ## Khi nào nên áp dụng?
@@ -147,11 +147,11 @@ Không cần thiết áp dụng cho các bảng dữ liệu tĩnh, bảng chiề
 
 ### 2. Nếu một cột dữ liệu `order_amount` bị cảnh báo là có Distribution Drift lớn, bạn sẽ làm gì để tìm nguyên nhân gốc rễ (Root Cause)?
 * **Gợi ý trả lời**: Để tìm nguyên nhân, tôi sẽ thực hiện theo các bước sau:
-  1. Kiểm tra Data Lineage để xác định nguồn gốc của dữ liệu đầu vào.
+  1. Kiểm tra [Data Lineage](/concepts/governance-metadata/data-lineage/) để xác định nguồn gốc của dữ liệu đầu vào.
   2. Vẽ biểu đồ phân phối (Histogram) của tệp dữ liệu hiện tại và đối chiếu với baseline để xem hình dáng phân phối bị trượt theo hướng nào (ví dụ: xuất hiện nhiều giá trị 0 hay toàn bộ phân phối bị dịch chuyển sang phải).
   3. Kiểm tra khía cạnh nghiệp vụ: Doanh nghiệp có đang chạy chương trình khuyến mãi khủng nào không? Có sự thay đổi đột biến nào từ thị trường thực tế không?
   4. Kiểm tra khía cạnh kỹ thuật: Backend có thay đổi logic ghi nhận dữ liệu không? Có lỗi chuyển đổi tiền tệ hay lỗi hệ thống làm nhân bản bản ghi không?
-  5. Dựa trên kết quả tìm được: Nếu do thay đổi thực tế của thị trường, tôi sẽ cập nhật baseline mới và yêu cầu retrain model Machine Learning. Nếu do lỗi kỹ thuật, tôi sẽ phối hợp với đội backend để sửa lỗi và tiến hành chạy lại (backfill) dữ liệu sạch.
+  5. Dựa trên kết quả tìm được: Nếu do thay đổi thực tế của thị trường, tôi sẽ cập nhật baseline mới và yêu cầu retrain model Machine Learning. Nếu do lỗi kỹ thuật, tôi sẽ phối hợp với đội backend để sửa lỗi và tiến hành chạy lại ([backfill](/concepts/etl-elt/backfill/)) dữ liệu sạch.
 
 ## Tài liệu tham khảo
 

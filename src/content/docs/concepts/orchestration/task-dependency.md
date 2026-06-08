@@ -9,7 +9,7 @@ seoTitle: "Task Dependency là gì? Quản lý sự phụ thuộc trong DAG Airf
 metaDescription: "Tìm hiểu Task Dependency (Sự phụ thuộc tác vụ) trong điều phối dữ liệu. Các quy tắc Trigger Rules (all_success, all_done) và cách kiểm soát luồng điều khiển."
 ---
 
-Trong thế giới điều phối dữ liệu (Data Orchestration) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** đóng vai trò như một hệ thống đèn tín hiệu giao thông. Nó quyết định trình tự thực thi (Control Flow) của các bước trong đường ống dữ liệu, chỉ rõ: Tác vụ A phải kết thúc với trạng thái như thế nào thì Tác vụ B mới được phép khởi chạy. 
+Trong thế giới điều phối dữ liệu (Data [Orchestration](/concepts/orchestration/orchestration/)) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** đóng vai trò như một hệ thống đèn tín hiệu giao thông. Nó quyết định trình tự thực thi (Control Flow) của các bước trong đường ống dữ liệu, chỉ rõ: Tác vụ A phải kết thúc với trạng thái như thế nào thì Tác vụ B mới được phép khởi chạy. 
 
 Quản lý phụ thuộc tốt không chỉ giúp dữ liệu được xử lý đúng thứ tự, ngăn chặn thảm họa sử dụng dữ liệu rác, mà còn cho phép chúng ta xây dựng các kịch bản ứng phó sự cố (Exception Handling) cực kỳ linh hoạt và thông minh.
 
@@ -105,7 +105,7 @@ with DAG(...) as dag:
 ```
 
 > [!NOTE]
-> Trong một số công cụ transform dữ liệu như dbt, sự phụ thuộc giữa các bảng thường được tự động nhận diện thông qua hàm tham chiếu `{{ ref('ten_bang') }}` thay vì phải khai báo thủ công.
+> Trong một số công cụ transform dữ liệu như [dbt](/concepts/transformation-analytics/dbt/), sự phụ thuộc giữa các bảng thường được tự động nhận diện thông qua hàm tham chiếu `{{ ref('ten_bang') }}` thay vì phải khai báo thủ công.
 
 ## Nghệ thuật viết DAG: Best Practices và những lỗi sơ đẳng
 

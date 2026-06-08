@@ -11,7 +11,7 @@ metaDescription: "Khái niệm Data Ownership (Quyền sở hữu dữ liệu): 
 
 Trong các doanh nghiệp truyền thống, có một tình huống dở khóc dở cười thường xuyên xảy ra. Báo cáo doanh thu gửi lên ban giám đốc bị lệch số liệu. Sếp triệu tập cuộc họp khẩn và yêu cầu Trưởng phòng Công nghệ thông tin (IT) giải trình lý do. 
 
-Trưởng phòng IT thanh minh rằng hệ thống đường ống trích xuất, biến đổi, nạp (ETL/ELT) chạy hoàn hảo không lỗi, con số bị sai là do các nhân viên phòng Kinh doanh (Sales) nhập liệu cẩu thả trên phần mềm Quản lý quan hệ khách hàng (CRM) nguồn. Trưởng phòng Sales lập tức phản pháo: *"Chúng tôi bận đi gặp khách hàng đem doanh số về cho công ty, hệ thống CRM thì khó dùng, lỗi đó là của IT chứ sao trách chúng tôi!"*.
+Trưởng phòng IT thanh minh rằng hệ thống đường ống trích xuất, biến đổi, nạp ([ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/)) chạy hoàn hảo không lỗi, con số bị sai là do các nhân viên phòng Kinh doanh (Sales) nhập liệu cẩu thả trên phần mềm Quản lý quan hệ khách hàng (CRM) nguồn. Trưởng phòng Sales lập tức phản pháo: *"Chúng tôi bận đi gặp khách hàng đem doanh số về cho công ty, hệ thống CRM thì khó dùng, lỗi đó là của IT chứ sao trách chúng tôi!"*.
 
 Tình huống đùn đẩy trách nhiệm kiểu "cha chung không ai khóc" này xảy ra khi doanh nghiệp thiếu đi một cơ chế **Quyền sở hữu dữ liệu (Data Ownership)** rõ ràng.
 
@@ -39,8 +39,8 @@ Vai trò cốt lõi của một Data Owner bao gồm:
 
 Data Ownership đánh dấu một sự thay đổi lớn trong tư duy quản trị doanh nghiệp:
 
-* **Mô hình cũ (IT-centric)**: Phòng IT hay đội Kỹ thuật dữ liệu (Data Engineering) được xem là "chủ nhân" của toàn bộ kho dữ liệu. Họ phải gánh chịu mọi lỗi lầm về chất lượng dữ liệu mặc dù họ không phải là người sinh ra dữ liệu nguồn và không có thẩm quyền bắt các phòng ban khác sửa đổi quy trình làm việc.
-* **Mô hình hiện đại (Data Mesh)**: Dữ liệu được nâng tầm thành **Sản phẩm dữ liệu (Data as a Product)**. Đội IT chỉ là người cung cấp "Nền tảng tự phục vụ" (Self-serve Platform) như duy trì cloud, quản lý Snowflake. Còn các phòng ban kinh doanh nghiệp vụ mới chính là những chủ nhân (Data Owners) thực thụ của dữ liệu họ tạo ra. Họ phải tự chạy pipeline, tự dọn dẹp và chịu trách nhiệm khi dữ liệu của mình bị lỗi.
+* **Mô hình cũ (IT-centric)**: Phòng IT hay đội Kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)) được xem là "chủ nhân" của toàn bộ kho dữ liệu. Họ phải gánh chịu mọi lỗi lầm về chất lượng dữ liệu mặc dù họ không phải là người sinh ra dữ liệu nguồn và không có thẩm quyền bắt các phòng ban khác sửa đổi quy trình làm việc.
+* **Mô hình hiện đại ([Data Mesh](/concepts/system-architecture/data-mesh/))**: Dữ liệu được nâng tầm thành **Sản phẩm dữ liệu (Data as a Product)**. Đội IT chỉ là người cung cấp "Nền tảng tự phục vụ" (Self-serve Platform) như duy trì cloud, quản lý [Snowflake](/concepts/cloud-data-platform/snowflake/). Còn các phòng ban kinh doanh nghiệp vụ mới chính là những chủ nhân (Data Owners) thực thụ của dữ liệu họ tạo ra. Họ phải tự chạy pipeline, tự dọn dẹp và chịu trách nhiệm khi dữ liệu của mình bị lỗi.
 
 ---
 
@@ -65,7 +65,7 @@ flowchart TD
 
 ## Ví dụ thực tế: Phân quyền sở hữu nghiêm ngặt trên Snowflake
 
-Trong các kho dữ liệu hiện đại như Snowflake, quyền sở hữu dữ liệu được cụ thể hóa bằng các câu lệnh phân quyền theo vai trò (RBAC - Role-Based Access Control) nghiêm ngặt để đảm bảo phòng IT không thể tự tiện can thiệp vào dữ liệu nhạy cảm của phòng ban khác:
+Trong các kho dữ liệu hiện đại như Snowflake, quyền sở hữu dữ liệu được cụ thể hóa bằng các câu lệnh phân quyền theo vai trò (RBAC - Role-Based [Access Control](/concepts/governance-metadata/access-control/)) nghiêm ngặt để đảm bảo phòng IT không thể tự tiện can thiệp vào dữ liệu nhạy cảm của phòng ban khác:
 
 ```sql
 -- 1. Tạo một Role đại diện cho Data Owner của phòng Marketing
@@ -136,4 +136,4 @@ TO ROLE marketing_data_owner REVOKE CURRENT GRANTS;
 
 ## English Summary
 
-**Data Ownership** is a foundational principle of Data Governance that assigns ultimate accountability for the quality, security, and lifecycle of a specific dataset to a business leader (Data Owner) rather than the IT department. By clearly defining roles—such as Data Owners (decision-makers), Data Stewards (operational caretakers), and Data Custodians (technical engineers)—it prevents the classic "blame game" where IT is held responsible for poor data originating from business operational systems. This domain-driven ownership paradigm is critical for modern decentralized architectures like Data Mesh, shifting the responsibility of data quality to those who produce and understand the data best.
+**Data Ownership** is a foundational principle of Data Governance that assigns ultimate accountability for the quality, security, and lifecycle of a specific dataset to a business leader (Data Owner) rather than the IT department. By clearly defining roles—such as Data Owners (decision-makers), Data Stewards (operational caretakers), and Data Custodians (technical engineers)—it prevents the classic "blame game" where IT is held responsible for poor data originating from business operational systems. This domain-driven ownership paradigm is critical for modern decentralized architectures like Data Mesh, shifting the responsibility of [data quality](/concepts/data-quality/data-quality/) to those who produce and understand the data best.

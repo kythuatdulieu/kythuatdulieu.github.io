@@ -9,7 +9,7 @@ seoTitle: "Data Testing là gì? Tên tổng quan về các phương pháp kiể
 metaDescription: "Data Testing - Kiểm thử dữ liệu động: Định nghĩa, vai trò trong Data Pipeline, và các phương pháp kiểm thử tự động với dbt hoặc Great Expectations."
 ---
 
-Trong phát triển phần mềm, một khi bạn đã viết Unit Test cho một hàm toán học như `add(1, 2)` và nó trả về kết quả là `3`, bạn có thể kê gối ngủ ngon vì thuật toán đã đúng. Nhưng trong thế giới kỹ thuật dữ liệu (Data Engineering), câu chuyện lại hoàn toàn khác. Hôm nay code ETL của bạn chạy rất trơn tru, nhưng ngày mai đối tác đột ngột thay đổi cấu trúc API, gửi về một chuỗi ký tự thay vì một con số. Kết quả là pipeline bị "sập" giữa đêm, hoặc tệ hơn là âm thầm ghi nhận dữ liệu sai lệch vào kho dữ liệu.
+Trong phát triển phần mềm, một khi bạn đã viết Unit Test cho một hàm toán học như `add(1, 2)` và nó trả về kết quả là `3`, bạn có thể kê gối ngủ ngon vì thuật toán đã đúng. Nhưng trong thế giới kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)), câu chuyện lại hoàn toàn khác. Hôm nay code [ETL](/concepts/etl-elt/etl/) của bạn chạy rất trơn tru, nhưng ngày mai đối tác đột ngột thay đổi cấu trúc API, gửi về một chuỗi ký tự thay vì một con số. Kết quả là pipeline bị "sập" giữa đêm, hoặc tệ hơn là âm thầm ghi nhận dữ liệu sai lệch vào kho dữ liệu.
 
 Đó là lý do chúng ta cần đến **Data Testing (Kiểm thử dữ liệu động)** — những chiếc "cầu dao tự động" giúp bảo vệ hệ thống trước sự biến động khôn lường của dữ liệu thực tế.
 
@@ -26,7 +26,7 @@ Có một sự thật phũ phàng trong ngành dữ liệu: *"Lỗi dữ liệu 
 If không thiết lập các bài kiểm thử tự động:
 * Dữ liệu hỏng (ví dụ: lỗi tỷ giá khiến doanh thu ngày bị nhân lên 100 lần) sẽ âm thầm chảy qua hệ thống và hiển thị chễm chệ trên trang báo cáo BI của CEO vào sáng hôm sau.
 * Khi lãnh đạo phát hiện ra số liệu vô lý, niềm tin của họ vào đội ngũ dữ liệu sẽ giảm sút nghiêm trọng.
-* Các kỹ sư dữ liệu sẽ phải mất hàng giờ, thậm chí hàng ngày để truy vết ngược lại đường đi của dữ liệu (Data Lineage) nhằm tìm ra nguồn gốc của lỗi.
+* Các kỹ sư dữ liệu sẽ phải mất hàng giờ, thậm chí hàng ngày để truy vết ngược lại đường đi của dữ liệu ([Data Lineage](/concepts/governance-metadata/data-lineage/)) nhằm tìm ra nguồn gốc của lỗi.
 
 Data Testing sinh ra để bắt lỗi ngay từ thời điểm nó xuất hiện, cô lập dữ liệu bẩn và phát đi cảnh báo sớm cho đội ngũ kỹ thuật theo nguyên lý "thất bại sớm" (Fail-fast).
 
@@ -57,7 +57,7 @@ graph LR
 
 1. **Nạp dữ liệu thô (Ingestion)**: Dữ liệu được đưa vào vùng đệm tạm thời (Staging Area).
 2. **Kiểm thử tại cửa ngõ (Source Tests)**: Chạy các bài test cơ bản về schema và tính toàn vẹn. Nếu phát hiện lỗi nghiêm trọng, hệ thống sẽ lập tức ngắt pipeline (Cầu dao tự động - Circuit Breaker) và cảnh báo qua Slack.
-3. **Biến đổi dữ liệu (Transformation)**: Chạy các logic làm sạch và kết hợp dữ liệu (dbt, Spark).
+3. **Biến đổi dữ liệu (Transformation)**: Chạy các logic làm sạch và kết hợp dữ liệu ([dbt](/concepts/transformation-analytics/dbt/), Spark).
 4. **Kiểm thử nghiệp vụ (Logic Tests)**: Chạy các phép đối sánh logic phức tạp trên dữ liệu đã biến đổi.
 5. **Xuất bản**: Nếu mọi bài test đều vượt qua, dữ liệu mới được đẩy lên các bảng Data Mart phục vụ cho BI Dashboard.
 
@@ -108,7 +108,7 @@ if not results["success"]:
 
 ### Cân nhắc đánh đổi (Trade-offs)
 * **Thời gian xử lý vs. Độ an toàn**: Việc chạy hàng loạt bài test sẽ làm tăng thời gian chạy của pipeline (ví dụ: từ 10 phút lên 20 phút).
-* **Chi phí tài nguyên**: Với các Cloud Data Warehouse tính phí theo dung lượng truy vấn (như BigQuery hay Snowflake), mỗi lệnh `SELECT COUNT(*)` chạy test đều tiêu tốn tiền bạc của doanh nghiệp. Hãy thiết lập các bài test một cách thông minh và có chọn lọc.
+* **Chi phí tài nguyên**: Với các Cloud [Data Warehouse](/concepts/data-warehouse/data-warehouse/) tính phí theo dung lượng truy vấn (như BigQuery hay [Snowflake](/concepts/cloud-data-platform/snowflake/)), mỗi lệnh `SELECT COUNT(*)` chạy test đều tiêu tốn tiền bạc của doanh nghiệp. Hãy thiết lập các bài test một cách thông minh và có chọn lọc.
 * **Không áp dụng khi làm PoC**: Khi bạn chỉ đang viết thử nghiệm một mô hình học máy nhanh trên máy cá nhân với tệp dữ liệu tĩnh, hãy lược bỏ bớt các bước kiểm thử rườm rà này để tăng tốc độ phát triển.
 
 ---
@@ -136,9 +136,9 @@ if not results["success"]:
 
 1. [Great Expectations Documentation](https://docs.greatexpectations.io/docs/) - Official documentation for building and executing data assertions in Python.
 2. [dbt Documentation: Data Tests](https://docs.getdbt.com/docs/build/tests) - Guide to defining schema tests and custom SQL data quality checks in dbt.
-3. [Monte Carlo Data: Data Observability vs. Data Testing](https://www.montecarlodata.com/blog-data-observability-vs-data-testing/) - Technical blog comparing static testing assertions against automated data monitoring.
+3. [Monte Carlo Data: Data Observability vs. Data Testing](https://www.getmontecarlo.com/blog/data-observability-vs-data-testing/) - Technical blog comparing static testing assertions against automated data monitoring.
 4. Datafold: Automated Data Testing in CI - Overview of regression testing and continuous data validation within software development workflows.
-5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Reference book discussing data pipeline design, circuit breaker patterns, and data quality architectures.
+5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Reference book discussing [data pipeline](/concepts/foundation/data-pipeline/) design, circuit breaker patterns, and data quality architectures.
 
 ## English Summary
 

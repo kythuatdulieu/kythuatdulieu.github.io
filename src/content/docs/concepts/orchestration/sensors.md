@@ -24,7 +24,7 @@ Quy trình kiểm tra diễn ra theo vòng lặp:
 
 ## Tại sao chúng ta cần Sensors?
 
-Hãy tưởng tượng bạn thỏa thuận với đối tác rằng họ sẽ gửi file dữ liệu vào lúc 1h sáng. Bạn đặt lịch DAG chạy lúc `01:05`. Nhưng thực tế, có hôm đối tác gặp sự cố và file chỉ đến lúc `01:30`.
+Hãy tưởng tượng bạn thỏa thuận với đối tác rằng họ sẽ gửi file dữ liệu vào lúc 1h sáng. Bạn đặt lịch [DAG](/concepts/orchestration/dag/) chạy lúc `01:05`. Nhưng thực tế, có hôm đối tác gặp sự cố và file chỉ đến lúc `01:30`.
 
 * **Nếu dùng Operator thông thường (như BashOperator)**: Lúc 01:05, tác vụ chạy kiểm tra, không thấy file, pipeline lập tức báo lỗi đỏ (`Failed`). Bạn sẽ bị đánh thức lúc nửa đêm và phải bấm chạy lại bằng tay.
 * **Nếu tự viết vòng lặp `while/sleep` trong Python**: Tác vụ sẽ "treo" và giữ chặt tài nguyên của Worker Slot trong suốt 30 phút chờ đợi. Nếu hệ thống có nhiều DAG cùng chờ như vậy, toàn bộ hạ tầng sẽ bị nghẽn vì không còn chỗ cho các tác vụ thực sự xử lý dữ liệu.

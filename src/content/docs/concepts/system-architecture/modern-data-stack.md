@@ -17,10 +17,10 @@ Modern Data Stack không phải là một công cụ đơn lẻ, mà là một t
 
 ## Từ ETL truyền thống sang mô hình ELT hiện đại
 
-Đặc trưng lớn nhất phân biệt Modern Data Stack với các kiến trúc cũ là sự dịch chuyển từ mô hình **ETL** (Extract - Transform - Load) sang **ELT** (Extract - Load - Transform).
+Đặc trưng lớn nhất phân biệt Modern Data Stack với các kiến trúc cũ là sự dịch chuyển từ mô hình **[ETL](/concepts/etl-elt/etl/)** (Extract - Transform - Load) sang **[ELT](/concepts/etl-elt/elt/)** (Extract - Load - Transform).
 
-* **ETL truyền thống**: Dữ liệu được trích xuất (Extract), đưa qua một máy chủ trung gian để làm sạch, biến đổi logic (Transform), rồi mới nạp (Load) vào kho dữ liệu. Nguyên nhân là do phần cứng của các Data Warehouse thế hệ cũ rất đắt đỏ và hữu hạn, không thể gánh nổi các tác vụ biến đổi dữ liệu nặng nề.
-* **ELT hiện đại**: Dữ liệu thô từ các nguồn được trích xuất và nạp thẳng vào **Cloud Data Warehouse** (như Snowflake, BigQuery) mà không cần chế biến trước. Sau đó, chúng ta tận dụng sức mạnh tính toán phân tán gần như vô hạn và rẻ tiền của đám mây để thực hiện toàn bộ việc biến đổi dữ liệu bằng ngôn ngữ SQL trực tiếp bên trong kho dữ liệu.
+* **ETL truyền thống**: Dữ liệu được trích xuất (Extract), đưa qua một máy chủ trung gian để làm sạch, biến đổi logic (Transform), rồi mới nạp (Load) vào kho dữ liệu. Nguyên nhân là do phần cứng của các [Data Warehouse](/concepts/data-warehouse/data-warehouse/) thế hệ cũ rất đắt đỏ và hữu hạn, không thể gánh nổi các tác vụ biến đổi dữ liệu nặng nề.
+* **ELT hiện đại**: Dữ liệu thô từ các nguồn được trích xuất và nạp thẳng vào **Cloud Data Warehouse** (như [Snowflake](/concepts/cloud-data-platform/snowflake/), BigQuery) mà không cần chế biến trước. Sau đó, chúng ta tận dụng sức mạnh tính toán phân tán gần như vô hạn và rẻ tiền của đám mây để thực hiện toàn bộ việc biến đổi dữ liệu bằng ngôn ngữ SQL trực tiếp bên trong kho dữ liệu.
 
 ---
 
@@ -94,7 +94,7 @@ Nhạc trưởng điều phối lịch chạy tuần tự của toàn bộ hệ 
 Hãy tưởng tượng bạn có dữ liệu bán hàng nằm ở database MySQL và chi phí chạy quảng cáo nằm ở tài khoản Facebook Ads.
 1. Bạn cấu hình kết nối Facebook Ads và MySQL trên giao diện **Airbyte (EL)**. Airbyte sẽ tự động copy toàn bộ dữ liệu thô này thả vào **BigQuery (Warehouse)** sau mỗi một tiếng.
 2. Tại BigQuery, dữ liệu Facebook Ads ban đầu nằm dưới dạng JSON thô rất khó đọc.
-3. Analytics Engineer sẽ viết các đoạn mã SQL trong **dbt (T)** để thực hiện việc bóc tách JSON, JOIN bảng chi phí quảng cáo với bảng doanh số đơn hàng để tính toán tỷ suất hoàn vốn (ROI). dbt sẽ biên dịch đoạn code này và đẩy xuống BigQuery thực thi.
+3. Analytics Engineer sẽ viết các đoạn mã SQL trong **[dbt](/concepts/transformation-analytics/dbt/) (T)** để thực hiện việc bóc tách JSON, JOIN bảng chi phí quảng cáo với bảng doanh số đơn hàng để tính toán tỷ suất hoàn vốn (ROI). dbt sẽ biên dịch đoạn code này và đẩy xuống BigQuery thực thi.
 4. Cuối cùng, Giám đốc Marketing có thể mở dashboard trên **Metabase (BI)** để theo dõi hiệu quả chiến dịch một cách trực quan mà không cần biết viết một dòng code nào.
 
 Dưới đây là một đoạn code dbt mẫu để tính toán ROI:
@@ -144,7 +144,7 @@ LEFT JOIN sales s ON f.campaign_id = s.campaign_id
 
 ### Không nên chọn khi:
 * Doanh nghiệp có yêu cầu cực kỳ khắt khe về bảo mật thông tin, không được phép đưa dữ liệu ra ngoài On-premise (như ngân hàng, quốc phòng).
-* Hệ thống bắt buộc phải xử lý dữ liệu theo thời gian thực (độ trễ dưới 1 giây). MDS bản chất được thiết kế để xử lý dữ liệu theo lô (Batch Processing).
+* Hệ thống bắt buộc phải xử lý dữ liệu theo thời gian thực (độ trễ dưới 1 giây). MDS bản chất được thiết kế để xử lý dữ liệu theo lô ([Batch Processing](/concepts/batch-processing/batch-processing/)).
 
 ---
 
@@ -168,14 +168,14 @@ LEFT JOIN sales s ON f.campaign_id = s.campaign_id
 * **Mục đích của người phỏng vấn**: Kiểm tra kiến thức của bạn về công cụ biến đổi dữ liệu tiêu chuẩn hiện nay.
 * **Gợi ý trả lời**:
   * dbt đóng vai trò làm trung tâm của tầng biến đổi (Transform - chữ T trong ELT). Nó cho phép viết các câu truy vấn SQL lồng nhau một cách có tổ chức (nhờ cấu trúc modularity và hàm `ref()`).
-  * dbt được đánh giá cao vì nó đã mang các tiêu chuẩn chất lượng của kỹ nghệ phần mềm (Software Engineering) áp dụng vào việc phân tích dữ liệu: quản lý mã nguồn bằng Git, viết test case tự động kiểm tra chất lượng dữ liệu (kiểm tra trùng lặp, giá trị null), tự động vẽ bản đồ dòng chảy dữ liệu (Data Lineage) và tự động tạo tài liệu hướng dẫn (documentation).
+  * dbt được đánh giá cao vì nó đã mang các tiêu chuẩn chất lượng của kỹ nghệ phần mềm (Software Engineering) áp dụng vào việc phân tích dữ liệu: quản lý mã nguồn bằng Git, viết test case tự động kiểm tra chất lượng dữ liệu (kiểm tra trùng lặp, giá trị null), tự động vẽ bản đồ dòng chảy dữ liệu ([Data Lineage](/concepts/governance-metadata/data-lineage/)) và tự động tạo tài liệu hướng dẫn (documentation).
 
 ---
 
 ## Tài liệu tham khảo
 
-1. **dbt Labs Blog** - *Các bài viết định hình khái niệm Analytics Engineering và MDS*.
-2. **"Fundamentals of Data Engineering"** - Joe Reis & Matt Housley.
+1. [dbt Labs Blog](https://www.getdbt.com/blog/)
+2. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Joe Reis & Matt Housley
 
 ---
 

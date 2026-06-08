@@ -16,7 +16,7 @@ Khi thiết kế một hệ thống phần mềm hoặc xây dựng các đườ
 Điểm khác biệt cốt lõi giữa hai mô hình này nằm ở **quyền kiểm soát luồng dữ liệu (control of flow)**:
 
 * **Mô hình Đẩy (Push Model)**: Nguồn phát dữ liệu (Producer) đóng vai trò chủ động. Ngay khi có một sự kiện hay dữ liệu mới xuất hiện, nó sẽ lập tức đóng gói và "đẩy" thẳng tới hệ thống nhận. Hệ thống nhận (Consumer) ở trạng thái bị động chờ đợi và xử lý bất kỳ lúc nào dữ liệu ập đến. Ví dụ thực tế dễ thấy nhất là tính năng Webhooks của các cổng thanh toán, hoặc thông báo đẩy (Push Notification) trên điện thoại của bạn.
-* **Mô hình Kéo (Pull Model)**: Nguồn nhận dữ liệu (Consumer) nắm thế chủ động. Nguồn phát chỉ làm nhiệm vụ lưu trữ dữ liệu một chỗ một cách thụ động. Hệ thống nhận sẽ định kỳ kết nối tới nguồn phát để thăm dò (poll): *"Có thông tin gì mới không? Gửi cho tôi nhé!"*. Ví dụ điển hình là các tiến trình ETL chạy định kỳ hoặc các câu lệnh gọi API dạng GET để lấy dữ liệu.
+* **Mô hình Kéo (Pull Model)**: Nguồn nhận dữ liệu (Consumer) nắm thế chủ động. Nguồn phát chỉ làm nhiệm vụ lưu trữ dữ liệu một chỗ một cách thụ động. Hệ thống nhận sẽ định kỳ kết nối tới nguồn phát để thăm dò (poll): *"Có thông tin gì mới không? Gửi cho tôi nhé!"*. Ví dụ điển hình là các tiến trình [ETL](/concepts/etl-elt/etl/) chạy định kỳ hoặc các câu lệnh gọi API dạng GET để lấy dữ liệu.
 
 ## Cuộc chiến giữa Tức thì (Latency) và Bền bỉ (Stability)
 
@@ -67,7 +67,7 @@ graph LR
 
 ## Mô hình Hybrid trong thực tế: Tại sao Apache Kafka lại phối hợp cả hai?
 
-Để tận dụng ưu điểm của cả hai thế giới, các kiến trúc sư dữ liệu hiện đại thường thiết kế các hệ thống Hybrid sử dụng Message Broker ở giữa (như Apache Kafka).
+Để tận dụng ưu điểm của cả hai thế giới, các kiến trúc sư dữ liệu hiện đại thường thiết kế các hệ thống Hybrid sử dụng Message Broker ở giữa (như [Apache Kafka](/concepts/streaming-processing/apache-kafka/)).
 
 Trong hệ sinh thái Kafka:
 * **Từ Producer đến Kafka (Push)**: Các thiết bị IoT hay ứng dụng gửi dữ liệu liên tục lên Kafka theo cơ chế **Push**. Điều này giúp giải phóng dữ liệu nhanh chóng khỏi thiết bị biên (edge devices) mà không cần lo lắng Broker có sẵn sàng nhận hay không, tránh việc nghẽn bộ nhớ tại nguồn.
@@ -107,7 +107,7 @@ while True:
 | **Độ bảo mật mạng** | Khó hơn (Phải mở cổng tường lửa để đón nhận Push) | Dễ hơn (Bên nhận chủ động ra ngoài Internet lấy data) |
 
 ### Những nguyên tắc thiết kế quan trọng
-* **Ưu tiên Pull cho luồng Ingestion**: Khi thiết kế các luồng thu thập dữ liệu (Data Ingestion) cho Data Lake hay Data Warehouse, hãy ưu tiên cơ chế Pull. Việc kéo dữ liệu giúp bạn chủ động trong việc lập lịch, xử lý lỗi, chạy lại dữ liệu cũ (backfill) mà không cần can thiệp hay yêu cầu đội phát triển ứng dụng nguồn phải viết lại code.
+* **Ưu tiên Pull cho luồng Ingestion**: Khi thiết kế các luồng thu thập dữ liệu ([Data Ingestion](/concepts/etl-elt/data-ingestion/)) cho [Data Lake](/concepts/data-lake-lakehouse/data-lake/) hay [Data Warehouse](/concepts/data-warehouse/data-warehouse/), hãy ưu tiên cơ chế Pull. Việc kéo dữ liệu giúp bạn chủ động trong việc lập lịch, xử lý lỗi, chạy lại dữ liệu cũ ([backfill](/concepts/etl-elt/backfill/)) mà không cần can thiệp hay yêu cầu đội phát triển ứng dụng nguồn phải viết lại code.
 * **Tự vệ khi dùng Webhook**: Nếu bạn bắt buộc phải cung cấp một cổng API để bên thứ ba push dữ liệu sang (ví dụ nhận trạng thái thanh toán từ Stripe), hãy đảm bảo API đó có tính **Idempotent (lũy đẳng)** để tránh xử lý trùng lặp. Đồng thời, hãy chuyển tiếp ngay dữ liệu nhận được vào một hàng đợi tin nhắn (Message Queue) để trả về phản hồi HTTP nhanh nhất có thể, tránh việc giữ kết nối mạng quá lâu làm cạn kiệt tài nguyên server.
 * **Tránh cạm bẫy "Polling Hell"**: Một sai lầm kinh điển khi làm Pull là cấu hình vòng lặp kéo dữ liệu với tần suất quá cao (ví dụ cứ 1 giây quét một bảng database hàng chục triệu dòng để tìm bản ghi mới). Việc này sẽ nhanh chóng vắt kiệt I/O của database và kéo sập ứng dụng.
 
@@ -129,8 +129,8 @@ while True:
 
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Phần phân tích chi tiết về các luồng truyền tải thông điệp).
-2. **Kafka: The Definitive Guide** - Tài liệu giải thích triết lý thiết kế cơ chế Consumer Pull của LinkedIn.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann
+2. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Gwen Shapira, Todd Palino, Rajini Sivaram, and Krit Gunnala
 
 ## English Summary
 

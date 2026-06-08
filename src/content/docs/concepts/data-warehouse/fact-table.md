@@ -11,7 +11,7 @@ metaDescription: "Tìm hiểu chi tiết về Bảng sự kiện (Fact Table) tr
 
 Mỗi khi bạn đi siêu thị và nghe tiếng "bíp" vang lên lúc nhân viên thu ngân quét mã vạch trên sản phẩm, một giao dịch mới đã được ghi nhận. Trong thế giới lưu trữ dữ liệu, hành động quét mã vạch đó sẽ sinh ra một loạt các con số: số lượng mua, đơn giá, số tiền chiết khấu và tổng doanh thu. 
 
-Để phục vụ cho việc phân tích và báo cáo sau này, tất cả những con số đo lường thực tế đó sẽ được gom về một bảng lưu trữ trung tâm. Bảng đó được gọi là **Bảng sự kiện (Fact Table)** – xương sống của mọi mô hình dữ liệu đa chiều (Dimensional Modeling) trong Data Warehouse.
+Để phục vụ cho việc phân tích và báo cáo sau này, tất cả những con số đo lường thực tế đó sẽ được gom về một bảng lưu trữ trung tâm. Bảng đó được gọi là **Bảng sự kiện (Fact Table)** – xương sống của mọi mô hình dữ liệu đa chiều ([Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/)) trong [Data Warehouse](/concepts/data-warehouse/data-warehouse/).
 
 ## Điểm hội tụ của những con số biết nói
 
@@ -55,7 +55,7 @@ erDiagram
         varchar email
     }
     dim_store {
-        int store_key FK
+        int store_key PK
         varchar store_name
         varchar city
     }
@@ -132,7 +132,7 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 
 ### Nguyên tắc vàng (Best Practices)
 * **Thiết lập độ mịn sâu nhất có thể (Atomic Grain)**: Hãy luôn lưu trữ dữ liệu ở mức độ chi tiết nhất (ví dụ: từng sản phẩm trong hóa đơn) thay vì lưu dữ liệu đã được tổng hợp sẵn theo ngày hay theo cửa hàng. Việc tổng hợp số liệu hãy để công cụ BI thực hiện. Dữ liệu càng chi tiết sẽ càng giúp doanh nghiệp trả lời được mọi câu hỏi phân tích phát sinh ngẫu nhiên (Ad-hoc queries) trong tương lai.
-* **Không để NULL ở các khóa ngoại (FK)**: Nếu một giao dịch bán hàng diễn ra mà không có thông tin khách hàng (khách vãng lai), tuyệt đối không để giá trị NULL ở cột `customer_key`. Hệ thống ETL phải gán giá trị này bằng `-1` (trỏ đến bản ghi "Khách vãng lai/Không xác định" trong bảng `dim_customer`). NULL ở bảng Fact sẽ làm hỏng kết quả báo cáo khi thực hiện phép JOIN.
+* **Không để NULL ở các khóa ngoại (FK)**: Nếu một giao dịch bán hàng diễn ra mà không có thông tin khách hàng (khách vãng lai), tuyệt đối không để giá trị NULL ở cột `customer_key`. Hệ thống [ETL](/concepts/etl-elt/etl/) phải gán giá trị này bằng `-1` (trỏ đến bản ghi "Khách vãng lai/Không xác định" trong bảng `dim_customer`). NULL ở bảng Fact sẽ làm hỏng kết quả báo cáo khi thực hiện phép JOIN.
 
 ### Sai lầm dễ mắc phải (Common Mistakes)
 * **Chèn các cột chuỗi văn bản (VARCHAR) dài vào bảng Fact**: Đôi khi do lười viết câu lệnh JOIN, Data Engineer chèn thẳng cột `product_name` hay `customer_email` vào bảng `fact_sales`. Việc này làm dung lượng bảng Fact phình to một cách khủng khiếp, làm giảm hiệu năng truy vấn của toàn bộ hệ thống.
@@ -145,7 +145,7 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 * Dễ dàng mở rộng: Khi cần bổ sung một chiều phân tích mới (ví dụ kênh bán hàng), bạn chỉ cần tạo bảng `dim_channel` mới và thêm một cột khóa ngoại `channel_key` (kiểu INT) vào bảng Fact.
 
 ### Nhược điểm & Đánh đổi
-* Dung lượng lưu trữ tăng rất nhanh theo thời gian. Bạn cần thiết lập cơ chế phân vùng bảng (Partitioning) chặt chẽ để quản lý hiệu năng.
+* Dung lượng lưu trữ tăng rất nhanh theo thời gian. Bạn cần thiết lập cơ chế phân vùng bảng ([Partitioning](/concepts/database-storage/partitioning/)) chặt chẽ để quản lý hiệu năng.
 * Cực kỳ tốn kém tài nguyên khi cần cập nhật dữ liệu lịch sử. Nếu phát hiện công thức tính doanh thu của năm ngoái bị sai, việc chạy lệnh `UPDATE` trên bảng Fact chứa hàng tỷ dòng là một cơn ác mộng lớn.
 
 ## Góc phỏng vấn
@@ -163,7 +163,7 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 ### 3. Làm thế nào để bạn xử lý trường hợp một thuộc tính của Dimension thay đổi theo thời gian trong Fact Table?
 * **Gợi ý trả lời**: 
   * Chúng ta sử dụng kỹ thuật SCD (Slowly Changing Dimensions) để quản lý lịch sử thay đổi của Dimension. Khi một thuộc tính Dimension thay đổi (ví dụ: khách hàng đổi địa chỉ), tùy thuộc vào loại SCD (SCD Type 1, 2, hay 3), khóa ngoại tương ứng trong Fact Table sẽ liên kết đến bản ghi phù hợp.
-  * Đặc biệt với SCD Type 2, một bản ghi mới với khóa thay thế (surrogate key) mới được tạo ra trong bảng Dimension, và các giao dịch Fact phát sinh sau thời điểm thay đổi sẽ tự động liên kết với khóa mới này, từ đó giúp bảo toàn tính chính xác lịch sử của báo cáo.
+  * Đặc biệt với SCD Type 2, một bản ghi mới với khóa thay thế ([surrogate key](/concepts/data-warehouse/surrogate-key/)) mới được tạo ra trong bảng Dimension, và các giao dịch Fact phát sinh sau thời điểm thay đổi sẽ tự động liên kết với khóa mới này, từ đó giúp bảo toàn tính chính xác lịch sử của báo cáo.
 
 ---
 
@@ -175,10 +175,10 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 ## Tài liệu tham khảo
 
 1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic textbook detailing fact table designs, grain specifications, and additive/non-additive metrics.
-2. [Snowflake Documentation: Designing Fact Tables](https://docs.snowflake.com/) - Best practices and patterns for building highly performant fact tables on Snowflake.
-3. Databricks Documentation: Medallion Architecture - Guide to structuring raw ingestions into Gold-layer fact and dimension tables.
-4. Monte Carlo Data: Dimensional Modeling 101 - Comprehensive guide on how fact tables aggregate quantitative metrics for BI tools.
-5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Integrating classic Kimball dimensional designs, surrogate keys, and fact tables within the Databricks Lakehouse.
+2. [Snowflake Documentation: Designing Fact Tables](https://docs.snowflake.com/) - Best practices and patterns for building highly performant fact tables on [Snowflake](/concepts/cloud-data-platform/snowflake/).
+3. [Databricks Documentation: Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture) - Guide to structuring raw ingestions into Gold-layer fact and dimension tables.
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling-101/) - Comprehensive guide on how fact tables aggregate quantitative metrics for BI tools.
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Integrating classic Kimball dimensional designs, surrogate keys, and fact tables within the Databricks [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/).
 
 ## English Summary
 

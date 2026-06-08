@@ -19,11 +19,11 @@ Biểu diễn bằng công thức toán học:
 
 $$f(f(x)) = f(x)$$
 
-Trong bối cảnh hệ thống phân tán và thiết kế đường ống dữ liệu ETL/ELT, một pipeline có tính lũy đẳng cho phép các kỹ sư dữ liệu thoải mái chạy lại (rerun hoặc backfill) các tác vụ bị lỗi hoặc bị trễ mà không cần phải lo lắng về việc dữ liệu bị hỏng, bị ghi đè sai lệch hay sinh ra các bản ghi trùng lặp (duplicates).
+Trong bối cảnh hệ thống phân tán và thiết kế đường ống dữ liệu [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/), một pipeline có tính lũy đẳng cho phép các kỹ sư dữ liệu thoải mái chạy lại (rerun hoặc [backfill](/concepts/etl-elt/backfill/)) các tác vụ bị lỗi hoặc bị trễ mà không cần phải lo lắng về việc dữ liệu bị hỏng, bị ghi đè sai lệch hay sinh ra các bản ghi trùng lặp (duplicates).
 
 ## Tại sao chúng ta cần tính lũy đẳng trong hệ thống dữ liệu?
 
-Trong thế giới thực tế của Data Engineering, các đường ống dữ liệu thường xuyên phải đối mặt với vô vàn sự cố ngoài ý muốn:
+Trong thế giới thực tế của [Data Engineering](/concepts/foundation/data-engineering/), các đường ống dữ liệu thường xuyên phải đối mặt với vô vàn sự cố ngoài ý muốn:
 * Hệ thống nguồn (Source Database) bất ngờ bị sập hoặc mất kết nối.
 * Mạng chập chờn gây mất gói tin giữa chừng.
 * Máy chủ tính toán (Compute Cluster/Spark) bị cạn kiệt tài nguyên dẫn đến tắt đột ngột khi đang ghi dữ liệu.
@@ -95,9 +95,9 @@ WHEN NOT MATCHED THEN
 
 ## Quy tắc "vàng" cho kỹ sư dữ liệu
 
-* **Luôn thiết lập Phân vùng dữ liệu (Partitioning)**: Hãy phân vùng bảng dữ liệu theo thời gian (ví dụ: ngày tạo `created_at` hoặc ngày xử lý `execution_date`). Việc này giúp thao tác xóa và ghi đè (Overwrite) chỉ diễn ra trên một phân vùng nhỏ, tối ưu hiệu năng và tốc độ truy vấn đáng kể.
-* **Đảm bảo các giao dịch mang tính Nguyên tử (Atomic Transactions)**: Hãy chắc chắn rằng quá trình xóa dữ liệu cũ và ghi dữ liệu mới diễn ra như một khối thống nhất (hoặc tất cả thành công, hoặc không có gì thay đổi). Các định dạng dữ liệu hiện đại như Delta Lake, Apache Iceberg hay Apache Hudi hỗ trợ tính năng ACID này một cách tự nhiên.
-* **Tách biệt logic xử lý khỏi trạng thái hệ thống**: Tuyệt đối tránh sử dụng các hàm thời gian động như `CURRENT_DATE()` trong câu lệnh SQL ETL. Thay vào đó, hãy sử dụng các tham số thời gian cố định được truyền vào từ công cụ lập lịch (ví dụ tham số `ds` trong Apache Airflow) để đảm bảo kết quả luôn đồng nhất khi chạy lại.
+* **Luôn thiết lập Phân vùng dữ liệu ([Partitioning](/concepts/database-storage/partitioning/))**: Hãy phân vùng bảng dữ liệu theo thời gian (ví dụ: ngày tạo `created_at` hoặc ngày xử lý `execution_date`). Việc này giúp thao tác xóa và ghi đè (Overwrite) chỉ diễn ra trên một phân vùng nhỏ, tối ưu hiệu năng và tốc độ truy vấn đáng kể.
+* **Đảm bảo các giao dịch mang tính Nguyên tử (Atomic Transactions)**: Hãy chắc chắn rằng quá trình xóa dữ liệu cũ và ghi dữ liệu mới diễn ra như một khối thống nhất (hoặc tất cả thành công, hoặc không có gì thay đổi). Các định dạng dữ liệu hiện đại như [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/), [Apache Iceberg](/concepts/data-lake-lakehouse/apache-iceberg/) hay [Apache Hudi](/concepts/data-lake-lakehouse/apache-hudi/) hỗ trợ tính năng ACID này một cách tự nhiên.
+* **Tách biệt logic xử lý khỏi trạng thái hệ thống**: Tuyệt đối tránh sử dụng các hàm thời gian động như `CURRENT_DATE()` trong câu lệnh SQL ETL. Thay vào đó, hãy sử dụng các tham số thời gian cố định được truyền vào từ công cụ lập lịch (ví dụ tham số `ds` trong [Apache Airflow](/concepts/orchestration/apache-airflow/)) để đảm bảo kết quả luôn đồng nhất khi chạy lại.
 
 ## Những sai lầm tai hại thường gặp
 
@@ -147,9 +147,9 @@ WHEN NOT MATCHED THEN
 
 1. [Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) - AWS Builder's Library article on designing systems with safe retries and idempotency keys.
 2. [Designing Robust APIs with Idempotency](https://stripe.com/blog/idempotency) - Stripe Engineering Blog post explaining how they implement and handle idempotency in API requests.
-3. Transactions in Apache Kafka: Exactly-Once Semantics - Confluent Blog post on idempotence and exactly-once processing in Kafka.
+3. Transactions in [Apache Kafka](/concepts/streaming-processing/apache-kafka/): Exactly-Once Semantics - Confluent Blog post on idempotence and exactly-once processing in Kafka.
 4. SQL MERGE Statement - Databricks SQL reference documentation for performing idempotent upserts.
-5. [What is Idempotency?](https://docs.getdbt.com/terms/idempotency) - dbt Labs definition and explanation of idempotency in data modeling.
+5. [What is Idempotency?](https://docs.getdbt.com/terms/idempotency) - [dbt](/concepts/transformation-analytics/dbt/) Labs definition and explanation of idempotency in data modeling.
 
 ## English Summary
 

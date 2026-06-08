@@ -99,8 +99,8 @@ producer.flush()
 
 ## Tài liệu tham khảo
 
-* **Kafka: The Definitive Guide** - Neha Narkhede (Chương Kafka Internals).
-* Confluent: How to choose the number of topics/partitions.
+1. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Neha Narkhede, Gwen Shapira, and Todd Palino
+2. [Confluent: How to Choose the Number of Topics/Partitions](https://www.confluent.io/blog/how-choose-number-topics-partitions-apache-kafka-cluster/)
 
 ## English Summary
 

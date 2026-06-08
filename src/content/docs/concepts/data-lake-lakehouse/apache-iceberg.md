@@ -11,13 +11,13 @@ metaDescription: "Khám phá Apache Iceberg: Định dạng bảng mở do Netfl
 
 # Apache Iceberg: Định dạng bảng thế hệ mới cho Data Lake
 
-Khi xây dựng các kho dữ liệu phân tích khổng lồ, việc tối ưu hóa hiệu năng truy vấn và đảm bảo tính nhất quán dữ liệu luôn là những thử thách cực kỳ khó khăn. Để giải quyết vấn đề này, Netflix đã phát triển và giới thiệu **Apache Iceberg** – một định dạng bảng mở (Open Table Format) hiệu năng cao dành cho các kho dữ liệu quy mô Petabyte.
+Khi xây dựng các kho dữ liệu phân tích khổng lồ, việc tối ưu hóa hiệu năng truy vấn và đảm bảo tính nhất quán dữ liệu luôn là những thử thách cực kỳ khó khăn. Để giải quyết vấn đề này, Netflix đã phát triển và giới thiệu **Apache Iceberg** – một định dạng bảng mở (Open [Table Format](/concepts/data-lake-lakehouse/table-format/)) hiệu năng cao dành cho các kho dữ liệu quy mô Petabyte.
 
-Đóng vai trò là một lớp quản lý siêu dữ liệu (Metadata Layer) trung gian nằm giữa các engine tính toán (như Spark, Trino, Flink, Snowflake) và các hệ thống lưu trữ đám mây vật lý (S3, GCS, HDFS), Iceberg mang lại khả năng thực thi giao dịch ACID an toàn, nâng cấp cấu trúc bảng (Schema Evolution) mượt mà và tính năng phân vùng ẩn (Hidden Partitioning) độc đáo. Cùng với Delta Lake, Iceberg hiện đang là tiêu chuẩn thiết kế kiến trúc Lakehouse hiện đại.
+Đóng vai trò là một lớp quản lý siêu dữ liệu (Metadata Layer) trung gian nằm giữa các engine tính toán (như Spark, Trino, Flink, [Snowflake](/concepts/cloud-data-platform/snowflake/)) và các hệ thống lưu trữ đám mây vật lý (S3, GCS, HDFS), Iceberg mang lại khả năng thực thi giao dịch ACID an toàn, nâng cấp cấu trúc bảng ([Schema Evolution](/concepts/data-lake-lakehouse/schema-evolution/)) mượt mà và tính năng phân vùng ẩn (Hidden [Partitioning](/concepts/database-storage/partitioning/)) độc đáo. Cùng với Delta Lake, Iceberg hiện đang là tiêu chuẩn thiết kế kiến trúc Lakehouse hiện đại.
 
 ## Cơn ác mộng Petabyte tại Netflix và sự sụp đổ của Apache Hive
 
-Suốt một thời gian dài, Apache Hive là chuẩn mực chung để định nghĩa cấu trúc bảng dữ liệu trên Hadoop và Data Lake. Hive quản lý dữ liệu bằng cách theo dõi các thư mục vật lý (Folder-based). Ví dụ: một tệp tin Parquet khi được thả vào thư mục `year=2026/month=06` sẽ tự động được coi là thuộc về phân vùng (partition) tháng 6 năm 2026.
+Suốt một thời gian dài, Apache Hive là chuẩn mực chung để định nghĩa cấu trúc bảng dữ liệu trên Hadoop và [Data Lake](/concepts/data-lake-lakehouse/data-lake/). Hive quản lý dữ liệu bằng cách theo dõi các thư mục vật lý (Folder-based). Ví dụ: một tệp tin Parquet khi được thả vào thư mục `year=2026/month=06` sẽ tự động được coi là thuộc về phân vùng (partition) tháng 6 năm 2026.
 
 Tuy nhiên, khi quy mô dữ liệu của Netflix phình to lên hàng Petabyte, thiết kế dựa trên thư mục của Hive bắt đầu bộc lộ những điểm yếu chí mạng:
 
@@ -42,7 +42,7 @@ Iceberg cung cấp cơ chế Snapshot Isolation. Khi một tiến trình đang g
 
 ### 2. Phân vùng ẩn (Hidden Partitioning)
 Đây là tính năng độc quyền và cực kỳ đắt giá của Iceberg.
-* Với Hive, nếu bạn có cột `timestamp` (ví dụ: `2026-06-07 10:15:00`), bạn phải viết code ETL để tạo thêm một cột phụ là `date_str = '2026-06-07'` và cấu hình phân vùng theo cột này. Người dùng truy vấn bắt buộc phải nhớ gõ `WHERE date_str = ...`.
+* Với Hive, nếu bạn có cột `timestamp` (ví dụ: `2026-06-07 10:15:00`), bạn phải viết code [ETL](/concepts/etl-elt/etl/) để tạo thêm một cột phụ là `date_str = '2026-06-07'` và cấu hình phân vùng theo cột này. Người dùng truy vấn bắt buộc phải nhớ gõ `WHERE date_str = ...`.
 * Với Iceberg, bạn chỉ cần chỉ định: *"Hãy phân vùng bảng theo ngày từ cột event_time"*. Iceberg sẽ tự động xử lý ngầm toàn bộ logic phân chia. Người dùng chỉ việc viết truy vấn tự nhiên: `WHERE event_time > '2026-06-07'`, Iceberg sẽ tự hiểu và chỉ quét đúng phân vùng của ngày đó, loại bỏ hoàn toàn nguy cơ quét nhầm toàn bộ bảng do sơ suất của con người.
 
 ### 3. Tiến hóa cấu trúc bảng không giới hạn (Schema Evolution)
@@ -58,14 +58,14 @@ Hệ thống Iceberg quản lý một bảng dữ liệu thông qua cấu trúc 
 ```mermaid
 graph TD
     subgraph "Catalog Layer"
-        A["Iceberg Catalog\nNessie, Hive Metastore, AWS Glue"]
+        A["Iceberg Catalog<br/>Nessie, Hive Metastore, AWS Glue"]
     end
 
     subgraph "Metadata Layer  (Tracking)"
-        B["Metadata JSON\nTable schema, Current Snapshot ID"]
-        C["Manifest List\nList of manifests for a snapshot"]
-        D1["Manifest File 1\nTracks files, partition bounds"]
-        D2["Manifest File 2\nTracks files, column min/max"]
+        B["Metadata JSON<br/>Table schema, Current Snapshot ID"]
+        C["Manifest List<br/>List of manifests for a snapshot"]
+        D1["Manifest File 1<br/>Tracks files, partition bounds"]
+        D2["Manifest File 2<br/>Tracks files, column min/max"]
     end
 
     subgraph "Data Layer  (Storage on S3/GCS)"
@@ -117,7 +117,7 @@ FOR SYSTEM_VERSION AS OF 10963874102873;
 ## Những nguyên tắc vàng khi vận hành Apache Iceberg
 
 * **Lựa chọn Catalog đáng tin cậy:** Catalog chính là xương sống của Iceberg, nơi định vị file metadata mới nhất. Hãy ưu tiên sử dụng các dịch vụ Catalog chất lượng như AWS Glue, Snowflake Catalog hoặc Project Nessie (hỗ trợ quản lý phiên bản dữ liệu tương tự Git như tạo nhánh branch, merge dữ liệu).
-* **Định kỳ tối ưu hóa tệp tin (Compaction):** Quá trình cập nhật hoặc xóa dữ liệu (DML) sẽ liên tục sinh ra các tệp tin nhỏ lẻ hoặc các file log thay đổi. Bạn cần lên lịch chạy các tác vụ Compaction (lệnh `rewriteDataFiles` trong Spark) định kỳ để gộp các file nhỏ thành các file Parquet có kích thước tối ưu (khoảng 128MB - 512MB).
+* **Định kỳ tối ưu hóa tệp tin ([Compaction](/concepts/data-lake-lakehouse/compaction/)):** Quá trình cập nhật hoặc xóa dữ liệu (DML) sẽ liên tục sinh ra các tệp tin nhỏ lẻ hoặc các file log thay đổi. Bạn cần lên lịch chạy các tác vụ Compaction (lệnh `rewriteDataFiles` trong Spark) định kỳ để gộp các file nhỏ thành các file Parquet có kích thước tối ưu (khoảng 128MB - 512MB).
 * **Quản lý vòng đời Snapshot:** Để tránh việc kho lưu trữ phình to và cây siêu dữ liệu quá nặng nề, hãy lên lịch dọn dẹp các snapshot cũ (`ExpireSnapshots`) và xóa bỏ các tệp tin mồ côi (`DeleteOrphanFiles`) không còn liên kết với metadata hiện tại.
 
 ## Những sai lầm kinh điển dễ gây lãng phí tài nguyên
@@ -173,4 +173,4 @@ Iceberg giải quyết vấn đề này bằng cách gán cho mỗi cột một 
 
 ## English Summary
 
-Apache Iceberg is a high-performance open table format designed to manage massive analytics datasets on Data Lakes (Lakehouse architecture). Originating at Netflix to solve the severe performance scalability and reliability issues of Apache Hive, Iceberg completely abandons folder-based tracking in favor of precise, file-level metadata tracking (via Manifest trees). This innovative design enables robust ACID transactions, safe and instant Schema Evolution (via unique column IDs), and the game-changing "Hidden Partitioning" feature, which protects users from accidental full-table scans without requiring them to know the physical data layout. As an independent open standard, Iceberg serves as the universal metadata bridge allowing various analytical engines (Spark, Trino, Snowflake) to concurrently process petabytes of data on cost-effective cloud storage.
+Apache Iceberg is a high-performance open table format designed to manage massive analytics datasets on Data Lakes (Lakehouse architecture). Originating at Netflix to solve the severe performance scalability and reliability issues of Apache Hive, Iceberg completely abandons folder-based tracking in favor of precise, file-level metadata tracking (via Manifest trees). This innovative design enables robust ACID transactions, safe and instant Schema Evolution (via unique column IDs), and the game-changing "Hidden Partitioning" feature, which protects users from accidental full-table scans without requiring them to know the physical data layout. As an independent open standard, Iceberg serves as the universal metadata bridge allowing various analytical engines (Spark, Trino, Snowflake) to concurrently process petabytes of data on cost-effective [cloud storage](/concepts/cloud-data-platform/cloud-storage/).

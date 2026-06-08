@@ -9,7 +9,7 @@ seoTitle: "Cảnh báo và Xử lý sự cố Dữ liệu (Alerting & Incident R
 metaDescription: "Tìm hiểu quy trình Cảnh báo (Alerting) và Phản ứng sự cố (Incident Response) trong Kỹ thuật Dữ liệu, cách thiết lập PagerDuty/Slack, và văn hóa Post-mortem."
 ---
 
-Hãy tưởng tượng bạn là một kỹ sư dữ liệu. Vào lúc 3 giờ sáng, hệ thống dbt báo lỗi đỏ rực, đường ống dẫn dữ liệu (pipeline) bị sập. Sáng hôm sau, CEO chuẩn bị bước vào cuộc họp quan quan trọng nhưng dashboard doanh thu lại hiển thị số liệu sai lệch hoặc trống trơn. Lúc này, ai sẽ là người thức dậy sửa lỗi? Làm thế nào để phân loại xem đây là lỗi khẩn cấp hay có thể đợi đến giờ hành chính? Và làm sao để báo cho các bên liên quan biết hệ thống đang được khắc phục?
+Hãy tưởng tượng bạn là một kỹ sư dữ liệu. Vào lúc 3 giờ sáng, hệ thống [dbt](/concepts/transformation-analytics/dbt/) báo lỗi đỏ rực, đường ống dẫn dữ liệu (pipeline) bị sập. Sáng hôm sau, CEO chuẩn bị bước vào cuộc họp quan quan trọng nhưng dashboard doanh thu lại hiển thị số liệu sai lệch hoặc trống trơn. Lúc này, ai sẽ là người thức dậy sửa lỗi? Làm thế nào để phân loại xem đây là lỗi khẩn cấp hay có thể đợi đến giờ hành chính? Và làm sao để báo cho các bên liên quan biết hệ thống đang được khắc phục?
 
 Đây chính là lúc quy trình **Cảnh báo và Phản ứng sự cố (Alerting & Incident Response)** phát huy vai trò. Đây là bước hành động tiếp theo ngay sau khi hệ thống giám sát (Monitoring / Data Observability) phát hiện ra bất thường, nhằm đảm bảo mọi sự cố dữ liệu đều được nhận diện, phân công đúng người trực (on-call), giải quyết nhanh chóng và ngăn ngừa tái diễn.
 
@@ -26,7 +26,7 @@ Nhiều đội ngũ dữ liệu đầu tư rất nhiều tiền vào các công 
 Để xây dựng một hệ thống ứng phó chuyên nghiệp như các đội ngũ SRE (Site Reliability Engineering) thực thụ, bạn cần tập trung vào 4 yếu tố cốt lõi:
 
 * **Phân loại độ nghiêm trọng (Severity / SEV Levels):** Không phải lỗi nào cũng khẩn cấp như nhau. Lỗi sập hệ thống thanh toán cốt lõi (SEV-1) yêu cầu gọi điện đánh thức kỹ sư ngay lập tức, trong khi lỗi định dạng của một bảng phân tích nháp (SEV-4) hoàn toàn có thể để đến sáng mai xử lý.
-* **Định tuyến và Phân công trực ban (Routing & On-call Rotation):** Cảnh báo phải được gửi đích danh đến đúng đội ngũ sở hữu dữ liệu đó (Data Ownership). Đồng thời, luôn có một người trực chính (Primary On-call) chịu trách nhiệm tiếp nhận và xử lý cảnh báo trong ca trực.
+* **Định tuyến và Phân công trực ban (Routing & On-call Rotation):** Cảnh báo phải được gửi đích danh đến đúng đội ngũ sở hữu dữ liệu đó ([Data Ownership](/concepts/governance-metadata/data-ownership/)). Đồng thời, luôn có một người trực chính (Primary On-call) chịu trách nhiệm tiếp nhận và xử lý cảnh báo trong ca trực.
 * **Giao tiếp minh bạch (Communication):** Khi sự cố nghiêm trọng xảy ra, ưu tiên hàng đầu là phải cập nhật trạng thái cho người dùng cuối (Business users) biết rằng: *"Chúng tôi đã ghi nhận sự cố sai lệch số liệu và đang tập trung khắc phục, dự kiến sẽ hoàn thành trong vòng 1 giờ nữa"*. Điều này giúp giảm thiểu sự hoang mang và phàn nàn.
 * **Văn hóa họp rút kinh nghiệm không đổ lỗi (Blameless Post-mortem):** Sau khi khắc phục xong sự cố, cả đội sẽ họp lại để phân tích nguyên nhân gốc rễ (Root Cause) và đưa ra giải pháp cải tiến hệ thống, tuyệt đối không tìm người để chỉ trích hay phạt.
 
@@ -40,8 +40,8 @@ Một sự cố dữ liệu chuẩn từ khi phát hiện đến lúc giải quy
    * PagerDuty tự động gọi điện hoặc nhắn tin cho kỹ sư đang trực ca đó.
    * Kỹ sư nhấn nút "Acknowledge" (Đã nhận) trên ứng dụng để xác nhận mình đang xử lý, ngăn không cho hệ thống tiếp tục gọi điện báo động cho các cấp quản lý cao hơn (Escalation).
 3. **Điều tra và Khắc phục tạm thời (Investigation & Mitigation):**
-   * Kỹ sư trực kiểm tra bản đồ liên kết dữ liệu (Data Lineage) và phát hiện công cụ Fivetran bị lỗi API Token nên không thể cào dữ liệu về.
-   * Tiến hành cập nhật Token mới và chạy lại (backfill) đường ống dữ liệu để khôi phục trạng thái bình thường.
+   * Kỹ sư trực kiểm tra bản đồ liên kết dữ liệu (Data Lineage) và phát hiện công cụ Fivetran bị lỗi API [Token](/concepts/genai-ml/token/) nên không thể cào dữ liệu về.
+   * Tiến hành cập nhật Token mới và chạy lại ([backfill](/concepts/etl-elt/backfill/)) đường ống dữ liệu để khôi phục trạng thái bình thường.
 4. **Giải quyết triệt để (Resolution):** Đánh dấu sự cố là "Resolved" trên hệ thống và gửi thông báo xác nhận dữ liệu đã sạch tới các phòng ban kinh doanh.
 5. **Đánh giá sau sự cố (Post-mortem):** Cả đội ngồi lại phân tích tại sao Token bị hết hạn mà không có cảnh báo trước, từ đó thiết lập thêm một cảnh báo tự động gửi email nhắc nhở trước 3 ngày khi Token chuẩn bị hết hạn.
 
@@ -161,7 +161,7 @@ Quy trình này là bắt buộc đối với bất kỳ đội ngũ dữ liệu
   2. **Containment (Cách ly):** Tạm thời treo thông báo bảo trì hoặc ẩn biểu đồ doanh thu trên Web UI để tránh việc người dùng đọc phải số liệu sai lệch đưa ra quyết định sai.
   3. **Investigation (Điều tra):** Sử dụng Data Lineage và log của Airflow để truy vết xem tác vụ nào đã chạy trùng lặp (ví dụ: Airflow tự động chạy lại do lỗi mạng dẫn đến ghi đè trùng dữ liệu).
   4. **Mitigation/Resolution (Khắc phục):** Chạy lệnh xóa dữ liệu trùng lặp (hoặc chạy lại pipeline với cơ chế ghi đè idempotent), kiểm tra lại số liệu và bật lại dashboard cho người dùng.
-  5. **Post-mortem (Hậu kiểm):** Trong tuần làm việc mới, viết tài liệu phân tích nguyên nhân và thiết lập thêm ràng buộc duy nhất (Unique constraint) ở tầng Data Warehouse để ngăn chặn triệt để lỗi này trong tương lai.
+  5. **Post-mortem (Hậu kiểm):** Trong tuần làm việc mới, viết tài liệu phân tích nguyên nhân và thiết lập thêm ràng buộc duy nhất (Unique constraint) ở tầng [Data Warehouse](/concepts/data-warehouse/data-warehouse/) để ngăn chặn triệt để lỗi này trong tương lai.
 
 ## Tài liệu tham khảo
 

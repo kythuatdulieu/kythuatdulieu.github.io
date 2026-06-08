@@ -9,11 +9,11 @@ seoTitle: "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipelin
 metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) trong ETL/ELT: cách sử dụng High Watermark, quản lý trạng thái (State) và khác biệt so với Full Load."
 ---
 
-Khi bắt đầu xây dựng một kho dữ liệu (Data Warehouse), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).
+Khi bắt đầu xây dựng một kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).
 
 ## Chỉ kéo và xử lý phần thay đổi
 
-Incremental Load (Nạp dữ liệu gia tăng) là một cơ chế trích xuất và nạp dữ liệu trong quy trình ETL/ELT. Thay vì tải lại toàn bộ kho dữ liệu khổng lồ từ thuở sơ khai, hệ thống chỉ chủ động kéo về phần dữ liệu "Delta" — tức là những bản ghi mới được tạo hoặc vừa bị chỉnh sửa trạng thái kể từ lần chạy thành công gần nhất của đường ống dữ liệu (Data Pipeline).
+Incremental Load (Nạp dữ liệu gia tăng) là một cơ chế trích xuất và nạp dữ liệu trong quy trình [ETL](/concepts/etl-elt/etl/)/ELT. Thay vì tải lại toàn bộ kho dữ liệu khổng lồ từ thuở sơ khai, hệ thống chỉ chủ động kéo về phần dữ liệu "Delta" — tức là những bản ghi mới được tạo hoặc vừa bị chỉnh sửa trạng thái kể từ lần chạy thành công gần nhất của đường ống dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)).
 
 Để nhận diện được phần Delta này, luồng Ingestion (thu thập dữ liệu) cần được thiết kế dựa trên hai cột mốc quan trọng:
 1. **Cột theo dõi thời gian (Tracking Column) ở hệ thống nguồn**: Có thể là cột `created_at`, `updated_at` hoặc một chuỗi số ID tăng dần (`auto_increment_id`). Cột này giúp hệ thống xác định dòng dữ liệu nào vừa xuất hiện hoặc vừa thay đổi.
@@ -30,7 +30,7 @@ Incremental Load ra đời như một vị cứu tinh giúp kho dữ liệu củ
 
 ## Dấu mực nước: Khái niệm then chốt High Watermark
 
-Ý tưởng cốt lõi giúp Incremental Load vận hành trơn tru nằm ở khái niệm **High Watermark (Dấu mực nước cao nhất)**.
+Ý tưởng cốt lõi giúp Incremental Load vận hành trơn tru nằm ở khái niệm **High [Watermark](/concepts/streaming-processing/watermark/) (Dấu mực nước cao nhất)**.
 
 Hãy tưởng tượng bạn đang đọc một cuốn sách dày 1,000 trang. Thay vì mỗi ngày mở sách ra đọc lại từ trang 1, bạn dùng một chiếc kẹp sách (Bookmark) để đánh dấu trang 100 mà bạn vừa đọc xong. Ngày hôm sau, bạn chỉ việc mở đúng trang 101 để đọc tiếp.
 
@@ -82,7 +82,7 @@ graph TD
 
 ## Thực chiến: Triển khai Incremental Model với dbt
 
-Công cụ dbt (Data Build Tool) cung cấp giải pháp thiết lập Incremental Load cực kỳ thanh lịch thông qua mã SQL kết hợp với Jinja template.
+Công cụ [dbt](/concepts/transformation-analytics/dbt/) (Data Build Tool) cung cấp giải pháp thiết lập Incremental Load cực kỳ thanh lịch thông qua mã SQL kết hợp với Jinja template.
 
 Dưới đây là ví dụ cấu hình cho file `daily_sales.sql`:
 
@@ -126,7 +126,7 @@ Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành 
 ### Điểm cộng
 * Rút gọn dung lượng truyền tải mạng và giảm tải chi phí I/O đi hàng trăm lần.
 * Rút ngắn thời gian chạy job, cho phép tăng tần suất nạp dữ liệu (ví dụ 15 phút một lần thay vì chờ qua đêm), đáp ứng nhu cầu phân tích thời gian thực (Near Real-time).
-* Tiết kiệm đáng kể chi phí điện toán trên các kho dữ liệu đám mây (như Snowflake hay BigQuery).
+* Tiết kiệm đáng kể chi phí điện toán trên các kho dữ liệu đám mây (như [Snowflake](/concepts/cloud-data-platform/snowflake/) hay BigQuery).
 
 ### Điểm trừ
 * **Độ phức tạp kiến trúc tăng cao**: Bạn phải thiết lập và duy trì một hệ thống quản lý trạng thái (Watermark Storage). Nếu file cấu hình này bị hỏng, đường ống dữ liệu sẽ bị gián đoạn.
@@ -155,7 +155,7 @@ Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành 
 1. Incremental Sync Modes - Airbyte Documentation explaining incremental sync configurations and modes.
 2. [Configure incremental models](https://docs.getdbt.com/docs/build/incremental-models) - dbt Developer Hub guide on building and configuring incremental models.
 3. [Building Efficient Data Pipelines With Incremental Updates](https://fivetran.com/blog/building-efficient-data-pipelines-with-incremental-updates) - Fivetran Blog post detailing incremental sync patterns and strategies.
-4. [AWS Glue ETL Jobs Incremental Load](https://docs.aws.amazon.com/glue/latest/dg/glue-etl-jobs-incremental-load.html) - AWS Glue official documentation on managing incremental data loading.
+4. [AWS Glue ETL Jobs Incremental Load](https://docs.aws.amazon.com/glue/latest/dg/glue-etl-jobs-incremental-load.html) - AWS Glue official documentation on managing incremental [data loading](/concepts/etl-elt/data-loading/).
 5. [Incrementally load data from a source data store to a destination data store](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview) - Microsoft Azure Data Factory documentation on incremental copy patterns.
 
 ## English Summary

@@ -9,9 +9,9 @@ seoTitle: "Amazon Redshift là gì? Kiến trúc MPP Data Warehouse của AWS"
 metaDescription: "Khám phá Amazon Redshift: Kiến trúc xử lý song song khổng lồ (MPP), sự khác biệt kiến trúc Share-Nothing vs RA3, và so sánh với BigQuery/Snowflake."
 ---
 
-Vào năm 2012, Amazon Web Services (AWS) đã tạo nên một bước ngoặt lớn trong ngành dữ liệu khi giới thiệu **Amazon Redshift** – dịch vụ kho dữ liệu (Data Warehouse) trên đám mây ở quy mô Petabyte đầu tiên trên thế giới. 
+Vào năm 2012, Amazon Web Services (AWS) đã tạo nên một bước ngoặt lớn trong ngành dữ liệu khi giới thiệu **Amazon Redshift** – dịch vụ kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) trên đám mây ở quy mô Petabyte đầu tiên trên thế giới. 
 
-Bằng cách kết hợp kiến trúc Xử lý Song song Khổng lồ (Massively Parallel Processing - MPP) và lưu trữ dạng cột (Columnar Storage), Redshift cho phép các doanh nghiệp thực thi các câu lệnh SQL phức tạp trên lượng dữ liệu khổng lồ với tốc độ cực nhanh. Cho đến nay, Redshift vẫn là một trong những cột trụ vững chắc và phổ biến nhất trong hệ sinh thái của AWS.
+Bằng cách kết hợp kiến trúc Xử lý Song song Khổng lồ (Massively Parallel Processing - MPP) và lưu trữ dạng cột ([Columnar Storage](/concepts/database-storage/columnar-storage/)), Redshift cho phép các doanh nghiệp thực thi các câu lệnh SQL phức tạp trên lượng dữ liệu khổng lồ với tốc độ cực nhanh. Cho đến nay, Redshift vẫn là một trong những cột trụ vững chắc và phổ biến nhất trong hệ sinh thái của AWS.
 
 ## Cuộc cách mạng "dân chủ hóa" kho dữ liệu
 
@@ -43,7 +43,7 @@ Trong thiết kế truyền thống của Redshift, năng lực tính toán (CPU
 ## Những tính năng làm nên tên tuổi của Redshift
 
 ### 1. Redshift Spectrum (Truy vấn trực tiếp trên Hồ dữ liệu)
-Thay vì phải tốn thời gian và chi phí thiết lập các đường ống ETL phức tạp để nạp dữ liệu từ Amazon S3 vào Redshift, Spectrum cho phép bạn viết câu lệnh SQL để kết hợp (JOIN) trực tiếp các bảng dữ liệu bên trong Redshift với các file định dạng Parquet/CSV đang nằm tự do trên S3 mà không cần di chuyển dữ liệu.
+Thay vì phải tốn thời gian và chi phí thiết lập các đường ống [ETL](/concepts/etl-elt/etl/) phức tạp để nạp dữ liệu từ Amazon S3 vào Redshift, Spectrum cho phép bạn viết câu lệnh SQL để kết hợp (JOIN) trực tiếp các bảng dữ liệu bên trong Redshift với các file định dạng Parquet/CSV đang nằm tự do trên S3 mà không cần di chuyển dữ liệu.
 
 ### 2. Các kiểu phân phối dữ liệu vật lý (Distribution Styles)
 Để tận dụng tối đa sức mạnh xử lý song song của kiến trúc MPP, dữ liệu khi nạp vào Redshift cần được phân chia đồng đều giữa các node. Bạn có quyền cấu hình các chiến lược phân phối sau:
@@ -60,26 +60,26 @@ Hãy cùng xem sơ đồ dưới đây để hình dung cách các thành phần
 
 ```mermaid
 graph TD
-    subgraph Client Apps
-        BI[Tableau / Quicksight]
-        SQL[SQL IDE / JDBC]
+    subgraph "Client Apps"
+        BI["Tableau / Quicksight"]
+        SQL["SQL IDE / JDBC"]
     end
 
-    subgraph Amazon Redshift Cluster
-        Leader[Leader Node \n SQL Parsing & Plan]
+    subgraph "Amazon Redshift Cluster"
+        Leader["Leader Node <br/> SQL Parsing & Plan"]
         
-        subgraph Compute Nodes
-            Node1[Node 1 \n Local Cache SSD]
-            Node2[Node 2 \n Local Cache SSD]
+        subgraph "Compute Nodes"
+            Node1["Node 1 <br/> Local Cache SSD"]
+            Node2["Node 2 <br/> Local Cache SSD"]
         end
         
         Leader -- Execution Plan --> Node1
         Leader -- Execution Plan --> Node2
     end
 
-    subgraph AWS Storage Layer
-        RMS[(Redshift Managed Storage \n S3 Backend \n Cold Data)]
-        S3DataLake[(Amazon S3 \n External Data Lake)]
+    subgraph "AWS Storage Layer"
+        RMS["Redshift Managed Storage <br/> S3 Backend <br/> Cold Data"]
+        S3DataLake["Amazon S3 <br/> External Data Lake"]
     end
 
     BI --> Leader
@@ -89,6 +89,8 @@ graph TD
     Node2 -- Page in/out --> RMS
 
     Node1 -- Redshift Spectrum Query --> S3DataLake
+
+
 ```
 
 ## Bắt tay vào tối ưu: Sức mạnh của Distribution Style trong thực tế
@@ -127,12 +129,12 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 ## Những "bí kíp" giúp Redshift vận hành trơn tru
 
 * **Định kỳ dọn dẹp hệ thống (VACUUM):** Khác với BigQuery, Redshift thừa hưởng nhiều đặc tính của RDBMS truyền thống. Khi bạn chạy lệnh `DELETE` hoặc `UPDATE`, dữ liệu cũ không thực sự biến mất khỏi ổ đĩa mà chỉ được đánh dấu ẩn. Bạn cần lập lịch chạy lệnh `VACUUM` thường xuyên để dọn dẹp các tệp tin rác này và sắp xếp lại thứ tự dữ liệu trên đĩa (mặc dù các phiên bản Redshift mới đã tích hợp tính năng Auto-Vacuum tự động).
-* **Thiết lập Sort Keys thông minh:** Tương tự như cơ chế Clustering, việc chỉ định Sort Key trên các cột thường dùng để lọc (như cột ngày tháng `order_date`) giúp Redshift nhanh chóng bỏ qua các block dữ liệu không liên quan (Zone Maps), cải thiện tốc độ quét dữ liệu.
+* **Thiết lập Sort Keys thông minh:** Tương tự như cơ chế [Clustering](/concepts/database-storage/clustering/), việc chỉ định Sort Key trên các cột thường dùng để lọc (như cột ngày tháng `order_date`) giúp Redshift nhanh chóng bỏ qua các block dữ liệu không liên quan (Zone Maps), cải thiện tốc độ quét dữ liệu.
 * **Kiểm tra sơ đồ thực thi (EXPLAIN):** Trước khi đưa các câu truy vấn phức tạp vào vận hành thực tế, hãy chạy lệnh `EXPLAIN` trước câu SQL để kiểm tra xem hệ thống có cảnh báo các tác vụ truyền tải mạng nặng như `DS_BCAST_INNER` hay không, từ đó điều chỉnh lại DistKey cho phù hợp.
 
 ## Những sai lầm kinh điển cần tránh
 
-* **Sử dụng Redshift như một database giao dịch (OLTP):** Thiết lập các ràng buộc khóa ngoại (Foreign Key) hay khóa duy nhất (Unique) và mong chờ Redshift tự động báo lỗi khi chèn dữ liệu trùng lặp như PostgreSQL. Trong thực tế, Redshift **bỏ qua việc kiểm tra ràng buộc** này để ưu tiên tốc độ ghi dữ liệu ở quy mô lớn. Việc kiểm tra và làm sạch dữ liệu trùng lặp phải được xử lý chủ động thông qua code ETL (ví dụ dùng logic UPSERT/Merge).
+* **Sử dụng Redshift như một database giao dịch ([OLTP](/concepts/database-storage/oltp/)):** Thiết lập các ràng buộc khóa ngoại (Foreign Key) hay khóa duy nhất (Unique) và mong chờ Redshift tự động báo lỗi khi chèn dữ liệu trùng lặp như PostgreSQL. Trong thực tế, Redshift **bỏ qua việc kiểm tra ràng buộc** này để ưu tiên tốc độ ghi dữ liệu ở quy mô lớn. Việc kiểm tra và làm sạch dữ liệu trùng lặp phải được xử lý chủ động thông qua code ETL (ví dụ dùng logic UPSERT/Merge).
 * **Ghi dữ liệu bằng các lệnh INSERT nhỏ lẻ:** Chạy hàng trăm nghìn lệnh `INSERT INTO table VALUES(...)` liên tục sẽ tạo ra nút thắt cổ chai cực lớn tại Leader Node. Cách làm đúng là đẩy dữ liệu lên S3 dưới dạng các tệp tin CSV/Parquet, sau đó chạy một câu lệnh `COPY` duy nhất để tất cả các Compute Node cùng kéo dữ liệu song song vào kho.
 
 ## Được và mất khi lựa chọn Redshift
@@ -149,8 +151,8 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 
 * **Nên dùng khi:**
   * Doanh nghiệp của bạn đã xây dựng toàn bộ hạ tầng trên AWS và không có kế hoạch chuyển dịch sang mô hình đa đám mây (Multi-cloud).
-  * Bạn có đội ngũ Data Engineering mạnh, muốn chủ động kiểm soát chi phí hạ tầng ở mức tối ưu nhất thông qua việc tự cấu hình hệ thống.
-  * Bạn muốn xây dựng mô hình Lakehouse, kết hợp linh hoạt giữa lưu trữ dữ liệu có cấu trúc trong kho và truy vấn file thô trên S3.
+  * Bạn có đội ngũ [Data Engineering](/concepts/foundation/data-engineering/) mạnh, muốn chủ động kiểm soát chi phí hạ tầng ở mức tối ưu nhất thông qua việc tự cấu hình hệ thống.
+  * Bạn muốn xây dựng mô hình [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/), kết hợp linh hoạt giữa lưu trữ dữ liệu có cấu trúc trong kho và truy vấn file thô trên S3.
 
 * **Không nên dùng khi:**
   * Doanh nghiệp đang sử dụng Google Cloud hoặc Azure làm nền tảng đám mây chính.

@@ -9,9 +9,9 @@ seoTitle: "dbt Testing - Hướng dẫn triển khai kiểm thử tự động d
 metaDescription: "Khám phá dbt Testing: các bài kiểm thử cơ bản (Generic Tests) và phức tạp (Singular Tests) để đảm bảo chất lượng và tính toàn vẹn của dữ liệu trong quá trình Transformation."
 ---
 
-Có một tình huống trớ trêu mà bất kỳ ai làm trong ngành dữ liệu cũng từng trải qua ít nhất một lần: Sếp hoặc đối tác kinh doanh gửi một tin nhắn đầy giận dữ vào group chat: *"Tại sao doanh thu trên dashboard hôm nay lại giảm đi 50%?"* hoặc *"Sao danh sách khách hàng lại xuất hiện tên trùng lặp thế này?"*. Cả đội dữ liệu cuống cuồng đi kiểm tra, rà soát lại đống code ETL phức tạp để tìm xem lỗi phát sinh từ đâu.
+Có một tình huống trớ trêu mà bất kỳ ai làm trong ngành dữ liệu cũng từng trải qua ít nhất một lần: Sếp hoặc đối tác kinh doanh gửi một tin nhắn đầy giận dữ vào group chat: *"Tại sao doanh thu trên dashboard hôm nay lại giảm đi 50%?"* hoặc *"Sao danh sách khách hàng lại xuất hiện tên trùng lặp thế này?"*. Cả đội dữ liệu cuống cuồng đi kiểm tra, rà soát lại đống code [ETL](/concepts/etl-elt/etl/) phức tạp để tìm xem lỗi phát sinh từ đâu.
 
-Để chấm dứt cảnh tượng "chữa cháy" bị động đó, **dbt Testing** đã ra đời. Đây là một cơ chế kiểm thử tích hợp trực tiếp trong **dbt (data build tool)**, giúp bạn chủ động phát hiện lỗi và bảo vệ chất lượng dữ liệu (Data Quality) tự động ngay khi dữ liệu vừa được biến đổi.
+Để chấm dứt cảnh tượng "chữa cháy" bị động đó, **dbt Testing** đã ra đời. Đây là một cơ chế kiểm thử tích hợp trực tiếp trong **[dbt](/concepts/transformation-analytics/dbt/) (data build tool)**, giúp bạn chủ động phát hiện lỗi và bảo vệ chất lượng dữ liệu (Data Quality) tự động ngay khi dữ liệu vừa được biến đổi.
 
 ## dbt Testing hoạt động như thế nào?
 
@@ -30,7 +30,7 @@ flowchart TD
 
 1. Bạn khai báo các bài test trong file cấu hình `.yml` hoặc tự viết câu lệnh SQL.
 2. Khi bạn gõ lệnh `dbt test`, dbt sẽ tự động biên dịch các cấu hình đó thành các câu lệnh SQL hoàn chỉnh.
-3. dbt gửi các câu lệnh SQL này lên Data Warehouse (như BigQuery, Snowflake, hay PostgreSQL) để thực thi.
+3. dbt gửi các câu lệnh SQL này lên [Data Warehouse](/concepts/data-warehouse/data-warehouse/) (như BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/), hay PostgreSQL) để thực thi.
 4. Hệ thống sẽ đếm số lượng dòng dữ liệu trả về:
    * Nếu kết quả trả về là **0 dòng**: Nghĩa là không có dòng dữ liệu nào vi phạm $\rightarrow$ Test **PASS** (màu xanh lá).
    * Nếu kết quả trả về từ **1 dòng trở lên**: Nghĩa là đã có dữ liệu lỗi xuất hiện $\rightarrow$ Test **FAIL** (màu đỏ). dbt sẽ thông báo chi tiết dòng nào bị lỗi và trả về mã lỗi.

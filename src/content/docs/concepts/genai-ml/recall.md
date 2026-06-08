@@ -27,7 +27,7 @@ Trong đó:
 
 Tổng số $(TP + FN)$ biểu diễn toàn bộ các nhãn Positive thực tế có trong tập dữ liệu (Ground Truth).
 
-Trong bối cảnh Hệ thống truy xuất thông tin (Information Retrieval) hoặc các ứng dụng RAG (Retrieval-Augmented Generation), Recall được hiểu là tỷ lệ tài liệu liên quan mà hệ thống đã lôi ra được trên tổng số tài liệu liên quan có trong database.
+Trong bối cảnh Hệ thống truy xuất thông tin (Information Retrieval) hoặc các ứng dụng [RAG](/concepts/genai-ml/rag/) (Retrieval-Augmented Generation), Recall được hiểu là tỷ lệ tài liệu liên quan mà hệ thống đã lôi ra được trên tổng số tài liệu liên quan có trong database.
 
 ## Tại sao chúng ta cần Recall?
 
@@ -85,14 +85,16 @@ Sự giằng co giữa Precision (Độ chuẩn xác) và Recall (Độ phủ) l
 
 ```mermaid
 graph LR
-    A[Focus on Recall] -->|Cast a wide net| B(Low FN, High FP)
-    B --> C[Catch all targets\nbut many false alarms]
+    A["Focus on Recall"] -->|"Cast a wide net"| B("Low FN, High FP")
+    B --> C["Catch all targets<br/>but many false alarms"]
     
-    D[Focus on Precision] -->|Be strictly selective| E(Low FP, High FN)
-    E --> F[High accuracy on predictions\nbut miss many targets]
+    D["Focus on Precision"] -->|"Be strictly selective"| E("Low FP, High FN")
+    E --> F["High accuracy on predictions<br/>but miss many targets"]
     
     style A fill:#ffcccc,stroke:#333
     style D fill:#cce5ff,stroke:#333
+
+
 ```
 
 * **Ưu tiên tối ưu Recall**: Mô hình sẽ mở rộng ranh giới phân loại, chấp nhận "thà bắt nhầm còn hơn bỏ sót". Kết quả là số lượng lỗi False Negatives giảm mạnh, nhưng số lượng báo động giả (False Positives) sẽ tăng cao, kéo Precision đi xuống.
@@ -105,7 +107,7 @@ Bạn nên cấu hình ngưỡng phân loại của mô hình thiên về Recall
 * **Ngành Y tế**: Hệ thống phát hiện tế bào ung thư. Thà bắt nhầm một bệnh nhân lành tính đi xét nghiệm chuyên sâu còn hơn bỏ sót một ca ác tính để bệnh tiến triển nặng.
 * **An ninh mạng**: Hệ thống phát hiện xâm nhập trái phép hoặc mã độc.
 * **Xe tự hành**: Nhận diện chướng ngại vật trên đường. Thà phanh gấp nhầm vì một chiếc lá rơi còn hơn đâm trực diện vào người đi bộ.
-* **Hệ thống RAG (giai đoạn Retrieval)**: Chúng ta cần Recall cao ở bước quét tài liệu để lấy đầy đủ ngữ cảnh đưa cho LLM. LLM sau đó có đủ trí thông minh để tự chắt lọc thông tin đúng và bỏ qua thông tin nhiễu.
+* **Hệ thống RAG (giai đoạn Retrieval)**: Chúng ta cần Recall cao ở bước quét tài liệu để lấy đầy đủ ngữ cảnh đưa cho [LLM](/concepts/genai-ml/llm/). LLM sau đó có đủ trí thông minh để tự chắt lọc thông tin đúng và bỏ qua thông tin nhiễu.
 
 ### Khi nào không nên chọn Recall làm mục tiêu chính?
 Tránh tập trung quá mức vào Recall khi việc **báo động giả (False Positive) gây ra sự phiền toái hoặc rủi ro nghiêm trọng**:
@@ -115,7 +117,7 @@ Tránh tập trung quá mức vào Recall khi việc **báo động giả (False
 ### Các nguyên tắc đánh giá chuẩn chỉnh (Best Practices)
 * **Đo lường bằng F1-Score**: Đừng bao giờ đánh giá một mô hình chỉ dựa trên một chỉ số đơn lẻ. Hãy sử dụng F1-Score – trung bình điều hòa của Precision và Recall – để có cái nhìn cân bằng và tổng quan nhất.
 * **Vẽ biểu đồ PR Curve (Precision-Recall Curve)**: Thay vì sử dụng ngưỡng mặc định là 0.5 để phân loại, hãy vẽ biểu đồ PR Curve để tìm ra điểm cân bằng tối ưu nhất phù hợp với yêu cầu thực tế của dự án.
-* **Recall@K trong Search**: Đối với các hệ thống tìm kiếm hoặc Vector Database, hãy tập trung đo lường Recall@K (ví dụ Recall@10). Chỉ số này cho biết tỷ lệ tài liệu liên quan xuất hiện trong Top K kết quả đầu tiên, bởi vì người dùng thực tế rất hiếm khi kiên nhẫn xem hết toàn bộ danh sách kết quả.
+* **Recall@K trong Search**: Đối với các hệ thống tìm kiếm hoặc [Vector Database](/concepts/genai-ml/vector-database/), hãy tập trung đo lường Recall@K (ví dụ Recall@10). Chỉ số này cho biết tỷ lệ tài liệu liên quan xuất hiện trong Top K kết quả đầu tiên, bởi vì người dùng thực tế rất hiếm khi kiên nhẫn xem hết toàn bộ danh sách kết quả.
 
 ## Các khái niệm liên quan
 
@@ -132,7 +134,7 @@ Tránh tập trung quá mức vào Recall khi việc **báo động giả (False
 ### 2. Bạn sẽ làm thế nào để tăng chỉ số Recall cho hệ thống truy xuất tài liệu (Retrieval) trong ứng dụng RAG?
 * **Gợi ý trả lời**: Để cải thiện Recall cho bước Retrieval, ta có thể áp dụng các kỹ thuật:
   1. Tăng số lượng tài liệu lấy ra (tăng giá trị $K$ trong tìm kiếm Top-K, ví dụ lấy Top-15 thay vì Top-5).
-  2. Triển khai kiến trúc Hybrid Search: Kết hợp thế mạnh của Vector Search (tìm theo ngữ nghĩa) và BM25 Search (tìm theo từ khóa chính xác) để đảm bảo không bỏ sót các tài liệu chứa từ khóa chuyên ngành.
+  2. Triển khai kiến trúc [Hybrid Search](/concepts/genai-ml/hybrid-search/): Kết hợp thế mạnh của Vector Search (tìm theo ngữ nghĩa) và BM25 Search (tìm theo từ khóa chính xác) để đảm bảo không bỏ sót các tài liệu chứa từ khóa chuyên ngành.
   3. Cải tiến chiến lược cắt nhỏ văn bản (Chunking Strategy), tăng tỷ lệ gối đầu (overlap) giữa các đoạn văn bản để giữ trọn vẹn ngữ cảnh ngữ nghĩa.
   4. Sử dụng mô hình Embedding chất lượng cao hơn và phù hợp với ngôn ngữ của tập tài liệu.
 
@@ -150,4 +152,4 @@ Tránh tập trung quá mức vào Recall khi việc **báo động giả (False
 
 ## English Summary
 
-Recall, also known as Sensitivity or True Positive Rate, is a performance metric used in classification and information retrieval systems. It measures the proportion of actual positive cases that the model successfully identified ($TP / (TP + FN)$). Recall is critically important in risk-averse scenarios, such as medical diagnostics or anomaly detection, where the cost of a False Negative (missing a target) is vastly higher than a False Positive (false alarm). In search and Retrieval-Augmented Generation (RAG) contexts, Recall indicates how comprehensively the system retrieved relevant documents from the database. It is typically evaluated alongside Precision using the F1-Score or plotted on a Precision-Recall curve to determine the optimal operational threshold.
+Recall, also known as Sensitivity or True Positive Rate, is a performance metric used in classification and information retrieval systems. It measures the proportion of actual positive cases that the model successfully identified ($TP / (TP + FN)$). Recall is critically important in risk-averse scenarios, such as medical diagnostics or [anomaly detection](/concepts/data-quality/anomaly-detection/), where the cost of a False Negative (missing a target) is vastly higher than a False Positive (false alarm). In search and Retrieval-Augmented Generation (RAG) contexts, Recall indicates how comprehensively the system retrieved relevant documents from the database. It is typically evaluated alongside Precision using the F1-Score or plotted on a Precision-Recall curve to determine the optimal operational threshold.

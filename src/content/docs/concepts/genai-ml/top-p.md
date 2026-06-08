@@ -27,7 +27,7 @@ Thay vì bốc ngẫu nhiên trên toàn bộ từ điển (vốn chứa hàng t
 
 Bản chất của việc AI viết văn là lấy mẫu từ một phân phối xác suất từ vựng. 
 * Nếu chúng ta luôn bắt AI chọn từ có xác suất cao nhất (Greedy Decoding), câu văn sinh ra sẽ rất đơn điệu, lặp đi lặp lại và thiếu sức sống.
-* Tuy nhiên, nếu cho phép AI lấy mẫu hoàn toàn tự do trên toàn bộ từ điển, mô hình sẽ thỉnh thoảng bốc nhầm các từ có xác suất cực thấp nằm ở "phần đuôi dài" (long tail). Điều này dẫn đến các lỗi ngớ ngẩn như câu văn bị sai ngữ pháp, vô nghĩa, hoặc phát sinh ảo giác (hallucination).
+* Tuy nhiên, nếu cho phép AI lấy mẫu hoàn toàn tự do trên toàn bộ từ điển, mô hình sẽ thỉnh thoảng bốc nhầm các từ có xác suất cực thấp nằm ở "phần đuôi dài" (long tail). Điều này dẫn đến các lỗi ngớ ngẩn như câu văn bị sai ngữ pháp, vô nghĩa, hoặc phát sinh ảo giác ([hallucination](/concepts/genai-ml/hallucination/)).
 
 Top-p ra đời để giải quyết dứt điểm bài toán này bằng cách cắt bỏ phần đuôi từ vựng không an toàn một cách linh hoạt theo ngữ cảnh, đảm bảo AI vừa viết văn tự nhiên, vừa không nói những điều nhảm nhí.
 
@@ -57,15 +57,17 @@ Dưới đây là sơ đồ luồng lọc từ vựng bằng thuật toán Top-p
 
 ```mermaid
 graph TD
-    A[Logits đầu ra từ LLM] --> B[Áp dụng Softmax để lấy Probabilities]
-    B --> C[Sắp xếp Token theo Xác suất giảm dần]
-    C --> D[Tính tổng xác suất tích lũy]
-    D --> E{Tổng >= p?}
-    E -- Chưa --> F[Đưa token vào tập Nucleus]
+    A["Logits đầu ra từ LLM"] --> B["Áp dụng Softmax để lấy Probabilities"]
+    B --> C["Sắp xếp Token theo Xác suất giảm dần"]
+    C --> D["Tính tổng xác suất tích lũy"]
+    D --> E{"Tổng >= p?"}
+    E -- Chưa --> F["Đưa token vào tập Nucleus"]
     F --> D
-    E -- Rồi --> G[Dừng, chuẩn hóa lại xác suất tập Nucleus]
-    G --> H[Lấy mẫu ngẫu nhiên token từ Nucleus]
-    H --> I[Token sinh ra]
+    E -- Rồi --> G["Dừng, chuẩn hóa lại xác suất tập Nucleus"]
+    G --> H["Lấy mẫu ngẫu nhiên token từ Nucleus"]
+    H --> I["Token sinh ra"]
+
+
 ```
 
 ## Ví dụ thực tế: Cấu hình Top-p bằng Python

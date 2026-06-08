@@ -9,7 +9,7 @@ seoTitle: "Data Reconciliation là gì? Kỹ thuật đối soát dữ liệu"
 metaDescription: "Tìm hiểu Data Reconciliation: Quy trình đối chiếu dữ liệu tự động giữa hệ thống Nguồn (Source) và Đích (Target) để phát hiện sai lệch và đảm bảo độ chính xác."
 ---
 
-Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ liệu (Data Pipeline) khổng lồ cho một ví điện tử hoặc một trang thương mại điện tử lớn. Sáng sớm thức dậy, bạn thấy hệ thống báo pipeline đã chạy thành công (Success) với một màu xanh mướt mát mắt. Nhưng khoan mừng vội! Liệu có dòng doanh thu nào bị "rơi rớt" trên đường truyền từ cơ sở dữ liệu bán hàng qua Data Lake rồi tới Data Warehouse không? Logic JOIN của bạn có vô tình làm nhân bản dữ liệu khiến doanh thu vọt lên gấp đôi?
+Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)) khổng lồ cho một ví điện tử hoặc một trang thương mại điện tử lớn. Sáng sớm thức dậy, bạn thấy hệ thống báo pipeline đã chạy thành công (Success) với một màu xanh mướt mát mắt. Nhưng khoan mừng vội! Liệu có dòng doanh thu nào bị "rơi rớt" trên đường truyền từ cơ sở dữ liệu bán hàng qua [Data Lake](/concepts/data-lake-lakehouse/data-lake/) rồi tới [Data Warehouse](/concepts/data-warehouse/data-warehouse/) không? Logic JOIN của bạn có vô tình làm nhân bản dữ liệu khiến doanh thu vọt lên gấp đôi?
 
 Để trả lời những câu hỏi mang tính "sống còn" này, chúng ta cần đến **Data Reconciliation (Đối soát hay kiểm tra chéo dữ liệu)**.
 
@@ -24,7 +24,7 @@ Nếu xuất hiện bất kỳ sai lệch nào (`Delta != 0`), hệ thống sẽ
 ## Tại sao pipeline chạy thành công (Success) vẫn có thể là "cú lừa"?
 
 Một pipeline báo "Success" chỉ có nghĩa là code của bạn chạy không bị crash và hệ thống không ném ra lỗi cú pháp. Nó không hề đảm bảo dữ liệu bên trong là chính xác. Có rất nhiều lỗi ngầm (Silent failures) có thể xảy ra:
-* Công cụ CDC (Change Data Capture) hoặc Ingestion tool đọc dữ liệu từ Kafka bị rớt mạng trong vài mili-giây, làm lọt mất một số sự kiện (events). Pipeline vẫn chạy tiếp như chưa có chuyện gì xảy ra.
+* Công cụ CDC ([Change Data Capture](/concepts/etl-elt/change-data-capture/)) hoặc Ingestion tool đọc dữ liệu từ Kafka bị rớt mạng trong vài mili-giây, làm lọt mất một số sự kiện (events). Pipeline vẫn chạy tiếp như chưa có chuyện gì xảy ra.
 * Phép toán JOIN trong SQL bị lỗi "fan-out" (nhân bản dòng) do thiếu khóa chính hoặc quan hệ nhiều-nhiều chưa được xử lý, làm tổng tiền doanh thu nhân lên gấp nhiều lần.
 * Lỗi múi giờ (Timezone mismatch) khiến một số hóa đơn của ngày hôm nay bị nhảy sang ngày hôm sau trên Data Warehouse.
 
@@ -65,7 +65,7 @@ graph TD
 ```
 
 1. **Tạo snapshot nguồn**: Tạo một bảng tổng hợp chỉ số nguồn (ví dụ: số giao dịch và tổng tiền trong ngày). Đây được gọi là *Source Control Total*.
-2. **Xử lý ETL**: Đường ống dẫn dữ liệu chạy bình thường.
+2. **Xử lý [ETL](/concepts/etl-elt/etl/)**: Đường ống dẫn dữ liệu chạy bình thường.
 3. **Tạo snapshot đích**: Tính toán các chỉ số tương đương trên bảng đích cuối cùng thu được để tạo *Target Control Total*.
 4. **Đối chiếu chéo (Cross-check)**: So sánh hai bảng Control Total để tính toán độ lệch (`Delta`).
 5. **Cảnh báo vượt ngưỡng**: Thiết lập một ngưỡng dung sai cho phép (ví dụ: `0.01%` do lệch mili-giây múi giờ). Nếu độ lệch vượt quá ngưỡng này, hệ thống sẽ tự động gửi cảnh báo qua Slack hoặc PagerDuty.
@@ -113,7 +113,7 @@ WHERE tx_date = '2026-06-07';
 ### "Bí kíp" bỏ túi cho Data Engineer (Best Practices)
 * **Đóng mốc thời gian (Watermarking/Batching)**: Dữ liệu nguồn liên tục được thêm mới. Nếu bạn đối soát mà không chốt một mốc thời gian cố định, số liệu nguồn và đích sẽ không bao giờ khớp. Hãy dùng cột `updated_at` hoặc Kafka offset để chia lô đối soát rõ ràng.
 * **Lưu vết lịch sử đối soát (Audit Trail)**: Đừng chỉ print log ra màn hình rồi thôi. Hãy lưu toàn bộ lịch sử đối soát vào một bảng chuyên biệt. Đây sẽ là bằng chứng kiểm toán vô cùng giá trị để chứng minh tính toàn vẹn của dữ liệu qua thời gian.
-* **Tích hợp vào Orchestrator**: Biến bước đối soát thành task cuối cùng trong luồng công việc (DAG) trên Apache Airflow. Nếu task đối soát thất bại, hãy chặn không cho gửi báo cáo hàng ngày đến ban giám đốc.
+* **Tích hợp vào Orchestrator**: Biến bước đối soát thành task cuối cùng trong luồng công việc ([DAG](/concepts/orchestration/dag/)) trên [Apache Airflow](/concepts/orchestration/apache-airflow/). Nếu task đối soát thất bại, hãy chặn không cho gửi báo cáo hàng ngày đến ban giám đốc.
 
 ### Cạm bẫy thường gặp (Common Mistakes)
 * **Không tính toán đến độ trễ (Latency Mismatch)**: Nguồn cập nhật liên tục (real-time) nhưng đích lại cập nhật theo giờ. Việc đối soát ngay lúc hệ thống đích chưa kịp cập nhật hết sẽ tạo ra các báo động giả (False Positives) liên tục, gây mệt mỏi cho đội ngũ vận hành.
@@ -144,10 +144,10 @@ WHERE tx_date = '2026-06-07';
 
 1. [Netflix Tech Blog: Netflix Billing Migration to AWS — Part II](https://netflixtechblog.com/netflix-billing-migration-to-aws-part-ii-834f6358126) - Case study detailing datastore migration and financial reconciliation strategies under high consistency constraints.
 2. [Stripe: Reconciliation Documentation](https://stripe.com/docs/reconciliation) - Official Stripe documentation on automated transaction matching and payout audit loops.
-3. Monte Carlo Data: What is Data Reconciliation? - Practical guide on why and how to build automated cross-system data checks in the modern data stack.
+3. Monte Carlo Data: What is Data Reconciliation? - Practical guide on why and how to build automated cross-system data checks in the [modern data stack](/concepts/system-architecture/modern-data-stack/).
 4. Datafold: Reconciling Databases and Warehouses - Technical engineering post explaining row-by-row data reconciliation using data diffing tools.
 5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Chapter on data verification, auditing, and reconciliation patterns across end-to-end pipelines.
 
 ## English Summary
 
-**Data Reconciliation** is the automated auditing process of comparing datasets between a Source system and a Target Data Warehouse to ensure zero data loss, duplication, or corruption during the ETL/ELT transit. Through techniques like row-count checks, metric/value aggregations (e.g., verifying `SUM(revenue)` matches), and data hashing/fingerprinting for row-by-row accuracy, it proves the integrity of financial and operational reporting. Establishing solid reconciliation pipelines prevents silent failures and serves as the ultimate audit trail for data accuracy.
+**Data Reconciliation** is the automated auditing process of comparing datasets between a Source system and a Target Data Warehouse to ensure zero data loss, duplication, or corruption during the ETL/[ELT](/concepts/etl-elt/elt/) transit. Through techniques like row-count checks, metric/value aggregations (e.g., verifying `SUM(revenue)` matches), and data hashing/fingerprinting for row-by-row accuracy, it proves the integrity of financial and operational reporting. Establishing solid reconciliation pipelines prevents silent failures and serves as the ultimate audit trail for data accuracy.

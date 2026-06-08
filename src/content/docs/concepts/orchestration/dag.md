@@ -9,7 +9,7 @@ seoTitle: "DAG là gì? Directed Acyclic Graph trong Data Pipeline"
 metaDescription: "Đồ thị có hướng không chu trình (DAG) là gì? Lý do các công cụ Orchestration như Airflow, dbt, Spark sử dụng kiến trúc DAG để mô hình hóa Data Pipeline."
 ---
 
-Trong thế giới Kỹ thuật dữ liệu (Data Engineering), nếu có một khái niệm toán học được áp dụng rộng rãi nhất làm nền tảng cho mọi đường ống dữ liệu (Data Pipeline), thì đó chắc chắn phải là **DAG (Directed Acyclic Graph)**. Cho dù bạn đang làm việc với Apache Airflow, dbt, Apache Spark hay Snowflake, việc hiểu rõ và thiết kế tốt cấu trúc DAG chính là chìa khóa để xây dựng các hệ thống điều phối dữ liệu mạnh mẽ và không bao giờ gặp lỗi bế tắc.
+Trong thế giới Kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)), nếu có một khái niệm toán học được áp dụng rộng rãi nhất làm nền tảng cho mọi đường ống dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)), thì đó chắc chắn phải là **DAG (Directed Acyclic Graph)**. Cho dù bạn đang làm việc với Apache Airflow, [dbt](/concepts/transformation-analytics/dbt/), [Apache Spark](/concepts/batch-processing/apache-spark/) hay [Snowflake](/concepts/cloud-data-platform/snowflake/), việc hiểu rõ và thiết kế tốt cấu trúc DAG chính là chìa khóa để xây dựng các hệ thống điều phối dữ liệu mạnh mẽ và không bao giờ gặp lỗi bế tắc.
 
 ## DAG: Khung xương toán học định hình các Data Pipeline
 
@@ -64,7 +64,7 @@ graph TD
     style C2 fill:#ffcccc,stroke:#ff0000
 ```
 
-Trong mô hình hợp lệ, hai tác vụ `Extract MySQL` và `Extract API` có thể chạy song song cùng lúc vì chúng không phụ thuộc lẫn nhau. Tác vụ `Transform using dbt` chỉ được kích hoạt khi quá trình tải dữ liệu lên Data Warehouse hoàn tất.
+Trong mô hình hợp lệ, hai tác vụ `Extract MySQL` và `Extract API` có thể chạy song song cùng lúc vì chúng không phụ thuộc lẫn nhau. Tác vụ `Transform using dbt` chỉ được kích hoạt khi quá trình tải dữ liệu lên [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hoàn tất.
 
 ## Cách thức vận hành bên dưới của Scheduler
 
@@ -115,7 +115,7 @@ dbt sẽ tự động hiểu rằng mô hình `marts_revenue` phụ thuộc vào
 ## Những lỗi sơ đẳng dễ gây sập hệ thống Orchestrator
 
 * **Vô tình tạo phụ thuộc vòng lặp (Cyclic Dependency)**: Lỗi kinh điển nhất khi lập trình. Ví dụ: Tác vụ A yêu cầu thư viện đầu ra của Tác vụ B, nhưng Tác vụ B lại được thiết lập phụ thuộc vào Tác vụ A. Bộ điều phối sẽ lập tức báo lỗi `AirflowDagCycleException` và từ chối chạy.
-* **Sử dụng vòng lặp vô tận chờ đợi bên trong một Tác vụ**: Việc lập trình viết các hàm `while True` bên trong một Task để chờ dữ liệu từ một hệ thống khác sẽ giữ chặt tài nguyên máy chủ `(worker lock)`, gây tắc nghẽn tài nguyên cho toàn bộ hệ thống. Hãy sử dụng các tác vụ chuyên biệt gọi là **Sensors (Cảm biến)** để lắng nghe tín hiệu một cách tối ưu.
+* **Sử dụng vòng lặp vô tận chờ đợi bên trong một Tác vụ**: Việc lập trình viết các hàm `while True` bên trong một Task để chờ dữ liệu từ một hệ thống khác sẽ giữ chặt tài nguyên máy chủ `(worker lock)`, gây tắc nghẽn tài nguyên cho toàn bộ hệ thống. Hãy sử dụng các tác vụ chuyên biệt gọi là **[Sensors](/concepts/orchestration/sensors/) (Cảm biến)** để lắng nghe tín hiệu một cách tối ưu.
 
 ## Sự đánh đổi khi áp dụng kiến trúc DAG
 

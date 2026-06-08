@@ -27,8 +27,8 @@ Each bài toán AI khác nhau đòi hỏi các nhóm chỉ số đánh giá hoà
 
 1. **Bài toán Phân loại (Classification)**: Đo lường xem mô hình phân chia nhãn đúng hay sai (ví dụ: email này là Spam hay Hộp thư đến).
 2. **Bài toán Hồi quy (Regression)**: Đo lường khoảng cách sai lệch giữa số liệu dự báo và thực tế (ví dụ: dự đoán giá nhà lệch bao nhiêu triệu đồng).
-3. **Bài toán Tìm kiếm và Truy xuất (Information Retrieval / RAG)**: Đo lường xem hệ thống có lấy ra đúng và đủ các tài liệu liên quan từ database hay không.
-4. **Sinh văn bản (Generative AI / LLM)**: Đo lường độ trôi chảy, tính hữu ích và tính trung thực (không bị ảo giác - hallucination) của câu trả lời.
+3. **Bài toán Tìm kiếm và Truy xuất (Information Retrieval / [RAG](/concepts/genai-ml/rag/))**: Đo lường xem hệ thống có lấy ra đúng và đủ các tài liệu liên quan từ database hay không.
+4. **Sinh văn bản (Generative AI / LLM)**: Đo lường độ trôi chảy, tính hữu ích và tính trung thực (không bị ảo giác - [hallucination](/concepts/genai-ml/hallucination/)) của câu trả lời.
 
 ## Khi "bắt lầm còn hơn bỏ sót": Cuộc đấu tranh giữa Precision và Recall
 
@@ -36,7 +36,7 @@ Trong các bài toán phân loại, có 3 chỉ số vô cùng quan trọng mà 
 
 * **Accuracy (Độ chính xác tổng thể)**: Tỷ lệ số lần dự đoán đúng trên tổng số mẫu dữ liệu. Chỉ số này chỉ đáng tin cậy khi dữ liệu của bạn cân bằng (số lượng mẫu của các lớp tương đương nhau).
 * **Precision (Độ chuẩn xác)**: Trả lời câu hỏi: *"Trong số những trường hợp mô hình dự đoán là Đúng (Positive), có bao nhiêu phần trăm thực sự Đúng trong thực tế?"*. Bạn cần tối ưu hóa Precision khi hậu quả của việc báo động giả (False Positive) là cực kỳ lớn. Ví dụ: phê duyệt khoản vay ngân hàng (nếu duyệt nhầm hồ sơ xấu thì ngân hàng mất tiền).
-* **Recall (Độ bao phủ)**: Trả lời câu hỏi: *"Trong tổng số các trường hợp thực tế là Đúng, mô hình đã tìm và giữ lại được bao nhiêu phần trăm?"*. Chỉ số này cần được ưu tiên hàng đầu khi việc bỏ sót (False Negative) gây hậu quả nghiêm trọng. Ví dụ: tầm soát bệnh ung thư (thà nghi ngờ nhầm còn hơn bỏ sót một bệnh nhân).
+* **[Recall](/concepts/genai-ml/recall/) (Độ bao phủ)**: Trả lời câu hỏi: *"Trong tổng số các trường hợp thực tế là Đúng, mô hình đã tìm và giữ lại được bao nhiêu phần trăm?"*. Chỉ số này cần được ưu tiên hàng đầu khi việc bỏ sót (False Negative) gây hậu quả nghiêm trọng. Ví dụ: tầm soát bệnh ung thư (thà nghi ngờ nhầm còn hơn bỏ sót một bệnh nhân).
 * **F1-Score**: Trung bình điều hòa giữa Precision và Recall, giúp bạn có được một cái nhìn cân bằng nhất khi cả hai chỉ số trên đều quan trọng.
 
 ## Đánh giá hệ thống RAG và các mô hình ngôn ngữ lớn (LLM)
@@ -47,13 +47,15 @@ Xu hướng hiện nay là áp dụng phương pháp **LLM-as-a-Judge**. Chúng 
 
 ```mermaid
 graph TD
-    A[Câu hỏi User] --> B[RAG Pipeline]
-    B --> C[Trả về Câu trả lời + Tài liệu Context]
-    C --> D{LLM Evaluator - GPT-4}
-    D --> E[Faithfulness Metric: Câu trả lời có dựa trên Context không?]
-    D --> F[Answer Relevance: Câu trả lời có đúng trọng tâm câu hỏi không?]
-    E --> G[Kết quả chấm điểm 0.0 - 1.0]
+    A["Câu hỏi User"] --> B["RAG Pipeline"]
+    B --> C["Trả về Câu trả lời + Tài liệu Context"]
+    C --> D{"LLM Evaluator - GPT-4"}
+    D --> E["Faithfulness Metric: Câu trả lời có dựa trên Context không?"]
+    D --> F["Answer Relevance: Câu trả lời có đúng trọng tâm câu hỏi không?"]
+    E --> G["Kết quả chấm điểm 0.0 - 1.0"]
     F --> G
+
+
 ```
 
 * **Faithfulness (Tính trung thực)**: Đo xem câu trả lời của mô hình có hoàn toàn dựa vào tài liệu ngữ cảnh (Context) được cung cấp hay không, tránh hiện tượng tự bịa thông tin.
@@ -108,4 +110,4 @@ Tính toán chỉ số:
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 
-Evaluation Metrics are quantifiable mathematical measures used to assess the performance, accuracy, and reliability of AI models. In classification, metrics like Precision, Recall, and F1-Score handle imbalanced datasets far better than standard Accuracy. In Search and RAG systems, metrics like Precision@K, MRR, and NDCG evaluate the retrieval ranking quality. For modern Generative AI, traditional lexical overlap metrics (like BLEU or ROUGE) are obsolete due to their inability to capture semantic equivalence; instead, the industry employs "LLM-as-a-Judge" frameworks (like RAGAS) to evaluate faithfulness and contextual relevance. Understanding the trade-off between metrics (e.g., Precision vs. Recall) is critical to aligning models with business objectives.
+Evaluation Metrics are quantifiable mathematical measures used to assess the performance, accuracy, and reliability of AI models. In classification, metrics like Precision, Recall, and F1-Score handle imbalanced datasets far better than standard Accuracy. In Search and RAG systems, metrics like Precision@K, MRR, and [NDCG](/concepts/genai-ml/ndcg/) evaluate the retrieval ranking quality. For modern Generative AI, traditional lexical overlap metrics (like BLEU or ROUGE) are obsolete due to their inability to capture semantic equivalence; instead, the industry employs "LLM-as-a-Judge" frameworks (like RAGAS) to evaluate faithfulness and contextual relevance. Understanding the trade-off between metrics (e.g., Precision vs. Recall) is critical to aligning models with business objectives.

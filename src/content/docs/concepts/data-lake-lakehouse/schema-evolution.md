@@ -9,7 +9,7 @@ seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake"
 metaDescription: "Tìm hiểu Schema Evolution là gì: cơ chế tự động thích ứng với thay đổi cấu trúc bảng (thêm, xóa, đổi tên cột) mà không cần ghi lại dữ liệu cũ trên Data Lake."
 ---
 
-Trong thế giới Data Engineering, có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn thêm một cột để theo dõi hành vi người dùng; ngày mai, họ đổi kiểu dữ liệu của trường số điện thoại từ số sang chuỗi để hỗ trợ mã quốc gia. 
+Trong thế giới [Data Engineering](/concepts/foundation/data-engineering/), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn thêm một cột để theo dõi hành vi người dùng; ngày mai, họ đổi kiểu dữ liệu của trường số điện thoại từ số sang chuỗi để hỗ trợ mã quốc gia. 
 
 Nếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như vậy sẽ là một lần pipeline bị sập, kéo theo hàng giờ cày cuốc để sửa code và chạy lại dữ liệu lịch sử. Để giải quyết vấn đề này, các công nghệ lưu trữ hiện đại đã giới thiệu một khái niệm cứu cánh: **Schema Evolution (Tiến hóa lược đồ)**.
 
@@ -21,10 +21,10 @@ Nếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như 
 
 ## Tại sao chúng ta cần Schema Evolution?
 
-Hãy thử nhớ lại cách chúng ta xử lý khi hệ thống nguồn (OLTP) thay đổi cấu trúc trước đây:
+Hãy thử nhớ lại cách chúng ta xử lý khi hệ thống nguồn ([OLTP](/concepts/database-storage/oltp/)) thay đổi cấu trúc trước đây:
 
-1. **Pipeline đổ vỡ hàng loạt**: Chỉ cần nguồn gửi thêm một trường mới hoặc thiếu một trường so với cấu trúc bảng đích, job ETL/ELT sẽ lập tức báo lỗi và dừng hoạt động.
-2. **Chi phí vận hành đắt đỏ**: Với các định dạng lưu trữ cũ trên Data Lake (như file Parquet thô qua Hive), nếu muốn đổi tên một cột hoặc xóa một trường, cách duy nhất là dùng Spark đọc toàn bộ dữ liệu lịch sử lên, biến đổi cấu trúc, rồi ghi đè lại toàn bộ. Quá trình này không chỉ tốn hàng ngày trời mà còn ngốn hàng ngàn đô la chi phí tính toán của máy chủ.
+1. **Pipeline đổ vỡ hàng loạt**: Chỉ cần nguồn gửi thêm một trường mới hoặc thiếu một trường so với cấu trúc bảng đích, job [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/) sẽ lập tức báo lỗi và dừng hoạt động.
+2. **Chi phí vận hành đắt đỏ**: Với các định dạng lưu trữ cũ trên [Data Lake](/concepts/data-lake-lakehouse/data-lake/) (như file Parquet thô qua Hive), nếu muốn đổi tên một cột hoặc xóa một trường, cách duy nhất là dùng Spark đọc toàn bộ dữ liệu lịch sử lên, biến đổi cấu trúc, rồi ghi đè lại toàn bộ. Quá trình này không chỉ tốn hàng ngày trời mà còn ngốn hàng ngàn đô la chi phí tính toán của máy chủ.
 3. **Mất an toàn dữ liệu**: Đôi khi hệ thống tự động ép kiểu dữ liệu mới vào cấu trúc cũ (ví dụ: chuyển kiểu `FLOAT` thành `INT`) dẫn đến việc dữ liệu bị làm tròn và mất mát thông tin quan trọng một cách âm thầm.
 
 Schema Evolution ra đời để biến những thay đổi cấu trúc phức tạp này thành một **thao tác cập nhật siêu dữ liệu (metadata) tức thì**, giúp giảm thiểu tối đa công sức bảo trì của kỹ sư dữ liệu.
@@ -52,7 +52,7 @@ graph TD
 
 ## Thực hành: Tự động hóa tiến hóa cấu trúc với Delta Lake
 
-Dưới đây là ví dụ minh họa cách Apache Spark kết hợp với **Delta Lake** tự động cập nhật cấu trúc bảng khi phát hiện dữ liệu mới có thêm cột:
+Dưới đây là ví dụ minh họa cách [Apache Spark](/concepts/batch-processing/apache-spark/) kết hợp với **Delta Lake** tự động cập nhật cấu trúc bảng khi phát hiện dữ liệu mới có thêm cột:
 
 ```python
 # Ghi DataFrame ban đầu với 2 cột
@@ -86,7 +86,7 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 
 * **Đừng lạm dụng `mergeSchema = true`**: Nếu tự động chấp nhận mọi thay đổi cấu trúc từ nguồn đổ về, bảng của bạn sẽ nhanh chóng tích tụ hàng chục cột rác do lỗi gõ phím (typo) hoặc dữ liệu sai định dạng của hệ thống nguồn. Đối với các môi trường Production quan trọng, hãy thực hiện thay đổi schema một cách chủ động thông qua các lệnh `ALTER TABLE` có kiểm soát.
 * **Tránh hạ cấp kiểu dữ liệu (Downcasting)**: Schema Evolution chỉ hỗ trợ nâng cấp (widening). Bạn không thể tự động chuyển một cột từ `STRING` về lại `INT` vì điều này chắc chắn gây ra lỗi đọc dữ liệu hoặc mất mát thông tin. Nếu bắt buộc phải hạ cấp, bạn phải tạo cột mới hoặc ghi đè lại toàn bộ bảng.
-* **Sự khác biệt giữa các Table Format**: Nếu bạn đang xây dựng Data Lakehouse từ đầu, hãy cân nhắc chọn Apache Iceberg. Cơ chế quản lý qua Column ID của Iceberg hoạt động độc lập và an sau hơn hẳn so với một số format vẫn còn phụ thuộc một phần vào tên cột.
+* **Sự khác biệt giữa các Table Format**: Nếu bạn đang xây dựng Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) từ đầu, hãy cân nhắc chọn Apache Iceberg. Cơ chế quản lý qua Column ID của Iceberg hoạt động độc lập và an sau hơn hẳn so với một số format vẫn còn phụ thuộc một phần vào tên cột.
 
 ### So sánh các hướng tiếp cận xử lý:
 
@@ -99,7 +99,7 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 ## Khái niệm liên quan
 
 * [Table Format](/concepts/data-lake-lakehouse/table-format/): Định dạng bảng dữ liệu.
-* Data Lakehouse: Kiến trúc kết hợp Data Lake và Data Warehouse.
+* Data Lakehouse: Kiến trúc kết hợp Data Lake và [Data Warehouse](/concepts/data-warehouse/data-warehouse/).
 * [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/): Định dạng lưu trữ mã nguồn mở của Databricks.
 * [Apache Iceberg](/concepts/data-lake-lakehouse/apache-iceberg/): Định dạng bảng phân tích hiệu năng cao.
 
@@ -118,8 +118,8 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 1. [Apache Iceberg Schema Evolution](https://iceberg.apache.org/docs/latest/evolution/) - Official Apache Iceberg documentation detailing Column ID tracking and schema evolution.
 2. [Delta Lake Schema Enforcement](https://docs.delta.io/latest/delta-batch.html#schema-enforcement) - Official Delta Lake documentation on how Delta Lake guards table schemas against incompatible data formats.
 3. [Delta Lake Schema Evolution](https://docs.delta.io/latest/delta-batch.html#schema-evolution) - Official Delta Lake documentation on enabling automatic schema evolution.
-4. Diving into Delta Lake Schema Enforcement & Evolution - Databricks engineering blog post exploring schema management patterns in production.
-5. Apache Iceberg Internals Guide - Dremio's deep dive into Iceberg metadata, schema mapping, and manifest structure.
+4. [Diving into Delta Lake Schema Enforcement & Evolution](https://www.databricks.com/blog/2019/09/24/diving-into-delta-lake-schema-enforcement-evolution.html) - Databricks engineering blog post exploring schema management patterns in production.
+5. [Apache Iceberg Internals Guide](https://www.dremio.com/resources/guide/apache-iceberg-internals/) - Dremio's deep dive into Iceberg metadata, schema mapping, and manifest structure.
 
 ## English Summary
 

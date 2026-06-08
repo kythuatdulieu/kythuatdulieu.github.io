@@ -15,7 +15,7 @@ Trong thế giới công nghệ hiện đại, dữ liệu không còn là nhữ
 
 Kiến trúc thời gian thực là phương pháp thiết kế hệ thống dữ liệu tập trung vào việc thu thập, xử lý và phân phối các luồng dữ liệu liên tục (data streaming) với độ trễ cực thấp – thường chỉ tính bằng mili-giây đến vài giây. 
 
-Thay vì gom dữ liệu lại thành từng lô lớn rồi mới đem đi xử lý như mô hình Batch Processing truyền thống, kiến trúc Real-time xử lý dữ liệu theo mô hình **"dữ liệu đang chuyển động" (data in motion)**. Mọi hành động của người dùng (nhấp chuột trên web, quẹt thẻ tín dụng, tín hiệu cảm biến IoT gửi về...) được coi là một **Sự kiện (Event)**. Hệ thống sẽ xử lý và đưa ra phản hồi đối với sự kiện đó ngay khi nó đang di chuyển trên đường truyền, trước khi nó kịp cập bến và lưu trữ cố định vào database.
+Thay vì gom dữ liệu lại thành từng lô lớn rồi mới đem đi xử lý như mô hình [Batch Processing](/concepts/batch-processing/batch-processing/) truyền thống, kiến trúc Real-time xử lý dữ liệu theo mô hình **"dữ liệu đang chuyển động" (data in motion)**. Mọi hành động của người dùng (nhấp chuột trên web, quẹt thẻ tín dụng, tín hiệu cảm biến IoT gửi về...) được coi là một **Sự kiện (Event)**. Hệ thống sẽ xử lý và đưa ra phản hồi đối với sự kiện đó ngay khi nó đang di chuyển trên đường truyền, trước khi nó kịp cập bến và lưu trữ cố định vào database.
 
 ## Sự suy giảm giá trị của thời gian trong dữ liệu
 
@@ -25,22 +25,22 @@ Thay vì gom dữ liệu lại thành từng lô lớn rồi mới đem đi xử
 * **Gợi ý sản phẩm tức thời (Dynamic Recommendation)**: Khi khách hàng chuẩn bị rời trang web thương mại điện tử, việc đưa ra một chương trình khuyến mãi flash-sale dựa trên hành vi duyệt web vừa rồi phải diễn ra ngay lập tức để giữ chân họ.
 * **Vận hành xe tự hành và ứng dụng gọi xe**: Các ứng dụng như Grab, Uber hay hệ thống định vị của xe tự lái yêu cầu cập nhật vị trí của tài xế và khách hàng liên tục từng giây để tối ưu hóa lộ trình và tính toán giá cả linh hoạt (dynamic pricing).
 
-Các kiến trúc xử lý theo lô truyền thống (như Data Warehouse hay Hadoop) hoàn toàn bất lực trước những yêu cầu khắt khe này. Kiến trúc thời gian thực ra đời chính là để khai thác tối đa giá trị thời gian của dữ liệu.
+Các kiến trúc xử lý theo lô truyền thống (như [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hay Hadoop) hoàn toàn bất lực trước những yêu cầu khắt khe này. Kiến trúc thời gian thực ra đời chính là để khai thác tối đa giá trị thời gian của dữ liệu.
 
 ## Những triết lý thiết kế cốt lõi
 
 * **Tách rời hệ thống (Decoupling)**: Hệ thống tạo ra dữ liệu (Producers) và hệ thống xử lý dữ liệu (Consumers) không bao giờ giao tiếp trực tiếp với nhau. Chúng được kết nối gián tiếp qua một hệ thống nhật ký sự kiện phân tán (Distributed Event Log) có khả năng chịu lỗi cao.
-* **Xử lý luồng có trạng thái (Stateful Stream Processing)**: Các động cơ xử lý (engine) duy trì một bộ nhớ trạng thái đệm bên trong (state store) để thực hiện các phép tính như đếm, nhóm theo thời gian (windowing) và so khớp trực tiếp trên dòng dữ liệu vô tận mà không cần liên tục gọi truy vấn vào database vật lý.
+* **Xử lý luồng có trạng thái (Stateful Stream Processing)**: Các động cơ xử lý (engine) duy trì một bộ nhớ trạng thái đệm bên trong (state store) để thực hiện các phép tính như đếm, nhóm theo thời gian ([windowing](/concepts/streaming-processing/windowing/)) và so khớp trực tiếp trên dòng dữ liệu vô tận mà không cần liên tục gọi truy vấn vào database vật lý.
 * **Chủ động đẩy dữ liệu (Push over Pull)**: Thay vì hệ thống đích phải định kỳ chạy lệnh hỏi *"Có dữ liệu mới không?"* (Pull), hệ thống xử lý sẽ chủ động đẩy (Push) kết quả tính toán tới ứng dụng hiển thị ngay khi công việc hoàn tất.
 
 ## Các mảnh ghép trong một hệ thống Real-time tiêu chuẩn
 
 Một hệ thống Real-time hoàn chỉnh thường được cấu thành từ 4 lớp công nghệ chính:
 
-1. **Lớp Thu thập dữ liệu (Ingestion Layer)**: Sử dụng các công cụ Change Data Capture (CDC) như Debezium để theo dõi và bắt lại mọi sự thay đổi (INSERT, UPDATE, DELETE) từ các database nghiệp vụ, hoặc thu nhận trực tiếp các dòng sự kiện clickstream từ ứng dụng.
-2. **Lớp Lưu trữ sự kiện (Message/Event Broker)**: Sử dụng Apache Kafka, Amazon Kinesis hoặc Google Pub/Sub làm xương sống. Lớp này chịu trách nhiệm tiếp nhận hàng triệu sự kiện mỗi giây, sắp xếp thứ tự và lưu giữ chúng an toàn trên bộ nhớ đệm phân tán.
+1. **Lớp Thu thập dữ liệu (Ingestion Layer)**: Sử dụng các công cụ [Change Data Capture](/concepts/etl-elt/change-data-capture/) (CDC) như Debezium để theo dõi và bắt lại mọi sự thay đổi (INSERT, UPDATE, DELETE) từ các database nghiệp vụ, hoặc thu nhận trực tiếp các dòng sự kiện clickstream từ ứng dụng.
+2. **Lớp Lưu trữ sự kiện (Message/Event Broker)**: Sử dụng [Apache Kafka](/concepts/streaming-processing/apache-kafka/), Amazon Kinesis hoặc Google Pub/Sub làm xương sống. Lớp này chịu trách nhiệm tiếp nhận hàng triệu sự kiện mỗi giây, sắp xếp thứ tự và lưu giữ chúng an toàn trên bộ nhớ đệm phân tán.
 3. **Lớp Xử lý luồng dữ liệu (Stream Processing Engine)**: Sử dụng Apache Flink, Spark Streaming hoặc ksqlDB để tiêu thụ dữ liệu từ Broker. Lớp này thực hiện các công việc tính toán thời gian thực như lọc dữ liệu, làm giàu thông tin (JOIN sự kiện với dữ liệu tĩnh trong cache Redis) và gom nhóm theo cửa sổ thời gian.
-4. **Lớp Phục vụ và Phân tích (Real-time Serving & Analytics)**: Kết quả sau khi xử lý được đẩy trực tiếp qua WebSockets lên màn hình người dùng, hoặc lưu vào các database In-memory / OLAP hỗ trợ chỉ mục cao như Redis, Apache Druid, ClickHouse hay Apache Pinot để phục vụ báo cáo trực tiếp.
+4. **Lớp Phục vụ và Phân tích (Real-time Serving & Analytics)**: Kết quả sau khi xử lý được đẩy trực tiếp qua WebSockets lên màn hình người dùng, hoặc lưu vào các database In-memory / [OLAP](/concepts/database-storage/olap/) hỗ trợ chỉ mục cao như Redis, Apache Druid, ClickHouse hay Apache Pinot để phục vụ báo cáo trực tiếp.
 
 ## Sơ đồ kiến trúc luồng dữ liệu thời gian thực
 
@@ -109,9 +109,9 @@ HAVING COUNT(*) > 3 AND SUM(amount) > 10000;
 ## Những lưu ý thực chiến khi thiết kế hệ thống
 
 ### Những nguyên tắc vàng (Best Practices)
-* **Thiết kế tính lũy đẳng (Idempotency)**: Trong hệ thống phân tán, lỗi kết nối mạng là điều không thể tránh khỏi và Broker có thể gửi lặp lại một sự kiện. Hệ thống xử lý luồng bắt buộc phải có cơ chế nhận diện và bỏ qua các sự kiện trùng lặp này (Exactly-once semantics).
+* **Thiết kế tính lũy đẳng ([Idempotency](/concepts/etl-elt/idempotency/))**: Trong hệ thống phân tán, lỗi kết nối mạng là điều không thể tránh khỏi và Broker có thể gửi lặp lại một sự kiện. Hệ thống xử lý luồng bắt buộc phải có cơ chế nhận diện và bỏ qua các sự kiện trùng lặp này (Exactly-once semantics).
 * **Xử lý dữ liệu đến muộn (Late Data)**: Do sự cố mạng ở thiết bị di động, dữ liệu có thể bị đẩy lên chậm vài tiếng so với thời điểm thực tế phát sinh. Thiết kế hệ thống thời gian thực cần sử dụng khái niệm **Event Time** (thời gian sự kiện thực sự xảy ra) phối hợp với cơ chế **Watermarks** để xử lý dữ liệu trễ một cách hợp lý, thay vì dùng `Processing Time` (thời gian hệ thống nhận được dữ liệu).
-* **Áp dụng kiến trúc CQRS**: Không bao giờ ghi ngược kết quả phân tích thời gian thực trực tiếp vào cơ sở dữ liệu OLTP đang vận hành ứng dụng chính, vì điều này rất dễ gây ra tình trạng khóa bảng (deadlocks). Hãy sử dụng các kho lưu trữ chuyên đọc và truy vấn nhanh như Elasticsearch hoặc Druid.
+* **Áp dụng kiến trúc CQRS**: Không bao giờ ghi ngược kết quả phân tích thời gian thực trực tiếp vào cơ sở dữ liệu [OLTP](/concepts/database-storage/oltp/) đang vận hành ứng dụng chính, vì điều này rất dễ gây ra tình trạng khóa bảng (deadlocks). Hãy sử dụng các kho lưu trữ chuyên đọc và truy vấn nhanh như Elasticsearch hoặc Druid.
 
 ### Những sai lầm kinh điển cần tránh
 * **Micro-batching trá hình**: Nhiều người thiết kế pipeline bằng cách định kỳ chạy câu lệnh SQL quét database (Pull) mỗi 1 phút một lần và gọi đó là "real-time". Đây thực chất chỉ là xử lý lô siêu nhỏ (Micro-batch). Cách làm này không chỉ gây lãng phí tài nguyên database khi không có dữ liệu mới, mà còn dễ bị nghẽn hệ thống khi lượng dữ liệu đột ngột tăng cao.
@@ -151,14 +151,14 @@ HAVING COUNT(*) > 3 AND SUM(amount) > 10000;
 
 ### 2. Hãy so sánh sự khác biệt giữa CDC (Change Data Capture) và phương pháp Batch ETL Query-based. Tại sao kiến trúc Real-time luôn ưu ái CDC?
 * **Gợi ý trả lời**: 
-  - **Query-based ETL** định kỳ chạy các câu lệnh query dạng `SELECT * WHERE updated_at > X` trực tiếp vào database nguồn. Cách làm này gây áp lực đọc rất lớn lên database nghiệp vụ và hoàn toàn không bắt được các sự kiện xóa vật lý (DELETE) trừ khi có thiết kế Soft Delete phức tạp.
+  - **Query-based [ETL](/concepts/etl-elt/etl/)** định kỳ chạy các câu lệnh query dạng `SELECT * WHERE updated_at > X` trực tiếp vào database nguồn. Cách làm này gây áp lực đọc rất lớn lên database nghiệp vụ và hoàn toàn không bắt được các sự kiện xóa vật lý (DELETE) trừ khi có thiết kế Soft Delete phức tạp.
   - **CDC** (như Debezium) hoạt động bằng cách đọc trực tiếp file ghi log giao dịch (Write-Ahead Log / Binlog) của database. Phương pháp này có độ trễ gần như bằng không, không gây ảnh hưởng đến hiệu năng truy vấn của database chính, và bắt được 100% mọi sự thay đổi (gồm cả lệnh DELETE vật lý). Do đó, CDC là nguồn cung cấp dữ liệu đầu vào hoàn hảo cho các kiến trúc thời gian thực.
 
 ## Tài liệu tham khảo
 
-1. **Streaming Systems** - Tyler Akidau. Cuốn sách gối đầu giường giải thích sâu sắc về các khái niệm cốt lõi của xử lý luồng.
-2. **Designing Event-Driven Systems** - Ben Stopford.
-3. **Kafka: The Definitive Guide** - Gwen Shapira, Todd Palino.
+1. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
+2. [Designing Event-Driven Systems](https://www.confluent.io/designing-event-driven-systems/) - Ben Stopford
+3. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Gwen Shapira, Todd Palino, Rajini Sivaram, and Krit Gunnala
 
 ## English Summary
 

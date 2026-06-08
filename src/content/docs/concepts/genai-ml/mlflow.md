@@ -18,7 +18,7 @@ Trong thế giới kỹ nghệ phần mềm truyền thống, chúng ta có Git 
 
 ## Bốn trụ cột công nghệ của MLflow
 
-Được phát triển ban đầu bởi Databricks, MLflow được thiết kế theo triết lý độc lập với thư viện (framework-agnostic). Bạn có thể thoải mái sử dụng nó với TensorFlow, PyTorch, Scikit-learn, hay thậm chí là các mô hình ngôn ngữ lớn (LLM) thông qua 4 thành phần cốt lõi:
+Được phát triển ban đầu bởi Databricks, MLflow được thiết kế theo triết lý độc lập với thư viện (framework-agnostic). Bạn có thể thoải mái sử dụng nó với TensorFlow, PyTorch, Scikit-learn, hay thậm chí là các mô hình ngôn ngữ lớn ([LLM](/concepts/genai-ml/llm/)) thông qua 4 thành phần cốt lõi:
 
 ### 1. MLflow Tracking (Lưu vết thử nghiệm)
 Đây là một "cuốn nhật ký tự động" cho mọi lượt chạy (run) huấn luyện mô hình. Nó tự động ghi nhận các tham số đầu vào (parameters), các chỉ số đánh giá đầu ra (metrics - như Loss, Accuracy qua từng epoch), mã nguồn Git commit và các file kết quả vật lý (artifacts - như file model `.pkl`, hình ảnh biểu đồ ROC).
@@ -27,7 +27,7 @@ Trong thế giới kỹ nghệ phần mềm truyền thống, chúng ta có Git 
 Giúp đóng gói code phân tích dữ liệu và huấn luyện theo một định dạng chuẩn hóa (sử dụng môi trường Conda hoặc Docker). Nhờ vậy, bất kỳ ai trong team cũng có thể chạy lại chính xác đoạn code đó trên máy tính của họ với cùng một kết quả mà không sợ lỗi môi trường.
 
 ### 3. MLflow Models (Đóng gói mô hình)
-Định nghĩa một cấu trúc thư mục chuẩn cho các mô hình học máy. Một thư mục MLflow Model sẽ chứa file trọng số mô hình cùng một file mô tả cách sử dụng nó. Nhờ tính chuẩn hóa này, bạn có thể dễ dàng triển khai mô hình lên nhiều môi trường khác nhau như chạy batch trên Apache Spark, hoặc dựng REST API trên Docker.
+Định nghĩa một cấu trúc thư mục chuẩn cho các mô hình học máy. Một thư mục MLflow Model sẽ chứa file trọng số mô hình cùng một file mô tả cách sử dụng nó. Nhờ tính chuẩn hóa này, bạn có thể dễ dàng triển khai mô hình lên nhiều môi trường khác nhau như chạy batch trên [Apache Spark](/concepts/batch-processing/apache-spark/), hoặc dựng REST API trên Docker.
 
 ### 4. Model Registry (Kho quản lý phiên bản tập trung)
 Đóng vai trò như một "GitHub dành cho models". Nó cung cấp một giao diện tập trung để quản lý các phiên bản mô hình, theo dõi lịch sử cập nhật và kiểm soát trạng thái vòng đời của chúng (đang thử nghiệm - Staging, đang chạy thực tế - Production, hay đã lưu trữ - Archived).
@@ -41,7 +41,7 @@ Hãy cùng xem dữ liệu và mô hình di chuyển thế nào trong một hệ
 ```mermaid
 graph TD
     subgraph "Data Scientist Environment"
-        A["Jupyter Notebook / Python Script"] -->|"mlflow.log_param()"| B(["MLflow Tracking Server"])
+        A["Jupyter Notebook / Python Script"] -->|"mlflow.log_param()"| B("MLflow Tracking Server")
         A -->|"mlflow.log_metric()"| B
         A -->|"mlflow.log_model()"| C["(Artifact Store: S3/GCS)"]
     end
@@ -56,6 +56,8 @@ graph TD
         F -->|"Fetch Production Model"| G["REST API / Docker"]
         C -->|"Download Model Files"| G
     end
+
+
 ```
 
 ### 1. Giai đoạn Huấn luyện (Tracking)
@@ -91,11 +93,11 @@ Các ứng dụng backend hoặc API Gateway chỉ cần gọi đến MLflow API
 * **Cộng đồng lớn mạnh**: Được hậu thuẫn bởi Databricks và có hàng nghìn doanh nghiệp lớn tin dùng, trở thành tiêu chuẩn thực tế (de-facto standard) của ngành MLOps.
 
 ### Những hạn chế cần lưu ý (Cons)
-* **Không phải là công cụ lập lịch (Scheduler)**: MLflow không giúp bạn lên lịch tự động chạy pipeline định kỳ (nhiệm vụ đó vẫn thuộc về các công cụ như Apache Airflow hoặc Prefect).
+* **Không phải là công cụ lập lịch (Scheduler)**: MLflow không giúp bạn lên lịch tự động chạy pipeline định kỳ (nhiệm vụ đó vẫn thuộc về các công cụ như [Apache Airflow](/concepts/orchestration/apache-airflow/) hoặc Prefect).
 * **Phân quyền bảo mật ở bản open-source còn hạn chế**: Bản miễn phí của MLflow không hỗ trợ các tính năng quản lý quyền truy cập nâng cao (RBAC). Nếu cần tính năng này, doanh nghiệp thường phải nâng cấp lên phiên bản thương mại của Databricks hoặc tự thiết kế các lớp bảo mật bổ sung.
 
 ### Lời khuyên xương máu khi triển khai (Best Practices)
-* **Tách biệt Storage lưu trữ**: Trong môi trường thực tế, hãy cấu hình MLflow lưu trữ metadata (các con số, tham số nhẹ) vào một cơ sở dữ liệu quan hệ (Backend Store như PostgreSQL). Còn đối với các file mô hình nặng (Artifact Store), hãy đẩy chúng lên các kho lưu trữ đám mây như AWS S3 hoặc Google Cloud Storage để tránh làm tràn ổ cứng server.
+* **Tách biệt Storage lưu trữ**: Trong môi trường thực tế, hãy cấu hình MLflow lưu trữ metadata (các con số, tham số nhẹ) vào một cơ sở dữ liệu quan hệ (Backend Store như PostgreSQL). Còn đối với các file mô hình nặng (Artifact Store), hãy đẩy chúng lên các kho lưu trữ đám mây như AWS S3 hoặc Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) để tránh làm tràn ổ cứng server.
 * **Tự động hóa bằng Webhooks**: Thiết lập các webhook để khi một mô hình được chuyển trạng thái sang `Production` trong Model Registry, hệ thống sẽ tự động kích hoạt đường ống CI/CD để build Docker và deploy bản cập nhật lên Kubernetes.
 * **Tận dụng thẻ phân loại (Tags)**: Hãy đặt tag rõ ràng cho mỗi lượt chạy (ví dụ: phiên bản tập dữ liệu sử dụng, tên người thực hiện) để sau này dễ dàng tìm kiếm và đối chiếu.
 
@@ -117,7 +119,7 @@ Các ứng dụng backend hoặc API Gateway chỉ cần gọi đến MLflow API
 ## Khái niệm liên quan
 
 * MLOps (Machine Learning Operations)
-* Model Serving
+* [Model Serving](/concepts/genai-ml/model-serving/)
 * LLMOps
 
 ---

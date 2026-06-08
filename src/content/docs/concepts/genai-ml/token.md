@@ -41,12 +41,14 @@ Sơ đồ quy trình biến đổi:
 
 ```mermaid
 flowchart TD
-    A[Raw Text: 'unbelievable'] --> B[Characters: u, n, b, e, l, i, e, v, a, b, l, e]
-    B --> C{Frequency Analysis}
-    C --> D[Merge 'able' suffix]
-    C --> E[Merge 'believ' stem]
-    C --> F[Merge 'un' prefix]
-    D & E & F --> G[Final Tokens: 'un', 'believ', 'able']
+    A["Raw Text: 'unbelievable'"] --> B["Characters: u, n, b, e, l, i, e, v, a, b, l, e"]
+    B --> C{"Frequency Analysis"}
+    C --> D["Merge 'able' suffix"]
+    C --> E["Merge 'believ' stem"]
+    C --> F["Merge 'un' prefix"]
+    D & E & F --> G["Final Tokens: 'un', 'believ', 'able'"]
+
+
 ```
 
 ## Bất bình đẳng ngôn ngữ: Câu chuyện token Việt vs Anh

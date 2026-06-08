@@ -9,7 +9,7 @@ seoTitle: "Cơ sở dữ liệu Vector (Vector Database) - Nền tảng của Ge
 metaDescription: "Tìm hiểu Cơ sở dữ liệu Vector (Vector Store): Cách lưu trữ embeddings, thuật toán tìm kiếm ANN (HNSW), và vai trò then chốt trong hệ thống RAG."
 ---
 
-Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh, các mô hình ngôn ngữ lớn (LLM) giống như những bộ não siêu việt nhưng lại có một điểm yếu chí mạng: chúng không có trí nhớ dài hạn đối với dữ liệu nội bộ của doanh nghiệp. Để giải quyết vấn đề này, các kỹ sư dữ liệu đã xây dựng một "ngăn nhớ" chuyên biệt có khả năng lưu trữ và truy xuất tri thức một cách thông minh. Đó chính là **Cơ sở dữ liệu Vector (Vector Database / Vector Store)**. 
+Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh, các mô hình ngôn ngữ lớn ([LLM](/concepts/genai-ml/llm/)) giống như những bộ não siêu việt nhưng lại có một điểm yếu chí mạng: chúng không có trí nhớ dài hạn đối với dữ liệu nội bộ của doanh nghiệp. Để giải quyết vấn đề này, các kỹ sư dữ liệu đã xây dựng một "ngăn nhớ" chuyên biệt có khả năng lưu trữ và truy xuất tri thức một cách thông minh. Đó chính là **Cơ sở dữ liệu Vector ([Vector Database](/concepts/genai-ml/vector-database/) / Vector Store)**. 
 
 Khác với các cơ sở dữ liệu truyền thống vốn chỉ hiểu các phép so khớp từ khóa chính xác, Vector Database lưu trữ thông tin dưới dạng các tọa độ đa chiều (embeddings) và cho phép tìm kiếm dữ liệu dựa trên sự tương đồng về mặt ngữ nghĩa (semantic similarity).
 
@@ -25,7 +25,7 @@ Phần lớn dữ liệu phát sinh hàng ngày trong doanh nghiệp là dữ li
 
 Nếu bạn muốn tìm kiếm bức ảnh chứa *"một chú mèo đang ngủ trưa"* hoặc đoạn văn có nội dung tương đồng với ý niệm *"cảm thấy thỏa mãn với cuộc sống"*, câu lệnh SQL với toán tử `LIKE %cat%` sẽ không thể giải quyết được. 
 
-Vector Database ra đời để mở ra cánh cửa **Tìm kiếm theo ngữ nghĩa (Semantic Search)**. Thay vì so sánh mặt chữ, nó đo lường khoảng cách toán học giữa các ý niệm. Hai câu: *"Tôi thấy rất vui"* và *"Tôi ngập tràn hạnh phúc"* dù không chia sẻ bất kỳ từ vựng chung nào, nhưng khi được đưa vào không gian vector, tọa độ của chúng vẫn sẽ nằm rất sát nhau.
+Vector Database ra đời để mở ra cánh cửa **Tìm kiếm theo ngữ nghĩa ([Semantic Search](/concepts/genai-ml/semantic-search/))**. Thay vì so sánh mặt chữ, nó đo lường khoảng cách toán học giữa các ý niệm. Hai câu: *"Tôi thấy rất vui"* và *"Tôi ngập tràn hạnh phúc"* dù không chia sẻ bất kỳ từ vựng chung nào, nhưng khi được đưa vào không gian vector, tọa độ của chúng vẫn sẽ nằm rất sát nhau.
 
 ## Ba thành phần cốt lõi của một Vector Database
 
@@ -60,7 +60,7 @@ graph TD
 
 ### Giai đoạn ghi (Indexing Pipeline)
 * Đọc tài liệu thô phi cấu trúc từ các nguồn.
-* Chia nhỏ văn bản thành các đoạn ngắn (Chunking) để giữ cho ngữ nghĩa tập trung.
+* Chia nhỏ văn bản thành các đoạn ngắn ([Chunking](/concepts/genai-ml/chunking/)) để giữ cho ngữ nghĩa tập trung.
 * Chuyển hóa các đoạn văn này thành vector thông qua mô hình Embedding.
 * Lưu trữ vector kèm theo dữ liệu gốc (Metadata) vào Vector Database và tự động xây dựng cây chỉ mục (Index).
 
@@ -101,7 +101,7 @@ LIMIT 1;
 
 ## Best Practices thiết kế hệ thống và cạm bẫy cần tránh
 
-* **Thiết lập bộ lọc kết hợp (Hybrid Search):** Hãy luôn lưu kèm Metadata (như tác giả, ngày tạo, thẻ danh mục) cùng với vector. Việc này cho phép bạn kết hợp tìm kiếm ngữ nghĩa với các câu lệnh lọc điều kiện SQL truyền thống (`WHERE author = 'Alice'`), giúp tăng độ chính xác của kết quả.
+* **Thiết lập bộ lọc kết hợp ([Hybrid Search](/concepts/genai-ml/hybrid-search/)):** Hãy luôn lưu kèm Metadata (như tác giả, ngày tạo, thẻ danh mục) cùng với vector. Việc này cho phép bạn kết hợp tìm kiếm ngữ nghĩa với các câu lệnh lọc điều kiện SQL truyền thống (`WHERE author = 'Alice'`), giúp tăng độ chính xác của kết quả.
 * **Chọn đúng hàm đo khoảng cách:** Hãy kiểm tra kỹ tài liệu hướng dẫn của mô hình Embedding bạn chọn để biết họ sử dụng phép đo nào khi huấn luyện. Với mô hình của OpenAI, hãy sử dụng `Cosine Similarity`. Việc chọn sai hàm đo khoảng cách sẽ khiến kết quả tìm kiếm bị sai lệch nghiêm trọng.
 * **Lên lịch tối ưu hóa chỉ mục định kỳ:** Khi bạn thực hiện các thao tác xóa hoặc cập nhật dữ liệu, các Vector Database thường chỉ đánh dấu xóa logic (soft delete) trên sơ đồ đồ thị. Bạn cần lên lịch chạy các tiến trình dọn dẹp và tổ chức lại chỉ mục (vacuum/optimize) định kỳ để duy trì hiệu năng đọc ổn định.
 
@@ -126,8 +126,8 @@ LIMIT 1;
 * [Chunking Strategy - Chiến lược cắt đoạn](/concepts/genai-ml/chunking-strategy/)
 
 **Tài liệu tham khảo:**
-1. **The Curious Case of Neural Text Degeneration** - *Holtzman et al.* (Paper giới thiệu về Nucleus Sampling và decoding).
-2. **Hugging Face Transformers Documentation** - *Tài liệu chi tiết về các giải thuật sinh văn bản và vector search*.
+1. [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320) - Research paper detailing the HNSW algorithm.
+2. [Pinecone Learning Center: Vector Databases](https://www.pinecone.io/learn/vector-database/) - Comprehensive guides and articles explaining vector databases, indices, and metrics.
 
 ---
 

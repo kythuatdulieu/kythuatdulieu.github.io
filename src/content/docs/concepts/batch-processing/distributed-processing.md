@@ -120,7 +120,7 @@ Dù xử lý phân tán rất mạnh mẽ, nhưng việc cấu hình và thiết
 * [Data Skew](/concepts/batch-processing/data-skew/)
 * MapReduce
 
-## Góc phỏng vấn
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Sự khác biệt giữa Scale Up (Vertical Scaling) và Scale Out (Horizontal Scaling) là gì?
 * **Gợi ý trả lời**: Scale Up là giải pháp tăng cường sức mạnh phần cứng (nâng CPU, RAM, ổ cứng) cho một máy chủ duy nhất. Phương pháp này có giới hạn vật lý rõ rệt, chi phí tăng theo cấp số nhân và mang rủi ro "Single Point of Failure" (nếu máy hỏng thì hệ thống sập). Scale Out là phương pháp mở rộng bằng cách thêm nhiều máy chủ cấu hình vừa phải vào một cụm (cluster) để làm việc song song dưới sự điều phối của phần mềm. Scale Out có chi phí tăng tuyến tính linh hoạt, tính chịu lỗi cao và là triết lý thiết kế cốt lõi của các hệ thống dữ liệu lớn ngày nay.

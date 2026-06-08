@@ -15,7 +15,7 @@ Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh (GenAI), khả năng 
 
 ## Vector Database là gì? Thấu hiểu dữ liệu qua lăng kính ngữ nghĩa
 
-Về mặt định nghĩa, **Vector Database** là một hệ thống cơ sở dữ liệu chuyên biệt được thiết kế để lưu trữ, lập chỉ mục (indexing) và truy vấn các **Embeddings** – những mảng số thực đa chiều biểu diễn các đặc trưng ngữ nghĩa của dữ liệu phi cấu trúc (như văn bản, hình ảnh, âm thanh).
+Về mặt định nghĩa, **Vector Database** là một hệ thống cơ sở dữ liệu chuyên biệt được thiết kế để lưu trữ, lập chỉ mục ([indexing](/concepts/database-storage/indexing/)) và truy vấn các **[Embeddings](/concepts/genai-ml/embeddings/)** – những mảng số thực đa chiều biểu diễn các đặc trưng ngữ nghĩa của dữ liệu phi cấu trúc (như văn bản, hình ảnh, âm thanh).
 
 Thay vì sử dụng các câu lệnh SQL với toán tử so sánh quen thuộc như `=` hay `LIKE`, Vector Database sử dụng các phép toán tính toán khoảng cách trong không gian hình học đa chiều (như Cosine Similarity, Euclidean Distance hay Dot Product) kết hợp với các thuật toán lập chỉ mục lân cận gần đúng (Approximate Nearest Neighbor - ANN) để tìm kiếm và trả về kết quả tương đồng nhất chỉ trong vài phần nghìn giây.
 
@@ -25,7 +25,7 @@ Sự trỗi dậy của Deep Learning và các Mô hình Ngôn ngữ Lớn (LLM)
 
 1. **Sự bất lực của tìm kiếm từ khóa:** Các cơ sở dữ liệu quan hệ (PostgreSQL, MySQL) hay các engine tìm kiếm văn bản kinh điển (Elasticsearch với thuật toán BM25) rất mạnh về việc tìm từ khóa chính xác. Tuy nhiên, chúng hoàn toàn không hiểu được ngữ nghĩa của từ nếu không được cấu hình từ điển đồng nghĩa (synonyms) thủ công cực kỳ phức tạp.
 2. **Thảm họa hiệu năng khi quy mô tăng lớn:** Để tìm ra vector giống nhất với một câu truy vấn trong số 1 triệu vector có sẵn, phương pháp đơn giản nhất là lấy vector đó đi so sánh khoảng cách lần lượt với toàn bộ 1 triệu vector còn lại (thuật toán k-Nearest Neighbors - KNN). Phép toán brute-force này có độ phức tạp $O(N)$, sẽ làm treo hệ thống ngay khi dữ liệu phình to.
-3. **Thiếu các tính năng quản lý dữ liệu cấp doanh nghiệp:** Các thư viện tìm kiếm vector lưu trữ trực tiếp trên RAM (như FAISS của Meta) có tốc độ rất nhanh nhưng lại thiếu đi các tính năng cơ bản của một cơ sở dữ liệu thực thụ như: khả năng lưu trữ bền vững (persistence), hỗ trợ các giao dịch CRUD, phân cụm phân tán (distributed clustering) và quản lý quyền truy cập.
+3. **Thiếu các tính năng quản lý dữ liệu cấp doanh nghiệp:** Các thư viện tìm kiếm vector lưu trữ trực tiếp trên RAM (như FAISS của Meta) có tốc độ rất nhanh nhưng lại thiếu đi các tính năng cơ bản của một cơ sở dữ liệu thực thụ như: khả năng lưu trữ bền vững (persistence), hỗ trợ các giao dịch CRUD, phân cụm phân tán (distributed [clustering](/concepts/database-storage/clustering/)) và quản lý quyền truy cập.
 
 Vector Database ra đời để giải quyết trọn vẹn các bài toán này: mang đến khả năng tìm kiếm ngữ nghĩa siêu tốc đồng thời đảm bảo đầy đủ các tính năng quản trị dữ liệu chuẩn doanh nghiệp.
 
@@ -46,28 +46,30 @@ Kiến trúc luồng dữ liệu (Data Flow) trong một hệ thống ứng dụ
 
 ```mermaid
 flowchart TD
-    subgraph Ingestion Phase
-        A[Raw Documents] --> B[Chunking]
-        B --> C[Embedding Model]
-        C --> D[(Vector Database\n+ Metadata Index)]
+    subgraph "Ingestion Phase"
+        A["Raw Documents"] --> B[Chunking]
+        B --> C["Embedding Model"]
+        C --> D["Vector Database<br/>+ Metadata Index"]
     end
     
-    subgraph Query Phase
-        E[User Query] --> F[Same Embedding Model]
-        F --> G{ANN Search\nCosine / L2}
-        D -.->|Search Space| G
-        G --> H[Top K Results]
+    subgraph "Query Phase"
+        E["User Query"] --> F["Same Embedding Model"]
+        F --> G{"ANN Search<br/>Cosine / L2"}
+        D -.->|"Search Space"| G
+        G --> H["Top K Results"]
     end
     
     style Ingestion Phase fill:#f9f9f9,stroke:#333
     style Query Phase fill:#f9f9f9,stroke:#333
     style D fill:#cce5ff,stroke:#333
+
+
 ```
 
 ### 1. Giai đoạn Ingestion (Nạp dữ liệu)
 * Hệ thống đọc các tài liệu thô phi cấu trúc (ví dụ: các file PDF chính sách nội bộ).
-* Dữ liệu được cắt nhỏ thành các đoạn văn bản ngắn (Chunking) để tránh loãng ngữ nghĩa.
-* Các đoạn văn này được gửi qua Embedding Model để chuyển hóa thành các vector số thực.
+* Dữ liệu được cắt nhỏ thành các đoạn văn bản ngắn ([Chunking](/concepts/genai-ml/chunking/)) để tránh loãng ngữ nghĩa.
+* Các đoạn văn này được gửi qua [Embedding Model](/concepts/genai-ml/embedding-model/) để chuyển hóa thành các vector số thực.
 * Hệ thống lưu trữ các vector này vào Vector Database kèm theo siêu dữ liệu (metadata như: tên file, ngày tạo, danh mục) và tiến hành xây dựng chỉ mục (Index).
 
 ### 2. Giai đoạn Query (Tìm kiếm truy vấn)

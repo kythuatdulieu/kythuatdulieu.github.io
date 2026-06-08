@@ -15,13 +15,13 @@ Khi thiết kế các hệ thống dữ liệu lớn, việc dung hòa giữa nh
 
 Kiến trúc Kappa là một mô hình kiến trúc phần mềm tập trung hoàn toàn vào việc xử lý dữ liệu dưới dạng luồng (Stream Processing) mà không cần đến lớp xử lý lô (Batch Layer) riêng biệt. Triết lý của Kappa coi tất cả mọi dữ liệu trong doanh nghiệp — cho dù là một giao dịch vừa phát sinh mili-giây trước hay dữ liệu lịch sử của 5 năm về trước — đều là các sự kiện thuộc về một chuỗi dòng chảy liên tục.
 
-Mô hình này được đề xuất bởi Jay Kreps (nhà đồng sáng lập của Apache Kafka và công ty Confluent) vào năm 2014 như một sự thay thế gọn gàng hơn cho kiến trúc Lambda. Bằng cách loại bỏ hoàn toàn tầng Batch, Kappa sử dụng một công cụ xử lý luồng mạnh mẽ duy nhất (như Apache Flink, Spark Streaming hoặc Kafka Streams) để đảm nhận cả nhiệm vụ tính toán thời gian thực lẫn xử lý lại dữ liệu lịch sử. Trong thế giới của Kappa, xử lý lô (Batch) thực chất chỉ là một trường hợp đặc biệt của xử lý luồng (khi điểm bắt đầu đọc được tua lại quá khứ và điểm kết thúc nằm ở hiện tại).
+Mô hình này được đề xuất bởi Jay Kreps (nhà đồng sáng lập của [Apache Kafka](/concepts/streaming-processing/apache-kafka/) và công ty Confluent) vào năm 2014 như một sự thay thế gọn gàng hơn cho kiến trúc Lambda. Bằng cách loại bỏ hoàn toàn tầng Batch, Kappa sử dụng một công cụ xử lý luồng mạnh mẽ duy nhất (như Apache Flink, Spark Streaming hoặc Kafka Streams) để đảm nhận cả nhiệm vụ tính toán thời gian thực lẫn xử lý lại dữ liệu lịch sử. Trong thế giới của Kappa, xử lý lô (Batch) thực chất chỉ là một trường hợp đặc biệt của xử lý luồng (khi điểm bắt đầu đọc được tua lại quá khứ và điểm kết thúc nằm ở hiện tại).
 
 ## Lời tuyên chiến với sự phức tạp của Lambda
 
 Mặc dù kiến trúc Lambda rất mạnh mẽ, nó lại mang tới một vấn đề nhức nhối cho các doanh nghiệp: **Nợ kỹ thuật và chi phí vận hành quá cao** (Operational Complexity).
 
-Với Lambda, các kỹ sư dữ liệu bắt buộc phải viết, kiểm thử và duy trì cùng một logic nghiệp vụ hai lần bằng hai ngôn ngữ hoặc công nghệ khác nhau: một lần cho lớp Batch (như Apache Spark, Hadoop) và một lần cho lớp Stream (như Apache Storm, Flink). Mỗi khi thay đổi một quy tắc tính toán nhỏ, họ phải đảm bảo cập nhật đồng bộ ở cả hai nơi. Bất kỳ sự lệch pha nào giữa hai lớp này cũng sẽ dẫn đến việc số liệu hiển thị trên Dashboard bị sai lệch.
+Với Lambda, các kỹ sư dữ liệu bắt buộc phải viết, kiểm thử và duy trì cùng một logic nghiệp vụ hai lần bằng hai ngôn ngữ hoặc công nghệ khác nhau: một lần cho lớp Batch (như [Apache Spark](/concepts/batch-processing/apache-spark/), Hadoop) và một lần cho lớp Stream (như Apache Storm, Flink). Mỗi khi thay đổi một quy tắc tính toán nhỏ, họ phải đảm bảo cập nhật đồng bộ ở cả hai nơi. Bất kỳ sự lệch pha nào giữa hai lớp này cũng sẽ dẫn đến việc số liệu hiển thị trên Dashboard bị sai lệch.
 
 Jay Kreps lập luận rằng: Với sự tiến bộ vượt bậc của các công cụ xử lý luồng phân tán chịu lỗi cao cùng khả năng lưu trữ không giới hạn của các hệ thống log sự kiện (như Apache Kafka), chúng ta hoàn toàn có thể hợp nhất hai lớp này làm một. Việc loại bỏ hoàn toàn luồng Batch vẫn đảm bảo tính chính xác tuyệt đối của dữ liệu và khả năng tính toán lại lịch sử (re-computation).
 
@@ -95,8 +95,8 @@ DataStream<String> stream = env.addSource(consumer);
 ## Những chỉ dẫn "vàng" cho kỹ sư
 
 * **Cấu hình Retention Policy cho Kafka hợp lý**: Hãy đảm bảo thời gian lưu giữ dữ liệu của Kafka đủ lâu để phục vụ cho nhu cầu tua lại. Bạn nên kết hợp tính năng Tiered Storage của Kafka để tự động đẩy các log sự kiện cũ xuống các dịch vụ lưu trữ giá rẻ như Amazon S3 nhằm tiết kiệm chi phí đĩa cứng đắt đỏ của các Broker.
-* **Chú trọng năng lực quản lý trạng thái (Stateful Processing)**: Hãy chọn các framework xử lý luồng hỗ trợ lưu trữ trạng thái tốt (như RocksDB StateBackend trong Apache Flink) để quản lý các tác vụ phức tạp như gom nhóm theo thời gian (windowing) hay ghép nối các luồng dữ liệu lịch sử khổng lồ.
-* **Lập trình tuyệt đối dựa trên Event Time**: Khi chạy tua lại dữ liệu lịch sử (replay), mốc thời gian máy chủ xử lý dữ liệu (Processing Time) sẽ hoàn toàn mất đi giá trị (vì hàng triệu sự kiện của 5 năm trước đều được xử lý vào ngày hôm nay). Bạn bắt buộc phải lập trình dựa trên thời điểm sự kiện thực tế phát sinh (Event Time), kết hợp với cấu hình Watermark để xử lý các sự kiện bị đến trễ.
+* **Chú trọng năng lực quản lý trạng thái (Stateful Processing)**: Hãy chọn các framework xử lý luồng hỗ trợ lưu trữ trạng thái tốt (như RocksDB StateBackend trong Apache Flink) để quản lý các tác vụ phức tạp như gom nhóm theo thời gian ([windowing](/concepts/streaming-processing/windowing/)) hay ghép nối các luồng dữ liệu lịch sử khổng lồ.
+* **Lập trình tuyệt đối dựa trên Event Time**: Khi chạy tua lại dữ liệu lịch sử (replay), mốc thời gian máy chủ xử lý dữ liệu (Processing Time) sẽ hoàn toàn mất đi giá trị (vì hàng triệu sự kiện của 5 năm trước đều được xử lý vào ngày hôm nay). Bạn bắt buộc phải lập trình dựa trên thời điểm sự kiện thực tế phát sinh (Event Time), kết hợp với cấu hình [Watermark](/concepts/streaming-processing/watermark/) để xử lý các sự kiện bị đến trễ.
 
 ## Các sai lầm kinh điển dễ biến thành thảm họa
 
@@ -112,8 +112,8 @@ DataStream<String> stream = env.addSource(consumer);
 * **Dễ dàng thử nghiệm**: Bạn có thể triển khai chạy thử nghiệm thuật toán mới song song với thuật toán cũ trên cùng một luồng dữ liệu thực tế mà không sợ làm ảnh hưởng đến người dùng hiện tại.
 
 ### Điểm trừ
-* **Chi phí lưu trữ log sự kiện đắt đỏ**: Việc lưu giữ hàng Petabytes dữ liệu lịch sử lâu dài trong Kafka tốn kém hơn nhiều so với việc lưu trữ các tệp tĩnh trên các Data Lake giá rẻ (như Amazon S3 hay HDFS).
-* **Hiệu năng xử lý Batch thuần túy**: Mặc dù Flink xử lý luồng rất mạnh mẽ, nhưng đối với các truy vấn phân tích yêu cầu JOIN hàng chục bảng dữ liệu khổng lồ (Heavy OLAP), các công cụ chạy Batch truyền thống (như Spark SQL hay Google BigQuery) vẫn cho thấy sự vượt trội về mặt tốc độ và tối ưu hóa bộ nhớ.
+* **Chi phí lưu trữ log sự kiện đắt đỏ**: Việc lưu giữ hàng Petabytes dữ liệu lịch sử lâu dài trong Kafka tốn kém hơn nhiều so với việc lưu trữ các tệp tĩnh trên các [Data Lake](/concepts/data-lake-lakehouse/data-lake/) giá rẻ (như Amazon S3 hay HDFS).
+* **Hiệu năng xử lý Batch thuần túy**: Mặc dù Flink xử lý luồng rất mạnh mẽ, nhưng đối với các truy vấn phân tích yêu cầu JOIN hàng chục bảng dữ liệu khổng lồ (Heavy [OLAP](/concepts/database-storage/olap/)), các công cụ chạy Batch truyền thống (như [Spark SQL](/concepts/batch-processing/spark-sql/) hay [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/)) vẫn cho thấy sự vượt trội về mặt tốc độ và tối ưu hóa bộ nhớ.
 
 ## Khi nào nên dùng và khi nào không?
 
@@ -145,8 +145,8 @@ DataStream<String> stream = env.addSource(consumer);
 
 ## Tài liệu tham khảo
 
-1. **Questioning the Lambda Architecture** - Jay Kreps (Bài báo gốc khai sinh ra khái niệm Kappa Architecture năm 2014).
-2. **Streaming Systems** - Tyler Akidau, Slava Chernyak, Reuven Lax (Sách xuất sắc từ các kỹ sư Google Dataflow giải thích chi tiết về Event Time, Watermarks).
+1. [Questioning the Lambda Architecture](https://www.oreilly.com/content/questioning-the-lambda-architecture/) - Jay Kreps
+2. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
 
 ## English Summary
 

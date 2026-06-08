@@ -11,13 +11,13 @@ metaDescription: "Khám phá kỹ thuật SQL Transformation trong Data Warehous
 
 Hãy tưởng tượng bạn đang có một kho chứa đầy nguyên liệu thô (Raw Data) được thu thập từ khắp nơi về. Chúng hỗn loạn, móp méo và chưa thể sử dụng ngay được. **SQL Transformation** chính là quá trình chúng ta vào bếp, sử dụng ngôn ngữ truy vấn có cấu trúc (SQL) làm công cụ chính để làm sạch, sơ chế, kết hợp và biến đổi đống nguyên liệu thô ấy thành những "món ăn" dữ liệu thơm ngon, sẵn sàng phục vụ cho việc phân tích và ra quyết định kinh doanh (Business-ready Data).
 
-Với sự trỗi dậy mạnh mẽ của các siêu máy tính Cloud Data Warehouse như Snowflake hay BigQuery, SQL đã quay trở lại vị trí "ngôn ngữ mẹ đẻ" thống trị toàn bộ mảng chuyển đổi dữ liệu, vượt qua cả các framework lập trình phức tạp.
+Với sự trỗi dậy mạnh mẽ của các siêu máy tính Cloud Data Warehouse như [Snowflake](/concepts/cloud-data-platform/snowflake/) hay BigQuery, SQL đã quay trở lại vị trí "ngôn ngữ mẹ đẻ" thống trị toàn bộ mảng chuyển đổi dữ liệu, vượt qua cả các framework lập trình phức tạp.
 
 ## Sự trỗi dậy của SQL trong kỷ nguyên đám mây và ELT
 
-Nửa thập kỷ trước, trong thời kỳ hoàng kim của Hadoop và Big Data (mô hình ETL truyền thống), nhiều người từng nghĩ SQL đã "hết thời". Họ cho rằng SQL không thể mở rộng (not scalable). Quá trình biến đổi dữ liệu khi đó thường được thực hiện bên ngoài kho dữ liệu bằng Python, Java hoặc Scala (thông qua MapReduce hay Spark). Cách tiếp cận này vô tình dựng lên một rào cản lớn: nó đòi hỏi đội ngũ Data Engineer phải cực kỳ giỏi lập trình, trong khi các Data Analyst – những người hiểu rõ nghiệp vụ nhất – lại không thể chạm tay vào logic biến đổi dữ liệu.
+Nửa thập kỷ trước, trong thời kỳ hoàng kim của Hadoop và Big Data (mô hình [ETL](/concepts/etl-elt/etl/) truyền thống), nhiều người từng nghĩ SQL đã "hết thời". Họ cho rằng SQL không thể mở rộng (not scalable). Quá trình biến đổi dữ liệu khi đó thường được thực hiện bên ngoài kho dữ liệu bằng Python, Java hoặc Scala (thông qua MapReduce hay Spark). Cách tiếp cận này vô tình dựng lên một rào cản lớn: nó đòi hỏi đội ngũ Data Engineer phải cực kỳ giỏi lập trình, trong khi các Data Analyst – những người hiểu rõ nghiệp vụ nhất – lại không thể chạm tay vào logic biến đổi dữ liệu.
 
-Tuy nhiên, từ năm 2016 trở đi, cục diện hoàn toàn thay đổi. Các Cloud Data Warehouse chứng minh rằng chúng có thể xử lý hàng Petabytes dữ liệu bằng câu lệnh SQL chỉ trong nháy mắt. Mô hình dịch chuyển từ ETL sang **ELT** (Extract, Load, rồi mới Transform). SQL Transformation trở thành ngôi sao sáng nhờ ba lý do cốt lõi:
+Tuy nhiên, từ năm 2016 trở đi, cục diện hoàn toàn thay đổi. Các Cloud Data Warehouse chứng minh rằng chúng có thể xử lý hàng Petabytes dữ liệu bằng câu lệnh SQL chỉ trong nháy mắt. Mô hình dịch chuyển từ ETL sang **[ELT](/concepts/etl-elt/elt/)** (Extract, Load, rồi mới Transform). SQL Transformation trở thành ngôi sao sáng nhờ ba lý do cốt lõi:
 
 1. **Dân chủ hóa dữ liệu (Data Democratization):** Hầu như ai làm việc với dữ liệu cũng biết SQL. Nhờ SQL Transformation, hàng triệu Data Analyst giờ đây có thể tự tay xây dựng pipeline chuyển đổi dữ liệu mà không cần phụ thuộc hoàn toàn vào Data Engineer.
 2. **Không tốn chi phí di chuyển dữ liệu:** Thay vì mất công copy hàng triệu dòng dữ liệu từ Database ra một máy chủ Python riêng để tính toán rồi lại lưu ngược trở lại, SQL Transformation thực thi logic trực tiếp ngay tại nơi lưu trữ dữ liệu (Push-down compute).
@@ -25,8 +25,8 @@ Tuy nhiên, từ năm 2016 trở đi, cục diện hoàn toàn thay đổi. Các
 
 ## Từ dữ liệu thô đến sản phẩm hoàn chỉnh: Cách thức vận hành
 
-Trong một đường ống dẫn dữ liệu (Data Pipeline), quá trình biến đổi (T - Transform) bao gồm các thao tác cơ bản nhưng vô cùng quan trọng:
-* **Làm sạch (Cleaning):** Loại bỏ dữ liệu rác, xử lý giá trị NULL và khử trùng lặp (Deduplication).
+Trong một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)), quá trình biến đổi (T - Transform) bao gồm các thao tác cơ bản nhưng vô cùng quan trọng:
+* **Làm sạch (Cleaning):** Loại bỏ dữ liệu rác, xử lý giá trị NULL và khử trùng lặp ([Deduplication](/concepts/etl-elt/deduplication/)).
 * **Ép kiểu (Casting):** Đồng nhất định dạng, ví dụ chuyển chuỗi chữ số thành số nguyên (`INT`), chuyển đổi các định dạng ngày tháng khác nhau về một chuẩn `DATE`.
 * **Hợp nhất (Joining):** Kết nối dữ liệu phân mảnh từ nhiều nguồn khác nhau (ví dụ: nối bảng Đơn hàng với bảng Khách hàng).
 * **Gom nhóm (Aggregating):** Tính tổng doanh thu theo tháng, tính trung bình chi tiêu của khách hàng.
@@ -42,22 +42,22 @@ Trong một đường ống dẫn dữ liệu (Data Pipeline), quá trình biế
 
 ## Kiến trúc luồng dữ liệu chuẩn mực với CTE Pattern
 
-Một trong những thiết kế kinhдени và chuẩn mực nhất khi viết SQL Transformation là sử dụng **CTE (Common Table Expression)** thay thế hoàn toàn cho các sub-query lồng nhau. Hãy xem sơ đồ luồng dữ liệu dưới đây:
+Một trong những thiết kế kinh điển và chuẩn mực nhất khi viết SQL Transformation là sử dụng **CTE (Common Table Expression)** thay thế hoàn toàn cho các sub-query lồng nhau. Hãy xem sơ đồ luồng dữ liệu dưới đây:
 
 ```mermaid
 flowchart TD
-    subgraph Import Layer
+    subgraph "Import Layer"
         A[(raw_orders)]
         B[(raw_customers)]
     end
     
-    subgraph Cleaning Layer
-        C[cleaned_orders\n- Cast Date\n- Filter Status\n- Abs Revenue]
-        D[cleaned_customers\n- Upper Country]
+    subgraph "Cleaning Layer"
+        C[cleaned_orders<br/>- Cast Date<br/>- Filter Status<br/>- Abs Revenue]
+        D[cleaned_customers<br/>- Upper Country]
     end
     
-    subgraph Assembly Layer
-        E[final_mart\nLEFT JOIN]
+    subgraph "Assembly Layer"
+        E[final_mart<br/>LEFT JOIN]
     end
     
     A --> C

@@ -15,9 +15,9 @@ Thế nhưng, nếu hệ thống của bạn hỗ trợ tính năng **Time Trave
 
 ## Time Travel là gì? Tính năng "Undo" thần kỳ của dữ liệu
 
-**Time Travel** là tính năng cho phép hệ thống (như Cloud Data Warehouse hay Data Lakehouse) truy vấn và xem lại trạng thái của một bảng dữ liệu tại một mốc thời gian cụ thể hoặc ở một số phiên bản trong quá khứ, miễn là mốc đó nằm trong cửa sổ lưu giữ lịch sử (retention window) được cấu hình trước.
+**Time Travel** là tính năng cho phép hệ thống (như Cloud [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hay Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/)) truy vấn và xem lại trạng thái của một bảng dữ liệu tại một mốc thời gian cụ thể hoặc ở một số phiên bản trong quá khứ, miễn là mốc đó nằm trong cửa sổ lưu giữ lịch sử (retention window) được cấu hình trước.
 
-Về cơ bản, Time Travel biến kho dữ liệu của bạn từ một nơi chỉ lưu giữ trạng thái hiện tại thành một hệ thống quản lý phiên bản (version control) thông minh – tương tự như cách Git hoạt động nhưng là dành cho dữ liệu cấp độ hàng Petabyte. Tính năng này được hỗ trợ cực kỳ mạnh mẽ bởi các Table Format hiện đại (như Delta Lake, Apache Iceberg, Apache Hudi) và các nền tảng Data Warehouse đám mây (như Snowflake, BigQuery).
+Về cơ bản, Time Travel biến kho dữ liệu của bạn từ một nơi chỉ lưu giữ trạng thái hiện tại thành một hệ thống quản lý phiên bản (version control) thông minh – tương tự như cách Git hoạt động nhưng là dành cho dữ liệu cấp độ hàng Petabyte. Tính năng này được hỗ trợ cực kỳ mạnh mẽ bởi các Table Format hiện đại (như Delta Lake, Apache Iceberg, [Apache Hudi](/concepts/data-lake-lakehouse/apache-hudi/)) và các nền tảng Data Warehouse đám mây (như [Snowflake](/concepts/cloud-data-platform/snowflake/), BigQuery).
 
 ## Tại sao chúng ta cần đến khả năng "Du hành thời gian"?
 
@@ -113,10 +113,10 @@ RESTORE TABLE customer_table TO TIMESTAMP AS OF '2026-06-07 10:00:00';
 ## Tài liệu tham khảo
 
 1. [Delta Lake Time Travel (Data Versioning)](https://docs.delta.io/latest/delta-batch.html#query-an-older-snapshot-of-a-table-time-travel) - Official Delta Lake documentation on querying historical tables.
-2. [Apache Iceberg Time Travel Queries](https://iceberg.apache.org/docs/latest/spark-queries/#time-travel) - Spark SQL time travel syntax and usage instructions in Apache Iceberg.
+2. [Apache Iceberg Time Travel Queries](https://iceberg.apache.org/docs/latest/spark-queries/#time-travel) - [Spark SQL](/concepts/batch-processing/spark-sql/) time travel syntax and usage instructions in Apache Iceberg.
 3. [Snowflake Time Travel Guide](https://docs.snowflake.com/en/user-guide/data-time-travel) - Official Snowflake documentation explaining temporal queries, retention periods, and fail-safe concepts.
-4. Querying Iceberg Tables with Time Travel on AWS EMR - Amazon Web Services developer guide on using time travel features with EMR and Iceberg.
-5. Introducing Delta Lake Time Travel for Data Lakes - Databricks blog post introducing the design and use cases of Delta Lake's time-travel capability.
+4. [Querying Iceberg Tables with Time Travel on AWS EMR](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg-use-time-travel.html) - Amazon Web Services developer guide on using time travel features with EMR and Iceberg.
+5. [Introducing Delta Lake Time Travel for Data Lakes](https://www.databricks.com/blog/2019/02/04/introducing-delta-lake-time-travel-for-data-lakes.html) - Databricks blog post introducing the design and use cases of Delta Lake's time-travel capability.
 
 ---
 

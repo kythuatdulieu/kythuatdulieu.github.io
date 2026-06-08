@@ -11,13 +11,13 @@ metaDescription: "Tìm hiểu Few-shot Prompting và In-Context Learning: phươ
 
 Hãy tưởng tượng bạn vừa nhận một cậu thực tập sinh mới và giao cho cậu ấy một nhiệm vụ phân loại phản hồi của khách hàng. Nếu bạn chỉ nói chung chung: *"Hãy phân loại các tin nhắn này thành tích cực hoặc tiêu cực"*, cậu ấy có thể làm được, nhưng đôi khi sẽ lúng túng với những câu nói đùa hoặc tiếng lóng. Nhưng nếu bạn đưa cho cậu ấy 3 ví dụ mẫu: *"Câu này là tích cực vì khách khen thật lòng, câu kia là tiêu cực vì họ đang mỉa mai"*, cậu ấy sẽ hiểu ý bạn ngay lập tức.
 
-Trong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), kỹ thuật này được gọi là **Few-shot Prompting** (Học qua vài ví dụ). Bằng cách cung cấp một số lượng nhỏ các cặp đầu vào - đầu ra mẫu (demonstrations/examples) ngay bên trong câu lệnh (prompt), bạn kích hoạt khả năng học tập tức thời của mô hình để nhận về kết quả chính xác và đúng định dạng nhất.
+Trong thế giới của các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/genai-ml/llm/)), kỹ thuật này được gọi là **Few-shot Prompting** (Học qua vài ví dụ). Bằng cách cung cấp một số lượng nhỏ các cặp đầu vào - đầu ra mẫu (demonstrations/examples) ngay bên trong câu lệnh (prompt), bạn kích hoạt khả năng học tập tức thời của mô hình để nhận về kết quả chính xác và đúng định dạng nhất.
 
 ## Từ "học vẹt" đến khả năng tự suy luận: Bản chất của Few-shot Prompting
 
 Để hiểu rõ Few-shot Prompting, hãy so sánh nó với người anh em *Zero-shot Prompting*. Nếu Zero-shot là việc yêu cầu mô hình làm bài kiểm tra ngay lập tức mà không cho ôn tập trước, thì Few-shot chính là việc cung cấp cho nó 2-3 bài giải mẫu để nó nắm bắt được cách chấm điểm cũng như cấu trúc trả lời.
 
-Về bản chất, bạn sẽ chèn trực tiếp các cặp bài toán và lời giải mẫu (thường từ 1 đến 5 ví dụ) vào chuỗi văn bản gửi cho LLM. Mô hình sẽ phân tích các điểm tương đồng, quy luật cấu trúc từ các ví dụ này. Khi gặp câu hỏi thực tế ở cuối prompt, nó sẽ tự động hoàn thành theo đúng khuôn mẫu đã học được. Điểm đặc biệt là quá trình này diễn ra hoàn toàn dựa trên cửa sổ ngữ cảnh (Context Window) chứ không hề thay đổi các trọng số (weights) của mạng nơ-ron.
+Về bản chất, bạn sẽ chèn trực tiếp các cặp bài toán và lời giải mẫu (thường từ 1 đến 5 ví dụ) vào chuỗi văn bản gửi cho LLM. Mô hình sẽ phân tích các điểm tương đồng, quy luật cấu trúc từ các ví dụ này. Khi gặp câu hỏi thực tế ở cuối prompt, nó sẽ tự động hoàn thành theo đúng khuôn mẫu đã học được. Điểm đặc biệt là quá trình này diễn ra hoàn toàn dựa trên cửa sổ ngữ cảnh ([Context Window](/concepts/genai-ml/context-window/)) chứ không hề thay đổi các trọng số (weights) của mạng nơ-ron.
 
 ## Tại sao chúng ta cần đến Few-shot Prompting?
 
@@ -25,22 +25,24 @@ Dù LLM ngày càng thông minh và có khả năng Zero-shot đáng kinh ngạc
 
 1. **Yêu cầu tuân thủ định dạng nghiêm ngặt (Strict Formatting)**: Khi bạn cần kết quả trả về là một chuỗi JSON sạch để nạp vào database, việc ra lệnh bằng lời nói (Zero-shot) rất dễ khiến LLM sinh thêm các câu từ rườm rà như *"Đây là kết quả JSON của bạn..."*. Vài ví dụ Few-shot sẽ định hình khuôn mẫu đầu ra, khiến mô hình im lặng trả về đúng định dạng yêu cầu.
 2. **Xử lý các ngữ cảnh đặc thù (Domain-specific tasks)**: Hãy nghĩ về câu: *"Đôi giày này đi sướng vãi!"*. Từ "vãi" vốn mang sắc thái tiêu cực trong từ điển thông thường, nhưng trong ngôn ngữ mạng, nó lại là một từ nhấn mạnh sự tích cực. Cung cấp ví dụ Few-shot giúp mô hình "cập nhật" bộ từ vựng và tư duy logic đặc thù của riêng bạn trong thời gian thực.
-3. **Giải pháp thay thế Fine-Tuning giá rẻ**: Việc thu thập hàng ngàn mẫu dữ liệu để huấn luyện lại mô hình (Fine-tune/LoRA) rất tốn kém và mất thời gian. Trong khi đó, việc soạn ra 3-5 mẫu chất lượng để nhét vào prompt chỉ tốn của bạn vài phút mà hiệu quả mang lại đôi khi không hề kém cạnh.
+3. **Giải pháp thay thế Fine-Tuning giá rẻ**: Việc thu thập hàng ngàn mẫu dữ liệu để huấn luyện lại mô hình (Fine-tune/[LoRA](/concepts/genai-ml/lora/)) rất tốn kém và mất thời gian. Trong khi đó, việc soạn ra 3-5 mẫu chất lượng để nhét vào prompt chỉ tốn của bạn vài phút mà hiệu quả mang lại đôi khi không hề kém cạnh.
 
 ## Dưới nắp ca-pô: Cơ chế In-Context Learning hoạt động ra sao?
 
 Cơ sở khoa học của Few-shot Prompting nằm ở khái niệm **In-Context Learning (ICL)** (Học trong ngữ cảnh) — một đặc tính bộc phát (emergent capability) chỉ xuất hiện ở các mô hình ngôn ngữ quy mô lớn với hàng tỷ tham số.
 
-Khi nhận được các ví dụ mẫu, các lớp Transformer không hề tiến hành cập nhật tham số thuật toán Gradient Descent như cách huấn luyện truyền thống. Thay vào đó, qua cơ chế **Attention** (Chú ý), mô hình sẽ tự động xây dựng một ánh xạ tuyến tính nội bộ giữa không gian Input và Output, tạo ra một "rãnh trượt" ngữ nghĩa. Khi từ khóa câu hỏi cuối cùng xuất hiện, xác suất dự đoán các token tiếp theo sẽ bị uốn nắn mạnh mẽ đi vào quỹ đạo cấu trúc của các ví dụ phía trên.
+Khi nhận được các ví dụ mẫu, các lớp Transformer không hề tiến hành cập nhật tham số thuật toán Gradient Descent như cách huấn luyện truyền thống. Thay vào đó, qua cơ chế **Attention** (Chú ý), mô hình sẽ tự động xây dựng một ánh xạ tuyến tính nội bộ giữa không gian Input và Output, tạo ra một "rãnh trượt" ngữ nghĩa. Khi từ khóa câu hỏi cuối cùng xuất hiện, xác suất dự đoán các [token](/concepts/genai-ml/token/) tiếp theo sẽ bị uốn nắn mạnh mẽ đi vào quỹ đạo cấu trúc của các ví dụ phía trên.
 
 Quy trình hoạt động này có thể được hình dung như sau:
 
 ```mermaid
 flowchart TD
-    A[1. Instruction<br/>Chỉ dẫn chung] --> B[2. Demonstrations<br/>Ví dụ mẫu 1, 2, 3]
-    B --> C[3. Query<br/>Truy vấn đích]
-    C --> D{LLM<br/>Cơ chế Attention}
-    D -. "Bắt chước Pattern" .-> E[Kết quả chuẩn xác]
+    A["1. Instruction<br/>Chỉ dẫn chung"] --> B["2. Demonstrations<br/>Ví dụ mẫu 1, 2, 3"]
+    B --> C["3. Query<br/>Truy vấn đích"]
+    C --> D{"LLM<br/>Cơ chế Attention"}
+    D -. "Bắt chước Pattern" .-> E["Kết quả chuẩn xác"]
+
+
 ```
 
 Một prompt Few-shot tuyển chuẩn luôn gồm 3 phần rõ rệt:
@@ -157,7 +159,7 @@ print(few_shot_prompt.format(user_input="Cho 5 phần cơm sườn và 2 lon coc
 
 **Không nên dùng khi:**
 * Các tác vụ mà mô hình đã làm rất tốt ở mức Zero-shot (như dịch thuật cơ bản, tóm tắt văn bản ngắn) để tránh lãng phí token.
-* Tác vụ có quá nhiều luật logic phức tạp vượt quá sức chứa của cửa sổ prompt. Khi đó, RAG (Retrieval-Augmented Generation) hoặc Fine-tuning sẽ là lựa chọn kinh tế hơn.
+* Tác vụ có quá nhiều luật logic phức tạp vượt quá sức chứa của cửa sổ prompt. Khi đó, [RAG](/concepts/genai-ml/rag/) (Retrieval-Augmented Generation) hoặc Fine-tuning sẽ là lựa chọn kinh tế hơn.
 
 ## Các khái niệm liên quan
 
@@ -179,7 +181,7 @@ print(few_shot_prompt.format(user_input="Cho 5 phần cơm sườn và 2 lon coc
 
 ### 3. "Dynamic Few-shot Prompting" là gì và tại sao nó lại đi đôi với Vector Database?
 * **Mục đích câu hỏi**: Đánh giá khả năng thiết kế hệ thống LLM ở quy mô lớn (Production-grade LLM Systems).
-* **Gợi ý trả lời**: Thay vì gán cứng (hardcode) một vài ví dụ cố định vào prompt cho mọi người dùng, Dynamic Few-shot Prompting sử dụng Vector Database để lưu trữ hàng ngàn ví dụ mẫu chất lượng cao dưới dạng vector nhúng (embeddings). Khi người dùng gửi một câu hỏi mới, hệ thống sẽ tìm kiếm trong Vector DB các ví dụ mẫu có độ tương đồng ngữ nghĩa cao nhất với câu hỏi đó, rồi ghép linh hoạt các ví dụ này vào prompt gửi lên LLM. Điều này giúp tối ưu hóa không gian ngữ cảnh và tăng tính cá nhân hóa cũng như độ chính xác cho từng truy vấn cụ thể.
+* **Gợi ý trả lời**: Thay vì gán cứng (hardcode) một vài ví dụ cố định vào prompt cho mọi người dùng, Dynamic Few-shot Prompting sử dụng [Vector Database](/concepts/genai-ml/vector-database/) để lưu trữ hàng ngàn ví dụ mẫu chất lượng cao dưới dạng vector nhúng ([embeddings](/concepts/genai-ml/embeddings/)). Khi người dùng gửi một câu hỏi mới, hệ thống sẽ tìm kiếm trong Vector DB các ví dụ mẫu có độ tương đồng ngữ nghĩa cao nhất với câu hỏi đó, rồi ghép linh hoạt các ví dụ này vào prompt gửi lên LLM. Điều này giúp tối ưu hóa không gian ngữ cảnh và tăng tính cá nhân hóa cũng như độ chính xác cho từng truy vấn cụ thể.
 
 ## Tài liệu tham khảo
 
@@ -189,4 +191,4 @@ print(few_shot_prompt.format(user_input="Cho 5 phần cơm sườn và 2 lon coc
 
 ## English Summary
 
-**Few-shot Prompting** is a prompt engineering technique that leverages the **In-Context Learning** capabilities of Large Language Models by injecting a small number of input-output demonstrations directly into the prompt before the final user query. This allows the model to infer patterns, formatting constraints, and domain-specific logic dynamically at inference time without requiring any gradient updates or permanent fine-tuning. While it significantly boosts accuracy and strict output formatting (like JSON structure), it increases token consumption and is subject to limitations such as context window limits and recency bias.
+**Few-shot Prompting** is a [prompt engineering](/concepts/genai-ml/prompt-engineering/) technique that leverages the **In-Context Learning** capabilities of Large Language Models by injecting a small number of input-output demonstrations directly into the prompt before the final user query. This allows the model to infer patterns, formatting constraints, and domain-specific logic dynamically at inference time without requiring any gradient updates or permanent fine-tuning. While it significantly boosts accuracy and strict output formatting (like JSON structure), it increases token consumption and is subject to limitations such as context window limits and recency bias.

@@ -15,7 +15,7 @@ Tấm bản đồ này được vẽ ra nhằm hướng tới:
 
 Để tiếp thu tốt nhất các kiến thức trong lộ trình này, bạn cần:
 * Hoàn thành cấp độ thực chiến tương đương **Junior to Middle Data Engineer**.
-* Hiểu rõ các nguyên lý thiết kế hệ thống dữ liệu cơ bản, mô hình hóa dữ liệu (data modeling) và các quy trình ETL/ELT truyền thống.
+* Hiểu rõ các nguyên lý thiết kế hệ thống dữ liệu cơ bản, mô hình hóa dữ liệu (data modeling) và các quy trình [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/) truyền thống.
 
 ## Từng bước làm chủ điện toán đám mây
 
@@ -45,5 +45,5 @@ Môi trường Cloud cực kỳ tiện lợi nhưng cũng sẽ là một "cỗ m
 
 Khi phỏng vấn cho các vị trí Cloud Data Engineer, hãy chuẩn bị tinh thần trả lời các câu hỏi tình huống thực tế sau:
 * **Thiết kế phân quyền**: Bạn sẽ áp dụng cơ chế đặc quyền tối thiểu (Least Privilege) trong `IAM` như thế nào để đảm bảo an toàn cho toàn bộ hệ thống dữ liệu?
-* **Tối ưu hóa chi phí (Cost Optimization)**: Hãy so sánh chi phí và hiệu năng giữa các giải pháp lưu trữ khác nhau. Bạn đã bao giờ tối ưu hóa thành công một hệ thống dữ liệu đám mây để tiết kiệm chi phí cho công ty chưa?
+* **Tối ưu hóa chi phí ([Cost Optimization](/concepts/cloud-data-platform/cost-optimization/))**: Hãy so sánh chi phí và hiệu năng giữa các giải pháp lưu trữ khác nhau. Bạn đã bao giờ tối ưu hóa thành công một hệ thống dữ liệu đám mây để tiết kiệm chi phí cho công ty chưa?
 * **Khả năng chịu lỗi và Khôi phục thảm họa (Fault Tolerance & Disaster Recovery)**: Làm sao để đảm bảo đường ống dữ liệu vẫn hoạt động liên tục hoặc tự động phục hồi khi gặp các sự cố gián đoạn dịch vụ từ phía nhà cung cấp đám mây?

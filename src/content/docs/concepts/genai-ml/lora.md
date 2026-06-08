@@ -9,11 +9,11 @@ seoTitle: "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả"
 metaDescription: "Tìm hiểu chi tiết về Low-Rank Adaptation (LoRA), kỹ thuật PEFT giúp tinh chỉnh mô hình ngôn ngữ lớn (LLM) với chi phí thấp, giảm thiểu VRAM mà vẫn giữ nguyên hiệu suất."
 ---
 
-Khi bạn muốn biến một mô hình ngôn ngữ lớn (LLM) thô thành một chuyên gia trong một lĩnh vực cụ thể (ví dụ: một bot viết mã SQL hoặc một trợ lý y tế), phương pháp truyền thống là **Full Fine-Tuning (Tinh chỉnh toàn bộ mô hình)**. 
+Khi bạn muốn biến một mô hình ngôn ngữ lớn ([LLM](/concepts/genai-ml/llm/)) thô thành một chuyên gia trong một lĩnh vực cụ thể (ví dụ: một bot viết mã SQL hoặc một trợ lý y tế), phương pháp truyền thống là **Full Fine-Tuning (Tinh chỉnh toàn bộ mô hình)**. 
 
 Tuy nhiên, việc cập nhật lại toàn bộ hàng tỷ tham số của LLM giống như việc bạn phải xây dựng lại toàn bộ một nhà máy: nó yêu cầu một lượng lớn GPU chuyên dụng đắt đỏ (như A100 hay H100) để chứa các trạng thái tối ưu hóa (optimizer states) và gradient, chi phí lưu trữ khổng lồ và rủi ro mô hình bị "quên sạch" các kiến thức tổng quát ban đầu (Catastrophic Forgetting).
 
-Để giải quyết bài toán đau đầu này, các nhà nghiên cứu tại Microsoft đã phát triển kỹ thuật **Low-Rank Adaptation (LoRA)**. Đây là một phương pháp tinh chỉnh tham số hiệu quả (PEFT - Parameter-Efficient Fine-Tuning) giúp bạn "dạy" mô hình lớn học tác vụ mới với chi phí phần cứng siêu rẻ mà vẫn giữ nguyên được phong độ của mô hình gốc.
+Để giải quyết bài toán đau đầu này, các nhà nghiên cứu tại Microsoft đã phát triển kỹ thuật **Low-Rank Adaptation (LoRA)**. Đây là một phương pháp tinh chỉnh tham số hiệu quả ([PEFT](/concepts/genai-ml/peft/) - Parameter-Efficient Fine-Tuning) giúp bạn "dạy" mô hình lớn học tác vụ mới với chi phí phần cứng siêu rẻ mà vẫn giữ nguyên được phong độ của mô hình gốc.
 
 ## Ý tưởng toán học đằng sau LoRA
 
@@ -43,20 +43,20 @@ Quy trình tiêm và huấn luyện LoRA diễn ra theo các bước cực kỳ 
 
 ```mermaid
 graph TD
-    Input[Input Feature: x]
+    Input["Input Feature: x"]
 
-    subgraph Pre-trained Model
-        W0[Frozen Pre-trained Weight <br> W0]
+    subgraph "Pre-trained Model"
+        W0["Frozen Pre-trained Weight <br> W0"]
     end
 
-    subgraph LoRA Adapter
-        A[Matrix A <br> size: r x k <br> Random Init]
-        B[Matrix B <br> size: d x r <br> Zero Init]
-        Scale[Scaling Factor: alpha / r]
+    subgraph "LoRA Adapter"
+        A["Matrix A <br> size: r x k <br> Random Init"]
+        B["Matrix B <br> size: d x r <br> Zero Init"]
+        Scale["Scaling Factor: alpha / r"]
     end
 
-    Sum((+))
-    Output[Output Feature: h]
+    Sum(("+"))
+    Output["Output Feature: h"]
 
     Input --> W0
     Input --> A
@@ -67,6 +67,8 @@ graph TD
     Scale --> Sum
     
     Sum --> Output
+
+
 ```
 
 1. **Đóng băng mô hình gốc**: Tải mô hình gốc lên bộ nhớ và khóa toàn bộ trọng số $W_0$ lại để chúng không bị cập nhật trong quá trình lan truyền ngược (backpropagation).
@@ -171,7 +173,7 @@ peft_model.print_trainable_parameters()
   * **QLoRA (Quantized LoRA)** đi xa hơn bằng cách lượng tử hóa (nén) mô hình gốc xuống định dạng 4-bit (thường dùng kiểu NF4). Khi huấn luyện, dữ liệu đi qua mô hình 4-bit sẽ được giải nén tạm thời sang 16-bit để tính toán với ma trận LoRA (vẫn chạy ở 16-bit). QLoRA giúp giảm lượng VRAM cần thiết đi thêm khoảng 4 lần so với LoRA thông thường, đổi lại tốc độ huấn luyện sẽ chậm đi một chút do tốn thêm bước giải nén.
 
 ### 3. Việc sử dụng LoRA có làm chậm tốc độ suy luận (inference latency) của mô hình trong thực tế không?
-* **Mục đích của người phỏng vấn**: Đánh giá hiểu biết của bạn về quy trình đóng gói và triển khai mô hình (Model Serving).
+* **Mục đích của người phỏng vấn**: Đánh giá hiểu biết của bạn về quy trình đóng gói và triển khai mô hình ([Model Serving](/concepts/genai-ml/model-serving/)).
 * **Gợi ý trả lời**:
   * Điều này tùy thuộc vào cách bạn triển khai. Nếu bạn load song song mô hình gốc và tệp adapter thô để chạy suy luận, tốc độ sẽ bị chậm lại do hệ thống phải thực hiện thêm các phép tính ma trận phụ.
   * Tuy nhiên, trên môi trường production, chúng ta luôn thực hiện bước hợp nhất trọng số (Weight Merging) trước: Cộng trực tiếp $\Delta W$ vào ma trận gốc $W_0$. Khi đó, mô hình sẽ trở lại thành một ma trận duy nhất, tốc độ suy luận hoàn toàn giống hệt như mô hình gốc, độ trễ phát sinh bằng 0.

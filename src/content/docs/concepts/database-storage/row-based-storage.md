@@ -77,7 +77,7 @@ Nếu cơ sở dữ liệu sử dụng cấu trúc Row-based (như InnoDB của 
 * **Tránh bảng quá rộng (Quá nhiều cột)**: Thiết kế một bảng chứa 100-200 cột trong hệ thống Row-based là một thực hành tồi. Mỗi lần bạn muốn đọc một dòng dữ liệu, hệ thống bắt buộc phải kéo một khối lượng dữ liệu khổng lồ chứa hàng trăm cột không dùng tới vào RAM, gây lãng phí bộ đệm (Buffer Pool). Hãy chia nhỏ bảng bằng các nguyên tắc chuẩn hóa dữ liệu.
 
 ### Những sai lầm kinh điển
-* **Sử dụng CSDL Row-based làm kho phân tích (Data Warehouse)**: Nhiều lập trình viên viết các câu lệnh phân tích như `SELECT SUM(total) FROM orders` trên MySQL. Để tính tổng doanh thu của cột `total`, ổ đĩa vẫn buộc phải quét qua toàn bộ dữ liệu của các cột khác như tên khách hàng, trạng thái, địa chỉ... gây lãng phí tài nguyên I/O đĩa cứng cực kỳ lớn.
+* **Sử dụng CSDL Row-based làm kho phân tích ([Data Warehouse](/concepts/data-warehouse/data-warehouse/))**: Nhiều lập trình viên viết các câu lệnh phân tích như `SELECT SUM(total) FROM orders` trên MySQL. Để tính tổng doanh thu của cột `total`, ổ đĩa vẫn buộc phải quét qua toàn bộ dữ liệu của các cột khác như tên khách hàng, trạng thái, địa chỉ... gây lãng phí tài nguyên I/O đĩa cứng cực kỳ lớn.
 * **Lạm dụng lệnh SELECT ***: Thói quen viết `SELECT *` trong code ứng dụng để lấy toàn bộ cột của một dòng từ database lên RAM chỉ để hiển thị đúng 2 thông tin tên và tuổi lên giao diện sẽ làm lãng phí băng thông mạng và bộ nhớ hệ thống.
 
 ## Đánh đổi thực tế: Khi nào nên và không nên sử dụng?
@@ -107,7 +107,7 @@ Nếu cơ sở dữ liệu sử dụng cấu trúc Row-based (như InnoDB của 
 ### 1. Bạn hãy giải thích cụ thể khi nào doanh nghiệp nên lựa chọn Row-based và khi nào nên chọn Column-based storage?
 * **Gợi ý trả lời**: 
   - Chúng ta chọn **Row-based** cho các hệ thống OLTP (như cơ sở dữ liệu vận hành ứng dụng) nơi có tần suất ghi chèn, cập nhật các dòng đơn lẻ diễn ra liên tục, và các truy vấn thường có xu hướng đọc ra toàn bộ thông tin của một bản ghi cụ thể.
-  - Chúng ta chọn **Column-based** cho các hệ thống OLAP (như Data Warehouse để phân tích) nơi dữ liệu hầu như chỉ đọc (Read-heavy), ít khi cập nhật từng dòng và các câu truy vấn thường quét qua hàng triệu dòng dữ liệu nhưng chỉ tập trung tính toán tổng hợp trên một vài cột cụ thể (như tính tổng doanh thu, đếm số lượng người dùng).
+  - Chúng ta chọn **Column-based** cho các hệ thống [OLAP](/concepts/database-storage/olap/) (như Data Warehouse để phân tích) nơi dữ liệu hầu như chỉ đọc (Read-heavy), ít khi cập nhật từng dòng và các câu truy vấn thường quét qua hàng triệu dòng dữ liệu nhưng chỉ tập trung tính toán tổng hợp trên một vài cột cụ thể (như tính tổng doanh thu, đếm số lượng người dùng).
 
 ### 2. Nếu một bảng dữ liệu Row-based không có Index, điều gì sẽ xảy ra ở tầng vật lý của đĩa cứng khi ta chạy câu lệnh `SELECT name FROM users WHERE email = 'a@a.com'`?
 * **Gợi ý trả lời**: Do không có Index, hệ thống buộc phải thực hiện quét toàn bảng (Full Table Scan). Ở tầng vật lý, ổ đĩa cứng bắt buộc phải đọc tuần tự từng block dữ liệu từ đầu đến cuối. Mặc dù chúng ta chỉ cần lấy giá trị của cột `name`, ổ đĩa vẫn phải đọc toàn bộ thông tin của tất cả các cột không liên quan nằm chung trên dòng đó (như tuổi, địa chỉ, lịch sử hoạt động) để nạp lên RAM rồi mới tiến hành lọc. Việc này gây lãng phí tài nguyên băng thông I/O của đĩa và khiến tốc độ phản hồi cực kỳ chậm nếu bảng có hàng triệu bản ghi.
@@ -116,9 +116,9 @@ Nếu cơ sở dữ liệu sử dụng cấu trúc Row-based (như InnoDB của 
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann providing in-depth analysis of row-oriented vs. column-oriented physical database layout.
 2. [C-Store: A Column-Oriented DBMS](https://dl.acm.org/doi/10.1145/1083592.1083658) - Seminal research paper by Michael Stonebraker et al. contrasting column store with traditional row store.
-3. ClickHouse Documentation: Column-oriented DBMS - Explains why column-oriented storage outperforms row-oriented storage for analytical queries.
+3. [ClickHouse Documentation: Column-oriented DBMS](https://clickhouse.com/docs/en/intro/) - Explains why column-oriented storage outperforms row-oriented storage for analytical queries.
 4. [PostgreSQL Documentation: Database Physical Storage](https://www.postgresql.org/docs/current/storage.html) - Official PostgreSQL documentation on how tables and rows are physically structured as pages and blocks on disk.
-5. AWS: Row-Oriented vs. Column-Oriented Databases - AWS comparison guide detailing performance trade-offs, transactional vs. analytical workloads, and storage patterns.
+5. [AWS: Row-Oriented vs. Column-Oriented Databases](https://docs.aws.amazon.com/redshift/latest/dg/c_columnar_storage_disk_mem_width.html) - AWS comparison guide detailing performance trade-offs, transactional vs. analytical workloads, and storage patterns.
 
 
 ## English Summary

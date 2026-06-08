@@ -73,17 +73,17 @@ Dưới đây là sơ đồ trực quan hóa luồng hoạt động của Data C
 
 ```mermaid
 graph TD
-    subgraph Software Engineering / Producers
+    subgraph "Software Engineering / Producers"
         A[Microservice Code]
         B[Database Schema]
         C[CI/CD Pipeline]
     end
 
-    subgraph Data Contract Registry
+    subgraph "Data Contract Registry"
         D[(YAML Contract Repo)]
     end
 
-    subgraph Data Engineering / Consumers
+    subgraph "Data Engineering / Consumers"
         E[Kafka / Event Bus]
         F[Data Warehouse]
         G[BI Reports]
@@ -155,7 +155,7 @@ quality:
 
 ## Những sai lầm thường gặp khi áp dụng
 
-* **Nhầm lẫn giữa Data Contract và Data Testing**: Các công cụ test dữ liệu như dbt tests chỉ chạy *sau khi* dữ liệu đã vào kho (Post-ingestion) - tức là khi "sự đã rồi". Data Contract đi trước một bước, ngăn chặn lỗi *trước khi* dữ liệu được ghi nhận (Pre-ingestion).
+* **Nhầm lẫn giữa Data Contract và [Data Testing](/concepts/data-quality/data-testing/)**: Các công cụ test dữ liệu như [dbt](/concepts/transformation-analytics/dbt/) tests chỉ chạy *sau khi* dữ liệu đã vào kho (Post-ingestion) - tức là khi "sự đã rồi". Data Contract đi trước một bước, ngăn chặn lỗi *trước khi* dữ liệu được ghi nhận (Pre-ingestion).
 * **Đội Data tự biên tự diễn**: Nếu đội Data tự viết hợp đồng rồi tự lưu trữ mà không có sự tham gia, đồng thuận của đội Backend, hợp đồng đó chỉ là một tờ giấy vô giá trị.
 * **Thiết kế quá cứng nhắc**: Việc kiểm soát quá chi tiết từng li từng tí có thể làm chậm tốc độ phát triển phần mềm của đội Backend, khiến họ cảm thấy bị cản trở và tìm cách "lách luật" hoặc từ chối sử dụng.
 
@@ -178,7 +178,7 @@ quality:
 ## Khi nào nên và không nên áp dụng?
 
 ### Nên áp dụng khi:
-* Doanh nghiệp đang chuyển dịch sang mô hình **Data Mesh**, nơi các đội domain tự sở hữu và cung cấp Data Products.
+* Doanh nghiệp đang chuyển dịch sang mô hình **[Data Mesh](/concepts/system-architecture/data-mesh/)**, nơi các đội domain tự sở hữu và cung cấp Data Products.
 * Hệ thống sử dụng kiến trúc Microservices phức tạp với hàng trăm dịch vụ liên tục thay đổi schema mỗi ngày.
 * Dữ liệu đóng vai trò quyết định trong vận hành thời gian thực (ví dụ: các mô hình Machine Learning tự động duyệt hạn mức tài chính).
 
@@ -200,8 +200,8 @@ quality:
 ## Góc phỏng vấn: Những câu hỏi thường gặp
 
 ### 1. Hãy phân biệt Data Contract và dbt tests (hoặc Great Expectations)?
-* **Mục đích của người phỏng vấn**: Kiểm tra xem bạn có hiểu rõ khái niệm "Shift-Left Data Quality" và vị trí của từng công cụ trong kiến trúc dữ liệu hay không.
-* **Gợi ý trả lời**: dbt tests hay Great Expectations hoạt động ở lớp chuyển đổi dữ liệu (Transformation), tức là kiểm tra sau khi dữ liệu đã nằm trong Data Warehouse (Post-ingestion). Nó mang tính chất phát hiện và cảnh báo sự cố. Ngược lại, Data Contract là một cơ chế phòng vệ chủ động ngăn chặn sự thay đổi cấu trúc sai lệch ngay từ nguồn phát hoặc trong quá trình build code (Pre-ingestion). Có thể ví von: Data Contract giúp "rác không vào nhà", còn dbt tests giúp "dọn dẹp đống rác lỡ lọt vào nhà".
+* **Mục đích của người phỏng vấn**: Kiểm tra xem bạn có hiểu rõ khái niệm "Shift-Left [Data Quality](/concepts/data-quality/data-quality/)" và vị trí của từng công cụ trong kiến trúc dữ liệu hay không.
+* **Gợi ý trả lời**: dbt tests hay Great Expectations hoạt động ở lớp chuyển đổi dữ liệu (Transformation), tức là kiểm tra sau khi dữ liệu đã nằm trong [Data Warehouse](/concepts/data-warehouse/data-warehouse/) (Post-ingestion). Nó mang tính chất phát hiện và cảnh báo sự cố. Ngược lại, Data Contract là một cơ chế phòng vệ chủ động ngăn chặn sự thay đổi cấu trúc sai lệch ngay từ nguồn phát hoặc trong quá trình build code (Pre-ingestion). Có thể ví von: Data Contract giúp "rác không vào nhà", còn dbt tests giúp "dọn dẹp đống rác lỡ lọt vào nhà".
 * **Lỗi cần tránh**: Tránh nhận định sai lầm rằng dbt tests hoàn toàn có thể thay thế Data Contract.
 
 ### 2. Ai là người sở hữu (Owner) thực sự của một bản Data Contract?

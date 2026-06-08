@@ -13,7 +13,7 @@ Trong các hệ thống phân tán xử lý dữ liệu lớn, có một thực 
 
 Vậy điều gì sẽ xảy ra với lượng dữ liệu khổng lồ đang bay trên đường truyền khi sự cố ập đến? Làm sao để chúng ta đảm bảo dữ liệu không bị mất đi, và cũng không bị xử lý lặp lại nhiều lần làm sai lệch kết quả cuối cùng? 
 
-Câu trả lời nằm ở **Exactly-Once Semantics (EOS) – Ngữ nghĩa xử lý chính xác một lần**. Đây được coi là "chén thánh" về độ tin cậy trong các hệ thống xử lý dữ liệu luồng (Streaming Processing).
+Câu trả lời nằm ở **Exactly-Once Semantics (EOS) – Ngữ nghĩa xử lý chính xác một lần**. Đây được coi là "chén thánh" về độ tin cậy trong các hệ thống xử lý dữ liệu luồng ([Streaming Processing](/concepts/streaming-processing/streaming-processing/)).
 
 ## Khi server sập ở giữa chừng: Số tiền của khách sẽ đi về đâu?
 
@@ -113,7 +113,7 @@ result.sinkTo(sink);
 ## Giải pháp thay thế thông minh và những lỗi thường gặp
 
 ### Giải pháp thay thế bằng Lũy đẳng (Idempotent Sinks)
-Việc triển khai giao thức giao dịch hai pha (2PC) rất phức tạp và ảnh hưởng nhiều đến hiệu năng. Nếu hệ thống đích của bạn là các cơ sở dữ liệu hỗ trợ cơ chế ghi đè theo Khóa chính (như Redis, Cassandra, Elasticsearch hoặc các câu lệnh `INSERT ON CONFLICT UPDATE` của SQL), hãy tận dụng tính chất **Lũy đẳng (Idempotency)**. 
+Việc triển khai giao thức giao dịch hai pha (2PC) rất phức tạp và ảnh hưởng nhiều đến hiệu năng. Nếu hệ thống đích của bạn là các cơ sở dữ liệu hỗ trợ cơ chế ghi đè theo Khóa chính (như Redis, Cassandra, Elasticsearch hoặc các câu lệnh `INSERT ON CONFLICT UPDATE` của SQL), hãy tận dụng tính chất **Lũy đẳng ([Idempotency](/concepts/etl-elt/idempotency/))**. 
 
 Bằng cách thiết kế khóa chính duy nhất cho mỗi bản ghi dữ liệu, bạn chỉ cần Flink chạy ở chế độ **At-least-once** đơn giản. Khi có lỗi và dữ liệu bị gửi lặp lại, database đích sẽ tự động ghi đè lên khóa cũ, giúp kết quả cuối cùng vẫn đạt được tính Exactly-once một cách nhẹ nhàng và hiệu quả.
 
@@ -124,7 +124,7 @@ Bằng cách thiết kế khóa chính duy nhất cho mỗi bản ghi dữ liệ
 ## Được và mất: Cân nhắc giữa Hiệu năng và Độ chính xác
 
 ### Điểm cộng (Pros)
-* Giúp lập trình viên không cần phải viết các logic loại bỏ trùng lặp dữ liệu (deduplication) phức tạp ở tầng ứng dụng.
+* Giúp lập trình viên không cần phải viết các logic loại bỏ trùng lặp dữ liệu ([deduplication](/concepts/etl-elt/deduplication/)) phức tạp ở tầng ứng dụng.
 * Đảm bảo tính đúng đắn tuyệt đối cho các ứng dụng tài chính, hóa đơn, thanh toán.
 
 ### Điểm trừ (Cons)
@@ -160,9 +160,9 @@ Không cần thiết áp dụng cho các hệ thống giám sát log kỹ thuậ
 
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann.
-2. **Apache Flink Documentation** - Fault Tolerance Guarantees & Two-Phase Commit.
-3. **Kafka The Definitive Guide** - Exactly Once Semantics.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann
+2. [Apache Flink Documentation - Fault Tolerance Guarantees](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpoints/)
+3. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Neha Narkhede, Gwen Shapira, and Todd Palino
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

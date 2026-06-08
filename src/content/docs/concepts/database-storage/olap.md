@@ -15,7 +15,7 @@ Nếu bạn cố gắng chạy câu lệnh SQL này trên cơ sở dữ liệu v
 
 Để giải quyết bài toán phân tích dữ liệu quy mô lớn mà không làm gián đoạn hệ thống vận hành, chúng ta cần đến **OLAP (Online Analytical Processing - Xử lý Phân tích Trực tuyến)**.
 
-OLAP là kiến trúc cơ sở dữ liệu được tối ưu hóa đặc biệt cho các tác vụ đọc dữ liệu (read-heavy), tính toán tổng hợp (aggregations) trên các tập dữ liệu lịch sử khổng lồ lên tới hàng Terabyte hoặc Petabyte. Nó chính là công nghệ lõi đứng sau các kho dữ liệu (Data Warehouse) và các công cụ báo cáo thông minh (BI Tools).
+OLAP là kiến trúc cơ sở dữ liệu được tối ưu hóa đặc biệt cho các tác vụ đọc dữ liệu (read-heavy), tính toán tổng hợp (aggregations) trên các tập dữ liệu lịch sử khổng lồ lên tới hàng Terabyte hoặc Petabyte. Nó chính là công nghệ lõi đứng sau các kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) và các công cụ báo cáo thông minh (BI Tools).
 
 ---
 
@@ -84,7 +84,7 @@ ORDER BY
     total_revenue DESC;
 ```
 
-Nếu chạy trên một database dạng hàng thông thường, câu lệnh này sẽ mất rất nhiều thời gian. Nhưng trên một OLAP Engine sử dụng lưu trữ dạng cột (Columnar Storage), kết quả sẽ được trả về chỉ trong vòng vài giây ngắn ngủi.
+Nếu chạy trên một database dạng hàng thông thường, câu lệnh này sẽ mất rất nhiều thời gian. Nhưng trên một OLAP Engine sử dụng lưu trữ dạng cột ([Columnar Storage](/concepts/database-storage/columnar-storage/)), kết quả sẽ được trả về chỉ trong vòng vài giây ngắn ngủi.
 
 ---
 
@@ -113,7 +113,7 @@ Nếu chạy trên một database dạng hàng thông thường, câu lệnh nà
 * Cần cho phép các nhà phân tích dữ liệu viết các câu truy vấn tự do (Ad-hoc queries) trên tập dữ liệu lớn để tìm kiếm insights.
 
 ### Không nên chọn khi:
-* Tuyệt đối không dùng làm cơ sở dữ liệu chính (Backend) cho một website ứng dụng để xử lý giỏ hàng hay lưu trữ thông tin đăng nhập của người dùng. Các tác vụ này bắt buộc phải sử dụng hệ thống **OLTP (Online Transaction Processing)** để đảm bảo tính toàn vẹn giao dịch và tốc độ phản hồi tính bằng mili-giây cho từng người dùng lẻ.
+* Tuyệt đối không dùng làm cơ sở dữ liệu chính (Backend) cho một website ứng dụng để xử lý giỏ hàng hay lưu trữ thông tin đăng nhập của người dùng. Các tác vụ này bắt buộc phải sử dụng hệ thống **[OLTP](/concepts/database-storage/oltp/) (Online Transaction Processing)** để đảm bảo tính toàn vẹn giao dịch và tốc độ phản hồi tính bằng mili-giây cho từng người dùng lẻ.
 
 ---
 
@@ -146,7 +146,7 @@ Nếu chạy trên một database dạng hàng thông thường, câu lệnh nà
 1. The Data Warehouse Toolkit - The definitive guide to dimensional modeling by Ralph Kimball and Margy Ross.
 2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann analyzing storage engines, column-oriented storage, and OLAP.
 3. [Snowflake Documentation: OLAP vs. OLTP](https://www.snowflake.com/guides/olap-vs-oltp) - Detailed guide explaining the differences between transactional and analytical processing.
-4. ClickHouse Documentation: What is OLAP? - High-level introduction to analytical database systems and columnar storage principles.
+4. [ClickHouse Documentation: What is OLAP?](https://clickhouse.com/docs/en/intro/) - High-level introduction to analytical database systems and columnar storage principles.
 5. [Microsoft Learn: Online Analytical Processing (OLAP)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/online-analytical-processing) - Overview of analytical data store architecture and dimensional modeling in Azure.
 
 
@@ -154,4 +154,4 @@ Nếu chạy trên một database dạng hàng thông thường, câu lệnh nà
 
 ## English summary
 
-OLAP (Online Analytical Processing) systems are specialized database engines designed to answer complex, multi-dimensional queries and perform high-speed aggregations across vast amounts of historical data. Operating as the backbone for Data Warehouses and BI tools, OLAP typically employs columnar storage and denormalized dimensional models (Star Schema) to optimize read-heavy analytical workloads. Unlike OLTP, OLAP is not suitable for high-frequency transactional updates, but excels at enabling analysts to slice, dice, roll-up, and drill-down into data to extract business intelligence.
+OLAP (Online Analytical Processing) systems are specialized database engines designed to answer complex, multi-dimensional queries and perform high-speed aggregations across vast amounts of historical data. Operating as the backbone for Data Warehouses and BI tools, OLAP typically employs columnar storage and denormalized dimensional models ([Star Schema](/concepts/data-warehouse/star-schema/)) to optimize read-heavy analytical workloads. Unlike OLTP, OLAP is not suitable for high-frequency transactional updates, but excels at enabling analysts to slice, dice, roll-up, and drill-down into data to extract business intelligence.

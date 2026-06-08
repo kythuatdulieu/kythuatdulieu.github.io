@@ -11,16 +11,16 @@ metaDescription: "Tìm hiểu chi tiết Bảng chiều (Dimension Table) trong 
 
 Nếu bạn mở một bảng sự kiện (Fact Table) trong kho dữ liệu ra và chỉ thấy những con số khô khan như `revenue = 500,000` hay `quantity = 10`, bạn sẽ không thể biết được ý nghĩa thực sự của chúng. 500,000 này là doanh thu bán sản phẩm nào? Ai là người mua? Mua ở chi nhánh nào? Vào thời gian nào?
 
-Để trả lời những câu hỏi mang tính ngữ cảnh đó, chúng ta cần đến **Dimension Table (Bảng chiều)**. Trong Lược đồ hình sao (Star Schema), nếu Fact Table là tâm điểm chứa các con số đo lường, thì các bảng Dimension bao quanh chính là linh hồn giúp biến dữ liệu thô vô cảm thành những thông tin kinh doanh có giá trị.
+Để trả lời những câu hỏi mang tính ngữ cảnh đó, chúng ta cần đến **Dimension Table (Bảng chiều)**. Trong Lược đồ hình sao ([Star Schema](/concepts/data-warehouse/star-schema/)), nếu Fact Table là tâm điểm chứa các con số đo lường, thì các bảng Dimension bao quanh chính là linh hồn giúp biến dữ liệu thô vô cảm thành những thông tin kinh doanh có giá trị.
 
 ## Bảng chiều (Dimension Table) thực chất là gì?
 
-**Dimension Table (Bảng chiều)** là một bảng cơ sở dữ liệu chuyên biệt trong Data Warehouse dùng để lưu trữ các thuộc tính mang tính mô tả (Descriptive Attributes). Nó cung cấp câu trả lời cho các câu hỏi về ngữ cảnh: *"Ai? Cái gì? Ở đâu? Khi nào? Như thế nào?"*.
+**Dimension Table (Bảng chiều)** là một bảng cơ sở dữ liệu chuyên biệt trong [Data Warehouse](/concepts/data-warehouse/data-warehouse/) dùng để lưu trữ các thuộc tính mang tính mô tả (Descriptive Attributes). Nó cung cấp câu trả lời cho các câu hỏi về ngữ cảnh: *"Ai? Cái gì? Ở đâu? Khi nào? Như thế nào?"*.
 
 Một bảng chiều tiêu chuẩn thường có các đặc điểm vật lý sau:
 1. **Thiết kế "Rộng" (Wide)**: Chứa rất nhiều cột thuộc tính mô tả chi tiết (ví dụ: bảng `dim_customer` có thể có tới hàng chục, thậm chí hàng trăm cột như Tên, Tuổi, Giới tính, Email, Địa chỉ, Phân khúc,...).
 2. **Kích thước dòng "Nông" (Shallow)**: So với bảng Fact chứa hàng tỷ dòng giao dịch, bảng Dimension thường có kích thước nhỏ hơn rất nhiều, dao động từ vài trăm dòng (như bảng chi nhánh) cho tới vài triệu dòng (như bảng khách hàng lớn).
-3. **Sử dụng Khóa thay thế (Surrogate Key)**: Bảng chiều sử dụng một khóa chính tự sinh dạng số nguyên (`INT`/`BIGINT`) làm khóa chính thay vì dùng ID gốc của hệ thống nguồn.
+3. **Sử dụng Khóa thay thế ([Surrogate Key](/concepts/data-warehouse/surrogate-key/))**: Bảng chiều sử dụng một khóa chính tự sinh dạng số nguyên (`INT`/`BIGINT`) làm khóa chính thay vì dùng ID gốc của hệ thống nguồn.
 
 ## Tại sao chúng ta cần tách biệt bảng chiều?
 
@@ -30,7 +30,7 @@ Bằng cách tách các thuộc tính mô tả ra các bảng Dimension độc l
 
 ## 3 Triết lý cốt lõi khi thiết kế bảng chiều
 
-* **Phi chuẩn hóa (Denormalization)**: Trái ngược với cơ sở dữ liệu vận hành (OLTP) vốn cố gắng phân rã bảng để tránh trùng lặp dữ liệu, bảng Dimension trong Data Warehouse lại ưu tiên phi chuẩn hóa để tăng tốc độ đọc. Tên danh mục, tên thương hiệu được lưu trực tiếp ngay cạnh tên sản phẩm trong cùng một bảng, chấp nhận trùng lặp thông tin để tránh các phép JOIN phức tạp khi người dùng truy vấn.
+* **Phi chuẩn hóa (Denormalization)**: Trái ngược với cơ sở dữ liệu vận hành ([OLTP](/concepts/database-storage/oltp/)) vốn cố gắng phân rã bảng để tránh trùng lặp dữ liệu, bảng Dimension trong Data Warehouse lại ưu tiên phi chuẩn hóa để tăng tốc độ đọc. Tên danh mục, tên thương hiệu được lưu trực tiếp ngay cạnh tên sản phẩm trong cùng một bảng, chấp nhận trùng lặp thông tin để tránh các phép JOIN phức tạp khi người dùng truy vấn.
 * **Nặng về văn bản (Text-heavy)**: Hầu hết các cột trong bảng chiều là kiểu chuỗi ký tự (`VARCHAR`). Chúng sinh ra để hiển thị trực tiếp lên các trục tiêu đề hoặc bộ lọc (Filters/Slicers) trên các dashboard BI (Tableau, Power BI).
 * **Tính đồng nhất (Conformed Dimensions)**: Đây là yếu tố sống còn của một Data Warehouse. Nếu phòng bán hàng và phòng kho cùng sử dụng chung một bảng `dim_product` duy nhất, doanh nghiệp có thể dễ dàng đối chiếu số lượng bán và số lượng tồn kho trên cùng một báo cáo. Việc thiết kế sai lệch, mỗi phòng ban dùng một bảng Dimension riêng sẽ dẫn đến tình trạng "Silo dữ liệu" — nơi số liệu của các bộ phận không bao giờ khớp nhau.
 
@@ -137,11 +137,11 @@ Nếu không có bảng `dim_date`, bạn sẽ phải viết một câu lệnh S
 
 ## Tài liệu tham khảo
 
-1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's foundational book on dimensional modeling and dimension table design.
-2. [Snowflake Documentation: Designing Dimension Tables](https://docs.snowflake.com/) - Best practices and modeling principles for optimized dimensions in Snowflake.
-3. Databricks Documentation: Slowly Changing Dimensions (SCD) - Technical guide to implementing and running SCD Type 1 and Type 2 updates in Delta Lake.
-4. Monte Carlo Data: Dimensional Modeling 101 - Detailed blog post explaining how dimensions provide descriptive context to metrics in modern data architectures.
-5. Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse - Strategic guide on deploying star schemas and dimension tables on modern cloud lakehouses.
+1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's foundational book on [dimensional modeling](/concepts/data-warehouse/dimensional-modeling/) and dimension table design.
+2. [Snowflake Documentation: Designing Dimension Tables](https://docs.snowflake.com/) - Best practices and modeling principles for optimized dimensions in [Snowflake](/concepts/cloud-data-platform/snowflake/).
+3. [Databricks Documentation: Slowly Changing Dimensions (SCD)](https://docs.databricks.com/en/delta-live-tables/cdc.html) - Technical guide to implementing and running SCD Type 1 and Type 2 updates in [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/).
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling-101/) - Detailed blog post explaining how dimensions provide descriptive context to metrics in modern data architectures.
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Strategic guide on deploying star schemas and dimension tables on modern cloud lakehouses.
 
 ## English Summary
 

@@ -11,7 +11,7 @@ metaDescription: "Khám phá tổng quan về Kỹ thuật Dữ liệu (Data Eng
 
 Trong kỷ nguyên số, chúng ta thường nghe nhiều về trí tuệ nhân tạo (AI), học máy (Machine Learning) hay những bảng dashboard phân tích kinh doanh (BI) lung linh sắc màu. Thế nhưng, đằng sau những báo cáo chuẩn xác hay những mô hình AI thông minh đó là một người hùng thầm lặng: **Kỹ thuật Dữ liệu (Data Engineering)**. 
 
-If ví dữ liệu như dòng dầu mỏ quý giá, thì các kỹ sư dữ liệu (Data Engineers) chính là những người thiết kế và vận hành các nhà máy lọc dầu cũng như hệ thống đường ống dẫn dầu khổng lồ, biến nguồn nguyên liệu thô sơ, lẫn tạp chất thành nguồn năng lượng tinh khiết, sẵn sàng đưa vào sử dụng.
+Nếu ví dữ liệu như dòng dầu mỏ quý giá, thì các kỹ sư dữ liệu (Data Engineers) chính là những người thiết kế và vận hành các nhà máy lọc dầu cũng như hệ thống đường ống dẫn dầu khổng lồ, biến nguồn nguyên liệu thô sơ, lẫn tạp chất thành nguồn năng lượng tinh khiết, sẵn sàng đưa vào sử dụng.
 
 ---
 
@@ -27,17 +27,17 @@ Nhiệm vụ cốt lõi của Data Engineering là đảm bảo dòng dữ liệ
 
 Tại sao các doanh nghiệp hiện nay lại săn đón Kỹ sư dữ liệu nhiều đến thế? Câu trả lời nằm ở ba đặc tính cốt lõi của Big Data (Velocity - Tốc độ, Volume - Khối lượng, Variety - Sự đa dạng):
 
-1. **Sự phân mảnh dữ liệu**: Dữ liệu của một công ty không nằm yên một chỗ. Chúng rải rác ở khắp nơi: từ cơ sở dữ liệu vận hành (OLTP), phần mềm SaaS (như Salesforce, HubSpot) cho đến log hành vi của người dùng trên web/app.
+1. **Sự phân mảnh dữ liệu**: Dữ liệu của một công ty không nằm yên một chỗ. Chúng rải rác ở khắp nơi: từ cơ sở dữ liệu vận hành ([OLTP](/concepts/database-storage/oltp/)), phần mềm SaaS (như Salesforce, HubSpot) cho đến log hành vi của người dùng trên web/app.
 2. **Dữ liệu nhiễu và thiếu nhất quán**: Dữ liệu thô thường cực kỳ "bẩn". Có những dòng bị trùng lặp, thiếu thông tin, sai định dạng hoặc mang giá trị lỗi. Nếu phân tích trực tiếp trên đống dữ liệu này, kết quả nhận được sẽ hoàn toàn sai lệch.
 3. **Bài toán hiệu năng**: Việc chạy trực tiếp các câu truy vấn phân tích nặng nề trên cơ sở dữ liệu đang vận hành (như DB của ứng dụng mua sắm) sẽ làm hệ thống bị chậm, thậm chí gây sập web.
 
-Data Engineering xuất hiện để mở ra một "đường cao tốc" kết nối các ngõ hẻm dữ liệu thô, lọc sạch chúng và đưa về một "nhà kho" trung tâm (Data Warehouse hoặc Data Lake) để phân tích một cách an toàn và tối ưu nhất.
+Data Engineering xuất hiện để mở ra một "đường cao tốc" kết nối các ngõ hẻm dữ liệu thô, lọc sạch chúng và đưa về một "nhà kho" trung tâm ([Data Warehouse](/concepts/data-warehouse/data-warehouse/) hoặc [Data Lake](/concepts/data-lake-lakehouse/data-lake/)) để phân tích một cách an toàn và tối ưu nhất.
 
 ---
 
 ## Bốn trụ cột cốt lõi của Data Engineering
 
-Để xây dựng một hệ thống dữ liệu hoàn chỉnh, các kỹ sư cần nắm vững ba mảnh ghép quan trọng:
+Để xây dựng một hệ thống dữ liệu hoàn chỉnh, các kỹ sư cần nắm vững bốn mảnh ghép quan trọng:
 
 * **Thu nạp dữ liệu (Ingestion)**: Quá trình kéo dữ liệu từ các nguồn về. Nó có thể diễn ra theo lô định kỳ (`Batch`) hoặc theo thời gian thực liên tục (`Streaming`).
 * **Lưu trữ dữ liệu (Storage)**: Lựa chọn mô hình và công nghệ lưu trữ phù hợp như Data Warehouse, Data Lake hoặc kiến trúc kết hợp Data Lakehouse.
@@ -126,9 +126,9 @@ GROUP BY 1, 2;
 
 ## Kinh nghiệm đúc kết từ thực tế (Best Practices)
 
-* **Thiết kế tính lũy đẳng (Idempotency)**: Hãy thiết kế sao cho dù bạn chạy lại một pipeline bao nhiêu lần đi chăng nữa, kết quả cuối cùng vẫn không thay đổi và không làm trùng lặp dữ liệu.
+* **Thiết kế tính lũy đẳng ([Idempotency](/concepts/etl-elt/idempotency/))**: Hãy thiết kế sao cho dù bạn chạy lại một pipeline bao nhiêu lần đi chăng nữa, kết quả cuối cùng vẫn không thay đổi và không làm trùng lặp dữ liệu.
 * **Quản lý hạ tầng bằng mã (Infrastructure as Code - IaC)**: Sử dụng các công cụ như Terraform để quản lý và định nghĩa tài nguyên máy chủ, cơ sở dữ liệu nhằm dễ dàng kiểm soát phiên bản và khôi phục khi gặp sự cố.
-* **Kiểm thử chất lượng tự động**: Đừng đợi đến khi người dùng báo cáo lỗi. Hãy tích hợp sẵn các bài test chất lượng dữ liệu (như kiểm tra giá trị NULL, kiểm tra tính duy nhất) bằng các thư viện như Great Expectations hoặc dbt tests.
+* **Kiểm thử chất lượng tự động**: Đừng đợi đến khi người dùng báo cáo lỗi. Hãy tích hợp sẵn các bài test chất lượng dữ liệu (như kiểm tra giá trị NULL, kiểm tra tính duy nhất) bằng các thư viện như Great Expectations hoặc [dbt](/concepts/transformation-analytics/dbt/) tests.
 * **Tách rời Lưu trữ và Tính toán (Decoupling Storage and Compute)**: Giúp bạn linh hoạt mở rộng dung lượng lưu trữ mà không cần trả thêm tiền cho sức mạnh CPU không cần thiết, tối ưu hóa chi phí vận hành.
 
 ---
@@ -151,7 +151,7 @@ GROUP BY 1, 2;
 ### Thách thức
 * Đòi hỏi chi phí đầu tư lớn cho hạ tầng đám mây và đội ngũ nhân sự chuyên môn cao.
 * Thời gian xây dựng ban đầu dài, giá trị mang lại thường gián tiếp nên khó đo lường ROI (Return on Investment) ngay lập tức.
-* Dễ bị động khi các hệ thống nguồn thay đổi cấu trúc bảng (Schema evolution) đột ngột.
+* Dễ bị động khi các hệ thống nguồn thay đổi cấu trúc bảng ([Schema evolution](/concepts/data-lake-lakehouse/schema-evolution/)) đột ngột.
 
 ---
 
@@ -160,8 +160,8 @@ GROUP BY 1, 2;
 ### 1. Phân biệt ETL và ELT. Khi nào ta nên dùng mô hình nào?
 * **Mục đích của người phỏng vấn**: Đánh giá hiểu biết sâu sắc của bạn về sự dịch chuyển trong kiến trúc dữ liệu hiện đại.
 * **Gợi ý trả lời**:
-  * **ETL (Extract, Transform, Load)**: Biến đổi dữ liệu trên một máy chủ trung gian trước khi nạp vào kho lưu trữ. Đây là lựa chọn tối ưu khi kho lưu trữ hạ nguồn không có khả năng tính toán mạnh, hoặc khi cần mã hóa/che giấu dữ liệu nhạy cảm trước khi lưu trữ.
-  * **ELT (Extract, Load, Transform)**: Nạp toàn bộ dữ liệu thô vào Data Warehouse trước rồi mới tận dụng sức mạnh tính toán cực khủng của DWH (như BigQuery, Snowflake) để biến đổi dữ liệu bằng SQL. Đây là xu hướng thịnh hành hiện nay nhờ chi phí lưu trữ đám mây ngày càng rẻ và tốc độ xử lý song song vượt trội của các Cloud DWH.
+  * **[ETL](/concepts/etl-elt/etl/) (Extract, Transform, Load)**: Biến đổi dữ liệu trên một máy chủ trung gian trước khi nạp vào kho lưu trữ. Đây là lựa chọn tối ưu khi kho lưu trữ hạ nguồn không có khả năng tính toán mạnh, hoặc khi cần mã hóa/che giấu dữ liệu nhạy cảm trước khi lưu trữ.
+  * **[ELT](/concepts/etl-elt/elt/) (Extract, Load, Transform)**: Nạp toàn bộ dữ liệu thô vào Data Warehouse trước rồi mới tận dụng sức mạnh tính toán cực khủng của DWH (như BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/)) để biến đổi dữ liệu bằng SQL. Đây là xu hướng thịnh hành hiện nay nhờ chi phí lưu trữ đám mây ngày càng rẻ và tốc độ xử lý song song vượt trội của các Cloud DWH.
 * **Lỗi cần tránh**: Tránh khẳng định phiến diện rằng ETL đã lỗi thời và ELT luôn tốt hơn. Cả hai đều có vị trí đứng tùy thuộc vào bài toán bảo mật và tài chính của doanh nghiệp.
 
 ### 2. Tính lũy đẳng (Idempotency) trong Data Pipeline là gì và tại sao nó lại quan trọng?
@@ -171,7 +171,7 @@ GROUP BY 1, 2;
 ## Tài liệu tham khảo
 
 1. [What is Data Engineering?](https://www.ibm.com/topics/data-engineering) - IBM comprehensive topic guide on data engineering definition and lifecycle.
-2. [What is Data Engineering?](https://www.databricks.com/glossary/data-engineering) - Databricks Glossary definition of data engineering and modern cloud lakehouse solutions.
+2. [What is Data Engineering?](https://www.databricks.com/glossary/data-engineering) - Databricks Glossary definition of data engineering and modern cloud [lakehouse](/concepts/data-lake-lakehouse/lakehouse/) solutions.
 3. [What is Data Engineering?](https://cloud.google.com/discover/what-is-data-engineering) - Google Cloud Learn page for data engineering concepts, tools, and certifications.
 4. [Fundamentals of Data Engineering Book](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - O'Reilly page for the comprehensive guide book by Joe Reis and Matt Housley.
 5. [Designing Data-Intensive Applications Book](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - O'Reilly page for Martin Kleppmann's classic book on distributed systems and data design.

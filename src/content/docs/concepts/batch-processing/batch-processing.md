@@ -9,7 +9,7 @@ seoTitle: "Xử lý dữ liệu theo lô - Cẩm nang Batch Processing phân tá
 metaDescription: "Tìm hiểu toàn diện về Batch Processing: định nghĩa, kiến trúc xử lý phân tán MapReduce vs Spark, cơ chế Shuffle, lỗi Data Skew và các kỹ thuật tối ưu hóa Spark Job."
 ---
 
-Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng (Streaming Processing) được ví như dòng nước chảy xiết liên tục thì **Batch Processing (Xử lý dữ liệu theo lô)** lại giống như những hồ chứa nước khổng lồ được xả định kỳ. Dù không mang lại cảm giác "tức thì" như streaming, Batch Processing vẫn luôn là xương sống vững chắc cho mọi hệ thống dữ liệu lớn nhờ khả năng giải quyết những tác vụ tính toán khổng lồ và phức tạp nhất.
+Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/streaming-processing/streaming-processing/)) được ví như dòng nước chảy xiết liên tục thì **Batch Processing (Xử lý dữ liệu theo lô)** lại giống như những hồ chứa nước khổng lồ được xả định kỳ. Dù không mang lại cảm giác "tức thì" như streaming, Batch Processing vẫn luôn là xương sống vững chắc cho mọi hệ thống dữ liệu lớn nhờ khả năng giải quyết những tác vụ tính toán khổng lồ và phức tạp nhất.
 
 ## Batch Processing là gì?
 
@@ -39,7 +39,7 @@ Hệ thống Batch Processing phân tán ra đời để giải quyết triệt 
 *Điểm hạn chế*: Giữa hai pha Map và Reduce, toàn bộ dữ liệu trung gian bắt buộc phải ghi xuống đĩa cứng vật lý `(Disk I/O)`. Điều này khiến các thuật toán lặp đi lặp lại (như học máy hay tính toán lặp) trở nên cực kỳ chậm chạp do nút thắt cổ chai ở đĩa cứng.
 
 ### 2. Kỷ nguyên Apache Spark (Mô hình đồ thị bộ nhớ DAG)
-Spark ra đời như một cuộc cách mạng bằng cách giữ toàn bộ dữ liệu trung gian trong bộ nhớ RAM `(In-memory processing)`. Thay vì thực thi từng bước tuần tự ghi xuống đĩa, Spark tổ chức các bước biến đổi dưới dạng đồ thị có hướng không chu trình **DAG (Directed Acyclic Graph)**. 
+Spark ra đời như một cuộc cách mạng bằng cách giữ toàn bộ dữ liệu trung gian trong bộ nhớ RAM `(In-memory processing)`. Thay vì thực thi từng bước tuần tự ghi xuống đĩa, Spark tổ chức các bước biến đổi dưới dạng đồ thị có hướng không chu trình **[DAG](/concepts/orchestration/dag/) (Directed Acyclic Graph)**. 
 
 Nhờ cơ chế **Lazy Evaluation** (đánh giá lười biếng), Spark không thực sự tính toán ngay lập tức khi bạn viết code. Nó chỉ ghi lại kế hoạch và chỉ bắt đầu chạy khi bạn thực hiện một hành động ghi dữ liệu đầu ra `(Action)`. Điều này giúp bộ tối ưu hóa Catalyst của Spark có cái nhìn toàn cảnh để sắp xếp và tối ưu hóa chuỗi thực thi một cách thông minh nhất.
 
@@ -81,14 +81,14 @@ graph TD
 
 Khi bạn nhấn nút kích hoạt một Spark Job, chuỗi sự kiện sau sẽ diễn ra:
 1. **Lập kế hoạch (Job Planning)**: Driver Node nhận mã thực thi của bạn, phân tích cấu trúc và xây dựng đồ thị logic DAG.
-2. **Phân vùng dữ liệu (Partitioning)**: Tập dữ liệu khổng lồ đầu vào được chia nhỏ thành các phân vùng `(Partitions)` phân tán khắp cụm máy.
+2. **Phân vùng dữ liệu ([Partitioning](/concepts/database-storage/partitioning/))**: Tập dữ liệu khổng lồ đầu vào được chia nhỏ thành các phân vùng `(Partitions)` phân tán khắp cụm máy.
 3. **Phân phối tác vụ (Task Scheduling)**: Driver chia đồ thị DAG thành các giai đoạn thực thi `(Stages)`. Ranh giới giữa các Stage chính là các điểm xảy ra quá trình xáo trộn dữ liệu qua mạng `(Shuffle)`. Mỗi Stage sẽ gồm nhiều tác vụ nhỏ `(Tasks)`, mỗi tác vụ xử lý trên một `Partition` cụ thể.
 4. **Thực thi song song (Parallel Execution)**: Driver gửi các tác vụ này tới các Executor Node. Mỗi Executor chạy các tác vụ này song song trên các luồng CPU của mình.
-5. **Ghi nhận và Dọn dẹp**: Sau khi tất cả các tác vụ hoàn tất, kết quả cuối cùng được ghi xuống Data Lake (ví dụ dưới định dạng Parquet) hoặc Data Warehouse, và cụm tài nguyên tính toán được giải phóng.
+5. **Ghi nhận và Dọn dẹp**: Sau khi tất cả các tác vụ hoàn tất, kết quả cuối cùng được ghi xuống [Data Lake](/concepts/data-lake-lakehouse/data-lake/) (ví dụ dưới định dạng Parquet) hoặc [Data Warehouse](/concepts/data-warehouse/data-warehouse/), và cụm tài nguyên tính toán được giải phóng.
 
 ## Trải nghiệm thực tế với PySpark
 
-Hãy cùng xem một ví dụ thực tế: Đọc tệp dữ liệu giao dịch khổng lồ định dạng CSV từ Cloud Storage (S3), tính tổng doanh thu theo từng cửa hàng `(store_id)` và lưu lại kết quả dưới định dạng tối ưu Parquet.
+Hãy cùng xem một ví dụ thực tế: Đọc tệp dữ liệu giao dịch khổng lồ định dạng CSV từ [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) (S3), tính tổng doanh thu theo từng cửa hàng `(store_id)` và lưu lại kết quả dưới định dạng tối ưu Parquet.
 
 Dưới đây là mã nguồn Batch Job (`process_sales.py`):
 
@@ -125,7 +125,7 @@ Thiết kế một batch job chạy được thì dễ, nhưng chạy nhanh, ổ
 ### Những kinh nghiệm xương máu (Best Practices)
 * **Quy hoạch kích thước phân vùng hợp lý**: Spark mặc định chia 200 partition khi thực hiện Shuffle. Nếu dữ liệu quá nhỏ, 200 partition sẽ tạo ra rất nhiều tác vụ rác (overhead). Nếu dữ liệu quá lớn (hàng trăm GB), con số 200 lại quá ít khiến mỗi partition phình to, dễ gây lỗi tràn bộ nhớ `(Out Of Memory - OOM)`. Con số lý tưởng cho mỗi phân vùng sau shuffle là từ **100MB đến 200MB**.
 * **Hạn chế tối đa các phép toán Shuffle**: Các thao tác như `.groupBy()`, `.join()`, `.distinct()` bắt buộc dữ liệu phải di chuyển qua lại giữa các máy chủ trong mạng (Shuffle). Hãy lọc dữ liệu bằng `.filter()` và loại bỏ các cột thừa càng sớm càng tốt trước khi shuffle để giảm bớt gánh nặng đường truyền.
-* **Tận dụng Broadcast Joins**: Khi cần JOIN một bảng dữ liệu khổng lồ với một bảng danh mục (dimension table) kích thước nhỏ (dưới 10MB), hãy dùng Broadcast Join. Spark sẽ sao chép bảng nhỏ này tới mọi Executor, giúp thực hiện phép JOIN ngay tại chỗ mà không cần xáo trộn bảng lớn qua mạng.
+* **Tận dụng Broadcast Joins**: Khi cần JOIN một bảng dữ liệu khổng lồ với một bảng danh mục ([dimension table](/concepts/data-warehouse/dimension-table/)) kích thước nhỏ (dưới 10MB), hãy dùng Broadcast Join. Spark sẽ sao chép bảng nhỏ này tới mọi Executor, giúp thực hiện phép JOIN ngay tại chỗ mà không cần xáo trộn bảng lớn qua mạng.
 * **Bộ đệm thông minh (Caching)**: Nếu một DataFrame được tái sử dụng nhiều lần ở các nhánh tính toán khác nhau, hãy gọi `.cache()` hoặc `.persist()` để giữ nó lại trên RAM, tránh việc Spark phải đọc lại file gốc và tính toán lại từ đầu.
 
 ### Những cạm bẫy dễ mắc phải (Common Mistakes)
@@ -148,16 +148,16 @@ Thiết kế một batch job chạy được thì dễ, nhưng chạy nhanh, ổ
 
 **Nên chọn khi:**
 * Cần tính toán báo cáo tài chính, tổng kết doanh thu định kỳ hàng ngày, hàng tuần hoặc hàng tháng.
-* Chạy các tiến trình gom và dọn dẹp file nhỏ (Compaction) trên Data Lake.
+* Chạy các tiến trình gom và dọn dẹp file nhỏ ([Compaction](/concepts/data-lake-lakehouse/compaction/)) trên Data Lake.
 * Huấn luyện mô hình học máy (Machine Learning) trên dữ liệu lịch sử đồ sộ.
-* Đồng bộ hóa dữ liệu định kỳ (Data Replication) từ các database nguồn (OLTP) vào Data Warehouse.
+* Đồng bộ hóa dữ liệu định kỳ (Data Replication) từ các database nguồn ([OLTP](/concepts/database-storage/oltp/)) vào Data Warehouse.
 
 **Không nên chọn khi:**
 * Cần phát hiện gian lận thẻ tín dụng hoặc cảnh báo bảo mật mạng theo thời gian thực (yêu cầu độ trễ dưới vài giây).
 * Cần cập nhật số dư tài khoản ngân hàng hoặc ví điện tử ngay sau khi khách hàng quẹt thẻ.
 * Xây dựng các màn hình giám sát trực tiếp (real-time dashboards) cần cập nhật từng giây.
 
-## Góc phỏng vấn: Những câu hỏi thực chiến
+## Trọng tâm ôn luyện phỏng vấn
 
 ### 1. Giải thích cơ chế Shuffle trong hệ thống phân tán và tại sao nó được coi là kẻ thù của hiệu năng Spark.
 * **Mục đích câu hỏi**: Kiểm tra hiểu biết sâu sắc của ứng viên về chi phí truyền thông mạng và I/O đĩa trong môi trường phân tán.

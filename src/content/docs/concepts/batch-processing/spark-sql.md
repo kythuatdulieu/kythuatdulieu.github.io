@@ -117,7 +117,7 @@ Cả hai cách viết trên, khi chạy thực tế, đều được Catalyst Op
 
 ### 2. Catalyst Optimizer tối ưu hóa câu truy vấn của người dùng như thế nào? Nêu ví dụ về một kỹ thuật tối ưu hóa phổ biến.
 * **Gợi ý trả lời**: Catalyst Optimizer hoạt động bằng cách chuyển đổi câu truy vấn qua 4 bước: Phân tích cú pháp, Áp dụng Catalog để xác thực Schema, Tối ưu hóa logic (Rule-based) và Chọn lựa kế hoạch vật lý tối ưu nhất dựa trên chi phí tài nguyên (Cost-based).
-  Một kỹ thuật tối ưu hóa rất phổ biến của Catalyst là **Predicate Pushdown** (Đẩy điều kiện lọc xuống sâu nhất có thể). Ví dụ, nếu ta viết câu lệnh JOIN hai bảng rồi mới lọc kết quả `WHERE age > 18`, Catalyst sẽ tự động đẩy phép lọc `age > 18` vào bảng dữ liệu trước khi thực hiện phép JOIN. Việc này giúp giảm thiểu đáng kể số lượng bản ghi cần xáo trộn qua mạng (Shuffle) và nạp vào RAM, giúp tăng tốc độ xử lý rõ rệt.
+  Một kỹ thuật tối ưu hóa rất phổ biến của Catalyst là **Predicate Pushdown** (Đẩy điều kiện lọc xuống sâu nhất có thể). Ví dụ, nếu ta viết câu lệnh JOIN hai bảng rồi mới lọc kết quả `WHERE age > 18`, Catalyst sẽ tự động đẩy phép lọc `age > 18` vào bảng dữ liệu trước khi thực hiện phép JOIN. Việc này giúp giảm thiểu đáng kể số lượng bản ghi cần xáo trộn qua mạng ([Shuffle](/concepts/batch-processing/shuffle/)) và nạp vào RAM, giúp tăng tốc độ xử lý rõ rệt.
 
 ## Tài liệu tham khảo
 

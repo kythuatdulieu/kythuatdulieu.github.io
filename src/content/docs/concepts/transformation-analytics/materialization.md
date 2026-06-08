@@ -9,7 +9,7 @@ seoTitle: "Materialization trong dbt - Cẩm nang Data Warehouse chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Materialization trong dbt: định nghĩa, các loại materialization (View, Table, Incremental, Ephemeral) và cách lựa chọn phù hợp."
 ---
 
-Khi bạn viết một mô hình (model) trong dbt (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh `SELECT` thuần túy. Vậy làm thế nào để câu lệnh `SELECT` đó biến thành một bảng dữ liệu thực tế hay một khung nhìn ảo trên Data Warehouse (Snowflake, BigQuery, Redshift,...)? 
+Khi bạn viết một mô hình (model) trong [dbt](/concepts/transformation-analytics/dbt/) (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh `SELECT` thuần túy. Vậy làm thế nào để câu lệnh `SELECT` đó biến thành một bảng dữ liệu thực tế hay một khung nhìn ảo trên [Data Warehouse](/concepts/data-warehouse/data-warehouse/) ([Snowflake](/concepts/cloud-data-platform/snowflake/), BigQuery, Redshift,...)? 
 
 Câu trả lời nằm ở **Materialization (Vật liệu hóa / Phương thức lưu trữ)**.
 
@@ -26,10 +26,10 @@ dbt cung cấp cho chúng ta 4 loại materialization được xây dựng sẵn
 ```mermaid
 graph TD
     A[dbt Model SQL] --> B{Materialization Type}
-    B -->|View| C[Virtual Layer\nNo Storage, Slow Query]
-    B -->|Table| D[Physical Table\nStorage Used, Fast Query]
-    B -->|Incremental| E[Delta Updates\nMerge/Insert new data only]
-    B -->|Ephemeral| F[CTE Injection\nNo DB Object Created]
+    B -->|View| C[Virtual Layer<br/>No Storage, Slow Query]
+    B -->|Table| D[Physical Table<br/>Storage Used, Fast Query]
+    B -->|Incremental| E[Delta Updates<br/>Merge/Insert new data only]
+    B -->|Ephemeral| F[CTE Injection<br/>No DB Object Created]
     
     style C fill:#fdfd96,stroke:#333
     style D fill:#77dd77,stroke:#333
@@ -86,10 +86,10 @@ SELECT
 FROM {{ source('web_tracking', 'raw_pageviews') }}
 
 -- Khối logic này chỉ chạy trong các lần chạy incremental, không chạy khi full-refresh
-{ % if is_incremental() % }
+{% if is_incremental() %}
 
   WHERE event_timestamp >= (SELECT max(event_timestamp) FROM {{ this }})
-{ % endif % }
+{% endif %}
 ```
 
 ---
@@ -114,7 +114,7 @@ FROM {{ source('web_tracking', 'raw_pageviews') }}
 ### Những sai lầm phổ biến cần tránh
 * **Tạo chuỗi Ephemeral quá dài**: Việc lồng ghép các model Ephemeral gọi lẫn nhau sẽ tạo ra các câu truy vấn SQL lồng CTE cực kỳ phức tạp. Database optimizer sẽ bị quá tải và báo lỗi Out of Memory.
 * **Lạm dụng Incremental quá sớm**: Incremental yêu cầu bạn phải tự quản lý logic lọc dữ liệu (`is_incremental()`). Nó rất dễ bị sai lệch số liệu nếu nguồn dữ liệu bị cập nhật hồi tố (historical updates). Chỉ nên dùng khi bảng Table của bạn mất hơn 15-30 phút để build.
-* **Quên đặt mệnh đề lọc dữ liệu**: Cấu hình `materialized='incremental'` nhưng không viết block `{ % if is_incremental() % }` sẽ khiến dbt quét sạch toàn bộ dữ liệu nguồn rồi MERGE vào bảng đích. Cách này thậm chí còn chạy chậm và tốn kém hơn cả Table.
+* **Quên đặt mệnh đề lọc dữ liệu**: Cấu hình `materialized='incremental'` nhưng không viết block `{% if is_incremental() %}` sẽ khiến dbt quét sạch toàn bộ dữ liệu nguồn rồi MERGE vào bảng đích. Cách này thậm chí còn chạy chậm và tốn kém hơn cả Table.
 
 ---
 

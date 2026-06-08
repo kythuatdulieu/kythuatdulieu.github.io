@@ -11,13 +11,13 @@ metaDescription: "Khám phá Delta Lake: Định dạng Open Table Format mã ng
 
 # Delta Lake - Bảng dữ liệu giao dịch mở
 
-Nếu bạn từng làm việc với Data Lake truyền thống (sử dụng các tệp tin Parquet hay CSV lưu trên S3/GCS), chắc hẳn bạn đã quen với những tình huống dở khóc dở cười: Pipeline đang ghi dữ liệu thì bị sập nguồn giữa chừng, để lại một đống tệp tin hỏng nửa vời và bạn không cách nào biết cái nào đúng cái nào sai; hay mỗi lần cần xóa một khách hàng theo luật bảo mật thông tin (GDPR), bạn phải viết một đoạn code cồng kềnh đọc toàn bộ dữ liệu lên RAM, lọc dòng rồi ghi đè lại.
+Nếu bạn từng làm việc với [Data Lake](/concepts/data-lake-lakehouse/data-lake/) truyền thống (sử dụng các tệp tin Parquet hay CSV lưu trên S3/GCS), chắc hẳn bạn đã quen với những tình huống dở khóc dở cười: Pipeline đang ghi dữ liệu thì bị sập nguồn giữa chừng, để lại một đống tệp tin hỏng nửa vời và bạn không cách nào biết cái nào đúng cái nào sai; hay mỗi lần cần xóa một khách hàng theo luật bảo mật thông tin (GDPR), bạn phải viết một đoạn code cồng kềnh đọc toàn bộ dữ liệu lên RAM, lọc dòng rồi ghi đè lại.
 
 Để giải quyết triệt để những điểm yếu chí mạng này và biến một Data Lake hỗn độn (Data Swamp) thành một hệ thống đáng tin cậy, Databricks đã phát triển và giới thiệu **Delta Lake**.
 
 ## Delta Lake thực chất là gì?
 
-**Delta Lake** là một lớp lưu trữ mã nguồn mở (thuộc định dạng Open Table Format) nằm trên vùng lưu trữ đám mây giá rẻ của bạn (như Amazon S3, Google Cloud Storage, hay Azure Blob Storage). 
+**Delta Lake** là một lớp lưu trữ mã nguồn mở (thuộc định dạng Open [Table Format](/concepts/data-lake-lakehouse/table-format/)) nằm trên vùng lưu trữ đám mây giá rẻ của bạn (như Amazon S3, Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/), hay Azure Blob Storage). 
 
 Về mặt vật lý, Delta Lake không phải là một máy chủ cơ sở dữ liệu hay một phần mềm cài đặt phức tạp. Nó chỉ đơn giản là một đặc tả định dạng dữ liệu (Data Format Specification) đi kèm các thư viện hỗ trợ tích hợp sâu vào các công cụ tính toán như Apache Spark, Pandas, hay Trino.
 
@@ -31,7 +31,7 @@ Trước khi Delta Lake xuất hiện vào năm 2019, các kỹ sư làm việc 
 
 * **Thiếu tính toàn vẹn giao dịch (ACID)**: Nếu job ghi dữ liệu của bạn đang chạy và chép được 50% số tệp Parquet xuống S3 rồi bị crash, bạn sẽ phải tự đi tìm và dọn dẹp các tệp tin rác đó. Người dùng truy vấn vào thời điểm đó cũng sẽ đọc phải dữ liệu bị lỗi nửa vời.
 * **Không hỗ trợ UPDATE/DELETE**: Parquet là định dạng file tĩnh, không thể sửa đổi nội dung bên trong sau khi đã ghi. Muốn thay đổi dù chỉ 1 dòng, bạn bắt buộc phải đọc cả bảng lên, sửa rồi ghi đè lại toàn bộ, cực kỳ tốn chi phí và tài nguyên.
-* **Lỗi cấu trúc dữ liệu (Schema Drift)**: Khi một job vô tình ghi một tệp Parquet chứa cột `age` kiểu `STRING` vào chung thư mục chứa các tệp cũ có cột `age` kiểu `INT`, toàn bộ các job đọc dữ liệu phía sau sẽ bị đổ vỡ (Crash) lập tức do bất đồng nhất kiểu dữ liệu.
+* **Lỗi cấu trúc dữ liệu ([Schema Drift](/concepts/observability-reliability/schema-drift/))**: Khi một job vô tình ghi một tệp Parquet chứa cột `age` kiểu `STRING` vào chung thư mục chứa các tệp cũ có cột `age` kiểu `INT`, toàn bộ các job đọc dữ liệu phía sau sẽ bị đổ vỡ (Crash) lập tức do bất đồng nhất kiểu dữ liệu.
 
 ## Trái tim của Delta Lake: Transaction Log hoạt động như thế nào?
 
@@ -132,15 +132,15 @@ RESTORE TABLE delta.`s3://bucket/bronze/users` TO VERSION AS OF 0;
   * Nếu không trùng (ví dụ A sửa khách hàng ở Hà Nội, B sửa khách hàng ở Sài Gòn), Delta sẽ tự động ghép thay đổi của B thành Version 12 (Auto-resolve). Nếu có trùng lặp file vật lý, giao dịch của B sẽ bị báo lỗi và hoàn tác (Rollback) để bảo vệ tính nhất quán.
 
 ### 2. Time Travel trong Delta Lake là một tính năng tuyệt vời. Nhưng làm thế nào tôi có thể duy trì dữ liệu của 10 năm quá khứ mà không tốn chi phí ổ cứng khổng lồ cho các file Parquet bị thay thế?
-* **Gợi ý trả lời**: Thực tế, chúng ta không nên dùng tính năng Time Travel của hạ tầng Delta Lake để lưu trữ lịch sử dài hạn (ví dụ 10 năm). Việc giữ lại toàn bộ các file cũ của 10 năm qua sẽ làm phình to dung lượng lưu trữ trên cloud cực kỳ khủng khiếp và tốn kém. 
+* **Gợi ý trả lời**: Thực tế, chúng ta không nên dùng tính năng [Time Travel](/concepts/data-lake-lakehouse/time-travel/) của hạ tầng Delta Lake để lưu trữ lịch sử dài hạn (ví dụ 10 năm). Việc giữ lại toàn bộ các file cũ của 10 năm qua sẽ làm phình to dung lượng lưu trữ trên cloud cực kỳ khủng khiếp và tốn kém. 
   * Để quản lý chi phí tối ưu, chúng ta bắt buộc phải chạy lệnh `VACUUM` thường xuyên để xóa sạch các file rác cũ hơn 7 hoặc 30 ngày (tức là chỉ giữ khả năng Time Travel trong ngắn hạn để khắc phục sự cố).
-  * Đối với bài toán lưu giữ lịch sử phân tích 10 năm của doanh nghiệp, giải pháp chuẩn mực là phải thiết kế mô hình dữ liệu **SCD Type 2 (Slowly Changing Dimension)** ở lớp Data Modeling. Khi đó, lịch sử thay đổi của thực thể được lưu thành các dòng dữ liệu mới trong cùng một tệp tin Parquet hiện tại, thay vì trông cậy vào tính năng Time Travel vật lý của hệ thống lưu trữ.
+  * Đối với bài toán lưu giữ lịch sử phân tích 10 năm của doanh nghiệp, giải pháp chuẩn mực là phải thiết kế mô hình dữ liệu **SCD Type 2 ([Slowly Changing Dimension](/concepts/data-warehouse/slowly-changing-dimension/))** ở lớp Data Modeling. Khi đó, lịch sử thay đổi của thực thể được lưu thành các dòng dữ liệu mới trong cùng một tệp tin Parquet hiện tại, thay vì trông cậy vào tính năng Time Travel vật lý của hệ thống lưu trữ.
 
 ---
 
 ## Khái niệm liên quan
 
-* [Data Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) - Kiến trúc kết hợp Data Lake và Data Warehouse.
+* [Data Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) - Kiến trúc kết hợp Data Lake và [Data Warehouse](/concepts/data-warehouse/data-warehouse/).
 * [Apache Spark](/concepts/batch-processing/apache-spark/) - Công cụ tính toán phân tán đi liền với Delta Lake.
 
 ## Tài liệu tham khảo
@@ -149,8 +149,8 @@ RESTORE TABLE delta.`s3://bucket/bronze/users` TO VERSION AS OF 0;
 2. [Delta Lake GitHub Repository](https://github.com/delta-io/delta) - Open-source repository, codebase, and issue tracking for Delta Lake.
 3. [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores](https://doi.org/10.14778/3415478.3415560) - Research paper detailing Delta Lake's design and internals, presented at VLDB 2020.
 4. [Delta Lake Concurrency Control Documentation](https://docs.delta.io/latest/concurrency-control.html) - Official documentation on multi-version concurrency control (MVCC) and conflict resolution.
-5. [Databricks Delta Lake Product Overview](https://www.databricks.com/product/delta-lake-on-databricks) - Managed Delta Lake product page detailing optimizations like Z-Ordering and liquid clustering.
+5. [Databricks Delta Lake Product Overview](https://www.databricks.com/product/delta-lake-on-databricks) - Managed Delta Lake product page detailing optimizations like Z-Ordering and liquid [clustering](/concepts/database-storage/clustering/).
 
 ## English Summary
 
-**Delta Lake** is an open-source storage layer (an open table format) initially developed by Databricks that brings relational database "superpowers"—such as ACID transactions, scalable metadata handling, Schema Enforcement, DML support (UPDATE/DELETE/MERGE), and Time Travel—to massive, low-cost Data Lakes. It achieves this by overlaying a transaction log (`_delta_log`) on top of static Apache Parquet files, utilizing Optimistic Concurrency Control to manage concurrent reads and writes safely. Acting as the foundational building block for the Data Lakehouse architecture, Delta Lake eliminates the "data swamp" problem, enabling organizations to unify batch processing, streaming, Machine Learning, and Business Intelligence workloads on a single, highly reliable data copy.
+**Delta Lake** is an open-source storage layer (an open table format) initially developed by Databricks that brings [relational database](/concepts/database-storage/relational-database/) "superpowers"—such as ACID transactions, scalable metadata handling, Schema Enforcement, DML support (UPDATE/DELETE/MERGE), and Time Travel—to massive, low-cost Data Lakes. It achieves this by overlaying a transaction log (`_delta_log`) on top of static Apache Parquet files, utilizing Optimistic Concurrency Control to manage concurrent reads and writes safely. Acting as the foundational building block for the Data Lakehouse architecture, Delta Lake eliminates the "data swamp" problem, enabling organizations to unify [batch processing](/concepts/batch-processing/batch-processing/), streaming, Machine Learning, and Business Intelligence workloads on a single, highly reliable data copy.

@@ -15,13 +15,13 @@ Thế nhưng, khi chuyển giao mô hình cho đội ngũ Kỹ sư phần mềm 
 
 Chỉ cần một sự sai lệch nhỏ trong cách tính toán giữa hai môi trường, mô hình của bạn khi chạy thực tế sẽ cho ra các kết quả sai lệch hoàn toàn. 
 
-Để giải quyết bài toán hóc búa này, khái niệm **Feature Store (Kho đặc trưng)** đã ra đời, đóng vai trò là chiếc cầu nối vững chắc giữa Kỹ thuật dữ liệu (Data Engineering) và Khoa học dữ liệu (Data Science).
+Để giải quyết bài toán hóc búa này, khái niệm **Feature Store (Kho đặc trưng)** đã ra đời, đóng vai trò là chiếc cầu nối vững chắc giữa Kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)) và Khoa học dữ liệu (Data Science).
 
 ## Điểm giao thoa giữa Kỹ sư dữ liệu và Khoa học dữ liệu
 
 Trong thế giới Machine Learning, **Feature (Đặc trưng)** là các thuộc tính độc lập có thể đo lường được dùng làm dữ liệu đầu vào giúp mô hình AI đưa ra dự đoán (ví dụ: tuổi tài khoản, vị trí địa lý, tổng chi tiêu).
 
-**Feature Store** là một tầng quản lý dữ liệu chuyên biệt (Data Management Layer) trong kiến trúc MLOps. Nó tiếp nhận dữ liệu thô từ các kho chứa dữ liệu (Data Warehouse, Data Lake) hoặc các luồng dữ liệu trực tuyến (Kafka), thực hiện biến đổi dữ liệu thông qua các pipeline định sẵn và lưu trữ chúng dưới dạng một danh mục đặc trưng thống nhất. 
+**Feature Store** là một tầng quản lý dữ liệu chuyên biệt (Data Management Layer) trong kiến trúc MLOps. Nó tiếp nhận dữ liệu thô từ các kho chứa dữ liệu (Data Warehouse, [Data Lake](/concepts/data-lake-lakehouse/data-lake/)) hoặc các luồng dữ liệu trực tuyến (Kafka), thực hiện biến đổi dữ liệu thông qua các pipeline định sẵn và lưu trữ chúng dưới dạng một danh mục đặc trưng thống nhất. 
 
 Nền tảng này vừa cung cấp dữ liệu lịch sử quy mô lớn phục vụ cho việc huấn luyện mô hình (Offline Training), vừa cung cấp các vectơ đặc trưng với độ trễ tính bằng mili-giây phục vụ cho các ứng dụng dự đoán thời gian thực (Online Serving).
 
@@ -39,7 +39,7 @@ Feature Store giải quyết triệt để những vấn đề này bằng cách
 
 Trọng tâm kiến trúc của một Feature Store (như Feast, Hopsworks hay Tecton) là **Cơ chế lưu trữ kép (Dual Storage Architecture)**:
 
-* **Offline Store (Lưu trữ ngoại tuyến)**: Nơi lưu giữ lượng dữ liệu lịch sử khổng lồ (hàng Terabyte hoặc Petabyte) trên các hệ thống Data Lake (S3, GCS) hoặc Data Warehouse (BigQuery, Snowflake). Hệ thống này được tối ưu hóa để đọc ghi dữ liệu theo lô (Batch) với tốc độ cao, giúp các nhà khoa học dữ liệu nhanh chóng trích xuất tập dữ liệu lớn phục vụ huấn luyện mô hình.
+* **Offline Store (Lưu trữ ngoại tuyến)**: Nơi lưu giữ lượng dữ liệu lịch sử khổng lồ (hàng Terabyte hoặc Petabyte) trên các hệ thống Data Lake (S3, GCS) hoặc Data Warehouse (BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/)). Hệ thống này được tối ưu hóa để đọc ghi dữ liệu theo lô (Batch) với tốc độ cao, giúp các nhà khoa học dữ liệu nhanh chóng trích xuất tập dữ liệu lớn phục vụ huấn luyện mô hình.
 * **Online Store (Lưu trữ trực tuyến)**: Nơi lưu giữ giá trị đặc trưng **mới nhất** của từng thực thể trên các cơ sở dữ liệu có tốc độ đọc ghi cực nhanh trực tiếp trên bộ nhớ (In-memory) như Redis hoặc DynamoDB. Hệ thống này tối ưu cho việc truy xuất thông tin của một thực thể (ví dụ một User cụ thể) với độ trễ siêu thấp dưới 10 mili-giây khi ứng dụng thực tế gọi API dự đoán.
 
 Đặc biệt, cả hai kho lưu trữ này đều được quản lý đồng bộ bởi một logic nguồn chung, giúp xóa nhòa khoảng cách giữa lúc thử nghiệm và lúc chạy thực tế.
@@ -156,7 +156,7 @@ print(training_df.head())
 * Doanh nghiệp có đội ngũ dữ liệu lớn với hàng chục mô hình AI cần vận hành song song.
 * Các mô hình AI yêu cầu đưa ra phán đoán trực tuyến thời gian thực cho người dùng cuối với độ trễ cực thấp (như hệ thống phát hiện giao dịch gian lận thẻ tín dụng, hệ thống gợi ý bài viết, định giá chuyến xe linh hoạt).
 
-Nếu doanh nghiệp chỉ chạy các tác vụ báo cáo tĩnh (Business Intelligence) hoặc các mô hình dự đoán theo lô định kỳ (Batch Inference), việc sử dụng Data Warehouse kết hợp với các công cụ biến đổi dữ liệu như dbt là giải pháp kinh tế và đơn giản hơn nhiều.
+Nếu doanh nghiệp chỉ chạy các tác vụ báo cáo tĩnh (Business Intelligence) hoặc các mô hình dự đoán theo lô định kỳ (Batch Inference), việc sử dụng Data Warehouse kết hợp với các công cụ biến đổi dữ liệu như [dbt](/concepts/transformation-analytics/dbt/) là giải pháp kinh tế và đơn giản hơn nhiều.
 
 ## Khái niệm liên quan
 
@@ -174,10 +174,10 @@ Nếu doanh nghiệp chỉ chạy các tác vụ báo cáo tĩnh (Business Intel
 
 ## Tài liệu tham khảo
 
-1. **Feast Documentation** - Tài liệu hướng dẫn sử dụng công cụ Feature Store mã nguồn mở.
-2. **Michelangelo (Uber Engineering Blog)** - Bài viết khởi thủy về nền tảng Machine Learning của Uber.
-3. **Designing Machine Learning Systems** - Chip Huyen (Cuốn sách xuất sắc phân tích sâu về Data Engineering cho MLOps).
+1. [Feast Documentation](https://docs.feast.dev/)
+2. [Meet Michelangelo: Uber's Machine Learning Platform](https://www.uber.com/blog/michelangelo-machine-learning-platform/)
+3. [Designing Machine Learning Systems](https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/) - Chip Huyen
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 
-A Feature Store is a centralized data management system for Machine Learning. It serves as a dual-layer architectural bridge: an Offline Store (like a Data Warehouse/Lake) optimized for massive batch processing to generate training datasets with strict point-in-time correctness, and an Online Store (like an in-memory key-value database) for extremely low-latency feature serving in real-time prediction environments. By using a single source of truth for feature definitions, it eradicates the notorious training-serving skew, prevents data leakage, and enables data scientists to reuse features across the organization, massively accelerating the MLOps lifecycle.
+A Feature Store is a centralized data management system for Machine Learning. It serves as a dual-layer architectural bridge: an Offline Store (like a Data Warehouse/Lake) optimized for massive [batch processing](/concepts/batch-processing/batch-processing/) to generate training datasets with strict point-in-time correctness, and an Online Store (like an in-memory key-value database) for extremely low-latency feature serving in real-time prediction environments. By using a single source of truth for feature definitions, it eradicates the notorious training-serving skew, prevents data leakage, and enables data scientists to reuse features across the organization, massively accelerating the MLOps lifecycle.

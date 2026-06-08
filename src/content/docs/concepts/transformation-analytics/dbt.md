@@ -15,11 +15,11 @@ Trước đây, viết code SQL để chuyển đổi dữ liệu giống như b
 
 ## dbt thực chất là gì?
 
-**dbt (data build tool)** là một công cụ mã nguồn mở được phát triển bởi dbt Labs, đảm nhận chuyên biệt chữ **"T" (Transform - Biến đổi)** trong kiến trúc dữ liệu ELT (Extract, Load, Transform) hiện đại.
+**dbt (data build tool)** là một công cụ mã nguồn mở được phát triển bởi dbt Labs, đảm nhận chuyên biệt chữ **"T" (Transform - Biến đổi)** trong kiến trúc dữ liệu [ELT](/concepts/etl-elt/elt/) (Extract, Load, Transform) hiện đại.
 
 Về bản chất, dbt hoạt động như một "Trình biên dịch" (Compiler) và "Trình điều phối" (Runner):
 * **Đầu vào**: Các file text chứa các câu lệnh `SELECT` SQL thuần túy kết hợp với ngôn ngữ lập trình động Jinja do kỹ sư viết (gọi là các Models).
-* **Quá trình**: dbt biên dịch các file này thành mã SQL chuẩn, tính toán thứ tự chạy giữa các bảng (vẽ đồ thị phụ thuộc DAG) và gửi các câu lệnh này xuống Data Warehouse của bạn.
+* **Quá trình**: dbt biên dịch các file này thành mã SQL chuẩn, tính toán thứ tự chạy giữa các bảng (vẽ đồ thị phụ thuộc [DAG](/concepts/orchestration/dag/)) và gửi các câu lệnh này xuống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) của bạn.
 * **Đầu ra**: Các bảng (Tables) hoặc View vật lý được tạo ra tự động trên Data Warehouse để sẵn sàng phục vụ cho các công cụ BI (Tableau, Power BI).
 
 > [!IMPORTANT]
@@ -62,7 +62,7 @@ graph LR
         Stg -. "JOIN / Agg" .-> Mart
     end
 
-    subgraph "3. dbt (Chỉ chứa Code - Gửi Lệnh)"
+    subgraph DbtLayer ["3. dbt (Chỉ chứa Code - Gửi Lệnh)"]
         C["dbt Models SQL + Jinja"]
         T["dbt Tests"]
         C == "Gửi lệnh CREATE TABLE/VIEW" ==> Raw
@@ -74,7 +74,7 @@ graph LR
         Mart --> Dash["Dashboards"]
     end
     
-    style 3 fill:#ffe0b2,stroke:#ff9800
+    style DbtLayer fill:#ffe0b2,stroke:#ff9800
 ```
 
 ---
@@ -120,10 +120,10 @@ Khi bạn chạy lệnh `dbt test`, dbt sẽ tự động biên dịch cấu hì
 
 ### Những sai lầm phổ biến cần tránh
 * **Không dùng hàm `{{ ref() }}` mà gọi thẳng tên bảng**: Nếu bạn viết cứng đường dẫn bảng kiểu `SELECT * FROM production.stg_users` thay vì `{{ ref('stg_users') }}`, dbt sẽ không thể nhận diện được mối liên kết giữa các bảng. Điều này khiến dbt không vẽ được sơ đồ DAG, không biết bảng nào cần chạy trước bảng nào và code sẽ bị lỗi ngay khi bạn đổi môi trường từ Dev sang Prod.
-* **Sử dụng dbt làm công cụ nạp dữ liệu (ETL)**: Cố gắng cấu hình dbt để gọi API hoặc đọc file Excel bên ngoài. dbt sinh ra không phải để làm tác vụ nạp dữ liệu (Extract/Load). Hãy để các công cụ chuyên dụng như Airbyte hoặc Fivetran làm việc đó, sau khi dữ liệu đã nằm gọn trong kho, dbt mới bắt đầu tham gia biến đổi.
+* **Sử dụng dbt làm công cụ nạp dữ liệu ([ETL](/concepts/etl-elt/etl/))**: Cố gắng cấu hình dbt để gọi API hoặc đọc file Excel bên ngoài. dbt sinh ra không phải để làm tác vụ nạp dữ liệu (Extract/Load). Hãy để các công cụ chuyên dụng như Airbyte hoặc Fivetran làm việc đó, sau khi dữ liệu đã nằm gọn trong kho, dbt mới bắt đầu tham gia biến đổi.
 
 ### Điểm đánh đổi (Trade-offs)
-* **Ràng buộc hạ tầng**: dbt hoạt động tốt nhất trên các Data Warehouse thế hệ mới tối ưu cho OLAP (như BigQuery, Snowflake, Redshift). Nếu bạn cố chạy dbt trên các database giao dịch truyền thống (như PostgreSQL bản nhỏ), các tính năng nâng cao như nạp dữ liệu gia tăng (Incremental Load) sẽ không đạt hiệu năng tối đa.
+* **Ràng buộc hạ tầng**: dbt hoạt động tốt nhất trên các Data Warehouse thế hệ mới tối ưu cho [OLAP](/concepts/database-storage/olap/) (như BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/), Redshift). Nếu bạn cố chạy dbt trên các database giao dịch truyền thống (như PostgreSQL bản nhỏ), các tính năng nâng cao như nạp dữ liệu gia tăng ([Incremental Load](/concepts/etl-elt/incremental-load/)) sẽ không đạt hiệu năng tối đa.
 * **Over-engineering cho dự án nhỏ**: Nếu dự án của bạn chỉ có dưới 10 bảng dữ liệu đơn giản, việc thiết lập Git, YAML, cấu hình dbt Core đôi khi tốn thời gian hơn rất nhiều so với việc viết một vài script SQL đơn giản.
 
 ---

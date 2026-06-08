@@ -25,10 +25,10 @@ Mọi hệ thống phần mềm dù có được thiết kế hoàn hảo đến
 ## Bản chất của các câu hỏi xử lý sự cố
 
 Trong thế giới dữ liệu, một sự cố Production thường diễn ra dưới nhiều hình thức đa dạng:
-* Đường ống dẫn dữ liệu (Data Pipeline) đột ngột bị sập (Job Failure).
+* Đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)) đột ngột bị sập (Job Failure).
 * Pipeline chạy thành công nhưng mất quá nhiều thời gian, vi phạm cam kết thời gian hoàn thành (SLA Violation).
 * Hệ thống truyền tin Kafka bị mất kết nối mạng, gây ùn ứ dữ liệu.
-* Nghiêm trọng nhất: dữ liệu rác hoặc dữ liệu trùng lặp trôi vào kho dữ liệu (Data Warehouse) khiến các báo cáo doanh thu tài chính bị sai lệch mà không có Job nào báo đỏ.
+* Nghiêm trọng nhất: dữ liệu rác hoặc dữ liệu trùng lặp trôi vào kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) khiến các báo cáo doanh thu tài chính bị sai lệch mà không có Job nào báo đỏ.
 
 ---
 
@@ -61,18 +61,20 @@ Dưới đây là sơ đồ mô tả luồng xử lý chuẩn khi hệ thống p
 
 ```mermaid
 graph TD
-    A[PagerDuty Alert: Doanh thu = 0] --> B(Triage: Sev-1 Critical)
-    B --> C[Communication: Báo cáo với PM]
+    A["PagerDuty Alert: Doanh thu = 0"] --> B("Triage: Sev-1 Critical")
+    B --> C["Communication: Báo cáo với PM"]
     B --> D[Investigation]
     
-    D --> E{Lỗi do Code hay Dữ liệu nguồn?}
-    E -->|Mã nguồn| F[Rollback git commit gần nhất]
-    E -->|Nguồn hỏng| G[Pause Pipeline, gọi team Backend]
+    D --> E{"Lỗi do Code hay Dữ liệu nguồn?"}
+    E -->|"Mã nguồn"| F["Rollback git commit gần nhất"]
+    E -->|"Nguồn hỏng"| G["Pause Pipeline, gọi team Backend"]
     
-    F --> H[Chạy lại Backfill dữ liệu]
+    F --> H["Chạy lại Backfill dữ liệu"]
     G --> H
     
-    H --> I[Post-mortem Document]
+    H --> I["Post-mortem Document"]
+
+
 ```
 
 ---
@@ -84,10 +86,10 @@ graph TD
 **Cách phân tích và giải quyết bài bản**:
 
 1. **Khoanh vùng phạm vi ảnh hưởng**: Tôi sẽ kiểm tra câu lệnh SQL tính toán báo cáo đó để xác định bảng dữ liệu nguồn. Phát hiện số liệu được lấy trực tiếp từ bảng `fact_sales`.
-2. **Truy vết nguồn gốc dữ liệu (Data Lineage)**: Sử dụng bản đồ Lineage để truy tìm nguồn gốc nạp dữ liệu. Bảng `fact_sales` được cập nhật bởi một Airflow Job mang tên `sales_ingestion`.
+2. **Truy vết nguồn gốc dữ liệu ([Data Lineage](/concepts/governance-metadata/data-lineage/))**: Sử dụng bản đồ Lineage để truy tìm nguồn gốc nạp dữ liệu. Bảng `fact_sales` được cập nhật bởi một Airflow Job mang tên `sales_ingestion`.
 3. **Kiểm tra nhật ký hệ thống (Logs)**: Rà soát log của Job `sales_ingestion` đêm qua. Phát hiện job đã bị mất kết nối mạng giữa chừng khi đang nạp dữ liệu từ database nguồn. Hệ thống Airflow sau đó đã tự động kích hoạt cơ chế chạy lại (Retry).
-4. **Xác định nguyên nhân gốc rễ (Root Cause)**: Do Job `sales_ingestion` được thiết kế theo dạng chỉ ghi thêm dữ liệu (Append-only) mà không có tính lũy đẳng (Idempotency). Ở lần chạy đầu tiên, job đã nạp thành công 50% dữ liệu rồi sập. Ở lần chạy lại sau đó, job lại tiếp tục tải toàn bộ 100% dữ liệu đè lên, dẫn đến việc trùng lặp dữ liệu giao dịch của ngày hôm đó.
-5. **Khắc phục sự cố**: Xóa toàn bộ các bản ghi bị lỗi của ngày hôm đó trong bảng `fact_sales`. Chỉnh sửa lại thiết kế của Job sang cơ chế ghi đè (Delete-then-Insert hoặc UPSERT) để đảm bảo tính lũy đẳng, sau đó thực hiện chạy lại (Backfill) dữ liệu ngày hôm đó.
+4. **Xác định nguyên nhân gốc rễ (Root Cause)**: Do Job `sales_ingestion` được thiết kế theo dạng chỉ ghi thêm dữ liệu (Append-only) mà không có tính lũy đẳng ([Idempotency](/concepts/etl-elt/idempotency/)). Ở lần chạy đầu tiên, job đã nạp thành công 50% dữ liệu rồi sập. Ở lần chạy lại sau đó, job lại tiếp tục tải toàn bộ 100% dữ liệu đè lên, dẫn đến việc trùng lặp dữ liệu giao dịch của ngày hôm đó.
+5. **Khắc phục sự cố**: Xóa toàn bộ các bản ghi bị lỗi của ngày hôm đó trong bảng `fact_sales`. Chỉnh sửa lại thiết kế của Job sang cơ chế ghi đè (Delete-then-Insert hoặc UPSERT) để đảm bảo tính lũy đẳng, sau đó thực hiện chạy lại ([Backfill](/concepts/etl-elt/backfill/)) dữ liệu ngày hôm đó.
 
 ---
 
@@ -151,4 +153,4 @@ graph TD
 
 ## English Summary
 
-The Production Incident QA interview assesses a candidate's operational maturity, ability to troubleshoot complex issues under pressure, and adherence to Incident Response protocols. Employers look for structured thinking: starting with Triage and Acknowledge, prioritizing immediate Mitigation (e.g., rolling back instead of hotfixing) to stop the bleeding, ensuring proactive Communication with stakeholders, and ultimately performing Root Cause Analysis (RCA) using frameworks like the '5 Whys'. Strong candidates emphasize Idempotency to enable easy backfills, implement blameless post-mortems, and establish robust observability mechanisms rather than relying on manual checks or user complaints.
+The Production Incident QA interview assesses a candidate's operational maturity, ability to troubleshoot complex issues under pressure, and adherence to Incident Response protocols. Employers look for structured thinking: starting with Triage and Acknowledge, prioritizing immediate Mitigation (e.g., rolling back instead of hotfixing) to stop the bleeding, ensuring proactive Communication with stakeholders, and ultimately performing [Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/) (RCA) using frameworks like the '5 Whys'. Strong candidates emphasize Idempotency to enable easy backfills, implement blameless post-mortems, and establish robust observability mechanisms rather than relying on manual checks or user complaints.

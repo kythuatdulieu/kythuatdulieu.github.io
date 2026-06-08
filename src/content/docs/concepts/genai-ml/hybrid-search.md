@@ -16,7 +16,7 @@ Trong các hệ thống hỗ trợ hỏi đáp bằng trí tuệ nhân tạo (RA
 Tìm kiếm kết hợp (Hybrid Search) là phương pháp truy xuất thông tin kết hợp đồng thời sức mạnh của hai trường phái tìm kiếm: **Tìm kiếm từ khóa chính xác (Keyword/Sparse Search)** và **Tìm kiếm ngữ nghĩa (Semantic/Dense Vector Search)**. Bằng cách hòa trộn và xếp hạng lại điểm số từ cả hai phương pháp này, Hybrid Search giúp khắc phục điểm yếu của từng kỹ thuật riêng lẻ, mang lại kết quả tìm kiếm chính xác và toàn diện nhất.
 
 Trong các hệ thống tìm kiếm tài liệu hiện đại, chúng ta luôn có sự hiện diện của hai trường phái này:
-1. **Tìm kiếm Dày (Dense / Vector Search)**: Đại diện bởi các cơ sở dữ liệu Vector và các mô hình Embeddings. Phương pháp này có khả năng thấu hiểu ngữ nghĩa và các từ đồng nghĩa (ví dụ: nó hiểu từ "chó" và "cún" có mối liên hệ mật thiết với nhau).
+1. **Tìm kiếm Dày (Dense / Vector Search)**: Đại diện bởi các cơ sở dữ liệu Vector và các mô hình [Embeddings](/concepts/genai-ml/embeddings/). Phương pháp này có khả năng thấu hiểu ngữ nghĩa và các từ đồng nghĩa (ví dụ: nó hiểu từ "chó" và "cún" có mối liên hệ mật thiết với nhau).
 2. **Tìm kiếm Thưa (Sparse / Keyword Search)**: Đại diện bởi các thuật toán thống kê văn bản truyền thống như TF-IDF hoặc **BM25** (vốn là trái tim của Elasticsearch hay OpenSearch). Nó tập trung vào việc tìm kiếm các ký tự trùng khớp chính xác 100%.
 
 Hybrid Search sẽ chạy song song một câu truy vấn của người dùng qua cả hai công cụ Dense và Sparse, lấy ra hai danh sách kết quả độc lập, sau đó sử dụng một thuật toán trộn (Fusion Algorithm) để hợp nhất chúng thành một danh sách kết quả tốt nhất trước khi gửi cho LLM xử lý.
@@ -51,22 +51,24 @@ Dưới đây là luồng xử lý truy vấn trong một Vector Database hỗ t
 
 ```mermaid
 flowchart TD
-    A[Câu truy vấn<br/>User Query] --> B[Embedding Model<br/>Dense Vector]
-    A --> C[Tokenizer / BM25<br/>Sparse Vector]
+    A["Câu truy vấn<br/>User Query"] --> B["Embedding Model<br/>Dense Vector"]
+    A --> C["Tokenizer / BM25<br/>Sparse Vector"]
     
-    B --> D[(Vector Database)]
+    B --> D["Vector Database"]
     C --> D
     
-    D --> E[Top-K Dense Results]
-    D --> F[Top-K Sparse Results]
+    D --> E["Top-K Dense Results"]
+    D --> F["Top-K Sparse Results"]
     
-    E & F --> G{Thuật toán Trộn<br/>RRF Fusion}
-    G --> H[Kết quả Hybrid<br/>Top-K Final]
+    E & F --> G{"Thuật toán Trộn<br/>RRF Fusion"}
+    G --> H["Kết quả Hybrid<br/>Top-K Final"]
+
+
 ```
 
 ### 1. Giai đoạn Lập chỉ mục (Indexing)
 * Dữ liệu văn bản thô được cắt nhỏ thành các phân đoạn (chunks).
-* Mỗi phân đoạn đi qua Embedding Model để tạo ra Dense Vector (mảng số thực, ví dụ 768 chiều).
+* Mỗi phân đoạn đi qua [Embedding Model](/concepts/genai-ml/embedding-model/) để tạo ra Dense Vector (mảng số thực, ví dụ 768 chiều).
 * Đồng thời, phân đoạn cũng đi qua bộ Tokenizer của thuật toán BM25 để tạo ra Sparse Vector (mảng thưa biểu diễn tần suất xuất hiện của từ).
 * Cả hai định dạng Vector này được lưu trữ đồng thời vào cơ sở dữ liệu.
 
@@ -110,12 +112,12 @@ response = (
 ## Những cạm bẫy dễ vấp phải
 
 * **Bỏ quên bộ tách từ (Tokenizer) tiếng Việt cho BM25**: Thuật toán BM25 dựa trên việc đếm tần suất xuất hiện của các từ đơn lẻ. Trong tiếng Anh, các từ cách nhau bằng khoảng trắng. Nhưng tiếng Việt là ngôn ngữ đơn tiết, các từ ghép như *"học sinh"* hay *"đất đai"* gồm hai âm tiết. Nếu bạn dùng bộ Tokenizer mặc định của tiếng Anh, nó sẽ cắt nát từ ghép thành các từ đơn lẻ *"học"*, *"sinh"*, làm giảm đáng kể hiệu quả của Keyword Search. Hãy tích hợp các công cụ tách từ tiếng Việt (như VnCoreNLP hoặc pyvi) trước khi đưa dữ liệu vào BM25.
-* **Nhầm lẫn giữa Re-ranking và Hybrid Search**: Nhiều kỹ sư nghĩ rằng việc sử dụng các mô hình xếp hạng lại như Cohere Rerank ở bước cuối cùng đã là Hybrid Search. Thực chất, Reranker chỉ làm nhiệm vụ sắp xếp lại những kết quả *đã được tìm thấy*. Nếu ở bước truy xuất đầu tiên (Retriever), hệ thống Vector Search của bạn bị trượt và không bốc được tài liệu chứa mã sản phẩm cần tìm, thì Reranker ở bước sau cũng không có dữ liệu để sắp xếp. Bạn bắt buộc phải dùng Hybrid Search ngay từ tầng truy xuất đầu tiên.
+* **Nhầm lẫn giữa Re-ranking và Hybrid Search**: Nhiều kỹ sư nghĩ rằng việc sử dụng các mô hình xếp hạng lại như Cohere Rerank ở bước cuối cùng đã là Hybrid Search. Thực chất, [Reranker](/concepts/genai-ml/reranker/) chỉ làm nhiệm vụ sắp xếp lại những kết quả *đã được tìm thấy*. Nếu ở bước truy xuất đầu tiên (Retriever), hệ thống Vector Search của bạn bị trượt và không bốc được tài liệu chứa mã sản phẩm cần tìm, thì Reranker ở bước sau cũng không có dữ liệu để sắp xếp. Bạn bắt buộc phải dùng Hybrid Search ngay từ tầng truy xuất đầu tiên.
 
 ## Được và mất khi chọn giải pháp Hybrid (Trade-offs)
 
 ### Điểm cộng
-* **Độ bao phủ dữ liệu tối đa (High Recall)**: Giải quyết tốt cả bài toán hiểu ngữ nghĩa mơ hồ lẫn bài toán tìm kiếm mã số chính xác tuyệt đối.
+* **Độ bao phủ dữ liệu tối đa (High [Recall](/concepts/genai-ml/recall/))**: Giải quyết tốt cả bài toán hiểu ngữ nghĩa mơ hồ lẫn bài toán tìm kiếm mã số chính xác tuyệt đối.
 * **Độ ổn định hệ thống cao**: Nếu mô hình Embedding của bạn hoạt động chưa tốt ở một lĩnh vực chuyên môn sâu, thuật toán BM25 sẽ đóng vai trò bệ đỡ kéo lại độ chính xác cho kết quả.
 
 ### Điểm trừ

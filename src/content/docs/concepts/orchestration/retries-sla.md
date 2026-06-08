@@ -9,12 +9,15 @@ seoTitle: "Cơ chế Retries và SLA trong Data Pipeline (Airflow)"
 metaDescription: "Tìm hiểu cách thiết lập cơ chế Tự động thử lại (Retries), hàm Exponential Backoff và cảnh báo vi phạm Cam kết cấp độ dịch vụ (SLA) trong Data Orchestration."
 ---
 
-Trong thế giới kỹ thuật dữ liệu, có một chân lý bất biến: *Hạ tầng mạng luôn có thể gặp sự cố*. Một máy chủ API của đối tác có thể bị quá tải tạm thời, cơ sở dữ liệu có thể khởi động lại trong vài giây, hoặc đường truyền mạng internet có thể bị nghẽn. Một đường ống dẫn dữ liệu (data pipeline) chuyên nghiệp không thể dễ dàng sụp đổ và dừng hoạt động chỉ vì một lỗi mạng gián đoạn ngắn hạn 3 giây. Để xây dựng những hệ thống tự phục hồi bền bỉ, chúng ta cần phối hợp hai công cụ quan trọng: **Retries (Cơ chế thử lại tự động)** và **SLA (Cam kết thời gian dịch vụ)**.
+Trong thế giới kỹ thuật dữ liệu, có một chân lý bất biến: *Hạ tầng mạng luôn có thể gặp sự cố*. Một máy chủ API của đối tác có thể bị quá tải tạm thời, cơ sở dữ liệu có thể khởi động lại trong vài giây, hoặc đường truyền mạng internet có thể bị nghẽn. Một đường ống dẫn dữ liệu ([data pipeline](/concepts/foundation/data-pipeline/)) chuyên nghiệp không thể dễ dàng sụp đổ và dừng hoạt động chỉ vì một lỗi mạng gián đoạn ngắn hạn 3 giây. Để xây dựng những hệ thống tự phục hồi bền bỉ, chúng ta cần phối hợp hai công cụ quan trọng: **Retries (Cơ chế thử lại tự động)** và **SLA (Cam kết thời gian dịch vụ)**.
 
 ## Khi mạng máy tính luôn có thể chập chờn: Tại sao cần Retries và SLA?
 
 * **Retries (Thử lại tự động)**: Là cơ chế thiết lập ở cấp độ tác vụ (task). Khi một task đang chạy bị lỗi và ném ra Exception, thay vì ngay lập tức báo đỏ và dừng toàn bộ luồng công việc, hệ thống điều phối (Orchestrator) sẽ chuyển task đó sang trạng thái chờ đợi một khoảng thời gian ngắn (Retry Delay) rồi kích hoạt chạy lại từ đầu. Quá trình này sẽ lặp lại cho đến khi task chạy thành công hoặc vượt quá số lần thử lại tối đa cho phép (`max_retries`). Đây được ví như liều thuốc "kháng sinh" giúp hệ thống tự dọn dẹp các lỗi mạng tạm thời mà không cần con người can thiệp.
 * **SLA (Service Level Agreement - Cam kết cấp độ dịch vụ)**: Là một ngưỡng thời gian giới hạn nghiêm ngặt (ví dụ: *"Báo cáo doanh thu phải hoàn thành trước 07:00 AM"*). Nếu một tác vụ hoặc toàn bộ đường ống dẫn dữ liệu không kết thúc thành công trước mốc thời gian này, hệ thống sẽ kích hoạt một hàm callback để gửi email hoặc tin nhắn cảnh báo (SLA Miss) tới đội ngũ vận hành. SLA không dừng hay can thiệp vào luồng chạy, nó chỉ làm nhiệm vụ giám sát và cảnh báo.
+
+> [!IMPORTANT]
+> Trong Airflow 3.0, tính năng SLA truyền thống (`sla` và `sla_miss_callback`) đã bị loại bỏ hoàn toàn và được thay thế bằng cơ chế **Deadline Alerts** để theo dõi tiến độ một cách chủ động và ổn định hơn.
 
 Hãy hình dung một kịch bản thực tế: Bạn có một task gọi API để lấy dữ liệu quảng cáo từ Facebook vào lúc 02:00 sáng.
 * **Nếu không thiết lập Retries**: Đúng 02:00 sáng, máy chủ Facebook bị nghẽn mạng trong vòng 5 giây và trả về mã lỗi HTTP 504. Task thất bại ngay lập tức, toàn bộ pipeline phía sau bị chặn đứng. Kỹ sư trực ca phải thức dậy lúc 02:15 sáng để nhấn nút chạy lại thủ công. Khi nhấn nút, mạng đã bình thường trở lại, pipeline chạy mượt mà, nhưng giấc ngủ của kỹ sư đã bị gián đoạn vô ích.
@@ -51,7 +54,7 @@ sequenceDiagram
 ```
 
 1. **Vòng đời của Task khi gặp lỗi**: Khi task chạy lần đầu và gặp lỗi, trạng thái của nó được chuyển thành `UP_FOR_RETRY` (chứ không phải `FAILED`). Bộ điều phối sẽ chờ đợi hết thời gian delay rồi tự động xếp lịch chạy lại. Nếu sau số lần thử tối đa cấu hình mà vẫn lỗi, task mới chính thức bị đánh dấu là `FAILED` và gửi thông báo khẩn cấp.
-2. **Quy trình giám sát SLA**: Một tiến trình chạy ngầm của bộ điều phối sẽ liên tục so quét các mốc thời gian. Nếu mốc thời gian hiện tại vượt quá mốc (Giờ DAG khởi động + khoảng thời gian SLA định trước) mà task đó vẫn chưa báo trạng thái thành công (`SUCCESS`), hệ thống sẽ kích hoạt hàm `sla_miss_callback` để bắn tin nhắn cảnh báo, trong khi task vẫn được tiếp tục chạy bình thường.
+2. **Quy trình giám sát SLA**: Một tiến trình chạy ngầm của bộ điều phối sẽ liên tục so quét các mốc thời gian. Nếu mốc thời gian hiện tại vượt quá mốc (Giờ [DAG](/concepts/orchestration/dag/) khởi động + khoảng thời gian SLA định trước) mà task đó vẫn chưa báo trạng thái thành công (`SUCCESS`), hệ thống sẽ kích hoạt hàm `sla_miss_callback` để bắn tin nhắn cảnh báo, trong khi task vẫn được tiếp tục chạy bình thường.
 
 ## Ví dụ cấu hình: Thiết lập Retries và SLA trong Apache Airflow
 
@@ -81,7 +84,7 @@ default_args = {
 with DAG(
     dag_id='mission_critical_pipeline',
     default_args=default_args,
-    schedule_interval='@daily',
+    schedule='@daily',
     sla_miss_callback=send_sla_miss_alert   # Hàm callback được gọi khi vi phạm thời gian SLA
 ) as dag:
 
@@ -97,7 +100,7 @@ with DAG(
 ## Kinh nghiệm thực chiến để thiết kế hệ thống bền bỉ
 
 ### Các nguyên tắc vàng cần tuân thủ (Best Practices)
-* **Tính lũy đẳng (Idempotency) là điều kiện bắt buộc**: Đừng bao giờ kích hoạt tính năng tự động thử lại (Retries) nếu tác vụ của bạn chưa được thiết kế để lũy đẳng. Hãy hình dung một task thực hiện lệnh chèn dữ liệu (`INSERT`) thô vào database SQL mà không có khóa chính. Nếu task gặp sự cố ngắt kết nối mạng ở giây cuối cùng (dữ liệu thực tế đã được chèn vào database nhưng máy chủ chưa kịp báo trạng thái thành công về cho Orchestrator), việc tự động chạy lại task đó từ đầu sẽ ghi thêm một đống dữ liệu trùng lặp (duplicates) vào bảng. Do đó, hãy luôn thiết kế các tác vụ dưới dạng `UPSERT / MERGE` hoặc xóa dữ liệu cũ trước khi chèn mới.
+* **Tính lũy đẳng ([Idempotency](/concepts/etl-elt/idempotency/)) là điều kiện bắt buộc**: Đừng bao giờ kích hoạt tính năng tự động thử lại (Retries) nếu tác vụ của bạn chưa được thiết kế để lũy đẳng. Hãy hình dung một task thực hiện lệnh chèn dữ liệu (`INSERT`) thô vào database SQL mà không có khóa chính. Nếu task gặp sự cố ngắt kết nối mạng ở giây cuối cùng (dữ liệu thực tế đã được chèn vào database nhưng máy chủ chưa kịp báo trạng thái thành công về cho Orchestrator), việc tự động chạy lại task đó từ đầu sẽ ghi thêm một đống dữ liệu trùng lặp (duplicates) vào bảng. Do đó, hãy luôn thiết kế các tác vụ dưới dạng `UPSERT / MERGE` hoặc xóa dữ liệu cũ trước khi chèn mới.
 * **Tách biệt rõ ràng SLA và Execution Timeout**: 
   - `SLA` chỉ dùng để cảnh báo tiến độ chậm trễ tổng thể của hệ thống mà không can thiệp vào trạng thái chạy của task.
   - `Execution Timeout` giống như một cầu dao điện tự động, nó sẽ giết chết (kill) trực tiếp một task đang bị kẹt vô hạn (ví dụ như kẹt khóa bảng SQL lock) để giải phóng tài nguyên hệ thống, tạo ra Exception để kích hoạt cơ chế thử lại. Hãy luôn kết hợp nhịp nhàng cả hai cấu hình này.
@@ -110,7 +113,7 @@ with DAG(
 
 ### Về cơ chế Retries
 * **Ưu điểm**: Giảm thiểu tới 90% các cảnh báo lỗi rác vào ban đêm do chập chờn mạng ngắn hạn, giúp đội ngũ vận hành có thời gian nghỉ ngơi tốt hơn.
-* **Nhược điểm**: Có thể che giấu các vấn đề tiềm ẩn của hạ tầng (Infrastructure masking). Ví dụ: Data Warehouse đang bị quá tải nên thường xuyên từ chối kết nối, nhưng việc các task liên tục thử lại và cuối cùng vẫn chạy được sẽ tạo ra ảo giác hệ thống vẫn ổn định, cho đến khi nó sụp đổ hoàn toàn.
+* **Nhược điểm**: Có thể che giấu các vấn đề tiềm ẩn của hạ tầng (Infrastructure masking). Ví dụ: [Data Warehouse](/concepts/data-warehouse/data-warehouse/) đang bị quá tải nên thường xuyên từ chối kết nối, nhưng việc các task liên tục thử lại và cuối cùng vẫn chạy được sẽ tạo ra ảo giác hệ thống vẫn ổn định, cho đến khi nó sụp đổ hoàn toàn.
 
 ### Về giám sát SLA
 * **Ưu điểm**: Giúp nâng cao tính chuyên nghiệp và xây dựng lòng tin với các đối tác kinh doanh nhờ việc chủ động kiểm soát và thông báo rủi ro chậm trễ số liệu trước khi họ phát hiện ra.
@@ -144,4 +147,4 @@ with DAG(
 
 ## English Summary
 
-In Data Orchestration, **Retries** and **SLA (Service Level Agreements)** are fundamental pillars for building resilient and transparent data pipelines. Network partitions and external API hiccups are inevitable; retries automatically re-trigger failed tasks without human intervention, effectively mitigating transient errors. Utilizing an "Exponential Backoff" strategy during retries prevents accidental DDoS-ing of struggling source systems. Meanwhile, an SLA is a passive monitoring threshold that alerts stakeholders if a process (or entire DAG) fails to complete by a critical business deadline. Crucially, before enabling retries, engineers must guarantee that every task is idempotent (e.g., using UPSERT operations) to prevent data duplication when a half-finished process is re-executed.
+In Data [Orchestration](/concepts/orchestration/orchestration/), **Retries** and **SLA (Service Level Agreements)** are fundamental pillars for building resilient and transparent data pipelines. Network partitions and external API hiccups are inevitable; retries automatically re-trigger failed tasks without human intervention, effectively mitigating transient errors. Utilizing an "Exponential Backoff" strategy during retries prevents accidental DDoS-ing of struggling [source systems](/concepts/foundation/source-systems/). Meanwhile, an SLA is a passive monitoring threshold that alerts stakeholders if a process (or entire DAG) fails to complete by a critical business deadline. Crucially, before enabling retries, engineers must guarantee that every task is idempotent (e.g., using UPSERT operations) to prevent data duplication when a half-finished process is re-executed.

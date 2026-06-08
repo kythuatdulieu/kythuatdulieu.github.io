@@ -148,9 +148,9 @@ Góc phỏng vấn: Những câu hỏi thực chiến
 * [Kafka Topics & Partitions](/concepts/streaming-processing/kafka-topics-partitions/)
 
 **Tài liệu tham khảo:**
-1. **Kafka: The Definitive Guide** - Neha Narkhede et al. (Chương phân tích sâu về cơ chế Kafka Consumer).
-2. **Designing Data-Intensive Applications** - Martin Kleppmann (Lý thuyết về hệ thống phân tán và truyền tải thông điệp).
+1. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Neha Narkhede, Gwen Shapira, and Todd Palino
+2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann
 
 ## English Summary
 
-Consumer Groups in Apache Kafka provide the essential mechanism for massively parallelizing data consumption. By assigning multiple consumer instances the same `group.id`, Kafka transparently divides the Topic's Partitions among them, preventing duplicate processing and effectively implementing a load-balancing message queue. Conversely, assigning unique group IDs enables the classic Publish-Subscribe pattern, allowing independent downstream systems (e.g., a real-time alerting engine and a Data Lake backup pipeline) to read the same stream of events at their own pace. Careful tuning of partitions is required, as the number of partitions acts as the hard ceiling on how many consumers can concurrently process data.
+Consumer Groups in Apache Kafka provide the essential mechanism for massively parallelizing data consumption. By assigning multiple consumer instances the same `group.id`, Kafka transparently divides the Topic's Partitions among them, preventing duplicate processing and effectively implementing a load-balancing message queue. Conversely, assigning unique group IDs enables the classic Publish-Subscribe pattern, allowing independent downstream systems (e.g., a real-time alerting engine and a [Data Lake](/concepts/data-lake-lakehouse/data-lake/) backup pipeline) to read the same stream of events at their own pace. Careful tuning of partitions is required, as the number of partitions acts as the hard ceiling on how many consumers can concurrently process data.

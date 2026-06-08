@@ -9,9 +9,9 @@ seoTitle: "Table Format - Định dạng bảng trong Data Lakehouse"
 metaDescription: "Khái niệm Table Format là gì? Sự khác biệt giữa Table Format và File Format. Tại sao Apache Iceberg, Delta Lake và Hudi lại quan trọng cho Data Lake."
 ---
 
-Hãy tưởng tượng bạn đang có một kho lưu trữ khổng lồ chứa hàng triệu tệp tin dữ liệu định dạng Parquet hay CSV nằm rải rác trên Amazon S3 hoặc Google Cloud Storage. Đối với các công cụ truy vấn SQL, đống tệp tin này giống như một mê cung hỗn loạn. **Table Format (Định dạng bảng)** chính là lớp bản đồ thông minh (abstraction layer) giúp gom tất cả các tệp tin riêng lẻ đó lại, tổ chức chúng một cách khoa học để máy tính hiểu được chúng là một bảng dữ liệu logic duy nhất.
+Hãy tưởng tượng bạn đang có một kho lưu trữ khổng lồ chứa hàng triệu tệp tin dữ liệu định dạng Parquet hay CSV nằm rải rác trên Amazon S3 hoặc Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/). Đối với các công cụ truy vấn SQL, đống tệp tin này giống như một mê cung hỗn loạn. **Table Format (Định dạng bảng)** chính là lớp bản đồ thông minh (abstraction layer) giúp gom tất cả các tệp tin riêng lẻ đó lại, tổ chức chúng một cách khoa học để máy tính hiểu được chúng là một bảng dữ liệu logic duy nhất.
 
-Nhờ có Table Format, chúng ta có thể mang các tính năng cao cấp vốn chỉ có ở các cơ sở dữ liệu quan hệ truyền thống như giao dịch ACID, tự động cập nhật cấu trúc (schema evolution) hay quay ngược thời gian truy vấn (time travel) đặt vào trong các Data Lake giá rẻ. Đây chính là xương sống định hình nên kiến trúc Data Lakehouse hiện đại.
+Nhờ có Table Format, chúng ta có thể mang các tính năng cao cấp vốn chỉ có ở các cơ sở dữ liệu quan hệ truyền thống như giao dịch ACID, tự động cập nhật cấu trúc ([schema evolution](/concepts/data-lake-lakehouse/schema-evolution/)) hay quay ngược thời gian truy vấn ([time travel](/concepts/data-lake-lakehouse/time-travel/)) đặt vào trong các [Data Lake](/concepts/data-lake-lakehouse/data-lake/) giá rẻ. Đây chính là xương sống định hình nên kiến trúc Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) hiện đại.
 
 ## Định dạng bảng là gì? Sự nhầm lẫn phổ biến với Định dạng tệp
 
@@ -98,9 +98,9 @@ Khi đoạn code trên chạy, Delta Lake sẽ âm thầm ghi một file Parquet
 
 ### Chọn lựa định dạng phù hợp
 Hiện tại, thị trường Table Format đang được thống trị bởi bộ ba "Big 3":
-* **Apache Iceberg:** Được thiết kế cực kỳ thanh lịch, độc lập với các engine tính toán và được hỗ trợ rất mạnh mẽ bởi cộng đồng (Snowflake, Trino, Cloudera).
-* **Delta Lake:** Được phát triển bởi Databricks, tích hợp hoàn hảo với Apache Spark và hệ sinh thái của Databricks.
-* **Apache Hudi:** Được Uber phát triển, tối ưu hóa rất mạnh cho các bài toán CDC (Change Data Capture) và xử lý dữ liệu tăng dần (incremental processing).
+* **Apache Iceberg:** Được thiết kế cực kỳ thanh lịch, độc lập với các engine tính toán và được hỗ trợ rất mạnh mẽ bởi cộng đồng ([Snowflake](/concepts/cloud-data-platform/snowflake/), Trino, Cloudera).
+* **Delta Lake:** Được phát triển bởi Databricks, tích hợp hoàn hảo với [Apache Spark](/concepts/batch-processing/apache-spark/) và hệ sinh thái của Databricks.
+* **Apache Hudi:** Được Uber phát triển, tối ưu hóa rất mạnh cho các bài toán CDC ([Change Data Capture](/concepts/etl-elt/change-data-capture/)) và xử lý dữ liệu tăng dần (incremental processing).
 
 ### Một số nguyên tắc thiết kế tốt (Best Practices)
 * **Kết hợp với một Catalog chung:** Hãy sử dụng một hệ thống Catalog (như AWS Glue Catalog, Hive Metastore, hoặc Nessie) để lưu trữ con trỏ trỏ tới file metadata mới nhất. Điều này giúp các engine tính toán khác nhau có thể cùng làm việc trên một bảng dữ liệu một cách đồng bộ.
@@ -154,4 +154,4 @@ Trong kiến trúc Hive cũ, việc có quá nhiều file nhỏ sẽ làm nghẽ
 
 ## English summary
 
-A Table Format is an abstraction layer that brings relational database functionalities—such as ACID transactions, schema evolution, and time travel—to massive datasets residing in data lakes (like S3 or GCS). Unlike file formats (e.g., Parquet, Avro) that define physical data encoding, a table format (e.g., Apache Iceberg, Delta Lake, Apache Hudi) uses metadata to track which data files comprise a given snapshot of a table. This approach eliminates inefficient file listing operations, ensures data consistency during concurrent read/write operations, and serves as the foundational architecture for the modern Data Lakehouse paradigm.
+A Table Format is an abstraction layer that brings [relational database](/concepts/database-storage/relational-database/) functionalities—such as ACID transactions, schema evolution, and time travel—to massive datasets residing in data lakes (like S3 or GCS). Unlike [file formats](/concepts/database-storage/file-formats/) (e.g., Parquet, Avro) that define physical data encoding, a table format (e.g., Apache Iceberg, Delta Lake, Apache Hudi) uses metadata to track which data files comprise a given snapshot of a table. This approach eliminates inefficient file listing operations, ensures data consistency during concurrent read/write operations, and serves as the foundational architecture for the modern Data Lakehouse paradigm.

@@ -94,11 +94,11 @@ Mỗi khi có một giao dịch mới xuất hiện trong luồng `transactions`
 
 ### Các nguyên tắc thiết kế tốt (Best Practices)
 * **Quản lý vòng đời dữ liệu phù hợp:** Stream có xu hướng phình to vô hạn và được lưu trữ tuần tự (append-only) trên đĩa cứng (như Kafka). Bảng lại cần truy xuất ngẫu nhiên cực nhanh và thường được lưu trữ trong bộ nhớ RAM hoặc Key-Value Store (như RocksDB). Hãy thiết kế thời gian lưu trữ (retention policy) hợp lý cho từng loại để tránh tràn bộ nhớ.
-* **Cấu hình Compaction cho Table:** Nếu một Kafka Topic được dùng để biểu diễn một Bảng (ví dụ: thông tin cấu hình người dùng), hãy thiết lập thuộc tính `cleanup.policy=compact`. Kafka sẽ tự động dọn dẹp các bản ghi cũ và chỉ giữ lại bản ghi mới nhất cho mỗi Key, giúp tiết kiệm dung lượng đĩa và đẩy nhanh quá trình tái cấu trúc bảng khi khởi động lại dịch vụ.
+* **Cấu hình [Compaction](/concepts/data-lake-lakehouse/compaction/) cho Table:** Nếu một Kafka Topic được dùng để biểu diễn một Bảng (ví dụ: thông tin cấu hình người dùng), hãy thiết lập thuộc tính `cleanup.policy=compact`. Kafka sẽ tự động dọn dẹp các bản ghi cũ và chỉ giữ lại bản ghi mới nhất cho mỗi Key, giúp tiết kiệm dung lượng đĩa và đẩy nhanh quá trình tái cấu trúc bảng khi khởi động lại dịch vụ.
 
 ### Những sai lầm thường gặp (Common Mistakes)
 * **Quên định nghĩa Khóa chính (Primary Key) khi tạo Table:** Stream không cần khóa chính vì nó chỉ quan tâm đến các sự kiện độc lập. Nhưng khi chuyển hóa thành Table, bạn bắt buộc phải xác định khóa. Nếu không, hệ thống sẽ không biết sự kiện tiếp theo là chèn mới (`INSERT`) hay cập nhật (`UPDATE`) dữ liệu cũ, dẫn đến việc bảng tĩnh bị phình to vô hạn giống như một Stream.
-* **Chèn dữ liệu thô từ Stream vào Database mà không dùng UPSERT:** Khi bạn tiêu thụ một luồng CDC để ghi đè vào Data Warehouse, nếu chỉ dùng lệnh `INSERT` thông thường, bạn sẽ vô tình lưu trữ toàn bộ lịch sử thay đổi của dòng đó. Hãy dùng lệnh `MERGE` hoặc `UPSERT` để ép luồng dữ liệu trở về đúng dạng trạng thái tĩnh của Bảng.
+* **Chèn dữ liệu thô từ Stream vào Database mà không dùng UPSERT:** Khi bạn tiêu thụ một luồng CDC để ghi đè vào [Data Warehouse](/concepts/data-warehouse/data-warehouse/), nếu chỉ dùng lệnh `INSERT` thông thường, bạn sẽ vô tình lưu trữ toàn bộ lịch sử thay đổi của dòng đó. Hãy dùng lệnh `MERGE` hoặc `UPSERT` để ép luồng dữ liệu trở về đúng dạng trạng thái tĩnh của Bảng.
 
 ## Đặt hai khái niệm lên bàn cân (Trade-offs)
 
@@ -108,7 +108,7 @@ Mỗi khi có một giao dịch mới xuất hiện trong luồng `transactions`
 
 ### Đặc trưng của Table
 * **Ưu điểm:** Truy vấn trạng thái hiện tại cực kỳ nhanh (độ phức tạp $O(1)$ nếu truy xuất bằng khóa chính). Rất trực quan và quen thuộc với người viết SQL.
-* **Nhược điểm:** Xóa bỏ hoàn toàn các trạng thái trung gian. Bạn sẽ không thể biết người dùng đã đổi tên bao nhiêu lần trước khi có cái tên hiện tại, trừ khi bạn chủ động thiết kế thêm các bảng lịch sử phức tạp (như Slowly Changing Dimension).
+* **Nhược điểm:** Xóa bỏ hoàn toàn các trạng thái trung gian. Bạn sẽ không thể biết người dùng đã đổi tên bao nhiêu lần trước khi có cái tên hiện tại, trừ khi bạn chủ động thiết kế thêm các bảng lịch sử phức tạp (như [Slowly Changing Dimension](/concepts/data-warehouse/slowly-changing-dimension/)).
 
 ## Khi nào nên dùng tư duy Dòng, khi nào nên dùng tư duy Bảng?
 
@@ -126,9 +126,9 @@ Mỗi khi có một giao dịch mới xuất hiện trong luồng `transactions`
 * [Apache Kafka - Nền tảng luồng sự kiện](/concepts/streaming-processing/apache-kafka/)
 
 **Tài liệu tham khảo:**
-1. **Kafka: The Definitive Guide** - *Gwen Shapira* (Chương 11 giải thích cực kỳ chi tiết về Duality).
-2. **Confluent Blog** - *Streams and Tables in Apache Kafka: A Primer* (Bài viết nổi tiếng của Jay Kreps).
-3. **Designing Data-Intensive Applications** - *Martin Kleppmann*.
+1. [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781492044048/) - Gwen Shapira, Todd Palino, Rajini Sivaram, and Krit Gunnala
+2. [Confluent Blog: Streams and Tables in Apache Kafka: A Primer](https://www.confluent.io/blog/kafka-streams-tables-primer/)
+3. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann
 
 ---
 

@@ -114,7 +114,7 @@ optimized_df.explain()
 
 ## Tài liệu tham khảo
 
-1. [Apache Spark SQL Join Hints](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-hints.html) - Official Apache Spark documentation on directing the optimizer to use specific join strategies (e.g. Broadcast, Merge, Shuffle Hash).
+1. [Apache Spark SQL Join Hints](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-hints.html) - Official [Apache Spark](/concepts/batch-processing/apache-spark/) documentation on directing the optimizer to use specific join strategies (e.g. Broadcast, Merge, Shuffle Hash).
 2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Reference book by Bill Chambers and Matei Zaharia featuring detailed explanations of Joins.
 3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
 4. [Adaptive Query Execution: Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html) - Databricks engineering blog post describing dynamic runtime join optimizations like converting Sort-Merge Join to Broadcast Hash Join.

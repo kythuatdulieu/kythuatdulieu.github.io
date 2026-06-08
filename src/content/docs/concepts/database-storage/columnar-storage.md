@@ -9,7 +9,7 @@ seoTitle: "Lưu trữ dạng Cột (Columnar Storage) - Cốt lõi của Data Wa
 metaDescription: "Tìm hiểu chi tiết về Lưu trữ dạng cột (Column-oriented storage), cách thức nén dữ liệu, tối ưu hóa truy vấn phân tích (OLAP) và sự khác biệt với dạng dòng."
 ---
 
-Nếu bạn từng trầm trồ khi thấy một truy vấn SQL quét qua hàng tỷ dòng dữ liệu trên Google BigQuery hay Snowflake trả về kết quả chỉ trong vài giây, bạn đang chứng kiến sức mạnh của **Columnar Storage (Lưu trữ dạng cột)**. Đây chính là "vũ khí bí mật" định hình nên tốc độ kinh ngạc của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
+Nếu bạn từng trầm trồ khi thấy một truy vấn SQL quét qua hàng tỷ dòng dữ liệu trên [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/) hay [Snowflake](/concepts/cloud-data-platform/snowflake/) trả về kết quả chỉ trong vài giây, bạn đang chứng kiến sức mạnh của **Columnar Storage (Lưu trữ dạng cột)**. Đây chính là "vũ khí bí mật" định hình nên tốc độ kinh ngạc của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
 
 ## Columnar Storage: Khởi nguồn của tốc độ truy vấn phân tích kinh ngạc
 
@@ -97,13 +97,13 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 ## Thiết kế và sử dụng Columnar Storage hiệu quả (Best Practices)
 
 * **Sắp xếp dữ liệu thông minh trước khi lưu**: Để tối đa hóa tỷ lệ nén của thuật toán RLE, hãy sắp xếp bảng theo các cột có nhiều giá trị trùng lặp cao trước khi ghi xuống đĩa (ví dụ: `ORDER BY date, category`).
-* **Sử dụng định dạng tệp tin tối ưu**: Khi làm việc trên Data Lake, hãy chuyển dữ liệu từ các định dạng thô (như JSON, CSV) sang các định dạng cột mở như **Apache Parquet** để tận dụng tối đa tốc độ truy vấn.
+* **Sử dụng định dạng tệp tin tối ưu**: Khi làm việc trên [Data Lake](/concepts/data-lake-lakehouse/data-lake/), hãy chuyển dữ liệu từ các định dạng thô (như JSON, CSV) sang các định dạng cột mở như **Apache Parquet** để tận dụng tối đa tốc độ truy vấn.
 * **Chỉ SELECT những cột thực sự cần thiết**: Việc viết lệnh `SELECT *` một cách vô tội vạ trên các hệ thống Columnar Storage sẽ bắt hệ thống phải thực hiện quy trình ghép các cột lại thành từng hàng trong bộ nhớ `(Row reconstruction)`. Điều này hoàn toàn phá vỡ ưu thế thiết kế của kiến trúc cột.
 
 ## Những điểm yếu chí mạng và sai lầm thường gặp
 
-* **Cố gắng thực hiện cập nhật từng dòng (Row-level UPDATE)**: Đây là điểm yếu lớn nhất của Columnar storage. Để cập nhật một thông tin nhỏ của một người, hệ thống bắt buộc phải giải nén toàn bộ tệp cột đó, thực hiện sửa đổi rồi nén lại từ đầu. Do đó, các hệ thống Data Warehouse hiện đại thường được thiết kế theo mô hình ghi chèn thêm dữ liệu mới `(APPEND)` thay vì cập nhật trực tiếp.
-* **Sử dụng Columnar Storage cho hệ thống giao dịch (OLTP)**: Đưa các định dạng Parquet hoặc Data Warehouse làm cơ sở dữ liệu backend cho một website thương mại điện tử là một sai lầm nghiêm trọng. Việc tạo mới một đơn hàng (chèn 1 dòng mới chứa nhiều cột thông tin) sẽ buộc hệ thống phải xé lẻ dòng đó ra thành hàng chục mảnh để chèn vào các file cột độc lập, làm hệ thống bị nghẽn nghiêm trọng.
+* **Cố gắng thực hiện cập nhật từng dòng (Row-level UPDATE)**: Đây là điểm yếu lớn nhất của Columnar storage. Để cập nhật một thông tin nhỏ của một người, hệ thống bắt buộc phải giải nén toàn bộ tệp cột đó, thực hiện sửa đổi rồi nén lại từ đầu. Do đó, các hệ thống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hiện đại thường được thiết kế theo mô hình ghi chèn thêm dữ liệu mới `(APPEND)` thay vì cập nhật trực tiếp.
+* **Sử dụng Columnar Storage cho hệ thống giao dịch ([OLTP](/concepts/database-storage/oltp/))**: Đưa các định dạng Parquet hoặc Data Warehouse làm cơ sở dữ liệu backend cho một website thương mại điện tử là một sai lầm nghiêm trọng. Việc tạo mới một đơn hàng (chèn 1 dòng mới chứa nhiều cột thông tin) sẽ buộc hệ thống phải xé lẻ dòng đó ra thành hàng chục mảnh để chèn vào các file cột độc lập, làm hệ thống bị nghẽn nghiêm trọng.
 
 ## Bức tranh hai mặt: Ưu và nhược điểm
 
@@ -119,7 +119,7 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 ## Khi nào là sự lựa chọn đúng đắn?
 
 **Nên chọn khi:**
-* Bạn xây dựng kiến trúc Data Warehouse, Data Lakehouse hoặc các hệ thống OLAP phục vụ báo cáo phân tích.
+* Bạn xây dựng kiến trúc Data Warehouse, Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) hoặc các hệ thống OLAP phục vụ báo cáo phân tích.
 * Lưu trữ các dữ liệu lịch sử dài hạn (như logs, sự kiện hành vi người dùng) cần lưu trữ tối ưu và truy vấn nhanh.
 
 **Không nên chọn khi:**
@@ -148,7 +148,7 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 
 1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's book detailing storage models, column-oriented layouts, and analytical schemas on O'Reilly.
 2. [Apache Parquet Documentation](https://parquet.apache.org/docs/) - Official documentation for Apache Parquet, the industry-standard open source columnar file format.
-3. What is a Column-Oriented Database? - ClickHouse's conceptual guide to columnar database storage and its performance benefits for analytical workloads.
+3. [What is a Column-Oriented Database?](https://clickhouse.com/docs/en/concepts/column-oriented-database) - ClickHouse's conceptual guide to columnar database storage and its performance benefits for analytical workloads.
 4. [Column-oriented DBMS](https://en.wikipedia.org/wiki/Column-oriented_DBMS) - Wikipedia's comprehensive overview of column-oriented database management systems.
 5. [What is a Columnar Database?](https://www.snowflake.com/guides/columnar-database/) - Snowflake Guide describing how columnar database storage structures and speeds up OLAP queries.
 

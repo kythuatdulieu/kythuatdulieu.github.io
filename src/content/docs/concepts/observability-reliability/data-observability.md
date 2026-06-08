@@ -25,10 +25,10 @@ Nói một cách đơn giản, Data Observability là hệ thống giúp đội 
 
 ## Tại sao chúng ta không thể thiếu Data Observability?
 
-Kiến trúc dữ liệu hiện đại ngày càng phức tạp với hàng trăm luồng trích xuất, biến đổi và nạp dữ liệu (ETL/ELT) đan xen chéo nhau. Điều này dẫn đến những rủi ro tiềm ẩn luôn chực chờ phá hủy tính nhất quán của dữ liệu:
+Kiến trúc dữ liệu hiện đại ngày càng phức tạp với hàng trăm luồng trích xuất, biến đổi và nạp dữ liệu ([ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/)) đan xen chéo nhau. Điều này dẫn đến những rủi ro tiềm ẩn luôn chực chờ phá hủy tính nhất quán của dữ liệu:
 
-* **Sự cố âm thầm (Silent Failures)**: Đội ngũ phát triển Backend sửa một tính năng nhỏ trên ứng dụng, đổi tên cột `user_status` thành `status`. Tiến trình chạy dbt vẫn báo xanh (vì cú pháp SQL không sai), nhưng thực tế là dữ liệu cột trạng thái đã bị bỏ trống hoàn toàn trên Kho dữ liệu (Data Warehouse).
-* **Hiện tượng dữ liệu mồ côi (Stale Data)**: Pipeline nạp dữ liệu báo chạy thành công ("Success"), nhưng thực chất API nguồn của bên thứ ba đã thay đổi token khiến hệ thống chỉ nhận về 0 bản ghi. Mọi chỉ số giám sát hạ tầng đều hiển thị bình thường, nhưng dữ liệu trong kho thì cũ rích.
+* **Sự cố âm thầm (Silent Failures)**: Đội ngũ phát triển Backend sửa một tính năng nhỏ trên ứng dụng, đổi tên cột `user_status` thành `status`. Tiến trình chạy [dbt](/concepts/transformation-analytics/dbt/) vẫn báo xanh (vì cú pháp SQL không sai), nhưng thực tế là dữ liệu cột trạng thái đã bị bỏ trống hoàn toàn trên Kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)).
+* **Hiện tượng dữ liệu mồ côi (Stale Data)**: Pipeline nạp dữ liệu báo chạy thành công ("Success"), nhưng thực chất API nguồn của bên thứ ba đã thay đổi [token](/concepts/genai-ml/token/) khiến hệ thống chỉ nhận về 0 bản ghi. Mọi chỉ số giám sát hạ tầng đều hiển thị bình thường, nhưng dữ liệu trong kho thì cũ rích.
 * **Thời gian chết dữ liệu (Data Downtime)**: Đây là khoảng thời gian dữ liệu bị sai lệch, thiếu sót hoặc không khả dụng mà không ai phát hiện ra. Hậu quả của việc đưa ra các quyết định kinh doanh dựa trên đống dữ liệu sai lệch này là vô cùng nghiêm trọng đối với doanh nghiệp.
 
 ---
@@ -87,10 +87,10 @@ graph TD
     Slack --> Jira
 ```
 
-1. **Thu thập siêu dữ liệu (Metadata & Logs)**: Hệ thống kết nối vào Data Warehouse, công cụ điều phối (Orchestration như Airflow) và công cụ biến đổi dữ liệu (dbt) để đọc nhật ký truy vấn (`query logs`) mà không cần can thiệp trực tiếp vào dữ liệu thô nhạy cảm.
+1. **Thu thập siêu dữ liệu (Metadata & Logs)**: Hệ thống kết nối vào Data Warehouse, công cụ điều phối ([Orchestration](/concepts/orchestration/orchestration/) như Airflow) và công cụ biến đổi dữ liệu (dbt) để đọc nhật ký truy vấn (`query logs`) mà không cần can thiệp trực tiếp vào dữ liệu thô nhạy cảm.
 2. **Học máy tự động (ML Profiling)**: Hệ thống tự động phân tích dữ liệu lịch sử để tìm ra "baseline" (trạng thái bình thường). Ví dụ: Hệ thống tự hiểu rằng vào ngày cuối tuần, lượng đơn hàng thường chỉ bằng 30% ngày thường.
-3. **Phát hiện bất thường (Anomaly Detection)**: So sánh dữ liệu thực tế với baseline. Nếu phát hiện sai lệch vượt quá ngưỡng cho phép, hệ thống sẽ kích hoạt báo động.
-4. **Cảnh báo thông minh (Alerting & Triage)**: Bắn cảnh báo chi tiết qua Slack/Teams kèm theo sơ đồ phả hệ (Data Lineage) để kỹ sư biết ngay bảng nào bị lỗi và dashboard nào sẽ bị ảnh hưởng.
+3. **Phát hiện bất thường ([Anomaly Detection](/concepts/data-quality/anomaly-detection/))**: So sánh dữ liệu thực tế với baseline. Nếu phát hiện sai lệch vượt quá ngưỡng cho phép, hệ thống sẽ kích hoạt báo động.
+4. **Cảnh báo thông minh (Alerting & Triage)**: Bắn cảnh báo chi tiết qua Slack/Teams kèm theo sơ đồ phả hệ ([Data Lineage](/concepts/governance-metadata/data-lineage/)) để kỹ sư biết ngay bảng nào bị lỗi và dashboard nào sẽ bị ảnh hưởng.
 
 ---
 
@@ -109,7 +109,7 @@ checks for dim_exchange:
       avg_currency_rate: avg(currency_rate)
 
   # 3. Volume: Cảnh báo nếu số dòng dữ liệu giảm hơn 10% so với tuần trước
-  - row_count = last_week_count * 0.9
+  - change same day last week for row_count < -10%
 ```
 
 ---
@@ -119,7 +119,7 @@ checks for dim_exchange:
 ### Ưu điểm (Pros):
 * **Chủ động phát hiện sự cố (Proactive Detection)**: Đội ngũ dữ liệu nhận diện lỗi trước khi người dùng cuối hoặc ban giám đốc phát hiện ra trên các dashboard BI.
 * **Giảm thiểu thời gian chết dữ liệu (Data Downtime)**: Nhờ có các cảnh báo tự động, thời gian từ lúc phát sinh lỗi đến lúc khắc phục được rút ngắn tối đa.
-* **Phân tích nguyên nhân gốc rễ nhanh chóng (Root Cause Analysis)**: Tích hợp phả hệ dữ liệu (Data Lineage) giúp kỹ sư khoanh vùng ngay lập tức bảng nguồn nào gây ra lỗi.
+* **Phân tích nguyên nhân gốc rễ nhanh chóng ([Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/))**: Tích hợp phả hệ dữ liệu (Data Lineage) giúp kỹ sư khoanh vùng ngay lập tức bảng nguồn nào gây ra lỗi.
 * **Tự động hóa bằng Machine Learning**: Tiết kiệm công sức khi không cần phải viết hàng ngàn quy tắc kiểm thử tĩnh cho mọi bảng trong hệ thống.
 
 ### Đánh đổi và Thách thức (Cons & Trade-offs):
@@ -145,7 +145,7 @@ checks for dim_exchange:
 ## Góc phỏng vấn
 
 ### 1. Phân biệt sự khác nhau giữa Data Quality và Data Observability?
-* **Gợi ý trả lời**: Data Quality tập trung vào trạng thái tĩnh của dữ liệu (tính chính xác, đầy đủ, hợp lệ) thông qua việc áp đặt các quy tắc kiểm thử cố định do con người viết ra. Trong khi đó, Data Observability là một khái niệm rộng hơn, giám sát toàn diện trạng thái động của cả hệ thống (dữ liệu kết hợp với pipeline). Nó không đòi hỏi con người phải viết trước tất cả các luật mà tận dụng Machine Learning để tự động phát hiện bất thường dựa trên hành vi lịch sử, đồng thời tích hợp phả hệ dữ liệu để tìm nguyên nhân gốc rễ một cách nhanh chóng.
+* **Gợi ý trả lời**: [Data Quality](/concepts/data-quality/data-quality/) tập trung vào trạng thái tĩnh của dữ liệu (tính chính xác, đầy đủ, hợp lệ) thông qua việc áp đặt các quy tắc kiểm thử cố định do con người viết ra. Trong khi đó, Data Observability là một khái niệm rộng hơn, giám sát toàn diện trạng thái động của cả hệ thống (dữ liệu kết hợp với pipeline). Nó không đòi hỏi con người phải viết trước tất cả các luật mà tận dụng Machine Learning để tự động phát hiện bất thường dựa trên hành vi lịch sử, đồng thời tích hợp phả hệ dữ liệu để tìm nguyên nhân gốc rễ một cách nhanh chóng.
 
 ### 2. Làm thế nào để giải quyết vấn nạn Alert Fatigue (quá tải cảnh báo) khi triển khai hệ thống Observability?
 * **Gợi ý trả lời**: Chúng ta có thể áp dụng ba giải pháp phối hợp:
@@ -168,4 +168,4 @@ checks for dim_exchange:
 
 ## English Summary
 
-**Data Observability** is an organization's capability to fully understand the health and state of its data within the system. It eliminates data downtime and blind spots by providing automated monitoring, alerting, and root cause analysis tools for data pipelines. Originating from software engineering principles, it focuses on five core pillars: Freshness, Distribution, Volume, Schema, and Lineage. Unlike static data quality testing which catches "known unknowns", Data Observability utilizes Machine Learning to profile historical metadata and proactively detect "unknown unknowns" (e.g., sudden volume drops or schema drift), enabling data teams to fix issues before they impact downstream business dashboards.
+**Data Observability** is an organization's capability to fully understand the health and state of its data within the system. It eliminates data downtime and blind spots by providing automated monitoring, alerting, and root cause analysis tools for data pipelines. Originating from software engineering principles, it focuses on five core pillars: Freshness, Distribution, Volume, Schema, and Lineage. Unlike static data quality testing which catches "known unknowns", Data Observability utilizes Machine Learning to profile historical metadata and proactively detect "unknown unknowns" (e.g., sudden volume drops or [schema drift](/concepts/observability-reliability/schema-drift/)), enabling data teams to fix issues before they impact downstream business dashboards.

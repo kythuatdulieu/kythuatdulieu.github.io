@@ -9,7 +9,7 @@ seoTitle: "Root Cause Analysis (RCA) là gì? Kỹ năng phân tích sự cố d
 metaDescription: "Root Cause Analysis (RCA) trong Kỹ thuật Dữ liệu: Các phương pháp (5 Whys, Ishikawa), ứng dụng Data Lineage và quy trình tìm nguyên nhân sự cố pipeline."
 ---
 
-Trong quá trình vận hành các hệ thống dữ liệu, sự cố là điều không thể tránh khỏi. Một ngày đẹp trời, data pipeline bỗng dưng bị sập, dữ liệu hiển thị trên dashboard bị sai lệch hoặc mô hình máy học đưa ra các dự đoán bất thường. Khi đó, phản xạ tự nhiên của chúng ta là nhanh chóng "chữa cháy" để hệ thống hoạt động trở lại. Tuy nhiên, nếu chỉ dừng lại ở đó, lỗi sẽ sớm lặp lại vào ngày mai. Để giải quyết triệt để vấn đề, chúng ta cần đến một quy trình phân tích bài bản mang tên **Root Cause Analysis (RCA) - Phân tích nguyên nhân gốc rễ**.
+Trong quá trình vận hành các hệ thống dữ liệu, sự cố là điều không thể tránh khỏi. Một ngày đẹp trời, [data pipeline](/concepts/foundation/data-pipeline/) bỗng dưng bị sập, dữ liệu hiển thị trên dashboard bị sai lệch hoặc mô hình máy học đưa ra các dự đoán bất thường. Khi đó, phản xạ tự nhiên của chúng ta là nhanh chóng "chữa cháy" để hệ thống hoạt động trở lại. Tuy nhiên, nếu chỉ dừng lại ở đó, lỗi sẽ sớm lặp lại vào ngày mai. Để giải quyết triệt để vấn đề, chúng ta cần đến một quy trình phân tích bài bản mang tên **Root Cause Analysis (RCA) - Phân tích nguyên nhân gốc rễ**.
 
 ## Nhổ tận gốc cỏ dại: RCA là gì?
 
@@ -26,7 +26,7 @@ Trong kỹ thuật dữ liệu, quy trình xử lý sự cố luôn được chi
 Nếu một đội ngũ dữ liệu thiếu đi văn hóa phân tích RCA bài bản, họ sẽ nhanh chóng rơi vào các cạm bẫy:
 * **Vòng lặp sự cố vô tận**: Cùng một lỗi (ví dụ như API của đối tác bị mất kết nối đột ngột) xảy ra liên tục từ tháng này qua tháng khác. Kỹ sư dữ liệu phải liên tục thức giấc lúc nửa đêm chỉ để bấm nút chạy lại (Retry) thủ công.
 * **Lãng phí tài nguyên chất xám**: Các kỹ sư giỏi phải dành tới 80% thời gian làm việc chỉ để đi vá các lỗi vặt cũ (Maintenance) thay vì tập trung nghiên cứu, xây dựng các tính năng mới mang lại giá trị kinh tế thực tế cho doanh nghiệp.
-* **Các bản vá tạm bợ (Band-aid fixes)**: Khi thấy dữ liệu bị thiếu hụt, kỹ sư thường viết vội các câu lệnh kiểm tra kiểu `IF NULL THEN 0` ở khắp mọi nơi để che mắt người dùng. Lâu dần, kho dữ liệu (Data Warehouse) sẽ biến thành một đống hỗn độn, chạy chậm chạp và tích tụ lượng nợ kỹ thuật (Technical Debt) khổng lồ.
+* **Các bản vá tạm bợ (Band-aid fixes)**: Khi thấy dữ liệu bị thiếu hụt, kỹ sư thường viết vội các câu lệnh kiểm tra kiểu `IF NULL THEN 0` ở khắp mọi nơi để che mắt người dùng. Lâu dần, kho dữ liệu ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)) sẽ biến thành một đống hỗn độn, chạy chậm chạp và tích tụ lượng nợ kỹ thuật (Technical Debt) khổng lồ.
 
 ## Hai trụ cột cốt lõi của RCA
 
@@ -59,7 +59,7 @@ flowchart TD
 1. **Khảo sát hiện trạng (What happened?)**: Mô tả chi tiết và khách quan về sự cố (ví dụ: *"Dashboard báo cáo doanh thu ngày 07/06 hiển thị bằng 0"*). Xác định rõ mốc thời gian (Timeline) từ lúc sự cố bắt đầu phát sinh cho đến khi được khắc phục tạm thời.
 2. **Khoanh vùng kỹ thuật (Isolation)**: Lần theo sơ đồ Data Lineage để đi ngược dòng dữ liệu. Nếu bảng đầu ra rỗng, ta kiểm tra bảng staging trước đó. Nếu staging vẫn có dữ liệu mà bảng đích rỗng, điểm đứt gãy chắc chắn nằm ở logic biến đổi giữa hai bảng này.
 3. **Phân tích chiều sâu bằng 5 Whys**: Đặt các câu hỏi liên tục để đào sâu vấn đề từ kỹ thuật sang quy trình vận hành.
-4. **Đề xuất hành động ngăn ngừa (Action Items)**: Tạo các task cụ thể trên Jira để bổ sung các bài kiểm thử dữ liệu (Data Quality Tests), tối ưu hóa cấu hình cảnh báo, hoặc điều chỉnh quy trình phối hợp giữa các team.
+4. **Đề xuất hành động ngăn ngừa (Action Items)**: Tạo các task cụ thể trên Jira để bổ sung các bài kiểm thử dữ liệu ([Data Quality](/concepts/data-quality/data-quality/) Tests), tối ưu hóa cấu hình cảnh báo, hoặc điều chỉnh quy trình phối hợp giữa các team.
 
 ## Ví dụ thực tế: Cú sập chỉ số Churn Rate 100%
 
@@ -69,17 +69,17 @@ flowchart TD
 * **Tại sao (1) Dashboard báo Churn Rate 100%?**
   - Vì bảng lưu trữ lịch sử thuê bao `Fact_Subscriptions` tại kho dữ liệu DWH ngày hôm qua ghi nhận toàn bộ cột trạng thái hoạt động `is_active` là `FALSE`.
 * **Tại sao (2) cột `is_active` lại bị ghi nhận là `FALSE`?**
-  - Vì mô hình dbt thực hiện phép nối `LEFT JOIN` với bảng thông tin người dùng `crm_users`, nhưng kết quả join bị trả về `NULL`. Logic code quy định nếu kết quả join bị `NULL` thì mặc định trạng thái hoạt động là `FALSE`.
+  - Vì mô hình [dbt](/concepts/transformation-analytics/dbt/) thực hiện phép nối `LEFT JOIN` với bảng thông tin người dùng `crm_users`, nhưng kết quả join bị trả về `NULL`. Logic code quy định nếu kết quả join bị `NULL` thì mặc định trạng thái hoạt động là `FALSE`.
 * **Tại sao (3) phép LEFT JOIN lại trả về NULL?**
   - Vì cột khóa ngoại `user_id` ở hệ thống nguồn vừa bị thay đổi kiểu dữ liệu từ dạng số `123` sang định dạng chuỗi chứa tiền tố `'user-123'`, dẫn đến lệch kiểu dữ liệu (Type Mismatch) khi thực hiện so khớp join.
 * **Tại sao (4) định dạng của `user_id` bị thay đổi ở hệ thống nguồn mà team Data không hề hay biết?**
-  - Vì team Backend vừa triển khai một bản cập nhật hệ thống để đổi thư viện tạo ID nhưng quên không thông báo cho team Data về sự thay đổi cấu trúc này (hiện tượng Schema Drift).
+  - Vì team Backend vừa triển khai một bản cập nhật hệ thống để đổi thư viện tạo ID nhưng quên không thông báo cho team Data về sự thay đổi cấu trúc này (hiện tượng [Schema Drift](/concepts/observability-reliability/schema-drift/)).
 * **Tại sao (5) lỗi nghiêm trọng này lại có thể lọt thẳng lên môi trường Production DWH mà không bị chặn lại ở cửa ngõ?**
   - **(Root Cause - Nguyên nhân gốc)**: Vì Data Pipeline của chúng ta hiện tại chưa thiết lập các bộ kiểm tra chất lượng dữ liệu (Data Quality Tests) ở tầng dữ liệu đầu vào (Ingestion) để xác thực kiểu dữ liệu và định dạng trước khi chạy các mô hình tính toán.
 
 ### Các hành động khắc phục cụ thể (Action Items):
 1. Thiết lập bài test định dạng `user_id` bằng Regex trong file cấu hình dbt. Nếu dữ liệu đầu vào không khớp định dạng, pipeline sẽ lập tức dừng chạy để bảo toàn tính đúng đắn cho dashboard.
-2. Làm việc với team Backend để thống nhất áp dụng **Data Contract (Hợp đồng dữ liệu)** – ràng buộc không tự ý thay đổi cấu trúc bảng nguồn khi chưa có sự đồng ý của các team tiêu thụ dữ liệu.
+2. Làm việc với team Backend để thống nhất áp dụng **[Data Contract](/concepts/transformation-analytics/data-contract/) (Hợp đồng dữ liệu)** – ràng buộc không tự ý thay đổi cấu trúc bảng nguồn khi chưa có sự đồng ý của các team tiêu thụ dữ liệu.
 
 Dưới đây là file cấu hình dbt test để thực thi Action Item số 1:
 
@@ -142,4 +142,4 @@ models:
 
 ## English Summary
 
-Root Cause Analysis (RCA) is a systematic problem-solving process used in Data Engineering to uncover the fundamental, underlying reasons for data incidents (e.g., pipeline failures, data anomalies), rather than merely addressing surface symptoms. Employing methodologies like the "5 Whys" and leveraging technical tools like Data Lineage, RCA aims to identify systemic or process flaws (like missing data contracts or absent CI/CD tests) that led to the failure. A critical component of Site Reliability Engineering (SRE), RCA must be conducted in a "blameless" culture to encourage honest investigation, resulting in concrete action items that "fireproof" the architecture and prevent the same issue from ever recurring.
+Root Cause Analysis (RCA) is a systematic problem-solving process used in [Data Engineering](/concepts/foundation/data-engineering/) to uncover the fundamental, underlying reasons for data incidents (e.g., pipeline failures, data anomalies), rather than merely addressing surface symptoms. Employing methodologies like the "5 Whys" and leveraging technical tools like Data Lineage, RCA aims to identify systemic or process flaws (like missing data contracts or absent CI/CD tests) that led to the failure. A critical component of Site Reliability Engineering (SRE), RCA must be conducted in a "blameless" culture to encourage honest investigation, resulting in concrete action items that "fireproof" the architecture and prevent the same issue from ever recurring.

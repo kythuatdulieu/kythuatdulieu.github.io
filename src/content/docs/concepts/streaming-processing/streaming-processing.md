@@ -136,8 +136,8 @@ query.awaitTermination()
 * [Batch Processing - Xử lý theo lô](/concepts/batch-processing/batch-processing/)
 
 **Tài liệu tham khảo:**
-* **Streaming Systems** - *Tyler Akidau* (Google).
-* **Designing Data-Intensive Applications** - *Martin Kleppmann* (Chương Stream Processing).
+1. [Streaming Systems](https://www.oreilly.com/library/view/streaming-systems/9781491983812/) - Tyler Akidau, Slava Chernyak, and Reuven Lax
+2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann
 
 ---
 
