@@ -751,7 +751,4 @@ body.focus-mode .main-pane {
     }
 }
 
-/* Hide duplicate H1 inside Starlight markdown body to prevent double titles */
-.sl-markdown-content h1 {
-    display: none !important;
-}
+

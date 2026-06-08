@@ -1,6 +1,6 @@
 ---
 title: "Cửa sổ ngữ cảnh - Context Window"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["llm", "context-window", "transformers", "nlp", "genai", "prompt-engineering"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Cửa sổ ngữ cảnh (Context Window) trong LLM là gì?"
 metaDescription: "Khái niệm Context Window (Cửa sổ ngữ cảnh) trong các mô hình ngôn ngữ lớn (LLM), cách nó hoạt động, giới hạn, và ảnh hưởng tới RAG và chi phí."
 ---
-
-# Cửa sổ ngữ cảnh - Context Window
 
 Khi tương tác với các mô hình ngôn ngữ lớn (LLM) như GPT-4, Claude hay Llama, bạn có bao giờ thắc mắc làm thế nào AI có thể nhớ được những câu nói trước đó của bạn trong cuộc hội thoại? Hay tại sao khi bạn gửi một tài liệu quá dài, AI lại báo lỗi hoặc đột ngột quên mất yêu cầu ban đầu? Câu trả lời nằm ở khái niệm **Context Window (Cửa sổ ngữ cảnh)** – một thông số kỹ thuật quyết định trực tiếp đến dung lượng bộ nhớ tạm thời của mô hình.
 

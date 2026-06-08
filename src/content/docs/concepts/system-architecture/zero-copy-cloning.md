@@ -9,8 +9,6 @@ seoTitle: "Zero-Copy Cloning - Kỹ thuật nhân bản dữ liệu siêu tốc"
 metaDescription: "Tìm hiểu Zero-Copy Cloning, kỹ thuật cốt lõi trong các Cloud Data Warehouse như Snowflake, giúp sao chép database siêu tốc mà không tốn dung lượng lưu trữ."
 ---
 
-# Zero-Copy Cloning - Kỹ thuật nhân bản dữ liệu siêu tốc
-
 Hãy tưởng tượng bạn đang quản lý một kho dữ liệu (Data Warehouse) khổng lồ lên tới hàng trăm Terabytes trên môi trường Production. Đội ngũ Data Science cần một bản sao y hệt của toàn bộ dữ liệu này để thử nghiệm mô hình học máy mới. Đội ngũ Data Engineer cũng cần một bản sao tương tự để chạy thử nghiệm các pipeline dbt/SQL trước khi deploy bản cập nhật. 
 
 Nếu dùng cách truyền thống, việc sao chép hàng trăm Terabytes dữ liệu sang một môi trường test (như Staging hay Dev) sẽ là một cơn ác mộng DevOps thực sự: bạn sẽ phải chờ đợi hàng giờ, thậm chí hàng ngày để đồng bộ dữ liệu, và hóa đơn lưu trữ (storage cost) của công ty sẽ lập tức tăng gấp đôi hoặc gấp ba. 

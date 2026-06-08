@@ -1,6 +1,6 @@
 ---
 title: "Độ phủ - Recall trong Máy học"
-category: "Data Engineering / Machine Learning"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["recall", "precision", "f1-score", "metrics", "classification", "retrieval"]
 readingTime: "8 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Độ phủ (Recall) là gì? Tầm quan trọng trong Machine Learning & RAG"
 metaDescription: "Tìm hiểu chi tiết về Recall (Độ phủ) trong Machine Learning và Information Retrieval. Công thức, Trade-off với Precision và ứng dụng thực tế trong RAG."
 ---
-
-# Độ phủ - Recall trong Máy học
 
 Khi đánh giá hiệu năng của một mô hình học máy (Machine Learning) hay một hệ thống tìm kiếm thông tin, chúng ta thường nghe nhắc đến thuật ngữ **Recall (Độ phủ)**. Đây là một trong những thước đo quan trọng bậc nhất giúp chúng ta biết được mô hình có đang hoạt động hiệu quả hay không, đặc biệt là trong các bài toán mang tính chất rủi ro cao hoặc mất cân bằng dữ liệu.
 

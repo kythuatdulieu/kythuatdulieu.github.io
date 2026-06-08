@@ -175,15 +175,13 @@ Bất kỳ một kiến trúc nào cũng có những mặt lợi và hại riên
   * **Data Lake**: Nơi lưu trữ mọi định dạng dữ liệu thô với chi phí cực rẻ, nhưng thiếu tính quản trị, dễ biến thành "đầm lầy dữ liệu" và không hỗ trợ ACID.
   * **Data Lakehouse**: Mang các tính năng quản trị mạnh mẽ (ACID, Schema) và hiệu năng truy vấn SQL của Data Warehouse đặt trực tiếp lên trên lớp lưu trữ mở, giá rẻ của Data Lake.
 
----
-
 ## Tài liệu tham khảo
 
-1. **Databricks Research Papers** - *"Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics"*.
-2. **Fundamentals of Data Engineering** - Joe Reis & Matt Housley.
-3. **Tài liệu hướng dẫn (Documentation) của Apache Iceberg và Delta Lake**.
-
----
+1. [Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics](http://cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf) - Seminal CIDR 2021 research paper outlining the architecture and design of the data lakehouse.
+2. [What is a Data Lakehouse?](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html) - Foundational Databricks blog post defining the lakehouse concept.
+3. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Comprehensive guide by Joe Reis and Matt Housley on modern data storage systems and architectural patterns.
+4. [Apache Hudi Overview](https://hudi.apache.org/docs/overview) - Official Hudi documentation detailing one of the primary table formats enabling the lakehouse architecture.
+5. [Apache Iceberg Table Spec](https://iceberg.apache.org/spec/) - Technical specification for the Iceberg table format, explaining how transactional metadata maps files in a lakehouse.
 
 ## English summary
 

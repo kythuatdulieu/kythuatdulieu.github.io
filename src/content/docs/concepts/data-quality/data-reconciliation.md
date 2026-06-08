@@ -9,8 +9,6 @@ seoTitle: "Data Reconciliation là gì? Kỹ thuật đối soát dữ liệu"
 metaDescription: "Tìm hiểu Data Reconciliation: Quy trình đối chiếu dữ liệu tự động giữa hệ thống Nguồn (Source) và Đích (Target) để phát hiện sai lệch và đảm bảo độ chính xác."
 ---
 
-# Đối soát dữ liệu - Data Reconciliation
-
 Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ liệu (Data Pipeline) khổng lồ cho một ví điện tử hoặc một trang thương mại điện tử lớn. Sáng sớm thức dậy, bạn thấy hệ thống báo pipeline đã chạy thành công (Success) với một màu xanh mướt mát mắt. Nhưng khoan mừng vội! Liệu có dòng doanh thu nào bị "rơi rớt" trên đường truyền từ cơ sở dữ liệu bán hàng qua Data Lake rồi tới Data Warehouse không? Logic JOIN của bạn có vô tình làm nhân bản dữ liệu khiến doanh thu vọt lên gấp đôi?
 
 Để trả lời những câu hỏi mang tính "sống còn" này, chúng ta cần đến **Data Reconciliation (Đối soát hay kiểm tra chéo dữ liệu)**.
@@ -138,12 +136,17 @@ WHERE tx_date = '2026-06-07';
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Data Testing](/concepts/data-quality/data-testing/)
+* [Data Quality](/concepts/data-quality/data-quality/)
 
-1. **[Data Testing](/concepts/data-quality/data-testing/)** - Cách viết các bài kiểm thử để ngăn chặn lỗi dữ liệu.
-2. **[Data Quality](/concepts/data-quality/data-quality/)** - Khái niệm tổng quan về chất lượng dữ liệu.
-3. **Fundamentals of Data Engineering** - Cuốn sách của Joe Reis, đặc biệt là phần về Auditing & Validation.
-4. **"Data Reconciliation in FinTech"** - Các bài viết kỹ thuật từ blog của Stripe hoặc Uber chia sẻ về cách đối soát tiền tệ quy mô lớn.
+## Tài liệu tham khảo
+
+1. [Netflix Tech Blog: Netflix Billing Migration to AWS — Part II](https://netflixtechblog.com/netflix-billing-migration-to-aws-part-ii-834f6358126) - Case study detailing datastore migration and financial reconciliation strategies under high consistency constraints.
+2. [Stripe: Reconciliation Documentation](https://stripe.com/docs/reconciliation) - Official Stripe documentation on automated transaction matching and payout audit loops.
+3. [Monte Carlo Data: What is Data Reconciliation?](https://www.montecarlodata.com/blog-what-is-data-reconciliation/) - Practical guide on why and how to build automated cross-system data checks in the modern data stack.
+4. [Datafold: Reconciling Databases and Warehouses](https://www.datafold.com/blog/data-reconciliation-at-scale) - Technical engineering post explaining row-by-row data reconciliation using data diffing tools.
+5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Chapter on data verification, auditing, and reconciliation patterns across end-to-end pipelines.
 
 ## English Summary
 

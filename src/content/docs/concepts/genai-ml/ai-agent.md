@@ -1,6 +1,6 @@
 ---
 title: "Tác nhân AI (AI Agent)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["ai-agent", "genai", "llm", "automation", "tool-use"]
 readingTime: "15 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "AI Agent (Tác nhân AI) là gì? Kiến trúc và ứng dụng thực tế"
 metaDescription: "Tìm hiểu kiến trúc của AI Agent (Tác nhân AI): cách kết hợp bộ não LLM với khả năng lập kế hoạch (Planning), bộ nhớ (Memory) và sử dụng công cụ (Tool Use/Action)."
 ---
-
-# Tác nhân AI (AI Agent): Khi LLM bước ra khỏi chiếc hộp để hành động
 
 Nếu từng sử dụng các chatbot như ChatGPT, Gemini hay Claude bản thô, bạn hẳn đã quen với việc nhập câu hỏi và nhận về câu trả lời. Cơ chế này giống như việc bạn trò chuyện với một bộ não uyên bác nhưng bị nhốt trong phòng kín: nó có thể viết luận, giải thích code hay làm thơ, nhưng lại không thể tự tay truy cập Internet, không thể mở cơ sở dữ liệu nội bộ công ty để lấy số liệu, và càng không thể tự gửi cho bạn một email báo cáo.
 

@@ -60,7 +60,7 @@ flowchart TD
 
 Một trong những thuật toán đơn giản nhưng cực kỳ hiệu quả để phát hiện bất thường là **Z-score** (Độ lệch chuẩn). 
 * Z-score đo lường xem một điểm dữ liệu mới lệch bao nhiêu lần độ lệch chuẩn so với giá trị trung bình trong quá khứ.
-* Theo phân phối chuẩn, nếu giá trị tuyệt đối của Z-score lớn hơn 3 (`Z > 3` hoặc `Z < -3`), khả năng xuất hiện của điểm dữ liệu đó chỉ là 0.3%. Đây là dấu hiệu rõ ràng của một sự bất thường cực độ.
+* Trên phân phối chuẩn, nếu giá trị tuyệt đối của Z-score lớn hơn 3 (`Z > 3` hoặc `Z < -3`), khả năng xuất hiện của điểm dữ liệu đó chỉ là 0.3%. Đây là dấu hiệu rõ ràng của một sự bất thường cực độ.
 
 Dưới đây là cách bạn có thể tự viết một đoạn code SQL trong dbt để phát hiện bất thường về thể tích dữ liệu (Volume) của ngày hôm nay dựa trên lịch sử 7 ngày trước đó:
 
@@ -83,7 +83,7 @@ CROSS JOIN historical_stats h
 WHERE ABS((today.daily_count - h.mean_count) / h.stddev_count) > 3;
 ```
 
-Nếu câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó có nghĩa là dữ liệu ngày hôm nay của bạn đang có biến động bất thường nghiêm trọng.
+If câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó có nghĩa là dữ liệu ngày hôm nay của bạn đang có biến động bất thường nghiêm trọng.
 
 ## Những nguyên tắc giúp triển khai hiệu quả
 
@@ -127,8 +127,11 @@ Nếu câu truy vấn trên trả về bất kỳ bản ghi nào, điều đó c
 
 ## Tài liệu tham khảo
 
-1. **"Data Quality Fundamentals"** - Barr Moses, Lior Gavish (CEO của Monte Carlo, người định nghĩa ra Data Observability và Anomaly Detection trong DWH).
-2. **Prophet (Meta)** - Tài liệu học thuật về Time Series Forecasting được ứng dụng rộng rãi.
+1. [Monte Carlo Data: How to Detect Data Anomalies with SQL](https://www.montecarlodata.com/blog-how-to-detect-data-anomalies-with-sql/) - Practical guide on implementing Z-score and rolling average calculations in SQL for data quality metrics.
+2. [Meta Prophet Documentation Quick Start](https://facebook.github.io/prophet/docs/quick_start.html) - Documentation for Meta's Prophet library, used for forecasting seasonal time-series data.
+3. [Netflix Tech Blog: RAD Outlier Detection on Big Data](https://netflixtechblog.com/rad-outlier-detection-on-big-data-d6b0494371cc) - Netflix's engineering approach to detecting anomalies in high-volume, multi-dimensional stream processing.
+4. [Uber Engineering Blog: uVitals Anomaly Detection & Alerting System](https://www.uber.com/blog/uvitals-an-anomaly-detection-alerting-system/) - Overview of Uber's real-time, multi-dimensional unsupervised anomaly detection system.
+5. [Databricks Blog: Near Real-Time Anomaly Detection with Delta Live Tables](https://www.databricks.com/blog/2022/08/29/near-real-time-anomaly-detection-delta-live-tables-and-databricks-machine-learning.html) - Implementing unsupervised anomaly detection pipelines on data lakes using MLflow and Spark.
 
 ## English Summary
 

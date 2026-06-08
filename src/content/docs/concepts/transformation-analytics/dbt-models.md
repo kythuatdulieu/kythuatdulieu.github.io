@@ -1,6 +1,6 @@
 ---
 title: "dbt Models - Tầng biến đổi và cấu trúc dự án"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Intermediate"
 tags: ["dbt", "models", "data-modeling", "analytics-engineering", "sql"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "Cấu trúc dbt Models: Staging, Intermediate và Marts"
 metaDescription: "Kháp phá cách tổ chức các dbt Models theo chuẩn Analytics Engineering. Phân biệt Source, Staging, Intermediate và Marts layer để xây dựng Data Warehouse."
 ---
-
-# dbt Models - Tầng biến đổi và cấu trúc dự án
 
 Nếu bạn đã từng làm việc trong một dự án dữ liệu lớn sử dụng SQL truyền thống, chắc hẳn bạn không lạ gì cảnh tượng: Những câu lệnh SQL dài hàng ngàn dòng, JOIN hàng chục bảng chồng chéo lên nhau. Khi số liệu bị sai hoặc cấu trúc nguồn thay đổi, việc tìm kiếm và sửa lỗi biến thành một cơn ác mộng "mò kim đáy bể". Logic bị lặp lại ở khắp mọi nơi, và không ai dám chắc mình đã sửa hết các chỗ cần sửa.
 

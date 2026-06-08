@@ -9,8 +9,6 @@ seoTitle: "Data Ingestion - Quy trình thu nạp dữ liệu"
 metaDescription: "Tìm hiểu Data Ingestion là gì. So sánh hai phương pháp thu nạp dữ liệu chính: Batch Ingestion (Theo lô) và Streaming Ingestion (Luồng thời gian thực)."
 ---
 
-# Thu nạp dữ liệu (Data Ingestion): Xây dựng hệ thống đường ống nước cho doanh nghiệp
-
 Trong vòng đời của dữ liệu (`Data Lifecycle`), **Data Ingestion (Thu nạp dữ liệu)** là bước đi chập chững đầu tiên nhưng vô cùng quan trọng. Hãy tưởng tượng doanh nghiệp của bạn sở hữu một kho dữ liệu trung tâm hiện đại, nhưng nếu không có hệ thống "đường ống dẫn nước" để hút dữ liệu thô từ các nguồn sông hồ (cơ sở dữ liệu ứng dụng, log server, API bên thứ ba) về kho, thì mọi công cụ phân tích hay trí tuệ nhân tạo (AI) đều trở nên vô dụng. 
 
 Data Ingestion chính là việc thiết kế và vận hành hệ thống đường ống vận chuyển huyết mạch đó.

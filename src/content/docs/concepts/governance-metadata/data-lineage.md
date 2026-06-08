@@ -9,8 +9,6 @@ seoTitle: "Data Lineage (Phả hệ dữ liệu) là gì? Phân tích nguyên nh
 metaDescription: "Khám phá Data Lineage (Phả hệ dữ liệu/Vết tích dữ liệu): Khái niệm, cách thức lập bản đồ luồng dữ liệu tự động và tầm quan trọng trong phân tích tác động, sửa lỗi."
 ---
 
-# Phả hệ dữ liệu (Data Lineage): Chiếc bản đồ định vị dòng chảy dữ liệu
-
 Hãy tưởng tượng bạn bước vào một thư viện khổng lồ với hàng triệu cuốn sách, nhưng không hề có mục lục, không có sơ đồ phân loại và các cuốn sách liên tục được thay đổi nội dung mỗi ngày. Trong một hệ thống dữ liệu lớn của doanh nghiệp, nơi hàng ngàn bảng dữ liệu đan xen, kết nối chéo với nhau qua các luồng xử lý phức tạp, việc không kiểm soát được nguồn gốc và đích đến của dữ liệu là một cơn ác mộng thực sự. 
 
 Đó là lý do chúng ta cần đến **Phả hệ dữ liệu (Data Lineage)** – chiếc "bản đồ kho báu" giúp định vị chính xác đường đi và sự biến đổi của dòng chảy thông tin.

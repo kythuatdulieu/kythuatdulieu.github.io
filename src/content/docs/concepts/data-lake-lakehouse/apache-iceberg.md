@@ -9,7 +9,7 @@ seoTitle: "Apache Iceberg là gì? Cuộc cách mạng Open Table Format cho Dat
 metaDescription: "Khám phá Apache Iceberg: Định dạng bảng mở do Netflix phát triển. Tính năng ACID, Hidden Partitioning, và cách Iceberg tối ưu hóa truy vấn Data Lake ở quy mô Petabyte."
 ---
 
-# Apache Iceberg: Định dạng bảng mở thế hệ mới giải cứu Data Lake khỏi "vết xe đổ" của Hive
+# Apache Iceberg: Định dạng bảng thế hệ mới cho Data Lake
 
 Khi xây dựng các kho dữ liệu phân tích khổng lồ, việc tối ưu hóa hiệu năng truy vấn và đảm bảo tính nhất quán dữ liệu luôn là những thử thách cực kỳ khó khăn. Để giải quyết vấn đề này, Netflix đã phát triển và giới thiệu **Apache Iceberg** – một định dạng bảng mở (Open Table Format) hiệu năng cao dành cho các kho dữ liệu quy mô Petabyte.
 
@@ -51,7 +51,7 @@ Bạn có thể tự do đổi tên cột, xóa cột, đổi kiểu dữ liệu
 ### 4. Quay ngược thời gian (Time Travel)
 Iceberg cho phép bạn dễ dàng truy vấn dữ liệu của bảng tại một mốc thời gian cụ thể hoặc tại một Snapshot ID nhất định trong quá khứ, cực kỳ hữu ích cho việc đối chiếu báo cáo hoặc phục hồi dữ liệu khi xảy ra sự cố.
 
-## Cận cảnh kiến trúc 3 tầng của Apache Iceberg
+## Cân cảnh kiến trúc 3 tầng của Apache Iceberg
 
 Hệ thống Iceberg quản lý một bảng dữ liệu thông qua cấu trúc phân cấp gồm 3 tầng rõ rệt:
 
@@ -153,7 +153,7 @@ FOR SYSTEM_VERSION AS OF 10963874102873;
 * [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/)
 * [Apache Spark](/concepts/batch-processing/apache-spark/)
 
-## Trọng tâm ôn luyện phỏng vấn
+## Góc phỏng vấn: Trọng tâm lý thuyết
 
 ### 1. Hãy giải thích sự khác biệt giữa cơ chế phân vùng dựa trên thư mục (Folder-based partition) của Hive và phân vùng ẩn (Hidden Partition) của Iceberg. Tại sao Hidden Partition lại giúp ngăn chặn lỗi Full Table Scan?
 * **Gợi ý trả lời:** Trong Hive, logic phân vùng gắn chặt với cấu trúc thư mục vật lý (ví dụ: `month=06`). Người dùng bắt buộc phải biết rõ cấu trúc này và viết đúng cột phân vùng trong câu lệnh `WHERE month=06`. Nếu họ lọc theo cột ngày gốc `WHERE order_date = '2026-06-01'`, Hive sẽ không hiểu và buộc phải quét toàn bộ bảng (Full Table Scan) để tìm dữ liệu. 
@@ -165,9 +165,11 @@ Iceberg giải quyết vấn đề này bằng cách gán cho mỗi cột một 
 
 ## Tài liệu tham khảo
 
-1. **Iceberg Specification Docs** (Tài liệu gốc mô tả cách tổ chức cây Manifest cực kỳ kinh điển của Apache Iceberg).
-2. **Netflix Tech Blog**: "How Netflix built Iceberg" (Hành trình và lý do ra đời của dự án).
-3. **Fundamentals of Data Engineering** - Joe Reis.
+1. [Apache Iceberg Table Spec](https://iceberg.apache.org/spec/) - Detailed specifications of the Iceberg table format including manifest and metadata layouts.
+2. [Apache Iceberg GitHub Repository](https://github.com/apache/iceberg) - The official open-source code repository and community hub for Apache Iceberg.
+3. [Incremental Processing using Netflix Maestro and Apache Iceberg](https://netflixtechblog.com/incremental-processing-using-netflix-maestro-and-apache-iceberg-e4c19460a876) - Netflix Tech Blog post explaining how Iceberg enables low-latency incremental data processing.
+4. [Snowflake Iceberg Tables Guide](https://docs.snowflake.com/en/user-guide/tables-iceberg) - Snowflake's documentation on configuring and querying external Apache Iceberg tables.
+5. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Joe Reis and Matt Housley's book on modern data systems, storage, and architecture.
 
 ## English Summary
 

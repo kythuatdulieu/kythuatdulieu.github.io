@@ -1,6 +1,6 @@
 ---
 title: "Normalized Discounted Cumulative Gain - NDCG"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["ndcg", "metrics", "search-engine", "reranking", "information-retrieval"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking"
 metaDescription: "Tìm hiểu chi tiết Normalized Discounted Cumulative Gain (NDCG). Metric cốt lõi để đánh giá hiệu năng xếp hạng (ranking) trong hệ thống Tìm kiếm và RAG."
 ---
-
-# NDCG (Normalized Discounted Cumulative Gain): Thước Đo Vàng Đánh Giá Xếp Hạng Tìm Kiếm
 
 Khi xây dựng một công cụ tìm kiếm (Search Engine), hệ thống gợi ý (Recommender System) hay bước tái xếp hạng (Reranking) trong kiến trúc RAG, các chỉ số đo lường truyền thống như Precision (Độ chính xác) hay Recall (Độ bao phủ) thường không đủ để đánh giá chất lượng trải nghiệm của người dùng. 
 

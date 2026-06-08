@@ -9,8 +9,6 @@ seoTitle: "Amazon Redshift là gì? Kiến trúc MPP Data Warehouse của AWS"
 metaDescription: "Khám phá Amazon Redshift: Kiến trúc xử lý song song khổng lồ (MPP), sự khác biệt kiến trúc Share-Nothing vs RA3, và so sánh với BigQuery/Snowflake."
 ---
 
-# Amazon Redshift: Người tiên phong mở đường cho kỷ nguyên Cloud Data Warehouse
-
 Vào năm 2012, Amazon Web Services (AWS) đã tạo nên một bước ngoặt lớn trong ngành dữ liệu khi giới thiệu **Amazon Redshift** – dịch vụ kho dữ liệu (Data Warehouse) trên đám mây ở quy mô Petabyte đầu tiên trên thế giới. 
 
 Bằng cách kết hợp kiến trúc Xử lý Song song Khổng lồ (Massively Parallel Processing - MPP) và lưu trữ dạng cột (Columnar Storage), Redshift cho phép các doanh nghiệp thực thi các câu lệnh SQL phức tạp trên lượng dữ liệu khổng lồ với tốc độ cực nhanh. Cho đến nay, Redshift vẫn là một trong những cột trụ vững chắc và phổ biến nhất trong hệ sinh thái của AWS.
@@ -180,9 +178,11 @@ Vì cả hai bảng đều sử dụng chung một khóa phân phối (`customer
 
 ## Tài liệu tham khảo
 
-1. **Amazon Redshift Database Developer Guide** - Designing tables, Distribution styles, and Sort keys.
-2. **AWS Architecture Center** - Building a Data Lake Foundation with Amazon S3 and Redshift.
-3. **Fundamentals of Data Engineering** - Joe Reis & Matt Housley. (So sánh các kiến trúc Data Warehouse hiện đại).
+1. [Amazon Redshift Database Developer Guide](https://docs.aws.amazon.com/redshift/latest/dg/welcome.html) - Official developer documentation for designing tables, queries, and managing cluster performance.
+2. [Amazon Redshift RA3 Nodes Under the Hood](https://aws.amazon.com/blogs/big-data/amazon-redshift-ra3-nodes-with-managed-storage-under-the-hood/) - AWS Engineering blog post detailing decoupled compute and managed S3 storage architecture.
+3. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Comprehensive book by Joe Reis and Matt Housley comparing modern cloud data warehouses like Redshift, BigQuery, and Snowflake.
+4. [Choosing a Data Distribution Style in Redshift](https://docs.aws.amazon.com/redshift/latest/dg/c_choosing_dist_style.html) - AWS documentation guidance on selecting KEY, ALL, EVEN, or AUTO distribution styles for table optimization.
+5. [AWS in Action, Third Edition](https://www.manning.com/books/aws-in-action-third-edition) - Practical book covering core AWS services including Amazon Redshift cluster deployments and IAM integrations by Andreas Wittig and Michael Wittig.
 
 ## English Summary
 

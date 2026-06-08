@@ -1,6 +1,6 @@
 ---
 title: "Gợi ý hệ thống (System Prompt)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["system-prompt", "prompt-engineering", "genai", "llm"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "System Prompt là gì? Vai trò của Gợi ý hệ thống trong LLM"
 metaDescription: "Tìm hiểu chi tiết về System Prompt (System Message): cách thiết lập tính cách, giới hạn và định hướng hành vi vĩnh viễn cho LLM và AI Agents."
 ---
-
-# Gợi ý hệ thống - System Prompt: Chỉ thị tối cao của nhà phát triển AI
 
 Hãy tưởng tượng bạn đang tuyển dụng một trợ lý ảo siêu năng lực nhưng hoàn toàn chưa biết gì về văn hóa công ty hay nhiệm vụ cụ thể của mình. Trước khi cho phép trợ lý đó trò chuyện trực tiếp với khách hàng, bạn dắt họ vào phòng riêng và đưa ra một bản hướng dẫn tuyệt mật: *"Bạn là đại diện chăm sóc khách hàng của một hãng hàng không cao cấp. Hãy luôn nói chuyện lịch sự, tuyệt đối không được tiết lộ thông tin nội bộ của công ty, và chỉ được trả lời các câu hỏi liên quan đến lịch trình bay."*
 

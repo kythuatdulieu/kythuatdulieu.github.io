@@ -9,8 +9,6 @@ seoTitle: "Cloud Object Storage là gì? (Amazon S3, Google Cloud Storage, Azure
 metaDescription: "Tìm hiểu toàn diện về Cloud Object Storage (Lưu trữ hướng đối tượng trên đám mây): Khái niệm, kiến trúc, sự khác biệt với File Storage và vai trò làm nền tảng cho Data Lake."
 ---
 
-# Lưu trữ đối tượng trên đám mây - Cloud Object Storage
-
 Trong kỷ nguyên của Big Data và Điện toán đám mây, việc tìm kiếm một nơi lưu trữ dữ liệu vừa rẻ, vừa an toàn, lại có khả năng mở rộng vô hạn là mong muốn của mọi doanh nghiệp. **Cloud Object Storage (Lưu trữ đối tượng trên đám mây)** chính là lời giải hoàn hảo cho bài toán đó. Từ những cái tên quen thuộc như Amazon S3, Google Cloud Storage (GCS) cho đến Azure Blob Storage, công nghệ này đã trở thành xương sống vững chắc cho các kiến trúc Data Lake và Data Lakehouse hiện đại ngày nay.
 
 ## Cloud Object Storage: Xương sống thầm lặng của Data Lake hiện đại
@@ -165,17 +163,19 @@ WHERE year = 2026 AND month = 05;
   * Trong kiến trúc cũ (như Hadoop HDFS cục bộ), máy chủ đảm nhận cả nhiệm vụ lưu trữ và tính toán. Nếu dữ liệu tăng lên nhưng nhu cầu tính toán không đổi, bạn vẫn buộc phải mua thêm máy chủ mới (gồm cả CPU và RAM đắt đỏ) gây lãng phí.
   * Tách rời lưu trữ (trên S3 giá rẻ) và tính toán (bằng Spark/Trino chạy theo giờ) giúp doanh nghiệp tối ưu hóa chi phí cực tốt. Bạn có thể tắt cụm tính toán khi không dùng đến mà không sợ mất mát dữ liệu, đem lại tính linh hoạt tối đa cho hệ thống.
 
-## Khái niệm liên quan & Tài liệu tham khảo
+## Các khái niệm liên quan
 
-**Khái niệm liên quan:**
 * [Data Lake](/concepts/data-lake-lakehouse/data-lake/)
 * Định dạng dữ liệu cột Parquet (Columnar Storage)
 * [Kiến trúc Serverless Data](/concepts/cloud-data-platform/serverless-data/)
 
-**Tài liệu tham khảo:**
-1. **Amazon S3 Documentation** - Hướng dẫn chi tiết về các tính năng và kiến trúc của S3.
-2. **Designing Data-Intensive Applications** - Martin Kleppmann (Lý thuyết cơ bản về lưu trữ và hệ thống phân tán).
-3. **The Data Lakehouse Architecture** - Bài nghiên cứu từ Databricks về sự kết hợp giữa Object Storage và Table Format.
+## Tài liệu tham khảo
+
+1. [Amazon S3 User Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) - Official documentation detailing object storage concepts, bucket policies, lifecycle management, and security best practices.
+2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining storage engines, distributed systems, and retrieval layouts.
+3. [Designing Cloud Data Platforms](https://www.manning.com/books/designing-cloud-data-platforms) - Authoritative book by Danil Zburivsky and Lynda Partner covering cloud data architecture and object storage integration.
+4. [Databricks Unity Catalog Guide](https://docs.databricks.com/en/connect/unity-catalog/index.html) - Documentation on securely connecting and governing cloud object storage across cloud providers.
+5. [AWS Big Data Blog: Amazon S3](https://aws.amazon.com/blogs/big-data/tag/amazon-s3/) - Official AWS blog containing case studies and reference architectures for building S3-based data lakes.
 
 ## English Summary
 

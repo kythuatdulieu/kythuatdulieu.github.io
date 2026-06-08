@@ -9,8 +9,6 @@ seoTitle: "Giám sát Khối lượng Dữ liệu (Volume Anomalies) trong Data 
 metaDescription: "Khái niệm Volume Anomalies là gì? Tìm hiểu cách giám sát, phát hiện sự thay đổi bất thường về số lượng bản ghi (rows) trong Data Observability."
 ---
 
-# Phát hiện bất thường về khối lượng dữ liệu - Volume Anomalies
-
 Hãy tưởng tượng bạn đang vận hành một hệ thống dữ liệu phục vụ báo cáo doanh thu hàng ngày. Sáng hôm nay, hệ thống Airflow báo tất cả các job đều "xanh rì" (Success), cấu trúc bảng (schema) không đổi, thời gian cập nhật đúng tiến độ. Nhưng khi mở Dashboard lên, biểu đồ doanh thu tụt dốc một cách khó hiểu. Hóa ra, do một lỗi kỹ thuật từ phía đối tác, lượng dữ liệu đổ về kho giảm tới 80% mà không hề báo lỗi. Đây chính là lúc chúng ta cần đến **Volume Anomalies** — một trong năm trụ cột cốt lõi của Data Observability.
 
 Giám sát khối lượng dữ liệu (Volume Monitoring) tập trung vào việc theo dõi số lượng bản ghi (row count) hoặc kích thước tệp (byte size) được nạp vào, biến đổi hoặc xóa đi trong hệ thống dữ liệu theo thời gian. Việc này giúp đội ngũ Data Team nhanh chóng phát hiện các sự cố mất mát dữ liệu (Data Loss) hoặc bùng nổ dữ liệu (Data Duplication) một cách tự động, trước khi người dùng kịp nhận ra.

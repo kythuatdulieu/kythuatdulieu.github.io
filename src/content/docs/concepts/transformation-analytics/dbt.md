@@ -1,6 +1,6 @@
 ---
 title: "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Beginner"
 tags: ["dbt", "transformation", "sql", "data-warehouse", "analytics-engineering"]
 readingTime: "11 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "dbt (data build tool) là gì? Lõi của Analytics Engineering"
 metaDescription: "Tìm hiểu dbt (data build tool) là gì, tại sao nó thay đổi hoàn toàn cách Data Engineers và Data Analysts làm việc. Kiến trúc ELT, Jinja SQL và quản lý version."
 ---
-
-# dbt (data build tool) - Công cụ chuyển đổi dữ liệu
 
 Nếu bạn hỏi bất kỳ một Analytics Engineer hay Data Engineer nào về công cụ đã thay đổi hoàn toàn cách họ làm việc trong những năm gần đây, câu trả lời nhận được nhiều nhất chắc chắn là **dbt (data build tool)**. 
 

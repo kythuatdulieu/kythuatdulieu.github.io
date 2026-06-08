@@ -9,8 +9,6 @@ seoTitle: "Stream-Table Duality là gì? Mối quan hệ giữa Stream và Table
 metaDescription: "Khám phá nguyên lý Stream-Table Duality (Tính lưỡng tính dòng - bảng). Cách chuyển đổi qua lại giữa dữ liệu tĩnh (Table) và dữ liệu động (Stream)."
 ---
 
-# Stream-Table Duality - Tính lưỡng tính Dòng - Bảng: Hai mặt của một đồng xu dữ liệu
-
 Trong thế giới thiết kế hệ thống phân tán và cơ sở dữ liệu hiện đại, **Stream-Table Duality (Tính lưỡng tính dòng - bảng)** là một nguyên lý toán học cốt lõi đầy thú vị. Nguyên lý này phát biểu một cách đơn giản nhưng cực kỳ mạnh mẽ: **Bất kỳ một luồng dữ liệu động nào (Stream) cũng có thể được cô đọng lại thành một bảng dữ liệu tĩnh (Table), và bất kỳ một bảng tĩnh nào cũng có thể được chuyển hóa thành một luồng dữ liệu biến động liên tục.** 
 
 Hiểu được mối quan hệ mật thiết này là chìa khóa để bạn làm chủ các công nghệ xử lý luồng hiện đại như Apache Kafka Streams, Flink SQL hay các hệ thống trích xuất thay đổi dữ liệu (Change Data Capture - CDC).

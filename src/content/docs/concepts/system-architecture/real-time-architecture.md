@@ -9,8 +9,6 @@ seoTitle: "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time A
 metaDescription: "Tìm hiểu kiến trúc dữ liệu thời gian thực, tầm quan trọng, các công nghệ như Kafka, Flink, CSDL In-memory và cách phân biệt với kiến trúc Batch truyền thống."
 ---
 
-# Real-time Architecture (Kiến trúc Thời gian thực)
-
 Trong thế giới công nghệ hiện đại, dữ liệu không còn là những khối thông tin tĩnh lặng nằm im trong các ổ đĩa cứng chờ được xử lý vào cuối ngày. Dữ liệu ngày nay giống như một dòng nước chảy xiết liên tục. Doanh nghiệp nào có khả năng thấu hiểu và phản ứng với dòng chảy đó nhanh hơn sẽ chiếm được lợi thế cạnh tranh vượt trội. Đó là lý do **Real-time Architecture (Kiến trúc thời gian thực)** ra đời và trở thành xương sống cho các hệ thống công nghệ hàng đầu thế giới.
 
 ## Dữ liệu không ngừng chuyển động: Kiến trúc Real-time là gì?

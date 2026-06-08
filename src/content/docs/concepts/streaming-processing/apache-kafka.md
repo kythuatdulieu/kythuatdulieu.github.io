@@ -9,8 +9,6 @@ seoTitle: "Apache Kafka là gì? Nền tảng phân phối Event Streaming phân
 metaDescription: "Giới thiệu cốt lõi về Apache Kafka: kiến trúc Pub/Sub phân tán, ưu điểm bền bỉ so với RabbitMQ và vai trò xương sống trong hệ thống Data Engineering hiện đại."
 ---
 
-# Apache Kafka: Hệ thống thần kinh trung ương của kiến trúc dữ liệu hiện đại
-
 Trong các hệ thống phần mềm lớn, dữ liệu không chỉ nằm im một chỗ mà cần phải di chuyển liên tục giữa các ứng dụng: dữ liệu nhấp chuột của người dùng từ trình duyệt cần truyền về hệ thống phân tích, dữ liệu thanh toán từ ứng dụng di động cần gửi sang dịch vụ kế toán và cảnh báo bảo mật.
 
 Nếu bạn chỉ có hai ứng dụng, việc kết nối chúng cực kỳ đơn giản qua API trực tiếp. Nhưng nếu hệ thống của bạn mở rộng lên hàng chục ứng dụng và kho lưu trữ khác nhau, việc kết nối trực tiếp sẽ nhanh chóng biến thành một "mạng nhện" chằng chịt, cực kỳ dễ vỡ và khó bảo trì.

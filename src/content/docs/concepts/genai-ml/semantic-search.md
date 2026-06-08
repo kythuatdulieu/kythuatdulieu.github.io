@@ -1,6 +1,6 @@
 ---
 title: "Tìm kiếm ngữ nghĩa - Semantic Search"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["semantic-search", "vector-database", "nlp", "information-retrieval"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Tìm kiếm ngữ nghĩa (Semantic Search) là gì? Khác gì với Keyword Search?"
 metaDescription: "Tìm hiểu Tìm kiếm ngữ nghĩa (Semantic Search), cách thức hoạt động dựa trên Vector Embeddings và ứng dụng trong các hệ thống thông minh, RAG."
 ---
-
-# Tìm kiếm ngữ nghĩa - Semantic Search
 
 Đã bao giờ bạn gõ một câu hỏi lên công cụ tìm kiếm của một trang web bán hàng và nhận về kết quả trống trơn, chỉ vì bạn không dùng đúng từ khóa mà họ đặt tên cho sản phẩm? Hay khi bạn tìm kiếm "xe hơi", hệ thống lại bỏ qua các bài viết chứa từ "ô tô"? 
 

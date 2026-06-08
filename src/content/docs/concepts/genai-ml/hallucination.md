@@ -1,6 +1,6 @@
 ---
 title: "Ảo giác LLM (Hallucination)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["hallucination", "llm", "genai", "rag", "ai-safety"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Ảo giác AI (Hallucination) là gì? Nguyên nhân và cách khắc phục"
 metaDescription: "Khám phá hiện tượng Ảo giác (Hallucination) trong các Mô hình Ngôn ngữ Lớn (LLM): hiểu rõ bản chất thống kê, nguyên nhân và các phương pháp phòng chống (RAG, CoT)."
 ---
-
-# Khi Trí tuệ nhân tạo "nói hươu nói vượn": Giải mã hiện tượng Ảo giác (Hallucination)
 
 Trong cuộc cách mạng Trí tuệ Nhân tạo tạo sinh (GenAI), chúng ta đã chứng kiến các Mô hình Ngôn ngữ Lớn (LLM) làm thơ, lập trình và viết luận với tốc độ và sự sắc bén kinh ngạc. Thế nhưng, đằng sau vẻ ngoài uyên bác đó là một điểm yếu chí mạng: thỉnh thoảng chúng lại tự tin bịa ra các thông tin sai lệch, không có thật nhưng lại trình bày một cách vô cùng mạch lạc và trôi chảy. Hiện tượng này được gọi là **Ảo giác** (Hallucination). Đây là rào cản lớn nhất ngăn cản việc đưa LLM vào các ngành nghề yêu cầu độ chính xác tuyệt đối như y tế, luật pháp hay tài chính.
 

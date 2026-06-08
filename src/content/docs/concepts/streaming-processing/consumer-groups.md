@@ -9,8 +9,6 @@ seoTitle: "Kafka Consumer Groups: Cơ chế xử lý dữ liệu song song hiệ
 metaDescription: "Khám phá nguyên lý Consumer Groups trong Apache Kafka: Cách kết hợp nhiều ứng dụng để chia sẻ tải tiêu thụ dữ liệu song song và cơ chế Rebalance khi hệ thống rớt mạng."
 ---
 
-# Consumer Groups trong Kafka
-
 Trong thế giới của các luồng dữ liệu thời gian thực (Streaming Data), Apache Kafka nổi lên như một hệ thống vận chuyển thông điệp vô cùng mạnh mẽ. Để xử lý khối lượng tin nhắn khổng lồ đổ về mỗi giây, Kafka không thể chỉ dựa vào một máy chủ xử lý đơn lẻ. **Consumer Group (Nhóm người tiêu dùng)** chính là cơ chế thông minh giúp Kafka dễ dàng phân chia tải công việc và xử lý song song ở quy mô cực lớn.
 
 ## Consumer Group: Giải pháp chia sẻ gánh nặng tiêu thụ dữ liệu của Kafka

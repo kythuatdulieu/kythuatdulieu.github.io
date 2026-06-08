@@ -1,6 +1,6 @@
 ---
 title: "Low-Rank Adaptation (LoRA)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["lora", "peft", "llm", "fine-tuning", "genai"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả"
 metaDescription: "Tìm hiểu chi tiết về Low-Rank Adaptation (LoRA), kỹ thuật PEFT giúp tinh chỉnh mô hình ngôn ngữ lớn (LLM) với chi phí thấp, giảm thiểu VRAM mà vẫn giữ nguyên hiệu suất."
 ---
-
-# Low-Rank Adaptation (LoRA) - Tinh Chỉnh LLM Không Còn Là Đặc Quyền Của Đại Gia
 
 Khi bạn muốn biến một mô hình ngôn ngữ lớn (LLM) thô thành một chuyên gia trong một lĩnh vực cụ thể (ví dụ: một bot viết mã SQL hoặc một trợ lý y tế), phương pháp truyền thống là **Full Fine-Tuning (Tinh chỉnh toàn bộ mô hình)**. 
 

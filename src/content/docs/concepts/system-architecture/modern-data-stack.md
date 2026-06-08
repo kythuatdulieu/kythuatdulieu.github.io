@@ -9,8 +9,6 @@ seoTitle: "Modern Data Stack (MDS) - Hệ sinh thái dữ liệu hiện đại"
 metaDescription: "Tìm hiểu Modern Data Stack (MDS): định nghĩa, các thành phần công cụ như Fivetran, Snowflake, dbt, sự chuyển dịch từ ETL sang ELT và câu hỏi phỏng vấn."
 ---
 
-# Modern Data Stack (MDS): Hệ Sinh Thái Dữ Liệu Hiện Đại Trên Đám Mây
-
 Cách đây khoảng một thập kỷ, việc xây dựng một hệ thống phân tích dữ liệu lớn (Big Data) cho doanh nghiệp là một nhiệm vụ vô cùng gian nan. Bạn cần một đội ngũ kỹ sư phần mềm hùng hậu để vận hành các cụm máy chủ vật lý On-premise chạy Hadoop, viết hàng ngàn dòng code Java/Scala phức tạp để xử lý dữ liệu và tự tay viết code kết nối với API của các dịch vụ như Facebook Ads hay Salesforce. 
 
 Hôm nay, mọi thứ đã thay đổi hoàn toàn nhờ sự xuất hiện của **Modern Data Stack (MDS) - Hệ sinh thái dữ liệu hiện đại**.

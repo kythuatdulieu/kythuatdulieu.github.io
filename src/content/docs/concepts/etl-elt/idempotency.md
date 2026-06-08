@@ -9,8 +9,6 @@ seoTitle: "Tính lũy đẳng (Idempotency) trong Data Engineering - Khái niệ
 metaDescription: "Tìm hiểu chi tiết về Idempotency (Tính lũy đẳng) trong ETL/ELT pipeline, tại sao nó quan trọng, cách thức hoạt động và các câu hỏi phỏng vấn."
 ---
 
-# Xây dựng đường ống dữ liệu kiên cố với Tính lũy đẳng (Idempotency)
-
 Trong cuộc sống hàng ngày, nếu bạn bấm nút thang máy nhiều lần, thang máy vẫn chỉ đón bạn một lần duy nhất. Nếu bạn nhấn nút gửi một tin nhắn ngân hàng nhiều lần, tài khoản của bạn lý tưởng nhất cũng chỉ được trừ tiền một lần. Trong khoa học máy tính và kỹ thuật dữ liệu, thuộc tính kỳ diệu giúp ngăn chặn các tác vụ bị thực thi thừa thãi này được gọi là **Tính lũy đẳng** (Idempotency). Đây là một trong những tiêu chuẩn vàng để xây dựng nên những đường ống dữ liệu (Data Pipeline) kiên cố, có khả năng tự phục hồi lỗi cực kỳ mạnh mẽ.
 
 ## Khi việc chạy lại không gây ra tai họa

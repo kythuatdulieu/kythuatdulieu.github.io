@@ -9,8 +9,6 @@ seoTitle: "Grain (Độ mịn dữ liệu) là gì? Khái niệm sống còn tro
 metaDescription: "Tìm hiểu Grain (Granularity - Độ mịn dữ liệu) trong Data Warehouse. Tại sao việc xác định Grain là bước quan trọng nhất khi thiết kế Fact Table và Dimensional Model."
 ---
 
-# Làm chủ độ mịn của dữ liệu: Khái niệm Grain trong thiết kế Data Warehouse
-
 Trong thiết kế kiến trúc dữ liệu, có những quyết định tuy nhỏ nhưng lại mang tính sống còn đối với sự thành bại của cả dự án. Một trong số đó là việc xác định **Grain** (Độ mịn hay Độ hạt dữ liệu). Nếu bạn định nghĩa Grain một cách hời hợt hoặc tệ hơn là trộn lẫn các mức độ chi tiết khác nhau vào cùng một bảng, hệ thống báo cáo của bạn sẽ nhanh chóng hiển thị những con số sai lệch, đánh mất hoàn toàn niềm tin từ phía người dùng kinh doanh.
 
 ## Câu hỏi sống còn: Một dòng dữ liệu đại diện cho cái gì?
@@ -144,8 +142,11 @@ Khi cần lập báo cáo so sánh, chúng ta sẽ thực hiện tổng hợp (R
 
 ## Tài liệu tham khảo
 
-1. **The Data Warehouse Toolkit** - Ralph Kimball (Tuyên bố Bước 2: "Declare the Grain" là bước thiết kế tối thượng).
-2. **Data Modeling for the Business** - Steve Hoberman.
+1. [Declaring the Grain](https://www.kimballgroup.com/2003/03/declaring-the-grain/) - Ralph Kimball's guide on declaring the grain of a fact table on Kimball Group.
+2. [Grain - Kimball Dimensional Modeling Techniques](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/grain/) - Official Kimball Group techniques index definition for dimensional grain.
+3. [Fact Table Grain](https://www.holistics.io/books/setup-analytics-database/fact-table-grain/) - Conceptual chapter on data granularity in Holistics Analytics Setup Guide.
+4. [Granularity in Data Warehouse](https://www.geeksforgeeks.org/granularity-in-data-warehouse/) - Educational article on data warehouse granularity and its design implications on GeeksforGeeks.
+5. [The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross, definitive guide to dimensional modeling on O'Reilly.
 
 ## English Summary
 

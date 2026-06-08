@@ -9,8 +9,6 @@ seoTitle: "Watermark là gì? Xử lý Late Data trong Streaming"
 metaDescription: "Tìm hiểu chi tiết về Watermark trong kiến trúc Streaming, cách nó giải quyết bài toán dữ liệu đến muộn (late data) và cân bằng giữa độ trễ và tính chính xác."
 ---
 
-# Watermark - Dấu chuẩn thời gian trong thế giới Stream Processing
-
 Trong lập trình xử lý luồng dữ liệu (Stream Processing), một trong những thử thách lớn nhất là kiểm soát yếu tố thời gian. Không giống như xử lý theo lô (Batch Processing) nơi mọi dữ liệu đã nằm yên vị trong kho, dữ liệu Streaming chảy liên tục và thường xuyên đến lệch giờ, mất trật tự do độ trễ mạng hoặc lỗi kết nối từ các thiết bị ngoại vi. Để giải quyết bài toán này khi sử dụng thời gian xảy ra sự kiện (Event Time), các kỹ sư dữ liệu sử dụng một công cụ vô cùng mạnh mẽ: **Watermark** (Dấu chuẩn thời gian).
 
 ---

@@ -9,8 +9,6 @@ seoTitle: "Data Skew là gì? Hiện tượng lệch phân vùng và cách xử 
 metaDescription: "Tìm hiểu hiện tượng cực hình Data Skew (lệch dữ liệu) trong Apache Spark làm treo hệ thống, cách nhận biết qua Spark UI và các phương pháp giải quyết (Salting, Broadcast)."
 ---
 
-# Lệch dữ liệu - Data Skew
-
 Hãy tưởng tượng bạn đang quản lý một đội công nhân gồm 200 người để dọn dẹp một đống đổ nát khổng lồ. Kế hoạch ban đầu là chia đều công việc cho tất cả mọi người để hoàn thành nhanh nhất. Nhưng do lỗi phân công, 199 người dọn xong phần của mình chỉ trong 10 giây và ra quán trà đá ngồi chơi, trong khi 1 người còn lại phải tự mình khuân vác một khối đá tảng nặng hàng chục tấn trong suốt 5 tiếng đồng hồ. Cả đội phải ngồi đợi người cuối cùng này làm xong thì mới được ra về.
 
 Trong thế giới Big Data, hiện tượng tréo ngoe này được gọi là **Data Skew (Lệch dữ liệu)**. Đây là một trong những nguyên nhân hàng đầu khiến các pipeline Spark bị kẹt vô tận hoặc sập nguồn đột ngột do hết bộ nhớ (OOM - Out Of Memory).
@@ -132,11 +130,17 @@ result_df = sales_salted.join(cust_salted, ["city", "salt"]).drop("salt")
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Các khái niệm liên quan
 
-1. **[Spark Joins](/concepts/batch-processing/spark-joins/)** - Tìm hiểu sâu hơn các cơ chế JOIN trong Spark.
-2. **Spark: The Definitive Guide** - Cuốn sách của Bill Chambers và Matei Zaharia, phần viết về tối ưu hiệu năng cụm.
-3. **Databricks Blog** - Các bài viết chuyên sâu về cơ chế hoạt động của Adaptive Query Execution (AQE).
+* **[Spark Joins](/concepts/batch-processing/spark-joins/)** - Tìm hiểu sâu hơn các cơ chế JOIN trong Spark.
+
+## Tài liệu tham khảo
+
+1. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Comprehensive guide to using, tuning, and monitoring Spark by Bill Chambers and Matei Zaharia.
+2. [Adaptive Query Execution: Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html) - Databricks engineering blog post detailing the mechanics of Spark's AQE framework, including skew joins.
+3. [Apache Spark SQL Performance Tuning Guide](https://spark.apache.org/docs/latest/sql-performance-tuning.html) - Official documentation covering memory structures, join strategies, and adaptive query configurations.
+4. [High Performance Spark](https://www.oreilly.com/library/view/high-performance-spark/9781491943199/) - Practical guide to optimizing and troubleshooting distributed Spark code, specifically addressing data skew and custom partitioning, by Holden Karau and Rachel Warren.
+5. [Detecting and Solving Data Skew in Spark SQL](https://www.databricks.com/blog/2019/04/24/detecting-and-solving-data-skew-in-spark-sql.html) - Comprehensive guide on diagnosing and resolving data skew issues in production Spark applications.
 
 ## English Summary
 

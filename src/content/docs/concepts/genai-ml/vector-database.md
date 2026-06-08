@@ -1,6 +1,6 @@
 ---
 title: "Cơ sở dữ liệu Vector (Vector Database)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["vector-database", "genai", "embedding", "rag", "similarity-search"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích chi tiết"
 metaDescription: "Tìm hiểu kiến trúc Cơ sở dữ liệu Vector, embeddings, thuật toán tìm kiếm tương đồng (ANN, HNSW) và ứng dụng trong xây dựng hệ thống RAG cho GenAI."
 ---
-
-# Cơ sở dữ liệu Vector - Vector Database: Xương sống của Trí tuệ nhân tạo
 
 Hãy tưởng tượng bạn đang tìm kiếm thông tin trong thư viện. Thay vì đi tìm cuốn sách chứa chính xác từ khóa `"chó con"`, bạn mong muốn thủ thư hiểu được ý định của bạn và mang ra những cuốn sách nói về `"cún yêu"`, `"thú cưng bốn chân"` hay thậm chí là `"người bạn trung thành"`. 
 

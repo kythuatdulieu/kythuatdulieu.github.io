@@ -9,8 +9,6 @@ seoTitle: "Pipeline Design Interview - Thiết kế Data Pipeline hệ thống d
 metaDescription: "Hướng dẫn thiết kế kiến trúc Data Pipeline (ETL/ELT) trong phỏng vấn Data Engineering: Khả năng mở rộng, tính lũy đẳng (Idempotency) và Data Quality."
 ---
 
-# Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview
-
 Trong quy trình tuyển dụng Data Engineer (từ cấp độ Mid, Senior cho đến Staff), vòng phỏng vấn **Thiết kế Data Pipeline** (đôi khi gọi là System Design cho Data) luôn là vòng thi quan trọng nhất. Vòng này kiểm tra toàn diện khả năng tư duy hệ thống, thiết kế kiến trúc và giải quyết các bài toán dữ liệu thực tế của ứng viên.
 
 ---

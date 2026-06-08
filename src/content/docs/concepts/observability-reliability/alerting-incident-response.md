@@ -9,8 +9,6 @@ seoTitle: "Cảnh báo và Xử lý sự cố Dữ liệu (Alerting & Incident R
 metaDescription: "Tìm hiểu quy trình Cảnh báo (Alerting) và Phản ứng sự cố (Incident Response) trong Kỹ thuật Dữ liệu, cách thiết lập PagerDuty/Slack, và văn hóa Post-mortem."
 ---
 
-# Cảnh báo và phản ứng sự cố (Alerting & Incident Response): Khi đường ống dữ liệu gặp sự cố
-
 Hãy tưởng tượng bạn là một kỹ sư dữ liệu. Vào lúc 3 giờ sáng, hệ thống dbt báo lỗi đỏ rực, đường ống dẫn dữ liệu (pipeline) bị sập. Sáng hôm sau, CEO chuẩn bị bước vào cuộc họp quan quan trọng nhưng dashboard doanh thu lại hiển thị số liệu sai lệch hoặc trống trơn. Lúc này, ai sẽ là người thức dậy sửa lỗi? Làm thế nào để phân loại xem đây là lỗi khẩn cấp hay có thể đợi đến giờ hành chính? Và làm sao để báo cho các bên liên quan biết hệ thống đang được khắc phục?
 
 Đây chính là lúc quy trình **Cảnh báo và Phản ứng sự cố (Alerting & Incident Response)** phát huy vai trò. Đây là bước hành động tiếp theo ngay sau khi hệ thống giám sát (Monitoring / Data Observability) phát hiện ra bất thường, nhằm đảm bảo mọi sự cố dữ liệu đều được nhận diện, phân công đúng người trực (on-call), giải quyết nhanh chóng và ngăn ngừa tái diễn.

@@ -9,8 +9,6 @@ seoTitle: "Spark Execution Model: Kiến trúc Driver, Cluster Manager và Execu
 metaDescription: "Hiểu sâu về kiến trúc thực thi (Execution Model) trong Apache Spark: Vai trò của Driver, Cluster Manager, và Worker/Executor Node trong phân phối khối lượng công việc."
 ---
 
-# Mô hình thực thi Spark - Spark Execution Model
-
 Khi viết một đoạn mã Apache Spark để xử lý dữ liệu lớn, chúng ta thường viết các câu lệnh trông rất tuần tự và đơn giản trên máy tính cá nhân. Thế nhưng, khi đoạn code đó được gửi lên một cụm máy chủ gồm hàng chục hay hàng trăm máy tính (Cluster), Spark làm thế nào để chia nhỏ công việc và điều phối chúng chạy song song một cách nhịp nhàng? 
 
 Để trả lời câu hỏi đó, chúng ta cần tìm hiểu về **Spark Execution Model (Mô hình thực thi Spark)**.
@@ -113,8 +111,11 @@ Quá trình thực thi diễn ra ở hậu trường như sau:
 
 ## Tài liệu tham khảo
 
-1. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Chương về Application Architecture).
-2. **Databricks documentation** - Hardware Provisioning.
+1. [Apache Spark Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html) - Official Apache Spark documentation describing cluster architectures, driver-executor coordination, and cluster managers.
+2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Essential book by Bill Chambers and Matei Zaharia covering Spark's application architecture and execution model.
+3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
+4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/) - Introduction to Spark structural APIs, architecture, and distributed execution mechanics by Jules S. Damji, Brooke Wenig, and Tathagata Das.
+5. [Databricks Cluster Resource Management](https://docs.databricks.com/en/archive/legacy/resource-management.html) - Technical documentation detailing hardware provisioning, executor allocation, and performance considerations.
 
 ## English Summary
 

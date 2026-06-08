@@ -1,6 +1,6 @@
 ---
 title: "Chỉ số đánh giá - Evaluation Metric"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["evaluation", "metric", "machine-learning", "rag", "metrics"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Chỉ số đánh giá (Evaluation Metric) trong Machine Learning và RAG"
 metaDescription: "Tìm hiểu các Chỉ số đánh giá (Evaluation Metric) dùng để đo lường hiệu suất của mô hình Machine Learning, LLM và hệ thống RAG."
 ---
-
-# Chỉ số đánh giá - Evaluation Metric
 
 Có một câu nói nổi tiếng trong giới quản trị và kỹ thuật: *"Bạn không thể cải thiện những thứ bạn không thể đo lường"*. 
 

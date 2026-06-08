@@ -1,6 +1,6 @@
 ---
 title: "Kỹ nghệ Gợi ý - Prompt Engineering"
-category: "GenAI"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["prompt-engineering", "genai", "llm", "chain-of-thought", "context-learning"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Kỹ nghệ Gợi ý (Prompt Engineering) - Cẩm nang tối ưu hóa LLM chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Prompt Engineering: khái niệm, các kỹ thuật tối ưu như Zero-shot, Few-shot, Chain-of-Thought (CoT) và các câu hỏi phỏng vấn thực tế."
 ---
-
-# Kỹ nghệ Gợi ý - Prompt Engineering
 
 Nhiều người thường nghĩ tương tác với AI chỉ đơn thuần là gõ một câu hỏi và nhận lại câu trả lời. Thế nhưng, để AI hiểu đúng ý, đưa ra kết quả chính xác, định dạng chuẩn và không tự "bịa đặt" thông tin (hallucination) lại là cả một nghệ thuật và khoa học. Đó chính là lý do **Prompt Engineering (Kỹ nghệ Gợi ý)** ra đời và nhanh chóng trở thành một trong những kỹ năng quan trọng nhất trong kỷ nguyên trí tuệ nhân tạo.
 

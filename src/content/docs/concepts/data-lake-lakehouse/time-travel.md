@@ -9,8 +9,6 @@ seoTitle: "Time Travel - Du hành thời gian trên Data Lake"
 metaDescription: "Khái niệm Time Travel trong Data Engineering: khả năng truy vấn phiên bản dữ liệu trong quá khứ, cách hoạt động và ứng dụng để phục hồi dữ liệu hoặc machine learning."
 ---
 
-# Time Travel - Du hành thời gian: Chiếc vé khứ hồi cho dữ liệu của bạn
-
 Hãy tưởng tượng bạn vừa lỡ tay chạy một câu lệnh `UPDATE` hoặc `DELETE` nhạy cảm trên một bảng dữ liệu khổng lồ mà... quên viết kèm điều kiện `WHERE`. Chỉ trong tích tắc, toàn bộ dữ liệu khách hàng quan trọng đã bốc hơi hoặc bị ghi đè hỗn loạn. Cơn ác mộng của mọi kỹ sư dữ liệu bắt đầu. 
 
 Thế nhưng, nếu hệ thống của bạn hỗ trợ tính năng **Time Travel (Du hành thời gian)**, bạn có thể thở phào nhẹ nhõm. Chỉ bằng một câu lệnh SQL đơn giản, bạn có thể đưa bảng dữ liệu quay ngược trở lại trạng thái hoàn hảo của nó cách đây 10 phút hoặc tại một phiên bản (version) cụ thể trong quá khứ.
@@ -112,10 +110,13 @@ RESTORE TABLE customer_table TO TIMESTAMP AS OF '2026-06-07 10:00:00';
 * [Apache Iceberg](/concepts/data-lake-lakehouse/apache-iceberg/)
 * Data Lakehouse
 
-**Tài liệu tham khảo:**
-1. **Delta Lake Documentation** - *"Time Travel (data versioning)"*.
-2. **Snowflake Documentation** - *"Understanding & Using Time Travel"*.
-3. **Apache Iceberg Documentation** - *"Time Travel and Rollback"*.
+## Tài liệu tham khảo
+
+1. [Delta Lake Time Travel (Data Versioning)](https://docs.delta.io/latest/delta-batch.html#query-an-older-snapshot-of-a-table-time-travel) - Official Delta Lake documentation on querying historical tables.
+2. [Apache Iceberg Time Travel Queries](https://iceberg.apache.org/docs/latest/spark-queries/#time-travel) - Spark SQL time travel syntax and usage instructions in Apache Iceberg.
+3. [Snowflake Time Travel Guide](https://docs.snowflake.com/en/user-guide/data-time-travel) - Official Snowflake documentation explaining temporal queries, retention periods, and fail-safe concepts.
+4. [Querying Iceberg Tables with Time Travel on AWS EMR](https://docs.aws.amazon.com/emr/latest/EMR-Developer-Guide/emr-iceberg-time-travel.html) - Amazon Web Services developer guide on using time travel features with EMR and Iceberg.
+5. [Introducing Delta Lake Time Travel for Data Lakes](https://www.databricks.com/blog/2019/02/04/introducing-delta-lake-time-travel-for-data-lakes.html) - Databricks blog post introducing the design and use cases of Delta Lake's time-travel capability.
 
 ---
 

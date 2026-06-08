@@ -1,6 +1,6 @@
 ---
 title: "Kiểm thử tự động - dbt Testing"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Intermediate"
 tags: ["dbt", "data-testing", "data-quality", "analytics-engineering", "ci-cd"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "dbt Testing - Hướng dẫn triển khai kiểm thử tự động dữ liệu"
 metaDescription: "Khám phá dbt Testing: các bài kiểm thử cơ bản (Generic Tests) và phức tạp (Singular Tests) để đảm bảo chất lượng và tính toàn vẹn của dữ liệu trong quá trình Transformation."
 ---
-
-# Kiểm thử tự động - dbt Testing
 
 Có một tình huống trớ trêu mà bất kỳ ai làm trong ngành dữ liệu cũng từng trải qua ít nhất một lần: Sếp hoặc đối tác kinh doanh gửi một tin nhắn đầy giận dữ vào group chat: *"Tại sao doanh thu trên dashboard hôm nay lại giảm đi 50%?"* hoặc *"Sao danh sách khách hàng lại xuất hiện tên trùng lặp thế này?"*. Cả đội dữ liệu cuống cuồng đi kiểm tra, rà soát lại đống code ETL phức tạp để tìm xem lỗi phát sinh từ đâu.
 

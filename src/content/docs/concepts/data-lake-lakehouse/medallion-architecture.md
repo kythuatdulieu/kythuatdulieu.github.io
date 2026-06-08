@@ -9,7 +9,7 @@ seoTitle: "Medallion Architecture là gì? Kiến trúc Bronze - Silver - Gold t
 metaDescription: "Tìm hiểu chi tiết về Medallion Architecture (Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng) phổ biến trong Data Lakehouse và Databricks. Vai trò của từng lớp dữ liệu."
 ---
 
-# Kiến trúc Medallion (Bronze - Silver - Gold) trong Data Lakehouse
+# Kiến trúc Medallion - Medallion Architecture
 
 Khi phong trào xây dựng **Data Lake (Hồ dữ liệu)** bùng nổ, nhiều doanh nghiệp đã hào hứng đổ tất cả mọi nguồn dữ liệu họ có vào một nơi lưu trữ tập trung duy nhất (như Amazon S3 hay Google Cloud Storage). Tuy nhiên, chỉ sau một thời gian ngắn, hồ dữ liệu nhanh chóng biến thành một **Đầm lầy dữ liệu (Data Swamp)**. Lý do rất đơn giản: không ai biết file nào là dữ liệu thô, file nào đã được làm sạch, và bảng nào là bảng chuẩn xác để làm báo cáo.
 
@@ -119,7 +119,7 @@ Các nhà phân tích không muốn đọc hàng triệu dòng dữ liệu theo 
 
 ## Góc phỏng vấn: Câu hỏi thường gặp
 
-### 1. Tại sao các Data Scientists thường lấy dữ liệu từ lớp Silver (Bạc) thay vì lấy ở lớp Gold (Vàng) vốn đã được gom nhóm rất đẹp đẽ?
+### 1. Tại sao các Data Scientists thường lấy dữ liệu từ lớp Silver (Bạc) thay vị lấy ở lớp Gold (Vàng) vốn đã được gom nhóm rất đẹp đẽ?
 * **Mục đích của người phỏng vấn**: Kiểm tra xem bạn có hiểu sự khác biệt về bản chất công việc giữa Data Science (mang tính dự báo) và Business Intelligence (mang tính mô tả).
 * **Gợi ý trả lời**:
   * Các thuật toán Machine Learning cần tìm kiếm các mẫu hành vi vi mô trong một lượng lớn dữ liệu chi tiết (atomic grain). Lớp Gold thường là dữ liệu đã bị tổng hợp (aggregated) theo các chiều cụ thể (ví dụ: tổng doanh số theo ngày). 
@@ -132,14 +132,13 @@ Các nhà phân tích không muốn đọc hàng triệu dòng dữ liệu theo 
   * Bởi vì lớp Silver có nhiệm vụ làm sạch về mặt kỹ thuật (loại bỏ null, chuẩn hóa kiểu dữ liệu). Nó phải phản ánh trung thực thực tế khách quan (doanh thu là bao nhiêu, phí hoàn tiền là bao nhiêu dưới dạng các cột riêng biệt). 
   * Việc định nghĩa công thức *"Doanh thu thực tế = Doanh thu - Phí hoàn tiền"* là một Business Rule. Nếu chúng ta sửa đổi trực tiếp ở Silver, chúng ta sẽ bóp méo dữ liệu đầu vào chung của toàn doanh nghiệp, gây ảnh hưởng đến các phòng ban khác vốn có thể sử dụng công thức tính toán doanh thu khác. Lớp Gold mới là nơi dành riêng cho các Business Rules này.
 
----
-
 ## Tài liệu tham khảo
 
-1. **Databricks Documentation**: *"What is a Medallion Architecture?"*.
-2. **Data Engineering with Databricks Certification guide**.
-
----
+1. [Databricks Medallion Architecture Guide](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Official design pattern documentation detailing Bronze, Silver, and Gold layer structures.
+2. [Azure Databricks Lakehouse: Medallion Architecture](https://learn.microsoft.com/en-us/azure/databricks/lakehouse/medallion-architecture) - Microsoft guide on configuring Bronze, Silver, and Gold tables in an Azure environment.
+3. [AWS Big Data Blog](https://aws.amazon.com/blogs/big-data/) - Official blog featuring case studies, tutorials, and best practices for building multi-hop data lake architectures on AWS.
+4. [Apache Hudi Overview](https://hudi.apache.org/docs/overview) - Hudi guide on building incremental, multi-hop medallion data pipelines.
+5. [Data Engineering with Databricks](https://www.oreilly.com/library/view/data-engineering-with/9781835081198/) - O'Reilly book on implementing medallion pipelines, data governance, and analytics in Databricks.
 
 ## English summary
 

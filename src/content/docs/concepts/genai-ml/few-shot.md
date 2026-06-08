@@ -1,6 +1,6 @@
 ---
 title: "Học qua vài ví dụ (Few-shot Prompting)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["genai", "prompt-engineering", "few-shot", "llm", "in-context-learning"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Few-shot Prompting là gì? Kỹ thuật In-Context Learning hiệu quả"
 metaDescription: "Tìm hiểu Few-shot Prompting và In-Context Learning: phương pháp cung cấp ví dụ mẫu để định hướng Mô hình Ngôn ngữ Lớn (LLM) trả về kết quả chính xác và đúng định dạng."
 ---
-
-# Học qua vài ví dụ - Sức mạnh của Few-shot Prompting
 
 Hãy tưởng tượng bạn vừa nhận một cậu thực tập sinh mới và giao cho cậu ấy một nhiệm vụ phân loại phản hồi của khách hàng. Nếu bạn chỉ nói chung chung: *"Hãy phân loại các tin nhắn này thành tích cực hoặc tiêu cực"*, cậu ấy có thể làm được, nhưng đôi khi sẽ lúng túng với những câu nói đùa hoặc tiếng lóng. Nhưng nếu bạn đưa cho cậu ấy 3 ví dụ mẫu: *"Câu này là tích cực vì khách khen thật lòng, câu kia là tiêu cực vì họ đang mỉa mai"*, cậu ấy sẽ hiểu ý bạn ngay lập tức.
 

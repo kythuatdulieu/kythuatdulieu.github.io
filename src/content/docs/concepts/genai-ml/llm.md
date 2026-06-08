@@ -1,6 +1,6 @@
 ---
 title: "Mô hình Ngôn ngữ Lớn (Large Language Model)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["llm", "genai", "transformer", "nlp", "machine-learning"]
 readingTime: "15 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "LLM là gì? Tổng quan về Mô hình Ngôn ngữ Lớn (Large Language Model)"
 metaDescription: "Tìm hiểu kiến trúc cốt lõi của LLM (Large Language Model), cơ chế Transformer, Next-token prediction, và hành trình từ Pre-training đến Instruction Tuning."
 ---
-
-# Mô hình Ngôn ngữ Lớn (LLM) - Lớp Vỏ Tri Thức Của Nhân Loại
 
 Nếu bạn đã từng trầm trồ trước khả năng làm thơ, viết code hay trả lời câu hỏi trôi chảy của ChatGPT, Claude hay Gemini, thì bạn đã chứng kiến sức mạnh của **Mô hình Ngôn ngữ Lớn (Large Language Model - LLM)**. 
 

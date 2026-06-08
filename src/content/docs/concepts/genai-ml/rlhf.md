@@ -1,6 +1,6 @@
 ---
 title: "Học tăng cường từ phản hồi của con người - RLHF"
-category: "GenAI"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["rlhf", "genai", "llm", "reinforcement-learning", "alignment"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "RLHF (Reinforcement Learning from Human Feedback) - Căn bản đến chuyên sâu"
 metaDescription: "Khám phá RLHF (Học tăng cường từ phản hồi của con người): cách thức căn chỉnh LLMs với giá trị con người thông qua SFT, Reward Model và PPO."
 ---
-
-# Học tăng cường từ phản hồi của con người - RLHF
 
 Khi các mô hình ngôn ngữ lớn (LLM) vượt qua giai đoạn huấn luyện ban đầu trên hàng nghìn tỷ từ ngữ từ Internet, chúng sở hữu lượng tri thức khổng lồ nhưng lại hành xử như một cỗ máy vô cảm. Chúng chỉ biết đoán từ tiếp theo dựa trên xác suất toán học thô sơ, sẵn sàng trả lời chi tiết cách chế tạo vũ khí hoặc đưa ra các thông tin độc hại, thiên kiến. Để biến những cỗ máy thô ráp này thành các trợ lý ảo hữu ích, an toàn và đồng cảm như ChatGPT hay Claude, các nhà khoa học đã sử dụng một kỹ thuật tinh chỉnh cốt lõi mang tên **RLHF (Reinforcement Learning from Human Feedback - Học tăng cường từ phản hồi của con người)**.
 

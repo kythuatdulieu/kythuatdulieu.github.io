@@ -9,8 +9,6 @@ seoTitle: "Data Extraction - Các phương pháp trích xuất dữ liệu"
 metaDescription: "Trích xuất dữ liệu (Data Extraction) là gì? Tìm hiểu các kỹ thuật trích xuất phổ biến như Full Load, Incremental Load, API và Database Log (CDC)."
 ---
 
-# Trích xuất dữ liệu (Data Extraction): Chốt chặn đầu tiên của hành trình ETL/ELT
-
 Trong quy trình ETL/ELT kinh điển, chữ cái đầu tiên "**E**" chính là đại diện cho **Extraction (Trích xuất dữ liệu)**. Đây là bước đi chập chững đầu tiên nhưng lại đóng vai trò quyết định: làm thế nào để kết nối, đọc và rút dữ liệu thô ra khỏi các hệ thống nguồn (như cơ sở dữ liệu vận hành, hệ thống SaaS của bên thứ ba, hay các tệp nhật ký hoạt động) rồi mang về nhà kho trung tâm.
 
 Một thách thức lớn đặt ra cho các kỹ sư dữ liệu là: hệ thống nguồn vô cùng đa dạng và liên tục thay đổi. Nhiệm vụ của chúng ta không chỉ đơn thuần là viết code kết nối, mà phải tìm ra câu trả lời cho bài toán hóc búa: *“Làm sao lấy được đúng và đủ dữ liệu cần thiết mà không làm quá tải hay làm sập hệ thống đang trực tiếp phục vụ khách hàng?”*

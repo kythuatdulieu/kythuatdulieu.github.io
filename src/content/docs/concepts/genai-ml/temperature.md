@@ -1,6 +1,6 @@
 ---
 title: "Nhiệt độ - Temperature"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["llm", "temperature", "decoding", "prompt-engineering", "generation"]
 readingTime: "7 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Temperature trong AI là gì? Cách tinh chỉnh độ sáng tạo của LLM"
 metaDescription: "Tìm hiểu thông số Temperature (Nhiệt độ) trong các mô hình AI/LLM, cách nó điều khiển tính ngẫu nhiên và sáng tạo của câu trả lời."
 ---
-
-# Nhiệt độ - Temperature: Nút vặn điều chỉnh trí tưởng tượng của AI
 
 Trong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), có một tham số vô cùng quyền lực giúp bạn quyết định xem AI sẽ trả lời một cách cứng nhắc, chính xác như một cuốn sách giáo khoa, hay bay bổng, đầy tính sáng tạo như một nhà thơ. Tham số đó được gọi là **Temperature (Nhiệt độ)**. 
 

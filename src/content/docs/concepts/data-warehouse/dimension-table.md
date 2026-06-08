@@ -9,8 +9,6 @@ seoTitle: "Dimension Table (Bảng chiều) là gì? Thiết kế chiều dữ l
 metaDescription: "Tìm hiểu chi tiết Bảng chiều (Dimension Table) trong Data Warehouse: Định nghĩa, vai trò, thuộc tính, Surrogate Key và Tầm quan trọng của Conformed Dimension."
 ---
 
-# Bảng chiều - Dimension Table
-
 Nếu bạn mở một bảng sự kiện (Fact Table) trong kho dữ liệu ra và chỉ thấy những con số khô khan như `revenue = 500,000` hay `quantity = 10`, bạn sẽ không thể biết được ý nghĩa thực sự của chúng. 500,000 này là doanh thu bán sản phẩm nào? Ai là người mua? Mua ở chi nhánh nào? Vào thời gian nào?
 
 Để trả lời những câu hỏi mang tính ngữ cảnh đó, chúng ta cần đến **Dimension Table (Bảng chiều)**. Trong Lược đồ hình sao (Star Schema), nếu Fact Table là tâm điểm chứa các con số đo lường, thì các bảng Dimension bao quanh chính là linh hồn giúp biến dữ liệu thô vô cảm thành những thông tin kinh doanh có giá trị.
@@ -133,11 +131,17 @@ Nếu không có bảng `dim_date`, bạn sẽ phải viết một câu lệnh S
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Fact Table](/concepts/data-warehouse/fact-table/)
+* [Slowly Changing Dimension (SCD)](/concepts/data-warehouse/slowly-changing-dimension/)
 
-1. **[Fact Table](/concepts/data-warehouse/fact-table/)** - Tìm hiểu về bảng sự kiện trong Data Warehouse.
-2. **[Slowly Changing Dimension (SCD)](/concepts/data-warehouse/slowly-changing-dimension/)** - Các kỹ thuật quản lý lịch sử thay đổi của bảng chiều.
-3. **The Data Warehouse Toolkit** - Cuốn sách kinh điển của Ralph Kimball về thiết kế mô hình đa chiều Star Schema.
+## Tài liệu tham khảo
+
+1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's foundational book on dimensional modeling and dimension table design.
+2. [Snowflake Documentation: Designing Dimension Tables](https://docs.snowflake.com/) - Best practices and modeling principles for optimized dimensions in Snowflake.
+3. [Databricks Documentation: Slowly Changing Dimensions (SCD)](https://docs.databricks.com/en/delta/scd.html) - Technical guide to implementing and running SCD Type 1 and Type 2 updates in Delta Lake.
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Detailed blog post explaining how dimensions provide descriptive context to metrics in modern data architectures.
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Strategic guide on deploying star schemas and dimension tables on modern cloud lakehouses.
 
 ## English Summary
 

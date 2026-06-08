@@ -9,8 +9,6 @@ seoTitle: "Databricks Platform - Nền tảng Lakehouse dữ liệu"
 metaDescription: "Tìm hiểu chi tiết về Nền tảng Databricks: khái niệm Lakehouse, kiến trúc, Apache Spark tối ưu và các câu hỏi phỏng vấn thực tế."
 ---
 
-# Databricks Platform
-
 Nếu bạn từng làm việc trong một dự án dữ liệu lớn (Big Data), chắc hẳn bạn đã quen với cảnh tượng: Đội ngũ Data Engineer loay hoay viết Spark code trên các cụm máy chủ phức tạp; đội ngũ Data Scientist dùng các file Jupyter Notebook rời rạc trên máy cá nhân để train model; còn các Data Analyst lại mệt mỏi chờ đợi dữ liệu được chuyển đổi từ Data Lake sang Data Warehouse để chạy SQL báo cáo. Sự phân mảnh này không chỉ làm chậm tiến độ mà còn tạo ra những bức tường vô hình ngăn cách các phòng ban.
 
 Đó là lý do **Databricks** ra đời — nền tảng đám mây thống nhất tiên phong đưa ra khái niệm **Lakehouse**, giúp kết hợp hoàn hảo những gì tốt nhất của Data Lake và Data Warehouse vào chung một mái nhà.
@@ -30,7 +28,7 @@ Kiến trúc cũ này bộc lộ nhiều điểm yếu:
 2. **Thiếu độ tin cậy**: Data Lake truyền thống thiếu tính toàn vẹn giao dịch (ACID transactions). Nếu một tiến trình ghi dữ liệu bị lỗi giữa chừng, dữ liệu sẽ bị hỏng và không có cách nào tự động khôi phục.
 3. **Môi trường làm việc phân mảnh**: Kỹ sư dữ liệu (dùng Scala/Spark), nhà khoa học dữ liệu (dùng Python) và nhà phân tích (dùng SQL) làm việc trên các công cụ độc lập, rất khó cộng tác với nhau.
 
-Databricks giải quyết triệt để các vấn đề này bằng cách đặt một lớp quản trị và giao dịch đáng tin cậy (Delta Lake) ngay trên vùng lưu trữ Data Lake giá rẻ, biến nó thành một **Lakehouse** mạnh mẽ.
+Databricks giải quyết triệt các vấn đề này bằng cách đặt một lớp quản trị và giao dịch đáng tin cậy (Delta Lake) ngay trên vùng lưu trữ Data Lake giá rẻ, biến nó thành một **Lakehouse** mạnh mẽ.
 
 ## Bộ ba công nghệ cốt lõi làm nên sức mạnh Databricks
 
@@ -148,12 +146,18 @@ Sau khi ghi, bảng `clickstream_gold` này lập tức hiển thị trong hệ 
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
 
-1. **[Delta Lake](/concepts/data-lake-lakehouse/delta-lake/)** - Tìm hiểu chi tiết về công nghệ lưu trữ cốt lõi Delta Lake.
-2. **[Lệch dữ liệu - Data Skew](/concepts/batch-processing/data-skew/)** - Cách nhận diện và khắc phục lỗi lệch dữ liệu trong Spark.
-3. **Databricks Documentation** - Trang tài liệu chính thức từ hãng.
-4. **Spark: The Definitive Guide** - Cuốn sách gối đầu giường về Apache Spark của Bill Chambers và Matei Zaharia.
+* [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/) - Tìm hiểu chi tiết về công nghệ lưu trữ cốt lõi Delta Lake.
+* [Lệch dữ liệu - Data Skew](/concepts/batch-processing/data-skew/) - Cách nhận diện và khắc phục lỗi lệch dữ liệu trong Spark.
+
+## Tài liệu tham khảo
+
+1. [Databricks Documentation](https://docs.databricks.com/) - The official Databricks documentation containing guides, tutorials, and developer resources.
+2. [Databricks Well-Architected Lakehouse Framework](https://docs.databricks.com/en/lakehouse-architecture/index.html) - Architectural principles and best practices for building a production-ready lakehouse on Databricks.
+3. [Unity Catalog Guide](https://docs.databricks.com/en/data-governance/unity-catalog/index.html) - Official documentation for governing data, files, and AI models securely using Databricks Unity Catalog.
+4. [Delta Lake Home](https://delta.io/) - Official website of Delta Lake, the open-source storage framework underpinning the Lakehouse architecture.
+5. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Comprehensive guide to Apache Spark, its core architecture, and APIs, authored by Bill Chambers and Matei Zaharia.
 
 ## English Summary
 

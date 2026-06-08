@@ -1,6 +1,6 @@
 ---
 title: "Lớp ngữ nghĩa chỉ số - Metrics Layer"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Advanced"
 tags: ["metrics-layer", "semantic-layer", "head-less-bi", "analytics-engineering", "single-source-of-truth"]
 readingTime: "11 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "Lớp ngữ nghĩa chỉ số (Metrics Layer / Semantic Layer) là gì?"
 metaDescription: "Khám phá Metrics Layer (Semantic Layer) hay Headless BI: khái niệm định nghĩa tập trung các chỉ số doanh nghiệp để tránh tình trạng bất đồng số liệu giữa các bộ phận."
 ---
-
-# Lớp Ngữ Nghĩa Chỉ Số (Metrics Layer) - Giải Pháp Chấm Dứt Cuộc Chiến Số Liệu
 
 Trong các cuộc họp ban giám đốc ở nhiều doanh nghiệp, một cảnh tượng dở khóc dở cười thường xuyên xảy ra: 
 - Giám đốc Marketing báo cáo tổng doanh thu tháng qua là 10 tỷ (dùng Google Looker Studio).

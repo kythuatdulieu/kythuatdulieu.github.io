@@ -9,8 +9,6 @@ seoTitle: "Chỉ mục Cơ sở dữ liệu (Indexing) - Cách tăng tốc độ
 metaDescription: "Hiểu sâu về Database Indexing, cấu trúc dữ liệu B-Tree, Hash Index, cách đánh chỉ mục hiệu quả và những rủi ro khi lạm dụng Index."
 ---
 
-# Tăng tốc độ truy vấn cơ sở dữ liệu: Bí mật của Indexing
-
 Hãy tưởng tượng bạn đang cầm trên tay một cuốn sách bách khoa toàn thư dày 1,000 trang và muốn tìm định nghĩa của cụm từ "Database". Nếu cuốn sách không có mục lục, bạn bắt buộc phải lật giở và đọc từng trang từ trang 1 đến trang 1000. Hành động mệt mỏi và tốn thời gian này được gọi là quét toàn bộ (Full Scan). Nhưng nhờ có phần Mục lục (Index) ở cuối cuốn sách, được sắp xếp thứ tự chữ cái A-Z, bạn dễ dàng tra ra từ "Database" nằm ở trang 450 và lật thẳng tới đó. 
 
 Trong thế giới cơ sở dữ liệu, kỹ thuật tăng tốc thần kỳ này được gọi là **Indexing** (Chỉ mục cơ sở dữ liệu).
@@ -151,8 +149,11 @@ SELECT * FROM users WHERE first_name = 'An';
 
 ## Tài liệu tham khảo
 
-1. **Use The Index, Luke!** - Markus Winand (Hướng dẫn kinh điển về Indexing cho Developer).
-2. **Database Internals** - Alex Petrov.
+1. [Use The Index, Luke!](https://use-the-index-luke.com/) - A developer-centric guide to database indexing by Markus Winand.
+2. [Indexes in PostgreSQL](https://www.postgresql.org/docs/current/indexes.html) - Official PostgreSQL documentation explaining index types and usage.
+3. [Optimization and Indexes in MySQL](https://dev.mysql.com/doc/refman/8.0/en/optimization-indexes.html) - Official MySQL reference manual outlining query performance and index optimization.
+4. [Indexes and Index-Organized Tables in Oracle](https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/indexes-and-index-organized-tables.html) - Official Oracle concepts guide on logical and physical index structures.
+5. [Indexing in Databases](https://www.geeksforgeeks.org/indexing-in-databases-sql/) - Educational overview of primary, secondary, and clustered indexing structures on GeeksforGeeks.
 
 ## English Summary
 

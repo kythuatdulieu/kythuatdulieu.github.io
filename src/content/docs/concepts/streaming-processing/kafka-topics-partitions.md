@@ -9,8 +9,6 @@ seoTitle: "Topics và Partitions trong Kafka: Cơ chế song song hóa"
 metaDescription: "Hiểu rõ cấu trúc dữ liệu của Apache Kafka: Topic là gì, tại sao việc chia Partition lại là chìa khóa sống còn tạo nên thông lượng khổng lồ cho Kafka."
 ---
 
-# Mở khóa sức mạnh Apache Kafka: Giải mã Topics và Partitions
-
 Khi xây dựng các hệ thống xử lý dữ liệu thời gian thực (Real-time Streaming) ở quy mô lớn, Apache Kafka luôn là cái tên được nhắc đến đầu tiên. Sự mạnh mẽ và khả năng chịu tải khủng khiếp của Kafka không đến từ sự ngẫu nhiên. Nó bắt nguồn từ một kiến trúc thiết kế thông minh xoay quanh hai khái niệm cốt lõi: **Topic** (Chủ đề) và **Partition** (Phân vùng). Hãy cùng bóc tách xem chúng là gì và tại sao chúng lại là chìa khóa mở ra thông lượng truyền tải dữ liệu vô hạn của Kafka.
 
 ## Topics và Partitions là gì?

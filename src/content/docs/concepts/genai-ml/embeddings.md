@@ -1,6 +1,6 @@
 ---
 title: "Vectơ nhúng - Embeddings"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["embeddings", "vector-space", "nlp", "representation-learning"]
 readingTime: "9 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Vectơ nhúng (Embeddings) là gì? Khái niệm và ứng dụng"
 metaDescription: "Tìm hiểu Vectơ nhúng (Embeddings) là gì trong AI, tính chất toán học của chúng và vai trò cốt lõi trong Tìm kiếm ngữ nghĩa và các mô hình ngôn ngữ lớn."
 ---
-
-# Vectơ nhúng - Embeddings
 
 Hãy tưởng tượng bạn đang cố gắng giải thích cho một người nước ngoài không biết tiếng Việt hiểu thế nào là "xe hơi". Thay vì cố gắng định nghĩa bằng các từ ngữ phức tạp, bạn đưa cho họ một loạt các tấm thẻ ghi điểm số:
 * Mức độ có bánh xe: **9/10**

@@ -9,8 +9,6 @@ seoTitle: "Cấu trúc phân cấp thực thi: Spark Jobs, Stages và Tasks"
 metaDescription: "Hiểu sâu cấu trúc giải phẫu của một Spark Application thông qua biểu đồ phân cấp DAG: Application, Jobs, Stages và Tasks, giúp đọc hiểu Spark UI dễ dàng."
 ---
 
-# Jobs, Stages, và Tasks trong Spark
-
 Để xử lý hàng Terabyte dữ liệu trên một mạng lưới gồm nhiều máy tính, Apache Spark không thể chỉ chạy code của bạn một cách tuần tự từ trên xuống dưới. Hệ thống buộc phải "mổ xẻ" chương trình thành nhiều phần nhỏ và điều phối chúng song song. 
 
 Nếu mở công cụ giám sát Spark UI lên, bạn sẽ thấy hàng tá thuật ngữ như **Jobs**, **Stages**, và **Tasks**. Hiểu rõ mối liên kết giữa các khái niệm này là bước đệm tối thiểu giúp bạn đọc hiểu hiệu năng và tìm ra các điểm nghẽn (bottleneck) của luồng dữ liệu.
@@ -120,8 +118,11 @@ city_count_df.write.save("s3://output/")
 
 ## Tài liệu tham khảo
 
-1. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Chương về Spark UI và Anatomy of a Spark Job).
-2. Official Spark Documentation: [Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html)
+1. [Apache Spark Cluster Overview](https://spark.apache.org/docs/latest/cluster-overview.html) - Official documentation on cluster components, master-worker interactions, and scheduling.
+2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Reference book by Bill Chambers and Matei Zaharia covering Spark jobs, stages, tasks, and Spark UI profiling.
+3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
+4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/) - Essential book detailing structured APIs, data flow, and job execution by Jules S. Damji, Brooke Wenig, and Tathagata Das.
+5. [Mastering Apache Spark: DAGScheduler](https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-dag-scheduler.html) - Community guide describing the inner workings of Spark's DAG Scheduler and task scheduling process by Jacek Laskowski.
 
 ## English Summary
 

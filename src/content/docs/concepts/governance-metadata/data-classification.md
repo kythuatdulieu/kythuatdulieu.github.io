@@ -9,8 +9,6 @@ seoTitle: "Phân loại dữ liệu (Data Classification) - Cẩm nang Data Gove
 metaDescription: "Tìm hiểu về Phân loại dữ liệu (Data Classification) trong quản trị dữ liệu, phương pháp phân loại, bảo vệ PII và các câu hỏi phỏng vấn thực tế."
 ---
 
-# Phân loại dữ liệu - Data Classification
-
 Khi dữ liệu trở thành nguồn tài sản chiến lược của doanh nghiệp, việc bảo vệ nó khỏi các cuộc tấn công bảo mật và rò rỉ thông tin là nhiệm vụ quan trọng hàng đầu. Tuy nhiên, nếu bạn cố gắng bảo vệ mọi byte dữ liệu với cùng một tiêu chuẩn an ninh nghiêm ngặt nhất, bạn sẽ nhanh chóng cạn kiệt ngân sách. **Data Classification (Phân loại dữ liệu)** chính là nghệ thuật gán nhãn và phân cấp thông tin, giúp doanh nghiệp tập trung nguồn lực để bảo vệ những gì thực sự nhạy cảm và giá trị nhất.
 
 ## Phân loại dữ liệu (Data Classification): Khiên bảo vệ tài sản thông tin

@@ -1,6 +1,6 @@
 ---
 title: "Tái sắp xếp kết quả - Reranking"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["reranking", "retrieval", "rag", "search-engine", "hybrid-search"]
 readingTime: "9 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Reranking là gì? Tối ưu hóa hệ thống Search và RAG"
 metaDescription: "Tìm hiểu Reranking (Tái sắp xếp kết quả): Quy trình 2 bước (Two-stage Retrieval) giúp cải thiện độ chính xác (Precision) cho hệ thống tìm kiếm và RAG."
 ---
-
-# Tái sắp xếp kết quả - Reranking
 
 Khi xây dựng các hệ thống tìm kiếm thông tin lớn hoặc các ứng dụng RAG (Retrieval-Augmented Generation), việc lấy được những tài liệu thực sự chất lượng và liên quan nhất để đưa vào prompt cho LLM là yếu tố quyết định sự thành bại của giải pháp. Để giải quyết triệt để bài toán này, các kỹ sư thường áp dụng một kỹ thuật tối ưu hóa thứ hạng cực kỳ hiệu quả gọi là **Reranking (Tái sắp xếp kết quả)**.
 

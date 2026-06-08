@@ -186,9 +186,11 @@ dfUpdates.write.format("hudi").
 
 ## Tài liệu tham khảo
 
-1. **Apache Hudi Documentation**: (https://hudi.apache.org/docs/overview) - Tài liệu chính thức kiến trúc và hướng dẫn.
-2. **"Data Engineering with Apache Spark, Delta Lake, and Lakehouse"** - Phân tích so sánh Hudi, Iceberg và Delta Lake.
-3. **Uber Engineering Blog**: "Hudi: Uber Engineering’s Incremental Processing Framework on Hadoop".
+1. [Apache Hudi Overview](https://hudi.apache.org/docs/overview) - Official Apache Hudi documentation detailing its core concepts, timeline, and architecture.
+2. [Apache Hudi GitHub Repository](https://github.com/apache/hudi) - The open-source code repository, release notes, and community contributions for Hudi.
+3. [Building a Large-scale Transactional Data Lake at Uber Using Apache Hudi](https://www.uber.com/blog/building-a-large-scale-transactional-data-lake-at-uber-using-apache-hudi/) - The foundational Uber Engineering Blog post introducing the history and design of Hudi.
+4. [AWS EMR Release Guide: Apache Hudi](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hudi.html) - AWS documentation on how to configure and run Apache Hudi on Amazon EMR.
+5. [Apache Hudi AWS Integrations](https://hudi.apache.org/docs/hoodie_aws) - Guide on integrating Apache Hudi with AWS services such as AWS Glue Data Catalog, Athena, and EMR Serverless.
 
 ## English Summary
 

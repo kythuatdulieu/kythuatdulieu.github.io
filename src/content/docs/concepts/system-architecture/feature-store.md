@@ -9,8 +9,6 @@ seoTitle: "Feature Store - Hệ thống quản lý đặc trưng Machine Learnin
 metaDescription: "Tìm hiểu Feature Store là gì trong MLOps, giải quyết bài toán Online-Offline Skew, và vì sao các kỹ sư dữ liệu và ML Engineers cần nó."
 ---
 
-# Feature Store
-
 Hãy tưởng tượng bạn là một nhà khoa học dữ liệu (Data Scientist). Bạn vừa dành ra ba tháng miệt mài nghiên cứu, viết code Python/Pandas trên Jupyter Notebook để tính toán ra các đặc trưng (features) cực kỳ đắt giá từ dữ liệu lịch sử như: *"Tần suất mua hàng trung bình trong 7 ngày qua"*, hay *"Số lần click vào quảng cáo của người dùng"*. Mô hình Machine Learning của bạn đạt độ chính xác ấn tượng trên máy tính cá nhân.
 
 Thế nhưng, khi chuyển giao mô hình cho đội ngũ Kỹ sư phần mềm (Software Engineers) để đưa lên chạy thực tế (Production), một "cơn ác mộng" xuất hiện. Đội ngũ kỹ sư phải viết lại toàn bộ logic tính toán đặc trưng kia bằng ngôn ngữ Java hoặc Go để đọc dữ liệu thời gian thực từ database. 

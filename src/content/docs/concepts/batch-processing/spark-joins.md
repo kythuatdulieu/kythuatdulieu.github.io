@@ -9,8 +9,6 @@ seoTitle: "Spark Joins: Broadcast Hash Join, Shuffle Hash Join và Sort Merge Jo
 metaDescription: "Phân tích 3 chiến lược kết nối dữ liệu (Joins) vật lý cốt lõi trong Apache Spark: Broadcast Hash Join, Shuffle Hash Join và Sort Merge Join. Cách Catalyst tự động lựa chọn."
 ---
 
-# Các loại Join trong Spark
-
 Trong lập trình cơ sở dữ liệu nói chung và xử lý dữ liệu lớn (Big Data) nói riêng, phép nối bảng (Join) luôn là một trong những hoạt động phổ biến nhưng lại ngốn nhiều tài nguyên CPU, RAM và băng thông mạng nhất. 
 
 Khi bạn gõ câu lệnh đơn giản `df1.join(df2)`, ở hậu trường, bộ tối ưu hóa Catalyst Optimizer của Spark sẽ không thực thi một cách ngây thơ. Nó sẽ dựa trên kích thước dữ liệu và cấu hình hệ thống để lựa chọn một chiến lược (Physical Join Strategy) phù hợp nhất. 
@@ -116,8 +114,11 @@ optimized_df.explain()
 
 ## Tài liệu tham khảo
 
-1. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Chương Joins).
-2. Databricks Blogs on Spark SQL Physical Plans.
+1. [Apache Spark SQL Join Hints](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-hints.html) - Official Apache Spark documentation on directing the optimizer to use specific join strategies (e.g. Broadcast, Merge, Shuffle Hash).
+2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Reference book by Bill Chambers and Matei Zaharia featuring detailed explanations of Joins.
+3. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical guide to Spark architecture and cluster management by Jean-Georges Perrin.
+4. [Adaptive Query Execution: Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html) - Databricks engineering blog post describing dynamic runtime join optimizations like converting Sort-Merge Join to Broadcast Hash Join.
+5. [Detecting and Solving Data Skew in Spark SQL](https://www.databricks.com/blog/2019/04/24/detecting-and-solving-data-skew-in-spark-sql.html) - Practical guide on diagnosing and resolving data skew issues during join operations.
 
 ## English Summary
 

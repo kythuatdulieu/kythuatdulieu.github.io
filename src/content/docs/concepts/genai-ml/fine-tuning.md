@@ -1,6 +1,6 @@
 ---
 title: "Tinh chỉnh mô hình - Fine-tuning"
-category: "GenAI"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["fine-tuning", "llm", "lora", "peft", "transfer-learning"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Fine-tuning là gì? Cẩm nang Tinh chỉnh Mô hình AI (PEFT, LoRA)"
 metaDescription: "Khái niệm Fine-tuning (Tinh chỉnh mô hình) trong GenAI. Phân biệt Fine-tuning vs RAG. Tìm hiểu các kỹ thuật PEFT và LoRA tối ưu phần cứng."
 ---
-
-# Nghệ thuật mài giũa AI: Đi sâu vào thế giới Fine-tuning
 
 Khi bắt đầu làm việc với các Mô hình Ngôn ngữ Lớn (LLM), bạn sẽ nhanh chóng nhận ra rằng dù chúng rất thông minh nhưng đôi khi lại giống như những "học giả biết tuốt" — cái gì cũng biết một chút nhưng lại thiếu đi sự sâu sắc và đặc thù mà doanh nghiệp của bạn thực sự cần. Lúc này, bạn đứng trước một quyết định quan trọng: Chấp nhận sử dụng các kỹ thuật viết prompt phức tạp, hay tiến hành tác động trực tiếp vào "não bộ" của mô hình. Quá trình tác động và huấn luyện lại đó được gọi là **Fine-tuning** (Tinh chỉnh mô hình).
 

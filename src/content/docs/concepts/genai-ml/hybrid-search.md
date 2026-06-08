@@ -1,6 +1,6 @@
 ---
 title: "Tìm kiếm kết hợp (Hybrid Search)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["hybrid-search", "vector-database", "rag", "bm25", "genai"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Hybrid Search là gì? Kết hợp Keyword và Vector Search trong RAG"
 metaDescription: "Khám phá Hybrid Search (Tìm kiếm kết hợp), kỹ thuật hòa trộn giữa tìm kiếm từ khóa (BM25) và tìm kiếm vector (Dense Retrieval) để tối ưu hệ thống RAG."
 ---
-
-# Hai mảnh ghép hoàn hảo: Tìm kiếm kết hợp (Hybrid Search) trong hệ thống RAG
 
 Trong các hệ thống hỗ trợ hỏi đáp bằng trí tuệ nhân tạo (RAG - Retrieval-Augmented Generation) hiện nay, việc tìm kiếm và truy xuất thông tin chính xác từ kho tài liệu khổng lồ là yếu tố quyết định chất lượng câu trả lời của LLM. Tuy nhiên, nếu chỉ sử dụng tìm kiếm thông thường hoặc tìm kiếm bằng vector, bạn sẽ sớm nhận ra những hạn chế lớn. Để giải quyết triệt để bài toán này, các kỹ sư dữ liệu đã kết hợp hai phương pháp tìm kiếm tưởng chừng như đối nghịch nhau thành một giải pháp ưu việt: **Tìm kiếm kết hợp** (Hybrid Search).
 

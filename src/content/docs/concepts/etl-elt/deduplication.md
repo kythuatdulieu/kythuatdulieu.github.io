@@ -9,8 +9,6 @@ seoTitle: "Khử trùng lặp dữ liệu (Deduplication) là gì? Các kỹ thu
 metaDescription: "Tìm hiểu deduplication (khử trùng lặp) là gì, tại sao lại quan trọng và các kỹ thuật thực tiễn dùng SQL, Window Functions để xử lý trùng lặp trong pipeline."
 ---
 
-# Loại bỏ trùng lặp - Deduplication
-
 Hãy tưởng tượng bạn đang chạy một chiến dịch gửi mã giảm giá tri ân khách hàng thân thiết. Do một lỗi kỹ thuật nào đó, thông tin của khách hàng tên Bob bị trùng lặp thành 5 dòng trong cơ sở dữ liệu. Kết quả là Bob nhận được 5 email chứa 5 mã giảm giá khác nhau, còn báo cáo gửi sếp thì ghi nhận số lượng khách hàng hoạt động tăng vọt gấp nhiều lần thực tế.
 
 Trong ngành kỹ thuật dữ liệu, hiện tượng này được gọi là dữ liệu bị trùng lặp (Duplicate Data). Để bảo vệ hệ thống báo cáo khỏi những số liệu ảo này, chúng ta cần áp dụng **Deduplication (Khử trùng lặp dữ liệu)**.

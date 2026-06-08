@@ -9,8 +9,6 @@ seoTitle: "Task Dependency là gì? Quản lý sự phụ thuộc trong DAG Airf
 metaDescription: "Tìm hiểu Task Dependency (Sự phụ thuộc tác vụ) trong điều phối dữ liệu. Các quy tắc Trigger Rules (all_success, all_done) và cách kiểm soát luồng điều khiển."
 ---
 
-# Task Dependency - Quản lý sự phụ thuộc tác vụ: Điều khiển giao thông trong Data Pipeline
-
 Trong thế giới điều phối dữ liệu (Data Orchestration) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** đóng vai trò như một hệ thống đèn tín hiệu giao thông. Nó quyết định trình tự thực thi (Control Flow) của các bước trong đường ống dữ liệu, chỉ rõ: Tác vụ A phải kết thúc với trạng thái như thế nào thì Tác vụ B mới được phép khởi chạy. 
 
 Quản lý phụ thuộc tốt không chỉ giúp dữ liệu được xử lý đúng thứ tự, ngăn chặn thảm họa sử dụng dữ liệu rác, mà còn cho phép chúng ta xây dựng các kịch bản ứng phó sự cố (Exception Handling) cực kỳ linh hoạt và thông minh.

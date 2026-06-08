@@ -9,8 +9,6 @@ seoTitle: "Vai trò Kỹ sư Dữ liệu - Sự khác biệt với Data Scientis
 metaDescription: "Tìm hiểu chi tiết vai trò của Kỹ sư Dữ liệu (Data Engineer), kỹ năng cốt lõi và sự phân biệt rõ ràng với Data Scientist và Software Engineer."
 ---
 
-# Vai trò Kỹ sư Dữ liệu - Data Engineer Role
-
 Trong kỷ nguyên số, chúng ta thường nghe rất nhiều về Trí tuệ nhân tạo (AI), Học máy (Machine Learning) hay các nhà Khoa học dữ liệu (Data Scientist) - những người tìm ra những thông tin đắt giá từ dữ liệu. Thế nhưng, có một sự thật ít ai biết: đằng sau mọi dashboard lung linh của doanh nghiệp hay các mô hình AI xuất sắc là sự đóng góp thầm lặng của các **Kỹ sư Dữ liệu (Data Engineer)**. Họ chính là những người "lát đường", chịu trách nhiệm thiết kế, xây dựng và duy trì cơ sở hạ tầng dữ liệu để dòng chảy thông tin trong tổ chức luôn thông suốt và đáng tin cậy.
 
 Về bản chất, **Data Engineer** là một kỹ sư phần mềm chuyên biệt hóa trong lĩnh vực dữ liệu. Nhiệm vụ cốt lõi của họ là vận chuyển dữ liệu từ các hệ thống nguồn (thường ở dạng thô, phân tán và chưa có cấu trúc) đến các kho lưu trữ dữ liệu tập trung (như Data Warehouse hoặc Data Lake) dưới dạng đã được làm sạch, biến đổi và tối ưu hóa để sẵn sàng cho việc truy vấn. Để làm được điều này, họ phải làm việc thường xuyên với các hệ thống tính toán phân tán, các hệ cơ sở dữ liệu (SQL, NoSQL), công cụ tích hợp dữ liệu (ETL/ELT tools) và các nền tảng điện toán đám mây (Cloud platforms).

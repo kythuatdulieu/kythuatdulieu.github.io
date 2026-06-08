@@ -9,8 +9,6 @@ seoTitle: "OLAP là gì? Hệ thống Xử lý Phân tích Trực tuyến"
 metaDescription: "Tìm hiểu kiến trúc OLAP (Online Analytical Processing), các truy vấn đa chiều, khối OLAP (Cubes) và sự kết hợp với Data Warehouse."
 ---
 
-# Hệ Thống OLAP (Online Analytical Processing): Sức Mạng Đằng Sau Các Báo Cáo Phân Tích
-
 Hãy tưởng tượng CEO của một chuỗi bán lẻ lớn đưa ra yêu cầu: *"Cho tôi biết tổng doanh thu của tất cả cửa hàng tại Đông Nam Á trong quý 3 năm nay, so với cùng kỳ năm ngoái, và chia nhỏ theo từng danh mục sản phẩm."*
 
 Nếu bạn cố gắng chạy câu lệnh SQL này trên cơ sở dữ liệu vận hành thông thường (như MySQL hay PostgreSQL phục vụ hệ thống ERP/CRM của công ty), hệ thống sẽ lập tức bị đơ. Lý do là vì cơ sở dữ liệu giao dịch phải thực hiện hàng chục phép `JOIN` và quét qua hàng triệu dòng bản ghi thô để gom nhóm dữ liệu. Việc này không chỉ làm tê liệt các ứng dụng bán hàng đang chạy mà còn tốn rất nhiều thời gian chờ đợi.

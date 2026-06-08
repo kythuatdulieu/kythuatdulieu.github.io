@@ -1,6 +1,6 @@
 ---
 title: "Chiến lược phân tách văn bản - Chunking Strategy"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["chunking", "rag", "vector-database", "nlp", "text-processing"]
 readingTime: "8 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Chunking Strategy là gì? Tối ưu hóa văn bản cho hệ thống RAG"
 metaDescription: "Tìm hiểu các chiến lược phân tách văn bản (Chunking Strategy) trong hệ thống RAG: Fixed-size, Recursive, Semantic chunking và tầm quan trọng của Overlap."
 ---
-
-# Chiến lược phân tách văn bản - Chunking Strategy
 
 Khi xây dựng các ứng dụng Trí tuệ nhân tạo tạo sinh (GenAI), đặc biệt là các hệ thống trả lời câu hỏi dựa trên tài liệu doanh nghiệp sử dụng kiến trúc RAG (Retrieval-Augmented Generation), chúng ta thường gặp một bài toán: Làm thế nào để AI có thể đọc hiểu và tìm kiếm thông tin nhanh chóng trên những cuốn sách, báo cáo tài chính hay tài liệu kỹ thuật dài hàng trăm trang? Câu trả lời nằm ở một bước tiền xử lý cực kỳ quan trọng: **Chunking Strategy (Chiến lược phân tách văn bản)**.
 

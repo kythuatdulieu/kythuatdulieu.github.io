@@ -1,6 +1,6 @@
 ---
 title: "Token - Đơn vị từ vựng"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["token", "tokenization", "llm", "nlp", "preprocessing"]
 readingTime: "7 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Token là gì? Đơn vị từ vựng trong LLM và NLP"
 metaDescription: "Tìm hiểu Token là gì trong ngữ cảnh AI/LLM, cách tính token, thuật toán BPE (Byte-Pair Encoding) và ảnh hưởng đến chi phí API."
 ---
-
-# Token - Đơn vị từ vựng: Những mảnh ghép ngôn ngữ mà AI thấu hiểu
 
 Khi bắt đầu lập trình hoặc sử dụng các Mô hình Ngôn ngữ Lớn (LLM) như GPT-4 hay Claude, bạn sẽ liên tục bắt gặp từ khóa **Token**. Nhà cung cấp API tính tiền dựa trên "1 triệu token", mô hình giới hạn độ dài dựa trên "Cửa sổ ngữ cảnh (Context Window) 128k token". 
 

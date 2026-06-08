@@ -1,6 +1,6 @@
 ---
 title: "Hợp đồng dữ liệu - Data Contract"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Advanced"
 tags: ["data-contract", "data-governance", "data-quality", "data-engineering", "microservices"]
 readingTime: "13 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "Hợp đồng dữ liệu (Data Contract) - Khái niệm cốt lõi cho Data Mesh"
 metaDescription: "Tìm hiểu về Hợp đồng dữ liệu (Data Contract): định nghĩa, cấu trúc, lợi ích và lý do tại sao nó lại quan trọng trong kiến trúc hệ thống dữ liệu hiện đại."
 ---
-
-# Hợp đồng dữ liệu (Data Contract): Khi dữ liệu cần những cam kết vững chắc
 
 Hãy tưởng tượng một buổi sáng thứ Hai, bạn bước vào văn phòng và thấy hệ thống báo cáo doanh thu đột ngột bị lỗi. Sau vài giờ đánh vật với code để tìm nguyên nhân, bạn phát hiện ra một sự thật trớ trêu: Đội ngũ phát triển Backend vừa cập nhật cơ sở dữ liệu để phục vụ một tính năng mới. Họ đã âm thầm đổi tên trường `customer_type` thành `customer_segment` và xóa đi một cột "không dùng đến". Nhưng trớ trêu thay, cột bị xóa đó lại là đầu vào cốt lõi cho pipeline phân tích của đội Data.
 

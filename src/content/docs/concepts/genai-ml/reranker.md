@@ -1,6 +1,6 @@
 ---
 title: "Mô hình tái sắp xếp - Reranker"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["reranker", "cross-encoder", "bi-encoder", "transformers", "nlp"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Mô hình Reranker (Cross-Encoder) là gì? Khác biệt với Bi-Encoder"
 metaDescription: "Khám phá kiến trúc mô hình Reranker (Cross-Encoder), cơ chế tính toán Attention chéo và lý do vì sao nó vượt trội hơn Bi-Encoder (Embedding models)."
 ---
-
-# Mô hình tái sắp xếp - Reranker
 
 Trong các hệ thống truy xuất thông tin hiện đại và đặc biệt là trong kiến trúc RAG (Retrieval-Augmented Generation), việc tìm kiếm được tài liệu chính xác nhất để làm ngữ cảnh cho LLM quyết định trực tiếp đến chất lượng câu trả lời. Để đạt được độ chính xác tối ưu, các kỹ sư thường không chỉ dựa vào tìm kiếm vector thông thường mà sẽ bổ sung thêm một bộ lọc cực kỳ mạnh mẽ ở giai đoạn sau: **Mô hình tái sắp xếp (Reranker)**.
 

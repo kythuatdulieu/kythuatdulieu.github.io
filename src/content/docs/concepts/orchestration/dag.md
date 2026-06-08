@@ -9,8 +9,6 @@ seoTitle: "DAG là gì? Directed Acyclic Graph trong Data Pipeline"
 metaDescription: "Đồ thị có hướng không chu trình (DAG) là gì? Lý do các công cụ Orchestration như Airflow, dbt, Spark sử dụng kiến trúc DAG để mô hình hóa Data Pipeline."
 ---
 
-# DAG - Đồ thị có hướng không chu trình
-
 Trong thế giới Kỹ thuật dữ liệu (Data Engineering), nếu có một khái niệm toán học được áp dụng rộng rãi nhất làm nền tảng cho mọi đường ống dữ liệu (Data Pipeline), thì đó chắc chắn phải là **DAG (Directed Acyclic Graph)**. Cho dù bạn đang làm việc với Apache Airflow, dbt, Apache Spark hay Snowflake, việc hiểu rõ và thiết kế tốt cấu trúc DAG chính là chìa khóa để xây dựng các hệ thống điều phối dữ liệu mạnh mẽ và không bao giờ gặp lỗi bế tắc.
 
 ## DAG: Khung xương toán học định hình các Data Pipeline

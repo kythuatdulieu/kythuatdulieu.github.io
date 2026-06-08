@@ -9,8 +9,6 @@ seoTitle: "Phương pháp luận Kimball (Kimball Methodology) - Xây dựng Dat
 metaDescription: "Khám phá phương pháp luận Ralph Kimball trong xây dựng Data Warehouse: Hướng tiếp cận Bottom-up, Dimensional Modeling, Star Schema và Data Marts."
 ---
 
-# Phương pháp luận Kimball: Thiết kế Data Warehouse hướng tới người dùng kinh doanh (Business-driven)
-
 Khi bắt tay vào xây dựng kho dữ liệu (Data Warehouse) cho doanh nghiệp, một trong những thách thức lớn nhất không nằm ở khâu viết code hay quản trị phần cứng. Thử thách thực sự là làm sao để cấu trúc đống dữ liệu khổng lồ, hỗn độn kia thành một mô hình trực quan, dễ hiểu với người dùng kinh doanh (Business Users) và mang lại tốc độ truy vấn báo cáo nhanh nhất. Để giải quyết bài toán này, phần lớn các doanh nghiệp hiện nay đều lựa chọn đi theo triết lý thực tiễn và vô cùng mạnh mẽ của Ralph Kimball: **Phương pháp luận Kimball** (Kimball Methodology).
 
 ## Khởi đầu từ nhu cầu thực tiễn
@@ -181,9 +179,11 @@ CREATE TABLE fact_sales (
 
 ## Tài liệu tham khảo
 
-1. **The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling** - Ralph Kimball, Margy Ross. (Kinh thánh của Dimensional Modeling).
-2. **Data Warehouse Architecture: Inmon vs. Kimball** (Các tài liệu so sánh kiến trúc).
-3. **Fundamentals of Data Engineering** - Joe Reis.
+1. [The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's definitive book on dimensional modeling on O'Reilly.
+2. [Kimball Dimensional Modeling Techniques](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/) - Official Kimball Group registry of dimensional modeling design techniques.
+3. [Dimensional Modeling](https://en.wikipedia.org/wiki/Dimensional_modeling) - Wikipedia's overview of dimensional modeling design concepts, star schemas, and Kimball's data warehouse bus architecture.
+4. [Difference between Kimball and Inmon](https://www.geeksforgeeks.org/difference-between-kimball-and-inmon/) - Comparison of Kimball and Inmon data warehouse architectures on GeeksforGeeks.
+5. [Kimball vs. Inmon: Two School of Thoughts](https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/) - Structured comparison of the two leading data warehousing schools of thought in the Holistics Analytics Setup Guide.
 
 ## English Summary
 

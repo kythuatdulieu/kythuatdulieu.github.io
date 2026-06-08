@@ -9,8 +9,6 @@ seoTitle: "ACID Transactions trên Data Lake - Kiến trúc Lakehouse"
 metaDescription: "Tìm hiểu cơ chế thực thi giao dịch ACID (Atomicity, Consistency, Isolation, Durability) trên Data Lake và Object Storage qua các công nghệ Table Format."
 ---
 
-# ACID Transactions trên Data Lake: Mang tính năng Data Warehouse lên Object Storage
-
 Hãy tưởng tượng bạn đang vận hành một hệ thống dữ liệu lớn phục vụ báo cáo tài chính cho doanh nghiệp. Vào lúc 2 giờ sáng, đường ống dẫn dữ liệu (data pipeline) đang cập nhật hàng triệu bản ghi giao dịch mới vào Data Lake. Cùng lúc đó, đội ngũ phân tích chạy các truy vấn SQL để kết xuất báo cáo. Nếu hệ thống đột ngột gặp sự cố mất điện hoặc lỗi mạng, liệu dữ liệu của bạn sẽ ra sao? Báo cáo xuất ra có bị sai lệch, chắp vá hay không?
 
 Để giải quyết những bài toán hóc búa này, chúng ta cần đến **ACID Transactions (Giao dịch ACID)**. Trước đây, ACID vốn là "đặc sản" độc quyền của các cơ sở dữ liệu quan hệ truyền thống hoặc các Data Warehouse đắt đỏ. Giờ đây, nhờ sự phát triển của các Table Format hiện đại, chúng ta hoàn toàn có thể chạy các giao dịch ACID trực tiếp trên các hệ thống Object Storage giá rẻ như AWS S3, Google Cloud Storage hay HDFS.
@@ -174,9 +172,11 @@ deltaTable.update(
 
 ## Tài liệu tham khảo
 
-1. **"Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores"** - (VLDB Paper 2020) Mô tả cách Delta Lake cung cấp ACID.
-2. **"Designing Data-Intensive Applications"** - Martin Kleppmann (Chương 7: Transactions).
-3. **Apache Iceberg Documentation** (iceberg.apache.org/reliability) - Đặc tả về OCC và Atomicity.
+1. [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores](https://doi.org/10.14778/3415478.3415560) - VLDB 2020 paper outlining Delta Lake's design and transactional model.
+2. [Apache Iceberg Table Spec](https://iceberg.apache.org/spec/) - Official specification of the Iceberg table format, detailing isolation and transaction model.
+3. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's guide to system architecture and database transactions (Chapter 7).
+4. [Introducing Delta Lake: ACID Transactions on Spark](https://www.databricks.com/blog/2019/08/21/introducing-delta-lake-acid-transactions-on-spark.html) - Databricks blog introducing ACID transactions to Apache Spark workloads.
+5. [Querying Apache Iceberg Tables in Amazon Athena](https://docs.aws.amazon.com/athena/latest/ug/querying-iceberg.html) - AWS documentation on using Athena to query transactional Iceberg tables stored on Amazon S3.
 
 ## English Summary
 

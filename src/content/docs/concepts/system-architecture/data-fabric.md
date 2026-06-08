@@ -9,8 +9,6 @@ seoTitle: "Data Fabric - Kiến trúc dệt dữ liệu tự động"
 metaDescription: "Tìm hiểu kiến trúc Data Fabric, giải pháp tích hợp siêu dữ liệu (metadata) sử dụng AI để tự động hóa quản lý và truy cập dữ liệu đa đám mây."
 ---
 
-# Data Fabric (Dệt dữ liệu): Kiến trúc tự động hóa kết nối dữ liệu đa đám mây
-
 Trong những năm gần đây, dữ liệu doanh nghiệp không chỉ bùng nổ về mặt kích thước mà còn phân mảnh mạnh mẽ theo chiều ngang. Bạn sẽ dễ dàng bắt gặp những kịch bản mà dữ liệu giao dịch nằm ở hệ thống On-premises (máy chủ vật lý tại công ty), dữ liệu phân tích nằm trên Google BigQuery, tệp log người dùng lưu trên AWS S3, còn thông tin khách hàng lại nằm rải rác trong các ứng dụng SaaS như Salesforce.
 
 Việc cố gắng gom (ingest) toàn bộ dữ liệu khổng lồ này về một Data Lake duy nhất bằng sức người đang trở nên cực kỳ tốn thời gian, tốn kém chi phí đường truyền và thường xuyên vấp phải các rào cản pháp lý về biên giới dữ liệu. Trước thực tế đó, **Data Fabric (Lưới dệt dữ liệu)** xuất hiện như một giải pháp cứu cánh giúp kết nối thế giới dữ liệu phân mảnh này mà không cần dịch chuyển vật lý.

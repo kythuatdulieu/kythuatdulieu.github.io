@@ -1,6 +1,6 @@
 ---
 title: "Tinh chỉnh hiệu quả tham số (PEFT)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["peft", "lora", "fine-tuning", "llm", "genai"]
 readingTime: "14 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "PEFT là gì? Các kỹ thuật tinh chỉnh LLM hiệu quả (LoRA, QLoRA)"
 metaDescription: "Tìm hiểu Parameter-Efficient Fine-Tuning (PEFT) và LoRA - kỹ thuật cách mạng giúp tinh chỉnh Mô hình Ngôn ngữ Lớn (LLM) trên một GPU duy nhất với chi phí thấp."
 ---
-
-# Tinh chỉnh hiệu quả tham số - PEFT
 
 Việc huấn luyện hay tinh chỉnh (fine-tune) các Mô hình Ngôn ngữ Lớn (LLM) từng được coi là cuộc chơi độc quyền của các ông lớn công nghệ sở hữu tiềm lực tài chính khổng lồ cùng hệ thống siêu máy tính hàng nghìn GPU đắt đỏ. Thế nhưng, sự ra đời của **PEFT (Parameter-Efficient Fine-Tuning)** đã thay đổi hoàn toàn cục diện đó. Kỹ thuật này đã dân chủ hóa AI, cho phép bất kỳ kỹ sư hay doanh nghiệp nhỏ nào cũng có thể tinh chỉnh các mô hình hàng tỷ tham số ngay trên chiếc card đồ họa dân dụng của mình với chi phí cực kỳ rẻ.
 

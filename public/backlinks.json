@@ -9,6 +9,14 @@
       "title": "Các loại Join trong Spark"
     },
     {
+      "url": "/concepts/batch-processing/data-skew/",
+      "title": "Lệch dữ liệu - Data Skew"
+    },
+    {
+      "url": "/concepts/batch-processing/shuffle/",
+      "title": "Shuffle trong Spark"
+    },
+    {
       "url": "/concepts/cloud-data-platform/azure-synapse/",
       "title": "Azure Synapse Analytics"
     },
@@ -19,6 +27,10 @@
     {
       "url": "/concepts/data-lake-lakehouse/compaction/",
       "title": "Compaction"
+    },
+    {
+      "url": "/concepts/data-lake-lakehouse/time-travel/",
+      "title": "Time Travel"
     },
     {
       "url": "/concepts/database-storage/compression-algorithms/",
@@ -53,10 +65,6 @@
     {
       "url": "/concepts/batch-processing/spark-sql/",
       "title": "Spark SQL"
-    },
-    {
-      "url": "/concepts/batch-processing/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
     }
   ],
   "/concepts/batch-processing/distributed-processing/": [
@@ -129,6 +137,10 @@
     {
       "url": "/concepts/cloud-data-platform/databricks-platform/",
       "title": "Databricks Platform"
+    },
+    {
+      "url": "/concepts/data-lake-lakehouse/acid-transactions-on-lake/",
+      "title": "ACID Transactions trên Data Lake"
     },
     {
       "url": "/concepts/data-lake-lakehouse/apache-hudi/",
@@ -479,6 +491,10 @@
       "title": "Apache Iceberg - Định dạng bảng thế hệ mới"
     },
     {
+      "url": "/concepts/data-lake-lakehouse/compaction/",
+      "title": "Compaction"
+    },
+    {
       "url": "/concepts/data-lake-lakehouse/lakehouse/",
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
     },
@@ -507,8 +523,16 @@
       "title": "Kho dữ liệu phân tích - Data Warehouse"
     },
     {
+      "url": "/concepts/data-warehouse/dimension-table/",
+      "title": "Bảng chiều - Dimension Table"
+    },
+    {
       "url": "/concepts/data-warehouse/dimensional-modeling/",
       "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/data-warehouse/slowly-changing-dimension/",
+      "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
     },
     {
       "url": "/concepts/data-warehouse/snowflake-schema/",
@@ -1431,16 +1455,16 @@
       "title": "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
     },
     {
+      "url": "/concepts/data-quality/data-reconciliation/",
+      "title": "Đối soát dữ liệu - Data Reconciliation"
+    },
+    {
       "url": "/concepts/data-quality/data-testing/",
       "title": "Kiểm thử dữ liệu động - Data Testing"
     },
     {
       "url": "/concepts/data-warehouse/slowly-changing-dimension/",
       "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
-    },
-    {
-      "url": "/concepts/data-warehouse/surrogate-key/",
-      "title": "Khóa thay thế - Surrogate Key"
     },
     {
       "url": "/concepts/etl-elt/elt/",
@@ -1501,8 +1525,8 @@
       "title": "Time Travel"
     },
     {
-      "url": "/concepts/data-lake-lakehouse/apache-hudi/",
-      "title": "Apache Hudi"
+      "url": "/concepts/data-warehouse/dimension-table/",
+      "title": "Bảng chiều - Dimension Table"
     },
     {
       "url": "/concepts/etl-elt/data-loading/",
@@ -1541,6 +1565,10 @@
     {
       "url": "/concepts/cloud-data-platform/snowflake/",
       "title": "Snowflake Data Cloud"
+    },
+    {
+      "url": "/concepts/database-storage/clustering/",
+      "title": "Phân cụm Dữ liệu - Clustering"
     },
     {
       "url": "/concepts/system-architecture/modern-data-stack/",
@@ -1691,10 +1719,6 @@
       "title": "Change Data Capture (CDC)"
     },
     {
-      "url": "/concepts/cloud-data-platform/cloud-storage/",
-      "title": "Lưu trữ đối tượng trên đám mây - Cloud Object Storage"
-    },
-    {
       "url": "/concepts/data-lake-lakehouse/apache-iceberg/",
       "title": "Apache Iceberg - Định dạng bảng thế hệ mới"
     },
@@ -1803,6 +1827,10 @@
       "title": "Kho dữ liệu phân tích - Data Warehouse"
     },
     {
+      "url": "/concepts/data-warehouse/slowly-changing-dimension/",
+      "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
+    },
+    {
       "url": "/concepts/etl-elt/data-ingestion/",
       "title": "Data Ingestion"
     },
@@ -1881,6 +1909,10 @@
       "title": "Compaction"
     },
     {
+      "url": "/concepts/data-lake-lakehouse/data-lake/",
+      "title": "Hồ dữ liệu - Data Lake"
+    },
+    {
       "url": "/concepts/data-lake-lakehouse/schema-evolution/",
       "title": "Schema Evolution"
     },
@@ -1891,6 +1923,18 @@
     {
       "url": "/concepts/data-lake-lakehouse/time-travel/",
       "title": "Time Travel"
+    },
+    {
+      "url": "/concepts/data-quality/data-profiling/",
+      "title": "Lập hồ sơ dữ liệu - Data Profiling"
+    },
+    {
+      "url": "/concepts/data-warehouse/data-warehouse/",
+      "title": "Kho dữ liệu phân tích - Data Warehouse"
+    },
+    {
+      "url": "/concepts/data-warehouse/dimension-table/",
+      "title": "Bảng chiều - Dimension Table"
     },
     {
       "url": "/concepts/data-warehouse/unity-catalog/",
@@ -1973,6 +2017,10 @@
     {
       "url": "/concepts/data-lake-lakehouse/lakehouse/",
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
+    },
+    {
+      "url": "/concepts/data-lake-lakehouse/medallion-architecture/",
+      "title": "Kiến trúc Medallion - Medallion Architecture"
     },
     {
       "url": "/concepts/data-lake-lakehouse/time-travel/",
@@ -2063,6 +2111,10 @@
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
     },
     {
+      "url": "/concepts/data-warehouse/data-warehouse/",
+      "title": "Kho dữ liệu phân tích - Data Warehouse"
+    },
+    {
       "url": "/concepts/foundation/data-platform-architecture/",
       "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
     },
@@ -2105,8 +2157,20 @@
       "title": "dbt Models - Tầng biến đổi và cấu trúc dự án"
     },
     {
+      "url": "/concepts/cloud-data-platform/snowflake/",
+      "title": "Snowflake Data Cloud"
+    },
+    {
+      "url": "/concepts/data-warehouse/dimension-table/",
+      "title": "Bảng chiều - Dimension Table"
+    },
+    {
       "url": "/concepts/data-warehouse/fact-table/",
       "title": "Bảng sự kiện - Fact Table"
+    },
+    {
+      "url": "/concepts/data-warehouse/slowly-changing-dimension/",
+      "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
     },
     {
       "url": "/concepts/data-warehouse/surrogate-key/",
@@ -2163,6 +2227,14 @@
     {
       "url": "/concepts/observability-reliability/volume-anomalies/",
       "title": "Phát hiện bất thường về khối lượng dữ liệu - Volume Anomalies"
+    },
+    {
+      "url": "/concepts/data-quality/data-quality/",
+      "title": "Chất lượng dữ liệu - Data Quality"
+    },
+    {
+      "url": "/concepts/data-quality/data-testing/",
+      "title": "Kiểm thử dữ liệu động - Data Testing"
     }
   ],
   "/concepts/data-quality/data-testing/": [
@@ -2219,6 +2291,10 @@
     {
       "url": "/concepts/data-quality/data-quality/",
       "title": "Chất lượng dữ liệu - Data Quality"
+    },
+    {
+      "url": "/concepts/data-quality/data-testing/",
+      "title": "Kiểm thử dữ liệu động - Data Testing"
     }
   ],
   "/concepts/governance-metadata/data-catalog/": [
@@ -2243,8 +2319,16 @@
       "title": "ACID Transactions trên Data Lake"
     },
     {
+      "url": "/concepts/data-lake-lakehouse/apache-hudi/",
+      "title": "Apache Hudi"
+    },
+    {
       "url": "/concepts/data-lake-lakehouse/data-lake/",
       "title": "Hồ dữ liệu - Data Lake"
+    },
+    {
+      "url": "/concepts/data-quality/data-quality/",
+      "title": "Chất lượng dữ liệu - Data Quality"
     },
     {
       "url": "/concepts/foundation/data-platform-architecture/",
@@ -2411,20 +2495,6 @@
     {
       "url": "/learning-paths/analytics-engineer/",
       "title": "Analytics Engineer (Kỹ sư phân tích dữ liệu)"
-    }
-  ],
-  "/concepts/transformation-analytics/dbt-testing/": [
-    {
-      "url": "/concepts/data-quality/data-testing/",
-      "title": "Kiểm thử dữ liệu động - Data Testing"
-    },
-    {
-      "url": "/concepts/transformation-analytics/dbt/",
-      "title": "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
-    },
-    {
-      "url": "/concepts/transformation-analytics/materialization/",
-      "title": "Phương thức lưu trữ kết quả dbt - Materialization"
     }
   ],
   "/concepts/data-warehouse/slowly-changing-dimension/": [
@@ -2909,6 +2979,10 @@
       "title": "Xử lý dữ liệu theo lô - Batch Processing"
     },
     {
+      "url": "/concepts/batch-processing/data-skew/",
+      "title": "Lệch dữ liệu - Data Skew"
+    },
+    {
       "url": "/concepts/batch-processing/spark-partition/",
       "title": "Spark Partition"
     },
@@ -3145,10 +3219,6 @@
     {
       "url": "/concepts/orchestration/retries-sla/",
       "title": "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
-    },
-    {
-      "url": "/concepts/orchestration/task-dependency/",
-      "title": "Task Dependency - Quản lý sự phụ thuộc tác vụ"
     },
     {
       "url": "/concepts/transformation-analytics/sql-transformation/",
@@ -3389,8 +3459,20 @@
       "title": "Google BigQuery - Nền tảng phân tích Serverless"
     },
     {
+      "url": "/concepts/cloud-data-platform/snowflake/",
+      "title": "Snowflake Data Cloud"
+    },
+    {
       "url": "/concepts/data-lake-lakehouse/apache-hudi/",
       "title": "Apache Hudi"
+    },
+    {
+      "url": "/concepts/data-lake-lakehouse/compaction/",
+      "title": "Compaction"
+    },
+    {
+      "url": "/concepts/data-lake-lakehouse/delta-lake/",
+      "title": "Delta Lake - Bảng dữ liệu giao dịch mở"
     },
     {
       "url": "/concepts/genai-ml/vector-database/",
@@ -4087,10 +4169,6 @@
       "title": "Xử lý thời gian thực - Streaming Processing"
     },
     {
-      "url": "/concepts/batch-processing/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    },
-    {
       "url": "/concepts/cloud-data-platform/cost-optimization/",
       "title": "Tối ưu hóa chi phí (Cost Optimization)"
     },
@@ -4161,10 +4239,6 @@
       "title": "Snowflake Data Cloud"
     },
     {
-      "url": "/concepts/data-lake-lakehouse/apache-hudi/",
-      "title": "Apache Hudi"
-    },
-    {
       "url": "/concepts/data-lake-lakehouse/apache-iceberg/",
       "title": "Apache Iceberg - Định dạng bảng thế hệ mới"
     },
@@ -4175,10 +4249,6 @@
     {
       "url": "/concepts/data-lake-lakehouse/data-lake/",
       "title": "Hồ dữ liệu - Data Lake"
-    },
-    {
-      "url": "/concepts/data-lake-lakehouse/delta-lake/",
-      "title": "Delta Lake - Bảng dữ liệu giao dịch mở"
     },
     {
       "url": "/concepts/data-lake-lakehouse/lakehouse/",
@@ -4193,10 +4263,6 @@
       "title": "Schema Evolution"
     },
     {
-      "url": "/concepts/data-lake-lakehouse/table-format/",
-      "title": "Table Format"
-    },
-    {
       "url": "/concepts/data-quality/data-reconciliation/",
       "title": "Đối soát dữ liệu - Data Reconciliation"
     },
@@ -4207,22 +4273,6 @@
     {
       "url": "/concepts/data-warehouse/fact-table/",
       "title": "Bảng sự kiện - Fact Table"
-    },
-    {
-      "url": "/concepts/data-warehouse/kimball-methodology/",
-      "title": "Kimball Methodology - Dimensional Modeling"
-    },
-    {
-      "url": "/concepts/data-warehouse/slowly-changing-dimension/",
-      "title": "Xử lý Dimension thay đổi chậm - Slowly Changing Dimension (SCD)"
-    },
-    {
-      "url": "/concepts/data-warehouse/snowflake-schema/",
-      "title": "Lược đồ bông tuyết - Snowflake Schema"
-    },
-    {
-      "url": "/concepts/data-warehouse/surrogate-key/",
-      "title": "Khóa thay thế - Surrogate Key"
     },
     {
       "url": "/concepts/database-storage/compression-algorithms/",
@@ -4347,14 +4397,6 @@
     {
       "url": "/interview/production-incident-qa/",
       "title": "Xử lý sự cố Production (Phỏng vấn) - Production Incident QA"
-    },
-    {
-      "url": "/interview/python-de-interview/",
-      "title": "Python Data Engineering Interview Patterns"
-    },
-    {
-      "url": "/interview/sql-interview-patterns/",
-      "title": "SQL Interview Patterns"
     },
     {
       "url": "/learning-paths/analytics-engineer/",
@@ -5657,6 +5699,10 @@
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
     },
     {
+      "url": "/concepts/data-lake-lakehouse/medallion-architecture/",
+      "title": "Kiến trúc Medallion - Medallion Architecture"
+    },
+    {
       "url": "/concepts/data-quality/data-quality/",
       "title": "Chất lượng dữ liệu - Data Quality"
     },
@@ -6105,6 +6151,10 @@
       "title": "Apache Hudi"
     },
     {
+      "url": "/concepts/database-storage/compression-algorithms/",
+      "title": "Thuật toán nén dữ liệu - Compression Algorithms"
+    },
+    {
       "url": "/concepts/database-storage/file-formats/",
       "title": "Định dạng Tệp Dữ liệu - File Formats"
     },
@@ -6317,6 +6367,10 @@
       "title": "Zero-Copy Cloning"
     },
     {
+      "url": "/concepts/cloud-data-platform/google-bigquery/",
+      "title": "Google BigQuery - Nền tảng phân tích Serverless"
+    },
+    {
       "url": "/interview/cloud-platform-interview/",
       "title": "Nền tảng Cloud (Phỏng vấn) - Cloud Platform Interview"
     },
@@ -6351,6 +6405,16 @@
     {
       "url": "/concepts/transformation-analytics/metrics-layer/",
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
+    }
+  ],
+  "/concepts/transformation-analytics/dbt-testing/": [
+    {
+      "url": "/concepts/transformation-analytics/dbt/",
+      "title": "dbt (data build tool) - Công cụ chuyển đổi dữ liệu"
+    },
+    {
+      "url": "/concepts/transformation-analytics/materialization/",
+      "title": "Phương thức lưu trữ kết quả dbt - Materialization"
     }
   ],
   "/learning-paths/beginner-de/": [
@@ -6435,6 +6499,20 @@
       "title": "Stream-Table Duality - Tính lưỡng tính Dòng - Bảng"
     }
   ],
+  "/concepts/data-warehouse/unity-catalog/": [
+    {
+      "url": "/concepts/cloud-data-platform/cloud-storage/",
+      "title": "Lưu trữ đối tượng trên đám mây - Cloud Object Storage"
+    },
+    {
+      "url": "/concepts/cloud-data-platform/databricks-platform/",
+      "title": "Databricks Platform"
+    },
+    {
+      "url": "/learning-paths/data-platform-engineer/",
+      "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
+    }
+  ],
   "/concepts/data-quality/anomaly-detection/": [
     {
       "url": "/concepts/cloud-data-platform/cost-optimization/",
@@ -6497,18 +6575,12 @@
       "title": "Databricks Platform"
     },
     {
-      "url": "/concepts/data-warehouse/unity-catalog/",
-      "title": "Unity Catalog"
-    }
-  ],
-  "/concepts/data-warehouse/unity-catalog/": [
-    {
-      "url": "/concepts/cloud-data-platform/databricks-platform/",
-      "title": "Databricks Platform"
+      "url": "/concepts/data-quality/anomaly-detection/",
+      "title": "Phát hiện bất thường - Anomaly Detection"
     },
     {
-      "url": "/learning-paths/data-platform-engineer/",
-      "title": "Data Platform Engineer (Kỹ sư nền tảng dữ liệu)"
+      "url": "/concepts/data-warehouse/unity-catalog/",
+      "title": "Unity Catalog"
     }
   ],
   "/concepts/data-lake-lakehouse/schema-evolution/": [

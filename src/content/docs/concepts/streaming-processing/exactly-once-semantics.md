@@ -9,8 +9,6 @@ seoTitle: "Exactly-Once Semantics (EOS) trong Streaming Processing"
 metaDescription: "Khám phá Exactly-Once Semantics (EOS) là gì. So sánh At-most-once, At-least-once và Exactly-once. Cách Apache Flink và Kafka đạt được EOS qua Two-Phase Commit."
 ---
 
-# Exactly-Once Semantics (EOS) - Xử lý chính xác một lần
-
 Trong các hệ thống phân tán xử lý dữ liệu lớn, có một thực tế phũ phàng mà các kỹ sư luôn phải đối mặt: **Mọi thứ đều có thể bị sập**. Mạng internet có thể mất kết nối bất ngờ, máy chủ có thể mất điện đột ngột và phần mềm có thể bị crash ở bất kỳ dòng code nào. 
 
 Vậy điều gì sẽ xảy ra với lượng dữ liệu khổng lồ đang bay trên đường truyền khi sự cố ập đến? Làm sao để chúng ta đảm bảo dữ liệu không bị mất đi, và cũng không bị xử lý lặp lại nhiều lần làm sai lệch kết quả cuối cùng? 

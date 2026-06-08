@@ -9,8 +9,6 @@ seoTitle: "Data Catalog là gì? Khái niệm Danh mục dữ liệu chi tiết"
 metaDescription: "Tìm hiểu Data Catalog (Danh mục dữ liệu) - Công cụ cốt lõi phục vụ tìm kiếm, khám phá (Data Discovery) và quản trị toàn bộ tài sản dữ liệu của doanh nghiệp."
 ---
 
-# Danh mục dữ liệu - Data Catalog
-
 Hãy tưởng tượng bạn bước vào một siêu thị khổng lồ nhưng không hề có các biển chỉ dẫn ngành hàng, không có nhãn giá và các sản phẩm được xếp lộn xộn trên kệ. Việc tìm kiếm một hộp sữa sẽ trở thành một cơn ác mộng. Trong thế giới dữ liệu của doanh nghiệp cũng vậy, khi số lượng bảng dữ liệu lên tới hàng ngàn và nằm rải rác ở khắp các phòng ban, việc tìm đúng dữ liệu để làm báo cáo là vô cùng khó khăn. **Data Catalog (Danh mục dữ liệu)** chính là "tấm bản đồ chỉ đường" giúp giải quyết triệt để sự hỗn loạn này.
 
 ## Data Catalog: Bản đồ dẫn đường trong kho tàng dữ liệu doanh nghiệp

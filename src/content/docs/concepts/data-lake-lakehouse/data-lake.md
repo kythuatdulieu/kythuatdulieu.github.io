@@ -9,7 +9,7 @@ seoTitle: "Hồ dữ liệu - Hướng dẫn chuyên sâu về Data Lake"
 metaDescription: "Tìm hiểu toàn diện về Data Lake (Hồ dữ liệu): định nghĩa, cấu trúc tổ chức dữ liệu thô, định dạng Parquet/Avro, sự cố tệp nhỏ và cách phân biệt DWH vs Data Lake."
 ---
 
-# Hồ dữ liệu (Data Lake): Nơi lưu trữ không giới hạn cho kỷ nguyên Big Data
+# Hồ dữ liệu (Data Lake)
 
 Trong kỷ nguyên bùng nổ thông tin, dữ liệu được sinh ra với tốc độ chóng mặt và đa dạng về chủng loại. Khi các mô hình Kho dữ liệu (Data Warehouse) truyền thống bắt đầu bộc lộ những giới hạn về mặt chi phí và khả năng lưu trữ các định dạng phi cấu trúc, **Hồ dữ liệu (Data Lake)** đã xuất hiện như một cuộc cách mạng, mở ra một không gian lưu trữ không giới hạn với chi phí cực kỳ tối ưu cho các doanh nghiệp.
 
@@ -170,14 +170,13 @@ df_structured.write \
   * **Nén dữ liệu hiệu quả**: Lưu trữ dạng cột giúp các giá trị có cùng kiểu dữ liệu nằm cạnh nhau, tối ưu hóa các thuật toán nén như Snappy hay Gzip, giúp tiết kiệm từ 60% đến 80% dung lượng lưu trữ so với CSV.
   * **Hỗ trợ thống kê tại chỗ (Metadata statistics)**: Parquet lưu trữ giá trị Min/Max của từng cột trong mỗi nhóm dòng (row group). Công cụ đọc có thể nhìn vào metadata này để quyết định bỏ qua không đọc cả một phân đoạn dữ liệu lớn nếu giá trị cần tìm không nằm trong khoảng Min/Max, tăng tốc truy vấn đáng kể.
 
----
+## Tài liệu tham khảo
 
-## Tài liệu tham khảo hữu ích
-1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley.
-2. **Designing Data-Intensive Applications** - Martin Kleppmann.
-3. **Databricks Blog** - Các bài viết chuyên sâu về tối ưu hóa hiệu năng Data Lake và giải quyết Metadata Bottleneck.
-
----
+1. [AWS: What is a Data Lake?](https://aws.amazon.com/big-data/datalakes-and-analytics/what-is-a-data-lake/) - Concept overview, benefits, and architectural patterns of data lakes on AWS.
+2. [Google Cloud: What is a Data Lake?](https://cloud.google.com/learn/what-is-a-data-lake) - Definitions and learning resources comparing data lakes to data warehouses.
+3. [Databricks Data Lake Guide](https://www.databricks.com/discover/pages/what-is-a-data-lake) - In-depth guide on data lake structures, technologies, and lakehouse evolution.
+4. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Comprehensive book by Joe Reis and Matt Housley covering storage tiering and data lake designs.
+5. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's guide on data modeling, serialization formats (Parquet/Avro), and storage internals.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

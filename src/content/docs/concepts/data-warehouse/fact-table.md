@@ -9,8 +9,6 @@ seoTitle: "Fact Table (Bảng sự kiện) là gì? Phân loại Fact trong Data
 metaDescription: "Tìm hiểu chi tiết về Bảng sự kiện (Fact Table) trong Data Warehouse: Định nghĩa, vai trò, các loại Fact (Additive, Semi-Additive, Non-Additive) và Grain."
 ---
 
-# Bảng sự kiện - Fact Table
-
 Mỗi khi bạn đi siêu thị và nghe tiếng "bíp" vang lên lúc nhân viên thu ngân quét mã vạch trên sản phẩm, một giao dịch mới đã được ghi nhận. Trong thế giới lưu trữ dữ liệu, hành động quét mã vạch đó sẽ sinh ra một loạt các con số: số lượng mua, đơn giá, số tiền chiết khấu và tổng doanh thu. 
 
 Để phục vụ cho việc phân tích và báo cáo sau này, tất cả những con số đo lường thực tế đó sẽ được gom về một bảng lưu trữ trung tâm. Bảng đó được gọi là **Bảng sự kiện (Fact Table)** – xương sống của mọi mô hình dữ liệu đa chiều (Dimensional Modeling) trong Data Warehouse.
@@ -160,24 +158,28 @@ CREATE INDEX idx_fact_store ON fact_sales(store_key);
 ### 2. Sự khác biệt cốt lõi giữa Transaction Fact Table và Accumulating Snapshot Fact Table là gì?
 * **Gợi ý trả lời**: 
   * **Transaction Fact Table**: Được thiết kế theo cơ chế *Insert-Only* (chỉ chèn thêm, không cập nhật). Mỗi khi một giao dịch kinh doanh đơn lẻ phát sinh (ví dụ: một giao dịch quẹt thẻ), hệ thống sẽ chèn ngay một dòng mới vào bảng. Dữ liệu lịch sử đã ghi nhận sẽ không bao giờ bị thay đổi.
-  * **Accumulating Snapshot Fact Table**: Được thiết kế để theo dõi *toàn bộ vòng đời* của một quy trình gồm nhiều bước (ví dụ: quy trình xử lý đơn hàng hay xử lý hồ sơ bảo hiểm). Bảng này sẽ có nhiều cột khóa ngoại ngày tháng đại diện cho từng bước (`order_date_key`, `ship_date_key`, `delivery_date_key`). Khi đơn hàng mới được tạo, chỉ cột `order_date_key` có giá trị. Khi đơn hàng được giao, hệ thống ETL sẽ thực hiện lệnh `UPDATE` chính dòng dữ liệu đó để điền tiếp giá trị vào cột `delivery_date_key`. Loại bảng Fact này rất hữu ích khi cần tính toán độ trễ (lag time) giữa các bước trong một quy trình.
+  * **Accumulating Snapshot Fact Table**: Được thiết kế để theo dõi *toàn bộ vòng đời* của một quy trình gồm nhiều bước (ví dụ: quy trình xử lý đơn hàng hay xử lý hồ sơ bảo hiểm). Bảng này sẽ có nhiều cột khóa ngoại ngày tháng đại diện cho từng bước (`order_date_key`, `ship_date_key`, `delivery_date_key`). Khi đơn hàng mới được tạo, chỉ cột `order_date_key` có giá trị. Khi đơn hàng được giao, hệ thống ETL sẽ thực hiện lệnh `UPDATE` chính dòng dữ liệu đó để điền tiếp giá trị vào cột `delivery_date_key`. Chuỗi bảng Fact này rất hữu ích khi cần tính toán độ trễ (lag time) giữa các bước trong một quy trình.
 
 ### 3. Làm thế nào để bạn xử lý trường hợp một thuộc tính của Dimension thay đổi theo thời gian trong Fact Table?
 * **Gợi ý trả lời**: 
   * Chúng ta sử dụng kỹ thuật SCD (Slowly Changing Dimensions) để quản lý lịch sử thay đổi của Dimension. Khi một thuộc tính Dimension thay đổi (ví dụ: khách hàng đổi địa chỉ), tùy thuộc vào loại SCD (SCD Type 1, 2, hay 3), khóa ngoại tương ứng trong Fact Table sẽ liên kết đến bản ghi phù hợp.
   * Đặc biệt với SCD Type 2, một bản ghi mới với khóa thay thế (surrogate key) mới được tạo ra trong bảng Dimension, và các giao dịch Fact phát sinh sau thời điểm thay đổi sẽ tự động liên kết với khóa mới này, từ đó giúp bảo toàn tính chính xác lịch sử của báo cáo.
 
-## Đọc thêm và Tài liệu tham khảo
+---
 
-### Các khái niệm liên quan
+## Khái niệm liên quan
 * [Dimension Table](/concepts/data-warehouse/dimension-table/) - Bảng chiều mô tả ngữ cảnh.
 * [Star Schema](/concepts/data-warehouse/star-schema/) - Mô hình hình sao trong thiết kế DWH.
 * [Grain](/concepts/data-warehouse/grain/) - Độ mịn dữ liệu trong thiết kế Fact Table.
 
-### Sách và tài liệu chính thống
-1. **The Data Warehouse Toolkit** - Ralph Kimball.
-2. **Fundamentals of Data Engineering** - Joe Reis.
+## Tài liệu tham khảo
 
-## Tóm tắt bằng tiếng Anh (English Summary)
+1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic textbook detailing fact table designs, grain specifications, and additive/non-additive metrics.
+2. [Snowflake Documentation: Designing Fact Tables](https://docs.snowflake.com/) - Best practices and patterns for building highly performant fact tables on Snowflake.
+3. [Databricks Documentation: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Guide to structuring raw ingestions into Gold-layer fact and dimension tables.
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Comprehensive guide on how fact tables aggregate quantitative metrics for BI tools.
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Integrating classic Kimball dimensional designs, surrogate keys, and fact tables within the Databricks Lakehouse.
+
+## English Summary
 
 A Fact Table is the central table in a star schema of a data warehouse, storing the quantitative measurements (facts/metrics) of business events alongside foreign keys that link to descriptive dimension tables. Characterized as being highly atomic, deeply granular, and massively long (often containing billions of rows), fact tables are optimized for rapid numerical aggregation. Facts can be additive (summable across all dimensions), semi-additive, or non-additive. Additionally, fact tables are categorized into transaction (insert-only events), periodic snapshot (regular interval summaries), and accumulating snapshot (tracking a process pipeline via updates), forming the analytical backbone of any enterprise BI system.

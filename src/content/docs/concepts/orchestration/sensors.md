@@ -9,8 +9,6 @@ seoTitle: "Airflow Sensors là gì? Cảm biến dữ liệu trong Orchestration
 metaDescription: "Tìm hiểu về Sensors trong Apache Airflow. Cách thiết lập tác vụ chờ đợi, cơ chế Polling (Poke vs Reschedule) và tối ưu hóa tài nguyên Worker."
 ---
 
-# Sensors - Tác vụ cảm biến chờ đợi
-
 Trong công việc của một Data Engineer, việc lập lịch chạy job dựa trên thời gian cứng nhắc (ví dụ: cứ đúng 1 giờ sáng là chạy) thường tiềm ẩn rất nhiều rủi ro. Thực tế, luồng dữ liệu của bạn thường phụ thuộc vào các yếu tố ngoại cảnh: chờ đối tác tải file báo cáo lên AWS S3, chờ hệ thống CRM xuất dữ liệu xong, hoặc chờ một API bên thứ ba phản hồi thành công. 
 
 Nếu hệ thống nguồn bị chậm trễ, pipeline của bạn chắc chắn sẽ sập vì không tìm thấy dữ liệu. Để giải quyết bài toán "chờ đợi" này một cách thông minh, các công cụ điều phối (Orchestration) như Apache Airflow đã cung cấp một tính năng cực kỳ hữu ích: **Sensors (Tác vụ cảm biến)**.

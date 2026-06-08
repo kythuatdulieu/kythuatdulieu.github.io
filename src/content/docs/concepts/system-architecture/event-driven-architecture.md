@@ -9,8 +9,6 @@ seoTitle: "Kiến trúc hướng sự kiện (Event-Driven Architecture)"
 metaDescription: "Tìm hiểu kiến trúc hướng sự kiện (EDA): Khái niệm cốt lõi, sự khác biệt với kiến trúc gọi API truyền thống (Request-Driven), và cách ứng dụng với Kafka."
 ---
 
-# Event-Driven Architecture (Kiến trúc hướng sự kiện)
-
 Trong phát triển phần mềm hiện đại, đặc biệt là khi làm việc với hệ thống Microservices, việc thiết kế cách các dịch vụ giao tiếp với nhau là một bài toán hóc búa. 
 
 Nếu bạn từng chứng kiến cảnh một trang web bị đứng im, biểu tượng quay vòng tròn xoay mãi không ngừng sau khi bạn nhấn nút "Đặt hàng", rất có thể hệ thống phía sau đang bị nghẽn do các dịch vụ phải chờ đợi nhau phản hồi theo chuỗi. Để giải quyết triệt để vấn đề này, các kỹ sư thường chuyển dịch sang một mô hình thiết kế tối ưu hơn: **Event-Driven Architecture (EDA) – Kiến trúc hướng sự kiện**.

@@ -9,8 +9,6 @@ seoTitle: "Xử lý dữ liệu theo lô - Cẩm nang Batch Processing phân tá
 metaDescription: "Tìm hiểu toàn diện về Batch Processing: định nghĩa, kiến trúc xử lý phân tán MapReduce vs Spark, cơ chế Shuffle, lỗi Data Skew và các kỹ thuật tối ưu hóa Spark Job."
 ---
 
-# Xử lý dữ liệu theo lô - Batch Processing
-
 Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng (Streaming Processing) được ví như dòng nước chảy xiết liên tục thì **Batch Processing (Xử lý dữ liệu theo lô)** lại giống như những hồ chứa nước khổng lồ được xả định kỳ. Dù không mang lại cảm giác "tức thì" như streaming, Batch Processing vẫn luôn là xương sống vững chắc cho mọi hệ thống dữ liệu lớn nhờ khả năng giải quyết những tác vụ tính toán khổng lồ và phức tạp nhất.
 
 ## Batch Processing là gì?
@@ -202,20 +200,20 @@ Thiết kế một batch job chạy được thì dễ, nhưng chạy nhanh, ổ
   * **Lợi ích**: Giúp Catalyst Optimizer có cái nhìn toàn cảnh về toàn bộ chuỗi biến đổi. Từ đó, nó có thể tự động tối ưu hóa sơ đồ thực thi, ví dụ như thực hiện **Predicate Pushdown** (đẩy bộ lọc `filter` xuống sát nguồn đọc nhất để tránh tải các dòng dữ liệu thừa lên bộ nhớ) hoặc gộp các phép toán cột lại với nhau để giảm quét đĩa.
 * **Lỗi cần tránh**: Không nhắc đến khái niệm Catalyst Optimizer hoặc Predicate Pushdown khi phân tích lợi ích của Lazy Evaluation.
 
-## Khái niệm liên quan & Tài liệu tham khảo
+## Các khái niệm liên quan
 
-**Khái niệm liên quan:**
 * [Distributed Processing](/concepts/batch-processing/distributed-processing/)
 * [Apache Spark](/concepts/batch-processing/apache-spark/)
 * [Shuffle (Distributed System)](/concepts/batch-processing/shuffle/)
 * [Data Skew](/concepts/batch-processing/data-skew/)
 
-**Tài liệu tham khảo:**
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 10: Batch Processing - Phân tích chi tiết về MapReduce và triết lý Unix Tools).
-2. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia (Cuốn sách chính thức giải thích cặn kẽ Spark Execution Model và cơ chế Shuffle).
-3. **High Performance Spark** - Holden Karau, Rachel Warren (Cẩm nang nâng cao về tối ưu bộ nhớ, gỡ lỗi Data Skew và tối ưu hóa Joins).
-4. **Research Paper**: *Resilient Distributed Datasets: A Spatio-Temporal Abstraction for In-Memory Cluster Computing* - Matei Zaharia et al. (Bài báo khoa học gốc khai sinh ra Apache Spark).
-5. **Apache Spark Documentation** - Tuning Spark Guide (Tài liệu chính thức hướng dẫn cấu hình bộ nhớ, số lượng partition và tối ưu hóa hiệu năng).
+## Tài liệu tham khảo
+
+1. [MapReduce: Simplified Data Processing on Large Clusters](https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/) - Google's original research paper on the MapReduce distributed computing model by Jeffrey Dean and Sanjay Ghemawat.
+2. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's authoritative book, detailing batch processing and MapReduce architectures in Chapter 10.
+3. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Official guide on Spark's execution model, distributed computing, and performance tuning by Bill Chambers and Matei Zaharia.
+4. [Resilient Distributed Datasets: A Spatio-Temporal Abstraction for In-Memory Cluster Computing](https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf) - The seminal academic paper introducing RDDs and Apache Spark cluster design by Matei Zaharia et al.
+5. [Apache Spark Tuning Guide](https://spark.apache.org/docs/latest/tuning.html) - Official optimization handbook covering memory tuning, partition sizing, and serialization configurations.
 
 ## English Summary
 

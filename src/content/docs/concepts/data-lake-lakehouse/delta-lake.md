@@ -138,12 +138,18 @@ RESTORE TABLE delta.`s3://bucket/bronze/users` TO VERSION AS OF 0;
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
 
-1. **[Data Lakehouse](/concepts/data-lake-lakehouse/lakehouse/)** - Kiến trúc kết hợp Data Lake và Data Warehouse.
-2. **[Apache Spark](/concepts/batch-processing/apache-spark/)** - Công cụ tính toán phân tán đi liền với Delta Lake.
-3. **Delta.io** - Trang chủ dự án mã nguồn mở Delta Lake.
-4. **Fundamentals of Data Engineering** - Cuốn sách của Joe Reis, chương viết về Data Storage và các Table Formats.
+* [Data Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) - Kiến trúc kết hợp Data Lake và Data Warehouse.
+* [Apache Spark](/concepts/batch-processing/apache-spark/) - Công cụ tính toán phân tán đi liền với Delta Lake.
+
+## Tài liệu tham khảo
+
+1. [Delta Lake Home](https://delta.io/) - Official website of the Delta Lake project, featuring guides, blogs, and community forums.
+2. [Delta Lake GitHub Repository](https://github.com/delta-io/delta) - Open-source repository, codebase, and issue tracking for Delta Lake.
+3. [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores](https://doi.org/10.14778/3415478.3415560) - Research paper detailing Delta Lake's design and internals, presented at VLDB 2020.
+4. [Delta Lake Concurrency Control Documentation](https://docs.delta.io/latest/concurrency-control.html) - Official documentation on multi-version concurrency control (MVCC) and conflict resolution.
+5. [Databricks Delta Lake Product Overview](https://www.databricks.com/product/delta-lake-on-databricks) - Managed Delta Lake product page detailing optimizations like Z-Ordering and liquid clustering.
 
 ## English Summary
 

@@ -9,8 +9,6 @@ seoTitle: "Quản trị dữ liệu (Data Governance) là gì? Khung chuẩn DAM
 metaDescription: "Khái niệm Data Governance (Quản trị dữ liệu): Khung quy tắc, chính sách và con người đảm bảo tính khả dụng, tính toàn vẹn và bảo mật dữ liệu doanh nghiệp."
 ---
 
-# Quản trị dữ liệu (Data Governance): Thiết lập luật lệ cho vương quốc dữ liệu
-
 Hãy thử tưởng tượng một quốc gia không có luật pháp, không có hiến pháp và không có cảnh sát giao thông. Mọi người tự do đi lại theo cách mình muốn, tự đặt ra luật lệ riêng cho khu phố của mình. Vương quốc dữ liệu của một doanh nghiệp không có **Quản trị dữ liệu (Data Governance)** cũng sẽ rơi vào cảnh hỗn loạn tương tự. 
 
 Dữ liệu được lưu trữ vô tội vạ, mỗi phòng ban tự định nghĩa các chỉ số kinh doanh theo ý mình, thông tin nhạy cảm của khách hàng bị phơi bày trên những file Excel mà bất kỳ ai cũng có thể mở. Data Governance sinh ra chính là để thiết lập trật tự từ sự hỗn loạn đó.

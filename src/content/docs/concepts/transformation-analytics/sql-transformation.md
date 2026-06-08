@@ -1,6 +1,6 @@
 ---
 title: "SQL Transformation - Biến đổi dữ liệu bằng SQL"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Beginner"
 tags: ["sql", "transformation", "dbt", "data-warehouse", "analytics-engineering", "elt"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "SQL Transformation là gì? Kỹ thuật biến đổi dữ liệu bằng SQL"
 metaDescription: "Khám phá kỹ thuật SQL Transformation trong Data Warehouse. So sánh với Python/Spark, kiến trúc ELT và các hàm SQL cốt lõi cho Analytics Engineering."
 ---
-
-# SQL Transformation - Nghệ thuật biến đổi dữ liệu bằng ngôn ngữ SQL
 
 Hãy tưởng tượng bạn đang có một kho chứa đầy nguyên liệu thô (Raw Data) được thu thập từ khắp nơi về. Chúng hỗn loạn, móp méo và chưa thể sử dụng ngay được. **SQL Transformation** chính là quá trình chúng ta vào bếp, sử dụng ngôn ngữ truy vấn có cấu trúc (SQL) làm công cụ chính để làm sạch, sơ chế, kết hợp và biến đổi đống nguyên liệu thô ấy thành những "món ăn" dữ liệu thơm ngon, sẵn sàng phục vụ cho việc phân tích và ra quyết định kinh doanh (Business-ready Data).
 

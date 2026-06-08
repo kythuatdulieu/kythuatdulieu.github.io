@@ -9,7 +9,7 @@ seoTitle: "Compaction - Tối ưu hóa hiệu năng Data Lake (Small Files Probl
 metaDescription: "Tìm hiểu Compaction trong Data Engineering: giải pháp cho Small Files Problem, cách gom tệp tin nhỏ thành tệp lớn để tăng tốc độ truy vấn trên Data Lake."
 ---
 
-# Compaction
+# Compaction: Giải pháp tối ưu hóa hiệu năng cho Data Lake
 
 Trong thế giới Data Engineering, việc thiết lập các luồng dữ liệu streaming hay micro-batch để liên tục cập nhật thông tin thời gian thực là một yêu cầu cực kỳ phổ biến. Thế nhưng, đằng sau sự tiện lợi đó ẩn chứa một "bệnh lý" kinh điển của hệ thống lưu trữ: sự xuất hiện của hàng triệu file nhỏ lẻ. **Compaction (Gom tệp)** chính là phương thuốc đặc trị, đóng vai trò như một người dọn dẹp âm thầm giúp duy trì hiệu năng đỉnh cao cho toàn bộ hệ thống Data Lake của doanh nghiệp.
 
@@ -140,18 +140,20 @@ SparkActions
   * *Synchronous Compaction*: Được thực thi ngay trong luồng ghi chính của ứng dụng. Ưu điểm là dữ liệu ở đích luôn được tối ưu và sạch sẽ, nhưng nhược điểm là làm tăng thời gian hoàn thành tác vụ ghi `(write latency)`, không thích hợp cho các pipeline streaming thời gian thực yêu cầu ghi nhanh.
   * *Asynchronous Compaction*: Chạy như một tiến trình ngầm độc lập hoàn toàn với luồng ghi chính. Luồng ghi cứ việc chèn file nhỏ xuống đĩa để đạt tốc độ tối đa. Tiến trình ngầm sẽ gom dữ liệu sau đó. Đây là lựa chọn bắt buộc cho các luồng streaming thời gian thực (như kiến trúc Merge-on-Read của Apache Hudi).
 
-## Khái niệm liên quan & Tài liệu tham khảo
+## Khái niệm liên quan
 
-**Khái niệm liên quan:**
 * Data Lakehouse
 * [Apache Hudi](/concepts/data-lake-lakehouse/apache-hudi/)
 * [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/)
 * [Data Ingestion](/concepts/etl-elt/data-ingestion/)
 
-**Tài liệu tham khảo:**
-1. **Databricks Documentation** - "OPTIMIZE - Delta Lake".
-2. **Apache Hudi Documentation** - "Compaction configuration and execution".
-3. **"Hadoop: The Definitive Guide"** - Tom White (Chương phân tích về NameNode Memory và Small Files Problem).
+## Tài liệu tham khảo
+
+1. [Databricks: Optimize Data File Layout](https://docs.databricks.com/en/optimizations/optimize.html) - Official guide on using the OPTIMIZE command to compact Delta Lake files.
+2. [Apache Hudi Compaction Guide](https://hudi.apache.org/docs/compaction/) - Technical documentation explaining compaction execution and tuning for Hudi tables.
+3. [Apache Iceberg Spark Procedures: rewrite_data_files](https://iceberg.apache.org/docs/latest/spark-procedures/) - Official Iceberg guide on compaction procedures using Spark.
+4. [Snowflake Automatic Clustering and Compaction](https://docs.snowflake.com/en/user-guide/tables-auto-reclustering) - Explanation of Snowflake's background services that automatically cluster and compact micro-partitions.
+5. [Hadoop: The Definitive Guide](https://www.oreilly.com/library/view/hadoop-the-definitive/9781491901625/) - Tom White's authoritative book covering HDFS block sizing and the small files problem.
 
 ## English Summary
 

@@ -9,8 +9,6 @@ seoTitle: "Kho dữ liệu phân tích - Cẩm nang Data Warehouse chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Data Warehouse (DWH): định nghĩa, kiến trúc, Star/Snowflake Schema, phương pháp Kimball vs Inmon và các câu hỏi phỏng vấn thực tế."
 ---
 
-# Kho dữ liệu phân tích - Data Warehouse
-
 Hãy tưởng tượng bạn là Giám đốc Công nghệ của một chuỗi siêu thị lớn. Bạn muốn biết doanh thu bán hàng trong tháng trước thay đổi ra sao, khách hàng ở khu vực nào mua nhiều nhất và chiến dịch marketing nào mang lại hiệu quả cao nhất. Tuy nhiên, thông tin giao dịch lại nằm ở cơ sở dữ liệu bán hàng (PostgreSQL), thông tin khách hàng nằm ở CRM (Salesforce) và chi phí quảng cáo nằm ở Google Ads. Làm sao để bạn kết nối và khai phá đống dữ liệu phân tán này mà không làm treo hệ thống bán lẻ đang chạy thực tế của các siêu thị?
 
 Đây chính là sứ mệnh của **Data Warehouse (DWH - Kho dữ liệu phân tích)** — "đại bản doanh" lưu trữ và xử lý toàn bộ dữ liệu lịch sử của doanh nghiệp.
@@ -185,12 +183,17 @@ ORDER BY total_revenue DESC;
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/)
+* [Slowly Changing Dimension (SCD)](/concepts/data-warehouse/slowly-changing-dimension/)
 
-1. **[Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/)** - Thiết kế mô hình dữ liệu cho Data Warehouse.
-2. **[Slowly Changing Dimension (SCD)](/concepts/data-warehouse/slowly-changing-dimension/)** - Các kỹ thuật quản lý thay đổi thuộc tính dimension.
-3. **Designing Data-Intensive Applications** - Cuốn sách nổi tiếng của Martin Kleppmann, phần phân tích về lưu trữ dạng cột (Column-oriented storage).
-4. **The Data Warehouse Toolkit** - Sách gối đầu giường của Ralph Kimball về thiết kế lược đồ Dimensional Modeling và Star Schema.
+## Tài liệu tham khảo
+
+1. [Snowflake: Data Warehousing Guide](https://www.snowflake.com/trending/data-warehousing) - Overview of cloud data warehouse features, storage mechanisms, and design methodologies.
+2. [Databricks: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Documentation on organizing data warehouse layers (Bronze, Silver, Gold) in the Lakehouse.
+3. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball and Margy Ross's definitive guide on dimensional modeling and star schema design.
+4. [DAMA International Official Site](https://www.dama.org/) - Official resources from the Data Management Association outlining the DMBOK standards for corporate data warehousing.
+5. [Databricks Blog: What is a Data Lakehouse?](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html) - Foundational post detailing the evolution of data warehouses towards unified lakehouse designs.
 
 ## English Summary
 

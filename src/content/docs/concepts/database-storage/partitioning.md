@@ -9,8 +9,6 @@ seoTitle: "Phân vùng dữ liệu (Partitioning) là gì? Tối ưu hóa Databa
 metaDescription: "Khám phá kỹ thuật Phân vùng (Partitioning) trong cơ sở dữ liệu: Horizontal vs Vertical Partitioning, cách hoạt động và lợi ích tối ưu hóa truy vấn."
 ---
 
-# Phân vùng Dữ liệu - Partitioning
-
 Khi cơ sở dữ liệu của bạn phình to từ vài triệu dòng lên hàng tỷ dòng, những câu truy vấn SQL từng chạy trong chớp mắt bỗng trở nên chậm chạp và ì ạch. Bạn đã thử tạo index (chỉ mục), nhưng khi dữ liệu quá khổng lồ, bộ index cũng lớn đến mức không thể nhét vừa vào bộ nhớ RAM. Đây chính là lúc chúng ta cần đến **Partitioning** (Phân vùng dữ liệu) - một nghệ thuật "chia để trị" kinh điển trong ngành kỹ thuật dữ liệu.
 
 ## Nghệ thuật "chia để trị" trong thế giới dữ liệu lớn

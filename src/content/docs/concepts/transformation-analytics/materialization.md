@@ -1,6 +1,6 @@
 ---
 title: "Phương thức lưu trữ kết quả dbt - Materialization"
-category: "Transformation & Analytics Engineering"
+category: "Transformation & Analytics"
 difficulty: "Intermediate"
 tags: ["dbt", "materialization", "analytics-engineering", "data-warehouse", "transformation"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-07
 seoTitle: "Materialization trong dbt - Cẩm nang Data Warehouse chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Materialization trong dbt: định nghĩa, các loại materialization (View, Table, Incremental, Ephemeral) và cách lựa chọn phù hợp."
 ---
-
-# Phương thức lưu trữ kết quả dbt - Materialization
 
 Khi bạn viết một mô hình (model) trong dbt (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh `SELECT` thuần túy. Vậy làm thế nào để câu lệnh `SELECT` đó biến thành một bảng dữ liệu thực tế hay một khung nhìn ảo trên Data Warehouse (Snowflake, BigQuery, Redshift,...)? 
 

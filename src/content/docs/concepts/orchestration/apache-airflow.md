@@ -9,8 +9,6 @@ seoTitle: "Apache Airflow là gì? Hướng dẫn chi tiết kiến trúc Airflo
 metaDescription: "Tìm hiểu Apache Airflow - công cụ Orchestration mã nguồn mở số 1 trong Data Engineering. Kiến trúc, các thành phần chính (Scheduler, Webserver), và cách hoạt động."
 ---
 
-# Apache Airflow: Nhạc trưởng tài ba điều phối các dòng chảy dữ liệu
-
 Trong kỷ nguyên Big Data, một quy trình xử lý dữ liệu thực tế hiếm khi diễn ra đơn giản. Hãy tưởng tượng bạn phải xây dựng một chuỗi công việc: cào dữ liệu từ Salesforce, lưu vào hồ dữ liệu Amazon S3, kích hoạt cụm máy chủ Spark để làm sạch, nạp kết quả cuối cùng vào kho dữ liệu Redshift, và gửi email báo cáo cho quản lý. 
 
 Làm thế nào để bạn liên kết các bước này lại với nhau một cách tuần tự? Làm sao để bước sau biết đường tự động chạy ngay khi bước trước vừa hoàn thành? Và nếu một bước bị lỗi giữa chừng, làm cách nào để tự động chạy lại (retry) mà không cần can thiệp thủ công?

@@ -9,8 +9,6 @@ seoTitle: "Giám sát độ trễ dữ liệu (Freshness Monitoring) trong Data 
 metaDescription: "Tìm hiểu về Giám sát độ trễ dữ liệu (Freshness Monitoring), cách thiết lập Data SLA, cơ chế đo lường và cảnh báo tự động khi pipeline chậm trễ."
 ---
 
-# Giữ cho dòng chảy dữ liệu luôn "tươi mới": Freshness Monitoring
-
 Trong thế giới kỹ thuật dữ liệu, có một câu nói nổi tiếng thế này: *"Dữ liệu đúng nhưng trễ hẹn cũng có thể coi là dữ liệu sai"* (Right data, wrong time is wrong data). Bạn có một báo cáo tài chính chính xác đến từng xu, nhưng nếu nó được gửi trễ 3 tiếng sau khi phiên giao dịch bắt đầu, giá trị của nó gần như bằng không. Để giải quyết bài toán này, các kỹ sư dữ liệu đã phát triển một trụ cột quan trọng trong hệ thống Data Observability: **Freshness Monitoring** (Giám sát độ trễ dữ liệu).
 
 ## Câu chuyện đằng sau dữ liệu "thiu" và Data SLA

@@ -9,8 +9,6 @@ seoTitle: "Data Orchestration là gì? Điều phối dữ liệu trong Data Eng
 metaDescription: "Khám phá Data Orchestration (Điều phối dữ liệu), tại sao không nên dùng Cron, và vai trò của hệ thống orchestration trong việc quản lý Data Pipeline."
 ---
 
-# Orchestration - Lập lịch và điều phối dữ liệu
-
 Hãy tưởng tượng bạn đang quản lý một nhà máy sản xuất. Nguyên liệu thô cần được đưa vào đúng giờ, máy trộn phải chạy xong thì máy đóng gói mới được kích hoạt, và nếu có sự cố mất điện hay kẹt máy, toàn bộ dây chuyền phải phát cảnh báo ngay lập tức. Trong thế giới Data Engineering, **Data Orchestration** (Điều phối dữ liệu) chính là hệ thống quản lý và vận hành tự động toàn bộ dây chuyền đó. 
 
 Dữ liệu không tự nhiên di chuyển hay tự chuyển hóa một cách hoàn hảo. Một hệ thống Orchestration đóng vai trò như một vị "Nhạc trưởng" (Orchestrator) đứng giữa dàn nhạc số, điều phối hàng chục công cụ khác nhau từ Spark, Snowflake, dbt cho đến các API bên ngoài, đảm bảo từng tác vụ chạy đúng lúc, đúng thứ tự và xử lý êm đẹp mọi sự cố phát sinh.

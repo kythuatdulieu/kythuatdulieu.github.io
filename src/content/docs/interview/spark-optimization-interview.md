@@ -9,8 +9,6 @@ seoTitle: "Spark Optimization Interview - Câu hỏi phỏng vấn Data Engineer
 metaDescription: "Cẩm nang giải quyết các bài toán tối ưu hóa Apache Spark trong phỏng vấn Data Engineer: xử lý Data Skew, Out of Memory (OOM), Broadcast Join và Shuffle."
 ---
 
-# Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview
-
 Apache Spark từ lâu đã là công cụ xử lý dữ liệu lớn (Big Data) tiêu chuẩn của ngành dữ liệu. Tuy nhiên, việc vận hành Spark trên các cụm máy chủ phân tán chưa bao giờ là dễ dàng. Phân tán dữ liệu mang lại sức mạnh tính toán khổng lồ nhưng cũng đi kèm với vô vàn lỗi phát sinh phức tạp (như lệch dữ liệu, nghẽn mạng I/O) mà việc chạy code trên một máy chủ đơn lẻ không bao giờ gặp phải.
 
 Vòng phỏng vấn **Tối ưu hóa Spark (Spark Optimization)** là nơi nhà tuyển dụng lọc ra những kỹ sư thực thụ — những người không chỉ biết viết code Spark chạy được mà còn biết cách làm cho hệ thống chạy hiệu quả, tiết kiệm chi phí đám mây và luôn hoàn thành đúng thời hạn cam kết (SLA).

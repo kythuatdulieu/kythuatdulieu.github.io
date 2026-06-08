@@ -9,8 +9,6 @@ seoTitle: "Tối ưu hóa chi phí hệ thống dữ liệu đám mây (Cost Opt
 metaDescription: "Tìm hiểu chi tiết về tối ưu hóa chi phí trong Cloud Data Platform (FinOps), các chiến lược cốt lõi, best practices, và các câu hỏi phỏng vấn về FinOps trong hệ thống dữ liệu."
 ---
 
-# Tối ưu hóa chi phí (Cost Optimization)
-
 Mô hình Điện toán đám mây với cơ chế thanh toán theo mức độ sử dụng `(pay-as-you-go)` mang lại cho các doanh nghiệp sự linh hoạt tuyệt vời trong việc mở rộng tài nguyên. Thế nhưng, đây cũng là một con dao hai lưỡi. Nếu không có một chiến lược quản lý tốt, bạn sẽ rất dễ đối mặt với những "hóa đơn sốc" cuối tháng. **Tối ưu hóa chi phí (Cost Optimization)** hay kỷ luật **FinOps** trong kỹ thuật dữ liệu chính là chiếc la bàn giúp doanh nghiệp vận hành hệ thống dữ liệu lớn một cách hiệu quả và tiết kiệm nhất.
 
 ## Tối ưu hóa chi phí (FinOps): Nghệ thuật cân bằng giữa hiệu năng và túi tiền
@@ -152,17 +150,19 @@ WHERE event_date BETWEEN '2026-06-01' AND '2026-06-30'
   * *Về mặt kỹ thuật*: Cấu hình đặt hạn mức quét dữ liệu tối đa `(Quotas)` cho từng người dùng hoặc từng dự án (ví dụ: giới hạn tối đa quét 1TB dữ liệu/ngày/nhân viên). Thiết lập bắt buộc phải sử dụng bộ lọc `WHERE` trên các cột phân vùng khi truy vấn các bảng lớn.
   * *Về quy trình*: Xây dựng sẵn các bảng dữ liệu tổng hợp `(Data Marts / Aggregated Tables)` và hướng dẫn các nhà phân tích truy vấn trên đó thay vì chọc trực tiếp vào kho dữ liệu thô. Đồng thời, tổ chức các buổi chia sẻ nội bộ hướng dẫn cách đọc sơ đồ thực thi truy vấn để ước tính chi phí trước khi bấm nút chạy.
 
-## Khái niệm liên quan & Tài liệu tham khảo
+## Khái niệm liên quan
 
-**Khái niệm liên quan:**
 * [Databricks Platform](/concepts/cloud-data-platform/databricks-platform/)
 * [Data Lake](/concepts/data-lake-lakehouse/data-lake/)
 * [Modern Data Stack](/concepts/system-architecture/modern-data-stack/)
 
-**Tài liệu tham khảo:**
-1. **Cloud FinOps** - J.R. Storment, Mike Fuller (Sách gối đầu giường về văn hóa và phương pháp FinOps).
-2. **Google Cloud Cost Optimization Guide** - Các tài liệu hướng dẫn tối ưu hóa chi phí chính thức từ Google.
-3. **AWS Well-Architected Framework** - Trụ cột Cost Optimization.
+## Tài liệu tham khảo
+
+1. [FinOps Foundation Framework](https://www.finops.org/) - The official framework and standard definitions for cloud financial operations and cost management.
+2. [AWS Well-Architected Framework - Cost Optimization](https://aws.amazon.com/architecture/well-architected/) - Key concepts, design principles, and architectural best practices for cost optimization on AWS.
+3. [Google Cloud Architecture Framework: Cost Optimization](https://cloud.google.com/architecture/framework/cost-optimization) - Strategies and best practices for monitoring, control, and optimization of cloud costs on Google Cloud Platform.
+4. [Snowflake: Understanding and Optimizing Cost](https://docs.snowflake.com/en/user-guide/cost-understanding-optimizing) - Best practices and tools for managing and optimizing virtual warehouse compute and storage consumption.
+5. [Databricks Lakehouse Cost Optimization](https://docs.databricks.com/en/lakehouse-architecture/cost-optimization/) - Best practices for optimizing workload compute, using serverless options, and governing DBUs.
 
 ## English Summary
 

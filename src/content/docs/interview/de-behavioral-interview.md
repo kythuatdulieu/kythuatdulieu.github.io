@@ -9,8 +9,6 @@ seoTitle: "Data Engineer Behavioral Interview - Phỏng vấn hành vi và văn 
 metaDescription: "Cẩm nang vượt qua vòng phỏng vấn hành vi (Behavioral Interview) cho Data Engineer. Phương pháp trả lời STAR, kỹ năng làm việc với Stakeholders."
 ---
 
-# Phỏng vấn Hành vi DE - DE Behavioral Interview
-
 Trong quy trình tuyển dụng Data Engineer ở các công ty công nghệ lớn, vòng **Phỏng vấn Hành vi (Behavioral Interview)** hay vòng đánh giá độ phù hợp văn hóa (Culture Fit) thường bị các ứng viên thuần kỹ thuật xem nhẹ. Nhiều người cho rằng chỉ cần giải được các bài toán thuật toán hóc búa hay thiết kế được hệ thống chịu tải triệu user là đủ để đỗ. 
 
 Nhưng thực tế lại chứng minh điều ngược lại: một Kỹ sư Dữ liệu dù giỏi chuyên môn đến đâu nhưng nếu có thái độ kiêu ngạo, thiếu khả năng lắng nghe ý kiến phản hồi hoặc không thể giải thích nổi công việc của mình cho các phòng ban khác hiểu, sẽ dễ dàng phá hỏng tinh thần làm việc của cả một tập thể. Vòng phỏng vấn này ra đời để tìm ra những người không chỉ giỏi code mà còn biết cách làm việc cùng con người.

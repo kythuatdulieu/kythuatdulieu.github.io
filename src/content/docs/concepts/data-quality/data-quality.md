@@ -9,8 +9,6 @@ seoTitle: "Chất lượng dữ liệu (Data Quality) là gì? Tại sao nó qua
 metaDescription: "Khái niệm nền tảng về Chất lượng dữ liệu (Data Quality): Định nghĩa, tầm quan trọng, cách đo lường cơ bản và hậu quả của dữ liệu kém chất lượng (Bad Data)."
 ---
 
-# Chất lượng dữ liệu - Data Quality
-
 Hãy tưởng tượng bạn vừa chi ra hàng triệu USD để xây dựng một hệ thống Data Warehouse hiện đại, thuê những Data Scientist giỏi nhất về để tối ưu hóa mô hình AI. Nhưng khi chạy thực tế, báo cáo doanh thu liên tục bị lệch, còn AI thì đưa ra những gợi ý mua sắm vô lý cho khách hàng. Cuối cùng, ban giám đốc quay trở lại dùng những file Excel thủ công vì không tin vào hệ thống nữa. 
 
 Đó chính là bi kịch của việc bỏ quên **Data Quality (Chất lượng dữ liệu)**.
@@ -150,12 +148,18 @@ else:
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Các chiều chất lượng dữ liệu](/concepts/data-quality/data-quality-dimensions/)
+* [Data Testing](/concepts/data-quality/data-testing/)
+* [Data Contract](/concepts/transformation-analytics/data-contract/)
 
-1. **[Các chiều chất lượng dữ liệu](/concepts/data-quality/data-quality-dimensions/)** - Đi sâu vào 6 khía cạnh đo lường chất lượng dữ liệu tiêu chuẩn.
-2. **[Data Testing](/concepts/data-quality/data-testing/)** - Hướng dẫn chi tiết cách viết code để kiểm thử dữ liệu.
-3. **[Data Contract](/concepts/transformation-analytics/data-contract/)** - Giải pháp giao ước dữ liệu để ngăn chặn rác từ nguồn.
-4. **"Data Quality: The Accuracy Dimension"** - Cuốn sách nổi tiếng của tác giả Jack E. Olson.
+## Tài liệu tham khảo
+
+1. [Monte Carlo Data: What is Data Quality?](https://www.montecarlodata.com/blog-what-is-data-quality/) - In-depth guide discussing the shift from reactive monitoring to end-to-end data observability.
+2. [O'Reilly: Data Quality Fundamentals](https://www.oreilly.com/library/view/data-quality-fundamentals/9781098112035/) - Handbook by Barr Moses, Lior Gavish, and Molly Vorwerck on designing reliable data architectures.
+3. [Great Expectations Documentation](https://docs.greatexpectations.io/docs/) - Official reference for building and configuring pipeline-based data assertions in Python.
+4. [DAMA International Official Site](https://www.dama.org/) - Official resources and publications from the Data Management Association.
+5. [Collibra: What is Data Quality?](https://www.collibra.com/us/en/blog/what-is-data-quality) - Article covering governance frameworks, key indicators, and data catalog integrations.
 
 ## English Summary
 

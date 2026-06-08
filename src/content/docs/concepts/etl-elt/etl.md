@@ -9,8 +9,6 @@ seoTitle: "ETL (Extract, Transform, Load) - Khái niệm cốt lõi trong Data E
 metaDescription: "Tìm hiểu quy trình ETL là gì: Trích xuất (Extract), Biến đổi (Transform) và Nạp (Load) dữ liệu. Sự khác biệt và ứng dụng của ETL trong xây dựng Data Warehouse."
 ---
 
-# ETL (Extract, Transform, Load)
-
 Trong ngành Kỹ thuật dữ liệu (Data Engineering), nếu có một khái niệm được coi là nền móng, xuất hiện trong mọi cuộc thảo luận từ xưa đến nay, thì đó chính là **ETL (Extract - Transform - Load)**. 
 
 Dù bạn đang làm việc với các hệ thống báo cáo tài chính truyền thống hay các ứng dụng phân tích dữ liệu lớn trên đám mây, việc hiểu rõ bản chất của ETL là bước đi đầu tiên bắt buộc. Hãy cùng bóc tách xem quy trình tích hợp dữ liệu kinh điển này hoạt động như thế nào và tại sao nó vẫn giữ một vị trí quan trọng trong kiến trúc dữ liệu hiện đại.

@@ -9,8 +9,6 @@ seoTitle: "Data Drift / Distribution Drift là gì? Cách giám sát phân phố
 metaDescription: "Distribution Drift (Data Drift) là sự thay đổi phân phối giá trị thống kê của dữ liệu theo thời gian. Tìm hiểu tác động và cách cấu hình Data Observability để xử lý."
 ---
 
-# Trôi dạt phân phối - Distribution Drift (Data Drift)
-
 Hãy tưởng tượng bạn đang vận hành một đường ống dữ liệu (data pipeline) rất mượt mà. Schema của các bảng không hề thay đổi, số lượng bản ghi đổ về mỗi ngày vẫn đều đặn, không có lỗi hệ thống nào xảy ra. Bạn thở phào nhẹ nhõm vì nghĩ mọi thứ đang hoàn hảo. 
 
 Nhưng ở đầu ra, mô hình Machine Learning dự báo tỷ lệ khách hàng rời bỏ dịch vụ (Churn Prediction) vốn rất chính xác nay đột ngột đưa ra những dự báo sai lệch hoàn toàn. Các báo cáo phân tích kinh doanh hiển thị các con số doanh thu trung bình giảm mạnh một cách bất thường mà không rõ nguyên nhân. 

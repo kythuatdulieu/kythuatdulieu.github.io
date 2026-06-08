@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content';
 // Dynamically fetch all concepts from the content folder
 const allDocs = await getCollection('docs');
 const concepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
-
 // Group concepts by category
 const groupedConcepts = {};
 
@@ -40,16 +39,16 @@ const categoryOrder = [
     "Data Warehouse",
     "Data Lake & Lakehouse",
     "ETL / ELT",
+    "Transformation & Analytics",
+    "System Architecture",
     "Batch Processing",
     "Streaming Processing",
     "Orchestration",
-    "Data Quality & Governance",
-    "Data Architecture & Paradigms",
-    "Modern Data Stack",
-    "System Design & Cloud",
-    "Vector Database & Search",
-    "Large Language Models (LLMs)",
-    "LLMOps & Real-world AI"
+    "Observability & Reliability",
+    "Data Quality",
+    "Governance & Metadata",
+    "Cloud Data Platform",
+    "GenAI & Machine Learning"
 ];
 
 // Sort categories based on predefined order, unknown categories go to the end

@@ -9,8 +9,6 @@ seoTitle: "Snowflake Data Warehouse là gì? Kiến trúc và Tính năng cốt 
 metaDescription: "Tìm hiểu về Snowflake - Nền tảng Dữ liệu Đám mây (Data Cloud). Kiến trúc đa cụm tách rời, tính năng Time Travel, Data Sharing và mô hình Micro-partitions."
 ---
 
-# Snowflake Data Cloud
-
 Nếu đã từng làm việc trong các dự án di chuyển dữ liệu lên đám mây (Cloud Migration), chắc chắn bạn không lạ lẫm gì với cái tên **Snowflake**. Từ một tân binh trong thị trường kho dữ liệu đám mây, Snowflake đã nhanh chóng bứt phá để trở thành một trong những nền tảng dữ liệu (Cloud Data Platform) phổ biến và được săn đón nhất toàn cầu. 
 
 Điều gì đã tạo nên sức hút kỳ diệu này cho Snowflake? Hãy cùng tìm hiểu sâu vào kiến trúc và những tính năng độc bản của nền tảng này.
@@ -102,7 +100,7 @@ ALTER TABLE production.customers SWAP WITH customers_restored;
 * **Không dùng Snowflake cho các tác vụ OLTP**: Snowflake được tối ưu hóa cho các truy vấn phân tích (OLAP) theo lô lớn. Nếu bạn cố kết nối backend ứng dụng web vào Snowflake để chạy các lệnh insert/update từng dòng nhỏ lẻ liên tục (single-row inserts), hệ thống sẽ bị chậm và sinh ra hàng triệu tệp tin micro-partition rác làm nghẽn lớp siêu dữ liệu (Metadata).
 * **Tin tưởng vào cơ chế tự động của hệ thống**: Đừng tốn thời gian tạo index hay chia phân vùng thủ công (Snowflake không hỗ trợ index truyền thống). Hệ thống tự cắt nhỏ dữ liệu thành các file micro-partition và tự lưu giá trị Min/Max của các cột để tối ưu hóa truy vấn (Partition Pruning).
 
-| Tiêu chí | Kho dữ liệu truyền thống (Redshift cũ / On-premise) | Snowflake Data Cloud |
+| Tiêu chí | Kho dữ liệu truyền thống (Redshift cũ / On-block) | Snowflake Data Cloud |
 | :--- | :--- | :--- |
 | **Kiến trúc** | Tích hợp Compute và Storage trên cùng cụm server | Tách biệt hoàn toàn Compute và Storage |
 | **Co giãn (Scaling)** | Khó co giãn, mất thời gian cấu hình node | Tự động co giãn tức thì, bật/tắt tự động |
@@ -127,9 +125,11 @@ ALTER TABLE production.customers SWAP WITH customers_restored;
 
 ## Tài liệu tham khảo
 
-1. **Snowflake Documentation** - Snowflake Architecture.
-2. **Snowflake: A Cloud Enterprise Data Warehouse** - Dageville et al. (Paper học thuật gốc trình bày kiến trúc Snowflake tại SIGMOD 2016).
-3. **The Data Warehouse Toolkit** - Ralph Kimball.
+1. [Snowflake Architecture & Key Concepts](https://docs.snowflake.com/en/user-guide/intro-key-concepts) - Official overview of Snowflake's unique three-layer architecture and cloud ecosystem.
+2. [The Snowflake Elastic Data Warehouse](https://doi.org/10.1145/2882903.2903741) - Seminal research paper published at ACM SIGMOD 2016 detailing the design and internals of Snowflake.
+3. [Snowflake Micro-partitions & Data Clustering](https://docs.snowflake.com/en/user-guide/tables-micro-partitions) - Technical documentation explaining how Snowflake automatically partitions and clusters data.
+4. [Snowflake Zero-Copy Cloning Guide](https://docs.snowflake.com/en/user-guide/object-clone) - Official guide on cloning databases, schemas, and tables without duplicating storage.
+5. [The Data Warehouse Toolkit](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic book on dimensional modeling techniques and best practices.
 
 ## English Summary
 

@@ -9,8 +9,6 @@ seoTitle: "Distributed Processing là gì? Tổng quan Xử lý phân tán Big D
 metaDescription: "Khái niệm cốt lõi về hệ thống xử lý dữ liệu phân tán (Distributed Processing), tại sao chúng thay thế hệ thống đơn máy chủ trong kỷ nguyên Big Data."
 ---
 
-# Xử lý phân tán - Distributed Processing
-
 Trong kỷ nguyên số ngày nay, lượng dữ liệu sinh ra mỗi giây từ mạng xã hội, thiết bị IoT, hay các giao dịch tài chính là khổng lồ. Hãy tưởng tượng bạn đang đối mặt với một file log nặng vài Terabyte và cần trích xuất thông tin hành vi người dùng. Nếu chỉ dùng một chiếc máy tính cá nhân hay thậm chí là một máy chủ cấu hình mạnh để đọc và xử lý tuần tự, bạn có thể phải đợi hàng ngày, thậm chí hàng tuần. 
 
 Để giải quyết bài toán này, các kỹ sư dữ liệu không cố gắng chế tạo ra những siêu máy tính đắt đỏ vô hạn. Thay vào đó, họ kết nối hàng chục, hàng trăm chiếc máy tính bình thường lại với nhau và bắt chúng cùng làm việc. Đó chính là nền tảng của **Xử lý phân tán (Distributed Processing)** – triết lý công nghệ cốt lõi định hình nên kỷ nguyên Big Data.
@@ -132,8 +130,11 @@ Dù xử lý phân tán rất mạnh mẽ, nhưng việc cấu hình và thiết
 
 ## Tài liệu tham khảo
 
-* **Designing Data-Intensive Applications** - Martin Kleppmann (Cuốn sách kinh điển phân tích sâu về Batch Processing và MapReduce).
-* **Hadoop: The Definitive Guide** - Tom White.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's book exploring distributed data systems architecture and tradeoffs.
+2. [Distributed Systems, 4th Edition](https://www.distributed-systems.net/index.php/books/ds4/) - Andrew S. Tanenbaum and Maarten van Steen's classic textbook on distributed computing principles.
+3. [Hadoop: The Definitive Guide, 4th Edition](https://www.oreilly.com/library/view/hadoop-the-definitive/9781492044062/) - Comprehensive resource on the Apache Hadoop distributed processing ecosystem by Tom White.
+4. [Think Distributed Systems](https://www.manning.com/books/think-distributed-systems) - Practical guide to understanding and modeling distributed architectures by Dominik Tornow.
+5. [MapReduce: Simplified Data Processing on Large Clusters](https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/) - Google's original research paper on the MapReduce distributed computing model by Jeffrey Dean and Sanjay Ghemawat.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

@@ -9,8 +9,6 @@ seoTitle: "Phương pháp luận Inmon (Inmon Methodology) - Xây dựng Data Wa
 metaDescription: "Tìm hiểu phương pháp luận Bill Inmon (Corporate Information Factory) trong xây dựng Data Warehouse: Hướng tiếp cận Top-down, chuẩn hóa 3NF và Single Source of Truth."
 ---
 
-# Phương pháp luận Inmon: Thiết kế Data Warehouse theo triết lý "Từ trên xuống" (Top-down)
-
 Khi thiết kế và xây dựng một kho dữ liệu trung tâm (Data Warehouse) cho doanh nghiệp, bạn sẽ nhanh chóng nhận ra đây không chỉ là một bài toán kỹ thuật lập trình đơn thuần. Đó là cuộc chiến về mặt kiến trúc và triết lý quản trị dữ liệu. Trong lịch sử phát triển của ngành, hai trường phái lớn luôn đứng đối lập nhau. Một bên là tư duy thực tiễn, nhanh gọn của Ralph Kimball; bên còn lại là sự chặt chẽ, quy chuẩn và mang tính hệ thống cao của Bill Inmon — người vẫn được cả thế giới kính trọng gọi là "Cha đẻ của Data Warehouse".
 
 ## Tổng quan: Lời giải của Bill Inmon cho bài toán dữ liệu lớn
@@ -184,9 +182,11 @@ Sau khi cấu trúc 3NF này được hoàn thiện trong Core EDW, quy trình E
 
 ## Tài liệu tham khảo
 
-1. **Building the Data Warehouse** - W.H. Inmon. (Sách nền tảng đặt nền móng cho thuật ngữ Data Warehouse).
-2. **Corporate Information Factory** - W.H. Inmon, Claudia Imhoff, Ryan Sousa.
-3. **Data Warehouse Architecture: Inmon vs. Kimball** - Các bài báo nghiên cứu chuyên ngành.
+1. [Building the Data Warehouse, 4th Edition](https://www.oreilly.com/library/view/building-the-data/9780764599446/) - W.H. Inmon's foundational book defining the architecture and principles of data warehousing on O'Reilly.
+2. [Corporate Information Factory, 2nd Edition](https://www.oreilly.com/library/view/corporate-information-factory/9780471399612/) - W.H. Inmon, Claudia Imhoff, and Ryan Sousa's guide to the CIF framework on O'Reilly.
+3. [What is a Data Warehouse?](https://www.databricks.com/glossary/data-warehouse) - An entry in the Databricks Glossary outlining the Inmon Top-Down methodology and Corporate Information Factory design.
+4. [Difference between Kimball and Inmon](https://www.geeksforgeeks.org/difference-between-kimball-and-inmon/) - Comparison of architecture, deployment, and data modeling between the two schools of thought on GeeksforGeeks.
+5. [Kimball vs. Inmon: Two School of Thoughts](https://www.holistics.io/books/setup-analytics-database/kimball-vs-inmon/) - Structured comparison of the two classic approaches to data warehouse design from the Holistics Analytics Setup Guide.
 
 ## English Summary
 

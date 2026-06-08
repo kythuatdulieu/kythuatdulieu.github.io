@@ -1,6 +1,6 @@
 ---
 title: "LLM làm giám khảo (LLM-as-a-judge)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["llm-evaluation", "llm-as-a-judge", "genai", "prompt-engineering"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "LLM-as-a-judge là gì? Phương pháp đánh giá ứng dụng GenAI"
 metaDescription: "Tìm hiểu phương pháp LLM-as-a-judge trong việc tự động hóa đánh giá chất lượng (evaluation) các ứng dụng LLM và RAG, thay thế việc chấm điểm thủ công bằng con người."
 ---
-
-# LLM Làm Giám Khảo (LLM-as-a-judge): Khi AI Tự Chấm Điểm AI
 
 Khi đưa một ứng dụng GenAI (như chatbot chăm sóc khách hàng hoặc hệ thống tìm kiếm thông tin RAG) vào môi trường thực tế, câu hỏi đau đầu nhất của mọi đội ngũ phát triển luôn là: **"Làm sao để biết câu trả lời của chatbot có chính xác, an toàn và hữu ích hay không?"** 
 

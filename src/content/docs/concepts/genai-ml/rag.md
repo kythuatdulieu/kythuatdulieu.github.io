@@ -1,6 +1,6 @@
 ---
 title: "Tạo lập Truy xuất Tăng cường (RAG)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["rag", "genai", "llm", "vector-database", "information-retrieval"]
 readingTime: "15 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "RAG là gì? Tổng quan về Retrieval-Augmented Generation"
 metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG), cách RAG giảm thiểu ảo giác của LLM, quy trình tích hợp Vector Database và thiết kế luồng xử lý RAG nâng cao."
 ---
-
-# Tạo lập Truy xuất Tăng cường - RAG (Retrieval-Augmented Generation)
 
 Các mô hình ngôn ngữ lớn (LLM) ngày nay sở hữu khả năng hành văn và suy luận logic vô cùng ấn tượng. Tuy nhiên, khi đưa vào môi trường doanh nghiệp, chúng thường bộc lộ những điểm yếu chết người như tự bịa đặt thông tin (ảo giác) hay không biết gì về các tài liệu bảo mật nội bộ. Để giải quyết bài toán này mà không phải tiêu tốn hàng triệu USD cho việc huấn luyện lại mô hình, cộng đồng công nghệ đã phát triển một kiến trúc đột phá mang tên **RAG (Retrieval-Augmented Generation)**.
 

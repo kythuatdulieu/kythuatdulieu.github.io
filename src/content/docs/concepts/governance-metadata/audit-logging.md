@@ -9,8 +9,6 @@ seoTitle: "Nhật ký kiểm toán (Audit Logging) - Giám sát truy cập dữ 
 metaDescription: "Tìm hiểu về Nhật ký kiểm toán (Audit Logging) trong quản trị dữ liệu: khái niệm, tầm quan trọng, kiến trúc thu thập log và các tiêu chuẩn bảo mật (SOC2, HIPAA)."
 ---
 
-# Nhật ký kiểm toán (Audit Logging): Chiếc "hộp đen" bảo vệ hệ thống dữ liệu
-
 Hãy tưởng tượng bạn là Giám đốc công nghệ (CTO) của một công ty tài chính lớn. Vào một buổi sáng, bạn nhận được cảnh báo rằng thông tin cá nhân của hàng ngàn khách hàng đã bị rò rỉ ra ngoài. Lúc này, làm thế nào để bạn biết ai đã truy cập vào bảng dữ liệu khách hàng nhạy cảm đó? Họ đã chạy câu truy vấn SQL nào? Vào thời gian nào? Và dữ liệu đó được truyền đi đâu?
 
 Để trả lời những câu hỏi này một cách chính xác, bạn cần có **Nhật ký kiểm toán (Audit Logging)**.

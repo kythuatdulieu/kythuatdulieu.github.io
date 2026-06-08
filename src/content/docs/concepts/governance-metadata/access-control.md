@@ -9,8 +9,6 @@ seoTitle: "Kiểm soát truy cập (Access Control) - RBAC và ABAC trong hệ t
 metaDescription: "Tìm hiểu chi tiết về Kiểm soát truy cập (Access Control) dữ liệu: phân quyền theo vai trò (RBAC), phân quyền theo thuộc tính (ABAC) và cách áp dụng thực tế."
 ---
 
-# Kiểm soát truy cập - Access Control (RBAC & ABAC)
-
 Hãy tưởng tượng bạn đang quản lý một kho dữ liệu khổng lồ của một tập đoàn lớn. Một ngày nọ, một kỹ sư dữ liệu vô tình chạy lệnh `DROP TABLE` nhầm trên môi trường Production, hoặc dữ liệu thẻ tín dụng nhạy cảm của khách hàng bị hiển thị công khai cho toàn bộ đội ngũ Marketing. Đây chính là những kịch bản "ác mộng" mà bất kỳ hệ thống dữ liệu nào cũng muốn tránh. 
 
 Để giải quyết bài toán này, chúng ta cần một cơ chế bảo vệ vững chắc: **Kiểm soát truy cập (Access Control)**. Đây là hệ thống quản lý nhằm xác định ai (người dùng, ứng dụng) được phép làm gì (đọc, ghi, sửa, xóa) trên tài nguyên dữ liệu nào (cơ sở dữ liệu, bảng, cột, hàng). 

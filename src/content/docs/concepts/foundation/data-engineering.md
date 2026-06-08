@@ -9,8 +9,6 @@ seoTitle: "Kỹ thuật Dữ liệu - Cẩm nang Data Engineering toàn diện"
 metaDescription: "Khám phá tổng quan về Kỹ thuật Dữ liệu (Data Engineering), định nghĩa, mục đích, kiến trúc cốt lõi và các phương pháp thực hành tốt nhất."
 ---
 
-# Kỹ thuật Dữ liệu (Data Engineering): Nền móng vững chắc của mọi hệ thống dữ liệu
-
 Trong kỷ nguyên số, chúng ta thường nghe nhiều về trí tuệ nhân tạo (AI), học máy (Machine Learning) hay những bảng dashboard phân tích kinh doanh (BI) lung linh sắc màu. Thế nhưng, đằng sau những báo cáo chuẩn xác hay những mô hình AI thông minh đó là một người hùng thầm lặng: **Kỹ thuật Dữ liệu (Data Engineering)**. 
 
 Nếu ví dữ liệu như dòng dầu mỏ quý giá, thì các kỹ sư dữ liệu (Data Engineers) chính là những người thiết kế và vận hành các nhà máy lọc dầu cũng như hệ thống đường ống dẫn dầu khổng lồ, biến nguồn nguyên liệu thô sơ, lẫn tạp chất thành nguồn năng lượng tinh khiết, sẵn sàng đưa vào sử dụng.

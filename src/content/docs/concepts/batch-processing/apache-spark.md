@@ -9,8 +9,6 @@ seoTitle: "Apache Spark là gì? Tổng quan khung xử lý dữ liệu lớn tr
 metaDescription: "Tìm hiểu kiến trúc Apache Spark, cơ chế xử lý phân tán In-Memory, RDD, DataFrame và lý do nó thay thế Hadoop MapReduce trong xử lý dữ liệu lớn (Big Data)."
 ---
 
-# Apache Spark: Động cơ tăng tốc xử lý dữ liệu lớn trong bộ nhớ
-
 Khi lượng dữ liệu của doanh nghiệp tăng từ vài Gigabyte lên hàng Terabyte hoặc Petabyte, các công cụ xử lý trên một máy tính đơn lẻ (như Pandas) sẽ lập tức bị quá tải và sập nguồn do thiếu tài nguyên. Để giải quyết bài toán Big Data này, chúng ta cần một cơ chế tính toán phân tán: chia nhỏ dữ liệu và phân phối cho một cụm gồm nhiều máy tính cùng xử lý song song.
 
 Trong số các công cụ tính toán phân tán hiện nay, **Apache Spark** chính là cái tên nổi bật nhất. Được thiết kế như một động cơ phân tích thống nhất (Unified Analytics Engine), Spark nổi tiếng nhờ khả năng xử lý dữ liệu siêu tốc bằng cách giữ toàn bộ các bước tính toán trung gian trực tiếp trên bộ nhớ RAM (In-Memory Computing), thay vì ghi xuống đĩa cứng chậm chạp như các thế hệ công nghệ đi trước.
@@ -135,8 +133,11 @@ high_value_df.write.parquet("s3://data-lake/processed/high_value_customers/")
 
 ## Tài liệu tham khảo
 
-* **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia.
-* **Learning Spark** - Jules S. Damji, Brooke Wenig, Tathagata Das.
+1. [Apache Spark Official Documentation](https://spark.apache.org/docs/latest/) - The official programming guides, API references, and deployment documentation for Apache Spark.
+2. [Apache Spark on Databricks](https://docs.databricks.com/en/spark/index.html) - Documentation and best practices for running and optimizing Spark workloads on Databricks.
+3. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Comprehensive guide to using, tuning, and monitoring Spark by Bill Chambers and Matei Zaharia.
+4. [Learning Spark, 2nd Edition](https://www.oreilly.com/library/view/learning-spark-2nd/9781491933015/) - Practical guide to Apache Spark structured APIs and streaming applications by Jules S. Damji, Brooke Wenig, and Tathagata Das.
+5. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Hands-on guide to using Spark for data processing tasks using Java, Python, and SQL by Jean-Georges Perrin.
 
 ## English Summary
 

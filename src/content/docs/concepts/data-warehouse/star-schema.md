@@ -9,8 +9,6 @@ seoTitle: "Star Schema (Lược đồ hình sao) là gì? Ưu nhược điểm t
 metaDescription: "Tìm hiểu chi tiết về Star Schema (Lược đồ hình sao): kiến trúc, cách hoạt động, so sánh với mô hình chuẩn hóa 3NF và tại sao nó là tiêu chuẩn vàng của hệ thống BI."
 ---
 
-# Lược đồ hình sao - Star Schema: Tiêu chuẩn vàng trong thiết kế Data Warehouse
-
 Trong thiết kế kho dữ liệu (Data Warehouse) theo trường phái Dimensional Modeling, **Star Schema (Lược đồ hình sao)** được ví như một "tiêu chuẩn vàng" kinh điển. Cái tên đầy hình tượng này bắt nguồn từ việc biểu đồ quan hệ của hệ thống trông giống hệt như một ngôi sao: nằm ở trung tâm là một bảng sự kiện (Fact Table) lưu trữ các chỉ số đo lường, bao quanh và kết nối trực tiếp với nó là các bảng chiều (Dimension Tables) chứa các thông tin mô tả ngữ cảnh. 
 
 Nhờ cấu trúc đơn giản, trực quan và có phần phi chuẩn hóa (denormalized) này, Star Schema mang lại tốc độ truy vấn phân tích đáng kinh ngạc, đồng thời cực kỳ thân thiện với các công cụ Business Intelligence (BI) như Power BI hay Tableau.
@@ -172,10 +170,13 @@ Bộ tối ưu hóa (Optimizer) của database sẽ lọc nhanh các bản ghi t
 * [Fact Table - Bảng sự kiện](/concepts/data-warehouse/fact-table/)
 * [Dimension Table - Bảng chiều](/concepts/data-warehouse/dimension-table/)
 
-**Tài liệu tham khảo:**
-1. **The Data Warehouse Toolkit** - *Ralph Kimball* (Cuốn sách gối đầu giường giải thích tại sao Star Schema là chuẩn mực).
-2. **Microsoft Documentation**: *Understand star schema and its importance for Power BI*.
-3. **Data Warehouse Systems: Design and Implementation** - *Alejandro Vaisman*.
+## Tài liệu tham khảo
+
+1. [The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's primary book defining the star schema model on O'Reilly.
+2. [What is Star Schema?](https://www.databricks.com/glossary/star-schema) - Definitive guide to star schema characteristics, facts, and dimensions in the Databricks Glossary.
+3. [Understand star schema and its importance for Power BI](https://learn.microsoft.com/en-us/power-bi/guidance/star-schema) - Official Microsoft documentation on star schema design best practices for Power BI analytics.
+4. [Star Schema](https://en.wikipedia.org/wiki/Star_schema) - Wikipedia's overview of the star schema database design including facts, dimensions, and join structures.
+5. [What is a Star Schema?](https://www.snowflake.com/guides/star-schema/) - A guide to multidimensional database modeling and star schema layouts on Snowflake Guides.
 
 ---
 

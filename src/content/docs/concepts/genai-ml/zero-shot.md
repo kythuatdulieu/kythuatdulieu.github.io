@@ -1,6 +1,6 @@
 ---
 title: "Học không cần ví dụ (Zero-shot)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["genai", "prompt-engineering", "zero-shot", "llm", "nlp"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Zero-shot Prompting là gì? Cẩm nang học không cần ví dụ cho LLM"
 metaDescription: "Tìm hiểu chuyên sâu về kỹ thuật Zero-shot trong Prompt Engineering: định nghĩa, cơ chế hoạt động, best practices và các câu hỏi phỏng vấn thực tế."
 ---
-
-# Học không cần ví dụ - Zero-shot Prompting
 
 Hãy tưởng tượng bạn tuyển dụng một trợ lý thông minh vừa tốt nghiệp từ một trường đại học hàng đầu thế giới. Bạn đưa cho họ một tài liệu tiếng Anh và nói: *"Hãy tóm tắt văn bản này sang tiếng Việt cho tôi"*. Bạn không cần phải làm mẫu cho họ một bản tóm tắt nào trước đó cả. Người trợ lý chỉ cần dựa vào kiến thức ngôn ngữ học và kỹ năng đọc hiểu sẵn có của mình để hoàn thành xuất sắc nhiệm vụ.
 

@@ -9,8 +9,6 @@ seoTitle: "Data Loading - Kỹ thuật nạp dữ liệu trong ETL/ELT"
 metaDescription: "Tìm hiểu Data Loading (Nạp dữ liệu) là gì. Các chiến lược nạp dữ liệu quan trọng như Full Overwrite, Append (Thêm mới), và Upsert/Merge vào Data Warehouse."
 ---
 
-# Nạp dữ liệu (Data Loading): Nghệ thuật ghi dữ liệu hiệu năng cao vào kho chứa
-
 Trong quy trình trích xuất, biến đổi và nạp dữ liệu (ETL/ELT - Extract, Transform, Load / Extract, Load, Transform) kinh điển, chữ cái cuối cùng đại diện cho **Loading (Nạp dữ liệu)**. Đây là bước vật lý trực tiếp ghi hoặc đẩy toàn bộ dữ liệu (cho dù là dữ liệu thô vừa lấy về hay dữ liệu tinh chọn đã qua xử lý) vào hệ thống lưu trữ đích cuối cùng – nơi mà các nhà phân tích hay các công cụ báo cáo thông minh (BI - Business Intelligence) như Tableau, PowerBI đang chờ sẵn để khai thác.
 
 ---

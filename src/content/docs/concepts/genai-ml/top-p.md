@@ -1,6 +1,6 @@
 ---
 title: "Nucleus Sampling - Top-p"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["llm", "decoding", "generation", "top-p", "nucleus-sampling"]
 readingTime: "8 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Top-p (Nucleus Sampling) là gì? - Tinh chỉnh thông số LLM"
 metaDescription: "Tìm hiểu chi tiết về Nucleus Sampling (Top-p) trong quá trình sinh văn bản của LLM, cách hoạt động và sự khác biệt giữa Top-p và Temperature."
 ---
-
-# Nucleus Sampling - Top-p: Nghệ thuật chọn lọc từ vựng của AI
 
 Hãy tưởng tượng bạn đang chơi trò chơi nối chữ với một nhà thông thái. Tại mỗi lượt đi, thay vì lôi toàn bộ cuốn từ điển tiếng Việt ra để chọn từ tiếp theo (dễ dẫn đến việc bốc nhầm các từ cổ hoặc từ hiếm gây tối nghĩa câu), nhà thông thái chỉ liệt kê ra một danh sách ngắn các từ phù hợp nhất với ngữ cảnh hiện tại. Sau đó, ông tính tổng mức độ "tự tin" của nhóm từ này sao cho vừa tròn một ngưỡng nhất định (ví dụ 90%) và chỉ bốc ngẫu nhiên một từ trong nhóm đó. 
 

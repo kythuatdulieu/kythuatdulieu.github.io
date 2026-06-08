@@ -9,8 +9,6 @@ seoTitle: "OLTP là gì? Đặc điểm hệ thống Xử lý Giao dịch Trực
 metaDescription: "Khám phá khái niệm OLTP (Online Transaction Processing): Đặc điểm, kiến trúc, sự khác biệt với OLAP và các ứng dụng thực tế."
 ---
 
-# Hệ Thống OLTP (Online Transaction Processing): Trái Tim Vận Hành Của Mọi Ứng Dụng
-
 Mỗi khi bạn thực hiện một hành động như thêm hàng vào giỏ trên Shopee, chuyển khoản ngân hàng qua ứng dụng di động, hay đặt mua một vé máy bay trực tuyến, bạn đang trực tiếp tương tác với một hệ thống **OLTP (Online Transaction Processing - Xử lý Giao dịch Trực tuyến)**.
 
 Nếu như các hệ thống phân tích (OLAP) đóng vai trò là "bộ não" giúp doanh nghiệp nhìn nhận lại quá khứ để ra quyết định, thì OLTP chính là "hệ tuần hoàn" giữ cho các ứng dụng vận hành hàng ngày sống sót. 

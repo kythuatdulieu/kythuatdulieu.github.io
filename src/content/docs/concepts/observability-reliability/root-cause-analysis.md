@@ -9,8 +9,6 @@ seoTitle: "Root Cause Analysis (RCA) là gì? Kỹ năng phân tích sự cố d
 metaDescription: "Root Cause Analysis (RCA) trong Kỹ thuật Dữ liệu: Các phương pháp (5 Whys, Ishikawa), ứng dụng Data Lineage và quy trình tìm nguyên nhân sự cố pipeline."
 ---
 
-# Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)
-
 Trong quá trình vận hành các hệ thống dữ liệu, sự cố là điều không thể tránh khỏi. Một ngày đẹp trời, data pipeline bỗng dưng bị sập, dữ liệu hiển thị trên dashboard bị sai lệch hoặc mô hình máy học đưa ra các dự đoán bất thường. Khi đó, phản xạ tự nhiên của chúng ta là nhanh chóng "chữa cháy" để hệ thống hoạt động trở lại. Tuy nhiên, nếu chỉ dừng lại ở đó, lỗi sẽ sớm lặp lại vào ngày mai. Để giải quyết triệt để vấn đề, chúng ta cần đến một quy trình phân tích bài bản mang tên **Root Cause Analysis (RCA) - Phân tích nguyên nhân gốc rễ**.
 
 ## Nhổ tận gốc cỏ dại: RCA là gì?

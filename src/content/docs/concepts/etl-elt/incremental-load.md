@@ -9,8 +9,6 @@ seoTitle: "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipelin
 metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) trong ETL/ELT: cách sử dụng High Watermark, quản lý trạng thái (State) và khác biệt so với Full Load."
 ---
 
-# Tối ưu hóa đường ống dữ liệu với phương pháp Nạp gia tăng (Incremental Load)
-
 Khi bắt đầu xây dựng một kho dữ liệu (Data Warehouse), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).
 
 ## Chỉ kéo và xử lý phần thay đổi

@@ -9,8 +9,6 @@ seoTitle: "Lưu trữ dạng Cột (Columnar Storage) - Cốt lõi của Data Wa
 metaDescription: "Tìm hiểu chi tiết về Lưu trữ dạng cột (Column-oriented storage), cách thức nén dữ liệu, tối ưu hóa truy vấn phân tích (OLAP) và sự khác biệt với dạng dòng."
 ---
 
-# Lưu trữ dạng Cột - Columnar Storage
-
 Nếu bạn từng trầm trồ khi thấy một truy vấn SQL quét qua hàng tỷ dòng dữ liệu trên Google BigQuery hay Snowflake trả về kết quả chỉ trong vài giây, bạn đang chứng kiến sức mạnh của **Columnar Storage (Lưu trữ dạng cột)**. Đây chính là "vũ khí bí mật" định hình nên tốc độ kinh ngạc của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
 
 ## Columnar Storage: Khởi nguồn của tốc độ truy vấn phân tích kinh ngạc
@@ -146,10 +144,13 @@ pq.write_table(table, 'users.parquet', compression='snappy')
 * [OLAP (Xử lý phân tích trực tuyến)](/concepts/database-storage/olap/)
 * [File Formats (Định dạng tệp dữ liệu)](/concepts/database-storage/file-formats/)
 
-**Tài liệu tham khảo:**
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 3 - Phân tích chi tiết về Column-oriented Storage).
-2. **The Vertica Analytic Database Architecture** - Andrew Lamb et al.
-3. **Apache Parquet Documentation** - Trang tài liệu chính thức về chuẩn lưu trữ Parquet.
+## Tài liệu tham khảo
+
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Martin Kleppmann's book detailing storage models, column-oriented layouts, and analytical schemas on O'Reilly.
+2. [Apache Parquet Documentation](https://parquet.apache.org/docs/) - Official documentation for Apache Parquet, the industry-standard open source columnar file format.
+3. [What is a Column-Oriented Database?](https://clickhouse.com/docs/en/about-us/column-oriented-database/) - ClickHouse's conceptual guide to columnar database storage and its performance benefits for analytical workloads.
+4. [Column-oriented DBMS](https://en.wikipedia.org/wiki/Column-oriented_DBMS) - Wikipedia's comprehensive overview of column-oriented database management systems.
+5. [What is a Columnar Database?](https://www.snowflake.com/guides/columnar-database/) - Snowflake Guide describing how columnar database storage structures and speeds up OLAP queries.
 
 ## English Summary
 

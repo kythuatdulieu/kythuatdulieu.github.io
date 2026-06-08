@@ -9,8 +9,6 @@ seoTitle: "Data Mesh - Kiến trúc dữ liệu phân tán theo hướng miền"
 metaDescription: "Tìm hiểu kiến trúc Data Mesh, 4 nguyên tắc cốt lõi của Zhamak Dehghani, sự thay đổi từ Data Lake/Data Warehouse tập trung sang tư duy phi tập trung."
 ---
 
-# Data Mesh (Lưới dữ liệu): Phân rã kho dữ liệu khổng lồ bằng tư duy phi tập trung
-
 Trong nhiều thập kỷ, giải pháp kinh điển cho mọi bài toán dữ liệu lớn của doanh nghiệp luôn là: gom tất cả về một kho chứa tập trung – cho dù đó là Data Warehouse hay Data Lake. Thế nhưng, khi quy trình kinh doanh ngày càng phức tạp, việc nhồi nhét hàng vạn luồng dữ liệu từ hàng chục phòng ban khác nhau vào một nơi duy nhất đã vô tình tạo ra một "nút thắt cổ chai" nhân lực và công nghệ khủng khiếp.
 
 **Data Mesh** xuất hiện như một làn gió mới, định hình lại toàn bộ cách chúng ta tổ chức con người và hạ tầng kỹ thuật thông qua tư duy phi tập trung (decentralization).

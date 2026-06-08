@@ -9,8 +9,6 @@ seoTitle: "6 chiều chất lượng dữ liệu (Data Quality Dimensions) quan 
 metaDescription: "Tìm hiểu chi tiết về 6 chiều (dimensions) đo lường chất lượng dữ liệu: Completeness, Accuracy, Consistency, Validity, Uniqueness, Timeliness kèm ví dụ thực tế."
 ---
 
-# Các chiều chất lượng dữ liệu - Data Quality Dimensions
-
 Khi sếp hoặc khách hàng yêu cầu: *"Hãy đảm bảo dữ liệu trong bảng Doanh thu có chất lượng tốt"*, bạn sẽ bắt đầu từ đâu? Định nghĩa thế nào là "tốt"? Với một lập trình viên, mơ hồ là kẻ thù số một. Đó là lý do tại sao chúng ta cần đến **Data Quality Dimensions (Các chiều chất lượng dữ liệu)**. Đây là hệ thống phân loại tiêu chuẩn giúp phân tách khái niệm trừu tượng "chất lượng dữ liệu" thành các thuộc tính có thể định lượng và đo lường bằng các con số cụ thể.
 
 Theo tổ chức quản trị dữ liệu danh tiếng DAMA (Data Management Association), có 6 chiều chất lượng dữ liệu cốt lõi giúp bạn đánh giá sức khỏe của một tập dữ liệu.
@@ -144,12 +142,18 @@ models:
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Data Quality](/concepts/data-quality/data-quality/)
+* [Data Testing](/concepts/data-quality/data-testing/)
+* [Data Profiling](/concepts/data-quality/data-profiling/)
 
-1. **[Data Quality](/concepts/data-quality/data-quality/)** - Khái niệm tổng quan về chất lượng dữ liệu.
-2. **[Data Testing](/concepts/data-quality/data-testing/)** - Cách viết các bài kiểm thử dữ liệu thực tế.
-3. **[Data Profiling](/concepts/data-quality/data-profiling/)** - Quy trình khám phá dữ liệu để tìm ra các chỉ số chất lượng ban đầu.
-4. **DAMA-DMBOK** (Data Management Body of Knowledge) - Tài liệu chuẩn mực về Quản trị dữ liệu, đặc biệt là chương về Data Quality.
+## Tài liệu tham khảo
+
+1. [Collibra: The 6 Dimensions of Data Quality](https://www.collibra.com/us/en/blog/the-6-dimensions-of-data-quality) - Guide exploring DAMA-aligned dimensions of data quality and validation.
+2. [Monte Carlo Data: What are Data Quality Dimensions?](https://www.montecarlodata.com/blog-what-are-data-quality-dimensions/) - Detailed breakdown of the foundational dimensions with real-world technical implementation examples.
+3. [DAMA International Official Site](https://www.dama.org/) - Official web page of the Data Management Association, authors of the DMBOK framework.
+4. [DAMA-DMBOK: Data Management Body of Knowledge](https://www.oreilly.com/library/view/dama-dmbok-data-management/9781634622349/) - O'Reilly reference guide specifying standards for data quality dimensions.
+5. [Great Expectations Official Documentation](https://docs.greatexpectations.io/) - Open-source validation library that automates testing for validity, completeness, and uniqueness.
 
 ## English Summary
 

@@ -9,8 +9,6 @@ seoTitle: "Kafka Design Interview - Câu hỏi phỏng vấn thiết kế hệ t
 metaDescription: "Hướng dẫn thiết kế hệ thống với Apache Kafka: Đảm bảo tính nhất quán, Exactly-once semantics, quản lý Consumer Groups và các câu hỏi phỏng vấn System Design."
 ---
 
-# Thiết kế Kafka (Phỏng vấn) - Kafka Design Interview
-
 Trong các buổi phỏng vấn thiết kế hệ thống (System Design) dành cho vị trí Data Engineer hoặc Backend Engineer cấp độ Mid/Senior, các câu hỏi xoay quanh Apache Kafka luôn là một phần cực kỳ quan trọng và hóc búa. 
 
 Tại sao lại như vậy? Bởi vì trong các hệ thống phân tán quy mô lớn, việc xử lý dữ liệu thời gian thực (real-time event streaming) chưa bao giờ là dễ dàng. Hệ thống thực tế luôn phải đối mặt với các sự cố bất khả kháng như mất kết nối mạng (network partitions), sập máy chủ đột ngột (node crashes) hay lưu lượng truy cập tăng vọt. Nhà tuyển dụng muốn xem cách bạn sử dụng Kafka để thiết kế một hệ thống có độ trễ thấp, thông lượng cao, không bao giờ bị mất mát dữ liệu và xử lý chính xác một lần (exactly-once processing).

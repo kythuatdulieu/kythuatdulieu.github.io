@@ -9,8 +9,6 @@ seoTitle: "Mô hình hóa dữ liệu đa chiều (Dimensional Modeling) trong D
 metaDescription: "Tìm hiểu Dimensional Modeling là gì: Kỹ thuật thiết kế dữ liệu tối ưu cho Data Warehouse, Data Marts và Business Intelligence (BI) dựa trên Fact và Dimension."
 ---
 
-# Mô hình hóa dữ liệu đa chiều - Dimensional Modeling
-
 Hãy tưởng tượng bạn là một chuyên viên phân tích dữ liệu (Data Analyst) hoặc một nhà quản lý kinh doanh. Mỗi sáng thức dậy, câu hỏi đầu tiên xuất hiện trong đầu bạn thường sẽ là: *"Doanh thu tháng này tăng trưởng ra sao so với tháng trước?"*, *"Sản phẩm nào đang bán chạy nhất ở khu vực miền Nam?"*, hay *"Khách hàng thành viên đóng góp bao nhiêu phần trăm vào tổng lợi nhuận?"*. 
 
 Để trả lời những câu hỏi mang tính chất "bức tranh toàn cảnh" này một cách nhanh chóng, chúng ta không thể dựa vào các cấu trúc dữ liệu giao dịch thông thường. Đó là lý do **Dimensional Modeling** (Mô hình hóa dữ liệu đa chiều) ra đời. Đây là một nghệ thuật thiết kế cơ sở dữ liệu chuyên biệt dành cho Kho dữ liệu (Data Warehouse) và Data Mart, giúp biến những bảng dữ liệu phức tạp thành một cấu trúc trực quan, dễ hiểu và cực kỳ nhanh khi truy vấn.
@@ -147,7 +145,6 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 * Dữ liệu dạng phi cấu trúc như hình ảnh, âm thanh, video hay text log thô (đối với nhóm này, Data Lake hoặc các giải pháp hồ dữ liệu sẽ phù hợp hơn).
 
 ## Khái niệm liên quan
-
 * [Star Schema](/concepts/data-warehouse/star-schema/)
 * [Snowflake Schema](/concepts/data-warehouse/snowflake-schema/)
 * [Fact Table](/concepts/data-warehouse/fact-table/)
@@ -163,8 +160,11 @@ Nhờ giảm thiểu số lượng JOIN, database engine (đặc biệt là các
 
 ## Tài liệu tham khảo
 
-1. **The Data Warehouse Toolkit** - Ralph Kimball (Cuốn sách gối đầu giường về Dimensional Modeling).
-2. **Microsoft Power BI Documentation** (Tài liệu hướng dẫn thiết kế Star Schema tối ưu cho DAX).
+1. [O'Reilly: The Data Warehouse Toolkit, 3rd Edition](https://www.oreilly.com/library/view/the-data-warehouse/9781118530801/) - Ralph Kimball's classic book introducing dimensional modeling techniques.
+2. [Snowflake: Star Schema Modeling Guide](https://www.snowflake.com/trending/data-vault) - Overview of star schema structures and modeling approaches on Snowflake.
+3. [Databricks Documentation: Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion-architecture.html) - Documentation on implementing Gold layer dimensional models in a Lakehouse.
+4. [Monte Carlo Data: Dimensional Modeling 101](https://www.montecarlodata.com/blog-dimensional-modeling/) - Comprehensive introduction to the components of dimensional modeling (facts and dimensions).
+5. [Databricks Blog: Dimensional Modeling in the Modern Data Lakehouse](https://www.databricks.com/blog/2022/06/24/dimensional-modeling-in-the-modern-data-lakehouse.html) - Modern deployment patterns for building star schemas using Spark and Delta Lake.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

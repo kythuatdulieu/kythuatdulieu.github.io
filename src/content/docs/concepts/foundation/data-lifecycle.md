@@ -9,8 +9,6 @@ seoTitle: "Vòng đời Dữ liệu (Vòng đời Dữ liệu) - Từ lúc sinh 
 metaDescription: "Hiểu rõ Vòng đời Dữ liệu (Data Lifecycle): bao gồm các giai đoạn Sinh ra, Lưu trữ, Xử lý, Sử dụng, Lưu trữ dài hạn và Tiêu hủy dữ liệu."
 ---
 
-# Vòng đời Dữ liệu (Data Lifecycle): Hành trình từ lúc sinh ra đến khi tiêu hủy
-
 Giống như mọi sinh vật hay sản phẩm trong tự nhiên, dữ liệu cũng có một vòng đời riêng của nó. Nhiều người thường lầm tưởng dữ liệu là thứ tồn tại vĩnh viễn và càng tích lũy nhiều càng tốt. Thế nhưng, trong thực tế vận hành doanh nghiệp, dữ liệu không được quản lý vòng đời rõ ràng sẽ nhanh chóng trở thành gánh nặng tài chính và pháp lý khổng lồ. 
 
 Hiểu rõ **Vòng đời Dữ liệu (Data Lifecycle)** giúp chúng ta biết cách ứng xử phù hợp với dữ liệu ở từng giai đoạn, từ lúc nó được tạo ra cho đến khi bị xóa bỏ hoàn toàn khỏi hệ thống.

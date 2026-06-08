@@ -1,6 +1,6 @@
 ---
 title: "Quản lý vòng đời Machine Learning với MLflow"
-category: "Data Engineering / Machine Learning"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["mlflow", "mlops", "model-registry", "experiment-tracking"]
 readingTime: "10 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "MLflow là gì? Nền tảng quản lý MLOps và Model Lifecycle"
 metaDescription: "Khách phá MLflow: công cụ mã nguồn mở hàng đầu cho MLOps. Tìm hiểu MLflow Tracking, Models, Model Registry và ứng dụng trong Data Engineering."
 ---
-
-# MLflow - Hệ Điều Hành Quản Lý Vòng Đời Machine Learning
 
 Nếu bạn từng tham gia huấn luyện các mô hình Machine Learning, chắc hẳn bạn đã trải qua những tình huống "dở khóc dở cười" này:
 - Bạn chạy thử nghiệm 50 phiên bản mô hình khác nhau với đủ loại tham số (learning rate, batch size, epochs). Đến cuối tuần, bạn tìm được một mô hình có độ chính xác cao nhất nhưng hoàn toàn bất lực vì... không nhớ nổi mình đã dùng cấu hình nào để chạy nó.

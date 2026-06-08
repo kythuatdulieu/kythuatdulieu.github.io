@@ -9,8 +9,6 @@ seoTitle: "Metadata Management - Quản lý siêu dữ liệu trong Data Enginee
 metaDescription: "Tìm hiểu Metadata Management (Quản lý siêu dữ liệu) là gì. Phân loại Technical, Business, Operational Metadata và vai trò cốt lõi trong Data Warehouse."
 ---
 
-# Quản lý siêu dữ liệu (Metadata Management): La Bàn Định Hướng Trong Đại Dương Dữ Liệu
-
 Hãy tưởng tượng bạn bước vào một thư viện khổng lồ chứa hàng triệu cuốn sách nhưng hoàn toàn không có mục lục, không có tên tác giả trên bìa, và các cuốn sách được xếp lộn xộn không theo thứ tự nào. Dù thư viện đó có chứa nhiều kiến thức vô giá đến đâu, bạn cũng sẽ sớm bỏ cuộc vì không thể tìm thấy thông tin mình cần. 
 
 Trong thế giới dữ liệu, thảm họa đó được gọi là **Đầm lầy dữ liệu (Data Swamp)**. Và thứ duy nhất giúp chúng ta ngăn chặn thảm họa này chính là **Siêu dữ liệu (Metadata)** cùng quy trình **Quản lý siêu dữ liệu (Metadata Management)**.

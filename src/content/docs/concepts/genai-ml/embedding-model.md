@@ -1,6 +1,6 @@
 ---
 title: "Mô hình nhúng - Embedding Model"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Advanced"
 tags: ["embedding-model", "neural-network", "contrastive-learning", "nlp"]
 readingTime: "11 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Cấu trúc và cách huấn luyện Embedding Model (Mô hình nhúng)"
 metaDescription: "Đi sâu vào kiến trúc bên trong của một Embedding Model, phương pháp học đối chiếu (Contrastive Learning) và các kiến trúc như Bi-Encoder, Cross-Encoder."
 ---
-
-# Mô hình nhúng - Embedding Model
 
 Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng RAG (Retrieval-Augmented Generation) hay tìm kiếm ngữ nghĩa (Semantic Search), chúng ta thường nghe rất nhiều về thuật ngữ "nhúng" (embedding). Nhưng dưới góc nhìn của một kỹ sư thiết kế hệ thống, một **Mô hình nhúng (Embedding Model)** thực chất hoạt động như thế nào ở tầng kiến trúc sâu (architecture-level)? 
 

@@ -1,6 +1,6 @@
 ---
 title: "Học qua vài ví dụ - Few-shot Prompting"
-category: "GenAI"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm"]
 readingTime: "7 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Few-shot Prompting là gì? Kỹ thuật Prompt Engineering cơ bản"
 metaDescription: "Tìm hiểu Few-shot Prompting: kỹ thuật chèn ví dụ vào prompt để hướng dẫn LLM (In-context Learning) trả về đúng định dạng mà không cần fine-tune."
 ---
-
-# Học qua vài ví dụ - Few-shot Prompting
 
 Khi dạy một đứa trẻ nhận biết các loại trái cây, thay vì ngồi đọc một loạt định dạng lý thuyết dài dòng về vỏ, hạt hay lá, cách nhanh nhất là chỉ vào quả táo và nói: *"Đây là quả táo"*, chỉ vào quả cam và nói: *"Đây là quả cam"*. Sau khi quan sát vài ví dụ thực tế đó, đứa trẻ sẽ tự khắc nhận biết được các loại quả tương tự.
 

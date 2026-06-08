@@ -9,8 +9,6 @@ seoTitle: "Performance Tuning QA - Phỏng vấn tối ưu hóa truy vấn dữ 
 metaDescription: "Tuyệt chiêu trả lời phỏng vấn tối ưu hóa hiệu năng truy vấn (Performance Tuning): Tối ưu SQL, Indexing, Partitioning, Materialized Views."
 ---
 
-# Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA
-
 Có một sự thật hiển nhiên trong ngành dữ liệu: viết một câu truy vấn SQL chạy ra kết quả đúng trên máy tính cá nhân với vài ngàn dòng dữ liệu thử nghiệm thì ai cũng làm được. Nhưng khi mang câu lệnh đó chạy trên môi trường Production với hàng chục tỷ dòng dữ liệu (Terabytes hay Petabytes), nó có thể khiến hệ thống bị treo hàng giờ, làm nghẽn toàn bộ đường ống dẫn dữ liệu và "đốt" hàng ngàn USD của doanh nghiệp.
 
 Vòng phỏng vấn **Tối ưu hóa hiệu năng (Performance Tuning)** chính là ranh giới phân định rõ ràng nhất giữa một kỹ sư dữ liệu Junior và một Senior thực thụ. Nhà tuyển dụng muốn kiểm tra khả năng chẩn đoán lỗi, tư duy tối ưu phần cứng và kỹ năng viết code SQL hiệu quả của bạn dưới áp lực dữ liệu quy mô lớn.

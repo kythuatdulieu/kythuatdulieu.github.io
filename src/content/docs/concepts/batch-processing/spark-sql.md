@@ -9,8 +9,6 @@ seoTitle: "Spark SQL là gì? Catalyst Optimizer và DataFrame trong Apache Spar
 metaDescription: "Giới thiệu Spark SQL, thành phần cốt lõi của Apache Spark dùng để xử lý dữ liệu cấu trúc bằng SQL và DataFrame API. Tìm hiểu cơ chế Catalyst Optimizer."
 ---
 
-# Spark SQL
-
 Khi làm việc với các hệ thống dữ liệu lớn, việc phải viết các đoạn mã lập trình phân tán phức tạp để biến đổi dữ liệu luôn là một trở ngại lớn đối với các nhà phân tích và kỹ sư dữ liệu. Để đơn giản hóa quá trình này và mang ngôn ngữ truy vấn phổ biến nhất thế giới vào hệ sinh thái Big Data, Apache Spark đã phát triển một phân hệ cốt lõi: **Spark SQL**.
 
 ## Spark SQL là gì? Cầu nối giữa thế giới SQL và Big Data
@@ -123,8 +121,11 @@ Cả hai cách viết trên, khi chạy thực tế, đều được Catalyst Op
 
 ## Tài liệu tham khảo
 
-1. **Spark: The Definitive Guide** - Bill Chambers, Matei Zaharia.
-2. Tài liệu Databricks về Catalyst Optimizer.
+1. [Apache Spark SQL and DataFrames Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html) - Official Apache Spark programming guide for SQL queries, schema definition, and structural APIs.
+2. [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/) - Essential book by Bill Chambers and Matei Zaharia introducing the structured API and Catalyst execution flow.
+3. [High Performance Spark](https://www.oreilly.com/library/view/high-performance-spark/9781491943199/) - Practical reference guide on optimizing Spark SQL operations and execution internals by Holden Karau and Rachel Warren.
+4. [Spark in Action, Second Edition](https://www.manning.com/books/spark-in-action-second-edition) - Practical book detailing Spark SQL application building and structured query pipelines by Jean-Georges Perrin.
+5. [Deep Dive into Spark SQL's Catalyst Optimizer](https://www.databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html) - Databricks engineering blog post describing the inner design of Spark's extensible optimization framework.
 
 ## English Summary
 

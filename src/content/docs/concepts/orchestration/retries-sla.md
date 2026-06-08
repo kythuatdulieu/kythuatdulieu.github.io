@@ -9,8 +9,6 @@ seoTitle: "Cơ chế Retries và SLA trong Data Pipeline (Airflow)"
 metaDescription: "Tìm hiểu cách thiết lập cơ chế Tự động thử lại (Retries), hàm Exponential Backoff và cảnh báo vi phạm Cam kết cấp độ dịch vụ (SLA) trong Data Orchestration."
 ---
 
-# Retries và SLA - Tự phục hồi và Cam kết dịch vụ
-
 Trong thế giới kỹ thuật dữ liệu, có một chân lý bất biến: *Hạ tầng mạng luôn có thể gặp sự cố*. Một máy chủ API của đối tác có thể bị quá tải tạm thời, cơ sở dữ liệu có thể khởi động lại trong vài giây, hoặc đường truyền mạng internet có thể bị nghẽn. Một đường ống dẫn dữ liệu (data pipeline) chuyên nghiệp không thể dễ dàng sụp đổ và dừng hoạt động chỉ vì một lỗi mạng gián đoạn ngắn hạn 3 giây. Để xây dựng những hệ thống tự phục hồi bền bỉ, chúng ta cần phối hợp hai công cụ quan trọng: **Retries (Cơ chế thử lại tự động)** và **SLA (Cam kết thời gian dịch vụ)**.
 
 ## Khi mạng máy tính luôn có thể chập chờn: Tại sao cần Retries và SLA?

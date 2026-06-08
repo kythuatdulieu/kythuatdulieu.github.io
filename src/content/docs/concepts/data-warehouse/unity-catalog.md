@@ -9,8 +9,6 @@ seoTitle: "Unity Catalog là gì? Giải pháp Data Governance của Databricks"
 metaDescription: "Tìm hiểu Unity Catalog, giải pháp quản trị dữ liệu (Data Governance) và AI thống nhất trên nền tảng Databricks Lakehouse."
 ---
 
-# Unity Catalog: Người gác đền thông minh cho Data Lakehouse
-
 Trong kiến trúc dữ liệu hiện đại, việc lưu trữ hàng Petabyte dữ liệu trên Data Lake giờ đây đã trở nên đơn giản và tiết kiệm. Thế nhưng, câu hỏi hóc búa đặt ra là: Làm thế nào để kiểm soát được ai có quyền xem bảng nào? Làm sao che đi các thông tin nhạy cảm của khách hàng như số điện thoại, số thẻ tín dụng mà không phải copy ra bảng khác? Và làm thế nào để biết một bảng dữ liệu báo cáo được tạo ra từ những nguồn nào? 
 
 Để trả lời những câu hỏi đó, Databricks đã cho ra đời **Unity Catalog** – giải pháp quản trị dữ liệu (Data Governance) và tài sản AI tập trung, đóng vai trò như một "người gác đền" thông minh và tin cậy cho cấu trúc Data Lakehouse.
@@ -111,9 +109,13 @@ Khi một nhân viên thuộc chi nhánh Hà Nội chạy lệnh `SELECT * FROM 
 * [Data Warehouse - Kho dữ liệu](/concepts/data-warehouse/data-warehouse/)
 * [Data Lake - Hồ dữ liệu](/concepts/data-lake-lakehouse/data-lake/)
 
-**Tài liệu tham khảo:**
-1. **Databricks Documentation** - *What is Unity Catalog?*
-2. **Data Governance: The Definitive Guide** - *Evren Eryurek et al.*
+## Tài liệu tham khảo
+
+1. [What is Unity Catalog?](https://docs.databricks.com/en/data-governance/unity-catalog/index.html) - Official Databricks overview and documentation of Unity Catalog concepts.
+2. [Introducing Unity Catalog: Fine-grained Governance for Data and AI on the Lakehouse](https://www.databricks.com/blog/introducing-unity-catalog-fine-grained-governance-data-and-ai-lakehouse) - Databricks blog announcement detailing Unity Catalog's architecture and capabilities.
+3. [Delta Sharing](https://www.databricks.com/product/delta-sharing) - Secure data sharing protocol integrated into Databricks Unity Catalog.
+4. [Unity Catalog on Azure Databricks](https://learn.microsoft.com/en-us/azure/databricks/data-governance/unity-catalog/) - Official Microsoft Azure guide on implementing Unity Catalog governance.
+5. [Open Source Unity Catalog](https://github.com/unitycatalog/unitycatalog) - The official open-source GitHub repository for the Unity Catalog project.
 
 ---
 

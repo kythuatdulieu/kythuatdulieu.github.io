@@ -1,6 +1,6 @@
 ---
 title: "Phân tách văn bản - Chunking"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Beginner"
 tags: ["chunking", "rag", "preprocessing", "nlp", "vector-database"]
 readingTime: "8 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Chunking là gì? Kỹ thuật phân tách văn bản trong RAG"
 metaDescription: "Tìm hiểu Chunking trong Xử lý ngôn ngữ tự nhiên (NLP) và RAG, tại sao phải chia nhỏ tài liệu, các chiến lược chunking (Fixed-size, Semantic) và Overlap."
 ---
-
-# Phân tách văn bản - Chunking
 
 Nếu bạn đang bước chân vào thế giới của Trí tuệ nhân tạo tạo sinh (GenAI) hoặc đang xây dựng các hệ thống tìm kiếm thông minh dựa trên dữ liệu doanh nghiệp (RAG), có một thuật ngữ bạn sẽ nghe thấy hàng ngày: **Chunking (Phân tách văn bản)**. Mặc dù nghe có vẻ đơn giản là "cắt nhỏ văn bản", nhưng đây lại là bước tiền xử lý mang tính quyết định đến việc AI của bạn trả lời thông minh hay ngây ngô.
 

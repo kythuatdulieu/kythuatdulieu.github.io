@@ -9,8 +9,6 @@ seoTitle: "Streaming Processing là gì? Xử lý dữ liệu thời gian thực
 metaDescription: "Tìm hiểu kiến trúc Streaming Processing (Xử lý dòng sự kiện), sự khác biệt giữa Batch và Streaming, và các ứng dụng cốt lõi của thời gian thực."
 ---
 
-# Xử lý thời gian thực - Streaming Processing: Đánh chặn dòng chảy dữ liệu
-
 Hãy tưởng tượng dữ liệu trong doanh nghiệp của bạn giống như một dòng sông chảy xiết không ngừng nghỉ. Thay vì chờ đến cuối ngày, khi dòng sông tạm lắng xuống để bạn múc từng xô nước lớn về phân tích (mô hình Batch Processing), bạn quyết định đặt một hệ thống cảm biến và bộ lọc thông minh ngay trên dòng chảy đó để phân tích, tính toán và phản hồi tức thì với từng giọt nước đi qua (thường chỉ mất vài phần nghìn giây). Đó chính là bản chất của **Streaming Processing (Xử lý dòng sự kiện)**. 
 
 Phương pháp này mang đến cho doanh nghiệp khả năng thấu hiểu những gì "đang thực sự xảy ra ở hiện tại" (What is happening right now), từ đó kích hoạt các hành động tức thì theo hướng sự kiện (Event-driven).

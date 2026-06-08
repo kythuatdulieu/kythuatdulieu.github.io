@@ -9,8 +9,6 @@ seoTitle: "Cơ sở Dữ liệu Quan hệ (RDBMS) - Nguyên lý và Ứng dụng
 metaDescription: "Tìm hiểu Cơ sở Dữ liệu Quan hệ (RDBMS) là gì, tính chất ACID, khóa chính, khóa ngoại và sự phổ biến của SQL trong quản trị dữ liệu."
 ---
 
-# Cơ sở Dữ liệu Quan hệ - Relational Database
-
 Trong thế giới lưu trữ dữ liệu, dù có bao nhiêu công nghệ mới ra đời thì **Cơ sở dữ liệu quan hệ (Relational Database - RDBMS)** vẫn luôn đứng vững như một tượng đài, là sự lựa chọn hàng đầu cho hầu hết các hệ thống công nghệ từ nhỏ đến lớn. Đây là nền tảng đáng tin cậy giúp quản lý thông tin giao dịch, dữ liệu khách hàng và vận hành các ứng dụng cốt lõi của doanh nghiệp.
 
 ## Trật tự trong thế giới dữ liệu: Cơ sở dữ liệu quan hệ là gì?

@@ -9,8 +9,6 @@ seoTitle: "Kiến trúc Nền tảng Dữ liệu Hiện đại: DWH, Data Lake v
 metaDescription: "Tìm hiểu toàn cảnh Kiến trúc Nền tảng Dữ liệu hiện đại (Modern Data Stack), sự tiến hóa từ Data Warehouse đến Data Lake và Data Lakehouse."
 ---
 
-# Kiến trúc Nền tảng Dữ liệu (Data Platform Architecture): Bản thiết kế cho hệ sinh thái thông tin hiện đại
-
 Trong bất kỳ tổ chức hướng dữ liệu (data-driven) nào, việc sở hữu một hạ tầng dữ liệu (data infrastructure) hoạt động trơn tru là yếu tố sống còn. Tuy nhiên, dữ liệu của doanh nghiệp không chỉ tăng trưởng về kích thước mà còn đa dạng về mặt hình thái: từ dữ liệu có cấu trúc (structured data) dạng bảng (SQL), dữ liệu bán cấu trúc (semi-structured data) như JSON từ API, XML, cho đến dữ liệu phi cấu trúc (unstructured data) như hình ảnh, video, âm thanh.
 
 Không có một công nghệ hay cơ sở dữ liệu đơn lẻ nào đủ sức giải quyết hoàn hảo mọi bài toán phân tích. Đó là lý do chúng ta cần đến **Kiến trúc Nền tảng Dữ liệu (Data Platform Architecture)** – bản thiết kế tổng thể giúp liên kết linh hoạt các khối công nghệ lưu trữ, xử lý và phân phối thông tin.

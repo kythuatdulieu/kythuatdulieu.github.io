@@ -5,11 +5,9 @@ difficulty: "Intermediate"
 tags: ["data-testing", "data-quality", "dbt", "great-expectations", "ci-cd"]
 readingTime: "11 mins"
 lastUpdated: 2026-06-07
-seoTitle: "Data Testing là gì? Tổng quan về các phương pháp kiểm thử dữ liệu"
+seoTitle: "Data Testing là gì? Tên tổng quan về các phương pháp kiểm thử dữ liệu"
 metaDescription: "Data Testing - Kiểm thử dữ liệu động: Định nghĩa, vai trò trong Data Pipeline, và các phương pháp kiểm thử tự động với dbt hoặc Great Expectations."
 ---
-
-# Kiểm thử dữ liệu động - Data Testing
 
 Trong phát triển phần mềm, một khi bạn đã viết Unit Test cho một hàm toán học như `add(1, 2)` và nó trả về kết quả là `3`, bạn có thể kê gối ngủ ngon vì thuật toán đã đúng. Nhưng trong thế giới kỹ thuật dữ liệu (Data Engineering), câu chuyện lại hoàn toàn khác. Hôm nay code ETL của bạn chạy rất trơn tru, nhưng ngày mai đối tác đột ngột thay đổi cấu trúc API, gửi về một chuỗi ký tự thay vì một con số. Kết quả là pipeline bị "sập" giữa đêm, hoặc tệ hơn là âm thầm ghi nhận dữ liệu sai lệch vào kho dữ liệu.
 
@@ -25,7 +23,7 @@ Chúng ta viết các đoạn mã (bằng SQL hoặc Python) để định nghĩ
 
 Có một sự thật phũ phàng trong ngành dữ liệu: *"Lỗi dữ liệu chắc chắn sẽ xảy ra, vấn đề chỉ là khi nào."*
 
-Nếu không thiết lập các bài kiểm thử tự động:
+If không thiết lập các bài kiểm thử tự động:
 * Dữ liệu hỏng (ví dụ: lỗi tỷ giá khiến doanh thu ngày bị nhân lên 100 lần) sẽ âm thầm chảy qua hệ thống và hiển thị chễm chệ trên trang báo cáo BI của CEO vào sáng hôm sau.
 * Khi lãnh đạo phát hiện ra số liệu vô lý, niềm tin của họ vào đội ngũ dữ liệu sẽ giảm sút nghiêm trọng.
 * Các kỹ sư dữ liệu sẽ phải mất hàng giờ, thậm chí hàng ngày để truy vết ngược lại đường đi của dữ liệu (Data Lineage) nhằm tìm ra nguồn gốc của lỗi.
@@ -130,12 +128,17 @@ if not results["success"]:
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Khái niệm liên quan
+* [Data Quality](/concepts/data-quality/data-quality/)
+* [Các chiều chất lượng dữ liệu](/concepts/data-quality/data-quality-dimensions/)
 
-1. **[dbt Testing](/concepts/transformation-analytics/dbt-testing/)** - Tìm hiểu cách dbt xử lý kiểm thử dữ liệu bằng SQL.
-2. **[Data Quality](/concepts/data-quality/data-quality/)** - Hiểu về triết lý quản trị chất lượng dữ liệu.
-3. **Fundamentals of Data Engineering** - Cuốn sách của Joe Reis, phần viết về Testing trong pipeline dữ liệu.
-4. **Great Expectations Documentation** - Tài liệu hướng dẫn sử dụng thư viện kiểm thử dữ liệu hàng đầu của Python.
+## Tài liệu tham khảo
+
+1. [Great Expectations Documentation](https://docs.greatexpectations.io/docs/) - Official documentation for building and executing data assertions in Python.
+2. [dbt Documentation: Data Tests](https://docs.getdbt.com/docs/build/tests) - Guide to defining schema tests and custom SQL data quality checks in dbt.
+3. [Monte Carlo Data: Data Observability vs. Data Testing](https://www.montecarlodata.com/blog-data-observability-vs-data-testing/) - Technical blog comparing static testing assertions against automated data monitoring.
+4. [Datafold: Automated Data Testing in CI](https://www.datafold.com/blog/automated-data-testing-in-ci) - Overview of regression testing and continuous data validation within software development workflows.
+5. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Reference book discussing data pipeline design, circuit breaker patterns, and data quality architectures.
 
 ## English Summary
 

@@ -9,8 +9,6 @@ seoTitle: "Windowing là gì? Tumbling, Sliding, Session Windows trong Streaming
 metaDescription: "Tìm hiểu các loại Windowing trong xử lý dữ liệu Streaming: Tumbling, Sliding, Session. Cách chia cắt luồng dữ liệu vô hạn thành các nhóm hữu hạn để phân tích."
 ---
 
-# Windowing - Phân nhóm dữ liệu luồng theo thời gian
-
 Dữ liệu luồng (Streaming Data) về bản chất là một dòng chảy vô hạn, không có điểm dừng. Việc thực hiện các phép tính toán tổng hợp như đếm số lượng giao dịch hay tính tổng doanh thu trên một tập dữ liệu không bao giờ kết thúc là một thử thách bất khả thi về mặt kỹ thuật. Để giải quyết bài toán này, chúng ta cần một kỹ thuật gọi là **Windowing** (Phân nhóm theo cửa sổ) — phương pháp thông minh giúp "chia nhỏ" dòng thác dữ liệu vô tận thành các khối thời gian hữu hạn để xử lý.
 
 ---

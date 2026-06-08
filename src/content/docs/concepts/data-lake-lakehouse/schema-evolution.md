@@ -9,8 +9,6 @@ seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake"
 metaDescription: "Tìm hiểu Schema Evolution là gì: cơ chế tự động thích ứng với thay đổi cấu trúc bảng (thêm, xóa, đổi tên cột) mà không cần ghi lại dữ liệu cũ trên Data Lake."
 ---
 
-# Schema Evolution (Tiến hóa lược đồ)
-
 Trong thế giới Data Engineering, có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn thêm một cột để theo dõi hành vi người dùng; ngày mai, họ đổi kiểu dữ liệu của trường số điện thoại từ số sang chuỗi để hỗ trợ mã quốc gia. 
 
 Nếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như vậy sẽ là một lần pipeline bị sập, kéo theo hàng giờ cày cuốc để sửa code và chạy lại dữ liệu lịch sử. Để giải quyết vấn đề này, các công nghệ lưu trữ hiện đại đã giới thiệu một khái niệm cứu cánh: **Schema Evolution (Tiến hóa lược đồ)**.
@@ -88,7 +86,7 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 
 * **Đừng lạm dụng `mergeSchema = true`**: Nếu tự động chấp nhận mọi thay đổi cấu trúc từ nguồn đổ về, bảng của bạn sẽ nhanh chóng tích tụ hàng chục cột rác do lỗi gõ phím (typo) hoặc dữ liệu sai định dạng của hệ thống nguồn. Đối với các môi trường Production quan trọng, hãy thực hiện thay đổi schema một cách chủ động thông qua các lệnh `ALTER TABLE` có kiểm soát.
 * **Tránh hạ cấp kiểu dữ liệu (Downcasting)**: Schema Evolution chỉ hỗ trợ nâng cấp (widening). Bạn không thể tự động chuyển một cột từ `STRING` về lại `INT` vì điều này chắc chắn gây ra lỗi đọc dữ liệu hoặc mất mát thông tin. Nếu bắt buộc phải hạ cấp, bạn phải tạo cột mới hoặc ghi đè lại toàn bộ bảng.
-* **Sự khác biệt giữa các Table Format**: Nếu bạn đang xây dựng Data Lakehouse từ đầu, hãy cân nhắc chọn Apache Iceberg. Cơ chế quản lý qua Column ID của Iceberg hoạt động độc lập và an toàn hơn hẳn so với một số format vẫn còn phụ thuộc một phần vào tên cột.
+* **Sự khác biệt giữa các Table Format**: Nếu bạn đang xây dựng Data Lakehouse từ đầu, hãy cân nhắc chọn Apache Iceberg. Cơ chế quản lý qua Column ID của Iceberg hoạt động độc lập và an sau hơn hẳn so với một số format vẫn còn phụ thuộc một phần vào tên cột.
 
 ### So sánh các hướng tiếp cận xử lý:
 
@@ -117,8 +115,11 @@ Mặc dù Schema Evolution rất tiện lợi, việc lạm dụng nó có thể
 
 ## Tài liệu tham khảo
 
-1. **Apache Iceberg Documentation**: Schema Evolution (iceberg.apache.org/evolution) - Giải thích chi tiết về Column ID tracking.
-2. **Delta Lake Documentation**: Schema Validation & Evolution.
+1. [Apache Iceberg Schema Evolution](https://iceberg.apache.org/docs/latest/evolution/) - Official Apache Iceberg documentation detailing Column ID tracking and schema evolution.
+2. [Delta Lake Schema Enforcement](https://docs.delta.io/latest/delta-batch.html#schema-enforcement) - Official Delta Lake documentation on how Delta Lake guards table schemas against incompatible data formats.
+3. [Delta Lake Schema Evolution](https://docs.delta.io/latest/delta-batch.html#schema-evolution) - Official Delta Lake documentation on enabling automatic schema evolution.
+4. [Diving into Delta Lake Schema Enforcement & Evolution](https://www.databricks.com/blog/2019/09/24/diving-into-delta-lake-schema-enforcement-protection.html) - Databricks engineering blog post exploring schema management patterns in production.
+5. [Apache Iceberg Internals Guide](https://www.dremio.com/resources/guide/apache-iceberg-internals/) - Dremio's deep dive into Iceberg metadata, schema mapping, and manifest structure.
 
 ## English Summary
 

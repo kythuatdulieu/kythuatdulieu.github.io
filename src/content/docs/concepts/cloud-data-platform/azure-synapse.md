@@ -9,8 +9,6 @@ seoTitle: "Azure Synapse Analytics - Nền tảng phân tích dữ liệu đám 
 metaDescription: "Tìm hiểu chi tiết về Azure Synapse Analytics: định nghĩa, kiến trúc, cách hoạt động, các phương pháp tối ưu và câu hỏi phỏng vấn thực tế."
 ---
 
-# Azure Synapse Analytics: Giải pháp phân tích dữ liệu hợp nhất trên hệ sinh thái Microsoft Azure
-
 Trong các doanh nghiệp lớn, dữ liệu thường bị phân mảnh ở nhiều nơi: dữ liệu có cấu trúc ổn định được lưu trữ trong kho dữ liệu (Data Warehouse) phục vụ báo cáo BI, còn dữ liệu phi cấu trúc hoặc bán cấu trúc khổng lồ lại nằm rải rác trên hồ dữ liệu (Data Lake) phục vụ cho khoa học dữ liệu (Data Science).
 
 Việc phải quản lý và vận hành nhiều công cụ riêng biệt cho hai thế giới này luôn là một bài toán đau đầu đối với các kỹ sư hệ thống.
@@ -161,8 +159,11 @@ Hệ thống sẽ tự động quét các file Parquet trực tiếp trên Data 
 
 ## Tài liệu tham khảo
 
-1. **Microsoft Learn** - Azure Synapse Analytics Documentation.
-2. **DP-203 Data Engineering on Microsoft Azure** - Certification Guide.
+1. [What is Azure Synapse Analytics?](https://learn.microsoft.com/azure/synapse-analytics/overview-what-is) - Official Microsoft documentation introducing the unified Synapse analytics workspace.
+2. [Azure Synapse SQL Architecture](https://learn.microsoft.com/azure/synapse-analytics/sql/concepts-sql-architecture) - Microsoft Learn reference guide on dedicated and serverless SQL query processing.
+3. [Learning Azure Synapse Analytics](https://www.oreilly.com/library/view/learning-azure-synapse/9781098105303/) - Practical guide by Paul Andrew and Richard Swinbank on data warehousing, lakehouses, and pipelines in Azure.
+4. [Serverless SQL Pool in Azure Synapse](https://learn.microsoft.com/azure/synapse-analytics/sql/on-demand-workspace-overview) - Official guide on using the on-demand query endpoint to scan files directly on Azure Data Lake Storage.
+5. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Authoritative book by Joe Reis and Matt Housley comparing cloud analytics engines and data architectures.
 
 ## English Summary
 

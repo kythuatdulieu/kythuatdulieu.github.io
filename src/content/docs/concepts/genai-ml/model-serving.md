@@ -1,6 +1,6 @@
 ---
 title: "Phục vụ mô hình (Model Serving)"
-category: "GenAI / Data Engineering"
+category: "GenAI & Machine Learning"
 difficulty: "Intermediate"
 tags: ["mlops", "model-serving", "inference", "vllm", "triton", "genai"]
 readingTime: "12 mins"
@@ -8,8 +8,6 @@ lastUpdated: 2026-06-08
 seoTitle: "Model Serving là gì? Cách triển khai mô hình AI/ML lên Production"
 metaDescription: "Tìm hiểu kiến trúc Model Serving (Phục vụ mô hình) trong MLOps. Kiến thức chuyên sâu về Real-time, Batch Serving, Dynamic Batching và các công cụ như vLLM, Triton, Ray Serve."
 ---
-
-# Phục vụ mô hình (Model Serving) - Cầu Nối Đưa Trí Tuệ Nhân Tạo Vào Đời Thực
 
 Sau khi dành nhiều tuần liền để xử lý dữ liệu và huấn luyện mô hình Machine Learning hay Generative AI, kết quả cuối cùng bạn thu được thường chỉ là một tệp tin chứa ma trận trọng số tĩnh (ví dụ: file `.pkl` của Scikit-Learn, tệp `.onnx`, hay thư mục chứa các file `.safetensors` của Hugging Face). 
 

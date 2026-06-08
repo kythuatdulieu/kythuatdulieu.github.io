@@ -9,8 +9,6 @@ seoTitle: "Data Pipeline là gì? Cấu trúc và Kiến trúc Đường ống D
 metaDescription: "Khám phá Data Pipeline: định nghĩa, các thành phần cốt lõi (Extract, Transform, Load), và sự khác biệt giữa xử lý Batch vs Streaming."
 ---
 
-# Đường ống dữ liệu (Data Pipeline): Hệ tuần hoàn nuôi dưỡng hệ sinh thái thông tin
-
 Hãy tưởng tượng dữ liệu trong doanh nghiệp giống như những dòng nước. Nếu không có hệ thống đường ống dẫn nước tự động, sạch sẽ và an toàn, nhân viên của bạn sẽ phải xách từng xô nước từ các nguồn sông hồ khác nhau về nhà để tự lọc và sử dụng. Quá trình thủ công này không chỉ tốn thời gian, dễ gây ô nhiễm mà còn không thể đáp ứng được nhu cầu sử dụng quy mô lớn của cả một thành phố.
 
 **Đường ống dữ liệu (Data Pipeline)** chính là hệ thống dẫn nước tự động hóa đó, đóng vai trò như "hệ tuần hoàn" bơm dòng máu thông tin đi nuôi dưỡng toàn bộ các hoạt động phân tích và ra quyết định của doanh nghiệp.

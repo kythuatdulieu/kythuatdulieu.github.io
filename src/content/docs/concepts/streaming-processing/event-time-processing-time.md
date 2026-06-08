@@ -9,8 +9,6 @@ seoTitle: "Event Time vs Processing Time trong Streaming Processing"
 metaDescription: "Tìm hiểu sự khác biệt giữa Event Time (Thời gian sự kiện) và Processing Time (Thời gian xử lý) trong hệ thống Streaming, tại sao lại cần phân biệt và cách xử lý độ trễ."
 ---
 
-# Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time
-
 Khi chúng ta chuyển đổi từ mô hình xử lý dữ liệu theo lô (Batch Processing) sang xử lý dữ liệu luồng (Streaming Processing), có một khái niệm tưởng chừng rất đơn giản nhưng lại trở nên vô cùng phức tạp: **Thời gian**. 
 
 Trong một hệ thống streaming hoạt động liên tục 24/7, việc định nghĩa "khi nào một sự kiện thực sự xảy ra" là chìa khóa để đảm bảo tính đúng đắn của toàn bộ báo cáo phân tích. Nếu không phân biệt rõ ràng giữa **Thời gian sự kiện (Event Time)** và **Thời gian xử lý (Processing Time)**, bạn sẽ rất dễ rơi vào bẫy sai lệch số liệu mà không thể nào tìm ra nguyên nhân.

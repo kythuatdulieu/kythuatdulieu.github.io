@@ -9,8 +9,6 @@ seoTitle: "Lưu trữ dạng Dòng (Row-based Storage) - Cơ sở cho Hệ thố
 metaDescription: "Tìm hiểu kiến trúc lưu trữ dạng dòng (Row-oriented storage) truyền thống, lý do nó thống trị hệ thống OLTP và sự đối lập với lưu trữ dạng cột."
 ---
 
-# Lưu trữ dạng Dòng - Row-based Storage
-
 Khi bắt đầu tìm hiểu về cách cơ sở dữ liệu lưu trữ thông tin vật lý trên đĩa cứng, chúng ta sẽ bắt gặp hai trường phái thiết kế kinh điển: Lưu trữ dạng Dòng (Row-based Storage) và Lưu trữ dạng Cột (Columnar Storage). Trong số đó, **Row-based Storage** là mô hình lâu đời, phổ biến và là xương sống cho hầu hết các hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) quen thuộc như MySQL, PostgreSQL hay Oracle.
 
 ## Lưu trữ theo hàng dọc ổ đĩa: Row-based Storage là gì?
