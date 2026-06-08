@@ -9,11 +9,11 @@ let inConceptSection = false;
 
 for (let line of lines) {
     line = line.trim();
-    if (line.startsWith('### 1. Danh sách Khái niệm')) {
+    if (line.startsWith('### 5. Danh mục')) {
         inConceptSection = true;
         continue;
     }
-    if (inConceptSection && line.startsWith('### 2.')) {
+    if (inConceptSection && line.startsWith('### 6.')) {
         break;
     }
 

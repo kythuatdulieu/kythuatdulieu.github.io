@@ -1,4 +1,179 @@
 <div class="moc-container">
+  <h3 class="moc-category">Nhóm 1: Foundation (Nền tảng - 6 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-engineering/" class="concept-link" data-concept="data-engineering"><strong>Data Engineering</strong></a>: Định nghĩa tổng quan và ranh giới nghề nghiệp.</li>
+    <li><a href="/concepts/data-engineer-role/" class="concept-link" data-concept="data-engineer-role"><strong>Data Engineer Role</strong></a>: Vai trò, phân biệt với Data Scientist và Software Engineer.</li>
+    <li><a href="/concepts/data-lifecycle/" class="concept-link" data-concept="data-lifecycle"><strong>Data Lifecycle</strong></a>: Vòng đời sinh ra, lưu trữ, biến đổi và tiêu thụ dữ liệu.</li>
+    <li><a href="/concepts/source-systems/" class="concept-link" data-concept="source-systems"><strong>Source Systems</strong></a>: Các hệ thống nguồn sinh dữ liệu (OLTP, Logs, APIs, IoT).</li>
+    <li><a href="/concepts/data-pipeline/" class="concept-link" data-concept="data-pipeline"><strong>Data Pipeline</strong></a>: Cấu trúc cơ bản của đường ống dẫn dữ liệu.</li>
+    <li><a href="/concepts/data-platform-architecture/" class="concept-link" data-concept="data-platform-architecture"><strong>Data Platform Architecture</strong></a>: Kiến trúc tổng quan của một nền tảng dữ liệu hiện đại.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 2: Database & Storage (Cơ sở dữ liệu & Lưu trữ - 10 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/relational-database/" class="concept-link" data-concept="relational-database"><strong>Relational Database</strong></a>: Cơ sở dữ liệu quan hệ và tính chất ACID.</li>
+    <li><a href="/concepts/oltp/" class="concept-link" data-concept="oltp"><strong>Oltp</strong></a>: Xử lý giao dịch trực tuyến và tối ưu hóa ghi.</li>
+    <li><a href="/concepts/olap/" class="concept-link" data-concept="olap"><strong>Olap</strong></a>: Xử lý phân tích trực tuyến và tối ưu hóa truy vấn đọc.</li>
+    <li><a href="/concepts/columnar-storage/" class="concept-link" data-concept="columnar-storage"><strong>Columnar Storage</strong></a>: Lưu trữ dạng cột (Column-oriented storage).</li>
+    <li><a href="/concepts/row-based-storage/" class="concept-link" data-concept="row-based-storage"><strong>Row Based Storage</strong></a>: Lưu trữ dạng dòng (Row-oriented storage).</li>
+    <li><a href="/concepts/indexing/" class="concept-link" data-concept="indexing"><strong>Indexing</strong></a>: Các cơ chế chỉ mục tối ưu hóa tìm kiếm.</li>
+    <li><a href="/concepts/partitioning/" class="concept-link" data-concept="partitioning"><strong>Partitioning</strong></a>: Kỹ thuật phân vùng dữ liệu vật lý trên ổ đĩa.</li>
+    <li><a href="/concepts/clustering/" class="concept-link" data-concept="clustering"><strong>Clustering</strong></a>: Nhóm dữ liệu liên quan cạnh nhau trong phân vùng.</li>
+    <li><a href="/concepts/file-formats/" class="concept-link" data-concept="file-formats"><strong>File Formats</strong></a>: Parquet, ORC, Avro, JSON, CSV.</li>
+    <li><a href="/concepts/compression-algorithms/" class="concept-link" data-concept="compression-algorithms"><strong>Compression Algorithms</strong></a>: Snappy, Gzip, Zstandard (Zstd).</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 3: Data Warehouse (Kho dữ liệu - 11 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-warehouse/" class="concept-link" data-concept="data-warehouse"><strong>Data Warehouse</strong></a>: Hệ thống lưu trữ dữ liệu phân tích tập trung.</li>
+    <li><a href="/concepts/kimball-methodology/" class="concept-link" data-concept="kimball-methodology"><strong>Kimball Methodology</strong></a>: Triết lý xây dựng DWH hướng Business, Star Schema của Ralph Kimball.</li>
+    <li><a href="/concepts/inmon-methodology/" class="concept-link" data-concept="inmon-methodology"><strong>Inmon Methodology</strong></a>: Triết lý xây dựng DWH tập trung 3NF của Bill Inmon.</li>
+    <li><a href="/concepts/dimensional-modeling/" class="concept-link" data-concept="dimensional-modeling"><strong>Dimensional Modeling</strong></a>: Kỹ thuật mô hình hóa dữ liệu đa chiều.</li>
+    <li><a href="/concepts/star-schema/" class="concept-link" data-concept="star-schema"><strong>Star Schema</strong></a>: Lược đồ hình sao (Fact nằm giữa, Dimension xung quanh).</li>
+    <li><a href="/concepts/snowflake-schema/" class="concept-link" data-concept="snowflake-schema"><strong>Snowflake Schema</strong></a>: Lược đồ bông tuyết (Chuẩn hóa các bảng Dimension).</li>
+    <li><a href="/concepts/fact-table/" class="concept-link" data-concept="fact-table"><strong>Fact Table</strong></a>: Bảng sự kiện chứa các chỉ số đo lường (metrics).</li>
+    <li><a href="/concepts/dimension-table/" class="concept-link" data-concept="dimension-table"><strong>Dimension Table</strong></a>: Bảng chiều dữ liệu chứa ngữ cảnh mô tả.</li>
+    <li><a href="/concepts/slowly-changing-dimension/" class="concept-link" data-concept="slowly-changing-dimension"><strong>Slowly Changing Dimension</strong></a>: Kỹ thuật xử lý Dimension thay đổi chậm (SCD Type 0, 1, 2, 3, 4, 6).</li>
+    <li><a href="/concepts/surrogate-key/" class="concept-link" data-concept="surrogate-key"><strong>Surrogate Key</strong></a>: Khóa thay thế (thường là số tự tăng hoặc hash) thay cho Natural Key.</li>
+    <li><a href="/concepts/grain/" class="concept-link" data-concept="grain"><strong>Grain</strong></a>: Độ mịn/Mức độ chi tiết của dữ liệu trong bảng Fact.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 4: Data Lake & Lakehouse (Hồ dữ liệu & Lakehouse - 11 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-lake/" class="concept-link" data-concept="data-lake"><strong>Data Lake</strong></a>: Vùng lưu trữ dữ liệu thô quy mô lớn, chưa cấu trúc.</li>
+    <li><a href="/concepts/lakehouse/" class="concept-link" data-concept="lakehouse"><strong>Lakehouse</strong></a>: Kiến trúc hợp nhất hiệu năng của Data Warehouse và dung lượng của Data Lake.</li>
+    <li><a href="/concepts/medallion-architecture/" class="concept-link" data-concept="medallion-architecture"><strong>Medallion Architecture</strong></a>: Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng (Bronze, Silver, Gold).</li>
+    <li><a href="/concepts/delta-lake/" class="concept-link" data-concept="delta-lake"><strong>Delta Lake</strong></a>: Định dạng bảng lưu trữ mã nguồn mở hỗ trợ ACID trên Data Lake.</li>
+    <li><a href="/concepts/apache-iceberg/" class="concept-link" data-concept="apache-iceberg"><strong>Apache Iceberg</strong></a>: Định dạng bảng thế hệ mới cho dữ liệu cực lớn, tối ưu hóa truy cập siêu dữ liệu.</li>
+    <li><a href="/concepts/apache-hudi/" class="concept-link" data-concept="apache-hudi"><strong>Apache Hudi</strong></a>: Định dạng bảng tối ưu hóa cho các tác vụ ghi đè nhanh và CDC trên Data Lake.</li>
+    <li><a href="/concepts/table-format/" class="concept-link" data-concept="table-format"><strong>Table Format</strong></a>: Khái niệm về định dạng bảng lưu trữ (khác với định dạng tệp tin vật lý).</li>
+    <li><a href="/concepts/acid-transactions-on-lake/" class="concept-link" data-concept="acid-transactions-on-lake"><strong>Acid Transactions On Lake</strong></a>: Cơ chế đảm bảo tính đồng nhất ACID trên Object Storage.</li>
+    <li><a href="/concepts/schema-evolution/" class="concept-link" data-concept="schema-evolution"><strong>Schema Evolution</strong></a>: Khả năng tự động thay đổi cấu trúc bảng mà không làm hỏng dữ liệu cũ.</li>
+    <li><a href="/concepts/time-travel/" class="concept-link" data-concept="time-travel"><strong>Time Travel</strong></a>: Cơ chế truy vấn dữ liệu tại một mốc thời gian trong quá khứ.</li>
+    <li><a href="/concepts/compaction/" class="concept-link" data-concept="compaction"><strong>Compaction</strong></a>: Quá trình dọn dẹp và gộp các tệp tin nhỏ để tối ưu hóa hiệu năng đọc (Small Files Problem).</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 5: ETL / ELT (Tích hợp dữ liệu - 11 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/etl/" class="concept-link" data-concept="etl"><strong>Etl</strong></a>: Trích xuất, Biến đổi tại vùng đệm, rồi Nạp vào đích.</li>
+    <li><a href="/concepts/elt/" class="concept-link" data-concept="elt"><strong>Elt</strong></a>: Trích xuất, Nạp trực tiếp vào đích, rồi dùng hiệu năng của đích để Biến đổi.</li>
+    <li><a href="/concepts/data-ingestion/" class="concept-link" data-concept="data-ingestion"><strong>Data Ingestion</strong></a>: Quá trình thu nạp dữ liệu từ các nguồn vào hệ thống lưu trữ.</li>
+    <li><a href="/concepts/data-extraction/" class="concept-link" data-concept="data-extraction"><strong>Data Extraction</strong></a>: Các phương pháp trích xuất dữ liệu (Full, Incremental, API, Database log).</li>
+    <li><a href="/concepts/data-transformation/" class="concept-link" data-concept="data-transformation"><strong>Data Transformation</strong></a>: Kỹ thuật làm sạch, chuẩn hóa, gộp và biến đổi cấu trúc dữ liệu.</li>
+    <li><a href="/concepts/data-loading/" class="concept-link" data-concept="data-loading"><strong>Data Loading</strong></a>: Kỹ thuật nạp dữ liệu (Append, Upsert, Overwrite).</li>
+    <li><a href="/concepts/incremental-load/" class="concept-link" data-concept="incremental-load"><strong>Incremental Load</strong></a>: Cơ chế nạp dữ liệu tăng trưởng (chỉ lấy phần dữ liệu mới thay đổi).</li>
+    <li><a href="/concepts/change-data-capture/" class="concept-link" data-concept="change-data-capture"><strong>Change Data Capture</strong></a>: Công nghệ tự động ghi nhận các thay đổi ở mức log của database.</li>
+    <li><a href="/concepts/backfill/" class="concept-link" data-concept="backfill"><strong>Backfill</strong></a>: Quy trình chạy lại pipeline lịch sử để sửa lỗi hoặc cập nhật logic mới.</li>
+    <li><a href="/concepts/idempotency/" class="concept-link" data-concept="idempotency"><strong>Idempotency</strong></a>: Tính lũy đẳng — thuộc tính đảm bảo chạy lại pipeline nhiều lần với cùng đầu vào luôn ra cùng đầu ra, không sinh dữ liệu rác.</li>
+    <li><a href="/concepts/deduplication/" class="concept-link" data-concept="deduplication"><strong>Deduplication</strong></a>: Kỹ thuật loại bỏ dữ liệu trùng lặp trong pipeline.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 6: Batch Processing (Xử lý theo lô - 10 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/batch-processing/" class="concept-link" data-concept="batch-processing"><strong>Batch Processing</strong></a>: Cơ chế xử lý dữ liệu theo lô lớn định kỳ.</li>
+    <li><a href="/concepts/distributed-processing/" class="concept-link" data-concept="distributed-processing"><strong>Distributed Processing</strong></a>: Xử lý phân tán trên cụm máy tính (Cluster compute).</li>
+    <li><a href="/concepts/apache-spark/" class="concept-link" data-concept="apache-spark"><strong>Apache Spark</strong></a>: Khung xử lý dữ liệu phân tán trong bộ nhớ (In-memory).</li>
+    <li><a href="/concepts/spark-sql/" class="concept-link" data-concept="spark-sql"><strong>Spark Sql</strong></a>: Thành phần tối ưu hóa truy vấn dữ liệu cấu trúc của Spark.</li>
+    <li><a href="/concepts/spark-execution-model/" class="concept-link" data-concept="spark-execution-model"><strong>Spark Execution Model</strong></a>: Mô hình hoạt động của Driver, Executors và Tasks.</li>
+    <li><a href="/concepts/shuffle/" class="concept-link" data-concept="shuffle"><strong>Shuffle</strong></a>: Quá trình trao đổi dữ liệu vật lý giữa các nút trong mạng cụm phân tán (điểm nghẽn hiệu năng Spark).</li>
+    <li><a href="/concepts/spark-partition/" class="concept-link" data-concept="spark-partition"><strong>Spark Partition</strong></a>: Đơn vị chia nhỏ dữ liệu để xử lý song song trong Spark.</li>
+    <li><a href="/concepts/spark-jobs-stages-tasks/" class="concept-link" data-concept="spark-jobs-stages-tasks"><strong>Spark Jobs Stages Tasks</strong></a>: Cấu trúc phân cấp thực thi của một Spark Application.</li>
+    <li><a href="/concepts/data-skew/" class="concept-link" data-concept="data-skew"><strong>Data Skew</strong></a>: Hiện tượng lệch dữ liệu giữa các phân vùng gây chậm tiến trình.</li>
+    <li><a href="/concepts/spark-joins/" class="concept-link" data-concept="spark-joins"><strong>Spark Joins</strong></a>: Broadcast Hash Join vs Shuffle Hash Join.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 7: Streaming Processing (Xử lý dòng - 9 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/streaming-processing/" class="concept-link" data-concept="streaming-processing"><strong>Streaming Processing</strong></a>: Cơ chế xử lý dữ liệu liên tục theo thời gian thực.</li>
+    <li><a href="/concepts/apache-kafka/" class="concept-link" data-concept="apache-kafka"><strong>Apache Kafka</strong></a>: Hệ thống lưu trữ và phân phối dòng sự kiện phân tán.</li>
+    <li><a href="/concepts/kafka-topics-partitions/" class="concept-link" data-concept="kafka-topics-partitions"><strong>Kafka Topics Partitions</strong></a>: Đơn vị tổ chức và phân chia song song hóa dữ liệu trong Kafka.</li>
+    <li><a href="/concepts/consumer-groups/" class="concept-link" data-concept="consumer-groups"><strong>Consumer Groups</strong></a>: Nhóm các ứng dụng tiêu thụ dữ liệu song song từ Kafka partitions.</li>
+    <li><a href="/concepts/event-time-processing-time/" class="concept-link" data-concept="event-time-processing-time"><strong>Event Time Processing Time</strong></a>: Thời gian xảy ra sự kiện thực tế vs Thời gian sự kiện được xử lý trong hệ thống.</li>
+    <li><a href="/concepts/watermark/" class="concept-link" data-concept="watermark"><strong>Watermark</strong></a>: Cơ chế theo dõi tiến trình thời gian thực tế để xử lý dữ liệu đến muộn.</li>
+    <li><a href="/concepts/windowing/" class="concept-link" data-concept="windowing"><strong>Windowing</strong></a>: Phân nhóm dòng dữ liệu theo các khung thời gian (Tumbling, Sliding, Session).</li>
+    <li><a href="/concepts/exactly-once-semantics/" class="concept-link" data-concept="exactly-once-semantics"><strong>Exactly Once Semantics</strong></a>: Đảm bảo mỗi thông điệp được xử lý chính xác một lần duy nhất.</li>
+    <li><a href="/concepts/stream-table-duality/" class="concept-link" data-concept="stream-table-duality"><strong>Stream Table Duality</strong></a>: Tính lưỡng tính dòng - bảng (Mối quan hệ biến đổi qua lại giữa Stream và Table).</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 8: Orchestration (Điều phối - 7 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/orchestration/" class="concept-link" data-concept="orchestration"><strong>Orchestration</strong></a>: Quản lý, lập lịch và điều phối các tác vụ trong hệ thống dữ liệu.</li>
+    <li><a href="/concepts/apache-airflow/" class="concept-link" data-concept="apache-airflow"><strong>Apache Airflow</strong></a>: Công cụ điều phối và lập lịch pipeline viết bằng Python.</li>
+    <li><a href="/concepts/dag/" class="concept-link" data-concept="dag"><strong>Dag</strong></a>: Đồ thị có hướng không chu trình biểu diễn dòng công việc của pipeline.</li>
+    <li><a href="/concepts/task-dependency/" class="concept-link" data-concept="task-dependency"><strong>Task Dependency</strong></a>: Thiết lập mối quan hệ phụ thuộc thứ tự thực thi giữa các tác vụ.</li>
+    <li><a href="/concepts/airflow-scheduler/" class="concept-link" data-concept="airflow-scheduler"><strong>Airflow Scheduler</strong></a>: Bộ não lập lịch và điều phối tác vụ thực thi của Airflow.</li>
+    <li><a href="/concepts/sensors/" class="concept-link" data-concept="sensors"><strong>Sensors</strong></a>: Tác vụ đặc biệt dùng để chờ một điều kiện bên ngoài thỏa mãn trước khi chạy tiếp.</li>
+    <li><a href="/concepts/retries-sla/" class="concept-link" data-concept="retries-sla"><strong>Retries Sla</strong></a>: Cơ chế tự động thử lại khi lỗi và cảnh báo vi phạm thời gian hoàn thành (SLA).</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 9: Transformation & Analytics Engineering (7 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/dbt/" class="concept-link" data-concept="dbt"><strong>Dbt</strong></a>: Công cụ quản lý và thực thi mã biến đổi dữ liệu SQL trong kho lưu trữ dữ liệu.</li>
+    <li><a href="/concepts/sql-transformation/" class="concept-link" data-concept="sql-transformation"><strong>Sql Transformation</strong></a>: Lập trình biến đổi dữ liệu chuyên nghiệp bằng SQL chuẩn hóa.</li>
+    <li><a href="/concepts/dbt-models/" class="concept-link" data-concept="dbt-models"><strong>Dbt Models</strong></a>: Quản lý các tầng biến đổi (Source, Staging, Intermediate, Marts).</li>
+    <li><a href="/concepts/materialization/" class="concept-link" data-concept="materialization"><strong>Materialization</strong></a>: Các phương thức lưu trữ kết quả của dbt (View, Table, Incremental, Ephemeral).</li>
+    <li><a href="/concepts/data-contract/" class="concept-link" data-concept="data-contract"><strong>Data Contract</strong></a>: Thỏa thuận cấu trúc dữ liệu ràng buộc giữa đội phát triển nguồn và đội tiêu thụ dữ liệu.</li>
+    <li><a href="/concepts/metrics-layer/" class="concept-link" data-concept="metrics-layer"><strong>Metrics Layer</strong></a>: Lớp ngữ nghĩa dùng để tập trung hóa định nghĩa các chỉ số phân tích.</li>
+    <li><a href="/concepts/dbt-testing/" class="concept-link" data-concept="dbt-testing"><strong>Dbt Testing</strong></a>: Kiểm thử dữ liệu tự động tích hợp trong quá trình build dbt.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 10: Data Quality (Chất lượng dữ liệu - 6 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-quality/" class="concept-link" data-concept="data-quality"><strong>Data Quality</strong></a>: Định nghĩa và tầm quan trọng của chất lượng dữ liệu.</li>
+    <li><a href="/concepts/data-quality-dimensions/" class="concept-link" data-concept="data-quality-dimensions"><strong>Data Quality Dimensions</strong></a>: Sáu chiều đo lường chất lượng dữ liệu (Completeness, Accuracy, Consistency, Validity, Uniqueness, Timeliness).</li>
+    <li><a href="/concepts/data-testing/" class="concept-link" data-concept="data-testing"><strong>Data Testing</strong></a>: Kiểm thử dữ liệu động trong pipeline.</li>
+    <li><a href="/concepts/data-reconciliation/" class="concept-link" data-concept="data-reconciliation"><strong>Data Reconciliation</strong></a>: Quy trình đối chiếu dữ liệu giữa nguồn và đích để phát hiện sai lệch.</li>
+    <li><a href="/concepts/anomaly-detection/" class="concept-link" data-concept="anomaly-detection"><strong>Anomaly Detection</strong></a>: Phát hiện bất thường trong dữ liệu bằng thống kê hoặc học máy.</li>
+    <li><a href="/concepts/data-profiling/" class="concept-link" data-concept="data-profiling"><strong>Data Profiling</strong></a>: Phân tích thống kê cấu trúc dữ liệu để hiểu phân phối dữ liệu đầu vào.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 11: Governance & Metadata (Quản trị & Metadata - 8 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-governance/" class="concept-link" data-concept="data-governance"><strong>Data Governance</strong></a>: Khung quy tắc quản trị dữ liệu cấp doanh nghiệp.</li>
+    <li><a href="/concepts/metadata-management/" class="concept-link" data-concept="metadata-management"><strong>Metadata Management</strong></a>: Quản lý thông tin về thông tin dữ liệu (Technical, Business, Operational Metadata).</li>
+    <li><a href="/concepts/data-catalog/" class="concept-link" data-concept="data-catalog"><strong>Data Catalog</strong></a>: Thư mục tra cứu dữ liệu tập trung cho doanh nghiệp.</li>
+    <li><a href="/concepts/data-lineage/" class="concept-link" data-concept="data-lineage"><strong>Data Lineage</strong></a>: Bản đồ theo dõi nguồn gốc và hành trình biến đổi của dữ liệu từ nguồn đến báo cáo.</li>
+    <li><a href="/concepts/data-ownership/" class="concept-link" data-concept="data-ownership"><strong>Data Ownership</strong></a>: Định nghĩa quyền sở hữu và trách nhiệm đối với dữ liệu của các phòng ban.</li>
+    <li><a href="/concepts/data-classification/" class="concept-link" data-concept="data-classification"><strong>Data Classification</strong></a>: Phân loại dữ liệu theo mức độ bảo mật và mã hóa PII.</li>
+    <li><a href="/concepts/access-control/" class="concept-link" data-concept="access-control"><strong>Access Control</strong></a>: Phân quyền truy cập dựa trên vai trò (RBAC) và thuộc tính (ABAC).</li>
+    <li><a href="/concepts/audit-logging/" class="concept-link" data-concept="audit-logging"><strong>Audit Logging</strong></a>: Ghi chép nhật ký truy cập dữ liệu phục vụ tuân thủ bảo mật.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 12: Observability & Reliability (Khả năng quan sát - 7 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/data-observability/" class="concept-link" data-concept="data-observability"><strong>Data Observability</strong></a>: Khả năng giám sát và chủ động phát hiện lỗi của hệ thống dữ liệu.</li>
+    <li><a href="/concepts/freshness-monitoring/" class="concept-link" data-concept="freshness-monitoring"><strong>Freshness Monitoring</strong></a>: Giám sát độ trễ dữ liệu thực tế so với cam kết.</li>
+    <li><a href="/concepts/volume-anomalies/" class="concept-link" data-concept="volume-anomalies"><strong>Volume Anomalies</strong></a>: Phát hiện bất thường về khối lượng dữ liệu (quá nhiều hoặc mất mát dữ liệu).</li>
+    <li><a href="/concepts/schema-drift/" class="concept-link" data-concept="schema-drift"><strong>Schema Drift</strong></a>: Phát hiện và xử lý sự thay đổi cấu trúc bảng đột ngột từ hệ thống nguồn.</li>
+    <li><a href="/concepts/distribution-drift/" class="concept-link" data-concept="distribution-drift"><strong>Distribution Drift</strong></a>: Phát hiện sự thay đổi phân phối giá trị của dữ liệu theo thời gian (Data Drift).</li>
+    <li><a href="/concepts/alerting-incident-response/" class="concept-link" data-concept="alerting-incident-response"><strong>Alerting Incident Response</strong></a>: Quy trình cảnh báo và phân luồng xử lý sự cố pipeline.</li>
+    <li><a href="/concepts/root-cause-analysis/" class="concept-link" data-concept="root-cause-analysis"><strong>Root Cause Analysis</strong></a>: Phân tích tìm nguyên nhân gốc rễ lỗi dữ liệu (RCA).</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 13: Cloud Data Platform (Nền tảng đám mây - 8 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/cloud-storage/" class="concept-link" data-concept="cloud-storage"><strong>Cloud Storage</strong></a>: Cơ chế lưu trữ hướng đối tượng trên đám mây (S3, GCS, ADLS).</li>
+    <li><a href="/concepts/serverless-data/" class="concept-link" data-concept="serverless-data"><strong>Serverless Data</strong></a>: Xử lý dữ liệu không cần quản lý máy chủ.</li>
+    <li><a href="/concepts/google-bigquery/" class="concept-link" data-concept="google-bigquery"><strong>Google Bigquery</strong></a>: Kiến trúc lưu trữ và phân tích phân tán serverless của Google Cloud.</li>
+    <li><a href="/concepts/snowflake/" class="concept-link" data-concept="snowflake"><strong>Snowflake</strong></a>: Nền tảng dữ liệu tách biệt tài nguyên tính toán và lưu trữ.</li>
+    <li><a href="/concepts/amazon-redshift/" class="concept-link" data-concept="amazon-redshift"><strong>Amazon Redshift</strong></a>: Kho dữ liệu MPP của AWS.</li>
+    <li><a href="/concepts/azure-synapse/" class="concept-link" data-concept="azure-synapse"><strong>Azure Synapse</strong></a>: Giải pháp tích hợp phân tích dữ liệu lớn của Microsoft.</li>
+    <li><a href="/concepts/databricks-platform/" class="concept-link" data-concept="databricks-platform"><strong>Databricks Platform</strong></a>: Nền tảng Lakehouse dựa trên công cụ Apache Spark được tối ưu hóa.</li>
+    <li><a href="/concepts/cost-optimization/" class="concept-link" data-concept="cost-optimization"><strong>Cost Optimization</strong></a>: Các kỹ thuật tối ưu hóa chi phí vận hành trên Cloud Data Platform.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 14: System Architecture (Kiến trúc hệ thống - 10 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/lambda-architecture/" class="concept-link" data-concept="lambda-architecture"><strong>Lambda Architecture</strong></a>: Kiến trúc kết hợp xử lý lô (Batch) và xử lý nhanh (Speed/Streaming).</li>
+    <li><a href="/concepts/kappa-architecture/" class="concept-link" data-concept="kappa-architecture"><strong>Kappa Architecture</strong></a>: Kiến trúc loại bỏ xử lý lô, coi mọi dữ liệu là một dòng sự kiện.</li>
+    <li><a href="/concepts/data-mesh/" class="concept-link" data-concept="data-mesh"><strong>Data Mesh</strong></a>: Kiến trúc dữ liệu phân tán hướng miền nghiệp vụ (Domain-driven data design).</li>
+    <li><a href="/concepts/data-fabric/" class="concept-link" data-concept="data-fabric"><strong>Data Fabric</strong></a>: Kiến trúc tích hợp dữ liệu sử dụng AI để kết nối các nguồn siêu dữ liệu phân tán.</li>
+    <li><a href="/concepts/modern-data-stack/" class="concept-link" data-concept="modern-data-stack"><strong>Modern Data Stack</strong></a>: Hệ sinh thái các công cụ dữ liệu đám mây thế hệ mới (Fivetran, Snowflake, dbt, Airflow).</li>
+    <li><a href="/concepts/real-time-architecture/" class="concept-link" data-concept="real-time-architecture"><strong>Real Time Architecture</strong></a>: Kiến trúc phục vụ phân tích dữ liệu thời gian thực độ trễ thấp.</li>
+    <li><a href="/concepts/feature-store/" class="concept-link" data-concept="feature-store"><strong>Feature Store</strong></a>: Hệ thống lưu trữ và quản lý các đặc trưng dữ liệu phục vụ huấn luyện Machine Learning.</li>
+    <li><a href="/concepts/event-driven-architecture/" class="concept-link" data-concept="event-driven-architecture"><strong>Event Driven Architecture</strong></a>: Kiến trúc hệ thống phản hồi theo các sự kiện.</li>
+    <li><a href="/concepts/zero-copy-cloning/" class="concept-link" data-concept="zero-copy-cloning"><strong>Zero Copy Cloning</strong></a>: Kỹ thuật nhân bản dữ liệu tức thời mà không tốn tài nguyên lưu trữ vật lý.</li>
+    <li><a href="/concepts/push-pull-delivery/" class="concept-link" data-concept="push-pull-delivery"><strong>Push Pull Delivery</strong></a>: Cơ chế đẩy dữ liệu (Push) vs kéo dữ liệu (Pull) trong tích hợp hệ thống.</li>
+  </ul>
+  <h3 class="moc-category">Nhóm 15: Interview Preparation (Chuẩn bị phỏng vấn - 10 khái niệm)</h3>
+  <ul class="moc-list">
+    <li><a href="/concepts/sql-interview-patterns/" class="concept-link" data-concept="sql-interview-patterns"><strong>Sql Interview Patterns</strong></a>: Các dạng bài SQL kinh điển trong phỏng vấn (Window functions, CTEs, self-joins).</li>
+    <li><a href="/concepts/python-de-interview/" class="concept-link" data-concept="python-de-interview"><strong>Python De Interview</strong></a>: Lập trình Python giải quyết bài toán xử lý file lớn, tối ưu hóa bộ nhớ (`yield`, generators).</li>
+    <li><a href="/concepts/spark-optimization-interview/" class="concept-link" data-concept="spark-optimization-interview"><strong>Spark Optimization Interview</strong></a>: Các câu hỏi gỡ lỗi Spark Job, tối ưu cấu hình phân cụm.</li>
+    <li><a href="/concepts/kafka-design-interview/" class="concept-link" data-concept="kafka-design-interview"><strong>Kafka Design Interview</strong></a>: Thiết kế luồng sự kiện chịu lỗi tốt và đảm bảo thứ tự ghi nhận.</li>
+    <li><a href="/concepts/data-modeling-interview/" class="concept-link" data-concept="data-modeling-interview"><strong>Data Modeling Interview</strong></a>: Thiết kế lược đồ kho dữ liệu cho các mô hình kinh doanh cụ thể.</li>
+    <li><a href="/concepts/pipeline-design-interview/" class="concept-link" data-concept="pipeline-design-interview"><strong>Pipeline Design Interview</strong></a>: Thiết kế đường ống tích hợp dữ liệu chịu lỗi và tự phục hồi từ đầu.</li>
+    <li><a href="/concepts/cloud-platform-interview/" class="concept-link" data-concept="cloud-platform-interview"><strong>Cloud Platform Interview</strong></a>: So sánh lựa chọn công nghệ đám mây và tối ưu chi phí hạ tầng.</li>
+    <li><a href="/concepts/production-incident-qa/" class="concept-link" data-concept="production-incident-qa"><strong>Production Incident Qa</strong></a>: Trả lời câu hỏi xử lý sự cố thực tế khi hệ thống bị sập vào lúc nửa đêm.</li>
+    <li><a href="/concepts/performance-tuning-qa/" class="concept-link" data-concept="performance-tuning-qa"><strong>Performance Tuning Qa</strong></a>: Tối ưu hóa hiệu năng truy vấn trên các bảng dữ liệu hàng tỷ dòng.</li>
+    <li><a href="/concepts/de-behavioral-interview/" class="concept-link" data-concept="de-behavioral-interview"><strong>De Behavioral Interview</strong></a>: Các câu hỏi hành vi, phối hợp làm việc giữa nhóm Kỹ thuật và Nghiệp vụ.</li>
   </ul>
 </div>
 
