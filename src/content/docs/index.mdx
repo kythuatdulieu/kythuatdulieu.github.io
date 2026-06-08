@@ -1,36 +1,36 @@
 ---
-title: Kỹ Thuật Dữ Liệu - Data Engineering Concepts
-description: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho cộng đồng kỹ sư dữ liệu Việt Nam.
+title: Kỹ Thuật Dữ Liệu
+description: Kỹ thuật Dữ liệu chuyên sâu
 template: splash
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 import MapOfContent from '../../components/MapOfContent.astro';
 
-<MapOfContent>
-  <div style="margin-top: 4rem;"></div>
+<MapOfContent />
+
+<div style="margin-top: 5rem; margin-bottom: 2rem;"></div>
+
+<div id="quizzes">
+  ## 📝 Luyện Đề Thi Thử (Practice Quizzes)
   
-  <div id="quizzes">
-    ## 📝 Luyện Đề Thi Thử (Practice Quizzes)
-    
-    Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.
-    
-    <CardGrid stagger>
-    	<Card title="Databricks DE Professional" icon="laptop">
-    		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Data Engineer Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế. 
-            
-            <br/>
-            <a href="/quizzes/databricks-de-advanced/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
-    	</Card>
-    	<Card title="Databricks GenAI Associate" icon="rocket">
-    		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG, Vector Search và LLM.
-            
-            <br/>
-            <a href="/quizzes/databricks-genai-associate/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
-    	</Card>
-    </CardGrid>
-  </div>
-</MapOfContent>
+  Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến.
+  
+  <CardGrid stagger>
+    <Card title="Databricks DE Professional" icon="laptop">
+        Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Data Engineer Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế. 
+        
+        <br/>
+        <a href="/quizzes/databricks-de-advanced/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
+    </Card>
+    <Card title="Databricks GenAI Associate" icon="rocket">
+        Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu.
+        
+        <br/>
+        <a href="/quizzes/databricks-genai-associate/" data-astro-reload style="font-weight: bold; color: var(--sl-color-accent); text-decoration: none;">Bắt đầu thi thử →</a>
+    </Card>
+  </CardGrid>
+</div>
 
 <style>{`
   .sl-markdown-content {
