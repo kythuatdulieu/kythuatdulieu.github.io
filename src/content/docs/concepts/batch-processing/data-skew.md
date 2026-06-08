@@ -59,12 +59,16 @@ result_df = sales_df.join(customers_df, "city", "inner")
 Dưới đây là các kỹ thuật giúp bạn giải quyết vấn đề này:
 
 ### 1. Lọc bỏ các giá trị rác hoặc NULL (Filter Nulls)
-Nếu các bản ghi có khóa NULL không thực sự đóng góp vào kết quả JOIN (như trong phép INNER JOIN), hãy lọc sạch chúng trước khi tiến hành JOIN. Điều này ngăn không cho hàng triệu dòng NULL dồn về một máy.```python
+Nếu các bản ghi có khóa NULL không thực sự đóng góp vào kết quả JOIN (như trong phép INNER JOIN), hãy lọc sạch chúng trước khi tiến hành JOIN. Điều này ngăn không cho hàng triệu dòng NULL dồn về một máy.
+
+```python
 sales_valid = sales_df.filter(col("city").isNotNull())
 ```
 
 ### 2. Kỹ thuật Broadcast Join (Tuyệt chiêu tốt nhất)
-Nếu bảng khách hàng (`customers`) có kích thước nhỏ (ví dụ dưới 1GB, có thể nhét vừa bộ nhớ của một máy), hãy bắt Spark gửi bản sao của toàn bộ bảng này đến tất cả các node (Broadcast). Khi đó, Spark sẽ thực hiện JOIN trực tiếp trên từng node mà không cần phải thực hiện quá trình Shuffle dữ liệu của bảng `sales` khổng lồ nữa.```python
+Nếu bảng khách hàng (`customers`) có kích thước nhỏ (ví dụ dưới 1GB, có thể nhét vừa bộ nhớ của một máy), hãy bắt Spark gửi bản sao của toàn bộ bảng này đến tất cả các node (Broadcast). Khi đó, Spark sẽ thực hiện JOIN trực tiếp trên từng node mà không cần phải thực hiện quá trình Shuffle dữ liệu của bảng `sales` khổng lồ nữa.
+
+```python
 from pyspark.sql.functions import broadcast
 
 result_df = sales_df.join(broadcast(customers_df), "city")

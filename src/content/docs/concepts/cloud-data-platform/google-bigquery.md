@@ -68,14 +68,18 @@ Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công n
 
 Giả sử bạn đang có một bảng dữ liệu lịch sử Wikipedia (`wikipedia_views`) với dung lượng 10TB. Bạn cần thống kê số lượt xem các bài viết liên quan đến chủ đề "Vietnam" trong năm 2026.
 
-### Cách viết tồi (Làm bay đứt $62.5 của công ty):```sql
+### Cách viết tồi (Làm bay đứt $62.5 của công ty):
+
+```sql
 -- Dùng SELECT * bắt BigQuery quét toàn bộ các cột của bảng 10TB
 SELECT * FROM `bigquery-public-data.wikipedia.views`
 WHERE title = 'Vietnam' AND date LIKE '2026-%';
 ```
 *Vì BigQuery tính tiền dựa trên lượng dữ liệu quét qua chứ không tính trên số dòng kết quả trả về. Việc bạn lạm dụng `SELECT *` sẽ bắt hệ thống quét qua toàn bộ 10TB dữ liệu trên đĩa, ngay cả khi kết quả trả về chỉ có vài dòng.*
 
-### Cách viết tối ưu (Có thể chỉ tốn $0.01):```sql
+### Cách viết tối ưu (Có thể chỉ tốn $0.01):
+
+```sql
 -- Chỉ bóc tách duy nhất 2 cột cần thiết là (views) và (date)
 SELECT sum(views) 
 FROM `bigquery-public-data.wikipedia.views`

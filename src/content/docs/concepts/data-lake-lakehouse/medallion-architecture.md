@@ -54,7 +54,9 @@ graph LR
 Hãy xem cách dữ liệu của một thiết bị đo chất lượng không khí thay đổi qua 3 tầng:
 
 **1. Tại tầng Bronze (Thô)**:
-Hệ thống lưu lại nguyên vẹn chuỗi JSON nhận được từ thiết bị cảm biến:```json
+Hệ thống lưu lại nguyên vẹn chuỗi JSON nhận được từ thiết bị cảm biến:
+
+```json
 {"device_id": "A-123", "temp_f": "75.2", "pm25": "12", "timestamp": "1686090000"}
 ```
 *(Lưu ý: Tầng này có thể chứa cả các bản ghi bị lỗi do thiết bị mất sóng như `"temp_f": "NULL"`)*.

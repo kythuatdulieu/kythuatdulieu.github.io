@@ -93,14 +93,18 @@ erDiagram
 
 Hãy cùng so sánh câu lệnh SQL truy vấn tổng doanh thu theo tên Danh mục Sản phẩm (Category) giữa hai mô hình:
 
-### Trên Star Schema (Phi chuẩn hóa - Chỉ cần 1 phép JOIN)```sql
+### Trên Star Schema (Phi chuẩn hóa - Chỉ cần 1 phép JOIN)
+
+```sql
 SELECT p.category_name, SUM(f.revenue)
 FROM fact_sales f
 JOIN dim_product p ON f.product_key = p.product_key
 GROUP BY p.category_name;
 ```
 
-### Trên Snowflake Schema (Đã chuẩn hóa - Cần tới 3 phép JOIN liên tiếp)```sql
+### Trên Snowflake Schema (Đã chuẩn hóa - Cần tới 3 phép JOIN liên tiếp)
+
+```sql
 SELECT c.category_name, SUM(f.revenue)
 FROM fact_sales f
 JOIN dim_product p ON f.product_key = p.product_key

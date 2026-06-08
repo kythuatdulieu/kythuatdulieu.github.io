@@ -90,7 +90,9 @@ graph LR
 
 Giả sử hệ thống nguồn của bạn là MySQL chứa bảng `orders`. Để không làm chậm hệ thống khi khách hàng đang mua sắm, bạn cấu hình công cụ **Debezium** (một công cụ CDC) để đọc file `binlog` của MySQL.
 
-Khi một đơn hàng mới được tạo (INSERT), Debezium bắt được sự kiện này trong `binlog` ở định dạng JSON:```json
+Khi một đơn hàng mới được tạo (INSERT), Debezium bắt được sự kiện này trong `binlog` ở định dạng JSON:
+
+```json
 {
   "op": "c",
   "after": {

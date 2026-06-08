@@ -65,7 +65,9 @@ Hệ thống sẽ truy cập vào các bảng metadata hệ thống (ví dụ `i
 * **Hạn chế**: Đôi khi không phản ánh chính xác 100% nếu có ai đó chạy lệnh thay đổi Metadata (như sửa comment, chỉnh cấu trúc cột) mà không thực sự ghi thêm dữ liệu mới.
 
 ### 2. Dựa trên Cột thời gian (Query-based / Timestamp-based)
-Hệ thống sẽ định kỳ chạy một câu lệnh SQL để tìm giá trị thời gian lớn nhất thực tế của dữ liệu:```sql
+Hệ thống sẽ định kỳ chạy một câu lệnh SQL để tìm giá trị thời gian lớn nhất thực tế của dữ liệu:
+
+```sql
 SELECT MAX(created_at) FROM my_table;
 ```
 Sau đó, so sánh giá trị này với thời gian hiện tại. Nếu độ lệch vượt quá ngưỡng cam kết (SLA), hệ thống lập tức kích hoạt cảnh báo. Đây là cách làm thực chất và chính xác nhất vì nó nhìn thẳng vào lõi dữ liệu.

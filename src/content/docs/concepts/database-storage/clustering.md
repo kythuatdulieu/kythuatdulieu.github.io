@@ -91,7 +91,9 @@ PARTITION BY DATE_TRUNC(transaction_date, MONTH)
 CLUSTER BY customer_id, product_category;
 ```
 
-Khi một nhà phân tích chạy câu lệnh:```sql
+Khi một nhà phân tích chạy câu lệnh:
+
+```sql
 SELECT SUM(amount) 
 FROM sales_data.transactions 
 WHERE transaction_date = '2026-06-07' AND customer_id = 'CUST-123';

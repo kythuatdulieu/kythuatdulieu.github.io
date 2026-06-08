@@ -50,7 +50,9 @@ s3://my-data-lake/sales/
     └── month=02/ -> chứa data_part4.parquet
 ```
 
-Khi bạn thực hiện câu lệnh SQL:```sql
+Khi bạn thực hiện câu lệnh SQL:
+
+```sql
 SELECT SUM(revenue) FROM sales WHERE year=2026 AND month=01;
 ```
 Bộ máy truy vấn (Query Engine như Athena hoặc Trino) sẽ bỏ qua toàn bộ các thư mục khác, chỉ đọc đúng file `data_part3.parquet` nằm trong thư mục `year=2026/month=01/`. Nhờ vậy, hóa đơn Cloud của doanh nghiệp được giảm đáng kể vì phí dịch vụ thường tính trên lượng dữ liệu được quét.

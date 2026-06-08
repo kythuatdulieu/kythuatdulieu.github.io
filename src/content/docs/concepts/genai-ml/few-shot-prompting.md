@@ -62,7 +62,9 @@ flowchart TD
 
 **Bài toán: Trích xuất tên viết tắt của công ty (Ticker) từ một đoạn văn bản.**
 
-Dưới đây là một prompt Few-shot mẫu bạn gửi cho mô hình:```text
+Dưới đây là một prompt Few-shot mẫu bạn gửi cho mô hình:
+
+```text
 Trích xuất tên mã viết tắt của các công ty công nghệ trong câu sau.
 
 Văn bản: Apple Inc. vừa phát hành điện thoại mới.
@@ -78,7 +80,9 @@ Văn bản: Tập đoàn Meta Platforms ra mắt kính thực tế ảo.
 Viết tắt: 
 ```
 
-*Kết quả sinh ra bởi mô hình:*```text
+*Kết quả sinh ra bởi mô hình:*
+
+```text
 META
 ```
 Mô hình tự động học được quy luật: chỉ trả về mã viết tắt dạng viết hoa 4-5 chữ cái, loại bỏ hoàn toàn các câu từ dẫn dắt rườm rà.

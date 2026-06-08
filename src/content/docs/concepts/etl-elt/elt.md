@@ -76,7 +76,9 @@ graph LR
 
 Dưới đây là ví dụ minh họa cách viết các file SQL trong dbt để thực hiện bước Transform ngay trong Data Warehouse.
 
-Đầu tiên, chúng ta tạo một file `stg_customers.sql` để làm sạch dữ liệu từ bảng thô:```sql
+Đầu tiên, chúng ta tạo một file `stg_customers.sql` để làm sạch dữ liệu từ bảng thô:
+
+```sql
 WITH raw_customers AS (
     SELECT * FROM {{ source('raw_postgres', 'customers') }}
 )
@@ -89,7 +91,9 @@ FROM raw_customers
 WHERE email IS NOT NULL
 ```
 
-Sau đó, chúng ta tạo file `dim_customers.sql` để định hình bảng chiều phân tích cuối cùng:```sql
+Sau đó, chúng ta tạo file `dim_customers.sql` để định hình bảng chiều phân tích cuối cùng:
+
+```sql
 SELECT 
     customer_id,
     first_name,

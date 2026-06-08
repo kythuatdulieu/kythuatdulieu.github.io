@@ -62,14 +62,18 @@ Hệ thống sẽ tiến hành kiểm tra sự tồn tại của các khóa chí
 
 Giả sử bạn có một đường ống dữ liệu chạy định kỳ hàng ngày vào lúc nửa đêm để tải dữ liệu giao dịch của ngày `2026-06-07` vào kho dữ liệu.
 
-### Cách viết tồi (Không lũy đẳng - Tránh sử dụng):```sql
+### Cách viết tồi (Không lũy đẳng - Tránh sử dụng):
+
+```sql
 -- Lệnh chạy lúc nửa đêm ngày 07/06/2026
 INSERT INTO sales_warehouse
 SELECT * FROM source_sales WHERE date = '2026-06-07';
 ```
 *Nếu câu lệnh này đang chạy được một nửa thì gặp sự cố mạng và dừng lại, khi bạn bấm chạy lại lần hai, toàn bộ dữ liệu giao dịch của ngày hôm đó sẽ bị chèn thêm một lần nữa, tạo ra dữ liệu trùng lặp.*
 
-### Cách viết lũy đẳng bằng phương pháp Overwrite (Delete-Write):```sql
+### Cách viết lũy đẳng bằng phương pháp Overwrite (Delete-Write):
+
+```sql
 -- Bước 1: Chủ động xóa sạch dữ liệu của ngày hôm đó trước
 DELETE FROM sales_warehouse WHERE date = '2026-06-07';
 
@@ -79,7 +83,9 @@ SELECT * FROM source_sales WHERE date = '2026-06-07';
 ```
 *Dù bạn có chạy lại câu lệnh này 100 lần, dữ liệu của ngày 07/06/2026 trong kho vẫn luôn sạch sẽ và chính xác.*
 
-### Cách viết lũy đẳng bằng phương pháp MERGE (Upsert):```sql
+### Cách viết lũy đẳng bằng phương pháp MERGE (Upsert):
+
+```sql
 MERGE INTO sales_warehouse AS target
 USING (SELECT * FROM source_sales WHERE date = '2026-06-07') AS source
 ON target.order_id = source.order_id

@@ -98,7 +98,9 @@ Hệ thống quét và tự động gán nhãn bảo mật:
 * Cột `full_name`, `email`, `phone` -> Gán nhãn `PII` và cấp độ `Restricted`.
 * Cột `segment`, `lifetime_value` -> Gán nhãn `Business_Metric` và cấp độ `Internal`.
 
-**Bước 2: Thiết lập chính sách che giấu dữ liệu động (Ví dụ trên [Snowflake](/concepts/cloud-data-platform/snowflake/) DWH)**```sql
+**Bước 2: Thiết lập chính sách che giấu dữ liệu động (Ví dụ trên [Snowflake](/concepts/cloud-data-platform/snowflake/) DWH)**
+
+```sql
 -- Khởi tạo chính sách ẩn danh thông tin Email
 CREATE OR REPLACE MASKING POLICY email_mask AS (val VARCHAR) RETURNS VARCHAR ->
   CASE

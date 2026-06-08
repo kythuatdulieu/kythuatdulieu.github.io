@@ -96,7 +96,9 @@ with DAG(dag_id="example_dag", start_date=datetime(2026, 6, 1)) as dag:
 
 Trong công cụ biến đổi dữ liệu **dbt (data build tool)**, bạn không cần tự tay viết các toán tử vẽ mũi tên. Thay vào đó, dbt sẽ tự phân tích cú pháp hàm tham chiếu `{{ ref() }}` trong các file SQL để tự động xây dựng nên một DAG khổng lồ.
 
-Ví dụ trong file SQL `marts_revenue.sql`:```sql
+Ví dụ trong file SQL `marts_revenue.sql`:
+
+```sql
 SELECT * 
 FROM {{ ref('stg_sales') }} 
 JOIN {{ ref('stg_users') }} ON ...

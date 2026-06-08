@@ -88,7 +88,9 @@ graph LR
 
 Hãy cùng xem một thiết kế thực tế cho hệ thống Thương mại điện tử (E-commerce) sử dụng mô hình Star Schema.
 
-### 1. Bảng Dimension: `dim_product` (Lưu thông tin sản phẩm)```sql
+### 1. Bảng Dimension: `dim_product` (Lưu thông tin sản phẩm)
+
+```sql
 CREATE TABLE dim_product (
     product_key INT PRIMARY KEY, -- Surrogate Key tự sinh
     product_id VARCHAR(50),      -- Natural Key từ hệ thống nguồn
@@ -101,7 +103,9 @@ CREATE TABLE dim_product (
 );
 ```
 
-### 2. Bảng Fact: `fact_sales` (Lưu thông tin giao dịch)```sql
+### 2. Bảng Fact: `fact_sales` (Lưu thông tin giao dịch)
+
+```sql
 CREATE TABLE fact_sales (
     sales_key BIGINT PRIMARY KEY,
     date_key INT,               -- Foreign key liên kết sang dim_date
@@ -114,7 +118,9 @@ CREATE TABLE fact_sales (
 ```
 
 ### Truy vấn phân tích mẫu
-Để tính toán tổng doanh số theo danh mục sản phẩm trong tháng 5 năm 2026:```sql
+Để tính toán tổng doanh số theo danh mục sản phẩm trong tháng 5 năm 2026:
+
+```sql
 SELECT 
     p.category,
     SUM(f.revenue) AS total_revenue,

@@ -78,7 +78,9 @@ graph TD
 
 ## Ví dụ thực tế: Cứu nguy dữ liệu bị xóa nhầm bằng Time Travel
 
-Lúc 10:00 sáng, một nhà phân tích chạy nhầm lệnh xóa sạch dữ liệu khách hàng:```sql
+Lúc 10:00 sáng, một nhà phân tích chạy nhầm lệnh xóa sạch dữ liệu khách hàng:
+
+```sql
 DELETE FROM production.customers WHERE status = 'active'; 
 ```
 

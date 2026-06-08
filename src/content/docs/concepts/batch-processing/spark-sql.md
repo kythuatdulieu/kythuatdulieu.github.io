@@ -61,7 +61,9 @@ flowchart TD
 
 Một điểm tuyệt vời của Spark SQL là bạn có thể tự do trộn lẫn giữa cách viết DataFrame API và câu lệnh SQL truyền thống tùy theo thói quen của mình.
 
-### Cách 1: Sử dụng DataFrame API (Phong cách lập trình)```python
+### Cách 1: Sử dụng DataFrame API (Phong cách lập trình)
+
+```python
 # Đọc dữ liệu từ S3 vào DataFrame
 df_sales = spark.read.parquet("s3://data/sales/")
 
@@ -71,7 +73,9 @@ df_filtered = df_sales.filter(df_sales["amount"] > 100) \
                       .sum("amount")
 ```
 
-### Cách 2: Sử dụng SQL thuần túy (Phong cách khai báo)```python
+### Cách 2: Sử dụng SQL thuần túy (Phong cách khai báo)
+
+```python
 # Đăng ký DataFrame thành một View ảo tạm thời
 df_sales.createOrReplaceTempView("sales_table")
 

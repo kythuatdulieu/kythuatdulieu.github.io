@@ -74,7 +74,9 @@ flowchart TD
 
 Một trong những Dimension quan trọng nhất của mọi Data Warehouse là bảng chiều thời gian. Thay vì dùng các hàm tính toán ngày tháng của SQL trực tiếp trên bảng Fact (rất chậm), Data Warehouse thiết kế hẳn một bảng chứa lịch vật lý.
 
-### Câu lệnh SQL khởi tạo bảng `dim_date````sql
+### Câu lệnh SQL khởi tạo bảng `dim_date`
+
+```sql
 CREATE TABLE dim_date (
     date_key INT PRIMARY KEY,         -- Định dạng YYYYMMDD (ví dụ: 20260607)
     full_date DATE,

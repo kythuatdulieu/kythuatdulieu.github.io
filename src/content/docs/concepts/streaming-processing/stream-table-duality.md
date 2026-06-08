@@ -67,7 +67,9 @@ graph LR
 
 Hãy cùng xem ksqlDB (một SQL engine chạy trên Apache Kafka) xử lý tính lưỡng tính này như thế nào:
 
-**1. Khai báo một Stream (đại diện cho luồng giao dịch):**```sql
+**1. Khai báo một Stream (đại diện cho luồng giao dịch):**
+
+```sql
 CREATE STREAM transactions (
     account_id VARCHAR,
     amount INT
@@ -75,7 +77,9 @@ CREATE STREAM transactions (
 ```
 *Stream này sẽ liên tục nhận các sự kiện chuyển tiền dạng: `[id: 1, amount: 100]`, `[id: 1, amount: 50]`, `[id: 2, amount: 200]`...*
 
-**2. Chuyển đổi Stream đó thành một Table (Tổng số dư tài khoản):**```sql
+**2. Chuyển đổi Stream đó thành một Table (Tổng số dư tài khoản):**
+
+```sql
 CREATE TABLE account_balances AS
 SELECT 
     account_id, 

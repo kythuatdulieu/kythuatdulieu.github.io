@@ -85,7 +85,9 @@ graph LR
 
 Thay vì tạo một bảng khách hàng phẳng và rộng chứa đầy đủ thông tin địa chỉ (`dim_customer` theo phong cách Kimball), Inmon yêu cầu tách biệt hoàn toàn các thực thể để triệt tiêu sự trùng lặp dữ liệu:
 
-**1. Bảng Khách Hàng cốt lõi (`edw_customer`)**```sql
+**1. Bảng Khách Hàng cốt lõi (`edw_customer`)**
+
+```sql
 CREATE TABLE edw_customer (
     customer_id INT PRIMARY KEY,
     first_name VARCHAR(50),
@@ -95,7 +97,9 @@ CREATE TABLE edw_customer (
 );
 ```
 
-**2. Bảng Địa chỉ (`edw_address`)**```sql
+**2. Bảng Địa chỉ (`edw_address`)**
+
+```sql
 CREATE TABLE edw_address (
     address_id INT PRIMARY KEY,
     street VARCHAR(255),
@@ -105,7 +109,9 @@ CREATE TABLE edw_address (
 );
 ```
 
-**3. Bảng Ánh xạ trung gian (`edw_customer_address`) để giải quyết quan hệ nhiều-nhiều (N-N)**```sql
+**3. Bảng Ánh xạ trung gian (`edw_customer_address`) để giải quyết quan hệ nhiều-nhiều (N-N)**
+
+```sql
 CREATE TABLE edw_customer_address (
     customer_id INT,
     address_id INT,

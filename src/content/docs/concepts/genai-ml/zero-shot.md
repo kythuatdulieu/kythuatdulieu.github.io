@@ -59,14 +59,18 @@ graph TD
 
 Giả sử bạn cần phân tích cảm xúc từ các phản hồi của khách hàng gửi về hệ thống.
 
-**Prompt (Zero-shot)**:```text
+**Prompt (Zero-shot)**:
+
+```text
 Classify the sentiment of the following customer review into exactly one of these categories: [Positive, Negative, Neutral].
 
 Review: "The delivery was incredibly fast, but the packaging was severely damaged."
 Sentiment:
 ```
 
-**Output mong đợi từ LLM**:```text
+**Output mong đợi từ LLM**:
+
+```text
 Neutral
 ```
 

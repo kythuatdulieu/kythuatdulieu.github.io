@@ -86,7 +86,9 @@ graph TD
 
 Hãy cùng xem ví dụ cụ thể về cách thiết lập công cụ `pgAudit` để theo dõi các truy cập vào bảng dữ liệu y tế nhạy cảm `patients` trong cơ sở dữ liệu PostgreSQL.
 
-### 1. Bật extension pgAudit trong file cấu hình postgresql.conf```ini
+### 1. Bật extension pgAudit trong file cấu hình postgresql.conf
+
+```ini
 shared_preload_libraries = 'pgaudit'
 # Ghi lại các lệnh đọc (READ), ghi (WRITE), thay đổi cấu trúc (DDL) và phân quyền (ROLE)
 pgaudit.log = 'READ, WRITE, DDL, ROLE'  

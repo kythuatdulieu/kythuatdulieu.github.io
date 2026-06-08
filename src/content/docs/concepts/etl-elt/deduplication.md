@@ -57,7 +57,9 @@ Xét một bảng dữ liệu người dùng (`users`) ở vùng Staging đang b
 
 Mục tiêu của chúng ta là lọc bỏ dòng trạng thái cũ (`pending`) của Bob và giữ lại dòng trạng thái mới nhất (`active`) dựa trên mốc thời gian `updated_at`.
 
-### Câu lệnh SQL sử dụng hàm cửa sổ `ROW_NUMBER()````sql
+### Câu lệnh SQL sử dụng hàm cửa sổ `ROW_NUMBER()`
+
+```sql
 WITH ranked_users AS (
     SELECT 
         user_id,

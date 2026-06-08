@@ -64,7 +64,9 @@ graph TD
 
 ## Ví dụ thực tế: Điều gì xảy ra khi bạn chạy lệnh đếm số dòng?
 
-Hãy xem một câu lệnh đếm số dòng rất quen thuộc:```python
+Hãy xem một câu lệnh đếm số dòng rất quen thuộc:
+
+```python
 # 1. Đoạn code này được thực thi tại máy Driver
 df = spark.read.parquet("s3://huge-logs/")
 count = df.count()

@@ -90,7 +90,9 @@ Hãy tưởng tượng bạn cần đếm số lượng người dùng truy cậ
 Bạn phải lên AWS tạo một cụm máy ảo EMR (Elastic MapReduce) gồm 1 node chính và 5 node phụ. Bạn phải chờ khoảng 15 phút để các máy ảo khởi động xong rồi mới submit job Spark lên chạy. Khi job chạy xong sau 30 phút, **nếu bạn quên tắt cụm máy ảo**, chúng sẽ tiếp tục chạy vô ích suốt ngày nghỉ cuối tuần và gửi cho bạn một hóa đơn trị giá 500 USD.
 
 ### Hướng đi Serverless (Dùng Amazon Athena)
-Bạn chỉ cần mở giao diện Athena và gõ trực tiếp câu lệnh SQL:```sql
+Bạn chỉ cần mở giao diện Athena và gõ trực tiếp câu lệnh SQL:
+
+```sql
 SELECT country, COUNT(*) as visits 
 FROM s3_web_logs_table 
 GROUP BY country;

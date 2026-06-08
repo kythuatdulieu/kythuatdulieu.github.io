@@ -91,7 +91,9 @@ graph TD
 
 Dưới đây là ví dụ sử dụng Spark Shell (ngôn ngữ Scala) để thực hiện các thao tác Insert và Upsert dữ liệu vào bảng Hudi:
 
-### 1. Khởi tạo dữ liệu mẫu và ghi mới (Insert)```scala
+### 1. Khởi tạo dữ liệu mẫu và ghi mới (Insert)
+
+```scala
 import org.apache.hudi.QuickstartUtils._
 import scala.collection.JavaConversions._
 import org.apache.spark.sql.SaveMode._
@@ -117,7 +119,9 @@ df.write.format("hudi").
   save(basePath)
 ```
 
-### 2. Cập nhật dữ liệu hiện tại (Upsert)```scala
+### 2. Cập nhật dữ liệu hiện tại (Upsert)
+
+```scala
 // Sinh ra dữ liệu cập nhật cho các bản ghi vừa tạo
 val updates = convertToStringList(dataGen.generateUpdates(10))
 val dfUpdates = spark.read.json(spark.sparkContext.parallelize(updates, 2))

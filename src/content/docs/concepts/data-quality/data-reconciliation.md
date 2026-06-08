@@ -75,7 +75,9 @@ graph TD
 
 Hãy cùng xem một kịch bản đối soát thực tế cho một công ty tài chính.
 
-**Bước 1: Tính toán trên CSDL nguồn (MySQL)**```sql
+**Bước 1: Tính toán trên CSDL nguồn (MySQL)**
+
+```sql
 -- Chạy lúc 00:00 AM ngày 08/06/2026 cho ngày hôm trước
 SELECT 
     '2026-06-07' as date,
@@ -86,7 +88,9 @@ WHERE DATE(created_at) = '2026-06-07';
 -- Kết quả thu được: src_count = 10000, src_amount = 500000.50
 ```
 
-**Bước 2: Tính toán trên Data Mart đích (BigQuery)** sau khi pipeline hoàn tất:```sql
+**Bước 2: Tính toán trên Data Mart đích (BigQuery)** sau khi pipeline hoàn tất:
+
+```sql
 SELECT 
     '2026-06-07' as date,
     COUNT(tx_id) as tgt_count,

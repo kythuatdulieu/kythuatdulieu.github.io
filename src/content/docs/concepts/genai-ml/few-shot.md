@@ -53,7 +53,9 @@ Một prompt Few-shot tuyển chuẩn luôn gồm 3 phần rõ rệt:
 
 Hãy xem xét một tác vụ trích xuất thực thể từ tin nhắn đặt hàng của khách hàng sang định dạng JSON.
 
-**Prompt (Few-shot) gửi lên LLM:**```text
+**Prompt (Few-shot) gửi lên LLM:**
+
+```text
 Trích xuất Món ăn và Số lượng từ tin nhắn. Chỉ trả về JSON, không thêm chữ nào khác.
 
 ---
@@ -80,7 +82,9 @@ Tin nhắn: Em ơi cho 5 phần cơm sườn nướng và 2 lon coca giao qua qu
 Output:
 ```
 
-**Kết quả sinh ra từ LLM:**```json
+**Kết quả sinh ra từ LLM:**
+
+```json
 {
   "items": [
     {"name": "cơm sườn nướng", "quantity": 5},

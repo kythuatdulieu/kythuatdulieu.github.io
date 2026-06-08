@@ -71,12 +71,16 @@ Tùy vào độ phức tạp của bài toán, các kỹ sư thường áp dụn
 
 Hãy xem xét bài toán trích xuất thông tin từ email phản hồi của khách hàng thành cấu trúc dữ liệu JSON để tự động hóa quy trình CRM.
 
-### Cách viết tệ (Mơ hồ, không có cấu trúc):```text
+### Cách viết tệ (Mơ hồ, không có cấu trúc):
+
+```text
 Đọc email này và lấy ra tên, số điện thoại, lý do phàn nàn giúp tôi:
 "Chào công ty, tôi là Nguyễn Văn A. Số của tôi là 0901234567. Tôi mua cái máy giặt hôm qua mà nay nó không lên nguồn. Đổi cho tôi nhanh lên."
 ```
 
-### Cách viết chuẩn (Áp dụng các thành phần cốt lõi):```text
+### Cách viết chuẩn (Áp dụng các thành phần cốt lõi):
+
+```text
 [Role]
 Bạn là một trợ lý AI chuyên trích xuất dữ liệu thô thành cấu trúc hệ thống.
 
