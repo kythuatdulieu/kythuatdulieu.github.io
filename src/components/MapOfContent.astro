@@ -62,81 +62,175 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
 });
 ---
 
-<table class="moc-table">
-    <tbody id="moc-table-body">
-        {sortedCategories.map(category => (
-            <tr class="moc-row" data-category={category}>
-                <th class="moc-category-cell">
-                    <span class="drag-handle" title="Kéo thả để sắp xếp">⠿</span>
-                    {category}
-                </th>
-                <td class="moc-links-cell">
-                    {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map((concept, index) => (
-                        <span>
-                            <a href={concept.url} class="concept-link" data-concept={concept.dataConcept}>{concept.title}</a>{index < groupedConcepts[category].length - 1 ? ', ' : ''}
-                        </span>
-                    ))}
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</table>
+<div class="moc-layout">
+    <!-- Cột Category (Danh mục) -->
+    <aside class="moc-sidebar">
+        <div class="moc-sidebar-sticky">
+            <h3 class="moc-sidebar-title">Danh mục</h3>
+            <ul class="moc-category-list" id="moc-category-list">
+                {sortedCategories.map(category => {
+                    const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                    return (
+                        <li class="moc-category-item" data-category={category}>
+                            <span class="drag-handle" title="Kéo thả để sắp xếp">⠿</span>
+                            <a href={`#cat-${catSlug}`} class="moc-category-link">{category}</a>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Cột Content Map (Nội dung) -->
+    <div class="moc-content" id="moc-content-map">
+        {sortedCategories.map(category => {
+            const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            return (
+                <section class="moc-section" id={`cat-${catSlug}`} data-category={category}>
+                    <h2 class="moc-section-title">{category}</h2>
+                    <div class="moc-grid">
+                        {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map(concept => (
+                            <a href={concept.url} class="concept-card" data-concept={concept.dataConcept}>
+                                <span class="concept-card-title">{concept.title}</span>
+                                <svg class="concept-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                        ))}
+                    </div>
+                </section>
+            );
+        })}
+    </div>
+</div>
 
 <style>
-.moc-table {
-    width: 100%;
-    max-width: 850px;
-    margin: 2rem auto;
-    border-collapse: collapse;
+.moc-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
     font-family: var(--sl-font);
-    font-size: 0.95rem;
 }
-.moc-row {
-    border-bottom: 1px solid var(--sl-color-hairline);
-    transition: background-color 0.2s;
-    background-color: transparent;
+
+@media (min-width: 768px) {
+    .moc-layout {
+        grid-template-columns: 260px 1fr;
+        align-items: start;
+    }
 }
-.moc-row:hover {
-    background-color: var(--sl-color-bg-nav);
+
+/* Sidebar Categories */
+.moc-sidebar-sticky {
+    position: sticky;
+    top: 6rem; /* Starlight header offset */
+    background: var(--sl-color-bg-nav);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--sl-color-hairline);
+    box-shadow: var(--sl-shadow-sm);
 }
-.moc-category-cell {
-    width: 30%;
-    padding: 1.2rem 1rem 1.2rem 0;
-    text-align: left;
-    vertical-align: top;
-    font-weight: 600;
+.moc-sidebar-title {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.2rem;
     color: var(--sl-color-white);
-    display: flex;
-    align-items: flex-start;
+    font-weight: 600;
+    border-bottom: 1px solid var(--sl-color-hairline);
+    padding-bottom: 0.5rem;
 }
-.moc-links-cell {
-    width: 70%;
-    padding: 1.2rem 0 1.2rem 1rem;
-    vertical-align: top;
-    line-height: 1.8;
-    color: var(--sl-color-gray-3);
+.moc-category-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.moc-category-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s;
+}
+.moc-category-item:hover {
+    background-color: var(--sl-color-bg-inline-code);
+    border-radius: 6px;
 }
 .drag-handle {
     cursor: grab;
     color: var(--sl-color-gray-4);
     margin-right: 0.5rem;
+    margin-left: 0.5rem;
     font-size: 1.1rem;
-    user-select: none;
     opacity: 0.3;
-    transition: opacity 0.2s;
-    padding-top: 0.1rem;
+    user-select: none;
 }
-.moc-row:hover .drag-handle {
+.moc-category-item:hover .drag-handle {
     opacity: 1;
 }
-.concept-link {
-    color: var(--sl-color-accent-high);
-    text-decoration: none;
-    transition: color 0.2s;
+.moc-category-link {
+    color: var(--sl-color-text-accent);
+    text-decoration: none !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    flex: 1;
 }
-.concept-link:hover {
+.moc-category-link:hover {
     color: var(--sl-color-accent);
-    text-decoration: underline;
+}
+
+/* Content Map Sections */
+.moc-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+.moc-section {
+    scroll-margin-top: 6rem;
+}
+.moc-section-title {
+    font-size: 1.8rem;
+    color: var(--sl-color-white);
+    border-bottom: 2px solid var(--sl-color-accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem !important;
+    margin-top: 0 !important;
+}
+.moc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.concept-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    background-color: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+}
+.concept-card:hover {
+    background-color: var(--sl-color-bg-inline-code);
+    border-color: var(--sl-color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.concept-card-title {
+    color: var(--sl-color-text-accent);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+.concept-card-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--sl-color-accent);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease-in-out;
+}
+.concept-card:hover .concept-card-icon {
+    opacity: 1;
+    transform: translateX(0);
 }
 .sortable-ghost {
     opacity: 0.4;
@@ -148,27 +242,44 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
 import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/+esm';
 
 function initSortable() {
-    const tbody = document.getElementById('moc-table-body');
-    if (!tbody) return;
+    const list = document.getElementById('moc-category-list');
+    const contentMap = document.getElementById('moc-content-map');
+    if (!list || !contentMap) return;
 
-    // Load saved row order
-    const savedCategoryOrder = JSON.parse(localStorage.getItem('moc-table-order') || 'null');
-    if (savedCategoryOrder) {
-        const rows = Array.from(tbody.querySelectorAll('.moc-row'));
-        savedCategoryOrder.forEach(categoryName => {
-            const el = rows.find(r => r.dataset.category === categoryName);
-            if (el) tbody.appendChild(el);
+    // Load saved category order
+    const savedOrder = JSON.parse(localStorage.getItem('moc-layout-order') || 'null');
+    if (savedOrder) {
+        // Sort sidebar list
+        const listItems = Array.from(list.querySelectorAll('.moc-category-item'));
+        savedOrder.forEach(cat => {
+            const el = listItems.find(i => i.dataset.category === cat);
+            if (el) list.appendChild(el);
+        });
+        
+        // Sort content sections to match
+        const sections = Array.from(contentMap.querySelectorAll('.moc-section'));
+        savedOrder.forEach(cat => {
+            const el = sections.find(s => s.dataset.category === cat);
+            if (el) contentMap.appendChild(el);
         });
     }
 
-    // Initialize Sortable on tbody
-    new Sortable(tbody, {
+    // Initialize Sortable on Sidebar List
+    new Sortable(list, {
         handle: '.drag-handle',
         animation: 150,
         ghostClass: 'sortable-ghost',
         onEnd: function () {
-            const order = Array.from(tbody.querySelectorAll('.moc-row')).map(el => el.dataset.category);
-            localStorage.setItem('moc-table-order', JSON.stringify(order));
+            // Save new order
+            const newOrder = Array.from(list.querySelectorAll('.moc-category-item')).map(el => el.dataset.category);
+            localStorage.setItem('moc-layout-order', JSON.stringify(newOrder));
+            
+            // Reorder content sections live
+            const sections = Array.from(contentMap.querySelectorAll('.moc-section'));
+            newOrder.forEach(cat => {
+                const el = sections.find(s => s.dataset.category === cat);
+                if (el) contentMap.appendChild(el);
+            });
         }
     });
 }
