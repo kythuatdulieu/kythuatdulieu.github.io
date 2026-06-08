@@ -25,9 +25,10 @@ if (!currentPath.endsWith('/')) {
 // For kythuatdulieu.github.io, the base path is / so we're good.
 
 const pageBacklinks = backlinks[currentPath] || [];
+const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPath === '/';
 ---
 
-{pageBacklinks.length > 0 && (
+{!isSplashPage && pageBacklinks.length > 0 && (
   <div class="backlinks-container">
     <h3>Liên kết ngược (Backlinks)</h3>
     <p>Các trang khác có nhắc đến chủ đề này:</p>
@@ -41,6 +42,7 @@ const pageBacklinks = backlinks[currentPath] || [];
   </div>
 )}
 
+{!isSplashPage && (
 <div class="comments-container" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--sl-color-hairline);">
   <h3 style="font-size: var(--sl-text-h4); margin-bottom: 1rem; font-weight: 600; color: var(--sl-color-white);">Bình luận & Thảo luận</h3>
   
@@ -92,6 +94,7 @@ const pageBacklinks = backlinks[currentPath] || [];
     <em>(Lưu ý: Bạn cần đăng nhập GitHub để bình luận. Nếu lỗi, vui lòng đảm bảo đã cài đặt Utterances App trên Github Repo)</em>
   </p>
 </div>
+)}
 
 <Default {...Astro.props}>
   <slot />

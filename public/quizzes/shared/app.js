@@ -9,7 +9,11 @@
     // State
     // ========================
     // Dynamically load the STATE_KEY based on the path
-    const quizId = window.location.pathname.split('/').filter(Boolean).pop() || 'quiz';
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length > 0 && segments[segments.length - 1].includes('.')) {
+        segments.pop();
+    }
+    const quizId = segments.pop() || 'quiz';
     const STATE_KEY = `quiz_state_${quizId}_v1`;
 
     let questions = [];
@@ -332,12 +336,22 @@
 
         if (els.btnPdf) {
             if (q.page) {
+                els.btnPdf.style.display = '';
                 els.btnPdf.disabled = false;
                 const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
                 els.btnPdf.onclick = () => window.open(`${pdfPath}#page=${q.page}`, '_blank');
             } else {
+                els.btnPdf.style.display = 'none';
                 els.btnPdf.disabled = true;
                 els.btnPdf.onclick = null;
+            }
+        }
+
+        if (els.btnImage) {
+            if (q.image) {
+                els.btnImage.style.display = '';
+            } else {
+                els.btnImage.style.display = 'none';
             }
         }
 
@@ -846,7 +860,7 @@
             if (typeof QUESTIONS_DATA !== 'undefined') {
                 questions = QUESTIONS_DATA.map(q => ({ ...q }));
             } else {
-                const response = await fetch('questions.json');
+                const response = await fetch(`/quizzes/${quizId}/questions.json`);
                 const data = await response.json();
                 const questionsArray = Array.isArray(data) ? data : (data.questions || []);
                 questions = questionsArray.map(q => ({ ...q }));
