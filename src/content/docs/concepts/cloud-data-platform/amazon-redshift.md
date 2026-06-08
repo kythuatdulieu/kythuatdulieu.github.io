@@ -21,7 +21,7 @@ Bằng cách kết hợp kiến trúc Xử lý Song song Khổng lồ (Massively
 2. Vận hành tốn kém, đòi hỏi một đội ngũ quản trị viên cơ sở dữ liệu (DBA) đông đảo và chuyên nghiệp để duy trì hệ thống.
 3. Chờ đợi hàng tháng trời để mua thêm phần cứng và nâng cấp cấu hình (Scale-up) khi dung lượng lưu trữ bị đầy.
 
-Amazon Redshift ra đời và thay đổi hoàn toàn luật chơi. Lần đầu tiên trong lịch sử, một công ty khởi nghiệp nhỏ cũng có thể sở hữu một cụm Data Warehouse mạnh mẽ ngang ngửa với các ngân hàng lớn chỉ với mức giá khởi điểm cực kỳ rẻ khoảng $0.25/giờ, khởi tạo nhanh chóng trong 15 phút và có thể tắt đi khi không còn nhu cầu sử dụng.
+Amazon Redshift ra đời và thay đổi hoàn toàn luật chơi. Lần đầu tiên trong lịch sử, một công ty khởi nghiệp nhỏ cũng có thể sở hữu một cụm Data Warehouse mạnh mẽ ngang ngửa với các ngân hàng lớn chỉ với mức giá khởi điểm cực kỳ rẻ khoảng \$0.25/giờ, khởi tạo nhanh chóng trong 15 phút và có thể tắt đi khi không còn nhu cầu sử dụng.
 
 ## Trái tim của Redshift: Kiến trúc xử lý song song khổng lồ (MPP)
 

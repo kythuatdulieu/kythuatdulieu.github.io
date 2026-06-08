@@ -89,14 +89,14 @@ sequenceDiagram
 
 ## Ví dụ thực tế: Bài toán số dư tài khoản ngân hàng
 
-Hãy tưởng tượng một bảng lưu trữ số dư tài khoản ngân hàng trên Data Lake. Số dư ban đầu (V1) của tài khoản `acc_01` là 100$.
+Hãy tưởng tượng một bảng lưu trữ số dư tài khoản ngân hàng trên Data Lake. Số dư ban đầu (V1) của tài khoản `acc_01` là 100\$.
 
-* **Writer A (Giao dịch trừ tiền):** Muốn trừ 20$. A đọc số dư V1 (100$), tính toán và ghi file mới với số dư = 80$.
-* **Writer B (Giao dịch cộng tiền):** Muốn cộng 50$. B đọc số dư V1 (100$), tính toán và ghi file mới với số dư = 150$.
+* **Writer A (Giao dịch trừ tiền):** Muốn trừ 20\$. A đọc số dư V1 (100\$), tính toán và ghi file mới với số dư = 80\$.
+* **Writer B (Giao dịch cộng tiền):** Muốn cộng 50\$. B đọc số dư V1 (100\$), tính toán và ghi file mới với số dư = 150\$.
 
-Nếu không có ACID, bản ghi của B có thể ghi đè lên A và khiến số dư tài khoản kết thúc ở mức 150$ (hoàn toàn sai thực tế!). 
+Nếu không có ACID, bản ghi của B có thể ghi đè lên A và khiến số dư tài khoản kết thúc ở mức 150\$ (hoàn toàn sai thực tế!). 
 
-Nhờ có OCC trong các Table Format, kịch bản sẽ diễn ra như sau: Writer A commit thành công phiên bản V2 (80$). Khi Writer B cố gắng commit phiên bản V2, hệ thống sẽ từ chối. B buộc phải cập nhật lại trạng thái (đọc số dư mới từ V2 là 80$), cộng thêm 50$ để ra 130$, ghi file mới và commit thành công phiên bản V3. Dữ liệu tài chính được bảo vệ vẹn toàn.
+Nhờ có OCC trong các Table Format, kịch bản sẽ diễn ra như sau: Writer A commit thành công phiên bản V2 (80\$). Khi Writer B cố gắng commit phiên bản V2, hệ thống sẽ từ chối. B buộc phải cập nhật lại trạng thái (đọc số dư mới từ V2 là 80\$), cộng thêm 50\$ để ra 130\$, ghi file mới và commit thành công phiên bản V3. Dữ liệu tài chính được bảo vệ vẹn toàn.
 
 Dưới đây là cách chúng ta hiện thực hóa điều này bằng mã nguồn PySpark với Delta Lake:
 ```python

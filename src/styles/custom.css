@@ -1,3 +1,15 @@
+@import "katex/dist/katex.min.css";
+
+/* Enable smooth scrolling globally */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fix SVG height in Starlight for Katex symbols */
+.katex-html svg {
+  height: inherit;
+}
+
 /* ==========================================================
    SIDEBAR HIERARCHY STYLING 
    ========================================================== */

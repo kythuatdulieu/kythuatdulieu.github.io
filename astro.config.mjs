@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import rehypeMermaidLite from 'rehype-mermaid-lite';
 import { conceptCategories } from './src/config/categories.js';
 
@@ -8,7 +10,9 @@ import { conceptCategories } from './src/config/categories.js';
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
 	markdown: {
+		remarkPlugins: [remarkMath],
 		rehypePlugins: [
+			rehypeKatex,
 			[rehypeMermaidLite, { 
 				// By default it turns ```mermaid into <pre class="mermaid">
 			}]

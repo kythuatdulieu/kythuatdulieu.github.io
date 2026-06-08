@@ -6,6 +6,13 @@ template: splash
 
 import MapOfContent from '../../components/MapOfContent.astro';
 
+<div class="scroll-action-container">
+  <a href="#quizzes" class="scroll-to-quizzes-btn">
+    <span>📝 Luyện Đề Thi Thử</span>
+    <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+  </a>
+</div>
+
 <MapOfContent />
 
 <div id="quizzes" class="quiz-section">
@@ -120,6 +127,42 @@ import MapOfContent from '../../components/MapOfContent.astro';
     .quiz-link-card {
       flex: 1;
     }
+  }
+
+  .scroll-action-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: -1.5rem 0 2rem 0;
+  }
+  
+  .scroll-to-quizzes-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, var(--sl-color-accent), var(--sl-color-accent-high));
+    color: var(--sl-color-text-invert) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 30px;
+    text-decoration: none !important;
+    box-shadow: 0 4px 12px rgba(var(--sl-color-accent-rgb), 0.35);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .scroll-to-quizzes-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(var(--sl-color-accent-rgb), 0.5);
+    filter: brightness(1.15);
+  }
+  
+  .scroll-to-quizzes-btn:hover .arrow-down {
+    transform: translateY(3px);
+  }
+  
+  .scroll-to-quizzes-btn .arrow-down {
+    transition: transform 0.2s ease;
   }
 `}</style>
 

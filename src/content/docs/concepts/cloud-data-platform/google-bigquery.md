@@ -59,16 +59,16 @@ Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công n
 
 Để không bị sốc khi nhận hóa đơn GCP cuối tháng, bạn cần hiểu rõ cách BigQuery tính tiền. Về cơ bản, Google tách biệt chi phí thành hai phần:
 
-1. **Chi phí lưu trữ (Storage Pricing)**: Rất rẻ, chỉ khoảng $0.02 cho mỗi GB dữ liệu lưu trữ một tháng (tương đương với việc lưu file thô trên Amazon S3 hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/)). Đặc biệt, nếu một phân vùng dữ liệu không bị chỉnh sửa trong vòng 90 ngày liên tiếp, Google sẽ tự động giảm 50% chi phí lưu trữ cho phân vùng đó (Long-term storage).
+1. **Chi phí lưu trữ (Storage Pricing)**: Rất rẻ, chỉ khoảng \$0.02 cho mỗi GB dữ liệu lưu trữ một tháng (tương đương với việc lưu file thô trên Amazon S3 hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/)). Đặc biệt, nếu một phân vùng dữ liệu không bị chỉnh sửa trong vòng 90 ngày liên tiếp, Google sẽ tự động giảm 50% chi phí lưu trữ cho phân vùng đó (Long-term storage).
 2. **Chi phí truy vấn (Compute/Query Pricing)**: Có hai tùy chọn chính tùy thuộc vào quy mô doanh nghiệp:
-   * **On-demand (Trả theo dung lượng quét - Phổ biến nhất)**: Google tính phí khoảng **$6.25 cho mỗi Terabyte (TB)** dữ liệu mà câu lệnh SQL của bạn thực tế quét qua. Nếu bạn không chạy câu lệnh nào, bạn hoàn toàn không mất phí tính toán.
+   * **On-demand (Trả theo dung lượng quét - Phổ biến nhất)**: Google tính phí khoảng **\$6.25 cho mỗi Terabyte (TB)** dữ liệu mà câu lệnh SQL của bạn thực tế quét qua. Nếu bạn không chạy câu lệnh nào, bạn hoàn toàn không mất phí tính toán.
    * **Capacity Pricing (Mua khoán slots)**: Phù hợp cho các doanh nghiệp lớn muốn kiểm soát chi phí cố định. Bạn sẽ thuê một lượng tài nguyên tính toán cố định (tính bằng Slots, tối thiểu là 100 slots) với mức giá cố định hàng tháng để thỏa sức chạy các câu lệnh SQL mà không lo chi phí phát sinh.
 
 ## Minh họa thực tế: Kẻ phá hoại ví tiền vs Người tối ưu hóa
 
 Giả sử bạn đang có một bảng dữ liệu lịch sử Wikipedia (`wikipedia_views`) với dung lượng 10TB. Bạn cần thống kê số lượt xem các bài viết liên quan đến chủ đề "Vietnam" trong năm 2026.
 
-### Cách viết tồi (Làm bay đứt $62.5 của công ty):
+### Cách viết tồi (Làm bay đứt \$62.5 của công ty):
 
 ```sql
 -- Dùng SELECT * bắt BigQuery quét toàn bộ các cột của bảng 10TB
@@ -77,7 +77,7 @@ WHERE title = 'Vietnam' AND date LIKE '2026-%';
 ```
 *Vì BigQuery tính tiền dựa trên lượng dữ liệu quét qua chứ không tính trên số dòng kết quả trả về. Việc bạn lạm dụng `SELECT *` sẽ bắt hệ thống quét qua toàn bộ 10TB dữ liệu trên đĩa, ngay cả khi kết quả trả về chỉ có vài dòng.*
 
-### Cách viết tối ưu (Có thể chỉ tốn $0.01):
+### Cách viết tối ưu (Có thể chỉ tốn \$0.01):
 
 ```sql
 -- Chỉ bóc tách duy nhất 2 cột cần thiết là (views) và (date)
