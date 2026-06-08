@@ -1,159 +1,68 @@
 ---
-title: Data Engineering Handbook
-description: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho kỹ sư Việt Nam. Nơi xây dựng "Bộ Não Thứ Hai" cho sự nghiệp Data của bạn.
+title: Kỹ Thuật Dữ Liệu
+description: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho cộng đồng kỹ sư dữ liệu Việt Nam.
 template: splash
+hero:
+  tagline: Cẩm nang Kỹ thuật Dữ liệu chuyên sâu, chuẩn xác và có hệ thống dành cho cộng đồng kỹ sư dữ liệu Việt Nam. Khám phá lộ trình học, ngân hàng phỏng vấn và bản đồ tri thức được cấu trúc bài bản.
+  actions:
+    - text: Xem Lộ Trình Học
+      link: /learning-paths/
+      icon: right-arrow
+      variant: primary
+    - text: Tra Cứu Khái Niệm
+      link: /concepts/data-warehouse/
+      icon: external
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 import MapOfContent from '../../components/MapOfContent.astro';
 
-<div class="welcome-container">
-  <div class="pillars-grid">
-    <div class="pillar-card">
-      <div class="pillar-icon">🚀</div>
-      <h3>Lộ trình học tập</h3>
-      <p>Định hướng phát triển năng lực Data Engineering từ con số 0 lên cấp độ Senior và Specialist chuyên sâu thông qua 8 lộ trình chi tiết.</p>
-      <a href="/learning-paths/" class="pillar-cta">Khám phá lộ trình →</a>
-    </div>
-    
-    <div class="pillar-card">
-      <div class="pillar-icon">🎯</div>
-      <h3>Ngân hàng phỏng vấn</h3>
-      <p>Tuyển tập các câu hỏi phỏng vấn thực chiến chuyên sâu kèm gợi ý trả lời chi tiết chia theo từng nhóm kỹ năng kỹ thuật và hành vi.</p>
-      <a href="/interview/" class="pillar-cta">Luyện phỏng vấn →</a>
-    </div>
+<div style="margin-top: 4rem;"></div>
 
-    <div class="pillar-card">
-      <div class="pillar-icon">📚</div>
-      <h3>Khái niệm kỹ thuật</h3>
-      <p>Tra cứu hệ thống 156 định nghĩa và thuật ngữ cốt lõi được cấu trúc mạch lạc thành các danh mục để xây dựng bộ não thứ hai của bạn.</p>
-      <a href="#concepts-map" class="pillar-cta">Tra cứu khái niệm ↓</a>
-    </div>
-  </div>
+## 📝 Luyện Đề Thi Thử (Practice Quizzes)
 
-  <hr class="section-divider" />
+Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.
 
-  <h2 class="homepage-section-title">📝 Luyện Đề Thi Thử (Practice Quizzes)</h2>
-  <p class="section-subtitle">Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến, hỗ trợ song ngữ Anh-Việt và giải thích chi tiết.</p>
+<CardGrid stagger>
+	<Card title="Databricks DE Professional" icon="laptop">
+		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Data Engineer Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế. 
+        
+        [**Bắt đầu thi thử →**](/quizzes/databricks-de-advanced/)
+	</Card>
+	<Card title="Databricks GenAI Associate" icon="rocket">
+		Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG, Vector Search và LLM.
+        
+        [**Bắt đầu thi thử →**](/quizzes/databricks-genai-associate/)
+	</Card>
+</CardGrid>
+
+<div style="margin-top: 5rem;"></div>
+
+<div id="concepts-map">
+  ## 📚 Bản Đồ Tri Thức (Map of Content)
   
-  <div class="pillars-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-    <div class="pillar-card">
-      <div class="pillar-icon">🏆</div>
-      <h3>Databricks Data Engineer Professional</h3>
-      <p>Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks DE Professional nâng cao gồm 238 câu hỏi sát với đề thi thực tế.</p>
-      <a href="/quizzes/databricks-de-advanced/" class="pillar-cta">Bắt đầu thi thử →</a>
-    </div>
-
-    <div class="pillar-card">
-      <div class="pillar-icon">🤖</div>
-      <h3>Databricks GenAI Engineer Associate</h3>
-      <p>Thi thử bộ câu hỏi ôn tập chứng chỉ Databricks Generative AI Engineer gồm 92 câu hỏi chuyên sâu về RAG và LLM.</p>
-      <a href="/quizzes/databricks-genai-associate/" class="pillar-cta">Bắt đầu thi thử →</a>
-    </div>
-  </div>
-
-  <hr class="section-divider" />
-
-  <div id="concepts-map">
-    <h2 class="homepage-section-title">📚 Bản Đồ Tri Thức Kỹ Thuật (Map of Content)</h2>
-    <p class="section-subtitle">Tra cứu 156 khái niệm kỹ thuật cốt lõi phân chia theo 15 danh mục. Bạn có thể kéo thả sắp xếp thứ tự danh mục theo ý muốn.</p>
-    
-    <MapOfContent />
-  </div>
+  Tra cứu 101 khái niệm kỹ thuật cốt lõi phân chia theo 11 danh mục theo lộ trình chuẩn. Kéo thả danh mục để tùy chỉnh không gian học tập của bạn.
+  
+  <MapOfContent />
 </div>
 
 <style>{`
-  .welcome-container {
-    max-width: 1024px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-  }
-  @media (min-width: 768px) {
-    .pillars-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .pillar-card {
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 16px;
-    padding: 2rem 1.75rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .pillar-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--sl-color-accent);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-  }
-  .pillar-icon {
-    font-size: 2.25rem;
-    margin-bottom: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    background: var(--sl-color-bg-inline-code);
-    border-radius: 12px;
-    border: 1px solid var(--sl-color-hairline);
-  }
-  .pillar-card h3 {
-    font-size: 1.35rem !important;
-    font-weight: 700;
-    color: var(--sl-color-white);
-    margin-top: 0 !important;
-    margin-bottom: 0.75rem !important;
-  }
-  .pillar-card p {
-    font-size: 0.95rem;
-    color: var(--sl-color-gray-3);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-  }
-  .pillar-cta {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--sl-color-text-accent);
-    text-decoration: none !important;
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.2s ease;
-  }
-  .pillar-card:hover .pillar-cta {
-    color: var(--sl-color-accent);
-    transform: translateX(4px);
-  }
-  .homepage-section-title {
-    font-size: 1.8rem !important;
-    font-weight: 700;
-    color: var(--sl-color-white);
-    margin-top: 2rem !important;
-    margin-bottom: 0.5rem !important;
-  }
-  .section-subtitle {
-    font-size: 1rem;
-    color: var(--sl-color-gray-3);
-    margin-bottom: 2rem;
-  }
-  .section-divider {
-    border: 0;
-    border-top: 1px solid var(--sl-color-hairline);
-    margin: 3rem 0;
-  }
-  
-  /* Override default Starlight padding on main grid */
   .sl-markdown-content {
     max-width: 100% !important;
+  }
+  
+  /* Tạo hiệu ứng hover cho các Card Starlight */
+  .sl-link-card, .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .sl-link-card:hover, .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  /* Căn chỉnh lại Hero Section */
+  .hero {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 `}</style>
