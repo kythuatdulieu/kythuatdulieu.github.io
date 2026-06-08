@@ -292,18 +292,30 @@
         els.optionsList.innerHTML = '';
         const optionLetters = Object.keys(q.options).sort();
 
+        // Ensure currentSelection exists and is reset if switching questions
+        if (typeof window.currentSelectionQId === 'undefined' || window.currentSelectionQId !== q.id) {
+            window.currentSelection = new Set();
+            window.currentSelectionQId = q.id;
+        }
+
         optionLetters.forEach(letter => {
             const div = document.createElement('div');
             div.className = 'option-item';
 
             if (answered) {
                 div.classList.add('disabled');
-                if (letter === q.answer) {
+                const userAnsArr = userAns.split(',');
+                const correctAnsArr = q.answer ? q.answer.split(',') : [];
+                
+                if (correctAnsArr.includes(letter)) {
                     div.classList.add('correct-answer');
-                }
-                if (letter === userAns && letter !== q.answer) {
+                } else if (userAnsArr.includes(letter)) {
                     div.classList.add('wrong-answer');
                 }
+            } else if (q.isMulti && window.currentSelection.has(letter)) {
+                div.classList.add('selected-answer'); // Needs CSS
+                div.style.border = '2px solid var(--primary)';
+                div.style.backgroundColor = 'var(--bg-glass-hover)';
             }
 
             const letterSpan = document.createElement('span');
@@ -376,10 +388,27 @@
     }
 
     function selectAnswer(qId, letter) {
-        userAnswers[qId] = letter;
-        updateScores();
-        renderQuestion();
-        saveState();
+        const q = questions.find(q => q.id === qId);
+        if (q && q.isMulti) {
+            const requiredCount = q.answer ? q.answer.split(',').length : 1;
+            if (window.currentSelection.has(letter)) {
+                window.currentSelection.delete(letter);
+            } else {
+                window.currentSelection.add(letter);
+            }
+            if (window.currentSelection.size === requiredCount) {
+                userAnswers[qId] = Array.from(window.currentSelection).sort().join(',');
+                window.currentSelection.clear();
+                updateScores();
+                saveState();
+            }
+            renderQuestion();
+        } else {
+            userAnswers[qId] = letter;
+            updateScores();
+            saveState();
+            renderQuestion();
+        }
     }
 
     // ========================
