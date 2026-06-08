@@ -21,30 +21,28 @@ for (let line of lines) {
 
     if (line.startsWith('#### Nhóm')) {
         const title = line.replace('#### ', '').trim();
-        html += `  <h3 class="moc-category">${title}</h3>\n  <ul class="moc-list">\n`;
+        html += `  <h3 class="moc-category">${title}</h3>\n  <div class="moc-grid">\n`;
     } else if (line.match(/^\d+\.\s+`([^`]+)`:\s+(.*)$/)) {
         const match = line.match(/^\d+\.\s+`([^`]+)`:\s+(.*)$/);
         const slug = match[1];
-        let desc = match[2].trim();
         
-        // title format
         let titleText = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         if (slug.includes(' ')) {
-            titleText = slug; // if it wasn't slugified
+            titleText = slug;
         }
         const finalSlug = slug.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
         
-        html += `    <li><a href="/concepts/${finalSlug}/" class="concept-link" data-concept="${finalSlug}"><strong>${titleText}</strong></a>: ${desc}</li>\n`;
-    } else if (line === '' && html.endsWith('  <ul class="moc-list">\n')) {
+        html += `    <a href="/concepts/${finalSlug}/" class="concept-tag" data-concept="${finalSlug}">${titleText}</a>\n`;
+    } else if (line === '' && html.endsWith('  <div class="moc-grid">\n')) {
         // empty line inside list? ignore or close
     } else if (line === '' || line.startsWith('---')) {
-        if (html.includes('<ul class="moc-list">') && !html.endsWith('</ul>\n')) {
-             html += `  </ul>\n`;
+        if (html.includes('<div class="moc-grid">') && !html.endsWith('</div>\n')) {
+             html += `  </div>\n`;
         }
     }
 }
-if (!html.endsWith('</ul>\n')) {
-    html += `  </ul>\n`;
+if (!html.endsWith('</div>\n')) {
+    html += `  </div>\n`;
 }
 
 html += `</div>\n`;
@@ -52,36 +50,43 @@ html += `</div>\n`;
 html += `
 <style>
 .moc-container {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
     font-family: var(--sl-font);
 }
 .moc-category {
-    margin-top: 2.5rem !important;
-    margin-bottom: 1rem !important;
-    font-size: 1.5rem;
-    color: var(--sl-color-white);
-    border-bottom: 1px solid var(--sl-color-gray-5);
-    padding-bottom: 0.5rem;
-}
-.moc-list {
-    list-style-type: none;
-    padding-left: 0;
-}
-.moc-list li {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
-    color: var(--sl-color-gray-3);
-}
-.concept-link {
-    color: var(--sl-color-accent-high);
-    text-decoration: none;
+    margin-top: 2rem !important;
+    margin-bottom: 1.2rem !important;
+    font-size: 1.25rem;
     font-weight: 600;
-    transition: color 0.2s;
+    color: var(--sl-color-white);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
 }
-.concept-link:hover {
-    color: var(--sl-color-accent);
-    text-decoration: underline;
+.moc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.concept-tag {
+    display: inline-block;
+    padding: 0.4rem 0.85rem;
+    background-color: var(--sl-color-bg-nav);
+    color: var(--sl-color-text-accent);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+}
+.concept-tag:hover {
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+    border-color: var(--sl-color-accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 </style>
 `;
