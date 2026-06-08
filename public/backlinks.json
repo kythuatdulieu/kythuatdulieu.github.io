@@ -4569,10 +4569,6 @@
     {
       "url": "/concepts/transformation-analytics/metrics-layer/",
       "title": "Lớp ngữ nghĩa chỉ số - Metrics Layer"
-    },
-    {
-      "url": "/",
-      "title": "Kỹ Thuật Dữ Liệu - Data Engineering Concepts"
     }
   ],
   "/concepts/genai-ml/rag/": [
@@ -4675,10 +4671,6 @@
     {
       "url": "/concepts/genai-ml/temperature/",
       "title": "Nhiệt độ - Temperature"
-    },
-    {
-      "url": "/",
-      "title": "Kỹ Thuật Dữ Liệu - Data Engineering Concepts"
     }
   ],
   "/concepts/genai-ml/system-prompt/": [

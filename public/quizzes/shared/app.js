@@ -849,6 +849,15 @@
         const quizContainer = document.querySelector('.quiz-container');
         quizContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
         quizContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        // Quiz selector
+        const selectQuiz = $('selectQuiz');
+        if (selectQuiz) {
+            selectQuiz.addEventListener('change', (e) => {
+                const targetQuiz = e.target.value;
+                window.location.href = `/quizzes/${targetQuiz}/`;
+            });
+        }
     }
 
     // ========================
@@ -881,6 +890,12 @@
         els.toggleVi.checked = showVietnamese;
         els.btnShuffle.classList.toggle('active', shuffleMode);
         els.toggleShuffle.checked = shuffleMode;
+
+        // Set quiz selector value
+        const selectQuiz = $('selectQuiz');
+        if (selectQuiz) {
+            selectQuiz.value = quizId;
+        }
 
         if (!shuffleMode) {
             questionOrder = questions.map((_, i) => i);

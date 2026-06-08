@@ -4,183 +4,151 @@ import { getCollection } from 'astro:content';
 const allDocs = await getCollection('docs');
 const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
 
-// Create a lookup map for existing concepts by slug or title
-const conceptMap = new Map();
-existingConcepts.forEach(doc => {
-    const rawSlug = doc.id.replace('concepts/', '').replace('.md', '').replace('.mdx', '');
-    const title = doc.data.title.toLowerCase();
-    conceptMap.set(rawSlug, `/${doc.slug}/`);
-    conceptMap.set(title, `/${doc.slug}/`);
-    
-    // Also map by extracting trailing title parts (e.g. "Concept - Parquet")
-    const match = title.match(/-\s*([a-z0-9\s]+)$/);
-    if (match && match[1]) {
-        conceptMap.set(match[1].trim(), `/${doc.slug}/`);
-    }
+// Map category folder names to clean display names, ordered logically
+const categoryNames = {
+  "foundation": "Foundation (Nền Tảng)",
+  "system-architecture": "Data Architectures & Stacks",
+  "database-storage": "Database & Storage",
+  "data-warehouse": "Data Warehouse & Modeling",
+  "data-lake-lakehouse": "Data Lake & Lakehouse",
+  "cloud-data-platform": "Cloud Data Platform",
+  "batch-processing": "Batch Processing",
+  "streaming-processing": "Streaming Processing",
+  "etl-elt": "ETL & ELT",
+  "transformation-analytics": "Transformation & Analytics",
+  "orchestration": "Orchestration",
+  "data-quality": "Data Quality",
+  "governance-metadata": "Governance & Metadata",
+  "observability-reliability": "Observability & Reliability",
+  "genai-ml": "GenAI & Machine Learning"
+};
+
+const orderedCategories = Object.keys(categoryNames);
+const dynamicMOC = [];
+
+orderedCategories.forEach(catSlug => {
+   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${catSlug}/`));
+   if (docsInCat.length > 0) {
+       dynamicMOC.push({
+           categorySlug: catSlug,
+           category: categoryNames[catSlug],
+           concepts: docsInCat.map(doc => {
+               // Extract clean title without prefixes like "Concept -" if they exist
+               let title = doc.data.title;
+               const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
+               if (match && match[1]) title = match[1].trim();
+               
+               return {
+                   title: title,
+                   url: `/${doc.slug}/`
+               };
+           })
+       });
+   }
 });
 
-// Helper to find URL
-function getConceptUrl(name) {
-    const searchName = name.toLowerCase();
-    const slugName = searchName.replace(/[^a-z0-9]+/g, '-');
-    return conceptMap.get(searchName) || conceptMap.get(slugName) || null;
+// Any other categories not listed in the ordered list?
+const existingCatSlugs = new Set(orderedCategories);
+const otherDocs = existingConcepts.filter(doc => {
+    const parts = doc.id.split('/');
+    if (parts.length >= 3) {
+        return !existingCatSlugs.has(parts[1]);
+    }
+    return false;
+});
+if (otherDocs.length > 0) {
+    dynamicMOC.push({
+        categorySlug: "other",
+        category: "Các khái niệm khác",
+        concepts: otherDocs.map(doc => ({ title: doc.data.title, url: `/${doc.slug}/` }))
+    });
 }
-
-const hardcodedMOC = [
-  {
-    category: "Storage & Warehousing",
-    concepts: ["OLTP", "OLAP", "ACID Transactions", "Data Warehouse", "Data Lake", "Data Lakehouse", "Cloud Data Warehouses", "Compute and Storage Separation", "Storage Layer", "Three Vs"]
-  },
-  {
-    category: "Open Table & File Formats",
-    concepts: ["Data Lake File Formats", "Data Lake Table Format", "Apache Parquet", "Apache Arrow", "Apache Avro", "Apache Iceberg", "Delta Lake", "Time Travel"]
-  },
-  {
-    category: "Data Architectures & Stacks",
-    concepts: ["Data Engineering Architecture", "Modern Data Stack", "Open Data Stack", "Declarative Data Stack", "Medallion Architecture", "Data Mesh", "Microsoft Fabric", "Inmon vs Kimball"]
-  },
-  {
-    category: "Data Modeling",
-    concepts: ["Data Modeling", "Different Levels of Data Modeling", "Entity Relationship Diagram (ERD)", "Dimensional Modeling", "Data Vault", "Anchor Modeling", "Entity-Centric Data Modeling (ECM)", "Activity Schema", "Relational Model", "Normalization", "Denormalization", "Fact Table", "Dimensions", "Slowly Changing Dimension", "Bus Matrix", "Granularity", "Cardinality"]
-  },
-  {
-    category: "Ingestion, Movement & CDC",
-    concepts: ["ETL", "ELT", "EtLT", "Reverse ETL", "ETL vs ELT", "Change Data Capture (CDC)", "Delta-Load Options", "Stream Processing", "Apache Kafka", "Backfill", "MapReduce", "Hadoop"]
-  },
-  {
-    category: "Transformation, Orchestration & Pipelines",
-    concepts: ["Data Orchestration", "DAG", "Software-Defined Asset", "Functional Data Engineering", "Declarative vs Imperative", "Apache Airflow", "Dagster", "dbt", "SQLMesh", "Notebooks", "Idempotency", "AI Orchestrators"]
-  },
-  {
-    category: "Data Management & Governance",
-    concepts: ["Data Governance", "Data Catalog", "Data Contracts", "Data Lineage", "Data Product", "Master Data Management", "Schema Evolution", "Schema Registry", "Schema Drift", "DataOps"]
-  },
-  {
-    category: "Semantic Layer, Metrics & Federation",
-    concepts: ["Semantic Layer", "Modern Semantic Layer", "Metrics Layer", "Metrics", "SQL Query Engine", "Analytics API", "Semantic SQL", "Data Federation"]
-  },
-  {
-    category: "OLAP, BI & Analytics Evolution",
-    concepts: ["Traditional OLAP Cubes", "Modern OLAP Systems", "Cube", "Business Intelligence", "BI Tools", "Pivot Table"]
-  },
-  {
-    category: "Performance & Engine Internals",
-    concepts: ["CAP Theorem", "Push-downs", "Materialized Views", "CTE", "Full Table Scan"]
-  },
-  {
-    category: "Practice, Role & Career",
-    concepts: ["Data Engineering Lifecycle", "Data Engineering Approaches", "The Role of a Data Engineer", "Data Engineer vs Software Engineer", "Retrieval-Augmented Generation (RAG)"]
-  }
-];
-
-const defaultBacklinks = [
-  { url: "/concepts/foundation/data-platform-architecture/", title: "The Data Engineering Toolkit" },
-  { url: "/concepts/foundation/data-engineering/", title: "What is Data Engineering" },
-  { url: "/concepts/foundation/data-engineer-role/", title: "Book: The History and State of Data Engineering" }
-];
 ---
 
 <div class="moc-container">
-    <div class="moc-main-content">
-        <!-- Title and Metadata -->
-        <h1 class="moc-title">Data Engineering Concepts</h1>
-        
-        <div class="moc-meta">
-            <span>Last updated Jun 8, 2026</span>
-            <span class="meta-dot">·</span>
-            <span>Created Aug 21, 2023</span>
-            <span class="meta-dot">·</span>
-            <span>5 min read</span>
-        </div>
-        
-        <!-- Table of Contents -->
-        <details class="moc-toc" open>
-            <summary>Table of Contents</summary>
-            <ul>
-                <li><a href="#how-to-use-this-map">1 How to Use This Map</a></li>
-                <li><a href="#quizzes">2 Luyện Đề Thi Thử (Practice Quizzes)</a></li>
-            </ul>
-        </details>
-        
-        <!-- Description -->
-        <p class="moc-description">
-            Nếu bạn muốn trở thành một kỹ sư dữ liệu (Data Engineer), hãy học các khái niệm này. Bảng phân loại dưới đây là Bản đồ nội dung (Map of Content - MOC) với 101 ý tưởng đầu vào cốt lõi kết nối tới toàn bộ Cẩm nang Kỹ thuật Dữ liệu. Đọc từ trên xuống dưới theo lộ trình học tập, hoặc nhảy vào bất kỳ chủ đề nào bạn cần đào sâu.
-        </p>
-        
-        <!-- The Table -->
-        <div class="moc-table-wrapper" id="concept-table">
-            <table class="moc-table">
-                <thead>
-                    <tr>
-                        <th class="col-category">Category</th>
-                        <th class="col-concepts">Data Engineering Concepts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {hardcodedMOC.map(group => {
-                        const catSlug = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                        return (
-                            <tr id={`row-${catSlug}`}>
-                                <td class="cat-cell">
-                                    <strong>{group.category}</strong>
-                                </td>
-                                <td class="concepts-cell">
-                                    <div class="concepts-list">
-                                        {group.concepts.map((concept, index) => {
-                                            const url = getConceptUrl(concept);
-                                            const isLast = index === group.concepts.length - 1;
-                                            return (
-                                                <span class="concept-item-wrapper">
-                                                    {url ? (
-                                                        <a href={url} class="concept-tag active">
-                                                            {concept}
-                                                        </a>
-                                                    ) : (
-                                                        <span class="concept-tag inactive" title="Bài viết đang được cập nhật (Sắp có)">
-                                                            {concept}
-                                                        </span>
-                                                    )}
-                                                    {!isLast && <span class="comma">, </span>}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- How to Use Section -->
-        <section class="moc-section" id="how-to-use-this-map">
-            <h2>💡 How to Use This Map (Hướng dẫn sử dụng)</h2>
-            <ul>
-                <li><strong>Học theo lộ trình:</strong> Đọc bảng phân loại từ trên xuống dưới. Các khái niệm được sắp xếp từ cơ bản (Lưu trữ, Định dạng dữ liệu) đến nâng cao (Điều phối, Quản trị, GenAI/ML).</li>
-                <li><strong>Liên kết màu đỏ:</strong> Click vào các từ khóa có nền hồng, chữ đỏ để xem chi tiết bài học chi tiết của khái niệm đó.</li>
-                <li><strong>Khái niệm chưa có màu đỏ:</strong> Các khái niệm có viền xám đứt nét đang được soạn thảo và sẽ sớm xuất hiện.</li>
-                <li><strong>Xem liên kết ngược (Backlinks):</strong> Ở cuối mỗi bài viết sẽ có phần Liên kết ngược giúp bạn biết khái niệm đó được tham chiếu từ những bài học nào khác, tạo thành một mạng lưới kiến thức liên kết chặt chẽ.</li>
-            </ul>
-        </section>
-
-        <!-- Slot for Quizzes (which are passed from index.mdx) -->
-        <slot />
-    </div>
-    
-    <!-- Sidebar Column -->
-    <aside class="moc-sidebar">
-        <div class="moc-sidebar-sticky">
-            <h3 class="moc-sidebar-title">Backlinks</h3>
-            <div class="moc-backlinks-list">
-                {defaultBacklinks.map(link => (
-                    <a href={link.url} class="moc-backlink-card">
-                        <span class="moc-backlink-text">{link.title}</span>
-                    </a>
+    <div class="moc-layout">
+        <!-- Sidebar -->
+        <aside class="moc-sidebar">
+            <h3 class="moc-sidebar-title">Danh mục (Categories)</h3>
+            <ul class="moc-nav-list" id="moc-nav-list">
+                {dynamicMOC.map(group => (
+                    <li class="moc-nav-item" data-target={`row-${group.categorySlug}`}>
+                        <div class="drag-handle">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line></svg>
+                        </div>
+                        <span class="moc-nav-text">{group.category}</span>
+                    </li>
                 ))}
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="moc-main">
+            <!-- Details / Header -->
+            <details class="moc-header-details">
+                <summary>Chỉ mục Trang chủ (Mục lục)</summary>
+                <ul>
+                    <li><a href="#how-to-use-this-map">1 Hướng dẫn sử dụng Bản đồ</a></li>
+                    <li><a href="#quizzes">2 Luyện Đề Thi Thử (Practice Quizzes)</a></li>
+                </ul>
+            </details>
+            
+            <!-- Description -->
+            <p class="moc-description">
+                Bạn muốn tìm hiểu hoặc củng cố kiến thức về Data Engineering? Bản đồ tri thức (Map of Content - MOC) dưới đây hệ thống hóa 100+ khái niệm cốt lõi nhất được chia thành 15 hạng mục chuẩn mực. Mọi khái niệm đều là các bài viết chuyên sâu có sẵn trong Cẩm nang.
+            </p>
+            
+            <!-- The Table -->
+            <div class="moc-table-wrapper" id="concept-table">
+                <table class="moc-table">
+                    <thead>
+                        <tr>
+                            <th class="col-category">Category</th>
+                            <th class="col-concepts">Data Engineering Concepts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dynamicMOC.map(group => {
+                            return (
+                                <tr id={`row-${group.categorySlug}`}>
+                                    <td class="cat-cell">
+                                        <strong>{group.category}</strong>
+                                    </td>
+                                    <td class="concepts-cell">
+                                        <div class="concepts-list">
+                                            {group.concepts.map((concept, index) => {
+                                                const isLast = index === group.concepts.length - 1;
+                                                return (
+                                                    <span class="concept-item-wrapper">
+                                                        <a href={concept.url} class="concept-tag active">
+                                                            {concept.title}
+                                                        </a>
+                                                        {!isLast && <span class="comma">, </span>}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
+            
+            <!-- How to Use Section -->
+            <section class="moc-section" id="how-to-use-this-map">
+                <h2>💡 Hướng dẫn sử dụng Bản đồ</h2>
+                <ul>
+                    <li><strong>Học theo lộ trình:</strong> Đọc bảng phân loại từ trên xuống dưới. Các khái niệm được sắp xếp từ cơ bản (Lưu trữ, Định dạng dữ liệu) đến nâng cao (Điều phối, Quản trị, GenAI/ML).</li>
+                    <li><strong>Tra cứu thần tốc:</strong> Kéo thả các danh mục ở thanh menu bên trái để cá nhân hóa thứ tự học tập của bạn. Click vào các từ khóa để đi thẳng tới bài viết chuyên sâu.</li>
+                </ul>
+            </section>
+
+            <!-- Slot for Quizzes (which are passed from index.mdx) -->
+            <slot />
         </div>
-    </aside>
+    </div>
 </div>
 
 <style>
@@ -188,297 +156,405 @@ const defaultBacklinks = [
 :root {
     --moc-bg: var(--sl-color-bg);
     --moc-text: var(--sl-color-text);
-    --moc-meta-text: var(--sl-color-gray-3);
+    --moc-text-muted: var(--sl-color-text-accent);
     --moc-border: var(--sl-color-hairline);
-    --moc-th-bg: var(--sl-color-bg-nav);
-    --moc-tag-active-bg: #fff0f0;
-    --moc-tag-active-text: #c92a2a;
-    --moc-tag-active-border: #ffc9c9;
-    --moc-tag-inactive-bg: var(--sl-color-bg-inline-code);
-    --moc-tag-inactive-text: var(--sl-color-gray-4);
-    --moc-tag-inactive-border: var(--sl-color-hairline);
-    --moc-backlink-border: #ffc9c9;
-    --moc-backlink-bg: rgba(255, 240, 240, 0.4);
-    --moc-backlink-text: #c92a2a;
+    --moc-bg-alt: var(--sl-color-bg-nav);
+    --moc-primary: var(--sl-color-accent);
+    --moc-primary-hover: var(--sl-color-accent-high);
+    --moc-hover-bg: var(--sl-color-gray-6);
+    --moc-radius: 8px;
+    --moc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-:root[data-theme="dark"] {
-    --moc-tag-active-bg: #2b1414;
-    --moc-tag-active-text: #ff8787;
-    --moc-tag-active-border: #5c2020;
-    --moc-backlink-border: #5c2020;
-    --moc-backlink-bg: rgba(43, 20, 20, 0.4);
-    --moc-backlink-text: #ff8787;
-}
-
-/* CSS Grid Container */
 .moc-container {
+    width: 100%;
+    margin: 2rem auto;
+    font-family: var(--sl-font), sans-serif;
+}
+
+.moc-layout {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem;
-    margin: 1.5rem 0;
-    font-family: var(--sl-font);
+    gap: 2rem;
+    align-items: start;
 }
 
-@media (min-width: 1024px) {
-    .moc-container {
-        grid-template-columns: 3.2fr 1fr;
+@media (min-width: 768px) {
+    .moc-layout {
+        grid-template-columns: 260px 1fr;
     }
 }
 
-/* Main Column Styles */
-.moc-main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
+/* Typography */
 .moc-title {
     font-size: 2.5rem !important;
     font-weight: 800 !important;
-    color: var(--sl-color-white);
-    margin: 0 !important;
-    line-height: 1.2;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.2 !important;
 }
 
 .moc-meta {
-    font-size: 0.9rem;
-    color: var(--moc-meta-text);
+    font-size: 0.85rem;
+    color: var(--moc-text-muted);
+    margin-bottom: 2rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: -0.5rem;
-    border-bottom: 1px solid var(--moc-border);
-    padding-bottom: 1rem;
 }
 
 .meta-dot {
     opacity: 0.5;
 }
 
-/* Collapsible Table of Contents */
-.moc-toc {
-    background: var(--sl-color-bg-nav);
+.moc-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--moc-text);
+    margin-bottom: 2rem;
+}
+
+.moc-section {
+    margin-top: 3rem;
+}
+
+.moc-section h2 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    font-weight: 700 !important;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--moc-border);
+}
+
+.moc-section ul {
+    padding-left: 1.5rem;
+}
+
+.moc-section li {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+/* Sidebar & Navigation */
+.moc-sidebar {
+    position: sticky;
+    top: 5rem; /* Adjust based on your header height */
+    background: var(--moc-bg-alt);
     border: 1px solid var(--moc-border);
-    border-radius: 8px;
+    border-radius: var(--moc-radius);
     padding: 1rem;
-    transition: all 0.3s ease;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
 }
 
-.moc-toc summary {
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    color: var(--sl-color-white);
-    outline: none;
-    user-select: none;
+.moc-sidebar-title {
+    font-size: 0.9rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--moc-text-muted);
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--moc-border);
 }
 
-.moc-toc ul {
-    list-style: none !important;
-    padding-left: 1.5rem !important;
-    margin: 0.5rem 0 0 0 !important;
+.moc-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.moc-nav-item {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 4px;
+    cursor: grab;
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none;
+    background: var(--moc-bg);
+    border: 1px solid transparent;
 }
 
-.moc-toc li a {
-    color: var(--moc-tag-active-text);
-    text-decoration: none;
+.moc-nav-item:hover {
+    background-color: var(--moc-hover-bg);
+}
+
+.moc-nav-item.is-active {
+    border-color: var(--moc-primary);
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+}
+
+.moc-nav-item.is-dragging {
+    opacity: 0.5;
+    background-color: var(--moc-hover-bg);
+    cursor: grabbing;
+}
+
+.moc-nav-item.drag-over {
+    border-top: 2px solid var(--moc-primary);
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--moc-text-muted);
+    margin-right: 0.5rem;
+    cursor: grab;
+}
+
+.moc-nav-item:active .drag-handle {
+    cursor: grabbing;
+}
+
+.moc-nav-text {
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
-.moc-toc li a:hover {
-    text-decoration: underline;
+/* Details Component */
+.moc-header-details {
+    background: var(--moc-bg-alt);
+    border: 1px solid var(--moc-border);
+    border-radius: var(--moc-radius);
+    margin-bottom: 2rem;
+    overflow: hidden;
 }
 
-.moc-description {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin: 0 !important;
-    color: var(--moc-text);
+.moc-header-details summary {
+    padding: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(0,0,0,0.02);
 }
 
-/* MOC Table Styles */
+.moc-header-details summary:hover {
+    background: rgba(0,0,0,0.04);
+}
+
+.moc-header-details ul {
+    padding: 0 1rem 1rem 2.5rem;
+    margin: 0;
+}
+
+.moc-header-details li {
+    margin-bottom: 0.5rem;
+}
+
+/* The Table */
 .moc-table-wrapper {
-    width: 100%;
     overflow-x: auto;
     border: 1px solid var(--moc-border);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border-radius: var(--moc-radius);
+    background: var(--moc-bg);
 }
 
 .moc-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    font-size: 0.95rem;
+    margin: 0 !important; /* Override markdown table margins */
 }
 
 .moc-table th {
-    background-color: var(--moc-th-bg);
-    color: var(--sl-color-white);
-    font-weight: 700;
-    padding: 0.75rem 1rem;
+    background-color: var(--moc-bg-alt);
+    padding: 1rem;
+    font-weight: 600;
     border-bottom: 2px solid var(--moc-border);
+    color: var(--moc-text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .col-category {
-    width: 25%;
-    min-width: 180px;
+    width: 30%;
 }
 
 .col-concepts {
-    width: 75%;
+    width: 70%;
 }
 
 .moc-table td {
-    padding: 1rem;
+    padding: 1.25rem 1rem;
     border-bottom: 1px solid var(--moc-border);
     vertical-align: top;
 }
 
-.cat-cell {
-    color: var(--sl-color-white);
-    font-weight: 700;
+.moc-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-.concepts-cell {
-    line-height: 2.1;
+.moc-table tbody tr {
+    transition: background-color 0.3s;
 }
 
-.concepts-list {
-    word-break: break-word;
+.moc-table tbody tr.highlight {
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
 }
 
-.concept-item-wrapper {
-    display: inline;
+.cat-cell strong {
+    display: block;
+    font-size: 1.05rem;
+    color: var(--moc-text);
 }
 
 /* Concept Tags */
+.concepts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.25rem;
+    line-height: 1.8;
+}
+
+.concept-item-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
 .concept-tag {
     display: inline-block;
-    padding: 0.1rem 0.4rem;
-    font-size: 0.88rem;
-    font-weight: 500;
+    padding: 0.1rem 0.5rem;
     border-radius: 4px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0.15rem 0;
-    text-decoration: none !important;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .concept-tag.active {
-    background-color: var(--moc-tag-active-bg);
-    color: var(--moc-tag-active-text);
-    border: 1px solid var(--moc-tag-active-border);
+    color: var(--moc-primary);
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+    font-weight: 500;
 }
 
 .concept-tag.active:hover {
-    background-color: var(--moc-tag-active-text);
-    color: var(--sl-color-bg);
-    border-color: var(--moc-tag-active-text);
+    background-color: var(--moc-primary);
+    color: var(--sl-color-text-invert);
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.concept-tag.inactive {
-    background-color: var(--moc-tag-inactive-bg);
-    color: var(--moc-tag-inactive-text);
-    border: 1px dashed var(--moc-tag-inactive-border);
-    cursor: not-allowed;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .comma {
-    color: var(--moc-text);
-    margin-right: 0.25rem;
-    opacity: 0.5;
-}
-
-/* Sidebar Column Styles */
-.moc-sidebar {
-    display: block;
-}
-
-.moc-sidebar-sticky {
-    position: sticky;
-    top: 6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.moc-sidebar-title {
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    font-family: monospace;
-    color: var(--sl-color-white);
-    margin: 0 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--moc-border);
-    padding-bottom: 0.5rem;
-}
-
-.moc-backlinks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.moc-backlink-card {
-    display: block;
-    border: 1px solid var(--moc-backlink-border);
-    background-color: var(--moc-backlink-bg);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    text-decoration: none !important;
-    transition: all 0.2s ease;
-    text-align: center;
-}
-
-.moc-backlink-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    background-color: var(--moc-tag-active-text);
-}
-
-.moc-backlink-card:hover .moc-backlink-text {
-    color: var(--sl-color-bg);
-}
-
-.moc-backlink-text {
-    color: var(--moc-backlink-text);
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: color 0.2s ease;
-}
-
-/* Section Styles */
-.moc-section {
-    margin-top: 2rem;
-    border-top: 1px solid var(--moc-border);
-    padding-top: 1.5rem;
-}
-
-.moc-section h2 {
-    font-size: 1.5rem !important;
-    color: var(--sl-color-white);
-    margin-bottom: 1rem !important;
-    font-weight: 600;
-}
-
-.moc-section ul {
-    list-style: disc !important;
-    padding-left: 1.5rem !important;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.moc-section li {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--moc-text);
+    color: var(--moc-text-muted);
 }
 </style>
+
+<script>
+// Logic to handle Drag and Drop for Categories
+document.addEventListener('astro:page-load', () => {
+    const list = document.getElementById('moc-nav-list');
+    if (!list) return;
+
+    let draggedItem = null;
+
+    list.addEventListener('dragstart', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.classList.contains('moc-nav-item')) {
+            draggedItem = target;
+            setTimeout(() => target.classList.add('is-dragging'), 0);
+        }
+    });
+
+    list.addEventListener('dragend', (e) => {
+        const target = e.target as HTMLElement;
+        target.classList.remove('is-dragging');
+        draggedItem = null;
+        
+        // Remove all drag-over visual cues
+        document.querySelectorAll('.moc-nav-item').forEach(item => {
+            item.classList.remove('drag-over');
+        });
+        
+        reorderTableRows();
+    });
+
+    list.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const target = (e.target as HTMLElement).closest('.moc-nav-item');
+        if (target && target !== draggedItem) {
+            target.classList.add('drag-over');
+        }
+    });
+
+    list.addEventListener('dragleave', (e) => {
+        const target = (e.target as HTMLElement).closest('.moc-nav-item');
+        if (target) {
+            target.classList.remove('drag-over');
+        }
+    });
+
+    list.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const target = (e.target as HTMLElement).closest('.moc-nav-item');
+        if (target && target !== draggedItem && draggedItem) {
+            target.classList.remove('drag-over');
+            
+            // Determine if we should insert before or after based on mouse position relative to target
+            const bounding = target.getBoundingClientRect();
+            const offset = bounding.y + (bounding.height / 2);
+            
+            if (e.clientY - offset > 0) {
+                target.after(draggedItem);
+            } else {
+                target.before(draggedItem);
+            }
+        }
+    });
+
+    // Reorder the actual table rows to match the sidebar order
+    function reorderTableRows() {
+        const tbody = document.querySelector('#concept-table tbody');
+        if (!tbody) return;
+        
+        const items = document.querySelectorAll('.moc-nav-item');
+        items.forEach(item => {
+            const targetId = item.getAttribute('data-target');
+            if (targetId) {
+                const row = document.getElementById(targetId);
+                if (row) {
+                    tbody.appendChild(row); // Appending moves it to the end, effectively sorting them
+                }
+            }
+        });
+    }
+
+    // Scroll highlighting logic
+    const navItems = document.querySelectorAll('.moc-nav-item');
+    const rows = document.querySelectorAll('.moc-table tbody tr');
+    
+    // Highlight sidebar item when clicking it
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const targetId = item.getAttribute('data-target');
+            if (!targetId) return;
+            
+            const row = document.getElementById(targetId);
+            if (row) {
+                // Remove highlight from all
+                rows.forEach(r => r.classList.remove('highlight'));
+                navItems.forEach(n => n.classList.remove('is-active'));
+                
+                // Highlight target
+                row.classList.add('highlight');
+                item.classList.add('is-active');
+                
+                // Scroll to row
+                const y = row.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({top: y, behavior: 'smooth'});
+                
+                // Remove highlight after animation
+                setTimeout(() => {
+                    row.classList.remove('highlight');
+                }, 2000);
+            }
+        });
+    });
+    
+    // Set up drag attributes
+    navItems.forEach(item => {
+        item.setAttribute('draggable', 'true');
+    });
+});
+</script>

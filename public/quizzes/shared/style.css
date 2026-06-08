@@ -1414,3 +1414,35 @@ button {
   color: #1d4ed8; /* darker blue */
 }
 
+/* Quiz Selector styles */
+.quiz-select {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.quiz-select:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--text-secondary);
+}
+
+.quiz-select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+  .home-text {
+    display: none;
+  }
+}
+
+
