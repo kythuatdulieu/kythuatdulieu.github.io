@@ -19,6 +19,29 @@
         });
     }
 
+    async function getConceptsData() {
+        if (window.conceptsPromise) {
+            return window.conceptsPromise;
+        }
+        window.conceptsPromise = (async () => {
+            if (window.conceptsData && Object.keys(window.conceptsData).length > 0) {
+                return window.conceptsData;
+            }
+            try {
+                const conceptsResponse = await fetch('/concepts.json?v=' + new Date().getTime());
+                if (conceptsResponse.ok) {
+                    const data = await conceptsResponse.json();
+                    window.conceptsData = data.concepts || {};
+                    return window.conceptsData;
+                }
+            } catch (err) {
+                console.warn('Cannot load concepts.json:', err);
+            }
+            return {};
+        })();
+        return window.conceptsPromise;
+    }
+
     function extractPreview(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -72,6 +95,25 @@
                 
                 if (popoverCache[url]) {
                     tippyInstance.setContent('<div class="popover-content">' + popoverCache[url] + '</div>');
+                    return;
+                }
+
+                // Check if this URL matches a concept with a hand-written definition
+                const concepts = await getConceptsData();
+                const concept = Object.values(concepts).find(c => {
+                    const cleanUrl = url.replace(/\/$/, '').toLowerCase();
+                    const cleanCUrl = c.url.replace(/\/$/, '').toLowerCase();
+                    return cleanUrl === cleanCUrl;
+                });
+
+                if (concept && concept.definition) {
+                    let bulletsHtml = '';
+                    if (concept.bullets && concept.bullets.length > 0) {
+                        bulletsHtml = '<ul>' + concept.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+                    }
+                    const content = `<p>${concept.definition}</p>${bulletsHtml}`;
+                    popoverCache[url] = content;
+                    tippyInstance.setContent('<div class="popover-content">' + content + '</div>');
                     return;
                 }
 

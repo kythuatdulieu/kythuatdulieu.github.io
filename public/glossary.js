@@ -4,20 +4,41 @@
     let popoverEl = null;
     let hoverTimeout = null;
     let hideTimeout = null;
+    const popoverCache = {};
+
+    async function getConceptsData() {
+        if (window.conceptsPromise) {
+            return window.conceptsPromise;
+        }
+        window.conceptsPromise = (async () => {
+            if (window.conceptsData && Object.keys(window.conceptsData).length > 0) {
+                return window.conceptsData;
+            }
+            try {
+                const conceptsResponse = await fetch('/concepts.json?v=' + new Date().getTime());
+                if (conceptsResponse.ok) {
+                    const data = await conceptsResponse.json();
+                    window.conceptsData = data.concepts || {};
+                    return window.conceptsData;
+                }
+            } catch (err) {
+                console.warn('Cannot load concepts.json:', err);
+            }
+            return {};
+        })();
+        return window.conceptsPromise;
+    }
 
     async function init() {
         try {
-            const conceptsResponse = await fetch('/concepts.json?v=' + new Date().getTime());
-            if (conceptsResponse.ok) {
-                const data = await conceptsResponse.json();
-                conceptsData = data.concepts || {};
-                sortedKeys = Object.keys(conceptsData).sort((a, b) => b.length - a.length);
-                initPopoverDOM();
-                
-                // Observe DOM changes or just apply to current content
-                const container = document.querySelector('.sl-markdown-content') || document.body;
-                applyConceptHighlights(container);
-            }
+            const data = await getConceptsData();
+            conceptsData = data || {};
+            sortedKeys = Object.keys(conceptsData).sort((a, b) => b.length - a.length);
+            initPopoverDOM();
+            
+            // Observe DOM changes or just apply to current content
+            const container = document.querySelector('.sl-markdown-content') || document.body;
+            applyConceptHighlights(container);
         } catch (err) {
             console.warn('Không thể tải glossary khái niệm:', err);
         }
@@ -138,6 +159,45 @@
         });
     }
 
+    function extractPreview(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const contentArea = doc.querySelector('.sl-markdown-content');
+        if (!contentArea) return null;
+        
+        // Find first paragraph with text
+        const paragraphs = contentArea.querySelectorAll('p');
+        for (const p of paragraphs) {
+            const text = p.textContent.trim();
+            if (text.length > 30 && !p.closest('.sl-aside')) {
+                return p.innerHTML;
+            }
+        }
+        return null;
+    }
+
+    function showPopoverLoading(link) {
+        if (!popoverEl) return;
+        
+        const bodyEl = document.getElementById('popover-body');
+        if (bodyEl) {
+            bodyEl.innerHTML = `
+                <div class="popover-loading">
+                    <div class="spinner"></div> Đang tải...
+                </div>
+            `;
+        }
+        
+        const closeBtn = document.getElementById('popover-close');
+        if (closeBtn) closeBtn.style.display = 'none';
+        
+        popoverEl.classList.remove('hidden');
+        popoverEl.offsetWidth; // force reflow
+        popoverEl.classList.add('visible');
+        
+        positionPopover(link);
+    }
+
     function handleMouseEnter(e) {
         const link = e.currentTarget;
         const conceptKey = link.dataset.concept;
@@ -147,8 +207,41 @@
         clearTimeout(hideTimeout);
         clearTimeout(hoverTimeout);
         
-        hoverTimeout = setTimeout(() => {
-            showPopover(link, concept, false);
+        hoverTimeout = setTimeout(async () => {
+            if (concept.definition) {
+                showPopover(link, concept, false);
+            } else if (concept.url) {
+                // Show loading first
+                showPopoverLoading(link);
+                
+                const url = concept.url;
+                try {
+                    let preview = popoverCache[url];
+                    if (!preview) {
+                        const res = await fetch(url);
+                        if (res.ok) {
+                            const html = await res.text();
+                            preview = extractPreview(html);
+                            if (preview) {
+                                popoverCache[url] = preview;
+                            }
+                        }
+                    }
+                    
+                    if (preview) {
+                        const tempConcept = { ...concept, definition: preview };
+                        showPopover(link, tempConcept, false);
+                    } else {
+                        const tempConcept = { ...concept, definition: 'Không tìm thấy trích dẫn.' };
+                        showPopover(link, tempConcept, false);
+                    }
+                } catch (err) {
+                    const tempConcept = { ...concept, definition: 'Lỗi tải dữ liệu.' };
+                    showPopover(link, tempConcept, false);
+                }
+            } else {
+                showPopover(link, concept, false);
+            }
         }, 200);
     }
 
@@ -224,23 +317,6 @@
                 popoverEl.classList.add('hidden');
             }
         }, 200);
-    }
-
-    function positionPopover(link) {
-        const rect = link.getBoundingClientRect();
-        const popoverWidth = popoverEl.offsetWidth;
-        const popoverHeight = popoverEl.offsetHeight;
-        
-        let left = rect.left + window.scrollX + (rect.width / 2) - (popoverWidth / 2);
-        let top = rect.top + window.scrollY - popoverHeight - 12;
-        
-        if (left < 10) left = 10;
-        else if (left + popoverWidth > window.innerWidth - 10) left = window.innerWidth - popoverWidth - 10;
-        
-        if (rect.top - popoverHeight - 12 < 10) top = rect.bottom + window.scrollY + 12;
-        
-        popoverEl.style.left = `${left}px`;
-        popoverEl.style.top = `${top}px`;
     }
 
     // Run init on initial load and view transitions

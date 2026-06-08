@@ -46,7 +46,7 @@ function walk(dir) {
     
     // Inject mermaid from CDN
     await page.goto('about:blank');
-    await page.addScriptTag({ url: 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js' });
+    await page.addScriptTag({ path: path.join(__dirname, 'node_modules', 'mermaid', 'dist', 'mermaid.min.js') });
     
     await page.evaluate(() => {
         mermaid.initialize({ startOnLoad: false });

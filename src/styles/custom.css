@@ -194,6 +194,28 @@ body.focus-mode .main-pane {
     margin-bottom: 0.25rem;
 }
 
+.popover-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--sl-color-hairline);
+    border-top-color: var(--sl-color-accent);
+    border-radius: 50%;
+    animation: popover-spin 0.8s linear infinite;
+}
+
+@keyframes popover-spin {
+    to { transform: rotate(360deg); }
+}
+
 .hidden {
     display: none !important;
 }

@@ -7,6 +7,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Kho dữ liệu phân tích - Cẩm nang Data Warehouse chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Data Warehouse (DWH): định nghĩa, kiến trúc, Star/Snowflake Schema, phương pháp Kimball vs Inmon và các câu hỏi phỏng vấn thực tế."
+definition: "Data Warehouse (DWH - Kho dữ liệu phân tích) là một hệ thống cơ sở dữ liệu chuyên biệt lưu trữ dữ liệu lịch sử tích hợp từ nhiều nguồn khác nhau, được tối ưu hóa cho các truy vấn phân tích (OLAP), báo cáo và hỗ trợ ra quyết định (BI)."
 ---
 
 Hãy tưởng tượng bạn là Giám đốc Công nghệ của một chuỗi siêu thị lớn. Bạn muốn biết doanh thu bán hàng trong tháng trước thay đổi ra sao, khách hàng ở khu vực nào mua nhiều nhất và chiến dịch marketing nào mang lại hiệu quả cao nhất. Tuy nhiên, thông tin giao dịch lại nằm ở cơ sở dữ liệu bán hàng (PostgreSQL), thông tin khách hàng nằm ở CRM (Salesforce) và chi phí quảng cáo nằm ở Google Ads. Làm sao để bạn kết nối và khai phá đống dữ liệu phân tán này mà không làm treo hệ thống bán lẻ đang chạy thực tế của các siêu thị?

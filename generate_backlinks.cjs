@@ -14,6 +14,82 @@ function getFiles(dir, files = []) {
     return files;
 }
 
+function updateGlossary() {
+    const conceptsDir = path.join(__dirname, 'src', 'content', 'docs', 'concepts');
+    const outPath = path.join(__dirname, 'public', 'concepts.json');
+    
+    if (!fs.existsSync(conceptsDir)) {
+        console.warn('Concepts directory not found.');
+        return;
+    }
+
+    const mdFiles = [];
+    function walkDir(dir) {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const fullPath = path.join(dir, file);
+            if (fs.statSync(fullPath).isDirectory()) {
+                walkDir(fullPath);
+            } else if (file.endsWith('.md')) {
+                mdFiles.push(fullPath);
+            }
+        }
+    }
+    walkDir(conceptsDir);
+
+    const concepts = {};
+
+    mdFiles.forEach(file => {
+        const slug = path.basename(file, '.md');
+        const relPath = path.relative(path.join(__dirname, 'src', 'content', 'docs'), file);
+        const urlPath = '/' + relPath.replace(/\.md$/, '/').replace(/\\/g, '/');
+
+        let key = slug.replace(/-/g, ' ');
+        if (key.toLowerCase() === 'etl') key = 'ETL';
+        else if (key.toLowerCase() === 'elt') key = 'ELT';
+        else if (key.toLowerCase() === 'olap') key = 'OLAP';
+        else if (key.toLowerCase() === 'oltp') key = 'OLTP';
+        else if (key.toLowerCase() === 'rag') key = 'RAG';
+        else if (key.toLowerCase() === 'llm') key = 'LLM';
+        else if (key === key.toLowerCase()) {
+            key = key.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        const content = fs.readFileSync(file, 'utf8');
+        const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+        const meta = {};
+        if (fmMatch) {
+            const yamlText = fmMatch[1];
+            yamlText.split('\n').forEach(line => {
+                line = line.trim();
+                if (!line || !line.includes(':')) return;
+                const idx = line.indexOf(':');
+                const k = line.slice(0, idx).trim();
+                const v = line.slice(idx + 1).trim().replace(/^['"]|['"]$/g, '');
+                meta[k] = v;
+            });
+        }
+
+        const title = meta.seoTitle || meta.title || key;
+        const category = meta.category || 'Khái niệm';
+        const definition = meta.definition || '';
+
+        concepts[key] = {
+            title: title,
+            category: category,
+            definition: definition,
+            bullets: [],
+            url: urlPath
+        };
+    });
+
+    fs.writeFileSync(outPath, JSON.stringify({ concepts }, null, 2), 'utf8');
+    console.log('concepts.json generated/updated.');
+}
+
+// Update concepts.json before building backlinks
+updateGlossary();
+
 const docsDir = path.join(__dirname, 'src', 'content', 'docs');
 const files = getFiles(docsDir);
 

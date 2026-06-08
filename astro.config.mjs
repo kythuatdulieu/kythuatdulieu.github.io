@@ -93,12 +93,12 @@ export default defineConfig({
 
 					items: [
 						{ 
-							label: 'Databricks DE Professional',
+							label: 'Databricks Certified Data Engineer Professional',
 							link: '/quizzes/databricks-de-advanced/',
 							attrs: { 'data-astro-reload': true }
 						},
 						{ 
-							label: 'Databricks GenAI Associate',
+							label: 'Databricks Certified Generative AI Engineer Associate',
 							link: '/quizzes/databricks-genai-associate/',
 							attrs: { 'data-astro-reload': true }
 						}

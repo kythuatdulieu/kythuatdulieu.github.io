@@ -7,6 +7,7 @@ tags: ["olap", "data-warehouse", "analytics", "business-intelligence"]
 lastUpdated: 2026-06-07
 seoTitle: "OLAP là gì? Hệ thống Xử lý Phân tích Trực tuyến"
 metaDescription: "Tìm hiểu kiến trúc OLAP (Online Analytical Processing), các truy vấn đa chiều, khối OLAP (Cubes) và sự kết hợp với Data Warehouse."
+definition: "OLAP (Online Analytical Processing) là công nghệ và hệ thống tối ưu hóa cho các tác vụ phân tích dữ liệu đa chiều, thực hiện các truy vấn đọc dữ liệu phức tạp trên quy mô lớn để báo cáo và hỗ trợ ra quyết định."
 ---
 
 Hãy tưởng tượng CEO của một chuỗi bán lẻ lớn đưa ra yêu cầu: *"Cho tôi biết tổng doanh thu của tất cả cửa hàng tại Đông Nam Á trong quý 3 năm nay, so với cùng kỳ năm ngoái, và chia nhỏ theo từng danh mục sản phẩm."*
