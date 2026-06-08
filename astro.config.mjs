@@ -20,7 +20,14 @@ export default defineConfig({
 				'./src/styles/custom.css'
 			],
 			head: [
-				{ tag: 'script', attrs: { src: '/glossary.js', defer: true } }
+				{
+					tag: 'script',
+					attrs: { src: '/glossary.js', defer: true },
+				},
+				{
+					tag: 'script',
+					attrs: { type: 'module', src: '/mermaid-init.js' },
+				}
 			],
 			social: { github: 'https://github.com/kythuatdulieu' },
 			sidebar: [
