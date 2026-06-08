@@ -66,9 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Restore saved width
+  // Restore saved width with validation
   const savedWidth = localStorage.getItem('sidebarWidth');
   if (savedWidth) {
-    document.documentElement.style.setProperty('--sl-sidebar-width', savedWidth);
+    const parsedWidth = parseInt(savedWidth, 10);
+    const maxAllowedWidth = Math.min(450, window.innerWidth * 0.35); // Max 450px or 35% of screen width
+    
+    if (!isNaN(parsedWidth) && parsedWidth >= 200 && parsedWidth <= maxAllowedWidth) {
+      document.documentElement.style.setProperty('--sl-sidebar-width', `${parsedWidth}px`);
+    } else {
+      // Clear invalid or too large saved width
+      localStorage.removeItem('sidebarWidth');
+    }
   }
 });
