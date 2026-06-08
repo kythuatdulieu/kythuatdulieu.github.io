@@ -120,10 +120,10 @@ SELECT
 FROM raw_orders
 
 -- Khối lệnh này CHỈ CHẠY ở những lần chạy sau (không chạy lần đầu tạo bảng)
-{% if is_incremental() %}
+{ % if is_incremental() % }
   -- Filter chỉ lấy những dòng có updated_at LỚN HƠN thời gian max của bảng đích
   WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
-{% endif %}
+{ % endif % }
 ```
 
 Bên dưới nền, dbt sẽ dịch khối lệnh này thành một câu lệnh MERGE (Upsert) khổng lồ và xử lý phần Watermark tự động qua hàm `MAX(updated_at)`.

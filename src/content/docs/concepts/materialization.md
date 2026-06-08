@@ -75,12 +75,10 @@ SELECT
 FROM {{ source('web_tracking', 'raw_pageviews') }}
 
 -- Khối logic này chỉ chạy trong các lần chạy incremental, không chạy khi full-refresh
-{% if is_incremental() %}
+{ % if is_incremental() % }
 
-  -- Lọc lấy dữ liệu mới hơn thời gian cập nhật gần nhất trong bảng đích
   WHERE event_timestamp >= (SELECT max(event_timestamp) FROM {{ this }})
-
-{% endif %}
+{ % endif % }
 ```
 
 ---
@@ -98,7 +96,7 @@ FROM {{ source('web_tracking', 'raw_pageviews') }}
 
 * **Dùng Ephemeral quá sâu**: Tạo mô hình Ephemeral gọi đến mô hình Ephemeral khác tạo ra chuỗi CTE chồng chéo rất dài. Data Warehouse optimizer sẽ không phân tích nổi và sập (out of memory).
 * **Lạm dụng Incremental từ đầu**: Incremental có logic phức tạp và rủi ro bị lệch dữ liệu. Chỉ dùng nó khi bảng Table mất quá nhiều chi phí và thời gian (>15-30 phút) để build full-refresh.
-* **Thiếu is_incremental() macro**: Cấu hình materialization là incremental nhưng quên viết mệnh đề lọc `{% if is_incremental() %}`. Hậu quả là dbt vẫn quét lại toàn bộ dữ liệu nguồn và cố gắng MERGE chúng, chạy còn chậm hơn cả Table.
+* **Thiếu is_incremental() macro**: Cấu hình materialization là incremental nhưng quên viết mệnh đề lọc `{ % if is_incremental() % }`. Hậu quả là dbt vẫn quét lại toàn bộ dữ liệu nguồn và cố gắng MERGE chúng, chạy còn chậm hơn cả Table.
 
 ---
 
