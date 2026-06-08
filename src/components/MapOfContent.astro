@@ -62,87 +62,85 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
 });
 ---
 
-<div class="moc-container" id="moc-container">
-    {sortedCategories.map(category => (
-        <div class="moc-group" data-category={category}>
-            <h3 class="moc-category">
-                <span class="drag-handle">⠿</span>
-                {category}
-            </h3>
-            <div class="moc-grid" data-category={category}>
-                {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map(concept => (
-                    <a href={concept.url} class="concept-tag" data-concept={concept.dataConcept}>
-                        {concept.title}
-                    </a>
-                ))}
-            </div>
-        </div>
-    ))}
-</div>
+<table class="moc-table">
+    <tbody id="moc-table-body">
+        {sortedCategories.map(category => (
+            <tr class="moc-row" data-category={category}>
+                <th class="moc-category-cell">
+                    <span class="drag-handle" title="Kéo thả để sắp xếp">⠿</span>
+                    {category}
+                </th>
+                <td class="moc-links-cell">
+                    {groupedConcepts[category].sort((a, b) => a.title.localeCompare(b.title)).map((concept, index) => (
+                        <span>
+                            <a href={concept.url} class="concept-link" data-concept={concept.dataConcept}>{concept.title}</a>{index < groupedConcepts[category].length - 1 ? ', ' : ''}
+                        </span>
+                    ))}
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
 
 <style>
-.moc-container {
+.moc-table {
+    width: 100%;
     max-width: 850px;
-    margin: 0 auto;
+    margin: 2rem auto;
+    border-collapse: collapse;
     font-family: var(--sl-font);
+    font-size: 0.95rem;
 }
-.moc-group {
-    background: transparent;
-    transition: transform 0.2s ease;
+.moc-row {
+    border-bottom: 1px solid var(--sl-color-hairline);
+    transition: background-color 0.2s;
+    background-color: transparent;
 }
-.moc-category {
-    margin-top: 2rem !important;
-    margin-bottom: 1.2rem !important;
-    font-size: 1.25rem;
+.moc-row:hover {
+    background-color: var(--sl-color-bg-nav);
+}
+.moc-category-cell {
+    width: 30%;
+    padding: 1.2rem 1rem 1.2rem 0;
+    text-align: left;
+    vertical-align: top;
     font-weight: 600;
     color: var(--sl-color-white);
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--sl-color-hairline);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+}
+.moc-links-cell {
+    width: 70%;
+    padding: 1.2rem 0 1.2rem 1rem;
+    vertical-align: top;
+    line-height: 1.8;
+    color: var(--sl-color-gray-3);
 }
 .drag-handle {
     cursor: grab;
     color: var(--sl-color-gray-4);
-    margin-right: 0.75rem;
-    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
     user-select: none;
-    opacity: 0.5;
+    opacity: 0.3;
     transition: opacity 0.2s;
+    padding-top: 0.1rem;
 }
-.moc-category:hover .drag-handle {
+.moc-row:hover .drag-handle {
     opacity: 1;
 }
-.moc-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    min-height: 40px; /* To allow dropping when empty */
+.concept-link {
+    color: var(--sl-color-accent-high);
+    text-decoration: none;
+    transition: color 0.2s;
 }
-.concept-tag {
-    display: inline-block;
-    padding: 0.4rem 0.85rem;
-    background-color: var(--sl-color-bg-nav);
-    color: var(--sl-color-text-accent);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: none !important;
-    transition: all 0.2s ease-in-out;
-    cursor: grab;
-}
-.concept-tag:hover {
-    background-color: var(--sl-color-accent);
-    color: var(--sl-color-text-invert);
-    border-color: var(--sl-color-accent);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+.concept-link:hover {
+    color: var(--sl-color-accent);
+    text-decoration: underline;
 }
 .sortable-ghost {
     opacity: 0.4;
-    background-color: var(--sl-color-gray-5);
+    background-color: var(--sl-color-gray-5) !important;
 }
 </style>
 
@@ -150,62 +148,28 @@ const sortedCategories = Object.keys(groupedConcepts).sort((a, b) => {
 import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/+esm';
 
 function initSortable() {
-    const container = document.getElementById('moc-container');
-    if (!container) return;
+    const tbody = document.getElementById('moc-table-body');
+    if (!tbody) return;
 
-    // Load saved category order
-    const savedCategoryOrder = JSON.parse(localStorage.getItem('moc-category-order') || 'null');
+    // Load saved row order
+    const savedCategoryOrder = JSON.parse(localStorage.getItem('moc-table-order') || 'null');
     if (savedCategoryOrder) {
-        const groups = Array.from(container.querySelectorAll('.moc-group'));
+        const rows = Array.from(tbody.querySelectorAll('.moc-row'));
         savedCategoryOrder.forEach(categoryName => {
-            const el = groups.find(g => g.dataset.category === categoryName);
-            if (el) container.appendChild(el);
+            const el = rows.find(r => r.dataset.category === categoryName);
+            if (el) tbody.appendChild(el);
         });
     }
 
-    // Load saved tag placements
-    const savedTagPlacement = JSON.parse(localStorage.getItem('moc-tag-placement') || 'null');
-    if (savedTagPlacement) {
-        Object.keys(savedTagPlacement).forEach(category => {
-            const grid = container.querySelector(`.moc-grid[data-category="${category}"]`);
-            if (grid) {
-                const tagSlugs = savedTagPlacement[category];
-                tagSlugs.forEach(slug => {
-                    const tag = document.querySelector(`.concept-tag[data-concept="${slug}"]`);
-                    if (tag) grid.appendChild(tag);
-                });
-            }
-        });
-    }
-
-    // Initialize Category Sortable
-    new Sortable(container, {
+    // Initialize Sortable on tbody
+    new Sortable(tbody, {
         handle: '.drag-handle',
         animation: 150,
         ghostClass: 'sortable-ghost',
         onEnd: function () {
-            const order = Array.from(container.querySelectorAll('.moc-group')).map(el => el.dataset.category);
-            localStorage.setItem('moc-category-order', JSON.stringify(order));
+            const order = Array.from(tbody.querySelectorAll('.moc-row')).map(el => el.dataset.category);
+            localStorage.setItem('moc-table-order', JSON.stringify(order));
         }
-    });
-
-    // Initialize Tag Sortable across grids
-    const grids = container.querySelectorAll('.moc-grid');
-    grids.forEach(grid => {
-        new Sortable(grid, {
-            group: 'shared',
-            animation: 150,
-            ghostClass: 'sortable-ghost',
-            onEnd: function () {
-                const state = {};
-                grids.forEach(g => {
-                    const cat = g.dataset.category;
-                    const tags = Array.from(g.querySelectorAll('.concept-tag')).map(t => t.dataset.concept);
-                    state[cat] = tags;
-                });
-                localStorage.setItem('moc-tag-placement', JSON.stringify(state));
-            }
-        });
     });
 }
 
