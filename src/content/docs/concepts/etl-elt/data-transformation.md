@@ -168,11 +168,14 @@ FROM customer_behavior
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Tài liệu tham khảo
 
-1. **[ETL và ELT](/concepts/etl-elt/etl/)** - So sánh hai hướng tiếp cận tích hợp dữ liệu phổ biến.
-2. **[Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/)** - Thiết kế mô hình dữ liệu cho Data Warehouse.
-3. **dbt Labs Documentation** - Cẩm nang chuẩn mực của dbt về cách tổ chức và phân chia các lớp dữ liệu trong dự án.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining batch processing, dataflows, and schema evolution during transformations.
+2. [dbt Documentation: How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview) - Best practices on staging, intermediate, and marts layers for SQL-based transformations.
+3. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley describing data transformation types (structural, semantic) and technologies (SQL, Spark).
+4. [Databricks: Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture) - Architectural guide defining Bronze (raw), Silver (cleaned), and Gold (curated) data transformation layers.
+5. [AWS Glue: Transforming Data](https://docs.aws.amazon.com/glue/latest/dg/transforming-data.html) - Technical documentation explaining ETL operations, schema mapping, and script generation in AWS.
+
 
 ## English Summary
 

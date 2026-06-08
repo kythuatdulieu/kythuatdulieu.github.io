@@ -132,34 +132,13 @@ Sau đó, sự kiện này được đẩy vào Kafka và cuối cùng lưu vào
 * [Data Pipeline (Đường ống dữ liệu)](/concepts/foundation/data-pipeline/) - Đường ống luân chuyển dữ liệu.
 * [Schema Drift (Trôi dạt cấu trúc)](/concepts/observability-reliability/schema-drift/) - Hiện tượng thay đổi cấu trúc dữ liệu nguồn.
 
----
+## Tài liệu tham khảo
 
-## Góc phỏng vấn: Xử lý các bài toán về Hệ thống nguồn
-
-### 1. Change Data Capture (CDC) là gì? Khác gì với Incremental Load dựa trên cột `updated_at`?
-* **Gợi ý trả lời**: 
-  * CDC đọc trực tiếp từ log của Database (Binlog/WAL) để lấy từng thay đổi ở mức độ dòng (Row-level). Nó bắt được cả các thao tác DELETE (xóa dữ liệu).
-  * Incremental Load sử dụng câu lệnh SELECT `WHERE updated_at > last_run`. Khuyết điểm lớn nhất của nó là **không thể phát hiện được dữ liệu đã bị xóa vật lý** (Hard delete) vì dòng đó không còn trong bảng để mà SELECT. Ngoài ra, nó làm tốn tài nguyên của hệ thống nguồn để quét index cột `updated_at`.
-
-### 2. Bạn làm gì khi hệ thống nguồn là một API của bên thứ 3 và họ áp đặt giới hạn (Rate Limit) chỉ 100 requests / phút?
-* **Gợi ý trả lời**: Tôi sẽ áp dụng cơ chế điều tiết (Throttling) trong code trích xuất. Đồng thời xử lý HTTP Status Code `429 Too Many Requests` bằng kỹ thuật Exponential Backoff (chờ 1s, rồi 2s, rồi 4s... trước khi thử lại). Tôi cũng sẽ tận dụng cơ chế Webhook (nếu API có hỗ trợ) để bên thứ 3 chủ động đẩy dữ liệu sang hệ thống của tôi thay vì tôi phải liên tục gọi API để hỏi.
-
-### 3. Làm thế nào để trích xuất dữ liệu từ các hệ thống SaaS API (như Salesforce, Shopify) một cách hiệu quả và xử lý vấn đề thay đổi cấu trúc API (API Versioning)?
-* **Gợi ý trả lời**: 
-  * Để trích xuất hiệu quả, ta nên sử dụng các bộ connector chuẩn hóa (như Fivetran, Airbyte) hoặc tự viết client client hỗ trợ phân trang (pagination) và xử lý rate limit tự động.
-  * Để đối phó với API Versioning, cần lưu cấu hình phiên bản API đang gọi ở lớp biến môi trường. Trước khi nâng cấp phiên bản API mới của đối tác lên Production, cần chạy các bài kiểm thử độ tương thích schema trong môi trường Staging.
-  * Luôn lưu trữ dữ liệu thô (Raw JSON response) vào Bronze layer của Data Lake trước khi biến đổi, giúp dễ dàng chạy lại (replay) pipeline từ đầu nếu API thay đổi cấu trúc phản hồi.
-
----
-
-## Đọc thêm và Tài liệu tham khảo
-
-1. [OLTP (Hệ thống giao dịch)](/concepts/database-storage/oltp/) - Hệ thống xử lý giao dịch trực tuyến.
-2. [Data Pipeline (Đường ống dữ liệu)](/concepts/foundation/data-pipeline/) - Đường ống luân chuyển dữ liệu.
-3. **Designing Data-Intensive Applications** - Martin Kleppmann.
-4. **Debezium Documentation** - Red Hat.
-
----
+1. [Debezium Documentation](https://debezium.io/documentation/reference/stable/) - Red Hat open source platform for monitoring database transaction logs and capturing change data.
+2. [Databricks Lakeflow Connect](https://www.databricks.com/product/lakeflow/lakeflow-connect) - Databricks product page explaining managed database replication and source system connectivity.
+3. [AWS Database Migration Service Welcome Guide](https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html) - AWS official guide on migrating and replicating data from source databases.
+4. [What is Data Integration?](https://www.ibm.com/topics/data-integration) - IBM guide to consolidating and integrating diverse data sources.
+5. [What is Change Data Capture (CDC)?](https://www.confluent.io/learn/change-data-capture/) - Confluent learning center article on the mechanics of CDC for streaming data ingestion.
 
 ## English Summary
 

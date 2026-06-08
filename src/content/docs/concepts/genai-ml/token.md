@@ -43,13 +43,10 @@ Sơ đồ quy trình biến đổi:
 flowchart TD
     A[Raw Text: 'unbelievable'] --> B[Characters: u, n, b, e, l, i, e, v, a, b, l, e]
     B --> C{Frequency Analysis}
-    C --> D[Merge 'a' + 'b' + 'l' + 'e' -> 'able']
-    C --> E[Merge 'b' + 'e' + 'l' + 'i' + 'e' + 'v' -> 'believ']
-    C --> F[Merge 'u' + 'n' -> 'un']
+    C --> D[Merge 'able' suffix]
+    C --> E[Merge 'believ' stem]
+    C --> F[Merge 'un' prefix]
     D & E & F --> G[Final Tokens: 'un', 'believ', 'able']
-    
-    style A fill:#f9f9f9,stroke:#333
-    style G fill:#d4edda,stroke:#333
 ```
 
 ## Bất bình đẳng ngôn ngữ: Câu chuyện token Việt vs Anh
@@ -106,12 +103,6 @@ print(f"Tiếng Việt: {len(tokens_vi)} tokens -> {tokens_vi}")
 * [Phân tách văn bản (Chunking)](/concepts/genai-ml/chunking/)
 * [Mô hình ngôn ngữ lớn (LLMs)](/concepts/genai-ml/llm/)
 
-**Tài liệu tham khảo:**
-1. **Neural Machine Translation of Rare Words with Subword Units** - *Sennrich et al.* (Nghiên cứu đặt nền móng cho thuật toán BPE trong NLP).
-2. **OpenAI Tiktoken Repository** - *Mã nguồn mở công cụ tokenizer của OpenAI*.
-
----
-
 ## Góc phỏng vấn: Câu hỏi thường gặp
 
 ### 1. Thuật toán Byte-Pair Encoding (BPE) giải quyết được vấn đề gì trong xử lý ngôn ngữ tự nhiên (NLP)?
@@ -119,13 +110,23 @@ print(f"Tiếng Việt: {len(tokens_vi)} tokens -> {tokens_vi}")
 BPE là một thuật toán token hóa theo mức độ bộ phận của từ (Sub-word). Nó giải quyết được bài toán cân bằng giữa:
 * **Kích thước từ điển (Vocabulary Size):** Giúp từ điển không bị phình to quá lớn như phương pháp Word-level (vốn dễ bị bỏ sót tên riêng, từ viết tắt).
 * **Độ dài chuỗi đầu vào:** Giúp chuỗi token truyền vào mạng nơ-ron ngắn hơn và giàu ngữ nghĩa hơn nhiều so với phương pháp Character-level (vốn chia nhỏ về mức chữ cái đơn lẻ, làm cạn kiệt Context Window rất nhanh).
-Đặc biệt, BPE giải quyết triệt để lỗi từ lạ Out-Of-Vocabulary (OOV) vì bất kỳ từ lạ nào cũng có thể bị chẻ nhỏ thành các mảnh ghép ký tự có sẵn trong từ điển.
+Biệt ngữ: BPE giải quyết triệt để lỗi từ lạ Out-Of-Vocabulary (OOV) vì bất kỳ từ lạ nào cũng có thể bị chẻ nhỏ thành các mảnh ghép ký tự có sẵn trong từ điển.
 
 ### 2. Tại sao chi phí khi phát triển ứng dụng GenAI bằng tiếng Việt lại thường cao hơn nhiều so với tiếng Anh?
 **Gợi ý trả lời:**
 Hầu hết các LLM lớn trên thế giới hiện nay đều sử dụng bộ Tokenizer được huấn luyện chủ yếu dựa trên các tài liệu tiếng Anh. Do đó, từ điển của chúng chứa sẵn phần lớn các từ tiếng Anh hoàn chỉnh (1 từ thường tương đương 1 token). 
 
 Trong khi đó, do dữ liệu tiếng Việt ít hơn, các từ tiếng Việt không được nhận diện nguyên vẹn mà bị băm nhỏ thành các âm tiết hoặc ký tự đơn lẻ (1 từ tiếng Việt có thể tốn 2 đến 3 token). Vì nhà cung cấp API tính tiền dựa trên số lượng token xử lý, cùng một câu có nghĩa tương đương, phiên bản tiếng Việt sẽ sinh ra số lượng token lớn hơn nhiều, dẫn đến chi phí vận hành đắt hơn và chiếm dụng bộ nhớ ngữ cảnh nhiều hơn.
+
+---
+
+## Tài liệu tham khảo
+
+1. [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) - Bài báo nghiên cứu nền tảng đề xuất sử dụng BPE cho việc mã hóa subword trong xử lý ngôn ngữ tự nhiên.
+2. [OpenAI tiktoken GitHub Repository](https://github.com/openai/tiktoken) - Thư viện mã nguồn mở của OpenAI để đếm và tối ưu hóa token nhanh chóng trong Python.
+3. [Hugging Face NLP Course: Tokenizers Chapter](https://huggingface.co/learn/nlp-course/chapter6/1) - Phần khóa học chi tiết của Hugging Face giải thích cơ chế hoạt động của các bộ Tokenizer khác nhau.
+4. [Tokenizer Summary - Hugging Face Transformers](https://huggingface.co/docs/transformers/tokenizer_summary) - Tài liệu tổng hợp và so sánh chi tiết các thuật toán BPE, WordPiece và SentencePiece.
+5. [OpenAI Tokenizer Tool](https://platform.openai.com/tokenizer) - Công cụ web chính thức của OpenAI giúp lập trình viên kiểm tra trực quan và đếm số lượng token cho các đoạn văn bản.
 
 ---
 

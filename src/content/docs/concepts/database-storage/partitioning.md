@@ -157,8 +157,12 @@ CREATE TABLE measurement_y2026m02 PARTITION OF measurement
 
 ## Tài liệu tham khảo
 
-1. **Google Cloud BigQuery Documentation** - Introduction to partitioned tables.
-2. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 6 - Partitioning).
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining partition routing, sharding, and database scaling.
+2. [Google Cloud Documentation: Introduction to Partitioned Tables](https://cloud.google.com/bigquery/docs/partitioned-tables) - Official guide on BigQuery partitioning strategies (time-unit, integer-range, ingestion-time).
+3. [Microsoft Learn: Data Partitioning Guidance](https://learn.microsoft.com/en-us/azure/architecture/best-practices/data-partitioning) - Azure architecture patterns detailing horizontal, vertical, and functional partitioning.
+4. [PostgreSQL Documentation: Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html) - Official guide to declarative partitioning in PostgreSQL, covering range, list, and hash partitioning.
+5. [MySQL 8.0 Reference Manual: Partitioning](https://dev.mysql.com/doc/refman/8.0/en/partitioning.html) - Documentation on MySQL partitioning types, pruning, constraints, and management.
+
 
 ## English Summary
 

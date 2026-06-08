@@ -140,10 +140,17 @@ for i, score in enumerate(scores):
   - Khi có query gửi đến, hệ thống sẽ tính toán độ tương đồng tối đa (Max-Similarity) giữa từng vector token của câu hỏi với tất cả vector token của tài liệu, sau đó cộng tổng lại.
   - Kiến trúc lai này cho phép chúng ta tính toán và lưu trữ trước (offline) các vector token của tài liệu, đồng thời khi tìm kiếm online vẫn giữ được độ chính xác gần tương đương với mô hình Cross-Encoder nhưng với tốc độ nhanh hơn rất nhiều.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 2: Data Models and Query Languages).
-2. **"LoRA: Low-Rank Adaptation of Large Language Models"** - Hu et al. (Microsoft, 2021) - Tài liệu tham khảo thêm về các kỹ thuật Transformer tối ưu.
+1. [SentenceTransformers Retrieve & Re-Rank](https://www.sbert.net/examples/applications/retrieve_rerank/README.html) - Tài liệu hướng dẫn chính thức từ SentenceTransformers về quy trình tìm kiếm hai giai đoạn kết hợp Bi-Encoder và Cross-Encoder.
+2. [ColBERT: Efficient and Effective Late Interaction over BERT for Information Retrieval](https://arxiv.org/abs/2004.12832) - Bài báo nghiên cứu giới thiệu kiến trúc ColBERT về cơ chế Late Interaction nhằm cân bằng giữa tốc độ và độ chính xác.
+3. [Rerank 3 Nimble - Cohere Blog](https://cohere.com/blog/rerank-3-nimble) - Bài viết giới thiệu mô hình Rerank 3 Nimble của Cohere, chuyên dụng tối ưu hóa tốc độ tái xếp hạng cho môi trường doanh nghiệp.
+4. [Rerankers for RAG - Pinecone Learning Center](https://www.pinecone.io/learn/series/rag/rerankers/) - Hướng dẫn chi tiết cách tích hợp Reranker vào các ứng dụng RAG của Pinecone.
+5. [Training and Finetuning Reranker Models - Hugging Face Blog](https://huggingface.co/blog/how-to-train-sentence-transformers) - Hướng dẫn từ Hugging Face về cách huấn luyện và tinh chỉnh mô hình Cross-Encoder/Reranker sử dụng Sentence Transformers.
+
+---
 
 ## English Summary
 

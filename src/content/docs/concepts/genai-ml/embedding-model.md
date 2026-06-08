@@ -133,8 +133,11 @@ model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=3, warmup_st
 
 ## Tài liệu tham khảo
 
-1. **Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks** - Reimers & Gurevych (2019).
-2. **Supervised Learning of Universal Sentence Representations** - Conneau et al. (2017).
+1. [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://aclanthology.org/D19-1410/) - Nils Reimers and Iryna Gurevych (EMNLP 2019 paper on Sentence-BERT).
+2. [Sentence Transformers Documentation](https://www.sbert.net/) - The official documentation for training and using SBERT models.
+3. [Sentence-BERT preprint on arXiv](https://arxiv.org/abs/1908.10084) - Original arXiv submission for Siamese BERT-Networks.
+4. [Hugging Face: How to Train a Sentence Transformer](https://huggingface.co/blog/how-to-train-sentence-transformers) - Step-by-step guide to fine-tuning embedding models on Hugging Face.
+5. [Pinecone: Introduction to Semantic Search](https://www.pinecone.io/learn/semantic-search/) - A comprehensive conceptual guide to embedding-based semantic search.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

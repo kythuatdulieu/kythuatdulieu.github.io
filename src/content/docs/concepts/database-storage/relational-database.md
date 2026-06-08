@@ -155,8 +155,12 @@ COMMIT;
 
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 2: Data Models and Query Languages).
-2. **Database System Concepts** - Abraham Silberschatz.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining data models, query languages, and RDBMS internals.
+2. [Database System Concepts](https://db-book.com/) - Textbook by Abraham Silberschatz, Henry F. Korth, and S. Sudarshan covering relational theory, transactions, and SQL.
+3. [PostgreSQL Documentation](https://www.postgresql.org/docs/) - Official reference manual for PostgreSQL, one of the world's most advanced open-source RDBMS.
+4. [MySQL Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/) - Complete guide to the MySQL database engine, transactional storage, and SQL syntax.
+5. [Codd's Seminal Paper: A Relational Model of Data for Large Shared Data Banks](https://dl.acm.org/doi/10.1145/362384.362685) - Edgar F. Codd's seminal research paper that founded relational database theory.
+
 
 ## English Summary
 

@@ -116,11 +116,14 @@ Sau khi thực thi, kết quả trả về sẽ chỉ còn duy nhất 2 dòng: B
 
 ---
 
-## Đọc thêm & Tài liệu tham khảo
+## Tài liệu tham khảo
 
-1. **[Data Quality](/concepts/data-quality/data-quality/)** - Hiểu về triết lý chất lượng dữ liệu.
-2. **Designing Data-Intensive Applications** - Cuốn sách của Martin Kleppmann, đặc biệt là chương viết về cơ chế phân phối tin nhắn và tính lũy đẳng (Idempotency).
-3. **SQL Cookbook** - Cuốn sách nổi tiếng của Anthony Molinaro về các kỹ thuật xử lý dữ liệu bằng SQL.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann explaining at-least-once message delivery, message deduplication, and idempotency.
+2. [SQL Cookbook](https://www.oreilly.com/library/view/sql-cookbook-2nd/9781492077435/) - Book by Anthony Molinaro and Robert de Graaf containing recipe patterns for finding and removing duplicate records in SQL.
+3. [Apache Spark Documentation: dropDuplicates](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.DataFrame.dropDuplicates.html) - Official API reference for PySpark's dropDuplicates method, a standard data engineering tool for row deduplication.
+4. [Delta Lake Documentation: Upserting data using merge](https://docs.delta.io/latest/delta-update.html#upsert-into-a-table-using-merge) - Official Delta Lake guide showing how to deduplicate and merge CDC records.
+5. [Dedupe Python Library Documentation](https://github.com/dedupeio/dedupe) - Open-source library documentation for Dedupe.io, demonstrating machine-learning-based deduplication and entity resolution.
+
 
 ## English Summary
 

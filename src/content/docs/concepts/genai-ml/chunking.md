@@ -22,7 +22,7 @@ Mỗi mảnh nhỏ (chunk) sau khi được cắt ra sẽ đại diện cho mộ
 Có hai lý do vật lý và kỹ thuật cốt lõi buộc chúng ta phải thực hiện bước chia nhỏ này:
 
 1. **Giới hạn đầu vào của mô hình Embedding**: Hầu hết các mô hình nhúng (như BERT hay các dòng Sentence-Transformers) đều có một giới hạn cứng về độ dài chuỗi ký tự đầu vào `(Max Sequence Length)`, thường dao động từ 512 đến 8192 tokens. Nếu bạn đưa vào một bài báo dài 10.000 từ, mô hình sẽ tự động cắt bỏ phần đuôi mà không hề báo trước, gây mất mát dữ liệu nghiêm trọng.
-2. **Hiện tượng "loãng" ngữ nghĩa (Semantic Dilution)**: Một vector nhúng (ví dụ 768 chiều) giống như một cái bình nước. Bạn có thể đổ đầy thông tin của một câu ngắn: *"Cách đổi mật khẩu Wi-Fi"* và bình nước sẽ giữ nguyên vị ngọt đậm đà của ý tưởng đó. Nhưng nếu bạn cố ép mô hình nhúng cả một cuốn sách hướng dẫn IT dài 50 trang vào đúng một vector đó, hương vị ban đầu sẽ bị hòa tan hoàn toàn. Câu hỏi truy vấn của người dùng về mật khẩu Wi-Fi sẽ bị chìm nghỉm giữa hàng ngàn chủ đề khác và không thể tìm thấy.
+2. **Hiện tượng "loãng" ngữ nghĩa (Semantic Dilution)**: Một vector nhúng (ví dụ 768 chiều) giống như một cái bình nước. Bạn có thể đổ đầy thông tin của một câu ngắn: *"Cách đổi mật khẩu Wi-Fi"* và bình nước sẽ giữ nguyên vị ngọt đậm đà của ý tưởng đó. Nhưng nếu bạn cố ép mô hình nhúng cả một cuốn sách hướng dẫn IT dài 50 trang vào đúng một vector đó, hương vị ban đầu sẽ bị hòa tan hoàn toàn. Câu hỏi truy vấn của người dùng về mật khẩu Wi-Fi sẽ bị chìm nghịch giữa hàng ngàn chủ đề khác và không thể tìm thấy.
 
 ## Những nguyên tắc vàng để tạo nên một Chunk chất lượng
 
@@ -126,9 +126,13 @@ print(f"Kích thước chunk đầu tiên: {len(chunks[0])} ký tự")
 * [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/genai-ml/semantic-search/)
 * [Mô hình ngôn ngữ lớn (LLMs)](/concepts/genai-ml/llm/)
 
-**Tài liệu tham khảo:**
-1. **LangChain Documentation** - Text Splitters module.
-2. **Pinecone Learn** - Chunking Strategies for Vector Databases.
+## Tài liệu tham khảo
+
+1. [How to partition documents for vector search](https://learn.microsoft.com/en-us/azure/search/vector-search-how-to-chunk-documents) - Microsoft Azure guide to document chunking strategies in AI Search.
+2. [Databricks Vector Search](https://docs.databricks.com/en/generative-ai/vector-search.html) - Databricks documentation on preparing and chunking datasets for managed vector databases.
+3. [Use RAG in Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/agent-engine/use-rag) - Google Cloud official guide on document chunking and vector indexing configuration.
+4. [LangChain How-To: Text Splitters](https://python.langchain.com/docs/how_to/#text-splitters) - LangChain official guides on utilizing document text splitters.
+5. [Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/) - Pinecone guide on the impact of chunk size and overlap on vector database search.
 
 ## English Summary
 

@@ -19,7 +19,7 @@ Thay vì tin tưởng tuyệt đối vào kết quả xếp hạng thô sơ ban 
 
 ## Tại sao hệ thống tìm kiếm cần đến hai giai đoạn?
 
-Hệ thống tìm kiếm thông tin quy mô lớn luôn phải đối mặt với sự giằng co kinh điển giữa **Tốc độ (Speed)** và **Độ chính xác sâu (Deep Semantic Precision)**.
+Hệ thống tìm kiếm thông tin quy mô lớn luôn phải đối mặt với sự giằng co kinh duyệt giữa **Tốc độ (Speed)** và **Độ chính xác sâu (Deep Semantic Precision)**.
 
 * Nếu chúng ta mang một mô hình ngôn ngữ lớn cực kỳ thông minh đi đọc chi tiết và so khớp từng tài liệu một trong số hàng triệu tài liệu trong database, hệ thống sẽ mất hàng giờ mới có thể đưa ra kết quả. Điều này hoàn toàn bất khả thi cho các ứng dụng thực tế.
 * Ngược lại, nếu chỉ dùng Vector Database (Bi-Encoder) hoặc BM25, chúng ta sẽ có kết quả cực nhanh (chỉ mất khoảng 10ms). Thế nhưng, các hệ thống này phân tích ngữ nghĩa ở mức độ khá nông. Chúng có thể dễ dàng bị đánh lừa bởi các tài liệu chứa từ khóa trùng khớp nhưng ngữ cảnh thực tế lại hoàn toàn khác biệt.
@@ -137,11 +137,18 @@ for idx, result in enumerate(response.results):
 ### 3. Chúng ta có thể sử dụng chính các LLM lớn (như GPT-4) đóng vai trò làm mô hình Reranker được không?
 * **Gợi ý trả lời**: Hoàn toàn có thể. Kỹ thuật này thường được gọi là "LLM-as-a-Judge" (sử dụng prompt yêu cầu LLM chấm điểm mức độ liên quan của từng tài liệu). Tuy nhiên, trong môi trường sản xuất (production), cách tiếp cận này rất ít khi được áp dụng do chi phí API cực kỳ đắt đỏ, tốn lượng lớn token, tốc độ phản hồi chậm và rủi ro LLM trả về sai định dạng kết quả khiến hệ thống không thể parse được. Thực tế, người ta thường sử dụng các mô hình Reranker chuyên dụng cỡ nhỏ (khoảng 200M đến 2B tham số) được huấn luyện riêng biệt bằng các hàm loss xếp hạng, mang lại hiệu năng tương đương nhưng nhanh và rẻ hơn hàng chục lần.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"** - Lewis et al. (Facebook AI Research, 2020).
-2. **LangChain Documentation** - Hướng dẫn xây dựng luồng RAG và tích hợp Reranker.
+1. [Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/html/htmldoc/irbook.html) - Sách giáo khoa kinh điển về thu hồi thông tin từ Đại học Stanford.
+2. [Cohere Rerank API Documentation](https://docs.cohere.com/docs/rerank) - Tài liệu hướng dẫn sử dụng mô hình Cohere Rerank chính thức.
+3. [Reranking for Better Search - Qdrant Blog](https://qdrant.tech/blog/reranking/) - Bài viết phân tích của Qdrant về cách ứng dụng Reranking để tối ưu hóa kết quả tìm kiếm vector.
+4. [Node Postprocessors (Reranking) - LlamaIndex](https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/node_postprocessors/) - Hướng dẫn sử dụng các bộ lọc Postprocessor và Reranker trong framework LlamaIndex.
+5. [Rerankers for RAG - Pinecone Learning Center](https://www.pinecone.io/learn/series/rag/rerankers/) - Bài viết hướng dẫn thiết lập hệ thống tái xếp hạng để cải tiến chất lượng ứng dụng RAG của Pinecone.
+
+---
 
 ## English Summary
 
-Reranking is the crucial second stage in modern two-stage Information Retrieval and RAG pipelines. After a fast but coarse first-stage retrieval (e.g., Vector Search or BM25) fetches a broad candidate pool of documents (high recall), a Reranker model evaluates the exact query-document pairs to compute highly accurate semantic relevance scores. It then reorders the candidates, surfacing the most relevant documents to the top (high precision) before feeding them into an LLM. While it adds a slight latency overhead, Reranking dramatically improves the final answer quality by overcoming the shallow matching limitations of standalone vector embeddings.
+Reranking is the crucial second stage in modern two-stage Information Retrieval and RAG pipelines. After a fast but coarse first-stage retrieval (e.g., Vector Search or BM25) fetches a broad candidate pool of documents (high recall), a Reranker model evaluates the exact query-document pairs to compute highly accurate semantic relevance scores. It then reorders the candidates, surfacing the most relevant documents to the top (high precision) before feeding them into an LLM. While it adds a slight latency overhead, Reranking dramatically improves the final answer quality by overcoming the matching limitations of standalone vector embeddings.

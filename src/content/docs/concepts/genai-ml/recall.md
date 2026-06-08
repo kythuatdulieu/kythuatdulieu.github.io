@@ -136,10 +136,17 @@ Tránh tập trung quá mức vào Recall khi việc **báo động giả (False
   3. Cải tiến chiến lược cắt nhỏ văn bản (Chunking Strategy), tăng tỷ lệ gối đầu (overlap) giữa các đoạn văn bản để giữ trọn vẹn ngữ cảnh ngữ nghĩa.
   4. Sử dụng mô hình Embedding chất lượng cao hơn và phù hợp với ngôn ngữ của tập tài liệu.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann.
-2. **Introduction to Information Retrieval** - Christopher D. Manning et al.
+1. [Precision and recall - Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall) - Bài viết chi tiết về định nghĩa và ứng dụng của Precision và Recall trên Wikipedia.
+2. [Evaluation of Ranked Retrieval Results - Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/html/htmldoc/evaluation-of-ranked-retrieval-results-1.html) - Tài liệu từ Đại học Stanford về cách đánh giá xếp hạng và tính Recall trong truy xuất thông tin.
+3. [Classification: Precision and Recall - Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall) - Khóa học Machine Learning của Google giải thích về Precision và Recall.
+4. [Scikit-learn recall_score API Documentation](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html) - Tài liệu hướng dẫn sử dụng hàm tính Recall của thư viện Scikit-learn.
+5. [Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow (3rd Edition)](https://github.com/ageron/handson-ml3) - Kho lưu trữ mã nguồn và tài liệu đi kèm của cuốn sách kinh điển về Machine Learning của tác giả Aurélien Géron.
+
+---
 
 ## English Summary
 

@@ -116,12 +116,6 @@ resp_hot = openai.ChatCompletion.create(
 * [Nucleus Sampling (Top-p)](/concepts/genai-ml/top-p/)
 * [Token (Đơn vị từ vựng)](/concepts/genai-ml/token/)
 
-**Tài liệu tham khảo:**
-1. **Deep Learning** - *Ian Goodfellow, Yoshua Bengio, Aaron Courville* (Chương về Softmax và Sampling).
-2. **OpenAI API Reference** - *Chat Completions Documentation*.
-
----
-
 ## Góc phỏng vấn: Câu hỏi thường gặp
 
 ### 1. Về mặt toán học, chuyện gì xảy ra với phân phối xác suất khi ta đẩy Temperature T tiến tới vô cùng ($T \rightarrow \infty$)?
@@ -135,6 +129,16 @@ Khi áp dụng phép toán Softmax, mọi token đều có xác suất xuất hi
 Đối với bài toán phân tích pháp lý, tính chính xác và trung thực của dữ liệu là quan trọng nhất. Tôi sẽ thiết lập **Temperature = 0** để kích hoạt cơ chế Greedy Decoding (luôn chọn từ có xác suất cao nhất), giúp loại bỏ tính ngẫu nhiên và ngăn chặn ảo giác. 
 
 Ở mức $T=0$, tham số Top-p sẽ không còn tác dụng. Nếu vì lý do nào đó cần câu văn mềm mại hơn một chút và để $T > 0$ cực nhỏ (ví dụ $0.1$), tôi sẽ giới hạn **Top-p ở mức rất thấp (khoảng 0.1)** để đảm bảo AI chỉ được lựa chọn trong số các từ vựng an toàn nhất.
+
+---
+
+## Tài liệu tham khảo
+
+1. [OpenAI API Reference - Chat Completions](https://platform.openai.com/docs/api-reference/chat) - Tài liệu tham khảo chính thức về các thông số cấu hình API Chat của OpenAI bao gồm `temperature`.
+2. [How to generate text - Hugging Face Blog](https://huggingface.co/blog/how-to-generate) - Bài viết hướng dẫn các phương pháp giải mã và sinh văn bản trong Transformer (coi nhiệt độ, top-k, top-p).
+3. [Advanced Generation Parameters - Cohere Documentation](https://docs.cohere.com/docs/advanced-generation-parameters) - Hướng dẫn chi tiết từ Cohere giải thích các thông số nâng cao như Temperature, Top-k và Top-p.
+4. [Deep Learning Book](https://www.deeplearningbook.org/) - Cuốn sách giáo khoa kinh điển về Học Sâu của Ian Goodfellow, Yoshua Bengio và Aaron Courville.
+5. [Anthropic Claude Messages API Reference](https://docs.anthropic.com/en/api/messages) - Tài liệu đặc tả kỹ thuật API Messages của Anthropic, hướng dẫn cách thiết lập temperature cho dòng mô hình Claude.
 
 ---
 

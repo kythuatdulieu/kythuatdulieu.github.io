@@ -30,7 +30,7 @@ Trong thế giới thực tế của Data Engineering, các đường ống dữ
 
 Khi các sự cố này xảy ra, hành động khắc phục phổ biến nhất của các kỹ sư là: *"Hãy thử chạy lại job này xem sao"*.
 
-Nhưng nếu đường ống dữ liệu của bạn không được thiết kế có tính lũy đẳng, thảm họa sẽ bắt đầu:
+Biết trước lỗi sẽ xảy ra, nhưng nếu đường ống dữ liệu của bạn không được thiết kế có tính lũy đẳng, thảm họa sẽ bắt đầu:
 * Ở lần chạy thứ nhất, job ghi được 50% dữ liệu rồi sập.
 * Ở lần chạy thứ hai, job tiếp tục ghi đè hoặc ghi nối tiếp từ đầu, dẫn đến việc 50% dữ liệu đầu tiên bị lặp lại hai lần.
 * Kết quả là số liệu trên các Dashboard báo cáo bị sai lệch (ví dụ doanh thu bị nhân đôi), làm xói mòn hoàn toàn lòng tin của người dùng kinh doanh đối với hệ thống dữ liệu.
@@ -145,8 +145,11 @@ WHEN NOT MATCHED THEN
 
 ## Tài liệu tham khảo
 
-* **Data Engineering with Python** - Paul Crickard.
-* **Fundamentals of Data Engineering** - Joe Reis, Matt Housley.
+1. [Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) - AWS Builder's Library article on designing systems with safe retries and idempotency keys.
+2. [Designing Robust APIs with Idempotency](https://stripe.com/blog/idempotency) - Stripe Engineering Blog post explaining how they implement and handle idempotency in API requests.
+3. [Transactions in Apache Kafka: Exactly-Once Semantics](https://www.confluent.io/blog/idempotence-exactly-once-semantics-apache-kafka/) - Confluent Blog post on idempotence and exactly-once processing in Kafka.
+4. [SQL MERGE Statement](https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-dml-merge.html) - Databricks SQL reference documentation for performing idempotent upserts.
+5. [What is Idempotency?](https://docs.getdbt.com/terms/idempotency) - dbt Labs definition and explanation of idempotency in data modeling.
 
 ## English Summary
 

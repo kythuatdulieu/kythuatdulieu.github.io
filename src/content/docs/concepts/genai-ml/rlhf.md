@@ -150,10 +150,17 @@ for epoch, batch in enumerate(dataloader):
 * **Gợi ý trả lời**: Quy trình RLHF truyền thống rất phức tạp vì yêu cầu huấn luyện một Reward Model trung gian và chạy thuật toán PPO nặng nề (phải tải đồng thời 4 mô hình vào GPU VRAM). 
   DPO (Direct Preference Optimization) là một cải tiến đột phá được chứng minh bằng toán học rằng chúng ta có thể trực tiếp tối ưu hóa mô hình ngôn ngữ dựa trên dữ liệu xếp hạng sở thích (Preference Data) của con người mà không cần qua bước huấn luyện Reward Model trung gian và không cần chạy thuật toán PPO. DPO biến bài toán học tăng cường phức tạp thành một bài toán phân loại tổn thất (classification loss) đơn giản, giúp quá trình huấn luyện nhanh hơn, ổn định hơn và tiết kiệm tài nguyên GPU đáng kể.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **"Training language models to follow instructions with human feedback"** - Ouyang et al. (OpenAI, 2022) - Paper nền tảng của InstructGPT.
-2. **Transformers Reinforcement Learning (TRL) Documentation** - Tài liệu hướng dẫn sử dụng thư viện huấn luyện PPO/DPO của Hugging Face.
+1. [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155) - Bài báo nghiên cứu giới thiệu InstructGPT và phương pháp RLHF của OpenAI (2022).
+2. [Illustrating Reinforcement Learning from Human Feedback (RLHF)](https://huggingface.co/blog/rlhf) - Bài viết giải thích trực quan về cơ chế hoạt động của RLHF từ Hugging Face.
+3. [Transformers Reinforcement Learning (TRL) Documentation](https://huggingface.co/docs/trl/index) - Tài liệu hướng dẫn sử dụng thư viện TRL để triển khai huấn luyện PPO, DPO cho LLM.
+4. [Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290) - Bài báo nghiên cứu giới thiệu thuật toán DPO, thay thế tối ưu cho RLHF/PPO truyền thống.
+5. [Llama 2: Open Foundation and Fine-Tuned Chat Models](https://arxiv.org/abs/2307.09288) - Bài báo nghiên cứu của Meta chi tiết về quy trình căn chỉnh mô hình Llama 2 bằng RLHF.
+
+---
 
 ## English Summary
 

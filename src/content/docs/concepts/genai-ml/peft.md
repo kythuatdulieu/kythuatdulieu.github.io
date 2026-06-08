@@ -23,7 +23,7 @@ Trong số các kỹ thuật thuộc họ PEFT, **LoRA (Low-Rank Adaptation)** c
 
 ## Tại sao chúng ta cần PEFT/LoRA?
 
-* **Vượt qua rào cản phần cứng (VRAM Bottleneck)**: Huấn luyện một mô hình ngôn ngữ 7 tỷ tham số (7B) theo cách truyền thống đòi hỏi tối thiểu khoảng 100GB+ VRAM – con số vượt quá khả năng của bất kỳ card đồ họa đơn lẻ nào. Nhờ PEFT (đặc biệt là QLoRA - phiên bản lượng tử hóa 4-bit của LoRA), bạn có thể dễ dàng chạy huấn luyện mô hình 7B ngay trên một chiếc card đồ họa RTX 3090 hoặc 4090 24GB thường thấy ở các PC chơi game.
+* **Vượt qua rào cản phần cứng (VRAM Bottleneck)**: Huấn luyện một mô hình ngôn ngữ 7 tỷ tham số (7B) theo cách truyền thống đòi hỏi tối thiểu khoảng 100GB+ VRAM – con số vượt quá khả năng của bất kỳ card đồ họa đơn lẻ nào. Nhờ PEFT (đặc biệt với QLoRA - phiên bản lượng tử hóa 4-bit của LoRA), bạn có thể dễ dàng chạy huấn luyện mô hình 7B ngay trên một chiếc card đồ họa RTX 3090 hoặc 4090 24GB thường thấy ở các PC chơi game.
 * **Ngăn ngừa hiện tượng "Quên tai hại" (Catastrophic Forgetting)**: Khi tinh chỉnh toàn bộ mô hình (Full Fine-Tuning) trên một tập dữ liệu nhỏ hẹp, các trọng số nguyên bản dễ bị thay đổi quá mức khiến mô hình bị "cháy" và quên mất các khả năng ngôn ngữ tổng quát vốn có. PEFT giải quyết điều này bằng cách giữ nguyên mô hình nền tảng, giúp duy trì trí thông minh cơ bản của mô hình.
 * **Tiết kiệm chi phí lưu trữ và triển khai đa nhiệm**: Giả sử doanh nghiệp có 5 dự án khác nhau dựa trên cùng một mô hình 7B. Với Full Fine-Tuning, bạn phải lưu trữ 5 phiên bản mô hình độc lập (mỗi phiên bản khoảng 14GB, tổng cộng 70GB). Với PEFT/LoRA, mỗi dự án (gọi là một Adapter) chỉ nặng khoảng vài chục Megabytes. Bạn chỉ cần lưu trữ duy nhất 1 mô hình gốc 14GB và 5 file adapter siêu nhẹ 50MB. Hơn nữa, bạn có thể dễ dàng thay đổi nóng (swap) các adapter này ngay trong quá trình chạy thực tế (inference) mà không cần khởi động lại mô hình gốc.
 
@@ -156,11 +156,17 @@ merged_model.save_pretrained("./llama-3-pirate-final")
 * **Mục đích của người phỏng vấn**: Kiểm tra kinh nghiệm thiết kế kiến trúc hệ thống phục vụ mô hình (Model Serving) trong môi trường production.
 * **Gợi ý trả lời**: Hoàn toàn được. Các framework phục vụ mô hình hiện đại (như vLLM hoặc LoRAX) hỗ trợ tính năng **Multi-LoRA Serving**. Hệ thống chỉ cần nạp duy nhất một Base Model gốc vào VRAM GPU, sau đó tải kèm nhiều adapter LoRA siêu nhẹ chạy song song. Khi có request API gửi đến kèm theo mã định danh của adapter cụ thể, hệ thống sẽ tự động chuyển hướng luồng tính toán qua adapter tương ứng. Giải pháp này giúp tối ưu hóa hiệu năng và tiết kiệm chi phí phần cứng vượt trội so với việc host nhiều mô hình lớn độc lập.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **"LoRA: Low-Rank Adaptation of Large Language Models"** - Hu et al. (Microsoft, 2021).
-2. **"QLoRA: Efficient Finetuning of Quantized LLMs"** - Dettmers et al. (2023).
-3. **HuggingFace PEFT Documentation** - Tài liệu hướng dẫn sử dụng thư viện PEFT chuẩn công nghiệp.
+1. [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685) - Bài báo nghiên cứu gốc giới thiệu kỹ thuật LoRA của Microsoft.
+2. [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314) - Bài báo nghiên cứu giới thiệu phương pháp QLoRA tối ưu hóa bộ nhớ khi tinh chỉnh.
+3. [Hugging Face PEFT Documentation](https://huggingface.co/docs/peft/index) - Tài liệu chính thức về thư viện Parameter-Efficient Fine-Tuning (PEFT) của Hugging Face.
+4. [Parameter-Efficient Fine-Tuning using Hugging Face PEFT](https://huggingface.co/blog/peft) - Bài viết trên Hugging Face Blog hướng dẫn thực hành sử dụng thư viện PEFT.
+5. [Efficient Fine-Tuning with LoRA: A Guide to Optimal Parameter Selection](https://www.databricks.com/blog/efficient-fine-tuning-lora-guide-optimal-parameter-selection) - Hướng dẫn từ Databricks về cách chọn tham số tối ưu (như rank và alpha) khi tinh chỉnh với LoRA.
+
+---
 
 ## English Summary
 

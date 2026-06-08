@@ -122,7 +122,7 @@ print(response.choices[0].message.content)
 
 ### Không nên chọn khi:
 * Bạn chỉ đang ở giai đoạn nghiên cứu, phân tích dữ liệu (R&D) hoặc chạy thử nghiệm trên Jupyter Notebook.
-* Các tác vụ phân tích không cần tính tức thời (ví dụ: chạy mô hình dự đoán tỷ lệ khách hàng rời bỏ vào cuối tháng để gửi email). Với trường hợp này, hãy sử dụng **Batch Processing / Offline Serving** (chạy một script Python hàng giờ trên Data Warehouse để xử lý hàng loạt dữ liệu rồi lưu kết quả vào Database) sẽ rẻ và an toàn hơn nhiều.
+* Các tác vụ phân tích không cần tính tức thời (ví dụ: chạy mô hình dự đoán tỷ lệ khách hàng rời bỏ vào cuối tháng để gửi email). Với trường hợp này, hãy sử dụng **Batch Processing / Offline Serving** (chạy một script Python hàng giờ trên Data Warehouse để xử lý hàng loạt dữ liệu rồi lưu kết quả vào Database) sẽ rẻ và an sau hơn nhiều.
 
 ---
 
@@ -159,9 +159,11 @@ print(response.choices[0].message.content)
 
 ## Tài liệu tham khảo
 
-1. **"Designing Machine Learning Systems"** - Chip Huyen.
-2. **NVIDIA Triton Inference Server Documentation**.
-3. **vLLM Paper**: *"vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention"*.
+1. [Designing Machine Learning Systems](https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/) - Cuốn sách của tác giả Chip Huyen về thiết kế hệ thống học máy thực tế.
+2. [NVIDIA Triton Inference Server Documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/index.html) - Tài liệu hướng dẫn sử dụng máy chủ phục vụ suy luận Triton của NVIDIA.
+3. [vLLM: Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180) - Bài báo nghiên cứu giới thiệu thuật toán PagedAttention và thư viện vLLM.
+4. [Ray Serve Documentation](https://docs.ray.io/en/latest/serve/index.html) - Tài liệu hướng dẫn triển khai và phục vụ mô hình học máy phân tán bằng Ray Serve.
+5. [Hugging Face Text Generation Inference (TGI)](https://github.com/huggingface/text-generation-inference) - Mã nguồn mở và tài liệu của Hugging Face phục vụ tối ưu hóa suy luận cho LLM.
 
 ---
 

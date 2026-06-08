@@ -130,13 +130,19 @@ print(f"Độ tương đồng Cosine: {cosine:.2f}")
 
 ---
 
-## Đọc thêm và Tài liệu tham khảo
+## Khái niệm liên quan
 
-1. [Mô hình nhúng (Embedding Models)](/concepts/genai-ml/embedding-models/) - Khám phá các loại mô hình nhúng phổ biến.
-2. [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/genai-ml/semantic-search/) - Ứng dụng embeddings trong việc tìm kiếm thông tin theo ngữ nghĩa.
-3. [Vector Database](/concepts/genai-ml/vector-database/) - Cách lưu trữ và truy vấn hiệu quả hàng triệu vectơ nhúng.
-4. **Word2Vec Parameter Learning Explained** - Xin Rong.
-5. **Deep Learning for Natural Language Processing** - Jason Brownlee.
+* [Mô hình nhúng (Embedding Models)](/concepts/genai-ml/embedding-models/) - Khám phá các loại mô hình nhúng phổ biến.
+* [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/genai-ml/semantic-search/) - Ứng dụng embeddings trong việc tìm kiếm thông tin theo ngữ nghĩa.
+* [Vector Database](/concepts/genai-ml/vector-database/) - Cách lưu trữ và truy vấn hiệu quả hàng triệu vectơ nhúng.
+
+## Tài liệu tham khảo
+
+1. [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/pubs/glove.pdf) - Jeffrey Pennington, Richard Socher, and Christopher D. Manning (2014 paper introducing GloVe).
+2. [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781) - Tomas Mikolov et al. (The foundational Word2Vec paper).
+3. [Stanford CS224N: Natural Language Processing with Deep Learning](https://web.stanford.edu/class/cs224n/) - A premier university course covering word embeddings and deep learning for NLP.
+4. [Dive into Deep Learning - Section 15.5: GloVe](https://d2l.ai/chapter_natural-language-processing-pretraining/glove.html) - An interactive, mathematically rigorous guide explaining global vectors.
+5. [Pinecone: What is a Vector Database?](https://www.pinecone.io/learn/vector-database/) - A clear explanation of vector databases, vector embeddings, and indexing methods.
 
 ---
 

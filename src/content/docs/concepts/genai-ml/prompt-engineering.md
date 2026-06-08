@@ -82,7 +82,7 @@ Hãy xem xét bài toán trích xuất thông tin từ email phản hồi của 
 Bạn là một trợ lý AI chuyên trích xuất dữ liệu thô thành cấu trúc hệ thống.
 
 [Instruction]
-Hãy phân tích email khiếu nại dưới đây và trích xuất các thông tin quan trọng. Kết quả trả về phải là một chuỗi JSON hợp lệ theo định dạng được chỉ ra trong phần [Format]. Tuyệt đối không viết thêm bất kỳ từ nào khác ngoài JSON.
+Hãy phân tích email khiếu nại dưới đây và trích xuất các thông tin quan trạng. Kết quả trả về phải là một chuỗi JSON hợp lệ theo định dạng được chỉ ra trong phần [Format]. Tuyệt đối không viết thêm bất kỳ từ nào khác ngoài JSON.
 
 [Email]
 "Chào công ty, tôi là Nguyễn Văn A. Số của tôi là 0901234567. Tôi mua cái máy giặt hôm qua mà nay nó không lên nguồn. Đổi cho tôi nhanh lên."
@@ -166,11 +166,17 @@ print(final_prompt)
   2. Viết chỉ thị rõ ràng trong System Prompt yêu cầu AI chỉ xem dữ liệu trong các thẻ phân tách là nội dung xử lý, tuyệt đối không được coi đó là mệnh lệnh thực thi.
   3. Sử dụng thêm một mô hình AI phụ (Guardrail/Moderation model) để lọc và kiểm tra tính an toàn của dữ liệu đầu vào và đầu ra trước khi hiển thị cho người dùng.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **Prompt Engineering Guide** - DAIR.AI.
-2. **"Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"** - Jason Wei et al. (2022).
-3. **OpenAI API Documentation** - Best practices for prompt engineering.
+1. [Prompt Engineering Guide](https://www.promptingguide.ai/) - Cẩm nang học Prompt Engineering toàn diện từ cơ bản đến nâng cao của DAIR.AI.
+2. [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903) - Bài báo nghiên cứu đột phá của Google về kỹ thuật chuỗi tư duy (Chain-of-Thought).
+3. [OpenAI Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering) - Tài liệu hướng dẫn thực hành và các chiến lược viết prompt tối ưu từ OpenAI.
+4. [Anthropic Prompt Engineering Documentation](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) - Tài liệu hướng dẫn thiết kế prompt tối ưu cho dòng mô hình Claude của Anthropic.
+5. [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) - Bài báo nghiên cứu giới thiệu kỹ thuật ReAct kết hợp lập luận và hành động cho AI Agent.
+
+---
 
 ## English Summary
 

@@ -114,8 +114,12 @@ Nếu cơ sở dữ liệu sử dụng cấu trúc Row-based (như InnoDB của 
 
 ## Tài liệu tham khảo
 
-1. **Designing Data-Intensive Applications** - Martin Kleppmann (Phân tích chi tiết về các mô hình lưu trữ vật lý của cơ sở dữ liệu).
-2. **PostgreSQL Documentation** - Tổng quan về công cụ lưu trữ dữ liệu.
+1. [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - Book by Martin Kleppmann providing in-depth analysis of row-oriented vs. column-oriented physical database layout.
+2. [C-Store: A Column-Oriented DBMS](https://dl.acm.org/doi/10.1145/1083592.1083658) - Seminal research paper by Michael Stonebraker et al. contrasting column store with traditional row store.
+3. [ClickHouse Documentation: Column-oriented DBMS](https://clickhouse.com/docs/en/about/olap) - Explains why column-oriented storage outperforms row-oriented storage for analytical queries.
+4. [PostgreSQL Documentation: Database Physical Storage](https://www.postgresql.org/docs/current/storage.html) - Official PostgreSQL documentation on how tables and rows are physically structured as pages and blocks on disk.
+5. [AWS: Row-Oriented vs. Column-Oriented Databases](https://aws.amazon.com/compare/the-difference-between-row-oriented-and-column-oriented-databases/) - AWS comparison guide detailing performance trade-offs, transactional vs. analytical workloads, and storage patterns.
+
 
 ## English Summary
 

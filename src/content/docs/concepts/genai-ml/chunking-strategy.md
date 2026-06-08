@@ -24,7 +24,7 @@ Hãy tưởng tượng bạn có một cuốn sách dày 500 trang. Bạn không
 Có 3 lý do bắt buộc bạn phải thực hiện phân tách văn bản khi xây dựng các hệ thống AI:
 
 1. **Giới hạn vật lý của mô hình Embedding**: Các mô hình nhúng phổ biến (như `text-embedding-ada-002` của OpenAI) có giới hạn đầu vào tối đa là 8192 tokens. Nếu bạn cố nhồi nhét một tài liệu dài hơn thế, mô hình sẽ lặng lẽ vứt bỏ toàn bộ phần nội dung thừa phía sau.
-2. **Hiện tượng "loãng" ngữ nghĩa (Semantic Dilution)**: Nếu bạn cố tình nén toàn bộ một bài báo cáo dài 50 trang thành một vector duy nhất, vector đó sẽ chứa một mớ hỗn độn nhiều ý tưởng khác nhau. Khi người dùng hỏi về một chi tiết nhỏ nằm ở trang 12, thuật toán tìm kiếm khoảng cách Vector sẽ không đủ độ nhạy để nhận diện ra tài liệu đó nữa.
+2. **Hiện tượng "loãng" ngữ nghĩa (Semantic Dilution)**: Nếu bạn cố nén toàn bộ một bài báo cáo dài 50 trang thành một vector duy nhất, vector đó sẽ chứa một mớ hỗn độn nhiều ý tưởng khác nhau. Khi người dùng hỏi về một chi tiết nhỏ nằm ở trang 12, thuật toán tìm kiếm khoảng cách Vector sẽ không đủ độ nhạy để nhận diện ra tài liệu đó nữa.
 3. **Giới hạn Context Window của LLM**: Khi LLM sinh câu trả lời, việc nhồi nhét cả tập tài liệu khổng lồ vào Prompt không chỉ làm tăng chi phí API một cách chóng mặt mà còn khiến mô hình dễ bị nhiễu thông tin – hiện tượng này được gọi là "Lost in the middle" (AI bị quên mất thông tin nằm ở giữa tài liệu).
 
 ## Hai trụ cột cốt lõi: Chunk Size và Chunk Overlap
@@ -157,10 +157,13 @@ for i, chunk in enumerate(chunks):
 * [Embeddings](/concepts/genai-ml/embeddings/)
 * [RAG (Retrieval-Augmented Generation)](/concepts/genai-ml/rag/)
 
-**Tài liệu tham khảo:**
-1. **Pinecone Learning Center** - "Chunking Strategies for LLM Applications".
-2. **LangChain Documentation** - "Text Splitters".
-3. **LlamaIndex Documentation** - "Node Parsers and Text Splitters".
+## Tài liệu tham khảo
+
+1. [Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/) - Pinecone Learning Center guide to text splitting methods and parameters.
+2. [LangChain Text Splitters Concept Guide](https://python.langchain.com/docs/concepts/text_splitters/) - LangChain documentation explaining character and token splitters.
+3. [LlamaIndex Node Parsers and Text Splitters](https://docs.llamaindex.ai/en/stable/module_guides/loading/node_parsers/) - LlamaIndex guide on transforming documents into searchable nodes.
+4. [Effective Chunking Strategies for RAG](https://docs.cohere.com/docs/effective-chunking-strategies-for-rag) - Cohere official documentation explaining best practices for text chunking.
+5. [How to count tokens with tiktoken](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) - OpenAI Cookbook guide for precise token counting when preprocessing text.
 
 ## English Summary
 

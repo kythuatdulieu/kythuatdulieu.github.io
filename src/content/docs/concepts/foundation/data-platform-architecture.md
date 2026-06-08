@@ -149,17 +149,20 @@ GROUP BY signup_date;
 ### 3. Tại sao việc phân tách giữa Tính toán (Compute) và Lưu trữ (Storage) lại cực kỳ quan trọng trong Modern Data Stack?
 * **Gợi ý trả lời**: Việc phân tách Compute và Storage giải quyết bài toán lãng phí tài nguyên của kiến trúc truyền thống. Trước đây, khi muốn lưu trữ nhiều dữ liệu hơn, doanh nghiệp phải mua thêm máy chủ có cả ổ cứng và CPU, dẫn đến tình trạng thừa năng lực tính toán nhưng thiếu dung lượng lưu trữ (hoặc ngược lại). Với Modern Data Stack, dữ liệu được lưu trữ trên Cloud Object Storage (như S3) cực kỳ rẻ và vô hạn, trong khi tài nguyên tính toán (như Snowflake, Databricks) chỉ được bật lên khi có nhu cầu truy vấn hoặc chạy ETL. Điều này giúp tối ưu hóa chi phí vận hành một cách tối đa.
 
----
-
 ## Đọc thêm và Tài liệu tham khảo
-1. [Data Lake](/concepts/data-lake-lakehouse/data-lake/) - Khái niệm và cách xây dựng hồ dữ liệu.
-2. [Data Warehouse](/concepts/data-warehouse/data-warehouse/) - Khái niệm và thiết kế kho dữ liệu truyền thống.
-3. [Batch Processing](/concepts/batch-processing/batch-processing/) - Kỹ thuật xử lý dữ liệu theo lô.
-4. [Change Data Capture (CDC)](/concepts/etl-elt/change-data-capture/) - Kỹ thuật theo dõi và đồng bộ thay đổi dữ liệu.
-5. **Databricks Lakehouse Platform Documentation** - Tài liệu hướng dẫn thiết kế và vận hành kiến trúc Lakehouse.
-6. **Data Mesh** - Zhamak Dehghani (Chương viết về thiết kế hạ tầng dữ liệu tự phục vụ).
 
----
+* [Data Lake](/concepts/data-lake-lakehouse/data-lake/) - Khái niệm và cách xây dựng hồ dữ liệu.
+* [Data Warehouse](/concepts/data-warehouse/data-warehouse/) - Khái niệm và thiết kế kho dữ liệu truyền thống.
+* [Batch Processing](/concepts/batch-processing/batch-processing/) - Kỹ thuật xử lý dữ liệu theo lô.
+* [Change Data Capture (CDC)](/concepts/etl-elt/change-data-capture/) - Kỹ thuật theo dõi và đồng bộ thay đổi dữ liệu.
+
+## Tài liệu tham khảo
+
+1. [What is a Data Lakehouse?](https://www.databricks.com/glossary/data-lakehouse) - Databricks Glossary page on the hybrid data lakehouse paradigm.
+2. [What is Data Architecture?](https://www.snowflake.com/en/resources/guides/data-architecture/) - Snowflake comprehensive guide on enterprise data platform design.
+3. [Modern Data Architecture on AWS](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/modern-data-architecture.html) - AWS Well-Architected Analytics Lens documentation for designing scalable data architectures.
+4. [Big Data Architecture Style](https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/big-data) - Microsoft Azure Architecture Center guide for designing large-scale big data architectures.
+5. [Data Mesh Book](https://www.oreilly.com/library/view/data-mesh/9781492092384/) - O'Reilly page for Zhamak Dehghani's foundational book on decentralized data platform design.
 
 ## English Summary
 

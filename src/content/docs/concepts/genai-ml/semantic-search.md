@@ -135,10 +135,17 @@ print(f"Tài liệu khớp nhất: {documents[indices[0][0]]}")
 * **Gợi ý trả lời**: Thuật toán KNN (K-Nearest Neighbors) truyền thống sẽ tính toán khoảng cách từ vectơ truy vấn tới *tất cả* các vectơ có trong database để tìm ra kết quả gần nhất. Khi cơ sở dữ liệu lên tới hàng triệu hay hàng tỷ vectơ, độ phức tạp $O(N)$ này sẽ gây ra độ trễ cực lớn, không thể chạy thời gian thực.
   Các thuật toán ANN (như HNSW, IVF) giải quyết vấn đề này bằng cách hy sinh một phần cực nhỏ độ chính xác để phân cụm hoặc xây dựng đồ thị liên kết giữa các vectơ. Nhờ đó, độ phức tạp tìm kiếm giảm xuống còn $O(\log N)$, giúp hệ thống trả về kết quả chỉ trong vài mili-giây.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **Information Retrieval: Implementing and Evaluating Search Engines** - Stefan Büttcher.
-2. **Dense Passage Retrieval for Open-Domain Question Answering** - Karpukhin et al. (2020).
+1. [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906) - Bài báo nghiên cứu đột phá giới thiệu kỹ thuật Dense Passage Retrieval (DPR) cho hệ thống tìm kiếm câu hỏi mở.
+2. [Semantic search - Wikipedia](https://en.wikipedia.org/wiki/Semantic_search) - Bài viết tổng quan về lý thuyết và lịch sử phát triển của tìm kiếm ngữ nghĩa trên Wikipedia.
+3. [Vector-based Semantic Search - Pinecone Learning Center](https://www.pinecone.io/learn/semantic-search/) - Hướng dẫn chi tiết từ Pinecone về lý thuyết và thực hành thiết lập Semantic Search sử dụng cơ sở dữ liệu Vector.
+4. [Semantic Search Guide - Cohere](https://docs.cohere.com/docs/semantic-search) - Hướng dẫn từ Cohere về cách ứng dụng mô hình ngôn ngữ lớn để triển khai công cụ tìm kiếm ngữ nghĩa hiệu quả.
+5. [Elasticsearch Semantic Search Official Guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/semantic-search.html) - Tài liệu hướng dẫn tích hợp và triển khai Semantic Search trực tiếp trên Elasticsearch sử dụng mô hình học máy.
+
+---
 
 ## English Summary
 

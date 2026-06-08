@@ -29,7 +29,7 @@ Nếu thiếu đi hệ thống đường ống tự động, doanh nghiệp sẽ
 
 * **Sự thiếu hiệu quả của các quy trình thủ công**: Nhân viên phân tích phải tải các file Excel/CSV từ nhiều hệ thống hàng ngày, dùng hàm Excel để gộp dữ liệu bằng tay rồi mới vẽ biểu đồ báo cáo. Quy trình này tốn hàng giờ làm việc lặp đi lặp lại và cực kỳ dễ xảy ra sai sót do con người.
 * **Nhu cầu hợp nhất dữ liệu từ nhiều nguồn**: Để có được bức tranh toàn cảnh về hiệu quả kinh doanh, bạn cần kết hợp dữ liệu giao dịch từ cơ sở dữ liệu MySQL với dữ liệu chiến dịch quảng cáo từ API của Facebook Ads. Data Pipeline giúp tự động hóa việc kết nối và ghép nối (JOIN) các nguồn dữ liệu này lại với nhau.
-* **Khả năng chịu lỗi và tự khôi phục**: Hệ thống nguồn có thể bị mất mạng đột ngột hoặc file gửi qua API bị sai định dạng. Việc copy-paste thủ công không thể tự phát hiện lỗi, trong khi một pipeline kỹ thuật sẽ tự động cách ly dữ liệu lỗi, ghi nhận log và cảnh báo cho kỹ sư vào cuộc xử lý.
+* **Khability chịu lỗi và tự khôi phục**: Hệ thống nguồn có thể bị mất mạng đột ngột hoặc file gửi qua API bị sai định dạng. Việc copy-paste thủ công không thể tự phát hiện lỗi, trong khi một pipeline kỹ thuật sẽ tự động cách ly dữ liệu lỗi, ghi nhận log và cảnh báo cho kỹ sư vào cuộc xử lý.
 
 ---
 
@@ -113,7 +113,7 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
     t2 = PythonOperator(task_id='transform', python_callable=transform_data)
     t3 = PythonOperator(task_id='load', python_callable=load_data)
 
-    # Thiết lập thứ tự chạy: t1 -> t2 -> t3
+    # Thiết lập thứ tự chạy: t1 >> t2 >> t3
     t1 >> t2 >> t3
 ```
 
@@ -166,15 +166,13 @@ with DAG('daily_sales_pipeline', start_date=datetime(2026, 6, 7), schedule_inter
   2) **Lưu trữ dữ liệu bán cấu trúc**: Ở vùng nạp thô (Staging/Landing Zone), sử dụng định dạng linh hoạt như JSON (ở PostgreSQL/Snowflake) để nạp toàn bộ thuộc tính mới mà nguồn gửi về mà không cần thay đổi cấu trúc bảng ngay lập tức.
   3) **Thiết lập cảnh báo tự động**: Giám sát schema drift và kích hoạt cảnh báo cho đội kỹ sư dữ liệu để họ chủ động cập nhật các bảng ở hạ nguồn trước khi các báo cáo BI bị lỗi dữ liệu.
 
----
+## Tài liệu tham khảo
 
-## Đọc thêm và Tài liệu tham khảo
-* [Data Ingestion (Nạp dữ liệu vào hệ thống)](/concepts/etl-elt/data-ingestion/) - Quá trình thu thập và đưa dữ liệu thô vào hệ thống lưu trữ đệm.
-* [Orchestration (Điều phối quy trình)](/concepts/orchestration/orchestration/) - Tự động hóa và quản lý sự phụ thuận giữa các công việc dữ liệu.
-* **Fundamentals of Data Engineering** - Joe Reis.
-* **Apache Airflow Documentation** - Tài liệu hướng dẫn sử dụng và lập trình luồng công việc trên Airflow.
-
----
+1. [What is a Data Pipeline?](https://www.ibm.com/topics/data-pipeline) - IBM guide detailing definitions, components, and best practices of data pipelines.
+2. [What is a Data Pipeline?](https://www.databricks.com/glossary/data-pipeline) - Databricks Glossary explaining different data pipeline architectures.
+3. [What is a Data Pipeline?](https://cloud.google.com/learn/what-is-a-data-pipeline) - Google Cloud Learn page explaining stages and technologies for building data pipelines.
+4. [What is a Data Pipeline?](https://aws.amazon.com/what-is/data-pipeline/) - AWS page introducing the concepts, benefits, and use cases of data pipelines.
+5. [Apache Airflow Documentation](https://airflow.apache.org/docs/) - Official documentation for the industry-standard workflow orchestration platform.
 
 ## English Summary
 

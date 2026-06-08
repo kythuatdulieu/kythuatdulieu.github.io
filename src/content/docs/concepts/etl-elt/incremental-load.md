@@ -102,10 +102,10 @@ SELECT
 FROM raw_orders
 
 -- Khối lệnh này CHỈ CHẠY ở những lần chạy sau (không chạy lần đầu tạo bảng)
-{ % if is_incremental() % }
+{% if is_incremental() %}
   -- Filter chỉ lấy những dòng có updated_at LỚN HƠN thời gian max của bảng đích
   WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
-{ % endif % }
+{% endif %}
 ```
 
 Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành một câu lệnh `MERGE` (Upsert) phức tạp và xử lý việc so sánh Watermark hoàn toàn tự động.
@@ -152,9 +152,11 @@ Khi chạy lệnh, dbt sẽ tự động biên dịch đoạn code trên thành 
 
 ## Tài liệu tham khảo
 
-1. **Airbyte Documentation** - Incremental Sync (https://docs.airbyte.com/understanding-airbyte/connections/incremental-deduped-history/)
-2. **dbt Labs** - About Incremental Models.
-3. **Fundamentals of Data Engineering** - Joe Reis.
+1. [Incremental Sync Modes](https://docs.airbyte.com/understanding-airbyte/connections/incremental-deduped-history) - Airbyte Documentation explaining incremental sync configurations and modes.
+2. [Configure incremental models](https://docs.getdbt.com/docs/build/incremental-models) - dbt Developer Hub guide on building and configuring incremental models.
+3. [Building Efficient Data Pipelines With Incremental Updates](https://fivetran.com/blog/building-efficient-data-pipelines-with-incremental-updates) - Fivetran Blog post detailing incremental sync patterns and strategies.
+4. [AWS Glue ETL Jobs Incremental Load](https://docs.aws.amazon.com/glue/latest/dg/glue-etl-jobs-incremental-load.html) - AWS Glue official documentation on managing incremental data loading.
+5. [Incrementally load data from a source data store to a destination data store](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview) - Microsoft Azure Data Factory documentation on incremental copy patterns.
 
 ## English Summary
 

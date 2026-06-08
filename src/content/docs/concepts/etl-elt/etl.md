@@ -138,12 +138,15 @@ Nếu bạn đang xây dựng một hệ thống dữ liệu hiện đại hoàn
 ### 2. Làm thế nào để đảm bảo tính Idempotent (Lũy đẳng) khi thiết kế một pipeline ETL load dữ liệu hàng ngày?
 * **Gợi ý trả lời**: Để đảm bảo tính lũy đẳng (chạy lại nhiều lần vẫn cho ra một kết quả chính xác duy nhất), chúng ta cần tránh việc dùng lệnh `INSERT` đơn thuần vì sẽ gây trùng lặp dữ liệu. Có hai phương pháp phổ biến:
   1. **Delete-then-Insert**: Trước khi nạp dữ liệu mới của ngày hôm đó, job ETL sẽ thực hiện lệnh xóa dữ liệu cũ của ngày tương ứng: `DELETE FROM target_table WHERE date = 'ngày_chạy_job'`, sau đó mới thực hiện chèn dữ liệu mới vào.
-  2. **Upsert/Merge**: Sử dụng cú pháp `MERGE INTO` dựa trên một Khóa chính (Primary Key). Nếu bản ghi đã tồn tại trong bảng đích, hệ thống sẽ thực hiện cập nhật (Update) thông tin mới; nếu chưa tồn tại, hệ thống mới tiến hành chèn (Insert) bản ghi mới. Cách này giúp chạy lại job nhiều lần một cách an toàn.
+  2. **Upsert/Merge**: Sử dụng cú pháp `MERGE INTO` dựa trên một Khóa chính (Primary Key). Nếu bản ghi đã tồn tại trong bảng đích, hệ thống sẽ thực hiện cập nhật (Update) thông tin mới; if chưa tồn tại, hệ thống mới tiến hành chèn (Insert) bản ghi mới. Cách này giúp chạy lại job nhiều lần một cách an toàn.
 
 ## Tài liệu tham khảo
 
-1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley.
-2. **The Data Warehouse Toolkit** - Ralph Kimball.
+1. [What is ETL (Extract, Transform, Load)?](https://www.ibm.com/topics/etl) - IBM Guide on the foundations of data integration and ETL processes.
+2. [What is ETL?](https://www.databricks.com/glossary/extract-transform-load) - Databricks Glossary explanation of Extract, Transform, Load, and its evolution to ELT.
+3. [What is ETL (Extract, Transform, Load)?](https://cloud.google.com/learn/what-is-etl) - Google Cloud Learn page detailing the mechanics, benefits, and types of ETL.
+4. [What is AWS Glue?](https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html) - AWS Glue official documentation for serverless data integration and ETL.
+5. [Extract, transform, and load (ETL)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/etl) - Microsoft Azure Architecture Center guide on ETL pipelines and cloud implementations.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

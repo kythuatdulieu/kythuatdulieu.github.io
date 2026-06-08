@@ -137,9 +137,13 @@ if len(tokens) > MAX_TOKENS:
 * [Tìm kiếm ngữ nghĩa (Semantic Search)](/concepts/genai-ml/semantic-search/)
 * [Phân tách văn bản (Chunking)](/concepts/genai-ml/chunking/)
 
-**Tài liệu tham khảo:**
-1. **Attention Is All You Need** - Vaswani et al. (2017) - Bài báo khoa học gốc đặt nền móng cho Transformer.
-2. **Lost in the Middle: How Language Models Use Long Contexts** - Nelson F. Liu et al. (2023) - Nghiên cứu thực nghiệm về hành vi sử dụng ngữ cảnh dài của LLM.
+## Tài liệu tham khảo
+
+1. [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Seminal research paper introducing the Transformer architecture and self-attention mechanism.
+2. [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172) - Stanford study on model performance and information retrieval behavior in long contexts.
+3. [Anthropic Claude Models and Context Windows](https://docs.anthropic.com/en/docs/about-claude/models) - Official Anthropic documentation detailing context window limits and management.
+4. [OpenAI API Reference: Embeddings](https://platform.openai.com/docs/guides/embeddings) - OpenAI guide covering tokenization, model usage, and token limits.
+5. [Hugging Face Transformers: LLM Tutorial](https://huggingface.co/docs/transformers/llm_tutorial) - Hugging Face guide on running, configuring, and optimizing long-context models.
 
 ## English Summary
 

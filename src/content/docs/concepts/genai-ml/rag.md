@@ -19,7 +19,7 @@ Quy trình RAG bao gồm hai giai đoạn chính:
 1. **Truy xuất (Retrieval)**: Khi nhận được câu hỏi từ người dùng, hệ thống sẽ tự động tìm kiếm trên kho dữ liệu của doanh nghiệp (sách hướng dẫn, wiki nội bộ, cơ sở dữ liệu) để chọn lọc ra những đoạn văn bản chứa thông tin liên quan nhất.
 2. **Tạo lập tăng cường (Augmented Generation)**: Hệ thống ghép các đoạn thông tin tìm được vào câu hỏi gốc của người dùng tạo thành một ngữ cảnh (context) đầy đủ. LLM sau đó chỉ cần đọc kỹ phần ngữ cảnh này và viết ra câu trả lời cuối cùng một cách chính xác, có căn cứ rõ ràng.
 
-## Tại sao RAG lại là cứu cánh cho các LLM?
+## Tại sao RAG lại là cứu cảnh cho các LLM?
 
 Dù thông minh đến đâu, các LLM thương mại vẫn phải đối mặt với 3 thách thức lớn khi áp dụng vào thực tế:
 * **Ảo giác (Hallucination)**: LLM có xu hướng tự tạo ra thông tin nghe có vẻ rất thuyết phục khi gặp câu hỏi khó hoặc thông tin không có sẵn trong bộ nhớ của nó.
@@ -177,11 +177,17 @@ print(answer)
   2. Yêu cầu LLM này viết lại câu hỏi thứ 2 thành một câu độc lập, mang đầy đủ ngữ nghĩa (ví dụ: *"CEO của công ty sinh năm bao nhiêu?"*).
   3. Sử dụng câu hỏi đã được viết lại này để thực hiện mã hóa vector và tìm kiếm trong Vector DB.
 
+---
+
 ## Tài liệu tham khảo
 
-1. **"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"** - Lewis et al. (Facebook AI Research, 2020).
-2. **LangChain Documentation** - Các bài viết hướng dẫn thực hành xây dựng RAG pipeline.
-3. **LlamaIndex Documentation** - Framework chuyên dụng tối ưu hóa cấu trúc dữ liệu cho các ứng dụng RAG.
+1. [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401) - Bài báo nghiên cứu khoa học gốc giới thiệu kiến trúc RAG từ đội ngũ Facebook AI Research (2020).
+2. [LangChain RAG Tutorial](https://python.langchain.com/v0.2/docs/tutorials/rag/) - Hướng dẫn chi tiết cách xây dựng và thiết lập các thành phần của một RAG pipeline bằng LangChain.
+3. [LlamaIndex Documentation](https://docs.llamaindex.ai/en/stable/) - Tài liệu chính thức của LlamaIndex, framework chuyên dụng tối ưu hóa quản lý và truy xuất dữ liệu cho LLM.
+4. [Retrieval-Augmented Generation (RAG) - Pinecone Learning Center](https://www.pinecone.io/learn/retrieval-augmented-generation/) - Hướng dẫn sâu rộng về khái niệm RAG và vai trò của cơ sở dữ liệu Vector trong kiến trúc này.
+5. [Creating High Quality RAG Applications with Databricks](https://www.databricks.com/blog/creating-high-quality-rag-applications-databricks) - Bài viết từ Databricks chia sẻ các phương pháp thiết kế và đánh giá hệ thống RAG chất lượng cao trong thực tế.
+
+---
 
 ## English Summary
 

@@ -11,7 +11,7 @@ metaDescription: "Khám phá tổng quan về Kỹ thuật Dữ liệu (Data Eng
 
 Trong kỷ nguyên số, chúng ta thường nghe nhiều về trí tuệ nhân tạo (AI), học máy (Machine Learning) hay những bảng dashboard phân tích kinh doanh (BI) lung linh sắc màu. Thế nhưng, đằng sau những báo cáo chuẩn xác hay những mô hình AI thông minh đó là một người hùng thầm lặng: **Kỹ thuật Dữ liệu (Data Engineering)**. 
 
-Nếu ví dữ liệu như dòng dầu mỏ quý giá, thì các kỹ sư dữ liệu (Data Engineers) chính là những người thiết kế và vận hành các nhà máy lọc dầu cũng như hệ thống đường ống dẫn dầu khổng lồ, biến nguồn nguyên liệu thô sơ, lẫn tạp chất thành nguồn năng lượng tinh khiết, sẵn sàng đưa vào sử dụng.
+If ví dữ liệu như dòng dầu mỏ quý giá, thì các kỹ sư dữ liệu (Data Engineers) chính là những người thiết kế và vận hành các nhà máy lọc dầu cũng như hệ thống đường ống dẫn dầu khổng lồ, biến nguồn nguyên liệu thô sơ, lẫn tạp chất thành nguồn năng lượng tinh khiết, sẵn sàng đưa vào sử dụng.
 
 ---
 
@@ -37,7 +37,7 @@ Data Engineering xuất hiện để mở ra một "đường cao tốc" kết n
 
 ## Bốn trụ cột cốt lõi của Data Engineering
 
-Để xây dựng một hệ thống dữ liệu hoàn chỉnh, các kỹ sư cần nắm vững bốn mảnh ghép quan trọng:
+Để xây dựng một hệ thống dữ liệu hoàn chỉnh, các kỹ sư cần nắm vững ba mảnh ghép quan trọng:
 
 * **Thu nạp dữ liệu (Ingestion)**: Quá trình kéo dữ liệu từ các nguồn về. Nó có thể diễn ra theo lô định kỳ (`Batch`) hoặc theo thời gian thực liên tục (`Streaming`).
 * **Lưu trữ dữ liệu (Storage)**: Lựa chọn mô hình và công nghệ lưu trữ phù hợp như Data Warehouse, Data Lake hoặc kiến trúc kết hợp Data Lakehouse.
@@ -168,13 +168,13 @@ GROUP BY 1, 2;
 * **Mục đích của người phỏng vấn**: Đo lường kinh nghiệm thực chiến của bạn trong việc thiết kế và xử lý lỗi hệ thống.
 * **Gợi ý trả lời**: Idempotency là thuộc tính đảm bảo một tác vụ xử lý dữ liệu khi chạy lại nhiều lần vẫn cho ra cùng một kết quả duy nhất. Trong thực tế, pipeline rất dễ bị lỗi giữa chừng do mất mạng hoặc quá tải. Thiết kế pipeline lũy đẳng giúp ta tự tin nhấn nút "Retry" mà không sợ dữ liệu bị nhân đôi (duplicate). Chúng ta thường đạt được điều này bằng cách sử dụng câu lệnh `UPSERT` (`MERGE`) hoặc xóa sạch dữ liệu của ngày cần chạy trước khi ghi đè dữ liệu mới (`Delete-Write` pattern).
 
----
+## Tài liệu tham khảo
 
-## Tài liệu tham khảo hữu ích
-1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley (Cuốn sách gối đầu giường của mọi Data Engineer).
-2. **Designing Data-Intensive Applications** - Martin Kleppmann (Cuốn sách kinh điển về thiết kế hệ thống dữ liệu lớn).
-
----
+1. [What is Data Engineering?](https://www.ibm.com/topics/data-engineering) - IBM comprehensive topic guide on data engineering definition and lifecycle.
+2. [What is Data Engineering?](https://www.databricks.com/glossary/data-engineering) - Databricks Glossary definition of data engineering and modern cloud lakehouse solutions.
+3. [What is Data Engineering?](https://cloud.google.com/learn/what-is-data-engineering) - Google Cloud Learn page for data engineering concepts, tools, and certifications.
+4. [Fundamentals of Data Engineering Book](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - O'Reilly page for the comprehensive guide book by Joe Reis and Matt Housley.
+5. [Designing Data-Intensive Applications Book](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) - O'Reilly page for Martin Kleppmann's classic book on distributed systems and data design.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

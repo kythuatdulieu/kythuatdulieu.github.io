@@ -128,7 +128,7 @@ Ví dụ dưới đây là cấu hình chính sách vòng đời dữ liệu (Li
 
 ### 3. Làm thế nào để tự động hóa chính sách vòng đời của các phân vùng bảng (partitions) trong một Cloud Data Warehouse như BigQuery hay Snowflake?
 * **Gợi ý trả lời**:
-  * Đối với các hệ thống Cloud Data Warehouse, chúng ta có thể thiết lập chính sách phân vùng dựa trên thời gian (Time-partitioned tables) và áp dụng thời hạn hết hạn (Partition expiration).
+  * Đối với các hệ thống Cloud Data Warehouse, chúng ta có thể thiết lập chính sách phân vùng dựa trên thời gian (Time-partitioned tables) and áp dụng thời hạn hết hạn (Partition expiration).
   * Ví dụ, trong **Google BigQuery**, chúng ta có thể cấu hình thuộc tính `partition_expiration_days` cho bảng (ví dụ đặt là 90 ngày). BigQuery sẽ tự động xóa các phân vùng chứa dữ liệu cũ hơn 90 ngày mà không cần can thiệp thủ công.
   * Trong **Snowflake**, chúng ta có thể sử dụng chính sách `Time Travel` kết hợp với `Fail-safe` và thiết lập các cron job định kỳ chạy lệnh SQL để lưu trữ (archive) hoặc xóa dữ liệu cũ nhằm tối ưu hóa chi phí lưu trữ Storage.
 
@@ -139,11 +139,13 @@ Ví dụ dưới đây là cấu hình chính sách vòng đời dữ liệu (Li
 * [Data Pipeline (Đường ống dữ liệu)](/concepts/foundation/data-pipeline/) - Quy trình luân chuyển dữ liệu qua các chặng.
 * [Data Warehouse (Kho dữ liệu)](/concepts/data-warehouse/data-warehouse/) - Hệ thống lưu trữ và phân tích dữ liệu tập trung.
 
-### Tài liệu tham khảo chính thống
-1. **DAMA-DMBOK: Data Management Body of Knowledge** - Hiệp hội Quản lý Dữ liệu quốc tế.
-2. **AWS Storage Best Practices** - Tài liệu hướng dẫn thiết kế và tối ưu hóa vòng đời lưu trữ trên đám mây.
+## Tài liệu tham khảo
 
----
+1. [DAMA International DMBOK](https://www.dama.org/cpages/dmbok) - Official page for the DAMA-DMBOK guide on data governance and lifecycle management.
+2. [Amazon S3 Lifecycle Policies](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html) - AWS documentation on configuring rules to transition or expire objects automatically.
+3. [Cloud Storage Object Lifecycle Management](https://cloud.google.com/storage/docs/lifecycle) - Google Cloud documentation on defining lifecycle policies for cloud storage buckets.
+4. [Microsoft Purview Data Lifecycle Management](https://learn.microsoft.com/en-us/purview/data-lifecycle-management) - Microsoft official documentation on retention and deletion policies.
+5. [Managing BigQuery Tables (Table Expiration)](https://cloud.google.com/bigquery/docs/managing-tables#table-expiration) - Google Cloud BigQuery documentation for setting automatic partition/table time-to-live policies.
 
 ## Tóm tắt bằng tiếng Anh (English Summary)
 

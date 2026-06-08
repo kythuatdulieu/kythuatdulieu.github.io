@@ -154,16 +154,14 @@ def extract_users_from_api(api_key):
   * **Giải pháp 1 (Schema Validation)**: Sử dụng một lớp Schema Validation (như JSON Schema hoặc Great Expectations) để kiểm tra tính hợp lệ của schema trước khi tải. Nếu phát hiện trường dữ liệu mới hoặc kiểu dữ liệu bị thay đổi, hệ thống sẽ gửi cảnh báo (Alert) cho kỹ sư dữ liệu hoặc tự động cách ly (Quarantine) các bản ghi lỗi.
   * **Giải pháp 2 (ELT Pattern)**: Áp dụng mô hình ELT bằng cách trích xuất dữ liệu thô (Raw Data) dưới định dạng bán cấu trúc như JSON/semi-structured, lưu trữ nguyên trạng vào Landing Zone (Data Lake hoặc Stage Table của DWH). Việc phân tích cấu trúc cụ thể sẽ được trì hoãn và xử lý bằng các công cụ biến đổi dữ liệu (như dbt) trong Data Warehouse. Điều này giúp Pipeline trích xuất không bị gián đoạn khi có Schema Drift nhẹ.
 
-## Đọc thêm và Tài liệu tham khảo
+## Tài liệu tham khảo
 
-### Các khái niệm liên quan
-* [ETL (Extract - Transform - Load)](/concepts/etl-elt/etl/) - Quy trình tích hợp dữ liệu truyền thống.
-* [ELT (Extract - Load - Transform)](/concepts/etl-elt/elt/) - Quy trình tích hợp dữ liệu hiện đại trên Cloud DWH.
-* [Change Data Capture (CDC)](/concepts/etl-elt/change-data-capture/) - Phương pháp trích xuất dữ liệu real-time qua nhật ký.
+1. [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) - Book by Joe Reis and Matt Housley detail-oriented on the extraction layer, source systems, and connectivity.
+2. [Airbyte Documentation: Connection Sync Modes](https://docs.airbyte.com/understanding-airbyte/connections/) - Official guide explaining sync modes such as Full Refresh, Incremental Append, and Incremental Deduped History.
+3. [AWS Glue: Working with Incremental Ingestion](https://docs.aws.amazon.com/glue/latest/dg/glue-incremental-ingestion.html) - AWS documentation explaining how to design incremental data extraction pipelines using job bookmarks.
+4. [Stripe API Reference: Pagination](https://stripe.com/docs/api/pagination) - Verified SaaS API documentation illustrating how pagination, cursors, and limits work in practice for data extraction.
+5. [Microsoft Learn: Extract, Transform, and Load (ETL)](https://learn.microsoft.com/en-us/azure/architecture/data-guide/relational-data/etl) - Reference architecture on building secure, resilient data extraction flows in cloud environments.
 
-### Tài liệu tham khảo chính thống
-1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley.
-2. **Airbyte Documentation** - Tài liệu hướng dẫn chi tiết về "Full Refresh vs Incremental Syncs".
 
 ---
 
