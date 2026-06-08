@@ -173,7 +173,12 @@
         const link = e.currentTarget;
         const conceptKey = link.dataset.concept;
         const slug = conceptKey.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
-        window.location.href = `/concepts/${slug}/`;
+        const concept = conceptsData[conceptKey];
+        if (concept && concept.url) {
+            window.location.href = concept.url;
+        } else {
+            window.location.href = `/concepts/${slug}/`;
+        }
     }
 
     function showPopover(link, concept, isSticky = false) {

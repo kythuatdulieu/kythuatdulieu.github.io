@@ -25,12 +25,17 @@ def extract_frontmatter(file_path):
     return metadata
 
 def main():
-    md_files = glob.glob('src/content/docs/concepts/*.md')
+    md_files = glob.glob('src/content/docs/concepts/**/*.md', recursive=True)
     concepts = {}
     
     for md_file in md_files:
         filename = os.path.basename(md_file)
-        slug = filename[:-3] # remove .md
+        slug = os.path.splitext(filename)[0]
+        
+        # Calculate Astro Starlight URL path
+        rel_path = os.path.relpath(md_file, 'src/content/docs')
+        rel_path = rel_path.replace('\\', '/')
+        url_path = '/' + os.path.splitext(rel_path)[0] + '/'
         
         # Original concepts mapping for backward compatibility and clean keys
         key = slug.replace('-', ' ')
@@ -56,7 +61,8 @@ def main():
             'title': title,
             'category': category,
             'definition': definition,
-            'bullets': []
+            'bullets': [],
+            'url': url_path
         }
         
         # Also add an alternative key if the slug has multiple words and is well-known?

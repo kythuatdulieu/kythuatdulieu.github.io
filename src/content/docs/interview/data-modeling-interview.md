@@ -36,7 +36,7 @@ Mô hình hóa dữ liệu là quá trình chúng ta tổ chức lại mớ hỗ
 
 ---
 
-## Từng bước chinh phục bài toán Data Modeling trên bảng trắng
+## Quy trình thiết kế Data Modeling trên bảng trắng
 
 Trong một buổi phỏng vấn trực tiếp (Whiteboard Interview), hãy dẫn dắt người phỏng vấn qua các bước triển khai bài bản thay vì cắm đầu vẽ bảng ngay lập tức:
 

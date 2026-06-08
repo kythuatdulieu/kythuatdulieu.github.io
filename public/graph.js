@@ -38,7 +38,7 @@
                 const c = concepts[key];
                 const cat = c.category || 'Chung';
                 let slug = key.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
-                let url = '/concepts/' + slug + '/';
+                let url = c.url || ('/concepts/' + slug + '/');
                 
                 nodes.push({
                     id: url,

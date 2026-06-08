@@ -28,9 +28,9 @@ Bạn cần chứng minh kỹ năng chẩn đoán nguyên nhân gốc rễ (Root
 
 ---
 
-## Bốn trụ cột tối ưu hóa Spark bạn cần nắm giữ
+## Bốn trụ cột tối ưu hóa Spark
 
-Để chinh phục vòng phỏng vấn này, bạn cần hiểu sâu sắc kiến trúc bên trong của Spark và bám sát 4 trụ cột tối ưu hóa sau:
+Để hoàn thành tốt vòng phỏng vấn này, bạn cần hiểu rõ kiến trúc bên dưới của Spark và nắm vững 4 trụ cột tối ưu hóa sau:
 
 * **Quản lý bộ nhớ (Memory Management)**: Hiểu rõ cơ chế phân bổ tài nguyên bộ nhớ đệm giữa Execution Memory (cho tính toán JOIN, Aggregate) và Storage Memory (cho Caching dữ liệu), từ đó cấu hình bộ nhớ cho các Executor một cách tối ưu.
 * **Tối ưu hóa quá trình xáo trộn dữ liệu (Shuffle Optimization)**: Hạn chế tối đa việc di chuyển dữ liệu qua mạng giữa các máy chủ (Network I/O) khi thực hiện các phép toán nặng như `JOIN` hay `groupBy`. Đây là thao tác ngốn tài nguyên nhất trong tính toán phân tán.

@@ -13,6 +13,7 @@
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/starlight": "^0.23.4",
     "astro": "^4.16.19",
+    "mermaid": "^11.15.0",
     "puppeteer": "^24.43.1",
     "sharp": "^0.34.5"
   }

@@ -1,10 +1,14 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { remarkMermaid } from './mermaid-plugin.js';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
+	markdown: {
+		remarkPlugins: [remarkMermaid],
+	},
 	integrations: [
 		starlight({
 			title: 'Data Engineering Handbook',
@@ -53,7 +57,68 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Khái niệm (Concepts)',
-					autogenerate: { directory: 'concepts' },
+					items: [
+						{
+							label: 'Cơ sở & Kiến trúc (Foundation)',
+							autogenerate: { directory: 'concepts/foundation' }
+						},
+						{
+							label: 'Cơ sở dữ liệu & Lưu trữ (Database & Storage)',
+							autogenerate: { directory: 'concepts/database-storage' }
+						},
+						{
+							label: 'Kho dữ liệu (Data Warehouse)',
+							autogenerate: { directory: 'concepts/data-warehouse' }
+						},
+						{
+							label: 'Hồ dữ liệu & Lakehouse (Data Lake & Lakehouse)',
+							autogenerate: { directory: 'concepts/data-lake-lakehouse' }
+						},
+						{
+							label: 'Tích hợp dữ liệu (ETL / ELT)',
+							autogenerate: { directory: 'concepts/etl-elt' }
+						},
+						{
+							label: 'Biến đổi & Phân tích (Transformation & Analytics)',
+							autogenerate: { directory: 'concepts/transformation-analytics' }
+						},
+						{
+							label: 'Kiến trúc hệ thống (System Architecture)',
+							autogenerate: { directory: 'concepts/system-architecture' }
+						},
+						{
+							label: 'Xử lý theo lô (Batch Processing)',
+							autogenerate: { directory: 'concepts/batch-processing' }
+						},
+						{
+							label: 'Xử lý luồng dữ liệu (Streaming Processing)',
+							autogenerate: { directory: 'concepts/streaming-processing' }
+						},
+						{
+							label: 'Điều phối quy trình (Orchestration)',
+							autogenerate: { directory: 'concepts/orchestration' }
+						},
+						{
+							label: 'Giám sát & Độ tin cậy (Observability & Reliability)',
+							autogenerate: { directory: 'concepts/observability-reliability' }
+						},
+						{
+							label: 'Chất lượng dữ liệu (Data Quality)',
+							autogenerate: { directory: 'concepts/data-quality' }
+						},
+						{
+							label: 'Quản trị & Siêu dữ liệu (Governance & Metadata)',
+							autogenerate: { directory: 'concepts/governance-metadata' }
+						},
+						{
+							label: 'Nền tảng Cloud (Cloud Data Platform)',
+							autogenerate: { directory: 'concepts/cloud-data-platform' }
+						},
+						{
+							label: 'GenAI & Machine Learning (GenAI / ML)',
+							autogenerate: { directory: 'concepts/genai-ml' }
+						}
+					]
 				},
 				{
 					label: 'Lộ trình học (Learning Paths)',

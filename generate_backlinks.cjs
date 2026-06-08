@@ -18,6 +18,18 @@ const docsDir = path.join(__dirname, 'src', 'content', 'docs');
 const files = getFiles(docsDir);
 
 const backlinks = {};
+const slugToUrl = {};
+
+files.forEach(file => {
+    let relPath = path.relative(docsDir, file);
+    let urlPath = '/' + relPath.replace(/\.mdx?$/, '/').replace(/\\/g, '/');
+    if (urlPath.endsWith('index/')) {
+        urlPath = urlPath.replace('index/', '');
+    }
+    const slug = path.basename(file, path.extname(file));
+    slugToUrl[slug] = urlPath;
+});
+
 
 files.forEach(file => {
     const content = fs.readFileSync(file, 'utf8');
@@ -106,7 +118,7 @@ try {
         
         matches.forEach(conceptKey => {
             let slug = conceptKey.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
-            let linkUrl = '/concepts/' + slug + '/';
+            let linkUrl = slugToUrl[slug] || ('/concepts/' + slug + '/');
             
             // Exclude self links
             if (linkUrl === urlPath) return;
