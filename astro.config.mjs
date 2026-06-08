@@ -27,6 +27,22 @@ export default defineConfig({
 				{
 					tag: 'script',
 					attrs: { type: 'module', src: '/mermaid-init.js' },
+				},
+				{
+					tag: 'script',
+					attrs: { src: 'https://unpkg.com/@popperjs/core@2', defer: true },
+				},
+				{
+					tag: 'script',
+					attrs: { src: 'https://unpkg.com/tippy.js@6', defer: true },
+				},
+				{
+					tag: 'script',
+					attrs: { src: '/popover.js', defer: true },
+				},
+				{
+					tag: 'link',
+					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/animations/shift-away.css' },
 				}
 			],
 			social: { github: 'https://github.com/kythuatdulieu' },

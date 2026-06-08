@@ -644,3 +644,43 @@ footer {
     }
 }
 
+/* Tippy Custom Theme for Link Previews */
+.tippy-box[data-theme~='starlight'] {
+    background-color: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 0;
+    text-align: left;
+}
+
+.tippy-box[data-theme~='starlight'] > .tippy-content {
+    padding: 1rem;
+}
+
+.tippy-box[data-theme~='starlight'] .popover-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--sl-color-text-accent);
+}
+
+.tippy-box[data-theme~='starlight'] .popover-error {
+    color: var(--danger);
+}
+
+.tippy-box[data-theme~='starlight'] .popover-content {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tippy-box[data-theme~='starlight'] .popover-content p {
+    margin-bottom: 0.5rem;
+}
+
+.tippy-box[data-theme~='starlight'] .popover-content p:last-child {
+    margin-bottom: 0;
+}
