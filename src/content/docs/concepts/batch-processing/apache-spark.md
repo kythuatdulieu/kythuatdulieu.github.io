@@ -33,23 +33,46 @@ Sức mạnh vượt trội của Apache Spark được xây dựng dựa trên 
 
 Một ứng dụng Spark hoạt động theo mô hình Master-Slave (Chủ - Tớ) với sự phân chia vai trò rõ ràng:
 ```mermaid
-graph TD
-    A[Driver Program] -->|Tạo ra SparkContext| B(Cluster Manager)
-    B --> C[Worker Node 1]
-    B --> D[Worker Node 2]
-    B --> E[Worker Node n]
-    
-    subgraph Worker Node 1
-        W1[Executor 1]
-        W1_Tasks[Tasks in RAM]
-        W1 --> W1_Tasks
+flowchart TD
+    subgraph Master ["Master Node (Driver Process)"]
+        Driver["<b>Driver Program</b><br/>- Tạo SparkSession / SparkContext<br/>- Phân tích mã nguồn thành DAG<br/>- Lập lịch và điều phối Tasks"]
     end
-    
-    subgraph Worker Node 2
-        W2[Executor 2]
-        W2_Tasks[Tasks in RAM]
-        W2 --> W2_Tasks
+
+    subgraph Resources ["Quản lý tài nguyên"]
+        CM["<b>Cluster Manager</b><br/>(YARN / K8s / Standalone)<br/>- Cấp phát tài nguyên hệ thống"]
     end
+
+    subgraph Workers ["Worker Nodes (Slaves)"]
+        direction LR
+        subgraph W1 ["Worker Node 1"]
+            direction TB
+            Exec1["<b>Executor 1 (JVM)</b><br/>- Chạy Tasks trong bộ nhớ<br/>- Lưu trữ đệm (Cache)"]
+            T1_1[Task 1]
+            T1_2[Task 2]
+            Exec1 --> T1_1
+            Exec1 --> T1_2
+        end
+
+        subgraph W2 ["Worker Node 2"]
+            direction TB
+            Exec2["<b>Executor 2 (JVM)</b><br/>- Chạy Tasks trong bộ nhớ<br/>- Lưu trữ đệm (Cache)"]
+            T2_1[Task 3]
+            Exec2 --> T2_1
+        end
+    end
+
+    %% Communication Flows
+    Driver <-->|1. Yêu cầu & Cấp phát tài nguyên| CM
+    CM <-->|2. Quản lý Container / Workers| Workers
+    Driver -.->|3. Gửi Tasks & Nhận Kết quả trực tiếp| Exec1
+    Driver -.->|3. Gửi Tasks & Nhận Kết quả trực tiếp| Exec2
+
+    %% Styling
+    style Master fill:#edf2f4,stroke:#2b2d42,stroke-width:2px
+    style Resources fill:#f4f1de,stroke:#e07a5f,stroke-width:2px
+    style Workers fill:#f8f9fa,stroke:#dee2e6,stroke-dasharray: 5 5
+    style W1 fill:#e8f1f5,stroke:#3282b8
+    style W2 fill:#e8f1f5,stroke:#3282b8
 ```
 
 * **Driver Program:** Đóng vai trò làm bộ não điều khiển chính. Nó chứa mã nguồn của bạn, tạo ra `SparkSession`, lập kế hoạch chạy (DAG) và phân phối các nhiệm vụ nhỏ xuống các nút con.

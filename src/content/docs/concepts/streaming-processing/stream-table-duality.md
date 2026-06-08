@@ -50,14 +50,22 @@ Nếu bạn chỉ có bàn cờ hiện tại (Table), bạn biết ngay thế tr
 
 Mối quan hệ qua lại này tạo nên một vòng lặp khép kín trong kiến trúc dữ liệu:
 ```mermaid
-graph LR
-    subgraph Duality Loop
-        A[(Table / State)] -- "Đạo hàm (CDC / Binlog)" --> B[Stream / Event Log]
-        B -- "Tích phân (Aggregate / Materialize)" --> A
+flowchart TD
+    subgraph Loop ["Vòng lặp Lưỡng tính (Duality Loop)"]
+        direction LR
+        
+        Table["<b>TABLE (State / Bảng)</b><br/>- Đại diện cho 'Hiện tại'<br/>- Tĩnh (Static snapshot)<br/>- Tra cứu bằng Khóa (Key lookup)<br/>- Ví dụ: Số dư tài khoản = 150\$"]
+        
+        Stream["<b>STREAM (History / Dòng)</b><br/>- Đại diện cho 'Quá trình'<br/>- Động (Append-only logs)<br/>- Quét tuần tự (Sequential scan)<br/>- Ví dụ: +100\$, -50\$, +100\$"]
+
+        %% Operations
+        Table --->|"<b>Đạo hàm (Derivative)</b><br/>CDC / Binlog / Transaction logs"| Stream
+        Stream --->|"<b>Tích phân (Integration)</b><br/>Aggregation / Materialization"| Table
     end
 
-    style A fill:#e1f5fe,stroke:#01579b
-    style B fill:#fff3e0,stroke:#e65100
+    %% Styling
+    style Table fill:#e1f5fe,stroke:#01579b,color:#000
+    style Stream fill:#fff3e0,stroke:#e65100,color:#000
 ```
 
 * **Chiều đi lên (Tích phân):** Các sự kiện riêng lẻ trong Log được gom tụ lại để hình thành nên Trạng thái (State Store hoặc Materialized View).

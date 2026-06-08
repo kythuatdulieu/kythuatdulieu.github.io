@@ -42,25 +42,41 @@ Tùy vào mức độ quan trọng của dữ liệu và tài nguyên tính toá
 
 Kiến trúc đối soát chuẩn thường đi qua các bước sau:
 ```mermaid
-graph TD
-    subgraph "Operational DB  (Source)"
-        A["(PostgreSQL)"] -->|"1. Generate Control Totals"| B["Source Audit Table"]
+flowchart LR
+    %% Source
+    subgraph Source ["Operational DB (Nguồn)"]
+        A[("PostgreSQL DB")] -->|"1. Tính Control Totals"| B["Source Audit Table<br/>(Tổng dòng, tổng giá trị)"]
     end
 
-    A -->|"2. Data Extraction via ETL"| C["(Data Warehouse)"]
-    
-    subgraph "Analytical DB  (Target)"
-        C --> D["Target Fact Table"]
-        D -->|"3. Generate Control Totals"| E["Target Audit Table"]
+    %% Data Pipeline
+    A -->|"2. Nạp & Biến đổi (ETL / ELT)"| C
+
+    %% Target
+    subgraph Target ["Analytical DB (Đích)"]
+        C[("Data Warehouse / Lake")] --> D["Target Fact Table"]
+        D -->|"3. Tính Control Totals"| E["Target Audit Table<br/>(Tổng dòng, tổng giá trị)"]
     end
 
-    subgraph "Recon Engine"
-        B --> F{"Reconciliation Logic"}
+    %% Recon Engine
+    subgraph Engine ["Đối soát (Reconciliation Engine)"]
+        F{"So khớp (Reconciliation Logic)<br/>Tính toán Delta"}
+        B --> F
         E --> F
     end
 
-    F --"Delta = 0"--> G["Pass - OK for BI"]
-    F --"Delta > Threshold"--> H["Alert: Data Discrepancy"]
+    %% Outcomes
+    G["Pass - OK for BI / Reports"]
+    H["Alert: Sai lệch dữ liệu (Slack / PagerDuty)"]
+
+    F -->|"Delta = 0"| G
+    F -->|"Delta > Ngưỡng"| H
+
+    %% Styling
+    style Source fill:#edf2f4,stroke:#8d99ae
+    style Target fill:#edf2f4,stroke:#8d99ae
+    style Engine fill:#fff9eb,stroke:#f0a818
+    style G fill:#eefafc,stroke:#017a8c,color:#000
+    style H fill:#ffeef2,stroke:#ff5e7e,color:#000
 ```
 
 1. **Tạo snapshot nguồn**: Tạo một bảng tổng hợp chỉ số nguồn (ví dụ: số giao dịch và tổng tiền trong ngày). Đây được gọi là *Source Control Total*.

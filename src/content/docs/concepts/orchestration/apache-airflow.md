@@ -49,18 +49,47 @@ Một hệ thống Airflow hoàn chỉnh được vận hành bởi sự phối 
 3. **Metadata Database (Cơ sở dữ liệu lưu trữ trạng thái):** Thường sử dụng PostgreSQL hoặc MySQL. Đây là nơi lưu trữ toàn bộ lịch sử chạy của các tác vụ, thông tin đăng nhập cấu hình kết nối, biến môi trường và định nghĩa của các DAG.
 4. **Executor & Workers (Bộ thực thi và Công nhân):** Lực lượng trực tiếp thực hiện công việc. Trong môi trường lớn, Airflow thường cấu hình **Celery Executor** (phân phối tác vụ cho các server worker tĩnh) hoặc **Kubernetes Executor** (mỗi tác vụ được khởi tạo chạy trên một Pod độc lập của Kubernetes và tự động hủy sau khi hoàn thành).
 ```mermaid
-graph TD
-    subgraph Airflow Architecture
-        UI[Webserver UI] --> DB[(Metadata Database)]
-        Sch[Scheduler] --> DB
-        Sch -->|Đẩy Task vào Queue| Q(Message Broker: Redis/RabbitMQ)
-        W1[Worker Node 1] -. Lấy Task .-> Q
-        W2[Worker Node 2] -. Lấy Task .-> Q
-        W1 --> DB
-        W2 --> DB
+flowchart TD
+    %% Source Code
+    DAG_Folder[("📁 Thư mục code DAGs<br/>(DAGs Folder)")]
+
+    %% Airflow Core Components
+    subgraph Airflow ["Hệ sinh thái Apache Airflow (Celery Executor Mode)"]
+        direction TB
+        
+        UI["<b>Webserver</b><br/>- Giao diện Flask UI<br/>- Hiển thị trạng thái DAGs"]
+        
+        Sch["<b>Scheduler</b><br/>- Phân tích cú pháp DAGs<br/>- Lập lịch chạy Tasks"]
+        
+        DB[("<b>Metadata Database</b><br/>(PostgreSQL / MySQL)<br/>- Lưu trữ trạng thái và cấu hình")]
+        
+        Queue[["<b>Queue / Message Broker</b><br/>(Redis / RabbitMQ)<br/>- Hàng đợi chứa Tasks"]]
+        
+        subgraph Workers ["Lực lượng Workers"]
+            direction LR
+            W1["<b>Worker 1</b><br/>Thực thi Tasks"]
+            W2["<b>Worker 2</b><br/>Thực thi Tasks"]
+        end
     end
 
-    DAG_Folder[(Thư mục code DAG)] -. Phân tích code .-> Sch
+    %% DAG Folder Reading
+    DAG_Folder -.->|1. Đọc & hiển thị| UI
+    DAG_Folder -.->|1. Quét định kỳ| Sch
+
+    %% DB Interactions
+    UI <-->|"Đọc / Ghi trạng thái"| DB
+    Sch <-->|"Lập lịch & Lưu trạng thái"| DB
+    W1 --->|"Cập nhật kết quả"| DB
+    W2 --->|"Cập nhật kết quả"| DB
+
+    %% Task Execution Flow
+    Sch --->|"2. Gửi Tasks"| Queue
+    Queue -.->|"3. Nhận Tasks"| W1
+    Queue -.->|"3. Nhận Tasks"| W2
+
+    %% Styling
+    style Airflow fill:#fdfefe,stroke:#017a8c,stroke-width:2px
+    style Workers fill:#f2f9f9,stroke:#5eb5b0,stroke-dasharray: 5 5
 ```
 
 ## Bắt tay vào code: Tạo một DAG ETL cơ bản

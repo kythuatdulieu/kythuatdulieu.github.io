@@ -41,10 +41,49 @@ Kiến trúc Medallion chia nhỏ quy trình xử lý dữ liệu ([ETL](/concep
 
 Dưới đây là sơ đồ dòng chảy dữ liệu tuần tự của kiến trúc Medallion:
 ```mermaid
-graph LR
-    Source[Sources] --> Bronze[(Bronze)]
-    Bronze --> Silver[(Silver)]
-    Silver --> Gold[(Gold)]
+flowchart LR
+    %% Data Sources
+    subgraph Sources ["Nguồn dữ liệu (Data Sources)"]
+        direction TB
+        DB[(RDBMS / Databases)]
+        API([APIs])
+        IoT[IoT / Logs]
+    end
+
+    %% Medallion Layers
+    subgraph Medallion ["Kiến trúc Medallion (Medallion Architecture)"]
+        direction LR
+        Bronze["<b>Bronze Layer</b><br/>(Ingestion Zone)<br/>- Dữ liệu thô (Raw)<br/>- Append-only<br/>- JSON / CSV / Avro"]
+        
+        Silver["<b>Silver Layer</b><br/>(Cleansed Zone)<br/>- Làm sạch & Khử trùng<br/>- Đồng nhất Schema<br/>- Parquet / Delta Lake"]
+        
+        Gold["<b>Gold Layer</b><br/>(Curated Zone)<br/>- Tổng hợp (Aggregated)<br/>- Quy tắc Nghiệp vụ<br/>- Star Schema (Fact/Dim)"]
+    end
+
+    %% Consumers
+    subgraph Consumers ["Nhóm Tiêu thụ (Consumers)"]
+        direction TB
+        DS[Data Science / ML]
+        BI[Business Intelligence / BI]
+        Report[Reports / Analysts]
+    end
+
+    %% Connections
+    Sources -->|Ingest / CDC| Bronze
+    Bronze -->|Clean & Conform| Silver
+    Silver -->|Aggregate & Model| Gold
+    
+    Silver -->|Atomic Data| DS
+    Gold -->|Structured Queries| BI
+    Gold -->|Pre-aggregated| Report
+
+    %% Styling
+    style Sources fill:#edf2f4,stroke:#8d99ae
+    style Consumers fill:#edf2f4,stroke:#8d99ae
+    
+    style Bronze fill:#cd7f32,stroke:#3a1d00,color:#fff
+    style Silver fill:#c0c0c0,stroke:#3a3a3a,color:#000
+    style Gold fill:#ffd700,stroke:#5c4d00,color:#000
 ```
 
 ---

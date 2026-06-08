@@ -5645,10 +5645,6 @@
       "title": "Nhiệt độ - Temperature"
     },
     {
-      "url": "/concepts/data-quality/data-reconciliation/",
-      "title": "Đối soát dữ liệu - Data Reconciliation"
-    },
-    {
       "url": "/concepts/foundation/source-systems/",
       "title": "Hệ thống Nguồn - Source Systems"
     }
@@ -7170,6 +7166,10 @@
     }
   ],
   "/concepts/transformation-analytics/materialization/": [
+    {
+      "url": "/concepts/streaming-processing/stream-table-duality/",
+      "title": "Stream-Table Duality - Tính lưỡng tính Dòng - Bảng"
+    },
     {
       "url": "/concepts/transformation-analytics/dbt-models/",
       "title": "dbt Models - Tầng biến đổi và cấu trúc dự án"

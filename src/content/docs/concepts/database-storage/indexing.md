@@ -38,12 +38,12 @@ Khi bạn thực thi câu lệnh SQL: `SELECT * FROM users WHERE user_id = 45;` 
 graph TD
     subgraph B-Tree Index Structure
         Root[Root Node: 50]
-        Branch1[Branch Node: 10, 30]
-        Branch2[Branch Node: 70, 90]
-        Leaf1[Leaf: 1-10]
-        Leaf2[Leaf: 11-30]
+        Branch1[Branch Node: 30]
+        Branch2[Branch Node: 70]
+        Leaf1[Leaf: 1-30]
+        Leaf2[Leaf: 31-50]
         Leaf3[Leaf: 51-70]
-        Leaf4[Leaf: 71-90]
+        Leaf4[Leaf: 71-99]
     end
 
     subgraph Physical Disk Data Pages
@@ -63,9 +63,9 @@ graph TD
 ```
 
 1. Hệ thống truy cập vào nút gốc (Root Node) của cây Index. Giả sử nút gốc chứa giá trị `50`. Hệ thống biết ngay giá trị `45` cần tìm nằm ở nhánh bên trái (nhỏ hơn 50).
-2. Nó đi xuống nút nhánh (Branch Node) [10, 30] và nhanh chóng xác định 45 nằm ngoài dải này, tiếp tục đi xuống nút lá (Leaf Node) chứa dải [11-30] và các phần tử lân cận.
-3. Tại nút lá, hệ thống tìm thấy khóa `45`. Đi kèm với khóa này là con trỏ vật lý trỏ trực tiếp đến dải byte trên đĩa cứng (ví dụ: `Block 5, Offset 10`).
-4. Cơ sở dữ liệu nhảy thẳng tới địa chỉ ổ đĩa đó để lấy lên các thông tin còn lại của người dùng (tên, tuổi, email) và trả về cho bạn. Tiến trình này chỉ tiêu tốn 3-4 lần đọc đĩa (I/O), cực kỳ tiết kiệm tài nguyên.
+2. Nó đi xuống nút nhánh (Branch Node) `[30]` và xác định `45 > 30`, do đó đi xuống nút lá (Leaf Node) chứa dải `[31-50]`.
+3. Tại nút lá `[31-50]`, hệ thống tìm thấy khóa `45`. Đi kèm với khóa này là con trỏ vật lý trỏ trực tiếp đến dải byte trên đĩa cứng (ví dụ: `Block 5, Offset 10` thuộc `Data Block A`).
+4. Cơ sở dữ liệu nhảy thẳng tới địa chỉ ổ đĩa đó để lấy lên các thông tin còn lại của người dùng (tên, tuổi, email) và trả về cho bạn. Tiến trình này chỉ tiêu tốn 3 lần đọc đĩa (I/O), cực kỳ tiết kiệm tài nguyên.
 
 ## Thực chiến: Khởi tạo và sử dụng Index trong PostgreSQL
 

@@ -54,19 +54,28 @@ Quy trình đánh giá sự phụ thuộc diễn ra như sau:
 
 Dưới đây là một số kịch bản rẽ nhánh và hội tụ dựa trên Trigger Rules trong DAG:
 ```mermaid
-graph TD
-    A1(Task A: Extract DB) -->|Success| B1(Task B: Transform Data)
-    B1 -->|Success| C1{Trigger: all_success}
-    C1 -->|Kích hoạt| D1(Task Report)
+flowchart TD
+    subgraph S1 ["Kịch bản 1: all_success (Mặc định)"]
+        direction TB
+        A1["Task A: Extract DB"] -->|Success| B1["Task B: Transform Data"]
+        B1 -->|Success| C1{"Trigger: all_success"}
+        C1 -->|Kích hoạt| D1["Task Report"]
+    end
 
-    A2(Task X: Check API) -->|Failed| B2(Task Y: Alert Slack)
-    B2 -->|Trigger: one_failed| C2(Chạy tác vụ Cảnh báo)
+    subgraph S2 ["Kịch bản 2: one_failed (Xử lý lỗi)"]
+        direction TB
+        A2["Task X: Check API"] -->|Failed| B2["Task Y: Alert Slack"]
+        B2 -->|"Trigger: one_failed"| C2["Chạy tác vụ Cảnh báo"]
+    end
 
-    A3(Branching logic) -->|Thành công nhánh 1| B3(Nhánh 1)
-    A3 -->|Skip nhánh 2| C3(Nhánh 2)
-    B3 --> D3{Trigger: none_failed_min_one_success}
-    C3 -. Bỏ qua .-> D3
-    D3 --> E3(Chạy tác vụ gom nhánh)
+    subgraph S3 ["Kịch bản 3: none_failed_min_one_success (Gom nhánh)"]
+        direction TB
+        A3["Branching Logic"] -->|Thành công| B3["Nhánh 1"]
+        A3 -->|Bỏ qua| C3["Nhánh 2"]
+        B3 --> D3{"Trigger: none_failed_min_one_success"}
+        C3 -.->|Bỏ qua| D3
+        D3 --> E3["Chạy tác vụ gom nhánh"]
+    end
 ```
 
 ## Ví dụ thực tế: Viết DAG Airflow thiết lập sự phụ thuộc
