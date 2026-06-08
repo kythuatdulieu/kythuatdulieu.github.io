@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import { conceptCategories } from '../config/categories.js';
+
+const allDocs = await getCollection('docs');
+const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
+
+const dynamicMOC = [];
+
+conceptCategories.forEach(cat => {
+   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
+   if (docsInCat.length > 0) {
+       dynamicMOC.push({
+           categorySlug: cat.slug,
+           category: cat.label,
+           concepts: docsInCat.map(doc => {
+               // Extract clean title without prefixes like "Concept -" if they exist
+               let title = doc.data.title;
+               const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
+               if (match && match[1]) title = match[1].trim();
+               
+               return {
+                   title: title,
+                   url: `/${doc.slug}/`
+               };
+           })
+       });
+   }
+});
+
+// Any other categories not listed in the ordered list?
+const existingCatSlugs = new Set(conceptCategories.map(c => c.slug));
+const otherDocs = existingConcepts.filter(doc => {
+    const parts = doc.id.split('/');
+    if (parts.length >= 3) {
+        return !existingCatSlugs.has(parts[1]);
+    }
+    return false;
+});
+if (otherDocs.length > 0) {
+    dynamicMOC.push({
+        categorySlug: "other",
+        category: "Các khái niệm khác",
+        concepts: otherDocs.map(doc => ({ title: doc.data.title, url: `/${doc.slug}/` }))
+    });
+}
+---
+
+<div class="moc-container">
+    <!-- The Table -->
+    <div class="moc-table-wrapper" id="concept-table">
+        <table class="moc-table">
+            <thead>
+                <tr>
+                    <th class="col-category">Category</th>
+                    <th class="col-concepts">Data Engineering Concepts</th>
+                </tr>
+            </thead>
+            <tbody>
+                {dynamicMOC.map(group => {
+                    return (
+                        <tr id={`row-${group.categorySlug}`}>
+                            <td class="cat-cell">
+                                <strong>{group.category}</strong>
+                            </td>
+                            <td class="concepts-cell">
+                                <div class="concepts-list">
+                                    {group.concepts.map((concept, index) => {
+                                        const isLast = index === group.concepts.length - 1;
+                                        return (
+                                            <span class="concept-item-wrapper">
+                                                <a href={concept.url} class="concept-tag active">
+                                                    {concept.title}
+                                                </a>
+                                                {!isLast && <span class="comma">, </span>}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                            </td>
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Slot for Quizzes (which are passed from index.mdx) -->
+    <slot />
+</div>
+
+<style>
+/* Theme Variables */
+:root {
+    --moc-bg: var(--sl-color-bg);
+    --moc-text: var(--sl-color-text);
+    --moc-text-muted: var(--sl-color-text-accent);
+    --moc-border: var(--sl-color-hairline);
+    --moc-bg-alt: var(--sl-color-bg-nav);
+    --moc-primary: var(--sl-color-accent);
+    --moc-primary-hover: var(--sl-color-accent-high);
+    --moc-hover-bg: var(--sl-color-gray-6);
+    --moc-radius: 8px;
+    --moc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.moc-container {
+    width: 100%;
+    margin: 2rem auto;
+    font-family: var(--sl-font), sans-serif;
+}
+
+/* The Table */
+.moc-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--moc-border);
+    border-radius: var(--moc-radius);
+    background: var(--moc-bg);
+}
+
+.moc-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin: 0 !important; /* Override markdown table margins */
+}
+
+.moc-table th {
+    background-color: var(--moc-bg-alt);
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--moc-border);
+    color: var(--moc-text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.col-category {
+    width: 30%;
+}
+
+.col-concepts {
+    width: 70%;
+}
+
+.moc-table td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--moc-border);
+    vertical-align: top;
+}
+
+.moc-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.moc-table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.moc-table tbody tr.highlight {
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+}
+
+.cat-cell strong {
+    display: block;
+    font-size: 1.05rem;
+    color: var(--moc-text);
+}
+
+/* Concept Tags */
+.concepts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.25rem;
+    line-height: 1.8;
+}
+
+.concept-item-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.concept-tag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.concept-tag.active {
+    color: var(--moc-primary);
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+    font-weight: 500;
+}
+
+.concept-tag.active:hover {
+    background-color: var(--moc-primary);
+    color: var(--sl-color-text-invert);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.comma {
+    color: var(--moc-text-muted);
+}
+</style>
+
+

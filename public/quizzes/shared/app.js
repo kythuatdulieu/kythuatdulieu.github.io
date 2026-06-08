@@ -1,0 +1,962 @@
+/**
+ * Quiz App - Certified Data Engineer Professional
+ * Core quiz engine with navigation, scoring, review modes, Vietnamese toggle, and theme switching.
+ */
+(function () {
+    'use strict';
+
+    // ========================
+    // State
+    // ========================
+    // Dynamically load the STATE_KEY based on the path
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length > 0 && segments[segments.length - 1].includes('.')) {
+        segments.pop();
+    }
+    const quizId = segments.pop() || 'quiz';
+    const STATE_KEY = `quiz_state_${quizId}_v1`;
+
+    let questions = [];
+    let questionOrder = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let showVietnamese = false;
+    let showImage = false;
+    let shuffleMode = false;
+    let filterMode = 'all';
+    let darkTheme = false; // Default to Light theme as per GenAI Associate style
+
+    // ========================
+    // DOM References
+    // ========================
+    const $ = id => document.getElementById(id);
+
+    const els = {
+        questionCounter: $('questionCounter'),
+        questionBadge: $('questionBadge'),
+        topicBadge: $('topicBadge'),
+        questionText: $('questionText'),
+        questionTextVi: $('questionTextVi'),
+        optionsList: $('optionsList'),
+        btnPdf: $('btnPdf'),
+        btnImage: $('btnImage'),
+        questionImageBox: $('questionImageBox'),
+        questionImage: $('questionImage'),
+
+        scoreCorrect: $('scoreCorrect'),
+        scoreIncorrect: $('scoreIncorrect'),
+        scoreUnanswered: $('scoreUnanswered'),
+        progressBar: $('progressBar'),
+        btnPrev: $('btnPrev'),
+        btnNext: $('btnNext'),
+        btnGrid: $('btnGrid'),
+        btnViToggle: $('btnViToggle'),
+        btnShuffle: $('btnShuffle'),
+        btnTheme: $('btnTheme'),
+        themeIconSun: $('themeIconSun'),
+        themeIconMoon: $('themeIconMoon'),
+        btnMenu: $('btnMenu'),
+        sidePanel: $('sidePanel'),
+        overlay: $('overlay'),
+        btnClosePanel: $('btnClosePanel'),
+        gridModal: $('gridModal'),
+        questionGrid: $('questionGrid'),
+        btnCloseGrid: $('btnCloseGrid'),
+        toggleVi: $('toggleVi'),
+        toggleShuffle: $('toggleShuffle'),
+        toggleTheme: $('toggleTheme'),
+        statCorrect: $('statCorrect'),
+        statIncorrect: $('statIncorrect'),
+        statUnanswered: $('statUnanswered'),
+        statTotal: $('statTotal'),
+        countAll: $('countAll'),
+        countCorrect: $('countCorrect'),
+        countIncorrect: $('countIncorrect'),
+        countUnanswered: $('countUnanswered'),
+        btnReviewAll: $('btnReviewAll'),
+        btnReviewCorrect: $('btnReviewCorrect'),
+        btnReviewIncorrect: $('btnReviewIncorrect'),
+        btnReviewUnanswered: $('btnReviewUnanswered'),
+        btnResetAll: $('btnResetAll'),
+        btnResetIncorrect: $('btnResetIncorrect'),
+        btnResetCorrect: $('btnResetCorrect'),
+        questionCard: $('questionCard'),
+    };
+
+    // ========================
+    // Persistence
+    // ========================
+    function saveState() {
+        try {
+            const state = {
+                userAnswers,
+                showVietnamese,
+                shuffleMode,
+                darkTheme,
+                currentIndex,
+                filterMode,
+                questionOrder: shuffleMode ? questionOrder : null,
+            };
+            localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        } catch (e) { /* ignore */ }
+    }
+
+    function loadState() {
+        try {
+            const saved = localStorage.getItem(STATE_KEY);
+            if (!saved) return;
+            const state = JSON.parse(saved);
+            userAnswers = state.userAnswers || {};
+            showVietnamese = state.showVietnamese || false;
+            shuffleMode = state.shuffleMode || false;
+            darkTheme = state.darkTheme !== undefined ? state.darkTheme : true;
+            currentIndex = state.currentIndex || 0;
+            filterMode = state.filterMode || 'all';
+            if (state.questionOrder && shuffleMode) {
+                questionOrder = state.questionOrder;
+            }
+        } catch (e) { /* ignore */ }
+    }
+
+    // ========================
+    // Theme
+    // ========================
+    function applyTheme() {
+        if (darkTheme) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            els.themeIconSun.style.display = '';
+            els.themeIconMoon.style.display = 'none';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            els.themeIconSun.style.display = 'none';
+            els.themeIconMoon.style.display = '';
+        }
+        if (els.toggleTheme) els.toggleTheme.checked = !darkTheme;
+    }
+
+    function toggleTheme() {
+        darkTheme = !darkTheme;
+        applyTheme();
+        showToast(darkTheme ? '🌙 Giao diện tối' : '☀️ Giao diện sáng');
+        saveState();
+    }
+
+    // ========================
+    // Scoring
+    // ========================
+    function getCounts() {
+        let correct = 0, incorrect = 0, unanswered = 0;
+        questions.forEach(q => {
+            if (userAnswers[q.id] !== undefined) {
+                if (userAnswers[q.id] === q.answer) correct++;
+                else incorrect++;
+            } else {
+                unanswered++;
+            }
+        });
+        return { correct, incorrect, unanswered };
+    }
+
+    function updateScores() {
+        const { correct, incorrect, unanswered } = getCounts();
+        els.scoreCorrect.textContent = correct;
+        els.scoreIncorrect.textContent = incorrect;
+        els.scoreUnanswered.textContent = unanswered;
+
+        els.statCorrect.textContent = correct;
+        els.statIncorrect.textContent = incorrect;
+        els.statUnanswered.textContent = unanswered;
+        els.statTotal.textContent = questions.length;
+
+        els.countAll.textContent = questions.length;
+        els.countCorrect.textContent = correct;
+        els.countIncorrect.textContent = incorrect;
+        els.countUnanswered.textContent = unanswered;
+
+        const answered = correct + incorrect;
+        const pct = questions.length > 0 ? (answered / questions.length) * 100 : 0;
+        els.progressBar.style.width = pct + '%';
+    }
+
+    // ========================
+    // Filter / Order
+    // ========================
+    function getFilteredIndices() {
+        let indices = [...questionOrder];
+        if (filterMode === 'correct') {
+            indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
+        } else if (filterMode === 'incorrect') {
+            indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+        } else if (filterMode === 'unanswered') {
+            indices = indices.filter(i => userAnswers[questions[i].id] === undefined);
+        }
+        return indices;
+    }
+
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function applyShuffle() {
+        if (shuffleMode) {
+            questionOrder = shuffleArray(questions.map((_, i) => i));
+        } else {
+            questionOrder = questions.map((_, i) => i);
+        }
+        currentIndex = 0;
+        showImage = false;
+    }
+
+    // ========================
+    // Vietnamese Translation
+    // ========================
+    function getVietnameseQuestion(q) {
+        if (q.question_vi) return q.question_vi;
+        // Auto-generate a label since we don't have full translations
+        return null;
+    }
+
+    function getVietnameseOption(q, letter) {
+        if (q.options_vi && q.options_vi[letter]) return q.options_vi[letter];
+        return null;
+    }
+
+    // Helper to append text with bold and inline code formatted
+    function appendFormattedText(element, text) {
+        const parts = text.split(/(\*\*.*?\*\*|`{3,}[\s\S]*?`{3,}|``.*?``|`.*?`)/);
+        parts.forEach(part => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+                const bold = document.createElement('strong');
+                bold.textContent = part.slice(2, -2);
+                element.appendChild(bold);
+            } else if (part.startsWith('```') && part.endsWith('```')) {
+                const code = document.createElement('code');
+                code.className = 'code-block';
+                let codeContent = part.slice(3, -3);
+                // Clean up language prefix if present (e.g. "python\n")
+                codeContent = codeContent.replace(/^(python|yaml|sql|bash|json)\n/, '');
+                code.textContent = codeContent;
+                element.appendChild(code);
+            } else if (part.startsWith('``') && part.endsWith('``')) {
+                const code = document.createElement('code');
+                code.textContent = part.slice(2, -2);
+                element.appendChild(code);
+            } else if (part.startsWith('`') && part.endsWith('`')) {
+                const code = document.createElement('code');
+                code.textContent = part.slice(1, -1);
+                element.appendChild(code);
+            } else if (part) {
+                element.appendChild(document.createTextNode(part));
+            }
+        });
+    }
+
+    // Helper to render markdown-like text to a container safely
+    function renderMarkdownSafely(container, markdownText) {
+        container.replaceChildren();
+        if (!markdownText) return;
+
+        const lines = markdownText.split('\n');
+        let currentList = null;
+
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) {
+                currentList = null;
+                return;
+            }
+
+            // Bullet list item
+            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                if (!currentList || currentList.tagName !== 'UL') {
+                    currentList = document.createElement('ul');
+                    currentList.className = 'explanation-list';
+                    container.appendChild(currentList);
+                }
+                const li = document.createElement('li');
+                appendFormattedText(li, trimmed.substring(2));
+                currentList.appendChild(li);
+            }
+            // Numbered list item
+            else if (/^(?:\-\s*)?\d+\.\s+/.test(trimmed)) {
+                const match = trimmed.match(/^(?:\-\s*)?(\d+\.\s+)(.*)/);
+                if (!currentList || currentList.tagName !== 'OL') {
+                    currentList = document.createElement('ol');
+                    currentList.className = 'explanation-list';
+                    container.appendChild(currentList);
+                }
+                const li = document.createElement('li');
+                appendFormattedText(li, match[2]);
+                currentList.appendChild(li);
+            }
+            // Headings
+            else if (trimmed.startsWith('### ')) {
+                currentList = null;
+                const h4 = document.createElement('h4');
+                h4.className = 'explanation-heading';
+                appendFormattedText(h4, trimmed.substring(4));
+                container.appendChild(h4);
+            } else if (trimmed.startsWith('## ')) {
+                currentList = null;
+                const h3 = document.createElement('h3');
+                h3.className = 'explanation-heading';
+                appendFormattedText(h3, trimmed.substring(3));
+                container.appendChild(h3);
+            }
+            // Paragraph
+            else {
+                currentList = null;
+                const p = document.createElement('p');
+                p.className = 'explanation-paragraph';
+                appendFormattedText(p, trimmed);
+                container.appendChild(p);
+            }
+        });
+    }
+
+    // ========================
+    // Rendering
+    // ========================
+    function renderQuestion(animate = true) {
+        const filtered = getFilteredIndices();
+        if (filtered.length === 0) {
+            els.questionBadge.textContent = 'Không có câu hỏi';
+            els.topicBadge.textContent = '';
+            els.questionText.textContent = filterMode === 'correct' ? 'Chưa có câu trả lời đúng nào.' :
+                filterMode === 'incorrect' ? 'Chưa có câu trả lời sai nào.' :
+                    filterMode === 'unanswered' ? 'Đã hoàn thành tất cả câu hỏi! 🎉' :
+                        'Không có câu hỏi.';
+            els.questionTextVi.style.display = 'none';
+            els.optionsList.innerHTML = '';
+
+            els.questionCounter.textContent = '0 / 0';
+            return;
+        }
+
+        if (currentIndex >= filtered.length) currentIndex = filtered.length - 1;
+        if (currentIndex < 0) currentIndex = 0;
+
+        const qIdx = filtered[currentIndex];
+        const q = questions[qIdx];
+        const userAns = userAnswers[q.id];
+        const answered = userAns !== undefined;
+
+        if (els.btnPdf) {
+            if (q.page) {
+                els.btnPdf.style.display = '';
+                els.btnPdf.disabled = false;
+                const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
+                els.btnPdf.onclick = () => window.open(`${pdfPath}#page=${q.page}`, '_blank');
+            } else {
+                els.btnPdf.style.display = 'none';
+                els.btnPdf.disabled = true;
+                els.btnPdf.onclick = null;
+            }
+        }
+
+        if (els.btnImage) {
+            if (q.image) {
+                els.btnImage.style.display = '';
+            } else {
+                els.btnImage.style.display = 'none';
+            }
+        }
+
+        if (els.questionImageBox && els.questionImage) {
+            if (q.image && showImage) {
+                els.questionImage.src = q.image;
+                els.questionImageBox.style.display = 'block';
+            } else {
+                els.questionImageBox.style.display = 'none';
+                els.questionImage.removeAttribute('src');
+            }
+        }
+
+        // Counter
+        els.questionCounter.textContent = `${currentIndex + 1} / ${filtered.length}`;
+
+        // Badge
+        els.questionBadge.textContent = `Question #${q.id}`;
+        els.topicBadge.textContent = `Topic ${q.topic}`;
+
+        // Question text
+        els.questionText.replaceChildren();
+        appendFormattedText(els.questionText, q.question);
+
+        // Vietnamese question text
+        if (showVietnamese && q.question_vi) {
+            els.questionTextVi.replaceChildren();
+            appendFormattedText(els.questionTextVi, q.question_vi);
+            els.questionTextVi.style.display = 'block';
+        } else {
+            els.questionTextVi.style.display = 'none';
+        }
+
+        // Options
+        els.optionsList.innerHTML = '';
+        const optionLetters = Object.keys(q.options).sort();
+
+        // Ensure currentSelection exists and is reset if switching questions
+        if (typeof window.currentSelectionQId === 'undefined' || window.currentSelectionQId !== q.id) {
+            window.currentSelection = new Set();
+            window.currentSelectionQId = q.id;
+        }
+
+        optionLetters.forEach(letter => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+
+            if (answered) {
+                div.classList.add('disabled');
+                const userAnsArr = userAns.split(',');
+                const correctAnsArr = q.answer ? q.answer.split(',') : [];
+                
+                if (correctAnsArr.includes(letter)) {
+                    div.classList.add('correct-answer');
+                } else if (userAnsArr.includes(letter)) {
+                    div.classList.add('wrong-answer');
+                }
+            } else if (q.isMulti && window.currentSelection.has(letter)) {
+                div.classList.add('selected'); // Use the selected class from style.css
+            }
+
+            const letterSpan = document.createElement('span');
+            letterSpan.className = 'option-letter';
+            
+            if (answered) {
+                const userAnsArr = userAns.split(',');
+                const correctAnsArr = q.answer ? q.answer.split(',') : [];
+                
+                if (correctAnsArr.includes(letter)) {
+                    letterSpan.textContent = '✓';
+                } else if (userAnsArr.includes(letter)) {
+                    letterSpan.textContent = '✗';
+                } else {
+                    letterSpan.textContent = letter;
+                }
+            } else {
+                letterSpan.textContent = letter;
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'option-content';
+
+            const textSpan = document.createElement('div');
+            textSpan.className = 'option-text';
+            appendFormattedText(textSpan, q.options[letter]);
+
+            if (showVietnamese) {
+                const viOpt = getVietnameseOption(q, letter);
+                if (viOpt) {
+                    const viSpan = document.createElement('div');
+                    viSpan.className = 'option-text-vi';
+                    appendFormattedText(viSpan, viOpt);
+                    viSpan.style.display = 'block';
+                    textSpan.appendChild(viSpan);
+                }
+            }
+
+            contentDiv.appendChild(textSpan);
+
+            div.appendChild(letterSpan);
+            div.appendChild(contentDiv);
+
+            if (!answered) {
+                div.addEventListener('click', () => selectAnswer(q.id, letter));
+            }
+
+            els.optionsList.appendChild(div);
+        });
+
+        // Render Submit Button for Multi-choice if not answered
+        if (q.isMulti && !answered) {
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'multi-submit-btn';
+            const requiredCount = q.answer ? q.answer.split(',').length : 1;
+            submitBtn.textContent = `Xác nhận (${window.currentSelection.size}/${requiredCount})`;
+            
+            if (window.currentSelection.size === requiredCount) {
+                submitBtn.disabled = false;
+                submitBtn.addEventListener('click', () => {
+                    userAnswers[q.id] = Array.from(window.currentSelection).sort().join(',');
+                    window.currentSelection.clear();
+                    updateScores();
+                    saveState();
+                    renderQuestion();
+                });
+            } else {
+                submitBtn.disabled = true;
+            }
+            els.optionsList.appendChild(submitBtn);
+        }
+
+        // Explanation — shown after answering
+        let explanationDiv = document.getElementById('explanationBox');
+        if (!explanationDiv) {
+            explanationDiv = document.createElement('div');
+            explanationDiv.id = 'explanationBox';
+            explanationDiv.className = 'explanation-box';
+            els.optionsList.parentNode.insertBefore(explanationDiv, els.optionsList.nextSibling);
+        }
+
+        if (answered && q.explanation_vi) {
+            explanationDiv.replaceChildren();
+
+            const title = document.createElement('div');
+            title.className = 'explanation-title';
+            title.textContent = '💡 Giải thích';
+            explanationDiv.appendChild(title);
+
+            const contentContainer = document.createElement('div');
+            contentContainer.className = 'explanation-content';
+            renderMarkdownSafely(contentContainer, q.explanation_vi);
+            explanationDiv.appendChild(contentContainer);
+
+            // References (Citations)
+            if (q.references && q.references.length > 0) {
+                const refBox = document.createElement('div');
+                refBox.className = 'references-box';
+
+                const refTitle = document.createElement('div');
+                refTitle.className = 'references-title';
+                refTitle.textContent = '📚 Tài liệu tham khảo:';
+                refBox.appendChild(refTitle);
+
+                const refList = document.createElement('ul');
+                refList.className = 'references-list';
+
+                q.references.forEach(ref => {
+                    if (ref.title && ref.url) {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.setAttribute('href', ref.url);
+                        a.setAttribute('target', '_blank');
+                        a.setAttribute('rel', 'noopener noreferrer');
+                        a.className = 'reference-link';
+                        a.textContent = ref.title;
+                        li.appendChild(a);
+                        refList.appendChild(li);
+                    }
+                });
+
+                refBox.appendChild(refList);
+                explanationDiv.appendChild(refBox);
+            }
+
+            explanationDiv.style.display = 'block';
+        } else {
+            explanationDiv.style.display = 'none';
+        }
+
+
+
+        if (animate) {
+            // Animate card
+            els.questionCard.style.animation = 'none';
+            requestAnimationFrame(() => {
+                els.questionCard.style.animation = 'fadeInUp 0.3s ease';
+            });
+        }
+
+        saveState();
+    }
+
+    function selectAnswer(qId, letter) {
+        const q = questions.find(q => q.id === qId);
+        if (q && q.isMulti) {
+            const requiredCount = q.answer ? q.answer.split(',').length : 1;
+            if (window.currentSelection.has(letter)) {
+                window.currentSelection.delete(letter);
+            } else {
+                if (window.currentSelection.size < requiredCount) {
+                    window.currentSelection.add(letter);
+                } else {
+                    showToast(`Chỉ được chọn tối đa ${requiredCount} đáp án`);
+                }
+            }
+            renderQuestion(false);
+        } else {
+            userAnswers[qId] = letter;
+            updateScores();
+            saveState();
+            renderQuestion(false);
+        }
+    }
+
+    // ========================
+    // Navigation
+    // ========================
+    function goNext() {
+        const filtered = getFilteredIndices();
+        if (currentIndex < filtered.length - 1) {
+            currentIndex++;
+            showImage = false;
+            renderQuestion();
+        }
+    }
+
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showImage = false;
+            renderQuestion();
+        }
+    }
+
+    function goToQuestion(idx) {
+        currentIndex = idx;
+        renderQuestion();
+        closeGrid();
+    }
+
+    // ========================
+    // Grid
+    // ========================
+    function renderGrid(filter) {
+        const gridFilter = filter || 'all';
+        els.questionGrid.innerHTML = '';
+
+        document.querySelectorAll('.grid-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.filter === gridFilter);
+        });
+
+        let indices = [...questionOrder];
+        if (gridFilter === 'correct') {
+            indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
+        } else if (gridFilter === 'incorrect') {
+            indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+        } else if (gridFilter === 'unanswered') {
+            indices = indices.filter(i => userAnswers[questions[i].id] === undefined);
+        }
+
+        const filtered = getFilteredIndices();
+
+        indices.forEach((qOrderIdx) => {
+            const q = questions[qOrderIdx];
+            const btn = document.createElement('button');
+            btn.className = 'grid-item';
+            btn.textContent = q.id;
+
+            const posInFiltered = filtered.indexOf(qOrderIdx);
+
+            if (userAnswers[q.id] !== undefined) {
+                if (userAnswers[q.id] === q.answer) {
+                    btn.classList.add('answered-correct');
+                } else {
+                    btn.classList.add('answered-incorrect');
+                }
+            }
+
+            if (posInFiltered === currentIndex) {
+                btn.classList.add('current');
+            }
+
+            btn.addEventListener('click', () => {
+                if (gridFilter !== 'all' && gridFilter !== filterMode) {
+                    filterMode = gridFilter;
+                }
+                const newFiltered = getFilteredIndices();
+                const pos = newFiltered.indexOf(qOrderIdx);
+                if (pos >= 0) {
+                    goToQuestion(pos);
+                } else {
+                    filterMode = 'all';
+                    const allFiltered = getFilteredIndices();
+                    const allPos = allFiltered.indexOf(qOrderIdx);
+                    if (allPos >= 0) goToQuestion(allPos);
+                }
+            });
+
+            els.questionGrid.appendChild(btn);
+        });
+    }
+
+    function openGrid() {
+        renderGrid('all');
+        els.gridModal.classList.add('visible');
+    }
+
+    function closeGrid() {
+        els.gridModal.classList.remove('visible');
+    }
+
+    // ========================
+    // Side Panel
+    // ========================
+    function openPanel() {
+        updateScores();
+        els.sidePanel.classList.add('open');
+        els.overlay.classList.add('visible');
+    }
+
+    function closePanel() {
+        els.sidePanel.classList.remove('open');
+        els.overlay.classList.remove('visible');
+    }
+
+    // ========================
+    // Vietnamese Toggle
+    // ========================
+    function toggleVietnamese(on) {
+        showVietnamese = on;
+        els.btnViToggle.classList.toggle('active', on);
+        els.toggleVi.checked = on;
+        renderQuestion();
+        saveState();
+    }
+
+    // ========================
+    // Shuffle Toggle
+    // ========================
+    function toggleShuffleMode(on) {
+        shuffleMode = on;
+        els.btnShuffle.classList.toggle('active', on);
+        els.toggleShuffle.checked = on;
+        applyShuffle();
+        renderQuestion();
+        showToast(on ? '🔀 Đã bật xáo trộn' : '📋 Thứ tự gốc');
+        saveState();
+    }
+
+    // ========================
+    // Review Modes
+    // ========================
+    function setReviewMode(mode) {
+        filterMode = mode;
+        currentIndex = 0;
+        renderQuestion();
+        closePanel();
+        const labels = {
+            all: '📋 Tất cả câu hỏi',
+            correct: '✅ Câu trả lời đúng',
+            incorrect: '❌ Câu trả lời sai',
+            unanswered: '⬜ Câu chưa làm',
+        };
+        showToast(labels[mode] || mode);
+        saveState();
+    }
+
+    // ========================
+    // Reset
+    // ========================
+    function resetAll() {
+        if (!confirm('Bạn có chắc muốn reset tất cả? Mọi tiến trình sẽ bị xóa.')) return;
+        userAnswers = {};
+        currentIndex = 0;
+        filterMode = 'all';
+        updateScores();
+        renderQuestion();
+        closePanel();
+        showToast('🔄 Đã reset tất cả');
+        saveState();
+    }
+
+    function resetIncorrect() {
+        const toReset = questions.filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.answer);
+        if (toReset.length === 0) {
+            showToast('Không có câu sai nào để reset');
+            return;
+        }
+        if (!confirm(`Reset ${toReset.length} câu trả lời sai?`)) return;
+        toReset.forEach(q => delete userAnswers[q.id]);
+        updateScores();
+        renderQuestion();
+        closePanel();
+        showToast(`↩️ Đã reset ${toReset.length} câu sai`);
+        saveState();
+    }
+
+    function resetCorrect() {
+        const toReset = questions.filter(q => userAnswers[q.id] === q.answer);
+        if (toReset.length === 0) {
+            showToast('Không có câu đúng nào để reset');
+            return;
+        }
+        if (!confirm(`Reset ${toReset.length} câu trả lời đúng?`)) return;
+        toReset.forEach(q => delete userAnswers[q.id]);
+        updateScores();
+        renderQuestion();
+        closePanel();
+        showToast(`↩️ Đã reset ${toReset.length} câu đúng`);
+        saveState();
+    }
+
+    // ========================
+    // Toast
+    // ========================
+    let toastTimer;
+    function showToast(msg) {
+        let toast = document.querySelector('.toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        clearTimeout(toastTimer);
+        toast.textContent = msg;
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    // ========================
+    // Keyboard & Swipe
+    // ========================
+    function handleKeyboard(e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            goNext();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            goPrev();
+        } else if (e.key === 'Escape') {
+            closePanel();
+            closeGrid();
+        }
+    }
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    function handleTouchStart(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }
+
+    function handleTouchEnd(e) {
+        const dx = e.changedTouches[0].screenX - touchStartX;
+        const dy = e.changedTouches[0].screenY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
+            if (dx < 0) goNext();
+            else goPrev();
+        }
+    }
+
+    // ========================
+    // Event Bindings
+    // ========================
+    function bindEvents() {
+        // Navigation
+        els.btnNext.addEventListener('click', goNext);
+        els.btnPrev.addEventListener('click', goPrev);
+
+        // Grid
+        els.btnGrid.addEventListener('click', openGrid);
+        els.btnCloseGrid.addEventListener('click', closeGrid);
+        els.gridModal.addEventListener('click', (e) => {
+            if (e.target === els.gridModal) closeGrid();
+        });
+
+        document.querySelectorAll('.grid-tab').forEach(tab => {
+            tab.addEventListener('click', () => renderGrid(tab.dataset.filter));
+        });
+
+        // Side Panel
+        els.btnMenu.addEventListener('click', openPanel);
+        els.btnClosePanel.addEventListener('click', closePanel);
+        els.overlay.addEventListener('click', closePanel);
+        if (els.btnImage) {
+            els.btnImage.addEventListener('click', () => {
+                showImage = !showImage;
+                renderQuestion();
+            });
+        }
+
+        // Vietnamese toggle
+        els.btnViToggle.addEventListener('click', () => toggleVietnamese(!showVietnamese));
+        els.toggleVi.addEventListener('change', (e) => toggleVietnamese(e.target.checked));
+
+        // Theme toggle
+        els.btnTheme.addEventListener('click', toggleTheme);
+        if (els.toggleTheme) {
+            els.toggleTheme.addEventListener('change', () => toggleTheme());
+        }
+
+        // Shuffle toggle
+        els.btnShuffle.addEventListener('click', () => toggleShuffleMode(!shuffleMode));
+        els.toggleShuffle.addEventListener('change', (e) => toggleShuffleMode(e.target.checked));
+
+        // Review modes
+        els.btnReviewAll.addEventListener('click', () => setReviewMode('all'));
+        els.btnReviewCorrect.addEventListener('click', () => setReviewMode('correct'));
+        els.btnReviewIncorrect.addEventListener('click', () => setReviewMode('incorrect'));
+        els.btnReviewUnanswered.addEventListener('click', () => setReviewMode('unanswered'));
+
+        // Reset
+        els.btnResetAll.addEventListener('click', resetAll);
+        els.btnResetIncorrect.addEventListener('click', resetIncorrect);
+        els.btnResetCorrect.addEventListener('click', resetCorrect);
+
+        // Keyboard
+        document.addEventListener('keydown', handleKeyboard);
+
+        // Swipe
+        const quizContainer = document.querySelector('.quiz-container');
+        quizContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+        quizContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        // Quiz selector
+        const selectQuiz = $('selectQuiz');
+        if (selectQuiz) {
+            selectQuiz.addEventListener('change', (e) => {
+                const targetQuiz = e.target.value;
+                window.location.href = `/quizzes/${targetQuiz}/`;
+            });
+        }
+    }
+
+    // ========================
+    // Init
+    // ========================
+    async function init() {
+        try {
+            // Check if questions are already embedded (legacy support) or if we need to fetch
+            if (typeof QUESTIONS_DATA !== 'undefined') {
+                questions = QUESTIONS_DATA.map(q => ({ ...q }));
+            } else {
+                const response = await fetch(`/quizzes/${quizId}/questions.json`);
+                const data = await response.json();
+                const questionsArray = Array.isArray(data) ? data : (data.questions || []);
+                questions = questionsArray.map(q => ({ ...q }));
+            }
+        } catch (err) {
+            console.error('Failed to load questions.json:', err);
+            els.questionText.innerHTML = '<span style="color:red">Lỗi tải dữ liệu câu hỏi. Vui lòng thử lại.</span>';
+            return;
+        }
+
+        questionOrder = questions.map((_, i) => i);
+        
+        loadState();
+
+        // Apply saved UI states
+        applyTheme();
+        els.btnViToggle.classList.toggle('active', showVietnamese);
+        els.toggleVi.checked = showVietnamese;
+        els.btnShuffle.classList.toggle('active', shuffleMode);
+        els.toggleShuffle.checked = shuffleMode;
+
+        // Set quiz selector value
+        const selectQuiz = $('selectQuiz');
+        if (selectQuiz) {
+            selectQuiz.value = quizId;
+        }
+
+        if (!shuffleMode) {
+            questionOrder = questions.map((_, i) => i);
+        }
+
+        updateScores();
+        renderQuestion();
+        bindEvents();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

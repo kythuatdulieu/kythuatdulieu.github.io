@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "dev": "node generate_backlinks.cjs && astro dev",
+    "start": "node generate_backlinks.cjs && astro dev",
+    "build": "node generate_backlinks.cjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -13,6 +13,13 @@
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/starlight": "^0.23.4",
     "astro": "^4.16.19",
+    "mermaid": "^11.15.0",
+    "playwright": "^1.60.0",
+    "puppeteer": "^24.43.1",
+    "rehype-katex": "^7.0.1",
+    "rehype-mermaid": "^3.0.0",
+    "rehype-mermaid-lite": "^1.1.0",
+    "remark-math": "^6.0.0",
     "sharp": "^0.34.5"
   }
 }

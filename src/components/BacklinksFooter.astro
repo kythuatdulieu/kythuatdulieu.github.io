@@ -1,0 +1,213 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+import fs from 'fs';
+import path from 'path';
+
+let backlinks = {};
+try {
+  const filePath = path.join(process.cwd(), 'public', 'backlinks.json');
+  if (fs.existsSync(filePath)) {
+    const file = fs.readFileSync(filePath, 'utf-8');
+    backlinks = JSON.parse(file);
+  }
+} catch (e) {
+  console.error("Error loading backlinks:", e);
+}
+
+let currentPath = Astro.url.pathname;
+// Ensure consistent trailing slash
+if (!currentPath.endsWith('/')) {
+  currentPath += '/';
+}
+
+// Remove base path if applicable
+// For kythuatdulieu.github.io, the base path is / so we're good.
+
+const pageBacklinks = backlinks[currentPath] || [];
+const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPath === '/';
+
+// Parse category from URL to construct smart homepage backlink
+const pathParts = currentPath.split('/').filter(Boolean);
+let categorySlug = '';
+let categoryName = '';
+if (pathParts[0] === 'concepts' && pathParts[1]) {
+  categorySlug = pathParts[1];
+  const categoryNames = {
+    "foundation": "Foundation (Nền Tảng)",
+    "system-architecture": "Data Architectures & Stacks",
+    "database-storage": "Database & Storage",
+    "data-warehouse": "Data Warehouse & Modeling",
+    "data-lake-lakehouse": "Data Lake & Lakehouse",
+    "cloud-data-platform": "Cloud Data Platform",
+    "batch-processing": "Batch Processing",
+    "streaming-processing": "Streaming Processing",
+    "etl-elt": "ETL & ELT",
+    "transformation-analytics": "Transformation & Analytics",
+    "orchestration": "Orchestration",
+    "data-quality": "Data Quality",
+    "governance-metadata": "Governance & Metadata",
+    "observability-reliability": "Observability & Reliability",
+    "genai-ml": "GenAI & Machine Learning"
+  };
+  categoryName = categoryNames[categorySlug] || '';
+}
+---
+
+{!isSplashPage && pageBacklinks.length > 0 && (
+  <div class="backlinks-container">
+    <h3>Liên kết ngược (Backlinks)</h3>
+    <p>Các trang khác có nhắc đến chủ đề này:</p>
+    <ul class="backlinks-list">
+      {pageBacklinks.map((link: any) => (
+        <li>
+          <a href={link.url}>{link.title}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+{!isSplashPage && (
+  <div class="navigation-hub">
+    <a href="/" class="nav-hub-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; display: inline-block; vertical-align: middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      Trang chủ (Bản đồ tri thức)
+    </a>
+    {categorySlug && categoryName && (
+      <span class="nav-hub-separator">/</span>
+      <a href={`/#row-${categorySlug}`} class="nav-hub-link category-link">
+        Chuyên mục: {categoryName}
+      </a>
+    )}
+  </div>
+)}
+{!isSplashPage && (
+<div class="comments-container" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--sl-color-hairline);">
+  <h3 style="font-size: var(--sl-text-h4); margin-bottom: 1rem; font-weight: 600; color: var(--sl-color-white);">Bình luận & Thảo luận</h3>
+  
+  <div id="utterances-container"></div>
+  
+  <script is:inline>
+    function loadUtterances() {
+      const container = document.getElementById('utterances-container');
+      if (!container) return;
+      
+      // Remove old script/iframe to prevent duplicates
+      container.innerHTML = '';
+      
+      const script = document.createElement('script');
+      script.src = 'https://utteranc.es/client.js';
+      script.setAttribute('repo', 'kythuatdulieu/kythuatdulieu.github.io');
+      script.setAttribute('issue-term', 'pathname');
+      
+      // Detect Starlight's current theme
+      const isDark = document.documentElement.dataset.theme === 'dark';
+      script.setAttribute('theme', isDark ? 'github-dark' : 'github-light');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+      
+      container.appendChild(script);
+    }
+
+    // Run immediately since Starlight might not use ViewTransitions
+    // Use requestAnimationFrame to ensure the DOM element is fully ready
+    requestAnimationFrame(() => {
+        loadUtterances();
+        
+        // Watch for Starlight dark/light mode toggles
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-theme') {
+              loadUtterances();
+            }
+          });
+        });
+        observer.observe(document.documentElement, { attributes: true });
+    });
+
+    // Also keep the astro:page-load hook just in case ViewTransitions is enabled later
+    document.addEventListener('astro:page-load', loadUtterances);
+  </script>
+
+</div>
+)}
+
+<Default {...Astro.props}>
+  <slot />
+</Default>
+
+<style>
+  .backlinks-container {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--sl-color-hairline);
+    margin-bottom: 2rem;
+  }
+  .backlinks-container h3 {
+    font-size: var(--sl-text-h4);
+    margin-bottom: 0.5rem;
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+  .backlinks-container p {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+    margin-bottom: 1rem;
+  }
+  .backlinks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .backlinks-list li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  .backlinks-list li::before {
+    content: "↳";
+    position: absolute;
+    left: 0;
+    color: var(--sl-color-gray-4);
+  }
+  .backlinks-list li a {
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .backlinks-list li a:hover {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+  }
+  .navigation-hub {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+  }
+  .nav-hub-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-hub-link:hover {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+  }
+  .nav-hub-separator {
+    color: var(--sl-color-gray-4);
+  }
+  .category-link {
+    font-weight: 600;
+  }
+</style>

@@ -1,68 +1,111 @@
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
     let conceptsData = {};
     let sortedKeys = [];
-    let popoverEl = null;
-    let hoverTimeout = null;
-    let hideTimeout = null;
+    window.popoverCache = window.popoverCache || {};
+
+    // Define shared functions on window conditionally to support any script loading order
+    window.ensureTippyLoaded = window.ensureTippyLoaded || function() {
+        if (typeof tippy !== 'undefined') {
+            return Promise.resolve();
+        }
+        return new Promise((resolve) => {
+            const checkInterval = setInterval(() => {
+                if (typeof tippy !== 'undefined') {
+                    clearInterval(checkInterval);
+                    resolve();
+                }
+            }, 50);
+        });
+    };
+
+    window.getConceptsData = window.getConceptsData || async function() {
+        if (window.conceptsPromise) {
+            return window.conceptsPromise;
+        }
+        window.conceptsPromise = (async () => {
+            if (window.conceptsData && Object.keys(window.conceptsData).length > 0) {
+                return window.conceptsData;
+            }
+            try {
+                const conceptsResponse = await fetch('/concepts.json?v=' + new Date().getTime());
+                if (conceptsResponse.ok) {
+                    const data = await conceptsResponse.json();
+                    window.conceptsData = data.concepts || {};
+                    return window.conceptsData;
+                }
+            } catch (err) {
+                console.warn('Cannot load concepts.json:', err);
+            }
+            return {};
+        })();
+        return window.conceptsPromise;
+    };
+
+    window.extractPageDetails = window.extractPageDetails || function(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Extract title from h1
+        const titleEl = doc.querySelector('h1');
+        const title = titleEl ? titleEl.textContent.trim() : '';
+
+        const contentArea = doc.querySelector('.sl-markdown-content');
+        let preview = '';
+        if (contentArea) {
+            const paragraphs = contentArea.querySelectorAll('p');
+            for (const p of paragraphs) {
+                const text = p.textContent.trim();
+                if (text.length > 30 && !p.closest('.sl-aside')) {
+                    preview = p.innerHTML;
+                    break;
+                }
+            }
+        }
+        return { title, preview };
+    };
+
+    window.getCategoryLabel = window.getCategoryLabel || function(url) {
+        const lower = url.toLowerCase();
+        if (lower.includes('/concepts/')) {
+            return 'Khái niệm';
+        }
+        if (lower.includes('/learning-paths/')) {
+            return 'Lộ trình học';
+        }
+        if (lower.includes('/interview/')) {
+            return 'Phỏng vấn';
+        }
+        return 'Tài liệu';
+    };
+
+    window.buildPopoverHtml = window.buildPopoverHtml || function(title, category, bodyHtml, url) {
+        return `
+            <div class="popover-wrapper">
+                <div class="popover-header">
+                    <span class="popover-category">${category}</span>
+                    <h3 class="popover-title"><a href="${url}">${title}</a></h3>
+                </div>
+                <div class="popover-body">
+                    ${bodyHtml}
+                </div>
+                <div class="popover-footer">
+                    <a href="${url}" class="popover-more">Xem chi tiết →</a>
+                </div>
+            </div>
+        `;
+    };
 
     async function init() {
         try {
-            const conceptsResponse = await fetch('/concepts.json?v=' + new Date().getTime());
-            if (conceptsResponse.ok) {
-                const data = await conceptsResponse.json();
-                conceptsData = data.concepts || {};
-                sortedKeys = Object.keys(conceptsData).sort((a, b) => b.length - a.length);
-                initPopoverDOM();
-                
-                // Observe DOM changes or just apply to current content
-                const container = document.querySelector('.sl-markdown-content') || document.body;
-                applyConceptHighlights(container);
-            }
+            const data = await window.getConceptsData();
+            conceptsData = data || {};
+            sortedKeys = Object.keys(conceptsData).sort((a, b) => b.length - a.length);
+            
+            const container = document.querySelector('.sl-markdown-content') || document.body;
+            applyConceptHighlights(container);
         } catch (err) {
             console.warn('Không thể tải glossary khái niệm:', err);
         }
-    }
-
-    function initPopoverDOM() {
-        if (document.getElementById('concept-popover')) return;
-        
-        popoverEl = document.createElement('div');
-        popoverEl.id = 'concept-popover';
-        popoverEl.className = 'concept-popover hidden';
-        popoverEl.innerHTML = `
-            <div class="popover-header">
-                <h4 id="popover-title">Khái niệm</h4>
-                <span class="popover-badge" id="popover-category">Danh mục</span>
-            </div>
-            <div class="popover-body" id="popover-body"></div>
-            <div class="popover-footer">
-                <span class="popover-tip">Chạm bên ngoài hoặc nhấn nút để đóng</span>
-                <button class="popover-close-btn" id="popover-close">Đóng</button>
-            </div>
-        `;
-        
-        document.body.appendChild(popoverEl);
-        
-        popoverEl.addEventListener('mouseenter', () => {
-            clearTimeout(hideTimeout);
-        });
-        popoverEl.addEventListener('mouseleave', () => {
-            clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(() => {
-                hidePopover();
-            }, 300);
-        });
-        
-        document.getElementById('popover-close').addEventListener('click', (e) => {
-            e.preventDefault();
-            hidePopover();
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (popoverEl && !popoverEl.classList.contains('hidden') && !popoverEl.contains(e.target) && !e.target.classList.contains('concept-link')) {
-                hidePopover();
-            }
-        });
     }
 
     function wrapConcepts(element, concepts, sortedKeys) {
@@ -87,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const escapedKeys = sortedKeys.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-        const pattern = \`(?<![\\p{L}\\p{N}_])(\${escapedKeys.join('|')})(?![\\p{L}\\p{N}_])\`;
+        const pattern = `(^|[^\\p{L}\\p{N}_])(${escapedKeys.join('|')})(?=[^\\p{L}\\p{N}_]|$)`;
         const regex = new RegExp(pattern, 'gui');
 
         for (const node of textNodes) {
@@ -101,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let match;
                 
                 while ((match = regex.exec(text)) !== null) {
-                    const matchedText = match[0];
-                    const matchIndex = match.index;
+                    const matchedText = match[2];
+                    const matchIndex = match.index + match[1].length;
                     
                     if (matchIndex > lastIndex) {
                         fragment.appendChild(document.createTextNode(text.substring(lastIndex, matchIndex)));
@@ -110,13 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const conceptKey = sortedKeys.find(key => key.toLowerCase() === matchedText.toLowerCase());
                     
-                    const span = document.createElement('span');
-                    span.className = 'concept-link';
-                    span.dataset.concept = conceptKey;
-                    span.textContent = matchedText;
-                    fragment.appendChild(span);
+                    const a = document.createElement('a');
+                    a.className = 'concept-link';
+                    a.dataset.concept = conceptKey;
+                    a.textContent = matchedText;
+                    fragment.appendChild(a);
                     
-                    lastIndex = regex.lastIndex;
+                    lastIndex = matchIndex + matchedText.length;
+                    regex.lastIndex = lastIndex;
                 }
                 
                 if (lastIndex < text.length) {
@@ -134,108 +178,78 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapConcepts(containerElement, conceptsData, sortedKeys);
         
         const links = containerElement.querySelectorAll('.concept-link');
-        links.forEach(link => {
-            link.addEventListener('mouseenter', handleMouseEnter);
-            link.addEventListener('mouseleave', handleMouseLeave);
-            link.addEventListener('click', handleConceptClick);
+        
+        window.ensureTippyLoaded().then(() => {
+            links.forEach(link => {
+                if (link.dataset.hasPopover) return;
+                link.dataset.hasPopover = "true";
+
+                const conceptKey = link.dataset.concept;
+                const concept = conceptsData[conceptKey];
+                if (!concept) return;
+
+                const slug = conceptKey.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+                const url = concept.url || `/concepts/${slug}/`;
+                link.href = url;
+
+                tippy(link, {
+                    content: '<div class="popover-loading"><div class="spinner"></div> Đang tải...</div>',
+                    allowHTML: true,
+                    theme: 'starlight',
+                    animation: 'shift-away',
+                    interactive: true,
+                    maxWidth: 400,
+                    placement: 'auto',
+                    appendTo: document.body,
+                    onShow: async (instance) => {
+                        if (window.popoverCache[url]) {
+                            instance.setContent(window.popoverCache[url]);
+                            return;
+                        }
+
+                        if (concept.definition) {
+                            let bulletsHtml = '';
+                            if (concept.bullets && concept.bullets.length > 0) {
+                                bulletsHtml = '<ul>' + concept.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+                            }
+                            const content = window.buildPopoverHtml(concept.title || conceptKey, concept.category || 'Khái niệm', `<p>${concept.definition}</p>${bulletsHtml}`, url);
+                            window.popoverCache[url] = content;
+                            instance.setContent(content);
+                            return;
+                        }
+
+                        // Fallback fetching
+                        try {
+                            const res = await fetch(url);
+                            if (res.ok) {
+                                const html = await res.text();
+                                const details = window.extractPageDetails(html);
+                                if (details.preview) {
+                                    const content = window.buildPopoverHtml(details.title || conceptKey, concept.category || 'Khái niệm', `<p>${details.preview}</p>`, url);
+                                    window.popoverCache[url] = content;
+                                    instance.setContent(content);
+                                } else {
+                                    instance.setContent('<div class="popover-error">Không tìm thấy trích dẫn.</div>');
+                                }
+                            } else {
+                                instance.setContent('<div class="popover-error">Không tìm thấy trích dẫn.</div>');
+                            }
+                        } catch (e) {
+                            instance.setContent('<div class="popover-error">Lỗi tải dữ liệu.</div>');
+                        }
+                    }
+                });
+
+
+            });
         });
     }
 
-    function handleMouseEnter(e) {
-        const link = e.currentTarget;
-        const conceptKey = link.dataset.concept;
-        const concept = conceptsData[conceptKey];
-        if (!concept) return;
-
-        clearTimeout(hideTimeout);
-        clearTimeout(hoverTimeout);
-        
-        hoverTimeout = setTimeout(() => {
-            showPopover(link, concept, false);
-        }, 200);
+    // Run init on initial load and view transitions
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
-
-    function handleMouseLeave(e) {
-        clearTimeout(hoverTimeout);
-        clearTimeout(hideTimeout);
-        
-        hideTimeout = setTimeout(() => {
-            hidePopover();
-        }, 300);
-    }
-
-    function handleConceptClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const link = e.currentTarget;
-        const conceptKey = link.dataset.concept;
-        const concept = conceptsData[conceptKey];
-        if (!concept) return;
-        
-        clearTimeout(hoverTimeout);
-        clearTimeout(hideTimeout);
-        
-        showPopover(link, concept, true);
-    }
-
-    function showPopover(link, concept, isSticky = false) {
-        if (!popoverEl) return;
-        
-        document.getElementById('popover-title').textContent = concept.title || conceptKey;
-        document.getElementById('popover-category').textContent = concept.category || 'Khái niệm';
-        
-        const bodyEl = document.getElementById('popover-body');
-        let bulletsHtml = '';
-        if (concept.bullets && concept.bullets.length > 0) {
-            bulletsHtml = '<ul>' + concept.bullets.map(b => \`<li>\${b}</li>\`).join('') + '</ul>';
-        }
-        bodyEl.innerHTML = \`<p>\${concept.definition}</p>\${bulletsHtml}\`;
-        
-        const closeBtn = document.getElementById('popover-close');
-        const tipEl = popoverEl.querySelector('.popover-tip');
-        
-        if (isSticky) {
-            closeBtn.style.display = 'block';
-            tipEl.innerHTML = 'Đã ghim khái niệm';
-        } else {
-            closeBtn.style.display = 'none';
-            tipEl.innerHTML = 'Di chuột ra ngoài để đóng';
-        }
-        
-        popoverEl.classList.remove('hidden');
-        popoverEl.offsetWidth; // force reflow
-        popoverEl.classList.add('visible');
-        
-        positionPopover(link);
-    }
-
-    function hidePopover() {
-        if (!popoverEl) return;
-        popoverEl.classList.remove('visible');
-        setTimeout(() => {
-            if (!popoverEl.classList.contains('visible')) {
-                popoverEl.classList.add('hidden');
-            }
-        }, 200);
-    }
-
-    function positionPopover(link) {
-        const rect = link.getBoundingClientRect();
-        const popoverWidth = popoverEl.offsetWidth;
-        const popoverHeight = popoverEl.offsetHeight;
-        
-        let left = rect.left + window.scrollX + (rect.width / 2) - (popoverWidth / 2);
-        let top = rect.top + window.scrollY - popoverHeight - 12;
-        
-        if (left < 10) left = 10;
-        else if (left + popoverWidth > window.innerWidth - 10) left = window.innerWidth - popoverWidth - 10;
-        
-        if (rect.top - popoverHeight - 12 < 10) top = rect.bottom + window.scrollY + 12;
-        
-        popoverEl.style.left = \`\${left}px\`;
-        popoverEl.style.top = \`\${top}px\`;
-    }
-
-    init();
-});
+    document.addEventListener('astro:page-load', init);
+})();
