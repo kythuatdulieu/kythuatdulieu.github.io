@@ -1,14 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import { remarkMermaid } from './mermaid-plugin.js';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
-	markdown: {
-		remarkPlugins: [remarkMermaid],
-	},
 	integrations: [
 		starlight({
 			title: 'Data Engineering Handbook',
@@ -30,7 +26,7 @@ export default defineConfig({
 				},
 				{
 					tag: 'script',
-					attrs: { type: 'module', src: '/mermaid-init.js' },
+					attrs: { type: 'module', src: '/mermaid-client.js' },
 				},
 				{
 					tag: 'script',
