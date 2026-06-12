@@ -1,171 +1,409 @@
 ---
-title: Kỹ Thuật Dữ Liệu
-description: Kỹ thuật Dữ liệu chuyên sâu
+title: Cẩm Nang Kỹ Thuật Dữ Liệu
+description: Hệ thống hóa toàn bộ kiến thức, khái niệm và dự án thực chiến dành cho Kỹ sư Dữ liệu (Data Engineer).
 template: splash
 ---
 
 import MapOfContent from '../../components/MapOfContent.astro';
+import JourneyCards from '../../components/JourneyCards.astro';
 
-<div class="scroll-action-container">
-  <a href="#quizzes" class="scroll-to-quizzes-btn">
-    <span>📝 Ôn Thi Certificate</span>
-    <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-  </a>
+<div class="hero-container">
+  <h1 class="hero-title">
+    Cẩm Nang Kỹ Thuật Dữ Liệu
+  </h1>
+  
+  <p class="hero-subtitle">
+    Hệ thống hóa toàn bộ kiến thức, khái niệm cốt lõi, so sánh công nghệ và hướng dẫn thực hành dự án đầu-cuối (E2E) dành cho Kỹ sư Dữ liệu (Data Engineer).
+  </p>
+
+  <div class="hero-ctas">
+    <a href="/concepts/1-foundations/foundation/data-engineering/" class="cta-btn primary-cta">
+      <span>Bắt đầu học</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+    
+    <a href="#career-prep" class="cta-btn secondary-cta">
+      <span>Luyện thi & Phỏng vấn</span>
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-badge">
+      <span class="stat-icon">📚</span>
+      <span class="stat-text">150+ Bài học</span>
+    </div>
+    <div class="stat-badge">
+      <span class="stat-icon">🧭</span>
+      <span class="stat-text">8+ Lộ trình</span>
+    </div>
+    <div class="stat-badge">
+      <span class="stat-icon">🚀</span>
+      <span class="stat-text">3+ Dự án E2E</span>
+    </div>
+    <div class="stat-badge">
+      <span class="stat-icon">📝</span>
+      <span class="stat-text">400+ Câu Quiz</span>
+    </div>
+  </div>
 </div>
+
+<hr class="section-divider" />
+
+<JourneyCards />
+
+<hr class="section-divider" />
 
 <MapOfContent />
 
-<div id="quizzes" class="quiz-section">
-  <h2 class="quiz-title">📝 Ôn Thi Certificate</h2>
-  <p class="quiz-desc">Hệ thống ôn luyện thi trắc nghiệm trực tuyến các chứng chỉ Databricks phổ biến.</p>
+<div id="career-prep" class="quiz-section">
+  <h2 class="quiz-title">💼 Bệ Phóng Sự Nghiệp (Career Prep)</h2>
+  <p class="quiz-desc">Hệ thống đề ôn luyện trắc nghiệm chứng chỉ Databricks trực tuyến và ngân hàng câu hỏi phỏng vấn chọn lọc kèm lời giải chi tiết.</p>
   
-  <div class="quiz-links-container">
-    <a href="/quizzes/databricks-de-advanced/" data-astro-reload class="quiz-link-card">
-      <img src="https://www.databricks.com/sites/default/files/2025-10/professional-badge-de.png?v=1761143167" alt="Databricks Certified Data Engineer Professional" class="quiz-badge-img" />
-      <div class="quiz-info">
-        <h3>Databricks Certified Data Engineer Professional</h3>
-        <p>327 câu hỏi sát đề thi thực tế</p>
+  <div class="career-grid-container">
+    <div class="quiz-links-container">
+      <a href="/quizzes/databricks-de-advanced/" data-astro-reload class="quiz-link-card">
+        <img src="https://www.databricks.com/sites/default/files/2025-10/professional-badge-de.png?v=1761143167" alt="Databricks Certified Data Engineer Professional" class="quiz-badge-img" />
+        <div class="quiz-info">
+          <h3>Databricks Certified Data Engineer Professional</h3>
+          <p>327 câu hỏi trắc nghiệm ôn tập</p>
+        </div>
+        <div class="quiz-arrow">→</div>
+      </a>
+      
+      <a href="/quizzes/databricks-genai-associate/" data-astro-reload class="quiz-link-card">
+        <img src="https://www.databricks.com/sites/default/files/2025-10/associate-badge-gen-ai.png?v=1761153880" alt="Databricks Certified Generative AI Engineer Associate" class="quiz-badge-img" />
+        <div class="quiz-info">
+          <h3>Databricks Certified Generative AI Engineer Associate</h3>
+          <p>92 câu hỏi trắc nghiệm ôn tập</p>
+        </div>
+        <div class="quiz-arrow">→</div>
+      </a>
+    </div>
+
+    <a href="/interview/overview/" class="interview-link-card">
+      <div class="interview-icon-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
       </div>
-      <div class="quiz-arrow">→</div>
-    </a>
-    
-    <a href="/quizzes/databricks-genai-associate/" data-astro-reload class="quiz-link-card">
-      <img src="https://www.databricks.com/sites/default/files/2025-10/associate-badge-gen-ai.png?v=1761153880" alt="Databricks Certified Generative AI Engineer Associate" class="quiz-badge-img" />
-      <div class="quiz-info">
-        <h3>Databricks Certified Generative AI Engineer Associate</h3>
-        <p>92 câu hỏi chuyên sâu</p>
+      <div class="interview-info">
+        <h3>Ngân Hàng Câu Hỏi Phỏng Vấn</h3>
+        <p>Tuyển tập câu hỏi phỏng vấn DE chuyên sâu từ SQL, Spark Optimization, Kafka, Pipeline Design đến System Design.</p>
+        <span class="interview-action">Xem bộ câu hỏi <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span>
       </div>
-      <div class="quiz-arrow">→</div>
     </a>
   </div>
 </div>
 
 <style>{`
+  /* Override default Starlight constraints for full-width content */
   .sl-markdown-content {
-    max-width: 100% !important;
+    max-width: 1000px !important;
+    margin: 0 auto !important;
   }
-  
-  .quiz-section {
-    margin-top: 4rem;
-    padding-top: 2rem;
+
+  /* Hero Section */
+  .hero-container {
+    padding: 6rem 1rem 4rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Background Glow Mesh */
+  .hero-container::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(var(--sl-color-accent-rgb, 59, 130, 246), 0.15) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .hero-title {
+    font-size: 2.75rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    margin: 0 0 1.25rem 0 !important;
+    background: linear-gradient(135deg, var(--sl-color-white) 40%, var(--sl-color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 3.5rem !important;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--sl-color-gray-2);
+    max-width: 700px;
+    margin: 0 auto 2.5rem auto !important;
+    line-height: 1.6;
+  }
+
+  :global([data-theme='light']) .hero-subtitle {
+    color: var(--sl-color-gray-3);
+  }
+
+  /* CTAs Buttons */
+  .hero-ctas {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+
+  .primary-cta {
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-text-invert) !important;
+    border: 1px solid var(--sl-color-accent);
+    box-shadow: 0 4px 14px rgba(var(--sl-color-accent-rgb), 0.25);
+  }
+
+  .primary-cta:hover {
+    background-color: var(--sl-color-accent-high);
+    border-color: var(--sl-color-accent-high);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(var(--sl-color-accent-rgb), 0.35);
+  }
+
+  .secondary-cta {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-text) !important;
+  }
+
+  .secondary-cta:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--sl-color-gray-2);
+    transform: translateY(-1px);
+  }
+
+  /* Stats Row */
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 3.5rem;
+  }
+
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    background: rgba(var(--sl-color-bg-nav-rgb), 0.2);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-2);
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+  }
+
+  .stat-icon {
+    font-size: 0.9rem;
+  }
+
+  .section-divider {
+    margin: 3rem 0 !important;
+    border: 0;
     border-top: 1px solid var(--sl-color-hairline);
   }
-  
+
+  /* Quiz & Career Section */
+  .quiz-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
   .quiz-title {
-    font-size: 1.75rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.5rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    margin: 0 0 0.5rem 0 !important;
+    background: linear-gradient(135deg, var(--sl-color-white) 40%, var(--sl-color-accent-high) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
   }
-  
+
   .quiz-desc {
-    color: var(--sl-color-text-accent);
-    margin-bottom: 2rem;
+    color: var(--sl-color-gray-3);
+    margin: 0 0 2rem 0 !important;
+    font-size: 0.95rem;
   }
-  
+
+  .career-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
   .quiz-links-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .quiz-link-card {
     display: flex;
     align-items: center;
-    padding: 1.5rem;
-    background: var(--sl-color-bg-nav);
+    padding: 1.25rem 1.5rem;
+    background: rgba(var(--sl-color-bg-nav-rgb, 20, 24, 33), 0.4);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--sl-color-hairline);
-    border-radius: 8px;
+    border-radius: 12px;
     text-decoration: none !important;
     color: var(--sl-color-text);
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
   }
-  
+
   .quiz-link-card:hover {
-    border-color: var(--sl-color-accent);
-    background: rgba(var(--sl-color-accent-rgb), 0.05);
+    border-color: rgba(var(--sl-color-accent-rgb), 0.5);
+    background: rgba(var(--sl-color-accent-rgb), 0.04);
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
   }
-  
+
   .quiz-badge-img {
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
-    margin-right: 1.5rem;
+    margin-right: 1.25rem;
     flex-shrink: 0;
   }
-  
+
   .quiz-info {
     flex: 1;
   }
-  
+
   .quiz-info h3 {
-    margin: 0 !important;
-    font-size: 1.25rem !important;
-    color: var(--sl-color-white);
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
   }
-  
+
   .quiz-info p {
-    margin: 0.25rem 0 0 0 !important;
-    font-size: 0.9rem;
-    color: var(--sl-color-text-accent);
+    margin: 0 !important;
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
   }
-  
+
   .quiz-arrow {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--sl-color-accent);
-    font-weight: bold;
-    opacity: 0.5;
-    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0.6;
+    transition: all 0.2s ease;
   }
-  
+
   .quiz-link-card:hover .quiz-arrow {
     opacity: 1;
     transform: translateX(4px);
   }
-  
-  @media (min-width: 768px) {
-    .quiz-links-container {
-      flex-direction: row;
-    }
-    .quiz-link-card {
-      flex: 1;
-    }
+
+  /* Interview Card */
+  .interview-link-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: rgba(var(--sl-color-bg-nav-rgb, 20, 24, 33), 0.4);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 12px;
+    text-decoration: none !important;
+    color: var(--sl-color-text) !important;
+    transition: all 0.25s ease;
   }
 
-  .scroll-action-container {
-    display: flex;
-    justify-content: flex-start;
-    margin: -1.5rem 0 2rem 0;
+  .interview-link-card:hover {
+    border-color: rgba(var(--sl-color-accent-rgb), 0.5);
+    background: rgba(var(--sl-color-accent-rgb), 0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
   }
-  
-  .scroll-to-quizzes-btn {
+
+  .interview-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--sl-color-accent-rgb), 0.1);
+    color: var(--sl-color-accent);
+    margin-bottom: 1rem;
+    border: 1px solid rgba(var(--sl-color-accent-rgb), 0.15);
+  }
+
+  .interview-info {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .interview-info h3 {
+    margin: 0 0 0.5rem 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
+  }
+
+  .interview-info p {
+    margin: 0 0 1.25rem 0 !important;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-3);
+    flex-grow: 1;
+  }
+
+  .interview-action {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 1.25rem;
-    background: linear-gradient(135deg, var(--sl-color-accent), var(--sl-color-accent-high));
-    color: var(--sl-color-text-invert) !important;
+    gap: 0.35rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    font-size: 0.95rem;
-    border-radius: 30px;
-    text-decoration: none !important;
-    box-shadow: 0 4px 12px rgba(var(--sl-color-accent-rgb), 0.35);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--sl-color-accent);
+    transition: all 0.2s ease;
+    margin-top: auto;
   }
-  
-  .scroll-to-quizzes-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(var(--sl-color-accent-rgb), 0.5);
-    filter: brightness(1.15);
+
+  .interview-link-card:hover .interview-action {
+    color: var(--sl-color-accent-high);
   }
-  
-  .scroll-to-quizzes-btn:hover .arrow-down {
-    transform: translateY(3px);
+
+  .interview-link-card:hover .arrow {
+    transform: translateX(4px);
   }
-  
-  .scroll-to-quizzes-btn .arrow-down {
+
+  .arrow {
     transition: transform 0.2s ease;
   }
-`}</style>
 
+  @media (min-width: 768px) {
+    .career-grid-container {
+      grid-template-columns: 1.25fr 1fr;
+    }
+  }
+`}</style>

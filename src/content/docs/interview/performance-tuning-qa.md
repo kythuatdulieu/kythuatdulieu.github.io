@@ -25,11 +25,11 @@ Khi phỏng vấn, bạn cần chứng minh mình biết cách đọc và hiểu
 
 ## Bốn nguyên tắc vàng để tối ưu hóa mọi hệ thống lưu trữ
 
-Bất kể bạn đang làm việc trên cơ sở dữ liệu truyền thống (PostgreSQL, MySQL) hay các kho dữ liệu đám mây hiện đại (BigQuery, [Snowflake](/concepts/cloud-data-platform/snowflake/)), việc tối ưu hiệu năng luôn xoay quanh 4 nguyên tắc cốt lõi sau:
+Bất kể bạn đang làm việc trên cơ sở dữ liệu truyền thống (PostgreSQL, MySQL) hay các kho dữ liệu đám mây hiện đại (BigQuery, [Snowflake](/concepts/2-storage/cloud-data-platform/snowflake/)), việc tối ưu hiệu năng luôn xoay quanh 4 nguyên tắc cốt lõi sau:
 
 * **Cắt tỉa dữ liệu từ sớm (Pushdown / Pruning)**: Quy tắc vàng của ngành dữ liệu là *"Hãy đọc từ đĩa cứng càng ít dữ liệu càng tốt"*. Hãy luôn cố gắng đẩy các bộ lọc điều kiện (`WHERE`, chỉ định rõ các cột cần lấy trong `SELECT`) xuống sâu nhất có thể, trước khi thực hiện các phép toán nặng nề như gom nhóm (`GROUP BY`) hay kết hợp bảng (`JOIN`).
-* **Tổ chức dữ liệu vật lý thông minh (Data Organization)**: Phân chia dữ liệu trên ổ đĩa thông qua cơ chế Phân vùng ([Partitioning](/concepts/database-storage/partitioning/) - chia thành các thư mục nhỏ) và gom cụm ([Clustering](/concepts/database-storage/clustering/) / Z-Ordering - xếp các dòng có giá trị tương tự nằm gần nhau). Việc này giúp công cụ truy vấn có thể bỏ qua (skip) hàng loạt tệp tin không liên quan khi tìm kiếm.
-* **Đánh chỉ mục hợp lý ([Indexing](/concepts/database-storage/indexing/))**: Sử dụng các cấu trúc dữ liệu bổ trợ như B-Tree Index (phù hợp cho các hệ thống giao dịch [OLTP](/concepts/database-storage/oltp/)) hoặc Bitmap Index (phù hợp cho các hệ thống phân tích [OLAP](/concepts/database-storage/olap/)) để thay thế phép quét toàn bộ bảng (Full Table Scan) bằng các phép tìm kiếm nhị phân có độ phức tạp thấp $O(\log n)$.
+* **Tổ chức dữ liệu vật lý thông minh (Data Organization)**: Phân chia dữ liệu trên ổ đĩa thông qua cơ chế Phân vùng ([Partitioning](/concepts/2-storage/database-storage/partitioning/) - chia thành các thư mục nhỏ) và gom cụm ([Clustering](/concepts/2-storage/database-storage/clustering/) / Z-Ordering - xếp các dòng có giá trị tương tự nằm gần nhau). Việc này giúp công cụ truy vấn có thể bỏ qua (skip) hàng loạt tệp tin không liên quan khi tìm kiếm.
+* **Đánh chỉ mục hợp lý ([Indexing](/concepts/2-storage/database-storage/indexing/))**: Sử dụng các cấu trúc dữ liệu bổ trợ như B-Tree Index (phù hợp cho các hệ thống giao dịch [OLTP](/concepts/2-storage/database-storage/oltp/)) hoặc Bitmap Index (phù hợp cho các hệ thống phân tích [OLAP](/concepts/2-storage/database-storage/olap/)) để thay thế phép quét toàn bộ bảng (Full Table Scan) bằng các phép tìm kiếm nhị phân có độ phức tạp thấp $O(\log n)$.
 * **Tính toán trước (Pre-computation)**: Thay vì bắt hệ thống phải quét qua dữ liệu của 5 năm để tính tổng doanh thu mỗi khi người dùng mở Dashboard, hãy tính toán sẵn số liệu này vào ban đêm và lưu kết quả ra một bảng trung gian (Materialized Views).
 
 ---
@@ -87,7 +87,7 @@ GROUP BY product_id;
 * **Lựa chọn đúng thuật toán JOIN phù hợp với kích thước bảng**:
   * Khi JOIN một bảng lớn với một bảng cấu hình siêu nhỏ: Hãy dùng cơ chế `Broadcast Join` (hoặc Hash Join) để sao chép bảng nhỏ sang tất cả các worker nodes, tránh việc phải xáo trộn bảng lớn qua mạng.
   * Khi JOIN hai bảng khổng lồ với nhau: Hãy đảm bảo cả hai bảng đều được phân phối (Distributed/Bucketed) dựa trên cùng một khóa JOIN để dữ liệu liên quan nằm sẵn trên cùng một node.
-* **Ưu tiên định dạng lưu trữ hướng cột ([Columnar Storage](/concepts/database-storage/columnar-storage/))**: Trong các hệ thống phân tích OLAP, việc lưu trữ dữ liệu dưới định dạng Parquet hoặc ORC là một Best Practice bắt buộc. Nếu câu truy vấn của bạn chỉ cần đọc 3 cột trong một bảng có 100 cột, hệ thống hướng cột sẽ chỉ phải đọc các file vật lý của đúng 3 cột đó, giúp tiết kiệm đến 97% tài nguyên đọc đĩa.
+* **Ưu tiên định dạng lưu trữ hướng cột ([Columnar Storage](/concepts/2-storage/database-storage/columnar-storage/))**: Trong các hệ thống phân tích OLAP, việc lưu trữ dữ liệu dưới định dạng Parquet hoặc ORC là một Best Practice bắt buộc. Nếu câu truy vấn của bạn chỉ cần đọc 3 cột trong một bảng có 100 cột, hệ thống hướng cột sẽ chỉ phải đọc các file vật lý của đúng 3 cột đó, giúp tiết kiệm đến 97% tài nguyên đọc đĩa.
 
 ---
 

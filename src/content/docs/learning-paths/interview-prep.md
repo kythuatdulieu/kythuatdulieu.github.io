@@ -29,15 +29,15 @@ SQL luôn là bài kiểm tra đầu tiên và bắt buộc đối với mọi D
 ### Bước 2: Thiết lập bộ khung thiết kế hệ thống dữ liệu lớn (Data System Design)
 Vòng thiết kế hệ thống là nơi phân định rõ ràng giữa một kỹ sư làm việc theo lối mòn và một kỹ sư có tư duy kiến trúc lớn.
 * Hãy xây dựng cho mình một bộ khung (framework) thiết kế hệ thống mạch lạc: từ việc chủ động làm rõ các yêu cầu kinh doanh, ước lượng lưu lượng dữ liệu/băng thông, cho đến phác thảo sơ đồ kiến trúc tổng thể.
-* Hiểu sâu sắc và phân tích được các lựa chọn kiến trúc: khi nào nên chạy Batch so với Streaming, so sánh sự đánh đổi giữa kiến trúc Lambda ([Lambda Architecture](/concepts/system-architecture/lambda-architecture/)) và kiến trúc Kappa ([Kappa Architecture](/concepts/system-architecture/kappa-architecture/)).
+* Hiểu sâu sắc và phân tích được các lựa chọn kiến trúc: khi nào nên chạy Batch so với Streaming, so sánh sự đánh đổi giữa kiến trúc Lambda ([Lambda Architecture](/concepts/1-foundations/system-architecture/lambda-architecture/)) và kiến trúc Kappa ([Kappa Architecture](/concepts/1-foundations/system-architecture/kappa-architecture/)).
 
 ### Bước 3: Lập trình thuật toán xử lý dữ liệu lớn (Python for Big Data)
 Bài test lập trình (Coding test) dành cho Data Engineer thường khác biệt so với Software Engineer thông thường. Bạn sẽ bị thử thách về khả năng xử lý dữ liệu lớn vượt quá giới hạn bộ nhớ (Out-of-memory).
-* Hãy học cách tối ưu bộ nhớ bằng cách sử dụng **Generators (`yield`)**, Iterators và kỹ thuật chia nhỏ dữ liệu để xử lý ([chunking](/concepts/genai-ml/chunking/)).
+* Hãy học cách tối ưu bộ nhớ bằng cách sử dụng **Generators (`yield`)**, Iterators và kỹ thuật chia nhỏ dữ liệu để xử lý ([chunking](/concepts/6-ai-ml/genai-ml/chunking/)).
 * Nắm vững các cấu trúc dữ liệu tối ưu tài nguyên trong Python để tránh tình trạng chương trình bị crash giữa chừng khi chạy thực tế.
 
 ### Bước 4: Xử lý sự cố thực tế trên môi trường Production (Troubleshooting)
-Nhà tuyển dụng rất thích hỏi về kinh nghiệm xử lý khủng hoảng. Bạn cần trang bị tư duy Phân tích nguyên nhân gốc rễ (RCA - [Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/)) một cách bài bản:
+Nhà tuyển dụng rất thích hỏi về kinh nghiệm xử lý khủng hoảng. Bạn cần trang bị tư duy Phân tích nguyên nhân gốc rễ (RCA - [Root Cause Analysis](/concepts/5-quality-governance/observability-reliability/root-cause-analysis/)) một cách bài bản:
 * Hãy tập trả lời các câu hỏi tình huống: Bạn sẽ làm gì khi một đường ống dữ liệu (pipeline) quan trọng đột ngột bị sập giữa đêm? Làm thế nào để phát hiện và khôi phục khi dữ liệu bị thất thoát ở giữa luồng? Làm cách nào để xử lý các sự cố vi phạm cam kết chất lượng dịch vụ (SLA breach) về thời gian hoàn thành?
 
 ---

@@ -74,11 +74,67 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Cẩm nang (Handbook)',
-					items: conceptCategories.map(cat => ({
-						label: cat.label,
-						collapsed: true,
-						autogenerate: { directory: `concepts/${cat.slug}` }
-					}))
+					items: [
+						{
+							label: '1. Cơ sở & Kiến trúc',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('1-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '2. Lưu trữ & Quản lý dữ liệu',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('2-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '3. Tích hợp & Biến đổi dữ liệu',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('3-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '4. Xử lý thời gian thực',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('4-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '5. Chất lượng & Quản trị',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('5-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '6. AI & Machine Learning',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('6-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						}
+					]
+				},
+				{
+					label: 'Dự án E2E (E2E Projects)',
+					collapsed: true,
+					autogenerate: { directory: 'projects' },
 				},
 				{
 					label: 'Lộ trình học (Learning Paths)',

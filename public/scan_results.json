@@ -1,0 +1,43 @@
+{
+  "total": 172,
+  "passed": 171,
+  "failed": 1,
+  "details": [
+    {
+      "file": "src/content/docs/concepts/cloud-data-platform/snowflake-search-optimization.md",
+      "filename": "snowflake-search-optimization.md",
+      "score": 76,
+      "wordCount": 4236,
+      "reports": [
+        {
+          "section": "Citations",
+          "passed": false,
+          "score": 0,
+          "max": 15,
+          "message": "Missing '## Tài liệu tham khảo' or '## References' section"
+        },
+        {
+          "section": "Structure",
+          "passed": false,
+          "score": 0,
+          "max": 3,
+          "message": "Missing required Pros/Cons section"
+        },
+        {
+          "section": "Structure",
+          "passed": false,
+          "score": 0,
+          "max": 3,
+          "message": "Missing required Interview preparation Q&As section"
+        },
+        {
+          "section": "Structure",
+          "passed": false,
+          "score": 0,
+          "max": 3,
+          "message": "Missing required English Summary section"
+        }
+      ]
+    }
+  ]
+}

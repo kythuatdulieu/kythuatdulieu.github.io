@@ -6,7 +6,7 @@ sidebar:
   order: 1
 ---
 
-Tuyển tập các câu hỏi phỏng vấn [Data Engineering](/concepts/foundation/data-engineering/) chất lượng cao được thiết kế theo format chuẩn bị phỏng vấn, tập trung vào:
+Tuyển tập các câu hỏi phỏng vấn [Data Engineering](/concepts/1-foundations/foundation/data-engineering/) chất lượng cao được thiết kế theo format chuẩn bị phỏng vấn, tập trung vào:
 
 - **System Design**: Kiến trúc luồng dữ liệu, xử lý sự cố.
 - **SQL & Optimization**: Tối ưu hóa truy vấn nâng cao.

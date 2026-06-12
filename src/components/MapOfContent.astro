@@ -5,208 +5,374 @@ import { conceptCategories } from '../config/categories.js';
 const allDocs = await getCollection('docs');
 const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
 
-const dynamicMOC = [];
+const domains = [
+  {
+    id: "domain-1",
+    label: "1. Cơ sở & Kiến trúc",
+    description: "Nền móng về kỹ thuật dữ liệu, vòng đời dữ liệu, thiết kế hệ thống và các mô hình kiến trúc phân tích (Medallion, Lambda, Kappa, Data Mesh).",
+    prefix: "1-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>`
+  },
+  {
+    id: "domain-2",
+    label: "2. Lưu trữ & Quản lý dữ liệu",
+    description: "Thiết kế cơ sở dữ liệu (OLTP, OLAP, HTAP), định dạng file mở (Parquet, Delta, Iceberg), hồ dữ liệu (Lakehouse) và Cloud platforms.",
+    prefix: "2-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>`
+  },
+  {
+    id: "domain-3",
+    label: "3. Tích hợp & Biến đổi dữ liệu",
+    description: "Quy trình tích hợp (ETL/ELT, CDC, Idempotency), dbt transformations, orchestration (Airflow, Dagster) và xử lý theo lô lớn (Batch Processing).",
+    prefix: "3-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`
+  },
+  {
+    id: "domain-4",
+    label: "4. Xử lý thời gian thực",
+    description: "Xử lý luồng dữ liệu liên tục (Streaming Processing), kiến trúc Spark Streaming vs Flink, quản lý State, Event-Time và Watermarking.",
+    prefix: "4-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>`
+  },
+  {
+    id: "domain-5",
+    label: "5. Chất lượng & Quản trị",
+    description: "Đảm bảo độ tin cậy dữ liệu (Data Quality, SLA/SLO, Observability), thiết lập Data Catalog, bảo mật và quản trị siêu dữ liệu tập trung.",
+    prefix: "5-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`
+  },
+  {
+    id: "domain-6",
+    label: "6. AI & Machine Learning",
+    description: "Hạ tầng dữ liệu cho AI/ML: thiết kế Feature Store, kỹ thuật Chunking dữ liệu, Embedding Models, Vector Database và tối ưu ứng dụng RAG.",
+    prefix: "6-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`
+  }
+];
 
-conceptCategories.forEach(cat => {
-   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
-   if (docsInCat.length > 0) {
-       dynamicMOC.push({
-           categorySlug: cat.slug,
-           category: cat.label,
-           concepts: docsInCat.map(doc => {
-               // Extract clean title without prefixes like "Concept -" if they exist
-               let title = doc.data.title;
-               const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
-               if (match && match[1]) title = match[1].trim();
-               
-               return {
-                   title: title,
-                   url: `/${doc.slug}/`
-               };
-           })
-       });
-   }
-});
+function getConceptTags(title, url) {
+  const lowercaseTitle = title.toLowerCase();
+  const lowercaseUrl = url.toLowerCase();
+  const tags = [];
+  
+  if (lowercaseTitle.includes('spark') || lowercaseUrl.includes('spark')) {
+    tags.push({ name: 'Spark', color: '#E25A27', bg: 'rgba(226, 90, 39, 0.08)' });
+  }
+  if (lowercaseTitle.includes('flink') || lowercaseUrl.includes('flink')) {
+    tags.push({ name: 'Flink', color: '#E65320', bg: 'rgba(230, 83, 32, 0.08)' });
+  }
+  if (lowercaseTitle.includes('kafka') || lowercaseUrl.includes('kafka')) {
+    tags.push({ name: 'Kafka', color: '#B163FF', bg: 'rgba(177, 99, 255, 0.08)' });
+  }
+  if (lowercaseTitle.includes('dbt') || lowercaseUrl.includes('dbt')) {
+    tags.push({ name: 'dbt', color: '#FF6B4A', bg: 'rgba(255, 107, 74, 0.08)' });
+  }
+  if (lowercaseTitle.includes('airflow') || lowercaseUrl.includes('airflow') || lowercaseTitle.includes('dagster') || lowercaseUrl.includes('dagster')) {
+    tags.push({ name: 'Orchestrator', color: '#017A8A', bg: 'rgba(1, 122, 138, 0.08)' });
+  }
+  if (lowercaseTitle.includes('sql') || lowercaseUrl.includes('sql')) {
+    tags.push({ name: 'SQL', color: '#3399FF', bg: 'rgba(51, 153, 255, 0.08)' });
+  }
+  if (lowercaseTitle.includes('databricks') || lowercaseUrl.includes('databricks')) {
+    tags.push({ name: 'Databricks', color: '#FF3621', bg: 'rgba(255, 54, 33, 0.08)' });
+  }
+  if (lowercaseTitle.includes('iceberg') || lowercaseTitle.includes('delta') || lowercaseTitle.includes('parquet')) {
+    tags.push({ name: 'Format', color: '#10B981', bg: 'rgba(16, 185, 129, 0.08)' });
+  }
+  if (lowercaseTitle.includes('lakehouse') || lowercaseUrl.includes('lakehouse')) {
+    tags.push({ name: 'Lakehouse', color: '#06B6D4', bg: 'rgba(6, 182, 212, 0.08)' });
+  }
+  if (lowercaseTitle.includes('rag') || lowercaseTitle.includes('vector') || lowercaseTitle.includes('llm') || lowercaseTitle.includes('embedding')) {
+    tags.push({ name: 'AI/ML', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.08)' });
+  }
 
-// Any other categories not listed in the ordered list?
-const existingCatSlugs = new Set(conceptCategories.map(c => c.slug));
-const otherDocs = existingConcepts.filter(doc => {
-    const parts = doc.id.split('/');
-    if (parts.length >= 3) {
-        return !existingCatSlugs.has(parts[1]);
-    }
-    return false;
-});
-if (otherDocs.length > 0) {
-    dynamicMOC.push({
-        categorySlug: "other",
-        category: "Các khái niệm khác",
-        concepts: otherDocs.map(doc => ({ title: doc.data.title, url: `/${doc.slug}/` }))
-    });
+  return tags.slice(0, 1); // Limit to 1 main tag to keep it clean
 }
+
+const domainsData = domains.map(domain => {
+    const categoriesInDomain = conceptCategories
+        .filter(cat => cat.slug.startsWith(domain.prefix))
+        .map(cat => {
+            const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
+            return {
+                categorySlug: cat.slug,
+                categoryLabel: cat.label,
+                concepts: docsInCat.map(doc => {
+                    let title = doc.data.title;
+                    const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
+                    if (match && match[1]) title = match[1].trim();
+                    
+                    return {
+                        title: title,
+                        url: `/${doc.slug}/`,
+                        tags: getConceptTags(title, doc.slug)
+                    };
+                })
+            };
+        })
+        .filter(cat => cat.concepts.length > 0);
+
+    return {
+        ...domain,
+        categories: categoriesInDomain
+    };
+}).filter(d => d.categories.length > 0);
+
 ---
 
-<div class="moc-container">
-    <!-- The Table -->
-    <div class="moc-table-wrapper" id="concept-table">
-        <table class="moc-table">
-            <thead>
-                <tr>
-                    <th class="col-category">Category</th>
-                    <th class="col-concepts">Data Engineering Concepts</th>
-                </tr>
-            </thead>
-            <tbody>
-                {dynamicMOC.map(group => {
-                    return (
-                        <tr id={`row-${group.categorySlug}`}>
-                            <td class="cat-cell">
-                                <strong>{group.category}</strong>
-                            </td>
-                            <td class="concepts-cell">
-                                <div class="concepts-list">
-                                    {group.concepts.map((concept, index) => {
-                                        const isLast = index === group.concepts.length - 1;
-                                        return (
-                                            <span class="concept-item-wrapper">
-                                                <a href={concept.url} class="concept-tag active">
-                                                    {concept.title}
-                                                </a>
-                                                {!isLast && <span class="comma">, </span>}
-                                            </span>
-                                        );
-                                    })}
-                                </div>
-                            </td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
+<div class="moc-container" id="concepts">
+    <div class="section-header">
+        <h2 class="section-title-glow">SƠ ĐỒ KIẾN THỨC CỐT LÕI</h2>
+        <p class="section-subtitle">Tra cứu chi tiết các khái niệm, kiến trúc và mô hình dữ liệu trong 6 lĩnh vực chính của cẩm nang.</p>
     </div>
 
-    <!-- Slot for Quizzes (which are passed from index.mdx) -->
+    <div class="domains-grid">
+        {domainsData.map(domain => (
+            <div class="domain-card" id={domain.id}>
+                <div class="domain-card-header">
+                    <div class="domain-icon-wrapper" set:html={domain.svg} />
+                    <h3 class="domain-title">{domain.label}</h3>
+                </div>
+                <p class="domain-description">{domain.description}</p>
+                
+                <div class="domain-categories">
+                    {domain.categories.map((cat, catIdx) => (
+                        <details class="category-details" open={catIdx === 0}>
+                            <summary class="category-summary">
+                                <span class="category-summary-title">{cat.categoryLabel}</span>
+                                <div class="category-summary-meta">
+                                    <span class="category-count">{cat.concepts.length} bài</span>
+                                    <span class="summary-chevron">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </span>
+                                </div>
+                            </summary>
+                            <div class="concepts-list">
+                                {cat.concepts.map((concept) => (
+                                    <a href={concept.url} class="concept-chip">
+                                        <span class="concept-title-text">{concept.title}</span>
+                                        {concept.tags.map(tag => (
+                                            <span class="tech-tag" style={`color: ${tag.color}; background: ${tag.bg}; border-color: rgba(${tag.color === '#303030' ? '120,120,120' : '255,255,255'}, 0.15)`}>
+                                                {tag.name}
+                                            </span>
+                                        ))}
+                                    </a>
+                                ))}
+                            </div>
+                        </details>
+                    ))}
+                </div>
+            </div>
+        ))}
+    </div>
+
     <slot />
 </div>
 
 <style>
-/* Theme Variables */
-:root {
-    --moc-bg: var(--sl-color-bg);
-    --moc-text: var(--sl-color-text);
-    --moc-text-muted: var(--sl-color-text-accent);
-    --moc-border: var(--sl-color-hairline);
-    --moc-bg-alt: var(--sl-color-bg-nav);
-    --moc-primary: var(--sl-color-accent);
-    --moc-primary-hover: var(--sl-color-accent-high);
-    --moc-hover-bg: var(--sl-color-gray-6);
-    --moc-radius: 8px;
-    --moc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
 .moc-container {
     width: 100%;
-    margin: 2rem auto;
+    margin: 4rem auto;
     font-family: var(--sl-font), sans-serif;
 }
 
-/* The Table */
-.moc-table-wrapper {
-    overflow-x: auto;
-    border: 1px solid var(--moc-border);
-    border-radius: var(--moc-radius);
-    background: var(--moc-bg);
+.section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
 }
 
-.moc-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    margin: 0 !important; /* Override markdown table margins */
-}
-
-.moc-table th {
-    background-color: var(--moc-bg-alt);
-    padding: 1rem;
-    font-weight: 600;
-    border-bottom: 2px solid var(--moc-border);
-    color: var(--moc-text-muted);
-    font-size: 0.9rem;
-    text-transform: uppercase;
+.section-title-glow {
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
     letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0 !important;
+    background: linear-gradient(135deg, var(--sl-color-white) 30%, var(--sl-color-accent-high) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
-.col-category {
-    width: 30%;
+.section-subtitle {
+    font-size: 0.95rem;
+    color: var(--sl-color-gray-3);
+    max-width: 600px;
+    margin: 0 auto !important;
 }
 
-.col-concepts {
-    width: 70%;
+.domains-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
 }
 
-.moc-table td {
-    padding: 1.25rem 1rem;
-    border-bottom: 1px solid var(--moc-border);
-    vertical-align: top;
+@media (min-width: 768px) {
+    .domains-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.moc-table tbody tr:last-child td {
-    border-bottom: none;
+/* Glassmorphic Domain Cards */
+.domain-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    border-radius: 12px;
+    background: rgba(var(--sl-color-bg-nav-rgb, 20, 24, 33), 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--sl-color-hairline);
+    transition: all 0.3s ease;
 }
 
-.moc-table tbody tr {
-    transition: background-color 0.3s;
+.domain-card:hover {
+    border-color: rgba(var(--sl-color-accent-rgb), 0.4);
+    box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
 }
 
-.moc-table tbody tr.highlight {
-    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+.domain-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.5rem;
 }
 
-.cat-cell strong {
-    display: block;
-    font-size: 1.05rem;
-    color: var(--moc-text);
+.domain-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sl-color-accent);
+    background: rgba(var(--sl-color-accent-rgb), 0.08);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    flex-shrink: 0;
 }
 
-/* Concept Tags */
+.domain-title {
+    margin: 0 !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
+    line-height: 1.3 !important;
+}
+
+.domain-description {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0 !important;
+}
+
+/* Category Group (details Summary) */
+.domain-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.category-details {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-top: 0.75rem;
+}
+
+.category-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-2);
+    transition: color 0.2s ease;
+}
+
+.category-summary::-webkit-details-marker {
+    display: none;
+}
+
+.category-summary:hover {
+    color: var(--sl-color-white);
+}
+
+.category-summary-title {
+    flex-grow: 1;
+    padding-right: 0.5rem;
+}
+
+.category-summary-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.category-count {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-3);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.1rem 0.45rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-chevron {
+    display: flex;
+    align-items: center;
+    transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+    color: var(--sl-color-gray-3);
+}
+
+.category-details[open] .summary-chevron {
+    transform: rotate(180deg);
+    color: var(--sl-color-accent);
+}
+
+/* Concepts Chip List */
 .concepts-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.25rem;
-    line-height: 1.8;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-bottom: 0.5rem;
 }
 
-.concept-item-wrapper {
+.concept-chip {
     display: inline-flex;
     align-items: center;
-}
-
-.concept-tag {
-    display: inline-block;
-    padding: 0.1rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    text-decoration: none;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--sl-color-text) !important;
+    text-decoration: none !important;
     transition: all 0.2s ease;
-    white-space: nowrap;
 }
 
-.concept-tag.active {
-    color: var(--moc-primary);
-    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+.concept-chip:hover {
+    background: rgba(var(--sl-color-accent-rgb), 0.06);
+    border-color: rgba(var(--sl-color-accent-rgb), 0.5);
+    color: var(--sl-color-white) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.concept-title-text {
     font-weight: 500;
 }
 
-.concept-tag.active:hover {
-    background-color: var(--moc-primary);
-    color: var(--sl-color-text-invert);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.comma {
-    color: var(--moc-text-muted);
+.tech-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.02rem 0.3rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 </style>
-
-

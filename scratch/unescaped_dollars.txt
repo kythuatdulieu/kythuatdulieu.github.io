@@ -1,0 +1,220 @@
+Scanning for unescaped literal dollar signs (e.g. $6.25, 100$)...
+
+File: concepts/2-storage/cloud-data-platform/bigquery-optimization.md
+  Line 47: - **Tính phí**: Google tính phí dựa trên **dung lượng dữ liệu thực tế bị quét** qua bởi câu truy vấn (mức giá chuẩn là **$6.25 cho mỗi Terabyte - TB**). Nếu bạn không chạy câu truy vấn nào, chi phí tính toán bằng $0.
+  Line 47: - **Tính phí**: Google tính phí dựa trên **dung lượng dữ liệu thực tế bị quét** qua bởi câu truy vấn (mức giá chuẩn là **$6.25 cho mỗi Terabyte - TB**). Nếu bạn không chạy câu truy vấn nào, chi phí tính toán bằng $0.
+  Line 68: Do **không có dữ liệu vật lý nào được đọc từ đĩa** và **không có Slots tính toán nào được huy động**, hoạt động Dry-run hoàn toàn **miễn phí ($0)** và hoàn thành trong mili-giây.
+  Line 161: - Chi phí cao ($0.01 cho mỗi 200 Megabytes dữ liệu nạp vào).
+  Line 168: - Chi phí rẻ hơn 50% so với `insertAll` (chỉ khoảng **$0.025 cho mỗi Gigabyte - GB** dữ liệu nạp vào).
+  Line 269: - **Chi phí**: Giá cước ghi dữ liệu của Storage Write API là $0.025/GB, rẻ hơn 50% so với mức phí $0.01/200MB (~$0.05/GB) của `insertAll`.
+  Line 269: - **Chi phí**: Giá cước ghi dữ liệu của Storage Write API là $0.025/GB, rẻ hơn 50% so với mức phí $0.01/200MB (~$0.05/GB) của `insertAll`.
+  Line 269: - **Chi phí**: Giá cước ghi dữ liệu của Storage Write API là $0.025/GB, rẻ hơn 50% so với mức phí $0.01/200MB (~$0.05/GB) của `insertAll`.
+  Line 274: - **Nguyên lý hoạt động**: Khi nhận yêu cầu Dry-run, bộ điều phối (Query Coordinator) của Dremel chỉ tiến hành phân tích cú pháp SQL, xác thực schema và quyền truy cập, đồng thời đọc metadata (các thông số cấu trúc bảng) của Colossus để tính toán lượng dữ liệu (bytes) dự kiến sẽ bị quét qua. Vì không có tài nguyên tính toán (Slots) nào được huy động và không có dữ liệu thực tế nào được đọc từ đĩa, hoạt động này hoàn toàn miễn phí ($0) và diễn ra rất nhanh.
+  Line 303: Google BigQuery is a serverless, highly scalable cloud data warehouse designed as a columnar [OLAP](/concepts/2-storage/database-storage/olap/) database. Its extreme performance stems from decoupling compute (Dremel) and storage (Colossus), interconnected via the ultra-high-speed Jupiter network. Compute resources are abstractly represented as **Slots** (virtual CPU/RAM units), which can be allocated dynamically via the pay-per-scan **On-Demand model** ($6.25/TB) or reserved upfront through **Capacity Commitment** (offering predictable billing and autoscaling). To avoid "query shock", developers can run free **Dry-run** executions, which validate SQL syntax against table metadata without spinning up worker slots.
+  Line 307: For ingestion, BigQuery's modern gRPC-based **Storage Write API** replaces the legacy REST-based `insertAll` streaming, reducing ingestion costs by 50% ($0.025/GB) and providing robust transactional guarantees. It offers three distinct streaming modes:
+
+File: concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md
+  Line 53: - **Mức giá**: Khoảng $6.25 cho mỗi Terabyte (TB) dữ liệu được quét (áp dụng cho khu vực US, giá có thể thay đổi theo Region).
+  Line 62: | **Giá cơ bản (mỗi slot-hour)** | ~$0.04 | ~$0.06 | ~$0.10 |
+  Line 62: | **Giá cơ bản (mỗi slot-hour)** | ~$0.04 | ~$0.06 | ~$0.10 |
+  Line 62: | **Giá cơ bản (mỗi slot-hour)** | ~$0.04 | ~$0.06 | ~$0.10 |
+  Line 71: Giả sử doanh nghiệp đang cân nhắc chuyển sang **Enterprise Edition** với giá thuê cam kết là **$0.06 / slot-hour** (khoảng $43.8 / slot-month cho 1 slot chạy liên tục 730 giờ).
+  Line 71: Giả sử doanh nghiệp đang cân nhắc chuyển sang **Enterprise Edition** với giá thuê cam kết là **$0.06 / slot-hour** (khoảng $43.8 / slot-month cho 1 slot chạy liên tục 730 giờ).
+  Line 75: $$\text{Chi phí On-demand hàng tháng} = \text{Dung lượng quét (TB)} \times \$6.25$$
+  Line 81: - Chi phí On-demand: $800 \times \$6.25 = \$5,000 / \text{tháng}$.
+  Line 83: - Chi phí cố định: $100 \text{ slots} \times \$43.8 = \$4,380 / \text{tháng}$.
+  Line 85: - Chi phí Autoscaling: $100 \text{ slots} \times 2 \text{ giờ} \times 30 \text{ ngày} \times \$0.06 = \$360$.
+  Line 85: - Chi phí Autoscaling: $100 \text{ slots} \times 2 \text{ giờ} \times 30 \text{ ngày} \times \$0.06 = \$360$.
+  Line 88: Trong kịch bản này, doanh nghiệp tiết kiệm được **$260 / tháng** và quan trọng hơn là có được sự kiểm soát tài chính tuyệt đối nhờ thiết lập giới hạn slot trần (hard limit), loại bỏ hoàn toàn rủi ro một câu truy vấn tồi vô tình quét qua hàng chục Terabytes làm tăng vọt hóa đơn đột biến.
+  Line 219: - Hóa đơn BigQuery On-demand hàng tháng vượt quá ngưỡng $4,000 - $5,000 một cách thường xuyên.
+  Line 219: - Hóa đơn BigQuery On-demand hàng tháng vượt quá ngưỡng $4,000 - $5,000 một cách thường xuyên.
+  Line 267: - **Pricing Models**: Transitioning from On-demand ($6.25/TB scanned) to Capacity Pricing (BigQuery Editions: Standard, Enterprise, Enterprise Plus) is a strategic move for organizations looking to ensure budget predictability. The financial inflection point can be calculated by comparing historical scan volumes against slot-hour commitment costs.
+
+File: concepts/2-storage/cloud-data-platform/cloud-storage.md
+  Line 37: Object Storage ra đời để giải quyết triệt để những vấn đề này bằng cách đưa tất cả vào một **không gian phẳng (flat namespace)**. Mọi đối tượng được ném chung vào một cái "thùng" `(bucket)` lớn và được tìm kiếm trực tiếp bằng mã định danh, mang lại khả năng mở rộng vô hạn với mức chi phí cực rẻ (chỉ khoảng `$0.02 / GB / tháng`).
+
+File: concepts/2-storage/cloud-data-platform/serverless-data.md
+  Line 23: 2. **Tự động co giãn (Auto-Scaling)**: Hệ thống tự động huy động hàng nghìn CPU ngay khi bạn chạy một truy vấn cực lớn, và lập tức thu hồi về $0$ (Scale to zero) khi chạy xong.
+  Line 23: 2. **Tự động co giãn (Auto-Scaling)**: Hệ thống tự động huy động hàng nghìn CPU ngay khi bạn chạy một truy vấn cực lớn, và lập tức thu hồi về $0$ (Scale to zero) khi chạy xong.
+  Line 24: 3. **Trả tiền theo mức sử dụng thực tế (Pay-as-you-go)**: Bạn không phải trả tiền thuê máy theo giờ. Chi phí chỉ được tính dựa trên dung lượng dữ liệu bị quét qua (Data Scanned), số lượng giao dịch, hoặc số giây tính toán thực tế. Khi bạn không chạy truy vấn nào, chi phí tính toán bằng $0$.
+  Line 24: 3. **Trả tiền theo mức sử dụng thực tế (Pay-as-you-go)**: Bạn không phải trả tiền thuê máy theo giờ. Chi phí chỉ được tính dựa trên dung lượng dữ liệu bị quét qua (Data Scanned), số lượng giao dịch, hoặc số giây tính toán thực tế. Khi bạn không chạy truy vấn nào, chi phí tính toán bằng $0$.
+
+File: concepts/2-storage/data-lake-lakehouse/lakehouse-optimization.md
+  Line 94: * Giả sử $X = 3$ (nhị phân: `011`) và $Y = 5$ (nhị phân: `101`).
+  Line 94: * Giả sử $X = 3$ (nhị phân: `011`) và $Y = 5$ (nhị phân: `101`).
+
+File: concepts/3-integration/batch-processing/data-skew.md
+  Line 81: * **Bên bảng Sales (bảng bị lệch)**: Thêm một cột `salt` chứa số nguyên ngẫu nhiên từ 0 đến $N-1$ (ví dụ $N = 5$). Giá trị `"Ho Chi Minh"` sẽ bị chia nhỏ thành `"Ho Chi Minh_0"`, `"Ho Chi Minh_1"`, ..., `"Ho Chi Minh_4"`. Dữ liệu sẽ được phân tán đều ra 5 máy khác nhau.
+  Line 81: * **Bên bảng Sales (bảng bị lệch)**: Thêm một cột `salt` chứa số nguyên ngẫu nhiên từ 0 đến $N-1$ (ví dụ $N = 5$). Giá trị `"Ho Chi Minh"` sẽ bị chia nhỏ thành `"Ho Chi Minh_0"`, `"Ho Chi Minh_1"`, ..., `"Ho Chi Minh_4"`. Dữ liệu sẽ được phân tán đều ra 5 máy khác nhau.
+  Line 82: * **Bên bảng Customers**: Nhân bản mỗi dòng thành $N$ dòng (dùng hàm `explode`) với các hậu tố từ 0 đến $N-1$.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 160: * **Gợi ý trả lời**: Kỹ thuật này hoạt động bằng cách ghép thêm một chuỗi/số ngẫu nhiên (ví dụ từ $0$ đến $N-1$) vào khóa JOIN của bảng bị lệch nhằm phân tán dữ liệu của khóa đó ra thành $N$ phần nhỏ hơn. Ở bảng còn lại (bảng không lệch hoặc nhỏ hơn), ta nhân bản mỗi dòng thành $N$ dòng với các hậu tố từ $0$ đến $N-1$ tương ứng.
+  Line 161: * Việc chọn hệ số muối $N$ cần cân bằng giữa hiệu quả phân tán tải và tài nguyên tiêu hao. Hệ số muối quá nhỏ (ví dụ $N = 2$) có thể không đủ phân tán tải, trong khi hệ số muối quá lớn (ví dụ $N > 100$) sẽ gây bùng nổ dữ liệu ở bảng được nhân bản, tốn dung lượng bộ nhớ và băng thông I/O. Thông thường, hệ số muối lý tưởng nằm trong khoảng từ 10 đến 50.
+  Line 161: * Việc chọn hệ số muối $N$ cần cân bằng giữa hiệu quả phân tán tải và tài nguyên tiêu hao. Hệ số muối quá nhỏ (ví dụ $N = 2$) có thể không đủ phân tán tải, trong khi hệ số muối quá lớn (ví dụ $N > 100$) sẽ gây bùng nổ dữ liệu ở bảng được nhân bản, tốn dung lượng bộ nhớ và băng thông I/O. Thông thường, hệ số muối lý tưởng nằm trong khoảng từ 10 đến 50.
+
+File: concepts/3-integration/etl-elt/data-transformation.md
+  Line 77: * **Ép kiểu & Định dạng (Casting / Formatting)**: Chuyển đổi cột số tiền từ dạng chuỗi ký tự (`"$1,000"`) sang dạng số (`DECIMAL(10,2)`) và quy đổi tất cả các mốc thời gian về múi giờ chuẩn (UTC).
+
+File: concepts/3-integration/orchestration/task-dependency.md
+  Line 122: * **Sử dụng Dummy Node (EmptyOperator) làm điểm trung chuyển:** Nếu bạn có 5 tác vụ nạp dữ liệu song song cần kết nối tới 5 tác vụ biến đổi song song (mô hình All-to-All), việc nối trực tiếp sẽ tạo ra $5 \times 5 = 25$ mũi tên đan chéo trên giao diện. Hãy chèn một `EmptyOperator` ở giữa làm trạm trung chuyển (`[T1..T5] >> Dummy >> [T6..T10]`). Số lượng kết nối giảm xuống chỉ còn 10 đường, giúp giao diện DAG cực kỳ gọn gàng và dễ nhìn.
+  Line 122: * **Sử dụng Dummy Node (EmptyOperator) làm điểm trung chuyển:** Nếu bạn có 5 tác vụ nạp dữ liệu song song cần kết nối tới 5 tác vụ biến đổi song song (mô hình All-to-All), việc nối trực tiếp sẽ tạo ra $5 \times 5 = 25$ mũi tên đan chéo trên giao diện. Hãy chèn một `EmptyOperator` ở giữa làm trạm trung chuyển (`[T1..T5] >> Dummy >> [T6..T10]`). Số lượng kết nối giảm xuống chỉ còn 10 đường, giúp giao diện DAG cực kỳ gọn gàng và dễ nhìn.
+  Line 173: Khi chúng ta có nhiều tác vụ ở tầng trước (ví dụ 10 tác vụ tải dữ liệu) và nhiều tác vụ ở tầng sau (10 tác vụ lưu dữ liệu), nếu nối trực tiếp All-to-All, hệ thống phải quản lý $10 \times 10 = 100$ mối quan hệ phụ thuộc. Điều này làm rối loạn giao diện đồ thị (thành một mạng nhện chằng chịt) và gây tải cho Scheduler Database.
+  Line 173: Khi chúng ta có nhiều tác vụ ở tầng trước (ví dụ 10 tác vụ tải dữ liệu) và nhiều tác vụ ở tầng sau (10 tác vụ lưu dữ liệu), nếu nối trực tiếp All-to-All, hệ thống phải quản lý $10 \times 10 = 100$ mối quan hệ phụ thuộc. Điều này làm rối loạn giao diện đồ thị (thành một mạng nhện chằng chịt) và gây tải cho Scheduler Database.
+  Line 174: Bằng cách chèn một Dummy Node ở giữa làm trạm trung chuyển, chúng ta giảm số lượng liên kết xuống còn $10 + 10 = 20$. Thiết kế này giúp giao diện DAG trực quan, gọn gàng, đồng thời tạo ra một điểm chốt chặn (Checkpoint) rõ ràng giúp việc theo dõi trạng thái hệ thống dễ dàng hơn rất nhiều.
+  Line 174: Bằng cách chèn một Dummy Node ở giữa làm trạm trung chuyển, chúng ta giảm số lượng liên kết xuống còn $10 + 10 = 20$. Thiết kế này giúp giao diện DAG trực quan, gọn gàng, đồng thời tạo ra một điểm chốt chặn (Checkpoint) rõ ràng giúp việc theo dõi trạng thái hệ thống dễ dàng hơn rất nhiều.
+
+File: concepts/4-realtime/streaming-processing/exactly-once-semantics.md
+  Line 42: * **Idempotent Sink (Ghi lũy đẳng)**: Thực hiện ghi đè dữ liệu theo Khóa chính (Primary Key). Phép toán ghi đè $x=10$ chạy nhiều lần thì giá trị của $x$ vẫn không thay đổi.
+
+File: concepts/4-realtime/streaming-processing/spark-structured-streaming.md
+  Line 170: 3. **Giai đoạn Áp dụng (Micro-batch $N+1$)**: Giá trị $\text{Watermark}_{N}$ mới tính toán sẽ được ghi vào tệp tin Checkpoint metadata. Khi vi phân $N+1$ bắt đầu thực thi, Spark SQL engine sẽ sử dụng giá trị $\text{Watermark}_{N}$ này để thực hiện hai nhiệm vụ cốt lõi:
+  Line 170: 3. **Giai đoạn Áp dụng (Micro-batch $N+1$)**: Giá trị $\text{Watermark}_{N}$ mới tính toán sẽ được ghi vào tệp tin Checkpoint metadata. Khi vi phân $N+1$ bắt đầu thực thi, Spark SQL engine sẽ sử dụng giá trị $\text{Watermark}_{N}$ này để thực hiện hai nhiệm vụ cốt lõi:
+  Line 171: * **Loại bỏ dữ liệu muộn (Late Data Filtering)**: Bất kỳ bản ghi mới nào đi vào vi phân $N+1$ có nhãn thời gian nhỏ hơn hoặc bằng $\text{Watermark}_{N}$ sẽ bị loại bỏ ngay lập tức và không tham gia vào các phép tính toán gom nhóm.
+  Line 203: * **Bước 4**: Spark khôi phục trạng thái lưu trữ trong State Store quay trở về thời điểm kết thúc vi phân $N-1$.
+
+File: concepts/4-realtime/streaming-processing/streaming-processing.md
+  Line 82: # 2. Xử lý logic thời gian thực: Phát hiện các giao dịch trên $10,000 thực hiện ở nước ngoài
+
+File: concepts/5-quality-governance/observability-reliability/data-observability.md
+  Line 101: *   $\text{PSI} < 0.1$: Không có sự trôi lệch đáng kể (ổn định).
+  Line 102: *   $0.1 \le \text{PSI} < 0.25$: Trôi lệch ở mức trung bình (cần theo dõi).
+  Line 102: *   $0.1 \le \text{PSI} < 0.25$: Trôi lệch ở mức trung bình (cần theo dõi).
+  Line 103: *   $\text{PSI} \ge 0.25$: Trôi lệch nghiêm trọng (cần huấn luyện lại mô hình ML hoặc kiểm tra lại nguồn dữ liệu).
+  Line 106: Phép thử KS là một kiểm định phi tham số so sánh hàm phân phối tích lũy (CDF) của hai mẫu dữ liệu để xác định xem chúng có thuộc cùng một phân phối xác suất hay không. Nếu giá trị $p\text{-value}$ thu được từ phép thử KS nhỏ hơn ngưỡng ý nghĩa (thường là $0.05$), chúng ta kết luận rằng dữ liệu đã bị trôi lệch phân phối rõ rệt.
+  Line 106: Phép thử KS là một kiểm định phi tham số so sánh hàm phân phối tích lũy (CDF) của hai mẫu dữ liệu để xác định xem chúng có thuộc cùng một phân phối xác suất hay không. Nếu giá trị $p\text{-value}$ thu được từ phép thử KS nhỏ hơn ngưỡng ý nghĩa (thường là $0.05$), chúng ta kết luận rằng dữ liệu đã bị trôi lệch phân phối rõ rệt.
+
+File: concepts/6-ai-ml/genai-ml/context-window.md
+  Line 124: * Do đó, nếu chuỗi văn bản đầu vào có độ dài N tokens, chúng ta sẽ có một ma trận tương quan kích thước $N \times N$, tương đương với $N^2$ phép tính. Điều này khiến cho nhu cầu tính toán và bộ nhớ VRAM tăng theo cấp số nhân khi N tăng lên.
+
+File: concepts/6-ai-ml/genai-ml/embedding-models.md
+  Line 21: Mô hình này sở hữu hàng triệu hoặc hàng tỷ tham số (weights) được tối ưu hóa thông qua quá trình lan truyền ngược (backpropagation). Mục tiêu tối thượng của quá trình này là đảm bảo rằng: nếu hai đoạn văn bản $x_1$ và $x_2$ có nội dung tương đồng về mặt ngữ nghĩa, thì khoảng cách hình học giữa hai vectơ đầu ra $f(x_1)$ và $f(x_2)$ trong không gian đa chiều phải cực kỳ gần nhau. Ngược lại, nếu chúng không liên quan, chúng sẽ bị đẩy ra xa nhau.
+  Line 21: Mô hình này sở hữu hàng triệu hoặc hàng tỷ tham số (weights) được tối ưu hóa thông qua quá trình lan truyền ngược (backpropagation). Mục tiêu tối thượng của quá trình này là đảm bảo rằng: nếu hai đoạn văn bản $x_1$ và $x_2$ có nội dung tương đồng về mặt ngữ nghĩa, thì khoảng cách hình học giữa hai vectơ đầu ra $f(x_1)$ và $f(x_2)$ trong không gian đa chiều phải cực kỳ gần nhau. Ngược lại, nếu chúng không liên quan, chúng sẽ bị đẩy ra xa nhau.
+
+File: concepts/6-ai-ml/genai-ml/fine-tuning.md
+  Line 45: 3. **Huấn luyện tiết kiệm**: Trong quá trình lan truyền ngược, chỉ có các tham số của ma trận $A$ và $B$ được phép học và cập nhật. Vì chiều (rank) của chúng rất nhỏ, số lượng tham số cần huấn luyện giảm đi tới $10,000$ lần. Điều này cho phép bạn tinh chỉnh các mô hình hàng chục tỷ tham số ngay trên các dòng card đồ họa phổ thông (như RTX 3090/4090) thay vì các cụm máy chủ A100 đắt đỏ.
+  Line 45: 3. **Huấn luyện tiết kiệm**: Trong quá trình lan truyền ngược, chỉ có các tham số của ma trận $A$ và $B$ được phép học và cập nhật. Vì chiều (rank) của chúng rất nhỏ, số lượng tham số cần huấn luyện giảm đi tới $10,000$ lần. Điều này cho phép bạn tinh chỉnh các mô hình hàng chục tỷ tham số ngay trên các dòng card đồ họa phổ thông (như RTX 3090/4090) thay vì các cụm máy chủ A100 đắt đỏ.
+  Line 183: * **Gợi ý trả lời**: Khi huấn luyện các mô hình lớn, việc cập nhật ma trận trọng số gốc $W$ kích thước $(d \times d)$ yêu cầu dung lượng bộ nhớ GPU khổng lồ để lưu trữ các trạng thái tối ưu hóa (optimizer states) và gradients. LoRA giải quyết bài toán này bằng cách đóng băng ma trận $W$ và chèn song song hai ma trận có rank thấp là $A$ kích thước $(d \times r)$ và $B$ kích thước $(r \times d)$ với giá trị rank $r$ cực kỳ nhỏ ($r \ll d$, ví dụ $r=8$ hoặc $16$). Trong suốt quá trình huấn luyện, chúng ta chỉ cập nhật trọng số cho ma trận $A$ và $B$. Điều này cắt giảm số lượng tham số cần tối ưu hóa lên tới hàng ngàn lần, giúp giảm thiểu đáng kể dung lượng VRAM cần thiết và cho phép chạy fine-tune trên các dòng GPU phổ thông.
+  Line 183: * **Gợi ý trả lời**: Khi huấn luyện các mô hình lớn, việc cập nhật ma trận trọng số gốc $W$ kích thước $(d \times d)$ yêu cầu dung lượng bộ nhớ GPU khổng lồ để lưu trữ các trạng thái tối ưu hóa (optimizer states) và gradients. LoRA giải quyết bài toán này bằng cách đóng băng ma trận $W$ và chèn song song hai ma trận có rank thấp là $A$ kích thước $(d \times r)$ và $B$ kích thước $(r \times d)$ với giá trị rank $r$ cực kỳ nhỏ ($r \ll d$, ví dụ $r=8$ hoặc $16$). Trong suốt quá trình huấn luyện, chúng ta chỉ cập nhật trọng số cho ma trận $A$ và $B$. Điều này cắt giảm số lượng tham số cần tối ưu hóa lên tới hàng ngàn lần, giúp giảm thiểu đáng kể dung lượng VRAM cần thiết và cho phép chạy fine-tune trên các dòng GPU phổ thông.
+  Line 183: * **Gợi ý trả lời**: Khi huấn luyện các mô hình lớn, việc cập nhật ma trận trọng số gốc $W$ kích thước $(d \times d)$ yêu cầu dung lượng bộ nhớ GPU khổng lồ để lưu trữ các trạng thái tối ưu hóa (optimizer states) và gradients. LoRA giải quyết bài toán này bằng cách đóng băng ma trận $W$ và chèn song song hai ma trận có rank thấp là $A$ kích thước $(d \times r)$ và $B$ kích thước $(r \times d)$ với giá trị rank $r$ cực kỳ nhỏ ($r \ll d$, ví dụ $r=8$ hoặc $16$). Trong suốt quá trình huấn luyện, chúng ta chỉ cập nhật trọng số cho ma trận $A$ và $B$. Điều này cắt giảm số lượng tham số cần tối ưu hóa lên tới hàng ngàn lần, giúp giảm thiểu đáng kể dung lượng VRAM cần thiết và cho phép chạy fine-tune trên các dòng GPU phổ thông.
+
+File: concepts/6-ai-ml/genai-ml/hybrid-search.md
+  Line 80: * *Lưu ý*: Một số hệ thống cho phép tùy chỉnh tham số `Alpha` (từ 0.0 đến 1.0). Nếu $Alpha = 1.0$, hệ thống sẽ chạy thuần Vector Search. Nếu $Alpha = 0.0$, hệ thống chạy thuần Keyword Search. Thiết lập $Alpha = 0.5$ mang lại sự cân bằng 50/50 giữa hai phương pháp.
+  Line 80: * *Lưu ý*: Một số hệ thống cho phép tùy chỉnh tham số `Alpha` (từ 0.0 đến 1.0). Nếu $Alpha = 1.0$, hệ thống sẽ chạy thuần Vector Search. Nếu $Alpha = 0.0$, hệ thống chạy thuần Keyword Search. Thiết lập $Alpha = 0.5$ mang lại sự cân bằng 50/50 giữa hai phương pháp.
+  Line 80: * *Lưu ý*: Một số hệ thống cho phép tùy chỉnh tham số `Alpha` (từ 0.0 đến 1.0). Nếu $Alpha = 1.0$, hệ thống sẽ chạy thuần Vector Search. Nếu $Alpha = 0.0$, hệ thống chạy thuần Keyword Search. Thiết lập $Alpha = 0.5$ mang lại sự cân bằng 50/50 giữa hai phương pháp.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+  Line 139: * **Gợi ý trả lời**: RRF tính toán điểm số của tài liệu bằng cách lấy nghịch đảo thứ hạng của nó trong từng danh sách tìm kiếm: $1 / (k + \text{Rank})$. Hằng số $k$ đóng vai trò làm trơn đường cong điểm số (Smoothing). Nếu không có $k$ (tức $k=0$), khoảng cách điểm số giữa vị trí số 1 ($1/1 = 1.0$) và vị trí số 2 ($1/2 = 0.5$) là quá lớn, khiến tài liệu đứng đầu ở một danh sách tìm kiếm sẽ chiếm ưu thế tuyệt đối. Việc thêm $k=60$ giúp điểm số của vị trí số 1 ($1/61$) và số 2 ($1/62$) không bị chênh lệch quá nhiều, từ đó tạo cơ hội cho các tài liệu xuất hiện ở vị trí cao ở cả hai luồng tìm kiếm có cơ hội cộng hưởng điểm số và vượt lên dẫn đầu.
+
+File: concepts/6-ai-ml/genai-ml/lora.md
+  Line 33: Giả sử lớp Attention của mô hình có kích thước $d = 4096$ và $k = 4096$. Ma trận cập nhật $\Delta W$ thông thường sẽ có $4096 \times 4096 \approx 16.7$ triệu tham số cần huấn luyện.
+  Line 33: Giả sử lớp Attention của mô hình có kích thước $d = 4096$ và $k = 4096$. Ma trận cập nhật $\Delta W$ thông thường sẽ có $4096 \times 4096 \approx 16.7$ triệu tham số cần huấn luyện.
+  Line 33: Giả sử lớp Attention của mô hình có kích thước $d = 4096$ và $k = 4096$. Ma trận cập nhật $\Delta W$ thông thường sẽ có $4096 \times 4096 \approx 16.7$ triệu tham số cần huấn luyện.
+  Line 33: Giả sử lớp Attention của mô hình có kích thước $d = 4096$ và $k = 4096$. Ma trận cập nhật $\Delta W$ thông thường sẽ có $4096 \times 4096 \approx 16.7$ triệu tham số cần huấn luyện.
+  Line 34: Nếu áp dụng LoRA với hạng $r = 8$:
+  Line 35: * Ma trận $A$ chỉ có $8 \times 4096 = 32.768$ tham số.
+  Line 35: * Ma trận $A$ chỉ có $8 \times 4096 = 32.768$ tham số.
+  Line 36: * Ma trận $B$ cũng có $32.768$ tham số.
+  Line 36: * Ma trận $B$ cũng có $32.768$ tham số.
+  Line 37: * Tổng số tham số cần huấn luyện lúc này chỉ là $\sim 65.536$ (giảm tới hơn 250 lần so với ban đầu!).
+  Line 74: 1. **Đóng băng mô hình gốc**: Tải mô hình gốc lên bộ nhớ và khóa toàn bộ trọng số $W_0$ lại để chúng không bị cập nhật trong quá trình lan truyền ngược (backpropagation).
+  Line 77: * Ma trận $B$ được khởi tạo bằng **toàn bộ số 0**. Điều này cực kỳ quan trọng vì nó đảm bảo lúc mới bắt đầu (epoch 0), tích $B \times A = 0$, mô hình hoạt động giống hệt như chưa hề tinh chỉnh, tránh bị sốc hoặc lệch kết quả.
+  Line 87: 2. **Cấu hình**: Tiêm LoRA vào các lớp chiếu của Attention (`q_proj`, `v_proj`) với rank $r = 16$ và hệ số scale $\alpha = 32$.
+  Line 87: 2. **Cấu hình**: Tiêm LoRA vào các lớp chiếu của Attention (`q_proj`, `v_proj`) với rank $r = 16$ và hệ số scale $\alpha = 32$.
+  Line 175: * Ma trận B bắt buộc phải khởi tạo bằng toàn bộ số 0 để đảm bảo tích $\Delta W = B \times A = 0$ tại bước huấn luyện đầu tiên (step 0). Điều này giúp giữ cho mô hình hoạt động ổn định và có đầu ra y hệt mô hình gốc khi chưa học gì.
+  Line 188: * Tuy nhiên, trên môi trường production, chúng ta luôn thực hiện bước hợp nhất trọng số (Weight Merging) trước: Cộng trực tiếp $\Delta W$ vào ma trận gốc $W_0$. Khi đó, mô hình sẽ trở lại thành một ma trận duy nhất, tốc độ suy luận hoàn toàn giống hệt như mô hình gốc, độ trễ phát sinh bằng 0.
+  Line 193: * Hệ số Alpha là một hằng số dùng để điều chỉnh tỷ lệ ảnh hưởng của LoRA adapter lên trọng số gốc của mô hình. Cụ thể, ma trận cập nhật $\Delta W$ sẽ được nhân với tỷ lệ $\frac{\alpha}{r}$ trước khi cộng vào $W_0$.
+
+File: concepts/6-ai-ml/genai-ml/ndcg.md
+  Line 29: Là tổng điểm Gain của top $K$ tài liệu được trả về. Ví dụ, nếu hệ thống trả về 3 tài liệu có mức độ liên quan lần lượt là [3, 2, 0] thì $CG = 3 + 2 + 0 = 5$.
+  Line 40: * $\log_2(i + 1)$: Hàm phạt giảm dần. Ở vị trí số 1, mẫu số là $\log_2(2) = 1$ (không bị phạt). Ở vị trí số 3, mẫu số là $\log_2(4) = 2$ (điểm Gain bị chia đôi). Cơ chế này ép thuật toán phải tìm mọi cách đẩy kết quả xịn nhất lên đỉnh.
+  Line 40: * $\log_2(i + 1)$: Hàm phạt giảm dần. Ở vị trí số 1, mẫu số là $\log_2(2) = 1$ (không bị phạt). Ở vị trí số 3, mẫu số là $\log_2(4) = 2$ (điểm Gain bị chia đôi). Cơ chế này ép thuật toán phải tìm mọi cách đẩy kết quả xịn nhất lên đỉnh.
+  Line 74: * Vị trí 1 ($i=1, rel=1$): Điểm phạt = $\log_2(2) = 1 \rightarrow$ Điểm đóng góp = $1 / 1 = 1.0$
+  Line 74: * Vị trí 1 ($i=1, rel=1$): Điểm phạt = $\log_2(2) = 1 \rightarrow$ Điểm đóng góp = $1 / 1 = 1.0$
+  Line 74: * Vị trí 1 ($i=1, rel=1$): Điểm phạt = $\log_2(2) = 1 \rightarrow$ Điểm đóng góp = $1 / 1 = 1.0$
+  Line 75: * Vị trí 2 ($i=2, rel=2$): Điểm phạt = $\log_2(3) \approx 1.585 \rightarrow$ Điểm đóng góp = $2 / 1.585 \approx 1.26$
+  Line 75: * Vị trí 2 ($i=2, rel=2$): Điểm phạt = $\log_2(3) \approx 1.585 \rightarrow$ Điểm đóng góp = $2 / 1.585 \approx 1.26$
+  Line 75: * Vị trí 2 ($i=2, rel=2$): Điểm phạt = $\log_2(3) \approx 1.585 \rightarrow$ Điểm đóng góp = $2 / 1.585 \approx 1.26$
+  Line 76: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+  Line 76: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+  Line 76: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+  Line 81: * Vị trí 1 ($i=1, rel=2$): Điểm đóng góp = $2 / \log_2(2) = 2.0$
+  Line 81: * Vị trí 1 ($i=1, rel=2$): Điểm đóng góp = $2 / \log_2(2) = 2.0$
+  Line 81: * Vị trí 1 ($i=1, rel=2$): Điểm đóng góp = $2 / \log_2(2) = 2.0$
+  Line 82: * Vị trí 2 ($i=2, rel=1$): Điểm đóng góp = $1 / \log_2(3) \approx 0.63$
+  Line 82: * Vị trí 2 ($i=2, rel=1$): Điểm đóng góp = $1 / \log_2(3) \approx 0.63$
+  Line 82: * Vị trí 2 ($i=2, rel=1$): Điểm đóng góp = $1 / \log_2(3) \approx 0.63$
+  Line 83: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+  Line 83: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+  Line 83: * Vị trí 3 ($i=3, rel=0$): Điểm đóng góp = $0$
+
+File: concepts/6-ai-ml/genai-ml/peft.md
+  Line 44: **Hãy làm một phép toán đơn giản**: Thay vì phải huấn luyện $4096 \times 4096 \approx 16.7$ triệu tham số của ma trận gốc, với LoRA ($r=8$), chúng ta chỉ cần huấn luyện $(4096 \times 8) + (8 \times 4096) \approx 65$ nghìn tham số. Khối lượng tính toán đã được giảm thiểu đi hơn 250 lần!
+  Line 44: **Hãy làm một phép toán đơn giản**: Thay vì phải huấn luyện $4096 \times 4096 \approx 16.7$ triệu tham số của ma trận gốc, với LoRA ($r=8$), chúng ta chỉ cần huấn luyện $(4096 \times 8) + (8 \times 4096) \approx 65$ nghìn tham số. Khối lượng tính toán đã được giảm thiểu đi hơn 250 lần!
+  Line 44: **Hãy làm một phép toán đơn giản**: Thay vì phải huấn luyện $4096 \times 4096 \approx 16.7$ triệu tham số của ma trận gốc, với LoRA ($r=8$), chúng ta chỉ cần huấn luyện $(4096 \times 8) + (8 \times 4096) \approx 65$ nghìn tham số. Khối lượng tính toán đã được giảm thiểu đi hơn 250 lần!
+  Line 44: **Hãy làm một phép toán đơn giản**: Thay vì phải huấn luyện $4096 \times 4096 \approx 16.7$ triệu tham số của ma trận gốc, với LoRA ($r=8$), chúng ta chỉ cần huấn luyện $(4096 \times 8) + (8 \times 4096) \approx 65$ nghìn tham số. Khối lượng tính toán đã được giảm thiểu đi hơn 250 lần!
+  Line 78: 2. Chèn các ma trận nhỏ $A$ và $B$ (Adapter) song song với các lớp Attention của mô hình gốc. Ma trận $A$ được khởi tạo với các giá trị ngẫu nhiên, còn ma trận $B$ được khởi tạo bằng $0$ (nhằm đảm bảo ban đầu adapter chưa làm ảnh hưởng đến kết quả gốc).
+  Line 78: 2. Chèn các ma trận nhỏ $A$ và $B$ (Adapter) song song với các lớp Attention của mô hình gốc. Ma trận $A$ được khởi tạo với các giá trị ngẫu nhiên, còn ma trận $B$ được khởi tạo bằng $0$ (nhằm đảm bảo ban đầu adapter chưa làm ảnh hưởng đến kết quả gốc).
+  Line 117: * **Đặt Rank ($r$) hợp lý**: Thông thường, giá trị $r=8$ hoặc $r=16$ là điểm khởi đầu lý tưởng. Việc tăng rank lên quá cao (như 64 hay 128) không giúp mô hình thông minh hơn mà chỉ làm tăng dung lượng VRAM tiêu thụ và dễ dẫn đến hiện tượng quá khớp (overfitting).
+  Line 117: * **Đặt Rank ($r$) hợp lý**: Thông thường, giá trị $r=8$ hoặc $r=16$ là điểm khởi đầu lý tưởng. Việc tăng rank lên quá cao (như 64 hay 128) không giúp mô hình thông minh hơn mà chỉ làm tăng dung lượng VRAM tiêu thụ và dễ dẫn đến hiện tượng quá khớp (overfitting).
+
+File: concepts/6-ai-ml/genai-ml/recall.md
+  Line 56: * $Recall = \frac{5}{5 + 5} = 0.5$ (50%)
+  Line 62: * $Recall = \frac{3}{4} = 0.75$ (75%)
+  Line 63: * $Precision = \frac{3}{5} = 0.60$ (60%)
+  Line 127: Ví dụ: Một mô hình dự đoán vô tội vạ mọi email đều là spam sẽ đạt Recall = 1.0 nhưng Precision chỉ đạt 0.01. Nếu dùng trung bình cộng, điểm số sẽ là $(1.0 + 0.01) / 2 = 0.505$ (một con số trông có vẻ khá tốt). Tuy nhiên, nếu dùng trung bình điều hòa, điểm F1-Score sẽ bị kéo tụt xuống mức sát đáy là 0.02. Điều này phản ánh chính xác rằng mô hình đó hoàn toàn vô dụng trong thực tế.
+
+File: concepts/6-ai-ml/genai-ml/temperature.md
+  Line 21: * **Khi $T = 0$:** Mô hình rơi vào trạng thái hoàn toàn tất định (Deterministic). Nó luôn luôn chọn từ có xác suất cao nhất ở mọi bước sinh từ.
+  Line 22: * **Khi $0 < T < 1$:** Làm cho phân phối xác suất trở nên "nhọn" hơn. Các từ có khả năng xuất hiện cao sẽ được gia tăng cơ hội, trong khi các từ có xác suất thấp sẽ bị dìm sâu hơn nữa.
+  Line 22: * **Khi $0 < T < 1$:** Làm cho phân phối xác suất trở nên "nhọn" hơn. Các từ có khả năng xuất hiện cao sẽ được gia tăng cơ hội, trong khi các từ có xác suất thấp sẽ bị dìm sâu hơn nữa.
+  Line 23: * **Khi $T > 1$:** Làm cho phân phối xác suất trở nên "phẳng" hơn. Thu hẹp khoảng cách xác suất giữa các từ vựng, tạo cơ hội cho những từ hiếm hoặc "mạo hiểm" được xuất hiện.
+  Line 33: Nếu không có tham số Temperature (hoặc thiết lập $T=0$), mô hình sẽ luôn chọn từ có tỷ lệ cao nhất là `"xanh"`. Nếu bạn gọi API này 100 lần, bạn sẽ nhận về 100 câu trả lời giống hệt nhau.
+  Line 39: * **Nhiệt độ thấp ($T = 0$ - Logic & Chính xác):** Hoàn toàn không có sự sáng tạo. Phù hợp cho các tác vụ hỏi đáp dữ liệu thực tế (QA), trích xuất thông tin, viết mã nguồn, và kiến trúc [RAG](/concepts/6-ai-ml/genai-ml/rag/). Mức này giúp hạn chế tối đa hiện tượng Ảo giác ([Hallucination](/concepts/6-ai-ml/genai-ml/hallucination/)) của AI.
+  Line 40: * **Nhiệt độ trung bình ($T = 0.7 \rightarrow 1.0$ - Cân bằng):** Đây là chế độ mặc định của phần lớn các chatbot hiện nay (như ChatGPT, Claude). Câu văn tạo ra tự nhiên, từ vựng phong phú nhưng vẫn đảm bảo tính logic và mạch lạc của nội dung.
+  Line 41: * **Nhiệt độ cao ($T > 1.5$ - Hỗn loạn):** Mức độ sáng tạo đạt đỉnh điểm, nhưng đi kèm rủi ro cực kỳ lớn về việc câu văn bị sai ngữ pháp, vô nghĩa hoặc hoàn toàn lạc đề.
+  Line 53: * **Nếu $T = 1$ (Bình thường):** Tỷ lệ chọn từ A là $\approx 73\%$, từ B là $27\%$.
+  Line 53: * **Nếu $T = 1$ (Bình thường):** Tỷ lệ chọn từ A là $\approx 73\%$, từ B là $27\%$.
+  Line 54: * **Nếu $T = 0.1$ (Lạnh):** Điểm thô bị phóng đại lên thành 20 và 10. Khoảng cách $\exp(20)$ và $\exp(10)$ trở nên khổng lồ. Tỷ lệ chọn từ A vọt lên $\approx 99.99\%$. Từ B hầu như không còn cơ hội.
+  Line 55: * **Nếu $T = 2$ (Nóng):** Điểm thô co lại thành 1.0 và 0.5. Khoảng cách xác suất bị thu hẹp đáng kể. Tỷ lệ chọn từ A giảm xuống $\approx 62\%$, từ B tăng lên $38\%$. Từ B giờ đây có cơ hội "ra sân" rất cao.
+  Line 55: * **Nếu $T = 2$ (Nóng):** Điểm thô co lại thành 1.0 và 0.5. Khoảng cách xác suất bị thu hẹp đáng kể. Tỷ lệ chọn từ A giảm xuống $\approx 62\%$, từ B tăng lên $38\%$. Từ B giờ đây có cơ hội "ra sân" rất cao.
+  Line 102: * **Kết hợp khéo léo với [Prompt Engineering](/concepts/6-ai-ml/genai-ml/prompt-engineering/):** Thay vì cố gắng tăng Temperature lên quá cao để AI viết hay hơn (dẫn đến vỡ định dạng cấu trúc), hãy giữ Temperature ở mức cân bằng ($0.7$) và sử dụng kỹ thuật viết prompt định hướng (ví dụ: *"Hãy viết theo giọng điệu lãng mạn, sử dụng nhiều phép ẩn dụ..."*).
+  Line 102: * **Kết hợp khéo léo với [Prompt Engineering](/concepts/6-ai-ml/genai-ml/prompt-engineering/):** Thay vì cố gắng tăng Temperature lên quá cao để AI viết hay hơn (dẫn đến vỡ định dạng cấu trúc), hãy giữ Temperature ở mức cân bằng ($0.7$) và sử dụng kỹ thuật viết prompt định hướng (ví dụ: *"Hãy viết theo giọng điệu lãng mạn, sử dụng nhiều phép ẩn dụ..."*).
+  Line 112: * **Không kiểm soát được cấu trúc:** Thiết lập nhiệt độ quá cao ($T > 1.5$) dễ làm AI bị loạn, sinh ra từ ngữ vô nghĩa, lặp ký tự hoặc sai cú pháp nghiêm trọng.
+  Line 117: * **Nhiệt độ thấp ($T \approx 0$):** Khi làm việc với các tác vụ đòi hỏi sự chính xác tuyệt đối như viết code, phân tích cú pháp, trích xuất dữ liệu JSON, lập luận toán học hoặc truy xuất thông tin (RAG).
+  Line 118: * **Nhiệt độ trung bình ($T \approx 0.7 - 1.0$):** Khi xây dựng các chatbot giao tiếp thông thường, trả lời email, viết báo cáo hoặc tóm tắt tài liệu một cách tự nhiên.
+  Line 119: * **Nhiệt độ cao ($T \ge 1.2$):** Khi cần mô hình brainstorm ý tưởng mới, sáng tác nghệ thuật, viết truyện hoặc thơ ca phong phú.
+  Line 134: Khi $T \rightarrow \infty$, tỷ số $z_i / T$ sẽ tiến dần về 0 với mọi điểm số thô $z_i$. Do đó, tử số $\exp(z_i / T)$ trong công thức Softmax sẽ tiến tới $\exp(0) = 1$ cho tất cả các token có mặt trong từ điển.
+  Line 142: Ở mức $T=0$, tham số Top-p sẽ không còn tác dụng. Nếu vì lý do nào đó cần câu văn mềm mại hơn một chút và để $T > 0$ cực nhỏ (ví dụ $0.1$), tôi sẽ giới hạn **Top-p ở mức rất thấp (khoảng 0.1)** để đảm bảo AI chỉ được lựa chọn trong số các từ vựng an toàn nhất.
+  Line 142: Ở mức $T=0$, tham số Top-p sẽ không còn tác dụng. Nếu vì lý do nào đó cần câu văn mềm mại hơn một chút và để $T > 0$ cực nhỏ (ví dụ $0.1$), tôi sẽ giới hạn **Top-p ở mức rất thấp (khoảng 0.1)** để đảm bảo AI chỉ được lựa chọn trong số các từ vựng an toàn nhất.
+  Line 142: Ở mức $T=0$, tham số Top-p sẽ không còn tác dụng. Nếu vì lý do nào đó cần câu văn mềm mại hơn một chút và để $T > 0$ cực nhỏ (ví dụ $0.1$), tôi sẽ giới hạn **Top-p ở mức rất thấp (khoảng 0.1)** để đảm bảo AI chỉ được lựa chọn trong số các từ vựng an toàn nhất.
+  Line 142: Ở mức $T=0$, tham số Top-p sẽ không còn tác dụng. Nếu vì lý do nào đó cần câu văn mềm mại hơn một chút và để $T > 0$ cực nhỏ (ví dụ $0.1$), tôi sẽ giới hạn **Top-p ở mức rất thấp (khoảng 0.1)** để đảm bảo AI chỉ được lựa chọn trong số các từ vựng an toàn nhất.
+
+File: concepts/6-ai-ml/genai-ml/top-p.md
+  Line 24: 3. Chỉ giữ lại nhóm token hàng đầu có tổng xác suất tích lũy vừa vượt quá hoặc bằng ngưỡng $p$ ($0 \le p \le 1$) đã thiết lập.
+  Line 24: 3. Chỉ giữ lại nhóm token hàng đầu có tổng xác suất tích lũy vừa vượt quá hoặc bằng ngưỡng $p$ ($0 \le p \le 1$) đã thiết lập.
+  Line 97: * **Top-k (Cố định số lượng):** Luôn chỉ xem xét đúng $k$ từ có xác suất cao nhất (ví dụ: $k=50$). Thiết kế này gặp vấn đề khi phân phối xác suất thay đổi:
+  Line 108: * **Top-p thấp ($0.1 \rightarrow 0.3$):** Phù hợp cho các tác vụ cần độ chính xác cao, đòi hỏi tư duy logic (như viết code, sinh câu lệnh SQL, dịch thuật hoặc trích xuất thông tin).
+  Line 108: * **Top-p thấp ($0.1 \rightarrow 0.3$):** Phù hợp cho các tác vụ cần độ chính xác cao, đòi hỏi tư duy logic (như viết code, sinh câu lệnh SQL, dịch thuật hoặc trích xuất thông tin).
+  Line 109: * **Top-p cao ($0.7 \rightarrow 0.95$):** Phù hợp cho các tác vụ cần sự đa dạng ngôn từ, sáng tạo nghệ thuật (như viết blog, lên ý tưởng, viết truyện).
+  Line 109: * **Top-p cao ($0.7 \rightarrow 0.95$):** Phù hợp cho các tác vụ cần sự đa dạng ngôn từ, sáng tạo nghệ thuật (như viết blog, lên ý tưởng, viết truyện).
+  Line 123: * **Top-p thấp ($0.1 - 0.3$):** Phù hợp khi thực hiện các tác vụ cần độ chính xác cao, đòi hỏi tư duy logic như lập trình, dịch thuật kỹ thuật, trích xuất dữ liệu có cấu trúc.
+  Line 123: * **Top-p thấp ($0.1 - 0.3$):** Phù hợp khi thực hiện các tác vụ cần độ chính xác cao, đòi hỏi tư duy logic như lập trình, dịch thuật kỹ thuật, trích xuất dữ liệu có cấu trúc.
+  Line 124: * **Top-p cao ($0.7 - 0.95$):** Phù hợp cho các bài toán sáng tạo nội dung, tiếp thị, viết kịch bản hoặc hội thoại tự nhiên với người dùng.
+  Line 124: * **Top-p cao ($0.7 - 0.95$):** Phù hợp cho các bài toán sáng tạo nội dung, tiếp thị, viết kịch bản hoặc hội thoại tự nhiên với người dùng.
+
+File: projects/azure-e2e-project.md
+  Line 306: * **Chi phí**: Dedicated SQL Pool yêu cầu tài nguyên phần cứng cố định chạy liên tục 24/7 và chi phí tối thiểu rất cao. Serverless SQL Pool tính phí theo dung lượng dữ liệu quét qua câu lệnh truy vấn ($5 cho mỗi TB dữ liệu quét), cực kỳ tiết kiệm cho các báo cáo không chạy liên tục.
+
+Scan complete. Found 171 unescaped dollar signs across 23 files.
