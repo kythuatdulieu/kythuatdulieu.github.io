@@ -77,6 +77,8 @@ Khi kích hoạt `--defer`, nếu dbt phát hiện bảng cha (`dim_users`) chư
 
 Dưới đây là sơ đồ luồng hoạt động tự động hóa hoàn chỉnh của một quy trình CI/CD cho dữ liệu khi lập trình viên thực hiện mở Pull Request trên GitHub:
 
+![Kiến trúc tổng quan luồng deploy dữ liệu tự động](/images/data-pipeline-cicd/mwaa-architecture.png)
+
 ```mermaid
 graph TD
     A[Nhánh Git của Developer] -->|Tạo Pull Request| B[Kích hoạt GitHub Actions CI]

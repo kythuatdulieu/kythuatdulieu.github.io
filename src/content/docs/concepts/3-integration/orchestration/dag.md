@@ -20,6 +20,8 @@ Hiểu một cách đơn giản, **DAG (Directed Acyclic Graph)**, dịch sang t
 2. **Các cạnh có hướng (Directed Edges)**: Biểu diễn bằng các mũi tên nối giữa các đỉnh (ví dụ: $A \rightarrow B$). Nó định nghĩa mối quan hệ phụ thuộc chặt chẽ: *"Tác vụ A bắt buộc phải hoàn thành thành công thì tác vụ B mới được phép bắt đầu chạy"*.
 3. **Đặc tính không chu trình (Acyclic)**: Nếu bạn bắt đầu đi từ một tác vụ bất kỳ theo chiều mũi tên, bạn sẽ **không bao giờ** có thể quay lại chính tác vụ đó. Nói cách khác, hệ thống tuyệt đối cấm các vòng lặp vô hạn dạng $A \rightarrow B \rightarrow C \rightarrow A$.
 
+![Minh họa đồ thị có hướng không chu trình (DAG)](/images/dag/directed_acyclic_graph_3.svg)
+
 ## Tại sao chúng ta cần cấu trúc DAG?
 
 Hãy tưởng tượng bạn đang xây dựng một quy trình tính lương tự động cho doanh nghiệp:

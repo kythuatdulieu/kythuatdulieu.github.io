@@ -62,6 +62,8 @@ Dagster giải quyết triệt để bài toán quản lý trạng thái bằng 
 
 Sự khác biệt cốt lõi trong tư duy thiết kế giữa mô hình hướng tác vụ (Task-centric) của Airflow và hướng tài sản (Asset-centric) của Dagster được thể hiện trực quan qua sơ đồ dưới đây:
 
+![Kiến trúc luồng điều phối dữ liệu dạng Task-Centric (Airflow)](/images/orchestrator-comparison/mwaa-architecture.png)
+
 ```mermaid
 graph TD
     subgraph "Mô hình Hướng tác vụ (Task-Centric - Airflow)"

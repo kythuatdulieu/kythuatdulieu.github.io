@@ -49,6 +49,8 @@ Một hệ thống Airflow hoàn chỉnh được vận hành bởi sự phối 
 2. **Scheduler (Bộ lập lịch):** Bộ não của toàn bộ hệ thống. Nó liên tục quét thư mục code, đối chiếu thời gian biểu để tạo ra các lượt chạy DAG mới và chuyển trạng thái các tác vụ đủ điều kiện sang hàng đợi.
 3. **Metadata Database (Cơ sở dữ liệu lưu trữ trạng thái):** Thường sử dụng PostgreSQL hoặc MySQL. Đây là nơi lưu trữ toàn bộ lịch sử chạy của các tác vụ, thông tin đăng nhập cấu hình kết nối, biến môi trường và định nghĩa của các DAG.
 4. **Executor & Workers (Bộ thực thi và Công nhân):** Lực lượng trực tiếp thực hiện công việc. Trong môi trường lớn, Airflow thường cấu hình **Celery Executor** (phân phối tác vụ cho các server worker tĩnh) hoặc **Kubernetes Executor** (mỗi tác vụ được khởi tạo chạy trên một Pod độc lập của Kubernetes và tự động hủy sau khi hoàn thành).
+
+![Sơ đồ kiến trúc luồng dữ liệu của Apache Airflow](/images/apache-airflow/mwaa-architecture.png)
 ```mermaid
 flowchart TD
     %% Source Code

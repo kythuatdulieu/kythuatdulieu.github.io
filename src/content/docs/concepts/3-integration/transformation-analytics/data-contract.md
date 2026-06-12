@@ -32,6 +32,8 @@ Hợp đồng này hoạt động như một cơ chế quản trị kết nối 
 
 Khi tích hợp Kafka Schema Registry, luồng đi của một bản tin được kiểm duyệt thông qua một quy trình phối hợp nhịp nhàng giữa Producer, Schema Registry, Kafka Broker, và Consumer:
 
+![Kiến trúc hoạt động của Kafka Schema Registry](/images/data-contract/schema-registry-design-kafka.png)
+
 ```mermaid
 sequenceDiagram
     autonumber

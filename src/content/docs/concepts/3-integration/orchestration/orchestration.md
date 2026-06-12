@@ -59,6 +59,8 @@ Nhờ sự phân tách này, bản thân Orchestrator luôn nhẹ nhàng vì nó
 ## Kiến trúc và luồng đi của dữ liệu
 
 Sơ đồ dưới đây minh họa cách một Orchestrator điều phối các hệ thống thực thi mà không trực tiếp can thiệp vào dữ liệu:
+
+![Kiến trúc luồng điều phối dữ liệu tổng quát](/images/orchestration/mwaa-architecture.png)
 ```mermaid
 graph TD
     subgraph "Lập lịch & Điều phối"

@@ -145,6 +145,8 @@ Nhờ có Deferral, bạn có thể kiểm thử độc lập bất kỳ mô hì
 
 Dưới đây là sơ đồ luồng hoạt động chuẩn của một quy trình Stateful CI/CD khi một kỹ sư thực hiện mở Pull Request trên Git:
 
+![Sơ đồ tích hợp CI/CD dựa trên trạng thái (Stateful CI) của dbt](/images/dbt-advanced/mwaa-architecture.png)
+
 ```mermaid
 graph TD
     A[Developer tạo Pull Request] --> B[Kích hoạt CI/CD Pipeline]
