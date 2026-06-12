@@ -5,208 +5,221 @@ import { conceptCategories } from '../config/categories.js';
 const allDocs = await getCollection('docs');
 const existingConcepts = allDocs.filter(doc => doc.id.startsWith('concepts/'));
 
-const dynamicMOC = [];
+const domains = [
+  {
+    id: "domain-1",
+    label: "1. Cơ sở & Kiến trúc",
+    description: "Nền móng về kỹ thuật dữ liệu, vòng đời dữ liệu, thiết kế hệ thống và các mô hình kiến trúc phân tích (Medallion, Lambda, Kappa, Data Mesh).",
+    prefix: "1-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>`
+  },
+  {
+    id: "domain-2",
+    label: "2. Lưu trữ & Quản lý dữ liệu",
+    description: "Thiết kế cơ sở dữ liệu (OLTP, OLAP, HTAP), định dạng file mở (Parquet, Delta, Iceberg), hồ dữ liệu (Lakehouse) và Cloud platforms.",
+    prefix: "2-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>`
+  },
+  {
+    id: "domain-3",
+    label: "3. Tích hợp & Biến đổi dữ liệu",
+    description: "Quy trình tích hợp (ETL/ELT, CDC, Idempotency), dbt transformations, orchestration (Airflow, Dagster) và xử lý theo lô lớn (Batch Processing).",
+    prefix: "3-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`
+  },
+  {
+    id: "domain-4",
+    label: "4. Xử lý thời gian thực",
+    description: "Xử lý luồng dữ liệu liên tục (Streaming Processing), kiến trúc Spark Streaming vs Flink, quản lý State, Event-Time và Watermarking.",
+    prefix: "4-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>`
+  },
+  {
+    id: "domain-5",
+    label: "5. Chất lượng & Quản trị",
+    description: "Đảm bảo độ tin cậy dữ liệu (Data Quality, SLA/SLO, Observability), thiết lập Data Catalog, bảo mật và quản trị siêu dữ liệu tập trung.",
+    prefix: "5-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`
+  },
+  {
+    id: "domain-6",
+    label: "6. AI & Machine Learning",
+    description: "Hạ tầng dữ liệu cho AI/ML: thiết kế Feature Store, kỹ thuật Chunking dữ liệu, Embedding Models, Vector Database và tối ưu ứng dụng RAG.",
+    prefix: "6-",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`
+  }
+];
 
-conceptCategories.forEach(cat => {
-   const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
-   if (docsInCat.length > 0) {
-       dynamicMOC.push({
-           categorySlug: cat.slug,
-           category: cat.label,
-           concepts: docsInCat.map(doc => {
-               // Extract clean title without prefixes like "Concept -" if they exist
-               let title = doc.data.title;
-               const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
-               if (match && match[1]) title = match[1].trim();
-               
-               return {
-                   title: title,
-                   url: `/${doc.slug}/`
-               };
-           })
-       });
-   }
-});
+const domainsData = domains.map(domain => {
+    const categoriesInDomain = conceptCategories
+        .filter(cat => cat.slug.startsWith(domain.prefix))
+        .map(cat => {
+            const docsInCat = existingConcepts.filter(doc => doc.id.startsWith(`concepts/${cat.slug}/`));
+            return {
+                categorySlug: cat.slug,
+                categoryLabel: cat.label,
+                concepts: docsInCat.map(doc => {
+                    let title = doc.data.title;
+                    const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
+                    if (match && match[1]) title = match[1].trim();
+                    
+                    return {
+                        title: title,
+                        url: `/${doc.slug}/`
+                    };
+                })
+            };
+        })
+        .filter(cat => cat.concepts.length > 0);
 
-// Any other categories not listed in the ordered list?
-const existingCatSlugs = new Set(conceptCategories.map(c => c.slug));
-const otherDocs = existingConcepts.filter(doc => {
-    const parts = doc.id.split('/');
-    if (parts.length >= 3) {
-        return !existingCatSlugs.has(parts[1]);
-    }
-    return false;
-});
-if (otherDocs.length > 0) {
-    dynamicMOC.push({
-        categorySlug: "other",
-        category: "Các khái niệm khác",
-        concepts: otherDocs.map(doc => ({ title: doc.data.title, url: `/${doc.slug}/` }))
-    });
-}
+    return {
+        ...domain,
+        categories: categoriesInDomain
+    };
+}).filter(d => d.categories.length > 0);
 ---
 
 <div class="moc-container">
-    <!-- The Table -->
-    <div class="moc-table-wrapper" id="concept-table">
-        <table class="moc-table">
-            <thead>
-                <tr>
-                    <th class="col-category">Category</th>
-                    <th class="col-concepts">Data Engineering Concepts</th>
-                </tr>
-            </thead>
-            <tbody>
-                {dynamicMOC.map(group => {
-                    return (
-                        <tr id={`row-${group.categorySlug}`}>
-                            <td class="cat-cell">
-                                <strong>{group.category}</strong>
-                            </td>
-                            <td class="concepts-cell">
-                                <div class="concepts-list">
-                                    {group.concepts.map((concept, index) => {
-                                        const isLast = index === group.concepts.length - 1;
-                                        return (
-                                            <span class="concept-item-wrapper">
-                                                <a href={concept.url} class="concept-tag active">
-                                                    {concept.title}
-                                                </a>
-                                                {!isLast && <span class="comma">, </span>}
-                                            </span>
-                                        );
-                                    })}
-                                </div>
-                            </td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
+    <div class="domains-grid">
+        {domainsData.map(domain => (
+            <div class="domain-card" id={domain.id}>
+                <div class="domain-card-header">
+                    <div class="domain-icon-wrapper" set:html={domain.svg} />
+                    <h2 class="domain-title">{domain.label}</h2>
+                </div>
+                <p class="domain-description">{domain.description}</p>
+                
+                <div class="domain-categories">
+                    {domain.categories.map(cat => (
+                        <div class="category-group">
+                            <h3 class="category-title">{cat.categoryLabel}</h3>
+                            <div class="concepts-list">
+                                {cat.concepts.map((concept, idx) => (
+                                    <>
+                                        <a href={concept.url} class="concept-link">
+                                            {concept.title}
+                                        </a>
+                                        {idx < cat.concepts.length - 1 && <span class="divider">·</span>}
+                                    </>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        ))}
     </div>
-
-    <!-- Slot for Quizzes (which are passed from index.mdx) -->
-    <slot />
 </div>
 
 <style>
-/* Theme Variables */
-:root {
-    --moc-bg: var(--sl-color-bg);
-    --moc-text: var(--sl-color-text);
-    --moc-text-muted: var(--sl-color-text-accent);
-    --moc-border: var(--sl-color-hairline);
-    --moc-bg-alt: var(--sl-color-bg-nav);
-    --moc-primary: var(--sl-color-accent);
-    --moc-primary-hover: var(--sl-color-accent-high);
-    --moc-hover-bg: var(--sl-color-gray-6);
-    --moc-radius: 8px;
-    --moc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
 .moc-container {
     width: 100%;
-    margin: 2rem auto;
+    margin: 1rem auto;
     font-family: var(--sl-font), sans-serif;
 }
 
-/* The Table */
-.moc-table-wrapper {
-    overflow-x: auto;
-    border: 1px solid var(--moc-border);
-    border-radius: var(--moc-radius);
-    background: var(--moc-bg);
+.domains-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.moc-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    margin: 0 !important; /* Override markdown table margins */
+@media (min-width: 768px) {
+    .domains-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.moc-table th {
-    background-color: var(--moc-bg-alt);
-    padding: 1rem;
-    font-weight: 600;
-    border-bottom: 2px solid var(--moc-border);
-    color: var(--moc-text-muted);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+/* Minimalist Document Directory Card */
+.domain-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    transition: border-color 0.2s ease;
 }
 
-.col-category {
-    width: 30%;
+.domain-card:hover {
+    border-color: var(--sl-color-gray-3);
 }
 
-.col-concepts {
-    width: 70%;
+.domain-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
-.moc-table td {
-    padding: 1.25rem 1rem;
-    border-bottom: 1px solid var(--moc-border);
-    vertical-align: top;
+.domain-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sl-color-gray-2);
+    flex-shrink: 0;
 }
 
-.moc-table tbody tr:last-child td {
-    border-bottom: none;
+.domain-title {
+    margin: 0 !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
+    line-height: 1.3 !important;
 }
 
-.moc-table tbody tr {
-    transition: background-color 0.3s;
+.domain-description {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    line-height: 1.5;
+    margin: 0 0 1.25rem 0 !important;
 }
 
-.moc-table tbody tr.highlight {
-    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
+/* Category & Concept Grouping */
+.domain-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Comfortably spaced categories */
+    margin-top: auto;
 }
 
-.cat-cell strong {
-    display: block;
-    font-size: 1.05rem;
-    color: var(--moc-text);
+.category-group {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-top: 0.75rem;
 }
 
-/* Concept Tags */
+.category-title {
+    margin: 0 0 0.5rem 0 !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: var(--sl-color-gray-2) !important;
+}
+
+/* Inline text links list */
 .concepts-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.25rem;
-    line-height: 1.8;
-}
-
-.concept-item-wrapper {
-    display: inline-flex;
     align-items: center;
+    gap: 0.45rem 0.65rem; /* Increased gap spacing for readability */
+    line-height: 1.6;
 }
 
-.concept-tag {
-    display: inline-block;
-    padding: 0.1rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    white-space: nowrap;
+.concept-link {
+    font-size: 0.85rem;
+    color: var(--sl-color-accent) !important;
+    text-decoration: none !important;
+    transition: color 0.15s ease;
 }
 
-.concept-tag.active {
-    color: var(--moc-primary);
-    background-color: rgba(var(--sl-color-accent-rgb), 0.1);
-    font-weight: 500;
+.concept-link:hover {
+    color: var(--sl-color-accent-high) !important;
+    text-decoration: underline !important;
 }
 
-.concept-tag.active:hover {
-    background-color: var(--moc-primary);
-    color: var(--sl-color-text-invert);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.comma {
-    color: var(--moc-text-muted);
+.divider {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-4);
+    user-select: none;
 }
 </style>
-
-
