@@ -4,9 +4,10 @@ category: "Interview Preparation"
 difficulty: "Advanced"
 tags: ["incident-response", "troubleshooting", "interview", "on-call", "rca"]
 readingTime: "11 mins"
-lastUpdated: 2026-06-07
+lastUpdated: 2026-06-12
 seoTitle: "Production Incident QA - Phỏng vấn xử lý sự cố Data Engineering"
 metaDescription: "Cẩm nang xử lý sự cố hệ thống dữ liệu (Production Incident) trong phỏng vấn Data Engineering: Quy trình Root Cause Analysis, On-call và SLA/SLO."
+definition: "Cẩm nang phỏng vấn về cách xử lý sự cố hệ thống dữ liệu môi trường Production, quy trình On-call, ứng phó sự cố khẩn cấp, Root Cause Analysis (RCA) và viết tài liệu hậu kiểm."
 ---
 
 Trong các buổi phỏng vấn Data Engineer (đặc biệt là các vị trí từ Senior trở lên), vòng phỏng vấn **Xử lý sự cố Production** (Production Incident QA) là một thử thách vô cùng thực tế. Vòng này được thiết kế để đánh giá khả năng chẩn đoán lỗi, tư duy giải quyết vấn đề dưới áp lực cao (troubleshooting under pressure), kỹ năng giao tiếp liên phòng ban và tinh thần trách nhiệm của ứng viên khi đóng vai trò là một kỹ sư trực gác (On-call Engineer).
@@ -44,17 +45,6 @@ Trong thế giới dữ liệu, một sự cố Production thường diễn ra d
 
 ---
 
-## Hướng dẫn từng bước trả lời phỏng vấn khi hệ thống gặp sự cố
-
-Khi người phỏng vấn đưa ra tình huống: *"Pipeline của bạn báo lỗi tràn bộ nhớ (OOM) lúc nửa đêm. Bạn sẽ làm gì?"*, hãy trình bày câu trả lời của mình theo các bước hành động cụ thể thay vì chỉ tập trung vào kỹ thuật sửa lỗi:
-
-* **Bước 1**: *"Trước tiên, tôi sẽ kiểm tra Logs trên Airflow hoặc Spark UI để xác nhận chính xác task nào đang sập và tầm ảnh hưởng của nó tới các bảng dữ liệu hạ lưu."*
-* **Bước 2**: *"Tiếp theo, tôi sẽ gửi thông báo lên kênh Slack chung để báo cho các bên kinh doanh biết rằng hệ thống dữ liệu đang gặp sự cố và báo cáo doanh thu sáng nay có thể bị trễ."*
-* **Bước 3**: *"Để khôi phục hệ thống nhanh nhất, tôi sẽ tạm thời cấu hình tăng bộ nhớ RAM cấp phát lên gấp đôi và chạy lại (Retry) pipeline. Vì trong các ngày đặc biệt như Flash Sale, lượng dữ liệu tăng đột biến rất dễ gây ra lỗi OOM tạm thời."*
-* **Bước 4**: *"Sau khi pipeline đã chạy xanh trở lại, tôi sẽ mở Grafana để phân tích chi tiết các chỉ số sử dụng CPU/RAM của job đó, rà soát lại code để tìm ra đoạn logic gây rò rỉ bộ nhớ nhằm tối ưu hóa triệt để vào ngày hôm sau."*
-
----
-
 ## Sơ đồ quy trình ứng phó và khắc phục sự cố hệ thống
 
 Dưới đây là sơ đồ mô tả luồng xử lý chuẩn khi hệ thống phát đi cảnh báo sự cố nghiêm trọng:
@@ -72,84 +62,92 @@ graph TD
     G --> H
     
     H --> I["Post-mortem Document"]
-
-
 ```
 
 ---
 
-## Tình huống thực tế: Doanh thu trên báo cáo đột ngột tăng gấp đôi
+## Điểm mạnh và điểm yếu
 
-**Đề bài từ người phỏng vấn**: *"Sáng nay, báo cáo hiển thị doanh thu của công ty đột ngột tăng vọt lên gấp đôi so với thực tế. Giám đốc tài chính đang rất tức giận. Bạn là Data Engineer chịu trách nhiệm hệ thống này, bạn sẽ điều tra lỗi như thế nào?"*
+Khi đối phó sự cố Production, hai chiến lược khôi phục phổ biến là **Quay lui mã nguồn (Rollback)** và **Sửa đè nóng (Roll-forward)**. Mỗi phương pháp đều có ưu và nhược điểm riêng:
 
-**Cách phân tích và giải quyết bài bản**:
+### Chiến lược Quay lui (Rollback)
+* **Điểm mạnh (Pros)**: Cực kỳ an toàn, giúp khôi phục hệ thống về trạng thái ổn định gần nhất một cách nhanh chóng mà không cần tốn thời gian suy nghĩ logic sửa lỗi dưới áp lực thời gian.
+* **Điểm yếu (Cons)**: Có thể gặp khó khăn nếu bản cập nhật đi kèm với các thay đổi cấu trúc bảng dữ liệu (DDL) phức tạp khó hoàn tác ngay lập tức, hoặc làm mất một số tính năng mới đã chạy thành công trước đó.
 
-1. **Khoanh vùng phạm vi ảnh hưởng**: Tôi sẽ kiểm tra câu lệnh SQL tính toán báo cáo đó để xác định bảng dữ liệu nguồn. Phát hiện số liệu được lấy trực tiếp từ bảng `fact_sales`.
-2. **Truy vết nguồn gốc dữ liệu ([Data Lineage](/concepts/5-quality-governance/governance-metadata/data-lineage/))**: Sử dụng bản đồ Lineage để truy tìm nguồn gốc nạp dữ liệu. Bảng `fact_sales` được cập nhật bởi một Airflow Job mang tên `sales_ingestion`.
-3. **Kiểm tra nhật ký hệ thống (Logs)**: Rà soát log của Job `sales_ingestion` đêm qua. Phát hiện job đã bị mất kết nối mạng giữa chừng khi đang nạp dữ liệu từ database nguồn. Hệ thống Airflow sau đó đã tự động kích hoạt cơ chế chạy lại (Retry).
-4. **Xác định nguyên nhân gốc rễ (Root Cause)**: Do Job `sales_ingestion` được thiết kế theo dạng chỉ ghi thêm dữ liệu (Append-only) mà không có tính lũy đẳng ([Idempotency](/concepts/3-integration/etl-elt/idempotency/)). Ở lần chạy đầu tiên, job đã nạp thành công 50% dữ liệu rồi sập. Ở lần chạy lại sau đó, job lại tiếp tục tải toàn bộ 100% dữ liệu đè lên, dẫn đến việc trùng lặp dữ liệu giao dịch của ngày hôm đó.
-5. **Khắc phục sự cố**: Xóa toàn bộ các bản ghi bị lỗi của ngày hôm đó trong bảng `fact_sales`. Chỉnh sửa lại thiết kế của Job sang cơ chế ghi đè (Delete-then-Insert hoặc UPSERT) để đảm bảo tính lũy đẳng, sau đó thực hiện chạy lại ([Backfill](/concepts/3-integration/etl-elt/backfill/)) dữ liệu ngày hôm đó.
-
----
-
-## Những nguyên tắc vàng và Best Practices
-
-* **Chủ động phát hiện lỗi bằng hệ thống cảnh báo (Alerting)**: Một sự cố tồi tệ nhất là khi chỉ được phát hiện sau khi khách hàng hoặc người dùng kinh doanh gọi điện phàn nàn. Hãy thiết lập các chốt chặn chất lượng dữ liệu tự động (Data Quality Checks) và cảnh báo trễ hạn hoàn thành (SLA Timeout Alerts) để phát hiện lỗi trước khi người dùng kịp mở báo cáo.
-* **Văn hóa Post-mortem không đổ lỗi (Blameless)**: Khi viết tài liệu phân tích sự cố, hãy tập trung vào câu hỏi: *"Quy trình kiểm soát nào đã bị bỏ sót khiến lỗi này lọt qua được môi trường Production?"* chứ tuyệt đối không tập trung chỉ trích cá nhân kỹ sư nào đã viết đoạn code đó.
-* **Ưu tiên Rollback hơn là cố gắng sửa đè (Fix-forward)**: Khi deploy code mới lên Production và phát hiện lỗi, phương án an toàn nhất luôn là thực hiện `git revert` và rollback hạ tầng về trạng thái ổn định gần nhất, thay vì cố gắng vội vã viết code sửa lỗi trực tiếp trên Production trong tình trạng căng thẳng.
+### Chiến lược Sửa đè (Roll-forward / Hotfix)
+* **Điểm mạnh (Pros)**: Giải quyết trực tiếp vấn đề mà không cần hoàn tác toàn bộ gói triển khai, giữ lại được các tính năng mới khác.
+* **Điểm yếu (Cons)**: Rất nguy hiểm vì kỹ sư viết code vá lỗi trong trạng thái hoảng loạn, thiếu ngủ dễ dẫn đến sai sót và làm thảm họa nhân lên gấp nhiều lần.
 
 ---
 
-## Những sai lầm kinh điển dễ làm trầm trọng thêm sự cố
+## Khi nào nên dùng
 
-* **Mất bình tĩnh và âm thầm tự sửa lỗi**: Nhiều kỹ sư khi gặp sự cố thường âm thầm tìm cách tự sửa lỗi một mình mà không cập nhật trạng thái cho mọi người. Việc này khiến quản lý dự án (PM) hoang mang không biết tiến độ khắc phục ra sao để thông báo cho khách hàng. Hãy luôn cập nhật thông tin thường xuyên.
-* **Hội chứng mệt mỏi vì cảnh báo (Alert Fatigue)**: Việc cấu hình ngưỡng cảnh báo quá nhạy (ví dụ: hệ thống rung chuông liên tục cho các lỗi cảnh báo nhỏ) sẽ khiến các kỹ sư dần trở nên chai lì và dễ bỏ qua cả những cảnh báo đỏ cực kỳ nghiêm trọng.
-* **Tự ý xóa dữ liệu lỗi mà không sao lưu (Backup)**: Trong lúc vội vã khắc phục sự cố, nhiều kỹ sư gõ trực tiếp lệnh xóa (`DELETE`) dữ liệu lỗi trên Production mà quên tạo bản sao lưu dự phòng. Nếu chẳng may gõ nhầm điều kiện lọc, bạn có thể xóa mất dữ liệu thật và khiến thảm họa nhân lên gấp nhiều lần.
-
----
-
-## Bài toán đánh đổi: Rollback (Quay lui) hay Roll-forward (Sửa đè)?
-
-* **Rollback**: Giúp đưa hệ thống trở lại trạng thái an toàn trước đó gần như ngay lập tức, giảm thiểu tối đa rủi ro phát sinh thêm lỗi mới. Tuy nhiên, nó sẽ tốn thời gian để hoàn tác (revert) các thay đổi cấu trúc bảng (DDL) nếu bạn đã lỡ chạy deploy trước đó.
-* **Roll-forward**: Cố gắng viết mã vá lỗi (hotfix) trực tiếp đè lên hệ thống hiện tại. Cách này sẽ nhanh chóng nếu lỗi cực kỳ đơn giản, nhưng lại tiềm ẩn rủi ro rất cao vì dễ viết sai code trong lúc đang hoảng loạn hoặc thiếu ngủ.
+* **Nên dùng Rollback**: Là lựa chọn mặc định cho hầu hết các sự cố cấp độ Sev-1 (nghiêm trọng ảnh hưởng đến người dùng cuối). Khi hệ thống đang "chảy máu", ưu tiên hàng đầu là khôi phục hoạt động bình thường càng nhanh càng tốt.
+* **Nên dùng Roll-forward**: Chỉ áp dụng khi lỗi cực kỳ đơn giản (như sai lỗi chính tả biến môi trường, thiếu một tham số cấu hình nhỏ) và việc rollback cấu trúc bảng dữ liệu (DDL) sẽ gây ra rủi ro mất mát dữ liệu lớn hơn.
 
 ---
 
-## Bộ câu hỏi phỏng vấn thực tế và Cách trả lời ghi điểm
+## Trọng tâm ôn luyện phỏng vấn
 
-### 1. Hãy phân biệt các khái niệm SLA, SLO và SLI trong bối cảnh quản lý Data Pipeline.
-* **Gợi ý trả lời**: 
-  * **SLI (Service Level Indicator)**: Chỉ số đo lường hiệu suất thực tế của hệ thống tại một thời điểm (Ví dụ: *"Thời gian chạy của pipeline hôm nay là 40 phút"*).
-  * **SLO (Service Level Objective)**: Mục tiêu hiệu suất nội bộ do đội ngũ kỹ thuật tự đặt ra để phấn đấu (Ví dụ: *"99% số báo cáo trong tháng phải chạy xong trước 8:00 sáng hàng ngày"*).
-  * **SLA (Service Level Agreement)**: Cam kết mức độ dịch vụ giữa công ty và khách hàng có ràng buộc về mặt pháp lý hoặc tài chính (Ví dụ: *"Nếu dữ liệu báo cáo gửi chậm hơn 9:00 sáng, công ty sẽ phải hoàn trả 10% phí dịch vụ của tháng đó"*).
+Dưới đây là 3 tình huống phỏng vấn thực tế giả định được giải quyết theo quy trình phản ứng và khắc phục sự cố chuyên nghiệp:
 
-### 2. Hãy mô tả phương pháp phân tích "5 Whys" (5 câu hỏi Tại sao) để tìm nguyên nhân gốc rễ (RCA).
-* **Gợi ý trả lời**: Đây là phương pháp đặt câu hỏi "Tại sao" liên tiếp để bóc tách dần các hiện tượng bề mặt nhằm tìm ra nguyên nhân sâu xa nhất của lỗi hệ thống.
-  * *Ví dụ thực tế*: Số liệu doanh thu hiển thị sai. 
-    1. *Tại sao?* Vì Job Spark nạp dữ liệu bị trùng lặp. 
-    2. *Tại sao?* Vì Job đó bị kích hoạt chạy lại 2 lần liên tiếp. 
-    3. *Tại sao?* Vì Airflow bị mất kết nối mạng với database nguồn nên tự động kích hoạt chạy lại (Auto-retry). 
-    4. *Tại sao?* Vì database nguồn đang chạy tác vụ sao lưu (backup) tự động định kỳ gây quá tải cổng kết nối. 
-    5. *Tại sao?* Vì lịch chạy backup tự động của database nguồn đang được cấu hình trùng khít với khung giờ chạy pipeline dữ liệu.
-    $\rightarrow$ *Root Cause*: Cấu hình sai lịch hoạt động của các hệ thống hạ tầng.
+### Tình huống 1: Triage và Mitigate lỗi sập luồng dữ liệu do vi phạm SLA
+**Câu hỏi**: *"Vào lúc 3 giờ sáng, hệ thống cảnh báo PagerDuty đổ chuông báo hiệu Job Spark nạp dữ liệu ngày bị sập và có nguy cơ vi phạm cam kết SLA hoàn thành lúc 6 giờ sáng của doanh nghiệp. Bạn sẽ xử lý sự cố này thế nào theo quy trình chuẩn?"*
 
-### 3. Bạn sẽ xử lý thế nào nếu phát hiện một lỗi chất lượng dữ liệu (Data Quality) đã âm thầm xảy ra trong kho dữ liệu suốt 3 tháng qua?
-* **Gợi ý trả lời**: Tôi sẽ tiến hành quy trình chạy lại dữ liệu lịch sử (Backfill) theo các bước:
-  1. **Đóng băng (Freeze)** bảng dữ liệu bị lỗi, tạm thời vô hiệu hóa quyền ghi mới và đặt thông báo cảnh báo trên các dashboard BI để người dùng biết số liệu đang được sửa đổi, tránh lấy số liệu sai để phân tích.
-  2. **Xác định thời điểm bắt đầu lỗi** bằng cách rà soát log hệ thống và đối chiếu dữ liệu gốc.
-  3. **Xóa các phân vùng dữ liệu** (partitions) bị lỗi trong 3 tháng qua (hoặc chuẩn bị sẵn các script `MERGE INTO` để cập nhật đè).
-  4. **Viết mã sửa lỗi**, kiểm thử kỹ lưỡng trên môi trường Staging/Dev để đảm bảo code hoạt động hoàn hảo.
-  5. **Kích hoạt pipeline nạp lại (Backfill)** dữ liệu thô từ nguồn (như Kafka hoặc S3 raw storage) cho khoảng thời gian 3 tháng bị ảnh hưởng.
+**Trả lời (Quy trình Triage-Mitigate-Communicate-RCA)**:
+* **Triage (Xác nhận & Phân loại)**: Tôi truy cập vào Airflow Dashboard để xác định task bị lỗi. Phát hiện job `spark_daily_ingest` đã chạy được 2 tiếng rồi sập do lỗi `java.lang.OutOfMemoryError: Java heap space` ở các Executor node. Mức độ ảnh hưởng là Sev-2 vì nó trực tiếp đe dọa SLA báo cáo của ban giám đốc.
+* **Mitigate (Giảm nhẹ)**: Vì lượng dữ liệu ngày hôm qua tăng đột biến do chiến dịch khuyến mãi (Flash Sale), tôi sẽ tạm thời tăng tài nguyên RAM cho các Executor trong cấu hình Spark của Airflow task lên gấp rưỡi (từ 8GB lên 12GB) và kích hoạt chạy lại (Retry) ngay lập tức để tận dụng thời gian.
+* **Communicate (Giao tiếp)**: Tôi gửi một tin nhắn lên kênh Slack `#data-ops-incidents` báo cáo: *"Sự cố Sev-2 phát sinh lúc 3:00 sáng tại job spark_daily_ingest do tràn bộ nhớ dữ liệu Flash Sale. Đã thực hiện tăng RAM cấu hình và chạy lại. Dự kiến hoàn thành lúc 5:45 sáng, sát giờ SLA 6:00. Chúng tôi đang tiếp tục giám sát."*
+* **RCA (Root Cause Analysis)**: Sau khi job chạy thành công lúc 5:40 sáng, tôi mở Spark UI ra phân tích. Nguyên nhân gốc rễ là do dữ liệu đầu vào bị lệch (Data Skew) ở khóa `merchant_id = 999` (tài khoản đối tác chính chạy khuyến mãi), khiến 1 Executor phải xử lý 80% lượng tải và bị sập RAM.
+* **Action Items**: Lên kế hoạch refactor code để áp dụng kỹ thuật Salting khóa join hoặc kích hoạt Adaptive Query Execution (AQE) của Spark để tự động chia nhỏ các phân vùng bị lệch.
 
----
+### Tình huống 2: Sử dụng phương pháp 5 Whys tìm nguyên nhân số liệu báo cáo tăng gấp đôi
+**Câu hỏi**: *"Sáng nay, báo cáo hiển thị doanh thu của công ty đột ngột tăng vọt lên gấp đôi so với thực tế. Giám đốc tài chính đang rất tức giận. Bạn sẽ điều tra và giải trình nguyên nhân gốc rễ bằng phương pháp 5 Whys thế nào?"*
 
-## Sách hay và tài liệu tham khảo
+**Trả lời (STAR & 5 Whys)**:
+* **Situation**: Bảng dữ liệu doanh thu `fact_sales` bị trùng lặp bản ghi, khiến dashboard BI hiển thị sai lệch nghiêm trọng.
+* **Task**: Thực hiện truy vết nguồn gốc dữ liệu (Data Lineage) và áp dụng phương pháp 5 Whys để tìm ra lỗi hệ thống.
+* **Action (Thực hiện phân tích 5 Whys)**:
+  1. *Tại sao doanh thu tăng gấp đôi?* Vì bảng `fact_sales` chứa 2 bản ghi trùng lặp cho mỗi giao dịch xảy ra ngày hôm qua.
+  2. *Tại sao bảng chứa bản ghi trùng lặp?* Vì Job Airflow nạp dữ liệu từ database nguồn đã chạy lại (Retry) thành công ở lần thứ 2 nhưng không xóa dữ liệu ghi dở dang của lần thứ 1.
+  3. *Tại sao Job Airflow chạy lại?* Vì ở lần chạy thứ 1, kết nối mạng giữa cụm Spark và database nguồn bị ngắt quãng giữa chừng khi đang tải được 50% dữ liệu.
+  4. *Tại sao Job không tự dọn dẹp dữ liệu cũ khi sập?* Vì luồng dữ liệu được viết bằng lệnh `INSERT INTO` (Append-only) thay vì sử dụng cơ chế ghi đè phân vùng (Overwrite) hoặc câu lệnh `MERGE INTO` (Upsert). Pipeline thiếu tính lũy đẳng (Idempotency).
+  5. *Tại sao pipeline thiếu tính lũy đẳng?* Vì tiêu chuẩn phát triển code (Data Quality Framework) chưa bắt buộc kiểm tra và áp dụng thiết kế Idempotent cho các luồng nạp dữ liệu.
+* **Result**: Tôi xác định được Root Cause là lỗi thiết kế hệ thống thiếu tính lũy đẳng. Tôi đã tiến hành dọn dẹp dữ liệu trùng lặp bằng script xóa phân vùng, chạy lại backfill dữ liệu đúng, và refactor code sang cơ chế `MERGE INTO` để ngăn chặn lỗi tái diễn.
 
-1. **Site Reliability Engineering (SRE)** - Google (Cuốn sách kinh điển nhất thế giới về văn hóa trực gác, ứng phó sự cố và viết tài liệu hậu kiểm).
-2. **Fundamentals of Data Engineering** - Chương 10 chia sẻ sâu sắc về Data Operations (DataOps) và cách thức quản lý sự cố dữ liệu.
+### Tình huống 3: Khắc phục lỗi chất lượng dữ liệu âm thầm trôi qua 3 tháng
+**Câu hỏi**: *"Chúng ta phát hiện ra một lỗi chất lượng dữ liệu (Data Quality) do một API nguồn gửi dữ liệu bị khuyết trường thông tin địa lý suốt 3 tháng qua mà không có Job nào báo đỏ. Dashboard hiển thị 30% khách hàng có vị trí 'Unknown'. Bạn sẽ xử lý sự cố này thế nào?"*
+
+**Trả lời (STAR & Phục hồi dữ liệu)**:
+* **Situation**: Dữ liệu lịch sử 3 tháng bị khuyết thông tin địa lý, ảnh hưởng nghiêm trọng đến các báo cáo phân bổ ngân sách marketing theo vùng.
+* **Task**: Thực hiện vá lỗi code, thiết lập chốt chặn chất lượng dữ liệu mới và chạy lại (Backfill) 3 tháng dữ liệu một cách an toàn mà không làm gián đoạn dashboard hiện tại.
+* **Action**:
+  1. *Đóng băng và Cảnh báo*: Tạo một bản ghi tạm trên Dashboard ghi rõ: *"Dữ liệu địa lý từ ngày A đến ngày B đang được hiệu chỉnh. Vui lòng không sử dụng cho báo cáo chính thức."*
+  2. *Hotfix Code*: Sửa đổi API Client để tự động điền thông tin địa lý mặc định dựa trên địa chỉ IP của người dùng nếu trường địa lý bị rỗng, viết unit test kiểm tra và deploy lên production.
+  3. *Chạy Backfill*: Viết một kịch bản Airflow chạy lùi thời gian (Backfill DAG) chia nhỏ theo từng ngày. Thay vì chạy 1 lần cho 3 tháng (gây quá tải DB), tôi chia nhỏ tải để chạy cuốn chiếu ngược từ ngày gần nhất về quá khứ, chạy vào khung giờ thấp điểm từ 1:00 đến 4:00 sáng.
+  4. *Data Quality Check*: Thêm bài kiểm tra tự động bằng Great Expectations để cảnh báo ngay lập tức nếu tỷ lệ giá trị 'Unknown' vượt quá 2% trong ngày.
+* **Result**: Sau 5 ngày chạy cuốn chiếu, toàn bộ dữ liệu 3 tháng đã được khôi phục chính xác hoàn toàn. Hệ thống giám sát mới sẽ tự động bắn cảnh báo Slack nếu gặp lỗi tương tự trong vòng 24 giờ.
 
 ---
 
 ## English Summary
 
 The Production Incident QA interview assesses a candidate's operational maturity, ability to troubleshoot complex issues under pressure, and adherence to Incident Response protocols. Employers look for structured thinking: starting with Triage and Acknowledge, prioritizing immediate Mitigation (e.g., rolling back instead of hotfixing) to stop the bleeding, ensuring proactive Communication with stakeholders, and ultimately performing [Root Cause Analysis](/concepts/5-quality-governance/observability-reliability/root-cause-analysis/) (RCA) using frameworks like the '5 Whys'. Strong candidates emphasize Idempotency to enable easy backfills, implement blameless post-mortems, and establish robust observability mechanisms rather than relying on manual checks or user complaints.
+
+---
+
+## Xem thêm các khái niệm liên quan
+
+* [Tính lũy đẳng (Idempotency)](../concepts/3-integration/etl-elt/idempotency/) - Nguyên tắc vàng để đảm bảo tính nhất quán dữ liệu.
+* [Orchestration & Airflow](../concepts/3-integration/orchestration/orchestration/) - Quản lý và điều phối các job dữ liệu phân tán.
+* [Data Quality](../concepts/5-quality-governance/data-quality/data-quality/) - Thiết lập các chốt chặn kiểm soát chất lượng dữ liệu.
+
+---
+
+## Tài liệu tham khảo
+
+1. [AWS Well-Architected Framework - Reliability Pillar](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html)
+2. [Google Site Reliability Engineering (SRE) Book](https://sre.google/sre-book/table-of-contents/)
+3. [Databricks Lakehouse Reliability Guidelines](https://docs.databricks.com/lakehouse/data-reliability.html)
+4. [Apache Spark Performance Tuning and Troubleshooting](https://spark.apache.org/docs/latest/tuning.html)
+5. [Confluent Kafka Operations and Monitoring Guide](https://docs.confluent.io/platform/current/kafka/operations-monitoring.html)

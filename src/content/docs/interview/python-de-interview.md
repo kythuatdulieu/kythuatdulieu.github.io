@@ -4,28 +4,44 @@ category: "Interview Preparation"
 difficulty: "Advanced"
 tags: ["python", "interview", "data-engineering", "generators", "memory-optimization"]
 readingTime: "12 mins"
-lastUpdated: 2026-06-07
+lastUpdated: 2026-06-12
 seoTitle: "Các dạng bài Python phỏng vấn Data Engineering"
 metaDescription: "Các dạng bài tập Python cốt lõi khi phỏng vấn Data Engineer: Xử lý tệp lớn không tràn bộ nhớ, Generator (yield), tối ưu hóa thuật toán và xử lý API JSON."
+definition: "Tổng hợp các dạng bài tập Python cốt lõi và câu hỏi phỏng vấn tình huống cho Data Engineer: xử lý file dung lượng lớn không tràn RAM, lập trình generator, lập trình đệ quy và bất đồng bộ."
 ---
 
 Khác biệt lớn nhất giữa vòng phỏng vấn lập trình (Live Coding) của Software Engineer (SWE) và Data Engineer (DE) nằm ở tính thực dụng của bài toán. 
 
 Trong khi các lập trình viên SWE thường phải đối mặt với các thuật toán cấu trúc dữ liệu thuần túy và lắt léo (như các bài toán Leetcode Medium/Hard về quy hoạch động hay đồ thị), thì một kỹ sư dữ liệu DE lại được đánh giá dựa trên khả năng giải quyết các vấn đề thực chiến: xử lý các tệp dữ liệu khổng lồ mà không làm tràn bộ nhớ (Out of Memory - OOM), làm sạch và chuyển đổi các cấu trúc dữ liệu JSON phức tạp, hoặc tối ưu hóa việc thu thập dữ liệu từ các API phân trang.
 
-Dưới đây là 5 dạng bài tập Python kinh điển thường xuất hiện trong các buổi phỏng vấn Data Engineer và phương pháp giải quyết tối ưu nhất.
+---
+
+## Trực quan hóa cơ chế đọc luồng dữ liệu (Streaming vs Memory Loading)
+
+Sơ đồ dưới đây minh họa sự khác biệt trực quan về hiệu năng sử dụng bộ nhớ RAM giữa phương pháp tải toàn bộ tệp tin và phương pháp sử dụng Generator đọc từng dòng:
+
+```mermaid
+graph TD
+    subgraph Traditional_Loading["Traditional: json.load() / Pandas"]
+        A[50GB Log File] -->|Load Entire File| B[RAM memory space]
+        B -->|OutOfMemory| C[Crash: MemoryError]
+    end
+    
+    subgraph Generator_Streaming["Memory Efficient: Python Generator"]
+        D[50GB Log File] -->|Read line-by-line| E[RAM: 1 line at a time]
+        E -->|Process & Yield| F[Output Data Stream]
+        F -->|Constant RAM Usage| G[Success: 100% Processed]
+    end
+```
 
 ---
 
-## Dạng 1: Xử lý tệp tin kích thước siêu lớn (Large File Processing)
+## Các dạng bài tập Python cốt lõi
 
-**Tình huống phỏng vấn**: *"Bạn có một tệp log mang tên `events.json` dung lượng 50GB. Hãy viết một chương trình Python để thống kê số lượng lỗi 'ERROR' theo từng ID người dùng (`user_id`). Máy chủ chạy code của bạn chỉ có cấu hình 4GB RAM."*
+### Dạng 1: Xử lý tệp tin kích thước siêu lớn (Large File Processing)
+Sử dụng các hàm có sẵn như `json.load(file)`, `file.read()`, hoặc dùng thư viện Pandas qua lệnh `pandas.read_json()` sẽ cố gắng tải toàn bộ 50GB dữ liệu vào bộ nhớ RAM cùng một lúc, dẫn đến việc sập chương trình ngay lập tức vì lỗi tràn bộ nhớ (`MemoryError`).
 
-### Cách tiếp cận sai lầm (Naive Approach)
-Sử dụng các hàm có sẵn như `json.load(file)`, `file.read()`, hoặc dùng thư viện Pandas qua lệnh `pandas.read_json()`. Cách làm này sẽ cố gắng tải toàn bộ 50GB dữ liệu vào bộ nhớ RAM cùng một lúc, dẫn đến việc sập chương trình ngay lập tức vì lỗi tràn bộ nhớ (`MemoryError`).
-
-### Giải pháp tối ưu (Sử dụng Generator đọc lười)
-Bí quyết ở đây là đọc tệp tin theo từng dòng (Line-by-line) hoặc theo từng khối nhỏ (Chunking) một cách "lười biếng" (Lazy Evaluation). Đối tượng tệp tin (File Object) trong Python mặc định đã là một generator giúp chúng ta thực hiện việc này cực kỳ dễ dàng.
+Giải pháp tối ưu là đọc tệp tin theo từng dòng (Line-by-line) hoặc theo từng khối nhỏ (Chunking) một cách "lười biếng" (Lazy Evaluation). Đối tượng tệp tin (File Object) trong Python mặc định đã là một generator giúp chúng ta thực hiện việc này cực kỳ dễ dàng:
 ```python
 import json
 from collections import defaultdict
@@ -50,18 +66,8 @@ def process_large_log(file_path):
     return dict(error_counts)
 ```
 
-> [!TIP]
-> Điểm cộng lớn trước nhà tuyển dụng là khi bạn chủ động phân tích: toàn bộ 50GB dữ liệu thô chỉ đi qua RAM dưới dạng từng dòng đơn lẻ, bộ nhớ duy nhất cần duy trì lâu dài là từ điển `error_counts` lưu số lượng lỗi của người dùng (chỉ tốn vài Megabytes RAM).
-
----
-
-## Dạng 2: Tối ưu bộ nhớ lười với Generators (yield)
-
-Generators là một trong những khái niệm quan trọng nhất của ngôn ngữ Python mà một Data Engineer bắt buộc phải thành thạo. Kỹ thuật này giúp tạo ra dữ liệu trên đường chạy (on-the-fly) thay vì lưu giữ toàn bộ danh sách kết quả trong bộ nhớ.
-
-**Tình huống phỏng vấn**: *"Hãy viết một hàm kết nối và thu thập thông tin người dùng từ một API có phân trang (Paginated API) và trả về luồng dữ liệu liên tục để ghi vào database."*
-
-### Giải pháp tối ưu sử dụng từ khóa `yield`
+### Dạng 2: Tối ưu bộ nhớ lười với Generators (yield)
+Generators giúp tạo ra dữ liệu trên đường chạy (on-the-fly) thay vì lưu giữ toàn bộ danh sách kết quả trong bộ nhớ.
 ```python
 import requests
 
@@ -86,25 +92,13 @@ def fetch_all_users_from_api(base_url):
         page += 1
 
 # Cách tiêu thụ bộ nhớ lười (Lazy consumption)
-user_stream = fetch_all_users_from_api("https://api.example.com")
-for user in user_stream:
-    # Xử lý và ghi thẳng vào database mà không cần tạo một List khổng lồ
-    write_to_db(user)
+# user_stream = fetch_all_users_from_api("https://api.example.com")
+# for user in user_stream:
+#     write_to_db(user)
 ```
 
----
-
-## Dạng 3: Tận dụng Hash Maps & Sets để tối ưu thuật toán
-
-Trong các bài toán xử lý dữ liệu, Data Engineer thường xuyên phải thực hiện các phép toán gom nhóm (Group By) hoặc lọc trùng lặp (Deduplication). Việc tối ưu độ phức tạp thuật toán thời gian về mức $O(1)$ là cực kỳ quan trọng.
-
-**Tình huống phỏng vấn**: *"Bạn có hai danh sách (Lists) email khách hàng: Danh sách A chứa 1 triệu email mua hàng, Danh sách B chứa 1 triệu email gửi phàn nàn dịch vụ. Hãy tìm ra những khách hàng vừa mua hàng vừa gửi phàn nàn."*
-
-### Cách tiếp cận sai lầm
-Sử dụng hai vòng lặp lồng nhau: `for email in A: if email in B...`. Cách này có độ phức tạp thời gian lên tới $O(N^2)$, chương trình sẽ mất nhiều giờ đồng hồ để chạy xong trên tập dữ liệu 1 triệu bản ghi.
-
-### Giải pháp tối ưu sử dụng Set (Hash Map)
-Chuyển danh sách A sang cấu trúc dữ liệu `Set`. Việc tìm kiếm phần tử trong một Set chỉ tiêu tốn độ phức tạp thời gian là $O(1)$, đưa tổng thời gian xử lý của thuật toán về mức $O(N)$ tuyến tính.
+### Dạng 3: Tận dụng Hash Maps & Sets để tối ưu thuật toán
+Việc tối ưu độ phức tạp thuật toán thời gian về mức $O(1)$ thay vì sử dụng vòng lặp lồng nhau $O(N^2)$ là cực kỳ quan trọng đối với các tập dữ liệu lớn:
 ```python
 def find_common_emails(sales_emails, support_emails):
     # Chuyển List thành Set (tốn thêm RAM nhưng truy xuất O(1))
@@ -116,46 +110,19 @@ def find_common_emails(sales_emails, support_emails):
             common.append(email)
             
     return common
-
-# Hoặc ngắn gọn hơn thể hiện độ rành Python:
-# return list(set(sales_emails) & set(support_emails))
 ```
 
----
-
-## Dạng 4: Làm phẳng cấu trúc JSON phức tạp (Data Flattening)
-
-Các cơ sở dữ liệu dạng tài liệu (NoSQL) hoặc các API dịch vụ thường trả về dữ liệu dưới dạng JSON lồng nhau nhiều cấp (Nested JSON). Trước khi nạp dữ liệu này vào kho dữ liệu quan hệ ([Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/)), Data Engineer cần phải làm phẳng nó ra thành cấu trúc bảng phẳng (dạng cột và dòng).
-
-**Tình huống phỏng vấn**: *"Viết một hàm đệ quy (Recursive Function) để làm phẳng một từ điển (Dictionary) lồng nhau phức tạp."*
-
-* **Dữ liệu đầu vào (Input)**:
-  ```json
-  {
-      "user": {"id": 1, "name": "A"},
-      "location": {"city": "Hanoi", "coords": {"lat": 21, "lng": 105}}
-  }
-  ```
-* **Kết quả mong muốn (Output)**:
-  ```json
-  {
-      "user_id": 1, "user_name": "A", "location_city": "Hanoi", "location_coords_lat": 21, "location_coords_lng": 105
-  }
-  ```
-
-### Giải pháp tối ưu bằng đệ quy
+### Dạng 4: Làm phẳng cấu trúc JSON phức tạp (Data Flattening)
+Trước khi nạp dữ liệu lồng nhau vào kho dữ liệu quan hệ, Data Engineer cần phải làm phẳng nó ra thành cấu trúc bảng phẳng (dạng cột và dòng) bằng đệ quy:
 ```python
 def flatten_dict(d, parent_key='', sep='_'):
     items = []
     for k, v in d.items():
-        # Tạo khóa mới bằng cách nối khóa cha và khóa con
         new_key = f"{parent_key}{sep}{k}" if parent_key else k
         
         if isinstance(v, dict):
-            # Nếu là từ điển, gọi đệ quy tiếp
             items.extend(flatten_dict(v, new_key, sep=sep).items())
         else:
-            # Nếu là giá trị nguyên thủy (str, int), gán vào danh sách
             items.append((new_key, v))
             
     return dict(items)
@@ -163,51 +130,155 @@ def flatten_dict(d, parent_key='', sep='_'):
 
 ---
 
-## Dạng 5: Tăng tốc xử lý với Đa luồng (Concurrency)
+## Điểm mạnh và điểm yếu
 
-Nếu bài toán yêu cầu tối ưu hóa thời gian xử lý cho các tác vụ bị nghẽn ở băng thông mạng hoặc I/O (Network/IO-bound) — ví dụ: cần tải xuống hàng ngàn tệp tin từ Internet — bạn cần biết cách sử dụng module `concurrent.futures`.
+Khi thiết kế logic xử lý dữ liệu bằng Python ad-hoc, chúng ta thường phải lựa chọn giữa việc sử dụng **Generators (Lazy Evaluation)** và **Lists/Pandas DataFrames (Eager Evaluation)**:
 
-### Giải pháp tối ưu sử dụng ThreadPoolExecutor
-```python
-import concurrent.futures
-import requests
+### Phương pháp Đọc lười (Generators - `yield`)
+* **Điểm mạnh (Pros)**: Cực kỳ tiết kiệm bộ nhớ RAM (độ phức tạp bộ nhớ là $O(1)$), xử lý được tệp tin có dung lượng vô hạn, khởi chạy nhanh vì không cần đợi load hết file.
+* **Điểm yếu (Cons)**: Dữ liệu chỉ được duyệt qua một lần duy nhất, không thể truy cập ngẫu nhiên theo chỉ mục (`generator[5]`), và khó thực hiện các thao tác đảo ngược hay sắp xếp toàn cục.
 
-urls = ["http://api.com/file1", "http://api.com/file2", ...]
-
-def download_file(url):
-    # Hàm I/O bound tải file
-    response = requests.get(url)
-    return response.status_code
-
-def download_all_concurrently(urls):
-    results = []
-    # Dùng ThreadPool vì tác vụ là I/O bound (gọi mạng)
-    # Nếu là tác vụ nặng CPU tính toán, hãy dùng ProcessPoolExecutor
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        # Áp hàm download_file lên toàn bộ danh sách urls
-        future_to_url = {executor.submit(download_file, url): url for url in urls}
-        
-        for future in concurrent.futures.as_completed(future_to_url):
-            url = future_to_url[future]
-            try:
-                data = future.result()
-                results.append(data)
-            except Exception as exc:
-                print(f'{url} sinh ra lỗi: {exc}')
-                
-    return results
-```
+### Phương pháp Đọc sớm (Lists / DataFrames)
+* **Điểm mạnh (Pros)**: Thao tác dữ liệu linh hoạt (truy cập index, sắp xếp, lọc trùng lặp, tính toán thống kê ma trận rất nhanh).
+* **Điểm yếu (Cons)**: Tiêu thụ tài nguyên bộ nhớ rất lớn (dễ sập lỗi `MemoryError` khi kích thước file vượt quá RAM hệ thống).
 
 ---
 
-## Những kinh nghiệm vàng khi Live Coding
+## Khi nào nên dùng
 
-* **Luôn chủ động xử lý ngoại lệ (Exception Handling)**: Dữ liệu thực tế luôn luôn có lỗi và chứa nhiều giá trị rác. Điểm số của bạn sẽ tăng vọt nếu bạn biết bao bọc các đoạn code phân tích cú pháp hoặc chuyển đổi kiểu dữ liệu (Type Casting) trong các khối lệnh `try...except`.
-* **Khai báo kiểu dữ liệu rõ ràng (Type Hinting)**: Sử dụng các khai báo kiểu dữ liệu trong Python hiện đại (ví dụ: `def process(data: list[dict]) -> dict:`) thể hiện bạn là một kỹ sư chuyên nghiệp, có thói quen viết mã nguồn sạch và dễ bảo trì.
-* **Chủ động phân tích độ phức tạp thuật toán (Time & Space Complexity)**: Ngay sau khi hoàn thành đoạn code, hãy chủ động giải thích cho người phỏng vấn: *"Giải pháp này của tôi có độ phức tạp thời gian là O(N) và độ phức tạp không gian (bộ nhớ) là O(1) do sử dụng cơ chế Generator. Nó đảm bảo an toàn tuyệt đối cho bộ nhớ RAM của hệ thống khi chạy trên dữ liệu lớn"*.
+* **Nên dùng Generators**: Khi xây dựng các bước nạp dữ liệu thô (Data Ingestion), đọc log file dạng dòng, gọi API phân trang hoặc các tác vụ streaming nhẹ nhàng.
+* **Nên dùng Lists / Pandas**: Chỉ dùng khi kích thước dữ liệu được khống chế chắc chắn nhỏ hơn dung lượng RAM cho phép, hoặc khi cần thực hiện các phép toán phức tạp (như tính toán ma trận, học máy) yêu cầu dữ liệu nằm sẵn trong bộ nhớ.
+* **Nên dùng ThreadPoolExecutor**: Thích hợp cho các tác vụ nghẽn băng thông mạng hoặc I/O (Network-bound) như gọi đồng thời nhiều REST API, tải file từ S3.
+* **Nên dùng ProcessPoolExecutor**: Thích hợp cho các tác vụ nghẽn CPU (CPU-bound) như giải nén file ZIP khổng lồ, tính toán toán học phức tạp, nhằm vượt qua rào cản của cơ chế khóa luồng toàn cục Python GIL (Global Interpreter Lock).
+
+---
+
+## Trọng tâm ôn luyện phỏng vấn
+
+Dưới đây là 3 tình huống phỏng vấn lập trình Python thực chiến yêu cầu viết mã nguồn tối ưu và xử lý lỗi:
+
+### Tình huống 1: Tránh lỗi tràn RAM khi đọc file CSV/JSON khổng lồ ad-hoc
+**Câu hỏi**: *"Chương trình Python xử lý tệp tin log 100GB của chúng tôi liên tục sập do lỗi MemoryError hàng đêm. Hệ thống chạy chương trình chỉ có cấu hình tối đa 8GB RAM. Hãy viết một hàm Python để đếm số lượng bản ghi có trạng thái 'SUCCESS' mà không gây tràn bộ nhớ, và giải thích tại sao giải pháp của bạn lại hoạt động an toàn."*
+
+**Trả lời (Khung STAR)**:
+* **Situation**: Script cũ sử dụng `json.load()` để đọc file log 100GB và sập RAM ngay lập tức do máy chủ chỉ có 8GB RAM.
+* **Task**: Refactor chương trình sử dụng cơ chế đọc luồng (Streaming) để đưa độ phức tạp bộ nhớ về mức hằng số $O(1)$.
+* **Action**:
+```python
+import json
+
+def count_success_records(file_path: str) -> int:
+    success_count = 0
+    # open() trả về một file object hoạt động như một Generator dòng
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            try:
+                # Phân tích cú pháp từng dòng độc lập
+                record = json.loads(line.strip())
+                if record.get('status') == 'SUCCESS':
+                    success_count += 1
+            except json.JSONDecodeError:
+                # Bỏ qua các dòng bị lỗi cú pháp để đảm bảo pipeline không bị gián đoạn
+                continue
+    return success_count
+```
+* **Result**: Chương trình xử lý trọn vẹn tệp tin 100GB chỉ tiêu tốn chưa đầy 15MB RAM cố định, thời gian chạy hoàn thành ổn định mà không lo bị ngắt quãng bởi hệ điều hành.
+
+### Tình huống 2: Thiết kế luồng gọi API đa luồng có kiểm soát tần suất (Rate Limiting)
+**Câu hỏi**: *"Chúng tôi cần tải dữ liệu từ 10,000 endpoint REST API. Nếu chạy tuần tự trong vòng lặp thông thường sẽ mất 3 tiếng. Nhưng nếu dùng ThreadPoolExecutor với 100 workers, hệ thống API nguồn sẽ lập tức khóa IP của chúng ta do vi phạm giới hạn tần suất (Error 429 Too Many Requests). Bạn sẽ thiết kế giải pháp như thế nào bằng Python để tải nhanh nhất nhưng không bị khóa?"*
+
+**Trả lời (Khung STAR)**:
+* **Situation**: Cần gọi 10,000 API nhanh nhưng bị giới hạn tần suất (Rate Limit) ở API nguồn, gây ra các lỗi HTTP 429.
+* **Task**: Lập trình một cơ chế giới hạn tốc độ (Rate Limiting / Throttling) kết hợp đa luồng.
+* **Action**:
+```python
+import concurrent.futures
+import time
+import requests
+from queue import Queue
+
+def worker_task(url: str, rate_limit_interval: float) -> dict:
+    # Giả lập ngủ một khoảng thời gian nhỏ để đảm bảo tần suất gọi API
+    time.sleep(rate_limit_interval)
+    try:
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 429:
+            # Nếu gặp 429, ngủ lâu hơn (Exponential Backoff) và chạy lại
+            time.sleep(2)
+            return requests.get(url, timeout=5).json()
+    except Exception as e:
+        return {"url": url, "error": str(e)}
+
+def download_with_throttling(urls: list[str], max_workers: int = 10) -> list[dict]:
+    results = []
+    # Khoảng cách tối thiểu giữa các request của mỗi luồng để tránh spam
+    interval = 0.1 
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit các task chạy đồng thời có giãn cách
+        future_to_url = {executor.submit(worker_task, url, interval): url for url in urls}
+        for future in concurrent.futures.as_completed(future_to_url):
+            try:
+                data = future.result()
+                results.append(data)
+            except Exception as e:
+                results.append({"error": str(e)})
+    return results
+```
+* **Result**: Rút ngắn thời gian thu thập dữ liệu từ 3 tiếng xuống còn dưới 10 phút mà hoàn toàn tránh được lỗi HTTP 429 nhờ sự kết hợp hài hòa giữa ThreadPool và cơ chế Throttling.
+
+### Tình huống 3: Làm phẳng dữ liệu JSON động có hiện tượng Schema Drift
+**Câu hỏi**: *"Nguồn dữ liệu MongoDB của chúng tôi trả về các bản ghi JSON lồng nhau phức tạp. Hơn nữa, cấu trúc của nó thay đổi liên tục (Schema Drift) — một số bản ghi bị khuyết trường, một số trường khác thay đổi kiểu dữ liệu từ chuỗi sang từ điển. Hãy viết một hàm Python làm phẳng cấu trúc này một cách an toàn để ghi vào bảng SQL."*
+
+**Trả lời (Khung STAR)**:
+* **Situation**: Dữ liệu JSON bị lồng nhau nhiều cấp và có cấu trúc không đồng nhất giữa các bản ghi (Schema Drift).
+* **Task**: Viết một thuật toán đệ quy làm phẳng dữ liệu động một cách phòng thủ (Defensive Programming).
+* **Action**:
+```python
+def robust_flatten(data: dict, parent_key: str = '', sep: str = '_') -> dict:
+    items = []
+    if not isinstance(data, dict):
+        return {}
+        
+    for key, value in data.items():
+        new_key = f"{parent_key}{sep}{key}" if parent_key else key
+        
+        if isinstance(value, dict):
+            # Nếu là từ điển lồng nhau, gọi đệ quy tiếp
+            items.extend(robust_flatten(value, new_key, sep=sep).items())
+        elif isinstance(value, list):
+            # Nếu gặp mảng (List), ta chuyển đổi nó thành dạng chuỗi JSON 
+            # để tránh làm sập đệ quy và giữ nguyên thông tin
+            items.append((new_key, str(value)))
+        else:
+            # Xử lý các giá trị nguyên thủy thông thường
+            items.append((new_key, value))
+            
+    return dict(items)
+```
+* **Result**: Hàm đệ quy làm phẳng chính xác mọi bản ghi bất kể độ lồng nhau và tự động xử lý an toàn các kiểu dữ liệu phức tạp dạng mảng mà không gây lỗi dừng pipeline.
 
 ---
 
 ## English Summary
 
 Python interviews for Data Engineers shift focus away from hard algorithmic puzzles (like dynamic programming) towards practical data handling scenarios. Key interview patterns include processing massive files without running out of memory (Out of Memory errors) by reading files lazily line-by-line or using [chunking](/concepts/6-ai-ml/genai-ml/chunking/). Candidates must master the use of `yield` and Generators to create memory-efficient data streams, especially when handling paginated APIs. Additionally, writing recursive functions to flatten deeply nested JSON dictionaries into tabular formats, utilizing Hash Maps (Sets) for $O(1)$ fast [deduplication](/concepts/3-integration/etl-elt/deduplication/), and demonstrating basic I/O concurrency using `ThreadPoolExecutor` are fundamental skills expected in top-tier technical interviews.
+
+---
+
+## Xem thêm các khái niệm liên quan
+
+* [Deduplication (Khử trùng lặp)](../concepts/3-integration/etl-elt/deduplication/) - Tối ưu hóa khử trùng lặp dữ liệu lớn.
+* [Ingestion Patterns](../concepts/3-integration/etl-elt/data-ingestion/) - Các mô hình nạp dữ liệu phổ biến.
+* [System Design Foundations](../concepts/1-foundations/system-architecture/data-platform-architecture/) - Nguyên lý thiết kế hệ thống dữ liệu.
+
+---
+
+## Tài liệu tham khảo
+
+1. [Python functional programming - Generators documentation](https://docs.python.org/3/howto/functional.html)
+2. [Python Concurrent Programming using Futures](https://docs.python.org/3/library/concurrent.futures.html)
+3. [AWS Lambda - Optimizing Python runtime memory usage](https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html)
+4. [Google Cloud Functions - Memory Allocation and Performance Guide](https://cloud.google.com/functions/docs/configuring/memory)
+5. [Databricks Developer Guide - High Performance Python on Spark](https://docs.databricks.com/developer/index.html)
