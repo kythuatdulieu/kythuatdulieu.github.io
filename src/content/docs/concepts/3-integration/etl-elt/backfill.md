@@ -16,6 +16,9 @@ Thế nhưng, cuộc sống không phải lúc nào cũng êm đềm như vậy.
 
 Để xử lý những tình huống này, chúng ta cần đến một kỹ thuật cực kỳ quan trọng trong [Data Engineering](/concepts/1-foundations/foundation/data-engineering/): **Backfill (Chạy bù dữ liệu lịch sử)**. Đây là hành động "quay ngược thời gian" của hệ thống [ETL](/concepts/3-integration/etl-elt/etl/)/ELT, buộc các tiến trình phải tính toán lại dữ liệu của các ngày hoặc các tháng đã trôi qua trong quá khứ nhằm lấp đầy các khoảng trống và sửa đổi dữ liệu cho đúng chuẩn.
 
+
+![Cơ chế chạy bù dữ liệu quá khứ (Backfilling) thông qua lập lịch của Airflow](/images/backfill/airflow-backfill.png)
+
 ## Tại sao chúng ta bắt buộc phải chạy lại dữ liệu quá khứ?
 
 Dù hệ thống dữ liệu của bạn có được thiết kế hoàn hảo đến đâu, việc phải chạy Backfill vẫn là một phần tất yếu trong vòng đời phát triển vì ba nguyên nhân phổ biến sau:

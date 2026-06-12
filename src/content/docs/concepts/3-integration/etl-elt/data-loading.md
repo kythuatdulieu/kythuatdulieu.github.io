@@ -14,6 +14,9 @@ Trong quy trình trích xuất, biến đổi và nạp dữ liệu ([ETL](/conc
 
 ---
 
+
+![Quy trình đẩy và tải dữ liệu (Push/Load) vào các phân vùng lưu trữ đích](/images/data-loading/push-transform-load.png)
+
 ## Data Loading thực chất là gì?
 
 **Nạp dữ liệu (Data Loading)** là thao tác đưa kết quả của quá trình trích xuất hoặc biến đổi dữ liệu vào các bảng vật lý tại hệ thống đích (thường là Kho dữ liệu - Data Warehouse, Hồ dữ liệu - Data Lake hoặc các cơ sở dữ liệu phân tích).

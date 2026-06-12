@@ -14,6 +14,9 @@ Hãy tưởng tượng bạn đang quản lý một đội công nhân gồm 200
 
 Trong thế giới Big Data, hiện tượng tréo ngoe này được gọi là **Data Skew (Lệch dữ liệu)**. Đây là một trong những nguyên nhân hàng đầu khiến các pipeline Spark bị kẹt vô tận hoặc sập nguồn đột ngột do hết bộ nhớ (OOM - Out Of Memory).
 
+
+![Cơ chế xử lý lệch dữ liệu (Skew Join) thông qua tự động chia nhỏ phân vùng lớn (AQE Skew Join)](/images/data-skew/blog-adaptive-query-execution-3.png)
+
 ## Data Skew thực chất là gì?
 
 Trong các hệ thống tính toán phân tán như [Apache Spark](/concepts/3-integration/batch-processing/apache-spark/), dữ liệu được chia nhỏ thành nhiều phần gọi là các phân vùng (partitions) và phân phối xuống các node xử lý khác nhau. **Data Skew** xảy ra khi dữ liệu phân bố không đồng đều giữa các phân vùng này.

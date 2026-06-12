@@ -14,6 +14,9 @@ Trong thế giới dữ liệu hiện đại, việc đưa ra quyết định d�
 
 ---
 
+
+![Kiến trúc Change Data Capture (CDC) dựa trên log-reader kết hợp Debezium và Apache Kafka](/images/change-data-capture/debezium-architecture.png)
+
 ## 1. Bản chất và So sánh các Phương pháp Tiếp cận CDC
 
 Có ba phương pháp phổ biến để phát hiện và thu thập các thay đổi dữ liệu từ cơ sở dữ liệu nguồn: **Query-based CDC**, **Trigger-based CDC**, và **Log-based CDC**.

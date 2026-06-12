@@ -12,6 +12,9 @@ metaDescription: "Tìm hiểu chi tiết về Idempotency (Tính lũy đẳng) t
 
 Trong cuộc sống hàng ngày, nếu bạn bấm nút thang máy nhiều lần, thang máy vẫn chỉ đón bạn một lần duy nhất. Nếu bạn nhấn nút gửi một tin nhắn ngân hàng nhiều lần, tài khoản của bạn lý tưởng nhất cũng chỉ được trừ tiền một lần. Trong khoa học máy tính và kỹ thuật dữ liệu, thuộc tính kỳ diệu giúp ngăn chặn các tác vụ bị thực thi thừa thãi này được gọi là **Tính lũy đẳng** (Idempotency). Đây là một trong những tiêu chuẩn vàng để xây dựng nên những đường ống dữ liệu (Data Pipeline) kiên cố, có khả năng tự phục hồi lỗi cực kỳ mạnh mẽ.
 
+
+![Thiết kế API Idempotency đảm bảo an toàn khi Client thực hiện yêu cầu gửi lại (Retries)](/images/idempotency/making-retries-safe-1.png)
+
 ## Khi việc chạy lại không gây ra tai họa
 
 Về mặt định nghĩa toán học, **Idempotency** chỉ một hành động hoặc một hàm số mà nếu bạn áp dụng nó nhiều lần liên tiếp, kết quả thu được vẫn hoàn toàn trùng khớp với lần thực thi thành công đầu tiên.

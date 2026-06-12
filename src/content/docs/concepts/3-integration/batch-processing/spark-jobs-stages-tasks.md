@@ -14,6 +14,9 @@ definition: "Jobs, Stages và Tasks đại diện cho cấu trúc phân cấp đ
 
 Nếu mở công cụ giám sát Spark UI lên, bạn sẽ thấy hàng tá thuật ngữ như **Jobs**, **Stages**, và **Tasks**. Hiểu rõ mối liên kết giữa các khái niệm này là bước đệm tối thiểu giúp bạn đọc hiểu hiệu năng và tìm ra các điểm nghẽn (bottleneck) của luồng dữ liệu.
 
+
+![Cơ chế thực thi Task trên CPU Core của Executor](/images/spark-jobs-stages-tasks/taskexecution.png)
+
 ## Kiến trúc và Nguyên lý phân cấp thực thi
 
 Khi một ứng dụng Spark chạy, hệ thống quản lý và điều phối các đơn vị công việc theo một cấu trúc phân cấp từ lớn xuống nhỏ bao gồm: **Application $\rightarrow$ Jobs $\rightarrow$ Stages $\rightarrow$ Tasks**.

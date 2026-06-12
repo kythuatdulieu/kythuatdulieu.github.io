@@ -16,6 +16,9 @@ Trong các hệ thống xử lý dữ liệu lớn bằng [Apache Spark](/concep
 
 ---
 
+
+![Sơ đồ chi tiết bộ nhớ Executor (JVM heap, Storage, Execution, User, Off-heap) và các tham số cấu hình tương ứng](/images/spark-memory-management/SparkExecutorMemory.png)
+
 ## Kiến trúc bộ nhớ Spark Executor JVM (Executor JVM Memory Layout)
 
 Khi Spark chạy một ứng dụng phân tán, mỗi **Executor** được khởi chạy dưới dạng một tiến trình máy ảo Java (JVM process) trên một Worker Node. Bộ nhớ tổng thể của một Executor được chia thành hai phần chính: **On-Heap Memory** (bộ nhớ trong Heap JVM) và **Off-Heap Memory** (bộ nhớ ngoài Heap JVM).

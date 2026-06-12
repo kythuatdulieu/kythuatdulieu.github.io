@@ -12,6 +12,9 @@ definition: "Spark SQL là một phân hệ cốt lõi của Apache Spark dùng 
 
 Khi làm việc với các hệ thống dữ liệu lớn, việc phải viết các đoạn mã lập trình phân tán phức tạp để biến đổi dữ liệu luôn là một trở ngại lớn đối với các nhà phân tích và kỹ sư dữ liệu. Để đơn giản hóa quá trình này và mang ngôn ngữ truy vấn phổ biến nhất thế giới vào hệ sinh thái Big Data, Apache Spark đã phát triển một phân hệ cốt lõi: **Spark SQL**.
 
+
+![Quy trình tối ưu hóa câu lệnh SQL qua các bước của Catalyst Optimizer](/images/spark-sql/catalyst-optimizer.png)
+
 ## Spark SQL là gì? Cầu nối giữa thế giới SQL và Big Data
 
 **Spark SQL** là một module quan trọng của Apache Spark được thiết kế chuyên biệt để xử lý dữ liệu có cấu trúc (structured data). 
