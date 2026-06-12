@@ -14,10 +14,6 @@ Hãy tưởng tượng dữ liệu trong doanh nghiệp của bạn giống như
 
 Phương pháp này mang đến cho doanh nghiệp khả năng thấu hiểu những gì "đang thực sự xảy ra ở hiện tại" (What is happening right now), từ đó kích hoạt các hành động tức thì theo hướng sự kiện (Event-driven).
 
-
-![Sơ đồ minh họa kiến trúc Streaming Processing](/images/streaming-processing/diagram_1.png)
-
-
 ## Streaming Processing là gì? Khi dữ liệu chuyển động liên tục
 
 **Streaming Processing** là kỹ thuật xử lý các luồng dữ liệu (Data Streams) theo thời gian thực (Real-time) hoặc gần thời gian thực (Near real-time). Trong thế giới số, luồng dữ liệu là một chuỗi các sự kiện (Events) vô hạn, chảy liên tục và không bao giờ có điểm kết thúc. Ví dụ dễ thấy nhất là dữ liệu từ các cảm biến thông minh (IoT), lịch sử click chuột của người dùng trên trang web, hay các giao dịch quẹt thẻ tín dụng trên toàn cầu.
@@ -32,10 +28,6 @@ Trong nền kinh tế số hiện nay, giá trị của thông tin giảm dần 
 * **Gợi ý nội dung (TikTok, Shopee):** Hệ thống cần gợi ý video hoặc sản phẩm tiếp theo dựa trên những gì bạn vừa lướt xem cách đây đúng 3 giây, để giữ chân bạn ở lại ứng dụng lâu nhất có thể.
 
 Streaming Processing ra đời nhằm giải quyết bài toán về tính "chớp nhoáng" của thông tin – điều mà các hệ thống xử lý theo lô (Batch Processing) truyền thống không bao giờ có thể đáp ứng được.
-
-
-![Quy trình xử lý và luồng dữ liệu Streaming Processing](/images/streaming-processing/diagram_2.svg)
-
 
 ## Một hệ thống Streaming vận hành như thế nào?
 

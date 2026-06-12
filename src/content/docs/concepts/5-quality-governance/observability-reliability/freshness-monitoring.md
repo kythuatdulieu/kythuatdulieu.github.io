@@ -14,9 +14,6 @@ Trong thế giới kỹ thuật dữ liệu, có một câu nói nổi tiếng t
 
 ![../_images/diagram_task_lifecycle.png](/images/freshness-monitoring/diagram_1.png)
 
-![Google Cloud Documentation](/images/freshness-monitoring/diagram_2.svg)
-
-
 ## Câu chuyện đằng sau dữ liệu "thiu" và Data SLA
 
 Freshness Monitoring là quá trình theo dõi, đo lường và đưa ra các cảnh báo tức thời về mức độ "tươi mới" (up-to-date) của dữ liệu trong hệ thống so với cam kết chất lượng dịch vụ (Data SLA - Service Level Agreement). Bằng cách liên tục kiểm tra thời gian kể từ lần cuối cùng một bảng hoặc một tập dữ liệu (dataset) được cập nhật thành công, Freshness Monitoring giúp trả lời những câu hỏi nhức nhối như:

@@ -12,10 +12,6 @@ definition: "Kappa Architecture là một kiến trúc xử lý dữ liệu tinh
 
 Khi thiết kế các hệ thống dữ liệu lớn, việc dung hòa giữa nhu cầu báo cáo thời gian thực (Real-time) và tính toán số liệu lịch sử chính xác (Batch) luôn là một bài toán hóc búa. Trong nhiều năm, kiến trúc Lambda đã thống trị như một giải pháp tiêu chuẩn. Thế nhưng, việc phải vận hành song song hai hệ thống độc lập trong Lambda đã mang lại gánh nặng bảo trì khổng lồ cho các kỹ sư dữ liệu. Để giải quyết triệt để nút thắt này, một mô hình kiến trúc tinh giản và thanh lịch hơn đã ra đời: **Kiến trúc Kappa** (Kappa Architecture).
 
-
-![Sơ đồ minh họa kiến trúc Kappa Architecture](/images/kappa-architecture/diagram_1.png)
-
-
 ## Khi mọi thứ đều là dòng chảy (Stream)
 
 Kiến trúc Kappa là một mô hình kiến trúc phần mềm tập trung hoàn toàn vào việc xử lý dữ liệu dưới dạng luồng (Stream Processing) mà không cần đến lớp xử lý lô (Batch Layer) riêng biệt. Triết lý của Kappa coi tất cả mọi dữ liệu trong doanh nghiệp — cho dù là một giao dịch vừa phát sinh mili-giây trước hay dữ liệu lịch sử của 5 năm về trước — đều là các sự kiện thuộc về một chuỗi dòng chảy liên tục.

@@ -16,10 +16,6 @@ Hiểu rõ **Vòng đời Dữ liệu (Data Lifecycle)** giúp chúng ta biết 
 
 ---
 
-
-![Sơ đồ minh họa kiến trúc Data Lifecycle](/images/data-lifecycle/diagram_1.png)
-
-
 ## Kiến trúc và Vòng đời của dữ liệu
 
 Quản lý Vòng đời Dữ liệu không chỉ là một kỹ thuật lập trình mà là một phần quan trọng của chiến lược Quản trị Dữ liệu (`Data Governance`). Một vòng đời dữ liệu tiêu chuẩn thường trải qua 6 chặng đường:
@@ -54,10 +50,6 @@ Việc giữ lại tất cả mọi thứ mãi mãi là một tư duy sai lầm 
 * **Hạn chế rủi ro bảo mật**: Dữ liệu cũ không còn giá trị sử dụng nhưng vẫn nằm trong hệ thống sẽ trở thành miếng mồi ngon cho các hacker. Việc tiêu hủy đúng hạn giúp giảm thiểu diện tích bị tấn công (attack surface) của doanh nghiệp.
 
 ---
-
-
-![Quy trình xử lý và luồng dữ liệu Data Lifecycle](/images/data-lifecycle/diagram_2.svg)
-
 
 ## Tự động hóa quản lý vòng đời dữ liệu
 

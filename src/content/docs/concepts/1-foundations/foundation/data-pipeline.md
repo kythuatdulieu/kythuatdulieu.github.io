@@ -16,10 +16,6 @@ Hãy tưởng tượng dữ liệu trong doanh nghiệp giống như những dò
 
 ---
 
-
-![Sơ đồ minh họa kiến trúc Data Pipeline](/images/data-pipeline/diagram_1.png)
-
-
 ## Data Pipeline thực chất là gì?
 
 **Đường ống dữ liệu (Data Pipeline)** là một tập hợp các quy trình tự động hóa được thiết lập để vận chuyển dữ liệu từ các hệ thống nguồn (Sources - nơi sinh ra dữ liệu ban đầu) đến hệ thống đích (Destination - nơi lưu trữ dữ liệu phân tích), đồng thời thực hiện các bước lọc sạch, biến đổi định dạng và tổng hợp thông tin trên đường đi.
@@ -38,9 +34,7 @@ Nếu thiếu đi hệ thống đường ống tự động, doanh nghiệp sẽ
 
 ---
 
-
 ![Quy trình xử lý và luồng dữ liệu Data Pipeline](/images/data-pipeline/diagram_2.svg)
-
 
 ## Các thành phần cốt lõi của một Data Pipeline
 

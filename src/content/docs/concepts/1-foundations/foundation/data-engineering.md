@@ -16,10 +16,6 @@ Nếu ví dữ liệu như dòng dầu mỏ quý giá, thì Kỹ sư Dữ liệu
 
 ---
 
-
-![Sơ đồ minh họa kiến trúc Data Engineering](/images/data-engineering/diagram_1.png)
-
-
 ## Kỹ thuật Dữ liệu & Kỹ sư Dữ liệu là gì?
 
 * **Kỹ thuật Dữ liệu (Data Engineering)** là một lĩnh vực chuyên môn tập trung vào việc thiết kế, xây dựng, vận hành và duy trì hệ thống kiến trúc dữ liệu quy mô lớn. Đây là sự giao thoa hài hòa giữa Kỹ thuật phần mềm (`Software Engineering`) và Quản trị dữ liệu (`Data Management`).
@@ -40,9 +36,7 @@ Sự trỗi dậy và chuyên môn hóa của vai trò này được thúc đẩ
 
 ---
 
-
 ![Quy trình xử lý và luồng dữ liệu Data Engineering](/images/data-engineering/diagram_2.svg)
-
 
 ## Kiến trúc công việc và Phân biệt vai trò
 

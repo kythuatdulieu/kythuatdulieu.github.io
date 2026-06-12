@@ -12,11 +12,6 @@ definition: "Tìm hiểu quy trình lập hồ sơ dữ liệu (Data Profiling) 
 
 Có bao giờ bạn nhảy vào viết code [ETL](/concepts/3-integration/etl-elt/etl/) ngay khi vừa nhận được một file CSV hay thông tin kết nối CSDL từ đối tác, để rồi vài ngày sau pipeline bị "sập" liên tục vì những lỗi ngớ ngẩn như cột chứa chữ thay vì số, hay độ dài chuỗi vượt quá khai báo? Nếu câu trả lời là có, bạn không cô đơn đâu. Đó là lúc chúng ta cần đến **Data Profiling (Lập hồ sơ dữ liệu)** — bước "chụp X-quang" giúp bạn nhìn thấu hình hài thực sự của dữ liệu trước khi đặt bút viết dòng code đầu tiên.
 
-![Data profiling overview](/images/data-profiling/diagram_1.png)
-
-![Data profiling diagram](/images/data-profiling/diagram_2.png)
-
-
 ## Data Profiling thực chất là gì?
 
 Nói một cách đơn giản, **Data Profiling (Lập hồ sơ dữ liệu)** là quá trình khám phá, phân tích thống kê và đánh giá cấu trúc (structure), nội dung (content) cùng chất lượng (quality) của một tập dữ liệu thô. Nếu như các Data Scientist có bước EDA (Exploratory Data Analysis) để tìm kiếm insight phục vụ mô hình, thì Data Engineer dùng Data Profiling như một công cụ kỹ thuật để trả lời những câu hỏi thực dụng hơn:

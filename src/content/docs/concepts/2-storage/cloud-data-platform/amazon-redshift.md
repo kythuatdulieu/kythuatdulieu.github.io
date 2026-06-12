@@ -90,11 +90,7 @@ graph TD
 
     Node1 -- Redshift Spectrum Query --> S3DataLake
 
-
 ```
-
-![Sơ đồ kiến trúc minh họa 1](/images/amazon-redshift/diagram_1.png)
-
 
 ## Bắt tay vào tối ưu: Sức mạnh của Distribution Style trong thực tế
 

@@ -14,9 +14,6 @@ Hãy tưởng tượng bạn bước vào một siêu thị khổng lồ nhưng 
 
 ![../_images/schema-registry-ecosystem.jpg](/images/data-catalog/diagram_1.jpg)
 
-![Google Cloud Documentation](/images/data-catalog/diagram_2.svg)
-
-
 ## Data Catalog: Bản đồ dẫn đường trong kho tàng dữ liệu doanh nghiệp
 
 Về mặt bản chất, **Data Catalog** là một siêu nền tảng `(Platform)` chuyên làm nhiệm vụ thu thập, quản lý và tổ chức Siêu dữ liệu `(Metadata)` từ mọi ngóc ngách trong hệ thống công nghệ của doanh nghiệp – từ các cơ sở dữ liệu nguồn, [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/), cho đến các [ETL](/concepts/3-integration/etl-elt/etl/) pipeline và các báo cáo BI Dashboard. Nó cung cấp một giao diện web trực quan, hoạt động giống như một thanh công cụ tìm kiếm Google nội bộ dành riêng cho dữ liệu.

@@ -16,11 +16,6 @@ Nhưng thực chất, LLM hoạt động như thế nào? Liệu nó có thực 
 
 Về bản chất, LLM là một hệ thống Trí tuệ Nhân tạo (AI) học sâu (Deep Learning) được thiết kế để hiểu, tạo lập và tương tác bằng ngôn ngữ tự nhiên. Sức mạnh thực sự của LLM không nằm ở một trí thông minh có ý thức, mà là khả năng toán học siêu việt trong việc dự đoán từ ngữ tiếp theo (next-[token](/concepts/6-ai-ml/genai-ml/token/) prediction) dựa trên ngữ cảnh được cung cấp.
 
-![Biểu đồ minh họa Llm](/images/llm/diagram_1.png)
-
-![Biểu đồ minh họa Llm](/images/llm/diagram_2.png)
-
-
 ## LLM là gì dưới góc nhìn kỹ thuật?
 
 Nếu bóc tách một LLM ra, bạn sẽ thấy nó chỉ là một tập hợp khổng lồ các tệp tin chứa ma trận trọng số (weight parameters - thường từ vài tỷ đến hàng nghìn tỷ tham số). Những con số này chính là phần mã hóa mối quan hệ phân phối thống kê giữa các từ vựng trong ngôn ngữ loài người.
@@ -66,7 +61,6 @@ flowchart LR
     
     style C fill:#f9f,stroke:#333,stroke-width:2px
     style E fill:#bbf,stroke:#333,stroke-width:2px
-
 
 ```
 

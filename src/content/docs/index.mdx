@@ -6,6 +6,11 @@ template: splash
 
 import MapOfContent from '../../components/MapOfContent.astro';
 
+<div class="home-header">
+  <h1>Cẩm Nang Kỹ Thuật Dữ Liệu</h1>
+  <p>Hệ thống hóa toàn bộ kiến thức, khái niệm cốt lõi, so sánh công nghệ và hướng dẫn thực hành dự án đầu-cuối (E2E) dành cho Kỹ sư Dữ liệu (Data Engineer).</p>
+</div>
+
 <MapOfContent />
 
 <div id="quizzes" class="quiz-section">
@@ -38,6 +43,30 @@ import MapOfContent from '../../components/MapOfContent.astro';
   .sl-markdown-content {
     max-width: 1000px !important;
     margin: 0 auto !important;
+  }
+
+  /* Simple clean header */
+  .home-header {
+    padding: 3rem 0 2rem 0;
+    margin-bottom: 2.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .home-header h1 {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: var(--sl-color-white) !important;
+    margin: 0 0 0.5rem 0 !important;
+    line-height: 1.25 !important;
+  }
+
+  .home-header p {
+    font-size: 1.1rem;
+    color: var(--sl-color-gray-2);
+    margin: 0 !important;
+    line-height: 1.5;
+    max-width: 800px;
   }
 
   /* Quiz Section */

@@ -16,11 +16,6 @@ Trong thế giới của AI tạo sinh (GenAI), kỹ thuật này được gọi
 
 ---
 
-![Prompt engineering workflow diagram](/images/zero-shot/diagram_1.png)
-
-![Google Cloud Documentation](/images/zero-shot/diagram_2.svg)
-
-
 ## Đi sâu vào định nghĩa: Zero-shot là gì?
 
 Trong lĩnh vực Học máy (Machine Learning) truyền thống, **Zero-shot Learning** mô tả khả năng một mô hình có thể nhận dạng hoặc phân loại các đối tượng thuộc những nhãn (labels) mà nó chưa từng thấy trong tập dữ liệu huấn luyện (ví dụ: mô hình được học cách nhận biết ngựa và các thuộc tính sọc vằn, từ đó có thể tự nhận biết được ngựa vằn dù chưa từng học qua ảnh ngựa vằn).
@@ -50,7 +45,6 @@ Quy trình xử lý một Zero-shot Prompt diễn ra rất đơn giản:
 graph TD
     Prompt["User Prompt"] --> LLM["LLM Engine"]
     LLM --> Output["Final Output"]
-
 
 ```
 

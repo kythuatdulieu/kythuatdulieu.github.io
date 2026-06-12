@@ -12,10 +12,7 @@ definition: "Tinh chỉnh mô hình (Fine-tuning) là quá trình tiếp tục h
 
 Khi bắt đầu làm việc với các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/6-ai-ml/genai-ml/llm/)), bạn sẽ nhanh chóng nhận ra rằng dù chúng rất thông minh nhưng đôi khi lại giống như những "học giả biết tuốt" — cái gì cũng biết một chút nhưng lại thiếu đi sự sâu sắc và đặc thù mà doanh nghiệp của bạn thực sự cần. Lúc này, bạn đứng trước một quyết định quan trọng: Chấp nhận sử dụng các kỹ thuật viết prompt phức tạp, hay tiến hành tác động trực tiếp vào "não bộ" của mô hình. Quá trình tác động và huấn luyện lại đó được gọi là **Fine-tuning** (Tinh chỉnh mô hình).
 
-![Google Cloud Documentation](/images/fine-tuning/diagram_1.svg)
-
 ![Serving endpoints list](/images/fine-tuning/diagram_2.png)
-
 
 ## Khi "học giả biết tuốt" đi học lớp chuyên ngành
 
@@ -67,7 +64,6 @@ graph TD
     C --> G(+)
     F --> G
     G --> H["Final Output Y"]
-
 
 ```
 

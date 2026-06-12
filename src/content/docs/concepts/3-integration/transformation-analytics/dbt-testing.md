@@ -20,7 +20,7 @@ Trong hệ sinh thái dbt, mọi bài kiểm thử (test) thực chất đều l
 
 Nguyên lý hoạt động của dbt Testing cực kỳ đơn giản nhưng vô cùng hiệu quả: **Một bài test dbt sẽ cố gắng tìm kiếm và trả về (SELECT) những dòng dữ liệu vi phạm quy tắc.
 
-![Sơ đồ nguyên lý hoạt động của dbt Testing](/images/dbt-testing/mwaa-architecture.png)** 
+** 
 ```mermaid
 flowchart TD
     A["1. Khai báo Tests<br/>schema.yml / thư mục tests"] --> B["2. Biên dịch<br/>Lệnh dbt test"]

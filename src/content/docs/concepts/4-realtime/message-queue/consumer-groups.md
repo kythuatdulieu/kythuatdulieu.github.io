@@ -12,10 +12,6 @@ definition: "Consumer Group trong Apache Kafka là cơ chế nhóm nhiều tiế
 
 Trong thế giới của các luồng dữ liệu thời gian thực (Streaming Data), Apache Kafka nổi lên như một hệ thống vận chuyển thông điệp vô cùng mạnh mẽ. Để xử lý khối lượng tin nhắn khổng lồ đổ về mỗi giây, Kafka không thể chỉ dựa vào một máy chủ xử lý đơn lẻ. **Consumer Group (Nhóm người tiêu dùng)** chính là cơ chế thông minh giúp Kafka dễ dàng phân chia tải công việc và xử lý song song ở quy mô cực lớn.
 
-
-![Sơ đồ minh họa kiến trúc Consumer Groups](/images/consumer-groups/diagram_1.png)
-
-
 ## Consumer Group: Giải pháp chia sẻ gánh nặng tiêu thụ dữ liệu của Kafka
 
 Về cơ bản, **Consumer Group** là một tập hợp các tiến trình hoặc ứng dụng khách `(Consumers)` cùng bắt tay hợp tác để đọc và tiêu thụ dữ liệu từ một hoặc nhiều Kafka Topics. 

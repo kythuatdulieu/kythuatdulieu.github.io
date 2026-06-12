@@ -18,9 +18,6 @@ Hãy tưởng tượng bạn bước vào một thư viện khổng lồ với h
 
 ![An example graph of lineage entity metadata created by SageMaker AI to track your workflow.](/images/data-lineage/diagram_1.png)
 
-![Microsoft](/images/data-lineage/diagram_2.png)
-
-
 ## Phả hệ dữ liệu thực chất là gì?
 
 **Data Lineage** là khả năng theo dõi, lập bản đồ và hiển thị trực quan toàn bộ hành trình vòng đời của dữ liệu. Nó giúp chúng ta trả lời các câu hỏi: Dữ liệu bắt nguồn từ hệ thống nguồn nào? Nó đã di chuyển qua những đâu? Trải qua các bước biến đổi (Transformations) như thế nào? Và cuối cùng được hiển thị trên báo cáo hay mô hình học máy nào ở hạ nguồn?

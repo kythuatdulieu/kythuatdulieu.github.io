@@ -14,11 +14,6 @@ Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ 
 
 Để trả lời những câu hỏi mang tính "sống còn" này, chúng ta cần đến **Data Reconciliation (Đối soát hay kiểm tra chéo dữ liệu)**.
 
-![Data profiling overview](/images/data-reconciliation/diagram_1.png)
-
-![Data profiling diagram](/images/data-reconciliation/diagram_2.png)
-
-
 ## Bản chất của đối soát dữ liệu
 
 Trong ngành kỹ thuật dữ liệu, **Reconciliation (Đối soát)** là kỹ thuật đối chiếu tự động các chỉ số đo lường hoặc giá trị dữ liệu giữa hai hệ thống: **Nguồn (Source)** và **Đích (Target)**.

@@ -21,8 +21,6 @@ Mỗi khi thay đổi công cụ BI hoặc có nhân sự mới, doanh nghiệp 
 
 Để chấm dứt sự hỗn loạn này, các kỹ sư hệ thống đã phát triển một lớp kiến trúc trung gian gọi là **Metrics Layer (hay Semantic Layer, Headless BI)**.
 
-![Kiến trúc lớp ngữ nghĩa chỉ số trong hệ thống Modern Data Stack](/images/metrics-layer/metrics-layer-architecture.png)
-
 ## Metrics Layer là gì?
 
 **Metrics Layer** là một lớp kiến trúc nằm giữa tầng lưu trữ dữ liệu ([Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/)) và các công cụ tiêu thụ dữ liệu đầu cuối (như các phần mềm BI, mô hình Machine Learning, hoặc các ứng dụng Web/SaaS). 

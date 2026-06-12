@@ -16,9 +16,6 @@ Tuy nhiên, việc cập nhật lại toàn bộ hàng tỷ tham số của LLM 
 
 Để giải quyết bài toán đau đầu này, các nhà nghiên cứu tại Microsoft đã phát triển kỹ thuật **Low-Rank Adaptation (LoRA)**. Đây là một phương pháp tinh chỉnh tham số hiệu quả ([PEFT](/concepts/6-ai-ml/genai-ml/peft/) - Parameter-Efficient Fine-Tuning) giúp bạn "dạy" mô hình lớn học tác vụ mới với chi phí phần cứng siêu rẻ mà vẫn giữ nguyên được phong độ của mô hình gốc.
 
-![Google Cloud Documentation](/images/lora/diagram_1.svg)
-
-
 ## Ý tưởng toán học đằng sau LoRA
 
 Triết lý của LoRA dựa trên một giả thuyết khoa học gọi là **Hạng nội tại (Intrinsic Rank)**: Khi chúng ta tinh chỉnh một mô hình khổng lồ cho một tác vụ cụ thể, sự thay đổi thực tế của các trọng số ($\Delta W$) thực chất chỉ nằm trong một không gian có số chiều rất thấp.
@@ -70,7 +67,6 @@ graph TD
     Scale --> Sum
     
     Sum --> Output
-
 
 ```
 

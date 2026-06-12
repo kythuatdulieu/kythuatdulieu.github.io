@@ -14,9 +14,6 @@ Khi tương tác với các mô hình ngôn ngữ lớn ([LLM](/concepts/6-ai-ml
 
 ![Biểu đồ minh họa Context Window](/images/context-window/diagram_1.png)
 
-![Google Cloud Documentation](/images/context-window/diagram_2.svg)
-
-
 ## Context Window: "Bộ nhớ làm việc" giới hạn của các mô hình ngôn ngữ
 
 Nói một cách đơn giản, **Context Window (Cửa sổ ngữ cảnh)** giống như "bộ nhớ ngắn hạn" hoặc "bộ nhớ làm việc" `(working memory)` của LLM. Nó đại diện cho số lượng đơn vị từ vựng `(tokens)` tối đa mà mô hình có thể tiếp nhận, xử lý và ghi nhớ cùng một lúc trong một lượt tương tác. 
@@ -50,7 +47,6 @@ graph LR
     E -- Không --> G["Lỗi / Truncate"]
     F --> H["Sinh Token đầu ra"]
     H -. "Feedback loop" .-> F
-
 
 ```
 

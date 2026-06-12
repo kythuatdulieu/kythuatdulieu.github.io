@@ -52,9 +52,6 @@ graph TD
     end
 ```
 
-![Sơ đồ kiến trúc minh họa 1](/images/snowflake-search-optimization/diagram_1.svg)
-
-
 ### Hạn chế của Min/Max Pruning
 Cơ chế Pruning mặc định dựa trên khoảng Min/Max hoạt động cực kỳ hiệu quả khi dữ liệu được nạp theo một thứ tự tự nhiên (ví dụ như theo thời gian ghi nhận). Tuy nhiên, đối với các cột có độ chọn lọc cao (High-cardinality) như số định danh cá nhân (UUID), địa chỉ email, hoặc mã giao dịch, và dữ liệu nạp vào ngẫu nhiên, khoảng Min/Max của hầu hết các micro-partition sẽ bị chồng chéo (overlapping) lên nhau. 
 

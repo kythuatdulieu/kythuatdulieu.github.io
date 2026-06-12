@@ -14,10 +14,7 @@ Sau khi dành nhiều tuần liền để xử lý dữ liệu và huấn luyệ
 
 Một file tĩnh nằm cô độc trên đĩa cứng thì không thể tự tương tác với ứng dụng Web, Mobile App hay các đường ống dữ liệu của doanh nghiệp. Để biến tệp ma trận vô tri đó thành một dịch vụ phần mềm thực sự hữu ích, có khả năng tiếp nhận yêu cầu từ người dùng và trả về kết quả dự đoán (suy luận - inference) theo thời gian thực, chúng ta cần đến quy trình **Model Serving (Phục vụ mô hình)**.
 
-![Biểu đồ minh họa Model Serving](/images/model-serving/diagram_1.png)
-
 ![A diagram showing the concept of an endpoint.](/images/model-serving/diagram_2.png)
-
 
 ## Tại sao không thể gọi mô hình như một hàm lập trình thông thường?
 
@@ -49,7 +46,6 @@ graph TD
     Client["Client App"] --> API["API Gateway"]
     API --> ModelPod["Model Server Pod"]
     ModelPod --> Compute["GPU Inference"]
-
 
 ```
 
@@ -129,8 +125,6 @@ print(response.choices[0].message.content)
 * **Tách riêng bước tiền xử lý**: Nếu việc biến đổi dữ liệu thô (như cắt ghép, xoay ảnh) tốn nhiều tài nguyên CPU, hãy tách nó ra một microservice chạy riêng trên CPU. Đừng bắt GPU phải dừng lại chờ đợi CPU xử lý dữ liệu thô (GPU Starvation).
 
 ---
-
-
 
 ---
 

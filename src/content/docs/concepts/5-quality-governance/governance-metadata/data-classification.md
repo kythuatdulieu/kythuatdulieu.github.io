@@ -14,9 +14,6 @@ Khi dữ liệu trở thành nguồn tài sản chiến lược của doanh nghi
 
 ![Biểu đồ minh họa Data Classification](/images/data-classification/diagram_1.svg)
 
-![Microsoft](/images/data-classification/diagram_2.png)
-
-
 ## Phân loại dữ liệu (Data Classification): Khiên bảo vệ tài sản thông tin
 
 Về cơ bản, **Phân loại dữ liệu** là quy trình nhận diện, gán nhãn và phân nhóm dữ liệu dựa trên mức độ nhạy cảm, giá trị nghiệp vụ cũng như các yêu cầu tuân thủ pháp luật. 

@@ -14,11 +14,6 @@ Trong phát triển phần mềm, một khi bạn đã viết Unit Test cho mộ
 
 Đó là lý do chúng ta cần đến **Data Testing (Kiểm thử dữ liệu động)** — những chiếc "cầu dao tự động" giúp bảo vệ hệ thống trước sự biến động khôn lường của dữ liệu thực tế.
 
-![Data profiling overview](/images/data-testing/diagram_1.png)
-
-![Data profiling diagram](/images/data-testing/diagram_2.png)
-
-
 ## Data Testing thực sự là gì?
 
 Khác với kiểm thử phần mềm truyền thống (Software Testing) vốn tập trung kiểm tra tính đúng đắn của dòng code, **Data Testing** là quá trình lập trình các xác nhận tự động (automated assertions) chạy liên tục bên trong đường ống dữ liệu để xác minh chất lượng của luồng dữ liệu (data payload) thay đổi mỗi ngày.

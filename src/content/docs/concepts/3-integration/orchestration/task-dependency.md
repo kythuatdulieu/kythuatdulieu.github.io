@@ -55,7 +55,6 @@ Quy trình đánh giá sự phụ thuộc diễn ra như sau:
 
 Dưới đây là một số kịch bản rẽ nhánh và hội tụ dựa trên Trigger Rules trong DAG:
 
-![Kiến trúc luồng điều phối tác vụ với Trigger Rules](/images/task-dependency/mwaa-architecture.png)
 ```mermaid
 flowchart TD
     subgraph S1 ["Kịch bản 1: all_success (Mặc định)"]

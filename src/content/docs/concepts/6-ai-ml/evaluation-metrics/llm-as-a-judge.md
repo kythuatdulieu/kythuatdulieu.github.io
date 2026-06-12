@@ -18,11 +18,6 @@ Nếu dùng con người để ngồi đọc và chấm điểm hàng ngàn câu
 
 Đó là lúc phương pháp **LLM-as-a-judge (LLM làm giám khảo)** xuất hiện như một cứu cánh. Phương pháp này sử dụng một Mô hình Ngôn ngữ Lớn cực kỳ thông minh (như GPT-4, Claude 3) đóng vai trò làm "trọng tài" để tự động đánh giá và chấm điểm chất lượng đầu ra của các LLM khác.
 
-![Biểu đồ minh họa Llm As A Judge](/images/llm-as-a-judge/diagram_1.png)
-
-![Google Cloud Documentation](/images/llm-as-a-judge/diagram_2.svg)
-
-
 ## Tại sao chúng ta cần LLM-as-a-judge?
 
 Đánh giá chất lượng (Evaluation - Eval) hiện là một trong những rào cản lớn nhất khi muốn đưa AI vào thực tế. Chúng ta đối mặt với ba vấn đề lớn:
@@ -51,7 +46,6 @@ flowchart TD
     F --> G{"Output JSON"}
     G --> H["Score<br/>1-5"]
     G --> I["Rationale<br/>Chain-of-Thought"]
-
 
 ```
 

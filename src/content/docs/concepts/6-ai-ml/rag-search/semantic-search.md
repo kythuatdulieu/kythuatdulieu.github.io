@@ -14,11 +14,6 @@ metaDescription: "Tìm hiểu Tìm kiếm ngữ nghĩa (Semantic Search), cách 
 
 Đó là giới hạn lớn nhất của phương pháp tìm kiếm từ khóa truyền thống (Keyword Search). Để giải quyết bài toán này và giúp máy tính thực sự "hiểu" những gì con người viết, **Semantic Search (Tìm kiếm ngữ nghĩa)** đã ra đời.
 
-![Biểu đồ minh họa Semantic Search](/images/semantic-search/diagram_1.png)
-
-![Biểu đồ minh họa Semantic Search](/images/semantic-search/diagram_2.png)
-
-
 ## Tìm kiếm ngữ nghĩa là gì? Vượt qua giới hạn của từ khóa
 
 **Semantic Search** là kỹ thuật truy xuất thông tin dựa trên ý nghĩa, ngữ cảnh và ý định (intent) thực sự của câu truy vấn, thay vì chỉ so khớp ký tự vật lý một cách máy móc.
@@ -64,7 +59,6 @@ sequenceDiagram
     App->>VectorDB: Tìm K Nearest Neighbors cho Query Vector
     VectorDB-->>App: Trả về Top-K tài liệu giống nhất
     App-->>User: Hiển thị kết quả ("Hướng dẫn hủy đơn và refund...")
-
 
 ```
 

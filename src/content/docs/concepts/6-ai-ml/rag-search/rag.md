@@ -14,9 +14,6 @@ Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng ngôn ngữ và su
 
 ![Biểu đồ minh họa Rag](/images/rag/diagram_1.jpg)
 
-![Biểu đồ minh họa Rag](/images/rag/diagram_2.png)
-
-
 ## Đưa "sách giáo khoa" cho AI: RAG là gì?
 
 Thay vì bắt LLM phải trả lời câu hỏi hoàn toàn dựa trên trí nhớ có sẵn (vốn được đóng băng sau khi huấn luyện), RAG cung cấp cho mô hình một cuốn "sách giáo khoa" chứa đầy đủ thông tin thực tế ngay tại thời điểm được hỏi. 

@@ -12,10 +12,7 @@ metaDescription: "Tìm hiểu Reranking (Tái sắp xếp kết quả) và mô h
 
 Khi xây dựng các hệ thống tìm kiếm thông tin lớn hoặc các ứng dụng [RAG](/concepts/6-ai-ml/genai-ml/rag/) (Retrieval-Augmented Generation), việc lấy được những tài liệu thực sự chất lượng và liên quan nhất để đưa vào prompt cho [LLM](/concepts/6-ai-ml/genai-ml/llm/) là yếu tố quyết định sự thành bại của giải pháp. Để giải quyết triệt để bài toán này, các kỹ sư thường áp dụng một kỹ thuật tối ưu hóa thứ hạng cực kỳ hiệu quả gọi là **Reranking (Tái sắp xếp kết quả)** sử dụng các mô hình **Reranker**.
 
-![Google Cloud Documentation](/images/reranking/diagram_1.svg)
-
 ![AI Search index, Databricks calculates embeddings](/images/reranking/diagram_2.png)
-
 
 ## Bước lọc tinh tế cho hệ thống tìm kiếm: Reranking là gì?
 

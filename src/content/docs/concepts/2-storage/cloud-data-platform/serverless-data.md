@@ -80,12 +80,9 @@ graph LR
     S3Clean -. "Data Scanned" .-> QueryEngine
     QueryEngine -- "SQL Results" --> BI
 
-
 ```
 
-![Sơ đồ kiến trúc minh họa 1](/images/serverless-data/diagram_1.png)
 ![Sơ đồ kiến trúc minh họa 2](/images/serverless-data/diagram_2.svg)
-
 
 ## So sánh thực tế: Bài toán xử lý 500GB log
 

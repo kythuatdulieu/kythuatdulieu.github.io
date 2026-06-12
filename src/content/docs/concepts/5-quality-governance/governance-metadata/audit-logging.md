@@ -16,11 +16,6 @@ Hãy tưởng tượng bạn là Giám đốc công nghệ (CTO) của một cô
 
 Tương tự như chiếc hộp đen trên máy bay ghi lại mọi thông tin chuyến bay để phục vụ việc điều tra sự cố, Audit Logging tự động ghi lại một cách chi tiết, có hệ thống và không thể thay đổi mọi hoạt động, sự kiện và quyền truy cập diễn ra trong hệ thống dữ liệu. Đây là lớp bảo vệ cuối cùng giúp doanh nghiệp truy vết sự cố, phát hiện xâm nhập trái phép và tuân thủ các tiêu chuẩn bảo mật khắt khe như SOC2, GDPR, hay HIPAA.
 
-![Biểu đồ minh họa Audit Logging](/images/audit-logging/diagram_1.png)
-
-![Biểu đồ minh họa Audit Logging](/images/audit-logging/diagram_2.png)
-
-
 ## Tại sao Audit Logging lại tối quan trọng đối với doanh nghiệp?
 
 Nếu không có một hệ thống Audit Log được thiết lập bài bản, đội ngũ vận hành dữ liệu sẽ gặp phải ba thách thức lớn:

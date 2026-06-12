@@ -12,9 +12,6 @@ definition: "RLHF (Reinforcement Learning from Human Feedback) là phương phá
 
 Khi các mô hình ngôn ngữ lớn (LLM) vượt qua giai đoạn huấn luyện ban đầu trên hàng nghìn tỷ từ ngữ từ Internet, chúng sở hữu lượng tri thức khổng lồ nhưng lại hành xử như một cỗ máy vô cảm. Chúng chỉ biết đoán từ tiếp theo dựa trên xác suất toán học thô sơ, sẵn sàng trả lời chi tiết cách chế tạo vũ khí hoặc đưa ra các thông tin độc hại, thiên kiến. Để biến những cỗ máy thô ráp này thành các trợ lý ảo hữu ích, an toàn và đồng cảm như ChatGPT hay Claude, các nhà khoa học đã sử dụng một kỹ thuật tinh chỉnh cốt lõi mang tên **RLHF (Reinforcement Learning from Human Feedback - Học tăng cường từ phản hồi của con người)**.
 
-![Google Cloud Documentation](/images/rlhf/diagram_1.svg)
-
-
 ## Đưa la bàn đạo đức vào AI: RLHF là gì?
 
 RLHF là phương pháp tối ưu hóa mô hình ngôn ngữ bằng cách sử dụng một **Mô hình Phần thưởng (Reward Model)** được huấn luyện từ chính những đánh giá sở thích của con người (Human Preferences). 
@@ -78,7 +75,6 @@ graph TD
     
     C --> E
     C -.->|"Reference Policy"| K
-
 
 ```
 
