@@ -12,6 +12,9 @@ metaDescription: "Tìm hiểu chi tiết về Prompt Engineering: khái niệm, 
 
 Nhiều người thường nghĩ tương tác với AI chỉ đơn thuần là gõ một câu hỏi và nhận lại câu trả lời. Thế nhưng, để AI hiểu đúng ý, đưa ra kết quả chính xác, định dạng chuẩn và không tự "bịa đặt" thông tin ([hallucination](/concepts/6-ai-ml/genai-ml/hallucination/)) lại là cả một nghệ thuật và khoa học. Đó chính là lý do **Prompt Engineering (Kỹ nghệ Gợi ý)** ra đời và nhanh chóng trở thành một trong những kỹ năng quan trọng nhất trong kỷ nguyên trí tuệ nhân tạo.
 
+![Prompt engineering workflow diagram](/images/prompt-engineering/diagram_1.png)
+
+
 ## Giao tiếp với AI: Prompt Engineering là gì?
 
 Hiểu một cách đơn giản, Prompt Engineering là quá trình thiết kế, thử nghiệm và tối ưu hóa các câu lệnh đầu vào (prompt) nhằm định hướng các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/6-ai-ml/genai-ml/llm/)) hoặc các mô hình GenAI khác tạo ra kết quả mong muốn. Kỹ năng này không chỉ dừng ở việc chỉnh sửa câu chữ, mà là tư duy lập trình bằng ngôn ngữ tự nhiên – cung cấp ngữ cảnh (context), phân vai (role), thiết lập giới hạn (constraints) và kiểm soát cấu trúc đầu ra (format).

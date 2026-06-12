@@ -16,6 +16,11 @@ Trong thế giới dữ liệu doanh nghiệp cũng vậy. Việc để người
 
 ---
 
+![Data profiling overview](/images/data-observability/diagram_1.png)
+
+![Data profiling diagram](/images/data-observability/diagram_2.png)
+
+
 ## 1. Từ Data Quality Testing đến Data Observability
 
 Trước đây, chúng ta thường sử dụng phương pháp **[Data Testing](/concepts/5-quality-governance/data-quality/data-testing)** thông qua các công cụ như dbt tests hoặc Great Expectations để thiết lập các quy tắc cứng (rules) cho dữ liệu (ví dụ: kiểm tra cột `customer_id` có bị `NULL` hay không, hoặc giá trị của cột `age` có lớn hơn 0 không).

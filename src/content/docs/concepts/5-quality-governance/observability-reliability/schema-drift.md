@@ -14,6 +14,11 @@ Hãy tưởng tượng bạn vừa xây dựng xong một hệ thống [Data Pip
 
 Chào mừng bạn đến với thế giới của **Schema Drift** (Trôi dạt cấu trúc) – một trong những "cơn ác mộng" kinh điển nhất của mọi Data Engineer.
 
+![../_images/schema-registry-ecosystem.jpg](/images/schema-drift/diagram_1.jpg)
+
+![Partition evolution diagram](/images/schema-drift/diagram_2.png)
+
+
 ## Schema Drift là gì và tại sao nó lại nguy hiểm?
 
 Nói một cách đơn giản, **Schema Drift** xảy ra khi có sự không đồng bộ (mismatch) giữa cấu trúc dữ liệu thực tế được gửi đến và cấu trúc dữ liệu mà hệ thống Data Pipeline hoặc Data Warehouse của bạn đang kỳ vọng nhận được.

@@ -23,6 +23,9 @@ flowchart TD
     A --> G[Timeliness<br/>Kịp thời]
 ```
 
+![Transform unstructured data for AI icon](/images/data-quality-dimensions/diagram_2.svg)
+
+
 ## 6 Trụ cột đo lường chất lượng dữ liệu
 
 ### 1. Tính đầy đủ (Completeness)

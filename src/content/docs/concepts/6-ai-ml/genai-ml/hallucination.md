@@ -12,6 +12,9 @@ metaDescription: "Tìm hiểu hiện tượng Ảo giác (Hallucination) trong M
 
 Trong cuộc cách mạng Trí tuệ Nhân tạo tạo sinh (GenAI), chúng ta đã chứng kiến các Mô hình Ngôn ngữ Lớn (LLM) làm thơ, lập trình và viết luận với tốc độ và sự sắc bén kinh ngạc. Thế nhưng, đằng sau vẻ ngoài uyên bác đó là một điểm yếu chí mạng: thỉnh thoảng chúng lại tự tin bịa ra các thông tin sai lệch, không có thật nhưng lại trình bày một cách vô cùng mạch lạc và trôi chảy. Hiện tượng này được gọi là **Ảo giác** (Hallucination). Đây là rào cản lớn nhất ngăn cản việc đưa LLM vào các ngành nghề yêu cầu độ chính xác tuyệt đối như y tế, luật pháp hay tài chính.
 
+![Google Cloud Documentation](/images/hallucination/diagram_1.svg)
+
+
 ## Bản chất của hiện tượng ảo giác LLM
 
 Trong tâm lý học của con người, "ảo giác" là việc nhìn hoặc nghe thấy những thứ không tồn tại trong thế giới vật lý. Tuy nhiên đối với AI, từ **Hallucination** (hay đôi khi các nhà khoa học gọi là *Confabulation* - chứng bịa chuyện) không liên quan gì đến ý thức hay sinh học.

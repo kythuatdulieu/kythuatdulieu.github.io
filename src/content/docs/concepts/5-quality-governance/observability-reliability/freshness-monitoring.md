@@ -12,6 +12,11 @@ definition: "Giám sát độ trễ dữ liệu (Freshness Monitoring) là quy t
 
 Trong thế giới kỹ thuật dữ liệu, có một câu nói nổi tiếng thế này: *"Dữ liệu đúng nhưng trễ hẹn cũng có thể coi là dữ liệu sai"* (Right data, wrong time is wrong data). Bạn có một báo cáo tài chính chính xác đến từng xu, nhưng nếu nó được gửi trễ 3 tiếng sau khi phiên giao dịch bắt đầu, giá trị của nó gần như bằng không. Để giải quyết bài toán này, các kỹ sư dữ liệu đã phát triển một trụ cột quan trọng trong hệ thống [Data Observability](/concepts/5-quality-governance/observability-reliability/data-observability/): **Freshness Monitoring** (Giám sát độ trễ dữ liệu).
 
+![../_images/diagram_task_lifecycle.png](/images/freshness-monitoring/diagram_1.png)
+
+![Google Cloud Documentation](/images/freshness-monitoring/diagram_2.svg)
+
+
 ## Câu chuyện đằng sau dữ liệu "thiu" và Data SLA
 
 Freshness Monitoring là quá trình theo dõi, đo lường và đưa ra các cảnh báo tức thời về mức độ "tươi mới" (up-to-date) của dữ liệu trong hệ thống so với cam kết chất lượng dịch vụ (Data SLA - Service Level Agreement). Bằng cách liên tục kiểm tra thời gian kể từ lần cuối cùng một bảng hoặc một tập dữ liệu (dataset) được cập nhật thành công, Freshness Monitoring giúp trả lời những câu hỏi nhức nhối như:

@@ -12,6 +12,11 @@ definition: "Tinh chỉnh mô hình (Fine-tuning) là quá trình tiếp tục h
 
 Khi bắt đầu làm việc với các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/6-ai-ml/genai-ml/llm/)), bạn sẽ nhanh chóng nhận ra rằng dù chúng rất thông minh nhưng đôi khi lại giống như những "học giả biết tuốt" — cái gì cũng biết một chút nhưng lại thiếu đi sự sâu sắc và đặc thù mà doanh nghiệp của bạn thực sự cần. Lúc này, bạn đứng trước một quyết định quan trọng: Chấp nhận sử dụng các kỹ thuật viết prompt phức tạp, hay tiến hành tác động trực tiếp vào "não bộ" của mô hình. Quá trình tác động và huấn luyện lại đó được gọi là **Fine-tuning** (Tinh chỉnh mô hình).
 
+![Google Cloud Documentation](/images/fine-tuning/diagram_1.svg)
+
+![Serving endpoints list](/images/fine-tuning/diagram_2.png)
+
+
 ## Khi "học giả biết tuốt" đi học lớp chuyên ngành
 
 Về mặt kỹ thuật, Fine-tuning là quá trình lấy một mô hình AI đã được huấn luyện trên một lượng dữ liệu khổng lồ (Pre-trained Foundation Model) và tiếp tục huấn luyện nó trên một tập dữ liệu nhỏ hơn, mang tính đặc thù của một lĩnh vực cụ thể (domain-specific data). Mục tiêu cốt lõi ở đây là điều chỉnh các trọng số (weights) của mô hình để cải thiện hiệu suất cho một tác vụ chuyên biệt, dạy cho nó một giọng điệu (tone/style) mới, hoặc tích hợp các kiến thức nghiệp vụ sâu mà không cần phải chi hàng chục triệu USD để huấn luyện lại một mô hình từ con số 0.

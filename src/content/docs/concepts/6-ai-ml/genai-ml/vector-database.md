@@ -14,6 +14,11 @@ Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh (GenAI), các mô hì
 
 Khác với các cơ sở dữ liệu truyền thống vốn chỉ hiểu các phép so khớp từ khóa chính xác, Vector Database lưu trữ thông tin dưới dạng các tọa độ đa chiều (embeddings) và cho phép tìm kiếm dữ liệu dựa trên sự tương đồng về mặt ngữ nghĩa (semantic similarity).
 
+![Getting Started with Text Embeddings and Vector Search](/images/vector-database/diagram_1.png)
+
+![A Hybrid Search Tutorial with Vector Search](/images/vector-database/diagram_2.png)
+
+
 ## Vector Database là gì? Thấu hiểu dữ liệu qua lăng kính ngữ nghĩa
 
 Về mặt định nghĩa, **Vector Database** (hay **Vector Store**) là một hệ thống cơ sở dữ liệu chuyên biệt được thiết kế để lưu trữ, lập chỉ mục ([indexing](/concepts/2-storage/database-storage/indexing/)) và truy vấn các **[Embeddings](/concepts/6-ai-ml/genai-ml/embedding-models/)** – những mảng số thực đa chiều biểu diễn các đặc trưng ngữ nghĩa của dữ liệu phi cấu trúc (như văn bản, hình ảnh, âm thanh).

@@ -14,6 +14,11 @@ Sau khi dành nhiều tuần liền để xử lý dữ liệu và huấn luyệ
 
 Một file tĩnh nằm cô độc trên đĩa cứng thì không thể tự tương tác với ứng dụng Web, Mobile App hay các đường ống dữ liệu của doanh nghiệp. Để biến tệp ma trận vô tri đó thành một dịch vụ phần mềm thực sự hữu ích, có khả năng tiếp nhận yêu cầu từ người dùng và trả về kết quả dự đoán (suy luận - inference) theo thời gian thực, chúng ta cần đến quy trình **Model Serving (Phục vụ mô hình)**.
 
+![Biểu đồ minh họa Model Serving](/images/model-serving/diagram_1.png)
+
+![A diagram showing the concept of an endpoint.](/images/model-serving/diagram_2.png)
+
+
 ## Tại sao không thể gọi mô hình như một hàm lập trình thông thường?
 
 Nhiều người mới bắt đầu thường nghĩ đơn giản: chỉ cần viết một API bằng Flask hoặc FastAPI, load mô hình lên mỗi khi có request và gọi hàm `model.predict(data)` để trả về kết quả. Tuy nhiên, cách làm này sẽ nhanh chóng thất bại thảm hại trong môi trường thực tế (production) vì ba lý do cốt lõi:

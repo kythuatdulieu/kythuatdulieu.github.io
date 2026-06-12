@@ -16,6 +16,11 @@ Hãy tưởng tượng bạn đang quản lý một kho dữ liệu khổng lồ
 
 Trong bài viết này, chúng ta sẽ cùng đi sâu vào hai mô hình kiểm soát truy cập phổ biến và mạnh mẽ nhất hiện nay: **RBAC (Role-Based Access Control)** và **ABAC (Attribute-Based Access Control)**.
 
+![This diagram illustrates that the tags applied to a principal must match the tags applied to a resource for the user to be granted permissions to the resource. Tags be applied to IAM groups, resource groups, individual users and individual resources.](/images/access-control/diagram_1.png)
+
+![This diagram illustrates that role-based access control requires that each identity be assigned a specific job-function based policy to access different resources.](/images/access-control/diagram_2.png)
+
+
 ## Tại sao chúng ta cần kiểm soát truy cập chặt chẽ?
 
 Trong thế giới [Data Engineering](/concepts/1-foundations/foundation/data-engineering/), dữ liệu không chỉ là tài sản mà còn đi kèm với trách nhiệm pháp lý và bảo mật. Nếu không có một hệ thống phân quyền rõ ràng, hệ thống của bạn sẽ phải đối mặt với ba rủi ro lớn:

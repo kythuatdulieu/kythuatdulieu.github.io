@@ -12,6 +12,11 @@ metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG),
 
 Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng ngôn ngữ và suy luận logic tốt. Tuy nhiên, trong môi trường doanh nghiệp, các LLM thường gặp hạn chế như tự bịa đặt thông tin ([ảo giác - hallucination](/concepts/6-ai-ml/genai-ml/hallucination/)) hoặc không có quyền truy cập vào tài liệu nội bộ. Để khắc phục vấn đề này mà không cần tốn chi phí huấn luyện lại mô hình, kiến trúc **RAG (Retrieval-Augmented Generation)** được phát triển như một giải pháp thay thế hiệu quả.
 
+![Biểu đồ minh họa Rag](/images/rag/diagram_1.jpg)
+
+![Biểu đồ minh họa Rag](/images/rag/diagram_2.png)
+
+
 ## Đưa "sách giáo khoa" cho AI: RAG là gì?
 
 Thay vì bắt LLM phải trả lời câu hỏi hoàn toàn dựa trên trí nhớ có sẵn (vốn được đóng băng sau khi huấn luyện), RAG cung cấp cho mô hình một cuốn "sách giáo khoa" chứa đầy đủ thông tin thực tế ngay tại thời điểm được hỏi. 

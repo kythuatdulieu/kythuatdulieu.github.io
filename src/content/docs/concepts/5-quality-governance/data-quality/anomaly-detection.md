@@ -14,6 +14,11 @@ Trong thế giới Kỹ thuật Dữ liệu, có một câu nói nổi tiếng: 
 
 Đây chính là lúc chúng ta cần đến **Phát hiện bất thường (Anomaly Detection / Outlier Detection)**. Thay vì dựa vào các quy tắc cứng nhắc do con người tự viết, phương pháp này ứng dụng các thuật toán Thống kê và Học máy (Machine Learning) để tự động theo dõi hành vi của dữ liệu theo thời gian, từ đó phát hiện ra những điểm bất thường ẩn sâu mà mắt thường và các bộ kiểm thử thông thường dễ dàng bỏ sót.
 
+![The screenshot shows the data quality anomaly detection process.](/images/anomaly-detection/diagram_1.png)
+
+![The screenshot shows a line graph of data quality statistics over time.](/images/anomaly-detection/diagram_2.png)
+
+
 ## Tại sao các bài kiểm thử tĩnh (Rule-based Tests) là chưa đủ?
 
 Các công cụ kiểm thử chất lượng dữ liệu truyền thống (như [dbt](/concepts/3-integration/transformation-analytics/dbt/) tests hay Great Expectations) hoạt động dựa trên các bộ quy tắc cố định (Rule-based). Bạn chỉ viết được kiểm thử cho những lỗi mà bạn **lường trước được** nó sẽ xảy ra.

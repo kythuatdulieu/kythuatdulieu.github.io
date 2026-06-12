@@ -12,6 +12,11 @@ metaDescription: "Tìm hiểu các chiến lược phân tách văn bản (Chunk
 
 Khi xây dựng các ứng dụng Trí tuệ nhân tạo tạo sinh (GenAI), đặc biệt là các hệ thống trả lời câu hỏi dựa trên tài liệu doanh nghiệp sử dụng kiến trúc [RAG](/concepts/6-ai-ml/genai-ml/rag/), việc xử lý dữ liệu đầu vào đóng vai trò quyết định. Một trong những bước tiền xử lý quan trọng nhất là **Chunking (Phân tách văn bản)**. Kỹ thuật này không chỉ giúp mô hình "nuốt" trôi các tài liệu dài mà còn trực tiếp ảnh hưởng đến độ chính xác của tìm kiếm ngữ nghĩa và chất lượng câu trả lời từ LLM.
 
+![Biểu đồ minh họa Chunking](/images/chunking/diagram_1.jpg)
+
+![Google Cloud Documentation](/images/chunking/diagram_2.svg)
+
+
 ## Chunking: Nghệ thuật "chia để trị" văn bản trong kỷ nguyên GenAI
 
 Nói một cách đơn giản, **Chunking** là hành động chia nhỏ một tài liệu văn bản dài (như sách, file PDF, trang web, báo cáo tài chính) thành các đoạn ngắn hơn, có kích thước tối ưu (gọi là các *chunks*). 

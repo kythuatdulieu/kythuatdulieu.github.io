@@ -16,6 +16,9 @@ Dữ liệu được lưu trữ vô tội vạ, mỗi phòng ban tự định ng
 
 ---
 
+![Microsoft](/images/data-governance/diagram_1.png)
+
+
 ## Quản trị dữ liệu thực chất là gì?
 
 **Data Governance** không phải là một công việc viết code, cấu hình máy chủ hay xây dựng cơ sở hạ tầng kỹ thuật. Đây là một khái niệm nằm ở cấp chiến lược kinh doanh (`Business strategy level`). 
