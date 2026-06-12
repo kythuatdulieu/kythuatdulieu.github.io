@@ -644,9 +644,25 @@ button {
 
 .nav-btn.grid-btn {
   flex: 1.2;
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.15);
+  color: var(--accent);
+}
+
+.nav-btn.grid-btn:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="dark"] .nav-btn.grid-btn {
   background: rgba(99, 102, 241, 0.1);
   border-color: rgba(99, 102, 241, 0.2);
   color: var(--accent-light);
+}
+
+[data-theme="dark"] .nav-btn.grid-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.35);
 }
 
 /* ===================================
