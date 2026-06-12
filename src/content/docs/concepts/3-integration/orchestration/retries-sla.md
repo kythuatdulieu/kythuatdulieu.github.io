@@ -36,6 +36,8 @@ Thay vào đó, hãy giãn cách thời gian giữa các lần thử lại một
 ## Cơ chế vận hành thực tế trong hệ thống Orchestration
 
 Sơ đồ dưới đây mô tả sự tương tác giữa Bộ điều phối (Scheduler), Tác vụ (Task) và Cơ chế giám sát SLA:
+
+![Kiến trúc điều phối và quản lý trạng thái tác vụ với Retries và SLA](/images/retries-sla/mwaa-architecture.png)
 ```mermaid
 sequenceDiagram
     participant S as Scheduler

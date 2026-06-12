@@ -14,6 +14,8 @@ Hãy tưởng tượng bạn đang có một kho chứa đầy nguyên liệu th
 
 Với sự trỗi dậy mạnh mẽ của các siêu máy tính Cloud Data Warehouse như [Snowflake](/concepts/2-storage/cloud-data-platform/snowflake/) hay BigQuery, SQL đã quay trở lại vị trí "ngôn ngữ mẹ đẻ" thống trị toàn bộ mảng chuyển đổi dữ liệu, vượt qua cả các framework lập trình phức tạp.
 
+![Kiến trúc biến đổi dữ liệu bằng SQL trong hạ tầng Cloud Data Warehouse](/images/sql-transformation/mwaa-architecture.png)
+
 ## Sự trỗi dậy của SQL trong kỷ nguyên đám mây và ELT
 
 Nửa thập kỷ trước, trong thời kỳ hoàng kim của Hadoop và Big Data (mô hình [ETL](/concepts/3-integration/etl-elt/etl/) truyền thống), nhiều người từng nghĩ SQL đã "hết thời". Họ cho rằng SQL không thể mở rộng (not scalable). Quá trình biến đổi dữ liệu khi đó thường được thực hiện bên ngoài kho dữ liệu bằng Python, Java hoặc Scala (thông qua MapReduce hay Spark). Cách tiếp cận này vô tình dựng lên một rào cản lớn: nó đòi hỏi đội ngũ Data Engineer phải cực kỳ giỏi lập trình, trong khi các Data Analyst – những người hiểu rõ nghiệp vụ nhất – lại không thể chạm tay vào logic biến đổi dữ liệu.

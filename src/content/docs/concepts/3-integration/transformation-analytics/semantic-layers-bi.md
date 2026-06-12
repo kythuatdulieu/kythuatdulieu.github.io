@@ -36,6 +36,8 @@ Hãy tưởng tượng kịch bản: Phòng Tài chính định nghĩa "Doanh th
 
 Bằng cách áp dụng Semantic Layer, doanh nghiệp buộc phải thống nhất và định nghĩa rõ ràng các chỉ số như `finance_revenue` và `marketing_attributed_revenue` ở một nơi duy nhất. Mọi truy vấn từ Tableau, Looker, Power BI hay các ứng dụng nội bộ đều được định tuyến qua Semantic Layer để đảm bảo trả về cùng một kết quả chính xác.
 
+![Kiến trúc lớp ngữ nghĩa Semantic Layer và tích hợp công cụ Business Intelligence](/images/semantic-layers-bi/mwaa-architecture.png)
+
 ```mermaid
 flowchart TD
     subgraph Data_Warehouse ["Data Warehouse (BigQuery/Snowflake)"]

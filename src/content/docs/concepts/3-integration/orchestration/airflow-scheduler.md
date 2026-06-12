@@ -47,6 +47,8 @@ Mỗi chu kỳ (Tick) của vòng lặp Scheduler (từ phiên bản Airflow 2.0
 ## Sơ đồ kiến trúc và luồng điều phối của Airflow
 
 Hãy cùng nhìn vào sơ đồ dưới đây để hình dung đường đi của một tác vụ từ khi còn là code Python cho đến khi được Worker thực thi:
+
+![Kiến trúc tổng quan của Airflow trong môi trường điều phối thực tế](/images/airflow-scheduler/mwaa-architecture.png)
 ```mermaid
 graph TD
     subgraph Scheduler Node

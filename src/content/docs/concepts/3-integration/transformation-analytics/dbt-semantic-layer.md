@@ -44,6 +44,8 @@ Sự chuyển dịch này mang lại một triết lý thiết kế mới: **Tá
 
 Dưới đây là sơ đồ kiến trúc tổng quan mô tả cách dòng dữ liệu đi qua Semantic Layer:
 
+![Kiến trúc luồng dữ liệu đi qua dbt Semantic Layer](/images/dbt-semantic-layer/mwaa-architecture.png)
+
 ```mermaid
 graph TD
     subgraph Data Warehouse
