@@ -16,6 +16,10 @@ Trong nhiều thập kỷ, giải pháp kinh điển cho mọi bài toán dữ l
 
 ---
 
+
+![Sơ đồ minh họa kiến trúc Data Mesh](/images/data-mesh/diagram_1.png)
+
+
 ## Data Mesh thực chất là gì?
 
 Được giới thiệu lần đầu vào năm 2019 bởi chuyên gia Zhamak Dehghani, **Data Mesh** không phải là một công cụ phần mềm hay một dịch vụ cloud cụ thể, mà là một sự thay đổi mô hình kiến trúc về mặt tổ chức và quy trình quản lý (`Socio-technical paradigm shift`).
@@ -35,6 +39,10 @@ Hệ thống lưu trữ tập trung bộc lộ 3 điểm nghẽn lớn khi doanh
 Data Mesh tháo gỡ nút thắt này bằng cách áp dụng triết lý Microservices vào thế giới dữ liệu: **"Ai hiểu dữ liệu nhất, người đó tự quản lý và chịu trách nhiệm cho dữ liệu của mình."**
 
 ---
+
+
+![Quy trình xử lý và luồng dữ liệu Data Mesh](/images/data-mesh/diagram_2.png)
+
 
 ## Bốn nguyên tắc trụ cột cấu thành Data Mesh
 

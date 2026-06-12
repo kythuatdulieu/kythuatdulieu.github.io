@@ -14,6 +14,10 @@ Trong phát triển phần mềm hiện đại, đặc biệt là khi làm việ
 
 Nếu bạn từng chứng kiến cảnh một trang web bị đứng im, biểu tượng quay vòng tròn xoay mãi không ngừng sau khi bạn nhấn nút "Đặt hàng", rất có thể hệ thống phía sau đang bị nghẽn do các dịch vụ phải chờ đợi nhau phản hồi theo chuỗi. Để giải quyết triệt để vấn đề này, các kỹ sư thường chuyển dịch sang một mô hình thiết kế tối ưu hơn: **Event-Driven Architecture (EDA) – Kiến trúc hướng sự kiện**.
 
+
+![Sơ đồ minh họa kiến trúc Event Driven Architecture](/images/event-driven-architecture/diagram_1.jpg)
+
+
 ## Khi các dịch vụ không còn phải chờ đợi nhau
 
 Về mặt khái niệm, một **sự kiện (Event)** là một bản ghi ghi nhận một sự thay đổi trạng thái có ý nghĩa đã xảy ra trong quá khứ (ví dụ: *"Khách hàng vừa nhấn nút Mua hàng"*, *"Đơn hàng #456 đã được thanh toán thành công"*).
@@ -35,6 +39,10 @@ Thiết kế này chứa đựng 3 "tử huyệt" nguy hiểm:
 * **Liên kết chặt chẽ (Tight Coupling)**: `Order Service` bắt buộc phải biết rõ địa chỉ mạng của tất cả các dịch vụ khác. Nếu tương lai doanh nghiệp muốn thêm một dịch vụ "Tích điểm thành viên", kỹ sư sẽ phải vào sửa lại mã nguồn của `Order Service` để chèn thêm một cuộc gọi API mới.
 
 EDA sinh ra để đập tan sự ràng buộc này. Khi có đơn hàng, `Order Service` chỉ cần hét lên: *"Có đơn hàng mới đây!"* rồi hoàn thành ngay giao dịch cho khách hàng. Mọi dịch vụ khác tự nghe tin và tự lo liệu phần việc của mình.
+
+
+![Quy trình xử lý và luồng dữ liệu Event Driven Architecture](/images/event-driven-architecture/diagram_2.svg)
+
 
 ## Triết lý "Tự biên đạo" (Choreography) thay vì "Chỉ huy" (Orchestration)
 

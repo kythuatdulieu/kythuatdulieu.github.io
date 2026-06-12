@@ -14,6 +14,10 @@ Trong lập trình xử lý luồng dữ liệu (Stream Processing), một trong
 
 ---
 
+
+![Sơ đồ minh họa kiến trúc Watermark](/images/watermark/diagram_1.svg)
+
+
 ## Nhịp đập thời gian của dữ liệu: Tại sao chúng ta cần Watermark?
 
 Hãy tưởng tượng bạn đang xây dựng một ứng dụng tính toán doanh thu bán hàng theo từng phút. Cửa sổ thời gian (Window) cần tổng hợp dữ liệu từ `10:00` đến `10:01`. Lúc này, hệ thống của bạn đã nhận được một vài sự kiện có nhãn thời gian `10:02`. Liệu bạn đã có thể "chốt sổ" để xuất kết quả cho phút `10:00 - 10:01` chưa?
@@ -31,6 +35,10 @@ Về mặt kỹ thuật, **Watermark** $W(t)$ là một sự kiện đặc biệ
 Nói cách khác, Watermark là thước đo sự tiến triển của Event Time so với thời gian xử lý thực tế (Processing Time) trong hệ thống. Nó cho phép hệ thống tự tin đóng các cửa sổ thời gian kết thúc trước mốc $t$ và giải phóng tài nguyên tính toán.
 
 ---
+
+
+![Quy trình xử lý và luồng dữ liệu Watermark](/images/watermark/diagram_2.svg)
+
 
 ## Cơ chế hoạt động: Làm thế nào hệ thống biết lúc nào nên "chốt sổ"?
 
