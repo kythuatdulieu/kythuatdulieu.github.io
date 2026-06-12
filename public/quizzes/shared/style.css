@@ -798,6 +798,10 @@ button {
 }
 
 .stat-total .stat-number {
+  color: var(--accent);
+}
+
+[data-theme="dark"] .stat-total .stat-number {
   color: var(--accent-light);
 }
 
