@@ -148,6 +148,12 @@ graph TD
     class ProjDataPlatform,ProjLooker,ProjSandbox1,ProjSandbox2 proj;
 ```
 
+![Sơ đồ phân bổ và tối ưu hóa Slot tài nguyên trong BigQuery](/images/bigquery-slot-optimization/diagram_1.png)
+
+
+
+
+
 ---
 
 ## Các mẫu Tối ưu hóa Truy vấn nâng cao

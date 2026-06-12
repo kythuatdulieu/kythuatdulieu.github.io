@@ -70,6 +70,9 @@ flowchart TD
     style E fill:#ccffcc,stroke:#333
 ```
 
+![Sơ đồ mô hình dữ liệu và các chiều thay đổi chậm (SCD)](/images/slowly-changing-dimension/diagram_1.png)
+
+
 ### Minh họa bằng dữ liệu thực tế:
 **1. Trạng thái ban đầu:** Khách hàng Alice sống ở Hanoi.
 

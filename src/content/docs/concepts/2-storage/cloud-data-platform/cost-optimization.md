@@ -73,6 +73,9 @@ graph TD
     F --> H
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/cost-optimization/diagram_1.svg)
+
+
 ## Ví dụ thực chiến: Cắt giảm 97% chi phí trên Google BigQuery
 
 Hãy tưởng tượng một bảng dữ liệu chứa lịch sử sự kiện `user_events` có dung lượng lên tới 50TB dữ liệu thô. Các nhà phân tích thường xuyên thực hiện truy vấn để tính toán lượng người dùng hoạt động hàng tháng (MAU).

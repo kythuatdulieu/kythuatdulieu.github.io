@@ -87,6 +87,10 @@ graph TD
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/cloud-storage/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/cloud-storage/diagram_2.png)
+
+
 ## Thực hành quản trị dữ liệu thông qua AWS CLI và SQL
 
 Dưới đây là một số câu lệnh thực tế mà các Data Engineer thường dùng để tương tác với Amazon S3:

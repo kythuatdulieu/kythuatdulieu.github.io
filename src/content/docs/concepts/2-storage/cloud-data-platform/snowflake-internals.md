@@ -47,6 +47,9 @@ graph TD
     S3 --- MP1
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/snowflake-internals/diagram_1.png)
+
+
 ### 1. Lớp Lưu trữ Dữ liệu (Database Storage Layer)
 Khi dữ liệu được nạp (load) vào Snowflake, nó sẽ được tổ chức lại thành một định dạng tối ưu nội bộ. Dữ liệu được nén (compressed), chuyển đổi sang định dạng lưu trữ dạng cột (columnar format), và lưu trữ dưới dạng các tệp tin bất biến gọi là **Micro-partitions**.
 

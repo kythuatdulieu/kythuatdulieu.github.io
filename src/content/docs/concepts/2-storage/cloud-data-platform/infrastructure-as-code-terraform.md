@@ -54,6 +54,9 @@ graph TD
     I --> J[Hạ tầng Cloud được cập nhật]
 ```
 
+![Sơ đồ kiến trúc hạ tầng đám mây được khởi tạo tự động bằng Terraform](/images/infrastructure-as-code-terraform/diagram_1.png)
+
+
 Quy trình này đảm bảo không có bất kỳ thay đổi đơn phương nào được thực hiện trực tiếp trên môi trường Production mà không qua kiểm duyệt và ghi nhận lịch sử.
 
 ---

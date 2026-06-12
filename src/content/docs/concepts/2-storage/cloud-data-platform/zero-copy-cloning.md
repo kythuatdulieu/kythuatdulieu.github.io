@@ -68,6 +68,9 @@ graph TD
     %% Table A keeps original pointers
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/zero-copy-cloning/diagram_1.svg)
+
+
 ---
 
 ## Tình huống thực tế: Cứu cảnh cho đội phân tích dữ liệu

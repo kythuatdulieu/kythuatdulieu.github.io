@@ -80,6 +80,9 @@ graph LR
     E --> J
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/inmon-methodology/diagram_1.png)
+
+
 *Lưu ý quan trọng: Nhờ kiến trúc này, các bộ phận nghiên cứu chuyên sâu (Data Science/Data Mining) có thể bỏ qua lớp Data Mart và chọc thẳng vào Core EDW (3NF) để khai thác nguồn dữ liệu chi tiết thô nguyên bản.*
 
 ## Minh họa thực tế: Mô hình hóa dữ liệu Khách hàng chuẩn 3NF

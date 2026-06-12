@@ -91,6 +91,10 @@ graph LR
     H --> K
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/kimball-methodology/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/kimball-methodology/diagram_2.png)
+
+
 * **Operational [Source Systems](/concepts/1-foundations/foundation/source-systems/)**: Nguồn dữ liệu vận hành hàng ngày của doanh nghiệp.
 * **[ETL](/concepts/3-integration/etl-elt/etl/) System (Tầng trích xuất - biến đổi - nạp)**: Nơi thực hiện các tác vụ tích hợp dữ liệu bao gồm làm sạch, đồng nhất định dạng, xử lý lịch sử thay đổi (SCD - Slowly Changing Dimension) và tạo khóa thay thế (Surrogate Keys).
 * **Presentation Area**: Lớp lưu trữ phục vụ truy vấn, nơi dữ liệu được tổ chức dưới dạng Star Schema.

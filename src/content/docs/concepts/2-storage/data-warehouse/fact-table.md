@@ -70,6 +70,9 @@ erDiagram
     fact_sales }|..|| dim_date : "date_key"
 ```
 
+![Sơ đồ liên kết bảng Fact và các bảng Dimension trong Star Schema](/images/fact-table/diagram_1.png)
+
+
 ## Ba thuộc tính đo lường cần phân biệt
 
 Khi thiết kế các chỉ số đo lường trong Fact Table, các kỹ sư dữ liệu phân chia chúng làm 3 loại dựa trên tính chất cộng gộp (Additivity) của chúng:

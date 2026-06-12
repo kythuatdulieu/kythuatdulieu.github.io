@@ -93,6 +93,9 @@ graph TD
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/amazon-redshift/diagram_1.png)
+
+
 ## Bắt tay vào tối ưu: Sức mạnh của Distribution Style trong thực tế
 
 Giả sử bạn có hai bảng: `orders` (1 tỷ dòng) và `customers` (10 triệu dòng) và bạn thường xuyên phải chạy câu lệnh JOIN sau để tính doanh thu theo khu vực:

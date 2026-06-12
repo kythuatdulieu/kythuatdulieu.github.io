@@ -78,6 +78,10 @@ graph LR
     F --> J
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/data-warehouse/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/data-warehouse/diagram_2.png)
+
+
 1. **Thu nạp dữ liệu ([Data Ingestion](/concepts/3-integration/etl-elt/data-ingestion/))**: Trích xuất dữ liệu từ các nguồn thông qua CDC ([Change Data Capture](/concepts/3-integration/etl-elt/change-data-capture/)) hoặc các công cụ [ETL](/concepts/3-integration/etl-elt/etl/)/[ELT](/concepts/3-integration/etl-elt/elt/) theo lô (Batch).
 2. **Vùng đệm (Staging Area)**: Lưu trữ tạm thời dữ liệu thô để xử lý mà không làm ảnh hưởng đến hiệu năng kết nối của database nguồn.
 3. **Biến đổi dữ liệu ([Data Transformation](/concepts/3-integration/etl-elt/data-transformation/))**: Thực hiện lọc rác, khử trùng lặp, giải quyết lịch sử thay đổi (SCD - Slowly Changing Dimensions) và gán khóa thay thế (Surrogate Keys).

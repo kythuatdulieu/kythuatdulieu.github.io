@@ -75,6 +75,10 @@ graph TD
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/databricks-platform/diagram_1.svg)
+![Sơ đồ kiến trúc minh họa 2](/images/databricks-platform/diagram_2.svg)
+
+
 * **Không gian làm việc chung (Workspace)**: Mọi người cộng tác qua giao diện Notebooks hỗ trợ đa ngôn ngữ (Python, SQL, Scala, R). Bạn có thể viết code Python ở ô này và viết SQL ở ô ngay dưới để truy vấn cùng một bảng dữ liệu.
 * **Quản lý cụm tính toán (Clusters)**: Databricks tự động cấp phát, mở rộng hoặc tắt các cụm máy chủ (Clusters) tùy theo tải thực tế. Có hai loại cụm: *Interactive Clusters* (phục vụ lập trình, thử nghiệm) và *Job Clusters* (tự động bật lên để chạy pipeline định kỳ rồi tự tắt đi để tiết kiệm chi phí).
 * **Quản trị tập trung với [Unity Catalog](/concepts/2-storage/data-warehouse/unity-catalog/)**: Tầng quản trị giúp phân quyền bảo mật chi tiết đến từng dòng, từng cột dữ liệu và tự động vẽ lại phả hệ dữ liệu ([Data Lineage](/concepts/5-quality-governance/governance-metadata/data-lineage/)) giúp bạn biết bảng này được sinh ra từ những nguồn nào.

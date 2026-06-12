@@ -91,6 +91,13 @@ graph TD
     NAT_GW --> IGW
 ```
 
+![Sơ đồ phân cấp khóa bảo mật (KMS Key Hierarchy) bảo vệ dữ liệu trong VPC](/images/networking-security-vpc/diagram_1.png)
+
+
+
+
+
+
 *   **VPC Peering**:
     *   *Nguyên lý*: Kết nối trực tiếp hai VPC ở tầng định tuyến mạng (L3).
     *   *Ưu điểm*: Băng thông cực cao, không giới hạn cổng giao tiếp, độ trễ tối thiểu.

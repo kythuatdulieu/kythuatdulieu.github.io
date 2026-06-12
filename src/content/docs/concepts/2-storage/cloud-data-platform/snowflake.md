@@ -66,6 +66,9 @@ graph TD
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/snowflake/diagram_1.png)
+
+
 1. **Lớp Lưu trữ Tập trung (Centralized Storage Layer)**: Dữ liệu nạp vào Snowflake sẽ được tự động chia nhỏ thành các tệp tin nén định dạng cột gọi là **Micro-partitions** và lưu trữ trên Cloud Object Storage (như AWS S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/), Azure Blob). Lớp này có giá thành lưu trữ cực rẻ và khả năng mở rộng vô hạn.
 2. **Lớp Tính toán Đa cụm (Multi-cluster Compute Layer)**: Snowflake sử dụng các cụm máy chủ ảo gọi là **Virtual Warehouses** để xử lý các câu lệnh SQL. Bạn có thể tạo riêng một Virtual Warehouse cho team Marketing (size Small) và một Virtual Warehouse cho team Data Science (size X-Large). Hai cụm máy này cùng nhìn vào một kho dữ liệu lưu trữ trung tâm nhưng chạy trên tài nguyên CPU độc lập, không lo tranh chấp.
 3. **Lớp Dịch vụ Đám mây (Cloud Services Layer)**: Được ví như "bộ não" điều khiển toàn bộ hệ thống. Lớp này quản lý các tác vụ như xác thực bảo mật, phân tích tối ưu hóa truy vấn SQL, quản lý siêu dữ liệu (metadata), kiểm soát quyền truy cập và quản lý giao dịch.

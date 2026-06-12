@@ -61,6 +61,9 @@ flowchart TD
     F --> G
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/dimension-table/diagram_1.png)
+
+
 1. Người dùng thay đổi thông tin (ví dụ: cập nhật số điện thoại mới) trên hệ thống nguồn CRM/ERP.
 2. Công cụ ETL quét và phát hiện ra sự thay đổi này.
 3. Hệ thống sinh ra hoặc liên kết với một Khóa thay thế (Surrogate Key).
