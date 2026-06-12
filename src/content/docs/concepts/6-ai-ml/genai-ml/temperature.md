@@ -14,6 +14,11 @@ Trong thế giới của các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/6-ai-
 
 Bằng cách can thiệp vào các thuật toán toán học ngay trước khi mô hình lựa chọn từ vựng để xuất ra, Temperature đóng vai trò như một chiếc nút vặn điều chỉnh mức độ ngẫu nhiên và tính sáng tạo của đoạn văn bản được sinh ra.
 
+![Mô tả phân phối xác suất Token theo Temperature](/images/temperature/diagram_1.svg)
+
+![Biến đổi Logits sang xác suất qua hàm Softmax](/images/temperature/diagram_2.webp)
+
+
 ## Bản chất toán học của "Nhiệt độ" trong AI
 
 Về mặt kỹ thuật, **Temperature** ($T$) là một hằng số được dùng để chia trực tiếp cho các giá trị đầu ra thô (logits) của lớp mạng nơ-ron cuối cùng trước khi chúng đi qua hàm Softmax để quy đổi thành xác suất phân bố từ vựng:

@@ -14,6 +14,11 @@ Hãy tưởng tượng bạn đang chơi trò chơi nối chữ với một nhà
 
 Trong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), kỹ thuật chọn lọc thông minh này được gọi là **Top-p** hay **Nucleus Sampling (Lấy mẫu hạt nhân)**.
 
+![Cơ chế lọc Top-K trong quá trình Sampling](/images/top-p/diagram_1.webp)
+
+![Quy trình chuyển đổi xác suất sang Token văn bản đầu ra](/images/top-p/diagram_2.webp)
+
+
 ## Top-p là gì? Tập hợp hạt nhân động
 
 **Top-p (Nucleus Sampling)** là một thuật toán giải mã (decoding strategy) được sử dụng để kiểm soát độ ngẫu nhiên và tính mạch lạc của văn bản do AI tạo ra. 

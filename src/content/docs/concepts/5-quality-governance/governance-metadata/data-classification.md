@@ -12,6 +12,11 @@ definition: "Phân loại dữ liệu (Data Classification) là quá trình xác
 
 Khi dữ liệu trở thành nguồn tài sản chiến lược của doanh nghiệp, việc bảo vệ nó khỏi các cuộc tấn công bảo mật và rò rỉ thông tin là nhiệm vụ quan trọng hàng đầu. Tuy nhiên, nếu bạn cố gắng bảo vệ mọi byte dữ liệu với cùng một tiêu chuẩn an ninh nghiêm ngặt nhất, bạn sẽ nhanh chóng cạn kiệt ngân sách. **Data Classification (Phân loại dữ liệu)** chính là nghệ thuật gán nhãn và phân cấp thông tin, giúp doanh nghiệp tập trung nguồn lực để bảo vệ những gì thực sự nhạy cảm và giá trị nhất.
 
+![Biểu đồ minh họa Data Classification](/images/data-classification/diagram_1.svg)
+
+![Microsoft](/images/data-classification/diagram_2.png)
+
+
 ## Phân loại dữ liệu (Data Classification): Khiên bảo vệ tài sản thông tin
 
 Về cơ bản, **Phân loại dữ liệu** là quy trình nhận diện, gán nhãn và phân nhóm dữ liệu dựa trên mức độ nhạy cảm, giá trị nghiệp vụ cũng như các yêu cầu tuân thủ pháp luật. 

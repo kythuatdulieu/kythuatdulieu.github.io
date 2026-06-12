@@ -16,6 +16,11 @@ Nếu từng sử dụng các chatbot như ChatGPT, Gemini hay Claude bản thô
 
 Thay vì chỉ trả lời thụ động, AI Agent là một hệ thống tự trị lấy Mô hình Ngôn ngữ Lớn (LLM) làm "bộ não" trung tâm, kết hợp với khả năng lập kế hoạch (Planning), lưu trữ thông tin (Memory), và đặc biệt là khả năng tương tác với thế giới bên ngoài thông qua việc sử dụng công cụ (Tool Use) để tự thực hiện các nhiệm vụ phức tạp.
 
+![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_1.png)
+
+![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_2.png)
+
+
 ## Tại sao chúng ta cần AI Agent thay vì chỉ LLM đơn thuần?
 
 Mặc dù các mô hình LLM ngày nay rất thông minh, chúng vẫn gặp phải ba rào cản lớn khi đối mặt với các bài toán thực tế của doanh nghiệp:

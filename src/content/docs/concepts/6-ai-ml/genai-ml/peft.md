@@ -12,6 +12,9 @@ definition: "PEFT (Parameter-Efficient Fine-Tuning) là tập hợp các kỹ th
 
 Việc huấn luyện hay tinh chỉnh (fine-tune) các Mô hình Ngôn ngữ Lớn (LLM) từng được coi là cuộc chơi độc quyền của các ông lớn công nghệ sở hữu tiềm lực tài chính khổng lồ cùng hệ thống siêu máy tính hàng nghìn GPU đắt đỏ. Thế nhưng, sự ra đời của **PEFT (Parameter-Efficient Fine-Tuning)** đã thay đổi hoàn toàn cục diện đó. Kỹ thuật này đã dân chủ hóa AI, cho phép bất kỳ kỹ sư hay doanh nghiệp nhỏ nào cũng có thể tinh chỉnh các mô hình hàng tỷ tham số ngay trên chiếc card đồ họa dân dụng của mình với chi phí cực kỳ rẻ.
 
+![Google Cloud Documentation](/images/peft/diagram_1.svg)
+
+
 ## Đột phá mang tính cách mạng: PEFT là gì?
 
 Khi các mô hình mã nguồn mở như Llama 3 hay Mistral được công bố, chúng sở hữu lượng kiến thức tổng quát vô cùng phong phú. Tuy nhiên, để những mô hình này thực sự hiểu sâu và làm tốt một công việc chuyên biệt của doanh nghiệp (ví dụ: viết code theo chuẩn riêng của dự án, hoặc phân tích báo cáo tài chính nội bộ), chúng ta cần thực hiện quá trình tinh chỉnh (Fine-tuning).

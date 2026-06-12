@@ -12,6 +12,11 @@ definition: "Data Catalog (Danh mục dữ liệu) là nền tảng quản lý s
 
 Hãy tưởng tượng bạn bước vào một siêu thị khổng lồ nhưng không hề có các biển chỉ dẫn ngành hàng, không có nhãn giá và các sản phẩm được xếp lộn xộn trên kệ. Việc tìm kiếm một hộp sữa sẽ trở thành một cơn ác mộng. Trong thế giới dữ liệu của doanh nghiệp cũng vậy, khi số lượng bảng dữ liệu lên tới hàng ngàn và nằm rải rác ở khắp các phòng ban, việc tìm đúng dữ liệu để làm báo cáo là vô cùng khó khăn. **Data Catalog (Danh mục dữ liệu)** chính là "tấm bản đồ chỉ đường" giúp giải quyết triệt để sự hỗn loạn này.
 
+![../_images/schema-registry-ecosystem.jpg](/images/data-catalog/diagram_1.jpg)
+
+![Google Cloud Documentation](/images/data-catalog/diagram_2.svg)
+
+
 ## Data Catalog: Bản đồ dẫn đường trong kho tàng dữ liệu doanh nghiệp
 
 Về mặt bản chất, **Data Catalog** là một siêu nền tảng `(Platform)` chuyên làm nhiệm vụ thu thập, quản lý và tổ chức Siêu dữ liệu `(Metadata)` từ mọi ngóc ngách trong hệ thống công nghệ của doanh nghiệp – từ các cơ sở dữ liệu nguồn, [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/), cho đến các [ETL](/concepts/3-integration/etl-elt/etl/) pipeline và các báo cáo BI Dashboard. Nó cung cấp một giao diện web trực quan, hoạt động giống như một thanh công cụ tìm kiếm Google nội bộ dành riêng cho dữ liệu.

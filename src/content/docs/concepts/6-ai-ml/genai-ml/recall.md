@@ -12,6 +12,11 @@ definition: "Recall (Độ phủ) là tỷ lệ phần trăm số điểm dữ l
 
 Khi đánh giá hiệu năng của một mô hình học máy (Machine Learning) hay một hệ thống tìm kiếm thông tin, chúng ta thường nghe nhắc đến thuật ngữ **Recall (Độ phủ)**. Đây là một trong những thước đo quan trọng bậc nhất giúp chúng ta biết được mô hình có đang hoạt động hiệu quả hay không, đặc biệt là trong các bài toán mang tính chất rủi ro cao hoặc mất cân bằng dữ liệu.
 
+![Biểu đồ minh họa Recall](/images/recall/diagram_1.png)
+
+![Biểu đồ minh họa Recall](/images/recall/diagram_2.png)
+
+
 ## Không bỏ sót mục tiêu: Recall là gì?
 
 Recall (Độ phủ) – hay còn gọi là Độ nhạy (Sensitivity) hoặc True Positive Rate (TPR) – là thước đo đánh giá tỷ lệ các trường hợp "Đúng" (Positive) trên thực tế mà mô hình đã nhận diện thành công so với tổng số trường hợp "Đúng" thực tế tồn tại trong tập dữ liệu.

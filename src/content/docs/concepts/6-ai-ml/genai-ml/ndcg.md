@@ -18,6 +18,11 @@ Lây do rất đơn giản: Precision và Recall chỉ quan tâm đến việc k
 
 Để giải quyết bài toán này, các kỹ sư dữ liệu sử dụng một chỉ số nâng cao gọi là **Normalized Discounted Cumulative Gain (NDCG)**. Chỉ số này phản ánh chính xác hiệu suất xếp hạng của mô hình với thang điểm từ 0 đến 1 (1 là trạng thái hoàn hảo).
 
+![Google Cloud Documentation](/images/ndcg/diagram_1.svg)
+
+![Wikipedia](/images/ndcg/diagram_2.svg)
+
+
 ## Bóc tách công thức toán học của NDCG
 
 Để hiểu được ý nghĩa toán học của NDCG, chúng ta hãy cùng phân tích từng từ cấu thành nên chỉ số này từ phải qua trái:

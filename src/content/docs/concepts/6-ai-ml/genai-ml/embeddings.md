@@ -19,6 +19,11 @@ Từ những điểm số đó, người kia có thể dễ dàng hình dung ra 
 
 Trong thế giới của Trí tuệ Nhân tạo, **Vectơ nhúng (Embeddings)** chính là những "tấm thẻ điểm số" như thế. Chúng là các mảng chứa các số thực (ví dụ: `[0.12, -0.45, 0.88, ...]`) dùng để biểu diễn ngữ nghĩa của các dữ liệu phi cấu trúc (như từ ngữ, câu văn, hình ảnh hay âm thanh) dưới dạng mà máy tính có thể hiểu và tính toán được.
 
+![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_1.png)
+
+![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_2.png)
+
+
 ## Bản dịch số học của thế giới phi cấu trúc
 
 Về mặt kỹ thuật, **Embeddings** là một dạng biểu diễn dữ liệu dày đặc (dense representation). Thay vì lưu trữ từ vựng dưới dạng các chuỗi ký tự (strings) rời rạc vốn không mang giá trị toán học, chúng ta chuyển đổi chúng thành các tọa độ điểm trong một không gian hình học đa chiều (thường từ hàng trăm đến hàng nghìn chiều).

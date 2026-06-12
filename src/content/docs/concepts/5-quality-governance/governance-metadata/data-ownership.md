@@ -18,6 +18,11 @@ Tình huống đùn đẩy trách nhiệm kiểu "cha chung không ai khóc" nà
 
 ---
 
+![Role hierarchy example](/images/data-ownership/diagram_1.png)
+
+![../_images/schema-registry-ecosystem.jpg](/images/data-ownership/diagram_2.jpg)
+
+
 ## Data Ownership thực chất là gì?
 
 **Data Ownership (Quyền sở hữu dữ liệu)** không nhằm mục đích tranh giành quyền sở hữu tài sản vật lý (vì mọi dữ liệu cuối cùng vẫn là tài sản chung của doanh nghiệp). Nó thực chất là việc phân định rõ ràng **Sự chịu trách nhiệm (Accountability)** đối với chất lượng dữ liệu.

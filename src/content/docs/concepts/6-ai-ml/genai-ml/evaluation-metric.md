@@ -14,6 +14,11 @@ Có một câu nói nổi tiếng trong giới quản trị và kỹ thuật: *"
 
 Khi xây dựng các mô hình Machine Learning hay các hệ thống AI hiện đại, việc bạn chạy thử một vài câu lệnh và thấy kết quả trả về "có vẻ đúng" là chưa bao giờ đủ để tự tin đưa hệ thống lên môi trường Production thực tế. Để biết chắc chắn mô hình của mình hoạt động tốt đến đâu và có thực sự giải quyết được bài toán kinh doanh hay không, chúng ta cần những thước đo khách quan và chuẩn xác. Đó chính là lý do **Chỉ số đánh giá (Evaluation Metric)** tồn tại.
 
+![Biểu đồ minh họa Evaluation Metric](/images/evaluation-metric/diagram_1.png)
+
+![Google Cloud Documentation](/images/evaluation-metric/diagram_2.svg)
+
+
 ## Tại sao "cảm giác" không bao giờ đủ trong Trí tuệ Nhân tạo?
 
 Về mặt toán học, **Evaluation Metric** là các công thức tính toán sự sai lệch (hoặc mức độ tương thích) giữa **kết quả dự đoán của mô hình (Predictions)** và **kết quả thực tế chuẩn xác (Ground Truth/Labels)**. 

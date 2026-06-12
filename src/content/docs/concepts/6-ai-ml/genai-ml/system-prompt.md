@@ -14,6 +14,9 @@ Hãy tưởng tượng bạn đang tuyển dụng một trợ lý ảo siêu nă
 
 Trong thế giới của Trí tuệ nhân tạo tạo sinh (GenAI), bản hướng dẫn tuyệt mật đó chính là **System Prompt (Gợi ý hệ thống)**. Đây là đoạn mã lệnh hoặc hướng dẫn cốt lõi, thường vô hình đối với người dùng cuối, được cài đặt ở tầng sâu nhất trước khi cuộc hội thoại giữa người dùng và Mô hình Ngôn ngữ Lớn (LLM) bắt đầu.
 
+![Luồng xử lý System Message trong Azure OpenAI](/images/system-prompt/diagram_1.svg)
+
+
 ## System Prompt là gì? Chỉ thị tối cao ẩn sau hậu trường
 
 Trong kiến trúc giao tiếp API của các LLM hiện đại (như họ GPT của OpenAI hay Claude của Anthropic), tin nhắn được phân chia rõ ràng theo các **Role (Vai trò)**:

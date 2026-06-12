@@ -14,6 +14,11 @@ Hãy tưởng tượng bạn là một kỹ sư dữ liệu. Vào lúc 3 giờ s
 
 Đây chính là lúc quy trình **Cảnh báo và Phản ứng sự cố (Alerting & Incident Response)** phát huy vai trò. Đây là bước hành động tiếp theo ngay sau khi hệ thống giám sát (Monitoring / Data Observability) phát hiện ra bất thường, nhằm đảm bảo mọi sự cố dữ liệu đều được nhận diện, phân công đúng người trực (on-call), giải quyết nhanh chóng và ngăn ngừa tái diễn.
 
+![Two of the recommended alerting policies for the Cloud SQL integration package.](/images/alerting-incident-response/diagram_1.png)
+
+![Diagram that explains Azure Monitor alerts.](/images/alerting-incident-response/diagram_2.png)
+
+
 ## Tại sao có hệ thống giám sát tốt là chưa đủ?
 
 Nhiều đội ngũ dữ liệu đầu tư rất nhiều tiền vào các công cụ giám sát hiện đại như Monte Carlo hay Datadog, nhưng lại bỏ quên quy trình ứng phó. Kết quả là họ thường xuyên rơi vào ba tình huống dở khóc dở cười:

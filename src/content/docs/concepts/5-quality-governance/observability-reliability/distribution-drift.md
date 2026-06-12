@@ -16,6 +16,11 @@ Nhưng ở đầu ra, mô hình Machine Learning dự báo tỷ lệ khách hàn
 
 Chào mừng bạn đến với thế giới của **Distribution Drift (Trôi dạt phân phối)** hay thường được gọi là **Data Drift** – một trong những hiện tượng "silent failure" (lỗi ngầm) nguy hiểm và khó phát hiện nhất trong kỹ thuật dữ liệu và MLOps.
 
+![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_1.png)
+
+![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_2.png)
+
+
 ## Khi dữ liệu thay đổi "tính cách" một cách âm thầm
 
 Để dễ hình dung, **Distribution Drift** là hiện tượng các đặc trưng thống kê của dữ liệu (như giá trị trung bình, độ lệch chuẩn, phân phối chuẩn) bị thay đổi hình dáng phân phối theo thời gian, khác biệt rõ rệt so với dữ liệu lịch sử hoặc dữ liệu dùng để huấn luyện mô hình.

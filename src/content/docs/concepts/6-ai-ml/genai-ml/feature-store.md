@@ -18,6 +18,11 @@ Chỉ cần một sự sai lệch nhỏ trong cách tính toán giữa hai môi 
 
 Để giải quyết bài toán hóc búa này, khái niệm **Feature Store (Kho đặc trưng)** đã ra đời, đóng vai trò là chiếc cầu nối vững chắc giữa Kỹ thuật dữ liệu ([Data Engineering](/concepts/1-foundations/foundation/data-engineering/)) và Khoa học dữ liệu (Data Science).
 
+![Missing alt text value](/images/feature-store/diagram_1.png)
+
+![Missing alt text value](/images/feature-store/diagram_2.png)
+
+
 ## Điểm giao thoa giữa Kỹ sư dữ liệu và Khoa học dữ liệu
 
 Trong thế giới Machine Learning, **Feature (Đặc trưng)** là các thuộc tính độc lập có thể đo lường được dùng làm dữ liệu đầu vào giúp mô hình AI đưa ra dự đoán (ví dụ: tuổi tài khoản, vị trí địa lý, tổng chi tiêu).

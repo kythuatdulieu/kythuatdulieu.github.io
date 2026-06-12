@@ -14,6 +14,9 @@ Khi bắt đầu lập trình hoặc sử dụng các Mô hình Ngôn ngữ Lớ
 
 Vậy Token thực chất là gì? Tại sao các mô hình AI không đọc chữ cái hoặc nguyên cả từ như con người, mà lại bắt buộc phải dịch mọi thứ ra thành Token?
 
+![Google Cloud Documentation](/images/token/diagram_1.svg)
+
+
 ## Token là gì? Mảnh ghép lego của ngôn ngữ
 
 Trong Xử lý ngôn ngữ tự nhiên (NLP) và Trí tuệ nhân tạo, **Token** là đơn vị dữ liệu nhỏ nhất của văn bản mà mô hình máy tính có thể tiếp nhận, xử lý và hiểu được. 
