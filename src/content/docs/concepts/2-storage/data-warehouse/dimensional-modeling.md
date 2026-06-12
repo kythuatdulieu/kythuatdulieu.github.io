@@ -73,6 +73,9 @@ erDiagram
     DIM_STORE ||--o{ FACT_SALES : "filters"
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/dimensional-modeling/diagram_1.png)
+
+
 *Nhìn vào sơ đồ trên, bạn sẽ thấy để lọc hoặc gom nhóm dữ liệu doanh thu theo cửa hàng, chúng ta chỉ cần thực hiện đúng một phép JOIN đơn giản từ `FACT_SALES` sang `DIM_STORE`.*
 
 ## 4 bước thiết kế "kinh điển" của Kimball

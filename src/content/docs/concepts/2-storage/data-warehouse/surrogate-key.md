@@ -65,6 +65,10 @@ erDiagram
     }
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/surrogate-key/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/surrogate-key/diagram_2.png)
+
+
 Bảng Dimension `DIM_CUSTOMER`:
 | customer_sk (PK) | natural_key | name | city | is_current |
 | :--- | :--- | :--- | :--- | :--- |

@@ -50,6 +50,9 @@ graph TD
     DremelMaster -- "Return Result" --> SQL
 ```
 
+![Sơ đồ kiến trúc giám sát và điều phối truy vấn trong Google BigQuery](/images/google-bigquery/diagram_1.png)
+
+
 Kiến trúc này được xây dựng vững chắc trên 3 trụ cột công nghệ độc quyền của Google:
 
 1. **Lớp lưu trữ (Storage) - Colossus**: Dữ liệu khi nạp vào BigQuery sẽ được chuyển đổi sang định dạng nén cột độc quyền gọi là **Capacitor**, sau đó phân mảnh và lưu trữ trên hệ thống Colossus của Google. Cơ chế sao lưu tự động (replication) đảm bảo dữ liệu của bạn luôn an toàn trước mọi sự cố vật lý.

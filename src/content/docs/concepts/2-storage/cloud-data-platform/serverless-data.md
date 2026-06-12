@@ -83,6 +83,10 @@ graph LR
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/serverless-data/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/serverless-data/diagram_2.svg)
+
+
 ## So sánh thực tế: Bài toán xử lý 500GB log
 
 Hãy tưởng tượng bạn cần đếm số lượng người dùng truy cập theo từng quốc gia từ 500GB log lưu trên Amazon S3.

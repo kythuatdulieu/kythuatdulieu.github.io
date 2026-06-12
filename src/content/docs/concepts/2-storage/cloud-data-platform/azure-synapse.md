@@ -92,6 +92,10 @@ graph TD
 
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/azure-synapse/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/azure-synapse/diagram_2.png)
+
+
 ## Thực hành nhanh: Truy vấn file Parquet trên Data Lake bằng Serverless SQL Pool
 
 Giả sử doanh nghiệp của bạn có các tệp tin Parquet lưu trữ lịch sử giao dịch mua sắm trên Azure Data Lake Storage (ADLS) Gen2. Thay vì phải tốn công xây dựng pipeline nạp dữ liệu vào database, bạn có thể mở Synapse Studio lên và chạy ngay câu lệnh T-SQL sau để tính tổng doanh thu theo ngày:

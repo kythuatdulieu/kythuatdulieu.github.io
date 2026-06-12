@@ -90,6 +90,10 @@ erDiagram
     DIM_STORE }o--|| DIM_CITY : "located in"
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/snowflake-schema/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/snowflake-schema/diagram_2.png)
+
+
 ## Trải nghiệm thực tế: Khi Star Schema đối đầu Snowflake Schema qua câu SQL
 
 Hãy cùng so sánh câu lệnh SQL truy vấn tổng doanh thu theo tên Danh mục Sản phẩm (Category) giữa hai mô hình:

@@ -229,6 +229,12 @@ graph TD
     style BQ_Storage fill:#e8f5e9,stroke:#388e3c,stroke-width:1px
 ```
 
+![Sơ đồ tối ưu hóa tài nguyên và thực thi truy vấn trong BigQuery](/images/bigquery-optimization/diagram_1.png)
+
+
+
+
+
 ---
 
 ## Điểm mạnh và điểm yếu (Pros & Cons)

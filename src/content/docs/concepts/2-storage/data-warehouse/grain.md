@@ -75,6 +75,10 @@ flowchart TD
     B --> D[Báo cáo So sánh<br/>Target vs Actual]
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/grain/diagram_1.jpg)
+![Sơ đồ kiến trúc minh họa 2](/images/grain/diagram_2.jpg)
+
+
 Chúng ta tuyệt đối không được gộp chung 2 luồng này vào một bảng duy nhất. Giải pháp chuẩn mực là tách làm 2 Fact Table riêng biệt với 2 mức Grain tương ứng:
 
 **1. Bảng Doanh thu thực tế (Atomic Grain)**

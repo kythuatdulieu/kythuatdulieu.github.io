@@ -99,6 +99,10 @@ erDiagram
     DIM_CUSTOMER ||--o{ FACT_SALES : "filters"
 ```
 
+![Sơ đồ kiến trúc minh họa 1](/images/star-schema/diagram_1.png)
+![Sơ đồ kiến trúc minh họa 2](/images/star-schema/diagram_2.png)
+
+
 > [!NOTE]
 > Tất cả các mối quan hệ đều là Một-Nhiều (1-to-Many), đi từ bảng Dimension trỏ thẳng vào bảng Fact ở trung tâm. Hoàn toàn không có các bảng phụ nối tiếp từ Dimension ra ngoài.
 
