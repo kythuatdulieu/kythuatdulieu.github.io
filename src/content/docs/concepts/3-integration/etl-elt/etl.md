@@ -15,6 +15,9 @@ Trong ngành Kỹ thuật dữ liệu ([Data Engineering](/concepts/1-foundation
 
 Dù bạn đang làm việc với các hệ thống báo cáo tài chính truyền thống hay các ứng dụng phân tích dữ liệu lớn trên đám mây, việc hiểu rõ bản chất của ETL là bước đi đầu tiên bắt buộc. Hãy cùng bóc tách xem quy trình tích hợp dữ liệu kinh điển này hoạt động như thế nào và tại sao nó vẫn giữ một vị trí quan trọng trong kiến trúc dữ liệu hiện đại.
 
+
+![Sơ đồ kiến trúc quy trình trích xuất, biến đổi và tải dữ liệu truyền thống (ETL)](/images/etl/azure-etl.png)
+
 ## Quy trình tích hợp dữ liệu truyền thống nhưng chưa bao giờ lỗi thời
 
 Về cơ bản, **ETL** là quy trình tự động hóa giúp kết nối nhiều nguồn dữ liệu khác nhau, xử lý làm sạch chúng trên một máy chủ trung gian, rồi nạp kết quả hoàn chỉnh vào một kho dữ liệu trung tâm (Data Warehouse) để phục vụ phân tích. Quy trình này gồm 3 bước tuần tự:

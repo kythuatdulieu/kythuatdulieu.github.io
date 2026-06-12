@@ -14,6 +14,9 @@ Nếu đã từng làm việc với [Apache Spark](/concepts/3-integration/batch
 
 Vậy Shuffle thực chất là gì? Tại sao nó lại là "kẻ thù số một" đối với hiệu năng của Spark, và làm cách nào để chúng ta chung sống hòa bình cũng như tối ưu hóa nó?
 
+
+![Cơ chế Shuffle Write tối ưu hóa nhờ gom nhóm file (Consolidation)](/images/shuffle/shuffle-write-consolidation.png)
+
 ## Shuffle là gì? Nút thắt cổ chai lớn nhất trong tính toán phân tán
 
 Trong một hệ thống tính toán phân tán như Apache Spark, dữ liệu được chia nhỏ thành nhiều phần gọi là các **phân vùng (Partitions)** và phân tán trên nhiều máy tính khác nhau (Worker Nodes) để xử lý song song. 

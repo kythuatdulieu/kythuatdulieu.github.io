@@ -16,6 +16,9 @@ Trong các hệ thống xử lý dữ liệu lớn bằng [Apache Spark](/concep
 
 ---
 
+
+![Kỹ thuật tối ưu hóa động (AQE Coalesce) gộp các phân vùng nhỏ sau bước Shuffle của Spark](/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png)
+
 ## 1. Dynamic Partition Pruning (DPP)
 
 ### Khái niệm và sự khác biệt với Static Partition Pruning

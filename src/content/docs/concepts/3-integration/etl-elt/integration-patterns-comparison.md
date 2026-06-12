@@ -14,6 +14,9 @@ Trong kỷ nguyên số, dữ liệu được ví như "dầu mỏ" mới của 
 
 Trong lịch sử ngành kỹ thuật dữ liệu (Data Engineering), chúng ta đã chứng kiến sự tiến hóa vượt bậc của các mô hình tích hợp dữ liệu. Bắt đầu từ [ETL](/concepts/3-integration/etl-elt/etl/) truyền thống, chuyển dịch sang [ELT](/concepts/3-integration/etl-elt/elt/) hiện đại gắn liền với sự bùng nổ của [Cloud Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) (kho dữ liệu đám mây), và gần đây nhất là sự xuất hiện của **Reverse ETL** để đưa dữ liệu phân tích quay trở lại phục vụ các hoạt động vận hành thời gian thực. Bài viết này sẽ phân tích chuyên sâu các mô hình tích hợp dữ liệu này, so sánh kiến trúc kỹ thuật, ưu nhược điểm và đưa ra hướng dẫn chi tiết giúp bạn lựa chọn mô hình phù hợp cho doanh nghiệp.
 
+
+![Sơ đồ vị trí và vai trò của dbt (data build tool) trong hệ sinh thái Modern Data Stack](/images/integration-patterns-comparison/dbt-platform-overview.jpg)
+
 ## Kiến trúc & So sánh Kỹ thuật (Technical & Architecture Comparison)
 
 ### 1. ETL (Extract - Transform - Load)

@@ -14,6 +14,9 @@ Nếu coi dữ liệu thô (raw data) giống như dầu thô vừa được kha
 
 Data Transformation chính là chữ **"T"** quan trọng trong quy trình [ETL](/concepts/3-integration/etl-elt/etl/)/[ELT](/concepts/3-integration/etl-elt/elt/) — giai đoạn biến đống dữ liệu hỗn độn thành những tài sản thông tin giá trị, chuẩn mực và sẵn sàng cho các quyết định kinh doanh.
 
+
+![Mô hình luồng biến đổi dữ liệu theo kiến trúc Medallion (Bronze -> Silver -> Gold)](/images/data-transformation/medallion-architecture.png)
+
 ## Data Transformation là gì?
 
 Nói một cách chính xác, **Data Transformation** là quá trình thay đổi định dạng, cấu trúc hoặc giá trị của dữ liệu từ trạng thái nguồn (khi vừa thu thập) thành trạng thái đích (phù hợp để tiêu thụ).

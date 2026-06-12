@@ -14,6 +14,9 @@ Khi lượng dữ liệu của doanh nghiệp tăng từ vài Gigabyte lên hàn
 
 Trong số các công cụ tính toán phân tán hiện nay, **Apache Spark** chính là cái tên nổi bật nhất. Được thiết kế như một động cơ phân tích thống nhất (Unified Analytics Engine), Spark nổi tiếng nhờ khả năng xử lý dữ liệu siêu tốc bằng cách giữ toàn bộ các bước tính toán trung gian trực tiếp trên bộ nhớ RAM (In-Memory Computing), thay vì ghi xuống đĩa cứng chậm chạp như các thế hệ công nghệ đi trước.
 
+
+![Kiến trúc các tiến trình phân tán (Driver, Cluster Manager, và Executors) trong cụm Apache Spark](/images/apache-spark/cluster-overview.png)
+
 ## Cuộc đổi ngôi lịch sử: Tạm biệt kỷ nguyên đĩa cứng chậm chạp của Hadoop
 
 Trước khi Spark ra đời và thống trị thế giới Big Data, chuẩn mực công nghệ thời đó là **Hadoop MapReduce**. Mặc dù Hadoop giải quyết tốt bài toán lưu trữ và xử lý phân tán, nó lại gặp một điểm nghẽn chí mạng về mặt hiệu năng:

@@ -14,6 +14,9 @@ Trong kỷ nguyên số ngày nay, lượng dữ liệu sinh ra mỗi giây từ
 
 Để giải quyết bài toán này, các kỹ sư dữ liệu không cố gắng chế tạo ra những siêu máy tính đắt đỏ vô hạn. Thay vào đó, họ kết nối hàng chục, hàng trăm chiếc máy tính bình thường lại với nhau và bắt chúng cùng làm việc. Đó chính là nền tảng của **Xử lý phân tán (Distributed Processing)** – triết lý công nghệ cốt lõi định hình nên kỷ nguyên Big Data.
 
+
+![Mô hình cấu trúc mạng lưới phân tán điều phối nhiệm vụ giữa Driver và Executors](/images/distributed-processing/Architecture.png)
+
 ## Kỷ nguyên Big Data và sự giới hạn của siêu máy chủ
 
 Trước đây, khi dữ liệu của doanh nghiệp phình to, giải pháp đầu tiên người ta nghĩ đến thường là nâng cấp cấu hình cho máy chủ hiện tại: mua thêm RAM, cắm thêm CPU mạnh hơn, nâng cấp ổ cứng. Phương pháp này được gọi là **Mở rộng theo chiều dọc (Scale Up / Vertical Scaling)**. 

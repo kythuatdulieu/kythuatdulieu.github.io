@@ -14,6 +14,9 @@ Khi viết một đoạn mã Apache Spark để xử lý dữ liệu lớn, chú
 
 Để trả lời câu hỏi đó, chúng ta cần tìm hiểu về **Spark Execution Model (Mô hình thực thi Spark)**.
 
+
+![Mô hình thực thi Master-Slave trong cụm tính toán phân tán Apache Spark](/images/spark-execution-model/cluster-overview.png)
+
 ## Spark Execution Model là gì? Cách thức vận hành của một cụm tính toán phân tán
 
 Trong Apache Spark, ứng dụng của bạn không chạy độc lập trên một máy tính duy nhất. Khi bạn kích hoạt một Spark Application, hệ thống sẽ tự động tách biệt luồng điều khiển (Control Flow) và luồng dữ liệu (Data Flow). 

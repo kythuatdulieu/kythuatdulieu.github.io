@@ -14,6 +14,9 @@ Trong thế giới kỹ thuật dữ liệu, chắc hẳn bạn đã quen thuộ
 
 Thay vì biến đổi dữ liệu trên đường truyền, ELT đảo ngược quy trình: trích xuất dữ liệu, nạp thẳng vào kho lưu trữ, rồi mới tiến hành biến đổi. Tại sao sự thay đổi thứ tự tưởng chừng đơn giản này lại tạo ra một cuộc cách mạng lớn đến vậy? Hãy cùng đi sâu vào tìm hiểu.
 
+
+![Sơ đồ kiến trúc luồng dữ liệu ELT (Extract-Load-Transform) trên Cloud Data Warehouse](/images/elt/azure-elt.png)
+
 ## Sự trỗi dậy của cuộc cách mạng "Nạp trước, xử lý sau"
 
 Để hiểu được ELT, hãy nhìn vào 3 bước cấu thành nên nó:

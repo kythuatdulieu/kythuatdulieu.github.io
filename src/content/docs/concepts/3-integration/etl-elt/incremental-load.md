@@ -12,6 +12,9 @@ metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) 
 
 Khi bắt đầu xây dựng một kho dữ liệu ([Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/)), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).
 
+
+![Cơ chế tải tăng dần (Incremental Load) dựa trên cột mốc thời gian (Watermark-based)](/images/incremental-load/workflow-using-watermark.png)
+
 ## Chỉ kéo và xử lý phần thay đổi
 
 Incremental Load (Nạp dữ liệu gia tăng) là một cơ chế trích xuất và nạp dữ liệu trong quy trình [ETL](/concepts/3-integration/etl-elt/etl/)/ELT. Thay vì tải lại toàn bộ kho dữ liệu khổng lồ từ thuở sơ khai, hệ thống chỉ chủ động kéo về phần dữ liệu "Delta" — tức là những bản ghi mới được tạo hoặc vừa bị chỉnh sửa trạng thái kể từ lần chạy thành công gần nhất của đường ống dữ liệu ([Data Pipeline](/concepts/1-foundations/foundation/data-pipeline/)).

@@ -12,6 +12,9 @@ definition: "Xử lý dữ liệu theo lô (Batch Processing) là phương pháp
 
 Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/4-realtime/streaming-processing/streaming-processing/)) được ví như dòng nước chảy xiết liên tục thì **Batch Processing (Xử lý dữ liệu theo lô)** lại giống như những hồ chứa nước khổng lồ được xả định kỳ. Dù không mang lại cảm giác "tức thì" như streaming, Batch Processing vẫn luôn là xương sống vững chắc cho mọi hệ thống dữ liệu lớn nhờ khả năng giải quyết những tác vụ tính toán khổng lồ và phức tạp nhất.
 
+
+![Mô hình luồng dữ liệu MapReduce truyền thống trong xử lý theo lô](/images/batch-processing/MapReduce.png)
+
 ## Batch Processing là gì?
 
 Hiểu một cách đơn giản, **Batch Processing** là phương pháp thực thi tính toán trên một tập hợp dữ liệu lớn có sẵn và có giới hạn rõ ràng `(bounded data)` một cách định kỳ. Tiến trình này chạy nền và hoàn toàn không cần tương tác trực tiếp với người dùng cuối trong suốt thời gian thực thi. 

@@ -14,6 +14,9 @@ Hãy tưởng tượng bạn đang chạy một chiến dịch gửi mã giảm 
 
 Trong ngành kỹ thuật dữ liệu, hiện tượng này được gọi là dữ liệu bị trùng lặp (Duplicate Data). Để bảo vệ hệ thống báo cáo khỏi những số liệu ảo này, chúng ta cần áp dụng **Deduplication (Khử trùng lặp dữ liệu)**.
 
+
+![Mô hình thực thi thao tác loại bỏ trùng lặp (distinct) dữ liệu phân tán](/images/deduplication/distinct.png)
+
 ## Deduplication là gì?
 
 **Deduplication (Khử trùng lặp)** là quá trình nhận diện và loại bỏ các bản ghi trùng lặp trong một tập dữ liệu. Mục tiêu cuối cùng là đảm bảo tính duy nhất (Uniqueness) của các thực thể ở một mức độ chi tiết (Granularity) nhất định.

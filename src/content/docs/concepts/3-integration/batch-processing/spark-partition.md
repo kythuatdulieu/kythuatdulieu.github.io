@@ -14,6 +14,9 @@ Khi làm việc với các hệ thống xử lý dữ liệu lớn (Big Data) nh
 
 Câu trả lời nằm ở khái niệm **Spark Partition (Phân vùng dữ liệu)**.
 
+
+![Phân biệt sự phụ thuộc phân vùng: Narrow Dependency vs Wide Dependency (Shuffle)](/images/spark-partition/NarrowDependency.png)
+
 ## Spark Partition là gì? Đơn vị tiền tệ của tính song song
 
 Nói một cách đơn giản, **Partition** là một phân mảnh logic (logical chunk) của một tập dữ liệu lớn (DataFrame hoặc RDD) được lưu trữ phân tán trên các máy tính trong cụm (Cluster).
