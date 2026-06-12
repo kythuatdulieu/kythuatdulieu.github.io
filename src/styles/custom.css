@@ -13,74 +13,125 @@ html {
 /* ==========================================================
    SIDEBAR HIERARCHY STYLING 
    ========================================================== */
-.sidebar-pane details > summary {
+/* Spacing between Level 1 top-level groups (Handbook, Projects, paths, etc.) */
+.sidebar-pane > ul > li {
+    margin-bottom: 1.5rem !important;
+}
+
+/* LEVEL 1 summaries (e.g. Cẩm nang (Handbook), Dự án E2E) */
+.sidebar-pane > ul > li > details > summary {
     font-weight: 700 !important;
-    color: var(--sl-color-white) !important;
-    font-size: 1.05rem;
-    padding-bottom: 0.3rem;
+    font-size: 1.05rem !important;
+    color: var(--sl-color-white) !important; /* Boldest White */
+    padding: 0.35rem 0 !important;
+    cursor: pointer;
 }
 
-/* Bullet / Arrow caret colors */
-.sidebar-pane details > summary .caret {
-    color: var(--sl-color-gray-3) !important;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-.sidebar-pane details[open] > summary .caret {
-    color: var(--sl-color-white) !important;
-}
-
-/* Add indentation and left borders to nested groups to easily distinguish levels */
-/* Border for Level 1 list (contains Level 2 items) */
-.sidebar-pane details > ul {
-    border-left: 1px solid rgba(var(--sl-color-accent-rgb), 0.35) !important;
-    margin-left: 0.6rem;
-    padding-left: 0.6rem !important;
-}
-
-/* Level 2 Group (Sub-categories like "Cơ sở & Kiến trúc (Foundation)") */
-.sidebar-pane details details > summary {
+/* LEVEL 2 summaries (e.g. 1. Cơ sở & Kiến trúc, 2. Lưu trữ) */
+.sidebar-pane > ul > li > details > ul > li > details > summary {
     font-weight: 600 !important;
-    color: var(--sl-color-text-accent) !important;
-    font-size: 0.95rem;
-    padding-bottom: 0.2rem;
+    font-size: 0.95rem !important;
+    color: var(--sl-color-gray-1) !important; /* High contrast Light Gray */
+    padding: 0.25rem 0 !important;
+    cursor: pointer;
 }
-.sidebar-pane details details[open] > summary .caret {
-    color: var(--sl-color-text-accent) !important;
+.sidebar-pane > ul > li > details > ul > li > details[open] > summary {
+    color: var(--sl-color-white) !important;
 }
 
-/* Border for Level 2 list (contains Level 3 items) */
-.sidebar-pane details details > ul {
+/* LEVEL 3 summaries (e.g. Cơ sở (Foundation), Kiến trúc hệ thống) */
+.sidebar-pane > ul > li > details > ul > li > details > ul > li > details > summary {
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    color: var(--sl-color-gray-2) !important; /* Medium contrast Gray */
+    padding: 0.2rem 0 !important;
+    cursor: pointer;
+}
+.sidebar-pane > ul > li > details > ul > li > details > ul > li > details[open] > summary {
+    color: var(--sl-color-accent) !important; /* Open folders get active Accent color */
+}
+
+/* Indentations and borders for lists */
+/* Level 1 list container (indented with left border) */
+.sidebar-pane > ul > li > details > ul {
+    border-left: 2px solid rgba(var(--sl-color-accent-rgb), 0.25) !important;
+    margin-left: 0.5rem !important;
+    padding-left: 0.75rem !important;
+    margin-top: 0.35rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Level 2 list container (indented further with hairline border) */
+.sidebar-pane > ul > li > details > ul > li > details > ul {
     border-left: 1px solid var(--sl-color-hairline) !important;
-    margin-left: 0.5rem;
+    margin-left: 0.4rem !important;
+    padding-left: 0.65rem !important;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Level 3 list container (contains Level 4 articles - no border, just indent) */
+.sidebar-pane > ul > li > details > ul > li > details > ul > li > details > ul {
+    border-left: none !important;
+    margin-left: 0.3rem !important;
     padding-left: 0.5rem !important;
+    margin-top: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
 }
 
-/* Level 2 Direct Links (pages directly under Level 1 groups) */
-.sidebar-pane details > ul > li > a:not([aria-current="page"]) {
-    color: var(--sl-color-gray-1) !important;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-.sidebar-pane details > ul > li > a:not([aria-current="page"]):hover {
-    color: var(--sl-color-white) !important;
+/* Spacing for list items */
+.sidebar-pane li {
+    margin-bottom: 0.3rem !important;
 }
 
-/* Level 3 Links (pages inside Level 2 groups) */
-.sidebar-pane details details > ul > li > a:not([aria-current="page"]) {
-    color: var(--sl-color-gray-2) !important;
-    font-weight: 400;
-    font-size: 0.9rem;
-}
-.sidebar-pane details details > ul > li > a:not([aria-current="page"]):hover {
-    color: var(--sl-color-white) !important;
+/* LEVEL 4 / ARTICLES (Lowest level: individual lesson links) */
+.sidebar-pane a:not([aria-current="page"]) {
+    color: var(--sl-color-gray-3) !important; /* Muted gray for reading links */
+    font-weight: 400 !important;
+    font-size: 0.85rem !important; /* Smaller text size for files */
+    padding: 0.125rem 0 !important;
+    display: inline-block;
+    transition: all 0.2s ease;
 }
 
-/* Active links highlight (preserves the accent background) */
+.sidebar-pane a:not([aria-current="page"]):hover {
+    color: var(--sl-color-white) !important; /* Lights up on hover */
+    padding-left: 3px !important;
+}
+
+/* Page bullet indicator for non-active article links */
+.sidebar-pane a:not([aria-current="page"])::before {
+    content: "•";
+    color: var(--sl-color-gray-4);
+    margin-right: 0.4rem;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.sidebar-pane a:not([aria-current="page"]):hover::before {
+    color: var(--sl-color-accent);
+}
+
+/* Active article link highlight - GitBook style */
 .sidebar-pane a[aria-current="page"] {
     font-weight: 700 !important;
-    background-color: var(--sl-color-text-accent) !important;
-    color: var(--sl-color-text-invert) !important;
-    border-radius: 4px;
+    font-size: 0.85rem !important;
+    background-color: rgba(var(--sl-color-accent-rgb), 0.1) !important;
+    color: var(--sl-color-accent) !important;
+    border-left: 3px solid var(--sl-color-accent) !important;
+    border-radius: 0 4px 4px 0;
+    padding-left: 0.5rem !important;
+    padding-top: 0.2rem !important;
+    padding-bottom: 0.2rem !important;
+    margin-left: -0.65rem;
+    display: block;
+}
+
+.sidebar-pane a[aria-current="page"]::before {
+    content: "→";
+    color: var(--sl-color-accent);
+    margin-right: 0.35rem;
+    font-weight: 900;
 }
 
 /* ==========================================================

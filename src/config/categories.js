@@ -13,11 +13,15 @@ export const conceptCategories = [
     { slug: '3-integration/orchestration', label: 'Điều phối quy trình (Orchestration)' },
     { slug: '3-integration/batch-processing', label: 'Xử lý theo lô (Batch Processing)' },
     // 4-realtime
-    { slug: '4-realtime/streaming-processing', label: 'Xử lý luồng dữ liệu (Streaming Processing)' },
+    { slug: '4-realtime/message-queue', label: 'Hệ thống Event Streaming (Kafka)' },
+    { slug: '4-realtime/stream-calculation', label: 'Xử lý luồng dữ liệu (Spark, Flink)' },
     // 5-quality-governance
     { slug: '5-quality-governance/data-quality', label: 'Chất lượng dữ liệu (Data Quality)' },
     { slug: '5-quality-governance/governance-metadata', label: 'Quản trị & Siêu dữ liệu (Governance & Metadata)' },
     { slug: '5-quality-governance/observability-reliability', label: 'Giám sát & Độ tin cậy (Observability & Reliability)' },
     // 6-ai-ml
-    { slug: '6-ai-ml/genai-ml', label: 'GenAI & Machine Learning (GenAI / ML)' }
+    { slug: '6-ai-ml/llm-basics', label: 'Cơ bản LLM & Prompt' },
+    { slug: '6-ai-ml/rag-search', label: 'Hệ thống RAG & Vector Search' },
+    { slug: '6-ai-ml/fine-tuning', label: 'Huấn luyện & Triển khai (Fine-Tuning)' },
+    { slug: '6-ai-ml/evaluation-metrics', label: 'Đánh giá & Giám sát (Evaluation)' }
 ];

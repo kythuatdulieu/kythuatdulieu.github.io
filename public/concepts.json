@@ -743,7 +743,7 @@
       "url": "/concepts/3-integration/transformation-analytics/dbt/"
     },
     "Materialization": {
-      "title": "Materialization trong dbt - Hướng dẫn chuyên sâu từ thực chiến",
+      "title": "Materialization trong dbt: Hướng dẫn Chuyên sâu và Thực chiến",
       "category": "Transformation & Analytics",
       "definition": "Materialization trong dbt là các chiến lược xác định cách dbt biên dịch và ghi kết quả của câu lệnh SELECT thành các đối tượng vật lý (Table, Incremental) hoặc ảo (View, Ephemeral) trên Data Warehouse.",
       "bullets": [],
@@ -775,84 +775,84 @@
       "category": "Streaming Processing",
       "definition": "Apache Kafka là nền tảng phân phối luồng sự kiện phân tán (Distributed Event Streaming) mã nguồn mở, hoạt động theo mô hình xuất bản/đăng ký (Publish/Subscribe) và lưu trữ log nối tiếp (append-only log), giúp trung chuyển dữ liệu thời gian thực với độ trễ siêu thấp.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/apache-kafka/"
+      "url": "/concepts/4-realtime/message-queue/apache-kafka/"
     },
     "Consumer Groups": {
       "title": "Kafka Consumer Groups: Cơ chế xử lý dữ liệu song song hiệu năng cao",
       "category": "Streaming Processing",
       "definition": "Consumer Group trong Apache Kafka là cơ chế nhóm nhiều tiến trình tiêu thụ dữ liệu (Consumers) để chia sẻ tải và đọc song song các phân vùng (Partitions) của một Topic mà không bị trùng lặp dữ liệu.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/consumer-groups/"
-    },
-    "Event Time Processing Time": {
-      "title": "Event Time vs Processing Time trong Streaming Processing",
-      "category": "Streaming Processing",
-      "definition": "Event Time là mốc thời gian sự kiện thực tế diễn ra ở thiết bị nguồn, còn Processing Time là mốc thời gian máy chủ xử lý dữ liệu nhận được sự kiện đó.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/event-time-processing-time/"
-    },
-    "Exactly Once Semantics": {
-      "title": "Exactly-Once Semantics (EOS) trong Streaming Processing",
-      "category": "Streaming Processing",
-      "definition": "Exactly-Once Semantics (EOS) là mức độ đảm bảo xử lý dữ liệu cao nhất trong hệ thống phân tán, cam kết mỗi bản ghi đầu vào được xử lý và tác động đến kết quả đầu ra đúng một lần duy nhất.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/exactly-once-semantics/"
+      "url": "/concepts/4-realtime/message-queue/consumer-groups/"
     },
     "Kafka Rebalance Protocols": {
       "title": "Kafka Rebalance Protocols & Assignment: Core Guide",
       "category": "Streaming Processing",
       "definition": "Kafka Consumer Rebalance Protocols là giao thức điều phối giữa các Consumer và Group Coordinator nhằm phân bổ các phân vùng trong một Consumer Group.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/kafka-rebalance-protocols/"
+      "url": "/concepts/4-realtime/message-queue/kafka-rebalance-protocols/"
     },
     "Kafka Topics Partitions": {
       "title": "Topics và Partitions trong Kafka: Cơ chế song song hóa",
       "category": "Streaming Processing",
       "definition": "Topic trong Apache Kafka là danh mục logic dùng để phân loại dữ liệu, còn Partition là đơn vị phân chia vật lý giúp song song hóa xử lý và mở rộng quy mô lưu trữ trên cụm Broker.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/kafka-topics-partitions/"
+      "url": "/concepts/4-realtime/message-queue/kafka-topics-partitions/"
+    },
+    "Event Time Processing Time": {
+      "title": "Event Time vs Processing Time trong Streaming Processing",
+      "category": "Streaming Processing",
+      "definition": "Event Time là mốc thời gian sự kiện thực tế diễn ra ở thiết bị nguồn, còn Processing Time là mốc thời gian máy chủ xử lý dữ liệu nhận được sự kiện đó.",
+      "bullets": [],
+      "url": "/concepts/4-realtime/stream-calculation/event-time-processing-time/"
+    },
+    "Exactly Once Semantics": {
+      "title": "Exactly-Once Semantics (EOS) trong Streaming Processing",
+      "category": "Streaming Processing",
+      "definition": "Exactly-Once Semantics (EOS) là mức độ đảm bảo xử lý dữ liệu cao nhất trong hệ thống phân tán, cam kết mỗi bản ghi đầu vào được xử lý và tác động đến kết quả đầu ra đúng một lần duy nhất.",
+      "bullets": [],
+      "url": "/concepts/4-realtime/stream-calculation/exactly-once-semantics/"
     },
     "Spark Structured Streaming": {
       "title": "Spark Structured Streaming: Mô hình truy vấn và cơ chế hoạt động",
       "category": "Streaming Processing",
       "definition": "Spark Structured Streaming là một công cụ xử lý luồng (stream processing) có cấu trúc, được xây dựng trên Spark SQL engine giúp xử lý dữ liệu thời gian thực dạng bảng vô hạn (unbounded table) với các đảm bảo về hiệu năng và Exactly-Once.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/spark-structured-streaming/"
+      "url": "/concepts/4-realtime/stream-calculation/spark-structured-streaming/"
     },
     "Spark Vs Flink Comparison": {
       "title": "So sánh Apache Spark vs Apache Flink chi tiết nhất",
       "category": "Streaming Processing",
       "definition": "Bản so sánh toàn diện giữa Apache Spark và Apache Flink về kiến trúc xử lý (micro-batching vs continuous streaming), cơ chế quản lý trạng thái stateful, fault tolerance, watermarking và các tiêu chí lựa chọn công cụ phù hợp cho hệ thống data pipeline.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/spark-vs-flink-comparison/"
+      "url": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/"
     },
     "Stream Table Duality": {
       "title": "Stream-Table Duality là gì? Mối quan hệ giữa Stream và Table",
       "category": "Streaming Processing",
       "definition": "Stream-Table Duality là tính lưỡng tính dòng - bảng, biểu thị mối quan hệ mật thiết giữa luồng dữ liệu biến động (Stream) và bảng dữ liệu trạng thái tĩnh (Table) trong xử lý dữ liệu thời gian thực.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/stream-table-duality/"
+      "url": "/concepts/4-realtime/stream-calculation/stream-table-duality/"
     },
     "Streaming Processing": {
       "title": "Streaming Processing là gì? Xử lý dữ liệu thời gian thực",
       "category": "Streaming Processing",
       "definition": "Streaming Processing (Xử lý dòng dữ liệu) là phương pháp tính toán và xử lý dữ liệu liên tục dưới dạng luồng sự kiện vô hạn ngay khi chúng phát sinh theo thời gian thực.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/streaming-processing/"
+      "url": "/concepts/4-realtime/stream-calculation/streaming-processing/"
     },
     "Watermark": {
       "title": "Watermark là gì? Xử lý Late Data trong Streaming",
       "category": "Streaming Processing",
       "definition": "Watermark (Dấu chuẩn thời gian) là cơ chế theo dõi tiến trình thời gian logic trong xử lý dữ liệu luồng, giúp hệ thống xác định khi nào nên đóng các cửa sổ thời gian và xử lý dữ liệu đến muộn.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/watermark/"
+      "url": "/concepts/4-realtime/stream-calculation/watermark/"
     },
     "Windowing": {
       "title": "Windowing là gì? Tumbling, Sliding, Session Windows trong Streaming",
       "category": "Streaming Processing",
       "definition": "Windowing (Phân nhóm theo cửa sổ) là kỹ thuật chia cắt luồng dữ liệu vô hạn thành các khối dữ liệu thời gian hữu hạn để thực hiện các phép toán thống kê và tổng hợp.",
       "bullets": [],
-      "url": "/concepts/4-realtime/streaming-processing/windowing/"
+      "url": "/concepts/4-realtime/stream-calculation/windowing/"
     },
     "Anomaly Detection": {
       "title": "Phát hiện bất thường dữ liệu (Anomaly Detection) là gì?",
@@ -1013,210 +1013,210 @@
       "category": "GenAI & Machine Learning",
       "definition": "Tác nhân AI (AI Agent) là một hệ thống tự trị sử dụng Mô hình Ngôn ngữ Lớn (LLM) làm bộ não trung tâm, kết hợp với khả năng lập kế hoạch, ghi nhớ và sử dụng công cụ để tự động thực hiện các nhiệm vụ phức tạp.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/ai-agent/"
-    },
-    "Chunking": {
-      "title": "Kỹ thuật Chunking trong RAG: Hướng dẫn phân tách văn bản tối ưu",
-      "category": "GenAI & Machine Learning",
-      "definition": "Phân tách văn bản (Chunking) là bước tiền xử lý chia nhỏ tài liệu dài thành các đoạn có kích thước tối ưu để chuyển đổi thành vector nhúng và cải thiện hiệu năng RAG.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/chunking/"
-    },
-    "Context Window": {
-      "title": "Cửa sổ ngữ cảnh (Context Window) trong LLM là gì?",
-      "category": "GenAI & Machine Learning",
-      "definition": "Cửa sổ ngữ cảnh (Context Window) là giới hạn số lượng token tối đa mà một mô hình ngôn ngữ lớn (LLM) có thể nhận dạng, ghi nhớ và xử lý trong một lượt tương tác (Prompt + Output).",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/context-window/"
-    },
-    "Embedding Models": {
-      "title": "Embedding Models - Tổng quan về các mô hình nhúng trong AI",
-      "category": "GenAI & Machine Learning",
-      "definition": "Các mô hình nhúng (Embedding Models) đại diện cho các họ thuật toán và mô hình học máy dùng để ánh xạ các dữ liệu phi cấu trúc thành các vectơ số thực đa chiều trong không gian ngữ nghĩa liên tục.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/embedding-models/"
-    },
-    "Embeddings": {
-      "title": "Vectơ nhúng (Embeddings) là gì? Khái niệm và ứng dụng",
-      "category": "GenAI & Machine Learning",
-      "definition": "Vectơ nhúng (Embeddings) là các chuỗi số thực đa chiều biểu diễn ngữ nghĩa của dữ liệu phi cấu trúc (văn bản, hình ảnh) để máy tính có thể so sánh và tính toán ngữ nghĩa.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/embeddings/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/"
     },
     "Evaluation Metric": {
       "title": "Chỉ số đánh giá (Evaluation Metric) trong Machine Learning & RAG",
       "category": "GenAI & Machine Learning",
       "definition": "Chỉ số đánh giá (Evaluation Metric) là các thước đo định lượng dùng để đo lường và đánh giá hiệu năng, độ chính xác cũng như chất lượng của mô hình Machine Learning, LLM hoặc hệ thống RAG.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/evaluation-metric/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/evaluation-metric/"
     },
     "Feature Store": {
       "title": "Feature Store - Hệ thống quản lý đặc trưng Machine Learning",
       "category": "GenAI / ML",
       "definition": "Feature Store là một hệ thống quản lý dữ liệu chuyên biệt cho Machine Learning, giúp lưu trữ, chia sẻ và đồng bộ hóa các đặc trưng (features) giữa môi trường Offline Training và Online Serving.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/feature-store/"
-    },
-    "Few Shot Prompting": {
-      "title": "Cẩm nang Few-shot Prompting - Kỹ thuật In-Context Learning",
-      "category": "GenAI & Machine Learning",
-      "definition": "Few-shot Prompting (Học qua vài ví dụ) là kỹ thuật chèn một vài cặp ví dụ đầu vào-đầu ra mẫu vào câu lệnh để hướng dẫn mô hình ngôn ngữ lớn học cách giải quyết bài toán theo định dạng và phong cách mong muốn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/few-shot-prompting/"
-    },
-    "Fine Tuning": {
-      "title": "Fine-tuning là gì? Cẩm nang Tinh chỉnh Mô hình AI (PEFT, LoRA)",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tinh chỉnh mô hình (Fine-tuning) là quá trình tiếp tục huấn luyện một mô hình ngôn ngữ đã được pre-train trên một tập dữ liệu nhỏ, đặc thù để thích ứng với các tác vụ hoặc lĩnh vực chuyên biệt.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/fine-tuning/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/feature-store/"
     },
     "Hallucination": {
       "title": "Ảo giác LLM là gì? Nguyên nhân và cách khắc phục ảo giác AI",
       "category": "GenAI & Machine Learning",
       "definition": "Ảo giác LLM (Hallucination) là hiện tượng mô hình ngôn ngữ lớn tự tin tạo ra các thông tin sai lệch, không có thực hoặc mâu thuẫn logic nhưng được trình bày rất trôi chảy và mạch lạc.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/hallucination/"
-    },
-    "Hybrid Search": {
-      "title": "Hybrid Search là gì? Kết hợp Keyword và Vector Search trong RAG",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tìm kiếm kết hợp (Hybrid Search) là kỹ thuật kết hợp đồng thời tìm kiếm từ khóa chính xác (BM25) và tìm kiếm ngữ nghĩa (Vector Search) để tối ưu hóa độ chính xác và độ bao phủ của kết quả truy vấn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/hybrid-search/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
     },
     "Llm As A Judge": {
       "title": "Cẩm nang LLM-as-a-judge - Phương pháp đánh giá GenAI tự động",
       "category": "GenAI & Machine Learning",
       "definition": "LLM-as-a-judge (LLM làm giám khảo) là phương pháp sử dụng một mô hình ngôn ngữ lớn mạnh mẽ để tự động chấm điểm và đánh giá chất lượng đầu ra của các mô hình ngôn ngữ hoặc ứng dụng AI khác.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/llm-as-a-judge/"
-    },
-    "LLM": {
-      "title": "LLM là gì? Tổng quan về Mô hình Ngôn ngữ Lớn (Large Language Model)",
-      "category": "GenAI & Machine Learning",
-      "definition": "Mô hình ngôn ngữ lớn (LLM) là mô hình deep learning dựa trên kiến trúc Transformer, được huấn luyện trên lượng văn bản khổng lồ để hiểu và tạo ngôn ngữ tự nhiên thông qua dự đoán token tiếp theo.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/llm/"
-    },
-    "Lora": {
-      "title": "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả",
-      "category": "GenAI & Machine Learning",
-      "definition": "Low-Rank Adaptation (LoRA) là kỹ thuật PEFT đóng băng mô hình gốc và chèn các ma trận hạng thấp song song để tinh chỉnh LLM hiệu quả, giảm bộ nhớ GPU.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/lora/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/llm-as-a-judge/"
     },
     "Mlflow": {
       "title": "MLflow là gì? Nền tàm quản lý MLOps và Model Lifecycle",
       "category": "GenAI & Machine Learning",
       "definition": "MLflow là nền tảng mã nguồn mở quản lý vòng đời Machine Learning (MLOps), gồm theo dõi thử nghiệm, đóng gói mã nguồn, quản lý phiên bản và triển khai mô hình.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/mlflow/"
-    },
-    "Model Serving": {
-      "title": "Model Serving là gì? Cách triển khai mô hình AI/ML lên Production",
-      "category": "GenAI & Machine Learning",
-      "definition": "Model Serving là quá trình triển khai mô hình học máy thành dịch vụ phần mềm (qua API REST/gRPC) để phục vụ các yêu cầu suy luận của ứng dụng thực tế.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/model-serving/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/mlflow/"
     },
     "Ndcg": {
       "title": "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking",
       "category": "GenAI & Machine Learning",
       "definition": "Normalized Discounted Cumulative Gain (NDCG) là chỉ số đo lường hiệu quả xếp hạng của hệ thống tìm kiếm và gợi ý, tính đến mức độ liên quan đa cấp độ và vị trí hiển thị của kết quả.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/ndcg/"
-    },
-    "Peft": {
-      "title": "PEFT là gì? Các kỹ thuật tinh chỉnh LLM hiệu quả (LoRA, QLoRA)",
-      "category": "GenAI & Machine Learning",
-      "definition": "PEFT (Parameter-Efficient Fine-Tuning) là tập hợp các kỹ thuật tinh chỉnh mô hình ngôn ngữ lớn (LLM) hiệu quả bằng cách chỉ cập nhật một lượng cực nhỏ tham số bổ sung nhằm tiết kiệm tài nguyên.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/peft/"
-    },
-    "Prompt Engineering": {
-      "title": "Cẩm nang Prompt Engineering - Tối ưu hóa mô hình LLM hiệu quả",
-      "category": "GenAI & Machine Learning",
-      "definition": "Prompt Engineering (Kỹ nghệ Gợi ý) là quá trình thiết kế, thử nghiệm và tối ưu hóa các câu lệnh đầu vào để định hướng các Mô hình Ngôn ngữ Lớn (LLM) tạo ra kết quả mong muốn với độ chính xác cao và định dạng chuẩn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/prompt-engineering/"
-    },
-    "RAG": {
-      "title": "RAG là gì? Tổng quan về Retrieval-Augmented Generation",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tạo lập Truy xuất Tăng cường (RAG) là kiến trúc kết hợp khả năng ngôn ngữ của LLM với thông tin thực tế từ cơ sở dữ liệu ngoài để sinh câu trả lời chính xác và đáng tin cậy.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/rag/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/ndcg/"
     },
     "Recall": {
       "title": "Độ phủ (Recall) là gì? Tầm quan trọng trong Machine Learning & RAG",
       "category": "GenAI & Machine Learning",
       "definition": "Recall (Độ phủ) là tỷ lệ phần trăm số điểm dữ liệu thực tế mang nhãn Positive được mô hình nhận diện thành công, giúp đo lường mức độ bỏ sót thông tin.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/recall/"
+      "url": "/concepts/6-ai-ml/evaluation-metrics/recall/"
     },
-    "Reranking": {
-      "title": "Reranking là gì? Tối ưu hóa hệ thống Search và RAG",
+    "Fine Tuning": {
+      "title": "Fine-tuning là gì? Cẩm nang Tinh chỉnh Mô hình AI (PEFT, LoRA)",
       "category": "GenAI & Machine Learning",
-      "definition": "Reranking (Tái sắp xếp kết quả) là bước thứ hai trong quy trình truy xuất thông tin hai giai đoạn, sử dụng mô hình Reranker (Cross-encoder) để đánh giá chi tiết và tối ưu hóa thứ hạng tài liệu liên quan.",
+      "definition": "Tinh chỉnh mô hình (Fine-tuning) là quá trình tiếp tục huấn luyện một mô hình ngôn ngữ đã được pre-train trên một tập dữ liệu nhỏ, đặc thù để thích ứng với các tác vụ hoặc lĩnh vực chuyên biệt.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/reranking/"
+      "url": "/concepts/6-ai-ml/fine-tuning/fine-tuning/"
+    },
+    "Lora": {
+      "title": "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả",
+      "category": "GenAI & Machine Learning",
+      "definition": "Low-Rank Adaptation (LoRA) là kỹ thuật PEFT đóng băng mô hình gốc và chèn các ma trận hạng thấp song song để tinh chỉnh LLM hiệu quả, giảm bộ nhớ GPU.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/fine-tuning/lora/"
+    },
+    "Model Serving": {
+      "title": "Model Serving là gì? Cách triển khai mô hình AI/ML lên Production",
+      "category": "GenAI & Machine Learning",
+      "definition": "Model Serving là quá trình triển khai mô hình học máy thành dịch vụ phần mềm (qua API REST/gRPC) để phục vụ các yêu cầu suy luận của ứng dụng thực tế.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/fine-tuning/model-serving/"
+    },
+    "Peft": {
+      "title": "PEFT là gì? Các kỹ thuật tinh chỉnh LLM hiệu quả (LoRA, QLoRA)",
+      "category": "GenAI & Machine Learning",
+      "definition": "PEFT (Parameter-Efficient Fine-Tuning) là tập hợp các kỹ thuật tinh chỉnh mô hình ngôn ngữ lớn (LLM) hiệu quả bằng cách chỉ cập nhật một lượng cực nhỏ tham số bổ sung nhằm tiết kiệm tài nguyên.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/fine-tuning/peft/"
     },
     "Rlhf": {
       "title": "RLHF là gì? Tinh chỉnh LLM từ phản hồi của con người",
       "category": "GenAI & Machine Learning",
       "definition": "RLHF (Reinforcement Learning from Human Feedback) là phương pháp tối ưu hóa mô hình ngôn ngữ lớn bằng học tăng cường dựa trên đánh giá của con người.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/rlhf/"
+      "url": "/concepts/6-ai-ml/fine-tuning/rlhf/"
     },
-    "Semantic Search": {
-      "title": "Tìm kiếm ngữ nghĩa (Semantic Search) là gì? Khái niệm & Ứng dụng",
+    "Context Window": {
+      "title": "Cửa sổ ngữ cảnh (Context Window) trong LLM là gì?",
       "category": "GenAI & Machine Learning",
-      "definition": "Tìm kiếm ngữ nghĩa (Semantic Search) là phương pháp tìm kiếm thông tin bằng cách thấu hiểu ngữ cảnh và ý định của người dùng, thay vì so khớp từ khóa chính xác.",
+      "definition": "Cửa sổ ngữ cảnh (Context Window) là giới hạn số lượng token tối đa mà một mô hình ngôn ngữ lớn (LLM) có thể nhận dạng, ghi nhớ và xử lý trong một lượt tương tác (Prompt + Output).",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/semantic-search/"
+      "url": "/concepts/6-ai-ml/llm-basics/context-window/"
+    },
+    "Few Shot Prompting": {
+      "title": "Cẩm nang Few-shot Prompting - Kỹ thuật In-Context Learning",
+      "category": "GenAI & Machine Learning",
+      "definition": "Few-shot Prompting (Học qua vài ví dụ) là kỹ thuật chèn một vài cặp ví dụ đầu vào-đầu ra mẫu vào câu lệnh để hướng dẫn mô hình ngôn ngữ lớn học cách giải quyết bài toán theo định dạng và phong cách mong muốn.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/"
+    },
+    "LLM": {
+      "title": "LLM là gì? Tổng quan về Mô hình Ngôn ngữ Lớn (Large Language Model)",
+      "category": "GenAI & Machine Learning",
+      "definition": "Mô hình ngôn ngữ lớn (LLM) là mô hình deep learning dựa trên kiến trúc Transformer, được huấn luyện trên lượng văn bản khổng lồ để hiểu và tạo ngôn ngữ tự nhiên thông qua dự đoán token tiếp theo.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/llm-basics/llm/"
+    },
+    "Prompt Engineering": {
+      "title": "Cẩm nang Prompt Engineering - Tối ưu hóa mô hình LLM hiệu quả",
+      "category": "GenAI & Machine Learning",
+      "definition": "Prompt Engineering (Kỹ nghệ Gợi ý) là quá trình thiết kế, thử nghiệm và tối ưu hóa các câu lệnh đầu vào để định hướng các Mô hình Ngôn ngữ Lớn (LLM) tạo ra kết quả mong muốn với độ chính xác cao và định dạng chuẩn.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/llm-basics/prompt-engineering/"
     },
     "System Prompt": {
       "title": "System Prompt là gì? Cách tối ưu gợi ý hệ thống cho LLM",
       "category": "GenAI & Machine Learning",
       "definition": "System Prompt (Gợi ý hệ thống) là câu lệnh cấu hình ở mức hệ thống giúp thiết lập vai trò, quy tắc bảo mật, định dạng đầu ra và ngữ cảnh chung cho mô hình ngôn ngữ lớn trước cuộc trò chuyện.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/system-prompt/"
+      "url": "/concepts/6-ai-ml/llm-basics/system-prompt/"
     },
     "Temperature": {
       "title": "Temperature trong AI là gì? Cách tinh chỉnh độ sáng tạo của LLM",
       "category": "GenAI & Machine Learning",
       "definition": "Temperature là tham số điều khiển tính ngẫu nhiên và độ sáng tạo của mô hình ngôn ngữ lớn (LLM) bằng cách làm phẳng hoặc làm nhọn phân phối xác suất của các token đầu ra.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/temperature/"
+      "url": "/concepts/6-ai-ml/llm-basics/temperature/"
     },
     "Token": {
       "title": "Token là gì? Đơn vị từ vựng trong LLM và NLP",
       "category": "GenAI & Machine Learning",
       "definition": "Token là đơn vị dữ liệu chữ viết nhỏ nhất mà mô hình ngôn ngữ lớn (LLM) có thể xử lý, có thể biểu diễn một ký tự, một âm tiết hoặc một từ hoàn chỉnh.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/token/"
+      "url": "/concepts/6-ai-ml/llm-basics/token/"
     },
     "Top P": {
       "title": "Top-p (Nucleus Sampling) là gì? - Tinh chỉnh thông số LLM",
       "category": "GenAI & Machine Learning",
       "definition": "Top-p (Nucleus Sampling) là kỹ thuật giải mã giới hạn nhóm token tiềm năng được chọn bằng cách tích lũy xác suất từ cao xuống thấp cho đến khi đạt ngưỡng p mong muốn.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/top-p/"
-    },
-    "Vector Database": {
-      "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích chi tiết",
-      "category": "GenAI & Machine Learning",
-      "definition": "Cơ sở dữ liệu Vector (Vector Database) là hệ thống cơ sở dữ liệu chuyên biệt dùng để lưu trữ, lập chỉ mục và truy vấn các chuỗi số thực đa chiều (embeddings), hỗ trợ tìm kiếm tương đồng ngữ nghĩa siêu tốc.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/vector-database/"
+      "url": "/concepts/6-ai-ml/llm-basics/top-p/"
     },
     "Zero Shot": {
       "title": "Cẩm nang Zero-shot Prompting - Học không cần ví dụ trong LLM",
       "category": "GenAI & Machine Learning",
       "definition": "Zero-shot Prompting (Học không cần ví dụ) là kỹ thuật gửi câu lệnh trực tiếp đến Mô hình Ngôn ngữ Lớn (LLM) để thực hiện nhiệm vụ mà không cung cấp bất kỳ ví dụ mẫu nào.",
       "bullets": [],
-      "url": "/concepts/6-ai-ml/genai-ml/zero-shot/"
+      "url": "/concepts/6-ai-ml/llm-basics/zero-shot/"
+    },
+    "Chunking": {
+      "title": "Kỹ thuật Chunking trong RAG: Hướng dẫn phân tách văn bản tối ưu",
+      "category": "GenAI & Machine Learning",
+      "definition": "Phân tách văn bản (Chunking) là bước tiền xử lý chia nhỏ tài liệu dài thành các đoạn có kích thước tối ưu để chuyển đổi thành vector nhúng và cải thiện hiệu năng RAG.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/chunking/"
+    },
+    "Embedding Models": {
+      "title": "Embedding Models - Tổng quan về các mô hình nhúng trong AI",
+      "category": "GenAI & Machine Learning",
+      "definition": "Các mô hình nhúng (Embedding Models) đại diện cho các họ thuật toán và mô hình học máy dùng để ánh xạ các dữ liệu phi cấu trúc thành các vectơ số thực đa chiều trong không gian ngữ nghĩa liên tục.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    "Embeddings": {
+      "title": "Vectơ nhúng (Embeddings) là gì? Khái niệm và ứng dụng",
+      "category": "GenAI & Machine Learning",
+      "definition": "Vectơ nhúng (Embeddings) là các chuỗi số thực đa chiều biểu diễn ngữ nghĩa của dữ liệu phi cấu trúc (văn bản, hình ảnh) để máy tính có thể so sánh và tính toán ngữ nghĩa.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/embeddings/"
+    },
+    "Hybrid Search": {
+      "title": "Hybrid Search là gì? Kết hợp Keyword và Vector Search trong RAG",
+      "category": "GenAI & Machine Learning",
+      "definition": "Tìm kiếm kết hợp (Hybrid Search) là kỹ thuật kết hợp đồng thời tìm kiếm từ khóa chính xác (BM25) và tìm kiếm ngữ nghĩa (Vector Search) để tối ưu hóa độ chính xác và độ bao phủ của kết quả truy vấn.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/hybrid-search/"
+    },
+    "RAG": {
+      "title": "RAG là gì? Tổng quan về Retrieval-Augmented Generation",
+      "category": "GenAI & Machine Learning",
+      "definition": "Tạo lập Truy xuất Tăng cường (RAG) là kiến trúc kết hợp khả năng ngôn ngữ của LLM với thông tin thực tế từ cơ sở dữ liệu ngoài để sinh câu trả lời chính xác và đáng tin cậy.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/rag/"
+    },
+    "Reranking": {
+      "title": "Reranking là gì? Tối ưu hóa hệ thống Search và RAG",
+      "category": "GenAI & Machine Learning",
+      "definition": "Reranking (Tái sắp xếp kết quả) là bước thứ hai trong quy trình truy xuất thông tin hai giai đoạn, sử dụng mô hình Reranker (Cross-encoder) để đánh giá chi tiết và tối ưu hóa thứ hạng tài liệu liên quan.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/reranking/"
+    },
+    "Semantic Search": {
+      "title": "Tìm kiếm ngữ nghĩa (Semantic Search) là gì? Khái niệm & Ứng dụng",
+      "category": "GenAI & Machine Learning",
+      "definition": "Tìm kiếm ngữ nghĩa (Semantic Search) là phương pháp tìm kiếm thông tin bằng cách thấu hiểu ngữ cảnh và ý định của người dùng, thay vì so khớp từ khóa chính xác.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/semantic-search/"
+    },
+    "Vector Database": {
+      "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích chi tiết",
+      "category": "GenAI & Machine Learning",
+      "definition": "Cơ sở dữ liệu Vector (Vector Database) là hệ thống cơ sở dữ liệu chuyên biệt dùng để lưu trữ, lập chỉ mục và truy vấn các chuỗi số thực đa chiều (embeddings), hỗ trợ tìm kiếm tương đồng ngữ nghĩa siêu tốc.",
+      "bullets": [],
+      "url": "/concepts/6-ai-ml/rag-search/vector-database/"
     }
   }
 }

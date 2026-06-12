@@ -4,7 +4,11 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { evaluateFile } = require('../scripts/evaluate_article.cjs');
 
-const conceptsDir = '/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts';
+const conceptsDirs = [
+  '/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts',
+  '/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview',
+  '/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects'
+];
 
 function walk(dir, files = []) {
   if (!fs.existsSync(dir)) return files;
@@ -21,14 +25,17 @@ function walk(dir, files = []) {
   return files;
 }
 
-const allFiles = walk(conceptsDir);
-console.log(`Found ${allFiles.length} concept articles to audit.`);
+const allFiles = [];
+conceptsDirs.forEach(dir => {
+  allFiles.push(...walk(dir));
+});
+console.log(`Found ${allFiles.length} articles to audit.`);
 
 const results = [];
 let perfectCount = 0;
 
 for (const file of allFiles) {
-  const relPath = path.relative(conceptsDir, file);
+  const relPath = path.relative('/home/duclinh/kythuatdulieu.github.io/src/content/docs', file);
   try {
     const res = evaluateFile(file);
     if (res) {
