@@ -16,6 +16,8 @@ Việc lựa chọn định dạng tệp (File format) như Apache Parquet, ORC,
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho File Formats Deep Dive](/images/file-formats-deep-dive/parquet-file-layout.gif)
+
 ## 1. Lưu trữ theo Dòng (Row-based) vs Lưu trữ theo Cột (Columnar)
 
 Để hiểu rõ tại sao Parquet và Avro lại được thiết kế theo hai hướng hoàn toàn trái ngược, trước tiên chúng ta cần so sánh triết lý lưu trữ cốt lõi: [Lưu trữ dạng dòng (Row-based Storage)](/concepts/2-storage/database-storage/row-based-storage/) và [Lưu trữ dạng cột (Columnar Storage)](/concepts/2-storage/database-storage/columnar-storage/).

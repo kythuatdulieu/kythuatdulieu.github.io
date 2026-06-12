@@ -12,6 +12,8 @@ definition: "Phân vùng dữ liệu (partitioning) là kỹ thuật chia nhỏ 
 
 Khi cơ sở dữ liệu của bạn phình to từ vài triệu dòng lên hàng tỷ dòng, những câu truy vấn SQL từng chạy trong chớp mắt bỗng trở nên chậm chạp và ì ạch. Bạn đã thử tạo index (chỉ mục), nhưng khi dữ liệu quá khổng lồ, bộ index cũng lớn đến mức không thể nhét vừa vào bộ nhớ RAM. Đây chính là lúc chúng ta cần đến **Partitioning** (Phân vùng dữ liệu) - một nghệ thuật "chia để trị" kinh điển trong ngành kỹ thuật dữ liệu.
 
+![Sơ đồ kiến trúc minh họa cho Partitioning](/images/partitioning/partitioning-strategies.png)
+
 ## Nghệ thuật "chia để trị" trong thế giới dữ liệu lớn
 
 Về mặt khái niệm, phân vùng dữ liệu là việc chia nhỏ một bảng dữ liệu logic khổng lồ thành các phần vật lý nhỏ hơn (gọi là các partition) lưu trữ trên đĩa cứng. Điểm hay là đối với người dùng cuối hoặc các ứng dụng, họ vẫn nhìn thấy và truy vấn trên một bảng duy nhất. Nhưng ở bên dưới, hệ thống cơ sở dữ liệu sẽ thông minh chỉ quét các phân vùng thực sự chứa dữ liệu cần thiết, giúp giảm thiểu đáng kể lượng dữ liệu phải đọc ghi (I/O) và tăng tốc độ truy vấn lên gấp nhiều lần.

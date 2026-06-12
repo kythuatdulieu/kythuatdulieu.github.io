@@ -14,6 +14,8 @@ Hãy tưởng tượng bạn vừa lỡ tay chạy một câu lệnh `UPDATE` ho
 
 Thế nhưng, nếu hệ thống của bạn hỗ trợ tính năng **Time Travel (Du hành thời gian)**, bạn có thể thở phào nhẹ nhõm. Chỉ bằng một câu lệnh SQL đơn giản, bạn có thể đưa bảng dữ liệu quay ngược trở lại trạng thái hoàn hảo của nó cách đây 10 phút hoặc tại một phiên bản (version) cụ thể trong quá khứ.
 
+![Sơ đồ kiến trúc minh họa cho Time Travel](/images/time-travel/time-travel-mechanism.png)
+
 ## Time Travel là gì? Tính năng "Undo" thần kỳ của dữ liệu
 
 **Time Travel** là tính năng cho phép hệ thống (như Cloud [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) hay Data [Lakehouse](/concepts/2-storage/data-lake-lakehouse/lakehouse/)) truy vấn và xem lại trạng thái của một bảng dữ liệu tại một mốc thời gian cụ thể hoặc ở một số phiên bản trong quá khứ, miễn là mốc đó nằm trong cửa sổ lưu giữ lịch sử (retention window) được cấu hình trước.

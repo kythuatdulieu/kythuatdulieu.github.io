@@ -16,6 +16,8 @@ Bài viết này đi sâu phân tích so sánh cấu trúc vật lý của hệ 
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho OLTP vs OLAP vs HTAP Comparison](/images/oltp-olap-htap-comparison/htap-architecture.png)
+
 ## 1. Sự khác biệt cốt lõi về cấu trúc vật lý (Core Architectural Differences)
 
 ### Layout lưu trữ vật lý: Dạng hàng (Row-oriented) vs Dạng cột (Column-oriented)

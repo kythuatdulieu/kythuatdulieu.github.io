@@ -16,6 +16,8 @@ Sự ra đời của kiến trúc [Data Lakehouse](/concepts/2-storage/data-lake
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho Lakehouse Optimization](/images/lakehouse-optimization/z-ordering-optimization.png)
+
 ## 1. Vectorized Execution Engine: Photon
 Trong các hệ thống phân tán truyền thống như Apache Spark, việc thực thi câu lệnh SQL dựa trên máy ảo Java (JVM). Spark sử dụng kỹ thuật *Whole-Stage Code Generation* để biên dịch các kế hoạch truy vấn thành mã Java byte-code khi chạy. Tuy nhiên, kiến trúc này gặp phải những giới hạn vật lý của JVM: overhead từ Garbage Collection (GC), không tận dụng được tối đa hiệu năng của CPU hiện đại và gặp khó khăn trong việc tối ưu hóa mức phần cứng (như các thanh ghi CPU và bộ nhớ đệm Cache).
 

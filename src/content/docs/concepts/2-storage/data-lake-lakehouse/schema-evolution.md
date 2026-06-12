@@ -14,6 +14,8 @@ Trong thế giới [Data Engineering](/concepts/1-foundations/foundation/data-en
 
 Nếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như vậy sẽ là một lần pipeline bị sập, kéo theo hàng giờ cày cuốc để sửa code và chạy lại dữ liệu lịch sử. Để giải quyết vấn đề này, các công nghệ lưu trữ hiện đại đã giới thiệu một khái niệm cứu cánh: **Schema Evolution (Tiến hóa lược đồ)**.
 
+![Sơ đồ kiến trúc minh họa cho Schema Evolution](/images/schema-evolution/schema-evolution.png)
+
 ## Schema Evolution là gì? Khi dữ liệu không bao giờ đứng yên
 
 **Schema Evolution** là khả năng tự động theo dõi, quản lý và áp dụng các thay đổi cấu trúc bảng (như thêm cột, đổi tên, xóa cột hoặc đổi kiểu dữ liệu) theo thời gian. 

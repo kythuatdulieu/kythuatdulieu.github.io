@@ -16,6 +16,8 @@ Bài viết này đi sâu vào phân tích cấu trúc Metadata nội bộ của
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho Iceberg Metadata Internals](/images/iceberg-metadata-internals/iceberg-metadata-internals.png)
+
 ## 1. Cấu trúc cây Metadata phân cấp (Hierarchical Metadata Tree)
 
 Khác biệt cốt lõi giữa Apache Iceberg và Apache Hive truyền thống là cách theo dõi dữ liệu. Hive quản lý dữ liệu ở cấp độ thư mục (Folder-level), dẫn đến các vấn đề nghiêm trọng về hiệu năng khi số lượng tệp tin lớn. Ngược lại, Iceberg quản lý dữ liệu ở cấp độ tệp tin (File-level) thông qua một cấu trúc cây Metadata phân cấp chặt chẽ gồm 4 tầng.

@@ -16,6 +16,8 @@ Trước đây, giải pháp duy nhất là xây dựng và vận hành song son
 
 Đó chính là lý do **Lakehouse (hay Data Lakehouse)** ra đời — một kiến trúc lai (hybrid architecture) hợp nhất những gì tốt nhất của hai thế giới này.
 
+![Sơ đồ kiến trúc minh họa cho Lakehouse](/images/lakehouse/lakehouse-architecture.png)
+
 ## Data Lakehouse là gì và hoạt động như thế nào?
 
 Về bản chất, **Lakehouse** là một kiến trúc hệ thống mở, lưu trữ dữ liệu thô trên một lớp Object Storage giá rẻ, nhưng phủ lên đó một **lớp siêu dữ liệu (metadata layer) thông minh**. 

@@ -14,6 +14,8 @@ Khi xây dựng các kho dữ liệu phân tích khổng lồ, việc tối ưu 
 
 Đóng vai trò là một lớp quản lý siêu dữ liệu (Metadata Layer) trung gian nằm giữa các engine tính toán (như Spark, Trino, Flink, [Snowflake](/concepts/2-storage/cloud-data-platform/snowflake/)) và các hệ thống lưu trữ đám mây vật lý (S3, GCS, HDFS), Iceberg mang lại khả năng thực thi giao dịch ACID an toàn, nâng cấp cấu trúc bảng ([Schema Evolution](/concepts/2-storage/data-lake-lakehouse/schema-evolution/)) mượt mà và tính năng phân vùng ẩn (Hidden [Partitioning](/concepts/2-storage/database-storage/partitioning/)) độc đáo. Cùng với Delta Lake, Iceberg hiện đang là tiêu chuẩn thiết kế kiến trúc Lakehouse hiện đại.
 
+![Sơ đồ kiến trúc minh họa cho Apache Iceberg](/images/apache-iceberg/iceberg-metadata.png)
+
 ## Cơn ác mộng Petabyte tại Netflix và sự sụp đổ của Apache Hive
 
 Suốt một thời gian dài, Apache Hive là chuẩn mực chung để định nghĩa cấu trúc bảng dữ liệu trên Hadoop và [Data Lake](/concepts/2-storage/data-lake-lakehouse/data-lake/). Hive quản lý dữ liệu bằng cách theo dõi các thư mục vật lý (Folder-based). Ví dụ: một tệp tin Parquet khi được thả vào thư mục `year=2026/month=06` sẽ tự động được coi là thuộc về phân vùng (partition) tháng 6 năm 2026.

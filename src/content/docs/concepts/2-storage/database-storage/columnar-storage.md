@@ -12,6 +12,8 @@ definition: "Columnar Storage (lưu trữ dạng cột) là phương pháp tổ 
 
 Columnar Storage (Lưu trữ dạng cột) là yếu tố kỹ thuật cốt lõi quyết định hiệu năng xử lý của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.
 
+![Sơ đồ kiến trúc minh họa cho Columnar Storage](/images/columnar-storage/row-vs-columnar-storage.png)
+
 ## Khái niệm Columnar Storage
 
 Trong các cơ sở dữ liệu truyền thống (Row-oriented Database như MySQL hay PostgreSQL), dữ liệu được lưu trữ vật lý trên đĩa theo từng hàng (dòng) liên tiếp. Điều này có nghĩa là nếu một bảng có 100 cột, toàn bộ 100 cột của hàng thứ nhất sẽ được ghi trước, rồi mới đến hàng thứ hai, thứ ba. 

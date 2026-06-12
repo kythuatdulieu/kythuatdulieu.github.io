@@ -16,6 +16,8 @@ Nếu như các hệ thống phân tích ([OLAP](/concepts/2-storage/database-st
 
 Nhiệm vụ tối thượng của OLTP là xử lý một lượng khổng lồ các giao dịch (transactions) ngắn, diễn ra liên tục với yêu cầu tốc độ phản hồi cực nhanh (tính bằng mili-giây) và độ chính xác tuyệt đối.
 
+![Sơ đồ kiến trúc minh họa cho OLTP](/images/oltp/oltp-system-architecture.png)
+
 ## Bản chất của một "Giao dịch" trong OLTP
 
 Dưới góc nhìn cơ sở dữ liệu, một "giao dịch" trong OLTP là tập hợp các câu lệnh SQL viết dữ liệu (`INSERT`, `UPDATE`, `DELETE`) tác động lên một số lượng nhỏ các bản ghi. 

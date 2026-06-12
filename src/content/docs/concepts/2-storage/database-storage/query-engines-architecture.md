@@ -21,6 +21,8 @@ Hiểu rõ sự khác biệt bản chất giữa ba công cụ này là chìa kh
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho Query Engines Architecture](/images/query-engines-architecture/mpp-query-engine-architecture.png)
+
 ## Kiến trúc Cốt lõi và Sự Khác biệt Bản chất
 
 Để thấy rõ sự khác biệt, trước hết chúng ta cần đi sâu vào cấu trúc vận hành bên trong của từng động cơ truy vấn.

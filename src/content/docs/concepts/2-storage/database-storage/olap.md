@@ -20,6 +20,8 @@ OLAP là kiến trúc cơ sở dữ liệu được tối ưu hóa đặc biệt
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho OLAP](/images/olap/olap-cube.png)
+
 ## Những trụ cột công nghệ giúp OLAP chạy siêu tốc
 
 Khác với các cơ sở dữ liệu giao dịch truyền thống, OLAP đạt được hiệu năng truy vấn phân tích vượt trội nhờ áp dụng ba nguyên lý thiết kế cốt lõi:

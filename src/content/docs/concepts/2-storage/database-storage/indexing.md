@@ -14,6 +14,8 @@ Hãy tưởng tượng bạn đang cầm trên tay một cuốn sách bách khoa
 
 Trong thế giới cơ sở dữ liệu, kỹ thuật tăng tốc thần kỳ này được gọi là **Indexing** (Chỉ mục cơ sở dữ liệu).
 
+![Sơ đồ kiến trúc minh họa cho Indexing](/images/indexing/btree-index.png)
+
 ## Chỉ mục cơ sở dữ liệu là gì?
 
 Database Index (Chỉ mục cơ sở dữ liệu) là một cấu trúc dữ liệu phụ được xây dựng trên một hoặc nhiều cột của bảng. Nó lưu trữ dữ liệu dưới một định dạng đã được sắp xếp thứ tự, đi kèm với các con trỏ (pointers) trỏ trực tiếp đến vị trí vật lý của dòng dữ liệu gốc trên ổ đĩa. 

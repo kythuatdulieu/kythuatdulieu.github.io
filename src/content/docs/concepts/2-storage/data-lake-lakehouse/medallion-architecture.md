@@ -14,6 +14,8 @@ Khi phong trào xây dựng **[Data Lake](/concepts/2-storage/data-lake-lakehous
 
 Để lập lại trật tự cho hồ dữ liệu, Databricks đã đề xuất **Kiến trúc Medallion (Medallion Architecture)** — hay còn gọi là kiến trúc phân tầng dữ liệu Đồng, Bạc, Vàng. Đây là một mẫu thiết kế logic giúp tổ chức dữ liệu một cách khoa học, nâng cấp dần chất lượng dữ liệu qua từng chặng để phục vụ tốt nhất cho mọi nhu cầu phân tích của doanh nghiệp.
 
+![Sơ đồ kiến trúc minh họa cho Medallion Architecture](/images/medallion-architecture/medallion-architecture-flow.png)
+
 ## Lộ trình dòng chảy dữ liệu qua Ba lớp Huy chương
 
 Kiến trúc Medallion chia nhỏ quy trình xử lý dữ liệu ([ETL](/concepts/3-integration/etl-elt/etl/)/[ELT](/concepts/3-integration/etl-elt/elt/)) thành ba lớp (zones) với các vai trò và mức độ tinh sạch khác nhau:

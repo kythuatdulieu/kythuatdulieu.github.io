@@ -12,6 +12,8 @@ definition: "Row-based Storage (lưu trữ dạng dòng) là phương pháp tổ
 
 Khi bắt đầu tìm hiểu về cách cơ sở dữ liệu lưu trữ thông tin vật lý trên đĩa cứng, chúng ta sẽ bắt gặp hai trường phái thiết kế kinh điển: Lưu trữ dạng Dòng (Row-based Storage) và Lưu trữ dạng Cột (Columnar Storage). Trong số đó, **Row-based Storage** là mô hình lâu đời, phổ biến và là xương sống cho hầu hết các hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) quen thuộc như MySQL, PostgreSQL hay Oracle.
 
+![Sơ đồ kiến trúc minh họa cho Row-based Storage](/images/row-based-storage/row-oriented-storage-layout.png)
+
 ## Lưu trữ theo hàng dọc ổ đĩa: Row-based Storage là gì?
 
 Lưu trữ dạng dòng (hay Row-oriented storage) là phương pháp tổ chức dữ liệu vật lý trên ổ đĩa sao cho toàn bộ các thuộc tính (cột) của cùng một bản ghi (dòng) được xếp nằm cạnh nhau một cách tuần tự.

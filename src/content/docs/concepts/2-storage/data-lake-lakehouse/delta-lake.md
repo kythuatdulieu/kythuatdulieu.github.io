@@ -14,6 +14,8 @@ Nếu bạn từng làm việc với [Data Lake](/concepts/2-storage/data-lake-l
 
 Để giải quyết triệt để những điểm yếu chí mạng này và biến một Data Lake hỗn độn (Data Swamp) thành một hệ thống đáng tin cậy, Databricks đã phát triển và giới thiệu **Delta Lake**.
 
+![Sơ đồ kiến trúc minh họa cho Delta Lake](/images/delta-lake/delta-lake-architecture.png)
+
 ## Delta Lake thực chất là gì?
 
 **Delta Lake** là một lớp lưu trữ mã nguồn mở (thuộc định dạng Open [Table Format](/concepts/2-storage/data-lake-lakehouse/table-format/)) nằm trên vùng lưu trữ đám mây giá rẻ của bạn (như Amazon S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/), hay Azure Blob Storage). 

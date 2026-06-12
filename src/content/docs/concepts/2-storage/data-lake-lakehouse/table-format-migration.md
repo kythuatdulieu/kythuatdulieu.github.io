@@ -16,6 +16,8 @@ Tuy nhiên, việc di chuyển hàng chục Petabyte dữ liệu lịch sử cù
 
 ---
 
+![Sơ đồ kiến trúc minh họa cho Table Format Migration](/images/table-format-migration/table-format-migration.png)
+
 ## Nhu cầu kiến trúc: Từ Hive/Parquet sang Open Table Formats
 
 Trong kiến trúc Data Lake thế hệ cũ (Hive-style Data Lake), một bảng dữ liệu thực chất chỉ là một đường dẫn thư mục trên Object Storage (S3, GCS, ADLS) hoặc HDFS, phân cấp theo các thư mục con (ví dụ: `year=2026/month=06/day=12/`). Cách tiếp cận này bộc lộ những hạn chế nghiêm trọng khi quy mô dữ liệu tăng lên:

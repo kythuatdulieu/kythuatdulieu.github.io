@@ -12,6 +12,8 @@ definition: "Clustering (phân cụm) là kỹ thuật sắp xếp dữ liệu v
 
 Trong các hệ thống [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) hiện đại, khi đối mặt với những bảng dữ liệu khổng lồ lên tới hàng trăm Terabytes, việc tối ưu hóa tốc độ truy vấn và giảm thiểu chi phí quét đĩa là mục tiêu hàng đầu của mọi Data Engineer. Bên cạnh kỹ thuật phân vùng quen thuộc (Partitioning), **Clustering (Phân cụm dữ liệu)** chính là "vũ khí tối thượng" thứ hai giúp bạn sắp đặt dữ liệu một cách thông minh nhất để tăng tốc hệ thống.
 
+![Sơ đồ kiến trúc minh họa cho Clustering](/images/clustering/clustering-layout.png)
+
 ## Phân cụm dữ liệu (Clustering): Nghệ thuật sắp đặt vật lý tối ưu
 
 Về mặt bản chất, **Clustering** là quá trình sắp xếp dữ liệu một cách vật lý trên ổ đĩa sao cho các bản ghi có giá trị tương đồng (dựa trên một hoặc nhiều cột được chỉ định trước) sẽ được đặt sát cạnh nhau trong cùng một khối lưu trữ `(block hoặc file)`. 

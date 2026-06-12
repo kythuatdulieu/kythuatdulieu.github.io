@@ -16,6 +16,8 @@ Trong thế giới Kỹ thuật Dữ liệu, Data Lake (Hồ dữ liệu) luôn 
 
 Đóng vai trò là một định dạng bảng (Table Format) hiện đại, Hudi mang lại các tính năng quan trọng như giao dịch ACID, cập nhật (Upserts), xóa (Deletes) và xử lý dữ liệu gia tăng (Incremental Processing) trực tiếp trên các hệ thống lưu trữ phân tán như AWS S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/) hay HDFS, biến Data Lake của bạn thành một Data [Lakehouse](/concepts/2-storage/data-lake-lakehouse/lakehouse/) tin cậy.
 
+![Sơ đồ kiến trúc minh họa cho Apache Hudi](/images/apache-hudi/hudi-cow-mor.png)
+
 ## Tại sao Data Lake truyền thống cần đến Hudi?
 
 Trước khi có sự xuất hiện của các Table Format như Apache Hudi, việc quản lý dữ liệu trên Data Lake giống như cố gắng chỉnh sửa một cuốn sách được in trên giấy đá:

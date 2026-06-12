@@ -12,6 +12,8 @@ definition: "Compaction là quá trình bảo trì định kỳ chạy ngầm tr
 
 Trong thế giới [Data Engineering](/concepts/1-foundations/foundation/data-engineering/), việc thiết lập các luồng dữ liệu streaming hay micro-batch để liên tục cập nhật thông tin thời gian thực là một yêu cầu cực kỳ phổ biến. Thế nhưng, đằng sau sự tiện lợi đó ẩn chứa một "bệnh lý" kinh điển của hệ thống lưu trữ: sự xuất hiện của hàng triệu file nhỏ lẻ. **Compaction (Gom tệp)** chính là phương thuốc đặc trị, đóng vai trò như một người dọn dẹp âm thầm giúp duy trì hiệu năng đỉnh cao cho toàn bộ hệ thống [Data Lake](/concepts/2-storage/data-lake-lakehouse/data-lake/) của doanh nghiệp.
 
+![Sơ đồ kiến trúc minh họa cho Compaction](/images/compaction/compaction-flow.png)
+
 ## Compaction: Người dọn dẹp âm thầm phía sau Data Lake
 
 Về mặt định nghĩa, **Compaction** là quá trình bảo trì định kỳ chạy ẩn nhằm gom hàng ngàn tệp tin dữ liệu có kích thước quá nhỏ thành một số lượng ít hơn các tệp tin có kích thước tối ưu hơn. 

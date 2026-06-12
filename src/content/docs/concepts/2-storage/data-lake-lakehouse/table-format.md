@@ -14,6 +14,8 @@ Hãy tưởng tượng bạn đang có một kho lưu trữ khổng lồ chứa 
 
 Nhờ có Table Format, chúng ta có thể mang các tính năng cao cấp vốn chỉ có ở các cơ sở dữ liệu quan hệ truyền thống như giao dịch ACID, tự động cập nhật cấu trúc ([schema evolution](/concepts/2-storage/data-lake-lakehouse/schema-evolution/)) hay quay ngược thời gian truy vấn ([time travel](/concepts/2-storage/data-lake-lakehouse/time-travel/)) đặt vào trong các [Data Lake](/concepts/2-storage/data-lake-lakehouse/data-lake/) giá rẻ. Đây chính là xương sống định hình nên kiến trúc Data [Lakehouse](/concepts/2-storage/data-lake-lakehouse/lakehouse/) hiện đại.
 
+![Sơ đồ kiến trúc minh họa cho Table Format](/images/table-format/table-format-layer.png)
+
 ## Định dạng bảng là gì? Sự nhầm lẫn phổ biến với Định dạng tệp
 
 Trong kỹ thuật dữ liệu, có một sự nhầm lẫn cực kỳ phổ biến giữa hai khái niệm: **Table Format** và **File Format**. Hãy cùng phân biệt rõ:
