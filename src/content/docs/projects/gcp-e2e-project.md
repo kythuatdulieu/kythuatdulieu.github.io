@@ -10,9 +10,13 @@ metaDescription: "Xây dựng Serverless Lakehouse trên GCP bằng Pub/Sub, Dat
 definition: "Hướng dẫn chi tiết xây dựng hệ thống Serverless Lakehouse hiện đại trên nền tảng Google Cloud (GCP) sử dụng Dataflow, BigQuery Storage Write API, dbt, Airflow và Looker."
 ---
 
-Trong kỷ nguyên dữ liệu lớn (Big Data) và phân tích thời gian thực (Real-time Analytics), việc xây dựng một hệ thống nền tảng dữ liệu (Data Platform) vừa đảm bảo khả năng mở rộng vô hạn (Scalability), vừa tối ưu chi phí vận hành là một thách thức lớn. Bài viết này hướng dẫn chi tiết cách thiết kế và triển khai một hệ thống **Serverless Lakehouse** toàn diện trên nền tảng **Google Cloud Platform (GCP)** kết hợp với các công cụ thuộc **Modern Data Stack**.
+Trong kỷ nguyên dữ liệu lớn (Big Data) và phân tích thời gian thực (Real-time Analytics), việc xây dựng một hệ thống nền tảng dữ liệu (Data Platform) vừa đảm bảo khả năng mở rộng vô hạn (Scalability), vừa tối ưu chi phí vận hành là một thách thức lớn. 
 
-Hệ thống được thiết kế theo hướng sự kiện (Event-driven) từ lúc tiếp nhận dữ liệu thời gian thực cho đến khi hiển thị trên các dashboard báo cáo, được kiểm soát chặt chẽ về mặt chất lượng dữ liệu và điều phối tự động.
+Kiến trúc này được thiết kế và tối ưu hóa dựa trên mô hình hệ thống phân phối sự kiện (Event Delivery Platform) quy mô toàn cầu của **Spotify** (xử lý hơn 1.4 nghìn tỷ sự kiện mỗi ngày từ hàng trăm triệu thiết bị hoạt động) kết hợp với các khuyến nghị thực tế từ **GCP Architecture Blog**. Spotify đã di chuyển từ cụm Apache Kafka và Hadoop tự vận hành sang mô hình hoàn toàn quản lý sử dụng **Google Cloud Pub/Sub** làm xương sống truyền tin và **Cloud Dataflow** làm công cụ xử lý dòng, giúp tăng tính ổn định của luồng dữ liệu và tối giản chi phí vận hành (ZeroOps).
+
+Bài viết này hướng dẫn chi tiết cách thiết kế và triển khai một hệ thống **Serverless Lakehouse** toàn diện trên nền tảng **Google Cloud Platform (GCP)** kết hợp với các công cụ thuộc **Modern Data Stack**. Hệ thống được thiết kế theo hướng sự kiện (Event-driven) từ lúc tiếp nhận dữ liệu thời gian thực cho đến khi hiển thị trên các dashboard báo cáo, được kiểm soát chặt chẽ về mặt chất lượng dữ liệu và điều phối tự động.
+
+Để chuẩn bị kiến thức nền tảng trước khi nghiên cứu dự án này, bạn có thể tham khảo [/concepts/4-realtime/streaming-processing/apache-kafka](/concepts/4-realtime/streaming-processing/apache-kafka) để hiểu cách hệ thống hàng đợi tin nhắn hoạt động, [/concepts/4-realtime/streaming-processing/spark-structured-streaming](/concepts/4-realtime/streaming-processing/spark-structured-streaming) về xử lý luồng, cơ chế [/concepts/4-realtime/streaming-processing/watermark](/concepts/4-realtime/streaming-processing/watermark) để kiểm soát dữ liệu đến muộn, và [/concepts/4-realtime/streaming-processing/exactly-once-semantics](/concepts/4-realtime/streaming-processing/exactly-once-semantics) để nắm rõ cách bảo toàn tính nhất quán dữ liệu.
 
 ---
 
@@ -50,6 +54,24 @@ graph TD
     class H tool;
 ```
 
+Dưới đây là sơ đồ chi tiết về chuỗi kết nối streaming và cơ chế chống trùng lặp dữ liệu từ client đầu vào đến BigQuery:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as IoT Device / Web Client
+    participant PubSub as Google Cloud Pub/Sub
+    participant Dataflow as Cloud Dataflow (Beam Runner)
+    participant BQ as BigQuery (Bronze Raw)
+    
+    Client->>PubSub: Publish Event (JSON payload)
+    PubSub->>Dataflow: Stream Pull / Push subscription
+    Note over Dataflow: Parse JSON & Apply Schema<br/>Extract Event Time (Watermark)<br/>Join Metadata via Side Input
+    Dataflow->>BQ: Write via Storage Write API (Committed Stream)
+    BQ->>BQ: Idempotent Offset Check (Acknowledge Write)
+    Dataflow->>PubSub: Acknowledge Message (Ack)
+```
+
 Luồng đi của dữ liệu (Data Pipeline Flow) được chia làm 3 phân đoạn chính:
 
 ### Streaming Ingestion & Processing (Thu nạp & Xử lý thời gian thực)
@@ -67,6 +89,23 @@ Dữ liệu từ Dataflow được ghi trực tiếp vào **BigQuery** thông qu
 - **Cloud Composer (Managed Apache Airflow)**: Công cụ điều phối trung tâm. Airflow lập lịch và kích hoạt các dbt run thông qua Docker containers hoặc Astronomer Cosmos. Nó cũng kiểm soát việc chạy các mô hình tính toán tăng trưởng (Incremental Models).
 - **dbt Core**: Thực hiện biến đổi dữ liệu ngay trong lòng BigQuery (ELT). Trong môi trường CI/CD, dbt sử dụng cơ chế **Stateful CI** để chỉ chạy lại các model bị thay đổi nhằm tiết kiệm tài nguyên BigQuery.
 - **Looker BI**: Tầng Semantic Layer sử dụng ngôn ngữ LookML giúp định nghĩa thống nhất các chỉ số (metrics), chiều dữ liệu (dimensions) và phân quyền truy cập trước khi trực quan hóa trên dashboard.
+
+---
+
+## Chi tiết cấu hình các cấu phần trong Production
+
+### 1. Google Cloud Pub/Sub
+*   **DLQ (Dead Letter Queue) & Retry Configuration**: Để đảm bảo không mất mát bất cứ thông điệp lỗi nào (ví dụ sự kiện sai định dạng cấu trúc hoặc payload hỏng), Topic chính được liên kết với một Dead Letter Topic. Cấu hình cụ thể:
+    *   `max_delivery_attempts`: 5 (thử lại gửi tin tối đa 5 lần đến Subscription chính).
+    *   Nếu sau 5 lần thử lại vẫn thất bại, tin nhắn tự động chuyển tiếp sang DLQ topic `dead-letter-events` và kích hoạt cảnh báo hệ thống qua Stackdriver Alerting.
+    *   `message_retention_duration`: `"604800s"` (giữ dữ liệu tối đa 7 ngày trên Pub/Sub trong trường hợp hệ thống Dataflow gặp sự cố nghiêm trọng không thể tiêu thụ dữ liệu).
+
+### 2. Cloud Dataflow (Apache Beam SDK Python)
+Để xử lý các biến động về lưu lượng và ghép nối dữ liệu một cách hiệu quả, Dataflow Pipeline được cấu hình với các tham số nâng cao:
+*   **Windowing and Allowed Lateness**: Dữ liệu sự kiện được gom nhóm theo khung thời gian cố định (**Fixed Windows**) 5 phút dựa trên Event Time. Cấu hình xử lý dữ liệu trễ:
+    *   `allowed_lateness`: 30 phút (chấp nhận và xử lý các tin nhắn đến muộn tối đa 30 phút so với watermark hiện tại).
+    *   `Triggers`: Sử dụng trigger kết hợp `AfterWatermark(early=AfterProcessingTime(60), late=AfterEvery(1))` để ngay lập tức cập nhật dữ liệu tổng hợp tạm thời và cập nhật lại bảng tính toán khi có dữ liệu muộn.
+*   **Side Inputs**: Để thực hiện làm giàu thông tin cho sự kiện thời gian thực (ví dụ: gán tên thiết bị từ danh mục ID chậm thay đổi), chúng ta sử dụng cơ chế **Side Inputs** của Apache Beam. Danh mục thiết bị được đọc từ BigQuery dưới dạng một `PCollection` và phát (broadcast) tới toàn bộ các worker thread của Dataflow qua `pvalue.AsDict(side_input_pcoll)`. Việc này giúp Dataflow thực hiện tra cứu (lookup) trực tiếp trên bộ nhớ (in-memory) của worker, tránh việc truy vấn database liên tục trên từng bản ghi trong dòng streaming.
 
 ---
 
@@ -199,7 +238,7 @@ Khi chạy dbt trên môi trường Production với hàng trăm model cùng lú
    - Gán (Assign) Service Account chạy Airflow/dbt vào `etl_reservation`.
    - Gán Service Account hoặc người dùng nhóm Looker vào `bi_reservation`.
 3. **Ưu tiên chạy dbt Incremental Models**:
-   Trong dbt, thay vì rebuild toàn bộ bảng (`table` materialization), cần tối ưu hóa các mô hình biến đổi dữ liệu theo dạng **Incremental Models** dựa trên [thời gian sự kiện](/concepts/4-realtime/streaming-processing/event-time-processing-time):
+   Trong dbt, thay vì rebuild toàn bộ bảng (`table` materialization), cần tối ưu hóa các mô hình biến đổi dữ liệu theo dạng **Incremental Models** dựa trên thời gian sự kiện:
 
 ```sql
 {{
@@ -281,11 +320,14 @@ Stateful CI là kỹ thuật tối ưu hóa quá trình tích hợp liên tục 
 
 ## English Summary
 
-Building a modern **Serverless Lakehouse** on **Google Cloud Platform (GCP)** involves integrating decoupling ingestion, scalable stream processing, high-performance analytical storage, and declarative data transformation. 
+Building a modern **Serverless Lakehouse** on **Google Cloud Platform (GCP)** involves integrating decoupling ingestion, scalable stream processing, high-performance analytical storage, and automated orchestration. This architecture is modeled after **Spotify's** global event delivery platform, which processes trillions of daily events via a zero-ops Pub/Sub and Dataflow design.
 
-The end-to-end architecture leverages **GCP Pub/Sub** for event ingestion, **Cloud Dataflow (Apache Beam Python)** for processing stream events, and the **BigQuery Storage Write API (Committed Streams)** to achieve high-throughput, cost-effective, and **exactly-once** data delivery into BigQuery. 
-
-Downstream processing is structured around the **Medallion Architecture (Bronze -> Silver -> Gold)**, implemented via **dbt Core** and orchestrated dynamically using **Cloud Composer (Airflow)** with modern integration libraries like **Astronomer Cosmos**. To avoid resource contention between heavy ETL queries and interactive BI tools (e.g., **Looker**), compute workloads are isolated using **BigQuery Slot Reservations** and partitioned incremental loads.
+### Core takeaways:
+*   **Decoupled & Scalable Ingestion**: Uses Google Cloud Pub/Sub for high-throughput messaging, backed by DLQs with strict retry limit configurations (5 attempts) and 7-day retention.
+*   **Robust Stream Processing**: Cloud Dataflow (Apache Beam SDK Python) handles ingestion windows (5-minute fixed windows) with up to 30 minutes of allowed lateness, utilizing **Side Inputs** to perform high-speed, in-memory reference lookups.
+*   **Exactly-Once Storage Ingestion**: Leverages the BigQuery Storage Write API (Committed Streams) using dynamic connection pools and offset tracking to enforce exactly-once data delivery.
+*   **Compute Isolation**: Employs **BigQuery Reservations** (separate slots for ETL vs BI workloads) to prevent resource contention.
+*   **Orchestration & Transformation**: Cloud Composer (Airflow) manages **dbt Core** models via **Astronomer Cosmos**, which parses the compilation manifest to construct a granular, model-level dependency DAG with incremental state support.
 
 ---
 
@@ -298,5 +340,5 @@ Downstream processing is structured around the **Medallion Architecture (Bronze 
 5. [dbt Core Documentation - About dbt Core](https://docs.getdbt.com/docs/core/about-dbt-core)
 6. [Cloud Composer Orchestration Overview](https://cloud.google.com/composer/docs/composer-2/composer-overview)
 7. [Looker Semantic Modeling Quick Reference](https://cloud.google.com/looker/docs/lookml-quick-reference)
-8. [Databricks - What is a Lakehouse?](https://docs.databricks.com/lakehouse/index.html)
-9. [Confluent - GCP Pub/Sub Connector](https://docs.confluent.io/platform/current/connect/page-gcp.html)
+8. [Spotify Engineering Blog - Spotify's Event Delivery Road to the Cloud](https://engineering.atspotify.com/2016/03/spotifys-event-delivery-the-road-to-the-cloud-part-i/)
+9. [Google Cloud Blog - Scaling BigQuery Ingestion with Storage Write API](https://cloud.google.com/blog/products/databases/streaming-data-into-bigquery-using-storage-write-api)
