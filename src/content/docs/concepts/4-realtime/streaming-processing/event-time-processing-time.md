@@ -14,6 +14,10 @@ Khi chúng ta chuyển đổi từ mô hình xử lý dữ liệu theo lô (Batc
 
 Trong một hệ thống streaming hoạt động liên tục 24/7, việc định nghĩa "khi nào một sự kiện thực sự xảy ra" là chìa khóa để đảm bảo tính đúng đắn của toàn bộ báo cáo phân tích. Nếu không phân biệt rõ ràng giữa **Thời gian sự kiện (Event Time)** và **Thời gian xử lý (Processing Time)**, bạn sẽ rất dễ rơi vào bẫy sai lệch số liệu mà không thể nào tìm ra nguyên nhân.
 
+
+![Sơ đồ minh họa kiến trúc Event Time Processing Time](/images/event-time-processing-time/diagram_1.svg)
+
+
 ## Kiến trúc và Sự khác biệt giữa Event Time và Processing Time
 
 Hãy cùng làm rõ hai khái niệm này thông qua một ví dụ đơn giản:
@@ -30,6 +34,10 @@ Thế nhưng, trong thế giới thực tế, dữ liệu truyền đi qua mạn
 2. **Sai lệch thứ tự (Out-of-order Data)**: Do các gói tin đi qua các con đường định tuyến mạng khác nhau, sự kiện xảy ra sau có thể đến server trước sự kiện xảy ra trước.
 
 Hãy tưởng tượng bạn đang viết một chương trình tính toán doanh thu từng giờ của doanh nghiệp. Nếu bạn sử dụng Processing Time (đồng hồ của server), các sự kiện mua hàng của ngày hôm qua (do điện thoại mất sóng gửi bù lên hôm nay) sẽ bị tính gộp vào doanh thu của ngày hôm nay. Điều này làm sai lệch hoàn toàn biểu đồ báo cáo tài chính.
+
+
+![Quy trình xử lý và luồng dữ liệu Event Time Processing Time](/images/event-time-processing-time/diagram_2.svg)
+
 
 ## Sự đánh đổi cốt lõi: Độ trễ (Latency) vs Độ chính xác (Accuracy)
 

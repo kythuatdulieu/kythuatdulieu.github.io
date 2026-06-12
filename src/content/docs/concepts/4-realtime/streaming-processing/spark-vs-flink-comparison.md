@@ -16,6 +16,10 @@ Mặc dù cả hai đều là các framework tính toán phân tán mạnh mẽ,
 
 ---
 
+
+![Sơ đồ minh họa kiến trúc Spark Vs Flink Comparison](/images/spark-vs-flink-comparison/diagram_1.svg)
+
+
 ## Mô hình thực thi cốt lõi (Core Execution Paradigms)
 
 Kiến trúc thực thi là điểm khác biệt căn bản nhất giữa Apache Spark và Apache Flink, trực tiếp ảnh hưởng đến các chỉ số về độ trễ (latency) và thông lượng (throughput).
@@ -78,6 +82,10 @@ Khả năng quản lý trạng thái và chịu lỗi là một trong những đ
 *   **Savepoints**: Đây là tính năng độc nhất vô nhị của Flink. Khác với checkpoints (tự động và dùng để hồi phục lỗi), **Savepoint** là một điểm dừng trạng thái được kích hoạt thủ công bởi người dùng. Savepoint lưu toàn bộ trạng thái của ứng dụng dưới dạng một tệp siêu dữ liệu độc lập. Nhà phát triển có thể dùng Savepoint để cập nhật mã nguồn ứng dụng, thay đổi độ song song (scaling up/down), hoặc di chuyển toàn bộ ứng dụng sang một cụm máy chủ khác mà không làm mất trạng thái lịch sử tính toán.
 
 ---
+
+
+![Quy trình xử lý và luồng dữ liệu Spark Vs Flink Comparison](/images/spark-vs-flink-comparison/diagram_2.svg)
+
 
 ## Xử lý thời gian sự kiện (Event-Time), Dữ liệu đến muộn và Watermarking
 

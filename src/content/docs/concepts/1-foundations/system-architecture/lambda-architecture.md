@@ -16,6 +16,10 @@ Trong thế giới Big Data, các kỹ sư dữ liệu từng phải đối mặ
 
 Để giải quyết bài toán hóc búa này, Nathan Marz (cha đẻ của Apache Storm) đã đề xuất **Kiến trúc Lambda (Lambda Architecture)**. Đây là một mô hình thiết kế hệ thống dữ liệu lớn giúp cân bằng hoàn hảo giữa ba yếu tố: độ trễ (latency), thông lượng (throughput) và độ chính xác của dữ liệu.
 
+
+![Sơ đồ minh họa kiến trúc Lambda Architecture](/images/lambda-architecture/diagram_1.png)
+
+
 ## Cơ chế hoạt động của Lambda Architecture
 
 Ý tưởng cốt lõi để giải quyết bài toán này nằm ở phương trình đơn giản nhưng mạnh mẽ: 
@@ -70,6 +74,10 @@ graph TD
 ```
 
 ---
+
+
+![Quy trình xử lý và luồng dữ liệu Lambda Architecture](/images/lambda-architecture/diagram_3.png)
+
 
 ## Một ví dụ thực tế từ E-commerce
 
