@@ -1,0 +1,39 @@
+/* Override default Starlight constraints for full-width content */
+.sl-markdown-content {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Remove the specific ContentPanel that contains the PageTitle */
+.content-panel:has(h1#_top) {
+  display: none !important;
+}
+
+/* Remove default paddings on the main content panel */
+.content-panel {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  margin: 0 !important;
+}
+
+/* Two-column split layout for Quiz and QuickView */
+.top-split-layout {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0 !important;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+.split-col {
+  flex: 1;
+  min-width: 0; /* Prevents flex children from overflowing */
+}
+
+@media (max-width: 1024px) {
+  .top-split-layout {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}

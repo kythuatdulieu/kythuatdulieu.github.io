@@ -12,7 +12,7 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [remarkMath],
 		rehypePlugins: [
-			rehypeKatex,
+			[rehypeKatex, { strict: 'ignore' }],
 			[rehypeMermaidLite, { 
 				// By default it turns ```mermaid into <pre class="mermaid">
 			}]
@@ -26,8 +26,8 @@ export default defineConfig({
 				root: { label: 'Tiếng Việt', lang: 'vi' }
 			},
 			components: {
-				PageSidebar: './src/components/InteractiveGraphSidebar.astro',
 				Footer: './src/components/BacklinksFooter.astro',
+				Head: './src/components/CustomHead.astro',
 			},
 			customCss: [
 				'./src/styles/custom.css'
@@ -62,6 +62,14 @@ export default defineConfig({
 					attrs: { src: '/focus.js', defer: true },
 				},
 				{
+					tag: 'script',
+					attrs: { src: '/code-toggle.js', defer: true },
+				},
+				{
+					tag: 'script',
+					attrs: { src: '/image-viewer.js', defer: true },
+				},
+				{
 					tag: 'link',
 					attrs: { rel: 'stylesheet', href: 'https://unpkg.com/tippy.js@6/dist/tippy.css' },
 				},
@@ -76,7 +84,7 @@ export default defineConfig({
 					label: 'Cẩm nang (Handbook)',
 					items: [
 						{
-							label: '1. Cơ sở & Kiến trúc',
+							label: '1. Nền tảng & Kiến trúc (Foundations & Architecture)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('1-')).map(cat => ({
 								label: cat.label,
@@ -85,7 +93,7 @@ export default defineConfig({
 							}))
 						},
 						{
-							label: '2. Lưu trữ & Quản lý dữ liệu',
+							label: '2. Tầng Lưu trữ (Data Storage)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('2-')).map(cat => ({
 								label: cat.label,
@@ -94,7 +102,7 @@ export default defineConfig({
 							}))
 						},
 						{
-							label: '3. Tích hợp & Biến đổi dữ liệu',
+							label: '3. Thu thập & Biến đổi (Ingestion & Transformation)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('3-')).map(cat => ({
 								label: cat.label,
@@ -103,7 +111,7 @@ export default defineConfig({
 							}))
 						},
 						{
-							label: '4. Xử lý thời gian thực',
+							label: '4. Thời gian thực & Luồng (Real-time)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('4-')).map(cat => ({
 								label: cat.label,
@@ -112,7 +120,7 @@ export default defineConfig({
 							}))
 						},
 						{
-							label: '5. Chất lượng & Quản trị',
+							label: '5. Phục vụ & Phân tích (Serving & Analytics)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('5-')).map(cat => ({
 								label: cat.label,
@@ -121,9 +129,27 @@ export default defineConfig({
 							}))
 						},
 						{
-							label: '6. AI & Machine Learning',
+							label: '6. DataOps & Điều phối (DataOps)',
 							collapsed: true,
 							items: conceptCategories.filter(cat => cat.slug.startsWith('6-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '7. Bảo mật & Quản trị (Security & Governance)',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('7-')).map(cat => ({
+								label: cat.label,
+								collapsed: true,
+								autogenerate: { directory: `concepts/${cat.slug}` }
+							}))
+						},
+						{
+							label: '8. GenAI & ML Engineering',
+							collapsed: true,
+							items: conceptCategories.filter(cat => cat.slug.startsWith('8-')).map(cat => ({
 								label: cat.label,
 								collapsed: true,
 								autogenerate: { directory: `concepts/${cat.slug}` }

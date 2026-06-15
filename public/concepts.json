@@ -1,1222 +1,200 @@
 {
   "concepts": {
-    "Data Engineering": {
-      "title": "Kỹ thuật Dữ liệu & Vai trò Kỹ sư Dữ liệu - Cẩm nang toàn diện",
-      "category": "Foundation",
-      "definition": "Kỹ thuật Dữ liệu (Data Engineering) là lĩnh vực chuyên môn tập trung vào việc thiết kế, xây dựng và vận hành các hệ thống hạ tầng thu thập, lưu trữ và xử lý dữ liệu quy mô lớn; trong đó Kỹ sư Dữ liệu đóng vai trò cốt lõi.",
+    "Api Batch Ingestion": {
+      "title": "API & Batch Ingestion at Scale",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/foundation/data-engineering/"
+      "url": "/concepts/1-ingestion/api-batch-ingestion/"
     },
-    "Data Lifecycle": {
-      "title": "Vòng đời Dữ liệu (Vòng đời Dữ liệu) - Từ lúc sinh ra đến khi tiêu hủy",
-      "category": "Foundation",
-      "definition": "Vòng đời Dữ liệu (Data Lifecycle) là toàn bộ các giai đoạn mà dữ liệu đi qua, từ lúc được khởi tạo, lưu trữ, xử lý, khai thác, lưu trữ dài hạn cho đến khi bị tiêu hủy hoàn toàn.",
+    "Cdc Debezium": {
+      "title": "Debezium Architecture: Mổ xẻ cơ chế Log-Based CDC và bài toán Dual-Write",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/foundation/data-lifecycle/"
+      "url": "/concepts/1-ingestion/cdc-debezium/"
     },
-    "Data Pipeline": {
-      "title": "Data Pipeline là gì? Cấu trúc và Kiến trúc Đường ống Dữ liệu",
-      "category": "Foundation",
-      "definition": "Đường ống Dữ liệu (Data Pipeline) là chuỗi các quy trình tự động hóa giúp thu thập, làm sạch, biến đổi và vận chuyển dữ liệu từ nhiều nguồn khác nhau đến nơi lưu trữ tập trung.",
+    "Bigquery Snowflake": {
+      "title": "Cloud DWH: BigQuery vs Snowflake - Mổ Xẻ Kiến Trúc Phân Tán và Tốc Độ Shuffle",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/foundation/data-pipeline/"
+      "url": "/concepts/2-data-storage/cloud-dwh/bigquery-snowflake/"
     },
-    "Source Systems": {
-      "title": "Hệ thống Nguồn (Source Systems) - Điểm bắt đầu của Dữ liệu",
-      "category": "Foundation",
-      "definition": "Hệ thống Nguồn (Source Systems) là nơi dữ liệu thô ban đầu được sinh ra từ các giao dịch, nhật ký hoạt động hoặc thiết bị IoT, đóng vai trò là điểm khởi đầu cho mọi đường ống dữ liệu.",
+    "Lakehouse Architecture": {
+      "title": "Data Lakehouse Architecture: Giải Phẫu Lõi Transaction và Thiết Kế Lưu Trữ",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/foundation/source-systems/"
+      "url": "/concepts/2-data-storage/data-lake-lakehouse/lakehouse-architecture/"
     },
-    "Data Fabric": {
-      "title": "Data Fabric - Kiến trúc dệt dữ liệu tự động",
-      "category": "System Architecture",
-      "definition": "Data Fabric là một thiết kế kiến trúc sử dụng siêu dữ liệu chủ động (Active Metadata) và AI/ML để kết nối, tích hợp và tự động hóa quản lý các nguồn dữ liệu phân mảnh trên môi trường đa đám mây.",
+    "Parquet Orc Internals": {
+      "title": "Concepts Deep-dive: Parquet & ORC Internals",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/data-fabric/"
+      "url": "/concepts/2-data-storage/file-formats/parquet-orc-internals/"
     },
-    "Data Mesh": {
-      "title": "Data Mesh - Kiến trúc dữ liệu phân tán theo hướng miền",
-      "category": "System Architecture",
-      "definition": "Data Mesh là một mô hình kiến trúc phi tập trung, phân chia quyền sở hữu dữ liệu cho các đội nghiệp vụ theo miền nghiệp vụ (domains) và quản lý dữ liệu như một sản phẩm.",
+    "Api Ingestion Patterns": {
+      "title": "API Ingestion Patterns: Rate Limiting, Exponential Backoff & DLQ",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/data-mesh/"
+      "url": "/concepts/2-ingestion/api-ingestion-patterns/"
     },
-    "Data Platform Architecture": {
-      "title": "Kiến trúc Nền tảng Dữ liệu & Modern Data Stack (MDS) toàn diện",
-      "category": "System Architecture",
-      "definition": "Kiến trúc Nền tảng Dữ liệu (Data Platform Architecture) và Modern Data Stack (MDS) là bản thiết kế và hệ sinh thái các công cụ đám mây giúp tổ chức thu nạp, lưu trữ, xử lý và phân phối dữ liệu dựa trên mô hình ELT.",
+    "Cdc Debezium Internals": {
+      "title": "Change Data Capture: Debezium Internals & Transactional Outbox",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/data-platform-architecture/"
+      "url": "/concepts/2-ingestion/cdc-debezium-internals/"
     },
-    "Event Driven Architecture": {
-      "title": "Kiến trúc hướng sự kiện (Event-Driven Architecture)",
-      "category": "System Architecture",
-      "definition": "Event-Driven Architecture (EDA) là kiến trúc hướng sự kiện bất đồng bộ, trong đó các dịch vụ độc lập giao tiếp thông qua việc phát và tiêu thụ sự kiện qua một Event Broker trung gian.",
+    "Kafka Tiered Storage": {
+      "title": "Kafka Architecture: KIP-405 Tiered Storage",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/event-driven-architecture/"
+      "url": "/concepts/2-ingestion/kafka-tiered-storage/"
     },
-    "Event Driven Schema Registry": {
-      "title": "Event Sourcing, CQRS & Schema Registry trong Hệ Thống Phân Tán",
-      "category": "System Architecture",
-      "definition": "Event Sourcing lưu trữ trạng thái dưới dạng một chuỗi sự kiện bất biến, CQRS phân tách mô hình đọc và ghi, còn Schema Registry quản lý phiên bản cấu trúc dữ liệu.",
+    "Zero Etl Architecture": {
+      "title": "Zero-ETL Architecture in Modern Cloud",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/event-driven-schema-registry/"
+      "url": "/concepts/2-ingestion/zero-etl-architecture/"
     },
-    "Kappa Architecture": {
-      "title": "Kappa Architecture - Kiến trúc xử lý luồng dữ liệu",
-      "category": "System Architecture",
-      "definition": "Kappa Architecture là một kiến trúc xử lý dữ liệu tinh giản, loại bỏ tầng Batch và coi mọi dữ liệu là một dòng chảy (stream) liên tục, sử dụng một engine duy nhất cho cả real-time và reprocessing.",
+    "Spark Execution Memory": {
+      "title": "Apache Spark: Deep Dive into Unified Memory Management & Data Skew Handling",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/kappa-architecture/"
+      "url": "/concepts/3-ingestion-transformation/batch-processing/spark-execution-memory/"
     },
-    "Lambda Architecture": {
-      "title": "Lambda Architecture - Kiến trúc xử lý luồng và lô kết hợp",
-      "category": "System Architecture",
-      "definition": "Lambda Architecture là một kiến trúc xử lý dữ liệu lớn kết hợp giữa xử lý lô (Batch Layer) đảm bảo tính chính xác và xử lý luồng (Speed Layer) đảm bảo độ trễ thấp.",
+    "Airbnb Minerva Semantic Layer": {
+      "title": "Airbnb Minerva Semantic Layer: Metrics as Code và Bài Toán Nhất Quán Dữ Liệu",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/lambda-architecture/"
+      "url": "/concepts/3-ingestion-transformation/data-modeling/airbnb-minerva-semantic-layer/"
     },
-    "Push Pull Delivery": {
-      "title": "Cơ chế giao tiếp Push và Pull trong tích hợp hệ thống dữ liệu",
-      "category": "System Architecture",
-      "definition": "Push và Pull là hai cơ chế truyền tải thông tin xác định bên gửi (Producer - Push) hay bên nhận (Consumer - Pull) chủ động kiểm soát tốc độ và thời điểm di chuyển dữ liệu.",
+    "Presto Trino": {
+      "title": "Concepts Deep-dive: MPP Engines - Presto/Trino",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/push-pull-delivery/"
+      "url": "/concepts/3-ingestion-transformation/mpp-engines/presto-trino/"
     },
-    "Real Time Architecture": {
-      "title": "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time Architecture)",
-      "category": "System Architecture",
-      "definition": "Real-time Architecture là một mô hình kiến trúc xử lý dữ liệu liên tục dưới dạng dòng chảy (stream) với độ trễ cực thấp (mili-giây đến giây), giúp phản ứng tức thời với các sự kiện.",
+    "Flink Architecture": {
+      "title": "Apache Flink: Deep Dive vào True Streaming, RocksDB & Chandy-Lamport Checkpointing",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/1-foundations/system-architecture/real-time-architecture/"
+      "url": "/concepts/3-ingestion-transformation/stream-processing/flink-architecture/"
     },
-    "Amazon Redshift": {
-      "title": "Amazon Redshift là gì? Kiến trúc MPP Data Warehouse của AWS",
-      "category": "Cloud Data Platform",
-      "definition": "Amazon Redshift là kho dữ liệu đám mây (Cloud Data Warehouse) hiệu năng cao của AWS, sử dụng kiến trúc Xử lý Song song Khổng lồ (MPP) và lưu trữ dạng cột để phân tích dữ liệu quy mô petabyte.",
+    "Btree Vs Lsm": {
+      "title": "B-Tree vs LSM-Tree Storage Engines",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/amazon-redshift/"
+      "url": "/concepts/3-storage/database-internals/btree-vs-lsm/"
     },
-    "Azure Synapse": {
-      "title": "Azure Synapse Analytics - Nền tảng phân tích dữ liệu đám mây",
-      "category": "Cloud Data Platform",
-      "definition": "Azure Synapse Analytics là nền tảng phân tích hợp nhất của Microsoft, kết hợp kho dữ liệu doanh nghiệp (Enterprise Data Warehousing) và xử lý dữ liệu lớn (Big Data Analytics) trên đám mây Azure.",
+    "Postgres Mvcc": {
+      "title": "Postgres MVCC & ACID Internals",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/azure-synapse/"
+      "url": "/concepts/3-storage/database-internals/postgres-mvcc/"
     },
-    "Bigquery Optimization": {
-      "title": "Tối ưu hóa Google BigQuery và Storage Write API Chi Tiết",
-      "category": "Cloud Data Platform",
-      "definition": "Bài viết chuyên sâu về các kỹ thuật tối ưu hóa chi phí và hiệu năng trên Google BigQuery, kết hợp phân tích kiến trúc Storage Write API thế hệ mới.",
+    "Apache Arrow": {
+      "title": "Concepts Deep-dive: In-Memory Formats - Apache Arrow",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/bigquery-optimization/"
+      "url": "/concepts/3-storage/file-formats/apache-arrow/"
     },
-    "Bigquery Slot Optimization": {
-      "title": "Tối ưu hóa Slot & Chi phí BigQuery: Hướng dẫn FinOps chuyên sâu",
-      "category": "Cloud Data Platform",
-      "definition": "BigQuery Slots là các đơn vị tính toán ảo đại diện cho CPU và RAM cần thiết để chạy các truy vấn SQL. Tối ưu hóa BigQuery Slot giúp doanh nghiệp tăng hiệu năng truy vấn và kiểm soát chi phí FinOps hiệu quả.",
+    "Parquet Dremel": {
+      "title": "Columnar Formats: Parquet & Record Shredding",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization/"
+      "url": "/concepts/3-storage/file-formats/parquet-dremel/"
     },
-    "Cloud Storage": {
-      "title": "Cloud Object Storage là gì? Tìm hiểu Amazon S3 và Azure Blob",
-      "category": "Cloud Data Platform",
-      "definition": "Cloud Object Storage là dịch vụ lưu trữ đối tượng phẳng trên đám mây (như AWS S3, Azure Blob, GCS), cung cấp khả năng mở rộng vô hạn, độ bền cao và chi phí cực thấp.",
+    "Apache Iceberg Internals": {
+      "title": "Apache Iceberg: Metadata Tree & OCC",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/cloud-storage/"
+      "url": "/concepts/3-storage/lakehouse/apache-iceberg-internals/"
     },
-    "Cost Optimization": {
-      "title": "Tối ưu hóa chi phí hệ thống dữ liệu đám mây (Cost Optimization)",
-      "category": "Cloud Data Platform",
-      "definition": "Tối ưu hóa chi phí (Cost Optimization) hay kỷ luật FinOps trong kỹ thuật dữ liệu là quá trình giám sát, đánh giá và điều chỉnh tài nguyên tính toán và lưu trữ nhằm đạt hiệu quả tài chính tối ưu trên đám mây.",
+    "Delta Lake Internals": {
+      "title": "Deep-dive: Delta Lake Transaction Log & Z-Ordering",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/cost-optimization/"
+      "url": "/concepts/3-storage/lakehouse/delta-lake-internals/"
     },
-    "Databricks Platform": {
-      "title": "Databricks Platform - Nền tảng Lakehouse dữ liệu",
-      "category": "Cloud Data Platform",
-      "definition": "Databricks Platform là nền tảng phân tích dữ liệu đám mây thống nhất tiên phong kiến trúc Lakehouse, kết hợp ưu điểm của Data Lake và Data Warehouse dựa trên Apache Spark và Delta Lake.",
+    "Uber Kafka Architecture": {
+      "title": "Uber Kafka: Vận hành Kafka ở quy mô Petabyte",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/databricks-platform/"
+      "url": "/concepts/4-realtime-streaming/message-brokers/uber-kafka-architecture/"
     },
-    "Google Bigquery": {
-      "title": "Google BigQuery là gì? Kiến trúc và Hướng dẫn tối ưu hóa",
-      "category": "Cloud Data Platform",
-      "definition": "Google BigQuery là kho dữ liệu đám mây (Cloud Data Warehouse) phân tích không máy chủ (Serverless) hiệu năng cao trên Google Cloud Platform, sử dụng kiến trúc phân tách tính toán và lưu trữ.",
+    "Kimball Data Vault": {
+      "title": "Dimensional Modeling vs Data Vault: Đánh Đổi Hiệu Suất và Scale trên Cloud DWH",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/google-bigquery/"
+      "url": "/concepts/5-data-modeling/dimensional-vault/kimball-data-vault/"
     },
-    "Infrastructure As Code Terraform": {
-      "title": "Terraform IaC cho Data Engineer: Hướng dẫn từ A-Z",
-      "category": "Cloud Data Platform",
-      "definition": "Infrastructure as Code (IaC) với Terraform giúp Data Engineer định nghĩa, quản lý và tự động hóa hạ tầng dữ liệu đám mây (Cloud Storage, BQ, Glue) một cách nhất quán.",
+    "Clickhouse Pinot": {
+      "title": "Concepts Deep-dive: Real-time OLAP với ClickHouse & Pinot",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform/"
+      "url": "/concepts/5-data-modeling/realtime-olap/clickhouse-pinot/"
     },
-    "Networking Security Vpc": {
-      "title": "Thiết kế Networking & Bảo mật Cloud Data Platform hiệu quả",
-      "category": "Cloud Data Platform",
-      "definition": "Thiết kế Networking và Bảo mật trong Cloud Data Platform bao gồm các giải pháp thiết kế mạng riêng ảo VPC, kết nối an toàn qua Private Link, mã hóa dữ liệu KMS và phân quyền truy cập chéo tài khoản nhằm bảo vệ tài sản dữ liệu của doanh nghiệp.",
+    "Observability Monte Carlo": {
+      "title": "Data Observability & Quality",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/networking-security-vpc/"
+      "url": "/concepts/6-orchestration/data-quality/observability-monte-carlo/"
     },
-    "Serverless Data": {
-      "title": "Serverless Data Processing là gì? Tương lai của Kỹ thuật dữ liệu",
-      "category": "Cloud Data Platform",
-      "definition": "Serverless Data Processing là mô hình xử lý dữ liệu đám mây trong đó nhà cung cấp dịch vụ quản lý và phân bổ động tài nguyên máy chủ, tự động co giãn và tính phí theo thực tế sử dụng.",
+    "Ci Cd Data": {
+      "title": "DataOps Architecture: CI/CD, Zero-Copy Clone & Blue-Green Deployment",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/serverless-data/"
+      "url": "/concepts/6-orchestration/dataops/ci-cd-data/"
     },
-    "Snowflake Internals": {
-      "title": "Kiến trúc Snowflake & Cơ chế hoạt động chi tiết (Internals)",
-      "category": "Cloud Data Platform",
-      "definition": "Bài viết phân tích chuyên sâu về kiến trúc 3 lớp tách biệt (Storage, Compute, Services), cơ chế Micro-partitioning, Clustering Keys, Zero-Copy Cloning và Time Travel của Snowflake.",
+    "Dagster Sda": {
+      "title": "Dagster & Software-Defined Assets: Cuộc Cách Mạng Từ Task-Based Đến Asset-Based Orchestration",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/snowflake-internals/"
+      "url": "/concepts/6-orchestration/orchestrators/dagster-sda/"
     },
-    "Snowflake Search Optimization": {
-      "title": "Tối ưu hóa tìm kiếm (SOS) và Phân cụm dữ liệu trong Snowflake",
-      "category": "Cloud Data Platform",
-      "definition": "Phân tích chuyên sâu về cơ chế hoạt động của Snowflake Search Optimization Service (SOS) và Phân cụm tự động (Automatic Clustering), so sánh hiệu năng, chi phí và cách lựa chọn phương pháp tối ưu truy vấn điểm và truy vấn dải.",
+    "Zhamak Dehghani": {
+      "title": "Data Mesh Architecture (Zhamak Dehghani)",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/snowflake-search-optimization/"
+      "url": "/concepts/7-architecture/data-mesh/zhamak-dehghani/"
     },
-    "Snowflake": {
-      "title": "Snowflake Data Warehouse là gì? Kiến trúc và Tính năng cốt lõi",
-      "category": "Cloud Data Platform",
-      "definition": "Snowflake Data Cloud là nền tảng dữ liệu đám mây (Cloud Data Platform) được cung cấp dưới dạng SaaS, nổi bật với kiến trúc ba lớp phân tách hoàn toàn giữa lưu trữ tập trung và tính toán đa cụm.",
+    "Data Privacy": {
+      "title": "Data Privacy & Governance Engineering: Mổ xẻ Hệ thống Privacy-Aware của Meta",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/snowflake/"
+      "url": "/concepts/7-architecture/governance/data-privacy/"
     },
-    "Zero Copy Cloning": {
-      "title": "Zero-Copy Cloning - Kỹ thuật nhân bản dữ liệu siêu tốc",
-      "category": "Cloud Data Platform",
-      "definition": "Zero-Copy Cloning là kỹ thuật nhân bản dữ liệu siêu tốc bằng cách sao chép các con trỏ siêu dữ liệu (metadata pointers) trỏ về cùng các phân vùng dữ liệu vật lý bất biến.",
+    "Lambda Vs Kappa": {
+      "title": "Deep-dive: Lambda vs Kappa Architecture",
+      "category": "Khái niệm",
+      "definition": "",
       "bullets": [],
-      "url": "/concepts/2-storage/cloud-data-platform/zero-copy-cloning/"
-    },
-    "Acid Transactions On Lake": {
-      "title": "ACID Transactions trên Data Lake - Kiến trúc Lakehouse",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Giao dịch ACID trên Data Lake là cơ chế đảm bảo tính toàn vẹn dữ liệu (Atomicity, Consistency, Isolation, Durability) trên các hệ thống lưu trữ đối tượng giá rẻ như S3 hoặc GCS thông qua việc quản lý siêu dữ liệu (metadata) và nhật ký giao dịch.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/acid-transactions-on-lake/"
-    },
-    "Apache Hudi": {
-      "title": "Apache Hudi - Định dạng bảng tối ưu cho Data Lakehouse",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Apache Hudi (Hadoop Upserts Deletes and Incrementals) là định dạng bảng mã nguồn mở cung cấp khả năng lưu trữ giao dịch ACID, cập nhật (upsert), xóa (delete) và xử lý dữ liệu gia tăng ở cấp bản ghi trực tiếp trên Data Lake.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/apache-hudi/"
-    },
-    "Apache Iceberg": {
-      "title": "Apache Iceberg là gì? Cuộc cách mạng Open Table Format cho Data Lake",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Apache Iceberg là định dạng bảng mã nguồn mở hiệu năng cao, cung cấp giao dịch ACID, Hidden Partitioning và tiến hóa schema độc lập với engine tính toán, giúp quản lý dữ liệu lớn ở quy mô Petabyte.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/apache-iceberg/"
-    },
-    "Compaction": {
-      "title": "Compaction - Tối ưu hóa hiệu năng Data Lake (Small Files Problem)",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Compaction là quá trình bảo trì định kỳ chạy ngầm trên Data Lake và Lakehouse nhằm gộp hàng ngàn tệp tin nhỏ lẻ thành một số lượng ít hơn các tệp tin có kích thước tối ưu, giúp giải quyết triệt để vấn đề Small Files Problem và tăng tốc độ truy vấn.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/compaction/"
-    },
-    "Data Lake": {
-      "title": "Hồ dữ liệu - Hướng dẫn chuyên sâu về Data Lake",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Data Lake (Hồ dữ liệu) là hệ thống lưu trữ tập trung cho phép lưu giữ toàn bộ dữ liệu có cấu trúc, bán cấu trúc và phi cấu trúc của doanh nghiệp ở định dạng nguyên bản với triết lý Schema-on-Read.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/data-lake/"
-    },
-    "Delta Lake": {
-      "title": "Delta Lake là gì? Tính năng ACID trên Data Lakehouse",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Delta Lake là lớp lưu trữ mã nguồn mở (Open Table Format) hiệu năng cao nằm trên Data Lake, cung cấp các tính năng giao dịch ACID, Time Travel và Schema Evolution nhằm biến Data Lake thành kiến trúc Lakehouse tin cậy.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/delta-lake/"
-    },
-    "Iceberg Metadata Internals": {
-      "title": "Apache Iceberg Metadata Internals & Snapshot Management Guide",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Apache Iceberg Metadata Internals & Snapshot Management là việc phân tích cấu trúc cây metadata của Iceberg và các kỹ thuật tối ưu hóa như dọn dẹp snapshot, file mồ côi để duy trì hiệu năng hệ thống.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/iceberg-metadata-internals/"
-    },
-    "Lakehouse Optimization": {
-      "title": "Tối ưu hóa Lakehouse: Photon, Z-Order & Liquid Clustering",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Lakehouse Optimization bao gồm các kỹ thuật tối ưu hóa hiệu năng truy vấn và lưu trữ trên Data Lakehouse, nổi bật là công cụ thực thi vector hóa Photon, sắp xếp dữ liệu đa chiều Z-Ordering, Liquid Clustering, gom tệp Compaction và chỉ mục bỏ qua dữ liệu Data Skipping.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/lakehouse-optimization/"
-    },
-    "Lakehouse": {
-      "title": "Lakehouse (Data Lakehouse) là gì? Khái niệm, Đặc điểm và Kiến trúc",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Kiến trúc Lakehouse (Data Lakehouse) là kiến trúc quản lý dữ liệu hiện đại kết hợp tính năng giao dịch ACID và quản lý cấu trúc bảng mạnh mẽ của Data Warehouse cùng khả năng lưu trữ linh hoạt, giá rẻ của Data Lake.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/lakehouse/"
-    },
-    "Medallion Architecture": {
-      "title": "Medallion Architecture là gì? Mô hình phân lớp trong Lakehouse",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Medallion Architecture (Kiến trúc Đồng - Bạc - Vàng) là mẫu thiết kế logic phân tầng dữ liệu giúp làm sạch, chuẩn hóa và tối ưu hóa dữ liệu một cách tuần tự từ thô đến tinh chọn trong Data Lakehouse.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/medallion-architecture/"
-    },
-    "Schema Evolution": {
-      "title": "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Schema Evolution (Tiến hóa lược đồ) là cơ chế tự động quản lý và áp dụng các thay đổi về cấu trúc bảng (như thêm, xóa, đổi tên cột hoặc kiểu dữ liệu) mà không yêu cầu ghi đè lại dữ liệu lịch sử trên Data Lakehouse.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/schema-evolution/"
-    },
-    "Table Format Comparison": {
-      "title": "So sánh Delta Lake vs Iceberg vs Hudi: Kiến trúc & Lựa chọn",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Bảng so sánh chi tiết và hướng dẫn lựa chọn giữa ba định dạng bảng phổ biến nhất hiện nay cho kiến trúc Data Lakehouse: Delta Lake, Apache Iceberg và Apache Hudi.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/table-format-comparison/"
-    },
-    "Table Format Migration": {
-      "title": "Di chuyển sang Open Table Formats (Delta Lake & Apache Iceberg)",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Hướng dẫn toàn diện về kỹ thuật di chuyển dữ liệu từ các cấu trúc Data Lake truyền thống (Hive/Parquet) sang các Open Table Formats hiện đại như Delta Lake và Apache Iceberg sử dụng các phương pháp In-place và Shadow Migration.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/table-format-migration/"
-    },
-    "Table Format": {
-      "title": "Table Format - Định dạng bảng trong Data Lakehouse",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Table Format (Định dạng bảng) là lớp quản lý siêu dữ liệu (metadata abstraction layer) nằm trên Data Lake, giúp tổ chức các tệp dữ liệu vật lý riêng lẻ thành các bảng logic có cấu trúc và hỗ trợ giao dịch ACID.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/table-format/"
-    },
-    "Time Travel": {
-      "title": "Time Travel - Du hành thời gian trên Data Lake",
-      "category": "Data Lake & Lakehouse",
-      "definition": "Time Travel là tính năng cho phép truy vấn và xem lại trạng thái của bảng dữ liệu tại một mốc thời gian hoặc phiên bản cụ thể trong quá khứ.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-lake-lakehouse/time-travel/"
-    },
-    "Data Warehouse": {
-      "title": "Kho dữ liệu phân tích - Cẩm nang Data Warehouse chuyên sâu",
-      "category": "Data Warehouse",
-      "definition": "Data Warehouse (DWH - Kho dữ liệu phân tích) là một hệ thống cơ sở dữ liệu chuyên biệt lưu trữ dữ liệu lịch sử tích hợp từ nhiều nguồn khác nhau, được tối ưu hóa cho các truy vấn phân tích (OLAP), báo cáo và hỗ trợ ra quyết định (BI).",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/data-warehouse/"
-    },
-    "Dimension Table": {
-      "title": "Dimension Table (Bảng chiều) là gì? Thiết kế chiều dữ liệu trong DWH",
-      "category": "Data Warehouse",
-      "definition": "Bảng chiều (Dimension Table) chứa các thuộc tính dạng văn bản hoặc mô tả để cung cấp ngữ cảnh kinh doanh (như ai, cái gì, ở đâu, khi nào) cho các chỉ số đo lường trong bảng sự kiện.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/dimension-table/"
-    },
-    "Dimensional Modeling": {
-      "title": "Mô hình hóa đa chiều (Dimensional Modeling) trong Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Mô hình hóa đa chiều (Dimensional Modeling) là phương pháp thiết kế cơ sở dữ liệu tối ưu hóa tốc độ truy vấn phân tích (OLAP), bao gồm hai loại bảng chính: Fact Table và Dimension Table.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/dimensional-modeling/"
-    },
-    "Fact Table": {
-      "title": "Fact Table (Bảng sự kiện) là gì? Phân loại Fact trong Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Bảng sự kiện (Fact Table) lưu trữ các chỉ số đo lường định lượng (metrics) và các khóa ngoại liên kết đến các bảng chiều, đóng vai trò trung tâm trong lược đồ hình sao (Star Schema).",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/fact-table/"
-    },
-    "Grain": {
-      "title": "Grain (Độ mịn dữ liệu) là gì? Khái niệm sống còn trong Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Độ mịn dữ liệu (Grain) xác định mức độ chi tiết của một dòng dữ liệu duy nhất trong bảng sự kiện. Đây là bước quan trọng nhất trong việc định hình mô hình hóa đa chiều.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/grain/"
-    },
-    "Inmon Methodology": {
-      "title": "Phương pháp luận Inmon (Inmon Methodology) - Xây dựng Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Phương pháp luận Inmon tiếp cận xây dựng kho dữ liệu từ trên xuống (Top-down), dữ liệu từ nguồn được chuẩn hóa ở mức 3NF trong kho trung tâm trước khi chia về các Data Mart.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/inmon-methodology/"
-    },
-    "Kimball Methodology": {
-      "title": "Phương pháp luận Kimball (Kimball Methodology) thiết kế Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Phương pháp luận Kimball tiếp cận xây dựng kho dữ liệu từ dưới lên (Bottom-up), tập trung vào mô hình hóa đa chiều (Star Schema) trực tiếp từ nhu cầu phân tích của phòng ban.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/kimball-methodology/"
-    },
-    "Slowly Changing Dimension": {
-      "title": "Slowly Changing Dimension (SCD) là gì? Type 1, 2, 3, 4, 6",
-      "category": "Data Warehouse",
-      "definition": "Chiều thay đổi chậm (SCD - Slowly Changing Dimension) là tập hợp các kỹ thuật quản lý và lưu trữ dữ liệu lịch sử khi các thuộc tính của bảng chiều biến động theo thời gian.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/slowly-changing-dimension/"
-    },
-    "Snowflake Schema": {
-      "title": "Snowflake Schema (Lược đồ bông tuyết) - So sánh và Ứng dụng thực tế",
-      "category": "Data Warehouse",
-      "definition": "Lược đồ bông tuyết (Snowflake Schema) là một dạng biến thể của lược đồ hình sao, trong đó các bảng chiều được chuẩn hóa (normalize) thành nhiều bảng nhỏ có quan hệ phân cấp.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/snowflake-schema/"
-    },
-    "Star Schema": {
-      "title": "Star Schema (Lược đồ hình sao) - Chuẩn vàng thiết kế Data Warehouse",
-      "category": "Data Warehouse",
-      "definition": "Lược đồ hình sao (Star Schema) là mô hình thiết kế kho dữ liệu đơn giản và phổ biến nhất, gồm một bảng sự kiện (Fact) ở trung tâm kết nối trực tiếp với các bảng chiều (Dimension).",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/star-schema/"
-    },
-    "Surrogate Key": {
-      "title": "Surrogate Key (Khóa thay thế) là gì? Phân biệt với Natural Key",
-      "category": "Data Warehouse",
-      "definition": "Khóa thay thế (Surrogate Key) là khóa chính tự sinh dạng số nguyên (INT/BIGINT) trong bảng chiều, không có ý nghĩa nghiệp vụ, dùng để tối ưu hóa liên kết và quản lý lịch sử SCD.",
-      "bullets": [],
-      "url": "/concepts/2-storage/data-warehouse/surrogate-key/"
-    },
-    "Clustering": {
-      "title": "Clustering Dữ liệu là gì? So sánh Clustering vs Partitioning",
-      "category": "Database & Storage",
-      "definition": "Clustering (phân cụm) là kỹ thuật sắp xếp dữ liệu vật lý trên đĩa sao cho các dòng có giá trị tương đồng trên các cột chỉ định nằm cạnh nhau, giúp tối ưu hóa Block Pruning và tăng hiệu năng truy vấn phân tích.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/clustering/"
-    },
-    "Columnar Storage": {
-      "title": "Lưu trữ dạng Cột (Columnar Storage) - Cốt lõi của Data Warehouse",
-      "category": "Database & Storage",
-      "definition": "Columnar Storage (lưu trữ dạng cột) là phương pháp tổ chức dữ liệu vật lý trên ổ đĩa theo cột thay vì theo dòng, tối ưu hóa băng thông I/O cho các truy vấn phân tích (OLAP) và nâng cao tỷ lệ nén.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/columnar-storage/"
-    },
-    "Compression Algorithms": {
-      "title": "Thuật toán nén dữ liệu (Compression Algorithms) - Snappy, Gzip, Zstd",
-      "category": "Database & Storage",
-      "definition": "Thuật toán nén dữ liệu (compression algorithms) là các kỹ thuật giảm kích thước vật lý của dữ liệu trên đĩa hoặc đường truyền mạng, giải quyết điểm nghẽn Disk/Network I/O trong các hệ thống Big Data.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/compression-algorithms/"
-    },
-    "File Formats Deep Dive": {
-      "title": "Định dạng tệp dữ liệu (File Formats): Parquet & Avro Internals",
-      "category": "Database & Storage",
-      "definition": "Khám phá chuyên sâu về các định dạng lưu trữ cột Parquet/ORC và dòng Avro, từ cơ chế nén, mã hóa nhị phân đến cấu trúc tệp chi tiết phục vụ các kiến trúc dữ liệu hiện đại.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/file-formats-deep-dive/"
-    },
-    "Indexing": {
-      "title": "Chỉ mục Cơ sở dữ liệu (Indexing) - Cách tăng tốc độ truy vấn SQL",
-      "category": "Database & Storage",
-      "definition": "Chỉ mục cơ sở dữ liệu (indexing) là cấu trúc dữ liệu phụ (thường là B-Tree) giúp tăng tốc độ tìm kiếm và truy xuất bản ghi trong database, đánh đổi lại dung lượng đĩa và tốc độ ghi.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/indexing/"
-    },
-    "OLAP": {
-      "title": "OLAP là gì? Hệ thống Xử lý Phân tích Trực tuyến",
-      "category": "Database & Storage",
-      "definition": "OLAP (Online Analytical Processing) là công nghệ và hệ thống tối ưu hóa cho các tác vụ phân tích dữ liệu đa chiều, thực hiện các truy vấn đọc dữ liệu phức tạp trên quy mô lớn để báo cáo và hỗ trợ ra quyết định.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/olap/"
-    },
-    "Oltp Olap Htap Comparison": {
-      "title": "So sánh OLTP vs OLAP vs HTAP: Kiến trúc & Trường hợp sử dụng",
-      "category": "Database & Storage",
-      "definition": "Bài viết so sánh toàn diện kiến trúc cơ sở dữ liệu OLTP, OLAP và HTAP, làm rõ sự khác biệt giữa lưu trữ dạng dòng và cột, cơ chế đồng thời và các kịch bản áp dụng thực tế.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/oltp-olap-htap-comparison/"
-    },
-    "OLTP": {
-      "title": "OLTP là gì? Đặc điểm hệ thống Xử lý Giao dịch Trực tuyến",
-      "category": "Database & Storage",
-      "definition": "OLTP (Online Transaction Processing) là hệ thống cơ sở dữ liệu tối ưu hóa cho việc xử lý các giao dịch trực tuyến nhanh chóng với tần suất cao, đảm bảo tính nhất quán của dữ liệu (ACID) khi có nhiều người dùng đồng thời.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/oltp/"
-    },
-    "Partitioning": {
-      "title": "Phân vùng dữ liệu (Partitioning) là gì? Tối ưu hóa Database",
-      "category": "Database & Storage",
-      "definition": "Phân vùng dữ liệu (partitioning) là kỹ thuật chia nhỏ một bảng dữ liệu lớn thành các phần vật lý độc lập trên đĩa cứng để tăng tốc độ truy vấn thông qua cơ chế cắt tỉa phân vùng (partition pruning).",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/partitioning/"
-    },
-    "Query Engines Architecture": {
-      "title": "So sánh Kiến trúc Fast Query Engines: Trino, ClickHouse, Druid",
-      "category": "Database & Storage",
-      "definition": "So sánh kiến trúc ba động cơ truy vấn phân tích (OLAP) phổ biến: Trino (truy vấn liên kết), ClickHouse (lưu trữ cột vectorized) và Apache Druid (real-time index).",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/query-engines-architecture/"
-    },
-    "Relational Database": {
-      "title": "Cơ sở Dữ liệu Quan hệ (RDBMS) - Nguyên lý và Ứng dụng",
-      "category": "Database & Storage",
-      "definition": "Cơ sở dữ liệu quan hệ (RDBMS) là hệ thống quản trị dữ liệu dựa trên mô hình quan hệ, tổ chức thông tin dưới dạng các bảng liên kết qua khóa chính/khóa ngoại và đảm bảo tính toàn vẹn qua các thuộc tính ACID.",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/relational-database/"
-    },
-    "Row Based Storage": {
-      "title": "Lưu trữ dạng Dòng (Row-based Storage) - Cơ sở cho Hệ thống OLTP",
-      "category": "Database & Storage",
-      "definition": "Row-based Storage (lưu trữ dạng dòng) là phương pháp tổ chức dữ liệu vật lý trên ổ đĩa theo hàng liên tiếp, tối ưu hóa cho các thao tác đọc ghi toàn bộ thực thể của hệ thống giao dịch (OLTP).",
-      "bullets": [],
-      "url": "/concepts/2-storage/database-storage/row-based-storage/"
-    },
-    "Apache Spark": {
-      "title": "Apache Spark là gì? Tổng quan khung xử lý dữ liệu lớn trong bộ nhớ",
-      "category": "Batch Processing",
-      "definition": "Apache Spark là một động cơ phân tích thống nhất mã nguồn mở, chuyên xử lý và tính toán dữ liệu lớn theo mô hình phân tán trong bộ nhớ (In-Memory Computing).",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/apache-spark/"
-    },
-    "Batch Processing": {
-      "title": "Xử lý dữ liệu theo lô - Cẩm nang Batch Processing phân tán",
-      "category": "Batch Processing",
-      "definition": "Xử lý dữ liệu theo lô (Batch Processing) là phương pháp thực thi tính toán trên một tập hợp dữ liệu lớn có sẵn và có giới hạn rõ ràng (bounded data) một cách định kỳ.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/batch-processing/"
-    },
-    "Data Skew": {
-      "title": "Data Skew là gì? Cách xử lý lệch dữ liệu trong Big Data & Spark",
-      "category": "Batch Processing",
-      "definition": "Data Skew (lệch dữ liệu) là hiện tượng dữ liệu phân bố không đều giữa các phân vùng trong tính toán phân tán, khiến một số node quá tải và làm chậm toàn bộ hệ thống.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/data-skew/"
-    },
-    "Distributed Processing": {
-      "title": "Distributed Processing là gì? Tổng quan Xử lý phân tán Big Data",
-      "category": "Batch Processing",
-      "definition": "Xử lý phân tán (Distributed Processing) là phương pháp chia nhỏ một tác vụ tính toán khổng lồ thành nhiều phần và thực thi song song trên một cụm gồm nhiều máy chủ liên kết với nhau.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/distributed-processing/"
-    },
-    "Shuffle": {
-      "title": "Shuffle trong Spark: Điểm nghẽn hiệu năng cốt lõi cần tối ưu",
-      "category": "Batch Processing",
-      "definition": "Shuffle trong Apache Spark là quá trình phân phối lại và luân chuyển vật lý dữ liệu giữa các phân vùng trên toàn cụm máy chủ, xảy ra khi thực hiện các phép toán có phụ thuộc rộng (wide dependencies) như join, groupBy hay distinct.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/shuffle/"
-    },
-    "Spark Advanced Tuning": {
-      "title": "Tối ưu hóa Spark nâng cao: DPP, AQE & Memory Tuning",
-      "category": "Batch Processing",
-      "definition": "Tối ưu hóa Spark nâng cao bao gồm các kỹ thuật Dynamic Partition Pruning (DPP), Adaptive Query Execution (AQE) và quản lý bộ nhớ Spark JVM để cải thiện hiệu năng xử lý dữ liệu lớn, giảm thiểu Shuffle và tối ưu hóa tài nguyên phần cứng.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-advanced-tuning/"
-    },
-    "Spark Aqe Catalyst": {
-      "title": "Spark AQE & Catalyst Optimizer: Deep Dive & Performance Tuning",
-      "category": "Batch Processing",
-      "definition": "Spark Adaptive Query Execution (AQE) và Catalyst Optimizer là hai công nghệ cốt lõi giúp Spark tối ưu hóa kế hoạch thực thi truy vấn tĩnh và động (runtime) nhằm đạt hiệu năng tối đa.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-aqe-catalyst/"
-    },
-    "Spark Execution Model": {
-      "title": "Spark Execution Model: Kiến trúc Driver, Cluster Manager và Executor",
-      "category": "Batch Processing",
-      "definition": "Spark Execution Model định nghĩa cách thức phân chia, điều phối và thực thi các tác vụ tính toán phân tán thông qua bộ ba Driver, Cluster Manager và Executor.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-execution-model/"
-    },
-    "Spark Jobs Stages Tasks": {
-      "title": "Cấu trúc phân cấp thực thi: Spark Jobs, Stages và Tasks",
-      "category": "Batch Processing",
-      "definition": "Jobs, Stages và Tasks đại diện cho cấu trúc phân cấp điều phối và thực thi vật lý các tác vụ tính toán phân tán trong một ứng dụng Apache Spark.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-jobs-stages-tasks/"
-    },
-    "Spark Joins": {
-      "title": "Spark Joins: Broadcast Hash Join, Shuffle Hash Join và Sort Merge Join",
-      "category": "Batch Processing",
-      "definition": "Các chiến lược Join trong Spark bao gồm Broadcast Hash Join, Shuffle Hash Join và Sort Merge Join, được bộ tối ưu hóa Catalyst tự động lựa chọn dựa trên kích thước dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-joins/"
-    },
-    "Spark Memory Management": {
-      "title": "Spark Memory Management & OOM Troubleshooting chuyên sâu",
-      "category": "Batch Processing",
-      "definition": "Spark Memory Management là cơ chế phân chia bộ nhớ JVM Executor thành Execution, Storage, User và Reserved memory, giúp tối ưu hóa hiệu năng tính toán và lưu trữ.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-memory-management/"
-    },
-    "Spark Partition": {
-      "title": "Spark Partition là gì? Tối ưu phân vùng trong Apache Spark",
-      "category": "Batch Processing",
-      "definition": "Spark Partition là các phân mảnh logic của một tập dữ liệu lớn được lưu trữ phân tán, đóng vai trò là đơn vị cơ bản quyết định tính song song (parallelism) trong Apache Spark.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-partition/"
-    },
-    "Spark Sql": {
-      "title": "Spark SQL là gì? Catalyst Optimizer và DataFrame trong Apache Spark",
-      "category": "Batch Processing",
-      "definition": "Spark SQL là một phân hệ cốt lõi của Apache Spark dùng để xử lý dữ liệu có cấu trúc bằng cách cung cấp giao diện truy vấn SQL tiêu chuẩn kết hợp DataFrame API và Catalyst Optimizer.",
-      "bullets": [],
-      "url": "/concepts/3-integration/batch-processing/spark-sql/"
-    },
-    "Backfill": {
-      "title": "Quy trình Backfill trong Kỹ thuật Dữ liệu: Chạy bù dữ liệu lịch sử",
-      "category": "ETL / ELT",
-      "definition": "Backfill là quy trình chạy lại các luồng dữ liệu (Data Pipeline) cho các khoảng thời gian trong quá khứ nhằm sửa lỗi, bổ sung cột mới hoặc bù đắp dữ liệu bị thiếu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/backfill/"
-    },
-    "Change Data Capture": {
-      "title": "Change Data Capture (CDC) - Giải pháp đồng bộ dữ liệu thời gian thực",
-      "category": "ETL / ELT",
-      "definition": "Change Data Capture (CDC) là tập hợp các công nghệ và mẫu thiết kế nhằm tự động phát hiện, nắm bắt các thay đổi dữ liệu (Insert, Update, Delete) tại nguồn gần như ngay lập tức để đồng bộ sang đích.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/change-data-capture/"
-    },
-    "Data Extraction": {
-      "title": "Data Extraction - Các phương pháp trích xuất dữ liệu",
-      "category": "ETL / ELT",
-      "definition": "Data Extraction là bước đầu tiên trong quy trình ETL/ELT nhằm thu thập và trích xuất dữ liệu thô từ nhiều nguồn khác nhau về hệ thống lưu trữ trung tâm.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/data-extraction/"
-    },
-    "Data Ingestion": {
-      "title": "Data Ingestion - Quy trình thu nạp dữ liệu",
-      "category": "ETL / ELT",
-      "definition": "Data Ingestion là quá trình thu thập, vận chuyển và nạp dữ liệu thô từ các nguồn phát sinh ban đầu vào một kho lưu trữ tập trung để sẵn sàng cho phân tích.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/data-ingestion/"
-    },
-    "Data Loading": {
-      "title": "Data Loading - Kỹ thuật nạp dữ liệu trong ETL/ELT",
-      "category": "ETL / ELT",
-      "definition": "Data Loading là giai đoạn ghi dữ liệu đã trích xuất hoặc biến đổi vào hệ thống lưu trữ đích cuối cùng như Data Warehouse, Data Lake để phục vụ phân tích.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/data-loading/"
-    },
-    "Data Transformation": {
-      "title": "Data Transformation - Nghệ thuật làm sạch và biến đổi dữ liệu",
-      "category": "ETL / ELT",
-      "definition": "Data Transformation là quá trình làm sạch, chuẩn hóa, tái cấu trúc và áp dụng logic nghiệp vụ lên dữ liệu thô để phục vụ phân tích.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/data-transformation/"
-    },
-    "Deduplication": {
-      "title": "Phương pháp khử trùng lặp dữ liệu (Deduplication) hiệu quả",
-      "category": "ETL / ELT",
-      "definition": "Deduplication là quá trình nhận diện và loại bỏ các bản ghi trùng lặp trong tập dữ liệu để đảm bảo tính duy nhất và nâng cao chất lượng dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/deduplication/"
-    },
-    "ELT": {
-      "title": "ELT (Extract, Load, Transform) - Sự thay thế cho ETL truyền thống",
-      "category": "ETL / ELT",
-      "definition": "ELT (Extract, Load, Transform) là quy trình tích hợp dữ liệu hiện đại nhằm trích xuất dữ liệu, nạp nguyên bản vào kho lưu trữ rồi mới thực hiện biến đổi làm sạch.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/elt/"
-    },
-    "ETL": {
-      "title": "Quy trình ETL (Extract, Transform, Load) trong Data Engineering",
-      "category": "ETL / ELT",
-      "definition": "ETL là quy trình tích hợp dữ liệu truyền thống nhằm trích xuất dữ liệu từ các nguồn, biến đổi làm sạch trên máy chủ trung gian và nạp vào kho dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/etl/"
-    },
-    "Idempotency": {
-      "title": "Tính lũy đẳng (Idempotency) trong thiết kế Data Pipeline",
-      "category": "ETL / ELT",
-      "definition": "Idempotency (Tính lũy đẳng) là thuộc tính đảm bảo một tác vụ dù thực thi một hay nhiều lần với cùng một đầu vào thì kết quả cuối cùng nhận được vẫn không thay đổi.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/idempotency/"
-    },
-    "Incremental Load": {
-      "title": "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipeline",
-      "category": "ETL / ELT",
-      "definition": "Incremental Load là phương pháp nạp dữ liệu gia tăng, chỉ thu thập và xử lý các bản ghi mới hoặc thay đổi kể từ lần chạy cuối cùng để tối ưu hóa hiệu năng.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/incremental-load/"
-    },
-    "Integration Patterns Comparison": {
-      "title": "So sánh ETL vs ELT vs Reverse ETL: Kiến trúc & Khác biệt",
-      "category": "ETL / ELT",
-      "definition": "So sánh chi tiết các mô hình tích hợp dữ liệu phổ biến: ETL truyền thống qua middleware, ELT hiện đại trên Cloud Data Warehouse, và Reverse ETL đồng bộ ngược dữ liệu về các ứng dụng SaaS vận hành.",
-      "bullets": [],
-      "url": "/concepts/3-integration/etl-elt/integration-patterns-comparison/"
-    },
-    "Airflow Scheduler": {
-      "title": "Airflow Scheduler hoạt động như thế nào? Cấu trúc và Tối ưu",
-      "category": "Orchestration",
-      "definition": "Airflow Scheduler là tiến trình trung tâm của Apache Airflow, chịu trách nhiệm quét thư mục DAG, kiểm tra các điều kiện phụ thuộc và lập lịch cho các tác vụ.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/airflow-scheduler/"
-    },
-    "Apache Airflow": {
-      "title": "Apache Airflow là gì? Hướng dẫn chi tiết kiến trúc Airflow",
-      "category": "Orchestration",
-      "definition": "Apache Airflow là nền tảng mã nguồn mở hàng đầu dùng để điều phối, lập lịch và giám sát các luồng dữ liệu (data pipelines) dưới dạng code Python.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/apache-airflow/"
-    },
-    "Dag": {
-      "title": "DAG là gì? Directed Acyclic Graph trong Data Pipeline",
-      "category": "Orchestration",
-      "definition": "DAG (Directed Acyclic Graph) là đồ thị có hướng không chu trình, được dùng trong kỹ thuật dữ liệu để mô hình hóa các nhiệm vụ và mối quan hệ phụ thuộc giữa chúng.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/dag/"
-    },
-    "Orchestration": {
-      "title": "Data Orchestration là gì? Điều phối dữ liệu trong Data Engineering",
-      "category": "Orchestration",
-      "definition": "Data Orchestration (Điều phối dữ liệu) là quá trình tự động hóa việc lên lịch, quản lý sự phụ thuộc, giám sát và thực thi các luồng công việc xử lý dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/orchestration/"
-    },
-    "Orchestrator Comparison": {
-      "title": "Airflow vs Prefect vs Dagster: So sánh công cụ Orchestration",
-      "category": "Orchestration",
-      "definition": "Bản so sánh toàn diện giữa ba công cụ điều phối dữ liệu (Data Orchestration) hàng đầu hiện nay bao gồm Apache Airflow, Prefect và Dagster, phân tích từ kiến trúc cốt lõi đến các mô hình thực thi và quản lý trạng thái.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/orchestrator-comparison/"
-    },
-    "Retries Sla": {
-      "title": "Cơ chế Retries và SLA trong Data Pipeline (Airflow)",
-      "category": "Orchestration",
-      "definition": "Retries là cơ chế tự động thử lại tác vụ bị lỗi trong khi SLA là cam kết thời gian hoàn thành tổng thể của luồng dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/retries-sla/"
-    },
-    "Sensors": {
-      "title": "Airflow Sensors là gì? Cảm biến dữ liệu trong Orchestration",
-      "category": "Orchestration",
-      "definition": "Sensors là một loại Operator đặc biệt trong Apache Airflow có nhiệm vụ liên tục kiểm tra (poll) một điều kiện bên ngoài cho đến khi nó được thỏa mãn.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/sensors/"
-    },
-    "Task Dependency": {
-      "title": "Task Dependency là gì? Quản lý sự phụ thuộc trong DAG Airflow",
-      "category": "Orchestration",
-      "definition": "Task Dependency (Sự phụ thuộc tác vụ) là cơ chế thiết lập thứ tự thực thi giữa các nhiệm vụ trong một đường ống dữ liệu (DAG) dựa trên trạng thái của chúng.",
-      "bullets": [],
-      "url": "/concepts/3-integration/orchestration/task-dependency/"
-    },
-    "Data Contract": {
-      "title": "Hợp đồng dữ liệu (Data Contract) và Kafka Schema Registry",
-      "category": "Transformation & Analytics",
-      "definition": "Hợp đồng dữ liệu (Data Contract) là thỏa thuận rõ ràng và có khả năng thực thi tự động giữa bên sản xuất và bên tiêu thụ dữ liệu để đảm bảo chất lượng và cấu trúc schema thông qua các công cụ như Schema Registry.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/data-contract/"
-    },
-    "Data Pipeline Cicd": {
-      "title": "CI/CD cho Modern Data Pipelines: Slim CI và Data Testing",
-      "category": "Transformation & Analytics",
-      "definition": "Quy trình CI/CD cho Modern Data Pipelines kết hợp kỹ thuật dbt Slim CI và kiểm thử chất lượng dữ liệu tự động, giúp tối ưu hóa tài nguyên tính toán, phát hiện sớm lỗi logic hoặc lỗi cấu trúc schema trước khi deploy lên môi trường Production.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/data-pipeline-cicd/"
-    },
-    "Dbt Advanced": {
-      "title": "Advanced dbt Pipelines & Stateful CI/CD: Strategies and Deferral",
-      "category": "Transformation & Analytics",
-      "definition": "Detailed guide on building stateful dbt pipelines, exploring incremental strategies, BigQuery vs Snowflake patterns, and stateful CI/CD with code deferral.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/dbt-advanced/"
-    },
-    "Dbt Models": {
-      "title": "Cấu trúc dbt Models: Staging, Intermediate và Marts",
-      "category": "Transformation & Analytics",
-      "definition": "dbt Models là các tệp SQL chứa câu lệnh SELECT trong dbt, được tổ chức theo kiến trúc phân tầng (Staging, Intermediate, Marts) để cấu trúc hóa luồng biến đổi dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/dbt-models/"
-    },
-    "Dbt Semantic Layer": {
-      "title": "dbt Semantic Layer & MetricFlow: Architecture and Implementation",
-      "category": "Transformation & Analytics",
-      "definition": "A comprehensive guide on the dbt Semantic Layer and MetricFlow, covering architecture, transition from legacy metrics, components, and query compilation.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/dbt-semantic-layer/"
-    },
-    "Dbt Testing": {
-      "title": "dbt Testing - Hướng dẫn triển khai kiểm thử tự động dữ liệu",
-      "category": "Transformation & Analytics",
-      "definition": "dbt Testing là khung kiểm thử dữ liệu tích hợp trong dbt, sử dụng câu lệnh SQL để phát hiện các dòng dữ liệu vi phạm quy tắc nhằm tự động bảo vệ chất lượng dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/dbt-testing/"
-    },
-    "Dbt": {
-      "title": "dbt (data build tool) là gì? Lõi của Analytics Engineering",
-      "category": "Transformation & Analytics",
-      "definition": "dbt (data build tool) là công cụ mã nguồn mở chuyên trách việc chuyển đổi dữ liệu (Transform) trong kiến trúc ELT bằng cách biên dịch và chạy các model SQL trên Data Warehouse.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/dbt/"
-    },
-    "Materialization": {
-      "title": "Materialization trong dbt: Hướng dẫn Chuyên sâu và Thực chiến",
-      "category": "Transformation & Analytics",
-      "definition": "Materialization trong dbt là các chiến lược xác định cách dbt biên dịch và ghi kết quả của câu lệnh SELECT thành các đối tượng vật lý (Table, Incremental) hoặc ảo (View, Ephemeral) trên Data Warehouse.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/materialization/"
-    },
-    "Metrics Layer": {
-      "title": "Lớp ngữ nghĩa chỉ số (Metrics Layer / Semantic Layer) là gì?",
-      "category": "Transformation & Analytics",
-      "definition": "Metrics Layer (Semantic Layer) là lớp trung gian nằm giữa Data Warehouse và các công cụ tiêu thụ để định nghĩa và quản lý tập trung các chỉ số đo lường doanh nghiệp.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/metrics-layer/"
-    },
-    "Semantic Layers Bi": {
-      "title": "Xây dựng Semantic Layer & Tích hợp BI (LookML & dbt MetricFlow)",
-      "category": "Transformation & Analytics",
-      "definition": "Semantic Layer là tầng trừu tượng trung gian định nghĩa tập trung các chỉ số (metrics) và logic nghiệp vụ, kết nối kho dữ liệu với các công cụ BI như Looker và dbt MetricFlow.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/semantic-layers-bi/"
-    },
-    "Sql Transformation": {
-      "title": "SQL Transformation là gì? Kỹ thuật biến đổi dữ liệu bằng SQL",
-      "category": "Transformation & Analytics",
-      "definition": "SQL Transformation là quá trình sử dụng ngôn ngữ SQL để làm sạch, chuẩn hóa, kết hợp và tổng hợp dữ liệu trực tiếp trong Data Warehouse theo kiến trúc ELT hiện đại.",
-      "bullets": [],
-      "url": "/concepts/3-integration/transformation-analytics/sql-transformation/"
-    },
-    "Apache Kafka": {
-      "title": "Apache Kafka là gì? Nền tảng phân phối Event Streaming phân tán",
-      "category": "Streaming Processing",
-      "definition": "Apache Kafka là nền tảng phân phối luồng sự kiện phân tán (Distributed Event Streaming) mã nguồn mở, hoạt động theo mô hình xuất bản/đăng ký (Publish/Subscribe) và lưu trữ log nối tiếp (append-only log), giúp trung chuyển dữ liệu thời gian thực với độ trễ siêu thấp.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/message-queue/apache-kafka/"
-    },
-    "Consumer Groups": {
-      "title": "Kafka Consumer Groups: Cơ chế xử lý dữ liệu song song hiệu năng cao",
-      "category": "Streaming Processing",
-      "definition": "Consumer Group trong Apache Kafka là cơ chế nhóm nhiều tiến trình tiêu thụ dữ liệu (Consumers) để chia sẻ tải và đọc song song các phân vùng (Partitions) của một Topic mà không bị trùng lặp dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/message-queue/consumer-groups/"
-    },
-    "Kafka Rebalance Protocols": {
-      "title": "Kafka Rebalance Protocols & Assignment: Core Guide",
-      "category": "Streaming Processing",
-      "definition": "Kafka Consumer Rebalance Protocols là giao thức điều phối giữa các Consumer và Group Coordinator nhằm phân bổ các phân vùng trong một Consumer Group.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/message-queue/kafka-rebalance-protocols/"
-    },
-    "Kafka Topics Partitions": {
-      "title": "Topics và Partitions trong Kafka: Cơ chế song song hóa",
-      "category": "Streaming Processing",
-      "definition": "Topic trong Apache Kafka là danh mục logic dùng để phân loại dữ liệu, còn Partition là đơn vị phân chia vật lý giúp song song hóa xử lý và mở rộng quy mô lưu trữ trên cụm Broker.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/message-queue/kafka-topics-partitions/"
-    },
-    "Event Time Processing Time": {
-      "title": "Event Time vs Processing Time trong Streaming Processing",
-      "category": "Streaming Processing",
-      "definition": "Event Time là mốc thời gian sự kiện thực tế diễn ra ở thiết bị nguồn, còn Processing Time là mốc thời gian máy chủ xử lý dữ liệu nhận được sự kiện đó.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/event-time-processing-time/"
-    },
-    "Exactly Once Semantics": {
-      "title": "Exactly-Once Semantics (EOS) trong Streaming Processing",
-      "category": "Streaming Processing",
-      "definition": "Exactly-Once Semantics (EOS) là mức độ đảm bảo xử lý dữ liệu cao nhất trong hệ thống phân tán, cam kết mỗi bản ghi đầu vào được xử lý và tác động đến kết quả đầu ra đúng một lần duy nhất.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/exactly-once-semantics/"
-    },
-    "Spark Structured Streaming": {
-      "title": "Spark Structured Streaming: Mô hình truy vấn và cơ chế hoạt động",
-      "category": "Streaming Processing",
-      "definition": "Spark Structured Streaming là một công cụ xử lý luồng (stream processing) có cấu trúc, được xây dựng trên Spark SQL engine giúp xử lý dữ liệu thời gian thực dạng bảng vô hạn (unbounded table) với các đảm bảo về hiệu năng và Exactly-Once.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/spark-structured-streaming/"
-    },
-    "Spark Vs Flink Comparison": {
-      "title": "So sánh Apache Spark vs Apache Flink chi tiết nhất",
-      "category": "Streaming Processing",
-      "definition": "Bản so sánh toàn diện giữa Apache Spark và Apache Flink về kiến trúc xử lý (micro-batching vs continuous streaming), cơ chế quản lý trạng thái stateful, fault tolerance, watermarking và các tiêu chí lựa chọn công cụ phù hợp cho hệ thống data pipeline.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/"
-    },
-    "Stream Table Duality": {
-      "title": "Stream-Table Duality là gì? Mối quan hệ giữa Stream và Table",
-      "category": "Streaming Processing",
-      "definition": "Stream-Table Duality là tính lưỡng tính dòng - bảng, biểu thị mối quan hệ mật thiết giữa luồng dữ liệu biến động (Stream) và bảng dữ liệu trạng thái tĩnh (Table) trong xử lý dữ liệu thời gian thực.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/stream-table-duality/"
-    },
-    "Streaming Processing": {
-      "title": "Streaming Processing là gì? Xử lý dữ liệu thời gian thực",
-      "category": "Streaming Processing",
-      "definition": "Streaming Processing (Xử lý dòng dữ liệu) là phương pháp tính toán và xử lý dữ liệu liên tục dưới dạng luồng sự kiện vô hạn ngay khi chúng phát sinh theo thời gian thực.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/streaming-processing/"
-    },
-    "Watermark": {
-      "title": "Watermark là gì? Xử lý Late Data trong Streaming",
-      "category": "Streaming Processing",
-      "definition": "Watermark (Dấu chuẩn thời gian) là cơ chế theo dõi tiến trình thời gian logic trong xử lý dữ liệu luồng, giúp hệ thống xác định khi nào nên đóng các cửa sổ thời gian và xử lý dữ liệu đến muộn.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/watermark/"
-    },
-    "Windowing": {
-      "title": "Windowing là gì? Tumbling, Sliding, Session Windows trong Streaming",
-      "category": "Streaming Processing",
-      "definition": "Windowing (Phân nhóm theo cửa sổ) là kỹ thuật chia cắt luồng dữ liệu vô hạn thành các khối dữ liệu thời gian hữu hạn để thực hiện các phép toán thống kê và tổng hợp.",
-      "bullets": [],
-      "url": "/concepts/4-realtime/stream-calculation/windowing/"
-    },
-    "Anomaly Detection": {
-      "title": "Phát hiện bất thường dữ liệu (Anomaly Detection) là gì?",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu cách phát hiện bất thường (Anomaly Detection) trong kỹ thuật dữ liệu bằng thuật toán thống kê và học máy để tự động hóa giám sát chất lượng dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
-    },
-    "Data Profiling": {
-      "title": "Data Profiling là gì? Lập hồ sơ dữ liệu để hiểu nguồn dữ liệu",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu quy trình lập hồ sơ dữ liệu (Data Profiling) giúp khám phá, phân tích thống kê cấu trúc, nội dung và các mối quan hệ ẩn trong dữ liệu thô.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/data-profiling/"
-    },
-    "Data Quality Dimensions": {
-      "title": "6 chiều chất lượng dữ liệu (Data Quality Dimensions) quan trọng nhất",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu 6 chiều chất lượng dữ liệu cốt lõi (Completeness, Accuracy, Consistency, Validity, Uniqueness, Timeliness) theo chuẩn DAMA để đo lường sức khỏe dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
-    },
-    "Data Quality": {
-      "title": "Chất lượng dữ liệu (Data Quality) là gì? Tại sao nó quan trọng?",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu định nghĩa Chất lượng dữ liệu (Data Quality), tầm quan trọng của dữ liệu sạch và chiến lược chuyển dịch từ ứng phó thụ động sang kiểm soát chủ động.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/data-quality/"
-    },
-    "Data Reconciliation": {
-      "title": "Data Reconciliation là gì? Kỹ thuật đối soát dữ liệu",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu quy trình đối soát dữ liệu (Data Reconciliation) giúp so sánh và phát hiện sai lệch số lượng và giá trị giữa hệ thống nguồn và hệ thống đích.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/data-reconciliation/"
-    },
-    "Data Testing": {
-      "title": "Data Testing là gì? Tên tổng quan về các phương pháp kiểm thử dữ liệu",
-      "category": "Data Quality",
-      "definition": "Tìm hiểu phương pháp kiểm thử dữ liệu (Data Testing) nhằm lập trình các xác nhận tự động (assertions) giúp kiểm soát chất lượng luồng dữ liệu liên tục.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/data-quality/data-testing/"
-    },
-    "Access Control": {
-      "title": "Kiểm soát truy cập RBAC và ABAC trong hệ thống dữ liệu",
-      "category": "Governance & Metadata",
-      "definition": "Kiểm soát truy cập (Access Control) là cơ chế quản lý xác định quyền hạn của người dùng hoặc ứng dụng đối với tài nguyên dữ liệu, thông qua hai mô hình phổ biến là RBAC và ABAC.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/access-control/"
-    },
-    "Audit Logging": {
-      "title": "Nhật ký kiểm toán (Audit Logging) - Giám sát truy cập dữ liệu",
-      "category": "Governance & Metadata",
-      "definition": "Nhật ký kiểm toán (Audit Logging) là quá trình tự động ghi lại toàn bộ lịch sử truy cập và thay đổi dữ liệu trong hệ thống, nhằm phục vụ mục đích kiểm tra và bảo mật.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
-    },
-    "Data Catalog": {
-      "title": "Data Catalog là gì? Khái niệm Danh mục dữ liệu chi tiết",
-      "category": "Governance & Metadata",
-      "definition": "Data Catalog (Danh mục dữ liệu) là nền tảng quản lý siêu dữ liệu tập trung giúp người dùng tìm kiếm, khám phá, hiểu rõ nguồn gốc và quản trị toàn bộ tài sản dữ liệu của doanh nghiệp.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
-    },
-    "Data Classification": {
-      "title": "Phân loại dữ liệu (Data Classification) - Cẩm nang Data Governance",
-      "category": "Governance & Metadata",
-      "definition": "Phân loại dữ liệu (Data Classification) là quá trình xác định và gán nhãn dữ liệu theo mức độ nhạy cảm và tầm quan trọng đối với tổ chức, từ đó áp dụng các chính sách bảo mật phù hợp.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/data-classification/"
-    },
-    "Data Governance": {
-      "title": "Quản trị dữ liệu (Data Governance) là gì? Khung chuẩn DAMA",
-      "category": "Governance & Metadata",
-      "definition": "Quản trị dữ liệu (Data Governance) là khung quy tắc, quy trình và con người để quản lý tài sản dữ liệu của doanh nghiệp, đảm bảo dữ liệu có tính khả dụng, toàn vẹn và bảo mật.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/data-governance/"
-    },
-    "Data Lineage": {
-      "title": "Data Lineage (Phả hệ dữ liệu) trong Data Engineering",
-      "category": "Governance & Metadata",
-      "definition": "Data Lineage (Phả hệ dữ liệu) là bản đồ thể hiện nguồn gốc, các bước biến đổi và đích đến của dữ liệu trong suốt vòng đời của nó trong hệ thống.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/data-lineage/"
-    },
-    "Data Ownership": {
-      "title": "Data Ownership là gì? Ai chịu trách nhiệm quản lý dữ liệu?",
-      "category": "Governance & Metadata",
-      "definition": "Quyền sở hữu dữ liệu (Data Ownership) là việc xác định rõ cá nhân hoặc phòng ban nghiệp vụ chịu trách nhiệm pháp lý và có thẩm quyền ra quyết định đối với vòng đời, chất lượng và độ bảo mật của một tập dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/data-ownership/"
-    },
-    "Metadata Management": {
-      "title": "Metadata Management - Quản lý siêu dữ liệu trong Data Engineering",
-      "category": "Governance & Metadata",
-      "definition": "Quản lý siêu dữ liệu (Metadata Management) là quá trình thu thập, tích hợp và duy trì siêu dữ liệu (dữ liệu mô tả về dữ liệu) nhằm giúp doanh nghiệp dễ dàng tìm kiếm, hiểu và quản trị các tài sản thông tin.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/metadata-management/"
-    },
-    "Unity Catalog Governance": {
-      "title": "Unity Catalog: Quản trị dữ liệu tập trung trên Databricks Lakehouse",
-      "category": "Governance & Metadata",
-      "definition": "Unity Catalog là giải pháp quản trị dữ liệu hợp nhất cho Databricks Lakehouse, cung cấp khả năng phân quyền chi tiết, kiểm toán bảo mật và tự động hóa Data Lineage.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/governance-metadata/unity-catalog-governance/"
-    },
-    "Alerting Incident Response": {
-      "title": "Cảnh báo và Xử lý sự cố Dữ liệu (Alerting & Incident Response)",
-      "category": "Observability & Reliability",
-      "definition": "Quy trình Cảnh báo và Phản ứng sự cố (Alerting & Incident Response) trong kỹ thuật dữ liệu giúp phát hiện, phân loại, định tuyến và xử lý kịp thời các lỗi để giảm thiểu thời gian gián đoạn dữ liệu.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/"
-    },
-    "Data Observability": {
-      "title": "Data Observability là gì? Cẩm nang giám sát độ tin cậy dữ liệu",
-      "category": "Observability & Reliability",
-      "definition": "Data Observability (Khả năng quan sát dữ liệu) là giải pháp giám sát toàn diện trạng thái sức khỏe của hệ thống dữ liệu và pipeline dựa trên 5 trụ cột: Freshness, Distribution, Volume, Schema và Lineage.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/data-observability/"
-    },
-    "Distribution Drift": {
-      "title": "Data Drift / Distribution Drift là gì? Cách giám sát phân phối dữ liệu",
-      "category": "Observability & Reliability",
-      "definition": "Distribution Drift (Trôi dạt phân phối) là hiện tượng các đặc trưng thống kê của dữ liệu thay đổi theo thời gian, gây ảnh hưởng trực tiếp đến hiệu năng của mô hình học máy và báo cáo phân tích.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/distribution-drift/"
-    },
-    "Freshness Monitoring": {
-      "title": "Giám sát độ trễ dữ liệu (Freshness Monitoring) trong Data Pipeline",
-      "category": "Observability & Reliability",
-      "definition": "Giám sát độ trễ dữ liệu (Freshness Monitoring) là quy trình theo dõi mức độ tươi mới của dữ liệu so với cam kết chất lượng dịch vụ (Data SLA), đảm bảo phát hiện kịp thời các đường ống dữ liệu bị chậm.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/freshness-monitoring/"
-    },
-    "Root Cause Analysis": {
-      "title": "Root Cause Analysis (RCA) là gì? Kỹ năng phân tích sự cố dữ liệu",
-      "category": "Observability & Reliability",
-      "definition": "Phân tích nguyên nhân gốc rễ (Root Cause Analysis - RCA) là quy trình giải quyết sự cố có hệ thống nhằm xác định nguyên nhân sâu xa nhất của lỗi dữ liệu và thiết lập giải pháp phòng ngừa lâu dài.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/root-cause-analysis/"
-    },
-    "Schema Drift": {
-      "title": "Schema Drift là gì? Cách xử lý thay đổi cấu trúc dữ liệu",
-      "category": "Observability & Reliability",
-      "definition": "Schema Drift (Trôi dạt cấu trúc) là hiện tượng cấu trúc của nguồn dữ liệu thay đổi bất ngờ (như thêm, xóa, đổi tên cột hoặc đổi kiểu dữ liệu) so với kỳ vọng ban đầu của pipeline.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/schema-drift/"
-    },
-    "Volume Anomalies": {
-      "title": "Giám sát Khối lượng Dữ liệu (Volume Anomalies) trong Data Pipeline",
-      "category": "Observability & Reliability",
-      "definition": "Phát hiện bất thường về khối lượng dữ liệu (Volume Anomalies) là quy trình giám sát số lượng bản ghi hoặc dung lượng dữ liệu, phát hiện các sụt giảm hoặc tăng vọt bất thường.",
-      "bullets": [],
-      "url": "/concepts/5-quality-governance/observability-reliability/volume-anomalies/"
-    },
-    "Ai Agent": {
-      "title": "AI Agent (Tác nhân AI) là gì? Kiến trúc và ứng dụng thực tế",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tác nhân AI (AI Agent) là một hệ thống tự trị sử dụng Mô hình Ngôn ngữ Lớn (LLM) làm bộ não trung tâm, kết hợp với khả năng lập kế hoạch, ghi nhớ và sử dụng công cụ để tự động thực hiện các nhiệm vụ phức tạp.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/"
-    },
-    "Evaluation Metric": {
-      "title": "Chỉ số đánh giá (Evaluation Metric) trong Machine Learning & RAG",
-      "category": "GenAI & Machine Learning",
-      "definition": "Chỉ số đánh giá (Evaluation Metric) là các thước đo định lượng dùng để đo lường và đánh giá hiệu năng, độ chính xác cũng như chất lượng của mô hình Machine Learning, LLM hoặc hệ thống RAG.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/evaluation-metric/"
-    },
-    "Feature Store": {
-      "title": "Feature Store - Hệ thống quản lý đặc trưng Machine Learning",
-      "category": "GenAI / ML",
-      "definition": "Feature Store là một hệ thống quản lý dữ liệu chuyên biệt cho Machine Learning, giúp lưu trữ, chia sẻ và đồng bộ hóa các đặc trưng (features) giữa môi trường Offline Training và Online Serving.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/feature-store/"
-    },
-    "Hallucination": {
-      "title": "Ảo giác LLM là gì? Nguyên nhân và cách khắc phục ảo giác AI",
-      "category": "GenAI & Machine Learning",
-      "definition": "Ảo giác LLM (Hallucination) là hiện tượng mô hình ngôn ngữ lớn tự tin tạo ra các thông tin sai lệch, không có thực hoặc mâu thuẫn logic nhưng được trình bày rất trôi chảy và mạch lạc.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
-    },
-    "Llm As A Judge": {
-      "title": "Cẩm nang LLM-as-a-judge - Phương pháp đánh giá GenAI tự động",
-      "category": "GenAI & Machine Learning",
-      "definition": "LLM-as-a-judge (LLM làm giám khảo) là phương pháp sử dụng một mô hình ngôn ngữ lớn mạnh mẽ để tự động chấm điểm và đánh giá chất lượng đầu ra của các mô hình ngôn ngữ hoặc ứng dụng AI khác.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/llm-as-a-judge/"
-    },
-    "Mlflow": {
-      "title": "MLflow là gì? Nền tàm quản lý MLOps và Model Lifecycle",
-      "category": "GenAI & Machine Learning",
-      "definition": "MLflow là nền tảng mã nguồn mở quản lý vòng đời Machine Learning (MLOps), gồm theo dõi thử nghiệm, đóng gói mã nguồn, quản lý phiên bản và triển khai mô hình.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/mlflow/"
-    },
-    "Ndcg": {
-      "title": "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking",
-      "category": "GenAI & Machine Learning",
-      "definition": "Normalized Discounted Cumulative Gain (NDCG) là chỉ số đo lường hiệu quả xếp hạng của hệ thống tìm kiếm và gợi ý, tính đến mức độ liên quan đa cấp độ và vị trí hiển thị của kết quả.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/ndcg/"
-    },
-    "Recall": {
-      "title": "Độ phủ (Recall) là gì? Tầm quan trọng trong Machine Learning & RAG",
-      "category": "GenAI & Machine Learning",
-      "definition": "Recall (Độ phủ) là tỷ lệ phần trăm số điểm dữ liệu thực tế mang nhãn Positive được mô hình nhận diện thành công, giúp đo lường mức độ bỏ sót thông tin.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/evaluation-metrics/recall/"
-    },
-    "Fine Tuning": {
-      "title": "Fine-tuning là gì? Cẩm nang Tinh chỉnh Mô hình AI (PEFT, LoRA)",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tinh chỉnh mô hình (Fine-tuning) là quá trình tiếp tục huấn luyện một mô hình ngôn ngữ đã được pre-train trên một tập dữ liệu nhỏ, đặc thù để thích ứng với các tác vụ hoặc lĩnh vực chuyên biệt.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/fine-tuning/fine-tuning/"
-    },
-    "Lora": {
-      "title": "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả",
-      "category": "GenAI & Machine Learning",
-      "definition": "Low-Rank Adaptation (LoRA) là kỹ thuật PEFT đóng băng mô hình gốc và chèn các ma trận hạng thấp song song để tinh chỉnh LLM hiệu quả, giảm bộ nhớ GPU.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/fine-tuning/lora/"
-    },
-    "Model Serving": {
-      "title": "Model Serving là gì? Cách triển khai mô hình AI/ML lên Production",
-      "category": "GenAI & Machine Learning",
-      "definition": "Model Serving là quá trình triển khai mô hình học máy thành dịch vụ phần mềm (qua API REST/gRPC) để phục vụ các yêu cầu suy luận của ứng dụng thực tế.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/fine-tuning/model-serving/"
-    },
-    "Peft": {
-      "title": "PEFT là gì? Các kỹ thuật tinh chỉnh LLM hiệu quả (LoRA, QLoRA)",
-      "category": "GenAI & Machine Learning",
-      "definition": "PEFT (Parameter-Efficient Fine-Tuning) là tập hợp các kỹ thuật tinh chỉnh mô hình ngôn ngữ lớn (LLM) hiệu quả bằng cách chỉ cập nhật một lượng cực nhỏ tham số bổ sung nhằm tiết kiệm tài nguyên.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/fine-tuning/peft/"
-    },
-    "Rlhf": {
-      "title": "RLHF là gì? Tinh chỉnh LLM từ phản hồi của con người",
-      "category": "GenAI & Machine Learning",
-      "definition": "RLHF (Reinforcement Learning from Human Feedback) là phương pháp tối ưu hóa mô hình ngôn ngữ lớn bằng học tăng cường dựa trên đánh giá của con người.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/fine-tuning/rlhf/"
-    },
-    "Context Window": {
-      "title": "Cửa sổ ngữ cảnh (Context Window) trong LLM là gì?",
-      "category": "GenAI & Machine Learning",
-      "definition": "Cửa sổ ngữ cảnh (Context Window) là giới hạn số lượng token tối đa mà một mô hình ngôn ngữ lớn (LLM) có thể nhận dạng, ghi nhớ và xử lý trong một lượt tương tác (Prompt + Output).",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/context-window/"
-    },
-    "Few Shot Prompting": {
-      "title": "Cẩm nang Few-shot Prompting - Kỹ thuật In-Context Learning",
-      "category": "GenAI & Machine Learning",
-      "definition": "Few-shot Prompting (Học qua vài ví dụ) là kỹ thuật chèn một vài cặp ví dụ đầu vào-đầu ra mẫu vào câu lệnh để hướng dẫn mô hình ngôn ngữ lớn học cách giải quyết bài toán theo định dạng và phong cách mong muốn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/"
-    },
-    "LLM": {
-      "title": "LLM là gì? Tổng quan về Mô hình Ngôn ngữ Lớn (Large Language Model)",
-      "category": "GenAI & Machine Learning",
-      "definition": "Mô hình ngôn ngữ lớn (LLM) là mô hình deep learning dựa trên kiến trúc Transformer, được huấn luyện trên lượng văn bản khổng lồ để hiểu và tạo ngôn ngữ tự nhiên thông qua dự đoán token tiếp theo.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/llm/"
-    },
-    "Prompt Engineering": {
-      "title": "Cẩm nang Prompt Engineering - Tối ưu hóa mô hình LLM hiệu quả",
-      "category": "GenAI & Machine Learning",
-      "definition": "Prompt Engineering (Kỹ nghệ Gợi ý) là quá trình thiết kế, thử nghiệm và tối ưu hóa các câu lệnh đầu vào để định hướng các Mô hình Ngôn ngữ Lớn (LLM) tạo ra kết quả mong muốn với độ chính xác cao và định dạng chuẩn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/prompt-engineering/"
-    },
-    "System Prompt": {
-      "title": "System Prompt là gì? Cách tối ưu gợi ý hệ thống cho LLM",
-      "category": "GenAI & Machine Learning",
-      "definition": "System Prompt (Gợi ý hệ thống) là câu lệnh cấu hình ở mức hệ thống giúp thiết lập vai trò, quy tắc bảo mật, định dạng đầu ra và ngữ cảnh chung cho mô hình ngôn ngữ lớn trước cuộc trò chuyện.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/system-prompt/"
-    },
-    "Temperature": {
-      "title": "Temperature trong AI là gì? Cách tinh chỉnh độ sáng tạo của LLM",
-      "category": "GenAI & Machine Learning",
-      "definition": "Temperature là tham số điều khiển tính ngẫu nhiên và độ sáng tạo của mô hình ngôn ngữ lớn (LLM) bằng cách làm phẳng hoặc làm nhọn phân phối xác suất của các token đầu ra.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/temperature/"
-    },
-    "Token": {
-      "title": "Token là gì? Đơn vị từ vựng trong LLM và NLP",
-      "category": "GenAI & Machine Learning",
-      "definition": "Token là đơn vị dữ liệu chữ viết nhỏ nhất mà mô hình ngôn ngữ lớn (LLM) có thể xử lý, có thể biểu diễn một ký tự, một âm tiết hoặc một từ hoàn chỉnh.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/token/"
-    },
-    "Top P": {
-      "title": "Top-p (Nucleus Sampling) là gì? - Tinh chỉnh thông số LLM",
-      "category": "GenAI & Machine Learning",
-      "definition": "Top-p (Nucleus Sampling) là kỹ thuật giải mã giới hạn nhóm token tiềm năng được chọn bằng cách tích lũy xác suất từ cao xuống thấp cho đến khi đạt ngưỡng p mong muốn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/top-p/"
-    },
-    "Zero Shot": {
-      "title": "Cẩm nang Zero-shot Prompting - Học không cần ví dụ trong LLM",
-      "category": "GenAI & Machine Learning",
-      "definition": "Zero-shot Prompting (Học không cần ví dụ) là kỹ thuật gửi câu lệnh trực tiếp đến Mô hình Ngôn ngữ Lớn (LLM) để thực hiện nhiệm vụ mà không cung cấp bất kỳ ví dụ mẫu nào.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/llm-basics/zero-shot/"
-    },
-    "Chunking": {
-      "title": "Kỹ thuật Chunking trong RAG: Hướng dẫn phân tách văn bản tối ưu",
-      "category": "GenAI & Machine Learning",
-      "definition": "Phân tách văn bản (Chunking) là bước tiền xử lý chia nhỏ tài liệu dài thành các đoạn có kích thước tối ưu để chuyển đổi thành vector nhúng và cải thiện hiệu năng RAG.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/chunking/"
-    },
-    "Embedding Models": {
-      "title": "Embedding Models - Tổng quan về các mô hình nhúng trong AI",
-      "category": "GenAI & Machine Learning",
-      "definition": "Các mô hình nhúng (Embedding Models) đại diện cho các họ thuật toán và mô hình học máy dùng để ánh xạ các dữ liệu phi cấu trúc thành các vectơ số thực đa chiều trong không gian ngữ nghĩa liên tục.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/embedding-models/"
-    },
-    "Embeddings": {
-      "title": "Vectơ nhúng (Embeddings) là gì? Khái niệm và ứng dụng",
-      "category": "GenAI & Machine Learning",
-      "definition": "Vectơ nhúng (Embeddings) là các chuỗi số thực đa chiều biểu diễn ngữ nghĩa của dữ liệu phi cấu trúc (văn bản, hình ảnh) để máy tính có thể so sánh và tính toán ngữ nghĩa.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/embeddings/"
-    },
-    "Hybrid Search": {
-      "title": "Hybrid Search là gì? Kết hợp Keyword và Vector Search trong RAG",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tìm kiếm kết hợp (Hybrid Search) là kỹ thuật kết hợp đồng thời tìm kiếm từ khóa chính xác (BM25) và tìm kiếm ngữ nghĩa (Vector Search) để tối ưu hóa độ chính xác và độ bao phủ của kết quả truy vấn.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/hybrid-search/"
-    },
-    "RAG": {
-      "title": "RAG là gì? Tổng quan về Retrieval-Augmented Generation",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tạo lập Truy xuất Tăng cường (RAG) là kiến trúc kết hợp khả năng ngôn ngữ của LLM với thông tin thực tế từ cơ sở dữ liệu ngoài để sinh câu trả lời chính xác và đáng tin cậy.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/rag/"
-    },
-    "Reranking": {
-      "title": "Reranking là gì? Tối ưu hóa hệ thống Search và RAG",
-      "category": "GenAI & Machine Learning",
-      "definition": "Reranking (Tái sắp xếp kết quả) là bước thứ hai trong quy trình truy xuất thông tin hai giai đoạn, sử dụng mô hình Reranker (Cross-encoder) để đánh giá chi tiết và tối ưu hóa thứ hạng tài liệu liên quan.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/reranking/"
-    },
-    "Semantic Search": {
-      "title": "Tìm kiếm ngữ nghĩa (Semantic Search) là gì? Khái niệm & Ứng dụng",
-      "category": "GenAI & Machine Learning",
-      "definition": "Tìm kiếm ngữ nghĩa (Semantic Search) là phương pháp tìm kiếm thông tin bằng cách thấu hiểu ngữ cảnh và ý định của người dùng, thay vì so khớp từ khóa chính xác.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/semantic-search/"
-    },
-    "Vector Database": {
-      "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích chi tiết",
-      "category": "GenAI & Machine Learning",
-      "definition": "Cơ sở dữ liệu Vector (Vector Database) là hệ thống cơ sở dữ liệu chuyên biệt dùng để lưu trữ, lập chỉ mục và truy vấn các chuỗi số thực đa chiều (embeddings), hỗ trợ tìm kiếm tương đồng ngữ nghĩa siêu tốc.",
-      "bullets": [],
-      "url": "/concepts/6-ai-ml/rag-search/vector-database/"
+      "url": "/concepts/7-architecture/lambda-kappa/lambda-vs-kappa/"
     }
   }
 }

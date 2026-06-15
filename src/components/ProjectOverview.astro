@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+
+const allDocs = await getCollection('docs');
+const contentDocs = allDocs.filter(doc => doc.id !== 'index.mdx');
+
+const tree = {};
+contentDocs.forEach(doc => {
+  const parts = doc.id.split('/');
+  if (parts.length === 1) return;
+
+  const rootFolder = parts[0];
+  if (!tree[rootFolder]) {
+    tree[rootFolder] = { name: rootFolder, items: [], subfolders: {} };
+  }
+
+  if (parts.length === 2) {
+    tree[rootFolder].items.push(doc);
+  } else {
+    const subFolder = parts[1];
+    if (!tree[rootFolder].subfolders[subFolder]) {
+      tree[rootFolder].subfolders[subFolder] = { name: subFolder, items: [] };
+    }
+    tree[rootFolder].subfolders[subFolder].items.push(doc);
+  }
+});
+
+const sectionNames = {
+  'learning-paths': 'Lộ Trình Học Tập',
+  'concepts': 'Hệ Thống Khái Niệm',
+  'projects': 'Dự Án Thực Chiến',
+  'interview': 'Bộ Câu Hỏi Phỏng Vấn'
+};
+
+const sortedRoots = ['learning-paths', 'concepts', 'projects', 'interview'].filter(r => tree[r]);
+
+function formatTitle(id) {
+    return id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+---
+
+<div class="accordion-layout">
+  {sortedRoots.map((rootKey, index) => {
+    const rootData = tree[rootKey];
+    
+    return (
+      <details class="root-details" open={index === 0}>
+        <summary class="root-summary">
+          <span class="summary-title">{sectionNames[rootKey] || rootKey}</span>
+          <span class="summary-icon">▼</span>
+        </summary>
+        
+        <div class="root-content">
+          {/* Render items directly under root */}
+          {rootData.items.length > 0 && (
+            <div class="sub-group-main">
+                <ul class="clean-list">
+                {rootData.items.map(doc => (
+                    <li>
+                    <a href={`/${doc.slug}/`}>{doc.data.title}</a>
+                    </li>
+                ))}
+                </ul>
+            </div>
+          )}
+          
+          {/* Render subfolders */}
+          <div class="sub-grid">
+            {Object.keys(rootData.subfolders).sort().map(subKey => {
+              const subData = rootData.subfolders[subKey];
+              return (
+                <div class="sub-group">
+                  <h3 class="sub-title">{formatTitle(subKey)}</h3>
+                  <ul class="clean-list">
+                    {subData.items.map(doc => {
+                        let title = doc.data.title;
+                        const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
+                        if (match && match[1]) title = match[1].trim();
+
+                        return (
+                            <li>
+                                <a href={`/${doc.slug}/`}>{title}</a>
+                            </li>
+                        );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </details>
+    );
+  })}
+</div>

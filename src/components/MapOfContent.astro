@@ -83,27 +83,16 @@ const domainsData = domains.map(domain => {
     <div class="domains-grid">
         {domainsData.map(domain => (
             <div class="domain-card" id={domain.id}>
-                <div class="domain-card-header">
-                    <div class="domain-icon-wrapper" set:html={domain.svg} />
-                    <h2 class="domain-title">{domain.label}</h2>
+                <div class="domain-header">
+                    <div class="domain-icon" set:html={domain.svg} />
+                    <h3 class="domain-title">{domain.label.split('. ')[1] || domain.label}</h3>
                 </div>
-                <p class="domain-description">{domain.description}</p>
-                
+                <p class="domain-desc">{domain.description}</p>
                 <div class="domain-categories">
                     {domain.categories.map(cat => (
-                        <div class="category-group">
-                            <h3 class="category-title">{cat.categoryLabel}</h3>
-                            <div class="concepts-list">
-                                {cat.concepts.map((concept, idx) => (
-                                    <>
-                                        <a href={concept.url} class="concept-link">
-                                            {concept.title}
-                                        </a>
-                                        {idx < cat.concepts.length - 1 && <span class="divider">·</span>}
-                                    </>
-                                ))}
-                            </div>
-                        </div>
+                        <a href={cat.concepts[0].url} class="cat-tag">
+                            {cat.categoryLabel}
+                        </a>
                     ))}
                 </div>
             </div>
@@ -114,15 +103,14 @@ const domainsData = domains.map(domain => {
 <style>
 .moc-container {
     width: 100%;
-    margin: 1rem auto;
-    font-family: var(--sl-font), sans-serif;
+    margin: 0;
+    font-family: var(--sl-font-system), sans-serif;
 }
 
 .domains-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    margin-bottom: 2rem;
 }
 
 @media (min-width: 768px) {
@@ -131,95 +119,89 @@ const domainsData = domains.map(domain => {
     }
 }
 
-/* Minimalist Document Directory Card */
+@media (min-width: 1200px) {
+    .domains-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Premium Card Design */
 .domain-card {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
-    border-radius: 8px;
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    transition: border-color 0.2s ease;
+    padding: 1.75rem;
+    background: var(--sl-color-bg-nav, rgba(20, 20, 25, 0.5));
+    border: 1px solid var(--sl-color-hairline, rgba(255, 255, 255, 0.08));
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .domain-card:hover {
-    border-color: var(--sl-color-gray-3);
+    border-color: var(--sl-color-gray-4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
 }
 
-.domain-card-header {
+.domain-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
-.domain-icon-wrapper {
+.domain-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--sl-color-gray-2);
+    width: 32px;
+    height: 32px;
+    color: var(--sl-color-text-accent, var(--sl-color-accent));
+    background: rgba(var(--sl-color-accent-rgb, 100, 100, 255), 0.1);
+    border-radius: 8px;
     flex-shrink: 0;
 }
 
 .domain-title {
     margin: 0 !important;
-    font-size: 1.15rem !important;
-    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
     color: var(--sl-color-white) !important;
-    line-height: 1.3 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em;
 }
 
-.domain-description {
-    font-size: 0.85rem;
+.domain-desc {
+    font-size: 0.9rem;
     color: var(--sl-color-gray-3);
-    line-height: 1.5;
-    margin: 0 0 1.25rem 0 !important;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0 !important;
+    flex-grow: 1;
 }
 
-/* Category & Concept Grouping */
+/* Category Tags */
 .domain-categories {
     display: flex;
-    flex-direction: column;
-    gap: 1.25rem; /* Comfortably spaced categories */
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-top: auto;
 }
 
-.category-group {
-    border-top: 1px solid var(--sl-color-hairline);
-    padding-top: 0.75rem;
-}
-
-.category-title {
-    margin: 0 0 0.5rem 0 !important;
-    font-size: 0.85rem !important;
-    font-weight: 600 !important;
+.cat-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
     color: var(--sl-color-gray-2) !important;
-}
-
-/* Inline text links list */
-.concepts-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.45rem 0.65rem; /* Increased gap spacing for readability */
-    line-height: 1.6;
-}
-
-.concept-link {
-    font-size: 0.85rem;
-    color: var(--sl-color-accent) !important;
+    background: var(--sl-color-black, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--sl-color-hairline, rgba(255, 255, 255, 0.05));
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
     text-decoration: none !important;
-    transition: color 0.15s ease;
+    transition: all 0.2s ease;
 }
 
-.concept-link:hover {
-    color: var(--sl-color-accent-high) !important;
-    text-decoration: underline !important;
-}
-
-.divider {
-    font-size: 0.85rem;
-    color: var(--sl-color-gray-4);
-    user-select: none;
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--sl-color-accent-high);
 }
 </style>

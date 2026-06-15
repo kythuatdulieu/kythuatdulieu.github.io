@@ -1,0 +1,37 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Head.astro';
+
+// Get page metadata
+const { entry, id } = Astro.props;
+const isDoc = !!entry;
+
+// Generate JSON-LD for Articles if it's a content page
+let schema = null;
+
+if (isDoc && entry.data) {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": entry.data.title,
+    "description": entry.data.description || `Bài viết về ${entry.data.title}`,
+    "author": {
+      "@type": "Person",
+      "name": "Kỹ thuật Dữ liệu",
+      "url": "https://kythuatdulieu.github.io"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Data Engineering Handbook",
+      "url": "https://kythuatdulieu.github.io"
+    },
+    "inLanguage": "vi-VN"
+  };
+}
+---
+
+<Default {...Astro.props} />
+
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

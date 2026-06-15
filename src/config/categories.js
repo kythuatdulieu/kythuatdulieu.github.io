@@ -1,27 +1,30 @@
 export const conceptCategories = [
-    // 1-foundations
-    { slug: '1-foundations/foundation', label: 'Cơ sở (Foundation)' },
-    { slug: '1-foundations/system-architecture', label: 'Kiến trúc hệ thống (System Architecture)' },
-    // 2-storage
-    { slug: '2-storage/database-storage', label: 'Cơ sở dữ liệu & Lưu trữ (Database & Storage)' },
-    { slug: '2-storage/data-lake-lakehouse', label: 'Hồ dữ liệu & Lakehouse (Data Lake & Lakehouse)' },
-    { slug: '2-storage/cloud-data-platform', label: 'Nền tảng Cloud (Cloud Data Platform)' },
-    { slug: '2-storage/data-warehouse', label: 'Kho dữ liệu (Data Warehouse)' },
-    // 3-integration
-    { slug: '3-integration/etl-elt', label: 'Tích hợp dữ liệu (ETL / ELT)' },
-    { slug: '3-integration/transformation-analytics', label: 'Biến đổi & Phân tích (Transformation & Analytics)' },
-    { slug: '3-integration/orchestration', label: 'Điều phối quy trình (Orchestration)' },
-    { slug: '3-integration/batch-processing', label: 'Xử lý theo lô (Batch Processing)' },
-    // 4-realtime
-    { slug: '4-realtime/message-queue', label: 'Hệ thống Event Streaming (Kafka)' },
-    { slug: '4-realtime/stream-calculation', label: 'Xử lý luồng dữ liệu (Spark, Flink)' },
-    // 5-quality-governance
-    { slug: '5-quality-governance/data-quality', label: 'Chất lượng dữ liệu (Data Quality)' },
-    { slug: '5-quality-governance/governance-metadata', label: 'Quản trị & Siêu dữ liệu (Governance & Metadata)' },
-    { slug: '5-quality-governance/observability-reliability', label: 'Giám sát & Độ tin cậy (Observability & Reliability)' },
-    // 6-ai-ml
-    { slug: '6-ai-ml/llm-basics', label: 'Cơ bản LLM & Prompt' },
-    { slug: '6-ai-ml/rag-search', label: 'Hệ thống RAG & Vector Search' },
-    { slug: '6-ai-ml/fine-tuning', label: 'Huấn luyện & Triển khai (Fine-Tuning)' },
-    { slug: '6-ai-ml/evaluation-metrics', label: 'Đánh giá & Giám sát (Evaluation)' }
+    // 1. Foundations & Architecture
+    { slug: '1-foundations-architecture/core-concepts', label: 'Cơ sở & Khái niệm lõi (Core Concepts)' },
+    { slug: '1-foundations-architecture/system-architecture', label: 'Kiến trúc hệ thống (System Architecture)' },
+    // 2. Data Storage
+    { slug: '2-data-storage/databases', label: 'Cơ sở dữ liệu (OLTP & OLAP)' },
+    { slug: '2-data-storage/data-warehouse', label: 'Kho dữ liệu (Data Warehouse)' },
+    { slug: '2-data-storage/data-lake-lakehouse', label: 'Hồ dữ liệu (Data Lake & Lakehouse)' },
+    // 3. Ingestion & Transformation
+    { slug: '3-ingestion-transformation/data-ingestion', label: 'Thu thập dữ liệu (Data Ingestion)' },
+    { slug: '3-ingestion-transformation/data-modeling', label: 'Mô hình hóa dữ liệu (Data Modeling)' },
+    { slug: '3-ingestion-transformation/batch-processing', label: 'Xử lý theo lô (Batch Processing)' },
+    { slug: '3-ingestion-transformation/dbt-transformation', label: 'Biến đổi dữ liệu (Data Transformation)' },
+    // 4. Realtime & Streaming
+    { slug: '4-realtime-streaming/message-brokers', label: 'Hệ thống hàng đợi (Message Brokers)' },
+    { slug: '4-realtime-streaming/stream-processing', label: 'Xử lý luồng (Stream Processing)' },
+    // 5. Serving & Analytics
+    { slug: '5-serving-analytics', label: 'Phục vụ dữ liệu & Phân tích (Serving & Analytics)' },
+    // 6. DataOps & Orchestration
+    { slug: '6-dataops-orchestration/orchestration', label: 'Điều phối quy trình (Orchestration)' },
+    { slug: '6-dataops-orchestration/observability-quality', label: 'Chất lượng & Giám sát (Quality & Observability)' },
+    { slug: '6-dataops-orchestration/software-engineering', label: 'Kỹ nghệ phần mềm (Software Engineering)' },
+    // 7. Security & Governance
+    { slug: '7-security-governance/data-governance', label: 'Quản trị dữ liệu (Data Governance)' },
+    { slug: '7-security-governance/security-compliance', label: 'Bảo mật & Tuân thủ (Security & Compliance)' },
+    // 8. GenAI & ML
+    { slug: '8-genai-ml/llm-foundations', label: 'Nền tảng LLM (LLM Foundations)' },
+    { slug: '8-genai-ml/rag-systems', label: 'Hệ thống RAG (RAG Systems)' },
+    { slug: '8-genai-ml/mlops-evaluation', label: 'MLOps & Đánh giá (MLOps & Evaluation)' }
 ];
