@@ -1,0 +1,4 @@
+src/content/docs/concepts/3-integration/batch-processing/spark-advanced-tuning.md
+src/content/docs/concepts/3-integration/batch-processing/shuffle.md
+src/content/docs/concepts/3-integration/batch-processing/spark-execution-model.md
+src/content/docs/concepts/3-integration/batch-processing/spark-sql.md

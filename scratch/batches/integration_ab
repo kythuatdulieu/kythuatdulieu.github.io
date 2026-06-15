@@ -1,0 +1,10 @@
+src/content/docs/concepts/3-integration/transformation-analytics/dbt-semantic-layer.md
+src/content/docs/concepts/3-integration/transformation-analytics/dbt-advanced.md
+src/content/docs/concepts/3-integration/transformation-analytics/dbt-testing.md
+src/content/docs/concepts/3-integration/transformation-analytics/sql-transformation.md
+src/content/docs/concepts/3-integration/transformation-analytics/materialization.md
+src/content/docs/concepts/3-integration/transformation-analytics/dbt.md
+src/content/docs/concepts/3-integration/transformation-analytics/metrics-layer.md
+src/content/docs/concepts/3-integration/transformation-analytics/data-pipeline-cicd.md
+src/content/docs/concepts/3-integration/transformation-analytics/semantic-layers-bi.md
+src/content/docs/concepts/3-integration/etl-elt/integration-patterns-comparison.md

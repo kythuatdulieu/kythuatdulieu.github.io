@@ -1,0 +1,10 @@
+src/content/docs/concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform.md
+src/content/docs/concepts/2-storage/cloud-data-platform/snowflake.md
+src/content/docs/concepts/2-storage/cloud-data-platform/serverless-data.md
+src/content/docs/concepts/2-storage/cloud-data-platform/azure-synapse.md
+src/content/docs/concepts/2-storage/cloud-data-platform/cloud-storage.md
+src/content/docs/concepts/2-storage/cloud-data-platform/zero-copy-cloning.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/delta-lake.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/iceberg-metadata-internals.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format-comparison.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/compaction.md

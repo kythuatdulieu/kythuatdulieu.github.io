@@ -1,0 +1,10 @@
+src/content/docs/concepts/5-quality-governance/data-quality/data-testing.md
+src/content/docs/concepts/5-quality-governance/data-quality/data-quality.md
+src/content/docs/concepts/5-quality-governance/data-quality/data-reconciliation.md
+src/content/docs/concepts/5-quality-governance/data-quality/data-quality-dimensions.md
+src/content/docs/concepts/5-quality-governance/data-quality/data-profiling.md
+src/content/docs/concepts/5-quality-governance/data-quality/anomaly-detection.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/audit-logging.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/metadata-management.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/access-control.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/data-lineage.md

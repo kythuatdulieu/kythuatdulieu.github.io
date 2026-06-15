@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/retries-sla.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/sensors.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/task-dependency.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/software-engineering/data-pipeline-cicd.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/software-engineering/dbt-testing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/software-engineering/gitops.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/software-engineering/iac-terraform.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/access-control.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/audit-logging.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/data-catalog.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/data-classification.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/data-governance.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/data-lineage.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/data-ownership.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/metadata-management.md

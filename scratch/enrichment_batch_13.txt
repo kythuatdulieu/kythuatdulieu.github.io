@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/rag.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/reranking.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/semantic-search.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/vector-database.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/cloud-platform-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/data-modeling-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/de-behavioral-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/kafka-design-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/overview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/performance-tuning-qa.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/pipeline-design-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/production-incident-qa.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/python-de-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/spark-optimization-interview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/sql-interview-patterns.md

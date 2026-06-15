@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/exactly-once-semantics.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-structured-streaming.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-vs-flink-comparison.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/stream-table-duality.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/streaming-processing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/watermark.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/windowing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-serving-analytics/data-apis.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-serving-analytics/metrics-layer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-serving-analytics/olap-cubes.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-serving-analytics/reverse-etl.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-serving-analytics/semantic-layers-bi.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/alerting-incident-response.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/anomaly-detection.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-observability.md

@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/core-concepts/data-engineering.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/core-concepts/data-lifecycle.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/core-concepts/data-pipeline.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/core-concepts/source-systems.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/data-fabric.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/data-mesh.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/data-platform-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-schema-registry.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/kappa-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/lambda-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations-architecture/system-architecture/real-time-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/acid-transactions-on-lake.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/apache-hudi.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/apache-iceberg.md

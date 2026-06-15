@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/evaluation-metric.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/feature-store.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/fine-tuning.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/hallucination.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/llm-as-a-judge.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/lora.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/mlflow.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/model-serving.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/ndcg.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/recall.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/rlhf.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/chunking.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/embedding-models.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/embeddings.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/rag-systems/hybrid-search.md

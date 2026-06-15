@@ -451,4 +451,42 @@ body.focus-mode .main-pane {
     padding: 0.5rem 0;
 }
 
+/* ==========================================================
+   CODE BLOCK MAX HEIGHT
+   Prevent long code blocks from causing scroll fatigue
+   ========================================================== */
+.expressive-code pre {
+    max-height: 500px;
+    overflow-y: auto;
+}
 
+/* ==========================================================
+   CODE TOGGLE BUTTON
+   ========================================================== */
+.code-toggle-btn {
+    background-color: var(--sl-color-gray-6);
+    color: var(--sl-color-text-accent);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 6px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.code-toggle-btn:hover {
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+/* When collapsed, hide the expressive-code figure entirely */
+.expressive-code.code-collapsed figure {
+    display: none !important;
+}

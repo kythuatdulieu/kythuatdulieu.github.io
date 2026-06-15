@@ -1,0 +1,10 @@
+src/content/docs/concepts/2-storage/data-warehouse/data-warehouse.md
+src/content/docs/concepts/2-storage/data-warehouse/star-schema.md
+src/content/docs/concepts/2-storage/data-warehouse/inmon-methodology.md
+src/content/docs/concepts/2-storage/data-warehouse/grain.md
+src/content/docs/concepts/2-storage/data-warehouse/kimball-methodology.md
+src/content/docs/concepts/2-storage/data-warehouse/dimensional-modeling.md
+src/content/docs/concepts/2-storage/data-warehouse/surrogate-key.md
+src/content/docs/concepts/2-storage/data-warehouse/dimension-table.md
+src/content/docs/concepts/2-storage/data-warehouse/snowflake-schema.md
+src/content/docs/concepts/2-storage/data-warehouse/fact-table.md

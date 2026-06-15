@@ -1,0 +1,12 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/analytics-engineer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/beginner-de.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/cloud-data-engineer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/data-platform-engineer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/interview-prep.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/junior-to-middle-de.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/middle-to-senior-de.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/overview.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/learning-paths/streaming-data-engineer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/aws-e2e-project.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/azure-e2e-project.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/gcp-e2e-project.md

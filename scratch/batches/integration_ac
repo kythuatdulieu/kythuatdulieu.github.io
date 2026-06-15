@@ -1,0 +1,10 @@
+src/content/docs/concepts/3-integration/etl-elt/elt.md
+src/content/docs/concepts/3-integration/etl-elt/idempotency.md
+src/content/docs/concepts/3-integration/etl-elt/data-ingestion.md
+src/content/docs/concepts/3-integration/etl-elt/data-extraction.md
+src/content/docs/concepts/3-integration/etl-elt/data-loading.md
+src/content/docs/concepts/3-integration/etl-elt/backfill.md
+src/content/docs/concepts/3-integration/etl-elt/incremental-load.md
+src/content/docs/concepts/3-integration/etl-elt/change-data-capture.md
+src/content/docs/concepts/3-integration/etl-elt/etl.md
+src/content/docs/concepts/3-integration/etl-elt/deduplication.md

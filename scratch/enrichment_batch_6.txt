@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/integration-patterns-comparison.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/push-pull-delivery.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/data-vault.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/dimension-table.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/dimensional-modeling.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/fact-table.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/grain.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/inmon-methodology.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/kimball-methodology.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/nosql-modeling.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/snowflake-schema.md

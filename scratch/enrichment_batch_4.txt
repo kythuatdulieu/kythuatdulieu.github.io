@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/compression-algorithms.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/file-formats-deep-dive.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/indexing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/olap.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/oltp-olap-htap-comparison.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/oltp.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/partitioning.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/query-engines-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/relational-database.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/row-based-storage.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/data-skew.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/shuffle.md

@@ -1,0 +1,174 @@
+---
+---
+<div class="quiz-slider-container">
+  <div class="slider-wrapper">
+    <button class="slider-btn prev-btn" aria-label="Trái">‹</button>
+    
+    <div class="quiz-track">
+      <!-- Quiz 1 -->
+      <a href="/quizzes/databricks-de-advanced/" class="quiz-card">
+        <img src="https://www.databricks.com/sites/default/files/2025-10/professional-badge-de.png?v=1761143167" alt="Data Engineer Professional" class="quiz-img" />
+        <div class="quiz-info">
+          <span class="quiz-name">Data Engineer Professional</span>
+          <span class="quiz-count">327 Câu</span>
+        </div>
+      </a>
+
+      <!-- Quiz 2 -->
+      <a href="/quizzes/databricks-genai-associate/" class="quiz-card">
+        <img src="https://www.databricks.com/sites/default/files/2025-10/associate-badge-gen-ai.png?v=1761153880" alt="GenAI Engineer Associate" class="quiz-img" />
+        <div class="quiz-info">
+          <span class="quiz-name">GenAI Engineer Associate</span>
+          <span class="quiz-count">92 Câu</span>
+        </div>
+      </a>
+      
+    </div>
+
+    <button class="slider-btn next-btn" aria-label="Phải">›</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrapper = document.querySelector('.quiz-slider-container .slider-wrapper');
+    if (!wrapper) return;
+    
+    const track = wrapper.querySelector('.quiz-track');
+    const prevBtn = wrapper.querySelector('.prev-btn');
+    const nextBtn = wrapper.querySelector('.next-btn');
+    const scrollAmount = 260; 
+    
+    prevBtn.addEventListener('click', () => track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => track.scrollBy({ left: scrollAmount, behavior: 'smooth' }));
+
+    let autoScroll;
+    const start = () => {
+      autoScroll = setInterval(() => {
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+          track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      }, 3500);
+    };
+
+    start();
+    wrapper.addEventListener('mouseenter', () => clearInterval(autoScroll));
+    wrapper.addEventListener('mouseleave', start);
+  });
+</script>
+
+<style>
+  .quiz-slider-container {
+    width: 100%;
+    margin-bottom: 0;
+    font-family: var(--sl-font-system), sans-serif;
+  }
+
+  .slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .quiz-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0;
+    width: 100%;
+  }
+  .quiz-track::-webkit-scrollbar { display: none; }
+
+  .quiz-card {
+    flex: 0 0 240px;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+  }
+  .quiz-card:hover:not(.placeholder) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(var(--sl-color-accent-rgb, 100, 100, 255), 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .quiz-card.placeholder {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .quiz-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+  .placeholder-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--sl-color-gray-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--sl-color-gray-3);
+  }
+
+  .quiz-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .quiz-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+    line-height: 1.2;
+  }
+  .quiz-count {
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+    background: var(--sl-color-gray-6);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    display: inline-block;
+    width: max-content;
+  }
+
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--sl-color-black);
+    border: 1px solid var(--sl-color-gray-4);
+    color: var(--sl-color-white);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+  .slider-wrapper:hover .slider-btn { opacity: 1; }
+  .slider-btn:hover { background: var(--sl-color-gray-5); }
+  .prev-btn { left: -16px; }
+  .next-btn { right: -16px; }
+  @media (max-width: 768px) { .slider-btn { display: none; } }
+</style>

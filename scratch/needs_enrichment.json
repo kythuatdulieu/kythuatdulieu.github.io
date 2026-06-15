@@ -1,0 +1,1601 @@
+[
+  {
+    "file": "concepts/1-foundations-architecture/core-concepts/data-engineering.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/core-concepts/data-lifecycle.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Only 1 baseline links found, need 5-10"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/core-concepts/data-pipeline.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/core-concepts/source-systems.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/data-fabric.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/data-mesh.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/data-platform-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/event-driven-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/event-driven-schema-registry.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Only 4 baseline links found, need 5-10",
+      "No source designated as Primary/Core"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/kappa-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/lambda-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/1-foundations-architecture/system-architecture/real-time-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/acid-transactions-on-lake.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/apache-hudi.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/apache-iceberg.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/compaction.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/data-lake.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/delta-lake.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/iceberg-metadata-internals.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/lakehouse-optimization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/lakehouse.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/medallion-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/schema-evolution.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/table-format-comparison.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/table-format-migration.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/table-format.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-lake-lakehouse/time-travel.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/amazon-redshift.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/azure-synapse.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/bigquery-optimization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/bigquery-slot-optimization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/cloud-storage.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/cost-optimization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/data-warehouse.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/databricks-platform.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/google-bigquery.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/infrastructure-as-code-terraform.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/serverless-data.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/slowly-changing-dimension.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/snowflake-internals.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/snowflake-search-optimization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/snowflake.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/data-warehouse/zero-copy-cloning.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/clustering.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/columnar-storage.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/compression-algorithms.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/file-formats-deep-dive.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/indexing.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/olap.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/oltp-olap-htap-comparison.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/oltp.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/partitioning.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/query-engines-architecture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/relational-database.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/2-data-storage/databases/row-based-storage.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/data-skew.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/shuffle.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-advanced-tuning.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-aqe-catalyst.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-execution-model.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-jobs-stages-tasks.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-joins.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-memory-management.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-partition.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/batch-processing/spark-sql.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/backfill.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/data-transformation.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/elt.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/etl.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-ingestion/push-pull-delivery.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/data-vault.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/dimension-table.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/dimensional-modeling.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/fact-table.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/grain.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/inmon-methodology.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/kimball-methodology.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/nosql-modeling.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/snowflake-schema.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/star-schema.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/streaming-modeling.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/data-modeling/surrogate-key.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/data-contract.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/dbt-advanced.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/dbt-models.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/dbt-semantic-layer.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/dbt.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/materialization.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/3-ingestion-transformation/dbt-transformation/sql-transformation.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/message-brokers/apache-kafka.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/message-brokers/consumer-groups.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/message-brokers/kafka-rebalance-protocols.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/message-brokers/kafka-topics-partitions.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/event-time-processing-time.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/exactly-once-semantics.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/spark-structured-streaming.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/spark-vs-flink-comparison.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/stream-table-duality.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/streaming-processing.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/watermark.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/4-realtime-streaming/stream-processing/windowing.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/5-serving-analytics/data-apis.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/5-serving-analytics/metrics-layer.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/5-serving-analytics/olap-cubes.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/5-serving-analytics/reverse-etl.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/5-serving-analytics/semantic-layers-bi.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/alerting-incident-response.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/anomaly-detection.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-observability.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-profiling.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-quality.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-reconciliation.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/data-testing.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/distribution-drift.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/root-cause-analysis.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/schema-drift.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/observability-quality/volume-anomalies.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/airflow-scheduler.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/apache-airflow.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/dag.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/orchestration.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/orchestrator-comparison.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/retries-sla.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/sensors.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/orchestration/task-dependency.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/software-engineering/data-pipeline-cicd.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/software-engineering/dbt-testing.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/software-engineering/gitops.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/6-dataops-orchestration/software-engineering/iac-terraform.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Only 3 baseline links found, need 5-10",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/access-control.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/audit-logging.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/data-catalog.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/data-classification.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/data-governance.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/data-lineage.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/data-ownership.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/metadata-management.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/data-governance/unity-catalog-governance.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/security-compliance/data-masking.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Only 1 baseline links found, need 5-10",
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/security-compliance/encryption-kms.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/security-compliance/iam-rbac.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Only 2 baseline links found, need 5-10",
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/7-security-governance/security-compliance/networking-security-vpc.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/context-window.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/few-shot-prompting.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/llm.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/prompt-engineering.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/system-prompt.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/temperature.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/token.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/top-p.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/llm-foundations/zero-shot.md",
+    "issues": [
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/ai-agent.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/evaluation-metric.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/feature-store.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/fine-tuning.md",
+    "issues": [
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/hallucination.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/llm-as-a-judge.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/lora.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/mlflow.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/model-serving.md",
+    "issues": [
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/ndcg.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/recall.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/mlops-evaluation/rlhf.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/chunking.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/embedding-models.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/embeddings.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/hybrid-search.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/rag.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/reranking.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/semantic-search.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "concepts/8-genai-ml/rag-systems/vector-database.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/cloud-platform-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/data-modeling-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/de-behavioral-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/kafka-design-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/overview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/performance-tuning-qa.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/pipeline-design-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/production-incident-qa.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/python-de-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/spark-optimization-interview.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "interview/sql-interview-patterns.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/analytics-engineer.md",
+    "issues": [
+      "Only 3 baseline links found, need 5-10",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/beginner-de.md",
+    "issues": [
+      "Only 3 baseline links found, need 5-10",
+      "No source designated as Primary/Core",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/cloud-data-engineer.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/data-platform-engineer.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/interview-prep.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/junior-to-middle-de.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "learning-paths/middle-to-senior-de.md",
+    "issues": [
+      "Only 2 baseline links found, need 5-10",
+      "No source designated as Primary/Core"
+    ]
+  },
+  {
+    "file": "learning-paths/overview.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "learning-paths/streaming-data-engineer.md",
+    "issues": [
+      "Missing [RESEARCH METADATA] block"
+    ]
+  },
+  {
+    "file": "projects/aws-e2e-project.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "projects/azure-e2e-project.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  },
+  {
+    "file": "projects/gcp-e2e-project.md",
+    "issues": [
+      "Missing or too short description in frontmatter",
+      "Missing [RESEARCH METADATA] block",
+      "No images found in content"
+    ]
+  }
+]

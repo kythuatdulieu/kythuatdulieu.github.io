@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-profiling.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-quality-dimensions.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-quality.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-reconciliation.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/data-testing.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/distribution-drift.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/freshness-monitoring.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/root-cause-analysis.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/schema-drift.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/observability-quality/volume-anomalies.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/airflow-scheduler.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/apache-airflow.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/dag.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/orchestration.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-dataops-orchestration/orchestration/orchestrator-comparison.md

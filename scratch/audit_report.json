@@ -3,7 +3,7 @@
     "path": "concepts/1-foundations/foundation/data-engineering.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/foundation/data-engineering.md",
     "score": 100,
-    "wordCount": 3946,
+    "wordCount": 3936,
     "issues": []
   },
   {
@@ -17,49 +17,49 @@
     "path": "concepts/1-foundations/foundation/data-pipeline.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/foundation/data-pipeline.md",
     "score": 100,
-    "wordCount": 2093,
+    "wordCount": 2083,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/foundation/source-systems.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/foundation/source-systems.md",
     "score": 100,
-    "wordCount": 1942,
+    "wordCount": 1924,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/data-fabric.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/data-fabric.md",
     "score": 100,
-    "wordCount": 2030,
+    "wordCount": 2020,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/data-mesh.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/data-mesh.md",
     "score": 100,
-    "wordCount": 2165,
+    "wordCount": 2147,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/data-platform-architecture.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/data-platform-architecture.md",
     "score": 100,
-    "wordCount": 3695,
+    "wordCount": 3684,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/event-driven-architecture.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/event-driven-architecture.md",
     "score": 100,
-    "wordCount": 2630,
+    "wordCount": 2621,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/event-driven-schema-registry.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/event-driven-schema-registry.md",
     "score": 100,
-    "wordCount": 4102,
+    "wordCount": 4080,
     "issues": []
   },
   {
@@ -80,14 +80,14 @@
     "path": "concepts/1-foundations/system-architecture/push-pull-delivery.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/push-pull-delivery.md",
     "score": 100,
-    "wordCount": 2257,
+    "wordCount": 2246,
     "issues": []
   },
   {
     "path": "concepts/1-foundations/system-architecture/real-time-architecture.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/real-time-architecture.md",
     "score": 100,
-    "wordCount": 2642,
+    "wordCount": 2633,
     "issues": []
   },
   {
@@ -101,77 +101,77 @@
     "path": "concepts/2-storage/cloud-data-platform/azure-synapse.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/azure-synapse.md",
     "score": 100,
-    "wordCount": 2454,
+    "wordCount": 2440,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/bigquery-optimization.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-optimization.md",
     "score": 100,
-    "wordCount": 4627,
+    "wordCount": 4613,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md",
     "score": 100,
-    "wordCount": 4139,
+    "wordCount": 4117,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/cloud-storage.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/cloud-storage.md",
     "score": 100,
-    "wordCount": 2559,
+    "wordCount": 2545,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/cost-optimization.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/cost-optimization.md",
     "score": 100,
-    "wordCount": 2081,
+    "wordCount": 2074,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/databricks-platform.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/databricks-platform.md",
     "score": 100,
-    "wordCount": 2454,
+    "wordCount": 2440,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/google-bigquery.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/google-bigquery.md",
     "score": 100,
-    "wordCount": 2721,
+    "wordCount": 2707,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform.md",
     "score": 100,
-    "wordCount": 3409,
+    "wordCount": 3394,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/networking-security-vpc.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/networking-security-vpc.md",
     "score": 100,
-    "wordCount": 3987,
+    "wordCount": 3971,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/serverless-data.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/serverless-data.md",
     "score": 100,
-    "wordCount": 2585,
+    "wordCount": 2578,
     "issues": []
   },
   {
     "path": "concepts/2-storage/cloud-data-platform/snowflake-internals.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/snowflake-internals.md",
     "score": 100,
-    "wordCount": 4130,
+    "wordCount": 4123,
     "issues": []
   },
   {
@@ -185,7 +185,7 @@
     "path": "concepts/2-storage/cloud-data-platform/snowflake.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/snowflake.md",
     "score": 100,
-    "wordCount": 2622,
+    "wordCount": 2615,
     "issues": []
   },
   {
@@ -206,7 +206,7 @@
     "path": "concepts/2-storage/data-lake-lakehouse/apache-hudi.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/apache-hudi.md",
     "score": 100,
-    "wordCount": 2681,
+    "wordCount": 2672,
     "issues": []
   },
   {
@@ -290,7 +290,7 @@
     "path": "concepts/2-storage/data-lake-lakehouse/table-format.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format.md",
     "score": 100,
-    "wordCount": 2337,
+    "wordCount": 2328,
     "issues": []
   },
   {
@@ -304,77 +304,77 @@
     "path": "concepts/2-storage/data-warehouse/data-warehouse.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/data-warehouse.md",
     "score": 100,
-    "wordCount": 3080,
+    "wordCount": 3066,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/dimension-table.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/dimension-table.md",
     "score": 100,
-    "wordCount": 2245,
+    "wordCount": 2238,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/dimensional-modeling.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/dimensional-modeling.md",
     "score": 100,
-    "wordCount": 2336,
+    "wordCount": 2329,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/fact-table.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/fact-table.md",
     "score": 100,
-    "wordCount": 2767,
+    "wordCount": 2754,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/grain.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/grain.md",
     "score": 100,
-    "wordCount": 2217,
+    "wordCount": 2203,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/inmon-methodology.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/inmon-methodology.md",
     "score": 100,
-    "wordCount": 2522,
+    "wordCount": 2515,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/kimball-methodology.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/kimball-methodology.md",
     "score": 100,
-    "wordCount": 2596,
+    "wordCount": 2582,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/slowly-changing-dimension.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/slowly-changing-dimension.md",
     "score": 100,
-    "wordCount": 2810,
+    "wordCount": 2797,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/snowflake-schema.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/snowflake-schema.md",
     "score": 100,
-    "wordCount": 2252,
+    "wordCount": 2238,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/star-schema.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/star-schema.md",
     "score": 100,
-    "wordCount": 2539,
+    "wordCount": 2525,
     "issues": []
   },
   {
     "path": "concepts/2-storage/data-warehouse/surrogate-key.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/surrogate-key.md",
     "score": 100,
-    "wordCount": 2237,
+    "wordCount": 2223,
     "issues": []
   },
   {
@@ -521,7 +521,7 @@
     "path": "concepts/3-integration/batch-processing/spark-jobs-stages-tasks.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-jobs-stages-tasks.md",
     "score": 100,
-    "wordCount": 2090,
+    "wordCount": 2139,
     "issues": []
   },
   {
@@ -640,14 +640,14 @@
     "path": "concepts/3-integration/orchestration/airflow-scheduler.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/orchestration/airflow-scheduler.md",
     "score": 100,
-    "wordCount": 2724,
+    "wordCount": 2711,
     "issues": []
   },
   {
     "path": "concepts/3-integration/orchestration/apache-airflow.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/orchestration/apache-airflow.md",
     "score": 100,
-    "wordCount": 3020,
+    "wordCount": 3010,
     "issues": []
   },
   {
@@ -661,7 +661,7 @@
     "path": "concepts/3-integration/orchestration/orchestration.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/orchestration/orchestration.md",
     "score": 100,
-    "wordCount": 2648,
+    "wordCount": 2639,
     "issues": []
   },
   {
@@ -794,7 +794,7 @@
     "path": "concepts/4-realtime/message-queue/kafka-topics-partitions.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime/message-queue/kafka-topics-partitions.md",
     "score": 100,
-    "wordCount": 2074,
+    "wordCount": 2063,
     "issues": []
   },
   {
@@ -815,7 +815,7 @@
     "path": "concepts/4-realtime/stream-calculation/spark-structured-streaming.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime/stream-calculation/spark-structured-streaming.md",
     "score": 100,
-    "wordCount": 4301,
+    "wordCount": 4281,
     "issues": []
   },
   {
@@ -857,7 +857,7 @@
     "path": "concepts/5-quality-governance/data-quality/anomaly-detection.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/data-quality/anomaly-detection.md",
     "score": 100,
-    "wordCount": 2480,
+    "wordCount": 2459,
     "issues": []
   },
   {
@@ -871,14 +871,14 @@
     "path": "concepts/5-quality-governance/data-quality/data-quality-dimensions.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/data-quality/data-quality-dimensions.md",
     "score": 100,
-    "wordCount": 1828,
+    "wordCount": 1822,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/data-quality/data-quality.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/data-quality/data-quality.md",
     "score": 100,
-    "wordCount": 2012,
+    "wordCount": 2006,
     "issues": []
   },
   {
@@ -899,7 +899,7 @@
     "path": "concepts/5-quality-governance/governance-metadata/access-control.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/access-control.md",
     "score": 100,
-    "wordCount": 2783,
+    "wordCount": 2720,
     "issues": []
   },
   {
@@ -913,14 +913,14 @@
     "path": "concepts/5-quality-governance/governance-metadata/data-catalog.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-catalog.md",
     "score": 100,
-    "wordCount": 2703,
+    "wordCount": 2702,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/governance-metadata/data-classification.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-classification.md",
     "score": 100,
-    "wordCount": 2747,
+    "wordCount": 2741,
     "issues": []
   },
   {
@@ -934,70 +934,70 @@
     "path": "concepts/5-quality-governance/governance-metadata/data-lineage.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-lineage.md",
     "score": 100,
-    "wordCount": 2412,
+    "wordCount": 2397,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/governance-metadata/data-ownership.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-ownership.md",
     "score": 100,
-    "wordCount": 2532,
+    "wordCount": 2528,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/governance-metadata/metadata-management.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/metadata-management.md",
     "score": 100,
-    "wordCount": 2316,
+    "wordCount": 2315,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md",
     "score": 100,
-    "wordCount": 4631,
+    "wordCount": 4621,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/alerting-incident-response.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/alerting-incident-response.md",
     "score": 100,
-    "wordCount": 2640,
+    "wordCount": 2622,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/data-observability.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/data-observability.md",
     "score": 100,
-    "wordCount": 3400,
+    "wordCount": 3394,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/distribution-drift.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/distribution-drift.md",
     "score": 100,
-    "wordCount": 2364,
+    "wordCount": 2346,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/freshness-monitoring.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/freshness-monitoring.md",
     "score": 100,
-    "wordCount": 2426,
+    "wordCount": 2425,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/root-cause-analysis.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/root-cause-analysis.md",
     "score": 100,
-    "wordCount": 2892,
+    "wordCount": 2874,
     "issues": []
   },
   {
     "path": "concepts/5-quality-governance/observability-reliability/schema-drift.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/schema-drift.md",
     "score": 100,
-    "wordCount": 2210,
+    "wordCount": 2206,
     "issues": []
   },
   {
@@ -1011,7 +1011,7 @@
     "path": "concepts/6-ai-ml/evaluation-metrics/ai-agent.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/ai-agent.md",
     "score": 100,
-    "wordCount": 2839,
+    "wordCount": 2827,
     "issues": []
   },
   {
@@ -1025,7 +1025,7 @@
     "path": "concepts/6-ai-ml/evaluation-metrics/feature-store.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/feature-store.md",
     "score": 100,
-    "wordCount": 2629,
+    "wordCount": 2621,
     "issues": []
   },
   {
@@ -1046,28 +1046,28 @@
     "path": "concepts/6-ai-ml/evaluation-metrics/mlflow.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/mlflow.md",
     "score": 100,
-    "wordCount": 2153,
+    "wordCount": 2140,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/evaluation-metrics/ndcg.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/ndcg.md",
     "score": 100,
-    "wordCount": 2265,
+    "wordCount": 2264,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/evaluation-metrics/recall.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/recall.md",
     "score": 100,
-    "wordCount": 2303,
+    "wordCount": 2293,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/fine-tuning/fine-tuning.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/fine-tuning/fine-tuning.md",
     "score": 100,
-    "wordCount": 2982,
+    "wordCount": 2979,
     "issues": []
   },
   {
@@ -1081,7 +1081,7 @@
     "path": "concepts/6-ai-ml/fine-tuning/model-serving.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/fine-tuning/model-serving.md",
     "score": 100,
-    "wordCount": 2631,
+    "wordCount": 2623,
     "issues": []
   },
   {
@@ -1102,7 +1102,7 @@
     "path": "concepts/6-ai-ml/llm-basics/context-window.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/context-window.md",
     "score": 100,
-    "wordCount": 2086,
+    "wordCount": 2080,
     "issues": []
   },
   {
@@ -1130,14 +1130,14 @@
     "path": "concepts/6-ai-ml/llm-basics/system-prompt.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/system-prompt.md",
     "score": 100,
-    "wordCount": 3084,
+    "wordCount": 3076,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/llm-basics/temperature.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/temperature.md",
     "score": 100,
-    "wordCount": 1925,
+    "wordCount": 1907,
     "issues": []
   },
   {
@@ -1151,7 +1151,7 @@
     "path": "concepts/6-ai-ml/llm-basics/top-p.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/top-p.md",
     "score": 100,
-    "wordCount": 1982,
+    "wordCount": 1962,
     "issues": []
   },
   {
@@ -1165,21 +1165,21 @@
     "path": "concepts/6-ai-ml/rag-search/chunking.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/chunking.md",
     "score": 100,
-    "wordCount": 2298,
+    "wordCount": 2293,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/rag-search/embedding-models.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/embedding-models.md",
     "score": 100,
-    "wordCount": 2846,
+    "wordCount": 2834,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/rag-search/embeddings.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/embeddings.md",
     "score": 100,
-    "wordCount": 2499,
+    "wordCount": 2489,
     "issues": []
   },
   {
@@ -1193,14 +1193,14 @@
     "path": "concepts/6-ai-ml/rag-search/rag.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/rag.md",
     "score": 100,
-    "wordCount": 2614,
+    "wordCount": 2609,
     "issues": []
   },
   {
     "path": "concepts/6-ai-ml/rag-search/reranking.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/reranking.md",
     "score": 100,
-    "wordCount": 2504,
+    "wordCount": 2498,
     "issues": []
   },
   {
@@ -1214,105 +1214,105 @@
     "path": "concepts/6-ai-ml/rag-search/vector-database.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/vector-database.md",
     "score": 100,
-    "wordCount": 3181,
+    "wordCount": 3166,
     "issues": []
   },
   {
     "path": "interview/cloud-platform-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/cloud-platform-interview.md",
     "score": 100,
-    "wordCount": 2686,
+    "wordCount": 1610,
     "issues": []
   },
   {
     "path": "interview/data-modeling-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/data-modeling-interview.md",
     "score": 100,
-    "wordCount": 2623,
+    "wordCount": 1331,
     "issues": []
   },
   {
     "path": "interview/de-behavioral-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/de-behavioral-interview.md",
     "score": 100,
-    "wordCount": 2818,
+    "wordCount": 1483,
     "issues": []
   },
   {
     "path": "interview/kafka-design-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/kafka-design-interview.md",
     "score": 100,
-    "wordCount": 2725,
+    "wordCount": 1727,
     "issues": []
   },
   {
     "path": "interview/overview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/overview.md",
     "score": 100,
-    "wordCount": 2206,
+    "wordCount": 2255,
     "issues": []
   },
   {
     "path": "interview/performance-tuning-qa.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/performance-tuning-qa.md",
     "score": 100,
-    "wordCount": 2673,
+    "wordCount": 1534,
     "issues": []
   },
   {
     "path": "interview/pipeline-design-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/pipeline-design-interview.md",
     "score": 100,
-    "wordCount": 2957,
+    "wordCount": 1530,
     "issues": []
   },
   {
     "path": "interview/production-incident-qa.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/production-incident-qa.md",
     "score": 100,
-    "wordCount": 2332,
+    "wordCount": 1348,
     "issues": []
   },
   {
     "path": "interview/python-de-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/python-de-interview.md",
     "score": 100,
-    "wordCount": 2140,
+    "wordCount": 1465,
     "issues": []
   },
   {
     "path": "interview/spark-optimization-interview.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/spark-optimization-interview.md",
     "score": 100,
-    "wordCount": 2373,
+    "wordCount": 1791,
     "issues": []
   },
   {
     "path": "interview/sql-interview-patterns.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/interview/sql-interview-patterns.md",
     "score": 100,
-    "wordCount": 2273,
+    "wordCount": 1158,
     "issues": []
   },
   {
     "path": "projects/aws-e2e-project.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/aws-e2e-project.md",
     "score": 100,
-    "wordCount": 3266,
+    "wordCount": 1568,
     "issues": []
   },
   {
     "path": "projects/azure-e2e-project.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/azure-e2e-project.md",
     "score": 100,
-    "wordCount": 3792,
+    "wordCount": 1649,
     "issues": []
   },
   {
     "path": "projects/gcp-e2e-project.md",
     "absolutePath": "/home/duclinh/kythuatdulieu.github.io/src/content/docs/projects/gcp-e2e-project.md",
     "score": 100,
-    "wordCount": 3734,
+    "wordCount": 1261,
     "issues": []
   }
 ]

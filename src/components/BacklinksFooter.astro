@@ -3,6 +3,7 @@ import type { Props } from '@astrojs/starlight/props';
 import Default from '@astrojs/starlight/components/Footer.astro';
 import fs from 'fs';
 import path from 'path';
+import { conceptCategories } from '../config/categories.js';
 
 let backlinks = {};
 try {
@@ -31,40 +32,41 @@ const isSplashPage = Astro.props.entry?.data?.template === 'splash' || currentPa
 const pathParts = currentPath.split('/').filter(Boolean);
 let categorySlug = '';
 let categoryName = '';
-if (pathParts[0] === 'concepts' && pathParts[1]) {
-  categorySlug = pathParts[1];
-  const categoryNames = {
-    "foundation": "Foundation (Nền Tảng)",
-    "system-architecture": "Data Architectures & Stacks",
-    "database-storage": "Database & Storage",
-    "data-warehouse": "Data Warehouse & Modeling",
-    "data-lake-lakehouse": "Data Lake & Lakehouse",
-    "cloud-data-platform": "Cloud Data Platform",
-    "batch-processing": "Batch Processing",
-    "streaming-processing": "Streaming Processing",
-    "etl-elt": "ETL & ELT",
-    "transformation-analytics": "Transformation & Analytics",
-    "orchestration": "Orchestration",
-    "data-quality": "Data Quality",
-    "governance-metadata": "Governance & Metadata",
-    "observability-reliability": "Observability & Reliability",
-    "genai-ml": "GenAI & Machine Learning"
-  };
-  categoryName = categoryNames[categorySlug] || '';
+let domainId = '';
+
+if (pathParts[0] === 'concepts' && pathParts[1] && pathParts[2]) {
+  const fullSlug = `${pathParts[1]}/${pathParts[2]}`;
+  const foundCategory = conceptCategories.find(cat => cat.slug === fullSlug);
+  if (foundCategory) {
+    categorySlug = fullSlug;
+    categoryName = foundCategory.label;
+    
+    // Extract domain prefix character (e.g. '1' from '1-foundations')
+    const prefixChar = pathParts[1].charAt(0);
+    if (/[1-6]/.test(prefixChar)) {
+      domainId = `domain-${prefixChar}`;
+    }
+  }
 }
+const MAX_BACKLINKS = 6;
+// Limit number of backlinks to avoid overwhelming the user
+const displayBacklinks = pageBacklinks.slice(0, MAX_BACKLINKS);
 ---
 
-{!isSplashPage && pageBacklinks.length > 0 && (
+{!isSplashPage && displayBacklinks.length > 0 && (
   <div class="backlinks-container">
-    <h3>Liên kết ngược (Backlinks)</h3>
-    <p>Các trang khác có nhắc đến chủ đề này:</p>
-    <ul class="backlinks-list">
-      {pageBacklinks.map((link: any) => (
-        <li>
-          <a href={link.url}>{link.title}</a>
-        </li>
+    <h3>🔗 Bài viết liên quan</h3>
+    <p>Các nội dung khác có nhắc đến hoặc liên quan mật thiết với chủ đề này:</p>
+    <div class="backlinks-grid">
+      {displayBacklinks.map((link: any) => (
+        <a href={link.url} class="backlink-card">
+          <div class="backlink-card-content">
+            <svg class="backlink-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span class="backlink-title">{link.title}</span>
+          </div>
+        </a>
       ))}
-    </ul>
+    </div>
   </div>
 )}
 
@@ -76,7 +78,7 @@ if (pathParts[0] === 'concepts' && pathParts[1]) {
     </a>
     {categorySlug && categoryName && (
       <span class="nav-hub-separator">/</span>
-      <a href={`/#row-${categorySlug}`} class="nav-hub-link category-link">
+      <a href={domainId ? `/#${domainId}` : '/'} class="nav-hub-link category-link">
         Chuyên mục: {categoryName}
       </a>
     )}
@@ -155,33 +157,48 @@ if (pathParts[0] === 'concepts' && pathParts[1]) {
     color: var(--sl-color-gray-3);
     margin-bottom: 1rem;
   }
-  .backlinks-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .backlinks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .backlink-card {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
   }
-  .backlinks-list li {
-    position: relative;
-    padding-left: 1.25rem;
+  .backlink-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--sl-color-text-accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-  .backlinks-list li::before {
-    content: "↳";
-    position: absolute;
-    left: 0;
-    color: var(--sl-color-gray-4);
+  .backlink-card-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
-  .backlinks-list li a {
+  .backlink-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
     color: var(--sl-color-text-accent);
-    text-decoration: none;
+    margin-top: 0.1rem;
+  }
+  .backlink-title {
+    color: var(--sl-color-text);
     font-weight: 500;
+    font-size: var(--sl-text-sm);
+    line-height: 1.4;
     transition: color 0.2s;
   }
-  .backlinks-list li a:hover {
-    color: var(--sl-color-white);
-    text-decoration: underline;
+  .backlink-card:hover .backlink-title {
+    color: var(--sl-color-text-accent);
   }
   .navigation-hub {
     display: flex;

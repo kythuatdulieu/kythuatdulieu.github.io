@@ -1,0 +1,10 @@
+src/content/docs/concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/data-classification.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/data-catalog.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/data-governance.md
+src/content/docs/concepts/5-quality-governance/governance-metadata/data-ownership.md
+src/content/docs/concepts/5-quality-governance/observability-reliability/alerting-incident-response.md
+src/content/docs/concepts/5-quality-governance/observability-reliability/data-observability.md
+src/content/docs/concepts/5-quality-governance/observability-reliability/schema-drift.md
+src/content/docs/concepts/5-quality-governance/observability-reliability/volume-anomalies.md
+src/content/docs/concepts/5-quality-governance/observability-reliability/freshness-monitoring.md

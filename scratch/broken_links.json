@@ -1,0 +1,2771 @@
+{
+  "brokenLinks": [
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-engineering.md",
+      "link": "/images/data-engineering/architecture.png",
+      "resolved": "/images/data-engineering/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-lifecycle.md",
+      "link": "/images/data-lifecycle/architecture.png",
+      "resolved": "/images/data-lifecycle/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-pipeline.md",
+      "link": "/images/data-pipeline/architecture.png",
+      "resolved": "/images/data-pipeline/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/source-systems.md",
+      "link": "/images/source-systems/architecture.png",
+      "resolved": "/images/source-systems/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/dimension-table.md",
+      "link": "/images/dimension-table/architecture.png",
+      "resolved": "/images/dimension-table/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/dimensional-modeling.md",
+      "link": "/images/dimensional-modeling/architecture.png",
+      "resolved": "/images/dimensional-modeling/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/fact-table.md",
+      "link": "/images/fact-table/architecture.png",
+      "resolved": "/images/fact-table/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/grain.md",
+      "link": "/images/grain/architecture.png",
+      "resolved": "/images/grain/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/inmon-methodology.md",
+      "link": "/images/inmon-methodology/architecture.png",
+      "resolved": "/images/inmon-methodology/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/kimball-methodology.md",
+      "link": "/images/kimball-methodology/architecture.png",
+      "resolved": "/images/kimball-methodology/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/snowflake-schema.md",
+      "link": "/images/snowflake-schema/architecture.png",
+      "resolved": "/images/snowflake-schema/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/star-schema.md",
+      "link": "/images/star-schema/architecture.png",
+      "resolved": "/images/star-schema/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/surrogate-key.md",
+      "link": "/images/surrogate-key/architecture.png",
+      "resolved": "/images/surrogate-key/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/data-fabric.md",
+      "link": "/images/data-fabric/architecture.png",
+      "resolved": "/images/data-fabric/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/data-mesh.md",
+      "link": "/images/data-mesh/architecture.png",
+      "resolved": "/images/data-mesh/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/data-platform-architecture.md",
+      "link": "/images/data-platform-architecture/architecture.png",
+      "resolved": "/images/data-platform-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-architecture.md",
+      "link": "/images/event-driven-architecture/architecture.png",
+      "resolved": "/images/event-driven-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-schema-registry.md",
+      "link": "/images/schema-registry/architecture.png",
+      "resolved": "/images/schema-registry/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/kappa-architecture.md",
+      "link": "/images/kappa-architecture/architecture.png",
+      "resolved": "/images/kappa-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/lambda-architecture.md",
+      "link": "/images/lambda-architecture/architecture.png",
+      "resolved": "/images/lambda-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/push-pull-delivery.md",
+      "link": "/images/push-pull/architecture.png",
+      "resolved": "/images/push-pull/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/real-time-architecture.md",
+      "link": "/images/real-time/architecture.png",
+      "resolved": "/images/real-time/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/acid-transactions-on-lake.md",
+      "link": "/images/acid-transactions-on-lake/architecture.png",
+      "resolved": "/images/acid-transactions-on-lake/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/apache-hudi.md",
+      "link": "/images/apache-hudi/architecture.png",
+      "resolved": "/images/apache-hudi/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/apache-iceberg.md",
+      "link": "/images/apache-iceberg/architecture.png",
+      "resolved": "/images/apache-iceberg/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/compaction.md",
+      "link": "/images/compaction/architecture.png",
+      "resolved": "/images/compaction/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/data-lake.md",
+      "link": "/images/data-lake/architecture.png",
+      "resolved": "/images/data-lake/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/delta-lake.md",
+      "link": "/images/delta-lake/architecture.png",
+      "resolved": "/images/delta-lake/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/iceberg-metadata-internals.md",
+      "link": "/images/iceberg/architecture.png",
+      "resolved": "/images/iceberg/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/lakehouse-optimization.md",
+      "link": "/images/lakehouse-optimization/architecture.png",
+      "resolved": "/images/lakehouse-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/lakehouse.md",
+      "link": "/images/lakehouse/architecture.png",
+      "resolved": "/images/lakehouse/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/medallion-architecture.md",
+      "link": "/images/medallion-architecture/architecture.png",
+      "resolved": "/images/medallion-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/schema-evolution.md",
+      "link": "/images/schema-evolution/architecture.png",
+      "resolved": "/images/schema-evolution/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format-comparison.md",
+      "link": "/images/table-formats/architecture.png",
+      "resolved": "/images/table-formats/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format-migration.md",
+      "link": "/images/table-format-migration/architecture.png",
+      "resolved": "/images/table-format-migration/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format.md",
+      "link": "/images/table-format/architecture.png",
+      "resolved": "/images/table-format/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/time-travel.md",
+      "link": "/images/time-travel/architecture.png",
+      "resolved": "/images/time-travel/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/amazon-redshift.md",
+      "link": "/images/amazon-redshift/architecture.png",
+      "resolved": "/images/amazon-redshift/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/azure-synapse.md",
+      "link": "/images/azure-synapse/architecture.png",
+      "resolved": "/images/azure-synapse/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/bigquery-optimization.md",
+      "link": "/images/bigquery-optimization/architecture.png",
+      "resolved": "/images/bigquery-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/bigquery-slot-optimization.md",
+      "link": "/concepts/2-storage/cloud-data-platform/google-bigquery",
+      "resolved": "/concepts/2-storage/cloud-data-platform/google-bigquery/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/bigquery-slot-optimization.md",
+      "link": "/images/bigquery-slot-optimization/architecture.png",
+      "resolved": "/images/bigquery-slot-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/cloud-storage.md",
+      "link": "/images/cloud-storage/architecture.png",
+      "resolved": "/images/cloud-storage/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/cost-optimization.md",
+      "link": "/images/cost-optimization/architecture.png",
+      "resolved": "/images/cost-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/data-warehouse.md",
+      "link": "/images/data-warehouse/architecture.png",
+      "resolved": "/images/data-warehouse/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/databricks-platform.md",
+      "link": "/images/databricks-platform/architecture.png",
+      "resolved": "/images/databricks-platform/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/images/google-bigquery/architecture.png",
+      "resolved": "/images/google-bigquery/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/concepts/2-storage/cloud-data-platform/snowflake/",
+      "resolved": "/concepts/2-storage/cloud-data-platform/snowflake/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/concepts/2-storage/cloud-data-platform/amazon-redshift/",
+      "resolved": "/concepts/2-storage/cloud-data-platform/amazon-redshift/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/concepts/2-storage/cloud-data-platform/serverless-data/",
+      "resolved": "/concepts/2-storage/cloud-data-platform/serverless-data/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization/",
+      "resolved": "/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/google-bigquery.md",
+      "link": "/concepts/2-storage/cloud-data-platform/azure-synapse/",
+      "resolved": "/concepts/2-storage/cloud-data-platform/azure-synapse/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/serverless-data.md",
+      "link": "/images/serverless/architecture.png",
+      "resolved": "/images/serverless/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "link": "/images/slowly-changing-dimension/architecture.png",
+      "resolved": "/images/slowly-changing-dimension/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "link": "/concepts/2-storage/data-warehouse/dimension-table/",
+      "resolved": "/concepts/2-storage/data-warehouse/dimension-table/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "link": "/concepts/2-storage/data-warehouse/surrogate-key/",
+      "resolved": "/concepts/2-storage/data-warehouse/surrogate-key/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "link": "/concepts/2-storage/data-warehouse/data-warehouse/",
+      "resolved": "/concepts/2-storage/data-warehouse/data-warehouse/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "link": "/concepts/2-storage/data-warehouse/dimensional-modeling/",
+      "resolved": "/concepts/2-storage/data-warehouse/dimensional-modeling/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/snowflake-internals.md",
+      "link": "/images/snowflake-internals/architecture.png",
+      "resolved": "/images/snowflake-internals/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/snowflake-search-optimization.md",
+      "link": "/images/snowflake-search-optimization/architecture.png",
+      "resolved": "/images/snowflake-search-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/snowflake.md",
+      "link": "/images/snowflake/architecture.png",
+      "resolved": "/images/snowflake/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/zero-copy-cloning.md",
+      "link": "/images/zero-copy-cloning/architecture.png",
+      "resolved": "/images/zero-copy-cloning/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/clustering.md",
+      "link": "/images/clustering/architecture.png",
+      "resolved": "/images/clustering/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/columnar-storage.md",
+      "link": "/images/columnar-storage/architecture.png",
+      "resolved": "/images/columnar-storage/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/compression-algorithms.md",
+      "link": "/images/compression-algorithms/architecture.png",
+      "resolved": "/images/compression-algorithms/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/file-formats-deep-dive.md",
+      "link": "/images/file-formats-deep-dive/parquet-file-layout.gif",
+      "resolved": "/images/file-formats-deep-dive/parquet-file-layout.gif/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/indexing.md",
+      "link": "/concepts/2-storage/database-storage/clustering/",
+      "resolved": "/concepts/2-storage/database-storage/clustering/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/olap.md",
+      "link": "/images/olap/architecture.png",
+      "resolved": "/images/olap/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/oltp-olap-htap-comparison.md",
+      "link": "/images/oltp-olap-htap-comparison/architecture.png",
+      "resolved": "/images/oltp-olap-htap-comparison/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/oltp.md",
+      "link": "/images/oltp/architecture.png",
+      "resolved": "/images/oltp/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/partitioning.md",
+      "link": "/images/partitioning/architecture.png",
+      "resolved": "/images/partitioning/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/query-engines-architecture.md",
+      "link": "/images/query-engines-architecture/architecture.png",
+      "resolved": "/images/query-engines-architecture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/relational-database.md",
+      "link": "/images/relational-database/architecture.png",
+      "resolved": "/images/relational-database/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/row-based-storage.md",
+      "link": "/images/row-based-storage/architecture.png",
+      "resolved": "/images/row-based-storage/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/serving-analytics/metrics-layer.md",
+      "link": "/images/metrics-layer/architecture.png",
+      "resolved": "/images/metrics-layer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/serving-analytics/semantic-layers-bi.md",
+      "link": "/images/semantic-layers-bi/architecture.png",
+      "resolved": "/images/semantic-layers-bi/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+      "link": "/images/apache-spark/cluster-overview.png",
+      "resolved": "/images/apache-spark/cluster-overview.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+      "link": "/concepts/3-integration/batch-processing/spark-aqe-catalyst/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-aqe-catalyst/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+      "link": "/concepts/3-integration/batch-processing/spark-jobs-stages-tasks/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-jobs-stages-tasks/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+      "link": "/concepts/3-integration/batch-processing/spark-partition/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-partition/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/apache-spark.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+      "link": "/images/batch-processing/MapReduce.png",
+      "resolved": "/images/batch-processing/MapReduce.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+      "link": "/concepts/3-integration/batch-processing/apache-spark/",
+      "resolved": "/concepts/3-integration/batch-processing/apache-spark/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+      "link": "/concepts/3-integration/batch-processing/distributed-processing/",
+      "resolved": "/concepts/3-integration/batch-processing/distributed-processing/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/batch-processing.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/data-skew.md",
+      "link": "/images/data-skew/blog-adaptive-query-execution-3.png",
+      "resolved": "/images/data-skew/blog-adaptive-query-execution-3.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/data-skew.md",
+      "link": "/concepts/3-integration/batch-processing/spark-memory-management/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-memory-management/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/data-skew.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/data-skew.md",
+      "link": "/concepts/3-integration/batch-processing/distributed-processing/",
+      "resolved": "/concepts/3-integration/batch-processing/distributed-processing/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+      "link": "/images/distributed-processing/Architecture.png",
+      "resolved": "/images/distributed-processing/Architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+      "link": "/concepts/3-integration/batch-processing/apache-spark/",
+      "resolved": "/concepts/3-integration/batch-processing/apache-spark/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/distributed-processing.md",
+      "link": "/concepts/3-integration/batch-processing/spark-partition/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-partition/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/shuffle.md",
+      "link": "/images/shuffle/shuffle-write-consolidation.png",
+      "resolved": "/images/shuffle/shuffle-write-consolidation.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/shuffle.md",
+      "link": "/concepts/3-integration/batch-processing/spark-memory-management/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-memory-management/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/shuffle.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-advanced-tuning.md",
+      "link": "/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png",
+      "resolved": "/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-aqe-catalyst.md",
+      "link": "/images/spark-aqe-catalyst/blog-adaptive-query-execution-3.png",
+      "resolved": "/images/spark-aqe-catalyst/blog-adaptive-query-execution-3.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-aqe-catalyst.md",
+      "link": "/concepts/3-integration/batch-processing/spark-joins/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-joins/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-aqe-catalyst.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-execution-model.md",
+      "link": "/images/spark-execution-model/cluster-overview.png",
+      "resolved": "/images/spark-execution-model/cluster-overview.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-execution-model.md",
+      "link": "/concepts/3-integration/batch-processing/spark-advanced-tuning/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-advanced-tuning/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-execution-model.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-jobs-stages-tasks.md",
+      "link": "/images/spark-jobs-stages-tasks/taskexecution.png",
+      "resolved": "/images/spark-jobs-stages-tasks/taskexecution.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-jobs-stages-tasks.md",
+      "link": "/concepts/3-integration/batch-processing/spark-execution-model/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-execution-model/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-jobs-stages-tasks.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-joins.md",
+      "link": "/images/spark-joins/ShuffleJoin.png",
+      "resolved": "/images/spark-joins/ShuffleJoin.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-joins.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-joins.md",
+      "link": "/concepts/3-integration/batch-processing/spark-aqe-catalyst/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-aqe-catalyst/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-joins.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-memory-management.md",
+      "link": "/images/spark-memory-management/SparkExecutorMemory.png",
+      "resolved": "/images/spark-memory-management/SparkExecutorMemory.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-memory-management.md",
+      "link": "/concepts/3-integration/batch-processing/spark-advanced-tuning/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-advanced-tuning/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-memory-management.md",
+      "link": "/concepts/3-integration/batch-processing/spark-joins/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-joins/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-partition.md",
+      "link": "/images/spark-partition/NarrowDependency.png",
+      "resolved": "/images/spark-partition/NarrowDependency.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-partition.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-partition.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-sql.md",
+      "link": "/images/spark-sql/catalyst-optimizer.png",
+      "resolved": "/images/spark-sql/catalyst-optimizer.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-sql.md",
+      "link": "/concepts/3-integration/batch-processing/spark-execution-model/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-execution-model/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-sql.md",
+      "link": "/concepts/3-integration/batch-processing/spark-advanced-tuning/",
+      "resolved": "/concepts/3-integration/batch-processing/spark-advanced-tuning/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/backfill.md",
+      "link": "/images/backfill/architecture.png",
+      "resolved": "/images/backfill/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/backfill.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/backfill.md",
+      "link": "/concepts/3-integration/etl-elt/data-loading/",
+      "resolved": "/concepts/3-integration/etl-elt/data-loading/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md",
+      "link": "/images/change-data-capture/architecture.png",
+      "resolved": "/images/change-data-capture/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md",
+      "link": "/concepts/3-integration/etl-elt/incremental-load/",
+      "resolved": "/concepts/3-integration/etl-elt/incremental-load/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md",
+      "link": "/concepts/3-integration/etl-elt/data-ingestion/",
+      "resolved": "/concepts/3-integration/etl-elt/data-ingestion/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md",
+      "link": "/concepts/4-realtime/streaming-processing/apache-kafka/",
+      "resolved": "/concepts/4-realtime/streaming-processing/apache-kafka/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+      "link": "/images/data-extraction/architecture.png",
+      "resolved": "/images/data-extraction/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+      "link": "/concepts/3-integration/etl-elt/change-data-capture/",
+      "resolved": "/concepts/3-integration/etl-elt/change-data-capture/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+      "link": "/concepts/3-integration/etl-elt/data-ingestion/",
+      "resolved": "/concepts/3-integration/etl-elt/data-ingestion/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+      "link": "/concepts/4-quality/data-contracts/",
+      "resolved": "/concepts/4-quality/data-contracts/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+      "link": "/images/data-ingestion/architecture.png",
+      "resolved": "/images/data-ingestion/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+      "link": "/concepts/4-quality/data-contracts/",
+      "resolved": "/concepts/4-quality/data-contracts/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+      "link": "/concepts/3-integration/etl-elt/change-data-capture/",
+      "resolved": "/concepts/3-integration/etl-elt/change-data-capture/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+      "link": "/images/data-loading/architecture.png",
+      "resolved": "/images/data-loading/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+      "link": "/concepts/3-integration/etl-elt/data-extraction/",
+      "resolved": "/concepts/3-integration/etl-elt/data-extraction/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+      "link": "/concepts/3-integration/etl-elt/incremental-load/",
+      "resolved": "/concepts/3-integration/etl-elt/incremental-load/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-transformation.md",
+      "link": "/images/data-transformation/medallion-architecture.png",
+      "resolved": "/images/data-transformation/medallion-architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-transformation.md",
+      "link": "/concepts/3-integration/etl-elt/elt/",
+      "resolved": "/concepts/3-integration/etl-elt/elt/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-transformation.md",
+      "link": "/concepts/3-integration/transformation-analytics/dbt/",
+      "resolved": "/concepts/3-integration/transformation-analytics/dbt/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-transformation.md",
+      "link": "/concepts/3-integration/etl-elt/deduplication/",
+      "resolved": "/concepts/3-integration/etl-elt/deduplication/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+      "link": "/images/deduplication/architecture.png",
+      "resolved": "/images/deduplication/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+      "link": "/concepts/3-integration/batch-processing/data-skew/",
+      "resolved": "/concepts/3-integration/batch-processing/data-skew/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+      "link": "/concepts/3-integration/batch-processing/shuffle/",
+      "resolved": "/concepts/3-integration/batch-processing/shuffle/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md",
+      "link": "/images/elt/architecture.png",
+      "resolved": "/images/elt/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md",
+      "link": "/concepts/4-quality/data-contracts/",
+      "resolved": "/concepts/4-quality/data-contracts/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md",
+      "link": "/concepts/2-storage/medallion-architecture/",
+      "resolved": "/concepts/2-storage/medallion-architecture/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md",
+      "link": "/concepts/3-integration/etl-elt/incremental-load/",
+      "resolved": "/concepts/3-integration/etl-elt/incremental-load/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md",
+      "link": "/images/etl/architecture.png",
+      "resolved": "/images/etl/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md",
+      "link": "/concepts/3-integration/etl-elt/elt/",
+      "resolved": "/concepts/3-integration/etl-elt/elt/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md",
+      "link": "/concepts/3-integration/etl-elt/integration-patterns-comparison/",
+      "resolved": "/concepts/3-integration/etl-elt/integration-patterns-comparison/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md",
+      "link": "/concepts/3-integration/batch-processing/apache-spark/",
+      "resolved": "/concepts/3-integration/batch-processing/apache-spark/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+      "link": "/images/idempotency/architecture.png",
+      "resolved": "/images/idempotency/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+      "link": "/concepts/3-integration/etl-elt/backfill/",
+      "resolved": "/concepts/3-integration/etl-elt/backfill/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+      "link": "/concepts/3-integration/etl-elt/data-loading/",
+      "resolved": "/concepts/3-integration/etl-elt/data-loading/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+      "link": "/concepts/3-integration/etl-elt/deduplication/",
+      "resolved": "/concepts/3-integration/etl-elt/deduplication/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+      "link": "/images/incremental-load/architecture.png",
+      "resolved": "/images/incremental-load/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+      "link": "/concepts/3-integration/etl-elt/idempotency/",
+      "resolved": "/concepts/3-integration/etl-elt/idempotency/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+      "link": "/concepts/3-integration/etl-elt/data-loading/",
+      "resolved": "/concepts/3-integration/etl-elt/data-loading/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+      "link": "/concepts/3-integration/etl-elt/change-data-capture/",
+      "resolved": "/concepts/3-integration/etl-elt/change-data-capture/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/integration-patterns-comparison.md",
+      "link": "/images/integration-patterns-comparison/architecture.png",
+      "resolved": "/images/integration-patterns-comparison/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/data-contract.md",
+      "link": "/images/data-contract/schema-registry-design-kafka.png",
+      "resolved": "/images/data-contract/schema-registry-design-kafka.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/data-contract.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/data-contract.md",
+      "link": "/concepts/3-integration/transformation-analytics/data-pipeline-cicd/",
+      "resolved": "/concepts/3-integration/transformation-analytics/data-pipeline-cicd/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-advanced.md",
+      "link": "/images/dbt-advanced/architecture.png",
+      "resolved": "/images/dbt-advanced/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-models.md",
+      "link": "/concepts/3-integration/transformation-analytics/materialization/",
+      "resolved": "/concepts/3-integration/transformation-analytics/materialization/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-models.md",
+      "link": "/concepts/3-integration/etl-elt/data-transformation/",
+      "resolved": "/concepts/3-integration/etl-elt/data-transformation/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-models.md",
+      "link": "/concepts/3-integration/orchestration/orchestration/",
+      "resolved": "/concepts/3-integration/orchestration/orchestration/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-semantic-layer.md",
+      "link": "/images/dbt-semantic-layer/architecture.png",
+      "resolved": "/images/dbt-semantic-layer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt.md",
+      "link": "/images/dbt/architecture.png",
+      "resolved": "/images/dbt/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/materialization.md",
+      "link": "/images/materialization/architecture.png",
+      "resolved": "/images/materialization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/sql-transformation.md",
+      "link": "/images/sql-transformation/architecture.png",
+      "resolved": "/images/sql-transformation/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/apache-kafka.md",
+      "link": "/images/apache-kafka/architecture.png",
+      "resolved": "/images/apache-kafka/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/consumer-groups.md",
+      "link": "/images/consumer-groups/architecture.png",
+      "resolved": "/images/consumer-groups/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/consumer-groups.md",
+      "link": "/concepts/4-realtime/message-queue/kafka-rebalance-protocols/",
+      "resolved": "/concepts/4-realtime/message-queue/kafka-rebalance-protocols/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/consumer-groups.md",
+      "link": "/concepts/4-realtime/message-queue/kafka-topics-partitions/",
+      "resolved": "/concepts/4-realtime/message-queue/kafka-topics-partitions/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-rebalance-protocols.md",
+      "link": "/images/kafka-rebalance-protocols/architecture.png",
+      "resolved": "/images/kafka-rebalance-protocols/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-topics-partitions.md",
+      "link": "/images/kafka-topics-partitions/architecture.png",
+      "resolved": "/images/kafka-topics-partitions/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-topics-partitions.md",
+      "link": "/concepts/4-realtime/message-queue/consumer-groups/",
+      "resolved": "/concepts/4-realtime/message-queue/consumer-groups/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/event-time-processing-time.md",
+      "link": "/images/event-time-processing-time/architecture.png",
+      "resolved": "/images/event-time-processing-time/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/event-time-processing-time.md",
+      "link": "/concepts/4-realtime/stream-calculation/watermark/",
+      "resolved": "/concepts/4-realtime/stream-calculation/watermark/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/exactly-once-semantics.md",
+      "link": "/images/exactly-once-semantics/architecture.png",
+      "resolved": "/images/exactly-once-semantics/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/exactly-once-semantics.md",
+      "link": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/",
+      "resolved": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-structured-streaming.md",
+      "link": "/images/spark-structured-streaming/architecture.png",
+      "resolved": "/images/spark-structured-streaming/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-structured-streaming.md",
+      "link": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/",
+      "resolved": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-vs-flink-comparison.md",
+      "link": "/images/apache-flink/architecture.png",
+      "resolved": "/images/apache-flink/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-vs-flink-comparison.md",
+      "link": "/concepts/4-realtime/stream-calculation/exactly-once-semantics/",
+      "resolved": "/concepts/4-realtime/stream-calculation/exactly-once-semantics/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/stream-table-duality.md",
+      "link": "/images/stream-table-duality/architecture.png",
+      "resolved": "/images/stream-table-duality/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/streaming-processing.md",
+      "link": "/images/streaming-processing/architecture.png",
+      "resolved": "/images/streaming-processing/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/streaming-processing.md",
+      "link": "/concepts/4-realtime/message-queue/apache-kafka/",
+      "resolved": "/concepts/4-realtime/message-queue/apache-kafka/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/streaming-processing.md",
+      "link": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/",
+      "resolved": "/concepts/4-realtime/stream-calculation/spark-vs-flink-comparison/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/watermark.md",
+      "link": "/images/watermark/architecture.png",
+      "resolved": "/images/watermark/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/watermark.md",
+      "link": "/concepts/4-realtime/stream-calculation/event-time-processing-time/",
+      "resolved": "/concepts/4-realtime/stream-calculation/event-time-processing-time/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/windowing.md",
+      "link": "/images/windowing/architecture.png",
+      "resolved": "/images/windowing/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/windowing.md",
+      "link": "/concepts/4-realtime/stream-calculation/watermark/",
+      "resolved": "/concepts/4-realtime/stream-calculation/watermark/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/images/alerting-incident-response/architecture.png",
+      "resolved": "/images/alerting-incident-response/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/root-cause-analysis/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/root-cause-analysis/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-ownership/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-ownership/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/distribution-drift/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/distribution-drift/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/freshness-monitoring/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/freshness-monitoring/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/images/anomaly-detection/architecture.png",
+      "resolved": "/images/anomaly-detection/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-reconciliation",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-reconciliation/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "link": "/concepts/3-integration/orchestration/retries-sla/",
+      "resolved": "/concepts/3-integration/orchestration/retries-sla/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/images/data-observability/architecture.png",
+      "resolved": "/images/data-observability/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/root-cause-analysis/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/root-cause-analysis/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-lineage/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-lineage/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/distribution-drift/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/distribution-drift/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/freshness-monitoring/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/freshness-monitoring/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/images/data-profiling/architecture.png",
+      "resolved": "/images/data-profiling/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/concepts/5-quality-governance/data-quality/anomaly-detection",
+      "resolved": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/images/data-quality-dimensions/architecture.png",
+      "resolved": "/images/data-quality-dimensions/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/5-quality-governance/data-quality/anomaly-detection",
+      "resolved": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-reconciliation",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-reconciliation/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "link": "/concepts/3-integration/orchestration/retries-sla/",
+      "resolved": "/concepts/3-integration/orchestration/retries-sla/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/images/data-quality/architecture.png",
+      "resolved": "/images/data-quality/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/anomaly-detection",
+      "resolved": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/3-integration/orchestration/retries-sla/",
+      "resolved": "/concepts/3-integration/orchestration/retries-sla/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/3-integration/transformation-analytics/data-contract/",
+      "resolved": "/concepts/3-integration/transformation-analytics/data-contract/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/anomaly-detection/",
+      "resolved": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/images/data-reconciliation/architecture.png",
+      "resolved": "/images/data-reconciliation/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-testing",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-testing/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/3-integration/orchestration/retries-sla/",
+      "resolved": "/concepts/3-integration/orchestration/retries-sla/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/anomaly-detection/",
+      "resolved": "/concepts/5-quality-governance/data-quality/anomaly-detection/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-profiling/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-profiling/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality-dimensions/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-testing.md",
+      "link": "/images/data-testing/architecture.png",
+      "resolved": "/images/data-testing/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/freshness-monitoring.md",
+      "link": "/images/freshness-monitoring/architecture.png",
+      "resolved": "/images/freshness-monitoring/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/freshness-monitoring.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/freshness-monitoring.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/volume-anomalies/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/volume-anomalies/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/freshness-monitoring.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/images/schema-drift/architecture.png",
+      "resolved": "/images/schema-drift/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/2-storage/data-lake-lakehouse/lakehouse/",
+      "resolved": "/concepts/2-storage/data-lake-lakehouse/lakehouse/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/3-integration/transformation-analytics/data-contract/",
+      "resolved": "/concepts/3-integration/transformation-analytics/data-contract/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/distribution-drift/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/distribution-drift/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "link": "/images/volume-anomalies/architecture.png",
+      "resolved": "/images/volume-anomalies/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/distribution-drift/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/distribution-drift/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "link": "/concepts/5-quality-governance/data-quality/data-quality/",
+      "resolved": "/concepts/5-quality-governance/data-quality/data-quality/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/alerting-incident-response/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/orchestration/dag.md",
+      "link": "/images/dag/directed_acyclic_graph_3.svg",
+      "resolved": "/images/dag/directed_acyclic_graph_3.svg/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/orchestration/task-dependency.md",
+      "link": "/concepts/3-integration/orchestration/airflow-scheduler/",
+      "resolved": "/concepts/3-integration/orchestration/airflow-scheduler/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/orchestration/task-dependency.md",
+      "link": "/concepts/3-integration/orchestration/apache-airflow/",
+      "resolved": "/concepts/3-integration/orchestration/apache-airflow/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/orchestration/task-dependency.md",
+      "link": "/concepts/3-integration/orchestration/dag/",
+      "resolved": "/concepts/3-integration/orchestration/dag/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/software-engineering/data-pipeline-cicd.md",
+      "link": "/images/data-pipeline-cicd/architecture.png",
+      "resolved": "/images/data-pipeline-cicd/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/software-engineering/dbt-testing.md",
+      "link": "/images/dbt-testing/architecture.png",
+      "resolved": "/images/dbt-testing/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/access-control.md",
+      "link": "/images/access-control/architecture.png",
+      "resolved": "/images/access-control/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/access-control.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-classification/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-classification/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/access-control.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/audit-logging.md",
+      "link": "/images/audit-logging/architecture.png",
+      "resolved": "/images/audit-logging/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/audit-logging.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/audit-logging.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-classification/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-classification/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/audit-logging.md",
+      "link": "/concepts/5-quality-governance/observability-reliability/data-observability/",
+      "resolved": "/concepts/5-quality-governance/observability-reliability/data-observability/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-catalog.md",
+      "link": "/images/data-catalog/architecture.png",
+      "resolved": "/images/data-catalog/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-catalog.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/metadata-management/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/metadata-management/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-catalog.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-governance/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-governance/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-catalog.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-lineage/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-lineage/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/images/data-classification/architecture.png",
+      "resolved": "/images/data-classification/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/images/data-governance/architecture.png",
+      "resolved": "/images/data-governance/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/unity-catalog-governance/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/unity-catalog-governance/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-lineage/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-lineage/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-lineage.md",
+      "link": "/images/data-lineage/architecture.png",
+      "resolved": "/images/data-lineage/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-lineage.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-lineage.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-lineage.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/images/data-ownership/architecture.png",
+      "resolved": "/images/data-ownership/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-governance/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-governance/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/1-foundations/system-architecture/data-mesh/",
+      "resolved": "/concepts/1-foundations/system-architecture/data-mesh/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/metadata-management.md",
+      "link": "/images/metadata-management/architecture.png",
+      "resolved": "/images/metadata-management/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/metadata-management.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/access-control/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/access-control/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/metadata-management.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/audit-logging/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/audit-logging/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/metadata-management.md",
+      "link": "/concepts/5-quality-governance/governance-metadata/data-catalog/",
+      "resolved": "/concepts/5-quality-governance/governance-metadata/data-catalog/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/unity-catalog-governance.md",
+      "link": "/images/unity-catalog/architecture.png",
+      "resolved": "/images/unity-catalog/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/security-compliance/networking-security-vpc.md",
+      "link": "/images/networking-security-vpc/architecture.png",
+      "resolved": "/images/networking-security-vpc/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/context-window.md",
+      "link": "/images/context-window/architecture.png",
+      "resolved": "/images/context-window/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/llm.md",
+      "link": "/images/llm/architecture.png",
+      "resolved": "/images/llm/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/prompt-engineering.md",
+      "link": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/",
+      "resolved": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/prompt-engineering.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/hallucination/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/prompt-engineering.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/llm-as-a-judge/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/llm-as-a-judge/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/system-prompt.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/hallucination/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/temperature.md",
+      "link": "/images/temperature/architecture.png",
+      "resolved": "/images/temperature/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/token.md",
+      "link": "/images/token/architecture.png",
+      "resolved": "/images/token/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/top-p.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/hallucination/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/zero-shot.md",
+      "link": "/images/zero-shot/architecture.png",
+      "resolved": "/images/zero-shot/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/zero-shot.md",
+      "link": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/",
+      "resolved": "/concepts/6-ai-ml/llm-basics/few-shot-prompting/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/zero-shot.md",
+      "link": "/concepts/6-ai-ml/fine-tuning/fine-tuning/",
+      "resolved": "/concepts/6-ai-ml/fine-tuning/fine-tuning/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ai-agent.md",
+      "link": "/images/ai-agent/architecture.png",
+      "resolved": "/images/ai-agent/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/evaluation-metric.md",
+      "link": "/images/evaluation-metric/architecture.png",
+      "resolved": "/images/evaluation-metric/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/evaluation-metric.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/hallucination/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/hallucination/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/evaluation-metric.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/recall/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/recall/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/feature-store.md",
+      "link": "/images/feature-store/architecture.png",
+      "resolved": "/images/feature-store/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/fine-tuning.md",
+      "link": "/images/fine-tuning/architecture.png",
+      "resolved": "/images/fine-tuning/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/hallucination.md",
+      "link": "/images/hallucination/architecture.png",
+      "resolved": "/images/hallucination/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/lora.md",
+      "link": "/images/lora/architecture.png",
+      "resolved": "/images/lora/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/mlflow.md",
+      "link": "/images/mlflow/architecture.png",
+      "resolved": "/images/mlflow/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/mlflow.md",
+      "link": "/concepts/6-ai-ml/llm-basics/llm/",
+      "resolved": "/concepts/6-ai-ml/llm-basics/llm/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/mlflow.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/model-serving.md",
+      "link": "/images/model-serving/architecture.png",
+      "resolved": "/images/model-serving/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ndcg.md",
+      "link": "/images/ndcg/architecture.png",
+      "resolved": "/images/ndcg/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ndcg.md",
+      "link": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/",
+      "resolved": "/concepts/6-ai-ml/evaluation-metrics/ai-agent/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ndcg.md",
+      "link": "/concepts/6-ai-ml/rag-search/reranking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/reranking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ndcg.md",
+      "link": "/concepts/6-ai-ml/rag-search/chunking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/chunking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/recall.md",
+      "link": "/images/recall/architecture.png",
+      "resolved": "/images/recall/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/rlhf.md",
+      "link": "/images/rlhf/architecture.png",
+      "resolved": "/images/rlhf/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/chunking.md",
+      "link": "/images/chunking/architecture.png",
+      "resolved": "/images/chunking/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/chunking.md",
+      "link": "/concepts/6-ai-ml/llm-basics/context-window/",
+      "resolved": "/concepts/6-ai-ml/llm-basics/context-window/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/chunking.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/chunking.md",
+      "link": "/concepts/6-ai-ml/rag-search/reranking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/reranking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embedding-models.md",
+      "link": "/images/embedding-models/architecture.png",
+      "resolved": "/images/embedding-models/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embedding-models.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embedding-models.md",
+      "link": "/concepts/6-ai-ml/rag-search/reranking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/reranking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "link": "/images/embeddings/architecture.png",
+      "resolved": "/images/embeddings/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "link": "/concepts/6-ai-ml/rag-search/semantic-search/",
+      "resolved": "/concepts/6-ai-ml/rag-search/semantic-search/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "link": "/concepts/6-ai-ml/rag-search/chunking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/chunking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/hybrid-search.md",
+      "link": "/images/hybrid-search/architecture.png",
+      "resolved": "/images/hybrid-search/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/hybrid-search.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/hybrid-search.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/rag.md",
+      "link": "/images/rag/architecture.png",
+      "resolved": "/images/rag/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/rag.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/rag.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/rag.md",
+      "link": "/concepts/6-ai-ml/rag-search/reranking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/reranking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/rag.md",
+      "link": "/concepts/6-ai-ml/rag-search/chunking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/chunking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/reranking.md",
+      "link": "/images/reranking/architecture.png",
+      "resolved": "/images/reranking/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/reranking.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/reranking.md",
+      "link": "/concepts/6-ai-ml/rag-search/hybrid-search/",
+      "resolved": "/concepts/6-ai-ml/rag-search/hybrid-search/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/reranking.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/semantic-search.md",
+      "link": "/images/semantic-search/architecture.png",
+      "resolved": "/images/semantic-search/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/semantic-search.md",
+      "link": "/concepts/6-ai-ml/rag-search/vector-database/",
+      "resolved": "/concepts/6-ai-ml/rag-search/vector-database/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/semantic-search.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/semantic-search.md",
+      "link": "/concepts/6-ai-ml/rag-search/hybrid-search/",
+      "resolved": "/concepts/6-ai-ml/rag-search/hybrid-search/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/vector-database.md",
+      "link": "/images/vector-database/architecture.png",
+      "resolved": "/images/vector-database/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/vector-database.md",
+      "link": "/concepts/6-ai-ml/rag-search/chunking/",
+      "resolved": "/concepts/6-ai-ml/rag-search/chunking/"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/vector-database.md",
+      "link": "/concepts/6-ai-ml/rag-search/embedding-models/",
+      "resolved": "/concepts/6-ai-ml/rag-search/embedding-models/"
+    },
+    {
+      "file": "src/content/docs/interview/cloud-platform-interview.md",
+      "link": "/images/cloud-platform/architecture.png",
+      "resolved": "/images/cloud-platform/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/data-modeling-interview.md",
+      "link": "/images/data-modeling/architecture.png",
+      "resolved": "/images/data-modeling/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/de-behavioral-interview.md",
+      "link": "/images/de-behavioral/architecture.png",
+      "resolved": "/images/de-behavioral/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/kafka-design-interview.md",
+      "link": "/images/kafka-design/architecture.png",
+      "resolved": "/images/kafka-design/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/overview.md",
+      "link": "/images/overview/architecture.png",
+      "resolved": "/images/overview/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/performance-tuning-qa.md",
+      "link": "/images/performance-tuning/architecture.png",
+      "resolved": "/images/performance-tuning/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/pipeline-design-interview.md",
+      "link": "/images/pipeline-design/architecture.png",
+      "resolved": "/images/pipeline-design/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/production-incident-qa.md",
+      "link": "/images/production-incident/architecture.png",
+      "resolved": "/images/production-incident/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/python-de-interview.md",
+      "link": "/images/python-de/architecture.png",
+      "resolved": "/images/python-de/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/spark-optimization-interview.md",
+      "link": "/images/spark-optimization/architecture.png",
+      "resolved": "/images/spark-optimization/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/interview/sql-interview-patterns.md",
+      "link": "/images/sql-interview/architecture.png",
+      "resolved": "/images/sql-interview/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/analytics-engineer.md",
+      "link": "/images/analytics-engineer/architecture.png",
+      "resolved": "/images/analytics-engineer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/beginner-de.md",
+      "link": "/images/beginner-de/architecture.png",
+      "resolved": "/images/beginner-de/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/cloud-data-engineer.md",
+      "link": "/images/cloud-data-engineer/architecture.png",
+      "resolved": "/images/cloud-data-engineer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/data-platform-engineer.md",
+      "link": "/images/data-platform-engineer/architecture.png",
+      "resolved": "/images/data-platform-engineer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/interview-prep.md",
+      "link": "/images/interview-prep/architecture.png",
+      "resolved": "/images/interview-prep/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/junior-to-middle-de.md",
+      "link": "/images/junior-to-middle-de/architecture.png",
+      "resolved": "/images/junior-to-middle-de/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/middle-to-senior-de.md",
+      "link": "/images/middle-to-senior-de/architecture.png",
+      "resolved": "/images/middle-to-senior-de/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/overview.md",
+      "link": "/images/overview/architecture.png",
+      "resolved": "/images/overview/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/learning-paths/streaming-data-engineer.md",
+      "link": "/images/streaming-data-engineer/architecture.png",
+      "resolved": "/images/streaming-data-engineer/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/projects/aws-e2e-project.md",
+      "link": "/images/aws-e2e-project/architecture.png",
+      "resolved": "/images/aws-e2e-project/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/projects/azure-e2e-project.md",
+      "link": "/images/azure-e2e-project/architecture.png",
+      "resolved": "/images/azure-e2e-project/architecture.png/"
+    },
+    {
+      "file": "src/content/docs/projects/gcp-e2e-project.md",
+      "link": "/images/gcp-e2e-project/architecture.png",
+      "resolved": "/images/gcp-e2e-project/architecture.png/"
+    }
+  ],
+  "brokenImages": [
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-engineering.md",
+      "image": "/images/data-engineering/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-engineering/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-lifecycle.md",
+      "image": "/images/data-lifecycle/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-lifecycle/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/data-pipeline.md",
+      "image": "/images/data-pipeline/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-pipeline/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/core-concepts/source-systems.md",
+      "image": "/images/source-systems/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/source-systems/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/dimension-table.md",
+      "image": "/images/dimension-table/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/dimension-table/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/dimensional-modeling.md",
+      "image": "/images/dimensional-modeling/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/dimensional-modeling/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/fact-table.md",
+      "image": "/images/fact-table/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/fact-table/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/grain.md",
+      "image": "/images/grain/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/grain/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/inmon-methodology.md",
+      "image": "/images/inmon-methodology/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/inmon-methodology/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/kimball-methodology.md",
+      "image": "/images/kimball-methodology/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/kimball-methodology/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/snowflake-schema.md",
+      "image": "/images/snowflake-schema/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/snowflake-schema/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/star-schema.md",
+      "image": "/images/star-schema/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/star-schema/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/data-modeling/surrogate-key.md",
+      "image": "/images/surrogate-key/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/surrogate-key/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/data-fabric.md",
+      "image": "/images/data-fabric/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-fabric/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/data-platform-architecture.md",
+      "image": "/images/data-platform-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-platform-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-architecture.md",
+      "image": "/images/event-driven-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/event-driven-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/event-driven-schema-registry.md",
+      "image": "/images/schema-registry/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/schema-registry/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/kappa-architecture.md",
+      "image": "/images/kappa-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/kappa-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/lambda-architecture.md",
+      "image": "/images/lambda-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/lambda-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/push-pull-delivery.md",
+      "image": "/images/push-pull/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/push-pull/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/1-foundations-architecture/system-architecture/real-time-architecture.md",
+      "image": "/images/real-time/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/real-time/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/acid-transactions-on-lake.md",
+      "image": "/images/acid-transactions-on-lake/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/acid-transactions-on-lake/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/compaction.md",
+      "image": "/images/compaction/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/compaction/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/data-lake.md",
+      "image": "/images/data-lake/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-lake/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/iceberg-metadata-internals.md",
+      "image": "/images/iceberg/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/iceberg/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/lakehouse-optimization.md",
+      "image": "/images/lakehouse-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/lakehouse-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/medallion-architecture.md",
+      "image": "/images/medallion-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/medallion-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/schema-evolution.md",
+      "image": "/images/schema-evolution/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/schema-evolution/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format-comparison.md",
+      "image": "/images/table-formats/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/table-formats/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format-migration.md",
+      "image": "/images/table-format-migration/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/table-format-migration/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/table-format.md",
+      "image": "/images/table-format/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/table-format/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-lake-lakehouse/time-travel.md",
+      "image": "/images/time-travel/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/time-travel/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/amazon-redshift.md",
+      "image": "/images/amazon-redshift/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/amazon-redshift/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/azure-synapse.md",
+      "image": "/images/azure-synapse/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/azure-synapse/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/bigquery-optimization.md",
+      "image": "/images/bigquery-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/bigquery-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/bigquery-slot-optimization.md",
+      "image": "/images/bigquery-slot-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/bigquery-slot-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/cloud-storage.md",
+      "image": "/images/cloud-storage/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/cloud-storage/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/cost-optimization.md",
+      "image": "/images/cost-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/cost-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/data-warehouse.md",
+      "image": "/images/data-warehouse/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-warehouse/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/databricks-platform.md",
+      "image": "/images/databricks-platform/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/databricks-platform/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/serverless-data.md",
+      "image": "/images/serverless/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/serverless/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/slowly-changing-dimension.md",
+      "image": "/images/slowly-changing-dimension/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/slowly-changing-dimension/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/snowflake-internals.md",
+      "image": "/images/snowflake-internals/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/snowflake-internals/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/snowflake-search-optimization.md",
+      "image": "/images/snowflake-search-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/snowflake-search-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/data-warehouse/zero-copy-cloning.md",
+      "image": "/images/zero-copy-cloning/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/zero-copy-cloning/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/clustering.md",
+      "image": "/images/clustering/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/clustering/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/columnar-storage.md",
+      "image": "/images/columnar-storage/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/columnar-storage/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/compression-algorithms.md",
+      "image": "/images/compression-algorithms/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/compression-algorithms/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/olap.md",
+      "image": "/images/olap/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/olap/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/oltp-olap-htap-comparison.md",
+      "image": "/images/oltp-olap-htap-comparison/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/oltp-olap-htap-comparison/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/oltp.md",
+      "image": "/images/oltp/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/oltp/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/partitioning.md",
+      "image": "/images/partitioning/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/partitioning/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/query-engines-architecture.md",
+      "image": "/images/query-engines-architecture/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/query-engines-architecture/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/relational-database.md",
+      "image": "/images/relational-database/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/relational-database/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/databases/row-based-storage.md",
+      "image": "/images/row-based-storage/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/row-based-storage/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/serving-analytics/metrics-layer.md",
+      "image": "/images/metrics-layer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/metrics-layer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/2-storage-serving/serving-analytics/semantic-layers-bi.md",
+      "image": "/images/semantic-layers-bi/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/semantic-layers-bi/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/backfill.md",
+      "image": "/images/backfill/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/backfill/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md",
+      "image": "/images/data-extraction/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-extraction/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md",
+      "image": "/images/data-ingestion/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-ingestion/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md",
+      "image": "/images/data-loading/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-loading/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md",
+      "image": "/images/deduplication/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/deduplication/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/elt.md",
+      "image": "/images/elt/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/elt/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/etl.md",
+      "image": "/images/etl/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/etl/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/idempotency.md",
+      "image": "/images/idempotency/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/idempotency/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/incremental-load.md",
+      "image": "/images/incremental-load/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/incremental-load/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/data-ingestion/integration-patterns-comparison.md",
+      "image": "/images/integration-patterns-comparison/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/integration-patterns-comparison/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-advanced.md",
+      "image": "/images/dbt-advanced/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/dbt-advanced/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-semantic-layer.md",
+      "image": "/images/dbt-semantic-layer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/dbt-semantic-layer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/materialization.md",
+      "image": "/images/materialization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/materialization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/sql-transformation.md",
+      "image": "/images/sql-transformation/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/sql-transformation/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/consumer-groups.md",
+      "image": "/images/consumer-groups/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/consumer-groups/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-rebalance-protocols.md",
+      "image": "/images/kafka-rebalance-protocols/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/kafka-rebalance-protocols/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-topics-partitions.md",
+      "image": "/images/kafka-topics-partitions/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/kafka-topics-partitions/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/event-time-processing-time.md",
+      "image": "/images/event-time-processing-time/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/event-time-processing-time/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/exactly-once-semantics.md",
+      "image": "/images/exactly-once-semantics/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/exactly-once-semantics/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/spark-structured-streaming.md",
+      "image": "/images/spark-structured-streaming/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/spark-structured-streaming/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/stream-table-duality.md",
+      "image": "/images/stream-table-duality/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/stream-table-duality/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/streaming-processing.md",
+      "image": "/images/streaming-processing/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/streaming-processing/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/watermark.md",
+      "image": "/images/watermark/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/watermark/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/4-realtime-streaming/stream-processing/windowing.md",
+      "image": "/images/windowing/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/windowing/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/alerting-incident-response.md",
+      "image": "/images/alerting-incident-response/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/alerting-incident-response/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/anomaly-detection.md",
+      "image": "/images/anomaly-detection/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/anomaly-detection/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-observability.md",
+      "image": "/images/data-observability/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-observability/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-profiling.md",
+      "image": "/images/data-profiling/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-profiling/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality-dimensions.md",
+      "image": "/images/data-quality-dimensions/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-quality-dimensions/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-quality.md",
+      "image": "/images/data-quality/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-quality/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-reconciliation.md",
+      "image": "/images/data-reconciliation/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-reconciliation/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/data-testing.md",
+      "image": "/images/data-testing/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-testing/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/freshness-monitoring.md",
+      "image": "/images/freshness-monitoring/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/freshness-monitoring/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/schema-drift.md",
+      "image": "/images/schema-drift/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/schema-drift/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/observability-quality/volume-anomalies.md",
+      "image": "/images/volume-anomalies/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/volume-anomalies/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/software-engineering/data-pipeline-cicd.md",
+      "image": "/images/data-pipeline-cicd/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-pipeline-cicd/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/5-dataops-orchestration/software-engineering/dbt-testing.md",
+      "image": "/images/dbt-testing/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/dbt-testing/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/access-control.md",
+      "image": "/images/access-control/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/access-control/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/audit-logging.md",
+      "image": "/images/audit-logging/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/audit-logging/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-catalog.md",
+      "image": "/images/data-catalog/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-catalog/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-classification.md",
+      "image": "/images/data-classification/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-classification/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-governance.md",
+      "image": "/images/data-governance/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-governance/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-lineage.md",
+      "image": "/images/data-lineage/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-lineage/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/data-ownership.md",
+      "image": "/images/data-ownership/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-ownership/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/metadata-management.md",
+      "image": "/images/metadata-management/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/metadata-management/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/data-governance/unity-catalog-governance.md",
+      "image": "/images/unity-catalog/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/unity-catalog/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/6-security-governance/security-compliance/networking-security-vpc.md",
+      "image": "/images/networking-security-vpc/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/networking-security-vpc/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/context-window.md",
+      "image": "/images/context-window/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/context-window/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/llm.md",
+      "image": "/images/llm/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/llm/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/temperature.md",
+      "image": "/images/temperature/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/temperature/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/token.md",
+      "image": "/images/token/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/token/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/llm-foundations/zero-shot.md",
+      "image": "/images/zero-shot/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/zero-shot/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ai-agent.md",
+      "image": "/images/ai-agent/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/ai-agent/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/evaluation-metric.md",
+      "image": "/images/evaluation-metric/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/evaluation-metric/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/feature-store.md",
+      "image": "/images/feature-store/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/feature-store/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/fine-tuning.md",
+      "image": "/images/fine-tuning/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/fine-tuning/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/hallucination.md",
+      "image": "/images/hallucination/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/hallucination/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/lora.md",
+      "image": "/images/lora/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/lora/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/mlflow.md",
+      "image": "/images/mlflow/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/mlflow/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/model-serving.md",
+      "image": "/images/model-serving/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/model-serving/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/ndcg.md",
+      "image": "/images/ndcg/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/ndcg/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/recall.md",
+      "image": "/images/recall/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/recall/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/mlops-evaluation/rlhf.md",
+      "image": "/images/rlhf/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/rlhf/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/chunking.md",
+      "image": "/images/chunking/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/chunking/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embedding-models.md",
+      "image": "/images/embedding-models/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/embedding-models/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/embeddings.md",
+      "image": "/images/embeddings/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/embeddings/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/hybrid-search.md",
+      "image": "/images/hybrid-search/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/hybrid-search/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/reranking.md",
+      "image": "/images/reranking/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/reranking/architecture.png"
+    },
+    {
+      "file": "src/content/docs/concepts/7-genai-ml/rag-systems/semantic-search.md",
+      "image": "/images/semantic-search/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/semantic-search/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/cloud-platform-interview.md",
+      "image": "/images/cloud-platform/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/cloud-platform/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/data-modeling-interview.md",
+      "image": "/images/data-modeling/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-modeling/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/de-behavioral-interview.md",
+      "image": "/images/de-behavioral/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/de-behavioral/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/kafka-design-interview.md",
+      "image": "/images/kafka-design/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/kafka-design/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/overview.md",
+      "image": "/images/overview/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/overview/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/performance-tuning-qa.md",
+      "image": "/images/performance-tuning/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/performance-tuning/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/pipeline-design-interview.md",
+      "image": "/images/pipeline-design/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/pipeline-design/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/production-incident-qa.md",
+      "image": "/images/production-incident/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/production-incident/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/python-de-interview.md",
+      "image": "/images/python-de/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/python-de/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/spark-optimization-interview.md",
+      "image": "/images/spark-optimization/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/spark-optimization/architecture.png"
+    },
+    {
+      "file": "src/content/docs/interview/sql-interview-patterns.md",
+      "image": "/images/sql-interview/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/sql-interview/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/analytics-engineer.md",
+      "image": "/images/analytics-engineer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/analytics-engineer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/beginner-de.md",
+      "image": "/images/beginner-de/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/beginner-de/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/cloud-data-engineer.md",
+      "image": "/images/cloud-data-engineer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/cloud-data-engineer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/data-platform-engineer.md",
+      "image": "/images/data-platform-engineer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/data-platform-engineer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/interview-prep.md",
+      "image": "/images/interview-prep/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/interview-prep/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/junior-to-middle-de.md",
+      "image": "/images/junior-to-middle-de/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/junior-to-middle-de/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/middle-to-senior-de.md",
+      "image": "/images/middle-to-senior-de/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/middle-to-senior-de/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/overview.md",
+      "image": "/images/overview/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/overview/architecture.png"
+    },
+    {
+      "file": "src/content/docs/learning-paths/streaming-data-engineer.md",
+      "image": "/images/streaming-data-engineer/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/streaming-data-engineer/architecture.png"
+    },
+    {
+      "file": "src/content/docs/projects/aws-e2e-project.md",
+      "image": "/images/aws-e2e-project/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/aws-e2e-project/architecture.png"
+    },
+    {
+      "file": "src/content/docs/projects/azure-e2e-project.md",
+      "image": "/images/azure-e2e-project/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/azure-e2e-project/architecture.png"
+    },
+    {
+      "file": "src/content/docs/projects/gcp-e2e-project.md",
+      "image": "/images/gcp-e2e-project/architecture.png",
+      "resolvedPath": "/home/duclinh/kythuatdulieu.github.io/public/images/gcp-e2e-project/architecture.png"
+    }
+  ]
+}

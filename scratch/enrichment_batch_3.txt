@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/bigquery-slot-optimization.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/cloud-storage.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/cost-optimization.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/data-warehouse.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/databricks-platform.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/google-bigquery.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/infrastructure-as-code-terraform.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/serverless-data.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/slowly-changing-dimension.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/snowflake-internals.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/snowflake-search-optimization.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/snowflake.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/zero-copy-cloning.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/clustering.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/databases/columnar-storage.md

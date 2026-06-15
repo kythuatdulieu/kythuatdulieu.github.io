@@ -1,0 +1,20 @@
+<script>
+  function removeTitlePanel() {
+    const titleH1 = document.getElementById('_top');
+    if (titleH1) {
+      const panel = titleH1.closest('.content-panel');
+      if (panel) {
+        panel.remove();
+      }
+    }
+  }
+  
+  // Run immediately if possible
+  removeTitlePanel();
+  
+  // Run on DOM loaded
+  document.addEventListener('DOMContentLoaded', removeTitlePanel);
+  
+  // Run on Astro page transitions
+  document.addEventListener('astro:page-load', removeTitlePanel);
+</script>

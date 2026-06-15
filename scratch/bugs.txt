@@ -1,0 +1,5 @@
+Found 198 articles to audit for visuals (images, tables, diagrams).
+Audit complete! Visuals report written to scratch/audit_visuals_report.json
+Total images: 53
+Total Mermaid diagrams: 195
+Total markdown tables: 59

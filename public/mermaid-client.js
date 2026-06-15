@@ -165,17 +165,7 @@ async function initAndRender() {
                     }
                 });
                 
-                // Mouse wheel to Zoom
-                container.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const zoomFactor = 1.08;
-                    if (e.deltaY < 0) {
-                        if (scale < 6.0) scale *= zoomFactor;
-                    } else {
-                        if (scale > 0.2) scale /= zoomFactor;
-                    }
-                    updateTransform();
-                }, { passive: false });
+
                 
                 // Button Actions
                 zoomIn.addEventListener('click', () => {

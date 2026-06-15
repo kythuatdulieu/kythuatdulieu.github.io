@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/star-schema.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/streaming-modeling.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-modeling/surrogate-key.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/data-contract.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-advanced.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-models.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt-semantic-layer.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/dbt.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/materialization.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/dbt-transformation/sql-transformation.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/message-brokers/apache-kafka.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/message-brokers/consumer-groups.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-rebalance-protocols.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/message-brokers/kafka-topics-partitions.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime-streaming/stream-processing/event-time-processing-time.md

@@ -1,0 +1,1235 @@
+[
+  {
+    "file": "concepts/1-foundations/foundation/source-systems.md",
+    "lineNum": 27,
+    "alt": "Quy trình xử lý và luồng dữ liệu Source Systems",
+    "url": "/images/source-systems/diagram_2.png",
+    "context": "---\n\n\n![Quy trình xử lý và luồng dữ liệu Source Systems](/images/source-systems/diagram_2.png)\n\n\n## Why it exists",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/data-fabric.md",
+    "lineNum": 40,
+    "alt": "Quy trình xử lý và luồng dữ liệu Data Fabric",
+    "url": "/images/data-fabric/diagram_2.webp",
+    "context": "\n---\n\n![Quy trình xử lý và luồng dữ liệu Data Fabric](/images/data-fabric/diagram_2.webp)\n\n## Mô hình kiến trúc hoạt động của Data Fabric\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/data-mesh.md",
+    "lineNum": 20,
+    "alt": "Sơ đồ minh họa kiến trúc Data Mesh",
+    "url": "/images/data-mesh/diagram_1.png",
+    "context": "---\n\n\n![Sơ đồ minh họa kiến trúc Data Mesh](/images/data-mesh/diagram_1.png)\n\n\n## Data Mesh thực chất là gì?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/data-mesh.md",
+    "lineNum": 44,
+    "alt": "Quy trình xử lý và luồng dữ liệu Data Mesh",
+    "url": "/images/data-mesh/diagram_2.png",
+    "context": "---\n\n\n![Quy trình xử lý và luồng dữ liệu Data Mesh](/images/data-mesh/diagram_2.png)\n\n\n## Bốn nguyên tắc trụ cột cấu thành Data Mesh",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/event-driven-architecture.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ minh họa kiến trúc Event Driven Architecture",
+    "url": "/images/event-driven-architecture/diagram_1.jpg",
+    "context": "\nNếu bạn từng chứng kiến cảnh một trang web bị đứng im, biểu tượng quay vòng tròn xoay mãi không ngừng sau khi bạn nhấn nút \"Đặt hàng\", rất có thể hệ thống phía sau đang bị nghẽn do các dịch vụ phải chờ đợi nhau phản hồi theo chuỗi. Để giải quyết triệt để vấn đề này, các kỹ sư thường chuyển dịch sang một mô hình thiết kế tối ưu hơn: **Event-Driven Architecture (EDA) – Kiến trúc hướng sự kiện**.\n\n![Sơ đồ minh họa kiến trúc Event Driven Architecture](/images/event-driven-architecture/diagram_1.jpg)\n\n## Khi các dịch vụ không còn phải chờ đợi nhau\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/event-driven-schema-registry.md",
+    "lineNum": 20,
+    "alt": "Sơ đồ minh họa kiến trúc Event Driven Schema Registry",
+    "url": "/images/event-driven-schema-registry/diagram_1.png",
+    "context": "---\n\n\n![Sơ đồ minh họa kiến trúc Event Driven Schema Registry](/images/event-driven-schema-registry/diagram_1.png)\n\n\n## 1. Event Sourcing Paradigm: Sổ Cái Bất Biến (Append-Only Ledger)",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/event-driven-schema-registry.md",
+    "lineNum": 60,
+    "alt": "Quy trình xử lý và luồng dữ liệu Event Driven Schema Registry",
+    "url": "/images/event-driven-schema-registry/diagram_2.png",
+    "context": "---\n\n\n![Quy trình xử lý và luồng dữ liệu Event Driven Schema Registry](/images/event-driven-schema-registry/diagram_2.png)\n\n\n## 3. Confluent Schema Registry Internals: Cơ Chế Quản Lý Lược Đồ Dữ Liệu",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/1-foundations/system-architecture/push-pull-delivery.md",
+    "lineNum": 30,
+    "alt": "Quy trình xử lý và luồng dữ liệu Push Pull Delivery",
+    "url": "/images/push-pull-delivery/diagram_2.png",
+    "context": "\nTuy nhiên, điểm yếu của Push xuất hiện khi hệ thống nguồn phát ra dữ liệu quá nhanh (ví dụ 10.000 sự kiện/giây) và dồn dập đổ vào một máy chủ nhận nhỏ bé đang quá tải. Để tránh việc người nhận bị \"sập\" vì ngập lụt dữ liệu, mô hình Pull xuất hiện như một giải pháp cứu cánh. Bằng cách cho phép máy chủ nhận chủ động kéo dữ liệu về theo tốc độ xử lý thực tế của nó (chẳng hạn 10 sự kiện/giây), hệ thống có khả năng tự vệ tự nhiên trước áp lực dữ liệu tăng đột biến (hiện tượng này gọi là Kháng áp suất ngược - **Backpressure**).\n\n![Quy trình xử lý và luồng dữ liệu Push Pull Delivery](/images/push-pull-delivery/diagram_2.png)\n\n## Bản chất hoạt động của hai mô hình\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/azure-synapse.md",
+    "lineNum": 95,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/azure-synapse/diagram_1.png",
+    "context": "\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/azure-synapse/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/azure-synapse/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/azure-synapse.md",
+    "lineNum": 96,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/azure-synapse/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/azure-synapse/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/azure-synapse/diagram_2.png)\n\n\n## Thực hành nhanh: Truy vấn file Parquet trên Data Lake bằng Serverless SQL Pool",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/bigquery-optimization.md",
+    "lineNum": 232,
+    "alt": "Sơ đồ tối ưu hóa tài nguyên và thực thi truy vấn trong BigQuery",
+    "url": "/images/bigquery-optimization/diagram_1.png",
+    "context": "    style BQ_Storage fill:#e8f5e9,stroke:#388e3c,stroke-width:1px\n```\n\n![Sơ đồ tối ưu hóa tài nguyên và thực thi truy vấn trong BigQuery](/images/bigquery-optimization/diagram_1.png)\n\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md",
+    "lineNum": 151,
+    "alt": "Sơ đồ phân bổ và tối ưu hóa Slot tài nguyên trong BigQuery",
+    "url": "/images/bigquery-slot-optimization/diagram_1.png",
+    "context": "    class ProjDataPlatform,ProjLooker,ProjSandbox1,ProjSandbox2 proj;\n```\n\n![Sơ đồ phân bổ và tối ưu hóa Slot tài nguyên trong BigQuery](/images/bigquery-slot-optimization/diagram_1.png)\n\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/cloud-storage.md",
+    "lineNum": 90,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/cloud-storage/diagram_1.png",
+    "context": "\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/cloud-storage/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/cloud-storage/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/cloud-storage.md",
+    "lineNum": 91,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/cloud-storage/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/cloud-storage/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/cloud-storage/diagram_2.png)\n\n\n## Thực hành quản trị dữ liệu thông qua AWS CLI và SQL",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/cost-optimization.md",
+    "lineNum": 76,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/cost-optimization/diagram_1.svg",
+    "context": "    F --> H\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/cost-optimization/diagram_1.svg)\n\n\n## Ví dụ thực chiến: Cắt giảm 97% chi phí trên Google BigQuery",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/google-bigquery.md",
+    "lineNum": 53,
+    "alt": "Sơ đồ kiến trúc giám sát và điều phối truy vấn trong Google BigQuery",
+    "url": "/images/google-bigquery/diagram_1.png",
+    "context": "    DremelMaster -- \"Return Result\" --> SQL\n```\n\n![Sơ đồ kiến trúc giám sát và điều phối truy vấn trong Google BigQuery](/images/google-bigquery/diagram_1.png)\n\n\nKiến trúc này được xây dựng vững chắc trên 3 trụ cột công nghệ độc quyền của Google:",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform.md",
+    "lineNum": 57,
+    "alt": "Sơ đồ kiến trúc hạ tầng đám mây được khởi tạo tự động bằng Terraform",
+    "url": "/images/infrastructure-as-code-terraform/diagram_1.png",
+    "context": "    I --> J[Hạ tầng Cloud được cập nhật]\n```\n\n![Sơ đồ kiến trúc hạ tầng đám mây được khởi tạo tự động bằng Terraform](/images/infrastructure-as-code-terraform/diagram_1.png)\n\n\nQuy trình này đảm bảo không có bất kỳ thay đổi đơn phương nào được thực hiện trực tiếp trên môi trường Production mà không qua kiểm duyệt và ghi nhận lịch sử.",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/networking-security-vpc.md",
+    "lineNum": 94,
+    "alt": "Sơ đồ phân cấp khóa bảo mật (KMS Key Hierarchy) bảo vệ dữ liệu trong VPC",
+    "url": "/images/networking-security-vpc/diagram_1.png",
+    "context": "    NAT_GW --> IGW\n```\n\n![Sơ đồ phân cấp khóa bảo mật (KMS Key Hierarchy) bảo vệ dữ liệu trong VPC](/images/networking-security-vpc/diagram_1.png)\n\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/snowflake-internals.md",
+    "lineNum": 50,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/snowflake-internals/diagram_1.png",
+    "context": "    S3 --- MP1\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/snowflake-internals/diagram_1.png)\n\n\n### 1. Lớp Lưu trữ Dữ liệu (Database Storage Layer)",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/cloud-data-platform/snowflake.md",
+    "lineNum": 69,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/snowflake/diagram_1.png",
+    "context": "\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/snowflake/diagram_1.png)\n\n\n1. **Lớp Lưu trữ Tập trung (Centralized Storage Layer)**: Dữ liệu nạp vào Snowflake sẽ được tự động chia nhỏ thành các tệp tin nén định dạng cột gọi là **Micro-partitions** và lưu trữ trên Cloud Object Storage (như AWS S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/), Azure Blob). Lớp này có giá thành lưu trữ cực rẻ và khả năng mở rộng vô hạn.",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/acid-transactions-on-lake.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho ACID Transactions trên Data Lake",
+    "url": "/images/acid-transactions-on-lake/acid-transactions-log.png",
+    "context": "\nĐể giải quyết những bài toán hóc búa này, chúng ta cần đến **ACID Transactions (Giao dịch ACID)**. Trước đây, ACID vốn là \"đặc sản\" độc quyền của các cơ sở dữ liệu quan hệ truyền thống hoặc các [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) đắt đỏ. Giờ đây, nhờ sự phát triển của các Table Format hiện đại, chúng ta hoàn toàn có thể chạy các giao dịch ACID trực tiếp trên các hệ thống Object Storage giá rẻ như AWS S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/) hay HDFS.\n\n![Sơ đồ kiến trúc minh họa cho ACID Transactions trên Data Lake](/images/acid-transactions-on-lake/acid-transactions-log.png)\n\n## Nhắc lại một chút: ACID là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/apache-hudi.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho Apache Hudi",
+    "url": "/images/apache-hudi/hudi-cow-mor.png",
+    "context": "\nĐóng vai trò là một định dạng bảng (Table Format) hiện đại, Hudi mang lại các tính năng quan trọng như giao dịch ACID, cập nhật (Upserts), xóa (Deletes) và xử lý dữ liệu gia tăng (Incremental Processing) trực tiếp trên các hệ thống lưu trữ phân tán như AWS S3, Google [Cloud Storage](/concepts/2-storage/cloud-data-platform/cloud-storage/) hay HDFS, biến Data Lake của bạn thành một Data [Lakehouse](/concepts/2-storage/data-lake-lakehouse/lakehouse/) tin cậy.\n\n![Sơ đồ kiến trúc minh họa cho Apache Hudi](/images/apache-hudi/hudi-cow-mor.png)\n\n## Tại sao Data Lake truyền thống cần đến Hudi?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/apache-iceberg.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Apache Iceberg",
+    "url": "/images/apache-iceberg/iceberg-metadata.png",
+    "context": "\nĐóng vai trò là một lớp quản lý siêu dữ liệu (Metadata Layer) trung gian nằm giữa các engine tính toán (như Spark, Trino, Flink, [Snowflake](/concepts/2-storage/cloud-data-platform/snowflake/)) và các hệ thống lưu trữ đám mây vật lý (S3, GCS, HDFS), Iceberg mang lại khả năng thực thi giao dịch ACID an toàn, nâng cấp cấu trúc bảng ([Schema Evolution](/concepts/2-storage/data-lake-lakehouse/schema-evolution/)) mượt mà và tính năng phân vùng ẩn (Hidden [Partitioning](/concepts/2-storage/database-storage/partitioning/)) độc đáo. Cùng với Delta Lake, Iceberg hiện đang là tiêu chuẩn thiết kế kiến trúc Lakehouse hiện đại.\n\n![Sơ đồ kiến trúc minh họa cho Apache Iceberg](/images/apache-iceberg/iceberg-metadata.png)\n\n## Cơn ác mộng Petabyte tại Netflix và sự sụp đổ của Apache Hive\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/compaction.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Compaction",
+    "url": "/images/compaction/compaction-flow.png",
+    "context": "\nTrong thế giới [Data Engineering](/concepts/1-foundations/foundation/data-engineering/), việc thiết lập các luồng dữ liệu streaming hay micro-batch để liên tục cập nhật thông tin thời gian thực là một yêu cầu cực kỳ phổ biến. Thế nhưng, đằng sau sự tiện lợi đó ẩn chứa một \"bệnh lý\" kinh điển của hệ thống lưu trữ: sự xuất hiện của hàng triệu file nhỏ lẻ. **Compaction (Gom tệp)** chính là phương thuốc đặc trị, đóng vai trò như một người dọn dẹp âm thầm giúp duy trì hiệu năng đỉnh cao cho toàn bộ hệ thống [Data Lake](/concepts/2-storage/data-lake-lakehouse/data-lake/) của doanh nghiệp.\n\n![Sơ đồ kiến trúc minh họa cho Compaction](/images/compaction/compaction-flow.png)\n\n## Compaction: Người dọn dẹp âm thầm phía sau Data Lake\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/data-lake.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Data Lake",
+    "url": "/images/data-lake/data-lake-architecture.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Data Lake](/images/data-lake/data-lake-architecture.png)\n\n## Thực chất Hồ dữ liệu (Data Lake) là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/delta-lake.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Delta Lake",
+    "url": "/images/delta-lake/delta-lake-architecture.png",
+    "context": "\nĐể giải quyết triệt để những điểm yếu chí mạng này và biến một Data Lake hỗn độn (Data Swamp) thành một hệ thống đáng tin cậy, Databricks đã phát triển và giới thiệu **Delta Lake**.\n\n![Sơ đồ kiến trúc minh họa cho Delta Lake](/images/delta-lake/delta-lake-architecture.png)\n\n## Delta Lake thực chất là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/iceberg-metadata-internals.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho Iceberg Metadata Internals",
+    "url": "/images/iceberg-metadata-internals/iceberg-metadata-internals.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Iceberg Metadata Internals](/images/iceberg-metadata-internals/iceberg-metadata-internals.png)\n\n## 1. Cấu trúc cây Metadata phân cấp (Hierarchical Metadata Tree)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/lakehouse-optimization.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho Lakehouse Optimization",
+    "url": "/images/lakehouse-optimization/z-ordering-optimization.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Lakehouse Optimization](/images/lakehouse-optimization/z-ordering-optimization.png)\n\n## 1. Vectorized Execution Engine: Photon\nTrong các hệ thống phân tán truyền thống như Apache Spark, việc thực thi câu lệnh SQL dựa trên máy ảo Java (JVM). Spark sử dụng kỹ thuật *Whole-Stage Code Generation* để biên dịch các kế hoạch truy vấn thành mã Java byte-code khi chạy. Tuy nhiên, kiến trúc này gặp phải những giới hạn vật lý của JVM: overhead từ Garbage Collection (GC), không tận dụng được tối đa hiệu năng của CPU hiện đại và gặp khó khăn trong việc tối ưu hóa mức phần cứng (như các thanh ghi CPU và bộ nhớ đệm Cache).",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/lakehouse.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho Lakehouse",
+    "url": "/images/lakehouse/lakehouse-architecture.png",
+    "context": "\nĐó chính là lý do **Lakehouse (hay Data Lakehouse)** ra đời — một kiến trúc lai (hybrid architecture) hợp nhất những gì tốt nhất của hai thế giới này.\n\n![Sơ đồ kiến trúc minh họa cho Lakehouse](/images/lakehouse/lakehouse-architecture.png)\n\n## Data Lakehouse là gì và hoạt động như thế nào?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/medallion-architecture.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Medallion Architecture",
+    "url": "/images/medallion-architecture/medallion-architecture-flow.png",
+    "context": "\nĐể lập lại trật tự cho hồ dữ liệu, Databricks đã đề xuất **Kiến trúc Medallion (Medallion Architecture)** — hay còn gọi là kiến trúc phân tầng dữ liệu Đồng, Bạc, Vàng. Đây là một mẫu thiết kế logic giúp tổ chức dữ liệu một cách khoa học, nâng cấp dần chất lượng dữ liệu qua từng chặng để phục vụ tốt nhất cho mọi nhu cầu phân tích của doanh nghiệp.\n\n![Sơ đồ kiến trúc minh họa cho Medallion Architecture](/images/medallion-architecture/medallion-architecture-flow.png)\n\n## Lộ trình dòng chảy dữ liệu qua Ba lớp Huy chương\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/schema-evolution.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Schema Evolution",
+    "url": "/images/schema-evolution/schema-evolution.png",
+    "context": "\nNếu hệ thống của bạn quá cứng nhắc, mỗi lần thay đổi như vậy sẽ là một lần pipeline bị sập, kéo theo hàng giờ cày cuốc để sửa code và chạy lại dữ liệu lịch sử. Để giải quyết vấn đề này, các công nghệ lưu trữ hiện đại đã giới thiệu một khái niệm cứu cánh: **Schema Evolution (Tiến hóa lược đồ)**.\n\n![Sơ đồ kiến trúc minh họa cho Schema Evolution](/images/schema-evolution/schema-evolution.png)\n\n## Schema Evolution là gì? Khi dữ liệu không bao giờ đứng yên\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/table-format-comparison.md",
+    "lineNum": 26,
+    "alt": "Sơ đồ kiến trúc minh họa cho Table Format Comparison",
+    "url": "/images/table-format-comparison/table-format-comparison.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Table Format Comparison](/images/table-format-comparison/table-format-comparison.png)\n\n## Bảng so sánh trực diện (Head-to-Head Comparison Matrix)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/table-format-migration.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho Table Format Migration",
+    "url": "/images/table-format-migration/table-format-migration.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Table Format Migration](/images/table-format-migration/table-format-migration.png)\n\n## Nhu cầu kiến trúc: Từ Hive/Parquet sang Open Table Formats\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/table-format.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Table Format",
+    "url": "/images/table-format/table-format-layer.png",
+    "context": "\nNhờ có Table Format, chúng ta có thể mang các tính năng cao cấp vốn chỉ có ở các cơ sở dữ liệu quan hệ truyền thống như giao dịch ACID, tự động cập nhật cấu trúc ([schema evolution](/concepts/2-storage/data-lake-lakehouse/schema-evolution/)) hay quay ngược thời gian truy vấn ([time travel](/concepts/2-storage/data-lake-lakehouse/time-travel/)) đặt vào trong các [Data Lake](/concepts/2-storage/data-lake-lakehouse/data-lake/) giá rẻ. Đây chính là xương sống định hình nên kiến trúc Data [Lakehouse](/concepts/2-storage/data-lake-lakehouse/lakehouse/) hiện đại.\n\n![Sơ đồ kiến trúc minh họa cho Table Format](/images/table-format/table-format-layer.png)\n\n## Định dạng bảng là gì? Sự nhầm lẫn phổ biến với Định dạng tệp\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-lake-lakehouse/time-travel.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Time Travel",
+    "url": "/images/time-travel/time-travel-mechanism.png",
+    "context": "\nThế nhưng, nếu hệ thống của bạn hỗ trợ tính năng **Time Travel (Du hành thời gian)**, bạn có thể thở phào nhẹ nhõm. Chỉ bằng một câu lệnh SQL đơn giản, bạn có thể đưa bảng dữ liệu quay ngược trở lại trạng thái hoàn hảo của nó cách đây 10 phút hoặc tại một phiên bản (version) cụ thể trong quá khứ.\n\n![Sơ đồ kiến trúc minh họa cho Time Travel](/images/time-travel/time-travel-mechanism.png)\n\n## Time Travel là gì? Tính năng \"Undo\" thần kỳ của dữ liệu\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/data-warehouse.md",
+    "lineNum": 81,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/data-warehouse/diagram_1.png",
+    "context": "    F --> J\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/data-warehouse/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/data-warehouse/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/data-warehouse.md",
+    "lineNum": 82,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/data-warehouse/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/data-warehouse/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/data-warehouse/diagram_2.png)\n\n\n1. **Thu nạp dữ liệu ([Data Ingestion](/concepts/3-integration/etl-elt/data-ingestion/))**: Trích xuất dữ liệu từ các nguồn thông qua CDC ([Change Data Capture](/concepts/3-integration/etl-elt/change-data-capture/)) hoặc các công cụ [ETL](/concepts/3-integration/etl-elt/etl/)/[ELT](/concepts/3-integration/etl-elt/elt/) theo lô (Batch).",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/dimension-table.md",
+    "lineNum": 64,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/dimension-table/diagram_1.png",
+    "context": "    F --> G\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/dimension-table/diagram_1.png)\n\n\n1. Người dùng thay đổi thông tin (ví dụ: cập nhật số điện thoại mới) trên hệ thống nguồn CRM/ERP.",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/dimensional-modeling.md",
+    "lineNum": 76,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/dimensional-modeling/diagram_1.png",
+    "context": "    DIM_STORE ||--o{ FACT_SALES : \"filters\"\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/dimensional-modeling/diagram_1.png)\n\n\n*Nhìn vào sơ đồ trên, bạn sẽ thấy để lọc hoặc gom nhóm dữ liệu doanh thu theo cửa hàng, chúng ta chỉ cần thực hiện đúng một phép JOIN đơn giản từ `FACT_SALES` sang `DIM_STORE`.*",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/fact-table.md",
+    "lineNum": 73,
+    "alt": "Sơ đồ liên kết bảng Fact và các bảng Dimension trong Star Schema",
+    "url": "/images/fact-table/diagram_1.png",
+    "context": "    fact_sales }|..|| dim_date : \"date_key\"\n```\n\n![Sơ đồ liên kết bảng Fact và các bảng Dimension trong Star Schema](/images/fact-table/diagram_1.png)\n\n\n## Ba thuộc tính đo lường cần phân biệt",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/grain.md",
+    "lineNum": 78,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/grain/diagram_1.jpg",
+    "context": "    B --> D[Báo cáo So sánh<br/>Target vs Actual]\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/grain/diagram_1.jpg)\n![Sơ đồ kiến trúc minh họa 2](/images/grain/diagram_2.jpg)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/grain.md",
+    "lineNum": 79,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/grain/diagram_2.jpg",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/grain/diagram_1.jpg)\n![Sơ đồ kiến trúc minh họa 2](/images/grain/diagram_2.jpg)\n\n\nChúng ta tuyệt đối không được gộp chung 2 luồng này vào một bảng duy nhất. Giải pháp chuẩn mực là tách làm 2 Fact Table riêng biệt với 2 mức Grain tương ứng:",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/inmon-methodology.md",
+    "lineNum": 83,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/inmon-methodology/diagram_1.png",
+    "context": "    E --> J\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/inmon-methodology/diagram_1.png)\n\n\n*Lưu ý quan trọng: Nhờ kiến trúc này, các bộ phận nghiên cứu chuyên sâu (Data Science/Data Mining) có thể bỏ qua lớp Data Mart và chọc thẳng vào Core EDW (3NF) để khai thác nguồn dữ liệu chi tiết thô nguyên bản.*",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/kimball-methodology.md",
+    "lineNum": 94,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/kimball-methodology/diagram_1.png",
+    "context": "    H --> K\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/kimball-methodology/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/kimball-methodology/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/kimball-methodology.md",
+    "lineNum": 95,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/kimball-methodology/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/kimball-methodology/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/kimball-methodology/diagram_2.png)\n\n\n* **Operational [Source Systems](/concepts/1-foundations/foundation/source-systems/)**: Nguồn dữ liệu vận hành hàng ngày của doanh nghiệp.",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/slowly-changing-dimension.md",
+    "lineNum": 73,
+    "alt": "Sơ đồ mô hình dữ liệu và các chiều thay đổi chậm (SCD)",
+    "url": "/images/slowly-changing-dimension/diagram_1.png",
+    "context": "    style E fill:#ccffcc,stroke:#333\n```\n\n![Sơ đồ mô hình dữ liệu và các chiều thay đổi chậm (SCD)](/images/slowly-changing-dimension/diagram_1.png)\n\n\n### Minh họa bằng dữ liệu thực tế:",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/snowflake-schema.md",
+    "lineNum": 93,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/snowflake-schema/diagram_1.png",
+    "context": "    DIM_STORE }o--|| DIM_CITY : \"located in\"\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/snowflake-schema/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/snowflake-schema/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/snowflake-schema.md",
+    "lineNum": 94,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/snowflake-schema/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/snowflake-schema/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/snowflake-schema/diagram_2.png)\n\n\n## Trải nghiệm thực tế: Khi Star Schema đối đầu Snowflake Schema qua câu SQL",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/star-schema.md",
+    "lineNum": 102,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/star-schema/diagram_1.png",
+    "context": "    DIM_CUSTOMER ||--o{ FACT_SALES : \"filters\"\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/star-schema/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/star-schema/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/star-schema.md",
+    "lineNum": 103,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/star-schema/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/star-schema/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/star-schema/diagram_2.png)\n\n\n> [!NOTE]",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/surrogate-key.md",
+    "lineNum": 68,
+    "alt": "Sơ đồ kiến trúc minh họa 1",
+    "url": "/images/surrogate-key/diagram_1.png",
+    "context": "    }\n```\n\n![Sơ đồ kiến trúc minh họa 1](/images/surrogate-key/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/surrogate-key/diagram_2.png)\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/data-warehouse/surrogate-key.md",
+    "lineNum": 69,
+    "alt": "Sơ đồ kiến trúc minh họa 2",
+    "url": "/images/surrogate-key/diagram_2.png",
+    "context": "```\n\n![Sơ đồ kiến trúc minh họa 1](/images/surrogate-key/diagram_1.png)\n![Sơ đồ kiến trúc minh họa 2](/images/surrogate-key/diagram_2.png)\n\n\nBảng Dimension `DIM_CUSTOMER`:",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/clustering.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Clustering",
+    "url": "/images/clustering/clustering-layout.png",
+    "context": "\nTrong các hệ thống [Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) hiện đại, khi đối mặt với những bảng dữ liệu khổng lồ lên tới hàng trăm Terabytes, việc tối ưu hóa tốc độ truy vấn và giảm thiểu chi phí quét đĩa là mục tiêu hàng đầu của mọi Data Engineer. Bên cạnh kỹ thuật phân vùng quen thuộc (Partitioning), **Clustering (Phân cụm dữ liệu)** chính là \"vũ khí tối thượng\" thứ hai giúp bạn sắp đặt dữ liệu một cách thông minh nhất để tăng tốc hệ thống.\n\n![Sơ đồ kiến trúc minh họa cho Clustering](/images/clustering/clustering-layout.png)\n\n## Phân cụm dữ liệu (Clustering): Nghệ thuật sắp đặt vật lý tối ưu\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/columnar-storage.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Columnar Storage",
+    "url": "/images/columnar-storage/row-vs-columnar-storage.png",
+    "context": "\nColumnar Storage (Lưu trữ dạng cột) là yếu tố kỹ thuật cốt lõi quyết định hiệu năng xử lý của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng tệp tin tối ưu như Apache Parquet.\n\n![Sơ đồ kiến trúc minh họa cho Columnar Storage](/images/columnar-storage/row-vs-columnar-storage.png)\n\n## Khái niệm Columnar Storage\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/compression-algorithms.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Compression Algorithms",
+    "url": "/images/compression-algorithms/compression-algorithms.png",
+    "context": "\nTrong thiết kế hệ thống dữ liệu lớn (Big Data), việc tối ưu hóa dung lượng lưu trữ và tốc độ truyền tải thông tin là một bài toán sống còn. Khi lưu trữ hàng Terabytes hay Petabytes dữ liệu trên Cloud, hóa đơn thanh toán sẽ nhanh chóng vượt tầm kiểm soát nếu bạn không có một chiến lược nén dữ liệu tốt. **Compression Algorithms (Thuật toán nén dữ liệu)** chính là chìa khóa vàng giúp doanh nghiệp tiết kiệm hàng ngàn đô-la chi phí lưu trữ, đồng thời đẩy nhanh tốc độ truy vấn lên gấp nhiều lần.\n\n![Sơ đồ kiến trúc minh họa cho Compression Algorithms](/images/compression-algorithms/compression-algorithms.png)\n\n## Nén dữ liệu: Nghệ thuật hóa giải nút thắt I/O trong Big Data\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/file-formats-deep-dive.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho File Formats Deep Dive",
+    "url": "/images/file-formats-deep-dive/parquet-file-layout.gif",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho File Formats Deep Dive](/images/file-formats-deep-dive/parquet-file-layout.gif)\n\n## 1. Lưu trữ theo Dòng (Row-based) vs Lưu trữ theo Cột (Columnar)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/indexing.md",
+    "lineNum": 17,
+    "alt": "Sơ đồ kiến trúc minh họa cho Indexing",
+    "url": "/images/indexing/btree-index.png",
+    "context": "\nTrong thế giới cơ sở dữ liệu, kỹ thuật tăng tốc thần kỳ này được gọi là **Indexing** (Chỉ mục cơ sở dữ liệu).\n\n![Sơ đồ kiến trúc minh họa cho Indexing](/images/indexing/btree-index.png)\n\n## Chỉ mục cơ sở dữ liệu là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/olap.md",
+    "lineNum": 23,
+    "alt": "Sơ đồ kiến trúc minh họa cho OLAP",
+    "url": "/images/olap/olap-cube.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho OLAP](/images/olap/olap-cube.png)\n\n## Những trụ cột công nghệ giúp OLAP chạy siêu tốc\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/oltp-olap-htap-comparison.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho OLTP vs OLAP vs HTAP Comparison",
+    "url": "/images/oltp-olap-htap-comparison/htap-architecture.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho OLTP vs OLAP vs HTAP Comparison](/images/oltp-olap-htap-comparison/htap-architecture.png)\n\n## 1. Sự khác biệt cốt lõi về cấu trúc vật lý (Core Architectural Differences)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/oltp.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc minh họa cho OLTP",
+    "url": "/images/oltp/oltp-system-architecture.png",
+    "context": "\nNhiệm vụ tối thượng của OLTP là xử lý một lượng khổng lồ các giao dịch (transactions) ngắn, diễn ra liên tục với yêu cầu tốc độ phản hồi cực nhanh (tính bằng mili-giây) và độ chính xác tuyệt đối.\n\n![Sơ đồ kiến trúc minh họa cho OLTP](/images/oltp/oltp-system-architecture.png)\n\n## Bản chất của một \"Giao dịch\" trong OLTP\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/partitioning.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Partitioning",
+    "url": "/images/partitioning/partitioning-strategies.png",
+    "context": "\nKhi cơ sở dữ liệu của bạn phình to từ vài triệu dòng lên hàng tỷ dòng, những câu truy vấn SQL từng chạy trong chớp mắt bỗng trở nên chậm chạp và ì ạch. Bạn đã thử tạo index (chỉ mục), nhưng khi dữ liệu quá khổng lồ, bộ index cũng lớn đến mức không thể nhét vừa vào bộ nhớ RAM. Đây chính là lúc chúng ta cần đến **Partitioning** (Phân vùng dữ liệu) - một nghệ thuật \"chia để trị\" kinh điển trong ngành kỹ thuật dữ liệu.\n\n![Sơ đồ kiến trúc minh họa cho Partitioning](/images/partitioning/partitioning-strategies.png)\n\n## Nghệ thuật \"chia để trị\" trong thế giới dữ liệu lớn\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/query-engines-architecture.md",
+    "lineNum": 24,
+    "alt": "Sơ đồ kiến trúc minh họa cho Query Engines Architecture",
+    "url": "/images/query-engines-architecture/mpp-query-engine-architecture.png",
+    "context": "\n---\n\n![Sơ đồ kiến trúc minh họa cho Query Engines Architecture](/images/query-engines-architecture/mpp-query-engine-architecture.png)\n\n## Kiến trúc Cốt lõi và Sự Khác biệt Bản chất\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/relational-database.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Relational Database",
+    "url": "/images/relational-database/rdbms-internals.png",
+    "context": "\nTrong thế giới lưu trữ dữ liệu, dù có bao nhiêu công nghệ mới ra đời thì **Cơ sở dữ liệu quan hệ (Relational Database - RDBMS)** vẫn luôn đứng vững như một tượng đài, là sự lựa chọn hàng đầu cho hầu hết các hệ thống công nghệ từ nhỏ đến lớn. Đây là nền tảng đáng tin cậy giúp quản lý thông tin giao dịch, dữ liệu khách hàng và vận hành các ứng dụng cốt lõi của doanh nghiệp.\n\n![Sơ đồ kiến trúc minh họa cho Relational Database](/images/relational-database/rdbms-internals.png)\n\n## Trật tự trong thế giới dữ liệu: Cơ sở dữ liệu quan hệ là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/2-storage/database-storage/row-based-storage.md",
+    "lineNum": 15,
+    "alt": "Sơ đồ kiến trúc minh họa cho Row-based Storage",
+    "url": "/images/row-based-storage/row-oriented-storage-layout.png",
+    "context": "\nKhi bắt đầu tìm hiểu về cách cơ sở dữ liệu lưu trữ thông tin vật lý trên đĩa cứng, chúng ta sẽ bắt gặp hai trường phái thiết kế kinh điển: Lưu trữ dạng Dòng (Row-based Storage) và Lưu trữ dạng Cột (Columnar Storage). Trong số đó, **Row-based Storage** là mô hình lâu đời, phổ biến và là xương sống cho hầu hết các hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) quen thuộc như MySQL, PostgreSQL hay Oracle.\n\n![Sơ đồ kiến trúc minh họa cho Row-based Storage](/images/row-based-storage/row-oriented-storage-layout.png)\n\n## Lưu trữ theo hàng dọc ổ đĩa: Row-based Storage là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/apache-spark.md",
+    "lineNum": 18,
+    "alt": "Kiến trúc các tiến trình phân tán (Driver, Cluster Manager, và Executors) trong cụm Apache Spark",
+    "url": "/images/apache-spark/cluster-overview.png",
+    "context": "Trong số các công cụ tính toán phân tán hiện nay, **Apache Spark** chính là cái tên nổi bật nhất. Được thiết kế như một động cơ phân tích thống nhất (Unified Analytics Engine), Spark nổi tiếng nhờ khả năng xử lý dữ liệu siêu tốc bằng cách giữ toàn bộ các bước tính toán trung gian trực tiếp trên bộ nhớ RAM (In-Memory Computing), thay vì ghi xuống đĩa cứng chậm chạp như các thế hệ công nghệ đi trước.\n\n\n![Kiến trúc các tiến trình phân tán (Driver, Cluster Manager, và Executors) trong cụm Apache Spark](/images/apache-spark/cluster-overview.png)\n\n## Cuộc đổi ngôi lịch sử: Tạm biệt kỷ nguyên đĩa cứng chậm chạp của Hadoop\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/batch-processing.md",
+    "lineNum": 16,
+    "alt": "Mô hình luồng dữ liệu MapReduce truyền thống trong xử lý theo lô",
+    "url": "/images/batch-processing/MapReduce.png",
+    "context": "Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/4-realtime/stream-calculation/streaming-processing/)) được ví như dòng nước chảy xiết liên tục thì **Batch Processing (Xử lý dữ liệu theo lô)** lại giống như những hồ chứa nước khổng lồ được xả định kỳ. Dù không mang lại cảm giác \"tức thì\" như streaming, Batch Processing vẫn luôn là xương sống vững chắc cho mọi hệ thống dữ liệu lớn nhờ khả năng giải quyết những tác vụ tính toán khổng lồ và phức tạp nhất.\n\n\n![Mô hình luồng dữ liệu MapReduce truyền thống trong xử lý theo lô](/images/batch-processing/MapReduce.png)\n\n## Batch Processing là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/data-skew.md",
+    "lineNum": 18,
+    "alt": "Cơ chế xử lý lệch dữ liệu (Skew Join) thông qua tự động chia nhỏ phân vùng lớn (AQE Skew Join)",
+    "url": "/images/data-skew/blog-adaptive-query-execution-3.png",
+    "context": "Trong thế giới Big Data, hiện tượng tréo ngoe này được gọi là **Data Skew (Lệch dữ liệu)**. Đây là một trong những nguyên nhân hàng đầu khiến các pipeline Spark bị kẹt vô tận hoặc sập nguồn đột ngột do hết bộ nhớ (OOM - Out Of Memory).\n\n\n![Cơ chế xử lý lệch dữ liệu (Skew Join) thông qua tự động chia nhỏ phân vùng lớn (AQE Skew Join)](/images/data-skew/blog-adaptive-query-execution-3.png)\n\n## Data Skew thực chất là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/distributed-processing.md",
+    "lineNum": 18,
+    "alt": "Mô hình cấu trúc mạng lưới phân tán điều phối nhiệm vụ giữa Driver và Executors",
+    "url": "/images/distributed-processing/Architecture.png",
+    "context": "Để giải quyết bài toán này, các kỹ sư dữ liệu không cố gắng chế tạo ra những siêu máy tính đắt đỏ vô hạn. Thay vào đó, họ kết nối hàng chục, hàng trăm chiếc máy tính bình thường lại với nhau và bắt chúng cùng làm việc. Đó chính là nền tảng của **Xử lý phân tán (Distributed Processing)** – triết lý công nghệ cốt lõi định hình nên kỷ nguyên Big Data.\n\n\n![Mô hình cấu trúc mạng lưới phân tán điều phối nhiệm vụ giữa Driver và Executors](/images/distributed-processing/Architecture.png)\n\n## Kỷ nguyên Big Data và sự giới hạn của siêu máy chủ\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/shuffle.md",
+    "lineNum": 18,
+    "alt": "Cơ chế Shuffle Write tối ưu hóa nhờ gom nhóm file (Consolidation)",
+    "url": "/images/shuffle/shuffle-write-consolidation.png",
+    "context": "Vậy Shuffle thực chất là gì? Tại sao nó lại là \"kẻ thù số một\" đối với hiệu năng của Spark, và làm cách nào để chúng ta chung sống hòa bình cũng như tối ưu hóa nó?\n\n\n![Cơ chế Shuffle Write tối ưu hóa nhờ gom nhóm file (Consolidation)](/images/shuffle/shuffle-write-consolidation.png)\n\n## Shuffle là gì? Nút thắt cổ chai lớn nhất trong tính toán phân tán\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-advanced-tuning.md",
+    "lineNum": 20,
+    "alt": "Kỹ thuật tối ưu hóa động (AQE Coalesce) gộp các phân vùng nhỏ sau bước Shuffle của Spark",
+    "url": "/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png",
+    "context": "---\n\n\n![Kỹ thuật tối ưu hóa động (AQE Coalesce) gộp các phân vùng nhỏ sau bước Shuffle của Spark](/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png)\n\n## 1. Dynamic Partition Pruning (DPP)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-aqe-catalyst.md",
+    "lineNum": 20,
+    "alt": "Adaptive Query Execution (AQE) tự động xử lý hiện tượng lệch dữ liệu (Skew Join) lúc runtime",
+    "url": "/images/spark-aqe-catalyst/blog-adaptive-query-execution-3.png",
+    "context": "---\n\n\n![Adaptive Query Execution (AQE) tự động xử lý hiện tượng lệch dữ liệu (Skew Join) lúc runtime](/images/spark-aqe-catalyst/blog-adaptive-query-execution-3.png)\n\n## 1. Catalyst Optimizer: Bộ tối ưu hóa tĩnh\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-execution-model.md",
+    "lineNum": 18,
+    "alt": "Mô hình thực thi Master-Slave trong cụm tính toán phân tán Apache Spark",
+    "url": "/images/spark-execution-model/cluster-overview.png",
+    "context": "Để trả lời câu hỏi đó, chúng ta cần tìm hiểu về **Spark Execution Model (Mô hình thực thi Spark)**.\n\n\n![Mô hình thực thi Master-Slave trong cụm tính toán phân tán Apache Spark](/images/spark-execution-model/cluster-overview.png)\n\n## Spark Execution Model là gì? Cách thức vận hành của một cụm tính toán phân tán\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-jobs-stages-tasks.md",
+    "lineNum": 18,
+    "alt": "Cơ chế thực thi Task trên CPU Core của Executor",
+    "url": "/images/spark-jobs-stages-tasks/taskexecution.png",
+    "context": "Nếu mở công cụ giám sát Spark UI lên, bạn sẽ thấy hàng tá thuật ngữ như **Jobs**, **Stages**, và **Tasks**. Hiểu rõ mối liên kết giữa các khái niệm này là bước đệm tối thiểu giúp bạn đọc hiểu hiệu năng và tìm ra các điểm nghẽn (bottleneck) của luồng dữ liệu.\n\n\n![Cơ chế thực thi Task trên CPU Core của Executor](/images/spark-jobs-stages-tasks/taskexecution.png)\n\n## Kiến trúc và Nguyên lý phân cấp thực thi\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-joins.md",
+    "lineNum": 20,
+    "alt": "Cơ chế xáo trộn và gom nhóm dữ liệu (Shuffle Join) giữa hai bảng",
+    "url": "/images/spark-joins/ShuffleJoin.png",
+    "context": "Hãy cùng tìm hiểu ba chiến lược Join vật lý cốt lõi trong Spark: **Broadcast Hash Join (BHJ)**, **Shuffle Hash Join (SHJ)**, và **Sort Merge Join (SMJ)**.\n\n\n![Cơ chế xáo trộn và gom nhóm dữ liệu (Shuffle Join) giữa hai bảng](/images/spark-joins/ShuffleJoin.png)\n\n## Ba chiến lược Join vật lý cốt lõi\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-memory-management.md",
+    "lineNum": 20,
+    "alt": "Sơ đồ chi tiết bộ nhớ Executor (JVM heap, Storage, Execution, User, Off-heap) và các tham số cấu hình tương ứng",
+    "url": "/images/spark-memory-management/SparkExecutorMemory.png",
+    "context": "---\n\n\n![Sơ đồ chi tiết bộ nhớ Executor (JVM heap, Storage, Execution, User, Off-heap) và các tham số cấu hình tương ứng](/images/spark-memory-management/SparkExecutorMemory.png)\n\n## Kiến trúc bộ nhớ Spark Executor JVM (Executor JVM Memory Layout)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-partition.md",
+    "lineNum": 18,
+    "alt": "Phân biệt sự phụ thuộc phân vùng: Narrow Dependency vs Wide Dependency (Shuffle)",
+    "url": "/images/spark-partition/NarrowDependency.png",
+    "context": "Câu trả lời nằm ở khái niệm **Spark Partition (Phân vùng dữ liệu)**.\n\n\n![Phân biệt sự phụ thuộc phân vùng: Narrow Dependency vs Wide Dependency (Shuffle)](/images/spark-partition/NarrowDependency.png)\n\n## Spark Partition là gì? Đơn vị tiền tệ của tính song song\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/batch-processing/spark-sql.md",
+    "lineNum": 16,
+    "alt": "Quy trình tối ưu hóa câu lệnh SQL qua các bước của Catalyst Optimizer",
+    "url": "/images/spark-sql/catalyst-optimizer.png",
+    "context": "Khi làm việc với các hệ thống dữ liệu lớn, việc phải viết các đoạn mã lập trình phân tán phức tạp để biến đổi dữ liệu luôn là một trở ngại lớn đối với các nhà phân tích và kỹ sư dữ liệu. Để đơn giản hóa quá trình này và mang ngôn ngữ truy vấn phổ biến nhất thế giới vào hệ sinh thái Big Data, Apache Spark đã phát triển một phân hệ cốt lõi: **Spark SQL**.\n\n\n![Quy trình tối ưu hóa câu lệnh SQL qua các bước của Catalyst Optimizer](/images/spark-sql/catalyst-optimizer.png)\n\n## Spark SQL là gì? Cầu nối giữa thế giới SQL và Big Data\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/backfill.md",
+    "lineNum": 20,
+    "alt": "Cơ chế chạy bù dữ liệu quá khứ (Backfilling) thông qua lập lịch của Airflow",
+    "url": "/images/backfill/airflow-backfill.png",
+    "context": "Để xử lý những tình huống này, chúng ta cần đến một kỹ thuật cực kỳ quan trọng trong [Data Engineering](/concepts/1-foundations/foundation/data-engineering/): **Backfill (Chạy bù dữ liệu lịch sử)**. Đây là hành động \"quay ngược thời gian\" của hệ thống [ETL](/concepts/3-integration/etl-elt/etl/)/ELT, buộc các tiến trình phải tính toán lại dữ liệu của các ngày hoặc các tháng đã trôi qua trong quá khứ nhằm lấp đầy các khoảng trống và sửa đổi dữ liệu cho đúng chuẩn.\n\n\n![Cơ chế chạy bù dữ liệu quá khứ (Backfilling) thông qua lập lịch của Airflow](/images/backfill/airflow-backfill.png)\n\n## Tại sao chúng ta bắt buộc phải chạy lại dữ liệu quá khứ?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/change-data-capture.md",
+    "lineNum": 18,
+    "alt": "Kiến trúc Change Data Capture (CDC) dựa trên log-reader kết hợp Debezium và Apache Kafka",
+    "url": "/images/change-data-capture/debezium-architecture.png",
+    "context": "---\n\n\n![Kiến trúc Change Data Capture (CDC) dựa trên log-reader kết hợp Debezium và Apache Kafka](/images/change-data-capture/debezium-architecture.png)\n\n## 1. Bản chất và So sánh các Phương pháp Tiếp cận CDC\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/data-extraction.md",
+    "lineNum": 20,
+    "alt": "Sơ đồ phân biệt luồng kiểm soát (Control Flow) và luồng trích xuất dữ liệu (Data Flow)",
+    "url": "/images/data-extraction/control-flow-data-flow.png",
+    "context": "---\n\n\n![Sơ đồ phân biệt luồng kiểm soát (Control Flow) và luồng trích xuất dữ liệu (Data Flow)](/images/data-extraction/control-flow-data-flow.png)\n\n## Dữ liệu phân mảnh - Lý do Data Extraction tồn tại\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/data-ingestion.md",
+    "lineNum": 20,
+    "alt": "Quy trình Ingestion đưa dữ liệu từ các nguồn khác nhau vào hệ thống lưu trữ tập trung",
+    "url": "/images/data-ingestion/data-ingestion-flow.png",
+    "context": "---\n\n\n![Quy trình Ingestion đưa dữ liệu từ các nguồn khác nhau vào hệ thống lưu trữ tập trung](/images/data-ingestion/data-ingestion-flow.png)\n\n## Thu nạp dữ liệu (Data Ingestion) thực chất là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/data-loading.md",
+    "lineNum": 18,
+    "alt": "Quy trình đẩy và tải dữ liệu (Push/Load) vào các phân vùng lưu trữ đích",
+    "url": "/images/data-loading/push-transform-load.png",
+    "context": "---\n\n\n![Quy trình đẩy và tải dữ liệu (Push/Load) vào các phân vùng lưu trữ đích](/images/data-loading/push-transform-load.png)\n\n## Data Loading thực chất là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/data-transformation.md",
+    "lineNum": 18,
+    "alt": "Mô hình luồng biến đổi dữ liệu theo kiến trúc Medallion (Bronze -> Silver -> Gold)",
+    "url": "/images/data-transformation/medallion-architecture.png",
+    "context": "Data Transformation chính là chữ **\"T\"** quan trọng trong quy trình [ETL](/concepts/3-integration/etl-elt/etl/)/[ELT](/concepts/3-integration/etl-elt/elt/) — giai đoạn biến đống dữ liệu hỗn độn thành những tài sản thông tin giá trị, chuẩn mực và sẵn sàng cho các quyết định kinh doanh.\n\n\n![Mô hình luồng biến đổi dữ liệu theo kiến trúc Medallion (Bronze -> Silver -> Gold)](/images/data-transformation/medallion-architecture.png)\n\n## Data Transformation là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/deduplication.md",
+    "lineNum": 18,
+    "alt": "Mô hình thực thi thao tác loại bỏ trùng lặp (distinct) dữ liệu phân tán",
+    "url": "/images/deduplication/distinct.png",
+    "context": "Trong ngành kỹ thuật dữ liệu, hiện tượng này được gọi là dữ liệu bị trùng lặp (Duplicate Data). Để bảo vệ hệ thống báo cáo khỏi những số liệu ảo này, chúng ta cần áp dụng **Deduplication (Khử trùng lặp dữ liệu)**.\n\n\n![Mô hình thực thi thao tác loại bỏ trùng lặp (distinct) dữ liệu phân tán](/images/deduplication/distinct.png)\n\n## Deduplication là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/elt.md",
+    "lineNum": 18,
+    "alt": "Sơ đồ kiến trúc luồng dữ liệu ELT (Extract-Load-Transform) trên Cloud Data Warehouse",
+    "url": "/images/elt/azure-elt.png",
+    "context": "Thay vì biến đổi dữ liệu trên đường truyền, ELT đảo ngược quy trình: trích xuất dữ liệu, nạp thẳng vào kho lưu trữ, rồi mới tiến hành biến đổi. Tại sao sự thay đổi thứ tự tưởng chừng đơn giản này lại tạo ra một cuộc cách mạng lớn đến vậy? Hãy cùng đi sâu vào tìm hiểu.\n\n\n![Sơ đồ kiến trúc luồng dữ liệu ELT (Extract-Load-Transform) trên Cloud Data Warehouse](/images/elt/azure-elt.png)\n\n## Sự trỗi dậy của cuộc cách mạng \"Nạp trước, xử lý sau\"\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/etl.md",
+    "lineNum": 19,
+    "alt": "Sơ đồ kiến trúc quy trình trích xuất, biến đổi và tải dữ liệu truyền thống (ETL)",
+    "url": "/images/etl/azure-etl.png",
+    "context": "Dù bạn đang làm việc với các hệ thống báo cáo tài chính truyền thống hay các ứng dụng phân tích dữ liệu lớn trên đám mây, việc hiểu rõ bản chất của ETL là bước đi đầu tiên bắt buộc. Hãy cùng bóc tách xem quy trình tích hợp dữ liệu kinh điển này hoạt động như thế nào và tại sao nó vẫn giữ một vị trí quan trọng trong kiến trúc dữ liệu hiện đại.\n\n\n![Sơ đồ kiến trúc quy trình trích xuất, biến đổi và tải dữ liệu truyền thống (ETL)](/images/etl/azure-etl.png)\n\n## Quy trình tích hợp dữ liệu truyền thống nhưng chưa bao giờ lỗi thời\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/idempotency.md",
+    "lineNum": 16,
+    "alt": "Thiết kế API Idempotency đảm bảo an toàn khi Client thực hiện yêu cầu gửi lại (Retries)",
+    "url": "/images/idempotency/making-retries-safe-1.png",
+    "context": "Trong cuộc sống hàng ngày, nếu bạn bấm nút thang máy nhiều lần, thang máy vẫn chỉ đón bạn một lần duy nhất. Nếu bạn nhấn nút gửi một tin nhắn ngân hàng nhiều lần, tài khoản của bạn lý tưởng nhất cũng chỉ được trừ tiền một lần. Trong khoa học máy tính và kỹ thuật dữ liệu, thuộc tính kỳ diệu giúp ngăn chặn các tác vụ bị thực thi thừa thãi này được gọi là **Tính lũy đẳng** (Idempotency). Đây là một trong những tiêu chuẩn vàng để xây dựng nên những đường ống dữ liệu (Data Pipeline) kiên cố, có khả năng tự phục hồi lỗi cực kỳ mạnh mẽ.\n\n\n![Thiết kế API Idempotency đảm bảo an toàn khi Client thực hiện yêu cầu gửi lại (Retries)](/images/idempotency/making-retries-safe-1.png)\n\n## Khi việc chạy lại không gây ra tai họa\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/incremental-load.md",
+    "lineNum": 16,
+    "alt": "Cơ chế tải tăng dần (Incremental Load) dựa trên cột mốc thời gian (Watermark-based)",
+    "url": "/images/incremental-load/workflow-using-watermark.png",
+    "context": "Khi bắt đầu xây dựng một kho dữ liệu ([Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/)), phương pháp đơn giản nhất mà ai cũng nghĩ tới là mỗi ngày quét toàn bộ dữ liệu từ hệ thống nguồn rồi ghi đè lên hệ thống đích (Full Load). Tuy nhiên, khi doanh nghiệp phát triển và lượng dữ liệu phình to lên cấp độ hàng trăm Gigabytes hay Terabytes, cách tiếp cận ngây thơ này sẽ sớm bóp nghẹt hệ thống của bạn. Đây chính là lúc bạn cần chuyển đổi sang một chiến lược thông minh và tối ưu hơn: **Incremental Load** (Nạp gia tăng).\n\n\n![Cơ chế tải tăng dần (Incremental Load) dựa trên cột mốc thời gian (Watermark-based)](/images/incremental-load/workflow-using-watermark.png)\n\n## Chỉ kéo và xử lý phần thay đổi\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/etl-elt/integration-patterns-comparison.md",
+    "lineNum": 18,
+    "alt": "Sơ đồ vị trí và vai trò của dbt (data build tool) trong hệ sinh thái Modern Data Stack",
+    "url": "/images/integration-patterns-comparison/dbt-platform-overview.jpg",
+    "context": "Trong lịch sử ngành kỹ thuật dữ liệu (Data Engineering), chúng ta đã chứng kiến sự tiến hóa vượt bậc của các mô hình tích hợp dữ liệu. Bắt đầu từ [ETL](/concepts/3-integration/etl-elt/etl/) truyền thống, chuyển dịch sang [ELT](/concepts/3-integration/etl-elt/elt/) hiện đại gắn liền với sự bùng nổ của [Cloud Data Warehouse](/concepts/2-storage/data-warehouse/data-warehouse/) (kho dữ liệu đám mây), và gần đây nhất là sự xuất hiện của **Reverse ETL** để đưa dữ liệu phân tích quay trở lại phục vụ các hoạt động vận hành thời gian thực. Bài viết này sẽ phân tích chuyên sâu các mô hình tích hợp dữ liệu này, so sánh kiến trúc kỹ thuật, ưu nhược điểm và đưa ra hướng dẫn chi tiết giúp bạn lựa chọn mô hình phù hợp cho doanh nghiệp.\n\n\n![Sơ đồ vị trí và vai trò của dbt (data build tool) trong hệ sinh thái Modern Data Stack](/images/integration-patterns-comparison/dbt-platform-overview.jpg)\n\n## Kiến trúc & So sánh Kỹ thuật (Technical & Architecture Comparison)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/orchestration/dag.md",
+    "lineNum": 23,
+    "alt": "Minh họa đồ thị có hướng không chu trình (DAG)",
+    "url": "/images/dag/directed_acyclic_graph_3.svg",
+    "context": "2. **Các cạnh có hướng (Directed Edges)**: Biểu diễn bằng các mũi tên nối giữa các đỉnh (ví dụ: $A \\rightarrow B$). Nó định nghĩa mối quan hệ phụ thuộc chặt chẽ: *\"Tác vụ A bắt buộc phải hoàn thành thành công thì tác vụ B mới được phép bắt đầu chạy\"*.\n3. **Đặc tính không chu trình (Acyclic)**: Nếu bạn bắt đầu đi từ một tác vụ bất kỳ theo chiều mũi tên, bạn sẽ **không bao giờ** có thể quay lại chính tác vụ đó. Nói cách khác, hệ thống tuyệt đối cấm các vòng lặp vô hạn dạng $A \\rightarrow B \\rightarrow C \\rightarrow A$.\n\n![Minh họa đồ thị có hướng không chu trình (DAG)](/images/dag/directed_acyclic_graph_3.svg)\n\n## Tại sao chúng ta cần cấu trúc DAG?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/transformation-analytics/data-contract.md",
+    "lineNum": 35,
+    "alt": "Kiến trúc hoạt động của Kafka Schema Registry",
+    "url": "/images/data-contract/schema-registry-design-kafka.png",
+    "context": "\nKhi tích hợp Kafka Schema Registry, luồng đi của một bản tin được kiểm duyệt thông qua một quy trình phối hợp nhịp nhàng giữa Producer, Schema Registry, Kafka Broker, và Consumer:\n\n![Kiến trúc hoạt động của Kafka Schema Registry](/images/data-contract/schema-registry-design-kafka.png)\n\n```mermaid\nsequenceDiagram",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/3-integration/transformation-analytics/dbt.md",
+    "lineNum": 52,
+    "alt": "Kiến trúc dbt vận hành trong hệ thống Modern Data Stack",
+    "url": "/images/dbt/dbt-architecture.png",
+    "context": "\nDưới đây là sơ đồ mô tả vai trò của dbt trong kiến trúc dữ liệu hiện đại:\n\n![Kiến trúc dbt vận hành trong hệ thống Modern Data Stack](/images/dbt/dbt-architecture.png)\n```mermaid\ngraph LR\n    subgraph \"1. EL Tools (Fivetran / Airbyte)\"",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/4-realtime/message-queue/kafka-topics-partitions.md",
+    "lineNum": 30,
+    "alt": "Quy trình xử lý và luồng dữ liệu Kafka Topics Partitions",
+    "url": "/images/kafka-topics-partitions/diagram_2.png",
+    "context": "* Bằng cách chặt nhỏ Topic đó thành 100 Partitions rải đều trên 100 máy chủ Broker khác nhau, áp lực ghi đĩa và băng thông mạng lập tức được chia đều cho 100 cỗ máy.\n* Ở đầu ra, 100 ứng dụng Consumers có thể đồng thời kết nối vào 100 máy chủ này để bốc dữ liệu ra xử lý song song. Nhờ kiến trúc phân tán phân vùng này, Kafka có khả năng mở rộng ngang (Scale-out) gần như vô cực.\n\n![Quy trình xử lý và luồng dữ liệu Kafka Topics Partitions](/images/kafka-topics-partitions/diagram_2.png)\n\n## Cách phân phối tin nhắn vào các Partition\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/4-realtime/stream-calculation/spark-structured-streaming.md",
+    "lineNum": 20,
+    "alt": "Sơ đồ minh họa kiến trúc Spark Structured Streaming",
+    "url": "/images/spark-structured-streaming/diagram_1.png",
+    "context": "---\n\n\n![Sơ đồ minh họa kiến trúc Spark Structured Streaming](/images/spark-structured-streaming/diagram_1.png)\n\n\n## 1. Mô hình Truy vấn Lũy tiến (Incremental Query Model)",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/4-realtime/stream-calculation/spark-structured-streaming.md",
+    "lineNum": 121,
+    "alt": "Quy trình xử lý và luồng dữ liệu Spark Structured Streaming",
+    "url": "/images/spark-structured-streaming/diagram_2.png",
+    "context": "---\n\n\n![Quy trình xử lý và luồng dữ liệu Spark Structured Streaming](/images/spark-structured-streaming/diagram_2.png)\n\n\n## 3. Xử lý có trạng thái (Stateful Processing) và Quản lý Checkpoint",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/data-quality/anomaly-detection.md",
+    "lineNum": 17,
+    "alt": "The screenshot shows the data quality anomaly detection process.",
+    "url": "/images/anomaly-detection/diagram_1.png",
+    "context": "\nĐây chính là lúc chúng ta cần đến **Phát hiện bất thường (Anomaly Detection / Outlier Detection)**. Thay vì dựa vào các quy tắc cứng nhắc do con người tự viết, phương pháp này ứng dụng các thuật toán Thống kê và Học máy (Machine Learning) để tự động theo dõi hành vi của dữ liệu theo thời gian, từ đó phát hiện ra những điểm bất thường ẩn sâu mà mắt thường và các bộ kiểm thử thông thường dễ dàng bỏ sót.\n\n![The screenshot shows the data quality anomaly detection process.](/images/anomaly-detection/diagram_1.png)\n\n![The screenshot shows a line graph of data quality statistics over time.](/images/anomaly-detection/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/data-quality/anomaly-detection.md",
+    "lineNum": 19,
+    "alt": "The screenshot shows a line graph of data quality statistics over time.",
+    "url": "/images/anomaly-detection/diagram_2.png",
+    "context": "\n![The screenshot shows the data quality anomaly detection process.](/images/anomaly-detection/diagram_1.png)\n\n![The screenshot shows a line graph of data quality statistics over time.](/images/anomaly-detection/diagram_2.png)\n\n\n## Tại sao các bài kiểm thử tĩnh (Rule-based Tests) là chưa đủ?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/data-quality/data-quality.md",
+    "lineNum": 17,
+    "alt": "Data profiling overview",
+    "url": "/images/data-quality/diagram_1.png",
+    "context": "\nĐó chính là bi kịch của việc bỏ quên **Data Quality (Chất lượng dữ liệu)**.\n\n![Data profiling overview](/images/data-quality/diagram_1.png)\n\n![Data profiling diagram](/images/data-quality/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/data-quality/data-quality.md",
+    "lineNum": 19,
+    "alt": "Data profiling diagram",
+    "url": "/images/data-quality/diagram_2.png",
+    "context": "\n![Data profiling overview](/images/data-quality/diagram_1.png)\n\n![Data profiling diagram](/images/data-quality/diagram_2.png)\n\n\n## Bản chất của Chất lượng dữ liệu: Không có \"đúng sai\" tuyệt đối",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/access-control.md",
+    "lineNum": 19,
+    "alt": "This diagram illustrates that the tags applied to a principal must match the tags applied to a resource for the user to be granted permissions to the resource. Tags be applied to IAM groups, resource groups, individual users and individual resources.",
+    "url": "/images/access-control/diagram_1.png",
+    "context": "\nTrong bài viết này, chúng ta sẽ cùng đi sâu vào hai mô hình kiểm soát truy cập phổ biến và mạnh mẽ nhất hiện nay: **RBAC (Role-Based Access Control)** và **ABAC (Attribute-Based Access Control)**.\n\n![This diagram illustrates that the tags applied to a principal must match the tags applied to a resource for the user to be granted permissions to the resource. Tags be applied to IAM groups, resource groups, individual users and individual resources.](/images/access-control/diagram_1.png)\n\n![This diagram illustrates that role-based access control requires that each identity be assigned a specific job-function based policy to access different resources.](/images/access-control/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/access-control.md",
+    "lineNum": 21,
+    "alt": "This diagram illustrates that role-based access control requires that each identity be assigned a specific job-function based policy to access different resources.",
+    "url": "/images/access-control/diagram_2.png",
+    "context": "\n![This diagram illustrates that the tags applied to a principal must match the tags applied to a resource for the user to be granted permissions to the resource. Tags be applied to IAM groups, resource groups, individual users and individual resources.](/images/access-control/diagram_1.png)\n\n![This diagram illustrates that role-based access control requires that each identity be assigned a specific job-function based policy to access different resources.](/images/access-control/diagram_2.png)\n\n\n## Tại sao chúng ta cần kiểm soát truy cập chặt chẽ?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/data-lineage.md",
+    "lineNum": 19,
+    "alt": "An example graph of lineage entity metadata created by SageMaker AI to track your workflow.",
+    "url": "/images/data-lineage/diagram_1.png",
+    "context": "\n---\n\n![An example graph of lineage entity metadata created by SageMaker AI to track your workflow.](/images/data-lineage/diagram_1.png)\n\n## Phả hệ dữ liệu thực chất là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/data-ownership.md",
+    "lineNum": 21,
+    "alt": "Role hierarchy example",
+    "url": "/images/data-ownership/diagram_1.png",
+    "context": "\n---\n\n![Role hierarchy example](/images/data-ownership/diagram_1.png)\n\n\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md",
+    "lineNum": 19,
+    "alt": "Unity Catalog object model diagram",
+    "url": "/images/unity-catalog-governance/diagram_1.png",
+    "context": "\n---\n\n![Unity Catalog object model diagram](/images/unity-catalog-governance/diagram_1.png)\n\n![Unity Catalog object model diagram](/images/unity-catalog-governance/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md",
+    "lineNum": 21,
+    "alt": "Unity Catalog object model diagram",
+    "url": "/images/unity-catalog-governance/diagram_2.png",
+    "context": "\n![Unity Catalog object model diagram](/images/unity-catalog-governance/diagram_1.png)\n\n![Unity Catalog object model diagram](/images/unity-catalog-governance/diagram_2.png)\n\n\n## Kiến trúc của Unity Catalog",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/alerting-incident-response.md",
+    "lineNum": 17,
+    "alt": "Two of the recommended alerting policies for the Cloud SQL integration package.",
+    "url": "/images/alerting-incident-response/diagram_1.png",
+    "context": "\nĐây chính là lúc quy trình **Cảnh báo và Phản ứng sự cố (Alerting & Incident Response)** phát huy vai trò. Đây là bước hành động tiếp theo ngay sau khi hệ thống giám sát (Monitoring / Data Observability) phát hiện ra bất thường, nhằm đảm bảo mọi sự cố dữ liệu đều được nhận diện, phân công đúng người trực (on-call), giải quyết nhanh chóng và ngăn ngừa tái diễn.\n\n![Two of the recommended alerting policies for the Cloud SQL integration package.](/images/alerting-incident-response/diagram_1.png)\n\n![Diagram that explains Azure Monitor alerts.](/images/alerting-incident-response/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/alerting-incident-response.md",
+    "lineNum": 19,
+    "alt": "Diagram that explains Azure Monitor alerts.",
+    "url": "/images/alerting-incident-response/diagram_2.png",
+    "context": "\n![Two of the recommended alerting policies for the Cloud SQL integration package.](/images/alerting-incident-response/diagram_1.png)\n\n![Diagram that explains Azure Monitor alerts.](/images/alerting-incident-response/diagram_2.png)\n\n\n## Tại sao có hệ thống giám sát tốt là chưa đủ?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/data-observability.md",
+    "lineNum": 19,
+    "alt": "Data profiling overview",
+    "url": "/images/data-observability/diagram_1.png",
+    "context": "\n---\n\n![Data profiling overview](/images/data-observability/diagram_1.png)\n\n![Data profiling diagram](/images/data-observability/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/data-observability.md",
+    "lineNum": 21,
+    "alt": "Data profiling diagram",
+    "url": "/images/data-observability/diagram_2.png",
+    "context": "\n![Data profiling overview](/images/data-observability/diagram_1.png)\n\n![Data profiling diagram](/images/data-observability/diagram_2.png)\n\n\n## 1. Từ Data Quality Testing đến Data Observability",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/distribution-drift.md",
+    "lineNum": 19,
+    "alt": "The model monitoring process with Amazon SageMaker Model Monitor.",
+    "url": "/images/distribution-drift/diagram_1.png",
+    "context": "\nChào mừng bạn đến với thế giới của **Distribution Drift (Trôi dạt phân phối)** hay thường được gọi là **Data Drift** – một trong những hiện tượng \"silent failure\" (lỗi ngầm) nguy hiểm và khó phát hiện nhất trong kỹ thuật dữ liệu và MLOps.\n\n![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_1.png)\n\n![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/distribution-drift.md",
+    "lineNum": 21,
+    "alt": "The model monitoring process with Amazon SageMaker Model Monitor.",
+    "url": "/images/distribution-drift/diagram_2.png",
+    "context": "\n![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_1.png)\n\n![The model monitoring process with Amazon SageMaker Model Monitor.](/images/distribution-drift/diagram_2.png)\n\n\n## Khi dữ liệu thay đổi \"tính cách\" một cách âm thầm",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/root-cause-analysis.md",
+    "lineNum": 16,
+    "alt": "Screenshot of alert history tab with suppression from alert processing rule.",
+    "url": "/images/root-cause-analysis/diagram_2.png",
+    "context": "Trong quá trình vận hành các hệ thống dữ liệu, sự cố là điều không thể tránh khỏi. Một ngày đẹp trời, [data pipeline](/concepts/1-foundations/foundation/data-pipeline/) bỗng dưng bị sập, dữ liệu hiển thị trên dashboard bị sai lệch hoặc mô hình máy học đưa ra các dự đoán bất thường. Khi đó, phản xạ tự nhiên của chúng ta là nhanh chóng \"chữa cháy\" để hệ thống hoạt động trở lại. Tuy nhiên, nếu chỉ dừng lại ở đó, lỗi sẽ sớm lặp lại vào ngày mai. Để giải quyết triệt để vấn đề, chúng ta cần đến một quy trình phân tích bài bản mang tên **Root Cause Analysis (RCA) - Phân tích nguyên nhân gốc rễ**.\n\n\n![Screenshot of alert history tab with suppression from alert processing rule.](/images/root-cause-analysis/diagram_2.png)\n\n\n## Nhổ tận gốc cỏ dại: RCA là gì?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/5-quality-governance/observability-reliability/schema-drift.md",
+    "lineNum": 18,
+    "alt": "Partition evolution diagram",
+    "url": "/images/schema-drift/diagram_2.png",
+    "context": "Chào mừng bạn đến với thế giới của **Schema Drift** (Trôi dạt cấu trúc) – một trong những \"cơn ác mộng\" kinh điển nhất của mọi Data Engineer.\n\n\n![Partition evolution diagram](/images/schema-drift/diagram_2.png)\n\n\n## Schema Drift là gì và tại sao nó lại nguy hiểm?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/ai-agent.md",
+    "lineNum": 19,
+    "alt": "Biểu đồ minh họa Ai Agent",
+    "url": "/images/ai-agent/diagram_1.png",
+    "context": "\nThay vì chỉ trả lời thụ động, AI Agent là một hệ thống tự trị lấy Mô hình Ngôn ngữ Lớn (LLM) làm \"bộ não\" trung tâm, kết hợp với khả năng lập kế hoạch (Planning), lưu trữ thông tin (Memory), và đặc biệt là khả năng tương tác với thế giới bên ngoài thông qua việc sử dụng công cụ (Tool Use) để tự thực hiện các nhiệm vụ phức tạp.\n\n![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_1.png)\n\n![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/ai-agent.md",
+    "lineNum": 21,
+    "alt": "Biểu đồ minh họa Ai Agent",
+    "url": "/images/ai-agent/diagram_2.png",
+    "context": "\n![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_1.png)\n\n![Biểu đồ minh họa Ai Agent](/images/ai-agent/diagram_2.png)\n\n\n## Tại sao chúng ta cần AI Agent thay vì chỉ LLM đơn thuần?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/feature-store.md",
+    "lineNum": 21,
+    "alt": "Missing alt text value",
+    "url": "/images/feature-store/diagram_1.png",
+    "context": "\nĐể giải quyết bài toán hóc búa này, khái niệm **Feature Store (Kho đặc trưng)** đã ra đời, đóng vai trò là chiếc cầu nối vững chắc giữa Kỹ thuật dữ liệu ([Data Engineering](/concepts/1-foundations/foundation/data-engineering/)) và Khoa học dữ liệu (Data Science).\n\n![Missing alt text value](/images/feature-store/diagram_1.png)\n\n![Missing alt text value](/images/feature-store/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/feature-store.md",
+    "lineNum": 23,
+    "alt": "Missing alt text value",
+    "url": "/images/feature-store/diagram_2.png",
+    "context": "\n![Missing alt text value](/images/feature-store/diagram_1.png)\n\n![Missing alt text value](/images/feature-store/diagram_2.png)\n\n\n## Điểm giao thoa giữa Kỹ sư dữ liệu và Khoa học dữ liệu",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/mlflow.md",
+    "lineNum": 20,
+    "alt": "Model tracking UI.",
+    "url": "/images/mlflow/diagram_1.png",
+    "context": "\nTrong thế giới kỹ nghệ phần mềm truyền thống, chúng ta có Git để quản lý phiên bản code. Còn trong thế giới Học máy, chúng ta có **MLflow** — một nền tảng mã nguồn mở sinh ra để quản lý toàn bộ vòng đời của mô hình Machine Learning (ML Lifecycle), đóng vai trò là xương sống cho các hệ thống MLOps hiện đại.\n\n![Model tracking UI.](/images/mlflow/diagram_1.png)\n\n![MLflow integrates with Databricks to develop and deploy ML models.](/images/mlflow/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/mlflow.md",
+    "lineNum": 22,
+    "alt": "MLflow integrates with Databricks to develop and deploy ML models.",
+    "url": "/images/mlflow/diagram_2.png",
+    "context": "\n![Model tracking UI.](/images/mlflow/diagram_1.png)\n\n![MLflow integrates with Databricks to develop and deploy ML models.](/images/mlflow/diagram_2.png)\n\n\n## Bốn trụ cột công nghệ của MLflow",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/recall.md",
+    "lineNum": 15,
+    "alt": "Biểu đồ minh họa Recall",
+    "url": "/images/recall/diagram_1.png",
+    "context": "\nKhi đánh giá hiệu năng của một mô hình học máy (Machine Learning) hay một hệ thống tìm kiếm thông tin, chúng ta thường nghe nhắc đến thuật ngữ **Recall (Độ phủ)**. Đây là một trong những thước đo quan trọng bậc nhất giúp chúng ta biết được mô hình có đang hoạt động hiệu quả hay không, đặc biệt là trong các bài toán mang tính chất rủi ro cao hoặc mất cân bằng dữ liệu.\n\n![Biểu đồ minh họa Recall](/images/recall/diagram_1.png)\n\n![Biểu đồ minh họa Recall](/images/recall/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/evaluation-metrics/recall.md",
+    "lineNum": 17,
+    "alt": "Biểu đồ minh họa Recall",
+    "url": "/images/recall/diagram_2.png",
+    "context": "\n![Biểu đồ minh họa Recall](/images/recall/diagram_1.png)\n\n![Biểu đồ minh họa Recall](/images/recall/diagram_2.png)\n\n\n## Không bỏ sót mục tiêu: Recall là gì?",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/fine-tuning/model-serving.md",
+    "lineNum": 17,
+    "alt": "A diagram showing the concept of an endpoint.",
+    "url": "/images/model-serving/diagram_2.png",
+    "context": "\nMột file tĩnh nằm cô độc trên đĩa cứng thì không thể tự tương tác với ứng dụng Web, Mobile App hay các đường ống dữ liệu của doanh nghiệp. Để biến tệp ma trận vô tri đó thành một dịch vụ phần mềm thực sự hữu ích, có khả năng tiếp nhận yêu cầu từ người dùng và trả về kết quả dự đoán (suy luận - inference) theo thời gian thực, chúng ta cần đến quy trình **Model Serving (Phục vụ mô hình)**.\n\n![A diagram showing the concept of an endpoint.](/images/model-serving/diagram_2.png)\n\n## Tại sao không thể gọi mô hình như một hàm lập trình thông thường?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/context-window.md",
+    "lineNum": 15,
+    "alt": "Biểu đồ minh họa Context Window",
+    "url": "/images/context-window/diagram_1.png",
+    "context": "\nKhi tương tác với các mô hình ngôn ngữ lớn ([LLM](/concepts/6-ai-ml/llm-basics/llm/)) như GPT-4, Claude hay Llama, bạn có bao giờ thắc mắc làm thế nào AI có thể nhớ được những câu nói trước đó của bạn trong cuộc hội thoại? Hay tại sao khi bạn gửi một tài liệu quá dài, AI lại báo lỗi hoặc đột ngột quên mất yêu cầu ban đầu? Câu trả lời nằm ở khái niệm **Context Window (Cửa sổ ngữ cảnh)** – một thông số kỹ thuật quyết định trực tiếp đến dung lượng bộ nhớ tạm thời của mô hình.\n\n![Biểu đồ minh họa Context Window](/images/context-window/diagram_1.png)\n\n## Context Window: \"Bộ nhớ làm việc\" giới hạn của các mô hình ngôn ngữ\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/system-prompt.md",
+    "lineNum": 17,
+    "alt": "Luồng xử lý System Message trong Azure OpenAI",
+    "url": "/images/system-prompt/diagram_1.svg",
+    "context": "\nTrong thế giới của Trí tuệ nhân tạo tạo sinh (GenAI), bản hướng dẫn tuyệt mật đó chính là **System Prompt (Gợi ý hệ thống)**. Đây là đoạn mã lệnh hoặc hướng dẫn cốt lõi, thường vô hình đối với người dùng cuối, được cài đặt ở tầng sâu nhất trước khi cuộc hội thoại giữa người dùng và Mô hình Ngôn ngữ Lớn (LLM) bắt đầu.\n\n![Luồng xử lý System Message trong Azure OpenAI](/images/system-prompt/diagram_1.svg)\n\n\n## System Prompt là gì? Chỉ thị tối cao ẩn sau hậu trường",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/temperature.md",
+    "lineNum": 17,
+    "alt": "Mô tả phân phối xác suất Token theo Temperature",
+    "url": "/images/temperature/diagram_1.svg",
+    "context": "\nBằng cách can thiệp vào các thuật toán toán học ngay trước khi mô hình lựa chọn từ vựng để xuất ra, Temperature đóng vai trò như một chiếc nút vặn điều chỉnh mức độ ngẫu nhiên và tính sáng tạo của đoạn văn bản được sinh ra.\n\n![Mô tả phân phối xác suất Token theo Temperature](/images/temperature/diagram_1.svg)\n\n![Biến đổi Logits sang xác suất qua hàm Softmax](/images/temperature/diagram_2.webp)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/temperature.md",
+    "lineNum": 19,
+    "alt": "Biến đổi Logits sang xác suất qua hàm Softmax",
+    "url": "/images/temperature/diagram_2.webp",
+    "context": "\n![Mô tả phân phối xác suất Token theo Temperature](/images/temperature/diagram_1.svg)\n\n![Biến đổi Logits sang xác suất qua hàm Softmax](/images/temperature/diagram_2.webp)\n\n\n## Bản chất toán học của \"Nhiệt độ\" trong AI",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/top-p.md",
+    "lineNum": 17,
+    "alt": "Cơ chế lọc Top-K trong quá trình Sampling",
+    "url": "/images/top-p/diagram_1.webp",
+    "context": "\nTrong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), kỹ thuật chọn lọc thông minh này được gọi là **Top-p** hay **Nucleus Sampling (Lấy mẫu hạt nhân)**.\n\n![Cơ chế lọc Top-K trong quá trình Sampling](/images/top-p/diagram_1.webp)\n\n![Quy trình chuyển đổi xác suất sang Token văn bản đầu ra](/images/top-p/diagram_2.webp)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/llm-basics/top-p.md",
+    "lineNum": 19,
+    "alt": "Quy trình chuyển đổi xác suất sang Token văn bản đầu ra",
+    "url": "/images/top-p/diagram_2.webp",
+    "context": "\n![Cơ chế lọc Top-K trong quá trình Sampling](/images/top-p/diagram_1.webp)\n\n![Quy trình chuyển đổi xác suất sang Token văn bản đầu ra](/images/top-p/diagram_2.webp)\n\n\n## Top-p là gì? Tập hợp hạt nhân động",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/chunking.md",
+    "lineNum": 15,
+    "alt": "Biểu đồ minh họa Chunking",
+    "url": "/images/chunking/diagram_1.jpg",
+    "context": "\nKhi xây dựng các ứng dụng Trí tuệ nhân tạo tạo sinh (GenAI), đặc biệt là các hệ thống trả lời câu hỏi dựa trên tài liệu doanh nghiệp sử dụng kiến trúc [RAG](/concepts/6-ai-ml/rag-search/rag/), việc xử lý dữ liệu đầu vào đóng vai trò quyết định. Một trong những bước tiền xử lý quan trọng nhất là **Chunking (Phân tách văn bản)**. Kỹ thuật này không chỉ giúp mô hình \"nuốt\" trôi các tài liệu dài mà còn trực tiếp ảnh hưởng đến độ chính xác của tìm kiếm ngữ nghĩa và chất lượng câu trả lời từ LLM.\n\n![Biểu đồ minh họa Chunking](/images/chunking/diagram_1.jpg)\n\n## Chunking: Nghệ thuật \"chia để trị\" văn bản trong kỷ nguyên GenAI\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/embedding-models.md",
+    "lineNum": 17,
+    "alt": "Biểu đồ minh họa Embedding Models",
+    "url": "/images/embedding-models/diagram_1.png",
+    "context": "\nChiếc cầu nối đó chính là **Các mô hình nhúng (Embedding Models)** – một trong những mảnh ghép công nghệ quan trọng nhất đứng sau sự bùng nổ của Trí tuệ Nhân tạo thế hệ mới (GenAI), các hệ thống tìm kiếm ngữ nghĩa (Semantic Search) và [RAG](/concepts/6-ai-ml/rag-search/rag/) (Retrieval-Augmented Generation).\n\n![Biểu đồ minh họa Embedding Models](/images/embedding-models/diagram_1.png)\n\n![Biểu đồ minh họa Embedding Models](/images/embedding-models/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/embedding-models.md",
+    "lineNum": 19,
+    "alt": "Biểu đồ minh họa Embedding Models",
+    "url": "/images/embedding-models/diagram_2.png",
+    "context": "\n![Biểu đồ minh họa Embedding Models](/images/embedding-models/diagram_1.png)\n\n![Biểu đồ minh họa Embedding Models](/images/embedding-models/diagram_2.png)\n\n\n## Bản chất toán học của một mô hình nhúng",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/embeddings.md",
+    "lineNum": 22,
+    "alt": "Biểu đồ minh họa Embeddings",
+    "url": "/images/embeddings/diagram_1.png",
+    "context": "\nTrong thế giới của Trí tuệ Nhân tạo, **Vectơ nhúng (Embeddings)** chính là những \"tấm thẻ điểm số\" như thế. Chúng là các mảng chứa các số thực (ví dụ: `[0.12, -0.45, 0.88, ...]`) dùng để biểu diễn ngữ nghĩa của các dữ liệu phi cấu trúc (như từ ngữ, câu văn, hình ảnh hay âm thanh) dưới dạng mà máy tính có thể hiểu và tính toán được.\n\n![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_1.png)\n\n![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/embeddings.md",
+    "lineNum": 24,
+    "alt": "Biểu đồ minh họa Embeddings",
+    "url": "/images/embeddings/diagram_2.png",
+    "context": "\n![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_1.png)\n\n![Biểu đồ minh họa Embeddings](/images/embeddings/diagram_2.png)\n\n\n## Bản dịch số học của thế giới phi cấu trúc",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/rag.md",
+    "lineNum": 15,
+    "alt": "Biểu đồ minh họa Rag",
+    "url": "/images/rag/diagram_1.jpg",
+    "context": "\nCác mô hình ngôn ngữ lớn (LLM) sở hữu khả năng ngôn ngữ và suy luận logic tốt. Tuy nhiên, trong môi trường doanh nghiệp, các LLM thường gặp hạn chế như tự bịa đặt thông tin ([ảo giác - hallucination](/concepts/6-ai-ml/evaluation-metrics/hallucination/)) hoặc không có quyền truy cập vào tài liệu nội bộ. Để khắc phục vấn đề này mà không cần tốn chi phí huấn luyện lại mô hình, kiến trúc **RAG (Retrieval-Augmented Generation)** được phát triển như một giải pháp thay thế hiệu quả.\n\n![Biểu đồ minh họa Rag](/images/rag/diagram_1.jpg)\n\n## Đưa \"sách giáo khoa\" cho AI: RAG là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/reranking.md",
+    "lineNum": 15,
+    "alt": "AI Search index, Databricks calculates embeddings",
+    "url": "/images/reranking/diagram_2.png",
+    "context": "\nKhi xây dựng các hệ thống tìm kiếm thông tin lớn hoặc các ứng dụng [RAG](/concepts/6-ai-ml/rag-search/rag/) (Retrieval-Augmented Generation), việc lấy được những tài liệu thực sự chất lượng và liên quan nhất để đưa vào prompt cho [LLM](/concepts/6-ai-ml/llm-basics/llm/) là yếu tố quyết định sự thành bại của giải pháp. Để giải quyết triệt để bài toán này, các kỹ sư thường áp dụng một kỹ thuật tối ưu hóa thứ hạng cực kỳ hiệu quả gọi là **Reranking (Tái sắp xếp kết quả)** sử dụng các mô hình **Reranker**.\n\n![AI Search index, Databricks calculates embeddings](/images/reranking/diagram_2.png)\n\n## Bước lọc tinh tế cho hệ thống tìm kiếm: Reranking là gì?\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/vector-database.md",
+    "lineNum": 17,
+    "alt": "Getting Started with Text Embeddings and Vector Search",
+    "url": "/images/vector-database/diagram_1.png",
+    "context": "\nKhác với các cơ sở dữ liệu truyền thống vốn chỉ hiểu các phép so khớp từ khóa chính xác, Vector Database lưu trữ thông tin dưới dạng các tọa độ đa chiều (embeddings) và cho phép tìm kiếm dữ liệu dựa trên sự tương đồng về mặt ngữ nghĩa (semantic similarity).\n\n![Getting Started with Text Embeddings and Vector Search](/images/vector-database/diagram_1.png)\n\n![A Hybrid Search Tutorial with Vector Search](/images/vector-database/diagram_2.png)\n",
+    "isSuspicious": false,
+    "reasons": []
+  },
+  {
+    "file": "concepts/6-ai-ml/rag-search/vector-database.md",
+    "lineNum": 19,
+    "alt": "A Hybrid Search Tutorial with Vector Search",
+    "url": "/images/vector-database/diagram_2.png",
+    "context": "\n![Getting Started with Text Embeddings and Vector Search](/images/vector-database/diagram_1.png)\n\n![A Hybrid Search Tutorial with Vector Search](/images/vector-database/diagram_2.png)\n\n\n## Vector Database là gì? Thấu hiểu dữ liệu qua lăng kính ngữ nghĩa",
+    "isSuspicious": false,
+    "reasons": []
+  }
+]

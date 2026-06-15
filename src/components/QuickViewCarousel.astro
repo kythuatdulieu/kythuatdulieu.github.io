@@ -1,0 +1,209 @@
+<div class="quick-view-card">
+  <div class="quick-view-content" id="quick-view-container">
+    <div class="quick-view-category" id="qv-category">Foundation</div>
+    <h3 class="quick-view-title" id="qv-title">Đường ống Dữ liệu (Data Pipeline)</h3>
+    <p class="quick-view-definition" id="qv-definition">
+      Đang tải dữ liệu khái niệm...
+    </p>
+    <a href="#" class="quick-view-btn" id="qv-link">
+      Khám phá ngay →
+    </a>
+  </div>
+  <div class="qv-progress-bar">
+    <div class="qv-progress-fill" id="qv-progress-fill"></div>
+  </div>
+</div>
+
+<style>
+  .quick-view-card {
+    padding: 1rem;
+    background: var(--sl-color-bg-nav, rgba(20, 20, 25, 0.5));
+    border: 1px solid var(--sl-color-hairline, rgba(255, 255, 255, 0.08));
+    border-radius: 12px;
+    font-family: var(--sl-font-system), sans-serif;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+
+  .quick-view-content {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .quick-view-content.fade {
+    opacity: 0;
+  }
+
+  .quick-view-category {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .quick-view-title {
+    margin: 0 0 0.5rem 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .quick-view-definition {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.4;
+    margin: 0 0 1rem 0 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
+  .quick-view-btn {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sl-color-white) !important;
+    background-color: var(--sl-color-black, rgba(0,0,0,0.5));
+    border: 1px solid var(--sl-color-gray-4);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+  }
+
+  .quick-view-btn:hover {
+    background-color: var(--sl-color-white);
+    color: var(--sl-color-black) !important;
+  }
+
+  /* Minimal Progress Bar */
+  .qv-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+  }
+
+  .qv-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--sl-color-text-accent, #60a5fa), #a855f7);
+  }
+</style>
+
+<script>
+  let concepts = [];
+  let currentIndex = 0;
+  let intervalId = null;
+
+  async function initQuickView() {
+    try {
+      const response = await fetch('/concepts.json');
+      if (!response.ok) return;
+      const data = await response.json();
+      concepts = Object.values(data.concepts || {});
+      if (concepts.length === 0) return;
+      
+      // Shuffle concepts so it's a random start
+      concepts.sort(() => Math.random() - 0.5);
+      
+      updateQuickView(true); // Initial load without long delay
+      startCycle();
+    } catch (e) {
+      console.warn("Failed to load concepts for carousel", e);
+    }
+  }
+
+  function resetProgressBar() {
+    const fill = document.getElementById('qv-progress-fill');
+    if (!fill) return;
+    
+    // Stop transition and set width to 0%
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    
+    // Force browser reflow to apply style changes instantly
+    void fill.offsetWidth; 
+    
+    // Re-enable transition and animate to 100%
+    fill.style.transition = 'width 7s linear';
+    fill.style.width = '100%';
+  }
+
+  function updateQuickView(immediate = false) {
+    const container = document.getElementById('quick-view-container');
+    const categoryEl = document.getElementById('qv-category');
+    const titleEl = document.getElementById('qv-title');
+    const definitionEl = document.getElementById('qv-definition');
+    const linkEl = document.getElementById('qv-link');
+
+    if (!container || !categoryEl || !titleEl || !definitionEl || !linkEl || concepts.length === 0) return;
+
+    const concept = concepts[currentIndex];
+    
+    if (immediate) {
+      categoryEl.textContent = concept.category || 'Khái niệm';
+      titleEl.textContent = (concept.title || '').split(' - ')[0];
+      definitionEl.textContent = concept.definition;
+      linkEl.setAttribute('href', concept.url);
+      resetProgressBar();
+      return;
+    }
+
+    // Add fade class
+    container.classList.add('fade');
+    
+    setTimeout(() => {
+      categoryEl.textContent = concept.category || 'Khái niệm';
+      titleEl.textContent = (concept.title || '').split(' - ')[0];
+      definitionEl.textContent = concept.definition;
+      linkEl.setAttribute('href', concept.url);
+      
+      // Reset progress bar on new card content
+      resetProgressBar();
+      
+      // Remove fade class
+      container.classList.remove('fade');
+    }, 300);
+  }
+
+  function startCycle() {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(() => {
+      currentIndex = (currentIndex + 1) % concepts.length;
+      updateQuickView(false);
+    }, 7000); // Cycle every 7 seconds
+  }
+
+  // Handle initial page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQuickView);
+  } else {
+    initQuickView();
+  }
+  
+  // Handle Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    initQuickView();
+  });
+</script>

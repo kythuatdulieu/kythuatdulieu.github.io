@@ -1,0 +1,10 @@
+src/content/docs/concepts/2-storage/data-warehouse/slowly-changing-dimension.md
+src/content/docs/concepts/2-storage/cloud-data-platform/google-bigquery.md
+src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-optimization.md
+src/content/docs/concepts/2-storage/cloud-data-platform/cost-optimization.md
+src/content/docs/concepts/2-storage/cloud-data-platform/snowflake-search-optimization.md
+src/content/docs/concepts/2-storage/cloud-data-platform/snowflake-internals.md
+src/content/docs/concepts/2-storage/cloud-data-platform/databricks-platform.md
+src/content/docs/concepts/2-storage/cloud-data-platform/networking-security-vpc.md
+src/content/docs/concepts/2-storage/cloud-data-platform/amazon-redshift.md
+src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md

@@ -1,0 +1,10 @@
+src/content/docs/concepts/2-storage/data-lake-lakehouse/schema-evolution.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/apache-iceberg.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/data-lake.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format-migration.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/apache-hudi.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/medallion-architecture.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/lakehouse-optimization.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/lakehouse.md
+src/content/docs/concepts/2-storage/data-lake-lakehouse/time-travel.md

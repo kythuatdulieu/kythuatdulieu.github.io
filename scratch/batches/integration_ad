@@ -1,0 +1,10 @@
+src/content/docs/concepts/3-integration/etl-elt/data-transformation.md
+src/content/docs/concepts/3-integration/batch-processing/spark-jobs-stages-tasks.md
+src/content/docs/concepts/3-integration/batch-processing/distributed-processing.md
+src/content/docs/concepts/3-integration/batch-processing/spark-partition.md
+src/content/docs/concepts/3-integration/batch-processing/spark-aqe-catalyst.md
+src/content/docs/concepts/3-integration/batch-processing/apache-spark.md
+src/content/docs/concepts/3-integration/batch-processing/spark-memory-management.md
+src/content/docs/concepts/3-integration/batch-processing/batch-processing.md
+src/content/docs/concepts/3-integration/batch-processing/spark-joins.md
+src/content/docs/concepts/3-integration/batch-processing/data-skew.md

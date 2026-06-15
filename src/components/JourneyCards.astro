@@ -228,9 +228,9 @@
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = (e as MouseEvent).clientX - rect.left;
-      const y = (e as MouseEvent).clientX - rect.top; // wait, clientY not clientX for y
+      const y = (e as MouseEvent).clientY - rect.top;
       (card as HTMLElement).style.setProperty('--x', `${x}px`);
-      (card as HTMLElement).style.setProperty('--y', `${(e as MouseEvent).clientY - rect.top}px`);
+      (card as HTMLElement).style.setProperty('--y', `${y}px`);
     });
   });
 </script>

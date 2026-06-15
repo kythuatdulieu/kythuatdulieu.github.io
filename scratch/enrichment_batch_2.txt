@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/compaction.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/data-lake.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/delta-lake.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/iceberg-metadata-internals.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/lakehouse-optimization.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/lakehouse.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/medallion-architecture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/schema-evolution.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/table-format-comparison.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/table-format-migration.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/table-format.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-lake-lakehouse/time-travel.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/amazon-redshift.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/azure-synapse.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-data-storage/data-warehouse/bigquery-optimization.md

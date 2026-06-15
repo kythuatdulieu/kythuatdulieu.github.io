@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-advanced-tuning.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-aqe-catalyst.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-execution-model.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-jobs-stages-tasks.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-joins.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-memory-management.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-partition.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/batch-processing/spark-sql.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/backfill.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/change-data-capture.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-extraction.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-ingestion.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-loading.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/data-transformation.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-ingestion-transformation/data-ingestion/deduplication.md

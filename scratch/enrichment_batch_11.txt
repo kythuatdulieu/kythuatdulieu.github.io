@@ -1,0 +1,15 @@
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/data-governance/unity-catalog-governance.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/security-compliance/data-masking.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/security-compliance/encryption-kms.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/security-compliance/iam-rbac.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/7-security-governance/security-compliance/networking-security-vpc.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/context-window.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/few-shot-prompting.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/llm.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/prompt-engineering.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/system-prompt.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/temperature.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/token.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/top-p.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/llm-foundations/zero-shot.md
+/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/8-genai-ml/mlops-evaluation/ai-agent.md

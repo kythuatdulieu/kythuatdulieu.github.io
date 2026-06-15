@@ -1,0 +1,353 @@
+{
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/foundation/source-systems.md": [
+    "/images/source-systems/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/data-fabric.md": [
+    "/images/data-fabric/diagram_2.webp"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/data-mesh.md": [
+    "/images/data-mesh/diagram_1.png",
+    "/images/data-mesh/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/event-driven-architecture.md": [
+    "/images/event-driven-architecture/diagram_1.jpg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/event-driven-schema-registry.md": [
+    "/images/event-driven-schema-registry/diagram_1.png",
+    "/images/event-driven-schema-registry/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/1-foundations/system-architecture/push-pull-delivery.md": [
+    "/images/push-pull-delivery/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/azure-synapse.md": [
+    "/images/azure-synapse/diagram_1.png",
+    "/images/azure-synapse/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-optimization.md": [
+    "/images/bigquery-optimization/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/bigquery-slot-optimization.md": [
+    "/images/bigquery-slot-optimization/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/cloud-storage.md": [
+    "/images/cloud-storage/diagram_1.png",
+    "/images/cloud-storage/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/cost-optimization.md": [
+    "/images/cost-optimization/diagram_1.svg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/google-bigquery.md": [
+    "/images/google-bigquery/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/infrastructure-as-code-terraform.md": [
+    "/images/infrastructure-as-code-terraform/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/networking-security-vpc.md": [
+    "/images/networking-security-vpc/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/snowflake-internals.md": [
+    "/images/snowflake-internals/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/cloud-data-platform/snowflake.md": [
+    "/images/snowflake/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/acid-transactions-on-lake.md": [
+    "/images/acid-transactions-on-lake/acid-transactions-log.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/apache-iceberg.md": [
+    "/images/apache-iceberg/iceberg-metadata.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/compaction.md": [
+    "/images/compaction/compaction-flow.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/data-lake.md": [
+    "/images/data-lake/data-lake-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/delta-lake.md": [
+    "/images/delta-lake/delta-lake-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/iceberg-metadata-internals.md": [
+    "/images/iceberg-metadata-internals/iceberg-metadata-internals.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/lakehouse-optimization.md": [
+    "/images/lakehouse-optimization/z-ordering-optimization.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/lakehouse.md": [
+    "/images/lakehouse/lakehouse-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/medallion-architecture.md": [
+    "/images/medallion-architecture/medallion-architecture-flow.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/schema-evolution.md": [
+    "/images/schema-evolution/schema-evolution.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format-comparison.md": [
+    "/images/table-format-comparison/table-format-comparison.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/table-format-migration.md": [
+    "/images/table-format-migration/table-format-migration.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-lake-lakehouse/time-travel.md": [
+    "/images/time-travel/time-travel-mechanism.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/data-warehouse.md": [
+    "/images/data-warehouse/diagram_1.png",
+    "/images/data-warehouse/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/dimension-table.md": [
+    "/images/dimension-table/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/dimensional-modeling.md": [
+    "/images/dimensional-modeling/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/fact-table.md": [
+    "/images/fact-table/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/grain.md": [
+    "/images/grain/diagram_1.jpg",
+    "/images/grain/diagram_2.jpg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/inmon-methodology.md": [
+    "/images/inmon-methodology/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/kimball-methodology.md": [
+    "/images/kimball-methodology/diagram_1.png",
+    "/images/kimball-methodology/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/slowly-changing-dimension.md": [
+    "/images/slowly-changing-dimension/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/snowflake-schema.md": [
+    "/images/snowflake-schema/diagram_1.png",
+    "/images/snowflake-schema/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/star-schema.md": [
+    "/images/star-schema/diagram_1.png",
+    "/images/star-schema/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/data-warehouse/surrogate-key.md": [
+    "/images/surrogate-key/diagram_1.png",
+    "/images/surrogate-key/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/clustering.md": [
+    "/images/clustering/clustering-layout.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/columnar-storage.md": [
+    "/images/columnar-storage/row-vs-columnar-storage.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/compression-algorithms.md": [
+    "/images/compression-algorithms/compression-algorithms.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/file-formats-deep-dive.md": [
+    "/images/file-formats-deep-dive/parquet-file-layout.gif"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/indexing.md": [
+    "/images/indexing/btree-index.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/olap.md": [
+    "/images/olap/olap-cube.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/oltp-olap-htap-comparison.md": [
+    "/images/oltp-olap-htap-comparison/htap-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/oltp.md": [
+    "/images/oltp/oltp-system-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/partitioning.md": [
+    "/images/partitioning/partitioning-strategies.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/query-engines-architecture.md": [
+    "/images/query-engines-architecture/mpp-query-engine-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/relational-database.md": [
+    "/images/relational-database/rdbms-internals.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/2-storage/database-storage/row-based-storage.md": [
+    "/images/row-based-storage/row-oriented-storage-layout.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/apache-spark.md": [
+    "/images/apache-spark/cluster-overview.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/batch-processing.md": [
+    "/images/batch-processing/MapReduce.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/data-skew.md": [
+    "/images/data-skew/blog-adaptive-query-execution-3.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/distributed-processing.md": [
+    "/images/distributed-processing/Architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/shuffle.md": [
+    "/images/shuffle/shuffle-write-consolidation.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-advanced-tuning.md": [
+    "/images/spark-advanced-tuning/blog-adaptive-query-execution-4.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-aqe-catalyst.md": [
+    "/images/spark-aqe-catalyst/blog-adaptive-query-execution-3.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-execution-model.md": [
+    "/images/spark-execution-model/cluster-overview.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-jobs-stages-tasks.md": [
+    "/images/spark-jobs-stages-tasks/taskexecution.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-joins.md": [
+    "/images/spark-joins/ShuffleJoin.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-memory-management.md": [
+    "/images/spark-memory-management/SparkExecutorMemory.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-partition.md": [
+    "/images/spark-partition/NarrowDependency.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/batch-processing/spark-sql.md": [
+    "/images/spark-sql/catalyst-optimizer.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/backfill.md": [
+    "/images/backfill/airflow-backfill.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/change-data-capture.md": [
+    "/images/change-data-capture/debezium-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/data-extraction.md": [
+    "/images/data-extraction/control-flow-data-flow.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/data-ingestion.md": [
+    "/images/data-ingestion/data-ingestion-flow.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/data-loading.md": [
+    "/images/data-loading/push-transform-load.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/data-transformation.md": [
+    "/images/data-transformation/medallion-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/deduplication.md": [
+    "/images/deduplication/distinct.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/elt.md": [
+    "/images/elt/azure-elt.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/etl.md": [
+    "/images/etl/azure-etl.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/idempotency.md": [
+    "/images/idempotency/making-retries-safe-1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/incremental-load.md": [
+    "/images/incremental-load/workflow-using-watermark.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/etl-elt/integration-patterns-comparison.md": [
+    "/images/integration-patterns-comparison/dbt-platform-overview.jpg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/orchestration/dag.md": [
+    "/images/dag/directed_acyclic_graph_3.svg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/transformation-analytics/data-contract.md": [
+    "/images/data-contract/schema-registry-design-kafka.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/3-integration/transformation-analytics/dbt.md": [
+    "/images/dbt/dbt-architecture.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime/message-queue/kafka-topics-partitions.md": [
+    "/images/kafka-topics-partitions/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/4-realtime/stream-calculation/spark-structured-streaming.md": [
+    "/images/spark-structured-streaming/diagram_1.png",
+    "/images/spark-structured-streaming/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/data-quality/anomaly-detection.md": [
+    "/images/anomaly-detection/diagram_1.png",
+    "/images/anomaly-detection/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/data-quality/data-quality.md": [
+    "/images/data-quality/diagram_1.png",
+    "/images/data-quality/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/access-control.md": [
+    "/images/access-control/diagram_1.png",
+    "/images/access-control/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-lineage.md": [
+    "/images/data-lineage/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/data-ownership.md": [
+    "/images/data-ownership/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/governance-metadata/unity-catalog-governance.md": [
+    "/images/unity-catalog-governance/diagram_1.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/alerting-incident-response.md": [
+    "/images/alerting-incident-response/diagram_1.png",
+    "/images/alerting-incident-response/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/data-observability.md": [
+    "/images/data-observability/diagram_1.png",
+    "/images/data-observability/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/distribution-drift.md": [
+    "/images/distribution-drift/diagram_1.png",
+    "/images/distribution-drift/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/root-cause-analysis.md": [
+    "/images/root-cause-analysis/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/5-quality-governance/observability-reliability/schema-drift.md": [
+    "/images/schema-drift/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/ai-agent.md": [
+    "/images/ai-agent/diagram_1.png",
+    "/images/ai-agent/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/feature-store.md": [
+    "/images/feature-store/diagram_1.png",
+    "/images/feature-store/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/mlflow.md": [
+    "/images/mlflow/diagram_1.png",
+    "/images/mlflow/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/evaluation-metrics/recall.md": [
+    "/images/recall/diagram_1.png",
+    "/images/recall/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/fine-tuning/model-serving.md": [
+    "/images/model-serving/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/system-prompt.md": [
+    "/images/system-prompt/diagram_1.svg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/temperature.md": [
+    "/images/temperature/diagram_1.svg",
+    "/images/temperature/diagram_2.webp"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/llm-basics/top-p.md": [
+    "/images/top-p/diagram_1.webp",
+    "/images/top-p/diagram_2.webp"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/chunking.md": [
+    "/images/chunking/diagram_1.jpg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/embedding-models.md": [
+    "/images/embedding-models/diagram_1.png",
+    "/images/embedding-models/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/embeddings.md": [
+    "/images/embeddings/diagram_1.png",
+    "/images/embeddings/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/rag.md": [
+    "/images/rag/diagram_1.jpg"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/reranking.md": [
+    "/images/reranking/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/concepts/6-ai-ml/rag-search/vector-database.md": [
+    "/images/vector-database/diagram_1.png",
+    "/images/vector-database/diagram_2.png"
+  ],
+  "/home/duclinh/kythuatdulieu.github.io/src/content/docs/index.mdx": [
+    "https://www.databricks.com/sites/default/files/2025-10/professional-badge-de.png?v=1761143167",
+    "https://www.databricks.com/sites/default/files/2025-10/associate-badge-gen-ai.png?v=1761153880"
+  ]
+}
