@@ -84,97 +84,52 @@ export default defineConfig({
 					label: 'Cẩm nang (Handbook)',
 					items: [
 						{
-							label: '1. Nền tảng & Kiến trúc (Foundations & Architecture)',
+							label: '1. Nền tảng & Kiến trúc',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('1-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['foundation', 'system-architecture'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						},
 						{
-							label: '2. Tầng Lưu trữ (Data Storage)',
+							label: '2. Tích hợp dữ liệu (Ingestion)',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('2-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['etl-elt'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						},
 						{
-							label: '3. Thu thập & Biến đổi (Ingestion & Transformation)',
+							label: '3. Lưu trữ & Data Warehouse',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('3-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['database-storage', 'data-lake-lakehouse', 'data-warehouse', 'cloud-data-platform'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						},
 						{
-							label: '4. Thời gian thực & Luồng (Real-time)',
+							label: '4. Xử lý tính toán (Processing)',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('4-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['batch-processing', 'streaming-processing', 'transformation-analytics'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						},
 						{
-							label: '5. Phục vụ & Phân tích (Serving & Analytics)',
+							label: '5. Điều phối & Chất lượng (DataOps)',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('5-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['orchestration', 'observability-reliability', 'data-quality', 'governance-metadata'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						},
 						{
-							label: '6. DataOps & Điều phối (DataOps)',
+							label: '6. AI & Machine Learning',
 							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('6-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
-						},
-						{
-							label: '7. Bảo mật & Quản trị (Security & Governance)',
-							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('7-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
-						},
-						{
-							label: '8. GenAI & ML Engineering',
-							collapsed: true,
-							items: conceptCategories.filter(cat => cat.slug.startsWith('8-')).map(cat => ({
-								label: cat.label,
-								collapsed: true,
-								autogenerate: { directory: `concepts/${cat.slug}` }
-							}))
+							items: conceptCategories.filter(c => ['genai-ml'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
 						}
 					]
 				},
 				{
-					label: 'Dự án E2E (E2E Projects)',
+					label: '7. Lộ trình & Phỏng vấn',
 					collapsed: true,
-					autogenerate: { directory: 'projects' },
-				},
-				{
-					label: 'Lộ trình học (Learning Paths)',
-
-					collapsed: true,
-
-					autogenerate: { directory: 'learning-paths' },
-				},
-				{
-					label: 'Phỏng vấn (Interview)',
-
-					collapsed: true,
-
-					autogenerate: { directory: 'interview' },
+					items: [
+						{
+							label: 'Lộ trình học (Learning Paths)',
+							collapsed: true,
+							autogenerate: { directory: 'learning-paths' },
+						},
+						{
+							label: 'Phỏng vấn (Interview)',
+							collapsed: true,
+							autogenerate: { directory: 'interview' },
+						}
+					]
 				},
 				{
 					label: 'Ôn thi Certificate (Quizzes)',
