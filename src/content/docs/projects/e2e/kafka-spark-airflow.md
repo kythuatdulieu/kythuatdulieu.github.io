@@ -3,8 +3,6 @@ title: "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
 description: "Hướng dẫn xây dựng hệ thống Data Engineering pipeline thực tế ở quy mô lớn (FAANG-level) sử dụng các công nghệ như Kafka, Spark, Airflow, PostgreSQL và Docker."
 ---
 
-# Xây dựng hệ thống Data Engineering End-to-End: Từ Local đến Quy mô FAANG
-
 Bài viết này hướng dẫn chi tiết về cách xây dựng một Data Pipeline hoàn chỉnh (End-to-End) sử dụng Kafka, Spark, Airflow, Postgres, và Docker. Mặc dù hệ thống được triển khai trên môi trường Local (On-premise) thông qua Docker, các nguyên lý thiết kế, cách tổ chức luồng dữ liệu và giải quyết các bài toán về tính nhất quán (Consistency), khả năng chịu lỗi (Fault-Tolerance) đều được tham chiếu từ các hệ thống dữ liệu khổng lồ tại các công ty công nghệ hàng đầu như Uber và Netflix.
 
 Netflix xử lý hàng nghìn tỷ message Kafka mỗi ngày, trong khi Uber chạy hơn 400.000 Spark batch jobs để phân tích Exabyte dữ liệu. Việc hiểu rõ kiến trúc cơ bản ở quy mô nhỏ sẽ giúp bạn dễ dàng mở rộng (scale) lên mức độ xử lý Big Data.

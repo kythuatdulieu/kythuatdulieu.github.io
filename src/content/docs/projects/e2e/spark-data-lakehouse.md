@@ -3,8 +3,6 @@ title: "Modern Data Engineering: Building a Data Lakehouse with Apache Spark"
 description: "A comprehensive guide on building a Data Lakehouse using Apache Spark, Nifi, MinIO, Airflow, Postgres, and Ranger."
 ---
 
-# Modern Data Engineering: Building a Data Lakehouse with Apache Spark
-
 *This article is based on the architectural concepts and details originally detailed by Mahmud Oyinloye in "Modern Data Engineering: Building a Data Lakehouse with Apache Spark — Vol 1".*
 
 Welcome to a paradigm shift in Data Engineering. This guide introduces a new approach to Data Engineering involving the evolution of traditional Enterprise Data Warehouse and Data Lake techniques into a new Data Lakehouse paradigm that combines prior architectures.

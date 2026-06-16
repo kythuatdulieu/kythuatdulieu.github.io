@@ -3,8 +3,6 @@ title: "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
 description: "Hướng dẫn chi tiết về dự án E2E Streamify, xử lý dữ liệu streaming thời gian thực với Kafka, Spark Streaming, Airflow, dbt và GCP."
 ---
 
-# Streamify: Real-time Data Pipeline E2E
-
 Streamify là một dự án Data Engineering End-to-End (E2E) mô phỏng quá trình xử lý dữ liệu từ một nền tảng nghe nhạc trực tuyến (giống như Spotify hay Apple Music). Dự án này tập trung vào việc thiết lập một hệ thống streaming thời gian thực (real-time data pipeline) để thu thập, xử lý, và phân tích các sự kiện của người dùng, từ đó đưa ra các báo cáo kinh doanh tức thời và hệ thống gợi ý bài hát.
 
 Trong kỷ nguyên dữ liệu hiện đại, việc phân tích log sau một ngày không còn đáp ứng đủ nhu cầu kinh doanh. Hệ thống cần khả năng phản ứng ngay khi người dùng nhấn nút "Play" hoặc bỏ qua (skip) một bài hát. Streamify được sinh ra để giải quyết bài toán đó.
