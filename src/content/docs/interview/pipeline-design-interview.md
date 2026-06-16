@@ -9,6 +9,8 @@ seoTitle: "Pipeline Design Interview - Thiết kế Data Pipeline hệ thống d
 metaDescription: "Hướng dẫn thiết kế kiến trúc Data Pipeline (ETL/ELT) trong phỏng vấn Data Engineering: Khả năng mở rộng, tính lũy đẳng (Idempotency) và Data Quality."
 ---
 
+
+
 Trong quy trình tuyển dụng Data Engineer (từ cấp độ Mid, Senior cho đến Staff), vòng phỏng vấn **Thiết kế [Data Pipeline](/concepts/foundation/data-pipeline/)** (đôi khi gọi là System Design cho Data) luôn là vòng thi quan trọng nhất. Vòng này kiểm tra toàn diện khả năng tư duy hệ thống, thiết kế kiến trúc và giải quyết các bài toán dữ liệu thực tế của ứng viên.
 
 ---
@@ -74,8 +76,8 @@ graph LR
         D["(Bronze: Raw Data)"]
         E["(Silver: Clean & Join)"]
         F["(Gold: Data Marts)"]
-        D -. "dbt (Transform)" .-> E
-        E -. "dbt (Transform)" .-> F
+        D -. "dbt ("Transform")" .-> E
+        E -. "dbt ("Transform")" .-> F
     end
 
     subgraph "Orchestration & Monitoring"
@@ -85,7 +87,7 @@ graph LR
 
     A -->|"CDC"| C
     B -->|"REST / Batch"| C
-    C -->|"Load (EL)"| D
+    C -->|"Load ("EL")"| D
     G -. "Trigger Ingestion" .-> C
     G -. "Trigger Transform" .-> D
     H -. "Data Quality Check" .-> E
@@ -167,3 +169,10 @@ graph LR
 ## English Summary
 
 The Pipeline Design Interview evaluates a candidate's capability to build scalable, resilient, and accurate data movement systems. It focuses heavily on crucial principles such as [Idempotency](/concepts/etl-elt/idempotency/) (ensuring multiple pipeline runs produce the exact same outcome without data duplication), decoupling storage and compute, handling late-arriving data, and implementing data quality checks (Data Contracts/WAP pattern). Candidates should be prepared to discuss the trade-offs between Batch and Streaming architectures, justify the shift from ETL to ELT (e.g., using [Medallion Architecture](/concepts/data-lake-lakehouse/medallion-architecture/) with dbt and cloud warehouses), and design robust data ingestion strategies using Change Data Capture (CDC) over repetitive full database loads.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

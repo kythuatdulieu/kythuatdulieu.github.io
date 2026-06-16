@@ -1,17 +1,11 @@
 export const conceptCategories = [
-    { slug: 'foundation', label: 'Cơ sở & Kiến trúc (Foundation)' },
-    { slug: 'database-storage', label: 'Cơ sở dữ liệu & Lưu trữ (Database & Storage)' },
-    { slug: 'data-warehouse', label: 'Kho dữ liệu (Data Warehouse)' },
-    { slug: 'data-lake-lakehouse', label: 'Hồ dữ liệu & Lakehouse (Data Lake & Lakehouse)' },
-    { slug: 'etl-elt', label: 'Tích hợp dữ liệu (ETL / ELT)' },
-    { slug: 'transformation-analytics', label: 'Biến đổi & Phân tích (Transformation & Analytics)' },
-    { slug: 'system-architecture', label: 'Kiến trúc hệ thống (System Architecture)' },
-    { slug: 'batch-processing', label: 'Xử lý theo lô (Batch Processing)' },
-    { slug: 'streaming-processing', label: 'Xử lý luồng dữ liệu (Streaming Processing)' },
-    { slug: 'orchestration', label: 'Điều phối quy trình (Orchestration)' },
-    { slug: 'observability-reliability', label: 'Giám sát & Độ tin cậy (Observability & Reliability)' },
-    { slug: 'data-quality', label: 'Chất lượng dữ liệu (Data Quality)' },
-    { slug: 'governance-metadata', label: 'Quản trị & Siêu dữ liệu (Governance & Metadata)' },
-    { slug: 'cloud-data-platform', label: 'Nền tảng Cloud (Cloud Data Platform)' },
-    { slug: 'genai-ml', label: 'GenAI & Machine Learning (GenAI / ML)' }
+    { slug: '1-distributed-systems-architecture', label: '1. Kiến Trúc Hệ Thống Phân Tán' },
+    { slug: '2-data-ingestion-integration', label: '2. Tích Hợp & Thu Thập Dữ Liệu' },
+    { slug: '3-storage-engines-formats', label: '3. Storage Engines & Định Dạng' },
+    { slug: '4-compute-engines-batch', label: '4. Compute Engines & Batch' },
+    { slug: '5-stream-processing-realtime', label: '5. Xử Lý Luồng & Real-time' },
+    { slug: '6-data-modeling-transformation', label: '6. Data Modeling & Biến Đổi' },
+    { slug: '7-dataops-orchestration-quality', label: '7. DataOps & Quản Trị Chất Lượng' },
+    { slug: '8-security-governance-finops', label: '8. Bảo Mật, Quản Trị & FinOps' },
+    { slug: '9-genai-machine-learning', label: '9. GenAI & Machine Learning' }
 ];

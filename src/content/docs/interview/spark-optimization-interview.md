@@ -9,6 +9,8 @@ seoTitle: "Spark Optimization Interview - Câu hỏi phỏng vấn Data Engineer
 metaDescription: "Cẩm nang giải quyết các bài toán tối ưu hóa Apache Spark trong phỏng vấn Data Engineer: xử lý Data Skew, Out of Memory (OOM), Broadcast Join và Shuffle."
 ---
 
+
+
 [Apache Spark](/concepts/batch-processing/apache-spark/) từ lâu đã là công cụ xử lý dữ liệu lớn (Big Data) tiêu chuẩn của ngành dữ liệu. Tuy nhiên, việc vận hành Spark trên các cụm máy chủ phân tán chưa bao giờ là dễ dàng. Phân tán dữ liệu mang lại sức mạnh tính toán khổng lồ nhưng cũng đi kèm với vô vàn lỗi phát sinh phức tạp (như lệch dữ liệu, nghẽn mạng I/O) mà việc chạy code trên một máy chủ đơn lẻ không bao giờ gặp phải.
 
 Vòng phỏng vấn **Tối ưu hóa Spark (Spark Optimization)** là nơi nhà tuyển dụng lọc ra những kỹ sư thực thụ — những người không chỉ biết viết code Spark chạy được mà còn biết cách làm cho hệ thống chạy hiệu quả, tiết kiệm chi phí đám mây và luôn hoàn thành đúng thời hạn cam kết (SLA).
@@ -153,3 +155,10 @@ graph TD
 ## English Summary
 
 The Spark Optimization Interview focuses on assessing a Data Engineer's ability to troubleshoot and tune Apache Spark applications. Key areas include diagnosing Out of Memory (OOM) errors on both the Driver and Executors, resolving Data Skew through techniques like Salting or Adaptive Query Execution (AQE), and minimizing network I/O by optimizing Shuffles (e.g., preferring Broadcast Hash Joins over Sort-Merge Joins). Mastery of Spark's internal architecture—such as Catalyst Optimizer, memory management, and physical planning—is required to pass these technical rounds and write scalable, cost-effective data pipelines in production.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

@@ -9,6 +9,8 @@ seoTitle: "Các dạng bài SQL kinh điển trong phỏng vấn Data Engineer"
 metaDescription: "Tổng hợp các dạng bài tập SQL (SQL Patterns) thường gặp nhất trong phỏng vấn kỹ sư dữ liệu: Window functions, CTEs đệ quy, Self-joins và Gaps & Islands."
 ---
 
+
+
 Trong các buổi phỏng vấn cho vị trí Data Engineer, Data Analyst hay Analytics Engineer, bài kiểm tra Live Coding SQL là một cửa ải bắt buộc và vô cùng quan trọng. 
 
 Khi phỏng vấn các vị trí đòi hỏi chuyên môn cao, nhà tuyển dụng sẽ không đưa ra các câu hỏi truy vấn `SELECT` hay `JOIN` cơ bản. Họ sẽ tập trung vào các dạng bài toán (SQL Patterns) có độ phức tạp cao nhằm kiểm tra khả năng tư duy logic, kỹ năng phân tích chuỗi thời gian và tư duy tối ưu hóa hiệu năng câu lệnh của bạn.
@@ -197,3 +199,10 @@ GROUP BY month;
 ## English Summary
 
 SQL interviews for Data roles heavily test a candidate's ability to manipulate data structures efficiently. Mastering specific patterns is crucial. The most important patterns include **Window Functions** (using `DENSE_RANK`, `LAG/LEAD` for Top-N and comparative analysis), **CTEs** (breaking down logic and using `RECURSIVE` for hierarchical data), **Self-Joins** (useful for retention and pairwise analytics), **Gaps and Islands** (solving consecutive sequence problems by subtracting row numbers from dates), and **Conditional Aggregation** (using `SUM(CASE WHEN...)` for pivoting). A strong candidate not only solves the logic but ensures the code is highly readable using CTEs and actively communicates edge-cases prior to coding.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

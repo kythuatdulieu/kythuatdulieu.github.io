@@ -9,6 +9,8 @@ seoTitle: "Production Incident QA - Phỏng vấn xử lý sự cố Data Engine
 metaDescription: "Cẩm nang xử lý sự cố hệ thống dữ liệu (Production Incident) trong phỏng vấn Data Engineering: Quy trình Root Cause Analysis, On-call và SLA/SLO."
 ---
 
+
+
 Trong các buổi phỏng vấn Data Engineer (đặc biệt là các vị trí từ Senior trở lên), vòng phỏng vấn **Xử lý sự cố Production** (Production Incident QA) là một thử thách vô cùng thực tế. Vòng này được thiết kế để đánh giá khả năng chẩn đoán lỗi, tư duy giải quyết vấn đề dưới áp lực cao (troubleshooting under pressure), kỹ năng giao tiếp liên phòng ban và tinh thần trách nhiệm của ứng viên khi đóng vai trò là một kỹ sư trực gác (On-call Engineer).
 
 ---
@@ -62,7 +64,7 @@ Dưới đây là sơ đồ mô tả luồng xử lý chuẩn khi hệ thống p
 graph TD
     A["PagerDuty Alert: Doanh thu = 0"] --> B("Triage: Sev-1 Critical")
     B --> C["Communication: Báo cáo với PM"]
-    B --> D[Investigation]
+    B --> D["Investigation"]
     
     D --> E{"Lỗi do Code hay Dữ liệu nguồn?"}
     E -->|"Mã nguồn"| F["Rollback git commit gần nhất"]
@@ -104,7 +106,7 @@ graph TD
 
 * **Mất bình tĩnh và âm thầm tự sửa lỗi**: Nhiều kỹ sư khi gặp sự cố thường âm thầm tìm cách tự sửa lỗi một mình mà không cập nhật trạng thái cho mọi người. Việc này khiến quản lý dự án (PM) hoang mang không biết tiến độ khắc phục ra sao để thông báo cho khách hàng. Hãy luôn cập nhật thông tin thường xuyên.
 * **Hội chứng mệt mỏi vì cảnh báo (Alert Fatigue)**: Việc cấu hình ngưỡng cảnh báo quá nhạy (ví dụ: hệ thống rung chuông liên tục cho các lỗi cảnh báo nhỏ) sẽ khiến các kỹ sư dần trở nên chai lì và dễ bỏ qua cả những cảnh báo đỏ cực kỳ nghiêm trọng.
-* **Tự ý xóa dữ liệu lỗi mà không sao lưu (Backup)**: Trong lúc vội vã khắc phục sự cố, nhiều kỹ sư gõ trực tiếp lệnh xóa (`DELETE`) dữ liệu lỗi trên Production mà quên tạo bản sao lưu dự phòng. Nếu chẳng may gõ nhầm điều kiện lọc, bạn có thể xóa mất dữ liệu thật và khiến thảm họa nhân lên gấp nhiều lần.
+* **Tự ý xóa dữ liệu lỗi mà không sao lưu (Backup)**: Trong lúc vội vã khắc phục sự cố, nhiều kỹ sư gõ trực tiếp lệnh xóa (`DELETE`) dữ liệu lỗi trên Production mà quên tạo bản sao lưu dự phòng. Nếu chẳng may gõ nhầm điều kiện lọc, bạn có thể xóa mất dữ liệu thật và khiến vấn đề nhân lên gấp nhiều lần.
 
 ---
 
@@ -153,3 +155,10 @@ graph TD
 ## English Summary
 
 The Production Incident QA interview assesses a candidate's operational maturity, ability to troubleshoot complex issues under pressure, and adherence to Incident Response protocols. Employers look for structured thinking: starting with Triage and Acknowledge, prioritizing immediate Mitigation (e.g., rolling back instead of hotfixing) to stop the bleeding, ensuring proactive Communication with stakeholders, and ultimately performing [Root Cause Analysis](/concepts/observability-reliability/root-cause-analysis/) (RCA) using frameworks like the '5 Whys'. Strong candidates emphasize Idempotency to enable easy backfills, implement blameless post-mortems, and establish robust observability mechanisms rather than relying on manual checks or user complaints.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**
