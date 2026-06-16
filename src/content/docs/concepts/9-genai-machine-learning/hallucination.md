@@ -11,10 +11,6 @@ description: "Trong cuộc cách mạng Trí tuệ Nhân tạo tạo sinh (GenAI
 
 
 
-# Ảo Giác LLM (Hallucination) Là Gì?
-
-
-
 **Hallucination (Ảo giác)** là hiện tượng các Mô hình Ngôn ngữ Lớn (Large Language Models - LLM) như ChatGPT, Gemini, Claude, Llama sinh ra các thông tin sai lệch, không có thật, hoặc vô lý nhưng lại trình bày với một thái độ cực kỳ tự tin và thuyết phục.
 
 Trong ngữ cảnh con người, ảo giác thường mang ý nghĩa bệnh lý. Đối với AI, hiện tượng này xuất phát từ cách thức hoạt động cốt lõi của chúng: **Dự đoán từ tiếp theo dựa trên xác suất (next-token prediction)**. LLM không thực sự "hiểu" sự thật, nó chỉ học các mô hình ngôn ngữ từ hàng tỷ văn bản và đoán từ nào có khả năng xuất hiện cao nhất tiếp theo.

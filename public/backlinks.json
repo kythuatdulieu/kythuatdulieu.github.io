@@ -675,6 +675,10 @@
       "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
     },
     {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
       "url": "/projects/system-design/finops-architecture/",
       "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
     },
@@ -1229,6 +1233,10 @@
     {
       "url": "/learning-paths/specializations/streaming-data-engineer/",
       "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     },
     {
       "url": "/projects/e2e/kafka-spark-airflow/",
@@ -3339,6 +3347,10 @@
       "title": "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
     },
     {
+      "url": "/projects/e2e/snowflakedemo/",
+      "title": "Snowflake Pipeline: Hệ thống Xử lý Dữ liệu Tài chính"
+    },
+    {
       "url": "/projects/e2e/streamify-pipeline/",
       "title": "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
     },
@@ -3607,6 +3619,10 @@
     {
       "url": "/learning-paths/specializations/streaming-data-engineer/",
       "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     },
     {
       "url": "/projects/e2e/spark-data-lakehouse/",
@@ -5127,6 +5143,10 @@
       "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
     },
     {
+      "url": "/projects/e2e/snowflakedemo/",
+      "title": "Snowflake Pipeline: Hệ thống Xử lý Dữ liệu Tài chính"
+    },
+    {
       "url": "/projects/e2e/streamify-pipeline/",
       "title": "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
     },
@@ -5529,6 +5549,10 @@
       "title": "Lộ trình học (Learning Paths)"
     },
     {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
       "url": "/projects/e2e/kafka-spark-airflow/",
       "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
     },
@@ -5851,6 +5875,10 @@
     {
       "url": "/projects/e2e/showpulse-ticketmaster/",
       "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
+    },
+    {
+      "url": "/projects/e2e/snowflakedemo/",
+      "title": "Snowflake Pipeline: Hệ thống Xử lý Dữ liệu Tài chính"
     },
     {
       "url": "/projects/e2e/spark-data-lakehouse/",
@@ -6563,12 +6591,20 @@
       "title": "Data Platform Engineer: Sứ Mệnh Xây Dựng Hạ Tầng Dữ Liệu Ở Cấp Độ Tổ Chức"
     },
     {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
       "url": "/projects/e2e/kafka-spark-airflow/",
       "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
     },
     {
       "url": "/projects/e2e/showpulse-ticketmaster/",
       "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
+    },
+    {
+      "url": "/projects/e2e/snowflakedemo/",
+      "title": "Snowflake Pipeline: Hệ thống Xử lý Dữ liệu Tài chính"
     },
     {
       "url": "/projects/e2e/spark-data-lakehouse/",
@@ -7769,6 +7805,10 @@
       "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
     },
     {
+      "url": "/projects/e2e/snowflakedemo/",
+      "title": "Snowflake Pipeline: Hệ thống Xử lý Dữ liệu Tài chính"
+    },
+    {
       "url": "/projects/e2e/streamify-pipeline/",
       "title": "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
     },
@@ -8059,6 +8099,10 @@
     {
       "url": "/learning-paths/core-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     },
     {
       "url": "/projects/e2e/streamify-pipeline/",
@@ -8627,6 +8671,10 @@
     {
       "url": "/learning-paths/core-paths/de-career-paths/",
       "title": "Nấc thang sự nghiệp (Career Path) của Data Engineer"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     },
     {
       "url": "/projects/e2e/reddit-data-pipeline/",
@@ -9439,6 +9487,10 @@
     {
       "url": "/interview/performance-tuning-qa/",
       "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     }
   ],
   "/concepts/6-data-modeling-transformation/fact-table/": [
@@ -10489,6 +10541,10 @@
     {
       "url": "/concepts/9-genai-machine-learning/prompt-engineering/",
       "title": "Kỹ nghệ Gợi ý - Prompt Engineering"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
     },
     {
       "url": "/projects/system-design/modern-vs-post-modern-data-stack/",
