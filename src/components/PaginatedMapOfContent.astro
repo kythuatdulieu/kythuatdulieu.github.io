@@ -19,20 +19,31 @@ contentDocs.forEach(doc => {
   let catLabel = 'Bài viết khác';
   
   if (rootFolder === 'concepts' && parts.length > 2) {
-      catSlug = `${parts[1]}/${parts[2]}`;
+      catSlug = parts[1];
       const found = conceptCategories.find(c => c.slug === catSlug);
       if (found) catLabel = found.label;
       else {
-          catLabel = (parts[2] || parts[1]).replace(/-/g, ' ');
+          catLabel = parts[1].replace(/^\d+-/, '').replace(/-/g, ' ');
           catLabel = catLabel.charAt(0).toUpperCase() + catLabel.slice(1);
       }
   } else {
+      const customLabels = {
+          'e2e': 'Dự Án Data Engineering (E2E)',
+          'aws': 'Dự Án AWS',
+          'azure': 'Dự Án Azure',
+          'gcp': 'Dự Án GCP',
+          'dwh': 'Dự Án Data Warehouse',
+          'on-prem': 'Dự Án On-Premise',
+          'system-design': 'Thiết Kế Hệ Thống',
+          'core-paths': 'Lộ Trình Cốt Lõi',
+          'specializations': 'Chuyên Ngành Hẹp',
+          'leadership-culture': 'Lãnh Đạo & Văn Hóa'
+      };
       if (parts.length === 2) {
-          catLabel = 'Danh sách bài viết';
+          catLabel = 'Tất cả bài viết';
       } else {
           catSlug = parts[1];
-          catLabel = parts[1].replace(/-/g, ' ');
-          catLabel = catLabel.charAt(0).toUpperCase() + catLabel.slice(1);
+          catLabel = customLabels[catSlug] || (parts[1].charAt(0).toUpperCase() + parts[1].slice(1).replace(/-/g, ' '));
       }
   }
 

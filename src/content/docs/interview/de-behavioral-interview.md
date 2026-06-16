@@ -9,6 +9,8 @@ seoTitle: "Data Engineer Behavioral Interview - Phỏng vấn hành vi và văn 
 metaDescription: "Cẩm nang vượt qua vòng phỏng vấn hành vi (Behavioral Interview) cho Data Engineer. Phương pháp trả lời STAR, kỹ năng làm việc với Stakeholders."
 ---
 
+
+
 Trong quy trình tuyển dụng Data Engineer ở các công ty công nghệ lớn, vòng **Phỏng vấn Hành vi (Behavioral Interview)** hay vòng đánh giá độ phù hợp văn hóa (Culture Fit) thường bị các ứng viên thuần kỹ thuật xem nhẹ. Nhiều người cho rằng chỉ cần giải được các bài toán thuật toán hóc búa hay thiết kế được hệ thống chịu tải triệu user là đủ để đỗ. 
 
 Nhưng thực tế lại chứng minh điều ngược lại: một Kỹ sư Dữ liệu dù giỏi chuyên môn đến đâu nhưng nếu có thái độ kiêu ngạo, thiếu khả năng lắng nghe ý kiến phản hồi hoặc không thể giải thích nổi công việc của mình cho các phòng ban khác hiểu, sẽ dễ dàng phá hỏng tinh thần làm việc của cả một tập thể. Vòng phỏng vấn này ra đời để tìm ra những người không chỉ giỏi code mà còn biết cách làm việc cùng con người.
@@ -112,3 +114,10 @@ Chỉ với khoảng 5 câu chuyện chuẩn bị kỹ lưỡng này, bạn hoà
 ## English Summary
 
 The Behavioral Interview assesses a Data Engineer's emotional intelligence (EQ), teamwork, and problem-solving mindset when faced with non-technical challenges. Mastery of the S-T-A-R method (Situation, Task, Action, Result) is essential for structuring compelling narratives from past experiences. Key topics often revolve around resolving cross-functional conflicts (e.g., unexpected upstream schema changes), managing stakeholder expectations (explaining complex architecture like Batch vs. Streaming to non-tech teams), handling failures with a growth mindset, and demonstrating ownership. Interviewers look for authenticity, constructive communication, and candidates who use the pronoun "I" to distinctly claim their individual impact.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

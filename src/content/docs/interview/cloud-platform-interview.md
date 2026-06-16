@@ -9,6 +9,8 @@ seoTitle: "Cloud Platform Interview - Câu hỏi phỏng vấn Đám mây Data E
 metaDescription: "Cẩm nang phỏng vấn thiết kế hạ tầng trên Cloud: So sánh AWS vs GCP, tối ưu chi phí đám mây (FinOps), và kiến trúc Serverless."
 ---
 
+
+
 Công nghệ điện toán đám mây (Cloud Computing) đã trở thành tiêu chuẩn mặc định của hầu hết các hệ thống dữ liệu hiện đại. Tuy nhiên, sự tiện lợi và linh hoạt của Cloud luôn đi kèm với một cái giá rất đắt nếu chúng ta thiết kế sai lầm. Một câu truy vấn BigQuery viết cẩu thả có thể "đốt sạch" hàng ngàn USD trong vài giây; hay một cổng mạng VPC cấu hình sai có thể làm rò rỉ dữ liệu nhạy cảm của hàng triệu khách hàng ra ngoài Internet. 
 
 Vòng phỏng vấn **Cloud Platform** ra đời không phải để kiểm tra xem bạn có thuộc lòng danh sách hàng trăm tên gọi dịch vụ của AWS, GCP hay Azure hay không. Người phỏng vấn thực sự muốn đánh giá tư duy thiết kế kiến trúc phân tán (Distributed Architecture) của bạn, cách bạn cân bằng giữa hiệu năng và chi phí (tư duy FinOps), cũng như khả năng xây dựng một hệ thống dữ liệu "Vững chắc, Bảo mật và Tối ưu hóa".
@@ -162,3 +164,10 @@ graph LR
 ## English Summary
 
 The Cloud Platform Interview focuses on evaluating a candidate's ability to architect distributed data systems using public cloud providers (AWS, GCP, Azure) while balancing performance, security, and cost. Candidates must demonstrate FinOps thinking (e.g., separating storage from compute, using spot instances, applying data lifecycle policies to cold storage) and choose the appropriate abstraction level (IaaS, PaaS, or Serverless/SaaS) for the use case. Familiarity with networking (VPC), Identity Access Management (IAM/Least Privilege), and mitigating data transfer costs are critical factors to succeed in this round.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

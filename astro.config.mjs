@@ -81,55 +81,69 @@ export default defineConfig({
 			social: { github: 'https://github.com/kythuatdulieu/kythuatdulieu.github.io' },
 			sidebar: [
 				{
-					label: 'Cẩm nang (Handbook)',
+					label: '1. Khái niệm Cốt lõi (Concepts)',
 					items: [
 						{
-							label: '1. Nền tảng & Kiến trúc',
+							label: '1. Hệ thống Phân tán & Kiến trúc',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['foundation', 'system-architecture'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/1-distributed-systems-architecture' }
 						},
 						{
-							label: '2. Tích hợp dữ liệu (Ingestion)',
+							label: '2. Thu nạp & Tích hợp Dữ liệu',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['etl-elt'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/2-data-ingestion-integration' }
 						},
 						{
-							label: '3. Lưu trữ & Data Warehouse',
+							label: '3. Lưu trữ & Định dạng (Storage)',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['database-storage', 'data-lake-lakehouse', 'data-warehouse', 'cloud-data-platform'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/3-storage-engines-formats' }
 						},
 						{
-							label: '4. Xử lý tính toán (Processing)',
+							label: '4. Tính toán Lô (Batch Compute)',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['batch-processing', 'streaming-processing', 'transformation-analytics'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/4-compute-engines-batch' }
 						},
 						{
-							label: '5. Điều phối & Chất lượng (DataOps)',
+							label: '5. Xử lý Luồng (Real-time Streaming)',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['orchestration', 'observability-reliability', 'data-quality', 'governance-metadata'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/5-stream-processing-realtime' }
 						},
 						{
-							label: '6. AI & Machine Learning',
+							label: '6. Mô hình hóa & Biến đổi',
 							collapsed: true,
-							items: conceptCategories.filter(c => ['genai-ml'].includes(c.slug)).map(cat => ({ label: cat.label, collapsed: true, autogenerate: { directory: `concepts/${cat.slug}` } }))
+							autogenerate: { directory: 'concepts/6-data-modeling-transformation' }
+						},
+						{
+							label: '7. Điều phối & DataOps',
+							collapsed: true,
+							autogenerate: { directory: 'concepts/7-dataops-orchestration-quality' }
+						},
+						{
+							label: '8. Bảo mật, Quản trị & FinOps',
+							collapsed: true,
+							autogenerate: { directory: 'concepts/8-security-governance-finops' }
+						},
+						{
+							label: '9. AI & Machine Learning',
+							collapsed: true,
+							autogenerate: { directory: 'concepts/9-genai-machine-learning' }
 						}
 					]
 				},
 				{
-					label: '7. Lộ trình & Phỏng vấn',
+					label: '2. Lộ trình & Sự nghiệp (Learning Paths)',
 					collapsed: true,
-					items: [
-						{
-							label: 'Lộ trình học (Learning Paths)',
-							collapsed: true,
-							autogenerate: { directory: 'learning-paths' },
-						},
-						{
-							label: 'Phỏng vấn (Interview)',
-							collapsed: true,
-							autogenerate: { directory: 'interview' },
-						}
-					]
+					autogenerate: { directory: 'learning-paths' }
+				},
+				{
+					label: '3. Dự án & Thiết kế Hệ thống (Projects)',
+					collapsed: true,
+					autogenerate: { directory: 'projects' }
+				},
+				{
+					label: '4. Phỏng vấn (Interview QA)',
+					collapsed: true,
+					autogenerate: { directory: 'interview' },
 				},
 				{
 					label: 'Ôn thi Certificate (Quizzes)',

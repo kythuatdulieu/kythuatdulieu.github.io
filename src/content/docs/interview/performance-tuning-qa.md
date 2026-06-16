@@ -6,8 +6,10 @@ tags: ["performance-tuning", "sql", "indexing", "partitioning", "interview"]
 readingTime: "13 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Performance Tuning QA - Phỏng vấn tối ưu hóa truy vấn dữ liệu"
-metaDescription: "Tuyệt chiêu trả lời phỏng vấn tối ưu hóa hiệu năng truy vấn (Performance Tuning): Tối ưu SQL, Indexing, Partitioning, Materialized Views."
+metaDescription: "vấn đề trả lời phỏng vấn tối ưu hóa hiệu năng truy vấn (Performance Tuning): Tối ưu SQL, Indexing, Partitioning, Materialized Views."
 ---
+
+
 
 Có một sự thật hiển nhiên trong ngành dữ liệu: viết một câu truy vấn SQL chạy ra kết quả đúng trên máy tính cá nhân với vài ngàn dòng dữ liệu thử nghiệm thì ai cũng làm được. Nhưng khi mang câu lệnh đó chạy trên môi trường Production với hàng chục tỷ dòng dữ liệu (Terabytes hay Petabytes), nó có thể khiến hệ thống bị treo hàng giờ, làm nghẽn toàn bộ đường ống dẫn dữ liệu và "đốt" hàng ngàn USD của doanh nghiệp.
 
@@ -142,3 +144,10 @@ Trong thời đại ngày nay, giá thành của ổ đĩa lưu trữ đã trở
 ## English Summary
 
 The Performance Tuning QA interview round challenges candidates to analyze and resolve slow-running SQL queries and structural bottlenecks in large-scale data systems. Success requires a profound understanding of how databases execute queries (using the `EXPLAIN` plan) and the application of physical data organization techniques. Candidates are expected to advocate for pushing down filters (Predicate/Partition Pruning), leveraging Columnar Storage (Parquet/ORC) over Row Storage, and substituting expensive operations (like `COUNT DISTINCT`) with approximate algorithms (HyperLogLog) when exact precision isn't necessary. Mastering the trade-offs between compute time and storage space—via Indexing, Caching, and Materialized Views—is the ultimate indicator of a senior-level data professional.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

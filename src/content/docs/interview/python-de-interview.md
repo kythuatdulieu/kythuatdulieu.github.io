@@ -9,6 +9,8 @@ seoTitle: "Các dạng bài Python phỏng vấn Data Engineering"
 metaDescription: "Các dạng bài tập Python cốt lõi khi phỏng vấn Data Engineer: Xử lý tệp lớn không tràn bộ nhớ, Generator (yield), tối ưu hóa thuật toán và xử lý API JSON."
 ---
 
+
+
 Khác biệt lớn nhất giữa vòng phỏng vấn lập trình (Live Coding) của Software Engineer (SWE) và Data Engineer (DE) nằm ở tính thực dụng của bài toán. 
 
 Trong khi các lập trình viên SWE thường phải đối mặt với các thuật toán cấu trúc dữ liệu thuần túy và lắt léo (như các bài toán Leetcode Medium/Hard về quy hoạch động hay đồ thị), thì một kỹ sư dữ liệu DE lại được đánh giá dựa trên khả năng giải quyết các vấn đề thực chiến: xử lý các tệp dữ liệu khổng lồ mà không làm tràn bộ nhớ (Out of Memory - OOM), làm sạch và chuyển đổi các cấu trúc dữ liệu JSON phức tạp, hoặc tối ưu hóa việc thu thập dữ liệu từ các API phân trang.
@@ -211,3 +213,10 @@ def download_all_concurrently(urls):
 ## English Summary
 
 Python interviews for Data Engineers shift focus away from hard algorithmic puzzles (like dynamic programming) towards practical data handling scenarios. Key interview patterns include processing massive files without running out of memory (Out of Memory errors) by reading files lazily line-by-line or using [chunking](/concepts/genai-ml/chunking/). Candidates must master the use of `yield` and Generators to create memory-efficient data streams, especially when handling paginated APIs. Additionally, writing recursive functions to flatten deeply nested JSON dictionaries into tabular formats, utilizing Hash Maps (Sets) for $O(1)$ fast [deduplication](/concepts/etl-elt/deduplication/), and demonstrating basic I/O concurrency using `ThreadPoolExecutor` are fundamental skills expected in top-tier technical interviews.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**

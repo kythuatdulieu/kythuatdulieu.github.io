@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 700">
+  <defs>
+    <style>
+      .circle-c { fill: rgba(255, 99, 132, 0.2); stroke: rgb(255, 99, 132); stroke-width: 4; }
+      .circle-a { fill: rgba(54, 162, 235, 0.2); stroke: rgb(54, 162, 235); stroke-width: 4; }
+      .circle-p { fill: rgba(255, 206, 86, 0.2); stroke: rgb(255, 206, 86); stroke-width: 4; }
+      .text-title { font-family: sans-serif; font-size: 28px; font-weight: bold; fill: #333; text-anchor: middle; }
+      .text-desc { font-family: sans-serif; font-size: 16px; fill: #666; text-anchor: middle; }
+      .text-intersect { font-family: sans-serif; font-size: 22px; font-weight: bold; fill: #222; text-anchor: middle; }
+      .text-sub { font-family: sans-serif; font-size: 14px; fill: #444; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- Circles -->
+  <!-- Consistency (Top Left) -->
+  <circle cx="300" cy="250" r="200" class="circle-c" />
+  <!-- Availability (Top Right) -->
+  <circle cx="500" cy="250" r="200" class="circle-a" />
+  <!-- Partition Tolerance (Bottom Center) -->
+  <circle cx="400" cy="423" r="200" class="circle-p" />
+
+  <!-- Labels for main circles -->
+  <text x="220" y="150" class="text-title">Consistency (C)</text>
+  <text x="220" y="175" class="text-desc">Mọi node trả về</text>
+  <text x="220" y="195" class="text-desc">dữ liệu mới nhất</text>
+
+  <text x="580" y="150" class="text-title">Availability (A)</text>
+  <text x="580" y="175" class="text-desc">Hệ thống luôn</text>
+  <text x="580" y="195" class="text-desc">phản hồi thành công</text>
+
+  <text x="400" y="550" class="text-title">Partition Tolerance (P)</text>
+  <text x="400" y="575" class="text-desc">Hệ thống vẫn sống</text>
+  <text x="400" y="595" class="text-desc">khi mạng bị đứt gãy</text>
+
+  <!-- Intersections -->
+  <!-- CA (Top Center) -->
+  <text x="400" y="210" class="text-intersect">Hệ CA</text>
+  <text x="400" y="235" class="text-sub">Chỉ có ở RDBMS</text>
+  <text x="400" y="255" class="text-sub">(Không thực tế</text>
+  <text x="400" y="275" class="text-sub">trên Cloud)</text>
+
+  <!-- CP (Left Center) -->
+  <text x="290" y="380" class="text-intersect">Hệ CP</text>
+  <text x="290" y="405" class="text-sub">Thà báo lỗi</text>
+  <text x="290" y="425" class="text-sub">còn hơn sai</text>
+  <text x="290" y="445" class="text-sub">(HBase, Zookeeper)</text>
+
+  <!-- AP (Right Center) -->
+  <text x="510" y="380" class="text-intersect">Hệ AP</text>
+  <text x="510" y="405" class="text-sub">Thà trả dữ liệu cũ</text>
+  <text x="510" y="425" class="text-sub">còn hơn sập</text>
+  <text x="510" y="445" class="text-sub">(DynamoDB, Cassandra)</text>
+</svg>

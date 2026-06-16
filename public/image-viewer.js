@@ -69,14 +69,20 @@ function initImageViewer() {
         download.title = 'Download Image';
         download.style.cssText = btnStyle + ' font-size: 14px !important;';
         
+        const fullscreen = document.createElement('button');
+        fullscreen.innerHTML = '⛶';
+        fullscreen.title = 'Full Screen';
+        fullscreen.style.cssText = btnStyle + ' font-size: 16px !important;';
+        
         controls.appendChild(zoomIn);
         controls.appendChild(zoomOut);
         controls.appendChild(reset);
         controls.appendChild(download);
+        controls.appendChild(fullscreen);
         container.appendChild(controls);
         
         // Hover effects for buttons
-        [zoomIn, zoomOut, reset, download].forEach(btn => {
+        [zoomIn, zoomOut, reset, download, fullscreen].forEach(btn => {
             btn.onmouseover = () => {
                 btn.style.borderColor = 'var(--sl-color-accent)';
                 btn.style.backgroundColor = 'rgba(var(--sl-color-accent-rgb), 0.1)';
@@ -164,6 +170,57 @@ function initImageViewer() {
                 a.target = '_blank';
                 a.click();
             }
+        });
+        
+        fullscreen.addEventListener('click', () => {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+            overlay.style.backdropFilter = 'blur(5px)';
+            overlay.style.zIndex = '999999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.cursor = 'zoom-out';
+            
+            const modalImg = document.createElement('img');
+            modalImg.src = img.src;
+            modalImg.style.maxWidth = '95vw';
+            modalImg.style.maxHeight = '95vh';
+            modalImg.style.objectFit = 'contain';
+            modalImg.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+            modalImg.style.borderRadius = '8px';
+            
+            // Add animation
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.2s ease-in-out';
+            modalImg.style.transform = 'scale(0.95)';
+            modalImg.style.transition = 'transform 0.2s ease-in-out';
+            
+            overlay.appendChild(modalImg);
+            document.body.appendChild(overlay);
+            
+            // Trigger reflow for animation
+            overlay.offsetHeight;
+            
+            overlay.style.opacity = '1';
+            modalImg.style.transform = 'scale(1)';
+            
+            // Allow zoom/pan in full screen mode by adding a small listener
+            // (Keeping it simple by closing on click for now, per "chỉ ảnh")
+            overlay.addEventListener('click', () => {
+                overlay.style.opacity = '0';
+                modalImg.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    if (document.body.contains(overlay)) {
+                        document.body.removeChild(overlay);
+                    }
+                }, 200);
+            });
         });
     });
 }

@@ -9,6 +9,8 @@ seoTitle: "Kafka Design Interview - Câu hỏi phỏng vấn thiết kế hệ t
 metaDescription: "Hướng dẫn thiết kế hệ thống với Apache Kafka: Đảm bảo tính nhất quán, Exactly-once semantics, quản lý Consumer Groups và các câu hỏi phỏng vấn System Design."
 ---
 
+
+
 Trong các buổi phỏng vấn thiết kế hệ thống (System Design) dành cho vị trí Data Engineer hoặc Backend Engineer cấp độ Mid/Senior, các câu hỏi xoay quanh [Apache Kafka](/concepts/streaming-processing/apache-kafka/) luôn là một phần cực kỳ quan trọng và hóc búa. 
 
 Tại sao lại như vậy? Bởi vì trong các hệ thống phân tán quy mô lớn, việc xử lý dữ liệu thời gian thực (real-time event streaming) chưa bao giờ là dễ dàng. Hệ thống thực tế luôn phải đối mặt với các sự cố bất khả kháng như mất kết nối mạng (network partitions), sập máy chủ đột ngột (node crashes) hay lưu lượng truy cập tăng vọt. Nhà tuyển dụng muốn xem cách bạn sử dụng Kafka để thiết kế một hệ thống có độ trễ thấp, thông lượng cao, không bao giờ bị mất mát dữ liệu và xử lý chính xác một lần (exactly-once processing).
@@ -169,3 +171,10 @@ graph LR
 ## English Summary
 
 The Kafka Design Interview tests a candidate's ability to architect distributed, real-time event streaming systems. Key evaluation points include partition strategy for high throughput, maintaining message ordering, and configuring durability and availability via replication (ISR) and acknowledgments (`acks=all`). Candidates must articulate the trade-offs between elegance and speed, and demonstrate mastery over advanced topics like Consumer Group rebalancing, manual offset management, handling Poison Pills via Dead Letter Queues (DLQ), and ensuring Exactly-Once semantics using idempotent producers and Kafka transactions.
+
+## Tài Liệu Tham Khảo
+* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+* **Data Engineering at Scale: Netflix Tech Blog**
+* **Building Data Infrastructure at Airbnb**
