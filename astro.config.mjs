@@ -35,6 +35,19 @@ export default defineConfig({
 			head: [
 				{
 					tag: 'script',
+					attrs: { src: 'https://www.googletagmanager.com/gtag/js?id=G-0B1XQQ61EY', async: true },
+				},
+				{
+					tag: 'script',
+					content: `
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'G-0B1XQQ61EY');
+					`,
+				},
+				{
+					tag: 'script',
 					attrs: { src: '/sidebar-resizer.js', defer: true },
 				},
 				{
