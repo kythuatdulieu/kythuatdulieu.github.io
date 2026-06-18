@@ -6,7 +6,7 @@ readingTime: "7 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Clustering Dữ liệu là gì? So sánh Clustering vs Partitioning"
 metaDescription: "Tìm hiểu Clustering (Phân cụm dữ liệu) trong Database/Data Warehouse, cơ chế gom nhóm vật lý các bản ghi tương đồng để tăng tốc truy vấn lọc dữ liệu."
-description: "Trong các hệ thống [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hiện đại, khi đối mặt với những bảng dữ liệu khổng lồ lên tới hàng trăm ..."
+description: "Trong các hệ thống [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) hiện đại, khi đối mặt với những bảng dữ liệu khổng lồ lên tới hàng trăm ..."
 ---
 
 

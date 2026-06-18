@@ -6,12 +6,12 @@ readingTime: "13 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Xử lý dữ liệu theo lô - Cẩm nang Batch Processing phân tán"
 metaDescription: "Tìm hiểu toàn diện về Batch Processing: định nghĩa, kiến trúc xử lý phân tán MapReduce vs Spark, cơ chế Shuffle, lỗi Data Skew và các kỹ thuật tối ưu hóa Spark Job."
-description: "Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/5-streaming-processing/streaming-processing/)) được ví như dòng nước chảy liên tục, thì xử lý theo lô (Batch Processing) giống như việc gom góp nước vào một hồ chứa khổng lồ rồi xử lý tất cả trong một lần. Đây là trụ cột vững chắc của mọi hệ thống dữ liệu."
+description: "Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/5-stream-processing-realtime/streaming-processing)) được ví như dòng nước chảy liên tục, thì xử lý theo lô (Batch Processing) giống như việc gom góp nước vào một hồ chứa khổng lồ rồi xử lý tất cả trong một lần. Đây là trụ cột vững chắc của mọi hệ thống dữ liệu."
 ---
 
 
 
-Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/5-streaming-processing/streaming-processing/)) được ví như dòng nước chảy liên tục cần xử lý ngay lập tức, thì **xử lý theo lô (Batch Processing)** giống như việc gom góp nước vào một hồ chứa khổng lồ rồi đưa qua nhà máy lọc nước để xử lý toàn bộ trong một đợt. 
+Trong thế giới kỹ thuật dữ liệu, nếu xử lý dòng ([Streaming Processing](/concepts/5-stream-processing-realtime/streaming-processing)) được ví như dòng nước chảy liên tục cần xử lý ngay lập tức, thì **xử lý theo lô (Batch Processing)** giống như việc gom góp nước vào một hồ chứa khổng lồ rồi đưa qua nhà máy lọc nước để xử lý toàn bộ trong một đợt. 
 
 Batch Processing (Xử lý theo lô) là mô hình tính toán trên các tập dữ liệu lớn đã được thu thập trong một khoảng thời gian nhất định (ví dụ: một giờ, một ngày, hoặc một tháng) và chạy theo định kỳ (được lập lịch). Dù thế giới ngày nay luôn khao khát dữ liệu theo thời gian thực (real-time), Batch Processing vẫn là "xương sống" và chiếm đến hơn 80% khối lượng công việc của bất kỳ hệ thống Data Engineering nào vì tính ổn định, dễ quản lý và chi phí tối ưu.
 

@@ -6,7 +6,7 @@ readingTime: "11 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Snowflake Schema (Lược đồ bông tuyết) - Định nghĩa, So sánh và Ứng dụng"
 metaDescription: "Tìm hiểu Snowflake Schema trong Data Warehouse. So sánh chi tiết sự khác biệt giữa Snowflake Schema và Star Schema, ưu nhược điểm và khi nào nên áp dụng."
-description: "Khi bắt tay vào thiết kế mô hình dữ liệu đa chiều cho [Data Warehouse](/concepts/data-warehouse/data-warehouse/), lược đồ hình sao (Star Schema) thườn..."
+description: "Khi bắt tay vào thiết kế mô hình dữ liệu đa chiều cho [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse), lược đồ hình sao (Star Schema) thườn..."
 ---
 
 

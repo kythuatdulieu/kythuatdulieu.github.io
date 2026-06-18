@@ -11,7 +11,7 @@ description: "Trong thiết kế kho dữ liệu (Data Warehouse) theo trường
 
 
 
-Trong thiết kế kho dữ liệu ([Data Warehouse](/concepts/2-data-warehouse/data-warehouse/)) theo phương pháp Dimensional Modeling của Ralph Kimball, **Star Schema (Lược đồ hình sao)** là kiến trúc cơ bản và phổ biến nhất. 
+Trong thiết kế kho dữ liệu ([Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)) theo phương pháp Dimensional Modeling của Ralph Kimball, **Star Schema (Lược đồ hình sao)** là kiến trúc cơ bản và phổ biến nhất. 
 
 Star Schema bao gồm một hoặc nhiều **Fact Tables** (bảng sự kiện) nằm ở vị trí trung tâm, được bao quanh bởi các **Dimension Tables** (bảng chiều), tạo thành một cấu trúc có hình dáng giống như một ngôi sao.
 

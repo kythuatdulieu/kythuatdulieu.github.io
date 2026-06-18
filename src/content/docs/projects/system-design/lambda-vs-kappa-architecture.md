@@ -31,7 +31,7 @@ flowchart TD
     B -->|Append-only Log| C["Batch Layer\n(HDFS, Amazon S3)"]
     B -->|Event Stream| D["Speed Layer\n(Flink, Spark Streaming)"]
     
-    C -->|Batch Processing\n(Spark, MapReduce)| E[("Batch Views\nPre-computed, High Accuracy")]
+    C -->|"Batch Processing\n(Spark, MapReduce)"| E[("Batch Views\nPre-computed, High Accuracy")]
     D -->|Real-time Processing| F[("Real-time Views\nLow Latency, Approximate")]
     
     E --> G("Serving Layer \nNoSQL / Query Engine")
@@ -118,7 +118,7 @@ flowchart LR
     C --> D[("Serving Database\nPinot, ClickHouse, Redis")]
     D --> E["End Users / BI Dashboards"]
     
-    B -.->|Reprocessing / Backfilling| C2["Secondary Stream Job\n("Rewind Offset to Zero")"]
+    B -.->|"Reprocessing / Backfilling"| C2["Secondary Stream Job\n(Rewind Offset to Zero)"]
     C2 -.-> D2[("New Version of Serving Table")]
 ```
 
@@ -217,7 +217,7 @@ flowchart LR
     C -->|Micro-batch / Streaming| D[("Silver Layer\nCleaned, Joined & Filtered")]
     D -->|Aggregations| E[("Gold Layer\nBusiness Level Metrics")]
     
-    C -.->|Time-travel Reprocessing\n("Unified API")| C
+    C -.->|"Time-travel Reprocessing\n(Unified API)"| C
     
     classDef lakehouse fill:#e6f3ff,stroke:#333,stroke-width:2px;
     class C,D,E lakehouse;

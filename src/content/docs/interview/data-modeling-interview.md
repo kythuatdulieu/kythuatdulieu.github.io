@@ -11,7 +11,7 @@ metaDescription: "Hướng dẫn giải quyết bài toán thiết kế mô hìn
 
 
 
-Khi bạn phỏng vấn cho vị trí Data Engineer chuyên về [Data Warehouse](/concepts/data-warehouse/data-warehouse/) hoặc Analytics Engineering, vòng **Mô hình hóa dữ liệu** (Data Modeling) luôn là một thử thách bắt buộc và mang tính quyết định. 
+Khi bạn phỏng vấn cho vị trí Data Engineer chuyên về [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) hoặc Analytics Engineering, vòng **Mô hình hóa dữ liệu** (Data Modeling) luôn là một thử thách bắt buộc và mang tính quyết định. 
 
 Mục tiêu của vòng phỏng vấn này không phải là kiểm tra xem bạn viết SQL giỏi đến mức nào, mà là đánh giá khả năng tư duy logic và kỹ năng chuyển đổi các yêu cầu nghiệp vụ kinh doanh trừu tượng thành các cấu trúc bảng dữ liệu vật lý tối ưu. Người phỏng vấn thường sẽ đưa ra một mô hình kinh doanh quen thuộc (như ứng dụng gọi xe, sàn thương mại điện tử, ứng dụng đặt phòng) và yêu cầu bạn thiết kế kiến trúc kho dữ liệu để phục vụ cho các báo cáo phân tích sau này.
 
@@ -27,10 +27,10 @@ Mô hình hóa dữ liệu là quá trình chúng ta tổ chức lại mớ hỗ
 
 ## Quy trình thiết kế 4 bước thần thánh của Kimball
 
-Để xây dựng một mô hình dữ liệu chuẩn phân tích, phương pháp luận [Dimensional Modeling](/concepts/data-warehouse/dimensional-modeling/) của Ralph Kimball là một "kim chỉ nam" kinh điển. Bạn cần thể hiện rõ ràng 4 bước tư duy này trước mặt người phỏng vấn:
+Để xây dựng một mô hình dữ liệu chuẩn phân tích, phương pháp luận [Dimensional Modeling](/concepts/6-data-modeling-transformation/dimensional-modeling) của Ralph Kimball là một "kim chỉ nam" kinh điển. Bạn cần thể hiện rõ ràng 4 bước tư duy này trước mặt người phỏng vấn:
 
 1. **Chọn quy trình nghiệp vụ (Choose the Business Process)**: Xác định rõ bạn đang muốn phân tích quy trình nào của doanh nghiệp (ví dụ: Giao dịch mua hàng, Đăng ký tài khoản, Giao hàng...).
-2. **Tuyên bố mức độ chi tiết (Declare the [Grain](/concepts/data-warehouse/grain/))**: Đây là bước quan trọng nhất và dễ bị sai lệch nhất. Bạn cần phát biểu rõ một dòng dữ liệu trong bảng đo lường đại diện cho điều gì? (Ví dụ: Một dòng là một đơn đặt xe thành công, hay một dòng là một món hàng trong giỏ hàng).
+2. **Tuyên bố mức độ chi tiết (Declare the [Grain](/concepts/6-data-modeling-transformation/grain))**: Đây là bước quan trọng nhất và dễ bị sai lệch nhất. Bạn cần phát biểu rõ một dòng dữ liệu trong bảng đo lường đại diện cho điều gì? (Ví dụ: Một dòng là một đơn đặt xe thành công, hay một dòng là một món hàng trong giỏ hàng).
 3. **Xác định các chiều thông tin (Identify the Dimensions)**: Tìm câu trả lời cho các câu hỏi *Ai? Cái gì? Ở đâu? Khi nào?* để thiết lập các bảng Dimension (Ví dụ: Người dùng, Tài xế, Địa điểm, Thời gian).
 4. **Xác định các chỉ số đo lường (Identify the Facts)**: Xác định những số liệu số nào có thể cộng gộp, tính trung bình hoặc thống kê được (Ví dụ: Số tiền thanh toán, Quãng đường di chuyển, Số lượng đơn hàng).
 
@@ -50,7 +50,7 @@ Trong một buổi phỏng vấn trực tiếp (Whiteboard Interview), hãy dẫ
 
 ## Thiết kế mô hình dữ liệu cho ứng dụng gọi xe (Ride-Hailing)
 
-Dưới đây là một sơ đồ ERD mẫu thiết kế theo mô hình [Star Schema](/concepts/data-warehouse/star-schema/) cho dịch vụ gọi xe công nghệ:
+Dưới đây là một sơ đồ ERD mẫu thiết kế theo mô hình [Star Schema](/concepts/6-data-modeling-transformation/star-schema) cho dịch vụ gọi xe công nghệ:
 ```mermaid
 erDiagram
     FACT_RIDES {
@@ -119,7 +119,7 @@ erDiagram
 
 ## Những nguyên tắc vàng và Best Practices
 
-* **Luôn sử dụng [Surrogate Key](/concepts/data-warehouse/surrogate-key/) (Khóa nhân tạo)**: Tuyệt đối không dùng các ID của hệ thống nguồn (như UUID dạng string) làm khóa chính cho các bảng Dimension. Hãy tự tạo một khóa tự tăng kiểu số nguyên (Integer/BigInt). Khóa nhân tạo giúp tối ưu hiệu năng của các phép JOIN và là bắt buộc nếu bạn muốn lưu vết lịch sử thay đổi dữ liệu (SCD).
+* **Luôn sử dụng [Surrogate Key](/concepts/6-data-modeling-transformation/surrogate-key) (Khóa nhân tạo)**: Tuyệt đối không dùng các ID của hệ thống nguồn (như UUID dạng string) làm khóa chính cho các bảng Dimension. Hãy tự tạo một khóa tự tăng kiểu số nguyên (Integer/BigInt). Khóa nhân tạo giúp tối ưu hiệu năng của các phép JOIN và là bắt buộc nếu bạn muốn lưu vết lịch sử thay đổi dữ liệu (SCD).
 * **Xây dựng bảng Date Dimension riêng**: Đừng phụ thuộc vào các hàm xử lý ngày tháng của cơ sở dữ liệu. Thiết kế một bảng `dim_date` riêng với các cờ thông tin được tính toán sẵn (như `is_holiday`, `is_weekend`, `fiscal_quarter`) sẽ giúp các câu truy vấn phân tích nhẹ nhàng và chuẩn hóa hơn rất nhiều.
 * **Quy chuẩn đặt tên (Naming Convention)**: Nên dùng hậu tố `_key` cho các khóa chính/khóa ngoại trong kho dữ liệu, và dùng hậu tố `_id` để chỉ mã định danh lấy từ hệ thống nguồn.
 
@@ -170,7 +170,7 @@ erDiagram
 
 ## English Summary
 
-The Data Modeling Interview evaluates a candidate's proficiency in translating business requirements into optimal analytical schemas, primarily focusing on Ralph Kimball's Dimensional Modeling approach. Candidates are expected to master the four-step process: selecting the business process, declaring the grain, identifying dimensions, and identifying facts. Key discussion points often involve differentiating between Star and [Snowflake](/concepts/cloud-data-platform/snowflake/) schemas, effectively designing Fact and Dimension tables using surrogate keys, and applying Slowly Changing Dimensions (SCD) to track historical changes accurately without compromising query performance in an [OLAP](/concepts/database-storage/olap/) environment.
+The Data Modeling Interview evaluates a candidate's proficiency in translating business requirements into optimal analytical schemas, primarily focusing on Ralph Kimball's Dimensional Modeling approach. Candidates are expected to master the four-step process: selecting the business process, declaring the grain, identifying dimensions, and identifying facts. Key discussion points often involve differentiating between Star and [Snowflake](/concepts/3-storage-engines-formats/snowflake) schemas, effectively designing Fact and Dimension tables using surrogate keys, and applying Slowly Changing Dimensions (SCD) to track historical changes accurately without compromising query performance in an [OLAP](/concepts/3-storage-engines-formats/olap) environment.
 
 ## Tài Liệu Tham Khảo
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**

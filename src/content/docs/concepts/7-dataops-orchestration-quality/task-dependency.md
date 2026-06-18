@@ -11,7 +11,7 @@ description: "Trong thế giới điều phối dữ liệu (Data Orchestration)
 
 
 
-Trong thế giới điều phối dữ liệu (Data [Orchestration](/concepts/orchestration/orchestration/)) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** là xương sống của mọi pipeline. Nói một cách đơn giản, Dependency là "các mũi tên" nối các Node (tác vụ) trong một DAG, quy định thứ tự thực thi của chúng. Việc quản lý Dependency chặt chẽ đảm bảo Task B chỉ chạy khi Task A đã hoàn tất một cách thành công (hoặc tuỳ thuộc vào một điều kiện cụ thể), từ đó tránh tình trạng xử lý dữ liệu sai lệch khi các bước tiền đề chưa hoàn thành.
+Trong thế giới điều phối dữ liệu (Data [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration)) dựa trên mô hình đồ thị có hướng không chu trình (DAG), **Task Dependency (Sự phụ thuộc tác vụ)** là xương sống của mọi pipeline. Nói một cách đơn giản, Dependency là "các mũi tên" nối các Node (tác vụ) trong một DAG, quy định thứ tự thực thi của chúng. Việc quản lý Dependency chặt chẽ đảm bảo Task B chỉ chạy khi Task A đã hoàn tất một cách thành công (hoặc tuỳ thuộc vào một điều kiện cụ thể), từ đó tránh tình trạng xử lý dữ liệu sai lệch khi các bước tiền đề chưa hoàn thành.
 
 ---
 

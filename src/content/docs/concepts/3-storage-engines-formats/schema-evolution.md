@@ -6,12 +6,12 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-16
 seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake"
 metaDescription: "Tìm hiểu Schema Evolution là gì: cơ chế tự động thích ứng với thay đổi cấu trúc bảng (thêm, xóa, đổi tên cột) mà không cần ghi lại dữ liệu cũ trên Data Lake."
-description: "Trong thế giới [Data Engineering](/concepts/foundation/data-engineering/), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn gửi 5 cột, ngày mai có thể là 7 cột hoặc đổi tên 1 cột. Xử lý những thay đổi này một cách trơn tru là nhiệm vụ của Schema Evolution."
+description: "Trong thế giới [Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn gửi 5 cột, ngày mai có thể là 7 cột hoặc đổi tên 1 cột. Xử lý những thay đổi này một cách trơn tru là nhiệm vụ của Schema Evolution."
 ---
 
 
 
-Trong thế giới [Data Engineering](/concepts/foundation/data-engineering/), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Ứng dụng nguồn liên tục cập nhật tính năng mới, dẫn đến việc dữ liệu sinh ra có thêm các trường mới, đổi tên trường cũ, hoặc thậm chí xóa bỏ các trường không còn sử dụng. Nếu hệ thống dữ liệu không thể xử lý những thay đổi này một cách uyển chuyển, toàn bộ pipeline (đường ống dữ liệu) sẽ bị gián đoạn.
+Trong thế giới [Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Ứng dụng nguồn liên tục cập nhật tính năng mới, dẫn đến việc dữ liệu sinh ra có thêm các trường mới, đổi tên trường cũ, hoặc thậm chí xóa bỏ các trường không còn sử dụng. Nếu hệ thống dữ liệu không thể xử lý những thay đổi này một cách uyển chuyển, toàn bộ pipeline (đường ống dữ liệu) sẽ bị gián đoạn.
 
 **Schema Evolution (Tiến hóa cấu trúc)** là khả năng thay đổi cấu trúc của một bảng (như thêm, xóa, đổi tên cột, hay thay đổi kiểu dữ liệu) theo thời gian **mà không cần phải viết lại (rewrite) toàn bộ dữ liệu lịch sử**. Đây là một tính năng tối quan trọng trong các kiến trúc Data Lake và Lakehouse hiện đại.
 

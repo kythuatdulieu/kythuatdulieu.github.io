@@ -11,7 +11,7 @@ description: "Hãy tưởng tượng bạn vừa chi ra hàng triệu USD để 
 
 
 
-Hãy tưởng tượng bạn vừa chi ra hàng triệu USD để xây dựng một hệ thống [Data Warehouse](/concepts/4-data-warehouse/data-warehouse/) hiện đại, thuê những Kỹ sư Dữ liệu và Nhà khoa học Dữ liệu giỏi nhất, nhưng khi lên báo cáo, phòng Sales phàn nàn rằng doanh thu bị lệch, phòng Marketing than phiền rằng gửi email bị lỗi hàng loạt vì sai địa chỉ. Đó là lúc bạn nhận ra vấn đề nằm ở **Data Quality (Chất lượng dữ liệu)**.
+Hãy tưởng tượng bạn vừa chi ra hàng triệu USD để xây dựng một hệ thống [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) hiện đại, thuê những Kỹ sư Dữ liệu và Nhà khoa học Dữ liệu giỏi nhất, nhưng khi lên báo cáo, phòng Sales phàn nàn rằng doanh thu bị lệch, phòng Marketing than phiền rằng gửi email bị lỗi hàng loạt vì sai địa chỉ. Đó là lúc bạn nhận ra vấn đề nằm ở **Data Quality (Chất lượng dữ liệu)**.
 
 Data Quality là nền móng của sự tin cậy. Dù công cụ hay mô hình Machine Learning của bạn có tiên tiến đến đâu, nguyên tắc **"Garbage In, Garbage Out" (Rác vào thì Rác ra)** luôn đúng. Nếu dữ liệu đầu vào không chính xác, thiếu sót hoặc sai định dạng, mọi phân tích và dự đoán từ nó đều trở nên vô giá trị, thậm chí gây ra những quyết định kinh doanh sai lầm và làm xói mòn niềm tin của người dùng vào hệ thống dữ liệu.
 

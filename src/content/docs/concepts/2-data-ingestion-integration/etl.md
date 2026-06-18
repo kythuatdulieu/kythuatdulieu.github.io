@@ -6,12 +6,12 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-16
 seoTitle: "ETL (Extract, Transform, Load) - Khái niệm cốt lõi trong Data Engineering"
 metaDescription: "Tìm hiểu quy trình ETL là gì: Trích xuất (Extract), Biến đổi (Transform) và Nạp (Load) dữ liệu. Sự khác biệt và ứng dụng của ETL trong xây dựng Data Warehouse."
-description: "Trong ngành Kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)), nếu có một khái niệm được coi là nền móng, xuất hiện trong mọi cuộc thảo luận, thì đó chính là ETL (Extract, Transform, Load)."
+description: "Trong ngành Kỹ thuật dữ liệu ([Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering)), nếu có một khái niệm được coi là nền móng, xuất hiện trong mọi cuộc thảo luận, thì đó chính là ETL (Extract, Transform, Load)."
 ---
 
 
 
-Trong ngành Kỹ thuật dữ liệu ([Data Engineering](/concepts/foundation/data-engineering/)), nếu có một khái niệm được coi là nền móng, xuất hiện trong mọi cuộc thảo luận và hệ thống dữ liệu, thì đó chính là **ETL (Extract, Transform, Load)**. Đây là quy trình cốt lõi giúp tổ chức di chuyển dữ liệu từ các hệ thống vận hành (operational systems) sang các hệ thống phân tích (analytical systems) như [Data Warehouse](/concepts/3-data-storage/data-warehouse/) hoặc [Data Lake](/concepts/3-data-storage/data-lake/).
+Trong ngành Kỹ thuật dữ liệu ([Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering)), nếu có một khái niệm được coi là nền móng, xuất hiện trong mọi cuộc thảo luận và hệ thống dữ liệu, thì đó chính là **ETL (Extract, Transform, Load)**. Đây là quy trình cốt lõi giúp tổ chức di chuyển dữ liệu từ các hệ thống vận hành (operational systems) sang các hệ thống phân tích (analytical systems) như [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) hoặc [Data Lake](/concepts/3-storage-engines-formats/data-lake).
 
 ETL là một mô hình kiến trúc truyền thống đã có mặt từ những năm 1990. Mặc dù công nghệ đã có nhiều bước tiến vượt bậc với sự xuất hiện của các kiến trúc mới như [ELT](/concepts/2-data-ingestion-integration/elt/) hay Streaming, việc nắm vững cách hoạt động của ETL vẫn là yếu tố bắt buộc đối với bất kỳ Kỹ sư Dữ liệu nào.
 

@@ -163,4 +163,4 @@ Khi thiết kế và vận hành ShowPulse ở tiêu chuẩn Production, có nhi
 - **Confluent Blog:** **Ticketmaster: Real-Time Streaming & Dynamic Pricing with Apache Kafka** - Chi tiết về cách Ticketmaster xử lý dữ liệu định giá động qua Kafka.
 - **Netflix Tech Blog:** **Kafka Inside Keystone Pipeline** - Cách Netflix xử lý hàng ngàn tỷ sự kiện mỗi ngày bằng việc chia tách Kafka Fronting và Consumer.
 - **dbt Developer Blog:** [Best practices cho Medallion Architecture và Incremental Models trong Snowflake](https://www.getdbt.com/blog/).
-- **Snowflake Architecture:** [Decoupling Compute and Storage in Cloud Data Warehouses](https://www.snowflake.com/en/data-cloud/architecture/).
+- **Snowflake Architecture:** [Decoupling Compute and Storage in Cloud Data Warehouses](https://docs.snowflake.com/en/user-guide/intro-key-concepts).

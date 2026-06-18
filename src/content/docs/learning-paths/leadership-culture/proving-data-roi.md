@@ -62,7 +62,7 @@ graph TD
     subgraph "Serving & Business Impact"
         F --> G["Machine Learning Model Serving"]
         G --> H["Personalized Recommendation"]
-        H -->|Hiển thị sản phẩm phù hợp| I["Tăng 5% Doanh Thu ("ROI Trực Tiếp")"]
+        H -->|"Hiển thị sản phẩm phù hợp"| I["Tăng 5% Doanh Thu (ROI Trực Tiếp)"]
     end
     
     style I fill:#d4edda,stroke:#28a745,stroke-width:2px;

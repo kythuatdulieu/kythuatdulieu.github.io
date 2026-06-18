@@ -10,7 +10,7 @@ sidebar:
 
 Trong kỷ nguyên dữ liệu hiện đại, vai trò của Data Engineer (DE) không chỉ dừng lại ở việc di chuyển dữ liệu đơn thuần (ETL/ELT). Kỹ sư Dữ liệu ngày nay thực chất là những Kỹ sư Phần mềm (Software Engineers) chuyên sâu về **hệ thống phân tán (Distributed Systems)**, **xử lý dữ liệu lớn (Big Data Processing)**, và **tối ưu hóa chi phí điện toán (Cost-efficiency Optimization)**. 
 
-Tuyển tập các câu hỏi phỏng vấn [Data Engineering](/concepts/foundation/data-engineering/) này được thiết kế theo format chuẩn của các công ty công nghệ hàng đầu (FAANG, Grab, Gojek, VNG, ...), tập trung vào các trụ cột cốt lõi:
+Tuyển tập các câu hỏi phỏng vấn [Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering) này được thiết kế theo format chuẩn của các công ty công nghệ hàng đầu (FAANG, Grab, Gojek, VNG, ...), tập trung vào các trụ cột cốt lõi:
 
 - **System Design & Architecture**: Thiết kế kiến trúc luồng dữ liệu, đánh giá trade-off, xử lý sự cố ở quy mô Petabyte.
 - **Advanced SQL & Data Modeling**: Tối ưu hóa truy vấn chuyên sâu, phân tích Execution Plan, và thiết kế mô hình dữ liệu (Kimball, Data Vault).

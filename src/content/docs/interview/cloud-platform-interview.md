@@ -32,8 +32,8 @@ Bạn phải trả lời được một cách thuyết phục các câu hỏi ki
 
 Khi thảo luận hoặc thiết kế hạ tầng Cloud trong buổi phỏng vấn, bạn nên bám sát vào ba trụ cột cốt lõi sau:
 
-* **Lựa chọn dịch vụ phù hợp (Service Selection)**: Thể hiện sự hiểu biết sâu sắc về các mô hình dịch vụ IaaS (như EC2 máy ảo), PaaS (dịch vụ được quản lý một phần như EMR, Cloud SQL) và SaaS/Serverless (những kho dữ liệu được quản lý hoàn toàn như [Snowflake](/concepts/cloud-data-platform/snowflake/), BigQuery). Luôn đặt lên bàn cân các điểm mạnh và điểm yếu của từng mô hình trước khi đưa ra quyết định.
-* **Tối ưu hóa chi phí ([Cost Optimization](/concepts/cloud-data-platform/cost-optimization/) / FinOps)**: Đây là một kỹ năng cực kỳ ăn điểm. Hãy chứng minh bạn biết cách tiết kiệm tài nguyên cho doanh nghiệp thông qua việc sử dụng các máy ảo giá rẻ (Spot Instances), tự động tắt/bật hoặc co giãn tài nguyên theo nhu cầu thực tế (Auto-scaling), và phân loại dữ liệu để chuyển các dữ liệu cũ sang tầng lưu trữ lạnh giá rẻ (Cold Storage).
+* **Lựa chọn dịch vụ phù hợp (Service Selection)**: Thể hiện sự hiểu biết sâu sắc về các mô hình dịch vụ IaaS (như EC2 máy ảo), PaaS (dịch vụ được quản lý một phần như EMR, Cloud SQL) và SaaS/Serverless (những kho dữ liệu được quản lý hoàn toàn như [Snowflake](/concepts/3-storage-engines-formats/snowflake), BigQuery). Luôn đặt lên bàn cân các điểm mạnh và điểm yếu của từng mô hình trước khi đưa ra quyết định.
+* **Tối ưu hóa chi phí ([Cost Optimization](/concepts/8-security-governance-finops/cost-optimization) / FinOps)**: Đây là một kỹ năng cực kỳ ăn điểm. Hãy chứng minh bạn biết cách tiết kiệm tài nguyên cho doanh nghiệp thông qua việc sử dụng các máy ảo giá rẻ (Spot Instances), tự động tắt/bật hoặc co giãn tài nguyên theo nhu cầu thực tế (Auto-scaling), và phân loại dữ liệu để chuyển các dữ liệu cũ sang tầng lưu trữ lạnh giá rẻ (Cold Storage).
 * **Bảo mật và Tuân thủ (Security & Compliance)**: Hãy chứng tỏ bạn luôn đặt tính bảo mật lên hàng đầu bằng cách áp dụng nguyên tắc đặc quyền tối thiểu (Least Privilege) khi phân quyền IAM, mã hóa dữ liệu ở cả hai trạng thái — khi lưu trữ (Encryption at rest) và khi truyền tải (Encryption in transit), cũng như thiết lập các vùng mạng an toàn.
 
 ---
@@ -51,7 +51,7 @@ Khi nhận được một câu hỏi thiết kế hệ thống trên Cloud, thay
 
 ## Mô hình tham chiếu Modern Data Stack trên AWS
 
-Sơ đồ dưới đây minh họa một kiến trúc [Modern Data Stack](/concepts/system-architecture/modern-data-stack/) chuẩn mực được thiết kế an toàn trong mạng ảo VPC của AWS:
+Sơ đồ dưới đây minh họa một kiến trúc [Modern Data Stack](/concepts/1-distributed-systems-architecture/modern-data-stack) chuẩn mực được thiết kế an toàn trong mạng ảo VPC của AWS:
 ```mermaid
 graph LR
     subgraph "Data Sources"
@@ -109,8 +109,8 @@ graph LR
 
 ## Những nguyên tắc vàng và Best Practices
 
-* **Ưu tiên kiến trúc Serverless (Serverless First)**: Trừ khi hệ thống của bạn có khối lượng công việc khổng lồ chạy ổn định và liên tục ở cường độ cao, hãy luôn ưu tiên các dịch vụ Serverless (AWS Lambda, [Google BigQuery](/concepts/cloud-data-platform/google-bigquery/), Amazon Athena). Bạn sẽ không phải tốn nhân sự vận hành máy ảo và chỉ phải trả tiền cho từng giây tính toán thực tế.
-* **Áp dụng chính sách vòng đời dữ liệu ([Data Lifecycle](/concepts/foundation/data-lifecycle/) Policies)**: Hãy cấu hình các quy tắc tự động chuyển các file dữ liệu cũ (ví dụ: các file log hệ thống đã lưu trên 30 ngày) xuống các tầng lưu trữ lạnh có chi phí siêu rẻ như Amazon S3 Glacier hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) Coldline.
+* **Ưu tiên kiến trúc Serverless (Serverless First)**: Trừ khi hệ thống của bạn có khối lượng công việc khổng lồ chạy ổn định và liên tục ở cường độ cao, hãy luôn ưu tiên các dịch vụ Serverless (AWS Lambda, [Google BigQuery](/concepts/3-storage-engines-formats/google-bigquery), Amazon Athena). Bạn sẽ không phải tốn nhân sự vận hành máy ảo và chỉ phải trả tiền cho từng giây tính toán thực tế.
+* **Áp dụng chính sách vòng đời dữ liệu ([Data Lifecycle](/concepts/1-distributed-systems-architecture/data-lifecycle) Policies)**: Hãy cấu hình các quy tắc tự động chuyển các file dữ liệu cũ (ví dụ: các file log hệ thống đã lưu trên 30 ngày) xuống các tầng lưu trữ lạnh có chi phí siêu rẻ như Amazon S3 Glacier hay Google [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage) Coldline.
 * **Gắn nhãn tài nguyên (Resource Tagging)**: Luôn xây dựng quy định gắn tag rõ ràng cho mọi tài nguyên tạo ra trên Cloud (ví dụ: `Environment=Prod`, `Team=Marketing`, `Project=Data-Sync`). Điều này giúp bạn dễ dàng xuất báo cáo tài chính hàng tháng để biết chính xác dự án nào đang tiêu tốn nhiều ngân sách nhất.
 
 ---

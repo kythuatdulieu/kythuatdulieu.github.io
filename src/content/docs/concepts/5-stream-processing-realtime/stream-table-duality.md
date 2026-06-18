@@ -33,8 +33,8 @@ Tính lưỡng tính ở đây có nghĩa là: **Stream và Table thực chất 
 
 ```mermaid
 flowchart LR
-    A["Stream"] -- "Tổng hợp ("Aggregation") / Materialize" --> B["Table"]
-    B -- "Ghi nhận thay đổi ("CDC / Changelog")" --> A
+    A["Stream"] -- "Tổng hợp (Aggregation) / Materialize" --> B["Table"]
+    B -- "Ghi nhận thay đổi (CDC / Changelog)" --> A
 ```
 
 ### 2.1. Từ Stream sang Table (Stream as a Table)

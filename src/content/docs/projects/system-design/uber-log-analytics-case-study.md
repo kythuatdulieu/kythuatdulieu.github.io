@@ -164,8 +164,8 @@ graph TD
     
     Broker1 -->|Scatter| RealtimeServer
     Broker1 -->|Scatter| OfflineServer
-    RealtimeServer -->|Gather ("Partial Results")| Broker1
-    OfflineServer -->|Gather ("Partial Results")| Broker1
+    RealtimeServer -->|"Gather Partial Results"| Broker1
+    OfflineServer -->|"Gather Partial Results"| Broker1
     
     Kafka["Kafka Topic partitions"] -->|Consume Event-by-Event| RealtimeServer
     S3["HDFS / AWS S3 Deep Store"] -->|Download Segments| OfflineServer

@@ -113,13 +113,13 @@ Hãy cùng xem xét một hệ thống thương mại điện tử (E-commerce) 
 
 ```mermaid
 graph LR
-    DB[("PostgreSQL\nTransactions")] -->|Airbyte ("Batch")| S3[("Amazon S3\nRaw Data Zone")]
-    Web["Web/App Clickstream"] -->|Kafka ("Stream")| S3
+    DB[("PostgreSQL\nTransactions")] -->|"Airbyte (Batch)"| S3[("Amazon S3\nRaw Data Zone")]
+    Web["Web/App Clickstream"] -->|"Kafka (Stream)"| S3
     
     S3 -->|Apache Spark| S3_Clean[("Amazon S3\nClean Zone")]
     
     S3_Clean -->|Snowpipe / COPY INTO| WH[("Snowflake\nData Warehouse")]
-    WH -->|dbt ("Transform")| WH_Marts[("Data Marts\nStar Schema")]
+    WH -->|"dbt (Transform)"| WH_Marts[("Data Marts\nStar Schema")]
     
     WH_Marts --> Tableau["Tableau Dashboards"]
     WH_Marts --> ML["Machine Learning Models"]

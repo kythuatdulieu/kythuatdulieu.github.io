@@ -126,8 +126,8 @@ graph TD
     D1["Client Thêm Item 3 qua Node B"] --> E1("Cart: [Item 1, Item 2, Item 3]<br/>Clock: [A:2, B:1]")
     D2["Client Xóa Item 2 qua Node C"] --> E2("Cart: [Item 1, Item 3]<br/>Clock: [A:2, C:1]")
     
-    E1 -->"|Hệ thống phục hồi & Gossip đồng bộ| F
-    E2 -->|Hệ thống phục hồi & Gossip đồng bộ| F{Phát hiện Conflict!<br/>[A:2, B:1"] vs ["A:2, C:1"]}
+    E1 -->|"Hệ thống phục hồi & Gossip đồng bộ"| F
+    E2 -->|"Hệ thống phục hồi & Gossip đồng bộ"| F{"Phát hiện Conflict!<br/>[A:2, B:1] vs [A:2, C:1]"}
     
     F -->|DB Trả 2 Siblings cho Client| G("Client merge logic:<br/>Giữ Item 1, xóa Item 2, thêm Item 3")
     G -->|Tạo bản mới ghi xuống DB| H("Cart: [Item 1, Item 3]<br/>Clock: [A:3, B:1, C:1]")

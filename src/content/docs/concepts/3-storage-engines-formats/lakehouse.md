@@ -6,7 +6,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Lakehouse (Data Lakehouse) là gì? Khái niệm, Đặc điểm và Kiến trúc"
 metaDescription: "Tìm hiểu toàn diện về Data Lakehouse: Kiến trúc lai hợp nhất sức mạnh phân tích của Data Warehouse và khả năng lưu trữ linh hoạt, rẻ tiền của Data Lake."
-description: "Hãy tưởng tượng bạn đang phải quản lý một hệ thống dữ liệu khổng lồ. Một mặt, bạn cần sự linh hoạt của **[Data Lake](/concepts/data-lake-lakehouse/data-lake)** để chứa mọi loại dữ liệu thô. Mặt khác, bạn lại cần tốc độ, tính toàn vẹn dữ liệu (ACID) và khả năng hỗ trợ BI của **Data Warehouse**. Đó là lúc **Data Lakehouse** ra đời, một mô hình kiến trúc mang tính cách mạng kết hợp ưu điểm của cả hai thế giới."
+description: "Hãy tưởng tượng bạn đang phải quản lý một hệ thống dữ liệu khổng lồ. Một mặt, bạn cần sự linh hoạt của **[Data Lake](/concepts/3-storage-engines-formats/data-lake)** để chứa mọi loại dữ liệu thô. Mặt khác, bạn lại cần tốc độ, tính toàn vẹn dữ liệu (ACID) và khả năng hỗ trợ BI của **Data Warehouse**. Đó là lúc **Data Lakehouse** ra đời, một mô hình kiến trúc mang tính cách mạng kết hợp ưu điểm của cả hai thế giới."
 ---
 
 

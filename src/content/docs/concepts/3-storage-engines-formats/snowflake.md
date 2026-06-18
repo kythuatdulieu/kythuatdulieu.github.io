@@ -23,7 +23,7 @@ Kiến trúc này bao gồm 3 lớp chính:
 
 ```mermaid
 flowchart TD
-    subgraph Cloud Services ["Lớp Cloud Services (Não bộ)"]
+    subgraph CloudServices ["Lớp Cloud Services (Não bộ)"]
         A["Xác thực & Phân quyền"]
         B["Tối ưu hóa Truy vấn"]
         C["Quản lý Metadata"]
@@ -40,7 +40,7 @@ flowchart TD
         DB[("Cloud Storage<br>S3 / GCS / Azure")]
     end
 
-    Cloud Services --> Compute
+    CloudServices --> Compute
     Compute --> Storage
 ```
 

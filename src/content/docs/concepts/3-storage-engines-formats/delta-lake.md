@@ -24,7 +24,7 @@ Nếu bạn từng làm việc với Data Lake truyền thống (sử dụng cá
 
 ## Kiến trúc cốt lõi của Delta Lake
 
-Đằng sau một bảng Delta, dữ liệu thực tế vẫn được lưu trữ dưới định dạng [Apache Parquet](/concepts/3-storage-engines-formats/parquet). Điểm khác biệt mấu chốt làm nên Delta Lake chính là **Transaction Log (Delta Log)**.
+Đằng sau một bảng Delta, dữ liệu thực tế vẫn được lưu trữ dưới định dạng [Apache Parquet](/concepts/3-storage-engines-formats/parquet-internals). Điểm khác biệt mấu chốt làm nên Delta Lake chính là **Transaction Log (Delta Log)**.
 
 Một thư mục bảng Delta Lake điển hình sẽ trông như thế này:
 

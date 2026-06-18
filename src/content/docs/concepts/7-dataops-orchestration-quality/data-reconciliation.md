@@ -11,7 +11,7 @@ description: "Hãy tưởng tượng bạn đang vận hành một đường ố
 
 
 
-Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)) khổng lồ cho một ví điện tử hoặc một sàn thương mại điện tử. Hàng triệu giao dịch diễn ra mỗi ngày được hút (Extract) từ các cơ sở dữ liệu vận hành (MySQL, PostgreSQL), đưa qua hệ thống biến đổi (Transform) và cuối cùng nạp (Load) vào Data Warehouse (như Snowflake, BigQuery) để lập báo cáo. Điều gì xảy ra nếu một ngày nào đó, tổng doanh thu trên Dashboard bị lệch đi vài tỷ đồng so với sổ sách kế toán do đường ống dữ liệu bị nghẽn hoặc sót bản ghi?
+Hãy tưởng tượng bạn đang vận hành một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline)) khổng lồ cho một ví điện tử hoặc một sàn thương mại điện tử. Hàng triệu giao dịch diễn ra mỗi ngày được hút (Extract) từ các cơ sở dữ liệu vận hành (MySQL, PostgreSQL), đưa qua hệ thống biến đổi (Transform) và cuối cùng nạp (Load) vào Data Warehouse (như Snowflake, BigQuery) để lập báo cáo. Điều gì xảy ra nếu một ngày nào đó, tổng doanh thu trên Dashboard bị lệch đi vài tỷ đồng so với sổ sách kế toán do đường ống dữ liệu bị nghẽn hoặc sót bản ghi?
 
 Đây là lúc **Data Reconciliation (Đối soát dữ liệu)** trở thành "vị cứu tinh". Data Reconciliation là quá trình kiểm tra chéo (Cross-check) dữ liệu ở các điểm khác nhau trong pipeline để đảm bảo tính toàn vẹn và nhất quán. Nó trả lời cho câu hỏi: *“Dữ liệu đầu ra ở hệ thống Đích (Target) có khớp chính xác với dữ liệu đầu vào từ hệ thống Nguồn (Source) hay không?”*
 

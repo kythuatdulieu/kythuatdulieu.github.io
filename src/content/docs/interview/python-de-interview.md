@@ -127,7 +127,7 @@ def find_common_emails(sales_emails, support_emails):
 
 ## Dạng 4: Làm phẳng cấu trúc JSON phức tạp (Data Flattening)
 
-Các cơ sở dữ liệu dạng tài liệu (NoSQL) hoặc các API dịch vụ thường trả về dữ liệu dưới dạng JSON lồng nhau nhiều cấp (Nested JSON). Trước khi nạp dữ liệu này vào kho dữ liệu quan hệ ([Data Warehouse](/concepts/data-warehouse/data-warehouse/)), Data Engineer cần phải làm phẳng nó ra thành cấu trúc bảng phẳng (dạng cột và dòng).
+Các cơ sở dữ liệu dạng tài liệu (NoSQL) hoặc các API dịch vụ thường trả về dữ liệu dưới dạng JSON lồng nhau nhiều cấp (Nested JSON). Trước khi nạp dữ liệu này vào kho dữ liệu quan hệ ([Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)), Data Engineer cần phải làm phẳng nó ra thành cấu trúc bảng phẳng (dạng cột và dòng).
 
 **Tình huống phỏng vấn**: *"Viết một hàm đệ quy (Recursive Function) để làm phẳng một từ điển (Dictionary) lồng nhau phức tạp."*
 
@@ -212,7 +212,7 @@ def download_all_concurrently(urls):
 
 ## English Summary
 
-Python interviews for Data Engineers shift focus away from hard algorithmic puzzles (like dynamic programming) towards practical data handling scenarios. Key interview patterns include processing massive files without running out of memory (Out of Memory errors) by reading files lazily line-by-line or using [chunking](/concepts/genai-ml/chunking/). Candidates must master the use of `yield` and Generators to create memory-efficient data streams, especially when handling paginated APIs. Additionally, writing recursive functions to flatten deeply nested JSON dictionaries into tabular formats, utilizing Hash Maps (Sets) for $O(1)$ fast [deduplication](/concepts/etl-elt/deduplication/), and demonstrating basic I/O concurrency using `ThreadPoolExecutor` are fundamental skills expected in top-tier technical interviews.
+Python interviews for Data Engineers shift focus away from hard algorithmic puzzles (like dynamic programming) towards practical data handling scenarios. Key interview patterns include processing massive files without running out of memory (Out of Memory errors) by reading files lazily line-by-line or using [chunking](/concepts/9-genai-machine-learning/chunking). Candidates must master the use of `yield` and Generators to create memory-efficient data streams, especially when handling paginated APIs. Additionally, writing recursive functions to flatten deeply nested JSON dictionaries into tabular formats, utilizing Hash Maps (Sets) for $O(1)$ fast [deduplication](/concepts/2-data-ingestion-integration/deduplication), and demonstrating basic I/O concurrency using `ThreadPoolExecutor` are fundamental skills expected in top-tier technical interviews.
 
 ## Tài Liệu Tham Khảo
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**

@@ -6,7 +6,7 @@ readingTime: "15 mins"
 lastUpdated: 2026-06-16
 seoTitle: "Cấu trúc và cách huấn luyện Embedding Model (Mô hình nhúng)"
 metaDescription: "Đi sâu vào kiến trúc bên trong của một Embedding Model, phương pháp học đối chiếu (Contrastive Learning) và các kiến trúc như Bi-Encoder, Cross-Encoder."
-description: "Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng [RAG](/concepts/genai-ml/rag/) (Retrieval-Augmented Generation) hay Semantic Search, Embedding Model đóng vai trò cốt lõi trong việc biểu diễn ngôn ngữ."
+description: "Khi làm việc với các hệ thống Trí tuệ Nhân tạo hiện đại, đặc biệt là các ứng dụng [RAG](/concepts/9-genai-machine-learning/rag) (Retrieval-Augmented Generation) hay Semantic Search, Embedding Model đóng vai trò cốt lõi trong việc biểu diễn ngôn ngữ."
 ---
 
 

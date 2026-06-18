@@ -108,7 +108,7 @@ Thay vì viết cứng code kết nối Database vào hàm (ví dụ: `df.to_sql
 
 ## 5. Áp dụng SDA vào Data Quality & DataOps
 
-SDA mang đến sự tích hợp tự nhiên với các nguyên tắc [DataOps](../1-introduction-to-dataops/what-is-dataops.md):
+SDA mang đến sự tích hợp tự nhiên với các nguyên tắc [DataOps](/concepts/7-dataops-orchestration-quality/dataops/):
 * **Kiểm tra chất lượng ngay lúc vật chất hóa (In-process Data Quality):** Bằng cách kết hợp công cụ như Great Expectations hoặc Pandera vào SDA, một quá trình materialize có thể trả về cả dữ liệu lẫn cảnh báo nếu dữ liệu không thoả mãn Schema hoặc Business Rules.
 * **Triển khai CI/CD:** Việc Data là Code giúp chúng ta thực hiện Pull Request, Code Review cho cấu trúc dữ liệu và Data Lineage dễ dàng trước khi triển khai (deploy) lên Production.
 

@@ -6,7 +6,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-16
 seoTitle: "Materialization trong dbt - Cẩm nang Data Warehouse chuyên sâu"
 metaDescription: "Tìm hiểu chi tiết về Materialization trong dbt: định nghĩa, các loại materialization (View, Table, Incremental, Ephemeral) và cách lựa chọn phù hợp."
-description: "Khi bạn viết một mô hình (model) trong [dbt](/concepts/transformation-analytics/dbt/) (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh SELECT. Tuy nhiên, cách kết quả của câu lệnh này được lưu trữ trong Data Warehouse (hoặc Database) mới quyết định đến chi phí, hiệu năng và thời gian cập nhật dữ liệu. Đây chính là khái niệm Materialization (Vật chất hóa)."
+description: "Khi bạn viết một mô hình (model) trong [dbt](/concepts/6-data-modeling-transformation/dbt) (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh SELECT. Tuy nhiên, cách kết quả của câu lệnh này được lưu trữ trong Data Warehouse (hoặc Database) mới quyết định đến chi phí, hiệu năng và thời gian cập nhật dữ liệu. Đây chính là khái niệm Materialization (Vật chất hóa)."
 ---
 
 

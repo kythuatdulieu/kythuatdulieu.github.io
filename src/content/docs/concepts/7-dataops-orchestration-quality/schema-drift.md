@@ -6,12 +6,12 @@ readingTime: "9 mins"
 lastUpdated: 2026-06-07
 seoTitle: "Schema Drift là gì? Cách xử lý thay đổi cấu trúc dữ liệu"
 metaDescription: "Tìm hiểu về Schema Drift (Trôi dạt cấu trúc) trong Data Engineering. Khái niệm, nguyên nhân, cách phát hiện và chiến lược Schema Evolution để xử lý tự động."
-description: "Hãy tưởng tượng bạn vừa xây dựng xong một hệ thống Data Pipeline hoàn hảo. Dữ liệu đổ về Data Warehouse đều đặn mỗi ngày, các báo cáo trên BI chạy mượt mà. Bỗng một ngày, pipeline báo lỗi đỏ rực..."
+description: "Schema Drift (Độ lệch lược đồ) là hiện tượng cấu trúc dữ liệu ở hệ thống nguồn (Source Systems) bị thay đổi một cách bất ngờ - ví dụ: thêm cột mới, xóa cột cũ, đổi tên cột hoặc thay đổi kiểu dữ liệu (data type) - mà không có sự thông báo trước cho Data Engineer, dẫn đến việc các [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline) hoặc các bảng lưu trữ cuối (như [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) hay [Data Lakehouse](/concepts/3-storage-engines-formats/lakehouse/)) bị vỡ (break) hoặc lưu trữ sai lệch dữ liệu."
 ---
 
 
 
-Hãy tưởng tượng bạn vừa xây dựng xong một hệ thống [Data Pipeline](/concepts/foundation/data-pipeline/) hoàn hảo. Dữ liệu đổ về [Data Warehouse](/concepts/foundation/data-warehouse/) đều đặn mỗi ngày, các báo cáo trên BI chạy mượt mà. Bỗng một ngày, pipeline báo lỗi đỏ rực, hoặc tệ hơn là pipeline vẫn báo thành công nhưng CEO phàn nàn rằng doanh thu tháng này trên Dashboard bị rớt thê thảm. 
+Hãy tưởng tượng bạn vừa xây dựng xong một hệ thống [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline) hoàn hảo. Dữ liệu đổ về [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) đều đặn mỗi ngày, các báo cáo trên BI chạy mượt mà. Bỗng một ngày, pipeline báo lỗi đỏ rực, hoặc tệ hơn là pipeline vẫn báo thành công nhưng CEO phàn nàn rằng doanh thu tháng này trên Dashboard bị rớt thê thảm. 
 
 Nguyên nhân? Đội ngũ kỹ sư phần mềm (Backend Engineers) đã đổi tên cột `revenue` thành `total_revenue` hoặc xóa hẳn một cột cũ trong cơ sở dữ liệu nguồn mà không thông báo cho bạn.
 
@@ -65,13 +65,13 @@ Nhiều công cụ và định dạng dữ liệu hiện đại hỗ trợ **Sch
 
 *   **Tự động thêm cột (Auto-add columns):** Khi phát hiện cột mới, công cụ tự động thực thi lệnh `ALTER TABLE ADD COLUMN` vào bảng đích.
 *   **Tự động nâng cấp kiểu dữ liệu (Upcasting):** Nếu nguồn thay đổi một trường từ `INT` sang `FLOAT`, hệ thống đích sẽ tự động mở rộng kiểu dữ liệu thành `FLOAT` (hoặc `STRING` là kiểu dữ liệu bao trùm nhất) để không làm mất dữ liệu.
-*   Các định dạng như **Parquet, Avro** và các kiến trúc [Data Lakehouse](/concepts/architecture/data-lakehouse/) với **Delta Lake, Apache Iceberg, Apache Hudi** đều có tính năng hỗ trợ Schema Evolution rất tốt.
+*   Các định dạng như **Parquet, Avro** và các kiến trúc [Data Lakehouse](/concepts/3-storage-engines-formats/lakehouse/) với **Delta Lake, Apache Iceberg, Apache Hudi** đều có tính năng hỗ trợ Schema Evolution rất tốt.
 
 ### 3. Sử dụng kiểu dữ liệu linh hoạt (Variant / JSON)
 
 Đối với các nguồn dữ liệu thay đổi quá thường xuyên, một chiến lược phổ biến là nạp (load) phần dữ liệu gốc ở dạng JSON vào một cột duy nhất có kiểu dữ liệu là `VARIANT` (Snowflake), `JSON` (BigQuery, PostgreSQL) hoặc `MAP`/`STRUCT` (Databricks).
 
-Quá trình trích xuất (parsing) các trường thông tin cụ thể sẽ được đẩy xuống các công cụ Transformation (như [dbt](/concepts/tools/dbt/)) thông qua SQL. Khi cấu trúc thay đổi, chỉ cần cập nhật lại SQL view mà không cần thiết kế lại toàn bộ luồng đẩy dữ liệu.
+Quá trình trích xuất (parsing) các trường thông tin cụ thể sẽ được đẩy xuống các công cụ Transformation (như [dbt](/concepts/6-data-modeling-transformation/dbt)) thông qua SQL. Khi cấu trúc thay đổi, chỉ cần cập nhật lại SQL view mà không cần thiết kế lại toàn bộ luồng đẩy dữ liệu.
 
 ### 4. Data Contracts (Hợp đồng dữ liệu) - Giải pháp tối ưu từ quy trình
 
