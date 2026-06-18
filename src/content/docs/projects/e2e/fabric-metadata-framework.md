@@ -9,7 +9,7 @@ Trong kỷ nguyên của Data Lakehouse, việc xây dựng và duy trì hàng t
 
 Hôm nay, chúng ta sẽ tìm hiểu về **Fabric Metadata-Driven Framework (FMD)** - một framework mã nguồn mở mạnh mẽ được thiết kế đặc biệt cho nền tảng Microsoft Fabric, cho phép bạn tự động hóa, điều phối và tiêu chuẩn hóa toàn bộ luồng dữ liệu.
 
-> **Mã Nguồn (GitHub):** [kythuatdulieu/FMD_FRAMEWORK](https://github.com/kythuatdulieu/FMD_FRAMEWORK) *(Forked từ repo gốc của Erwin de Kreuk)*
+> **Mã Nguồn (GitHub):** [kythuatdulieu/FMD_FRAMEWORK](https://github.com/kythuatdulieu/FMD_FRAMEWORK) *(Được fork và tùy chỉnh từ repo gốc của Erwin de Kreuk)*
 
 ---
 
@@ -17,53 +17,82 @@ Hôm nay, chúng ta sẽ tìm hiểu về **Fabric Metadata-Driven Framework (FM
 
 **FMD Framework** là một hệ thống cấu trúc sẵn (pre-built framework) xây dựng trên Microsoft Fabric. Nó áp dụng các quy chuẩn thiết kế Data Pipeline theo **Medallion Architecture** (Bronze - Silver - Gold) và tiếp cận theo tư duy **Lakehouse-First**.
 
-Thay vì tạo riêng biệt hàng tá Data Factory Pipelines cho mỗi nguồn dữ liệu khác nhau (như SQL Server, API, Oracle, CSV files), FMD tập trung logic vào **Metadata** (các bảng cấu hình trong cơ sở dữ liệu). Hệ thống sẽ đọc các siêu dữ liệu này ở thời điểm thực thi (runtime) để tự động sinh ra các tham số và động (dynamic) xử lý dữ liệu.
+Thay vì tạo riêng biệt hàng tá Data Factory Pipelines cho mỗi nguồn dữ liệu khác nhau (như SQL Server, API, Oracle, CSV files), FMD tập trung logic vào **Metadata** (các bảng cấu hình trong cơ sở dữ liệu Fabric SQL Database). Hệ thống sẽ đọc các siêu dữ liệu này ở thời điểm thực thi (runtime) để tự động sinh ra các tham số và linh hoạt xử lý luồng di chuyển dữ liệu.
+
+![FMD Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_Overview.png)
+*Hình 1: Kiến trúc tổng quan của FMD Framework, từ Source Systems đi qua các luồng xử lý tự động đến Business Domains*
 
 ### Tại sao lại chọn FMD Framework?
-*   **Dynamic Pipelines (Động):** Tự động điều chỉnh quá trình thực thi pipeline dựa trên metadata. Lý tưởng cho môi trường đa luồng, đa nguồn dữ liệu.
-*   **Sự Nhất Quán (Consistency):** Đảm bảo mọi bước từ Ingestion (thu thập) đến Publishing (công bố) đều tuân thủ một chuẩn duy nhất.
-*   **Giảm Thiểu Nỗ Lực Kỹ Thuật:** Không cần "phát minh lại bánh xe", tái sử dụng các mẫu (patterns) có sẵn để đưa dữ liệu vào Lakehouse nhanh nhất.
+Môi trường dữ liệu hiện đại đòi hỏi sự nhanh nhẹn, khả năng mở rộng và tính nhất quán. FMD đơn giản hóa những thách thức này bằng cách cung cấp:
+*   **Dynamic Pipelines (Luồng dữ liệu động):** Tự động điều chỉnh quá trình thực thi pipeline dựa trên metadata. Lý tưởng cho môi trường đa luồng, xử lý dữ liệu ở quy mô lớn (large-scale).
+*   **Sự Nhất Quán (Consistency):** Đảm bảo mọi bước từ Ingestion (thu thập), Processing (xử lý) đến Publishing (công bố) đều tuân thủ một chuẩn duy nhất trên toàn bộ hệ thống.
+*   **Giảm Thiểu Nỗ Lực Kỹ Thuật:** Cung cấp sẵn các Pattern tái sử dụng được (reusable patterns), giúp team kỹ thuật không cần "phát minh lại bánh xe".
+*   **Centralized Configuration:** Tập trung hóa cấu hình cho tất cả các thực thể dữ liệu (data entities).
 
 ---
 
-## 2. Kiến Trúc Tổng Quan Của FMD
+## 2. Kiến Trúc Sâu Bên Trong FMD
 
 FMD Framework được thiết kế dưới dạng module, tách biệt rõ ràng giữa Dữ Liệu (Data), Mã Nguồn (Code) và Điều Phối (Orchestration).
 
-### 2.1. Quản Trị Bằng Siêu Dữ Liệu (Metadata-Driven)
-Trái tim của hệ thống là một cơ sở dữ liệu (Fabric SQL Database) làm nhiệm vụ lưu trữ Metadata. Nó chứa cấu hình về:
+### 2.1. Quản Trị Bằng Siêu Dữ Liệu (Metadata-Driven Database)
+Trái tim của hệ thống là một cơ sở dữ liệu (Fabric SQL Database) làm nhiệm vụ lưu trữ toàn bộ cấu hình lõi:
 - Danh sách các nguồn dữ liệu (Source Connections).
-- Tần suất chạy (Schedules).
-- Các luật làm sạch dữ liệu (Cleansing Rules).
-- Tình trạng xử lý của từng bảng (Load Statuses).
+- Chu kỳ chạy (Schedules).
+- Các luật làm sạch và biến đổi dữ liệu (Cleansing Rules).
+- Tình trạng xử lý của từng thực thể (Load Statuses).
 
-### 2.2. Medallion Architecture
-FMD tích hợp chặt chẽ với kiến trúc huy chương của Databricks & Fabric:
-*   **Bronze Layer:** Nơi dữ liệu thô (Raw) được đẩy vào một cách tự động thông qua tính năng Copy Data của Fabric.
-*   **Silver Layer:** Sử dụng Fabric Notebooks (PySpark) được tham số hóa (Parameterized Notebooks) để làm sạch, khử trùng lặp và ghi dưới định dạng Delta Lake chuẩn hóa.
-*   **Gold Layer:** Tạo các mô hình dữ liệu (Data Model) phục vụ cho PowerBI và Reporting.
+![Metadata Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_METADATA_OVERVIEW.png)
+*Hình 2: Cấu trúc các bảng Metadata điều khiển toàn bộ luồng chạy của hệ thống*
+
+### 2.2. Tiến Trình Xử Lý Dữ Liệu (Medallion Architecture)
+FMD tích hợp chặt chẽ với kiến trúc huy chương của Microsoft Fabric:
+
+![Lakehouse Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_LAKEHOUSE_OVERVIEW.png)
+*Hình 3: Thiết kế Data Lakehouse tuân theo kiến trúc Medallion (Landing -> Bronze -> Silver -> Gold)*
+
+*   **Landing Zone / Bronze Layer:** Nơi dữ liệu thô (Raw) được kéo vào hệ thống một cách tự động thông qua các Copy Data Activities động, hỗ trợ đa dạng nguồn dữ liệu.
+*   **Silver Layer:** Sử dụng Fabric Notebooks (PySpark) được tham số hóa (Parameterized Notebooks) để chạy các rule làm sạch (Data Cleansing), khử trùng lặp và ghi dữ liệu thành định dạng Delta Lake chuẩn hóa.
+*   **Gold Layer:** Tạo các mô hình dữ liệu (Data Model) phục vụ sẵn sàng cho việc báo cáo qua PowerBI.
 
 ### 2.3. Điều Phối Bằng Taskflow
-Thay vì dùng các hệ thống orchestration bên ngoài như Apache Airflow, FMD tích hợp trực tiếp **Taskflow Orchestration** của Fabric Data Factory. Nó hỗ trợ:
-- Kích hoạt tuần tự (Sequential) hoặc song song (Parallel) các chuỗi pipeline.
-- Quản lý phụ thuộc (Dependencies) giữa các tiến trình.
+Thay vì dùng các hệ thống orchestration bên ngoài, FMD tận dụng sức mạnh điều phối ngay bên trong Fabric thông qua **Taskflow**. 
 
-### 2.4. Khả Năng Mở Rộng & Quản Lý Domain (Business Domains)
-Khung FMD được thiết kế để mở rộng theo kiến trúc **Data Mesh**. Mới đây, FMD đã bổ sung tính năng *Business Domain Deployment*, giúp tự động triển khai cơ sở hạ tầng Fabric cho từng phòng ban nghiệp vụ (Sales, HR, Marketing) mà vẫn giữ được sự kiểm soát tập trung.
+![Process Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_PROCESS_OVERVIEW.png)
+*Hình 4: Cách Taskflow phối hợp các Pipeline và Notebooks để chuyển đổi dữ liệu qua các lớp*
 
----
-
-## 3. Quản Trị & Giám Sát (Governance & Observability)
-
-Bên cạnh khả năng di chuyển dữ liệu, FMD giải quyết cực tốt bài toán **Data Observability**:
-- Hệ thống tự động theo dõi số lượng bản ghi được xử lý (rows processed).
-- Log lại trạng thái Load (Thành công, Thất bại) và Timestamp từng bước.
-- Cung cấp Audit Logs hoàn chỉnh, dễ dàng tích hợp vào một Dashboard tổng quan để Team Data Engineering chủ động phát hiện sự cố trước khi User phàn nàn.
+Nó hỗ trợ kích hoạt tuần tự (Sequential) hoặc song song (Parallel) các chuỗi pipeline và quản lý dependencies chặt chẽ từ lúc Load Data đến lúc Transformation.
 
 ---
 
-## 4. Tổng Kết
+## 3. Khả Năng Mở Rộng Theo Business Domains (Data Mesh)
 
-Nếu bạn đang chuyển dịch hệ thống dữ liệu của doanh nghiệp lên Microsoft Fabric (từ Synapse hoặc Azure Data Factory), **FMD Framework** là một lựa chọn "ăn liền" tuyệt vời. Việc tách biệt logic cấu hình khỏi mã nguồn (Code) giúp hệ thống của bạn mở rộng dễ dàng hàng ngàn Data Pipelines mà không phình to độ phức tạp. 
+Một tính năng cực kỳ mạnh mẽ của FMD là khả năng phân bổ theo **Business Domains**. FMD đã bổ sung tính năng *Business Domain Deployment*, giúp thiết lập một kiến trúc dạng **Data Mesh**.
 
-Tham khảo thêm cách cấu hình dữ liệu mẫu và tích hợp các nguồn tại [FMD Data Integration Wiki](https://github.com/edkreuk/FMD_FRAMEWORK/wiki).
+Cụ thể, FMD cung cấp module giúp tự động hóa quá trình sinh ra các Workspace riêng biệt trên Microsoft Fabric cho từng phòng ban (ví dụ: Sales, HR, Marketing). Mỗi Domain sẽ tự sở hữu hạ tầng Lakehouse của mình, tự quản lý dữ liệu đặc thù nhưng toàn bộ tiến trình vẫn tuân thủ theo các siêu dữ liệu quản trị tập trung (Centralized Governance).
+
+![Workspace Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_WORKSPACE_OVERVIEW.png)
+*Hình 5: Chiến lược phân tách Workspaces giữa Admin (quản trị tập trung) và các Domain nghiệp vụ*
+
+---
+
+## 4. Quản Trị & Giám Sát (Governance & Observability)
+
+Bên cạnh khả năng vận chuyển dữ liệu, FMD còn đóng vai trò như một "mắt thần" giám sát (Data Observability) cực kỳ nhạy bén:
+- Tự động theo dõi số lượng bản ghi (rows processed) tại mọi điểm chuyển giao dữ liệu.
+- Lưu trữ log chi tiết về trạng thái tiến trình (Thành công, Thất bại) kèm theo Timestamp chính xác từng giây.
+- Ghi nhận Audit Logs hoàn chỉnh, sẵn sàng xuất thẳng ra các Dashboard giám sát tổng thể. Đội ngũ Data Engineering có thể thiết lập cảnh báo (alert) để chủ động ứng cứu ngay khi có một node pipeline báo đỏ, trước khi người dùng cuối (Business Users) phát hiện ra dữ liệu bị sai lệch.
+
+---
+
+## 5. Tổng Kết & Use Cases Tiêu Biểu
+
+Nếu doanh nghiệp của bạn đang bắt đầu hành trình chuyển đổi (migration) lên **Microsoft Fabric** từ Synapse hoặc Azure Data Factory cũ, thì **FMD Framework** là một lựa chọn lý tưởng. Việc tách rời logic lập trình (Code) khỏi thông tin cấu hình dữ liệu (Metadata) giúp đội ngũ của bạn dễ dàng duy trì hàng trăm, thậm chí hàng ngàn data pipelines mà không phải viết lại code mỗi khi có thêm một nguồn dữ liệu mới.
+
+**Các Use Case phù hợp nhất:**
+- Xây dựng Data Lakehouse chuẩn doanh nghiệp lớn (Enterprise-grade).
+- Tích hợp dữ liệu từ nhiều nguồn đa dạng theo một chuẩn duy nhất (Multi-source data ingestion).
+- Quá trình onboarding thêm các Data Source mới chỉ cần điền vào bảng cấu hình (No-code / Low-code ingestion).
+- Triển khai mô hình phân quyền dữ liệu theo Data Mesh / Domains.
+
+> Khám phá cách cấu hình và triển khai chi tiết trên [Wiki của dự án FMD Framework gốc](https://github.com/edkreuk/FMD_FRAMEWORK/wiki).
