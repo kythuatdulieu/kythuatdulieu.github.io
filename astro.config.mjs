@@ -147,7 +147,29 @@ export default defineConfig({
 				{
 					label: '2. Lộ trình & Sự nghiệp (Learning Paths)',
 					collapsed: true,
-					autogenerate: { directory: 'learning-paths' }
+					items: [
+						{ label: 'Tổng quan Lộ trình', link: '/learning-paths/overview/' },
+						{
+							label: 'A. Lộ trình chính (Core Paths)',
+							items: [
+								{ label: '1. Beginner DE', link: '/learning-paths/core-paths/beginner-de/' },
+								{ label: '2. Junior to Middle DE', link: '/learning-paths/core-paths/junior-to-middle-de/' },
+								{ label: '3. Middle to Senior DE', link: '/learning-paths/core-paths/middle-to-senior-de/' },
+								{ label: 'Phân tích Nghề nghiệp', link: '/learning-paths/core-paths/de-career-paths/' },
+							]
+						},
+						{
+							label: 'B. Hướng đi chuyên sâu',
+							collapsed: true,
+							autogenerate: { directory: 'learning-paths/specializations' }
+						},
+						{
+							label: 'C. Lãnh đạo & Văn hóa',
+							collapsed: true,
+							autogenerate: { directory: 'learning-paths/leadership-culture' }
+						},
+						{ label: 'Chuẩn bị Phỏng vấn', link: '/learning-paths/interview-prep/' }
+					]
 				},
 				{
 					label: '3. Dự án & Thiết kế Hệ thống (Projects)',
