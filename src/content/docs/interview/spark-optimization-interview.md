@@ -11,7 +11,7 @@ metaDescription: "Cẩm nang giải quyết các bài toán tối ưu hóa Apach
 
 
 
-[Apache Spark](/concepts/batch-processing/apache-spark/) từ lâu đã là công cụ xử lý dữ liệu lớn (Big Data) tiêu chuẩn của ngành dữ liệu. Tuy nhiên, việc vận hành Spark trên các cụm máy chủ phân tán chưa bao giờ là dễ dàng. Phân tán dữ liệu mang lại sức mạnh tính toán khổng lồ nhưng cũng đi kèm với vô vàn lỗi phát sinh phức tạp (như lệch dữ liệu, nghẽn mạng I/O) mà việc chạy code trên một máy chủ đơn lẻ không bao giờ gặp phải.
+[Apache Spark](/concepts/4-compute-engines-batch/apache-spark) từ lâu đã là công cụ xử lý dữ liệu lớn (Big Data) tiêu chuẩn của ngành dữ liệu. Tuy nhiên, việc vận hành Spark trên các cụm máy chủ phân tán chưa bao giờ là dễ dàng. Phân tán dữ liệu mang lại sức mạnh tính toán khổng lồ nhưng cũng đi kèm với vô vàn lỗi phát sinh phức tạp (như lệch dữ liệu, nghẽn mạng I/O) mà việc chạy code trên một máy chủ đơn lẻ không bao giờ gặp phải.
 
 Vòng phỏng vấn **Tối ưu hóa Spark (Spark Optimization)** là nơi nhà tuyển dụng lọc ra những kỹ sư thực thụ — những người không chỉ biết viết code Spark chạy được mà còn biết cách làm cho hệ thống chạy hiệu quả, tiết kiệm chi phí đám mây và luôn hoàn thành đúng thời hạn cam kết (SLA).
 
@@ -33,8 +33,8 @@ Bạn cần chứng minh kỹ năng chẩn đoán nguyên nhân gốc rễ (Root
 Để hoàn thành tốt vòng phỏng vấn này, bạn cần hiểu rõ kiến trúc bên dưới của Spark và nắm vững 4 trụ cột tối ưu hóa sau:
 
 * **Quản lý bộ nhớ (Memory Management)**: Hiểu rõ cơ chế phân bổ tài nguyên bộ nhớ đệm giữa Execution Memory (cho tính toán JOIN, Aggregate) và Storage Memory (cho Caching dữ liệu), từ đó cấu hình bộ nhớ cho các Executor một cách tối ưu.
-* **Tối ưu hóa quá trình xáo trộn dữ liệu ([Shuffle](/concepts/batch-processing/shuffle/) Optimization)**: Hạn chế tối đa việc di chuyển dữ liệu qua mạng giữa các máy chủ (Network I/O) khi thực hiện các phép toán nặng như `JOIN` hay `groupBy`. Đây là thao tác ngốn tài nguyên nhất trong tính toán phân tán.
-* **Xử lý lệch dữ liệu ([Data Skew](/concepts/batch-processing/data-skew/))**: Phát hiện và phân phối lại khối lượng dữ liệu khi một vài task phải gánh lượng dữ liệu quá lớn và mất nhiều thời gian xử lý, trong khi các task khác đã hoàn thành và ngồi chơi.
+* **Tối ưu hóa quá trình xáo trộn dữ liệu ([Shuffle](/concepts/4-compute-engines-batch/shuffle) Optimization)**: Hạn chế tối đa việc di chuyển dữ liệu qua mạng giữa các máy chủ (Network I/O) khi thực hiện các phép toán nặng như `JOIN` hay `groupBy`. Đây là thao tác ngốn tài nguyên nhất trong tính toán phân tán.
+* **Xử lý lệch dữ liệu ([Data Skew](/concepts/4-compute-engines-batch/data-skew))**: Phát hiện và phân phối lại khối lượng dữ liệu khi một vài task phải gánh lượng dữ liệu quá lớn và mất nhiều thời gian xử lý, trong khi các task khác đã hoàn thành và ngồi chơi.
 * **Định dạng file và Tuần tự hóa (Serialization)**: Lựa chọn định dạng lưu trữ hướng cột hiệu quả (như Parquet, ORC) kết hợp với các bộ tuần tự hóa tốc độ cao (như Kryo serializer) để tối ưu hóa tốc độ đọc ghi đĩa.
 
 ---

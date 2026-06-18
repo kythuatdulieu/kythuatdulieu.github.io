@@ -11,7 +11,7 @@ metaDescription: "Hướng dẫn thiết kế kiến trúc Data Pipeline (ETL/EL
 
 
 
-Trong quy trình tuyển dụng Data Engineer (từ cấp độ Mid, Senior cho đến Staff), vòng phỏng vấn **Thiết kế [Data Pipeline](/concepts/foundation/data-pipeline/)** (đôi khi gọi là System Design cho Data) luôn là vòng thi quan trọng nhất. Vòng này kiểm tra toàn diện khả năng tư duy hệ thống, thiết kế kiến trúc và giải quyết các bài toán dữ liệu thực tế của ứng viên.
+Trong quy trình tuyển dụng Data Engineer (từ cấp độ Mid, Senior cho đến Staff), vòng phỏng vấn **Thiết kế [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline)** (đôi khi gọi là System Design cho Data) luôn là vòng thi quan trọng nhất. Vòng này kiểm tra toàn diện khả năng tư duy hệ thống, thiết kế kiến trúc và giải quyết các bài toán dữ liệu thực tế của ứng viên.
 
 ---
 
@@ -25,12 +25,12 @@ Nhà tuyển dụng muốn thông qua vòng phỏng vấn này để đánh giá
 
 ## Bản chất của việc thiết kế Data Pipeline
 
-Thiết kế một đường ống dữ liệu (Data Pipeline) không đơn thuần chỉ là vẽ các mũi tên kết nối các công cụ lại với nhau (ví dụ vẽ sơ đồ: *Airbyte $\rightarrow$ S3 $\rightarrow$ Spark $\rightarrow$ [Snowflake](/concepts/cloud-data-platform/snowflake/)*). 
+Thiết kế một đường ống dữ liệu (Data Pipeline) không đơn thuần chỉ là vẽ các mũi tên kết nối các công cụ lại với nhau (ví dụ vẽ sơ đồ: *Airbyte $\rightarrow$ S3 $\rightarrow$ Spark $\rightarrow$ [Snowflake](/concepts/3-storage-engines-formats/snowflake)*). 
 
 Đó là quá trình bạn phải định nghĩa chi tiết toàn bộ vòng đời của dữ liệu:
 * **Phương thức trích xuất**: Kéo dữ liệu (Pull) hay đẩy dữ liệu (Push)?
 * **Tần suất cập nhật**: Xử lý theo lô (Batch) hay thời gian thực (Streaming)?
-* **Mô hình biến đổi**: [ETL](/concepts/etl-elt/etl/) (Extract - Transform - Load) truyền thống hay [ELT](/concepts/etl-elt/elt/) (Extract - Load - Transform) hiện đại?
+* **Mô hình biến đổi**: [ETL](/concepts/2-data-ingestion-integration/etl) (Extract - Transform - Load) truyền thống hay [ELT](/concepts/2-data-ingestion-integration/elt) (Extract - Load - Transform) hiện đại?
 * **Khả năng phục hồi**: Làm thế nào để xử lý dữ liệu bị trễ (Late arriving data), cơ chế báo lỗi, và chiến lược nạp lại dữ liệu lịch sử (Backfilling) an toàn?
 
 ---
@@ -51,10 +51,10 @@ Một Data Pipeline được thiết kế chuẩn chỉnh bởi các kỹ sư Se
 Khi nhận được đề bài thiết kế hệ thống, hãy bình tĩnh dẫn dắt người phỏng vấn qua 5 giai đoạn tư duy mạch lạc sau:
 
 1. **Xác định quy mô hệ thống (Scope the System)**: Làm rõ dung lượng dữ liệu cần xử lý hàng ngày (Gigabytes, Terabytes hay Petabytes), định dạng của nguồn dữ liệu đầu vào (JSON, CSV, DB logs) và yêu cầu về tần suất cập nhật dữ liệu (Real-time, Hourly hay Daily).
-2. **Thiết kế kiến trúc tổng thể (High-Level Design)**: Đưa ra lựa chọn mô hình ETL hay ELT, và lựa chọn công nghệ lưu trữ tương ứng (Object Storage hay Cloud [Data Warehouse](/concepts/data-warehouse/data-warehouse/)).
-3. **Thu nhận dữ liệu ([Data Ingestion](/concepts/etl-elt/data-ingestion/))**: Thiết kế luồng kéo dữ liệu định kỳ hay bắt sự kiện thay đổi. Thảo luận cách thức tải dữ liệu tăng thêm ([Incremental Load](/concepts/etl-elt/incremental-load/)) thay vì tải lại toàn bộ.
+2. **Thiết kế kiến trúc tổng thể (High-Level Design)**: Đưa ra lựa chọn mô hình ETL hay ELT, và lựa chọn công nghệ lưu trữ tương ứng (Object Storage hay Cloud [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)).
+3. **Thu nhận dữ liệu ([Data Ingestion](/concepts/2-data-ingestion-integration/data-ingestion))**: Thiết kế luồng kéo dữ liệu định kỳ hay bắt sự kiện thay đổi. Thảo luận cách thức tải dữ liệu tăng thêm ([Incremental Load](/concepts/2-data-ingestion-integration/incremental-load)) thay vì tải lại toàn bộ.
 4. **Biến đổi và Lưu trữ (Transformation & Storage)**: Thiết kế luồng dữ liệu đi qua các tầng của kiến trúc Medallion (từ tầng thô Bronze, tầng làm sạch Silver cho đến tầng tổng hợp Gold).
-5. **Điều phối và Quan sát ([Orchestration](/concepts/orchestration/orchestration/) & Observability)**: Đề xuất các công cụ điều phối (như [Apache Airflow](/concepts/orchestration/apache-airflow/), Dagster), thiết lập cơ chế giám sát lỗi, theo dõi nguồn gốc dữ liệu ([Data Lineage](/concepts/governance-metadata/data-lineage/)) và tự động chạy lại (Retry) khi gặp lỗi tạm thời.
+5. **Điều phối và Quan sát ([Orchestration](/concepts/7-dataops-orchestration-quality/orchestration) & Observability)**: Đề xuất các công cụ điều phối (như [Apache Airflow](/concepts/7-dataops-orchestration-quality/apache-airflow), Dagster), thiết lập cơ chế giám sát lỗi, theo dõi nguồn gốc dữ liệu ([Data Lineage](/concepts/8-security-governance-finops/data-lineage)) và tự động chạy lại (Retry) khi gặp lỗi tạm thời.
 
 ---
 
@@ -76,8 +76,8 @@ graph LR
         D["(Bronze: Raw Data)"]
         E["(Silver: Clean & Join)"]
         F["(Gold: Data Marts)"]
-        D -. "dbt ("Transform")" .-> E
-        E -. "dbt ("Transform")" .-> F
+        D -. "dbt (Transform)" .-> E
+        E -. "dbt (Transform)" .-> F
     end
 
     subgraph "Orchestration & Monitoring"
@@ -87,7 +87,7 @@ graph LR
 
     A -->|"CDC"| C
     B -->|"REST / Batch"| C
-    C -->|"Load ("EL")"| D
+    C -->|"Load (EL)"| D
     G -. "Trigger Ingestion" .-> C
     G -. "Trigger Transform" .-> D
     H -. "Data Quality Check" .-> E
@@ -103,11 +103,11 @@ graph LR
 
 **Phân tích & Hướng thiết kế**:
 
-* **Ingestion (Thu nhận)**: Do hệ thống cơ sở dữ liệu Oracle cũ không thể chịu nổi các truy vấn quét dữ liệu lớn hàng ngày, tôi sẽ không dùng phương thức Full Load. Thay vào đó, tôi thiết lập cơ chế bắt sự kiện thay đổi dữ liệu (CDC - [Change Data Capture](/concepts/etl-elt/change-data-capture/)) bằng cách dùng Debezium để đọc file ghi nhật ký giao dịch (Transaction Log) của Oracle, sau đó đẩy các sự kiện INSERT/UPDATE/DELETE này vào Kafka.
+* **Ingestion (Thu nhận)**: Do hệ thống cơ sở dữ liệu Oracle cũ không thể chịu nổi các truy vấn quét dữ liệu lớn hàng ngày, tôi sẽ không dùng phương thức Full Load. Thay vào đó, tôi thiết lập cơ chế bắt sự kiện thay đổi dữ liệu (CDC - [Change Data Capture](/concepts/2-data-ingestion-integration/change-data-capture)) bằng cách dùng Debezium để đọc file ghi nhật ký giao dịch (Transaction Log) của Oracle, sau đó đẩy các sự kiện INSERT/UPDATE/DELETE này vào Kafka.
 * **Storage (Lưu trữ thô)**: Viết một chương trình Consumer để đẩy dữ liệu từ Kafka xuống Amazon S3 (Bronze Layer) theo định dạng Parquet để tối ưu hóa hiệu năng đọc ghi, phân chia phân vùng theo ngày xảy ra giao dịch (`year/month/day/`).
-* **Transformation (Biến đổi)**: Sử dụng [Apache Spark](/concepts/batch-processing/apache-spark/) (hoặc [dbt](/concepts/transformation-analytics/dbt/) trên Snowflake) để đọc dữ liệu từ tầng Bronze, tiến hành loại bỏ các bản ghi trùng lặp (do cơ chế At-least-once của Kafka), áp dụng cấu trúc bảng (schema) chuẩn hóa và lưu trữ kết quả đã làm sạch vào tầng Silver.
+* **Transformation (Biến đổi)**: Sử dụng [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) (hoặc [dbt](/concepts/6-data-modeling-transformation/dbt) trên Snowflake) để đọc dữ liệu từ tầng Bronze, tiến hành loại bỏ các bản ghi trùng lặp (do cơ chế At-least-once của Kafka), áp dụng cấu trúc bảng (schema) chuẩn hóa và lưu trữ kết quả đã làm sạch vào tầng Silver.
 * **Orchestration (Điều phối)**: Cấu hình Apache Airflow chạy định kỳ vào 00:30 sáng hàng ngày để kích hoạt các job tính toán tổng hợp dữ liệu từ tầng Silver sang Gold Layer để phục vụ trực tiếp cho báo cáo đối soát.
-* **[Data Quality](/concepts/data-quality/data-quality/) (Kiểm soát chất lượng)**: Chèn thêm bước kiểm tra dữ liệu tự động giữa tầng Silver và Gold: so sánh tổng số tiền giao dịch tính được với checksum từ hệ thống nguồn gửi sang. Nếu phát hiện độ lệch vượt quá 0.01%, hệ thống sẽ lập tức dừng quy trình báo cáo và gửi cảnh báo khẩn cấp qua Slack cho đội vận hành.
+* **[Data Quality](/concepts/7-dataops-orchestration-quality/data-quality) (Kiểm soát chất lượng)**: Chèn thêm bước kiểm tra dữ liệu tự động giữa tầng Silver và Gold: so sánh tổng số tiền giao dịch tính được với checksum từ hệ thống nguồn gửi sang. Nếu phát hiện độ lệch vượt quá 0.01%, hệ thống sẽ lập tức dừng quy trình báo cáo và gửi cảnh báo khẩn cấp qua Slack cho đội vận hành.
 
 ---
 
@@ -122,8 +122,8 @@ graph LR
 ## Những sai lầm kinh điển dễ làm "đổ vỡ" hệ thống
 
 * **Bỏ quên dữ liệu đến muộn (Late Arriving Data)**: Pipeline của bạn chốt số liệu ngày hôm qua vào đúng 00:00. Tuy nhiên, một số giao dịch phát sinh lúc 23:59 ngày hôm qua có thể bị trễ và chỉ truyền đến hệ thống vào lúc 00:05 ngày hôm nay do lỗi mạng điện thoại. Nếu không thiết kế cơ chế cập nhật đè (merge/upsert) cho dữ liệu đến trễ, báo cáo tài chính của bạn chắc chắn sẽ bị thiếu hụt số liệu.
-* **Lạm dụng lệnh UPDATE/DELETE trên [Data Lake](/concepts/data-lake-lakehouse/data-lake/)**: Các hệ thống Object Storage như Amazon S3 hay Google [Cloud Storage](/concepts/cloud-data-platform/cloud-storage/) được thiết kế để lưu trữ các file tĩnh bất biến. Việc cố gắng chạy lệnh Update hay Delete trên các file này sẽ bắt hệ thống phải đọc và ghi lại toàn bộ file vật lý mới, cực kỳ tốn tài nguyên. Hãy cân nhắc áp dụng kiến trúc Data [Lakehouse](/concepts/data-lake-lakehouse/lakehouse/) (như [Apache Iceberg](/concepts/data-lake-lakehouse/apache-iceberg/), [Delta Lake](/concepts/data-lake-lakehouse/delta-lake/)) để được hỗ trợ các giao dịch ACID mạnh mẽ.
-* **Thiết lập chuỗi phụ thuộc quá sâu (Hard Dependency)**: Thiết kế một [DAG](/concepts/orchestration/dag/) trong Airflow chứa hàng chục tác vụ chạy nối tiếp nhau kiểu chuỗi dài (Task A $\rightarrow$ Task B $\rightarrow$ ... $\rightarrow$ Task Z). Khi có một tác vụ ở giữa gặp lỗi (ví dụ Task Y), việc xử lý sự cố và chạy lại (retry) một chuỗi dài như vậy sẽ là một cực hình đối với đội ngũ vận hành.
+* **Lạm dụng lệnh UPDATE/DELETE trên [Data Lake](/concepts/3-storage-engines-formats/data-lake)**: Các hệ thống Object Storage như Amazon S3 hay Google [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage) được thiết kế để lưu trữ các file tĩnh bất biến. Việc cố gắng chạy lệnh Update hay Delete trên các file này sẽ bắt hệ thống phải đọc và ghi lại toàn bộ file vật lý mới, cực kỳ tốn tài nguyên. Hãy cân nhắc áp dụng kiến trúc Data [Lakehouse](/concepts/3-storage-engines-formats/lakehouse) (như [Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg), [Delta Lake](/concepts/3-storage-engines-formats/delta-lake)) để được hỗ trợ các giao dịch ACID mạnh mẽ.
+* **Thiết lập chuỗi phụ thuộc quá sâu (Hard Dependency)**: Thiết kế một [DAG](/concepts/7-dataops-orchestration-quality/dag) trong Airflow chứa hàng chục tác vụ chạy nối tiếp nhau kiểu chuỗi dài (Task A $\rightarrow$ Task B $\rightarrow$ ... $\rightarrow$ Task Z). Khi có một tác vụ ở giữa gặp lỗi (ví dụ Task Y), việc xử lý sự cố và chạy lại (retry) một chuỗi dài như vậy sẽ là một cực hình đối với đội ngũ vận hành.
 
 ---
 
@@ -168,7 +168,7 @@ graph LR
 
 ## English Summary
 
-The Pipeline Design Interview evaluates a candidate's capability to build scalable, resilient, and accurate data movement systems. It focuses heavily on crucial principles such as [Idempotency](/concepts/etl-elt/idempotency/) (ensuring multiple pipeline runs produce the exact same outcome without data duplication), decoupling storage and compute, handling late-arriving data, and implementing data quality checks (Data Contracts/WAP pattern). Candidates should be prepared to discuss the trade-offs between Batch and Streaming architectures, justify the shift from ETL to ELT (e.g., using [Medallion Architecture](/concepts/data-lake-lakehouse/medallion-architecture/) with dbt and cloud warehouses), and design robust data ingestion strategies using Change Data Capture (CDC) over repetitive full database loads.
+The Pipeline Design Interview evaluates a candidate's capability to build scalable, resilient, and accurate data movement systems. It focuses heavily on crucial principles such as [Idempotency](/concepts/2-data-ingestion-integration/idempotency) (ensuring multiple pipeline runs produce the exact same outcome without data duplication), decoupling storage and compute, handling late-arriving data, and implementing data quality checks (Data Contracts/WAP pattern). Candidates should be prepared to discuss the trade-offs between Batch and Streaming architectures, justify the shift from ETL to ELT (e.g., using [Medallion Architecture](/concepts/3-storage-engines-formats/medallion-architecture) with dbt and cloud warehouses), and design robust data ingestion strategies using Change Data Capture (CDC) over repetitive full database loads.
 
 ## Tài Liệu Tham Khảo
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**

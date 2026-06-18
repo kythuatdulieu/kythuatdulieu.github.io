@@ -11,7 +11,7 @@ description: "Trong thế giới của các Mô hình Ngôn ngữ Lớn (LLM), T
 
 
 
-Trong thế giới của các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/genai-ml/llm/)), **Temperature** (Nhiệt độ) là một trong những siêu tham số (hyperparameter) phổ biến và quan trọng nhất để điều khiển hành vi của mô hình khi sinh văn bản (text generation). Bằng cách tinh chỉnh tham số này, bạn có thể biến một AI từ một "nhà toán học" cứng nhắc, chính xác thành một "nhà thơ" bay bổng, đầy sức sáng tạo.
+Trong thế giới của các Mô hình Ngôn ngữ Lớn ([LLM](/concepts/9-genai-machine-learning/llm)), **Temperature** (Nhiệt độ) là một trong những siêu tham số (hyperparameter) phổ biến và quan trọng nhất để điều khiển hành vi của mô hình khi sinh văn bản (text generation). Bằng cách tinh chỉnh tham số này, bạn có thể biến một AI từ một "nhà toán học" cứng nhắc, chính xác thành một "nhà thơ" bay bổng, đầy sức sáng tạo.
 
 ## Temperature là gì?
 

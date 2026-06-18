@@ -3,7 +3,7 @@ title: "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
 description: "Lộ trình học tập chuyên sâu để làm chủ hệ thống xử lý dòng sự kiện với Apache Kafka, Spark Streaming và Flink."
 ---
 
-Lộ trình **Streaming Data Engineer** cung cấp hướng dẫn thiết kế, xây dựng và vận hành các hệ thống xử lý dòng dữ liệu thời gian thực (Real-time Streaming) với độ trễ thấp (low-latency) ở quy mô lớn. Nội dung tập trung vào kiến trúc cốt lõi của [Apache Kafka](/concepts/streaming-processing/apache-kafka/), tư duy xử lý thời gian sự kiện (Event-time), kỹ thuật quản lý trạng thái (Stateful Processing), và các mô hình tính toán phân tán mạnh mẽ nhất hiện nay như Apache Flink hay Spark Streaming.
+Lộ trình **Streaming Data Engineer** cung cấp hướng dẫn thiết kế, xây dựng và vận hành các hệ thống xử lý dòng dữ liệu thời gian thực (Real-time Streaming) với độ trễ thấp (low-latency) ở quy mô lớn. Nội dung tập trung vào kiến trúc cốt lõi của [Apache Kafka](/concepts/5-stream-processing-realtime/apache-kafka), tư duy xử lý thời gian sự kiện (Event-time), kỹ thuật quản lý trạng thái (Stateful Processing), và các mô hình tính toán phân tán mạnh mẽ nhất hiện nay như Apache Flink hay Spark Streaming.
 
 Trong thời đại dữ liệu lên ngôi, các doanh nghiệp không còn thỏa mãn với việc nhận báo cáo sau 24 giờ. Từ gợi ý sản phẩm thời gian thực (real-time recommendation), cảnh báo gian lận tài chính chỉ trong vài mili-giây, đến giám sát hệ thống IoT hàng triệu thiết bị, **Streaming Data Engineering** đã trở thành kỹ năng "phải có" đối với một Senior Data Engineer.
 
@@ -73,7 +73,7 @@ graph TD
 ```
 
 #### Consumer Groups & Rebalancing
-Một tính năng đột phá của Kafka là **[Consumer Groups](/concepts/streaming-processing/consumer-groups/)**. Khác với RabbitMQ, Kafka cho phép nhiều nhóm Consumer cùng đọc một Topic mà không tiêu hủy dữ liệu. Khi số lượng Consumer thay đổi, Kafka kích hoạt quá trình **Rebalancing** để phân bổ lại các Partitions, đây thường là nguyên nhân gây nghẽn cục bộ (Stop-The-World) mà một kỹ sư cần tối ưu.
+Một tính năng đột phá của Kafka là **[Consumer Groups](/concepts/5-stream-processing-realtime/consumer-groups)**. Khác với RabbitMQ, Kafka cho phép nhiều nhóm Consumer cùng đọc một Topic mà không tiêu hủy dữ liệu. Khi số lượng Consumer thay đổi, Kafka kích hoạt quá trình **Rebalancing** để phân bổ lại các Partitions, đây thường là nguyên nhân gây nghẽn cục bộ (Stop-The-World) mà một kỹ sư cần tối ưu.
 
 **Ví dụ Code (Python bằng `confluent-kafka`): Tạo một Producer cơ bản**
 ```python
@@ -131,7 +131,7 @@ sequenceDiagram
 
 #### Watermark là gì?
 Nếu bạn đếm số lượt click từ `10:00` đến `10:05` dựa trên Event-time, làm sao bạn biết khi nào có thể "đóng" kết quả lại để tính tổng? Có thể một thiết bị gửi dữ liệu của lúc `10:01` nhưng đến tận `10:06` mới tới.
-**[Watermark](/concepts/streaming-processing/watermark/)** là một ngưỡng thời gian "heuristic" báo hiệu cho hệ thống: *"Tôi tự tin rằng sẽ không còn sự kiện nào có Event-time < X đến hệ thống nữa"*. Nhờ Watermark, hệ thống có thể đóng các cửa sổ thời gian (Window) và tiến hành tính toán mà không bị chờ đợi vô hạn.
+**[Watermark](/concepts/5-stream-processing-realtime/watermark)** là một ngưỡng thời gian "heuristic" báo hiệu cho hệ thống: *"Tôi tự tin rằng sẽ không còn sự kiện nào có Event-time < X đến hệ thống nữa"*. Nhờ Watermark, hệ thống có thể đóng các cửa sổ thời gian (Window) và tiến hành tính toán mà không bị chờ đợi vô hạn.
 
 ---
 

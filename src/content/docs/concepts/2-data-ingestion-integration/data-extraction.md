@@ -6,12 +6,12 @@ readingTime: "15 mins"
 lastUpdated: 2026-06-16
 seoTitle: "Data Extraction - Các phương pháp trích xuất dữ liệu"
 metaDescription: "Trích xuất dữ liệu (Data Extraction) là gì? Tìm hiểu các kỹ thuật trích xuất phổ biến như Full Load, Incremental Load, API và Database Log (CDC)."
-description: "Trong quy trình [ETL](/concepts/etl-elt/etl/)/[ELT](/concepts/etl-elt/elt/) kinh điển, chữ cái đầu tiên '**E**' chính là đại diện cho **Extraction (Trích xuất dữ liệu)**. Khai thác dữ liệu từ các hệ thống nguồn là bước đầu tiên và quan trọng nhất trong mọi hệ thống Data Engineering."
+description: "Trong quy trình [ETL](/concepts/2-data-ingestion-integration/etl)/[ELT](/concepts/2-data-ingestion-integration/elt) kinh điển, chữ cái đầu tiên '**E**' chính là đại diện cho **Extraction (Trích xuất dữ liệu)**. Khai thác dữ liệu từ các hệ thống nguồn là bước đầu tiên và quan trọng nhất trong mọi hệ thống Data Engineering."
 ---
 
 
 
-Data Extraction (Trích xuất dữ liệu) là bước đầu tiên (**E** - Extract) trong bất kỳ đường ống dữ liệu (data pipeline) nào, dù là [ETL](/concepts/etl-elt/etl/) hay [ELT](/concepts/etl-elt/elt/). Đây là quá trình kết nối tới các hệ thống nguồn khác nhau (như cơ sở dữ liệu quan hệ, NoSQL, hệ thống SaaS, API, hoặc các file tĩnh) để lấy dữ liệu ra một cách an toàn và mang về kho lưu trữ trung tâm (Data Warehouse hoặc Data Lake). 
+Data Extraction (Trích xuất dữ liệu) là bước đầu tiên (**E** - Extract) trong bất kỳ đường ống dữ liệu (data pipeline) nào, dù là [ETL](/concepts/2-data-ingestion-integration/etl) hay [ELT](/concepts/2-data-ingestion-integration/elt). Đây là quá trình kết nối tới các hệ thống nguồn khác nhau (như cơ sở dữ liệu quan hệ, NoSQL, hệ thống SaaS, API, hoặc các file tĩnh) để lấy dữ liệu ra một cách an toàn và mang về kho lưu trữ trung tâm (Data Warehouse hoặc Data Lake). 
 
 Nếu bước này được thiết kế kém, nó không chỉ dẫn đến mất mát hoặc sai sót dữ liệu, mà còn có thể làm chậm trễ, thậm chí làm sập các hệ thống nghiệp vụ quan trọng (production databases) đang trực tiếp phục vụ người dùng. Do đó, "nghệ thuật" của Data Extraction là kéo được dữ liệu cần thiết với **độ trễ nhỏ nhất**, **chi phí thấp nhất** và **ít gây ảnh hưởng nhất** tới hệ thống nguồn.
 
@@ -119,7 +119,7 @@ Data Engineer thường xuyên phải làm việc với sự đa dạng và hỗ
 
 ## Kết Luận
 
-Bước Extraction thường là giai đoạn gian nan nhất trong Data Engineering vì bạn không có toàn quyền kiểm soát các hệ thống nguồn. Một chiến lược trích xuất thông minh kết hợp giữa Full Load (cho dữ liệu tĩnh), Incremental (qua API/Batch) và CDC (cho Core Database) sẽ giúp xây dựng một nền tảng dữ liệu ổn định, mở ra cơ hội khai thác phân tích cho các bước [Transformation (Chuyển đổi)](/concepts/etl-elt/data-transformation/) sau này.
+Bước Extraction thường là giai đoạn gian nan nhất trong Data Engineering vì bạn không có toàn quyền kiểm soát các hệ thống nguồn. Một chiến lược trích xuất thông minh kết hợp giữa Full Load (cho dữ liệu tĩnh), Incremental (qua API/Batch) và CDC (cho Core Database) sẽ giúp xây dựng một nền tảng dữ liệu ổn định, mở ra cơ hội khai thác phân tích cho các bước [Transformation (Chuyển đổi)](/concepts/2-data-ingestion-integration/data-transformation) sau này.
 
 ## Tài Liệu Tham Khảo
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**

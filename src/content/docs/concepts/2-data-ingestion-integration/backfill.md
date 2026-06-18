@@ -11,7 +11,7 @@ description: "Backfill là quá trình xử lý, cập nhật hoặc khôi phụ
 
 
 
-Trong trạng thái vận hành bình thường, một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/foundation/data-pipeline/)) thường sẽ tải và xử lý dữ liệu mới được sinh ra mỗi ngày (hoặc mỗi giờ). Tuy nhiên, mọi thứ hiếm khi hoàn hảo. Bạn sẽ thường xuyên đối mặt với việc cần phải xử lý lại dữ liệu của quá khứ. Quá trình đó được gọi là **Backfill** (Điền lấp lịch sử / Chạy bù).
+Trong trạng thái vận hành bình thường, một đường ống dẫn dữ liệu ([Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline)) thường sẽ tải và xử lý dữ liệu mới được sinh ra mỗi ngày (hoặc mỗi giờ). Tuy nhiên, mọi thứ hiếm khi hoàn hảo. Bạn sẽ thường xuyên đối mặt với việc cần phải xử lý lại dữ liệu của quá khứ. Quá trình đó được gọi là **Backfill** (Điền lấp lịch sử / Chạy bù).
 
 ## 1. Backfill là gì?
 

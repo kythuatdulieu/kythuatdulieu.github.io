@@ -15,7 +15,7 @@ description: "Trong thiết kế kho dữ liệu (Data Warehouse), Surrogate Key
 
 
 
-**Surrogate Key** (Khóa thay thế hay Khóa đại diện) là một giá trị định danh duy nhất (thường là một số nguyên tự tăng - auto-increment integer, hoặc một chuỗi băm - hash string/UUID) được thêm vào một bảng trong [Data Warehouse](/concepts/data-warehouse/data-warehouse/) để làm khóa chính (Primary Key). 
+**Surrogate Key** (Khóa thay thế hay Khóa đại diện) là một giá trị định danh duy nhất (thường là một số nguyên tự tăng - auto-increment integer, hoặc một chuỗi băm - hash string/UUID) được thêm vào một bảng trong [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) để làm khóa chính (Primary Key). 
 
 Điểm đặc biệt của Surrogate Key là nó **hoàn toàn vô nghĩa về mặt nghiệp vụ (business value)**. Nó không được sinh ra từ hệ thống nguồn (như CRM, ERP, ứng dụng mobile), mà được tạo ra bởi quy trình ETL/ELT khi dữ liệu được load vào Data Warehouse.
 

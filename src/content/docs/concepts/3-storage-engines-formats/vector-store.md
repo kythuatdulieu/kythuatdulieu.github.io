@@ -11,7 +11,7 @@ description: "Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh, các m
 
 
 
-Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh (Generative AI), các mô hình ngôn ngữ lớn ([LLM](/concepts/genai-ml/llm/)) thể hiện khả năng hiểu và sinh ngôn ngữ đáng kinh ngạc. Tuy nhiên, chúng gặp giới hạn về "trí nhớ" (không thể lưu trữ toàn bộ dữ liệu của một doanh nghiệp trong quá trình huấn luyện) và dễ bị ảo giác (hallucination) khi gặp kiến thức mới hoặc kiến thức nội bộ. 
+Trong kỷ nguyên của Trí tuệ nhân tạo tạo sinh (Generative AI), các mô hình ngôn ngữ lớn ([LLM](/concepts/9-genai-machine-learning/llm)) thể hiện khả năng hiểu và sinh ngôn ngữ đáng kinh ngạc. Tuy nhiên, chúng gặp giới hạn về "trí nhớ" (không thể lưu trữ toàn bộ dữ liệu của một doanh nghiệp trong quá trình huấn luyện) và dễ bị ảo giác (hallucination) khi gặp kiến thức mới hoặc kiến thức nội bộ. 
 
 **Cơ sở dữ liệu Vector (Vector Database)** ra đời và bùng nổ như một mảnh ghép then chốt để giải quyết vấn đề này. Nó đóng vai trò như một bộ nhớ dài hạn, cho phép tìm kiếm và truy xuất thông tin dựa trên ngữ nghĩa (semantic) thay vì chỉ so khớp từ khóa (keyword) như các hệ quản trị cơ sở dữ liệu truyền thống.
 

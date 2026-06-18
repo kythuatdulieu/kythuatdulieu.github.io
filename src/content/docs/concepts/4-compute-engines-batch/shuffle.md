@@ -6,7 +6,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-06-16
 seoTitle: "Shuffle trong Spark: Điểm nghẽn hiệu năng cốt lõi cần tối ưu"
 metaDescription: "Tìm hiểu chi tiết quá trình Shuffle trong Apache Spark là gì, tại sao nó gây ra độ trễ I/O và mạng lưới cực lớn, cũng như các kỹ thuật tuning hiệu năng để giảm thiểu Shuffle."
-description: "Nếu đã từng làm việc với [Apache Spark](/concepts/batch-processing/apache-spark/) để xử lý dữ liệu lớn, chắc hẳn bạn đã không dưới một lần gặp phải tì..."
+description: "Nếu đã từng làm việc với [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) để xử lý dữ liệu lớn, chắc hẳn bạn đã không dưới một lần gặp phải tì..."
 ---
 
 

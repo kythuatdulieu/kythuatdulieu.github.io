@@ -72,8 +72,8 @@ Một kiến trúc dữ liệu hiện đại sử dụng CDC thường xoay quan
 
 ```mermaid
 flowchart LR
-    A[("Nguồn:\n MySQL / Postgres")] -->|Log-based CDC\n ("Debezium")| B("Kafka Connect")
-    B -->|Sự kiện ("Events")| C[["Apache Kafka / Redpanda"]]
+    A[("Nguồn:\n MySQL / Postgres")] -->|"Log-based CDC\n (Debezium)"| B("Kafka Connect")
+    B -->|"Sự kiện (Events)"| C[["Apache Kafka / Redpanda"]]
     C -->|Kafka Connect / Flink| D[("Đích:\n Data Warehouse / Lake")]
     C -->|Microservices| E("Dịch vụ khác\n Cập nhật Cache/Search")
 ```

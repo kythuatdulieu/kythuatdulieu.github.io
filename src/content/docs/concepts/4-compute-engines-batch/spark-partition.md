@@ -11,7 +11,7 @@ description: "Khi làm việc với các hệ thống xử lý dữ liệu lớn
 
 
 
-Khi làm việc với các hệ thống xử lý dữ liệu lớn (Big Data) như [Apache Spark](../apache-spark/), tính toán song song chính là chìa khóa để xử lý hàng Terabyte hoặc Petabyte dữ liệu một cách hiệu quả. Và để làm được điều này, Spark sử dụng một khái niệm cốt lõi: **Partition (Phân vùng)**.
+Khi làm việc với các hệ thống xử lý dữ liệu lớn (Big Data) như [Apache Spark](/concepts/4-compute-engines-batch/apache-spark), tính toán song song chính là chìa khóa để xử lý hàng Terabyte hoặc Petabyte dữ liệu một cách hiệu quả. Và để làm được điều này, Spark sử dụng một khái niệm cốt lõi: **Partition (Phân vùng)**.
 
 ## 1. Spark Partition là gì?
 
