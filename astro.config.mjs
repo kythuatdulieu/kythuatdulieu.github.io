@@ -5,12 +5,13 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaidLite from 'rehype-mermaid-lite';
 import { conceptCategories } from './src/config/categories.js';
+import { remarkAutoLink } from './src/plugins/remark-auto-link.js';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
 	markdown: {
-		remarkPlugins: [remarkMath],
+		remarkPlugins: [remarkMath, remarkAutoLink],
 		rehypePlugins: [
 			[rehypeKatex, { strict: 'ignore' }],
 			[rehypeMermaidLite, { 
