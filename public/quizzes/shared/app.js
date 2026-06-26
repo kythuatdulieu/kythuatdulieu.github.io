@@ -483,8 +483,19 @@
             if (window.currentSelection.size === requiredCount) {
                 submitBtn.disabled = false;
                 submitBtn.addEventListener('click', () => {
-                    userAnswers[q.id] = Array.from(window.currentSelection).sort().join(',');
+                    const ansStr = Array.from(window.currentSelection).sort().join(',');
+                    userAnswers[q.id] = ansStr;
                     window.currentSelection.clear();
+                    
+                    if (typeof window.gtag === 'function') {
+                        window.gtag('event', 'quiz_answer', {
+                            quiz_id: quizId,
+                            question_id: q.id,
+                            is_correct: ansStr === q.answer,
+                            question_type: 'multi'
+                        });
+                    }
+
                     updateScores();
                     saveState();
                     renderQuestion();
@@ -582,6 +593,16 @@
             renderQuestion(false);
         } else {
             userAnswers[qId] = letter;
+            
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'quiz_answer', {
+                    quiz_id: quizId,
+                    question_id: qId,
+                    is_correct: letter === q.answer,
+                    question_type: 'single'
+                });
+            }
+
             updateScores();
             saveState();
             renderQuestion(false);
@@ -706,6 +727,14 @@
         showVietnamese = on;
         els.btnViToggle.classList.toggle('active', on);
         els.toggleVi.checked = on;
+        
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'quiz_language_toggle', {
+                quiz_id: quizId,
+                language: on ? 'vi' : 'en'
+            });
+        }
+
         renderQuestion();
         saveState();
     }
@@ -717,6 +746,14 @@
         shuffleMode = on;
         els.btnShuffle.classList.toggle('active', on);
         els.toggleShuffle.checked = on;
+        
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'quiz_shuffle_toggle', {
+                quiz_id: quizId,
+                shuffle_on: on
+            });
+        }
+
         applyShuffle();
         renderQuestion();
         showToast(on ? '🔀 Đã bật xáo trộn' : '📋 Thứ tự gốc');
@@ -749,6 +786,13 @@
         userAnswers = {};
         currentIndex = 0;
         filterMode = 'all';
+        
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'quiz_reset_all', {
+                quiz_id: quizId
+            });
+        }
+
         updateScores();
         renderQuestion();
         closePanel();
