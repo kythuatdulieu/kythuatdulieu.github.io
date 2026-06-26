@@ -1022,6 +1022,13 @@
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-testing/"
     },
+    "Dataops": {
+      "title": "DataOps là gì? Agile, CI/CD và Tự động hóa trong Kỹ thuật dữ liệu",
+      "category": "Khái niệm",
+      "definition": "",
+      "bullets": [],
+      "url": "/concepts/7-dataops-orchestration-quality/dataops/"
+    },
     "Dbt Testing": {
       "title": "dbt Testing - Hướng dẫn triển khai kiểm thử tự động dữ liệu",
       "category": "Khái niệm",

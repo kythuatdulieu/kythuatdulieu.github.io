@@ -21,7 +21,7 @@ Sự thăng tiến từ Junior lên Middle Data Engineer không nằm ở số n
 
 ## Bắt đầu từ đâu? (Prerequisites)
 
-* **Hoàn thành chặng đường:** 👉 **[Beginner Data Engineer](./beginner-de.md)**.
+* **Hoàn thành chặng đường:** 👉 **[Beginner Data Engineer](/learning-paths/core-paths/beginner-de/)**.
 * **Kinh nghiệm:** 1-2 năm thực chiến với SQL, Python, và có hiểu biết về cơ sở dữ liệu.
 * **Mong muốn:** Nâng tầm bản thân khỏi các script ETL thủ công, hướng tới tự động hóa và phân tích chuyên sâu.
 
@@ -71,4 +71,4 @@ Kiến trúc tách biệt Lưu trữ (Storage) và Tính toán (Compute) - Decou
 ## Bước tiếp theo
 
 Khi bạn đã làm chủ hệ thống kho dữ liệu đám mây và mô hình hóa, thách thức tiếp theo là xử lý dữ liệu quy mô "Khổng lồ" (Petabytes) với Spark và Kafka. Hãy tiến lên:
-👉 **[Middle to Senior Data Engineer](./middle-to-senior-de.md)**
+👉 **[Middle to Senior Data Engineer](/learning-paths/core-paths/middle-to-senior-de/)**

@@ -69,6 +69,11 @@ export function remarkAutoLink() {
                     return {
                         type: 'link',
                         url: concept.url,
+                        data: {
+                            hProperties: {
+                                className: ['popover-backlink']
+                            }
+                        },
                         children: [{ type: 'text', value: match }]
                     };
                 }
