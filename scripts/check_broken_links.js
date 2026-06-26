@@ -55,7 +55,10 @@ const brokenInternal = [];
 internalLinks.forEach(link => {
   let targetPath = '';
   
-  if (link.url.startsWith('/')) {
+  if (link.url.startsWith('/images/')) {
+    // Images are served from public folder
+    targetPath = path.join(process.cwd(), 'public', link.url);
+  } else if (link.url.startsWith('/')) {
     // Absolute from docs root
     targetPath = path.join(DOCS_DIR, link.url);
   } else {
