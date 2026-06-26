@@ -7,6 +7,8 @@ lastUpdated: 2026-06-26
 seoTitle: "Liquid Clustering trong Databricks là gì? Thay thế Partitioning và Z-Order"
 metaDescription: "Kiến trúc Liquid Clustering trong Delta Lake. Phân tích thuật toán Hilbert Curve, cơ chế Auto-balancing và thay thế hoàn toàn Hive Partitioning."
 description: "Tại sao Databricks lại tuyên bố Liquid Clustering là tiêu chuẩn mới? Phân tích sâu kiến trúc Flat Namespace, Incremental Clustering và thuật toán Auto-balancing."
+---
+
 Hive Partitioning và Z-Ordering đã làm tốt nhiệm vụ của mình trong kỷ nguyên Hadoop và Gen 1 Data Lakehouse. Tuy nhiên, ở quy mô Cloud-Native với luồng dữ liệu Streaming liên tục, chúng để lộ những yếu điểm kiến trúc chí mạng: Partitioning gây bùng nổ thư mục vật lý (Directory Explosion), còn Z-Ordering bóp nghẹt tài nguyên Compute (Write Amplification). 
 
 Databricks đã thiết kế lại hoàn toàn lớp Storage Layout với **Liquid Clustering** – chuyển dịch từ phân mảnh thư mục cứng nhắc sang gom cụm tệp động (Dynamic File Clustering) sử dụng thuật toán **Hilbert Curve**.
