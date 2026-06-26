@@ -1,108 +1,128 @@
 ---
 title: "Compaction"
-difficulty: "Intermediate"
-tags: ["compaction", "data-lakehouse", "optimization", "small-files-problem"]
-readingTime: "8 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Compaction - Tối ưu hóa hiệu năng Data Lake (Small Files Problem)"
-metaDescription: "Tìm hiểu Compaction trong Data Engineering: giải pháp cho Small Files Problem, cách gom tệp tin nhỏ thành tệp lớn để tăng tốc độ truy vấn trên Data Lake."
-description: "Trong thế giới Data Engineering, việc thiết lập các luồng dữ liệu streaming hay micro-batch liên tục cập nhật dữ liệu thường dẫn đến vấn đề Small Files Problem. Compaction chính là giải pháp cốt lõi cho vấn đề này."
+difficulty: "Advanced"
+tags: ["compaction", "data-lakehouse", "optimization", "small-files-problem", "iceberg", "delta-lake"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Compaction - Tối ưu hóa Data Lakehouse & Khắc phục OOM"
+metaDescription: "Tìm hiểu sâu về Compaction: Cơ chế Copy-on-Write (CoW) vs Merge-on-Read (MoR), Z-Ordering vs Liquid Clustering và cách khắc phục OOM trong Apache Iceberg."
+description: "Vấn đề Small Files là 'kẻ thù' số 1 của Data Lakehouse. Bài viết này mổ xẻ bản chất Compaction, sự đánh đổi giữa Write/Read Amplification, Liquid Clustering vs Z-Order, và cách xử lý sự cố OOMKilled trên Spark."
 ---
 
+Trong các hệ thống phân tán xử lý dữ liệu lớn (Big Data), việc đẩy dữ liệu từ các luồng streaming (Kafka, Kinesis) hoặc micro-batching thường xuyên tạo ra hàng triệu tệp tin nhỏ. Vấn đề **Small Files Problem** không chỉ làm chậm truy vấn mà còn có thể đánh sập hệ thống Metadata (như HDFS NameNode). Để giải quyết, chúng ta sử dụng **Compaction**.
 
+Tuy nhiên, Compaction không chỉ đơn giản là "gom file". Dưới góc độ System Design của một Data Engineer, Compaction là một cuộc chiến khốc liệt giữa **Write Amplification**, **Read Amplification**, **Compute Cost**, và **Memory (RAM)**.
 
-Compaction là quá trình dọn dẹp và tối ưu hóa hệ thống lưu trữ bằng cách gộp nhiều file dữ liệu nhỏ (Small Files) thành các file lớn hơn (thường từ 128MB - 512MB hoặc lên đến 1GB). Cơ chế này giúp giảm tải cho Metadata Server (như HDFS NameNode hay Metadata của AWS S3/Cloud Storage) và tăng tốc đáng kể các job xử lý dữ liệu phân tán (Spark, Presto, Trino) do giảm chi phí mở/đóng và tìm kiếm (seek) file.
+---
 
-## 1. Vấn đề File Nhỏ (The Small Files Problem)
+## 1. Bản chất Vật lý của Small Files Problem
 
-Trong một hệ thống Data Lake, dữ liệu thường xuyên được đẩy vào từ các luồng streaming (Kafka, Kinesis) hoặc các tiến trình micro-batch.
+Khi dữ liệu được ghi liên tục, các framework xử lý phân tán như Apache Spark hay Flink sẽ sinh ra rất nhiều tệp tin nhỏ vì những nguyên nhân kỹ thuật cốt lõi sau:
 
-### Nguyên nhân gây ra Small Files
-* **Streaming & Micro-batching:** Dữ liệu được ghi liên tục với tần suất cao (ví dụ: mỗi 1 phút hoặc vài giây một lần). Mỗi lần commit sẽ tạo ra các file mới rất nhỏ (vài KB đến vài MB).
-* **Over-partitioning:** Chia partition quá nhỏ (ví dụ: partition theo ngày, giờ, phút và cả khu vực) khiến lượng dữ liệu mỗi partition cực ít, sinh ra hàng ngàn file bé xíu.
-* **Over-parallelism:** Khi chạy các job Spark/Flink với số lượng task hoặc partition song song (shuffle partitions) quá lớn so với lượng dữ liệu, mỗi task sẽ ghi ra một phần kết quả dưới dạng một file riêng biệt.
+- **Over-parallelism (Phân mảnh do song song hóa):** Nếu bạn có 200 *Shuffle Partitions* (`spark.sql.shuffle.partitions=200`) nhưng lượng dữ liệu ghi ra ở mỗi micro-batch chỉ khoảng 10MB, Spark sẽ sinh ra 200 tệp tin nhỏ bé xíu (mỗi tệp vài chục KB) trong một lần commit.
+- **Over-partitioning (Phân mảnh theo cấu trúc thư mục):** Chia partition theo Hive-style (`year/month/day/hour/minute`) tạo ra độ chi tiết cao nhưng lại phân tán dữ liệu, dẫn đến số lượng file khổng lồ bên trong mỗi thư mục vật lý.
 
-### Hậu quả của Small Files
-* **Metadata Overhead:** Các hệ thống file phân tán như HDFS lưu metadata trên bộ nhớ (RAM) của NameNode. Hàng triệu file nhỏ sẽ làm cạn kiệt RAM NameNode. Với Cloud Object Storage (S3, GCS), việc liệt kê (LIST) và lấy thông tin (GET) hàng nghìn file tốn rất nhiều thời gian và chi phí API.
-* **Suy giảm hiệu năng truy vấn (I/O Overhead):** Việc mở một file, đọc header/footer và đóng file tốn một khoảng thời gian nhất định (latency). Khi đọc 10.000 file kích thước 1MB sẽ mất nhiều thời gian hơn rất nhiều so với đọc 10 file kích thước 1GB do I/O overhead.
-* **Giảm tỷ lệ nén (Compression Ratio):** Các thuật toán nén dạng block-based (Snappy, Zstd, Gzip) và các định dạng dữ liệu cột (Parquet, ORC) hoạt động hiệu quả nhất với dữ liệu đủ lớn. Nếu file quá nhỏ, dictionary/metadata của Parquet/ORC có khi còn lớn hơn cả data, và khả năng nén cực kỳ kém.
+### Hậu quả hệ thống (Systemic Impact)
+- **Cạn kiệt Memory Metadata:** HDFS lưu metadata của mỗi block trên RAM của NameNode. Hàng triệu file nhỏ sẽ khiến NameNode rơi vào trạng thái Garbage Collection (GC) liên tục hoặc OOM (Out-Of-Memory). Với S3/GCS, chi phí cho các lệnh API `LIST` và `GET` sẽ tăng đột biến (API Cost Explosion).
+- **I/O Latency Overhead:** Thời gian để thiết lập kết nối HTTP, đọc Header/Footer, khởi tạo bộ giải mã Parquet/ORC (Deser) cho 10,000 file 1MB lớn hơn gấp hàng trăm lần so với đọc 10 file 1GB.
+- **Vô hiệu hóa thuật toán nén:** Các thuật toán dạng block-based (Zstd, Snappy) yêu cầu dữ liệu đủ lớn để xây dựng Dictionary nén hiệu quả. Khi file quá nhỏ, kích thước Metadata của Parquet có thể lớn hơn cả Payload dữ liệu.
 
-## 2. Cách thức hoạt động của Compaction
+---
 
-Về bản chất, Compaction là một job xử lý dữ liệu chạy ngầm hoặc định kỳ. Tiến trình này sẽ:
-1. Đọc nhiều file dữ liệu nhỏ.
-2. Nạp vào bộ nhớ hoặc xử lý theo khối.
-3. Ghi ra một hoặc vài file dữ liệu lớn với kích thước tối ưu.
-4. Cập nhật lại Metadata của bảng (hoặc thư mục) để trỏ đến file mới và đánh dấu các file cũ là "đã xóa" (tombstoned) để chờ quá trình dọn dẹp (Vacuum).
+## 2. Cuộc chiến giữa Write vs Read Amplification
 
-### Minor Compaction vs Major Compaction (LSM-Trees)
-Trong các cơ sở dữ liệu dựa trên Log-Structured Merge-Tree (LSM-Tree) như Cassandra, HBase, RocksDB:
-* **Minor Compaction:** Gộp một số lượng nhỏ các file (SSTables) ở cùng level thành một file lớn hơn. Quá trình này diễn ra thường xuyên, tốn ít tài nguyên và nhanh chóng.
-* **Major Compaction:** Gộp toàn bộ các file trong một Column Family hoặc toàn bộ hệ thống thành một file duy nhất. Xóa hẳn các dữ liệu rác (tombstones). Tốn nhiều CPU, Disk I/O và thường chỉ được chạy vào giờ thấp điểm.
+Trước khi hiểu các chiến lược Compaction, ta cần hiểu định dạng Table Format (Iceberg, Delta, Hudi) quản lý Update/Delete như thế nào.
 
-## 3. Các chiến lược Compaction (Compaction Strategies)
+```mermaid
+graph TD
+    subgraph Copy-On-Write("CoW")
+        A1["File Gốc: 1GB"] -->|Update 1 Dòng| B1("Đọc toàn bộ lên RAM")
+        B1 --> C1("Ghi file Mới: 1GB")
+        C1 -.->|Write Amplification cực lớn| D1["Ưu: Tốc độ đọc rất nhanh"]
+    end
 
-Khi thực hiện Compaction, hệ thống có thể kết hợp việc tổ chức lại dữ liệu bên trong file mới để tối ưu hơn cho các câu truy vấn.
-
-### a. Bin-packing (Đóng gói)
-Cách đơn giản nhất: chỉ cần lấy các file nhỏ ghép lại cho đến khi đạt target size (ví dụ 256MB).
-* **Ưu điểm:** Tốc độ nhanh, ít tốn bộ nhớ và CPU do không phải sắp xếp dữ liệu.
-* **Nhược điểm:** Dữ liệu bên trong file không có thứ tự, không tối ưu cho Data Skipping (nhảy cóc dữ liệu khi truy vấn bằng Min/Max stats).
-
-### b. Sorting (Sắp xếp theo cột)
-Khi đọc các file nhỏ lên, thực hiện sắp xếp lại (Sort) dữ liệu dựa trên một hoặc nhiều cột thường xuyên được truy vấn (ví dụ: `customer_id`, `event_time`) trước khi ghi ra file lớn.
-* **Ưu điểm:** Giúp gom nhóm dữ liệu có cùng giá trị lại gần nhau. Metadata của Parquet sẽ có khoảng Min/Max thu hẹp lại, giúp query engine (Presto, Spark) bỏ qua file nhanh chóng nếu điều kiện lọc (WHERE) không nằm trong khoảng đó.
-* **Nhược điểm:** Tốn thêm thời gian, CPU và bộ nhớ để thực hiện sắp xếp.
-
-### c. Z-Ordering / Multi-dimensional Clustering
-Khi bạn có nhiều cột cùng quan trọng và cần truy vấn đan xen (ví dụ `x`, `y`, `z`). Nếu chỉ Sort theo `x` rồi `y`, cột `y` sẽ bị phân mảnh. Z-Ordering là một thuật toán sắp xếp đa chiều, đan xen các bit của nhiều cột để bảo tồn tính cục bộ của dữ liệu trên cả nhiều chiều.
-* **Ứng dụng:** Delta Lake `OPTIMIZE ... ZORDER BY`.
-
-## 4. Compaction trong Modern Data Lakehouse
-
-Các định dạng bảng mở (Open Table Formats) hiện đại cung cấp các giải pháp Compaction tích hợp sẵn, an toàn (chuẩn ACID) và mạnh mẽ.
-
-### Delta Lake
-Delta Lake xử lý Compaction thông qua câu lệnh `OPTIMIZE`.
-```sql
--- Bin-packing thông thường
-OPTIMIZE events;
-
--- Compaction kết hợp sắp xếp đa chiều Z-Order
-OPTIMIZE events ZORDER BY (user_id, event_type);
+    subgraph Merge-On-Read("MoR")
+        A2["File Gốc: 1GB"] -->|Update 1 Dòng| B2("Ghi Delta Log: 1KB")
+        B2 -.->|Write Amplification nhỏ| C2["Nhược: Phải MERGE khi truy vấn"]
+        C2 -.->|Read Amplification lớn| D2["Yêu cầu Background Compaction"]
+    end
 ```
-Sau khi `OPTIMIZE`, các file cũ không bị xóa ngay để đảm bảo an toàn cho các truy vấn đang chạy và hỗ trợ Time Travel. Bạn phải chạy `VACUUM` để dọn rác các file cũ. Từ Databricks Runtime mới hơn, **Liquid Clustering** được giới thiệu để tự động quản lý layout dữ liệu mà không cần chạy Z-Order thủ công thường xuyên.
 
-### Apache Iceberg
-Iceberg cung cấp các thủ tục (procedures) Spark để viết lại file dữ liệu thông qua action `RewriteDataFiles`.
-```java
-// Gọi qua Spark Actions API
-SparkActions.get(spark)
-  .rewriteDataFiles(table)
-  .option("target-file-size-bytes", Long.toString(256 * 1024 * 1024)) // 256 MB
-  .execute();
+- **Write Amplification (Copy-on-Write - CoW):** Cập nhật 1 dòng dữ liệu đòi hỏi phải đọc và ghi lại toàn bộ Parquet file (có thể lên tới 512MB). Delta Lake và Iceberg mặc định thiên về CoW. Nó tối ưu tuyệt đối cho Read, nhưng nếu ứng dụng Streaming ghi liên tục, I/O của Storage sẽ bị bóp nghẹt.
+- **Read Amplification (Merge-on-Read - MoR):** Dữ liệu cập nhật/xóa được ghi vào một file Log/Delta riêng rẽ (thường là Avro hoặc Delete Vector). Truy vấn đọc (Read) phải tự "hòa trộn" file gốc và file log trên RAM. Viêc này tạo ra Read Amplification. **Apache Hudi** rất mạnh về MoR.
+
+**=> Compaction sinh ra để cân bằng Trade-off này:** Nó chạy ngầm (Asynchronous Compaction) để gom các file Delta Logs (ở MoR) và các tệp dữ liệu nhỏ thành một tệp Parquet chuẩn lớn, xóa bỏ các tombstones (rác), giúp trả lại hiệu năng Read.
+
+---
+
+## 3. Các Chiến lược Compaction (Physical Execution)
+
+Khi kích hoạt Compaction (ví dụ qua `rewriteDataFiles` trong Iceberg hoặc `OPTIMIZE` trong Delta), Engine (như Spark) có nhiều cách để sắp xếp lại dữ liệu trên bộ nhớ trước khi flush xuống đĩa.
+
+### 3.1. Bin-packing (Đóng gói)
+Chiến lược mặc định, đơn giản, rẻ và ít tốn tài nguyên nhất.
+- **Cách hoạt động:** Mở các file nhỏ, nhét dữ liệu vào các file lớn (theo target size, ví dụ: 256MB) giống như xếp đồ vào balo (bin-packing).
+- **Đánh đổi:** Tốc độ rất nhanh, hiếm khi gây tràn RAM (OOM). Tuy nhiên, dữ liệu bên trong file KHÔNG được sắp xếp, không tối ưu cho Data Skipping (Min/Max Filtering).
+
+### 3.2. Sorting & Z-Ordering (Sắp xếp đa chiều)
+- **Sorting:** Shuffle dữ liệu (cực kỳ tốn kém) để gom các record có cùng khóa (`event_time`, `user_id`) vào chung một file, giúp thu hẹp dải Min/Max trong Parquet Footer.
+- **Z-Ordering:** Sử dụng "Space-filling curve" để map dữ liệu nhiều chiều (nhiều cột) thành một chiều. Vô cùng hữu ích khi có các truy vấn lọc đa dạng xen kẽ nhiều cột.
+
+```mermaid
+flowchart LR
+    subgraph Data Skipping("Min/Max")
+        F1("File 1: min=1, max=10") --> Q{"Truy vấn: id=25"}
+        F2("File 2: min=20, max=30") --> Q
+        F3("File 3: min=50, max=100") --> Q
+        Q -->|Skip File 1 & 3| F2
+    end
 ```
-Iceberg cho phép định nghĩa nhiều chiến lược: `binpack` (mặc định) và `sort`.
 
-### Apache Hudi
-Hudi được thiết kế đặc biệt cho streaming với hai loại bảng (Table Types):
-* **Copy-On-Write (COW):** Dữ liệu luôn được ghi đè vào file base (Parquet). Khá tốn kém khi ghi liên tục. Cần Clustering để cấu trúc lại file.
-* **Merge-On-Read (MOR):** Tối ưu cho streaming. Dữ liệu mới được ghi vào log files (Avro) kích thước nhỏ. Truy vấn sẽ tự join base file và log files. Hudi có một trình Compaction riêng biệt định kỳ gộp base file (Parquet) và log files (Avro) thành một base file Parquet mới.
+- **Đánh đổi của Z-Ordering:** Kiến trúc cứng nhắc. Khi có dữ liệu mới, để duy trì độ clustering hoàn hảo, bạn phải chạy lại (Rewrite) toàn bộ Table hoặc Partition, tạo ra Compute Cost khổng lồ.
 
-Hudi hỗ trợ **Asynchronous Compaction** (chạy ngầm không ảnh hưởng tiến trình ghi) và cung cấp thêm khái niệm **Clustering** (tương tự như Optimize Z-Order của Delta).
+### 3.3. Cuộc cách mạng Liquid Clustering (Databricks)
+Nhận thấy điểm yếu chí mạng của Z-Ordering (Full Rewrite), Databricks đã giới thiệu **Liquid Clustering**.
+- **Cách hoạt động:** Dữ liệu được nhóm thành các **Z-Cubes** (khối dữ liệu) dựa trên Metadata linh hoạt. Nó có khả năng tự động điều chỉnh layout theo thời gian thực (write-side optimization).
+- **Ưu điểm:** *Incremental Maintenance*. Thay vì rewrite toàn bộ, Liquid Clustering chỉ chạy optimize trên các dữ liệu chưa được cluster (unoptimized data). Bạn cũng có thể dùng `ALTER TABLE` để đổi khóa clustering mà không cần viết lại toàn bộ lịch sử. Hiện nay Databricks khuyến cáo dùng Liquid Clustering thay cho Z-Ordering và Hive Partitioning thông thường.
 
-## 5. Best Practices khi quản lý Compaction
+---
 
-1. **Kích thước file mục tiêu (Target File Size):** Tùy thuộc vào storage format. Với Parquet trên Data Lake (S3, GCS, ADLS), kích thước 128MB đến 1GB là lý tưởng. Không nên nén quá to (> 2GB) vì có thể làm chậm quá trình đọc song song ở các worker nodes.
-2. **Lập lịch (Scheduling):** Compaction là tác vụ nặng về I/O và tính toán. Nếu có thể, hãy lập lịch chạy Compaction (Airflow/Cron) vào các giờ thấp điểm.
-3. **Partition-Level Compaction:** Không nên chạy Compaction trên toàn bộ dữ liệu lịch sử nếu không cần thiết. Chỉ tập trung vào các partition mới nhất (ví dụ: partition của hôm nay hoặc hôm qua) vì dữ liệu streaming thường chỉ ghi vào các partition nóng.
-4. **Auto-Compaction:** Cân nhắc bật tính năng auto-compaction (ví dụ trong Databricks có `spark.databricks.delta.autoOptimize.autoCompact = true`) nếu resource dư dả, giúp gộp file nhỏ lại ngay trong quá trình write (dù file không to bằng optimize thủ công nhưng vẫn giảm tải đáng kể).
-5. **Đi kèm với Dọn dẹp (Vacuum/Expire):** Quá trình Compaction chỉ tạo ra file mới chứ không xóa ngay file cũ do tính chất Immutable của Object Storage và yêu cầu Time Travel. Luôn nhớ lập lịch lệnh `VACUUM` (Delta Lake) hoặc `expire_snapshots` (Iceberg) để dọn file đã obsolete, tiết kiệm chi phí lưu trữ S3.
+## 4. Tình huống Sập hệ thống (Operational Risks) & Troubleshooting
 
-## Tài Liệu Tham Khảo
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
-* [Apache Hudi Compaction Architecture](https://hudi.apache.org/docs/compaction/)
+Dưới đây là những "ác mộng" thực chiến mà Data Engineer thường gặp khi vận hành Compaction.
+
+### Sự cố 1: JVM OOMKilled khi chạy Apache Iceberg `rewriteDataFiles`
+**Tình huống:** Kích hoạt `SparkActions.get(spark).rewriteDataFiles(table)` với chiến lược `sort` hoặc `zorder` vào cuối tuần để dọn dẹp Data Lake. Đột nhiên Spark Job chết do Executor hoặc Driver bị Out-Of-Memory (OOM).
+
+**Bản chất vật lý (Root Cause):**
+1. **Shuffle Data Skew & Partition Size:** Chiến lược Sort yêu cầu Spark phải Shuffle dữ liệu qua mạng. Nếu một partition có kích thước quá lớn (ví dụ: vài trăm GB), khi nạp lên Memory của một Executor để thực hiện Sort, nó sẽ gây Spill-to-disk liên tục hoặc đánh sập Heap Space.
+2. **Metadata Overhead:** Driver Spark phải đọc manifest của hàng triệu file nhỏ để lập kế hoạch (planning). Kế hoạch này quá lớn làm Driver nổ tung.
+
+**Giải pháp (Mitigation):**
+- **Sử dụng Bin-pack thay cho Sort:** Nếu không cần Data Skipping quá ngặt nghèo, hãy quay về `binpack`. Nó không yêu cầu Global Sort.
+- **Chia để trị (Scope the Rewrite):** Tuyệt đối KHÔNG optimize toàn bộ bảng. Sử dụng `where` để giới hạn partition:
+  ```java
+  CALL catalog.system.rewrite_data_files(
+    table => 'db.table',
+    where => 'event_date >= CURRENT_DATE - INTERVAL 7 DAYS'
+  )
+  ```
+- **Granular Control (Kiểm soát tiến trình):** Bật `partial-progress.enabled` (cho phép job commit ngắt quãng để giải phóng RAM) và `min-input-files` (tránh rewrite các file đã đạt kích thước chuẩn).
+- **Tuning Spark:** Tăng `spark.executor.memoryOverhead` (hoặc `spark.kubernetes.memoryOverheadFactor` nếu chạy trên K8s) vì Java NIO và quá trình giải nén file thường dùng off-heap memory.
+
+### Sự cố 2: JIT Compaction vs "Thảm họa lưu trữ" S3
+**Tình huống:** Job Compaction chạy thành công, tệp nhỏ giảm, tốc độ truy vấn tăng, nhưng hóa đơn AWS S3 tháng sau tăng gấp đôi.
+
+**Bản chất:** Các định dạng như Delta hay Iceberg tuân thủ tính bất biến (Immutable). Quá trình Compaction tạo ra file 1GB MỚI, nhưng các tệp tin nhỏ cũ KHÔNG BỊ XÓA ngay (chúng được chuyển thành trạng thái *tombstoned* để phục vụ Time Travel / Snapshot Isolation). 
+**Giải pháp:** Compaction bắt buộc phải luôn luôn đi kèm với quá trình Garbage Collection:
+- Delta Lake: Chạy lệnh `VACUUM`.
+- Iceberg: Chạy procedure `expire_snapshots` kết hợp `remove_orphan_files`.
+
+---
+
+## Nguồn Tham Khảo (References)
+*   [Apache Iceberg Documentation - Compaction & RewriteDataFiles](https://iceberg.apache.org/docs/latest/maintenance/#compact-data-files)
+*   [Databricks: Liquid Clustering vs Z-Ordering under the hood](https://docs.databricks.com/en/delta/clustering.html)
+*   [Apache Hudi Architecture - Compaction (CoW vs MoR)](https://hudi.apache.org/docs/compaction/)
+*   [Designing Data-Intensive Applications (Chapter 3: SSTables and LSM-Trees)](https://dataintensive.net/)
+*   [Troubleshooting Spark OOM in Compaction Jobs - Dremio Blog](https://www.dremio.com/resources/blogs/)

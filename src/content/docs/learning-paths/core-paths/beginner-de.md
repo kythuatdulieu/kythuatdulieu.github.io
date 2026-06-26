@@ -71,4 +71,4 @@ Hiểu luồng di chuyển dữ liệu từ nguồn đến đích.
 
 ## Bước tiếp theo
 Sau khi hoàn thiện nền tảng, bạn đã sẵn sàng đối mặt với các hệ thống phân tán và dữ liệu lớn. Hãy chuyển sang chặng đường tiếp theo:
-👉 **[Junior to Middle Data Engineer](./junior-to-middle-de.md)**
+👉 **[Junior to Middle Data Engineer](/learning-paths/core-paths/junior-to-middle-de/)**

@@ -1,144 +1,142 @@
 ---
-title: "Spark SQL"
+title: "Spark SQL & Catalyst Optimizer"
 difficulty: "Intermediate"
-tags: ["spark-sql", "apache-spark", "catalyst-optimizer", "dataframe"]
+tags: ["spark-sql", "apache-spark", "catalyst-optimizer", "dataframe", "aqe"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Spark SQL là gì? Catalyst Optimizer và DataFrame trong Apache Spark"
-metaDescription: "Giới thiệu Spark SQL, thành phần cốt lõi của Apache Spark dùng để xử lý dữ liệu cấu trúc bằng SQL và DataFrame API. Tìm hiểu cơ chế Catalyst Optimizer."
-description: "Khi làm việc với các hệ thống dữ liệu lớn, việc phải viết các đoạn mã lập trình phân tán phức tạp để biến đổi dữ liệu luôn là một trở ngại lớn đối với các Data Engineer và Data Analyst. Spark SQL ra đời như một giải pháp toàn diện giúp xử lý dữ liệu cấu trúc và bán cấu trúc trên quy mô lớn."
+lastUpdated: 2026-06-26
+seoTitle: "Spark SQL & Catalyst Optimizer: Kiến Trúc Lõi và Tối Ưu Hóa Truy Vấn"
+metaDescription: "Đi sâu vào kiến trúc Spark SQL, Catalyst Optimizer và Adaptive Query Execution (AQE). Mổ xẻ cơ chế Physical Planning, xử lý Cartesian Explosion và Data Skew."
+description: "Spark SQL không chỉ là một SQL wrapper. Nó là một engine thực thi phân tán cực kỳ tinh vi với Catalyst Optimizer và AQE, giúp tối ưu DataFrames về mức tiệm cận bare-metal."
 ---
 
+Lập trình viên khi chuyển từ hệ thống xử lý dòng (như MapReduce hay RDD) sang Spark SQL thường rơi vào cạm bẫy "nghĩ rằng đây chỉ là một công cụ parse chuỗi SQL". Thực tế, Spark SQL là một **Distributed SQL Engine** sở hữu cơ chế lập kế hoạch thực thi (Query Planning) và sinh code (Code Generation) phức tạp, giúp nó có thể tự động biến những dòng code DataFrame ngây ngô nhất thành những luồng xử lý I/O tối ưu trên hàng ngàn cluster nodes.
 
-
-Khi làm việc với các hệ thống dữ liệu lớn, việc phải viết các đoạn mã lập trình phân tán phức tạp để biến đổi dữ liệu luôn là một trở ngại lớn đối với các Data Engineer và Data Analyst. Spark SQL ra đời như một giải pháp toàn diện giúp xử lý dữ liệu có cấu trúc (Structured Data) và bán cấu trúc trên quy mô lớn, kết hợp sức mạnh của engine phân tán Spark với sự quen thuộc của ngôn ngữ truy vấn SQL.
-
-Spark SQL là một module cốt lõi của Apache Spark. Nó không chỉ cung cấp một giao diện dễ dùng mà còn thường chạy nhanh hơn nhiều so với việc sử dụng RDD (Resilient Distributed Dataset) thuần túy. Bí quyết cho hiệu suất này nằm ở hai thành phần: **Catalyst Optimizer** và **Tungsten Engine**.
-
----
-
-## 1. Spark SQL là gì?
-
-
-
-Spark SQL đóng vai trò là một "cầu nối" giữa Spark engine và người sử dụng. Nó cho phép người dùng thao tác dữ liệu qua hai cách chính:
-1. **Truy vấn bằng SQL chuẩn**: Thực thi trực tiếp các câu lệnh SQL trên dữ liệu.
-2. **DataFrame / Dataset API**: Lập trình với các API cung cấp mức độ trừu tượng cao hơn bằng Python, Scala, Java hoặc R.
-
-Bên dưới, dù bạn sử dụng SQL thuần hay DataFrame API, Spark SQL đều chuyển đổi chúng thành một quá trình thực thi tối ưu nhờ Catalyst Optimizer, giúp hiệu năng tính toán là tương đương nhau ở mọi ngôn ngữ.
-
-### Các tính năng cốt lõi:
-- **Tích hợp liền mạch**: Trộn lẫn SQL với mã nguồn lập trình một cách tự nhiên. Bạn có thể truy vấn dữ liệu từ các DataFrame và ngược lại.
-- **Truy xuất dữ liệu đa dạng (Unified Data Access)**: Cung cấp API chung để đọc/ghi với nhiều định dạng dữ liệu như Parquet, ORC, JSON, CSV, JDBC/ODBC, Apache Hive, Apache Iceberg, Delta Lake.
-- **Khả năng tương thích Hive**: Hỗ trợ đầy đủ cú pháp HiveQL, hàm UDF (User-Defined Functions), và metastore của Apache Hive.
-- **Tối ưu hóa mạnh mẽ**: Catalyst Optimizer mang đến khả năng tối ưu query plan thông minh.
+Bài viết này sẽ đi sâu vào kiến trúc bên dưới của Spark SQL, cách Catalyst Optimizer nhào nặn Physical Plan, và những rủi ro sập hệ thống (OOM, Cartesian Explosion) trên production.
 
 ---
 
-## 2. DataFrame và Dataset API
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Trước Spark SQL, người dùng thao tác với dữ liệu qua RDD. RDD rất linh hoạt nhưng không có mô hình dữ liệu rõ ràng, dẫn đến việc khó tối ưu tự động. Spark SQL khắc phục điều này bằng DataFrames và Datasets.
+Spark SQL đứng giữa người dùng (thông qua DataFrame/Dataset API hoặc SQL thuần) và lõi thực thi Spark. Bất kể bạn viết code bằng Python, Scala hay Java, tất cả đều được ánh xạ về một **Logical Plan** đồng nhất, xóa bỏ hoàn toàn overhead của từng ngôn ngữ (trừ khi bạn lạm dụng Python UDF).
 
-### DataFrame
-- DataFrame tương đương với một bảng trong cơ sở dữ liệu quan hệ, hoặc một Data Frame trong R/Python (Pandas), nhưng được phân tán trên nhiều node.
-- Các cột trong DataFrame có tên và kiểu dữ liệu cụ thể (Schema).
-- DataFrame trong Spark có tính bất biến (Immutable), tương tự RDD.
+### Catalyst Optimizer: Cỗ Máy "Luyện Đan"
 
-### Dataset (Chỉ có trên Scala/Java)
-- Dataset kết hợp sự tiện lợi của kiểu dữ liệu được định nghĩa mạnh (strongly-typed) như trong lập trình hướng đối tượng với các tính năng tối ưu hóa của Spark SQL.
-- Python và R không hỗ trợ Dataset API do bản chất kiểu dữ liệu động (dynamic-typing) của các ngôn ngữ này, thay vào đó chúng sử dụng DataFrame.
-*(Lưu ý: Kể từ Spark 2.0, DataFrame thực chất là một `Dataset[Row]`)*.
+Catalyst Optimizer là trái tim của Spark SQL, được thiết kế dưới dạng một extensible framework sử dụng Functional Programming (pattern matching) của Scala. 
 
----
+Quy trình "luyện đan" (Query Optimization Pipeline) diễn ra qua 4 bước khốc liệt:
 
-## 3. Kiến Trúc Bên Dưới: Catalyst Optimizer
+```mermaid
+graph TD
+    A["SQL / DataFrame API"] --> B["Unresolved Logical Plan"]
+    B -->|Catalog / Metastore| C["Resolved Logical Plan"]
+    C -->|Rule-based Optimization| D["Optimized Logical Plan"]
+    D -->|Cost-based Optimization| E["Physical Plans"]
+    E --> F["Selected Physical Plan"]
+    F -->|Tungsten| G["Whole-Stage Code Generation"]
+    G --> H["RDDs Thực Thi Nhị Phân"]
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#bbf,stroke:#333,stroke-width:2px
+    style F fill:#bfb,stroke:#333,stroke-width:2px
+```
 
-Đây là "trái tim" của Spark SQL, chịu trách nhiệm tối ưu hóa các thao tác DataFrame/Dataset và SQL. Quá trình tối ưu của Catalyst đi qua 4 giai đoạn:
+1. **Analysis (Xác thực):** Chuyển từ *Unresolved* sang *Resolved Logical Plan*. Spark tra cứu Catalog (Hive Metastore) để đảm bảo bảng, cột tồn tại và tương thích kiểu dữ liệu.
+2. **Logical Optimization (RBO - Rule-Based Optimization):** Áp dụng các quy tắc cứng:
+   - **Predicate Pushdown:** Đẩy điều kiện `WHERE` xuống sát Storage Layer (chỉ đọc các block Parquet thỏa mãn).
+   - **Column Pruning:** Cắt bỏ các cột không dùng đến để giảm băng thông Network/Disk.
+   - **Constant Folding:** Tính toán hằng số ở thời gian biên dịch (`1 + 1` thành `2`).
+3. **Physical Planning (CBO - Cost-Based Optimization):** Catalyst sinh ra nhiều chiến lược thực thi vật lý. Ví dụ: Dùng `SortMergeJoin` hay `BroadcastHashJoin`? Dựa vào Statistics (metadata về row count, file size), nó chọn Plan có chi phí thấp nhất.
+4. **Code Generation:** Bàn giao cho **Tungsten Engine** để chuyển Plan thành Java bytecode (Whole-Stage Code Generation), bỏ qua overhead của việc gọi hàm ảo trên JVM.
 
-### Giai đoạn 1: Phân tích (Analysis)
-Bắt đầu với một chuỗi SQL hoặc chuỗi lệnh DataFrame, Spark sinh ra một **Unresolved Logical Plan**. Lúc này, Spark biết các cột và bảng nào đang được gọi nhưng chưa biết chúng có tồn tại hay kiểu dữ liệu có hợp lệ không. Catalyst sẽ dùng bộ từ điển **Catalog** (Metastore) để xác thực (resolve) các bảng và cột này, tạo ra một **Resolved Logical Plan**.
-
-### Giai đoạn 2: Tối ưu hóa logic (Logical Optimization)
-Spark áp dụng một tập hợp các quy tắc (Rules) theo phương pháp "Rule-based Optimization" (RBO). Các quy tắc phổ biến bao gồm:
-- **Predicate Pushdown**: Đẩy các bộ lọc (filter) xuống mức nguồn dữ liệu sớm nhất có thể. Ví dụ: Nếu bạn query 100GB dữ liệu Parquet nhưng có câu lệnh `WHERE age > 18`, Spark sẽ chỉ đọc những khối dữ liệu thoả mãn điều kiện đó từ đĩa.
-- **Column Pruning**: Loại bỏ các cột không dùng tới ngay từ lúc load dữ liệu, tiết kiệm I/O và memory.
-- **Constant Folding**: Đánh giá các hằng số ngay lúc biên dịch (ví dụ thay `1 + 1` thành `2`).
-
-Kết quả là sinh ra một **Optimized Logical Plan**.
-
-### Giai đoạn 3: Lập kế hoạch vật lý (Physical Planning)
-Ở đây Spark thực hiện "Cost-based Optimization" (CBO). Từ Optimized Logical Plan, Catalyst sinh ra nhiều **Physical Plans** (ví dụ: cách thực hiện Join khác nhau: SortMergeJoin vs BroadcastHashJoin). Sau đó Catalyst sẽ dựa trên số liệu thống kê (Statistics) về kích thước file, số dòng để đánh giá "chi phí" của từng plan và chọn ra kế hoạch có chi phí thấp nhất.
-
-### Giai đoạn 4: Sinh mã tự động (Code Generation)
-Sau khi có kế hoạch tối ưu, module **Tungsten** của Spark SQL sẽ dùng **Whole-Stage Code Generation** để compile tất cả query (SQL và DataFrame API) thành Java bytecode tối ưu nhất. Điều này giúp loại bỏ nhiều overhead khi thực thi (hạn chế các lời gọi hàm ảo virtual function calls).
+![Catalyst Optimizer Architecture](/images/4-compute-engines-batch/catalyst-optimizer.png)
 
 ---
 
-## 4. Tungsten Execution Engine
+## 2. Adaptive Query Execution (AQE): Khắc Phục Lỗi Tiên Đoán
 
-Project Tungsten tập trung cải thiện hiệu suất sử dụng bộ nhớ và CPU cho Spark, đưa tốc độ của nó tiệm cận với tốc độ phần cứng (bare metal). Những cải tiến chính của Tungsten bao gồm:
-- **Quản lý bộ nhớ ngoài luồng (Off-heap Memory Management)**: Tungsten tự quản lý bộ nhớ thông qua các mảng byte, thay vì dùng JVM Object. Điều này giúp giảm thiểu chi phí của quá trình thu gom rác (Garbage Collection - GC) trên các tập dữ liệu lớn.
-- **Cấu trúc dữ liệu thân thiện với Cache**: Spark lưu trữ dữ liệu dạng cột trên bộ nhớ một cách tuần tự (column-oriented layout), tận dụng tối đa L1/L2/L3 cache của CPU.
-- **Whole-stage CodeGen**: (Đã đề cập ở trên) Tích hợp nhiều toán tử trong query (ví dụ Filter, Select, Aggregate) vào một thân hàm (loop) duy nhất.
+Điểm yếu chí mạng của CBO trước bản Spark 3.0 là nó phụ thuộc hoàn toàn vào số liệu thống kê tĩnh. Nếu statistics cũ rích, CBO sẽ dự đoán sai bét nhè. 
 
----
+**Adaptive Query Execution (AQE)** giải quyết bài toán này bằng cách đo lường số liệu thực tế (runtime statistics) ngay trong lúc job đang chạy (giữa các stage) để "bẻ lái" kế hoạch thực thi:
 
-## 5. Adaptive Query Execution (AQE)
-
-Ra mắt mạnh mẽ trong Spark 3.0, **AQE** là một tính năng đột phá giúp tối ưu hóa Physical Plan *trong quá trình chạy* (Runtime) dựa trên dữ liệu thực tế thu thập được, thay vì chỉ ước tính lúc lập kế hoạch.
-
-Các khả năng chính của AQE:
-1. **Tự động gom nhóm các phân vùng Shuffle (Dynamically coalescing shuffle partitions)**: Sau quá trình shuffle (ví dụ sau khi `GROUP BY`), nếu có nhiều phân vùng quá nhỏ, AQE sẽ gộp chúng lại để tránh tạo ra quá nhiều task I/O nhỏ.
-2. **Chuyển đổi chiến lược Join động (Dynamically switching join strategies)**: Nếu lúc đầu Catalyst chọn Sort-Merge Join do ước lượng kích thước bảng lớn, nhưng sau bước filter thực tế, một bảng nhỏ lại chỉ còn vài Megabytes, AQE sẽ tự động đổi sang Broadcast Hash Join ở giữa quá trình chạy để tăng tốc.
-3. **Tự động xử lý Skew Join (Dynamically optimizing skew joins)**: Dữ liệu phân bổ không đều (Data Skew) là nỗi ác mộng trong hệ thống phân tán. AQE sẽ phát hiện các phân vùng bị skew (lệch kích thước quá lớn so với trung bình) và chia nhỏ chúng thành các phân vùng đều đặn hơn để xử lý song song.
+*   **Dynamically Coalescing Shuffle Partitions:** Gộp các vách ngăn (partitions) quá nhỏ sau khi Shuffle để tránh tạo ra hàng vạn Task nhỏ lẻ (gây nghẽn hệ thống lên lịch - Scheduler Overhead).
+*   **Dynamically Switching Join Strategies:** Nếu sau khi lọc, một bảng từ 100GB tụt xuống còn 5MB, AQE sẽ hủy kế hoạch `SortMergeJoin` tốn kém (phải sort và shuffle trên mạng) để chuyển sang `BroadcastHashJoin` (gửi thẳng 5MB lên mọi node).
+*   **Dynamically Optimizing Skew Joins:** Phát hiện một partition phình to đột biến (Data Skew) và tự động "chẻ" nó thành nhiều khối nhỏ xử lý song song, chống lỗi `OOMKilled`.
 
 ---
 
-## 6. Các thao tác phổ biến và Best Practices
+## 3. Rủi ro Vận hành (Operational Risks) & Đánh Đổi Hệ Thống
 
-### Khởi tạo SparkSession
-Mọi ứng dụng Spark SQL hiện đại (từ bản 2.0) bắt đầu với `SparkSession`:
+Dù Catalyst và AQE rất thông minh, nhưng hệ thống vẫn sẽ sập nếu người kỹ sư không nắm được các giới hạn của mạng và bộ nhớ vật lý.
+
+### 3.1. Cartesian Explosion (Bùng Nổ Tích Đề Các)
+Khi bạn thực hiện `JOIN` mà quên điều kiện `ON`, hoặc điều kiện join chứa các hàm bất phương trình (non-equi joins) như `tableA.id > tableB.id`.
+* **Hậu quả:** 1 triệu dòng x 1 triệu dòng = 1 ngàn tỷ dòng lưu vào bộ nhớ.
+* **Biểu hiện:** CPU đạt 100% nhiều giờ liền, Task đơ, và chết vì JVM OOM.
+* **Trade-off:** Spark cung cấp tham số `spark.sql.crossJoin.enabled = false` mặc định. Tuyệt đối không bật lên trừ khi bạn cực kỳ hiểu rõ data của mình. Thay vào đó, hãy dùng Window Functions hoặc gộp các điều kiện cứng.
+
+### 3.2. Broadcast Memory Pressure (Áp Lực Bộ Nhớ Driver)
+Khi bạn join với bảng nhỏ, Spark chọn `BroadcastHashJoin`. Bảng nhỏ sẽ được kéo về **Driver**, sau đó Driver nén lại và gửi cho các **Executor**.
+* **Hậu quả:** Nếu bạn set `spark.sql.autoBroadcastJoinThreshold` quá cao (ví dụ 1GB), Driver (thường cấu hình 2GB-4GB RAM) sẽ lập tức văng `java.lang.OutOfMemoryError`.
+* **Cách fix:** Khống chế ngưỡng broadcast ở mức dưới 50MB. Nếu bảng thực tế khoảng 100MB, hãy chia nhỏ xử lý hoặc ép dùng Shuffle Join `/*+ SHUFFLE_HASH(table) */`.
+
+### 3.3. Shuffle Spill-to-Disk (Tràn Đĩa Khi Shuffle)
+Xáo trộn mạng (Network Shuffle) là nguyên nhân số 1 gây thắt cổ chai. Khi Execution Memory không chứa nổi dữ liệu trung gian của một khối Shuffle, dữ liệu sẽ bị "Spill" (tràn) xuống đĩa cứng (Disk).
+* **Hậu quả:** Job chạy chậm đi gấp 10 lần vì I/O đĩa chậm hơn RAM rất nhiều.
+* **Trade-off:** Tăng RAM cho Executor không phải lúc nào cũng tối ưu (vì gây áp lực lên Java GC). Cách tốt nhất là tăng mạnh số lượng phân vùng Shuffle để chia nhỏ gánh nặng: `spark.sql.shuffle.partitions`.
+
+---
+
+## 4. Tối Ưu Hóa Trọng Yếu và Code Thực Chiến
+
+Tuyệt đối KHÔNG viết UDF bằng Python trừ trường hợp bất khả kháng. Python UDF yêu cầu serialize/deserialize dữ liệu qua lại giữa JVM và Python Process, làm tê liệt hiệu năng. Hãy sử dụng hàm native (built-in functions) hoặc SQL thuần.
+
+Dưới đây là một cấu hình `SparkSession` chuẩn cấp độ Enterprise, kích hoạt AQE và tối ưu đọc ghi Delta Lake:
+
 ```python
 from pyspark.sql import SparkSession
 
+# Khởi tạo Spark Session với các tham số Hardcore Engineering
 spark = SparkSession.builder \
-    .appName("Spark SQL Example") \
-    .config("spark.sql.warehouse.dir", "/user/hive/warehouse") \
-    .enableHiveSupport() \
+    .appName("ETL_Pipeline_SCD_Type2") \
+    .config("spark.sql.adaptive.enabled", "true") \
+    .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
+    .config("spark.sql.adaptive.skewJoin.enabled", "true") \
+    .config("spark.sql.shuffle.partitions", "2000") \
+    .config("spark.sql.autoBroadcastJoinThreshold", "20971520") \
+    .config("spark.databricks.delta.optimizeWrite.enabled", "true") \
+    .config("spark.databricks.delta.autoCompact.enabled", "true") \
     .getOrCreate()
+
+# Đọc dữ liệu với Predicate Pushdown và Column Pruning tối đa
+raw_df = spark.read.format("parquet") \
+    .load("s3a://data-lake/raw/events/") \
+    .select("user_id", "event_type", "amount", "timestamp") \
+    .filter("timestamp >= '2026-06-01' AND event_type = 'PURCHASE'")
+
+# View tạm để xài SQL
+raw_df.createOrReplaceTempView("stg_purchases")
+
+# Sử dụng SQL MERGE (SCD Type 2) trên Delta Lake để xử lý chênh lệch
+spark.sql("""
+    MERGE INTO delta_db.dim_users target
+    USING (
+        SELECT user_id, sum(amount) as total_spent
+        FROM stg_purchases
+        GROUP BY user_id
+    ) source
+    ON target.user_id = source.user_id
+    WHEN MATCHED AND target.total_spent != source.total_spent THEN
+        UPDATE SET target.total_spent = source.total_spent, target.updated_at = current_timestamp()
+    WHEN NOT MATCHED THEN
+        INSERT (user_id, total_spent, updated_at) VALUES (source.user_id, source.total_spent, current_timestamp())
+""")
 ```
-
-### Đọc, Ghi và Định dạng dữ liệu
-Spark SQL hỗ trợ đọc trực tiếp nhiều nguồn. **Parquet** là định dạng mặc định được khuyên dùng do khả năng nén cao và lưu trữ theo cột.
-```python
-# Đọc dữ liệu
-df = spark.read.parquet("hdfs://path/to/data.parquet")
-df_csv = spark.read.option("header", "true").csv("data.csv")
-
-# Ghi dữ liệu
-df.write.mode("overwrite").partitionBy("year", "month").parquet("hdfs://output/path")
-```
-
-### Sử dụng Temporary Views để gọi SQL
-Bạn có thể dễ dàng map một DataFrame thành một view để viết SQL chuẩn:
-```python
-df.createOrReplaceTempView("people")
-
-sqlDF = spark.sql("SELECT name, age FROM people WHERE age > 21")
-sqlDF.show()
-```
-
-### Best Practices để tối ưu hiệu suất Spark SQL:
-1. **Sử dụng Parquet/ORC**: Các định dạng dạng cột cho phép Predicate Pushdown và Column Pruning tối đa.
-2. **Broadcast Hash Join**: Khi Join một bảng lớn với một bảng nhỏ (thường < 10MB, có thể config qua `spark.sql.autoBroadcastJoinThreshold`), hãy dùng cơ chế Broadcast để tránh thao tác Shuffle tốn kém.
-3. **Partitioning**: Khi lưu trữ ra Data Lake, hãy sử dụng `partitionBy()` hợp lý theo các cột hay được query (như ngày, tháng, khu vực) để tăng tốc độ truy vấn sau này. Đừng tạo quá nhiều partition nhỏ.
-4. **Tránh dùng UDF (User Defined Functions) bừa bãi**: Python UDF thường rất chậm do chi phí serialization/deserialization dữ liệu giữa JVM (Spark chạy trên Java) và trình thông dịch Python. Hãy ưu tiên dùng các hàm nội bộ của Spark SQL (built-in functions trong `pyspark.sql.functions`). Nếu cần UDF, hãy xem xét **Pandas UDF (Vectorized UDF)** trong PySpark.
 
 ---
 
-## Tài Liệu Tham Khảo
+## 5. Nguồn Tham Khảo (References)
+
 * [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
-* **Troubleshooting Spark OOM and Memory Management - Uber Engineering**
-* [Spark Shuffle Architecture - DataBricks Deep Dive](https://databricks.com/session/deep-dive-into-spark-sql-with-advanced-performance-tuning)
-* **Presto: SQL on Everything - Facebook Engineering**
+* [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks Blog](https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html)
+* [Adaptive Query Execution in Spark 3.0 - Databricks](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+* [Designing Data-Intensive Applications (Martin Kleppmann) - Phân tích Data Skew & Partitioning]

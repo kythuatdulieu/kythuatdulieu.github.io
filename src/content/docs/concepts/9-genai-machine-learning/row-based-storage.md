@@ -3,90 +3,166 @@ title: "Lưu trữ dạng Dòng - Row-based Storage"
 difficulty: "Beginner"
 tags: ["storage", "row-based", "oltp", "database"]
 readingTime: "7 mins"
-lastUpdated: 2026-06-07
+lastUpdated: 2026-06-26
 seoTitle: "Lưu trữ dạng Dòng (Row-based Storage) - Cơ sở cho Hệ thống OLTP"
 metaDescription: "Tìm hiểu kiến trúc lưu trữ dạng dòng (Row-oriented storage) truyền thống, lý do nó thống trị hệ thống OLTP và sự đối lập với lưu trữ dạng cột."
-description: "Khi bắt đầu tìm hiểu về cách cơ sở dữ liệu lưu trữ thông tin vật lý trên đĩa cứng, chúng ta sẽ bắt gặp hai trường phái thiết kế kinh điển: Lưu trữ dạng dòng (Row-based) và Lưu trữ dạng cột (Column-based)."
+description: "Phân tích chuyên sâu về kiến trúc lưu trữ Row-based Storage từ góc độ I/O, Page Layout, B-Tree và các rủi ro vận hành (OOMKilled, Page Fragmentation)."
 ---
 
+**Row-based Storage** (hay Row-oriented Storage) không chỉ là một khái niệm học thuật. Khi bạn chạy một lệnh `INSERT` vào PostgreSQL hoặc MySQL, dữ liệu vật lý phải được ghi xuống đĩa (disk). Trong kiến trúc Row-based, toàn bộ dữ liệu của một hàng (row/record/tuple) được ghi **kề sát nhau (contiguous)** vào cùng một block bộ nhớ.
 
+Đây là xương sống của mọi hệ thống **OLTP** (Online Transaction Processing). Bài viết này sẽ mổ xẻ Row-based storage dưới lăng kính của một System Engineer: Cơ chế I/O vật lý, Page Layout, và các Trade-offs dẫn tới sập hệ thống.
 
-**Row-based Storage** (hay Row-oriented Storage) là mô hình lưu trữ dữ liệu truyền thống, trong đó toàn bộ dữ liệu của một hàng (row/record) được lưu trữ kề sát nhau trên các block (khối) của ổ đĩa cứng. Đây là cách tiếp cận phổ biến nhất trong các Hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) từ những ngày đầu và đóng vai trò xương sống cho các hệ thống **OLTP** (Online Transaction Processing - Xử lý giao dịch trực tuyến).
+## 1. Cơ chế Lưu trữ Vật lý: Anatomizing a Page (8KB/16KB)
 
-## 1. Cơ chế hoạt động trên ổ đĩa
+Database không tương tác với ổ cứng qua từng dòng (row). Hệ điều hành và Database thao tác I/O theo từng **khối (Page hoặc Block)**, thông thường là 8KB (PostgreSQL) hoặc 16KB (InnoDB/MySQL).
 
-Để hiểu tại sao mô hình này lại chiếm ưu thế trong các ứng dụng truyền thống, hãy xem xét cách nó lưu trữ dữ liệu vật lý. Giả sử bạn có một bảng dữ liệu người dùng (`Users`) với 4 cột như sau:
+Khi bạn truy vấn `SELECT * FROM Users WHERE ID = 1`, Database không quét từng byte, nó tìm vị trí của Page chứa Row đó và nạp toàn bộ Page (8KB) lên RAM (Buffer Pool).
 
-| ID | Name | Age | Email |
-|---|---|---|---|
-| 1 | Alice | 30 | alice@email.com |
-| 2 | Bob | 25 | bob@email.com |
-| 3 | Charlie | 35 | charlie@email.com |
+### PostgreSQL Heap Page Layout
 
-Trong kiến trúc Row-based, thay vì phân tách từng cột ra các khu vực khác nhau, dữ liệu này sẽ được lưu trữ trên ổ cứng dưới dạng một chuỗi các bản ghi liên tiếp:
+Hãy xem cấu trúc một Page trong PostgreSQL:
 
-```text
-[1, Alice, 30, alice@email.com] | [2, Bob, 25, bob@email.com] | [3, Charlie, 35, charlie@email.com]
+```mermaid
+graph TD
+  subgraph "Cấu trúc 1 Page 8KB (PostgreSQL Heap Tuple)"
+    direction TB
+    H[Page Header: Metadata, LSN, Transaction ID] --> LP[Line Pointers / ItemIds]
+    LP -.-> |Offset & Length| T3
+    LP -.-> |Offset & Length| T2
+    LP -.-> |Offset & Length| T1
+    
+    FS[Free Space / Lỗ hổng]
+    T3[Tuple 3: id, name, email] 
+    T2[Tuple 2: id, name, email] 
+    T1[Tuple 1: id, name, email]
+    
+    LP --- FS
+    FS --- T3
+    T3 --- T2
+    T2 --- T1
+  end
+  
+  style H fill:#f9f,stroke:#333,stroke-width:2px
+  style LP fill:#bbf,stroke:#333,stroke-width:2px
+  style FS fill:#eee,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+  style T1 fill:#dfd,stroke:#333,stroke-width:2px
+  style T2 fill:#dfd,stroke:#333,stroke-width:2px
+  style T3 fill:#dfd,stroke:#333,stroke-width:2px
 ```
 
-Khi Hệ quản trị cơ sở dữ liệu (DBMS) ghi dữ liệu của "Alice", toàn bộ thông tin từ `ID` cho đến `Email` sẽ được ghi vào một khối nhớ (block/page) duy nhất. Nhờ vậy, khi đĩa cứng (HDD) quay đầu từ hoặc khi ổ cứng thể rắn (SSD) truy cập block bộ nhớ, toàn bộ chi tiết về "Alice" có thể được nạp vào bộ nhớ RAM thông qua **một thao tác I/O duy nhất** (I/O operation).
+**Phân tích kỹ thuật (Technical Deep-dive):**
+- **Page Header**: Lưu trữ LSN (Log Sequence Number) cho cơ chế WAL (Write-Ahead Logging) và Checkpoint.
+- **Line Pointers**: Mảng các con trỏ từ đầu Page trỏ ngược xuống các Tuples ở cuối Page. Giúp O(1) lookup trong nội bộ Page.
+- **Tuples (Rows)**: Được ghi bắt đầu từ cuối Page ngược lên trên. Row-based phát huy sức mạnh ở đây: TẤT CẢ các cột của một Row được nén chặt trong cùng một Tuple.
 
-## 2. Ưu điểm nổi bật
+## 2. Row-based I/O & B-Tree Traversals
 
-Thiết kế lưu trữ từng dòng cạnh nhau mang lại những lợi ích tối quan trọng cho các ứng dụng tương tác trực tiếp với người dùng:
+Tại sao Row-based Storage lại vô đối cho OLTP? Câu trả lời nằm ở **B-Tree** và **Point Lookups**.
 
-- **Ghi dữ liệu (Insert) cực kỳ nhanh chóng:** Khi có một bản ghi mới (Ví dụ: một khách hàng mới đăng ký tài khoản), toàn bộ dữ liệu của khách hàng đó đơn giản chỉ cần được "đính kèm" (append) vào cuối tập tin dữ liệu hoặc được đặt vào một block còn trống. Đây là thao tác tuần tự nên rất tiết kiệm tài nguyên I/O đĩa.
-- **Cập nhật (Update) & Xóa (Delete) tối ưu:** Để thay đổi thông tin của một người (ví dụ đổi Email), hệ thống định vị được bản ghi đó và thực hiện sửa đổi "tại chỗ" (in-place update) trên một vài block liền kề mà không cần phải truy tìm ở nhiều file khác nhau.
-- **Tối ưu cho việc đọc từng thực thể (Entity-level Reads):** Rất nhiều truy vấn trong ứng dụng backend thường có dạng: `SELECT * FROM Users WHERE ID = 1`. Row-based trả về ngay lập tức toàn bộ đối tượng vì chúng ở cạnh nhau trên đĩa.
-- **Hỗ trợ tuyệt đối cho giao dịch ACID:** Row-based storage dễ dàng kết hợp với các cơ chế khóa cấp độ hàng (row-level locking). Điều này đảm bảo tính toàn vẹn dữ liệu cho các ứng dụng có số lượng truy cập đồng thời khổng lồ (high concurrency), chẳng hạn như thanh toán ngân hàng hoặc giỏ hàng thương mại điện tử.
+Trong MySQL (InnoDB), dữ liệu được tổ chức dưới dạng **Clustered Index**. Tức là, cấu trúc cây B+Tree chứa luôn Data ở tầng Leaf Nodes (các nút lá).
 
-## 3. Nhược điểm và Giới hạn
+![B-Tree Architecture](/images/9-genai-machine-learning/btree-index.svg)
+*B-Tree: Các node nội bộ (internal nodes) trỏ đến các node con. Tại Leaf Nodes của Clustered Index, toàn bộ Row được lưu trữ. Nguồn: Wikimedia*
 
-Tuy xuất sắc ở việc xử lý từng tác vụ độc lập, Row-based storage bộc lộ nhược điểm chí mạng khi đối mặt với dữ liệu phân tích (Analytics):
+**The I/O Advantage (Lợi thế I/O):**
+- Khi có một request thanh toán: `UPDATE accounts SET balance = balance - 100 WHERE id = 999;`
+- Nhờ B-Tree, hệ thống chỉ mất $O(\log N)$ I/O operations (thường là 3-4 lần rẽ nhánh) để tìm đúng Page chứa user 999.
+- Vì là **Row-based**, nên khi tìm thấy, toàn bộ thông tin (id, name, balance, status) đã nằm sẵn trong Page đó. **Chỉ cần 1 lần Random I/O Read** là lấy đủ mọi thông tin cần thiết.
 
-- **Chậm chạp với các truy vấn phân tích tổng hợp (Slow Analytical Queries):** Giả sử bạn muốn tính tuổi trung bình của tập khách hàng: `SELECT AVG(Age) FROM Users`. Dù bạn chỉ cần đúng một cột `Age`, cơ sở dữ liệu vẫn phải đọc **toàn bộ dữ liệu** của từng hàng (bao gồm cả `Name`, `Email`, v.v.) từ ổ cứng lên RAM, sau đó mới vứt bỏ các cột không cần thiết để tính toán. Hiện tượng này gây ra nghẽn cổ chai đĩa (I/O bottleneck) nghiêm trọng và lãng phí bộ nhớ RAM khi chạy phân tích trên bảng chứa hàng trăm triệu dòng và hàng chục cột.
-- **Tỉ lệ nén dữ liệu thấp (Poor Compression):** Các thuật toán nén hoạt động tốt nhất khi gặp các dữ liệu có tính lặp lại hoặc đồng nhất. Với Row-based, trong cùng một khối dữ liệu có chứa lẫn lộn các kiểu int (ID), varchar (Name, Email), datetime,... khiến việc nén rất kém hiệu quả.
+## 3. Systemic Trade-offs: Latency, Throughput & FinOps
 
-## 4. Các trường hợp sử dụng lý tưởng (Use Cases)
+Sử dụng Row-based storage cho hệ thống OLAP (Data Warehouse) là một thảm họa kiến trúc. Dưới đây là sự đánh đổi hệ thống (Trade-offs):
 
-Mô hình này sinh ra để phục vụ cho các **Hệ thống OLTP (Online Transaction Processing)**. Bạn sẽ sử dụng Row-based storage khi:
+### Read Amplification (Khuếch đại I/O)
 
-- Ứng dụng phải xử lý lượng lớn các tác vụ đọc/ghi diễn ra với tốc độ rất nhanh (tính bằng mili-giây).
-- Ứng dụng Web/Mobile Backend, Hệ thống quản trị nội dung (CMS), Phần mềm bán lẻ (POS).
-- Lưu trữ lịch sử giao dịch thanh toán, giỏ hàng trực tuyến, tài khoản người dùng.
-- Ứng dụng mà hầu hết các truy vấn `SELECT` sẽ cần trả về gần như toàn bộ các cột của một vài dòng cụ thể.
+Giả sử bảng `Users` có 50 cột. Bạn muốn đếm số user ở VN:
+`SELECT COUNT(*) FROM Users WHERE country = 'VN';`
 
-## 5. So sánh nhanh với Lưu trữ dạng Cột (Column-based Storage)
+Dù bạn chỉ cần đúng 1 cột `country`, Database vẫn phải bốc toàn bộ 50 cột (toàn bộ Page) từ Disk lên RAM. Hiện tượng **Read Amplification** (đọc dư thừa) này bóp nghẹt băng thông Disk (I/O Bottleneck), quét sạch Buffer Cache (Cache Eviction), và tăng vọt CPU khi giải mã dữ liệu dư thừa. Đây là lý do Column-based storage sinh ra.
 
-Để nhìn nhận rõ ràng hơn, hãy so sánh nó với người anh em đối lập - kiến trúc được sử dụng trong các hệ thống OLAP (Data Warehouse):
+### FinOps: Tối ưu Chi phí Disk I/O trên Cloud
 
-| Tiêu chí | Row-based Storage (Dạng Dòng) | Column-based Storage (Dạng Cột) |
-| :--- | :--- | :--- |
-| **Mục đích chính** | OLTP (Hệ thống giao dịch trực tuyến) | OLAP (Hệ thống phân tích, Data Warehouse) |
-| **Tác vụ Ghi (Insert)** | Nhanh - Ghi theo một khối liền mạch. | Chậm hơn - Phải tách nhỏ dữ liệu ra và ghi vào các vùng lưu trữ khác nhau cho từng cột. |
-| **Đọc toàn bộ thực thể** | Cực nhanh - Thường chỉ mất 1 đến vài I/O operation. | Chậm - Phải gom nhặt, lắp ráp (reconstruct) dữ liệu từ nhiều file của nhiều cột khác nhau. |
-| **Truy vấn tổng hợp (Aggregation)**| Chậm - Đọc thừa vô số dữ liệu dù chỉ cần 1 cột. | Cực nhanh - Đọc chính xác những cột cần thiết cho việc tính toán. |
-| **Khả năng nén dữ liệu** | Kém hiệu quả. | Rất hiệu quả (Vì dữ liệu cùng loại, cùng cột được đặt cạnh nhau). |
+Với Row-based, hệ thống của bạn thực hiện **Random I/O** liên tục để đọc/ghi các Row nằm rải rác. Nếu host trên AWS RDS, bạn phải cấp phát IOPS rất lớn (ổ `io2` hoặc `gp3`), dẫn tới chi phí cao. 
 
-## 6. Các Hệ quản trị cơ sở dữ liệu (DBMS) tiêu biểu
+Dưới đây là cấu hình Terraform thực chiến cho một DB Row-based OLTP Production, tối ưu cho Random I/O cường độ cao:
 
-Vì là kiến trúc nền tảng của mô hình quan hệ từ những năm 1970, hầu như tất cả các RDBMS phổ biến nhất hiện nay đều mặc định sử dụng cơ chế Row-based (hoặc sử dụng nó làm core engine chính):
+```hcl
+resource "aws_db_instance" "oltp_postgres" {
+  identifier        = "core-payment-db"
+  engine            = "postgres"
+  engine_version    = "15.4"
+  instance_class    = "db.r6g.4xlarge"  # High RAM for Buffer Pool
+  allocated_storage = 1000
+  
+  # FinOps: Dùng gp3 để tách biệt IOPS và Storage thay vì io2 đắt đỏ
+  storage_type      = "gp3"
+  iops              = 12000 # Random I/O cần IOPS cao để tránh I/O Wait
+  throughput        = 500   # MB/s
+  
+  parameter_group_name = aws_db_parameter_group.pg_tune.name
+}
 
-- **Hệ sinh thái mã nguồn mở:** MySQL, MariaDB, PostgreSQL.
-- **Cơ sở dữ liệu thương mại Enterprise:** Microsoft SQL Server, Oracle Database, IBM Db2.
-- **Cơ sở dữ liệu nhúng (Embedded):** SQLite.
+resource "aws_db_parameter_group" "pg_tune" {
+  name   = "pg-tune-row-based"
+  family = "postgres15"
 
-> **Lưu ý trong kỷ nguyên hiện đại:** Ranh giới đang dần mờ đi. Ví dụ, PostgreSQL mặc định là Row-based nhưng đã bắt đầu hỗ trợ các phần mở rộng lưu trữ dạng cột (như Citus), trong khi đó Microsoft SQL Server đã tích hợp thêm công nghệ *Columnstore Indexes* để phục vụ cả việc tính toán phân tích (mô hình HTAP - Hybrid Transactional/Analytical Processing).
+  parameter {
+    name  = "shared_buffers"
+    # PostgreSQL khuyến nghị 25% RAM để cache các Pages (Row-based)
+    value = "32768" # 32GB
+  }
+  parameter {
+    name  = "random_page_cost"
+    # Mặc định là 4.0 (cho ổ HDD). Với SSD gp3, set về 1.1 để Index Scan được ưu tiên
+    value = "1.1" 
+  }
+}
+```
 
-## 7. Kết luận
+## 4. Real-world Incidents: OOMKilled & Page Fragmentation
 
-Mặc dù các kho dữ liệu hiện đại khổng lồ trong Data Engineering (như Snowflake, BigQuery, Redshift) đều sử dụng hoàn toàn Column-based Storage, mô hình **Row-based Storage** vẫn sẽ là cấu trúc lưu trữ cơ sở dữ liệu không thể thay thế trong phát triển phần mềm và xây dựng các hệ thống hướng người dùng cuối. Việc hiểu rõ bản chất vật lý của nó giúp Data Engineer thiết kế các pipeline trích xuất dữ liệu (ELT/ETL) từ các cơ sở dữ liệu nguồn (Source DB) một cách trơn tru mà không làm sập (crash) hệ thống do nghẽn I/O.
+### Sự cố 1: OOMKilled (Out of Memory) khi đọc Bảng Lớn
 
----
+Rất nhiều kỹ sư mắc lỗi dùng Row-based như một kho Data Warehouse. Khi chạy một Job ETL để kéo 10 triệu dòng ra Python bằng `cursor.fetchall()`, toàn bộ dữ liệu của 10 triệu dòng (với vô số cột) sẽ bị hút vào RAM của container, gây ra lỗi **JVM OOMKilled** hoặc Python Process bị Linux OOM Killer bắn hạ.
 
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+**Giải pháp (Workaround):** Sử dụng Server-side Cursors (Generators) để stream từng Row (hoặc Batch) một cách an toàn mà không làm nổ RAM:
+
+```python
+import psycopg2
+
+def extract_row_based_safely(query, batch_size=2000):
+    conn = psycopg2.connect("dbname=coredb user=data_engineer")
+    
+    # name='server_cursor' kích hoạt Server-side cursor trên PostgreSQL
+    with conn.cursor(name='server_cursor') as cur:
+        cur.execute(query)
+        while True:
+            # Chỉ kéo từng batch nhỏ Row-based lên RAM (Network Fetch)
+            records = cur.fetchmany(batch_size)
+            if not records:
+                break
+            for record in records:
+                yield record # Yielding tránh OOM
+
+# Memory usage ổn định ở mức vài chục MB dù kéo 100GB dữ liệu
+for row in extract_row_based_safely("SELECT * FROM transactions"):
+    write_to_s3(row)
+```
+
+### Sự cố 2: MVCC Bloat và Page Fragmentation
+
+Trong PostgreSQL, khi bạn `UPDATE` một Row, database KHÔNG sửa đè trực tiếp (in-place) mà đánh dấu Row cũ là **Dead Tuple** và ghi một Tuple mới vào trong Page (cơ chế MVCC).
+Điều này khiến các Page nhanh chóng đầy rác. Nếu tiến trình Autovacuum không chạy kịp, số lượng Page bị phình to (Table Bloat), khiến một câu lệnh `SELECT` phải quét qua hàng nghìn Page đầy Dead Tuples (Disk I/O tăng đột biến, hệ thống bị chậm lại).
+
+**Cách khắc phục:**
+1. Tuning lại `autovacuum_vacuum_scale_factor`.
+2. Theo dõi chỉ số *Free Space Map (FSM)*.
+3. Dùng `pg_repack` hoặc `VACUUM FULL` (sẽ lock table) để dọn dẹp và sắp xếp lại các Page.
+
+## Nguồn Tham Khảo (References)
+
+- [Designing Data-Intensive Applications - Martin Kleppmann (O'Reilly)](https://dataintensive.net/)
+- [PostgreSQL Official Documentation: Database Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html)
+- [MySQL InnoDB Architecture - B-Tree Indexes](https://dev.mysql.com/doc/refman/8.0/en/innodb-architecture.html)
+- AWS Architecture Blog: [Optimizing PostgreSQL on Amazon RDS](https://aws.amazon.com/blogs/database/best-practices-for-working-with-amazon-aurora-and-amazon-rds-postgresql/)

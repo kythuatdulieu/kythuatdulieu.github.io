@@ -1,113 +1,149 @@
 ---
-title: "Bảng sự kiện - Fact Table"
-difficulty: "Beginner"
-tags: ["data-warehouse", "fact-table", "dimensional-modeling", "star-schema", "metrics"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Fact Table (Bảng sự kiện) là gì? Phân loại Fact trong Data Warehouse"
-metaDescription: "Tìm hiểu chi tiết về Bảng sự kiện (Fact Table) trong Data Warehouse: Định nghĩa, cấu trúc, các loại Fact (Additive, Semi-Additive, Non-Additive) và Grain."
-description: "Mỗi khi bạn đi siêu thị và nghe tiếng 'bíp' vang lên lúc nhân viên thu ngân quét mã vạch trên sản phẩm, một giao dịch mới đã được ghi nhận. Trong thế giới Dữ liệu, những sự kiện như vậy được lưu trữ ở đâu? Câu trả lời chính là Fact Table."
+title: "Bảng sự kiện - Fact Table trong Kỷ nguyên Big Data"
+difficulty: "Advanced"
+tags: ["data-warehouse", "fact-table", "lakehouse", "delta-lake", "performance-optimization", "system-design"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Thiết kế Fact Table chuyên sâu: Kiến trúc, Trade-offs và Tối ưu (AWS, Databricks)"
+metaDescription: "Khám phá bản chất vật lý của Fact Table trong Data Warehouse và Lakehouse. Phân tích các Systemic Trade-offs, kiến trúc Medallion, tối ưu OOMKilled và Z-Ordering."
+description: "Dưới góc nhìn của một Data Engineer, Fact Table không chỉ là một bảng trong cơ sở dữ liệu. Nó là một tập hợp các file Parquet phân tán khổng lồ. Thiết kế sai Grain, bạn sẽ nhận về Cartesian Explosion. Join sai cách, bạn sẽ đối mặt với OOMKilled."
 ---
 
+Khi hệ thống mở rộng đến hàng Terabyte hoặc Petabyte dữ liệu, định nghĩa sách giáo khoa *"Fact Table là bảng chứa các con số đo lường"* không còn đủ để giúp bạn sinh tồn. Dưới góc nhìn của một Staff Data Engineer, Fact Table không chỉ là một bảng logic trong Star Schema, mà thực chất là **một tập hợp các khối dữ liệu vật lý (thường là Parquet/ORC files)** phân tán trên S3, GCS hoặc HDFS.
 
-
-Mỗi khi bạn đi siêu thị và nghe tiếng "bíp" vang lên lúc nhân viên thu ngân quét mã vạch trên sản phẩm, một giao dịch mới đã được ghi nhận. Giao dịch này bao gồm số lượng sản phẩm, giá tiền, thời gian mua và người mua. Trong thế giới kho dữ liệu (Data Warehouse), những sự kiện định lượng này được lưu trữ trong **Bảng sự kiện (Fact Table)**.
-
-Fact Table là trung tâm của mô hình **Star Schema** (Mô hình hình sao) trong Dimensional Modeling do Ralph Kimball đề xuất. Bảng này chứa các **sự kiện kinh doanh đã xảy ra** kèm theo các chỉ số đo lường (Metrics/Measures) như Doanh thu, Số lượng. Khác với Dimension Table (Bảng chiều) thường tương đối ổn định, Fact Table liên tục phình to theo thời gian khi doanh nghiệp hoạt động và sinh ra dữ liệu mới.
-
----
-
-## 1. Cấu trúc của một Fact Table
-
-Một Fact Table điển hình thường bao gồm ba thành phần chính:
-
-### a. Khóa ngoại (Foreign Keys)
-Fact Table chứa rất nhiều khóa ngoại. Mỗi khóa ngoại sẽ liên kết đến Khóa chính (Primary Key) của một Dimension Table (Bảng chiều). Sự kết hợp của các khóa ngoại này giúp giải thích "ngữ cảnh" của sự kiện (Ai, Cái gì, Ở đâu, Khi nào). 
-*Ví dụ: `customer_id`, `product_id`, `store_id`, `date_id`.*
-
-### b. Các độ đo định lượng (Measures/Facts)
-Đây là phần cốt lõi chứa các con số phản ánh quy mô của sự kiện kinh doanh. Các con số này thường có thể tính toán, tổng hợp (Sum, Average, Count) để tạo ra các báo cáo.
-*Ví dụ: `sales_amount`, `quantity_sold`, `discount_amount`.*
-
-### c. Grain (Độ hạt dữ liệu)
-Grain là **mức độ chi tiết nhất** mà một dòng (row) trong Fact Table biểu diễn. Xác định Grain là bước quan trọng nhất trước khi thiết kế bất kỳ bảng sự kiện nào.
-*Ví dụ: "Một dòng trong Fact table tương ứng với một sản phẩm được quét trong một hóa đơn tại một cửa hàng vào một thời điểm nhất định".*
+Thiết kế một Fact Table ở scale lớn (như Uber, Netflix hay Databricks) là một bài toán đánh đổi liên tục giữa **Storage Cost** (chi phí lưu trữ), **Compute Cost** (chi phí tính toán) và **Read/Write Latency**.
 
 ---
 
-## 2. Các loại độ đo (Measures/Facts) trong Fact Table
+## 1. Bản chất Vật lý (Physical Execution & Storage)
 
-Dựa vào khả năng cộng gộp (aggregation), các độ đo trong Fact Table được chia làm 3 loại chính:
+### Sự sụp đổ của Relational Database truyền thống
+Trong một Data Warehouse truyền thống (RDBMS), Fact Table được lưu theo hàng (Row-oriented) trên disk. Tuy nhiên, khi Fact Table phình to đến hàng tỷ dòng, việc quét (scan) toàn bộ bảng để tính tổng doanh thu (`SUM(sales)`) trở thành thảm họa I/O.
 
-### a. Additive Facts (Có thể cộng gộp hoàn toàn)
-Là các con số có thể được cộng (SUM) theo MỌI chiều (Dimension) một cách hợp lý và mang lại ý nghĩa kinh doanh.
-* **Ví dụ:** `quantity_sold` (số lượng bán), `sales_amount` (doanh thu). Bạn có thể cộng tổng doanh thu theo ngày, theo cửa hàng, theo sản phẩm, hoặc theo khách hàng. Tất cả đều ra kết quả đúng.
+Đó là lý do các hệ thống hiện đại như **Amazon Redshift, Google BigQuery, hay Databricks** đều sử dụng kiến trúc lưu trữ dạng cột (Columnar Storage). 
 
-### b. Semi-Additive Facts (Cộng gộp một phần)
-Là các con số có thể được cộng gộp qua MỘT SỐ chiều, nhưng không thể cộng qua tất cả các chiều (thường là không thể cộng theo chiều Thời gian - Time Dimension).
-* **Ví dụ:** Số dư tài khoản ngân hàng (`account_balance`), Tồn kho (`inventory_level`). Bạn có thể cộng số lượng tồn kho của tất cả các cửa hàng trong một ngày cụ thể. Tuy nhiên, nếu bạn cộng tồn kho của một cửa hàng trong 30 ngày của tháng, con số đó là hoàn toàn vô nghĩa. Đối với semi-additive fact, người ta thường dùng phép tính trung bình (Average) hoặc lấy giá trị cuối kỳ (Last value) khi đi qua chiều thời gian.
+**Trade-off cốt lõi:**
+- **Write Penalty:** Lưu theo cột khiến việc ghi (Insert/Update) chậm hơn vì dữ liệu phải được phân mảnh và nén thành các blocks/files riêng biệt.
+- **Read Analytics:** Bù lại, các truy vấn phân tích (OLAP) cực kỳ nhanh. Hệ thống chỉ lấy đúng các cột cần thiết (Column Pruning) và đẩy các phép lọc xuống tận tầng lưu trữ (Predicate Pushdown).
 
-### c. Non-Additive Facts (Không thể cộng gộp)
-Là các con số KHÔNG THỂ cộng gộp theo bất kỳ chiều nào. Phép cộng sẽ cho ra kết quả vô nghĩa.
-* **Ví dụ:** Tỷ lệ phần trăm (như tỷ suất lợi nhuận `margin_percentage`), Đơn giá (`unit_price`), hoặc Nhiệt độ trung bình ngày. Thay vì lưu phần trăm trực tiếp, best practice là nên lưu Tử số (Numerator) và Mẫu số (Denominator) là các Additive Facts, để lúc lên báo cáo chúng ta cộng tổng tử số và mẫu số rồi mới chia ra phần trăm.
+### Phân vùng (Partitioning) & Vấn đề Small Files
+Fact table thường được phân vùng theo `date` hoặc `month`. 
 
----
+```mermaid
+graph TD
+    S3["Amazon S3 / GCS Data Lake"]
+    S3 --> P1["date=2026-06-01"]
+    S3 --> P2["date=2026-06-02"]
+    P1 --> F1["part-0001.parquet"]
+    P1 --> F2["part-0002.parquet"]
+    P2 --> F3["part-0001.parquet"]
+```
 
-## 3. Phân loại Fact Table (Types of Fact Tables)
+**Incident Thực tế: Tràn ngập file nhỏ (Small Files Problem)**
+Nếu data ingestion pipeline của bạn là Streaming (ví dụ Kafka -> Spark Structured Streaming) xả data liên tục mỗi 1 phút vào Data Lake, Fact Table sẽ chứa hàng triệu file Parquet dung lượng winy (vài KB). 
+Khi truy vấn, NameNode (hoặc S3 metadata server) sẽ bị quá tải khi mở từng file (Metadata Overhead), kéo theo hiệu năng truy vấn sụt giảm thê thảm.
 
-Tùy vào cách hệ thống ghi nhận sự kiện, chúng ta có 4 loại Fact Table phổ biến:
+**Giải pháp (FinOps & Performance):**
+Dùng tính năng **Auto Compaction** hoặc chạy job tối ưu hóa định kỳ để gom các file nhỏ thành file lớn (khoảng 128MB - 256MB).
 
-### a. Transaction Fact Table (Bảng sự kiện giao dịch)
-Đây là loại phổ biến nhất. Mỗi dòng ghi nhận **một sự kiện duy nhất** xảy ra tại một thời điểm cụ thể. Dữ liệu một khi đã ghi vào (Insert) thì hiếm khi bị cập nhật (Update).
-* **Đặc điểm:** Độ chi tiết (Grain) rất nhỏ, dữ liệu phát triển cực nhanh, kích thước bảng có thể lên đến hàng tỷ dòng.
-* **Ví dụ:** Bảng giao dịch bán lẻ (`retail_sales_fact`), nhật ký truy cập web (`web_logs`).
-
-### b. Periodic Snapshot Fact Table (Bảng sự kiện chụp nhanh định kỳ)
-Loại này ghi lại **trạng thái của một quy trình tại một thời điểm định kỳ** (ví dụ: cuối ngày, cuối tuần, cuối tháng).
-* **Đặc điểm:** Không quan tâm quá trình diễn ra thế nào, chỉ lấy "bức ảnh" chốt sổ cuối kỳ. Bảng này giúp trả lời các câu hỏi về xu hướng theo thời gian rất tốt nhưng dung lượng cũng tăng đều đặn mỗi kỳ.
-* **Ví dụ:** Số dư tài khoản ngân hàng cuối ngày (`daily_account_balances`), Báo cáo tồn kho cuối tháng (`monthly_inventory_snapshot`).
-
-### c. Accumulating Snapshot Fact Table (Bảng sự kiện chụp nhanh lũy kế)
-Loại bảng này dùng để theo dõi **vòng đời của một quy trình** có điểm khởi đầu và kết thúc rõ ràng, bao gồm nhiều bước. Mỗi dòng đại diện cho toàn bộ vòng đời của một đối tượng (như một đơn hàng, một quy trình bồi thường bảo hiểm).
-* **Đặc điểm:** Dòng dữ liệu được Insert ở bước đầu tiên của quy trình, và liên tục bị **Update** khi quy trình chuyển sang các bước tiếp theo. Nó có rất nhiều khóa ngày tháng (date foreign keys) để ghi lại thời điểm hoàn thành mỗi mốc.
-* **Ví dụ:** Quy trình xử lý đơn hàng: Ngày đặt hàng -> Ngày đóng gói -> Ngày giao hàng -> Ngày thanh toán.
-
-### d. Factless Fact Table (Bảng sự kiện không có độ đo)
-Là Fact table chứa toàn khóa ngoại (Foreign Keys) mà KHÔNG CÓ (hoặc có rất ít) con số độ đo định lượng nào.
-* **Đặc điểm:** Dùng để ghi nhận một sự kiện đã xảy ra, hoặc một mối quan hệ (coverage) trong một khoảng thời gian.
-* **Ví dụ:** Sự kiện sinh viên tham gia một lớp học (`student_attendance`). Chúng ta chỉ cần biết `student_id`, `class_id`, `date_id` là đủ để đếm số lượng người đi học (bằng cách COUNT dòng). Hoặc ví dụ một sản phẩm có được trưng bày tại một cửa hàng vào một ngày nào đó (nhưng không bán được cái nào).
+```sql
+-- Trên Delta Lake (Databricks)
+OPTIMIZE events_fact_table;
+```
 
 ---
 
-## 4. Bốn bước thiết kế Fact Table (Kimball's 4-Step Process)
+## 2. Fact Table trong Lakehouse & Medallion Architecture
 
-Để xây dựng một Fact Table chuẩn chỉnh, Ralph Kimball đã định nghĩa quy trình 4 bước bắt buộc:
+Uber từng gặp khủng hoảng khi Fact tables tĩnh (Parquet thô) không thể giải quyết hiệu quả bài toán **Late-arriving data** (Dữ liệu đến trễ) hoặc cập nhật trạng thái chuyến đi (Ride status). Giải pháp của họ là sinh ra Apache Hudi. Ngày nay, bộ ba **Delta Lake, Apache Iceberg và Apache Hudi** mang tính năng ACID transactions vào Data Lake, thay đổi hoàn toàn cách chúng ta thiết kế Fact Table.
 
-1. **Chọn quy trình nghiệp vụ (Select the Business Process):**
-   Xác định rõ chúng ta đang mô hình hóa hoạt động kinh doanh nào (VD: Mua hàng, Bán hàng, Xử lý bảo hiểm).
-   
-2. **Xác định Độ hạt (Declare the Grain):**
-   Quyết định mức độ chi tiết chính xác của một dòng trong Fact table. *"Đừng bao giờ bắt đầu thiết kế mà không chốt Grain"*.
-   
-3. **Xác định các Bảng chiều (Identify the Dimensions):**
-   Dựa vào Grain đã chọn, trả lời các câu hỏi Ai, Cái gì, Ở đâu, Khi nào để chọn ra các Dimension Tables phù hợp.
-   
-4. **Xác định các Độ đo (Identify the Facts):**
-   Xác định các chỉ số định lượng sẽ xuất hiện trong Fact Table dựa trên quy trình nghiệp vụ.
+Kiến trúc chuẩn hiện nay là **Medallion Architecture**. Fact Table hiếm khi nằm ở lớp Bronze.
+
+![Databricks Medallion Architecture](/images/6-data-modeling-transformation/medallion-architecture.jpeg)
+
+- **Bronze Layer:** Immutable Append-only (Lưu trữ raw events). Chưa phải Fact Table.
+- **Silver Layer:** Cleansed and Conformed. **ĐÂY LÀ NƠI FACT TABLE XUẤT HIỆN.** Dữ liệu đã được chuẩn hóa độ hạt (Grain), deduplicated, và có Schema chặt chẽ.
+- **Gold Layer:** Business-level Aggregates (Bảng Fact tổng hợp - *Cumulative/Aggregate Fact Tables*), tối ưu cho BI Dashboards.
+
+### Xử lý Incremental Updates (Upsert) với Delta Lake
+Thay vì chạy lại toàn bộ Batch ETL tốn kém, chúng ta dùng `MERGE INTO` để cập nhật Fact table.
+
+```sql
+-- Thực thi MERGE INTO xử lý Late-Arriving Data trong Silver Fact Table
+MERGE INTO silver.sales_fact AS target
+USING bronze.sales_stream_vw AS source
+ON target.order_id = source.order_id 
+   AND target.date = source.date -- Bắt buộc có Partition Key để chống Full Table Scan
+WHEN MATCHED AND source.status = 'CANCELLED' THEN 
+    UPDATE SET 
+        target.status = source.status,
+        target.updated_at = current_timestamp()
+WHEN NOT MATCHED THEN 
+    INSERT (order_id, customer_sk, product_sk, amount, date, status)
+    VALUES (source.order_id, source.customer_sk, source.product_sk, source.amount, source.date, source.status);
+```
+
+> [!WARNING] 
+> **Performance Trap:** Khệnh khạng dùng `MERGE INTO` mà không đính kèm **Partition Key** (`date`) trong mệnh đề `ON`. Spark sẽ thực hiện quét lại toàn bộ Petabyte Fact Table để tìm ra bản ghi `order_id` trùng khớp, tiêu tốn hàng nghìn đô la compute AWS chỉ cho một truy vấn nhỏ.
 
 ---
 
-## 5. Một số Best Practices thiết kế Fact Table
+## 3. Độ hạt (Grain) & Các lỗi Vận hành (Operational Risks)
 
-- **Tránh dùng giá trị NULL trong Fact table:** Thay vì để NULL trong các khóa ngoại, hãy dùng các khóa mặc định từ Dimension (VD: -1 hoặc 0 đại diện cho "Unknown" hoặc "Not Applicable").
-- **Không lưu trữ văn bản (Text/String) dài:** Fact table nên càng "gọn" càng tốt. Các thuộc tính mô tả (Text) nên được đẩy sang Dimension Table để tối ưu dung lượng và tốc độ truy vấn.
-- **Đồng nhất Grain cho mọi độ đo:** Tất cả các độ đo (measures) nằm trong cùng một Fact table bắt buộc phải có cùng một mức độ chi tiết (Grain). Đừng bao giờ mix độ đo tổng của tháng vào cùng một dòng với độ đo chi tiết của ngày.
-- **Tối ưu hóa kiểu dữ liệu:** Fact table có thể chứa hàng tỷ dòng, do đó việc thu nhỏ kiểu dữ liệu (`INT` thay vì `BIGINT` nếu không cần thiết, `DECIMAL/NUMERIC` thay cho `FLOAT` ở những dữ liệu tài chính) sẽ giúp tiết kiệm đáng kể dung lượng lưu trữ và RAM khi truy vấn.
+Xác định Grain không chỉ là lý thuyết, nó quyết định hệ thống của bạn có sống sót hay không. *"Một dòng trong Fact Table đại diện cho cái gì?"*
+
+### Incident: Cartesian Explosion (Vụ nổ Tích Đề Cát)
+Giả sử bạn có Fact Table lưu trữ "Lượt Click Ads" với Grain: *1 dòng = 1 lượt click của User trên 1 Campaign*.
+Khi Data Analyst join bảng này với Dimension Table `Dim_User` (nơi 1 User lỡ bị lặp lại 3 lần do thiết kế SCD Type 2 lỗi, chưa lọc ngày hiệu lực `is_current = True`).
+
+Kết quả: Bảng Fact 1 tỷ dòng x 3 = 3 tỷ dòng (Data Amplification). Dữ liệu tính doanh thu bị phình to (Double-counting), kéo theo sai lệch báo cáo tài chính. Hơn nữa, Spark Cluster sẽ phình RAM, dẫn đến lỗi **JVM OOMKilled** kinh điển.
+
+```python
+# CODE THỰC CHIẾN: Cách an toàn trước khi Join Fact và Dimension
+from pyspark.sql.functions import col
+
+# Đảm bảo Dimension Table chỉ có 1 bản ghi active cho mỗi khóa tự nhiên
+dim_user_active = dim_user.filter(col("is_current") == True).dropDuplicates(["natural_user_id"])
+
+# Bây giờ mới an toàn để Join với Fact
+fact_enriched = fact_clicks.join(
+    dim_user_active,
+    fact_clicks.user_sk == dim_user_active.user_sk,
+    "inner"
+)
+```
 
 ---
 
-## Tài Liệu Tham Khảo
-* [The Data Warehouse Toolkit - Ralph Kimball & Margy Ross](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/)
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
+## 4. Tối ưu Mạng và I/O (Network Shuffle & Z-Ordering)
+
+### Broadcast Hash Join chống Shuffle
+Khi JOIN một Fact table khổng lồ với một Dimension table nhỏ, nếu cấu hình không đúng, Spark sẽ thực hiện **Sort Merge Join**, ép toàn bộ cụm máy chủ phải trao đổi dữ liệu qua mạng (Network Shuffle). Quá trình này tạo ra I/O cực lớn và thường xuyên sập cụm.
+
+**Cách giải quyết:** Ép Spark dùng Broadcast Join, gửi bản copy của bảng Dimension đến từng node chứa Fact table.
+
+```python
+from pyspark.sql.functions import broadcast
+
+# Ép Broadcast Join. (Yêu cầu bảng Dimension nhỏ hơn tham số spark.sql.autoBroadcastJoinThreshold - mặc định 10MB)
+df_result = df_fact.join(broadcast(df_dimension), "product_key")
+```
+
+### Z-Ordering: Đánh bại Nút thắt Phân mảnh (Data Skipping)
+Nếu bạn query bảng Fact theo nhiều chiều liên tục (như vừa query theo `customer_id`, vừa query theo `product_id`), Partitioning đơn thuần là không đủ vì dữ liệu bên trong mỗi file Parquet bị phân tán ngẫu nhiên.
+
+**Z-Ordering** (có trên Delta Lake) cấu trúc lại dữ liệu vật lý sao cho các records có chung `customer_id` và `product_id` nằm cạnh nhau trên cùng một Parquet block. Khi query, engine sẽ dễ dàng bỏ qua (Skip) các block không liên quan (Data Skipping).
+
+```sql
+-- Tối ưu hóa Fact table cho các truy vấn lọc đa chiều
+OPTIMIZE sales_fact ZORDER BY (customer_id, product_id);
+```
+*Trade-off: Z-Ordering tốn rất nhiều Compute để sắp xếp lại dữ liệu. Tuyệt đối không chạy Z-Order trên các Fact tables theo kiểu realtime. Thường chỉ chạy vào ban đêm (Off-peak hours).*
+
+---
+
+## Nguồn Tham Khảo
+1. [Databricks - What is a Medallion Architecture?](https://www.databricks.com/glossary/medallion-architecture)
+2. [Uber Engineering Blog - Apache Hudi Design](https://eng.uber.com/hudi/)
+3. Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
+4. [Amazon Redshift - Optimizing for Star Schemas](https://aws.amazon.com/blogs/big-data/optimizing-for-star-schemas-and-interleaved-sorting-on-amazon-redshift/)

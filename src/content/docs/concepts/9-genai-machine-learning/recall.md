@@ -1,103 +1,147 @@
 ---
-title: "Độ phủ - Recall trong Máy học"
-difficulty: "Beginner"
-tags: ["recall", "precision", "f1-score", "metrics", "classification", "retrieval"]
-readingTime: "8 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Độ phủ (Recall) là gì? Tầm quan trọng trong Machine Learning & RAG"
-metaDescription: "Tìm hiểu chi tiết về Recall (Độ phủ) trong Machine Learning và Information Retrieval. Công thức, Trade-off với Precision và ứng dụng thực tế trong RAG."
-description: "Khi đánh giá hiệu năng của một mô hình học máy (Machine Learning) hay một hệ thống tìm kiếm thông tin, chúng ta thường nghe nhắc đến thuật ngữ **Recall**..."
+title: "Độ phủ - Recall & Precision trong RAG"
+difficulty: "Advanced"
+tags: ["recall", "precision", "f1-score", "rag", "hybrid-search", "metrics", "finops"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Độ phủ (Recall) và Precision trong RAG: Kiến trúc 2-Stage Retrieval"
+metaDescription: "Phân tích chuyên sâu về Recall và Precision từ góc độ Data Engineer. Kiến trúc Hybrid Search, Reranking, rủi ro vận hành (OOMKilled) và FinOps trong RAG."
+description: "Trong hệ thống RAG (Retrieval-Augmented Generation) và Information Retrieval, Recall không chỉ là một chỉ số trên giấy. Nó định hình toàn bộ kiến trúc 2-Stage Retrieval, quyết định chi phí vận hành (FinOps) và là nguyên nhân hàng đầu gây ra các sự cố hệ thống như Latency Spike hay Context Dilution."
 ---
 
+Khi thiết kế hệ thống tìm kiếm thông tin (Information Retrieval) hoặc RAG (Retrieval-Augmented Generation) ở quy mô Production, kỹ sư dữ liệu không nhìn **Recall (Độ phủ)** và **Precision (Độ chính xác)** qua lăng kính ma trận nhầm lẫn (Confusion Matrix) lý thuyết. Chúng ta nhìn nó dưới góc độ: **Đánh đổi giữa Băng thông xử lý (Throughput), Độ trễ (Latency), và Chi phí Token (FinOps).**
 
+Bài viết này mổ xẻ cách Recall và Precision chi phối các quyết định thiết kế hệ thống RAG và cách xử lý các sự cố vận hành phát sinh do việc cố gắng tối ưu hóa hai chỉ số này.
 
-Recall (Độ phủ), hay còn được gọi là Sensitivity (Độ nhạy) hoặc True Positive Rate (Tỷ lệ True Positive), là một chỉ số quan trọng trong Machine Learning (đặc biệt là bài toán phân loại - classification) và Information Retrieval (truy xuất thông tin). Nó trả lời cho câu hỏi: "Trong số **tất cả** các mẫu/tài liệu thực sự thuộc lớp Positive (hoặc thực sự liên quan), mô hình/hệ thống đã tìm ra và dự đoán đúng được bao nhiêu phần trăm?".
+---
 
-Cùng với Precision (Độ chính xác), Recall giúp chúng ta có cái nhìn toàn diện hơn về hiệu suất của một mô hình, đặc biệt là khi làm việc với các tập dữ liệu mất cân bằng (imbalanced datasets) hoặc các hệ thống tìm kiếm như RAG (Retrieval-Augmented Generation).
+## 1. Bản chất Hệ thống của Recall & Precision
 
-## 1. Công thức tính Recall trong bài toán Phân loại (Classification)
+Trong môi trường truy xuất dữ liệu khổng lồ (hàng tỷ vectors), hai chỉ số này đại diện cho sự giằng co về mặt tài nguyên:
 
+*   **Recall (Độ phủ):** Tỷ lệ tài liệu liên quan (Relevant Documents) mà hệ thống quét và trả về được trên tổng số tài liệu liên quan thực sự tồn tại trong Database.
+    *   *Tư duy hệ thống:* Recall thấp nghĩa là hệ thống bị "mù thông tin" (Information Blindness). Để LLM không bị ảo giác (Hallucination), bạn phải cung cấp đủ context. Để tăng Recall, ta thường phải tăng `top_k` hoặc giảm ngưỡng similarity threshold.
+*   **Precision (Độ chính xác):** Tỷ lệ tài liệu thực sự liên quan trong rổ kết quả mà hệ thống vừa truy xuất.
+    *   *Tư duy hệ thống:* Precision thấp nghĩa là hệ thống đang "bơm rác" (Noise) vào LLM. Điều này gây ra hiệu ứng Context Dilution (loãng ngữ cảnh), tăng nguy cơ "Lost in the middle", và đội chi phí Token API lên gấp nhiều lần.
 
+### Sự đánh đổi (The Trade-Off)
 
-Trong bài toán phân loại nhị phân (binary classification), kết quả dự đoán của mô hình thường được đánh giá dựa trên một **Confusion Matrix** (Ma trận nhầm lẫn), bao gồm 4 thành phần:
+Việc cố gắng kéo Recall lên 100% bằng cách tải hàng nghìn candidate chunks (`top_k = 1000`) sẽ khiến Precision tụt thê thảm. Ở cấp độ hạ tầng, điều này dẫn đến:
+1. **Network IO Bottleneck:** Quá trình vận chuyển lượng lớn vector payloads từ VectorDB sang Application Layer gây nghẽn băng thông.
+2. **FinOps Disaster:** Nhồi 1000 chunks vào LLM prompt (dù model có hỗ trợ 1M context window) sẽ làm nổ chi phí Inference.
 
-*   **True Positive (TP):** Mô hình dự đoán là Positive và thực tế là Positive (Dự đoán ĐÚNG).
-*   **True Negative (TN):** Mô hình dự đoán là Negative và thực tế là Negative (Dự đoán ĐÚNG).
-*   **False Positive (FP):** Mô hình dự đoán là Positive nhưng thực tế là Negative (Dự đoán SAI - Lỗi loại I).
-*   **False Negative (FN):** Mô hình dự đoán là Negative nhưng thực tế là Positive (Dự đoán SAI - Lỗi loại II).
+```mermaid
+graph LR
+    A[Query] --> B("Tăng `top_k`")
+    B --> C{Tác động}
+    C -->|Tích cực| D["Recall Tăng <br/> Giảm Hallucination do thiếu Info"]
+    C -->|Tiêu cực| E["Precision Giảm <br/> Tăng Token Cost <br/> Tăng LLM Latency"]
+```
 
-Công thức tính Recall như sau:
+---
 
-$$
-\text{Recall} = \frac{TP}{TP + FN}
-$$
+## 2. Kiến trúc Thực thi Vật lý: 2-Stage Retrieval (Hybrid Search + Reranking)
 
-**Diễn giải:** Recall là tỷ lệ giữa số lượng mẫu Positive được dự đoán đúng ($TP$) trên tổng số lượng mẫu Positive thực tế (bao gồm cả những mẫu dự đoán đúng $TP$ và những mẫu bị bỏ sót $FN$).
+Để phá vỡ giới hạn Trade-off này, các hệ thống RAG Enterprise (như kiến trúc tại Databricks, Netflix, hay Pinecone) sử dụng cơ chế **2-Stage Retrieval** (Truy xuất hai giai đoạn).
 
-**Ví dụ thực tế:** Hãy tưởng tượng bạn đang xây dựng một mô hình phát hiện bệnh ung thư.
-*   $TP$: Số bệnh nhân thực sự bị ung thư và mô hình chẩn đoán là CÓ.
-*   $FN$: Số bệnh nhân thực sự bị ung thư nhưng mô hình chẩn đoán là KHÔNG (bỏ sót bệnh).
-*   **Recall** trong trường hợp này đo lường: Trong tất cả các bệnh nhân bị ung thư, mô hình phát hiện ra được bao nhiêu %?
+![Hybrid Search Architecture](/images/9-genai-machine-learning/hybrid-search-architecture.png)
+*(Minh họa: Kiến trúc Hybrid Search và Reranking. Nguồn ảnh: Sanity/Pinecone)*
 
-Nếu Recall thấp, có nghĩa là mô hình bỏ sót rất nhiều bệnh nhân bị bệnh ($FN$ cao), điều này cực kỳ nguy hiểm trong y tế!
+### Giai đoạn 1: Maximizing Recall với Hybrid Search
+Tại tầng Vector Database (Milvus, Qdrant, hoặc Elasticsearch), chúng ta chạy song song hai engine:
+- **Dense Vector Search (HNSW):** Bắt ngữ nghĩa (Semantic) -> Tối ưu Recall cho các query phức tạp.
+- **Sparse Keyword Search (BM25):** Bắt từ khóa chính xác (Lexical) -> Tối ưu Precision cho danh từ riêng, mã lỗi (SKU, Error Code).
 
-## 2. Recall trong Truy xuất thông tin (Information Retrieval & RAG)
+Dưới đây là cấu hình Python thực tế sử dụng Qdrant Client để thực thi Hybrid Search kết hợp RRF (Reciprocal Rank Fusion):
 
-Trong ngữ cảnh của các hệ thống tìm kiếm (Search Engines), hệ thống gợi ý (Recommender Systems) hay RAG, khái niệm Recall hơi khác một chút nhưng bản chất vẫn giữ nguyên.
+```python
+# Thực thi Hybrid Search trên Qdrant để tối đa hóa Recall
+from qdrant_client import QdrantClient
+from qdrant_client.models import Prefetch, QueryRequest
 
-*   **Tài liệu liên quan (Relevant Documents):** Những tài liệu thực sự chứa thông tin giải quyết truy vấn của người dùng.
-*   **Tài liệu được truy xuất (Retrieved Documents):** Những tài liệu mà hệ thống tìm kiếm trả về.
+client = QdrantClient(url="http://localhost:6333")
 
-Công thức tính Recall trong trường hợp này:
+# Bước 1: Fetch lượng lớn candidates (high recall)
+query_request = QueryRequest(
+    prefetch=[
+        Prefetch(
+            query=bm25_query_vector, 
+            using="sparse", 
+            limit=100 # Kéo rộng lưới để tăng Recall
+        ),
+        Prefetch(
+            query=dense_query_vector, 
+            using="dense", 
+            limit=100 
+        ),
+    ],
+    query="rrf", # Sử dụng Reciprocal Rank Fusion gộp điểm
+    limit=50 # Giảm xuống còn 50 candidates
+)
 
-$$
-\text{Recall} = \frac{\text{Số tài liệu liên quan được truy xuất}}{\text{Tổng số tài liệu liên quan có trong cơ sở dữ liệu}}
-$$
+results = client.query_points("rag_collection", query_request)
+```
 
-**Ví dụ trong RAG:** Cơ sở dữ liệu (Vector DB) của bạn có tổng cộng 20 tài liệu nói về "chính sách nghỉ phép". Khi người dùng hỏi "Quy định nghỉ phép năm như thế nào?", hệ thống tìm kiếm trả về 5 tài liệu, nhưng trong đó chỉ có 3 tài liệu thực sự nói về nghỉ phép (2 tài liệu kia không liên quan - nhiễu). Đồng thời, hệ thống đã bỏ sót 17 tài liệu về nghỉ phép còn nằm trong DB.
+### Giai đoạn 2: Maximizing Precision với Cross-Encoder Reranker
+Lấy 50 candidates từ Giai đoạn 1 và đưa qua một Cross-Encoder model (ví dụ: `cohere/rerank-english-v3.0` hoặc `bge-reranker-v2-m3`). Cross-Encoder tuy nặng (Compute-intensive) nhưng vì chỉ chạy trên 50 chunks nên đảm bảo được Latency, giúp lọc ra top 5 chunks tinh khiết nhất (Precision cực cao) để nhồi vào LLM.
 
-*   **Recall** = $3 / 20 = 15\%$
+---
 
-Một hệ thống RAG có Recall thấp nghĩa là nó không tìm đủ thông tin (ngữ cảnh) cần thiết để LLM có thể trả lời đầy đủ và chính xác, dễ dẫn đến hiện tượng Hallucination (ảo giác) do thiếu thông tin đầu vào.
+## 3. Rủi ro Vận hành (Operational Risks) & Khắc phục
 
-## 3. Sự đánh đổi (Trade-off) giữa Recall và Precision
+Việc cấu hình hệ thống thiên vị Recall hoặc Precision có thể dẫn đến các sự cố nghiêm trọng.
 
-Trong thế giới lý tưởng, chúng ta muốn mô hình có cả Precision (Độ chính xác) và Recall (Độ phủ) đều đạt 100%. Tuy nhiên, trong thực tế, việc tăng chỉ số này thường dẫn đến việc giảm chỉ số kia.
+### Incident 1: VectorDB OOMKilled (Out-of-Memory) do Recall Tham Lam
+Khi Data Scientists muốn tối đa hóa Recall, họ thường tăng tham số `ef_search` trong thuật toán HNSW của VectorDB.
+*   **Vấn đề:** Tham số `ef_search` (kích thước danh sách candidate động trong lúc duyệt graph) tỷ lệ thuận với số node cần giữ trong RAM. Trong các đợt Traffic Spike, hàng nghìn concurrent queries với `ef_search = 500` sẽ khiến RAM phình to đột ngột, dẫn đến tiến trình bị hệ điều hành tắt ép buộc (OOMKilled - Out Of Memory).
+*   **Khắc phục (Fix):** Giới hạn cứng `ef_search` ở cấu hình Cluster, áp dụng Rate Limiting, hoặc chuyển sang DiskANN (Spill-to-disk) nếu hạ tầng dùng SSD NVMe.
 
-*   **Precision (Độ chính xác):** Trả lời câu hỏi "Trong số tất cả những dự đoán là Positive, có bao nhiêu % thực sự đúng?".
-    $$ \text{Precision} = \frac{TP}{TP + FP} $$
-*   **Nếu muốn tăng Recall:** Bạn có thể làm cho mô hình dự đoán "Positive" dễ dàng hơn (giảm ngưỡng - threshold). Mô hình sẽ bắt được nhiều trường hợp Positive hơn (TP tăng, FN giảm), Recall sẽ tăng. NHƯNG, việc dễ dãi dự đoán "Positive" sẽ kéo theo việc dự đoán sai nhiều trường hợp Negative thành Positive (FP tăng), làm cho **Precision giảm**.
-*   **Nếu muốn tăng Precision:** Bạn có thể làm cho mô hình khó tính hơn, chỉ dự đoán "Positive" khi cực kỳ chắc chắn. Khi đó FP sẽ giảm (Precision tăng). NHƯNG, sự khó tính đó sẽ làm mô hình bỏ sót nhiều trường hợp Positive thực sự (FN tăng), làm cho **Recall giảm**.
+```yaml
+# Cấu hình an toàn HNSW trong qdrant_config.yaml để tránh OOM
+hnsw_index:
+  m: 16                           # Mức độ kết nối graph vừa phải
+  ef_construct: 100               # Build chậm nhưng index chất lượng
+  full_scan_threshold: 10000      # Nếu filter query < 10k, full scan cho lẹ (đỡ tốn memory nhảy graph)
+  max_elements_per_segment: 200000
+```
 
-Để cân bằng giữa Precision và Recall, người ta thường dùng chỉ số **F1-Score**, là trung bình điều hòa của cả hai:
+### Incident 2: Context Dilution & API Rate Limit
+*   **Vấn đề:** Nếu lấy `top_k = 20` chunk từ PDF (mỗi chunk 500 tokens) -> Context dài 10,000 tokens. Điều này không chỉ tiêu tốn hàng ngàn đô la API hàng tháng (FinOps Alert) mà còn khiến LLM mất tập trung, sinh ra ảo giác.
+*   **Khắc phục (Fix):** Áp dụng **Metadata Pre-filtering** ngay tại VectorDB. Filter bằng SQL-like condition trước khi tính KNN Distance giúp loại bỏ triệt để Vector rác, vừa giữ Recall cao trong tập subset, vừa bảo vệ Precision.
 
-$$
-F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-$$
+```json
+// Elasticsearch query config - Pre-filtering to boost precision and speed
+{
+  "knn": {
+    "field": "content_vector",
+    "query_vector": [0.1, -0.2, ...],
+    "k": 5,
+    "num_candidates": 50,
+    "filter": {
+      "bool": {
+        "must": [
+          { "term": { "doc_type": "technical_spec" } },
+          { "range": { "publish_year": { "gte": 2023 } } }
+        ]
+      }
+    }
+  }
+}
+```
 
-## 4. Khi nào nên ưu tiên Recall? Khi nào nên ưu tiên Precision?
+---
 
-Tùy vào bài toán cụ thể, bạn sẽ quyết định việc ưu tiên chỉ số nào:
+## 4. Tóm tắt Tiêu chuẩn Thiết kế (Design Principles)
 
-### Ưu tiên Recall (Chấp nhận False Positive cao để không bỏ sót)
-*   **Y tế / Y khoa:** Phát hiện bệnh hiểm nghèo (ung thư, COVID-19). Thà chẩn đoán nhầm người khỏe mạnh thành bệnh nhân (False Positive - người này sau đó có thể làm các xét nghiệm chuyên sâu hơn để xác định lại), còn hơn là bỏ sót bệnh nhân mắc bệnh (False Negative - hậu quả chết người).
-*   **Phát hiện gian lận (Fraud Detection) / Hệ thống bảo mật:** Thà khóa nhầm một giao dịch hợp lệ hoặc chặn nhầm một email (sau đó người dùng có thể xác thực lại), còn hơn là để lọt một giao dịch lừa đảo hoặc mã độc.
-*   **Recall-oriented Search:** Trong việc tìm kiếm tài liệu pháp lý cho một vụ kiện, luật sư muốn xem TẤT CẢ các tài liệu có thể liên quan (Recall cao), chấp nhận phải đọc qua một vài tài liệu không liên quan (Precision thấp).
+1. **Đừng phụ thuộc vào LLM để lọc rác:** LLM không phải là máy lọc nhiễu. Hãy tối ưu **Precision** ở tầng Reranking (Cross-Encoder) trước khi dữ liệu chạm đến LLM.
+2. **Recall nằm ở Data Pipeline, không chỉ ở Query:** Nếu Chunking Strategy sai, hoặc thiếu Metadata enrichment lúc Ingestion, thì thuật toán HNSW xịn đến mấy cũng không cứu được Recall.
+3. **FinOps - Theo dõi Metric Token/Query:** Nếu Token/Query tăng đột biến mà CSAT (Customer Satisfaction) không tăng, hệ thống của bạn đang bị béo phì do cố nhồi Recall. Cần tinh chỉnh lại ngưỡng Similarity Threshold.
 
-### Ưu tiên Precision (Chấp nhận False Negative cao để đảm bảo độ chính xác)
-*   **Hệ thống gợi ý (Recommender Systems):** Chẳng hạn như gợi ý video trên YouTube hoặc sản phẩm trên Shopee. Nếu gợi ý sai (False Positive), người dùng sẽ cảm thấy phiền phức và trải nghiệm kém đi. Thà gợi ý ít nhưng chắc chắn đúng sở thích của họ, còn hơn là đưa ra hàng loạt gợi ý tào lao.
-*   **Xếp hạng kết quả tìm kiếm (Top-K Search):** Người dùng Google thường chỉ xem trang đầu tiên (top 10 kết quả). Do đó, những kết quả đầu tiên này phải CỰC KỲ chính xác và liên quan (Precision@K cao), nếu có bỏ sót một số kết quả ở trang 10 thì cũng không sao.
+---
 
-## 5. Cải thiện Recall trong RAG
+## 5. Nguồn Tham Khảo (References)
 
-Trong các hệ thống GenAI và RAG, nếu Recall của bước Retrieval (tìm kiếm ngữ cảnh) quá thấp, LLM sẽ không có đủ dữ liệu để trả lời đúng. Để tăng Recall, ta có thể áp dụng các kỹ thuật sau:
-1.  **Tăng `top_k`:** Truy xuất nhiều tài liệu hơn (ví dụ tăng từ 5 lên 10, 20 kết quả). Tuy nhiên điều này sẽ làm tăng chi phí token và có thể vượt quá Context Window của LLM.
-2.  **Hybrid Search:** Kết hợp tìm kiếm theo vector (Semantic Search) và tìm kiếm từ khóa (BM25 / Keyword Search) để bù trừ khuyết điểm của nhau.
-3.  **Query Expansion:** Mở rộng câu truy vấn gốc bằng các từ đồng nghĩa hoặc định dạng lại câu hỏi để hệ thống bắt được nhiều ngữ cảnh hơn.
-4.  **Metadata Filtering:** Gắn thẻ metadata vào chunk dữ liệu để thu hẹp phạm vi tìm kiếm, giúp kết quả tìm được chính xác hơn với bài toán.
-
-## Tài Liệu Tham Khảo
-* [Precision and recall - Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall)
-* [Evaluating Machine Learning Models - Google ML Crash Course](https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall)
-* [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)](https://arxiv.org/abs/2005.11401)
-* [Information Retrieval - Christopher D. Manning](https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-unranked-retrieval-sets-1.html)
+*   [Pinecone: Precision and Recall in Information Retrieval](https://www.pinecone.io/learn/offline-evaluation/)
+*   [Milvus Engineering: Hybrid Search and Reranking for better RAG](https://milvus.io/docs/multi-vector-search.md)
+*   [Elasticsearch Docs: kNN search and exact filtering](https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html)
+*   *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích về Trade-offs trong lưu trữ và truy vấn thông tin quy mô lớn.

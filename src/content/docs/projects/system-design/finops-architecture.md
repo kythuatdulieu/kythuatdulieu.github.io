@@ -30,7 +30,7 @@ WHERE event_date = '2023-10-15'
 GROUP BY user_id;
 ```
 
-Nếu bảng `clickstream_logs` không được chia vùng (Partitioned) theo cột `event_date`, BigQuery sẽ buộc phải quét toàn bộ 100TB dữ liệu (Full Table Scan). Với mức giá khoảng $5/TB dữ liệu được quét, câu truy vấn này tiêu tốn **$500**. Tệ hơn nữa, nếu câu truy vấn này được lập lịch chạy mỗi giờ một lần trong Apache Airflow, công ty sẽ mất **$12.000 / ngày**, tương đương **$360.000 / tháng** chỉ cho một sự thiếu hiểu biết cơ bản về tối ưu hóa.
+Nếu bảng `clickstream_logs` không được chia vùng (Partitioned) theo cột `event_date`, BigQuery sẽ buộc phải quét toàn bộ 100TB dữ liệu (Full Table Scan). Với mức giá khoảng \$5/TB dữ liệu được quét, câu truy vấn này tiêu tốn **\$500**. Tệ hơn nữa, nếu câu truy vấn này được lập lịch chạy mỗi giờ một lần trong Apache Airflow, công ty sẽ mất **\$12.000 / ngày**, tương đương **\$360.000 / tháng** chỉ cho một sự thiếu hiểu biết cơ bản về tối ưu hóa.
 
 ### Những chi phí "ẩn" (Hidden Costs)
 Ngoài việc quét dữ liệu lớn, các hệ thống Data Platform thường bị rò rỉ chi phí ở các khía cạnh:
@@ -222,7 +222,7 @@ FROM `company_data.clickstream_logs_optimized`
 WHERE DATE(event_timestamp) = '2023-10-15'
 GROUP BY user_id;
 ```
-*Hiệu quả FinOps:* Thay vì quét 100TB, hệ thống storage engine chỉ đọc dữ liệu cục bộ trong đúng 1 thư mục vật lý chứa dữ liệu ngày 15/10/2023. Lượng dữ liệu quét giảm xuống còn 500GB (chia 200 lần chi phí, từ $500 xuống chỉ còn $2.5 cho một cú Enter).
+*Hiệu quả FinOps:* Thay vì quét 100TB, hệ thống storage engine chỉ đọc dữ liệu cục bộ trong đúng 1 thư mục vật lý chứa dữ liệu ngày 15/10/2023. Lượng dữ liệu quét giảm xuống còn 500GB (chia 200 lần chi phí, từ \$500 xuống chỉ còn \$2.5 cho một cú Enter).
 
 ### 2. Thiết lập Rào chắn bảo vệ (Safeguards)
 Công nghệ không thể chỉ dựa vào ý thức con người. Để ngăn chặn rủi ro các user "lỡ tay", kiến trúc Data Platform phải thiết lập Quota Limits cứng bằng công cụ phân quyền.
@@ -251,10 +251,10 @@ AWS S3, GCP Cloud Storage đều cung cấp nhiều lớp lưu trữ với mức
 
 | Lớp lưu trữ (Storage Class) | Chi phí lưu trữ (/GB/tháng) | Phí truy xuất (/GB) | Kịch bản sử dụng FinOps |
 |-----------------------------|----------------------------|---------------------|-------------------------|
-| **S3 Standard** | ~$0.023 | $0.00 | Dữ liệu siêu nóng, truy cập liên tục hàng giờ (Raw data mới nạp vào, Bảng Delta đang active) |
-| **S3 Standard-IA** | ~$0.0125 | $0.01 | Dữ liệu nguội dần (truy cập đếm trên đầu ngón tay < 1 lần/tháng), ví dụ data của năm ngoái. |
-| **S3 Glacier Flexible Retrieval**| ~$0.0036 | $0.03 (Bulk) | Dữ liệu lưu trữ Archive, tốn vài tiếng để khôi phục. Dùng cho Backup hệ thống. |
-| **S3 Glacier Deep Archive** | ~$0.00099 | $0.02 (Bulk) | Dữ liệu cực lạnh, đóng băng giữ vài năm đáp ứng luật định compliance. Lấy lại mất 12-48 tiếng. |
+| **S3 Standard** | ~\$0.023 | \$0.00 | Dữ liệu siêu nóng, truy cập liên tục hàng giờ (Raw data mới nạp vào, Bảng Delta đang active) |
+| **S3 Standard-IA** | ~\$0.0125 | \$0.01 | Dữ liệu nguội dần (truy cập đếm trên đầu ngón tay < 1 lần/tháng), ví dụ data của năm ngoái. |
+| **S3 Glacier Flexible Retrieval**| ~\$0.0036 | \$0.03 (Bulk) | Dữ liệu lưu trữ Archive, tốn vài tiếng để khôi phục. Dùng cho Backup hệ thống. |
+| **S3 Glacier Deep Archive** | ~\$0.00099 | \$0.02 (Bulk) | Dữ liệu cực lạnh, đóng băng giữ vài năm đáp ứng luật định compliance. Lấy lại mất 12-48 tiếng. |
 
 **Triển khai Terraform S3 Lifecycle Policy tự động:**
 
@@ -330,7 +330,7 @@ sequenceDiagram
     participant Alerting as Slack / PagerDuty
     participant DataEngineer as Data Engineer On-call
     
-    BillingAPI->>MLEngine: Nạp số liệu chi phí $500 lúc 14:00 (Baseline chuẩn là $50)
+    BillingAPI->>MLEngine: Nạp số liệu chi phí \$500 lúc 14:00 (Baseline chuẩn là \$50)
     MLEngine->>MLEngine: Chạy dự báo thuật toán, Phát hiện vượt mức tin cậy 99%
     MLEngine->>Alerting: 🚨 ALERT CRITICAL: S3 PUT Requests tăng đột biến 1000% ở bucket XYZ
     Alerting->>DataEngineer: Kích hoạt chuông báo On-call lên điện thoại

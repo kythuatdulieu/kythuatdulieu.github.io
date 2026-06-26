@@ -1,0 +1,14 @@
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<h1>404 Not Found</h1>
+<ul>
+<li>Code: NoSuchKey</li>
+<li>Message: The specified key does not exist.</li>
+<li>Key: docs/apache-airflow/stable/_images/arch-diag-basic.png</li>
+<li>RequestId: A660ZD6HR3VE1K92</li>
+<li>HostId: w/GtpNUeKgXfQsVTnZIUeGHWyRMN7pNRuhpuiilefBZizXf4b0HaTFy9vckSieNu1AdciAIYhQB6InhMbU7Kv94pMEEcIQRU</li>
+</ul>
+<hr/>
+</body>
+</html>

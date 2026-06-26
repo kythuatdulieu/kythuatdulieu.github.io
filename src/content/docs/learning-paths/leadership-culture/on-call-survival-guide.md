@@ -169,7 +169,7 @@ Việc tìm kiếm nguyên nhân gốc rễ (Root Cause Analysis - RCA) trong kh
 ```bash
 #!/bin/bash
 # Emergency Rollback Script for Kubernetes
-DEPLOYMENT=$1
+DEPLOYMENT=\$1
 NAMESPACE=${2:-default}
 
 echo "🚨 Bắt đầu rollback khẩn cấp cho deployment: $DEPLOYMENT trong namespace: $NAMESPACE"

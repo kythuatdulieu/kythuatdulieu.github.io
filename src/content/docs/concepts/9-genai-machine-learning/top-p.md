@@ -1,121 +1,154 @@
 ---
-title: "Nucleus Sampling - Top-p"
+title: "Nucleus Sampling (Top-p)"
 difficulty: "Intermediate"
-tags: ["llm", "decoding", "generation", "top-p", "nucleus-sampling"]
+tags: ["llm", "decoding", "generation", "top-p", "nucleus-sampling", "vllm"]
 readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Top-p (Nucleus Sampling) là gì? - Tinh chỉnh thông số LLM"
-metaDescription: "Tìm hiểu chi tiết về Nucleus Sampling (Top-p) trong quá trình sinh văn bản của LLM, cách hoạt động và sự khác biệt giữa Top-p và Temperature."
-description: "Hãy tưởng tượng bạn đang chơi trò chơi nối chữ với một nhà thông thái. Tại mỗi lượt đi, thay vì lôi toàn bộ cuốn từ điển tiếng Việt ra để chọn từ tiếp theo (có thể dẫn đến những từ vô nghĩa), hay chỉ khăng khăng dùng một từ phổ biến nhất (gây nhàm chán), nhà thông thái chỉ tập trung vào một nhóm các từ hợp lý nhất. Top-p chính là phương pháp giúp Mô hình Ngôn ngữ Lớn (LLM) làm điều tương tự."
+lastUpdated: 2026-06-26
+seoTitle: "Top-p (Nucleus Sampling) Architecture - Tinh chỉnh thông số LLM & FinOps"
+metaDescription: "Kiến trúc hệ thống của Nucleus Sampling (Top-p) trong LLM. Phân tích chi tiết luồng xử lý, độ trễ (Latency), tối ưu throughput trên vLLM và các rủi ro vận hành."
+description: "Nucleus Sampling (Top-p) không đơn thuần là một 'công tắc' sáng tạo trên API. Dưới góc nhìn Data/ML Engineering, đây là một chiến lược giải mã (decoding strategy) can thiệp trực tiếp vào phân phối xác suất của mô hình, có ảnh hưởng lớn đến chất lượng đầu ra, tài nguyên GPU và Time-per-Output-Token (TPOT)."
 ---
 
+## 1. Kiến trúc Giải mã: Từ Logits đến Top-p (System Architecture)
 
+Để hiểu Nucleus Sampling (Top-p), chúng ta cần nhìn vào điểm cuối (tail-end) của kiến trúc Transformer. Sau khi đi qua hàng chục lớp Self-Attention và Feed-Forward, mô hình không sinh ra ngay một từ (token). Thay vào đó, nó tạo ra một vector khổng lồ gọi là **Logits** — với kích thước bằng đúng tập từ vựng (Vocabulary Size, thường từ 32,000 đến 128,000 tokens).
 
-## 1. Top-p (Nucleus Sampling) là gì?
+Quá trình chuyển đổi từ Logits thành Token cuối cùng được gọi là **Decoding Pipeline**.
 
+```mermaid
+flowchart TD
+    A["Hidden States("từ lớp Transformer cuối")"] -->|Linear Projection| B("Logits vector: kích thước ~100k")
+    B -->|Softmax / Temperature| C{Phân phối Xác suất}
+    C -->|Top-k| D["Cắt cố định K tokens"]
+    C -->|Top-p| E["Cắt theo tổng xác suất tích lũy"]
+    D --> F("Lấy mẫu ngẫu nhiên - Sampling")
+    E --> F
+    F --> G("(Next Token")
+```
 
+Các phương pháp đời đầu bộc lộ nhiều điểm yếu chí mạng ở quy mô lớn:
+- **Greedy Search (argmax):** Luôn chọn token có xác suất cao nhất. Dẫn đến câu văn robot, lặp từ cục bộ (ví dụ: "I don't know, I don't know, I don't know").
+- **Pure Sampling (Multinomial):** Lấy mẫu trên toàn bộ phân phối. Có rủi ro cao rơi vào vùng "long tail" (các từ vô nghĩa, ảo giác).
+- **Top-k Sampling:** Chặn cứng $K$ token đầu tiên. Khi mô hình rất "chắc chắn" (chỉ có 1-2 từ đúng), Top-k vẫn giữ lại $K$ từ, đẩy rác vào bộ lấy mẫu. Khi mô hình "phân vân" (cần tới 100 từ khả dĩ), Top-k lại cắt đi các từ hợp lý.
 
-**Top-p**, hay còn được giới nghiên cứu gọi là **Nucleus Sampling**, là một chiến lược giải mã (decoding strategy) được sử dụng rộng rãi trong các Mô hình Ngôn ngữ Lớn (Large Language Models - LLMs) như GPT-4, Llama, hay Gemini để quyết định từ (token) nào sẽ được sinh ra tiếp theo.
-
-Thay vì chọn một từ hoàn toàn ngẫu nhiên từ toàn bộ từ vựng, hoặc luôn chọn từ có xác suất cao nhất một cách máy móc, Top-p thiết lập một ngưỡng xác suất tích lũy $p$ (ví dụ: $p = 0.9$). Mô hình sẽ sắp xếp các từ ứng viên theo xác suất giảm dần và chỉ giữ lại một nhóm nhỏ các từ hàng đầu sao cho **tổng xác suất của chúng vừa đạt (hoặc vượt) ngưỡng $p$**. Tập hợp các từ được giữ lại này gọi là "hạt nhân" (nucleus). Cuối cùng, LLM sẽ chọn ngẫu nhiên một từ nằm trong cái hạt nhân đó, bỏ qua toàn bộ phần "đuôi" gồm những từ có xác suất quá thấp hoặc kỳ quặc.
-
-## 2. Vì sao chúng ta cần Top-p? (Vấn đề của các phương pháp cũ)
-
-Để hiểu giá trị của Top-p, chúng ta cần xem xét các phương pháp lấy mẫu (sampling) truyền thống và điểm yếu của chúng trong việc sinh văn bản tự nhiên (open-ended text generation):
-
-### 2.1. Greedy Decoding (Giải mã tham lam)
-Mô hình **luôn luôn** chọn từ có xác suất cao nhất tại mỗi bước.
-*   **Ưu điểm:** Nhanh, logic và đáng tin cậy cho các tác vụ phân tích, toán học.
-*   **Nhược điểm:** Văn bản sinh ra bị lặp từ nghiêm trọng, thiếu tính tự nhiên và vô cùng nhàm chán. Con người không bao giờ nói chuyện theo kiểu luôn dùng những từ dễ đoán nhất.
-
-### 2.2. Pure Random Sampling (Lấy mẫu ngẫu nhiên thuần túy)
-Mô hình quay một vòng quay may mắn trên **toàn bộ** từ điển dựa theo phân phối xác suất.
-*   **Ưu điểm:** Đa dạng và sáng tạo.
-*   **Nhược điểm:** Mô hình rất dễ "trượt chân" chọn trúng một từ ở "đuôi dài" (long tail) của phân phối — tức là một từ hoàn toàn lạc quẻ, vô nghĩa. Chỉ cần chọn sai một từ, toàn bộ ngữ cảnh của câu phía sau sẽ bị phá hỏng (hiện tượng này gọi là *text degeneration*).
-
-### 2.3. Top-k Sampling (Cắt bỏ cố định $k$ từ)
-Chỉ cho phép mô hình chọn ngẫu nhiên trong $k$ từ có xác suất cao nhất (ví dụ: $k = 50$).
-*   **Vấn đề:** Nếu $k$ được cố định là 50:
-    *   **Trường hợp 1 (Phân phối phẳng):** Có rất nhiều từ khả thi (ví dụ: "Hôm nay tôi ăn [cơm/phở/bún/miến/cháo/...]"). Việc cố định $k=50$ có thể cắt đi từ thứ 51, 52 dù chúng vẫn rất hợp lý.
-    *   **Trường hợp 2 (Phân phối dốc):** Chỉ có 1 hoặc 2 từ là hợp lý (ví dụ: "Việt Nam là một [quốc/nước]"). Từ thứ 3 trở đi tới từ thứ 50 hoàn toàn là những từ vô nghĩa. Việc giữ lại cả 50 từ sẽ đưa những từ rác vào tập hợp lấy mẫu, tăng nguy cơ sinh ra câu vô nghĩa.
-
-**Đây chính là lúc Top-p (Nucleus Sampling) tỏa sáng!** Top-p giải quyết triệt để điểm yếu của Top-k bằng cách **co giãn linh hoạt (dynamic) số lượng từ ứng viên** tùy thuộc vào độ chắc chắn của mô hình.
+**Nucleus Sampling (Top-p)**, được giới thiệu bởi Holtzman et al. (2019), giải quyết bài toán này bằng cách chặn linh hoạt (dynamic truncation). Thay vì chặn theo số lượng ($K$), nó chặn theo **khối lượng xác suất** ($P$).
 
 ---
 
-## 3. Top-p hoạt động như thế nào? (Từng bước chi tiết)
+## 2. Giải phẫu Thuật toán Top-p (Execution Logic)
 
-Thuật toán Top-p hoạt động tại mỗi bước sinh từ (token) theo trình tự sau:
+Thuật toán Top-p hoạt động như một bộ lọc động, cắt bỏ phần đuôi (tail) của phân phối phân suất. Luồng thực thi diễn ra ở cấp độ Tensor/GPU như sau:
 
-1.  **Dự đoán xác suất:** Mô hình ngôn ngữ (LLM) đưa ra phân phối xác suất cho tất cả các từ trong từ điển (thông thường khoảng 30,000 đến 100,000 từ).
-2.  **Sắp xếp:** Sắp xếp tất cả các từ theo thứ tự xác suất giảm dần.
-3.  **Cộng dồn (Cumulative Probability):** Tính tổng xác suất lũy kế từ trên xuống dưới.
-4.  **Cắt bỏ (Truncation):** Dừng lại ngay khi tổng xác suất lũy kế vừa đạt hoặc vượt qua giá trị $p$ mà bạn cài đặt.
-5.  **Chuẩn hóa:** Tập hợp các từ được giữ lại (nucleus) sẽ được chuẩn hóa lại xác suất sao cho tổng của chúng bằng 100%.
-6.  **Lấy mẫu:** Chọn ngẫu nhiên một từ từ tập hợp hạt nhân đó.
+1. **Sort:** Sắp xếp toàn bộ từ vựng theo xác suất giảm dần.
+2. **Cumulative Sum:** Tính tổng tích lũy (Cumulative Probability) từ trên xuống.
+3. **Masking/Truncation:** Tìm điểm "cắt" (cutoff) ngay khi tổng tích lũy vượt qua ngưỡng $p$. Đặt xác suất của tất cả token sau điểm cắt về \$0$.
+4. **Renormalize:** Chuẩn hóa lại các token còn lại (hạt nhân - nucleus) để tổng xác suất quay về \$1.0$.
+5. **Sample:** Lấy mẫu Multinomial từ tập hạt nhân.
 
-### 🌟 Ví dụ minh họa thực tế
+### Code Thực chiến (PyTorch / vLLM Simulation)
 
-Giả sử câu đang viết dở là: *"Buổi sáng, tôi thường uống một tách..."* và bạn đang set **$p = 0.9$**.
+Hãy xem cách Top-p được implement ở cấp độ Tensor trong PyTorch (tương tự logic bên trong `transformers` hoặc các optimized kernels của `vLLM`):
 
-Mô hình dự đoán các từ tiếp theo với xác suất như sau (đã sắp xếp giảm dần):
+```python
+import torch
+import torch.nn.functional as F
 
-| Hạng | Từ (Token) | Xác suất (%) | Tổng xác suất lũy kế (%) | Hành động của Top-p ($p=0.9$) |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | `cà phê` | 65% | 65% | ✅ Giữ lại (65 < 90) |
-| 2 | `trà` | 20% | 85% | ✅ Giữ lại (85 < 90) |
-| 3 | `sữa` | 7% | **92%** | ✅ Giữ lại (92 > 90, vượt ngưỡng -> Dừng) |
-| 4 | `nước` | 4% | 96% | ❌ Loại bỏ |
-| 5 | `nhựa` | 0.01%| 96.01% | ❌ Loại bỏ |
-| ... | ... | ... | ... | ❌ Loại bỏ |
+def apply_top_p_sampling(logits: torch.Tensor, top_p: float = 0.9, filter_value: float = -float('Inf')):
+    """
+    Mô phỏng hàm lọc Top-p trên GPU sử dụng PyTorch.
+    Logits shape: (batch_size, vocab_size)
+    """
+    # 1. Chuyển Logits thành Xác suất
+    probs = F.softmax(logits, dim=-1)
+    
+    # 2. Sắp xếp giảm dần (Đây là bước đắt đỏ nhất O(V log V))
+    sorted_probs, sorted_indices = torch.sort(probs, descending=True)
+    
+    # 3. Tính tổng tích lũy
+    cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+    
+    # 4. Tạo Mask: Loại bỏ các token mà tổng tích lũy > top_p
+    # (Cần shift right 1 bước để luôn giữ lại ít nhất 1 token trên ngưỡng)
+    sorted_indices_to_remove = cumulative_probs > top_p
+    sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+    sorted_indices_to_remove[..., 0] = 0 # Luôn giữ lại token xác suất cao nhất
+    
+    # 5. Áp dụng Mask quay ngược lại thứ tự gốc của từ vựng
+    indices_to_remove = sorted_indices_to_remove.scatter(1, sorted_indices, sorted_indices_to_remove)
+    logits[indices_to_remove] = filter_value
+    
+    # 6. Chuẩn hóa lại (thông qua softmax một lần nữa khi lấy mẫu) và Sample
+    filtered_probs = F.softmax(logits, dim=-1)
+    next_token = torch.multinomial(filtered_probs, num_samples=1)
+    
+    return next_token
 
-**Kết quả:**
-*   Mô hình sẽ **chỉ được phép** chọn ngẫu nhiên giữa 3 từ: `cà phê`, `trà`, và `sữa`.
-*   Từ thứ 4 (`nước`) và thứ 5 (`nhựa`) bị loại bỏ hoàn toàn. Dù `nhựa` ("uống một tách nhựa") là cực kỳ vô lý, nhưng nếu dùng Random Sampling, đôi khi mô hình vẫn xui xẻo chọn trúng. Top-p đã ngăn chặn hoàn toàn rủi ro này bằng cách cắt đứt cái "đuôi" rác.
-*   **Số lượng từ ứng viên ($k$) ở ví dụ này tự động điều chỉnh thành 3.** Nếu ở một ngữ cảnh khác, phân phối phẳng hơn, để đạt được 90% có thể mô hình phải gom tới 50 từ. Đây chính là tính "co giãn linh hoạt" của Top-p.
-
----
-
-## 4. Top-p (Nucleus Sampling) khác gì với Temperature?
-
-Nếu bạn đã từng dùng API của OpenAI (ChatGPT) hay Anthropic (Claude), bạn sẽ thấy luôn có 2 thông số đi liền với nhau: `temperature` và `top_p`. Chúng đều ảnh hưởng đến tính "ngẫu nhiên" hoặc "sáng tạo", nhưng theo hai cách hoàn toàn khác nhau.
-
-*   **Temperature (Thay đổi hình dáng phân phối):** Hoạt động bằng cách bóp méo xác suất *trước khi* quá trình loại bỏ diễn ra.
-    *   Temperature > 1.0: San phẳng phân phối (tăng xác suất của từ hiếm, giảm xác suất từ phổ biến).
-    *   Temperature < 1.0: Làm sắc nét phân phối (tăng cường sự thống trị của từ phổ biến).
-*   **Top-p (Cắt bỏ phân phối):** Không thay đổi xác suất gốc của các từ, mà hoạt động như một cái "kéo cắt", cắt bỏ hoàn toàn phần đuôi của phân phối để đảm bảo an toàn.
-
-**Nói một cách hình tượng:**
-*   **Temperature** giống như việc điều chỉnh nhiệt độ trong phòng: làm mọi thứ nóng lên (hỗn loạn hơn) hoặc lạnh đi (đóng băng/chắc chắn hơn).
-*   **Top-p** giống như một người bảo vệ đứng ở cửa tiệm: chỉ cho phép nhóm khách hàng VIP (nhóm chiếm tỷ trọng $p$ quan trọng nhất) bước vào vòng quay may mắn, và đuổi những vị khách lang thang (từ vựng kỳ quặc) đi.
-
-> **💡 Best Practice (Lưu ý quan trọng):**
-> Các nhà nghiên cứu và kỹ sư AI khuyên rằng **chỉ nên tinh chỉnh MỘT TRONG HAI thông số này** tại một thời điểm, trong khi giữ nguyên thông số còn lại ở mức mặc định (thường `temperature = 1.0` hoặc `top_p = 1.0`). Việc chỉnh sửa đồng thời cả hai có thể dẫn đến các kết quả rất khó dự đoán và kiểm soát.
-
----
-
-## 5. Hướng dẫn tinh chỉnh Top-p theo từng Use Case
-
-Tùy vào mục tiêu tác vụ mà bạn đang yêu cầu LLM thực hiện, việc cài đặt Top-p nên được điều chỉnh để đạt hiệu quả cao nhất:
-
-| Giá trị Top-p | Độ sáng tạo | Nhóm Tác vụ (Use Cases) phù hợp nhất | Giải thích |
-| :--- | :--- | :--- | :--- |
-| **0.0 - 0.1** | Rất thấp (Logic) | Viết Code, Trích xuất JSON, Dịch thuật kỹ thuật, QA dựa trên tài liệu (RAG). | Thu hẹp cực độ, mô hình gần như chỉ chọn từ tốt nhất. Đảm bảo tính chính xác, tính logic, tránh việc mô hình "ảo giác" (hallucination) thêm thắt rườm rà. |
-| **0.3 - 0.5** | Trung bình thấp | Viết email công việc, tóm tắt bài báo, giải thích khái niệm. | Cho phép một chút linh hoạt về mặt ngôn từ nhưng vẫn bám sát ý tưởng cốt lõi, tránh dùng từ ngữ quá hoa mỹ hoặc đi xa khỏi chủ đề. |
-| **0.7 - 0.9** | Trung bình cao | Viết blog, sáng tạo nội dung marketing, đối thoại chatbot (Persona), brainstorming. | Sự cân bằng tuyệt vời. Mô hình có thể dùng các cấu trúc câu đa dạng, từ vựng phong phú, nhưng Top-p vẫn sẽ cắt đi những từ rác rưởi phá hoại câu văn. |
-| **0.95 - 1.0** | Rất cao (Sáng tạo) | Viết thơ, sáng tác tiểu thuyết viễn tưởng, tạo ý tưởng điên rồ. | Mô hình được tự do lựa chọn hầu như toàn bộ phổ từ vựng. Văn bản sinh ra rất độc đáo và ít khi bị lặp lại, nhưng rủi ro đi chệch hướng hoặc sinh từ khó hiểu sẽ cao hơn. |
-
-## 6. Tổng kết
-
-**Nucleus Sampling (Top-p)** là một bước tiến quan trọng trong lĩnh vực Xử lý Ngôn ngữ Tự nhiên (NLP). Nó khắc phục được sự cứng nhắc của Top-k bằng cách tạo ra một "bộ lọc linh hoạt" dựa trên độ chắc chắn của mô hình tại từng khoảnh khắc sinh từ. Bằng cách hiểu rõ cách Top-p hoạt động và cách kết hợp nó với các thông số khác, bạn sẽ làm chủ được "ngòi bút" của các LLM mạnh mẽ nhất, khiến chúng vừa có thể bay bổng sáng tạo, vừa có thể tuân thủ logic sắt đá khi cần.
+# Giả lập logits cho tập từ vựng 32,000 từ
+mock_logits = torch.randn(1, 32000) 
+next_token_id = apply_top_p_sampling(mock_logits, top_p=0.9)
+print(f"Sampled Token ID: {next_token_id.item()}")
+```
 
 ---
 
-## Tài Liệu Tham Khảo Thực Tế Về Top-p
+## 3. Rủi ro Vận hành (Operational Risks) & Trade-offs
 
-*(Lưu ý: Các tài liệu tham khảo về kiến trúc hệ thống phân tán ở bản nháp cũ đã được thay thế bằng các tài liệu chính xác về NLP & LLM)*
+Dưới góc nhìn Hệ thống, Sampling không "miễn phí". Khi phục vụ LLM ở quy mô lớn (High QPS), Top-p sinh ra các nút thắt cổ chai mà Kỹ sư cần nắm rõ.
 
-*   [The Curious Case of Neural Text Degeneration - Holtzman et al. (2019)](https://arxiv.org/abs/1904.09751) - *Paper gốc và kinh điển nhất giới thiệu khái niệm Nucleus Sampling (Top-p).*
-*   [How to generate text: using different decoding methods for language generation with Transformers - Hugging Face Blog](https://huggingface.co/blog/how-to-generate) - *Giải thích trực quan và dễ hiểu về các chiến lược decoding.*
-*   [OpenAI API Documentation - Parameter Details](https://platform.openai.com/docs/api-reference/chat/create#chat/create-top_p) - *Cách OpenAI khuyên dùng Temperature và Top-p trong thực tiễn.*
-*   [Attention Is All You Need - Vaswani et al. (2017)](https://arxiv.org/abs/1706.03762) - *Nền tảng của các mô hình Transformer hiện đại.*
+### 3.1. The Compute Tax (Chi phí Tính toán)
+Khác với Greedy Search chỉ cần toán tử `argmax` với độ phức tạp $O(V)$ (với $V$ là kích thước từ vựng), Top-p bắt buộc phải dùng thuật toán sắp xếp (Sorting). Sắp xếp trên mảng 128,000 phần tử tốn kém $O(V \log V)$. Khi mô hình phục vụ hàng nghìn request qua Continuous Batching, thao tác Sort này tạo ra áp lực cực lớn lên GPU kernels, làm tăng **TPOT (Time Per Output Token)**.
+
+*Trade-off:* 
+*   Nếu tối ưu tuyệt đối cho **Throughput** (RPS) và **Latency**: Giảm vocab size nếu có thể (nhưng hiếm khi), hoặc ưu tiên các sampling kernels được tối ưu hóa như **FlashInfer** trong vLLM. 
+*   Nhiều production system chọn cách chỉ dùng Top-p với một $p$ vừa phải và kết hợp các custom CUDA kernels để thực hiện Approximate Sorting.
+
+### 3.2. Real-world Incidents: Cấu hình sai lệch
+- **Hallucination Spikes (Khi $p$ quá gần 1.0):** Nếu $p=0.99$ hoặc \$1.0$, vòng Nucleus quá rộng, kéo theo hàng loạt các "long tail tokens" (từ nhiễu). Điều này thường xuyên dẫn đến hiện tượng mô hình sinh ra JSON hỏng (malformed), nói lảm nhảm, hoặc lạc đề.
+- **Repetition Loops (Vòng lặp vĩnh cửu):** Ngược lại, nếu set $p$ quá thấp (ví dụ $p \le 0.1$), mô hình gần như quay lại trạng thái Greedy Search. Nếu kết hợp với việc thiếu `repetition_penalty` (hoặc `presence_penalty`), mô hình dễ dàng rơi vào một bẫy lặp từ vô tận, làm lãng phí Compute (GPU kẹt ở request này cho đến khi hit `max_tokens`).
+
+---
+
+## 4. Thực tiễn Kỹ thuật & FinOps (Engineering Best Practices)
+
+### Cấu hình Tối ưu trên vLLM
+Khi triển khai vLLM, các cấu hình sampling ảnh hưởng trực tiếp đến hiệu năng server và **FinOps (Tối ưu chi phí Compute)**:
+
+```bash
+# Lệnh chạy vLLM API server tối ưu hóa
+python3 -m vllm.entrypoints.openai.api_server \
+    --model meta-llama/Llama-3-8B-Instruct \
+    --enforce-eager \
+    --gpu-memory-utilization 0.9 \
+    --max-num-batched-tokens 8192
+```
+
+Khi clients gọi API tới Server vLLM này, cần quy hoạch chặt chẽ thông số Payload:
+
+```json
+{
+  "model": "meta-llama/Llama-3-8B-Instruct",
+  "messages": [...],
+  "top_p": 0.9,
+  "temperature": 1.0, 
+  "max_tokens": 1024,
+  "presence_penalty": 0.1
+}
+```
+
+**💡 Golden Rule: Đừng chỉnh đồng thời Top-p và Temperature**
+- Cả hai đều điều chỉnh độ đa dạng (diversity) của output.
+- **Temperature** làm phẳng/sắc nét toàn bộ đồ thị trước khi áp dụng hàm kích hoạt.
+- **Top-p** cắt đuôi đồ thị sau khi đã tính xác suất.
+- *Best Practice:* Cố định `Temperature = 1.0` và điều chỉnh `Top-p`. Nếu muốn văn bản an toàn, logic (như SQL parsing, Coding): $p = 0.1 - 0.3$. Nếu muốn chatbot sáng tạo, phong phú: $p = 0.7 - 0.9$. Đừng bao giờ set `top_p = 0.9` VÀ `temperature = 1.5` cùng lúc, output sẽ cực kỳ hỗn loạn.
+
+### Min-p: Kẻ thách thức Top-p
+Trong các version gần đây của vLLM và Hugging Face, **Min-p** nổi lên như một giải pháp thay thế. Thay vì tính tổng tích lũy, Min-p chỉ loại bỏ các token có xác suất nhỏ hơn một tỷ lệ cố định so với token dẫn đầu. Việc này cắt bỏ được hoàn toàn bước Sorting đắt đỏ, giúp **giảm Latency** đáng kể trên GPU mà vẫn giữ được chất lượng văn bản tương đương Top-p.
+
+---
+
+## 5. Nguồn Tham Khảo (References)
+
+*   [The Curious Case of Neural Text Degeneration (Holtzman et al., 2019)](https://arxiv.org/abs/1904.09751) - Whitepaper kinh điển đề xuất phương pháp Nucleus Sampling.
+*   [Hugging Face - How to generate text: using different decoding methods](https://huggingface.co/blog/how-to-generate) - Bài phân tích trực quan về Sampling Pipeline.
+*   [vLLM Documentation: Generation Parameters](https://docs.vllm.ai/en/latest/dev/sampling_params.html) - Chi tiết kỹ thuật về các sampling kernels và cấu hình tối ưu độ trễ trong môi trường Production.
+*   [Attention Is All You Need (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762) - Kiến trúc cốt lõi sinh ra vector Logits trong các mô hình Transformer.

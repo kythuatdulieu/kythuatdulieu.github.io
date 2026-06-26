@@ -21,7 +21,7 @@ Tại cấp độ Senior, bạn không chỉ tạo ra các đường ống dữ 
 
 ## Bắt đầu từ đâu? (Prerequisites)
 
-* **Hoàn thành chặng đường:** 👉 **[Junior to Middle Data Engineer](./junior-to-middle-de.md)**.
+* **Hoàn thành chặng đường:** 👉 **[Junior to Middle Data Engineer](/learning-paths/core-paths/junior-to-middle-de/)**.
 * **Kinh nghiệm:** Trên 3 năm thực chiến.
 * **Mong muốn:** Trở thành người thiết kế hệ thống (System Architect) hoặc giải quyết các sự cố dữ liệu phức tạp nhất trong tổ chức.
 
@@ -74,4 +74,4 @@ Tự động hóa hoàn toàn cơ sở hạ tầng.
 ## Bước tiếp theo
 
 Khi bạn đã vững vàng với công nghệ, con đường tiếp theo là nhân rộng tầm ảnh hưởng (Impact) và dẫn dắt đội ngũ.
-👉 **[Lãnh đạo & Văn hóa Kỹ thuật](../leadership-culture/de-traits-and-mindset.md)**
+👉 **[Lãnh đạo & Văn hóa Kỹ thuật](/learning-paths/leadership-culture/de-traits-and-mindset/)**

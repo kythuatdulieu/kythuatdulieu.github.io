@@ -1,122 +1,115 @@
 ---
 title: "Distributed Joins Mechanisms"
 difficulty: "Advanced"
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Distributed Joins Mechanisms - Data Engineering Deep Dive"
-metaDescription: "So sánh chi tiết các cơ chế Broadcast Join, Sort-Merge Join và Shuffle Hash Join trong hệ thống phân tán, tối ưu hóa Network I/O."
-description: "So sánh chi tiết Broadcast Join, Sort-Merge Join và Shuffle Hash Join ở mức độ Network I/O, bộ nhớ, và ứng dụng thực tế."
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Distributed Joins Mechanisms - Broadcast, Sort-Merge, Shuffle Hash"
+metaDescription: "Deep dive into Distributed Joins: Broadcast Hash Join, Sort-Merge Join, Shuffle Hash Join. Analyze Network I/O, JVM OOMKilled, and Data Skew troubleshooting."
+description: "Phân tích kiến trúc sâu của Broadcast Hash Join, Sort-Merge Join và Shuffle Hash Join ở mức Network I/O, JVM Memory và thực chiến xử lý Data Skew."
 ---
 
+Trong các hệ thống phân tán (Distributed Compute Engines) như Apache Spark, Trino hay Flink, thao tác JOIN không đơn thuần là ghép các bản ghi như Single-Node RDBMS (PostgreSQL/MySQL). Thay vào đó, nó là một bài toán **Network I/O & Memory Management** cực kỳ tốn kém. Dữ liệu phải được xáo trộn qua mạng giữa các Executors (Network Shuffle) để đảm bảo các bản ghi có cùng Join Key hội tụ về cùng một Node vật lý trước khi việc so khớp (probing) thực sự diễn ra.
 
+Tùy thuộc vào kích thước dữ liệu và cấu hình hệ thống, Query Optimizer sẽ quyết định chọn một trong ba chiến lược cốt lõi: **Broadcast Hash Join (BHJ)**, **Sort-Merge Join (SMJ)**, hoặc **Shuffle Hash Join (SHJ)**.
 
-Trong các hệ thống tính toán phân tán (như Apache Spark, Presto, Trino, Flink), thao tác JOIN giữa các tập dữ liệu lớn là một trong những operation đắt đỏ nhất. Khác với cơ sở dữ liệu truyền thống chạy trên một máy chủ (single-node database), dữ liệu trong hệ thống phân tán nằm rải rác trên nhiều máy chủ (nodes) khác nhau. Để nối dữ liệu, các node phải trao đổi dữ liệu cho nhau qua mạng lưới (Network I/O) – quá trình này gọi là **Shuffle**.
+---
 
-Tùy thuộc vào kích thước của hai bảng và cấu hình cụm, hệ thống tối ưu hóa truy vấn (Query Optimizer) sẽ chọn một trong ba cơ chế Join cốt lõi: **Broadcast Hash Join**, **Shuffle Hash Join**, và **Sort Merge Join**.
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-## 1. Broadcast Hash Join (BHJ)
+### 1.1. Broadcast Hash Join (BHJ)
+Đây là chiến lược Map-side Join nhanh nhất, được dùng khi một bảng (Dimension table) đủ nhỏ để vừa vặn trong RAM của mọi Executors, trong khi bảng còn lại (Fact table) rất lớn.
 
+*   **Nguyên lý hoạt động:** Driver Node đọc toàn bộ bảng nhỏ, sau đó *broadcast* (phát sóng) bản sao của bảng này tới từng Executor. Tại Executor, hệ thống dựng một In-Memory Hash Table từ bảng nhỏ. Bảng lớn được xử lý song song (Map phase), mỗi dòng sẽ được lookup (probe) trực tiếp vào Hash Table cục bộ.
+*   **Network I/O:** O(N) với N là số Executors. Hoàn toàn **KHÔNG có Shuffle** đối với bảng lớn.
+*   **Trade-off:** Đánh đổi Memory (tốn RAM ở Driver và Executor để chứa Hash Table) lấy Tốc độ (tránh Shuffle).
 
+**Cấu hình thực chiến (Spark):**
+```python
+# Tăng ngưỡng tự động Broadcast lên 50MB (Mặc định là 10MB)
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "52428800")
+```
 
-Broadcast Hash Join (thường gọi là Broadcast Join hoặc Map-side Join) là chiến lược tối ưu nhất nhưng bị giới hạn nghiêm ngặt bởi kích thước dữ liệu.
+### 1.2. Sort-Merge Join (SMJ)
+SMJ là cơ chế default cho hai bảng lớn từ Spark 2.3+. Khác với Hash Join đòi hỏi RAM, SMJ là chiến lược an toàn (Robust) nhất để chống lại rủi ro **JVM OOMKilled**.
 
-### Nguyên lý hoạt động
-Khi thực hiện join giữa một bảng rất lớn (Fact table) và một bảng rất nhỏ (Dimension table), hệ thống sẽ:
-1. Đọc bảng nhỏ lên bộ nhớ của Driver node (đối với Spark).
-2. Phát sóng (Broadcast) toàn bộ bảng nhỏ này tới bộ nhớ của tất cả các Worker nodes (Executors) đang chứa các phân vùng của bảng lớn.
-3. Tại mỗi Executor, hệ thống sẽ xây dựng một Hash Table trong bộ nhớ cho bảng nhỏ.
-4. Quét qua từng dòng của bảng lớn (đã có sẵn trên Executor) và tra cứu (probe) vào Hash Table để tìm dữ liệu khớp (matching records).
+*   **Nguyên lý hoạt động:** Cả hai bảng phải trải qua 3 giai đoạn (Phases):
+    1.  **Shuffle:** Cả hai bảng được re-partition qua mạng dựa trên Hash của Join Key.
+    2.  **Sort:** Tại mỗi partition của từng node, dữ liệu được sắp xếp (Sort) theo Join Key. Nếu RAM không đủ, JVM sẽ *Spill-to-disk* (ghi tạm xuống đĩa).
+    3.  **Merge:** Dùng hai con trỏ (Pointers) quét tuyến tính O(N) qua hai tập dữ liệu đã Sort để merge các records khớp nhau.
+*   **Trade-off:** Đánh đổi Tốc độ và Disk/CPU I/O (Sort phase cực kỳ đắt đỏ về Compute và I/O) để lấy sự Ổn định (Robustness), tránh OOM.
 
-### Phân tích tài nguyên
-* **Network I/O**: Không xảy ra Shuffle giữa các node cho bảng lớn. Bảng nhỏ được copy `N` lần (với `N` là số lượng executors). Tổng lượng dữ liệu qua mạng rất ít.
-* **Memory**: Đòi hỏi bộ nhớ của Driver và tất cả các Executors phải đủ lớn để chứa toàn bộ bảng nhỏ (cộng thêm overhead của Hash Table).
-* **CPU**: Rất thấp vì không có quá trình sắp xếp (Sorting).
+```mermaid
+graph TD
+    A["Bảng A: Fact"] -->|Hash Partition| S1("Shuffle")
+    B["Bảng B: Fact"] -->|Hash Partition| S1
+    S1 --> E1["Executor 1: Sort & Merge"]
+    S1 --> E2["Executor 2: Sort & Merge"]
+    S1 --> E3["Executor 3: Sort & Merge"]
+```
 
-### Ưu điểm
-* Nhanh nhất trong tất cả các loại Join vì hoàn toàn loại bỏ được bước Shuffle tốn kém của bảng lớn.
-* Không bị ảnh hưởng bởi Data Skew (lệch dữ liệu) của join key trên bảng lớn.
+### 1.3. Shuffle Hash Join (SHJ)
+SHJ là một phương án lai. Cả hai bảng vẫn bị Shuffle (như SMJ) để gom chung Join Key, nhưng thay vì Sort, Executor sẽ dựng Hash Table cho phân vùng của bảng nhỏ hơn và probe phân vùng của bảng lớn hơn.
 
-### Nhược điểm
-* Giới hạn kích thước bảng nhỏ (Trong Spark, mặc định được cấu hình bởi `spark.sql.autoBroadcastJoinThreshold` - thường là 10MB).
-* Nếu bảng nhỏ lớn hơn dung lượng bộ nhớ khả dụng, sẽ gây lỗi **Out-Of-Memory (OOM)** tại Driver hoặc Executor.
+*   **Trade-off:** Tiết kiệm CPU (không phải Sort) nhưng rủi ro OOM rất cao. Thường chỉ hiệu quả khi kích thước partition đủ nhỏ để fit vào memory của Executor, và không có Skew.
 
-## 2. Sort-Merge Join (SMJ)
+---
 
-Khi cả hai bảng đều quá lớn và không thể dùng Broadcast Join, Sort-Merge Join là sự lựa chọn phổ biến và ổn định nhất. Kể từ Spark 2.3, đây là cơ chế join mặc định cho các bảng lớn.
+## 2. Rủi ro Vận hành (Operational Risks & Incidents)
 
-### Nguyên lý hoạt động
-Quá trình chia làm 3 giai đoạn rõ rệt:
-1. **Shuffle Phase**: Cả hai bảng đều được phân chia (partition) và gửi qua mạng dựa trên giá trị băm (hash) của Join Key. Điều này đảm bảo các bản ghi có cùng Join Key từ cả hai bảng sẽ hội tụ về cùng một Node.
-2. **Sort Phase**: Tại mỗi node, các bản ghi trong từng phân vùng sẽ được sắp xếp (Sort) theo Join Key.
-3. **Merge Phase**: Hệ thống duy trì hai con trỏ đọc qua hai phân vùng đã được sắp xếp song song. Vì dữ liệu đã có thứ tự, hệ thống chỉ cần duyệt qua dữ liệu một lần (O(N) tại node đó) để ghép các bản ghi có cùng Join Key lại với nhau.
+Trong thực tế production, quá trình Join thường xuyên là tác nhân gây sập hệ thống (Incident).
 
-### Phân tích tài nguyên
-* **Network I/O**: Rất lớn. Toàn bộ dữ liệu của cả hai bảng đều phải được gửi qua mạng (Full Shuffle).
-* **Memory**: Sử dụng ít bộ nhớ hơn so với Hash Join. Nếu dữ liệu không vừa trong RAM, hệ thống sẽ ghi tạm (spill) xuống ổ cứng (Disk I/O).
-* **CPU**: Tốn nhiều CPU cho quá trình Hashing, Serialization/Deserialization (khi gửi qua mạng), và đặc biệt là thao tác Sort (Sắp xếp).
+### 2.1. Cartesian Explosion (Bùng nổ dữ liệu Cross Join)
+Khi thực hiện JOIN với điều kiện không đủ chặt (Non-equi join kiểu `<`, `>` hoặc thiếu key), Query Engine có thể rơi vào trạng thái Nested Loop Join (Cartesian Product), sinh ra $M \times N$ bản ghi, làm nghẽn toàn bộ Cluster.
+*   *Triệu chứng:* Disk Spill lên tới hàng Terabytes, Network Inbound bão hòa (saturated).
 
-### Ưu điểm
-* Rất ổn định (Robust). Hầu như không bao giờ bị OOM nhờ cơ chế Spill-to-Disk trong quá trình Sort.
-* Xử lý tốt khi hai bảng đều có dung lượng hàng Terabytes hoặc Petabytes.
+### 2.2. JVM OOMKilled & Broadcast Timeout
+Nếu ép buộc (Hint) dùng Broadcast Join cho một bảng có kích thước thực tế lớn hơn Driver/Executor Memory, Garbage Collector (GC) của JVM sẽ rơi vào tình trạng "GC Pause" liên tục (Stop-the-world) và kết thúc bằng lỗi OOM.
+Đồng thời, nếu timeout cấu hình quá thấp, tác vụ Broadcast bị fail giữa chừng: `spark.sql.broadcastTimeout`.
 
-### Nhược điểm
-* Chậm hơn nhiều so với Broadcast Join vì chi phí Shuffle qua mạng và Disk I/O (nếu bị spill).
-* Bị ảnh hưởng nghiêm trọng bởi Data Skew. Nếu một Join Key xuất hiện quá nhiều, toàn bộ dữ liệu của key đó sẽ đổ dồn về một node gây hiện tượng "nghẽn cổ chai" (Straggler).
+### 2.3. Data Skew (Lệch dữ liệu)
+Đây là sát thủ thầm lặng của Shuffle. Nếu Fact table có 80% dữ liệu thuộc về một `client_id = 'NULL'` hoặc một khách hàng quá lớn, khi Shuffle, toàn bộ 80% dữ liệu này đổ dồn vào một Task/Executor duy nhất, gây ra **Straggler Task** (1 Task chạy mất 5 tiếng trong khi các tasks khác xong trong 2 phút).
 
-## 3. Shuffle Hash Join (SHJ)
+---
 
-Shuffle Hash Join là một phương án lai giữa Sort Merge Join và Broadcast Join. Cơ chế này thường được dùng khi một bảng không đủ nhỏ để Broadcast, nhưng lại đủ nhỏ để mỗi phân vùng của nó có thể nằm lọt trong bộ nhớ sau quá trình Shuffle.
+## 3. Tối ưu Hệ thống (Systemic Troubleshooting)
 
-### Nguyên lý hoạt động
-1. **Shuffle Phase**: Giống như SMJ, cả hai bảng đều được hash partition qua mạng theo Join Key để dữ liệu cùng Key về cùng node.
-2. **Hash Phase (Build Phase)**: Tại mỗi node, thay vì Sort, hệ thống sẽ lấy tập dữ liệu của bảng nhỏ hơn (ở mức phân vùng) để xây dựng một In-Memory Hash Table.
-3. **Probe Phase**: Quét qua các bản ghi thuộc phân vùng tương ứng của bảng lớn hơn, tra cứu vào Hash Table và nối dữ liệu.
+### 3.1. Adaptive Query Execution (AQE) trong Spark 3+
+AQE cho phép Spark tự động đổi chiến lược Join trong lúc Run-time (Execution Phase) thay vì Plan-time.
 
-### Phân tích tài nguyên
-* **Network I/O**: Lớn (giống SMJ), toàn bộ dữ liệu cả 2 bảng đều bị Shuffle.
-* **Memory**: Yêu cầu phân vùng của bảng nhỏ hơn phải fit hoàn toàn vào RAM của Executor.
-* **CPU**: Tiết kiệm được chi phí CPU do không phải thực hiện Sort.
+1.  **Dynamically Switching Join Strategies:** Nếu sau giai đoạn Filter, một bảng lớn bỗng nhiên thu nhỏ lại dưới ngưỡng 10MB, AQE sẽ tự động đổi từ Sort-Merge Join thành Broadcast Hash Join (Loại bỏ Local Sort).
+2.  **Dynamically Optimizing Skew Joins:** AQE phát hiện partition bị lệch, tự động "xé nhỏ" (Split) partition đó và nhân bản (Replicate) partition đối ứng.
 
-### Ưu điểm
-* Nhanh hơn Sort-Merge Join (khi dữ liệu thỏa mãn điều kiện) vì bỏ qua được pha Sort đắt đỏ.
+```python
+# Cấu hình bật AQE và Skew Join Optimization
+spark.conf.set("spark.sql.adaptive.enabled", "true")
+spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
+spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionFactor", "5")
+```
 
-### Nhược điểm
-* **Rủi ro OOM cao**: Nếu bảng nhỏ không phân phối đều (có Data Skew), một số phân vùng sẽ phình to và không thể tạo Hash Table trong bộ nhớ, dẫn đến lỗi OOM ngay lập tức. Spark ưu tiên SMJ hơn SHJ chính vì lý do ổn định này.
+### 3.2. Manual Salting (Kỹ thuật băm dữ liệu thủ công)
+Khi không có AQE, ta phải can thiệp thủ công (Salting) để phân tán Data Skew.
 
-## Bảng So Sánh Các Cơ Chế Join
+**Giải pháp (PySpark):** Thêm một Salt ngẫu nhiên từ 1 đến N vào Join Key của bảng lớn, và Explode bảng nhỏ tương ứng.
+```python
+from pyspark.sql import functions as F
 
-| Tính chất | Broadcast Hash Join | Sort Merge Join | Shuffle Hash Join |
-| :--- | :--- | :--- | :--- |
-| **Kích thước dữ liệu** | 1 bảng rất nhỏ, 1 bảng lớn | 2 bảng đều rất lớn | 1 bảng trung bình, 1 bảng lớn |
-| **Shuffle Data (Network I/O)**| Không | Toàn bộ 2 bảng | Toàn bộ 2 bảng |
-| **Yêu cầu Sort (CPU)** | Không | Có | Không |
-| **Xây dựng Hash Table** | Có (Toàn bộ bảng nhỏ) | Không | Có (Từng phần của bảng nhỏ) |
-| **Rủi ro OOM** | Cao (nếu cấu hình sai) | Thấp (Spill to Disk) | Rất cao (Nếu gặp Data Skew) |
-| **Tốc độ (Speed)** | Nhanh nhất | Chậm nhất (ổn định nhất) | Nhanh (nếu không dính skew) |
+# Bảng lớn: Fact (bị Skew ở client_id = 1)
+df_fact = df_fact.withColumn("salt", F.round(F.rand() * 9))
+df_fact = df_fact.withColumn("salted_client_id", F.concat_ws("_", "client_id", "salt"))
 
-## 4. Adaptive Query Execution (AQE) trong Spark 3+
+# Bảng nhỏ: Dimension (Explode x10)
+salts = spark.range(0, 10)
+df_dim_exploded = df_dim.crossJoin(salts).withColumn("salted_client_id", F.concat_ws("_", "client_id", "id"))
 
-Từ phiên bản Apache Spark 3.0, tính năng **AQE (Adaptive Query Execution)** đã mang đến cuộc cách mạng về cách hệ thống tối ưu hóa phép Join ngay trong quá trình chạy (Run-time).
+# Thực hiện Join trên Key mới (hoàn toàn được phân tán)
+df_joined = df_fact.join(df_dim_exploded, "salted_client_id")
+```
 
-Thay vì phải quyết định cơ chế Join từ lúc lên kế hoạch (Plan time), AQE sẽ thu thập số liệu (statistics) trong lúc chạy và tự động điều chỉnh:
+---
 
-1. **Dynamically Coalescing Shuffle Partitions**: Tự động gom các phân vùng dữ liệu quá nhỏ lại với nhau sau Shuffle, giúp giảm số lượng tasks.
-2. **Dynamically Switching Join Strategies**: Nếu ban đầu Query Optimizer chọn Sort-Merge Join do bảng có vẻ lớn, nhưng sau khi qua một vài bước lọc (Filter), kích thước bảng thực tế thu nhỏ lại dưới ngưỡng `broadcastJoinThreshold`, AQE sẽ linh hoạt đổi chiến thuật từ SMJ sang Broadcast Hash Join ở giữa quá trình chạy.
-3. **Dynamically Optimizing Skew Joins**: Đây là vũ khí mạnh nhất của AQE. Khi phát hiện một phân vùng quá lớn (Skew Partition) trong quá trình Shuffle, AQE sẽ tự động xé nhỏ phân vùng đó thành các phân vùng con, và sao chép (replicate) dữ liệu của Join Key tương ứng từ bảng bên kia. Điều này giúp cân bằng tải và loại bỏ hiện tượng "Straggler task".
+## Nguồn Tham Khảo
 
-## 5. Kỹ thuật xử lý Data Skew thủ công (Salting)
-
-Khi bạn không có AQE (hoặc sử dụng các engine không tự động xử lý skew), việc Join một tập dữ liệu bị lệch (vd: quá nhiều giá trị null, hoặc một tập trung vào một id khách hàng cụ thể) sẽ làm treo cụm máy. Kỹ thuật phổ biến để giải quyết là **Salting**.
-
-**Cách Salting hoạt động:**
-1. Trên bảng lớn (bảng bị lệch): Thêm một cột khóa giả bằng cách gán thêm một số ngẫu nhiên (vd từ 1 đến 10) vào Join Key. (`key_skewed` -> `key_skewed_1`, `key_skewed_4`, v.v...)
-2. Trên bảng nhỏ (Dimension table): Nhân bản các bản ghi lên 10 lần (Explode), tương ứng với các salt từ 1 đến 10. (`key_skewed` -> `key_skewed_1`, `key_skewed_2`, ... `key_skewed_10`).
-3. Thực hiện Join theo khóa mới (`original_key + salt`). Nhờ việc chia nhỏ ngẫu nhiên, dữ liệu ở key bị lệch sẽ được phân tán đều cho 10 nodes khác nhau để xử lý, loại bỏ hoàn toàn nút thắt cổ chai.
-
-## Tài Liệu Tham Khảo
-
-* [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
-* **Troubleshooting Spark OOM and Memory Management - Uber Engineering**
-* [Spark Shuffle Architecture - DataBricks Deep Dive](https://databricks.com/session/deep-dive-into-spark-sql-with-advanced-performance-tuning)
-* **Presto: SQL on Everything - Facebook Engineering**
+*   [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
+*   [Adaptive Query Execution in Spark 3.0 - Databricks Engineering Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+*   *Designing Data-Intensive Applications* - Chapter 10: Batch Processing, Martin Kleppmann.
+*   [Presto: SQL on Everything (Facebook Engineering)](https://engineering.fb.com/2019/06/06/data-infrastructure/presto/)

@@ -2,147 +2,141 @@
 title: "Phương thức lưu trữ kết quả dbt - Materialization"
 difficulty: "Intermediate"
 tags: ["dbt", "materialization", "analytics-engineering", "data-warehouse", "transformation"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
 seoTitle: "Materialization trong dbt - Cẩm nang Data Warehouse chuyên sâu"
-metaDescription: "Tìm hiểu chi tiết về Materialization trong dbt: định nghĩa, các loại materialization (View, Table, Incremental, Ephemeral) và cách lựa chọn phù hợp."
-description: "Khi bạn viết một mô hình (model) trong [dbt](/concepts/6-data-modeling-transformation/dbt) (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh SELECT. Tuy nhiên, cách kết quả của câu lệnh này được lưu trữ trong Data Warehouse (hoặc Database) mới quyết định đến chi phí, hiệu năng và thời gian cập nhật dữ liệu. Đây chính là khái niệm Materialization (Vật chất hóa)."
+metaDescription: "Phân tích kiến trúc thực thi vật lý của các chiến lược Materialization trong dbt: Ephemeral, View, Table, và Incremental (Merge vs Insert Overwrite)."
+description: "Về bản chất, mã dbt chỉ là các câu lệnh SELECT. Tuy nhiên, cách dbt biên dịch và yêu cầu Data Warehouse hiện thực hóa (Materialization) những câu lệnh đó xuống hệ thống lưu trữ vật lý sẽ quyết định toàn bộ kiến trúc hiệu năng, chi phí tính toán (Compute Cost), và độ trễ (Latency)."
 ---
 
+Khi bạn viết một mô hình dbt, bạn đang định nghĩa logic nghiệp vụ qua một câu lệnh `SELECT`. Nhưng đối với một Data Engineer, câu hỏi cốt lõi không phải là "SELECT cái gì?" mà là **"Kết quả của lệnh SELECT này được vật chất hóa (Materialized) xuống ổ cứng hay nằm trên RAM của Data Warehouse như thế nào?"**
 
+Sự đánh đổi ở đây cực kỳ khắc nghiệt: Bạn sẵn sàng trả tiền cho **Compute Cost** (tính toán lại mỗi lần có truy vấn) hay **Storage Cost** (lưu sẵn kết quả xuống ổ cứng) và **Pipeline Latency** (thời gian chạy batch ETL)?
 
-Khi bạn viết một mô hình (model) trong dbt (data build tool), về mặt bản chất bạn chỉ đang viết một câu lệnh `SELECT`. Tuy nhiên, cách kết quả của câu lệnh này được lưu trữ (hoặc hiện thực hóa) trong Data Warehouse (hoặc Database) mới quyết định đến chi phí, hiệu năng và thời gian cập nhật dữ liệu. Đây chính là khái niệm Materialization (tạm dịch: *Vật chất hóa*).
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-## 1. Materialization là gì?
+dbt hỗ trợ 4 chiến lược materialization cơ bản. Dưới góc độ hệ thống, chúng ta sẽ xem xét cách Engine của Data Warehouse (như BigQuery Dremel, Snowflake Virtual Warehouse) xử lý chúng.
 
-Trong ngữ cảnh của dbt và Data Warehouse, **Materialization** là chiến lược hoặc cơ chế xác định cách một mô hình logic (câu lệnh SQL) được khởi tạo và lưu trữ vật lý trong cơ sở dữ liệu đích. 
+### Sơ đồ Kiến trúc Đánh đổi (Trade-off Matrix)
 
-Thay vì phải tự viết các câu lệnh DDL (Data Definition Language) hay DML (Data Manipulation Language) phức tạp như `CREATE TABLE ... AS`, `CREATE VIEW ... AS`, `INSERT INTO ...`, dbt sẽ đảm nhận việc biên dịch (compile) câu lệnh `SELECT` của bạn thành mã thực thi phù hợp dựa trên loại Materialization bạn chọn.
+```mermaid
+graph TD
+    A["dbt Model: SELECT * FROM..."]
+    
+    A -->|View| B("Mặt nạ Logic")
+    A -->|Table| C("Lưu trữ Vật lý")
+    A -->|Incremental| D("Lưu trữ Tăng dần")
+    A -->|Ephemeral| E("Nội suy CTE")
 
-Việc chọn đúng Materialization giúp hệ thống phân tích dữ liệu:
-- **Tối ưu chi phí:** Tránh tính toán lại toàn bộ dữ liệu (Full Refresh) khi không cần thiết.
-- **Tăng tốc hiệu năng truy vấn:** Đáp ứng SLA của dashboard một cách nhanh chóng.
-- **Tiết kiệm không gian lưu trữ:** Không lưu dư thừa những dữ liệu tạm, trung gian.
-
-## 2. Bốn loại Materialization cơ bản trong dbt
-
-dbt hỗ trợ sẵn 4 loại materialization cốt lõi. Hiểu rõ từng loại và ưu nhược điểm là nền tảng để thiết kế pipeline tối ưu.
-
-### 2.1. View (Mặc định)
-Khi sử dụng `view`, mô hình của bạn được tái tạo lại dưới dạng một **View** trong cơ sở dữ liệu (`CREATE VIEW ... AS SELECT ...`).
-View không thực sự lưu trữ dữ liệu. Nó chỉ là một lớp "mặt nạ" của câu lệnh SQL. Mỗi khi có ai đó query vào View, Data Warehouse sẽ chạy câu lệnh `SELECT` gốc với dữ liệu mới nhất.
-
-* **Ưu điểm:**
-  - Triển khai siêu nhanh vì không có dữ liệu nào được tính toán hay di chuyển lúc chạy `dbt run`.
-  - Luôn trả về dữ liệu mới nhất (Real-time so với bảng gốc) khi được truy vấn.
-  - Không tốn không gian lưu trữ thêm.
-* **Nhược điểm:**
-  - Chậm khi được truy vấn, đặc biệt nếu câu lệnh SQL có các phép `JOIN`, `AGGREGATION` phức tạp trên lượng dữ liệu lớn.
-  - Sẽ tốn chi phí compute (tính toán) mỗi khi được truy vấn (đối với BigQuery, Snowflake).
-* **Khi nào nên dùng:**
-  - Dành cho các mô hình ở các lớp đầu tiên (Staging models, Base models) hoặc các mô hình nhẹ nhàng như đổi tên cột, cast kiểu dữ liệu.
-  - Mô hình ít khi được truy cập bởi người dùng cuối.
-
-### 2.2. Table
-Với loại `table`, dbt sẽ drop bảng cũ và tạo lại toàn bộ bảng mới mỗi lần chạy (`CREATE TABLE ... AS SELECT ...`). Quá trình này thường được gọi là Full Refresh.
-
-* **Ưu điểm:**
-  - Tốc độ truy vấn rất nhanh do dữ liệu đã được tính toán xong và lưu trữ sẵn ở dạng vật lý. Cực kì phù hợp cho các Dashboard và BI Tools.
-* **Nhược điểm:**
-  - Thời gian xây dựng (`dbt run`) lâu, đặc biệt với dữ liệu khổng lồ.
-  - Tốn tài nguyên tính toán và chi phí khi dbt tái tạo lại bảng, dù cho chỉ có vài dòng dữ liệu mới.
-* **Khi nào nên dùng:**
-  - Các mô hình ở tầng cuối (Marts layer, Presentation layer) được truy vấn liên tục bởi BI tools hoặc nhiều người dùng cùng lúc.
-  - Các bảng có dữ liệu thay đổi thường xuyên trong quá khứ hoặc kích thước dữ liệu tương đối nhỏ.
-
-### 2.3. Incremental
-Đây là loại materialization mạnh mẽ nhất nhưng cũng khó cấu hình nhất. `incremental` cho phép bạn chỉ xử lý, tính toán và thêm (hoặc cập nhật) những dữ liệu *mới* hoặc dữ liệu *bị thay đổi* kể từ lần chạy cuối cùng, thay vì phải chạy lại toàn bộ dữ liệu lịch sử.
-
-* **Ưu điểm:**
-  - Cực kì tối ưu về thời gian chạy lệnh và chi phí điện toán trên Data Warehouse (đặc biệt hữu dụng cho các bảng fact hàng tỷ dòng).
-* **Nhược điểm:**
-  - Đòi hỏi kiến thức vững để cấu hình logic (xác định khóa chính `unique_key`, cờ thời gian cập nhật...).
-  - Dễ gặp rủi ro dữ liệu bị sai lệch, trùng lặp nếu logic lấy dữ liệu mới không chuẩn xác.
-  - Phức tạp hơn khi cần thay đổi cấu trúc bảng (schema evolution) hoặc tính toán lại lịch sử (backfill).
-* **Khi nào nên dùng:**
-  - Đối với các bảng sự kiện (Event data, Web logs, Transaction logs) không bao giờ bị thay đổi quá khứ, chỉ liên tục sinh ra dữ liệu mới.
-  - Khi thời gian chạy của mô hình `table` trở nên quá lâu và ảnh hưởng tới hệ thống.
-
-### 2.4. Ephemeral
-Khác với 3 loại trên, `ephemeral` **không** tạo ra bất cứ đối tượng vật lý nào (không table, không view) trong Data Warehouse. Thay vào đó, dbt sẽ trích xuất (interpolate) mã SQL của mô hình này và chèn thẳng vào các mô hình phía sau phụ thuộc vào nó (thông qua hàm `{{ ref() }}`) dưới dạng các **CTE** (Common Table Expression - hay mệnh đề `WITH`).
-
-* **Ưu điểm:**
-  - Giúp kho dữ liệu gọn gàng (clutter-free), không tạo rác.
-  - Có thể giúp tối ưu hóa query do bộ optimizer của Data Warehouse nhìn thấy bức tranh toàn cảnh để tính toán.
-* **Nhược điểm:**
-  - Gây khó khăn lớn cho việc debug. Không thể truy vấn trực tiếp mô hình này trong Data Warehouse để kiểm tra kết quả trung gian.
-  - Nếu mô hình ephemeral được tái sử dụng ở nhiều mô hình downstream, hệ thống có thể sẽ lặp lại việc tính toán nhiều lần làm giảm hiệu năng.
-* **Khi nào nên dùng:**
-  - Cho các phép chuyển đổi trung gian cực kỳ đơn giản (Lightweight transformations).
-  - Mô hình dùng một lần (chỉ được `ref` đúng 1 lần ở mô hình ngay sau nó).
-
-## 3. Cách cấu hình Materialization trong dbt
-
-Trong dbt, có 2 cách chính để định cấu hình materialization cho các mô hình:
-
-### Cách 1: Trong file `dbt_project.yml`
-Cách này áp dụng đồng loạt cho toàn bộ thư mục, thích hợp để thiết lập chuẩn mực chung.
-
-```yaml
-# dbt_project.yml
-models:
-  my_project:
-    # Tất cả models trong folder staging sẽ là views
-    staging:
-      +materialized: view
-    # Tất cả models trong folder marts sẽ là tables
-    marts:
-      +materialized: table
+    B -.->|Query time: Cao<br>Storage: 0| B1["Tái tính toán 100%"]
+    C -.->|Build time: Cao<br>Query time: Thấp| C1["Full Refresh"]
+    D -.->|Build time: Thấp<br>Query time: Thấp| D1["Merge / Insert Overwrite"]
+    E -.->|Query time: Rất Cao<br>Storage: 0| E1["Cảnh báo: Trùng lặp Query Plan"]
 ```
 
-### Cách 2: Trực tiếp trong file `.sql` của mô hình (Sử dụng config block)
-Cấu hình này sẽ ghi đè (override) các thiết lập từ file `dbt_project.yml`.
+### 1.1. Ephemeral: Cạm bẫy của Nội suy CTE
+Khi cấu hình `materialized='ephemeral'`, dbt KHÔNG tạo ra bất kỳ object nào trong database. Nó lấy mã SQL của bạn, bọc trong một `WITH` clause (CTE), và inject thẳng vào các model downstream.
 
+**Rủi ro Vận hành (Operational Risk):**
+Nếu một model Ephemeral được `ref()` bởi 3 model khác nhau trong cùng một luồng, Query Optimizer của Data Warehouse có thể sẽ không đủ thông minh để cache lại CTE đó. Kết quả là **bộ nhớ và CPU bị bạo chi** do phải đánh giá lại CTE 3 lần (Multiple Evaluations).
+*Quy tắc ngón tay cái:* Chỉ dùng Ephemeral cho các bước transformation cực nhẹ (cast type, rename) và chỉ được downstream model `ref()` **đúng 1 lần**.
+
+### 1.2. View: Đánh đổi Storage lấy Compute
+`CREATE OR REPLACE VIEW` chỉ lưu metadata. 
+- **Ưu điểm:** Zero build time. Data luôn Real-time với upstream.
+- **Điểm chết (Bottleneck):** Mỗi lần BI Tool (như Tableau/Superset) gửi query, Data Warehouse phải quét lại (scan) toàn bộ data từ các bảng gốc, thực hiện lại toàn bộ phép JOIN và Aggregation. Điều này tạo ra **Compute Spill-to-disk** nếu RAM của warehouse không đủ, gây tắc nghẽn queue.
+
+### 1.3. Table: Đánh đổi Compute lấy Performance
+`CREATE OR REPLACE TABLE`. Toàn bộ dữ liệu được tính toán một lần lúc chạy pipeline và ghi xuống đĩa (Full Refresh).
+- **Lợi ích:** BI Tool truy vấn cực nhanh (Microseconds/Milliseconds).
+- **Điểm chết:** Khi bảng fact vượt quá mốc trăm triệu rows, việc chạy `dbt run` có thể mất hàng giờ. Tiêu tốn cực lớn Compute Cost cho việc ghi lại (Rewrite) 99% dữ liệu cũ không hề thay đổi.
+
+## 2. The Incremental Beast: Merge vs Insert Overwrite
+
+Khi `table` trở nên quá nặng, Staff Engineer sẽ chuyển sang `incremental`. Đây là lúc kiến trúc thực sự phức tạp. Thay vì drop và tạo lại bảng, dbt chỉ xử lý **Delta Data** (dữ liệu mới).
+
+Dưới nắp capo, dbt cung cấp 2 chiến lược vật lý chính (đặc biệt quan trọng trên BigQuery và Snowflake):
+
+### 2.1. Chiến lược `merge` (Upsert)
+dbt sử dụng câu lệnh `MERGE INTO` để đối chiếu dữ liệu mới với dữ liệu cũ thông qua `unique_key`.
+
+**Real-world Incident: Cartesian Explosion & Full Table Scan**
+Nếu bạn sử dụng `merge` trên một bảng 10 tỷ dòng mà **KHÔNG** đánh Index / Cluster / Partition đúng cách, Data Warehouse buộc phải thực hiện **Full Table Scan** để tìm ra dòng cần update. Chi phí lúc này còn **đắt hơn cả việc chạy Full Refresh (Table)**.
+
+**Cấu hình thực chiến (Snowflake/BigQuery):**
 ```sql
--- models/marts/fct_orders.sql
 {{ config(
     materialized='incremental',
-    unique_key='order_id'
+    unique_key='transaction_id',
+    incremental_strategy='merge',
+    cluster_by=['date_id', 'merchant_id'] -- BẮT BUỘC để tránh Full Scan
 ) }}
 
-SELECT * FROM {{ ref('stg_orders') }}
-
--- Logic chỉ chạy nếu là incremental mode
+SELECT * FROM {{ ref('stg_transactions') }}
 {% if is_incremental() %}
-
-  WHERE updated_at > (SELECT max(updated_at) FROM {{ this }})
-
+    WHERE processed_at > (SELECT MAX(processed_at) FROM {{ this }})
 {% endif %}
 ```
 
-## 4. Các loại Materialization mở rộng (Data Warehouse Specific)
+### 2.2. Chiến lược `insert_overwrite` (Partition Replacement)
+Đây là chiến lược **thống trị** trong các hệ thống Data quy mô lớn. Thay vì tốn CPU để so khớp từng dòng (row-level match), `insert_overwrite` hoạt động ở cấp độ Block/Partition. dbt sẽ xóa toàn bộ Partition cũ (ví dụ: partition của ngày hôm qua) và ghi đè bằng data mới.
 
-Ngoài 4 loại cốt lõi, do sự phát triển của các hệ thống Modern Data Warehouse, dbt cũng hỗ trợ các loại materialization đặc thù giúp khai thác triệt để sức mạnh của từng hệ thống:
+**Tại sao nó vô địch về Cost/Performance?**
+Nó biến một phép cập nhật phức tạp thành một phép Write-only. Storage engine chỉ việc drop metadata của partition cũ và trỏ sang file Parquet/Capacitor mới. Zero-cost cho việc checking `unique_key`.
 
-* **Materialized View:** Là sự lai tạo giữa Table và View. Hệ thống sẽ tự động cập nhật kết quả ở chế độ nền. Hỗ trợ trên BigQuery, Snowflake, Redshift, PostgreSQL,...
-* **Table/View Clones:** Tính năng của Snowflake và BigQuery giúp copy một bảng gần như ngay lập tức mà không tốn chi phí copy dữ liệu vật lý (Zero-copy clone).
-* **Python Materialization:** (Snowpark, Databricks, BigQuery) Xử lý và lưu trữ dữ liệu thông qua DataFrames với ngôn ngữ Python.
+**Code thực chiến (BigQuery):**
+```sql
+{{ config(
+    materialized='incremental',
+    incremental_strategy='insert_overwrite',
+    partition_by={
+      "field": "created_date",
+      "data_type": "date",
+      "granularity": "day"
+    },
+    require_partition_filter=true
+) }}
 
-## 5. Best Practices & Chiến lược lựa chọn
+SELECT 
+    DATE(created_at) as created_date,
+    * 
+FROM {{ ref('stg_events') }}
+{% if is_incremental() %}
+    -- Chỉ xử lý dữ liệu của 3 ngày gần nhất để ghi đè partition
+    WHERE DATE(created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY)
+{% endif %}
+```
 
-Quy tắc ngón tay cái (Rule of thumb) trong dbt để quyết định loại materialization:
+## 3. Best Practices & System Tuning
 
-1. **Bắt đầu với `view`**: Luôn ưu tiên dùng `view` cho tới khi có một lý do chính đáng để từ bỏ nó (ví dụ query quá chậm hoặc quá đắt).
-2. **Nâng cấp lên `table`**: Khi view trở nên quá chậm đối với BI tool hoặc logic quá phức tạp, hãy chuyển sang `table`.
-3. **Thăng cấp lên `incremental`**: Khi thời gian cập nhật mô hình `table` vượt quá giới hạn cho phép hoặc chi phí quá lớn, hãy chuyển hóa thành `incremental`.
-4. **Sử dụng `ephemeral` cẩn trọng**: Chỉ áp dụng cho mô hình cực đơn giản và không muốn làm "rác" database.
+Để không làm sập (OOMKilled) Data Warehouse hay nhận hóa đơn tiền tỷ vào cuối tháng, hãy áp dụng các nguyên tắc sau:
 
-Việc thiết kế luồng materialization chuẩn mực (Staging là View, Intermediate là Ephemeral/View, Mart là Table/Incremental) sẽ giúp quy trình Data Transformation của bạn mạnh mẽ, linh hoạt và tối ưu chi phí vận hành.
+1. **Chuỗi Materialization Chuẩn mực:**
+   - **Lớp Staging (Source -> Bronze):** Luôn là `view`. Đừng tốn tiền lưu trữ một bản copy 1:1 của Raw Data.
+   - **Lớp Intermediate (Bronze -> Silver):** Dùng `ephemeral` nếu phép tính rất nhỏ (chỉ filter/cast type). Nếu có JOIN phức tạp, dùng `table` hoặc `view` tùy thuộc vào tần suất query downstream.
+   - **Lớp Marts/Presentation (Silver -> Gold):** Luôn là `table` (nếu < 10GB) hoặc `incremental` (nếu > 10GB). Đây là lớp phục vụ End-user, Latency phải bằng 0.
 
-## Tài Liệu Tham Khảo
+2. **Dbt Project Global Tuning:**
+Thay vì cấu hình rải rác từng file, hãy set chuẩn mực ở `dbt_project.yml`.
+```yaml
+models:
+  my_data_platform:
+    staging:
+      +materialized: view
+    marts:
+      core:
+        +materialized: incremental
+        +incremental_strategy: insert_overwrite
+      finance:
+        +materialized: table
+```
+
+3. **Cẩn thận với Schema Evolution:**
+Đối với `incremental`, khi upstream thêm một cột mới, `merge` hoặc `insert_overwrite` có thể bị lỗi mismtach columns. Hãy định cấu hình `on_schema_change: 'append_new_columns'` hoặc `'sync_all_columns'` một cách chủ động.
+
+## Nguồn Tham Khảo
 * [dbt Documentation - Materializations](https://docs.getdbt.com/docs/build/materializations)
+* [dbt Developer Blog - Incremental Models](https://getdbt.com/blog)
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
 * [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+* [Data Engineering at Scale: Netflix Tech Blog](https://netflixtechblog.com/)

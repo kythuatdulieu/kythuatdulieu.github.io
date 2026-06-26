@@ -1,134 +1,159 @@
 ---
 title: "Phục vụ mô hình (Model Serving)"
 difficulty: "Intermediate"
-tags: ["mlops", "model-serving", "inference", "vllm", "triton", "genai"]
-readingTime: "20 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Model Serving là gì? Cách triển khai mô hình AI/ML lên Production"
-metaDescription: "Tìm hiểu kiến trúc Model Serving (Phục vụ mô hình) trong MLOps. Kiến thức chuyên sâu về Real-time, Batch Serving, Dynamic Batching và các công cụ như vLLM, Triton, Ray Serve."
-description: "Sau khi dành nhiều tuần liền để xử lý dữ liệu và huấn luyện mô hình Machine Learning hay Generative AI, kết quả cuối cùng bạn thu được thường chỉ là các trọng số mô hình. Model Serving là quá trình biến chúng thành API phục vụ sản phẩm."
+tags: ["mlops", "model-serving", "inference", "vllm", "triton", "genai", "paged-attention"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Model Serving Architecture: vLLM, Triton và System Trade-offs"
+metaDescription: "Kiến trúc Model Serving chuyên sâu trong MLOps. Tìm hiểu Real-time vs Batch Inference, PagedAttention trong vLLM, Triton TensorRT, Ray Serve và giải quyết các lỗi OOMKilled, KV Cache Fragmentation."
+description: "Model Serving không chỉ là bọc mô hình bằng FastAPI. Đó là bài toán tối ưu thông lượng (Throughput) GPU, giảm phân mảnh VRAM và xử lý hàng triệu request mà không bị OOMKilled."
 ---
 
+Model Serving (hay Inference Serving) không phải là việc viết một API FastAPI đơn giản bằng thư viện `transformers`. Trong môi trường Production với hàng triệu requests và GPU đắt đỏ, Model Serving là một bài toán **Distributed Systems & Resource Management**.
 
+Đặc biệt trong kỷ nguyên Generative AI (LLMs), khi các mô hình có kích thước VRAM lên tới hàng chục, hàng trăm GB, những thách thức như **KV Cache Fragmentation**, **OOMKilled** (Out Of Memory), hay **Queueing Delays** diễn ra thường xuyên. 
 
-Model Serving (Phục vụ mô hình) là quá trình đóng gói một mô hình Machine Learning hoặc AI đã được huấn luyện xong thành một dịch vụ (thường là REST API hoặc gRPC) để các phần mềm khác có thể gọi vào và lấy dự đoán (Inference). Trong hệ thống phân tán, tốc độ phản hồi (Low Latency), thông lượng (High Throughput) và khả năng chịu tải cao (High Availability) là những yêu cầu cốt lõi.
-
-Bài viết này sẽ đi sâu vào các chiến lược Model Serving, cơ chế tối ưu và các framework phổ biến như NVIDIA Triton, Ray Serve, hay vLLM trong thời đại Generative AI.
+Bài viết này sẽ đi sâu vào kiến trúc thực thi vật lý (Physical Execution) của các hệ thống Model Serving chuyên dụng như NVIDIA Triton, vLLM, và Ray Serve, kèm theo các bài toán tối ưu FinOps.
 
 ---
 
-## 1. Các Chiến Lược Phục Vụ Mô Hình (Serving Strategies)
+## 1. Phân loại Mô hình Kiến trúc Phục vụ (Serving Architectures)
 
+Sự đánh đổi cốt lõi trong Inference là **Throughput (Thông lượng)** vs. **Latency (Độ trễ)**.
 
+### 1.1. Batch (Offline) vs. Real-time (Online) Inference
 
-Dựa trên yêu cầu của ứng dụng, chúng ta có hai cách tiếp cận chính: **Real-time Serving** (Online) và **Batch Serving** (Offline).
+- **Batch Inference (Offline)**: Đẩy toàn bộ dữ liệu qua mô hình trong một lô lớn (ví dụ: chấm điểm tín dụng 10 triệu user mỗi đêm bằng Apache Spark và MLflow).
+  - *Systemic Trade-off*: Tối đa hóa Hardware Utilization (GPU Compute), Throughput cực cao. Latency có thể tính bằng giờ. Tiết kiệm chi phí (FinOps) bằng cách dùng Spot Instances (AWS) hoặc Preemptible VMs (GCP).
+- **Real-time Inference (Online)**: Điển hình là Chatbot LLM, Fraud Detection, Recommendation Systems. Hệ thống nhận 1 request từ Client và phải trả về kết quả ngay.
+  - *Systemic Trade-off*: Yêu cầu Low Latency (vài chục đến vài trăm ms). Nếu không có kỹ thuật tối ưu, Hardware Utilization sẽ cực kỳ thấp do việc tính toán từng `Batch Size = 1` làm GPU bị đói dữ liệu (*GPU Starvation*).
 
-### 1.1 Real-time Serving (Online Inference)
+### 1.2. Streaming Inference (Event-Driven)
+Thay vì dùng API Gateway đồng bộ (Synchronous), các hệ thống như Kafka hoặc Kinesis Data Streams sẽ điều phối Request.
 
-Mô hình hoạt động như một web service, lắng nghe các yêu cầu từ client và trả về dự đoán ngay lập tức. Phù hợp cho các ứng dụng tương tác người dùng như:
-- Hệ thống gợi ý (Recommender Systems).
-- Trợ lý ảo, Chatbot (LLMs).
-- Phát hiện gian lận giao dịch (Fraud Detection).
+```mermaid
+graph LR
+    A["Producer Microservice"] -->|User Events| B("Kafka Topic: raw_events")
+    B --> C{Ray Serve / Flink ML}
+    C -->|Inference Result| D("Kafka Topic: scored_events")
+    D --> E["Consumer Service"]
+```
+- **Lợi ích vận hành:** Tự động *buffer* (đệm) các luồng traffic spikes hoặc Retry Storms, tránh làm sập Model Server. Tách rời (Decouple) hoàn toàn producer và AI worker.
 
-**Ưu điểm:** Phản hồi tức thời (độ trễ từ vài mili-giây đến vài giây).
-**Nhược điểm:** Đòi hỏi tài nguyên máy chủ luôn bật (always-on). Xử lý tải không ổn định rất tốn kém (spike traffic).
+---
 
-**Ví dụ mã giả (FastAPI + PyTorch):**
+## 2. Các Kỹ thuật Tối ưu Hóa Cốt Lõi (Core Optimizations)
 
-```python
-from fastapi import FastAPI
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+Không một công ty công nghệ lớn nào chạy thẳng PyTorch/Transformers raw lên Production. Họ sử dụng các **Inference Engines** được tối ưu hóa như **TensorRT, ONNX Runtime, vLLM Engine**.
 
-app = FastAPI()
+### 2.1. Dynamic Batching (Batching Động)
+Với Real-time inference, để giải quyết vấn đề *GPU Starvation*, hệ thống dùng Dynamic Batching:
+- **Nguyên lý:** Server lắng nghe trong một khoảng thời gian chờ siêu nhỏ (Delay Window, ví dụ: 5ms-10ms). Gom các request riêng lẻ (R1, R2, R3) thành một Tensor lớn `(Batch_Size=3, ...)` và đẩy vào GPU một lần duy nhất.
+- **Trade-off:** Tăng Latency một chút (do tốn thời gian chờ gom) nhưng Throughput có thể tăng gấp 3 đến 10 lần.
 
-# Tải mô hình vào bộ nhớ khi khởi động ứng dụng
-model_name = "distilbert-base-uncased-finetuned-sst-2-english"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
+### 2.2. Continuous Batching (LLM Specific)
+Mô hình ngôn ngữ lớn (LLMs) sinh văn bản (Text Generation) bằng cách trả về từng token (Auto-regressive). Batching tĩnh truyền thống thất bại thảm hại vì các câu hỏi có độ dài câu trả lời khác nhau (R1 sinh ra 5 tokens, R2 sinh ra 100 tokens).
 
-@app.post("/predict")
-async def predict(text: str):
-    inputs = tokenizer(text, return_tensors="pt")
-    with torch.no_grad():
-        logits = model(**inputs).logits
-    predicted_class_id = logits.argmax().item()
-    return {"class_id": predicted_class_id}
+**Continuous Batching (Iteration-level Scheduling)** chèn thêm request mới hoặc đẩy request đã hoàn thành ra khỏi batch ngay tại cấp độ tạo ra 1 token (*token-level*), không cần đợi cả batch lớn xong. Kỹ thuật này giúp Utilization của GPU liên tục ở mức > 90%.
+
+---
+
+## 3. Quản trị Bộ nhớ LLM: Nỗi Ám Ảnh KV Cache & PagedAttention
+
+Khi phục vụ LLM, GPU VRAM không chỉ lưu **Model Weights** (Trọng số). Một phần cực kỳ khổng lồ được dùng làm **KV Cache** (Key-Value Cache) lưu lại bối cảnh (context) các tokens đã tạo trước đó, tránh việc Model phải tính attention lại từ đầu.
+
+**Vấn đề (Real-world Incident):** 
+- Khi dùng PyTorch nguyên bản, KV Cache yêu cầu phân bổ **Contiguous Memory** (Bộ nhớ liền kề). Nghĩa là hệ thống phải "đặt chỗ" (allocate) lượng VRAM bằng với *Maximum Sequence Length* cho TẤT CẢ các request ngay từ đầu.
+- **Hậu quả:** Gây ra **Internal Fragmentation (Phân mảnh bộ nhớ trong)** khổng lồ lên tới 60-80%. Cụm GPU báo lỗi `OOMKilled` (Hết bộ nhớ) hoặc từ chối phục vụ, mặc dù phần lớn VRAM thực tế đang hoàn toàn trống!
+
+### Bước ngoặt: PagedAttention (vLLM Engine)
+
+Để khắc phục, đội ngũ UC Berkeley tạo ra **vLLM** - vay mượn trực tiếp khái niệm **Virtual Memory & Paging** từ Hệ Điều Hành (OS). 
+
+![PagedAttention in vLLM](/images/9-genai-machine-learning/vllm_paged_attention.gif)
+
+- **Nguyên lý:** Chia KV Cache thành các "Pages" (khối) có kích thước cố định (ví dụ chứa 16 tokens). Các blocks này KHÔNG cần nằm liền kề trong Physical VRAM. 
+- Một **Block Table** làm nhiệm vụ map (ánh xạ) giữa Logical tokens của request sang Physical VRAM blocks. Hệ thống chỉ cấp phát block mới khi quá trình generation thực sự cần.
+- **FinOps Impact:** Giảm Fragmentation xuống dưới 4%. Cho phép tăng kích thước Batch Size an toàn lên gấp 2-4 lần, tiết kiệm trực tiếp hàng ngàn đô la hạ tầng.
+
+**Ví dụ Bash/Terraform khởi chạy vLLM Server trên Production:**
+```bash
+# Triển khai vLLM engine với Continuous Batching, PagedAttention và Tensor Parallelism
+python3 -m vllm.entrypoints.openai.api_server \
+    --model meta-llama/Llama-3-8B-Instruct \
+    --gpu-memory-utilization 0.9 \
+    --max-num-batched-tokens 8192 \
+    --tensor-parallel-size 2 # Sharding model weights trên 2 GPUs
 ```
 
-### 1.2 Batch Serving (Offline Inference)
+---
 
-Mô hình dự đoán trên một tập dữ liệu lớn định kỳ (ví dụ: mỗi đêm lúc 2h sáng). Kết quả thường được lưu trữ vào Data Warehouse, Feature Store hoặc Database để hệ thống khác tra cứu lại sau.
+## 4. Triton Inference Server: Hệ Sinh Thái Đa Mô Hình (Multi-Model Serving)
 
-**Ứng dụng:** Chấm điểm tín dụng định kỳ, phân khúc khách hàng hàng tháng.
+Nếu kiến trúc AI của công ty bạn phức tạp - không chỉ có LLM mà còn Computer Vision (YOLOv8), Recommendation System (DLRM), Voice (Whisper) -> **NVIDIA Triton Inference Server** là tiêu chuẩn công nghiệp (De-facto Standard).
 
-**Ưu điểm:** Khả năng tận dụng tối đa phần cứng (Throughput cao) do chạy các batch lớn. Tài nguyên có thể tắt đi khi hoàn tất (Tiết kiệm chi phí).
-**Nhược điểm:** Không xử lý được dữ liệu tức thời.
+```mermaid
+architecture-beta
+    group triton["Triton Inference Server Node"]
+    
+    service gRPC("gRPC / REST API Endpoint") in triton
+    service scheduler("Dynamic Batcher & Scheduler") in triton
+    
+    service model1("ONNX Runtime: YOLOv8") in triton
+    service model2("TensorRT: DLRM") in triton
+    service model3("vLLM / TRT-LLM: Llama-3") in triton
+
+    gRPC --> scheduler
+    scheduler --> model1
+    scheduler --> model2
+    scheduler --> model3
+```
+
+**Tại sao Data Engineers/MLOps chọn Triton?**
+1. **Concurrent Model Execution:** Có thể tải đồng thời nhiều mô hình (PyTorch, TensorFlow, TensorRT) trên CÙNG một GPU vật lý. Triton tự động quản lý contention (xung đột) tài nguyên.
+2. **Model Ensembles (Pipeline Pipeline in VRAM):** Cho phép build DAG workflow. *Ví dụ:* Output của mô hình Voice (Speech-to-Text) làm Input trực tiếp cho mô hình LLM. Triton xử lý truyền dữ liệu trực tiếp trong không gian bộ nhớ GPU (bằng C++), hoàn toàn không có Network I/O hay CPU Memory copy (Zero-copy).
+
+**Code Thực Chiến: Cấu hình `config.pbtxt` kích hoạt Dynamic Batching trong Triton:**
+```protobuf
+name: "resnet50_tensorrt"
+platform: "tensorrt_plan"
+max_batch_size: 128
+dynamic_batching {
+  preferred_batch_size: [ 32, 64, 128 ]
+  max_queue_delay_microseconds: 5000  # Đợi tối đa 5ms để gom batch
+}
+instance_group [
+  {
+    count: 2 # Chạy 2 instances (workers) của mô hình chạy song song trên 1 GPU
+    kind: KIND_GPU
+  }
+]
+```
 
 ---
 
-## 2. Các Kỹ Thuật Tối Ưu Hóa (Optimization Techniques)
+## 5. Rủi Ro Vận Hành & Troubleshooting (Real-world Incidents)
 
-Khi đưa mô hình ra hệ thống phân tán (Production), mã FastAPI đơn giản sẽ gặp vấn đề về tài nguyên, đặc biệt khi dùng GPU.
+1. **Thảm họa OOMKilled & Spiky Traffic:** 
+   - *Incident:* Hệ thống đột ngột hứng 10,000 reqs/s. API worker đẩy toàn bộ xuống GPU. VRAM phình to (OOMKilled), container restart, downtime toàn hệ thống (Cascading Failure).
+   - *Khắc phục:* Kiến trúc phải có hàng đợi (Queue) ở mức Framework (như Ray Serve hoặc Triton) với cờ giới hạn truy cập đồng thời (`max_concurrent_queries`). Phải cài đặt cơ chế HTTP 429 Rate Limiting hoặc Backpressure để từ chối khéo các request thừa thay vì làm sập toàn bộ Cụm.
 
-### 2.1 Dynamic Batching (Batching Động)
+2. **Nút thắt cổ chai "Cold Start" (Khởi động lạnh):**
+   - *Incident:* Khi tải tăng, Kubernetes HPA scale up thêm Pod. Nhưng Pod kéo mô hình LLM nặng 40GB từ S3 qua mạng VPC mất tận 5 phút. Trong 5 phút đó, users gặp Timeout.
+   - *Khắc phục:* 
+     - Không lưu trọng số trên S3, hãy lưu trên hệ thống Shared File System tốc độ siêu cao gắn thẳng vào Cụm Kubernetes (như Amazon FSx for Lustre hoặc GCP Filestore).
+     - Sử dụng công cụ `safetensors` thay vì Pickle `.pt` để kích hoạt Lazy Loading.
 
-GPU thường tính toán song song rất tốt. Việc chạy dự đoán từng request một sẽ gây lãng phí. Dynamic Batching là kỹ thuật gom nhóm nhiều requests riêng lẻ trong một khoảng thời gian cực nhỏ (ví dụ 10ms) để xử lý một lượt.
-
-* **Cách hoạt động:** Khi có Request 1 đến, hệ thống đợi thêm `N` milliseconds xem có Request 2, 3 không. Nếu có, ghép chúng thành Tensor lớn `(Batch_Size=3)` đẩy vào GPU một lần.
-* **Lợi ích:** Tăng thông lượng (throughput) gấp nhiều lần, chỉ hy sinh một chút độ trễ (latency).
-
-### 2.2 Continuous Batching (Cho LLM)
-
-Với các mô hình tạo văn bản (Large Language Models), quá trình sinh ra từng token là tuần tự. Việc batching truyền thống sẽ kém hiệu quả nếu độ dài đầu ra khác nhau (Request A cần 10 tokens, Request B cần 100 tokens).
-
-**Continuous Batching** (hay Iteration-level Scheduling) cho phép chèn thêm request mới hoặc lấy request hoàn thành ra ở *bất kỳ bước tạo token nào*, không cần đợi toàn bộ batch kết thúc. Framework nổi tiếng như **vLLM** hay **Triton TensorRT-LLM** đang áp dụng rất thành công kỹ thuật này.
-
-### 2.3 Model Quantization (Lượng tử hóa)
-
-Chuyển đổi trọng số mô hình từ FP32 (dấu phẩy động 32-bit) sang FP16, INT8, hoặc INT4.
-* Giảm bộ nhớ (RAM/VRAM) cần thiết để tải mô hình.
-* Tốc độ tính toán nhanh hơn nhờ các chỉ thị phần cứng (Hardware instructions) tối ưu hóa số nguyên.
+3. **Dependency Hell trong Microservices ML:**
+   - *Incident:* Team CV dùng PyTorch 1.13, Team NLP dùng PyTorch 2.1. Cố nhồi chung vào một container gây ra Conflict thư viện.
+   - *Khắc phục:* Sử dụng **Ray Serve**. Framework này cho phép đóng gói Environment (Conda/Pip) theo *từng Model Endpoint riêng biệt* trên cùng một cụm Cluster vật lý. Tránh hoàn toàn chuyện Conflict.
 
 ---
 
-## 3. Kiến Trúc Hệ Thống & Frameworks Phổ Biến
+## Nguồn Tham Khảo (References)
 
-Trong MLOps hiện đại, chúng ta ít tự viết lại Server từ đầu mà tận dụng các Framework chuyên dụng:
-
-### 3.1 NVIDIA Triton Inference Server
-
-Triton là một Model Server do NVIDIA phát triển. Nó hỗ trợ:
-- **Multiple Frameworks:** TensorFlow, PyTorch, ONNX, TensorRT.
-- **Dynamic Batching:** Tích hợp sẵn và dễ cấu hình.
-- **Model Ensembling:** Kết nối đầu ra của mô hình này thành đầu vào của mô hình khác trực tiếp trong C++ để tránh nghẽn I/O.
-
-### 3.2 Ray Serve
-
-Được xây dựng trên nền tảng tính toán phân tán **Ray**. Ray Serve rất mạnh mẽ nếu bạn có logic inference phức tạp:
-- Gọi nhiều mô hình song song (như A/B Testing).
-- Tích hợp trực tiếp với mã Python (PyTorch/Scikit-learn).
-- Dễ dàng mở rộng ngang (Horizontal Scaling) trên các cụm máy chủ.
-
-### 3.3 vLLM (Generative AI Serving)
-
-Với các LLMs (Llama 3, Mistral, GPT-4), vLLM hiện đang thống trị nhờ cơ chế **PagedAttention**.
-- **PagedAttention:** Hoạt động giống quản lý bộ nhớ ảo trên Hệ Điều Hành, giúp giảm phân mảnh bộ nhớ của K-V Cache xuống gần như 0%.
-- Giúp phục vụ LLM với lượng Request đồng thời cao hơn 2-4 lần so với các cách truyền thống (như Hugging Face Transformers).
-
----
-
-## 4. Các Lưu Ý Về Edge Cases
-
-- **Out Of Memory (OOM):** Lỗi kinh điển khi có lượng dữ liệu đến GPU quá lớn hoặc Memory leak. Cần có cấu hình *Max Batch Size* chặt chẽ và công cụ Monitor.
-- **Cold Start:** Khởi động một cụm máy chạy LLM 70 Tỷ tham số có thể mất vài phút. Việc tự động mở rộng (Auto-scaling) cần dựa trên độ trễ trung bình thay vì đợi CPU lên 100%.
-- **Model Drift:** Dữ liệu thực tế thay đổi khiến mô hình hết chính xác. Model Serving Server phải hỗ trợ Shadow Deployment (chạy ngầm mô hình mới cùng lúc với bản cũ để theo dõi kết quả).
-
----
-
-## Tài Liệu Tham Khảo
-* [NVIDIA Triton Inference Server Documentation](https://developer.nvidia.com/triton-inference-server)
-* [vLLM: Easy, fast, and cheap LLM serving for everyone](https://github.com/vllm-project/vllm)
-* [Ray Serve - Scalable Model Serving](https://docs.ray.io/en/latest/serve/index.html)
-* **Designing Machine Learning Systems - Chip Huyen**
-* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)
+* [vLLM: Easy, fast, and cheap LLM serving for everyone (vLLM Blog)](https://blog.vllm.ai/2023/06/20/vllm.html)
+* [Efficient Memory Management for Large Language Model Serving with PagedAttention (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180)
+* [NVIDIA Triton Inference Server Architecture - Official Documentation](https://github.com/triton-inference-server/server/blob/main/docs/customization_guide/architecture.md)
+* [Ray Serve: Scalable and Programmable Model Serving](https://docs.ray.io/en/latest/serve/index.html)
+* [Netflix Technology Blog: Machine Learning Platform (Model Serving)](https://netflixtechblog.com/)

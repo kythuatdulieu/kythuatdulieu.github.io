@@ -1,117 +1,161 @@
 ---
 title: "Tìm kiếm kết hợp (Hybrid Search)"
 difficulty: "Intermediate"
-tags: ["hybrid-search", "vector-database", "rag", "bm25", "genai"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Hybrid Search là gì? Kết hợp Keyword và Vector Search trong RAG"
-metaDescription: "Tìm hiểu chi tiết về Hybrid Search (Tìm kiếm kết hợp), kỹ thuật hòa trộn giữa tìm kiếm từ khóa (BM25) và tìm kiếm vector (Dense Retrieval) để tối ưu hệ thống RAG."
-description: "Trong các hệ thống hỗ trợ hỏi đáp bằng trí tuệ nhân tạo (RAG - Retrieval-Augmented Generation) hiện nay, việc tìm kiếm và truy xuất thông tin chính xác là cực kỳ quan trọng. Bài viết sẽ đi sâu vào kỹ thuật Hybrid Search, giúp hệ thống không chỉ hiểu ngữ nghĩa mà còn bắt chính xác từng từ khóa."
+tags: ["hybrid-search", "vector-database", "rag", "bm25", "genai", "system-design"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Hybrid Search là gì? Kiến trúc Dual Retrieval và RRF trong Vector DB"
+metaDescription: "Khám phá kiến trúc Hybrid Search (Sparse + Dense Retrieval) trong hệ thống RAG Enterprise. Phân tích thuật toán RRF, rủi ro vận hành OOM, và so sánh chi phí FinOps giữa Weaviate, Pinecone, ElasticSearch."
+description: "Phân tích kiến trúc hệ thống Hybrid Search trong Enterprise RAG: Khắc phục điểm mù của Vector Search bằng Dual Retrieval (Dense + Sparse), tối ưu xếp hạng với RRF (Reciprocal Rank Fusion) và các rủi ro sập hệ thống (OOM, Compute Bottleneck)."
 ---
 
+Trong các hệ thống RAG (Retrieval-Augmented Generation) cấp doanh nghiệp (Enterprise), việc chỉ dựa vào Semantic Search (Tìm kiếm theo ngữ nghĩa - Dense Vector) bộc lộ một điểm mù chết người: **Nó hoàn toàn bất lực trước các Exact Keyword** (mã sản phẩm, UUID, danh từ riêng hoặc các từ lóng hiếm gặp). Nếu user tìm kiếm `TX-90210 Error`, Vector Model có thể bối rối và trả về các lỗi tương tự nhưng khác mã, làm sập toàn bộ logic của LLM sau đó.
 
-
-Hybrid Search (Tìm kiếm kết hợp hay Tìm kiếm lai) kết hợp sức mạnh của hai thế giới: **Tìm kiếm Từ khóa** (Keyword Search truyền thống, thường sử dụng thuật toán BM25) để bắt chính xác các danh từ riêng, mã sản phẩm hoặc thuật ngữ chuyên ngành; VÀ **Tìm kiếm Ngữ nghĩa** (Semantic Vector Search) để hiểu được ý định và ngữ cảnh của câu hỏi. Đây hiện được xem là kiến trúc tiêu chuẩn và tối ưu nhất cho các hệ thống RAG hiện đại.
-
----
-
-## 1. Tại sao chúng ta cần Hybrid Search?
-
-
-
-Trong một hệ thống truy xuất thông tin, chúng ta thường sử dụng một trong hai phương pháp chính, nhưng mỗi phương pháp đều có điểm mạnh và điểm yếu riêng:
-
-### Tìm kiếm từ khóa (Keyword/Sparse Search)
-Thường sử dụng các thuật toán như **TF-IDF** hay phổ biến nhất là **BM25**. Hệ thống sẽ đếm tần suất xuất hiện của từ khóa trong tài liệu so với toàn bộ tập dữ liệu.
-- **Ưu điểm:** Cực kỳ chính xác khi người dùng tìm kiếm các từ ngữ cụ thể, danh từ riêng, tên người, mã định danh (ví dụ: `IPHONE-15-PRO`, `GenZ`, tên một loại thuốc). Nó hoạt động tốt kể cả khi từ khóa không có trong từ điển (Out-of-vocabulary).
-- **Nhược điểm:** Không hiểu được ngữ nghĩa. Nó sẽ thất bại nếu người dùng sử dụng từ đồng nghĩa (ví dụ: tìm "điện thoại di động" sẽ không khớp với "smartphone"), hoặc khi truy vấn là một câu hỏi dài phức tạp.
-
-### Tìm kiếm Vector (Semantic/Dense Search)
-Sử dụng các mô hình học máy (như BERT, OpenAI Embeddings) để biến đổi cả câu truy vấn và tài liệu thành các vector số học nhiều chiều (dense vectors). Khoảng cách giữa các vector thể hiện mức độ tương đồng về mặt ý nghĩa.
-- **Ưu điểm:** Hiểu được ngữ cảnh, ý định của người dùng và xử lý tốt các từ đồng nghĩa hoặc câu hỏi đa nghĩa. Ví dụ: "Nơi nào bán đồ ăn ngon?" có thể khớp với "Nhà hàng ẩm thực tuyệt hảo".
-- **Nhược điểm:** Thường kém hiệu quả với các từ khóa hiếm, mã định danh cụ thể hoặc khi người dùng thực sự muốn tìm một từ chính xác (exact match) thay vì khái niệm tương đương.
-
-👉 **Giải pháp:** Hybrid Search ra đời để lấp đầy khoảng trống này bằng cách chạy song song cả hai phương pháp, sau đó gộp và xếp hạng lại (rerank) kết quả để trả về danh sách tài liệu tốt nhất.
+**Hybrid Search (Tìm kiếm lai/kết hợp)** ra đời để giải quyết vấn đề này bằng cách chạy song song hai engine: Sparse Retrieval (dựa trên keyword/BM25) và Dense Retrieval (dựa trên vector semantics), sau đó kết hợp điểm số của chúng. Đây là tiêu chuẩn kiến trúc (De facto standard) cho bất kỳ hệ thống tìm kiếm hiện đại nào.
 
 ---
 
-## 2. Cơ chế hoạt động của Hybrid Search
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution of Dual Retrieval)
 
-Một quy trình Hybrid Search tiêu chuẩn diễn ra qua các bước sau:
+Dưới góc nhìn thiết kế hệ thống, Hybrid Search không phải là một thuật toán đơn lẻ, mà là một quy trình Orchestration (Điều phối) hai luồng I/O độc lập. 
 
-1. **Tiếp nhận truy vấn (Querying):** Người dùng nhập một câu truy vấn (ví dụ: `"Cách sửa lỗi màn hình xanh trên Windows 11"`).
-2. **Chạy song song hai luồng (Dual Retrieval):**
-   - **Luồng Dense (Vector Search):** Câu truy vấn được đưa qua mô hình Embedding để tạo thành vector. Vector này được dùng để tìm kiếm các vector tài liệu gần nhất (thông qua thuật toán ANN, tính Cosine Similarity, v.v.).
-   - **Luồng Sparse (Keyword Search):** Câu truy vấn được tách từ (tokenize) và so khớp với chỉ mục đảo ngược (inverted index) bằng BM25.
-3. **Tính điểm và Kết hợp (Score Fusion):** Các tài liệu trả về từ cả hai luồng sẽ được tính điểm và gộp lại. Do thang điểm của Vector Search (ví dụ cosine 0-1) và BM25 (không giới hạn) là khác nhau, cần phải có cơ chế chuẩn hóa và kết hợp điểm số.
-4. **Xếp hạng lại và Trả kết quả (Reranking & Output):** Trả về Top $K$ tài liệu có điểm số cao nhất cho người dùng hoặc cho LLM trong hệ thống RAG.
+![Kiến trúc Hybrid Search - Nguồn: Weaviate](/images/9-genai-machine-learning/hybrid-search.png)
+
+```mermaid
+sequenceDiagram
+    participant C as Client("App/LLM")
+    participant Orchestrator as Query Orchestrator
+    participant BM25 as Sparse Index("Inverted Index")
+    participant HNSW as Dense Index("Vector HNSW")
+    participant Fusion as RRF / Score Fusion Engine
+
+    C->>Orchestrator: Truy vấn: "Cách fix lỗi OOMKilled trên k8s"
+    par Sparse Retrieval (Lexical)
+        Orchestrator->>BM25: Tokenize: ["fix, lỗi, OOMKilled, k8s"]
+        BM25-->>Orchestrator: Top 50 BM25 (Focus on "OOMKilled", "k8s")
+    and Dense Retrieval (Semantic)
+        Orchestrator->>HNSW: Vectorize("Embedding: [0.1, 0.4, ...]")
+        HNSW-->>Orchestrator: Top 50 ANN (Focus on "memory limit", "crash")
+    end
+    Orchestrator->>Fusion: Merge 2 danh sách tài liệu
+    Fusion-->>Orchestrator: Re-ranked Top K Documents
+    Orchestrator-->>C: Kết quả tối ưu nhất
+```
+
+### Cơ chế Dual Engine:
+1. **Sparse Index (Inverted Index / SPLADE):** Biểu diễn văn bản thành các Sparse Vector cực lớn (hàng triệu chiều tương ứng với số lượng từ vựng) nhưng chủ yếu là số `0`. Cấu trúc Inverted Index dưới nền giúp tra cứu keyword với độ trễ cực thấp (Sub-millisecond).
+2. **Dense Index (HNSW / IVF-PQ):** Biểu diễn văn bản thành Dense Vector (ví dụ: 1536 chiều với text-embedding-3-small). Sử dụng thuật toán ANN (Approximate Nearest Neighbor) thường là HNSW để duyệt đồ thị tìm láng giềng.
 
 ---
 
-## 3. Các phương pháp kết hợp kết quả (Score Fusion Methods)
+## 2. Giải thuật Kết hợp (Score Fusion Mechanisms)
 
-Làm sao để gộp kết quả từ hai hệ thống chấm điểm hoàn toàn khác nhau? Có hai phương pháp phổ biến nhất:
+Làm sao để kết hợp điểm của hai hệ thống đo lường hoàn toàn khác nhau? Điểm BM25 có thể dao động từ `0` đến `+∞`, trong khi điểm Cosine Similarity của Dense Vector nằm trong đoạn `[-1, 1]` (hoặc `[0, 1]`). 
 
-### 3.1. RRF (Reciprocal Rank Fusion)
-Đây là phương pháp đơn giản nhưng cực kỳ hiệu quả, hoạt động dựa trên **thứ hạng (rank)** của tài liệu thay vì điểm số tuyệt đối. Nó không yêu cầu việc chuẩn hóa các khoảng điểm khác nhau.
+### 2.1. Reciprocal Rank Fusion (RRF)
+RRF là thuật toán phổ biến nhất (được sử dụng mặc định trong Elasticsearch và Pinecone) vì nó không cần quan tâm đến điểm số tuyệt đối, mà chỉ dùng **thứ hạng (rank)**.
 
-Công thức của RRF:
 $$ RRF\_Score = \frac{1}{k + Rank_{dense}} + \frac{1}{k + Rank_{sparse}} $$
 
-Trong đó:
-- $Rank_{dense}$: Vị trí thứ hạng của tài liệu trong kết quả Vector Search.
-- $Rank_{sparse}$: Vị trí thứ hạng của tài liệu trong kết quả BM25.
-- $k$: Một hằng số làm mượt (smoothing constant), thường được đặt bằng 60.
+*(Trong đó $k$ là smoothing constant để tránh tài liệu top 1 có trọng số quá lớn, chuẩn công nghiệp thường đặt $k = 60$).*
 
-**Tại sao RRF hiệu quả?**
-RRF ưu tiên những tài liệu xuất hiện ở thứ hạng cao trong cả hai danh sách. Nếu một tài liệu vừa chứa chính xác từ khóa, vừa có ngữ nghĩa phù hợp, nó sẽ có điểm RRF rất cao.
+### 2.2. Khai triển với Elasticsearch & Python
+Dưới đây là một ví dụ thực chiến cấu hình truy vấn Hybrid Search với RRF bằng Elasticsearch Python Client (phiên bản hỗ trợ `retriever`).
 
-### 3.2. Alpha / Convex Combination (Nội suy tuyến tính)
-Phương pháp này kết hợp trực tiếp điểm số đã được chuẩn hóa. Hệ thống sử dụng một tham số $\alpha$ (nằm trong khoảng từ 0 đến 1) để quyết định "sức nặng" của mỗi phương pháp.
+```python
+from elasticsearch import Elasticsearch
 
+# Khởi tạo kết nối tới Elasticsearch Cluster
+es = Elasticsearch("https://es-cluster.vpc.internal:9200", api_key="...")
+
+# Giả định query đã được convert sang embedding vector
+query_text = "Fix lỗi OOMKilled trên K8s"
+query_vector = embedding_model.encode(query_text).tolist()
+
+response = es.search(
+    index="incident_postmortems",
+    # Sử dụng retriever API mới của ES cho RRF
+    retriever={
+        "rrf": {
+            "retrievers": [
+                {
+                    "standard": {
+                        "query": {
+                            "match": {
+                                "content": query_text
+                            }
+                        }
+                    }
+                },
+                {
+                    "knn": {
+                        "field": "content_vector",
+                        "query_vector": query_vector,
+                        "k": 10, # Top K của Dense
+                        "num_candidates": 100
+                    }
+                }
+            ],
+            "rank_window_size": 50, # Tính RRF trên top 50
+            "rank_constant": 60     # k = 60
+        }
+    },
+    _source=["incident_id", "resolution_notes"]
+)
+
+for hit in response['hits']['hits']:
+    print(f"ID: {hit['_source']['incident_id']} - Score RRF: {hit['_rank']}")
+```
+
+### 2.3. Alpha / Convex Combination (Nội suy Tuyến tính)
+Một số hệ thống như **Weaviate** cho phép Normalize điểm số về `[0, 1]` rồi sử dụng tham số $\alpha$ để tinh chỉnh sức nặng:
 $$ Final\_Score = \alpha \times Dense\_Score + (1 - \alpha) \times Sparse\_Score $$
-
-- Nếu $\alpha = 1$: Chỉ sử dụng tìm kiếm Vector hoàn toàn.
-- Nếu $\alpha = 0$: Chỉ sử dụng tìm kiếm BM25 hoàn toàn.
-- Nếu $\alpha = 0.5$: Trọng số chia đều 50/50 cho cả hai bên.
-
-Trong thực tế ứng dụng, nhiều hệ thống cấu hình cho $\alpha$ ở mức khoảng `0.7` đến `0.8`, hơi nghiêng về tìm kiếm Vector nhưng vẫn lấy yếu tố từ khóa làm bệ đỡ.
+- $\alpha = 1$: Thuần Semantic Vector Search.
+- $\alpha = 0$: Thuần BM25 Keyword Search.
+- Thiết lập thực tế thường dùng: $\alpha \approx 0.75$ (Ưu tiên semantic, fallback về keyword).
 
 ---
 
-## 4. Các công cụ và Vector Database hỗ trợ
+## 3. Rủi ro Vận hành & Real-world Incidents
 
-Đa số các Vector Database thế hệ mới đều đã tích hợp sẵn Hybrid Search một cách "out-of-the-box":
+Đưa Hybrid Search vào Production không chỉ là "bật 2 cái cờ (flags) lên", mà là sự thách thức trực diện về kiến trúc Hệ thống Phân tán (Distributed Systems).
 
-- **Weaviate:** Nổi tiếng với tính năng Hybrid Search tích hợp sâu. Cho phép tùy chỉnh tham số `alpha` dễ dàng qua API và tự động tính BM25 dưới nền.
-- **Qdrant:** Cung cấp tính năng tìm kiếm thưa (Sparse Vector) kết hợp Dense Vector, giúp thực hiện Hybrid Search hiệu quả.
-- **Pinecone:** Tương tự Qdrant, Pinecone cho phép đưa vào cả sparse/dense vectors cho mỗi điểm dữ liệu, tiện lợi cho việc kết hợp BM25 (dưới dạng SPLADE hoặc các thuật toán sparse khác).
-- **Milvus:** Hỗ trợ tính năng Multi-Vector và các chiến lược Rerank mạnh mẽ.
-- **Elasticsearch:** Ông vua của tìm kiếm văn bản truyền thống giờ đây đã hỗ trợ Dense Vector và chức năng truy vấn kết hợp (Ensemble retrieval) sử dụng RRF.
+### Incident 1: JVM OOMKilled trên Cluster (Elasticsearch/OpenSearch)
+- **Bối cảnh:** Team kỹ sư kích hoạt Vector Search trên một index có sẵn vài trăm GB dữ liệu text (Inverted Index).
+- **Nguyên nhân:** Thuật toán HNSW yêu cầu **Toàn bộ Graph phải nằm trên RAM (In-memory)** để duyệt với tốc độ thấp. Khi dữ liệu phình to, JVM heap bị tràn, dẫn đến chuỗi Garbage Collection (GC) tàn khốc (Stop-the-world) và OOMKilled. Node bị văng khỏi cluster, gây hiệu ứng domino sập toàn bộ Elasticsearch.
+- **Khắc phục:** 
+    - Áp dụng các kỹ thuật nén lượng tử hóa: **Scalar Quantization (SQ) / Product Quantization (PQ)** để giảm kích thước vector xuống 4x-32x lần.
+    - Chuyển sang kiến trúc Vector DB hỗ trợ **Disk-ANN** (Milvus, Qdrant, hoặc index memory-mapped), đánh đổi Latency (tăng Disk I/O) để cứu vãn RAM.
 
-Ngoài ra, các framework orchestration cho LLM như **LangChain** hay **LlamaIndex** cũng cung cấp các module (`EnsembleRetriever` trong LangChain) để kết hợp nhiều Retriever lại với nhau bằng thuật toán RRF.
-
----
-
-## 5. Ví dụ ứng dụng thực tế
-
-Tưởng tượng một hệ thống RAG tra cứu nội quy và phúc lợi cho nhân viên công ty:
-- **Câu hỏi của người dùng:** *"Làm thế nào để đăng ký nghỉ phép diện FMLA (Family and Medical Leave Act)?"*
-- Nếu chỉ dùng Vector Search: Nó có thể trả về các chính sách nghỉ phép chung chung, nghỉ thai sản, nghỉ ốm, do ý nghĩa gần giống. Nó có thể bỏ lỡ từ khóa `FMLA` vì cụm từ này ít gặp và có thể không nằm trong dữ liệu huấn luyện của mô hình embedding.
-- Nếu chỉ dùng Keyword Search: Nó chỉ tìm những câu có đúng từ `FMLA` nhưng có thể bỏ sót các đoạn văn bản quan trọng mô tả "chính sách cho phép nghỉ chăm sóc y tế cho người thân" mà không lặp lại từ khóa.
-- **Hybrid Search:** Bắt chính xác các đoạn chứa thuật ngữ `FMLA` (từ BM25) đồng thời hiểu ngữ cảnh của việc "đăng ký nghỉ phép chăm sóc người thân" (từ Vector). Kết quả là tài liệu liên quan nhất sẽ luôn được xếp hạng đầu tiên.
+### Incident 2: Query Latency Spike (Bottleneck khi Scatter-Gather)
+- **Bối cảnh:** Truy vấn Hybrid Search đột ngột có p99 latency > 2s.
+- **Nguyên nhân:** Trong một cluster nhiều phân mảnh (shards), truy vấn Hybrid phải phát đi tới toàn bộ các shard (Scatter). Mỗi shard thực hiện HNSW và BM25 riêng, sau đó tổng hợp (Gather). Với RRF, coordinator node phải thu thập danh sách cực lớn (e.g. `num_candidates=100` x số shard) trước khi có thể xếp hạng lại RRF, gây nghẽn cổ chai CPU và Network băng thông tại Coordinator.
+- **Khắc phục:** Giảm tham số `num_candidates` (hay `efSearch`), tinh gọn số lượng shards, hoặc scale-up tài nguyên Network/CPU cho Coordinator Node.
 
 ---
 
-## 6. Tổng kết
+## 4. Tối ưu Chi phí (FinOps) & Systemic Trade-offs
 
-Hybrid Search giải quyết triệt để vấn đề "hoặc chính xác, hoặc linh hoạt" bằng cách cung cấp cả hai. Dù phức tạp hơn đôi chút về mặt thiết lập hạ tầng (bạn phải duy trì cả Inverted Index và Vector Index, cũng như hai luồng tìm kiếm riêng biệt), lợi ích mà nó mang lại cho chất lượng truy xuất của các ứng dụng RAG là không thể phủ nhận. Khi xây dựng các hệ thống AI cấp doanh nghiệp (Enterprise GenAI), Hybrid Search hiện nay được xem là yêu cầu bắt buộc (must-have).
+Việc chọn triển khai Hybrid Search đồng nghĩa với việc bạn phải trả chi phí Infra cho **cả hai thế giới**.
+
+| Tiêu chí | Thuần BM25 (Keyword) | Thuần HNSW (Vector) | Hybrid Search |
+| :--- | :--- | :--- | :--- |
+| **Storage (Disk)** | Trung bình (Inverted Index) | Rất lớn (Vector + Graph) | Cực lớn (Cả hai Index) |
+| **Compute (RAM)** | Rất thấp (OS Page Cache) | Cực đắt (HNSW in RAM) | Cực đắt |
+| **Latency** | < 10ms | 20ms - 50ms | 50ms - 100ms+ (Cộng gộp + RRF) |
+| **Recall Rate** | Thấp với intent phức tạp | Thấp với từ lóng/mã | **Cao nhất (Best-in-class)** |
+
+### FinOps Checklist:
+1. **Có thực sự cần Hybrid?** Nếu hệ thống chỉ tìm kiếm tài liệu chung chung (không có mã sản phẩm, danh từ riêng khó), Semantic Search đơn thuần kết hợp với Reranker model (như Cohere Rerank) có thể mang lại hiệu quả tương tự mà ít phức tạp hơn ở lớp DB.
+2. **Sử dụng Serverless Vector DB:** Nếu tải (traffic) không đều, cân nhắc dùng Pinecone Serverless. Pinecone tách rời Compute và Storage (Compute-Storage Separation), tính tiền trên RCU/WCU (Read/Write Compute Units), giảm thiểu rủi ro phải ôm cluster khổng lồ 24/7 chỉ để chứa RAM cho HNSW.
+3. **Cơ chế Fallback:** Thay vì gộp điểm, thiết kế luồng pipeline: Nếu Semantic Search trả về confidence score thấp -> Rẽ nhánh (Fallback) sang BM25. Đánh đổi: Có thể mất một chút Recall nhưng tiết kiệm > 50% Compute.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [Pinecone - Hybrid Search and Sparse-Dense Vectors](https://www.pinecone.io/learn/hybrid-search-intro/)
-* [Weaviate - Hybrid Search Explained](https://weaviate.io/blog/hybrid-search-explained)
-* [LangChain Documentation - Ensemble Retriever](https://python.langchain.com/docs/modules/data_connection/retrievers/ensemble)
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+## 5. Nguồn Tham Khảo (References)
+
+* [Pinecone - The intuition behind Reciprocal Rank Fusion (RRF)](https://www.pinecone.io/learn/hybrid-search-intro/)
+* [Elasticsearch Documentation: Hybrid search and RRF](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html)
+* [Weaviate Blog - Hybrid Search Explained: Architecture & Alpha tuning](https://weaviate.io/blog/hybrid-search-explained)
+* **Designing Data-Intensive Applications (Martin Kleppmann)** - *Chương 3: Storage and Retrieval (Đọc thêm về Inverted Index).*
+* Nghiên cứu về nén Vector: *Product quantization for nearest neighbor search (Hervé Jégou et al.)*

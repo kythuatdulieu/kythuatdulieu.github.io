@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' type='text/css' href='https://www.elastic.co/static-res/styles/bootstrap.css' />
+    <link href='https://use.typekit.net/rwu6bgv.css' />
+    <style type='text/css'>
+      .shadow {
+        -moz-box-shadow: 0px 10px 20px 0px rgba(152,162,179,0.15), 0px 2px 6px 0px rgba(152,162,179,0.25);
+        -webkit-box-shadow: 0px 10px 20px 0px rgba(152,162,179,0.15), 0px 2px 6px 0px rgba(152,162,179,0.25);
+        -o-box-shadow: 0px 10px 20px 0px rgba(152,162,179,0.15), 0px 2px 6px 0px rgba(152,162,179,0.25);
+        -ms-box-shadow: 0px 10px 20px 0px rgba(152,162,179,0.15), 0px 2px 6px 0px rgba(152,162,179,0.25);
+        box-shadow: 0px 10px 20px 0px rgba(152,162,179,0.15), 0px 2px 6px 0px rgba(152,162,179,0.25);
+      } 
+      .main-heading {
+        border-bottom: 1px solid #CCCCCC;
+        -webkit-display: flex;
+        display: flex;
+        -webkit-justify-content: center;
+        justify-content: center;
+        padding-bottom: 30px;
+        padding-top: 30px;
+      }
+      h1, h2 {
+        font-family: aktiv-grotesk,sans-serif;
+        font-weight: 700;
+        margin-bottom: 0px;
+        padding: 0px 10px;
+      }
+      h2 {
+        line-height: 3rem;
+      }
+      .large-header {
+        position: relative;
+      }
+      .large-header:after {
+        content: "|";
+        margin: 0px 5px;
+        padding: 0px 5px;
+        position: absolute;
+        right: -15px;
+      }
+      .content {
+        margin-bottom: 80px;
+        margin-top: 50px;
+      }
+      .footer-content {
+        margin-bottom: 40px;
+      }
+      @media screen and (max-width: 575px) {
+        .main-heading {
+          display: block;
+          text-align: center;
+        }
+        .large-header:after {
+          content: '';
+        }
+      }
+    </style>    
+  </head>
+  <body>
+    <div id='elastic-nav'></div>
+    <script src='https://www.elastic.co/elastic-nav.js'></script>
+    <div>             
+      <div id='pageheader' class='shadow'> 
+        <div class='container'>
+          <div class='main-heading'>
+            <h1 class='large-header'>404</h1>
+            <h2>Well, that about wraps it up for this page</h2>
+          </div>
+        </div>
+      </div>
+      <div class='content container'>
+        <p>`I refuse to prove that I exist,’ says Page, `for proof denies faith, and without faith I am nothing.’</p>
+        <p>`But,’ says Man, `The Babel fish is a dead giveaway, isn’t it? It could not have evolved by chance. It proves you exist, and so therefore, by your own arguments, you don’t. <span class="caps">QED</span>.’</p>
+        <p>`Oh dear,’ says Page, `I hadn’t thought of that,’ and promptly disappears in a puff of logic.</p>
+      </div>
+    </div>  
+    <div id='elastic-footer'></div>
+    <script src='https://www.elastic.co/elastic-footer.js'></script>       
+  </body>
+</html>

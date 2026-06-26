@@ -1,231 +1,195 @@
 ---
 title: "Apache Hudi"
-difficulty: "Intermediate"
-tags: ["apache-hudi", "data-lakehouse", "table-format", "cdc", "streaming"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Apache Hudi - Định dạng bảng tối ưu cho Data Lakehouse và Streaming"
-metaDescription: "Tìm hiểu chi tiết kiến trúc, tính năng của Apache Hudi: định dạng bảng mã nguồn mở giúp quản lý dữ liệu lớn trên Data Lake với khả năng Update, Delete, Incremental processing và Streaming cực mạnh."
-description: "Trong thế giới Kỹ thuật Dữ liệu, Data Lake (Hồ dữ liệu) luôn là lựa chọn hàng đầu nhờ khả năng lưu trữ lượng thông tin khổng lồ với chi phí cực thấp. Tuy nhiên, Data Lake truyền thống gặp khó khăn khi xử lý các thao tác cập nhật, xóa bản ghi hay đồng bộ dữ liệu thời gian thực. Apache Hudi ra đời để giải quyết triệt để vấn đề này, biến Data Lake thành Data Lakehouse."
+difficulty: "Advanced"
+tags: ["apache-hudi", "data-lakehouse", "table-format", "cdc", "streaming", "uber"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Apache Hudi - Kiến trúc Data Lakehouse, Trade-offs và Streaming"
+metaDescription: "Phân tích kiến trúc chuyên sâu của Apache Hudi: File Layout, MoR vs CoW Trade-offs, Indexing (Bloom Filter, RLI), OCC/MVCC Concurrency và Thực chiến PySpark."
+description: "Được sinh ra tại Uber để giải quyết bài toán xử lý hàng nghìn tỷ bản ghi mỗi ngày, Apache Hudi không chỉ là một định dạng bảng (Table Format). Nó là một 'Database thu nhỏ' nằm trên Object Storage, cung cấp khả năng Streaming, Record-level Update/Delete và Incremental Processing với độ trễ cực thấp."
 ---
 
-Apache Hudi (Hadoop Upserts Deletes and Incrementals) là một Open Table Format (định dạng bảng mở) được tạo ra bởi Uber vào năm 2016 để giải quyết bài toán xử lý lượng lớn dữ liệu log sự kiện của họ. Hiện nay, Hudi là một dự án cấp cao (Top-Level Project) của Apache Software Foundation. 
+Thế giới Data Lakehouse hiện đại xoay quanh ba ông lớn: **Apache Hudi**, **Apache Iceberg** và **Delta Lake**. Nếu Iceberg sinh ra từ Netflix để giải quyết vấn đề quản lý Metadata khổng lồ, thì **Hudi (Hadoop Upserts Deletes and Incrementals)** được Uber thiết kế từ năm 2016 với một triết lý duy nhất: **Streaming-first và Upsert-heavy**.
 
-Thế mạnh lớn nhất của Hudi so với các định dạng khác như Apache Iceberg hay Delta Lake là khả năng xử lý **Streaming** cực mạnh, tối ưu cho các tác vụ Upsert/Delete liên tục, và cung cấp các cơ chế Indexing tinh vi giúp thay đổi dữ liệu với độ trễ thấp (low latency). Hudi không chỉ cung cấp định dạng lưu trữ mà còn đem lại một "Data Platform" mini ngay trong hệ sinh thái Data Lake của bạn.
+Bài viết này sẽ bỏ qua những định nghĩa cơ bản để đi sâu vào kiến trúc thực thi vật lý (Physical Execution) của Hudi, cách nó quản lý các File Groups, sự đánh đổi giữa các cơ chế Indexing, và những tình huống sập hệ thống thực tế (Real-world Incidents) mà bạn sẽ gặp phải khi vận hành cụm Hudi ở scale Petabyte.
 
 ---
 
-## 1. Kiến trúc cốt lõi (Core Architecture)
+## 1. Kiến trúc Lõi: Timeline và File Layout
 
+Sức mạnh của Hudi đến từ việc nó ánh xạ thành công các khái niệm của Relational Database (Log-structured merge-tree) xuống hệ thống lưu trữ tĩnh (Object Storage như S3/GCS hoặc HDFS).
 
+### 1.1. Hudi Timeline (Source of Truth)
 
-Để hiểu rõ cách Hudi hoạt động, chúng ta cần đi sâu vào 3 khái niệm nền tảng: Timeline, File Layout và Table Types.
-
-### 1.1 Hudi Timeline (Dòng thời gian)
-Đây là "trái tim" của Hudi. Timeline duy trì một lịch sử (log) của tất cả các thao tác (actions) đã được thực hiện trên bảng tại các thời điểm khác nhau (instants). Nhờ Timeline, Hudi cung cấp khả năng đảm bảo giao dịch ACID, Snapshot Isolation, và các tính năng mạnh mẽ như Time Travel (truy vấn dữ liệu trong quá khứ) hay Incremental Queries (truy vấn tăng dần).
-
-Mỗi action trên Timeline có thể ở một trong 3 trạng thái:
-*   `REQUESTED`: Thao tác đã được lên lịch nhưng chưa bắt đầu.
-*   `INFLIGHT`: Thao tác đang được thực thi.
-*   `COMPLETED`: Thao tác đã hoàn thành và dữ liệu sẵn sàng để đọc.
+Mọi giao dịch ACID trong Hudi đều xoay quanh **Timeline**. Đây là một danh sách sự kiện (event log) lưu trữ tất cả các *actions* xảy ra trên bảng theo thời gian (instants).
 
 ```mermaid
 stateDiagram-v2
-    direction LR
-    [*] --> REQUESTED: Lên lịch Action
+    direction LR["*"] --> REQUESTED: Lên lịch Action
     REQUESTED --> INFLIGHT: Bắt đầu thực thi
-    INFLIGHT --> COMPLETED: Ghi thành công
-    INFLIGHT --> REQUESTED: Lỗi (Rollback)
-    COMPLETED --> [*]
+    INFLIGHT --> COMPLETED: Ghi thành công, Snapshot sẵn sàng
+    INFLIGHT --> REQUESTED: Lỗi("Rollback")
     
     note right of COMPLETED
       Các Actions phổ biến:
-      - COMMIT
-      - DELTA_COMMIT
+      - COMMIT / DELTA_COMMIT
       - COMPACTION
-      - CLEAN
+      - CLEAN / REPLACE
     end note
 ```
 
-### 1.2 Tổ chức File (File Layout & Management)
-Hudi tổ chức dữ liệu thành các cấu trúc phân cấp tinh vi để tối ưu hóa việc đọc và ghi:
-*   **Partition (Phân vùng):** Tương tự như Hive, Hudi chia dữ liệu thành các thư mục phân vùng (VD: `date=2023-10-01/`).
-*   **File Group:** Bên trong mỗi phân vùng, dữ liệu được chia thành các File Group, mỗi File Group được định danh bằng một ID duy nhất.
-*   **File Slice:** Mỗi File Group chứa nhiều File Slice, tương ứng với các phiên bản theo thời gian.
-    *   Mỗi File Slice bao gồm 1 **Base File** (thường là định dạng Parquet dạng cột) tạo tại một `commit_time`.
-    *   Kèm theo đó là các **Log Files** (định dạng Avro dựa trên hàng) chứa các thao tác Upsert/Delete xảy ra sau khi Base File được tạo.
+*   `REQUESTED`: Một tiến trình (ví dụ: Compaction) đã được lên lịch.
+*   `INFLIGHT`: Đang ghi dữ liệu xuống disk.
+*   `COMPLETED`: Dữ liệu đã an toàn và các Readers có thể đọc được snapshot mới nhất.
 
-### 1.3 Các loại bảng (Table Types)
-Hudi hỗ trợ quản lý dữ liệu thông qua 2 loại bảng chính, nhằm đáp ứng các kịch bản sử dụng (workloads) khác nhau:
+Nhờ Timeline, Hudi hỗ trợ **Time Travel** và **Incremental Queries** (chỉ đọc những file thay đổi từ thời điểm `T1` đến `T2`) với chi phí cực thấp, thay vì phải tính toán lại (recompute) toàn bộ pipeline.
 
-| Tiêu chí | Copy On Write (CoW) | Merge On Read (MoR) |
+### 1.2. Physical File Layout: Phá vỡ cấu trúc thư mục tĩnh
+
+Hudi không đơn thuần vứt file Parquet vào thư mục Partition như Hive. Cấu trúc của nó chặt chẽ hơn nhiều để tránh vấn nạn "Small Files Problem".
+
+```mermaid
+graph TD
+    A["Partition: date=2026-06-26"] --> B("File Group 1: UUID-xxx")
+    A --> C("File Group 2: UUID-yyy")
+    
+    B --> D["File Slice 1: commit_time=t1"]
+    B --> E["File Slice 2: commit_time=t2"]
+    
+    D --> F("Base File: Parquet")
+    E --> G("Base File: Parquet")
+    E --> H("Log File: Avro - Delta_Commit_1")
+    E --> I("Log File: Avro - Delta_Commit_2")
+    
+    classDef fg fill:#f9f,stroke:#333,stroke-width:2px;
+    class B,C fg;
+```
+
+1.  **File Group:** Nhóm các phiên bản của cùng một tập hợp records. Mỗi File Group có dung lượng mục tiêu (ví dụ 120MB). Hudi sẽ cố gắng pack dữ liệu vào đúng dung lượng này để tối ưu I/O.
+2.  **File Slice:** Là phiên bản cụ thể của File Group tại một thời điểm (Instant). Một File Slice luôn chứa một **Base File (Parquet dạng cột)** và có thể kèm theo một hoặc nhiều **Log Files (Avro dạng hàng)** chứa các thao tác Upsert/Delete sau đó.
+
+---
+
+## 2. Table Types & Systemic Trade-offs
+
+Hudi cung cấp 2 loại bảng. Việc chọn sai loại bảng sẽ dẫn đến hậu quả nghiêm trọng về chi phí Compute (EC2/Databricks) hoặc Storage (S3 API Costs).
+
+### 2.1. Copy On Write (CoW)
+- **Cơ chế:** Khi có 1 record cần UPDATE, Hudi sẽ đọc toàn bộ Base File (Parquet) chứa record đó vào bộ nhớ, cập nhật record, và viết ra (Rewrite) một Base File hoàn toàn mới với `commit_time` mới.
+- **Đánh đổi (Trade-off):**
+  - **Read Latency:** Rất thấp. Reader chỉ việc đọc file Parquet thuần túy.
+  - **Write Amplification (Khuếch đại ghi):** CỰC KỲ CAO. Sửa 1 byte trong file 120MB đồng nghĩa với việc I/O phải write lại 120MB.
+- **Use Case:** Phù hợp với batch pipelines (chạy 1 lần/ngày), dữ liệu dạng append-only, hoặc read-heavy BI dashboards.
+
+### 2.2. Merge On Read (MoR)
+- **Cơ chế:** Khi có UPDATE, thay vì rewrite file Parquet, Hudi ghi các thay đổi vào một **Log File (Avro)** nhỏ nhắn đính kèm với Base File hiện tại. 
+- **Đánh đổi (Trade-off):**
+  - **Write Latency:** Cực thấp, phù hợp với Streaming (Kafka -> Hudi).
+  - **Read Amplification:** Cao. Khi query, Engine (Spark/Presto) phải tải cả Base File (Parquet) và quét qua các Log Files (Avro) để merge dữ liệu on-the-fly trên RAM.
+  - **Maintenance Overhead:** Đòi hỏi dịch vụ **Compaction** chạy ngầm để hợp nhất Log Files vào Base File định kỳ.
+- **Real-world Incident (Compaction Backlog):** Nếu Ingestion Rate quá cao nhưng Compaction Thread chạy không kịp (do thiếu executor memory), số lượng Log files (Avro) sẽ phình to. Khi Reader (Presto/Trino) query, việc merge hàng ngàn file Avro trong bộ nhớ sẽ gây ra lỗi `JVM OOMKilled` (Hết RAM).
+  *Khắc phục:* Phải tune lại `hoodie.compact.inline.max.delta.commits` và cấu hình Async Compaction riêng biệt (chạy trên một cụm Compute khác biệt với luồng Ingestion).
+
+---
+
+## 3. Hệ thống Indexing: Tránh "Full Table Scan"
+
+Làm sao Hudi biết record ID `user_123` nằm ở File Group nào để update mà không phải quét toàn bộ S3? Câu trả lời là Indexing.
+
+### 3.1. Bloom Filter Index (Default)
+Hudi nhúng trực tiếp một màng lọc Bloom (Probabilistic Data Structure) vào footer của các file Parquet.
+- **Cơ chế:** Khi Upsert, Hudi lấy các keys mới và check qua các Bloom filters. 
+- **Trade-off:** Rẻ tiền, không cần hệ thống ngoài. Tuy nhiên, nó có tỷ lệ **False Positives** (báo có tồn tại nhưng thực chất không). Điều này gây ra những lượt đọc đĩa (Disk Reads) dư thừa. Khi file quá lớn hoặc keys phân tán đều (Random UUIDs), Bloom Filter sẽ gây thắt cổ chai I/O.
+
+### 3.2. Record Level Index (RLI) - *Khuyến nghị cho Scale lớn*
+Được ra mắt từ bản 0.14.0, RLI duy trì một bảng metadata nội bộ lưu trữ chính xác map `[Record Key -> File Group ID]`.
+- **Cơ chế:** $O(1)$ Lookup. Cực kỳ nhanh chóng.
+- **Trade-off:** Đánh đổi bằng Storage và Memory để duy trì bảng Metadata (nhưng vẫn tốt hơn nhiều so với việc dựng hẳn cụm HBase bên ngoài).
+
+| Tiêu chí | Bloom Filter Index | Record Level Index (RLI) |
 | :--- | :--- | :--- |
-| **Định dạng file** | Chỉ sử dụng Base files (Parquet) | Kết hợp Base files (Parquet) và Log files (Avro) |
-| **Hành vi khi Update** | Viết lại (Rewrite) toàn bộ Base file chứa record đó | Nối (Append) các thay đổi vào Log files |
-| **Độ trễ ghi (Write latency)** | Cao (Do phải rewrite file) | Rất thấp (Do chỉ append logs) |
-| **Độ trễ đọc (Read latency)** | Rất thấp (Chỉ đọc file Parquet nguyên khối) | Cao hơn (Phải merge Parquet và Avro on-the-fly) |
-| **Use Case lý tưởng** | Read-heavy workloads, Batch Processing | Write-heavy, Streaming Ingestion, CDC |
-
-> [!TIP]
-> Nếu bạn đồng bộ dữ liệu từ RDBMS (MySQL, Postgres) qua CDC vào Data Lake mỗi 5 phút một lần, bảng **MoR** là sự lựa chọn duy nhất để tránh bị "nghẽn" I/O do rewrite liên tục. Nếu bạn chỉ cập nhật dữ liệu 1 lần vào cuối ngày, hãy dùng bảng **CoW**.
+| **Bản chất** | Xác suất (False Positives) | Chính xác ($O(1)$) |
+| **Storage Overhead** | Thấp (nằm trong Parquet Footer) | Cao hơn (cần Metadata Table riêng) |
+| **Best For** | Cập nhật tập trung vào phân vùng mới nhất (time-based) | Dữ liệu khổng lồ, phân tán (Random UUID Updates) |
 
 ---
 
-## 2. Các cơ chế Indexing (Chỉ mục)
+## 4. Concurrency Control: Cuộc chiến của những Writers
 
-Để thực hiện Upsert/Delete với hiệu suất cao (thay vì phải quét - scan toàn bộ các files trong Data Lake để tìm xem record cũ nằm ở đâu), Hudi sử dụng hệ thống Index pluggable để ánh xạ nhanh chóng một `record_key` tới đúng `File Group ID`.
+Hudi đảm bảo **Snapshot Isolation** để Reader không bao giờ đọc phải dữ liệu rác đang ghi dở. Tuy nhiên, khi có nhiều Writers (Multi-writers), Hudi quản lý bằng cơ chế nào?
 
-*   **Bloom Filter Index (Mặc định):** Được tạo tự động và nhúng vào footers của các file base (Parquet). Khi có dữ liệu mới tới, Hudi đọc các Bloom Filters để kiểm tra xem `record_key` đã tồn tại ở file nào chưa. Rất hiệu quả nhưng có thể chậm nếu dung lượng dữ liệu quá lớn (False Positive rate).
-*   **Record Level Index (HBase Index):** Ánh xạ trực tiếp tỉ lệ 1-1 giữa Record Key và File Group ID, lưu trên một cluster HBase bên ngoài. Cực nhanh cho các tập dữ liệu khổng lồ nhưng đòi hỏi quản lý infrastructure phức tạp.
-*   **Bucket Index:** Phân bổ các bản ghi vào số lượng "buckets" (thùng) cố định bằng thuật toán băm (hashing). Tốc độ Upsert siêu nhanh và ổn định, rất phổ biến cho các kiến trúc hiện đại không muốn duy trì HBase.
-
-> [!NOTE]
-> Hudi phân loại Index thành **Global** và **Non-Global**. 
-> - **Global Index** đảm bảo tính duy nhất của một record trên toàn bộ bảng. Quá trình Upsert sẽ tìm kiếm trong tất cả partitions (chi phí cao).
-> - **Non-Global Index** chỉ đảm bảo tính duy nhất trong nội bộ một partition. Upsert chỉ tìm kiếm record cũ ở phân vùng mà record mới sắp đi vào (nhanh hơn nhiều).
+1. **Optimistic Concurrency Control (OCC):** 
+   - Hudi không lock (khóa) từ đầu. Cứ ghi thoải mái. Lúc chuẩn bị Commit, Hudi mới check xem có Writer nào khác vừa commit vào cùng một File Group hay không.
+   - Nếu có Conflict, transaction thứ hai sẽ bị Abort và Retry.
+   - **Real-world Incident (Retry Storms):** Nếu 10 luồng Flink cùng cập nhật vào một partition `status=active`, OCC sẽ gây ra hàng loạt Rollback & Retry. Hệ thống bị kẹt trong một vòng lặp vĩnh cửu (Live-lock) gây lãng phí Compute khổng lồ. Lúc này, bạn phải dùng **Non-Blocking Concurrency Control (NBCC)** hoặc quy hoạch lại partitioning key.
+2. **Multiversion Concurrency Control (MVCC):**
+   - Áp dụng giữa Writer và các dịch vụ chạy ngầm (Table Services như Compaction/Clustering). Compaction cứ việc tạo Base File mới, Writer cứ việc append Log File. Trạng thái Timeline giúp 2 bên không giẫm chân lên nhau.
 
 ---
 
-## 3. Tính năng cốt lõi làm nên sức mạnh Hudi
+## 5. Show Me The Code: PySpark Hudi Upsert
 
-### 3.1 Khả năng Mutability (Update & Delete)
-Trong Data Lake truyền thống (sử dụng Hive), việc sửa hoặc xóa một vài dòng dữ liệu đồng nghĩa với việc bạn phải đọc toàn bộ partition, thay đổi dữ liệu trong bộ nhớ, và ghi lại (rewrite) toàn bộ partition vô cùng tốn kém (vi phạm nguyên tắc bất biến của HDFS/S3). Hudi cung cấp các toán tử `UPSERT` và `DELETE` hiệu quả ngay trên nền tảng Object Storage ở cấp độ bản ghi (record-level).
-
-### 3.2 Incremental Processing (Xử lý dữ liệu tăng dần)
-Đây là tính năng làm nên thương hiệu của Hudi. Thay vì phải xử lý lại toàn bộ bảng mỗi ngày, Hudi cho phép truy xuất lượng dữ liệu đã thay đổi (CDC) kể từ một mốc thời gian cụ thể.
-
-Giả sử bạn có Data Pipeline: Bảng A -> Bảng B -> Bảng C. Bằng Incremental Processing, bạn chỉ lấy ra dòng dữ liệu "vừa được thêm vào hoặc thay đổi" tại Bảng A trong 1 giờ qua để tính toán và cập nhật vào Bảng B, giảm chi phí Compute tới 90%.
-
-### 3.3 Concurrency Control (Kiểm soát đồng thời)
-Hudi cung cấp khả năng nhiều writer và reader (Multi-writers, Multi-readers) cùng hoạt động đồng thời:
-*   **MVCC (Multi-Version Concurrency Control):** Readers không bao giờ bị block bởi Writers. Readers luôn nhìn thấy bản snapshot nhất quán của dữ liệu.
-*   **Optimistic Concurrency Control (OCC):** Cho phép nhiều Writers ghi đồng thời. Trước khi commit, Hudi sẽ kiểm tra xem có 2 writers nào ghi chồng lên cùng một file hay không. Nếu có, writer thứ 2 sẽ fail và thử lại (retry). Cơ chế này yêu cầu cấu hình Lock Provider (Zookeeper, DynamoDB, HDFS).
-
-### 3.4 Table Services (Dịch vụ quản trị bảng tự động)
-Hudi tự động hóa hoàn toàn các thao tác bảo trì dữ liệu mà thông thường Data Engineer phải viết script chạy thủ công:
-*   **Compaction (Chỉ cho MoR):** Hợp nhất các file log (Avro) chứa các bản update vào file cơ sở (Parquet) theo lịch trình (thường chạy không đồng bộ - Async).
-*   **Clustering:** Sắp xếp, gom nhóm các file nhỏ (small files) thành các file lớn hơn để tránh lỗi quá tải metadata cho NameNode hoặc giảm số request S3. Bạn cũng có thể sắp xếp dữ liệu (Z-Ordering) để tăng tốc độ Query theo các cột cụ thể.
-*   **Cleaning:** Tự động dọn dẹp các phiên bản file cũ để giải phóng dung lượng lưu trữ Cloud.
-
----
-
-## 4. Hands-on PySpark: Làm việc với Apache Hudi
-
-Dưới đây là một ví dụ trực quan về cách sử dụng PySpark để khởi tạo, Upsert và truy vấn bảng Hudi.
-
-### 4.1. Khởi tạo Spark Session với Hudi
-
-Bạn cần tải thư viện Hudi đính kèm vào Spark (Ví dụ dùng Spark 3.3 và Hudi 0.13.1):
+Dưới đây là cấu hình Pipeline kinh điển dùng PySpark để thực hiện Upsert dữ liệu Streaming (CDC) vào bảng MoR. Chú ý các tham số cấu hình (Configurations) được giải thích kỹ.
 
 ```python
 from pyspark.sql import SparkSession
 
+# Yêu cầu tải đúng package hudi-spark (ví dụ: Spark 3.3, Hudi 0.14.0)
 spark = SparkSession.builder \
-    .appName("Hudi_Hands_On") \
+    .appName("Hudi_Staff_Pipeline") \
     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
     .config("spark.sql.extensions", "org.apache.spark.sql.hudi.HoodieSparkSessionExtension") \
-    .config("spark.jars.packages", "org.apache.hudi:hudi-spark3.3-bundle_2.12:0.13.1") \
+    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.hudi.catalog.HoodieCatalog") \
     .getOrCreate()
-```
 
-### 4.2. Ghi dữ liệu lần đầu (Insert)
-
-Giả sử chúng ta có tập dữ liệu khách hàng. Chú ý các tùy chọn cấu hình quan trọng của Hudi:
-
-```python
-data = [
-    (1, "Alice", 25, "New York", "2023-01-01T10:00:00Z"),
-    (2, "Bob", 30, "San Francisco", "2023-01-01T10:05:00Z"),
+# Dữ liệu CDC (Change Data Capture) từ Debezium Kafka
+updates_data = [
+    (101, "Alex", "Senior DE", "2026-06-26T10:00:00Z", False),
+    (102, "Bob", "Staff DE", "2026-06-26T10:05:00Z", False),
+    (101, "Alex", "Principal DE", "2026-06-26T10:15:00Z", False), # Bản ghi mới nhất của Alex
 ]
-columns = ["emp_id", "emp_name", "age", "city", "update_ts"]
-df = spark.createDataFrame(data, columns)
+columns = ["emp_id", "name", "title", "updated_at", "is_deleted"]
+df_cdc = spark.createDataFrame(updates_data, columns)
 
+# Cấu hình Hudi Hardcore
 hudi_options = {
-    'hoodie.table.name': 'employees',
-    'hoodie.datasource.write.recordkey.field': 'emp_id', # Primary Key
-    'hoodie.datasource.write.partitionpath.field': 'city', # Phân vùng theo thành phố
-    'hoodie.datasource.write.precombine.field': 'update_ts', # Nếu có nhiều bản ghi trùng key, lấy bản ghi có update_ts mới nhất
+    'hoodie.table.name': 'hr_employees',
+    'hoodie.table.type': 'MERGE_ON_READ',           # Tối ưu cho Streaming/CDC
+    
+    # Core Keys
+    'hoodie.datasource.write.recordkey.field': 'emp_id', 
+    'hoodie.datasource.write.precombine.field': 'updated_at', # Xử lý duplicate trong cùng batch: Lấy timestamp lớn nhất
+    'hoodie.datasource.write.partitionpath.field': '', # Unpartitioned hoặc chọn theo 'department'
+    
+    # Operation Type
     'hoodie.datasource.write.operation': 'upsert',
-    'hoodie.table.type': 'COPY_ON_WRITE' # Hoặc MERGE_ON_READ
+    'hoodie.datasource.write.payload.class': 'org.apache.hudi.common.model.DefaultHoodieRecordPayload',
+    
+    # Indexing Tuning (Khuyến nghị dùng RLI cho scale lớn trên bản 0.14+)
+    'hoodie.metadata.enable': 'true',
+    'hoodie.metadata.record.index.enable': 'true',
+    
+    # Tuning Small Files & Compaction (Chống OOMKilled)
+    'hoodie.parquet.max.file.size': '125829120',    # 120MB
+    'hoodie.compact.inline': 'false',               # KHÔNG chạy compaction chung luồng write (chạy Async riêng)
+    'hoodie.compact.inline.max.delta.commits': '5', # Báo hiệu cần compact sau 5 commits
 }
 
-base_path = "/tmp/hudi_employees"
-
-df.write.format("hudi"). \
-    options(**hudi_options). \
-    mode("overwrite"). \
-    save(base_path)
-```
-
-### 4.3. Cập nhật dữ liệu (Upsert)
-
-Alice chuyển từ "New York" sang "Los Angeles" và có nhân viên mới là Charlie. Chúng ta tiếp tục dùng lệnh Upsert:
-
-```python
-updates = [
-    (1, "Alice", 26, "Los Angeles", "2023-02-01T10:00:00Z"), # Cập nhật tuổi và thành phố của Alice
-    (3, "Charlie", 28, "Chicago", "2023-02-01T11:00:00Z")  # Insert Charlie
-]
-df_updates = spark.createDataFrame(updates, columns)
-
-df_updates.write.format("hudi"). \
+# Thực thi Upsert
+df_cdc.write.format("hudi"). \
     options(**hudi_options). \
     mode("append"). \
-    save(base_path)
+    save("s3://data-lake/raw/hr_employees")
 ```
 
-### 4.4. Truy vấn Incremental (Chỉ lấy dữ liệu thay đổi)
-
-Chỉ lấy các bản ghi thay đổi từ commit '20230101100000' (Ví dụ):
-
-```python
-spark.read \
-  .format("hudi") \
-  .option("hoodie.datasource.query.type", "incremental") \
-  .option("hoodie.datasource.read.begin.instanttime", "20230101100000") \
-  .load(base_path) \
-  .show()
-```
+**Phân tích Trade-off đoạn code trên:**
+- Chúng ta set `hoodie.compact.inline = 'false'` vì quá trình Compaction (merge Log + Base) rất tốn CPU và Memory. Nếu bắt luồng Ingestion Spark Streaming làm việc này, nó sẽ gây ra độ trễ (Spike Latency) cho luồng đọc từ Kafka. Thay vào đó, ta sẽ launch một Spark Job chạy ngầm định kỳ chỉ để làm nhiệm vụ Async Compaction.
 
 ---
 
-## 5. So sánh Hudi vs Iceberg vs Delta Lake
+## 6. Nguồn Tham Khảo (References)
 
-Mặc dù cả 3 đều là Open Table Formats cho Data Lakehouse, mỗi công cụ có thiết kế cốt lõi khác nhau:
-
-| Tính năng | Apache Hudi | Apache Iceberg | Delta Lake |
-| :--- | :--- | :--- | :--- |
-| **Mục tiêu thiết kế** | Tối ưu Upsert/Streaming/CDC | Quản lý Metadata bảng khổng lồ, chuẩn hóa | ACID Transactions, gắn liền Data Databricks |
-| **Cập nhật dữ liệu** | Rất mạnh (Record-level index, MoR) | Tốt (MoR hỗ trợ qua Delete files) | Tốt (nhưng phải dùng Databricks để có hiệu năng cao nhất) |
-| **Khả năng Incremental** | Siêu việt, thiết kế ngay từ đầu | Hỗ trợ qua changelog/time travel | Có cấu trúc CDC riêng, rất tốt |
-| **Quản lý Small Files** | Tự động Clustering/Compaction | Quản lý thủ công qua lệnh (hoặc dịch vụ bên thứ 3) | Tối ưu hóa qua `OPTIMIZE` (thường cần Databricks) |
-| **Hệ sinh thái** | Apache Spark, Flink, Presto, Trino | Spark, Trino, Dremio, Snowflake | Spark, Databricks ecosystem |
-
-> [!IMPORTANT]
-> Lựa chọn công cụ nào phụ thuộc vào hệ sinh thái hiện tại của bạn. Nếu hệ thống nặng về Streaming (Kafka, Flink, Spark Streaming) và CDC từ cơ sở dữ liệu, **Hudi** là vô đối. Nếu bạn muốn bảng của mình lưu trữ petabytes mà việc truy vấn metadata vẫn nhanh chóng, **Iceberg** là số 1. Nếu hệ thống hoàn toàn chạy trên Databricks, hãy ở lại với **Delta Lake**.
-
----
-
-## 6. Kịch bản thực tế (Real-world Scenarios)
-
-*   **Streaming Ingestion:** Uber (nơi sinh ra Hudi) phải xử lý hàng trăm tỷ event một ngày. Họ dùng Hudi để đẩy dữ liệu liên tục từ Kafka thẳng vào Hadoop/S3 với độ trễ cực thấp để tài xế và hành khách có trải nghiệm theo thời gian thực (real-time ETA).
-*   **Change Data Capture (CDC):** Nhiều doanh nghiệp dùng Hudi làm kho dữ liệu trung tâm, đồng bộ tự động từ các nguồn RDBMS (MySQL, PostgreSQL, Oracle) qua Debezium. Việc cập nhật và xóa khách hàng trong Data Lake trở nên trong suốt và dễ dàng.
-*   **Tuân thủ GDPR/CCPA:** Khi luật bảo vệ quyền riêng tư yêu cầu "Right to be Forgotten" (Quyền được lãng quên), các tổ chức cần xóa vĩnh viễn thông tin user cụ thể. Nhờ Hudi, họ có thể dùng câu lệnh SQL `DELETE FROM table WHERE user_id = 'X'` trực tiếp trên Data Lake mà không phải tốn thời gian tính toán lại dữ liệu của hàng triệu user khác.
-
----
-
-## 7. Các Best Practices (Thực hành tốt nhất)
-
-Khi vận hành Apache Hudi trên môi trường Production, bạn cần lưu ý:
-1.  **Chiến lược Partitioning:** Tránh tạo quá nhiều partition nhỏ (over-partitioning) dẫn đến số lượng file metadata khổng lồ, làm chậm quá trình Query. Nên chọn trường thời gian (VD: `ngày`, `tháng`) kết hợp với một cấp độ logic đủ lớn.
-2.  **Lựa chọn Key (Record Key và Pre-combine Key):** `Record Key` nên là Unique Key để phục vụ Upsert, và `Pre-combine Key` thường là trường `timestamp` cập nhật cuối cùng để Hudi biết bản ghi nào là mới nhất khi có xung đột (duplicate).
-3.  **Tự động hóa Clustering và Compaction:** Cấu hình Async Compaction (dành cho bảng MoR) và Inline Clustering để không làm chậm luồng ghi Streaming chính.
-
----
-
-## 8. Tài Liệu Tham Khảo
-
-*   [Trang chủ Apache Hudi](https://hudi.apache.org/)
-*   [Apache Hudi Core Concepts](https://hudi.apache.org/docs/concepts)
-*   **Kiến trúc nền tảng CDC với Apache Hudi**
-*   [Comparison of Data Lake Table Formats: Iceberg, Hudi, Delta Lake](https://lakefs.io/blog/hudi-iceberg-and-delta-lake-data-lake-table-formats-compared/)
+1. **Uber Engineering Blog:** [Apache Hudi™ at Uber: Engineering for Trillion-Record-Scale Data Lake Operations](https://www.uber.com/en-VN/blog/apache-hudi-trillion-record-data-lake/) - Bài viết kinh điển giải thích chi tiết động lực Uber chuyển từ kiến trúc Bulk Load sang Incremental Processing bằng Hudi.
+2. **Apache Hudi Official Docs:** [Concurrency Control (OCC vs MVCC)](https://hudi.apache.org/docs/concurrency_control) - Tài liệu mổ xẻ về cơ chế khóa (Locking) và xử lý tranh chấp Multi-writers.
+3. **Record Level Index (RLI):** [Introducing Multimodal Index in Apache Hudi](https://hudi.apache.org/blog/2023/11/01/multimodal-index/) - Giải thích về chi phí Storage và lợi ích $O(1)$ Lookup khi Hudi nâng cấp hệ thống Index.
+4. **Lakehouse Comparisons:** [Scaling Complex Data Workflows at Uber Using Apache Hudi](https://www.uber.com/blog/scaling-complex-data-workflows-using-apache-hudi/) - Phân tích cách Hudi giảm thiểu Read/Write Amplification trong hệ thống thực tế.
