@@ -1,159 +1,187 @@
 ---
 title: "Chiến lược phân tách văn bản - Chunking Strategy"
-difficulty: "Beginner"
-tags: ["chunking", "rag", "vector-database", "nlp", "text-processing"]
+difficulty: "Advanced"
+tags: ["chunking", "rag", "vector-database", "nlp", "finops", "system-design"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Chunking Strategy là gì? Tối ưu hóa văn bản cho hệ thống RAG"
-metaDescription: "Tìm hiểu các chiến lược phân tách văn bản (Chunking Strategy) trong hệ thống RAG: Fixed-size, Recursive, Semantic chunking và tầm quan trọng của Overlap."
-description: "Khi xây dựng các ứng dụng Trí tuệ nhân tạo tạo sinh (GenAI), đặc biệt là các hệ thống trả lời câu hỏi dựa trên tài liệu doanh nghiệp sử dụng kiến trúc..."
+lastUpdated: 2026-06-26
+seoTitle: "Chunking Strategy: Thiết kế hệ thống RAG và Tối ưu Vận hành"
+metaDescription: "Phân tích kiến trúc, rủi ro vận hành (OOM, Retry Storms), FinOps và các chiến lược Chunking (Semantic, Hierarchical) cho hệ thống RAG quy mô lớn."
+description: "Phân tích chuyên sâu về Chunking Strategy dưới góc nhìn thiết kế hệ thống Data Engineering, từ các chiến lược vật lý đến rủi ro vận hành và tối ưu chi phí (FinOps) trong các ứng dụng GenAI."
 ---
 
+Trong các hệ thống Retrieval-Augmented Generation (RAG) quy mô doanh nghiệp, **Chunking (Phân tách văn bản)** không chỉ là bước tiền xử lý NLP đơn thuần. Dưới góc độ System Design, Chunking là bài toán đánh đổi trực tiếp giữa **Độ trễ (Latency)**, **Thông lượng (Throughput)**, **Chi phí (FinOps)** và **Độ chính xác (Accuracy)** của toàn bộ pipeline Ingestion và Retrieval.
 
-
-Khi xây dựng các ứng dụng Trí tuệ nhân tạo tạo sinh (GenAI), đặc biệt là các hệ thống Retrieval-Augmented Generation (RAG) để trả lời câu hỏi dựa trên tài liệu, việc xử lý và chuẩn bị dữ liệu văn bản đóng vai trò sống còn. Một trong những bước quan trọng nhất của quá trình này là **Chunking** (Phân tách văn bản).
-
-**Chunking Strategy** (Chiến lược phân tách) là nghệ thuật cắt nhỏ một văn bản hoặc tài liệu dài thành các đoạn nhỏ hơn (gọi là *Chunks*) có kích thước phù hợp để đưa vào các mô hình Embedding và lưu trữ trong Vector Database. 
-
-Nếu bạn cắt quá nhỏ, các đoạn văn bản sẽ mất đi ngữ cảnh (Context) cần thiết để LLM hiểu. Nếu bạn cắt quá lớn, bạn sẽ làm loãng thông tin, làm giảm độ chính xác của tìm kiếm vector (Vector Search), và có nguy cơ vượt qua giới hạn Token (Token limit) của các mô hình ngôn ngữ lớn (LLM).
+Việc thiết kế sai chiến lược Chunking có thể dẫn đến các sự cố nghiêm trọng như cạn kiệt bộ nhớ (OOM) trong Vector DB, API Throttling từ các nhà cung cấp LLM, hoặc chi phí phình to do Context Window quá tải.
 
 ---
 
-## 1. Tại sao Chunking lại quan trọng trong hệ thống RAG?
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
+Quá trình Chunking xảy ra ở giai đoạn **Data Ingestion** của RAG pipeline. Dữ liệu thô từ Data Lake/Warehouse sẽ đi qua Text Splitter, Embedding Model trước khi được ghi (Write) vào Vector Database.
 
+![AWS RAG Architecture](/images/9-genai-machine-learning/aws-rag-chunking.png)
 
-Chunking không chỉ là việc chia nhỏ văn bản một cách cơ học. Nó tác động trực tiếp đến hiệu suất, chi phí và độ chính xác của toàn bộ ứng dụng GenAI.
+Để minh họa sâu hơn luồng xử lý vật lý và các nút thắt cổ chai (bottlenecks), hãy xem xét sơ đồ dưới đây:
 
-* **Vượt qua giới hạn Token (Token Limits):** Mọi LLM (như GPT-4, Claude 3, Llama 3) và các mô hình Embedding (như OpenAI `text-embedding-3`, BGE-m3) đều có giới hạn về số lượng Token chúng có thể xử lý trong một lần. Việc chia nhỏ tài liệu đảm bảo bạn không gửi quá nhiều dữ liệu vượt mức cho phép.
-* **Tối ưu hóa tìm kiếm Vector (Vector Search Optimization):** Khi người dùng đặt câu hỏi, hệ thống sẽ nhúng (embed) câu hỏi đó và tìm kiếm các đoạn văn bản có vector tương đồng cao nhất. Nếu chunk quá dài, ý nghĩa của một câu trả lời cụ thể có thể bị "chôn vùi" trong toàn bộ đoạn văn. Ngược lại, chunk vừa đủ sẽ tạo ra các vector đại diện sắc nét và tập trung hơn.
-* **Kiểm soát chi phí:** Gửi ít token hơn (nhưng chất lượng hơn) vào prompt của LLM giúp giảm đáng kể chi phí API.
-* **Cải thiện chất lượng sinh văn bản (Generation Quality):** Cung cấp cho LLM chính xác các đoạn thông tin (context) liên quan giúp giảm thiểu hiện tượng "ảo giác" (hallucination) và tăng tính chính xác cho câu trả lời.
-
----
-
-## 2. Các tham số cốt lõi trong Chunking
-
-Dù sử dụng chiến lược nào, bạn cũng cần quan tâm đến hai tham số chính: **Chunk Size** (Kích thước mỗi chunk) và **Chunk Overlap** (Mức độ chồng chéo).
-
-### Chunk Size (Kích thước Chunk)
-Đây là độ dài tối đa của mỗi đoạn văn bản được cắt ra. Kích thước này thường được đo bằng số lượng ký tự (characters) hoặc số lượng tokens. 
-* *Kích thước nhỏ* (ví dụ: 100-250 tokens): Giúp tìm kiếm rất chính xác các thông tin cụ thể (factoid). Nhưng có thể thiếu ngữ cảnh xung quanh.
-* *Kích thước lớn* (ví dụ: 500-1000 tokens): Bảo toàn tốt ngữ cảnh rộng, lý tưởng cho các câu hỏi cần tóm tắt hoặc suy luận phức tạp. Tuy nhiên, tìm kiếm có thể kém nhạy bén hơn với các chi tiết nhỏ.
-
-### Chunk Overlap (Mức độ chồng chéo)
-Khi cắt văn bản, câu hoặc ý có thể bị đứt gãy ở ranh giới giữa hai chunk. Để giải quyết, người ta để cho phần cuối của chunk trước "chồng lên" phần đầu của chunk sau một lượng nhất định.
-* Kích thước overlap thường dao động từ **10% đến 20%** kích thước của chunk.
-* *Ví dụ:* Nếu Chunk size là 1000 tokens và Overlap là 150 tokens, thì 150 tokens cuối của Chunk 1 sẽ lặp lại ở đầu Chunk 2, giúp giữ được tính liên kết và ngữ cảnh chuyển tiếp.
-
----
-
-## 3. Các chiến lược Chunking phổ biến (Chunking Strategies)
-
-Lựa chọn chiến lược phân tách phụ thuộc vào định dạng dữ liệu (PDF, Markdown, HTML, Code) và mức độ phức tạp của ứng dụng.
-
-### 3.1. Fixed-size Chunking (Phân tách theo kích thước cố định)
-Đây là phương pháp cơ bản và dễ triển khai nhất. Văn bản được chia thành các phần có số lượng ký tự hoặc token bằng nhau.
-
-* **Ưu điểm:** Cực kỳ đơn giản, tốc độ xử lý nhanh, dễ tính toán chi phí.
-* **Nhược điểm:** Mù mờ về mặt ngữ nghĩa. Nó có thể cắt ngang một câu, một đoạn văn, hoặc giữa một ý quan trọng, làm hỏng mạch ý nghĩa.
-* **Khi nào nên dùng:** Phù hợp làm baseline đầu tiên, hoặc khi xử lý các văn bản phi cấu trúc và không có ranh giới đoạn văn rõ ràng.
-
-### 3.2. Recursive Character Chunking (Phân tách đệ quy)
-Chiến lược này thông minh hơn Fixed-size. Nó cố gắng chia văn bản dựa trên danh sách các ký tự phân cách theo thứ tự ưu tiên (ví dụ: chia theo hai dấu xuống dòng `\n\n`, sau đó là một dấu xuống dòng `\n`, rồi tới dấu chấm `.`, dấu phẩy `,` và cuối cùng là khoảng trắng ` `).
-
-Nó sẽ "đệ quy" chia nhỏ văn bản cho đến khi các đoạn nhỏ đạt được kích thước Chunk Size mong muốn, nhưng vẫn cố gắng giữ lại các câu và đoạn văn nguyên vẹn.
-
-* **Ưu điểm:** Tốt hơn rất nhiều so với cắt cố định vì nó tôn trọng cấu trúc cơ bản của ngôn ngữ (câu, đoạn văn).
-* **Nhược điểm:** Vẫn có thể chia rẽ các khái niệm ngữ nghĩa lớn nếu chúng nằm trên nhiều đoạn văn.
-* **Khi nào nên dùng:** Đây là phương pháp **mặc định và được khuyên dùng nhất** cho hầu hết các loại văn bản thông thường. Trong LangChain, đây là cơ chế của `RecursiveCharacterTextSplitter`.
-
-### 3.3. Document-Based / Structural Chunking (Phân tách theo cấu trúc)
-Phương pháp này dựa vào cấu trúc vốn có của tài liệu, như thẻ HTML, các tiêu đề Markdown (`#`, `##`), cấu trúc file code (function, class), hoặc cấu trúc JSON.
-
-* **Ưu điểm:** Giữ được ngữ cảnh tự nhiên do người viết tạo ra. Một mục (section) trong tài liệu thường chứa một chủ đề hoàn chỉnh.
-* **Nhược điểm:** Yêu cầu các bộ phân tích (parsers) chuyên biệt cho từng loại file. Kích thước chunk có thể rất không đồng đều (có phần quá dài, có phần quá ngắn).
-* **Khi nào nên dùng:** Rất hiệu quả khi làm việc với Markdown, HTML, source code (Python, Java), hoặc các tài liệu luật, hợp đồng được chia thành các Điều, Khoản rõ ràng.
-
-### 3.4. Semantic Chunking (Phân tách theo ngữ nghĩa)
-Đây là một cách tiếp cận tiên tiến hơn. Semantic Chunking cố gắng nhóm các câu lại với nhau dựa trên độ tương đồng về mặt ý nghĩa, thay vì dựa trên số lượng ký tự hay cấu trúc cú pháp.
-
-Cách hoạt động:
-1. Chia văn bản thành các câu riêng lẻ.
-2. Tạo vector nhúng (embedding) cho từng câu.
-3. So sánh độ tương đồng cosine (Cosine Similarity) giữa các câu liền kề.
-4. Nếu độ tương đồng giảm mạnh (vượt qua một ngưỡng - threshold), hệ thống xác định đó là sự chuyển đổi chủ đề và thực hiện cắt chunk tại đó.
-
-* **Ưu điểm:** Các chunk được tạo ra mang tính gắn kết chủ đề (topical coherence) rất cao. Rất tốt cho hệ thống RAG cần trả lời chính xác theo từng "ý" của tài liệu.
-* **Nhược điểm:** Chạy chậm hơn và tốn kém hơn vì phải gọi API Embedding cho từng câu trước khi thực sự lưu trữ vào Vector DB.
-* **Khi nào nên dùng:** Khi bạn có ngân sách tài nguyên dồi dào và yêu cầu độ chính xác cực cao trong việc lấy lại ngữ cảnh.
-
-### 3.5. Agentic / Context-Aware Chunking (Phân tách dùng LLM)
-Sử dụng chính LLM để phân tích và trích xuất các chunk hoặc tóm tắt tài liệu một cách thông minh. Đôi khi phương pháp này kết hợp với việc tạo ra các "Document Summary" (Tóm tắt tài liệu) và dùng chúng làm siêu dữ liệu (metadata) liên kết với các chunk con.
-
-Một kỹ thuật nổi tiếng là **Parent-Document Retriever**: Cắt văn bản thành các chunk rất nhỏ (Child chunks) để tìm kiếm chính xác, nhưng khi tìm thấy, hệ thống lại trả về đoạn văn bản lớn hơn chứa chunk đó (Parent chunk) cho LLM đọc để có ngữ cảnh rộng.
-
----
-
-## 4. Hướng dẫn chọn chiến lược Chunking tối ưu
-
-Không có "một công thức chung cho mọi trường hợp" (No silver bullet). Việc lựa chọn chiến lược phụ thuộc vào ba yếu tố chính:
-
-1. **Bản chất của dữ liệu:** 
-   - Văn bản liền mạch (Tiểu thuyết, bài báo): Dùng *Recursive Chunking*.
-   - Tài liệu kỹ thuật, Wiki: Dùng *Structural Chunking* (Markdown/HTML splitters).
-   - Dữ liệu dạng bảng hoặc JSON: Cần xử lý riêng, biến đổi từng hàng/node thành các mô tả chuỗi (string descriptions).
-
-2. **Loại câu hỏi của người dùng:**
-   - Cần tìm thông tin thực tế, chi tiết nhanh (Ví dụ: "Mã lỗi 404 nghĩa là gì?"): Chunk size nhỏ (100-250 tokens), overlap nhỏ.
-   - Cần tóm tắt, so sánh, tổng hợp (Ví dụ: "So sánh chính sách đổi trả của năm 2023 và 2024"): Chunk size lớn (500-1000 tokens), overlap vừa đủ để không rớt ý.
-
-3. **Mô hình Embedding được sử dụng:**
-   - Các mô hình cũ (như `text-embedding-ada-002` của OpenAI) hỗ trợ tối đa 8191 tokens, nhưng hiệu suất tốt nhất lại nằm ở mức < 1000 tokens.
-   - Luôn tham khảo tài liệu kỹ thuật của mô hình Embedding để biết "Sweet spot" (điểm tối ưu) của độ dài văn bản đầu vào.
-
----
-
-## 5. Ví dụ thực hành với Python (LangChain)
-
-Dưới đây là một ví dụ minh họa cách sử dụng **RecursiveCharacterTextSplitter** trong thư viện LangChain, chiến lược được sử dụng phổ biến nhất.
-
-```python
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-# Nội dung văn bản mẫu
-text_content = """
-Trí tuệ nhân tạo (AI) đang thay đổi thế giới. Trong vài năm qua, chúng ta đã chứng kiến sự bùng nổ của các mô hình sinh (Generative Models).
-Ví dụ nổi bật nhất là ChatGPT của OpenAI, Midjourney cho hình ảnh, và nhiều mô hình mã nguồn mở khác từ Meta hay Mistral.
-
-Tuy nhiên, các mô hình này không hoàn hảo. Chúng có thể bị ảo giác (hallucinate), đưa ra thông tin sai lệch nhưng với giọng điệu rất tự tin.
-Để khắc phục điều này, kỹ thuật RAG (Retrieval-Augmented Generation) được sinh ra.
-RAG kết hợp sức mạnh suy luận của LLM với độ chính xác của cơ sở dữ liệu tri thức bên ngoài.
-"""
-
-# Khởi tạo Text Splitter
-# Cấu hình chunk_size=100 ký tự và chunk_overlap=20 ký tự
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=100,
-    chunk_overlap=20,
-    length_function=len,
-    separators=["\\n\\n", "\\n", ".", " ", ""]
-)
-
-# Thực hiện chia nhỏ văn bản
-chunks = text_splitter.split_text(text_content)
-
-for i, chunk in enumerate(chunks):
-    print(f"--- Chunk {i+1} ---")
-    print(chunk)
+```mermaid
+graph TD
+    subgraph Data Ingestion Pipeline
+        A["Raw Documents / S3"] -->|Read Streams| B("Document Loaders")
+        B --> C{"Chunking Engine"}
+        C -->|Fixed/Recursive| D1["Standard Chunks"]
+        C -->|Semantic/Agentic| D2["Context-Aware Chunks"]
+        D1 --> E["Batching & Rate Limiting"]
+        D2 --> E
+        E -->|gRPC / HTTP| F["Embedding Models / AWS Bedrock / OpenAI"]
+        F --> G["(Vector Database / Milvus, Pinecone)"]
+    end
+    
+    subgraph Retrieval Pipeline
+        H["User Query"] --> I["Query Embedding"]
+        I --> J["Vector Search ANN"]
+        J -->|Top K| G
+        G -->|Return Parent/Child Chunks| K["LLM Synthesis"]
+    end
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style F fill:#bfb,stroke:#333,stroke-width:2px
+    style G fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
-**Kết quả thu được sẽ có dạng chồng chéo tự nhiên giữa các đoạn:** Các câu lớn được cắt tại các dấu chấm hoặc xuống dòng, và các ký tự cuối của chunk này sẽ xuất hiện ở đầu chunk kế tiếp.
+### Đánh đổi Cốt lõi (Systemic Trade-offs)
+* **Chunk Size Lớn:** Tối ưu hóa **Throughput** khi ghi vào Vector DB, giữ context tốt hơn. Đánh đổi: **Latency** tăng khi generate embedding, tăng rủi ro tràn Context Window của LLM lúc retrieve, chi phí inference cao.
+* **Chunk Size Nhỏ:** Giảm chi phí token cho mỗi query, độ nhạy (Recall) cao cho các truy vấn Factoid. Đánh đổi: Mất ngữ nghĩa tổng thể (Orphaned context), gây ra hiện tượng *Cartesian Explosion* (số lượng vector quá lớn) làm tăng chi phí RAM/Storage trên Vector DB.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [LangChain Documentation: Text Splitters](https://python.langchain.com/docs/modules/data_connection/document_transformers/)
-* [Pinecone: Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/)
-* **LlamaIndex: Node Parsers & Text Splitters**
-* [Greg Kamradt: 5 Levels of Text Splitting](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb)
+## 2. Các Chiến lược Chunking Thực chiến
+
+Lựa chọn thuật toán cắt chunk phụ thuộc trực tiếp vào loại dữ liệu và ràng buộc về Compute/Storage.
+
+### 2.1. Heuristic-Based Chunking (Fixed-size & Recursive)
+* **Cơ chế:** Dựa trên số lượng Token/Ký tự và các dấu phân cách tĩnh (`\n\n`, `.`).
+* **Ưu điểm:** Độ phức tạp tính toán $O(N)$. Cực kỳ nhanh, không tốn chi phí gọi LLM hoặc embedding ở bước cắt. Stream-processing thân thiện.
+* **Nhược điểm:** Phá vỡ ranh giới ngữ nghĩa.
+* **Được dùng ở:** Baseline systems, log parsing, tabular data serialization.
+
+### 2.2. Structural / Syntax-Aware Chunking
+* **Cơ chế:** AST (Abstract Syntax Tree) Parsing cho Source Code, DOM Parsing cho HTML, hoặc Markdown Header splitting.
+* **Ví dụ:** Cắt một file Python, đảm bảo toàn bộ block `def...` hoặc `class...` nằm gọn trong 1 chunk.
+* **Ưu điểm:** Giữ nguyên tính toàn vẹn (Integrity) của Code và Document schema.
+* **Nhược điểm:** Cần CPU-intensive parsers. Mất cân bằng kích thước chunk nặng nề (Data Skew).
+
+### 2.3. Semantic Chunking (Phân tách Ngữ nghĩa)
+* **Cơ chế:** So sánh Cosine Similarity của vector nhúng giữa các câu liên tiếp. Nếu độ tương đồng tụt xuống dưới ngưỡng (Threshold), hệ thống sẽ tách chunk.
+* **System Design Trade-off:** Rất nặng về I/O và Compute. Thay vì gọi API Embedding 1 lần cho cả cụm lớn, bạn phải nhúng TỪNG câu để tìm điểm cắt. 
+* **Tối ưu:** Cần chạy các mô hình nhúng siêu nhẹ (vd: `all-MiniLM-L6-v2`) cục bộ (Local Compute) trên CPU hoặc GPU nhỏ trước khi nhúng chunk cuối cùng bằng các mô hình xịn (vd: `text-embedding-3-large`).
+
+### 2.4. Agentic / Hierarchical Chunking (Parent-Child)
+* **Cơ chế:** Lưu trữ metadata theo cấu trúc cây. Cắt văn bản thành các Node nhỏ (Child) để tìm kiếm (tối ưu Precision), nhưng khi context được nạp vào LLM, hệ thống truy xuất Node cha (Parent) bao bọc Node con đó (tối ưu Context).
+* **Kiến trúc dữ liệu:** Yêu cầu một **Document Store** (như DynamoDB hoặc MongoDB) chạy song song với **Vector DB**. Vector DB chỉ chứa UUID của Parent Node.
+
+---
+
+## 3. Rủi ro Vận hành và Tối ưu Chi phí (FinOps)
+
+Là Data Engineer, bạn không chỉ code thuật toán mà phải đối phó với hệ thống khi tải nặng.
+
+### 3.1. API Throttling & Retry Storms
+Khi chạy Ingestion pipeline hàng triệu tài liệu, việc tạo chunk và nạp vào Embedding API (OpenAI/AWS Bedrock) rất dễ dính lỗi `HTTP 429 Too Many Requests`.
+* **Sự cố thực tế:** Nếu pipeline không thiết kế cơ chế Exponential Backoff có jitter, hàng nghìn worker sẽ đồng loạt gửi lại request (Retry Storm), làm treo luôn gateway hoặc bị khóa API Key.
+* **Giải pháp:** Sử dụng Queue (Kafka/SQS) cho Ingestion, cấu hình rate limit ở worker, và dùng thư viện như `tenacity`.
+
+### 3.2. OOMKilled & Vector Database Fragmentation
+* **Sự cố:** Cấu hình Chunk Size quá nhỏ (ví dụ 50 tokens) cho một dataset 1TB sẽ đẻ ra hàng tỷ vectors. Các Vector DB in-memory (như Redis, Qdrant, Milvus) sẽ tiêu thụ RAM đột biến cho hệ thống Indexing (như HNSW), dẫn đến tiến trình bị kernel kill (`OOMKilled`).
+* **Khắc phục:** 
+  1. Nâng Chunk Size lên điểm "Sweet spot" (thường ~500-1000 tokens).
+  2. Bật tính năng Scalar Quantization hoặc Product Quantization (PQ) trên Vector DB để nén vector.
+  3. Dùng kiến trúc tràn đĩa cứng (Spill-to-disk / DiskANN).
+
+### 3.3. Tối ưu FinOps
+Việc sử dụng *Semantic Chunking* có thể đẩy chi phí Ingestion lên 10x so với *Recursive Chunking*.
+* Đưa các model Embedding nhỏ vào cụm Kubernetes nội bộ để cắt ngữ nghĩa (Local Inference).
+* Áp dụng thuật toán CDC (Change Data Capture) để chỉ nhúng (embed) lại các chunk có sự thay đổi, thay vì nhúng lại toàn bộ database khi sync.
+
+---
+
+## 4. Code Thực chiến (Executable Code)
+
+Dưới đây là một Python pipeline chuẩn mực production để xử lý Ingestion. Pipeline sử dụng `RecursiveCharacterTextSplitter`, kết hợp với cơ chế Rate Limiting, Exponential Backoff (chống Retry Storms) qua `tenacity`, và gộp Batch để tối ưu I/O.
+
+```python
+import os
+from typing import List
+from tenacity import retry, wait_random_exponential, stop_after_attempt
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+
+# Thiết lập Splitting Strategy phù hợp với Data Engineering
+# Chunk size 1000 đảm bảo độ nén tốt, giảm Cartesian Explosion cho Vector DB
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=150,
+    length_function=len,
+    is_separator_regex=False,
+)
+
+# Khởi tạo mô hình Embedding
+# Cần cấu hình max_retries bên trong nhưng ta bọc thêm tenacity ở ngoài cho chắc chắn
+embeddings_model = OpenAIEmbeddings(
+    model="text-embedding-3-small", 
+    max_retries=3
+)
+
+@retry(
+    wait=wait_random_exponential(multiplier=1, max=60), 
+    stop=stop_after_attempt(5),
+    reraise=True
+)
+def embed_batch_with_retry(texts: List[str]) -> List[List[float]]:
+    """
+    Hàm gọi API Embedding có trang bị Exponential Backoff + Jitter 
+    để chống Retry Storms và API Throttling (HTTP 429).
+    """
+    return embeddings_model.embed_documents(texts)
+
+def production_ingestion_pipeline(raw_documents: List[str], batch_size: int = 100):
+    """
+    Batch processing pipeline tối ưu I/O memory footprint (chống OOM).
+    """
+    # 1. Cắt Chunk
+    all_chunks = []
+    for doc in raw_documents:
+        all_chunks.extend(text_splitter.split_text(doc))
+        
+    print(f"Total chunks created: {len(all_chunks)}")
+    
+    # 2. Batching & Embedding để tránh gửi payload quá lớn làm rớt HTTP request
+    vectors = []
+    for i in range(0, len(all_chunks), batch_size):
+        batch = all_chunks[i : i + batch_size]
+        try:
+            batch_embeddings = embed_batch_with_retry(batch)
+            vectors.extend(batch_embeddings)
+            print(f"Successfully embedded batch {i//batch_size + 1}")
+        except Exception as e:
+            print(f"Failed to embed batch {i//batch_size + 1}: {str(e)}")
+            # Log vào Dead Letter Queue (DLQ) trong thực tế
+            
+    return all_chunks, vectors
+
+# ----- TEST THE PIPELINE -----
+if __name__ == "__main__":
+    # Đọc dữ liệu lớn (Mô phỏng 1 Document dài)
+    sample_doc = "Sự cố OOMKilled thường xảy ra khi Vector DB... " * 500
+    
+    # Xử lý Ingestion an toàn
+    chunks, vectors = production_ingestion_pipeline([sample_doc], batch_size=50)
+    print(f"Generated {len(vectors)} vectors ready for Milvus/Pinecone.")
+```
+
+---
+
+## 5. Nguồn Tham Khảo (References)
+* **Pinecone Engineering Blog**: [Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/) - Nền tảng lý thuyết về Fixed-size và Semantic chunking.
+* **Databricks Engineering**: Khảo sát chiến lược đánh giá RAG Ingestion Pipeline cho doanh nghiệp.
+* **AWS Architecture Blog**: [Build accurate and scalable RAG applications with Amazon Bedrock Knowledge Bases](https://aws.amazon.com/blogs/machine-learning/build-accurate-and-scalable-rag-applications-with-amazon-bedrock-knowledge-bases/) - Giải pháp Hierarchical Chunking.
+* **Designing Data-Intensive Applications (Martin Kleppmann)** - Cấu trúc dữ liệu và xử lý I/O Batches.

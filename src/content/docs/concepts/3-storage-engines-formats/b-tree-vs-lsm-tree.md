@@ -1,105 +1,151 @@
 ---
 title: "B-Tree vs LSM-Tree"
 difficulty: "Advanced"
-readingTime: "10 mins"
-lastUpdated: 2026-06-15
-seoTitle: "B-Tree vs LSM-Tree - Data Engineering Deep Dive"
-metaDescription: "Bản chất vật lý của Storage Engine: Đánh đổi giữa tốc độ Read (B-Tree) và tốc độ Write (LSM-Tree)."
-description: "Bản chất vật lý của Storage Engine: Đánh đổi giữa tốc độ Read (B-Tree) và tốc độ Write (LSM-Tree)."
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "B-Tree vs LSM-Tree: Kiến Trúc Lưu Trữ & Đánh Đổi Hệ Thống"
+metaDescription: "Phân tích kiến trúc cốt lõi của Storage Engines: B-Tree (Tối ưu Read) và LSM-Tree (Tối ưu Write). Đi sâu vào các Trade-off hệ thống, Amplification Triad và cấu hình thực chiến."
+description: "Phân tích kiến trúc cốt lõi của Storage Engines: B-Tree (Tối ưu Read) và LSM-Tree (Tối ưu Write). Đi sâu vào các Trade-off hệ thống, Amplification Triad và cấu hình thực chiến."
 ---
 
+Lựa chọn Storage Engine là quyết định thiết kế kiến trúc quan trọng bậc nhất, ảnh hưởng trực tiếp đến hiệu năng, chi phí vận hành và tính ổn định của hệ thống dữ liệu. Ở tầng vật lý, gần như tất cả các cơ sở dữ liệu hiện đại đều dựa trên một trong hai họ cấu trúc dữ liệu cốt lõi: **B-Tree** (và các biến thể như B+Tree) hoặc **LSM-Tree** (Log-Structured Merge-Tree).
 
-
-B-Tree (cây cân bằng) là cấu trúc lõi của RDBMS truyền thống, tối ưu cho thao tác Đọc nhưng chậm khi Ghi liên tục. Ngược lại, LSM-Tree (Log-Structured Merge-Tree) là cấu trúc lõi của NoSQL và Time-Series DB (như Cassandra, RocksDB), sinh ra để tối ưu hóa việc Ghi (Write-Heavy) với tốc độ khủng khiếp bằng cách chỉ nối thêm (append-only).
-
-Hiểu rõ sự khác biệt giữa hai cấu trúc dữ liệu này là chìa khóa để lựa chọn đúng storage engine cho hệ thống dữ liệu của bạn, từ các giao dịch tài chính yêu cầu độ trễ thấp (OLTP) đến các hệ thống thu thập log khổng lồ với yêu cầu thông lượng cao.
-
----
-
-## 1. B-Tree (Bayer-Tree / Balanced-Tree)
-
-B-Tree là kiến trúc nền tảng được sử dụng trong gần như mọi hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) như **MySQL (InnoDB)**, **PostgreSQL**, **Oracle** và cả một số NoSQL databases như **MongoDB** (WiredTiger) hay **Couchbase**.
-
-### 1.1. Cơ chế hoạt động
-
-- **Phân trang (Paging):** B-Tree chia đĩa cứng thành các khối (blocks) hoặc trang (pages) có kích thước cố định, thường là 4KB hoặc 8KB. Mỗi thao tác đọc/ghi đều thực hiện trên toàn bộ một page.
-- **Cấu trúc phân cấp:** Dữ liệu được tổ chức dưới dạng một cây cân bằng. Các node gốc (root) và node nhánh (internal) chứa khóa (keys) và con trỏ (pointers) trỏ đến các page con. Các node lá (leaf) nằm ở tầng cuối cùng chứa dữ liệu thực tế (hoặc con trỏ tới bản ghi dữ liệu).
-- **Cập nhật tại chỗ (In-place updates):** Khi muốn sửa một bản ghi, Storage Engine sẽ tìm đúng page chứa bản ghi đó, tải page lên bộ nhớ, cập nhật dữ liệu, và ghi đè (overwrite) toàn bộ page đó xuống đĩa cứng.
-
-### 1.2. Ưu điểm
-*   **Tốc độ đọc nhanh và ổn định:** Độ sâu của cây B-Tree thường rất nông (thường 3-4 tầng). Một cây B-Tree 4 tầng với page 4KB có thể lưu trữ lên đến 256TB dữ liệu. Việc tìm kiếm một bản ghi chỉ tốn tối đa 3-4 lần đọc từ đĩa (disk I/O).
-*   **Truy vấn theo dải (Range Queries) hiệu quả:** Với B+Tree (một biến thể phổ biến nhất của B-Tree), các node lá được liên kết với nhau bằng danh sách liên kết đôi (doubly-linked list). Nhờ vậy, việc duyệt và lấy các bản ghi liền kề nhau cực kỳ nhanh chóng.
-*   **Hỗ trợ Transaction tốt:** Việc khóa (Locking) ở cấp độ dòng (row) hoặc trang (page) để hỗ trợ ACID transaction dễ dàng hơn vì dữ liệu nằm tại một vị trí cố định trên đĩa.
-
-### 1.3. Nhược điểm
-*   **Chi phí ghi cao (Write Penalty):** Ghi dữ liệu ngẫu nhiên (random writes) yêu cầu phải tìm và cập nhật đúng page. Nếu một page bị đầy, việc chèn thêm dữ liệu sẽ gây ra hiện tượng chia tách trang (**Page Split**), làm thay đổi cấu trúc cây và tốn rất nhiều tài nguyên Disk I/O.
-*   **Phân mảnh (Fragmentation):** Việc xóa và chèn dữ liệu liên tục sẽ tạo ra các khoảng trống bên trong các page (internal fragmentation), làm giảm hiệu suất lưu trữ và yêu cầu quá trình `VACUUM` (trong PostgreSQL) hoặc `OPTIMIZE TABLE` (trong MySQL) để dọn dẹp không gian.
+Bài viết này không dừng lại ở định nghĩa cơ bản, mà mổ xẻ sâu vào **Kiến trúc Thực thi Vật lý (Physical Execution)**, **Amplification Triad (Hệ số khuếch đại)**, và các **Rủi ro Vận hành (Operational Risks)** từ góc nhìn của một Kỹ sư Hệ thống.
 
 ---
 
-## 2. LSM-Tree (Log-Structured Merge-Tree)
+## 1. Kiến Trúc Thực Thi Vật Lý (Physical Execution)
 
-LSM-Tree ra đời như một giải pháp cứu cánh cho các hệ thống yêu cầu tốc độ ghi khổng lồ (write-intensive) như ứng dụng chat, time-series, log monitoring. Đây là cấu trúc cốt lõi của **Cassandra, HBase, RocksDB, LevelDB, ClickHouse**.
+### 1.1. B-Tree: Triết lý "Cập nhật tại chỗ" (In-place Updates)
 
-### 2.1. Cơ chế hoạt động
+B-Tree (đặc biệt là B+Tree) là xương sống của các hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) truyền thống như MySQL (InnoDB), PostgreSQL, và Oracle. Thiết kế của nó nhắm đến việc tối ưu hóa độ trễ đọc (Read Latency) và hỗ trợ các truy vấn dải (Range Queries).
 
-Thay vì cập nhật tại chỗ như B-Tree, LSM-Tree biến mọi thao tác ghi, sửa, và xóa thành **ghi nối tiếp (Append-only)**.
+**Cơ chế hoạt động ở tầng đĩa:**
 
-1.  **Write-Ahead Log (WAL):** Khi có dữ liệu mới, hệ thống trước tiên ghi nối tiếp vào một tệp log trên đĩa để đảm bảo không mất dữ liệu nếu xảy ra sự cố sập nguồn (crash). Thao tác này cực kỳ nhanh vì sử dụng đĩa theo kiểu tuần tự (Sequential I/O).
-2.  **MemTable:** Sau khi ghi vào WAL, dữ liệu được đẩy vào một cấu trúc dữ liệu dạng cây nằm trên bộ nhớ RAM (gọi là MemTable, thường là Red-Black Tree hoặc Skip List).
-3.  **SSTable (Sorted String Table):** Khi MemTable đạt kích thước giới hạn (VD: 32MB - 64MB), nó sẽ được "đóng băng" và xả (flush) xuống đĩa tạo thành một file gọi là SSTable. SSTable là **bất biến (immutable)** - dữ liệu bên trong đã được sắp xếp theo khóa và không bao giờ bị sửa đổi.
-4.  **Compaction (Hợp nhất):** Theo thời gian, sẽ có hàng chục đến hàng trăm file SSTable trên đĩa. Một tiến trình chạy ngầm gọi là Compaction sẽ tiến hành gộp nhiều SSTable cũ lại với nhau. Quá trình này sẽ giữ lại bản ghi mới nhất, loại bỏ các bản ghi đã bị xóa (được đánh dấu bằng một cờ *tombstone*) hoặc ghi đè, sau đó tạo ra các SSTable mới và xóa các SSTable cũ.
+B-Tree chia không gian đĩa thành các khối (blocks) hoặc trang (pages) có kích thước cố định (thường là 4KB đến 16KB). Các node của cây được ánh xạ trực tiếp vào các pages này. 
 
-### 2.2. Ưu điểm
-*   **Tốc độ ghi siêu hạng:** Việc ghi dữ liệu vào LSM-Tree chỉ là thao tác ghi vào bộ nhớ (RAM) và ghi nối tiếp vào cuối file log (Sequential Disk I/O). Việc này không tốn chi phí tìm kiếm hay cập nhật page ngẫu nhiên như B-Tree, giúp Write Throughput cao hơn gấp nhiều lần.
-*   **Tỷ lệ nén tốt hơn:** Vì file SSTable là bất biến và không có các khoảng trống do hiện tượng page splitting như của B-Tree, dữ liệu được đóng gói chặt chẽ và nén rất hiệu quả.
+Khi một truy vấn `UPDATE` hoặc `INSERT` diễn ra:
+1. Hệ thống tìm page chứa dữ liệu trên đĩa bằng cách duyệt từ Root node xuống Leaf node.
+2. Tải page đó vào RAM (Buffer Pool).
+3. Sửa đổi dữ liệu trên page trong RAM.
+4. Ghi lại (Overwrite) toàn bộ page đó xuống đĩa.
 
-### 2.3. Nhược điểm
-*   **Tốc độ đọc chậm hơn và không ổn định:** Để đọc một bản ghi, hệ thống phải kiểm tra trong MemTable trước. Nếu không tìm thấy, nó phải dò tìm ở nhiều file SSTables trên đĩa (từ mới nhất đến cũ nhất). Dù có sử dụng **Bloom Filters** để nhanh chóng bỏ qua các SSTable không chứa key đó, chi phí đọc vẫn cao hơn đáng kể so với B-Tree.
-*   **Xung đột I/O do Compaction:** Tiến trình Compaction chạy ngầm tiêu tốn rất nhiều CPU và Disk I/O. Khi hệ thống đang có tải ghi rất lớn, tiến trình này có thể làm ảnh hưởng hiệu suất chung của hệ thống, gây ra những "cú giật" về độ trễ (latency spikes) cho cả thao tác đọc và ghi.
+```mermaid
+graph TD
+    Root["Root Node - Page 0"] --> Branch1["Branch Node - Page 1"]
+    Root --> Branch2["Branch Node - Page 2"]
+    Branch1 --> Leaf1["Leaf Node - Page 3: Khóa 1-10"]
+    Branch1 --> Leaf2["Leaf Node - Page 4: Khóa 11-20"]
+    Branch2 --> Leaf3["Leaf Node - Page 5: Khóa 21-30"]
+    
+    style Leaf1 fill:#f9f,stroke:#333,stroke-width:2px
+    style Leaf2 fill:#f9f,stroke:#333,stroke-width:2px
+    style Leaf3 fill:#f9f,stroke:#333,stroke-width:2px
+```
 
----
-
-## 3. Các Khái Niệm Amplification (Hệ số khuếch đại)
-
-Khi đánh giá hiệu suất của Storage Engines, các kỹ sư hệ thống thường xem xét ba loại Amplification:
-
-1.  **Write Amplification (Khuếch đại Ghi):** Tỉ lệ giữa lượng dữ liệu vật lý thực tế được ghi xuống đĩa so với lượng dữ liệu logic mà ứng dụng yêu cầu ghi.
-    *   **LSM-Tree:** Có Write Amplification rất cao. Một bản ghi có thể bị ghi lại hàng chục lần xuống đĩa trong suốt vòng đời của nó do các quá trình Compaction (khi các SSTable liên tục được hợp nhất).
-    *   **B-Tree:** Cũng có Write Amplification ở mức vừa phải. Mỗi khi thay đổi 1 byte, hệ thống vẫn phải ghi lại toàn bộ một Page (VD: 4KB - 8KB) cùng với việc ghi nhật ký vào WAL.
-2.  **Read Amplification (Khuếch đại Đọc):** Số lần phải đọc từ đĩa vật lý (I/O) để phục vụ cho một thao tác đọc logic.
-    *   **LSM-Tree:** Rất cao. Một thao tác tìm kiếm khóa duy nhất có thể yêu cầu mở và rà soát nhiều file SSTable khác nhau trên đĩa.
-    *   **B-Tree:** Thấp và rất dễ dự đoán. Nó chỉ phụ thuộc vào chiều sâu của cây B-Tree, thông thường chỉ tốn tối đa 3-4 lần disk reads.
-3.  **Space Amplification (Khuếch đại Không gian):** Lượng dung lượng đĩa thực tế tiêu tốn để lưu trữ so với kích thước logic của dữ liệu.
-    *   **LSM-Tree:** Đòi hỏi nhiều dung lượng trống tạm thời trong quá trình Compaction (cần không gian để ghi file mới trước khi xoá file cũ). Mặc dù bản thân các file nén rất tốt. Dữ liệu rác/cũ có thể tồn tại lâu trước khi bị dọn dẹp.
-    *   **B-Tree:** Do tình trạng phân mảnh (fragmentation), các page thường không bao giờ chứa 100% dữ liệu (thường để lại khoảng 20-30% trống để dành cho các thao tác updates/inserts tương lai), dẫn đến Space Amplification cũng đáng kể.
+**Tại sao In-place update lại đắt đỏ (Write Penalty)?**
+Do các page có kích thước cố định, nếu bạn chèn thêm một bản ghi vào một page đã đầy, B-Tree bắt buộc phải chia page đó làm hai (hiện tượng **Page Split**). Điều này kéo theo việc cập nhật lại các con trỏ ở node cha. Thao tác này sinh ra rất nhiều Random I/O trên đĩa, làm suy giảm nghiêm trọng thông lượng ghi (Write Throughput) khi hệ thống chịu tải cao.
 
 ---
 
-## 4. Tổng Kết Bảng So Sánh
+### 1.2. LSM-Tree: Triết lý "Ghi nối tiếp" (Append-only)
 
-| Đặc điểm | B-Tree | LSM-Tree |
-| :--- | :--- | :--- |
-| **Bản chất** | Cập nhật tại chỗ (In-place updates) | Ghi nối tiếp (Append-only) và Hợp nhất |
-| **Cấu trúc lưu trữ** | Cây cân bằng, phân mảnh theo các Pages/Blocks | MemTable (RAM) + SSTables (Disk) |
-| **Cách thức truy xuất Đĩa (Disk I/O)** | Đọc / Ghi ngẫu nhiên (Random I/O) | Đọc / Ghi tuần tự (Sequential I/O) |
-| **Tốc độ Đọc (Read Performance)** | Rất nhanh, độ trễ thấp và dự đoán được ($O(\log N)$) | Chậm hơn, độ trễ biến động, phụ thuộc số lượng SSTable |
-| **Tốc độ Ghi (Write Performance)** | Chậm hơn dưới tải nặng (do chi phí Page Split) | Cực kì nhanh, thông lượng (throughput) khổng lồ |
-| **Read Amplification** | Thấp | Cao |
-| **Write Amplification** | Vừa phải | Rất cao (do Compaction) |
-| **Space Amplification** | Cao (do rỗng và phân mảnh trong Page) | Thấp (Dữ liệu đặc và nén chặt, ít khoảng trống) |
-| **Quản lý không gian** | Xử lý bằng Page Split và Vacuum (dọn dẹp phân mảnh) | Dọn dẹp rác định kỳ thông qua Compaction |
-| **Trường hợp sử dụng (Use Cases)** | Dữ liệu giao dịch truyền thống, OLTP (MySQL, PostgreSQL). Yêu cầu cân bằng giữa Đọc - Ghi. | Event Logging, Time-Series DB, NoSQL, Write-heavy workloads (Cassandra, HBase). |
+Khi đối mặt với các tải dữ liệu khổng lồ như Event Logging, Time-Series Data, hay hệ thống Chat (nơi lượng Insert áp đảo lượng Read), B-Tree nhanh chóng trở thành nút thắt cổ chai do Random Disk I/O. **LSM-Tree** ra đời để giải bài toán này bằng cách biến mọi thao tác ghi (kể cả Update và Delete) thành thao tác ghi nối tiếp (Sequential I/O).
 
-> **Tóm lại:**
->
-> 💡 Sử dụng **B-Tree** khi hệ thống của bạn thực hiện nhiều thao tác **Đọc (Read-Heavy)**, hoặc yêu cầu một mức độ phản hồi ổn định nhất, hỗ trợ tốt cho các truy vấn Range Query, và đặc biệt là trong các hệ thống đòi hỏi tính ACID giao dịch khắt khe.
->
-> 💡 Sử dụng **LSM-Tree** khi hệ thống đối mặt với tải **Ghi (Write-Heavy)** liên tục và khổng lồ, nơi mà băng thông (throughput) của việc chèn/lưu trữ dữ liệu được ưu tiên cao nhất, như lưu trữ metrics, logs, hoặc các dữ liệu phân tích dạng time-series.
+Các Database tiêu biểu dùng LSM-Tree: Cassandra, RocksDB, ScyllaDB, InfluxDB, HBase.
 
-## Tài Liệu Tham Khảo
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+**Luồng dữ liệu (Data Pipeline) của LSM-Tree:**
+
+```mermaid
+flowchart LR
+    Client("(Client")) --> |1. Write| WAL["Write-Ahead Log<br/>Disk - Sequential"]
+    Client --> |2. Write| MemTable["MemTable<br/>RAM - Balanced Tree"]
+    MemTable --> |3. Flush when full| SST1["SSTable L0<br/>Disk - Immutable"]
+    SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged"]
+    
+    style MemTable fill:#bbf,stroke:#333,stroke-width:2px
+    style WAL fill:#f96,stroke:#333,stroke-width:2px
+    style SST1 fill:#dfd,stroke:#333,stroke-width:2px
+    style SST2 fill:#dfd,stroke:#333,stroke-width:2px
+```
+
+1. **Write-Ahead Log (WAL):** Dữ liệu đến được ghi nối tiếp vào cuối một file log trên đĩa. Thao tác này cực nhanh vì nó là Sequential I/O, dùng để chống mất dữ liệu khi sập nguồn.
+2. **MemTable:** Dữ liệu được đưa vào một cấu trúc cây cân bằng (như Red-Black Tree hoặc Skip List) nằm trên RAM. 
+3. **SSTable (Sorted String Table):** Khi MemTable đạt kích thước ngưỡng (ví dụ 64MB), nó bị đóng băng và xả (flush) xuống đĩa thành một file SSTable. File này là **Bất biến (Immutable)**.
+4. **Compaction:** Theo thời gian, hệ thống sẽ sinh ra hàng ngàn SSTable. Một tiến trình chạy nền (Compaction) sẽ liên tục đọc các SSTable cũ, trộn chúng lại (Merge Sort), loại bỏ các bản ghi bị xóa (tombstones) hoặc bị ghi đè, và tạo ra các SSTable lớn hơn ở tầng sâu hơn.
+
+---
+
+## 2. Hệ Số Khuếch Đại (The Amplification Triad)
+
+Khi tinh chỉnh hệ thống lưu trữ, các Data Engineer phải cân bằng giữa 3 loại hệ số khuếch đại (Amplification). Không có cấu trúc nào hoàn hảo ở cả 3 mặt.
+
+| Loại Amplification | Ý nghĩa hệ thống | B-Tree | LSM-Tree |
+| :--- | :--- | :--- | :--- |
+| **Write Amplification** | Lượng byte ghi xuống đĩa / Lượng byte logic cần ghi. Ảnh hưởng tuổi thọ SSD và băng thông đĩa. | **Vừa phải**. Khi sửa 1 byte, phải ghi đè cả Page (4-16KB) + ghi WAL. | **Cao**. Do quá trình Compaction, một dữ liệu có thể bị đọc lên ghi xuống (merged) hàng chục lần. |
+| **Read Amplification** | Số lượng disk reads / Lượng đọc logic. Ảnh hưởng trực tiếp đến Read Latency. | **Rất Thấp**. Tối đa bằng độ sâu của cây (thường 3-4 thao tác). | **Cao**. Có thể phải đọc nhiều SSTables, kiểm tra Bloom Filters, và dò MemTable. |
+| **Space Amplification** | Kích thước đĩa / Kích thước logic. Ảnh hưởng tới chi phí lưu trữ (FinOps). | **Cao**. Do hiện tượng phân mảnh (Fragmentation) và các khoảng trống dự phòng trong page. | **Thấp**. File bất biến được nén (Snappy, LZ4) rất chặt chẽ, tối đa hóa mật độ dữ liệu. |
+
+---
+
+## 3. Rủi Ro Vận Hành & Tình Huống Sập Hệ Thống
+
+### 3.1. B-Tree: Rủi ro Phân mảnh (Fragmentation)
+
+Trong các hệ thống RDBMS chạy lâu năm với cường độ DELETE/UPDATE lớn, các page của B-Tree sẽ bị "rỗ". Không gian trống bên trong page (Internal Fragmentation) tăng lên, dẫn đến Disk I/O tăng cao do hệ thống phải đọc nhiều page hơn để lấy cùng một lượng bản ghi.
+
+*   **Triệu chứng:** Câu lệnh `SELECT` tốn nhiều I/O hơn, độ trễ tăng dần theo thời gian dù số lượng bản ghi không tăng.
+*   **Cách khắc phục:** Cần thực hiện `VACUUM FULL` (PostgreSQL) hoặc `OPTIMIZE TABLE` (MySQL). Cảnh báo: Các thao tác này thường block table hoặc tiêu tốn tài nguyên khổng lồ, cần lên lịch vào giờ thấp điểm.
+
+### 3.2. LSM-Tree: Ác Mộng Cổ Chai Compaction (Compaction Stalling)
+
+Đây là cơn ác mộng kinh điển của các hệ thống dùng Cassandra hoặc RocksDB. 
+Khi tốc độ xả MemTable xuống đĩa (Flush) nhanh hơn khả năng tiến trình Compaction gộp các file SSTable, số lượng SSTable ở Level 0 (L0) sẽ tăng vọt.
+
+*   **Triệu chứng (Write Stall):** Khi số lượng L0 SSTable vượt ngưỡng nguy hiểm (ví dụ: `level0_slowdown_writes_trigger` trong RocksDB), hệ thống sẽ cố tình bóp nghẹt tốc độ ghi (Throttling) hoặc từ chối hoàn toàn thao tác ghi (Stop-the-world) để Compaction đuổi kịp. Hệ quả là API chèn dữ liệu bị Timeout hàng loạt, Kafka Consumer Lag tăng đột biến.
+*   **Triệu chứng Read (Read Amplification Spike):** Số file SSTable nhiều khiến các câu truy vấn Read phải dò qua hàng tá file, làm tăng độ trễ đọc một cách chóng mặt.
+
+**Khắc phục bằng cấu hình thực chiến (RocksDB Example):**
+
+Thay vì dùng cấu hình mặc định, cần can thiệp vào RocksDB properties để cân bằng tốc độ flush và compaction:
+
+```ini
+# Tăng số lượng thread chạy Compaction và Flush
+max_background_compactions=4
+max_background_flushes=2
+
+# Tăng kích thước MemTable để giảm tần suất flush
+write_buffer_size=134217728 # 128MB
+max_write_buffer_number=4
+
+# Mở rộng ngưỡng gây Write Stall để chịu tải đột biến (Burst Traffic)
+level0_slowdown_writes_trigger=20
+level0_stop_writes_trigger=36
+```
+
+### 3.3. LSM-Tree: Quản lý Bộ nhớ (OOMKilled)
+
+Mọi cấu trúc LSM-Tree đều duy trì MemTable và Block Cache trên RAM. Nếu không khống chế giới hạn cấp phát bộ nhớ (đặc biệt trong môi trường Kubernetes container), tiến trình cơ sở dữ liệu sẽ dễ dàng bị hệ điều hành đóng băng hoặc "bắn bỏ" (OOMKilled - Out Of Memory). Bạn phải cấu hình chặt chẽ giới hạn bộ nhớ dùng chung (ví dụ: sử dụng bộ đệm chung `LRUCache` cho cả Block Cache và giới hạn MemTable).
+
+---
+
+## 4. Tổng Kết Cấu Trúc Đánh Đổi (Systemic Trade-offs)
+
+Quyết định chọn B-Tree hay LSM-Tree không nằm ở việc cái nào "nhanh hơn", mà nằm ở việc bạn **chấp nhận hy sinh điều gì**:
+
+1.  **Latency vs Throughput:**
+    *   B-Tree hi sinh thông lượng ghi (Write Throughput) để đảm bảo độ trễ đọc siêu thấp và cực kỳ ổn định (Predictable Latency). Nó là trái tim của hệ thống OLTP, Payment gateways.
+    *   LSM-Tree hi sinh sự ổn định của độ trễ (sinh ra Latency Spikes do quá trình Compaction) để đạt được băng thông ghi khổng lồ. Nó sinh ra cho Data Ingestion từ IoT, Clickstream, Logs.
+2.  **Storage Cost vs Compute Cost:**
+    *   B-Tree tiêu tốn nhiều dung lượng đĩa hơn (Space Amplification cao) nhưng ít hao tốn CPU chạy nền.
+    *   LSM-Tree lưu trữ cực kỳ tối ưu, nén dữ liệu rất chặt (tiết kiệm SSD hiệu quả), nhưng đổi lại nó "đốt" CPU liên tục cho quá trình gộp (Compaction).
+
+Việc hiểu sâu đến tầng vật lý giúp Data Engineer không chỉ chọn đúng công cụ ngay từ đầu, mà còn làm chủ được hệ thống khi phải đối mặt với các sự cố vỡ tải trong thực tế.
+
+---
+
+## Nguồn Tham Khảo
+*   [Designing Data-Intensive Applications - Chapter 3: Storage and Retrieval](https://dataintensive.net/)
+*   [RocksDB Tuning Guide - GitHub Wiki](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide)
+*   [How we use RocksDB at Cloudflare](https://blog.cloudflare.com/how-we-use-rocksdb-at-cloudflare/)
+*   [ScyllaDB Architecture: LSM-Tree](https://docs.scylladb.com/stable/architecture/architecture-lsm.html)

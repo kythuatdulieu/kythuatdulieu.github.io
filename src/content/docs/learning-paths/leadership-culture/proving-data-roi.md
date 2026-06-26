@@ -47,7 +47,7 @@ Một website thương mại điện tử cần hiển thị sản phẩm liên 
 
 ```mermaid
 graph TD
-    subgraph "Data Ingestion (Event Sources)"
+    subgraph "Data Ingestion("Event Sources")"
         A["Web/Mobile App"] -->|Click Stream Events| B("Apache Kafka / Confluent")
         C["Transactional DB"] -->|CDC Events| D("Debezium")
     end
@@ -56,13 +56,13 @@ graph TD
     
     subgraph "Real-time Stream Processing"
         B --> E["Apache Flink / Spark Structured Streaming"]
-        E -->|Tính toán Feature realtime| F[("Feature Store / Redis")]
+        E -->|Tính toán Feature realtime| F["("Feature Store / Redis")"]
     end
     
     subgraph "Serving & Business Impact"
         F --> G["Machine Learning Model Serving"]
         G --> H["Personalized Recommendation"]
-        H -->|"Hiển thị sản phẩm phù hợp"| I["Tăng 5% Doanh Thu (ROI Trực Tiếp)"]
+        H -->|"Hiển thị sản phẩm phù hợp"| I["Tăng 5% Doanh Thu("ROI Trực Tiếp")"]
     end
     
     style I fill:#d4edda,stroke:#28a745,stroke-width:2px;

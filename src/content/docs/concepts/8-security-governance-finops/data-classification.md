@@ -1,103 +1,153 @@
 ---
-title: "Phân loại dữ liệu - Data Classification"
-difficulty: "Intermediate"
-tags: ["data-classification", "data-governance", "security", "pii", "compliance"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-07
-seoTitle: "Phân loại dữ liệu (Data Classification) - Cẩm nang Data Governance"
-metaDescription: "Tìm hiểu về Phân loại dữ liệu (Data Classification) trong quản trị dữ liệu, phương pháp phân loại, bảo vệ PII và các câu hỏi phỏng vấn thực tế."
-description: "Khi dữ liệu trở thành nguồn tài sản chiến lược của doanh nghiệp, việc bảo vệ nó khỏi các cuộc tấn công bảo mật và rò rỉ thông tin là nhiệm vụ quan trọ..."
+title: "Data Classification: Kiến trúc Phân loại và Bảo vệ Dữ liệu Nhạy cảm"
+definition: "Thiết kế hệ thống phân loại dữ liệu tự động (Data Classification) ở quy mô Exabyte, tối ưu hóa chi phí quét (Macie, DLP) và xử lý rò rỉ PII."
+difficulty: "Advanced"
+tags: ["data-classification", "macie", "dlp", "security", "finops", "unity-catalog"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Data Classification Architecture: Macie, DLP & Unity Catalog"
+metaDescription: "Kiến trúc hệ thống Data Classification ở quy mô lớn, trade-offs giữa Macie, Cloud DLP và Unity Catalog, tối ưu chi phí và xử lý rò rỉ PII."
 ---
 
+Vào thẳng vấn đề, Data Classification không phải là việc ngồi gán mác thủ công "Public" hay "Confidential" lên từng cột dữ liệu. Ở quy mô Data Lake (Exabytes), Data Classification là bài toán xây dựng **Automated Discovery Pipeline** chạy ngầm để quét hàng tỷ object, trích xuất metadata, gán tag (Tagging) tự động, và thực thi chính sách truy cập (Attribute-Based Access Control - ABAC) trước khi dữ liệu kịp đến tay end-user, đồng thời không làm cháy túi công ty vì chi phí API (FinOps).
 
+Bài viết này mổ xẻ kiến trúc Data Classification sử dụng các nền tảng kỹ thuật tiêu chuẩn như AWS Macie, Google Cloud DLP và Databricks Unity Catalog, cùng các trade-offs chí mạng về chi phí và hiệu năng vận hành.
 
-Data Classification (Phân loại dữ liệu) là bước dán nhãn mức độ nhạy cảm của dữ liệu (VD: Public, Internal, Confidential, Restricted). Những dữ liệu PII (Thông tin định danh cá nhân như SSN, Email, Số điện thoại) sẽ bị áp đặt các chính sách mã hóa cao nhất.
+## 1. Kiến trúc Physical Execution: Automated Data Classification Pipeline
 
-## Mở đầu
-Trong kỷ nguyên dữ liệu, khi lượng thông tin doanh nghiệp thu thập ngày càng khổng lồ, không phải tất cả dữ liệu đều có giá trị và mức độ rủi ro giống nhau. Việc bảo vệ toàn bộ dữ liệu với cùng một mức độ bảo mật là không hiệu quả, tốn kém và đôi khi gây cản trở đến hoạt động kinh doanh. **Data Classification (Phân loại dữ liệu)** là quy trình tổ chức, dán nhãn và phân chia dữ liệu thành các cấp độ khác nhau dựa trên mức độ nhạy cảm, giá trị kinh doanh và các yêu cầu tuân thủ.
+Một Data Classification Pipeline tiêu chuẩn (tham khảo từ kiến trúc bảo mật của Uber và AWS) bao gồm 4 thành phần vật lý:
 
-Quy trình này đóng vai trò nền tảng trong **Data Governance (Quản trị dữ liệu)** và **Data Security (Bảo mật dữ liệu)**. Phân loại dữ liệu giúp hệ thống biết được: dữ liệu này là gì, nó quan trọng đến mức nào, ai được phép truy cập và cần áp dụng các biện pháp bảo vệ nào.
+1. **Ingestion & Storage (S3/GCS):** Dữ liệu hạ cánh, chưa được kiểm duyệt.
+2. **Scanner / Discovery Engine:** AWS Macie, GCP DLP hoặc Unity Catalog Classifier.
+3. **Metadata Catalog:** AWS Glue Data Catalog, Amundsen hoặc DataHub để lưu trữ Tags/Metadata tập trung.
+4. **Enforcement Layer:** AWS Lake Formation, Snowflake hoặc Databricks để thực thi Dynamic Data Masking dựa trên tag.
 
-## Các mức độ phân loại dữ liệu phổ biến (Data Classification Levels)
-Mỗi tổ chức có thể định nghĩa các khung phân loại khác nhau, nhưng tiêu chuẩn chung thường bao gồm 4 cấp độ:
+### Luồng thực thi Data Classification
 
-### 1. Public Data (Dữ liệu công khai)
-* **Định nghĩa:** Dữ liệu có thể được truy cập tự do bởi công chúng mà không gây ra bất kỳ rủi ro nào cho tổ chức.
-* **Ví dụ:** Thông tin trên website công ty, thông cáo báo chí, tài liệu marketing, báo cáo tài chính công khai.
-* **Bảo mật:** Không yêu cầu mã hóa hoặc kiểm soát truy cập nghiêm ngặt. Tuy nhiên, vẫn cần đảm bảo tính toàn vẹn (Integrity) để tránh bị tin tặc sửa đổi trái phép.
+```mermaid
+sequenceDiagram
+    participant P as Data Pipeline (Spark/Flink)
+    participant S3 as Raw S3 Bucket
+    participant M as Scanner (AWS Macie / GCP DLP)
+    participant C as Metadata Catalog (Glue/DataHub)
+    participant L as Enforcement (Lake Formation)
+    participant U as Data Analyst
+    
+    P->>S3: Write Parquet Files (chứa ẩn PII data)
+    S3-->>M: S3 Event Notification (ObjectCreated)
+    M->>M: Pattern Matching & ML Inference (Detect SSN, Credit Card)
+    M->>C: Update Metadata Tags (tag: pii=true, level=restricted)
+    C-->>L: Sync Policy Tags / ABAC Rules
+    U->>L: Query via Athena / Snowflake
+    L->>L: Evaluate ABAC (Does User have 'pii:read'?)
+    alt Has Permission
+        L-->>U: Return Raw Data (Clear text)
+    else No Permission
+        L-->>U: Return Masked Data (****-1234) or Access Denied
+    end
+```
 
-### 2. Internal / Private Data (Dữ liệu nội bộ)
-* **Định nghĩa:** Dữ liệu chỉ dành cho nhân viên hoặc các đối tác được ủy quyền. Việc rò rỉ có thể gây ra những ảnh hưởng tiêu cực nhẹ đến doanh nghiệp.
-* **Ví dụ:** Sơ đồ tổ chức, chính sách nhân sự, tài liệu đào tạo nội bộ, email giao tiếp thông thường.
-* **Bảo mật:** Yêu cầu xác thực cơ bản (Authentication). Thường được bảo vệ phía sau tường lửa và mạng nội bộ (Intranet).
+## 2. Các công cụ cốt lõi và Trade-offs Hệ thống
 
-### 3. Confidential / Sensitive Data (Dữ liệu bảo mật / nhạy cảm)
-* **Định nghĩa:** Dữ liệu có giá trị cao, yêu cầu phân quyền nghiêm ngặt. Việc rò rỉ sẽ gây thiệt hại nghiêm trọng về tài chính, uy tín, hoặc dẫn đến các hình phạt pháp lý.
-* **Ví dụ:** Chiến lược kinh doanh chưa công bố, mã nguồn (source code), hợp đồng với đối tác, bảng lương, báo cáo tài chính nội bộ.
-* **Bảo mật:** Yêu cầu kiểm soát truy cập dựa trên vai trò (RBAC), mã hóa dữ liệu ở trạng thái nghỉ (data at rest) và trạng thái chuyển động (data in transit).
+Khi kiến trúc sư quyết định sử dụng giải pháp nào, sự đánh đổi (Trade-off) luôn nằm ở bộ ba: **Chi phí quét (Scan Cost) vs. Độ trễ phát hiện (Detection Latency) vs. Điểm mù hệ thống (Blind Spots)**.
 
-### 4. Restricted / Highly Confidential Data (Dữ liệu hạn chế)
-* **Định nghĩa:** Cấp độ nhạy cảm cao nhất. Truy cập chỉ được cấp theo nguyên tắc "cần phải biết" (need-to-know). Sự xâm phạm sẽ dẫn đến hậu quả thảm khốc cho tổ chức.
-* **Ví dụ:** PII (Thông tin định danh cá nhân), PHI (Thông tin sức khỏe), thông tin thẻ tín dụng (PCI), mật khẩu, khóa mã hóa (encryption keys).
-* **Bảo mật:** Yêu cầu mã hóa mạnh mẽ, Data Masking (Che dấu dữ liệu), Tokenization (Mã hóa thay thế), Multi-Factor Authentication (MFA), và lưu vết truy cập (Audit Logging) chi tiết.
+| Tiêu chí | AWS Macie | Google Cloud DLP | Databricks Unity Catalog (AI/LLM) |
+| :--- | :--- | :--- | :--- |
+| **Cơ chế quét** | Quét S3 Bucket định kỳ hoặc event-driven, dùng Pattern Matching & ML. | API cực mạnh, hỗ trợ quét streaming (Pub/Sub) và batch, tính năng Masking/De-identification native. | Agentic AI (LLMs) tự động quét và gán tag trong Catalog mà không cần chuyển dữ liệu đi. |
+| **Điểm mù (Blind spot)** | Chỉ hoạt động với S3. Không quét được database đang chạy (RDS/DynamoDB). | Cần pipeline đẩy dữ liệu qua API, dễ gặp nút thắt cổ chai mạng (Network Bottleneck). | Yêu cầu toàn bộ hệ sinh thái tính toán chạy trên Databricks. |
+| **Chi phí (FinOps)** | Rất đắt nếu quét Full (Full Scan) toàn bộ object. | Tính phí theo GB quét, cần sampling cẩn thận trong payload. | Bao gồm trong chi phí Compute (Serverless) của Databricks. |
 
-## Các loại dữ liệu đặc biệt nhạy cảm
-Trong quá trình Data Classification, kỹ sư dữ liệu cần đặc biệt chú ý đến các định dạng dữ liệu được pháp luật bảo vệ nghiêm ngặt:
+### 2.1. Executable Code: Cấu hình Terraform tự động gắn Tag với Macie
 
-* **PII (Personally Identifiable Information - Thông tin định danh cá nhân):** Bất kỳ thông tin nào có thể trực tiếp hoặc gián tiếp nhận dạng một cá nhân. VD: Tên, CMND/CCCD, Số an sinh xã hội (SSN), Số điện thoại, Email cá nhân, Địa chỉ nhà.
-* **PHI (Protected Health Information - Thông tin sức khỏe được bảo vệ):** Bệnh án, thông tin bảo hiểm y tế, kết quả xét nghiệm. Yêu cầu tuân thủ nghiêm ngặt tiêu chuẩn **HIPAA**.
-* **PCI (Payment Card Information - Thông tin thẻ thanh toán):** Số thẻ tín dụng (PAN), mã CVV, lịch sử giao dịch. Yêu cầu tuân thủ tiêu chuẩn **PCI-DSS**.
+Tuyệt đối không bật Macie để quét 100% S3 bucket (Full Scan), điều đó sẽ dẫn đến **Billing Incident** (hóa đơn tăng vọt chỉ trong một đêm). Thay vào đó, cấu hình Terraform dưới đây chỉ quét các bucket cụ thể, thiết lập Custom Identifier và sử dụng **Sampling**:
 
-## Quy trình phân loại dữ liệu (Data Classification Process)
-Để triển khai Data Classification một cách có hệ thống, các tổ chức thường thực hiện theo 4 bước:
+```hcl
+# Kích hoạt Macie
+resource "aws_macie2_account" "primary" {
+  finding_publishing_frequency = "FIFTEEN_MINUTES"
+  status                       = "ENABLED"
+}
 
-### 1. Khám phá dữ liệu (Data Discovery)
-Trước khi phân loại, bạn cần biết dữ liệu của mình đang nằm ở đâu. Kỹ sư dữ liệu sử dụng các công cụ Data Catalog để quét các cơ sở dữ liệu, data lake, data warehouse, file server... để xây dựng bức tranh toàn cảnh về tài sản dữ liệu.
-* **Công cụ:** Trình thu thập siêu dữ liệu (Metadata Crawlers).
+# Tạo Custom Data Identifier (Regex phát hiện Mã định danh nội bộ)
+resource "aws_macie2_custom_data_identifier" "internal_emp_id" {
+  name                   = "Internal_Employee_ID"
+  regex                  = "EMP-[0-9]{6}[A-Z]{2}"
+  description            = "Detects internal employee ID format"
+  maximum_match_distance = 50
+}
 
-### 2. Phân loại và Dán nhãn (Classification & Labeling)
-Dựa trên kết quả khám phá, áp dụng các quy tắc (Rule-based) hoặc mô hình Machine Learning để tự động nhận dạng và dán nhãn dữ liệu.
-* **Ví dụ:** Nếu một cột chứa chuỗi 16 số hợp lệ theo định dạng thẻ Visa/Mastercard -> Tự động dán nhãn "PCI-Restricted".
-* **Metadata Tags:** Các thẻ này được lưu trữ trong Data Catalog để quản lý tập trung.
+# Cấu hình Classification Job (Chỉ quét 10% dữ liệu để tiết kiệm chi phí)
+resource "aws_macie2_classification_job" "sensitive_data_scan" {
+  job_type = "SCHEDULED"
+  schedule_frequency {
+    daily_schedule = true
+  }
+  
+  # KHÔNG BAO GIỜ để 100% đối với bucket Petabyte, sử dụng Sampling
+  sampling_percentage = 10 
+  
+  s3_job_definition {
+    bucket_definitions {
+      account_id = data.aws_caller_identity.current.account_id
+      buckets    = ["arn:aws:s3:::company-datalake-raw-zone"]
+    }
+  }
 
-### 3. Áp dụng các biện pháp kiểm soát bảo mật (Applying Security Controls)
-Dựa vào nhãn đã dán, hệ thống sẽ tự động thực thi các chính sách bảo mật:
-* **Data Masking / Redaction:** Ẩn một phần dữ liệu (VD: `****-****-****-1234`).
-* **Encryption:** Mã hóa các cột nhạy cảm bằng AWS KMS hoặc GCP Cloud KMS.
-* **Row/Column-level Security:** Ẩn các cột hoặc dòng dữ liệu cụ thể đối với các Data Analyst không có đủ thẩm quyền.
+  custom_data_identifier_ids = [aws_macie2_custom_data_identifier.internal_emp_id.id]
+}
+```
 
-### 4. Theo dõi và Đánh giá liên tục (Monitoring & Continuous Assessment)
-Dữ liệu liên tục được tạo ra mới. Quy trình quét và phân loại phải diễn ra tự động thông qua các Data Pipeline để đảm bảo không có dữ liệu nhạy cảm nào bị "bỏ lọt" khi đưa vào Data Lake.
+## 3. Rủi ro Vận hành (Operational Risks) & Real-world Incidents
 
-## Công nghệ và Công cụ hỗ trợ
-* **Cloud Native:**
-  * **AWS Macie:** Sử dụng Machine Learning để tự động phát hiện và bảo vệ dữ liệu nhạy cảm trên Amazon S3.
-  * **Google Cloud DLP (Data Loss Prevention):** Công cụ cực kỳ mạnh mẽ để khám phá, phân loại và che giấu (masking) thông tin PII.
-  * **Azure Purview:** Nền tảng quản trị dữ liệu toàn diện của Microsoft.
-* **Open Source / Enterprise Data Catalogs:**
-  * **Apache Atlas / Amundsen:** Quản lý metadata và dán nhãn dữ liệu.
-  * **OpenMetadata / DataHub:** Nền tảng Data Catalog hiện đại, hỗ trợ quản lý Data Classification và tag-based security.
-* **Data Warehouse Security:**
-  * **Snowflake:** Cung cấp Dynamic Data Masking dựa trên tags.
-  * **BigQuery:** Cung cấp Policy Tags (Column-level security) để kiểm soát truy cập PII.
+### 3.1. Incident: Bùng nổ chi phí do Macie Full Scan (Macie Billing Explosion)
+* **Tình huống (Incident):** Một Data Engineer mới vào nghề kích hoạt Macie Classification Job cho toàn bộ `Raw Zone Bucket` chứa 5 PB dữ liệu lịch sử log clickstream (hoàn toàn không chứa PII).
+* **Hậu quả:** Cuối tháng, hóa đơn AWS báo hệ thống Macie ngốn $10,000+ vì nó tính phí $1.00/GB cho 500GB đầu và $0.10/GB cho các GB tiếp theo.
+* **Cách khắc phục:** 
+    * Triển khai mô hình **Targeted Scanning**: Chỉ cấp phát quét các thư mục (prefix) có rủi ro cao (ví dụ: `/users/`, `/payments/`, `/onboarding/`).
+    * Sử dụng **Sampling (5-10%)**: Theo nguyên lý xác suất thống kê, nếu 10% các block dữ liệu trong một partition Parquet chứa PII, hệ thống hoàn toàn có thể kết luận toàn bộ partition đó là `Restricted` mà không cần tốn chi phí quét 90% phần dung lượng còn lại.
 
-## Thực hành tốt nhất (Best Practices) cho Data Engineer
-1. **Phân loại càng sớm càng tốt (Shift-Left):** Thực hiện phân loại và mã hóa dữ liệu ngay tại thời điểm Ingestion (đưa vào hệ thống) thay vì đợi đến khi dữ liệu nằm ở Data Warehouse.
-2. **Nguyên tắc Đặc quyền tối thiểu (Least Privilege):** Mặc định từ chối (Default Deny). Chỉ cấp quyền truy cập dữ liệu Restricted khi có lý do chính đáng và thời hạn cụ thể.
-3. **Mô hình hóa dữ liệu tách biệt:** Lưu trữ dữ liệu PII trong các bảng (tables) hoặc khu vực riêng biệt (Secure Zone), sử dụng surrogate keys để kết nối thay vì để rải rác PII trên toàn bộ kho dữ liệu.
-4. **Tự động hóa:** Tích hợp Data Classification vào quá trình CI/CD của Data Pipeline. Nếu một schema mới chứa tên cột là `credit_card` được deploy, pipeline tự động gắn tag và áp dụng masking.
+### 3.2. Vấn đề Tag Propagation (Di truyền Tag) dẫn đến Rò rỉ PII
+Khi dữ liệu di chuyển qua các kiến trúc Medallion: `Raw -> Silver (Cleansed) -> Gold (Aggregated)`, các Metadata Tags nhạy cảm thường bị rơi rụng (dropped) do quá trình ETL tạo ra các file mới.
+* **Hậu quả:** Dữ liệu ở Raw Bucket bị khóa chặt bằng IAM policy, nhưng khi được Spark ETL đọc và ghi ra bảng Gold, nó mất đi tag `pii=true`. Kết quả là các Data Analyst ở hạ nguồn truy cập được số thẻ tín dụng hoặc số điện thoại chưa bị che (Masked).
+* **Giải pháp (Databricks Unity Catalog / Snowflake):** Hệ thống cần hỗ trợ **Lineage-based Tag Propagation**. Khi engine (như Spark/Snowflake) thực hiện `CREATE TABLE AS SELECT (CTAS)`, hệ thống Lineage nội tại phát hiện cột gốc `user.ssn` có tag `pii=true`, nó sẽ tự động kế thừa (inherit) tag này cho cột phái sinh ở bảng mới.
 
-## Câu hỏi phỏng vấn Data Engineer về Data Classification
-1. **Làm thế nào để bạn xử lý dữ liệu PII khi ingest từ một nguồn SQL Database vào Data Lake (S3)?**
-   * *Gợi ý trả lời:* Thực hiện giải mã / mã hóa lại (re-encryption) hoặc hashing / masking ngay trên dòng chảy dữ liệu (ví dụ: dùng Spark/Flink hoặc AWS Glue) trước khi ghi xuống S3. Dán nhãn metadata để quản trị viên nắm được.
-2. **Giải thích sự khác biệt giữa Data Masking, Tokenization và Encryption.**
-   * *Gợi ý trả lời:* Masking là che đi (không phục hồi được), Tokenization là thay thế bằng một chuỗi ngẫu nhiên có độ dài tương đương (lưu map ở một vault an toàn), Encryption là dùng thuật toán toán học cùng với key (có thể giải mã nếu có key).
-3. **Nếu một Data Analyst phàn nàn rằng họ không thể join các bảng vì cột User ID đã bị hashed, bạn sẽ giải quyết thế nào?**
-   * *Gợi ý trả lời:* Sử dụng kỹ thuật Hashing có muối cố định (Deterministic Hashing) để cùng một User ID luôn ra cùng một mã hash, hoặc phân quyền theo View để họ chỉ thấy dữ liệu họ cần, không cho truy cập bảng raw chứa PII.
+## 4. Kiểm soát Truy cập dựa trên Phân loại (Attribute-Based Access Control - ABAC)
 
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+Thay vì viết hàng trăm Role thủ công (RBAC) cho từng bảng, kiến trúc Data Security hiện đại dùng ABAC dựa vào Classification Tags. 
+
+**Code thực chiến: GCP BigQuery Policy Tags (YAML & SQL)**
+
+Đầu tiên, định nghĩa Policy Tag `High_Security` cho cột `credit_card_number` bằng YAML hoặc Terraform.
+
+```yaml
+# bigquery_schema_definition.yaml
+- name: credit_card_number
+  type: STRING
+  mode: NULLABLE
+  policyTags:
+    names:
+      - "projects/my-gcp-project/locations/us/taxonomies/data_classification/policyTags/High_Security"
+```
+
+Tiếp theo, thay vì block hoàn toàn truy cập, cấu hình **Dynamic Data Masking** ngay tại Data Warehouse để Analyst vẫn có thể chạy COUNT, GROUP BY mà không nhìn thấy dữ liệu thô:
+
+```sql
+-- DDL tạo Data Masking Policy trong BigQuery
+CREATE OR REPLACE DATA MASKING POLICY `my-gcp-project.us.mask_credit_cards`
+GRANT TO ('group:data_analysts@company.com')
+FILTER USING (
+  policy_tags = 'projects/my-gcp-project/locations/us/taxonomies/data_classification/policyTags/High_Security'
+)
+OPTIONS (
+  masking_expression = 'SHA256(credit_card_number)' -- Sử dụng Deterministic Hashing
+);
+```
+
+**Systemic Trade-off trong Data Masking:**
+Áp dụng Dynamic Masking (như hàm băm SHA256 phía trên) ngay tại lúc truy vấn (Query Time) sẽ làm tăng **CPU Compute Cost** và **Latency** của mỗi truy vấn. Nếu dữ liệu có quy mô cực lớn (hàng Terabyte truy vấn mỗi ngày), tốt hơn hết nên chuyển sang áp dụng **Static Masking** (mã hóa vật lý lúc Spark ETL chạy batch job) và ghi ra một bảng ẩn danh riêng biệt.
+
+## Nguồn Tham Khảo (References)
+* [AWS Architecture Blog: Data Classification and Security](https://aws.amazon.com/blogs/architecture/)
+* [Databricks Unity Catalog - Automated Data Classification](https://www.databricks.com/product/unity-catalog)
+* [Uber Engineering - Data Security and Access Control](https://www.uber.com/en-VN/blog/engineering/)
+* [Google Cloud DLP: Best practices for data loss prevention (DLP)](https://cloud.google.com/dlp/docs)

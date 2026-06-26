@@ -1,119 +1,133 @@
 ---
-title: "OLTP vs OLAP Storage"
+title: "OLTP vs OLAP: Phân Tích Kiến Trúc Vật Lý & Trade-offs"
 difficulty: "Advanced"
-readingTime: "10 mins"
-lastUpdated: 2026-06-15
-seoTitle: "OLTP vs OLAP Storage - Data Engineering Deep Dive"
-metaDescription: "Sự khác biệt vật lý giữa lưu trữ hướng dòng (Row-oriented) và hướng cột (Column-oriented)."
-description: "Sự khác biệt vật lý giữa lưu trữ hướng dòng (Row-oriented) và hướng cột (Column-oriented)."
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "OLTP vs OLAP Storage - Row-oriented vs Column-oriented | System Design"
+metaDescription: "Phân tích chuyên sâu kiến trúc lưu trữ vật lý của hệ thống OLTP và OLAP. Sự khác biệt giữa Row-oriented, Column-oriented, Vectorized Execution và Late Materialization."
+description: "Phân tích chuyên sâu kiến trúc lưu trữ vật lý, đánh đổi hệ thống (Trade-offs) và các kỹ thuật thực thi tiên tiến giữa OLTP (Row-oriented) và OLAP (Column-oriented)."
 ---
 
+Sự phân định giữa OLTP (Online Transaction Processing) và OLAP (Online Analytical Processing) thường bị hiểu nhầm ở mức độ ứng dụng (phục vụ người dùng cuối vs. phục vụ BI/Report). Tuy nhiên, dưới lăng kính của Data Engineering và System Design, cốt lõi của sự khác biệt này nằm ở **Cách dữ liệu được tổ chức lưu trữ vật lý trên đĩa (Disk Layout)**, **Kiến trúc bộ nhớ (Memory Architecture)**, và **Mô hình thực thi truy vấn (Query Execution Model)**.
 
-
-Sự khác biệt giữa OLTP và OLAP không chỉ nằm ở mục đích sử dụng ở mức ứng dụng (nghiệp vụ hàng ngày so với phân tích kinh doanh), mà cốt lõi nhất nằm ở **cách dữ liệu được tổ chức lưu trữ vật lý trên đĩa (Disk Layout) và trong bộ nhớ (Memory Layout)**. 
-
-Bài viết này sẽ đi sâu vào kiến trúc lưu trữ đằng sau các hệ thống OLTP (Online Transaction Processing) và OLAP (Online Analytical Processing), cụ thể là sự khác biệt giữa mô hình lưu trữ hướng dòng (Row-oriented) và hướng cột (Column-oriented).
-
----
-
-## 1. OLTP (Lưu Trữ Hướng Dòng - Row-Oriented Storage)
-
-OLTP là các hệ thống cơ sở dữ liệu phục vụ các giao dịch nghiệp vụ diễn ra liên tục. Các hệ thống như PostgreSQL, MySQL, Oracle, hay SQL Server được sinh ra để làm việc này.
-
-### Đặc Điểm Workload của OLTP
-- **Truy xuất ngẫu nhiên (Random Access)**: Tìm kiếm, đọc, và cập nhật một (hoặc một vài) dòng dữ liệu cụ thể (Point queries).
-- **Thao tác dữ liệu (CRUD)**: Tỷ lệ cao các lệnh `INSERT`, `UPDATE`, `DELETE`.
-- **Độ trễ thấp, đồng thời cao**: Yêu cầu phản hồi tính bằng mili-giây, hỗ trợ hàng nghìn đến hàng triệu giao dịch mỗi giây.
-- **Tính toàn vẹn (ACID)**: Yêu cầu cực kỳ khắt khe về tính nhất quán của giao dịch.
-
-### Kiến Trúc Lưu Trữ Hướng Dòng
-Để phục vụ tốt nhất cho các workload trên, OLTP sử dụng mô hình **Row-oriented**.
-Trong mô hình này, tất cả các trường (cột) của một bản ghi (dòng) được lưu trữ liên tiếp nhau trên đĩa.
-
-**Ví dụ:** Cho bảng `Users(id, name, age, city)`. Trên đĩa, dữ liệu sẽ được lưu dưới dạng:
-`[1, 'Alice', 25, 'Hanoi'], [2, 'Bob', 30, 'HCM'], [3, 'Charlie', 22, 'Da Nang']...`
-
-#### Lợi ích của Row-oriented
-- **Ghi cực nhanh (Fast Writes)**: Khi có một User mới đăng ký, toàn bộ thông tin của User đó được nối thêm (append) hoặc chèn vào dưới dạng một khối (block/page) duy nhất trên đĩa. Việc ghi nguyên một dòng chỉ tốn 1 lần thao tác I/O.
-- **Đọc trọn vẹn bản ghi**: Khi ứng dụng cần lấy thông tin profile của `id = 1` (`SELECT * FROM Users WHERE id = 1`), cơ sở dữ liệu chỉ cần đọc một block bộ nhớ (page) từ đĩa chứa dòng dữ liệu đó, lấy trọn vẹn mọi cột mà không cần gom nhặt từ nhiều nơi.
-
-#### Hạn chế của Row-oriented trong Phân tích
-Nếu bạn muốn tính độ tuổi trung bình của toàn bộ Users (`SELECT AVG(age) FROM Users`), hệ thống buộc phải đọc toàn bộ các block chứa tất cả các dòng dữ liệu (từ `id`, `name`, `age`, đến `city`) lên bộ nhớ, sau đó mới trích xuất cột `age` ra để tính. Quá trình này tạo ra I/O lãng phí khổng lồ vì đã tải lên những cột không hề được sử dụng đến (`name`, `city`, v.v).
+Bài viết này mổ xẻ sâu vào cơ chế Row-oriented (Lưu trữ hướng dòng) và Column-oriented (Lưu trữ hướng cột), cùng các rủi ro vận hành trong thực tế.
 
 ---
 
-## 2. OLAP (Lưu Trữ Hướng Cột - Column-Oriented Storage)
+## 1. Row-Oriented Storage (Kiến Trúc OLTP)
 
-OLAP là các hệ thống phục vụ cho việc phân tích dữ liệu, làm báo cáo kinh doanh (Business Intelligence). Đại diện là các Data Warehouse (Snowflake, BigQuery, Redshift) hoặc các Table Formats trên Data Lake (Parquet, Iceberg, Delta Lake).
+Các hệ thống OLTP (như PostgreSQL, MySQL, Oracle) được sinh ra để xử lý hàng vạn giao dịch mỗi giây (High Concurrency) với độ trễ tính bằng mili-giây (Low Latency). 
 
-### Đặc Điểm Workload của OLAP
-- **Đọc quét diện rộng (Full Table Scans/Range Scans)**: Xử lý hàng triệu đến hàng tỷ dòng, tập trung vào việc đọc.
-- **Chỉ chọn một số ít cột**: Các câu lệnh thường tập trung tính toán trên vài cột (`GROUP BY`, `SUM`, `AVG`, `COUNT`), bỏ qua phần lớn các cột khác trong bảng rộng (Wide tables có hàng trăm cột).
-- **Batch Updates/Inserts**: Dữ liệu thường được tải vào theo lô (batch) từ các hệ thống OLTP chứ ít khi cập nhật từng dòng liên tục.
-- **Giao dịch kéo dài**: Một truy vấn phân tích có thể chạy mất vài phút đến hàng giờ.
+### 1.1. Kiến Trúc Thực Thi Vật Lý (Physical Execution)
 
-### Kiến Trúc Lưu Trữ Hướng Cột
-Hệ thống OLAP giải quyết hạn chế của Row-oriented bằng cách sử dụng **Column-oriented storage**.
-Tại đây, dữ liệu của cùng một cột được xếp liên tiếp nhau.
+Trong mô hình **Row-oriented**, tất cả các trường (cột) của một bản ghi (tuple) được ghi liên tiếp nhau trên cùng một khối dữ liệu vật lý (thường gọi là Page hoặc Block, kích thước tiêu chuẩn 8KB - 16KB).
 
-**Ví dụ:** Bảng `Users` ở trên sẽ được lưu:
-- File / Block 1 (id): `[1, 2, 3]`
-- File / Block 2 (name): `['Alice', 'Bob', 'Charlie']`
-- File / Block 3 (age): `[25, 30, 22]`
-- File / Block 4 (city): `['Hanoi', 'HCM', 'Da Nang']`
+```mermaid
+block-beta
+  columns 1
+  Space["Mô Hình Lưu Trữ Row-oriented trên Đĩa (Disk Page)"]
+  block:Row1
+    id1["id: 1"] name1["name: Alice"] age1["age: 25"] city1["city: Hanoi"]
+  end
+  block:Row2
+    id2["id: 2"] name2["name: Bob"] age2["age: 30"] city2["city: HCM"]
+  end
+  block:Row3
+    id3["id: 3"] name3["name: Charlie"] age3["age: 22"] city3["city: Da Nang"]
+  end
+```
 
-#### Lợi ích của Column-oriented
-- **Giảm thiểu I/O (I/O Pruning)**: Khi thực hiện `SELECT AVG(age) FROM Users`, hệ thống chỉ đọc đúng Block 3. Băng thông đọc đĩa (Disk I/O) được tối ưu tối đa.
-- **Nén cực mạnh (High Compression)**: Vì các giá trị nằm cạnh nhau đều có cùng kiểu dữ liệu, nên thuật toán nén hoạt động cực kỳ hiệu quả. 
-  - *Ví dụ:* Cột `city` chứa `'Hanoi', 'Hanoi', 'Hanoi', 'HCM', 'HCM'` có thể nén bằng RLE (Run-length Encoding) thành `('Hanoi', 3), ('HCM', 2)`.
-  - Nén tốt giúp giảm dung lượng lưu trữ trên đĩa xuống từ 5-10 lần, đồng thời giảm lượng dữ liệu tải vào RAM (tiết kiệm băng thông bộ nhớ).
-- **Xử lý Vector (Vectorized Execution/SIMD)**: Các vi xử lý hiện đại (CPU) hỗ trợ chỉ lệnh SIMD (Single Instruction, Multiple Data). Hệ thống có thể thực hiện phép toán cộng, nhân, lọc song song trên một mảng dữ liệu cùng loại nằm kề nhau trên RAM thay vì lặp qua từng dòng, đẩy nhanh tốc độ thực thi gấp nhiều lần.
+**Cơ chế hoạt động:**
+- **Indexing (B+ Tree):** Hệ thống OLTP duy trì cấu trúc B+ Tree dày đặc. Khi bạn thực hiện `SELECT * FROM Users WHERE id = 2`, B+ Tree giúp truy tìm chính xác con trỏ vật lý (Pointer) trỏ đến Page chứa dòng dữ liệu đó.
+- **Buffer Pool (Page Cache):** Cơ sở dữ liệu sẽ tải nguyên Page 8KB đó từ Disk lên RAM (Buffer Pool). Vì dữ liệu nằm kề nhau, CPU chỉ cần 1 thao tác I/O để lấy trọn vẹn toàn bộ các cột của User.
 
-#### Hạn chế của Column-oriented
-- **Cập nhật và chèn chậm (Slow Updates/Inserts)**: Nếu chèn 1 dòng User mới, thay vì ghi 1 chỗ, hệ thống phải cắt dòng đó ra làm 4 phần và ghi vào 4 file/block tương ứng. Thao tác ngẫu nhiên (Random Write) trở thành ác mộng. Đó là lý do OLAP ưu tiên việc Load theo Batch (nối đuôi nhiều dòng cùng lúc).
-- **Truy xuất dòng cụ thể chậm**: Nếu muốn `SELECT * FROM Users WHERE id = 1`, hệ thống phải đọc từ 4 file khác nhau ở các vị trí tương ứng rồi "khâu" chúng lại (tuple reconstruction). Quá trình này tốn nhiều CPU và I/O ngẫu nhiên.
+### 1.2. Trade-offs Hệ Thống (Đánh Đổi)
 
----
+* **Điểm mạnh (Fast Random Writes/Reads):** Tối ưu tuyệt đối cho các thao tác CRUD (Create, Read, Update, Delete) theo từng bản ghi (Point-lookup). Ghi thêm 1 user mới chỉ là thao tác Append vào cuối Page hoặc chèn vào Page đang trống.
+* **Điểm yếu (Read Amplification - Khuếch đại Đọc):** 
+  Giả sử bạn chạy một truy vấn phân tích: `SELECT AVG(age) FROM Users`.
+  Vì đĩa chỉ có thể đọc theo từng khối (block), hệ thống buộc phải tải toàn bộ các Page (chứa cả `id`, `name`, `city`) lên RAM chỉ để vứt đi phần lớn dữ liệu và lấy ra cột `age`. Việc này gây lãng phí khổng lồ băng thông đĩa (Disk I/O) và băng thông bộ nhớ (Memory Bandwidth).
 
-## 3. So Sánh Chi Tiết: Row-oriented vs Column-oriented
+### 1.3. Rủi Ro Vận Hành Thực Tế (Operational Risks)
 
-| Tiêu chí | Lưu trữ Hướng Dòng (Row-oriented) | Lưu trữ Hướng Cột (Column-oriented) |
-| :--- | :--- | :--- |
-| **Mục tiêu hệ thống** | OLTP (PostgreSQL, MySQL) | OLAP (BigQuery, Snowflake, ClickHouse) |
-| **Đơn vị lưu trữ cơ bản** | Bản ghi đầy đủ (Record) | Tập hợp các giá trị của một Cột |
-| **Đặc thù Truy vấn (Reads)** | Trích xuất nhanh toàn bộ một / vài bản ghi (`SELECT * WHERE id=...`) | Quét dữ liệu trên diện rộng, lấy vài cột (`SELECT SUM(A), AVG(B) GROUP BY C`) |
-| **Hiệu suất Ghi/Cập nhật** | Rất cao, hỗ trợ Random Inserts/Updates cực tốt. | Kém với cập nhật từng dòng. Thường cần nạp theo Batch/Append-only. |
-| **Hiệu năng Nén dữ liệu** | Kém (do các cột cạnh nhau có kiểu dữ liệu khác nhau) | Rất cao (Sử dụng RLE, Dictionary Encoding, Bit-packing, Snappy, Zstd...) |
-| **Chỉ mục (Indexing)** | B-Tree, B+ Tree là cốt lõi. | Thường kết hợp Min/Max Statistics, Bloom Filters, Zone Maps thay vì B-Tree dày đặc. |
-| **Phù hợp với** | Giao dịch thương mại điện tử, Core Banking, Ứng dụng Web. | Phân tích dữ liệu, Báo cáo BI, Machine Learning Data Prep. |
+* **Cache Thrashing (Vỡ Buffer Pool):** Nếu bạn chạy một câu lệnh quét toàn bảng (Full Table Scan) hoặc một câu lệnh phân tích nặng trên database OLTP, hệ thống sẽ đẩy hàng loạt Page từ Disk lên RAM. Điều này quét sạch các dữ liệu "nóng" (hot data) đang nằm trong Buffer Pool (theo cơ chế LRU), khiến các giao dịch của người dùng bị khựng lại (Latency Spike), thậm chí gây sập ứng dụng.
+* **Write Amplification (Khuếch đại Ghi):** Trong các Engine như InnoDB (MySQL), việc cập nhật một cột nhỏ cũng đòi hỏi hệ thống phải ghi lại nguyên cả Page 16KB xuống đĩa (Doublewrite Buffer).
 
 ---
 
-## 4. Kiến Trúc Bộ Nhớ & Cấu Trúc Chỉ Mục 
+## 2. Column-Oriented Storage (Kiến Trúc OLAP)
 
-### Cấu Trúc Index
-- **Hệ thống OLTP**: Thường dựa trên cấu trúc cây cân bằng như **B+ Tree**. B+ Tree rất hiệu quả cho thao tác `Point-lookup` (tìm bản ghi bằng ID) và `Range Scan` (tìm bản ghi từ đoạn A tới B). Khi kết hợp B+ Tree với lưu trữ Row-based, hệ thống có thể nhảy thẳng (seek) đến Page trên đĩa chứa dữ liệu và đọc lên bộ nhớ siêu tốc.
-- **Hệ thống OLAP**: Không dùng B-Tree theo cách truyền thống vì chi phí duy trì quá lớn khi nạp hàng triệu dòng dữ liệu mới. Thay vào đó, chúng dùng **Min-Max Indexing (Zone Maps)**. Dữ liệu được chia thành các Block lớn. Với mỗi cột trong Block, hệ thống lưu giá trị Lớn nhất và Nhỏ nhất. Khi có query `WHERE age = 20`, nếu 20 không nằm trong khoảng `[Min, Max]` của Block, hệ thống bỏ qua toàn bộ Block đó (Data Skipping).
+Để phục vụ các khối lượng dữ liệu khổng lồ (từ hàng Terabyte đến Petabyte) trong Data Warehouse (Snowflake, BigQuery, ClickHouse) hay Data Lakehouse (Parquet, Iceberg, Delta Lake), mô hình **Column-oriented** được áp dụng.
 
-### Bộ Nhớ Đệm (Buffer Pool vs. Block Cache)
-- **OLTP**: Quản lý bộ nhớ cực kỳ khắt khe qua **Buffer Pool**. Các "Page" dữ liệu (thường 8KB-16KB) được tải lên và giữ trong RAM (cache). Cơ chế như LRU (Least Recently Used) được dùng để hoán đổi page nhằm ưu tiên các dòng được truy xuất nhiều lần (hot data). 
-- **OLAP**: Truy vấn thường lớn hơn rất nhiều so với dung lượng RAM. Thay vì giữ page lâu dài, OLAP ưu tiên việc đẩy (streaming) dữ liệu với thông lượng cao (High Throughput) từ disk qua CPU, dùng vectorization để tính toán rồi xả bộ nhớ đi (thường gọi là pipeline execution hoặc block-based processing). 
+### 2.1. Kiến Trúc Thực Thi Vật Lý
+
+Thay vì ghi theo dòng, dữ liệu được "xoay" lại. Tất cả các giá trị của **cùng một cột** sẽ được gom lại và ghi liên tiếp nhau thành các file hoặc block riêng biệt.
+
+```mermaid
+block-beta
+  columns 1
+  Space["Mô Hình Lưu Trữ Column-oriented (Theo Từng Khối Cột)"]
+  block:ColID
+    C1["Khối ID:"] id1["1"] id2["2"] id3["3"] id4["..."]
+  end
+  block:ColName
+    C2["Khối Name:"] name1["Alice"] name2["Bob"] name3["Charlie"] name4["..."]
+  end
+  block:ColAge
+    C3["Khối Age:"] age1["25"] age2["30"] age3["22"] age4["..."]
+  end
+  block:ColCity
+    C4["Khối City:"] city1["Hanoi"] city2["HCM"] city3["Da Nang"] city4["..."]
+  end
+```
+
+### 2.2. Cơ Chế Tối Ưu Lõi (Core Mechanics)
+
+**1. I/O Pruning (Cắt Tỉa I/O) & Data Skipping:**
+Khi chạy `SELECT AVG(age) FROM Users`, hệ thống sẽ **bỏ qua hoàn toàn** khối ID, Name, và City. Disk I/O giảm theo cấp số nhân (đôi khi từ 100GB xuống chỉ còn vài chục MB). Thay vì dùng B+ Tree, OLAP lưu metadata thống kê gọi là **Zone Maps** (Min/Max values cho mỗi khối). Nếu query `WHERE age > 50`, mà khối hiện tại có `Max(age) = 40`, hệ thống sẽ skip toàn bộ khối đó mà không cần đọc lên RAM.
+
+**2. High Compression (Nén Dữ Liệu Tối Đa):**
+Vì các giá trị đứng cạnh nhau có cùng kiểu dữ liệu, các thuật toán nén chuyên dụng phát huy tối đa sức mạnh:
+* **Run-length Encoding (RLE):** `['Hanoi', 'Hanoi', 'Hanoi', 'HCM', 'HCM']` nén thành `[('Hanoi', 3), ('HCM', 2)]`.
+* **Dictionary Encoding:** Mã hóa các chuỗi dài thành các số nguyên Integer (Dictionary mapping), giúp giảm thiểu footprint trên bộ nhớ.
+* Dữ liệu nén càng nhỏ, băng thông truyền từ Disk -> RAM -> CPU Cache càng nhanh.
+
+**3. Vectorized Execution (Thực thi SIMD):**
+Các hệ thống OLAP hiện đại (ClickHouse, Databricks Photon engine) từ bỏ mô hình xử lý "từng-dòng-một" (Volcano Iterator Model). Thay vào đó, chúng xử lý dữ liệu theo từng **Vector/Batch** (thường là mảng 1024 - 4096 giá trị) để tận dụng tập lệnh SIMD (Single Instruction, Multiple Data) của CPU.
+
+```mermaid
+flowchart LR
+    A["Cột Age: 25, 30, 22, 40"] --> B("CPU L1 Cache")
+    B --> C{"SIMD Instruction:\n vector_add()"}
+    C --> D["Result: 117"]
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+**4. Late Materialization (Vật Chất Hóa Trễ):**
+Hệ thống cố gắng duy trì dữ liệu ở dạng cột nén (hoặc các mảng con trỏ) càng lâu càng tốt đi qua các phép toán Filter, Join. Hệ thống chỉ "khâu" các cột lại thành cấu trúc dòng (Tuple Reconstruction) ở bước cuối cùng trước khi trả kết quả về cho Client. Việc này tiết kiệm lượng lớn CPU cycles và Memory.
+
+### 2.3. Rủi Ro Vận Hành & Trade-offs
+
+* **Tuple Reconstruction Penalty:** Truy xuất một bản ghi đầy đủ `SELECT * FROM Users WHERE id = 1` là một cơn ác mộng. Hệ thống phải tìm vị trí dòng ở cột ID, sau đó nhảy (seek) ngẫu nhiên sang các file Name, Age, City để "khâu" chúng lại. Thao tác này tiêu tốn CPU và Random I/O cực lớn.
+* **Small File Problem (Phân Mảnh Dữ Liệu):** Vì mô hình cột ghi rất chậm (phải xé dữ liệu ra nhiều file), dữ liệu thường được ghi theo dạng Append-only (Batching). Nếu tần suất ghi liên tục (Streaming) mà không được nén lại (Compaction), hệ thống sẽ sinh ra hàng triệu file Parquet nhỏ, làm sập Metadata Store (ví dụ: JVM OOMKilled trên Spark Driver khi cố đọc manifest file).
 
 ---
 
-## 5. Sự Tiến Hóa: Sự Kết Hợp của HTAP
+## 3. Tổng Kết: HTAP và Sự Trỗi Dậy của Lakehouse
 
-Sự phân tách giữa OLTP và OLAP đòi hỏi các công ty phải xây dựng hệ thống ống dẫn dữ liệu (ETL/ELT) liên tục sao chép dữ liệu từ Database OLTP sang Data Warehouse OLAP. Tuy nhiên, kiến trúc này có độ trễ lớn (thường từ vài giờ đến một ngày).
+Sự phân cực kiến trúc tạo ra nhu cầu di chuyển dữ liệu (ETL/ELT) từ OLTP sang OLAP, gây ra độ trễ (Data Latency). Để giải quyết, các hệ thống **HTAP (Hybrid Transactional/Analytical Processing)** ra đời:
 
-Hiện nay, nhiều hệ thống hiện đại đang hướng tới **HTAP (Hybrid Transactional/Analytical Processing)** - có khả năng phục vụ cả OLTP và OLAP trên cùng một nền tảng với độ trễ gần như bằng 0 (Real-time Analytics).
-- **Cơ chế Dual-format**: Hệ thống lưu dữ liệu nóng ở dạng Row-oriented trong bộ nhớ để phục vụ OLTP, và âm thầm đồng bộ (ở background) các dữ liệu cũ hơn xuống định dạng Column-oriented để tối ưu cho các lệnh OLAP.
-- *Ví dụ điển hình*: TiDB (với TiKV là Row-store, TiFlash là Column-store), Google AlloyDB (sử dụng in-memory columnar engine), Oracle Database In-Memory.
+* **Dual-Format Engine (Ví dụ: TiDB):** Sử dụng `TiKV` lưu trữ dạng Row-oriented cho OLTP, sau đó dùng thuật toán đồng bộ (Raft consensus) liên tục sao chép và chuyển đổi sang `TiFlash` dưới dạng Column-oriented cho OLAP.
+* **Lakehouse / Table Formats (Iceberg, Delta Lake):** Giữ nguyên lưu trữ dưới dạng Column-oriented (Parquet), nhưng bọc thêm một lớp Transaction Log (Metadata) hỗ trợ ACID (Row-level Updates/Deletes) ngay trên Data Lake.
+
+Hiểu sâu về cấu trúc vật lý này là kỹ năng bắt buộc để một Kỹ sư dữ liệu biết cách tối ưu hóa truy vấn, chọn Partition Key / Z-Ordering phù hợp, và giải quyết các bài toán thắt cổ chai (Bottlenecks) về I/O.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+## Nguồn Tham Khảo
+
+* [Designing Data-Intensive Applications - Martin Kleppmann (Chương 3: Storage and Retrieval)](https://dataintensive.net/)
+* [Apache Parquet - Columnar Storage Format](https://parquet.apache.org/docs/)
+* [Databricks Photon Engine: Vectorized Query Execution](https://databricks.com/product/photon)
+* [ClickHouse Architecture: Column-oriented database and Vectorization](https://clickhouse.com/docs/en/architecture/column-oriented)
+* [AWS Database Blog: Decoupling OLTP and OLAP Workloads](https://aws.amazon.com/blogs/database/)

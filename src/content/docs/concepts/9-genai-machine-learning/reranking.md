@@ -21,7 +21,7 @@ Trong thực tế, kho dữ liệu của một doanh nghiệp có thể lên t�
 graph TD
     A["User Query"] --> B["Stage 1: Initial Retrieval"]
     subgraph stage1 ["Giai đoạn 1: Ưu tiên Tốc độ và Recall"]
-    B -->|Vector Search / BM25| C[("Document Database 1M+ Docs")]
+    B -->|Vector Search / BM25| C["("Document Database 1M+ Docs")"]
     C -->|Top 100 Docs| D["Candidate Set"]
     end
     

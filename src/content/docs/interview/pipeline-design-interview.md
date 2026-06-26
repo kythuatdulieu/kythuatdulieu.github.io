@@ -76,8 +76,8 @@ graph LR
         D["(Bronze: Raw Data)"]
         E["(Silver: Clean & Join)"]
         F["(Gold: Data Marts)"]
-        D -. "dbt (Transform)" .-> E
-        E -. "dbt (Transform)" .-> F
+        D -. "dbt("Transform")" .-> E
+        E -. "dbt("Transform")" .-> F
     end
 
     subgraph "Orchestration & Monitoring"
@@ -87,7 +87,7 @@ graph LR
 
     A -->|"CDC"| C
     B -->|"REST / Batch"| C
-    C -->|"Load (EL)"| D
+    C -->|"Load("EL")"| D
     G -. "Trigger Ingestion" .-> C
     G -. "Trigger Transform" .-> D
     H -. "Data Quality Check" .-> E

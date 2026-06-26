@@ -1,109 +1,180 @@
 ---
-title: "Google BigQuery - Nền tảng phân tích Serverless"
-difficulty: "Intermediate"
-tags: ["google-cloud", "bigquery", "data-warehouse", "serverless", "olap"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Google BigQuery là gì? Kiến trúc và Hướng dẫn tối ưu hóa"
-metaDescription: "Tìm hiểu kiến trúc độc đáo của Google BigQuery (Borg, Colossus, Dremel), ưu nhược điểm, cách tính giá và các thủ thuật tối ưu hóa truy vấn chi phí thấp."
-description: "Trong thế giới phân tích dữ liệu, việc phải quản lý hạ tầng máy chủ, cấu hình bộ nhớ đệm hay thiết lập các chỉ mục (index) cho database luôn là nỗi ám ảnh. BigQuery ra đời để giải quyết triệt để bài toán này."
+title: "Google BigQuery - Phân Tích Kiến Trúc Máy Chủ Ảo (Serverless Data Warehouse)"
+difficulty: "Advanced"
+tags: ["google-cloud", "bigquery", "data-warehouse", "serverless", "dremel", "colossus"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc BigQuery: Dremel, Colossus và Các Đánh Đổi Hệ Thống"
+metaDescription: "Đi sâu vào kiến trúc vật lý của Google BigQuery (Borg, Colossus, Dremel, Jupiter). Phân tích mã nguồn Terraform, Tối ưu hoá truy vấn và các rủi ro vận hành OOMKilled, Slot Starvation."
+description: "Phân tích kiến trúc phân tách Compute và Storage của BigQuery. Mổ xẻ cách Dremel thực thi truy vấn, định dạng Capacitor, và các đánh đổi (trade-offs) để tránh sập hệ thống hoặc bùng nổ chi phí."
 ---
 
+Khác với các hệ thống RDBMS truyền thống (PostgreSQL, MySQL) nơi Compute và Storage bị trói buộc vào cùng một máy chủ vật lý, Google BigQuery là một Enterprise Data Warehouse theo đuổi triết lý **Decoupled Architecture** (Tách rời Tính toán và Lưu trữ). Nó cho phép bạn ném một truy vấn SQL phân tích hàng Petabyte dữ liệu và nhận kết quả trong vài giây, mà không cần quan tâm đến số lượng Node, RAM hay Disk I/O.
 
+Bài viết này sẽ lật mở "cỗ máy" dưới mui xe của BigQuery, giải thích cách nó vận hành dưới góc độ vật lý, cách triển khai bằng mã nguồn thực tế (Terraform/SQL), và quan trọng nhất là các tình huống rủi ro vận hành (Operational Risks) mà một Kỹ sư Dữ liệu sẽ phải đối mặt.
 
-Google BigQuery là một Enterprise Data Warehouse hoàn toàn Serverless (không máy chủ) và Highly Scalable (khả năng mở rộng cao) của Google Cloud Platform (GCP). Kế thừa các công nghệ xử lý dữ liệu khổng lồ nội bộ của Google, BigQuery có khả năng thực thi các câu lệnh truy vấn SQL trên các tập dữ liệu kích thước Petabyte, thậm chí Exabyte, chỉ trong vài giây đến vài phút mà không yêu cầu quản trị viên quản lý máy chủ, tối ưu hóa index hay cấu hình phần cứng (mô hình NoOps).
+## 1. Kiến trúc Vật lý (Physical Execution Architecture)
 
-Trong bài viết này, chúng ta sẽ đi sâu vào kiến trúc cốt lõi đứng sau tốc độ kinh hoàng của BigQuery, định dạng lưu trữ Capacitor, cách tổ chức dữ liệu thông minh và các best practices để sử dụng BigQuery một cách tiết kiệm và hiệu quả.
+Tốc độ khủng khiếp của BigQuery không đến từ phép màu, mà từ 4 trụ cột cơ sở hạ tầng nội bộ của Google. 
 
-## 1. Kiến trúc phân tách Compute và Storage
+```mermaid
+graph TD
+    subgraph Borg["Borg - Resource Management"]
+        direction TB
+        Client["Client / JDBC / UI"] -->|SQL Query| Root["Dremel: Root Node"]
+    end
 
+    subgraph Dremel["Dremel - Compute Engine"]
+        Root -->|Rewrite SQL & Split| Mixer1["Mixer Node"]
+        Root -->|Rewrite SQL & Split| Mixer2["Mixer Node"]
+        
+        Mixer1 -->|Shuffle & Aggregate| Leaf1["Leaf Node"]
+        Mixer1 -->|Shuffle & Aggregate| Leaf2["Leaf Node"]
+        Mixer2 -->|Shuffle & Aggregate| Leaf3["Leaf Node"]
+        Mixer2 -->|Shuffle & Aggregate| Leaf4["Leaf Node"]
+    end
 
+    subgraph Jupiter["Jupiter - Petabit Network"]
+        direction LR
+        Net("(Network Shuffle 1 Petabit/s"))
+    end
+    
+    Leaf1 & Leaf2 & Leaf3 & Leaf4 <--> Net
 
-Lợi thế cạnh tranh lớn nhất của BigQuery so với các Data Warehouse truyền thống nằm ở việc **tách rời hoàn toàn tầng tính toán (Compute) và tầng lưu trữ (Storage)**. Hai tầng này giao tiếp với nhau qua một mạng nội bộ siêu tốc độ của Google.
+    subgraph Colossus["Colossus - Distributed Storage"]
+        Net <--> Storage1["(Capacitor File 1)"]
+        Net <--> Storage2["(Capacitor File 2)"]
+        Net <--> Storage3["(Capacitor File N)"]
+    end
+```
 
-Điều này có nghĩa là bạn có thể mở rộng khả năng lưu trữ không giới hạn mà không cần mua thêm CPU, và ngược lại, quy mô tính toán tự động co giãn dựa trên độ phức tạp của câu truy vấn. Kiến trúc phân tách này dựa trên 4 trụ cột công nghệ chính:
+### 1.1. Dremel: Execution Engine (Động cơ Thực thi Tính toán)
+Dremel là engine xử lý MPP (Massively Parallel Processing). Khi bạn submit một truy vấn `SELECT`, Dremel biến nó thành một Execution Tree (cây thực thi):
+- **Root Node**: Nhận truy vấn, kiểm tra quyền, đọc metadata từ hệ thống để tối ưu hóa, sau đó chia nhỏ công việc.
+- **Mixer Nodes**: Làm nhiệm vụ gom nhóm (Aggregation) và xáo trộn dữ liệu (Shuffle) giữa các nhánh.
+- **Leaf Nodes**: Chịu trách nhiệm giao tiếp trực tiếp với tầng Storage (Colossus) để quét, lọc (Filter) dữ liệu ở định dạng cột. 
 
-### Dremel: Execution Engine (Động cơ thực thi)
-Dremel là cỗ máy tính toán phân tán cho phép truy vấn trực tiếp trên dữ liệu có cấu trúc và bán cấu trúc với tốc độ chóng mặt. Dremel chuyển đổi các câu lệnh SQL thành một cây thực thi (execution tree) nhiều tầng. 
-- Nút gốc (Root) nhận câu truy vấn và phân chia thành các truy vấn nhỏ hơn, gửi đến các nút trung gian (Mixers).
-- Các nút trung gian tiếp tục chia nhỏ nhiệm vụ và gửi tới các nút lá (Leaf nodes).
-- Các nút lá làm nhiệm vụ đọc dữ liệu song song trực tiếp từ Storage, tính toán sơ bộ và trả kết quả ngược lên trên.
+> [!NOTE]
+> Khái niệm **BigQuery Slot** chính là một đơn vị tài nguyên CPU, RAM và I/O mạng cấp phát cho các tiến trình chạy trên các Mixer và Leaf node này.
 
-### Colossus: Distributed Storage (Hệ thống lưu trữ phân tán)
-Colossus là thế hệ tiếp theo của Google File System (GFS). Đây là hệ thống file phân tán siêu bền bỉ (high durability), chịu trách nhiệm đảm bảo dữ liệu không bao giờ bị mất mát hay gián đoạn thông qua cơ chế sao chép đa vùng (replication) và mã hóa dự phòng (erasure encoding). Nhờ Colossus, BigQuery không bị giới hạn về dung lượng một bảng như các cơ sở dữ liệu truyền thống.
+### 1.2. Colossus: Distributed Storage
+Hệ thống file phân tán thế hệ 2 của Google (kế thừa GFS). Colossus chia dữ liệu thành các chunk nhỏ, lưu trữ dự phòng (erasure encoding) qua nhiều data center. BigQuery không bao giờ lưu dữ liệu trên ổ cứng local của các máy tính toán Dremel, mọi thứ đều nằm ở Colossus.
 
-### Jupiter: High-Speed Network (Mạng lưới tốc độ cao)
-Để Compute (Dremel) và Storage (Colossus) hoàn toàn tách biệt mà không bị nghẽn cổ chai (bottleneck) về băng thông, Google sử dụng kiến trúc mạng Jupiter siêu tốc. Jupiter cung cấp băng thông lên đến mức độ Petabit/s (hàng ngàn Terabit/s), giúp Dremel có thể đọc hàng Terabyte dữ liệu từ Colossus trong chớp mắt mà không cần tải dữ liệu về một "ổ cứng" cục bộ nào.
+### 1.3. Jupiter: The Network Bottleneck Breaker
+Nếu Dremel và Colossus bị tách rời, thì việc chuyển hàng Terabyte dữ liệu giữa chúng sẽ gây nghẽn cổ chai mạng (Network Bottleneck). Google giải quyết bằng **Jupiter Network**, cung cấp băng thông hai chiều lên tới 1 Petabit/giây (Pbps). Nhờ đó, việc đọc dữ liệu từ xa (remote storage) nhanh như đọc từ RAM cục bộ.
 
-### Borg: Resource Manager (Quản lý tài nguyên)
-Mọi tác vụ của Dremel, Colossus đều được phân bổ và vận hành bởi Borg - tiền thân của hệ thống Kubernetes mã nguồn mở ngày nay. Borg điều phối các "slot" (đơn vị tính toán của BigQuery) để đảm bảo hàng nghìn truy vấn đồng thời trên toàn bộ Google Cloud Platform được phục vụ đúng cam kết SLA.
+### 1.4. Capacitor: Định dạng lưu trữ theo Cột (Columnar Format)
+Dữ liệu trên Colossus được nén dưới định dạng **Capacitor** (phiên bản nội bộ mạnh mẽ hơn Parquet). 
+- Hỗ trợ Pushdown Predicates (đẩy điều kiện `WHERE` xuống tận cấp lưu trữ).
+- Lưu metadata (min, max, count, nulls) ở file header để Leaf nodes có thể loại bỏ ngay lập tức (Data Pruning) các block không thỏa mãn điều kiện trước khi nén/giải mã.
 
-## 2. Capacitor: Định dạng lưu trữ theo cột
+---
 
-BigQuery lưu trữ dữ liệu nội bộ bằng một định dạng độc quyền gọi là **Capacitor**. Nó là một định dạng file theo cột (Columnar format) tương tự như Apache Parquet hay ORC, nhưng được tối ưu hóa sâu hơn cho hệ sinh thái của Google.
+## 2. Show, Don't Tell: Triển khai với Code Thực Chiến
 
-Lợi ích của lưu trữ cột bằng Capacitor:
-1. **Giảm thiểu dung lượng I/O**: Truy vấn SQL chỉ đọc những cột được `SELECT`, bỏ qua hoàn toàn dữ liệu ở các cột không liên quan. Điều này tiết kiệm rất nhiều chi phí do BigQuery tính phí dựa trên số byte dữ liệu được quét.
-2. **Mã hóa và nén cao cấp**: Các dữ liệu trong cùng một cột thường có độ tương đồng cao (cùng kiểu dữ liệu, nhiều giá trị trùng lặp). Capacitor tự động sử dụng nhiều kỹ thuật nén tiên tiến (như Run-length Encoding, Dictionary Encoding) để nén dữ liệu. Thậm chí nó có khả năng thay đổi chiến lược nén ngay trong quá trình nạp dữ liệu (data loading).
-3. **Lưu trữ metadata thông minh**: Capacitor lưu lại các con số thống kê (min, max, count...) ở cấp độ block lưu trữ. Khi truy vấn tìm một bản ghi có giá trị cụ thể, Dremel sẽ dùng metadata này để "bỏ qua" (skip) các block không chứa dữ liệu cần thiết mà không cần quét toàn bộ.
+Thay vì bấm giao diện UI, Staff Data Engineer phải quản lý hạ tầng như một mã nguồn (Infrastructure as Code - IaC). Dưới đây là cấu hình Terraform để khởi tạo một Dataset và Bảng chuẩn Enterprise, áp dụng Partitioning và Clustering.
 
-## 3. Tổ chức dữ liệu: Partitioning và Clustering
+```hcl
+# main.tf
+resource "google_bigquery_dataset" "analytics_dw" {
+  dataset_id                  = "enterprise_analytics"
+  friendly_name               = "Enterprise Analytics"
+  description                 = "Data warehouse for real-time analytics"
+  location                    = "US"
+  default_table_expiration_ms = 31536000000 # 365 ngày hết hạn cho bảng tạm
+}
 
-Dù có khả năng quét hàng Petabyte trong vài giây, quét quá nhiều dữ liệu sẽ tiêu tốn chi phí cực lớn. Để tối ưu hóa, BigQuery cung cấp hai cơ chế vật lý để giới hạn phạm vi quét:
+resource "google_bigquery_table" "fact_transactions" {
+  dataset_id = google_bigquery_dataset.analytics_dw.dataset_id
+  table_id   = "fact_transactions"
 
-### Table Partitioning (Phân vùng bảng)
-Partitioning chia một bảng lớn thành nhiều mảnh (partitions) nhỏ hơn dựa trên giá trị của một cột. Khi truy vấn có điều kiện lọc (`WHERE`) nằm trên cột được phân vùng, BigQuery chỉ quét duy nhất các phân vùng thỏa mãn.
+  # Bắt buộc người dùng phải gõ WHERE transaction_date 
+  # để tránh full-scan tốn chi phí
+  require_partition_filter = true 
 
-BigQuery hỗ trợ 3 loại phân vùng:
-- **Time-unit column partitioning**: Phân vùng dựa trên 1 cột `DATE`, `TIMESTAMP`, hoặc `DATETIME` theo ngày (Daily), tháng (Monthly), năm (Yearly) hoặc giờ (Hourly).
-- **Ingestion time partitioning**: Tự động tạo phân vùng dựa trên thời gian dữ liệu được insert vào hệ thống (thông qua cột ảo `_PARTITIONTIME` hoặc `_PARTITIONDATE`).
-- **Integer range partitioning**: Phân vùng theo các giá trị nguyên (Integer), ví dụ: CustomerID từ 1-1000, 1001-2000.
+  time_partitioning {
+    type  = "DAY"
+    field = "transaction_date"
+  }
 
-### Table Clustering (Phân cụm bảng)
-Trong khi Partitioning chia bảng ở mức file hệ thống theo 1 tiêu chí, **Clustering** sẽ sắp xếp dữ liệu *bên trong* các phân vùng đó (hoặc toàn bộ bảng nếu không có partition) theo một nhóm lên tới 4 cột.
+  # Gom cụm dữ liệu vật lý theo nhóm để tối ưu tốc độ đọc và JOIN
+  clustering = ["merchant_id", "status"]
 
-Dữ liệu có cùng giá trị trong các cột được cluster sẽ được đặt cạnh nhau (co-located) trong các block lưu trữ. 
-Khi bạn dùng điều kiện `WHERE` hoặc `JOIN` trên các cột đã được cluster, BigQuery sử dụng block metadata để loại bỏ (prune) những block không khớp một cách nhanh chóng, mang lại tốc độ ưu việt hơn và giảm đáng kể lượng byte processed.
+  schema = <<EOF
+[
+  {"name": "transaction_id", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "transaction_date", "type": "DATE", "mode": "REQUIRED"},
+  {"name": "merchant_id", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "amount", "type": "NUMERIC", "mode": "NULLABLE"},
+  {"name": "status", "type": "STRING", "mode": "NULLABLE"}
+]
+EOF
+}
+```
 
-*Nguyên tắc:* Luôn thiết kế Partition trước để giảm khối lượng dữ liệu quét theo thời gian, sau đó kết hợp thêm Cluster theo những trường thường xuyên dùng để Filter (WHERE) hoặc nhóm (GROUP BY).
+> [!TIP]
+> Thuộc tính `require_partition_filter = true` là "chốt chặn an toàn" sống còn. Nếu Data Analyst quên viết `WHERE transaction_date = '2023-10-01'`, BigQuery sẽ từ chối chạy truy vấn thay vì quét mờ 10 TB dữ liệu và gửi hóa đơn hàng trăm đô la.
 
-## 4. Các mô hình định giá (Pricing Models)
+---
 
-Chi phí trong BigQuery được cấu thành từ hai phần rõ rệt: **Storage** (Lưu trữ) và **Compute / Analysis** (Tính toán).
+## 3. Rủi ro Vận hành và Sự Đánh đổi (Systemic Trade-offs)
 
-### Storage Pricing
-BigQuery chia dữ liệu thành 2 cấp độ:
-- **Active Storage**: Dữ liệu được sửa đổi hoặc truy cập trong 90 ngày qua. Chi phí thông thường cao hơn.
-- **Long-term Storage**: Dữ liệu không có bất kỳ thay đổi nào trong 90 ngày liên tiếp sẽ tự động giảm giá lưu trữ xuống xấp xỉ 50%. (Việc đọc dữ liệu không làm mất trạng thái Long-term).
-- BigQuery cũng tính giá dựa trên **Logical Bytes** (trước khi nén, rẻ hơn mỗi byte) hoặc **Physical Bytes** (sau khi nén trên disk, giá cao hơn mỗi byte). Bạn có thể chọn cách tính có lợi cho mình.
+BigQuery rất mạnh, nhưng không phải viên đạn bạc. Khi kiến trúc mạng và lưu trữ bị lạm dụng, hệ thống sẽ gặp sự cố (Incident).
 
-### Compute / Analysis Pricing
-- **On-demand Pricing**: Trả tiền theo lượng dữ liệu thực tế bị quét (bytes processed) tính bằng Terabytes (TB) khi chạy từng câu SQL. Mô hình này phù hợp cho người dùng mới, tải truy vấn không đều. (Mỗi tháng Google miễn phí quét 1TB đầu tiên).
-- **Capacity Pricing**: Trả tiền để "thuê" một số lượng cố định các khe cắm tính toán (Compute Slots) theo từng khung giờ hoặc tháng. Bạn sẽ không bị tính phí theo số lượng dữ liệu quét nữa, chỉ cần trả một khoản chi phí phẳng dựa trên số máy chủ chuyên dụng mà Google dành riêng cho bạn. Phù hợp cho tổ chức lớn với ngân sách cần dự báo chính xác.
+### 3.1. Slot Starvation (Đói tài nguyên)
+**Tình huống:** Pipeline dữ liệu vào buổi sáng chạy rất chậm, thỉnh thoảng báo lỗi `Resources exceeded during query execution`.
+**Nguyên nhân gốc rễ (Root Cause):** 
+BigQuery theo mô hình Multi-tenant (dùng chung tài nguyên) nếu bạn chọn On-demand Pricing. Số lượng Slots (CPU) là hữu hạn. Khi hàng loạt câu lệnh `SELECT *`, `JOIN` phức tạp, hoặc Window functions được gọi cùng lúc, hệ thống không cấp đủ Slot (Slot Starvation).
+**Giải pháp (Trade-off):**
+- Đánh đổi Chi phí lấy Ổn định: Chuyển sang mô hình **Capacity Pricing** (Edition) để mua đứt ví dụ 1,000 Slots chạy độc quyền (Dedicated).
+- Tối ưu hóa Code: Thay vì tính chính xác (Exact Math) tiêu tốn nhiều RAM trên Mixer nodes, hãy dùng xấp xỉ (Approximate Math).
 
-## 5. Ecosystem & Advanced Features
+```sql
+-- TRƯỚC: Rất chậm, OOMKilled trên Mixer node do phải giữ mọi giá trị trong RAM
+SELECT merchant_id, COUNT(DISTINCT user_id) 
+FROM fact_transactions GROUP BY 1;
 
-BigQuery không chỉ là kho lưu trữ dữ liệu, nó đóng vai trò là hạt nhân của toàn bộ hệ sinh thái Dữ liệu và AI của GCP.
-* **BigQuery ML (BQML)**: Cho phép Data Analyst huấn luyện các mô hình Machine Learning (Linear Regression, K-Means, XGBoost, ARIMA, thậm chí gọi các mô hình LLM thông qua Vertex AI) sử dụng thuần cú pháp SQL ngay bên trong BigQuery mà không cần xuất dữ liệu ra Python/Pandas.
-* **BigLake & BigQuery Omni**: Mở rộng định dạng và phạm vi truy vấn. Với Omni, bạn có thể gửi truy vấn từ giao diện BigQuery để phân tích dữ liệu đang nằm tại Amazon S3 hay Azure Blob Storage cục bộ bên đó mà không tốn băng thông dịch chuyển dữ liệu.
-* **BI Engine**: Dịch vụ tính toán lưu trong bộ nhớ (In-memory analysis) hoạt động bên cạnh BigQuery. BI Engine hỗ trợ Looker, Data Studio hay Tableau truy xuất kết quả dưới 1 giây (sub-second response) ngay trên hàng tỉ dòng dữ liệu gốc.
-* **Materialized Views**: BigQuery hỗ trợ pre-compute các bảng view tổng hợp. Điểm đặc biệt của Materialized Views trong BigQuery là khả năng "Smart Tuning" tự động định tuyến lại các truy vấn SQL thông thường vào View nếu nó nhận thấy view đó có thể tối ưu truy vấn tốt hơn, và tính năng cập nhật gia tăng tự động (automatic incremental refresh) khi bảng gốc có dữ liệu mới.
+-- SAU: Cực kỳ nhanh, dùng thuật toán HyperLogLog++, sai số ~1-2%
+SELECT merchant_id, APPROX_COUNT_DISTINCT(user_id) 
+FROM fact_transactions GROUP BY 1;
+```
 
-## 6. Tổng hợp Best Practices tối ưu hóa (Cost & Performance Tuning)
+### 3.2. Spill-to-Disk (Tràn RAM xuống ổ đĩa mạng) và OOM
+**Tình huống:** `JOIN` 2 bảng Fact quá lớn (hàng tỷ dòng) không cùng Partition/Cluster keys, truy vấn mất 30 phút.
+**Nguyên nhân:** Khi Mixer node nhận dữ liệu từ Leaf node để thực hiện `Hash Join`, nếu tổng lượng dữ liệu vượt quá dung lượng RAM của Mixer, nó buộc phải xả (spill) dữ liệu tạm xuống đĩa mạng qua Jupiter. Phép xáo trộn mạng (Network Shuffle) ở quy mô Petabyte cực kỳ đắt đỏ về độ trễ. Nếu vượt quá giới hạn Shuffle, truy vấn sẽ chết (OOM).
+**Giải pháp:**
+- Tránh Cartesian Explosion (Cross Join không điều kiện).
+- Lọc (Filter) mạnh nhất có thể *trước* khi `JOIN` hoặc dùng CTE.
 
-Để tránh gặp phải các hoá đơn hàng ngàn đô la cho BigQuery, hãy nằm lòng các nguyên tắc:
+### 3.3. DML Updates & Anti-patterns (SCD Type 2)
+**Tình huống:** Kỹ sư cố gắng mô phỏng Slowly Changing Dimension (SCD) Type 2 bằng cách `UPDATE` từng dòng dữ liệu mỗi 5 phút bằng Apache Airflow.
+**Nguyên nhân:** BigQuery là một hệ thống OLAP thiết kế cho thao tác đọc lớn (Read-heavy) và nối thêm (Append-only). Nó KHÔNG phải OLTP (như Postgres). Các lệnh `UPDATE/DELETE` kích hoạt quá trình ghi đè toàn bộ block Capacitor, làm chậm toàn hệ thống và bị giới hạn Quota (chỉ vài trăm lệnh DML mỗi bảng một ngày).
+**Giải pháp:** Sử dụng câu lệnh `MERGE` để batch các bản ghi thay đổi theo chu kỳ (ví dụ mỗi giờ 1 lần).
 
-1. **KHÔNG bao giờ dùng `SELECT *`**: Do BigQuery là database hướng cột, `SELECT *` sẽ buộc hệ thống phải quét và trả phí cho toàn bộ mọi cột trong bảng. Hãy chỉ định đích danh từng cột: `SELECT id, name, created_at`.
-2. **Luôn sử dụng Partitioning và Clustering** trên các bảng lớn (fact tables). Đặc biệt với Partitioning theo ngày/tháng, và cấu hình cờ *"Require partition filter"* để ép người dùng bắt buộc phải điền điều kiện thời gian khi truy vấn bảng đó.
-3. **Hạn chế dùng `COUNT(DISTINCT col)`**: Tìm kiếm các bản ghi duy nhất trên tập dữ liệu hàng tỉ dòng là siêu đắt đỏ. Nếu bạn chỉ cần số liệu ước lượng tương đối, hãy thay thế bằng **`APPROX_COUNT_DISTINCT(col)`**. Nó dùng thuật toán HyperLogLog++ để cho ra kết quả nhanh gấp nhiều lần và tiết kiệm tài nguyên mà độ lệch chỉ ~1-2%.
-4. **Tránh Filter trên các chuỗi bằng hàm LIKE '%...%'**: Tìm kiếm kiểu full-scan này vô hiệu hoá mọi nỗ lực Pruning (chặn quét) dữ liệu của Capacitor. Thay vào đó hãy xem xét thiết lập BigQuery Search Index cho các cột Text.
-5. **Dùng Table Expiration**: Đối với các tập dữ liệu staging (trung gian), tập dữ liệu tạm thời, hãy cấu hình Auto-expire (hết hạn) trên mức độ Dataset hoặc Table. BigQuery sẽ tự động xoá dọn dữ liệu, không làm phát sinh chi phí lưu trữ Active kéo dài.
-6. **Kiểm tra chi phí bằng `--dry-run`**: Trên giao diện hoặc CLI, hãy chạy chế độ Dry Run trước khi thực sự ấn Execute câu lệnh. Nó sẽ trả về dung lượng bytes processed thực tế để bạn quyết định có nên chạy SQL hay không, chế độ dry-run là hoàn toàn miễn phí.
+```sql
+-- Dùng MERGE để thực hiện Upsert (Insert/Update) hàng loạt một cách tối ưu
+MERGE `enterprise_analytics.dim_merchants` T
+USING `enterprise_analytics.stg_merchants` S
+ON T.merchant_id = S.merchant_id
+WHEN MATCHED AND T.status != S.status THEN
+  UPDATE SET status = S.status, updated_at = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (merchant_id, status, created_at, updated_at)
+  VALUES (S.merchant_id, S.status, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+```
 
-## Tài Liệu Tham Khảo Thêm
+---
+
+## 4. Tổng kết: Data Engineer cần nhớ gì?
+
+1. **Compute != Storage:** Bạn không bao giờ quan tâm đến dung lượng ổ đĩa. Hãy tập trung vào việc dữ liệu đang được tổ chức vật lý như thế nào để đọc ít nhất (Partitioning + Clustering).
+2. **Network is the Computer:** Tốc độ của BigQuery là nhờ mạng lưới Jupiter. Hạn chế tối đa các lệnh SQL gây xáo trộn mạng (Shuffle) quá lớn.
+3. **No `SELECT *`:** Trả tiền cho Compute là trả tiền cho lượng byte quét từ Colossus. Định dạng cột (Capacitor) chỉ phát huy sức mạnh khi bạn chọn đúng cột mình cần.
+
+---
+
+## 5. Nguồn Tham Khảo (References)
 * [A Look at Dremel - Interactive Analysis of Web-Scale Datasets (Google Research)](https://research.google/pubs/pub36632/)
 * [BigQuery under the hood - Official Google Cloud Blog](https://cloud.google.com/blog/products/data-analytics/new-blog-series-bigquery-under-the-hood)
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+* [BigQuery Storage Architecture Overview (Google Cloud Docs)](https://cloud.google.com/bigquery/docs/storage-overview)
+* Sách tham khảo: *Designing Data-Intensive Applications* (Martin Kleppmann) - Chương 3: Storage and Retrieval.

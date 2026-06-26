@@ -1,114 +1,181 @@
 ---
 title: "Tác nhân AI (AI Agent)"
 difficulty: "Advanced"
-tags: ["ai-agent", "genai", "llm", "automation", "tool-use"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "AI Agent (Tác nhân AI) là gì? Kiến trúc và ứng dụng thực tế"
-metaDescription: "Tìm hiểu chi tiết về kiến trúc của AI Agent (Tác nhân AI): cách kết hợp bộ não LLM với khả năng lập kế hoạch (Planning), bộ nhớ (Memory) và sử dụng công cụ (Tool Use/Action)."
-description: "AI Agent (Đại lý AI) là một hệ thống AI không chỉ dừng ở việc trả lời câu hỏi bằng văn bản, mà còn được trang bị khả năng sử dụng công cụ, lập kế hoạch, và đưa ra hành động thực tế một cách tự chủ."
+tags: ["ai-agent", "genai", "llm", "automation", "tool-use", "system-design", "langgraph", "finops"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-26
+seoTitle: "AI Agent Architecture: System Design, Trade-offs & Production Risks"
+metaDescription: "Tìm hiểu sâu về kiến trúc AI Agent (Multi-Agent Systems) dưới góc nhìn Data Engineering. Mổ xẻ System Design, FinOps, LLM Routing, Memory Lifecycle và Operational Risks."
+description: "Phân tích kiến trúc cốt lõi của AI Agent trong môi trường Production: từ ReAct, LangGraph orchestration đến xử lý Context Window OOM, State Checkpointing và tối ưu chi phí (FinOps)."
 ---
 
+Nếu chỉ giao tiếp qua khung chat đơn thuần (ChatGPT, Claude), Mô hình Ngôn ngữ Lớn (LLM) giống như một "bộ não trong bình" (brain in a vat) – thông minh nhưng hoàn toàn thụ động và bị cô lập khỏi thế giới bên ngoài. 
 
-
-Nếu từng sử dụng các chatbot như ChatGPT, Gemini hay Claude bản thô, bạn hẳn đã quen với việc nhập câu hỏi và nhận về câu trả lời. Tuy nhiên, hệ thống đó chỉ đóng vai trò như một "bộ não" thụ động, không có khả năng tương tác với thế giới thực ngoài giới hạn của khung chat. Đây là lúc **AI Agent (Tác nhân AI)** ra đời để thay đổi cuộc chơi.
-
-AI Agent (Đại lý AI/Tác nhân AI) là một hệ thống AI kết hợp sức mạnh suy luận của các Mô hình Ngôn ngữ Lớn (LLMs) với khả năng **lập kế hoạch (Planning)**, **lưu trữ ký ức (Memory)**, và **sử dụng công cụ (Tool Use/Action)**. Nhờ đó, Agent có thể tự động hoàn thành các tác vụ phức tạp một cách tự chủ (autonomous), thay vì chỉ tạo ra văn bản.
-
----
-
-## 1. Sự Khác Biệt Giữa LLM Truyền Thống và AI Agent
-
-
-
-| Tiêu chí | LLM truyền thống (Ví dụ: ChatGPT bản tiêu chuẩn) | AI Agent |
-| :--- | :--- | :--- |
-| **Bản chất** | Là một hệ thống dự đoán từ tiếp theo (next-token prediction). | Là một hệ thống sử dụng LLM làm cốt lõi (brain) để điều phối hành động. |
-| **Đầu ra** | Văn bản, mã nguồn, hình ảnh (thụ động). | Hành động (gọi API, thực thi code, truy vấn DB, v.v.). |
-| **Quy trình** | Single-turn (hỏi - đáp 1 lần) hoặc Multi-turn đơn giản. | Tự động phân tích, chia nhỏ tác vụ và thực hiện từng bước (Step-by-step) cho đến khi hoàn thành. |
-| **Công cụ** | Thường bị giới hạn trong dữ liệu đã được huấn luyện. | Có thể duyệt web, chạy code, gọi API bên thứ ba. |
+Dưới góc nhìn System Design, **AI Agent** đóng vai trò là một **vỏ bọc hệ điều hành (Operating System Wrapper)**. Nó sử dụng LLM như một công cụ tính toán logic (Reasoning Engine) trung tâm, kết nối bộ não này với **Bộ nhớ (Memory)**, **Quyền điều khiển luồng (Control Flow/Planning)**, và **Cổng tương tác ngoại vi (Tool Use / I/O)**. Thông qua AI Agent, phần mềm chuyển từ mô hình "chờ lệnh và trả lời" (Request-Response) sang mô hình "nhận mục tiêu và tự thực thi" (Goal-Oriented Autonomous Execution).
 
 ---
 
-## 2. Kiến Trúc Của Một AI Agent
+## 1. Kiến trúc Cốt lõi của một Agent (The Core Architecture)
 
-Dựa trên nghiên cứu của Lilian Weng (OpenAI) và thiết kế của các framework hiện đại, kiến trúc cốt lõi của một AI Agent bao gồm 4 thành phần chính:
+Kiến trúc Agent kinh điển được định hình rõ nét nhất qua bài viết nền tảng của Lilian Weng (OpenAI). Một Agent độc lập hoạt động dựa trên 4 phân hệ vật lý/logic:
 
-### 2.1. LLM (Bộ Não)
-Đóng vai trò là trung tâm xử lý (CPU) của Agent. LLM chịu trách nhiệm hiểu ngôn ngữ tự nhiên, suy luận logic, đưa ra quyết định, và điều hướng các thành phần khác. Các LLM mạnh mẽ nhất cho Agent hiện nay bao gồm GPT-4o, Claude 3.5 Sonnet, và Gemini 1.5 Pro.
+![AI Agent Overview](/images/9-genai-machine-learning/agent-overview.png)
+*Nguồn: Lilian Weng (2023) - Các thành phần cốt lõi của LLM-powered Autonomous Agent.*
 
-### 2.2. Lập Kế Hoạch (Planning)
-Khi nhận một yêu cầu phức tạp từ người dùng, Agent hiếm khi có thể giải quyết ngay lập tức trong một bước. Lập kế hoạch giúp Agent:
-*   **Task Decomposition (Phân rã tác vụ):** Khả năng chia một nhiệm vụ lớn, phức tạp thành các bước nhỏ hơn, dễ quản lý hơn. Các kỹ thuật như *Chain of Thought (CoT)* hoặc *Tree of Thoughts (ToT)* thường được áp dụng.
-*   **Reflection và Tự sửa lỗi (Self-Correction):** Agent có khả năng tự đánh giá các hành động đã thực hiện, nhận diện lỗi lầm, và điều chỉnh lại kế hoạch cho các bước tiếp theo. Các kỹ thuật như *ReAct (Reasoning and Acting)* kết hợp cả suy luận và hành động lặp đi lặp lại để Agent luôn đi đúng hướng.
-
-### 2.3. Bộ Nhớ (Memory)
-Để hoạt động mạch lạc trong nhiều bước thực thi, Agent cần ghi nhớ những gì đã xảy ra.
-*   **Bộ nhớ ngắn hạn (Short-term memory):** Khả năng ghi nhớ ngữ cảnh của cuộc trò chuyện hoặc luồng thực thi hiện tại (In-context learning). Bị giới hạn bởi Context Window của mô hình (ví dụ: 128K hoặc 2M tokens).
-*   **Bộ nhớ dài hạn (Long-term memory):** Khả năng lưu trữ thông tin bên ngoài trong thời gian dài (vài ngày, vài tháng) và truy xuất lại khi cần thiết. Thường được triển khai thông qua các **Vector Database** (như Pinecone, Qdrant, Milvus) kết hợp với kỹ thuật *Retrieval-Augmented Generation (RAG)*.
-
-### 2.4. Sử Dụng Công Cụ (Tool Use / Action)
-Đây là "tay chân" của Agent, biến nó từ một cỗ máy nói chuyện thành một hệ thống hành động. LLM được tinh chỉnh (fine-tune) để biết cách gọi các hàm (Function Calling) hoặc xuất kết quả dưới dạng JSON để kích hoạt các công cụ:
-*   **Web Browsing:** Tìm kiếm thông tin cập nhật trên Google, Bing, đọc và phân tích nội dung trang web.
-*   **Code Execution:** Môi trường thực thi mã nguồn an toàn (như Python Sandbox) để chạy code do LLM tự viết ra (dùng để tính toán toán học phức tạp, phân tích dữ liệu).
-*   **APIs / Tương tác hệ thống:** Gọi API để tương tác với các hệ thống phần mềm khác (ví dụ: gửi Slack message, tạo ticket Jira, truy vấn SQL Database).
+1. **Reasoning Engine (LLM):** Xử lý ngữ nghĩa, phân tích ý định (intent parsing) và quyết định luồng đi.
+2. **Planning & Orchestration:** 
+   - **Task Decomposition:** Phân rã mục tiêu lớn thành chuỗi đồ thị phụ thuộc (DAG) các task nhỏ.
+   - **ReAct (Reasoning and Acting):** Vòng lặp `Thought -> Action -> Observation` liên tục để tự sửa sai (Self-correction).
+3. **Memory System:**
+   - **Short-term Memory (In-context learning):** Trạng thái luồng thực thi (State) hiện tại, lưu trong Context Window giới hạn của LLM.
+   - **Long-term Memory:** Hạ tầng lưu trữ bền vững bên ngoài (Vector Databases như Qdrant, Milvus hoặc Graph Database) để gọi RAG khi cần nhớ lại thông tin quá khứ.
+4. **Tool Use / Actions:** Các API, Python REPL Sandboxes, Web Crawlers. Dưới góc độ hệ thống, đây là các HTTP/gRPC client được LLM gọi thông qua cơ chế *Function Calling* (trả về JSON payload có cấu trúc).
 
 ---
 
-## 3. Hệ Thống Đa Tác Nhân (Multi-Agent Systems)
+## 2. Multi-Agent Systems & Orchestration Patterns
 
-Trong khi Single-Agent (một tác nhân) phù hợp cho các công việc đơn giản, những hệ thống phức tạp yêu cầu sự cộng tác của nhiều "chuyên gia". Đây là lúc **Multi-Agent Systems** tỏa sáng.
+Đưa một Agent khổng lồ vào Production (God Agent) là một thảm họa System Design. Nó giống như Monolithic Architecture: Agent dễ bị "ảo giác" (Hallucinations), tràn Context Window, và cực kỳ khó debug. Thay vào đó, ngành Data/Software Engineering chuyển sang **Multi-Agent Systems (Micro-agents)**.
 
-Trong một hệ thống đa tác nhân, nhiều AI Agent khác nhau sẽ cùng làm việc, giao tiếp, tranh luận và hỗ trợ nhau thực hiện mục tiêu chung:
-*   **Researcher Agent:** Chuyên biệt cho việc tìm kiếm tài liệu, thu thập dữ liệu trên web.
-*   **Coder Agent:** Viết code dựa trên dữ liệu và yêu cầu đã được phân tích.
-*   **Reviewer / QA Agent:** Đóng vai trò kiểm tra code, phát hiện lỗi bảo mật và yêu cầu Coder Agent sửa lại.
+Các Pattern định tuyến đa tác nhân phổ biến:
 
-Các framework hàng đầu để xây dựng hệ thống Multi-Agent bao gồm:
-*   **AutoGen (Microsoft):** Cho phép xây dựng các workflow phức tạp với nhiều loại Agents giao tiếp qua lại với nhau.
-*   **CrewAI:** Lấy cảm hứng từ cấu trúc làm việc của con người, phân bổ Agents thành các "đội ngũ" (crews) với từng vai trò, mục tiêu và công cụ riêng.
-*   **LangGraph:** Mở rộng từ LangChain, chuyên để xây dựng Agent bằng cấu trúc đồ thị (graph) có khả năng định tuyến chu trình (cycles) và kiểm soát trạng thái (state).
+### 2.1. Sequential Pipeline (DAG Pattern)
+Luồng đi 1 chiều: Agent A thu thập dữ liệu -> Agent B viết code -> Agent C kiểm thử. Dễ scale, dễ track state, nhưng thiếu tính linh hoạt (không có vòng lặp).
+
+### 2.2. Hierarchical / Supervisor Routing
+Sử dụng một LLM mạnh làm Router (Supervisor) để phân phối task xuống cho các "Worker Agents" chuyên biệt.
+
+```mermaid
+graph TD
+    User("(User")) --> Sup["Supervisor Agent"]
+    Sup --> |Định tuyến| W1["Researcher Agent"]
+    Sup --> |Định tuyến| W2["Coder Agent"]
+    Sup --> |Định tuyến| W3["Reviewer Agent"]
+    
+    W1 -.-> |Kết quả Web| Sup
+    W2 -.-> |Source Code| Sup
+    W3 -.-> |Lint Errors| Sup
+    
+    Sup --> |Trả lời cuối cùng| User
+    
+    style Sup fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+### 2.3. Mã nguồn Thực chiến: Supervisor Pattern với LangGraph
+
+Dưới đây là kiến trúc Graph State quản lý trạng thái của các Agent bằng Python và LangGraph. Ở quy mô Production, chúng ta **không** truyền toàn bộ hội thoại cho mọi Agent, mà chỉ truyền các `State` (trạng thái hệ thống) cần thiết.
+
+```python
+from typing import Annotated, Sequence, TypedDict
+import operator
+from langgraph.graph import StateGraph, END
+from langchain_core.messages import BaseMessage
+
+# 1. Định nghĩa System State (Nơi lưu trữ Short-term Memory chung)
+class AgentState(TypedDict):
+    messages: Annotated[Sequence[BaseMessage], operator.add]
+    next_agent: str
+    intermediate_data: dict
+
+# 2. Định nghĩa Supervisor Node (Router)
+def supervisor_node(state: AgentState):
+    # LLM quyết định ai sẽ làm tiếp theo dựa trên messages gần nhất
+    router_prompt = f"Ai nên xử lý tiếp theo: Coder hay Researcher? (Trả về Tên)"
+    response = llm.invoke([SystemMessage(content=router_prompt)] + state["messages"])
+    
+    return {"next_agent": response.content.strip()}
+
+# 3. Định nghĩa Workflow Graph (Control Flow)
+workflow = StateGraph(AgentState)
+workflow.add_node("Supervisor", supervisor_node)
+workflow.add_node("Researcher", researcher_agent)
+workflow.add_node("Coder", coder_agent)
+
+# Routing Logic Edge
+workflow.add_conditional_edges(
+    "Supervisor",
+    lambda x: x["next_agent"], # Trích xuất tên Agent từ State
+    {
+        "Researcher": "Researcher",
+        "Coder": "Coder",
+        "FINISH": END
+    }
+)
+workflow.set_entry_point("Supervisor")
+app = workflow.compile()
+```
 
 ---
 
-## 4. Ứng Dụng Thực Tế Của AI Agent trong Kỹ Thuật Dữ Liệu và Lập Trình
+## 3. Quản trị State, Memory Lifecycle & Trade-offs
 
-AI Agent đang thay đổi cách các kỹ sư xây dựng hệ thống và xử lý dữ liệu:
+Khác với Data Pipeline truyền thống (Stateless), Agentic Pipeline là **Stateful**. Quản trị vòng đời bộ nhớ (Memory Lifecycle) là điểm nghẽn vật lý lớn nhất.
 
-1.  **AI Data Analyst / Engineer:** Agent nhận yêu cầu ngôn ngữ tự nhiên từ người dùng kinh doanh (VD: "Phân tích nguyên nhân giảm doanh thu tháng qua"), tự động truy vấn cấu trúc Database (Data Dictionary), viết lệnh SQL, chạy truy vấn. Nếu có lỗi SQL syntax, Agent đọc lỗi, tự sửa lại câu SQL, lấy dữ liệu về, viết script Python để vẽ biểu đồ và tổng hợp báo cáo.
-2.  **Autonomous Software Engineer:** Các AI software engineer như Devin hay SWE-agent có thể nhận một issue trên GitHub, tự động clone repository, dùng các lệnh terminal để dò tìm file (grep/find), đọc code, sửa file, chạy unit test, và tự tạo Pull Request.
-3.  **Tự Động Hóa Workflow Doanh Nghiệp (Robotic Process Automation 2.0):** Tự động hóa bộ phận hỗ trợ khách hàng, trong đó Agent có quyền vào hệ thống ERP để xem tình trạng đơn hàng, quyết định phê duyệt refund và gửi email thông báo cho khách.
+### 3.1. Vấn đề: Context Window Limits & OOMKilled
+Mỗi khi Agent chạy vòng lặp ReAct, History Messages to dần lên. LLM tính phí và xử lý toán học dựa trên số token truyền vào (Context Window). Khi token vượt ngưỡng (VD: > 128K tokens cho GPT-4o), API sẽ văng lỗi `RateLimitError` hoặc `ContextLengthExceeded` (tương đương với Out of Memory - OOMKilled ở JVM).
 
----
-
-## 5. Thách Thức Và Giới Hạn Hiện Tại
-
-Mặc dù có tiềm năng to lớn, việc triển khai AI Agent lên môi trường Production vẫn đối mặt với nhiều rào cản:
-
-*   **Độ tin cậy và Ảo giác (Hallucination):** Nếu LLM suy luận sai, Agent có thể lập một kế hoạch sai lầm và liên tiếp gọi các công cụ không cần thiết. Trong quá trình lặp (loops), lỗi có thể bị tích lũy (cascading errors) khiến tác vụ thất bại.
-*   **Vòng lặp vô hạn (Infinite Loops):** Nếu không cấu hình kỹ thuật dừng (early stopping/max iterations), Agent có thể bị kẹt trong một vòng lặp sửa lỗi không hồi kết, tiêu tốn lượng lớn tiền gọi API.
-*   **Rủi ro Bảo mật và An toàn (Security & Safety):** Giao quyền cho Agent thực thi hành động thực (đặc biệt là quyền xóa/sửa dữ liệu) tiềm ẩn rủi ro lớn. Các cuộc tấn công *Prompt Injection* có thể đánh lừa Agent thực thi những tác vụ phá hoại. Do đó, cơ chế **Human-in-the-loop (HITL)** – Yêu cầu con người phê duyệt (approve) trước các hành động quan trọng – đang là tiêu chuẩn bắt buộc.
-*   **Độ trễ và Chi phí (Latency & Cost):** Quá trình *Suy luận -> Lập kế hoạch -> Gọi Tool -> Phản hồi* đòi hỏi nhiều lệnh gọi API tới LLM, mất nhiều thời gian và tốn kém hơn so với hệ thống dựa trên rules thông thường. Không phù hợp cho các luồng xử lý cần độ trễ cực thấp (real-time).
+### 3.2. Đánh đổi Hệ thống (Systemic Trade-offs)
+*   **Latency vs. Context Retention:** Truyền toàn bộ lịch sử (Full History) đảm bảo độ chính xác cao nhưng làm tăng Time-to-First-Token (TTFT) theo cấp số nhân và chi phí cắt cổ.
+*   **Giải pháp (Context Pruning & Checkpointing):**
+    Sử dụng kỹ thuật *Sliding Window* (chỉ giữ $N$ tin nhắn gần nhất) kết hợp *Rolling Summarization* (Dùng mô hình nhỏ gọn như Claude 3.5 Haiku để tóm tắt các hội thoại cũ và lưu dưới dạng chuỗi cô đọng).
+    Trong LangGraph, ta sử dụng cơ chế `checkpointer` (ví dụ lưu State vào Redis hoặc Postgres) để cho phép **Human-in-the-loop (HITL)** và khôi phục (Resume) thay vì chạy lại từ đầu khi crash.
 
 ---
 
-## Kết Luận
-AI Agent đánh dấu bước chuyển dịch quan trọng từ Generative AI "thụ động" sang phần mềm "chủ động" có khả năng ra quyết định và thao tác độc lập. Bằng cách kết hợp linh hoạt "bộ não" LLM với các giác quan và công cụ (Tools & Memory), AI không chỉ còn là một cỗ máy tra cứu thông tin mà đang trở thành một **đồng nghiệp kỹ thuật số** thực thụ. Việc làm chủ kiến trúc và cách thiết kế AI Agent sẽ là một kỹ năng cốt lõi của các Kỹ sư Dữ liệu (Data Engineers) và Lập trình viên trong tương lai.
+## 4. Rủi ro Vận hành và Sự cố Thực tế (Operational Incidents)
+
+Giao quyền tự quyết cho AI gây ra những rủi ro thảm họa nếu không có Guardrails (Rào chắn) vật lý ở mức hạ tầng.
+
+### Incident 1: Infinite Retry Storms (Bão Lặp Vô Tận)
+*   **Triệu chứng:** Agent gọi một API truy vấn Database bị lỗi `400 Bad Request`. Agent nhận được lỗi, nhưng không đủ thông minh để biết API schema đã đổi. Nó quyết tâm gọi đi gọi lại hàng trăm lần bằng đủ các tham số bịa đặt.
+*   **Hậu quả:** API Provider khóa IP, hóa đơn LLM Token tăng vọt lên hàng nghìn USD chỉ trong 1 đêm do Context ngày càng phình to ở mỗi vòng lặp.
+*   **Giải pháp Hệ thống:** 
+    1. Áp đặt `max_iterations = 5` tại cấp độ Graph Orchestrator.
+    2. Cấu hình **Circuit Breaker**: Sau 3 lần lỗi API liên tiếp, buộc luồng chuyển sang `HumanFallbackNode` để con người can thiệp.
+
+### Incident 2: Hallucinated Arguments (Ảo giác Tham số Chết người)
+*   **Triệu chứng:** Khi Agent gọi function `delete_records(ids: List[str])`, nó tự ảo giác truyền vào `ids=["*"]` vì nghĩ rằng thao tác này hợp lệ theo thói quen Bash shell.
+*   **Giải pháp Hệ thống:** 
+    Bắt buộc sử dụng Strict Typed Validation. Ví dụ cấu hình `Pydantic` schema khắt khe trước khi request thực sự rời khỏi Agent tới System API:
+    ```python
+    from pydantic import BaseModel, Field, field_validator
+
+    class DeleteRecordsSchema(BaseModel):
+        ids: list[str] = Field(..., min_items=1)
+        
+        @field_validator('ids')
+        @classmethod
+        def no_wildcards(cls, v):
+            if "*" in v or "all" in v:
+                raise ValueError("Wildcards are strictly prohibited in IDs.")
+            return v
+    ```
+
+### Incident 3: Tool Execution Sandbox Escape
+*   **Triệu chứng:** Coder Agent được cung cấp quyền thực thi Python code bằng hàm `eval()` hoặc subprocess để test tính năng. Agent sinh ra mã có chứa `os.system("rm -rf /")`.
+*   **Giải pháp Hệ thống:** Chạy Code Execution Tools trong các môi trường **gVisor**, **Docker Sandbox** (không có network access, read-only file systems) hoặc sử dụng các dịch vụ cô lập như AWS Lambda, E2B (e2b.dev).
 
 ---
 
-## Tài Liệu Tham Khảo
+## 5. FinOps: Tối ưu Chi phí cho Agentic Systems
 
-### Về AI Agent & LLMs
-* [LLM Powered Autonomous Agents - Lilian Weng (OpenAI)](https://lilianweng.github.io/posts/2023-06-23-agent/)
-* [LangChain Agents Documentation](https://python.langchain.com/docs/modules/agents/)
-* [AutoGen Framework by Microsoft](https://microsoft.github.io/autogen/)
-* [CrewAI Documentation](https://docs.crewai.com/)
-* [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
+Kiến trúc AI Agent cực kỳ tốn kém vì số lượng lệnh gọi inference (API calls) có thể gấp 10-20 lần so với mô hình Chatbot 1-turn.
 
-### Về Data Engineering & System Design
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+1. **LLM Tiering (Định tuyến Mô hình):**
+   - Đừng dùng GPT-4o / Claude 3.5 Sonnet cho mọi tác vụ. 
+   - **Router/Supervisor Agent:** Dùng mô hình cực nhanh, rẻ (VD: GPT-4o-mini, Claude 3.5 Haiku, Llama-3-8B) vì tác vụ phân loại (classification) rất đơn giản.
+   - **Reasoning/Planning Agent:** Dùng mô hình đắt tiền.
+2. **Semantic Caching:**
+   - Sử dụng Redis, Momento hoặc các Vector DB kết hợp để cache. Nếu Input Intent tương tự (khoảng cách Cosine Similarity > 0.95), trả về cấu trúc Graph execution plan đã lưu từ trước thay vì yêu cầu LLM lập kế hoạch lại từ đầu.
+3. **Tracking Metrics:**
+   - Trong DataOps, chúng ta theo dõi Bytes Processed. Trong AgentOps, phải giám sát các metrics cốt lõi: *Tokens per Run*, *Action Success Rate*, *Graph Depth* (Số lần chuyển Node). Sử dụng các công cụ Observability như LangSmith, Phoenix (Arize), hoặc Datadog LLM Observability.
+
+---
+
+## 6. Nguồn Tham Khảo (References)
+
+*   **LLM Powered Autonomous Agents** - Lilian Weng, OpenAI Blog. [Link](https://lilianweng.github.io/posts/2023-06-23-agent/)
+*   **LangGraph: Multi-Agent Workflows** - LangChain Docs. [Link](https://python.langchain.com/docs/langgraph/)
+*   **Building effective agents** - Anthropic Engineering Blog. [Link](https://www.anthropic.com/research/building-effective-agents)
+*   **Multi-Agent Orchestration Patterns** - AWS Architecture Blog. [Link](https://aws.amazon.com/blogs/architecture/)
+*   **Designing Data-Intensive Applications** - Martin Kleppmann (Phần liên quan đến State Management & Fault Tolerance trong Hệ thống phân tán).

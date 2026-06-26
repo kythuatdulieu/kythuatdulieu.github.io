@@ -1,158 +1,177 @@
 ---
-title: "Windowing - Phân nhóm dữ liệu luồng theo thời gian"
-difficulty: "Intermediate"
-tags: ["streaming", "windowing", "tumbling", "sliding", "session", "flink"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Windowing là gì? Tumbling, Sliding, Session Windows trong Streaming"
-metaDescription: "Tìm hiểu các loại Windowing trong xử lý dữ liệu Streaming: Tumbling, Sliding, Session. Cách chia cắt luồng dữ liệu vô hạn thành các nhóm hữu hạn để phân tích."
-description: "Dữ liệu luồng (Streaming Data) về bản chất là một dòng chảy vô hạn, không có điểm dừng. Việc thực hiện các phép tính toán tổng hợp như đếm số lượng gi..."
+title: "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
+difficulty: "Advanced"
+tags: ["streaming", "windowing", "watermarks", "flink", "state-management", "oom"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Windowing & Watermarks: Kiến trúc xử lý Late Data trong Streaming"
+metaDescription: "Đi sâu vào kiến trúc thực thi vật lý của Windowing trong Stream Processing. Đánh đổi giữa Memory và Latency, Watermarks, xử lý Late Data và các rủi ro OOMKilled thực tế."
+description: "Phân tích sâu kiến trúc thực thi vật lý của Windowing và Watermarks trong các hệ thống Streaming quy mô lớn. Làm sao để quản lý State an toàn, tránh OOMKilled khi xử lý Late Data."
 ---
 
-Dữ liệu luồng (Streaming Data) về bản chất là một dòng chảy vô hạn (unbounded), không có điểm dừng. Việc thực hiện các phép tính toán tổng hợp (aggregation) như đếm số lượng giao dịch, tính tổng doanh thu hay tìm giá trị lớn nhất trên toàn bộ luồng dữ liệu là điều bất khả thi, bởi vì chúng ta không bao giờ có được toàn bộ dữ liệu. 
+Khi xử lý luồng dữ liệu vô hạn (Unbounded Data), bài toán không nằm ở việc tính toán, mà nằm ở việc **quản lý trạng thái (State Management)**. Vì bộ nhớ vật lý (RAM/Disk) là hữu hạn, bạn không thể giữ toàn bộ dữ liệu trên memory chờ đến khi stream kết thúc. 
 
-Để giải quyết bài toán này, chúng ta sử dụng khái niệm **Windowing**.
+**Windowing** về mặt vật lý là cơ chế cấp phát, lưu trữ, và giải phóng vùng nhớ (State) theo các lát cắt thời gian. Khái niệm này luôn đi kèm với **Watermarks** – tín hiệu thu dọn rác (Garbage Collection signal) để hệ thống biết khi nào có thể an toàn đóng cửa sổ, xuất kết quả, và xóa State để tránh `OOMKilled`.
 
-## 1. Windowing là gì?
-
-**Windowing** (chia cửa sổ) là kỹ thuật cắt luồng dữ liệu vô tận (Unbounded Stream) thành những khối dữ liệu hữu hạn (Finite/Bounded Windows) dựa trên một tiêu chí nào đó (thường là thời gian hoặc số lượng sự kiện) để có thể thực hiện các phép tính toán trên đó.
-
-Bạn có thể tưởng tượng Windowing giống như việc dùng một chiếc xô để múc nước từ một dòng sông đang chảy. Dòng sông là vô hạn, nhưng nước trong chiếc xô là hữu hạn, và bạn có thể dễ dàng đo lường xem trong xô có bao nhiêu lít nước.
-
-### Tại sao cần Windowing?
-- **Tính toán tổng hợp (Aggregation):** Để trả lời các câu hỏi như "Có bao nhiêu lượt truy cập trong 5 phút qua?", "Trung bình nhiệt độ của cảm biến trong 1 giờ qua là bao nhiêu?".
-- **Phát hiện bất thường (Anomaly Detection):** Nhận biết các hành vi đáng ngờ diễn ra liên tục trong một khoảng thời gian ngắn (ví dụ: đăng nhập sai mật khẩu 5 lần trong 1 phút).
-- **Phân tích theo phiên (Session Analysis):** Theo dõi hành vi người dùng trong một phiên truy cập trang web.
+Bài viết này mổ xẻ sâu vào kiến trúc thực thi của Windowing, các đánh đổi hệ thống (Trade-offs), và cách thiết kế để chống lại các thảm họa tràn bộ nhớ trong môi trường Production.
 
 ---
 
-## 2. Các khái niệm Thời gian (Time Concepts) trong Stream Processing
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Trước khi đi sâu vào các loại Window, chúng ta cần hiểu rõ 3 khái niệm thời gian thường được sử dụng trong các hệ thống xử lý luồng (như Apache Flink, Kafka Streams):
+Trong các hệ thống phân tán như Apache Flink hay Kafka Streams, luồng thực thi của một Windowing Operator bao gồm 3 thành phần cốt lõi:
 
-1. **Event Time (Thời gian sự kiện):** Đây là thời gian thực sự xảy ra sự kiện ở thiết bị phát sinh (ví dụ: thời gian cảm biến ghi nhận nhiệt độ, hoặc lúc user click vào nút). Thời gian này thường được đính kèm vào payload của event.
-2. **Ingestion Time (Thời gian tiếp nhận):** Thời gian hệ thống streaming (như Kafka) nhận được sự kiện.
-3. **Processing Time (Thời gian xử lý):** Thời gian máy chủ xử lý sự kiện đang chạy đoạn code windowing.
+1. **Window Assigner**: Khi một Record (sự kiện) đi vào, Assigner sẽ định tuyến (route) nó vào một hoặc nhiều Bucket (Cửa sổ). Nếu Record thuộc về nhiều cửa sổ (ví dụ: Sliding Window), dữ liệu gốc không được copy thành nhiều bản, mà State Backend (như RocksDB) sẽ tạo ra nhiều index point trỏ tới nó để tối ưu I/O.
+2. **Trigger**: Là bộ đánh giá điều kiện (Condition Evaluator) chạy sau mỗi record hoặc mỗi khi Watermark tiến lên. Trigger quyết định xem Window đã đủ điều kiện để tính toán (Fire) và xóa State (Purge) hay chưa.
+3. **State Backend**: Nơi lưu trữ dữ liệu của các Window đang mở (In-flight Windows). Tùy chọn In-memory (Heap) cho tốc độ siêu nhanh nhưng dễ OOM, hoặc RocksDB (Spill-to-disk) đánh đổi CPU/IO lấy sự ổn định.
 
-**Event Time** là quan trọng nhất vì nó phản ánh chính xác thế giới thực, giúp kết quả tính toán nhất quán dù hệ thống có bị delay, hay phải xử lý lại dữ liệu lịch sử (re-processing).
-
----
-
-## 3. Các loại Windowing phổ biến
-
-### 3.1. Tumbling Window (Cửa sổ cuộn)
-Tumbling Window chia dữ liệu thành các khoảng thời gian có **độ dài cố định** và **không chồng lấp** (non-overlapping). Mỗi sự kiện chỉ thuộc về duy nhất một Tumbling Window.
-
-- **Đặc điểm:** Cố định, không chồng lấp.
-- **Tham số:** Kích thước cửa sổ (Window Size).
-- **Ví dụ:** Tumbling Window với kích thước 5 phút. Các cửa sổ sẽ là `[00:00 - 00:05)`, `[00:05 - 00:10)`, `[00:10 - 00:15)`.
-
-![Tumbling Window](https://nightlies.apache.org/flink/flink-docs-release-1.18/fig/tumbling-windows.svg)
-*(Minh họa Tumbling Window. Nguồn: Apache Flink)*
-
-**Ứng dụng thực tế:**
-- Thống kê doanh thu theo mỗi giờ.
-- Báo cáo số lượng request vào server mỗi phút để vẽ biểu đồ tổng quan.
-
-### 3.2. Sliding Window / Hopping Window (Cửa sổ trượt)
-Sliding Window cũng có **độ dài cố định**, nhưng các cửa sổ có thể **chồng lấp lên nhau** (overlapping). Nó trượt đi một khoảng thời gian đều đặn gọi là Slide (bước trượt).
-
-- **Đặc điểm:** Cố định, có chồng lấp (nếu Slide < Size).
-- **Tham số:** Kích thước cửa sổ (Window Size) và Bước trượt (Slide Size).
-- **Ví dụ:** Sliding Window với kích thước 10 phút, bước trượt 5 phút. Các cửa sổ sẽ là `[00:00 - 00:10)`, `[00:05 - 00:15)`, `[00:10 - 00:20)`. Một sự kiện xảy ra lúc `00:07` sẽ thuộc về cả cửa sổ thứ nhất và thứ hai.
-
-![Sliding Window](https://nightlies.apache.org/flink/flink-docs-release-1.18/fig/sliding-windows.svg)
-*(Minh họa Sliding Window. Nguồn: Apache Flink)*
-
-**Ứng dụng thực tế:**
-- Tính toán đường trung bình động (Moving Average) của giá cổ phiếu trong 1 giờ qua, cập nhật mỗi 5 phút.
-- Cảnh báo: Gửi alert nếu có quá 100 lỗi (Error Logs) trong vòng 5 phút qua, kiểm tra lại cứ sau mỗi 1 phút.
-
-### 3.3. Session Window (Cửa sổ phiên)
-Session Window không có độ dài cố định. Nó nhóm các sự kiện theo hoạt động của người dùng (hoặc một key nào đó). Một session được mở ra khi có sự kiện đầu tiên, và sẽ đóng lại (kết thúc) nếu **không có sự kiện nào xảy ra trong một khoảng thời gian im lặng nhất định** (Session Gap).
-
-- **Đặc điểm:** Không cố định, dựa vào hoạt động, phụ thuộc vào dữ liệu.
-- **Tham số:** Khoảng thời gian nghỉ (Session Gap Timeout).
-- **Ví dụ:** Session Window với gap là 15 phút. Người dùng click vào lúc `10:00`, sau đó click tiếp lúc `10:10`. Vì thời gian nghỉ chưa tới 15 phút, cả 2 click này ở chung một session. Sau đó họ rời đi. Đến `10:30` (đã qua hơn 15 phút từ click cuối), phiên cũ sẽ đóng lại. Nếu họ trở lại lúc `10:35`, một session window mới sẽ được tạo ra.
-
-![Session Window](https://nightlies.apache.org/flink/flink-docs-release-1.18/fig/session-windows.svg)
-*(Minh họa Session Window. Nguồn: Apache Flink)*
-
-**Ứng dụng thực tế:**
-- Phân tích hành vi người dùng (User Analytics): đo lường một phiên mua sắm kéo dài bao lâu, họ đã xem bao nhiêu sản phẩm trước khi checkout.
-- Gom nhóm các log liên quan đến một giao dịch phức tạp kéo dài nhưng có độ trễ không lường trước được giữa các bước.
-
-### 3.4. Global Window (Cửa sổ toàn cục)
-Global Window gom tất cả các sự kiện (thường là cùng chung một khóa - key) vào một cửa sổ duy nhất không bao giờ tự đóng. 
-Bởi vì cửa sổ này không tự đóng lại, bạn **bắt buộc** phải cấu hình một **Trigger** (điều kiện kích hoạt) để hệ thống biết khi nào thì nên thực hiện tính toán.
-
-**Ứng dụng thực tế:**
-- Tính toán những logic tùy chỉnh phức tạp không dựa hoàn toàn vào thời gian. Ví dụ: Tính tổng khi giỏ hàng đạt 10 items, bất kể mất bao lâu.
+```mermaid
+graph TD
+    A["Kafka Partition"] -->|Network Shuffle| B["KeyBy Operator"]
+    B --> C{"Window Assigner"}
+    C -->|Assign| D1["Window 1 State"]
+    C -->|Assign| D2["Window 2 State"]
+    D1 -.-> E("Trigger Evaluator")
+    E -->|Fire & Purge| F["Aggregation Function"]
+    F --> G["Downstream Output"]
+    H["Watermark Generator"] --> E
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style F fill:#bbf,stroke:#333,stroke-width:2px
+```
+*(Kiến trúc thực thi luồng Windowing và State Evaluation)*
 
 ---
 
-## 4. Xử lý Dữ Liệu Đến Trễ (Late Data) với Watermarks
+## 2. Các Chiến lược Chia Cửa Sổ & Systemic Trade-offs
 
-Trong thực tế, khi sử dụng **Event Time**, do sự cố mạng hoặc đặc thù của thiết bị mobile (mất sóng rồi có lại), dữ liệu có thể đến hệ thống không theo thứ tự thời gian, và có những dữ liệu đến rất trễ (Late Events). 
+### 2.1. Tumbling Windows (Cửa sổ cuộn)
 
-Nếu hệ thống cứ đợi mãi để đóng Window, nó sẽ không bao giờ xuất ra được kết quả. Nếu hệ thống đóng Window quá sớm, nó sẽ tính sai vì bỏ sót dữ liệu trễ. 
+Tumbling Windows cắt stream thành các đoạn cố định, không chồng lấp. Một Record chỉ thuộc về **duy nhất** một window.
 
-**Watermark** ra đời để giải quyết việc này. Watermark là một mốc thời gian khai báo rằng: *"Tôi tin chắc rằng từ giờ trở đi, sẽ không còn dữ liệu nào có Event Time cũ hơn mức Watermark này gửi đến nữa. Đã đến lúc đóng Window và tính toán!"*. 
+![Tumbling Window](/images/5-stream-processing-realtime/tumbling-windows.svg)
+*(Tumbling Window. Nguồn: Apache Flink)*
 
-Nếu sau khi Window đã đóng và tính toán xong, vẫn có những sự kiện "cực trễ" đến (Late Data vượt qua cả Watermark timeout), các hệ thống như Flink cung cấp cơ chế:
-- **Drop (Bỏ qua):** Bỏ luôn những dữ liệu này.
-- **Side Output (Xuất ra nhánh rẽ):** Đẩy dữ liệu trễ vào một luồng phụ để kỹ sư kiểm tra hoặc lưu vào kho lạnh thay vì làm hỏng luồng tính toán chính.
-- **Allowed Lateness (Cho phép trễ):** Cho phép Window sống thêm một khoảng thời gian nữa sau khi có Watermark, cập nhật (update) lại kết quả trước đó nếu có dữ liệu trễ rớt vào.
+- **Đánh đổi hệ thống (Trade-off):** Thân thiện với bộ nhớ nhất. Số lượng active state chỉ tương đương với số lượng Key $\times$ 1 (một window đang mở trên mỗi key). Thông lượng (Throughput) cao nhất vì ít phải phân nhánh (Routing).
+- **Physical Impact:** Cực kỳ tối ưu cho các bài toán Aggregation liên tục như Count, Sum vì hệ thống có thể áp dụng `ReduceFunction` (tính gộp ngay lập tức) thay vì lưu trữ toàn bộ records thô vào ListState.
+
+**Thực chiến Flink SQL (Tính tổng doanh thu mỗi 5 phút):**
+```sql
+SELECT 
+    window_start, window_end, 
+    store_id, SUM(revenue) as total_rev
+FROM TABLE(
+    TUMBLE(TABLE pos_transactions, DESCRIPTOR(event_time), INTERVAL '5' MINUTES)
+)
+GROUP BY window_start, window_end, store_id;
+```
+
+### 2.2. Sliding Windows (Cửa sổ trượt)
+
+Các cửa sổ có cùng độ dài nhưng có thể chồng lấp. Slide step (bước trượt) quy định tần suất tạo cửa sổ mới.
+
+![Sliding Window](/images/5-stream-processing-realtime/sliding-windows.svg)
+*(Sliding Window. Nguồn: Apache Flink)*
+
+- **Đánh đổi hệ thống (Trade-off):** Đây là cơn ác mộng về **Event Amplification** (Khuếch đại sự kiện). Nếu bạn cấu hình `Size = 1 giờ` và `Slide = 1 phút`, mỗi record mới tới sẽ được assign vào $60$ cửa sổ đồng thời. Điều này đồng nghĩa với việc Write I/O vào State Backend bị nhân lên gấp 60 lần, CPU cũng phải làm việc gấp 60 lần khi Trigger đánh giá.
+- **Physical Impact:** Nếu dùng RocksDB State Backend, I/O disk sẽ bị ngẽn nghiêm trọng (Disk I/O Bound). Cần tuning kĩ RocksDB Block Cache và Write Buffer.
+
+**Cấu hình Flink DataStream API Java (Di chuyển trung bình):**
+```java
+stream
+    .keyBy(SensorData::getDeviceId)
+    // Cửa sổ 10 phút, trượt 1 phút -> Record thuộc về 10 Windows
+    .window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)))
+    // Dùng AggregateFunction (Pre-aggregation) thay vì ProcessWindowFunction
+    // để tránh lưu toàn bộ cục dữ liệu thô vào bộ nhớ
+    .aggregate(new AverageAggregate());
+```
+
+### 2.3. Session Windows (Cửa sổ phiên)
+
+Gom nhóm dựa trên hoạt động. Nếu một khóa (Key) không có event mới trong khoảng `session_gap`, window sẽ bị đóng.
+
+![Session Window](/images/5-stream-processing-realtime/session-windows.svg)
+*(Session Window. Nguồn: Apache Flink)*
+
+- **Đánh đổi hệ thống (Trade-off):** Phức tạp nhất trong thực thi vì Session Window mang tính chất **Mergeable Window** (Cửa sổ có thể gộp lại). Khi hai event gần nhau xuất hiện, hệ thống phải liên tục thao tác Read-Modify-Write trên State Backend để *merge* các vùng nhớ lại thành một Session dài hơn. Quá trình này ngốn CPU cực mạnh do serialization/deserialization.
+- **Physical Impact:** State không được thu hồi theo thời gian cố định. Rất dễ dính OOM (Out Of Memory) nếu một con bot liên tục spam event cách nhau `< session_gap`, khiến một window kéo dài bất tận và bành trướng kích thước (State Bloat).
 
 ---
 
-## 5. Triggers và Evictors
+## 3. Watermarks & Cơ chế xử lý Late Data
 
-Bên cạnh cách Window chia dữ liệu, hệ thống streaming còn sử dụng 2 khái niệm nâng cao để điều khiển chính xác khi nào window được thực thi:
+Trong môi trường phân tán, Event Time (thời gian phát sinh sự kiện) và Processing Time (thời gian máy chủ tính toán) luôn có một độ trễ (Skew). Mạng chập chờn, GC Pauses, hay Mobile rớt mạng khiến dữ liệu đến không theo thứ tự (Out-of-order).
 
-- **Triggers (Bộ kích hoạt):** Quyết định *khi nào* một window sẵn sàng để được hệ thống tính toán (evaluate) và xuất kết quả. Ví dụ: Trigger khi thời gian Watermark vượt qua thời gian kết thúc của Window, hoặc Trigger mỗi khi Window nhận đủ 100 events, hoặc kết hợp cả hai.
-- **Evictors (Bộ thanh lọc):** Hoạt động trước hoặc sau khi hàm tính toán của Window chạy. Nó có tác dụng xóa bớt các phần tử trong Window theo một logic riêng biệt nào đó (ví dụ: chỉ giữ lại 10 phần tử mới nhất trước khi tính tổng).
+**Watermark ($W$)** là một biến toàn cục mang ý nghĩa Heuristic: *"Hệ thống cam kết (một cách tương đối) rằng sẽ không có sự kiện nào có Event Time $t < W$ xuất hiện nữa"*.
+Khi Watermark vượt qua thời gian kết thúc của cửa sổ $T_{end}$, cửa sổ được phép **Fire (xuất kết quả)** và **Purge (Xóa State)** để giải phóng bộ nhớ.
 
----
+Tuy nhiên, sự đời hiếm khi hoàn hảo. Dữ liệu trễ (Late Data - $t < W$) vẫn có thể xuất hiện sau khi State đã bị dọn dẹp. Chúng ta xử lý bằng cách nào?
 
-## 6. Ví dụ Mã Nguồn: Apache Flink Windowing (Java)
+### 3.1. Allowed Lateness (Cho phép trễ)
+Thay vì xóa State ngay lập tức khi Watermark đi qua, ta giữ lại (retain) State trong một khoảng `allowed_lateness`. Nếu Late Data rớt vào, Window sẽ Trigger thêm lần nữa (Retract & Accumulate) để cập nhật kết quả.
 
-Dưới đây là đoạn mã giả lập sử dụng Apache Flink để định nghĩa các loại Window:
+- **Rủi ro:** Giữ lại State quá lâu đồng nghĩa với việc State Backend phình to. Nếu `allowed_lateness = 1 day`, bạn đang lưu rác của 24h qua trong Disk/RAM. RocksDB Compaction sẽ trở thành nút thắt cổ chai, gây rớt Throughput hệ thống trầm trọng (Backpressure).
 
 ```java
-DataStream<SensorReading> stream = env.addSource(new SensorSource());
+// Flink: Cho phép trễ 30 phút, sau 30 phút rớt vào Side Output
+OutputTag<Event> lateTag = new OutputTag<Event>("late-data"){};
 
-// 1. Tumbling Window 5 phút
-stream
-    .keyBy(SensorReading::getId)
-    .window(TumblingEventTimeWindows.of(Duration.ofMinutes(5)))
-    .process(new MyProcessWindowFunction());
+WindowedStream<Event, String, TimeWindow> windowedStream = stream
+    .keyBy(Event::getUserId)
+    .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+    .allowedLateness(Time.minutes(30)) // Giữ State thêm 30 phút
+    .sideOutputLateData(lateTag);     // Hết 30 phút đẩy ra Dead Letter Queue
+```
 
-// 2. Sliding Window 10 phút, trượt đi 1 phút
-stream
-    .keyBy(SensorReading::getId)
-    .window(SlidingEventTimeWindows.of(Duration.ofMinutes(10), Duration.ofMinutes(1)))
-    .process(new MyProcessWindowFunction());
+### 3.2. Side Outputs (Mô hình Dead-Letter Queue)
+Sự kiện đến quá trễ (sau cả `allowed_lateness`) sẽ bị rẽ nhánh sang một luồng phụ (Side Output) để đẩy xuống kho lạnh lưu trữ rẻ tiền (S3, GCS) thay vì làm sập luồng tính toán chính. Sau đó, batch processing (ví dụ: Spark) sẽ tiến hành Reconcile (đối soát) lại dữ liệu cuối ngày.
 
-// 3. Session Window với gap 15 phút
-stream
-    .keyBy(SensorReading::getId)
-    .window(EventTimeSessionWindows.withGap(Duration.ofMinutes(15)))
-    .process(new MyProcessWindowFunction());
+---
+
+## 4. Operational Risks & Real-world Incidents (Các thảm họa Production)
+
+### 4.1. Incident 1: "Idle Partitions" gây kẹt Watermark và tràn RAM
+**Hiện tượng:** Một cụm Flink bỗng dưng bùng nổ Memory và `OOMKilled` hàng loạt TaskManager, mặc dù lưu lượng dữ liệu không tăng. Window kết quả không chịu xuất ra.
+**Root Cause (Căn nguyên):** Khi bạn đọc từ một Kafka Topic có 100 Partitions, Watermark của Operator sẽ lấy $\min(Watermark_{p1}, ..., Watermark_{p100})$. Nếu có 1 Partition bị "đứng yên" (Idle - không có dữ liệu nào mới vào), Watermark của Partition đó sẽ kẹt vĩnh viễn ở một mốc thời gian cũ. Dẫn đến Global Watermark không thể tịnh tiến. 
+Hậu quả là các Window không bao giờ được Fire & Purge. State phình to nuốt chửng toàn bộ Heap Memory.
+**Cách khắc phục (Remediation):** Cấu hình Watermark Idle Timeout.
+```java
+// Đánh dấu partition là idle nếu không có sự kiện mới sau 10 giây
+WatermarkStrategy
+    .<Event>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+    .withIdleness(Duration.ofSeconds(10));
+```
+
+### 4.2. Incident 2: Thảm họa Cartesian Explosion trong Sliding Window
+**Hiện tượng:** CPU Usage tăng 100%, Checkpoint timeout, ứng dụng bị ngẽn cục bộ (Backpressure).
+**Root Cause:** Data Engineer thiết kế Sliding Window có $Size = 24h$, $Slide = 1s$. 1 Event được nhân bản vào $24 \times 60 \times 60 = 86400$ windows đồng thời. ListState phình to khủng khiếp.
+**Cách khắc phục:** 
+1. Không sử dụng Windowing trực tiếp. Thay vào đó lưu data vào Kafka, và dùng In-memory K-V Database (Redis/Aerospike) để tra cứu (Time-series aggregations).
+2. Tối ưu kiến trúc thành **Two-phase Aggregation**: Tumbling window nhỏ ($1s$) tính trước tổng cục bộ (Pre-aggregation), sau đó mới trượt (Sliding) trên các cửa sổ $1s$ đã được nén nhỏ để tính ra mốc $24h$.
+
+### 4.3. Incident 3: Data Skew và OOM trên Session Window
+**Hiện tượng:** TaskManager xử lý Key "khách hàng VIP" bị sập liên tục.
+**Root Cause:** Một con cào dữ liệu (Crawler/Bot) liên tục nhả event vào hệ thống bằng UserID của "khách hàng VIP". Mật độ event dày đặc khiến Session Gap không bao giờ đạt được. Session Window của Key này mở ra và kéo dài vô tận, gom hàng triệu event vào ListState.
+**Cách khắc phục:** Custom Trigger. Không chỉ Trigger dựa trên Session Gap, mà buộc (Force fire) Trigger & Purge nếu Window State vượt quá $N$ phần tử hoặc quá thời gian tối đa tuyệt đối (Max Absolute Duration).
+
+```java
+// Ví dụ logic Custom Trigger ép đóng Session Window nếu lớn hơn 1000 items
+public TriggerResult onElement(Event element, long timestamp, TimeWindow window, TriggerContext ctx) {
+    long count = ctx.getPartitionedState(countDescriptor).value();
+    if (count > 1000) {
+        ctx.getPartitionedState(countDescriptor).clear();
+        return TriggerResult.FIRE_AND_PURGE; // Ép đóng cửa sổ cứu RAM!
+    }
+    return TriggerResult.CONTINUE;
+}
 ```
 
 ---
 
-## Tổng kết
+## 5. Nguồn Tham Khảo (References)
 
-Hiểu rõ **Windowing** là một trong những bước quan trọng nhất khi làm việc với Streaming Data. Tùy thuộc vào yêu cầu nghiệp vụ (Business Requirements), bạn cần chọn đúng loại Window:
-- Cần báo cáo định kỳ không chồng chéo? Dùng **Tumbling**.
-- Cần chỉ số mượt mà, tính toán trượt để vẽ biểu đồ và alert? Dùng **Sliding**.
-- Cần phân tích hành vi theo từng "phiên" của người dùng? Dùng **Session**.
-
-Kèm theo đó, nắm vững **Event Time** và **Watermark** sẽ giúp hệ thống của bạn đưa ra những con số chính xác nhất kể cả khi mạng internet ngoài đời thực không hề hoàn hảo.
-
-## Tài Liệu Tham Khảo
-* [Apache Flink Windowing - Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/)
-* **Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau**
-* [Kafka Streams Windowing - Confluent Documentation](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#windowing)
+*   **Streaming Systems** - Tyler Akidau, Slava Chernyak, Reuven Lax (O'Reilly). *Một cuốn kinh thánh về Watermarks và Late Data.*
+*   [Apache Flink Official Architecture: Windows & Watermarks](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/)
+*   [Handling Late Data in Flink - Confluent Docs & Engineering Blogs](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#windowing)
+*   [Uber Engineering: Real-time Data Processing with Flink](https://www.uber.com/en-VN/blog/data-engineering/)

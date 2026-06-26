@@ -1,113 +1,127 @@
 ---
 title: "Lập hồ sơ dữ liệu - Data Profiling"
-difficulty: "Beginner"
-tags: ["data-profiling", "data-quality", "eda", "metadata"]
-readingTime: "9 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Data Profiling là gì? Lập hồ sơ dữ liệu để hiểu nguồn dữ liệu"
-metaDescription: "Khái niệm Data Profiling (Lập hồ sơ dữ liệu): Quy trình phân tích thống kê cấu trúc, phân phối và định dạng của dữ liệu thô trước khi xây dựng pipeline ETL."
-description: "Có bao giờ bạn nhảy vào viết code ETL ngay khi vừa nhận được một file CSV hay thông tin kết nối CSDL từ đối tác, để rồi vài ..."
+difficulty: "Intermediate"
+tags: ["data-profiling", "data-quality", "amazon-deequ", "spark", "oom"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Data Profiling là gì? Kiến trúc và Trade-offs trong Data Engineering"
+metaDescription: "Khám phá Data Profiling dưới góc nhìn kiến trúc hệ thống. Phân tích sự đánh đổi (Trade-offs), rủi ro OOMKilled khi chạy profiling ở Scale lớn."
+description: "Data Profiling ở môi trường Production không chỉ là Pandas describe(). Làm sao để chạy profiling trên Petabyte data mà không làm sập Cluster?"
 ---
 
+Có bao giờ bạn nhảy vào viết code ETL ngay khi vừa nhận được một file CSV hay thông tin kết nối CSDL từ đối tác, để rồi pipeline bị lỗi (crash) giữa chừng vì dữ liệu có chứa giá trị Null, định dạng ngày tháng không nhất quán, hoặc kiểu dữ liệu thay đổi đột ngột? Để tránh những sự cố đó, **Data Profiling (Lập hồ sơ dữ liệu)** ra đời.
 
+Nhưng bỏ qua định nghĩa cơ bản, Data Profiling không đơn thuần là đếm số lượng bản ghi hay tính giá trị trung bình. Ở quy mô Big Data (Petabyte-scale), việc chạy một lệnh `COUNT(DISTINCT)` ngây ngô có thể làm sập toàn bộ Spark Cluster do cạn kiệt bộ nhớ (OOMKilled). Bài viết này sẽ mổ xẻ Data Profiling dưới góc nhìn System Architecture.
 
-Có bao giờ bạn nhảy vào viết code [ETL](/concepts/2-data-ingestion-integration/etl) ngay khi vừa nhận được một file CSV hay thông tin kết nối CSDL từ đối tác, để rồi pipeline bị lỗi (crash) giữa chừng vì dữ liệu có chứa giá trị Null, định dạng ngày tháng không nhất quán, hoặc kiểu dữ liệu thay đổi đột ngột? Để tránh những sự cố đó, **Data Profiling (Lập hồ sơ dữ liệu)** ra đời như một bước "khám sức khỏe tổng quát" cho dữ liệu trước khi đưa vào xử lý.
+## Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-## Data Profiling là gì?
+Khi tích hợp Data Profiling vào hệ thống DataOps, Data Engineer phải thiết kế luồng chạy sao cho việc tính toán metadata không trở thành "Bottleneck" (nghẽn cổ chai) của toàn bộ Data Pipeline.
 
-
-
-**Data Profiling** là quá trình phân tích, kiểm tra và thu thập các số liệu thống kê (metadata) về dữ liệu thô để hiểu rõ cấu trúc, nội dung, chất lượng và các mối quan hệ bên trong dữ liệu. Quá trình này giúp Data Engineer và Data Analyst có cái nhìn tổng quan về hình hài của dữ liệu trước khi bắt tay vào thiết kế data pipeline, viết test hay xây dựng mô hình học máy.
-
-Nói một cách đơn giản, nếu dữ liệu là một cuốn sách, Data Profiling giống như việc đọc mục lục, đếm số trang, kiểm tra chính tả một vài trang ngẫu nhiên và xem xét bố cục chung của cuốn sách trước khi bạn quyết định tóm tắt nó.
-
-## Tại sao Data Profiling lại quan trọng?
-
-Data Profiling là bước không thể thiếu trong chu trình DataOps và quản trị chất lượng dữ liệu (Data Quality). Dưới đây là những lý do chính:
-
-1. **Phát hiện sớm các vấn đề về chất lượng dữ liệu (Data Quality):** Bằng cách đo lường các chỉ số như tỷ lệ Null, giá trị trùng lặp (duplicates), hay các giá trị ngoại lai (outliers), bạn có thể phát hiện dữ liệu rác (garbage data) trước khi chúng đi sâu vào kho dữ liệu (Data Warehouse/Data Lake).
-2. **Hiểu rõ hơn về nguồn dữ liệu (Source System Understanding):** Dữ liệu thực tế thường không hoàn hảo và tài liệu đi kèm (nếu có) đôi khi đã lỗi thời. Data Profiling giúp bạn khám phá cấu trúc thực sự của dữ liệu.
-3. **Giảm thiểu rủi ro cho pipeline ETL/ELT:** Nắm được kích thước dữ liệu (data size) và các loại dữ liệu (data types) giúp tối ưu hóa bộ nhớ và hiệu suất của pipeline, tránh hiện tượng Out Of Memory hoặc lỗi chuyển đổi kiểu dữ liệu (Type Casting Error).
-4. **Hỗ trợ thiết kế schema:** Giúp xác định các trường có thể đóng vai trò là Primary Key (khóa chính), Foreign Key (khóa ngoại) và các ràng buộc (constraints) cần thiết khi mô hình hóa dữ liệu.
-5. **Cơ sở để xây dựng Data Testing:** Các số liệu từ việc lập hồ sơ dữ liệu sẽ là tiêu chuẩn (baseline) để bạn viết các luật kiểm tra (rules/expectations) bằng dbt tests hoặc Great Expectations.
-
-## Các khía cạnh chính của Data Profiling
-
-Một quy trình lập hồ sơ dữ liệu toàn diện thường bao gồm 3 khía cạnh (khám phá) chính:
-
-### 1. Khám phá cấu trúc (Structure Discovery)
-Bước này tập trung vào định dạng (format) và độ đồng nhất của dữ liệu.
-* **Kiểu dữ liệu (Data Types):** Dữ liệu đang được lưu dưới dạng integer, string, boolean hay datetime?
-* **Định dạng mẫu (Pattern Matching):** Kiểm tra xem các trường như email, số điện thoại, mã bưu điện có tuân theo một cấu trúc chuỗi cụ thể (Regex) hay không.
-* **Độ dài cơ bản:** Đo lường chiều dài tối đa, tối thiểu và trung bình của các chuỗi văn bản.
-
-### 2. Khám phá nội dung (Content Discovery)
-Đi sâu vào từng hàng và từng cột để đánh giá giá trị cụ thể.
-* **Tính duy nhất (Uniqueness):** Bao nhiêu phần trăm dữ liệu trong một cột là giá trị duy nhất (Distinct Count)? Cột này có phù hợp làm khóa chính không?
-* **Tỷ lệ Null (Missing Values):** Phần trăm các ô bị trống hoặc chứa giá trị null.
-* **Phân phối thống kê (Statistical Distribution):** Tính toán các giá trị Min, Max, Mean, Median, Mode, Standard Deviation để tìm ra hình dạng phân phối (Normal, Skewed) và phát hiện Outliers.
-* **Tần suất xuất hiện (Frequency/Cardinality):** Giá trị nào xuất hiện nhiều nhất? Số lượng các nhóm riêng biệt (Categories) trong một cột là bao nhiêu?
-
-### 3. Khám phá mối quan hệ (Relationship Discovery)
-Phân tích cách dữ liệu kết nối với nhau trên nhiều bảng (Cross-table analysis).
-* **Tìm kiếm Primary Key/Foreign Key:** Xác định xem cột `user_id` ở bảng `orders` có khớp với cột `id` ở bảng `users` hay không.
-* **Ràng buộc toàn vẹn (Referential Integrity):** Phát hiện các bản ghi mồ côi (orphan records), ví dụ một đơn hàng có chứa `product_id` không tồn tại trong bảng sản phẩm.
-
-## Sự khác biệt giữa Data Profiling và EDA (Exploratory Data Analysis)
-
-Nhiều người thường nhầm lẫn giữa Data Profiling và Khám phá phân tích dữ liệu (EDA) do Data Scientist thực hiện. Mặc dù có những điểm chung, mục đích của chúng lại khác biệt:
-
-| Tiêu chí | Data Profiling (Lập hồ sơ dữ liệu) | EDA (Khám phá phân tích dữ liệu) |
-| --- | --- | --- |
-| **Mục tiêu** | Đánh giá chất lượng và cấu trúc của dữ liệu (metadata). | Tìm ra insights, mẫu (patterns) và xây dựng giả thuyết kinh doanh. |
-| **Đối tượng thực hiện** | Data Engineer, Data Steward, Analytics Engineer | Data Scientist, Data Analyst |
-| **Giai đoạn** | Ngay từ đầu, khi tiếp nhận dữ liệu từ Source System. | Trước khi xây dựng mô hình dự đoán (Machine Learning). |
-| **Công cụ thường dùng** | Great Expectations, ydata-profiling, Soda, dbt | Pandas, Matplotlib, Seaborn, Tableau, Jupyter Notebook |
-
-## Các Công Cụ Phổ Biến Cho Data Profiling
-
-Việc lập hồ sơ dữ liệu thủ công bằng SQL có thể tốn rất nhiều thời gian. Dưới đây là các công cụ tự động hóa quá trình này:
-
-### 1. ydata-profiling (trước đây là Pandas Profiling)
-Một thư viện Python mã nguồn mở mạnh mẽ. Chỉ với một vài dòng code, nó tạo ra một báo cáo HTML tương tác chi tiết bao gồm mọi phân phối, số lượng missing value, và cảnh báo (warnings) như High Cardinality hay High Correlation.
-
-```python
-import pandas as pd
-from ydata_profiling import ProfileReport
-
-df = pd.read_csv("sales_data.csv")
-profile = ProfileReport(df, title="Báo Cáo Profiling Bán Hàng")
-profile.to_file("sales_report.html")
+```mermaid
+graph TD
+    subgraph Storage / Data Lake
+        A["(Raw Data / Bronze)"]
+        B["(Curated Data / Silver)"]
+    end
+    
+    subgraph Data Profiling Cluster
+        C["Apache Spark / Amazon Deequ"]
+        D["Great Expectations"]
+    end
+    
+    subgraph Metadata Store
+        E["AWS Glue Data Catalog"]
+        F["(Metrics DB / DynamoDB)"]
+    end
+    
+    A -->|1. Read Sample / Incremental| C
+    C -->|2. Compute Metrics| F
+    C -.->|Generate Rules| D
+    F -->|3. Update Schema| E
+    
+    subgraph Consumers
+        G["Data Observability Dashboard"]
+        H["Downstream ETL"]
+    end
+    
+    F --> G
+    F -.->|4. Circuit Breaker| H
 ```
 
-### 2. Great Expectations (GX)
-Khung mã nguồn mở được thiết kế cho quá trình Data Testing và Profiling liên tục. Khác với `ydata-profiling` chỉ chạy một lần tĩnh, GX có chức năng tự động sinh ra các rules/expectations cơ bản (auto-profiler) dựa trên bộ dữ liệu bạn cung cấp, giúp tích hợp mượt mà vào luồng DataOps.
+### In-line vs. Out-of-band Profiling
 
-### 3. dbt (Data Build Tool)
-Trong hệ sinh thái dbt, mặc dù không phải là công cụ profiling chuyên dụng truyền thống, các package mở rộng như `dbt-profiler` giúp tự động sinh báo cáo thống kê ngay trong quá trình chạy dbt, cung cấp thông tin trực tiếp trên dbt Docs.
+1. **In-line Profiling (Synchronous):** Profiling chạy trực tiếp bên trong luồng ETL. Nếu dữ liệu không vượt qua các chốt kiểm tra (Data Quality Gates), pipeline sẽ dừng lại (Fail-fast).
+   * *Đánh đổi:* Đảm bảo tuyệt đối không có dữ liệu bẩn lọt vào downstream, nhưng hy sinh độ trễ (Latency). Thường áp dụng ở luồng Micro-batch hoặc trên tập dữ liệu đã được làm sạch (Silver -> Gold).
+2. **Out-of-band Profiling (Asynchronous):** Dữ liệu vẫn được đổ vào Data Lake. Một Asynchronous Job (như AWS Glue ETL, Databricks Job) được trigger song song để quét và tính toán số liệu. 
+   * *Đánh đổi:* Không làm chậm Ingestion, nhưng có rủi ro dữ liệu bẩn đã được tiêu thụ (consumed) bởi hệ thống khác trước khi cảnh báo kịp phát ra.
 
-### 4. Các giải pháp thương mại (Enterprise Solutions)
-Các nền tảng Data Catalog và Data Governance thương mại thường đi kèm với tính năng Data Profiling rất trực quan như:
-* **Monte Carlo** hoặc **Databand** (Data Observability)
-* **Atlan, Alation, Collibra** (Data Catalog)
-* **AWS Glue DataBrew** (trên đám mây AWS)
+## Rủi ro Vận hành (Operational Risks)
 
-## Quy trình Data Profiling hiệu quả
+### 1. Nỗi ám ảnh OOMKilled (Out of Memory)
+Trong Pandas, gọi `df.profile_report()` trên file 10GB có thể làm tràn RAM máy tính (Spill-to-disk). Trong Distributed Computing như Apache Spark, việc gọi `collect()` hoặc tính toán High-Cardinality Aggregations (như đếm số lượng người dùng duy nhất `user_id`) sẽ dẫn đến Network Shuffle khổng lồ.
+*Tình huống thực tế:* Một executor bị quá tải do Data Skew (dữ liệu phân bổ không đều theo partition), dẫn đến lỗi `java.lang.OutOfMemoryError: Java heap space`.
 
-1. **Lấy mẫu dữ liệu (Sampling):** Thay vì quét toàn bộ bảng với hàng tỷ bản ghi (gây tốn kém và chậm chạp), hãy lấy một tập mẫu đủ lớn (ví dụ 10,000 - 100,000 dòng ngẫu nhiên) để phân tích.
-2. **Chạy báo cáo Profiling tự động:** Sử dụng các công cụ tự động để tiết kiệm thời gian.
-3. **Phân tích kết quả và thảo luận với SME (Subject Matter Experts):** Đôi khi một cột có giá trị Null tới 90% không phải là lỗi, mà do thiết kế nghiệp vụ. Cần trao đổi với các bên liên quan để hiểu rõ ngữ cảnh kinh doanh.
-4. **Xác định các quy tắc (Data Quality Rules):** Từ báo cáo Profiling, viết các bộ quy tắc như `id_must_not_be_null`, `age_must_be_between_0_and_120`.
-5. **Đưa vào giám sát tự động:** Gắn các quy tắc này vào Data Pipeline (thông qua Airflow/Dagster và Great Expectations) để chặn dữ liệu bẩn xâm nhập vào hệ thống hàng ngày.
+**Cách khắc phục (Code thực chiến):**
+Tuyệt đối không dùng Pandas Profiling cho Big Data. Hãy sử dụng **Amazon Deequ** để phân tán việc tính toán. Để tính số lượng giá trị phân biệt, sử dụng thuật toán xấp xỉ (HyperLogLog) thay vì tính chính xác.
+
+```scala
+// Ví dụ cấu hình Amazon Deequ trong Scala
+import com.amazon.deequ.analyzers.runners.AnalysisRunner
+import com.amazon.deequ.analyzers.{Size, Completeness, ApproxCountDistinct}
+
+val analysisResult = AnalysisRunner
+  .onData(df)
+  .addAnalyzer(Size())
+  .addAnalyzer(Completeness("user_id"))
+  // Dùng ApproxCountDistinct (dựa trên thuật toán HyperLogLog) thay vì CountDistinct chính xác
+  // Điều này giúp tránh Network Shuffle khổng lồ và ngăn chặn OOMKilled
+  .addAnalyzer(ApproxCountDistinct("session_id")) 
+  .run()
+```
+
+### 2. Cartesian Explosion trong Cross-table Profiling
+Khi phân tích quan hệ (Relationship Discovery) giữa các bảng (ví dụ: phát hiện Orphan Records khi `order.user_id` không tồn tại trong `users.id`), thao tác `JOIN` không được kiểm soát có thể tạo ra Cartesian Explosion, sinh ra hàng tỷ bản ghi tạm thời, thổi bay bộ nhớ đệm. Cần kiểm tra cẩn thận các Broadcast Hash Join hoặc xử lý Skewness trước khi chạy Profiling.
+
+## Systemic Trade-offs (Sự Đánh Đổi Hệ Thống)
+
+Dưới góc nhìn Staff Engineer, Data Profiling là bài toán về tối ưu Trade-offs:
+
+1. **Accuracy vs. Compute Cost (Độ chính xác vs. Chi phí điện toán - FinOps)**
+   Chạy quét toàn bộ 100% dữ liệu lịch sử (Full scan) hàng ngày để sinh Profiling Report cực kỳ tốn kém. Giải pháp thực tiễn là **Sampling (Lấy mẫu ngẫu nhiên)**. Bạn chấp nhận kết quả Profiling có sai số (margin of error) để đổi lấy việc tiết kiệm 90% chi phí Cluster.
+   ```python
+   # PySpark: Lấy mẫu 10% dữ liệu, sử dụng seed để đảm bảo Idempotent (tính lặp lại được)
+   df_sample = df.sample(withReplacement=False, fraction=0.1, seed=42)
+   ```
+
+2. **Granularity vs. Resource Usage (Độ phân giải vs. Tiêu thụ tài nguyên)**
+   Table-level profiling (đếm row count, đo bytesize) tiêu thụ rất ít tài nguyên. Tuy nhiên, Column-level profiling (tính phân phối phân vị - Percentiles, dựng Histogram) trên các cột text/JSON dài sẽ ngốn CPU khủng khiếp. Luôn phải cấu hình tắt tính năng Profiling sâu trên các cột không cần thiết (như cột log raw).
+
+3. **Real-time Latency vs. Completeness**
+   Nếu nhúng Data Profiling trực tiếp vào Apache Kafka hay Flink (Streaming), bạn phải chấp nhận hy sinh các metric phức tạp như Exact Distinct Count. Thay vào đó, bạn phải dựa vào các cấu trúc dữ liệu xác suất (Probabilistic Data Structures) như HyperLogLog hoặc Bloom Filters để đảm bảo tốc độ O(1).
+
+## Các Công Cụ Tiêu Chuẩn Trong Industry
+
+1. **Amazon Deequ / PyDeequ:** Công cụ mã nguồn mở do Amazon phát triển dựa trên Apache Spark. Dành riêng cho tập dữ liệu Petabyte, sử dụng cơ chế Incremental Profiling (chỉ tính toán sự thay đổi metadata State trên dữ liệu mới thay vì load lại toàn bộ).
+2. **Great Expectations (GX):** Phù hợp với kiến trúc Batch Data Warehouse (như Snowflake, BigQuery). Tích hợp rất sâu vào dbt để tạo Data Quality Rules tự động dựa trên kết quả Profiling ban đầu.
+3. **Databricks Delta Live Tables (DLT):** Nếu bạn ở hệ sinh thái Databricks, DLT cung cấp cơ chế `EXPECT` để profiling và chặn dữ liệu bẩn ngay từ tầng Ingestion bằng SQL hoặc Python.
+
+```python
+# Ví dụ cấu hình Data Quality Expectations như một Circuit Breaker trong Databricks DLT
+import dlt
+
+@dlt.table
+@dlt.expect_or_drop("valid_timestamp", "event_time IS NOT NULL")
+@dlt.expect_or_fail("valid_user_id", "user_id > 0") # Sẽ fail toàn bộ job nếu gặp user_id âm
+def cleaned_events():
+  return spark.readStream.table("raw_events")
+```
 
 ## Tổng Kết
 
-Data Profiling là tấm bản đồ dẫn đường không thể thiếu trước khi bước vào hành trình xử lý dữ liệu phức tạp. Dành thời gian hiểu dữ liệu thô sẽ giúp các Data Engineer tiết kiệm vô số giờ "chữa cháy" sau này, và là nền tảng vững chắc để thiết lập Data Quality tốt cho mọi tổ chức Data-driven.
+Data Profiling không bao giờ là một bản báo cáo tĩnh nằm mốc meo trong máy của Data Analyst. Trong DataOps, Profiling là một Module sống, chạy liên tục và cung cấp các siêu dữ liệu (Metadata) quan trọng để hệ thống Data Quality tự động đưa ra quyết định (Circuit Breaker). Đổi lại, Data Engineer phải thiết kế luồng Profiling cẩn thận, áp dụng Sampling, Probabilistic Algorithms và xử lý Skewness để bảo vệ hệ thống khỏi những cơn ác mộng OOMKilled.
 
-## Tài Liệu Tham Khảo
-* [DataOps Manifesto](https://dataopsmanifesto.org/)
-* [Apache Airflow Architecture - Airflow Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
-* [Dagster: Data Orchestration for Machine Learning and Analytics](https://dagster.io/)
-* [dbt (data build tool) - Analytics Engineering Workflow](https://www.getdbt.com/product/what-is-dbt/)
-* [Great Expectations: Data Quality and Profiling](https://greatexpectations.io/)
-* [ydata-profiling Github Repository](https://github.com/ydataai/ydata-profiling)
+## Nguồn Tham Khảo
+1. [Test data quality at scale with Deequ - AWS Big Data Blog](https://aws.amazon.com/blogs/big-data/test-data-quality-at-scale-with-deequ/)
+2. [Data Quality engineering with Great Expectations](https://greatexpectations.io/)
+3. [Delta Live Tables Data Quality and Expectations - Databricks Official Docs](https://docs.databricks.com/en/delta-live-tables/expectations.html)
+4. *Designing Data-Intensive Applications* - Martin Kleppmann (O'Reilly)

@@ -1,92 +1,165 @@
 ---
 title: "Lưu trữ dạng Cột - Columnar Storage"
 difficulty: "Intermediate"
-tags: ["storage", "columnar", "olap", "big-data"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Lưu trữ dạng Cột (Columnar Storage) - Cốt lõi của Data Warehouse"
-metaDescription: "Tìm hiểu chi tiết về Lưu trữ dạng cột (Column-oriented storage), cách thức nén dữ liệu, tối ưu hóa truy vấn phân tích (OLAP) và sự khác biệt với dạng dòng."
-description: "Columnar Storage (Lưu trữ dạng cột) là yếu tố kỹ thuật cốt lõi quyết định hiệu năng xử lý của các hệ thống phân tích dữ liệu lớn (OLAP) và các định dạng dữ liệu hiện đại."
+tags: ["storage", "columnar", "olap", "big-data", "parquet"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Columnar Storage (Lưu trữ dạng cột) & Kiến trúc Parquet chuyên sâu"
+metaDescription: "Phân tích kiến trúc lưu trữ dạng cột (Columnar Storage), cấu trúc vật lý của Apache Parquet, cơ chế Late Materialization và các rủi ro OOMKilled trong vận hành."
+description: "Columnar Storage (Lưu trữ dạng cột) là hạt nhân vật lý của mọi hệ thống OLAP hiện đại. Bài viết mổ xẻ cách dữ liệu được nén, tổ chức trên đĩa và các rủi ro vận hành thực tế."
 ---
 
+Columnar Storage không đơn thuần là "lưu dữ liệu theo chiều dọc". Ở tầng hệ thống, đó là một sự thay đổi hoàn toàn về cách tổ chức Layout trên đĩa (Disk Layout), cách CPU nạp dữ liệu vào Cache (Memory Layout), và cơ chế thực thi truy vấn. 
 
+Mọi Data Warehouse (BigQuery, Snowflake) hay Data Lakehouse (Delta Lake, Iceberg) hiện đại đều phụ thuộc vào Columnar Storage (tiêu biểu là **Apache Parquet**) để giải bài toán I/O Bottleneck khi quét (scan) hàng Terabyte dữ liệu.
 
-Columnar Storage (Lưu trữ theo cột) là kiến trúc lưu trữ dữ liệu trong đó toàn bộ giá trị của một cột được xếp liên tiếp nhau trên đĩa, thay vì xếp theo từng dòng (row). Trái ngược với Row-based (lưu theo dòng) trong các RDBMS truyền thống, Columnar Storage cho phép nén dữ liệu cực tốt và tối ưu hóa vượt bậc cho các truy vấn phân tích (OLAP) chỉ cần đọc một vài cột cụ thể trong bảng hàng tỷ dòng.
+---
 
-Sự trỗi dậy của Data Warehouse (như Redshift, BigQuery, Snowflake) và Data Lakehouse (với Parquet, ORC, Iceberg) đều có nền tảng từ công nghệ lưu trữ theo cột này.
+## 1. Kiến trúc Vật lý (Physical Disk Layout)
 
-## 1. Sự khác biệt cốt lõi: Row-based vs Column-based
+Để hiểu tại sao Columnar Storage lại tối ưu cho các workload phân tích (Read-heavy, Analytical), hãy nhìn vào cách dữ liệu được ghi xuống đĩa (Disk). 
 
-Để hiểu rõ tại sao Columnar Storage lại mạnh mẽ, chúng ta cần xem cách dữ liệu được bố trí trên ổ cứng (Disk Layout). Giả sử chúng ta có một bảng `employees` với 3 cột: `ID`, `Name`, `Department`.
+Giả sử chúng ta có một khối dữ liệu người dùng (`ID`, `Name`, `Department`).
 
-**Bảng Dữ liệu Logic:**
-| ID | Name | Department |
-|----|-------|------------|
-| 1 | Alice | Engineering|
-| 2 | Bob | Sales |
-| 3 | Carol | Engineering|
+```mermaid
+block-beta
+  columns 3
+  space:3
+  block:row_title
+    %% Title for Row-Based
+    A0["Row-Based (OLTP)"]
+  end
+  space:2
+  
+  block:row_data
+    columns 1
+    R1["Block 1: 1 | Alice | Eng"]
+    R2["Block 2: 2 | Bob | Sales"]
+    R3["Block 3: 3 | Carol | Eng"]
+  end
+  space:2
 
-### Row-based Storage (Lưu trữ theo dòng)
-Dữ liệu được lưu tuần tự theo từng bản ghi (record/row).
+  space:3
+  block:col_title
+    B0["Column-Based (OLAP)"]
+  end
+  space:2
 
-* **Disk layout:** `1, Alice, Engineering; 2, Bob, Sales; 3, Carol, Engineering;`
-* **Đặc điểm:** Tối ưu cho hệ thống OLTP (Online Transaction Processing). Khi bạn muốn thêm một nhân viên mới (`INSERT`), hay lấy toàn bộ thông tin của nhân viên `ID = 2` (`SELECT * FROM ... WHERE ID=2`), đĩa chỉ cần tìm đến vị trí của dòng đó và đọc/ghi trong một thao tác I/O.
-* **Hạn chế:** Khi cần đếm số lượng nhân viên ở mỗi `Department`, ổ đĩa vẫn phải quét qua toàn bộ dữ liệu (bao gồm cả `ID` và `Name` không cần thiết). Việc đọc dữ liệu rác này làm lãng phí băng thông I/O và CPU.
+  block:col_data
+    columns 3
+    C1["Block 1 (ID):<br/>1 | 2 | 3"]
+    C2["Block 2 (Name):<br/>Alice | Bob | Carol"]
+    C3["Block 3 (Dept):<br/>Eng | Sales | Eng"]
+  end
+```
 
-### Column-based Storage (Lưu trữ theo cột)
-Dữ liệu của cùng một cột được nhóm lại và lưu trữ liền kề nhau.
+### Tại sao OLAP yêu thích Columnar?
 
-* **Disk layout:** `1, 2, 3; Alice, Bob, Carol; Engineering, Sales, Engineering;`
-* **Đặc điểm:** Tối ưu cho hệ thống OLAP (Online Analytical Processing). Nếu truy vấn `SELECT COUNT(*) FROM employees WHERE Department = 'Engineering'`, đĩa chỉ cần đọc vùng dữ liệu chứa cột `Department` (chiếm 1/3 tổng dung lượng) và bỏ qua các cột `ID`, `Name`.
-* **Hạn chế:** Khi thêm mới một dòng (`INSERT`), dữ liệu sẽ phải được xé nhỏ và ghi vào nhiều vị trí khác nhau trên đĩa (vị trí cuối của mỗi cột), làm cho thao tác ghi (write) chậm và tốn kém hơn.
+Trong một hệ thống Data Warehouse, câu lệnh thường thấy là:
+```sql
+SELECT Department, COUNT(*) 
+FROM employees 
+GROUP BY Department;
+```
 
-## 2. Tại sao Columnar Storage tối ưu cho OLAP?
+- **Với Row-based (như CSV, PostgreSQL Heap):** Ổ cứng phải quét qua Block 1, Block 2, Block 3. Hệ thống buộc phải đọc cả `ID` và `Name` từ đĩa lên RAM, đẩy qua Bus, vào CPU Cache, sau đó CPU mới tiến hành lọc lấy `Department`. Điều này gây ra **I/O Amplification** (khuếch đại I/O) nghiêm trọng.
+- **Với Column-based (như Parquet, ORC):** Ổ cứng chỉ cần thực hiện thao tác Seek đến đúng Offset của `Block 3 (Dept)` và chỉ quét duy nhất block đó. `ID` và `Name` hoàn toàn bị bỏ qua ở cấp độ I/O (I/O Minimization).
 
-Hệ thống phân tích dữ liệu lớn có tính chất: **Đọc nhiều (Read-heavy), Truy vấn tập trung vào một số cột cụ thể, Khối lượng dữ liệu khổng lồ (Millions to Billions of rows)**. Columnar Storage đáp ứng hoàn hảo các yêu cầu này thông qua 3 yếu tố chính:
+---
 
-### 2.1. Giảm thiểu Disk I/O (I/O Minimization)
-I/O (đọc/ghi ổ cứng và mạng) thường là nút thắt cổ chai (bottleneck) lớn nhất trong xử lý Big Data. Bằng cách chỉ đọc đúng những cột có mặt trong câu lệnh `SELECT`, `WHERE`, `GROUP BY`, Columnar Storage loại bỏ tới 80-90% lượng dữ liệu không cần thiết phải tải vào RAM.
+## 2. Giải phẫu kiến trúc Apache Parquet
 
-### 2.2. Hiệu suất nén dữ liệu cực cao (High Compression Ratio)
-Các thuật toán nén hoạt động tốt nhất khi dữ liệu có tính đồng nhất. Trong một cột, tất cả các giá trị đều có chung kiểu dữ liệu (Data Type) và thường xuyên có giá trị lặp lại (ví dụ: cột giới tính, mã quốc gia, trạng thái đơn hàng). Điều này mang lại tỷ lệ nén (Compression Ratio) rất cao so với Row-based (nơi các kiểu dữ liệu string, int, date đứng xen kẽ nhau).
+Apache Parquet (dựa trên paper **Dremel** của Google) là tiêu chuẩn *de facto* của Columnar Storage. Nó áp dụng một kiến trúc lưu trữ lai (Hybrid) cực kỳ thông minh để cân bằng giữa việc đọc cột và tái tạo lại dòng (Tuple Reconstruction).
 
-Các kỹ thuật nén phổ biến trong Columnar Storage:
-* **Run-Length Encoding (RLE):** Nén các giá trị lặp lại liên tiếp. Thay vì lưu `[US, US, US, US, VN, VN, UK]`, nó sẽ lưu thành `[US:4, VN:2, UK:1]`. Rất hiệu quả khi dữ liệu đã được sắp xếp (sorted).
-* **Dictionary Encoding:** Xây dựng một từ điển ánh xạ các giá trị chuỗi (string) thành các số nguyên (integer) nhỏ. Ví dụ: `{'Engineering': 0, 'Sales': 1}`. Mảng `[Engineering, Sales, Engineering]` sẽ được lưu là `[0, 1, 0]`. Điều này tiết kiệm dung lượng đáng kể vì số nguyên chiếm rất ít không gian so với chuỗi ký tự.
-* **Bit-Packing:** Dùng số lượng bit tối thiểu để biểu diễn các số nguyên nhỏ. Ví dụ: một cột chỉ chứa giá trị từ 1-7 thì chỉ cần 3 bit thay vì 32 bit (int32) tiêu chuẩn.
-* **Delta Encoding:** Lưu trữ sự chênh lệch (delta) giữa các giá trị liên tiếp thay vì lưu giá trị gốc. Thích hợp cho dữ liệu Time-series (Timestamp liên tục tăng). VD: `[1000, 1005, 1008]` trở thành `[1000, +5, +3]`.
+```mermaid
+graph TD
+    File["Parquet File"] --> RG1["Row Group 0("e.g. 10,000 rows")"]
+    File --> RG2["Row Group 1("e.g. 10,000 rows")"]
+    File --> Footer["File Footer("Metadata")"]
+    
+    RG1 --> CC1["Column Chunk 1("ID")"]
+    RG1 --> CC2["Column Chunk 2("Name")"]
+    RG1 --> CC3["Column Chunk 3("Dept")"]
+    
+    CC3 --> P1["Data Page 1"]
+    CC3 --> P2["Data Page 2"]
+    
+    P1 -.-> DP["Page Header("Zone Maps: Min/Max/Nulls") <br> + <br> Encoded/Compressed Values"]
+```
 
-### 2.3. Tối ưu hóa cho CPU (CPU Cache & Vectorized Processing)
-Vì các giá trị trong một mảng cùng kiểu dữ liệu được đặt cạnh nhau trong bộ nhớ (RAM/CPU Cache), CPU có thể sử dụng tính năng **SIMD** (Single Instruction, Multiple Data) để thực thi một phép toán duy nhất trên nhiều giá trị cùng lúc (Vectorized Processing). Ví dụ: nhân một cột `Quantity` với `Price` cho 1024 dòng trong vòng vài chu kỳ xung nhịp (clock cycles) của CPU.
+1. **Row Group:** File Parquet được chia ngang thành các Row Group (thường từ 128MB đến 1GB). Điều này giúp hệ thống phân tán (như Spark) có thể đọc song song nhiều Row Group trên các Node khác nhau.
+2. **Column Chunk:** Trong mỗi Row Group, dữ liệu lại được chia dọc thành các Column Chunk. Đảm bảo mọi giá trị của một cột trong 1 Row Group nằm liền kề nhau về mặt vật lý.
+3. **Data Page:** Đơn vị lưu trữ nhỏ nhất (thường 1MB - 8MB). Đây là nơi dữ liệu thực sự được nén và mã hóa.
+4. **File Footer:** Nơi chứa Schema và toàn bộ Metadata (Offsets của các Row Group, Zone Maps). Khi Spark đọc Parquet, thao tác đầu tiên là đọc Footer (ở cuối file) để lấy bản đồ dữ liệu, sau đó mới seek đến các Row Group cần thiết.
 
-## 3. Các kỹ thuật tiên tiến trong Columnar Storage
+---
 
-Các định dạng lưu trữ hiện đại không chỉ đơn thuần là "lưu theo cột" mà còn tích hợp nhiều kỹ thuật thông minh khác:
+## 3. Các Cơ chế Thực thi Lõi (Core Mechanics)
 
-### 3.1. Predicate Pushdown và Zone Maps (Min-Max Statistics)
-Khi lưu trữ, các engine thường chia dữ liệu thành các khối nhỏ (ví dụ: Row Groups trong Parquet chứa khoảng 1 triệu dòng). Ở đầu mỗi khối, nó lưu lại **metadata (Zone Maps)** bao gồm các thống kê: giá trị lớn nhất (Max), nhỏ nhất (Min), số giá trị Null (Null Count) của khối đó.
+### 3.1. Predicate Pushdown & Zone Maps
 
-Khi thực thi câu lệnh: `SELECT * FROM sales WHERE amount > 1000`
-Hệ thống sẽ kiểm tra metadata trước. Nếu Zone Map của một khối cho thấy `Max(amount) = 800`, engine sẽ **bỏ qua hoàn toàn (Skip)** việc đọc khối đó từ đĩa. Kỹ thuật này gọi là **Data Skipping** kết hợp **Predicate Pushdown** (đẩy điều kiện lọc xuống thẳng lớp lưu trữ).
+Nhờ việc lưu trữ Metadata (Zone Maps) chứa `Min`, `Max`, `Null Count` ở cấp độ File, Row Group và Page, engine (như Trino, Spark) có thể thực hiện **Data Skipping** (bỏ qua dữ liệu).
 
-### 3.2. Late Materialization
-Trong quá trình xử lý truy vấn, hệ thống giữ dữ liệu ở trạng thái nén hoặc định dạng cột (vector) càng lâu càng tốt. Việc kết hợp các cột lại thành một bảng kết quả hai chiều hoàn chỉnh (Row reconstruction) chỉ diễn ra ở bước cuối cùng trước khi trả về cho người dùng.
+Khi chạy `SELECT * FROM sales WHERE amount > 1000`:
+- Engine đọc Metadata của Row Group 1. Nếu `Max(amount) = 800`, engine bỏ qua toàn bộ Row Group này mà không cần hit vào Disk I/O để đọc các Data Pages.
+- Thao tác đẩy điều kiện `amount > 1000` xuống thẳng lớp Storage File để lọc trước khi load vào Memory được gọi là **Predicate Pushdown**.
 
-## 4. Các định dạng phổ biến hiện nay
+### 3.2. Hiệu suất nén (Compression) siêu việt
 
-* **Apache Parquet:** Định dạng tiêu chuẩn de facto cho Data Lake. Rất mạnh mẽ trong việc lưu trữ dữ liệu lồng nhau (nested data) hiệu quả (thông qua thuật toán Dremel của Google). Mặc định Parquet cấu trúc file theo hướng lai (Hybrid): File được chia thành các *Row Groups* lớn, bên trong mỗi Row Group, dữ liệu lại được chia theo *Column Chunk*.
-* **Apache ORC (Optimized Row Columnar):** Ra đời từ hệ sinh thái Hadoop/Hive. ORC cung cấp tỷ lệ nén cực kỳ mạnh và các chỉ mục nhẹ (lightweight indexes) tích hợp sẵn, đặc biệt phù hợp cho các truy vấn phân tích siêu lớn trên cụm Hadoop.
-* **Cơ sở dữ liệu In-Memory và OLAP chuyên biệt:** Apache Arrow (định dạng bộ nhớ in-memory chuẩn), ClickHouse, DuckDB đều triển khai core engine của chúng dựa trên khái niệm columnar để đạt tốc độ milisecond cho các truy vấn lớn.
+Bởi vì một cột chỉ chứa một kiểu dữ liệu duy nhất (Homogeneous data), Columnar Storage áp dụng được các thuật toán mã hóa (Encoding) siêu nhẹ trước khi nén bằng các thuật toán nặng (như Snappy, Zstd).
 
-## 5. Khi nào không nên dùng Columnar Storage?
+- **Run-Length Encoding (RLE):** `[US, US, US, VN, VN]` -> `[US:3, VN:2]`. Hiệu quả tối đa khi dữ liệu được sort (Z-Ordering / Liquid Clustering).
+- **Dictionary Encoding:** Thay vì lưu hàng triệu chuỗi `Engineering`, hệ thống lưu từ điển `{0: 'Engineering'}` và mã hóa cột thành các số nguyên `[0, 0, 0]`. Số nguyên nhỏ (Integer) chiếm cực kỳ ít RAM và CPU xử lý nhanh hơn chuỗi (String).
+- **Delta Encoding:** Lưu độ lệch thay vì giá trị gốc. Dãy timestamp `[1000, 1005, 1008]` trở thành `[1000, +5, +3]`.
 
-Mặc dù cực kỳ xuất sắc trong Analytical workloads, Columnar Storage có các nhược điểm tự nhiên khiến nó không phù hợp cho:
-1. **Hệ thống OLTP (Online Transaction Processing):** Các hệ thống POS, CRM, ERP có tần suất thêm (INSERT), cập nhật (UPDATE) và xóa (DELETE) từng bản ghi một cách liên tục. Việc update một dòng trong hệ thống Columnar rất phức tạp và tốn kém tài nguyên.
-2. **Truy vấn cần trả về toàn bộ các cột (SELECT *):** Khi bạn thực sự cần lấy một hoặc nhiều dòng trọn vẹn với hàng trăm cột (`SELECT * FROM table WHERE ID = X`), Columnar Storage sẽ chậm hơn Row Storage vì nó phải thu thập và "lắp ráp" lại dòng đó từ hàng trăm vị trí khác nhau trên ổ đĩa (Tuple reconstruction overhead).
+### 3.3. Late Materialization & Vectorized Processing
 
-## Tài Liệu Tham Khảo
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+- **Late Materialization:** Trong quá trình xử lý, dữ liệu được giữ nguyên ở dạng nén (ví dụ: mảng số nguyên của Dictionary Encoding) càng lâu càng tốt đi qua các phép `JOIN`, `FILTER`. Việc giải mã và "ráp" lại thành chuỗi ban đầu chỉ diễn ra ở Node cuối cùng trước khi trả về cho Client. Điều này tiết kiệm RAM đáng kể.
+- **Vectorized Processing:** Thay vì CPU xử lý từng dòng một (Volcano Iterator Model), các Columnar Engine sử dụng tập lệnh SIMD (Single Instruction, Multiple Data) của CPU để thực thi một phép cộng/nhân trên một mảng (vector) 1024 giá trị chỉ trong một vài chu kỳ xung nhịp (clock cycles).
+
+---
+
+## 4. Rủi ro Vận hành và Trade-offs (Real-world Incidents)
+
+Đừng nghĩ rằng Columnar Storage là "viên đạn bạc". Việc lạm dụng hoặc không hiểu bản chất của nó thường dẫn đến những lỗi sập hệ thống kinh điển.
+
+### 4.1. OOMKilled (Exit Code 137) vì thói quen `SELECT *`
+
+**Tình huống:** Một Data Scientist dùng PySpark chạy câu lệnh `SELECT * FROM user_events` (bảng có 200 cột) trên cụm Kubernetes, và Pod liên tục bị chết với trạng thái `OOMKilled` (Out of Memory Killed).
+
+**Giải phẫu nguyên nhân:** 
+Columnar Storage tối ưu cho việc đọc *ít cột*. Khi bạn `SELECT *`, hệ thống phải:
+1. Disk I/O phải seek liên tục đến 200 vị trí khác nhau (200 Column Chunks) trên ổ đĩa.
+2. **Tuple Reconstruction Overhead:** Engine phải nạp 200 mảng dữ liệu riêng biệt vào RAM và "khâu" (stitch) chúng lại thành một Row hoàn chỉnh. Thao tác này tiêu tốn cực kỳ nhiều CPU và RAM.
+3. Khi Memory vượt qua giới hạn cấp phát của K8s Pod, Linux Kernel sẽ gửi tín hiệu `SIGKILL` (Exit Code 137) để tiêu diệt tiến trình ngay lập tức.
+
+**Khắc phục:** Tuyệt đối chỉ `SELECT` đúng cột cần dùng. Phân quyền và tạo các Data Marts hẹp hơn để giới hạn scope truy cập.
+
+### 4.2. Cartesian Explosion lúc Shuffle (Memory Spill)
+
+**Tình huống:** Khi JOIN 2 bảng Parquet khổng lồ, Spark Job treo ở giai đoạn Reduce (Shuffle) hàng giờ liền, sau đó rớt vì `Disk space exhausted` hoặc `OOM`.
+
+**Giải phẫu nguyên nhân:**
+Bất kể Parquet đọc nhanh đến đâu, nếu điều kiện JOIN thiếu `ON clause` chặt chẽ, hoặc có Data Skew (một giá trị khóa xuất hiện quá nhiều), hệ thống sẽ tạo ra **Cartesian Explosion**. 
+Hai phân vùng 10,000 dòng gặp nhau sinh ra 100 triệu dòng trong RAM. Dữ liệu này không thể nén lại bằng Parquet (vì đang nằm trong Shuffle buffer của RAM) -> Gây tràn bộ nhớ (Spill-to-disk) -> Treo ổ cứng cục bộ của Worker.
+
+**Khắc phục:**
+- Kiểm tra Data Skew trước khi JOIN.
+- Filter (Pushdown) quyết liệt dữ liệu của cả 2 bảng trước khi bước vào giai đoạn Shuffle.
+
+### 4.3. Nỗi ám ảnh Small Files (Small File Problem)
+
+Columnar Storage ghét file nhỏ. Nếu bạn ingest dữ liệu streaming và cứ 1 giây tạo ra 1 file Parquet 10KB, hệ thống sẽ sụp đổ.
+- Lượng Metadata (File Footer) phình to hơn cả dữ liệu thực. NameNode của HDFS hoặc Index của bảng Delta/Iceberg sẽ bị quá tải (Metadata Bottleneck).
+- Engine không thể áp dụng Vectorized Processing cho các lô dữ liệu quá bé.
+- **Khắc phục:** Luôn có các tiến trình **Compaction (OPTIMIZE)** chạy ngầm để gom các file Parquet nhỏ thành file lớn (128MB - 512MB).
+
+---
+
+## 5. Nguồn Tham Khảo (References)
+
+1. **Dremel Paper (Google Research):** [Dremel: Interactive Analysis of Web-Scale Datasets](https://research.google/pubs/dremel-interactive-analysis-of-web-scale-datasets/) - Bài báo nền tảng đằng sau kiến trúc của Parquet và BigQuery.
+2. **Databricks Engineering:** [What is Parquet? (Columnar Storage)](https://www.databricks.com/glossary/what-is-parquet)
+3. **Designing Data-Intensive Applications** - *Martin Kleppmann* (Chapter 3: Storage and Retrieval - Column-Oriented Storage).
+4. **ClickHouse Tech Blog:** [Columnar storage formats: Parquet, ORC, and Arrow explained](https://clickhouse.com/blog/columnar-storage-formats-parquet-orc-arrow)
+5. **Kubernetes Troubleshooting:** Khắc phục lỗi [OOMKilled (Exit Code 137)](https://sysdig.com/blog/troubleshoot-kubernetes-oom/) trong xử lý dữ liệu lớn.

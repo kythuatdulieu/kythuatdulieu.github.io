@@ -42,7 +42,7 @@ graph TD
     B -- Có --> C["Lấy 1 Token"]
     C --> D["Chuyển Request đến Server"]
     B -- Không --> E["Từ chối: 429 Too Many Requests"]
-    F(("Token Refill Rate")) -.-> |Đổ Token liên tục| X[("Token Bucket")]
+    F("("Token Refill Rate"")) -.-> |Đổ Token liên tục| X["("Token Bucket")"]
     X -.-> B
 ```
 
@@ -101,7 +101,7 @@ flowchart TD
     end
     
     subgraph cache_group["Centralized Storage"]
-        redis[("Redis Cluster")]
+        redis["("Redis Cluster")"]
     end
     
     client1["Client App A"] --> gateway1

@@ -9,112 +9,165 @@ metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) 
 description: "Khi xây dựng Data Pipeline, phương pháp lấy dữ liệu tăng dần (Incremental Load) giúp tối ưu hóa hiệu suất, giảm thiểu chi phí và rút ngắn thời gian xử lý thay vì việc tải toàn bộ dữ liệu (Full Load)."
 ---
 
+Ở quy mô dữ liệu nhỏ, Full Load (Snapshot toàn bộ dữ liệu định kỳ) là phương pháp an toàn và dễ triển khai nhất. Tuy nhiên, khi hệ thống scale lên hàng Terabyte hoặc Petabyte, việc Full Load trở thành thảm họa về mặt tài nguyên (Compute & Network) và phá vỡ các SLA (Service Level Agreement) về độ trễ dữ liệu (Data Freshness).
 
+**Incremental Load (Nạp dữ liệu gia tăng)** không chỉ đơn thuần là "lấy dữ liệu mới". Dưới lăng kính của một Data Engineer / Staff Engineer, đây là bài toán quản lý trạng thái (State Management), đảm bảo tính lũy đẳng (Idempotency), xử lý sự bất đồng bộ của hệ thống phân tán (Late-arriving data, Clock Skew) và đối mặt với các vấn đề về Schema Evolution.
 
-Khi bắt đầu xây dựng một kho dữ liệu ([Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)) hoặc Data Lake, phương pháp đơn giản nhất để chuyển dữ liệu từ nguồn (Source) đến đích (Destination) là sao chép toàn bộ dữ liệu (Full Load). Tuy nhiên, khi dữ liệu lớn dần, việc sao chép hàng tỷ dòng dữ liệu mỗi ngày trở nên đắt đỏ, tốn thời gian và không cần thiết. Đây là lúc **Incremental Load (Nạp dữ liệu gia tăng)** trở thành một kỹ thuật bắt buộc trong Data Engineering.
+---
 
-## 1. Incremental Load là gì?
+## 1. Kiến Trúc Tổng Thể (System Architecture)
 
-**Incremental Load** là chiến lược nạp dữ liệu (Ingestion) chỉ lấy các bản ghi **mới được tạo (inserted)** hoặc **vừa được cập nhật (updated)** từ hệ thống nguồn kể từ lần nạp dữ liệu gần nhất, thay vì tải lại toàn bộ tập dữ liệu.
+Ngày nay, Incremental Load thường được thiết kế gắn liền với **Medallion Architecture** và **Open Table Formats** (Apache Iceberg, Apache Hudi, Delta Lake) để hỗ trợ ACID transactions ngay trên Data Lake (Transactional Data Lake).
 
-Ví dụ: Bạn có một bảng `customers` với 1 tỷ bản ghi. Thay vì truy vấn và tải 1 tỷ bản ghi mỗi đêm, bạn chỉ truy vấn những khách hàng mới đăng ký hoặc thay đổi thông tin trong 24 giờ qua (giả sử có khoảng 10.000 bản ghi). 
+```mermaid
+flowchart LR
+    subgraph Source["Hệ Thống Nguồn("Source")"]
+        DB["(PostgreSQL / MySQL)"]
+        API["External APIs"]
+    end
 
-## 2. Full Load vs. Incremental Load
+    subgraph Ingestion["Tầng Nạp("Ingestion Layer")"]
+        Debezium["Debezium CDC"]
+        Spark["Spark / Flink"]
+    end
 
-| Tiêu chí | Full Load (Tải toàn bộ) | Incremental Load (Tải gia tăng) |
-| :--- | :--- | :--- |
-| **Cách thức** | Tải toàn bộ dữ liệu có trong nguồn ở mỗi chu kỳ. | Chỉ tải những dữ liệu thay đổi kể từ lần nạp trước. |
-| **Tài nguyên** | Rất tốn kém (Network, Compute, Storage). | Tiết kiệm đáng kể tài nguyên. |
-| **Thời gian chạy** | Càng ngày càng lâu khi dữ liệu phình to. | Nhanh, thường chạy ổn định trong thời gian ngắn. |
-| **Độ phức tạp** | Rất đơn giản, chỉ cần `TRUNCATE` và `INSERT`. | Phức tạp, cần theo dõi trạng thái (State/Watermark) và xử lý `UPSERT`/`MERGE`. |
-| **Khi nào dùng?** | Dữ liệu nhỏ (vài MB/GB), bảng cấu hình (Lookup/Dimension tables), hoặc lần nạp đầu tiên (Initial Load). | Dữ liệu lớn (Fact tables), dữ liệu giao dịch hoặc logs. |
+    subgraph Lakehouse["Data Lakehouse("Iceberg/Hudi/Delta")"]
+        Bronze["(Bronze\nRaw Append)"]
+        Silver["(Silver\nUpsert / Deduplicate)"]
+        Gold["(Gold\nAggregated)"]
+    end
 
-## 3. Các cơ chế phổ biến để thực hiện Incremental Load
+    DB -- WAL / Binlog --> Debezium
+    API -- Watermark/Pagination --> Spark
+    Debezium -- Kafka Topics --> Spark
+    Spark -- Micro-batch / Streaming --> Bronze
+    Bronze -- Incremental Compute --> Silver
+    Silver -- Incremental Compute --> Gold
+```
 
-Để hệ thống ETL/ELT biết được "đâu là dữ liệu mới", bạn cần một cơ chế đánh dấu. Dưới đây là các kỹ thuật phổ biến nhất:
+Sự kết hợp giữa **CDC (Change Data Capture)** và **Open Table Formats** cho phép hệ thống chuyển từ xử lý Batch (tải hàng đêm) sang **Micro-batching** hoặc **Continuous Processing**, mang lại độ trễ thấp (Low Latency) trong khi vẫn duy trì băng thông cao (High Throughput).
 
-### 3.1. Dựa trên cột thời gian hoặc ID (Watermarking / High-water mark)
+---
 
-Đây là kỹ thuật phổ biến nhất. Hệ thống nguồn phải có một cột lưu trữ thời gian cập nhật cuối cùng (vd: `updated_at`, `modified_date`) hoặc một ID tăng dần (Auto-increment ID). 
+## 2. Các Mô Hình Incremental Load (Incremental Load Patterns)
 
-**Quy trình hoạt động:**
-1. Pipeline lưu trữ lại giá trị lớn nhất của cột `updated_at` ở lần chạy trước. Giá trị này gọi là **High-water mark** (hoặc State/Checkpoint).
-2. Lần chạy tiếp theo, Pipeline sẽ truy vấn nguồn:
-   \`\`\`sql
-   SELECT * FROM customers 
-   WHERE updated_at > '2026-06-15 00:00:00'; -- (Giá trị Watermark cũ)
-   \`\`\`
-3. Sau khi tải dữ liệu thành công, Pipeline cập nhật lại Watermark bằng giá trị `updated_at` lớn nhất trong lô dữ liệu vừa lấy được.
+### 2.1. Dựa trên State / High-water mark (Query-based)
 
-> **💡 Lưu ý:** Nếu chỉ dựa vào cột `created_at` (ngày tạo), bạn sẽ chỉ lấy được các bản ghi *mới thêm vào* nhưng sẽ bỏ sót các bản ghi *bị thay đổi* (updates).
+Phương pháp kinh điển nhất: Pipeline lưu lại một **High-water mark** (thường là timestamp `updated_at` hoặc auto-increment `id`) từ lần chạy trước (Checkpointing). Lần chạy tiếp theo chỉ query các bản ghi có giá trị lớn hơn mốc này.
 
-### 3.2. Change Data Capture (CDC) - Dựa trên Transaction Log
+**Code Example (SQL Extraction):**
+```sql
+-- Trích xuất dữ liệu dựa trên High-water mark với Lookback window
+SELECT * 
+FROM production.orders
+WHERE updated_at >= '2026-06-25T00:00:00Z' - INTERVAL 2 HOUR;
+```
+*(Lưu ý: Luôn có `INTERVAL 2 HOUR` làm **Lookback window** để bắt các transaction bị treo hoặc commit chậm do Clock Skew giữa các node trong Database).*
 
-Nếu việc truy vấn trực tiếp vào Database nguồn bằng cột `updated_at` gây áp lực lên hệ thống hoặc không có cột này, bạn có thể dùng **[CDC (Change Data Capture)](/concepts/2-data-ingestion-integration/change-data-capture/)**: Giúp trích xuất dữ liệu gia tăng tức thì, đọc trực tiếp các file log giao dịch của Database (như `binlog` trong MySQL, `WAL` trong PostgreSQL) để thu thập mọi sự kiện `INSERT`, `UPDATE`, `DELETE` ngay khi chúng xảy ra (Streaming hoặc Micro-batching). Các công cụ phổ biến cho CDC là **Debezium**, **AWS DMS**, hoặc **Fivetran**.
+**Systemic Trade-offs:**
+*   **Pros:** Dễ cài đặt, không cần động chạm vào infrastructure của DB nguồn.
+*   **Cons:** Không bắt được **Hard Deletes** (xoá cứng). Gây tải (Compute/IOPS) lên DB nguồn nếu bảng không được đánh index (Index) đúng cách trên cột `updated_at`.
 
-**Ưu điểm:** Bắt được cả các lệnh xoá cứng (Hard Deletes) mà phương pháp Watermark không thể làm được.
+### 2.2. Change Data Capture (Log-based CDC)
 
-### 3.3. Dựa trên API (Pagination và Delta Tokens)
+Kỹ thuật tiêu chuẩn ở quy mô enterprise (Uber, Netflix). Thay vì query DB, Ingestion Layer đọc trực tiếp từ **Transaction Log** (WAL của PostgreSQL, Binlog của MySQL, Oplog của MongoDB). 
 
-Khi tích hợp với các ứng dụng SaaS (Salesforce, Zendesk, Stripe), API thường hỗ trợ các query parameter như `updated_since` hoặc cung cấp một chuỗi `cursor` / `delta_token`. Bạn truyền token của lần gọi trước vào API để chỉ lấy các object bị thay đổi kể từ lúc đó.
+**Code Example (Debezium Kafka Connector JSON):**
+```json
+{
+  "name": "inventory-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres.production.internal",
+    "database.port": "5432",
+    "database.server.name": "dbserver1",
+    "plugin.name": "pgoutput",
+    "table.include.list": "public.orders,public.customers",
+    "snapshot.mode": "initial"
+  }
+}
+```
 
-## 4. Xử lý ghi dữ liệu vào đích (Destination)
+**Systemic Trade-offs:**
+*   **Pros:** Bắt được mọi DML (Insert, Update, Delete) với độ trễ tính bằng mili-giây (Sub-second latency). Hoàn toàn không gây tải tính toán lên Query Engine của DB nguồn.
+*   **Cons:** Tăng tính phức tạp của hạ tầng (cần vận hành Kafka, Schema Registry, Debezium). Dễ gặp sự cố rác log (Log bloat) nếu Consumer bị sập, khiến DB nguồn không thể dọn dẹp WAL.
 
-Sau khi kéo được dữ liệu gia tăng (Delta data), bạn phải đưa nó vào Data Warehouse/Data Lake. Cách bạn ghi dữ liệu phụ thuộc vào bản chất dữ liệu:
+---
 
-### 4.1. Append-only (Chỉ thêm mới)
+## 3. Quản lý trạng thái tại Đích (Target State Management)
 
-Sử dụng cho dữ liệu bất biến (Immutable data) như Logs, Events (vd: lượt click, pageviews). Bạn chỉ đơn giản là `INSERT` trực tiếp lô dữ liệu mới vào cuối bảng đích.
+Việc lấy được dữ liệu gia tăng (Delta) mới chỉ là 50% bài toán. Đưa lượng Delta này vào Target (Data Warehouse / Lakehouse) đòi hỏi chiến lược xử lý đụng độ (Conflict Resolution) và Idempotency.
 
-### 4.2. Upsert / Merge (Cập nhật nếu tồn tại, Thêm mới nếu chưa)
+### Dbt Incremental Model & MERGE (UPSERT)
+Trong kiến trúc hiện đại, công cụ như `dbt` quản lý cực tốt các logic này. Dưới mui xe (Under the hood), nó sử dụng lệnh `MERGE` để Upsert dữ liệu.
 
-Với dữ liệu có thể thay đổi (Mutable data) như Thông tin người dùng, trạng thái đơn hàng:
-- Nếu bản ghi đã tồn tại trong Data Warehouse (dựa trên Khóa chính - Primary Key), ta tiến hành **Cập nhật (UPDATE)**.
-- Nếu bản ghi chưa tồn tại, ta tiến hành **Thêm mới (INSERT)**.
-Thao tác này được gọi là **UPSERT** (Update + Insert) hay lệnh `MERGE` trong SQL.
+**Mã thực tế (dbt model config):**
+```yaml
+{{
+    config(
+        materialized='incremental',
+        unique_key='order_id',
+        incremental_strategy='merge',
+        partition_by={
+            "field": "created_at",
+            "data_type": "timestamp",
+            "granularity": "day"
+        }
+    )
+}}
 
-**Ví dụ lệnh MERGE trên Snowflake/BigQuery:**
-\`\`\`sql
-MERGE INTO target_customers AS target
-USING staging_incremental_customers AS source
-ON target.customer_id = source.customer_id
-WHEN MATCHED THEN 
-  UPDATE SET 
-    target.name = source.name,
-    target.email = source.email,
-    target.updated_at = source.updated_at
-WHEN NOT MATCHED THEN 
-  INSERT (customer_id, name, email, updated_at) 
-  VALUES (source.customer_id, source.name, source.email, source.updated_at);
-\`\`\`
+SELECT 
+    order_id,
+    user_id,
+    status,
+    updated_at
+FROM {{ source('raw', 'orders') }}
+{% if is_incremental() %}
+  -- Chỉ xử lý dữ liệu mới để giảm Compute Cost
+  WHERE updated_at > (SELECT max(updated_at) FROM {{ this }})
+{% endif %}
+```
 
-> **📌 Kỹ thuật dbt:** Nếu bạn dùng công cụ như **dbt**, incremental load được hỗ trợ mạnh mẽ qua các materialization là `incremental` cùng các chiến lược như `merge`, `delete+insert`, hay `append`.
+---
 
-## 5. Những thách thức của Incremental Load
+## 4. Systemic Trade-offs (Sự đánh đổi Hệ thống)
 
-Dù tối ưu về hiệu năng, Incremental Load mang lại những khó khăn nhất định khi vận hành:
+Khi thiết kế Incremental Pipelines, Staff Engineer phải liên tục cân bằng giữa các yếu tố:
 
-1. **Xoá cứng (Hard Deletes):**
-   Nếu một bản ghi bị xoá hoàn toàn khỏi cơ sở dữ liệu nguồn bằng lệnh `DELETE`, cột `updated_at` sẽ không còn tồn tại để Watermark có thể kéo về. Dữ liệu trong Data Warehouse sẽ trở nên lỗi thời (bản ghi vẫn còn trong kho dữ liệu dù đã bị xoá ở nguồn).
-   *Giải pháp:* Dùng Soft Deletes (thêm cột `is_deleted = boolean` thay vì xoá thật) hoặc áp dụng CDC.
+1.  **Latency vs. Throughput (Độ trễ vs. Băng thông):** 
+    *   **Streaming (Flink):** Latency cực thấp, nhưng Throughput/Cost ratio không hiệu quả khi tải lên Data Lake (hiện tượng "Small Files Problem").
+    *   **Micro-batching (Spark Structured Streaming):** Cân bằng tốt hơn. Gom dữ liệu mỗi 5-15 phút để optimize Parquet file sizes.
+2.  **Storage Cost vs. Compute Cost:** 
+    Lưu trữ toàn bộ CDC event log (Append-only) tốn Storage nhưng rẻ về Compute. Việc liên tục Compaction (Gộp file) và Upsert (Merge on Read / Copy on Write) để cập nhật Snapshot cuối cùng sẽ tốn rất nhiều Compute (Ví dụ: Databricks OPTIMIZE, Iceberg Compaction).
+3.  **Delivery Semantics:**
+    *   **At-least-once (Ít nhất một lần):** Có thể sinh ra dữ liệu trùng lặp (Duplicates). Bắt buộc lớp Transform (Silver Layer) phải có logic Deduplication vững chắc.
+    *   **Exactly-once (Chính xác một lần):** Rất đắt đỏ để setup (Two-phase commits trong Kafka/Flink) và giảm Throughput đáng kể.
 
-2. **Dữ liệu đến trễ (Late-arriving Data):**
-   Đôi khi hệ thống nguồn bị lỗi thời gian (clock skew) hoặc một transaction mất rất lâu để commit. Dữ liệu có thể được commit với timestamp cũ hơn Watermark hiện tại. Nếu pipeline của bạn chỉ lấy `>= Watermark`, bạn có thể bỏ sót dòng dữ liệu này.
-   *Giải pháp:* Thường lùi Watermark lại một khoảng thời gian (Lookback window) ví dụ trừ đi 1-2 tiếng khi truy vấn, kết hợp với cơ chế Upsert tại đích để tránh trùng lặp.
+---
 
-3. **Quản lý Initial Load:**
-   Để chạy Incremental Load, bảng đích phải có dữ liệu nền móng trước đó. Lần chạy đầu tiên luôn phải là Full Load (Historical Load), sau đó hệ thống mới lưu Watermark và chuyển sang Incremental cho các lần tiếp theo.
+## 5. Real-world Incidents & Troubleshooting (Xử lý Sự cố Thực tế)
 
-4. **Thay đổi cấu trúc (Schema Evolution):**
-   Khi hệ thống nguồn thêm cột, đổi kiểu dữ liệu, các lô Incremental tiếp theo có thể gặp lỗi khi chèn vào bảng đích cũ. Công cụ Data Integration cần khả năng tự động cập nhật Schema.
+Vận hành Incremental Load ở quy mô lớn chắc chắn sẽ đụng độ các sự cố hạ tầng:
 
-## 6. Tổng kết
+*   **Consumer Lag (Độ trễ Consumer):** 
+    *   **Hiện tượng:** Tốc độ nạp (Ingest) chậm hơn tốc độ DB nguồn tạo ra transaction. Kafka Consumer Lag tăng vọt.
+    *   **Xử lý:** Tăng số lượng partitions trong Kafka và scale-out số lượng Worker/Executors của Spark/Flink. Tối ưu hoá logic xử lý (Tránh các UDF nặng trong quá trình Ingest).
+*   **OOMKilled (Out Of Memory):**
+    *   **Hiện tượng:** Khi hệ thống bị ngừng (downtime) vài giờ, lúc bật lại, lô dữ liệu (Batch) tải gia tăng quá lớn, vượt quá RAM của Executor.
+    *   **Xử lý:** Cấu hình giới hạn kích thước Batch (Ví dụ: `maxOffsetsPerTrigger` trong Spark, hoặc `max_bytes` trong Kafka Consumer) để ép hệ thống chia nhỏ backlog thành nhiều Micro-batch.
+*   **Schema Drift (Trôi dạt lược đồ):**
+    *   **Hiện tượng:** Team Backend drop/alter một cột trên DB nguồn, pipeline CDC crash ngay lập tức vì schema không khớp.
+    *   **Xử lý:** Tích hợp **Schema Registry** (Avro/Protobuf) và kích hoạt tính năng **Schema Evolution** trên Iceberg/Delta Lake. Đảm bảo có quy trình "Backward Compatibility" nghiêm ngặt.
+*   **Re-bootstrapping / Backfill:**
+    *   **Hiện tượng:** Logic tầng Silver sai, cần chạy lại toàn bộ dữ liệu (Backfill) của 2 năm qua.
+    *   **Xử lý:** Bắt buộc duy trì khả năng truy cập vào dữ liệu Raw (Bronze) dưới dạng Append-only. Xoá checkpoint và replay lại toàn bộ luồng dữ liệu hoặc trigger một chiến lược Full Load tạm thời xen kẽ.
 
-Incremental Load là một pattern thiết yếu đối với bất kỳ Data Engineer nào. Nó giải quyết bài toán tải dữ liệu quy mô lớn một cách bền vững. Tùy thuộc vào yêu cầu độ trễ (latency), hệ thống nguồn (Database vs API) và loại dữ liệu (Sự kiện vs Trạng thái), bạn sẽ quyết định việc dùng **Watermarking** cơ bản hay phải triển khai một hệ thống **CDC** phức tạp.
+---
 
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [dbt Documentation on Incremental Models](https://docs.getdbt.com/docs/build/incremental-models)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+## 6. Nguồn Tham Khảo (References)
+
+1.  **Netflix Technology Blog:** [How Netflix Uses Apache Iceberg for Incremental Processing](https://netflixtechblog.com/) - Cách Netflix quản lý metadata khổng lồ để tránh Full Table Scans.
+2.  **Uber Engineering:** [Apache Hudi - Transactional Data Lakes](https://eng.uber.com/) - Tư duy đằng sau kiến trúc nạp dữ liệu gia tăng độ trễ thấp của Uber (Low-latency Upserts).
+3.  **Databricks Architecture:** [Medallion Architecture & Delta Lake Change Data Feed](https://www.databricks.com/blog/) - Chuẩn mực xây dựng Lakehouse.
+4.  **AWS Architecture Blog:** [Design log-based CDC architectures with AWS DMS and Apache Iceberg](https://aws.amazon.com/blogs/architecture/)
+5.  **Designing Data-Intensive Applications (Martin Kleppmann):** Chương 11 (Stream Processing) và Chương 10 (Batch Processing).

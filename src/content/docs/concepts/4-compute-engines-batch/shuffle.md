@@ -2,85 +2,111 @@
 title: "Shuffle trong Spark"
 difficulty: "Advanced"
 tags: ["shuffle", "apache-spark", "performance-tuning", "bottleneck"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Shuffle trong Spark: Điểm nghẽn hiệu năng cốt lõi cần tối ưu"
-metaDescription: "Tìm hiểu chi tiết quá trình Shuffle trong Apache Spark là gì, tại sao nó gây ra độ trễ I/O và mạng lưới cực lớn, cũng như các kỹ thuật tuning hiệu năng để giảm thiểu Shuffle."
-description: "Nếu đã từng làm việc với [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) để xử lý dữ liệu lớn, chắc hẳn bạn đã không dưới một lần gặp phải tì..."
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Spark Shuffle Architecture: I/O Bottleneck & OOM Mitigation"
+metaDescription: "Đi sâu vào kiến trúc vật lý của Spark Shuffle. Phân tích nguyên nhân Spill-to-disk, OOMKilled và chiến lược Salting xử lý Data Skew ở cấp độ Staff Engineer."
+description: "Shuffle là 'cơn ác mộng' tài nguyên trong tính toán phân tán. Hiểu rõ cơ chế Shuffle Write/Read, Network I/O và Disk Spill để cứu hệ thống khỏi OOMKilled."
 ---
 
+Khi vận hành các hệ thống Big Data hàng TB/PB, bạn sẽ sớm nhận ra rằng tính toán (CPU) hiếm khi là nút thắt cổ chai. Kẻ thù thực sự luôn là **Disk I/O** và **Network Bandwidth**. Trong Apache Spark, cơ chế kích hoạt sự bùng nổ của cả hai nút thắt này được gọi là **Shuffle**. 
 
+Hầu hết các lỗi `OOMKilled` (Out Of Memory), `FetchFailedException`, hay `ExecutorLostFailure` đều bắt nguồn trực tiếp từ một quá trình Shuffle không được tối ưu.
 
-Nếu đã từng làm việc với Apache Spark để xử lý dữ liệu lớn, chắc hẳn bạn đã không dưới một lần gặp phải tình trạng ứng dụng chạy chậm bất thường hoặc bị lỗi OutOfMemory (OOM) tại các bước Transformation cụ thể. Hầu hết nguyên nhân cho những vấn đề này đều bắt nguồn từ một cơ chế cốt lõi trong xử lý phân tán: **Shuffle**.
+## 1. Kiến trúc Vật lý của Spark Shuffle (Physical Execution)
 
-Shuffle (Trộn dữ liệu) là quá trình đắt đỏ nhất trong Spark, xảy ra khi dữ liệu phải di chuyển chéo qua lại giữa các Node trong cụm (cluster) (ví dụ khi gọi hàm `GROUP BY` hoặc `JOIN`). Việc hiểu rõ về cơ chế hoạt động của Shuffle và cách tối ưu hóa nó chính là chìa khóa để làm chủ Apache Spark. Tối ưu hóa Spark thường xoay quanh việc hạn chế tối đa số lượng bước Shuffle và dung lượng dữ liệu phải Shuffle.
+Khác với các phép biến đổi hẹp (Narrow Transformations) như `.map()` hay `.filter()` hoạt động hoàn toàn trên RAM (In-memory) trong cùng một Partition, các phép toán rộng (Wide Transformations) như `.groupByKey()`, `.join()` yêu cầu dữ liệu phải được phân phối lại qua mạng.
 
-## Tại sao phải có Shuffle?
+Spark chia quá trình Shuffle thành hai giai đoạn vật lý rạch ròi: **Shuffle Write** (Map side) và **Shuffle Read** (Reduce side), với `MapOutputTracker` làm cầu nối điều phối.
 
+```mermaid
+sequenceDiagram
+    participant M as Mapper (Shuffle Write)
+    participant D as Local Disk
+    participant T as MapOutputTracker (Driver)
+    participant R as Reducer (Shuffle Read)
+    
+    M->>M: Tính toán phân vùng đích (Hash Partitioner)
+    M->>D: Spill-to-disk (Ghi .data & .index files)
+    M->>T: Báo cáo vị trí File
+    R->>T: Xin địa chỉ File của Partition X
+    T-->>R: Trả về danh sách Node IP
+    R->>D: Network Fetch (Kéo dữ liệu)
+    R->>R: In-memory Merge/Sort
+```
 
+### 1.1. Shuffle Write (Giai đoạn Map)
+Tại Map side, Spark phải phân loại dữ liệu xem mỗi record sẽ đi về Reduce task nào. Để tránh tràn RAM ngay lập tức, dữ liệu được ghi vào bộ đệm (Shuffle RAM Buffer, mặc định `32KB`). Khi buffer đầy, dữ liệu bị **Spill-to-disk** (tràn xuống đĩa cứng cục bộ của Executor) thành các tệp tin `*.data` (chứa dữ liệu) và `*.index` (đánh dấu vị trí byte-offset của từng partition).
+- **Trade-off:** Tốn thời gian Serialize/Deserialize (CPU) và tạo ra lượng khổng lồ Disk I/O. Nếu dùng ổ cứng HDD thay vì NVMe SSD, quá trình này sẽ làm treo hệ thống.
 
-Trong kiến trúc phân tán như Spark, dữ liệu được chia nhỏ thành các **Partition** và được xử lý song song trên nhiều Executor. Tuy nhiên, nhiều operation (ví dụ: đếm số lượng sự kiện theo user) yêu cầu tất cả dữ liệu có cùng khóa (key) phải được gom lại một chỗ (một partition duy nhất) để thực hiện tính toán.
+### 1.2. Shuffle Read (Giai đoạn Reduce)
+Tại Reduce side, các task sẽ gọi RPC đến `MapOutputTracker` (nằm trên Driver) để lấy tọa độ dữ liệu. Sau đó, chúng mở các kết nối TCP để kéo (Fetch) dữ liệu qua mạng từ các Map Executor.
+- **Rủi ro vận hành (Operational Risk):** Nếu một Reduce task kéo quá nhiều dữ liệu về cùng lúc (do Data Skew), buffer bộ nhớ của nó (`spark.reducer.maxSizeInFlight` - mặc định `48MB`) sẽ quá tải. Tệ hơn, nếu một Map Executor bị ngỏm giữa chừng, Reducer sẽ văng lỗi `FetchFailedException`, buộc Spark phải tính toán lại (re-compute) toàn bộ Stage trước đó.
 
-Khi dữ liệu có cùng key đang nằm rải rác ở nhiều partition trên các node khác nhau, Spark bắt buộc phải phân phối lại dữ liệu này qua mạng lưới. Quá trình trao đổi dữ liệu toàn cục này chính là Shuffle.
+## 2. Rủi ro Vận hành: Điểm mù của Developer
 
-## Các hàm gây ra Shuffle
+### 2.1. Nút thắt cổ chai OOM với `groupByKey`
+Một sai lầm kinh điển của các Junior Engineer là sử dụng `groupByKey()` thay vì `reduceByKey()`.
 
-Một số Transformation (phép biến đổi) phổ biến yêu cầu dữ liệu phải được tổ chức lại dựa trên key sẽ kích hoạt quá trình Shuffle, được gọi là các phép toán **Wide Transformation**:
+**Tại sao `groupByKey` làm sập hệ thống?**
+`groupByKey` đẩy **toàn bộ dữ liệu thô** qua mạng sang Reduce side trước khi thực hiện tổng hợp. Nếu một Key có 1 tỷ records, Reducer chứa Key đó sẽ kéo 1 tỷ records vào RAM, dẫn đến `JVM OOMKilled`.
 
-- **Nhóm dữ liệu (Grouping):** `groupByKey()`, `reduceByKey()`, `aggregateByKey()`, `combineByKey()`, `groupBy()`.
-- **Nối dữ liệu (Joins):** Các loại JOIN như `join()`, `leftOuterJoin()`, `rightOuterJoin()`, trừ một số trường hợp đặc biệt như Broadcast Join hoặc dữ liệu đã được phân vùng (co-partitioned) sẵn.
-- **Biến đổi tập hợp (Set operations):** `distinct()`, `intersection()`.
-- **Sắp xếp (Sorting):** `sortByKey()`, `orderBy()`.
-- **Phân vùng lại (Repartitioning):** `repartition()`, `coalesce()` (nếu `shuffle=true`).
+**Code Thực chiến: Hãy dùng `reduceByKey`**
+`reduceByKey` thực hiện *Pre-aggregation* (Map-side Combine). Nó gom dữ liệu cục bộ ngay trên Mapper trước, sau đó chỉ gửi kết quả qua mạng.
 
-## Quá trình Shuffle diễn ra như thế nào?
+```python
+# ❌ TRÁNH DÙNG: Gây ra Full Network Shuffle và OOM
+rdd.map(lambda x: (x, 1)) \
+   .groupByKey() \
+   .mapValues(sum) 
 
-Shuffle không chỉ truyền dữ liệu qua mạng mà còn bao gồm nhiều hoạt động I/O đắt đỏ. Nó được chia làm hai giai đoạn (phase): **Shuffle Write** (Map side) và **Shuffle Read** (Reduce side). Cụ thể quá trình diễn ra như sau:
+# ✅ NÊN DÙNG: Pre-aggregation giảm 90% Network I/O
+rdd.map(lambda x: (x, 1)) \
+   .reduceByKey(lambda a, b: a + b)
+```
 
-1. **Giai đoạn Map (Shuffle Write):**
-   - Dữ liệu ở các partition hiện tại (Mapper) được duyệt và tính toán để xác định xem chúng cần đi tới phân vùng mục tiêu nào ở giai đoạn tiếp theo.
-   - Các executor tiến hành ghi các tệp dữ liệu trung gian ra **Local Disk** thay vì giữ trong bộ nhớ (để tránh OOM và cho phép phục hồi nếu có lỗi). Dữ liệu thường được sắp xếp (sort) và tổ chức thành các file theo partition đích.
-   - Việc phải serialize (tuần tự hóa) dữ liệu và ghi ra ổ đĩa khiến phase này tạo ra lượng **Disk I/O** rất lớn.
+### 2.2. Cartesian Explosion trong JOIN
+Thực hiện `.join()` mà không có điều kiện (Cross Join) hoặc điều kiện Join sinh ra dữ liệu m-n (Many-to-Many). Ví dụ bảng A có 1,000 dòng trùng key, bảng B có 1,000 dòng trùng key. Spark sẽ tạo ra 1,000 * 1,000 = 1,000,000 dòng tại ranh giới Shuffle, gây tràn đĩa cứng (No space left on device) ngay lập tức.
 
-2. **Giai đoạn Reduce (Shuffle Read):**
-   - Các executor đảm nhận giai đoạn tiếp theo (Reducer) sẽ liên hệ với MapOutputTracker (một service của Spark) để biết vị trí các tệp dữ liệu trung gian.
-   - Reducer sẽ kéo (fetch) dữ liệu của chúng từ Local Disk của các Mapper thông qua mạng (Network I/O). Dữ liệu này được deserialize, sau đó được merge/sort trước khi áp dụng phép toán tổng hợp cuối cùng.
-   - Quá trình kéo dữ liệu từ nhiều node khiến băng thông mạng bị chiếm dụng lớn, và nếu dữ liệu không đều (Data Skew), một reducer có thể bị OOM do kéo về quá nhiều dữ liệu.
+## 3. Khắc phục Data Skew với kỹ thuật Salting
 
-## Tại sao Shuffle lại "Đắt đỏ"?
+**Data Skew** xảy ra khi dữ liệu phân bố không đồng đều theo Hash Key. Một Reduce Task phải gồng gánh 80% tải của toàn hệ thống (Straggler Task), trong khi các task khác đã xong và ngồi chơi. 
 
-Shuffle tiêu tốn tài nguyên hệ thống ở nhiều khía cạnh:
+**Giải pháp cốt lõi:** Kỹ thuật Salting. Thêm một số ngẫu nhiên (Salt) vào khóa (Key) bị nghiêng để "phân mảnh" nó ra nhiều Reducer khác nhau, tính toán một phần (Partial Aggregate), sau đó gộp lại.
 
-1. **Network I/O:** Hàng GB đến hàng TB dữ liệu được di chuyển qua lại giữa các máy chủ trong cluster. Đây là nút thắt cổ chai vật lý cứng nhất.
-2. **Disk I/O:** Việc ghi tệp tin trung gian (Shuffle Spill) xuống ổ đĩa cục bộ làm giảm tốc độ rõ rệt. Nếu ổ cứng trên node không dùng SSD, tốc độ sẽ còn chậm hơn nhiều.
-3. **CPU (Serialization/Deserialization):** Spark phải chuyển dữ liệu trong memory thành định dạng byte stream để ghi ổ đĩa và gửi qua mạng, sau đó giải mã ngược lại.
-4. **Memory:** Buffer bộ nhớ được sử dụng ở cả giai đoạn Write (để sắp xếp) và Read (để merge). Bộ nhớ không đủ sẽ dẫn đến Spill liên tục ra disk (Ghi tràn) khiến hiệu suất tuột dốc.
+```python
+import random
+from pyspark.sql.functions import col, lit, concat_ws, explode, array
 
-## Các chiến lược tối ưu hóa Shuffle (Tuning)
+num_salts = 10  # Phân mảnh key thành 10 phần
 
-Để cải thiện hiệu năng Spark, nguyên tắc số một là **Tránh Shuffle nếu có thể**, và nguyên tắc số hai là **Giảm thiểu dữ liệu qua Shuffle**. Dưới đây là các kỹ thuật thường được áp dụng:
+# Bước 1: Thêm Salt ngẫu nhiên vào bảng Fact (Bảng lớn bị lệch)
+fact_df_salted = fact_df.withColumn(
+    "salted_key", 
+    concat_ws("_", col("skewed_key"), lit(random.randint(0, num_salts - 1)))
+)
 
-### 1. Sử dụng Broadcast Join thay vì Shuffle Hash/Sort Merge Join
-Khi cần Join một bảng lớn với một bảng nhỏ (ví dụ: bảng Dimensions), thay vì Shuffle cả 2 bảng, hãy dùng `broadcast()`. Spark sẽ sao chép toàn bộ bảng nhỏ tới mọi Executor. Dữ liệu bảng lớn không phải di chuyển qua mạng.
+# Bước 2: Nhân bản (Explode) bảng Dimension (Bảng nhỏ)
+dim_df_exploded = dim_df.withColumn(
+    "salt", explode(array([lit(i) for i in range(num_salts)]))
+).withColumn(
+    "salted_key", concat_ws("_", col("skewed_key"), col("salt"))
+)
 
-### 2. Sử dụng `reduceByKey` thay vì `groupByKey`
-Mặc dù kết quả có thể giống nhau, nhưng `reduceByKey` sẽ thực hiện *Pre-aggregation* (kết hợp cục bộ) ngay trên Mapper trước khi Shuffle. Điều này giảm đáng kể lượng dữ liệu cần truyền qua mạng. Ngược lại, `groupByKey` gửi toàn bộ dữ liệu thô qua mạng, rất dễ gây OOM.
+# Bước 3: Join trên salted_key (Dữ liệu bị lệch đã được phân phối đều)
+result = fact_df_salted.join(dim_df_exploded, "salted_key") \
+                       .drop("salted_key", "salt")
+```
+*Lưu ý: Kỹ thuật Salting đánh đổi việc tăng (nhân bản) dữ liệu trên bảng Dimension để đổi lấy phân phối I/O đồng đều trên toàn Cluster.*
 
-### 3. Điều chỉnh số lượng phân vùng Shuffle (`spark.sql.shuffle.partitions`)
-Mặc định, Spark để số lượng phân vùng cho Shuffle là `200`. Với dữ liệu siêu lớn, 200 task sẽ phải xử lý khối lượng dữ liệu khổng lồ dẫn đến Spill. Ngược lại, với lượng dữ liệu nhỏ, 200 partition lại gây ra lãng phí tài nguyên quản lý overhead. Cần tinh chỉnh thông số này dựa trên dung lượng dữ liệu, thường theo quy tắc mỗi partition dao động từ 100MB - 200MB.
+## 4. Tối ưu Chi phí (FinOps) với Shuffle Tuning
 
-Trong Spark 3.x, tính năng **Adaptive Query Execution (AQE)** đã giải quyết vấn đề này qua tính năng *Dynamically coalescing shuffle partitions*.
+Nếu bạn chạy Spark trên Cloud (AWS EMR, Databricks), Shuffle tồi tệ đồng nghĩa với đốt tiền tốn kém:
+1. **Tinh chỉnh `spark.sql.shuffle.partitions`:** Mặc định là 200. Quy tắc vàng (Rule of Thumb) là đặt giá trị này sao cho mỗi partition có dung lượng khoảng `100MB - 200MB`. Nếu có 1TB dữ liệu sau filter, hãy set tham số này thành `10000`. 
+2. **Loại bỏ Shuffle với Broadcast Join:** Luôn sử dụng `broadcast(small_df)` khi Join bảng nhỏ (< 2GB, tùy vào RAM của Executor). Thay vì Shuffle, bảng nhỏ được serialize và đẩy thẳng vào RAM của mọi Executor, tiết kiệm 100% Shuffle Network.
+3. **Cấu hình Off-Heap Memory:** Với các dữ liệu dạng Struct nặng nề, bộ nhớ Heap của JVM dễ bị đầy và kích hoạt Garbage Collection (GC Pause) liên tục khi giải mã Shuffle. Hãy bật `spark.memory.offHeap.enabled=true` để Spark sử dụng bộ nhớ ngoài (Direct Memory) thông qua Project Tungsten.
 
-### 4. Lọc (Filter) dữ liệu trước khi Shuffle
-Luôn thực hiện thao tác lọc các dòng không cần thiết, hoặc loại bỏ bớt các cột (select) trước khi thực hiện `join()` hoặc `groupBy()`. Lượng dữ liệu đi vào máy nghiền Shuffle càng nhỏ, ứng dụng chạy càng nhanh.
-
-### 5. Xử lý Data Skew (Lệch dữ liệu) bằng kỹ thuật Salting
-Data Skew xảy ra khi một số key có số lượng bản ghi áp đảo các key khác, khiến một số Task nhận được khối dữ liệu khổng lồ trong lúc Shuffle, trong khi các Task khác đã xong từ lâu.
-Giải pháp phổ biến là thêm một hậu tố ngẫu nhiên (Salt) vào key để phân tán bớt dữ liệu ra nhiều Reducer, sau đó mới tiến hành tổng hợp cục bộ (local aggregation) rồi thực hiện tổng hợp lần cuối. Tính năng AQE trong Spark 3.0 cũng cung cấp cơ chế tự động xử lý *Skew Join*.
-
-## Tài Liệu Tham Khảo
-* [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
-* **Troubleshooting Spark OOM and Memory Management - Uber Engineering**
-* [Spark Shuffle Architecture - DataBricks Deep Dive](https://databricks.com/session/deep-dive-into-spark-sql-with-advanced-performance-tuning)
-* **Presto: SQL on Everything - Facebook Engineering**
+## Nguồn Tham Khảo (References)
+- [Apache Spark Architecture Explained - Databricks](https://www.databricks.com/blog/2025/06/10/apache-spark-architecture-explained-how-the-unified-analytics-engine-actually-works.html)
+- [Project Tungsten: Bringing Apache Spark Closer to Bare Metal - Databricks](https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-apache-spark-closer-to-bare-metal.html)
+- Martin Kleppmann, *Designing Data-Intensive Applications*, Chapter 10: Batch Processing.

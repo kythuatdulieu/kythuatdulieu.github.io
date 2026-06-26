@@ -68,7 +68,7 @@ Một sơ đồ rõ ràng giúp người đọc nhanh chóng nắm bắt bức t
 
 ```mermaid
 graph TD
-    subgraph "Producers (Data Sources)"
+    subgraph "Producers("Data Sources")"
         Web["Web Frontend - JS SDK"]
         App["Mobile App - iOS/Android"]
         Backend["Backend Microservices"]
@@ -86,16 +86,16 @@ graph TD
 
     subgraph "Stream Processing Layer"
         Flink["Apache Flink Cluster"]
-        Redis[("Redis - Enrichment Cache")]
+        Redis["("Redis - Enrichment Cache")"]
     end
 
     subgraph "Storage & Serving Layer"
-        Iceberg[("Apache Iceberg Table")]
+        Iceberg["("Apache Iceberg Table")"]
         S3["AWS S3 - Object Storage"]
-        ClickHouse[("ClickHouse - Realtime OLAP")]
+        ClickHouse["("ClickHouse - Realtime OLAP")"]
     end
     
-    subgraph "Consumers (Downstream)"
+    subgraph "Consumers("Downstream")"
         Superset["Apache Superset / Grafana"]
         DataSci["Data Science Environment"]
     end

@@ -1,104 +1,151 @@
 ---
-title: "Xử lý Phân tích Trực tuyến - OLAP"
-difficulty: "Beginner"
-readingTime: "15 mins"
-tags: ["olap", "data-warehouse", "analytics", "business-intelligence"]
-lastUpdated: 2026-06-16
-seoTitle: "OLAP là gì? Hệ thống Xử lý Phân tích Trực tuyến"
-metaDescription: "Tìm hiểu kiến trúc OLAP (Online Analytical Processing), các truy vấn đa chiều, khối OLAP (Cubes), sự khác biệt với OLTP và các công nghệ OLAP hiện đại."
-definition: "OLAP (Online Analytical Processing) là công nghệ và hệ thống tối ưu hóa cho các tác vụ phân tích dữ liệu đa chiều, thực hiện các truy vấn đọc dữ liệu phức tạp trên quy mô lớn để báo cáo và hỗ trợ ra quyết định."
-description: "Hãy tưởng tượng CEO của một chuỗi bán lẻ lớn đưa ra yêu cầu: 'Cho tôi biết tổng doanh thu của tất cả cửa hàng tại Đông Nam Á trong quý 3 năm nay, so sánh với cùng kỳ năm ngoái và phân loại theo từng nhóm sản phẩm'. Để trả lời câu hỏi này nhanh chóng trên hàng tỷ giao dịch bán lẻ, bạn cần một hệ thống OLAP."
+title: "Kiến trúc OLAP (Online Analytical Processing) Chuyên Sâu"
+difficulty: "Advanced"
+readingTime: "20 mins"
+tags: ["olap", "columnar", "vectorized-execution", "clickhouse", "data-warehouse"]
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc OLAP: Columnar Storage, Vectorized Execution & Z-Ordering"
+metaDescription: "Phân tích sâu kiến trúc OLAP hiện đại: Columnar Storage, Vectorized Execution (SIMD), Sparse Index (ClickHouse), và Z-Ordering/Liquid Clustering (Databricks)."
+definition: "Trong kiến trúc hệ thống hiện đại, OLAP không chỉ là 'phân tích đa chiều' (Cubes) mà là sự kết hợp vật lý giữa Columnar Storage (lưu trữ dạng cột) và Vectorized Execution (thực thi vector hóa) để quét hàng tỷ bản ghi với độ trễ mili-giây."
 ---
 
+Các định nghĩa sách giáo khoa thường mô tả OLAP (Online Analytical Processing) bằng mô hình Khối đa chiều (OLAP Cubes), Roll-up, Drill-down. Tuy nhiên, dưới góc nhìn của một Kỹ sư Hệ thống (Data/Platform Engineer), OLAP là bài toán tối ưu hóa phần cứng: **Làm sao để vắt kiệt băng thông I/O của đĩa và tận dụng tối đa các tập lệnh SIMD của CPU?**
 
+Bài viết này mổ xẻ kiến trúc vật lý bên dưới các hệ thống OLAP hiện đại (như ClickHouse, Databricks, Apache Druid, Snowflake), sự đánh đổi (trade-offs) hệ thống, và các tình huống sập hệ thống thực tế (Incidents).
 
-OLAP (Online Analytical Processing) là hệ thống được thiết kế và tối ưu hóa cho các truy vấn phân tích đa chiều phức tạp trên khối lượng dữ liệu khổng lồ. Khác với hệ thống OLTP (Online Transaction Processing) tập trung vào việc ghi chú và xử lý các giao dịch nhanh chóng, OLAP thường quét hàng triệu đến hàng tỷ dòng dữ liệu để tính toán, tổng hợp (Aggregation) và trả về các báo cáo phân tích tổng quan phục vụ cho mục đích Business Intelligence (BI) và ra quyết định (Decision Making).
+---
 
-## 1. Đặc điểm chính của hệ thống OLAP
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-* **Truy vấn phức tạp và nặng về đọc (Read-heavy):** Các truy vấn OLAP thường xuyên phải thực hiện `JOIN` nhiều bảng, sử dụng các hàm tập hợp như `SUM`, `COUNT`, `AVG` và `GROUP BY` trên số lượng lớn bản ghi.
-* **Tối ưu hóa cho phân tích:** Cấu trúc dữ liệu và mô hình lưu trữ được tối ưu hóa để trả lời nhanh các câu hỏi phân tích từ người dùng.
-* **Dữ liệu lịch sử:** Dữ liệu trong hệ thống OLAP thường được tải định kỳ (thông qua quá trình ETL/ELT) từ các hệ thống OLTP hoặc các nguồn dữ liệu khác, lưu trữ dữ liệu lịch sử trong thời gian dài (tháng, năm).
-* **Độ trễ (Latency):** Việc cập nhật dữ liệu thường không diễn ra theo thời gian thực (real-time) mà có thể là theo lô (batch) hoặc vi lô (micro-batch), tuy nhiên hiện nay các hệ thống Real-time OLAP đang ngày càng phổ biến.
+Sức mạnh của một OLAP Engine hiện đại như ClickHouse hay DuckDB đến từ sự kết hợp của hai trụ cột: **Columnar Storage** (tối ưu I/O) và **Vectorized Execution** (tối ưu CPU).
 
-## 2. Mô hình đa chiều (Multidimensional Model) và Khối OLAP (OLAP Cube)
+### 1.1. Columnar Storage (Lưu trữ hướng cột)
 
-Trái tim của các hệ thống OLAP truyền thống là **Khối OLAP (OLAP Cube)**. Trong khi cơ sở dữ liệu quan hệ lưu trữ dữ liệu dưới dạng bảng (2 chiều: hàng và cột), OLAP Cube cho phép biểu diễn dữ liệu ở nhiều chiều (N-dimensions), giúp việc phân tích trực quan và đa diện hơn.
+Trong OLTP (như PostgreSQL, MySQL), dữ liệu được lưu theo dòng (Row-based). Khi bạn chạy `SELECT SUM(doanh_thu) FROM sales`, DB vẫn phải đọc toàn bộ các cột khác (tên, ngày, ID, v.v.) từ đĩa lên RAM. 
 
-### 2.1. Các thành phần của OLAP Cube
+Hệ thống OLAP lưu trữ mỗi cột thành một file (hoặc một block vật lý) riêng biệt. 
+- **Giảm thiểu I/O (I/O Pruning):** Engine chỉ đọc chính xác các file chứa cột cần thiết.
+- **Nén dữ liệu (Compression):** Vì dữ liệu trong một cột có cùng kiểu (ví dụ: `Int32` cho tuổi), các thuật toán nén như Run-Length Encoding (RLE), Dictionary, ZSTD hoặc Delta Encoding hoạt động cực kỳ hiệu quả, nén dữ liệu nhỏ lại 5x - 10x so với Row-based.
 
-* **Facts (Sự kiện/Chỉ số):** Là các dữ liệu định lượng, có thể đo lường được (ví dụ: Doanh thu, Số lượng bán, Chi phí). Các fact này thường nằm ở trung tâm (Fact Table).
-* **Dimensions (Chiều phân tích):** Là các thuộc tính dùng để phân nhóm, lọc và mô tả các *Facts* (ví dụ: Thời gian, Địa lý, Sản phẩm, Khách hàng). Mỗi Dimension có thể có một cấu trúc phân cấp (Hierarchy). Ví dụ: *Thời gian* (Năm -> Quý -> Tháng -> Ngày), *Địa lý* (Quốc gia -> Khu vực -> Tỉnh/Thành phố -> Cửa hàng).
+### 1.2. Vectorized Execution vs Volcano Iterator
 
-### 2.2. Các thao tác phân tích trên OLAP Cube
+Các DB truyền thống thường dùng mô hình **Volcano Iterator**: xử lý từng dòng (Row-by-Row). Với một tỷ dòng, Engine phải gọi hàm `next()` một tỷ lần. Overhead của việc gọi hàm ảo (virtual function calls) và rẽ nhánh (branching) khiến CPU bị "nghẽn".
 
-Các công cụ OLAP hỗ trợ người dùng "cắt lớp" dữ liệu thông qua các thao tác trực quan:
+OLAP Engine hiện đại dùng **Vectorized Execution** (Thực thi Vector hóa):
+- Dữ liệu được xử lý theo từng khối (Batch/Block), thường từ 1,024 đến 65,536 giá trị cùng lúc.
+- Khai thác tập lệnh **SIMD (Single Instruction, Multiple Data)** của CPU hiện đại (AVX-512). CPU có thể cộng 16 số nguyên 32-bit trong một chu kỳ xung nhịp (clock cycle) duy nhất thay vì 16 chu kỳ.
 
-* **Roll-up (Consolidation):** Tổng hợp dữ liệu lên một cấp độ cao hơn trong hệ phân cấp. Ví dụ: Từ doanh thu theo "Tháng" cuộn lên thành doanh thu theo "Quý" hoặc "Năm".
-* **Drill-down:** Ngược lại với Roll-up, đi sâu vào chi tiết của dữ liệu. Ví dụ: Từ doanh thu của "Quốc gia" đi sâu vào doanh thu của từng "Tỉnh/Thành phố".
-* **Slice (Cắt lát):** Trích xuất một khối nhỏ hơn (một mặt cắt) bằng cách chọn một giá trị cụ thể cho một chiều. Ví dụ: Xem doanh thu của *tất cả sản phẩm* và *tất cả địa điểm*, nhưng CHỈ trong `Năm = 2023`.
-* **Dice (Đổ xúc xắc):** Trích xuất một khối nhỏ hơn (Sub-cube) bằng cách chọn các giá trị cụ thể trên nhiều chiều cùng lúc. Ví dụ: Xem doanh thu của nhóm sản phẩm `Điện thoại` và `Laptop` tại `Hà Nội` và `TP.HCM` trong `Quý 1` và `Quý 2`.
-* **Pivot (Xoay trục):** Thay đổi cách bố trí hiển thị dữ liệu bằng cách hoán đổi các trục (chiều) để có một góc nhìn khác, tương tự như Pivot Table trong Excel.
+```mermaid
+flowchart LR
+    subgraph Row_Based["Volcano Model - Chậm"]
+        direction TB
+        R1("Row 1") --> CPU1["CPU \n Gọi hàm liên tục"]
+        R2("Row 2") --> CPU1
+        R3("Row 3") --> CPU1
+    end
 
-## 3. Phân loại kiến trúc OLAP
+    subgraph Vectorized["Vectorized Execution - Nhanh"]
+        V1("[Block: 8192 Rows]") ===> CPU2{"CPU + SIMD \n 1 Instruction"}
+    end
+    Row_Based ~~~ Vectorized
+```
 
-Hệ thống OLAP truyền thống được chia thành ba nhóm chính dựa trên cách dữ liệu được lưu trữ:
+---
 
-### ROLAP (Relational OLAP)
-Sử dụng trực tiếp cơ sở dữ liệu quan hệ (RDBMS) để quản lý kho dữ liệu. Dữ liệu được lưu trong các bảng theo mô hình Star Schema hoặc Snowflake Schema. Các truy vấn đa chiều được dịch thành các câu lệnh SQL phức tạp.
-* **Ưu điểm:** Khả năng mở rộng (scalability) cao, xử lý được lượng dữ liệu khổng lồ do dữ liệu không cần tạo khối vật lý trước.
-* **Nhược điểm:** Hiệu suất truy vấn có thể chậm đối với các báo cáo phức tạp do cần phải `JOIN` nhiều bảng lớn và tính toán on-the-fly.
+## 2. Tối ưu hóa Truy xuất (Retrieval Optimizations)
 
-### MOLAP (Multidimensional OLAP)
-Sử dụng các cấu trúc lưu trữ mảng đa chiều (multidimensional arrays) chuyên dụng. Các phép tính tổng hợp thường được tính toán trước (Pre-calculated) và lưu trữ trực tiếp dưới dạng Data Cube.
-* **Ưu điểm:** Tốc độ truy vấn cực nhanh (gần như tức thì) do các tập hợp (aggregations) đã được tính trước.
-* **Nhược điểm:** Khả năng mở rộng kém đối với dữ liệu quá lớn, dễ bị tình trạng "Data explosion" (bùng nổ dữ liệu) khi số lượng chiều (dimension) và độ chi tiết (cardinality) tăng cao.
+### 2.1. Sparse Index (Chỉ mục thưa) trong ClickHouse
 
-### HOLAP (Hybrid OLAP)
-Sự kết hợp giữa ROLAP và MOLAP. Dữ liệu tổng hợp (Aggregated data) được lưu trữ ở dạng khối MOLAP để truy vấn nhanh, trong khi dữ liệu chi tiết (Detailed data) vẫn được lưu trong cơ sở dữ liệu quan hệ ROLAP để linh hoạt mở rộng.
+Nếu OLTP dùng B-Tree (Dense Index - mỗi dòng một entry) khiến Index phình to đến mức không thể chứa trong RAM, thì ClickHouse dùng **Sparse Index (Chỉ mục thưa)** kết hợp vật lý sắp xếp (Sorted Data).
 
-## 4. Cấu trúc lưu trữ hiện đại cho OLAP (Columnar Storage)
+ClickHouse chia dữ liệu thành các **Granules** (Mặc định 8,192 rows/granule). Index chỉ lưu trữ **Mark (dấu mốc)** cho dòng đầu tiên của mỗi granule.
 
-Ngày nay, các hệ thống OLAP hiện đại không còn hoàn toàn phụ thuộc vào việc xây dựng trước các khối MOLAP cứng nhắc. Thay vào đó, chúng giải quyết bài toán hiệu suất bằng cách thay đổi cấu trúc lưu trữ từ định dạng dòng (Row-based) sang định dạng cột (Columnar-based).
+```mermaid
+architecture-beta
+    group disk("server")[Đĩa Disk - Sorted by UserID]
+    
+    service g1("database")[Granule 1: UserID 1 - 1500] in disk
+    service g2("database")[Granule 2: UserID 1500 - 3200] in disk
+    service g3("database")[Granule 3: UserID 3200 - 5000] in disk
+    
+    group ram("server")[RAM - Sparse Index]
+    service idx1("database")[Mark 1: UserID=1] in ram
+    service idx2("database")[Mark 2: UserID=1500] in ram
+    service idx3("database")[Mark 3: UserID=3200] in ram
 
-### Tại sao Columnar Storage lại tối ưu cho OLAP?
+    idx1 --> g1
+    idx2 --> g2
+    idx3 --> g3
+```
 
-1. **Giảm thiểu I/O (Chỉ đọc những cột cần thiết):** Các truy vấn phân tích thường chỉ quan tâm đến một vài cột cụ thể (ví dụ: `SELECT SUM(doanh_thu) FROM bang_ban_hang`). Với kiến trúc lưu trữ theo cột, hệ thống chỉ cần đọc dữ liệu từ phần đĩa cứng chứa đúng cột `doanh_thu` thay vì phải đọc toàn bộ hàng dữ liệu chứa hàng chục/hàng trăm cột khác không liên quan.
-2. **Nén dữ liệu hiệu quả cao:** Các giá trị trong cùng một cột có kiểu dữ liệu giống nhau và thường lặp lại (ví dụ: cột Quốc gia chứa nhiều giá trị 'Vietnam', 'US'). Do đó, có thể áp dụng các thuật toán nén như Run-Length Encoding (RLE), Dictionary Encoding, hay Bitmapped Indexing rất hiệu quả. Dữ liệu nén càng nhỏ, chi phí I/O khi đọc từ đĩa càng giảm, đưa dữ liệu vào RAM càng nhanh.
-3. **Xử lý Vector hóa (Vectorized Processing):** Cho phép CPU thực thi một chỉ thị duy nhất trên một khối dữ liệu (batch/vector) thay vì từng dòng đơn lẻ, giúp tận dụng tối đa kiến trúc CPU hiện đại (SIMD) và tăng tốc tính toán lên nhiều lần.
+*Khi query `WHERE UserID = 2000`, ClickHouse dùng Binary Search trên RAM để tìm ra giá trị nằm giữa Mark 2 và Mark 3. Nó sẽ bỏ qua (Skip) Granule 1 và 3, chỉ load Granule 2 từ đĩa lên.*
 
-## 5. So sánh nhanh OLTP và OLAP
+**Cấu hình thực chiến (ClickHouse):**
+```sql
+CREATE TABLE events (
+    event_time DateTime,
+    user_id UInt64,
+    event_type String
+) ENGINE = MergeTree()
+-- Xác định cấu trúc Sparse Index và vật lý lưu trữ trên đĩa
+ORDER BY (event_time, user_id) 
+-- Điều chỉnh Granule size nếu cần (mặc định 8192)
+SETTINGS index_granularity = 8192; 
+```
 
-| Tiêu chí | Hệ thống OLTP | Hệ thống OLAP |
-| :--- | :--- | :--- |
-| **Mục đích** | Xử lý giao dịch kinh doanh hàng ngày | Hỗ trợ phân tích dữ liệu và ra quyết định |
-| **Đặc điểm truy vấn** | Đọc/Ghi nhanh, Đơn giản, Chạm đến vài bản ghi (Point query) | Truy vấn Đọc phức tạp, Quét hàng triệu/tỷ bản ghi |
-| **Thiết kế DB** | Chuẩn hóa cao (3NF) để tránh dư thừa và bảo toàn tính toàn vẹn dữ liệu | Phi chuẩn hóa (Star/Snowflake Schema) để hạn chế JOIN và tăng tốc độ đọc |
-| **Dung lượng dữ liệu** | Từ vài GB đến vài TB | Từ vài TB đến hàng Petabytes (PB) |
-| **Số lượng người dùng** | Hàng ngàn đến hàng triệu người dùng cuối (End-users) | Ít (Chủ yếu là Data Analysts, BI Engineers, Management Level) |
-| **Định hướng lưu trữ**| Row-oriented (Lưu trữ theo dòng) | Column-oriented (Lưu trữ theo cột) |
-| **Thước đo hiệu suất**| Số lượng giao dịch mỗi giây (TPS - Transactions Per Second) | Thời gian phản hồi truy vấn (Query Response Time) |
+### 2.2. Z-Ordering vs Liquid Clustering (Databricks)
 
-## 6. Hệ sinh thái công nghệ OLAP hiện đại
+Khi dữ liệu lớn, việc "Data Skipping" (lọc bỏ các block không cần thiết) phụ thuộc vào cách dữ liệu được gom cụm.
 
-Theo sự phát triển của Cloud Computing và Big Data, kiến trúc OLAP đã tiến hóa mạnh mẽ. Chúng ta có thể phân loại các giải pháp OLAP hiện đại như sau:
+- **Z-Ordering:** Áp dụng đường cong không gian (Space-filling curves) để sắp xếp dữ liệu đa chiều (multi-dimensions) thành một chiều vật lý. Cực kỳ tốt để data skipping trên nhiều cột, nhưng **Trade-off** là tốn rất nhiều I/O và Compute để chạy lại lệnh `OPTIMIZE ... ZORDER BY` khi có dữ liệu mới (Ghi đè file nặng nề).
+- **Liquid Clustering (Delta Lake mới):** Thay thế Z-Ordering và Partitioning truyền thống. Cung cấp khả năng gom cụm tăng dần (Incremental), tránh việc viết lại toàn bộ file.
 
-* **Cloud Data Warehouses (ROLAP/Columnar):** Google BigQuery, Amazon Redshift, Snowflake. Các hệ thống này cung cấp kiến trúc lưu trữ theo cột, tách rời hoàn toàn lưu trữ và tính toán (Decoupled Storage and Compute), tự động mở rộng (auto-scaling) cực kỳ linh hoạt và khả năng serverless.
-* **Hadoop / Data Lake SQL Engines:** Apache Hive, Presto, Trino, Spark SQL. Cung cấp khả năng truy vấn SQL phân tán trực tiếp trên dữ liệu (thường được lưu dưới định dạng Parquet/ORC) nằm trên Data Lake (như HDFS, AWS S3, GCS) mà không cần tải dữ liệu vào kho.
-* **Real-time OLAP Databases:** ClickHouse, Apache Druid, Apache Pinot, StarRocks. Được thiết kế tối ưu hóa đặc biệt cho việc nhập dữ liệu liên tục (streaming ingestion) từ các message queue (Kafka, Kinesis) và có thể truy vấn báo cáo trong thời gian mili-giây với độ trễ từ lúc sinh dữ liệu đến lúc hiển thị chỉ dưới 1 giây (sub-second latency).
+```sql
+-- Thay vì dùng Z-Ordering cứng nhắc, Liquid Clustering linh hoạt hơn
+CREATE TABLE sales (
+    date DATE,
+    store_id STRING,
+    amount DOUBLE
+) USING DELTA
+CLUSTER BY (date, store_id); -- Hỗ trợ tối đa 4 cột để tránh pha loãng hiệu suất
+```
+**Trade-off:** Liquid Clustering linh hoạt cho Write/Merge, nhưng nếu table quá nhỏ (< 1TB), overhead của cơ chế này không đáng kể, có thể trở thành "dao mổ trâu giết gà".
 
-## 7. Tổng kết
+### 2.3. Selective Late Materialization
 
-OLAP đã và đang là nền tảng cốt lõi của lĩnh vực Business Intelligence và Data Warehousing. Dù cách tiếp cận kỹ thuật đã tiến hóa mạnh từ những Data Cubes cứng nhắc (MOLAP) tới kiến trúc Cloud Data Warehouse và Real-time OLAP linh hoạt hiện đại, bản chất mục tiêu của OLAP vẫn không thay đổi: **Cung cấp cho con người khả năng phân tích lượng dữ liệu đa chiều khổng lồ một cách nhanh chóng, linh hoạt, từ đó rút ra các insights sâu sắc để điều hành và phát triển doanh nghiệp.**
+Trong OLAP, **Early Materialization** (Load toàn bộ các cột cần thiết từ đầu) có thể gây tràn RAM và lãng phí I/O nếu truy vấn có tính chọn lọc cao (VD: `WHERE age > 90`). 
+Các hệ thống tân tiến sử dụng **Late Materialization**: Engine chỉ xử lý trên các file nén / vector của cột được filter trước. Chỉ khi tìm ra tập RowIDs hợp lệ (những người `age > 90`), nó mới "materialize" (gắn kết) các cột còn lại để trả về cho User.
 
-## Tài Liệu Tham Khảo
+---
 
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
-* **Amazon Redshift Architecture**
-* **ClickHouse Architecture and Features**
-* [Star Schema vs Snowflake Schema - Databricks](https://www.databricks.com/glossary/star-schema)
-* [Apache Druid Design](https://druid.apache.org/docs/latest/design/)
+## 3. Rủi ro Vận hành & Real-world Incidents
+
+Dưới đây là các tình huống sập hệ thống (Incidents) thường gặp khi vận hành OLAP quy mô lớn.
+
+### Incident 1: Cartesian Explosion & OOMKilled trong JOINs
+
+Hệ thống OLAP phân tán (như Presto, Trino) cực kỳ nhạy cảm với các cú `JOIN` lớn.
+- **Hiện tượng:** Truy vấn bị treo, sau đó node Worker chết do Out-Of-Memory (JVM OOMKilled).
+- **Nguyên nhân cốt lõi (Root Cause):** Khác với OLTP dùng Nested Loop Join, OLAP thường dùng **Hash Join**. Node sẽ đẩy toàn bộ bảng nhỏ (Build table) vào RAM để tạo Hash Table. Nếu cả 2 bảng đều quá lớn và key bị Data Skew (lệch dữ liệu), RAM sẽ phình to tức thì. Nếu có các key duplicate ở cả 2 bên (M:N), nó tạo ra **Cartesian Explosion** (Bùng nổ dữ liệu tỷ lệ $M \times N$).
+- **Cách khắc phục & Trade-off:**
+  - Bật tính năng **Spill-to-disk**: Chấp nhận giảm Throughput (tăng Latency) bằng cách cho phép Engine xả dữ liệu trung gian từ RAM xuống đĩa để tránh OOM.
+  - Sử dụng **Broadcast Join** cho bảng nhỏ (ép đẩy copy đến mọi node).
+  - Khử chuẩn (Denormalization) trước bằng dbt / Spark (tạo One-Big-Table - OBT) thay vì JOIN on-the-fly.
+
+### Incident 2: High Cardinality `GROUP BY` Bottlenecks
+
+- **Hiện tượng:** Truy vấn `SELECT user_id, COUNT(DISTINCT session_id) GROUP BY user_id` chạy quá lâu hoặc OOM.
+- **Nguyên nhân:** Cột `user_id` và `session_id` có Cardinality (độ phân tán) cực cao. Để đếm chính xác `COUNT(DISTINCT)`, Engine phải theo dõi chính xác từng ID độc nhất trong RAM bằng Hash Set. 
+- **Cách khắc phục:**
+  - Sử dụng thuật toán xấp xỉ (Approximate algorithms) nếu không cần độ chính xác 100%. Ví dụ: dùng hàm `uniq` hoặc `uniqCombined` trong ClickHouse (dựa trên thuật toán **HyperLogLog**).
+  - HyperLogLog chỉ tốn vài Kilobytes RAM để ước lượng số lượng phần tử khác nhau trên hàng tỷ dòng với sai số rất nhỏ (~1-2%), giải phóng hoàn toàn gánh nặng bộ nhớ.
+
+---
+
+## Nguồn Tham Khảo (References)
+
+* [ClickHouse: Architecture of a Fast Analytical Database](https://clickhouse.com/docs/en/architecture)
+* [Vectorized Execution and Late Materialization in Analytical Databases (Research)](https://ceur-ws.org/)
+* [Databricks Liquid Clustering vs Z-Ordering](https://docs.databricks.com/en/delta/clustering.html)
+* *Designing Data-Intensive Applications* (Martin Kleppmann) - Chapter 3: Storage and Retrieval (Column-Oriented Storage).
+* [DuckDB Architecture: Vectorized Query Execution](https://duckdb.org/why_duckdb)

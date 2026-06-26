@@ -9,154 +9,163 @@ metaDescription: "Tìm hiểu deduplication (khử trùng lặp) là gì, tại 
 description: "Deduplication (khử trùng lặp) là kỹ thuật loại bỏ các bản ghi nhân đôi trong hệ thống, đảm bảo tính chính xác của dữ liệu. Khám phá các chiến lược từ SQL Window Functions đến Streaming và Data Lake."
 ---
 
+## Khái Niệm Deduplication (Khử Trùng Lặp)
 
+Trong thế giới của hệ thống phân tán (Distributed Systems) và Data Engineering, **Deduplication** (Khử trùng lặp) không chỉ đơn thuần là việc "xóa dòng trùng". Dưới góc nhìn Staff Engineer, deduplication là cơ chế phòng thủ cốt lõi để duy trì **Data Integrity** (Tính toàn vẹn dữ liệu) khi đối mặt với các bản chất khắc nghiệt của mạng: Network Partitions, Node Failures và giới hạn của định lý CAP.
 
-## Khái Niệm Deduplication (Khử Trùng Lặp) Là Gì?
+Bất kỳ hệ thống nào trao đổi dữ liệu qua mạng đều phải tuân theo một trong các Semantics giao nhận (Delivery Semantics). Hầu hết các hệ thống Streaming và Message Broker (như Apache Kafka, RabbitMQ) mặc định cung cấp **At-Least-Once Delivery** (Giao ít nhất một lần) để đảm bảo không mất mát dữ liệu (Zero Data Loss). Sự đánh đổi của At-Least-Once chính là dữ liệu trùng lặp (Duplicates). Vì vậy, Deduplication là mảnh ghép bắt buộc để đạt được lý tưởng **Exactly-Once Processing (EoP)**.
 
-Deduplication (Khử trùng lặp) là quá trình xác định và loại bỏ các bản sao dư thừa của dữ liệu trong một hệ thống hoặc một tập dữ liệu, đảm bảo rằng mỗi thực thể (như một sự kiện, người dùng, giao dịch) chỉ được đại diện bằng một bản ghi duy nhất.
+## Tại Sao Dữ Liệu Lại Bị Trùng Lặp? (Root Causes)
 
-Hãy tưởng tượng bạn đang chạy một chiến dịch gửi mã giảm giá tri ân khách hàng thân thiết. Do một lỗi kỹ thuật nào đó, thông tin của khách hàng tên Bob bị đưa vào hệ thống hai lần. Hậu quả là Bob nhận được hai mã giảm giá, gây thất thoát doanh thu cho công ty và có thể làm sai lệch báo cáo hiệu quả chiến dịch. Deduplication sinh ra để giải quyết chính xác những vấn đề như vậy.
+Trùng lặp dữ liệu (Data Duplication) hiếm khi là do lỗi cố ý, mà thường xuất phát từ cơ chế tự phục hồi (Resilience) của hệ thống:
 
-Trong kỹ thuật dữ liệu (Data Engineering), đặc biệt là với dữ liệu lớn (Big Data) và các hệ thống phân tán, vấn đề trùng lặp xảy ra vô cùng phổ biến và là một trong những nhiệm vụ dọn dẹp dữ liệu (Data Cleansing) cốt lõi nhất nhằm duy trì Data Quality (Chất lượng dữ liệu).
+1. **Producer Retries (Thử lại từ phía gửi):** Khi Producer gửi một message tới Kafka/Kinesis nhưng gặp Network Timeout và không nhận được ACK. Producer không thể biết message đã được ghi thành công hay chưa (Two Generals' Problem), nó buộc phải retry. Kết quả: Message được ghi 2 lần.
+2. **Consumer Rebalancing & Unacknowledged Offsets:** Consumer đọc một batch dữ liệu, lưu thành công vào Database nhưng Crash (hoặc bị Rebalance) trước khi kịp Commit Offset về Broker. Khi Consumer mới tiếp quản Partition đó, nó sẽ đọc và xử lý lại từ Offset cũ.
+3. **Application Bugs (Lỗi Client-Side):** Thiếu cơ chế Debounce/Throttling ở Frontend, dẫn đến người dùng click API tạo đơn hàng 2 lần liên tiếp.
+4. **ETL Backfills:** Chạy lại Historical Pipeline mà không có cơ chế **Idempotent** (Không thay đổi trạng thái nếu chạy nhiều lần), dẫn tới việc Append đè lên dữ liệu cũ thay vì Upsert/Overwrite.
 
-## Tại Sao Dữ Liệu Lại Bị Trùng Lặp?
+## Kiến Trúc Hệ Thống: Exactly-Once Pipeline
 
-Trong các hệ thống phân tán và kiến trúc dữ liệu hiện đại, trùng lặp không phải là một "tai nạn" hiếm gặp, mà thường là kết quả tất yếu của các cơ chế đảm bảo hệ thống vận hành trơn tru:
+Dưới đây là sơ đồ mô tả cách một Data Pipeline xử lý trùng lặp từ End-to-End:
 
-1. **At-Least-Once Delivery (Giao hàng ít nhất một lần):** Các message broker như Apache Kafka hay RabbitMQ thường được dùng ở chế độ "At-Least-Once" để không bao giờ đánh mất dữ liệu. Nếu một consumer xử lý xong một message nhưng gặp sự cố mạng trước khi kịp xác nhận (acknowledge) lại với broker, broker sẽ tưởng message chưa được xử lý và tiến hành gửi lại, dẫn đến ghi trùng lặp dữ liệu vào đích đến.
-2. **Cơ Chế Retry (Thử lại):** Khi gọi API để lấy dữ liệu (ví dụ từ một third-party service) và gặp timeout, hệ thống sẽ tự động gọi lại (retry). Nếu API thực tế đã xử lý thành công ở lần đầu nhưng trả về response quá chậm, lần gọi thứ hai có thể sẽ tạo ra một tập dữ liệu trùng lặp.
-3. **Lỗi Ứng Dụng (Application Bugs):** Đôi khi, lỗi từ phía client frontend (ví dụ: người dùng nhấn nút "Thanh toán" hai lần liên tiếp do UI không bị vô hiệu hóa kịp thời) sẽ sinh ra các sự kiện giống hệt nhau được gửi về hệ thống backend.
-4. **Tích Hợp Từ Nhiều Nguồn Hệ Thống:** Khi gộp dữ liệu từ nhiều hệ thống (như CRM, ERP và Web Analytics) về cùng một Data Warehouse, cùng một thực thể (ví dụ: một khách hàng) có thể tồn tại ở cả nhiều hệ thống với các dị bản thông tin nhỏ, sinh ra nhiều dòng biểu diễn cho một người duy nhất.
-5. **Backfill và Chạy Lại Pipeline:** Khi có lỗi logic xử lý dữ liệu ở quá khứ, các Data Engineer thường phải chạy lại (backfill) pipeline ETL/ELT. Nếu pipeline không được thiết kế cẩn thận theo chuẩn "idempotent" (không thay đổi trạng thái hệ thống dù chạy 1 hay nhiều lần), việc chạy lại sẽ đơn thuần chèn thêm (append) dữ liệu thay vì ghi đè (overwrite), dẫn tới nhân đôi toàn bộ dữ liệu của ngày đó.
+```mermaid
+flowchart TD
+    subgraph Clients
+        A["Mobile App"] -->|Retry on Timeout| B("API Gateway")
+        C["Web App"] -->|No Debounce| B
+    end
 
-## Phân Loại Trùng Lặp
+    subgraph Ingestion
+        B -->|Produce Event| D["Apache Kafka"]
+        D -->|At-Least-Once| E["Apache Flink"]
+    end
 
-Trùng lặp thường được chia làm hai loại chính, đòi hỏi cách xử lý hoàn toàn khác nhau:
+    subgraph Streaming Deduplication
+        E -->|Stateful Dedup| F["(RocksDB State)"]
+        F -. Check event_id .-> E
+    end
 
-1. **Trùng Lặp Chính Xác (Exact Duplicates):** Toàn bộ các trường (cột) dữ liệu của hai hoặc nhiều bản ghi giống hệt nhau 100%. Loại này thường dễ nhận diện và xử lý bằng các thao tác nhóm (Group By) hoặc chọn lọc các phần tử khác biệt (Distinct).
-2. **Trùng Lặp Kèm Cập Nhật (Partial Duplicates / Late Arriving Updates):** Các bản ghi có cùng khóa chính (Primary Key / Entity ID) nhưng khác nhau ở thời gian cập nhật hoặc trạng thái dữ liệu. 
-   - *Ví dụ:* Bản ghi thứ nhất: `Order ID: 101, Status: PENDING, Updated: 10:00`.
-   - Bản ghi thứ hai đến sau: `Order ID: 101, Status: SUCCESS, Updated: 10:05`. 
-   Trong trường hợp này, bạn thường muốn **chỉ giữ lại bản ghi có trạng thái hoặc thời gian mới nhất** và loại bỏ bản ghi lịch sử cũ đi trong bảng snapshot.
+    subgraph Data Lakehouse / Storage
+        E -->|Upsert / Merge| G["(Apache Iceberg / Delta)"]
+        D -->|Raw Dump| H["(Raw Layer - S3)"]
+    end
 
-## Hậu Quả Của Dữ Liệu Trùng Lặp
+    subgraph Batch Deduplication
+        H -->|Airflow + dbt| I["Spark / BigQuery"]
+        I -->|QUALIFY ROW_NUMBER| G
+    end
 
-* **Sai Lệch Phân Tích & Báo Cáo:** Trùng lặp làm tăng giả tạo các chỉ số quan trọng như doanh thu, lượt truy cập, hay số lượng người dùng đang hoạt động (DAU/MAU). Điều này dẫn đến những quyết định kinh doanh hoàn toàn sai lầm.
-* **Tăng Chi Phí Lưu Trữ và Xử Lý:** Lưu trữ dữ liệu dư thừa làm lãng phí dung lượng ổ cứng. Quan trọng hơn, nó khiến các truy vấn phân tích (Queries) chậm hơn và tốn nhiều compute (CPU/RAM) hơn. Ở các hệ thống Data Warehouse tính phí theo lượng dữ liệu quét (như BigQuery, Snowflake), điều này tương đương với việc "đốt tiền" vô ích.
-* **Trải Nghiệm Khách Hàng Kém:** Trong các ứng dụng vận hành (Operational Systems), dữ liệu trùng có thể dẫn tới việc gửi email quảng cáo nhiều lần cho một người, xuất hóa đơn kép, hiển thị thông báo lặp đi lặp lại khiến người dùng khó chịu và phàn nàn.
-
-## Các Kỹ Thuật Khử Trùng Lặp Trong Data Engineering
-
-### 1. Sử Dụng SQL Window Functions (Phổ Biến Nhất Cho Batch Processing)
-
-Trong Data Warehouse (như Google BigQuery, Snowflake, Amazon Redshift), kỹ thuật tiêu chuẩn vàng để xử lý loại "Trùng lặp kèm cập nhật" là dùng hàm cửa sổ `ROW_NUMBER()`. 
-
-**Nguyên lý:** Phân nhóm dữ liệu theo khóa chính, sắp xếp từng nhóm theo thời gian (hoặc một trường tăng dần như version) giảm dần, và chỉ lấy ra dòng đầu tiên (số 1) của mỗi nhóm.
-
-```sql
-WITH DeduplicatedData AS (
-  SELECT 
-    order_id,
-    customer_id,
-    total_amount,
-    status,
-    updated_at,
-    -- Đánh số thứ tự cho từng bản ghi trong cùng 1 order_id
-    ROW_NUMBER() OVER (
-      PARTITION BY order_id          -- Nhóm các bản ghi có cùng khóa order_id
-      ORDER BY updated_at DESC       -- Ưu tiên bản ghi có thời gian cập nhật mới nhất lên đầu
-    ) as row_num
-  FROM raw_orders
-)
-SELECT 
-  order_id,
-  customer_id,
-  total_amount,
-  status,
-  updated_at
-FROM DeduplicatedData
-WHERE row_num = 1;                   -- Chỉ lấy bản ghi mới nhất (được đánh số 1)
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
-### 2. Sử Dụng `DISTINCT` hoặc `GROUP BY`
+## Các Chiến Lược Deduplication Phân Tầng
 
-Cách này chỉ phù hợp với "Trùng lặp chính xác" (Exact Duplicates) khi mọi trường đều giống nhau, hoặc khi bạn chỉ cần lấy ra danh sách các giá trị duy nhất.
+### 1. Ingestion Layer: Idempotent Producers
 
-```sql
--- Dùng DISTINCT để lấy danh sách loại sự kiện duy nhất của user trong ngày
-SELECT DISTINCT user_id, event_type, event_date 
-FROM user_events;
+Cách tốt nhất để xử lý trùng lặp là chặn nó ngay tại cửa. Kafka cung cấp tính năng Idempotent Producer, gán một `ProducerId` và `SequenceNumber` cho mỗi message. Broker sẽ tự động reject nếu nhận được Sequence Number đã tồn tại.
 
--- Dùng GROUP BY (tương đương DISTINCT trong trường hợp này, 
--- nhưng thường dùng nếu muốn kèm theo hàm Aggregation như COUNT/SUM)
-SELECT user_id, event_type, event_date 
-FROM user_events
-GROUP BY user_id, event_type, event_date;
+**Kafka Producer Configuration (Java):**
+```java
+Properties props = new Properties();
+props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092");
+// Bật Idempotence để chống duplicate do retry
+props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+props.put(ProducerConfig.ACKS_CONFIG, "all");
+props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
 ```
 
-### 3. Kỹ Thuật "Upsert" / Merge (Dành Cho Data Lake/Lakehouse)
-
-Trong kiến trúc Data Lakehouse hiện đại sử dụng các định dạng bảng mở như Delta Lake, Apache Iceberg, hoặc Apache Hudi, bạn có thể thực hiện Deduplication ngay tại thời điểm ghi dữ liệu bằng câu lệnh `MERGE INTO` (Upsert: Update or Insert).
-
-Hệ thống sẽ kiểm tra xem bản ghi đã tồn tại chưa: nếu có thì tiến hành cập nhật với dữ liệu mới, nếu chưa thì chèn mới.
-
-```sql
--- Ví dụ với Delta Lake
-MERGE INTO target_orders AS t
-USING source_new_orders AS s
-ON t.order_id = s.order_id
-WHEN MATCHED AND s.updated_at > t.updated_at THEN 
-  -- Đã tồn tại order_id và sự kiện mới có thời gian muộn hơn, ta sẽ cập nhật
-  UPDATE SET 
-    t.status = s.status, 
-    t.updated_at = s.updated_at,
-    t.total_amount = s.total_amount
-WHEN NOT MATCHED THEN 
-  -- Chưa tồn tại thì chèn mới hoàn toàn
-  INSERT (order_id, customer_id, total_amount, status, updated_at)
-  VALUES (s.order_id, s.customer_id, s.total_amount, s.status, s.updated_at);
+**Terraform Kafka Topic Cấu Hình Chống Mất Mát:**
+```hcl
+resource "kafka_topic" "financial_events" {
+  name               = "financial-events-v1"
+  replication_factor = 3
+  partitions         = 12
+  config = {
+    "min.insync.replicas" = "2"
+    "retention.ms"        = "604800000" # 7 days
+  }
+}
 ```
 
-### 4. Deduplication Trong Streaming (Xử Lý Dữ Liệu Dòng Chảy)
+### 2. Streaming Layer: Stateful Processing (Flink/Spark)
 
-Đối với dữ liệu Streaming (bằng Apache Flink, Spark Structured Streaming), việc loại bỏ trùng lặp phức tạp hơn nhiều so với Batch vì dòng dữ liệu là vô tận. Hệ thống cần phải "nhớ" các sự kiện đã đi qua để đối chiếu, bằng cách sử dụng **State Store** (Lưu trữ trạng thái).
+Trong xử lý dòng chảy vô tận (Unbounded Streams), bạn không thể join với toàn bộ lịch sử. Thay vào đó, ta dùng **State Store** (như RocksDB trong Flink) để nhớ các ID đã gặp. 
 
-Tuy nhiên, bạn không thể nhớ trạng thái mãi mãi vì bộ nhớ RAM/Disk của cluster rồi sẽ cạn kiệt. Kỹ thuật ở đây là kết hợp Deduplication với **Watermarks** (Mốc thời gian trễ cho phép) và **TTL (Time-To-Live)** để hệ thống có thể tự động xóa bỏ trạng thái của các sự kiện quá cũ mà hệ thống tự tin là sẽ không bị gửi trùng lặp lại nữa.
+**Systemic Trade-off (Đánh đổi hệ thống):** State Size (RAM/Disk) vs. Deduplication Window. Nếu bạn giữ state mãi mãi, Job sẽ chết vì Out-Of-Memory (OOM). Phải sử dụng **TTL (Time-To-Live)** hoặc **Watermarks**.
 
-*Ví dụ dùng Spark Structured Streaming:*
+**Cấu hình Flink RocksDB (flink-conf.yaml):**
+```yaml
+state.backend: rocksdb
+state.backend.incremental: true
+# Quan trọng: Kích hoạt TTL để dọn dẹp state cũ
+state.ttl: 24h 
+```
+
+**Spark Structured Streaming (Python):**
 ```python
-# Xác định khóa deduplication là 'event_id'
-# spark sẽ giữ trạng thái của event_id trong vòng 1 giờ tính từ event_timestamp
-# Bất kỳ event_id trùng lặp nào đến trong khoảng thời gian này sẽ bị vứt bỏ.
+# Giữ state trong 24 giờ. Bất kỳ event_id nào đến trễ hơn 24h sẽ bị drop (hoặc đưa vào Dead Letter Queue)
 deduped_df = streaming_df \
-    .withWatermark("event_timestamp", "1 hour") \
+    .withWatermark("event_timestamp", "24 hours") \
     .dropDuplicates(["event_id", "event_timestamp"])
 ```
 
-### 5. Ràng Buộc Khóa Chính (Primary Key Constraints)
+### 3. Batch / Data Warehouse Layer: SQL Window Functions
 
-Trong các cơ sở dữ liệu quan hệ (RDBMS) OLTP truyền thống như PostgreSQL hay MySQL, bạn có thể thiết lập cấu trúc Primary Key hoặc Unique Index ở cấp độ bảng để ngăn chặn không cho dữ liệu trùng lặp được lưu vào ngay từ đầu (Database sẽ từ chối và quăng lỗi `Duplicate entry` hoặc `Violation of PRIMARY KEY constraint`). 
+Trong BigQuery, Snowflake, hay Spark SQL, sử dụng `ROW_NUMBER()` là tiêu chuẩn (Gold Standard). Tuy nhiên, các kỹ sư lão luyện sẽ dùng mệnh đề `QUALIFY` để làm code ngắn gọn và tối ưu Execution Plan hơn việc dùng CTE.
 
-**Lưu ý quan trọng:** Trong môi trường Data Warehouse phân tán quy mô lớn (như BigQuery, Snowflake), tính năng kiểm tra khóa này thường **không được hỗ trợ (Not Enforced)** hoặc chỉ mang tính chất khai báo thông tin tham khảo (Informational). Lý do là vì chi phí tính toán để kiểm tra ràng buộc duy nhất trên từng row insert đối với lượng dữ liệu hàng Terabyte/Petabyte là cực kỳ đắt đỏ và làm nghẽn cổ chai (bottleneck) toàn bộ quá trình tải dữ liệu. Bạn thường phải tự xử lý trùng lặp bằng logic ETL.
+```sql
+-- Thay vì dùng CTE (WITH) phức tạp, sử dụng QUALIFY trong BigQuery/Snowflake
+SELECT 
+    event_id,
+    user_id,
+    event_payload,
+    ingested_at
+FROM raw.events
+WHERE date_partition >= CURRENT_DATE() - 7
+QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY event_id 
+    ORDER BY ingested_at DESC
+) = 1;
+```
 
-## Nên Khử Trùng Lặp Ở Đâu Trong Data Pipeline?
+**Systemic Trade-off:** `ROW_NUMBER()` yêu cầu **Network Shuffle** khổng lồ. Đánh đổi ở đây là **Compute Cost vs. Storage Cost**. Quét (Scan) toàn bộ bảng 10TB để deduplicate tốn kém hơn nhiều so với việc chỉ xử lý trên phân vùng (Partition) của ngày hiện tại.
 
-Một câu hỏi thường gặp khi thiết kế kiến trúc là: *Ta nên lọc trùng ở giai đoạn nào?*
+### 4. Storage Layer: Upsert / Merge (Lakehouse)
 
-1. **Tại Nguồn / Ingestion Layer (Lớp trích xuất):** Hạn chế dữ liệu rác đi vào hệ thống bằng cách dùng Upsert, kiểm tra Unique Key, và thiết kế các API Idempotent từ phía Backend. Phù hợp nhất với các kiến trúc streaming event driven hoặc micro-batch ingestion.
-2. **Tại Lớp Chuyển Đổi (Transformation / Staging Layer):** Đây là nơi phổ biến nhất. Các data engineer thường lưu trữ toàn bộ dữ liệu thô (kể cả bản sao) ở lớp Raw/Bronze (giữ nguyên "sự thật thô" - raw truth để dễ debug), sau đó sử dụng công cụ như dbt hoặc Spark kết hợp `ROW_NUMBER()` để làm sạch và loại trùng lặp trước khi đẩy vào lớp Silver/Data Mart.
-3. **Tại Lớp Phục Vụ (Serving / BI Layer):** Đôi khi bạn chọn cách lờ đi vấn đề trùng lặp ở Data Warehouse và chỉ làm deduplication trực tiếp trong view hoặc bằng các hàm SQL trực tiếp trên Dashboard (Ví dụ: dùng hàm `COUNT(DISTINCT user_id)` trong Tableau/PowerBI). Việc này linh hoạt và xử lý tức thời, nhưng đặc biệt dễ gây quá tải hệ thống xử lý truy vấn và phản hồi báo cáo rất chậm nếu tập dữ liệu khổng lồ.
+Với Apache Iceberg, Delta Lake hoặc Hudi, ta đẩy logic Deduplication xuống tầng lưu trữ thông qua `MERGE` statement. Bản chất đây là **Idempotent Storage**.
 
-## Best Practices & Lưu Ý Quan Trọng
+```sql
+MERGE INTO prod.transactions T
+USING staging.new_transactions S
+ON T.transaction_id = S.transaction_id
+WHEN MATCHED AND S.updated_at > T.updated_at THEN
+  UPDATE SET 
+    status = S.status, 
+    updated_at = S.updated_at
+WHEN NOT MATCHED THEN
+  INSERT (transaction_id, user_id, amount, status, updated_at)
+  VALUES (S.transaction_id, S.user_id, S.amount, S.status, S.updated_at);
+```
 
-* **Thiết Kế Idempotent Pipeline:** Nguyên lý quan trọng bậc nhất. Hãy đảm bảo ETL pipeline của bạn có thể được chạy lại (retry/backfill) vô số lần với cùng một khoảng tham số thời gian mà không bao giờ sinh ra nhiều bản sao dữ liệu. Ví dụ thay vì lệnh `INSERT INTO` (cứ chạy là chèn thêm), hãy luôn chủ động `DELETE` dữ liệu của phân vùng (partition) mục tiêu của ngày đó trước khi insert lại, hoặc sử dụng cơ chế `INSERT OVERWRITE PARTITION`.
-* **Cẩn Thận Với Chi Phí Tính Toán:** Các hàm `ROW_NUMBER()`, `DISTINCT`, hoặc `GROUP BY` trong các hệ thống phân tán yêu cầu hoạt động **Shuffle** (đảo trộn và sắp xếp dữ liệu qua lại giữa các máy chủ mạng) khổng lồ. Đây là các thao tác chậm và tốn kém tài nguyên nhất. Hãy nhớ luôn kết hợp với Table Partitioning và Clustering để giới hạn khối lượng dữ liệu lịch sử bị quét (ví dụ chỉ deduplicate dữ liệu trong vòng 7 ngày gần nhất thay vì quét lại toàn bộ lịch sử 10 năm).
-* **Lưu Giữ Vết (Audit Trail):** Đôi khi bạn không nên xóa (drop) hoàn toàn các bản ghi trùng lặp một cách thầm lặng. Sẽ có lúc bạn muốn "lọc" các bản ghi lỗi, nhân đôi này vào một bảng "bãi rác" riêng (Dead Letter Queue, Quarantine table, Error Log) để thiết lập cảnh báo, phục vụ việc đối soát, và giúp đội ngũ Backend điều tra sửa dứt điểm lỗi tận gốc (root cause) ở hệ thống nguồn.
+## Real-world Incidents & Troubleshooting (Kinh Nghiệm Thực Chiến)
 
-## Tài Liệu Tham Khảo
+### 1. Incident: Flink OOMKilled do State Quá Lớn
+**Bối cảnh:** Pipeline deduplicate lượt xem video quảng cáo theo `user_id` và `ad_id`.
+**Sự cố:** TaskManagers liên tục bị Kubernetes restart với mã lỗi `OOMKilled`. 
+**Root Cause:** Kỹ sư cấu hình state cho Flink nhưng **quên thiết lập State TTL**. Hàng tỷ tổ hợp `user_id + ad_id` được lưu trữ vĩnh viễn trên RocksDB tràn ra ngoài disk, làm Disk IOPS chạm trần, kéo theo timeout heartbeat tới JobManager.
+**Khắc phục:** Áp dụng State TTL 48h. Lượt xem quảng cáo thường chỉ bị gửi trùng trong vòng vài giờ đầu do retry, việc giữ state quá lâu là không cần thiết.
 
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+### 2. Incident: Kafka Consumer Lag Spike do RDBMS Upsert
+**Bối cảnh:** Ingestion layer đọc từ Kafka và ghi thẳng vào PostgreSQL bằng `INSERT ... ON CONFLICT DO UPDATE` (Upsert).
+**Sự cố:** Trong đợt Sale ngày lễ, lưu lượng tăng 10x. Consumer Lag tăng vọt lên hàng triệu messages.
+**Root Cause:** PostgreSQL bị lock contention (cạnh tranh khóa) trên Primary Key Index khi có hàng ngàn threads cố gắng thực hiện Upsert đồng thời. I/O Disk của DB lên 100%.
+**Khắc phục:** Chuyển chiến lược sang ELT: Consumer chỉ thực hiện Batch Insert (Append-only) vào một bảng RAW tạm thời (không index, tốc độ cực nhanh). Sau đó dùng dbt chạy batch job 5 phút/lần dùng `ROW_NUMBER()` để hợp nhất (Merge) vào bảng chính.
+
+## Nguồn Tham Khảo (References)
+
+1. [Exactly-Once Semantics in Apache Flink - Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/)
+2. [Exactly-Once Processing in Kafka Streams - Confluent Blog](https://www.confluent.io/blog/enabling-exactly-once-kafka-streams/)
+3. [Data Engineering at Scale: Netflix Tech Blog](https://netflixtechblog.com/)
+4. [Uber Engineering: Designing Real-time Data Pipelines](https://www.uber.com/en-VN/blog/engineering/)
+5. **Designing Data-Intensive Applications** - Martin Kleppmann (Chapter 11: Stream Processing)

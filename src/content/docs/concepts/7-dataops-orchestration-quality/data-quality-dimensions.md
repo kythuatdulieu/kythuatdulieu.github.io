@@ -1,147 +1,139 @@
 ---
 title: "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
-difficulty: "Beginner"
-tags: ["data-quality", "data-dimensions", "data-management", "dama"]
-readingTime: "11 mins"
-lastUpdated: 2026-06-07
-seoTitle: "6 chiều chất lượng dữ liệu (Data Quality Dimensions) quan trọng nhất"
-metaDescription: "Tìm hiểu chi tiết về 6 chiều (dimensions) đo lường chất lượng dữ liệu: Completeness, Accuracy, Consistency, Validity, Uniqueness, Timeliness kèm ví dụ thực tế."
-description: "Khi sếp hoặc khách hàng yêu cầu: *'Hãy đảm bảo dữ liệu trong bảng Doanh thu có chất lượng tốt'*, bạn sẽ bắt đầu từ đâu? Định nghĩa thế nào là 'tốt'? Cùng tìm hiểu 6 chiều đo lường chất lượng dữ liệu quan trọng nhất."
+difficulty: "Advanced"
+tags: ["data-quality", "data-dimensions", "data-management", "dama", "wap", "observability"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Data Quality Dimensions: Kiến trúc và Thực tiễn tại Uber, Netflix"
+metaDescription: "Phân tích chuyên sâu 6 chiều chất lượng dữ liệu dưới góc nhìn kiến trúc hệ thống lớn (Scale). Thực thi Write-Audit-Publish (WAP), Medallion Architecture và giải quyết Trade-offs."
+description: "Data Quality không đơn thuần là đếm số lượng NULL bằng SQL. Ở quy mô Enterprise (Uber, Netflix), Data Quality là một hệ thống Reliability (Độ tin cậy) được nhúng sâu vào Ingestion Layer thông qua Schema Registry, Write-Audit-Publish (WAP) pattern và Declarative Expectations."
 ---
 
+Data Quality thường được nhắc đến qua 6 chiều chuẩn mực của DAMA (Completeness, Accuracy, Consistency, Validity, Uniqueness, Timeliness). Tuy nhiên, nếu chỉ dừng lại ở định nghĩa và vài câu `SELECT COUNT(*)`, chúng ta sẽ hoàn toàn thất bại khi vận hành ở quy mô Petabyte hoặc các luồng Streaming real-time. 
 
-
-Khi sếp hoặc khách hàng yêu cầu: *"Hãy đảm bảo dữ liệu trong bảng Doanh thu có chất lượng tốt"*, bạn sẽ bắt đầu từ đâu? Định nghĩa thế nào là "tốt"? Việc nói "dữ liệu này nhìn có vẻ không đúng" là rất cảm tính và khó để đo lường, cải thiện.
-
-Để đánh giá chất lượng dữ liệu một cách khoa học, định lượng và có hệ thống, các tổ chức quản trị dữ liệu (như **DAMA - Data Management Association**) đã định nghĩa ra **Các chiều chất lượng dữ liệu (Data Quality Dimensions)**.
-
-Chất lượng dữ liệu được đo lường qua 6 chiều chuẩn mực: Tính đầy đủ (Completeness), Tính chính xác (Accuracy), Tính nhất quán (Consistency), Tính hợp lệ (Validity), Tính duy nhất (Uniqueness), và Tính kịp thời (Timeliness).
+Tại các công ty công nghệ lớn như Uber, Netflix, hay Databricks, Data Quality được đối xử như một **Reliability System (Hệ thống Độ tin cậy)** ngang hàng với Microservices. Bài viết này sẽ mổ xẻ 6 chiều chất lượng dữ liệu dưới góc độ Kiến trúc Hệ thống (System Architecture), các Design Patterns để thực thi chúng, và những sự cố sập hệ thống (Real-world Incidents) bạn sẽ gặp phải nếu áp dụng sai cách.
 
 ---
 
-## 1. Tính đầy đủ (Completeness)
+## 1. Bản chất Kiến trúc của 6 Chiều Chất Lượng Dữ Liệu
 
+### 1.1. Validity (Tính hợp lệ) & Cốt lõi của Schema Evolution
+Validity ở quy mô nhỏ là dùng Regex. Ở quy mô lớn, nó là bài toán **Schema Registry**. Netflix giải quyết tính hợp lệ ngay tại điểm phát sinh sự kiện (Point of Encoding) bằng kiến trúc Data Mesh. Nếu một Event không tuân thủ Protocol Buffers hoặc Avro Schema đã đăng ký, nó sẽ bị drop hoặc đẩy vào Dead Letter Queue (DLQ) ngay lập tức, không cho phép đi vào Data Lake.
 
+*   **Trade-off:** Strict Schema Validation (Tải trọng tính toán cao tại Ingestion) vs. Schema-on-Read (Tải trọng cao tại Query).
+*   **Real-world Incident (Poison Pill):** Một Consumer Lag khổng lồ xảy ra trên Kafka khi upstream thay đổi kiểu dữ liệu trường `amount` từ `INT` sang `STRING` nhưng không đăng ký qua Schema Registry. Consumer (viết bằng Java) liên tục ném exception `SerializationException` và rơi vào trạng thái **Retry Storm**, đánh gục toàn bộ downstream pipeline.
 
-**Tính đầy đủ** trả lời cho câu hỏi: *Dữ liệu có bị thiếu không? Có chứa các giá trị NULL ở những trường bắt buộc không?*
+### 1.2. Completeness (Tính đầy đủ) trong Streaming
+Trong môi trường Batch, đếm tỷ lệ NULL là đủ. Nhưng trong Streaming (Kafka, Flink), làm sao biết chúng ta đã nhận đủ các event của một transaction phức tạp? 
 
-Trong một tập dữ liệu, có những thông tin mang tính chất bắt buộc (ví dụ: Tên khách hàng, số điện thoại) và có những thông tin không bắt buộc (ví dụ: Sở thích). Tính đầy đủ thường đo lường tỷ lệ các trường dữ liệu quan trọng không bị trống.
+*   **Cách giải quyết:** Sử dụng **Watermarking** và **Stateful Processing**. Apache Flink sử dụng khái niệm Windowing và Allowed Lateness để quyết định khi nào một luồng dữ liệu được coi là "đầy đủ" để tính toán.
+*   **Trade-off:** Completeness vs. Timeliness. Chờ đợi dữ liệu đến đủ (Completeness) đồng nghĩa với việc tăng độ trễ (Latency).
 
-*   **Ví dụ thực tế:** Trong bảng danh sách khách hàng (`customers`), trường `email` bị bỏ trống (NULL) cho 30% số lượng khách hàng. Điều này làm chiến dịch Email Marketing không thể tiếp cận được tập khách hàng này.
-*   **Cách đo lường:** Tỷ lệ phần trăm các bản ghi có giá trị khác NULL trên tổng số bản ghi.
-*   **Mã SQL minh họa:**
-    ```sql
-    -- Tính tỷ lệ completeness của trường email
-    SELECT 
-        COUNT(email) * 100.0 / COUNT(*) AS email_completeness_pct
-    FROM customers;
-    ```
+### 1.3. Uniqueness (Tính duy nhất) & At-least-once Semantics
+Trong các hệ thống phân tán, mạng lưới có thể chập chờn (Network Partition), dẫn đến các producer gửi lại message (Retries). Các Message Broker như Kafka mặc định cung cấp `At-least-once` delivery, nghĩa là trùng lặp **chắc chắn sẽ xảy ra**.
 
-## 2. Tính chính xác (Accuracy)
+*   **Khắc phục Vật lý:** Thay vì cố gắng khử trùng (Deduplication) liên tục ở tầng Data Warehouse (gây tốn Compute cực lớn và nguy cơ **Cartesian Explosion** khi JOIN), kỹ sư dữ liệu sử dụng Idempotent Producers ở tầng Message Broker (vd: `enable.idempotence=true` trong Kafka) và các bảng Hudi/Iceberg với tính năng Upsert (MERGE ON KEY) dựa trên Primary Key.
 
-**Tính chính xác** trả lời cho câu hỏi: *Dữ liệu có phản ánh đúng thế giới thực hoặc đúng với "sự thật" (Golden source) không?*
+### 1.4. Timeliness (Tính kịp thời) & SLA Monitoring
+Timeliness không phải là dữ liệu "chạy nhanh thế nào", mà là sự chênh lệch giữa `Event_Time` (lúc user click) và `Processing_Time` (lúc dữ liệu có mặt ở bảng Gold). Uber theo dõi độ trễ này bằng hệ thống UDQ (Uber Data Quality), biến Freshness thành một SLA bắt buộc.
 
-Một dữ liệu có thể hoàn toàn hợp lệ về mặt định dạng, không bị thiếu, nhưng lại không chính xác.
-
-*   **Ví dụ thực tế:** Một khách hàng sinh năm `1990`, nhưng khi nhân viên nhập liệu gõ nhầm thành `2090`. Hoặc một khách hàng sống ở "Hà Nội" nhưng hệ thống lại ghi nhận là "Hồ Chí Minh".
-*   **Thách thức:** Đây là chiều khó đo lường tự động nhất. Làm sao hệ thống biết khách hàng thực sự sống ở đâu?
-*   **Cách đo lường:** Thường yêu cầu đối soát chéo với một nguồn dữ liệu tham chiếu đáng tin cậy thứ ba (ví dụ: đối chiếu số CMND/CCCD với cơ sở dữ liệu quốc gia), hoặc thực hiện audit/kiểm tra thủ công bằng con người định kỳ.
-
-## 3. Tính nhất quán (Consistency)
-
-**Tính nhất quán** trả lời cho câu hỏi: *Dữ liệu có đồng nhất khi xuất hiện ở nhiều nơi khác nhau (trong cùng một hệ thống hoặc trên nhiều hệ thống) không?*
-
-Nếu cùng một thực thể được mô tả theo hai cách khác nhau ở hai hệ thống, dữ liệu đó mất đi tính nhất quán.
-
-*   **Ví dụ thực tế:** Khách hàng "Nguyễn Văn A" có trạng thái tài khoản là `Active` (đang hoạt động) trong hệ thống Chăm sóc khách hàng (CRM), nhưng lại có trạng thái `Inactive` (đã khóa) trong hệ thống Thanh toán (Billing). Điều này gây ra mâu thuẫn khi phòng Kinh doanh và phòng Tài chính làm báo cáo chung.
-*   **Cách đo lường:** So sánh, join dữ liệu giữa các bảng hoặc hệ thống để tìm ra sự sai lệch.
-*   **Mã SQL minh họa:**
-    ```sql
-    -- Tìm khách hàng có trạng thái không nhất quán giữa CRM và Billing
-    SELECT 
-        c.customer_id, 
-        c.status AS crm_status, 
-        b.status AS billing_status
-    FROM crm_customers c
-    JOIN billing_customers b ON c.customer_id = b.customer_id
-    WHERE c.status != b.status;
-    ```
-
-## 4. Tính hợp lệ (Validity)
-
-**Tính hợp lệ** trả lời cho câu hỏi: *Dữ liệu có tuân thủ đúng định dạng, chuẩn mực, kiểu dữ liệu, hoặc nằm trong tập giá trị cho phép (Domain values) không?*
-
-*   **Ví dụ thực tế:** 
-    *   Trường `email` không chứa ký tự `@` (ví dụ: `nguyenvana.gmail.com`).
-    *   Trường `tuổi` chứa giá trị âm (`-5`).
-    *   Trường `mã quốc gia` chứa giá trị `VN` trong khi quy định hệ thống là phải ghi rõ `Vietnam`.
-*   **Cách đo lường:** Sử dụng Regular Expressions (Regex), kiểm tra kiểu dữ liệu, hoặc check với các bảng danh mục (Lookup tables/Reference data).
-*   **Mã SQL minh họa:**
-    ```sql
-    -- Tìm email không hợp lệ
-    SELECT customer_id, email
-    FROM customers
-    WHERE email NOT LIKE '%@%.%';
-
-    -- Tìm độ tuổi không hợp lệ
-    SELECT customer_id, age
-    FROM customers
-    WHERE age < 0 OR age > 150;
-    ```
-
-## 5. Tính duy nhất (Uniqueness)
-
-**Tính duy nhất** trả lời cho câu hỏi: *Một thực thể trong thế giới thực có bị ghi nhận nhiều lần một cách trùng lặp trong hệ thống không?*
-
-Dữ liệu bị trùng lặp sẽ dẫn đến việc báo cáo số lượng (ví dụ: tổng số khách hàng) bị đội lên, gây sai lệch nghiêm trọng trong quá trình ra quyết định.
-
-*   **Ví dụ thực tế:** Một khách hàng tên "Trần Thị B" tạo một tài khoản với số điện thoại thứ nhất. Sau đó, khách hàng này quên mật khẩu và tạo một tài khoản mới với số điện thoại thứ hai (nhưng cùng một người, cùng ngày sinh, cùng địa chỉ). Hệ thống ghi nhận đây là 2 khách hàng riêng biệt.
-*   **Cách giải quyết:** Quá trình khử trùng lặp (Deduplication) và Entity Resolution.
-*   **Cách đo lường:** Đếm số lần xuất hiện của các định danh (ID) hoặc kết hợp các trường khóa tự nhiên (Tên + Ngày sinh + Số điện thoại).
-*   **Mã SQL minh họa:**
-    ```sql
-    -- Tìm các số điện thoại bị đăng ký nhiều hơn 1 lần
-    SELECT phone_number, COUNT(*) AS num_accounts
-    FROM customers
-    GROUP BY phone_number
-    HAVING COUNT(*) > 1;
-    ```
-
-## 6. Tính kịp thời (Timeliness / Freshness)
-
-**Tính kịp thời** (hay Độ tươi mới) trả lời cho câu hỏi: *Dữ liệu có sẵn sàng ngay khi người dùng hoặc hệ thống cần để phục vụ nghiệp vụ không?*
-
-Dữ liệu dù chính xác đến đâu nhưng nếu đến quá trễ thì cũng không còn giá trị (ví dụ: dữ liệu giao dịch chứng khoán bị trễ 10 phút, hoặc cảnh báo gian lận thẻ tín dụng được gửi sau 2 ngày).
-
-*   **Ví dụ thực tế:** Báo cáo doanh thu Ban Giám đốc (Board of Directors) yêu cầu phải có vào 8h00 sáng mỗi ngày. Tuy nhiên, Data Pipeline chạy báo cáo thường xuyên bị lỗi và mất nhiều thời gian xử lý, dẫn đến 10h00 sáng báo cáo mới được cập nhật hoàn chỉnh.
-*   **Cách đo lường:** Theo dõi độ trễ (Latency) của pipeline, sự chênh lệch giữa `event_time` (thời điểm sự kiện phát sinh) và `processed_time` (thời điểm dữ liệu được nạp vào kho dữ liệu).
+### 1.5. Accuracy (Tính chính xác) & Consistency (Tính nhất quán)
+Đây là hai chiều khó giải quyết nhất bằng hệ thống tự động. Accuracy đòi hỏi đối chiếu với Golden Source (thường tốn kém chi phí API call hoặc cross-database query). Consistency đòi hỏi Reconciliation (đối soát) giữa nhiều microservices (ví dụ: Hệ thống Payment báo thành công, hệ thống Inventory báo chưa trừ kho).
 
 ---
 
-## Các chiều chất lượng dữ liệu mở rộng (Extended Dimensions)
+## 2. Các Mẫu Kiến Trúc (Architecture Patterns) Thực Thi Data Quality
 
-Ngoài 6 chiều cốt lõi trên, trong thực tiễn Data Engineering hiện đại, người ta còn quan tâm đến một số chiều mở rộng sau:
+Thay vì viết các kịch bản kiểm tra rời rạc, Data Engineering hiện đại nhúng Data Quality vào luồng chảy của dữ liệu thông qua các Pattern.
 
-1. **Tính toàn vẹn (Integrity):** Đảm bảo tính toàn vẹn tham chiếu (Referential Integrity) giữa các thực thể dữ liệu. Ví dụ: Bảng `Orders` có `customer_id = 999`, nhưng tìm trong bảng `Customers` lại không có ID này. Dữ liệu đơn hàng đang mồ côi (Orphan records).
-2. **Tính khả dụng (Availability / Accessibility):** Dữ liệu có dễ dàng truy cập bởi đúng người, bằng công cụ phù hợp mà không gặp rào cản kỹ thuật lớn hay không?
-3. **Tính bảo mật và quyền riêng tư (Security & Privacy):** Thông tin nhạy cảm (PII - Personally Identifiable Information) như thẻ tín dụng, căn cước công dân có được mã hóa (Masking/Hashing) và phân quyền kiểm soát truy cập nghiêm ngặt hay không?
+### 2.1. Mẫu Write-Audit-Publish (WAP)
 
-## Tự động hóa kiểm tra Chất lượng Dữ liệu (Data Quality Tools)
+Pattern này được áp dụng rộng rãi tại Uber, Netflix và Apple để ngăn chặn "Dữ liệu rác" rò rỉ vào production. WAP chia luồng ghi thành 3 pha, sử dụng các Table Format như Apache Iceberg hoặc Apache Hudi.
 
-Trong quy trình DataOps, việc kiểm tra các Data Quality Dimensions không thực hiện thủ công bằng Excel hay chạy SQL script bằng tay mỗi ngày. Chúng được nhúng trực tiếp vào các Data Pipelines (Orchestration) thông qua các công cụ tự động.
+```mermaid
+sequenceDiagram
+    participant P as Data Pipeline (Spark/Flink)
+    participant S as Staging/Branch (Audit)
+    participant Q as DQ Engine (Great Expectations/dbt)
+    participant M as Main/Prod Table (Publish)
 
-Một số công cụ/framework phổ biến:
-*   **dbt Tests:** Phổ biến nhất trong Modern Data Stack. dbt cho phép viết YAML tests cực nhanh cho `unique`, `not_null`, `accepted_values`, và `relationships`.
-*   **Great Expectations:** Một thư viện Python mạnh mẽ, định nghĩa chất lượng dữ liệu như là các "Kỳ vọng" (Expectations) và sinh ra báo cáo Data Docs trực quan.
-*   **Soda:** Nổi lên như một công cụ chuyên biệt với cú pháp YAML thân thiện với người không rành lập trình.
-*   **Nền tảng Data Observability (Monte Carlo, Databand):** Tập trung nhiều vào tính Kịp thời (Timeliness), Volume (khối lượng), Schema Change, tự động phát hiện bất thường bằng Machine Learning mà không cần viết test thủ công.
+    P->>S: 1. Write (Ghi dữ liệu vào nhánh ẩn/temp)
+    Note over S: Data không hiển thị với End Users
+    Q->>S: 2. Audit (Chạy các Data Quality Checks)
+    alt Quality Checks Pass
+        Q->>M: 3. Publish (Commit/Swap nhánh vào Prod)
+        Note over M: Metadata pointer được cập nhật (Atomic O(1))
+    else Quality Checks Fail
+        Q->>S: 3. Rollback/Alert (Quarantine Data)
+    end
+```
 
-## Tổng kết
+**Thực thi thực tế với Apache Iceberg:**
+Kỹ thuật WAP cực kỳ hiệu quả nhờ tính năng Zero-copy Branching của Iceberg (tương tự Git Branch).
 
-Việc hiểu rõ và nắm vững các chiều chất lượng dữ liệu là bước đầu tiên để xây dựng niềm tin (Data Trust) vào hệ thống dữ liệu. Bằng cách chia nhỏ một khái niệm trừu tượng như "Dữ liệu sạch" thành 6 tiêu chí: **Đầy đủ, Chính xác, Nhất quán, Hợp lệ, Duy nhất, Kịp thời**, các kỹ sư dữ liệu và nhà phân tích có thể dễ dàng thiết kế các bộ test tự động và báo cáo định lượng được sức khỏe của dữ liệu mỗi ngày.
+```sql
+-- 1. WRITE: Ghi vào một nhánh ẩn (Audit Branch)
+ALTER TABLE sales_data CREATE BRANCH audit_branch;
+INSERT INTO sales_data FOR VERSION AS OF 'audit_branch'
+SELECT * FROM raw_sales_stream;
 
-## Tài Liệu Tham Khảo
-* [DAMA International: Data Management Body of Knowledge (DMBOK)](https://www.dama.org/cpages/body-of-knowledge)
-* [DataOps Manifesto](https://dataopsmanifesto.org/)
-* [dbt (data build tool) - Data Testing](https://docs.getdbt.com/docs/build/data-tests)
-* [Great Expectations: Data Quality and Profiling](https://greatexpectations.io/)
+-- 2. AUDIT: Công cụ DQ (vd: Soda, dbt) truy vấn trực tiếp vào nhánh audit
+SELECT COUNT(*) FROM sales_data FOR VERSION AS OF 'audit_branch' 
+WHERE amount < 0; -- Expect 0
+
+-- 3. PUBLISH: Fast-forward nhánh audit vào nhánh main nếu test pass
+CALL catalog.system.fast_forward('sales_data', 'main', 'audit_branch');
+```
+
+**Trade-off của WAP:**
+Tăng Latency của toàn bộ pipeline do phải đợi pha Audit hoàn tất trước khi Publish. Tốn chi phí lưu trữ tạm thời cho dữ liệu Quarantine (cần chính sách Retention hợp lý).
+
+### 2.2. Declarative Expectations với Medallion Architecture
+
+Databricks (và các công cụ như Delta Live Tables) tiếp cận Data Quality bằng cách khai báo rõ các kỳ vọng (Expectations) trên đường ống ETL từ Bronze -> Silver -> Gold. Thay vì pipeline sập hoàn toàn khi gặp dữ liệu lỗi, hệ thống tự động định tuyến.
+
+```python
+# Ví dụ Delta Live Tables (DLT) xử lý Validity và Completeness
+import dlt
+from pyspark.sql.functions import expr
+
+@dlt.table(
+    name="silver_users",
+    comment="Cleaned user data with DQ expectations"
+)
+@dlt.expect_or_drop("valid_age", "age > 0 AND age < 120") # Drop record lỗi
+@dlt.expect_or_fail("valid_id", "user_id IS NOT NULL")   # Fail cả pipeline nếu ID NULL
+@dlt.expect_all_or_quarantine(
+    {"valid_email": "email LIKE '%@%.%'"},
+    "quarantine_users" # Đẩy record lỗi email vào bảng cách ly
+)
+def get_silver_users():
+    return dlt.read_stream("bronze_users")
+```
+
+**Real-world Incident (JVM OOMKilled):** 
+Nếu bạn cố gắng lưu trữ toàn bộ dữ liệu vi phạm (Quarantined data) vào bộ nhớ RAM của Spark Executor trước khi xả xuống disk, bạn sẽ nhanh chóng gặp lỗi `java.lang.OutOfMemoryError: Java heap space`. **Giải pháp:** Phải flush (spill-to-disk) luồng dữ liệu lỗi xuống Object Storage liên tục (streaming mode) thay vì buffer trên RAM.
+
+---
+
+## 3. Tối ưu Chi phí (FinOps) trong Data Quality
+
+Chạy hàng ngàn Data Quality checks mỗi giờ trên kho dữ liệu Data Warehouse (như Snowflake, BigQuery) sẽ đốt cháy ngân sách Compute của bạn cực kỳ nhanh chóng.
+
+1.  **Shift-Left Data Quality:** Bắt lỗi càng gần Source càng tốt. Kiểm tra Validity và Uniqueness ngay trên Apache Kafka/Kinesis hoặc ở lớp Bronze Data Lake, thay vì đợi dữ liệu load vào BigQuery rồi mới chạy `dbt test`. Compute của Spark/Presto trên Data Lake rẻ hơn Compute của Cloud Data Warehouse.
+2.  **Incremental Testing:** Thay vì chạy test trên toàn bộ bảng (`SELECT COUNT(*) FROM huge_table`), chỉ chạy test trên phân vùng dữ liệu mới nhất (dựa trên `_landing_time` hoặc Hudi Commit Time).
+3.  **Data Observability (ML-based):** Sử dụng các nền tảng như Monte Carlo hoặc Databand. Thay vì viết hàng trăm rule thủ công, hệ thống sử dụng Machine Learning để profile schema, volume và freshness, tự động cảnh báo khi có sự thay đổi đột biến (Anomaly Detection). Giảm thiểu đáng kể thời gian bảo trì Rules.
+
+## 4. Tổng Kết
+
+Đo lường 6 chiều chất lượng dữ liệu không phải là viết một danh sách SQL queries. Ở môi trường Enterprise, nó là việc áp dụng các nguyên lý **Reliability Engineering** vào Dữ liệu:
+*   Dùng **Schema Registry** để chặn rác từ cửa.
+*   Dùng **WAP Pattern** (Write-Audit-Publish) với Iceberg/Hudi để cô lập dữ liệu lỗi trước khi lên sóng.
+*   Sử dụng **Declarative Data Pipelines** (như DLT hoặc dbt) để tự động hóa định tuyến Quarantine/Drop.
+*   Quản lý **FinOps** nghiêm ngặt khi chạy Data Quality checks ở quy mô lớn.
+
+## Nguồn Tham Khảo
+* [Uber Engineering: UDQ - An Integrated Platform for Data Quality](https://www.uber.com/en-VN/blog/udq/)
+* [Netflix TechBlog: Data Mesh - A Data Movement and Processing Platform](https://netflixtechblog.com/data-mesh-a-data-movement-and-processing-platform-@netflix-1288bcab2873)
+* [Databricks: Implementing Data Quality with Delta Live Tables](https://www.databricks.com/blog/2022/08/31/implementing-data-quality-delta-live-tables.html)
+* [Apache Iceberg: Write-Audit-Publish (WAP) Pattern](https://iceberg.apache.org/docs/latest/branching/)

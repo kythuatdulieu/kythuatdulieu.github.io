@@ -1,110 +1,195 @@
 ---
 title: "FinOps trong Data Engineering"
 difficulty: "Advanced"
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "FinOps trong Data Engineering - Data Engineering Deep Dive"
-metaDescription: "Chiến lược tối ưu hoá chi phí Cloud Compute, Cloud Storage và quản trị tài chính hiệu quả trong Data Engineering."
-description: "Chiến lược tối ưu hoá chi phí Cloud Compute, Cloud Storage và quản trị tài chính hiệu quả trong Data Engineering."
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "FinOps Data Engineering - Tối ưu Cost Hệ Thống"
+metaDescription: "Kiến trúc FinOps cho Data Platform. Khắc phục OOMKilled, Cartesian Explosion, Small File Problem. Tối ưu Compute/Storage với Terraform, Iceberg."
+description: "Kiến trúc FinOps cho Data Platform. Khắc phục OOMKilled, Cartesian Explosion, Small File Problem. Tối ưu Compute/Storage với Terraform, Iceberg."
 ---
 
+Thay vì những lời kêu gọi tiết kiệm chung chung, FinOps đối với một Kỹ sư Dữ liệu (Data Engineer) ở cấp độ Staff/Principal là cuộc chiến ở tầng **Vật lý (Physical Execution Layer)**. Mỗi một byte dữ liệu được đưa vào RAM (Memory), ghi xuống ổ cứng (Disk I/O) hay truyền tải qua mạng (Network Shuffle) đều cấu thành hóa đơn Cloud cuối tháng. 
 
+Bài viết này đi sâu vào các quyết định thiết kế hệ thống, các sự cố "đốt tiền" kinh điển (OOMKilled, Cartesian Explosion, Retry Storms) và cách cấu hình kỹ thuật (Terraform, YAML, SQL) để xây dựng một Data Platform có Unit Economics tối ưu nhất.
 
-FinOps (Financial Operations) trong Data Engineering là thực hành văn hóa đưa trách nhiệm quản lý chi phí (Cost Management) xuống tận cấp độ của từng Kỹ sư. Thay vì phòng Tài chính đơn độc và mù mờ trả tiền mây (Cloud bill), các Kỹ sư Data phải biết tự dán nhãn (Tagging) resource, theo dõi chi phí truy vấn hàng ngày của mình và thiết kế các đường ống dữ liệu (Data Pipelines) một cách tối ưu nhất về mặt chi phí.
+## 1. Đánh đổi Hệ thống: Compute Cost vs. Storage Cost
 
-## 1. Tại sao FinOps lại quan trọng trong Data Engineering?
+Trong các thiết kế Data Platform hiện đại, chúng ta luôn phải cân bằng giữa Storage và Compute, cũng như Latency và Throughput.
 
+*   **Serverless (BigQuery, Athena) vs. Provisioned (Databricks, EMR)**: Serverless tính tiền theo lượng dữ liệu quét (Data Scanned - $5/TB) hoặc theo slot time. Nó hoàn hảo cho Spiky Workloads. Tuy nhiên, nếu bạn có một Streaming Pipeline chạy 24/7 với lượng dữ liệu khổng lồ, việc duy trì một cụm Provisioned với Spot Instances sẽ rẻ hơn gấp nhiều lần.
+*   **Normalized (Chuẩn hóa) vs. Denormalized (Phi chuẩn hóa)**: Lưu trữ dữ liệu dạng Normalized (Star Schema/Snowflake) tiết kiệm Storage Cost (rất rẻ trên S3), nhưng làm tăng Compute Cost do phải `JOIN` liên tục. Ngược lại, Denormalized tốn Storage Cost (lưu trùng lặp) nhưng giảm Compute Cost (không cần `JOIN`). Với giá S3 hiện tại ($0.023/GB), xu hướng chung là ưu tiên **Denormalized** (như Wide Column Tables) để tiết kiệm Compute.
 
+```mermaid
+graph TD
+    A["Data FinOps Framework"] --> B("Compute Optimization")
+    A --> C("Storage Lifecycle")
+    A --> D("DataOps & IaC")
+    B --> B1["Spot/Preemptible Instances"]
+    B --> B2["Query Pruning & Tuning"]
+    B --> B3["Shuffle/OOM Mitigation"]
+    C --> C1["Parquet/Iceberg/Zstd"]
+    C --> C2["Z-Ordering / Compaction"]
+    C --> C3["S3 Tiering / Glacier"]
+    D --> D1["Terraform Resource Tagging"]
+    D --> D2["Cost Estimation in CI/CD"]
+```
 
-Trong kỷ nguyên điện toán đám mây (Cloud Computing), các hệ thống dữ liệu có khả năng mở rộng (scale) gần như vô hạn. Điều này mang lại sự linh hoạt tuyệt vời nhưng cũng đi kèm với một rủi ro cực lớn: **chi phí có thể vượt ngoài tầm kiểm soát rất nhanh** nếu không có sự giám sát chặt chẽ.
+## 2. Rủi ro Vận hành (Operational Risks) & Khắc phục "Sự cố Đốt tiền"
 
-Các lý do chính khiến FinOps trở nên thiết yếu:
-*   **Tách biệt giữa người sử dụng và người trả tiền:** Kỹ sư thường ưu tiên hoàn thành công việc nhanh chóng (ví dụ: spin up một cluster Spark khổng lồ) mà không quan tâm đến chi phí, trong khi bộ phận tài chính lại không hiểu tại sao hóa đơn cuối tháng lại cao đột biến.
-*   **Tính chất "Pay-as-you-go":** Việc dễ dàng cung cấp tài nguyên (provision) khiến cho các tài nguyên dư thừa, không sử dụng (idle resources) dễ bị bỏ quên (orphan resources).
-*   **Sự phức tạp của Data Stack hiện đại:** Với sự kết hợp của nhiều công cụ như Snowflake, BigQuery, Databricks, Kafka, dbt, Airflow... việc bóc tách và phân bổ chi phí cho từng bộ phận (Cost Allocation) trở nên cực kỳ khó khăn.
+Các Data Engineer thường đau đầu với những lỗi hệ thống không chỉ làm hỏng pipeline mà còn thổi bay ngân sách.
 
-FinOps giải quyết vấn đề này bằng cách kết hợp ba yếu tố: **Con người (People), Quy trình (Process) và Công nghệ (Technology)**, giúp tối ưu hóa chi phí đám mây dựa trên giá trị kinh doanh mang lại (Unit Economics).
+### 2.1. Cartesian Explosion & Tràn RAM (OOMKilled)
+**Sự cố:** Kỹ sư thực hiện một câu lệnh `JOIN` mà không có khóa duy nhất (unique key) rõ ràng, tạo ra Cartesian Product (Tích Đề-các). Một bảng 1 triệu dòng JOIN với bảng 1 triệu dòng khác tạo ra 1 nghìn tỷ dòng.
+**Hệ quả vật lý:** Hệ thống phân tán (Spark) sẽ phải gửi toàn bộ dữ liệu qua mạng (Network Shuffle). Các Executor không đủ RAM để chứa khối lượng dữ liệu khổng lồ này, dẫn đến hiện tượng **Spill-to-disk** (ghi tạm ra ổ cứng) cực kỳ chậm, và cuối cùng chết với lỗi `java.lang.OutOfMemoryError: Java heap space` (OOMKilled). Cụm EMR liên tục restart và chạy lại job này hàng chục lần, đẩy chi phí lên hàng nghìn đô.
 
-## 2. Các nguyên tắc cốt lõi của FinOps trong Dữ liệu
+**Khắc phục bằng Broadcast Hash Join & Python Generators:**
+Thay vì Shuffle tốn kém, nếu một bảng đủ nhỏ (Dimension table), hãy broadcast (phát sóng) nó đến bộ nhớ của tất cả các Worker Nodes.
 
-Theo tổ chức FinOps Foundation, có các nguyên tắc cốt lõi sau cần áp dụng vào Data Engineering:
-1.  **Các nhóm (Teams) cần hợp tác với nhau:** Kỹ sư Dữ liệu, Quản lý Sản phẩm và Bộ phận Tài chính phải làm việc chung, hiểu rõ mục tiêu và sử dụng chung một "ngôn ngữ" về chi phí.
-2.  **Trách nhiệm cá nhân đối với chi phí:** Trách nhiệm tối ưu chi phí nằm ở chính các Kỹ sư viết code, không phải chỉ ở cấp độ quản lý. "You build it, you own its cost."
-3.  **Tập trung (Centralized team) thúc đẩy FinOps:** Cần có một nhóm hoặc các "Champion" thiết lập best practices, công cụ và quy trình chuẩn cho toàn tổ chức.
-4.  **Báo cáo kịp thời và dễ tiếp cận:** Dữ liệu chi phí phải có sẵn, cập nhật liên tục để có thể can thiệp ngay khi có dấu hiệu bất thường.
-5.  **Quyết định dựa trên giá trị doanh nghiệp (Business Value):** Chi phí cao không hẳn là xấu nếu nó mang lại doanh thu đột phá. Cần quan tâm đến Unit Metrics (ví dụ: $ cost / 1GB data processed, hoặc $ cost / 1 pipeline execution).
-6.  **Tận dụng mô hình định giá linh hoạt của Cloud:** Tận dụng tối đa Spot Instances, Reserved Instances, Savings Plans để mua tài nguyên với giá rẻ.
+```python
+from pyspark.sql.functions import broadcast
 
-## 3. Chiến lược Tối ưu hóa Chi phí Compute
+# Spark sẽ tự động đưa dimension_df vào RAM của từng Executor, loại bỏ Network Shuffle
+fact_df = spark.read.parquet("s3://data/fact_sales/")
+dim_df = spark.read.parquet("s3://data/dim_store/")
 
-Compute (tính toán) thường là thành phần tốn kém nhất trong kiến trúc Data Platform. Dưới đây là các phương pháp tối ưu:
+optimized_df = fact_df.join(broadcast(dim_df), "store_id")
+```
+Với các Script xử lý dữ liệu nặng trong Airflow (Python Operator), **tuyệt đối không tải toàn bộ dữ liệu vào RAM list**. Sử dụng Generators (`yield`) để xử lý từng chunk (Chunking).
 
-### a. Lựa chọn đúng Engine và Pricing Model
-*   **Serverless vs Provisioned:** Nếu khối lượng công việc (workload) thất thường, Serverless (như AWS Athena, BigQuery on-demand) có thể rẻ hơn. Nhưng nếu workload ổn định, liên tục và lớn, các cụm Provisioned (như EMR, Databricks, BigQuery flat-rate) kết hợp với Cam kết sử dụng dài hạn (Commitment plans) sẽ giúp giảm chi phí đáng kể.
-*   **Sử dụng Spot Instances / Preemptible VMs:** Đối với các tác vụ batch processing có khả năng chịu lỗi (fault-tolerant) và có thể tự động chạy lại nếu bị gián đoạn (như Spark jobs, Airflow tasks), hãy cấu hình sử dụng Spot Instances để tiết kiệm đến 80-90% chi phí compute.
+```python
+# CHỐNG OOMKILLED VỚI PYTHON GENERATOR
+def fetch_and_process_data(db_cursor, batch_size=10000):
+    while True:
+        results = db_cursor.fetchmany(batch_size)
+        if not results:
+            break
+        for row in results:
+            yield process_row(row) # Xử lý từng dòng thay vì nuốt trọn cả bảng vào RAM
+```
 
-### b. Right-sizing (Cấu hình dung lượng phù hợp)
-*   Không phải lúc nào cũng cần Cluster lớn. Việc cung cấp quá mức (Over-provisioning) là nguyên nhân chính gây lãng phí đám mây.
-*   Giám sát các chỉ số (Metrics) như CPU, Memory utilization của các node trong cluster.
-*   Cấu hình **Auto-scaling** với giới hạn trên và dưới (min/max nodes) hợp lý. Đảm bảo cluster tự động **scale down** hoặc **shutdown** hẳn khi không có Job nào chạy (Idle termination).
+### 2.2. The Small File Problem & Z-Ordering Fragmentation
+**Sự cố:** Các Streaming Jobs (ví dụ từ Kafka vào S3) ghi liên tục các file Parquet siêu nhỏ (vài KB). 
+**Hệ quả vật lý:** Khi Athena hoặc Spark đọc dữ liệu này, nó phải mở/đóng hàng triệu file (Metadata overhead & S3 GET request cost). Việc quét file cực kỳ chậm và tốn tiền API S3.
 
-### c. Tối ưu hóa Query và Data Processing
-*   **Chỉ truy vấn dữ liệu cần thiết:** Tránh `SELECT *`. Càng đọc nhiều cột và hàng không cần thiết, chi phí (và thời gian) càng tăng, đặc biệt trên các công cụ tính tiền theo dung lượng quét như BigQuery hay Athena.
-*   **Sử dụng Partitioning và Clustering / Z-Ordering:** Tổ chức file vật lý hiệu quả giúp query engine bỏ qua (Pruning) các file không liên quan đến bộ lọc của truy vấn.
-*   **Tối ưu hóa Spark / Pipeline Engine:**
-    *   Tránh hiện tượng phân bổ dữ liệu không đều (Data Skew).
-    *   Sử dụng Broadcast Joins thay vì Shuffle/Sort-Merge Joins khi có một bảng nhỏ (Dimension table).
-    *   Tái sử dụng bằng cách `Cache()` hoặc `Persist()` các DataFrame nếu chúng được tính toán một lần nhưng sử dụng lại nhiều lần trong cùng một ứng dụng.
+**Khắc phục bằng Compaction & Z-Ordering (Apache Iceberg / Delta Lake):**
+Chạy các Job nén định kỳ (Compaction) để gom các file nhỏ thành file lớn (~128MB - 256MB). Kết hợp với `Z-Ordering` để phân cụm dữ liệu cục bộ, giúp Data Skipping (Pruning) hiệu quả.
 
-### d. Tránh tính toán lại dữ liệu (Incremental Processing)
-*   Áp dụng kiến trúc xử lý dữ liệu tăng dần (Incremental load/CDC) thay vì nạp lại toàn bộ (Full refresh) mỗi ngày.
-*   Các công cụ như dbt (sử dụng incremental models) hoặc Apache Hudi, Iceberg, Delta Lake giúp kỹ sư chỉ nhận diện và xử lý các bản ghi mới hoặc thay đổi, giảm thiểu khối lượng dữ liệu đi qua pipeline.
+```sql
+-- Chạy trên Spark SQL / Databricks để giải quyết Small File Problem
+OPTIMIZE iceberg_catalog.db.sales_events 
+REWRITE DATA USING BIN_PACK;
 
-## 4. Chiến lược Tối ưu hóa Chi phí Storage
+-- Sắp xếp vật lý lại dữ liệu trên ổ cứng để tăng tốc độ truy vấn
+OPTIMIZE iceberg_catalog.db.sales_events 
+ZORDER BY (customer_id, event_date);
+```
 
-Storage tuy có đơn giá rẻ hơn Compute, nhưng dữ liệu có xu hướng phình to theo cấp số nhân. Quản lý Storage kém sẽ tạo ra các "bãi rác dữ liệu" (Data Swamps) tốn kém kinh phí duy trì hàng tháng.
+### 2.3. Retry Storms (Cơn bão thử lại)
+**Sự cố:** Một API bị rate-limit hoặc Kafka broker bị rớt mạng. Data Pipeline tự động retry liên tục hàng nghìn lần mỗi giây (Thundering Herd problem), khiến CPU của cluster tăng vọt, log sinh ra hàng chục GB/phút, và tốn kém chi phí Compute/Network vô ích.
 
-### a. Lifecycle Management (Quản lý Vòng đời Dữ liệu)
-*   **Phân lớp lưu trữ (Tiering):**
-    *   **Hot Storage:** Dành cho dữ liệu truy cập thường xuyên, phục vụ Analytics hàng ngày (SSD, Standard S3).
-    *   **Warm Storage:** Dữ liệu ít truy cập hơn nhưng vẫn cần sẵn sàng khi cần (S3 Infrequent Access).
-    *   **Cold / Archive Storage:** Dữ liệu chỉ lưu trữ cho mục đích kiểm toán (Compliance) hoặc backup dài hạn (Amazon Glacier, GCS Archive). Thời gian truy xuất có thể từ vài phút đến vài giờ nhưng chi phí cực rẻ.
-*   **Tự động hóa:** Cấu hình **Object Lifecycle rules** trên Cloud Storage để tự động hạ cấp (Transition) dữ liệu cũ sang các tier rẻ hơn hoặc tự động xóa (Expire) dữ liệu rác (temp tables, staging data, log files) sau N ngày.
+**Khắc phục bằng Cấu hình Exponential Backoff & Kafka Properties:**
+Luôn sử dụng độ trễ tăng dần theo hàm mũ (Exponential Backoff) kèm Jitter trong các cấu hình Retry.
 
-### b. Định dạng file và Nén dữ liệu (File Formats & Compression)
-*   **Định dạng dạng cột (Columnar Formats):** Bắt buộc sử dụng Parquet hoặc ORC thay vì CSV hay JSON cho Data Lake. Chúng tiết kiệm dung lượng lưu trữ nhờ khả năng nén tốt hơn, tăng tốc độ các hệ thống OLAP và làm giảm lượng data-scanned.
-*   **Thuật toán nén:** Dùng Snappy hoặc Zstandard (Zstd). Zstd mang lại tỷ lệ nén tuyệt vời với tốc độ giải nén rất nhanh, tối ưu hóa cả I/O, Network và Storage cost.
+*Cấu hình Airflow DAG (YAML/Python):*
+```python
+from datetime import timedelta
 
-### c. Data Retention Policies và Data Deduplication
-*   Xác định rõ "thời gian lưu giữ" (Retention period) cho từng loại dữ liệu cùng với team Pháp chế/Security. Không giữ dữ liệu mãi mãi nếu không có lý do chính đáng.
-*   Định kỳ dọn dẹp các bảng mồ côi (orphan tables), các bảng test do kỹ sư tạo ra.
-*   Với Data Lakehouse (như Delta Lake hoặc Apache Iceberg), thường xuyên chạy lệnh `VACUUM` hoặc thao tác xóa các file mồ côi sinh ra sau quá trình cập nhật (`UPDATE`/`DELETE`).
+default_args = {
+    'owner': 'data_eng',
+    'retries': 5,
+    'retry_delay': timedelta(minutes=1),
+    'retry_exponential_backoff': True, # BẮT BUỘC để chống Retry Storms
+    'max_retry_delay': timedelta(minutes=15),
+}
+```
 
-## 5. Giám sát, Theo dõi và Báo cáo Chi phí
+*Cấu hình Kafka Producer (Chống mất dữ liệu mà không tốn tài nguyên vô ích):*
+```properties
+# Kafka Producer Properties
+acks=all
+retries=2147483647
+retry.backoff.ms=500
+delivery.timeout.ms=120000
+enable.idempotence=true # Ngăn chặn duplicate data khi network chập chờn
+```
 
-### a. Resource Tagging (Gắn thẻ tài nguyên)
-*   Đây là viên gạch nền tảng của FinOps. Cần thiết lập quy định (Policy) bắt buộc gắn thẻ cho mọi tài nguyên (Cluster, Bucket, Jobs) trên Cloud.
-*   Ví dụ các thẻ tiêu chuẩn: `Project: DataPlatform`, `Environment: Production`, `Team: MarketingData`, `Pipeline: DailySales_ETL`.
-*   Tagging giúp bóc tách chi phí (Cost Allocation) minh bạch và tìm ra "thủ phạm" gây lãng phí một cách chính xác.
+## 3. Quản lý Vòng đời Dữ liệu & Xử lý Tăng dần (Incremental Load)
 
-### b. Cost Dashboards và Cảnh báo (Alerts)
-*   Xây dựng các bảng điều khiển tài chính (Sử dụng AWS Cost Explorer, GCP Billing Export sang BigQuery + Looker, hoặc công cụ bên thứ ba).
-*   Thiết lập **Budgets (Ngân sách)** và **Alerts (Cảnh báo)**. Cấu hình tính năng phát hiện bất thường (Anomaly detection). Khi chi phí trong một ngày vượt quá ngưỡng trung bình (ví dụ: một pipeline bị kẹt vòng lặp vô hạn), hệ thống sẽ lập tức gửi cảnh báo qua Email hoặc Slack/Teams cho Data Team để "cắt cầu dao" kịp thời.
+Một chiến lược FinOps tệ hại là quét toàn bộ Bảng A, tính toán, và ghi đè vào Bảng B (Full Refresh) mỗi ngày. Kỹ thuật này đốt hàng nghìn USD.
 
-## 6. Xây dựng Văn hóa FinOps trong team Data
+**Giải pháp:** Xử lý tăng dần (Incremental Load) kết hợp Slowly Changing Dimensions (SCD). Sử dụng lệnh `MERGE` của Apache Iceberg để chỉ quét và cập nhật các dòng có sự thay đổi.
 
-*   **Shift-left Cost Management:** Yêu cầu các kỹ sư phải ước tính chi phí (Cost Estimation) trong giai đoạn thiết kế, trước khi code được đẩy lên Production. CI/CD pipeline có thể được tích hợp các tool ước lượng chi phí (như Infracost cho Terraform).
-*   **Cost as a Metric:** Coi "hiệu quả chi phí" là một tiêu chí để review code, ngang hàng với "hiệu suất (performance)", "bảo mật" hay "tính dễ bảo trì".
-*   **Gamification và Gắn kết:** Tổ chức các cuộc thi nội bộ (Ví dụ: "Truy vấn tiết kiệm nhất tháng" hay "Chiến dịch dọn rác mùa xuân") để khuyến khích tinh thần tiết kiệm và nâng cao nhận thức trong đội ngũ. Đưa báo cáo chi phí vào buổi họp Sprint Review.
+```sql
+-- SCD Type 2 Thực chiến với Apache Iceberg
+MERGE INTO prod_catalog.core.dim_customers target
+USING staging.cdc_customers source
+ON target.customer_id = source.customer_id 
+   AND target.is_current = true
+WHEN MATCHED AND target.checksum != source.checksum THEN
+  -- Đánh dấu dòng cũ là 'hết hạn'
+  UPDATE SET 
+    target.is_current = false, 
+    target.valid_to = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  -- Thêm dữ liệu khách hàng mới
+  INSERT (customer_id, name, address, is_current, valid_from, valid_to, checksum)
+  VALUES (source.customer_id, source.name, source.address, true, CURRENT_TIMESTAMP(), '9999-12-31', source.checksum);
+```
 
-## Kết Luận
+## 4. Infrastructure as Code (IaC) & Resource Tagging
 
-FinOps trong Data Engineering không phải là cản trở tốc độ phát triển hay bóp nghẹt sự sáng tạo. Nó là nghệ thuật mang lại sự minh bạch, trách nhiệm và tính bền vững cho dữ liệu. Bằng cách kết hợp kiến trúc hệ thống hợp lý (Partitioning, Incremental processing), sử dụng thông minh các gói Cloud (Spot instances, Lifecycle rules), cùng với một văn hóa kỹ thuật tự chủ, các tổ chức có thể thoải mái xây dựng các nền tảng Dữ liệu khổng lồ mà vẫn yên tâm kiểm soát được ngân sách tài chính.
+Tài nguyên đám mây vô chủ (Orphaned/Zombie Resources) là lỗ đen FinOps. Mọi Cluster, Bucket, Job đều phải được tạo bằng IaC (Terraform) và dán nhãn (Tagging) bắt buộc. Bất kỳ tài nguyên nào không có Tag `CostCenter` sẽ bị xóa tự động bởi các Lambda function giám sát.
 
-## Tài Liệu Tham Khảo
-* [FinOps Foundation Framework](https://www.finops.org/framework/)
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+**Mã Terraform thực chiến (Tự động Tiering S3 và Tagging):**
+
+```hcl
+# S3 Bucket với Lifecycle Rules để tối ưu Storage Cost
+resource "aws_s3_bucket" "data_lake_raw" {
+  bucket = "company-datalake-raw-zone"
+
+  tags = {
+    Environment = "Production"
+    Team        = "DataEngineering"
+    CostCenter  = "DE-405"
+    FinOps      = "Strict"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "raw_lifecycle" {
+  bucket = aws_s3_bucket.data_lake_raw.id
+
+  rule {
+    id     = "archive-old-raw-data"
+    status = "Enabled"
+
+    # Xóa các multipart uploads bị kẹt (tránh tốn tiền vô ích)
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+
+    # Chuyển data ít dùng sang Infrequent Access sau 30 ngày
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    # Chuyển data vào kho lạnh Glacier sau 90 ngày
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+
+    # Hủy dữ liệu sau 1 năm (Data Retention Policy)
+    expiration {
+      days = 365
+    }
+  }
+}
+```
+
+## Nguồn Tham Khảo (References)
+*   **Databricks FinOps & Optimization:** [From Chaos to Control: A Cost Maturity Journey with Databricks](https://www.databricks.com/blog/2023/04/13/chaos-control-cost-maturity-journey-databricks.html)
+*   **AWS Architecture Blog:** Lộ trình tối ưu chi phí với Amazon S3 Lifecycle Management & EMR Spot Instances.
+*   **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 3 & 10 về Storage Engines và Batch Processing).
+*   **Apache Iceberg Documentation:** [Maintenance & Compaction](https://iceberg.apache.org/docs/latest/maintenance/)
+*   **The FinOps Foundation:** [FinOps Framework for Data Platform](https://www.finops.org/)

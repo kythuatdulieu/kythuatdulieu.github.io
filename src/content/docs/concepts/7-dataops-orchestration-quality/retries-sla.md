@@ -1,174 +1,175 @@
 ---
-title: "Retries và SLA - Tự phục hồi và Cam kết dịch vụ"
-difficulty: "Beginner"
-tags: ["orchestration", "retries", "sla", "airflow", "monitoring", "data-engineering"]
+title: "Retries, Jitter và SLA - Xây dựng Data Pipeline Tự Phục Hồi"
+description: "Phân tích kiến trúc tự phục hồi (Self-healing) trong DataOps. Giải quyết bài toán Thundering Herd, Retry Storms bằng Exponential Backoff & Jitter, và quản trị SLA/SLO hệ thống."
+difficulty: "Mid-Senior"
+tags: ["orchestration", "retries", "sla", "airflow", "monitoring", "data-engineering", "architecture"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Cơ chế Retries và SLA trong Data Pipeline (Airflow)"
-metaDescription: "Tìm hiểu cách thiết lập cơ chế Tự động thử lại (Retries), hàm Exponential Backoff và cảnh báo vi phạm Cam kết cấp độ dịch vụ (SLA) trong Data Orchestration."
-description: "Trong thế giới kỹ thuật dữ liệu, có một chân lý bất biến: *Hạ tầng mạng luôn có thể gặp sự cố*. Một máy chủ API của đối tác có thể bị quá tải tạm thời..."
+lastUpdated: 2026-06-26
+seoTitle: "DataOps Retries & SLA: Thundering Herd, Jitter và Tự Phục Hồi"
+metaDescription: "Tìm hiểu kiến trúc Tự động thử lại (Retries), Exponential Backoff, Jitter chống Retry Storms và quản lý SLA trong Data Orchestration như Apache Airflow."
 ---
 
+Một hệ thống dữ liệu vững chắc không phải là hệ thống không bao giờ lỗi, mà là hệ thống có khả năng tự phục hồi (self-healing) khi đối mặt với sự cố hạ tầng. Các lỗi phổ biến nhất trong distributed systems thường là lỗi tạm thời (transient errors): Network partitions, API Rate Limiting (HTTP 429), JVM Garbage Collection pauses, hay Database Lock timeout.
 
+Nếu Data Pipeline bị *crash* ngay khi gặp một transient error, hệ thống đó được xem là mỏng manh (fragile). Giải pháp cơ bản là Retry (thử lại). Tuy nhiên, nếu cấu hình Retry không cẩn thận, bạn sẽ tự tay tạo ra một đợt tấn công từ chối dịch vụ (DDoS) vào chính hệ thống của mình.
 
-Trong thế giới kỹ thuật dữ liệu, có một chân lý bất biến: *Hạ tầng mạng luôn có thể gặp sự cố*. Một máy chủ API của đối tác có thể bị quá tải tạm thời, kết nối mạng giữa các trung tâm dữ liệu có thể chập chờn trong vài giây, hoặc hệ thống cơ sở dữ liệu (Database) có thể đang thực hiện bảo trì ngẫu nhiên dẫn đến từ chối kết nối.
+## 1. Rủi ro Vận hành: Thundering Herd và Retry Storms
 
-Nếu pipeline của bạn bị sập (crash) ngay lần đầu tiên gặp phải các lỗi này, hệ thống của bạn quá mỏng manh (fragile). Đây là lúc cơ chế **Retries (Tự động thử lại)** phát huy tác dụng. Tuy nhiên, việc thử lại cũng cần có giới hạn để đảm bảo dữ liệu vẫn đến tay người dùng doanh nghiệp đúng giờ. Sự "đúng giờ" này được đo đếm và bảo vệ bằng **SLA (Service Level Agreement - Cam kết cấp độ dịch vụ)**.
+Hãy tưởng tượng một Data Pipeline gồm 500 Task instances (chạy qua Celery/Kubernetes workers) cùng query vào một Data Warehouse (như Snowflake hoặc Redshift) lúc 00:00 mỗi ngày. 
 
-## 1. Cơ chế Retries (Cố thử lại)
+Đột nhiên, Network switch bị *blip* (mất kết nối 2 giây). Toàn bộ 500 kết nối bị rớt. 
+Nếu hệ thống Orchestration được cấu hình: `retries=3, retry_delay=10s`. Sau đúng 10 giây, 500 Task này sẽ đồng loạt nã 500 kết nối mới vào Data Warehouse. Lượng connection tăng đột biến này gọi là **Thundering Herd** (Hiệu ứng bầy đàn). 
 
+Nếu Data Warehouse không chịu nổi tải, nó lại tiếp tục văng lỗi. 500 Task lại tiếp tục chờ 10s và thử lại... Quá trình này tạo ra một vòng lặp chết chóc gọi là **Retry Storm**.
 
+```mermaid
+sequenceDiagram
+    participant Workers as 500 Airflow Workers
+    participant DB as Data Warehouse
+    
+    Workers->>DB: 00:00:00 - Gửi 500 Queries (Thundering Herd)
+    Note over DB: Quá tải CPU/Connection Pool
+    DB-->>Workers: 00:00:02 - Connection Reset / Timeout
+    
+    Note over Workers: Chờ 10 giây (Fixed Delay)
+    
+    Workers->>DB: 00:00:12 - Gửi lại 500 Queries (Retry Storm)
+    Note over DB: Lại quá tải... Crash hoàn toàn!
+    DB-->>Workers: 00:00:15 - Connection Reset / Timeout
+```
 
-### 1.1 Lỗi Tạm Thời (Transient Errors) vs Lỗi Cố Định (Permanent Errors)
+## 2. Kiến trúc Giải quyết: Exponential Backoff và Jitter
 
-Trước khi cấu hình retries, bạn cần phân biệt hai loại lỗi chính trong hệ thống dữ liệu:
-*   **Transient Errors (Lỗi tạm thời):** Mất kết nối mạng ngẫu nhiên, Timeout khi gọi API, Database Lock do quá nhiều truy vấn đồng thời. Đặc điểm của lỗi này là nếu bạn chờ một chút và thử lại, nó có khả năng sẽ thành công.
-*   **Permanent Errors (Lỗi cố định):** Sai mật khẩu Database, thiếu quyền truy cập (Permission Denied), lỗi logic trong code (như chia cho 0, hoặc thay đổi schema dữ liệu). Thử lại những lỗi này bao nhiêu lần cũng vô ích, chỉ làm lãng phí tài nguyên.
+Để tránh Retry Storms, các Staff Engineer không bao giờ dùng *Fixed Delay* (chờ cố định). Thay vào đó, họ sử dụng **Exponential Backoff** kết hợp với **Jitter**.
 
-Cơ chế Retries được thiết kế chủ yếu để khắc phục **Lỗi tạm thời**.
+*   **Exponential Backoff (Lùi theo cấp số nhân):** Tăng thời gian chờ sau mỗi lần thất bại ($2^c \times base\_delay$). Ví dụ: 2s, 4s, 8s, 16s... Điều này cho phép Database hoặc API có thời gian xả tải (shed load) và phục hồi.
+*   **Jitter (Độ nhiễu ngẫu nhiên):** Backoff thôi là chưa đủ, vì 500 task vẫn có thể khởi động lại *cùng một lúc* ở giây thứ 2, thứ 4, thứ 8. Jitter cộng thêm một giá trị ngẫu nhiên vào thời gian chờ để dàn đều lượng requests theo trục thời gian, phá vỡ tính đồng bộ (synchronization) của Thundering Herd.
 
-### 1.2 Cấu hình Retries cơ bản trong Apache Airflow
+Thuật toán chuẩn (như đề xuất của AWS Architecture): 
+$Sleep = \text{random\_between}(0, \min(cap, base \times 2^{attempt}))$
 
-Trong Apache Airflow, retries là tính năng cốt lõi. Bạn có thể cấu hình số lần thử lại (`retries`) và khoảng thời gian chờ giữa các lần thử (`retry_delay`).
+```mermaid
+xychart-beta
+    title "Phân bổ Request theo thời gian (Có Jitter vs Không Jitter)"
+    x-axis [0s, 10s, 20s, 30s, 40s, 50s, 60s]
+    y-axis "Số lượng Request đồng thời" 0 --> 500
+    line "Fixed Delay (Retry Storm)" [500, 0, 500, 0, 500, 0, 0]
+    line "Exponential Backoff + Jitter" [500, 0, 100, 80, 150, 60, 50]
+```
+
+### Code Thực chiến: Cấu hình Airflow với Jitter
+
+Trong Apache Airflow, tuyệt đối không cấu hình `retry_delay` cứng nhắc. Dưới đây là cách setup chuẩn Enterprise:
 
 ```python
 from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime
+from airflow.exceptions import AirflowFailException
 
 default_args = {
-    'owner': 'data_engineer',
+    'owner': 'data_platform',
     'depends_on_past': False,
-    'retries': 3, # Thử lại tối đa 3 lần nếu thất bại
-    'retry_delay': timedelta(minutes=5), # Chờ 5 phút trước khi thử lại
+    'retries': 5, # Thử tối đa 5 lần
+    'retry_delay': timedelta(minutes=1), # Base delay
+    'retry_exponential_backoff': True, # Bật Exponential Backoff
+    'max_retry_delay': timedelta(minutes=15), # Cap = 15 phút, tránh việc chờ quá lâu vi phạm SLA
 }
 
+def extract_api_data(**kwargs):
+    import requests
+    response = requests.get("https://api.vendor.com/v1/data")
+    
+    if response.status_code == 401:
+        # Lỗi cố định (Permanent Error) - Sai Token. 
+        # CÓ RETRY CŨNG VÔ DỤNG. Đánh sập Task ngay lập tức (Fail-Fast)
+        raise AirflowFailException("Auth Error: Bỏ qua Retry. Báo động ngay!")
+        
+    elif response.status_code in (429, 500, 502, 503):
+        # Lỗi tạm thời (Transient) -> Raise Exception thường để Airflow tự động Retry theo Jitter
+        raise Exception(f"Transient Error: {response.status_code}")
+    
+    return response.json()
+
 with DAG(
-    'example_retries_dag',
+    'enterprise_retry_dag',
     default_args=default_args,
-    start_date=datetime(2023, 1, 1),
-    schedule_interval='@daily',
+    schedule_interval='@hourly',
     catchup=False
 ) as dag:
 
-    # Task này sẽ thử lại 3 lần, mỗi lần cách nhau 5 phút nếu xảy ra lỗi
-    extract_data_task = PythonOperator(
-        task_id='extract_data_from_api',
-        python_callable=lambda: print("Extracting data...")
+    # Airflow tự động áp dụng thuật toán Jitter khi retry_exponential_backoff=True
+    fetch_task = PythonOperator(
+        task_id='extract_vendor_api',
+        python_callable=extract_api_data
     )
 ```
 
-### 1.3 Exponential Backoff và Jitter
+## 3. SLA, SLO và SLI trong Data Engineering
 
-Nếu bạn có 100 tác vụ (tasks) cùng kết nối đến một API và API đó bị quá tải (Timeout), việc cả 100 tác vụ cùng thử lại (retry) sau đúng 5 phút sẽ tạo ra một luồng traffic khổng lồ (Thundering Herd Problem), đánh sập API đó một lần nữa.
+Bên cạnh độ ổn định (Reliability), giá trị cốt lõi của dữ liệu nằm ở tính thời sự (Freshness). Nếu Retry quá nhiều, dữ liệu sẽ đến tay người dùng trễ, phá vỡ **SLA (Service Level Agreement - Cam kết cấp độ dịch vụ)**.
 
-Để giải quyết, ta sử dụng **Exponential Backoff** và **Jitter**:
+Trong DataOps, chúng ta quản trị SLA theo chuẩn SRE (Site Reliability Engineering) của Google:
 
-*   **Exponential Backoff (Lùi lại theo cấp số nhân):** Thay vì chờ một khoảng thời gian cố định, thời gian chờ sẽ tăng lên sau mỗi lần thất bại (ví dụ: chờ 2 phút, rồi 4 phút, rồi 8 phút). Điều này cho hệ thống đích có thời gian phục hồi.
-*   **Jitter (Độ trễ ngẫu nhiên):** Thêm một khoảng thời gian ngẫu nhiên (vài giây hoặc vài phút) vào thời gian chờ để "làm nhiễu", đảm bảo các tác vụ không khởi động lại cùng một tích tắc.
+*   **SLI (Service Level Indicator - Chỉ báo thực tế):** Thời điểm Pipeline hoàn thành thực tế mỗi ngày. Ví dụ: *07:45 AM, 08:15 AM*.
+*   **SLO (Service Level Objective - Mục tiêu vận hành nội bộ):** Kỹ sư Data cam kết nội bộ phải đẩy dữ liệu lên Data Warehouse trước *08:00 AM* với tỷ lệ đạt 99% trong tháng.
+*   **SLA (Cam kết kinh doanh):** Hợp đồng với Business Users, thường nới lỏng hơn SLO một chút (ví dụ: *08:30 AM*). Nếu dữ liệu chưa có vào lúc 08:30 AM, PagerDuty sẽ gọi điện thoại trực tiếp cho Data Engineer on-call lúc nửa đêm.
 
-Trong Airflow, bạn cấu hình như sau:
+### Systemic Trade-offs: Latency vs. Reliability
 
-```python
-default_args = {
-    # ...
-    'retries': 5,
-    'retry_delay': timedelta(minutes=2),
-    'retry_exponential_backoff': True, # Bật Exponential Backoff
-    'max_retry_delay': timedelta(hours=1), # Đảm bảo khoảng chờ không quá 1 tiếng
-}
-```
+Nếu API Vendor bị chập chờn liên tục suốt 2 tiếng, bạn phải chọn giữa 2 Trade-off hệ thống:
 
-> [!WARNING] Tính Luỹ Đẳng (Idempotency) là bắt buộc
-> Để an toàn khi sử dụng Retries, Data Pipeline của bạn **phải** đảm bảo tính luỹ đẳng (Idempotency). Nghĩa là dù chạy lại tác vụ 1 lần hay 100 lần, kết quả cuối cùng trên Database vẫn giống hệt nhau (không bị nhân đôi dữ liệu).
+1.  **Chấp nhận hy sinh SLA (Reliability > Latency):** Cứ cấu hình Retry 50 lần, Max delay 30 phút. Đảm bảo dữ liệu chắc chắn sẽ lấy được, nhưng report của sếp có thể trễ đến trưa. 
+2.  **Bảo vệ SLA (Latency > Reliability):** Chấp nhận Skip qua task bị lỗi (Continue on Error) và báo cáo dữ liệu thiếu (Stale data/Partial data). Sử dụng Dead-Letter Queue (DLQ) để lưu trữ record lỗi và xử lý lại sau.
 
----
+### Quản trị SLA Misses bằng Code
 
-## 2. SLA (Service Level Agreement) - Cam kết cấp độ dịch vụ
-
-SLA không phải là một tính năng kỹ thuật thuần túy; nó là một cam kết giữa Data Team (Đội dữ liệu) và Business Users (Người dùng doanh nghiệp). 
-
-Ví dụ SLA: *"Pipeline tính toán Doanh Thu Hàng Ngày phải hoàn thành và dữ liệu sẵn sàng trên Dashboard trước 08:00 AM mỗi ngày, với tỷ lệ đạt 99% trong tháng."*
-
-### 2.1 Tại sao SLA quan trọng trong DataOps?
-
-1.  **Sự tin cậy (Trust):** Người dùng cần biết khi nào họ có thể sử dụng dữ liệu để ra quyết định. Nếu dữ liệu báo cáo chậm 2 tiếng so với kỳ vọng, họ có thể đưa ra quyết định kinh doanh sai lầm hoặc lỡ mất cơ hội.
-2.  **Đo lường chất lượng hệ thống:** SLA giúp phân biệt giữa một hệ thống "hoạt động được" và một hệ thống "hoạt động xuất sắc".
-
-### 2.2 Các khái niệm liên quan: SLA, SLO, SLI
-
-*   **SLI (Service Level Indicator):** Chỉ số đo lường thực tế (Ví dụ: Thời gian hoàn thành Pipeline ngày hôm nay là 07:45 AM).
-*   **SLO (Service Level Objective):** Mục tiêu nội bộ mà Data Team hướng tới (Ví dụ: Phải hoàn thành trước 07:30 AM).
-*   **SLA (Service Level Agreement):** Cam kết chính thức, thường đi kèm hình phạt hoặc quy trình leo thang nếu vi phạm (Ví dụ: Chậm nhất là 08:00 AM. Nếu vi phạm, gửi PagerDuty đánh thức Data Engineer on-call).
-
-### 2.3 Quản lý SLA trong Apache Airflow
-
-Airflow cho phép bạn cấu hình SLA trực tiếp trong code của DAG. Khi một tác vụ (task) không hoàn thành trong khoảng thời gian SLA cho phép (tính từ `execution_date`), một *SLA Miss* (Vi phạm SLA) sẽ được ghi nhận và bạn có thể kích hoạt các cảnh báo.
+Thay vì ngồi nhìn Dashboard chằm chằm, Data Engineer thiết lập các Callback tự động kích hoạt Incident Response khi vi phạm SLA (SLA Miss).
 
 ```python
 from datetime import timedelta
 from airflow import DAG
 from airflow.operators.dummy import DummyOperator
-from airflow.utils.email import send_email
+from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
-def my_sla_miss_callback(dag, task_list, blocking_task_list, slas, blocking_tis):
-    """Hàm được gọi khi bị vi phạm SLA"""
-    subject = f"SLA Miss Alert for DAG {dag.dag_id}"
-    html_content = f"The following tasks missed their SLA: {task_list}"
-    # Gửi email hoặc gửi tin nhắn Slack
-    send_email('data-team@company.com', subject, html_content)
-    print(f"SLA Missed! Triggering alert to Slack/PagerDuty...")
+def on_sla_miss_callback(dag, task_list, blocking_task_list, slas, blocking_tis):
+    """
+    Kích hoạt khi Pipeline không hoàn thành trong khoảng SLA cho phép
+    """
+    message = f":red_circle: *SLA MISS ALERT* :red_circle:\nDAG: `{dag.dag_id}`\nBlocking Tasks: `{blocking_task_list}`"
+    
+    SlackWebhookOperator(
+        task_id='slack_sla_alert',
+        http_conn_id='slack_connection',
+        message=message
+    ).execute(context={})
 
 default_args = {
-    'owner': 'data_engineer',
-    'sla': timedelta(hours=2), # Task phải xong trong 2 tiếng kể từ lúc bắt đầu DAG
+    'owner': 'data_platform',
+    'sla': timedelta(hours=2), # BẮT BUỘC toàn bộ DAG phải hoàn thành trong 2 tiếng
 }
 
 with DAG(
-    'daily_revenue_pipeline',
+    'critical_financial_report',
     default_args=default_args,
     start_date=datetime(2023, 1, 1),
-    schedule_interval='@daily',
-    sla_miss_callback=my_sla_miss_callback # Gọi hàm này nếu trễ SLA
+    sla_miss_callback=on_sla_miss_callback # Tự động gọi hàm này nếu trễ SLA
 ) as dag:
-
-    # Nếu task này mất hơn 2 tiếng (bao gồm cả thời gian chạy lại do lỗi)
-    # thì my_sla_miss_callback sẽ được kích hoạt.
-    long_running_task = DummyOperator(
-        task_id='compute_heavy_aggregations'
-    )
+    
+    heavy_compute_task = DummyOperator(task_id='spark_aggregation')
 ```
 
----
+## 4. Tóm tắt Tiêu chuẩn Thiết kế (Design Principles)
 
-## 3. Cân Bằng Giữa Retries, Timeouts và SLA
+Để xây dựng DataOps Pipeline chuyên nghiệp (Enterprise-grade), hãy luôn nhớ 3 nguyên tắc thép:
 
-Mối quan hệ giữa Retries, Timeout và SLA là cực kỳ mật thiết. Bạn không thể cho phép retry vô hạn, vì điều đó sẽ phá vỡ SLA.
+1.  **Idempotency (Tính luỹ đẳng) là bắt buộc:** Bạn không thể an tâm dùng Retry nếu Pipeline của bạn không luỹ đẳng. Lần retry thứ 2 không được phép INSERT đúp dữ liệu của lần chạy thứ 1. Hãy luôn dùng lệnh `MERGE` (UPSERT) thay vì `INSERT`, hoặc xóa vùng dữ liệu (`DELETE` partition) trước khi chạy lại.
+2.  **Fail-Fast cho Lỗi cố định:** Bắt các mã lỗi như 401 Unauthorized, 403 Forbidden, 404 Not Found, hoặc lỗi Syntax SQL và ngắt tiến trình NGAY LẬP TỨC bằng ngoại lệ `AirflowFailException`. Không lãng phí chu kỳ Retry.
+3.  **Timeout Limits:** Đừng bao giờ tin tưởng vào mạng lưới. Nếu một truy vấn Database bị Deadlock, task có thể bị "treo" (Zombie Task) vô thời hạn, hút cạn Connection Pool. Luôn cài đặt `execution_timeout` cứng (ví dụ 1 giờ) ở cấp độ Operator.
 
-Một số Best Practices (Thực hành tốt nhất) khi thiết kế DataOps Pipeline:
+## Nguồn Tham Khảo
 
-1.  **Thiết lập Timeouts rõ ràng:** Đừng để một truy vấn Database bị "treo" (hang) mãi mãi. Sử dụng `execution_timeout` để giết (kill) task nếu nó chạy quá lâu.
-    ```python
-    task = PythonOperator(
-        task_id='query_db',
-        execution_timeout=timedelta(minutes=30) # Kill task nếu chạy quá 30 phút
-    )
-    ```
-2.  **Giới hạn số lần và thời gian Retries:** Tổng thời gian chạy task (bao gồm retry + chờ) phải NHỎ HƠN thời hạn SLA. 
-    *Ví dụ:* SLA là 2 tiếng. Task bình thường chạy mất 30 phút. Bạn có thể cho phép tối đa 3 lần retries, khoảng chờ 10 phút. Tổng thời gian tệ nhất: `30m + 10m + 30m + 10m + 30m + 10m + 30m = 150 phút (2.5 tiếng)` -> Vượt quá SLA! Bạn cần thiết kế lại.
-3.  **Báo động (Alerting) ngay khi hỏng hoàn toàn (Exhausted Retries):** Khi số lần retry đã hết mà task vẫn lỗi, hãy kích hoạt `on_failure_callback` để gửi cảnh báo khẩn cấp (Slack, PagerDuty, Opsgenie) để kỹ sư trực can thiệp ngay lập tức.
-4.  **Sử dụng Dead-Letter Queue (DLQ):** Khi xử lý dữ liệu Streaming hoặc các record lỗi không thể phân tích (ví dụ sai định dạng JSON), đừng làm sập cả pipeline. Hãy chuyển các record lỗi này sang một bảng riêng (gọi là Dead-Letter Queue) để phân tích sau, và tiếp tục xử lý các record đúng (Continue on Error).
-5.  **Fail-Fast cho Lỗi cố định:** Nếu bạn bắt được lỗi `Invalid Credentials` (Sai mật khẩu), đừng để hệ thống retry. Hãy ngắt task ngay lập tức (Fail Fast) để tiết kiệm tài nguyên và báo động sớm.
-
-## 4. Tổng Kết
-
-*   **Retries** là áo giáp chống lại sự thiếu ổn định của hạ tầng mạng và hệ thống. Kết hợp với **Exponential Backoff**, nó giúp hệ thống Data Pipeline tự phục hồi (Self-healing) một cách thanh lịch mà không làm tắc nghẽn thêm hệ thống đích.
-*   **SLA** là hợp đồng niềm tin với người dùng cuối, đảm bảo dữ liệu luôn "tươi mới" (Freshness) đúng thời gian quy định. 
-*   Một kỹ sư DataOps giỏi là người biết cách **cấu hình kết hợp hài hòa** giữa Retries, Timeout, và Cảnh báo vi phạm SLA để tạo ra một hệ thống vừa kiên cường (Resilient) vừa đúng giờ.
-
-## Tài Liệu Tham Khảo
-* [DataOps Manifesto](https://dataopsmanifesto.org/)
-* [Apache Airflow - Retries and Timeouts](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html#retries)
-* [Apache Airflow - SLAs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html#slas)
-* [Google Cloud - SRE Fundamentals: SLIs, SLAs and SLOs](https://cloud.google.com/blog/products/gcp/sre-fundamentals-slis-slas-and-slos)
+1.  [AWS Architecture Blog - Exponential Backoff And Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+2.  [Netflix TechBlog - Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
+3.  [Google SRE Book - Service Level Objectives](https://sre.google/sre-book/service-level-objectives/)
+4.  [Apache Airflow Documentation - Task Retries and SLAs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html#retries)

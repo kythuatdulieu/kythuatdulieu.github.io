@@ -144,7 +144,7 @@ Dưới đây là một bản vẽ kiến trúc cấp cao (High-level Architectu
 ```mermaid
 graph TD
     subgraph "Data Sources"
-        DB[("OLTP Databases \n MySQL/PostgreSQL")]
+        DB["("OLTP Databases \n MySQL/PostgreSQL")"]
         API["External APIs \n Salesforce/Zendesk"]
         Events["Event Streams \n Web/App Clicks"]
     end
@@ -155,13 +155,13 @@ graph TD
     end
 
     subgraph DL["Data Lakehouse / Storage Layer"]
-        Iceberg[("Apache Iceberg / S3 \n Open Table Format")]
+        Iceberg["("Apache Iceberg / S3 \n Open Table Format")"]
         Spark("Apache Spark \n Compute Engine")
     end
 
     subgraph DW["Data Warehouse / Serving Layer"]
-        Snowflake[("Snowflake / BigQuery \n Analytical DB")]
-        Redis[("Redis \n Low Latency Serving")]
+        Snowflake["("Snowflake / BigQuery \n Analytical DB")"]
+        Redis["("Redis \n Low Latency Serving")"]
     end
 
     subgraph BI["BI & Applications"]

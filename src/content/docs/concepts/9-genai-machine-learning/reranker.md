@@ -21,17 +21,17 @@ Trong bối cảnh bùng nổ của các ứng dụng RAG (Retrieval-Augmented G
 
 ```mermaid
 graph TD
-    subgraph "Bi-Encoder Architecture (Embeddings)"
+    subgraph "Bi-Encoder Architecture("Embeddings")"
         Q1["Query"] -->|Encode| E1["Transformer / BERT"]
         D1["Document"] -->|Encode| E2["Transformer / BERT"]
         E1 --> V1["Query Vector"]
         E2 --> V2["Doc Vector"]
-        V1 --> S1(("Cosine<br>Similarity"))
+        V1 --> S1("("Cosine<br>Similarity""))
         V2 --> S1
         S1 --> Score1["Similarity Score"]
     end
 
-    subgraph "Cross-Encoder Architecture (Reranker)"
+    subgraph "Cross-Encoder Architecture("Reranker")"
         Q2["Query"] --> C["Concatenate: <br> CLS + Query + SEP + Document"]
         D2["Document"] --> C
         C --> TR["Transformer Layers<br>Full Self-Attention"]

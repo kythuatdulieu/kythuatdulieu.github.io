@@ -1,131 +1,182 @@
 ---
 title: "Architecture: Celery Executor vs Kubernetes Executor trong Apache Airflow"
-description: "Phân tích chuyên sâu về kiến trúc, ưu nhược điểm và ứng dụng thực tế của Celery Executor và Kubernetes Executor trong các hệ thống Data quy mô lớn. Hướng dẫn lựa chọn và triển khai kiến trúc tối ưu (bao gồm cả CeleryKubernetesExecutor)."
+description: "Phân tích kiến trúc vật lý, trade-offs hệ thống và các sự cố vận hành (OOMKilled, API Overload) giữa Celery Executor và Kubernetes Executor."
+lastUpdated: "2026-06-26"
 ---
 
-
-
-Apache Airflow không tự chạy các task (như truy vấn SQL, chạy Python script hay huấn luyện Machine Learning model). Airflow chỉ đóng vai trò là "bộ não" điều phối, và giao việc thực thi cho các **Executors** (Máy thực thi). Khi hệ thống Data lớn lên, việc lựa chọn Executor phù hợp sẽ quyết định đến chi phí, tốc độ, độ ổn định và khả năng bảo trì của toàn bộ nền tảng dữ liệu. Cuộc chiến kinh điển nhất và cũng là bài toán kiến trúc phổ biến nhất trong Data Engineering là giữa **Celery Executor** và **Kubernetes (K8s) Executor**.
-
-Trong bài viết này, chúng ta sẽ mổ xẻ chi tiết từng kiến trúc, so sánh chúng trên nhiều góc độ và khám phá cách kết hợp cả hai để tạo ra một hệ thống hoàn hảo.
+Apache Airflow không tự thực thi các task. Nó là bộ não điều phối (Control Plane) giao việc cho các **Executors** (Data Plane). Khi hệ thống mở rộng, việc chọn sai Executor không chỉ làm phình to chi phí hạ tầng (Idle Cost) mà còn gây ra các thảm họa hệ thống (System Outages) khó debug. Cuộc đối đầu kinh điển nhất về kiến trúc luôn diễn ra giữa **Celery Executor** và **Kubernetes (K8s) Executor**.
 
 ---
 
-## 1. Celery Executor: Cỗ Máy "Sống Dai" (Long-Running Workers)
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
+### 1.1. Celery Executor: Mô hình Long-Running Workers
 
+Celery Executor áp dụng kiến trúc phân tán truyền thống (Distributed Task Queue). Các "Worker" là các máy ảo (EC2, VM) hoặc Container tĩnh được bật 24/7, liên tục pooling (nghe ngóng) các task từ một Message Broker trung gian.
 
-Celery là kiến trúc mặc định và phổ biến nhất cho hầu hết các cụm Airflow truyền thống từ nhiều năm nay. Kiến trúc này dựa trên mô hình phân tán (distributed task queue) của framework Celery.
+```mermaid
+flowchart LR
+    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[("Message Broker\n(Redis/RabbitMQ)")]
+    Broker -- Pull Task --> Worker1["Celery Worker 1\n(Concurrency: 16)"]
+    Broker -- Pull Task --> Worker2["Celery Worker 2\n(Concurrency: 16)"]
+    
+    Worker1 -- Write State --> DB[("Result Backend\n(PostgreSQL)")]
+    Worker2 -- Write State --> DB
+    
+    style Broker fill:#f9f,stroke:#333,stroke-width:2px
+    style Worker1 fill:#bbf,stroke:#333,stroke-width:2px
+    style Worker2 fill:#bbf,stroke:#333,stroke-width:2px
+```
 
-### 1.1 Kiến trúc và Cách hoạt động
-Một cụm Airflow chạy Celery Executor thường bao gồm các thành phần sau:
-- **Scheduler:** Bộ phận lập lịch, liên tục kiểm tra các DAG và tạo ra các task instance cần chạy.
-- **Message Broker (Hàng đợi tin nhắn):** Thường là **Redis** hoặc **RabbitMQ**. Khi Scheduler thấy có task cần chạy, nó sẽ "đẩy" (push) thông tin của task đó vào hàng đợi này.
-- **Celery Workers:** Là các máy chủ (EC2, VM) được cấu hình để chạy 24/7. Các Worker này liên tục "lắng nghe" Message Broker. Khi có task xuất hiện, Worker nào đang rảnh sẽ bốc task đó ra và thực thi.
-- **Result Backend:** Một cơ sở dữ liệu (thường dùng chung Metadata Database như PostgreSQL/MySQL) lưu trữ trạng thái của các task sau khi Worker chạy xong (Success/Failed).
-- **Flower (Optional):** Một giao diện web UI dùng để giám sát trực tiếp hàng đợi Celery và trạng thái của các Workers.
+*Cấu hình `airflow.cfg` kinh điển cho Celery:*
+```ini
+[core]
+executor = CeleryExecutor
+parallelism = 1024
 
-### 1.2 Ưu điểm
-- **Độ trễ bằng 0 (Zero Latency):** Khởi động task cực nhanh vì các máy chủ (Worker) đã được bật sẵn và các tiến trình daemon luôn sẵn sàng nhận việc. Task được thực thi ngay lập tức khi vào Queue.
-- **Hoạt động ổn định với tải đều đặn:** Rất hiệu quả cho các khối lượng công việc (workloads) có số lượng task phân bổ đều đặn trong ngày.
-- **Dễ dàng giám sát qua Flower:** Cung cấp cái nhìn trực quan về resource của toàn bộ cụm Workers, số lượng task đang trong hàng đợi.
+[celery]
+# Yêu cầu bắt buộc phải có Broker và Result Backend
+broker_url = redis://redis:6379/0
+result_backend = db+postgresql://airflow:airflow@postgres/airflow
+worker_concurrency = 16 
+```
 
-### 1.3 Nhược điểm và Thách thức
-- **Lãng phí tài nguyên (Idle Cost):** Bạn phải trả tiền cho các Worker 24/7, ngay cả khi lúc 2h sáng không có task nào chạy. Để tiết kiệm, bạn có thể thiết lập Auto-scaling group, nhưng việc này phức tạp và thời gian scale-up máy ảo khá chậm (mất vài phút).
-- **Thảm họa thư viện (Dependency Hell):** Các Worker là môi trường tĩnh. Nếu Task A cần thư viện `pandas==1.0` và Task B cần `pandas==2.0`, việc cài đặt chúng trên cùng một Worker là cực kỳ khó khăn. Rủi ro xung đột thư viện rất cao.
-- **Một Task lỗi có thể kéo sập Worker (Resource Starvation):** Nếu một task bị memory leak hoặc sử dụng 100% CPU, toàn bộ các task khác chạy chung trên cùng một Worker đó có thể bị treo hoặc chết chùm.
+### 1.2. Kubernetes Executor: Mô hình Ephemeral Pod-per-Task
 
----
+Sự bùng nổ của Cloud Native mang đến Kubernetes Executor. Ở đây, khái niệm "Worker tĩnh" bị xóa bỏ. Thay vì đẩy task vào Queue, Scheduler nói chuyện trực tiếp với K8s API. Mỗi khi có task, một Pod (Container) mới tinh được khởi tạo. Chạy xong, Pod lập tức tự hủy (bốc hơi).
 
-## 2. Kubernetes Executor: Sát Thủ "Dùng Một Lần" (Ephemeral Pods)
+```mermaid
+flowchart TD
+    Scheduler["Airflow Scheduler"] -- API Call (Create Pod) --> K8sAPI["Kubernetes API Server"]
+    K8sAPI -- Schedule --> Node1["K8s Worker Node"]
+    
+    subgraph Node1
+        Pod1["Task A Pod\n(Image: pandas_env)"]
+        Pod2["Task B Pod\n(Image: tf_env\nGPU: 1)"]
+    end
+    
+    Pod1 -- Write State --> DB[("Metadata DB")]
+    Pod2 -- Write State --> DB
+    
+    style K8sAPI fill:#f96,stroke:#333,stroke-width:2px
+    style Pod1 fill:#bfb,stroke:#333,stroke-width:1px
+    style Pod2 fill:#bfb,stroke:#333,stroke-width:1px
+```
 
-Với sự trỗi dậy của Cloud Native, Kubernetes Executor đã thay đổi hoàn toàn cách chúng ta chạy Airflow. Khái niệm "Worker tĩnh chạy 24/7" hoàn toàn biến mất.
-
-### 2.1 Kiến trúc và Cách hoạt động
-- **Không có Message Broker và Worker tĩnh:** Kubernetes Executor giao tiếp trực tiếp với Kubernetes API.
-- **Mỗi Task là một Pod (Pod-per-Task):** Khi Airflow Scheduler nhận thấy có một task cần chạy, nó sẽ gửi lệnh đến Kubernetes API để tạo ra một **Pod** (Container) mới tinh. 
-- **Độc lập và tự hủy:** Pod này chứa đúng môi trường cần thiết, chạy duy nhất task đó. Sau khi task hoàn thành (thành công hoặc thất bại), Pod sẽ tự động bốc hơi, giải phóng hoàn toàn tài nguyên.
-
-### 2.2 Ưu điểm
-- **Cô lập hoàn toàn (Total Isolation):** Đây là "vũ khí hủy diệt" của K8s Executor. Task A có thể chạy trên một Docker image Python 3.6 với thư viện Pytorch cũ. Task B có thể chạy trên image R hay Java. Không có bất kỳ sự xung đột nào. Lỗi OOM (Out of Memory) của Task A cũng chỉ giết chết Pod của Task A, không ảnh hưởng đến ai.
-- **Tối ưu chi phí tuyệt đối (True Autoscaling):** Tính đàn hồi siêu việt. Lúc 2h sáng không có task, Kubernetes (đặc biệt khi dùng cùng KEDA hoặc Karpenter) sẽ scale cụm node về 0, bạn tốn 0 đồng cho việc thực thi. Lúc 8h sáng cần xử lý 1000 tasks, K8s sẽ đẻ ra 1000 Pods, khi xong lại dọn dẹp sạch sẽ.
-- **Linh hoạt tài nguyên phần cứng:** Bạn có thể chỉ định riêng biệt cho từng task. Ví dụ: Task A cần 100MB RAM, nhưng Task huấn luyện ML cần 1 GPU và 16GB RAM. K8s sẽ cấp phát chính xác yêu cầu này cho từng Pod tương ứng qua thông số `resources.requests` và `resources.limits`.
-
-### 2.3 Nhược điểm và Thách thức
-- **Độ trễ khởi động cao (Spin-up Latency):** Kubernetes mất thời gian để giao tiếp với API, lên lịch xếp Pod vào Node, tải (pull) Docker image và khởi động Container. Quá trình này có thể mất từ vài giây đến cả chục giây. 
-- **Không phù hợp cho short-tasks:** Đối với các DAG có hàng trăm task siêu nhỏ (chỉ mất 1-2 giây để chạy như một câu truy vấn SQL ngắn hay API call nhanh), thời gian chờ khởi tạo Pod thậm chí còn lớn hơn cả thời gian chạy task, làm tổng thời gian chạy DAG tăng lên gấp nhiều lần.
-- **Gây áp lực lớn lên Kubernetes API:** Nếu bạn ném hàng vạn task vào cùng một lúc, Kubernetes Control Plane có thể bị quá tải vì phải xử lý quá nhiều lệnh tạo/xóa Pod liên tục.
-
----
-
-## 3. So Sánh Chi Tiết (Matrix)
-
-| Tiêu chí | Celery Executor | Kubernetes Executor |
-| :--- | :--- | :--- |
-| **Kiến trúc thực thi** | Máy ảo tĩnh (Long-running Workers) | Container dùng một lần (Ephemeral Pods) |
-| **Tốc độ khởi động task** | Siêu nhanh (Zero latency) | Chậm (Mất vài giây đến cả phút để tạo Pod) |
-| **Mức độ cô lập (Isolation)** | Thấp (Các task chia sẻ chung môi trường) | Tuyệt đối (Mỗi task một Docker Image / Môi trường riêng) |
-| **Khả năng mở rộng (Scaling)** | Khó, thường scale theo Node (VM/EC2) | Dễ, scale đến từng Pod, hỗ trợ scale to Zero |
-| **Bảo trì / Quản lý thư viện** | Ác mộng (Dependency hell) | Dễ dàng (Đóng gói sẵn vào Docker Images) |
-| **Quản lý tài nguyên (CPU/RAM)** | Cấp phát chung cho cả Worker | Cấp phát chi tiết cho từng Task (Pod) |
-| **Mức độ phức tạp hạ tầng** | Trung bình (cần duy trì thêm Redis/RabbitMQ) | Cao (Yêu cầu đội ngũ am hiểu sâu về K8s) |
-
----
-
-## 4. Kiến Trúc Tối Thượng: CeleryKubernetesExecutor
-
-Trong thực tế doanh nghiệp, một hệ thống dữ liệu luôn có sự pha trộn:
-- 80% là các task rất nhẹ, chạy nhanh, lặp lại nhiều lần (gọi API lấy dữ liệu, dọn dẹp DB, trigger hệ thống khác).
-- 20% là các task cực nặng, cần cô lập, hoặc cần cấu hình thư viện độc đáo (chạy model Machine Learning, Spark submit).
-
-Nhận thấy điều này, Airflow từ phiên bản 2.0 đã giới thiệu **`CeleryKubernetesExecutor`**. Đây không phải là một Executor mới, mà là một hệ thống định tuyến (router) cho phép chạy song song CẢ HAI!
-
-**Cách hoạt động của CeleryKubernetesExecutor:**
-- Mặc định, tất cả các task sẽ được chuyển vào hàng đợi của **Celery Executor**. Nhờ vậy, hàng vạn task nhẹ sẽ được chạy tức thì, không gặp vấn đề về độ trễ tạo Pod.
-- Đối với những task cụ thể cần sự cô lập hoặc tài nguyên khủng, Data Engineer chỉ cần khai báo `queue='kubernetes'` trực tiếp trong code của Task (hoặc DAG). Lập tức, Airflow sẽ định tuyến task đó sang **Kubernetes Executor** để tạo Pod riêng.
-
-**Ví dụ cấu hình Task chạy K8s trong môi trường hỗn hợp:**
-```python
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
-
-# Task chạy trên K8s Pod riêng, dùng image chứa GPU và thư viện Tensorflow
-ml_training_task = KubernetesPodOperator(
-    task_id="train_model",
-    name="train_model_pod",
-    image="my-registry.com/data-science/tensorflow-env:v1",
-    cmds=["python", "train.py"],
-    namespace="airflow-tasks",
-    queue="kubernetes", # Lệnh định tuyến qua K8s Executor
-    get_logs=True
-)
+*Template cấu hình `pod_template.yaml` cấp phát tài nguyên chi tiết:*
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: airflow-worker-template
+spec:
+  containers:
+    - name: base
+      image: apache/airflow:2.7.0-python3.9
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "250m"
+        limits:
+          memory: "1Gi"  # OOMKilled nếu vượt quá giới hạn này
+          cpu: "500m"
+  restartPolicy: Never
 ```
 
 ---
 
-## 5. Lời Khuyên: Bạn Nên Chọn Gì?
+## 2. Phân tích Đánh đổi Hệ thống (Systemic Trade-offs)
 
-Việc lựa chọn phụ thuộc hoàn toàn vào quy mô hạ tầng, đặc thù dữ liệu và khả năng của đội ngũ:
+Quyết định chọn Executor phụ thuộc vào việc bạn sẵn sàng đánh đổi yếu tố nào giữa **Độ trễ (Latency)**, **Độ cô lập (Isolation)** và **Độ phức tạp vận hành (Operational Complexity)**.
 
-1. **Chọn Celery Executor nếu:**
-   - Công ty bạn chưa có sẵn hạ tầng Kubernetes và chưa có kỹ sư chuyên vận hành K8s.
-   - Luồng công việc chủ yếu là các task ngắn, yêu cầu phản hồi nhanh, chạy trên cùng một tập thư viện Python tiêu chuẩn.
-   - Team của bạn nhỏ, muốn hệ thống đơn giản, dễ debug trực tiếp trên máy chủ.
-
-2. **Chọn Kubernetes Executor nếu:** (Được coi là chuẩn mực hiện đại)
-   - Công ty bạn đã chuyển đổi số sang Kubernetes và có đội ngũ DevOps vận hành cụm K8s vững chắc.
-   - Bạn quản lý một nền tảng Data chung cho nhiều phòng ban (Marketing, Data Science, BI...), mỗi team sử dụng một bộ công cụ, thư viện và ngôn ngữ khác nhau.
-   - Bạn muốn tối ưu chi phí hạ tầng triệt để vào ban đêm hoặc những lúc không có task chạy.
-
-3. **Chọn CeleryKubernetesExecutor nếu:**
-   - Cụm Airflow của bạn có quy mô rất lớn (Enterprise Level), phục vụ hàng nghìn DAGs mỗi ngày. Bạn muốn tốc độ thần tốc của Celery cho luồng dữ liệu chuẩn, nhưng vẫn cần sự độc lập của K8s cho các quy trình AI/ML phức tạp.
-
-Việc hiểu sâu sắc ưu nhược điểm của các Executor không chỉ giúp hệ thống chạy nhanh hơn, mà còn có thể giúp công ty tiết kiệm hàng nghìn đô la chi phí máy chủ mỗi tháng.
+| Đặc tính Kỹ thuật | Celery Executor (Static Workers) | Kubernetes Executor (Ephemeral Pods) |
+| :--- | :--- | :--- |
+| **Spin-up Latency** (Độ trễ khởi động) | **Zero (Tính bằng ms)**. Worker đã nạp sẵn RAM, task vào là chạy. | **Cao (5s - 60s)**. Phải gọi K8s API -> Schedule Node -> Pull Image -> Init Container. |
+| **Environment Isolation** (Cô lập môi trường) | **Kém (Dependency Hell)**. Các task chung Worker phải dùng chung thư viện Python (`requirements.txt`). | **Tuyệt đối (Nirvana)**. Mỗi task có thể dùng một Docker Image khác nhau (Python, R, Java). |
+| **Resource Allocation** (Cấp phát tài nguyên) | Tĩnh (Static). Worker to nhưng task nhỏ sẽ gây lãng phí (Idle). | Động (Granular). Định nghĩa CPU/RAM limit chính xác đến từng task. |
+| **State Management** (Lưu trữ trạng thái) | Dựa vào Broker phụ trợ (Redis/RabbitMQ) - Thêm Single Point of Failure (SPOF). | Trực tiếp qua K8s API và Airflow DB - Lệ thuộc sức chịu tải của K8s Control Plane. |
 
 ---
 
-## Tài Liệu Tham Khảo Mở Rộng
-* [Apache Airflow Executors Explained - Airflow Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html)
-* [Kubernetes Executor in Airflow](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/kubernetes.html)
-* [Celery Architecture](https://docs.celeryq.dev/en/stable/getting-started/introduction.html)
-* [DataOps Manifesto - The Foundation of Modern Data Engineering](https://dataopsmanifesto.org/)
-* **Astronomer: The hybrid approach (CeleryKubernetes Executor)**
+## 3. Rủi ro Vận hành và Troubleshooting (Real-world Incidents)
+
+Không có kiến trúc nào hoàn hảo. Dưới đây là các tình huống sập hệ thống (Incidents) phổ biến nhất khi vận hành ở quy mô lớn (Enterprise Scale).
+
+### 3.1. Thảm họa OOMKilled "Chết chùm" (Celery Executor Blast Radius)
+- **Vấn đề:** Giả sử Worker của bạn có 16GB RAM, `worker_concurrency = 16` (chạy 16 task đồng thời). Một Data Scientist push lên một task Pandas `read_csv` một file 10GB.
+- **Hệ quả:** Tiến trình ngốn cạn RAM. Linux Kernel kích hoạt `OOM Killer` (Out Of Memory) và kill luôn tiến trình Worker đó.
+- **Blast Radius (Bán kính sát thương):** Toàn bộ 15 task khác đang chạy hoàn toàn bình thường trên Worker đó lập tức bị "chết chùm" (Zombies/Failed).
+- **Khắc phục:** 
+  - Đổi sang dùng Spark/Dask thay vì Pandas cho dữ liệu lớn.
+  - Sử dụng Kubernetes Executor để giới hạn `Blast Radius` (OOM của một Pod không lan sang Pod khác).
+
+### 3.2. Tấn công DDoS vào Kubernetes Control Plane (K8s Executor Overload)
+- **Vấn đề:** Bạn cần Backfill lại dữ liệu của 1 năm qua cho một DAG gồm 50 tasks rất nhẹ (mỗi task chỉ chạy câu SQL mất 2 giây). Tổng cộng: $365 \times 50 = 18,250$ tasks.
+- **Hệ quả:** Scheduler đồng loạt gửi hàng ngàn lệnh Create Pod đến **Kubernetes API Server**. ETCD Database của K8s bị quá tải (API Server Overload/Memory Pressure). K8s Control Plane bị đơ, không thể schedule Pod, dẫn đến toàn bộ cụm Airflow (kể cả Webserver) bị timeout. Hơn nữa, tổng thời gian chạy DAG chậm đi gấp 10 lần vì *Spin-up Latency* (Mất 10 giây để tạo Pod cho một task chạy 2 giây).
+- **Khắc phục:** 
+  - Không dùng K8s Executor cho các task siêu nhỏ. 
+  - Gộp các task siêu nhỏ (Task Consolidation) hoặc chuyển sang dùng Celery.
+
+---
+
+## 4. Tối ưu Chi phí (FinOps) & Cấu trúc Hỗn hợp (Hybrid Routing)
+
+### True Autoscaling với K8s Executor
+Nếu hệ thống của bạn có "đỉnh tải" (Spiky workloads) rõ rệt (Vd: chỉ chạy mạnh vào 2h sáng, ban ngày rảnh rỗi), Kubernetes Executor kết hợp với **Karpenter** hoặc **Cluster Autoscaler** mang lại khả năng *Scale-to-Zero* (Về 0 đồng khi không có task). Ngược lại, Celery luôn yêu cầu bạn trả tiền cho "Idle Capacity" (Dung lượng nhàn rỗi) 24/7.
+
+### Kiến trúc Hybrid (Airflow 2: CeleryKubernetesExecutor / Airflow 3: Multi-Executor)
+Đế giải quyết bài toán: *Làm sao vừa có Zero-latency của Celery cho 80% task nhẹ, vừa có Isolation của Kubernetes cho 20% task nặng (ML, Spark)?*
+
+Airflow cung cấp tính năng định tuyến. Bạn cấu hình mặc định là Celery, và chỉ định tuyến các task đặc thù sang K8s bằng tham số `queue='kubernetes'`.
+
+*Code ví dụ định tuyến Task AI/ML sang K8s Pod riêng (Cấp phát GPU):*
+```python
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from kubernetes.client import models as k8s
+
+def heavy_ml_training():
+    # Training logic using TensorFlow
+    pass
+
+with DAG('hybrid_execution_dag') as dag:
+    
+    # Task nhẹ: Chạy mặc định trên Celery Worker tĩnh (Nhanh, không có cold-start)
+    extract_data = PythonOperator(
+        task_id='extract_data',
+        python_callable=lambda: print("Light ELT task via Celery")
+    )
+
+    # Task nặng: Yêu cầu cô lập môi trường và cấu hình 1 GPU
+    train_model = PythonOperator(
+        task_id='train_model',
+        python_callable=heavy_ml_training,
+        queue='kubernetes', # 🚀 Định tuyến sang Kubernetes Executor
+        executor_config={
+            "pod_override": k8s.V1Pod(
+                spec=k8s.V1PodSpec(
+                    containers=[
+                        k8s.V1Container(
+                            name="base",
+                            resources=k8s.V1ResourceRequirements(
+                                limits={"nvidia.com/gpu": "1", "memory": "16Gi"}
+                            )
+                        )
+                    ]
+                )
+            )
+        }
+    )
+    
+    extract_data >> train_model
+```
+*(Lưu ý: Bắt đầu từ Airflow 3, `CeleryKubernetesExecutor` được thay thế bằng khái niệm Multi-Executors native, cho phép khai báo nhiều executor trên cùng một cụm một cách linh hoạt hơn).*
+
+---
+
+## 5. Nguồn Tham Khảo (References)
+
+* [Apache Airflow Core Concepts: Executors (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html)
+* [Astronomer: Evaluating Airflow Executors - Reliability vs Performance](https://www.astronomer.io/blog/airflow-executors-explained/)
+* [Kubernetes OOMKilled (Exit Code 137) Troubleshooting](https://sysdig.com/blog/troubleshoot-kubernetes-oom/)
+* [Airflow 3 Multi-Executor Architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html#multiple-executors)

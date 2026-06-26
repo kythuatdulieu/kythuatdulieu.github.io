@@ -136,8 +136,7 @@ Khi một sự cố SEV-0 xảy ra, sự hỗn loạn là kẻ thù lớn nhất
 Sử dụng sơ đồ dưới đây để hình dung quy trình từ lúc phát sinh đến lúc xử lý triệt để:
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Detection: Cảnh báo tự động / User Report
+stateDiagram-v2["*"] --> Detection: Cảnh báo tự động / User Report
     Detection --> Triage: Đánh giá mức độ (SEV)
     Triage --> Mobilization: Page PagerDuty, gọi IC & Responders
     Mobilization --> Mitigation: Khôi phục dịch vụ (Workaround)

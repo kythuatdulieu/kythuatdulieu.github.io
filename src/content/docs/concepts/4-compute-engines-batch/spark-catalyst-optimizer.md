@@ -2,126 +2,93 @@
 title: "Catalyst Optimizer"
 difficulty: "Advanced"
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Catalyst Optimizer - Data Engineering Deep Dive"
-metaDescription: "Tìm hiểu chi tiết về Catalyst Optimizer, bộ não của Spark SQL: Cách biến câu lệnh SQL thành RDD vật lý tối ưu nhất qua các giai đoạn RBO, CBO và AQE."
-description: "Bộ não của Spark SQL: Cách biến câu lệnh SQL hoặc DataFrame API thành kế hoạch thực thi vật lý tối ưu nhất."
+lastUpdated: 2026-06-26
+seoTitle: "Spark Catalyst Optimizer: RBO, CBO & Tungsten Code Generation"
+metaDescription: "Đi sâu vào kiến trúc Catalyst Optimizer của Spark SQL. Quá trình biến đổi từ AST sang Logical Plan, Physical Plan, và Whole-Stage Code Gen."
+description: "Catalyst Optimizer là bộ não Compiler đằng sau Spark SQL. Nó không chỉ phân tích câu lệnh SQL mà còn viết lại (rewrite) kiến trúc thực thi vật lý nhằm triệt tiêu I/O rác."
 ---
 
-Catalyst Optimizer là "bộ não" của Spark SQL, chịu trách nhiệm xử lý, phân tích và biến đổi các câu lệnh truy vấn (SQL, DataFrame/Dataset API) thành các Kế hoạch thực thi vật lý (Physical Execution Plan) tối ưu nhất để chạy trên RDDs. Bằng cách sử dụng ngôn ngữ lập trình hàm Scala, Catalyst cung cấp một framework mạnh mẽ dựa trên các cây (trees) và các quy tắc (rules) để thực hiện tối ưu hóa cả về mặt logic lẫn vật lý.
+Một trong những sai lầm lớn nhất của các kỹ sư mới làm quen với Apache Spark là tư duy thao tác từng dòng (như MapReduce truyền thống). Với API DataFrame/Dataset và Spark SQL, Spark mang tính chất **Khai báo (Declarative)**: Bạn chỉ bảo Spark "cái cần lấy", còn việc "Làm thế nào để lấy nhanh nhất với ít disk I/O nhất" là nhiệm vụ của **Catalyst Optimizer**.
 
-## 1. Vai trò của Catalyst Optimizer trong Spark
+Catalyst không chỉ là một bộ lập lịch, nó thực chất là một **Trình biên dịch (Compiler)** được viết bằng Scala, sử dụng Functional Programming (pattern matching, immutable trees) để thực hiện hàng trăm quy tắc viết lại truy vấn (Query Rewriting).
 
-Trước khi có Catalyst và Spark SQL, người dùng phải tự tối ưu hóa mã code RDD (Resilient Distributed Dataset) của mình. Việc quyết định khi nào nên `filter`, khi nào nên `join`, hay sử dụng phép toán nào đòi hỏi kinh nghiệm và kỹ năng lập trình phức tạp.
+## 1. Vòng Đời 4 Bước Chuyển Đổi Truy Vấn (Query Execution Phases)
 
-Catalyst thay đổi điều đó bằng cách cung cấp một bộ máy trừu tượng. Người dùng chỉ cần khai báo "cái gì" họ muốn làm thông qua SQL hoặc DataFrame API (tính khai báo - declarative), và Catalyst sẽ quyết định "làm như thế nào" cho nhanh nhất và hiệu quả nhất bằng cách:
+Cho dù bạn gọi mã bằng PySpark, Scala, hay SQL thuần túy, tất cả đều bị phân giải thành một luồng biên dịch chung bên trong Catalyst.
 
-- Dịch các ngôn ngữ lập trình khác nhau (Python, Java, Scala, SQL) về cùng một kế hoạch tối ưu.
-- Thực hiện các chiến lược tối ưu hóa tự động dựa trên quy tắc (Rule-based Optimization - RBO) và dựa trên chi phí (Cost-based Optimization - CBO).
-- Sinh mã tự động tại thời gian chạy (Whole-Stage Code Generation).
+![Catalyst Optimizer Phases](/images/4-compute-engines-batch/catalyst-optimizer.png)
+*Luồng xử lý 4 giai đoạn của Catalyst Optimizer, biến đổi từ cây AST chưa phân giải đến mã Java Bytecode vật lý. (Nguồn: Databricks)*
 
-## 2. Vòng đời xử lý truy vấn của Catalyst (Query Execution Phases)
+### Bước 1: AST và Cây chưa phân giải (Unresolved Logical Plan)
+Khi bạn `spark.sql("SELECT name FROM users")`, Spark dùng thư viện ANTLR 4 để parse chuỗi SQL thành một Cây cú pháp trừu tượng (AST).
+- Catalyst gọi đây là **Unresolved Logical Plan** vì nó hoàn toàn chưa biết bảng `users` hay cột `name` có tồn tại trong bộ nhớ hoặc Storage hay không.
 
-Khi một truy vấn được gửi đến Spark, nó phải trải qua 4 giai đoạn cốt lõi của Catalyst trước khi được sinh mã và thực thi:
+### Bước 2: Phân giải qua Catalog (Analyzed Logical Plan)
+Catalyst tra cứu **Session Catalog** (hoặc Hive Metastore) để:
+- Ánh xạ bảng `users` tới đường dẫn S3/HDFS thực tế (ví dụ: `s3://bucket/data/users.parquet`).
+- Xác thực Schema và kiểu dữ liệu (Data Type). Nếu bạn lấy kiểu Int cộng với String, Spark văng lỗi ở giai đoạn này.
+Kế hoạch lúc này trở thành **Analyzed Logical Plan**.
 
-![Catalyst Optimizer Phases](https://databricks.com/wp-content/uploads/2018/05/Catalyst-Optimizer-diagram.png) *(Hình minh hoạ luồng hoạt động chuẩn)*
+### Bước 3: Tối Ưu Hóa Logic Dựa Trên Quy Tắc (RBO - Optimized Logical Plan)
+Đây là nơi Catalyst áp dụng các bộ quy tắc (Heuristic Rules) bằng Rule-based Optimizer (RBO). Có hàng chục quy tắc mạnh mẽ:
+- **Predicate Pushdown (Đẩy bộ lọc xuống):** Nếu câu SQL có `WHERE age > 18`, Catalyst sẽ "đẩy" điều kiện này thẳng xuống Source (như tầng đọc của file Parquet/Iceberg). Chỉ những dữ liệu > 18 mới được load vào bộ nhớ, tiết kiệm hàng chục GB I/O.
+- **Column Pruning (Tỉa cột):** Tự động vứt bỏ các cột không dùng ở hàm `SELECT`, giảm mạnh chi phí Serialize bộ nhớ.
+- **Constant Folding:** Biến `WHERE date = '2026-06-26' + INTERVAL 1 DAY` thành một hằng số đã được tính trước ở Compile time để tiết kiệm CPU tại Runtime.
 
-### Phân tích cú pháp (Parsing) -> Unresolved Logical Plan
-Đầu tiên, Spark SQL sử dụng ANTLR (một công cụ phân tích cú pháp) để phân tích truy vấn SQL hoặc DataFrame API thành một Cây cú pháp trừu tượng (Abstract Syntax Tree - AST). Kết quả của bước này là một **Unresolved Logical Plan**.
-- *Tại sao gọi là Unresolved?* Vì lúc này Catalyst chỉ mới biết các cấu trúc của câu lệnh (vd: SELECT, FROM, WHERE), nhưng chưa biết các cột và bảng có thực sự tồn tại hay không, hoặc kiểu dữ liệu của chúng là gì.
+### Bước 4: Tối Ưu Hóa Vật Lý Dựa Trên Chi Phí (CBO - Physical Planning)
+Từ Optimized Logical Plan, Catalyst sẽ tạo ra hàng loạt các kịch bản thực thi khác nhau. Ví dụ: Join hai bảng thì có thể dùng `SortMergeJoin`, `BroadcastHashJoin`, hay `ShuffleHashJoin`.
 
-### Phân tích định danh (Analysis) -> Resolved Logical Plan
-Catalyst sử dụng một thành phần gọi là `Catalog` (có thể kết nối với Hive Metastore) để kiểm tra tính hợp lệ của Unresolved Logical Plan.
-- Nó kiểm tra xem các bảng (tables) và các cột (columns) có tồn tại trong cơ sở dữ liệu hay không.
-- Kiểm tra kiểu dữ liệu (Data types) để đảm bảo các phép toán hợp lệ (ví dụ không thể cộng một chuỗi với một số).
-- Kết quả thu được là một **Resolved Logical Plan** (hay còn gọi tắt là Logical Plan).
+Spark đưa các kịch bản này vào **Cost-Based Optimizer (CBO)**. CBO thu thập Table Statistics (Kích thước Byte, số dòng) để gán cho mỗi node một "Điểm chi phí I/O & CPU". Physical Plan nào có tổng Cost thấp nhất sẽ được chọn.
 
-### Tối ưu hóa Logic (Logical Optimization) -> Optimized Logical Plan
-Đây là lúc Catalyst áp dụng các tập hợp quy tắc dựa trên Heuristic (Rule-based Optimization - RBO) để tối ưu hoá Resolved Logical Plan. Kết quả là **Optimized Logical Plan**. Một số tối ưu hoá tiêu biểu bao gồm:
-- **Predicate Pushdown (Đẩy điều kiện lọc xuống sớm):** Đẩy các hàm `filter` hay `where` xuống càng gần nguồn dữ liệu càng tốt để giảm lượng dữ liệu cần đọc lên bộ nhớ.
-- **Column Pruning (Loại bỏ cột thừa):** Chỉ đọc các cột có tham gia vào truy vấn (SELECT, WHERE, JOIN), bỏ qua các cột không cần thiết.
-- **Constant Folding (Gộp hằng số):** Tự động tính toán các biểu thức hằng số ngay lúc compile thay vì lúc chạy (Ví dụ: biến `1 + 2` thành `3`).
-- **Boolean Expression Simplification:** Đơn giản hóa các biểu thức logic (ví dụ: `NOT (a > b)` thành `a <= b`).
+## 2. Sinh Mã Tự Động Toàn Trình (Whole-Stage Code Generation)
 
-### Lập kế hoạch vật lý (Physical Planning) -> Selected Physical Plan
-Từ Optimized Logical Plan, Catalyst sẽ tạo ra một hoặc nhiều **Physical Plans** (kế hoạch thực thi vật lý) mô tả chính xác cách dữ liệu sẽ được xử lý trên cluster.
-Ở giai đoạn này, Catalyst sử dụng **Cost-based Optimization (CBO)**:
-- Dựa trên các số liệu thống kê (Statistics) về dữ liệu (như kích thước bảng, số dòng, giá trị min/max, số lượng giá trị duy nhất), CBO tính toán chi phí (cost) cho từng Physical Plan.
-- Lựa chọn kế hoạch có chi phí thấp nhất làm **Selected Physical Plan**.
-- *Ví dụ điển hình:* Quyết định chiến lược Join: Dùng `BroadcastHashJoin` (nếu có 1 bảng nhỏ) hay `SortMergeJoin` (nếu cả 2 bảng đều lớn).
+Một khi Kế hoạch Vật lý (Physical Plan) chốt xong, nó sẽ được chuyển giao cho **Project Tungsten**. Tungsten không diễn dịch (interpret) từng dòng tính toán, mà nó áp dụng **Whole-Stage Code Generation**.
 
-### Sinh mã tự động (Code Generation)
-Sau khi có kế hoạch vật lý tối ưu, Spark sử dụng **Project Tungsten** để chuyển đổi Physical Plan thành mã Java Bytecode tối ưu thông qua tính năng **Whole-Stage Code Generation**.
-Thay vì gọi các hàm lồng nhau làm tốn kém chi phí (CPU overhead, virtual function dispatch), CodeGen "gộp" toàn bộ chuỗi các phép toán (vd: đọc dữ liệu -> lọc -> chiếu) thành một hàm Java duy nhất, chạy nhanh như code C++ do viết tay.
+**Trade-off của Iterator Model cũ (Volcano Model):**
+Trong quá khứ, mỗi phép toán (Filter, Project) là một hàm độc lập. Dữ liệu đi qua chuỗi các node phải trải qua hàm gọi ảo (Virtual Function Call) liên tục, phá hủy CPU Cache (L1/L2).
 
-## 3. Tối ưu hoá dựa trên chi phí (Cost-Based Optimizer - CBO)
-
-Được giới thiệu mạnh mẽ từ Spark 2.2, CBO nâng cao khả năng của Catalyst bằng cách sử dụng số liệu thống kê của bảng để ra quyết định tốt hơn, nhất là khi thực hiện JOIN nhiều bảng.
-
-Để CBO hoạt động hiệu quả, hệ thống cần số liệu thống kê bằng cách chạy lệnh:
-```sql
-ANALYZE TABLE ten_bang COMPUTE STATISTICS FOR COLUMNS cot1, cot2;
-```
-
-CBO mang lại các lợi ích lớn:
-- **Join Reordering (Sắp xếp lại thứ tự JOIN):** Nếu bạn join 3 bảng A, B, C. CBO tính toán kích thước của A JOIN B so với B JOIN C để quyết định phép tính nào thực hiện trước nhằm giảm thiểu kích thước dữ liệu trung gian (Intermediate Data).
-- **Lựa chọn đúng phương pháp Join:** Chuyển đổi linh hoạt giữa BroadcastHashJoin, ShuffleHashJoin và SortMergeJoin.
-
-## 4. Adaptive Query Execution (AQE) - Cuộc cách mạng trong Spark 3.x
-
-Một nhược điểm của CBO truyền thống là nó dựa vào số liệu thống kê tĩnh (tính toán trước khi chạy). Trong thực tế, dữ liệu có thể bị phân bố lệch (skewed) hoặc các hàm User Defined Functions (UDF) làm thống kê bị sai lệch trong lúc chạy.
-
-**AQE (Adaptive Query Execution)**, một tính năng lớn từ Spark 3.0, giải quyết vấn đề này bằng cách thu thập số liệu **ngay trong lúc đang chạy (runtime)** ở các điểm kết thúc của các Stage (thường là sau quá trình Shuffle) để tự động điều chỉnh kế hoạch thực thi cho các Stage tiếp theo.
-
-AQE mang lại 3 tối ưu hoá đột phá:
-
-### Dynamically Coalescing Shuffle Partitions (Gộp động các phân vùng Shuffle)
-Khi người dùng để cấu hình mặc định `spark.sql.shuffle.partitions = 200`, có thể có quá nhiều phân vùng nhỏ rải rác (gây lãng phí I/O và overhead scheduling) hoặc quá ít phân vùng lớn (gây OOM).
-AQE giám sát lượng dữ liệu đầu ra của shuffle và tự động gộp (coalesce) các phân vùng nhỏ liền kề thành phân vùng vừa phải, giúp cân bằng tải và tối ưu hiệu suất.
-
-### Dynamically Switching Join Strategies (Đổi chiến lược Join động)
-Giả sử có hai bảng được lên kế hoạch dùng `SortMergeJoin`. Tuy nhiên sau bước lọc dữ liệu (filter), một bảng bất ngờ thu nhỏ lại (kích thước nhỏ hơn `spark.sql.autoBroadcastJoinThreshold`).
-Thay vì vẫn thực hiện SortMergeJoin nặng nề (đòi hỏi shuffle và sort), AQE sẽ đổi ngay sang `BroadcastHashJoin` ngay tại runtime.
-
-### Dynamically Optimizing Skew Joins (Tối ưu hóa lệch dữ liệu khi Join)
-Data Skew (dữ liệu lệch) là "kẻ thù số 1" gây chậm hoặc chết các Job do một vài Executor phải ôm lượng dữ liệu khổng lồ.
-AQE tự động phát hiện các phân vùng bị lệch (skewed partitions) dựa trên kích thước sau giai đoạn shuffle. Nó sẽ tự động chia nhỏ (split) phân vùng bị lệch thành nhiều phần nhỏ hơn, và sao chép (replicate) dữ liệu tương ứng của bảng bên kia để join song song, loại bỏ hiện tượng thắt cổ chai (bottleneck).
-
-## 5. Dynamic Partition Pruning (DPP)
-
-Một tính năng ấn tượng khác cùng ra mắt trong Spark 3.0 là DPP (Tỉa phân vùng động). Trong kiến trúc Data Warehouse (Star Schema), ta thường xuyên Join bảng sự kiện lớn (Fact table) với bảng danh mục nhỏ (Dimension table).
-
-- Truy vấn thông thường: Lọc trên bảng Dimension -> Join với bảng Fact lớn.
-- **Không có DPP:** Spark phải đọc toàn bộ bảng Fact lên (Rất tốn kém), sau đó mới có thể thực hiện Join để lọc bớt.
-- **Có DPP:** Spark thực hiện một truy vấn con ẩn trên bảng Dimension để lấy ra các danh sách khoá cần thiết, sau đó `push down` danh sách này xuống thành điều kiện lọc (filter) tại bước đọc bảng Fact. Bằng cách này, Spark bỏ qua (prune) việc đọc các phân vùng (partitions) của bảng Fact không thỏa mãn điều kiện. DPP mang lại mức tăng tốc hiệu năng khổng lồ (có thể gấp chục lần).
-
-## 6. Cách đọc và hiểu Execution Plan
-
-Để xem Catalyst đã lên kế hoạch gì cho DataFrame hoặc truy vấn SQL của bạn, hãy sử dụng `.explain()`:
+**Cách Tungsten giải quyết:**
+Nó "Gộp" toàn bộ chuỗi Pipeline của Catalyst (Ví dụ: Đọc File -> Filter -> Select) thành một hàm Java lớn (Single Function). Mã Java này sau đó được biên dịch sang Bytecode bằng trình biên dịch Janino siêu tốc ngay lúc chạy (Runtime).
+Điều này loại bỏ hoàn toàn Overhead của CPU, giúp Code Spark SQL chạy với tốc độ tiệm cận với Code C++ được tối ưu hóa thủ công (Bare-Metal Speed).
 
 ```scala
-// Mặc định hiển thị Physical Plan
-df.explain()
+// Quan sát mã sinh (Generated Code) của Spark bằng explain
+df.filter("age > 18").select("name").explain("codegen")
+// Ký hiệu *(1), *(2) trong bảng Physical Plan chính là ranh giới của các Whole-Stage Code Gen Block.
+```
 
-// Hiển thị đầy đủ tất cả các bước (Parsed, Analyzed, Optimized, Physical)
-df.explain(true) 
-// Hoặc trong Spark 3.x
+## 3. Kiến Trúc Cao Cấp: Dynamic Partition Pruning (DPP)
+
+Được phát hành vào Spark 3.0, **DPP (Tỉa phân vùng động)** là bước tiến lớn của Catalyst phục vụ Data Warehousing (Star Schema).
+
+**Scenario: Join bảng Fact siêu lớn (Partition theo ngày) và bảng Dimension nhỏ.**
+```sql
+SELECT f.revenue 
+FROM fact_sales f 
+JOIN dim_store d ON f.store_id = d.id 
+WHERE d.region = 'APAC';
+```
+Bình thường, Catalyst không thể *Push-down* điều kiện `d.region = 'APAC'` xuống bảng Fact vì bảng Fact không có cột `region`. Điều này dẫn đến bảng Fact phải được Scan toàn bộ lên bộ nhớ.
+
+**Sự can thiệp của DPP:**
+Ngay tại thời điểm biên dịch vật lý, Catalyst "cài" một subquery ẩn. Nó chạy độc lập để lọc ra toàn bộ các `store_id` thuộc 'APAC' (Ví dụ ra danh sách `[12, 15, 99]`). 
+Sau đó, nó biến danh sách này thành bộ lọc (In-clause predicate) đẩy ngược về File Scanner của bảng Fact. File Scanner chỉ Scan các Partition chứa `store_id` đó. Disk I/O được cắt giảm theo cấp số nhân.
+
+## 4. Operational Troubleshooting với `EXPLAIN`
+
+Một Staff Data Engineer bắt buộc phải biết cách gỡ lỗi truy vấn thông qua Physical Plan.
+
+```python
+# Sử dụng 'extended' để theo dõi vòng đời biến đổi
 df.explain("extended")
 ```
 
-Khi đọc Explain Plan, bạn nên đọc từ **dưới lên trên**.
-* Nút dưới cùng là các nguồn lấy dữ liệu: `FileScan parquet`, `JDBCRelation`. (Hãy kiểm tra các `PushedFilters` tại đây xem Predicate Pushdown đã hoạt động chưa).
-* Các bước ở giữa là các thao tác biến đổi: `Filter`, `Project`, `Exchange` (chính là Shuffle), `Sort`.
-* Các bước Join: Tìm kiếm `BroadcastHashJoin`, `SortMergeJoin`. Nếu thấy `SortMergeJoin` kèm theo lượng dữ liệu quá lớn, có thể cần suy nghĩ về Skewness.
-* Nếu thấy ký hiệu `*(1)` hoặc `*(2)`, điều đó có nghĩa là Whole-Stage Code Generation đang được áp dụng tại block đó.
+**Cách đọc Plan (Từ dưới lên trên):**
+1. **Dưới cùng (Leaf Nodes):** `FileScan parquet ...`. Hãy tìm phần `PushedFilters`. Nếu bạn viết `.filter()` mà không thấy điều kiện ở đây, có nghĩa là Predicate Pushdown đã thất bại (thường do dùng UDF). I/O của bạn sẽ nổ tung.
+2. **Ở giữa (Internal Nodes):** `Exchange` báo hiệu ranh giới Shuffle. Nếu thấy `Exchange hashpartitioning`, kiểm tra xem phía trên nó là thuật toán Join gì. Nếu là `SortMergeJoin` và lượng dữ liệu lên đến Terabyte, bạn cần tính tới phương án bật AQE hoặc Salting.
+3. **Ký hiệu \*(1), \*(2):** Đây là các điểm mà Whole-Stage Code Gen đang chạy.
 
-## Tổng Kết
-
-Catalyst Optimizer và sự tiến hoá liên tục của nó (từ RBO, CBO, Project Tungsten đến AQE) chính là lý do khiến Spark SQL duy trì vị thế dẫn đầu trong các công cụ xử lý dữ liệu Big Data. Bằng cách hiểu luồng hoạt động của Catalyst, các Kỹ sư dữ liệu (Data Engineer) có thể nắm bắt cách viết các câu lệnh hiệu quả hơn, biết cách phân tích nguyên nhân tại sao một job Spark chạy chậm, và có thể tinh chỉnh (tune) các cấu hình nâng cao một cách chuyên nghiệp.
-
-## Tài Liệu Tham Khảo
-* [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
-* [Spark SQL: Relational Data Processing in Spark](https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf)
-* **Troubleshooting Spark OOM and Memory Management - Uber Engineering**
-* [Spark Shuffle Architecture - DataBricks Deep Dive](https://databricks.com/session/deep-dive-into-spark-sql-with-advanced-performance-tuning)
+## Nguồn Tham Khảo (References)
+- [Spark SQL: Relational Data Processing in Spark (SIGMOD 2015)](https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf)
+- [Databricks Deep Dive: Catalyst Optimizer](https://databricks.com/session/deep-dive-into-spark-sql-with-advanced-performance-tuning)
+- [Databricks Project Tungsten: Bringing Spark Closer to Bare Metal](https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-apache-spark-closer-to-bare-metal.html)

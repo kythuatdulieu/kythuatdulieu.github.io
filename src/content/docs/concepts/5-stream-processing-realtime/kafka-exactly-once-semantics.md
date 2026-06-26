@@ -1,142 +1,182 @@
 ---
 title: "Deep Dive: Exactly-Once Semantics (EOS) & Transactional Outbox Pattern"
-description: "Phân tích sâu về cơ chế Exactly-Once Semantics trong Apache Kafka và cách áp dụng Transactional Outbox Pattern để giải quyết bài toán Dual-Write trong kiến trúc Microservices và Data Streaming."
+description: "Phân tích kiến trúc của cơ chế Exactly-Once Semantics trong Apache Kafka và cách áp dụng Transactional Outbox Pattern kết hợp CDC (Debezium) để giải quyết bài toán Dual-Write trong hệ thống phân tán."
+lastUpdated: "2026-06-26"
 ---
 
+Trong thiết kế hệ thống phân tán (Distributed Systems), một trong những bài toán kinh điển và khó nhằn nhất là đảm bảo **Exactly-Once Semantics (EOS - Xử lý chính xác một lần)**. Làm thế nào để đảm bảo một sự kiện (ví dụ: trừ tiền tài khoản) không bị thất lạc (Data Loss) và cũng không bị xử lý nhân đôi (Duplicate Processing) khi network chập chờn, máy chủ crash, hoặc rớt kết nối Database?
 
-
-Trong nhiều năm, bài toán khó nhất của hệ thống phân tán (Distributed Systems) và Stream Processing là đảm bảo **Exactly-Once Semantics (EOS - Xử lý chính xác một lần)**. Làm sao để khi mạng rớt, máy chủ sập hoặc cơ sở dữ liệu gặp sự cố, dữ liệu không bị thất lạc và cũng không bị xử lý nhân đôi? Đặc biệt là trong các hệ thống đòi hỏi tính chính xác tuyệt đối như giao dịch ngân hàng, tính cước viễn thông, hay quản lý kho hàng.
-
-Bài viết này sẽ đi sâu vào hai khía cạnh quan trọng nhất để đạt được sự toàn vẹn dữ liệu:
-1. Cơ chế EOS bên trong Apache Kafka (Idempotent Producer & Transactions).
-2. Mẫu thiết kế **Transactional Outbox Pattern** để giải quyết bài toán Dual-Write giữa Database và Message Broker trong kiến trúc Microservices.
-
----
-
-## 1. Các Mức Độ Đảm Bảo Phân Phối Tin Nhắn (Message Delivery Guarantees)
-
-
-
-Trước khi đi sâu vào EOS, chúng ta cần hiểu ba mức độ đảm bảo phân phối tin nhắn cơ bản trong các hệ thống truyền tin:
-
-1. **At-most-once (Tối đa một lần)**: Tin nhắn được gửi đi và không bao giờ được gửi lại. Dữ liệu có thể bị mất nếu hệ thống gặp lỗi. Phù hợp cho các use-case ít quan trọng như log telemetry.
-2. **At-least-once (Ít nhất một lần)**: Hệ thống đảm bảo tin nhắn sẽ đến đích, nhưng nếu có lỗi xảy ra (ví dụ: mạng chậm làm mất ACK), tin nhắn có thể được gửi lại và xử lý nhiều lần, dẫn đến trùng lặp dữ liệu.
-3. **Exactly-once (Chính xác một lần)**: Mức độ lý tưởng nhất. Hệ thống đảm bảo mỗi tin nhắn được xử lý *đúng một lần duy nhất*, ngay cả khi máy chủ sập hoặc quá trình giao tiếp gặp sự cố mạng.
+Bài viết này mổ xẻ kiến trúc vật lý bên dưới hai mảnh ghép quan trọng nhất để đạt được sự toàn vẹn dữ liệu trong Data Streaming:
+1. Cơ chế **Idempotent Producer** và **Transactions** bên trong Apache Kafka.
+2. Mẫu thiết kế **Transactional Outbox Pattern** kết hợp Change Data Capture (CDC) để xử lý bài toán Dual-Write.
 
 ---
 
-## 2. Apache Kafka Exactly-Once Semantics (EOS)
+## 1. Apache Kafka Exactly-Once Semantics (EOS) Architecture
 
-Apache Kafka đã giải quyết bài toán EOS một cách triệt để từ phiên bản 0.11 bằng cách kết hợp hai tính năng chính: **Idempotent Producer** và **Kafka Transactions**.
+Trước Kafka 0.11, Kafka chỉ hỗ trợ *At-least-once* (Ít nhất một lần) hoặc *At-most-once* (Tối đa một lần). Việc Retry khi không nhận được ACK từ Broker dễ dàng dẫn đến Duplicate. Để đạt được EOS, Kafka đã thiết kế lại giao thức truyền thông bằng hai cơ chế cốt lõi.
 
-### 2.1. Idempotent Producer (Nhà sản xuất miễn nhiễm với trùng lặp)
+### 1.1. Idempotent Producer (Single-Partition)
 
-Trong cấu hình mặc định ở các phiên bản cũ, khi Producer gửi một gói tin đến Kafka Broker, nếu nó không nhận được mã xác nhận (ACK) do kết nối bị đứt, Producer sẽ tự động gửi lại (Retry). Điều này dẫn đến rủi ro Broker nhận được 2 gói tin giống hệt nhau (Duplicate).
+Ý tưởng của Idempotent Producer vay mượn từ giao thức TCP. Nó giúp Producer có thể gửi lại (Retry) một gói tin bao nhiêu lần tùy ý mà Broker vẫn đảm bảo không bị ghi trùng lặp trên một Partition.
 
-**Idempotent Producer** giải quyết triệt để việc này bằng cách:
-- Gắn một **Producer ID (PID)** duy nhất và một **Sequence Number** (số thứ tự tự động tăng) cho mỗi batch tin nhắn từ mỗi partition.
-- Kafka Broker duy trì số `Sequence Number` lớn nhất đã nhận được từ mỗi `PID` cho từng partition.
-- Nếu Broker nhận được một batch tin nhắn có `Sequence Number` nhỏ hơn hoặc bằng số đã lưu trữ, nó nhận diện đây là gói tin bị gửi trùng và sẽ âm thầm bỏ qua, chỉ gửi lại mã ACK cho Producer.
+**Kiến trúc thực thi vật lý:**
+- Khi khởi tạo, Producer được Broker cấp một **Producer ID (PID)** duy nhất và một `epoch`.
+- Mỗi batch tin nhắn gửi đi được gắn một **Sequence Number** (bắt đầu từ 0 và tăng dần).
+- Tại Kafka Broker, mỗi Partition duy trì một bảng map trong bộ nhớ (Memory) ghi lại `Sequence Number` lớn nhất đã nhận được từ mỗi `PID`.
+- Khi Broker nhận một batch, nó kiểm tra:
+  - Nếu `SeqNum == LastSeqNum + 1`: Chấp nhận ghi vào Log.
+  - Nếu `SeqNum <= LastSeqNum`: Đây là bản sao bị trùng (Duplicate do Retry), Broker âm thầm bỏ qua và trả về `ACK`.
+  - Nếu `SeqNum > LastSeqNum + 1`: Báo lỗi `OutOfOrderSequenceException` (Có khoảng trống dữ liệu bị mất).
 
-**Cách kích hoạt:**
-Vô cùng đơn giản, từ Kafka 3.0, tính năng này được **bật mặc định**. Nếu dùng phiên bản cũ hơn, bạn chỉ cần thiết lập thuộc tính sau trên Producer:
+**Cấu hình thực chiến (Kafka Properties):**
+Từ Kafka 3.0, tính năng này được **bật mặc định**. Nếu dùng bản cũ, bạn cấu hình:
 ```properties
 enable.idempotence=true
+# Các cấu hình ngầm định tự động ép buộc khi bật idempotence:
+acks=all
+max.in.flight.requests.per.connection<=5
+retries=2147483647
 ```
 
-### 2.2. Kafka Transactions (Giao dịch liên Topic & Partition)
+### 1.2. Kafka Transactions (Multi-Partition & Read-Process-Write)
 
-Idempotence chỉ giải quyết được việc tránh trùng lặp trên *một* Partition của *một* Topic tại một thời điểm. Tuy nhiên, trong Stream Processing (như Kafka Streams hoặc Flink), dòng chảy dữ liệu thường tuân theo mô hình: **Read - Process - Write**.
-Cụ thể: Đọc dữ liệu từ Topic A $\rightarrow$ Xử lý logic $\rightarrow$ Ghi kết quả vào Topic B, và đồng thời phải commit *offset* (đánh dấu vị trí đã đọc) ở Topic A.
+Idempotence chỉ giải quyết bài toán P2P (Point-to-Point) trên một Partition. Nhưng trong Stream Processing (Kafka Streams, Flink), luồng dữ liệu luôn là **Read - Process - Write**. Bạn đọc dữ liệu từ Topic A, biến đổi, ghi vào Topic B, và cuối cùng phải Commit Offset của Topic A. 
 
-Nếu máy chủ xử lý bị sập *sau khi* ghi kết quả vào Topic B nhưng *trước khi* commit offset ở Topic A, khi khởi động lại, ứng dụng sẽ đọc lại dữ liệu từ Topic A và ghi ra kết quả lần thứ hai vào Topic B.
+Nếu ứng dụng crash giữa chừng, bạn có thể đã ghi vào Topic B nhưng chưa commit Offset Topic A. Khi restart, ứng dụng sẽ đọc lại và sinh ra duplicate ở Topic B.
 
-**Kafka Transactions** sử dụng một biến thể của cơ chế Two-Phase Commit (2PC) để gộp việc "Ghi dữ liệu vào Topic B" và "Lưu Offset của Topic A" thành một **Giao Dịch (Transaction)** nguyên tử (Atomic):
+Để giải quyết, Kafka triển khai **Kafka Transactions** dựa trên biến thể của giao thức **Two-Phase Commit (2PC)**, được điều phối bởi **Transaction Coordinator** và lưu trạng thái vào topic nội bộ `__transaction_state`.
 
-1. **Transaction Coordinator**: Kafka sử dụng một module tên là Transaction Coordinator cùng topic nội bộ `__transaction_state` để theo dõi các giao dịch.
-2. **Begin Transaction**: Khởi tạo giao dịch. Producer được cấp một `transactional.id` (cố định để nhận diện qua các lần khởi động lại).
-3. **Write**: Ghi dữ liệu vào Topic B. Đồng thời gửi Offset của Topic A đến Transaction Coordinator. Dữ liệu lúc này đã nằm trên Broker nhưng đang ở trạng thái chưa cam kết (uncommitted).
-4. **Commit/Abort Transaction**: 
-   - Nếu xử lý hoàn tất, Producer gửi yêu cầu **Commit**. Dữ liệu được đánh dấu là hợp lệ.
-   - Nếu có lỗi phát sinh, hệ thống gọi **Abort**, các dữ liệu rác trước đó sẽ bị vô hiệu hóa.
+```mermaid
+sequenceDiagram
+    participant App as Stream App
+    participant TC as Transaction Coordinator
+    participant TLog as __transaction_state
+    participant TopicA as Topic A (Source)
+    participant TopicB as Topic B (Sink)
 
-**Phía Consumer:**
-Để Consumer không đọc phải dữ liệu rác (uncommitted hoặc aborted), bạn bắt buộc phải cấu hình:
+    App->>TC: InitTransactions (transactional.id)
+    TC-->>App: PID & Epoch assigned
+    App->>TC: BeginTransaction
+    App->>TopicA: Consume Messages
+    App->>TC: AddPartitionsToTxn (Topic B)
+    App->>TopicB: Produce Messages (Uncommitted)
+    App->>TC: SendOffsetsToTxn (Offset of Topic A)
+    App->>TC: CommitTransaction
+    TC->>TLog: Log PrepareCommit
+    TC->>TopicB: Write Control Record (Commit Marker)
+    TC->>TopicA: Commit Offsets
+    TC->>TLog: Log CompleteCommit
+```
+
+**Cách hoạt động của Marker Records:**
+Khi Producer ghi dữ liệu trong Transaction, dữ liệu thực tế **ngay lập tức** được nối (append) vào log của Topic B trên đĩa, nhưng nó vô hình với Consumer. Khi giao dịch Commit, Transaction Coordinator sẽ ghi một **Control Record** (Marker) đặc biệt vào cuối partition của Topic B.
+
+**Cấu hình Consumer để tránh "đọc bẩn" (Dirty Read):**
+Nếu không cấu hình, Consumer mặc định sẽ đọc mọi thứ. Để Consumer chỉ đọc các message đã được Commit, bạn BẮT BUỘC phải dùng:
 ```properties
 isolation.level=read_committed
 ```
-Consumer sẽ chỉ trả về cho ứng dụng những tin nhắn thuộc về các giao dịch đã hoàn thành thành công.
+Bên dưới, Broker sẽ duy trì một con trỏ gọi là **LSO (Last Stable Offset)**. Consumer chỉ được phép fetch dữ liệu nhỏ hơn LSO.
 
 ---
 
-## 3. Bài Toán Dual-Write Và Transactional Outbox Pattern
+## 2. The Dual-Write Problem & Transactional Outbox Pattern
 
-Kafka EOS rất mạnh mẽ nhưng nó chỉ gói gọn trong ranh giới của cụm Kafka. Trong thực tế Microservices, chúng ta thường xuyên đối mặt với bài toán **Dual-Write (Ghi kép)**: Một Service phải lưu dữ liệu nghiệp vụ vào Database, đồng thời phát một sự kiện (Event) ra Kafka cho các hệ thống khác.
+Dù Kafka EOS hoàn hảo, nó chỉ nằm gọn trong ranh giới cụm Kafka. Thực tế trong kiến trúc Microservices, hệ thống thường đối mặt với **Dual-Write**: 
+1. `INSERT` dữ liệu đơn hàng vào PostgreSQL.
+2. `PRODUCE` sự kiện `OrderCreated` vào Kafka để service Inventory trừ kho.
 
-**Ví dụ:** Service `Order` ghi đơn hàng mới vào DB PostgreSQL và gửi sự kiện `OrderCreated` lên Kafka để Service `Inventory` trừ kho.
+Nếu không dùng Distributed Transaction (ví dụ: XA Protocol - vốn cực kỳ chậm), lỗi mạng ở bước 2 sẽ dẫn đến **Bất đồng bộ trạng thái (State Inconsistency)**: Database có đơn hàng, nhưng Kafka không có event, kho không được trừ.
 
-**Nếu xử lý không khéo, lỗi mạng sẽ gây bất đồng bộ:**
-1. Lưu DB thành công $\rightarrow$ Lỗi khi gửi Kafka $\rightarrow$ Có đơn hàng nhưng kho không trừ.
-2. Gửi Kafka thành công $\rightarrow$ Lỗi khi lưu DB $\rightarrow$ Không có đơn hàng nhưng kho lại bị trừ.
+### 2.1. Kiến trúc Transactional Outbox kết hợp CDC (Debezium)
 
-Bạn không thể bọc 2 thao tác này trong một Local Database Transaction thông thường vì Kafka không phải là Database.
+Giải pháp tiêu chuẩn ngành (Industry Standard) để giải quyết Dual-Write là **Transactional Outbox Pattern** kết hợp với Change Data Capture (CDC). Thay vì ứng dụng trực tiếp gọi API Kafka, ứng dụng sẽ ghi sự kiện vào một bảng tạm `outbox_events` nằm chung trong một ACID Database Transaction cùng với dữ liệu nghiệp vụ.
 
-### 3.1. Transactional Outbox Pattern Hoạt Động Như Thế Nào?
+```mermaid
+sequenceDiagram
+    participant App as Microservice
+    participant DB as Postgres (Primary)
+    participant WAL as PG WAL
+    participant Debezium as Debezium (Kafka Connect)
+    participant Kafka as Kafka Broker
 
-Giải pháp chuẩn mực để giải quyết Dual-Write là **Transactional Outbox Pattern**. Thay vì gửi trực tiếp sự kiện sang Kafka, Service sẽ **ghi sự kiện đó vào một bảng tạm (Outbox Table) nằm chung trong Database**, và bọc nó chung một Transaction với thao tác cập nhật dữ liệu nghiệp vụ.
+    Note over App,DB: 1. Local Database Transaction
+    App->>DB: BEGIN Transaction
+    App->>DB: INSERT INTO orders (...)
+    App->>DB: INSERT INTO outbox_events (payload)
+    App->>DB: COMMIT Transaction
+    
+    Note over DB,WAL: 2. Logical Decoding
+    DB->>WAL: Flush to Write-Ahead Log (WAL)
+    
+    Note over Debezium,Kafka: 3. Real-time CDC Streaming
+    Debezium->>WAL: Tail/Read WAL (Logical Decoding)
+    Debezium->>Kafka: Produce Event to Topic (At-least-once)
+    Kafka-->>Debezium: ACK
+```
 
-**Các bước thực hiện:**
-1. Bắt đầu Database Transaction.
-2. Lưu dữ liệu nghiệp vụ: `INSERT INTO orders (...)`.
-3. Ghi sự kiện vào bảng Outbox: `INSERT INTO outbox_events (aggregate_id, event_type, payload)` với nội dung là JSON của sự kiện `OrderCreated`.
-4. Commit Database Transaction.
-
-Tính chất ACID của Relational Database đảm bảo rằng hai thao tác này mang tính nguyên tử. Dữ liệu kinh doanh và sự kiện tương ứng luôn đồng hành cùng nhau.
-
-### 3.2. Chuyển Tiếp Sự Kiện (Message Relay) Từ Outbox Lên Kafka
-
-Có hai phương pháp phổ biến để đọc dữ liệu từ bảng Outbox và đẩy lên Kafka:
-
-#### Cách 1: Polling Publisher (Quét Bảng Theo Chu Kỳ)
-Một cron job hoặc một process chạy ngầm liên tục `SELECT` các dòng trạng thái `PENDING` trong bảng Outbox, gửi chúng vào Kafka, sau đó `UPDATE` thành `PUBLISHED` hoặc `DELETE`.
-* **Ưu điểm:** Dễ hiểu, dễ cài đặt bằng mã nguồn trực tiếp (Java/Go/Python).
-* **Nhược điểm:** Tăng tải cho Database (do poll liên tục), độ trễ cao (latency phụ thuộc vào chu kỳ quét). Có rủi ro *At-least-once* nếu tiến trình bị sập sau khi gửi Kafka nhưng chưa kịp cập nhật trạng thái trong DB.
-
-#### Cách 2: Transaction Log Tailing / Change Data Capture (CDC)
-Sử dụng một công cụ chuyên dụng như **Debezium** để trực tiếp "lắng nghe" Transaction Log (ví dụ: `binlog` của MySQL, `WAL` của PostgreSQL). Debezium sẽ đóng vai trò như Kafka Source Connector. Bất cứ khi nào có bản ghi mới được INSERT vào bảng Outbox, Debezium lập tức đẩy sự kiện đó lên Kafka với độ trễ chỉ tính bằng mili-giây.
-* **Ưu điểm:** Hiệu năng cực cao, không làm tăng tải DB với các câu truy vấn, hỗ trợ Real-time (Thời gian thực).
-* **Nhược điểm:** Phải vận hành thêm hạ tầng Debezium & Kafka Connect, đòi hỏi kiến thức vận hành sâu hơn.
-
----
-
-## 4. Có Phải Lúc Nào Cũng Nên Dùng EOS Và Outbox Pattern?
-
-Mặc dù EOS và Transactional Outbox nghe giống như viên đạn bạc giải quyết mọi vấn đề, chúng đi kèm với cái giá đáng kể: **Hiệu năng (Performance) và Độ phức tạp (Complexity)**.
-
-* **Hiệu năng bị suy giảm:** Quá trình đàm phán 2PC của Kafka Transactions, độ trễ mạng thêm vào, và việc ghi DB hai lần (nghiệp vụ + outbox) làm tăng chi phí thời gian thực thi (Latency) và giảm đáng kể thông lượng (Throughput) hệ thống.
-* **Chi phí vận hành:** Việc khắc phục sự cố giao dịch kẹt (stuck transactions), xử lý DLQ (Dead Letter Queue) do Debezium không phân tích được dữ liệu đòi hỏi nhân sự kinh nghiệm.
-
-**Nguyên tắc lựa chọn kiến trúc:**
-- Ứng dụng thanh toán, giao dịch ngân hàng, tính cước viễn thông, thương mại điện tử cốt lõi: **Bắt buộc áp dụng EOS & Outbox Pattern**.
-- Hệ thống thu thập Log (Centralized Logging), theo dõi thao tác người dùng (Clickstream), hay hệ thống gợi ý sản phẩm (Recommendation): **Chỉ nên dùng At-least-once**. Dư một vài click chuột không làm hỏng tính chính xác tổng thể, nhưng thông lượng khổng lồ mới là điều quan trọng nhất.
+**Code thực chiến (PostgreSQL):**
+Thay vì quản lý bảng Outbox truyền thống, bạn có thể dùng một bảng cực kỳ đơn giản:
+```sql
+CREATE TABLE outbox_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    aggregate_type VARCHAR(255) NOT NULL,
+    aggregate_id VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    payload JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+*Lưu ý:* Debezium sẽ đọc trực tiếp từ Write-Ahead Log (WAL) thông qua `pgoutput` plugin. Do đó, ngay khi Transaction được Commit xuống đĩa, Debezium sẽ bắt được sự kiện gần như tức thời (Sub-millisecond latency) mà **không cần Polling (`SELECT`)** gây sập DB.
 
 ---
 
-## 5. Mảnh Ghép Cuối Cùng: Idempotent Consumer
+## 3. Systemic Trade-offs & Operational Risks (Lỗi Thực Chiến)
 
-Kể cả khi bạn phát sự kiện một cách an toàn (Transactional Outbox) và Broker quản lý trạng thái an toàn (Kafka EOS), điểm đến cuối cùng của chuỗi dữ liệu (Consumer) cũng cần được thiết kế vững chắc. 
+Mọi giải pháp thiết kế hệ thống đều đòi hỏi sự đánh đổi. EOS và Outbox Pattern mang lại độ tin cậy tuyệt đối, nhưng cái giá phải trả không hề rẻ.
 
-Một **Idempotent Consumer** có khả năng nhận cùng một tin nhắn nhiều lần mà kết quả ở đích cuối (Database của Consumer) vẫn không thay đổi. Cách đơn giản nhất để triển khai là Consumer sử dụng `event_id` (hoặc `message_id`) làm khóa chính hoặc lưu `event_id` đã xử lý vào Redis/DB để lọc trùng. 
+### 3.1. Consumer Lag do Zombie Transactions (Kafka)
+**Triệu chứng:** Khi dùng `isolation.level=read_committed`, Consumer bỗng dưng ngừng tiêu thụ dữ liệu (Lag tăng đột biến) dù Producer vẫn đang đẩy dữ liệu vào.
+**Root Cause (Nguyên nhân):** Một Transaction bị "treo" (Zombie Transaction) do Producer crash mà không báo Abort, hoặc Transaction Coordinator gặp lỗi. Khi đó, con trỏ **LSO (Last Stable Offset)** bị khóa chặt tại vị trí của Transaction đang treo đó. Dù có hàng triệu message mới được gửi vào thuộc các Transaction khác, Consumer cũng không thể đọc vượt qua LSO.
+**Giải pháp:** 
+- Đặt `transaction.timeout.ms` (mặc định 1 phút) hợp lý để Broker tự động Abort các giao dịch treo.
+- Theo dõi metrics `kafka.coordinator.transaction:type=transaction-coordinator-metrics,name=transaction-rate`.
 
-Kết hợp bộ ba: **Transactional Outbox (Phát an toàn) + Kafka EOS (Vận chuyển an toàn) + Idempotent Consumer (Xử lý an toàn)**, bạn sẽ làm chủ hoàn toàn dòng chảy dữ liệu hệ thống phân tán.
+### 3.2. Write Amplification & WAL Bloat (Outbox Pattern)
+**Triệu chứng:** Đĩa cứng của Database tăng đột biến (Disk Full), Replicas bị lag cấu hình CDC.
+**Root Cause:** Mô hình Outbox sinh ra tình trạng **Write Amplification (Khuếch đại ghi)**. Một thao tác chèn đơn hàng khiến DB phải ghi vào `orders`, ghi vào bảng `outbox_events`, sau đó ghi cả hai thao tác này vào WAL, đẩy WAL qua mạng cho Replica, và đẩy WAL cho Debezium. Nếu Debezium bị lỗi mạng và ngưng đọc, PostgreSQL sẽ giữ lại toàn bộ WAL file chưa được tiêu thụ, gây tràn đĩa.
+**Giải pháp:** 
+- Implement cơ chế dọn dẹp bảng Outbox (cronjob xóa dữ liệu định kỳ).
+- Monitor Replication Slot Size. Đặt `max_slot_wal_keep_size` trong PostgreSQL để phòng hờ trường hợp Debezium rớt quá lâu, DB thà drop replication slot còn hơn là sập đĩa.
+
+### 3.3. Hiệu năng & Throughput (Latency Overhead)
+Giao thức Two-Phase Commit trong Kafka yêu cầu nhiều round-trips mạng tới Transaction Coordinator. Cấu hình `acks=all` và `min.insync.replicas=2` ép dữ liệu phải được replicate sang tối thiểu 1 Broker khác trước khi báo thành công. Việc này tăng **Latency** lên đáng kể.
+**Hệ quả:** Đối với các hệ thống Clickstream Tracking hoặc IoT Telemetry với lưu lượng hàng triệu RPS, áp dụng EOS là tự sát. **Chỉ dùng EOS và Outbox cho Core Business (Thanh toán, Trừ tiền, Quản lý kho)**. Với Log và Analytics, *At-least-once* là quá đủ.
 
 ---
 
-## Tài Liệu Tham Khảo
+## 4. Idempotent Consumer: Mảnh Ghép Cuối Cùng
 
-* [Exactly-Once Semantics in Apache Kafka - Confluent Blog](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
-* [Transactional Outbox Pattern - Microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)
-* [Debezium Documentation - Change Data Capture](https://debezium.io/documentation/reference/stable/)
-* **Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau**
-* [Kafka: a Distributed Messaging System for Log Processing - LinkedIn (NetDB 2011)](http://notes.stephenholiday.com/Kafka.pdf)
+Debezium (hoặc bất kỳ hệ thống outbox relay nào) cung cấp *At-least-once delivery* khi đẩy dữ liệu vào Kafka. Tức là, nếu Debezium gửi event vào Kafka, Kafka nhận được nhưng gói ACK báo về bị rớt mạng, Debezium sẽ gửi lại.
 
+Điều này nghĩa là **Consumer ở đích đến phải là Idempotent (Miễn nhiễm với trùng lặp)**.
+Ví dụ: Thay vì cập nhật DB dạng tương đối:
+```sql
+-- SAI: Không Idempotent, chạy 2 lần sẽ bị trừ tiền 2 lần
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+```
+Hãy thiết kế Consumer xử lý theo kiểu tuyệt đối (Upsert/SCD) hoặc sử dụng bảng `processed_messages` để chặn trùng lặp:
+```sql
+-- ĐÚNG: Idempotent bằng cách dùng khóa chính
+INSERT INTO processed_messages (event_id) VALUES ('msg_123') ON CONFLICT DO NOTHING;
+-- Nếu INSERT thành công, mới tiến hành trừ tiền.
+```
+
+## 5. Nguồn Tham Khảo (References)
+
+1. **Confluent Blog:** [Exactly-Once Semantics are Possible: Here’s How Apache Kafka Does it](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
+2. **Uber Engineering:** [Reliable Processing with Apache Flink and Kafka](https://www.uber.com/en-VN/blog/reliable-processing-with-apache-flink-and-kafka/)
+3. **Debezium Official Docs:** [Reliable Microservices Data Exchange With the Outbox Pattern](https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/)
+4. **Sách:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Chapter 9: Consistency and Consensus.
+5. **Sách:** *Streaming Systems* (Tyler Akidau).

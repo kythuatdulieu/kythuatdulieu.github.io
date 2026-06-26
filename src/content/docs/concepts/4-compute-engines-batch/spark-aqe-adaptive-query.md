@@ -1,132 +1,78 @@
 ---
-title: "Deep Dive: Adaptive Query Execution (AQE) trong Spark 3.x"
-description: "Phân tích chuyên sâu về kiến trúc, cơ chế hoạt động, các tính năng cốt lõi và cách tinh chỉnh Adaptive Query Execution (AQE) trong Apache Spark."
+title: "Deep Dive: Adaptive Query Execution (AQE)"
+difficulty: "Advanced"
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Spark AQE (Adaptive Query Execution): Runtime Physical Plan Optimization"
+metaDescription: "Kiến trúc và vòng đời hoạt động của Adaptive Query Execution (AQE) trong Spark. Cách AQE xử lý Data Skew, gom nhóm partition và chuyển đổi Join Strategy tự động."
+description: "Spark AQE chấm dứt thời đại phải tune tay hàng chục thông số. Bằng cách chèn các vòng phản hồi (feedback loop) tại ranh giới Shuffle, AQE định hình lại Kế hoạch Vật lý (Physical Plan) ngay tại thời gian chạy (Runtime)."
 ---
 
+Trước Apache Spark 3.x, Catalyst Optimizer thực hiện tối ưu hóa hoàn toàn tĩnh (Static Optimization). Hệ thống dựa trên số liệu thống kê thu thập từ trước (Cost-Based Optimizer - CBO) để lên Kế hoạch Thực thi Vật lý (Physical Execution Plan). Nhưng "kế hoạch trên giấy" hiếm khi sống sót qua thực tế chiến trường.
 
+Việc dữ liệu phình to sau một hàm UDF (User-Defined Function) hay bị thu hẹp đột ngột sau bước `Filter` khiến các chiến lược được dự tính (như `SortMergeJoin`) trở thành thảm họa I/O. **Adaptive Query Execution (AQE)** thay đổi luật chơi bằng cách thu thập *Runtime Statistics* và thay đổi Kế hoạch Thực thi ngay giữa chừng.
 
-Adaptive Query Execution (AQE) được giới thiệu chính thức và ổn định từ Apache Spark 3.0 (và được bật mặc định từ Spark 3.2.0), đánh dấu một bước ngoặt lớn trong quá trình tối ưu hóa truy vấn của hệ sinh thái Spark. Khác với Catalyst Optimizer thông thường vốn dĩ thực hiện tối ưu hóa tĩnh (Static Optimization) dựa trên các quy tắc (Rule-based) và chi phí ước tính (Cost-based) trước khi thực thi, AQE mang đến khả năng thích ứng động. Nó cho phép Spark thu thập số liệu thống kê thực tế (Runtime Statistics) trong quá trình chạy và tự động điều chỉnh Kế hoạch thực thi (Execution Plan) ngay giữa chừng.
+## 1. Cơ Chế Bắt Nhịp Của AQE (Materialization Points)
 
-Bài viết này sẽ đi sâu vào kiến trúc cơ sở của AQE, ba tính năng cốt lõi, cách cấu hình, phân tích Spark UI khi có AQE, cũng như các giới hạn của nó.
+AQE không can thiệp vào giữa một Task đang chạy. Thay vào đó, nó tận dụng ranh giới tự nhiên của các Stage trong kiến trúc Spark: **Ranh giới Shuffle (Shuffle Boundaries)**.
 
----
+Khi dữ liệu được tính toán xong ở Map-side và Spill xuống đĩa (Shuffle Write), Spark gọi đây là một **Điểm chốt dữ liệu (Materialization Point)**. Tại khoảnh khắc này, kích thước chính xác của từng partition đã được biết rành mạch.
 
-## 1. Kiến Trúc Và Cơ Chế Hoạt Động Của AQE
+```mermaid
+graph TD
+    A["Start Stage 1"] --> B("Map Tasks Execute")
+    B --> C{"Materialization Point \n("Shuffle Write")"}
+    C -->|Feed Exact Stats| D["AQE Framework"]
+    D --> E("Catalyst: Re-optimize Logical Plan")
+    E --> F("Catalyst: Generate New Physical Plan")
+    F --> G["Submit Stage 2 with New Plan"]
+```
 
-Trước Spark 3.x, Spark tính toán execution plan (kế hoạch thực thi) trước khi job bắt đầu chạy và tuân thủ nghiêm ngặt kế hoạch đó cho đến khi kết thúc. Tuy nhiên, các ước tính của Cost-Based Optimizer (CBO) có thể bị sai lệch nghiêm trọng do thống kê dữ liệu cũ, thiếu thống kê, hoặc do việc áp dụng các hàm tự định nghĩa (User-Defined Functions - UDF) khiến Spark "mù tịt" về kích thước dữ liệu đầu ra.
+![AQE Architecture Diagram](/images/4-compute-engines-batch/aqe-framework.png)
+*Kiến trúc luồng dữ liệu của AQE phản hồi số liệu trở lại Catalyst Optimizer tại ranh giới Shuffle. (Nguồn: Databricks)*
 
-### 1.1 Ranh giới Shuffle (Shuffle Boundaries) và Điểm Dừng (Materialization Points)
-Trong Spark, một Job được phân rã thành nhiều Stages. Các Stages được phân tách bởi ranh giới của các thao tác **Shuffle** (như `join`, `groupBy`, `repartition`, `distinct`). 
-- Trong quá trình Shuffle, Map tasks ở stage trước sẽ tính toán, phân loại và ghi dữ liệu ra đĩa nội bộ của Executor (Shuffle Write).
-- Reduce tasks ở stage sau sẽ kéo dữ liệu này qua mạng để tiếp tục xử lý (Shuffle Read).
+## 2. Các Đòn Bẩy Hệ Thống Của AQE
 
-AQE tận dụng chính các ranh giới Shuffle này làm các **Materialization Points** (Điểm chốt dữ liệu). Khi toàn bộ Map tasks của một Stage hoàn thành, hệ thống đã ghi nhận chính xác kích thước và số lượng record của dữ liệu được sinh ra. Dựa trên số liệu thống kê thực tế (exact runtime statistics) này, AQE sẽ:
-1. Tạm dừng việc submit các stage tiếp theo.
-2. Nạp số liệu thống kê thực tế trở lại Catalyst Optimizer.
-3. Chạy lại tiến trình tối ưu hóa vật lý (Physical Planning) để xem xét và đánh giá lại kế hoạch của các Stage còn lại.
-4. Chọn một kế hoạch thực thi mới (tối ưu hơn) và tiếp tục thực thi.
+AQE cung cấp 3 tính năng cốt lõi giải quyết triệt để 3 cơn ác mộng lớn nhất của Data Engineers.
 
-### 1.2 Vòng Đời Tối Ưu Hóa Của AQE
-Vòng lặp vận hành của AQE diễn ra lặp đi lặp lại như sau:
-`Thực thi Stage -> Thu thập Runtime Statistics -> Cập nhật Logical/Physical Plan -> Áp dụng Rule mới -> Thực thi Stage tiếp theo`.
+### 2.1. Gom Phân Vùng Động (Dynamically Coalescing Shuffle Partitions)
 
-Quá trình này biến việc lên lịch truy vấn tĩnh thành một quá trình phản hồi liên tục (feedback loop), đảm bảo kế hoạch luôn tốt nhất dựa trên tình trạng dữ liệu ở thời gian thực.
+**Trade-off cũ:** Nếu `spark.sql.shuffle.partitions` quá lớn (VD: 10,000) nhưng dữ liệu thực tế ít, Spark sẽ sinh ra 10,000 file lắt nhắt (Small files problem). Hệ thống tốn I/O Scheduling khổng lồ chỉ để điều phối 10,000 tasks xử lý vài KB. Nếu quá nhỏ, Task bị phình to gây OOM.
 
----
+**Cách AQE giải quyết:** 
+Bạn cứ mạnh dạn set `spark.sql.shuffle.partitions` thật lớn ở mức khởi tạo (Initial Number). Khi Shuffle Write hoàn tất, AQE gom các partition liền kề (Coalesce) có kích thước nhỏ lại với nhau sao cho tiệm cận mức `spark.sql.adaptive.advisoryPartitionSizeInBytes` (mặc định 64MB). Số lượng Reduce Task giảm xuống một mức hoàn hảo mà không đòi hỏi bất kỳ công sức tuning thủ công nào.
 
-## 2. Ba Tính Năng Tối Ưu Hóa Cốt Lõi Của AQE
+### 2.2. Chuyển Đổi Kế Hoạch Join (Dynamically Switching Join Strategies)
 
-AQE giải quyết ba bài toán kinh điển gây đau đầu nhất cho Data Engineers và những nhà quản trị Spark Cluster.
+**Vấn đề:** Catalyst Optimizer lên kế hoạch `SortMergeJoin` (SMJ) vì bảng A và B đều lớn (hàng chục GB). Tuy nhiên, Stage 1 của bảng B có một phép `filter(col('date') == '2026-01-01')`. Sau khi Stage 1 chạy xong, bảng B thực tế chỉ còn vỏn vẹn 5MB. Nếu Spark tiếp tục dùng SMJ, nó sẽ lãng phí hàng giờ cho thao tác Shuffle Network và Sort.
 
-### 2.1 Dynamically Coalescing Shuffle Partitions (Gom nhóm phân vùng tự động)
-**Vấn đề:** 
-Làm sao để cấu hình `spark.sql.shuffle.partitions` (mặc định luôn là 200) cho phù hợp với từng bài toán?
-- Nếu set quá nhỏ (Ví dụ dữ liệu 1TB nhưng partition=200): Lượng dữ liệu trong mỗi partition quá lớn (hàng GB), dẫn đến Spill to Disk (tràn RAM ra đĩa), làm chậm quá trình xử lý cực kỳ nghiêm trọng, và dễ gặp lỗi OOM (Out of Memory).
-- Nếu set quá lớn (Ví dụ dữ liệu 1GB nhưng partition=10000): Dữ liệu bị chia quá vụn thành các file/partition siêu nhỏ. Spark tốn rất nhiều overhead cho việc scheduling tasks, khởi tạo task, và tốn kém I/O để đọc/ghi network cho hàng ngàn task li ti (chỉ xử lý vài KB dữ liệu mỗi task).
+**Hành động của AQE:**
+Ngay tại ranh giới Shuffle, AQE nhận ra bảng B chỉ còn 5MB (< `spark.sql.autoBroadcastJoinThreshold` mặc định 10MB). AQE lập tức "hủy bỏ" kế hoạch SMJ. Kế hoạch vật lý được bẻ lái sang **Broadcast Hash Join (BHJ)**. Bảng B 5MB được đẩy lên Driver và Broadcast thẳng xuống bộ nhớ (RAM) của tất cả Executors đang chứa bảng A. Network I/O Shuffle của bảng A được triệt tiêu hoàn toàn.
 
-**Giải pháp của AQE:**
-Data Engineer có thể mạnh dạn set `spark.sql.shuffle.partitions` bằng một con số khá lớn từ đầu (ví dụ: 800, 2000) dựa vào cụm dữ liệu lớn nhất. Sau quá trình Shuffle Write, AQE sẽ phân tích kích thước thực tế của từng partition được sinh ra. Nếu phát hiện các partition liên tiếp nhau có kích thước quá nhỏ, AQE sẽ gộp (coalesce) chúng lại trong quá trình Shuffle Read, sao cho kích thước mỗi partition mới đạt tới mức lý tưởng tiệm cận `spark.sql.adaptive.advisoryPartitionSizeInBytes` (mặc định 64MB).
+### 2.3. Cứu Nguy Skew Join Động (Dynamically Optimizing Skew Joins)
 
-**Kết quả:** Số lượng Reduce Task được tối ưu hóa động (dynamic reduction of tasks), giảm mạnh overhead từ I/O và Task scheduling, giúp Job kết thúc nhanh chóng hơn.
+Data Skew (dữ liệu lệch đổ dồn về một vài Key) là nguyên nhân số 1 gây ra hiện tượng *Straggler Tasks* (1 task chạy 3 tiếng trong khi 99 task khác chạy 3 phút xong). 
 
-### 2.2 Dynamically Switching Join Strategies (Chuyển đổi chiến lược Join động)
-**Vấn đề:**
-Broadcast Hash Join (BHJ) là thuật toán Join nhanh nhất trong Spark, vì nó chỉ định phát (broadcast) bảng nhỏ tới toàn bộ các Executors, loại bỏ hoàn toàn quá trình Shuffle qua mạng khét tiếng. Tuy nhiên, nếu Spark tĩnh không nhận diện được bảng đã nhỏ lại (ví dụ: sau khi áp dụng filter lọc dữ liệu trên một bảng rất lớn, kết quả trả về chỉ còn vài MB), Spark vẫn mù quáng chọn Sort-Merge Join (SMJ) - một thuật toán đòi hỏi phải sort (sắp xếp) và shuffle (phân phối lại) cả hai bảng qua mạng rất tốn kém tài nguyên và thời gian.
+Thường các Engineer phải dùng thủ thuật **Salting** (thêm khóa ngẫu nhiên) để chia để trị. Với AQE, việc này là tự động:
+1. AQE quét số liệu Shuffle Write, nếu một Partition có dung lượng lớn hơn `skewedPartitionFactor` (mặc định 5 lần) so với trung vị và lớn hơn `skewedPartitionThresholdInBytes` (256MB), nó dán nhãn **Skew**.
+2. AQE xẻ (Split) Partition bị nghiêng bên bảng A thành $N$ phần nhỏ bằng nhau.
+3. Đồng thời, AQE nhân bản (Replicate) Partition tương ứng ở bảng B thành $N$ bản sao.
+4. $N$ task mới được lập lịch để thực hiện Join cục bộ giữa mảnh nhỏ của A và bản sao của B.
 
-**Giải pháp của AQE:**
-Ngay tại ranh giới shuffle (sau khi việc đọc/filter dữ liệu đã xong và ghi ra đĩa), AQE kiểm tra lại kích thước thực tế của các phía tham gia Join. Nếu kích thước thực tế của một phía Join nhỏ hơn cấu hình `spark.sql.autoBroadcastJoinThreshold` (mặc định 10MB), nó sẽ mạnh dạn "vứt bỏ" kế hoạch Sort-Merge Join ban đầu, hủy bỏ bước Sort (sắp xếp) và chuyển ngay sang Broadcast Hash Join.
+OOMKilled bị đánh bại hoàn toàn mà không cần sửa một dòng code SQL nào.
 
-**Kết quả:** Loại bỏ hoàn toàn Network Shuffle và Sort tốn kém tài nguyên ở Stage tiếp theo, tăng tốc truy vấn đáng kể. Bạn sẽ thấy node `BroadcastQueryStage` thay vì node `SortMergeJoin` truyền thống trong DAG.
+## 3. Rủi Ro Vận Hành & Fallbacks: AQE Demote Broadcast Hash Join
 
-### 2.3 Dynamically Optimizing Skew Joins (Tự động tối ưu hóa Data Skew)
-**Vấn đề:**
-Data Skew (Dữ liệu bị lệch/phân bổ không đồng đều) là kẻ thù số 1 của mô hình tính toán phân tán. Khi join dữ liệu trên một khóa (key) phân bố không đều (VD: `country = 'US'` chiếm 80% tổng số bản ghi), theo cơ chế băm (hash), 1 task sẽ phải gồng mình xử lý 80% dữ liệu đó, trong khi 199 tasks khác xử lý 20% còn lại xong rất nhanh rồi "ngồi chơi". Task bị kẹt (Straggler task) này làm đình trệ toàn bộ job, tiêu tốn toàn bộ bộ nhớ và CPU của một Executor và rất dễ gây văng ứng dụng do lỗi OOM.
+Có những rủi ro khi CBO tĩnh đánh giá một bảng là nhỏ gọn (dưới 10MB) và quyết định dùng Broadcast Hash Join ngay từ đầu. Tuy nhiên, khi truy vấn chạy thực tế (runtime), bảng này có thể giãn nở (Decompress ratio) hoặc bị nghiêng cực độ khiến bộ nhớ của Driver và Executor vượt quá giới hạn (Broadcast Timeout / Driver OOM).
 
-**Giải pháp của AQE:**
-AQE theo dõi chặt chẽ kích thước của các partition sau khi Shuffle Write. Nếu một partition lớn hơn `spark.sql.adaptive.skewJoin.skewedPartitionFactor` nhân với kích thước partition trung bình (VÀ đồng thời vượt qua ngưỡng `spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes`), nó được tự động dán nhãn là **Skewed Partition**.
+Từ Spark 3.2+, AQE hỗ trợ tính năng **Demote Broadcast Hash Join**. Ngay tại Shuffle boundary, nếu AQE phát hiện bảng vượt quá ngưỡng dung lượng an toàn thực tế, nó sẽ chủ động *Hạ cấp* kế hoạch từ BHJ về lại SMJ để tránh làm Crash cụm máy chủ, đặt tính toàn vẹn (Availability) lên trên tốc độ (Latency).
 
-Lúc này, thay vì để 1 task vật lộn với cục dữ liệu khổng lồ đó, AQE sẽ **chia nhỏ (split)** partition bị nghiêng của Bảng A thành N phần nhỏ bằng nhau (sub-partitions). Sau đó, nó sẽ nhân bản (duplicate) partition tương ứng của Bảng B lên N lần để tiến hành join. Nhờ kỹ thuật này, N tasks (thay vì 1 task như ban đầu) sẽ xử lý song song phần dữ liệu nghiêng đó một cách an toàn.
+## 4. Những Góc Khuất Của AQE (Limitations)
 
-**Kết quả:** Giải quyết triệt để vấn đề "task chạy chậm kẹt tài nguyên" và OOM do skew, giúp hiệu năng ổn định, hoàn toàn không cần phải dùng kỹ thuật Salting (thêm muối ngẫu nhiên) thủ công rườm rà.
+- **Không hỗ trợ Streaming:** Bản chất AQE đòi hỏi việc *tạm dừng* (Pause) tại các điểm chốt dữ liệu để phân tích. Với Structured Streaming (xử lý Micro-batch vài ms), độ trễ do việc tạm dừng để Re-optimize là không thể chấp nhận được.
+- **Skew Trong Một Bản Ghi (Row-Level Skew):** AQE cắt Skew ở cấp độ Partition. Nếu Skew xảy ra do *một dòng dữ liệu duy nhất* (Ví dụ một JSON mảng khổng lồ nặng 2GB), AQE vô dụng. Máy nghiền I/O vẫn sẽ làm sập Executor chứa dòng đó.
 
----
-
-## 3. Các Tính Năng Nâng Cao Khác Của AQE (Spark 3.2+)
-
-Ngoài 3 tính năng kinh điển, các bản cập nhật Spark sau này liên tục bổ sung cho AQE:
-- **Demote BroadcastHashJoin:** Trong một số trường hợp, Catalyst ước tính một bảng rất nhỏ nhưng trong thực tế (runtime) bảng đó lại phình to bất thường (có thể do nén dữ liệu quá mức hoặc data skew). AQE có khả năng nhận ra nguy cơ quá tải bộ nhớ và lập tức "hạ cấp" (demote) kế hoạch từ Broadcast Join trở lại Sort Merge Join để tránh làm sập driver/executor do lỗi OOM.
-- **Empty Relation Propagation:** Nếu AQE nhận ra một Stage trả về kết quả rỗng (0 rows) sau khi áp dụng filter, nó có thể báo cho Catalyst Optimizer chặn đứng và không cần phải chạy (skip execution) các logic Join phía sau liên quan đến partition rỗng đó, tiết kiệm cực kỳ nhiều tài nguyên cho Cluster.
-
----
-
-## 4. Bảng Cấu Hình AQE Chi Tiết (Configuration)
-
-Để tinh chỉnh AQE cho phù hợp với cụm cluster và bài toán, Data Engineer sử dụng các tham số sau trong cấu hình Spark Session hoặc khi submit qua `spark-submit`:
-
-| Tham Số | Giá trị mặc định | Mô tả chi tiết |
-| :--- | :---: | :--- |
-| `spark.sql.adaptive.enabled` | `true` (từ bản 3.2) | Công tắc tổng để bật/tắt toàn bộ tính năng AQE. (Lưu ý: Spark 3.0-3.1 mặc định là `false`). |
-| `spark.sql.adaptive.coalescePartitions.enabled` | `true` | Bật tính năng gộp các shuffle partitions có kích thước nhỏ lại với nhau. |
-| `spark.sql.adaptive.coalescePartitions.initialPartitionNum` | _Not set_ | Số lượng partition khởi tạo ban đầu trước khi tính toán coalesce. Khuyên dùng: đặt bằng với `spark.sql.shuffle.partitions`. |
-| `spark.sql.adaptive.advisoryPartitionSizeInBytes` | `64MB` | Kích thước partition mục tiêu mong muốn sau khi gom lại. (Nên điều chỉnh theo cấu hình máy và tốc độ I/O đĩa/mạng). |
-| `spark.sql.adaptive.localShuffleReader.enabled` | `true` | Hỗ trợ tối ưu việc đọc dữ liệu shuffle cục bộ (local) mà không cần qua network khi chuyển đổi từ SMJ sang BHJ. |
-| `spark.sql.adaptive.skewJoin.enabled` | `true` | Kích hoạt tính năng xử lý Skew Join (xử lý dữ liệu nghiêng lệch tự động). |
-| `spark.sql.adaptive.skewJoin.skewedPartitionFactor` | `5` | Tỉ lệ gấp bao nhiêu lần so với kích thước partition trung vị (median) thì một partition sẽ bị coi là skew. |
-| `spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes`| `256MB` | Kích thước tối thiểu tuyệt đối để một partition bị coi là skew (ngăn chặn việc chia nhỏ các partition dù lệch gấp 5 lần nhưng kích thước thực tế chỉ vài MB). |
-
----
-
-## 5. Khi Nào AQE Không Hoạt Động Hoặc Kém Hiệu Quả?
-
-AQE vô cùng thông minh nhưng không phải là "viên đạn bạc" giải quyết bách bệnh về mặt performance:
-
-1. **Truy vấn không có ranh giới Shuffle:** AQE dựa hoàn toàn vào các điểm chốt dữ liệu (Materialization Points) sinh ra tại giai đoạn ghi Shuffle. Nếu ứng dụng Spark của bạn chỉ bao gồm các phép biến đổi hẹp (Narrow Transformations) như `map`, `filter`, `select` mà hoàn toàn không có `join` hay `groupBy`, AQE sẽ không có điểm can thiệp nào và việc bật nó lên sẽ không thay đổi bất kỳ điều gì.
-2. **Spark Streaming / Structured Streaming:** Ở thời điểm hiện tại, AQE **không được hỗ trợ** trong các ứng dụng Structured Streaming. Bản chất của Streaming là xử lý các luồng dữ liệu vô tận theo các micro-batches cực ngắn (vài chục mili-giây đến vài giây), việc tạm dừng để đánh giá lại kế hoạch liên tục tốn quá nhiều overhead dẫn đến độ trễ không chấp nhận được cho bài toán thời gian thực.
-3. **Data Skew Nội Tại Bên Trong Một Hàng (Row):** AQE xử lý skew ở cấp độ Partition. Nếu một giá trị key (ví dụ mảng Json rất lớn chứa hàng trăm ngàn phần tử) nằm gói gọn trong vỏn vẹn một dòng (row) và dòng này có kích thước lên đến hàng GB, AQE bất lực vì nó không thể xẻ nhỏ một dòng dữ liệu duy nhất ra chia cho các node. Đây là lỗi thiết kế cấu trúc dữ liệu tồi tệ, và vẫn sẽ đánh sập executor bởi OOM.
-4. **Logic xử lý tồi và Thiết kế dữ liệu kém:** Nếu dữ liệu đầu vào không được phân vùng trên hệ thống lưu trữ (HDFS/S3) đúng cách, định dạng text lưu thô thay vì Parquet/ORC, hoặc ứng dụng của bạn gọi các truy vấn Cartesian Join (Cross Join) vô nghĩa tỷ x tỷ records, AQE chỉ giảm bớt phần ngọn chứ không chữa được cốt lõi của sự chậm chạp.
-
----
-
-## 6. Theo Dõi AQE Trong Thực Tế
-
-### Trong Spark SQL UI
-Khi AQE can thiệp vào job đang chạy, giao diện Spark UI ở tab **SQL** là nơi quan sát sinh động nhất:
-- Các node trên sơ đồ execution plan (DAG) ban đầu chưa được chạy (unresolved).
-- Khi có thay đổi từ AQE, bạn sẽ thấy các node mới được gắn thêm tiền tố `AdaptiveSparkPlan`.
-- Có node ghi nhận `CustomShuffleReader` với chỉ số `coalesced` (báo hiệu tính năng gom partition thành công).
-- Node `SortMergeJoin` có thể sẽ bị gạch mờ và được thay thế hoàn toàn bởi nhánh `BroadcastHashJoin`.
-- Sự xuất hiện của cờ `isSkew` = true trên một số nhánh cây của node báo hiệu Data Skew đã được xử lý.
-
-### Thông qua lệnh `explain`
-Nếu bạn dùng lệnh `df.explain(True)` để in ra execution plan trên console, ở phần cuối cùng dưới tiêu đề `== Physical Plan ==` sẽ có một dòng chữ bắt đầu bằng `AdaptiveSparkPlan isFinalPlan=false` (hoặc `true` nếu truy vấn đã chạy xong). Sự xuất hiện của node AdaptiveSparkPlan là minh chứng rõ ràng nhất chỉ ra rằng truy vấn của bạn đã và đang được tối ưu hóa động bởi AQE.
-
----
-
-## Tài Liệu Tham Khảo Mở Rộng
-
-* [Adaptive Query Execution: Speeding Up Spark SQL at Runtime - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
-* [Spark SQL Guide: Adaptive Query Execution - Apache Spark Docs](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)
-* [Databricks: Optimizing Apache Spark with AQE (Video Session) - YouTube]
-* [Designing Data-Intensive Applications - Martin Kleppmann (Chương 10: Batch Processing)]
-* [Troubleshooting Adaptive Query Execution in Spark 3 - Uber Engineering Blog]
-* [The Pragmatic Engineer: Joe Reis on Modern Spark Optimization Techniques]
+## Nguồn Tham Khảo (References)
+- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime - Databricks](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+- [Spark SQL Guide: Adaptive Query Execution](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)
+- Uber Engineering Blog, *Troubleshooting Adaptive Query Execution in Spark 3*.

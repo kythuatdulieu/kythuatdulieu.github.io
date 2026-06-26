@@ -30,7 +30,7 @@ Kiến trúc tách biệt phá vỡ sự ràng buộc phần cứng này bằng 
 
 ```mermaid
 flowchart TD
-    subgraph monolithic["Monolithic Architecture (Shared-Nothing)"]
+    subgraph monolithic["Monolithic Architecture("Shared-Nothing")"]
         Node1["Node 1: CPU + RAM + Local Disk"]
         Node2["Node 2: CPU + RAM + Local Disk"]
         Node3["Node 3: CPU + RAM + Local Disk"]
@@ -39,14 +39,14 @@ flowchart TD
         Node1 <--> Node3
     end
 
-    subgraph decoupled["Decoupled Architecture (Storage & Compute Separated)"]
+    subgraph decoupled["Decoupled Architecture("Storage & Compute Separated")"]
         subgraph compute_layer["Compute Layer"]
             C1["Compute Cluster A \n Data Science Workload"]
             C2["Compute Cluster B \n BI Dashboards"]
             C3["Compute Cluster C \n ETL/ELT Batch Jobs"]
         end
         subgraph storage_layer["Storage Layer"]
-            S[("Centralized Cloud Object Storage \n S3 / GCS / Azure Blob")]
+            S["("Centralized Cloud Object Storage \n S3 / GCS / Azure Blob")"]
         end
         C1 -->|High-Speed Network| S
         C2 -->|High-Speed Network| S

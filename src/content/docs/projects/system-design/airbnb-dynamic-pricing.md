@@ -31,32 +31,32 @@ Việc xây dựng mô hình định giá tại Airbnb chứa đựng sự phứ
 ```mermaid
 flowchart TD
     subgraph Client_Layer
-        C[Client / Web App]
+        C["Client / Web App"]
     end
 
     subgraph API_Gateway
-        GW[API Gateway]
+        GW["API Gateway"]
     end
 
     subgraph Microservices
-        PS[Pricing Service]
-        SS[Search Service]
-        BS[Booking Service]
+        PS["Pricing Service"]
+        SS["Search Service"]
+        BS["Booking Service"]
     end
 
     subgraph Storage_and_Cache
-        RC[(Redis Cluster)]
-        DB[(Apache Cassandra / DynamoDB)]
+        RC["(Redis Cluster)"]
+        DB["(Apache Cassandra / DynamoDB)"]
     end
 
     subgraph Data_Platform
-        Kafka[Apache Kafka - Event Bus]
-        Spark[Apache Spark - Batch Layer]
-        Flink[Apache Flink - Real-time Layer]
-        S3[(Data Lake - Hadoop/S3)]
-        Zipline[Zipline / Feature Store]
-        ML[ML Inference Service]
-        Airflow[Apache Airflow - Orchestration]
+        Kafka["Apache Kafka - Event Bus"]
+        Spark["Apache Spark - Batch Layer"]
+        Flink["Apache Flink - Real-time Layer"]
+        S3["(Data Lake - Hadoop/S3)"]
+        Zipline["Zipline / Feature Store"]
+        ML["ML Inference Service"]
+        Airflow["Apache Airflow - Orchestration"]
     end
 
     C -->|Tim Kiem / Luot Xem| GW

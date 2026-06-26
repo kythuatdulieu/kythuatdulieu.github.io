@@ -196,12 +196,12 @@ Họ sử dụng công cụ **Debezium** đứng lắng nghe (theo dõi) sự th
 flowchart TD
     subgraph AppGrp["Application Tier"]
         App["API Backend"]
-        Cache[("Redis Cluster")]
+        Cache["("Redis Cluster")"]
         CacheUpdater["Worker CDC Listener"]
     end
     
     subgraph DBGrp["Data Tier"]
-        MySQL[("Primary DB (MySQL/PG)")]
+        MySQL["("Primary DB("MySQL/PG")")"]
         Debezium["Debezium CDC Connector"]
         Kafka["Apache Kafka Event Bus"]
     end

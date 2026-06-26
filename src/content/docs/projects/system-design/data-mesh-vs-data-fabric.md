@@ -68,10 +68,10 @@ graph TD
 
     %% Domains
     subgraph Domain_Sales ["Domain: Sales & Marketing"]
-        S_DB[("CRM DB")]
+        S_DB["("CRM DB")"]
         S_Pipe("Data Pipelines")
-        DP_Sales1[["Data Product: Customer 360"]]
-        DP_Sales2[["Data Product: Marketing RoI"]]
+        DP_Sales1["["Data Product: Customer 360""]]
+        DP_Sales2["["Data Product: Marketing RoI""]]
         
         S_DB --> S_Pipe
         S_Pipe --> DP_Sales1
@@ -79,9 +79,9 @@ graph TD
     end
     
     subgraph Domain_Finance ["Domain: Finance & Billing"]
-        F_DB[("Billing System")]
+        F_DB["("Billing System")"]
         F_Pipe("Data Pipelines")
-        DP_Finance1[["Data Product: Monthly Revenue"]]
+        DP_Finance1["["Data Product: Monthly Revenue""]]
         
         F_DB --> F_Pipe
         F_Pipe --> DP_Finance1
@@ -110,7 +110,7 @@ graph TD
     DP_Finance1 -->|Discovered via| Catalog
     
     %% Consumers
-    Consumers(("Data Scientists & BI")) -->|Query via Catalog| DP_Sales1
+    Consumers("("Data Scientists & BI"")) -->|Query via Catalog| DP_Sales1
     Consumers -->|Query via Catalog| DP_Finance1
 
     class Domain_Sales,Domain_Finance domain;
@@ -185,16 +185,16 @@ Data Fabric đóng vai trò là một **màng lưới thông minh (fabric/layer)
 graph BT
     %% Sources
     subgraph Data_Sources ["Distributed Data Sources"]
-        DB1[("Oracle On-Prem")]
-        DB2[("S3 Data Lake")]
-        DB3[("Snowflake Cloud")]
-        DB4[("NoSQL MongoDB")]
+        DB1["("Oracle On-Prem")"]
+        DB2["("S3 Data Lake")"]
+        DB3["("Snowflake Cloud")"]
+        DB4["("NoSQL MongoDB")"]
     end
 
     %% Fabric Layer
     subgraph Data_Fabric ["Data Fabric Layer"]
         Meta("Active Metadata System")
-        KG(("Knowledge Graph\n& Semantics"))
+        KG("("Knowledge Graph\n& Semantics""))
         AI("AI / ML Recommendation Engine")
         Virt["Data Virtualization / Federated Engine\n e.g., Presto/Trino/Denodo"]
         
@@ -216,7 +216,7 @@ graph BT
     Virt ===|Queries On-the-fly| DB4
 
     %% Consumers
-    Consumers(("Data Analysts,\nScientists, BI"))
+    Consumers("("Data Analysts,\nScientists, BI""))
     Consumers ===|Single SQL Query Endpoint| Virt
 ```
 

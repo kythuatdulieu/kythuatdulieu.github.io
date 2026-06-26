@@ -95,7 +95,7 @@ Dựa trên Tags, đội ngũ Data Engineering có thể tự tay xây dựng m�
 flowchart LR
     A["AWS CUR / GCP Billing Export"] -->|Raw CSV/JSON| B("Amazon S3 / GCS")
     B -->|Eventbridge + Lambda| C{"Snowpipe / BQ Load"}
-    C --> D[("Snowflake / BigQuery")]
+    C --> D["("Snowflake / BigQuery")"]
     D -->|dbt transformations| E["Aggregated Cost Models"]
     E -->|Superset / Tableau| F["FinOps Dashboard"]
     E -->|Slack Bot| G["Daily Cost Alerts to Teams"]

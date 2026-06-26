@@ -1,122 +1,81 @@
 ---
 title: "Kiến trúc MPP & Dremel"
 difficulty: "Advanced"
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Kiến trúc MPP & Dremel - Data Engineering Deep Dive"
-metaDescription: "Bí mật đằng sau khả năng quét hàng Petabyte dữ liệu trong vài giây của Google BigQuery. Tìm hiểu kiến trúc MPP và Google Dremel."
-description: "Khám phá kiến trúc MPP (Massively Parallel Processing) và công cụ Dremel của Google - trái tim của BigQuery."
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "MPP Architecture & Google Dremel - BigQuery Deep Dive"
+metaDescription: "Phân tích sâu kiến trúc Massively Parallel Processing (MPP), Execution Tree của Google Dremel (BigQuery), Columnar Storage, và Repetition/Definition Levels."
+description: "Mổ xẻ kiến trúc Massively Parallel Processing (MPP) và cốt lõi Dremel của Google BigQuery. Phân tích Execution Tree, Colossus, Borg, và Columnar Storage."
 ---
 
+Sự chậm trễ và tính chất Batch của Hadoop MapReduce đã thúc đẩy Google tìm kiếm một giải pháp thay thế phục vụ việc truy vấn dữ liệu ở tốc độ "Interactive" (vài giây cho PetaBytes). Giải pháp đó chính là hệ thống **Dremel**, được mô tả qua một bài báo khoa học vào năm 2010. Công nghệ này chính là lõi (Engine) đứng đằng sau **Google BigQuery**, và là nền tảng cho sự bùng nổ của các MPP Data Warehouses hiện đại (Snowflake, Redshift, ClickHouse).
 
+## 1. Bản chất của MPP (Massively Parallel Processing)
 
-MPP (Massively Parallel Processing) là kiến trúc xử lý song song quy mô lớn, trong đó mỗi Node có CPU và RAM riêng biệt (Shared-nothing). Dremel là engine MPP do Google tạo ra, đặt nền móng cho BigQuery, hỗ trợ xử lý hàng Petabyte bằng cách chia truy vấn thành một cây thực thi khổng lồ.
+MPP áp dụng kiến trúc **Shared-nothing** (Không chia sẻ tài nguyên). Trong đó, mỗi Node tham gia vào hệ thống sở hữu độc quyền CPU, RAM và Disk. Chúng giao tiếp nội bộ qua mạng băng thông lớn. 
 
-Bài viết này sẽ đi sâu vào kiến trúc cốt lõi của MPP, khám phá cách Dremel hoạt động và giải mã bí mật giúp công nghệ này thực hiện các truy vấn tương tác cực nhanh trên khối lượng dữ liệu khổng lồ.
+*   **Sự đánh đổi (Trade-off):** MPP hi sinh tính Consistency (trong mô hình ACID của cơ sở dữ liệu OLTP truyền thống) và năng lực xử lý giao dịch ghi siêu nhỏ (row-level inserts), đổi lấy khả năng xử lý truy vấn phân tích khổng lồ (OLAP) thông qua mô hình chia-để-trị (Divide and Conquer). Dữ liệu được coi là *Append-only* hoặc *Bulk load*.
 
----
+## 2. Kiến trúc Cây thực thi (Execution Tree) của Dremel
 
-## 1. Kiến trúc MPP (Massively Parallel Processing) là gì?
+Dremel không dựa trên MapReduce hai tầng cứng nhắc, mà sử dụng cơ chế định tuyến hình cây đa tầng (Multi-level Execution Tree) kết hợp với mô hình Scatter-Gather.
 
+```mermaid
+graph TD
+    Client["Client / BI Tool"] --> Root["Root Server"]
+    Root --> M1["Mixer Node L1"]
+    Root --> M2["Mixer Node L1"]
+    
+    M1 --> M3["Mixer Node L2"]
+    M1 --> M4["Mixer Node L2"]
+    M2 --> M5["Mixer Node L2"]
+    M2 --> M6["Mixer Node L2"]
+    
+    M3 --> L1["Leaf Node / Slot"]
+    M3 --> L2["Leaf Node / Slot"]
+    M4 --> L3["Leaf Node / Slot"]
+    M5 --> L4["Leaf Node / Slot"]
+    M6 --> L5["Leaf Node / Slot"]
+```
 
+1.  **Root Server:** Tiếp nhận SQL Query từ người dùng, đọc metadata, compile ra Execution Plan. Định tuyến truy vấn (Scatter) xuống các Mixer bên dưới và Gom kết quả (Gather) để trả về client.
+2.  **Mixer Nodes (Intermediate Servers):** Hoạt động như mạng phân phối. Chúng nhận Query một phần, đẩy xuống Leaf. Khi có dữ liệu trả ngược lên, Mixer đóng vai trò là Aggregator (Ví dụ: Partial Sum, Partial Count) để giảm băng thông chuyển tải (Network transfer) trước khi tới Root. Cấu trúc In-Memory Streaming này loại bỏ hoàn toàn hiện tượng Disk I/O Write của MapReduce trung gian.
+3.  **Leaf Nodes (Slots):** Là các đơn vị Compute nằm dưới cùng. Mỗi Leaf trực tiếp đọc một cục (chunk) dữ liệu từ Disk, filter, project, và tính toán logic tầng thấp nhất.
 
-MPP là một mô hình kiến trúc tính toán phân tán, được thiết kế để xử lý lượng lớn dữ liệu bằng cách chia nhỏ một công việc lớn thành nhiều phần nhỏ gọn hơn và thực thi chúng song song trên nhiều node máy chủ khác nhau.
+## 3. Khởi nguồn Columnar Storage & Dữ liệu lồng nhau
 
-### Đặc điểm cốt lõi của MPP
-* **Shared-Nothing Architecture:** Mỗi node trong cụm MPP đều sở hữu bộ vi xử lý (CPU), bộ nhớ (RAM) và đĩa lưu trữ (Disk) độc lập. Các node không chia sẻ tài nguyên phần cứng với nhau, loại bỏ điểm nghẽn (bottleneck) phổ biến trong kiến trúc shared-memory.
-* **Xử lý phân tán (Distributed Processing):** Khi một truy vấn (Query) được gửi đến, một Node điều phối (Master/Coordinator Node) sẽ phân tích, lập kế hoạch thực thi và chia nhỏ truy vấn này thành nhiều Query Plan nhỏ hơn, phân phối cho các Node xử lý (Worker Nodes/Compute Nodes) thực thi đồng thời.
-* **Giao tiếp qua mạng tốc độ cao:** Vì các node không chia sẻ bộ nhớ, chúng phải trao đổi dữ liệu (ví dụ: trong quá trình JOIN hoặc Aggregation) thông qua hạ tầng mạng nội bộ. Việc này đòi hỏi mạng phải có băng thông cực lớn và độ trễ thấp.
+Yếu tố giúp Dremel quét hàng tỷ dòng trong giây lát là sự kết hợp giữa MPP và định dạng lưu trữ cột (Columnar Storage). Trong các bài toán phân tích, truy vấn thường chỉ yêu cầu quét 3-5 cột trên tổng số 100 cột. Columnar format tối ưu hóa I/O bằng cơ chế **Projection Pushdown** (chỉ đọc các block của cột được yêu cầu).
 
-### Sự khác biệt giữa SMP và MPP
-* **SMP (Symmetric Multiprocessing):** Các CPU chia sẻ chung RAM và hệ điều hành. Phù hợp cho xử lý đa nhiệm quy mô nhỏ. Mở rộng (Scale-up) bị giới hạn bởi phần cứng vật lý của một máy chủ.
-* **MPP:** Các node độc lập hoàn toàn. Mở rộng (Scale-out) dễ dàng bằng cách thêm node mới vào cụm. Phù hợp cho Data Warehouse, Big Data Analytics.
+Tuy nhiên, Big Data thường tồn tại dưới dạng JSON lồng nhau (Nested/Repeated records) như Protocol Buffers. Dremel đã phát minh ra cách "kéo phẳng" (Flaten) các Node dạng cây này thành định dạng cột phẳng thông qua hai metadata flags cực kỳ quan trọng:
 
-Các hệ thống cơ sở dữ liệu truyền thống nổi tiếng sử dụng kiến trúc MPP bao gồm: Teradata, Netezza, Greenplum, Amazon Redshift.
+*   **Repetition Level (RL):** Giá trị này chỉ định tại Node nhánh nào (tree level) trong record, mảng danh sách bắt đầu lặp lại.
+*   **Definition Level (DL):** Để tiết kiệm dung lượng khi field mang giá trị `NULL` hoặc `Optional`, DL cho biết có bao nhiêu Node trên đường dẫn path từ Root đến field này thực sự tồn tại. Dữ liệu NULL sẽ không tốn byte lưu trữ nào.
 
----
+> Định dạng Columnar của Dremel sau này đã truyền cảm hứng trực tiếp cho Apache Foundation tạo ra **Apache Parquet**, chuẩn lưu trữ Big Data thống trị thế giới hiện nay.
 
-## 2. Sự ra đời của Google Dremel
+## 4. Dremel Tiến Hóa thành BigQuery (Google Cloud Era)
 
-Trong hệ sinh thái Big Data ban đầu của Google, công nghệ MapReduce (được Google công bố năm 2004) là giải pháp hoàn hảo cho việc xử lý hàng loạt (Batch Processing) các tệp dữ liệu khổng lồ. Tuy nhiên, MapReduce gặp phải một số hạn chế:
-* **Độ trễ cao (High Latency):** Việc khởi chạy các tác vụ map/reduce tốn thời gian, và phải ghi kết quả trung gian xuống đĩa, không thích hợp cho các truy vấn cần kết quả ngay (Ad-hoc / Interactive Query).
-* **Khó khăn cho Data Analyst:** MapReduce đòi hỏi viết mã lập trình phức tạp (Java, C++), trong khi các nhà phân tích muốn sử dụng ngôn ngữ truy vấn tiêu chuẩn như SQL.
+Trong BigQuery, kiến trúc Dremel đã được tái thiết kế triệt để nhằm tối ưu mô hình **Serverless Data Warehouse**:
 
-Để giải quyết nhu cầu "truy vấn dữ liệu với tốc độ suy nghĩ" (Interactive Analysis), Google đã phát triển **Dremel** và giới thiệu nó thông qua một bài báo khoa học nổi tiếng vào năm 2010. Dremel không sinh ra để thay thế MapReduce mà để bổ sung khả năng truy vấn dữ liệu web-scale trong khoảng thời gian chỉ vài giây.
-
----
-
-## 3. Kiến trúc Cây thực thi (Execution Tree) của Dremel
-
-Thiết kế độc đáo nhất của Dremel chính là cấu trúc xử lý phân tán theo hình cây (Execution Tree), kết hợp với kỹ thuật **Scatter-Gather**.
-
-Cấu trúc này chia làm nhiều tầng:
-1. **Root Server (Máy chủ gốc):** 
-   Nhận truy vấn SQL từ người dùng, đọc siêu dữ liệu (metadata) của bảng, sau đó định tuyến (route) truy vấn xuống các node ở tầng dưới. Nó cũng chịu trách nhiệm tổng hợp kết quả cuối cùng để trả về cho người dùng.
-2. **Intermediate Servers (Máy chủ trung gian):**
-   Nằm ở các nhánh của cây. Chúng nhận một phần của truy vấn từ Root Server, tiếp tục viết lại (rewrite) hoặc chia nhỏ truy vấn và đẩy xuống các tầng sâu hơn. Khi có kết quả từ dưới gửi lên, chúng đóng vai trò làm bộ giảm (reducer/aggregator) để gộp kết quả một phần (partial aggregation) trước khi gửi lên Root.
-3. **Leaf Servers (Máy chủ lá):**
-   Nằm ở tận cùng của cây thực thi. Đây là các node thực thi việc đọc dữ liệu thực tế từ hệ thống lưu trữ phân tán (Colossus/GFS). Chúng quét các khối dữ liệu (chunks), thực hiện lọc (filtering), tính toán cơ bản và trả kết quả ngược lên tầng trung gian.
-
-**Ví dụ quy trình Scatter-Gather:**
-Khi bạn `SELECT COUNT(*)` trên 1 Petabyte dữ liệu, truy vấn sẽ được Root chẻ nhỏ truyền tới hàng chục nghìn Leaf Nodes. Mỗi Leaf Node đếm số dòng trên một block dữ liệu nhỏ vài trăm MB do nó phụ trách. Sau đó, nó trả con số cục bộ lên máy chủ trung gian. Các máy chủ trung gian cộng tổng các số này lại, và cuối cùng Root Server đưa ra con số `COUNT` cuối cùng cho bạn chỉ sau vài giây.
-
----
-
-## 4. Columnar Storage & Xử lý dữ liệu Nested (Lồng nhau)
-
-Thành công của Dremel không chỉ đến từ xử lý song song, mà phần lớn đến từ cách nó lưu trữ dữ liệu. Dremel đã tiên phong sử dụng định dạng lưu trữ theo cột (Columnar Storage) hỗ trợ tối đa cho cấu trúc dữ liệu lồng nhau (Nested Data) - điển hình như dữ liệu Protocol Buffers hoặc JSON.
-
-### Lợi ích của Columnar Storage
-Trong phân tích dữ liệu, các truy vấn thường chỉ quét một vài cột trong một bảng có hàng trăm cột. Lưu trữ dạng cột cho phép:
-* **Giảm thiểu IO:** Hệ thống chỉ đọc chính xác các block chứa dữ liệu của cột cần thiết (Projection Pushdown), bỏ qua dữ liệu không liên quan.
-* **Tối ưu hóa nén dữ liệu (Compression):** Dữ liệu trong cùng một cột thường có chung kiểu và mang tính tương đồng cao, thuật toán nén (như RLE, Dictionary encoding, Snappy) hoạt động cực kỳ hiệu quả, giúp tiết kiệm dung lượng đĩa và băng thông mạng.
-
-### Phân tích kỹ thuật: Repetition Level & Definition Level
-Để biểu diễn các cấu trúc phức tạp (như danh sách, mảng lồng nhau) thành các cột phẳng (flat columns) mà không mất đi cấu trúc cây ban đầu, Dremel sáng tạo ra khái niệm:
-* **Definition Level (DL):** Xác định có bao nhiêu field trong đường dẫn (path) của một nested field thực sự tồn tại (để xử lý dữ liệu NULL/Optional).
-* **Repetition Level (RL):** Xác định ở mức độ (level) nào thì field lồng nhau này bắt đầu một mục lặp mới (xử lý dữ liệu Repeated/Array).
-
-Mô hình định dạng lưu trữ mạnh mẽ này sau đó đã tạo nguồn cảm hứng trực tiếp để cộng đồng mã nguồn mở tạo ra **Apache Parquet**, một trong những định dạng file Big Data phổ biến nhất hiện nay.
+1.  **Phân tách Storage và Compute (Separation of Storage & Compute):** 
+    Khác với MPP nguyên thủy cài đặt chung Storage và Compute trên một Rack vật lý (Hardware lock-in), BigQuery tách rời chúng:
+    *   **Tầng Storage:** Dữ liệu nằm trên **Colossus** (hệ thống lưu trữ bền vững phân tán thế hệ kế tiếp của GFS), lưu dưới dạng Capacitor format.
+    *   **Tầng Compute:** Hàng vạn Compute Slot là các container được quản lý bởi **Borg** (tiền thân của Kubernetes). Borg có thể spin-up hàng vạn micro-services để làm Leaf Node trong vài nano giây khi có truy vấn lớn ập đến.
+2.  **Jupiter Network:** Để khắc phục độ trễ I/O khi Compute và Storage cách xa nhau vật lý, Google kết nối chúng qua hệ thống mạng quang học Jupiter với băng thông lõi lên đến 1 Petabit/giây, đảm bảo Compute Node có thể đọc Storage phân tán mượt mà như đọc ổ đĩa Local NVMe.
+3.  **In-Memory Shuffle Service:** Các tác vụ JOIN lớn, thay vì ghi đĩa tạm, sẽ được đưa vào một Cluster bộ nhớ RAM khổng lồ phân tán chuyên dụng (Shuffle tier), giúp giải quyết các rủi ro Node OOM.
 
 ---
 
-## 5. Từ Dremel đến Google BigQuery (Hiện tại)
+## 5. Rủi ro Hệ thống (Troubleshooting in Dremel/MPP)
 
-**Google BigQuery** chính là dịch vụ Public Cloud được xây dựng dựa trên cốt lõi của Dremel. Tuy nhiên, BigQuery hiện tại (có thể coi là Dremel v2+) đã được nâng cấp với nhiều công nghệ độc quyền của hệ sinh thái Google Cloud:
-
-* **Tách biệt Compute và Storage (Separation of Storage and Compute):** 
-  Khác với kiến trúc MPP truyền thống (như Teradata, nơi CPU và Đĩa cứng gắn liền nhau trên cùng một rack), BigQuery tách rời hoàn toàn:
-  - **Storage:** Sử dụng **Colossus** (hệ thống file thế hệ mới thay thế GFS), lưu trữ dữ liệu bền vững ở định dạng cột (Capacitor format - tiến hóa từ format cũ của Dremel).
-  - **Compute:** Sử dụng cụm Dremel khổng lồ chạy trên hạ tầng quản lý container **Borg** (tiền thân của Kubernetes). Khi có truy vấn, Borg có thể spin-up hàng ngàn container CPU trong tích tắc để phục vụ xử lý.
-* **Jupiter Network:**
-  Để việc tách rời Storage và Compute khả thi mà không bị nghẽn cổ chai IO, Google dùng mạng quang nội bộ Jupiter Network, cung cấp băng thông lên đến mức 1 Petabit/giây (bisection bandwidth). Điều này cho phép các compute node đọc dữ liệu từ storage node nhanh như đọc từ đĩa cứng cục bộ.
-* **Trạng thái lưu trữ tạm thời trong RAM (Shuffle Layer):**
-  Trong quá trình JOIN hoặc tính toán phức tạp cần chuyển đổi vị trí dữ liệu (Shuffle), Dremel hiện đại sử dụng một lớp bộ nhớ cực lớn phân tán (In-Memory Shuffle Tier) để ghi nhận dữ liệu trung gian, giúp truy vấn hoàn thành siêu tốc mà không phải chờ ghi dữ liệu xuống đĩa.
+*   **Distributed JOIN Bottlenecks:** Dremel ưu tiên mạnh mẽ Broadcast Hash Join. Khi cả hai bảng đều siêu lớn và không lọt được vào RAM, Dremel sẽ hash-shuffle. Nếu xảy ra Data Skew nghiêm trọng, một Leaf node sẽ phải xử lý vượt quá giới hạn RAM của Container (Slot) gây ra OOM Error: `Resources exceeded during query execution`.
+*   **Concurrency Limits:** Vì MPP đẩy tính song song nội bộ (Intra-query parallelism) lên tối đa (huy động 5,000 slots cho 1 query), nó bị giới hạn mạnh về khả năng chịu tải song song bên ngoài (Inter-query concurrency). BigQuery thường giới hạn mức Concurrency mặc định chỉ khoảng 100 queries đồng thời, do đó không bao giờ được dùng BigQuery làm Backend cho các ứng dụng Real-time Web (OLTP).
 
 ---
 
-## 6. Ưu điểm và Hạn chế của Dremel/MPP
+## Nguồn Tham Khảo
 
-### Ưu điểm
-* **Tốc độ cực nhanh:** Thích hợp cho Data Warehousing và Ad-hoc Analytics, OLAP (Online Analytical Processing).
-* **Scale lớn:** Xử lý tốt các bảng dữ liệu hàng tỷ, nghìn tỷ dòng. Cung cấp mô hình Serverless (với BigQuery), không cần người dùng tự cấp phép và quản lý server.
-
-### Hạn chế (Trade-offs)
-* **Fault-tolerance hạn chế (So với MapReduce):** Dremel được thiết kế cho các truy vấn ngắn (short-lived queries). Nếu một compute node sập giữa chừng, hệ thống cố gắng thử lại (retry) phần nhỏ đó. Tuy nhiên, nếu truy vấn chạy hàng giờ liền với nhiều quá trình xáo trộn dữ liệu (Shuffle), kiến trúc gốc của Dremel kém bền bỉ hơn so với MapReduce/Spark. Mặc dù gần đây BigQuery đã cải thiện điều này qua các cập nhật nội bộ, đây vẫn là một điểm cần cân nhắc trong thiết kế MPP.
-* **Không tối ưu cho Transaction/OLTP:** Kiến trúc lưu trữ theo cột và phân tán này tốn kém cho việc ghi nhỏ lẻ liên tục (row-level insert/update). Dremel/MPP yêu cầu dữ liệu append-only hoặc xử lý theo lô lớn (bulk loading) để đạt hiệu năng tốt nhất.
-
----
-
-## Tổng kết
-
-Google Dremel và kiến trúc MPP đã thay đổi cách thế giới tiếp cận Big Data Analytics. Sự đột phá trong định dạng Columnar Storage cho cấu trúc Nested và mô hình Execution Tree đã làm cho những báo cáo mất vài giờ bằng MapReduce có thể được trích xuất trong vài giây bằng SQL. 
-
-Các tư tưởng thiết kế của Dremel vẫn tiếp tục tồn tại và định hình nền công nghiệp dữ liệu, không chỉ trên Google Cloud (BigQuery) mà còn thông qua hàng loạt dự án mã nguồn mở như Apache Impala, Apache Drill, Trino/Presto, và Apache Parquet.
-
----
-
-## Tài Liệu Tham Khảo
-* [Dremel: Interactive Analysis of Web-Scale Datasets (VLDB 2010)](https://research.google/pubs/pub36632/)
-* [A Look at Dremel (Google Cloud Blog)](https://cloud.google.com/blog/products/data-analytics/a-look-at-dremel)
-* [Dremel made simple with Parquet (Twitter Engineering)](https://blog.twitter.com/engineering/en_us/a/2013/dremel-made-simple-with-parquet.html)
-* **BigQuery under the hood (Google Cloud Documentation)**
+*   [Dremel: Interactive Analysis of Web-Scale Datasets (Google Whitepaper, VLDB 2010)](https://research.google/pubs/pub36632/)
+*   [A Look at Dremel (Google Cloud Blog)](https://cloud.google.com/blog/products/data-analytics/a-look-at-dremel)
+*   [BigQuery Under the Hood - Architecture (Google Cloud Official Docs)](https://cloud.google.com/bigquery/docs/architecture)
+*   [Dremel made simple with Parquet (Twitter Engineering Blog)](https://blog.twitter.com/engineering/en_us/a/2013/dremel-made-simple-with-parquet.html)

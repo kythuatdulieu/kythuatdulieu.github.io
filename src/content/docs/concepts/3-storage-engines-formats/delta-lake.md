@@ -1,145 +1,157 @@
 ---
 title: "Delta Lake - Bảng dữ liệu giao dịch mở (Open Table Format)"
 difficulty: "Advanced"
-tags: ["data-lakehouse", "delta-lake", "databricks", "acid", "parquet", "open-table-format"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Delta Lake là gì? Tính năng ACID trên Data Lakehouse"
-metaDescription: "Delta Lake: Định dạng Open Table Format mã nguồn mở hỗ trợ giao dịch ACID, Time Travel và Schema Evolution trên Data Lakehouse."
-description: "Nếu bạn từng làm việc với Data Lake truyền thống (sử dụng các tệp tin Parquet hay CSV lưu trên S3/GCS), chắc chắn bạn đã gặp phải các vấn đề về tính nhất quán, khó khăn trong việc cập nhật dữ liệu (UPDATE/DELETE), và thiếu khả năng kiểm soát giao dịch (ACID). Delta Lake ra đời như một giải pháp thiết yếu để giải quyết các vấn đề này, biến Data Lake thành Data Lakehouse."
+tags: ["data-lakehouse", "delta-lake", "databricks", "acid", "parquet", "open-table-format", "system-design"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc Delta Lake: Transaction Log, OCC và Trade-offs hệ thống"
+metaDescription: "Phân tích sâu về kiến trúc vật lý của Delta Lake, cơ chế Optimistic Concurrency Control, và các rủi ro vận hành (OOM, Small Files) trên Data Lakehouse."
+description: "Đối với Data Engineer, Delta Lake không chỉ là một định dạng file. Nó là một cơ sở dữ liệu phân tán không có Compute engine cố định, dựa trên Object Storage. Bài viết này sẽ mổ xẻ cơ chế Transaction Log, cách giải quyết xung đột (Optimistic Concurrency Control) và những đánh đổi hệ thống khi vận hành Delta Lake ở quy mô Petabyte."
 ---
 
+Lưu trữ dữ liệu thô (raw data) bằng Parquet hoặc CSV trên Amazon S3 hay Google Cloud Storage từng là tiêu chuẩn của Data Lake. Tuy nhiên, hệ thống này bộc lộ những tử huyệt chí mạng khi vận hành ở quy mô doanh nghiệp: Thiếu vắng giao dịch ACID dẫn đến đọc phải dữ liệu rác (partial reads) trong quá trình ghi, việc cập nhật (UPDATE/DELETE) đòi hỏi quét lại toàn bộ bucket, và hiện tượng rác metadata (Small File Problem) đánh sập hiệu năng tính toán. 
 
-
-Nếu bạn từng làm việc với Data Lake truyền thống (sử dụng các tệp tin Parquet hay CSV lưu trữ trên các object storage như Amazon S3, Google Cloud Storage, hoặc Azure Data Lake Storage), chắc chắn bạn đã từng gặp phải ít nhất một trong các vấn đề sau:
-
-- **Thiếu tính nhất quán (Lack of Consistency):** Khi một tiến trình đang ghi dữ liệu vào một partition, tiến trình đọc có thể đọc phải dữ liệu rác (partial data) hoặc gặp lỗi.
-- **Khó khăn khi cập nhật và xóa (UPDATE/DELETE/MERGE):** Việc thay đổi một vài dòng dữ liệu đòi hỏi bạn phải đọc lại toàn bộ file, thay đổi dữ liệu, và ghi đè file mới.
-- **Vấn đề nhiều file nhỏ (Small File Problem):** Dữ liệu streaming tạo ra hàng ngàn file nhỏ liên tục, làm suy giảm nghiêm trọng hiệu suất truy vấn.
-- **Không có kiểm soát lược đồ (Schema Enforcement):** Dữ liệu hỏng hoặc sai định dạng dễ dàng bị ghi vào Data Lake, gây ra hiệu ứng domino làm hỏng các đường ống dữ liệu (data pipelines) ở phía sau.
-
-**Delta Lake** là một Open Table Format được xây dựng trên nền tảng Data Lake để giải quyết tất cả những hạn chế trên. Được phát triển ban đầu bởi Databricks và sau đó mã nguồn mở cho Linux Foundation, Delta Lake mang đến khả năng **ACID transactions**, **Time Travel**, và **Scalable Metadata Handling**. Nó là nền tảng cốt lõi của kiến trúc **Data Lakehouse**.
+Delta Lake ra đời để giải quyết bài toán này. Về bản chất, nó biến Object Storage (S3/GCS/ADLS) thành một hệ quản trị cơ sở dữ liệu phân tán bằng cách tiêm (inject) một lớp Transaction Log ở giữa Compute Engine (Spark, Trino) và Data Files (Parquet).
 
 ---
 
-## Kiến trúc cốt lõi của Delta Lake
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Đằng sau một bảng Delta, dữ liệu thực tế vẫn được lưu trữ dưới định dạng [Apache Parquet](/concepts/3-storage-engines-formats/parquet-internals). Điểm khác biệt mấu chốt làm nên Delta Lake chính là **Transaction Log (Delta Log)**.
+Delta Lake không thay thế Parquet; nó **bao bọc (wrap)** Parquet bằng một cơ chế siêu dữ liệu (metadata) chặt chẽ. Cấu trúc vật lý của một bảng Delta được chia làm hai phần rõ rệt: Data Files và Transaction Log.
 
-Một thư mục bảng Delta Lake điển hình sẽ trông như thế này:
+### 1.1. Giải phẫu Transaction Log (`_delta_log`)
+
+`_delta_log` là bộ não của Delta Lake, hoạt động theo cơ chế **Write-Ahead Log (WAL)** nhưng được tối ưu cho hệ thống lưu trữ phân tán. 
+
+Mọi thay đổi đối với bảng (INSERT, UPDATE, DELETE, đổi Schema) đều sinh ra một file JSON tuần tự gọi là **Commit**.
 
 ```text
-my_table/
+s3://my-data-bucket/transactions_table/
 ├── _delta_log/
 │   ├── 00000000000000000000.json
 │   ├── 00000000000000000001.json
-│   ├── 00000000000000000002.json
-│   └── 00000000000000000002.checkpoint.parquet
+│   ├── 00000000000000000010.checkpoint.parquet
+│   ├── _last_checkpoint
+│   └── ...
 ├── part-00000-xxxx.snappy.parquet
-├── part-00001-yyyy.snappy.parquet
-└── part-00002-zzzz.snappy.parquet
+└── part-00001-yyyy.snappy.parquet
 ```
 
-### 1. Parquet Data Files
-Tất cả dữ liệu của bảng được lưu trong các file Parquet nén. Thay vì đọc trực tiếp các file này như trong Data Lake truyền thống, các engine tính toán (như Apache Spark, Trino, Presto) sẽ phải đọc qua Delta Log trước để biết chính xác những file Parquet nào thuộc về version mới nhất của bảng.
+- **JSON Commit Files:** Chứa mảng các hành động (Actions). Chủ yếu là `add` (thêm file Parquet mới vào bảng) và `remove` (đánh dấu xóa logic file Parquet cũ khỏi version hiện tại). 
+- **Checkpoint Files:** Nếu cứ mỗi lần đọc bảng, Spark phải quét qua hàng ngàn file JSON để tìm ra file Parquet hợp lệ thì I/O sẽ trở thành nút thắt cổ chai. Do đó, cứ sau mỗi 10 commits, Delta tự động gộp (compact) trạng thái của 10 file JSON đó thành một file `.checkpoint.parquet`.
+- **`_last_checkpoint`:** Trỏ đến version checkpoint mới nhất.
 
-### 2. Delta Log (`_delta_log`)
-Thư mục `_delta_log` là "trái tim" của Delta Lake. Nó lưu trữ lịch sử của mọi giao dịch thay đổi dữ liệu bảng.
-- **JSON files:** Mỗi commit (thêm, sửa, xóa dữ liệu hoặc thay đổi schema) sẽ tạo ra một file JSON tuần tự. File JSON này chứa siêu dữ liệu (metadata) về các file Parquet được thêm vào (`add`) và các file bị xóa bỏ khỏi version hiện tại (`remove`).
-- **Checkpoint files:** Việc đọc hàng ngàn file JSON sẽ làm chậm hiệu suất. Do đó, cứ sau mỗi 10 commits, Delta Lake sẽ tổng hợp tất cả trạng thái vào một file `.checkpoint.parquet`. Khi đọc bảng, engine chỉ cần đọc file checkpoint mới nhất và các file JSON nhỏ lẻ sinh ra sau đó.
+### 1.2. Luồng thực thi Truy vấn (Read Protocol)
+
+Khi một Compute Engine truy vấn bảng Delta, nó không bao giờ quét trực tiếp thư mục chứa Parquet. Nó tuân thủ giao thức sau:
+
+```mermaid
+sequenceDiagram
+    participant C as Compute Engine (Spark/Trino)
+    participant L as Delta Log (_delta_log)
+    participant S as Object Storage (S3)
+    
+    C->>L: 1. Đọc file _last_checkpoint
+    L-->>C: Trả về version 000010
+    C->>L: 2. Đọc 000010.checkpoint.parquet
+    C->>L: 3. Quét các JSON commit từ 000011 trở đi
+    C->>C: 4. Tái tạo trạng thái (State Reconstruction) trong bộ nhớ
+    C->>S: 5. Fetch song song các file Parquet có cờ `add`
+```
 
 ---
 
-## Các tính năng nổi bật của Delta Lake
+## 2. Kiểm soát Đồng thời (Concurrency Control)
 
-### 1. Giao dịch ACID (ACID Transactions)
-Delta Lake hỗ trợ cơ chế **Optimistic Concurrency Control (Kiểm soát đồng thời lạc quan)**.
-- **Atomicity (Tính nguyên tử):** Một giao dịch (ví dụ: ghi một lô dữ liệu) sẽ thành công hoàn toàn hoặc thất bại hoàn toàn. Sẽ không có chuyện chỉ một nửa dữ liệu được ghi vào Data Lake.
-- **Isolation (Tính cô lập):** Các tiến trình đọc và ghi có thể diễn ra đồng thời mà không can thiệp lẫn nhau. Người đọc luôn thấy trạng thái nhất quán mới nhất của dữ liệu (Snapshot Isolation).
-- **Consistency và Durability:** Dữ liệu sau khi ghi xong (commit hoàn tất vào transaction log) sẽ tồn tại vững chắc và được bảo vệ.
+Làm sao Delta Lake cho phép hàng trăm Spark jobs cùng ghi vào một bảng trên S3 mà không bị khóa (lock) toàn cục? Câu trả lời là **Optimistic Concurrency Control (OCC) - Kiểm soát đồng thời lạc quan**.
 
-### 2. Time Travel (Data Versioning)
-Vì Delta Lake không ngay lập tức xóa vật lý các file Parquet cũ (cho đến khi bạn chạy lệnh `VACUUM`), bạn có thể truy vấn lại trạng thái của bảng tại một thời điểm hoặc một version cụ thể trong quá khứ.
+OCC giả định rằng phần lớn các giao dịch sẽ không xung đột. Thay vì khóa bảng trước khi ghi, nó cứ ghi dữ liệu ra file vật lý, rồi mới kiểm tra xung đột ở phút chót (lúc commit vào `_delta_log`).
 
-Điều này cực kỳ hữu ích cho việc:
-- **Khôi phục dữ liệu:** Phục hồi từ những thao tác lỗi (ví dụ: vô tình DROP hoặc UPDATE nhầm).
-- **Audit:** Kiểm toán xem dữ liệu đã thay đổi thế nào.
-- **Tái tạo mô hình Machine Learning:** Huấn luyện lại mô hình với cùng một bộ dữ liệu lịch sử.
+```mermaid
+flowchart TD
+    A["Bắt đầu Giao dịch"] --> B["Ghi dữ liệu tính toán ra file Parquet ẩn"]
+    B --> C["Giai đoạn Commit: Cố tạo file 000013.json"]
+    C --> D{"Object Storage báo lỗi file đã tồn tại?"}
+    D -- CÓ (Xung đột version) --> E["Kiểm tra Logic Xung đột"]
+    E -- Các job ghi vào file/partition khác nhau --> F["Rebase: Đổi tên commit thành 000014.json và thử lại"]
+    E -- Các job sửa cùng một file("ví dụ MERGE") --> G["Thất bại: Ném ConcurrentAppendException"]
+    D -- KHÔNG("Chưa ai lấy version này") --> H["Commit thành công"]
+```
+
+**Systemic Trade-off:** 
+- **Được lợi:** Throughput ghi dữ liệu khổng lồ vì không có rào cản I/O Wait do Locking.
+- **Đánh đổi:** Nếu thiết kế kiến trúc để nhiều Streaming jobs cùng liên tục UPDATE vào cùng một Partition (hoặc Unpartitioned table), tỷ lệ Retry Storms sẽ tăng vọt. Các job sẽ liên tục tạo file Parquet, xung đột tại log, xóa bỏ file vừa tạo, tính toán lại và retry, gây bùng nổ chi phí Compute.
+
+---
+
+## 3. Tối ưu hóa I/O và Rủi ro Vận hành (Operational Risks)
+
+### 3.1. Bài toán File Nhỏ (The Small File Problem) & Compaction
+
+Dữ liệu streaming (như Kafka -> Spark -> Delta) cứ vài giây/phút lại tạo ra một lô Parquet vài KB. Khi số lượng file lên tới hàng triệu, quá trình "Tái tạo trạng thái" ở `_delta_log` sẽ làm sập Driver của Spark vì quá tải RAM (OOM - Out of Memory).
+
+**Giải pháp:** Sử dụng lệnh `OPTIMIZE` để Bin-packing (gom file nhỏ thành file lớn ~1GB). Kết hợp **Z-Ordering** để sắp xếp dữ liệu phân cụm (clustering) giúp Data Skipping hoạt động hiệu quả khi truy vấn `WHERE`.
+
+```python
+# Ví dụ cấu hình thực chiến cho Job bảo trì Delta Lake định kỳ (Airflow DAG)
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("Delta_Maintenance_Job") \
+    .config("spark.databricks.delta.retentionDurationCheck.enabled", "false") \
+    .config("spark.sql.files.maxRecordsPerFile", 1000000) \
+    .getOrCreate()
+
+# 1. Gom file và Z-Order theo 2 cột hay được filter nhất
+spark.sql("OPTIMIZE s3_events_table ZORDER BY (user_id, event_date)")
+
+# 2. Xóa vật lý các file rác (đã bị gỡ khỏi log) cũ hơn 7 ngày
+spark.sql("VACUUM s3_events_table RETAIN 168 HOURS")
+```
+
+### 3.2. Real-world Incident: OOMKilled khi chạy OPTIMIZE
+- **Triệu chứng:** Khi chạy `OPTIMIZE` trên một bảng Delta chưa được partition nặng 50TB, Spark Executor (hoặc Driver) liên tục báo lỗi `java.lang.OutOfMemoryError: Java heap space` và bị YARN/Kubernetes kill.
+- **Root Cause (Nguyên nhân lõi):** Lệnh `OPTIMIZE` Z-Ordering đòi hỏi xáo trộn toàn cục (Global Sort/Shuffle). Nó đẩy toàn bộ dữ liệu lên bộ nhớ để sắp xếp đa chiều (Z-curve). Bảng quá to khiến Spill-to-disk không cứu nổi hoặc Shuffle Block quá lớn.
+- **Cách khắc phục:** 
+  1. Thay vì Z-Order toàn bộ bảng, hãy khoanh vùng: `OPTIMIZE table WHERE date > '2023-01-01' ZORDER BY (user_id)`.
+  2. Bật tính năng **Liquid Clustering** (nếu dùng Databricks >= 13.3 LTS). Kỹ thuật này tự động mở rộng cụm dữ liệu phân tán (Incremental clustering) thay vì phải sắp xếp lại toàn cục như Z-Ordering cứng nhắc, giúp loại bỏ hoàn toàn các lỗi OOM khi Optimize bảng lớn.
+
+### 3.3. Đánh đổi với Time Travel (Cost vs. History)
+
+Delta Lake cung cấp tính năng **Time Travel**, cho phép bạn truy vấn `SELECT * FROM table TIMESTAMP AS OF '...'`. Nó làm được điều này bằng cách không xóa vật lý (hard-delete) các file Parquet cũ khi chạy `UPDATE`/`DELETE`, mà chỉ ghi vào JSON log là file đó đã bị `remove`.
+
+- **Trade-off:** Giữ lịch sử càng dài, chi phí lưu trữ S3/GCS càng phình to chóng mặt (Storage Inflation). Bạn không bao giờ nên coi Delta Lake là một hệ thống sao lưu dài hạn.
+- **Thực hành tốt:** Luôn lên lịch chạy lệnh `VACUUM` thường xuyên (mặc định giữ lại 7 ngày). Tuy nhiên, hãy nhớ: **Một khi đã VACUUM, bạn không thể Time Travel về trước thời điểm đó nữa.**
+
+---
+
+## 4. Xử lý CDC với Delta Lake (Change Data Capture)
+
+Để đồng bộ dữ liệu từ OLTP (PostgreSQL, MySQL) lên Delta Lake qua Debezium/Kafka, bạn thường dùng câu lệnh `MERGE` (SCD Type 1 hoặc Type 2). Dưới đây là kiến trúc mã thực thi Spark SQL tối ưu để Upsert dữ liệu, hạn chế ghi đè lại dữ liệu nếu không thay đổi:
 
 ```sql
--- Truy vấn theo Version
-SELECT * FROM my_table VERSION AS OF 5;
-
--- Truy vấn theo Timestamp
-SELECT * FROM my_table TIMESTAMP AS OF '2023-10-01 12:00:00';
+MERGE INTO target_delta_table AS T
+USING cdc_stream_updates AS S
+ON T.user_id = S.user_id 
+-- Tối ưu: Thêm điều kiện Partition Pruning để tránh quét toàn bảng
+AND T.event_date = S.event_date 
+WHEN MATCHED AND (T.email != S.email OR T.status != S.status) THEN 
+  UPDATE SET 
+    T.email = S.email, 
+    T.status = S.status,
+    T.updated_at = current_timestamp()
+WHEN NOT MATCHED THEN 
+  INSERT (user_id, email, status, event_date, updated_at) 
+  VALUES (S.user_id, S.email, S.status, S.event_date, current_timestamp());
 ```
 
-### 3. DML Operations (UPDATE, DELETE, MERGE)
-Với Data Lake truyền thống, việc `UPDATE` một dòng dữ liệu là cơn ác mộng. Bạn phải dùng Spark đọc toàn bộ file chứa dòng đó, lọc, sửa và ghi đè một file mới. Delta Lake hỗ trợ các lệnh DML tiêu chuẩn một cách tự nhiên.
-
-Đặc biệt tính năng **MERGE (Upsert)** cho phép bạn dễ dàng kết hợp dữ liệu từ hệ thống OLTP vào Data Lakehouse (Change Data Capture - CDC).
-
-```sql
-MERGE INTO target_table t
-USING source_data s
-ON t.id = s.id
-WHEN MATCHED THEN UPDATE SET t.value = s.value
-WHEN NOT MATCHED THEN INSERT (id, value) VALUES (s.id, s.value);
-```
-
-### 4. Schema Enforcement & Evolution
-- **Schema Enforcement:** Mặc định, Delta Lake ngăn chặn việc ghi dữ liệu có lược đồ không khớp với bảng. Nó bảo vệ chất lượng dữ liệu khỏi những lỗi không đáng có.
-- **Schema Evolution:** Nếu bạn chủ ý muốn thêm một cột mới vào bảng, bạn có thể kích hoạt Schema Evolution (ví dụ thêm option `mergeSchema` trong Spark) để tự động cập nhật lược đồ của bảng một cách an toàn.
-
-### 5. Unified Batch and Streaming
-Bạn có thể cấu hình cùng một bảng Delta làm nguồn (source) và đích đến (sink) cho cả dữ liệu Batch và Streaming. Transaction log đảm bảo cho Spark Structured Streaming có thể xử lý chính xác Exactly-Once (mỗi bản ghi chỉ được xử lý đúng một lần).
+*Lưu ý kiến trúc:* Mệnh đề `AND T.event_date = S.event_date` là một kỹ thuật sống còn (Partition Pruning trong Merge). Nếu bạn chỉ JOIN bằng khóa chính (`user_id`), Delta Lake sẽ phải tải metadata của toàn bộ bảng (có thể hàng vạn Parquet files) để tìm `user_id`. Bằng cách giới hạn thời gian (hoặc partition key), Engine chỉ quét một vài file cụ thể, giảm I/O xuống hàng trăm lần.
 
 ---
 
-## Tối ưu hóa hiệu suất trên Delta Lake
+## Nguồn Tham Khảo (References)
 
-Để duy trì hiệu suất đọc nhanh khi bảng phình to, Delta Lake cung cấp các cơ chế:
-
-### 1. Compaction (Tối ưu hóa file nhỏ)
-Sử dụng lệnh `OPTIMIZE`, Delta Lake sẽ "gom" nhiều file Parquet nhỏ thành các file lớn hơn (thường được tối ưu hóa ở mức xấp xỉ 1GB). Điều này giải quyết bài toán "Small File Problem", giảm thiểu chi phí quét metadata và tối ưu I/O.
-
-```sql
-OPTIMIZE my_table;
-```
-
-### 2. Data Skipping và Z-Ordering
-Khi lưu thông tin các file vào Delta Log, Delta cũng lưu lại chỉ số thống kê (min, max, null count) của từng cột. Dựa vào đó, khi có lệnh SELECT, nó có thể bỏ qua các file không chứa dữ liệu thỏa mãn điều kiện WHERE (Data Skipping).
-
-**Z-Ordering** là kỹ thuật sắp xếp lại dữ liệu trong các file đa chiều theo cụm (cluster) để nâng cao hiệu quả của Data Skipping. Kỹ thuật này cực kỳ hiệu quả cho các truy vấn có lọc nhiều điều kiện trên các cột có cardinality (độ phân tán) cao.
-
-### 3. Liquid Clustering
-Là tính năng hiện đại nhất được giới thiệu để thay thế cho cơ chế phân vùng (Partitioning) tĩnh truyền thống và Z-Ordering. Liquid Clustering tự động điều chỉnh và phân cụm dữ liệu linh hoạt mà không cần phải định nghĩa trước cột partition, rất hiệu quả cho các bảng lớn, và dữ liệu thay đổi thường xuyên (skewed data).
-
----
-
-## Delta Lake vs Apache Iceberg vs Apache Hudi
-
-Ba định dạng này thường được gọi chung là **Open Table Formats**. Dù có cùng mục tiêu là mang giao dịch ACID đến Data Lake, chúng có những điểm mạnh riêng:
-
-| Tính năng | Delta Lake | Apache Iceberg | Apache Hudi |
-| :--- | :--- | :--- | :--- |
-| **Hệ sinh thái chính** | Databricks, Apache Spark | Netflix, Trino, Flink | Uber, Hadoop Ecosystem |
-| **Transaction Log** | Cấp độ File (Thư mục `_delta_log`) | Cấp độ File (Manifests, Snapshots tree) | Cấp độ File (`.hoodie` timeline) |
-| **Schema Evolution** | Tốt (Thêm cột, thay đổi kiểu dữ liệu) | Xuất sắc (Hỗ trợ đổi tên, xóa cột an toàn mà không cần đọc lại dữ liệu) | Tốt |
-| **Streaming CDC** | Tốt (Hỗ trợ Spark Streaming) | Khá (Tích hợp Flink tốt) | Rất mạnh (Tối ưu riêng cho Upserts/CDC) |
-
-*Mẹo: Delta Lake là lựa chọn mặc định và tốt nhất nếu Data Stack của bạn đặt trọng tâm vào Apache Spark và Databricks. Ngược lại, nếu bạn sử dụng nhiều query engines khác nhau (như Trino, Athena, Snowflake) thì Apache Iceberg đang ngày càng chiếm ưu thế nhờ thiết kế metadata trung lập.*
-
----
-
-## Tổng kết
-
-Delta Lake đã thay đổi hoàn toàn cách chúng ta xây dựng Data Pipelines. Bằng việc mang các tính năng cốt lõi của Data Warehouse (ACID, DML, Versioning) xuống lớp Data Lake thông qua một `_delta_log` thông minh, nó mở đường cho kiến trúc **Data Lakehouse** – nơi bạn có thể vừa lưu trữ lượng dữ liệu khổng lồ với chi phí rẻ, vừa có thể chạy các truy vấn BI, ML với hiệu suất và độ tin cậy cao.
-
-## Tài Liệu Tham Khảo
-* [Delta Lake Official Documentation](https://docs.delta.io/latest/index.html)
-* [The Delta Lake Project (Linux Foundation)](https://delta.io/)
-* [Databricks: What is a Lakehouse?](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
+1. **Databricks Engineering Blog:** [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores (VLDB Paper)](https://www.databricks.com/wp-content/uploads/2020/08/p975-armbrust.pdf) - Báo cáo khoa học phân tích kiến trúc của `_delta_log` và cơ chế giải quyết xung đột trên S3.
+2. **Delta Lake Official Documentation:** [Concurrency Control](https://docs.delta.io/latest/concurrency-control.html) - Giải thích chi tiết về Optimistic Concurrency Control và các loại Exception khi ghi đè file.
+3. **AWS Architecture Blog:** [Build a Data Lakehouse on AWS](https://aws.amazon.com/blogs/architecture/build-a-data-lakehouse-on-aws/) - Ứng dụng Open Table Format trên hạ tầng đám mây.
+4. **Kleppmann, M. (2017).** *Designing Data-Intensive Applications*. O'Reilly Media - Chương 3 & 7 (Tham chiếu lý thuyết nền tảng cho Write-Ahead Log và ACID trên hệ thống phân tán).

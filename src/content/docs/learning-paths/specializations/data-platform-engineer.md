@@ -40,24 +40,24 @@ Một Data Platform hiện đại ở quy mô lớn thường được thiết k
 
 ```mermaid
 graph TD
-    subgraph Control_Plane ["Control Plane (Điều phối & Tự động hóa)"]
+    subgraph Control_Plane ["Control Plane("Điều phối & Tự động hóa")"]
         GitOps["GitOps / ArgoCD / GitHub Actions"]
         IaC["Terraform / Pulumi"]
         Orchestrator["Apache Airflow / Dagster"]
     end
 
-    subgraph Data_Plane ["Data Plane (Lưu trữ & Xử lý)"]
+    subgraph Data_Plane ["Data Plane("Lưu trữ & Xử lý")"]
         Ingestion["Kafka / Kinesis / Fivetran"]
-        Storage[("Data Lake: AWS S3 / GCS")]
+        Storage["("Data Lake: AWS S3 / GCS")"]
         Compute_Batch["Apache Spark on K8s"]
-        Warehouse[("Snowflake / BigQuery")]
+        Warehouse["("Snowflake / BigQuery")"]
         
         Ingestion --> Storage
         Storage --> Compute_Batch
         Compute_Batch --> Warehouse
     end
 
-    subgraph Observability_Governance ["Observability & Governance Plane (Giám sát & Bảo mật)"]
+    subgraph Observability_Governance ["Observability & Governance Plane("Giám sát & Bảo mật")"]
         Monitoring["Prometheus + Grafana + Datadog"]
         Catalog["DataHub / Amundsen"]
         Security["Apache Ranger / AWS IAM"]

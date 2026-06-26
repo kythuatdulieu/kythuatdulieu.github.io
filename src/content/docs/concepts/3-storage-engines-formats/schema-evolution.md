@@ -1,179 +1,161 @@
 ---
 title: "Schema Evolution"
 difficulty: "Intermediate"
-tags: ["schema-evolution", "data-lakehouse", "table-format", "data-engineering"]
-readingTime: "12 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lake"
-metaDescription: "Tìm hiểu Schema Evolution là gì: cơ chế tự động thích ứng với thay đổi cấu trúc bảng (thêm, xóa, đổi tên cột) mà không cần ghi lại dữ liệu cũ trên Data Lake."
-description: "Trong thế giới [Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Hôm nay, ứng dụng nguồn gửi 5 cột, ngày mai có thể là 7 cột hoặc đổi tên 1 cột. Xử lý những thay đổi này một cách trơn tru là nhiệm vụ của Schema Evolution."
+tags: ["schema-evolution", "data-lakehouse", "table-format", "data-engineering", "iceberg", "delta-lake"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lakehouse"
+metaDescription: "Tìm hiểu kiến trúc Schema Evolution: cơ chế tự động thích ứng với thay đổi cấu trúc bảng bằng metadata-only operations trên Iceberg và Delta Lake."
+description: "Dữ liệu luôn thay đổi (Schema Drift). Khi ứng dụng nguồn liên tục mutate payload, Schema Evolution là cơ chế sống còn giúp Data Lakehouse tự động thích nghi với cấu trúc mới mà không yêu cầu full-table rewrite (ghi đè toàn bộ dữ liệu lịch sử)."
 ---
 
+Trong môi trường Data Engineering quy mô lớn, **Schema Drift** (sự trôi dạt cấu trúc dữ liệu) không phải là "nếu" mà là "khi nào". Ứng dụng upstream (OLTP, Microservices) liên tục cập nhật tính năng: thêm trường `utm_source`, đổi tên `cust_id` thành `customer_id`, hoặc xóa cột chứa PII. 
 
+Nếu Data Platform từ chối tiếp nhận, pipeline sẽ gãy (Broken Pipeline). Nếu nhắm mắt tiếp nhận tất cả, Data Lake sẽ biến thành Data Swamp (Bãi lầy dữ liệu) với cấu trúc phân mảnh.
 
-Trong thế giới [Data Engineering](/concepts/1-distributed-systems-architecture/data-engineering), có một sự thật hiển nhiên: **Dữ liệu luôn thay đổi**. Ứng dụng nguồn liên tục cập nhật tính năng mới, dẫn đến việc dữ liệu sinh ra có thêm các trường mới, đổi tên trường cũ, hoặc thậm chí xóa bỏ các trường không còn sử dụng. Nếu hệ thống dữ liệu không thể xử lý những thay đổi này một cách uyển chuyển, toàn bộ pipeline (đường ống dữ liệu) sẽ bị gián đoạn.
-
-**Schema Evolution (Tiến hóa cấu trúc)** là khả năng thay đổi cấu trúc của một bảng (như thêm, xóa, đổi tên cột, hay thay đổi kiểu dữ liệu) theo thời gian **mà không cần phải viết lại (rewrite) toàn bộ dữ liệu lịch sử**. Đây là một tính năng tối quan trọng trong các kiến trúc Data Lake và Lakehouse hiện đại.
-
----
-
-## 1. Tại sao Schema Evolution lại quan trọng?
-
-Trong các hệ thống cơ sở dữ liệu quan hệ (RDBMS) truyền thống, việc thay đổi schema (như `ALTER TABLE ADD COLUMN`) có thể rất tốn kém về mặt hiệu năng hoặc gây lock (khóa) bảng trong thời gian dài, đặc biệt với các bảng chứa hàng tỷ dòng.
-
-Trong môi trường Big Data và Data Lake:
-1. **Dữ liệu được lưu trữ dưới dạng file tĩnh** (như CSV, JSON, Parquet) trên Cloud Storage (S3, GCS).
-2. Khi ứng dụng thay đổi, dữ liệu mới sẽ được ghi vào các file mới với cấu trúc (schema) mới.
-3. Khi query, engine (ví dụ: Spark, Trino) phải đọc cả file cũ và file mới. Nếu schema của file cũ và mới không khớp nhau, query có thể bị lỗi (`SchemaMismatchException`) hoặc trả về dữ liệu sai lệch.
-
-Schema Evolution giải quyết vấn đề này bằng cách thiết lập các quy tắc rõ ràng để đọc cả dữ liệu cũ và mới bằng một schema hợp nhất (unified schema) hoặc theo thời điểm lịch sử (time-travel).
+**Schema Evolution (Tiến hóa cấu trúc)** là năng lực của Storage Layer (cụ thể là Table Formats như Iceberg, Delta Lake, Hudi) cho phép thay đổi metadata của bảng một cách nguyên tử (atomic) để tương thích với dữ liệu mới, **mà không cần phải thực hiện những chiến dịch migration hoặc full-table rewrite đắt đỏ** trên hàng petabyte dữ liệu vật lý (Parquet/ORC).
 
 ---
 
-## 2. Các Loại Thay Đổi Schema Thường Gặp
+## 1. Bản chất Vật lý của Schema Evolution
 
-Một hệ thống hỗ trợ Schema Evolution toàn diện cần xử lý được các thao tác sau:
+Tại sao RDBMS truyền thống (như PostgreSQL, MySQL) có thể `ALTER TABLE ADD COLUMN` rất nhanh, nhưng trên Hadoop/Data Lake thời kỳ đầu lại là ác mộng?
 
-### 2.1. Thêm Cột (Add Column)
-- **Tình huống:** Thêm các metric mới hoặc metadata vào dữ liệu.
-- **Hành vi:** Dữ liệu mới sẽ chứa cột mới. Khi đọc dữ liệu lịch sử (không có cột này), hệ thống sẽ tự động điền giá trị `NULL`.
+Trong RDBMS, dữ liệu được quản lý bởi Storage Engine nội bộ. Khi thêm cột, DB thường chỉ cập nhật System Catalog (Metadata) và mặc định cột mới là `NULL` cho các block dữ liệu cũ. 
 
-### 2.2. Xóa Cột (Drop / Remove Column)
-- **Tình huống:** Một trường không còn được sử dụng do lo ngại về quyền riêng tư (như PII) hoặc ứng dụng không còn gửi.
-- **Hành vi:** Schema mới sẽ không có cột này. Khi đọc dữ liệu cũ, hệ thống đơn giản là bỏ qua (không đọc) cột đó từ file vật lý.
+Tuy nhiên, trong Data Lake thế hệ thứ nhất (Hive + Parquet):
+1. **Schema-on-read ngây thơ:** Hive lưu schema trong Metastore, nhưng vật lý là các file Parquet chứa schema ở phần *Footer*.
+2. **Coupling vật lý:** Khi query, engine (Spark, Trino) đối chiếu schema từ Hive với Parquet Footer bằng **Tên cột (Column Name)**. Nếu bạn đổi tên `id` thành `user_id` trong Hive, Spark đọc file Parquet cũ (chỉ có cột `id`) sẽ trả về `NULL` cho `user_id`, và mất luôn dữ liệu cột `id`.
 
-### 2.3. Đổi Tên Cột (Rename Column)
-- **Tình huống:** Đổi tên cột cho rõ nghĩa hơn (ví dụ: `cust_id` thành `customer_id`).
-- **Hành vi:** Cột cũ và cột mới thực chất trỏ tới cùng một dữ liệu vật lý. Hệ thống phải biết cách map (ánh xạ) dữ liệu cũ của `cust_id` sang `customer_id` mà không cần sửa file cũ.
-
-### 2.4. Thay Đổi Kiểu Dữ Liệu (Type Promotion / Widening)
-- **Tình huống:** Kích thước dữ liệu vượt quá giới hạn hiện tại.
-- **Hành vi:** Nâng cấp kiểu dữ liệu sang kiểu rộng hơn mà không làm mất thông tin. Ví dụ:
-  - `INT` $\rightarrow$ `BIGINT`
-  - `FLOAT` $\rightarrow$ `DOUBLE`
-  - `DECIMAL(10,2)` $\rightarrow$ `DECIMAL(18,2)`
-
-### 2.5. Đổi Vị Trí Cột (Reorder Columns)
-- **Hành vi:** Đổi vị trí các cột trong bảng (ví dụ: đẩy cột `id` lên đầu). Tính năng này ít ảnh hưởng đến dữ liệu vật lý nhưng giúp trải nghiệm query tốt hơn.
+Table Formats hiện đại giải quyết bài toán này bằng cách đưa **Metadata Layer** lên làm nguồn chân lý duy nhất (Single Source of Truth), tách rời hoàn toàn logical schema và physical schema.
 
 ---
 
-## 3. Quy Tắc Tương Thích Schema (Schema Compatibility)
+## 2. Kiến trúc Giải quyết Schema Evolution
 
-Khi quản lý schema bằng các công cụ như Schema Registry (Kafka), chúng ta thường bắt gặp các khái niệm về tương thích:
+### 2.1. Apache Iceberg: Unique Column IDs
 
-*   **Backward Compatibility (Tương thích ngược):** Mã (code) sử dụng schema *mới* có thể đọc được dữ liệu ghi bằng schema *cũ*. (Ví dụ: Thêm cột mới với giá trị mặc định, khi đọc dữ liệu cũ sẽ lấy giá trị mặc định).
-*   **Forward Compatibility (Tương thích xuôi):** Mã sử dụng schema *cũ* có thể đọc dữ liệu ghi bằng schema *mới*. (Ví dụ: Xóa cột, mã cũ khi đọc dữ liệu mới sẽ không thấy cột bị xóa nhưng vẫn hoạt động bình thường nếu bỏ qua nó).
-*   **Full / Both Compatibility:** Đảm bảo cả hai chiều trên.
+Iceberg là chuẩn mực (gold standard) cho in-place schema evolution. Thiết kế cốt lõi của Iceberg là **không bao giờ track cột bằng Tên (Name), mà bằng ID (Integer).**
 
----
+```mermaid
+graph TD
+    subgraph Logical_Schema["Logical Schema("Iceberg Metadata")"]
+        L1["ID: 1 | Name: 'user_id' | Type: int"]
+        L2["ID: 2 | Name: 'event_name' | Type: string"]
+        L3["ID: 3 | Name: 'revenue' | Type: double"]
+    end
 
-## 4. Cách Các Định Dạng Lưu Trữ Xử Lý Schema Evolution
+    subgraph Physical_Files["Physical Parquet Files"]
+        F1["File 1 - V1<br/>ID: 1("id"), ID: 2("event")"]
+        F2["File 2 - V2<br/>ID: 1("user_id"), ID: 2("event"), ID: 3("revenue")"]
+    end
 
-Cách dữ liệu được lưu trữ ảnh hưởng trực tiếp đến khả năng Schema Evolution.
-
-### CSV và JSON
-*   **Hỗ trợ:** Rất kém.
-*   **Cơ chế:** Dựa vào thứ tự cột (CSV) hoặc tên field (JSON). Nếu một cột bị đổi tên hoặc chèn vào giữa trong CSV, toàn bộ quá trình đọc sẽ bị sai lệch cấu trúc. Việc quản lý thay đổi vô cùng thủ công và dễ vỡ.
-
-### Apache Parquet
-*   **Hỗ trợ:** Khá tốt (Schema Enforcement và Add Column).
-*   **Cơ chế:** Parquet lưu trữ metadata và schema ở phần *footer* của mỗi file. Mặc định, Parquet giải quyết schema theo tên (Tên cột trong file khớp với tên cột khi query).
-*   **Hạn chế:** Không thể tự động hiểu việc đổi tên cột. Đổi `id` thành `user_id` sẽ khiến Parquet hiểu là cột `id` bị drop (trả về NULL) và cột `user_id` mới được thêm vào (cũng NULL cho dữ liệu cũ).
-
-### Apache Avro
-*   **Hỗ trợ:** Xuất sắc. Rất phổ biến trong Streaming (Kafka).
-*   **Cơ chế:** Avro lưu schema chuẩn (JSON format) cùng với dữ liệu. Nó sử dụng khái niệm **Writer's Schema** (lúc ghi) và **Reader's Schema** (lúc đọc). Khi đọc, Avro sẽ tự động so sánh hai schema và resolve (giải quyết) các khác biệt. Ví dụ, nếu Reader cần cột A nhưng Writer không có, Reader nhận giá trị mặc định. Nếu Writer có cột B nhưng Reader không cần, cột B bị bỏ qua.
-
----
-
-## 5. Schema Evolution trong Table Formats (Lakehouse)
-
-Đây là nơi Schema Evolution thực sự tỏa sáng ở quy mô Big Data. Table Formats giải quyết những hạn chế của Parquet bằng cách sử dụng metadata layer.
-
-### Apache Iceberg
-Iceberg là chuẩn mực cho in-place schema evolution (tiến hóa tại chỗ).
-*   **Cách hoạt động (Column IDs):** Iceberg gán một **ID duy nhất** cho mỗi cột thay vì dùng tên cột làm định danh vật lý.
-*   Khi bạn đổi tên cột `id` thành `user_id`, Iceberg chỉ cập nhật metadata (Tên `user_id` $\rightarrow$ Column ID `1`).
-*   Dữ liệu lịch sử (Parquet files) bên dưới vẫn lưu trữ theo ID `1`. Do đó, không có dữ liệu nào cần được ghi lại. Xóa hay thêm cột cũng chỉ là việc cấp phát hoặc loại bỏ ID trong metadata.
-
-### Delta Lake
-Delta Lake hỗ trợ Schema Evolution kết hợp với Schema Enforcement (Ngăn chặn việc vô tình ghi dữ liệu rác).
-*   **Schema Enforcement:** Nếu cố ghi DataFrame có schema khác với bảng Delta, thao tác sẽ bị từ chối để bảo vệ tính toàn vẹn dữ liệu.
-*   **Schema Evolution (Merge Schema):** Khi bạn *chủ động* muốn cập nhật schema, bạn thêm tùy chọn `mergeSchema=true`. Delta sẽ tự động gộp (union) schema cũ và mới.
-*   **Column Mapping:** Tương tự Iceberg, Delta (từ các bản cập nhật mới) hỗ trợ Column Mapping gán ID cho cột, cho phép đổi tên và xóa cột mà không cần viết lại Parquet.
-
-### Apache Hudi
-Hudi sử dụng cơ chế Schema Evolution kế thừa sức mạnh của Avro. Schema của bảng Hudi được duy trì trong `.hoodie` metadata dựa trên chuẩn Avro. Nó hỗ trợ backward compatibility rất mạnh mẽ, lý tưởng cho dữ liệu streaming có schema thay đổi liên tục.
-
----
-
-## 6. Ví Dụ: Schema Evolution với Delta Lake (PySpark)
-
-Giả sử bạn có một bảng lưu thông tin User. Hôm sau, đội Data Science yêu cầu thêm cột `age`.
-
-```python
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
-
-# 1. Tạo dữ liệu ban đầu
-data_v1 = [("Alice", "HR"), ("Bob", "Engineering")]
-schema_v1 = StructType([
-    StructField("name", StringType(), True),
-    StructField("department", StringType(), True)
-])
-
-df_v1 = spark.createDataFrame(data_v1, schema_v1)
-
-# Ghi dữ liệu vào Delta Table
-df_v1.write.format("delta").save("/tmp/users_delta")
-
-# 2. Dữ liệu ngày thứ 2 có thêm cột 'age'
-data_v2 = [("Charlie", "Sales", 28), ("Diana", "Marketing", 32)]
-schema_v2 = StructType([
-    StructField("name", StringType(), True),
-    StructField("department", StringType(), True),
-    StructField("age", IntegerType(), True) # Cột mới
-])
-
-df_v2 = spark.createDataFrame(data_v2, schema_v2)
-
-# Cố gắng ghi đè hoặc thêm vào sẽ bị LỖI (Schema Enforcement)
-# df_v2.write.format("delta").mode("append").save("/tmp/users_delta") # Lỗi: Schema mismatch
-
-# Sử dụng option mergeSchema="true" để thực hiện Schema Evolution
-df_v2.write.format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .save("/tmp/users_delta")
-
-# 3. Đọc lại bảng
-spark.read.format("delta").load("/tmp/users_delta").show()
-# Kết quả:
-# +-------+-----------+----+
-# |   name| department| age|
-# +-------+-----------+----+
-# |  Alice|         HR|null| <- Dữ liệu cũ tự động điền null cho cột age
-# |    Bob|Engineering|null|
-# |Charlie|      Sales|  28|
-# |  Diana|  Marketing|  32|
-# +-------+-----------+----+
+    L1 -.-> F1
+    L1 -.-> F2
+    L2 -.-> F1
+    L2 -.-> F2
+    L3 -.-> F2
 ```
 
+**Cơ chế hoạt động:**
+- **Add Column:** Cấp phát một ID mới (VD: `ID: 3 -> revenue`). Các file Parquet cũ không có ID 3 sẽ được Iceberg Reader tự động fill `NULL` khi quét.
+- **Rename Column:** Đổi tên logical từ `id` thành `user_id`. Vật lý bên dưới vẫn map với `ID: 1`. Dữ liệu cũ hoàn toàn nguyên vẹn.
+- **Drop Column:** Xóa `ID: 2` khỏi Logical Schema. Lần query tiếp theo, Engine bỏ qua (không thèm đọc) cột `ID: 2` từ Parquet Footer, dù dữ liệu vật lý vẫn còn đó. Tiết kiệm I/O.
+- **Side-effect Free:** Đảm bảo 100% không bao giờ đọc nhầm dữ liệu của cột bị xóa cho một cột mới tạo lại cùng tên (vì ID mới sẽ khác ID cũ).
+
+### 2.2. Delta Lake: Schema Enforcement & mergeSchema
+
+Triết lý của Delta Lake (đặc biệt trong hệ sinh thái Databricks) xoay quanh **Sự an toàn trước (Enforcement) - Tiến hóa sau (Evolution)**.
+
+Delta theo dõi schema trong Transaction Log (`_delta_log/00000X.json`). 
+
+```mermaid
+sequenceDiagram
+    participant Source as Spark App (Data Source)
+    participant Delta as Delta Transaction Log
+    participant Storage as Object Storage (Parquet)
+
+    Source->>Delta: Ghi DataFrame (Có thêm cột 'age')
+    Delta-->>Source: Kiểm tra Schema Validation
+    alt Schema Enforcement (Mặc định)
+        Delta--xSource: LỖI: Schema Mismatch (Chặn rác)
+    else Schema Evolution (mergeSchema=true)
+        Source->>Delta: Xin phép Union Schema
+        Delta->>Delta: Commit _delta_log mới (Schema v2)
+        Source->>Storage: Ghi Parquet file mới chứa cột 'age'
+        Delta-->>Source: SUCCESS
+    end
+```
+
+**Mã thực chiến (PySpark):**
+
+Tuyệt đối không nên để `mergeSchema` bật mặc định toàn hệ thống. Hãy trigger explicitly tại bước MERGE:
+
+```python
+# Cách 1: Bật option lúc write (Batch)
+df_new.write.format("delta") \
+    .mode("append") \
+    .option("mergeSchema", "true") \
+    .save("s3://bucket/gold/users")
+
+# Cách 2: Dùng SQL chuẩn (Databricks Runtime 12.2+)
+# Đây là cách clean và an toàn nhất cho ETL Pipelines
+spark.sql("""
+    MERGE WITH SCHEMA EVOLUTION INTO gold_users t
+    USING staging_users s
+    ON t.user_id = s.user_id
+    WHEN MATCHED THEN UPDATE SET *
+    WHEN NOT MATCHED THEN INSERT *
+""")
+```
+
+*Lưu ý: Các phiên bản Delta mới hiện nay cũng đã hỗ trợ **Column Mapping** (tương tự ID của Iceberg) bằng cách bật TBLPROPERTIES `delta.columnMapping.mode = 'name'`. Điều này cho phép đổi tên và xóa cột mà không cần rewrite.*
+
 ---
 
-## 7. Thách Thức và Best Practices
+## 3. Các Loại Thay Đổi Schema (Type Operations)
 
-1.  **Chỉ cấp phép Type Widening, tránh Type Narrowing:** Chuyển từ `INT` lên `BIGINT` là an toàn vì không mất dữ liệu (widening). Nhưng từ `BIGINT` xuống `INT` có thể gây tràn số (narrowing) và phá vỡ sự tương thích. Table formats hiện đại thường cấm thao tác này.
-2.  **Cẩn thận với kiểu dữ liệu phức tạp:** Schema Evolution trên các mảng (Arrays), Struct hay Map phức tạp thường khó khăn hơn và dễ sinh lỗi hơn các kiểu dữ liệu nguyên thủy (Primitive types).
-3.  **Governance & Schema Registry:** Ở quy mô lớn, việc tự động `mergeSchema` mọi lúc có thể dẫn đến một bảng rác với hàng trăm cột không ai hiểu. Cần có quy trình kiểm duyệt (như tích hợp Confluent Schema Registry) để kiểm soát các phiên bản schema trước khi chúng được đẩy xuống Data Lake.
-4.  **Tác động hiệu năng của 'Null' ngầm định:** Việc có hàng chục cột bị Drop nhưng vật lý vẫn nằm trên file cũ không tốn thêm dung lượng (bởi tính chất columnar storage của Parquet/ORC bỏ qua đọc rất nhanh), nhưng quá trình rewrite (compact/vacuum) sau này cần được lên lịch để dọn dẹp triệt để các file cũ.
+Một engine chuẩn Lakehouse phải hỗ trợ các phép toán tiến hóa sau:
+
+1. **Additive (Thêm cột/Nested fields):** Luôn an toàn (Forward/Backward Compatible).
+2. **Rename (Đổi tên):** Yêu cầu Column IDs (Iceberg) hoặc Column Mapping (Delta). Nếu không, hệ thống sẽ hiểu lầm là Drop + Add.
+3. **Type Promotion / Widening (Nới rộng kiểu):** `INT` $\rightarrow$ `BIGINT` hoặc `FLOAT` $\rightarrow$ `DOUBLE`. Safe operation vì không mất dữ liệu. Trino/Spark xử lý casting này tại runtime (on-the-fly) khi đọc Parquet blocks.
+4. **Type Narrowing (Thu hẹp):** `BIGINT` $\rightarrow$ `INT` hoặc `STRING` $\rightarrow$ `INT`. **Nguy cơ sập hệ thống (Data Loss / Runtime Exception)**. Các Table Format đều *từ chối* operation này. Bạn bắt buộc phải đọc lên, cast, và ghi đè (Overwrite / Rewrite).
+5. **Drop (Xóa):** Xóa logical. Cần lên lịch chạy `VACUUM` (Delta) hoặc `Rewrite Data Files` (Iceberg) sau đó để dọn dẹp dung lượng vật lý thực sự.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: Schema Evolution](https://iceberg.apache.org/docs/latest/evolution/)
-* [Delta Lake: Schema Update - Databricks](https://docs.databricks.com/en/delta/update-schema.html)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
-* [Confluent: Schema Registry and Schema Evolution](https://docs.confluent.io/platform/current/schema-registry/avro.html)
+## 4. Rủi Ro Vận Hành & Trade-offs (Sự đánh đổi)
+
+Data Engineer không được phép lạm dụng Schema Evolution. Dưới đây là những "Systemic Trade-offs" bạn phải đối mặt.
+
+### 4.1. "Double-Edged Sword" (Gươm hai lưỡi)
+*   **Lợi ích:** Data Ingestion layer (Bronze) cực kỳ linh hoạt, code không bao giờ crash giữa đêm vì upstream đổi tên trường.
+*   **Trade-off (Đánh đổi):** Downstream Consumers (BI Dashboards Tableau/PowerBI, ML Models) sẽ "vỡ vụn" (break). Tableau extract query sẽ LỖI nếu một cột bị Drop. ML Model sẽ dự đoán sai nếu một feature bỗng nhiên toàn `NULL` do bị đổi tên ở thượng nguồn.
+*   **Khắc phục:** Áp dụng **Medallion Architecture strictness**. Ở lớp Bronze/Raw: Cho phép `mergeSchema`. Ở lớp Silver/Gold: Chạy validation cứng bằng dbt tests hoặc Great Expectations. Bắt buộc Schema Enforcement.
+
+### 4.2. Hiệu năng Query (Query Planning Overhead)
+*   Mỗi lần tiến hóa schema, metadata snapshot sinh ra một version mới.
+*   Nếu hệ thống thả cửa cho schema thay đổi hàng nghìn lần (do cấu trúc JSON upstream bị dị dạng, tạo ra *Cartesian Explosion* của các cột), metadata (như `_delta_log` hoặc Iceberg Manifests) sẽ phình to khủng khiếp.
+*   **Hậu quả:** Spark Driver bị **OOMKilled** (Out of Memory) ngay tại phase Query Planning trước khi kịp chạm vào data vật lý. JVM Heap không gánh nổi Schema Registry khổng lồ.
+*   **Khắc phục:** Dùng Schema Registry (như Confluent) chặn từ cửa Kafka. Giới hạn số lượng cột tĩnh. Những trường quá dynamic (thay đổi liên tục) nên gom vào một cột `MAP<STRING, STRING>` hoặc `VARIANT` / `JSON` string.
+
+### 4.3. Nợ Kỹ Thuật Vật Lý (Physical Tech Debt)
+*   Schema Evolution chỉ là logical. Vật lý bên dưới (Parquet files) trở nên lộn xộn: File A có 10 cột, File B có 15 cột, File C bị đổi tên.
+*   Dù Engine hỗ trợ đọc gộp, nhưng I/O efficiency giảm sút, CPU phải tốn thêm cycles để "align" (căn chỉnh) schema ở runtime, Vectorized Reader của Parquet bị giảm hiệu năng.
+*   **Khắc phục:** Định kỳ chạy `OPTIMIZE` (Delta) hoặc `RewriteDataFiles` (Iceberg) để **Compact** và đồng nhất physical schema về version mới nhất. Đánh đổi Compute Cost lấy Query Speed.
+
+---
+
+## 5. Kết Luận
+
+Schema Evolution biến Data Lake từ một kho chứa thụ động thành một hệ thống linh hoạt (Resilient System). Tuy nhiên, "Với quyền lực lớn, trách nhiệm càng cao" - việc thả nổi Schema Evolution không có rào chắn sẽ biến Lakehouse thành một bãi rác không thể query. Kỹ sư Data giỏi là người biết cấu hình *khi nào hệ thống nên linh hoạt (Ingestion)* và *khi nào hệ thống phải cứng rắn (Consumption)*.
+
+---
+
+## Nguồn Tham Khảo
+
+1.  **Apache Iceberg Documentation:** [Schema Evolution in Iceberg](https://iceberg.apache.org/docs/latest/evolution/) (Giải thích cơ chế Unique Column ID).
+2.  **Databricks Blog:** [Merge with Schema Evolution](https://docs.databricks.com/en/delta/update-schema.html) (Cú pháp `MERGE WITH SCHEMA EVOLUTION`).
+3.  **Martin Kleppmann:** *Designing Data-Intensive Applications (Chapter 4: Encoding and Evolution)*. Phân tích nền tảng về Forward/Backward Compatibility.
+4.  **Confluent:** [Schema Registry & Schema Evolution](https://docs.confluent.io/platform/current/schema-registry/avro.html) (Best practices chặn rác từ lớp Streaming).

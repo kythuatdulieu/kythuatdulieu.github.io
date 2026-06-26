@@ -68,15 +68,15 @@ LoRA là kỹ thuật PEFT mang tính cách mạng nhất hiện nay. Thay vì c
 
 ```mermaid
 graph TD
-    subgraph "Lớp mạng Neural (Neural Network Layer)"
-        X(("Đầu vào X")) --> W["Trọng số gốc W<br>Bị đóng băng"]
+    subgraph "Lớp mạng Neural("Neural Network Layer")"
+        X("("Đầu vào X"")) --> W["Trọng số gốc W<br>Bị đóng băng"]
         X --> A["Ma trận A hạng thấp r x k"]
         A --> B["Ma trận B hạng thấp d x r"]
         
-        W --> S1(("+"))
+        W --> S1("("+""))
         B --> S1
         
-        S1 --> Y(("Đầu ra Y"))
+        S1 --> Y("("Đầu ra Y""))
     end
     
     style W fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5

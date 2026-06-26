@@ -1,86 +1,153 @@
 ---
-title: "Xử lý Giao dịch Trực tuyến - OLTP"
-difficulty: "Beginner"
-tags: ["oltp", "database", "transactions", "rdbms"]
-readingTime: "7 mins"
-lastUpdated: 2026-06-07
-seoTitle: "OLTP là gì? Đặc điểm hệ thống Xử lý Giao dịch Trực tuyến"
-metaDescription: "Khái niệm OLTP (Online Transaction Processing): Đặc điểm, kiến trúc, sự khác biệt với OLAP và các ứng dụng thực tế."
-definition: "OLTP (Online Transaction Processing) là hệ thống cơ sở dữ liệu tối ưu hóa cho việc xử lý các giao dịch trực tuyến nhanh chóng với tần suất cao, đảm bảo tính nhất quán của dữ liệu (ACID) khi có nhiều người dùng đồng thời."
-description: "Mỗi khi bạn thực hiện một hành động như thêm hàng vào giỏ trên Shopee, chuyển khoản ngân hàng qua ứng dụng di động, hay đặt mua một vé máy bay trực tuyến..."
+title: "Kiến trúc Hệ thống OLTP: B-Tree, WAL, MVCC và Troubleshooting"
+difficulty: "Advanced"
+tags: ["oltp", "database", "transactions", "rdbms", "mvcc", "postgresql", "mysql"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc OLTP Database: Phân tích chuyên sâu WAL, MVCC và B-Tree"
+metaDescription: "Phân tích chuyên sâu kiến trúc vật lý của hệ thống OLTP (PostgreSQL/MySQL). Tìm hiểu về B-Tree, WAL, MVCC, các dị thường giao dịch (Isolation Anomalies) và rủi ro vận hành."
+definition: "OLTP (Online Transaction Processing) là hệ thống thiết kế tối ưu cho tần suất ghi/đọc (Read/Write) cực lớn với độ trễ thấp ở mức vật lý, kết hợp cơ chế Buffer Pool trong RAM, B-Tree trên Disk, và thuật toán MVCC để giải quyết bài toán Concurrency (Đồng thời) khốc liệt."
+description: "Phân tích kiến trúc dưới mui xe (under the hood) của các RDBMS phổ biến như MySQL, PostgreSQL. Tại sao ACID không phải là ma thuật, và làm sao để hệ thống không bị Lock Contention khi có hàng triệu giao dịch."
 ---
 
+OLTP (Online Transaction Processing) thường bị hiểu nhầm một cách hời hợt là "hệ thống phục vụ người dùng cuối". Tuy nhiên, dưới lăng kính của Data/Backend Engineer, OLTP là một kỳ quan về thiết kế hệ thống nhằm giải quyết sự đánh đổi (trade-offs) giữa **Concurrency (Tính đồng thời)**, **Consistency (Tính nhất quán)**, và **I/O Latency (Độ trễ lưu trữ)**. 
 
+Bài viết này sẽ bỏ qua định nghĩa sách giáo khoa để "mổ xẻ" kiến trúc vật lý của một RDBMS chuẩn (như PostgreSQL, MySQL InnoDB) và các kỹ thuật giúp nó chịu tải hàng nghìn TPS (Transactions Per Second) mà không làm sập hệ thống.
 
-OLTP (Online Transaction Processing - Xử lý Giao dịch Trực tuyến) là một loại hệ thống xử lý dữ liệu thực hiện và quản lý các ứng dụng giao dịch theo thời gian thực (như MySQL, PostgreSQL, Oracle). Đặc trưng cốt lõi của OLTP là hàng ngàn hoặc thậm chí hàng triệu truy vấn ngắn (như `INSERT`, `UPDATE`, `DELETE`) diễn ra liên tục, yêu cầu độ trễ thấp ở mức mili-giây và bảo đảm tính toàn vẹn thông qua các tiêu chuẩn ACID khắt khe.
+## 1. Kiến trúc Vật lý (Physical Execution Architecture)
 
-## 1. OLTP Là Gì?
+Hệ thống OLTP truyền thống (Single-node) là một cỗ máy quản lý bộ nhớ và I/O khổng lồ. Mục tiêu tối thượng của nó là **tránh đọc/ghi trực tiếp xuống Disk càng nhiều càng tốt** vì chênh lệch tốc độ giữa RAM và SSD/HDD có thể lên tới hàng nghìn lần.
 
-Trong các hệ thống công nghệ thông tin hiện đại, **OLTP** đóng vai trò là "xương sống" cho các hoạt động kinh doanh hàng ngày. Từ việc bạn rút tiền tại cây ATM, mua một món hàng trên e-commerce, đến gửi một tin nhắn trên mạng xã hội – tất cả đều là các giao dịch (transactions) được xử lý bởi các hệ thống OLTP ở hậu cảnh.
+```mermaid
+graph TD
+    subgraph RAM["RAM Memory"]
+        BP["Buffer Pool / Shared Buffers<br/>- Cache Data Pages<br/>- Chứa Dirty Pages"]
+        LockManager["Lock Manager<br/>Quản lý Isolation"]
+    end
 
-Một **giao dịch (transaction)** trong ngữ cảnh cơ sở dữ liệu được định nghĩa là một hoặc một nhóm các tác vụ thực thi được coi là một đơn vị công việc duy nhất và không thể chia nhỏ. Yêu cầu lớn nhất của hệ thống OLTP không phải là đọc/phân tích khối lượng dữ liệu khổng lồ, mà là khả năng ghi nhận sự thay đổi trạng thái cực kỳ nhanh và chính xác.
+    subgraph Disk["Disk Storage"]
+        DataFiles["(Data Files<br/>B-Tree Index & Heap)"]
+        WALFiles["WAL / REDO Logs<br/>Sequential Append-only"]
+    end
 
-## 2. Đặc Điểm Của Hệ Thống OLTP
+    App("(Application")) -->|1. SQL Query| BP
+    App --> LockManager
+    BP -->|2. Cache Miss| DataFiles
+    DataFiles -->|3. Load 8KB Page| BP
+    BP -.->|4. Asynchronous Checkpoint<br/>(Random I/O)| DataFiles
+    BP ==>|5. Sync Commit<br/>(Sequential I/O)| WALFiles
+```
 
-Hệ thống OLTP được thiết kế để tập trung vào hiệu suất cho các thao tác ghi và đảm bảo tính nhất quán. Dưới đây là các đặc điểm nổi bật nhất:
+### 1.1. Buffer Pool / Shared Buffers
+Khi bạn chạy `SELECT * FROM users WHERE id = 1`, Database (DB) không quét ổ cứng ngay lập tức. Dữ liệu trên đĩa được chia thành các **Page/Block** (thường 8KB trong PostgreSQL hoặc 16KB trong MySQL). 
+- DB sẽ nạp Page chứa `id = 1` từ Disk lên một vùng RAM gọi là **Buffer Pool** (MySQL) hoặc **Shared Buffers** (PostgreSQL).
+- Các thao tác `UPDATE` cũng chỉ sửa dữ liệu ngay trên RAM. Lúc này, Page vừa được sửa bị đánh dấu là **Dirty Page** (trang nhớ bị dơ).
+- Định kỳ, một background thread (như `Checkpointer` hoặc `Background Writer`) sẽ gom các Dirty Pages và `flush` (đẩy) ngược xuống Disk để giải phóng RAM.
 
-* **Tốc độ phản hồi cực nhanh (Low Latency):** Thời gian phản hồi thường được tính bằng mili-giây. Người dùng không thể chờ đợi 30 giây để hoàn thành một giao dịch chuyển tiền.
-* **Xử lý khối lượng giao dịch lớn:** Hệ thống có thể phục vụ từ hàng ngàn đến hàng triệu giao dịch diễn ra đồng thời mỗi giây (High Throughput).
-* **Truy vấn đơn giản và ngắn:** Các câu lệnh SQL trong OLTP thường tác động đến một số lượng bản ghi (rows) rất nhỏ, thông qua việc sử dụng các Index (chỉ mục) chủ chốt (thường là Primary Key).
-* **Đảm bảo tính đồng thời cao (High Concurrency):** OLTP phải sử dụng các cơ chế khóa (locking) và cô lập (isolation) khéo léo để đảm bảo rằng nếu hai người cùng cập nhật một tài khoản ngân hàng, dữ liệu không bị sai lệch.
-* **Bảo vệ tính toàn vẹn của dữ liệu:** Thông qua việc tuân thủ nghiêm ngặt các nguyên tắc ACID.
-* **Lưu trữ dữ liệu theo hàng (Row-oriented storage):** Dữ liệu được lưu trữ theo dạng hàng để tối ưu cho quá trình ghi (insert/update) và truy xuất toàn bộ thuộc tính của một bản ghi nhanh chóng.
+> [!WARNING] Rủi ro vận hành (OOM & Cache Miss)
+> Nếu cấu hình Buffer Pool quá nhỏ (`innodb_buffer_pool_size` trong MySQL hoặc `shared_buffers` trong Postgres), hệ thống không đủ RAM chứa các Active Pages, dẫn tới **Spill-to-disk** (quét I/O liên tục). Tốc độ query sẽ giảm từ mili-giây xuống hàng giây, kéo theo hàng loạt connection bị nghẽn (Connection pool exhaustion).
 
-## 3. Các Tính Chất ACID Trong OLTP
+### 1.2. Write-Ahead Logging (WAL) - Linh hồn của Durability
+Nếu một thao tác `UPDATE` chỉ ghi vào RAM (Dirty Page) và hệ thống mất điện, làm sao giữ được tính **Durability (Bền vững)** trong chuẩn ACID?
+Câu trả lời là cơ chế **WAL (Write-Ahead Logging)** (hay `Redo Log` trong MySQL).
 
-Để hệ thống giao dịch hoạt động chuẩn xác, nó phải tuân thủ 4 nguyên lý **ACID**:
+- **Nguyên lý cốt lõi:** Mọi thay đổi dữ liệu phải được ghi tuần tự vào một file log trên Disk *trước khi* (Ahead) giao dịch được phản hồi thành công (Committed) về cho Client.
+- **Sự đánh đổi I/O:** 
+  - Đẩy trực tiếp Data Page xuống đĩa là **Random I/O** (tìm ngẫu nhiên track/sector để ghi), cực kỳ chậm.
+  - Ghi WAL là **Sequential I/O** (chỉ ghi nối tiếp vào đuôi file). Tốc độ Sequential I/O nhanh hơn Random I/O hàng trăm lần, kể cả trên ổ SSD NVMe. DB lợi dụng điều này để phản hồi ứng dụng nhanh nhất, còn việc đồng bộ Data Page (Random I/O) sẽ để Checkpointer làm ngầm (asynchronous) ở background.
 
-* **Atomicity (Tính nguyên tử):** Một giao dịch phải được thực hiện trọn vẹn. "All or Nothing" - nếu một bước trong giao dịch thất bại, toàn bộ các bước trước đó sẽ bị hoàn tác (rollback). *Ví dụ: Nếu bước trừ tiền ở tài khoản A thành công nhưng cộng tiền vào tài khoản B thất bại, tiền phải được trả lại cho A.*
-* **Consistency (Tính nhất quán):** Dữ liệu phải luôn đi từ trạng thái hợp lệ này sang trạng thái hợp lệ khác sau khi giao dịch kết thúc, đảm bảo mọi quy tắc ràng buộc (constraints, triggers, foreign keys) được duy trì.
-* **Isolation (Tính cô lập):** Các giao dịch diễn ra đồng thời sẽ không bị ảnh hưởng lẫn nhau. Hệ thống sẽ đảm bảo kết quả cuối cùng như thể các giao dịch được thực hiện một cách tuần tự từng cái một (tuỳ thuộc vào Isolation Level cấu hình).
-* **Durability (Tính bền vững):** Một khi giao dịch đã được xác nhận (committed), những thay đổi này sẽ được lưu trữ vĩnh viễn trên ổ cứng (như thông qua cơ chế Write-Ahead Logging) ngay cả khi hệ thống gặp sự cố như mất điện đột ngột.
+```mermaid
+sequenceDiagram
+    participant App as Application
+    participant RAM as Buffer Pool
+    participant WAL as WAL Log (Disk)
+    participant Disk as Data Files (Disk)
 
-## 4. OLTP vs OLAP: Sự Khác Biệt Cơ Bản
+    App->>RAM: 1. UPDATE balance = 500
+    RAM-->>RAM: 2. Modify in Memory (Dirty Page)
+    RAM->>WAL: 3. Append Log (Sequential I/O)
+    WAL-->>App: 4. Return Commit SUCCESS!
+    Note over RAM,Disk: Background Process (Later)
+    RAM->>Disk: 5. Checkpointer flushes page (Random I/O)
+```
 
-Hệ thống quản lý dữ liệu thường được chia làm hai mảng chính là OLTP và OLAP (Online Analytical Processing). Việc hiểu rõ sự khác biệt giữa hai hệ thống này giúp kiến trúc sư dữ liệu thiết kế hệ thống tối ưu hơn:
+### 1.3. B-Tree Index: Vũ khí đọc siêu tốc
+Hệ thống OLTP cần tìm đúng 1 record trong hàng tỷ record với tốc độ mili-giây. Cấu trúc dữ liệu "quốc dân" cho bài toán này là **B-Tree** (thường là B+ Tree).
+- Trong B+ Tree, chỉ các Node lá (Leaf nodes) chứa dữ liệu thực hoặc con trỏ vị trí vật lý (TID - Tuple ID). Các Node trung gian chỉ chứa Key để rẽ nhánh.
+- **Độ sâu cây cực nông:** Thông thường độ sâu của cây chỉ khoảng 3-4 tầng có thể chứa hàng chục triệu bản ghi. Nghĩa là DB chỉ cần tốn 3-4 lần đọc khối dữ liệu (I/O) là đã lấy ra được row cần tìm.
 
-| Tiêu Chí | OLTP (Xử lý giao dịch) | OLAP (Xử lý phân tích) |
-| :--- | :--- | :--- |
-| **Mục đích** | Quản lý, vận hành các hoạt động kinh doanh hàng ngày. | Phân tích dữ liệu lịch sử để hỗ trợ ra quyết định (BI/Reporting). |
-| **Loại truy vấn** | Nhanh, đơn giản, lượng dữ liệu nhỏ (INSERT, UPDATE, DELETE). | Phức tạp, sử dụng JOIN, GROUP BY trên lượng dữ liệu khổng lồ. |
-| **Tổ chức dữ liệu** | Lưu trữ theo hàng (Row-oriented). | Lưu trữ theo cột (Column-oriented). |
-| **Mức độ chuẩn hóa** | Mức chuẩn hóa cao (3NF) để tránh dư thừa và lỗi dị thường (anomaly) khi cập nhật. | Thường được khử chuẩn (Denormalized) thành dạng Star/Snowflake Schema. |
-| **Cập nhật dữ liệu** | Liên tục theo thời gian thực (Real-time). | Nạp theo đợt (Batch processing) hoặc Near-Realtime (Streaming). |
-| **Chỉ số hiệu năng (Metric)** | Số lượng giao dịch mỗi giây (TPS - Transactions Per Second). | Thời gian đáp ứng các truy vấn phân tích phức tạp. |
+## 2. Giải bài toán Đồng thời với MVCC (Multi-Version Concurrency Control)
 
-## 5. Kiến Trúc và Các Hệ Cơ Sở Dữ Liệu Phổ Biến
+Nếu Transaction A và Transaction B cùng lúc đọc và ghi vào tài khoản `ID = 1`, làm sao để tránh xung đột?
+Cách thô sơ nhất là **Lock (Khóa cứng)**. Tuy nhiên Lock làm giảm Concurrency thê thảm (ai vào trước khóa lại, người sau phải xếp hàng).
 
-Đa số các cơ sở dữ liệu OLTP truyền thống sử dụng kiến trúc RDBMS (Relational Database Management System) và tổ chức dữ liệu thông qua cấu trúc B-Tree Index nhằm tìm kiếm một khóa (Key) nhanh nhất có thể. Tuy nhiên, sự bùng nổ của lượng người dùng trên Internet đã dẫn tới sự phát triển của các cơ sở dữ liệu Distributed SQL/NewSQL để phục vụ việc mở rộng theo chiều ngang (horizontal scaling).
+Hầu hết RDBMS hiện đại dùng **MVCC**.
+Nguyên lý của MVCC: **"Readers don't block Writers, and Writers don't block Readers"** (Đọc không chặn Ghi, Ghi không chặn Đọc).
+- Khi bạn chạy `UPDATE`, DB không ghi đè row cũ. Nó tạo ra một **phiên bản (version)** hoàn toàn mới.
+- Dòng cũ vẫn được giữ lại để phục vụ cho những Transaction khác đang `SELECT` (dựa trên một Snapshot quá khứ).
+- Dưới DB Engine, mỗi dòng sẽ có các meta-data ẩn. Trong Postgres đó là `xmin` (ID của Transaction sinh ra nó) và `xmax` (ID của Transaction update/delete nó). Thông qua so sánh các ID này, DB biết Transaction nào được phép nhìn thấy row nào.
 
-Các hệ quản trị cơ sở dữ liệu phổ biến được sử dụng cho OLTP bao gồm:
+## 3. Các Mức độ Cô lập (Isolation Levels) & Dị thường (Anomalies)
 
-* **Relational Database (Truyền thống):** MySQL, PostgreSQL, Oracle Database, Microsoft SQL Server. Phù hợp cho đa số các ứng dụng với quy mô lưu trữ nằm gọn trong một vài máy chủ mạnh mẽ (Vertical Scaling).
-* **Distributed SQL (NewSQL):** CockroachDB, TiDB, YugabyteDB, Google Cloud Spanner. Hỗ trợ phân tán dữ liệu trên toàn cầu, cung cấp khả năng mở rộng tự động theo chiều ngang mà vẫn đảm bảo tính tuân thủ ACID chặt chẽ.
-* **NoSQL (Tối ưu giao dịch hẹp):** MongoDB (hỗ trợ Multi-document ACID transactions từ bản 4.0), Amazon DynamoDB. Được sử dụng trong các hệ thống đòi hỏi độ linh hoạt trong cấu trúc dữ liệu và xử lý quy mô lớn, tuy phải đánh đổi một phần sự khắt khe về quan hệ dữ liệu.
+Mặc dù có MVCC, việc cho phép bao nhiêu "ảo giác dữ liệu" xảy ra khi đọc/ghi đồng thời phụ thuộc vào **Isolation Level**. Nếu set Isolation level quá nghiêm ngặt -> Chậm (do xung đột Lock). Set quá lỏng lẻo -> Sai nghiệp vụ.
 
-## 6. Ví Dụ Về Các Ứng Dụng OLTP Thực Tế
+| Isolation Level | Dirty Read | Non-Repeatable Read | Phantom Read | Hiệu năng |
+| :--- | :--- | :--- | :--- | :--- |
+| **Read Uncommitted** | Có | Có | Có | Nhanh nhất (Không Lock) |
+| **Read Committed** (Default Postgres) | Không | Có | Có | Nhanh |
+| **Repeatable Read** (Default MySQL) | Không | Không | Có (Postgres chặn luôn) | Chậm hơn |
+| **Serializable** | Không | Không | Không | Rất chậm (Gần như chạy tuần tự) |
 
-1. **Ngành Ngân hàng & Tài chính:**
-   * Hệ thống ATM: Rút tiền, chuyển khoản.
-   * Xử lý giao dịch chứng khoán trực tuyến yêu cầu độ trễ cực thấp (High-Frequency Trading).
-   * Ứng dụng mobile banking: Cập nhật số dư tài khoản ngay tức thì sau mỗi biến động.
+### Khắc phục dị thường bằng Explicit Lock (Pessimistic Locking)
+Dị thường kinh điển nhất của OLTP là mất mát dữ liệu (Lost Update) do Race Condition. Giả sử 2 app cùng gọi `SELECT balance` (đều thấy 100), sau đó cả hai cùng gọi `UPDATE balance = balance + 10`. Thay vì ra 120, kết quả cuối cùng lại là 110!
 
-2. **Thương mại điện tử (E-Commerce):**
-   * Quản lý tồn kho: Đảm bảo không có hiện tượng 2 người cùng đặt mua thành công 1 sản phẩm cuối cùng (giải quyết qua concurrency control).
-   * Cập nhật giỏ hàng, thông tin thanh toán, và thay đổi trạng thái đơn hàng (từ "Đang xử lý" sang "Đã vận chuyển").
+**Cách giải quyết phổ biến trong code:**
+Thay vì đổi toàn bộ DB sang `Serializable` (gây sập tải), kỹ sư dùng Row-level Lock cụ thể bằng `SELECT ... FOR UPDATE`:
 
-3. **Hệ thống Đặt vé (Booking Systems):**
-   * Mua vé máy bay, đặt phòng khách sạn.
-   * Đòi hỏi cao trong việc giữ chỗ (seat reservation) để tránh tình trạng overbooking trong lúc xử lý thanh toán.
+```sql
+BEGIN;
+-- Khóa dòng dữ liệu ngay từ lúc đọc (Không cho ai khác chọc vào)
+SELECT balance FROM users WHERE id = 1 FOR UPDATE;
 
-## Tài Liệu Tham Khảo
+-- Giờ thì thoải mái xử lý logic trong code và update an toàn
+UPDATE users SET balance = balance + 10 WHERE id = 1;
+COMMIT;
+```
 
-* [Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval) - Martin Kleppmann](https://dataintensive.net/)
-* [Database Internals: A Deep Dive into How Distributed Data Systems Work - Alex Petrov](https://www.databass.dev/)
-* [The Evolution of Distributed Systems - TiDB Architecture](https://docs.pingcap.com/tidb/dev/tidb-architecture)
-* [ACID Properties in Database Management Systems - IBM Documentation](https://www.ibm.com/docs/en/cics-ts/5.4?topic=processing-acid-properties-transactions)
+## 4. Rủi Ro Vận Hành & Troubleshooting (Real-world Incidents)
+
+Lý thuyết OLTP hoàn hảo, nhưng ở môi trường Production, Database rất dễ gục ngã vì thiết kế sai lầm của Application. 
+
+### 4.1. Lock Contention & Deadlocks (Khóa chéo)
+- **Triệu chứng:** Giao dịch bị kẹt (hung), CPU DB không cao nhưng số lượng Active Connections bùng nổ, ứng dụng báo timeout.
+- **Nguyên nhân:** Transaction A giữ Lock ở Table 1 chờ Table 2; trong khi Transaction B giữ Lock ở Table 2 chờ Table 1. Hoặc quá nhiều app cùng `UPDATE` một dòng duy nhất (Hot Row) sinh ra hàng đợi Lock cực lớn.
+- **Khắc phục:** 
+  - Quy định thứ tự update đồng nhất trong Codebase (luôn update bảng/row theo thứ tự Alphabet hoặc ID tăng dần).
+  - Giảm thiểu tối đa kích thước vòng đời của 1 giao dịch. Không nhét gọi API (3rd party) hoặc thao tác tính toán nặng vào bên trong `BEGIN...COMMIT`.
+
+### 4.2. Khủng hoảng MVCC Bloat (PostgreSQL)
+Bởi vì cơ chế MVCC không ghi đè dữ liệu, các version cũ (Dead Tuples) phải được dọn dẹp bằng một background process gọi là **Auto-Vacuum**.
+- **Incident:** Khi bảng có tần suất `UPDATE`/`DELETE` quá lớn (ví dụ: Lưu trạng thái giỏ hàng liên tục), Auto-vacuum chạy không kịp. 
+- **Hậu quả:** Bảng phình to (Bloat) lên hàng chục GB dù dữ liệu khả dụng (Live Tuples) chỉ vài MB. Nó dẫn tới B-Tree Index bị phân mảnh, mỗi cú `SELECT` lại load hàng loạt file rác lên Buffer Pool -> Gây ra **Tràn RAM (OOMKilled)** và làm sập DB.
+- **Khắc phục:** Tinh chỉnh (Tuning) lại `autovacuum_vacuum_scale_factor`, giảm `statement_timeout` để giết các Transaction treo (long-running query) – thủ phạm chính block Auto-vacuum.
+
+### 4.3. Connection Pool Exhaustion
+Mỗi Connection vào RDBMS tiêu tốn tài nguyên khá lớn (với Postgres là khoảng 5-10MB RAM mỗi Process `fork`). 
+- Nếu ứng dụng Microservices của bạn mở cùng lúc 2,000 connections tới DB, nó sẽ ăn sạch 20GB RAM trước cả khi thực thi bất kỳ câu truy vấn nào. Nếu là kiến trúc Serverless (AWS Lambda) gọi trực tiếp DB thì đây là thảm họa.
+- **Khắc phục:** Kiến trúc bắt buộc phải có Connection Pooler trung gian (như **PgBouncer**, **Odyssey**, hoặc **AWS RDS Proxy**) để dồn ghép hàng vạn request vào một số lượng kết nối DB nhất định.
+
+## 5. OLTP Ở Kỷ Nguyên Cloud: NewSQL và Distributed SQL
+
+RDBMS truyền thống (MySQL, PostgreSQL) vốn được thiết kế theo tư duy kiến trúc Monolithic. Để scale, cách phổ biến nhất là Vertical Scaling (Nâng cấp máy chủ to hơn, thêm RAM, thêm CPU). 
+
+Tuy nhiên, khi chạm đến giới hạn vật lý (VD: Dữ liệu Terabytes, hàng chục ngàn TPS), các Tech Giant đã chuyển sang kiến trúc **Distributed SQL (NewSQL)** như CockroachDB, TiDB, YugabyteDB hoặc Google Cloud Spanner.
+
+- **Kiến trúc:** Dữ liệu tự động chia nhỏ (Sharding) trên nhiều Nodes máy chủ vật lý, đồng thời sử dụng các thuật toán đồng thuận phân tán như **Raft** hoặc **Paxos** để giữ vững cam kết ACID trong môi trường network bị phân mảnh (Network Partition).
+- **Sự đánh đổi (Trade-offs):** Mặc dù chịu tải ngang rất tốt (Horizontal Scale), Distributed SQL chịu hệ lụy về **Độ trễ Mạng (Network Latency)** do phải RPC gọi chéo giữa các Node. Các truy vấn `JOIN` phức tạp thường chậm hơn đáng kể so với việc chạy cục bộ trên một máy chủ PostgreSQL cực mạnh.
+
+## 6. Nguồn Tham Khảo (References)
+- [Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval, Chapter 7: Transactions) - Martin Kleppmann](https://dataintensive.net/)
+- [PostgreSQL Internals: Write-Ahead Log (WAL)](https://www.postgresql.org/docs/current/wal-intro.html)
+- [MySQL 8.0 Reference Manual: InnoDB Architecture](https://dev.mysql.com/doc/refman/8.0/en/innodb-architecture.html)
+- [Database Internals: A Deep Dive into How Distributed Data Systems Work - Alex Petrov](https://www.databass.dev/)
+- [TiDB Architecture - The Evolution of Distributed Systems](https://docs.pingcap.com/tidb/dev/tidb-architecture)

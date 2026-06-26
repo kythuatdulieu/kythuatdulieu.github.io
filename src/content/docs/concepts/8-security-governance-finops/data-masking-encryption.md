@@ -1,122 +1,164 @@
 ---
-title: "Data Masking & Encryption"
+title: "Data Masking & Encryption: Physical Execution & FinOps"
 difficulty: "Advanced"
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Data Masking & Encryption - Kỹ thuật che giấu và mã hoá dữ liệu"
-metaDescription: "Tìm hiểu chuyên sâu về Data Masking và Encryption trong Data Engineering: bảo vệ dữ liệu PII/PHI ở trạng thái nghỉ (At-rest), di chuyển (In-transit) và ứng dụng thực tiễn."
-description: "Che giấu và mã hoá dữ liệu nhạy cảm PII ở trạng thái nghỉ (At-rest) và di chuyển (In-transit)."
+lastUpdated: 2026-06-26
+seoTitle: "Data Masking & Encryption trong Data Engineering: KMS, DDM & Trade-offs"
+metaDescription: "Kiến trúc thực thi, đánh đổi hệ thống và rủi ro vận hành (KMS Throttling, OOM) khi áp dụng Envelope Encryption và Dynamic Data Masking."
+description: "Phân tích kiến trúc Envelope Encryption, Dynamic Data Masking, và giải phẫu các sự cố hệ thống (KMS Throttling, Query Bottleneck) khi bảo vệ dữ liệu PII/PHI."
 ---
 
+Bảo mật dữ liệu (Data Security) ở quy mô Petabyte không chỉ là câu chuyện của việc tuân thủ GDPR/HIPAA, mà là bài toán tối ưu giữa **Security (Bảo mật)**, **Performance (Hiệu năng)**, và **Cost (Chi phí)**. Khi mã hoá hoặc che giấu dữ liệu bị cấu hình sai, hệ thống sẽ phải trả giá bằng các sự cố như KMS Throttling, OOMKilled trên Worker Node, hoặc Query Latency tăng gấp 10 lần.
 
-
-Bảo mật dữ liệu là một trong những trụ cột quan trọng nhất của Data Governance và Security. Trong môi trường dữ liệu hiện đại, nơi hàng petabyte dữ liệu được thu thập, lưu trữ và xử lý mỗi ngày, việc bảo vệ thông tin nhạy cảm của người dùng (như PII, PHI, thông tin tài chính) là bắt buộc để tuân thủ các quy định pháp lý (GDPR, CCPA, HIPAA) và duy trì niềm tin của khách hàng.
-
-Hai kỹ thuật cốt lõi thường được sử dụng để bảo vệ dữ liệu là **Data Masking (Che giấu dữ liệu)** và **Data Encryption (Mã hóa dữ liệu)**. Mặc dù cả hai đều phục vụ mục đích bảo mật, chúng có cơ chế hoạt động và Use Case hoàn toàn khác nhau.
-
----
-
-## 1. Data Encryption (Mã hóa dữ liệu)
-
-**Encryption** là quá trình sử dụng các thuật toán toán học để biến đổi dữ liệu có thể đọc được (plaintext) thành một dạng không thể đọc được (ciphertext). Để khôi phục dữ liệu về dạng ban đầu, bạn cần một khóa giải mã (decryption key) tương ứng.
-
-### 1.1. Các trạng thái mã hóa (Encryption States)
-
-Trong Data Engineering, dữ liệu cần được bảo vệ ở ba trạng thái chính:
-
-*   **Encryption In-transit (Mã hóa khi di chuyển):**
-    *   Bảo vệ dữ liệu khi nó đang được truyền qua mạng (giữa client và server, hoặc giữa các microservices).
-    *   **Công nghệ:** TLS/SSL (Transport Layer Security).
-    *   **Ví dụ:** Dữ liệu di chuyển từ Kafka đến Spark Streaming hoặc từ Web App đến API Gateway phải luôn đi qua HTTPS/TLS.
-*   **Encryption At-rest (Mã hóa ở trạng thái nghỉ):**
-    *   Bảo vệ dữ liệu khi nó được lưu trữ trên ổ đĩa, cơ sở dữ liệu, Data Lake (S3, GCS), hoặc Data Warehouse.
-    *   **Công nghệ:** AES-256 (Advanced Encryption Standard), TDE (Transparent Data Encryption) trong các RDBMS.
-    *   **Ví dụ:** Bật tính năng Server-Side Encryption (SSE) trên Amazon S3 với AWS KMS (`SSE-KMS`) hoặc `SSE-S3`.
-*   **Encryption In-use (Mã hóa khi sử dụng) - Advanced:**
-    *   Bảo vệ dữ liệu khi nó đang được xử lý trong RAM hoặc CPU.
-    *   **Công nghệ:** Confidential Computing (sử dụng phần cứng như Intel SGX hoặc AMD SEV), Homomorphic Encryption (Mã hóa đồng cấu - cho phép tính toán trực tiếp trên ciphertext mà không cần giải mã).
-
-### 1.2. Key Management & Envelope Encryption
-
-Mã hóa chỉ an toàn khi **Khóa (Key)** được bảo vệ. Các hệ thống lớn thường sử dụng **KMS (Key Management Service)** như AWS KMS, Google Cloud KMS, hoặc HashiCorp Vault.
-
-**Envelope Encryption** là một best practice trong việc quản lý khóa:
-1.  Dữ liệu được mã hóa bằng một **Data Key** (DEK - Data Encryption Key).
-2.  Bản thân Data Key lại được mã hóa bằng một **Master Key** (KEK - Key Encryption Key).
-3.  Chỉ KEK mới được lưu trữ an toàn trong KMS. Hệ thống chỉ cần gọi KMS để giải mã DEK, sau đó dùng DEK ở local memory để giải mã khối lượng dữ liệu lớn, giúp tối ưu hiệu suất và giảm tải cho KMS.
+Bài viết này đi sâu vào kiến trúc thực thi vật lý của **Envelope Encryption** (Mã hóa bao thư) và **Dynamic Data Masking** (Che giấu dữ liệu động), cùng các Trade-offs hệ thống liên quan.
 
 ---
 
-## 2. Data Masking (Che giấu dữ liệu)
+## 1. Kiến trúc Thực thi Vật lý: Envelope Encryption
 
-**Data Masking** (hay còn gọi là Data Obfuscation) là kỹ thuật thay thế dữ liệu nhạy cảm bằng dữ liệu giả nhưng vẫn giữ nguyên cấu trúc hoặc tính chân thực của dữ liệu để phục vụ cho các mục đích như phát triển, kiểm thử (testing), hoặc phân tích (analytics) mà không làm lộ thông tin thật.
+Mã hóa dữ liệu ở trạng thái nghỉ (At-rest) hiếm khi sử dụng trực tiếp một khóa duy nhất cho toàn bộ Data Lake. Thay vào đó, tiêu chuẩn công nghiệp (AWS, GCP, Databricks) sử dụng **Envelope Encryption** với hệ thống quản lý khóa (KMS - Key Management Service).
 
-Ví dụ: Thay thế số thẻ tín dụng `4111 2222 3333 4444` thành `**** **** **** 4444`.
+### 1.1. Luồng thực thi (Physical Execution Flow)
 
-### 2.1. Phân loại Data Masking
+Envelope Encryption sử dụng hai loại khóa:
+1. **KEK (Key Encryption Key):** Khóa gốc, luôn nằm an toàn bên trong phần cứng HSM (Hardware Security Module) của KMS. Không bao giờ rời khỏi KMS.
+2. **DEK (Data Encryption Key):** Khóa dùng để mã hóa dữ liệu thực tế. DEK được tạo ra từ KMS, có hai phiên bản: Plaintext DEK (để giải mã trên RAM) và Encrypted DEK (lưu cùng file dữ liệu).
 
-*   **Static Data Masking (SDM):**
-    *   Dữ liệu được làm rối ở trạng thái nghỉ trước khi được sao chép sang môi trường khác.
-    *   **Use case:** Copy dữ liệu từ môi trường Production xuống môi trường Staging/Dev để đội ngũ kỹ sư kiểm thử. Dữ liệu thực đã bị thay đổi vĩnh viễn ở môi trường đích.
-*   **Dynamic Data Masking (DDM):**
-    *   Dữ liệu trên ổ đĩa vẫn là dữ liệu thực, nhưng khi người dùng truy vấn (SELECT), hệ thống sẽ che giấu dữ liệu on-the-fly (ngay lúc chạy) dựa trên Role và Permission của người dùng.
-    *   **Use case:** Cung cấp dữ liệu cho Data Analyst. Analyst vẫn có thể join bảng dựa trên email (đã được hash/mask), nhưng không thể đọc email thật.
-
-### 2.2. Các kỹ thuật Masking phổ biến
-
-1.  **Substitution (Thay thế):** Thay thế dữ liệu thật bằng dữ liệu giả từ một từ điển (VD: Đổi tên "Nguyễn Văn A" thành "Trần Thị B").
-2.  **Shuffling (Xáo trộn):** Hoán đổi các giá trị trong cùng một cột cho các bản ghi khác nhau. Phù hợp để giữ nguyên phân phối thống kê của cột.
-3.  **Variance/Number Variance:** Áp dụng một độ lệch ngẫu nhiên vào dữ liệu số (VD: Lương $5000 có thể biến thành một số ngẫu nhiên trong khoảng $4500 - $5500). Hữu ích cho phân tích tài chính vĩ mô.
-4.  **Masking Out (Che khuất một phần):** Thay thế một phần chuỗi bằng ký tự đặc biệt (VD: `X` hoặc `*`). Dùng nhiều cho số điện thoại, số thẻ tín dụng.
-5.  **Nulling Out (Làm trống):** Thay thế toàn bộ giá trị nhạy cảm bằng `NULL`.
-
----
-
-## 3. Tokenization & Format-Preserving Encryption
-
-Bên cạnh Encryption và Masking cơ bản, có hai kỹ thuật nâng cao thường gặp:
-
-*   **Tokenization (Mã thông báo hóa):** Thay thế dữ liệu nhạy cảm (như số thẻ tín dụng) bằng một chuỗi ngẫu nhiên gọi là Token. Không có thuật toán toán học nào có thể đảo ngược Token thành dữ liệu thật; hệ thống phải duy trì một cơ sở dữ liệu ánh xạ (Token Vault) được bảo mật nghiêm ngặt. Hệ thống thanh toán (Payment Gateways) thường dùng cách này.
-*   **Format-Preserving Encryption (FPE):** Mã hóa dữ liệu nhưng vẫn giữ nguyên định dạng (chiều dài, kiểu ký tự). Ví dụ: Một chuỗi 16 chữ số thẻ tín dụng khi mã hóa vẫn trả ra 16 chữ số khác. Điều này giúp các hệ thống Legacy (hệ thống cũ) không bị lỗi validation khi nhận dữ liệu mã hóa.
-
----
-
-## 4. Triển khai trong Data Pipeline & Data Warehouse
-
-### Snowflake
-Snowflake cung cấp **Dynamic Data Masking** tích hợp sẵn thông qua Masking Policies. Bạn có thể định nghĩa các hàm policy dựa trên Role:
-```sql
-CREATE OR REPLACE MASKING POLICY email_mask AS (val string) RETURNS string ->
-  CASE
-    WHEN CURRENT_ROLE() IN ('ANALYST_FULL_ACCESS', 'ACCOUNTADMIN') THEN val
-    ELSE '***@***.com'
-  END;
-
--- Áp dụng vào cột
-ALTER TABLE users MODIFY COLUMN email SET MASKING POLICY email_mask;
+```mermaid
+sequenceDiagram
+    participant App as Data Application (Spark/Flink)
+    participant KMS as AWS KMS (HSM)
+    participant Storage as S3 / GCS
+    
+    Note over App, KMS: Write Path (Mã hoá)
+    App->>KMS: Request GenerateDataKey(KEK_ID)
+    KMS-->>App: Return (Plaintext DEK, Encrypted DEK)
+    App->>App: Mã hoá Data bằng Plaintext DEK -> Ciphertext
+    App->>App: Xóa Plaintext DEK khỏi RAM
+    App->>Storage: Lưu [Encrypted DEK + Ciphertext]
+    
+    Note over App, KMS: Read Path (Giải mã)
+    Storage-->>App: Đọc [Encrypted DEK + Ciphertext]
+    App->>KMS: Request Decrypt(Encrypted DEK)
+    KMS-->>App: Return Plaintext DEK
+    App->>App: Giải mã Ciphertext bằng Plaintext DEK -> Data
 ```
 
-### Google BigQuery
-BigQuery hỗ trợ **Column-level Security** thông qua **Policy Tags**. Bạn tạo Data Taxonomy, gán tag (ví dụ: `High Security`, `PII`) cho các cột. Sau đó, quản lý quyền truy cập qua IAM Data Policies để quyết định ai có thể thấy dữ liệu gốc, ai thấy dữ liệu đã bị mask (Data Masking Rules trong BigQuery).
+### 1.2. Infrastructure as Code (Terraform)
 
-### Apache Spark / Databricks
-Trong Spark, bạn có thể áp dụng các hàm UDF (User Defined Functions) để mask dữ liệu trong quá trình ETL (trước khi ghi ra Data Lake). Databricks cũng cung cấp Dynamic Data Masking cho môi trường Unity Catalog để kiểm soát quyền truy cập fine-grained (chi tiết đến từng cột/dòng).
+Cấu hình AWS KMS với Customer Managed Key (CMK) và tính năng tự động luân chuyển khóa (Key Rotation) định kỳ hàng năm - một yêu cầu FinOps và Security bắt buộc.
+
+```hcl
+resource "aws_kms_key" "datalake_key" {
+  description             = "KEK for Data Lake PII Encryption"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true # Tự động xoay KEK mỗi năm, DEK cũ vẫn được giải mã bình thường
+  
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = { AWS = "arn:aws:iam::123456789012:root" }
+        Action = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow Spark IAM Role to Decrypt/Encrypt"
+        Effect = "Allow"
+        Principal = { AWS = aws_iam_role.spark_worker_role.arn }
+        Action = [
+          "kms:GenerateDataKey",
+          "kms:Decrypt"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+```
+
+### 1.3. Rủi ro Vận hành (Operational Risks) & Trade-offs
+
+*   **Sự cố KMS Throttling (Rate Limit Exceeded):** Khi một Spark Job đọc hàng chục ngàn file Parquet nhỏ (Small Files Problem), mỗi file có một Encrypted DEK riêng. Spark sẽ gọi API `kms:Decrypt` hàng chục ngàn lần cùng lúc. AWS KMS có hard limit (VD: 10,000 requests/second), dẫn đến `ThrottlingException` và Job thất bại.
+    *   *Khắc phục:* Sử dụng **AWS KMS Data Key Caching** hoặc gộp file (Compaction / `OPTIMIZE`) trước khi mã hoá.
+*   **JVM OOMKilled (Out of Memory):** Giải mã dữ liệu yêu cầu nạp toàn bộ block Ciphertext và Plaintext DEK vào RAM. Nếu block size quá lớn hoặc partition bị Data Skew, Executor JVM sẽ bị cạn kiệt Heap Memory và crash.
 
 ---
 
-## 5. Best Practices & Khuyến nghị
+## 2. Dynamic Data Masking (DDM) ở Data Warehouse
 
-1.  **Phân loại dữ liệu (Data Discovery & Classification):** Trước khi có thể bảo vệ, bạn phải biết dữ liệu nhạy cảm nằm ở đâu. Sử dụng các công cụ Data Catalog (như AWS Macie, Google Cloud DLP, Amundsen) để tự động quét và gắn thẻ (tag) dữ liệu PII/PHI.
-2.  **Nguyên tắc Least Privilege (Đặc quyền tối thiểu):** Chỉ cấp quyền giải mã hoặc xem dữ liệu không bị mask cho những users/services thực sự cần nó cho công việc.
-3.  **Tách biệt nhiệm vụ (Separation of Duties):** Quản trị viên cơ sở dữ liệu (DBA) có quyền quản lý hệ thống nhưng không nhất thiết phải có quyền xem (giải mã) dữ liệu kinh doanh nhạy cảm.
-4.  **Audit và Monitoring:** Ghi log liên tục về việc ai đã truy cập/giải mã thông tin gì, sử dụng các dịch vụ như AWS CloudTrail hoặc GCP Cloud Audit Logs. Đặt cảnh báo (alert) cho những hành vi truy cập bất thường.
-5.  **Luân chuyển khóa (Key Rotation):** Thiết lập tự động luân chuyển khóa mã hóa (KMS auto-rotation) định kỳ (ví dụ: mỗi 90 ngày) hoặc ngay khi nghi ngờ có rủi ro bảo mật.
+Trong khi Encryption bảo vệ dữ liệu khi ổ cứng bị đánh cắp, **Data Masking** bảo vệ dữ liệu khỏi những User/Analyst không có thẩm quyền truy cập PII, nhưng vẫn cho phép họ query data.
+
+Thay vì tạo ra một bản copy dữ liệu đã bị che giấu (Static Data Masking) gây tốn gấp đôi chi phí Storage, kiến trúc hiện đại dùng **Dynamic Data Masking (DDM)**: Dữ liệu trên ổ cứng là bản gốc (Plaintext), việc che giấu xảy ra **On-the-fly (Lúc chạy)** thông qua UDF được inject vào Query Plan dựa trên Role.
+
+### 2.1. Cấu hình DDM trên Databricks Unity Catalog
+
+Databricks Unity Catalog (UC) xử lý DDM bằng SQL UDFs đóng vai trò như một Proxy Filter.
+
+```sql
+-- 1. Tạo Masking Function
+CREATE OR REPLACE FUNCTION pii_mask_email(email STRING)
+RETURNS STRING
+RETURN CASE 
+    WHEN is_account_group_member('data_engineers') THEN email -- Nhóm DE thấy dữ liệu gốc
+    ELSE CONCAT(LEFT(email, 3), '***@***.com')               -- Nhóm khác thấy email bị mask
+  END;
+
+-- 2. Bind hàm Masking vào cột của Table
+ALTER TABLE prod.customer_360.users 
+ALTER COLUMN email SET MASK pii_mask_email;
+```
+
+Khi một Analyst chạy lệnh `SELECT email FROM users`, Unity Catalog Engine sẽ tự động viết lại (rewrite) câu lệnh thành:
+`SELECT pii_mask_email(email) FROM users`.
+
+### 2.2. Đánh đổi Hệ thống (Systemic Trade-offs)
+
+Mặc dù DDM giải quyết bài toán Data Governance hoàn hảo, nó mang lại những rủi ro cực lớn về Compute và Performance:
+
+1.  **Phá vỡ Predicate Pushdown & Partition Pruning:**
+    Nếu Analyst query: `SELECT * FROM users WHERE email = 'abc@gmail.com'`, hệ thống không thể đẩy điều kiện `email = '...'` xuống tầng Storage (Parquet/Delta) vì cột `email` đã bị bọc bởi hàm UDF `pii_mask_email()`.
+    *Hậu quả:* Engine phải thực hiện **Full Table Scan**, đọc toàn bộ TB dữ liệu lên RAM, chạy hàm Masking trên từng dòng, rồi mới filter. Query latency tăng từ vài giây lên vài giờ.
+
+2.  **Cartesian Explosion khi JOIN:**
+    Nếu hai bảng được JOIN bằng một cột PII bị masked (VD: Cùng bị mask thành `***@***.com`), hàng triệu bản ghi sẽ match với nhau, tạo ra Cartesian Product làm sập cụm (Cluster Crash).
+    *Cách khắc phục:* Đừng Mask cột dùng làm khóa JOIN. Hãy sử dụng kỹ thuật **Tokenization (Mã thông báo hóa)** hoặc **Format-Preserving Encryption (FPE)** để thay thế PII bằng một Token duy nhất mang tính xác định (Deterministic) nhưng không thể dịch ngược.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [NIST Cryptographic Standards and Guidelines](https://csrc.nist.gov/Projects/cryptographic-standards-and-guidelines)
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Snowflake Documentation: Dynamic Data Masking](https://docs.snowflake.com/en/user-guide/security-column-ddm-intro)
-* **Google Cloud Architecture Center: Data anonymization and masking**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+## 3. Tokenization & Format-Preserving Encryption (FPE)
+
+Khi hệ thống Legacy (hệ thống cũ) yêu cầu dữ liệu phải giữ đúng định dạng (ví dụ: Cột số thẻ tín dụng kiểu `INT`, độ dài 16, nếu ném chuỗi mã hoá AES `eyJhbG...` vào sẽ bị lỗi Data Type), ta dùng FPE hoặc Tokenization.
+
+```mermaid
+graph LR
+    A["Client App"] -->|Plain PAN: 4111222233334444| B("Tokenization Service")
+    B -->|Lưu Map vào Vault| C["(Token Vault DB)"]
+    B -->|Trả Token| D["Data Warehouse"]
+    D -->|Token: 4111999999994444| E["Data Analyst"]
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+*   **Đánh đổi (Trade-off):** Tokenization Server trở thành **Single Point of Failure (SPOF)**. Nếu hệ thống Token Vault bị chậm, toàn bộ luồng Ingestion bị thắt cổ chai. Hơn nữa, Token Vault Database phải mở rộng cực lớn để lưu trữ mapping 1:1.
+
+---
+
+## 4. Tối ưu Chi phí (FinOps) cho Security
+
+Bảo mật dữ liệu không hề miễn phí. Việc gọi API và Compute UDF sinh ra lượng chi phí (FinOps) khổng lồ:
+
+1.  **Chi phí API KMS:** AWS KMS tính phí khoảng $0.03 / 10,000 requests. Nếu Streaming Pipeline của bạn (ví dụ Flink) commit file liên tục mỗi phút, bạn có thể tốn hàng ngàn USD mỗi tháng chỉ riêng tiền gọi KMS.
+    *   *Chiến lược FinOps:* Chỉnh `checkpoint.interval` lớn hơn trong Flink, hoặc dùng tính năng S3 Bucket Key (giảm 99% request KMS bằng cách dùng 1 DEK cấp Bucket để mã hóa nhiều Object).
+2.  **Chi phí Compute của Dynamic Masking:** Việc đánh giá điều kiện `CASE WHEN` trên hàng tỷ dòng dữ liệu mỗi khi Data Analyst chạy query làm lãng phí Compute Credit (Snowflake Credits / DBU Databricks).
+    *   *Chiến lược FinOps:* Tránh dùng DDM cho các bảng được query tần suất cực cao (Dashboard). Hãy dùng vật lý hóa (Materialization) - tức là sinh ra một bảng Static Data Masking riêng thông qua dbt để phục vụ BI Tool.
+
+---
+
+## Nguồn Tham Khảo
+* [AWS Architecture Blog: Building a Customer Data Platform on AWS](https://aws.amazon.com/blogs/architecture/an-overview-and-architecture-of-building-a-customer-data-platform-on-aws/)
+* [Databricks Documentation: Dynamic Data Masking with Unity Catalog](https://docs.databricks.com/en/data-governance/unity-catalog/dynamic-data-masking.html)
+* *Designing Data-Intensive Applications* - Martin Kleppmann (Ch. 4: Encoding and Evolution).
+* [Snowflake Documentation: Dynamic Data Masking Architecture](https://docs.snowflake.com/en/user-guide/security-column-ddm-intro)

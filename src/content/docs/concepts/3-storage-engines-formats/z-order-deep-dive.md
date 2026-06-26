@@ -34,16 +34,16 @@ Hệ thống sau đó Sort dữ liệu theo duy nhất chuỗi nhị phân 1-D n
 
 ```mermaid
 graph TD
-    subgraph space2d [Z-Curve Mapping 2D to 1D]
+    subgraph space2d["Z-Curve Mapping 2D to 1D"]
     direction TB
-    A[0,0] --> B[1,0]
-    B --> C[0,1]
-    C --> D[1,1]
+    A["0,0"] --> B["1,0"]
+    B --> C["0,1"]
+    C --> D["1,1"]
     
-    D -.-> E[2,0]
-    E --> F[3,0]
-    F --> G[2,1]
-    G --> H[3,1]
+    D -.-> E["2,0"]
+    E --> F["3,0"]
+    F --> G["2,1"]
+    G --> H["3,1"]
     end
     
     style A fill:#f9f,stroke:#333,stroke-width:2px

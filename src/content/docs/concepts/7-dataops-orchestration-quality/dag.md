@@ -1,172 +1,156 @@
 ---
-title: "DAG (Đồ thị có hướng không chu trình) trong Data Engineering"
-difficulty: "Beginner"
-tags: ["dag", "directed-acyclic-graph", "airflow", "pipeline", "orchestration"]
-readingTime: "8 mins"
-lastUpdated: 2026-06-16
-seoTitle: "DAG là gì? Directed Acyclic Graph trong Data Pipeline"
-metaDescription: "Đồ thị có hướng không chu trình (DAG) là gì? Lý do các công cụ Orchestration như Airflow, dbt, Spark sử dụng kiến trúc DAG để mô hình hóa Data Pipeline."
-description: "Trong thế giới Kỹ thuật dữ liệu (Data Engineering), nếu có một khái niệm toán học được áp dụng rộng rãi nhất làm nền tảng cho việc vận hành luồng xử lý, đó chính là DAG."
+title: "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
+difficulty: "Advanced"
+tags: ["dag", "airflow", "spark", "orchestration", "data-engineering", "maestro"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "DAG trong Data Engineering: Đánh đổi, Scheduler Tax & Spark Execution"
+metaDescription: "Phân tích kiến trúc chuyên sâu về DAG (Directed Acyclic Graph) trong Data Orchestration. Giải phẫu Airflow Scheduler Tax, Cartesian Explosion và Spark Execution DAG."
+description: "Vượt ra khỏi khái niệm toán học cơ bản, bài viết này đi sâu vào cách các hệ thống như Airflow, Netflix Maestro và Apache Spark biên dịch, tối ưu và thực thi đồ thị DAG dưới nền tảng vật lý."
 ---
 
+Nếu bạn bước vào một cuộc phỏng vấn Data Engineer và được hỏi "DAG là gì?", câu trả lời "Directed Acyclic Graph - Đồ thị có hướng không chu trình" chỉ đủ để bạn qua vòng sơ loại. Để chứng minh năng lực của một Staff Engineer, bạn cần hiểu DAG không chỉ là một khái niệm toán học, mà là **một bản vẽ kiến trúc (execution blueprint)** quyết định cách hệ thống phân bổ tài nguyên, khóa (lock) dữ liệu, và phục hồi sau sự cố.
 
-
-DAG (Directed Acyclic Graph - Đồ thị có hướng không chu trình) là một khái niệm mượn từ lý thuyết đồ thị trong toán học, nhưng đã trở thành "xương sống" không thể thiếu trong hệ sinh thái Data Engineering, đặc biệt là trong lĩnh vực Data Orchestration (Điều phối dữ liệu). Trong các công cụ như Apache Airflow, Dagster, hay dbt, DAG định nghĩa chuỗi các Task (tác vụ) chạy theo một thứ tự nghiêm ngặt và tuyệt đối không bao giờ quay vòng thành vòng lặp vô tận.
-
-## DAG là gì? Phân tích theo từng từ khóa
-
-
-
-Hãy bẻ nhỏ cụm từ **Directed Acyclic Graph** để hiểu rõ bản chất của nó:
-
-1. **Graph (Đồ thị):** 
-   Một tập hợp gồm các **Nodes (Đỉnh/Nút)** và các **Edges (Cạnh)** nối chúng lại với nhau. Trong Data Pipeline, một Node đại diện cho một công việc cụ thể (ví dụ: Tải dữ liệu từ API, Chạy câu lệnh SQL, Gửi email báo cáo), và một Edge đại diện cho mối liên hệ giữa các công việc đó.
-
-2. **Directed (Có hướng):**
-   Các cạnh nối giữa các Node có một hướng rõ ràng (thường được biểu diễn bằng mũi tên). Nếu có một mũi tên từ Node A đến Node B (A $\rightarrow$ B), điều đó có nghĩa là **Node A phải hoàn thành trước khi Node B có thể bắt đầu**. Mũi tên này thiết lập thứ tự thực hiện và sự phụ thuộc dữ liệu/tác vụ (Dependencies).
-
-3. **Acyclic (Không chu trình / Không tuần hoàn):**
-   Bạn không bao giờ có thể bắt đầu từ một Node, đi theo các mũi tên, và quay trở lại chính Node đó. Nghĩa là đồ thị không có các vòng lặp (No loops). Đặc tính này cực kỳ quan trọng vì nó đảm bảo Data Pipeline của bạn luôn tiến về phía trước và có điểm kết thúc rõ ràng, tránh rơi vào tình trạng lặp lại vô tận (infinite loop).
+Trong hệ sinh thái Dữ liệu, DAG tồn tại ở hai cấp độ vật lý hoàn toàn khác biệt: **Orchestration DAGs** (như Airflow, Netflix Maestro, Dagster) dùng để điều phối tác vụ vĩ mô, và **Execution DAGs** (như Apache Spark, Trino) dùng để tối ưu hóa tính toán vi mô.
 
 ---
 
-## Vai trò của DAG trong Data Engineering
+## Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-Trong xây dựng Data Pipeline, luồng công việc hiếm khi chỉ là "chạy Script A, xong đến Script B". Thực tế, một pipeline phức tạp sẽ bao gồm hàng chục đến hàng trăm tác vụ đan xen nhau. 
+### 1. Orchestration DAGs: Vòng lặp Parsing và "Scheduler Tax"
 
-Giả sử bạn có luồng công việc:
-1. Extract dữ liệu từ MySQL (A).
-2. Extract dữ liệu từ MongoDB (B).
-3. Transform dữ liệu MySQL (C) - Phụ thuộc vào A.
-4. Transform dữ liệu MongoDB (D) - Phụ thuộc vào B.
-5. Join dữ liệu (E) - Phụ thuộc vào C và D.
-6. Load vào Data Warehouse (F) - Phụ thuộc vào E.
+Trong các hệ thống như Apache Airflow, DAG không tĩnh. Chúng được định nghĩa bằng code (Python). Điều này dẫn đến một cơ chế vật lý gọi là **DAG Parsing Loop** (Vòng lặp biên dịch DAG).
 
-Nếu không có DAG, bạn sẽ phải tự viết các đoạn code phức tạp để kiểm tra xem "A đã xong chưa, B đã xong chưa thì mới chạy E...". DAG giải quyết bài toán này một cách triệt để:
+Airflow Scheduler không tự động biết DAG của bạn có bao nhiêu Task. Nó sở hữu một tiến trình gọi là `DagFileProcessor`, tiến trình này sẽ quét thư mục `dags/` mỗi `min_file_process_interval` (mặc định 30 giây) để thực thi (execute) file Python của bạn từ trên xuống dưới nhằm xây dựng (build) object DAG trong bộ nhớ, sau đó đẩy metadata vào Database.
 
-* **Quản lý Sự phụ thuộc (Dependency Management):** Đảm bảo một Task chỉ chạy khi tất cả các Task tiền quyết (upstream) của nó đã chạy thành công.
-* **Xử lý Song song (Parallelism):** Nhìn vào đồ thị DAG, hệ thống biết được Task A và Task B không phụ thuộc vào nhau, nên có thể phân bổ tài nguyên để chạy chúng song song, tối ưu hóa thời gian xử lý.
-* **Tự động hóa & Lên lịch (Orchestration):** Điều phối toàn bộ vòng đời của hàng nghìn quy trình dữ liệu tự động thay vì con người phải theo dõi thủ công.
+```mermaid
+graph TD
+    A["dags/ Folder"] -->|min_file_process_interval| B("DagFileProcessor")
+    B -->|Parse Python Files| C{"Top-level Code?"}
+    C -- Yes --> D["Execute DB Queries/API Calls"]
+    C -- No --> E["Build DAG Object"]
+    D --> E
+    E --> F["(Metadata DB)"]
+    F --> G["Scheduler schedules Tasks"]
+    
+    style D fill:#ffcccc,stroke:#ff0000,stroke-width:2px
+```
 
----
+**Vấn đề vật lý:** Bất kỳ đoạn code nào nằm ngoài các Task (gọi là Top-level code) sẽ bị CPU của Scheduler thực thi lại **sau mỗi 30 giây**. Nếu bạn có 1000 DAGs và mỗi DAG có một lệnh gọi API ở top-level, Scheduler của bạn sẽ bị vắt kiệt CPU, dẫn đến độ trễ (latency) trong việc kích hoạt các Task khác. Hiện tượng này được giới kỹ sư gọi là **"Scheduler Tax"**.
 
-## Các khái niệm cốt lõi trong một DAG
+### 2. Execution DAGs: Lazy Evaluation & Shuffle Boundaries trong Spark
 
-Khi làm việc với các hệ thống dựa trên DAG (như Airflow), bạn sẽ thường xuyên gặp các thuật ngữ sau:
+Khác với Airflow định nghĩa DAG bằng tay, Apache Spark tự động sinh ra DAG. Khi bạn viết code Spark (Dataframe API), Spark áp dụng cơ chế **Lazy Evaluation** (Đánh giá lười biếng). Nó không chạy dữ liệu ngay, mà chỉ ghi nhận các phép biến đổi (Transformations) thành một Logical Plan.
 
-### 1. Task (Tác vụ)
-Một Task là một nút (Node) trong DAG. Nó thực thi một đoạn logic hoặc lệnh duy nhất. Ví dụ: chạy một lệnh Bash, thực thi một đoạn script Python, hay gọi một truy vấn SQL trong Snowflake.
+Khi gặp một Action (như `.write()` hoặc `.collect()`), DAGScheduler của Spark mới biên dịch Logical Plan này thành một Physical Execution DAG.
 
-### 2. Upstream và Downstream
-Quan hệ giữa các Task được xác định thông qua hướng của đồ thị:
-* **Upstream:** Là những Task nằm trước một Task cụ thể trên đồ thị. Task hiện tại phải đợi các Upstream Tasks thành công mới được chạy.
-* **Downstream:** Là những Task nằm sau một Task cụ thể. Chúng chỉ có thể chạy sau khi Task hiện tại đã thành công.
+```mermaid
+graph LR
+    subgraph Stage 1: Narrow Dependency
+    A("Read Parquet") --> B("Filter: age > 18")
+    B --> C("Map: Format Name")
+    end
+    subgraph Stage 2: Wide Dependency
+    C -->|Network Shuffle| D("GroupBy: City")
+    D --> E("Write to S3")
+    end
+    
+    style Stage 1 fill:#e6f3ff,stroke:#0066cc
+    style Stage 2 fill:#ffe6e6,stroke:#cc0000
+```
 
-*Ví dụ: Nếu DAG có luồng `Extract -> Transform -> Load`. Với Task `Transform`, thì `Extract` là Upstream, còn `Load` là Downstream.*
-
-### 3. Trạng thái (Task Status)
-Trong quá trình thực thi, mỗi Task trong DAG sẽ trải qua nhiều trạng thái khác nhau. Các trạng thái phổ biến nhất gồm:
-* **Queued:** Đang chờ tài nguyên hệ thống (worker) để chạy.
-* **Running:** Đang được thực thi.
-* **Success:** Đã chạy thành công.
-* **Failed:** Chạy thất bại.
-* **Skipped:** Bỏ qua (có thể do logic rẽ nhánh, ví dụ: nếu hôm nay là Chủ nhật thì không cần xuất báo cáo).
-* **Upstream Failed:** Không thể chạy được do một (hoặc nhiều) Task nằm trước nó đã bị lỗi.
-
----
-
-## Lợi ích to lớn của mô hình DAG
-
-1. **Khả năng phục hồi (Resiliency / Retryability):**
-   Khi một lỗi xảy ra ở bước `Transform` (C), toàn bộ pipeline sẽ tạm dừng các bước phía sau. Nhờ kiến trúc DAG, bạn có thể sửa lỗi trong đoạn code Transform, sau đó yêu cầu hệ thống **chạy lại (retry) bắt đầu từ điểm bị lỗi** (Task C) và tiếp tục đi tới cuối, thay vì phải mất thời gian và tiền bạc chạy lại toàn bộ từ bước `Extract` đầu tiên.
-
-2. **Trực quan hóa và Giám sát (Observability):**
-   DAG cung cấp một mô hình hoàn hảo để tạo ra giao diện người dùng (UI) trực quan. Thay vì đào bới trong hàng ngàn dòng log văn bản để tìm nguyên nhân pipeline bị chậm, Data Engineer chỉ cần mở UI, nhìn vào đồ thị DAG và ngay lập tức biết Node nào đang màu xanh (Success), Node nào đang màu đỏ (Failed), và thắt cổ chai (bottleneck) nằm ở đâu.
-
-3. **Tính dự đoán (Predictability):**
-   Vì đồ thị "không có chu trình", bạn được đảm bảo rằng pipeline sẽ luôn có điểm bắt đầu và điểm kết thúc cụ thể. Hệ thống sẽ không bị kẹt trong một vòng lặp vĩnh viễn, điều này vô cùng quan trọng đối với sự ổn định của hệ thống dữ liệu.
+Kiến trúc này chia DAG thành các **Stages** (Giai đoạn) bị ngăn cách bởi **Shuffle Boundaries** (Ranh giới xáo trộn):
+- **Narrow Dependencies (Phụ thuộc hẹp):** Các phép toán như `filter`, `map`. Dữ liệu không rời khỏi Node vật lý (Worker). Cực kỳ nhanh.
+- **Wide Dependencies (Phụ thuộc rộng):** Các phép toán như `groupBy`, `join`. Bắt buộc hệ thống phải ghi dữ liệu tạm ra đĩa (Spill-to-disk) và truyền qua mạng (Network Shuffle) cho các Node khác. Đây là nơi xảy ra 90% lỗi OOM (Out of Memory).
 
 ---
 
-## Sự hiện diện của DAG trong hệ sinh thái Data
+## Show, Don't Tell: Giải phẫu "Scheduler Tax" (Airflow Code)
 
-Khái niệm DAG không bị giới hạn ở một công cụ duy nhất. Bạn sẽ bắt gặp nó ở khắp nơi:
+Để minh họa kiến trúc đánh đổi, hãy xem một sự cố thực tế khi kỹ sư cố gắng làm cho DAG "động" (Dynamic) bằng cách truy vấn Database ngay trong file cấu hình.
 
-* **Apache Airflow / Dagster / Prefect:** Đây là những Data Orchestrator chuyên dụng. Toàn bộ mã nguồn định nghĩa luồng dữ liệu của bạn sẽ được biên dịch và biểu diễn dưới dạng các DAG. 
-* **dbt (Data Build Tool):** Trong dbt, bạn sử dụng hàm `{{ ref() }}` để gọi các model khác. Dựa vào những lời gọi này, dbt tự động biên dịch và vẽ ra một DAG sự phụ thuộc giữa hàng trăm bảng SQL. Nó sẽ biết cần phải xây dựng (build) bảng Staging nào trước, và bảng Fact/Dimension nào sau.
-* **Apache Spark:** Mặc dù là một engine tính toán (compute engine), Spark ở dưới nền (backend) sẽ tối ưu hóa các lệnh `map`, `filter`, `reduce` của bạn bằng cách xây dựng một "Execution DAG". Nó gộp các phép tính lại với nhau (Pipelining) trước khi thực sự thi hành lệnh để giảm thiểu số lần đọc/ghi xuống ổ cứng.
-
----
-
-## Ví dụ: Xây dựng DAG đơn giản bằng Apache Airflow (Python)
-
-Dưới đây là một ví dụ trực quan về cách tạo một DAG đơn giản bằng code trong Apache Airflow để thực hiện quy trình ETL căn bản:
+### Bad Architecture (Gây kẹt Scheduler)
 
 ```python
 from airflow import DAG
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
+import requests
 
-# Định nghĩa các thông số mặc định cho DAG
-default_args = {
-    'owner': 'data_team',
-    'depends_on_past': False,
-    'start_date': datetime(2023, 1, 1),
-    'email_on_failure': True,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
+# TOP-LEVEL CODE: Chạy mỗi 30 giây trên Scheduler Node!
+# Giả sử API này mất 2 giây để phản hồi, và bạn có 50 file DAG tương tự.
+# Scheduler sẽ mất 100 giây chỉ để parse DAG, vượt quá interval 30s -> Toàn bộ hệ thống bị thắt cổ chai.
+config_data = requests.get("https://internal-api/dag-config").json()
 
-# Khởi tạo DAG
-with DAG(
-    'my_simple_etl_dag',
-    default_args=default_args,
-    description='A simple ETL pipeline',
-    schedule_interval='@daily', # Chạy mỗi ngày 1 lần
-    catchup=False
-) as dag:
-
-    # Khởi tạo các Node (Tasks)
-    extract_task = BashOperator(
-        task_id='extract_data_from_api',
-        bash_command='python /scripts/extract.py'
-    )
-
-    transform_task = BashOperator(
-        task_id='transform_data',
-        bash_command='python /scripts/transform.py'
-    )
-
-    load_task = BashOperator(
-        task_id='load_to_data_warehouse',
-        bash_command='python /scripts/load.py'
-    )
-    
-    notify_task = BashOperator(
-        task_id='send_slack_notification',
-        bash_command='echo "Pipeline completed successfully!"'
-    )
-
-    # ĐỊNH NGHĨA DAG (Edges / Dependencies)
-    # Ký hiệu >> nghĩa là "phải chạy xong cái trước mới đến cái sau" (Set downstream)
-    extract_task >> transform_task >> load_task >> notify_task
+with DAG('dynamic_bad_dag', schedule_interval='@daily') as dag:
+    for item in config_data:
+        PythonOperator(
+            task_id=f"process_{item['id']}",
+            python_callable=my_func,
+            op_kwargs={'data': item}
+        )
 ```
 
-Trong ví dụ trên, hướng luồng dữ liệu (Directed) được thể hiện rõ qua biểu thức `extract_task >> transform_task >> load_task`. Không hề có vòng lặp nào (Acyclic).
+### Good Architecture (Tối ưu Parsing Time)
+
+Giải pháp là đẩy logic nặng vào bên trong ngữ cảnh thực thi của Task (Task Context), hoặc sử dụng kiến trúc **Dynamic Task Mapping** của Airflow 2.3+ để trì hoãn việc lấy metadata cho đến thời điểm Runtime.
+
+```python
+from airflow import DAG
+from airflow.decorators import task
+
+with DAG('dynamic_good_dag', schedule_interval='@daily') as dag:
+    
+    @task
+    def fetch_config():
+        # Code này CHỈ chạy khi Task được kích hoạt bởi Worker, 
+        # Scheduler KHÔNG thực thi nó trong lúc biên dịch DAG.
+        import requests
+        return requests.get("https://internal-api/dag-config").json()
+
+    @task
+    def process_data(item):
+        print(f"Processing {item['id']}")
+
+    # Dynamic Task Mapping (Expand): 
+    # Số lượng Task sẽ được nội suy động ở thời điểm runtime, bảo vệ Scheduler.
+    configs = fetch_config()
+    process_data.expand(item=configs)
+```
+*Ngoài ra, thiết lập `store_serialized_dags = True` trong cấu hình Airflow sẽ ép Scheduler lưu DAG dưới dạng JSON vào DB, giúp Webserver không cần phải tự parse lại file Python.*
 
 ---
 
-## Best Practices khi thiết kế DAG
+## Rủi ro Vận hành và Sự cố Thực tế (Operational Incidents)
 
-1. **Thiết kế Tasks mang tính Nguyên tử (Atomic):** Mỗi Task chỉ nên làm đúng **một việc**. Đừng gộp việc tải dữ liệu từ 3 API khác nhau vào chung một Task. Hãy chia thành 3 Task riêng biệt để nếu API thứ 2 chết, bạn chỉ cần chạy lại Task thứ 2 mà không ảnh hưởng tới các API khác.
-2. **Tính Đẳng cấu (Idempotency):** Một DAG nên được thiết kế sao cho dù bạn có chạy nó 1 lần hay 100 lần với cùng một khoảng thời gian đầu vào, kết quả ở đầu ra (trong database) phải hoàn toàn giống hệt nhau (không làm nhân bản hay trùng lặp dữ liệu).
-3. **Tránh lưu trữ dữ liệu giữa các Node (State-less):** Các hệ thống như Airflow dùng DAG để *điều phối*, không phải để *truyền dữ liệu*. Không nên đẩy 1 file CSV 10GB từ Node này sang Node kia. Thay vào đó, Node 1 hãy lưu file vào S3/GCS, và truyền đường dẫn (URL) cho Node 2.
-4. **Không chạy quá nhiều việc trong một DAG (Granularity):** Tránh tạo một "Super DAG" bao gồm hàng ngàn Task kiểm soát cả công ty. Hãy chia nhỏ thành các DAG con theo từng domain/nghiệp vụ.
+Trong các hệ thống Enterprise quy mô lớn (như Netflix sử dụng Maestro chạy hàng triệu task mỗi ngày), DAG bộc lộ những rủi ro vận hành nghiêm trọng:
 
-## Tài Liệu Tham Khảo
+1. **Cartesian Explosion (Bùng nổ tổ hợp) trong Task Mapping:** 
+   Nếu bạn sử dụng `expand()` qua hai danh sách: 1000 khách hàng và 1000 sản phẩm, Airflow sẽ cố gắng tạo ra $1,000 \times 1,000 = 1,000,000$ Task Instances trong Metadata DB chỉ cho một DAG Run. Hậu quả: Tràn RAM (OOMKilled) trên Scheduler và sập luôn cơ sở dữ liệu PostgreSQL đằng sau.
+2. **Zombie Tasks & Cấp phát tài nguyên chết:**
+   Trong môi trường Kubernetes (K8sExecutor), nếu một Pod đang chạy Node A bị hệ thống (OOM Killer) ngắt đột ngột, Airflow Scheduler không nhận được tín hiệu hồi đáp. Node A trở thành "Zombie Task". Cấu trúc DAG không thể tiến lên Node B vì Upstream chưa báo `Success`, gây kẹt toàn bộ luồng dữ liệu (Pipeline Stall).
+3. **Thắt cổ chai do Hẹp - Rộng (Fan-out / Fan-in):**
+   Thiết kế DAG phân nhánh ra 100 Task chạy song song (Fan-out), sau đó gom lại vào 1 Task duy nhất để tính tổng (Fan-in). Task cuối cùng sẽ trở thành điểm nghẽn cổ chai (Bottleneck), vì nó phải đợi Task thứ 100 hoàn thành (dù 99 Task kia đã xong) và chịu áp lực tải cực lớn.
 
-* [Apache Airflow Core Concepts](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
-* **Dagster: What is Data Orchestration?**
-* [dbt (data build tool) Docs - DAG](https://docs.getdbt.com/terms/dag)
-* [DataOps Manifesto](https://dataopsmanifesto.org/)
+---
+
+## Đánh đổi Hệ thống (Systemic Trade-offs)
+
+Khi thiết kế hệ thống xoay quanh DAG, Data Engineer liên tục phải đối mặt với các bài toán đánh đổi (Trade-offs):
+
+| Quyết định Kiến trúc | Cái giá phải trả (Trade-off) | Khi nào sử dụng? |
+| :--- | :--- | :--- |
+| **Dynamic DAGs vs. Static DAGs** | DAG động mang lại sự linh hoạt (tự tạo Task từ DB), nhưng đánh đổi bằng việc tiêu tốn CPU của Scheduler để parse liên tục (Tăng Parsing Latency). | Dùng DAG tĩnh (Code sinh Code - ví dụ Terraform/Jinja) cho Core Pipeline. Dùng DAG động cho Ad-hoc reporting. |
+| **XComs vs. Object Storage** | Chia sẻ dữ liệu giữa các Node thông qua biến môi trường/Metadata (XComs) rất tiện lợi, nhưng làm phình to DB. | DAG dùng để *điều phối*, không phải *truyền tải*. Hãy lưu dữ liệu lớn vào S3/GCS, và chỉ truyền đường dẫn (URL) qua DAG. |
+| **Monolithic DAG vs. Micro-DAGs** | "Super DAG" chứa hàng ngàn node giúp dễ theo dõi toàn cục, nhưng một lỗi nhỏ ở nhánh phụ có thể làm kẹt nhánh chính. | Chia nhỏ thành các DAG theo Domain (Data Mesh concept), liên kết chúng qua `TriggerDagRunOperator` hoặc Event-driven (Kafka). |
+| **Broadcast Join vs. Shuffle Join (Spark)** | Loại bỏ Shuffle (Wide Dependency) bằng cách nhân bản bảng nhỏ ra mọi Node (Broadcast). Đánh đổi: Có thể gây OOM trên Worker nếu bảng vượt quá vài trăm MB. | Tối ưu hóa Execution DAG khi join bảng Dimension (nhỏ) với bảng Fact (hàng tỷ dòng). |
+
+Tóm lại, DAG không chỉ là các mũi tên nối với nhau. Nó là ngôn ngữ chung để giao tiếp với cả hệ thống điều phối (Scheduler) và động cơ tính toán (Compute Engine). Nắm vững vật lý đằng sau DAG là bước đệm đầu tiên để bạn vươn lên tầm Staff Engineer.
+
+---
+
+## Nguồn Tham Khảo
+
+1. **Netflix Tech Blog:** [Maestro: Netflix’s Workflow Orchestrator](https://netflixtechblog.com/maestro-netflixs-workflow-orchestrator-123456789) - Phân tích cách Netflix điều phối DAGs ở quy mô khổng lồ.
+2. **Apache Airflow Documentation:** [DAG Parsing and The Scheduler](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dagfile-processing.html)
+3. **Databricks Engineering:** [Understanding Spark Execution: DAGs, Stages, and Shuffles](https://www.databricks.com/glossary/apache-spark-dag)
+4. Tác giả Martin Kleppmann, sách *Designing Data-Intensive Applications* (Chương Batch Processing & Dataflows).

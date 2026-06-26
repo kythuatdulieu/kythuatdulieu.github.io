@@ -1,110 +1,141 @@
 ---
 title: "Consumer Groups trong Kafka"
 difficulty: "Intermediate"
-tags: ["consumer-groups", "apache-kafka", "scaling", "parallelism"]
+tags: ["consumer-groups", "apache-kafka", "scaling", "parallelism", "rebalance", "oomkilled"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Kafka Consumer Groups: Cơ chế xử lý dữ liệu song song hiệu năng cao"
-metaDescription: "Tìm hiểu nguyên lý Consumer Groups trong Apache Kafka: Cách kết hợp nhiều ứng dụng để chia sẻ tải tiêu thụ dữ liệu song song và cơ chế Rebalance khi hệ thống rớt mạng."
-description: "Trong thế giới của các luồng dữ liệu thời gian thực (Streaming Data), Apache Kafka nổi lên như một hệ thống vận chuyển thông điệp vô cùng mạnh mẽ. Consumer Groups là một tính năng cốt lõi giúp Kafka mở rộng khả năng xử lý song song, đồng thời đảm bảo tính toàn vẹn và thứ tự của dữ liệu."
+lastUpdated: 2026-06-26
+seoTitle: "Kafka Consumer Groups: Kiến trúc Thực thi và Xử lý Lỗi (Rebalance, OOMKilled)"
+metaDescription: "Deep dive vào Apache Kafka Consumer Groups: Kiến trúc phân bổ tải, cơ chế Rebalance (Eager vs Cooperative), nguyên nhân gây ra Retry Storms, và lỗi OOMKilled."
+description: "Phân tích chuyên sâu về Consumer Groups trong Apache Kafka dưới góc nhìn System Design: Từ cơ chế điều phối nội bộ, quản lý Offsets đến các kịch bản sập hệ thống thực tế (Rebalance Storms, OOMKilled)."
 ---
 
+Bỏ qua các định nghĩa sách giáo khoa "Consumer Group là gì?", chúng ta sẽ mổ xẻ cơ chế hoạt động thực tế của Consumer Group trong Apache Kafka dưới góc độ thiết kế hệ thống (System Design). Làm sao Kafka đảm bảo hàng triệu message mỗi giây được xử lý song song mà không bị trùng lặp? Tại sao Consumer của bạn lại liên tục rớt mạng và gây ra *Rebalance Storm*? 
 
+Bài viết này sẽ đi sâu vào kiến trúc thực thi vật lý, chiến lược tái cân bằng (Rebalance), và cách xử lý các sự cố production kinh điển như *Poison Pills* hay *OOMKilled*.
 
-Trong thế giới của các luồng dữ liệu thời gian thực (Streaming Data), Apache Kafka nổi lên như một hệ thống vận chuyển thông điệp vô cùng mạnh mẽ. Để có thể xử lý lượng dữ liệu khổng lồ (vài triệu message mỗi giây), chỉ một ứng dụng Consumer đơn lẻ là không đủ. Đó là lúc **Consumer Groups** phát huy tác dụng.
+---
 
-Consumer Group trong Kafka cho phép nhiều Consumers (tiến trình ứng dụng) cùng hợp tác đọc dữ liệu từ một hoặc nhiều Topic. Mỗi Partition trong Topic chỉ được giao cho duy nhất 1 Consumer trong Group để đảm bảo tính thứ tự (Ordering) và cân bằng tải (Load Balancing).
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-## 1. Consumer Group Là Gì? Tại Sao Phải Sử Dụng?
+Sự phân chia tải trong Kafka dựa trên nguyên tắc độc quyền: **Một Partition chỉ được gắn cho tối đa MỘT Consumer trong cùng một Group tại một thời điểm.** 
 
-Khi một Producer gửi hàng nghìn tin nhắn mỗi giây vào một Topic, một Consumer duy nhất có thể không kịp xử lý (đọc, tính toán, ghi vào Database). Để mở rộng khả năng xử lý (Scale out), Kafka cung cấp khái niệm **Consumer Group**.
+Cơ chế này được quản lý bởi hai thành phần cốt lõi: **Group Coordinator** (trên Broker) và **Group Leader** (trên Client).
 
-Một Consumer Group bao gồm một hoặc nhiều Consumer instances cùng chia sẻ chung một định danh gọi là `group.id`. Các Consumer trong cùng một Group sẽ phân chia nhau nhiệm vụ đọc các Partition của Topic.
+```mermaid
+sequenceDiagram
+    participant C1 as Consumer 1 (Leader)
+    participant C2 as Consumer 2
+    participant GC as Group Coordinator (Broker)
+    
+    C1->>GC: JoinGroup Request
+    C2->>GC: JoinGroup Request
+    GC-->>C1: JoinGroup Response (You are Leader + Member list)
+    GC-->>C2: JoinGroup Response (You are Follower)
+    Note over C1: Leader chạy thuật toán phân bổ<br/>(Range, RoundRobin, Sticky)
+    C1->>GC: SyncGroup Request (Assignment plan)
+    C2->>GC: SyncGroup Request (Empty)
+    GC-->>C1: SyncGroup Response (Your Partitions)
+    GC-->>C2: SyncGroup Response (Your Partitions)
+```
 
-**Lợi ích của việc sử dụng Consumer Group:**
-- **Mở rộng (Scalability):** Dễ dàng thêm hoặc bớt Consumer để thay đổi tốc độ xử lý mà không cần sửa code.
-- **Tính sẵn sàng cao (High Availability):** Nếu một Consumer bị lỗi (crash), Kafka sẽ tự động giao công việc của nó cho các Consumer khác trong Group.
-- **Mô hình Messaging linh hoạt:** Cùng một Topic có thể được đọc bởi nhiều Consumer Group khác nhau (mô hình Pub/Sub), mỗi Group sẽ nhận được một bản sao toàn vẹn của luồng dữ liệu.
+1. **Group Coordinator**: Một Broker được Kafka bầu ra để quản lý state của một Group cụ thể. Broker này thường là leader của partition thuộc topic `__consumer_offsets` tương ứng với hash của `group.id`.
+2. **Group Leader**: Consumer đầu tiên gửi request join group sẽ được Coordinator phong làm Leader. Nó nhận danh sách toàn bộ thành viên và chịu trách nhiệm chạy thuật toán phân bổ (Partition Assignment Strategy). Việc đẩy logic phân bổ xuống client (Leader) giúp Kafka Broker không phải "hard-code" logic nghiệp vụ, dễ dàng cho phép các team tự viết Custom Assigner.
 
-## 2. Nguyên Lý Phân Bổ Partition Cho Consumer
+---
 
-Quy tắc tối thượng trong Consumer Group: **Mỗi Partition chỉ được đọc bởi tối đa MỘT Consumer trong cùng một Group tại một thời điểm.** 
+## 2. Các Chiến lược Rebalance (Rebalance Protocols)
 
-Ngược lại, một Consumer có thể đọc từ nhiều Partition. Hãy xem xét các kịch bản sau với một Topic có 4 Partitions (P0, P1, P2, P3):
+Rebalance là quá trình chia lại Partitions khi có sự thay đổi về thành viên trong Group (scale up/down, crash). Đây là lúc hệ thống dễ bị tổn thương nhất.
 
-* **Kịch bản 1: 1 Consumer** 
-  Consumer duy nhất này (C1) sẽ được gán tất cả 4 partitions. C1 sẽ phải tự mình xử lý lượng dữ liệu của cả Topic.
-* **Kịch bản 2: 2 Consumers** 
-  C1 và C2 chia nhau công việc. C1 đọc P0, P1; C2 đọc P2, P3. Hiệu suất tăng gấp đôi.
-* **Kịch bản 3: 4 Consumers** 
-  Mỗi Consumer (C1, C2, C3, C4) đọc chính xác một partition. Đây là trạng thái cân bằng và song song tối đa mà bạn có thể đạt được.
-* **Kịch bản 4: 5 Consumers** 
-  4 Consumers đầu tiên sẽ được gán 4 partitions. Consumer thứ 5 (C5) sẽ ở trạng thái **Idle** (rảnh rỗi) và không nhận được dữ liệu nào. Tuy nhiên, C5 vẫn hữu ích như một *Standby/Failover* instance: nếu một trong 4 Consumer kia gặp sự cố, C5 sẽ ngay lập tức được gán partition để thay thế.
+### 2.1. Eager Rebalance (Stop-the-World)
 
-> **Lưu ý quan trọng:** Bạn không thể tăng tốc độ xử lý bằng cách thêm Consumer nếu số lượng Consumer đã lớn hơn số lượng Partition. Để tăng khả năng song song hóa trong trường hợp này, bạn buộc phải tăng số lượng Partition của Topic.
+Giao thức cổ điển (trước KIP-429). Khi có sự kiện Rebalance, **toàn bộ Consumers phải dừng xử lý (Revoke all)**, trả lại tất cả Partitions cho Coordinator, sau đó Leader chia lại từ đầu.
+- **Trade-off**: Chấp nhận **Downtime 100%** trong suốt quá trình chia bài. Với các ứng dụng Stateful (ví dụ: Kafka Streams đang duy trì local RocksDB state), việc tước quyền và cấp lại gây ra độ trễ cực lớn vì phải rebuild state.
 
-## 3. Cơ Chế Consumer Rebalance (Cân Bằng Lại)
+### 2.2. Incremental Cooperative Rebalancing
 
-Rebalance là quá trình phân bổ lại quyền sở hữu các Partition cho các Consumer trong Group. 
+Ra mắt để giải quyết điểm yếu của Eager (từ KIP-429). Thay vì "cướp sạch", giao thức này chỉ **thu hồi những partitions thực sự cần thiết** để chuyển cho Consumer mới.
+- Các partitions không bị ảnh hưởng vẫn được xử lý bình thường.
+- Không còn hiện tượng "Stop-the-World".
 
-### Khi nào Rebalance xảy ra?
-- Khi một Consumer mới **gia nhập** vào Group.
-- Khi một Consumer **rời khỏi** Group (bị tắt một cách an toàn hoặc bị crash/timeout).
-- Khi số lượng Partition của Topic bị thay đổi.
-- Khi một Consumer Group đăng ký theo dõi một Topic mới (thông qua pattern regex).
+### 2.3. The Next-Gen Protocol (KIP-848 / Kafka 4.0)
 
-### Stop-the-world vs Incremental Cooperative Rebalance
+Một bước tiến lớn đẩy hoàn toàn logic Rebalance từ Client (Group Leader) lên **Server (Broker)** thông qua Background Threads, loại bỏ triệt để các rào cản đồng bộ hóa (synchronization barriers) ở phía client. 
 
-1. **Eager Rebalance (Truyền thống / Stop-the-world):**
-   Trong chiến lược này, khi có sự kiện rebalance, tất cả Consumer sẽ phải ngừng đọc dữ liệu, từ bỏ quyền sở hữu toàn bộ các partitions hiện tại. Sau đó Kafka sẽ phân bổ lại partition từ đầu. Điều này gây ra gián đoạn dịch vụ trong khoảng thời gian diễn ra rebalance.
+---
 
-2. **Incremental Cooperative Rebalance (Từ Kafka 2.4+):**
-   Kafka cho phép Consumer tiếp tục đọc từ các partition không bị ảnh hưởng. Thay vì tước bỏ toàn bộ partition, Kafka chỉ thu hồi những partition cần thiết để chuyển giao cho Consumer mới. Quá trình này mượt mà hơn và tránh được độ trễ đột biến (latency spikes) trong hệ thống stream.
+## 3. Rủi ro Vận hành (Operational Risks) & Real-world Incidents
 
-### Heartbeat và Health Check
-Làm sao Kafka biết một Consumer bị chết?
-Các Consumer phải gửi tín hiệu **Heartbeat** định kỳ (thường vài giây một lần) đến một Broker đặc biệt đóng vai trò là *Group Coordinator*. Nếu Coordinator không nhận được Heartbeat trong khoảng thời gian `session.timeout.ms`, nó sẽ coi Consumer đó đã "chết" và kích hoạt Rebalance.
+Dưới đây là chuỗi phản ứng dây chuyền (Cascading Failure) kinh điển khi vận hành Kafka Consumer trên môi trường Kubernetes.
 
-Mặt khác, nếu Consumer mất quá nhiều thời gian để xử lý một message mà không gọi hàm `poll()` tiếp theo trong thời gian `max.poll.interval.ms`, nó cũng sẽ bị coi là treo (livelock), bị loại khỏi Group và gây ra Rebalance.
+### 3.1. Synchronous Processing & Session Timeout
 
-## 4. Quản Lý Consumer Offsets
+**Triệu chứng:** Consumer xử lý message bằng cách gọi đồng bộ API ngoại bộ (ví dụ: gọi HTTP sang Microservice khác). Khi API này chậm (latency tăng vọt), thread `poll()` của Consumer bị treo (blocked).
+**Hệ quả:** Nếu quá thời gian `max.poll.interval.ms` (mặc định 5 phút) mà Consumer chưa gọi `poll()` lần tiếp theo, Coordinator sẽ coi Consumer này là *Dead* (Livelock) và đuổi khỏi Group, kích hoạt Rebalance.
 
-Kafka không xoá message ngay sau khi Consumer đọc xong. Message vẫn nằm trên ổ cứng của Broker. Vậy làm sao Consumer biết nó cần đọc từ đâu ở lần `poll()` tiếp theo hoặc sau khi hệ thống khởi động lại?
+### 3.2. Poison Pill & Retry Storm
 
-Kafka lưu vết quá trình đọc bằng khái niệm **Offset**. Consumer Group cam kết (Commit) giá trị offset của message cuối cùng nó xử lý thành công. 
+**Triệu chứng:** Một message bị lỗi format (schema mismatch) khiến code bắn Exception. Nếu bạn bọc trong khối `while(true) { retry() }`, Consumer sẽ kẹt vĩnh viễn ở message đó.
+**Hệ quả:** Sinh ra **Consumer Lag** khổng lồ. 
 
-- **Internal Topic (`__consumer_offsets`):** Từ phiên bản cũ, offset được lưu ở ZooKeeper. Nhưng ZooKeeper không phù hợp để lưu log cường độ cao. Kafka chuyển sang lưu offset trong một Topic nội bộ tên là `__consumer_offsets`. Nó hoạt động rất bền bỉ và nhanh chóng.
+**Khắc phục bằng Dead Letter Queue (DLQ):**
+Tuyệt đối không retry vô hạn. Hãy giới hạn số lần retry, nếu thất bại, đẩy message lỗi sang một Topic khác (DLQ) và commit offset để đi tiếp.
 
-### Commit Offset tự động (Auto Commit) vs Thủ công (Manual Commit)
+```java
+// Pseudo-code xử lý Poison Pill với DLQ
+try {
+    process(record.value());
+} catch (NonTransientException e) {
+    if (retryCount > MAX_RETRIES) {
+        kafkaProducer.send(new ProducerRecord<>("dlq-topic", record.key(), record.value()));
+        commitOffset(record); // Move on
+    }
+}
+```
 
-- **Auto Commit (`enable.auto.commit=true`):** Cơ chế mặc định. Consumer sẽ tự động commit offset sau một khoảng thời gian `auto.commit.interval.ms`. Rất tiện nhưng rủi ro nếu quá trình xử lý message bị lỗi giữa chừng, vì có thể offset đã được commit, dẫn đến mất dữ liệu.
-- **Manual Commit (`enable.auto.commit=false`):** Ứng dụng tự kiểm soát thời điểm gọi hàm `commitSync()` hoặc `commitAsync()` sau khi đảm bảo logic xử lý nghiệp vụ (ví dụ: ghi vào DB) đã thành công. Phù hợp cho việc đảm bảo tính chất **At-least-once** (Giao hàng ít nhất một lần).
+### 3.3. JVM OOMKilled & Rebalance Storm
 
-## 5. Group Coordinator và Group Leader
+**Triệu chứng:** Pod Kubernetes chạy Consumer bị crash với lỗi `OOMKilled`. Vừa khởi động lại xong lại chết tiếp.
+**Nguyên nhân:** 
+1. Consumer lấy quá nhiều dữ liệu một lúc (`max.poll.records` quá lớn).
+2. Từng message có dung lượng lớn (`fetch.max.bytes`).
+3. Memory leak trong quá trình Retry.
+Khi Pod bị OOMKilled, Kafka kích hoạt Rebalance. Vài giây sau, Pod mới lên lại, lại trigger Rebalance. Quá trình xử lý bị đứt đoạn liên tục -> **Rebalance Storm**.
 
-Kiến trúc đằng sau hoạt động của Consumer Group:
-1. **Group Coordinator:** Là một trong các Broker của Kafka. Mỗi Group có một Coordinator riêng (dựa trên việc tính toán hash của `group.id` phân bổ vào partition tương ứng của topic `__consumer_offsets`). Nhiệm vụ của nó là nhận heartbeat, quản lý offset, và điều phối tín hiệu rebalance.
-2. **Group Leader:** Là Consumer đầu tiên gia nhập vào Group. Khi cần Rebalance, Coordinator sẽ gửi danh sách tất cả các thành viên cho Leader. *Leader mới là người thực hiện thuật toán chia bài (Partition Assignment)*, sau đó gửi kế hoạch phân chia lại cho Coordinator, và Coordinator sẽ phân phát kế hoạch đó cho từng thành viên. Việc này giúp tách biệt logic chia partition khỏi broker.
+**Khắc phục (Tuning Properties):**
+Ép Consumer uống từng ngụm nhỏ để không tràn RAM.
 
-## 6. Theo Dõi Consumer Lag
+```properties
+# Giảm số lượng message mỗi lần poll (Mặc định 500)
+max.poll.records=100
 
-**Consumer Lag** là độ chênh lệch giữa lượng message đã được sinh ra (Producer tạo ra) và lượng message đã được Consumer xử lý xong.
-Lag được tính bằng công thức: 
-`Lag = Log End Offset (Offset mới nhất trên Broker) - Current Consumer Offset (Offset đã commit)`
+# Giới hạn dung lượng bytes trả về trong 1 lần fetch (Mặc định 50MB, giảm xuống 10MB)
+fetch.max.bytes=10485760
 
-- Một hệ thống khỏe mạnh có Lag rất thấp hoặc giao động nhỏ quanh mức 0.
-- Nếu Lag cứ tăng dần theo thời gian mà không giảm, tức là Consumer đang xử lý chậm hơn tốc độ sinh dữ liệu. Bạn cần:
-  1. Tối ưu hoá code xử lý của Consumer.
-  2. Scale thêm Consumer (và có thể cả Partition).
+# Giới hạn bytes trả về CHO MỖI PARTITION (Mặc định 1MB)
+max.partition.fetch.bytes=1048576
 
-## Tổng Kết
+# Tránh kích hoạt Rebalance quá nhạy cảm nếu network chập chờn
+session.timeout.ms=45000
+heartbeat.interval.ms=15000
+```
 
-Sử dụng Consumer Group hiệu quả là chìa khóa để khai thác toàn bộ sức mạnh của Apache Kafka. Nắm vững cách số lượng Partition ảnh hưởng đến số lượng Consumer, hiểu cơ chế Rebalance, và chọn chiến lược Commit Offset đúng đắn sẽ giúp ứng dụng của bạn hoạt động bền bỉ, dễ dàng co giãn và chống lại lỗi tốt nhất.
+---
 
-## Tài Liệu Tham Khảo
-* [Apache Kafka Documentation - Consumers](https://kafka.apache.org/documentation/#consumerapi)
-* [Apache Flink Architecture - Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/)
-* [Kafka: a Distributed Messaging System for Log Processing - LinkedIn (NetDB 2011)](http://notes.stephenholiday.com/Kafka.pdf)
-* **Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau**
-* [Exactly-Once Semantics in Apache Kafka - Confluent Blog](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
-* [Stateful Stream Processing with RocksDB - Flink Forward](https://flink-forward.org/)
+## 4. Đảm bảo tính toán toàn vẹn (Exactly-Once Semantics - EOS)
+
+Khi Consumer lấy dữ liệu, xử lý xong và gọi `commitSync()`, có một "cửa sổ rủi ro" (Window of Vulnerability): Dữ liệu đã lưu vào Database, nhưng lúc gọi `commit` thì Network đứt. Lần tới poll, nó đọc lại dữ liệu cũ -> Ghi đè hoặc trùng lặp (At-least-once).
+
+Để đạt được **Exactly-Once**, hệ thống thường phải dùng một trong hai cách:
+1. **Idempotent Consumer:** Đảm bảo logic xử lý có tính lũy đẳng (Ví dụ: Dùng `UPSERT` / `SQL MERGE` thay vì `INSERT`, kết hợp với Primary Key là ID của message).
+2. **Kafka Transactions:** Gói việc ghi kết quả vào Topic khác và commit offset vào chung một transaction atomic (Thường dùng trong mô hình *Consume-Transform-Produce* của Kafka Streams).
+
+---
+
+## Nguồn Tham Khảo (References)
+
+1. [KIP-429: Kafka Consumer Incremental Cooperative Rebalancing](https://cwiki.apache.org/confluence/display/KAFKA/KIP-429%3A+Kafka+Consumer+Incremental+Cooperative+Rebalancing)
+2. [KIP-848: The Next Generation of the Consumer Rebalance Protocol](https://cwiki.apache.org/confluence/display/KAFKA/KIP-848%3A+The+Next+Generation+of+the+Consumer+Rebalance+Protocol)
+3. [Kafka Consumer OOMKilled Post-Mortems - Redpanda Engineering Blog](https://redpanda.com/blog/kafka-consumer-rebalance)
+4. *Designing Data-Intensive Applications* - Martin Kleppmann (Chapter 11: Stream Processing)
+5. [Confluent: Exactly-Once Semantics in Apache Kafka](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)

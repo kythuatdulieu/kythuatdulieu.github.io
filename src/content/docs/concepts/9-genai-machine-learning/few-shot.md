@@ -30,14 +30,14 @@ Sự khác biệt giữa **In-Context Learning (Few-shot)** và **Fine-tuning** 
 
 ```mermaid
 graph TD
-    subgraph "Fine-Tuning (Huấn luyện lại)"
+    subgraph "Fine-Tuning("Huấn luyện lại")"
         A["Dữ liệu huấn luyện lớn"] --> B("Quá trình Training / Cập nhật Weights")
         B --> C{"Mô hình đã được tinh chỉnh"}
         C --> D["Prompt mới"]
         D --> E["Kết quả mong muốn"]
     end
 
-    subgraph "In-Context Learning (Few-shot Prompting)"
+    subgraph "In-Context Learning("Few-shot Prompting")"
         F["Vài ví dụ mẫu trong Prompt"] --> G["Prompt chứa cả ví dụ và câu hỏi mới"]
         G --> H("Mô hình gốc không đổi Weights")
         H --> I["Kết quả mong muốn"]

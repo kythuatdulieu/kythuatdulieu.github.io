@@ -1,146 +1,149 @@
 ---
-title: "Apache Airflow - Nền tảng điều phối dữ liệu"
+title: "Apache Airflow - Kiến trúc Hệ thống & Đánh đổi (System Architecture & Trade-offs)"
 difficulty: "Intermediate"
 tags: ["airflow", "orchestration", "python", "dag", "scheduler", "data-engineering"]
 readingTime: "12 mins"
-lastUpdated: 2026-06-07
-seoTitle: "Apache Airflow là gì? Hướng dẫn chi tiết kiến trúc Airflow"
-metaDescription: "Tìm hiểu Apache Airflow - công cụ Orchestration mã nguồn mở số 1 trong Data Engineering. Kiến trúc, các thành phần chính (Scheduler, Webserver), và cách hoạt động."
-description: "Trong kỷ nguyên Big Data, một quy trình xử lý dữ liệu thực tế hiếm khi diễn ra đơn giản. Hãy tưởng tượng bạn phải xây dựng một chuỗi công việc: cào dữ liệu, lưu Data Lake, xử lý Spark, và load vào Warehouse."
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc Apache Airflow: Scheduler Bottlenecks & Executor Trade-offs"
+metaDescription: "Phân tích chuyên sâu kiến trúc Apache Airflow dưới góc nhìn System Design. Các lỗi vận hành phổ biến (Scheduler Stalls, OOMKilled, DB Connection Bloat) và cách khắc phục."
+description: "Apache Airflow không chỉ là một công cụ lập lịch cron nâng cao. Trong các hệ thống quy mô lớn, việc quản lý hàng chục nghìn luồng dữ liệu đòi hỏi bạn phải hiểu rõ về cách Airflow phân phối công việc và những nút thắt cổ chai (bottleneck) của nó."
 ---
 
+Khởi nguồn từ Airbnb và trở thành dự án Top-Level của Apache, Airflow là "tiêu chuẩn ngành" (industry standard) cho việc điều phối dữ liệu (Data Orchestration). 
 
+Thay vì tập trung vào cách viết một DAG đơn giản, bài viết này sẽ "mổ xẻ" Airflow dưới góc độ **System Design**: Làm sao Airflow có thể scale lên hàng vạn task mỗi ngày? Khi nào hệ thống sẽ sập? Và làm sao để tránh tình trạng Scheduler bị "nghẽn"?
 
-Trong kỷ nguyên Big Data, một quy trình xử lý dữ liệu thực tế hiếm khi diễn ra đơn giản. Hãy tưởng tượng bạn phải xây dựng một chuỗi công việc: cào dữ liệu từ web, lưu vào Data Lake, gọi API của Spark để làm sạch, cuối cùng tải lên Data Warehouse và kích hoạt một pipeline Machine Learning để dự đoán. Quy trình này đòi hỏi sự phụ thuộc nghiêm ngặt, theo dõi chặt chẽ và khả năng xử lý sự cố tức thì khi có lỗi xảy ra.
+## Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-**Apache Airflow** là nền tảng Workflow Orchestration chuẩn mực nhất thế giới, được tạo ra tại Airbnb vào năm 2014 và chính thức trở thành dự án Top-Level của Apache Software Foundation từ năm 2019. Bằng cách sử dụng Python để định nghĩa Data Pipeline dưới dạng DAG (Directed Acyclic Graph), Airflow cho phép lên lịch, giám sát, và quản lý các phụ thuộc phức tạp một cách linh hoạt.
+Airflow là một hệ thống phân tán (distributed system) bao gồm 4 thành phần lõi giao tiếp với nhau chủ yếu qua Metadata Database và Message Broker (nếu dùng Celery).
 
-## 1. Workflow Orchestration Là Gì?
-
-
-
-Trong Kỹ thuật Dữ liệu (Data Engineering), **Workflow Orchestration** đóng vai trò là "nhạc trưởng" điều khiển các luồng dữ liệu (data pipelines). Nó chịu trách nhiệm lên lịch (scheduling), quản lý phụ thuộc (dependency management), theo dõi vòng đời (monitoring) và xử lý lỗi (error handling) cho các chuỗi tác vụ. Thay vì phải lên lịch chạy từng file script Python hay Bash bằng `cron` một cách thủ công, không đồng bộ và rời rạc, Hệ thống Điều phối (Orchestrator) kết nối chúng thành một mạng lưới tuần tự hoặc song song cực kỳ an toàn và trực quan.
-
-## 2. Tại Sao Lại Chọn Apache Airflow?
-
-- **Configuration as Code (Cấu hình bằng mã):** Tất cả workflow của Airflow được định nghĩa bằng mã Python tiêu chuẩn. Điều này cho phép Data Engineer tận dụng sức mạnh của lập trình hướng đối tượng, vòng lặp, tái sử dụng code, CI/CD, và quản lý lịch sử (Git).
-- **Giao diện Web Trực quan (Rich UI):** Airflow cung cấp cái nhìn chi tiết về trạng thái DAGs, logs của từng task, hiển thị đồ thị phụ thuộc (Graph), lịch sử chạy (Grid) giúp việc chẩn đoán lỗi cực kỳ nhanh chóng.
-- **Khả năng tích hợp vô tận:** Airflow có hàng nghìn **Providers** (plugin kết nối) dễ dàng tương tác với các công cụ thuộc hệ sinh thái Cloud và Big Data như AWS (S3, Redshift), GCP (BigQuery, GCS), Snowflake, dbt, Spark, Databricks,...
-- **Khả năng mở rộng mạnh mẽ:** Kiến trúc độc lập của Airflow hỗ trợ mở rộng số lượng công việc ra hàng chục nghìn luồng nhờ vào các Executor phân tán như Celery hoặc Kubernetes.
-
-## 3. Kiến Trúc Cốt Lõi Của Apache Airflow
-
-Để hiểu cách Airflow phân phối công việc, bạn cần nắm rõ 5 thành phần kiến trúc chính:
-
-1. **Web Server:** Máy chủ web sử dụng Flask và Gunicorn phục vụ giao diện UI cho người dùng. Nó cho phép user giám sát trạng thái task, đọc logs, kích hoạt lại task lỗi, hoặc tạm dừng luồng chạy của DAG.
-2. **Scheduler:** Được mệnh danh là "Bộ não" của Airflow. Đây là một Daemon chạy ngầm liên tục để phân tích các tập tin DAGs, quyết định khi nào các Task cần được kích hoạt dựa trên thời gian và ràng buộc đã định nghĩa, sau đó gửi chúng vào hàng đợi (Queue).
-3. **Metadata Database:** Cơ sở dữ liệu quan hệ (Thường dùng PostgreSQL hoặc MySQL) lưu trữ trạng thái của tất cả định nghĩa DAGs, Task Instances, Connections, Variables, người dùng và lịch sử thực thi.
-4. **Executor:** Cơ chế (engine) đóng vai trò trung gian xử lý hàng đợi task và quyết định *cách thức* và *nơi* các task được chạy. 
-5. **Worker (Với Celery/K8s Executor):** Các tiến trình độc lập thực hiện chạy mã lệnh thực tế. Trong quy mô lớn, workers được đặt trên nhiều máy chủ vật lý khác nhau nhằm chia tải xử lý.
-
-## 4. Các Khái Niệm Quan Trọng (Core Concepts)
-
-### DAG (Directed Acyclic Graph)
-DAG (Đồ thị có hướng và không chu trình) đại diện cho một luồng công việc (workflow). DAG không thực sự trực tiếp chạy các tiến trình xử lý dữ liệu, nó chỉ là tấm bản đồ định nghĩa **các task là gì** và **thứ tự chạy như thế nào**. Mũi tên luồng luôn đi theo một hướng và không được quay vòng lặp về chính nó (A -> B -> C).
-
-### Operator & Task
-- **Operator** là một khuôn mẫu xác định loại hình công việc nào sẽ được thực hiện.
-  - **Action Operators:** Thực thi trực tiếp code cụ thể (`BashOperator`, `PythonOperator`).
-  - **Transfer Operators:** Di chuyển dữ liệu giữa các dịch vụ hệ thống khác nhau (`GCSToBigQueryOperator`).
-  - **Sensors:** Một loại Operator chờ đợi (polling) liên tục cho đến khi một sự kiện cụ thể xảy ra như file mới tải lên S3 hoặc dữ liệu xuất hiện ở DB (`S3KeySensor`).
-- **Task** chính là một Operator cụ thể đã được nhúng hoặc khai báo bên trong một DAG.
-- **Task Instance:** Khi DAG thực sự đến chu kỳ chạy định kỳ, một execution sẽ sinh ra các phiên bản làm việc gọi là Task Instances mang theo thông tin cụ thể (thời gian chạy).
-
-### XCom (Cross-Communication)
-Về mặc định, các Tasks ở Airflow hoàn toàn độc lập với nhau (stateless). Nếu Task A cần gửi metadata ngắn (như ID batch, tên file sinh ra) sang Task B, Airflow cung cấp tính năng "XCom" (Cross-Communication). Tuy nhiên, **khuyến cáo** không dùng XCom để truyền lượng dữ liệu lớn như nguyên một Dataframe vì nó lưu trữ trực tiếp vào Metadata DB.
-
-### Variables & Connections
-- **Variables:** Các biến cấu hình dạng Key-Value được lưu trữ trong DB và cấu hình ở giao diện (như các hằng số, ngưỡng). Giúp tránh việc hard-code trực tiếp vào script Python.
-- **Connections:** Tương tự Variables nhưng để lưu trữ cấu hình mạng thông tin xác thực nhạy cảm (Host, Username, Password). Airflow sẽ mã hoá chúng để đảm bảo an toàn bảo mật thông tin.
-
-## 5. Các Loại Executor Phổ Biến
-
-Cách Airflow mở rộng hệ thống tỷ lệ thuận với loại Executor mà bạn sử dụng:
-- **SequentialExecutor:** (Mặc định dùng cơ sở dữ liệu SQLite). Chỉ chạy tuần tự 1 task tại 1 thời điểm. Thường dùng để debug logic ở môi trường local.
-- **LocalExecutor:** Sử dụng sức mạnh CPU Multiprocessing của máy chủ hiện tại để chạy song song các task trên một máy (Node) duy nhất. Phù hợp cho Production ở quy mô nhỏ lẻ.
-- **CeleryExecutor:** Đòi hỏi phải có hệ thống Message Broker quản lý hàng đợi như Redis hay RabbitMQ. Cho phép phân tán và giao việc (Task Routing) qua hàng chục node Worker vật lý khác nhau. Phổ biến và mạnh mẽ nhất.
-- **KubernetesExecutor:** Tích hợp trực tiếp với Kubernetes cluster. Mỗi khi Task đến lượt chạy, Airflow sẽ xin cấp phát (spawn) một Pod độc lập chạy trong K8s. Khi task hoàn thành, pod bị thu hồi giúp tài nguyên được tối ưu 100%.
-
-## 6. Best Practices Khi Viết DAGs
-
-1. **Tuân thủ Tính Luỹ Đẳng (Idempotency):** Một DAG Pipeline lý tưởng cần phải đảm bảo: Chạy lại cùng một tham số (khoảng thời gian nhất định) 1 lần hay 100 lần thì kết quả bảng dữ liệu đầu ra không thay đổi hay bị nhân đôi lên. Bạn nên sử dụng `INSERT OVERWRITE` / `MERGE` thay vì `APPEND`.
-2. **Không để mã tính toán nặng trong Top-level Code:** Khi bạn định nghĩa DAG, code bên ngoài scope của Task (top-level) sẽ được chạy quét liên tục bởi Scheduler mỗi 30 giây để bắt thay đổi file. Thực thi bất kỳ câu lệnh nào kết nối Database, API call hay xử lý nặng ở top-level sẽ gây "chết" Scheduler.
-3. **Phân rã Task hợp lý (Atomic Tasks):** Chia nhỏ công việc thành nhiều Task nhỏ nhất, mỗi Task chỉ làm 1 việc (Extract riêng, Transform riêng, Load riêng). Việc này có ích khi bạn gặp lỗi ở công đoạn Transform, bạn chỉ cần sửa code và resume DAG chạy trực tiếp từ Transform mà không phải cào lại dữ liệu Extract từ đầu.
-4. **Hệ Thống Cảnh Báo (Alerts):** Cấu hình tự động đẩy thông báo sang Slack, MS Teams hay Gửi Email bằng tham số mặc định `on_failure_callback`.
-
-## 7. Hướng Dẫn Nhanh: Viết Một DAG Cơ Bản Đầu Tiên
-
-Dưới đây là ví dụ minh họa cách viết một DAG với 2 Task Extract và Transform đơn giản kết nối với nhau:
-
-```python
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.bash import BashOperator
-from datetime import datetime, timedelta
-
-# Định nghĩa các thông số mặc định cho toàn bộ các Task trong DAG
-default_args = {
-    'owner': 'data_engineer_team',
-    'depends_on_past': False, # Không phụ thuộc vào kết quả của ngày hôm trước
-    'email_on_failure': True,
-    'email_on_retry': False,
-    'retries': 2, # Thử chạy lại 2 lần nếu thất bại
-    'retry_delay': timedelta(minutes=5),
-}
-
-# Khởi tạo DAG
-with DAG(
-    dag_id='tutorial_daily_pipeline_v1',
-    default_args=default_args,
-    description='Pipeline hướng dẫn cơ bản cho người mới',
-    schedule_interval='@daily',      # Lên lịch chạy vào mỗi ngày
-    start_date=datetime(2023, 1, 1), # Chạy từ ngày này
-    catchup=False,                   # Tắt chạy bù những ngày trong quá khứ nếu bị lỡ
-    tags=['tutorial', 'etl'],
-) as dag:
-
-    # 1. Hàm Python sẽ được gọi ở PythonOperator
-    def extract_data(**kwargs):
-        print("Đang tiến hành cào và trích xuất dữ liệu từ nguồn API...")
-        # Ở đây bạn có thể kết nối lấy API thực tế.
-        return "extract_success"
-
-    # Task 1: Extract Dữ liệu
-    task_extract = PythonOperator(
-        task_id='extract_data_task',
-        python_callable=extract_data,
-    )
-
-    # Task 2: Dùng câu lệnh Bash để giả lập việc xử lý
-    task_transform = BashOperator(
-        task_id='transform_data_task',
-        bash_command='echo "Thực thi làm sạch dữ liệu sau khi nhận thành công kết quả từ Task 1"',
-    )
-
-    # Định nghĩa luồng phụ thuộc (Dependency) bằng các dấu bitshift
-    task_extract >> task_transform
+```mermaid
+flowchart TB
+    User("(Data Engineer")) --> |HTTP/UI| WebServer("Web Server")
+    
+    subgraph Control Plane
+        WebServer
+        Scheduler("Scheduler Daemon")
+    end
+    
+    subgraph Data Plane
+        Worker1("Worker Node 1")
+        Worker2("Worker Node 2")
+    end
+    
+    MetadataDB["(Metadata DB\nPostgres/MySQL)"]
+    Queue["(Message Broker\nRedis/RabbitMQ)"]
+    
+    WebServer <--> |Read/Write Status| MetadataDB
+    Scheduler <--> |Parse DAGs & Update Status| MetadataDB
+    Scheduler --> |Push Task| Queue
+    Queue --> |Pull Task| Worker1
+    Queue --> |Pull Task| Worker2
+    Worker1 --> |Update Status| MetadataDB
+    Worker2 --> |Update Status| MetadataDB
 ```
 
-## 8. Apache Airflow Khác Gì Các Công Cụ Orchestration Thế Hệ Mới?
+1. **Scheduler (Bộ não):** Liên tục parse thư mục DAGs, kiểm tra điều kiện chạy, và đẩy các task đủ điều kiện vào Queue. 
+2. **Metadata Database (Trái tim):** Trạng thái (state) của toàn bộ hệ thống được lưu tại đây. Đây là một điểm **Single Point of Failure (SPOF)** tiềm năng.
+3. **Message Broker (Queue):** Thường dùng Redis hoặc RabbitMQ, làm buffer giữa Scheduler và các Worker.
+4. **Workers (Cơ bắp):** Nơi mã lệnh thực tế được thực thi.
 
-Mặc dù Airflow là kẻ tiên phong và có cộng đồng khổng lồ, một vài giới hạn về kiến trúc Task-based (bỏ mặc hoàn toàn dữ liệu đi bên trong luồng ra sao) và cách truyền dữ liệu XCom khá cồng kềnh đã tạo điều kiện cho các nền tảng mới ra đời như Dagster, Prefect, hay Mage.
+---
 
-- **Prefect:** Có cách tiếp cận thân thiện với Python-native, định nghĩa task thông qua tính năng decorators tự nhiên. Cung cấp Hybrid Model hiện đại (không lưu trữ code người dùng tại Cloud của Prefect).
-- **Dagster:** Đổi khái niệm "Task-aware" sang "Data-aware" orchestrator, coi các tài sản dữ liệu (Data Assets) là đối tượng chính yếu (first-class citizen) của việc điều phối, giúp quá trình kiểm thử phần mềm dữ liệu chặt chẽ từ lúc phát triển.
-- **Mage.ai:** Tập trung vào trải nghiệm IDE giống Jupyter Notebook ngay lập tức, khả năng đồng bộ cực nhanh và phân tích tích hợp chuyên sâu, rất thích hợp cho Data Science & AI.
+## Sự Đánh Đổi của các Executor (Executor Trade-offs)
 
-Tóm lại, **Apache Airflow vẫn giữ vững vị thế "Tiêu chuẩn ngành"** tại các doanh nghiệp vừa và lớn vì sự ổn định, sẵn sàng với Managed Cloud (Google Cloud Composer, Amazon MWAA), và một hệ sinh thái khổng lồ đã vượt qua thử thách thời gian trong môi trường thực chiến (Battle-tested).
+Linh hồn của việc scale Airflow nằm ở **Executor**. Airflow không trực tiếp chạy code, nó ủy quyền (delegate) việc đó cho Executor.
 
-## Tài Liệu Tham Khảo
-* [Apache Airflow Architecture - Airflow Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
-* [DataOps Manifesto](https://dataopsmanifesto.org/)
-* [Dagster: Data Orchestration for Machine Learning and Analytics](https://dagster.io/)
-* [Prefect: Dataflow Automation](https://www.prefect.io/)
-* [Mage.ai: Modern Data Pipeline](https://www.mage.ai/)
-* [dbt (data build tool) - Analytics Engineering Workflow](https://www.getdbt.com/product/what-is-dbt/)
-* [Great Expectations: Data Quality and Profiling](https://greatexpectations.io/)
+### 1. Celery Executor (High Throughput, Low Isolation)
+Celery là kiến trúc phổ biến nhất, sử dụng mô hình Producer (Scheduler) - Consumer (Workers) thông qua Broker (Redis).
+
+- **Ưu điểm:** Độ trễ (latency) cực thấp. Task được nhét vào Redis và Worker có thể pick up ngay lập tức trong vài mili-giây. Phù hợp cho hệ thống có hàng vạn task nhỏ, ngắn (ETL queries, API triggers).
+- **Nhược điểm (Trade-off):** Dependency Hell. Vì các Worker là các máy ảo (EC2/VM) dùng chung, nếu Task A cần `pandas==1.0` và Task B cần `pandas==2.0`, bạn sẽ gặp xung đột môi trường khốc liệt (Dependency Clash). Ngoài ra, một task memory leak có thể làm crash toàn bộ Worker Node, giết chết các task khác đang chạy cùng node đó.
+
+### 2. Kubernetes Executor (High Isolation, High Latency)
+Mỗi task khi chạy sẽ yêu cầu Scheduler nói chuyện với K8s API Server để **spawn ra một Pod mới hoàn toàn**, chạy xong thì hủy Pod.
+
+- **Ưu điểm:** Cách ly 100% (Absolute Isolation). Bạn có thể chỉ định tài nguyên riêng (CPU/RAM request) và Docker image riêng cho từng task. Xóa bỏ hoàn toàn Dependency Hell.
+- **Nhược điểm (Trade-off):** Pod Startup Latency. Để boot một K8s Pod thường mất từ 10 - 30 giây (kéo image, init container). Nếu bạn có 1000 tasks cần chạy mỗi 5 phút mà mỗi task chỉ mất 2 giây để chạy thật, thì K8s Executor là một thảm họa về Performance/Overhead. Hơn nữa, nó tạo áp lực cực lớn lên K8s Control Plane.
+
+> **💡 Best Practice (Kiến trúc lai - CeleryKubernetesExecutor):** 
+> Chạy các task ngắn, nhẹ trên Celery Worker (ví dụ: gởi SQL query sang Snowflake, gọi API) để có latency thấp. Chạy các task xử lý data nặng, cần lib dị (như train model Spark/Tensorflow) trên K8s Pods.
+
+---
+
+## Rủi ro Vận hành (Operational Risks & Bottlenecks)
+
+Khi Scale Airflow lên môi trường Enterprise, bạn chắc chắn sẽ đối mặt với các sự cố sau.
+
+### 1. Nút thắt cổ chai Scheduler (Scheduler Parse Time Bottleneck)
+Mặc định, Scheduler sẽ quét và dịch (parse) lại **toàn bộ thư mục DAGs mỗi 30 giây** (`min_file_process_interval`). Mục đích là để cập nhật các thay đổi code mới nhất.
+
+**🔴 Real-world Incident:** Scheduler bị "treo", CPU của Scheduler node chạm mức 100%, các task đáng lẽ phải chạy nhưng cứ kẹt ở trạng thái `Queued` hoặc `None`.
+
+**Nguyên nhân:** Top-level Code. Kỹ sư khai báo import thư viện nặng (`pandas`, `boto3`) hoặc gọi API/Database ở ngay đầu file DAG, bên ngoài scope của Task (PythonOperator/BashOperator). Điều này khiến Airflow phải gọi API/DB đó **vô ích mỗi 30 giây**.
+
+**✅ Cách khắc phục:** Đẩy mọi logic xử lý vào trong function của Task.
+
+```python
+# ❌ BAD PRACTICE (Gây sập Scheduler)
+import requests
+import pandas as pd
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+# Lỗi nghiêm trọng: Hàm này bị gọi MỖI 30 GIÂY khi Scheduler parse DAG
+config_data = requests.get("https://api.mycompany.com/config").json() 
+
+with DAG('bad_dag', ...) as dag:
+    # ...
+```
+
+```python
+# ✅ GOOD PRACTICE (Zero overhead lúc parse)
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+def _extract_and_process():
+    # CHỈ import bên trong hàm khi task thực sự chạy trên Worker
+    import requests
+    import pandas as pd
+    
+    config_data = requests.get("https://api.mycompany.com/config").json()
+    # ... process ...
+
+with DAG('good_dag', ...) as dag:
+    task = PythonOperator(
+        task_id='extract',
+        python_callable=_extract_and_process
+    )
+```
+
+### 2. Sự phình to kết nối CSDL (Metadata DB Connection Bloat)
+Scheduler, WebServer, và hàng trăm Worker - mỗi thành phần đều cần tạo connection pool đến Metadata DB (Postgres/MySQL) để cập nhật trạng thái (Running -> Success). 
+
+**🔴 Real-world Incident:** Database báo lỗi `FATAL: sorry, too many clients already`. Toàn bộ Airflow ngưng trệ.
+
+**Nguyên nhân:** Trong kiến trúc Celery phân tử, nếu bạn có 50 Celery Workers, mỗi worker cấu hình `parallelism=32`, bạn có khả năng mở hàng ngàn kết nối đồng thời tới DB. DB không đủ RAM để duy trì các connection này.
+
+**✅ Cách khắc phục:** 
+1. **Dùng Connection Pooling (PgBouncer):** Tuyệt đối KHÔNG cho Worker kết nối trực tiếp vào Postgres. Phải đi qua PgBouncer ở chế độ `transaction pooling` để multiplex (ghép kênh) hàng ngàn kết nối logic thành vài chục kết nối vật lý.
+2. **Database Pruning:** Table `task_instance` và `log` sẽ phình ra hàng chục triệu dòng. Cần có một maintenance DAG chạy cronjob xóa (DELETE) các metadata cũ hơn 90 ngày.
+
+### 3. OOMKilled Workers (Tràn RAM)
+Airflow sinh ra để điều phối, **KHÔNG PHẢI ĐỂ XỬ LÝ DỮ LIỆU ĐÁM LỚN (Data Processing)**. 
+
+**🔴 Real-world Incident:** Kỹ sư dùng `PythonOperator` đọc một file CSV 5GB vào pandas DataFrame trên một Celery Worker chỉ có 4GB RAM. OS tự động bắn tín hiệu `SIGKILL` (OOMKilled) giết chết tiến trình Worker. Task bị fail với log cụt lủn `Negsignal.SIGKILL`.
+
+**✅ Cách khắc phục:** 
+- Áp dụng nguyên tắc **ELT (Extract - Load - Transform)**. Airflow chỉ làm "nhạc trưởng" (Orchestrator).
+- Dùng `SnowflakeOperator`, `BigQueryInsertJobOperator`, hoặc kích hoạt Spark/Databricks job. Hãy để Compute Engine chuyên dụng làm việc nặng, Airflow chỉ gửi lệnh và ngồi chờ (Polling Sensor).
+- Nếu bắt buộc phải xử lý file trên Worker, hãy dùng Python Generators (Yield) để đọc file theo từng chunk (chunking) thay vì load toàn bộ vào RAM.
+
+---
+
+## Nguồn Tham Khảo (References)
+
+* [Airflow Architecture Overview - Official Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
+* [Airflow Scheduler Internals & Best Practices (Astronomer Blog)](https://www.astronomer.io/blog/airflow-scheduler-bottlenecks/)
+* [Scaling Apache Airflow for Machine Learning Workflows (AWS Architecture Blog)](https://aws.amazon.com/blogs/architecture/field-notes-scaling-apache-airflow-for-machine-learning-workflows/)
+* [Orchestrating Data with Apache Airflow (Databricks Engineering)](https://www.databricks.com/blog/2023/10/24/data-orchestration-apache-airflow.html)

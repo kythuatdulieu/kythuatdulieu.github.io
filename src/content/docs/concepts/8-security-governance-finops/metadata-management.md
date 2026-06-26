@@ -1,101 +1,136 @@
 ---
 title: "Quản lý siêu dữ liệu - Metadata Management"
-difficulty: "Beginner"
-tags: ["metadata", "data-governance", "data-catalog", "data-management"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Metadata Management - Quản lý siêu dữ liệu trong Data Engineering"
-metaDescription: "Tìm hiểu Metadata Management (Quản lý siêu dữ liệu) là gì. Phân loại Technical, Business, Operational Metadata và vai trò cốt lõi trong Data Warehouse."
-description: "Hãy tưởng tượng bạn bước vào một thư viện khổng lồ chứa hàng triệu cuốn sách nhưng hoàn toàn không có mục lục, không có tên tác giả trên bìa, và các cuốn sách không được sắp xếp. Metadata Management giải quyết vấn đề đó trong thế giới dữ liệu."
+difficulty: "Advanced"
+tags: ["metadata", "data-catalog", "data-governance", "hive-metastore", "data-lineage"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Metadata Management & Data Catalog Architecture: Push vs Pull, HMS Bottlenecks"
+metaDescription: "Kiến trúc hệ thống Metadata Management từ góc nhìn Staff Engineer: So sánh Push vs Pull, giải quyết Hive Metastore OOM, Uber Databook, Netflix UDA."
+description: "Trong các kiến trúc dữ liệu phân tán (Data Mesh, Lakehouse), Metadata không đơn thuần là 'dữ liệu về dữ liệu'. Nó chính là Control Plane của toàn bộ hệ sinh thái."
 ---
 
+Trong các kiến trúc dữ liệu phân tán (Data Mesh, Lakehouse), định nghĩa sách giáo khoa "Metadata là dữ liệu về dữ liệu" đã trở nên lỗi thời. Ở quy mô Enterprise, **Metadata Management** chính là **Control Plane** của toàn bộ hạ tầng dữ liệu. Nếu hệ thống lưu trữ như HDFS/S3 là Data Plane (nơi chứa dữ liệu vật lý), thì Data Catalog và Metastore đóng vai trò là Control Plane (nơi điều phối, phân quyền và định tuyến dữ liệu).
 
+Bài viết này đi sâu vào kiến trúc vật lý của hệ thống quản lý siêu dữ liệu, phân tích sự đánh đổi giữa các mô hình thu thập (Push vs Pull), và cách các Big Tech như Uber, Netflix giải quyết điểm nghẽn (bottlenecks) khi Metastore bị quá tải.
 
-Hãy tưởng tượng bạn bước vào một thư viện khổng lồ chứa hàng triệu cuốn sách nhưng hoàn toàn không có mục lục, không có tên tác giả trên bìa, và các cuốn sách không được phân loại hay sắp xếp. Việc tìm kiếm một thông tin cụ thể trong thư viện đó sẽ gần như bất khả thi. Hệ thống dữ liệu trong các tổ chức lớn cũng tương tự như vậy, nếu thiếu đi Metadata Management (Quản lý siêu dữ liệu).
+## 1. Kiến Trúc Thu Thập Metadata: Pull-based vs Push-based
 
-Metadata Management là quá trình thu thập, tổ chức, duy trì và tích hợp thông tin "dữ liệu về dữ liệu" (như: Bảng này tạo ngày nào? Ai là tác giả? Schema gồm các cột nào?). Metadata chính là nhiên liệu cốt lõi để vận hành Data Catalog, Data Lineage và các hệ thống Data Observability, giúp dữ liệu có thể tìm thấy, hiểu được và tin tưởng được.
+Việc thu thập Technical và Operational Metadata từ hàng nghìn pipelines đòi hỏi một chiến lược kiến trúc rõ ràng. Hiện nay, có hai trường phái chính:
 
-## 1. Metadata là gì?
+### 1.1. Pull-based Architecture (Kiến trúc Kéo)
+Đại diện tiêu biểu là **AWS Glue Crawlers** hoặc các công cụ quét định kỳ (Batch Scanners) như Amundsen thời kỳ đầu. Hệ thống trung tâm sẽ định kỳ kết nối tới các Data Sources (S3, RDS, Kafka) để lấy metadata, đọc schema và phân tích mẫu dữ liệu (data sampling).
 
-Metadata hiểu đơn giản là "dữ liệu mô tả về dữ liệu khác". Nó cung cấp ngữ cảnh, nguồn gốc, định dạng và các thông tin cần thiết khác để giúp con người hoặc hệ thống máy tính hiểu rõ hơn về khối dữ liệu đang làm việc.
+**Đánh đổi hệ thống (Systemic Trade-offs):**
+- **Ưu điểm:** Tách biệt hoàn toàn (Decoupled) với Data Pipelines. Việc quét metadata không làm gián đoạn hay ảnh hưởng tới latency của quá trình ghi dữ liệu gốc. Dễ dàng setup với các external sources.
+- **Rủi ro Vận hành (Latency & Compute Cost):** Metadata luôn bị trễ (Stale metadata). Hơn nữa, việc quét (crawling) trên object storage như Amazon S3 với hàng triệu files Parquet nhỏ sẽ gây ra bùng nổ chi phí gọi `LIST/GET` API và dễ dẫn đến tình trạng **S3 API Throttling**.
 
-Ví dụ, đối với một bức ảnh kỹ thuật số, nội dung cốt lõi là hình ảnh bạn nhìn thấy. Tuy nhiên, metadata của bức ảnh đó có thể bao gồm:
-- **Kích thước file:** 3MB
-- **Độ phân giải:** 1920x1080
-- **Ngày chụp:** 15/06/2026
-- **Vị trí địa lý (GPS):** Tọa độ (X, Y)
-- **Thiết bị chụp:** iPhone 15 Pro Max
+### 1.2. Push-based Architecture (Kiến trúc Đẩy - Event-Driven)
+Đại diện bởi kiến trúc của **DataHub (LinkedIn)**, chuẩn **OpenLineage**, và **Marquez**. Các Data Pipelines (Airflow, Spark, dbt) sẽ chủ động phát ra các sự kiện (Metadata Events) qua Kafka hoặc API ngay tại thời điểm runtime mỗi khi có một task hoàn thành hoặc schema bị thay đổi.
 
-Tương tự, đối với một bảng dữ liệu trong Data Warehouse, metadata sẽ là thông tin về schema, số lượng dòng, ngày cập nhật gần nhất, kỹ sư tạo ra bảng đó, hệ thống nguồn đẩy dữ liệu vào, v.v.
+**Đánh đổi hệ thống:**
+- **Ưu điểm:** Metadata được cập nhật gần như thời gian thực (Near real-time). Hệ thống bắt được chính xác Data Lineage (Flow) thay vì phải parse và suy đoán từ SQL logs.
+- **Rủi ro Vận hành:** Tính phụ thuộc (Coupling) cao. Code của pipeline gốc phải bị can thiệp (instrumented) để gắn thêm thư viện đẩy metadata. Nếu Kafka endpoint của Catalog bị sập, cần cơ chế Fallback xử lý lỗi (Ví dụ: dùng asynchoronous push kết hợp Dead Letter Queue) để không làm fail toàn bộ Data Pipeline cốt lõi.
 
-## 2. Phân loại Metadata
+```mermaid
+graph TD
+    subgraph "Push-based Architecture("DataHub / OpenLineage")"
+        Spark["Spark Job"] -- "1. Emit Event("Schema, Metrics")" --> Kafka["Kafka Topic"]
+        dbt["dbt Model"] -- "2. Emit Event("Lineage")" --> Kafka
+        Kafka -- "3. Consume Async" --> Ingestion["Ingestion Service"]
+        Ingestion --> GraphDB["(Graph DB / Neo4j)"]
+        Ingestion --> SearchIndex["(Elasticsearch)"]
+    end
+    
+    subgraph "Pull-based Architecture("AWS Glue Crawler")"
+        Crawler["Glue Crawler"] -- "1. LIST S3 bucket" --> S3["(Amazon S3)"]
+        Crawler -- "2. Sample Parquet Footer" --> S3
+        Crawler -- "3. Infer Schema" --> HMS["(Glue Catalog / Metastore)"]
+    end
+```
 
-Trong lĩnh vực Data Engineering, Metadata thường được phân thành 4 nhóm chính dựa trên vai trò và đối tượng sử dụng:
+## 2. Điểm Nghẽn Hệ Thống (Bottlenecks) và Cú Sập Hive Metastore
 
-### 2.1. Technical Metadata (Metadata Kỹ thuật)
-Nhóm này cung cấp thông tin chi tiết về cấu trúc và định dạng dữ liệu, thường được sử dụng bởi Data Engineers và các công cụ quản trị tự động.
-- **Ví dụ:** Tên cơ sở dữ liệu (Database name), Tên bảng (Table name), Tên cột (Column name), Kiểu dữ liệu (Data types - INT, VARCHAR, DATE), Khóa chính (Primary Key), Khóa ngoại (Foreign Key), Kích thước file (File size), Định dạng lưu trữ (Parquet, ORC, CSV).
-- **Mục đích:** Hỗ trợ quá trình thiết kế schema, tối ưu hóa truy vấn, và cấu hình các hệ thống lưu trữ/truyền tải dữ liệu.
+**Hive Metastore (HMS)** thường được dùng làm de-facto Data Catalog cho các hệ sinh thái Hadoop/Spark truyền thống. Tuy nhiên, bản chất nó là một kiến trúc Monolith backed bởi một RDBMS (MySQL/PostgreSQL).
 
-### 2.2. Business Metadata (Metadata Nghiệp vụ)
-Mô tả dữ liệu theo ngôn ngữ kinh doanh, giúp người dùng không chuyên về kỹ thuật (Data Analysts, Business Users) hiểu được ý nghĩa thực sự của dữ liệu.
-- **Ví dụ:** Định nghĩa thuật ngữ kinh doanh (Business glossary), Các quy tắc tính toán (Calculation rules như "Doanh thu thuần = Tổng doanh thu - Chiết khấu"), Phân loại mức độ nhạy cảm dữ liệu (PII, Public, Confidential), Chủ sở hữu dữ liệu (Data Owner/Steward).
-- **Mục đích:** Là cầu nối giữa ngôn ngữ kỹ thuật và nghiệp vụ kinh doanh, đảm bảo mọi người trong tổ chức có cùng một cách hiểu nhất quán về ý nghĩa của dữ liệu, tránh việc nhầm lẫn khi làm báo cáo.
+### Real-world Incident: JVM OOMKilled & Metastore Timeout
+Khi truy vấn một bảng được partitioned theo `(year, month, day, hour)` với lịch sử 5 năm, câu lệnh `SELECT * FROM table WHERE year = 2023` sẽ buộc Spark Driver gọi API `get_partitions_by_filter` tới HMS. 
+Nếu bảng có hàng chục nghìn partitions, HMS sẽ phải query RDBMS, deserialize các Object, và serialize thành Thrift response trả về.
+- **Hậu quả 1:** CPU của database backing HMS tăng vọt 100%.
+- **Hậu quả 2:** Quá trình cấp phát bộ nhớ bùng nổ, JVM của Spark Driver hoặc chính HMS bị **OOMKilled** (Out Of Memory) do payload Thrift trả về quá lớn (có thể lên tới hàng trăm MB hoặc vài GB).
+- **Hậu quả 3:** Cascade failure (Lỗi dây chuyền) – toàn bộ các pipelines khác gọi tới HMS trong cluster đều bị Connection Timeout và sập theo.
 
-### 2.3. Operational Metadata (Metadata Vận hành)
-Cung cấp thông tin về cách thức dữ liệu được tạo ra, xử lý và di chuyển qua lại giữa các hệ thống.
-- **Ví dụ:** Thời gian bắt đầu và kết thúc của một Data Pipeline, Trạng thái thực thi (Success, In progress, Failed), Số lượng dòng dữ liệu được xử lý trong mỗi batch, Các cảnh báo lỗi (Error logs), Version của pipeline đang chạy.
-- **Mục đích:** Hỗ trợ việc giám sát hệ thống (Data Observability), phát hiện và khắc phục sự cố (troubleshooting) kịp thời, theo dõi quá trình di chuyển dữ liệu (Data Lineage).
+### Kiến Trúc Khắc Phục (Architectural Solutions)
+1. **Thay đổi chuẩn lưu trữ (Iceberg/Hudi):** Các chuẩn Table Format mới như Apache Iceberg loại bỏ hoàn toàn sự phụ thuộc vào RDBMS của Hive Metastore trong việc lưu metadata ở cấp độ partition/file. Thay vào đó, nó lưu metadata trực tiếp trên Object Storage dưới dạng một cây phân cấp (tree of manifest files), giúp Spark Driver có thể parse song song (distributed planning).
+2. **Database Federation (Cách làm của Uber):** Đối với kiến trúc gốc, Uber đã giải quyết vấn đề HMS Monolith bằng cách phân tách metastore thành các Domain-Specific Databases, sử dụng con trỏ siêu dữ liệu (pointer-level metadata manipulation) để giảm bán kính ảnh hưởng (blast radius) khi một domain bị sập.
 
-### 2.4. Social / Usage Metadata (Metadata Tương tác và Sử dụng)
-Tập trung vào khía cạnh con người - cách người dùng trong tổ chức tương tác và đánh giá dữ liệu.
-- **Ví dụ:** Tần suất truy vấn vào một bảng (Query frequency), Top những người dùng hoặc phòng ban thường xuyên sử dụng bảng, Số lượt tải tập dữ liệu, Lịch sử truy cập, Đánh giá (Ratings) hoặc bình luận (Comments) của người dùng về mức độ tin cậy của bảng.
-- **Mục đích:** Giúp nhận diện được những tập dữ liệu cốt lõi (Core datasets) có giá trị cao nhất, thúc đẩy sự hợp tác giữa các team, loại bỏ các báo cáo hoặc bảng dữ liệu không còn được ai sử dụng (Dead assets).
+## 3. Kiến trúc Đồ thị Tri thức (Knowledge-Graph-based) - Netflix UDA
 
-## 3. Tại sao Metadata Management lại quan trọng?
+Netflix nhận ra rằng việc quản lý siêu dữ liệu dưới dạng các bảng RDBMS rời rạc không thể hiện được sự phức tạp của Data Lineage. Họ đã thiết kế **Unified Data Architecture (UDA)** sử dụng kiến trúc đồ thị.
 
-Khi quy mô dữ liệu của tổ chức ngày càng phình to, Quản lý siêu dữ liệu chuyển từ trạng thái "Nice-to-have" (có thì tốt) sang "Must-have" (bắt buộc phải có) bởi những lợi ích sống còn sau:
+- **Semantic Integration:** Sử dụng RDF (Resource Description Framework) và SHACL (Shapes Constraint Language) để map các concept kinh doanh (Business Domain Models) trực tiếp tới các cấu trúc vật lý.
+- **Graph Database Traversal:** Mọi thực thể (Table, Column, Pipeline, User, Dashboard) là các Node (Đỉnh). Các tương tác (Creates, Consumes, Owns) là Edges (Cạnh). Việc truy vấn *"Nếu sửa cột A, những Dashboard nào hạ nguồn bị ảnh hưởng?"* trở thành một bài toán duyệt đồ thị (Graph Traversal) được xử lý với độ trễ tính bằng mili-giây (sub-milliseconds), thay vì sử dụng đệ quy JOIN (Recursive CTEs) cực kỳ tốn kém và chậm chạp trên RDBMS.
 
-### Tăng cường khả năng khám phá dữ liệu (Data Discovery)
-Việc tìm kiếm dữ liệu phù hợp giống như mò kim đáy bể. Metadata Management giúp thiết lập các Data Catalog đóng vai trò như một "Google Search" nội bộ cho dữ liệu. Nhờ đó, Data Scientist có thể dễ dàng tìm thấy các features cần thiết để train model mà không tốn hàng tuần đi hỏi từng người.
+## 4. Quản lý Siêu dữ liệu Tự động với Machine Learning tại Uber
 
-### Hiểu rõ nguồn gốc dữ liệu (Data Lineage)
-Khi một bảng xếp hạng doanh số trên dashboard hiển thị dữ liệu bất thường, làm sao để điều tra nguyên nhân? Việc kết hợp Operational Metadata và Technical Metadata tạo ra bản đồ **Data Lineage**, giúp truy xuất ngược từ dashboard xuống tận Data Warehouse và tới hệ thống CRM ban đầu để biết dữ liệu bị hỏng ở công đoạn nào.
+Khi hệ thống chạm ngưỡng Exabytes dữ liệu, việc yêu cầu Data Steward gán tag thủ công (Business Metadata) là nhiệm vụ bất khả thi.
+Uber đã giải quyết vấn đề này bằng cách phát triển hệ thống **DataK9** tích hợp với nền tảng nội bộ **Databook**:
+- Hệ thống áp dụng hybrid approach (phương pháp lai): Một phần nhỏ các dataset lõi (Golden datasets) được gán nhãn thủ công (Manual Classification).
+- DataK9 sử dụng các ML models đã được train và các rule-based engines (sử dụng Bloom Filters) để quét trên toàn bộ hệ thống, tự động phân loại thông tin nhạy cảm PII (Personally Identifiable Information) hay dữ liệu tài chính (Financial Data).
+- Metadata sau khi auto-tag sẽ được đẩy vào Elasticsearch của Databook, từ đó hệ thống tự động kích hoạt các chính sách Role-Based Access Control (RBAC) để chặn quyền truy cập trái phép ở cấp độ cột (Column-level security).
 
-### Quản trị rủi ro và tuân thủ (Compliance & Security)
-Với các quy định nghiêm ngặt như GDPR, CCPA, tổ chức bắt buộc phải kiểm soát được dữ liệu nhạy cảm (PII - Personally Identifiable Information). Business Metadata giúp gắn thẻ (tagging) các cột dữ liệu chứa thông tin nhạy cảm (ví dụ: email, CCCD, thẻ tín dụng), từ đó tự động áp dụng các chính sách che giấu dữ liệu (data masking) hoặc kiểm soát quyền truy cập.
+## 5. Code Thực Chiến: Triển khai Data Catalog & LF bằng Terraform
 
-### Cải thiện chất lượng dữ liệu (Data Quality)
-Operational Metadata cung cấp bức tranh rõ ràng về độ trễ (latency), độ hoàn thiện (completeness) của dữ liệu mỗi ngày. Bằng việc giám sát metadata, hệ thống có thể kích hoạt các cảnh báo tự động khi một pipeline ETL mất quá nhiều thời gian để chạy hoặc lượng dữ liệu đột ngột giảm một nửa, cho phép xử lý trước khi user báo cáo lỗi.
+Thay vì cấu hình click-ops thủ công trên UI, các Staff Data Engineer sử dụng Infrastructure as Code (IaC) để thiết lập Data Catalog, gắn Business Metadata và cấu hình phân quyền truy cập. Ví dụ dưới đây sử dụng **AWS Glue Data Catalog** kết hợp **AWS Lake Formation**.
 
-## 4. Các Công Cụ Metadata Management Phổ Biến
+```hcl
+# 1. Thiết lập Glue Catalog Database (Logical Layer)
+resource "aws_glue_catalog_database" "gold_layer_metrics" {
+  name        = "gold_business_metrics"
+  description = "Chứa các bảng Aggregate đã được làm sạch cho hệ thống BI"
 
-Thị trường hiện tại cung cấp nhiều giải pháp thu thập và quản lý metadata, thường được biết đến qua các nền tảng **Data Catalog**:
+  # Gắn Business/Technical Metadata trực tiếp vào IaC
+  parameters = {
+    "data_owner"     = "growth_team"
+    "classification" = "confidential"
+    "pii_data"       = "false"
+    "cost_center"    = "dept-194"
+  }
+}
 
-1. **Amundsen (Phát triển bởi Lyft):** Giao diện tìm kiếm dữ liệu mạnh mẽ, tích hợp tốt Social Metadata dựa trên PageRank để đề xuất các bảng dữ liệu được sử dụng nhiều nhất.
-2. **DataHub (Phát triển bởi LinkedIn):** Nền tảng với kiến trúc hướng sự kiện (event-driven), hỗ trợ cơ chế Push/Pull metadata mạnh mẽ. Nó rất linh hoạt và phù hợp với nhiều loại data stack phức tạp.
-3. **Apache Atlas:** Rất phổ biến trong các hệ sinh thái Hadoop truyền thống. Atlas vô cùng mạnh trong việc quản trị dữ liệu (Data Governance), định nghĩa các chính sách bảo mật và vẽ sơ đồ luồng dữ liệu (Data Lineage).
-4. **OpenLineage / Marquez:** Chuyên biệt để thu thập và chia sẻ Operational Metadata, với mục tiêu chuẩn hóa Data Lineage giữa các hệ thống (Airflow, Spark, dbt, Snowflake, v.v.).
-5. **Công cụ Cloud-native:** Các nhà cung cấp đám mây lớn đều tích hợp sẵn:
-   - **AWS:** AWS Glue Data Catalog
-   - **Google Cloud:** Dataplex, Google Cloud Data Catalog
-   - **Azure:** Microsoft Purview
-6. **Giải pháp Enterprise thương mại:** Alation, Collibra cung cấp các bộ quản trị toàn diện, tập trung mạnh vào Business Metadata và phục vụ người dùng nghiệp vụ.
+# 2. Áp dụng Tag-based Access Control (TBAC)
+resource "aws_lakeformation_lf_tag" "sensitivity" {
+  key    = "sensitivity_level"
+  values = ["public", "high", "critical"]
+}
 
-## 5. Thách Thức Khi Triển Khai
+# 3. Phân quyền Data Governance (Data Plane Access) qua Lake Formation
+resource "aws_lakeformation_permissions" "bi_analyst_access" {
+  principal   = aws_iam_role.bi_analyst_role.arn
+  permissions = ["SELECT", "DESCRIBE"]
 
-Mặc dù có vai trò tối quan trọng, hành trình triển khai Metadata Management cũng gặp không ít rào cản:
-- **Thu thập Metadata tự động:** Các tổ chức sở hữu vô số hệ thống bị cô lập (Siloed systems) với các chuẩn metadata khác nhau. Việc viết tích hợp cho hàng tá công cụ để gom chúng vào một chỗ tốn kém thời gian. Việc cập nhật metadata thủ công (manual entry) chắc chắn sẽ dẫn đến việc metadata mau chóng lỗi thời và vô tác dụng. Tự động hóa là chìa khóa.
-- **Kiểm soát phiên bản (Versioning):** Schema của dữ liệu thường xuyên thay đổi (Schema evolution). Việc theo dõi lại lịch sử thay đổi của metadata cần được thiết kế cẩn thận.
-- **Xây dựng văn hóa (Data Culture):** Không một công cụ tự động nào có thể tự hiểu ngữ cảnh kinh doanh. Cần có văn hóa tổ chức khuyến khích việc viết document, gắn tags, định nghĩa thuật ngữ bởi chính những chuyên gia về dữ liệu đó (Data Stewards).
+  table {
+    database_name = aws_glue_catalog_database.gold_layer_metrics.name
+    name          = "fct_monthly_revenue"
+  }
+}
+```
+
+**Systemic Trade-offs khi dùng Lake Formation / TBAC:**
+- **Ưu điểm (Governance):** Khả năng Audit (kiểm toán) xuất sắc và mở rộng tốt. Phân quyền cấp độ Cột hoặc Row-level dễ dàng thông qua thẻ (Tag) thay vì định nghĩa lại chính sách từng bảng.
+- **Rủi ro Vận hành (Latency & Drift):** Khi có quá nhiều policies và tags, quá trình IAM+LF cross-evaluation của AWS sẽ làm tăng đáng kể query planning latency của Amazon Athena. Hơn nữa, việc Terraform drift khi các Data Stewards tự thay đổi quyền trên UI sẽ gây ra các lỗi `terraform apply` cho team DataOps, yêu cầu chiến lược reconcile chặt chẽ (như chạy Terraform drift detection định kỳ).
 
 ## 6. Tổng Kết
 
-Metadata Management không đơn thuần là quá trình "làm tài liệu cho kho dữ liệu". Nó là lớp hạ tầng chiến lược biến "Dữ liệu chưa được phân loại" thành "Tài sản Dữ liệu" (Data Asset) thực sự có giá trị. Thông qua Metadata Management, các quy trình Data Governance, Data Cataloging và tự động hóa sẽ được vận hành thông suốt, thúc đẩy một nền văn hóa mạnh mẽ, nơi mọi người tự tin ra quyết định dựa trên dữ liệu.
+Data Catalog và Metadata Management hoàn toàn không phải là một công cụ (Tool). Nó là một **Hệ Sinh Thái (Ecosystem)**. Việc thiết kế hệ thống này đòi hỏi kỹ sư phải giải quyết các bài toán phân tán hệ thống cốt lõi: 
+1. Làm thế nào để push metadata với throughput cao mà không làm nghẽn Data Pipeline gốc?
+2. Làm sao để đánh index hàng tỷ data files mà không gây sập (OOM) Metastore?
+3. Thiết kế kiến trúc tích hợp AI/ML để tự động hóa Data Governance ở quy mô Exabytes.
 
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+Việc làm chủ và có một kiến trúc Metadata đủ vững chắc chính là bước đệm kỹ thuật bắt buộc trước khi tổ chức có thể triển khai thành công các mô hình phi tập trung như **Data Mesh** hay **Data Fabric**.
+
+## Nguồn Tham Khảo
+* **Designing Data-Intensive Applications - Martin Kleppmann**
+* [Netflix Technology Blog: Data Mesh - A Data Movement and Processing Platform](https://netflixtechblog.com/)
+* [Netflix Technology Blog: Unified Data Architecture (UDA)](https://netflixtechblog.com/)
+* [Uber Engineering: Databook - Uber's Unified Portal for Metadata Management](https://eng.uber.com/databook/)
+* [AWS Architecture Blog: Build a Serverless Metadata Search Architecture](https://aws.amazon.com/blogs/architecture/)

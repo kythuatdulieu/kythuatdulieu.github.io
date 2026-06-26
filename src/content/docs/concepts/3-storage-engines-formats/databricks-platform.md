@@ -1,132 +1,157 @@
 ---
-title: "Databricks Platform"
-difficulty: "Intermediate"
-tags: ["databricks", "spark", "lakehouse", "big-data", "cloud"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Databricks Platform - Nền tảng Lakehouse và Data Intelligence toàn diện"
-metaDescription: "Tìm hiểu chi tiết về Nền tảng Databricks: Kiến trúc Control Plane - Data Plane, các thành phần cốt lõi như Delta Lake, Unity Catalog, Photon Engine, và ứng dụng thực tế."
-description: "Nếu bạn từng làm việc trong một dự án dữ liệu lớn (Big Data), chắc hẳn bạn đã quen với cảnh tượng: Đội ngũ Data Engineer loay hoay viết Spark code trên một hệ thống, Data Scientist chạy Jupyter Notebook trên một nền tảng khác..."
+title: "Databricks Platform: System Architecture & Execution Engines"
+difficulty: "Advanced"
+tags: ["databricks", "spark", "lakehouse", "photon", "liquid-clustering", "unity-catalog"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Databricks Platform Architecture: Control Plane, Photon & Trade-offs"
+metaDescription: "Phân tích kiến trúc kỹ thuật sâu của Databricks: Control Plane, Data Plane, Photon Vectorized Engine, Liquid Clustering vs Z-Ordering và xử lý lỗi OOMKilled."
+description: "Mổ xẻ kiến trúc Databricks từ góc nhìn System Design: Các luồng thực thi vật lý, Photon C++ Engine, Liquid Clustering và các rủi ro vận hành (OOM, Shuffle Spill)."
 ---
 
+Bỏ qua các định nghĩa mang tính tiếp thị về "Data Intelligence Platform", ở góc độ **System Design**, Databricks bản chất là một hệ thống phân tán mạnh mẽ kết hợp giữa năng lực điều phối cụm (Cluster Orchestration) và lõi xử lý dữ liệu được tinh chỉnh (Spark/Photon) chạy trên Cloud Object Storage.
 
-
-Nếu bạn từng làm việc trong một dự án dữ liệu lớn (Big Data), chắc hẳn bạn đã quen với cảnh tượng: Đội ngũ Data Engineer loay hoay viết Spark code trên một hệ thống, Data Scientist chạy Jupyter Notebook trên một nền tảng khác, còn Data Analyst lại dùng một công cụ BI kết nối vào Data Warehouse đắt đỏ. 
-
-**Databricks** ra đời để phá vỡ những bức tường ("data silos") này, thống nhất tất cả trên một nền tảng duy nhất gọi là Data Lakehouse, và gần đây nhất là định hình khái niệm **Data Intelligence Platform**.
-
----
-
-## 1. Databricks là gì?
-
-Databricks là một nền tảng dữ liệu đám mây (Cloud Data Platform) được sáng lập vào năm 2013 bởi chính những kỹ sư đã tạo ra **Apache Spark** (tại đại học UC Berkeley). Ban đầu, Databricks được biết đến như một nền tảng cung cấp "Apache Spark as a Service" - giúp việc thiết lập, quản lý và scale các cụm Spark trên môi trường Cloud trở nên cực kỳ dễ dàng.
-
-Tuy nhiên, Databricks ngày nay đã vượt xa khỏi việc chỉ là môi trường chạy Spark. Nền tảng này đã tiên phong đưa ra khái niệm **Data Lakehouse** - một kiến trúc kết hợp sức mạnh lưu trữ giá rẻ, linh hoạt của Data Lake với độ tin cậy, hiệu năng truy vấn và quản lý giao dịch của Data Warehouse.
-
-Hiện tại, Databricks định vị mình là **Data Intelligence Platform**, tích hợp sâu Generative AI vào nền tảng để giúp các tổ chức không chỉ lưu trữ và xử lý dữ liệu, mà còn dễ dàng hiểu và trích xuất giá trị từ dữ liệu đó thông qua các trợ lý AI nội bộ.
+Bài viết này sẽ mổ xẻ kiến trúc vật lý của Databricks, các engine thực thi cốt lõi (Photon), quản trị layout dữ liệu (Liquid Clustering), và các sự cố vận hành (OOMKilled) dưới góc nhìn của một Data Engineer.
 
 ---
 
-## 2. Kiến trúc tổng quan của Databricks
+## 1. Kiến trúc Vật lý (Physical Execution Architecture)
 
-Databricks là một nền tảng **Cloud-native**, hoạt động trên cả ba nhà cung cấp đám mây lớn (AWS, Azure, Google Cloud). Đáng chú ý, kiến trúc của Databricks được thiết kế phân tách rõ ràng làm hai phần nhằm đảm bảo tính bảo mật, hiệu năng và khả năng mở rộng: **Control Plane** (Mặt phẳng điều khiển) và **Data Plane** (Mặt phẳng dữ liệu).
+Kiến trúc Databricks tuân thủ mô hình bảo mật chia sẻ (Shared Security Model) trên Cloud (AWS/Azure/GCP), phân tách hoàn toàn giữa **Control Plane** và **Data Plane**. Sự phân tách này đảm bảo nguyên tắc: *Databricks quản lý Compute, nhưng Customer nắm giữ Data.*
 
-### 2.1. Control Plane (Quản lý bởi Databricks)
-Đây là môi trường backend do Databricks trực tiếp lưu trữ và quản lý (nằm trong tài khoản Cloud của Databricks). Các dịch vụ chạy trong Control Plane được mã hóa và bảo vệ chặt chẽ. Nó bao gồm:
-* **Web UI & Workspace:** Giao diện người dùng web, hệ thống quản lý Notebooks, thư mục, Git Repos và Dashboards.
-* **Cluster Management:** Trình quản lý vòng đời của các cụm máy chủ. Nó nhận yêu cầu cấp phép, khởi động, kết thúc và tự động mở rộng (auto-scaling) tài nguyên phần cứng.
-* **Job Scheduler:** Trình lên lịch và theo dõi các luồng công việc (Workflows/Jobs).
-* **Quản lý người dùng & Phân quyền:** Tích hợp Identity Provider (SSO), quản lý danh tính và access control (phần giao diện điều khiển).
+```mermaid
+architecture-beta
+    group control_plane("cloud")[Control Plane("Databricks Account")]
+    group data_plane("cloud")[Data Plane("Customer VPC")]
+    
+    service web_ui("server")[Web UI / Notebooks] in control_plane
+    service job_sched("server")[Workflow Scheduler] in control_plane
+    service cluster_mgr("server")[Cluster Manager] in control_plane
+    
+    service compute_nodes("server")[Spark/Photon Clusters("EC2/VMs")] in data_plane
+    service object_storage("database")[S3 / ADLS / GCS] in data_plane
+    
+    web_ui --> job_sched
+    job_sched --> cluster_mgr
+    cluster_mgr -- "Provision & Monitor("Secure Tunnel")" --> compute_nodes
+    compute_nodes -- "Read/Write Data("High Bandwidth")" --> object_storage
+```
 
-### 2.2. Data Plane (Nằm trong tài khoản Cloud của khách hàng)
-Đây là nơi dữ liệu của bạn thực sự tồn tại và nơi các tính toán cường độ cao (Compute) thực sự diễn ra. Quá trình xử lý nằm hoàn toàn trong Virtual Private Cloud (VPC) của bạn.
-* **Cloud Storage (Data Lake):** S3 (AWS), ADLS (Azure), hoặc GCS (Google Cloud) chứa toàn bộ dữ liệu thô và các bảng Delta Lake. Khách hàng hoàn toàn kiểm soát bucket/storage account này.
-* **Compute Clusters:** Các máy ảo (EC2, Azure VM, GCP Compute Engine) được Databricks Control Plane gửi lệnh khởi tạo vào trong mạng VPC của bạn để chạy mã Spark.
+### 1.1. Control Plane (Quản lý bởi Databricks)
+Đây là bộ não điều phối chạy trên tài khoản Cloud của Databricks.
+* **Cluster Manager:** Giao tiếp với Cloud API của nhà cung cấp (ví dụ AWS EC2 API) để khởi tạo, mở rộng (auto-scale) hoặc hủy các Spot/On-Demand Instances.
+* **Job Scheduler:** Trình kích hoạt DAG, quản lý luồng thực thi của các job (Databricks Workflows).
+* Dữ liệu truyền qua đây chỉ là Metadata, Logs và cấu hình. Khách hàng không lưu dữ liệu thô tại Control Plane (ngoại trừ cấu hình Serverless SQL/Compute - nơi Compute node cũng được Databricks host).
 
-> [!IMPORTANT]
-> **Bảo mật tuyệt đối:** Vì Data Plane nằm trong tài khoản Cloud của bạn, dữ liệu của bạn **không bao giờ rời khỏi môi trường VPC của bạn** (ngoại trừ cấu hình Serverless mà chúng ta sẽ nhắc ở phần sau). Databricks Control Plane chỉ kết nối một chiều một cách an toàn xuống Data Plane để gửi các "lệnh" điều phối và theo dõi trạng thái, không trực tiếp đọc nội dung dữ liệu của bạn để mang về hệ thống của họ.
+### 1.2. Data Plane (VPC của Khách hàng)
+Nơi xảy ra các tác vụ tính toán nặng (Heavy Lifting).
+* **Compute Layer:** Các Node Worker (Databricks Runtime) được cấp phát ngay trong VPC của bạn. Bạn phải cấu hình Subnet, Security Groups và NAT Gateway để đảm bảo các node này có thể kéo (pull) container image từ hệ thống của Databricks một cách an toàn.
+* **Storage Layer:** Dữ liệu hoàn toàn nằm trên S3/ADLS bucket của bạn. Compute Node sẽ mount hoặc truy cập qua IAM Roles/Instance Profiles.
 
----
-
-## 3. Các thành phần cốt lõi của hệ sinh thái Databricks
-
-Để trở thành một nền tảng toàn diện thay thế cho hàng chục công cụ rời rạc, Databricks bao gồm nhiều cấu phần, phục vụ cho từng khâu trong vòng đời dữ liệu.
-
-### 3.1. Databricks Runtime & Photon Engine
-* **Databricks Runtime (DBR):** Là môi trường thực thi cốt lõi được tinh chỉnh từ Apache Spark mã nguồn mở. DBR thường chạy nhanh hơn Spark nguồn mở khá nhiều nhờ các tối ưu hóa độc quyền, khả năng quản lý I/O tốt hơn (với tính năng caching), và tự động tinh chỉnh cấu hình (auto-tuning) tránh lỗi Out-Of-Memory.
-* **Photon Engine:** Là engine thực thi vector hóa (vectorized query engine) được viết hoàn toàn bằng C++ nhằm thay thế một phần engine JVM của Spark. Photon được thiết kế để tối ưu hóa trực tiếp các lệnh SQL, join, và aggregation trên dữ liệu dạng cột (Parquet/Delta), mang lại hiệu năng truy vấn siêu tốc độ, tiệm cận với các hệ thống Data Warehouse OLAP chuyên dụng (như Snowflake hay BigQuery) ngay trên dữ liệu Data Lake.
-
-### 3.2. Delta Lake
-Delta Lake là trái tim của nền tảng Lakehouse do Databricks khai sinh. Dù phiên bản lõi đã được trao cho Linux Foundation dưới dạng mã nguồn mở (Open Source), phiên bản Delta Lake chạy trên Databricks được tích hợp thêm những công cụ tối ưu mạnh mẽ nhất:
-* Cung cấp **giao dịch ACID** an toàn trên dữ liệu lưu bằng định dạng Parquet.
-* Hỗ trợ **Time Travel** (Truy vấn trạng thái dữ liệu ở một mốc thời gian trong quá khứ hoặc phục hồi dữ liệu bị lỗi).
-* Các tính năng tối ưu hóa độc quyền của Databricks như **Z-Ordering**, **Liquid Clustering**, và **Data Skipping** giúp tăng tốc độ đọc dữ liệu lên hàng chục lần mà không cần các server quản lý Index như database truyền thống.
-
-### 3.3. Unity Catalog
-Unity Catalog (UC) là bước tiến vĩ đại của Databricks trong mảng quản trị dữ liệu (Data Governance) và bảo mật tập trung cho toàn bộ dữ liệu và AI:
-* **Unified Catalog (Danh mục duy nhất):** Quản lý quyền truy cập (Access Control) cho toàn bộ các Workspace trong tổ chức. Phân quyền cực kỳ chi tiết ở mức bảng (Table), mức hàng (Row-level security) và cột (Column-level security) chỉ bằng các lệnh chuẩn SQL (GRANT/REVOKE).
-* **Data Lineage:** UC tự động vẽ biểu đồ dòng chảy dữ liệu trực quan (từ bảng nguồn đến bảng đích, file notebook nào tạo ra bảng đó). Điều này giúp DE xác định gốc rễ của luồng dữ liệu (Root cause analysis) hoặc đánh giá mức độ ảnh hưởng nếu định dạng một cột bị thay đổi.
-* **Delta Sharing:** Một giao thức mở tiêu chuẩn công nghiệp (open standard) giúp chia sẻ dữ liệu an toàn với các đối tác, khách hàng hoặc nhà cung cấp khác theo thời gian thực mà không cần sao chép dữ liệu hoặc yêu cầu đối tác phải dùng Databricks.
-
-### 3.4. Databricks SQL (DB SQL)
-Nhằm lôi kéo tập khách hàng Data Analyst vốn quen thuộc với giao diện của Data Warehouse, Databricks ra mắt DB SQL.
-* Cung cấp giao diện truy vấn SQL thân thiện, trình viết query, và công cụ xây dựng Dashboard trực tiếp trên nền tảng.
-* Tích hợp mượt mà với các công cụ BI phổ biến bên thứ ba (Power BI, Tableau, Looker) bằng bộ driver tối ưu.
-* Hỗ trợ **Serverless SQL Warehouses**, khởi động chỉ trong vài giây và tự động mở rộng (scale-out/scale-in) sức mạnh tính toán tuỳ theo lượng truy vấn, giúp người dùng không phải lo cấu hình cluster.
-
-### 3.5. Databricks Workflows & Delta Live Tables
-* **Databricks Workflows:** Trình điều phối (Data Orchestrator) được tích hợp sẵn, mạnh mẽ như Apache Airflow. Cho phép lên lịch biểu (schedule) chạy phối hợp Notebooks, Python scripts, dbt models, SQL queries, dải rộng trên nhiều cụm tính toán.
-* **Delta Live Tables (DLT):** Một framework mang tính cách mạng giúp xây dựng các data pipeline (ETL) bằng phương pháp khai báo (declarative). Với DLT, DE không cần viết code xử lý phụ thuộc, DLT sẽ tự động tạo biểu đồ DAG, tự động quản lý checkpoint cho streaming, tích hợp kiểm tra chất lượng dữ liệu (Data Quality / Expectations) và xử lý cả Streaming lẫn Batch bằng cùng một đoạn mã SQL/Python đơn giản.
-
-### 3.6. Machine Learning & AI (MosaicML & MLflow)
-Databricks phục vụ Data Scientist cực kỳ tốt từ ngày đầu, và giờ đây họ càng mạnh mẽ hơn trong kỷ nguyên AI.
-* Tích hợp nền tảng **MLflow** để quản lý toàn bộ vòng đời mô hình học máy (Theo dõi các thí nghiệm - Experiments tracking, Model Registry lưu trữ các phiên bản mô hình).
-* **Feature Store:** Một nơi quản lý tập trung lưu trữ và khám phá các đặc trưng (features) dùng chung cho ML, giúp tái sử dụng cho nhiều mô hình khác nhau mà không bị trùng lặp quy trình ETL.
-* Tích hợp **Generative AI & LLMs** qua việc sáp nhập MosaicML. Nền tảng Mosaic AI cho phép các tổ chức tự xây dựng, fine-tune (huấn luyện tinh chỉnh) và triển khai các mô hình ngôn ngữ lớn (LLMs) dựa trên bộ dữ liệu riêng của họ với chi phí tiết kiệm và bảo mật tuyệt đối.
+> [!WARNING]
+> **Cross-AZ Traffic Costs (Chi phí băng thông):** Trong Data Plane, nếu bạn khởi tạo cluster trải dài trên nhiều Availability Zones (AZ) để tăng tính khả dụng, các thao tác Shuffle (xáo trộn dữ liệu qua mạng) giữa các node khác AZ sẽ sinh ra cước phí Network Egress rất cao từ Cloud Provider. Đây là trade-off giữa High Availability và Compute Cost.
 
 ---
 
-## 4. Mô hình định giá (Pricing Model)
+## 2. Compute Layer: Dấu chấm hết của JVM với Photon Engine
 
-Databricks sử dụng một đơn vị điện toán tiêu chuẩn gọi là **DBU (Databricks Unit)** để đo lường và tính phí năng lực xử lý (mỗi node/giờ). Chi phí tổng thể vận hành Databricks bao gồm 2 phần độc lập:
+Spark truyền thống chạy trên **JVM (Java Virtual Machine)**. Mặc dù Tungsten Engine (từ Spark 2.x) đã tạo ra mã byte-code (whole-stage code generation) rất tốt, JVM vẫn phải chịu overhead về Garbage Collection (GC) và không có khả năng tận dụng triệt để kiến trúc phần cứng CPU hiện đại.
 
-1. **Chi phí Hạ tầng Cloud (Trả cho AWS/Azure/GCP):** Phí thuê máy ảo (Compute VM instances) và phí dung lượng lưu trữ Object Storage (S3/ADLS/GCS).
-2. **Chi phí Bản quyền Nền tảng (Trả cho Databricks):** Tính theo số DBU tiêu thụ dựa trên loại tác vụ (Compute type).
+Databricks đã viết lại engine thực thi bằng C++ gọi là **Photon**.
 
-Mỗi loại Compute được tính một mức giá DBU riêng biệt để tối ưu cho các luồng công việc khác nhau:
-* **All-Purpose Compute (Tương tác):** Dùng cho việc phát triển, chạy Notebook khám phá dữ liệu, giá DBU cao nhất.
-* **Jobs Compute (Tự động):** Dùng để chạy các pipeline đã lên lịch (Production workloads/Workflows). Cluster tự bật lên chạy job rồi tự tắt, giá DBU rẻ hơn đáng kể so với All-Purpose.
-* **SQL Compute (DB SQL):** Tối ưu hóa cho truy vấn SQL và BI, giá DBU nằm ở mức trung bình.
-* **Serverless Compute:** Giá DBU cao hơn một chút, nhưng bù lại bạn không mất tiền duy trì hạ tầng chạy không (idle), không chịu thời gian khởi động chậm (startup time), và Databricks quản lý hoàn toàn phần hạ tầng mạng/bảo mật.
+### 2.1. Vectorized Execution (Thực thi Vector hóa)
+Thay vì xử lý từng dòng (row-by-row) truyền thống, Photon xử lý dữ liệu theo các **Columnar Batches** (lô cột). Điều này cho phép engine tận dụng trực tiếp tập lệnh **SIMD (Single Instruction, Multiple Data)** của CPU. 
+Ví dụ: Để cộng hai cột A và B, thay vì CPU lặp qua 1000 dòng mất 1000 chu kỳ, nó sử dụng thanh ghi 256-bit (AVX2) hoặc 512-bit (AVX-512) để nạp và cộng hàng loạt các phần tử trong cùng một chu kỳ xung nhịp (clock cycle), giảm thiểu CPU branch prediction lỗi và tối ưu cache cấp L1/L2.
 
----
+### 2.2. Sự kiện "Fallback" về Spark JVM
+Photon tích hợp sâu vào Catalyst Optimizer, nó không đứng độc lập.
+* Nếu Catalyst phát hiện query node (ví dụ: Hash Aggregate, Filter, Sort) được Photon hỗ trợ, nó sẽ sinh ra `Photon-optimized Plan`.
+* Nếu gặp một thao tác không được hỗ trợ (ví dụ: Custom UDF viết bằng Python, xử lý chuỗi Regex phức tạp ngoài chuẩn, hoặc một số hàm JSON đặc thù), engine sẽ tự động **fallback** (rơi về) Spark JVM. Quá trình chuyển đổi định dạng bộ nhớ giữa bộ nhớ unmanaged của C++ và bộ nhớ heap của JVM sẽ tạo ra overhead nhỏ.
 
-## 5. Đánh giá Ưu và Nhược điểm
-
-### Ưu điểm nổi bật:
-* **Unified Platform (Nền tảng hợp nhất):** Mọi vai trò trong Data Team (DE, DS, DA, ML Engineer) đều quy tụ trên cùng một không gian làm việc, sử dụng cùng một định nghĩa bảng thông qua Unity Catalog. Điều này dập tắt các "cuộc chiến" về dữ liệu lệch pha.
-* **Hiệu năng xuất sắc:** Rất khó để tự thiết lập một hệ thống Hadoop/Spark on-premise chạy nhanh bằng Databricks Runtime. Sự kết hợp giữa Photon Engine và Delta Lake cho hiệu năng truy vấn siêu tốc.
-* **Thúc đẩy đổi mới (Innovation-driven):** Databricks liên tục cập nhật công nghệ nhanh chóng, từ mô hình Lakehouse, Data Sharing, cho đến việc tích hợp Generative AI.
-* **Đa Cloud (Multi-cloud):** Hỗ trợ đầy đủ ba đám mây lớn, giảm thiểu rủi ro bị khóa chặt vào một nhà cung cấp (vendor lock-in). Hệ thống code và pipeline trên Azure Databricks có thể dễ dàng chuyển đổi sang AWS Databricks.
-
-### Nhược điểm & Thách thức:
-* **Chi phí cao nếu quản lý lỏng lẻo:** Databricks vô cùng dễ sử dụng để khởi tạo cluster, nếu các DE/DS vô ý để các cụm All-Purpose cấu hình "khủng" chạy 24/7 mà không bật tính năng tự động tắt (auto-termination), hóa đơn cuối tháng của cả Cloud và Databricks sẽ là một con số khổng lồ.
-* **Đường cong học tập (Learning Curve):** Mặc dù đã tạo ra giao diện SQL dễ dùng, nhưng khi hệ thống phát sinh lỗi hiệu năng ở quy mô lớn, kỹ sư dữ liệu vẫn cần hiểu sâu về cơ chế phân tán của Apache Spark (Partitions, Shuffles, Skew data) để gỡ lỗi và tối ưu hóa.
-* **Rủi ro Ecosystem Lock-in:** Định dạng Parquet và Delta Lake là Open Source, nghĩa là bạn sở hữu dữ liệu của mình. Tuy nhiên, nếu bạn xây dựng hàng ngàn pipeline dựa trên các tính năng đóng độc quyền của Databricks (như Delta Live Tables, Photon, Unity Catalog specific features), việc "chuyển nhà" sang một nền tảng đối thủ cạnh tranh như Snowflake hay BigQuery vẫn sẽ đòi hỏi nỗ lực migrate khổng lồ.
+> [!TIP]
+> Để tận dụng tối đa sức mạnh Photon, tuyệt đối hạn chế sử dụng Python UDFs. Hãy sử dụng các hàm built-in của Spark SQL, vì chúng được map trực tiếp với các hàm C++ hiệu năng cao của Photon.
 
 ---
 
-## 6. Tổng kết
+## 3. Storage Layout: Z-Ordering vs. Liquid Clustering
 
-Databricks đã tiến hóa phi thường từ một công cụ đơn thuần giúp "chạy Spark trên Cloud cho dễ" trở thành một **Data Intelligence Platform** toàn diện, định hình lại cách thế giới lưu trữ và khai thác dữ liệu.
+Tối ưu hóa layout file (cách dữ liệu sắp xếp vật lý trong Object Storage) là chìa khóa để giảm I/O qua kỹ thuật Data Skipping. 
 
-Nếu tổ chức của bạn đang đối mặt với bài toán dữ liệu phi cấu trúc và có cấu trúc ở quy mô Terabyte/Petabyte, yêu cầu hệ thống phải vừa phục vụ mảng báo cáo BI truyền thống vừa cung cấp năng lực xây dựng các mô hình Machine Learning/AI tối tân, thì **Databricks** hiện là lựa chọn nền tảng ưu việt và mạnh mẽ bậc nhất trên thị trường.
+### 3.1. Hạn chế của Z-Ordering (Legacy)
+Trước đây, các kỹ sư thường dùng Partitioning kết hợp với **Z-Ordering** (thuật toán không gian ánh xạ đa chiều thành 1D - Z-order curve) để gom cụm dữ liệu liên quan vào cùng một file Parquet.
+* **Trade-offs:** Z-Ordering gây ra hiện tượng **Write Amplification** (khuếch đại ghi) cực kỳ lớn. Mỗi lần chạy lệnh `OPTIMIZE ... ZORDER BY`, engine phải đọc lại dữ liệu cũ, sort lại cùng dữ liệu mới, và ghi đè hàng loạt file Parquet. Quan trọng hơn, nếu bạn quyết định thay đổi chiến lược cột (change z-order keys), bạn phải rewrite lại toàn bộ table.
+
+### 3.2. Sự trỗi dậy của Liquid Clustering
+Liquid Clustering ra đời nhằm thay thế hoàn toàn Partitioning tĩnh và Z-Ordering. Nó sử dụng thuật toán gom cụm động (dynamic clustering) để tự động điều chỉnh layout file khi dữ liệu (và cả query pattern) thay đổi.
+
+```sql
+-- Tạo bảng với Liquid Clustering thay vì PARTITIONED BY lỗi thời
+CREATE TABLE events_prod (
+  event_id STRING,
+  user_id STRING,
+  event_time TIMESTAMP,
+  payload STRING
+)
+USING DELTA
+CLUSTER BY (user_id, DATE(event_time));
+
+-- Đổi chiến lược Cluster on-the-fly mà không cần rewrite data cũ
+ALTER TABLE events_prod CLUSTER BY (event_id);
+
+-- Hệ thống sẽ tự động điều chỉnh layout cho các data mới khi chạy OPTIMIZE
+OPTIMIZE events_prod;
+```
+**Lợi ích hệ thống:** Liquid Clustering giải quyết triệt để lỗi High-cardinality partitioning (tạo ra hàng triệu folder nhỏ làm sập NameNode/Metadata layer), và mang lại khả năng flexibility tuyệt đối cho các bảng Delta lớn.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [Databricks Documentation - Architecture Overview](https://docs.databricks.com/en/getting-started/architecture.html)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [Apache Spark - Unified Engine for large-scale data analytics](https://spark.apache.org/)
-* [Databricks Unity Catalog Guide](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+## 4. Rủi ro Vận hành: Nỗi ám ảnh OOMKilled và Shuffle Spill
+
+Dù kiến trúc Databricks có mạnh mẽ, hệ thống vẫn sẽ sập nếu Data Engineer không hiểu cơ chế Shuffle. Khi dữ liệu được join (đặc biệt là SortMergeJoin) hoặc aggregate, Spark buộc phải phân phối lại dữ liệu qua mạng giữa các node (**Network Shuffle**).
+
+### 4.1. Hiện tượng Shuffle Spill
+Khi bộ nhớ thực thi (Execution Memory) của Executor bị đầy do lượng dữ liệu dồn về một task quá lớn, Spark buộc phải "tràn" (spill) dữ liệu bộ nhớ ra ổ cứng SSD cục bộ (Local Disk) của Node. 
+Trong giao diện Spark UI, nếu bạn thấy chỉ số **Shuffle Spill (Disk)** > 0, hiệu năng pipeline của bạn đang bị bóp nghẹt nghiêm trọng do Disk I/O Bottleneck.
+
+### 4.2. JVM OOMKilled (Exit Code 137)
+Khi lượng dữ liệu Spill quá lớn gây cạn kiệt Disk, hoặc khi bộ dọn rác GC làm việc liên tục không nghỉ (GC Stall) khiến Node bị treo, hệ thống quản lý tài nguyên (YARN/K8s) sẽ thẳng tay kill luôn container đó với lỗi `OOMKilled`. Tình trạng này đặc biệt dễ xảy ra khi gặp hiện tượng **Data Skew** (Dữ liệu lệch - một task phải ôm 90% lượng data cần xử lý).
+
+**Kỹ thuật Khắc phục (Troubleshooting Code):**
+
+```python
+# 1. Bật Adaptive Query Execution (AQE) để engine tự động xử lý Skew Join
+# AQE sẽ chia nhỏ các task bị lệch thành các task nhỏ hơn ở runtime
+spark.conf.set("spark.sql.adaptive.enabled", "true")
+spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
+
+# 2. Tăng Shuffle Partitions (Mặc định 200 là quá nhỏ cho Terabyte data)
+# Quy tắc hệ thống: Target kích thước mỗi partition sau shuffle khoảng 100MB - 200MB.
+# Giả sử shuffle data size là 400GB -> cần ít nhất 2000 partitions.
+spark.conf.set("spark.sql.shuffle.partitions", "2000")
+
+# 3. Tăng Memory Overhead nếu dùng Python UDFs hoặc Photon (Off-heap memory)
+# Container có thể bị kill không phải do JVM heap, mà do bộ nhớ C++ (Off-heap) vượt ngưỡng.
+# Cấu hình trong Cluster Init (tăng lên 20% hoặc 30% thay vì 10% mặc định)
+spark.conf.set("spark.executor.memoryOverheadFactor", "0.2")
+```
+
+---
+
+## 5. Unity Catalog: Quản trị Kiến trúc (Data Governance)
+
+Ở môi trường Data Lake truyền thống, Data Engineer quản lý phân quyền qua các ACL (Access Control List) rời rạc như AWS S3 Bucket Policies hay IAM Roles. Điều này dẫn đến địa ngục bảo mật khi scale up. **Unity Catalog (UC)** giải quyết bằng cách cung cấp một lớp Meta-store tập trung và độc lập.
+
+Unity Catalog hoạt động như một "Người gác cổng" (Gatekeeper):
+1. User (hoặc BI Tool) chạy query `SELECT * FROM prod.finance.revenue`.
+2. Engine tính toán sẽ kiểm tra quyền hạn (Access Control) với Unity Catalog Server (thuộc Control Plane).
+3. Nếu hợp lệ, UC sẽ cấp phát một **Temporary Credentials** (Token hết hạn trong thời gian ngắn như AWS STS) để Compute Node đọc dữ liệu trực tiếp từ S3.
+
+Kiến trúc này giúp các kỹ sư (và cả Cluster) không bao giờ cần phải lưu trữ Access Key dài hạn của Object Storage, triệt tiêu rủi ro lộ cấu hình (Credential Leaks). Ngoài ra, UC hỗ trợ Row-level và Column-level Security bằng chuẩn SQL GRANT, một mức độ chi tiết mà S3 Policy không thể chạm tới.
+
+---
+
+## Nguồn Tham Khảo (References)
+* [Databricks Blog: Photon Vectorized Query Engine](https://www.databricks.com/blog/2021/06/17/announcing-photon-public-preview-the-next-generation-query-engine-on-the-databricks-lakehouse-platform.html)
+* [Databricks Blog: Announcing Liquid Clustering](https://www.databricks.com/blog/2023/10/24/announcing-general-availability-liquid-clustering.html)
+* [Understanding Spark OOM, Spill, and Data Skew - Databricks Architecture](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+* *Designing Data-Intensive Applications* - Martin Kleppmann (O'Reilly).

@@ -192,7 +192,7 @@ Một hệ thống Streaming hiện đại thường được thiết kế theo 
 ```mermaid
 graph LR
     subgraph "Data Sources"
-        DB[("OLTP Database<br/>PostgreSQL")]
+        DB["("OLTP Database<br/>PostgreSQL")"]
         Apps["Web/Mobile Apps"]
         IoT["IoT Devices"]
     end
@@ -212,8 +212,8 @@ graph LR
     end
 
     subgraph "Serving & Storage"
-        Redis[("Redis/Cassandra<br/>Fast Query")]
-        Iceberg[("Apache Iceberg<br/>Data Lakehouse")]
+        Redis["("Redis/Cassandra<br/>Fast Query")"]
+        Iceberg["("Apache Iceberg<br/>Data Lakehouse")"]
     end
 
     DB -->|Binlog| CDC

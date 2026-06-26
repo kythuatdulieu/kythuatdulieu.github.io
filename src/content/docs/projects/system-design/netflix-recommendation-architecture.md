@@ -92,12 +92,12 @@ graph TD
     API -.->|Events: Click, Watch| Kafka["Apache Kafka<br/>Event Bus"]
     
     Kafka --> Nearline["Tầng Nearline<br/>Apache Flink"]
-    Nearline -.->|Update Features| FeatStore[("Feature Store")]
-    Nearline -.->|Push to Cache| Cache[("EVCache / Redis")]
+    Nearline -.->|Update Features| FeatStore["("Feature Store")"]
+    Nearline -.->|Push to Cache| Cache["("EVCache / Redis")"]
     
-    Kafka --> S3[("Data Lake<br/>S3 + Iceberg")]
+    Kafka --> S3["("Data Lake<br/>S3 + Iceberg")"]
     S3 --> Offline["Tầng Offline<br/>Spark / Hadoop"]
-    Offline -->|Train Models & Batch Scored Data| ModelReg[("Model Registry")]
+    Offline -->|Train Models & Batch Scored Data| ModelReg["("Model Registry")"]
     Offline -->|Batch Write| FeatStore
     
     ModelReg --> Nearline

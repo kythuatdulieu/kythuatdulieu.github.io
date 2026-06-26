@@ -1,77 +1,147 @@
 ---
-title: "Hệ thống Nguồn - Source Systems"
-difficulty: "Beginner"
-tags: ["source-systems", "oltp", "api", "logs", "iot"]
-readingTime: "8 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Hệ thống Nguồn (Source Systems) - Điểm bắt đầu của Dữ liệu"
-metaDescription: "Tìm hiểu chi tiết về các hệ thống nguồn (Source Systems) trong kiến trúc dữ liệu bao gồm OLTP, APIs, Event Logs và hệ thống IoT."
-description: "Hệ thống Nguồn (Source Systems) là các hệ thống tác nghiệp (operational systems) nơi dữ liệu lần đầu tiên được tạo ra hoặc thu thập trong một tổ chức...."
+title: "Hệ thống Nguồn - Source Systems (Deep Dive)"
+difficulty: "Advanced"
+tags: ["source-systems", "oltp", "cdc", "outbox-pattern", "idempotency"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Hệ thống Nguồn (Source Systems): Kiến trúc & Systemic Trade-offs"
+metaDescription: "Phân tích Staff Engineer level về hệ thống nguồn: CDC (Change Data Capture), Transactional Outbox, Dual Writes, API Pagination và Systemic Trade-offs."
+description: "Hệ thống Nguồn (Source Systems) là nơi sinh ra dữ liệu. Việc trích xuất dữ liệu từ các hệ thống này ở quy mô lớn là một cuộc chiến liên tục về Distributed Systems trade-offs."
 ---
 
+Lấy dữ liệu từ nguồn không chỉ là việc gọi `SELECT *` hoặc một API `GET` đơn giản. Khi hệ thống phục vụ hàng chục ngàn Request/giây (RPS), bất kỳ một câu lệnh truy vấn phân tích (OLAP) nào chạy nhầm vào hệ thống tác nghiệp (OLTP) cũng có thể làm cạn kiệt Connection Pool, gây khóa bảng (Table Lock), và đánh sập hệ thống (Cascading Failure).
 
-
-**Source Systems (Hệ thống nguồn)** là nơi khai sinh ra dữ liệu gốc của doanh nghiệp, chẳng hạn như hệ thống quản lý quan hệ khách hàng CRM (Salesforce), phần mềm quản trị doanh nghiệp ERP (SAP), cơ sở dữ liệu của ứng dụng (PostgreSQL, MySQL), hoặc hệ thống phân tích người dùng (Google Analytics, Mixpanel). 
-
-Trách nhiệm tối quan trọng của một Data Engineer là thu thập, trích xuất (extract) dữ liệu từ các hệ thống nguồn này một cách an toàn, đáng tin cậy và **đảm bảo không làm ảnh hưởng đến hiệu năng của hệ thống tác nghiệp (production systems)**.
-
-## 1. Phân loại các Hệ thống Nguồn phổ biến
-
-Các hệ thống nguồn rất đa dạng về cấu trúc, giao thức giao tiếp và tần suất sinh dữ liệu. Dưới đây là các loại phổ biến nhất:
-
-### 1.1 Cơ sở dữ liệu tác nghiệp (OLTP Databases)
-OLTP (Online Transaction Processing) là các cơ sở dữ liệu phục vụ trực tiếp cho ứng dụng (app/web).
-* **Đặc điểm:** Tối ưu hoá cho việc đọc/ghi dữ liệu liên tục với độ trễ thấp, xử lý lượng lớn các giao dịch nhỏ (ví dụ: thêm đơn hàng, cập nhật thông tin user). Thường được chuẩn hoá (normalized) để tránh dư thừa dữ liệu.
-* **Ví dụ:** Hệ quản trị cơ sở dữ liệu quan hệ (PostgreSQL, MySQL, SQL Server, Oracle) hoặc cơ sở dữ liệu NoSQL (MongoDB, DynamoDB).
-
-### 1.2 APIs và các ứng dụng SaaS
-Nhiều doanh nghiệp không tự xây dựng mọi thứ mà sử dụng các phần mềm dịch vụ (Software as a Service) từ bên thứ ba. Dữ liệu này nằm trên server của nhà cung cấp và phải được lấy thông qua các API.
-* **Đặc điểm:** Giao tiếp qua HTTP (RESTful, GraphQL, SOAP). Dữ liệu trả về thường ở định dạng JSON/XML.
-* **Ví dụ:** Salesforce (CRM), Zendesk (Customer Support), Stripe (Payment), Shopify (E-commerce).
-
-### 1.3 Hệ thống tệp và lưu trữ đối tượng (Files & Object Storage)
-Dữ liệu đôi khi không nằm trong database mà định kỳ được xuất (export) ra dưới dạng tệp.
-* **Đặc điểm:** Dữ liệu có thể ở định dạng có cấu trúc (CSV, TSV), bán cấu trúc (JSON) hoặc lưu trữ dạng cột (Parquet).
-* **Ví dụ:** Amazon S3, Google Cloud Storage, SFTP/FTP servers, các file nhật ký (logs) định kỳ lưu trữ từ hệ thống.
-
-### 1.4 Nhật ký sự kiện và Streaming (Event Logs & IoT)
-Dữ liệu được tạo ra liên tục dưới dạng dòng thời gian, ghi lại các sự kiện cụ thể.
-* **Đặc điểm:** Tốc độ tạo (Velocity) cực nhanh, dung lượng (Volume) cực lớn. Dữ liệu thường là "append-only" (chỉ ghi thêm, không cập nhật lại).
-* **Ví dụ:** Clickstream logs (hành vi của user trên web), logs máy chủ (Nginx, Apache), tín hiệu cảm biến IoT từ các nhà máy. Thường sử dụng Apache Kafka, Amazon Kinesis hoặc RabbitMQ làm buffer trung gian.
-
-## 2. Thách thức khi trích xuất dữ liệu (Extraction Challenges)
-
-Lấy dữ liệu từ nguồn không đơn giản chỉ là chạy một câu lệnh `SELECT *`. Data Engineer phải đối mặt với nhiều thách thức kỹ thuật:
-
-* **Ảnh hưởng đến hiệu năng (Performance Impact):** Việc chạy một truy vấn phân tích nặng (quét hàng triệu dòng) trên DB OLTP có thể khóa bảng (table lock), tiêu tốn tài nguyên (CPU/RAM) và làm chậm hoặc sụp đổ ứng dụng của người dùng cuối.
-* **Thay đổi cấu trúc dữ liệu (Schema Evolution):** Software Engineer (SWE) thường xuyên cập nhật ứng dụng, như đổi tên cột, xóa trường, hoặc thay đổi kiểu dữ liệu. Sự bất đồng bộ này có thể làm vỡ (break) toàn bộ Data Pipeline ở hạ lưu.
-* **Giới hạn tỷ lệ API (Rate Limiting & Pagination):** Các hệ thống SaaS luôn có cơ chế bảo vệ như giới hạn số lượng request API trong một phút (ví dụ: tối đa 100 requests/phút). Data pipeline phải xử lý việc tự động thử lại (retry) với cơ chế exponential backoff và quản lý phân trang (pagination) trơn tru.
-
-## 3. Các chiến lược Trích xuất Dữ liệu (Extraction Strategies)
-
-Để giải quyết các thách thức trên, Data Engineers áp dụng nhiều chiến lược khác nhau tùy thuộc vào bài toán cụ thể:
-
-### 3.1 Full Extract (Trích xuất toàn bộ)
-* **Khái niệm:** Kéo toàn bộ bảng hoặc dữ liệu mỗi lần chạy pipeline.
-* **Ưu điểm:** Dễ triển khai, đơn giản hóa logic xử lý vì bạn luôn có bản sao đầy đủ nhất.
-* **Nhược điểm:** Tốn kém tài nguyên và thời gian chạy lâu nếu dữ liệu lớn. Thường chỉ dùng cho các bảng nhỏ (vài ngàn dòng) hoặc dimension tables (bảng danh mục) ít bị thay đổi.
-
-### 3.2 Incremental Extract (Trích xuất tăng dần)
-* **Khái niệm:** Chỉ lấy phần dữ liệu mới được sinh ra hoặc thay đổi kể từ lần trích xuất cuối cùng (dựa trên watermark). Thường tận dụng cột `updated_at` hoặc `id` tăng tự động.
-* **Ưu điểm:** Rất tối ưu về hiệu năng và băng thông vì chỉ truyền tải lượng dữ liệu nhỏ mỗi khoảng thời gian (như mỗi ngày hoặc mỗi giờ).
-* **Nhược điểm:** Có nguy cơ bỏ sót dữ liệu nếu hệ thống tác nghiệp có thao tác xóa cứng (hard-delete) mà không đánh dấu (ví dụ: không có cột `is_deleted`).
-
-### 3.3 Change Data Capture (CDC)
-* **Khái niệm:** Thay vì chạy câu lệnh truy vấn SQL liên tục, CDC đọc trực tiếp từ "Transaction Logs" (nhật ký giao dịch) của CSDL nguồn (ví dụ: *binlog* của MySQL, *WAL* của PostgreSQL, *Oplog* của MongoDB).
-* **Ưu điểm:** Bắt được mọi thay đổi (Insert, Update, Delete) theo thời gian thực (Real-time). Tác động đến DB nguồn là cực thấp (near-zero impact). Không bị mất dữ liệu dù bản ghi có bị thêm rồi xóa đi ngay lập tức trong tích tắc.
-* **Nhược điểm:** Kiến trúc phức tạp, đòi hỏi thiết lập chuyên sâu. Yêu cầu quyền truy cập mức cao (admin/root) vào cơ sở dữ liệu nguồn.
-* **Công cụ nổi bật:** Debezium, AWS Database Migration Service (DMS), Fivetran.
+Một Data/Software Engineer ở level Staff không nhìn hệ thống nguồn như những "bảng dữ liệu" tĩnh, mà nhìn chúng như các **State Machines** và **Event Logs** phân tán, liên tục đối mặt với bài toán về tính nhất quán (Consistency) và độ trễ (Latency).
 
 ---
 
-## Tài Liệu Tham Khảo
+## 1. Bản chất Hệ thống Tác nghiệp (OLTP) & Rủi ro Trích xuất (Operational Risks)
+
+Hệ thống tác nghiệp (OLTP - Online Transaction Processing) như PostgreSQL, MySQL, hay MongoDB được thiết kế cho các giao dịch nhỏ, tốc độ cao (low latency), sử dụng row-oriented storage và B-Tree Index.
+
+### 1.1 Vấn đề của Direct Query (Truy vấn trực tiếp)
+* **Khóa tài nguyên (Resource Locking):** Nếu bạn chạy một câu lệnh `SELECT` kéo 50 triệu dòng, cơ sở dữ liệu sẽ phải giữ các Snapshot/Locks. Trong PostgreSQL, điều này ngăn cản tiến trình `VACUUM` dọn dẹp các Dead Tuples (các bản ghi cũ bị xóa/cập nhật), dẫn đến Table Bloat (phình to ổ cứng) và giảm hiệu năng nghiêm trọng.
+* **CPU & I/O Contention:** Truy vấn lớn sẽ đẩy cache của OLTP (như InnoDB Buffer Pool trong MySQL) ra ngoài ổ đĩa (cache eviction), làm tăng I/O latency cho các thao tác của người dùng cuối.
+
+**Giải pháp vật lý:**
+Thay vì query thẳng vào Primary Node, ta thiết lập **Read Replica** (bản sao đọc).
+* **Trade-off:** Read Replica đồng bộ thông qua Replication Log (Asynchronous). Nếu Network chậm, Replication Lag có thể lên tới vài giây, khiến dữ liệu bạn trích xuất bị "stale" (cũ). Việc cấu hình Synchronous Replication thì lại làm chậm thao tác Write trên Primary Node.
+
+---
+
+## 2. Change Data Capture (CDC): Tiêu chuẩn Công nghiệp
+
+Để giảm tải hoàn toàn cho Database nguồn, kiến trúc **CDC (Change Data Capture)** được áp dụng. CDC không query vào bảng, mà đọc trực tiếp vào **Transaction Logs** (WAL ở PostgreSQL, Binlog ở MySQL).
+
+### Kiến trúc Debezium
+Debezium là de facto standard mã nguồn mở cho CDC, thường được chạy trên Kafka Connect.
+
+![Debezium Architecture](/images/1-distributed-systems-architecture/debezium-architecture.png)
+
+*Hình: Kiến trúc tiêu chuẩn của Debezium stream dữ liệu thay đổi vào Kafka.*
+
+### Deep Dive: PostgreSQL WAL & Replication Slots
+Để triển khai CDC với Postgres, Debezium cần Postgres tạo một **Logical Replication Slot**. Replication Slot đảm bảo rằng Postgres *không được xóa* các WAL segment cho đến khi Debezium báo đã đọc (ACK) xong.
+
+**Sự cố thực tế (Real-world Incident):**
+Nếu hệ thống Kafka / Debezium bị sập trong cuối tuần và không ai phát hiện, Replication Slot trên Postgres vẫn tiếp tục giữ các WAL logs. Do WAL logs liên tục sinh ra (vài chục GB mỗi giờ), phân vùng ổ cứng của Postgres sẽ bị đầy 100%. Khi Disk full, Postgres sẽ PANIC và sập toàn bộ hệ thống production.
+* **Fix/Config:** Luôn phải monitor metric `pg_replication_slots` và cấu hình cảnh báo, kết hợp giới hạn `max_slot_wal_keep_size` (từ Postgres 13) để Postgres tự động drop slot nếu WAL giữ quá nhiều, hy sinh pipeline dữ liệu để bảo vệ hệ thống Core OLTP.
+
+---
+
+## 3. Dual Writes vs. Transactional Outbox Pattern
+
+Khi kiến trúc chuyển sang Microservices, một sự kiện (ví dụ: User đặt hàng) cần được lưu vào DB nội bộ (Order DB), đồng thời phải đẩy vào Kafka để Data Warehouse hoặc hệ thống khác tiêu thụ.
+
+### 3.1 Cạm bẫy của Dual Writes
+Nhiều kỹ sư thiết kế hàm như sau:
+
+```javascript
+async function placeOrder(orderData) {
+    // 1. Lưu vào Database
+    await db.query('INSERT INTO orders ...'); 
+    // 2. Publish vào Kafka
+    await kafka.publish('orders_topic', orderData); 
+}
+```
+
+Đây là mô hình **Dual Writes**. Nếu hệ thống crash ngay sau bước 1 và trước bước 2, Database đã lưu đơn hàng, nhưng hệ thống downstream (Data/Analytics) không bao giờ nhận được sự kiện đó. Tính nhất quán bị phá vỡ (Inconsistent State). Sử dụng 2PC (Two-Phase Commit) thì lại quá chậm và dễ gây deadlock.
+
+### 3.2 Transactional Outbox Pattern
+Để giải quyết bài toán Atomicity, ta sử dụng **Outbox Pattern** kết hợp với **CDC**.
+
+```mermaid
+sequenceDiagram
+    participant App as Order Service
+    participant DB as Postgres (Primary)
+    participant Debezium as CDC (Debezium)
+    participant Kafka as Event Broker
+    
+    App->>DB: BEGIN Transaction
+    App->>DB: INSERT INTO orders (id, item...)
+    App->>DB: INSERT INTO outbox_events (id, payload, topic)
+    App->>DB: COMMIT Transaction
+    Note over DB,Debezium: WAL records atomic commit
+    Debezium->>DB: Tailing WAL / Logical Replication
+    Debezium->>Kafka: Publish event from 'outbox_events'
+    Kafka-->>App: (Optional) Consume back to verify/cleanup
+```
+
+* **Cơ chế:** Ghi dữ liệu nghiệp vụ và ghi event vào bảng `outbox` trong cùng một Database Transaction. Nếu 1 cái fail, cả 2 sẽ rollback. Sau đó, Debezium chỉ cần bắt thay đổi trên bảng `outbox` và đẩy vào Kafka.
+* **Trade-off:** Tăng khối lượng ghi (write I/O) trên Database chính, dẫn đến bảng `outbox` phình to. Cần có một tiến trình cron job định kỳ xóa dữ liệu cũ (Event Cleanup).
+
+---
+
+## 4. API, Rate Limiting & Độ tin cậy mạng (Network Reliability)
+
+Khi lấy dữ liệu từ các hệ thống SaaS bên thứ 3 (Salesforce, Zendesk, Stripe) qua API (REST/GraphQL), thách thức không nằm ở cơ sở dữ liệu mà nằm ở Mạng (Network) và Giới hạn tài nguyên (Rate Limiting).
+
+### 4.1. Xử lý Rate Limits & Throttling
+Các API luôn áp dụng thuật toán *Token Bucket* hoặc *Leaky Bucket*. Nếu pipeline của bạn bắn 1000 requests/s, bạn sẽ lập tức nhận lỗi `HTTP 429 Too Many Requests`.
+
+Pipeline không được phép crash. Chúng phải triển khai **Exponential Backoff with Jitter** (lùi lịch thử lại theo hàm mũ kèm độ trễ ngẫu nhiên). Độ trễ ngẫu nhiên (Jitter) giúp tránh hiện tượng "Thundering Herd" khi hàng ngàn threads cùng retry lại tại đúng một mili-giây.
+
+```python
+import time
+import random
+import requests
+
+def api_request_with_backoff(url, max_retries=5):
+    base_delay = 1.0  # seconds
+    for attempt in range(max_retries):
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code in [429, 502, 503, 504]:
+            # Calculate exponential backoff with full jitter
+            temp = min(60, base_delay * (2 ** attempt))
+            sleep_time = temp / 2 + random.uniform(0, temp / 2)
+            time.sleep(sleep_time)
+        else:
+            response.raise_for_status()
+    raise Exception("Max retries exceeded")
+```
+
+### 4.2. Pagination & Idempotency
+SaaS API trả về dữ liệu qua nhiều trang (Cursor-based hoặc Offset-based). 
+* Nếu pipeline sụp ở trang 99/100, bạn phải tải lại từ trang 1 nếu không thiết kế **Idempotency** (tính lũy đẳng) và Checkpointing. 
+* Hệ thống trích xuất (Ingestion system) phải lưu lại Cursor (ID bản ghi cuối cùng) vào một metadata store để khi chạy lại (resume), nó tiếp tục lấy từ ID đó thay vì chạy lại từ đầu.
+
+---
+
+## 5. Kiến trúc FinOps & Tối ưu chi phí (Cost Trade-offs)
+
+Trong Cloud, "Network Ingress/Egress" và "API Calls" đều tốn tiền.
+* Trích xuất theo kiểu **Full Extract** hàng đêm (vài TB) không chỉ giết chết network I/O mà chi phí Egress trên AWS có thể lên tới hàng chục nghìn đô la.
+* **Incremental Extract** (dựa trên cột `updated_at`) giảm chi phí băng thông, nhưng lại đòi hỏi truy vấn phải quét (scan) Index liên tục, tốn CPU.
+* Giải pháp tối ưu nhất cho chi phí dài hạn vẫn là Kafka + CDC (Debezium), mặc dù chi phí Setup ban đầu và Ops Complexity (vận hành) rất cao.
+
+---
+
+## Nguồn Tham Khảo (References)
 * [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)
-* [CAP Theorem and PACELC - Daniel Abadi](http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html)
-* [Dynamo: Amazon's Highly Available Key-value Store (SOSP 2007)](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf)
-* [Time, Clocks, and the Ordering of Events in a Distributed System - Leslie Lamport](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
-* [MapReduce: Simplified Data Processing on Large Clusters - Google](https://research.google.com/archive/mapreduce.html)
+* [Debezium Architecture & Documentation](https://debezium.io/documentation/reference/stable/architecture.html)
+* [Pattern: Transactional outbox - Microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)
+* [PostgreSQL Documentation: Logical Replication Slot & VACUUM Bloat](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html)
+* [AWS Architecture Blog: Exponential Backoff and Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+* [Confluent Blog: Dual Writes vs Outbox Pattern](https://www.confluent.io/blog/dual-write-problem/)

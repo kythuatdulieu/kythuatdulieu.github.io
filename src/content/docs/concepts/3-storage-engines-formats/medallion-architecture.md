@@ -1,116 +1,192 @@
 ---
-title: "Kiến trúc Medallion - Medallion Architecture"
-difficulty: "Beginner"
-tags: ["medallion-architecture", "data-lakehouse", "bronze", "silver", "gold", "databricks"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Medallion Architecture là gì? Kiến trúc Bronze - Silver - Gold trong Lakehouse"
-metaDescription: "Tìm hiểu chi tiết về Medallion Architecture (Kiến trúc phân lớp dữ liệu Đồng - Bạc - Vàng) phổ biến trong Data Lakehouse và Databricks. Vai trò của từng lớp dữ liệu."
-description: "Kiến trúc Medallion (hay cấu trúc Bronze - Silver - Gold) là một mẫu thiết kế quản lý dữ liệu phổ biến trong kỷ nguyên Data Lakehouse, giúp kiểm soát, làm sạch và tối ưu hóa dữ liệu."
+title: "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
+difficulty: "Advanced"
+tags: ["medallion-architecture", "data-lakehouse", "bronze", "silver", "gold", "databricks", "streaming", "liquid-clustering"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Medallion Architecture: System Design, Trade-offs & Operational Risks"
+metaDescription: "Phân tích kiến trúc Medallion (Bronze - Silver - Gold) dưới góc nhìn System Design. Trade-offs, rủi ro vận hành (OOM, Consumer Lag), và cấu trúc vật lý trên Data Lakehouse."
+description: "Phân tích chuyên sâu về kiến trúc Medallion dưới góc độ thiết kế hệ thống. Không dừng ở định nghĩa lớp dữ liệu, bài viết mổ xẻ cách thực thi vật lý, các đánh đổi hệ thống (Trade-offs), kỹ thuật tối ưu hóa và cách xử lý các rủi ro vận hành."
 ---
 
+Lưu trữ dữ liệu vào Data Lake với hy vọng "Schema-on-read" sẽ giải quyết mọi bài toán phân tích đã được chứng minh là một sai lầm kiến trúc (Architectural Anti-pattern). Thiếu vắng tính toàn vẹn giao dịch (ACID) và kiểm soát chất lượng, Data Lake nhanh chóng thoái hóa thành **Data Swamp**.
 
-
-Khi phong trào xây dựng **[Data Lake](/concepts/3-storage-engines-formats/data-lake) (Hồ dữ liệu)** bùng nổ, nhiều doanh nghiệp đã hào hứng đổ tất cả mọi nguồn dữ liệu vào chung một chỗ với hy vọng có thể phân tích được mọi thứ. Kết quả? Data Lake nhanh chóng biến thành một **Data Swamp (Đầm lầy dữ liệu)** - nơi chứa dữ liệu rác, không có cấu trúc, thiếu độ tin cậy và không thể sử dụng để ra quyết định kinh doanh.
-
-Để giải quyết triệt để vấn đề này, Databricks đã đưa ra khái niệm **Medallion Architecture (Kiến trúc Medallion)**.
-
-**Medallion Architecture** (Kiến trúc huy chương) là một thiết kế mô hình dữ liệu (data design pattern) được Databricks giới thiệu, nhằm tổ chức dữ liệu một cách logic và nhất quán bên trong [Data Lakehouse](/concepts/3-storage-engines-formats/lakehouse/). Kiến trúc này chia dữ liệu thành ba lớp: **Bronze** (Đồng), **Silver** (Bạc) và **Gold** (Vàng). Mỗi lớp đại diện cho một mức độ tinh chỉnh và cải thiện chất lượng dữ liệu từ khi được đưa vào (Ingestion) cho đến khi được tiêu thụ (Consumption).
+**Kiến trúc Medallion** (Bronze - Silver - Gold) được Databricks đề xuất như một Design Pattern tiêu chuẩn cho Data Lakehouse. Tuy nhiên, dưới góc độ Kỹ thuật Dữ liệu (Data Engineering), Medallion không chỉ là các thư mục logic. Nó là một pipeline **state machine**, trong đó dữ liệu được luân chuyển, thay đổi trạng thái, làm sạch và tối ưu hóa layout vật lý (Physical Data Layout) qua từng giai đoạn để phục vụ các Workload khác nhau.
 
 ---
 
-## 1. Nguyên lý cốt lõi của Kiến trúc Medallion
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Nguyên lý cơ bản của kiến trúc này là luân chuyển và tinh chế dữ liệu qua các lớp (layer) có mức độ làm sạch, cấu trúc và tổng hợp tăng dần. Cấu trúc này thường được xây dựng trên các định dạng bảng mở hỗ trợ giao dịch ACID mạnh mẽ như **[Delta Lake](/concepts/3-storage-engines-formats/delta-lake/)**, **Apache Iceberg**, hoặc **Apache Hudi**.
+Trên thực tế, Kiến trúc Medallion hoạt động dựa trên các định dạng bảng mở (Open Table Formats) như Delta Lake, Apache Iceberg hoặc Apache Hudi, kết hợp với các công cụ xử lý phân tán (Apache Spark, Trino).
 
-Ba lớp dữ liệu tiêu chuẩn bao gồm:
-- **Bronze Layer (Đồng):** Nơi chứa dữ liệu thô, giữ nguyên bản từ các hệ thống nguồn.
-- **Silver Layer (Bạc):** Dữ liệu đã được làm sạch, chuẩn hóa, lọc bỏ lỗi và hợp nhất.
-- **Gold Layer (Vàng):** Dữ liệu được tổng hợp, biến đổi theo nhu cầu nghiệp vụ để phục vụ phân tích (BI) và Machine Learning.
+```mermaid
+graph TD
+    %% Define Styles
+    classDef source fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef bronze fill:#cd7f32,stroke:#333,stroke-width:2px,color:#fff;
+    classDef silver fill:#c0c0c0,stroke:#333,stroke-width:2px,color:#000;
+    classDef gold fill:#ffd700,stroke:#333,stroke-width:2px,color:#000;
+    classDef compute fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,stroke-dasharray: 5 5;
 
----
+    subgraph Sources["Data Sources"]
+        Kafka["Apache Kafka / Event Streams"]:::source
+        OLTP["PostgreSQL / MySQL CDC"]:::source
+        API["External APIs / JSON"]:::source
+    end
 
-## 2. Chi tiết các lớp dữ liệu (Data Layers)
+    subgraph Bronze_Layer["Bronze Layer - Raw Landing"]
+        BronzeTable["(Delta: Raw Logs)"]:::bronze
+    end
 
-### 2.1. Bronze Layer (Lớp Đồng) - Nơi chứa Dữ liệu thô (Raw Data)
+    subgraph Silver_Layer["Silver Layer - Cleansed & Conformed"]
+        SilverTable["(Delta: Users / Orders)"]:::silver
+    end
 
-**Mục đích:** Là điểm hạ cánh đầu tiên (Landing Zone) của dữ liệu từ các hệ thống nguồn (Database OLTP, API, IoT Sensors, Logs hệ thống, Event Streams...). 
+    subgraph Gold_Layer["Gold Layer - Business Aggregates"]
+        GoldTable["(Delta: Daily Sales)"]:::gold
+    end
 
-**Đặc điểm và Tác vụ:**
-- **Không thay đổi (Immutable):** Dữ liệu được nạp vào dưới dạng Append-only (chỉ thêm mới). Hiếm khi thực hiện Update hay Delete ở lớp này.
-- **Giữ nguyên trạng (As-is):** Dữ liệu giữ đúng cấu trúc (schema) và định dạng từ nguồn (thường là định dạng JSON, CSV, thô Parquet).
-- **Lưu trữ toàn bộ lịch sử (Historical Archive):** Đây là bản sao lưu hoàn hảo của dữ liệu nguồn theo thời gian. Nếu có lỗi xử lý logic xảy ra ở các lớp sau, Data Engineer luôn có thể chạy lại quy trình (re-process) từ dữ liệu ở Bronze.
-- **Bổ sung Metadata:** Thường thêm các cột metadata để phục vụ việc tracking và debug như `_load_timestamp` (thời điểm lấy dữ liệu vào Bronze), `_source_file` (tên file gốc), hoặc `_batch_id`.
+    %% Flow
+    Kafka -- "Streaming Ingest("Append Only")" --> BronzeTable
+    OLTP -- "Debezium CDC" --> BronzeTable
+    API -- "Batch Extract" --> BronzeTable
 
-### 2.2. Silver Layer (Lớp Bạc) - Nguồn Sự thật Doanh nghiệp (Enterprise Truth)
+    BronzeTable -- "Data Cleansing & Deduplication" --> SilverCompute("(Spark Structured Streaming")):::compute
+    SilverCompute --> SilverTable
 
-**Mục đích:** Xóa bỏ sự lộn xộn của dữ liệu thô, cung cấp một phiên bản dữ liệu sạch sẽ, đã được chuẩn hóa và đáng tin cậy. Đây được coi là *Single Source of Truth* cho các phân tích ở mức độ chi tiết (granularity).
+    SilverTable -- "Aggregations / JOINs" --> GoldCompute("(Spark SQL / dbt")):::compute
+    GoldCompute --> GoldTable
 
-**Đặc điểm và Tác vụ:**
-- **Kiểm soát Lược đồ (Schema Enforcement):** Kiểm tra và ép kiểu dữ liệu chặt chẽ (ví dụ: chuỗi ngày tháng dạng string sang kiểu `DATE` hoặc `TIMESTAMP`).
-- **Data Cleansing (Làm sạch):** Xử lý các giá trị null, thay thế giá trị ngoại lệ, sửa lỗi định dạng. Dữ liệu lỗi có thể bị loại bỏ hoặc được đẩy vào các "bảng cách ly" (Quarantine tables) để kiểm tra sau.
-- **Deduplication (Loại bỏ trùng lặp):** Đảm bảo mỗi bản ghi (record) là duy nhất dựa trên một Primary Key nhất định.
-- **Data Integration (Hợp nhất dữ liệu):** Kết hợp các bảng riêng lẻ thành các thực thể đại diện cho các khái niệm doanh nghiệp. (Ví dụ: Kết nối dữ liệu Khách hàng từ CRM và hệ thống Website).
-- **SCD (Slowly Changing Dimensions):** Cập nhật thay đổi trạng thái của các thực thể theo thời gian thông qua các kỹ thuật SCD (như SCD Type 2) sử dụng `MERGE INTO`.
-
-### 2.3. Gold Layer (Lớp Vàng) - Sẵn sàng cho Nghiệp vụ (Business Ready)
-
-**Mục đích:** Dữ liệu ở lớp này được tinh chỉnh, lọc và tổng hợp dựa trên các yêu cầu kinh doanh hoặc Use-Case cụ thể. Đây là lớp trực tiếp "nói chuyện" với hệ thống Business Intelligence (BI), Dashboard, và hệ thống báo cáo.
-
-**Đặc điểm và Tác vụ:**
-- **Tổng hợp (Aggregation):** Thực hiện tính toán, group by (Ví dụ: Doanh thu trung bình theo tháng, Tỉ lệ user active hàng ngày, Số đơn hàng thành công theo khu vực).
-- **Mô hình hóa dữ liệu (Data Modeling):** Thường được tổ chức theo các mô hình thiết kế dành cho phân tích như **Star Schema** (Mô hình sao với các Fact và Dimension tables) để tối ưu hóa truy vấn cho BI tools.
-- **Tối ưu hóa hiệu suất:** Bảng Gold phục vụ hàng ngàn truy vấn đọc mỗi ngày nên thường được áp dụng các chiến thuật tối ưu hóa khắt khe như **Partitioning**, **Z-Ordering**, hoặc Liquid Clustering.
-- **Bảo mật và Ẩn danh:** Ẩn (Mask) hoặc loại bỏ hoàn toàn các thông tin cá nhân nhạy cảm (PII) trước khi phân quyền truy cập cho người dùng cuối.
-
----
-
-## 3. Tại sao Medallion Architecture lại quan trọng?
-
-1. **Khả năng Tái cấu trúc và Phục hồi (Reproducibility):** Vì dữ liệu nguyên bản luôn được bảo tồn ở Bronze layer, bất kể lúc nào Logic nghiệp vụ thay đổi hoặc có lỗi ở Silver/Gold, bạn có thể tự tin xóa và tính toán lại (recompute) toàn bộ luồng từ đầu.
-2. **Quản lý chất lượng dữ liệu theo từng bước:** Thay vì làm sạch dữ liệu trong một câu lệnh ETL/ELT khổng lồ và phức tạp, quá trình này được chia nhỏ. Data Engineer và Analyst có thể dễ dàng kiểm thử (test) từng lớp dữ liệu.
-3. **Phân quyền truy cập rõ ràng (RBAC - Role-Based Access Control):** 
-    - **Bronze:** Chỉ nhóm Data Engineering hoặc các Service Account hệ thống mới được phép truy cập.
-    - **Silver:** Cho phép Data Engineer, Data Scientist, và Advanced Analyst truy vấn dữ liệu thô nhưng đã sạch.
-    - **Gold:** Được chia sẻ rộng rãi cho Data Analyst, Business Users, và các hệ thống Report/BI.
-4. **Hỗ trợ liền mạch cho Batch và Streaming:** Kiến trúc này hoạt động hoàn hảo cho cả hai luồng xử lý lô và thời gian thực. Các framework như Spark Structured Streaming có thể liên tục đọc từ bảng Delta Bronze, biến đổi, và lưu vào Silver với độ trễ cực thấp.
+    %% End Users
+    SilverTable -. "Ad-hoc Queries / ML Models" .-> DataScientist("(Data Scientists"))
+    GoldTable -. "BI Dashboards("Low Latency")" .-> BI("(Power BI / Tableau"))
+```
 
 ---
 
-## 4. Medallion so với Data Warehouse truyền thống
+## 2. Đi sâu vào từng Layer: Code và Trade-offs
 
-Nếu bạn đã quen thuộc với mô hình Data Warehouse cổ điển (Staging -> ODS -> DWH -> Data Mart), bạn sẽ nhận thấy cấu trúc Medallion khá tương đồng:
+### 2.1. Bronze Layer: Bức tường lửa của sự thật (Immutable Landing)
 
-| Data Warehouse Truyền Thống | Lakehouse (Medallion) | Đặc điểm chính |
-|-----------------|---------------------|-------|
-| **Staging Area** | **Bronze** | Chứa dữ liệu thô. Trong DWH, Staging thường bị xóa định kỳ. Trong Lakehouse, Bronze thường lưu trữ dài hạn nhờ chi phí rẻ của Object Storage. |
-| **ODS / DWH Core** | **Silver** | Nơi hợp nhất dữ liệu ở cấp độ toàn doanh nghiệp (Enterprise View), đã được làm sạch và deduplicate. |
-| **Data Marts** | **Gold** | Chuyên biệt hóa cho từng phòng ban (Sales, Marketing) hoặc các báo cáo cụ thể. |
+Bronze layer không phải là bãi rác. Nó là điểm hạ cánh bảo toàn toàn bộ lịch sử (Historical Archive) và trạng thái thô nguyên bản nhất từ hệ thống nguồn.
 
-**Sự khác biệt cốt lõi:** 
-Trong DWH, quá trình di chuyển dữ liệu giữa các máy chủ (từ DB này sang DB khác) rất cồng kềnh. Trong Medallion trên Lakehouse, **tất cả** dữ liệu đều nằm yên trên một hệ thống lưu trữ phân tán duy nhất (ví dụ Amazon S3, Google Cloud Storage, Azure Data Lake Storage). Việc dữ liệu "chảy" từ Bronze -> Silver -> Gold chỉ đơn thuần là việc Engine tính toán ghi các file tĩnh (như Parquet/Delta) vào các thư mục phân tách logic khác nhau.
+- **Đặc tính kỹ thuật:** `Append-only`. Tuyệt đối không thực hiện Update/Delete ở lớp này. Dữ liệu được nạp vào bằng cơ chế streaming liên tục hoặc micro-batches.
+- **Physical Layout:** Giữ nguyên schema từ nguồn (thường là một cột chứa payload JSON/Avro thô), kèm theo các metadata của Pipeline như `_ingest_timestamp`, `_kafka_offset`, `_batch_id`.
+
+**Mã giả lập cấu trúc Streaming Ingestion (PySpark):**
+```python
+# Đọc từ Kafka và ghi Append-only vào Bronze (Delta)
+df_raw = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "broker:9092") \
+    .option("subscribe", "orders_topic") \
+    .load()
+
+# Ghi trực tiếp xuống Bronze với Checkpointing
+df_raw.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING) as raw_payload", "timestamp as _ingest_timestamp") \
+    .writeStream \
+    .format("delta") \
+    .option("checkpointLocation", "s3://datalake/checkpoints/bronze_orders") \
+    .trigger(processingTime="1 minute") \
+    .start("s3://datalake/bronze/orders")
+```
+
+**Trade-offs hệ thống:**
+- **Storage Cost vs. Auditability:** Việc lưu trữ mọi payload thô vĩnh viễn (kể cả dữ liệu rác) tiêu tốn Storage Cost rất lớn. Bù lại, bạn có khả năng "Time Travel" và **Re-process** (chạy lại toàn bộ logic pipeline từ đầu) nếu phát hiện lỗi logic ở lớp Silver/Gold.
+
+### 2.2. Silver Layer: Single Source of Truth (SSOT)
+
+Dữ liệu di chuyển từ Bronze sang Silver phải trải qua một quá trình khắt khe: Schema Enforcement (ép kiểu), Data Cleansing (loại bỏ Null/Invalid), và Deduplication (khử trùng lặp). Đây là nơi dữ liệu trở thành các Entity mang tính nghiệp vụ (Users, Orders, Transactions).
+
+- **Đặc tính kỹ thuật:** Hỗ trợ CRUD thông qua ACID Transactions. Xử lý Slowly Changing Dimensions (SCD Type 1/2) và Upserts (`MERGE INTO`).
+- **Physical Layout:** Dữ liệu được parse từ chuỗi thô thành các cột tường minh (Columnar). Tối ưu hóa đọc/ghi cân bằng thông qua Partitioning hoặc **Liquid Clustering**.
+
+**Xử lý SCD Type 2 bằng SQL MERGE (Delta Lake):**
+```sql
+-- Cập nhật dữ liệu vào bảng Silver, xử lý trùng lặp và ghi nhận thay đổi (Upsert)
+MERGE INTO silver.customers target
+USING (
+  SELECT * FROM (
+    -- Lấy record mới nhất từ Bronze nếu có trùng lặp trong cùng 1 batch
+    SELECT *, ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY _ingest_timestamp DESC) as rn
+    FROM bronze.customers_raw
+    WHERE _ingest_timestamp > (SELECT MAX(_ingest_timestamp) FROM silver.watermarks)
+  ) WHERE rn = 1
+) source
+ON target.customer_id = source.customer_id
+WHEN MATCHED AND target.hash_diff != source.hash_diff THEN
+  UPDATE SET *
+WHEN NOT MATCHED THEN
+  INSERT *;
+```
+
+### 2.3. Gold Layer: Tiêu thụ độ trễ thấp (Low-Latency Consumption)
+
+Gold layer không chứa dữ liệu chi tiết của toàn doanh nghiệp, mà chứa dữ liệu đã được **Aggregated** (tổng hợp), **Denormalized** (phi chuẩn hóa - Star Schema), và sẵn sàng phục vụ cho các BI Dashboard yêu cầu SLA phản hồi dưới 1 giây.
+
+- **Đặc tính kỹ thuật:** Read-heavy. Hạn chế tối đa các phép `JOIN` phức tạp khi truy vấn. Dữ liệu thường được overwrite định kỳ hoặc sử dụng Materialized Views.
+- **Physical Layout:** Tối ưu hóa cực độ cho việc đọc (Read-Optimized). 
+
+**Sử dụng Z-Ordering và Liquid Clustering:**
+Trong các kiến trúc cũ, Kỹ sư dữ liệu phải đoán trước cột nào sẽ được filter nhiều nhất trên Dashboard để thiết lập `PARTITION BY`. Tuy nhiên, với dữ liệu thay đổi, Partitioning cứng nhắc gây ra vấn đề Skew. Databricks đã giới thiệu **Liquid Clustering** để thay thế `Z-ORDER` và Partitioning truyền thống.
+
+```sql
+-- Thay vì: CREATE TABLE gold.sales PARTITIONED BY (region_id)
+-- Sử dụng Liquid Clustering cho phép cluster linh hoạt trên nhiều cột
+CREATE TABLE gold.daily_sales_by_region (
+    region_id STRING,
+    sales_date DATE,
+    total_revenue DECIMAL(18,2)
+)
+USING DELTA
+CLUSTER BY (region_id, sales_date);
+
+-- Hệ thống tự động Re-cluster dưới nền mà không cần viết lại toàn bộ file
+OPTIMIZE gold.daily_sales_by_region;
+```
 
 ---
 
-## 5. Ví dụ thực tiễn: Hệ thống Quản lý Đơn hàng E-commerce
+## 3. Rủi ro Vận hành & Trouble-shooting (Operational Risks)
 
-Giả sử bạn cần xây dựng Data Pipeline để theo dõi doanh số cho một nền tảng thương mại điện tử:
+Kiến trúc Medallion không tự động giải quyết mọi vấn đề. Dưới đây là các "cái bẫy" kiến trúc (Anti-patterns) và Bottlenecks thường gặp:
 
-1. **Data Source:** Hệ thống Backend phát ra các sự kiện đơn hàng dưới dạng chuỗi JSON qua Apache Kafka.
-2. **Vào lớp Bronze (`/bronze/orders/`):** Một tiến trình lưu thô tất cả message từ Kafka xuống hệ thống. Schema chỉ có 2 cột: `ingested_time` và `raw_payload` (chứa toàn bộ chuỗi JSON). Dữ liệu này có thể chứa cả các đơn hàng test hoặc định dạng lỗi.
-3. **Tinh luyện sang Silver (`/silver/orders/`):** Spark Job đọc từ Bronze, parse JSON thành các cột cụ thể (`order_id`, `customer_id`, `price`, `status`). Job này sẽ loại bỏ các dòng thiếu `order_id`, đổi tên khách hàng sang chữ in hoa, và lưu dữ liệu dưới định dạng Delta Lake chuẩn hóa.
-4. **Lên báo cáo ở Gold (`/gold/daily_revenue_by_region/`):** Một dbt model định kỳ chạy mỗi tiếng, đọc bảng Silver, `JOIN` với bảng thông tin khách hàng, thực hiện `GROUP BY` để tính "Tổng doanh thu hàng ngày theo khu vực". Dashboard trên Power BI kết nối trực tiếp vào bảng Gold này và có tốc độ load tính bằng mili-giây.
+### 3.1. Rủi ro Tràn Bộ Nhớ (JVM OOMKilled) tại lớp Silver
+**Vấn đề:** Khi join dữ liệu từ nhiều luồng Bronze để tạo ra Silver entity (ví dụ: enrich sự kiện Order với thông tin User), hoặc khi thực hiện Deduplication trên các khung thời gian (windows) lớn. Nếu Dữ liệu bị Skew (một `customer_id` có hàng triệu sự kiện), node thực thi (Executor) trong Spark sẽ vượt quá bộ nhớ cấp phát và bị HĐH tiêu diệt (OOMKilled).
+**Khắc phục:** 
+- Bật `Adaptive Query Execution (AQE)` trong Spark để xử lý Skew Joins tự động.
+- Tránh thực hiện Broadcast Join nếu bảng Dimension quá lớn (vượt quá `spark.sql.autoBroadcastJoinThreshold`).
+- Áp dụng Stateful Streaming với Watermarking cẩn thận để dọn dẹp state trên RAM: `.withWatermark("eventTime", "2 hours")`.
+
+### 3.2. Hiện tượng Consumer Lag & Bão Retry (Retry Storms)
+**Vấn đề:** Khi Streaming dữ liệu từ Kafka vào Bronze, nếu logic Transformation quá nặng hoặc I/O ghi xuống Object Storage bị thắt cổ chai, Spark Consumer không thể theo kịp tốc độ sản xuất dữ liệu của Kafka. Số lượng message tồn đọng (Lag) tăng vọt.
+**Khắc phục:**
+- Tách bạch (Decouple) hoàn toàn Bronze và Silver. Luồng Ingest từ Kafka vào Bronze **TUYỆT ĐỐI** không chứa bất kỳ logic biến đổi nặng nào (chỉ cast type và ghi xuống). Đẩy mọi logic nặng sang luồng Bronze -> Silver.
+- Tuning thông số `maxOffsetsPerTrigger` trong Spark Streaming để kiểm soát kích thước Micro-batch, tránh việc một batch quá lớn làm sập Cluster.
+
+### 3.3. Phân mảnh file nhỏ (The Small File Problem)
+**Vấn đề:** Việc ghi Streaming liên tục (mỗi 1 phút) vào Bronze/Silver sẽ tạo ra hàng vạn file Parquet có kích thước winy (vài KB) trên S3/GCS. Khi BI tool truy vấn lớp Gold hoặc Silver, `Network Shuffle` và I/O Overhead để mở metadata của hàng nghìn file sẽ làm query mất hàng chục phút.
+**Khắc phục:**
+- Chạy các Job `OPTIMIZE` định kỳ (Bin-packing) để gom các file nhỏ thành các file lớn (khoảng 1GB - 2GB).
+- Sử dụng tính năng `Auto Optimize` (Auto Compaction) của Delta Lake.
 
 ---
 
-## 6. Tổng kết
+## 4. Tổng kết Trade-offs của Kiến trúc
 
-Medallion Architecture không phải là một công cụ phần mềm, mà là một **tư duy hệ thống và quy chuẩn thiết kế**. Bằng cách phân định rõ ràng vai trò và trạng thái vòng đời của dữ liệu qua các lớp Đồng - Bạc - Vàng, các kỹ sư dữ liệu có thể xây dựng các Data Pipeline có tính module hóa cao, dễ bảo trì, linh hoạt trong xử lý lỗi, và mang lại giá trị cao nhất cho doanh nghiệp từ khối dữ liệu thô sơ.
+| Tiêu chí | Điểm mạnh (Pros) | Điểm yếu (Cons) |
+| :--- | :--- | :--- |
+| **Độ trễ (Latency)** | Hỗ trợ Streaming E2E với độ trễ thấp (vài giây/phút) từ nguồn đến Dashboard. | Cấu trúc nhiều tầng (Multi-hop) tạo độ trễ tích lũy so với việc chọc trực tiếp vào Replicas DB. |
+| **Chi phí (Cost)** | Compute và Storage được tách biệt hoàn toàn. Lưu trữ S3 rẻ hơn nhiều so với Data Warehouse truyền thống. | Lưu trữ dữ liệu dư thừa ở 3 lớp (Data Duplication). Đòi hỏi chính sách Data Retention nghiêm ngặt. |
+| **Quản trị (Governance)** | Rõ ràng về ranh giới trách nhiệm. Có thể Replay/Backfill dữ liệu dễ dàng từ Bronze. | Phức tạp trong việc thiết lập Data Lineage và truy vết lỗi xuyên suốt các tầng. |
 
-## Tài Liệu Tham Khảo
-* [What is a Medallion Architecture? - Databricks](https://www.databricks.com/glossary/medallion-architecture)
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* **Z-Ordering and Liquid Clustering - Databricks Optimization**
+Tóm lại, Medallion Architecture là sự đánh đổi giữa **Sự phức tạp trong luồng dữ liệu** để đổi lấy **Khả năng kiểm soát chất lượng, khả năng mở rộng và khả năng tái sử dụng** dữ liệu ở cấp độ doanh nghiệp.
+
+---
+
+## Nguồn Tham Khảo
+- [What is a Medallion Architecture? - Databricks Official](https://www.databricks.com/glossary/medallion-architecture)
+- [Liquid Clustering for Delta Lake - Databricks Blog](https://www.databricks.com/blog/2023/04/18/liquid-clustering-delta-lake.html)
+- [Data Lakehouse Architecture and Medallion Pattern - Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/solution-ideas/articles/azure-databricks-modern-analytics-architecture)
+- *Designing Data-Intensive Applications (Chapter 10: Batch Processing, Chapter 11: Stream Processing) - Martin Kleppmann*
+- [Spark Structured Streaming Programming Guide - Apache Spark Docs](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)

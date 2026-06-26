@@ -1,140 +1,144 @@
 ---
 title: "Cấu trúc định dạng File: Parquet, ORC, Avro và JSON - Deep Dive"
-description: "Phân tích chuyên sâu về các định dạng lưu trữ dữ liệu phổ biến trong Data Engineering: Parquet, ORC, Avro, JSON và CSV. So sánh Row-based vs Columnar và kiến trúc bên trong của từng định dạng."
+description: "Phân tích chuyên sâu kiến trúc vật lý của các định dạng lưu trữ Big Data: Parquet, ORC, Avro. Đánh đổi giữa Row-based vs Columnar và các sự cố OOMKilled thực tế."
+lastUpdated: 2026-06-26
 ---
 
+Trong hệ thống dữ liệu quy mô lớn (Data-Intensive Applications), việc chọn định dạng file không chỉ dừng ở câu chuyện "đọc nhanh hay ghi nhanh". Nó quyết định kiến trúc của toàn bộ luồng I/O (Input/Output), chi phí quét đĩa cứng, và lượng RAM mà các worker node (Spark/Trino) sẽ ngốn. Chọn sai định dạng lưu trữ có thể dẫn đến hiện tượng **Spill-to-disk**, **OOMKilled** (Out of Memory), hoặc đẩy hóa đơn AWS S3 API/Athena của bạn tăng lên gấp hàng chục lần.
 
+Bài viết này mổ xẻ cấu trúc vật lý (Physical Execution) dưới đĩa cứng của các định dạng Row-based và Columnar, cùng với các rủi ro vận hành.
 
-Trong Data Engineering, việc chọn sai định dạng file lưu trữ có thể làm chi phí Cloud (Storage & Compute I/O) của bạn tăng gấp 10 lần và tốc độ truy vấn giảm đi 100 lần. Không có định dạng nào là hoàn hảo cho mọi trường hợp. Bạn phải phân biệt rõ sự khác nhau giữa Row-based (Lưu theo dòng) và Columnar (Lưu theo cột) và hiểu rõ cấu trúc bên trong (internals) của chúng.
+---
 
-## 1. Row-based vs Columnar Storage
+## 1. Kiến trúc Thực thi Vật lý: Row-based vs Columnar
 
-
-
-Để hiểu rõ tại sao chúng ta lại có nhiều định dạng file như vậy, trước tiên cần phân biệt hai phương pháp lưu trữ dữ liệu: Row-based và Columnar.
+Thay vì hiểu một cách trừu tượng, hãy nhìn vào cách CPU và đĩa cứng xử lý dữ liệu.
 
 ### Row-based Storage (Lưu trữ theo dòng)
-Dữ liệu được ghi tuần tự từng dòng một. Khi một dòng được ghi vào đĩa cứng, tất cả các trường (fields) của dòng đó được đặt cạnh nhau.
-*   **Ví dụ định dạng:** CSV, JSON, Apache Avro.
-*   **Ưu điểm:**
-    *   Thêm mới dữ liệu cực nhanh (Append-heavy workloads) vì chỉ cần ghi vào cuối file.
-    *   Tối ưu khi cần lấy toàn bộ thông tin của một đối tượng cụ thể (truy xuất toàn bộ dòng).
-*   **Nhược điểm:**
-    *   Không hiệu quả cho truy vấn phân tích (Analytical queries) vì nếu bạn chỉ cần 1 cột, hệ thống vẫn phải quét qua tất cả các cột của dòng dữ liệu từ đĩa cứng.
-    *   Nén dữ liệu không hiệu quả vì dữ liệu trong một dòng thường có nhiều kiểu khác nhau (chuỗi, số nguyên, boolean nằm lẫn lộn).
+Dữ liệu của một bản ghi được ghi tuần tự và liền kề nhau trên đĩa.
+* **Đại diện:** CSV, JSON, Apache Avro.
+* **Đánh đổi hệ thống (Trade-offs):**
+  * **Tối ưu cho Write-heavy:** Ghi cực nhanh vì thao tác ghi là **Append-only** (ghi nối tiếp vào cuối block đĩa). Không mất chi phí CPU để gom nhóm và nén.
+  * **Thảm họa cho OLAP (Analytical):** Nếu bảng có 100 cột và bạn thực thi `SELECT SUM(salary) FROM table`, ổ cứng vật lý vẫn phải quét qua (Scan) và nạp toàn bộ 100 cột vào RAM. Gây ra hiện tượng **I/O Bottleneck** và lãng phí băng thông mạng.
 
 ### Columnar Storage (Lưu trữ theo cột)
-Dữ liệu được lưu trữ sao cho tất cả các giá trị của một cột được đặt cạnh nhau trên đĩa cứng.
-*   **Ví dụ định dạng:** Apache Parquet, Apache ORC.
-*   **Ưu điểm:**
-    *   **Data Skipping (Projection Pushdown):** Hệ thống chỉ cần đọc dữ liệu của những cột được yêu cầu trong câu lệnh `SELECT`, bỏ qua hoàn toàn I/O của các cột không liên quan.
-    *   **Hiệu suất nén cực cao:** Các giá trị trong cùng một cột có cùng kiểu dữ liệu. Điều này cho phép áp dụng các thuật toán nén chuyên dụng như Run-Length Encoding (RLE) hay Dictionary Encoding, giảm dung lượng đáng kể.
-    *   **Thực thi các phép toán Aggregate nhanh chóng:** Tính tổng (SUM), đếm (COUNT), trung bình (AVG) trên một cột trở nên vô cùng nhanh.
-*   **Nhược điểm:**
-    *   Thao tác ghi (Write) và cập nhật (Update) chậm hơn vì một dòng dữ liệu mới cần được bẻ nhỏ để ghi vào nhiều vị trí khác nhau trên đĩa.
+Dữ liệu của các cột giống nhau được nhóm lại và lưu liền kề.
+* **Đại diện:** Apache Parquet, Apache ORC.
+* **Đánh đổi hệ thống (Trade-offs):**
+  * **Tối ưu cho Read-heavy:** Hỗ trợ **Projection Pushdown** (chỉ đọc đúng cột cần thiết từ đĩa) và **Predicate Pushdown** (lọc dữ liệu ngay từ tầng đĩa cứng thông qua Metadata).
+  * **Chi phí ghi (Write-penalty) lớn:** Để ghi một dòng mới, hệ thống phải buffer (đệm) dữ liệu vào RAM cho đến khi đủ lớn (ví dụ 128MB cho một Row Group), sau đó tiến hành chuyển vị (transpose) thành các cột, chạy thuật toán nén, rồi mới xả (flush) xuống đĩa. Quá trình này ngốn rất nhiều CPU và RAM.
+
+```mermaid
+graph TD
+    subgraph Row_Based ["Row-based("CSV/Avro")"]
+        R1["Row 1: [ID_1, Name_1, Age_1]"] --> R2["Row 2: [ID_2, Name_2, Age_2]"]
+        R2 --> R3["Row 3: [ID_3, Name_3, Age_3]"]
+    end
+
+    subgraph Columnar ["Columnar("Parquet/ORC")"]
+        C1["Column ID: [ID_1, ID_2, ID_3]"] --> C2["Column Name: [Name_1, Name_2, Name_3]"]
+        C2 --> C3["Column Age: [Age_1, Age_2, Age_3]"]
+    end
+```
 
 ---
 
-## 2. Định dạng văn bản: CSV và JSON
+## 2. Apache Avro: Tiêu chuẩn vàng của Streaming (Kafka)
 
-Mặc dù không tối ưu cho Big Data, nhưng CSV và JSON vẫn được sử dụng rộng rãi vì tính dễ đọc và tính phổ quát.
+Avro là định dạng Row-based nhưng lưu dưới dạng nhị phân (Binary) siêu nén. Nó sinh ra để giải quyết bài toán Data Serialization cho các hệ thống Streaming (như Kafka) và RPC (Remote Procedure Call).
 
-### CSV (Comma-Separated Values)
-*   **Đặc điểm:** Định dạng văn bản phẳng, không có schema đi kèm, dữ liệu phân tách bằng dấu phẩy.
-*   **Hạn chế trong Big Data:**
-    *   Không lưu kiểu dữ liệu (tất cả là chuỗi), các engine phân tích phải tốn chi phí ép kiểu (parsing) lúc đọc (Schema-on-read).
-    *   Không thể chia nhỏ dễ dàng (Splittable) để xử lý song song trong Hadoop/Spark trừ khi không dùng nén, hoặc dùng các định dạng nén đắt đỏ như bzip2.
-    *   Không hỗ trợ kiểu dữ liệu phức tạp (Nested data như Array, Struct).
+### Kiến trúc File Avro
+File Avro tự thân mang cấu trúc (Self-describing). Mỗi file gồm 2 phần:
+1. **Header:** Lưu trữ **Schema** định dạng JSON (Reader cần schema này để giải mã khối nhị phân bên dưới) và Codec nén (Snappy, Deflate).
+2. **Data Blocks:** Chứa hàng ngàn bản ghi (records) nhị phân nối tiếp.
 
-### JSON (JavaScript Object Notation)
-*   **Đặc điểm:** Định dạng phổ biến nhất trong các API và giao tiếp Web. Lưu trữ dưới dạng Key-Value cặp. Cấu trúc linh hoạt (Semi-structured data).
-*   **Trong Big Data:** Thường dùng **JSONLines (JSONL)** (mỗi dòng là một object JSON hợp lệ).
-*   **Ưu điểm:** Hỗ trợ tốt dữ liệu lồng nhau (Nested structures) phức tạp, cấu trúc linh hoạt.
-*   **Hạn chế:** Dung lượng lưu trữ lớn vì phải lưu lại tên của Key lặp đi lặp lại ở mọi dòng. Tốc độ parse chậm. Thường được coi là định dạng ở "vùng hạ cánh" (Landing Zone/Bronze layer) trước khi được chuyển đổi sang Parquet/Avro.
-
----
-
-## 3. Apache Avro: Nhà Vô Địch Của Row-Based & Streaming
-
-**Avro** lưu dữ liệu theo từng dòng (Row-based) giống CSV hay JSON nhưng dưới dạng **nhị phân (binary)** cực kỳ nhỏ gọn. Nó được thiết kế đặc biệt cho các hệ thống có dữ liệu thay đổi cấu trúc liên tục.
-
-### Kiến trúc của file Avro
-Một file Avro bao gồm:
-1.  **Header:** Chứa Schema (được định nghĩa bằng JSON), mã nhận diện file, và codec nén.
-2.  **Data Blocks:** Các khối dữ liệu chứa hàng loạt các bản ghi nhị phân, được nén lại (thường dùng Snappy). Mỗi block đi kèm với kích thước (size) và số lượng bản ghi (record count), giúp hệ thống đọc có thể chia nhỏ file để xử lý song song.
-
-### Điểm mạnh vô đối: Schema Evolution (Sự tiến hóa cấu trúc)
-*   Avro tách biệt cấu trúc (Schema) khỏi dữ liệu. Khi đọc file, hệ thống sẽ lấy schema của file (Writer's Schema) so khớp với schema hiện tại của ứng dụng (Reader's Schema).
-*   Tính năng **Schema Resolution** của Avro cho phép xử lý mượt mà việc thêm cột (với giá trị mặc định), xóa cột hay đổi tên cột mà không làm vỡ (break) các data pipeline đang chạy.
-*   Trong các hệ thống phân tán, Avro thường được kết hợp với **Confluent Schema Registry** để quản lý phiên bản (versioning) của các cấu trúc.
-
-### Ứng dụng
-*   Là tiêu chuẩn vàng (de facto) cho hệ thống Streaming. Được dùng làm định dạng lưu trữ mặc định của các thông điệp truyền qua **Apache Kafka**.
-*   Phù hợp cho việc lưu trữ dữ liệu nhật ký (Logs) và các ứng dụng cần ghi dữ liệu liên tục (Write-intensive).
+### Trade-offs & Schema Evolution
+Điểm ăn tiền nhất của Avro nằm ở **Schema Resolution** (Sự tiến hóa của Schema). 
+* Trong môi trường Microservices, các team Backend liên tục thêm/sửa/xóa cột (cấu trúc JSON thay đổi).
+* Avro duy trì 2 schema: **Writer's Schema** (lúc ghi) và **Reader's Schema** (lúc đọc). Khi đọc, Avro sẽ tự động đối chiếu hai bản này:
+  * Nếu cột mới được thêm vào, nó dùng Default Value.
+  * Nếu cột bị xóa, nó bỏ qua.
+* Nhờ cơ chế này kết hợp với **Confluent Schema Registry**, Data Pipeline không bao giờ bị "gãy" (break) khi backend đổi cấu trúc.
 
 ---
 
-## 4. Apache Parquet: Vị Vua Của Columnar & Data Warehouse
+## 3. Apache Parquet: Cỗ máy phân tích (Data Lakehouse)
 
-Thay vì lưu theo dòng, **Parquet** chặt dữ liệu ra và lưu theo cột (Columnar). Được phát triển chung bởi Twitter và Cloudera, Parquet tối ưu cho các hệ thống xử lý song song (Hadoop, Spark).
+Parquet (ra đời từ sự kết hợp của Twitter và Cloudera) là xương sống của mọi kiến trúc Data Lake và Data Lakehouse hiện tại (Delta Lake, Apache Iceberg).
 
-### Kiến trúc bên trong file Parquet (Deep Dive)
-Kiến trúc của Parquet được chia làm nhiều cấp bậc từ lớn đến nhỏ:
+### Kiến trúc phân cấp (Hierarchical Structure)
+Parquet chia file thành 3 tầng vật lý:
 
-1.  **Row Groups:** File Parquet phân hoạch tập dữ liệu thành nhiều nhóm dòng lớn (thường mỗi nhóm từ 128MB - 1GB, chứa hàng triệu bản ghi). Điều này giúp cân bằng giữa bộ nhớ cần dùng và tốc độ I/O.
-2.  **Column Chunks:** Trong mỗi Row Group, dữ liệu được lưu theo cột. Một Column Chunk chứa tất cả giá trị của một cột trong Row Group đó.
-3.  **Pages:** Mỗi Column Chunk lại được chia nhỏ thành các Data Pages (thường là 1MB). Page là đơn vị nhỏ nhất để đọc và giải nén. File Parquet sẽ lưu **Statistics (Min/Max, số lượng giá trị Null)** ở mức độ Row Group, Column Chunk và Page.
+1. **Row Group:** Chia bảng thành các khối lớn (mặc định 128MB - 1GB). Mỗi Row Group chứa hàng triệu dòng dữ liệu.
+2. **Column Chunk:** Trong một Row Group, dữ liệu được tách thành các cột (Column Chunk).
+3. **Data Page (Page):** Mức độ vật lý nhỏ nhất để nén và giải nén (thường 1MB - 8MB).
 
-### Những kỹ thuật tối ưu thần thánh của Parquet:
-*   **Dictionary Encoding & RLE (Run-Length Encoding):** Nếu cột "Quốc gia" có 1 triệu dòng nhưng chỉ có 5 quốc gia khác nhau, Parquet sẽ tạo ra một từ điển (Dictionary) gán ID (ví dụ: VN=1, US=2) và sau đó sử dụng RLE để nén những ID giống nhau đứng cạnh nhau, làm dung lượng file thu nhỏ đáng kinh ngạc.
-*   **Predicate Pushdown & Data Skipping:** 
-    *   Hệ thống đọc Metadata (phần Footer của file Parquet) để lấy các chỉ số Min/Max.
-    *   Nếu bạn truy vấn `SELECT * FROM table WHERE Age > 50`, engine sẽ kiểm tra Min/Max của cột Age ở từng Row Group. Nếu max của một Row Group là 40, nó sẽ **bỏ qua hoàn toàn (Skip)** việc đọc Row Group đó từ đĩa, tiết kiệm I/O khổng lồ.
-*   **Projection Pushdown:** Nếu bảng của bạn có 100 cột, câu SQL `SELECT Age, Name` sẽ chỉ yêu cầu Parquet đọc đúng 2 Column Chunks tương ứng, 98 cột còn lại trên ổ cứng hoàn toàn không bị chạm đến.
+```mermaid
+classDiagram
+    class ParquetFile {
+        +File Metadata
+        +Footer
+    }
+    class RowGroup {
+        +Row Count
+        +Total Byte Size
+    }
+    class ColumnChunk {
+        +Column Statistics (Min, Max, Nulls)
+    }
+    class DataPage {
+        +Encoded Values
+        +Repetition Levels
+    }
+    
+    ParquetFile *-- RowGroup : contains multiple
+    RowGroup *-- ColumnChunk : one per column
+    ColumnChunk *-- DataPage : contains multiple
+```
 
-### Ứng dụng
-*   Parquet là xương sống của mọi kiến trúc **Data Lake** và **Data Lakehouse** hiện đại (như Delta Lake, Apache Iceberg, Hudi). 
-*   Nó tối ưu tuyệt đối cho các tác vụ phân tích dữ liệu nặng (OLAP) với tốc độ quét dữ liệu cực kỳ nhanh.
-
----
-
-## 5. Apache ORC (Optimized Row Columnar)
-
-**ORC** là một định dạng cột tương tự Parquet nhưng ra đời từ hệ sinh thái Hive (Hortonworks) nhằm khắc phục những điểm yếu của định dạng cột RCFile cũ.
-
-### Cấu trúc ORC
-*   Thay vì gọi là Row Group, ORC chia dữ liệu thành các khối lớn gọi là **Stripes** (thường khoảng 250MB).
-*   Trong mỗi Stripe, dữ liệu cũng được lưu theo cột. Cuối mỗi file và cuối mỗi Stripe đều có Index (chỉ mục) chứa thống kê (Min, Max, Sum, Count).
-*   ORC hỗ trợ **Lightweight Indexing**, bao gồm cả Bloom Filters để kiểm tra sự tồn tại của một giá trị một cách nhanh chóng mà không cần giải nén block.
-
-### So sánh ORC và Parquet
-*   **Lợi thế của ORC:** Về mặt lý thuyết, cấu trúc nén của ORC phức tạp hơn và thường cho tỉ lệ nén tốt hơn Parquet khoảng 10-15%. ORC tối ưu cực tốt cho các kiểu dữ liệu phức tạp đặc thù của Hive.
-*   **Lợi thế của Parquet:** Mức độ phổ biến. Parquet (được hậu thuẫn bởi Spark/Databricks) có cộng đồng hỗ trợ rộng lớn hơn rất nhiều và được hỗ trợ native bởi mọi công cụ trên Cloud (AWS Athena, Snowflake, Google BigQuery, Redshift). 
-*   **Quyết định:** Trừ khi kiến trúc hạ tầng của bạn đang bị khóa chặt (Vendor lock-in) vào Hadoop/Hive truyền thống, **hãy chọn Parquet** làm tiêu chuẩn cho Data Lake.
-
----
-
-## 6. Tổng kết: Lựa chọn định dạng nào cho Use Case của bạn?
-
-| Tiêu chí | CSV / JSON | Apache Avro | Apache Parquet | Apache ORC |
-| :--- | :--- | :--- | :--- | :--- |
-| **Loại lưu trữ** | Dòng (Text) | Dòng (Binary) | Cột (Binary) | Cột (Binary) |
-| **Trường hợp sử dụng tốt nhất** | Tích hợp hệ thống ngoài, trao đổi dữ liệu API, file cấu hình. | Streaming (Kafka), Schema Evolution mạnh, Write-heavy. | Data Lakehouse, Truy vấn OLAP, Read-heavy. | Hadoop/Hive ecosystem, Truy vấn OLAP. |
-| **Tính chia nhỏ (Splittable)** | Không (thường) | Có | Có | Có |
-| **Schema** | Schema-on-read | Được nhúng (Header) | Được nhúng (Footer) | Được nhúng (Footer) |
-| **Hiệu năng Đọc (Read / OLAP)** | Chậm | Trung bình | **Rất Nhanh** | **Rất Nhanh** |
-| **Hiệu năng Ghi (Write)** | Trung bình | **Rất Nhanh** | Chậm hơn | Chậm hơn |
-| **Nén dữ liệu** | Kém | Tốt | **Xuất Sắc** | **Xuất Sắc** |
-
-Trong kiến trúc **Medallion Architecture**, các Data Engineer thường thiết kế luồng xử lý như sau:
-*   **Bronze Layer (Vùng thô):** Lưu dữ liệu gốc bằng định dạng ban đầu của chúng (JSON, CSV) hoặc lưu trực tiếp dòng sự kiện từ Kafka bằng **Avro**.
-*   **Silver / Gold Layer (Vùng tinh chế):** Chuyển đổi hoàn toàn sang **Parquet** (thường được bọc bởi các Table Format như Delta Lake hoặc Iceberg) để tối ưu cho truy vấn phân tích, BI và AI/ML.
+### Tại sao Parquet truy vấn cực nhanh?
+- **Dictionary Encoding & RLE (Run-Length Encoding):** Với các cột có Cardinality thấp (như "Thành phố"), Parquet lập bảng từ điển (Hanoi=0, HCM=1). Dữ liệu 100 dòng "Hanoi" liền nhau được lưu bằng RLE là `100x0`. Nén siêu việt.
+- **Predicate Pushdown & Data Skipping:** Metadata nằm ở **Footer** của file lưu trữ giá trị `Min/Max` của từng Column Chunk. Khi chạy `SELECT * WHERE Age > 50`, engine (như Spark) đọc Footer trước. Nếu `Max(Age) = 40` trong Row Group đó, toàn bộ Row Group bị bỏ qua (Skipped) không cần load lên RAM. Giảm thiểu I/O disk một cách đáng kinh ngạc.
 
 ---
 
-## Tài Liệu Tham Khảo
-* [Apache Parquet Format Specifications](https://parquet.apache.org/docs/)
-* [Apache Iceberg: An Architectural Look Under the Covers](https://iceberg.apache.org/docs/latest/)
-* [Delta Lake: High-Performance ACID Table Storage - Databricks](https://delta.io/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
-* [Data Engineering Zoomcamp - File formats](https://github.com/DataTalksClub/data-engineering-zoomcamp)
+## 4. Apache ORC: Lựa chọn tối ưu cho Hadoop/Hive
+
+ORC (Optimized Row Columnar) có cấu trúc columnar tương tự Parquet nhưng được sinh ra để khắc phục điểm yếu của định dạng RCFile trong hệ sinh thái Hive.
+
+### Cấu trúc Stripes và Lightweight Indexing
+* Thay vì Row Group, ORC chia thành các **Stripes** (thường 250MB).
+* Cuối mỗi Stripe có một **Index Data** lưu Min/Max/Sum cho từng 10,000 dòng.
+* **Sự khác biệt cốt lõi:** ORC hỗ trợ **Bloom Filters** mặc định. Bloom Filter là một cấu trúc dữ liệu xác suất cho phép biết chắc chắn một phần tử "không tồn tại" trong block mà không cần giải nén. Điều này giúp ORC skip data cực gắt khi tìm kiếm theo cấu trúc `WHERE id = 'XYZ'`.
+
+**Parquet vs ORC:** Trừ khi hệ thống của bạn dính chặt (vendor lock-in) vào Hadoop/Hive, Parquet hiện đang là "kẻ chiến thắng" trong hệ sinh thái Cloud (AWS Athena, BigQuery, Snowflake, Spark) nhờ sự tương thích rộng rãi (Interoperability).
+
+---
+
+## 5. Rủi ro Vận hành (Operational Incidents)
+
+Dưới đây là các sự cố thường gặp trong quá trình thiết kế Data Pipeline liên quan đến file format:
+
+### Sự cố 1: Spark JVM OOMKilled khi ghi file Parquet/ORC
+- **Triệu chứng:** Container Spark bị OS kill vì lỗi Out Of Memory (OOM).
+- **Nguyên nhân:** Ghi dữ liệu Columnar yêu cầu phải đệm (buffer) dữ liệu vào RAM đến khi đủ kích thước Row Group (ví dụ 128MB * số lượng Partition) trước khi xả xuống đĩa. Nếu bảng của bạn có hàng ngàn cột phức tạp (Nested Arrays/Structs) và bạn có 200 concurrent tasks đang ghi, bộ nhớ Heap của JVM sẽ cạn kiệt.
+- **Khắc phục:** 
+  - Giảm kích thước Row Group (`parquet.block.size`) xuống nhỏ hơn.
+  - Kiểm soát số lượng shuffle partitions phù hợp với dung lượng RAM của Executor.
+
+### Sự cố 2: The "Small Files" Problem (Phân mảnh S3)
+- **Triệu chứng:** Truy vấn Parquet trên S3/Athena chạy siêu chậm (treo hàng chục phút) dù dữ liệu không nhiều.
+- **Nguyên nhân:** Streaming Job (VD: Spark Structured Streaming) ghi dữ liệu mỗi phút một lần tạo ra hàng trăm ngàn file Parquet tí hon (vài chục KB). Mỗi lần truy vấn, Athena/Spark phải thực hiện API call `GET` đến S3 cho từng file, dính I/O Latency của Network, và chi phí S3 List/Get API vọt lên trời. Metadata quét quá lâu.
+- **Khắc phục:**
+  - Viết Job chạy theo lịch (Cron) thực hiện thao tác **Compaction** (như `OPTIMIZE` trong Delta Lake) để gom hàng vạn file nhỏ thành file 1GB.
+  - Tối ưu bằng **Z-Ordering** để sắp xếp lại dữ liệu các cột thường dùng để tận dụng tối đa Data Skipping.
+
+---
+
+## Nguồn Tham Khảo
+
+1. [Apache Parquet Official Documentation](https://parquet.apache.org/docs/overview/)
+2. [Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval)](https://dataintensive.net/)
+3. [Databricks Blog: What is Parquet?](https://www.databricks.com/glossary/what-is-parquet)
+4. [AWS Big Data Blog: Optimizing Serverless Analytical Queries on S3](https://aws.amazon.com/blogs/big-data/)
+5. [Confluent: Schema Evolution and Compatibility](https://docs.confluent.io/platform/current/schema-registry/avro.html)
