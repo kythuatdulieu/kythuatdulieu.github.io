@@ -59,6 +59,22 @@ Thay vì viết cronjob lên lịch, Databricks hiện đại khuyến nghị gi
 ALTER TABLE main.default.events ENABLE PREDICTIVE OPTIMIZATION;
 ```
 
+## 5. Advanced Configs (Bí kíp cho Senior DE)
+
+Nếu bảng của bạn nằm ở mức hàng trăm Terabyte, các lệnh chạy mặc định có thể mất hàng giờ. Hãy bật các cờ (flags) ẩn sau đây để ép Spark chạy tối đa công suất:
+
+### Vacuum Parallel Delete
+Mặc định, `VACUUM` chỉ chạy single-threaded (một luồng duy nhất trên Driver node). Với hàng triệu tệp Tombstones, Driver sẽ chạy rất chậm. Bật cờ này để phân phối lệnh xóa (delete commands) cho tất cả các Worker nodes:
+```text
+spark.databricks.delta.vacuum.parallelDelete.enabled true
+```
+
+### Vacuum Logging
+Để audit xem VACUUM đã thực sự xóa bao nhiêu GB và tệp nào, hãy bật Audit Log:
+```text
+spark.databricks.delta.vacuum.logging.enabled true
+```
+
 ## Nguồn Tham Khảo (References)
 * [Databricks Documentation: Optimize data file layout](https://docs.databricks.com/en/delta/optimize.html)
 * [Databricks Documentation: Vacuum unused data files](https://docs.databricks.com/en/delta/vacuum.html)

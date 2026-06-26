@@ -69,19 +69,42 @@ Khác với quảng cáo, Z-Order là một con dao hai lưỡi tốn kém:
 ### Incident 1: Write Amplification (Bùng nổ I/O Ghi)
 Để tính toán đường cong Z toàn cục, Spark buộc phải kích hoạt **Network Shuffle** siêu lớn. 
 - **Triệu chứng:** Hóa đơn DBU (Compute) của Databricks tăng gấp 3 lần sau khi setup cronjob chạy `OPTIMIZE ZORDER BY` hàng đêm trên bảng Petabyte.
-- **Cách khắc phục:** Chỉ chạy Z-Order trên các phân vùng (partitions) mới nhất chưa được gom cụm.
-  ```sql
-  OPTIMIZE events 
-  WHERE date >= current_date() - INTERVAL 1 DAY
-  ZORDER BY (event_type, user_id);
-  ```
+- **Cách khắc phục:** Lên lịch chạy Z-Order giới hạn trên các phân vùng gần đây:
+```sql
+-- Tối ưu hóa toàn bộ bảng
+OPTIMIZE events 
+ZORDER BY (eventType, userId);
+
+-- Tối ưu hóa giới hạn trên các phân vùng gần đây (Tiết kiệm chi phí)
+OPTIMIZE events 
+WHERE date >= current_date() - INTERVAL 7 DAYS
+ZORDER BY (eventType, userId);
+```
 
 ### Incident 2: Dimensionality Decay (Pha loãng không gian)
 Khi bạn Z-Order quá nhiều cột, toán học của nó sẽ bị "pha loãng". 
 - **Triệu chứng:** Truy vấn chậm dần đều dù đã chạy Z-Order.
 - **Cách khắc phục:** Quy tắc vàng là **tuyệt đối không Z-Order quá 4 cột**. Chỉ chọn những cột xuất hiện nhiều nhất trong mệnh đề `WHERE` của các "Slow Queries".
 
+## 5. Advanced Configs (Cấu hình Chuyên sâu cho Senior)
+
+Trong môi trường Production lớn, bạn nên tinh chỉnh các Table Properties sau đây để Z-Order đạt hiệu năng tối đa:
+
+1. **Tuning `targetFileSize`**: Mặc định Databricks nhắm mục tiêu 1GB/tệp. Nếu hệ thống của bạn (như Athena, Presto) thích các file nhỏ hơn để nạp song song, hãy giảm xuống:
+   ```sql
+   ALTER TABLE events SET TBLPROPERTIES (
+     'delta.targetFileSize' = '268435456' -- 256MB
+   );
+   ```
+2. **Kiểm soát Indexed Columns**: Mặc định Delta chỉ thu thập Metadata (Min/Max) cho **32 cột đầu tiên**. Nếu bạn Z-Order một cột nằm ở vị trí thứ 40, Data Skipping sẽ bị "mù" và Z-Order trở nên vô dụng! Hãy cấu hình lại:
+   ```sql
+   ALTER TABLE events SET TBLPROPERTIES (
+     'delta.dataSkippingNumIndexedCols' = '50'
+   );
+   ```
+
 ## Nguồn Tham Khảo (References)
+* [Sách: Designing Data-Intensive Applications - Chapter 3 (Martin Kleppmann)](https://dataintensive.net/)
 * [Databricks Blog: Processing Petabytes of Data with Databricks Delta](https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-with-databricks-delta.html)
 * [Databricks Documentation: Z-Ordering (multi-dimensional clustering)](https://docs.databricks.com/en/delta/optimize.html#z-order-by)
 * [Whitepaper: The Delta Lake Architecture](https://github.com/delta-io/delta/blob/master/WhitePaper.md)
