@@ -9,9 +9,9 @@ metaDescription: "Khám phá bài toán Small Files trong Big Data. Hiểu rõ c
 description: "Phân tích sâu rủi ro I/O Bottleneck, sự tích tụ Tombstones trong Delta Log và cách khắc phục lỗi JVM OOMKilled khi vận hành Lakehouse quy mô lớn."
 ---
 
-Hệ thống Data Lakehouse của bạn có thể đột ngột sụp đổ hiệu năng dù tổng lượng dữ liệu không tăng nhiều. Căn bệnh thầm lặng này được cấu thành từ hai yếu tố vật lý: **Small Files Syndrome** (Hội chứng tệp siêu nhỏ) và **Tombstone Accumulation** (Tích tụ rác lịch sử). 
+Hiệu năng của hệ thống Data Lakehouse có thể suy giảm nghiêm trọng dù tổng lượng dữ liệu không tăng đáng kể. Vấn đề này thường bắt nguồn từ hai yếu tố vật lý: **Small Files Syndrome** (Hội chứng tệp siêu nhỏ) và **Tombstone Accumulation** (Tích tụ rác lịch sử). 
 
-Để sinh tồn trong môi trường Production, việc làm chủ hai công cụ `OPTIMIZE` (Chống phân mảnh) và `VACUUM` (Thu gom rác) là kỹ năng sống còn của mọi Data Engineer.
+Trong môi trường Production, việc vận hành hiệu quả hai công cụ `OPTIMIZE` (Chống phân mảnh) và `VACUUM` (Thu gom rác) là yêu cầu bắt buộc đối với Data Engineer để duy trì chi phí I/O ở mức tối ưu.
 
 ## 1. Bản chất Vật lý của "Small Files"
 
@@ -75,9 +75,9 @@ Thay vì viết cronjob lên lịch, Databricks hiện đại khuyến nghị gi
 ALTER TABLE main.default.events ENABLE PREDICTIVE OPTIMIZATION;
 ```
 
-## 5. Advanced Configs (Bí kíp cho Senior DE)
+## 5. Cấu hình nâng cao (Advanced Configs)
 
-Nếu bảng của bạn nằm ở mức hàng trăm Terabyte, các lệnh chạy mặc định có thể mất hàng giờ. Hãy bật các cờ (flags) ẩn sau đây để ép Spark chạy tối đa công suất:
+Với các bảng dữ liệu quy mô hàng trăm Terabyte, các thiết lập mặc định có thể mất nhiều giờ để hoàn thành. Bạn có thể sử dụng các cờ (flags) dưới đây để phân bổ thêm tài nguyên Spark:
 
 ### Vacuum Parallel Delete
 Mặc định, `VACUUM` chỉ chạy single-threaded (một luồng duy nhất trên Driver node). Với hàng triệu tệp Tombstones, Driver sẽ chạy rất chậm. Bật cờ này để phân phối lệnh xóa (delete commands) cho tất cả các Worker nodes:

@@ -399,6 +399,13 @@
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-optimistic-concurrency/"
     },
+    "Delta Optimize Vacuum": {
+      "title": "Cách sử dụng OPTIMIZE và VACUUM trong Databricks Delta Lake",
+      "category": "Khái niệm",
+      "definition": "",
+      "bullets": [],
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/"
+    },
     "File Formats Deep Dive": {
       "title": "Cấu trúc định dạng File: Parquet, ORC, Avro và JSON - Deep Dive",
       "category": "Khái niệm",
@@ -440,6 +447,13 @@
       "definition": "",
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/lakehouse/"
+    },
+    "Liquid Clustering Deep Dive": {
+      "title": "Liquid Clustering trong Databricks là gì? Thay thế Partitioning và Z-Order",
+      "category": "Khái niệm",
+      "definition": "",
+      "bullets": [],
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/"
     },
     "Medallion Architecture": {
       "title": "Medallion Architecture là gì? Kiến trúc Bronze - Silver - Gold trong Lakehouse",
@@ -546,12 +560,12 @@
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vector-store/"
     },
-    "Z Order Liquid Clustering": {
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering",
+    "Z Order Deep Dive": {
+      "title": "Z-Order Optimization trong Databricks và Delta Lake là gì?",
       "category": "Khái niệm",
       "definition": "",
       "bullets": [],
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/"
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/"
     },
     "Apache Spark": {
       "title": "Apache Spark là gì? Tổng quan khung xử lý dữ liệu lớn trong bộ nhớ",

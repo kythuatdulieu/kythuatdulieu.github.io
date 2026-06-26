@@ -1057,10 +1057,6 @@
       "title": "Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
-    },
-    {
       "url": "/concepts/4-compute-engines-batch/batch-processing/",
       "title": "Xử lý dữ liệu theo lô - Batch Processing"
     },
@@ -1715,10 +1711,6 @@
       "title": "Time Travel"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
-    },
-    {
       "url": "/concepts/4-compute-engines-batch/apache-spark/",
       "title": "Apache Spark"
     },
@@ -2241,10 +2233,6 @@
       "title": "Cơ sở dữ liệu Vector - Vector Database"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
-    },
-    {
       "url": "/concepts/4-compute-engines-batch/apache-spark/",
       "title": "Apache Spark"
     },
@@ -2683,6 +2671,10 @@
       "title": "Internals: Optimistic Concurrency Control trong Delta Lake"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
+      "title": "Databricks Under The Hood: Hiểu Sâu Cơ Chế OPTIMIZE & VACUUM"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/file-formats-deep-dive/",
       "title": "Cấu trúc định dạng File: Parquet, ORC, Avro và JSON - Deep Dive"
     },
@@ -2693,6 +2685,10 @@
     {
       "url": "/concepts/3-storage-engines-formats/indexing/",
       "title": "Chỉ mục Cơ sở dữ liệu - Indexing"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
     },
     {
       "url": "/concepts/3-storage-engines-formats/parquet-internals/",
@@ -2721,10 +2717,6 @@
     {
       "url": "/concepts/3-storage-engines-formats/vector-store/",
       "title": "Cơ sở dữ liệu Vector - Vector Database"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
     },
     {
       "url": "/concepts/5-stream-processing-realtime/stream-table-duality/",
@@ -2949,6 +2941,10 @@
       "title": "Internals: Optimistic Concurrency Control trong Delta Lake"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
+      "title": "Databricks Under The Hood: Hiểu Sâu Cơ Chế OPTIMIZE & VACUUM"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/file-formats-deep-dive/",
       "title": "Cấu trúc định dạng File: Parquet, ORC, Avro và JSON - Deep Dive"
     },
@@ -2963,6 +2959,10 @@
     {
       "url": "/concepts/3-storage-engines-formats/lakehouse/",
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
     },
     {
       "url": "/concepts/3-storage-engines-formats/olap/",
@@ -2997,8 +2997,8 @@
       "title": "Operational: Vacuum & Quản lý Dead Tuples trong Data Warehouse"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Thuật Toán Cốt Lõi Của Data Skipping"
     },
     {
       "url": "/concepts/4-compute-engines-batch/spark-sql/",
@@ -3245,10 +3245,6 @@
     {
       "url": "/concepts/3-storage-engines-formats/vacuum-autovacuum-mechanisms/",
       "title": "Operational: Vacuum & Quản lý Dead Tuples trong Data Warehouse"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
     },
     {
       "url": "/concepts/4-compute-engines-batch/spark-sql/",
@@ -3627,10 +3623,6 @@
       "title": "Table Format"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
-    },
-    {
       "url": "/concepts/4-compute-engines-batch/data-skew/",
       "title": "Lệch dữ liệu - Data Skew"
     },
@@ -3849,12 +3841,20 @@
       "title": "Thuật toán nén dữ liệu - Compression Algorithms"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
+      "title": "Databricks Under The Hood: Hiểu Sâu Cơ Chế OPTIMIZE & VACUUM"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
       "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Thuật Toán Cốt Lõi Của Data Skipping"
     },
     {
       "url": "/concepts/4-compute-engines-batch/apache-spark/",
@@ -6571,6 +6571,10 @@
       "title": "Google BigQuery - Nền tảng phân tích Serverless"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
       "title": "Kiến trúc Medallion - Medallion Architecture"
     },
@@ -6587,8 +6591,8 @@
       "title": "Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Thuật Toán Cốt Lõi Của Data Skipping"
     },
     {
       "url": "/concepts/4-compute-engines-batch/batch-processing/",
@@ -6753,6 +6757,10 @@
       "title": "Kiến trúc Lakehouse - Data Lakehouse"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
       "title": "Kiến trúc Medallion - Medallion Architecture"
     },
@@ -6797,8 +6805,8 @@
       "title": "Cơ sở dữ liệu Vector (Vector Database)"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Thuật Toán Cốt Lõi Của Data Skipping"
     },
     {
       "url": "/concepts/4-compute-engines-batch/apache-spark/",
@@ -8421,12 +8429,16 @@
       "title": "Thuật toán nén dữ liệu - Compression Algorithms"
     },
     {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering Deep Dive: Tạm Biệt Partitioning và Z-Ordering"
+    },
+    {
       "url": "/concepts/3-storage-engines-formats/partitioning/",
       "title": "Phân vùng Dữ liệu - Partitioning"
     },
     {
-      "url": "/concepts/3-storage-engines-formats/z-order-liquid-clustering/",
-      "title": "Tối ưu hóa truy vấn: Z-Ordering vs Liquid Clustering"
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Thuật Toán Cốt Lõi Của Data Skipping"
     },
     {
       "url": "/concepts/4-compute-engines-batch/batch-processing/",
@@ -8537,7 +8549,7 @@
       "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
     }
   ],
-  "/learning-paths/core-paths/junior-to-middle-de.md/": [
+  "/learning-paths/core-paths/junior-to-middle-de/": [
     {
       "url": "/learning-paths/core-paths/beginner-de/",
       "title": "Beginner Data Engineer (Kỹ sư dữ liệu nhập môn)"
@@ -8551,7 +8563,7 @@
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/learning-paths/core-paths/beginner-de.md/": [
+  "/learning-paths/core-paths/beginner-de/": [
     {
       "url": "/learning-paths/core-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
@@ -8665,7 +8677,7 @@
       "title": "FinOps trong Data Engineering"
     }
   ],
-  "/learning-paths/core-paths/middle-to-senior-de.md/": [
+  "/learning-paths/core-paths/middle-to-senior-de/": [
     {
       "url": "/learning-paths/core-paths/junior-to-middle-de/",
       "title": "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
@@ -8797,7 +8809,7 @@
       "title": "Case Study: Kiến trúc Log Analytics tại Uber"
     }
   ],
-  "/learning-paths/leadership-culture/de-traits-and-mindset.md/": [
+  "/learning-paths/leadership-culture/de-traits-and-mindset/": [
     {
       "url": "/learning-paths/core-paths/middle-to-senior-de/",
       "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
@@ -8911,31 +8923,31 @@
       "title": "Case Study: Kiến trúc Log Analytics tại Uber"
     }
   ],
-  "/learning-paths/specializations/data-platform-engineer.md/": [
+  "/learning-paths/specializations/data-platform-engineer/": [
     {
       "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/learning-paths/specializations/analytics-engineer.md/": [
+  "/learning-paths/specializations/analytics-engineer/": [
     {
       "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/learning-paths/specializations/streaming-data-engineer.md/": [
+  "/learning-paths/specializations/streaming-data-engineer/": [
     {
       "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/learning-paths/specializations/cloud-data-engineer.md/": [
+  "/learning-paths/specializations/cloud-data-engineer/": [
     {
       "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
     }
   ],
-  "/learning-paths/interview-prep.md/": [
+  "/learning-paths/interview-prep/": [
     {
       "url": "/learning-paths/overview/",
       "title": "Lộ trình học (Learning Paths)"
@@ -10491,6 +10503,10 @@
     {
       "url": "/concepts/3-storage-engines-formats/databricks-platform/",
       "title": "Databricks Platform"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
+      "title": "Databricks Under The Hood: Hiểu Sâu Cơ Chế OPTIMIZE & VACUUM"
     },
     {
       "url": "/concepts/8-security-governance-finops/data-masking-encryption/",
