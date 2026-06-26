@@ -36,11 +36,11 @@ sequenceDiagram
     participant Storage as Cloud Object Storage<br>(S3 / ADLS)
 
     User->>Cluster: SELECT * FROM prod.gold.users
-    Cluster->>UC: Xin quyền truy cập (Parse AST & Request Auth)
+    Cluster->>UC: Xin quyền truy cập("Parse AST & Request Auth")
     UC->>UC: Validate RBAC / IAM
-    UC-->>Cluster: Trả về Short-lived Token (STS/SAS)
+    UC-->>Cluster: Trả về Short-lived Token("STS/SAS")
     Cluster->>Storage: Read Data với Token
-    Storage-->>Cluster: Trả stream dữ liệu (Parquet/Delta)
+    Storage-->>Cluster: Trả stream dữ liệu("Parquet/Delta")
     Cluster-->>User: Query Results
 ```
 

@@ -21,28 +21,28 @@ Dưới đây là sơ đồ kiến trúc tổng thể của Vòng đời Dữ li
 
 ```mermaid
 architecture-beta
-    group source(Nguồn Dữ Liệu)
-    service web(Web/App) in source
-    service db(OLTP DB) in source
+    group source("Nguồn Dữ Liệu")
+    service web("Web/App") in source
+    service db("OLTP DB") in source
     
-    group ingestion(Thu Thập - Ingestion)
-    service kafka(Kafka/Pulsar) in ingestion
-    service cdc(Debezium CDC) in ingestion
+    group ingestion("Thu Thập - Ingestion")
+    service kafka("Kafka/Pulsar") in ingestion
+    service cdc("Debezium CDC") in ingestion
     
-    group storage(Lưu Trữ - Lakehouse)
-    service s3(S3 / GCS) in storage
-    service iceberg(Iceberg/Hudi) in storage
+    group storage("Lưu Trữ - Lakehouse")
+    service s3("S3 / GCS") in storage
+    service iceberg("Iceberg/Hudi") in storage
     
-    group processing(Xử Lý - Compute)
-    service spark(Apache Spark) in processing
-    service flink(Apache Flink) in processing
+    group processing("Xử Lý - Compute")
+    service spark("Apache Spark") in processing
+    service flink("Apache Flink") in processing
     
-    group serving(Phục Vụ - Serving)
-    service pinot(Apache Pinot) in serving
-    service trino(Trino/Presto) in serving
+    group serving("Phục Vụ - Serving")
+    service pinot("Apache Pinot") in serving
+    service trino("Trino/Presto") in serving
     
-    group archiving(FinOps & Archiving)
-    service glacier(S3 Glacier) in archiving
+    group archiving("FinOps & Archiving")
+    service glacier("S3 Glacier") in archiving
     
     db --> cdc
     web --> kafka
@@ -132,7 +132,7 @@ sequenceDiagram
     DB->>DBZ: Stream WAL changes
     DBZ->>KAFKA: Produce Event
     KAFKA->>Flink: Consume Event
-    alt Parsing Error (Poison Pill)
+    alt Parsing Error("Poison Pill")
         Flink->>DLQ: Route to DLQ
         Flink->>KAFKA: Commit Offset & Continue
     else Success

@@ -48,7 +48,7 @@ erDiagram
         string email
     }
     LINK_CUSTOMER_ORDER {
-        string hk_link_cust_order PK "MD5(hk_cust + hk_order)"
+        string hk_link_cust_order PK "MD5("hk_cust + hk_order")"
         string hk_customer FK
         string hk_order FK
         timestamp load_date

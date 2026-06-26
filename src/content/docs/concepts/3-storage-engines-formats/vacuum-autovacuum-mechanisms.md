@@ -1,89 +1,150 @@
 ---
-title: "Operational: Vacuum & Quản lý Dead Tuples trong Data Warehouse"
-description: "Tìm hiểu cơ chế MVCC, cách sinh ra Dead Tuples, và cách Vacuum/Autovacuum hoạt động để quản lý không gian lưu trữ và duy trì hiệu suất trong PostgreSQL, Delta Lake, và Apache Iceberg."
+title: "Operational: Vacuum, MVCC & Quản lý Data Bloat trong Data Warehouse"
+description: "Phân tích kiến trúc cốt lõi của Multi-Version Concurrency Control (MVCC) và cơ chế dọn rác (Vacuum/Autovacuum) trên PostgreSQL, Delta Lake, và Apache Iceberg."
+lastUpdated: 2026-06-26
 ---
 
+Trong các hệ thống quản trị cơ sở dữ liệu truyền thống như PostgreSQL và các Data Lakehouse hiện đại (Delta Lake, Apache Iceberg), cơ chế **MVCC (Multi-Version Concurrency Control)** được sử dụng làm nền tảng cốt lõi để cho phép nhiều giao dịch (transaction) cùng đọc và ghi dữ liệu đồng thời mà không bị lock (khóa) lẫn nhau. 
 
+Tuy nhiên, "cái giá" của MVCC là sự phình to dữ liệu (Data Bloat) do các phiên bản cũ bị bỏ lại. Để hệ thống không bị tràn ổ cứng hoặc suy giảm hiệu suất trầm trọng, cơ chế **Vacuum** ra đời như một Garbage Collector (Bộ thu gom rác) cho Storage Engine.
 
-Trong các hệ thống quản trị cơ sở dữ liệu (như PostgreSQL) và Data Lakehouse hiện đại (như Delta Lake, Apache Iceberg), cơ chế **MVCC (Multi-Version Concurrency Control)** được sử dụng rộng rãi để cho phép nhiều giao dịch (transaction) cùng đọc và ghi dữ liệu đồng thời mà không bị lock (khóa) lẫn nhau. Tuy nhiên, cái giá phải trả của MVCC là sự phình to dữ liệu do các phiên bản cũ không còn sử dụng, được gọi là **Data Bloat**. 
-
-Cơ chế **Vacuum** sinh ra để "dọn dẹp bãi chiến trường" này, đảm bảo hệ thống lưu trữ được tối ưu và hiệu suất truy vấn không bị suy giảm theo thời gian. Bài viết này sẽ đi sâu vào cơ chế sinh ra rác (Dead Tuples) và cách vận hành Vacuum từ RDBMS truyền thống đến các định dạng bảng hiện đại (Table Formats).
-
-## 1. Cơ chế MVCC và Sự hình thành "Rác" (Dead Tuples / Orphan Files)
-
-
-
-### 1.1. Trong RDBMS (PostgreSQL)
-Khi bạn thực hiện lệnh `UPDATE` hoặc `DELETE` trong PostgreSQL, hệ thống **không thực sự xóa bỏ** dòng dữ liệu cũ trên đĩa ngay lập tức.
-- **DELETE:** Dòng dữ liệu được đánh dấu là "đã chết" bằng cách cập nhật metadata (trường `xmax` được gán bằng ID của transaction thực hiện lệnh DELETE).
-- **UPDATE:** Thực chất là một sự kết hợp của `DELETE` và `INSERT`. Dòng cũ được đánh dấu "chết" và một dòng dữ liệu mới tinh được thêm vào bảng.
-
-Việc này giúp các truy vấn đang chạy (được bắt đầu từ trước khi có lệnh UPDATE/DELETE) vẫn có thể đọc được phiên bản cũ của dữ liệu một cách an toàn (tính nhất quán của snapshot). Nhưng qua thời gian, nếu bạn có các bảng OLTP/OLAP phải UPDATE hàng triệu dòng mỗi ngày, bảng của bạn sẽ tràn ngập "xác chết" (Dead Tuples).
-
-### 1.2. Trong Data Lakehouse (Delta Lake / Apache Iceberg)
-Các hệ thống Data Lakehouse sử dụng các file dữ liệu bất biến (immutable files) như Parquet hay ORC.
-- Khi có một thao tác `UPDATE` hoặc `DELETE`, hệ thống không thể sửa trực tiếp file Parquet hiện có.
-- Thay vào đó, nó tạo ra các file dữ liệu mới chứa kết quả sau khi cập nhật, và ghi nhận vào Transaction Log (Delta Log) hoặc Metadata Tree (Iceberg) rằng các file mới được thêm vào và các file cũ bị loại bỏ (tombstoned).
-- Các file cũ này giờ đây trở thành rác, nhưng chúng vẫn nằm trên Object Storage (S3, GCS) để hỗ trợ tính năng **Time Travel** (quay ngược thời gian). 
-
-Theo thời gian, số lượng file bị loại bỏ (orphan files hoặc unreferenced files) sẽ tăng lên, tiêu tốn chi phí lưu trữ khổng lồ.
+Bài viết này đi sâu vào phân tích kiến trúc vật lý của Dead Tuples, cách Vacuum vận hành, sự đánh đổi hệ thống (Trade-offs) và những rủi ro sập hệ thống thực tế.
 
 ---
 
-## 2. Vacuum / Autovacuum Làm Nhiệm Vụ Gì?
+## 1. Cơ chế Vật lý của MVCC và Sự hình thành "Dead Tuples"
 
-**Vacuum** là quá trình quét lại không gian lưu trữ, dọn dẹp dữ liệu rác, và giải phóng hoặc tái sử dụng không gian đĩa. Tùy thuộc vào hệ thống, quá trình này có những đặc thù riêng:
+### 1.1. Trong PostgreSQL (RDBMS)
 
-### 2.1. Vacuum trong PostgreSQL
-PostgreSQL cung cấp 2 chế độ chính:
-1. **VACUUM (Standard):** Quét qua các table, tìm các Dead Tuples và đánh dấu vùng trống đó vào **Free Space Map (FSM)** để các lệnh `INSERT`/`UPDATE` sau này có thể ghi đè lên. 
-   - Quá trình này **không làm giảm dung lượng file vật lý** (không trả lại dung lượng cho OS).
-   - Có thể chạy song song với các thao tác đọc/ghi khác.
-2. **VACUUM FULL:** Ghi lại toàn bộ bảng sang một file vật lý mới, loại bỏ hoàn toàn các khoảng trống.
-   - Giải phóng được dung lượng ổ cứng thực sự.
-   - **Nhược điểm chí mạng:** Sẽ lock (khóa cứng) toàn bộ bảng (`AccessExclusiveLock`), gây ra downtime, không ai có thể đọc hay ghi trong lúc này.
+PostgreSQL không bao giờ ghi đè trực tiếp (in-place update) lên dữ liệu vật lý. Mỗi dòng (Row/Tuple) trong PostgreSQL đều đi kèm với các trường metadata ẩn (System Columns) như `xmin` (ID của Transaction tạo ra dòng) và `xmax` (ID của Transaction xóa/cập nhật dòng).
 
-Để tự động hóa, PostgreSQL có daemon **Autovacuum** chạy ngầm. Nó liên tục theo dõi mức độ thay đổi dữ liệu của các bảng và tự động kích hoạt `VACUUM` (standard) cũng như `ANALYZE` để cập nhật thống kê (statistics) khi cần thiết. 
+Khi một lệnh `UPDATE` hoặc `DELETE` diễn ra:
+- **DELETE:** PostgreSQL cập nhật `xmax` của dòng hiện tại thành ID của Transaction gọi lệnh DELETE. Dòng này không bị xóa khỏi đĩa cứng ngay lập tức.
+- **UPDATE:** Thực chất là quá trình `DELETE` dòng cũ và `INSERT` dòng mới. 
 
-### 2.2. Vacuum trong Delta Lake và Apache Iceberg
-Khác với PostgreSQL, rác trong Data Lakehouse là các file vật lý nằm trên Object Storage. Lệnh `VACUUM` trên Delta Lake (hoặc Expire Snapshots trong Iceberg) sẽ:
-- Duyệt qua Transaction Log để xác định các file dữ liệu không còn thuộc về trạng thái dữ liệu hiện tại (hoặc không nằm trong phạm vi lịch sử được giữ lại).
-- Xóa vĩnh viễn các file Parquet/ORC này khỏi ổ cứng/S3.
+Những dòng bị đánh dấu xóa (có `xmax` hợp lệ và transaction đó đã commit) được gọi là **Dead Tuples**. Dưới đây là sơ đồ luồng mô phỏng MVCC trong PostgreSQL:
 
-Ví dụ lệnh trong Databricks (Delta Lake):
-```sql
-VACUUM events_table RETAIN 168 HOURS; -- Giữ lại lịch sử 7 ngày
+```mermaid
+sequenceDiagram
+    participant T1 as Transaction 100 (Đọc)
+    participant DB as Table (Storage)
+    participant T2 as Transaction 101 (Ghi)
+
+    T2->>DB: UPDATE row_id=1 SET val='B'
+    Note over DB: Dòng cũ: xmin=90, xmax=101("Dead Tuple")<br/>Dòng mới: xmin=101, xmax=0
+    T1->>DB: SELECT * WHERE row_id=1
+    Note right of T1: T1 bắt đầu trước T2, nên vẫn đọc<br/>dòng cũ (xmin=90, xmax=0 trong snapshot của nó).
 ```
 
----
+**Hậu quả (Data Bloat):** Nếu một bảng Transaction Table liên tục bị UPDATE, các Dead Tuples sẽ lấp đầy các Page (Block 8KB mặc định của Postgres), khiến các truy vấn `Seq Scan` (Quét tuần tự) phải đọc qua một lượng khổng lồ "rác", làm tăng I/O và giảm throughput.
 
-## 3. Quản lý và Tối Ưu Autovacuum / Vacuum
+### 1.2. Trong Data Lakehouse (Delta Lake / Apache Iceberg)
 
-### 3.1. Tối ưu Autovacuum cho PostgreSQL
-Với các bảng cập nhật thường xuyên, cấu hình Autovacuum mặc định thường không đủ nhanh để dọn dẹp, dẫn đến bảng bị Bloat nặng nề. Bạn có thể cần điều chỉnh:
-- **`autovacuum_vacuum_scale_factor`:** Mặc định là 0.2 (20%). Nghĩa là nếu 20% số dòng của bảng bị thay đổi, autovacuum mới chạy. Với bảng 100 triệu dòng, phải có 20 triệu dòng thay đổi mới kích hoạt. Hãy giảm mức này xuống (ví dụ 0.05 hoặc 0.01) cho các bảng lớn.
-- **`autovacuum_vacuum_cost_limit` và `autovacuum_vacuum_cost_delay`:** Tinh chỉnh để autovacuum chạy "mạnh" hơn thay vì ngủ đông quá lâu giữa các lần quét.
-- **Transaction ID Wraparound:** PostgreSQL dùng số nguyên 32-bit cho Transaction ID. Nếu hệ thống chạm ngưỡng 2 tỷ transaction, nó sẽ bị bọc vòng (wraparound) dẫn đến nguy cơ mất dữ liệu. Vacuum đóng vai trò quan trọng trong việc "đóng băng" (freeze) các transaction cũ để ngăn chặn thảm họa này.
+Kiến trúc Lakehouse dựa trên các file bất biến (Immutable Files) như Parquet. Do đó, hiện tượng sinh rác diễn ra ở cấp độ **File** thay vì cấp độ Tuple.
 
-### 3.2. Chiến lược Vacuum cho Data Lakehouse
-- **Schedule định kỳ:** Luôn thiết lập một job chạy định kỳ (hàng ngày hoặc hàng tuần) để `VACUUM` dữ liệu rác, nhằm tối ưu hóa chi phí lưu trữ AWS S3 / Azure Blob Storage.
-- **Tránh việc Vacuum quá ngắn:** Đừng đặt thời gian Retention quá thấp (ví dụ: `RETAIN 0 HOURS`), nếu không bạn sẽ đối mặt với rủi ro cực lớn.
+- Khi có lệnh `MERGE`, `UPDATE` hoặc `DELETE`, hệ thống sẽ ghi các bản ghi hợp lệ sang một (hoặc nhiều) file Parquet mới.
+- Các file cũ bị đánh dấu là "Tombstoned" (trong Delta Log) hoặc bị loại khỏi Snapshot mới nhất (trong Iceberg Manifest).
+- Các file cũ này vẫn nằm trơ trọi trên Object Storage (Amazon S3 / GCS) để phục vụ cho **Time Travel** (Truy vấn lại dữ liệu trong quá khứ).
+
+Nếu không được dọn dẹp, dung lượng S3 sẽ tăng theo cấp số nhân.
 
 ---
 
-## 4. Cảnh Báo "Sập Bẫy" Khi Chạy Vacuum trên Data Lakehouse
+## 2. Kiến trúc Thực thi Vật lý (Physical Execution) của Vacuum
 
-Rất nhiều Junior Data Engineer mắc sai lầm chí mạng: Chạy lệnh `VACUUM` với Retention = 0 giờ trên Delta Lake để "tiết kiệm tối đa chi phí S3 ngay lập tức". Hậu quả để lại rất khôn lường:
+### 2.1. PostgreSQL: Standard Vacuum vs Vacuum Full
 
-1. **Mất khả năng Time Travel:** Tính năng `Time Travel` (quay ngược thời gian dữ liệu, ví dụ đọc lại trạng thái bảng lúc 8h sáng) bị vô hiệu hóa hoàn toàn, vì các file lưu trữ trạng thái đó đã bị xóa mất. Khả năng phục hồi khi ghi nhầm dữ liệu (Disaster Recovery) là số không.
-2. **Crash Streaming Jobs và Long-running Queries:** Nếu có một job đọc dữ liệu chậm, hoặc một streaming job đang âm thầm đọc các file cũ, job đó sẽ **crash lập tức** vì file đã "bốc hơi" khỏi ổ cứng (Lỗi `FileNotFoundException`). 
-3. **Môi trường Production:** Ở môi trường Production, quy tắc bất thành văn là luôn giữ Retention của Vacuum tối thiểu từ **3 đến 7 ngày**, đủ thời gian để các batch job/streaming hoàn tất cũng như xử lý các sự cố khẩn cấp.
+PostgreSQL chia tiến trình dọn dẹp làm hai chiến lược với Trade-offs hoàn toàn trái ngược nhau.
+
+#### Standard VACUUM (Cơ chế dọn dẹp chạy ngầm)
+- **Cách hoạt động:** Quét các Page trong bảng, xác định các Dead Tuples và thêm địa chỉ của chúng vào **Free Space Map (FSM)**. Từ đó, các lệnh `INSERT`/`UPDATE` tiếp theo có thể chèn dữ liệu vào các khoảng trống này.
+- **Trade-off:** Rất nhẹ, chạy song song với các thao tác Đọc/Ghi (`ShareUpdateExclusiveLock`). Tuy nhiên, nó **không trả lại dung lượng (Disk Space) cho Hệ điều hành (OS)**. File vật lý vẫn giữ nguyên kích thước lớn nhất nó từng đạt.
+
+#### VACUUM FULL (Rebuild toàn bộ bảng)
+- **Cách hoạt động:** Tạo ra một file vật lý hoàn toàn mới, copy toàn bộ Live Tuples (dữ liệu còn sống) sang, sau đó xóa file cũ. Trả lại toàn bộ không gian cho OS.
+- **Trade-off chí mạng:** Yêu cầu `AccessExclusiveLock`. Toàn bộ bảng bị khóa cứng. **Mọi thao tác SELECT, INSERT, UPDATE, DELETE đều bị block cho đến khi chạy xong.** Không bao giờ dùng lệnh này trên Production vào giờ cao điểm!
+
+```mermaid
+graph TD
+    A["Bảng bị Bloat"] --> B{Lựa chọn Vacuum?}
+    B -->|Standard VACUUM| C["Quét & Cập nhật Free Space Map"]
+    B -->|VACUUM FULL| D["Khóa Bảng AccessExclusiveLock"]
+    C --> E["Tái sử dụng không gian bên trong file<br/>(Không trả cho OS)"]
+    D --> F["Rebuild File Mới<br/>(Trả dung lượng cho OS)"]
+```
+
+### 2.2. Delta Lake: VACUUM Command
+
+Trong Delta Lake, lệnh `VACUUM` xóa vĩnh viễn các file dữ liệu vật lý không còn được tham chiếu bởi Delta Log và đã cũ hơn một khoảng thời gian giữ lại (Retention Period).
+
+```sql
+-- Chạy trên Spark SQL / Databricks
+-- Lệnh này xóa các file rác cũ hơn 168 giờ (7 ngày)
+VACUUM events_table RETAIN 168 HOURS;
+```
+
+**Bẫy Vận Hành (Operational Trap):** Nhiều Junior Data Engineer thường set `RETAIN 0 HOURS` để tiết kiệm chi phí S3. Nếu có một job Streaming đang ngầm đọc một file cũ (để xử lý late data), mà lệnh VACUUM vừa xóa mất file đó trên S3, Streaming Job sẽ **crash lập tức** với lỗi `FileNotFoundException`.
+
+### 2.3. Apache Iceberg: Tách bạch Metadata và Data Files
+
+Iceberg giải quyết bài toán Data Bloat một cách tinh tế hơn bằng việc chia Garbage Collection thành 2 phase riêng biệt:
+
+1. **`expire_snapshots` (Dọn dẹp Metadata):** Xóa các Snapshot cũ khỏi `metadata.json`, giúp metadata không bị phình to làm chậm quá trình Query Planning của Trino/Spark.
+2. **`remove_orphan_files` (Dọn dẹp Physical Files):** Quét thư mục S3, so sánh với các file đang được Snapshot hợp lệ tham chiếu. Bất kỳ file Parquet nào không nằm trong danh sách sẽ bị xóa bỏ.
+
+```sql
+-- Iceberg Spark SQL Thực chiến
+-- Bước 1: Xóa Metadata Snapshot cũ hơn 7 ngày
+CALL catalog.system.expire_snapshots(
+  table => 'db.events',
+  older_than => TIMESTAMP '2026-06-19 00:00:00.000',
+  retain_last => 5
+);
+
+-- Bước 2: Dọn rác vật lý bị mồ côi (Orphan files)
+CALL catalog.system.remove_orphan_files(
+  table => 'db.events',
+  older_than => TIMESTAMP '2026-06-23 00:00:00.000'
+);
+```
+Sự tách bạch này giúp Iceberg an toàn hơn: `remove_orphan_files` có thể dọn được cả các file rác sinh ra do quá trình Write bị crash giữa chừng (những file chưa kịp đưa vào metadata).
 
 ---
 
-## Tài Liệu Tham Khảo
+## 3. Rủi ro Vận hành & Cấu hình Autovacuum (Troubleshooting)
 
-* [PostgreSQL Documentation: Routine Vacuuming](https://www.postgresql.org/docs/current/routine-vacuuming.html)
-* [Databricks: Vacuum a Delta table](https://docs.databricks.com/en/delta/vacuum.html)
-* [Apache Iceberg: Maintenance (Expire Snapshots, Remove Orphan Files)](https://iceberg.apache.org/docs/latest/maintenance/)
-* [SSTables and LSM-Trees - Designing Data-Intensive Applications (Chapter 3)](https://dataintensive.net/)
+### 3.1. Thảm họa Transaction ID Wraparound (PostgreSQL)
+PostgreSQL dùng số nguyên 32-bit cho Transaction ID (XID), giới hạn ở khoảng 2 tỷ (2,147,483,648). Khi hệ thống chạm đến giới hạn này, XID sẽ "bọc vòng" (wraparound) quay về 0. 
+- **Hậu quả:** Các transaction hiện tại sẽ thấy dữ liệu cũ kỹ (vừa ghi hôm qua) bỗng nhiên biến thành dữ liệu "của tương lai" (do XID > 2 tỷ lớn hơn XID 0), khiến mọi dữ liệu biến mất khỏi các lượt đọc. Database sẽ **ngừng hoạt động (force shutdown)** để bảo vệ dữ liệu.
+- **Cách khắc phục:** Vacuum đóng vai trò cực kỳ quan trọng trong việc "đóng băng" (Freeze) các XID cũ. Khi `age(relfrozenxid)` của một bảng quá cao, Autovacuum sẽ kích hoạt cơ chế `VACUUM FREEZE` để đánh dấu dòng đó là "vĩnh viễn hiển thị với mọi người", reset XID age về 0.
+
+### 3.2. Cấu hình Autovacuum Thực chiến cho Bảng Lớn
+Autovacuum chạy ngầm và dựa vào công thức:
+`Ngưỡng_kích_hoạt = autovacuum_vacuum_threshold + autovacuum_vacuum_scale_factor * số_dòng_của_bảng`
+
+Mặc định, `scale_factor` là 0.2 (20%). Nếu bảng có 1 tỷ dòng, phải có 200 triệu dòng thay đổi thì Autovacuum mới chạy. Điều này là **quá trễ** cho các hệ thống High-Traffic.
+
+**Code Cấu hình (`postgresql.conf`):**
+```yaml
+# Tinh chỉnh chung để Autovacuum chạy mạnh mẽ hơn
+autovacuum_max_workers = 5              # Tăng số luồng chạy song song (mặc định 3)
+autovacuum_vacuum_cost_limit = 2000     # Tăng limit I/O để chạy nhanh hơn (mặc định 200)
+autovacuum_vacuum_cost_delay = 2ms      # Giảm độ trễ giữa các lượt quét (mặc định 20ms)
+
+# Đối với bảng siêu lớn, nên ALTER TABLE riêng thay vì chỉnh toàn cục:
+# ALTER TABLE heavy_updates SET (autovacuum_vacuum_scale_factor = 0.01);
+```
+
+### 3.3. Chiến lược Retention an toàn cho Data Lakehouse
+Ở môi trường Production, quy tắc bất thành văn cho Delta Lake / Iceberg là:
+- Luôn giữ Retention của Vacuum tối thiểu từ **3 đến 7 ngày**. 
+- Khoảng thời gian này là độ trễ an toàn để các Batch Job chạy lại khi có sự cố, cũng như để Team Data có thể "Time Travel" truy nguyên nguyên nhân nếu logic xử lý bị lỗi.
+
+---
+
+## 4. Nguồn Tham Khảo (References)
+
+1. [Understanding autovacuum in Amazon RDS for PostgreSQL environments (AWS Database Blog)](https://aws.amazon.com/blogs/database/understanding-autovacuum-in-amazon-rds-for-postgresql-environments/)
+2. [Apache Iceberg Maintenance: Expire Snapshots & Remove Orphan Files (Official Docs)](https://iceberg.apache.org/docs/latest/maintenance/)
+3. [Databricks: Vacuum a Delta table (Official Docs)](https://docs.databricks.com/en/delta/vacuum.html)
+4. *Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval)* - Martin Kleppmann.

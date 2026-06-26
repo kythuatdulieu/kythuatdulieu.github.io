@@ -42,7 +42,7 @@ graph TD
     
     subgraph ML Infrastructure
         C -->|Feature Store| E["Training Data<br/>Baseline"]
-        E --> F("(ML Model"))
+        E --> F("(ML Model")
         D --> F
         F -->|Predictions| G("Inference Table<br/>Inputs + Outputs")
     end

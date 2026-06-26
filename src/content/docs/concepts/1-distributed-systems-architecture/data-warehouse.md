@@ -32,7 +32,7 @@ graph TD
         VW2["Virtual Warehouse 2<br/>ETL - 16 Nodes"]
     end
     subgraph Network
-        Net("(High-speed Cloud Network"))
+        Net("(High-speed Cloud Network")
     end
     subgraph Storage Layer
         S3["(Amazon S3 / GCS<br/>Centralized Data)"]

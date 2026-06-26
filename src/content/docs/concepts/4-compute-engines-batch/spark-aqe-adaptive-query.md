@@ -21,7 +21,7 @@ Khi dữ liệu được tính toán xong ở Map-side và Spill xuống đĩa (
 ```mermaid
 graph TD
     A["Start Stage 1"] --> B("Map Tasks Execute")
-    B --> C{"Materialization Point \n("Shuffle Write")"}
+    B --> C{"Materialization Point \n("Shuffle Write")}
     C -->|Feed Exact Stats| D["AQE Framework"]
     D --> E("Catalyst: Re-optimize Logical Plan")
     E --> F("Catalyst: Generate New Physical Plan")

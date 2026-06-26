@@ -1,112 +1,198 @@
 ---
-title: "Học không cần ví dụ (Zero-shot)"
-difficulty: "Beginner"
-tags: ["genai", "prompt-engineering", "zero-shot", "llm", "nlp"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Zero-shot Prompting là gì? Cẩm nang học không cần ví dụ cho LLM"
-metaDescription: "Tìm hiểu chuyên sâu về kỹ thuật Zero-shot trong Prompt Engineering: định nghĩa, cơ chế hoạt động, best practices và các câu hỏi phỏng vấn thực tế."
-description: "Khám phá kỹ thuật Zero-shot Prompting: Khi nào bạn nên giao phó nhiệm vụ cho AI mà không cần đưa ra ví dụ mẫu. Cơ chế, ứng dụng và cách tối ưu hóa."
+title: "Zero-shot Prompting: Từ Kiến trúc Học Máy đến Pipeline Dữ Liệu"
+difficulty: "Intermediate"
+tags: ["genai", "prompt-engineering", "zero-shot", "llm", "data-engineering", "architecture"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Zero-shot Prompting trong Data Engineering: Text-to-SQL & PII Detection"
+metaDescription: "Phân tích chuyên sâu về Zero-shot Prompting dưới góc nhìn Data Engineering: Ứng dụng trong Streaming PII, Text-to-SQL, Trade-offs hệ thống và rủi ro vận hành."
+description: "Vượt qua định nghĩa cơ bản, bài viết phân tích cách tích hợp Zero-shot Inference vào các Data Pipeline thực chiến, giải quyết bài toán Text-to-SQL, Streaming PII Detection, và các đánh đổi hệ thống (FinOps, Latency)."
 ---
 
+Đa số các tài liệu về Prompt Engineering mô tả **Zero-shot Prompting** như một phép màu: Bạn ra lệnh cho AI (Large Language Models - LLM) dịch một đoạn văn hoặc tóm tắt tài liệu mà không cần cung cấp bất kỳ ví dụ mẫu nào (Zero examples), và nó vẫn làm được. 
 
+Tuy nhiên, dưới góc nhìn của một Kỹ sư Dữ liệu (Data Engineer), Zero-shot không phải là ma thuật. Nó là quá trình **Inference (Suy luận)** dựa hoàn toàn vào **Parametric Memory** (Trí nhớ tham số - kiến thức được nén trong các trọng số Weights của Neural Network sau quá trình Pre-training và Instruction Tuning), thay vì **Contextual Memory** (Trí nhớ ngữ cảnh - thông tin được tiêm vào qua Prompt).
 
-## 1. Zero-shot Prompting là gì?
+Bài viết này sẽ mổ xẻ Zero-shot Prompting dưới lăng kính System Design, phân tích cách nhúng kỹ thuật này vào các Data Pipeline chịu tải cao, và những rủi ro vận hành (Operational Risks) đi kèm.
 
+---
 
+## 1. Bản chất Kỹ thuật: Parametric Memory vs. Contextual Grounding
 
-Hãy tưởng tượng bạn tuyển dụng một người trợ lý vô cùng xuất chúng, vừa tốt nghiệp xuất sắc từ mọi trường đại học hàng đầu trên thế giới. Bạn đưa cho họ một tài liệu tiếng Anh và yêu cầu: *"Hãy dịch tài liệu này sang tiếng Việt"*. Bạn không hề đưa ra bất kỳ mẫu dịch nào trước đó (ví dụ: "Apple dịch là Quả Táo, Hello là Xin Chào"). Dù vậy, người trợ lý vẫn hiểu ngay lập tức và hoàn thành xuất sắc công việc. 
+Khi bạn gọi một API LLM (như OpenAI, Anthropic) với Zero-shot Prompting, bạn đang ép mô hình phải lục lọi trong không gian vector khổng lồ của nó để tìm ra pattern phù hợp nhất với yêu cầu.
 
-Trong thế giới của Trí tuệ Nhân tạo (AI) và các Mô hình Ngôn ngữ Lớn (LLM - Large Language Models), **Zero-shot Prompting** chính là tình huống đó.
+*   **Zero-shot:** Phụ thuộc 100% vào Parametric Memory. Payload nhỏ (ít token), Network I/O thấp, TTFT (Time-To-First-Token) cực nhanh.
+*   **Few-shot / RAG:** Phụ thuộc vào Contextual Grounding. Payload lớn, tiêu tốn VRAM cho KV Cache, tăng Compute Cost và Latency.
 
-Cụ thể hơn, **Zero-Shot Prompting** (Học không cần ví dụ) là kỹ thuật mà người dùng đưa ra một mệnh lệnh, yêu cầu thẳng thừng cho mô hình AI mà **không cung cấp thêm bất kỳ ví dụ mẫu nào** (Zero examples) trong phần prompt. Mô hình phải dựa hoàn toàn vào những "kiến thức bản năng" đã được học trong quá trình huấn luyện (pre-training) và tinh chỉnh (instruction tuning) để tự suy luận ý định của người dùng và định dạng cần thiết để phản hồi.
+Trong thiết kế hệ thống, Zero-shot được xem là **Base Layer (Lớp cơ sở)** rẻ nhất và nhanh nhất. Chỉ khi Base Layer thất bại (chất lượng dữ liệu đầu ra không đạt yêu cầu SLA), chúng ta mới kích hoạt các chiến lược fallback tốn kém hơn như Few-shot hoặc RAG.
 
-## 2. Cơ chế hoạt động của Zero-shot
+---
 
-Để một mô hình AI có thể hiểu được lệnh Zero-shot, nó cần trải qua hai quá trình quan trọng:
+## 2. Kiến trúc Ứng dụng 1: Streaming PII Detection (Hybrid Approach)
 
-1. **Pre-training (Tiền huấn luyện):** Mô hình được tiếp xúc với một lượng dữ liệu khổng lồ (văn bản trên internet, sách, bài báo...). Tại đây, nó học được ngữ pháp, từ vựng, kiến thức chung và cả khả năng suy luận logic cơ bản của con người.
-2. **Instruction Tuning (Tinh chỉnh theo hướng dẫn) & RLHF (Học tăng cường từ phản hồi của con người):** Đây là bước "dạy" cho mô hình biết cách lắng nghe mệnh lệnh và hành xử như một trợ lý thay vì chỉ dự đoán từ tiếp theo. Nhờ bước này, LLM biết rằng khi bạn nói "Hãy tóm tắt...", nó cần thực hiện hành động tóm tắt chứ không phải viết tiếp đoạn văn bản đó.
+Một trong những bài toán kinh điển của Data Engineering hiện đại là phát hiện và che giấu (Redaction) dữ liệu nhạy cảm (PII - Personally Identifiable Information) trong các luồng dữ liệu thời gian thực (Streaming Data) như Kafka hoặc Kinesis trước khi đổ vào Data Lakehouse.
 
-**Ví dụ một prompt Zero-shot cơ bản:**
+Nếu dùng Zero-shot LLM để quét toàn bộ message, hệ thống sẽ gặp **Bottleneck khủng khiếp** về Latency và API Cost. Giải pháp thực chiến là kiến trúc **Hybrid Privacy Gateway**, kết hợp Regex/NER Engine (như Microsoft Presidio) làm Pass 1, và Zero-shot LLM làm Pass 2 cho các trường hợp nhập nhằng (Ambiguity).
 
-```text
-Phân loại cảm xúc của câu sau đây thành Tích cực, Tiêu cực hoặc Trung tính:
-"Dịch vụ chăm sóc khách hàng của công ty này thật sự rất tệ, tôi phải chờ hơn một tiếng đồng hồ mới có người nhấc máy."
-
-Kết quả:
+```mermaid
+graph TD
+    A["Kafka Topic: Raw Logs"] --> B("Privacy Proxy / Flink Job")
+    B --> C{Pass 1: Presidio Regex/NER}
+    C -->|High Confidence PII| D["Redaction / Masking"]
+    C -->|Low Confidence / Unstructured| E{Pass 2: Zero-shot LLM API}
+    E -->|Detected PII| D
+    E -->|Clean| F
+    D --> F["Kafka Topic: Sanitized Logs"]
+    F --> G["(Data Lakehouse)"]
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
-Trong ví dụ này, chúng ta không hề đưa ra ví dụ mẫu nào về câu tích cực hay tiêu cực trước đó, nhưng mô hình vẫn dễ dàng trả về `Tiêu cực`.
+### Triển khai Code (Python)
 
-## 3. Các ứng dụng phổ biến của Zero-shot Prompting
+Dưới đây là mô phỏng luồng xử lý Fallback, nơi Zero-shot Prompting được cấu hình chặt chẽ để trả về JSON (bắt buộc trong Data Pipeline để tránh lỗi Parse):
 
-Zero-shot Prompting tỏa sáng trong các tác vụ liên quan đến hiểu biết ngôn ngữ tự nhiên cơ bản:
+```python
+import json
+from presidio_analyzer import AnalyzerEngine
+# Giả sử chúng ta dùng một client LLM siêu nhẹ (như Llama-3-8B nội bộ)
+from llm_client import invoke_llm 
 
-* **Phân loại văn bản (Text Classification):** Phân loại tin tức (thể thao, chính trị, giải trí), phân tích cảm xúc (tích cực, tiêu cực), phát hiện thư rác (spam).
-* **Dịch thuật (Translation):** Dịch các đoạn văn bản từ ngôn ngữ này sang ngôn ngữ khác.
-* **Tóm tắt (Summarization):** Trích xuất ý chính từ các văn bản dài.
-* **Trích xuất thông tin (Information Extraction):** Lấy các thực thể (Tên người, Địa điểm, Thời gian) ra khỏi một đoạn văn.
-* **Trả lời câu hỏi (Question Answering):** Trả lời các câu hỏi về kiến thức chung.
+analyzer = AnalyzerEngine()
 
-## 4. Ưu điểm và Nhược điểm
+def process_stream_record(record: str) -> str:
+    # Pass 1: Deterministic Filtering (Zero Latency)
+    results = analyzer.analyze(text=record, entities=["EMAIL_ADDRESS", "PHONE_NUMBER"], language='en')
+    
+    if len(results) > 0:
+        return redact_deterministic(record, results)
+        
+    # Pass 2: Fallback to Zero-shot LLM for ambiguous context
+    # (Chỉ trigger khi Pass 1 không tìm thấy nhưng message nằm trong topic nhạy cảm)
+    system_prompt = """
+    You are a strict PII detection API. 
+    Analyze the text and output ONLY a valid JSON object. 
+    Schema: {"has_pii": boolean, "entities": [string]}
+    Do not include markdown blocks or explanations.
+    """
+    
+    user_prompt = f"Text: {record}"
+    
+    # Zero-shot inference call
+    llm_response = invoke_llm(system_prompt=system_prompt, prompt=user_prompt)
+    
+    try:
+        # Trong Pipeline, mọi response từ LLM đều có nguy cơ làm sập Schema
+        parsed_result = json.loads(llm_response)
+        if parsed_result.get("has_pii"):
+            return redact_llm_entities(record, parsed_result["entities"])
+        return record
+    except json.JSONDecodeError:
+        # Operational Risk: LLM Hallucination / Format Breakage
+        log_incident("LLM_FORMAT_ERROR", llm_response)
+        # Fallback an toàn: Đẩy vào Dead Letter Queue (DLQ)
+        send_to_dlq(record)
+        return ""
+```
 
-### Ưu điểm
+---
 
-* **Đơn giản, dễ sử dụng:** Bạn chỉ cần gõ yêu cầu của mình như đang nói chuyện với một người bình thường.
-* **Tiết kiệm Token (và chi phí):** Việc không phải nhồi nhét nhiều ví dụ vào prompt giúp tiết kiệm đáng kể số lượng token, từ đó giảm chi phí khi sử dụng API và tăng tốc độ phản hồi.
-* **Khả năng tổng quát hóa cao:** Những mô hình ngôn ngữ lớn hiện đại như GPT-4, Claude 3, Gemini 1.5 xử lý cực kỳ tốt Zero-shot trên nhiều lĩnh vực.
+## 3. Kiến trúc Ứng dụng 2: Zero-shot Text-to-SQL
 
-### Nhược điểm
+Mô hình Text-to-SQL cho phép người dùng kinh doanh (Business Users) truy vấn Data Warehouse bằng ngôn ngữ tự nhiên. Tuy nhiên, gửi một Zero-shot prompt như *"Lấy doanh thu tháng này"* thẳng cho LLM sẽ dính ngay lỗi **Context Saturation (Bão hòa ngữ cảnh)** nếu Database của bạn có hàng nghìn bảng.
 
-* **Kém hiệu quả với các tác vụ phức tạp:** Khi yêu cầu đòi hỏi những logic đặc thù, nghiệp vụ riêng biệt của doanh nghiệp, hoặc cấu trúc phản hồi quá phức tạp, Zero-shot thường thất bại hoặc đưa ra kết quả không nhất quán.
-* **Dễ gặp ảo giác (Hallucination):** Mô hình có thể "bịa" ra thông tin nếu không có các ràng buộc chặt chẽ từ ví dụ mẫu.
-* **Khó kiểm soát định dạng:** Mặc dù bạn có thể yêu cầu mô hình trả về định dạng JSON hay XML, nhưng nếu không có ví dụ cụ thể, mô hình đôi khi vẫn trả về kèm theo các đoạn văn bản thừa (ví dụ: "Dưới đây là kết quả JSON của bạn: ...").
+Kiến trúc chuẩn (Agentic Workflow) sẽ chia Text-to-SQL thành nhiều bước, trong đó Zero-shot được áp dụng cho từng Agent chuyên biệt:
 
-## 5. Best Practices khi sử dụng Zero-shot
+1.  **Schema Routing Agent (Zero-shot):** Nhận câu hỏi và chọn ra 3-5 bảng có khả năng liên quan nhất từ Metadata Catalog.
+2.  **SQL Generation Agent (Zero-shot / Few-shot):** Nhận câu hỏi + Lược đồ (Schema) của 5 bảng đã lọc -> Sinh ra SQL.
+3.  **Guard Layer (Verification):** Chạy lệnh `EXPLAIN` trên Data Warehouse (Snowflake/BigQuery). Nếu lỗi Cú pháp, gửi lại Error Trace cho Generator Agent tự sửa (Self-Correction).
 
-Để tối đa hóa sức mạnh của Zero-shot Prompting, bạn nên áp dụng các mẹo sau:
+### Cấu hình Terraform cho Guard Layer (AWS WAF + Bedrock)
 
-1. **Rõ ràng và cụ thể (Clear and Specific):** Hãy nêu chính xác những gì bạn muốn. Tránh những câu từ mơ hồ.
-   * ❌ *Kém:* "Làm cho câu này hay hơn."
-   * ✅ *Tốt:* "Hãy viết lại câu sau đây theo phong cách chuyên nghiệp, ngôn ngữ trang trọng để gửi cho đối tác kinh doanh."
-2. **Xác định vai trò (Role-playing):** Gán cho AI một vai trò cụ thể để định hình cách trả lời.
-   * *"Đóng vai một chuyên gia phân tích dữ liệu với 10 năm kinh nghiệm..."*
-3. **Cung cấp đủ bối cảnh (Context is King):** Dù không có ví dụ mẫu, bạn vẫn phải cung cấp bối cảnh đầy đủ cho dữ liệu bạn đang đưa vào.
-4. **Chỉ định rõ ràng định dạng đầu ra (Output Formatting):** Sử dụng các ký hiệu rõ ràng (như ngoặc kép, dấu gạch ngang) để phân tách giữa hướng dẫn và dữ liệu đầu vào.
-   * *"Trả về kết quả duy nhất ở định dạng JSON, không giải thích gì thêm."*
+Bạn không bao giờ được phép thực thi trực tiếp SQL sinh ra từ Zero-shot LLM vào Database mà không có cơ chế Read-Only và Rate Limiting.
 
-## 6. Zero-shot vs. Few-shot: Khi nào nên dùng kỹ thuật nào?
+```hcl
+# Thiết lập Role chỉ có quyền SELECT cho Text-to-SQL Agent
+resource "aws_iam_role" "text_to_sql_executor" {
+  name = "text-to-sql-readonly-role"
 
-Một trong những quyết định quan trọng của Prompt Engineering là lựa chọn giữa Zero-shot và Few-shot (Đưa ra một vài ví dụ).
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
 
-| Tiêu chí | Zero-shot | Few-shot |
-| :--- | :--- | :--- |
-| **Sử dụng khi nào?** | Tác vụ chung chung, phổ biến. AI đã được huấn luyện rất kỹ. | Tác vụ đặc thù, logic nội bộ, format đầu ra khắt khe. |
-| **Chi phí Token** | Thấp | Cao (tốn thêm token cho các ví dụ) |
-| **Tốc độ phản hồi** | Nhanh hơn | Chậm hơn một chút (phụ thuộc độ dài ví dụ) |
-| **Tính nhất quán của Output** | Trung bình - Khá | Rất cao |
+resource "aws_iam_policy" "athena_readonly_policy" {
+  name        = "AthenaReadOnlyForLLM"
+  description = "Chỉ cho phép chạy SELECT queries"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["athena:StartQueryExecution", "athena:GetQueryExecution", "athena:GetQueryResults"]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Action   = ["s3:GetObject", "s3:ListBucket"]
+        Effect   = "Allow"
+        Resource = ["arn:aws:s3:::data-lake-prod/*", "arn:aws:s3:::data-lake-prod"]
+      }
+    ]
+  })
+}
+```
 
-**Luật bất thành văn:** Luôn luôn bắt đầu với **Zero-shot**. Nếu mô hình thực hiện tốt, hãy giữ nguyên. Nếu kết quả không đạt yêu cầu, lúc đó hãy nâng cấp lên **Few-shot**.
+---
 
-## 7. Câu hỏi phỏng vấn thực tế
+## 4. Systemic Trade-offs (Đánh đổi Hệ thống) & FinOps
 
-**Câu hỏi 1: Sự khác biệt giữa Zero-shot learning trong AI truyền thống và Zero-shot prompting đối với LLMs là gì?**
-> **Gợi ý trả lời:**
-> * Trong AI truyền thống, "Zero-shot learning" (ZSL) thường ám chỉ việc huấn luyện một mô hình phân loại (hình ảnh hoặc văn bản) có khả năng nhận diện các nhãn (labels) mà nó *chưa từng* được nhìn thấy trong tập huấn luyện (thường thông qua việc dùng các attribute hoặc word embeddings làm cầu nối).
-> * Trong LLMs, "Zero-shot prompting" là quá trình tương tác (inference time) nơi chúng ta không cung cấp các ví dụ input-output minh họa nào trong prompt, mà dựa vào khả năng tổng quát hóa từ lượng kiến thức khổng lồ có sẵn của mô hình (đã được fine-tune qua Instruction Tuning).
+Khi quyết định sử dụng Zero-shot thay vì Fine-tuning hay Few-shot trong Data Pipelines, Staff Engineer cần cân nhắc các điểm mù sau:
 
-**Câu hỏi 2: Tại sao một mô hình mạnh (như GPT-4) đôi khi vẫn thất bại với Zero-shot ở những tác vụ tưởng chừng đơn giản (như in ra kết quả JSON chuẩn)? Cách khắc phục?**
-> **Gợi ý trả lời:**
-> * Mô hình thường được huấn luyện để trở nên "thân thiện và giải thích" (như một chatbot), dẫn đến việc nó hay thêm các cụm từ đệm như "Chắc chắn rồi, đây là đoạn mã JSON của bạn:".
-> * **Cách khắc phục trong Zero-shot:** 
->   1. Sử dụng System Prompt mạnh (ví dụ: "You are a JSON generator API. Output only valid JSON. No Markdown formatting. No explanations.").
->   2. Cung cấp tiền tố cho câu trả lời (Assistant pre-fill): Ví dụ bắt đầu phần phản hồi bằng ký tự `{`.
->   3. Nếu vẫn thất bại, buộc phải chuyển sang Few-shot hoặc sử dụng các công cụ ép kiểu trả về của API (như JSON mode / Structured Outputs của OpenAI).
+| Tiêu chí | Zero-shot Prompting | Few-shot Prompting / RAG | Fine-Tuning |
+| :--- | :--- | :--- | :--- |
+| **Network I/O & TTFT** | **Tốt nhất.** Payload gọn nhẹ (vài trăm tokens). Phản hồi tính bằng ms. | Trung bình - Kém. Phải nhét ví dụ/context, làm phình to payload. | Tốt. Payload nhỏ tương đương Zero-shot. |
+| **Compute Cost (FinOps)** | **Rẻ nhất.** Càng ít Input Token, hóa đơn API càng thấp. | Đắt đỏ do Input Tokens tăng theo cấp số nhân (đặc biệt với RAG). | Tốn chi phí MLOps và GPU khổng lồ để huấn luyện/host ban đầu. |
+| **Accuracy (Tính chính xác)** | Thấp - Trung bình. Phụ thuộc vào Parametric Memory. Dễ sinh lỗi Format. | Cao. Được "Grounding" bởi các ví dụ cụ thể. | Rất Cao cho tác vụ đặc thù (Domain-specific). |
 
-## 8. Tài liệu tham khảo
+**Bài toán FinOps:** Giả sử bạn xử lý 10 triệu records/ngày. Nếu dùng Few-shot (1000 tokens/prompt) giá `\$5/1M tokens`, bạn mất `\$50/ngày`. Nếu tối ưu xuống Zero-shot (100 tokens/prompt), chi phí giảm 10 lần xuống còn `\$5/ngày`. Sự chênh lệch này là khổng lồ khi Scale lên quy mô Enterprise.
 
-* [Kojima, T. et al. (2022). "Large Language Models are Zero-Shot Reasoners" (Let's think step by step)](https://arxiv.org/abs/2205.11916)
-* [Wei, J. et al. (2021). "Finetuned Language Models Are Zero-Shot Learners"](https://arxiv.org/abs/2109.01652)
-* [OpenAI Prompt Engineering Guide - Zero-shot](https://platform.openai.com/docs/guides/prompt-engineering)
-* **Learn Prompting: Zero-Shot Prompting**
+---
+
+## 5. Rủi ro Vận hành (Operational Risks) & Real-world Incidents
+
+Đưa Zero-shot vào Production không bao giờ là màu hồng. Dưới đây là các sự cố (Incidents) thường gặp và cách khắc phục:
+
+### 1. Sự cố: Format Breakage (Vỡ định dạng JSON)
+*   **Hiện tượng:** Pipeline sập vì hàm `json.loads()` văng lỗi. LLM (dù được dặn trả về JSON) thỉnh thoảng vẫn thêm câu mở đầu: *"Here is your JSON response: {..."*.
+*   **Khắc phục:** 
+    *   Sử dụng **Structured Outputs API** (như tính năng JSON Mode của OpenAI) để ép kiểu dữ liệu ở mức độ Tokenizer.
+    *   Luôn bọc lời gọi LLM trong khối `try-catch` và đẩy records lỗi vào **Dead Letter Queue (DLQ)** để xử lý lại (Retry) với Temperature = 0 hoặc đổi sang mô hình thông minh hơn.
+
+### 2. Sự cố: Silent Failures (Thất bại im lặng trong Text-to-SQL)
+*   **Hiện tượng:** LLM sinh ra câu SQL hợp lệ (Valid Syntax), chạy thành công không báo lỗi, nhưng logic sai bét (ví dụ: `JOIN` nhầm bảng hoặc quên lọc `WHERE is_deleted = false`). Hậu quả là Dashboard báo cáo sai số liệu, CEO ra quyết định sai.
+*   **Khắc phục:** 
+    *   Zero-shot tuyệt đối **không** được dùng một mình trong Data Analytics.
+    *   Phải thiết kế **Semantic Layer (Lớp ngữ nghĩa)**: LLM không viết SQL thuần mà sẽ gọi các dbt Metrics hoặc Cube.js API (vd: `SELECT * FROM metrics.monthly_revenue`).
+
+### 3. Sự cố: Throttling & Retry Storms
+*   **Hiện tượng:** Khi có một đợt Spike Traffic (ví dụ: Backfill dữ liệu lịch sử), hàng triệu lời gọi Zero-shot bắn về API của OpenAI/Anthropic gây ra lỗi `429 Too Many Requests`. Các node Worker liên tục Retry, tạo ra "Bão Retry" làm sập toàn bộ cluster.
+*   **Khắc phục:** Triển khai cơ chế **Exponential Backoff with Jitter** và sử dụng Circuit Breaker pattern. Đối với Batch Processing cường độ cao, cân nhắc triển khai các mô hình Local (như Llama-3, Mistral) trên Kubernetes (vLLM, TGI) để làm chủ Throughput.
+
+---
+
+## 6. Nguồn Tham Khảo (References)
+
+1.  [Kojima, T. et al. (2022). "Large Language Models are Zero-Shot Reasoners"](https://arxiv.org/abs/2205.11916) - *Nghiên cứu gốc về sức mạnh tiềm ẩn của Zero-shot thông qua kích hoạt "Let's think step by step".*
+2.  [Building Multi-Agent Text-to-SQL Systems (Towards Data Science)](https://towardsdatascience.com/) - *Các mẫu kiến trúc cho hệ thống Data Analytics dựa trên LLM.*
+3.  [Microsoft Presidio: Data Protection and Anonymization SDK](https://microsoft.github.io/presidio/) - *Tài liệu chính thức cho công cụ lọc PII Deterministic.*
+4.  [AWS Architecture Blog: Real-time Data Streaming with LLMs](https://aws.amazon.com/blogs/architecture/) - *Tham chiếu cách thiết lập Guard Layers và API Gateways cho hệ thống AI phân tán.*

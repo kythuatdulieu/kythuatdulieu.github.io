@@ -2,176 +2,168 @@
 title: "Normalized Discounted Cumulative Gain - NDCG"
 difficulty: "Advanced"
 tags: ["ndcg", "metrics", "search-engine", "reranking", "information-retrieval", "machine-learning"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-16
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
 seoTitle: "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking"
 metaDescription: "Tìm hiểu chi tiết Normalized Discounted Cumulative Gain (NDCG). Metric cốt lõi để đánh giá hiệu năng xếp hạng (ranking) trong hệ thống Tìm kiếm, RecSys và RAG."
 description: "Khi xây dựng một công cụ tìm kiếm (Search Engine), hệ thống gợi ý (Recommender System) hay bước tái xếp hạng (Reranking), NDCG là chỉ số không thể thiếu để đo lường chất lượng xếp hạng dựa trên độ liên quan."
 ---
 
+NDCG (Normalized Discounted Cumulative Gain) là thước đo chuẩn công nghiệp (industry standard) để đánh giá chất lượng của các hệ thống Xếp hạng (Ranking) như Search Engine, Recommender Systems và pipeline RAG (Retrieval-Augmented Generation). Không giống như Precision hay Recall chỉ quan tâm đến tính nhị phân (Đúng/Sai), NDCG trừng phạt nặng nề (penalize) các hệ thống trả về kết quả liên quan ở vị trí thấp. 
 
-
-NDCG (Normalized Discounted Cumulative Gain) là một chỉ số cực kỳ quan trọng dùng để đánh giá các thuật toán Xếp hạng (Ranking) và các hệ thống như Search Engine, Recommender Systems hay Hệ thống Hỏi đáp (RAG). Nó không chỉ quan tâm đến việc "Có trả về tài liệu đúng hay không" mà còn đặc biệt chú trọng việc "Tài liệu đúng nhất (độ liên quan cao nhất) có nằm ở vị trí đầu tiên (top 1) hay không".
-
----
-
-## 1. Vấn đề mà NDCG giải quyết
-
-
-
-Trong các hệ thống Information Retrieval truyền thống, chúng ta thường dùng các độ đo như Precision, Recall, hay F1-Score. Tuy nhiên, các metric này gặp phải hai điểm nghẽn chính khi áp dụng cho bài toán Ranking:
-1. **Chỉ dùng nhị phân (Binary Relevance):** Tài liệu chỉ có thể là "Có liên quan" hoặc "Không liên quan". Trong thực tế, độ liên quan thường là một thang điểm liên tục (ví dụ: từ 0 đến 3, trong đó 3 là cực kỳ liên quan, 0 là không liên quan).
-2. **Không xét thứ hạng (Order-agnostic):** Nếu một tài liệu cực kỳ liên quan nằm ở vị trí thứ 10, Precision@10 sẽ đánh giá nó tương đương với việc tài liệu đó nằm ở vị trí thứ 1. Điều này không đúng với kỳ vọng của người dùng khi họ hầu như chỉ nhìn vào các kết quả đầu tiên.
-
-NDCG ra đời để giải quyết triệt để hai vấn đề này.
+Trong thực tế vận hành tại các công ty lớn (Netflix, Spotify, Amazon), việc tối ưu NDCG không chỉ là một bài toán Toán học mà là một bài toán Hệ thống (Systems Engineering) đi kèm với những đánh đổi khốc liệt về Latency, Compute Cost và Memory.
 
 ---
 
-## 2. Phân tích từng thành phần: CG, DCG và NDCG
+## Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Để hiểu NDCG, chúng ta cần đi qua từng khái niệm tạo nên nó. Giả sử hệ thống trả về danh sách $p$ kết quả cho một truy vấn. Mỗi kết quả có một mức độ liên quan (relevance score) $rel_i$, trong đó $i$ là vị trí xếp hạng.
+Trong các hệ thống phân tán, quá trình tìm kiếm không bao giờ đánh giá toàn bộ kho dữ liệu bằng một model nặng nề. Thay vào đó, hệ thống sử dụng thiết kế **Two-Stage Retrieval (Truy xuất 2 giai đoạn)** để cân bằng giữa NDCG và Latency.
 
-### 2.1. Cumulative Gain (CG)
-
-**Cumulative Gain** là tổng các độ liên quan của $p$ kết quả trả về. Nó chỉ đơn giản là cộng dồn điểm liên quan mà không quan tâm đến thứ tự.
-
-$$CG_p = \sum_{i=1}^{p} rel_i$$
-
-**Nhược điểm:** Nếu hệ thống A trả về tài liệu tốt ở vị trí top 1, và hệ thống B trả về tài liệu tốt ở vị trí top 10, thì $CG_{10}$ của cả hai hệ thống là bằng nhau.
-
-### 2.2. Discounted Cumulative Gain (DCG)
-
-Để phạt (penalize) những tài liệu có độ liên quan cao nhưng lại xuất hiện ở vị trí thấp, chúng ta áp dụng một hàm phạt (discount function) dựa trên vị trí (logarithm của vị trí xếp hạng). Tài liệu càng nằm sâu bên dưới thì "đóng góp" của nó vào tổng điểm càng bị giảm đi (discounted).
-
-Công thức DCG thường dùng nhất (do Burges et al. đề xuất và áp dụng mạnh mẽ tại Microsoft):
-
-$$DCG_p = \sum_{i=1}^{p} \frac{2^{rel_i} - 1}{\log_2(i + 1)}$$
-
-- **Tử số ($2^{rel_i} - 1$):** Đề cao mạnh mẽ các tài liệu có độ liên quan cao (vì dùng hàm mũ).
-- **Mẫu số ($\log_2(i + 1)$):** Phạt các tài liệu nằm ở vị trí thấp. $\log$ được dùng thay vì tuyến tính để phản ánh đúng thực tế hành vi người dùng: Sự khác biệt giữa top 1 và top 2 quan trọng hơn rất nhiều so với top 11 và top 12.
-
-### 2.3. Normalized Discounted Cumulative Gain (NDCG)
-
-Giá trị DCG phụ thuộc vào truy vấn (query). Có truy vấn dễ, hệ thống tìm được nhiều tài liệu cực kỳ liên quan (DCG sẽ rất lớn). Có truy vấn khó, chỉ có vài tài liệu hơi liên quan (DCG sẽ nhỏ). Do đó, chúng ta không thể dùng DCG để so sánh hay tính trung bình qua nhiều truy vấn khác nhau.
-
-Để chuẩn hóa, ta chia DCG cho **IDCG (Ideal DCG)**.
-IDCG là giá trị DCG tối đa có thể đạt được cho truy vấn đó (tức là khi các tài liệu được sắp xếp giảm dần theo mức độ liên quan thực tế).
-
-$$NDCG_p = \frac{DCG_p}{IDCG_p}$$
-
-Giá trị của $NDCG_p$ luôn nằm trong khoảng $[0, 1]$. Điểm $1.0$ có nghĩa là hệ thống đã trả về danh sách hoàn hảo y hệt như danh sách tối ưu lý tưởng.
-
----
-
-## 3. Ví dụ Tính Toán Chi Tiết
-
-Giả sử chúng ta có một truy vấn *"cách tính ndcg"* và hệ thống Search trả về 5 tài liệu ($p=5$).
-Các chuyên gia đánh giá mức độ liên quan thực tế ($rel_i$) theo thang điểm từ 0 đến 3 (3 là cao nhất) cho 5 tài liệu này theo thứ tự hệ thống trả về lần lượt là: **2, 0, 3, 1, 2**.
-
-**Bước 1: Tính DCG@5**
-
-| Vị trí (i) | Độ liên quan ($rel_i$) | Tử số ($2^{rel_i} - 1$) | Mẫu số ($\log_2(i+1)$) | Gain được discount |
-|------------|-----------------------|-------------------------|------------------------|--------------------|
-| 1          | 2                     | $2^2 - 1 = 3$           | $\log_2(2) = 1$        | 3.000              |
-| 2          | 0                     | $2^0 - 1 = 0$           | $\log_2(3) \approx 1.585$| 0.000              |
-| 3          | 3                     | $2^3 - 1 = 7$           | $\log_2(4) = 2$        | 3.500              |
-| 4          | 1                     | $2^1 - 1 = 1$           | $\log_2(5) \approx 2.322$| 0.431              |
-| 5          | 2                     | $2^2 - 1 = 3$           | $\log_2(6) \approx 2.585$| 1.160              |
-
-Tổng $DCG_5 = 3.000 + 0.000 + 3.500 + 0.431 + 1.160 = \mathbf{8.091}$
-
-**Bước 2: Tính IDCG@5 (Trường hợp lý tưởng)**
-
-Để đạt DCG lớn nhất, thứ tự lý tưởng của các tài liệu phải được sắp xếp giảm dần theo điểm liên quan: **3, 2, 2, 1, 0**.
-
-| Vị trí (i) | Độ liên quan ($rel_i$) lý tưởng | Gain được discount lý tưởng |
-|------------|---------------------------------|-----------------------------|
-| 1          | 3                               | $(2^3-1)/\log_2(2) = 7.000$ |
-| 2          | 2                               | $(2^2-1)/\log_2(3) \approx 1.893$|
-| 3          | 2                               | $(2^2-1)/\log_2(4) = 1.500$ |
-| 4          | 1                               | $(2^1-1)/\log_2(5) \approx 0.431$|
-| 5          | 0                               | $(2^0-1)/\log_2(6) = 0.000$ |
-
-Tổng $IDCG_5 = 7.000 + 1.893 + 1.500 + 0.431 + 0.000 = \mathbf{10.824}$
-
-**Bước 3: Tính NDCG@5**
-
-$$NDCG_5 = \frac{8.091}{10.824} \approx \mathbf{0.748}$$
-
-Kết quả $0.748$ (hay $74.8\%$) cho thấy thuật toán Ranking hiện tại còn dư địa cải thiện, chủ yếu vì tài liệu siêu liên quan (3 điểm) bị tụt xuống vị trí số 3, trong khi tài liệu rác (0 điểm) lại chễm chệ ở vị trí số 2.
-
----
-
-## 4. Các Trường Hợp Cần Lưu Ý (Edge Cases)
-
-* **IDCG bằng 0:** Xảy ra khi toàn bộ tài liệu trong tập dữ liệu (hoặc kết quả trả về) đều có độ liên quan bằng 0 ($rel_i = 0, \forall i$). Khi đó phép chia cho 0 sẽ gây lỗi `ZeroDivisionError`. Cách xử lý chuẩn là quy ước $NDCG = 0.0$ trong trường hợp này.
-* **Tài liệu thiếu nhãn (Unjudged Documents):** Trong thực tế, không thể đánh nhãn thủ công cho toàn bộ kho tài liệu hàng triệu bản ghi. Các tài liệu chưa có nhãn thường được giả định mặc định là không liên quan ($rel = 0$). Điều này có thể khiến $NDCG$ đánh giá sai lệch các thuật toán có khả năng khám phá tài liệu tốt mà chưa ai từng chấm điểm.
-* **$k$ lớn hơn số lượng tài liệu có sẵn:** Khi tính NDCG@k nhưng tập dữ liệu chỉ có $n$ kết quả ($n < k$), thuật toán thường sẽ đệm thêm (padding) các vị trí còn lại bằng tài liệu có điểm liên quan bằng 0 để đảm bảo công bằng khi so sánh.
-
----
-
-## 5. Triển Khai Code (Python)
-
-Bạn có thể tự cài đặt NDCG hoặc sử dụng các thư viện Machine Learning phổ biến như `scikit-learn`.
-
-### 5.1. Sử dụng Scikit-Learn
-
-```python
-from sklearn.metrics import ndcg_score
-import numpy as np
-
-# y_true chứa mức độ liên quan thực tế của danh sách kết quả
-# Phải reshape thành mảng 2D (n_samples, n_labels)
-y_true = np.asarray([[2, 0, 3, 1, 2]])
-
-# y_score chứa điểm số do model dự đoán (được dùng để sắp xếp kết quả)
-# Ở đây ta giả sử mô hình dự đoán ra điểm số giảm dần để giữ nguyên thứ tự hiện tại của y_true
-y_score = np.asarray([[5.0, 4.0, 3.0, 2.0, 1.0]])
-
-# Tính NDCG@5
-ndcg_at_5 = ndcg_score(y_true, y_score, k=5)
-print(f"NDCG@5: {ndcg_at_5:.4f}") 
-# Kết quả có thể khác đôi chút do công thức mặc định của scikit-learn sử dụng log base 2 và tử số (rel_i) nguyên bản hoặc 2^(rel_i)-1.
+```mermaid
+sequenceDiagram
+    participant User
+    participant Gateway (API)
+    participant L1("BM25 / Vector DB")
+    participant L2("Cross-Encoder Reranker")
+    
+    User->>Gateway (API): Search Query
+    Gateway (API)->>L1("BM25 / Vector DB"): Query("Top 1000 - Candidate Gen")
+    L1("BM25 / Vector DB")-->>Gateway (API): 1000 Fast Results("Low Precision")
+    Gateway (API)->>L2("Cross-Encoder Reranker"): Rerank Top 100
+    Note over L2("Cross-Encoder Reranker"): Optimize for NDCG@10
+    L2("Cross-Encoder Reranker")-->>Gateway (API): 100 Ranked Results
+    Gateway (API)-->>User: Top 10 Results
 ```
 
-### 5.2. Tự cài đặt từ đầu (From Scratch)
+1. **L1 - Candidate Generation (Lọc thô):** Sử dụng Inverted Index (BM25) hoặc HNSW Vector Index (OpenSearch, Pinecone). Giai đoạn này đề cao Recall (lấy ra 1000-2000 tài liệu nhanh nhất có thể).
+2. **L2 - Reranking (Tái xếp hạng):** Chạy Learning-to-Rank (LTR) bằng XGBoost (LambdaMART) hoặc LLM Cross-Encoders (như Cohere Rerank) trên Top 100 kết quả từ L1 để tối ưu hóa trực tiếp điểm NDCG.
+
+*(Tham khảo kiến trúc mẫu:* `![Architecture Placeholder](/images/9-genai-machine-learning/architecture_placeholder.png)` *)*
+
+---
+
+## Bản chất Toán học đằng sau NDCG
+
+Dưới góc nhìn toán học, NDCG chia vấn đề thành 3 lớp:
+
+1. **Cumulative Gain (CG):** Tổng điểm liên quan của tất cả tài liệu trả về. (Thiếu nhạy cảm với vị trí).
+2. **Discounted Cumulative Gain (DCG):** Phạt các tài liệu liên quan nằm ở vị trí sâu bằng hàm Logarit. Sự khác biệt giữa Top 1 và Top 2 lớn hơn rất nhiều so với Top 10 và Top 11. 
+   $$DCG_p = \sum_{i=1}^{p} \frac{2^{rel_i} - 1}{\log_2(i + 1)}$$
+3. **Normalized DCG (NDCG):** Chuẩn hóa DCG bằng cách chia cho IDCG (Ideal DCG - giá trị lý tưởng nhất nếu các tài liệu được sắp xếp hoàn hảo). Điều này giúp so sánh chất lượng Ranking giữa các truy vấn khác nhau (vì có truy vấn dễ, có truy vấn khó).
+
+---
+
+## Show, Don't Tell: Thực thi Pipeline NDCG
+
+### 1. Tính toán Offline NDCG ở quy mô lớn (PySpark)
+
+Data Engineers không tính NDCG cho một query. Chúng ta tính nó cho hàng triệu logs (Clickstream data) mỗi ngày. Chạy vòng lặp `for` trên Pandas sẽ gây ra hiện tượng OOM (Out of Memory) hoặc chạy mất nhiều ngày. Thay vào đó, hãy dùng Window Functions của PySpark.
 
 ```python
-import numpy as np
+from pyspark.sql import SparkSession
+from pyspark.sql.window import Window
+import pyspark.sql.functions as F
 
-def dcg_at_k(r, k):
-    """Tính toán DCG@k cho list điểm liên quan r."""
-    r = np.asfarray(r)[:k]
-    if r.size:
-        return np.sum((np.power(2, r) - 1) / np.log2(np.arange(2, r.size + 2)))
-    return 0.
+spark = SparkSession.builder.appName("NDCG_Pipeline").getOrCreate()
 
-def ndcg_at_k(r, k):
-    """Tính toán NDCG@k cho list điểm liên quan r."""
-    dcg_max = dcg_at_k(sorted(r, reverse=True), k) # IDCG
-    if not dcg_max:
-        return 0.
-    return dcg_at_k(r, k) / dcg_max
+# Schema giả định: query_id, document_id, relevance_score (từ human label hoặc click)
+df = spark.read.parquet("s3://data-lake/search-logs/date=2026-06-26/")
 
-# Ví dụ như bài toán trên
-relevance_scores = [2, 0, 3, 1, 2]
-print(f"NDCG@5: {ndcg_at_k(relevance_scores, 5):.4f}")
-# Output: NDCG@5: 0.7475
+# Window phân cụm theo query_id, sắp xếp theo thứ hạng mô hình dự đoán
+window_model = Window.partitionBy("query_id").orderBy(F.col("model_rank").asc())
+
+# Window lý tưởng (Ideal), sắp xếp giảm dần theo relevance_score
+window_ideal = Window.partitionBy("query_id").orderBy(F.col("relevance_score").desc())
+
+# Tính DCG và IDCG với K=10
+K = 10
+
+def calculate_dcg(rank_col):
+    return (F.pow(2, F.col("relevance_score")) - 1) / F.log2(rank_col + 1)
+
+df_metrics = df.withColumn("model_pos", F.row_number().over(window_model)) \
+               .withColumn("ideal_pos", F.row_number().over(window_ideal)) \
+               .filter(F.col("model_pos") <= K) \
+               .withColumn("dcg_val", calculate_dcg(F.col("model_pos"))) \
+               .withColumn("idcg_val", calculate_dcg(F.col("ideal_pos")))
+
+# Aggregation
+ndcg_df = df_metrics.groupBy("query_id").agg(
+    (F.sum("dcg_val") / F.sum("idcg_val")).alias("ndcg_at_10")
+).fillna(0.0) # Handle ZeroDivisionError
+
+ndcg_df.show(5)
+```
+
+### 2. Triển khai OpenSearch với LTR (Terraform)
+
+Để tích hợp LTR đánh giá NDCG vào production, bạn cần cấu hình OpenSearch cluster thông qua Terraform. 
+
+```hcl
+resource "aws_opensearch_domain" "search_cluster" {
+  domain_name           = "prod-search-ltr"
+  engine_version        = "OpenSearch_2.11"
+
+  cluster_config {
+    instance_type          = "r6g.2xlarge.search" # RAM-heavy instances cho Inverted Index
+    instance_count         = 5
+    zone_awareness_enabled = true
+  }
+
+  advanced_options = {
+    "rest.action.multi.allow_explicit_index" = "true"
+    # Tuning cache size để chống tràn RAM khi rank
+    "indices.queries.cache.size"             = "15%" 
+  }
+
+  ebs_options {
+    ebs_enabled = true
+    volume_size = 500
+    volume_type = "gp3"
+    iops        = 3000 # Critical for High Throughput read
+  }
+}
 ```
 
 ---
 
-## 6. Ưu Điểm và Nhược Điểm của NDCG
+## Rủi ro Vận hành (Operational Risks) & Troubleshooting
 
-| Khía Cạnh | NDCG |
-|-----------|------|
-| **Ưu điểm** | - Đánh giá cao thứ hạng của các kết quả hàng đầu (phù hợp với thực tế người dùng).<br>- Hỗ trợ các nhãn độ liên quan đa bậc (multi-level relevance) thay vì chỉ nhị phân (0-1).<br>- Chuẩn hóa được qua các truy vấn khác nhau, dễ dàng tính trung bình để đánh giá toàn hệ thống. |
-| **Nhược điểm**| - Không phạt các tài liệu xấu (bad documents). Tài liệu rác chỉ đơn giản là có gain = 0, chứ không làm giảm chỉ số DCG tổng.<br>- Tính toán phức tạp hơn Precision/Recall.<br>- Gặp khó khăn khi có nhiều unjudged documents trong pool kết quả. |
+Trong thực tế, triển khai một pipeline tối ưu NDCG tiềm ẩn nhiều rủi ro sập hệ thống. 
+
+### 1. OOMKilled do Cartesian Explosion ở Giai đoạn L1
+- **Triệu chứng:** Container của L2 (Reranker) liên tục bị Crash/OOMKilled, P99 Latency tăng vọt lên 5000ms.
+- **Nguyên nhân (Root Cause):** Hệ thống L1 trả về quá nhiều Candidates (ví dụ: truy vấn quá chung chung như "áo", trả về 100,000 documents thay vì 1,000). Reranker sử dụng GPU/CPU để cross-encode tất cả các cặp `(query, document)`. Độ phức tạp là $O(N)$ nhưng với BERT base, mỗi phép toán tốn kém vô cùng, dẫn tới tràn RAM.
+- **Giải pháp (Troubleshooting):** Áp dụng Hard Limit (ví dụ: `size=500` cho L1) và sử dụng Circuit Breakers. Nếu kích thước payload từ L1 vượt quá threshold, bỏ qua L2 và trả về thẳng kết quả L1 (Degraded State) để bảo vệ Availability.
+
+### 2. Hiện tượng "Missing Labels" và Hồi quy NDCG (Model Regression)
+- **Triệu chứng:** NDCG rớt thê thảm trên Dashboard nhưng Business Metrics (Conversion Rate, Clicks) lại tăng.
+- **Nguyên nhân:** Tập đánh giá (Judgment list) thiếu nhãn (Unjudged Documents). Reranker mới (Dùng Semantic Search) tìm ra các tài liệu rất xuất sắc nhưng chưa từng được con người đánh giá (mặc định $rel=0$). Trong khi đó Reranker cũ (Keyword Match) chỉ trả ra các tài liệu cũ đã được gán nhãn $rel=3$. Do đó, mô hình mới bị NDCG phạt oan.
+- **Giải pháp:** Theo dõi chỉ số **Unjudged Rate**. Nếu > 10%, dừng so sánh NDCG ngay lập tức và chuyển sang đánh giá A/B Testing Online (Interleaving).
 
 ---
 
-## 7. Tài Liệu Tham Khảo Mở Rộng
+## Systemic Trade-offs: Latency vs. Throughput vs. Relevance
 
-* [Manning, Raghavan, Schütze - Introduction to Information Retrieval (Chapter 8: Evaluation in IR)](https://nlp.stanford.edu/IR-book/pdf/08eval.pdf)
-* [Burges et al. - Learning to Rank using Gradient Descent (ICML 2005)](https://icml.cc/2015/wp-content/uploads/2015/06/icml_ranking.pdf)
-* [Scikit-learn documentation for ndcg_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html)
+Tối ưu hóa NDCG luôn đòi hỏi sự đánh đổi (Trade-off):
+
+- **NDCG vs. Latency:** Tăng số lượng tài liệu đẩy vào L2 Reranker (Ví dụ: Rerank top 1000 thay vì Top 100) sẽ giúp tăng NDCG@10 thêm khoảng 2-3%. Tuy nhiên, P99 Latency sẽ tăng gấp 10 lần (từ 50ms lên 500ms). Trong e-commerce, trễ 100ms làm giảm 1% doanh thu. *Trade-off: Phải giới hạn Window Size của Reranker ở mức an toàn.*
+- **Cross-Encoder vs Bi-Encoder:** Bi-Encoder (so sánh Vector Cosine) cho phép pre-compute offline, cực kỳ nhanh (Latency tính bằng microsecond), throughput lớn nhưng NDCG thấp. Cross-Encoder (cấp query và document cùng lúc vào Transformers) có NDCG cao nhất nhưng Latency rất lớn và không thể pre-compute. *Trade-off: Dùng Bi-Encoder cho L1 và Cross-Encoder cho L2.*
+
+---
+
+## Tối ưu Chi phí (FinOps)
+
+Chạy LLM Rerankers để đua top NDCG trên mọi truy vấn sẽ đốt sạch ngân sách hạ tầng (Cloud Bill).
+1. **Semantic Caching:** Khoảng 60-70% lượng Search Queries tuân theo phân phối đuôi dài (Power Law / Pareto). Sử dụng Redis hoặc Elasticache để cache kết quả đã rerank của các truy vấn phổ biến. 
+2. **CPU-Optimized Rerankers:** Chạy Cross-Encoders trên GPU rất đắt (Nvidia A10G/T4). Có thể sử dụng các mô hình nhỏ (như `bge-reranker-v2-m3` hoặc LightGBM/XGBoost LambdaMART) đã được lượng tử hóa (Quantized INT8) hoặc compile qua ONNX Runtime để chạy trực tiếp trên CPU instances (như AWS Graviton3 `c7g`), tiết kiệm tới 60% chi phí.
+
+---
+
+## Nguồn Tham Khảo (References)
+
+1. [Netflix TechBlog: Offline Evaluation of Ranking](https://netflixtechblog.com) - Mổ xẻ cách Netflix dùng NDCG để đánh giá recommendation systems.
+2. [Spotify Engineering: Evaluating Personalization](https://engineering.atspotify.com) - Ứng dụng NDCG vào bài toán Home screen.
+3. [AWS Machine Learning Blog: OpenSearch Learning to Rank](https://aws.amazon.com/blogs/machine-learning) - Giải pháp kiến trúc chi tiết cho L1-L2 ranking pipeline.
+4. [Manning, Raghavan, Schütze - Introduction to Information Retrieval](https://nlp.stanford.edu/IR-book/pdf/08eval.pdf) - Chương 8: Đánh giá trong IR (Sách gối đầu giường của mọi Data Engineer). 
+5. Cấu hình Terraform tham khảo từ tài liệu chính thức của [Terraform AWS Provider (OpenSearch)](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/opensearch_domain).

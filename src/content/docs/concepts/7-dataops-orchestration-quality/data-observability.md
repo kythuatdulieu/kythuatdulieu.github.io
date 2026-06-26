@@ -40,7 +40,7 @@ graph TD
     B -.->|Information Schema, Query History| E
     C -.->|dbt manifest.json, run_results.json| E
     
-    G -->|Slack / PagerDuty| H("(Data Engineer"))
+    G -->|Slack / PagerDuty| H("(Data Engineer")
 ```
 
 ### Đánh đổi Hệ thống (Systemic Trade-offs): Metadata-driven vs. Data-driven

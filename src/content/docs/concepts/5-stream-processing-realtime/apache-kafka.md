@@ -50,14 +50,14 @@ Trước phiên bản 2.8.0, Kafka phụ thuộc vào một cluster **Apache Zoo
 
 ```mermaid
 graph TD
-    subgraph "ZooKeeper Era("Legacy")"
+    subgraph "ZooKeeper Era("Legacy")
         Z1("ZooKeeper Node") --- Z2("ZooKeeper Node")
         Z2 --- Z3("ZooKeeper Node")
         K1("Kafka Broker") -.-> Z1
         K2("Kafka Broker") -.-> Z2
     end
     
-    subgraph "KRaft Era("Modern")"
+    subgraph "KRaft Era("Modern")
         KR1["Controller Node"] --- KR2["Controller Node"]
         KR2 --- KR3["Controller Node"]
         KB1["Broker Node"] -.-> KR1

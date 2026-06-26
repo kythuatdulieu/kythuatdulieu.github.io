@@ -95,7 +95,7 @@ spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes=256MB
 
 ## 3. Real-World Incident: Cartesian Explosion do Null Values
 **Tình huống:** Một Data Pipeline liên tục sập (OOM) khi Join dữ liệu giao dịch với thông tin người dùng. 
-**Phân tích nguyên nhân (Root Cause):** Khóa `user_id` trong hệ thống chứa tới 15 triệu bản ghi mang giá trị `Null` (khách hàng vãng lai không đăng nhập). Khi Join, Spark tự động nhóm 15 triệu dòng này vào cùng một Partition. Tệ hơn, nếu bên bảng B cũng có `Null`, Spark thực hiện phép Cartesian Product (Tích Đề-các), tạo ra $15M \times 15M$ dòng trên một RAM Executor.
+**Phân tích nguyên nhân (Root Cause):** Khóa `user_id` trong hệ thống chứa tới 15 triệu bản ghi mang giá trị `Null` (khách hàng vãng lai không đăng nhập). Khi Join, Spark tự động nhóm 15 triệu dòng này vào cùng một Partition. Tệ hơn, nếu bên bảng B cũng có `Null`, Spark thực hiện phép Cartesian Product (Tích Đề-các), tạo ra \$15M \times 15M$ dòng trên một RAM Executor.
 **Cách khắc phục:** Luôn loại bỏ `Null` (`filter(col.isNotNull)`) hoặc gán ngẫu nhiên (UUID) trước khi Shuffle.
 
 ---

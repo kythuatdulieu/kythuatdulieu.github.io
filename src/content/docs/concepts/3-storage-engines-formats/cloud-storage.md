@@ -76,13 +76,13 @@ Kiến trúc hiện đại (Modern Data Stack) sử dụng S3 làm trung tâm, t
 
 ```mermaid
 graph TD
-    subgraph Compute Layer["Compute Engines("Ephemeral")"]
+    subgraph Compute Layer["Compute Engines(Ephemeral)"]
         A("Spark Cluster")
         B("Trino / Presto")
         C("Snowflake Warehouse")
     end
     
-    subgraph Storage Layer["Cloud Object Storage("Persistent")"]
+    subgraph Storage Layer["Cloud Object Storage(Persistent)"]
         D["(Amazon S3 / GCS)"]
     end
     

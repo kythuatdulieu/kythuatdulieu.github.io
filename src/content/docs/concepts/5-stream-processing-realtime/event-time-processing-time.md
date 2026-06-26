@@ -19,13 +19,13 @@ Khái niệm thời gian trong luồng dữ liệu (Stream Processing) không ph
 
 ```mermaid
 sequenceDiagram
-    participant Source as App/IoT (Event Time)
+    participant Source as App/IoT("Event Time")
     participant Network as Internet/Kafka
-    participant Worker as Flink TaskManager (Processing Time)
+    participant Worker as Flink TaskManager("Processing Time")
     
-    Source->>Network: T=12:00:00 (Event Generated)
-    Note over Network: Mạng nghẽn, rớt gói tin, mất sóng (Latency & Jitter)
-    Network->>Worker: T=12:05:30 (Data Arrives)
+    Source->>Network: T=12:00:00("Event Generated")
+    Note over Network: Mạng nghẽn, rớt gói tin, mất sóng("Latency & Jitter")
+    Network->>Worker: T=12:05:30("Data Arrives")
     Note over Worker: Worker Windowing dựa trên Event Time (12:00:00) hoặc Processing Time (12:05:30)
 ```
 

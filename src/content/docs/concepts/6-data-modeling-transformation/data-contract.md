@@ -22,25 +22,25 @@ Data Contract không phải là một file PDF hay tài liệu Confluence mà Pr
 ```mermaid
 sequenceDiagram
     participant BE as Backend Engineer
-    participant Git as Git Repository (CI/CD)
+    participant Git as Git Repository("CI/CD")
     participant CLI as Data Contract CLI / Linter
     participant Reg as Schema Registry
     participant Kafka as Kafka Broker (Topic)
-    participant DE as Data Pipeline (Flink/Spark)
+    participant DE as Data Pipeline("Flink/Spark")
 
-    BE->>Git: 1. Push code (thay đổi Schema)
+    BE->>Git: 1. Push code("thay đổi Schema")
     Git->>CLI: 2. Kích hoạt CI/CD Pipeline
     CLI->>Reg: 3. Fetch Contract v1.0
     CLI-->>CLI: 4. Chạy kiểm tra Backward Compatibility
     
-    alt Vi phạm Contract (Ví dụ: Xóa cột required)
-        CLI--xGit: 5a. Lỗi CI (Build Failed)
+    alt Vi phạm Contract("Ví dụ: Xóa cột required")
+        CLI--xGit: 5a. Lỗi CI("Build Failed")
         Git--xBE: Yêu cầu tạo phiên bản Contract mới
     else Hợp lệ
         CLI->>Reg: 5b. Đăng ký Contract v1.1
         Git->>Kafka: 6. Deploy Backend Service
         BE->>Kafka: 7. Produce messages
-        Kafka->>DE: 8. Consume messages (An toàn)
+        Kafka->>DE: 8. Consume messages("An toàn")
     end
 ```
 

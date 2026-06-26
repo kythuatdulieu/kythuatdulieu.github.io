@@ -28,14 +28,14 @@ Khi một User chạy câu lệnh `SELECT * FROM sales_data`, request không đi
 ```mermaid
 sequenceDiagram
     participant U as User / Client
-    participant C as Compute Engine (Spark/Trino)
-    participant CP as Control Plane (Unity Catalog / Lake Formation)
-    participant S as Storage (S3 / GCS)
+    participant C as Compute Engine("Spark/Trino")
+    participant CP as Control Plane("Unity Catalog / Lake Formation")
+    participant S as Storage("S3 / GCS")
 
     U->>C: 1. SELECT * FROM sales.us_data
     C->>CP: 2. Request Table Metadata & Permissions
     CP-->>C: 3. Return Temporary STS Token & Location
-    C->>S: 4. Read Parquet files (using STS Token)
+    C->>S: 4. Read Parquet files("using STS Token")
     S-->>C: 5. Return Data Blocks
     C-->>U: 6. Return Result Set
 ```

@@ -136,7 +136,8 @@ Khi một sự cố SEV-0 xảy ra, sự hỗn loạn là kẻ thù lớn nhất
 Sử dụng sơ đồ dưới đây để hình dung quy trình từ lúc phát sinh đến lúc xử lý triệt để:
 
 ```mermaid
-stateDiagram-v2["*"] --> Detection: Cảnh báo tự động / User Report
+stateDiagram-v2
+    [*] --> Detection: Cảnh báo tự động / User Report
     Detection --> Triage: Đánh giá mức độ (SEV)
     Triage --> Mobilization: Page PagerDuty, gọi IC & Responders
     Mobilization --> Mitigation: Khôi phục dịch vụ (Workaround)
@@ -168,7 +169,7 @@ Việc tìm kiếm nguyên nhân gốc rễ (Root Cause Analysis - RCA) trong kh
 ```bash
 #!/bin/bash
 # Emergency Rollback Script for Kubernetes
-DEPLOYMENT=$1
+DEPLOYMENT=\$1
 NAMESPACE=${2:-default}
 
 echo "🚨 Bắt đầu rollback khẩn cấp cho deployment: $DEPLOYMENT trong namespace: $NAMESPACE"

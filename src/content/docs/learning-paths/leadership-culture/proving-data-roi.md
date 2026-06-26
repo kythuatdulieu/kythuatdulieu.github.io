@@ -27,7 +27,7 @@ Hãy thay đổi cách bạn báo cáo và giao tiếp. Thay vì nói về công
 | Báo Cáo Kỹ Thuật (Nên Tránh) | Báo Cáo Kinh Doanh (Nên Dùng) | Tác Động (Business Impact) |
 | :--- | :--- | :--- |
 | "Em vừa chuyển Pipeline từ Pandas sang Spark, giảm thời gian chạy từ 4 tiếng xuống 15 phút." | "Dữ liệu báo cáo hiện đã sẵn sàng lúc 7h sáng thay vì 11h trưa. Team Marketing có thể điều chỉnh chiến dịch quảng cáo ngay lập tức." | **Tăng tỷ lệ chuyển đổi (Conversion), tối ưu hóa Ad Spend.** |
-| "Chúng ta đã chuyển định dạng lưu trữ từ JSON sang Parquet trên S3." | "Hệ thống lưu trữ mới giúp nén dữ liệu tốt hơn, tiết kiệm trực tiếp $5,000 tiền AWS mỗi tháng." | **Cắt giảm chi phí (Cost Reduction).** |
+| "Chúng ta đã chuyển định dạng lưu trữ từ JSON sang Parquet trên S3." | "Hệ thống lưu trữ mới giúp nén dữ liệu tốt hơn, tiết kiệm trực tiếp \$5,000 tiền AWS mỗi tháng." | **Cắt giảm chi phí (Cost Reduction).** |
 | "Em vừa tích hợp Monte Carlo / Great Expectations vào Data Pipeline." | "Hệ thống cảnh báo mới đã phát hiện và chặn dữ liệu lỗi trước khi gửi lên báo cáo tài chính, tránh nguy cơ báo cáo sai lệch doanh thu." | **Giảm thiểu rủi ro (Risk Mitigation).** |
 
 ---
@@ -47,7 +47,7 @@ Một website thương mại điện tử cần hiển thị sản phẩm liên 
 
 ```mermaid
 graph TD
-    subgraph "Data Ingestion("Event Sources")"
+    subgraph "Data Ingestion (Event Sources)"
         A["Web/Mobile App"] -->|Click Stream Events| B("Apache Kafka / Confluent")
         C["Transactional DB"] -->|CDC Events| D("Debezium")
     end
@@ -56,13 +56,13 @@ graph TD
     
     subgraph "Real-time Stream Processing"
         B --> E["Apache Flink / Spark Structured Streaming"]
-        E -->|Tính toán Feature realtime| F["("Feature Store / Redis")"]
+        E -->|Tính toán Feature realtime| F[("Feature Store / Redis")]
     end
     
     subgraph "Serving & Business Impact"
         F --> G["Machine Learning Model Serving"]
         G --> H["Personalized Recommendation"]
-        H -->|"Hiển thị sản phẩm phù hợp"| I["Tăng 5% Doanh Thu("ROI Trực Tiếp")"]
+        H -->|"Hiển thị sản phẩm phù hợp"| I["Tăng 5% Doanh Thu (ROI Trực Tiếp)"]
     end
     
     style I fill:#d4edda,stroke:#28a745,stroke-width:2px;
@@ -115,7 +115,7 @@ spark.sql("""
 """)
 ```
 
-**Chứng minh ROI:** "Việc chạy tác vụ Compaction và Z-Ordering tốn $50 chi phí compute mỗi tuần, nhưng nó đã làm giảm chi phí AWS S3 GET/PUT đi $1,500/tuần và giảm thời gian chạy các BI Dashboard từ 3 phút xuống còn 15 giây."
+**Chứng minh ROI:** "Việc chạy tác vụ Compaction và Z-Ordering tốn \$50 chi phí compute mỗi tuần, nhưng nó đã làm giảm chi phí AWS S3 GET/PUT đi \$1,500/tuần và giảm thời gian chạy các BI Dashboard từ 3 phút xuống còn 15 giây."
 
 ### C. Giảm Thiểu Rủi Ro (Risk Mitigation & Data Observability)
 
@@ -140,7 +140,7 @@ checks for fct_financial_transactions:
       name: Tỷ lệ khách hàng không xác định dưới 1%
 ```
 
-**Chứng minh ROI:** "Hệ thống Data Observability mới đã tự động chặn 14 pipeline mang dữ liệu lỗi lên production trong quý vừa qua. Dựa trên ước tính thiệt hại trung bình $5,000/sự cố do báo cáo sai lệch, hệ thống đã giúp công ty tránh được khoản rủi ro lên tới $70,000."
+**Chứng minh ROI:** "Hệ thống Data Observability mới đã tự động chặn 14 pipeline mang dữ liệu lỗi lên production trong quý vừa qua. Dựa trên ước tính thiệt hại trung bình \$5,000/sự cố do báo cáo sai lệch, hệ thống đã giúp công ty tránh được khoản rủi ro lên tới \$70,000."
 
 ---
 
@@ -170,7 +170,7 @@ models:
         criticality: "low"
 ```
 
-Khi nhìn vào Dashboard FinOps, nếu bạn thấy bảng `marketing_roi_dashboard` tiêu tốn $2,000/tháng nhưng mang lại hiểu biết giúp tối ưu $50,000 ngân sách quảng cáo -> ROI dương. Nếu `data_science_experiment` tiêu tốn $3,000/tháng nhưng đã hơn 3 tháng chưa ra được mô hình nào -> Bạn có cơ sở dữ liệu thực tế để đề xuất cắt giảm tài nguyên.
+Khi nhìn vào Dashboard FinOps, nếu bạn thấy bảng `marketing_roi_dashboard` tiêu tốn \$2,000/tháng nhưng mang lại hiểu biết giúp tối ưu \$50,000 ngân sách quảng cáo -> ROI dương. Nếu `data_science_experiment` tiêu tốn \$3,000/tháng nhưng đã hơn 3 tháng chưa ra được mô hình nào -> Bạn có cơ sở dữ liệu thực tế để đề xuất cắt giảm tài nguyên.
 
 ---
 
@@ -206,23 +206,23 @@ $$
 
 ### Bước 1: Tính TCO (Total Cost of Ownership - Tổng chi phí sở hữu)
 Tính tổng chi phí hàng năm (hoặc hàng tháng):
-*   **Hạ tầng đám mây (Cloud Infrastructure):** Chi phí Compute (EC2, Databricks, Snowflake credits, BigQuery slots), Storage (S3, GCS), và Network Egress. Giả sử: $100,000/năm.
-*   **Chi phí phần mềm & SaaS:** License của Fivetran, dbt Cloud, Airflow (Astronomer), Tableau/Looker, Monte Carlo. Giả sử: $50,000/năm.
-*   **Chi phí nhân sự (People/Engineering Costs):** Lương của đội ngũ Data Engineer, Platform Engineer duy trì hệ thống. Giả sử: $150,000/năm.
-*   **Tổng TCO:** $300,000/năm.
+*   **Hạ tầng đám mây (Cloud Infrastructure):** Chi phí Compute (EC2, Databricks, Snowflake credits, BigQuery slots), Storage (S3, GCS), và Network Egress. Giả sử: \$100,000/năm.
+*   **Chi phí phần mềm & SaaS:** License của Fivetran, dbt Cloud, Airflow (Astronomer), Tableau/Looker, Monte Carlo. Giả sử: \$50,000/năm.
+*   **Chi phí nhân sự (People/Engineering Costs):** Lương của đội ngũ Data Engineer, Platform Engineer duy trì hệ thống. Giả sử: \$150,000/năm.
+*   **Tổng TCO:** \$300,000/năm.
 
 ### Bước 2: Tính Lợi Ích (Total Benefits)
 Lợi ích bao gồm cả những khoản trực tiếp và gián tiếp (phải ước lượng):
-*   **Lợi nhuận tăng thêm (Revenue Uplift):** Hệ thống Data thúc đẩy các chiến dịch Marketing nhắm mục tiêu chuẩn xác hơn, tăng 2% doanh thu tổng $\approx$ $200,000/năm.
-*   **Cắt giảm chi phí trực tiếp (Direct Cost Savings):** Pipeline tự động đóng các server rảnh rỗi, thiết kế lại kiến trúc Data Warehouse giúp giảm $\approx$ $60,000/năm.
-*   **Năng suất nhân sự (Productivity Gain):** Tự động hóa quá trình làm báo cáo thủ công. Tiết kiệm 20 giờ/tuần cho 5 nhân viên Kế toán và Vận hành. (100 giờ x 52 tuần x $40/giờ) $\approx$ $208,000/năm.
-*   **Tổng Lợi Ích:** $468,000/năm.
+*   **Lợi nhuận tăng thêm (Revenue Uplift):** Hệ thống Data thúc đẩy các chiến dịch Marketing nhắm mục tiêu chuẩn xác hơn, tăng 2% doanh thu tổng $\approx$ \$200,000/năm.
+*   **Cắt giảm chi phí trực tiếp (Direct Cost Savings):** Pipeline tự động đóng các server rảnh rỗi, thiết kế lại kiến trúc Data Warehouse giúp giảm $\approx$ \$60,000/năm.
+*   **Năng suất nhân sự (Productivity Gain):** Tự động hóa quá trình làm báo cáo thủ công. Tiết kiệm 20 giờ/tuần cho 5 nhân viên Kế toán và Vận hành. (100 giờ x 52 tuần x \$40/giờ) $\approx$ \$208,000/năm.
+*   **Tổng Lợi Ích:** \$468,000/năm.
 
 ### Bước 3: Tính Toán
 $$
 \text{ROI} = \left( \frac{468,000 - 300,000}{300,000} \right) \times 100 = \textbf{56\%}
 $$
-Kết luận cho C-Level: *Với mỗi $1 công ty đầu tư vào Data Team và Data Platform, công ty thu về $1.56 giá trị trong cùng năm đó.* Đây là một con số thuyết phục không thể chối cãi.
+Kết luận cho C-Level: *Với mỗi \$1 công ty đầu tư vào Data Team và Data Platform, công ty thu về \$1.56 giá trị trong cùng năm đó.* Đây là một con số thuyết phục không thể chối cãi.
 
 ---
 

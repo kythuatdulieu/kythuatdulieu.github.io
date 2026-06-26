@@ -27,12 +27,12 @@ Thay vì lưu Timestamp 64-bit khổng lồ, Gorilla tính khoảng cách giữa
 
 ```mermaid
 flowchart LR
-    A[T1: 10:00:00] -->|Delta: 60s| B[T2: 10:01:00]
-    B -->|Delta: 60s| C[T3: 10:02:00]
+    A["T1: 10:00:00"] -->|Delta: 60s| B["T2: 10:01:00"]
+    B -->|Delta: 60s| C["T3: 10:02:00"]
     
     subgraph Delta-of-Delta
-        D(T2_Delta - T1_Delta = 0)
-        E(T3_Delta - T2_Delta = 0)
+        D("T2_Delta - T1_Delta = 0")
+        E("T3_Delta - T2_Delta = 0")
     end
     
     B -.-> D
@@ -110,12 +110,12 @@ Thay vì index từng dòng, ClickHouse nhóm dữ liệu thành các **Granules
 
 ```mermaid
 flowchart TD
-    A[Primary Index (RAM)] -->|Binary Search| B[Mark 0]
-    A --> C[Mark 1]
-    A --> D[Mark 2]
+    A["Primary Index (RAM)"] -->|Binary Search| B["Mark 0"]
+    A --> C["Mark 1"]
+    A --> D["Mark 2"]
     
-    B -->|Disk Pointer| E[Granule 0: Row 1-8192]
-    C -->|Disk Pointer| F[Granule 1: Row 8193-16384]
+    B -->|Disk Pointer| E["Granule 0: Row 1-8192"]
+    C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
     
     style A fill:#f96,stroke:#333,stroke-width:2px
 ```

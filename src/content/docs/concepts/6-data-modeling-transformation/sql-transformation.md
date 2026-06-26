@@ -31,12 +31,12 @@ graph LR
         Event["Kafka Events"]
     end
 
-    subgraph "ELT Pipeline("Fivetran/Airbyte + dbt")"
+    subgraph "ELT Pipeline("Fivetran/Airbyte + dbt")
         Extract["Extract"]
         Load["Load as-is"]
     end
 
-    subgraph "Cloud Data Warehouse("Snowflake/BigQuery")"
+    subgraph "Cloud Data Warehouse("Snowflake/BigQuery")
         Raw["(Raw Data)"]
         Transform["SQL Transformation / dbt"]
         Model["(Business Ready Data)"]
@@ -78,7 +78,7 @@ flowchart TD
         I2["int_payment_status.sql"]
     end
 
-    subgraph "Mart Layer("Business")"
+    subgraph "Mart Layer("Business")
         M1["fct_orders.sql"]
         M2["dim_customers.sql"]
     end

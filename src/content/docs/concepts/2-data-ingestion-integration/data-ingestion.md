@@ -35,13 +35,13 @@ sequenceDiagram
     participant OLTP as MySQL (Source)
     participant Binlog as Transaction Log
     participant Debezium as Debezium (CDC)
-    participant Kafka as Kafka (Event Broker)
+    participant Kafka as Kafka("Event Broker")
     participant Sink as Data Warehouse (Target)
 
-    OLTP->>Binlog: Commit Transaction (Row changes)
+    OLTP->>Binlog: Commit Transaction("Row changes")
     Binlog->>Debezium: Stream WAL/Binlog Events
-    Debezium->>Kafka: Publish to Topic (Avro/Protobuf)
-    Kafka->>Sink: Consume & Upsert (Idempotent MERGE)
+    Debezium->>Kafka: Publish to Topic("Avro/Protobuf")
+    Kafka->>Sink: Consume & Upsert("Idempotent MERGE")
 ```
 
 ## 2. Các Thỏa hiệp Hệ thống (Systemic Trade-offs)

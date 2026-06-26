@@ -154,7 +154,7 @@ Khi vận hành Data Catalog ở quy mô lớn, Staff Engineer cần lường tr
 
 Vận hành Data Catalog cũng tiêu tốn tài nguyên. Một hệ thống DataHub hoặc Amundsen đầy đủ đòi hỏi Kafka, Neo4j, Elasticsearch, MySQL, và nhiều dịch vụ frontend/backend.
 - **Cold Start Cost:** Việc dựng toàn bộ stack này trên Kubernetes tốn kém (ít nhất 3-4 Nodes loại lớn). Nếu startup/SME chưa có sẵn Kafka, chi phí duy trì Managed Kafka (MSK/Confluent) chỉ để chạy Data Catalog là sự lãng phí.
-- **Compute Cost khi Pull:** Nếu chạy Pull-based Ingestion (dùng crawler) quét qua Snowflake, các truy vấn `SHOW TABLES` hoặc quét `INFORMATION_SCHEMA` có thể kích hoạt (wake up) các Warehouse đang ngủ (Suspended). Thay vì quét, hãy lấy metadata từ các hệ thống trung gian như dbt (dùng file `manifest.json` và `catalog.json`), sẽ có giá $0.
+- **Compute Cost khi Pull:** Nếu chạy Pull-based Ingestion (dùng crawler) quét qua Snowflake, các truy vấn `SHOW TABLES` hoặc quét `INFORMATION_SCHEMA` có thể kích hoạt (wake up) các Warehouse đang ngủ (Suspended). Thay vì quét, hãy lấy metadata từ các hệ thống trung gian như dbt (dùng file `manifest.json` và `catalog.json`), sẽ có giá \$0.
 
 ---
 

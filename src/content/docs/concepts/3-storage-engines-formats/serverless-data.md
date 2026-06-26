@@ -104,7 +104,7 @@ Khi bạn bỏ quyền kiểm soát phần cứng cho nhà cung cấp đám mây
 - **Trade-off:** Không thể dùng Serverless cho các hệ thống OLTP yêu cầu `sub-millisecond latency` (Ví dụ: Hệ thống khớp lệnh chứng khoán).
 
 ### 3.2. Sự "Bùng nổ" Chi Phí (Cost Unpredictability)
-Hệ thống tính tiền theo Pay-per-use. Với Athena/BigQuery, chi phí thường tính trên số byte được quét (Ví dụ: $5 cho mỗi 1TB quét).
+Hệ thống tính tiền theo Pay-per-use. Với Athena/BigQuery, chi phí thường tính trên số byte được quét (Ví dụ: \$5 cho mỗi 1TB quét).
 - **Incident kinh điển - "Cartesian Explosion":** Một Data Analyst viết câu SQL: `SELECT * FROM table_A CROSS JOIN table_B` (hoặc thiếu điều kiện JOIN). Câu lệnh này buộc engine đọc toàn bộ cả 2 bảng khổng lồ và sinh ra hàng tỷ hàng kết quả trung gian. BigQuery sẽ vui vẻ cấp phát hàng nghìn Slots để xử lý, và bạn có thể nhận hóa đơn hàng ngàn Đô la chỉ cho một cú click chuột sai lầm.
 
 ### 3.3. Out of Memory (OOMKilled) trong Serverless Spark

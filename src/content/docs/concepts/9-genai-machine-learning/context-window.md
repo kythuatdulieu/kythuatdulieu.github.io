@@ -33,12 +33,12 @@ Ví dụ: Với LLaMA-2 70B, một request có context window 100k tokens có th
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffff'}}}%%
 architecture-beta
-    group gpu(GPU Memory - 80GB H100)
+    group gpu("GPU Memory - 80GB H100")
 
-    service weights(Model Weights - 40GB) in gpu
-    service kv_user1(KV Cache User 1 - 15GB) in gpu
-    service kv_user2(KV Cache User 2 - 15GB) in gpu
-    service kv_user3(KV Cache User 3 - 15GB) in gpu
+    service weights("Model Weights - 40GB") in gpu
+    service kv_user1("KV Cache User 1 - 15GB") in gpu
+    service kv_user2("KV Cache User 2 - 15GB") in gpu
+    service kv_user3("KV Cache User 3 - 15GB") in gpu
     
     weights:T --> kv_user1:L
     weights:B --> kv_user2:L

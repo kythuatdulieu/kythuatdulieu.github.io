@@ -25,12 +25,12 @@ Dưới đây là mô hình kiến trúc **Multi-Layered Defense**:
 
 ```mermaid
 graph TD
-    User([User Request]) --> InputValidator[Layer 1: Input Governance<br>NeMo Guardrails]
+    User("[User Request]") --> InputValidator["Layer 1: Input Governance<br>NeMo Guardrails"]
     InputValidator -- Rejected --> User
-    InputValidator -- Validated --> RAG[Layer 2: Grounded Retrieval<br>Vector DB + KG]
-    RAG --> LLM[LLM Core<br>Inference Endpoint]
-    LLM --> OutputValidator[Layer 3: Output Verification<br>Self-Reflection / Pydantic]
-    OutputValidator -- Hallucinated --> Fallback[Fallback / Human-in-the-Loop]
+    InputValidator -- Validated --> RAG["Layer 2: Grounded Retrieval<br>Vector DB + KG"]
+    RAG --> LLM["LLM Core<br>Inference Endpoint"]
+    LLM --> OutputValidator["Layer 3: Output Verification<br>Self-Reflection / Pydantic"]
+    OutputValidator -- Hallucinated --> Fallback["Fallback / Human-in-the-Loop"]
     OutputValidator -- Passed --> User
 ```
 

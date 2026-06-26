@@ -32,12 +32,12 @@ Giả sử có $f$ node bị lỗi.
 ### Crash-Tolerance (Raft/Paxos)
 - Mô hình lỗi: Node bị sập hoặc mất mạng.
 - Số node tối thiểu: **$N = 2f + 1$**
-- Giải thích: Để chịu được 1 node sập ($f=1$), ta cần 3 node. Khi 1 node sập, 2 node còn lại vẫn tạo thành đa số (majority) so với 3 node gốc ($2 > 3/2$).
+- Giải thích: Để chịu được 1 node sập ($f=1$), ta cần 3 node. Khi 1 node sập, 2 node còn lại vẫn tạo thành đa số (majority) so với 3 node gốc (\$2 > 3/2$).
 
 ### Byzantine Fault Tolerance (BFT/PBFT)
 - Mô hình lỗi: Node trả về dữ liệu xạo, hợp sức để đánh lừa mạng.
 - Số node tối thiểu: **$N = 3f + 1$**
-- Giải thích: Tại sao không phải $2f+1$? Giả sử có $f$ node nói dối. Trong quá trình bỏ phiếu, có $f$ node trung thực khác bị trễ mạng (không phản hồi kịp). Vậy số node trung thực đã trả lời là $N - 2f$. Để phe trung thực thắng phe nói dối, ta phải có $N - 2f > f \implies N > 3f$.
+- Giải thích: Tại sao không phải \$2f+1$? Giả sử có $f$ node nói dối. Trong quá trình bỏ phiếu, có $f$ node trung thực khác bị trễ mạng (không phản hồi kịp). Vậy số node trung thực đã trả lời là $N - 2f$. Để phe trung thực thắng phe nói dối, ta phải có $N - 2f > f \implies N > 3f$.
 Vậy để chịu 1 lỗi Byzantine ($f=1$), hệ thống cần tới 4 node.
 
 ## 3. Kiến Trúc PBFT (Practical BFT) và Nút Thắt Hiệu Năng
@@ -47,24 +47,24 @@ PBFT (1999) hoạt động qua 3 pha để đảm bảo sự đồng thuận dù
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Leader (Node 0)
-    participant Replica 1 (Trung thực)
-    participant Replica 2 (Phản bội)
-    participant Replica 3 (Trung thực)
+    participant Leader("Node 0")
+    participant Replica 1("Trung thực")
+    participant Replica 2("Phản bội")
+    participant Replica 3("Trung thực")
 
-    Client->>Leader (Node 0): Request
-    Leader (Node 0)->>Replica 1 (Trung thực): Pre-prepare
-    Leader (Node 0)->>Replica 2 (Phản bội): Pre-prepare
-    Leader (Node 0)->>Replica 3 (Trung thực): Pre-prepare
+    Client->>Leader("Node 0"): Request
+    Leader("Node 0")->>Replica 1("Trung thực"): Pre-prepare
+    Leader("Node 0")->>Replica 2("Phản bội"): Pre-prepare
+    Leader("Node 0")->>Replica 3("Trung thực"): Pre-prepare
 
-    Note over Replica 1 (Trung thực),Replica 3 (Trung thực): Prepare Phase (O(N^2) messages)
-    Replica 1 (Trung thực)->>Replica 2 (Phản bội): Prepare
-    Replica 1 (Trung thực)->>Replica 3 (Trung thực): Prepare
-    Replica 3 (Trung thực)->>Replica 1 (Trung thực): Prepare
+    Note over Replica 1("Trung thực"),Replica 3("Trung thực"): Prepare Phase("O(N^2") messages)
+    Replica 1("Trung thực")->>Replica 2("Phản bội"): Prepare
+    Replica 1("Trung thực")->>Replica 3("Trung thực"): Prepare
+    Replica 3("Trung thực")->>Replica 1("Trung thực"): Prepare
     
-    Note over Replica 1 (Trung thực),Replica 3 (Trung thực): Commit Phase (O(N^2) messages)
-    Replica 1 (Trung thực)->>Client: Reply
-    Replica 3 (Trung thực)->>Client: Reply
+    Note over Replica 1("Trung thực"),Replica 3("Trung thực"): Commit Phase("O(N^2") messages)
+    Replica 1("Trung thực")->>Client: Reply
+    Replica 3("Trung thực")->>Client: Reply
 ```
 
 **Sự Đánh Đổi Tàn Khốc (Trade-offs):**
@@ -98,7 +98,7 @@ graph TD
     H0 --> Data0["Data Block 0"]
     H0 --> Data1["Data Block 1"]
     H1 --> Data2["Data Block 2"]
-    H1 --> Data3["Data Block 3("Corrupted")"]
+    H1 --> Data3["Data Block 3(Corrupted)"]
     
     style Data3 fill:#ff9999,stroke:#333,stroke-width:2px
 ```

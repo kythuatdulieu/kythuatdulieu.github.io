@@ -30,7 +30,7 @@ graph TD
         WALFiles["WAL / REDO Logs<br/>Sequential Append-only"]
     end
 
-    App("(Application")) -->|1. SQL Query| BP
+    App("(Application") -->|1. SQL Query| BP
     App --> LockManager
     BP -->|2. Cache Miss| DataFiles
     DataFiles -->|3. Load 8KB Page| BP
@@ -64,11 +64,11 @@ sequenceDiagram
     participant Disk as Data Files (Disk)
 
     App->>RAM: 1. UPDATE balance = 500
-    RAM-->>RAM: 2. Modify in Memory (Dirty Page)
-    RAM->>WAL: 3. Append Log (Sequential I/O)
+    RAM-->>RAM: 2. Modify in Memory("Dirty Page")
+    RAM->>WAL: 3. Append Log("Sequential I/O")
     WAL-->>App: 4. Return Commit SUCCESS!
     Note over RAM,Disk: Background Process (Later)
-    RAM->>Disk: 5. Checkpointer flushes page (Random I/O)
+    RAM->>Disk: 5. Checkpointer flushes page("Random I/O")
 ```
 
 ### 1.3. B-Tree Index: Vũ khí đọc siêu tốc

@@ -26,9 +26,9 @@ sequenceDiagram
     participant LB as Load Balancer
     participant C as Consumer
 
-    P->>LB: POST /webhook (Event 1)
+    P->>LB: POST /webhook("Event 1")
     LB->>C: Forward
-    P->>LB: POST /webhook (Event 2)
+    P->>LB: POST /webhook("Event 2")
     LB->>C: Forward
     Note over P, C: Producer "mù" về trạng thái tài nguyên của Consumer
     P-xLB: POST x 10,000 (Spike)
@@ -62,10 +62,10 @@ sequenceDiagram
     participant B as Message Broker (Storage)
     participant C as Consumer
 
-    P->>B: Produce [Event 1, 2, 3]
+    P->>B: Produce["Event 1, 2, 3"]
     Note over B: Persist to Disk (PageCache)
     C->>B: GET /poll?max_batch=100
-    B->>C: Return [Event 1, 2, 3]
+    B->>C: Return["Event 1, 2, 3"]
     Note over C: Consumer tự quyết định tốc độ xử lý
 ```
 

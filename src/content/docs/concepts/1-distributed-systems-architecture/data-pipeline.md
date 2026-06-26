@@ -37,7 +37,7 @@ graph TD
         S3_Clean[("S3: Cleaned Parquet")]
     end
 
-    subgraph Compute Cluster (e.g., Spark / EMR)
+    subgraph Compute Cluster("e.g., Spark / EMR")
         Driver["Driver Node<br>(Plan DAG)"]
         Worker1["Worker 1<br>(Read partition 1)"]
         Worker2["Worker 2<br>(Read partition 2)"]

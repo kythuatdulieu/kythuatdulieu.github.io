@@ -32,7 +32,7 @@ graph TD
     
     B --> G{"Xác định Facts"}
     G --> H["Quantity = 1"]
-    G --> I["Unit Price = $5"]
+    G --> I["Unit Price = \$5"]
 ```
 
 ### 2. Sự Cố Vận Hành: Cartesian Explosion & Double-Counting

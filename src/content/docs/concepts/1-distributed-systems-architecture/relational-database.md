@@ -81,10 +81,10 @@ sequenceDiagram
     Client->>Leader: UPDATE users SET balance = 100
     activate Leader
     Leader->>Leader: Write to local WAL & fsync
-    Leader-->>Client: 200 OK (Commit Success)
+    Leader-->>Client: 200 OK("Commit Success")
     deactivate Leader
     Leader->>Follower: Send WAL stream (Async)
-    Note over Leader,Follower: Replication Lag (ví dụ: 100ms - 5s)
+    Note over Leader,Follower: Replication Lag("ví dụ: 100ms - 5s")
     Follower->>Follower: Apply WAL to local disk
 ```
 

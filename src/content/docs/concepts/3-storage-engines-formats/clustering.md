@@ -89,12 +89,12 @@ graph LR
     B("city=HCM, category=Food") --> Z2["Z-Value: 0110"]
     C("city=HN, category=Tech") --> Z3["Z-Value: 1001"]
     
-    subgraph "File A("Z-Ordered")"
+    subgraph "File A("Z-Ordered")
         Z1
         Z2
     end
     
-    subgraph "File B("Z-Ordered")"
+    subgraph "File B("Z-Ordered")
         Z3
     end
 ```

@@ -33,8 +33,8 @@ architecture-beta
     
     web_ui --> job_sched
     job_sched --> cluster_mgr
-    cluster_mgr -- "Provision & Monitor("Secure Tunnel")" --> compute_nodes
-    compute_nodes -- "Read/Write Data("High Bandwidth")" --> object_storage
+    cluster_mgr -- "Provision & Monitor("Secure Tunnel") --> compute_nodes
+    compute_nodes -- "Read/Write Data("High Bandwidth") --> object_storage
 ```
 
 ### 1.1. Control Plane (Quản lý bởi Databricks)

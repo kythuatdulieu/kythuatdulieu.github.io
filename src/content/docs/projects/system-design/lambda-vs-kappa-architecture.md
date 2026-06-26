@@ -26,13 +26,13 @@ Kiến trúc Lambda tách luồng dữ liệu (Data Pipeline) thành 3 lớp (La
 
 ```mermaid
 flowchart TD
-    A["Data Sources \n("Logs, CDC, Sensors")"] --> B("Message Broker \nKafka / Kinesis")
+    A["Data Sources \n(Logs, CDC, Sensors)"] --> B("Message Broker \nKafka / Kinesis")
     
-    B -->|Append-only Log| C["Batch Layer\n("HDFS, Amazon S3")"]
-    B -->|Event Stream| D["Speed Layer\n("Flink, Spark Streaming")"]
+    B -->|Append-only Log| C["Batch Layer\n(HDFS, Amazon S3)"]
+    B -->|Event Stream| D["Speed Layer\n(Flink, Spark Streaming)"]
     
-    C -->|"Batch Processing\n("Spark, MapReduce")"| E["("Batch Views\nPre-computed, High Accuracy")"]
-    D -->|Real-time Processing| F["("Real-time Views\nLow Latency, Approximate")"]
+    C -->|"Batch Processing\n(Spark, MapReduce)"| E[("Batch Views\nPre-computed, High Accuracy")]
+    D -->|Real-time Processing| F[("Real-time Views\nLow Latency, Approximate")]
     
     E --> G("Serving Layer \nNoSQL / Query Engine")
     F --> G
@@ -113,13 +113,13 @@ Kiến trúc **Kappa** mạnh tay chặt bỏ hoàn toàn Batch Layer, đưa ra 
 
 ```mermaid
 flowchart LR
-    A["Data Sources / CDC"] --> B["("Distributed Log \nApache Kafka / Apache Pulsar\nInfinite Retention")"]
+    A["Data Sources / CDC"] --> B[("Distributed Log \nApache Kafka / Apache Pulsar\nInfinite Retention")]
     B -->|Unified Stream Processing| C["Apache Flink / Kafka Streams"]
-    C --> D["("Serving Database\nPinot, ClickHouse, Redis")"]
+    C --> D[("Serving Database\nPinot, ClickHouse, Redis")]
     D --> E["End Users / BI Dashboards"]
     
-    B -.->|"Reprocessing / Backfilling"| C2["Secondary Stream Job\n("Rewind Offset to Zero")"]
-    C2 -.-> D2["("New Version of Serving Table")"]
+    B -.->|"Reprocessing / Backfilling"| C2["Secondary Stream Job\n(Rewind Offset to Zero)"]
+    C2 -.-> D2[("New Version of Serving Table")]
 ```
 
 - Toàn bộ dữ liệu của tổ chức phải được nạp và lưu trữ trong một hệ thống Message Broker mạnh mẽ. Khác với Lambda (nơi Kafka chỉ giữ data vài giờ hoặc vài ngày), Kafka trong kiến trúc Kappa phải được cấu hình để giữ dữ liệu vĩnh viễn (**Infinite Retention**).
@@ -212,12 +212,12 @@ Kiến trúc này lấy cảm hứng mạnh mẽ từ Kappa nhưng giải quyế
 
 ```mermaid
 flowchart LR
-    A["Data Sources"] -->|Streaming / CDC| B["("Kafka - Short Retention")"]
-    B -->|Stream Ingestion| C["("Bronze Layer\nRaw Data - S3/Iceberg")"]
-    C -->|Micro-batch / Streaming| D["("Silver Layer\nCleaned, Joined & Filtered")"]
-    D -->|Aggregations| E["("Gold Layer\nBusiness Level Metrics")"]
+    A["Data Sources"] -->|Streaming / CDC| B[("Kafka - Short Retention")]
+    B -->|Stream Ingestion| C[("Bronze Layer\nRaw Data - S3/Iceberg")]
+    C -->|Micro-batch / Streaming| D[("Silver Layer\nCleaned, Joined & Filtered")]
+    D -->|Aggregations| E[("Gold Layer\nBusiness Level Metrics")]
     
-    C -.->|"Time-travel Reprocessing\n("Unified API")"| C
+    C -.->|"Time-travel Reprocessing\n(Unified API)"| C
     
     classDef lakehouse fill:#e6f3ff,stroke:#333,stroke-width:2px;
     class C,D,E lakehouse;

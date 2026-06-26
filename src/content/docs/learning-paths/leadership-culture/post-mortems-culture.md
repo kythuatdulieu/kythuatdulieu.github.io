@@ -85,12 +85,12 @@ Hãy xem xét một hệ thống Data Ingestion từ Transactional Database (Pos
 
 ```mermaid
 graph LR
-    A["("PostgreSQL")"] -->|WAL/CDC| B("Debezium Connector")
+    A[("PostgreSQL")] -->|WAL/CDC| B("Debezium Connector")
     B --> C["Kafka Topic: events"]
     C --> D("Kafka Connect / S3 Sink")
-    D --> E["("S3 Data Lake")"]
+    D --> E[("S3 Data Lake")]
     E --> F("Airflow: COPY INTO")
-    F --> G["("Snowflake")"]
+    F --> G[("Snowflake")]
     
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#bbf,stroke:#333,stroke-width:2px
@@ -116,17 +116,17 @@ Khi phân tích qua lăng kính kỹ thuật hệ thống, chúng ta sẽ thấy
 ```mermaid
 graph TD
     subgraph "Data Sources"
-    A["("PostgreSQL")"]
+    A[("PostgreSQL")]
     end
     
-    subgraph "Streaming Platform("Auto-scaled")"
+    subgraph "Streaming Platform (Auto-scaled)"
     A -->|WAL/CDC| B("Debezium Kafka Connect")
     B --> C["Kafka Topic: events"]
     C -->|Alerting: Lag > 10K| P("Prometheus / Datadog")
     P -->|HPA Trigger| D
     end
     
-    subgraph "Consumers("Kubernetes")"
+    subgraph "Consumers (Kubernetes)"
     D("Kafka S3 Sink Pod 1")
     D2("Kafka S3 Sink Pod 2")
     D3("Kafka S3 Sink Pod N")
@@ -135,10 +135,10 @@ graph TD
     C --> D3
     end
     
-    D & D2 & D3 -->|Success| E["("S3 Data Lake")"]
-    D & D2 & D3 -->|Parse Errors| H["("Dead Letter Queue - S3")"]
+    D & D2 & D3 -->|Success| E[("S3 Data Lake")]
+    D & D2 & D3 -->|Parse Errors| H[("Dead Letter Queue - S3")]
     E --> F("Airflow Sensors / Event-driven Trigger")
-    F --> G["("Snowflake")"]
+    F --> G[("Snowflake")]
 ```
 
 ---

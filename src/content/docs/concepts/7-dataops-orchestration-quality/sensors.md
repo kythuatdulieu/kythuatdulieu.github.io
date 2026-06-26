@@ -44,7 +44,7 @@ sequenceDiagram
     participant T as Triggerer (Asyncio)
     participant DB as External System
 
-    Note over S, DB: 1. Poke Mode (Chiếm dụng vĩnh viễn)
+    Note over S, DB: 1. Poke Mode("Chiếm dụng vĩnh viễn")
     S->>W: Assign Task
     loop Mỗi 60s
         W->>DB: Kiểm tra dữ liệu
@@ -52,13 +52,13 @@ sequenceDiagram
         Note over W: Worker Slot bị khoá (time.sleep)
     end
     
-    Note over S, DB: 2. Deferrable Mode (Nhường cho Triggerer)
+    Note over S, DB: 2. Deferrable Mode("Nhường cho Triggerer")
     S->>W: Assign Task
     W->>T: Gửi điều kiện cần đợi (Event)
     W-->>S: Trả lại Slot ngay lập tức
     Note over W: Worker Slot ĐƯỢC GIẢI PHÓNG
     loop Non-blocking I/O (Async)
-        T->>DB: Poll (Bất đồng bộ)
+        T->>DB: Poll("Bất đồng bộ")
     end
     DB-->>T: Dữ liệu đã sẵn sàng
     T->>S: Phát Event hoàn thành
@@ -123,7 +123,7 @@ graph LR
     end
 
     subgraph Kiến trúc Push("Datasets")
-        JobA_Push["ETL Nguồn"] -->|Cập nhật| DS("(Dataset"))
+        JobA_Push["ETL Nguồn"] -->|Cập nhật| DS("(Dataset")
         DS -.->|Tự động Trigger| JobB_Push["Transform Job"]
     end
     

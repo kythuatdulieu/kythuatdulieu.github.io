@@ -33,15 +33,15 @@ Việc thu thập Technical và Operational Metadata từ hàng nghìn pipelines
 
 ```mermaid
 graph TD
-    subgraph "Push-based Architecture("DataHub / OpenLineage")"
-        Spark["Spark Job"] -- "1. Emit Event("Schema, Metrics")" --> Kafka["Kafka Topic"]
-        dbt["dbt Model"] -- "2. Emit Event("Lineage")" --> Kafka
+    subgraph "Push-based Architecture("DataHub / OpenLineage")
+        Spark["Spark Job"] -- "1. Emit Event("Schema, Metrics") --> Kafka["Kafka Topic"]
+        dbt["dbt Model"] -- "2. Emit Event("Lineage") --> Kafka
         Kafka -- "3. Consume Async" --> Ingestion["Ingestion Service"]
         Ingestion --> GraphDB["(Graph DB / Neo4j)"]
         Ingestion --> SearchIndex["(Elasticsearch)"]
     end
     
-    subgraph "Pull-based Architecture("AWS Glue Crawler")"
+    subgraph "Pull-based Architecture("AWS Glue Crawler")
         Crawler["Glue Crawler"] -- "1. LIST S3 bucket" --> S3["(Amazon S3)"]
         Crawler -- "2. Sample Parquet Footer" --> S3
         Crawler -- "3. Infer Schema" --> HMS["(Glue Catalog / Metastore)"]

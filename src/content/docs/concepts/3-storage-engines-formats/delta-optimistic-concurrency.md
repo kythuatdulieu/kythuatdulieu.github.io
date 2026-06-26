@@ -28,21 +28,21 @@ sequenceDiagram
     
     Note over Job A, Delta Log: Snapshot V1 (00001.json)
     
-    Job A->>Delta Log: 1. READ (Latest version = 1)
-    Job B->>Delta Log: 1. READ (Latest version = 1)
+    Job A->>Delta Log: 1. READ("Latest version = 1")
+    Job B->>Delta Log: 1. READ("Latest version = 1")
     
-    Job A->>Storage: 2. WRITE (Tạo file part-A.parquet)
-    Job B->>Storage: 2. WRITE (Tạo file part-B.parquet)
+    Job A->>Storage: 2. WRITE("Tạo file part-A.parquet")
+    Job B->>Storage: 2. WRITE("Tạo file part-B.parquet")
     
     Note over Storage: Các file Parquet lúc này là "mồ côi", chưa có trong bảng.
     
-    Job A->>Delta Log: 3. VALIDATE & COMMIT (Ghi 00002.json)
+    Job A->>Delta Log: 3. VALIDATE & COMMIT("Ghi 00002.json")
     Note over Delta Log: Lệnh Put-If-Absent thành công.<br/>Bảng hiện tại là V2.
     
-    Job B->>Delta Log: 3. VALIDATE & COMMIT (Ghi 00002.json)
+    Job B->>Delta Log: 3. VALIDATE & COMMIT("Ghi 00002.json")
     Note over Delta Log: Bị từ chối (FileAlreadyExists)!
     
-    Job B-->>Job B: Chạy thuật toán Auto-Merge (Conflict Resolution)
+    Job B-->>Job B: Chạy thuật toán Auto-Merge("Conflict Resolution")
 ```
 
 1. **READ (Đọc Snapshot):** Giao dịch đọc phiên bản mới nhất của bảng (ví dụ: `000001.json`). Nó lấy danh sách các file dữ liệu mà nó cần đọc. Hệ thống ghi nhận (record) snapshot `V1`.

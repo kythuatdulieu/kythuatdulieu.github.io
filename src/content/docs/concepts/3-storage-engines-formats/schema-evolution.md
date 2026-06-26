@@ -46,8 +46,8 @@ graph TD
     end
 
     subgraph Physical_Files["Physical Parquet Files"]
-        F1["File 1 - V1<br/>ID: 1("id"), ID: 2("event")"]
-        F2["File 2 - V2<br/>ID: 1("user_id"), ID: 2("event"), ID: 3("revenue")"]
+        F1["File 1 - V1<br/>ID: 1(id), ID: 2(event)"]
+        F2["File 2 - V2<br/>ID: 1(user_id), ID: 2(event), ID: 3(revenue)"]
     end
 
     L1 -.-> F1
@@ -71,17 +71,17 @@ Delta theo dõi schema trong Transaction Log (`_delta_log/00000X.json`).
 
 ```mermaid
 sequenceDiagram
-    participant Source as Spark App (Data Source)
+    participant Source as Spark App("Data Source")
     participant Delta as Delta Transaction Log
     participant Storage as Object Storage (Parquet)
 
-    Source->>Delta: Ghi DataFrame (Có thêm cột 'age')
+    Source->>Delta: Ghi DataFrame("Có thêm cột 'age'")
     Delta-->>Source: Kiểm tra Schema Validation
-    alt Schema Enforcement (Mặc định)
-        Delta--xSource: LỖI: Schema Mismatch (Chặn rác)
+    alt Schema Enforcement("Mặc định")
+        Delta--xSource: LỖI: Schema Mismatch("Chặn rác")
     else Schema Evolution (mergeSchema=true)
         Source->>Delta: Xin phép Union Schema
-        Delta->>Delta: Commit _delta_log mới (Schema v2)
+        Delta->>Delta: Commit _delta_log mới("Schema v2")
         Source->>Storage: Ghi Parquet file mới chứa cột 'age'
         Delta-->>Source: SUCCESS
     end

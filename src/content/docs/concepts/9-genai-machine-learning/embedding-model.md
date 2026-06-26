@@ -25,12 +25,12 @@ Trong các bài toán Retrieval (Truy xuất) quy mô lớn, chúng ta luôn ph�
 graph TD
     subgraph Query_Tower["Online Execution - Real-time"]
         Q["User Query / Context"] --> Q_Enc("Query Encoder<br/>Transformer")
-        Q_Enc --> U_Vec("(Vector U<br/>Dense Embedding"))
+        Q_Enc --> U_Vec("(Vector U<br/>Dense Embedding")
     end
 
     subgraph Document_Tower["Offline Execution - Batching"]
         D["Product / Document"] --> D_Enc("Document Encoder<br/>Transformer")
-        D_Enc --> V_Vec("(Vector V<br/>Dense Embedding"))
+        D_Enc --> V_Vec("(Vector V<br/>Dense Embedding")
     end
 
     V_Vec -.->|Pre-computed & Ingested| VDB["(Vector Database<br/>Milvus / Qdrant)"]

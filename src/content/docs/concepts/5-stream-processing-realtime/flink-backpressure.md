@@ -1,7 +1,7 @@
 ---
 title: "Kiến trúc Thực thi: Xử lý Backpressure trong Apache Flink"
 description: "Phân tích chuyên sâu cơ chế Flow Control ở tầng ứng dụng, Credit-based Network Stack, Unaligned Checkpoints, Buffer Debloating và các kịch bản Troubleshooting thực chiến."
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 ---
 
 ## 1. Bản chất Kiến trúc của Backpressure (Áp lực ngược)
@@ -43,14 +43,14 @@ sequenceDiagram
     participant D as Downstream (Receiver)
     
     Note over D: Cấp phát N Network Buffers trống
-    D->>U: Gửi Credit = N (Tôi có N chỗ trống)
+    D->>U: Gửi Credit = N("Tôi có N chỗ trống")
     Note over U: Cập nhật Credit Balance = N
     U->>N: Gửi 1 Data Buffer
     Note over U: Credit Balance = N - 1
     N->>D: Nhận 1 Data Buffer
     Note over D: Đưa vào Input Channel chờ xử lý
     Note over U: Không gửi nữa nếu Credit = 0
-    Note over D: Operator xử lý xong 1 Buffer (Giải phóng)
+    Note over D: Operator xử lý xong 1 Buffer("Giải phóng")
     D->>U: Gửi Credit Addition = +1
     Note over U: Credit Balance tăng lên, tiếp tục gửi
 ```
@@ -74,12 +74,12 @@ Trong cơ chế Checkpoint tiêu chuẩn (Aligned Checkpoint), các Checkpoint B
 ```mermaid
 graph TD
     subgraph Aligned Checkpoint
-    A1["Data 1"] --> B1["Data 2"] --> C1("(Barrier 1")) --> D1["Data 3"]
+    A1["Data 1"] --> B1["Data 2"] --> C1("(Barrier 1") --> D1["Data 3"]
     style C1 fill:#f96,stroke:#333,stroke-width:2px
     end
     
     subgraph Unaligned Checkpoint
-    C2("(Barrier 1")) -. Vượt mặt .-> A2["Data 1"]
+    C2("(Barrier 1") -. Vượt mặt .-> A2["Data 1"]
     A2 --> B2["Data 2"] --> D2["Data 3"]
     style C2 fill:#f96,stroke:#333,stroke-width:2px
     end

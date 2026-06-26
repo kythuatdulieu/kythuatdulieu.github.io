@@ -16,8 +16,8 @@ Bài viết này đi sâu vào các quyết định thiết kế hệ thống, c
 
 Trong các thiết kế Data Platform hiện đại, chúng ta luôn phải cân bằng giữa Storage và Compute, cũng như Latency và Throughput.
 
-*   **Serverless (BigQuery, Athena) vs. Provisioned (Databricks, EMR)**: Serverless tính tiền theo lượng dữ liệu quét (Data Scanned - $5/TB) hoặc theo slot time. Nó hoàn hảo cho Spiky Workloads. Tuy nhiên, nếu bạn có một Streaming Pipeline chạy 24/7 với lượng dữ liệu khổng lồ, việc duy trì một cụm Provisioned với Spot Instances sẽ rẻ hơn gấp nhiều lần.
-*   **Normalized (Chuẩn hóa) vs. Denormalized (Phi chuẩn hóa)**: Lưu trữ dữ liệu dạng Normalized (Star Schema/Snowflake) tiết kiệm Storage Cost (rất rẻ trên S3), nhưng làm tăng Compute Cost do phải `JOIN` liên tục. Ngược lại, Denormalized tốn Storage Cost (lưu trùng lặp) nhưng giảm Compute Cost (không cần `JOIN`). Với giá S3 hiện tại ($0.023/GB), xu hướng chung là ưu tiên **Denormalized** (như Wide Column Tables) để tiết kiệm Compute.
+*   **Serverless (BigQuery, Athena) vs. Provisioned (Databricks, EMR)**: Serverless tính tiền theo lượng dữ liệu quét (Data Scanned - \$5/TB) hoặc theo slot time. Nó hoàn hảo cho Spiky Workloads. Tuy nhiên, nếu bạn có một Streaming Pipeline chạy 24/7 với lượng dữ liệu khổng lồ, việc duy trì một cụm Provisioned với Spot Instances sẽ rẻ hơn gấp nhiều lần.
+*   **Normalized (Chuẩn hóa) vs. Denormalized (Phi chuẩn hóa)**: Lưu trữ dữ liệu dạng Normalized (Star Schema/Snowflake) tiết kiệm Storage Cost (rất rẻ trên S3), nhưng làm tăng Compute Cost do phải `JOIN` liên tục. Ngược lại, Denormalized tốn Storage Cost (lưu trùng lặp) nhưng giảm Compute Cost (không cần `JOIN`). Với giá S3 hiện tại (\$0.023/GB), xu hướng chung là ưu tiên **Denormalized** (như Wide Column Tables) để tiết kiệm Compute.
 
 ```mermaid
 graph TD

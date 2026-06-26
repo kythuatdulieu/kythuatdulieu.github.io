@@ -84,7 +84,7 @@ classDiagram
         +Total Byte Size
     }
     class ColumnChunk {
-        +Column Statistics (Min, Max, Nulls)
+        +Column Statistics("Min, Max, Nulls")
     }
     class DataPage {
         +Encoded Values

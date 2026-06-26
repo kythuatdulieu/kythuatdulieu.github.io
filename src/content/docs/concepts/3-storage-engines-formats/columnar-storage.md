@@ -75,11 +75,11 @@ Apache Parquet (dựa trên paper **Dremel** của Google) là tiêu chuẩn *de
 graph TD
     File["Parquet File"] --> RG1["Row Group 0("e.g. 10,000 rows")"]
     File --> RG2["Row Group 1("e.g. 10,000 rows")"]
-    File --> Footer["File Footer("Metadata")"]
+    File --> Footer["File Footer(Metadata)"]
     
-    RG1 --> CC1["Column Chunk 1("ID")"]
-    RG1 --> CC2["Column Chunk 2("Name")"]
-    RG1 --> CC3["Column Chunk 3("Dept")"]
+    RG1 --> CC1["Column Chunk 1(ID)"]
+    RG1 --> CC2["Column Chunk 2(Name)"]
+    RG1 --> CC3["Column Chunk 3(Dept)"]
     
     CC3 --> P1["Data Page 1"]
     CC3 --> P2["Data Page 2"]

@@ -1,7 +1,7 @@
 ---
 title: "Troubleshooting: Airflow Zombie Tasks & Pool Starvation"
 description: "Phân tích kiến trúc cốt lõi đằng sau Zombie Tasks và Pool Starvation trong Apache Airflow. Giải pháp cấu hình Executor, quản lý State và Deferrable Operators dành cho Staff Data Engineer."
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 ---
 
 Trong quá trình scale hệ thống Apache Airflow lên hàng ngàn DAGs (Directed Acyclic Graphs), bạn sẽ sớm đối mặt với hai thảm họa kiến trúc phổ biến nhất: **Zombie Tasks** (Tiến trình thây ma) và **Pool Starvation** (Đói tài nguyên). 
@@ -19,21 +19,21 @@ Về bản chất, đây là lỗi **Split-Brain** nhẹ giữa Worker và DB: W
 ```mermaid
 sequenceDiagram
     participant S as Airflow Scheduler
-    participant DB as Metadata DB (Postgres/MySQL)
-    participant W as Worker (K8s Pod / Celery)
-    participant OS as Linux OS (OOM Killer)
+    participant DB as Metadata DB("Postgres/MySQL")
+    participant W as Worker("K8s Pod / Celery")
+    participant OS as Linux OS("OOM Killer")
 
     S->>DB: Đánh dấu Task A = RUNNING
     S->>W: Giao Task A cho Worker
-    loop Heartbeat (mỗi 5s)
+    loop Heartbeat("mỗi 5s")
         W->>DB: Gửi Heartbeat cập nhật latest_heartbeat
     end
-    Note over W,OS: Task A load 50GB file Pandas (RAM 16GB)
+    Note over W,OS: Task A load 50GB file Pandas("RAM 16GB")
     OS-->>W: SIGKILL (OOMKilled)
     Note over W: Worker chết ngay lập tức, không kịp báo FAILED cho DB
     DB-->>S: Trạng thái vẫn là RUNNING!
     Note over S,DB: Task A trở thành Zombie
-    S->>DB: Zombie Killer quét `latest_heartbeat` > threshold (vd: 5 phút)
+    S->>DB: Zombie Killer quét `latest_heartbeat` > threshold("vd: 5 phút")
     DB-->>S: Trả về Task A (Zombie)
     S->>DB: Đánh dấu Task A = FAILED / Kích hoạt Retry
 ```

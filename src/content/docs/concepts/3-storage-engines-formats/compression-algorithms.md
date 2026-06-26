@@ -34,7 +34,7 @@ graph TD
     B -- Low Cardinality --> C["Dictionary Encoding"]
     B -- Sequential Data --> D["Run-Length Encoding - RLE"]
     B -- Narrow Range Int --> E["Bit-Packing"]
-    C --> F("(Uncompressed Page"))
+    C --> F("(Uncompressed Page")
     D --> F
     E --> F
     F --> G{"Compression Codec"}
@@ -86,7 +86,7 @@ graph TD
 
 ### 🚨 Incident 2: Hiệu ứng "Zstd Level 19" cắn nát Cloud Bill
 *   **Ngữ cảnh:** Một team Data quyết định chuyển toàn bộ kho dữ liệu sang Zstd với cấu hình cực đoan `compressionLevel = 19` (mức cao nhất) nhằm giảm hóa đơn lưu trữ S3.
-*   **Đánh đổi (The Trade-off):** Mức độ 19 sử dụng các thuật toán nén phức tạp và tốn một lượng khổng lồ CPU RAM. Kết quả là, chi phí lưu trữ S3 giảm được $500/tháng, nhưng hóa đơn tính toán (Compute Cost) của Databricks/EMR tăng lên $3000/tháng do các Cluster phải chạy lâu hơn và dùng nhiều node to hơn chỉ để làm toán giải nén.
+*   **Đánh đổi (The Trade-off):** Mức độ 19 sử dụng các thuật toán nén phức tạp và tốn một lượng khổng lồ CPU RAM. Kết quả là, chi phí lưu trữ S3 giảm được \$500/tháng, nhưng hóa đơn tính toán (Compute Cost) của Databricks/EMR tăng lên \$3000/tháng do các Cluster phải chạy lâu hơn và dùng nhiều node to hơn chỉ để làm toán giải nén.
 *   **Giải pháp (The Sweet Spot):** Zstd Level 3. Các Benchmark thực tế chứng minh Zstd Level 3 là điểm "Cân bằng vàng". Nó tiết kiệm dung lượng hơn Snappy ~15% mà hầu như không tăng độ trễ (Latency).
 
 ---

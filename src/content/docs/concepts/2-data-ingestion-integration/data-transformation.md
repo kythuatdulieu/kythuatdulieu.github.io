@@ -34,7 +34,7 @@ graph TD
         S3["S3 / GCS Data Lake"]
     end
 
-    subgraph "Medallion Architecture("Transform")"
+    subgraph "Medallion Architecture("Transform")
         Bronze["(Bronze Layer <br> Raw / Append-Only)"]
         Silver["(Silver Layer <br> Cleansed / Conformed)"]
         Gold["(Gold Layer <br> Aggregated / Business)"]

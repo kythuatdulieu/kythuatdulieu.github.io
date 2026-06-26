@@ -58,7 +58,7 @@ Các Database tiêu biểu dùng LSM-Tree: Cassandra, RocksDB, ScyllaDB, InfluxD
 
 ```mermaid
 flowchart LR
-    Client("(Client")) --> |1. Write| WAL["Write-Ahead Log<br/>Disk - Sequential"]
+    Client("(Client") --> |1. Write| WAL["Write-Ahead Log<br/>Disk - Sequential"]
     Client --> |2. Write| MemTable["MemTable<br/>RAM - Balanced Tree"]
     MemTable --> |3. Flush when full| SST1["SSTable L0<br/>Disk - Immutable"]
     SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged"]

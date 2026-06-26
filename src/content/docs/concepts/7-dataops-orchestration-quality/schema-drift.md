@@ -28,14 +28,14 @@ Khi hệ thống ingest data (Ingestion Layer) đọc một batch/stream chứa 
 
 ```mermaid
 flowchart TD
-    A[Upstream DB] -->|CDC Event| B(Kafka Topic)
+    A["Upstream DB"] -->|CDC Event| B("Kafka Topic")
     B --> C{Spark/Flink Job}
-    C -->|Schema Match| D[(Data Lake/Warehouse)]
+    C -->|Schema Match| D["(Data Lake/Warehouse)"]
     C -->|Schema Mismatch| E{Drift Handling Policy}
-    E -->|Fail Fast| F[Throw Exception / Dead Letter Queue]
-    E -->|Auto Evolve| G[Update Table Metadata]
+    E -->|Fail Fast| F["Throw Exception / Dead Letter Queue"]
+    E -->|Auto Evolve| G["Update Table Metadata"]
     G --> D
-    E -->|Ignore| H[Drop Unknown Columns]
+    E -->|Ignore| H["Drop Unknown Columns"]
     H --> D
 ```
 
@@ -169,7 +169,7 @@ sequenceDiagram
     participant Registry as Data Contract Registry
     participant DE as Data Engineer
 
-    BE->>CI: Push code (Changes Schema)
+    BE->>CI: Push code("Changes Schema")
     CI->>Registry: Validate against current Contract
     alt Is Valid
         Registry-->>CI: OK

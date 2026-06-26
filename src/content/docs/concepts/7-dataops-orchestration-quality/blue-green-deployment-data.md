@@ -22,18 +22,18 @@ Thay vì ghi trực tiếp vào bảng đang phục vụ (Production), luồng d
 
 ```mermaid
 graph TD
-    subgraph "1. WRITE("Staging/Green")"
+    subgraph "1. WRITE("Staging/Green")
         A["Kafka / S3 Raw Data"] -->|Spark / dbt ETL| B["(Uncommitted Snapshot / \n Staging Schema)"]
         style B fill:#e6f4ea,stroke:#1e8e3e
     end
 
-    subgraph "2. AUDIT("Validation")"
+    subgraph "2. AUDIT("Validation")
         B --> C{"Data Quality Tests \n dbt test / Great Expectations"}
         C -- Fails --> D["Alert & Halt Pipeline. \n Prod is untouched!"]
         style D fill:#fce8e6,stroke:#d93025
     end
 
-    subgraph "3. PUBLISH("Production/Blue")"
+    subgraph "3. PUBLISH("Production/Blue")
         C -- Passes --> E["Metadata Swap / \n Branch Merge"]
         E --> F["(Production Table / View)"]
         style F fill:#e8f0fe,stroke:#1a73e8
@@ -91,13 +91,13 @@ sequenceDiagram
     participant Data Quality (Audit)
     participant Consumers (BI)
 
-    Consumers->>Iceberg Metadata: Đọc từ v1 (Snapshot 101)
+    Consumers->>Iceberg Metadata: Đọc từ v1("Snapshot 101")
     Spark->>Iceberg Metadata: Ghi Parquet files mới (Write)
     Iceberg Metadata-->>Spark: Tạo Snapshot 102 (Uncommitted)
     Spark->>Data Quality: Chạy Audit trên Snapshot 102
     Data Quality-->>Spark: Audit Passed!
     Spark->>Iceberg Metadata: Publish: Gán current-snapshot-id = 102
-    Consumers->>Iceberg Metadata: Lần truy vấn sau đọc từ v2 (Snapshot 102)
+    Consumers->>Iceberg Metadata: Lần truy vấn sau đọc từ v2("Snapshot 102")
 ```
 
 Ngoài ra, các công cụ quản lý Data Versioning như **lakeFS** hoặc **Project Nessie** cũng cung cấp API giống hệt `git`:

@@ -143,24 +143,24 @@ Dưới đây là một mô hình tham khảo cho một Data Stack đơn giản 
 ```mermaid
 flowchart LR
     subgraph "Data Sources"
-        A1["("PostgreSQL / MySQL")"]
+        A1[("PostgreSQL / MySQL")]
         A2["SaaS APIs\nStripe, Salesforce"]
         A3["Flat Files\nS3 / GCS"]
     end
 
-    subgraph "Data Ingestion("Boring: EL")"
+    subgraph "Data Ingestion (Boring: EL)"
         B["Fivetran / Airbyte\nDaily Sync"]
     end
 
-    subgraph "Data Warehouse("Boring: Compute + Storage")"
-        C["("BigQuery / Snowflake")"]
+    subgraph "Data Warehouse (Boring: Compute + Storage)"
+        C[("BigQuery / Snowflake")]
     end
 
-    subgraph "Data Transformation("Boring: SQL")"
+    subgraph "Data Transformation (Boring: SQL)"
         D["dbt Core\nSQL Models"]
     end
 
-    subgraph "Orchestration("Boring: Scheduler")"
+    subgraph "Orchestration (Boring: Scheduler)"
         E["GitHub Actions / Cronjob"]
     end
 

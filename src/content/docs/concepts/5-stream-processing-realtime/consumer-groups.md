@@ -29,13 +29,13 @@ sequenceDiagram
     
     C1->>GC: JoinGroup Request
     C2->>GC: JoinGroup Request
-    GC-->>C1: JoinGroup Response (You are Leader + Member list)
-    GC-->>C2: JoinGroup Response (You are Follower)
+    GC-->>C1: JoinGroup Response("You are Leader + Member list")
+    GC-->>C2: JoinGroup Response("You are Follower")
     Note over C1: Leader chạy thuật toán phân bổ<br/>(Range, RoundRobin, Sticky)
-    C1->>GC: SyncGroup Request (Assignment plan)
+    C1->>GC: SyncGroup Request("Assignment plan")
     C2->>GC: SyncGroup Request (Empty)
-    GC-->>C1: SyncGroup Response (Your Partitions)
-    GC-->>C2: SyncGroup Response (Your Partitions)
+    GC-->>C1: SyncGroup Response("Your Partitions")
+    GC-->>C2: SyncGroup Response("Your Partitions")
 ```
 
 1. **Group Coordinator**: Một Broker được Kafka bầu ra để quản lý state của một Group cụ thể. Broker này thường là leader của partition thuộc topic `__consumer_offsets` tương ứng với hash của `group.id`.

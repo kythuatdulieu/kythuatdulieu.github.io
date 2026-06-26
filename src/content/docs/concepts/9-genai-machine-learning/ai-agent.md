@@ -47,7 +47,7 @@ Sử dụng một LLM mạnh làm Router (Supervisor) để phân phối task xu
 
 ```mermaid
 graph TD
-    User("(User")) --> Sup["Supervisor Agent"]
+    User("(User") --> Sup["Supervisor Agent"]
     Sup --> |Định tuyến| W1["Researcher Agent"]
     Sup --> |Định tuyến| W2["Coder Agent"]
     Sup --> |Định tuyến| W3["Reviewer Agent"]

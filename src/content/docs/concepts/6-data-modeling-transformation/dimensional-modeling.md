@@ -21,14 +21,14 @@ Khi thiết kế Star Schema, bạn không chỉ tạo khóa ngoại (Foreign Ke
 
 ```mermaid
 graph TD
-    subgraph "Execution Engine("Spark / Photon / Presto")"
+    subgraph "Execution Engine("Spark / Photon / Presto")
         C["Catalyst Optimizer"] -->|Pushdown Filter| DPP["Dynamic Partition Pruning"]
         C -->|Small Table < 10MB| BHJ["Broadcast Hash Join"]
     end
     
-    subgraph "Storage Layer("Object Storage: S3/GCS")"
-        F["("Fact_Sales\n("Delta / Parquet")\nHàng tỷ dòng, chia thành nhiều files")"]
-        D["("Dim_Date\n("Delta / Parquet")\nNhỏ gọn, tĩnh")"]
+    subgraph "Storage Layer("Object Storage: S3/GCS")
+        F["(Fact_Sales\n("Delta / Parquet")\nHàng tỷ dòng, chia thành nhiều files)"]
+        D["(Dim_Date\n("Delta / Parquet")\nNhỏ gọn, tĩnh)"]
     end
     
     DPP -.->|Skip Parquet RowGroups| F

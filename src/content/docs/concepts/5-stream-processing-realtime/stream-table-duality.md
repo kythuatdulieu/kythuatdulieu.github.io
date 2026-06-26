@@ -27,20 +27,20 @@ Thay vào đó, các framework như Kafka Streams hay Flink nhúng một Embedde
 
 ```mermaid
 flowchart TD
-    subgraph StreamingNode["Streaming Node("JVM")"]
+    subgraph StreamingNode["Streaming Node(JVM)"]
         StreamIn["Input Stream\n("Event Log")"]
-        MemTable["In-Memory Cache\n("MemTable")"]
-        RocksDB["("RocksDB\n("Local Disk SSTables")")"]
-        TableOut["Materialized Table\n("State")"]
+        MemTable["In-Memory Cache\n(MemTable)"]
+        RocksDB["(RocksDB\n("Local Disk SSTables")"]
+        TableOut["Materialized Table\n(State)"]
     end
     
-    Changelog["("Kafka Changelog Topic\n("Compacted")")"]
+    Changelog["(Kafka Changelog Topic\n(Compacted)"]
     
     StreamIn -- "Materialize" --> MemTable
-    MemTable -- "Spill-to-disk\n("Memory Mgmt")" --> RocksDB
+    MemTable -- "Spill-to-disk\n("Memory Mgmt") --> RocksDB
     RocksDB -. "Ad-hoc Query" .-> TableOut
     MemTable -- "Async flush" --> Changelog
-    Changelog -- "Replay("Fault Tolerance")" -.-> MemTable
+    Changelog -- "Replay("Fault Tolerance") -.-> MemTable
 ```
 
 Dữ liệu mới đến sẽ đi vào In-Memory Cache (MemTable), khi đầy sẽ xả xuống đĩa cứng (Spill-to-disk) dưới dạng SSTables (Sorted String Tables) của RocksDB. Table chính là giao diện truy vấn phía trên cấu trúc vật lý này.

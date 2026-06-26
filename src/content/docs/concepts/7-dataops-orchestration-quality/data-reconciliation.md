@@ -37,7 +37,7 @@ graph TD
     end
     
     C -->|Trigger Airflow/dbt| D
-    D -->|Match| F("(Pipeline Success"))
+    D -->|Match| F("(Pipeline Success")
     D -->|Mismatch| E
     E -->|Alert Data Downtime| G["PagerDuty / Slack"]
 ```

@@ -155,8 +155,8 @@ graph LR
     A["Mobile Apps / IoT"] -->|Events| B("Kafka / Redpanda Broker")
     C["RDBMS CDC: Debezium"] -->|Row Changes| B
     B -->|Real-time streams| D["Stream Processor: Apache Flink"]
-    B -->|"Log Replay("Batch")"| D
-    D -->|Continuous Updates| E["("Real-time OLAP: ClickHouse / Pinot")"]
+    B -->|"Log Replay (Batch)"| D
+    D -->|Continuous Updates| E[("Real-time OLAP: ClickHouse / Pinot")]
     E --> F["Live Dashboards & Apps"]
 ```
 
@@ -223,7 +223,7 @@ graph TD
 
     subgraph Domain_E_Commerce
         C["Orders Service Microservice"]
-        D["("Orders DB")"]
+        D[("Orders DB")]
         E["Orders Data Product"]
         C --> D
         D -->|CDC| E
@@ -232,7 +232,7 @@ graph TD
 
     subgraph Domain_Marketing
         F["Marketing Automation API"]
-        G["("CRM DB")"]
+        G[("CRM DB")]
         H["Customer 360 Data Product"]
         F --> G
         G -->|ELT| H

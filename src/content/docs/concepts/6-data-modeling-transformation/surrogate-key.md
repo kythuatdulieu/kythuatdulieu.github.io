@@ -1,125 +1,126 @@
 ---
 title: "Khóa thay thế - Surrogate Key"
-difficulty: "Beginner"
-tags: ["data-warehouse", "surrogate-key", "natural-key", "dimensional-modeling", "scd"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Surrogate Key (Khóa thay thế) là gì? Phân biệt với Natural Key"
-metaDescription: "Tìm hiểu chi tiết về Khóa thay thế (Surrogate Key) trong Data Warehouse. So sánh Surrogate Key và Natural Key, tại sao nó lại quan trọng đối với hệ thống ETL."
-description: "Trong thiết kế kho dữ liệu (Data Warehouse), Surrogate Key (Khóa thay thế) đóng vai trò cốt lõi trong việc quản lý các chiều dữ liệu (Dimensions) và đảm bảo tính toàn vẹn của lịch sử."
+difficulty: "Intermediate"
+tags: ["data-warehouse", "surrogate-key", "distributed-systems", "dbt", "snowflake", "bigquery"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Surrogate Key trong Distributed Data Warehouse (Snowflake, BigQuery)"
+metaDescription: "Thiết kế Surrogate Key trong MPP Data Warehouse. So sánh Sequence Generator và Hash Key (MD5/FARM_FINGERPRINT). Trade-offs về hiệu suất, lưu trữ và Distributed Bottlenecks."
+description: "Trong hệ thống Massively Parallel Processing (MPP) Data Warehouse, việc chọn đúng chiến lược sinh Surrogate Key quyết định khả năng scale, tránh Bottlenecks và đảm bảo toàn vẹn dữ liệu cho SCD."
 ---
 
+Trong môi trường Data Warehouse phân tán (Distributed Data Warehouse), việc liên kết các chiều dữ liệu (Dimensions) và bảng sự kiện (Facts) đòi hỏi một khóa định danh duy nhất. Khác với OLTP (nơi dùng Natural/Business Key như `user_id` hay `email`), Data Warehouse phải quản lý lịch sử (Slowly Changing Dimensions - SCD) và giải quyết tính không đồng nhất từ nhiều nguồn. Đây là lúc **Surrogate Key (Khóa thay thế)** phát huy tác dụng.
 
+Tuy nhiên, bài toán thực sự của một Data Engineer không nằm ở việc "tạo ra một ID tự tăng", mà là làm sao để tạo ra hàng tỷ ID một cách song song trên một cụm máy chủ MPP (Massively Parallel Processing) mà không gây nghẽn cổ chai (bottleneck) ở bộ định tuyến trung tâm.
 
-## Surrogate Key là gì?
+![Surrogate Key Distributed Architecture](/images/6-data-modeling-transformation/surrogate-key-arch.png)
 
+## 1. Physical Execution: Sequence Generators vs. Hash-Based Keys
 
+Trong các kiến trúc dữ liệu truyền thống (SMP - Symmetric Multiprocessing như SQL Server hay PostgreSQL), Surrogate Key thường được sinh ra bằng cấu trúc `IDENTITY(1,1)` hoặc `SEQUENCE`. Cơ sở dữ liệu sẽ khóa (lock) một state nội bộ, cấp phát số tiếp theo, và nhả lock.
 
-**Surrogate Key** (Khóa thay thế hay Khóa đại diện) là một giá trị định danh duy nhất (thường là một số nguyên tự tăng - auto-increment integer, hoặc một chuỗi băm - hash string/UUID) được thêm vào một bảng trong [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) để làm khóa chính (Primary Key). 
+Nhưng khi chuyển sang nền tảng MPP (Snowflake, BigQuery, Databricks), cấu trúc này trở thành một "thảm họa" về hiệu suất.
 
-Điểm đặc biệt của Surrogate Key là nó **hoàn toàn vô nghĩa về mặt nghiệp vụ (business value)**. Nó không được sinh ra từ hệ thống nguồn (như CRM, ERP, ứng dụng mobile), mà được tạo ra bởi quy trình ETL/ELT khi dữ liệu được load vào Data Warehouse.
+### The Distributed Coordinator Bottleneck
+Nếu bạn có 100 worker nodes cùng insert dữ liệu vào một bảng, việc sử dụng `SEQUENCE` đòi hỏi các nodes phải liên tục giao tiếp với một Coordinator node trung tâm để xin cấp phát dải số tiếp theo (hoặc xin từng số). Điều này phá vỡ tính chất "Shared-Nothing" của MPP, tạo ra độ trễ mạng (Network Latency) khổng lồ và Lock Contention.
 
-Trái ngược với Surrogate Key là **Natural Key** (Khóa tự nhiên) hay **Business Key** (Khóa nghiệp vụ) - là những giá trị có ý nghĩa trong hệ thống nguồn, ví dụ như Mã số thuế, CMND/CCCD, Mã nhân viên (`EMP_001`), hay Địa chỉ Email.
+### Giải pháp: Deterministic Hashing
+Để loại bỏ sự phụ thuộc vào trạng thái trung tâm (Stateless Generation), xu hướng Modern Data Stack (đặc biệt là dbt và Data Vault) chuyển sang sử dụng **Hash-based Surrogate Keys**. Các worker nodes có thể băm (hash) Natural Key kết hợp với các thuộc tính nghiệp vụ (như `source_system`) bằng một hàm thuật toán (MD5, SHA-256) một cách hoàn toàn độc lập và song song.
 
-## So sánh Natural Key và Surrogate Key
+```mermaid
+graph TD
+    subgraph "Distributed Hashing("No Bottleneck")"
+    A1("Worker Node 1<br/>NK: 'CUST_01'") -->|MD5| B1("Hash: 9a3b...")
+    A2("Worker Node 2<br/>NK: 'CUST_02'") -->|MD5| B2("Hash: f4c2...")
+    A3("Worker Node 3<br/>NK: 'CUST_03'") -->|MD5| B3("Hash: 71de...")
+    end
+    B1 --> D["(Fact Table)"]
+    B2 --> D
+    B3 --> D
+```
 
-Để hiểu rõ hơn về Surrogate Key, chúng ta cần so sánh nó với Natural Key thông qua bảng dưới đây:
+## 2. Code Thực chiến: Implement Surrogate Key trong Cloud DWH
 
-| Tiêu chí | Natural Key (Business Key) | Surrogate Key |
+Dưới đây là cách triển khai Surrogate Key sử dụng Hashing thông qua **dbt (Data Build Tool)** và một số hàm Native của các Cloud Data Warehouse.
+
+### Dùng dbt Macro
+dbt cung cấp macro `generate_surrogate_key` giúp chuẩn hóa việc tạo Hash Key, xử lý các vấn đề nhức nhối như Null values và Type casting ngầm.
+
+```sql
+-- models/dimensions/dim_customers.sql
+WITH source_data AS (
+    SELECT 
+        customer_id,
+        source_system,
+        email,
+        updated_at
+    FROM {{ ref('stg_salesforce_customers') }}
+)
+
+SELECT 
+    -- Tạo Hash Key từ Natural Key và Source System
+    {{ dbt_utils.generate_surrogate_key(['customer_id', 'source_system']) }} AS customer_sk,
+    customer_id AS business_key,
+    email,
+    -- Phục vụ SCD Type 2
+    updated_at AS valid_from,
+    LEAD(updated_at) OVER (PARTITION BY customer_id ORDER BY updated_at) AS valid_to
+FROM source_data;
+```
+
+### Native Cloud DWH Functions
+Nếu không dùng dbt, mỗi engine có một hàm băm tối ưu riêng ở tầng C++ / Rust bên dưới:
+- **BigQuery:** Ưu tiên dùng `FARM_FINGERPRINT()` vì nó trả về `INT64` (chiếm 8 bytes) thay vì string (MD5 chiếm 32 bytes), giúp tăng tốc độ JOIN lên cực nhiều.
+  ```sql
+  SELECT FARM_FINGERPRINT(CONCAT(CAST(customer_id AS STRING), '|', source_system)) AS customer_sk
+  ```
+- **Snowflake:** `MD5()` trả về VARCHAR(32).
+- **Databricks:** Databricks gần đây đã hỗ trợ `GENERATED ALWAYS AS IDENTITY`. Khác với các hệ thống MPP khác, Databricks đã tối ưu thuật toán cấp phát dải số (Range allocation) cho các worker nodes của Spark, giảm thiểu bottleneck. Tuy nhiên, nó vẫn làm mất đi tính Idempotency (xem phần dưới).
+
+## 3. Systemic Trade-offs: Hashing vs. Sequence
+
+Quyết định sử dụng Hash hay Sequence là một bài toán trade-off (đánh đổi) kinh điển trong System Design:
+
+| Tiêu chí | Hash-based Key (MD5 / SHA256) | Sequence-based Key (Identity / Auto-increment) |
 | :--- | :--- | :--- |
-| **Nguồn gốc** | Hệ thống vận hành gốc (OLTP), người dùng tạo ra. | Hệ thống phân tích (OLAP/Data Warehouse), tự động sinh ra bởi ETL/ELT. |
-| **Ý nghĩa** | Có ý nghĩa nghiệp vụ (VD: Mã khách hàng `CUST-999`). | Vô nghĩa, chỉ đóng vai trò định danh dòng dữ liệu (VD: `1`, `2`, `3` hoặc `uuid`). |
-| **Tính bất biến** | Có thể bị thay đổi (VD: Khách hàng đổi số điện thoại, đổi email, hoặc hệ thống đổi logic tạo mã). | Hoàn toàn không bao giờ thay đổi sau khi được tạo ra cho một dòng cụ thể. |
-| **Định dạng** | Thường là chuỗi (String), có độ dài đa dạng, hoặc có thể gồm nhiều cột ghép lại (Composite Key). | Thường là số nguyên (Integer/BigInt) hoặc mã băm (Hash/UUID) với độ dài cố định. |
-| **Mục đích** | Tìm kiếm, cập nhật dữ liệu ở hệ thống nguồn. | Quản lý lịch sử (SCD), tối ưu hóa hiệu suất JOIN trong Data Warehouse. |
+| **Idempotency (Tính luỹ đẳng)** | **Tuyệt đối.** Chạy lại (Backfill) 100 lần vẫn ra cùng một chuỗi Hash cho cùng một dòng dữ liệu. Rất quan trọng trong ELT. | **Kém.** Nếu bạn truncate bảng và load lại, các dòng cũ sẽ nhận ID mới, làm gãy toàn bộ bảng Fact đang tham chiếu. |
+| **Storage / RAM** | Cao. MD5 String chiếm 32 bytes (gấp 4 lần BIGINT). Nếu Fact table có hàng chục tỷ dòng, dung lượng lưu trữ và RAM khi load vào bộ nhớ để JOIN sẽ phình to. | **Cực thấp.** INT hoặc BIGINT (4-8 bytes). Cực kỳ tối ưu cho bộ nhớ và CPU Cache (Data Locality). |
+| **Network Shuffle / Bottleneck** | Không có Bottleneck. Hỗ trợ scale tuyến tính. | Gây Lock Contention ở Coordinator node. Có thể làm giảm Throughput ghi. |
 
-## Tại sao cần sử dụng Surrogate Key trong Data Warehouse?
+### Rủi ro: Hash Collisions (Đụng độ Hash)
+Theo **Nghịch lý Ngày sinh (Birthday Paradox)**, hàm MD5 (128-bit) có khả năng sinh ra hai chuỗi Hash giống nhau từ hai đầu vào khác nhau, dù tỷ lệ là cực kỳ thiên văn (khoảng 1 trên \$2^{64}$). Trong các tập dữ liệu dưới vài trăm tỷ dòng, xác suất đụng độ là không đáng kể. Nếu hệ thống của bạn (như Uber, Netflix) vượt qua giới hạn này, hãy sử dụng `SHA-256` (dù sẽ tốn chi phí compute hơn).
 
-Bạn có thể tự hỏi: *"Tại sao phải tốn công sinh ra một khóa mới trong khi dữ liệu từ nguồn đã có sẵn ID (Natural Key)?"* 
+## 4. Rủi ro Vận hành (Operational Risks) & Troubleshooting
 
-Dưới đây là những lý do sống còn khiến Surrogate Key trở thành tiêu chuẩn trong thiết kế Dimensional Modeling (Kimball):
+### Bài toán: Early Arriving Facts (Late Arriving Dimensions)
+Đây là một "ác mộng" phổ biến trong Data Streaming hoặc Micro-batching. 
+Giả sử một giao dịch (Fact) chứa `CUST-999` đẩy vào Kafka và load thẳng vào DWH. Tuy nhiên, thông tin chi tiết của `CUST-999` từ hệ thống CRM (Dimension) bị trễ mạng (Network Delay) và chưa có trong bảng `dim_customers`. 
 
-### 1. Quản lý sự thay đổi của dữ liệu (SCD - Slowly Changing Dimensions)
-
-Đây là lý do quan trọng nhất. Giả sử bạn có một khách hàng `CUST-001` tên là "Nguyễn Văn A" sống tại "Hà Nội". Sau một năm, anh ấy chuyển vào "TP.HCM". 
-
-Nếu bạn dùng Natural Key `CUST-001` làm khóa chính trong Dimension Table, bạn chỉ có 2 lựa chọn:
-- Cập nhật đè (Overwrite - SCD Type 1): Bạn mất thông tin anh A từng ở Hà Nội. Các báo cáo doanh thu năm ngoái ở Hà Nội sẽ bị tính sai cho TP.HCM.
-- Lưu lịch sử (SCD Type 2): Bạn cần tạo một dòng mới cho anh A. Nhưng vì `CUST-001` là khóa chính, cơ sở dữ liệu sẽ báo lỗi trùng lặp (Primary Key Violation).
+Nếu Fact cố gắng JOIN để lấy `customer_sk`, nó sẽ trả về `NULL` và phá vỡ Referential Integrity.
 
 **Giải pháp với Surrogate Key:**
-Mỗi phiên bản (version) của khách hàng sẽ có một Surrogate Key (SK) riêng, trong khi Natural Key (NK) vẫn giữ nguyên.
+Luôn khởi tạo các dòng "Bóng ma" (Ghost Rows / Dummy Rows) mang Negative Surrogate Keys trong bảng Dimension:
+- `SK = -1`: Dành cho các Early Arriving Facts. Fact sẽ map với `-1` (nghĩa là "Unknown Customer"). Khi Dimension đến sau, bạn chỉ cần UPDATE lại thông tin vào dòng `-1` (hoặc map lại ở lần build fact tiếp theo).
+- `SK = -2`: Not Applicable (Giao dịch không cần khách hàng).
+- `SK = -3`: Corrupted / Invalid Data.
 
-| KhachHang_SK (PK) | MaKhachHang (NK) | Ten | DiaChi | NgayHieuLuc | NgayHetHan | TrangThai |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `101` | `CUST-001` | Nguyễn Văn A | Hà Nội | 2022-01-01 | 2023-05-01 | Inactive |
-| `102` | `CUST-001` | Nguyễn Văn A | TP.HCM | 2023-05-02 | 9999-12-31 | Active |
-
-Fact Table bán hàng sẽ JOIN với SK `101` cho các đơn hàng cũ, và JOIN với SK `102` cho các đơn hàng mới. Lịch sử được bảo toàn tuyệt đối.
-
-### 2. Tối ưu hiệu suất (Performance)
-
-- **Tốc độ JOIN:** Việc JOIN giữa các bảng Fact (hàng tỷ dòng) và bảng Dimension (hàng triệu dòng) bằng các khóa số nguyên (Integer) sẽ nhanh hơn rất nhiều so với việc JOIN bằng chuỗi ký tự (Varchar) như `CUST-001` hay `abc@email.com`.
-- **Tiết kiệm không gian lưu trữ:** Bảng Fact lưu hàng tỷ dòng. Việc lưu trữ một số nguyên 4-byte hay 8-byte cho mỗi Fact sẽ tốn ít không gian hơn nhiều so với việc lưu trữ các chuỗi Natural Key dài. Kích thước nhỏ gọn cũng giúp Index hoạt động hiệu quả hơn trong bộ nhớ (RAM).
-
-### 3. Độc lập với hệ thống nguồn (Decoupling)
-
-Hệ thống Data Warehouse thường tích hợp dữ liệu từ nhiều nguồn khác nhau. 
-- **Trùng lặp Natural Key:** Hệ thống CRM có mã khách hàng `123`, hệ thống ERP cũng có mã khách hàng `123` nhưng lại là hai người khác nhau. Surrogate Key giúp phân biệt chúng dễ dàng.
-- **Tái cấu trúc hệ thống nguồn:** Nếu công ty bạn thay đổi phần mềm quản lý, cấu trúc Natural Key có thể thay đổi (từ kiểu INT sang kiểu UUID). Nếu DWH phụ thuộc vào Natural Key, bạn sẽ phải đập đi xây lại toàn bộ kho dữ liệu. Với Surrogate Key, bạn chỉ cần mapping lại ở tầng Staging.
-
-### 4. Xử lý "Early Arriving Facts" và dữ liệu bị thiếu
-
-Đôi khi một sự kiện giao dịch (Fact) xảy ra và đi vào DWH trước khi thông tin chi tiết về đối tượng đó (Dimension) xuất hiện trong hệ thống (thường gọi là Early Arriving Facts). 
-Với Surrogate Key, bạn có thể tạo trước một bản ghi Dimension "giả" với giá trị mặc định (Ví dụ: SK = `-1`, Tên = `Unknown`), để Fact table vẫn có thể load thành công. Khi dữ liệu Dimension thực sự tới, bạn chỉ cần cập nhật lại thông tin cho bản ghi SK đó.
-
-## Các phương pháp tạo Surrogate Key
-
-Có nhiều cách để sinh ra Surrogate Key tùy thuộc vào kiến trúc và công nghệ Data Warehouse của bạn.
-
-### 1. Auto-Increment / Identity Column / Sequence
-
-Đây là phương pháp cổ điển nhất. Cột sẽ tự động tăng giá trị (+1) mỗi khi có một dòng mới được chèn vào.
-- **Công nghệ:** `IDENTITY(1,1)` trong SQL Server, `SERIAL` trong PostgreSQL, `AUTOINCREMENT` trong MySQL, `SEQUENCE` trong Snowflake/Oracle.
-- **Ưu điểm:** Khóa là số nguyên, lý tưởng nhất cho hiệu năng JOIN và lưu trữ. Dễ hiểu, dễ cài đặt.
-- **Nhược điểm:** Phải tạo tuần tự (Sequential), gây "nghẽn cổ chai" (bottleneck) trong các hệ thống phân tán (Distributed Systems). Khó giữ sự đồng nhất giữa các môi trường Dev/Test/Prod (vì thứ tự load dữ liệu có thể khác nhau dẫn đến SK khác nhau).
-
-### 2. Mã băm (Hashing)
-
-Đây là xu hướng phổ biến trong kiến trúc Modern Data Stack hiện nay (như khi sử dụng dbt, BigQuery, Snowflake) hoặc trong Data Vault. Thay vì tạo số tự tăng, chúng ta sẽ băm (hash) Natural Key kết hợp với một vài thuộc tính khác (hoặc checksum) để tạo ra Surrogate Key.
-
-Ví dụ trong dbt sử dụng macro `dbt_utils.generate_surrogate_key`:
 ```sql
-{{ dbt_utils.generate_surrogate_key(['customer_id', 'source_system']) }}
+-- Khởi tạo Dummy Rows cho Dim_Customers
+INSERT INTO dim_customers (customer_sk, business_key, email, status)
+VALUES 
+  (-1, 'UNKNOWN', 'unknown@system.local', 'N/A'),
+  (-2, 'NOT_APPLICABLE', 'none', 'N/A');
 ```
-Hàm này thường sử dụng thuật toán MD5 để tạo ra một chuỗi băm (Hash string) độ dài 32 ký tự.
+Kỹ thuật này đảm bảo mọi truy vấn `INNER JOIN` sẽ không làm "bốc hơi" (drop) các dòng Fact bị thiếu Dimension, giữ cho tổng doanh thu (Sum of Revenue) luôn chính xác tuyệt đối.
 
-- **Ưu điểm:** Tính toán độc lập và có tính xác định (Deterministic). Cùng một Natural Key luôn sinh ra cùng một Surrogate Key dù ở bất kỳ hệ thống nào hay môi trường nào. Hỗ trợ xử lý song song cực tốt, không bị nghẽn (bottleneck) như Sequence.
-- **Nhược điểm:** Hiệu năng JOIN trên chuỗi Hash có thể chậm hơn một chút so với Integer. Chiếm nhiều dung lượng lưu trữ hơn (mặc dù các cloud DWH hiện nay như BigQuery/Snowflake tối ưu việc nén rất tốt nên chênh lệch này không đáng kể).
+## 5. Tổng kết
 
-### 3. UUID (Universally Unique Identifier)
+Việc chọn thiết kế Surrogate Key phản ánh độ trưởng thành của hệ thống Data Platform:
+- Nếu bạn ở quy mô nhỏ, dùng PostgreSQL hoặc Redshift đời đầu, `IDENTITY` (Sequence) mang lại hiệu năng JOIN siêu việt với chi phí storage thấp.
+- Nếu bạn xây dựng hệ thống MPP phân tán hiện đại, ưu tiên tính Idempotency và độ ổn định của ELT Pipelines, **Deterministic Hashing** thông qua dbt là con đường tốt nhất. Đừng sợ chi phí lưu trữ của Hash String, các Columnar DWH hiện tại (như Parquet, Snowflake micro-partitions) nén chuỗi (dictionary encoding) rất hiệu quả.
 
-Một hàm sinh UUID v4 sẽ tạo ra một chuỗi 128-bit hoàn toàn ngẫu nhiên và đảm bảo duy nhất trên toàn thế giới.
-- **Ưu điểm:** Sinh ngẫu nhiên dễ dàng mà không sợ đụng độ (collision). Hỗ trợ tốt cho phân tán.
-- **Nhược điểm:** Chiếm nhiều dung lượng lưu trữ nhất và hiệu năng JOIN chuỗi UUID thường chậm. Khác với Hashing, UUID không có tính xác định (chạy 2 lần sẽ ra 2 kết quả khác nhau), gây khó khăn trong việc load lại dữ liệu (backfill).
-
-## Khi nào KHÔNG nên sử dụng Surrogate Key?
-
-Mặc dù Surrogate Key mang lại rất nhiều lợi ích cho Data Warehouse, không phải lúc nào nó cũng cần thiết:
-
-1. **Bảng Fact (Fact Tables):** Bảng Fact chủ yếu chứa các khóa ngoại (Foreign Keys trỏ tới Dimension) và các chỉ số đo lường (Measures). Trong mô hình Kimball, Fact table không nhất thiết phải có một Surrogate Key (Khóa chính) riêng, trừ khi có một yêu cầu đặc biệt như cần audit từng dòng Fact cụ thể.
-2. **Hệ thống OLTP (Cơ sở dữ liệu ứng dụng):** Surrogate Key là khái niệm đặc thù cho phân tích (OLAP). Trong OLTP, các khóa chính auto-increment (như ID người dùng) thường được sử dụng và chúng có xu hướng trở thành Natural Key đối với góc nhìn của Data Warehouse sau này.
-3. **Bảng Dimension quá nhỏ và không bao giờ thay đổi:** Ví dụ bảng `Dim_Gender` chỉ có 2 dòng (Nam/Nữ) hoặc `Dim_Country`. Đôi khi việc gán một mã code đơn giản (`'M'`, `'F'`) làm khóa luôn cũng được chấp nhận để đơn giản hóa, dù không hoàn toàn chuẩn chỉ theo Kimball.
-
-## Tổng kết
-
-**Surrogate Key** là một kỹ thuật nền tảng trong Data Engineering và Data Warehousing. Nó là "tấm khiên" bảo vệ hệ thống phân tích của bạn khỏi sự hỗn loạn và thay đổi liên tục từ các hệ thống nguồn. Dù bạn chọn cách tạo khóa bằng Auto-increment truyền thống hay dùng hàm Hashing hiện đại, việc ứng dụng Surrogate Key đúng cách vào các bảng Dimension sẽ giúp kho dữ liệu của bạn trở nên bền vững, mở rộng tốt và lưu trữ được trọn vẹn lịch sử thay đổi của doanh nghiệp.
-
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* **The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling - Ralph Kimball**
+## Nguồn Tham Khảo (References)
+* [Databricks Blog - Identity Columns to Generate Surrogate Keys](https://www.databricks.com/blog/2022/08/08/identity-columns-to-generate-surrogate-keys.html)
+* [dbt Labs - A complete guide to surrogate keys and why they matter](https://docs.getdbt.com/blog/guide-to-surrogate-keys)
 * [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [dbt Labs - Surrogate Keys](https://docs.getdbt.com/terms/surrogate-key)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+* **Building Data Infrastructure at Uber**: Xử lý tính luỹ đẳng (Idempotency) trong Pipeline ETL phân tán.

@@ -125,17 +125,17 @@ sequenceDiagram
     participant User
     participant Okta as Okta (IdP)
     participant SCIM as SCIM Provisioning
-    participant Ranger as Apache Ranger (Policy Engine)
+    participant Ranger as Apache Ranger("Policy Engine")
     participant Trino as Trino (Compute)
     participant S3 as AWS S3 (Storage)
 
     User->>Okta: Login (SSO)
-    Okta-->>User: JWT Token (Chứa Attributes: Department, Role)
+    Okta-->>User: JWT Token("Chứa Attributes: Department, Role")
     Okta->>SCIM: Đồng bộ User/Group Metadata
     SCIM->>Ranger: Cập nhật User Identity
-    User->>Trino: Thực thi SQL Query (Kèm Token)
+    User->>Trino: Thực thi SQL Query("Kèm Token")
     Trino->>Ranger: Yêu cầu phân giải quyền AuthZ
-    Ranger-->>Trino: Trả về Policy (RLS/CLS Masks)
+    Ranger-->>Trino: Trả về Policy("RLS/CLS Masks")
     Trino->>S3: Kéo dữ liệu vật lý
     Trino-->>User: Trả dữ liệu đã lọc và Mask
 ```

@@ -19,7 +19,7 @@ Airflow là một hệ thống phân tán (distributed system) bao gồm 4 thàn
 
 ```mermaid
 flowchart TB
-    User("(Data Engineer")) --> |HTTP/UI| WebServer("Web Server")
+    User("(Data Engineer") --> |HTTP/UI| WebServer("Web Server")
     
     subgraph Control Plane
         WebServer

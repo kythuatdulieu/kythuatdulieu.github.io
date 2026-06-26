@@ -1,222 +1,217 @@
 ---
-title: "Quản lý vòng đời Machine Learning với MLflow"
+title: "Kiến trúc hệ thống MLflow: Tracking, Model Registry và Rủi ro vận hành"
 difficulty: "Intermediate"
-tags: ["mlflow", "mlops", "model-registry", "experiment-tracking"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-08
-seoTitle: "MLflow là gì? Nền tảng quản lý MLOps và Model Lifecycle"
-metaDescription: "Khám phá MLflow: công cụ mã nguồn mở hàng đầu cho MLOps. Tìm hiểu MLflow Tracking, Models, Model Registry và ứng dụng trong Data Engineering."
-description: "Nếu bạn từng tham gia huấn luyện các mô hình Machine Learning, chắc hẳn bạn đã trải qua những tình huống 'dở khóc dở cười' này:"
+tags: ["mlflow", "mlops", "model-registry", "experiment-tracking", "system-design"]
+readingTime: "12 mins"
+lastUpdated: 2026-06-26
+seoTitle: "MLflow Architecture: Nền tảng quản lý MLOps và Model Lifecycle"
+metaDescription: "Mổ xẻ kiến trúc vật lý của MLflow: Tracking Server, Backend Store, Artifact Store. Đi sâu vào operational risks, cấu hình hạ tầng và bài toán bottleneck khi scale."
+description: "MLflow không chỉ là một thư viện log metrics. Dưới góc nhìn Data Engineering, nó là một kiến trúc microservices phân tán giải quyết bài toán State Management và Versioning cho vòng đời Machine Learning."
 ---
 
+Trong kỹ thuật phần mềm, Git giúp quản lý vòng đời của Source Code. Trong Data Engineering, Data Catalog (như Amundsen, DataHub) quản lý vòng đời của Data. Còn đối với Machine Learning, bài toán phức tạp hơn nhiều: Chúng ta cần liên kết đồng thời **Code**, **Data**, **Hyperparameters**, và **Model Weights** thành một thể thống nhất. Đó chính là bài toán mà MLflow giải quyết.
 
+MLflow không chỉ là một thư viện Python. Dưới góc nhìn thiết kế hệ thống (System Design), nó là một kiến trúc phân tán (distributed architecture) được thiết kế chuyên biệt để quản lý State (trạng thái) của hàng triệu quá trình huấn luyện mô hình.
 
-Nếu bạn từng tham gia huấn luyện các mô hình Machine Learning, chắc hẳn bạn đã trải qua những tình huống 'dở khóc dở cười' này:
-- *“Tham số nào đã cho ra kết quả tốt nhất vào tuần trước nhỉ?”*
-- *“Mô hình chạy ngon trên máy mình, nhưng deploy lên server thì lỗi từa lưa!”*
-- *“Ủa model version 3 khác gì version 2 vậy?”*
-- *“Làm sao để biết model đang chạy trên production có thực sự tốt hơn model cũ không?”*
+## 1. Kiến trúc Vật lý (Physical Architecture)
 
-Đó là lúc bạn cần đến **MLflow**.
+Một hệ thống MLflow Production tiêu chuẩn bao gồm 4 thành phần logic (logical tiers):
 
-MLflow là nền tảng mã nguồn mở (được tạo bởi Databricks) dùng để quản lý toàn bộ vòng đời của Machine Learning (MLOps). Nó theo dõi các thông số chạy thử nghiệm (Tracking), lưu trữ mô hình (Model Registry), và đóng gói code để dễ dàng triển khai từ Laptop lên Production.
+1. **MLflow Client**: Các pipeline huấn luyện (Training Pipelines) chạy phân tán trên Airflow, Kubernetes Pods, hoặc Jupyter Notebooks.
+2. **Tracking Server**: Một lightweight REST API Server (thường triển khai bằng Gunicorn hoặc FastAPI). Nó đóng vai trò là Control Plane trung tâm.
+3. **Backend Store**: Cơ sở dữ liệu quan hệ (PostgreSQL / MySQL). Nơi này chỉ lưu trữ *Metadata*: Các thông số (Parameters), Metrics (số int/float), Tags, và trạng thái của Run. Dữ liệu tại đây có cấu trúc, dung lượng nhỏ, nhưng **tần suất Write cực kỳ cao**.
+4. **Artifact Store**: Object Storage (AWS S3, Google Cloud Storage, Azure Blob, hoặc MinIO). Đây là nơi chứa *Payloads* khổng lồ: Weights của model (file `.pkl`, `.safetensors`, `.h5`), hình ảnh, biểu đồ, và các tệp cấu hình.
 
----
+### Trực quan hóa Luồng dữ liệu (Data Flow)
 
-## 1. Kiến trúc tổng quan của MLflow
+```mermaid
+sequenceDiagram
+    participant C as MLflow Client
+    participant T as Tracking Server
+    participant B as Backend Store (PostgreSQL)
+    participant A as Artifact Store("S3/MinIO")
 
-MLflow được thiết kế theo triết lý "API-first", cho phép tích hợp với hầu hết các thư viện Machine Learning phổ biến (Scikit-learn, TensorFlow, PyTorch, XGBoost...) và có thể chạy ở mọi môi trường từ máy cá nhân đến Cloud.
+    C->>T: 1. mlflow.start_run()
+    T->>B: 2. Ghi Metadata("Run ID, Start Time, Status")
+    B-->>T: Trả về trạng thái & Run UUID
+    T-->>C: Trả về Run ID & Artifact URI
 
-Một hệ thống MLflow tiêu chuẩn xoay quanh 4 thành phần chính (Components):
-1. **MLflow Tracking**: Hệ thống ghi log các parameters, metrics, source code, và artifact (hình ảnh, file model) cho từng lần chạy thử nghiệm (run).
-2. **MLflow Projects**: Đóng gói source code data science dưới một định dạng chuẩn (sử dụng Conda/Docker) để có thể chạy lại một cách thống nhất ở bất cứ đâu.
-3. **MLflow Models**: Định dạng chuẩn hóa (flavor) để đóng gói các mô hình ML, giúp triển khai dễ dàng thông qua REST API hoặc batch inference trên Apache Spark.
-4. **MLflow Model Registry**: Nơi lưu trữ và quản lý tập trung các phiên bản mô hình, bao gồm việc theo dõi trạng thái (Staging, Production, Archived).
+    Note over C,B: Logging Metadata("High IOPS, Small Payload")
+    C->>T: 3. mlflow.log_metric("loss", 0.01)
+    T->>B: 4. UPDATE metrics table("DB Transaction")
 
----
+    Note over C,A: Logging Artifacts("High Throughput, Large Payload")
+    C->>A: 5. Upload model.pkl("Direct to S3")
+    Note right of C: Client sử dụng thông tin<br/>từ Artifact URI để upload thẳng lên S3<br/>bỏ qua Tracking Server.
+```
 
-## 2. Đi sâu vào các thành phần cốt lõi
+### Đánh đổi Kiến trúc: Direct vs. Proxied Artifact Access
 
-### 2.1. MLflow Tracking
+**1. Direct Access (Mặc định):** Như sơ đồ trên, Client nhận đường dẫn từ Tracking Server, sau đó dùng Credentials (như IAM Role / Access Key) của chính Client để đẩy file lên S3.
+- **Ưu điểm**: Throughput (băng thông) tối đa. Tracking Server hoàn toàn không bị ảnh hưởng khi các model nặng vài chục GB được upload.
+- **Nhược điểm (Rủi ro)**: Secret Sprawl. Mọi worker node tham gia huấn luyện đều phải được cấp quyền Write vào hệ thống S3.
 
-Tracking là thành phần được sử dụng nhiều nhất. Mỗi khi bạn train một mô hình, MLflow sẽ tạo ra một `Run`. Một run bao gồm:
-- **Parameters**: Các tham số đầu vào dưới dạng Key-Value (vd: `learning_rate = 0.01`).
-- **Metrics**: Các chỉ số đánh giá có thể thay đổi theo thời gian thực (vd: `loss`, `accuracy`).
-- **Tags**: Các metadata giúp phân loại và tìm kiếm run (vd: `env = dev`, `author = duclinh`).
-- **Artifacts**: File đầu ra ở bất kì định dạng nào (file `.pkl`, log file, biểu đồ phân tích).
+**2. Proxied Artifact Access (Từ phiên bản 1.24+):**
+- **Cơ chế**: Client upload artifact trực tiếp cho Tracking Server thông qua HTTP HTTP. Tracking Server sẽ assume một IAM Role duy nhất để đẩy tiếp lên S3 thay cho Client. Client lúc này chỉ cần có Token của MLflow.
+- **Trade-off (Bottleneck)**: Tracking Server lập tức trở thành Nút thắt cổ chai về Network I/O và Memory. Nếu có 100 jobs cùng đẩy model 2GB, Tracking Server sẽ cạn kiệt RAM, dẫn đến OOMKilled (Out of Memory), toàn bộ luồng CI/CD model bị đình trệ. Cần cấu hình Auto-scaling và Load Balancer (ví dụ ALB trên AWS) cực kỳ chặt chẽ nếu sử dụng phương án này.
 
-**Cách hoạt động (Code Example):**
-Ví dụ với một mô hình RandomForest cơ bản sử dụng thư viện `scikit-learn`:
+## 2. Rủi ro Vận hành (Operational Risks) & Real-world Incidents
+
+### Incident 1: "Cartesian Explosion" & Database Thrashing
+Bảng `metrics` trong Backend Store của MLflow lưu trữ theo cấu trúc Key-Value: Mỗi khi gọi lệnh `mlflow.log_metric()`, nó sẽ tạo một row mới bao gồm `(run_uuid, key, value, timestamp, step)`.
+
+Hãy thử nhẩm tính: Nếu hệ thống chạy 1,000 runs, mỗi run train 10,000 epochs, và bạn log 10 metrics/epoch $\rightarrow$ Bảng `metrics` sẽ phải gánh **100,000,000 rows**. 
+Hậu quả là PostgreSQL sẽ nhanh chóng cạn kiệt IOPS (Input/Output Operations Per Second), Table Bloat xảy ra liên tục, và bất kỳ truy vấn READ nào trên giao diện MLflow UI đều sẽ quay mòng mòng (Timeout).
+
+**Cách khắc phục (Remediation):**
+- Sử dụng `mlflow.log_metrics()` (batch write) thay vì lặp qua từng `log_metric`.
+- Áp dụng kỹ thuật **Downsampling**: Chỉ lưu metric sau mỗi 10 hoặc 100 steps đối với các vòng lặp Deep Learning dài hạn.
+
+### Incident 2: Dependency Hell (Xung đột Môi trường Đóng gói)
+Thành phần MLflow Models sử dụng concept `flavor` để đóng gói mô hình. Lỗi phổ biến nhất khi triển khai model (Serving) là file `conda.yaml` hoặc `requirements.txt` vô tình capture luôn các thư viện C-level gắn liền với hệ điều hành của môi trường huấn luyện (ví dụ các thư viện CUDA/C++ build riêng trên máy tính cá nhân chạy Ubuntu).
+Khi container phục vụ model chạy trên Alpine Linux, `pip install` sẽ văng lỗi thất bại toàn tập.
+**Cách khắc phục:** Cần review kỹ metadata của Model trước khi cho phép thăng cấp (Promote) trên Model Registry, và tách biệt các dependency phục vụ Inference với các dependency nặng nề phục vụ Training.
+
+## 3. Triển khai Thực chiến (Executable Infrastructure)
+
+Một cụm MLflow độc lập được cấu hình bằng `docker-compose.yml`, tích hợp MinIO đóng vai trò Artifact Store và PostgreSQL đóng vai trò Backend Store.
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=mlflow_user
+      - POSTGRES_PASSWORD=mlflow_pass
+      - POSTGRES_DB=mlflow_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mlflow_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=admin_minio
+      - MINIO_ROOT_PASSWORD=supersecret_minio
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  mlflow-tracking:
+    image: python:3.10-slim
+    command: >
+      bash -c "pip install mlflow psycopg2-binary boto3 && 
+      mlflow server
+      --backend-store-uri postgresql://mlflow_user:mlflow_pass@db:5432/mlflow_db
+      --default-artifact-root s3://mlflow-artifacts/
+      --host 0.0.0.0
+      --port 5000"
+    environment:
+      - AWS_ACCESS_KEY_ID=admin_minio
+      - AWS_SECRET_ACCESS_KEY=supersecret_minio
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000 # Giao tiếp qua S3 API
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+volumes:
+  pgdata:
+  minio_data:
+```
+
+### Tích hợp trên Python Client (Data Scientist Side)
+Để Data Scientist có thể tương tác với cụm hạ tầng vừa triển khai, Client bắt buộc phải khai báo đầy đủ Routing Parameters:
 
 ```python
+import os
 import mlflow
 import mlflow.sklearn
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
-import pandas as pd
 
-# Load data
-data = pd.read_csv("data.csv")
-X = data.drop(["target"], axis=1)
-y = data["target"]
-X_train, X_test, y_train, y_test = train_test_split(X, y)
+# Cấu hình gởi Metadata tới Control Plane
+mlflow.set_tracking_uri("http://localhost:5000")
 
-# Khởi tạo MLflow Tracking
-mlflow.set_tracking_uri("http://localhost:5000") # Cấu hình Tracking Server
-mlflow.set_experiment("my_house_price_prediction")
+# Cấu hình Authentication để Client tự đẩy file lên Artifact Store (Direct Access)
+os.environ["AWS_ACCESS_KEY_ID"] = "admin_minio"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "supersecret_minio"
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9000"
 
-with mlflow.start_run(run_name="RandomForest_Base"):
-    n_estimators = 100
-    max_depth = 5
+mlflow.set_experiment("fraud_detection_experiment")
+
+with mlflow.start_run():
+    rf = RandomForestRegressor(n_estimators=100, max_depth=5)
+    # Giả lập training
+    # rf.fit(X_train, y_train)
     
-    # 1. Log Parameters
-    mlflow.log_param("n_estimators", n_estimators)
-    mlflow.log_param("max_depth", max_depth)
+    # 1. Ghi Parameter vào PostgreSQL
+    mlflow.log_param("n_estimators", 100)
     
-    # Huấn luyện mô hình
-    rf = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth)
-    rf.fit(X_train, y_train)
-    
-    # Đánh giá
-    predictions = rf.predict(X_test)
-    mse = mean_squared_error(y_test, predictions)
-    
-    # 2. Log Metrics
-    mlflow.log_metric("mse", mse)
-    
-    # 3. Log Model (Tạo Artifacts)
+    # 2. Upload Model Trực tiếp lên S3 (Bỏ qua Tracking Server)
     mlflow.sklearn.log_model(rf, "random_forest_model")
 ```
 
-> [!TIP]
-> **MLflow Autologging**: Thay vì gọi `mlflow.log_param()` một cách thủ công cho từng tham số, MLflow cung cấp tính năng **autolog()** cực kì hữu ích cho các framework phổ biến:
-> ```python
-> import mlflow.xgboost
-> mlflow.xgboost.autolog() # Tự động log toàn bộ hyperparameter và metrics!
-> ```
+## 4. Tối ưu Chi phí (FinOps) & Dọn dẹp (Garbage Collection)
 
----
+Rất ít kỹ sư để ý rằng: Mặc định, khi người dùng (hoặc API) xóa một Run trên giao diện MLflow UI, hệ thống **CHỈ** thực hiện `Soft Delete` (đánh dấu cột `deleted_time` trong Database). Toàn bộ file model weights nặng hàng GB trên S3 vẫn còn nguyên! Lâu ngày, điều này sẽ tạo ra bãi rác khổng lồ gây thất thoát tài chính (Storage Cost).
 
-### 2.2. MLflow Models
+**Giải pháp Thực thi FinOps:**
+1. **Thiết lập Garbage Collection:**
+   Phải cấu hình một Cronjob (hoặc Airflow DAG) chạy định kỳ để dọn dẹp vật lý:
+   ```bash
+   # Lệnh này sẽ xóa vĩnh viễn (Hard delete) metadata trong Database 
+   # và gọi S3 API để xóa các Artifacts thuộc về các deleted runs.
+   mlflow gc --backend-store-uri postgresql://...
+   ```
+2. **S3 Lifecycle Policies:**
+   Kết hợp AWS S3 Bucket Policies để tự động dịch chuyển (transition) các object model cũ (không nằm trong trạng thái `Production` của Model Registry) sang vùng lưu trữ lạnh như *S3 Glacier*, hoặc tự động hủy (expire) sau 60 ngày.
 
-Thành phần này giải quyết bài toán khó nhất của MLOps: **Đóng gói mô hình như thế nào để team Software Engineering có thể sử dụng mà không cần hiểu về code Machine Learning?**
+## 5. Model Registry & Phân phối Mô hình với Apache Spark
 
-Mỗi model được log lên MLflow sẽ đi kèm một file `MLmodel` chứa định nghĩa (flavor).
-Ví dụ nội dung file `MLmodel`:
+Giai đoạn cuối cùng của vòng đời MLOps là phân phối mô hình. Trong Kỹ thuật Dữ liệu, triển khai mô hình thành một điểm REST API (như Flask hay FastAPI) thường gặp các điểm nghẽn nghiêm trọng về Network Latency (HTTP overhead) khi phải request API cho từng dòng (Row) trong tập dữ liệu hàng tỷ records.
 
-```yaml
-artifact_path: random_forest_model
-flavors:
-  python_function: # Flavor dùng để chạy Python chung
-    env: conda.yaml
-    loader_module: mlflow.sklearn
-    model_path: model.pkl
-    predict_fn: predict
-    python_version: 3.9.12
-  sklearn: # Flavor đặc thù của scikit-learn
-    pickled_model: model.pkl
-    sklearn_version: 1.0.2
-    serialization_format: cloudpickle
-```
+Giải pháp thiết kế ưu việt hơn là sử dụng **Batch Inference (Dự đoán hàng loạt)** thông qua Apache Spark. Mô hình MLflow lúc này được biến thành một **UDF (User Defined Function)** chạy song song trên cụm cluster:
 
-Cách phục vụ mô hình thông qua API rất đơn giản bằng CLI của mlflow:
-```bash
-# Phục vụ mô hình bằng REST API ở port 5002
-mlflow models serve -m "runs:/<RUN_ID>/random_forest_model" -p 5002
-```
-
----
-
-### 2.3. MLflow Model Registry
-
-Đây là kho quản lý vòng đời trung tâm. Khi một mô hình được đánh giá tốt ở môi trường thử nghiệm, bạn sẽ đăng ký nó vào Model Registry để bắt đầu quá trình quản lý version.
-
-Các bước vòng đời thông thường:
-`None -> Staging -> Production -> Archived`
-
-**Code Example cho Model Registry:**
 ```python
-import mlflow
-
-# 1. Đăng ký một model từ một Run đã chạy
-result = mlflow.register_model(
-    "runs:/<RUN_ID>/random_forest_model",
-    "HousePriceModel"
-)
-
-# 2. Chuyển trạng thái mô hình sang Production
-client = mlflow.tracking.MlflowClient()
-client.transition_model_version_stage(
-    name="HousePriceModel",
-    version=result.version,
-    stage="Production"
-)
-```
-
-Tại application logic (Backend API), kỹ sư phần mềm sẽ luôn trỏ lấy version đang ở "Production" để dự đoán mà không cần phải thay đổi code khi có mô hình mới:
-```python
+from pyspark.sql import SparkSession
 import mlflow.pyfunc
 
-# Luôn fetch mô hình đang ở Production state
-model_production_uri = "models:/HousePriceModel/Production"
-loaded_model = mlflow.pyfunc.load_model(model_production_uri)
+spark = SparkSession.builder.appName("BatchInference").getOrCreate()
+df = spark.read.parquet("s3://data-lake/transactions/2026/06/")
 
-# Thực thi inference
-predictions = loaded_model.predict(new_data)
+# 1. Tự động kéo model đang ở trạng thái "Production" từ Model Registry
+# Không bao giờ phải hardcode Version ID!
+model_uri = "models:/FraudDetectionModel/Production"
+
+# 2. Biên dịch (Compile) model thành hàm PySpark UDF
+predict_udf = mlflow.pyfunc.spark_udf(spark, model_uri)
+
+# 3. Phân tán xử lý trên hàng trăm Worker Nodes
+predictions_df = df.withColumn("is_fraud", predict_udf("feature_array"))
+
+# Ghi kết quả lại xuống Data Lake
+predictions_df.write.parquet("s3://data-lake/predictions/2026/06/")
 ```
 
----
+**Trade-off & Sự cố (Spill-to-disk/OOM):**
+Mặc dù Batch Inference cực kỳ mạnh mẽ, kiến trúc PySpark giao tiếp với Python (thông qua Py4J và PyArrow) đòi hỏi Serialize và Deserialize dữ liệu liên tục giữa quy trình **JVM (Java Virtual Machine)** và quy trình **Python Worker**. Đối với các Model Deep Learning (hoặc Random Forest quá sâu), bộ nhớ dùng cho việc trao đổi dữ liệu này có thể nhanh chóng tràn RAM của Executor, dẫn tới lỗi `OOMKilled` kinh điển, hoặc dữ liệu bị trào xuống đĩa cứng (Spill-to-disk) làm chậm hiệu suất hàng nghìn lần. Giải pháp bao gồm: Cấu hình `spark.executor.memoryOverhead` cao hơn, hoặc ưu tiên dùng các framework C-native thay vì pure Python.
 
-## 3. Setup MLflow Tracking Server trong môi trường thực tế
+## Nguồn Tham Khảo (References)
 
-Để ứng dụng MLflow vào một dự án thực tế với nhiều team data, bạn không thể sử dụng file system local (`localhost`). Cần triển khai một Tracking Server có chia 2 luồng rõ rệt:
-
-1. **Backend Store:** Lưu metadata (Parameters, Metrics, Tags). Thường dùng Relational Database như MySQL hoặc PostgreSQL.
-2. **Artifact Store:** Lưu file models/images/datasets. Thường dùng Object Storage như AWS S3, Google Cloud Storage, hoặc MinIO.
-
-> [!NOTE]
-> MLflow chỉ lưu tham chiếu đến Artifact Store trên Backend Store. MLflow Client sẽ nói chuyện với Backend Store để lấy URI, sau đó trực tiếp đẩy file model lên Artifact Store.
-
-### Cách khởi chạy MLflow Tracking Server
-
-```bash
-mlflow server \
-    --backend-store-uri postgresql://user:password@db_host:5432/mlflow_db \
-    --default-artifact-root s3://my-mlflow-bucket/artifacts/ \
-    --host 0.0.0.0 \
-    --port 5000
-```
-
-### Các edge cases và lưu ý thực tế (Best Practices):
-
-* **Bảo mật (Authentication & Authorization):** MLflow phiên bản mã nguồn mở thông thường không có sẵn phân quyền chặt chẽ. Đa phần các tổ chức sẽ đặt Tracking server sau một Reverse Proxy (ví dụ Nginx) có hỗ trợ HTTP Basic Auth, LDAP hoặc tích hợp OAuth2.
-* **Kích thước Artifacts quá lớn:** Việc ghi lại data mỗi lần training có thể khiến dung lượng lưu trữ phình to nhanh chóng và tốn kém chi phí. Nên tránh việc tự động ghi các artifacts lớn (như nguyên bộ dataset) và chỉ nên lưu đường dẫn (URI/ID) tới dataset đó, hoặc kết hợp các công cụ chuyên dụng như DVC (Data Version Control) với MLflow.
-* **Xử lý định dạng dữ liệu trong Production:** Khi phục vụ mô hình dạng REST API (`mlflow models serve`), MLflow sẽ luôn mong muốn input format tương thích với cấu trúc của pandas DataFrame (đặc biệt khi dùng `mlflow.pyfunc`). Cần hết sức cẩn trọng khi JSON request có dạng đa lớp (nested). Lúc này cần viết `Custom PyFunc model` để tự parse JSON theo format riêng của bạn trước khi đưa vào hàm `predict`.
-* **Dọn dẹp tự động (Garbage Collection):** MLflow không tự xóa các thí nghiệm đã bị bỏ đi (deleted runs). Cần thiết lập các cron job chạy `mlflow gc` để giải phóng dung lượng trên Backend và Artifact store theo chu kỳ.
-
----
-
-## 4. Tổng Kết
-
-**Ưu điểm:**
-- Giao diện UI thân thiện, có khả năng visualize và so sánh (compare) nhiều runs cạnh nhau.
-- Tương thích tốt với hầu như mọi ngôn ngữ và framework Data / ML (Python, R, Java, XGBoost, TensorFlow, PyTorch).
-- Cơ chế quản lý Model Registry tuyệt vời, giúp luân chuyển staging và production một cách có kiểm soát.
-- Triển khai độc lập với hạ tầng Cloud, ngăn chặn Vendor Lock-in (chỉ cần Docker và Database).
-
-**Nhược điểm:**
-- Không phải là công cụ CI/CD hay Data Orchestration, không tự động quản lý workflow hay data pipeline. Bạn cần kết hợp với Airflow, Prefect, hoặc Kubeflow để tự động hóa toàn bộ luồng huấn luyện.
-- Cơ chế Role-Based Access Control (RBAC) ở bản open-source còn hạn chế so với bản Managed MLflow của Databricks.
-
-MLflow giúp chuyển biến tư duy làm việc với Machine Learning từ việc "*Gõ lệnh trong Jupyter notebook một cách tùy hứng*" sang "*Xây dựng luồng kỹ thuật phần mềm có kiểm soát*". Đây được xem là một kỹ năng thiết yếu dành cho Data Scientist và Machine Learning Engineer để đưa mô hình ra thế giới thực.
-
----
-
-## Tài Liệu Tham Khảo
-
-* [MLflow Official Documentation](https://mlflow.org/docs/latest/index.html)
-* [The Databricks Blog: Managed MLflow](https://www.databricks.com/product/managed-mlflow)
-* [MLOps Principles - ml-ops.org](https://ml-ops.org/)
-* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)
-* [Time, Clocks, and the Ordering of Events in a Distributed System - Leslie Lamport](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
+* [MLflow Architecture - Official Documentation](https://mlflow.org/docs/latest/tracking.html#tracking-server)
+* [Design of MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
+* Martin Kleppmann, *Designing Data-Intensive Applications*, Chapter 10: Batch Processing (áp dụng cho luồng Spark UDF inference).
+* [Databricks: Managed MLflow and The MLOps Lifecycle](https://www.databricks.com/product/managed-mlflow)

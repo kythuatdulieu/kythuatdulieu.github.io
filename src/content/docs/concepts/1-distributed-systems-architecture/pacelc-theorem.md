@@ -120,20 +120,20 @@ sequenceDiagram
     participant Follower_1
     participant Follower_2
 
-    Note over Client,Follower_2: Kiến trúc PA/EL (Asynchronous Replication)
-    Client->>Leader: Write(key=X, val=1)
-    Leader-->>Client: ACK (HTTP 200) - Độ trễ ~2ms
+    Note over Client,Follower_2: Kiến trúc PA/EL("Asynchronous Replication")
+    Client->>Leader: Write("key=X, val=1")
+    Leader-->>Client: ACK("HTTP 200") - Độ trễ ~2ms
     Leader-)Follower_1: Replicate (Background)
     Leader-)Follower_2: Replicate (Background)
     Note over Follower_1,Follower_2: Nguy cơ Data Loss nếu Leader crash lúc này!
 
-    Note over Client,Follower_2: Kiến trúc PC/EC (Synchronous Replication)
-    Client->>Leader: Write(key=Y, val=2)
-    Leader->>Follower_1: Write(key=Y, val=2)
-    Leader->>Follower_2: Write(key=Y, val=2)
+    Note over Client,Follower_2: Kiến trúc PC/EC("Synchronous Replication")
+    Client->>Leader: Write("key=Y, val=2")
+    Leader->>Follower_1: Write("key=Y, val=2")
+    Leader->>Follower_2: Write("key=Y, val=2")
     Follower_1-->>Leader: ACK
     Follower_2-->>Leader: ACK
-    Leader-->>Client: ACK (HTTP 200) - Độ trễ ~40ms
+    Leader-->>Client: ACK("HTTP 200") - Độ trễ ~40ms
 ```
 
 ---
@@ -141,7 +141,7 @@ sequenceDiagram
 ## 6. FinOps & Kiến trúc Multi-Region
 
 Từ góc độ chi phí (FinOps), việc chọn EC (Else Consistency) trong mô hình Active-Active Multi-Region là cực kỳ tốn kém.
-1. **Cross-Region Data Transfer Cost**: Phí truyền tải dữ liệu giữa các AWS Regions (ví dụ: us-east-1 sang eu-central-1) khoảng $0.02/GB. Nếu hệ thống write-heavy và bắt buộc đồng bộ Synchronous, hóa đơn mạng sẽ phình to.
+1. **Cross-Region Data Transfer Cost**: Phí truyền tải dữ liệu giữa các AWS Regions (ví dụ: us-east-1 sang eu-central-1) khoảng \$0.02/GB. Nếu hệ thống write-heavy và bắt buộc đồng bộ Synchronous, hóa đơn mạng sẽ phình to.
 2. **Compute Idle Time**: CPU threads bị block để chờ I/O qua mạng WAN, dẫn đến hiệu suất tính toán (CPU Utilization) giảm, buộc phải provision nhiều instances hơn (scale-out) để xử lý cùng lượng Request per Second (RPS).
 
 **Khuyến nghị kiến trúc**: Sử dụng mô hình *Event-driven Architecture* kết hợp với CQRS. Phía Ghi (Command) sử dụng EC tại một Region duy nhất (Single-Leader). Phía Đọc (Query) sử dụng các Read-Replicas ở nhiều Region thông qua EL (Asynchronous), chấp nhận Replication Lag vài giây để tối ưu chi phí và độ trễ cho người dùng cuối.

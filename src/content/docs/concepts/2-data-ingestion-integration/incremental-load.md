@@ -21,7 +21,7 @@ Ngày nay, Incremental Load thường được thiết kế gắn liền với *
 
 ```mermaid
 flowchart LR
-    subgraph Source["Hệ Thống Nguồn("Source")"]
+    subgraph Source["Hệ Thống Nguồn(Source)"]
         DB["(PostgreSQL / MySQL)"]
         API["External APIs"]
     end

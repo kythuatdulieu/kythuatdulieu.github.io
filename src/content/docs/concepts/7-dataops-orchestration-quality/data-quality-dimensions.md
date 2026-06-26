@@ -52,19 +52,19 @@ Pattern này được áp dụng rộng rãi tại Uber, Netflix và Apple để
 
 ```mermaid
 sequenceDiagram
-    participant P as Data Pipeline (Spark/Flink)
+    participant P as Data Pipeline("Spark/Flink")
     participant S as Staging/Branch (Audit)
-    participant Q as DQ Engine (Great Expectations/dbt)
+    participant Q as DQ Engine("Great Expectations/dbt")
     participant M as Main/Prod Table (Publish)
 
-    P->>S: 1. Write (Ghi dữ liệu vào nhánh ẩn/temp)
+    P->>S: 1. Write("Ghi dữ liệu vào nhánh ẩn/temp")
     Note over S: Data không hiển thị với End Users
-    Q->>S: 2. Audit (Chạy các Data Quality Checks)
+    Q->>S: 2. Audit("Chạy các Data Quality Checks")
     alt Quality Checks Pass
-        Q->>M: 3. Publish (Commit/Swap nhánh vào Prod)
-        Note over M: Metadata pointer được cập nhật (Atomic O(1))
+        Q->>M: 3. Publish("Commit/Swap nhánh vào Prod")
+        Note over M: Metadata pointer được cập nhật("Atomic O(1")
     else Quality Checks Fail
-        Q->>S: 3. Rollback/Alert (Quarantine Data)
+        Q->>S: 3. Rollback/Alert("Quarantine Data")
     end
 ```
 

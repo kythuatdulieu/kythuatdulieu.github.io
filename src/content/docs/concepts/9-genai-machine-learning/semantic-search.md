@@ -1,112 +1,175 @@
 ---
-title: "Tìm kiếm ngữ nghĩa - Semantic Search"
+title: "Tìm kiếm ngữ nghĩa - Semantic Search (Vector Search)"
 difficulty: "Intermediate"
-tags: ["semantic-search", "vector-database", "nlp", "information-retrieval"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-08
-seoTitle: "Tìm kiếm ngữ nghĩa (Semantic Search) là gì? Khác gì với Keyword Search?"
-metaDescription: "Tìm hiểu Tìm kiếm ngữ nghĩa (Semantic Search), cách thức hoạt động dựa trên Vector Embeddings và ứng dụng trong các hệ thống thông minh, RAG."
-description: "Đã bao giờ bạn gõ một câu hỏi lên công cụ tìm kiếm của một trang web bán hàng và nhận về kết quả trống trơn, chỉ vì bạn không dùng đúng từ khóa mà họ ..."
+tags: ["semantic-search", "vector-database", "nlp", "information-retrieval", "hnsw", "rag"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Tìm kiếm ngữ nghĩa (Semantic Search) & Kiến trúc Vector Database"
+metaDescription: "Tìm hiểu kiến trúc Semantic Search, giải phẫu Vector Database (HNSW vs IVFFlat), phân tích rủi ro vận hành (OOMKilled, Stale Data) và tối ưu chi phí với Product Quantization."
+description: "Semantic Search không chỉ dừng lại ở mặt lý thuyết 'khớp ý nghĩa' thay vì 'khớp từ khóa'. Đối với Kỹ sư Dữ liệu, nó là bài toán về kiến trúc hệ thống, đánh đổi giữa Recall và Latency, xử lý OOMKilled và quản lý hàng tỷ Vector một cách tối ưu chi phí."
 ---
 
+Tìm kiếm ngữ nghĩa (Semantic Search) là trụ cột của hệ sinh thái RAG (Retrieval-Augmented Generation) và GenAI hiện đại. Đối với một Data Engineer, việc hiểu Semantic Search không dừng lại ở khái niệm "máy tính hiểu được ngôn ngữ", mà là bài toán thiết kế một **Vector Database** đủ khả năng chịu tải hàng tỷ bản ghi với độ trễ dưới 10ms (sub-10ms latency).
 
+Bài viết này sẽ mổ xẻ kiến trúc vật lý của hệ thống Semantic Search, so sánh sự đánh đổi của các thuật toán Indexing (HNSW vs IVFFlat), cách xử lý các rủi ro vận hành thực tế (OOMKilled, Stale Data) và tối ưu chi phí (FinOps).
 
-Đã bao giờ bạn gõ một câu hỏi lên công cụ tìm kiếm của một trang web bán hàng và nhận về kết quả trống trơn, chỉ vì bạn không dùng đúng từ khóa mà họ lưu trữ? Đây là vấn đề muôn thuở của tìm kiếm truyền thống. **Semantic Search (Tìm kiếm ngữ nghĩa)** ra đời để giải quyết bài toán đó. Nó vượt qua giới hạn của việc so khớp từ khóa, cho phép máy tính "hiểu" được ý định và ngữ cảnh của người dùng.
+## 1. Sự tiến hóa: Từ Keyword Search đến Hybrid Search
 
-## 1. Vấn đề của Keyword Search (Tìm kiếm từ khóa)
+Tìm kiếm truyền thống (Keyword Search) dựa trên thuật toán **BM25** (hoặc TF-IDF), bản chất là đếm tần suất xuất hiện của từ khóa. 
+- **Điểm nghẽn hệ thống:** Nó gặp hội chứng "mù đồng nghĩa" (Synonym Blindness) và nhạy cảm với lỗi chính tả (OOV - Out of Vocabulary).
+- **Giải pháp:** Semantic Search sử dụng các mô hình học sâu (như `text-embedding-3-small` của OpenAI) để chuyển đổi (embed) cả câu truy vấn và tài liệu thành các **Vector** đa chiều (thường là 768 hoặc 1536 chiều).
 
+Tuy nhiên, trong môi trường Production, Vector Search thuần túy thường thất bại khi người dùng tìm kiếm chính xác các mã định danh (Ví dụ: `SKU-12345` hoặc `NullPointerException`). Do đó, kiến trúc chuẩn hiện nay là **Hybrid Search**.
 
+### Kiến trúc Hybrid Search Pipeline
 
-Tìm kiếm truyền thống (Lexical Search hay Keyword Search) hoạt động dựa trên nguyên tắc **khớp chuỗi (exact match)** hoặc đếm tần suất xuất hiện của từ khóa (ví dụ thuật toán **TF-IDF**, **BM25**). 
+```mermaid
+graph TD
+    subgraph Offline Ingestion Pipeline
+        RD[Raw Data] --> CH[Chunker]
+        CH --> EM[Embedding Model]
+        EM --> VD[(Vector Database)]
+    end
 
-**Hạn chế lớn nhất:**
-- **Không hiểu từ đồng nghĩa:** Gõ "điện thoại thông minh", hệ thống dùng Keyword Search có thể bỏ qua các kết quả chứa từ "smartphone" hay "điện thoại di động".
-- **Bỏ qua ngữ cảnh (Context):** Từ "apple" có thể là "quả táo" hoặc "công ty Apple". Keyword Search khó phân biệt nếu không phân tích các từ xung quanh.
-- **Lỗi chính tả:** Sai một ký tự có thể khiến hệ thống không trả về kết quả nào (dù có thể dùng Fuzzy Search để giảm thiểu, nhưng hiệu quả còn nhiều hạn chế).
-- **Phụ thuộc vào cách diễn đạt:** Người dùng phải cố gắng đoán xem người tạo dữ liệu đã dùng từ khóa gì để thiết lập truy vấn.
+    subgraph Online Retrieval Pipeline
+        UQ[User Query] --> QE[Query Embedding]
+        UQ --> BM[BM25 / Keyword Engine]
+        QE --> ANN[ANN Vector Search]
+        
+        BM -- Top K Keywords --> RRF[Reciprocal Rank Fusion - RRF]
+        ANN -- Top K Vectors --> RRF
+        
+        RRF --> RE[Cross-Encoder Reranker]
+        RE --> FR[Final Results / LLM Context]
+    end
+```
 
-## 2. Semantic Search là gì?
+**Workflow:**
+1. **Truy vấn song song:** Hệ thống gửi query đồng thời đến Vector Search (tìm ý nghĩa) và Keyword Search (tìm chính xác từ khóa).
+2. **RRF (Reciprocal Rank Fusion):** Thuật toán gộp điểm số từ 2 danh sách kết quả không đồng nhất.
+3. **Reranking:** Dùng một mô hình Cross-Encoder nhỏ và chính xác hơn để đánh giá lại (re-score) Top K kết quả trước khi trả về.
 
-**Semantic Search** là phương pháp tìm kiếm thông tin không chỉ dựa vào sự xuất hiện của các ký tự hay từ khóa, mà dựa vào **ý nghĩa (semantics)** và **ngữ cảnh** của truy vấn. 
+## 2. Giải phẫu Vector Database: Indexing Algorithms
 
-Thay vì so sánh từng chữ cái, hệ thống Semantic Search chuyển cả câu truy vấn của bạn và toàn bộ tài liệu trong cơ sở dữ liệu sang một ngôn ngữ chung mà máy tính có thể phân tích được: **Toán học (Các vector số thực)**. Nhờ đó, ngay cả khi câu hỏi và tài liệu không chia sẻ bất kỳ từ vựng nào, hệ thống vẫn có thể nhận ra chúng đang nói về cùng một chủ đề.
+Các cơ sở dữ liệu truyền thống dùng B-Tree để đánh chỉ mục. Nhưng trong không gian 1536 chiều, B-Tree hoàn toàn vô dụng do hiện tượng **Curse of Dimensionality** (Lời nguyền số chiều). Vector DB (như Pinecone, Qdrant, Milvus) giải quyết bằng các thuật toán tìm kiếm lân cận gần đúng **ANN (Approximate Nearest Neighbor)**.
 
-## 3. Cách thức hoạt động của Semantic Search
+Dưới đây là một ảnh minh họa khái niệm K-Nearest Neighbors (KNN), thuật toán nền tảng của các phép tìm kiếm vector:
 
-Trái tim của Semantic Search nằm ở hai công nghệ cốt lõi: **Vector Embeddings** và **Similarity Search (Tìm kiếm độ tương đồng)**.
+![K-Nearest Neighbors Algorithm](/images/9-genai-machine-learning/knn-classification.png)
 
-### 3.1. Biến văn bản thành số: Vector Embeddings
-Máy tính không hiểu tiếng Việt hay tiếng Anh, chúng chỉ hiểu các con số. Bằng cách sử dụng các mô hình học sâu (Deep Learning Models) như BERT, RoBERTa hay các mô hình từ OpenAI, Cohere, HuggingFace, chúng ta có thể chuyển đổi một từ, một câu hay cả một đoạn văn thành một **dãy số thực dài (Vector)**. Quá trình này gọi là **Embedding**.
+### 2.1. HNSW (Hierarchical Navigable Small World)
 
-*Ví dụ đơn giản trong không gian 2 chiều (đơn giản hóa):*
-- "Chó": `[0.9, -0.2]`
-- "Mèo": `[0.8, -0.1]`
-- "Xe hơi": `[-0.5, 0.9]`
+Đây là thuật toán mặc định của hầu hết Vector DB hiện nay.
+- **Cơ chế:** Xây dựng một đồ thị đa tầng (multi-layer graph). Tầng trên cùng có ít điểm và kết nối dài (để nhảy nhanh qua không gian), các tầng dưới có nhiều điểm và kết nối ngắn (để dò tìm chính xác).
+- **Ưu điểm:** Tỷ lệ chính xác (Recall) cực cao (thường >95%). Hỗ trợ thêm/xóa/sửa (CRUD) dữ liệu động cực tốt mà không làm giảm chất lượng index.
+- **Nhược điểm (Trade-off):** Ngốn RAM khủng khiếp. HNSW không chỉ lưu trữ vector mà còn phải lưu cấu trúc đồ thị (edges/links) trong bộ nhớ.
 
-Các khái niệm giống nhau hoặc liên quan đến nhau sẽ có các tọa độ (vector) nằm gần nhau trong không gian đa chiều. Dễ thấy "Chó" và "Mèo" có giá trị gần nhau, trong khi "Xe hơi" nằm ở một khu vực hoàn toàn khác.
+### 2.2. IVFFlat (Inverted File with Flat Compression)
 
-### 3.2. Không gian Vector (Vector Space)
-Trong thực tế, các mô hình embedding sinh ra các vector có hàng trăm hoặc hàng nghìn chiều (ví dụ mô hình `text-embedding-3-small` của OpenAI trả về vector có 1536 chiều). Mỗi chiều đại diện cho một thuộc tính ngữ nghĩa ẩn nào đó mà mô hình đã học được từ hàng tỷ văn bản trong quá trình huấn luyện.
+- **Cơ chế:** Sử dụng K-Means để phân cụm (cluster) không gian vector thành các vùng (Voronoi cells). Khi truy vấn, hệ thống chỉ cần tìm cụm gần nhất và quét nội bộ cụm đó.
+- **Ưu điểm:** Rất tiết kiệm RAM và thời gian build index cực nhanh. Phù hợp với các dataset khổng lồ (>50M vectors) nhưng tĩnh.
+- **Nhược điểm:** Phải có dữ liệu trước để train cụm. Nếu dữ liệu mới được chèn vào có phân phối khác với dữ liệu cũ, index sẽ bị "Stale" (cũ kĩ). Yêu cầu phải chạy quá trình xây dựng lại chỉ mục (`REINDEX`) định kỳ để duy trì độ chính xác.
 
-### 3.3. Tính toán độ tương đồng (Similarity Metrics)
-Khi người dùng gõ câu truy vấn (Query), câu này cũng được chuyển thành một Vector bằng chính mô hình Embedding đã dùng cho cơ sở dữ liệu.
+## 3. Show, Don't Tell: Thực thi Hybrid Search
 
-Lúc này, bài toán tìm kiếm trở thành bài toán hình học không gian: **Tìm các vector trong cơ sở dữ liệu có khoảng cách gần nhất với vector của câu truy vấn.**
+Thay vì lý thuyết xuông, dưới đây là cách chúng ta cấu hình **Qdrant** qua Terraform và thực thi Hybrid Search bằng Python.
 
-Một số phép đo khoảng cách phổ biến:
-- **Cosine Similarity:** Đo góc giữa hai vector. Góc càng nhỏ (Cosine tiến về 1) thì ngữ nghĩa càng tương đồng. Đây là phép đo phổ biến nhất cho dữ liệu văn bản.
-- **Dot Product (Tích vô hướng):** Dùng để tính toán độ tương quan về hướng và cả độ lớn.
-- **Euclidean Distance (Khoảng cách L2):** Khoảng cách đường thẳng giữa hai điểm trong không gian.
+### Terraform Provisioning (Qdrant Cloud)
 
-## 4. Kiến trúc hệ thống Semantic Search
+```hcl
+# main.tf
+terraform {
+  required_providers {
+    qdrant = {
+      source  = "qdrant/qdrant-cloud"
+      version = "~> 1.0.0"
+    }
+  }
+}
 
-Một hệ thống Semantic Search tiêu chuẩn bao gồm các thành phần sau:
+resource "qdrant_cluster" "prod_hybrid_search" {
+  name           = "ecommerce-search-prod"
+  cloud_provider = "aws"
+  cloud_region   = "us-east-1"
+  
+  # Sử dụng RAM + Disk (Tiered Storage) để chống OOM
+  node_configuration {
+    package_id = "standard"
+    size       = "8gb"
+  }
+}
+```
 
-1. **Dữ liệu nguồn (Raw Data):** Văn bản, PDF, Website, cơ sở dữ liệu, v.v.
-2. **Data Pipeline / Chunking:** Dữ liệu quá dài sẽ được cắt nhỏ (chunking) thành các đoạn văn (paragraphs) hoặc câu để đảm bảo ngữ nghĩa được biểu diễn chính xác.
-3. **Embedding Model:** Đưa các chunk (đoạn văn) đi qua mô hình AI để tạo ra các Vector.
-4. **Vector Database:** Nơi lưu trữ (store) và đánh chỉ mục (index) các vector này. Các cơ sở dữ liệu vector phổ biến gồm: **Milvus, Pinecone, Qdrant, ChromaDB, Weaviate, pgvector**.
-5. **Retrieval (Quá trình truy vấn):**
-   - User nhập query: *"Cách làm bánh mì"*
-   - Query -> Embedding Model -> Vector Q
-   - Truy vấn Vector Database: Trả về top K vector gần với Vector Q nhất.
-   - Ánh xạ (Map) các vector trả về với văn bản gốc và hiển thị cho người dùng.
+### Python: Thực thi Hybrid Search (Chống OOM)
 
-## 5. So sánh Semantic Search vs Keyword Search
+Khi đẩy dữ liệu vào cluster, sử dụng batch processing thay vì load toàn bộ dữ liệu vào memory:
 
-| Tiêu chí | Keyword Search (TF-IDF, BM25) | Semantic Search (Vector Search) |
-|----------|------------------------------|---------------------------------|
-| **Cách thức khớp** | Khớp chính xác các từ khóa hoặc biến thể của từ. | Dựa trên độ tương đồng về ý nghĩa, ngữ cảnh. |
-| **Xử lý từ đồng nghĩa** | Kém (phải tự định nghĩa từ điển đồng nghĩa). | Rất tốt (mô hình tự hiểu các từ liên quan). |
-| **Xử lý lỗi chính tả** | Hạn chế. | Tốt (Vector không thay đổi quá nhiều nếu sai một vài lỗi nhỏ). |
-| **Khả năng đa ngôn ngữ** | Cần xây dựng engine riêng, dictionary riêng cho từng ngôn ngữ. | Dễ dàng hỗ trợ nếu dùng Multilingual Models (truy vấn tiếng Việt có thể tìm ra tài liệu tiếng Anh). |
-| **Tài nguyên phần cứng** | Tốn ít tài nguyên tính toán (chủ yếu dựa trên CPU/RAM). | Đòi hỏi nhiều tài nguyên hơn (GPU để tạo embedding, tối ưu bộ nhớ cho Vector DB). |
-| **Chi phí triển khai** | Thấp, dễ cấu hình với ElasticSearch hoặc Solr. | Cao hơn, đòi hỏi kiến thức về AI/ML và Vector DB. |
+```python
+from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct, VectorParams, Distance
 
-## 6. Hybrid Search: Mảnh ghép hoàn hảo
+# Kết nối đến Qdrant
+client = QdrantClient(url="https://<cluster-url>", api_key="<api-key>")
 
-Mặc dù Semantic Search rất thông minh, nhưng nó không hoàn hảo cho mọi trường hợp. Đôi khi người dùng *thực sự* muốn tìm kiếm chính xác một mã sản phẩm đặc thù ("iPhone 15 Pro Max 256GB") hoặc tên một lỗi hệ thống mã hóa ("NullPointerException", "Error 404"). Trong trường hợp này, Semantic Search có thể mang lại các kết quả "có ý nghĩa tương tự" nhưng lại không khớp chính xác chuỗi.
+# Tạo Collection hỗ trợ Hybrid (Dense + Sparse Vectors)
+client.create_collection(
+    collection_name="products",
+    vectors_config={
+        "text-dense": VectorParams(size=1536, distance=Distance.COSINE) # OpenAI Embeddings
+    },
+    sparse_vectors_config={
+        "text-sparse": {} # Sparse vector cho Keyword Search
+    }
+)
 
-Giải pháp tối ưu nhất được các hệ thống lớn (như ElasticSearch, Pinecone) áp dụng hiện nay là **Hybrid Search (Tìm kiếm lai)**: Kết hợp sức mạnh của cả Keyword Search và Semantic Search.
+# Thực thi Hybrid Query sử dụng RRF tích hợp sẵn của thư viện
+results = client.search(
+    collection_name="products",
+    query_vector=("text-dense", [0.1, 0.2, 0.3, ...]), # Dãy số float 1536 chiều
+    query_sparse=("text-sparse", {"indices": [102, 54], "values": [0.8, 0.4]}),
+    limit=5,
+    with_payload=True
+)
 
-Hệ thống sẽ hoạt động theo luồng:
-1. Chạy song song cả hai kiểu tìm kiếm: Lấy top K kết quả từ BM25 và top K kết quả từ Vector Search.
-2. Gộp kết quả sử dụng các thuật toán như **Reciprocal Rank Fusion (RRF)**.
-3. Đem lại danh sách kết quả cuối cùng hoàn hảo: vừa đáp ứng độ chính xác của từ khóa, vừa hiểu đúng ngữ cảnh.
+for result in results:
+    print(f"ID: {result.id}, Score: {result.score}, Product: {result.payload['name']}")
+```
 
-## 7. Ứng dụng thực tế của Semantic Search
+## 4. Rủi ro Vận hành (Operational Risks & Incidents)
 
-- **Hệ thống RAG (Retrieval-Augmented Generation):** Đây là công nghệ đằng sau các Chatbot thông minh (như ChatPDF, AI doanh nghiệp). Semantic Search giúp tìm ra tài liệu chính xác để làm "ngữ cảnh" cho mô hình Ngôn ngữ Lớn (LLM) trả lời, giảm thiểu việc AI bịa thông tin (hallucination).
-- **Thương mại điện tử (E-commerce):** Nâng cao trải nghiệm khách hàng bằng cách cho phép tìm kiếm theo nhu cầu thay vì tên sản phẩm (VD: "áo ấm mặc đi tuyết" thay vì bắt buộc dùng từ khóa "áo khoác phao").
-- **Hệ thống Hỗ trợ khách hàng (Customer Support):** Tự động tìm kiếm giải pháp trong hệ thống Knowledge Base nội bộ dựa trên câu hỏi tự nhiên của khách hàng.
-- **Tìm kiếm trên kho tài liệu đồ sộ:** Tìm kiếm nhanh chóng thông tin trong hàng nghìn hợp đồng, báo cáo, tài liệu luật pháp một cách trực quan, không cần phải nhớ chính xác từ khóa được sử dụng trong tài liệu.
+Làm Data Engineer, bạn cần phải biết hệ thống của mình sẽ sập như thế nào. 
 
-## Tài Liệu Tham Khảo
+### 4.1. Sự cố OOMKilled do Cartesian Explosion & HNSW
+**Tình huống:** Đội Data Science quyết định dùng mô hình embedding có 1536 chiều và bơm 20 triệu bản ghi vào cluster Qdrant / Milvus. Vài tiếng sau, Kubernetes Pod liên tục báo lỗi `OOMKilled` (Out of Memory) và crash loop.
+**Nguyên nhân:** Thuật toán HNSW lưu toàn bộ vector và đồ thị chỉ mục trên RAM. 20M vectors x 1536 chiều x 4 bytes (float32) = ~120GB RAM, cộng thêm 30-50% overhead cho cấu trúc đồ thị của HNSW.
+**Khắc phục:**
+- **Giải pháp tạm thời:** Bật tính năng Mmap (Memory-mapped files) trong Vector DB để đẩy index xuống ổ cứng SSD/NVMe. Đánh đổi: Tốc độ truy vấn (Latency) có thể tăng từ 10ms lên 50-100ms.
+- **Giải pháp cốt lõi:** Sử dụng Product Quantization (Xem phần FinOps bên dưới).
+
+### 4.2. Stale Cluster Drop Recall (Với IVFFlat)
+**Tình huống:** Hệ thống dùng IVFFlat (như `pgvector`). Sau một tháng chạy tốt, người dùng phàn nàn kết quả tìm kiếm rất tệ.
+**Nguyên nhân:** Thuật toán K-Means của IVFFlat được huấn luyện dựa trên lượng dữ liệu của tháng trước. Khi hàng loạt sản phẩm mới (dữ liệu có phân phối khác) được đưa vào, chúng bị nhét vào các cell (Voronoi cell) không còn phù hợp, dẫn đến Recall sụt giảm nghiêm trọng.
+**Khắc phục:** Viết một Airflow DAG để chạy lệnh `REINDEX` định kỳ hàng tuần nhằm tái huấn luyện các điểm trọng tâm (centroids) của cụm.
+
+## 5. Tối ưu Chi phí (FinOps trong Vector DB)
+
+RAM là tài nguyên đắt đỏ nhất trên Cloud. Tối ưu Vector Database thực chất là bài toán tối ưu RAM.
+
+### 5.1. Product Quantization (PQ) / Scalar Quantization (SQ)
+Thay vì lưu trữ mỗi chiều của vector bằng số nguyên thủy `float32` (4 bytes), chúng ta có thể nén chúng:
+- **Scalar Quantization (SQ):** Ép kiểu từ `float32` sang `int8`. Ngay lập tức giảm được 75% lượng RAM tiêu thụ, và do payload nhỏ hơn, tốc độ quét (scan speed) và cache hit rate cũng tăng vọt.
+- **Product Quantization (PQ):** Nén dữ liệu sâu hơn bằng cách chia vector thành các khối nhỏ (sub-vectors) và thay thế chúng bằng ID (mã định danh) của centroid gần nhất trong một "codebook" đã được huấn luyện. PQ có thể nén kích thước RAM lên tới 90-97%. 
+- **Trade-off:** Cả hai kỹ thuật đều mang tính chất "lossy" (mất mát dữ liệu), sẽ làm giảm độ bao phủ của truy vấn (Recall) khoảng 2-5%. 
+
+### 5.2. Tiered Storage (Lưu trữ phân tầng)
+Không phải vector nào cũng được query thường xuyên. Các hệ thống hiện đại (Milvus, Qdrant) hỗ trợ Tiered Storage:
+- **Hot Tier:** Sử dụng RAM hoặc NVMe SSD cho dữ liệu thường xuyên truy cập để đảm bảo độ trễ tính bằng mili-giây.
+- **Cold Tier:** Đẩy (Offload) dữ liệu ít truy cập xuống các dịch vụ Object Storage (ví dụ Amazon S3). Hệ thống sẽ có một chút độ trễ lớn hơn khi truy vấn chạm phải dữ liệu ở Cold Tier, nhưng bù lại hóa đơn cơ sở hạ tầng có thể giảm tới 80%.
+
+## Nguồn Tham Khảo
 
 * [What is Semantic Search? (Pinecone)](https://www.pinecone.io/learn/semantic-search/)
-* [Vector Embeddings Explained - HuggingFace](https://huggingface.co/blog/getting-started-with-embeddings)
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+* [Vector Database Scaling and ANN indexing algorithms (Milvus Blog)](https://milvus.io/blog)
+* [Qdrant Documentation: Hybrid Search & Indexing](https://qdrant.tech/documentation/)
+* [Billion-scale similarity search with GPUs (Amazon Science)](https://www.amazon.science/publications/billion-scale-similarity-search-with-gpus)
+* **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 3: Storage and Retrieval)

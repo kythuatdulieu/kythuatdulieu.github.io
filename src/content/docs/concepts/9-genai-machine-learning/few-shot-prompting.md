@@ -1,130 +1,180 @@
 ---
-title: "Học qua vài ví dụ - Few-shot Prompting"
-difficulty: "Beginner"
-tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm"]
-readingTime: "10 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Few-shot Prompting là gì? Kỹ thuật Prompt Engineering cơ bản"
-metaDescription: "Tìm hiểu Few-shot Prompting: kỹ thuật chèn ví dụ vào prompt để hướng dẫn LLM (In-context Learning) trả về đúng định dạng mà không cần fine-tune."
-description: "Khi dạy một đứa trẻ nhận biết các loại trái cây, thay vì ngồi đọc một loạt định nghĩa lý thuyết dài dòng về vỏ, hạt hay lá, cách nhanh nhất là đưa ra vài ví dụ..."
+title: "Few-shot Prompting trong Production: Kiến trúc, FinOps và Operational Risks"
+difficulty: "Advanced"
+tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm", "finops", "system-design"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Few-shot Prompting System Design: Dynamic Routing & Prompt Caching"
+metaDescription: "Thiết kế kiến trúc Few-shot Prompting ở scale production. Phân tích Operational Risks (TTFT, Throughput), FinOps (Token Tax) và cơ chế Prompt Caching (KV Cache)."
+description: "Tại sao hardcode vài ví dụ vào prompt lại biến thành cơn ác mộng tài chính và độ trễ ở quy mô lớn? Cùng Staff Engineer mổ xẻ kiến trúc Dynamic Few-shot, Prompt Caching và các giới hạn hệ thống."
 ---
 
+Vượt xa khỏi việc chỉ là một kỹ thuật gõ "vài ví dụ" trên giao diện ChatGPT, **Few-shot Prompting** trong môi trường Production là một bài toán System Design đầy thách thức. Việc nhồi nhét hàng chục examples vào context window của LLM sinh ra một loạt các vấn đề về **Token Tax** (Chi phí rác), **TTFT Latency** (Time To First Token) và cạn kiệt tài nguyên bộ nhớ GPU (**KV Cache Bloat**).
 
+Dưới góc nhìn của một Data/ML Engineer, Few-shot Prompting không phải là text, nó là **Data Assets**. Nếu bạn hardcode few-shot vào source code, hệ thống của bạn đã nợ Technical Debt ngay từ ngày đầu tiên.
 
-Khi dạy một đứa trẻ nhận biết các loại trái cây, thay vì ngồi đọc một loạt định nghĩa lý thuyết dài dòng về vỏ, hạt hay lá, cách nhanh nhất là chỉ vào vài quả táo, quả cam và nói tên của chúng. Mô hình ngôn ngữ lớn (LLM) cũng học theo cách tương tự thông qua kỹ thuật **Few-shot Prompting**.
+## 1. Kiến trúc Dynamic Few-Shot Routing
 
-## Few-Shot Prompting là gì?
+Thay vì ném một file text dài chứa 50 ví dụ vào mọi API request, hệ thống hiện đại sử dụng kiến trúc **Retrieval-Augmented Few-Shot (Dynamic Few-Shot)**. 
 
+### Cơ chế hoạt động (Physical Execution)
+Ý tưởng cốt lõi là coi bộ các ví dụ (shots) như một cơ sở dữ liệu. Khi user gửi query, hệ thống sẽ nhúng (embed) query đó và dùng Vector Search (kNN) để tìm ra top `k` ví dụ tương đồng nhất từ Vector Database, sau đó mới lắp ráp thành một Mega-prompt đẩy vào LLM.
 
+![Dynamic Few-Shot Architecture](/images/9-genai-machine-learning/dynamic-few-shot-architecture.png)
 
-**Few-Shot Prompting** (Học qua một vài ví dụ) là kỹ thuật Prompt Engineering trong đó bạn cung cấp cho mô hình ngôn ngữ (như ChatGPT, Claude, Gemini) một vài ví dụ cụ thể về Đầu vào (Input) và Đầu ra (Output) mong muốn ngay bên trong Prompt. 
-
-Việc "mớm mồi" này giúp mô hình nhận diện được khuôn mẫu (pattern), bắt chước nhanh chóng định dạng và giọng điệu cần thiết để xử lý câu hỏi hiện tại. Khả năng học ngay từ prompt của mô hình mà không cần phải cập nhật lại trọng số (weights) được gọi là **In-context Learning**.
-
-## Zero-shot, One-shot và Few-shot
-
-Để hiểu rõ hơn về Few-shot, chúng ta hãy so sánh nó với các khái niệm liên quan:
-
-- **Zero-shot Prompting**: Bạn yêu cầu LLM thực hiện một tác vụ mà không cung cấp bất kỳ ví dụ nào. LLM dựa hoàn toàn vào những kiến thức đã được huấn luyện (pre-training) để trả lời.
-- **One-shot Prompting**: Bạn cung cấp **chính xác một** ví dụ minh họa về cách làm.
-- **Few-shot Prompting**: Bạn cung cấp **một vài** ví dụ (thường từ 2 đến 10 ví dụ) để chỉ dẫn rõ ràng hơn về độ phức tạp và định dạng của câu trả lời.
-
-### Ví dụ minh họa sự khác biệt
-
-Giả sử bạn muốn phân loại sắc thái cảm xúc của một câu nói:
-
-**Zero-shot:**
-```text
-Phân loại cảm xúc của câu sau thành Tích cực, Tiêu cực hoặc Trung tính:
-Câu: "Tôi rất thích cách phục vụ của nhà hàng này."
-Cảm xúc: 
+```mermaid
+sequenceDiagram
+    participant User
+    participant App as Orchestrator
+    participant VectorDB as Vector Store("Chroma/Milvus")
+    participant LLM as LLM API
+    
+    User->>App: Gửi Query
+    App->>App: Generate Embedding (Query)
+    App->>VectorDB: kNN Search (Similarity)
+    VectorDB-->>App: Trả về Top 3 Examples liên quan nhất
+    App->>App: Compile Template("System + 3 Shots + Query")
+    App->>LLM: Gửi Inference Request
+    LLM-->>App: Trả về Result
+    App-->>User: Hiển thị
 ```
 
-**Few-shot:**
-```text
-Phân loại cảm xúc của câu sau thành Tích cực, Tiêu cực hoặc Trung tính:
+### Show, Don't Tell: LangChain Dynamic Few-Shot Pipeline
 
-Câu: "Món ăn quá mặn, tôi không thể ăn nổi."
-Cảm xúc: Tiêu cực
+Dưới đây là pipeline thực thi bằng Python, giới hạn `k=3` để tối ưu context window:
 
-Câu: "Hôm nay trời mưa to."
-Cảm xúc: Trung tính
+```python
+from langchain_chroma import Chroma
+from langchain_core.prompts import SemanticSimilarityExampleSelector, FewShotPromptTemplate, PromptTemplate
+from langchain_openai import OpenAIEmbeddings
 
-Câu: "Nhân viên rất nhiệt tình và thân thiện."
-Cảm xúc: Tích cực
+# 1. Tập dữ liệu vàng (Golden Dataset) - Thường load từ Data Warehouse
+examples = [
+    {"input": "Drop database orders;", "output": "SQL Injection (High Risk)"},
+    {"input": "Select * from users where id = 1;", "output": "Safe"},
+    {"input": "1; DROP TABLE users", "output": "SQL Injection (High Risk)"},
+    {"input": "UNION SELECT username, password FROM admins", "output": "SQL Injection (High Risk)"}
+]
 
-Câu: "Tôi rất thích cách phục vụ của nhà hàng này."
-Cảm xúc: 
+example_prompt = PromptTemplate(
+    input_variables=["input", "output"],
+    template="Input: {input}\nClassification: {output}"
+)
+
+# 2. Xây dựng Index Cache trên bộ nhớ
+example_selector = SemanticSimilarityExampleSelector.from_examples(
+    examples,
+    OpenAIEmbeddings(),
+    Chroma,
+    k=2 # Chỉ lấy 2 examples sát nghĩa nhất để nhét vào prompt
+)
+
+# 3. Tạo Dynamic Prompt
+dynamic_prompt = FewShotPromptTemplate(
+    example_selector=example_selector,
+    example_prompt=example_prompt,
+    prefix="Bạn là một firewall AI. Hãy phân loại câu SQL sau:\n",
+    suffix="Input: {query}\nClassification:",
+    input_variables=["query"]
+)
+
+# Execution thực tế:
+print(dynamic_prompt.format(query="SELECT * FROM products;"))
+# Model sẽ chỉ nhận được 2 ví dụ gần nhất thay vì load cả DB.
 ```
 
-Với **Zero-shot**, mô hình có thể trả lời bằng cả một đoạn văn dài như *"Dựa theo phân tích, câu nói này mang sắc thái Tích cực vì..."*. 
-Tuy nhiên, với **Few-shot**, mô hình nhìn vào các ví dụ trước đó và hiểu rằng bạn chỉ cần một từ ngắn gọn là `"Tích cực"`.
+---
 
-## Tại sao cần Few-Shot Prompting?
+## 2. Rủi ro Vận hành (Operational Risks)
 
-1. **Kiểm soát định dạng đầu ra (Format Control)**: Đây là lý do phổ biến nhất. Rất khó để mô tả bằng lời một cấu trúc JSON phức tạp hoặc một định dạng text đặc thù. Việc đưa ra vài ví dụ là cách ngắn nhất để LLM hiểu format bạn cần.
-2. **Thiết lập Tone of Voice**: Giúp mô hình hiểu được phong cách trả lời (ví dụ: chuyên nghiệp, mỉa mai, hay ngôn ngữ gen Z).
-3. **Giải quyết các bài toán ngách**: Khi bài toán của bạn sử dụng thuật ngữ nội bộ hoặc quy tắc đặc biệt mà LLM chưa từng được học kỹ trong quá trình pre-training.
+Nếu không kiểm soát tốt số lượng "shots", bạn sẽ dính các sự cố kinh điển sau ở tầng hạ tầng (Infrastructure):
 
-## Các ứng dụng thực tế
+### 2.1. Nút thắt TTFT (Time To First Token) Latency
+LLM inference có hai pha: **Prefill Phase** (đọc hiểu prompt) và **Decode Phase** (sinh ra token mới). 
+- **Prefill phase** xử lý toàn bộ prompt đầu vào song song, nhưng chi phí tính toán tăng theo bậc 2 ($O(N^2)$) của số token. 
+- Nhồi 20 examples vào prompt tương đương với việc ép GPU phải thực hiện một ma trận Attention khổng lồ. Kết quả? API của bạn sẽ bị "treo" vài giây trước khi token đầu tiên được sinh ra (TTFT Spike).
 
-### 1. Chuyển đổi định dạng dữ liệu (Data Parsing / Formatting)
+### 2.2. KV Cache Exhaustion (Cạn kiệt GPU VRAM)
+Khi model đọc Few-shot prompt, nó lưu trạng thái trung gian của các token vào **KV Cache** (Key-Value Cache) trên GPU VRAM. 
+- Tại scale hàng nghìn RPS (Requests Per Second), nếu mỗi request mang theo 4000 tokens tiền xử lý từ các ví dụ Few-shot, dung lượng KV Cache sẽ phình to khủng khiếp, gây ra hiện tượng **OOMKilled** trên các container vLLM hoặc buộc hệ thống phải Evict (đẩy ra) các session khác.
 
-Trong Data Engineering, chúng ta thường cần trích xuất dữ liệu không có cấu trúc thành có cấu trúc. Few-shot cực kỳ hiệu quả để làm việc này.
+---
 
-```text
-Trích xuất tên và tuổi từ đoạn văn bản sau, trả về định dạng JSON:
+## 3. Tối ưu Chi phí (FinOps) với Prompt Caching
 
-Văn bản: "Nam năm nay 25 tuổi, hiện đang là kỹ sư."
-JSON: {"name": "Nam", "age": 25}
+**"Token Tax"** là một thực tế tàn khốc: Nếu System prompt và 5 examples của bạn tốn 2,000 tokens, và bạn phục vụ 1 triệu requests/ngày, bạn đang trả tiền cho 2 tỷ tokens "rác" lặp đi lặp lại mỗi ngày.
 
-Văn bản: "Hôm qua sinh nhật lần thứ 30 của chị Lan."
-JSON: {"name": "Lan", "age": 30}
+### Giải pháp: LLM Prefix Caching (Prompt Caching)
+Các nhà cung cấp như Anthropic (Claude) hay framework mã nguồn mở (vLLM, SGLang) giới thiệu khái niệm **Prefix Caching**. 
 
-Văn bản: "Bác Hùng, 55 tuổi, vừa trúng số."
-JSON: 
+Thay vì tính toán lại ma trận Attention cho 2,000 tokens tĩnh (System prompt + Few-shots) trên mỗi request, hệ thống **chỉ tính toán 1 lần** và lưu KV Cache của đoạn đó trên VRAM. Các request sau có cùng phần "đầu" (Prefix) sẽ được ánh xạ thẳng vào Cache.
+
+```mermaid
+flowchart TD
+    A["Incoming Request"] --> B{Trùng khớp Prefix?}
+    B -- Yes("Cache Hit") --> C["Lấy KV States từ VRAM"]
+    B -- No("Cache Miss") --> D["Prefill Compute: Attention Matrix O_N^2"]
+    D --> E["Lưu KV States mới vào VRAM"]
+    C --> F["Decode Phase: Generate Token"]
+    E --> F
+    F --> G[Output]
 ```
 
-### 2. Trích xuất thông tin (Information Extraction)
+### Show, Don't Tell: Anthropic Prompt Caching API
+Khi triển khai với Anthropic Claude 3.5, việc khai báo `cache_control` giúp cắt giảm tới **90% chi phí input token** và giảm TTFT xuống dưới 50ms cho đoạn Few-shot dài:
 
-Bạn muốn lấy ra các thực thể cụ thể từ một văn bản dài.
+```python
+import anthropic
 
-```text
-Trích xuất các kỹ năng công nghệ từ mô tả công việc:
+client = anthropic.Anthropic()
 
-Mô tả: "Cần tuyển lập trình viên am hiểu về Python và có kinh nghiệm với hệ quản trị cơ sở dữ liệu MySQL. Biết dùng Git là lợi thế."
-Kỹ năng: Python, MySQL, Git
+response = client.messages.create(
+    model="claude-3-5-sonnet-20240620",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "Bạn là chuyên gia Data Engineer. Dưới đây là 100 ví dụ về cấu trúc Log hệ thống..."
+        },
+        {
+            "type": "text",
+            "text": "<logs_examples>...[10,000 tokens of few-shot examples]...</logs_examples>",
+            # Đánh dấu breakpoint để Cache lại toàn bộ khối này trên server Anthropic
+            "cache_control": {"type": "ephemeral"} 
+        }
+    ],
+    messages=[
+        {"role": "user", "content": "Phân tích đoạn log: ERR 0x992 Database Deadlock"}
+    ]
+)
 
-Mô tả: "Công việc yêu cầu ứng viên có khả năng phân tích dữ liệu bằng Pandas, trực quan hóa bằng Tableau và có hiểu biết cơ bản về AWS."
-Kỹ năng: Pandas, Tableau, AWS
-
-Mô tả: "Chúng tôi đang tìm kiếm kỹ sư dữ liệu thành thạo Apache Spark và Kafka, có kinh nghiệm làm việc với môi trường GCP."
-Kỹ năng:
+# Kiểm tra FinOps:
+print(response.usage.cache_creation_input_tokens) # Lần 1: 10,000 tokens
+print(response.usage.cache_read_input_tokens)     # Lần sau: 10,000 tokens (Giảm 90% giá!)
 ```
 
-## Các nguyên tắc tốt nhất (Best Practices) khi dùng Few-shot
+---
 
-Để Few-shot Prompting đạt hiệu quả cao nhất, bạn nên tuân theo một số nguyên tắc sau:
+## 4. Systemic Trade-offs: Few-shot vs. Fine-tuning
 
-1. **Cung cấp định dạng nhất quán**: Các ví dụ nên được format giống hệt nhau. Sử dụng dấu phân cách rõ ràng như `###`, `---`, hoặc ngoặc kép để tách biệt các ví dụ.
-2. **Tính đại diện và Đa dạng**: Chọn các ví dụ bao quát các trường hợp khác nhau của vấn đề. Nếu bài toán phân loại có 3 nhãn, hãy đảm bảo cả 3 nhãn đều xuất hiện trong các ví dụ.
-3. **Phân phối nhãn đồng đều**: Nếu bạn cung cấp 4 ví dụ và cả 4 đều có nhãn là "Tích cực", mô hình có thể bị thiên kiến (bias) và luôn đoán "Tích cực" cho input của bạn.
-4. **Thứ tự của các ví dụ**: Mô hình có xu hướng bị ảnh hưởng bởi những ví dụ nằm ở cuối prompt (Recency bias). Cố gắng xáo trộn ngẫu nhiên thứ tự các ví dụ nếu bạn sinh prompt tự động.
-5. **Số lượng ví dụ**: Thông thường từ 3 đến 5 ví dụ là đủ. Nếu bạn cần đưa vào quá nhiều ví dụ (hàng chục hay hàng trăm), có thể bạn nên cân nhắc kỹ thuật Fine-tuning (RAG hoặc Supervised Fine-Tuning).
+Khi nào nên dừng Few-shot và chuyển sang Supervised Fine-Tuning (SFT)? Hãy cân nhắc sự đánh đổi:
 
-## Hạn chế của Few-shot Prompting
+| Tiêu chí | Few-shot Prompting | Fine-Tuning (SFT / LoRA) |
+| :--- | :--- | :--- |
+| **Compute Cost (Lúc huấn luyện)** | Rẻ (\$0) | Đắt (GPU Hours cho Training) |
+| **Compute Cost (Lúc Inference)** | **Rất Đắt** (Phải trả tiền mang theo context dài) | **Rất Rẻ** (Chỉ tốn token cho query gốc) |
+| **Latency (TTFT)** | Cao (Prefill chậm do token dài) | Thấp (Ít token đầu vào) |
+| **Agility (Khả năng cập nhật)** | Real-time (Đổi ví dụ là có tác dụng ngay) | Chậm (Cần pipeline MLOps retrain) |
+| **Data Quality Tolerance** | Dễ bị "ảo giác" nếu 1 ví dụ sai lệch | Chống chịu nhiễu tốt hơn do hàm loss hội tụ |
 
-Dù mạnh mẽ, Few-shot Prompting không phải là "viên đạn bạc". Nó thường **thất bại** khi bài toán đòi hỏi phải **suy luận logic phức tạp** hoặc tính toán toán học nhiều bước. 
+**Quy tắc ngón tay cái của Staff Engineer:**
+1. Dùng Few-shot (Dynamic) cho việc định dạng output JSON, XML hoặc các logic business thay đổi liên tục hàng ngày.
+2. Khi bộ Few-shot vượt quá **2,000 tokens**, hoặc cần nhồi hơn **10 ví dụ** để model đạt độ chính xác >95%, đó là lúc phải đập bỏ và chuyển sang Fine-tuning.
 
-Ví dụ, nếu bạn đưa vào các bài toán đố mẹo hoặc tính toán có nhiều biến số, dù bạn đưa 10 ví dụ thì mô hình vẫn có thể làm sai ở ví dụ thứ 11 vì nó chỉ cố gắng khớp khuôn mẫu (pattern matching) thay vì thực sự suy luận.
+---
 
-Trong những trường hợp như vậy, chúng ta sẽ cần kết hợp Few-shot với một kỹ thuật tiên tiến hơn: **Chain-of-Thought (CoT)**. Thay vì chỉ cung cấp Input và Output, chúng ta sẽ cung cấp cả **các bước suy luận trung gian** vào trong ví dụ.
-
-## Tổng kết
-
-Few-Shot Prompting là một trong những công cụ cơ bản và hiệu quả nhất trong bộ kỹ năng Prompt Engineering. Bằng cách chèn một vài ví dụ chất lượng vào prompt (In-context learning), bạn có thể dễ dàng hướng dẫn LLM thực hiện đúng định dạng, giọng điệu và quy tắc bài toán mà không tốn công sức cấu hình phức tạp.
-
-## Tài Liệu Tham Khảo
-* [Language Models are Few-Shot Learners (Nghiên cứu gốc từ OpenAI về GPT-3)](https://arxiv.org/abs/2005.14165)
-* [Prompt Engineering Guide - Few-Shot Prompting](https://www.promptingguide.ai/techniques/fewshot)
-* **Ng - Machine Learning Specialization (Coursera)**
+## Nguồn Tham Khảo
+- [Prompt Caching with Anthropic Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
+- [LangChain: Dynamic Few-Shot using Example Selectors](https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/)
+- [vLLM KV Cache Architecture and PagedAttention](https://blog.vllm.ai/2023/06/20/vllm.html)
+- [Language Models are Few-Shot Learners (GPT-3 Whitepaper)](https://arxiv.org/abs/2005.14165)

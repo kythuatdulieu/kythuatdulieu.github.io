@@ -21,17 +21,17 @@ Spark chia quá trình Shuffle thành hai giai đoạn vật lý rạch ròi: **
 
 ```mermaid
 sequenceDiagram
-    participant M as Mapper (Shuffle Write)
+    participant M as Mapper("Shuffle Write")
     participant D as Local Disk
     participant T as MapOutputTracker (Driver)
-    participant R as Reducer (Shuffle Read)
+    participant R as Reducer("Shuffle Read")
     
-    M->>M: Tính toán phân vùng đích (Hash Partitioner)
-    M->>D: Spill-to-disk (Ghi .data & .index files)
+    M->>M: Tính toán phân vùng đích("Hash Partitioner")
+    M->>D: Spill-to-disk("Ghi .data & .index files")
     M->>T: Báo cáo vị trí File
     R->>T: Xin địa chỉ File của Partition X
     T-->>R: Trả về danh sách Node IP
-    R->>D: Network Fetch (Kéo dữ liệu)
+    R->>D: Network Fetch("Kéo dữ liệu")
     R->>R: In-memory Merge/Sort
 ```
 

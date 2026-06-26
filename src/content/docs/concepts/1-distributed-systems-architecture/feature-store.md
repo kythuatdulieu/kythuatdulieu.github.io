@@ -39,7 +39,7 @@ graph TD
     end
     
     subgraph Compute Engine
-        Spark["Spark / Flink("Transformation")"]
+        Spark["Spark / Flink(Transformation)"]
     end
     
     subgraph Feature Store System

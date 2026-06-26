@@ -105,12 +105,12 @@ sequenceDiagram
     
     Engine->>Engine: Chạy OPTIMIZE
     Engine->>S3: Ghi File 1GB mới
-    DL-->>Engine: Đánh dấu File 1GB là Active<br>Đánh dấu File 10KB là Tombstone (Xóa logic)
+    DL-->>Engine: Đánh dấu File 1GB là Active<br>Đánh dấu File 10KB là Tombstone("Xóa logic")
     
     Note over S3, DL: Dung lượng lưu trữ TĂNG LÊN
     
-    Engine->>Engine: Chạy VACUUM (sau 7 ngày)
-    Engine->>S3: Hard Delete (Xóa cứng) File 10KB cũ
+    Engine->>Engine: Chạy VACUUM("sau 7 ngày")
+    Engine->>S3: Hard Delete("Xóa cứng") File 10KB cũ
     Note over S3: Dung lượng lưu trữ GIẢM XUỐNG
 ```
 

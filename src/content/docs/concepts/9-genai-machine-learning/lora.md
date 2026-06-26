@@ -1,159 +1,168 @@
 ---
 title: "Low-Rank Adaptation (LoRA)"
 difficulty: "Intermediate"
-tags: ["lora", "peft", "llm", "fine-tuning", "genai"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Low-Rank Adaptation (LoRA) là gì? Tinh chỉnh LLM hiệu quả"
-metaDescription: "Tìm hiểu chi tiết về Low-Rank Adaptation (LoRA), kỹ thuật PEFT giúp tinh chỉnh mô hình ngôn ngữ lớn (LLM) với chi phí thấp, giảm thiểu VRAM mà vẫn giữ nguyên hiệu suất."
-description: "Khi bạn muốn biến một mô hình ngôn ngữ lớn (LLM) thô thành một chuyên gia trong một lĩnh vực cụ thể (ví dụ: một bot viết mã, hỗ trợ khách hàng, hoặc phân tích y tế), việc tinh chỉnh toàn bộ mô hình là rất tốn kém. LoRA cung cấp một giải pháp thanh lịch."
+tags: ["lora", "peft", "llm", "fine-tuning", "genai", "finops", "vllm"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Low-Rank Adaptation (LoRA) Architecture, FinOps & Production Risks"
+metaDescription: "Phân tích kiến trúc Low-Rank Adaptation (LoRA) dưới góc độ Data/ML Engineer: Tối ưu FinOps, tính toán VRAM, rủi ro OOMKilled khi hot-swap Adapter và cấu hình vLLM."
+description: "Phân tích kiến trúc Low-Rank Adaptation (LoRA) dưới góc độ System Engineering. Từ việc tối ưu FinOps trong quá trình huấn luyện, đến các rủi ro vận hành (OOMKilled) và cách thiết kế hệ thống Multi-LoRA Serving bằng vLLM."
 ---
 
+**LoRA (Low-Rank Adaptation)** không chỉ là một thuật toán; dưới góc nhìn của một Data/ML Engineer, nó là một giải pháp kiến trúc xuất sắc nhằm giải quyết bài toán FinOps (chi phí hạ tầng) và Storage Bottleneck khi tinh chỉnh (Fine-tuning) các Mô hình Ngôn ngữ Lớn (LLM).
 
-
-**LoRA (Low-Rank Adaptation)** là một trong những kỹ thuật phổ biến và hiệu quả nhất thuộc nhóm **PEFT** (Parameter-Efficient Fine-Tuning - Tinh chỉnh hiệu quả tham số). Thay vì cập nhật hàng chục tỷ tham số của một Mô hình Ngôn ngữ Lớn (LLM) vốn cực kỳ tốn VRAM và thời gian huấn luyện, LoRA "đóng băng" mô hình gốc và chèn thêm một vài ma trận nhỏ (low-rank matrices) vào mạng neural. Điều này cho phép chúng ta huấn luyện một mô hình ngôn ngữ mạnh mẽ (như LLaMA 3, Mistral) chỉ bằng một GPU dân dụng.
-
----
-
-## 1. Vấn đề của Full Fine-Tuning
-
-
-
-Khi một mô hình ngôn ngữ lớn (ví dụ GPT-3 175B hoặc LLaMA 70B) được huấn luyện trước (pre-trained) trên một lượng dữ liệu khổng lồ, nó có khả năng hiểu ngôn ngữ rất tốt nhưng chưa thực hiện tốt các tác vụ chuyên biệt theo yêu cầu (như trả lời câu hỏi y tế, lập trình, tóm tắt). 
-
-Để mô hình làm tốt một tác vụ cụ thể, chúng ta cần **Fine-Tuning** (tinh chỉnh). Phương pháp truyền thống là **Full Fine-Tuning**, trong đó:
-- Chúng ta cập nhật **toàn bộ** trọng số (weights) của mô hình dựa trên tập dữ liệu mới.
-- **Nhược điểm:**
-  - Tốn tài nguyên: Cần cập nhật hàng tỷ tham số, yêu cầu rất nhiều VRAM cho cả mô hình, trạng thái optimizer (optimizer states), gradient, và activation.
-  - Tốn không gian lưu trữ: Mỗi lần tinh chỉnh cho một tác vụ mới, chúng ta tạo ra một bản sao toàn bộ của mô hình. Nếu mô hình nặng 140GB, mười tác vụ sẽ tốn 1.4TB lưu trữ.
-  - Hiện tượng **Catastrophic Forgetting** (Quên thảm hoạ): Tinh chỉnh quá mạnh có thể khiến mô hình quên những kiến thức tổng quát đã học ở pha pre-training.
+Thay vì phải nhân bản toàn bộ hàng chục tỷ tham số (Full Fine-Tuning) cho mỗi tác vụ (điều dẫn đến sự bùng nổ lưu trữ hệ thống), LoRA "đóng băng" (freeze) mô hình gốc và tiêm (inject) các ma trận hạng thấp (low-rank matrices) vào mạng neural. Điều này cho phép phục vụ hàng chục "nhân cách" AI khác nhau trên cùng một GPU vật lý.
 
 ---
 
-## 2. LoRA hoạt động như thế nào?
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-LoRA được giới thiệu bởi các nhà nghiên cứu từ Microsoft (Hu et al., 2021). Ý tưởng cốt lõi dựa trên một giả thuyết toán học: **Sự thay đổi trọng số trong quá trình tinh chỉnh mô hình có "hạng nội tại thấp" (low intrinsic rank).**
+### 1.1 Cơ chế tiêm Adapter (Adapter Injection)
 
-Điều này có nghĩa là chúng ta không cần cập nhật một ma trận lớn (ví dụ $10,000 \times 10,000$), mà có thể xấp xỉ sự thay đổi đó bằng tích của hai ma trận nhỏ hơn rất nhiều.
+Trong kiến trúc Transformer, phần tiêu tốn nhiều toán tử nhân ma trận (MatMul) nhất là khối Attention, đặc biệt là các ma trận Query ($W_q$) và Value ($W_v$). LoRA can thiệp thẳng vào luồng thực thi này.
 
-### Toán học cốt lõi của LoRA
+![LoRA Architecture](/images/9-genai-machine-learning/lora_architecture.png)
+*Nguồn: HuggingFace - Sơ đồ phân rã ma trận trong LoRA.*
 
-Giả sử $W_0 \in \mathbb{R}^{d \times k}$ là một ma trận trọng số của mô hình gốc (pre-trained weights). Trong Full Fine-Tuning, trọng số này sẽ được cập nhật thành $W = W_0 + \Delta W$.
+Thay vì cập nhật trực tiếp ma trận trọng số gốc $W_0 \in \mathbb{R}^{d \times k}$ (với kích thước hàng chục GB), kiến trúc chia tách nhánh (split-path architecture) được áp dụng:
+1. **Đường dữ liệu gốc (Main Path):** Dữ liệu đi qua ma trận $W_0$ (chỉ đọc, đóng băng).
+2. **Đường Adapter (Side-car Path):** Dữ liệu đi qua hai ma trận nhỏ $B \in \mathbb{R}^{d \times r}$ và $A \in \mathbb{R}^{r \times k}$.
+3. **Phân phối (Aggregation):** Kết quả hai đường được cộng lại với nhau (Element-wise addition) và nhân với một tỷ lệ (Scaling factor).
 
-Trong LoRA, chúng ta **đóng băng (freeze)** $W_0$ (không cập nhật nó nữa). Thay vào đó, chúng ta biểu diễn phần cập nhật $\Delta W$ bằng tích của hai ma trận có hạng thấp:
-$$ \Delta W = B \times A $$
-Trong đó:
-- $B \in \mathbb{R}^{d \times r}$
-- $A \in \mathbb{R}^{r \times k}$
-- $r$ là **hạng (rank)**, một số nguyên nhỏ hơn rất nhiều so với $d$ và $k$ (thường $r = 8, 16, 32, \dots$).
+```mermaid
+graph TD
+    X("Input x") --> W0["Frozen Pre-trained Weights W_0"]
+    X --> A["Down-projection Matrix A"]
+    A --> B["Up-projection Matrix B"]
+    W0 --> Sum("(+")
+    B --> Scaling["Scale: Alpha/Rank"]
+    Scaling --> Sum
+    Sum --> H("Output h")
 
-Khi thực hiện lan truyền xuôi (forward pass) với đầu vào $x$:
-$$ h = W_0 x + \Delta W x = W_0 x + B A x $$
+    style W0 fill:#f9f,stroke:#333,stroke-width:2px
+    style A fill:#bbf,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+```
 
-Trong quá trình huấn luyện:
-1. $W_0$ bị đóng băng (gradient không được tính toán cho $W_0$).
-2. Ma trận $A$ được khởi tạo bằng phân phối Gauss ngẫu nhiên.
-3. Ma trận $B$ được khởi tạo bằng 0 (để lúc bắt đầu, $\Delta W = 0$ và mô hình hoạt động y hệt mô hình gốc).
-4. Chỉ có tham số của $A$ và $B$ được cập nhật bằng Gradient Descent.
+### 1.2 Đánh đổi Hệ thống (Systemic Trade-offs)
 
----
-
-## 3. Các siêu tham số (Hyperparameters) quan trọng trong LoRA
-
-Khi áp dụng LoRA, bạn sẽ cần cấu hình một số tham số cốt lõi:
-
-* **Rank ($r$):** Kích thước của các ma trận cập nhật. $r$ càng lớn, $\Delta W$ càng có khả năng biểu diễn các thay đổi phức tạp, nhưng cũng tốn nhiều tham số hơn. Thực tế, ngay cả $r=8$ hoặc $r=16$ cũng thường mang lại hiệu suất tương đương với Full Fine-Tuning trên nhiều bài toán.
-* **Alpha ($\alpha$):** Hệ số tỉ lệ (scaling factor). Trong thực tế, đầu ra của LoRA được nhân với một tỉ lệ $\frac{\alpha}{r}$. Alpha giúp kiểm soát tầm ảnh hưởng của LoRA adapter lên trọng số gốc. Quy tắc kinh nghiệm thông dụng là đặt $\alpha = 2 \times r$.
-* **Target Modules:** Những lớp nào trong mạng neural sẽ được gắn LoRA. Thường LoRA được gắn vào các thành phần của khối Attention (ví dụ: `q_proj`, `v_proj` trong LLaMA) và đôi khi cả mạng Feed-Forward (MLP). Gắn vào càng nhiều module thì số tham số huấn luyện càng tăng.
-* **Dropout:** Tỷ lệ ngẫu nhiên vô hiệu hóa một số kết nối trong ma trận LoRA để tránh overfitting. Thường đặt khoảng 0.05 đến 0.1.
+Về mặt thiết kế hệ thống, việc áp dụng LoRA đưa chúng ta vào một số sự đánh đổi cốt lõi:
+- **Storage Cost vs. Memory Bandwidth:** Bằng cách giữ Adapter nhỏ (vài chục MB), chi phí lưu trữ S3/EBS giảm 99%. Tuy nhiên, trong quá trình huấn luyện, Memory Bandwidth bị ép do GPU phải load song song hai đường $W_0$ và $(A, B)$.
+- **Rank ($r$) vs. Throughput:** Tăng $r$ giúp Adapter học được các đặc trưng phức tạp hơn (tốt cho lập trình/toán học), nhưng làm tăng số tham số huấn luyện, kéo theo việc ăn nhiều VRAM hơn cho Optimizer States (AdamW cần gấp đôi dung lượng của parameters).
 
 ---
 
-## 4. Tại sao LoRA là một bước đột phá?
+## 2. FinOps và Tính toán Chi phí (VRAM Capacity Planning)
 
-1. **Tiết kiệm phần cứng cực độ:** Bằng cách đóng băng mô hình gốc và chỉ huấn luyện $A$ và $B$, LoRA giảm **90-99%** số tham số cần cập nhật. VRAM cần thiết để huấn luyện giảm đi đáng kể (do không phải lưu trữ optimizer states cho $W_0$).
-2. **Không làm chậm tốc độ suy luận (No Inference Latency):** Sau khi huấn luyện xong, chúng ta có thể gộp (merge) trọng số LoRA vào mô hình gốc bằng phép cộng đơn giản: $W_{\text{merged}} = W_0 + B A$. Kết quả là một mô hình mới có cùng kiến trúc với mô hình gốc, hoàn toàn không tăng thêm thời gian tính toán khi sử dụng (inference).
-3. **Chuyển đổi Adapter dễ dàng (Modular & Swappable):** Do ma trận $\Delta W$ (gọi là LoRA Adapter) rất nhỏ (thường chỉ vài chục MB), bạn có thể lưu trữ nhiều adapter cho nhiều tác vụ khác nhau. Khi cần bot trả lời y tế, bạn tải mô hình gốc (vài chục GB) lên VRAM và đính kèm adapter y tế (50MB). Khi cần lập trình, bạn tháo adapter y tế và đính kèm adapter lập trình.
-4. **Hiệu suất tương đương Full Fine-Tuning:** Các nghiên cứu chỉ ra rằng dù số tham số huấn luyện ít hơn hẳn, mô hình được tinh chỉnh bằng LoRA có hiệu năng không kém gì (đôi khi tốt hơn) so với mô hình tinh chỉnh toàn bộ tham số, đặc biệt trong các tác vụ thiếu dữ liệu.
+Một sai lầm chí mạng của các đội ngũ ML là "Out of Memory" (OOMKilled) vì không tính toán kỹ VRAM trước khi phân bổ 인스턴스 (EC2 Instances) như AWS `g5.2xlarge` hay `p4d.24xlarge`.
 
----
+### 2.1 Công thức VRAM cho LoRA
 
-## 5. Ví dụ mã nguồn: Tinh chỉnh bằng thư viện PEFT
+Giả sử chúng ta Fine-tune mô hình LLaMA-3 8B (với Float16, 1 tham số = 2 Bytes):
+- **Base Model ($W_0$):** \$8 \times 10^9 \times 2 = 16 \text{ GB}$.
+- **LoRA Parameters ($r=16, \alpha=32$):** Chỉ khoảng 1% - 2% (khoảng 30-50 MB).
+- **Gradients (Float16):** Bằng số LoRA parameters x 2 Bytes = 50 MB.
+- **Optimizer States (AdamW):** AdamW lưu trữ `m` và `v` ở định dạng Float32 (4 Bytes/tham số). Số VRAM cần = Số LoRA param x 4 x 2 = 100 MB.
+- **Activations (Context Window):** Batch size và Sequence length quyết định. (Thường chiếm vài GB).
 
-Thư viện `peft` của Hugging Face giúp việc áp dụng LoRA trở nên vô cùng đơn giản, chỉ với vài dòng mã:
+=> Tổng cộng, chỉ cần khoảng **18-20 GB VRAM**, vừa khít cho một GPU RTX 4090 (24GB) hoặc AWS `g5.xlarge` (\$1.006/giờ). Nếu Full Fine-tuning, con số này có thể vọt lên hơn 100 GB VRAM (cần hệ thống Multi-GPU).
+
+### 2.2 Triển khai Huấn luyện Thực chiến (Python Executable)
+
+Để chống tràn RAM khi khởi tạo mô hình 16-bit, chúng ta kết hợp **QLoRA** (lượng tử hóa 4-bit) thông qua thư viện `bitsandbytes`.
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-# 1. Tải mô hình gốc và đóng băng (freeze) nó
-model_id = "meta-llama/Llama-3-8b"
+# 1. FinOps Caching & 4-bit Quantization (Chống OOM)
+# Lượng tử hoá W_0 xuống NF4 (NormalFloat4)
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16 # Giảm thiểu lỗi chính xác khi backward
+)
+
+# Load base model vào VRAM
 model = AutoModelForCausalLM.from_pretrained(
-    model_id, 
-    torch_dtype=torch.float16, 
-    device_map="auto"
+    "meta-llama/Meta-Llama-3-8B",
+    quantization_config=bnb_config,
+    device_map="auto" 
 )
-tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-# 2. Định nghĩa cấu hình LoRA
-lora_config = LoraConfig(
-    r=16,                         # Rank
-    lora_alpha=32,                # Alpha (thường = 2 * r)
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"], # Gắn vào lớp Attention
-    lora_dropout=0.05,            # Chống overfitting
+# Chuẩn bị cho K-bit training (gradient checkpointing để đổi Compute lấy VRAM)
+model = prepare_model_for_kbit_training(model)
+
+# 2. Định nghĩa cấu hình LoRA Adapter
+peft_config = LoraConfig(
+    r=16,                           # Bottleneck rank
+    lora_alpha=32,                  # Scaling factor (= 2*r)
+    target_modules=[                # Gắn Adapter vào mọi Attention & MLP projection
+        "q_proj", "k_proj", "v_proj", "o_proj", 
+        "gate_proj", "up_proj", "down_proj"
+    ],
+    lora_dropout=0.05,
     bias="none",
-    task_type="CAUSAL_LM"         # Bài toán mô hình ngôn ngữ
+    task_type="CAUSAL_LM"
 )
 
-# 3. Đính kèm LoRA vào mô hình gốc
-peft_model = get_peft_model(model, lora_config)
-
-# Kiểm tra số lượng tham số huấn luyện
+# 3. Tiêm (Inject) LoRA vào Base Model
+peft_model = get_peft_model(model, peft_config)
 peft_model.print_trainable_parameters()
-# Kết quả ví dụ: trainable params: 13,631,488 || all params: 8,043,907,072 || trainable%: 0.1694%
-
-# 4. (Sau đó bạn đưa `peft_model` vào Trainer của HuggingFace để huấn luyện bình thường)
+# Expected Output: trainable params: 41,943,040 || all params: 8,072,204,288 || trainable%: 0.5196%
 ```
 
-Như ví dụ trên, chúng ta chỉ phải huấn luyện khoảng **13 triệu** tham số (tương đương 0.17%), thay vì hơn **8 tỷ** tham số của LLaMA-3.
+---
+
+## 3. Rủi ro Vận hành (Operational Risks & Incidents)
+
+Trong môi trường Production, việc huấn luyện LoRA rất suôn sẻ, nhưng việc **Serving Multi-LoRA** (phục vụ nhiều LoRA adapters trên cùng một Base Model) lại là một cơn ác mộng về Infrastructure.
+
+### 3.1 Vấn đề "Context Switching" trong GPU (Multi-LoRA Bottleneck)
+Khi có 3 luồng người dùng gọi 3 Adapters khác nhau (Y tế, Lập trình, Pháp lý) trong cùng một thời điểm:
+- **Sai lầm:** Tải Base Model 3 lần vào VRAM -> 🔴 **OOMKilled**.
+- **Giải pháp cũ:** Một Base Model trong VRAM, hot-swap (tráo) các Adapter liên tục. 
+- **Incident (Latency Spike):** Thao tác copy trọng số Adapter vào GPU RAM mất khoảng 50-200ms mỗi lần tráo. Khi concurrency lên 100 req/s, GPU bị nghẽn do bus PCIe phải tải dữ liệu liên tục (PCIe Bottleneck), dẫn đến Latency tăng vọt lên hàng giây.
+
+### 3.2 Giải pháp Kiến trúc: vLLM Multi-LoRA Serving với PagedAttention
+vLLM (một engine serving LLM tốc độ cao) giải quyết vấn đề này thông qua kỹ thuật **Batched Inference cho Multi-LoRA**. Thay vì tráo Adapter cho từng request, vLLM nạp toàn bộ các Adapters vào VRAM (chúng rất nhỏ, chỉ khoảng 50MB mỗi cái, 100 cái cũng chỉ tốn 5GB). 
+
+Khi infer, vLLM gom (batch) các tokens của người dùng yêu cầu Adapter A lại với nhau, tính toán một lượt qua đường nhánh của Adapter A, kết hợp PagedAttention để tránh phân mảnh VRAM.
+
+**Cấu hình vLLM CLI khởi chạy Multi-LoRA:**
+```bash
+# Cấu hình khởi chạy vLLM hỗ trợ nhiều LoRA (Bật max_loras để giới hạn tránh OOM)
+vllm serve meta-llama/Meta-Llama-3-8B \
+    --enable-lora \
+    --max-loras 4 \
+    --max-lora-rank 32 \
+    --gpu-memory-utilization 0.9 \
+    --port 8000
+```
+
+*Trong cấu hình trên, `--max-loras` là một Guardrail. Nếu không giới hạn, một số lượng lớn Adapters được nạp vào VRAM sẽ nuốt chửng bộ nhớ dành cho KV Cache, khiến hệ thống từ chối các sequence dài (Context Window OOM).*
+
+### 3.3 Catastrophic Forgetting (Quên Thảm Họa) trong LoRA
+Mặc dù LoRA giúp hạn chế "Quên thảm họa" tốt hơn Full Fine-Tuning do Base Model bị đóng băng, nhưng bản thân Adapter vẫn có thể "học vẹt" (overfit) vào dữ liệu mới và bóp méo output.
+- **Biểu hiện:** Huấn luyện Adapter để trả lời JSON. Sau huấn luyện, Adapter trả lời JSON hoàn hảo nhưng mất khả năng tóm tắt văn bản.
+- **Khắc phục:** Trộn dữ liệu huấn luyện (Data Mixing). Thêm khoảng 5-10% dữ liệu Pre-training (hoặc instruction-tuning gốc) vào tập dữ liệu Fine-tuning của LoRA.
 
 ---
 
-## 6. Sự tiến hoá: QLoRA (Quantized LoRA)
+## Tóm tắt Hệ thống (System Summary)
 
-Dù LoRA giảm đáng kể dung lượng bộ nhớ cho optimizer, mô hình gốc $W_0$ vẫn được tải vào VRAM ở định dạng 16-bit (hoặc 32-bit). Một mô hình LLaMA-3 70B vẫn cần hơn 140GB VRAM chỉ để chứa trọng số gốc!
-
-Năm 2023, Dettmers et al. (đội ngũ từ University of Washington) giới thiệu **QLoRA** (Quantized LoRA). QLoRA giải quyết vấn đề này bằng cách:
-1. **Lượng tử hoá (Quantize)** mô hình gốc $W_0$ xuống định dạng 4-bit (chính xác hơn là 4-bit NormalFloat - NF4) thay vì 16-bit. Điều này giảm 4 lần bộ nhớ cần để chứa mô hình.
-2. Giữ nguyên các ma trận LoRA adapter (A và B) ở 16-bit để bảo toàn độ chính xác.
-3. Khi tính toán xuyên qua mạng (forward/backward pass), trọng số 4-bit được giải nén (dequantize) tạm thời thành 16-bit.
-
-**Kết quả:** Nhờ QLoRA, việc tinh chỉnh các mô hình khổng lồ như 33B hay thậm chí 70B có thể thực hiện được trên một GPU cá nhân mạnh (như RTX 3090/4090 24GB) hoặc các GPU đám mây giá rẻ (như L4 hoặc A10G), mở ra kỷ nguyên dân chủ hoá AI (democratizing AI).
+- **Storage & FinOps:** Giảm lưu trữ mô hình từ hàng trăm GB xuống vài chục MB. Chi phí huấn luyện giảm từ hàng nghìn USD xuống còn chưa tới \$10 bằng việc dùng các Single GPU (RTX 3090/4090/A10G).
+- **Kiến trúc mạng:** Tách nhánh ma trận (Low-rank decomposition) song song với ma trận gốc, sau đó cộng (Merge) hoặc hot-swap lúc Inference.
+- **Production Serving:** Bắt buộc sử dụng các framework tối ưu như `vLLM` hoặc `TGI` với tính năng Multi-LoRA để tránh nghẽn cổ chai PCIe do chuyển đổi ngữ cảnh liên tục.
 
 ---
 
-## 7. Các biến thể khác của LoRA
+## Nguồn Tham Khảo (References)
 
-Từ thành công của LoRA, nhiều nhà nghiên cứu đã phát triển các phiên bản cải tiến:
-* **AdaLoRA:** Tự động điều chỉnh Rank $r$ cho từng lớp trong mạng, phân bổ rank lớn cho những lớp cần thiết và thu hẹp rank ở các lớp ít quan trọng.
-* **DoRA (Weight-Decomposed Low-Rank Adaptation):** Tách trọng số pre-trained thành độ lớn (magnitude) và hướng (direction), chỉ dùng LoRA để tinh chỉnh hướng. DoRA cho hiệu suất ổn định và sát với Full Fine-Tuning hơn.
-* **LongLoRA:** Tinh chỉnh LoRA để mở rộng Context Window của các LLM hiệu quả.
-
----
-
-## Tóm tắt
-
-LoRA là một công nghệ bản lề mang tính cách mạng trong quá trình ứng dụng AI tạo sinh vào thực tế. Bằng cách tiếp cận toán học tinh tế (dùng ma trận hạng thấp), LoRA mang lại khả năng:
-* Chi phí tinh chỉnh bằng một phần nhỏ so với truyền thống.
-* Tránh "Catastrophic Forgetting".
-* Cho phép một mô hình gốc duy nhất hỗ trợ hàng chục "nhân cách" chuyên biệt (Adapter) có thể tráo đổi tức thời.
-
----
-
-## Tài Liệu Tham Khảo
-
-* [LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)](https://arxiv.org/abs/2106.09685)
-* [QLoRA: Efficient Finetuning of Quantized LLMs (Dettmers et al., 2023)](https://arxiv.org/abs/2305.14314)
-* [HuggingFace PEFT Documentation](https://huggingface.co/docs/peft/index)
-* [Practical Tips for Finetuning LLMs Using LoRA (Sebastian Raschka)](https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms)
+*   [LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021) - Arxiv](https://arxiv.org/abs/2106.09685)
+*   [QLoRA: Efficient Finetuning of Quantized LLMs (Dettmers et al., 2023) - Arxiv](https://arxiv.org/abs/2305.14314)
+*   [vLLM Documentation: Multi-LoRA Serving](https://docs.vllm.ai/en/latest/models/lora.html)
+*   [HuggingFace PEFT (Parameter-Efficient Fine-Tuning) GitHub Repository](https://github.com/huggingface/peft)
+*   [AWS Machine Learning Blog: Fine-tune Llama 2 with LoRA](https://aws.amazon.com/blogs/machine-learning/fine-tune-llama-2-for-text-generation-on-amazon-sagemaker/)

@@ -27,13 +27,13 @@ sequenceDiagram
     participant Workers as 500 Airflow Workers
     participant DB as Data Warehouse
     
-    Workers->>DB: 00:00:00 - Gửi 500 Queries (Thundering Herd)
+    Workers->>DB: 00:00:00 - Gửi 500 Queries("Thundering Herd")
     Note over DB: Quá tải CPU/Connection Pool
     DB-->>Workers: 00:00:02 - Connection Reset / Timeout
     
-    Note over Workers: Chờ 10 giây (Fixed Delay)
+    Note over Workers: Chờ 10 giây("Fixed Delay")
     
-    Workers->>DB: 00:00:12 - Gửi lại 500 Queries (Retry Storm)
+    Workers->>DB: 00:00:12 - Gửi lại 500 Queries("Retry Storm")
     Note over DB: Lại quá tải... Crash hoàn toàn!
     DB-->>Workers: 00:00:15 - Connection Reset / Timeout
 ```
@@ -42,7 +42,7 @@ sequenceDiagram
 
 Để tránh Retry Storms, các Staff Engineer không bao giờ dùng *Fixed Delay* (chờ cố định). Thay vào đó, họ sử dụng **Exponential Backoff** kết hợp với **Jitter**.
 
-*   **Exponential Backoff (Lùi theo cấp số nhân):** Tăng thời gian chờ sau mỗi lần thất bại ($2^c \times base\_delay$). Ví dụ: 2s, 4s, 8s, 16s... Điều này cho phép Database hoặc API có thời gian xả tải (shed load) và phục hồi.
+*   **Exponential Backoff (Lùi theo cấp số nhân):** Tăng thời gian chờ sau mỗi lần thất bại (\$2^c \times base\_delay$). Ví dụ: 2s, 4s, 8s, 16s... Điều này cho phép Database hoặc API có thời gian xả tải (shed load) và phục hồi.
 *   **Jitter (Độ nhiễu ngẫu nhiên):** Backoff thôi là chưa đủ, vì 500 task vẫn có thể khởi động lại *cùng một lúc* ở giây thứ 2, thứ 4, thứ 8. Jitter cộng thêm một giá trị ngẫu nhiên vào thời gian chờ để dàn đều lượng requests theo trục thời gian, phá vỡ tính đồng bộ (synchronization) của Thundering Herd.
 
 Thuật toán chuẩn (như đề xuất của AWS Architecture): 
@@ -50,10 +50,10 @@ $Sleep = \text{random\_between}(0, \min(cap, base \times 2^{attempt}))$
 
 ```mermaid
 xychart-beta
-    title "Phân bổ Request theo thời gian (Có Jitter vs Không Jitter)"
-    x-axis [0s, 10s, 20s, 30s, 40s, 50s, 60s]
+    title "Phân bổ Request theo thời gian("Có Jitter vs Không Jitter")"
+    x-axis["0s, 10s, 20s, 30s, 40s, 50s, 60s"]
     y-axis "Số lượng Request đồng thời" 0 --> 500
-    line "Fixed Delay (Retry Storm)" [500, 0, 500, 0, 500, 0, 0]
+    line "Fixed Delay("Retry Storm")" [500, 0, 500, 0, 500, 0, 0]
     line "Exponential Backoff + Jitter" [500, 0, 100, 80, 150, 60, 50]
 ```
 

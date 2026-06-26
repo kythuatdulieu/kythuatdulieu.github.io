@@ -25,19 +25,19 @@ flowchart LR
     
     subgraph "Stream Processing"
     B -->|Consume Streams| C{"Spark Streaming"}
-    C -->|Micro-batch| D["("Google Cloud Storage")"]
+    C -->|Micro-batch| D[("Google Cloud Storage")]
     end
     
     subgraph "Batch & Orchestration"
     E["Apache Airflow"] -.->|Trigger hourly| F["GCS to BigQuery Job"]
     D -->|Raw Data| F
-    F --> G["("Google BigQuery Raw")"]
+    F --> G[("Google BigQuery Raw")]
     end
     
     subgraph "Transformation & Analytics"
     E -.->|Trigger dbt| H{"dbt"}
     G -->|Transform| H
-    H -->|Fact/Dim Tables| I["("BigQuery DWH")"]
+    H -->|Fact/Dim Tables| I[("BigQuery DWH")]
     I --> J["Looker Studio / Data Studio"]
     end
 ```

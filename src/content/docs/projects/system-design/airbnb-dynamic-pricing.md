@@ -31,32 +31,32 @@ Việc xây dựng mô hình định giá tại Airbnb chứa đựng sự phứ
 ```mermaid
 flowchart TD
     subgraph Client_Layer
-        C["Client / Web App"]
+        C[Client / Web App]
     end
 
     subgraph API_Gateway
-        GW["API Gateway"]
+        GW[API Gateway]
     end
 
     subgraph Microservices
-        PS["Pricing Service"]
-        SS["Search Service"]
-        BS["Booking Service"]
+        PS[Pricing Service]
+        SS[Search Service]
+        BS[Booking Service]
     end
 
     subgraph Storage_and_Cache
-        RC["(Redis Cluster)"]
-        DB["(Apache Cassandra / DynamoDB)"]
+        RC[(Redis Cluster)]
+        DB[(Apache Cassandra / DynamoDB)]
     end
 
     subgraph Data_Platform
-        Kafka["Apache Kafka - Event Bus"]
-        Spark["Apache Spark - Batch Layer"]
-        Flink["Apache Flink - Real-time Layer"]
-        S3["(Data Lake - Hadoop/S3)"]
-        Zipline["Zipline / Feature Store"]
-        ML["ML Inference Service"]
-        Airflow["Apache Airflow - Orchestration"]
+        Kafka[Apache Kafka - Event Bus]
+        Spark[Apache Spark - Batch Layer]
+        Flink[Apache Flink - Real-time Layer]
+        S3[(Data Lake - Hadoop/S3)]
+        Zipline[Zipline / Feature Store]
+        ML[ML Inference Service]
+        Airflow[Apache Airflow - Orchestration]
     end
 
     C -->|Tim Kiem / Luot Xem| GW
@@ -153,7 +153,7 @@ df_features.write.mode("overwrite").parquet("s3a://airbnb-feature-store/geo/occu
 - **Apache Flink** (hoặc Spark Streaming) tiêu thụ luồng sự kiện này với độ trễ tính bằng mili-giây.
 - Thuật toán Flink sẽ áp dụng logic **Tumbling/Sliding Window** (Ví dụ: Cửa sổ thời gian 10 phút trượt mỗi 2 phút) để giám sát tỷ lệ Search/Book.
 - Nếu thuật toán phát hiện tỷ lệ Search Query về một toạ độ cụ thể (bounding box) vượt ngưỡng trung bình lịch sử (Z-score anomaly detection), hệ thống định giá nhận diện đây là **"Nhu cầu tăng vọt" (Demand Surge / Anomaly)**.
-- ML service lập tức kích hoạt, nhân Mức giá cơ sở (Base Price) với một **Hệ số Phụ thu (Surge Multiplier)** (ví dụ: $1.4x$) và đẩy trực tiếp vào DB, đè lên giá trị đã chạy trong luồng Batch.
+- ML service lập tức kích hoạt, nhân Mức giá cơ sở (Base Price) với một **Hệ số Phụ thu (Surge Multiplier)** (ví dụ: \$1.4x$) và đẩy trực tiếp vào DB, đè lên giá trị đã chạy trong luồng Batch.
 
 **Ví dụ Flink SQL phát hiện Anomaly trong thời gian thực:**
 
@@ -229,7 +229,7 @@ Mô hình định giá của Airbnb không đơn thuần là mô hình Hồi quy
 Mục tiêu là tìm ra $Price$ (Mức giá) sao cho $E[\text{Revenue}]$ (Doanh thu kỳ vọng) lớn nhất:
 $$ E[\text{Revenue}] = Price \times P(\text{booking} | Price, Features) $$
 
-1. **Dự đoán đường cong Cầu (Demand Curve Model)**: Sử dụng các mô hình Tree-based (XGBoost, LightGBM) hoặc Deep Neural Networks để dự đoán xác suất lấp đầy. Nếu thuật toán đặt giá $100, xác suất được thuê là 80%. Nếu tăng lên $150, xác suất thuê rớt thê thảm xuống 30%. Hàm mục tiêu sẽ tự động giải phương trình để tìm đỉnh Parabol của kỳ vọng doanh thu.
+1. **Dự đoán đường cong Cầu (Demand Curve Model)**: Sử dụng các mô hình Tree-based (XGBoost, LightGBM) hoặc Deep Neural Networks để dự đoán xác suất lấp đầy. Nếu thuật toán đặt giá \$100, xác suất được thuê là 80%. Nếu tăng lên \$150, xác suất thuê rớt thê thảm xuống 30%. Hàm mục tiêu sẽ tự động giải phương trình để tìm đỉnh Parabol của kỳ vọng doanh thu.
 2. **Cold Start Problem (Vấn đề Khởi động Lạnh)**: Một căn hộ mới tinh vừa đăng ký trên hệ thống, chưa có lượt review hay lịch sử giá nào thì định giá sao? Thuật toán sẽ dùng **Embedding** (nhúng vector hình ảnh từ Computer Vision lên ảnh chụp căn nhà) và KNN (K-Nearest Neighbors) để map căn nhà mới này với một cụm (cluster) các căn nhà tương đồng nhất trong khu vực để "mượn" dữ liệu Base Price.
 3. **Thuật Toán Multi-Armed Bandit (MAB)**: Việc giữ nguyên thuật toán sẽ khiến hệ thống mắc kẹt trong "Local Optima" (tối ưu cục bộ). Bằng thuật toán Bandit (ví dụ: epsilon-greedy hoặc Thompson Sampling), hệ thống luôn dành ra một tỷ lệ nhỏ (Explore) để chủ động đưa ra các mức giá hơi lệch chuẩn nhằm theo dõi phản ứng của thị trường, và từ đó thu thập dữ liệu nhãn (Label) mới để tái huấn luyện bản thân (Exploit).
 

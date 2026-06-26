@@ -28,22 +28,22 @@ HNSW là thuật toán "quốc dân" trong các Vector Database hiện đại (P
 ```mermaid
 graph TD
     subgraph Layer_2["Tầng 2 - Sparse("Bước nhảy xa")"]
-        N1("(Node 1")) --- N5("(Node 5"))
+        N1("(Node 1") --- N5("(Node 5")
     end
     
     subgraph Layer_1["Tầng 1 - Medium"]
-        N1 --- N3("(Node 3"))
+        N1 --- N3("(Node 3")
         N3 --- N5
-        N5 --- N8("(Node 8"))
+        N5 --- N8("(Node 8")
     end
     
     subgraph Layer_0["Tầng 0 - Dense("Chi tiết")"]
-        N1 --- N2("(Node 2"))
+        N1 --- N2("(Node 2")
         N2 --- N3
-        N3 --- N4("(Node 4"))
+        N3 --- N4("(Node 4")
         N4 --- N5
-        N5 --- N6("(Node 6"))
-        N6 --- N7("(Node 7"))
+        N5 --- N6("(Node 6")
+        N6 --- N7("(Node 7")
         N7 --- N8
     end
     

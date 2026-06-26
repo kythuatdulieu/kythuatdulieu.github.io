@@ -1,7 +1,7 @@
 ---
 title: "Deep Dive: Watermarks & Late Data Handling"
 description: "Mổ xẻ kiến trúc Watermarks trong Apache Flink. Tìm hiểu cơ chế Watermark Alignment, các rủi ro vận hành (OOM, Watermark Stall) và mô hình Dead Letter Queue xử lý Late Data ở quy mô Enterprise."
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 ---
 
 Trong các hệ thống phân tích dữ liệu luồng (Stream Processing), việc tính toán aggregate (tổng, trung bình, count) chỉ là phần ngọn. Câu hỏi nền tảng và hóc búa nhất mà mọi kiến trúc sư dữ liệu phải đối mặt là: **"Khi nào thì hệ thống biết chắc chắn rằng một Window (khung thời gian) ĐÃ ĐÓNG và có thể tự tin xuất kết quả ra ngoài?"**.
@@ -83,22 +83,22 @@ Nếu dữ liệu trễ tận 3 tiếng (vượt cả Allowed Lateness), Window 
 ```mermaid
 sequenceDiagram
     participant Kafka as Kafka Source
-    participant Flink as Flink Window (10:00-10:05)
+    participant Flink as Flink Window("10:00-10:05")
     participant Redis as Redis (Sink)
-    participant S3 as S3 (Side Output)
+    participant S3 as S3("Side Output")
 
-    Kafka->>Flink: Event [Time: 10:04]
+    Kafka->>Flink: Event["Time: 10:04"]
     Kafka->>Flink: Watermark [10:05:00]
     Flink->>Redis: ⚡ Emit Result (Trigger)
     Note over Flink: State giữ lại do<br/>Allowed Lateness = 2H
     
-    Kafka->>Flink: Event [Time: 10:02] (Đến lúc 10:30)
-    Flink->>Redis: 🔄 UPSERT (Update Result)
+    Kafka->>Flink: Event["Time: 10:02"] (Đến lúc 10:30)
+    Flink->>Redis: 🔄 UPSERT("Update Result")
     
     Kafka->>Flink: Watermark [12:05:00]
-    Note over Flink: 🔥 State bị PURGED (Xóa sạch)
+    Note over Flink: 🔥 State bị PURGED("Xóa sạch")
     
-    Kafka->>Flink: Event [Time: 10:01] (Đến lúc 13:00)
+    Kafka->>Flink: Event["Time: 10:01"] (Đến lúc 13:00)
     Flink->>S3: 📥 Route to Side Output (DLQ)
 ```
 

@@ -18,7 +18,7 @@ graph LR
     A["RappelConso API"] -->|Fetch Data| B("Apache Airflow PythonOperator")
     B -->|Produce Event| C["Apache Kafka"]
     C -->|Consume Topic| D["Apache Spark DockerOperator"]
-    D -->|Transform & Load| E["("PostgreSQL")"]
+    D -->|Transform & Load| E[("PostgreSQL")]
     
     subgraph "Docker Containers"
     B

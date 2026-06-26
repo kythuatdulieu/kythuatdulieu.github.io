@@ -25,7 +25,7 @@ Trong mô hình **Row-oriented**, tất cả các trường (cột) của một 
 ```mermaid
 block-beta
   columns 1
-  Space["Mô Hình Lưu Trữ Row-oriented trên Đĩa (Disk Page)"]
+  Space["Mô Hình Lưu Trữ Row-oriented trên Đĩa("Disk Page")"]
   block:Row1
     id1["id: 1"] name1["name: Alice"] age1["age: 25"] city1["city: Hanoi"]
   end
@@ -66,7 +66,7 @@ Thay vì ghi theo dòng, dữ liệu được "xoay" lại. Tất cả các giá
 ```mermaid
 block-beta
   columns 1
-  Space["Mô Hình Lưu Trữ Column-oriented (Theo Từng Khối Cột)"]
+  Space["Mô Hình Lưu Trữ Column-oriented("Theo Từng Khối Cột")"]
   block:ColID
     C1["Khối ID:"] id1["1"] id2["2"] id3["3"] id4["..."]
   end

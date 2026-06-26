@@ -1,7 +1,7 @@
 ---
 title: "Deep Dive: Exactly-Once Semantics (EOS) & Transactional Outbox Pattern"
 description: "Phân tích kiến trúc của cơ chế Exactly-Once Semantics trong Apache Kafka và cách áp dụng Transactional Outbox Pattern kết hợp CDC (Debezium) để giải quyết bài toán Dual-Write trong hệ thống phân tán."
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 ---
 
 Trong thiết kế hệ thống phân tán (Distributed Systems), một trong những bài toán kinh điển và khó nhằn nhất là đảm bảo **Exactly-Once Semantics (EOS - Xử lý chính xác một lần)**. Làm thế nào để đảm bảo một sự kiện (ví dụ: trừ tiền tài khoản) không bị thất lạc (Data Loss) và cũng không bị xử lý nhân đôi (Duplicate Processing) khi network chập chờn, máy chủ crash, hoặc rớt kết nối Database?
@@ -59,12 +59,12 @@ sequenceDiagram
     TC-->>App: PID & Epoch assigned
     App->>TC: BeginTransaction
     App->>TopicA: Consume Messages
-    App->>TC: AddPartitionsToTxn (Topic B)
+    App->>TC: AddPartitionsToTxn("Topic B")
     App->>TopicB: Produce Messages (Uncommitted)
-    App->>TC: SendOffsetsToTxn (Offset of Topic A)
+    App->>TC: SendOffsetsToTxn("Offset of Topic A")
     App->>TC: CommitTransaction
     TC->>TLog: Log PrepareCommit
-    TC->>TopicB: Write Control Record (Commit Marker)
+    TC->>TopicB: Write Control Record("Commit Marker")
     TC->>TopicA: Commit Offsets
     TC->>TLog: Log CompleteCommit
 ```
@@ -98,7 +98,7 @@ sequenceDiagram
     participant App as Microservice
     participant DB as Postgres (Primary)
     participant WAL as PG WAL
-    participant Debezium as Debezium (Kafka Connect)
+    participant Debezium as Debezium("Kafka Connect")
     participant Kafka as Kafka Broker
 
     Note over App,DB: 1. Local Database Transaction
@@ -111,8 +111,8 @@ sequenceDiagram
     DB->>WAL: Flush to Write-Ahead Log (WAL)
     
     Note over Debezium,Kafka: 3. Real-time CDC Streaming
-    Debezium->>WAL: Tail/Read WAL (Logical Decoding)
-    Debezium->>Kafka: Produce Event to Topic (At-least-once)
+    Debezium->>WAL: Tail/Read WAL("Logical Decoding")
+    Debezium->>Kafka: Produce Event to Topic("At-least-once")
     Kafka-->>Debezium: ACK
 ```
 

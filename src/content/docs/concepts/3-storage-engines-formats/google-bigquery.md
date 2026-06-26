@@ -36,7 +36,7 @@ graph TD
 
     subgraph Jupiter["Jupiter - Petabit Network"]
         direction LR
-        Net("(Network Shuffle 1 Petabit/s"))
+        Net("(Network Shuffle 1 Petabit/s")
     end
     
     Leaf1 & Leaf2 & Leaf3 & Leaf4 <--> Net

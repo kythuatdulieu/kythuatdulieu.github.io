@@ -196,12 +196,12 @@ Họ sử dụng công cụ **Debezium** đứng lắng nghe (theo dõi) sự th
 flowchart TD
     subgraph AppGrp["Application Tier"]
         App["API Backend"]
-        Cache["("Redis Cluster")"]
+        Cache[("Redis Cluster")]
         CacheUpdater["Worker CDC Listener"]
     end
     
     subgraph DBGrp["Data Tier"]
-        MySQL["("Primary DB("MySQL/PG")")"]
+        MySQL[("Primary DB (MySQL/PG)")]
         Debezium["Debezium CDC Connector"]
         Kafka["Apache Kafka Event Bus"]
     end
@@ -232,7 +232,7 @@ Khi dung lượng của Cache đạt ngưỡng giới hạn bộ nhớ (ví dụ
 ### Hashing và Phân Mảnh (Partitioning / Sharding)
 Với một cụm Redis có 10 nodes (máy chủ), làm sao để ứng dụng biết key `"user:123"` nằm ở node số mấy?
 - **Modulo Hashing:** Tính toán `Hash(key) % N` (N là số node). Thuật toán này rất tệ. Nếu bạn thêm hoặc bớt 1 node (N thay đổi), ví dụ từ 10 xuống 9, kết quả Modulo sẽ thay đổi hoàn toàn. Hầu như 90% keys sẽ bị tính toán sai vị trí dẫn đến Cache Miss toàn diện.
-- **Consistent Hashing (Băm nhất quán):** Biểu diễn các nodes và keys trên một vòng tròn (Hash Ring) có chu vi từ $0$ đến $2^{32}-1$. Khi thêm hoặc xóa node, chỉ có một lượng rất nhỏ (khoảng 1/N) keys bị ảnh hưởng (chỉ di chuyển sang node kề cận tiếp theo).
+- **Consistent Hashing (Băm nhất quán):** Biểu diễn các nodes và keys trên một vòng tròn (Hash Ring) có chu vi từ \$0$ đến \$2^{32}-1$. Khi thêm hoặc xóa node, chỉ có một lượng rất nhỏ (khoảng 1/N) keys bị ảnh hưởng (chỉ di chuyển sang node kề cận tiếp theo).
 - **Redis Cluster Slots:** Hệ thống Redis hiện đại phân chia không gian keys thành 16384 Hash Slots cố định. Cụm 10 node sẽ chia nhau quản lý số slot này. Khi scale-out thêm node thứ 11, Cluster tự động di dời (migrate) một số slots từ node cũ sang node mới một cách mượt mà và an toàn trong nền (background).
 
 ---

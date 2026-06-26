@@ -20,7 +20,7 @@ Sự hồi sinh của OBT gắn liền chặt chẽ với cơ chế hoạt độ
 
 1. **Columnar I/O Projection:** Khi một bảng OBT có tới 2,000 cột, một truy vấn BI (`SELECT user_id, SUM(revenue)`) trên hệ thống Columnar (ví dụ: Parquet, ORC, Capacitor của BigQuery) sẽ chỉ thực hiện đọc đĩa (Disk I/O) đúng 2 file/block chứa 2 cột đó. 1,998 cột còn lại hoàn toàn bị bỏ qua. Hệ quả là bảng càng rộng không làm chậm đi những truy vấn hẹp.
 2. **Compression (Nén dữ liệu):** Dữ liệu trong OBT bị lặp lại (redundancy) rất nhiều (Ví dụ: `customer_name` được lặp lại trên mỗi dòng giao dịch). Tuy nhiên, các kỹ thuật nén như **Run-length Encoding (RLE)**, **Dictionary Encoding** hay **Delta Encoding** hoạt động cực kỳ hiệu quả trên Columnar Storage, giúp triệt tiêu gần như hoàn toàn chi phí lưu trữ của sự trùng lặp này.
-3. **Decoupled Compute and Storage:** Lưu trữ trên Cloud (S3, GCS) có giá rẻ mạt (~$20/TB/tháng). Ngược lại, Compute cho các lệnh `JOIN` phân tán qua mạng (Network Shuffle) tốn kém và dễ gây nghẽn cổ chai (Bottleneck). OBT chính là bài toán đánh đổi: **Mua Storage rẻ để tiết kiệm Compute đắt đỏ.**
+3. **Decoupled Compute and Storage:** Lưu trữ trên Cloud (S3, GCS) có giá rẻ mạt (~\$20/TB/tháng). Ngược lại, Compute cho các lệnh `JOIN` phân tán qua mạng (Network Shuffle) tốn kém và dễ gây nghẽn cổ chai (Bottleneck). OBT chính là bài toán đánh đổi: **Mua Storage rẻ để tiết kiệm Compute đắt đỏ.**
 
 ```mermaid
 flowchart TD
@@ -44,8 +44,8 @@ flowchart TD
         Looker
     end
 
-    Core_Data_Warehouse -- "dbt / Spark("Heavy JOINs at Build-time")" --> OBT
-    OBT -- "Direct Query / Extract("No JOINs at Query-time")" --> BI_Tools
+    Core_Data_Warehouse -- "dbt / Spark("Heavy JOINs at Build-time") --> OBT
+    OBT -- "Direct Query / Extract("No JOINs at Query-time") --> BI_Tools
 ```
 
 ## 2. Systemic Trade-offs & Operational Risks

@@ -3,7 +3,7 @@ title: "Kappa Architecture"
 difficulty: "Advanced"
 tags: ["architecture", "streaming", "kappa", "event-driven", "kafka", "flink"]
 readingTime: "15 mins"
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 seoTitle: "Kappa Architecture - Thiết Kế Hệ Thống Xử Lý Luồng Hiện Đại"
 metaDescription: "Phân tích kiến trúc Kappa ở mức Staff Engineer: Cơ chế Reprocessing, State Management, Late Events, và các giới hạn về chi phí/tài nguyên."
 description: "Mọi dữ liệu đều là Stream. Đào sâu vào kiến trúc Kappa, giải quyết bài toán Reprocessing, Watermarks, RocksDB state, và FinOps cho lưu trữ log vô hạn."

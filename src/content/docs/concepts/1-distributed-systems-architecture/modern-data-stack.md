@@ -3,7 +3,7 @@ title: "Modern Data Stack"
 difficulty: "Beginner"
 tags: ["modern-data-stack", "elt", "dbt", "fivetran", "snowflake"]
 readingTime: "15 mins"
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 seoTitle: "Modern Data Stack (MDS) - Kiến trúc ELT và Quản trị Chi Phí"
 metaDescription: "Tìm hiểu Modern Data Stack (MDS) với cách tiếp cận kỹ thuật: ELT, Decoupling Compute/Storage, FinOps trong Snowflake, Incremental dbt, và Data Observability."
 description: "MDS đã chuyển đổi quy trình ETL cũ kỹ sang ELT trên Cloud. Đào sâu vào kiến trúc tách rời Compute/Storage, bài toán FinOps (chống đốt tiền) và quản trị DAGs."
@@ -77,7 +77,7 @@ SELECT * FROM {{ ref('stg_orders') }}
 ```
 
 ### Tuning 2: Clustering & Partitioning (Tối ưu Storage)
-Dữ liệu trên BigQuery/Snowflake phải được Partition/Cluster theo cột thời gian (thường là `created_at` hoặc `date`). Khi Looker dashboard query `WHERE date = 'today'`, engine chỉ đọc đúng phân vùng (micro-partition) của ngày hôm nay thay vì phải Scan (quét) toàn bộ Petabyte dữ liệu, giảm chi phí từ $100 xuống còn $0.01 cho câu query đó.
+Dữ liệu trên BigQuery/Snowflake phải được Partition/Cluster theo cột thời gian (thường là `created_at` hoặc `date`). Khi Looker dashboard query `WHERE date = 'today'`, engine chỉ đọc đúng phân vùng (micro-partition) của ngày hôm nay thay vì phải Scan (quét) toàn bộ Petabyte dữ liệu, giảm chi phí từ \$100 xuống còn \$0.01 cho câu query đó.
 
 ## 4. Xu Hướng Tương Lai: Data Mesh và Lakehouse
 

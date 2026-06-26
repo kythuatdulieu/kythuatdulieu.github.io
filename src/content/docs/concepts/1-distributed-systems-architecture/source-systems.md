@@ -78,8 +78,8 @@ sequenceDiagram
     participant Kafka as Event Broker
     
     App->>DB: BEGIN Transaction
-    App->>DB: INSERT INTO orders (id, item...)
-    App->>DB: INSERT INTO outbox_events (id, payload, topic)
+    App->>DB: INSERT INTO orders("id, item...")
+    App->>DB: INSERT INTO outbox_events("id, payload, topic")
     App->>DB: COMMIT Transaction
     Note over DB,Debezium: WAL records atomic commit
     Debezium->>DB: Tailing WAL / Logical Replication

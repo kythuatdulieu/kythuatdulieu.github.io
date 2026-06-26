@@ -54,11 +54,11 @@ sequenceDiagram
     
     CDC->>DB: 1. Generate Low Watermark (UUID) in a separate table
     Note over DB: Write Low Watermark to WAL
-    CDC->>DB: 2. SELECT * FROM users LIMIT 10000 (Chunk Query)
+    CDC->>DB: 2. SELECT * FROM users LIMIT 10000("Chunk Query")
     CDC->>DB: 3. Generate High Watermark (UUID)
     Note over DB: Write High Watermark to WAL
     DB-->>CDC: 4. Stream WAL Events
-    Note over CDC: CDC Process receives:<br/>- Low Watermark Event<br/>- Other Transactions (Tx1, Tx2)<br/>- High Watermark Event
+    Note over CDC: CDC Process receives:<br/>- Low Watermark Event<br/>- Other Transactions("Tx1, Tx2")<br/>- High Watermark Event
     CDC->>CDC: 5. Reconcile Chunk Query with In-flight Tx
     CDC->>Kafka: 6. Publish Final State to Kafka
 ```

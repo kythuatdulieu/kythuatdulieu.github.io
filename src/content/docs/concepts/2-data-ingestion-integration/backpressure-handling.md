@@ -31,11 +31,11 @@ sequenceDiagram
     participant Q as Network/Buffer
     participant C as Consumer (Downstream)
     
-    P->>Q: Send Data (10k EPS)
+    P->>Q: Send Data("10k EPS")
     Q->>C: Push Data
     Note over C: CPU/Memory usage > 85%
-    C-->>P: Backpressure Signal (Slow down!)
-    P->>Q: Send Data (Rate limited to 2k EPS)
+    C-->>P: Backpressure Signal("Slow down!")
+    P->>Q: Send Data("Rate limited to 2k EPS")
     Note over C: System recovers, processes backlog
 ```
 
@@ -93,8 +93,8 @@ graph LR
         NB2["Network Buffers"] --> R["Receiver Task"]
     end
     
-    NB1 -- "Data("Deducts Credit")" --> NB2
-    NB2 -. "Send Credits("Announce capacity")" .-> NB1
+    NB1 -- "Data("Deducts Credit") --> NB2
+    NB2 -. "Send Credits("Announce capacity") .-> NB1
 ```
 Mỗi khi TaskManager B xử lý xong dữ liệu và giải phóng buffer, nó gửi "Credits" cho TaskManager A. TaskManager A chỉ gửi dữ liệu khi số Credit > 0. Nếu B quá tải, Credit = 0, A sẽ ngưng gửi (Backpressured).
 

@@ -115,20 +115,20 @@ WAP hoạt động giống như mô hình Blue-Green Deployment trong Software E
 ```mermaid
 sequenceDiagram
     participant Ingestion Job
-    participant Iceberg/Nessie (Branch: audit_branch)
-    participant Data Quality Tool (Circuit Breaker)
-    participant Iceberg/Nessie (Branch: main)
+    participant Iceberg/Nessie("Branch: audit_branch")
+    participant Data Quality Tool("Circuit Breaker")
+    participant Iceberg/Nessie("Branch: main")
     
-    Ingestion Job->>Iceberg/Nessie (Branch: audit_branch): 1. WRITE data (Cô lập)
-    Note over Iceberg/Nessie (Branch: audit_branch): Dữ liệu chưa available cho end-user
-    Data Quality Tool->>Iceberg/Nessie (Branch: audit_branch): 2. AUDIT data (Chạy Tests)
+    Ingestion Job->>Iceberg/Nessie("Branch: audit_branch"): 1. WRITE data("Cô lập")
+    Note over Iceberg/Nessie("Branch: audit_branch"): Dữ liệu chưa available cho end-user
+    Data Quality Tool->>Iceberg/Nessie("Branch: audit_branch"): 2. AUDIT data("Chạy Tests")
     
     alt Test PASSED
-        Data Quality Tool->>Iceberg/Nessie (Branch: main): 3. PUBLISH (Merge/Fast-forward)
-        Note over Iceberg/Nessie (Branch: main): Dữ liệu mới available (Zero-copy)
+        Data Quality Tool->>Iceberg/Nessie("Branch: main"): 3. PUBLISH("Merge/Fast-forward")
+        Note over Iceberg/Nessie("Branch: main"): Dữ liệu mới available("Zero-copy")
     else Test FAILED
-        Data Quality Tool-->>Ingestion Job: ALERT: Drop Branch (Halt Pipeline)
-        Note over Iceberg/Nessie (Branch: main): Không bị ô nhiễm dữ liệu lỗi
+        Data Quality Tool-->>Ingestion Job: ALERT: Drop Branch("Halt Pipeline")
+        Note over Iceberg/Nessie("Branch: main"): Không bị ô nhiễm dữ liệu lỗi
     end
 ```
 

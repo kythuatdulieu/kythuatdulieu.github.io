@@ -47,16 +47,16 @@ sequenceDiagram
     participant App as Backend App
     participant PG as PostgreSQL (Primary)
     participant Slot as Logical Replication Slot
-    participant DBZ as Debezium Connector (Kafka Connect)
+    participant DBZ as Debezium Connector("Kafka Connect")
     participant Kafka as Apache Kafka
-    participant Sink as Sink Connector (S3/Snowflake)
+    participant Sink as Sink Connector("S3/Snowflake")
 
     App->>PG: BEGIN; UPDATE users...; COMMIT;
     PG->>PG: Ghi WAL (Physical)
-    PG->>Slot: Giải mã WAL (wal2json/pgoutput) -> Logical
+    PG->>Slot: Giải mã WAL("wal2json/pgoutput") -> Logical
     Slot-->>DBZ: Stream Logical Events
     DBZ->>DBZ: Transaction Parsing & Event Formatting
-    DBZ->>Kafka: Publish Event (Topic: server1.public.users)
+    DBZ->>Kafka: Publish Event("Topic: server1.public.users")
     Kafka-->>Sink: Consume Event
     Sink->>Sink: Batching / Parquet Conversion
     Sink->>Sink: Load to Data Warehouse

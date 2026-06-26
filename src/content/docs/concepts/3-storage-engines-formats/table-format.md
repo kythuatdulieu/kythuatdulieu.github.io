@@ -36,23 +36,23 @@ Iceberg không bao giờ sửa trực tiếp file Parquet. Mọi thay đổi (In
 ```mermaid
 graph TD
     subgraph Data Catalog
-        C[Catalog <br/> HMS, Nessie, AWS Glue]
+        C["Catalog <br/> HMS, Nessie, AWS Glue"]
     end
 
     subgraph Metadata Layer
-        M1[Metadata File <br/> v1.metadata.json]
-        M2[Metadata File <br/> v2.metadata.json <br/> Current Snapshot]
+        M1["Metadata File <br/> v1.metadata.json"]
+        M2["Metadata File <br/> v2.metadata.json <br/> Current Snapshot"]
         
-        S1[Manifest List <br/> snap-123.avro]
+        S1["Manifest List <br/> snap-123.avro"]
         
-        MF1[Manifest File 1 <br/> data-01.avro]
-        MF2[Manifest File 2 <br/> data-02.avro]
+        MF1["Manifest File 1 <br/> data-01.avro"]
+        MF2["Manifest File 2 <br/> data-02.avro"]
     end
 
-    subgraph Storage Layer (Parquet/ORC)
-        P1[(File A.parquet <br/> partition=1)]
-        P2[(File B.parquet <br/> partition=1)]
-        P3[(File C.parquet <br/> partition=2)]
+    subgraph Storage Layer("Parquet/ORC")
+        P1["(File A.parquet <br/> partition=1)"]
+        P2["(File B.parquet <br/> partition=1)"]
+        P3["(File C.parquet <br/> partition=2)"]
     end
 
     C -- "Atomic Pointer Update" --> M2

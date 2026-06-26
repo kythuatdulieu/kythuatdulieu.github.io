@@ -31,13 +31,13 @@ graph LR
         API["3rd Party APIs"]
     end
 
-    subgraph "Cloud Object Storage("S3 / GCS")"
-        Bronze["("Bronze Zone\n("Raw JSON/CSV")")"]
-        Silver["("Silver Zone\n("Cleansed Parquet")")"]
-        Gold["("Gold Zone\n("Aggregated/Business")")"]
+    subgraph "Cloud Object Storage("S3 / GCS")
+        Bronze["(Bronze Zone\n("Raw JSON/CSV")"]
+        Silver["(Silver Zone\n("Cleansed Parquet")"]
+        Gold["(Gold Zone\n("Aggregated/Business")"]
         
-        Bronze -- "Spark/Flink("Cleanse")" --> Silver
-        Silver -- "Spark/Trino("Aggregate")" --> Gold
+        Bronze -- "Spark/Flink("Cleanse") --> Silver
+        Silver -- "Spark/Trino("Aggregate") --> Gold
     end
 
     subgraph "Compute & Serving"

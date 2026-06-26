@@ -41,24 +41,24 @@ sequenceDiagram
     participant Client
     participant API Gateway
     participant Lambda (Worker)
-    participant DynamoDB (Idempotency Store)
-    participant RDS (Target DB)
+    participant DynamoDB("Idempotency Store")
+    participant RDS("Target DB")
 
-    Client->>API Gateway: POST /events (Header: Idempotency-Key=uuid-1)
+    Client->>API Gateway: POST /events("Header: Idempotency-Key=uuid-1")
     API Gateway->>Lambda (Worker): Invoke
-    Lambda (Worker)->>DynamoDB (Idempotency Store): Acquire Lock (PutItem if Not Exists)
+    Lambda (Worker)->>DynamoDB("Idempotency Store"): Acquire Lock("PutItem if Not Exists")
     
-    alt Lock Acquired (First Time)
-        DynamoDB (Idempotency Store)-->>Lambda (Worker): Success
-        Lambda (Worker)->>RDS (Target DB): Process & Insert Data (Atomically)
-        Lambda (Worker)->>DynamoDB (Idempotency Store): Update status = COMPLETED, save Response
-        Lambda (Worker)-->>Client: 201 Created (Data processed)
-    else Lock Failed (Request in Progress)
-        DynamoDB (Idempotency Store)-->>Lambda (Worker): ConditionalCheckFailedException
-        Lambda (Worker)-->>Client: 409 Conflict (Try again later)
-    else Key Exists & COMPLETED (Duplicate Retry)
-        DynamoDB (Idempotency Store)-->>Lambda (Worker): Return stored Response
-        Lambda (Worker)-->>Client: 200 OK (Cached Response)
+    alt Lock Acquired("First Time")
+        DynamoDB("Idempotency Store")-->>Lambda (Worker): Success
+        Lambda (Worker)->>RDS("Target DB"): Process & Insert Data (Atomically)
+        Lambda (Worker)->>DynamoDB("Idempotency Store"): Update status = COMPLETED, save Response
+        Lambda (Worker)-->>Client: 201 Created("Data processed")
+    else Lock Failed("Request in Progress")
+        DynamoDB("Idempotency Store")-->>Lambda (Worker): ConditionalCheckFailedException
+        Lambda (Worker)-->>Client: 409 Conflict("Try again later")
+    else Key Exists & COMPLETED("Duplicate Retry")
+        DynamoDB("Idempotency Store")-->>Lambda (Worker): Return stored Response
+        Lambda (Worker)-->>Client: 200 OK("Cached Response")
     end
 ```
 

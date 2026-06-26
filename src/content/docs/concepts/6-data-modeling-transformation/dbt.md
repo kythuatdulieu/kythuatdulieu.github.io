@@ -29,7 +29,7 @@ graph TD
     B -->|2. Optimize| C{"Thread Pool"}
     C -->|Thread 1| D["BigQuery / Snowflake"]
     C -->|Thread n| D
-    D --> E("(Materialized Objects"))
+    D --> E("(Materialized Objects")
 ```
 
 ### Hiện tượng "Cartesian Explosion" ở tầng Parsing

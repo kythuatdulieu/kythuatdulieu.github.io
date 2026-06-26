@@ -155,7 +155,7 @@ Trong Polaris, các Worker Nodes hoàn toàn không lưu trạng thái (Stateles
 Polaris chia nhỏ khối lượng công việc thành các **Cells** (các tác vụ cực nhỏ). Khi bạn query một file Parquet 100GB, Polaris không gán tĩnh file đó cho 1 Node, mà chia nó thành hàng ngàn Cells. Một cụm hàng trăm Worker Nodes sẽ liên tục "nhặt" các Cells này để xử lý. Nếu dữ liệu bị lệch (Skew), kiến trúc Cell sẽ tự động cân bằng tải (Dynamic Load Balancing) – Node nào rảnh sẽ nhặt thêm Cell, giải quyết triệt để vấn đề Data Skew kinh niên của kiến trúc MPP cũ.
 
 ### 4.3. Trade-offs của Serverless SQL
-*   **Pros:** Khởi động lập tức (Zero-warmup), chi phí cực thấp (trả tiền theo TB dữ liệu quét, ~$5/TB), truy vấn thẳng vào Data Lake (Zero-ETL).
+*   **Pros:** Khởi động lập tức (Zero-warmup), chi phí cực thấp (trả tiền theo TB dữ liệu quét, ~\$5/TB), truy vấn thẳng vào Data Lake (Zero-ETL).
 *   **Cons:** Phụ thuộc vào tốc độ mạng (Network I/O) và định dạng file. Nếu bạn query hàng triệu file `.csv` nhỏ (Small Files Problem) thay vì file `.parquet` được nén Snappy/ZSTD với Z-Ordering, Polaris sẽ phải quét qua toàn bộ siêu dữ liệu, khiến Query chạy chậm như rùa bò và tiêu tốn hàng đống tiền.
 
 ---

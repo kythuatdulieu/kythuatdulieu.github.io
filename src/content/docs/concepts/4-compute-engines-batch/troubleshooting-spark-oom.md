@@ -20,9 +20,9 @@ Một Job Spark chạy liên tục 4 tiếng đồng hồ trên 100 node đột 
 Từ Spark 1.6, Spark thống nhất bộ nhớ của Executor (và Driver). Tổng lượng RAM do Container cấp (bởi YARN hoặc Kubernetes) được chia làm 2 khu vực tử địa:
 
 ```mermaid
-pie title Cấu trúc 1 Node Container (VD: 10GB Total)
+pie title Cấu trúc 1 Node Container("VD: 10GB Total")
     "JVM Heap (spark.executor.memory)" : 85
-    "Memory Overhead (Off-Heap)" : 15
+    "Memory Overhead("Off-Heap")" : 15
 ```
 
 1. **Memory Overhead (Off-Heap):** Do Hệ điều hành quản lý, không thuộc JVM. Chứa các Network Buffers, C/C++ native libs (Snappy nén), và tiến trình Python (khi dùng PySpark UDF).

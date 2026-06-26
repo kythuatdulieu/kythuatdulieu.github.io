@@ -1,105 +1,143 @@
 ---
-title: "Tinh chỉnh hiệu quả tham số (PEFT)"
+title: "Parameter-Efficient Fine-Tuning (PEFT) & LoRA"
 difficulty: "Advanced"
-tags: ["peft", "lora", "fine-tuning", "llm", "genai"]
-readingTime: "14 mins"
-lastUpdated: 2026-06-16
-seoTitle: "PEFT là gì? Các kỹ thuật tinh chỉnh LLM hiệu quả (LoRA, QLoRA)"
-metaDescription: "Tìm hiểu Parameter-Efficient Fine-Tuning (PEFT) và LoRA - kỹ thuật cách mạng giúp tinh chỉnh Mô hình Ngôn ngữ Lớn (LLM) trên một GPU duy nhất với chi phí thấp."
-description: "Việc huấn luyện hay tinh chỉnh (fine-tune) các Mô hình Ngôn ngữ Lớn (LLM) từng được coi là cuộc chơi độc quyền của các ông lớn công nghệ sở hữu tiềm l..."
+tags: ["peft", "lora", "fine-tuning", "llm", "genai", "qlora"]
+readingTime: "15 mins"
+lastUpdated: 2026-06-26
+seoTitle: "Kiến trúc hệ thống PEFT & LoRA trong tinh chỉnh LLM"
+metaDescription: "Tìm hiểu kiến trúc vật lý của PEFT, LoRA, QLoRA. Đánh đổi hệ thống (Trade-offs), FinOps và rủi ro vận hành OOM khi tinh chỉnh LLM."
+description: "Phân tích chuyên sâu về Parameter-Efficient Fine-Tuning (PEFT). Thay vì coi đây là một phép màu, hãy nhìn nó dưới góc độ thiết kế hệ thống, quản lý memory bottleneck và cost-optimization (FinOps)."
 ---
 
+Bỏ qua các định nghĩa sách giáo khoa, **Parameter-Efficient Fine-Tuning (PEFT)** không phải là một "phép màu" của AI. Dưới góc nhìn kiến trúc hệ thống, PEFT đơn thuần là một bài toán **tối ưu hóa Memory IO (VRAM) và tính toán Ma trận** để giải quyết nút thắt cổ chai (bottleneck) khổng lồ mang tên *Optimizer States* trong quá trình Full Fine-Tuning (FFT).
 
+Khi train một mô hình 7B tham số (ví dụ LLaMA-2) bằng FFT với AdamW, bạn không chỉ cần lưu trọng số mô hình (14GB ở fp16). Bạn cần ít nhất **100-120GB VRAM** để chứa Gradients, Activations, và Optimizer states (Momentum, Variance). Sự ra đời của PEFT, đặc biệt là **LoRA (Low-Rank Adaptation)**, chuyển đổi bài toán cập nhật không gian trạng thái khổng lồ thành một bài toán xấp xỉ hạng thấp (low-rank approximation).
 
-Việc huấn luyện hay tinh chỉnh (fine-tune) các Mô hình Ngôn ngữ Lớn (LLM) từng được coi là cuộc chơi độc quyền của các ông lớn công nghệ sở hữu tiềm lực tài chính khổng lồ. Tuy nhiên, sự ra đời của **PEFT (Parameter-Efficient Fine-Tuning)** đã làm thay đổi hoàn toàn cục diện, dân chủ hóa khả năng tạo ra các mô hình AI tùy chỉnh.
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-PEFT là thuật ngữ chung chỉ các phương pháp cho phép Fine-tune các Mô hình Ngôn ngữ Lớn (LLM) bằng cách chỉ cập nhật một số lượng tham số rất nhỏ. Việc này giúp giảm thiểu hàng chục lần chi phí tính toán và yêu cầu bộ nhớ so với quá trình Full Fine-tuning, trong khi vẫn đạt được hiệu suất gần như tương đương.
+### Nguyên lý hoạt động của LoRA
+Thay vì cập nhật trực tiếp ma trận trọng số $W \in \mathbb{R}^{d \times k}$ (có kích thước rất lớn), LoRA "đóng băng" (freeze) $W$ và tiêm (inject) hai ma trận hạng thấp $A$ và $B$ vào luồng tính toán (forward pass). 
 
-## Tại sao chúng ta cần PEFT?
+Sự thay đổi của trọng số được biểu diễn:
+$\Delta W = B \times A$
 
+Trong đó:
+- $B \in \mathbb{R}^{d \times r}$, khởi tạo bằng 0.
+- $A \in \mathbb{R}^{r \times k}$, khởi tạo bằng phân phối Gauss.
+- $r \ll \min(d, k)$ là *rank* (hạng), thường là 8, 16, hoặc 32.
 
+![LoRA Architecture](/images/9-genai-machine-learning/lora_architecture.png)
+*(Hình ảnh mô tả kiến trúc LoRA - Ma trận $A$ và $B$ được cộng vào đầu ra của $W$ gốc)*
 
-Trước khi PEFT ra đời, để tinh chỉnh một mô hình như GPT-3 hay LLaMA cho một tác vụ cụ thể, chúng ta thường sử dụng **Full Fine-Tuning**. Phương pháp này yêu cầu cập nhật lại toàn bộ các trọng số (weights) của mô hình. Điều này mang đến một số vấn đề lớn:
+Khi đi qua layer, output $h$ sẽ được tính bằng:
+$h = Wx + \Delta Wx = Wx + BAx$
 
-1. **Chi phí tính toán khổng lồ**: Tinh chỉnh mô hình hàng tỷ tham số yêu cầu nhiều card đồ họa (GPU) cấu hình cao (như A100 80GB), gây tốn kém hàng nghìn đến hàng chục nghìn đô la.
-2. **Quản lý bộ nhớ (VRAM)**: Ngoài trọng số mô hình, quá trình huấn luyện còn cần bộ nhớ cho optimizer states (như AdamW), gradients, và activations. Do đó, một mô hình 7B cần tới hơn 100GB VRAM để Full Fine-tune.
-3. **Catastrophic Forgetting (Quên thảm họa)**: Khi huấn luyện lại toàn bộ tham số trên dữ liệu mới, mô hình có thể "quên" những kiến thức chung đã được học trong giai đoạn pre-training.
-4. **Lưu trữ**: Mỗi tác vụ tinh chỉnh tạo ra một bản sao toàn bộ mô hình (dung lượng hàng chục GB), khiến việc triển khai (deployment) cho nhiều khách hàng hoặc tác vụ khác nhau trở nên bất khả thi.
+**Hiệu ứng Vật lý (Physical Impact):** 
+Việc này giảm trực tiếp dung lượng RAM dành cho quá trình backward pass. Thay vì tính gradient cho ma trận $d \times k$ (hàng triệu tham số), GPU chỉ cần tính gradient cho hai ma trận $d \times r$ và $r \times k$ (vài nghìn tham số).
 
-PEFT giải quyết triệt để những vấn đề này bằng cách đóng băng (freeze) phần lớn các tham số gốc của mô hình và chỉ huấn luyện một số lượng nhỏ các tham số bổ sung (thường chiếm khoảng 1% đến 5% tổng số tham số).
+### QLoRA: Ép kiểu dữ liệu (Quantization) kết hợp LoRA
+Nếu LoRA giải quyết bài toán Optimizer Memory, thì **QLoRA** giải quyết bài toán Model Memory. QLoRA (Quantized LoRA) ép kiểu trọng số gốc $W$ xuống định dạng 4-bit NormalFloat (NF4), trong khi vẫn tính toán gradient ở fp16 hoặc bf16.
 
-## Các kỹ thuật PEFT phổ biến
-
-### 1. LoRA (Low-Rank Adaptation)
-
-**LoRA** là một trong những kỹ thuật PEFT phổ biến và hiệu quả nhất hiện nay, được giới thiệu bởi các nhà nghiên cứu từ Microsoft. Thay vì cập nhật trực tiếp ma trận trọng số $W$ có kích thước lớn ($d \times k$), LoRA đóng băng $W$ và học một ma trận cập nhật $\Delta W$ thông qua hai ma trận hạng thấp (low-rank matrices) $A$ và $B$.
-
-Cụ thể, $\Delta W = B \times A$, trong đó:
-- $B$ có kích thước $d \times r$
-- $A$ có kích thước $r \times k$
-- $r$ là rank, thường có giá trị rất nhỏ (ví dụ: 4, 8, 16) so với $d$ và $k$.
-
-Nhờ đó, số lượng tham số cần cập nhật giảm đi đáng kể. Khi suy luận (inference), ma trận $B \times A$ đơn giản được cộng thẳng vào ma trận gốc $W$, do đó **không có độ trễ bổ sung (zero inference latency)**.
-
-### 2. QLoRA (Quantized LoRA)
-
-**QLoRA** là sự tiến hóa của LoRA, kết hợp với các kỹ thuật lượng tử hóa (quantization). Nó lượng tử hóa mô hình gốc xuống mức độ chính xác thấp hơn (ví dụ: 4-bit NormalFloat) để giảm lượng VRAM cần thiết xuống tối đa, trong khi vẫn huấn luyện các tham số LoRA (A và B) ở độ chính xác cao hơn (như 16-bit bfloat16).
-
-Với QLoRA, bạn có thể tinh chỉnh mô hình 33B tham số trên một GPU duy nhất có 24GB VRAM!
-
-### 3. Prefix Tuning và Prompt Tuning
-
-Các phương pháp này không chạm vào cấu trúc bên trong của mô hình. Thay vào đó, chúng tối ưu hóa các vector đặc trưng (embeddings) ở đầu vào (input) hoặc ở các tầng (layers) của mô hình.
-
-- **Prompt Tuning**: Thêm một số "soft prompt" (các vector liên tục có thể huấn luyện) vào đầu dãy input embedding. Mô hình sẽ học cách điều chỉnh các soft prompt này để định hướng kết quả đầu ra.
-- **Prefix Tuning**: Tương tự như Prompt Tuning, nhưng các "prefix" được thêm vào mọi layer (tầng) của mô hình thay vì chỉ ở layer đầu vào. Kỹ thuật này thường được áp dụng tốt cho các mô hình tự hồi quy (autoregressive) và mô hình dạng encoder-decoder.
-
-### 4. Adapters
-
-Kỹ thuật này chèn thêm các mô-đun mạng nơ-ron nhỏ (gọi là "adapters") vào giữa các layer hiện có của mạng Transformer. Trong quá trình tinh chỉnh, chỉ các adapter modules này được cập nhật, trong khi toàn bộ mạng Transformer gốc bị đóng băng.
-
-## Lợi ích của PEFT
-
-* **Giảm chi phí phần cứng**: Có thể huấn luyện LLM trên phần cứng tiêu dùng (như RTX 3090, 4090) thay vì phải thuê cụm GPU đắt đỏ.
-* **Huấn luyện nhanh hơn**: Do tính toán gradients trên ít tham số hơn, quá trình backpropagation diễn ra nhanh chóng hơn.
-* **Linh hoạt khi triển khai**: Với LoRA, bạn chỉ cần lưu các file trọng số nhỏ (thường vài chục MB). Một mô hình nền tảng duy nhất có thể tải linh hoạt nhiều bộ trọng số LoRA khác nhau (gọi là LoRA adapters) cho các tác vụ riêng biệt mà không cần tải lại toàn bộ mô hình gốc.
-* **Hạn chế Catastrophic Forgetting**: Mô hình vẫn giữ được kiến thức nền tảng vững chắc do phần lớn trọng số ban đầu bị đóng băng.
-
-## Triển khai thực tế với thư viện PEFT
-
-Hugging Face đã phát triển thư viện `peft`, tích hợp sâu với `transformers`, giúp việc sử dụng PEFT trở nên cực kỳ đơn giản:
-
-```python
-from transformers import AutoModelForCausalLM
-from peft import get_peft_model, LoraConfig, TaskType
-
-# Tải mô hình gốc (sẽ tự động được freeze)
-model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
-
-# Định nghĩa cấu hình LoRA
-peft_config = LoraConfig(
-    task_type=TaskType.CAUSAL_LM,
-    inference_mode=False,
-    r=8,              # rank
-    lora_alpha=32,    # scaling factor
-    lora_dropout=0.1,
-    target_modules=["q_proj", "v_proj"] # Các ma trận mục tiêu
-)
-
-# Áp dụng LoRA vào mô hình
-peft_model = get_peft_model(model, peft_config)
-
-# Kiểm tra số tham số cần huấn luyện
-peft_model.print_trainable_parameters()
-# Đầu ra mẫu: trainable params: 4194304 || all params: 6742609920 || trainable%: 0.0622
+```mermaid
+flowchart TD
+    subgraph GPU_VRAM
+        W_4bit["Frozen Base Model("4-bit NF4")\n~4GB cho 7B model"] 
+        A_bf16["LoRA Adapter A (bf16)"]
+        B_bf16["LoRA Adapter B (bf16)"]
+        Opt["Paged AdamW Optimizer States\n("Giảm từ 42GB xuống < 2GB")"]
+    end
+    W_4bit --> Forward_Pass
+    A_bf16 --> Forward_Pass
+    B_bf16 --> Forward_Pass
+    Forward_Pass --> Loss
+    Loss -->|Backward| A_bf16
+    Loss -->|Backward| B_bf16
 ```
 
-Với chỉ vài dòng code, bạn đã sẵn sàng tinh chỉnh một LLM hàng tỷ tham số!
+## 2. Show, Don't Tell: Cấu hình QLoRA Thực chiến
 
-## Tài Liệu Tham Khảo
+Dưới đây là đoạn code thực chiến khởi tạo QLoRA pipeline bằng Python. Chú ý cấu hình `BitsAndBytesConfig` để ép kiểu (Quantize) và cấu hình `LoraConfig` để tiêm Adapter.
 
-* [LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)](https://arxiv.org/abs/2106.09685)
-* [QLoRA: Efficient Finetuning of Quantized LLMs (Dettmers et al., 2023)](https://arxiv.org/abs/2305.14314)
-* [Hugging Face PEFT Documentation](https://huggingface.co/docs/peft/index)
-* [Prefix-Tuning: Optimizing Continuous Prompts for Generation (Li & Liang, 2021)](https://arxiv.org/abs/2101.00190)
-* [The Power of Scale for Parameter-Efficient Prompt Tuning (Lester et al., 2021)](https://arxiv.org/abs/2104.08691)
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+
+# 1. Cấu hình Quantization (Ép kiểu)
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,       # Nested quantization tiết kiệm thêm VRAM
+    bnb_4bit_quant_type="nf4",            # Định dạng tối ưu cho weights phân phối chuẩn
+    bnb_4bit_compute_dtype=torch.bfloat16 # Giữ độ chính xác khi tính toán forward/backward
+)
+
+# 2. Tải Base Model (Freeze automatically)
+model_id = "meta-llama/Llama-2-7b-hf"
+model = AutoModelForCausalLM.from_pretrained(
+    model_id, 
+    quantization_config=bnb_config,
+    device_map="auto" # Tự động spill out sang CPU RAM nếu VRAM cạn kiệt
+)
+model = prepare_model_for_kbit_training(model)
+
+# 3. Cấu hình LoRA Adapter
+peft_config = LoraConfig(
+    r=16, 
+    lora_alpha=32,       # Scaling factor: Alpha càng lớn, trọng lượng của LoRA càng cao
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"], # Target các Attention Heads
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+# 4. Bọc Model với PEFT
+peft_model = get_peft_model(model, peft_config)
+peft_model.print_trainable_parameters()
+# Output: trainable params: 15,990,784 || all params: 6,754,406,400 || trainable%: 0.2367%
+```
+
+## 3. Rủi ro Vận hành (Operational Risks) & Troubleshooting
+
+Trong thực tế, khi scale việc huấn luyện lên các môi trường như Kubernetes hay Ray Clusters, hệ thống có thể gặp nhiều Incidents.
+
+### Incident 1: OOMKilled (Out-of-Memory) do Gradient Checkpointing chưa bật
+- **Triệu chứng:** Container bị kill với mã lỗi 137 (OOM) ở epoch thứ 2, mặc dù đã dùng QLoRA.
+- **Root Cause:** Dù số lượng tham số huấn luyện ít, kích thước *Activations* sinh ra trong Forward pass ở các context length dài (như 4096 tokens) vẫn lấp đầy VRAM.
+- **Cách khắc phục:** Đổi CPU tính toán thời gian (Compute) lấy VRAM (Memory) bằng kỹ thuật Gradient Checkpointing. Thay vì lưu tất cả activations, hệ thống chỉ lưu một số node và tính toán lại phần còn lại trong lúc backward.
+  ```python
+  model.gradient_checkpointing_enable()
+  ```
+
+### Incident 2: "Spill-to-disk" gây chết Throughput
+- **Triệu chứng:** GPU utilization rớt xuống 5-10%, tốc độ train cực chậm.
+- **Root Cause:** Cấu hình `device_map="auto"` của `accelerate` phát hiện thiếu VRAM và đẩy một phần weights/optimizer sang CPU RAM hoặc tệ hơn là swap disk (NVMe). IO bottleneck giữa CPU và GPU (PCIe bus) kéo sập hiệu năng.
+- **Cách khắc phục:** Sử dụng Paged Optimizer (`optim="paged_adamw_32bit"` trong TrainingArguments) để phân trang (paging) optimizer states, đẩy vào CPU RAM khi không dùng tới và kéo lại GPU khi cần, giảm thiểu overhead tắc nghẽn IO.
+
+## 4. Đánh đổi Hệ thống (Systemic Trade-offs)
+
+| Tiêu chí | Full Fine-Tuning (FFT) | LoRA | QLoRA |
+| :--- | :--- | :--- | :--- |
+| **Throughput (Training)** | Rất chậm | Nhanh | Rất chậm (Do CPU/GPU bottleneck khi de-quantize từ 4-bit lên 16-bit) |
+| **VRAM Requirement** | ~120GB (7B Model) | ~24GB | ~12GB (Vừa trên 1 RTX 3060) |
+| **Inference Latency** | Không đổi (Zero penalty) | Zero penalty (nếu merge weights) | Chậm hơn (nếu giữ nguyên base 4-bit) |
+| **Quality/Accuracy** | Cao nhất (Khó giữ kiến thức gốc) | 95-99% của FFT (Giữ vững kiến thức gốc) | Tương đương LoRA |
+
+**Merge Weights vs. Dynamic Adapters trong Serving:**
+- **Merge Weights (Static):** Bạn cộng cứng $W' = W + BA$ và lưu thành mô hình mới. Latency khi inference bằng 0. Nhưng mất đi tính linh hoạt.
+- **Multi-tenant Serving (Dynamic):** Các hệ thống hiện đại như **vLLM** hay **SGLang** hỗ trợ tải 1 Base Model duy nhất (chiếm 14GB VRAM) và hoán đổi linh hoạt (hot-swap) hàng trăm LoRA Adapters (mỗi adapter ~50MB) tuỳ theo Request (ví dụ Request A gọi bot CSKH, Request B gọi bot Sales). **Trade-off:** Giảm FinOps cost cực mạnh, nhưng tăng Compute Latency ở khâu dispatching request vào đúng Adapter.
+
+## 5. Tối ưu Chi phí (FinOps)
+
+Sử dụng LoRA không chỉ tiết kiệm phần cứng huấn luyện mà còn tác động mạnh mẽ đến FinOps trong giai đoạn Deployment (Serving).
+Giả sử bạn cần phục vụ 10 khách hàng B2B, mỗi khách hàng cần 1 model được fine-tune riêng.
+- **Nếu dùng FFT:** Bạn phải deploy 10 bản sao của LLM 7B. (10 x 14GB = 140GB VRAM). Cần thuê ít nhất 2x A100 80GB (Cost: ~\$6,000/tháng/node).
+- **Nếu dùng LoRA + vLLM:** Bạn deploy **1 Base Model (14GB)** + **10 LoRA adapters (10 x 50MB = 500MB)**. Tổng cộng < 15GB VRAM. Phục vụ toàn bộ trên một con GPU L4 hoặc A10G duy nhất. Tiết kiệm hơn **80%** chi phí cloud.
+
+---
+
+## Nguồn Tham Khảo (References)
+1. Hu, E. J., et al. (2021). *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint [arXiv:2106.09685](https://arxiv.org/abs/2106.09685).
+2. Dettmers, T., et al. (2023). *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint [arXiv:2305.14314](https://arxiv.org/abs/2305.14314).
+3. [Hugging Face PEFT Library Documentation](https://huggingface.co/docs/peft/index)
+4. [vLLM Documentation: LoRA support](https://docs.vllm.ai/en/latest/models/lora.html)
+5. AWS Machine Learning Blog: *Memory-efficient fine-tuning of large language models on Amazon SageMaker*

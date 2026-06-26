@@ -19,13 +19,13 @@ Linh hồn của Iceberg nằm ở cấu trúc **Metadata Tree**. Iceberg không
 
 ```mermaid
 graph TD
-    subgraph "Catalog Layer("Single Source of Truth")"
+    subgraph "Catalog Layer("Single Source of Truth")
         C["Iceberg Catalog <br> HMS, AWS Glue, REST"]
     end
 
-    subgraph "Metadata Layer("The Tree")"
-        M1["metadata_v1.json("Old")"]
-        M2["metadata_v2.json("Active")"]
+    subgraph "Metadata Layer("The Tree")
+        M1["metadata_v1.json(Old)"]
+        M2["metadata_v2.json(Active)"]
         ML1["Manifest List("Snapshot 1")"]
         ML2["Manifest List("Snapshot 2")"]
         MF1["Manifest File 1("Stats: min/max")"]
@@ -33,7 +33,7 @@ graph TD
         MF3["Manifest File 3("Stats: min/max")"]
     end
 
-    subgraph "Data Layer("Immutable Object Storage")"
+    subgraph "Data Layer("Immutable Object Storage")
         D1["(Data File A .parquet)"]
         D2["(Data File B .parquet)"]
         D3["(Data File C .parquet)"]

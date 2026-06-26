@@ -73,7 +73,7 @@ Các cửa sổ có cùng độ dài nhưng có thể chồng lấp. Slide step 
 ![Sliding Window](/images/5-stream-processing-realtime/sliding-windows.svg)
 *(Sliding Window. Nguồn: Apache Flink)*
 
-- **Đánh đổi hệ thống (Trade-off):** Đây là cơn ác mộng về **Event Amplification** (Khuếch đại sự kiện). Nếu bạn cấu hình `Size = 1 giờ` và `Slide = 1 phút`, mỗi record mới tới sẽ được assign vào $60$ cửa sổ đồng thời. Điều này đồng nghĩa với việc Write I/O vào State Backend bị nhân lên gấp 60 lần, CPU cũng phải làm việc gấp 60 lần khi Trigger đánh giá.
+- **Đánh đổi hệ thống (Trade-off):** Đây là cơn ác mộng về **Event Amplification** (Khuếch đại sự kiện). Nếu bạn cấu hình `Size = 1 giờ` và `Slide = 1 phút`, mỗi record mới tới sẽ được assign vào \$60$ cửa sổ đồng thời. Điều này đồng nghĩa với việc Write I/O vào State Backend bị nhân lên gấp 60 lần, CPU cũng phải làm việc gấp 60 lần khi Trigger đánh giá.
 - **Physical Impact:** Nếu dùng RocksDB State Backend, I/O disk sẽ bị ngẽn nghiêm trọng (Disk I/O Bound). Cần tuning kĩ RocksDB Block Cache và Write Buffer.
 
 **Cấu hình Flink DataStream API Java (Di chuyển trung bình):**
@@ -145,10 +145,10 @@ WatermarkStrategy
 
 ### 4.2. Incident 2: Thảm họa Cartesian Explosion trong Sliding Window
 **Hiện tượng:** CPU Usage tăng 100%, Checkpoint timeout, ứng dụng bị ngẽn cục bộ (Backpressure).
-**Root Cause:** Data Engineer thiết kế Sliding Window có $Size = 24h$, $Slide = 1s$. 1 Event được nhân bản vào $24 \times 60 \times 60 = 86400$ windows đồng thời. ListState phình to khủng khiếp.
+**Root Cause:** Data Engineer thiết kế Sliding Window có $Size = 24h$, $Slide = 1s$. 1 Event được nhân bản vào \$24 \times 60 \times 60 = 86400$ windows đồng thời. ListState phình to khủng khiếp.
 **Cách khắc phục:** 
 1. Không sử dụng Windowing trực tiếp. Thay vào đó lưu data vào Kafka, và dùng In-memory K-V Database (Redis/Aerospike) để tra cứu (Time-series aggregations).
-2. Tối ưu kiến trúc thành **Two-phase Aggregation**: Tumbling window nhỏ ($1s$) tính trước tổng cục bộ (Pre-aggregation), sau đó mới trượt (Sliding) trên các cửa sổ $1s$ đã được nén nhỏ để tính ra mốc $24h$.
+2. Tối ưu kiến trúc thành **Two-phase Aggregation**: Tumbling window nhỏ (\$1s$) tính trước tổng cục bộ (Pre-aggregation), sau đó mới trượt (Sliding) trên các cửa sổ \$1s$ đã được nén nhỏ để tính ra mốc \$24h$.
 
 ### 4.3. Incident 3: Data Skew và OOM trên Session Window
 **Hiện tượng:** TaskManager xử lý Key "khách hàng VIP" bị sập liên tục.

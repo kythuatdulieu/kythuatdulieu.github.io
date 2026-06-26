@@ -59,13 +59,13 @@ Trong các phiên bản Kafka trước đây (sử dụng Eager Rebalance), quá
 
 ```mermaid
 sequenceDiagram
-    participant C1 as Consumer 1 (P0, P1)
-    participant C2 as Consumer 2 (P2, P3)
+    participant C1 as Consumer 1("P0, P1")
+    participant C2 as Consumer 2("P2, P3")
     participant GC as Group Coordinator (Broker)
     
     Note over C1, GC: Trạng thái bình thường
-    C2 ->> x GC: Heartbeat Timeout (Crash hoặc Chậm)
-    GC -->> C1: Kích hoạt Rebalance (Stop the World)
+    C2 ->> x GC: Heartbeat Timeout("Crash hoặc Chậm")
+    GC -->> C1: Kích hoạt Rebalance("Stop the World")
     
     Note over C1: C1 NGỪNG XỬ LÝ DỮ LIỆU
     C1 ->> GC: Trả lại P0, P1 (Revoke)

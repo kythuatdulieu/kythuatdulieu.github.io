@@ -17,24 +17,24 @@ Thay vì lưu trữ dữ liệu cục bộ trên các node tính toán và phả
 
 ```mermaid
 flowchart TD
-    subgraph CloudServices ["Lớp 3: Cloud Services (Bộ não)"]
+    subgraph CloudServices ["Lớp 3: Cloud Services("Bộ não")"]
         direction LR
-        A["Xác thực (Auth/RBAC)"]
+        A["Xác thực("Auth/RBAC")"]
         B["Query Optimizer"]
         C["Metadata Management<br>(FoundationDB)"]
         D["Transaction Manager<br>(ACID)"]
     end
     
-    subgraph Compute ["Lớp 2: Compute (Virtual Warehouses) - Shared-Nothing"]
+    subgraph Compute ["Lớp 2: Compute("Virtual Warehouses") - Shared-Nothing"]
         direction LR
         WH1["Warehouse 1<br>(ETL Heavy)<br>XL Size"]
         WH2["Warehouse 2<br>(BI / Tableau)<br>M Size"]
         WH3["Warehouse 3<br>(Data Science)<br>L Size"]
     end
     
-    subgraph Storage ["Lớp 1: Storage (Lưu trữ Vật lý) - Shared-Disk"]
+    subgraph Storage ["Lớp 1: Storage("Lưu trữ Vật lý") - Shared-Disk"]
         direction LR
-        S3[("Amazon S3 / Azure Blob / GCS<br>Micro-partitions (Columnar, AES-256)")]
+        S3[("Amazon S3 / Azure Blob / GCS<br>Micro-partitions("Columnar, AES-256")")]
     end
 
     CloudServices ==>|Chỉ đạo & Lập kế hoạch| Compute

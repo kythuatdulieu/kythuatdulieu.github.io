@@ -44,10 +44,10 @@ sequenceDiagram
     participant E as ETL Pipeline
     participant D as Delta/Iceberg Table
     
-    S->>E: CDC Event (Update Address)
+    S->>E: CDC Event("Update Address")
     E->>D: 1. Scan for matching Natural Key (Customer_ID)
-    E->>D: 2. UPDATE existing row (Set Valid_To = NOW, Is_Current = False)
-    E->>D: 3. INSERT new row (Valid_From = NOW, Is_Current = True)
+    E->>D: 2. UPDATE existing row("Set Valid_To = NOW, Is_Current = False")
+    E->>D: 3. INSERT new row("Valid_From = NOW, Is_Current = True")
     Note over D: 2 File I/O Operations per Change
 ```
 

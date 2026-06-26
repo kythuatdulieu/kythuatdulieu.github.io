@@ -32,15 +32,15 @@ Apache Iceberg quản lý Data Lake thông qua một cấu trúc cây Metadata n
 
 ```mermaid
 graph TD
-    A["Snapshot N("Metadata.json")"] --> B("Manifest List("avro")")
-    B --> C1("Manifest File 1("avro") - Chứa Min/Max 100K files nhỏ")
-    B --> C2("Manifest File 2("avro")")
+    A["Snapshot N(Metadata.json)"] --> B("Manifest List(avro")
+    B --> C1("Manifest File 1(avro") - Chứa Min/Max 100K files nhỏ")
+    B --> C2("Manifest File 2(avro")
     
-    C1 --> D1["Data File 1("15KB")"]
-    C1 --> D2["Data File 2("12KB")"]
+    C1 --> D1["Data File 1(15KB)"]
+    C1 --> D2["Data File 2(12KB)"]
     C1 --> D3["... 99,998 Data Files khác"]
     
-    C2 --> D4["Data File X("512MB") - Đã được Compaction"]
+    C2 --> D4["Data File X(512MB) - Đã được Compaction"]
     
     style A fill:#2962FF,stroke:#333,stroke-width:2px,color:#fff
     style B fill:#00B0FF,stroke:#333,stroke-width:2px,color:#fff

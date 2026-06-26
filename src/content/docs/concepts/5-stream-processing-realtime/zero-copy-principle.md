@@ -23,10 +23,10 @@ sequenceDiagram
     participant CPU as CPU / DMA Engine
     participant NIC as Network Interface Card (NIC)
 
-    Note over Disk, NIC: Data Path của Zero-Copy (DMA Scatter/Gather)
-    Disk->>PageCache: 1. DMA Copy: Đọc dữ liệu vào PageCache (Bỏ qua CPU)
+    Note over Disk, NIC: Data Path của Zero-Copy("DMA Scatter/Gather")
+    Disk->>PageCache: 1. DMA Copy: Đọc dữ liệu vào PageCache("Bỏ qua CPU")
     Note over PageCache, CPU: Application gọi sendfile() (1 Context Switch)
-    CPU->>NIC: 2. Gửi Descriptor (vị trí, offset) vào Socket Buffer (Không copy data)
+    CPU->>NIC: 2. Gửi Descriptor("vị trí, offset") vào Socket Buffer("Không copy data")
     PageCache->>NIC: 3. DMA Gather: Kéo thẳng dữ liệu từ PageCache ra NIC
     Note over Disk, NIC: Tổng cộng: 2 DMA Copy, 0 CPU Copy, 2 Context Switches.
 ```

@@ -31,18 +31,18 @@ Ngược lại, **Hilbert Curve** là một cấu trúc hình học uốn lượ
 graph TD
     subgraph z_curve["Z-Curve: Locality Jumps"]
     direction LR
-    Z1("(1")) --> Z2("(2"))
-    Z2 -->|BƯỚC NHẢY DÀI| Z3("(3"))
-    Z3 --> Z4("(4"))
+    Z1("(1") --> Z2("(2")
+    Z2 -->|BƯỚC NHẢY DÀI| Z3("(3")
+    Z3 --> Z4("(4")
     style Z2 fill:#f99,stroke:#333
     style Z3 fill:#f99,stroke:#333
     end
 
     subgraph hilbert["Hilbert Curve: Continuous Locality"]
     direction LR
-    H1("(1")) --> H2("(2"))
-    H2 -->|LIỀN KỀ| H3("(3"))
-    H3 --> H4("(4"))
+    H1("(1") --> H2("(2")
+    H2 -->|LIỀN KỀ| H3("(3")
+    H3 --> H4("(4")
     style H2 fill:#9f9,stroke:#333
     style H3 fill:#9f9,stroke:#333
     end
@@ -84,7 +84,7 @@ graph TD
     C1 --> D1["data.parquet"]
     end
     
-    subgraph liquid["Liquid Clustering: O("1") Metadata Lookup"]
+    subgraph liquid["Liquid Clustering: O(1) Metadata Lookup"]
     direction TB
     A2["Query Engine"] -->|Read JSON/Parquet Log| B2["Delta Log Z-Cube"]
     B2 -->|Direct URI| C2["Flat Namespace / S3 Bucket"]

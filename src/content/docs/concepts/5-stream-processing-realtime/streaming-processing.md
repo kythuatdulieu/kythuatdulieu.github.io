@@ -42,15 +42,15 @@ Làm sao tính tổng doanh thu của "khung giờ 10:00 - 10:05" khi sự kiệ
 sequenceDiagram
     participant User Device
     participant Kafka Broker
-    participant Flink Operator (Window 10:00-10:05)
+    participant Flink Operator("Window 10:00-10:05")
     
-    User Device->>Kafka Broker: Event 10:04 (Arrives at 10:04)
-    User Device->>Kafka Broker: Event 10:03 (Delayed, Arrives at 10:08)
+    User Device->>Kafka Broker: Event 10:04("Arrives at 10:04")
+    User Device->>Kafka Broker: Event 10:03("Delayed, Arrives at 10:08")
     Note over Kafka Broker: Watermark generated: 10:05
-    Kafka Broker->>Flink Operator (Window 10:00-10:05): Watermark(10:05) reaches Window
-    Note over Flink Operator (Window 10:00-10:05): Window Closes & Materializes Result!
-    User Device->>Kafka Broker: Event 10:04 (Extremely Delayed, Arrives at 10:12)
-    Note over Flink Operator (Window 10:00-10:05): Handled as Late Data (Drop or Update Sink)
+    Kafka Broker->>Flink Operator("Window 10:00-10:05"): Watermark(10:05) reaches Window
+    Note over Flink Operator("Window 10:00-10:05"): Window Closes & Materializes Result!
+    User Device->>Kafka Broker: Event 10:04("Extremely Delayed, Arrives at 10:12")
+    Note over Flink Operator("Window 10:00-10:05"): Handled as Late Data("Drop or Update Sink")
 ```
 
 **Trade-offs khi cấu hình Watermark:**

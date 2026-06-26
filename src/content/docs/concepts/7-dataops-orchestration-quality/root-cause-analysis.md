@@ -47,7 +47,7 @@ graph TD
     dbt -.-> Quality
     dbt -.-> Lineage
     
-    Alert("(Alerting\nPagerDuty"))
+    Alert("(Alerting\nPagerDuty")
     Observability Layer -->|Triggers| Alert
 ```
 

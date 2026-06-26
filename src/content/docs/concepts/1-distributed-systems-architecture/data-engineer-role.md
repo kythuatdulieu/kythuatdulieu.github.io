@@ -26,7 +26,7 @@ Hệ thống lớn luôn có dị thường.
 - *Một kỹ sư cấp cao* thiết lập **Data Contracts** (Hợp đồng dữ liệu) tại nguồn, chặn đứng dữ liệu rác (schema drift, null fields, giá trị dị thường) bằng các framework như *Great Expectations* hoặc *dbt tests* trước khi nó chảy vào kho. Họ xây dựng hệ thống Cảnh báo (Observability - Data Lineage) để truy vết ngay lập tức khi một dashboard bị sai số liệu.
 
 ### 1.3 FinOps: Quản Trị Chi Phí Máy Tính 
-Trong kỷ nguyên Cloud, một truy vấn (query) viết tồi trên BigQuery quét nhầm 10 Petabyte dữ liệu có thể đốt của công ty $50,000 chỉ trong 10 giây.
+Trong kỷ nguyên Cloud, một truy vấn (query) viết tồi trên BigQuery quét nhầm 10 Petabyte dữ liệu có thể đốt của công ty \$50,000 chỉ trong 10 giây.
 Trách nhiệm của Data Engineer là tối ưu hóa định dạng lưu trữ (chuyển JSON sang định dạng cột Parquet/Iceberg), nén dữ liệu (Zstandard), partition (phân vùng) theo ngày, và loại bỏ các phép JOIN tốn kém (Network Shuffle) để tối đa hoá hiệu suất (Performance) và giảm thiểu chi phí (Cost).
 
 ## 2. Hệ Sinh Thái Công Nghệ (Modern Tech Stack)

@@ -32,9 +32,9 @@ graph TB
     end
     
     subgraph Persistent Storage Layer
-        S3_Bronze["("S3: Bronze Zone<br/>(Raw / JSON / CSV)")"]
-        S3_Silver["("S3: Silver Zone<br/>(Cleansed / Iceberg / Delta)")"]
-        S3_Gold["("S3: Gold Zone<br/>(Aggregated / Business Level)")"]
+        S3_Bronze["(S3: Bronze Zone<br/>(Raw / JSON / CSV)"]
+        S3_Silver["(S3: Silver Zone<br/>(Cleansed / Iceberg / Delta)"]
+        S3_Gold["(S3: Gold Zone<br/>(Aggregated / Business Level)"]
     end
     
     Spark -->|Batch ELT| S3_Bronze
@@ -173,12 +173,12 @@ sequenceDiagram
     
     Airflow->>EMR: Trigger Daily ETL Pipeline
     EMR->>Spot: Request 100 Spot Instances
-    Spot-->>EMR: Provisioned 100 Nodes (Cost -70%)
-    EMR->>EMR: Processing Map-Reduce (Shuffle/Compute)
+    Spot-->>EMR: Provisioned 100 Nodes("Cost -70%")
+    EMR->>EMR: Processing Map-Reduce("Shuffle/Compute")
     Note over Spot, EMR: AWS reclaims 10 Spot Nodes due to capacity limits
     EMR->>EMR: Detect Task Failure -> Relaunch on remaining/new Nodes
     EMR->>Airflow: Pipeline Succeeded
-    Airflow->>EMR: Terminate Cluster (Scale-to-Zero)
+    Airflow->>EMR: Terminate Cluster("Scale-to-Zero")
 ```
 
 ---

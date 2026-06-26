@@ -158,7 +158,7 @@ resource "pinecone_index" "rag_document_index" {
 
 ## 5. FinOps: Đánh đổi Chi phí (Open Source vs Managed API)
 
-Bài toán tài chính (FinOps) của Embedding Models thường rơi vào cái bẫy **"API Cost Trap"**. Ở giai đoạn PoC, dùng OpenAI `text-embedding-3-small` cực kỳ rẻ ($0.02 / 1 triệu tokens). Nhưng khi scale hệ thống RAG lên hàng triệu documents cập nhật liên tục (Real-time Streaming Ingestion), chi phí sẽ bùng nổ (Non-linear scale).
+Bài toán tài chính (FinOps) của Embedding Models thường rơi vào cái bẫy **"API Cost Trap"**. Ở giai đoạn PoC, dùng OpenAI `text-embedding-3-small` cực kỳ rẻ (\$0.02 / 1 triệu tokens). Nhưng khi scale hệ thống RAG lên hàng triệu documents cập nhật liên tục (Real-time Streaming Ingestion), chi phí sẽ bùng nổ (Non-linear scale).
 
 | Tiêu chí | Managed API (OpenAI/Cohere) | Tự Host Open-Source (TEI/vLLM) |
 | :--- | :--- | :--- |

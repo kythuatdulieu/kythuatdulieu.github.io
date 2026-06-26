@@ -47,7 +47,7 @@ Khi một Compute Engine truy vấn bảng Delta, nó không bao giờ quét tr�
 
 ```mermaid
 sequenceDiagram
-    participant C as Compute Engine (Spark/Trino)
+    participant C as Compute Engine("Spark/Trino")
     participant L as Delta Log (_delta_log)
     participant S as Object Storage (S3)
     
@@ -55,7 +55,7 @@ sequenceDiagram
     L-->>C: Trả về version 000010
     C->>L: 2. Đọc 000010.checkpoint.parquet
     C->>L: 3. Quét các JSON commit từ 000011 trở đi
-    C->>C: 4. Tái tạo trạng thái (State Reconstruction) trong bộ nhớ
+    C->>C: 4. Tái tạo trạng thái("State Reconstruction") trong bộ nhớ
     C->>S: 5. Fetch song song các file Parquet có cờ `add`
 ```
 

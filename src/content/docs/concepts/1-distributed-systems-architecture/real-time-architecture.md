@@ -59,15 +59,15 @@ Lambda tách biệt hai luồng: **Batch** (chính xác tuyệt đối) và **Sp
 ```mermaid
 graph LR
     subgraph Data Ingestion
-        A[Microservices] -->|Events| K(Kafka Cluster)
-        B[CDC / Debezium] -->|Change Data| K
+        A[Microservices] -->|Events| K("Kafka Cluster")
+        B["CDC / Debezium"] -->|Change Data| K
     end
     subgraph Processing
-        K -->|Stream| F1[Flink: Real-time Job]
-        K -->|Replay Stream| F2[Flink: Reprocessing Job]
+        K -->|Stream| F1["Flink: Real-time Job"]
+        K -->|Replay Stream| F2["Flink: Reprocessing Job"]
     end
     subgraph Serving
-        F1 --> O[(Pinot / ClickHouse)]
+        F1 --> O["(Pinot / ClickHouse)"]
         F2 --> O
     end
 ```

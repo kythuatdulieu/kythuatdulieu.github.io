@@ -9,7 +9,7 @@ metaDescription: "Tìm hiểu sâu về Data Testing dưới góc nhìn thiết 
 description: "Data Testing không chỉ là việc viết `NOT NULL` hay `UNIQUE`. Ở scale của các tập đoàn lớn, Data Testing là bài toán thiết kế điểm chốt chặn (Circuit Breaker) để ngăn chặn dữ liệu bẩn phá hủy Data Warehouse mà không làm sập pipeline."
 ---
 
-Trong phát triển phần mềm, Unit Test giúp bạn đảm bảo logic code hoạt động đúng. Tuy nhiên, trong Kỹ thuật Dữ liệu (Data Engineering), **logic đúng là chưa đủ, vì bản chất của dữ liệu là biến động**. Một ngày đẹp trời, API của đối tác trả về chuỗi `$10.5` thay vì số thực `10.5`, hoặc team Backend vô tình xóa mất bảng user_id. Pipeline của bạn vẫn chạy trơn tru, nhưng dữ liệu đầu ra lại biến thành "rác".
+Trong phát triển phần mềm, Unit Test giúp bạn đảm bảo logic code hoạt động đúng. Tuy nhiên, trong Kỹ thuật Dữ liệu (Data Engineering), **logic đúng là chưa đủ, vì bản chất của dữ liệu là biến động**. Một ngày đẹp trời, API của đối tác trả về chuỗi `\$10.5` thay vì số thực `10.5`, hoặc team Backend vô tình xóa mất bảng user_id. Pipeline của bạn vẫn chạy trơn tru, nhưng dữ liệu đầu ra lại biến thành "rác".
 
 Bài viết này bỏ qua những định nghĩa sách giáo khoa "Data Testing là gì?" để đi sâu vào cách thiết kế hệ thống kiểm thử dữ liệu dưới góc nhìn kiến trúc (Architecture), phân tích các mô hình như **Circuit Breaker** (như cách Netflix và Uber vận hành), và những rủi ro đánh đổi (Trade-offs) khốc liệt về tài nguyên (Compute Cost) khi thực thi kiểm thử trên quy mô Petabyte.
 

@@ -2,7 +2,7 @@
 title: "Gossip Protocol"
 difficulty: "Advanced"
 readingTime: "20 mins"
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 seoTitle: "Gossip Protocol - Thiết Kế Mạng Phân Tán Mức Staff Engineer"
 metaDescription: "Phân tích chuyên sâu về Gossip Protocol, SWIM, Phi Accrual Failure Detector, Gossip Storms, và các trade-offs trong vận hành thực tế tại quy mô lớn."
 description: "Cơ chế Gossip giúp các node đồng bộ trạng thái. Phân tích sâu về TCP/UDP, MTU, Phi Accrual, và các sự cố mạng thực tế (Gossip Storms)."
@@ -28,7 +28,7 @@ Cassandra và Dynamo áp dụng **Phi ($\Phi$) Accrual Failure Detector**. Thay 
 Công thức:
 $\Phi = -\log_{10}(1 - F(time\_since\_last\_heartbeat))$
 
-- Khi $\Phi = 8$, xác suất phán đoán sai (false positive) chỉ là $10^{-8}$.
+- Khi $\Phi = 8$, xác suất phán đoán sai (false positive) chỉ là \$10^{-8}$.
 
 ### Cấu hình thực tế (Cassandra `cassandra.yaml`)
 ```yaml
@@ -56,12 +56,12 @@ sequenceDiagram
     Note over B: Mạng từ A tới B bị đứt
     B--xA: (Timeout)
     
-    A->>C: Ping-Req (Target: B)
-    A->>D: Ping-Req (Target: B)
+    A->>C: Ping-Req("Target: B")
+    A->>D: Ping-Req("Target: B")
     
     C->>B: Ping (UDP)
     B-->>C: Ack
-    C-->>A: Ack (B is Alive!)
+    C-->>A: Ack("B is Alive!")
     
     Note over A,D: Tránh được báo động giả (False Positive)
 ```
@@ -76,7 +76,7 @@ Hệ quả: Các trạng thái mới sinh ra liên tục (Epoch/Version incremen
 - **Fix:** Phải implement Rate Limiting ở tầng Gossip và cơ chế "Quarantine" (cách ly) các node bị flap.
 
 ### FinOps: Chi Phí Inter-AZ Data Transfer
-Trên AWS/GCP, traffic luân chuyển giữa các Availability Zones (AZ) bị tính phí (khoảng $0.01/GB). Với Gossip protocol truyền thống, các node chọn random target để rỉ tai, không quan tâm AZ. Nếu cluster có 1,000 nodes chia đều ra 3 AZ, $\frac{2}{3}$ lượng traffic gossip sẽ đi xuyên AZ, tạo ra hóa đơn Data Transfer khổng lồ mỗi tháng.
+Trên AWS/GCP, traffic luân chuyển giữa các Availability Zones (AZ) bị tính phí (khoảng \$0.01/GB). Với Gossip protocol truyền thống, các node chọn random target để rỉ tai, không quan tâm AZ. Nếu cluster có 1,000 nodes chia đều ra 3 AZ, $\frac{2}{3}$ lượng traffic gossip sẽ đi xuyên AZ, tạo ra hóa đơn Data Transfer khổng lồ mỗi tháng.
 - **Fix:** Áp dụng **Topology-Aware Gossip**. Node ưu tiên (ví dụ: 90% xác suất) gossip với các node cùng AZ, và chỉ 10% gửi chéo AZ để tiết kiệm chi phí nhưng vẫn đảm bảo Eventual Consistency.
 
 ## 5. So Sánh: Gossip vs Consensus (Raft/Paxos)

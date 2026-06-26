@@ -32,9 +32,9 @@ graph TD
     Root --> N2["Internal Node<br/>[ 200 | 300 ]"]
     Root --> N3["Internal Node<br/>[ 600 | 800 ]"]
     
-    N1 --> L1["("Leaf: 1-19")"]
-    N1 --> L2["("Leaf: 20-49")"]
-    N1 --> L3["("Leaf: 50-99")"]
+    N1 --> L1["(Leaf: 1-19)"]
+    N1 --> L2["(Leaf: 20-49)"]
+    N1 --> L3["(Leaf: 50-99)"]
     
     L1 -.->|Next/Prev| L2
     L2 -.->|Next/Prev| L3
@@ -70,10 +70,10 @@ sequenceDiagram
     participant WAL (Disk)
     participant SSTables (Disk)
     
-    Client->>WAL: 1. Append (Sequential Write)
-    Client->>MemTable: 2. Insert/Update (In-memory)
+    Client->>WAL: 1. Append("Sequential Write")
+    Client->>MemTable: 2. Insert/Update("In-memory")
     Note over MemTable: Khi MemTable đầy...
-    MemTable->>SSTables: 3. Flush to Disk (Immutable File)
+    MemTable->>SSTables: 3. Flush to Disk("Immutable File")
     Note over SSTables: Background Task: Compaction
     SSTables->>SSTables: 4. Merge & Purge Tombstones
 ```

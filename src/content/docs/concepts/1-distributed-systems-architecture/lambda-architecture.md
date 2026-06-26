@@ -3,7 +3,7 @@ title: "Lambda Architecture"
 difficulty: "Advanced"
 tags: ["architecture", "streaming", "batch", "lambda", "big-data"]
 readingTime: "15 mins"
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 seoTitle: "Lambda Architecture - Phân Tích Chuyên Sâu Tầng Batch & Speed"
 metaDescription: "Tìm hiểu kiến trúc Lambda ở góc độ kỹ thuật: Trade-offs, Data Sync, Deduplication, và sự phức tạp khi bảo trì hệ thống Batch/Stream song song."
 description: "Sự đánh đổi kinh điển giữa Latency và Accuracy. Phân tích chi tiết cách gộp dữ liệu ở Serving Layer và những nỗi đau vận hành (Tech Debt)."

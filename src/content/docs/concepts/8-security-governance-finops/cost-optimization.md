@@ -35,7 +35,7 @@ graph TD
     end
     
     subgraph Compute Layer
-      B("(Heavy Batch Compute / Spark"))
+      B("(Heavy Batch Compute / Spark")
     end
     
     subgraph Presentation Layer
@@ -70,7 +70,7 @@ graph TD
 
 ### Incident 3: Thuế Dịch Chuyển Mạng (Cloud Egress Tax)
 - **Bối cảnh:** Hệ thống Ingestion (như Kafka) được đặt tại nền tảng GCP để nhận event từ app, trong khi Data Warehouse xử lý chính lại đặt tại AWS `us-east-1`.
-- **Hậu quả FinOps:** Đẩy 100TB dữ liệu dạng thô (Raw) mỗi tháng xuyên qua mạng Internet từ GCP sang AWS sẽ vấp phải Egress Cost rất đắt (lên đến ~$0.09/GB).
+- **Hậu quả FinOps:** Đẩy 100TB dữ liệu dạng thô (Raw) mỗi tháng xuyên qua mạng Internet từ GCP sang AWS sẽ vấp phải Egress Cost rất đắt (lên đến ~\$0.09/GB).
 - **Kiến trúc khắc phục:** Tuân thủ nguyên tắc *Data Gravity* - xử lý dữ liệu ở nơi lưu trữ nó. Nếu bắt buộc triển khai Multi-cloud, hãy nén file (Parquet/ZSTD) và chỉ luân chuyển dữ liệu đã được làm sạch, tổng hợp (Aggregated/Gold Data) thay vì truyền tải toàn bộ luồng Raw Events.
 
 ---

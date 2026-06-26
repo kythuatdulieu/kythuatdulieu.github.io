@@ -2,7 +2,7 @@
 title: "Bầu chọn Leader (Leader Election)"
 difficulty: "Advanced"
 readingTime: "15 mins"
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 seoTitle: "Leader Election (Raft/ZAB) - Giải phẫu sự cố Split-Brain & Fencing Tokens"
 metaDescription: "Phân tích sâu về Consensus, Raft, ZAB, các sự cố Split-brain do GC Pauses, Network Partitions và cách khắc phục triệt để bằng Fencing Tokens."
 description: "Tại sao hệ thống phân tán cần Leader? Cách Raft hoạt động. Các sự cố sập hệ thống (Split-brain, GC Pauses) và Fencing Tokens để bảo vệ dữ liệu."

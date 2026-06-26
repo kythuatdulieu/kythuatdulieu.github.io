@@ -1,7 +1,7 @@
 ---
 title: "Architecture: Celery Executor vs Kubernetes Executor trong Apache Airflow"
 description: "Phân tích kiến trúc vật lý, trade-offs hệ thống và các sự cố vận hành (OOMKilled, API Overload) giữa Celery Executor và Kubernetes Executor."
-lastUpdated: "2026-06-26"
+lastUpdated: 2026-06-26
 ---
 
 Apache Airflow không tự thực thi các task. Nó là bộ não điều phối (Control Plane) giao việc cho các **Executors** (Data Plane). Khi hệ thống mở rộng, việc chọn sai Executor không chỉ làm phình to chi phí hạ tầng (Idle Cost) mà còn gây ra các thảm họa hệ thống (System Outages) khó debug. Cuộc đối đầu kinh điển nhất về kiến trúc luôn diễn ra giữa **Celery Executor** và **Kubernetes (K8s) Executor**.
@@ -16,9 +16,9 @@ Celery Executor áp dụng kiến trúc phân tán truyền thống (Distributed
 
 ```mermaid
 flowchart LR
-    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[("Message Broker\n(Redis/RabbitMQ)")]
-    Broker -- Pull Task --> Worker1["Celery Worker 1\n(Concurrency: 16)"]
-    Broker -- Pull Task --> Worker2["Celery Worker 2\n(Concurrency: 16)"]
+    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[("Message Broker\n("Redis/RabbitMQ")")]
+    Broker -- Pull Task --> Worker1["Celery Worker 1\n("Concurrency: 16")"]
+    Broker -- Pull Task --> Worker2["Celery Worker 2\n("Concurrency: 16")"]
     
     Worker1 -- Write State --> DB[("Result Backend\n(PostgreSQL)")]
     Worker2 -- Write State --> DB
@@ -47,12 +47,12 @@ Sự bùng nổ của Cloud Native mang đến Kubernetes Executor. Ở đây, k
 
 ```mermaid
 flowchart TD
-    Scheduler["Airflow Scheduler"] -- API Call (Create Pod) --> K8sAPI["Kubernetes API Server"]
+    Scheduler["Airflow Scheduler"] -- API Call("Create Pod") --> K8sAPI["Kubernetes API Server"]
     K8sAPI -- Schedule --> Node1["K8s Worker Node"]
     
     subgraph Node1
-        Pod1["Task A Pod\n(Image: pandas_env)"]
-        Pod2["Task B Pod\n(Image: tf_env\nGPU: 1)"]
+        Pod1["Task A Pod\n("Image: pandas_env")"]
+        Pod2["Task B Pod\n("Image: tf_env\nGPU: 1")"]
     end
     
     Pod1 -- Write State --> DB[("Metadata DB")]
@@ -111,7 +111,7 @@ Không có kiến trúc nào hoàn hảo. Dưới đây là các tình huống s
   - Sử dụng Kubernetes Executor để giới hạn `Blast Radius` (OOM của một Pod không lan sang Pod khác).
 
 ### 3.2. Tấn công DDoS vào Kubernetes Control Plane (K8s Executor Overload)
-- **Vấn đề:** Bạn cần Backfill lại dữ liệu của 1 năm qua cho một DAG gồm 50 tasks rất nhẹ (mỗi task chỉ chạy câu SQL mất 2 giây). Tổng cộng: $365 \times 50 = 18,250$ tasks.
+- **Vấn đề:** Bạn cần Backfill lại dữ liệu của 1 năm qua cho một DAG gồm 50 tasks rất nhẹ (mỗi task chỉ chạy câu SQL mất 2 giây). Tổng cộng: \$365 \times 50 = 18,250$ tasks.
 - **Hệ quả:** Scheduler đồng loạt gửi hàng ngàn lệnh Create Pod đến **Kubernetes API Server**. ETCD Database của K8s bị quá tải (API Server Overload/Memory Pressure). K8s Control Plane bị đơ, không thể schedule Pod, dẫn đến toàn bộ cụm Airflow (kể cả Webserver) bị timeout. Hơn nữa, tổng thời gian chạy DAG chậm đi gấp 10 lần vì *Spin-up Latency* (Mất 10 giây để tạo Pod cho một task chạy 2 giây).
 - **Khắc phục:** 
   - Không dùng K8s Executor cho các task siêu nhỏ. 

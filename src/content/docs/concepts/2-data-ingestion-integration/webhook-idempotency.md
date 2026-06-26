@@ -54,25 +54,25 @@ Một thiết kế "Anti-pattern" phổ biến là thực hiện các tác vụ 
 sequenceDiagram
     participant P as Webhook Provider
     participant API as API Gateway (Ingress)
-    participant DDB as DynamoDB (Idempotency Store)
-    participant SQS as SQS FIFO (Message Broker)
+    participant DDB as DynamoDB("Idempotency Store")
+    participant SQS as SQS FIFO("Message Broker")
     participant W as Worker (Consumer)
     participant DW as Data Warehouse
 
-    P->>API: HTTP POST (event_id: 123)
+    P->>API: HTTP POST("event_id: 123")
     API->>DDB: Conditional Write (attribute_not_exists)
     alt Khóa đã tồn tại
         DDB-->>API: ConditionalCheckFailedException
-        API-->>P: HTTP 200 OK (Duplicate, Ignored)
+        API-->>P: HTTP 200 OK("Duplicate, Ignored")
     else Khóa chưa tồn tại
-        DDB-->>API: Success (State = ACCEPTED)
-        API->>SQS: SendMessage (MessageDeduplicationId = 123)
+        DDB-->>API: Success("State = ACCEPTED")
+        API->>SQS: SendMessage("MessageDeduplicationId = 123")
         API-->>P: HTTP 202 Accepted
     end
 
-    Note over SQS, W: Asynchronous Processing (At-Least-Once Delivery by SQS)
+    Note over SQS, W: Asynchronous Processing("At-Least-Once Delivery by SQS")
     SQS->>W: ReceiveMessage
-    W->>DW: UPSERT / MERGE (Defense in Depth)
+    W->>DW: UPSERT / MERGE("Defense in Depth")
     W->>SQS: DeleteMessage
 ```
 

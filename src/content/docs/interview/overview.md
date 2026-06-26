@@ -59,7 +59,7 @@ graph TD
 
     subgraph "Real-time Stream Processing"
         D -->|Consume Stream| E{"Apache Flink"}
-        E -->|Lookup Historic Features| F["("Redis - Feature Store")"]
+        E -->|Lookup Historic Features| F["(Redis - Feature Store)"]
         E -->|gRPC Call| G["ML Model Serving Container"]
     end
 
@@ -69,7 +69,7 @@ graph TD
     end
 
     subgraph "Data Lakehouse & ML Training"
-        I -->|Kafka Connect / Spark| J["("Data Lakehouse - S3/GCS + Iceberg")"]
+        I -->|Kafka Connect / Spark| J["(Data Lakehouse - S3/GCS + Iceberg)"]
         J -->|Batch ETL Spark| K["Update Features in Redis"]
         J -->|Historical Data| L["ML Training Pipeline / Airflow"]
         L -->|Deploy New Model| G
@@ -259,7 +259,7 @@ gitGraph
     branch feature/add-revenue-model
     checkout feature/add-revenue-model
     commit id:"Write SQL in dbt"
-    commit id:"Add dbt tests (unique, not_null)"
+    commit id:"Add dbt tests("unique, not_null")"
     checkout main
     merge feature/add-revenue-model id:"Pull Request + CI Check"
     commit id:"Airflow/Git Actions Trigger Deploy"

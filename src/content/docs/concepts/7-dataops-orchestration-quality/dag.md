@@ -125,7 +125,7 @@ with DAG('dynamic_good_dag', schedule_interval='@daily') as dag:
 Trong các hệ thống Enterprise quy mô lớn (như Netflix sử dụng Maestro chạy hàng triệu task mỗi ngày), DAG bộc lộ những rủi ro vận hành nghiêm trọng:
 
 1. **Cartesian Explosion (Bùng nổ tổ hợp) trong Task Mapping:** 
-   Nếu bạn sử dụng `expand()` qua hai danh sách: 1000 khách hàng và 1000 sản phẩm, Airflow sẽ cố gắng tạo ra $1,000 \times 1,000 = 1,000,000$ Task Instances trong Metadata DB chỉ cho một DAG Run. Hậu quả: Tràn RAM (OOMKilled) trên Scheduler và sập luôn cơ sở dữ liệu PostgreSQL đằng sau.
+   Nếu bạn sử dụng `expand()` qua hai danh sách: 1000 khách hàng và 1000 sản phẩm, Airflow sẽ cố gắng tạo ra \$1,000 \times 1,000 = 1,000,000$ Task Instances trong Metadata DB chỉ cho một DAG Run. Hậu quả: Tràn RAM (OOMKilled) trên Scheduler và sập luôn cơ sở dữ liệu PostgreSQL đằng sau.
 2. **Zombie Tasks & Cấp phát tài nguyên chết:**
    Trong môi trường Kubernetes (K8sExecutor), nếu một Pod đang chạy Node A bị hệ thống (OOM Killer) ngắt đột ngột, Airflow Scheduler không nhận được tín hiệu hồi đáp. Node A trở thành "Zombie Task". Cấu trúc DAG không thể tiến lên Node B vì Upstream chưa báo `Success`, gây kẹt toàn bộ luồng dữ liệu (Pipeline Stall).
 3. **Thắt cổ chai do Hẹp - Rộng (Fan-out / Fan-in):**

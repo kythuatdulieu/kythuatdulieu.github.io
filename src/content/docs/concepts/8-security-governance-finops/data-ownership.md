@@ -25,16 +25,16 @@ Ví dụ, khi Uber chuyển đổi sang GCP, họ đã phân rã Hive Metastore 
 
 ```mermaid
 graph TD
-    subgraph "Domain: Ride-Sharing("Producer")"
+    subgraph "Domain: Ride-Sharing("Producer")
         A["Kafka Topic: ride_events"] --> B("Flink: Stream Processing")
         B --> C["(Iceberg Table: trips_cleaned\nBucket: gs://uber-rides-prod)"]
     end
     
-    subgraph "Domain: FinTech("Consumer")"
+    subgraph "Domain: FinTech("Consumer")
         D["(Iceberg Table: payments\nBucket: gs://uber-fin-prod)"]
     end
     
-    C -. "Cross-Domain Query\n("Latency Overhead")" .-> E["Trino / Presto Cluster"]
+    C -. "Cross-Domain Query\n("Latency Overhead") .-> E["Trino / Presto Cluster"]
     D -. "Cross-Domain Query" .-> E
     E --> F["Dashboard: Daily Revenue"]
     

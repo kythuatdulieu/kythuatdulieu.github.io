@@ -26,20 +26,20 @@ Envelope Encryption sử dụng hai loại khóa:
 
 ```mermaid
 sequenceDiagram
-    participant App as Data Application (Spark/Flink)
+    participant App as Data Application("Spark/Flink")
     participant KMS as AWS KMS (HSM)
     participant Storage as S3 / GCS
     
-    Note over App, KMS: Write Path (Mã hoá)
+    Note over App, KMS: Write Path("Mã hoá")
     App->>KMS: Request GenerateDataKey(KEK_ID)
-    KMS-->>App: Return (Plaintext DEK, Encrypted DEK)
+    KMS-->>App: Return("Plaintext DEK, Encrypted DEK")
     App->>App: Mã hoá Data bằng Plaintext DEK -> Ciphertext
     App->>App: Xóa Plaintext DEK khỏi RAM
-    App->>Storage: Lưu [Encrypted DEK + Ciphertext]
+    App->>Storage: Lưu["Encrypted DEK + Ciphertext"]
     
-    Note over App, KMS: Read Path (Giải mã)
-    Storage-->>App: Đọc [Encrypted DEK + Ciphertext]
-    App->>KMS: Request Decrypt(Encrypted DEK)
+    Note over App, KMS: Read Path("Giải mã")
+    Storage-->>App: Đọc["Encrypted DEK + Ciphertext"]
+    App->>KMS: Request Decrypt("Encrypted DEK")
     KMS-->>App: Return Plaintext DEK
     App->>App: Giải mã Ciphertext bằng Plaintext DEK -> Data
 ```
@@ -150,7 +150,7 @@ graph LR
 
 Bảo mật dữ liệu không hề miễn phí. Việc gọi API và Compute UDF sinh ra lượng chi phí (FinOps) khổng lồ:
 
-1.  **Chi phí API KMS:** AWS KMS tính phí khoảng $0.03 / 10,000 requests. Nếu Streaming Pipeline của bạn (ví dụ Flink) commit file liên tục mỗi phút, bạn có thể tốn hàng ngàn USD mỗi tháng chỉ riêng tiền gọi KMS.
+1.  **Chi phí API KMS:** AWS KMS tính phí khoảng \$0.03 / 10,000 requests. Nếu Streaming Pipeline của bạn (ví dụ Flink) commit file liên tục mỗi phút, bạn có thể tốn hàng ngàn USD mỗi tháng chỉ riêng tiền gọi KMS.
     *   *Chiến lược FinOps:* Chỉnh `checkpoint.interval` lớn hơn trong Flink, hoặc dùng tính năng S3 Bucket Key (giảm 99% request KMS bằng cách dùng 1 DEK cấp Bucket để mã hóa nhiều Object).
 2.  **Chi phí Compute của Dynamic Masking:** Việc đánh giá điều kiện `CASE WHEN` trên hàng tỷ dòng dữ liệu mỗi khi Data Analyst chạy query làm lãng phí Compute Credit (Snowflake Credits / DBU Databricks).
     *   *Chiến lược FinOps:* Tránh dùng DDM cho các bảng được query tần suất cực cao (Dashboard). Hãy dùng vật lý hóa (Materialization) - tức là sinh ra một bảng Static Data Masking riêng thông qua dbt để phục vụ BI Tool.

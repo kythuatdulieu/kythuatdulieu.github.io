@@ -26,24 +26,24 @@ Một Data Classification Pipeline tiêu chuẩn (tham khảo từ kiến trúc 
 
 ```mermaid
 sequenceDiagram
-    participant P as Data Pipeline (Spark/Flink)
+    participant P as Data Pipeline("Spark/Flink")
     participant S3 as Raw S3 Bucket
-    participant M as Scanner (AWS Macie / GCP DLP)
-    participant C as Metadata Catalog (Glue/DataHub)
-    participant L as Enforcement (Lake Formation)
+    participant M as Scanner("AWS Macie / GCP DLP")
+    participant C as Metadata Catalog("Glue/DataHub")
+    participant L as Enforcement("Lake Formation")
     participant U as Data Analyst
     
-    P->>S3: Write Parquet Files (chứa ẩn PII data)
+    P->>S3: Write Parquet Files("chứa ẩn PII data")
     S3-->>M: S3 Event Notification (ObjectCreated)
-    M->>M: Pattern Matching & ML Inference (Detect SSN, Credit Card)
-    M->>C: Update Metadata Tags (tag: pii=true, level=restricted)
+    M->>M: Pattern Matching & ML Inference("Detect SSN, Credit Card")
+    M->>C: Update Metadata Tags("tag: pii=true, level=restricted")
     C-->>L: Sync Policy Tags / ABAC Rules
     U->>L: Query via Athena / Snowflake
-    L->>L: Evaluate ABAC (Does User have 'pii:read'?)
+    L->>L: Evaluate ABAC("Does User have 'pii:read'?")
     alt Has Permission
-        L-->>U: Return Raw Data (Clear text)
+        L-->>U: Return Raw Data("Clear text")
     else No Permission
-        L-->>U: Return Masked Data (****-1234) or Access Denied
+        L-->>U: Return Masked Data("****-1234") or Access Denied
     end
 ```
 
@@ -101,7 +101,7 @@ resource "aws_macie2_classification_job" "sensitive_data_scan" {
 
 ### 3.1. Incident: Bùng nổ chi phí do Macie Full Scan (Macie Billing Explosion)
 * **Tình huống (Incident):** Một Data Engineer mới vào nghề kích hoạt Macie Classification Job cho toàn bộ `Raw Zone Bucket` chứa 5 PB dữ liệu lịch sử log clickstream (hoàn toàn không chứa PII).
-* **Hậu quả:** Cuối tháng, hóa đơn AWS báo hệ thống Macie ngốn $10,000+ vì nó tính phí $1.00/GB cho 500GB đầu và $0.10/GB cho các GB tiếp theo.
+* **Hậu quả:** Cuối tháng, hóa đơn AWS báo hệ thống Macie ngốn \$10,000+ vì nó tính phí \$1.00/GB cho 500GB đầu và \$0.10/GB cho các GB tiếp theo.
 * **Cách khắc phục:** 
     * Triển khai mô hình **Targeted Scanning**: Chỉ cấp phát quét các thư mục (prefix) có rủi ro cao (ví dụ: `/users/`, `/payments/`, `/onboarding/`).
     * Sử dụng **Sampling (5-10%)**: Theo nguyên lý xác suất thống kê, nếu 10% các block dữ liệu trong một partition Parquet chứa PII, hệ thống hoàn toàn có thể kết luận toàn bộ partition đó là `Restricted` mà không cần tốn chi phí quét 90% phần dung lượng còn lại.

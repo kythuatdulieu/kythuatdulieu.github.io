@@ -23,7 +23,7 @@ Thay vì ghi trực tiếp log vào Database, các hệ thống lớn (Uber, Dat
 
 ```mermaid
 graph TD
-    A1["Databricks Workspace"] -->|Emit JSON| B("(Kafka / AWS Kinesis"))
+    A1["Databricks Workspace"] -->|Emit JSON| B("(Kafka / AWS Kinesis")
     A2["Snowflake"] -->|Database Activity Stream| B
     A3["AWS S3"] -->|S3 Access Logs| B
     B -->|Streaming Ingestion| C{"Log Routing"}
@@ -53,12 +53,12 @@ sequenceDiagram
     participant Auditor as Data Auditor Service
     participant User as Downstream Users
 
-    Spark->>Iceberg: 1. Write Data (Staged Snapshot W)
+    Spark->>Iceberg: 1. Write Data("Staged Snapshot W")
     Note over Iceberg: Snapshot is hidden from User
-    Spark->>Auditor: 2. Trigger Audit (Send Snapshot ID)
+    Spark->>Auditor: 2. Trigger Audit("Send Snapshot ID")
     Auditor->>Iceberg: 3. Query Staged Snapshot W
     Auditor-->>Auditor: 4. Check Data Quality / Security Policies
-    Auditor->>Iceberg: 5. Publish Snapshot W (Update Branch metadata)
+    Auditor->>Iceberg: 5. Publish Snapshot W("Update Branch metadata")
     Iceberg-->>User: 6. Data is now visible to READ
 ```
 

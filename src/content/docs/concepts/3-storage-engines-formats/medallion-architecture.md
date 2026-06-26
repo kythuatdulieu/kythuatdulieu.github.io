@@ -47,19 +47,19 @@ graph TD
     end
 
     %% Flow
-    Kafka -- "Streaming Ingest("Append Only")" --> BronzeTable
+    Kafka -- "Streaming Ingest("Append Only") --> BronzeTable
     OLTP -- "Debezium CDC" --> BronzeTable
     API -- "Batch Extract" --> BronzeTable
 
-    BronzeTable -- "Data Cleansing & Deduplication" --> SilverCompute("(Spark Structured Streaming")):::compute
+    BronzeTable -- "Data Cleansing & Deduplication" --> SilverCompute("(Spark Structured Streaming"):::compute
     SilverCompute --> SilverTable
 
-    SilverTable -- "Aggregations / JOINs" --> GoldCompute("(Spark SQL / dbt")):::compute
+    SilverTable -- "Aggregations / JOINs" --> GoldCompute("(Spark SQL / dbt"):::compute
     GoldCompute --> GoldTable
 
     %% End Users
-    SilverTable -. "Ad-hoc Queries / ML Models" .-> DataScientist("(Data Scientists"))
-    GoldTable -. "BI Dashboards("Low Latency")" .-> BI("(Power BI / Tableau"))
+    SilverTable -. "Ad-hoc Queries / ML Models" .-> DataScientist("(Data Scientists")
+    GoldTable -. "BI Dashboards("Low Latency") .-> BI("(Power BI / Tableau")
 ```
 
 ---
