@@ -9,8 +9,6 @@ metaDescription: "Khám phá chi tiết thuật toán Z-Order (Morton Code) tron
 description: "Phân tích sâu về Linear Sorting Bias, thuật toán Z-Order curve (Morton Code) và nguyên nhân gây ra Write Amplification trong Data Lakehouse."
 ---
 
-![Z-Order Architecture](/images/3-storage-engines-formats/z-order-architecture.png)
-
 Để Data Skipping hoạt động ở quy mô hàng Petabyte, metadata (min/max stats) trong file Parquet footer cần được co hẹp tối đa. RDBMS truyền thống dùng B-Tree Index, nhưng trong thế giới Distributed Object Storage (S3, ADLS), I/O cost để duy trì B-Tree là bất khả thi. Thay vào đó, Databricks và Delta Lake sử dụng cụm tệp vật lý (Physical Data Clustering). Tuy nhiên, gom cụm theo nhiều cột đồng thời lại vướng phải bài toán muôn thuở: **Linear Sorting Bias**.
 
 ## 1. Linear Sorting Bias (Độ Lệch Sắp Xếp Tuyến Tính)

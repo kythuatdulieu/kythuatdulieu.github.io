@@ -7,13 +7,51 @@ lastUpdated: 2026-06-26
 seoTitle: "Liquid Clustering trong Databricks là gì? Thay thế Partitioning và Z-Order"
 metaDescription: "Kiến trúc Liquid Clustering trong Delta Lake. Phân tích thuật toán Hilbert Curve, cơ chế Auto-balancing và thay thế hoàn toàn Hive Partitioning."
 description: "Tại sao Databricks lại tuyên bố Liquid Clustering là tiêu chuẩn mới? Phân tích sâu kiến trúc Flat Namespace, Incremental Clustering và thuật toán Auto-balancing."
----
-
-![Liquid Clustering Architecture](/images/3-storage-engines-formats/liquid-clustering-architecture.png)
-
 Hive Partitioning và Z-Ordering đã làm tốt nhiệm vụ của mình trong kỷ nguyên Hadoop và Gen 1 Data Lakehouse. Tuy nhiên, ở quy mô Cloud-Native với luồng dữ liệu Streaming liên tục, chúng để lộ những yếu điểm kiến trúc chí mạng: Partitioning gây bùng nổ thư mục vật lý (Directory Explosion), còn Z-Ordering bóp nghẹt tài nguyên Compute (Write Amplification). 
 
 Databricks đã thiết kế lại hoàn toàn lớp Storage Layout với **Liquid Clustering** – chuyển dịch từ phân mảnh thư mục cứng nhắc sang gom cụm tệp động (Dynamic File Clustering) sử dụng thuật toán **Hilbert Curve**.
+
+## 1. Cách thức hoạt động dưới mui xe (Under the Hood)
+
+Khác với Hive Partitioning chia dữ liệu thành các thư mục vật lý (hard-boundaries), Liquid Clustering ghi toàn bộ tệp Parquet vào một **Flat Namespace** duy nhất. Việc nhóm dữ liệu được quản lý hoàn toàn ở tầng Metadata (Delta Log). 
+
+Để làm được điều này, Liquid Clustering kết hợp 2 kỹ thuật cốt lõi: **Đường cong Hilbert** (Toán học) và **Z-Cube** (Cấu trúc dữ liệu).
+
+### 1.1. Đường cong Hilbert (Hilbert Curve) vs. Z-Curve
+Cả Z-Order và Liquid đều dùng *Space-filling curves* để ánh xạ dữ liệu đa chiều xuống 1D. Tuy nhiên, Z-Curve có một nhược điểm chí mạng gọi là **Locality Jumps** (Bước nhảy cục bộ). Tại các điểm biên của chữ Z, dữ liệu kề nhau trong không gian thực tế lại bị đẩy ra rất xa nhau trên chuỗi 1D.
+
+Ngược lại, **Hilbert Curve** có đặc tính hình học uốn lượn liên tục (continuous fractal). Nó đảm bảo rằng hai điểm gần nhau trong không gian đa chiều sẽ *luôn luôn* gần nhau trong chuỗi 1D.
+
+```mermaid
+graph TD
+    subgraph z_curve [Z-Curve: Locality Jumps]
+    direction LR
+    Z1((1)) --> Z2((2))
+    Z2 -->|BƯỚC NHẢY DÀI| Z3((3))
+    Z3 --> Z4((4))
+    style Z2 fill:#f99,stroke:#333
+    style Z3 fill:#f99,stroke:#333
+    end
+
+    subgraph hilbert [Hilbert Curve: Continuous Locality]
+    direction LR
+    H1((1)) --> H2((2))
+    H2 -->|LỀN KỀ| H3((3))
+    H3 --> H4((4))
+    style H2 fill:#9f9,stroke:#333
+    style H3 fill:#9f9,stroke:#333
+    end
+```
+**Kết quả:** Min/Max stats của tệp Parquet trong Liquid Clustering hẹp hơn Z-Order rất nhiều, giúp Data Skipping cắt tỉa tệp chính xác tuyệt đối.
+
+### 1.2. Z-Cube Metadata Framework
+Trong Delta Log của Liquid Clustering, Databricks duy trì một cấu trúc gọi là **Z-Cube**. 
+Thay vì phải đọc toàn bộ bảng để tính toán lại Curve mỗi khi có dữ liệu mới (như Z-Order), Z-Cube theo dõi vòng đời của từng tệp:
+- Tệp chưa được gom cụm (Unclustered).
+- Tệp đã gom cụm (Clustered).
+- Tệp rác (Tombstone).
+
+Khi lệnh `OPTIMIZE` chạy, nó chỉ quét qua Z-Cube, nhặt các tệp *Unclustered*, băm chúng qua Hilbert Curve và ghi ra file Parquet mới. Đây gọi là **Incremental Clustering** (Gom cụm tăng dần).
 
 ## 1. Kiến trúc Vật lý (Physical Architecture)
 
@@ -41,12 +79,19 @@ graph TD
 Trong môi trường Production, lệch dữ liệu (Data Skew) là nguyên nhân số 1 gây kẹt task trên Spark (Straggler Tasks). Với Liquid, khái niệm "Phân vùng lớn/Phân vùng nhỏ" biến mất.
 Engine tự động phát hiện cụm tọa độ Hilbert quá dày đặc và tự động "xé" nó ra thành nhiều tệp Parquet tối ưu (~1GB/tệp). Các điểm dữ liệu rời rạc sẽ được ghép lại chung tệp để tránh lỗi Small Files.
 
-## 2. Systemic Trade-offs: Tại sao vượt trội hơn Z-Order?
+## 2. Liquid Clustering khác gì Partitioning? (Systemic Trade-offs)
 
-Z-Order yêu cầu Spark phải Shuffle toàn bộ dữ liệu lịch sử để tính toán lại Curve. Liquid Clustering vượt qua điều này nhờ hai cơ chế cốt lõi:
+Mặc dù cả hai đều nhằm mục đích **Data Skipping**, nhưng sự khác biệt về kiến trúc là một trời một vực:
 
-1.  **Write-Time Clustering (Gom cụm ngay lúc ghi):** Khi chạy `INSERT` hoặc `MERGE`, dữ liệu nằm trên RAM đã được Spark rải vào các "bucket" logic của Liquid trước khi flush xuống đĩa. Tính trạng phân mảnh (Decay) được giảm thiểu ngay từ nguồn.
-2.  **Incremental OPTIMIZE:** Lệnh `OPTIMIZE` của Liquid chỉ tìm và nhắm mục tiêu vào các tệp chưa được gom cụm (Unclustered files), thay vì đọc lại toàn bộ bảng. Chi phí Compute (DBU) giảm đến 80% so với `OPTIMIZE ZORDER`.
+| Tiêu chí | Hive Partitioning | Liquid Clustering |
+| :--- | :--- | :--- |
+| **Cơ chế Pruning** | Hard-boundary (Bỏ qua Thư mục vật lý). | Soft-boundary (Bỏ qua Tệp dựa trên Delta Log Min/Max). |
+| **Data Skew** | Yếu. Dễ sinh ra thư mục chứa hàng triệu file vài KB, hoặc thư mục rỗng. | **Cân bằng tự động (Auto-balancing)**. Nhờ Hilbert, các cụm dữ liệu quá dày sẽ tự bị "xé" thành các tệp ~1GB. Các điểm dữ liệu mỏng tự được gom chung. |
+| **Write Amplification** | Thấp (Chỉ Append vào đúng thư mục). | Trung bình thấp (Nhờ **Write-Time Clustering** và Incremental Optimize). |
+| **Khả năng thay đổi** | Cực khó. Đổi cột Partition đồng nghĩa viết lại toàn bộ bảng. | **Linh hoạt**. Thay đổi lệnh `CLUSTER BY` không bắt buộc viết lại dữ liệu cũ. |
+
+### Incremental OPTIMIZE 
+Z-Order yêu cầu Spark phải Shuffle toàn bộ dữ liệu lịch sử. Với Liquid, nhờ cấu trúc Z-Cube, `OPTIMIZE` chỉ tốn chi phí Compute cho lượng dữ liệu Delta (dữ liệu mới nạp vào). Chi phí DBU giảm đến 80%.
 
 ## 3. Mã thực chiến (Executable Configs)
 
