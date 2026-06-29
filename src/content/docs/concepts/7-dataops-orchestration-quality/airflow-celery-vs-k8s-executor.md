@@ -23,9 +23,9 @@ Celery Executor áp dụng kiến trúc hàng đợi phân tán (Distributed Tas
 
 ```mermaid
 flowchart LR
-    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[["Message Broker\n('Redis/RabbitMQ']]]
-    Broker -- Pull Task --> Worker1["Celery Worker 1\n('Concurrency: 16')"]
-    Broker -- Pull Task --> Worker2["Celery Worker 2\n('Concurrency: 16')"]
+    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[["Message Broker ('Redis/RabbitMQ')"]]
+    Broker -- Pull Task --> Worker1["Celery Worker 1 ('Concurrency: 16')"]
+    Broker -- Pull Task --> Worker2["Celery Worker 2 ('Concurrency: 16')"]
     
     Worker1 -- Write State --> DB[("Metadata DB\n(PostgreSQL)")]
     Worker2 -- Write State --> DB

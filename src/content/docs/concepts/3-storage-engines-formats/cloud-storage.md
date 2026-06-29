@@ -20,23 +20,28 @@ Dưới góc nhìn của một **Staff Data Engineer / Systems Architect**, S3 k
 Không giống như File System (POSIX) cấp phát ổ đĩa qua các Block, Object Storage là một không gian phẳng (flat namespace). Dưới nền tảng vật lý, S3 phân tách hoàn toàn việc lưu trữ **Metadata (Siêu dữ liệu)** và **Payload (Dữ liệu thực tế)** thành hai hệ thống độc lập.
 
 ```mermaid
-architecture-beta
-    group api("cloud")[API & Routing Layer]
-    group meta("database")[Metadata Fleet [Distributed KV Store]]
-    group data("server")[Storage Fleet [Erasure Coded]]
+graph TD
+    client["Client / Spark Engine"]
+    
+    subgraph api ["API & Routing Layer"]
+        lb["Load Balancer / Gateway"]
+    end
+    
+    subgraph meta ["Metadata Fleet (Distributed KV Store)"]
+        index["Key-Value Store (Strong Consistency)"]
+    end
+    
+    subgraph data ["Storage Fleet (Erasure Coded)"]
+        disk1["Storage Node 1"]
+        disk2["Storage Node 2"]
+        disk3["Storage Node 3"]
+    end
 
-    service client("internet")[Client / Spark Engine]
-    service lb("api")[Load Balancer / Gateway] in api
-    service index("database")[Key-Value Store<br>[Strong Consistency]] in meta
-    service disk1("disk")[Storage Node 1] in data
-    service disk2("disk")[Storage Node 2] in data
-    service disk3("disk")[Storage Node 3] in data
-
-    client:R --> L:lb
-    lb:B --> T:index
-    lb:B --> T:disk1
-    lb:B --> T:disk2
-    lb:B --> T:disk3
+    client --> lb
+    lb --> index
+    lb --> disk1
+    lb --> disk2
+    lb --> disk3
 ```
 
 -   **Metadata Fleet:** Lưu trữ ánh xạ giữa `Object Key` (ví dụ: `s3://bucket/data.parquet`] và vị trí vật lý của nó trên các Data Nodes. Nó là một Distributed Key-Value Store cực kỳ tốc độ cao, đảm nhận việc khóa (locking) và tính quán (consistency).

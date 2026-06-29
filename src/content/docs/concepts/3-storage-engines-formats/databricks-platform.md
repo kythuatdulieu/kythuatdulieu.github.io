@@ -20,21 +20,22 @@ Bài viết này sẽ mổ xẻ kiến trúc vật lý của Databricks, các en
 Kiến trúc Databricks tuân thủ mô hình bảo mật chia sẻ (Shared Security Model) trên Cloud (AWS/Azure/GCP), phân tách rạch ròi giữa **Control Plane** và **Data Plane**. Sự phân tách này đảm bảo nguyên tắc tối thượng: *Databricks quản lý Compute, nhưng Khách hàng (Bạn) nắm quyền sinh sát với Data.*
 
 ```mermaid
-architecture-beta
-    group control_plane("cloud')[Control Plane('Databricks Account")]
-    group data_plane("cloud')[Data Plane('Customer VPC / VNet")]
+graph TD
+    subgraph control_plane ["Control Plane (Databricks Account)"]
+        web_ui["Web UI / Notebooks"]
+        job_sched["Workflow Scheduler"]
+        cluster_mgr["Cluster Manager"]
+        web_ui --> job_sched
+        job_sched --> cluster_mgr
+    end
     
-    service web_ui("server")[Web UI / Notebooks] in control_plane
-    service job_sched("server")[Workflow Scheduler] in control_plane
-    service cluster_mgr("server")[Cluster Manager] in control_plane
+    subgraph data_plane ["Data Plane (Customer VPC / VNet)"]
+        compute_nodes["Spark/Photon Clusters (EC2/VMs)"]
+        object_storage[("S3 / ADLS / GCS")]
+    end
     
-    service compute_nodes("server')[Spark/Photon Clusters('EC2/VMs")] in data_plane
-    service object_storage("database")[S3 / ADLS / GCS] in data_plane
-    
-    web_ui --> job_sched
-    job_sched --> cluster_mgr
-    cluster_mgr -- ""Provision & Monitor"Secure Tunnel") --> compute_nodes
-    compute_nodes -- "Read/Write Data("High Bandwidth") --> object_storage
+    cluster_mgr -->|"Provision & Monitor (Secure Tunnel)"| compute_nodes
+    compute_nodes -->|"Read/Write Data (High Bandwidth)"| object_storage
 ```
 
 ### 1.1. Control Plane (Quản lý bởi Databricks)

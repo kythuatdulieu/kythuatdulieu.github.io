@@ -73,9 +73,9 @@ graph TD
     g3["Granule 3: UserID 3200 - 5000"]
     
     group_ram["Memory Node: RAM - Sparse Index"]
-    service_idx1("Index Entry")["Mark 1: UserID=1"]
-    service_idx2("Index Entry")["Mark 2: UserID=1500"]
-    service_idx3("Index Entry")["Mark 3: UserID=3200"]
+    service_idx1["Index Entry - Mark 1: UserID=1"]
+    service_idx2["Index Entry - Mark 2: UserID=1500"]
+    service_idx3["Index Entry - Mark 3: UserID=3200"]
 
     service_idx1 --> g1
     service_idx2 --> g2

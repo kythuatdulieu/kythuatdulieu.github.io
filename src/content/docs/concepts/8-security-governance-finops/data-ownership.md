@@ -43,7 +43,7 @@ graph TD
         B --> C["(Iceberg Table: trips_cleaned\nBucket: gs://uber-rides-prod)"]
     end
     
-    subgraph "Domain: FinTech("Consumer")
+    subgraph Domain_FinTech ["Domain: FinTech (Consumer)"]
         D["(Iceberg Table: payments\nBucket: gs://uber-fin-prod)"]
     end
     
