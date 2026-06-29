@@ -11,7 +11,7 @@ description: "Data Quality không chỉ là những bài kiểm tra đếm dòng
 
 Data Quality [Chất lượng dữ liệu] thường bị hiểu nhầm là nhiệm vụ của Data Stewards hay Business Analysts đi chạy các câu lệnh SQL đếm số dòng `NULL`. Nhưng dưới góc nhìn của một Kỹ sư Dữ liệu hệ thống (Data Engineer), Data Quality là bài toán về **Độ tin cậy của Hệ thống (System Reliability)**. 
 
-Khái niệm **Data Downtime** (thời gian dữ liệu bị sai lệch, thiếu hụt hoặc quá hạn) ra đời để phản ánh sự thật: dữ liệu hỏng cũng gây thiệt hại nghiêm trọng như một web server bị sập. Khi bạn xử lý hàng triệu sự kiện mỗi giây (Uber, Netflix), một thay đổi nhỏ ở thượng nguồn như đổi kiểu dữ liệu từ `INT` sang `STRING` có thể đánh sập cụm Spark Streaming bằng lỗi `OOMKilled` hoặc gây ra [Consumer Lag](/concepts/4-realtime-processing/kafka-architecture] vô tận.
+Khái niệm **Data Downtime** (thời gian dữ liệu bị sai lệch, thiếu hụt hoặc quá hạn) ra đời để phản ánh sự thật: dữ liệu hỏng cũng gây thiệt hại nghiêm trọng như một web server bị sập. Khi bạn xử lý hàng triệu sự kiện mỗi giây (Uber, Netflix), một thay đổi nhỏ ở thượng nguồn như đổi kiểu dữ liệu từ `INT` sang `STRING` có thể đánh sập cụm Spark Streaming bằng lỗi `OOMKilled` hoặc gây ra [Consumer Lag](/concepts/5-stream-processing-realtime/kafka-consumer-lag-rebalance) vô tận.
 
 Bài viết này mổ xẻ **Kiến trúc Data Quality ở quy mô Big Data**, với các thiết kế như Data Contracts, Circuit Breakers, Dead Letter Queues và nền tảng Data Observability.
 
@@ -121,5 +121,5 @@ Data Quality trong thời đại dữ liệu quy mô lớn đòi hỏi tư duy c
 1. [Uber: Monitoring Data Quality at Scale with Statistical Modeling (DQM]][https://www.uber.com/en-US/blog/]
 2. [Monte Carlo: What is Data Observability?][https://www.montecarlodata.com/]
 3. [Data Contracts - The modern data architecture][https://datacontract.com/]
-4. [Data Mesh at Netflix: Schema Validation & Event Integrity](https://netflixtechblog.com/]
+4. [Data Mesh at Netflix: Schema Validation & Event Integrity](https://netflixtechblog.com/)
 5. *Designing Data-Intensive Applications* - Martin Kleppmann (O'Reilly).

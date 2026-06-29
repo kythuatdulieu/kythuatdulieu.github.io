@@ -18,7 +18,7 @@ AQE không can thiệp vào giữa một Task đang chạy. Thay vào đó, nó 
 
 Khi dữ liệu được tính toán xong ở Map-side và Spill xuống đĩa (Shuffle Write), Spark gọi đây là một **Điểm chốt dữ liệu (Materialization Point)**. Tại khoảnh khắc này, kích thước chính xác của từng partition đã được biết rành mạch. Dữ liệu thực tế này được gửi ngược về cho Catalyst Optimizer để nó có thể đánh giá lại và đưa ra một Kế hoạch Vật lý (Physical Plan) mới tốt hơn cho các Stage tiếp theo.
 
-![Adaptive Query Execution Architecture](../../assets/images/4-compute-engines-batch/aqe-speeding-up.png]
+![Adaptive Query Execution Architecture](/images/4-compute-engines-batch/aqe-framework.png)
 *Kiến trúc luồng dữ liệu của AQE phản hồi số liệu trở lại Catalyst Optimizer tại ranh giới Shuffle. (Nguồn: Databricks)*
 
 Quy trình hoạt động cốt lõi của vòng phản hồi AQE:
@@ -160,4 +160,4 @@ Từ Spark 3.2 trở lên, AQE bổ sung tính năng **Demote Broadcast Hash Joi
 ## Nguồn Tham Khảo (References)
 - [Adaptive Query Execution: Speeding Up Spark SQL at Runtime - Databricks][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
 - Uber Engineering Blog, *Making Apache Spark Effortless for All of Uber*.
-- [Spark SQL Guide: Adaptive Query Execution](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution]
+- [Spark SQL Guide: Adaptive Query Execution](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)

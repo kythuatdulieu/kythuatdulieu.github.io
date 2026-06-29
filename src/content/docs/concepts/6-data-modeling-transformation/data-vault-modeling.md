@@ -31,7 +31,7 @@ Khi scale một hệ thống Dữ liệu lên cỡ Petabytes với hàng trăm D
 
 Mô hình Data Vault được xây dựng xoay quanh 3 thực thể lõi: **Hubs, Links, và Satellites**.
 
-![Data Vault Example](/images/6-data-modeling-transformation/data_vault_example.png]
+![Data Vault Example](/images/6-data-modeling-transformation/data_vault_example.png)
 
 ```mermaid
 erDiagram

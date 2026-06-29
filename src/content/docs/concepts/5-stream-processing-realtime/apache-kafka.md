@@ -22,7 +22,7 @@ Linh hồn của Kafka (điều giúp LinkedIn có thể xử lý hàng nghìn t
 ### 1.1. Append-Only Log và Sequential I/O
 Mỗi Topic trong Kafka được chia thành nhiều Partition. Dưới mức vật lý (Filesystem), mỗi Partition là một thư mục, chứa chuỗi các tệp **Log Segments** (thường là `1GB` mỗi file).
 
-![Kafka Log Anatomy](/images/5-stream-processing-realtime/log_anatomy.png]
+![Kafka Log Anatomy](/images/5-stream-processing-realtime/log_anatomy.png)
 
 *Hình 1: Cấu trúc Append-Only Log của Kafka. Dữ liệu mới luôn được ghi vào cuối Log.*
 
@@ -115,7 +115,7 @@ Bạn bắt buộc phải tăng số lượng Partition trước. Nhưng việc 
 
 ## 5. Hệ Sinh Thái (The Confluent Ecosystem)
 
-![Kafka APIs and Ecosystem](/images/5-stream-processing-realtime/kafka-apis.png]
+![Kafka APIs and Ecosystem](/images/5-stream-processing-realtime/kafka-apis.png)
 
 1. **Kafka Connect:** Framework chuyên biệt Ingestion/Egestion (Kéo/Đẩy). Không cần tự viết code Python/Java, ta dùng JSON configs để đẩy dữ liệu CDC từ Postgres vào Kafka (Debezium) hoặc đẩy ra S3.
 2. **Kafka Streams:** Thư viện tính toán Stateful. Để chống mất State khi Node bị Crash (RAM bị xóa sạch), nó sử dụng **RocksDB** ghi trạng thái trung gian (Local State) xuống đĩa cục bộ, đồng thời backup state này lên một Changelog Topic trên cụm Kafka.

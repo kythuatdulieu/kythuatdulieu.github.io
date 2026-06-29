@@ -9,7 +9,7 @@ metaDescription: "Nghiên cứu chuyên sâu về Task Dependency: XCom, TaskFlo
 description: "Trong hệ thống phân tán, quản lý Dependency không chỉ là nối các mũi tên A -> B. Đây là bài toán thiết kế hệ thống đối phó với Worker Slot Starvation, TaskFlow API và Data-Aware."
 ---
 
-Trong thế giới Data [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration], **Task Dependency (Sự phụ thuộc tác vụ)** thường bị hiểu nhầm là thao tác lập trình đơn giản (chỉ cần nối `Task_A >> Task_B`). Tuy nhiên, khi scale hệ thống lên hàng vạn jobs mỗi ngày như Netflix hay Uber, Dependency chính là điểm nghẽn kiến trúc (Architectural Bottleneck) lớn nhất.
+Trong thế giới Data [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration), **Task Dependency (Sự phụ thuộc tác vụ)** thường bị hiểu nhầm là thao tác lập trình đơn giản (chỉ cần nối `Task_A >> Task_B`). Tuy nhiên, khi scale hệ thống lên hàng vạn jobs mỗi ngày như Netflix hay Uber, Dependency chính là điểm nghẽn kiến trúc (Architectural Bottleneck) lớn nhất.
 
 Quản lý Dependency là việc thiết kế các "khế ước" (contracts) để hệ thống biết chính xác: Khi nào tác vụ được kích hoạt? Truyền dữ liệu giữa các task ra sao? Điều kiện thành công là gì? Và nếu upstream thất bại, làm sao để chặn đứng hiệu ứng Domino (Cascading Failures) mà không làm tràn RAM hệ thống.
 

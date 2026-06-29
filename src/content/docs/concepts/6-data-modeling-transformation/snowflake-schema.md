@@ -18,7 +18,7 @@ Snowflake Schema là một kiến trúc Dimensional Modeling trong Data Warehous
 
 Trong Snowflake Schema, các Dimension không còn là một bảng phẳng (flat table - denormalized) mà bị vỡ ra thành nhiều Sub-dimension (Bảng chiều phụ) riêng biệt.
 
-![Snowflake Schema Architecture](/images/6-data-modeling-transformation/snowflake_schema.png]
+![Snowflake Schema Architecture](/images/6-data-modeling-transformation/snowflake_schema.png)
 *Kiến trúc Lược đồ bông tuyết.*
 
 Khi một câu lệnh SQL từ công cụ BI (Tableau, PowerBI) request dữ liệu từ Fact table, Optimizer của cơ sở dữ liệu phải thực hiện chuỗi các phép `JOIN` bậc thang (Cascading Joins) từ Fact -> Dim -> Sub-Dim.
@@ -154,4 +154,4 @@ Nhờ cách làm này, bạn giữ được ưu điểm chuẩn hóa ở khâu l
 * [AWS Architecture Blog - Design Patterns for Amazon Redshift][https://aws.amazon.com/blogs/architecture/]
 * [ThoughtSpot Blog - Star Schema vs Snowflake Schema][https://www.thoughtspot.com/data-trends/data-modeling/star-schema-vs-snowflake-schema]
 * [Netflix Tech Blog: Data Engineering and Data Modeling at Scale][https://netflixtechblog.com/]
-* [Fundamentals of Data Engineering - Joe Reis & Matt Housley](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/]
+* [Fundamentals of Data Engineering - Joe Reis & Matt Housley](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/)
