@@ -20,27 +20,29 @@ Sự trói buộc này sinh ra một bài toán vận hành thảm họa:
 Việc dịch chuyển sang đám mây (Cloud Computing) đã sinh ra một khái niệm mang tính cách mạng: **Storage-Compute Decoupling (Tách biệt Lưu trữ và Tính toán)**.
 
 ```mermaid
-architecture-beta
-    group monolithic(Cloud)[Shared-Nothing Monolithic]
-    service n1[server][Node 1: CPU + RAM + Disk] in monolithic
-    service n2[server][Node 2: CPU + RAM + Disk] in monolithic
-    service n3[server][Node 3: CPU + RAM + Disk] in monolithic
-    
-    n1:R -- L:n2
-    n2:R -- L:n3
-    n1:B -- T:n3
+graph TD
+    subgraph monolithic ["Shared-Nothing Monolithic"]
+        n1["Node 1: CPU + RAM + Disk"]
+        n2["Node 2: CPU + RAM + Disk"]
+        n3["Node 3: CPU + RAM + Disk"]
+        
+        n1 --- n2
+        n2 --- n3
+        n1 --- n3
+    end
 
-    group decoupled[Cloud][Storage-Compute Decoupled]
-    service cp1[server][Compute Cluster A: ETL] in decoupled
-    service cp2[server][Compute Cluster B: BI] in decoupled
-    service cp3[server][Compute Cluster C: Ad-Hoc] in decoupled
-    service net(internet][Cloud Backbone Network("100+ Gbps")] in decoupled
-    service s3(database)[Object Storage("S3 / GCS / ADLS")] in decoupled
-
-    cp1:B -- T:net
-    cp2:B -- T:net
-    cp3:B -- T:net
-    net:B -- T:s3
+    subgraph decoupled ["Storage-Compute Decoupled"]
+        cp1["Compute Cluster A: ETL"]
+        cp2["Compute Cluster B: BI"]
+        cp3["Compute Cluster C: Ad-Hoc"]
+        net("Cloud Backbone Network (100+ Gbps)")
+        s3[("Object Storage (S3 / GCS / ADLS)")]
+        
+        cp1 --- net
+        cp2 --- net
+        cp3 --- net
+        net --- s3
+    end
 ```
 
 Kiến trúc này biến Compute thành các **Stateless Worker Nodes (Node phi trạng thái)** có thể tự do mở rộng hoặc thu hẹp (Elastic), và Storage được phó thác cho các dịch vụ Cloud Object Storage cực kỳ bền bỉ nhưng siêu rẻ (AWS S3, GCS). Điểm nối giữa chúng là mạng lõi (Backbone Network) siêu tốc của Cloud Provider.

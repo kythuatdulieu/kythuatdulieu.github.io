@@ -31,27 +31,26 @@ Thay vì cung cấp một Engine duy nhất như Snowflake, Synapse phân mảnh
 ### 2.1. Giải phẫu Kiến trúc MPP
 
 ```mermaid
-architecture-beta
-    group synapse("cloud")[Azure Synapse Dedicated Pool [MPP]]
-    
-    service control("server")[Control Node [Não bộ]] in synapse
-    service compute1("server")[Compute Node 1] in synapse
-    service compute2("server")[Compute Node N] in synapse
-    service dms("network")[Data Movement Service [DMS]] in synapse
-    
-    service db1("database")[Distribution 1..x] in synapse
-    service db2("database")[Distribution y..60] in synapse
-    service storage("disk")[Azure Blob Storage] in synapse
-
-    control:R --> L:compute1
-    control:R --> L:compute2
-    compute1:B --> T:dms
-    compute2:B --> T:dms
-    
-    compute1:R --> L:db1
-    compute2:R --> L:db2
-    db1:B --> T:storage
-    db2:B --> T:storage
+graph TD
+    subgraph synapse ["Azure Synapse Dedicated Pool (MPP)"]
+        control["Control Node (Não bộ)"]
+        compute1["Compute Node 1"]
+        compute2["Compute Node N"]
+        dms["Data Movement Service (DMS)"]
+        db1[("Distribution 1..x")]
+        db2[("Distribution y..60")]
+        storage[("Azure Blob Storage")]
+        
+        control --> compute1
+        control --> compute2
+        compute1 --> dms
+        compute2 --> dms
+        
+        compute1 --> db1
+        compute2 --> db2
+        db1 --> storage
+        db2 --> storage
+    end
 ```
 
 *   **Control Node:** Não bộ của hệ thống. Chịu trách nhiệm nhận câu T-SQL, biên dịch qua Cost-Based Optimizer (CBO] thành Kế hoạch thực thi phân tán (Distributed Execution Plan) và điều phối công việc xuống các Compute Nodes.

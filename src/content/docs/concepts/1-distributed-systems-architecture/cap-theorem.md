@@ -112,7 +112,7 @@ flowchart TD
     PAC -- Availability --> AP["Hệ thống AP<br/>VD: Cassandra, DynamoDB, Riak"]
     PAC -- Consistency --> CP["Hệ thống CP<br/>VD: HBase, MongoDB, Zookeeper, Spanner"]
     
-    State -- Không ("Else - E") --> ELC{"Chọn L hay C?"}
+    State -->|"Không (Else - E)"| ELC{"Chọn L hay C?"}
     ELC -- Latency --> EL["Ưu tiên Tốc độ (L)<br/>Trả về ngay khi 1 node ghi xong<br/>Chấp nhận Async Replication"]
     ELC -- Consistency --> EC["Ưu tiên Chuẩn xác (C)<br/>Bắt user chờ ghi xong toàn bộ node<br/>Dùng Sync Replication/2PC"]
     

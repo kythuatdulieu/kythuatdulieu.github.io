@@ -53,21 +53,25 @@ WHERE updated_at >= (SELECT max_watermark - INTERVAL '15 minutes' FROM pipeline_
 Đây là chuẩn mực công nghiệp (Industry Standard) cho Data Ingestion ở quy mô siêu lớn (Scale). Thay vì liên tục spam câu lệnh `SELECT` (Pull), kiến trúc CDC sẽ "đọc lén" Write-Ahead Log (WAL ở PostgreSQL) hoặc Binlog (MySQL) và tuôn (Stream) mọi sự kiện Data Manipulation Language (DML: Insert, Update, Delete) ra ngoài.
 
 ```mermaid
-architecture-beta
-    group Source("cloud")[VPC: Source System]
-    group Streaming("cloud")[VPC: Data Platform]
-    group Dest("cloud")[Data Lake / Warehouse]
+graph TD
+    subgraph Source ["VPC: Source System"]
+        db[("Primary DB (PostgreSQL)")]
+        replica[("Read Replica")]
+    end
+    
+    subgraph Streaming ["VPC: Data Platform"]
+        debezium["Debezium / Kafka Connect"]
+        kafka["Apache Kafka / MSK"]
+    end
+    
+    subgraph Dest ["Data Lake / Warehouse"]
+        sink["Iceberg / Hudi Sink"]
+    end
 
-    service db("database')[Primary DB('PostgreSQL")] in Source
-    service replica("database")[Read Replica] in Source
-    service debezium("server")[Debezium / Kafka Connect] in Streaming
-    service kafka("server")[Apache Kafka / MSK] in Streaming
-    service sink("server")[Iceberg / Hudi Sink] in Dest
-
-    db:L -- R:replica
-    db:R -- L:debezium
-    debezium:R -- L:kafka
-    kafka:R -- L:sink
+    db --> replica
+    db --> debezium
+    debezium --> kafka
+    kafka --> sink
 ```
 
 - **Ưu điểm tuyệt đối:** 
