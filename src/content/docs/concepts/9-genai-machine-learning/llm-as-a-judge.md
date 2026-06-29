@@ -1,162 +1,149 @@
 ---
-title: "LLM làm giám khảo (LLM-as-a-judge)"
-difficulty: "Intermediate"
+title: "LLM làm Giám khảo (LLM-as-a-judge) - MLOps Thực Chiến"
+difficulty: "Advanced"
 tags: ["llm-evaluation", "llm-as-a-judge", "genai", "prompt-engineering", "mlops", "finops"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-26
+readingTime: "25 mins"
+lastUpdated: 2026-06-29
 seoTitle: "LLM-as-a-judge là gì? Kiến trúc Đánh giá Ứng dụng GenAI Enterprise"
-metaDescription: "Tìm hiểu kiến trúc hệ thống LLM-as-a-judge trong việc tự động hóa đánh giá ứng dụng GenAI. Phân tích FinOps, System Trade-offs và Operational Risks."
-description: "Khi đưa một ứng dụng GenAI vào môi trường thực tế, câu hỏi đau đầu nhất là làm sao đánh giá chất lượng tự động hóa quy mô lớn mà không cạn kiệt ngân sách. LLM-as-a-judge chính là giải pháp cốt lõi trong MLOps hiện đại."
+metaDescription: "Khám phá kiến trúc Asynchronous Offline Evaluation cho hệ thống GenAI. Phân tích RAG Triad, khắc phục Rate Limit Storms, quản trị FinOps và Thiên kiến của Judge."
+description: "Khi đưa hệ thống GenAI (RAG/Agent) vào Production, bài toán khốc liệt nhất không phải là sinh ra chữ, mà là làm sao đánh giá tự động hàng triệu câu trả lời mà không cạn kiệt ngân sách (FinOps). LLM-as-a-judge chính là hạt nhân của Evaluation MLOps."
 ---
 
-Khi triển khai các hệ thống GenAI (như RAG, Agentic Workflows) vào môi trường Production, thách thức lớn nhất không phải là làm sao để mô hình sinh ra chữ, mà là: *"Làm sao để đo lường tự động độ chính xác của hàng triệu luồng sinh chữ đó mà không cần đội ngũ QA đọc bằng mắt?"*
+Trong môi trường Lab, bạn có thể tự mình đọc bằng mắt vài chục câu trả lời của mô hình ngôn ngữ (LLM) và gật gù khen hay. Nhưng khi đẩy ứng dụng GenAI (Ví dụ: Hệ thống RAG đọc tài liệu nội bộ, Agentic Workflows) lên môi trường Production với hàng trăm nghìn Requests mỗi ngày, câu hỏi sinh tử đặt ra là: *"Làm sao để biết phiên bản Prompt V2 có thực sự tốt hơn V1, hay nó đang sinh ra hàng loạt Ảo giác (Hallucination) đe dọa uy tín công ty?"*
 
-**LLM-as-a-judge** (Sử dụng LLM làm Giám khảo) không chỉ là một kỹ thuật Prompt Engineering đơn thuần. Ở quy mô Enterprise (như Uber, Databricks, Netflix), nó là một **Evaluation Infrastructure** (Hạ tầng Đánh giá) hoàn chỉnh, bao gồm các luồng Async Batching, theo dõi Cost (FinOps), và xử lý Rate Limits.
+Thuê hàng nghìn Reviewers con người (Human-in-the-loop) để đọc từng log chat là điều không tưởng về cả thời gian và tài chính. Từ đó, kiến trúc **LLM-as-a-judge** (Sử dụng các mô hình LLM siêu việt như GPT-4 hay Claude 3.5 làm Giám khảo chấm điểm) ra đời. Tuy nhiên, ở quy mô Enterprise, nó không phải là một file Script chạy lặt vặt. Nó là một **Hạ tầng Đánh giá (Evaluation Infrastructure)** đồ sộ, dính líu chặt chẽ đến FinOps, Data Engineering và System Trade-offs.
 
 ---
 
-## 1. Kiến trúc Hệ thống Đánh giá (Evaluation Architecture)
+## 1. Kiến trúc Hệ thống Đánh giá (Asynchronous Evaluation Architecture)
 
-Trong thực tế, bạn hiếm khi chặn luồng thực thi chính (Execution Path) của User để chờ LLM Judge chấm điểm, vì nó sẽ cộng dồn độ trễ (Latency Penalty) rất lớn lên trải nghiệm người dùng. Thay vào đó, kiến trúc phổ biến nhất là **Asynchronous Offline Evaluation** (Đánh giá Batch bất đồng bộ).
-
-![LLM-as-a-judge Architecture](/images/9-genai-machine-learning/evaluation_architecture.png)
+Điều cấm kỵ đầu tiên trong thiết kế hệ thống GenAI: **Tuyệt đối không chặn (Block) luồng thực thi chính của User để chờ LLM Judge chấm điểm.**
+Gọi API của LLM tốn từ 2-5 giây. Nếu bạn bắt User chờ thêm 5 giây chỉ để hệ thống tự chấm điểm câu trả lời, trải nghiệm người dùng sẽ bị phá hủy. Kiến trúc bắt buộc phải là **Asynchronous Offline Evaluation** (Đánh giá Bất đồng bộ / Chạy ngầm).
 
 ```mermaid
 flowchart TD
-    subgraph Execution Path["Production Serving"]
+    subgraph Execution_Path ["Production Serving (Luồng User - Độ trễ thấp)"]
         U["User Query"] --> A["API Gateway"]
         A --> R["RAG Application"]
-        R --> DB["(Vector DB)"]
-        R --> LLM1["LLM - Generator"]
-        LLM1 --> Response["User Response"]
+        R --> DB["(Vector Database)"]
+        R --> LLM1["LLM - Generator (Sinh câu trả lời)"]
+        LLM1 --> Response["Phản hồi về cho User"]
     end
 
-    subgraph Evaluation Path["Asynchronous Evaluation Pipeline"]
-        R -.->|Log Traces| Kafka["Message Broker / Kafka"]
-        Kafka --> DL["(Data Lake / Delta Table)"]
+    subgraph Evaluation_Path ["Asynchronous Evaluation Pipeline (Luồng Đánh giá - Chạy ngầm)"]
+        R -.->|Gửi Traces| Kafka["Message Broker (Kafka)"]
+        Kafka --> DL["Data Lake / Delta Table"]
         
-        Job["Airflow / Databricks Job"] -->|Batch Pull| DL
-        Job --> Judge["LLM-as-a-Judge\nGPT-4 / Claude 3.5"]
-        Judge -->|Score & Rationale| Metric["(MLflow / Prometheus)"]
+        Job["Airflow / Databricks Job"] -->|Kéo Batch hàng đêm| DL
+        Job --> Judge["LLM-as-a-Judge\n(GPT-4o / Claude 3.5)"]
+        Judge -->|Điểm số & Lập luận| Metric["Metric Store (MLflow)"]
     end
     
     Metric --> Dashboard["Grafana / BI Dashboard"]
     
     classDef path fill:#f9f2f4,stroke:#d9534f,stroke-width:2px;
     classDef eval fill:#e9f7ef,stroke:#27ae60,stroke-width:2px;
-    class Execution Path path;
-    class Evaluation Path eval;
+    class Execution_Path path;
+    class Evaluation_Path eval;
 ```
 
-**Phân tích Kiến trúc:**
-1. **Telemetry & Logging:** Mọi Request, Context (các tài liệu chunks được retrieve từ Vector DB), và Response đều được serialize và bắn vào Kafka/Kinesis. Mục đích là để luồng ghi (write) không làm block I/O của ứng dụng chính.
-2. **Batch Processing:** Các job chạy ngầm (ví dụ: mỗi đêm lúc 2AM hoặc vi lô mỗi giờ) sẽ tổng hợp dữ liệu từ Data Lake, chuẩn bị Prompt kèm theo Rubric (tiêu chí đánh giá cứng), và gọi API tới LLM Judge.
-3. **Observability:** Điểm số (ví dụ: `Context Precision = 0.8`) bắt buộc đi kèm `Reasoning` (lý luận Chain-of-Thought của LLM Judge) được lưu vào các Metrics Store như MLflow để theo dõi sự suy thoái (Model Drift) và vẽ biểu đồ trên Grafana.
+**Phân tích Chi tiết Kiến trúc:**
+1. **Telemetry & Tracing:** Ứng dụng RAG không chỉ Log lại mỗi "Câu hỏi" và "Câu trả lời". Nó phải Log toàn bộ **Trace**, bao gồm các Chunks (Đoạn tài liệu) được móc lên từ Vector DB, metadata, và User Feedback (Nút Like/Dislike). Toàn bộ cục dữ liệu này được Serialize thành JSON và ném vào Kafka để xử lý sau.
+2. **Batch Processing:** Các Data Jobs (Chạy trên Apache Airflow hoặc Databricks) sẽ thức dậy vào 2 giờ sáng. Nó kéo hàng chục ngàn Logs của ngày hôm trước từ Data Lake, nạp vào Prompt đính kèm **Rubric (Tiêu chí chấm điểm khắt khe)**, và bắn hàng loạt (Batching) lên LLM Judge.
+3. **Observability (Giám sát Model Drift):** Mỗi điểm số (Ví dụ `Faithfulness = 0.2`) bắt buộc phải đi kèm một chuỗi **Reasoning (Lập luận Chain-of-Thought)** giải thích tại sao LLM Judge lại cho điểm thấp. Dữ liệu này được đẩy vào MLflow để theo dõi sự suy thoái (Drift) của hệ thống qua từng ngày.
 
 ---
 
-## 2. Tiêu chuẩn Đánh giá: The RAG Triad
+## 2. Tiêu chuẩn Đánh giá: RAG Triad (Tam giác RAG)
 
-Trong các hệ thống RAG, LLM Judge thường được giao nhiệm vụ đánh giá 3 khía cạnh độc lập (RAG Triad) thay vì chấm một điểm chung chung:
+Thay vì hỏi LLM Judge một câu ngây ngô *"Câu trả lời này có tốt không?"*, các kỹ sư chia nhỏ việc đánh giá thành 3 trục tọa độ toán học (Được gọi là **The RAG Triad**):
 
-1. **Context Precision (Độ chính xác của ngữ cảnh):** Context lấy ra từ Vector DB có thực sự chứa thông tin giải quyết câu hỏi không? (Đo lường năng lực của khối Retriever).
-2. **Faithfulness / Groundedness (Độ trung thực):** Response sinh ra có dựa **hoàn toàn** vào Context không? (Phát hiện Hallucination của khối Generator).
-3. **Answer Relevance (Độ liên quan):** Response có trả lời đúng trọng tâm Query của User không, hay trả lời lan man?
+1. **Context Precision (Độ chuẩn xác của Ngữ cảnh):** Các mảnh tài liệu (Chunks) mà khối Retriever moi lên từ Vector DB có thực sự chứa thông tin giải quyết được câu hỏi không? (Để chấm điểm khối Truy xuất).
+2. **Faithfulness / Groundedness (Độ trung thực):** LLM có dựa **100%** vào tài liệu được cung cấp để trả lời không? Hay nó lén lút "Bịa" thêm thông tin (Hallucination) từ kiến thức có sẵn của nó?
+3. **Answer Relevance (Độ bám sát câu hỏi):** Câu trả lời có đúng trọng tâm User hỏi không, hay chỉ trả lời lan man dài dòng?
 
-### Code Thực chiến: Implement LLM Judge với Python & Structured Outputs
-Dưới đây là cấu trúc code mô phỏng cách viết một LLM Judge sử dụng Pydantic để ép kiểu dữ liệu trả về, chống lại rủi ro LLM trả về format rác gây lỗi JSON Parsing Error ở Pipeline tiếp theo.
+### Code Thực chiến: LLM Judge với Structured Outputs (Pydantic)
+Sự cố kinh điển nhất của LLM Judge là nó sinh ra output Rác (Ví dụ: *"Dạ, điểm số là: {'score': 5}"*), làm sập (Crash) toàn bộ các hàm JSON Parser ở Data Pipeline phía sau. Dưới đây là cách sử dụng Pydantic để Ép (Force) LLM Judge phải trả về đúng Schema Toán học.
 
 ```python
 import openai
 from pydantic import BaseModel, Field
 
-# 1. Định nghĩa Schema trả về bắt buộc
+# 1. Định nghĩa Lược đồ (Schema) trả về cực kỳ nghiêm ngặt
 class EvaluationResult(BaseModel):
-    reasoning: str = Field(description="Step-by-step chain of thought explaining the score.")
-    score: int = Field(description="Score from 1 to 5 based on the rubric.")
-    is_hallucinated: bool = Field(description="True if the response contains information not in the context.")
+    reasoning: str = Field(description="Lập luận từng bước (Chain-of-thought) giải thích tại sao cho điểm số này.")
+    score: int = Field(description="Điểm số từ 1 đến 5 dựa trên Rubric.")
+    is_hallucinated: bool = Field(description="True nếu LLM sinh ra thông tin không hề tồn tại trong Context.")
 
 def evaluate_faithfulness(query: str, context: str, response: str) -> EvaluationResult:
     client = openai.Client()
     
     prompt = f"""
-    Bạn là một Giám khảo kiểm tra độ trung thực (Faithfulness) của hệ thống RAG.
-    Tuyệt đối tuân thủ tiêu chí (Rubric):
-    - Điểm 1: Câu trả lời hoàn toàn bịa đặt, không có trong ngữ cảnh.
-    - Điểm 3: Câu trả lời có phần đúng, nhưng thêm thắt chi tiết bên ngoài.
-    - Điểm 5: Câu trả lời hoàn toàn dựa trên ngữ cảnh.
+    Bạn là một Giám khảo khắt khe. Nhiệm vụ của bạn là đánh giá độ Trung thực [Faithfulness] của hệ thống RAG.
+    Tuyệt đối tuân thủ tiêu chí (Rubric) sau:
+    - Điểm 1: Câu trả lời hoàn toàn bịa đặt, không có dấu vết trong Ngữ cảnh.
+    - Điểm 3: Câu trả lời có phần đúng, nhưng chắp vá thông tin bên ngoài.
+    - Điểm 5: Câu trả lời lấy 100% từ Ngữ cảnh, không chế thêm.
     
-    [Query]: {query}
-    [Context]: {context}
-    [Response]: {response}
+    [User Query]: {query}
+    [Retrieved Context]: {context}
+    [LLM Response]: {response}
     
-    Hãy viết suy luận từng bước (Chain-of-Thought) trước khi ra điểm số.
+    Bắt buộc phải lập luận từng bước (Reasoning] trước khi đưa ra điểm số.
     """
 
-    completion = client.chat.completions.create(
+    # 2. Gọi API và ép kiểu với response_format
+    completion = client.chat.completions.parse(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
-        # Ép LLM trả về JSON khớp với Schema Pydantic bằng Structured Outputs
-        response_format={"type": "json_object"}, 
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "submit_evaluation",
-                "parameters": EvaluationResult.model_json_schema()
-            }
-        }],
-        tool_choice={"type": "function", "function": {"name": "submit_evaluation"}}
+        response_format=EvaluationResult, # OpenAI tự động ép LLM trả về đúng Object này
     )
     
-    # Parse và validate kết quả an toàn bằng Pydantic
-    raw_args = completion.choices[0].message.tool_calls[0].function.arguments
-    return EvaluationResult.model_validate_json(raw_args)
+    # Kết quả trả về là một Object Python an toàn tuyệt đối, không bao giờ lỗi JSON Parse
+    return completion.choices[0].message.parsed
 ```
 
 ---
 
-## 3. Rủi ro Vận hành (Operational Risks) & Đánh đổi (Trade-offs)
+## 3. Rủi ro Vận hành (Operational Risks] & Thảm Họa
 
-Triển khai LLM-as-a-judge không phải "cứ cắm API vào là chạy". Có những rủi ro kiến trúc mà đội ngũ Platform phải đối mặt:
+Việc cắm một API vào là xong chỉ có trong bài viết Tutorial. Thực tế Enterprise ẩn chứa những rủi ro cháy máy chủ:
 
-### 3.1. Incident Thực tế: Bão giới hạn Request (Rate Limit Storms)
-* **Incident:** Khi một DAG trên Airflow chạy vào nửa đêm để đánh giá 100,000 logs của ngày hôm trước, Job mở 500 concurrent workers gọi thẳng lên OpenAI API. Kết quả: Quét sạch hạn mức Token Per Minute (TPM), nhận về hàng loạt lỗi `HTTP 429 Too Many Requests`, làm sập luôn các service Production khác đang dùng chung API Key tổ chức.
-* **Cách khắc phục:** 
-  1. **Network Isolation:** Tách biệt API Key / TPM Quota cho luồng Evaluation và luồng Production Serving.
-  2. **Resiliency:** Bắt buộc implement thuật toán **Exponential Backoff & Jitter** trong HTTP Client của Judge.
-  3. **Batch API:** Tận dụng Batch API (ví dụ của OpenAI: gửi file `.jsonl` và nhận kết quả async sau 24h) để giảm 50% chi phí và không ăn vào Rate Limit realtime.
+### 3.1. Thảm Họa Bão Giới Hạn (Rate Limit Storms)
+- **Incident (Sự cố):** Đêm qua, Airflow Job chạy Batch Evaluation cho 100,000 tin nhắn Customer Service. Developer sử dụng `asyncio` để mở 500 kết nối song song gọi lên OpenAI API (Hoặc Azure OpenAI) cho nhanh.
+- **Hậu quả:** Hệ thống quét sạch hạn mức (Quota) Token Per Minute (TPM) của toàn công ty trong 2 giây. Hàng nghìn lỗi `HTTP 429 Too Many Requests` dội về. Tệ hại hơn, các Microservice Production khác đang phục vụ khách hàng thật cũng bị sập lây vì dùng chung API Key.
+- **Khắc phục Kiến trúc:** 
+  1. **Network Isolation:** Tách biệt hoàn toàn API Key và TPM Quota giữa luồng Evaluation và luồng Production.
+  2. **Batch API:** Đừng gọi REST API thời gian thực. Hãy sử dụng tính năng **Batch API** của OpenAI (Gửi 1 file `.jsonl` khổng lồ lên, nhận kết quả vào ngày hôm sau). Nó giảm **50% giá tiền** và không tính vào Rate Limit Real-time.
 
-### 3.2. FinOps: Đánh đổi Chi phí vs. Độ chính xác (Cost vs. Rigor)
-Dùng mô hình Frontier như GPT-4o để chấm 1 triệu tin nhắn mỗi ngày sẽ đốt sạch ngân sách Compute Cost.
-* **Trade-off:** Mức độ thông minh và lý luận (Reasoning capability) tỷ lệ thuận với giá tiền. 
-* **Kiến trúc Giải pháp (The Judge Cascade):** 
-  - Dùng GPT-4 (Gold Judge) để chấm một tập dữ liệu nhỏ đại diện (khoảng 5000 mẫu).
-  - Dùng tập dữ liệu nhãn vàng này để **Fine-tune** một model nhỏ mã nguồn mở (như `Llama-3-8B` hoặc `Phi-3`) thành một **Routing Judge** chuyên biệt.
-  - Triển khai model nhỏ này in-house (self-hosted). Nó có thể chạy với throughput cực cao, latency thấp, chi phí gần như bằng 0 (so với API SaaS), và chỉ fallback về GPT-4 khi model nhỏ trả về độ tự tin thấp (Low Confidence).
+### 3.2. Cơn Ác Mộng FinOps (Cost vs. Rigor)
+Dùng mô hình tối tân như GPT-4o để làm Giám khảo cho 1 triệu tin nhắn mỗi ngày sẽ khiến công ty nộp mạng hàng chục ngàn USD mỗi tháng chỉ riêng cho tiền... chấm điểm.
+- **The Judge Cascade (Giải pháp Cask Kiến trúc):** 
+  - Bước 1: Dùng GPT-4o (Gold Judge) chấm một tập dữ liệu nhỏ đại diện (Khoảng 5,000 mẫu).
+  - Bước 2: Lấy 5,000 mẫu "Điểm 10" này mang đi **Fine-tune (Huấn luyện lại)** một mô hình mã nguồn mở siêu nhỏ (Như `LLaMA-3-8B` hoặc `Phi-3`) biến nó thành một **Routing Judge chuyên biệt**.
+  - Bước 3: Đưa mô hình nhỏ này tự host (Self-hosted) trong công ty. Nó có thể chấm 1 triệu tin nhắn với chi phí điện năng gần như bằng 0. Khi mô hình nhỏ "Không chắc chắn" (Low Confidence), nó mới nhả Request về lại cho GPT-4o chấm.
 
-### 3.3. Thiên kiến của Giám khảo (Judge Biases)
-LLM là những giám khảo "thiên vị" một cách có hệ thống:
-* **Position Bias (Thiên vị vị trí):** Trong phương pháp so sánh cặp (Pairwise Comparison), khi yêu cầu LLM chọn giữa model A và model B, nó thường có thiên kiến ưu ái model nằm trước (A). 
-  * *Cách xử lý hệ thống:* Chạy thuật toán Swap Order (đảo vị trí prompt A-B) và thực hiện gọi API 2 lần độc lập. Điểm chỉ được xác nhận (Commit) khi cả 2 lần đều chọn cùng một model.
-* **Verbosity Bias (Thiên vị độ dài):** LLM mặc định thích những câu trả lời dài dòng, màu mè ngôn từ, cho dù một câu trả lời ngắn gọn là đủ chính xác.
-  * *Cách xử lý hệ thống:* Explicitly đưa rule giới hạn độ dài vào hệ thống Rubric, phạt điểm (penalize) các câu trả lời chứa thông tin thừa.
-* **Self-enhancement Bias (Thiên vị tự thân):** Mô hình thường có xu hướng chấm điểm cao hơn cho các câu trả lời mang "văn phong" được sinh ra từ chính dòng họ mô hình của nó (GPT-4 thường thích văn của GPT-3.5).
+### 3.3. Thiên Kiến Chết Người của Giám Khảo (Judge Biases)
+LLM không phải là những vị thần công tâm. Nghiên cứu *Judging LLM-as-a-Judge* (Zheng et al.) chỉ ra rằng LLM có 3 thiên kiến khuyết tật:
+1. **Position Bias (Thiên vị Vị trí đầu):** Nếu bạn đưa LLM Judge 2 câu trả lời A và B, bảo nó chọn cái nào hay hơn. Nó có xu hướng mù quáng chọn câu A (Câu nằm trước). 
+   - *Cách fix hệ thống:* Đảo ngược vị trí (Swap) A-B và gọi API lần 2. Chỉ ghi nhận kết quả nếu cả 2 lần gọi nó đều chọn cùng 1 đáp án.
+2. **Verbosity Bias (Thiên vị Chữ nghĩa Dài dòng):** LLM Judge mặc định "Đam mê" những câu trả lời dài lê thê, màu mè, cho dù câu trả lời ngắn gọn mới là chính xác nhất. Phải explicitly cấm điều này trong Rubric.
+3. **Self-enhancement Bias (Thiên vị Tự thân):** Dòng dõi nhà OpenAI (GPT-4) thường ưu ái chấm điểm cao cho văn phong do chính họ nhà GPT sinh ra (Hơn là văn phong của Claude).
 
 ---
 
-## 4. Các Framework Đánh giá chuẩn Công nghiệp
+## 4. Các Framework Đánh giá Chuẩn Công Nghiệp
 
-Thay vì tự viết các hàm API thô, cộng đồng Data Engineering có xu hướng đóng gói và chuẩn hóa thành các thư viện để tích hợp vào CI/CD:
+Thay vì code lại vòng lặp Retry hay tính toán Toán học từ đầu, Data Engineer sử dụng các Framework MLOps:
 
-- **RAGAS (RAG Assessment):** Framework tiêu chuẩn thực tế hiện nay chuyên trị RAG. Nó tự động hóa việc tính toán *RAG Triad* thông qua các bộ Prompts đã được chứng minh hiệu quả trong các Whitepaper (Reference-free evaluation).
-- **DeepEval:** Một framework open-source theo triết lý "Test-Driven Development (TDD)", hỗ trợ tích hợp thẳng vào `pytest`. Bạn có thể assert `Metric.is_successful()` ngay trong luồng CI/CD Pipeline để chặn (Block) việc deploy nếu phiên bản prompt mới làm rớt điểm số.
-- **TruLens:** Tập trung mạnh vào khía cạnh Observability, cung cấp Dashboard UI/UX trực quan hóa quá trình "Approve/Reject" của hệ thống LLM Judge và bóc tách các điểm nghẽn (bottleneck) trong chuỗi Agent.
+- **RAGAS (RAG Assessment):** Framework "Tiêu chuẩn ngành" hiện tại chuyên trị đánh giá RAG. Nó cung cấp sẵn các bộ Prompt Toán học siêu phức tạp để tính toán RAG Triad mà không cần tập dữ liệu Nhãn gốc (Reference-free evaluation).
+- **DeepEval:** Framework mã nguồn mở đi theo triết lý "Test-Driven Development (TDD)". Hỗ trợ nhúng thẳng vào `pytest`. Bạn có thể dùng lệnh `assert metric.is_successful[)` trong luồng CI/CD (GitHub Actions) để tự động chặn (Block) việc Deploy nếu phiên bản Prompt mới làm rớt điểm số.
+- **MLflow LLM Evaluate:** Tích hợp sâu vào Databricks, cho phép lưu trữ toàn bộ History của các cuộc đánh giá, dễ dàng so sánh Version 1 vs Version 2 bằng giao diện UI cực kỳ trực quan.
 
 ---
 
-## Nguồn Tham Khảo
-- [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al., 2023)](https://arxiv.org/abs/2306.05685)
-- [Databricks Blog: Best Practices for LLM Evaluation of RAG Applications](https://www.databricks.com/blog/2023/09/12/best-practices-llm-evaluation-rag-applications)
-- [OpenAI Documentation: Using the Batch API for Asynchronous Workloads](https://platform.openai.com/docs/guides/batch)
-- [DeepEval Open-Source Framework Documentation](https://docs.confident-ai.com/)
-- [Uber Engineering: Scaling AI Skill Evaluation in the Golden Marketplace](https://www.uber.com/en-US/blog/)
+## Nguồn Tham Khảo (References)
+1. **Zheng et al. (Arxiv 2023):** [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena][https://arxiv.org/abs/2306.05685]
+2. **Databricks Engineering:** [Best Practices for LLM Evaluation of RAG Applications][https://www.databricks.com/blog/2023/09/12/best-practices-llm-evaluation-rag-applications]
+3. **OpenAI Documentation:** [Batch API for Asynchronous Workloads][https://platform.openai.com/docs/guides/batch]
+4. **DeepEval Official Docs:** [The Open-Source LLM Evaluation Framework](https://docs.confident-ai.com/]

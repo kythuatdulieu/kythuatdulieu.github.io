@@ -1,131 +1,150 @@
 ---
 title: "Cơ sở dữ liệu Vector (Vector Database)"
 difficulty: "Intermediate"
-tags: ["vector-database", "genai", "embedding", "hnsw", "ivf-pq"]
+tags: ["vector-database", "genai", "embedding", "hnsw", "ivf-pq", "system-design", "finops"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích Kiến trúc HNSW, IVF-PQ"
-metaDescription: "Phân tích sâu kiến trúc Vector Database: thuật toán ANN (HNSW, IVF-PQ), các chiến lược Metadata Filtering, và Systemic Trade-offs trong vận hành thực tế (OOMKilled, Cartesian Explosion)."
-description: "Phân tích sâu về kiến trúc thực thi của Vector Database. Thay vì lý thuyết chung chung, chúng ta sẽ mổ xẻ cách các thuật toán HNSW, IVF-PQ hoạt động dưới nền tảng vật lý và những điểm 'thắt cổ chai' (bottlenecks) khi vận hành ở quy mô hàng tỷ vectors."
+lastUpdated: 2026-06-29
+seoTitle: "Cơ sở dữ liệu Vector (Vector Database) là gì? Kiến trúc HNSW vs IVF-PQ"
+metaDescription: "Phân tích sâu kiến trúc Vector Database: thuật toán ANN (HNSW, IVF-PQ), các chiến lược Metadata Filtering, và Systemic Trade-offs trong vận hành thực tế (OOMKilled)."
+description: "Phân tích kiến trúc thực thi vật lý của Vector Database. Thay vì lý thuyết AI chung chung, chúng ta sẽ mổ xẻ HNSW, IVF-PQ và những điểm 'thắt cổ chai' (bottlenecks) khi vận hành ở quy mô hàng tỷ vectors."
 ---
 
-Khác với Relational Database (RDBMS) sinh ra để giải quyết bài toán ACID và truy vấn cấu trúc, hay NoSQL tối ưu cho sự linh hoạt của Document/Key-Value, **Vector Database** ra đời để giải quyết một bài toán duy nhất nhưng cực kỳ tốn kém về mặt tính toán: **Tìm kiếm xấp xỉ không gian nhiều chiều (Approximate Nearest Neighbor - ANN)** ở quy mô khổng lồ.
+Khác với Relational Database (RDBMS - PostgreSQL, MySQL) sinh ra để giải quyết bài toán ACID và truy vấn có cấu trúc, hay NoSQL tối ưu cho sự linh hoạt của Document/Key-Value, **Vector Database** ra đời để giải quyết một bài toán duy nhất nhưng cực kỳ tốn kém về mặt tài nguyên (Compute & Memory): **Tìm kiếm xấp xỉ trong không gian nhiều chiều (Approximate Nearest Neighbor - ANN)** ở quy mô khổng lồ.
 
-Hệ thống RAG (Retrieval-Augmented Generation) hay Recommendation System hiện đại sẽ sụp đổ nếu dùng `numpy` hoặc `pgvector` với Brute-force (K-NN) để quét qua hàng tỷ vectors 1536-chiều. Thời gian phản hồi sẽ tăng từ vài mili-giây (ms) lên vài phút.
+Hệ thống RAG (Retrieval-Augmented Generation) hay Recommendation System hiện đại sẽ sụp đổ ngay lập tức nếu bạn dùng thuật toán Brute-force (K-NN - quét tuyến tính) để tìm kiếm qua hàng tỷ vectors 1536-chiều (ví dụ OpenAI Embeddings). Thời gian phản hồi sẽ tăng từ vài mili-giây (ms) lên vài phút. 
+
+Dưới góc nhìn của một Staff Engineer, Vector Database bản chất là một **hệ thống đánh đổi độ chính xác (Recall) để lấy tốc độ (Latency) và giảm thiểu RAM (Memory Footprint)**.
 
 ---
 
 ## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Một Vector Database hoàn chỉnh không chỉ lưu trữ mảng số. Nó là một hệ thống phân tán bao gồm Storage Engine, Indexing Engine, và Query Optimizer.
+Một Vector Database hoàn chỉnh ở cấp độ Enterprise (như Milvus, Qdrant) không chỉ lưu trữ mảng số. Nó là một hệ thống phân tán phức tạp bao gồm:
 
 ```mermaid
 graph TD
-    subgraph Ingestion Pipeline
-        A["Raw Data"] --> B["Embedding Model <br/> BERT/OpenAI"]
+    subgraph Client_Application
+        A["Raw Text / Image"] --> B["Embedding Model <br/> (e.g. text-embedding-3)"]
         B --> C["Dense Vectors <br/> Float32/Float16"]
-        D["Metadata <br/> JSON/Tags"] --> E["Vector DB Client"]
+        D["Metadata <br/> (Tenant_ID, Date)"] --> E["Vector DB SDK"]
         C --> E
     end
     
-    subgraph Vector Database Architecture
-        E --> F["Write-Ahead Log WAL"]
+    subgraph Vector_Database_Core
+        E --> F["Write-Ahead Log (WAL)\nĐảm bảo Durability"]
         F --> G["In-Memory Buffer"]
         
-        G --> H{"Indexer"}
-        H -->|Graph-based| I["HNSW Index <br/> Memory Heavy"]
-        H -->|Cluster-based| J["IVF-PQ Index <br/> Storage Optimized"]
+        G --> H{"Indexing Engine"}
+        H -->|Tốc độ & Recall cao| I["HNSW Index <br/> (Memory Bound)"]
+        H -->|Tiết kiệm RAM| J["IVF-PQ Index <br/> (Compute Bound)"]
         
-        I & J -.-> K["(Disk Storage / Mmap)"]
+        I & J -.-> K["(Persistent Storage / Mmap)"]
     end
     
-    subgraph Query Execution
-        L["Query Vector + Filters"] --> M["Query Optimizer"]
-        M --> N["Single-stage Filter"]
+    subgraph Query_Optimizer
+        L["Query Vector + Metadata Filters"] --> M["Filter Pushdown"]
+        M --> N["Single-stage Graph Traversal"]
         N --> O["Top-K Results"]
     end
 ```
 
-Khác với B-Tree index của RDBMS (độ phức tạp $O(\log N)$) cho exact match, Vector DB sử dụng các cấu trúc dữ liệu xác suất (probabilistic) để đánh đổi một chút độ chính xác (Recall) lấy tốc độ phản hồi tính bằng mili-giây.
+Khác với B-Tree index của RDBMS (có độ phức tạp $O(\log N)$) cho exact match, Vector DB sử dụng các cấu trúc dữ liệu xác suất (probabilistic) - gọi là ANN.
 
-## 2. Các Thuật Toán Indexing Cốt Lõi & Đánh Đổi
+---
 
-Đây là "trái tim" của Vector DB. Không có "silver bullet" (giải pháp hoàn hảo), Data Engineer phải chọn Index dựa trên Trade-offs giữa **Latency (Tốc độ)**, **Recall (Độ chính xác)**, và **Memory Footprint (RAM)**.
+## 2. Trái tim của Vector DB: HNSW vs. IVF-PQ
 
-### 2.1. HNSW (Hierarchical Navigable Small World)
-HNSW là thuật toán "State-of-the-Art" hiện nay (sử dụng mặc định trong Pinecone, Qdrant, Milvus). Dựa trên cấu trúc đồ thị nhiều tầng (multi-layer graph) giống như Skip-list kết hợp với Navigable Small World.
+Đây là quyết định hệ thống (Systemic Decision) quan trọng nhất bạn phải đưa ra. Không có "silver bullet" (giải pháp hoàn hảo).
 
-* **Cơ chế:** Các vectors được liên kết với nhau bằng các edges (cạnh). Tầng trên cùng rất thưa thớt (chỉ vài node). Khi query, thuật toán nhảy vào tầng trên cùng, tìm node gần nhất, rồi "rơi" xuống tầng dưới (dày đặc hơn), tiếp tục duyệt cho đến khi chạm tầng đáy (chứa toàn bộ node).
-* **Đánh đổi (Trade-offs):**
-  * **Pro:** Latency cực thấp ($O(\log N)$) và Recall cực cao (thường > 95%).
-  * **Con:** Cực kỳ tốn RAM (Memory-bound). Nó phải duy trì danh sách các neighbors (edges) cho mọi node trên RAM. Một index HNSW có thể phình to hơn 1.5 - 2 lần kích thước raw vectors. Thời gian Build Index (Insertion time) cũng rất chậm vì phải cập nhật lại cấu trúc đồ thị.
+### 2.1. HNSW (Hierarchical Navigable Small World) - Nhà vô địch về Latency
 
-### 2.2. IVF-PQ (Inverted File Index kết hợp Product Quantization)
-Được phát triển mạnh mẽ bởi FAISS (Meta), IVF-PQ là cứu cánh khi bạn có hàng tỷ vectors (Scale-out) và không đủ tiền thuê hàng tá servers RAM khủng.
+HNSW là thuật toán "State-of-the-Art" (được dùng làm mặc định trong Pinecone, Qdrant, Weaviate, pgvector). Nó dựa trên cấu trúc đồ thị nhiều tầng (Multi-layer Graph) lấy cảm hứng từ Skip-list.
 
-* **IVF (Inverted File):** Dùng thuật toán K-means để nhóm không gian vector thành $K$ cụm (Voronoi cells). Khi truy vấn, thay vì quét toàn bộ, hệ thống chỉ tìm cụm gần query vector nhất (centroids) và chỉ quét các vectors trong cụm đó.
-* **PQ (Product Quantization):** Kỹ thuật nén **Lossy**. Nó cắt vector (ví dụ 1536 chiều) thành nhiều khối nhỏ (vd: 8 khối, mỗi khối 192 chiều). Sau đó dùng clustering để gán cho mỗi khối một ID (byte). 
-* **Đánh đổi (Trade-offs):**
-  * **Pro:** Ép RAM cực mạnh. PQ có thể nén vector nhỏ lại 10-50 lần (phù hợp với môi trường Memory-constrained). IVF giúp tăng tốc độ quét tuyến tính.
-  * **Con:** Recall giảm đáng kể do nén Lossy và khả năng miss cụm của IVF (nếu vector nằm ở biên của Voronoi cell). Ngoài ra, khi dữ liệu drift (thay đổi phân phối), phải Re-cluster lại toàn bộ IVF (cực kỳ tốn CPU).
+*   **Cơ chế:** Các vectors được liên kết với nhau bằng các edges (cạnh). Tầng trên cùng rất thưa thớt. Khi query, thuật toán nhảy vào tầng trên cùng, tìm node gần nhất, rồi "rơi" xuống tầng dưới (dày đặc hơn), tiếp tục duyệt cho đến khi chạm tầng đáy.
+*   **Systemic Trade-offs:**
+    *   **Pro:** Latency cực thấp ($O(\log N)$) và Recall (độ chính xác) cực cao (thường > 95% đến 99%). Cực kỳ mượt mà cho các hệ thống Online RAG. Hỗ trợ Update/Delete (CRUD) rất tốt.
+    *   **Con:** **Cực kỳ tốn RAM (Memory-bound).** Thuật toán phải duy trì danh sách các neighbors (edges) cho mọi node. Một index HNSW có thể phình to hơn 1.5 - 2 lần kích thước raw vectors. Nếu bạn có 1 tỷ vectors 1536-chiều (khoảng 6TB raw data), HNSW index có thể đòi hỏi 10TB RAM để giữ mọi thứ trên bộ nhớ. CFO công ty bạn sẽ ngất xỉu khi nhìn thấy hóa đơn AWS.
 
-## 3. Metadata Filtering: The Cartesian Explosion Problem
+### 2.2. IVF-PQ (Inverted File Index kết hợp Product Quantization) - Cứu cánh cho FinOps
 
-Trong thực tế, bạn hiếm khi tìm KNN chay. Thường chúng ta cần query: *"Tìm 5 tài liệu giống văn bản này NHƯNG tác giả phải là 'A' và ngày tạo > '2024-01-01'"*. Vector DB xử lý bài toán này qua 3 hướng thiết kế vật lý:
+Được phát triển bởi FAISS (Meta), IVF-PQ là sự lựa chọn bắt buộc khi bạn Scale-out (Hàng chục triệu đến hàng tỷ vectors) và không đủ tiền thuê hàng tá servers RAM khủng.
 
-1. **Post-filtering:** Tìm Top-100 KNN trước bằng HNSW, sau đó loại bỏ những kết quả không thỏa mãn điều kiện metadata. 
-   * **Rủi ro:** Nếu 98/100 kết quả bị loại bởi metadata, user chỉ nhận được 2 kết quả (Missing results/Zero hits), dù trong DB vẫn còn hàng ngàn vector phù hợp xa hơn.
-2. **Pre-filtering:** Chạy bộ lọc metadata trước (giống RDBMS) để lấy danh sách ID, rồi mới quét HNSW/KNN trên tập con đó.
-   * **Rủi ro (HNSW Disconnected Graph):** Nếu bộ lọc quá khắt khe (chỉ 1% data thỏa mãn), các node còn lại trên đồ thị HNSW sẽ rời rạc, làm đứt gãy các đường đi (edges). HNSW sẽ mất tác dụng hoặc phải rớt về Brute-force, dẫn đến Latency tăng vọt.
-3. **Single-stage Filtering (Custom HNSW):** Đây là cách các Engine hiện đại như Qdrant hay Milvus giải quyết. Bộ lọc metadata được nhúng thẳng vào quá trình duyệt đồ thị. Nếu một node bị metadata reject, hệ thống bỏ qua nhưng vẫn mượn các cạnh (edges) của node đó để đi tiếp đến các neighbors khác.
+*   **IVF (Inverted File - Partitioning):** Dùng thuật toán K-means để nhóm không gian vector thành $K$ cụm (Voronoi cells). Khi truy vấn, hệ thống chỉ tính toán khoảng cách đến tâm cụm (centroids), sau đó chỉ quét các vectors nằm trong 1 hoặc vài cụm gần nhất.
+*   **PQ (Product Quantization - Lossy Compression):** Kỹ thuật nén **mất mát dữ liệu**. Nó cắt một vector dài (ví dụ 1536 chiều) thành nhiều khối nhỏ (vd: 8 khối). Sau đó dùng clustering để gán cho mỗi khối một ID (byte ngắn).
+*   **Systemic Trade-offs:**
+    *   **Pro:** Ép RAM cực mạnh. PQ có thể nén vector nhỏ lại 10-50 lần. Giảm thiểu chi phí hạ tầng (Cost/FinOps champion).
+    *   **Con:** Recall giảm mạnh do nén Lossy và rủi ro miss cụm của IVF (nếu vector nằm ở biên). **Đặc biệt:** Khi dữ liệu thay đổi (Data Drift), bạn phải chạy lại (Re-train) thuật toán clustering K-means cho toàn bộ index, gây tốn Compute khổng lồ. Không phù hợp với dữ liệu update liên tục.
 
-## 4. Cấu hình Kỹ thuật (Staff-level Configuration)
+---
 
-Đừng phó mặc cho cấu hình mặc định. Dưới đây là ví dụ cấu hình Collection trong Qdrant qua Python SDK để tối ưu HNSW Index cho môi trường Production, ngăn chặn **OOMKilled** (Out Of Memory).
+## 3. Metadata Filtering: Bãi mìn "Cartesian Explosion"
 
-```python
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, HnswConfigDiff, OptimizersConfigDiff
+Trong thực tế, bạn hiếm khi tìm KNN chay. Luôn luôn có filter: *"Tìm 5 tài liệu giống văn bản này NHƯNG thuộc `tenant_id = 'A'` và `status = 'ACTIVE'`"*. Vector DB xử lý bài toán này qua 3 hướng thiết kế vật lý:
 
-client = QdrantClient("localhost", port=6333)
+1.  **Post-filtering:** Tìm Top-100 KNN bằng HNSW trước, sau đó loại bỏ những kết quả không thỏa mãn metadata.
+    *   *Sự cố:* Nếu bộ lọc metadata quá khắt khe (chỉ 1% data thỏa mãn), 99/100 kết quả bị loại. User nhận được 1 kết quả (Zero hits), dù trong DB vẫn còn hàng ngàn vector phù hợp nằm xa hơn một chút.
+2.  **Pre-filtering:** Chạy bộ lọc metadata trước (dùng Inverted Index như RDBMS) để lấy danh sách ID, rồi mới quét HNSW trên tập con đó.
+    *   *Sự cố (Disconnected Graph):* HNSW Graph bị đứt gãy. Nếu bộ lọc loại bỏ 90% nodes, các nodes còn lại bị rời rạc, làm đứt gãy các đường đi (edges). HNSW mất tác dụng, hệ thống rớt về Brute-force -> CPU 100%, OOMKilled.
+3.  **Single-stage Filtering (Custom HNSW):** Các Engine hiện đại như Qdrant, Milvus thiết kế lại HNSW. Bộ lọc metadata được nhúng thẳng vào quá trình duyệt đồ thị. Nếu một node bị metadata reject, hệ thống bỏ qua (không đưa vào kết quả) nhưng **vẫn mượn các cạnh (edges) của node đó** để đi tiếp đến các neighbors khác. Đây là kiến trúc tối ưu nhất hiện nay.
 
-client.create_collection(
-    collection_name="enterprise_knowledge_base",
-    vectors_config=VectorParams(
-        size=1536,  # Kích thước vector của OpenAI text-embedding-ada-002
-        distance=Distance.COSINE
-    ),
-    # 1. Tối ưu kiến trúc HNSW Graph
-    hnsw_config=HnswConfigDiff(
-        m=32, # Số lượng cạnh (edges) tối đa mỗi node. Tăng M giúp tăng Recall (độ chính xác) nhưng ăn RAM (Memory Footprint) mạnh hơn.
-        ef_construct=200, # Kích thước queue khi build index. Càng lớn build càng chậm nhưng cấu trúc graph càng tốt.
-        full_scan_threshold=10000 # Nếu Pre-filtering trả về < 10,000 vectors, dùng Brute-force luôn thay vì duyệt Graph (tránh Overhead).
-    ),
-    # 2. Tối ưu Storage / Chống OOMKilled
-    optimizers_config=OptimizersConfigDiff(
-        memmap_threshold=20000, # Nếu segment > 20k vectors, chuyển payload (metadata) sang Mmap (Disk) thay vì giữ trên RAM. 
-        indexing_threshold=20000 # Chờ gom đủ 20k vectors mới build HNSW graph để tối ưu Write-Throughput.
-    )
-)
+---
+
+## 4. Code Thực Chiến: Cấu hình `pgvector` dưới góc độ Staff Engineer
+
+Đừng phó mặc cho cấu hình mặc định. PostgreSQL với extension `pgvector` là sự lựa chọn hoàn hảo ("Good Enough") để tránh Dependency Hell [không phải vận hành thêm cụm Qdrant/Milvus] nếu bạn có dưới 10-20 triệu vectors.
+
+Dưới đây là DDL để cấu hình HNSW Index đúng chuẩn cho Production, tránh bóp nghẹt RAM của Postgres:
+
+```sql
+-- Kích hoạt extension pgvector
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Tạo bảng lưu trữ Chunk dữ liệu cho RAG
+CREATE TABLE knowledge_chunks (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id UUID NOT NULL,
+    content TEXT,
+    -- Cột lưu trữ vector 1536 chiều của OpenAI
+    embedding vector(1536) 
+);
+
+-- BẮT BUỘC: Tạo Index B-Tree cho Metadata để hỗ trợ Pre/Post-filtering nhanh nhất
+CREATE INDEX idx_tenant_id ON knowledge_chunks(tenant_id);
+
+-- TỐI ƯU HNSW INDEX:
+-- Mặc định m=16, ef_construction=64. 
+-- Ở đây ta tăng m=32 (Tăng Recall, chấp nhận tốn RAM)
+-- Tăng ef_construction=128 (Build chậm hơn nhưng Graph chất lượng cao hơn)
+CREATE INDEX hnsw_idx_embedding ON knowledge_chunks 
+USING hnsw (embedding vector_cosine_ops)
+WITH (m = 32, ef_construction = 128);
+
+-- LƯU Ý KHI QUERY (Trong ứng dụng Python/NodeJS, thực thi lệnh này trước khi query)
+-- Điều chỉnh ef_search để tăng Recall lúc Query (Mặc định là 40, tăng lên 100)
+SET hnsw.ef_search = 100;
+
+-- Truy vấn lấy Top 5 chunks gần nhất cho một Tenant cụ thể
+SELECT id, content, (embedding <=> '[0.1, 0.2, ...]'] AS cosine_distance
+FROM knowledge_chunks
+WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+ORDER BY cosine_distance ASC
+LIMIT 5;
 ```
 
-## 5. Rủi Ro Vận Hành & Troubleshooting (Operational Risks)
+---
 
-- **JVM/Node OOMKilled:** Xảy ra cực kỳ phổ biến khi HNSW Index phình to vượt quá RAM của Kubernetes Pod. **Cách khắc phục:** Cấu hình `memmap_threshold` để đổ metadata xuống disk, hoặc chuyển sang dùng IVF-PQ nếu tập dữ liệu lên đến hàng trăm triệu.
-- **Index Build Bottleneck (Consumer Lag):** Khi có luồng streaming (Kafka) liên tục đổ vector vào DB, quá trình cập nhật đồ thị HNSW tốn rất nhiều CPU. **Cách khắc phục:** Tuning tham số `indexing_threshold` hoặc `ef_construct` nhỏ lại trong lúc bulk insert, sau đó build index offline.
+## 5. Rủi Ro Vận Hành & Troubleshooting (OOMKilled)
 
-## 6. Lựa chọn Vector DB
-
-- **Pinecone:** Serverless, managed. Phù hợp nếu team không có/thiếu Data Engineer cứng về hạ tầng. Ẩn đi hoàn toàn sự phức tạp nhưng chi phí ở quy mô lớn sẽ rất đắt.
-- **Qdrant:** Viết bằng Rust. Nổi bật với Single-stage filtering cực tốt, Payload lưu trữ hiệu quả (hỗ trợ Mmap/Disk). Đang là lựa chọn ưu tiên cho các team tự host (On-premise/Kubernetes).
-- **Milvus:** Sinh ra cho Scale-out (Hàng tỷ vectors). Kiến trúc microservices cực kỳ phức tạp (tách biệt query node, data node, index node). Chỉ dùng khi bạn là Enterprise có dữ liệu khổng lồ.
-- **pgvector:** Extension của Postgres. Dùng index `ivfflat` hoặc `hnsw`. Lựa chọn tuyệt vời ("Good Enough") nếu hệ thống đã có Postgres và số lượng vector < 10 triệu, giúp giảm "Dependency Hell" (không cần maintain thêm cụm Qdrant/Milvus).
+-   **JVM/Node OOMKilled (Out Of Memory):** Sự cố kinh điển nhất. Khi Insert lượng lớn vectors, quá trình build HNSW Graph đẩy RAM lên đỉnh điểm. Container bị Kubernetes chém chết (OOMKilled). 
+    *   *Khắc phục:* Trong Qdrant, cấu hình `memmap_threshold` để đổ metadata và vector xuống Disk (SSD NVMe) thay vì giữ trên RAM. Trên `pgvector`, giới hạn `work_mem` hoặc dùng IVF-PQ nếu tập dữ liệu quá khổng lồ.
+-   **Index Build Bottleneck:** Khi có luồng Kafka liên tục đổ vectors vào DB, cập nhật đồ thị HNSW tốn rất nhiều CPU (Consumer Lag phình to).
+    *   *Khắc phục:* Dừng build index tạm thời trong lúc bulk insert, sau đó build offline.
 
 ---
 
 ## Nguồn Tham Khảo (References)
 
-1. [Qdrant Documentation: Indexing and HNSW Configuration](https://qdrant.tech/documentation/concepts/indexing/)
-2. [Milvus Architecture: Scaling Vector Database](https://milvus.io/docs/architecture_overview.md)
-3. [Engineering at Meta: Faiss - A library for efficient similarity search](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/)
-4. *Bui, L.* (2024). Operational Risks in Vector Search Systems (Tech Blog Analysis).
+1.  **Qdrant Documentation: Indexing and HNSW Configuration** - Đi sâu vào Single-stage filtering.
+2.  **Milvus Architecture: Scaling Vector Database** - Thiết kế phân tán cho tỷ vectors.
+3.  **Engineering at Meta: Faiss** - Thư viện lõi cho IVF-PQ và thuật toán ANN.
+4.  **pgvector Documentation** - Cấu hình tối ưu Index trên PostgreSQL.

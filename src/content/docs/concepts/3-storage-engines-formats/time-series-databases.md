@@ -1,154 +1,130 @@
 ---
 title: "Kiến trúc Kỹ thuật Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)"
-description: "Phân tích sâu kiến trúc vật lý lưu trữ, thuật toán nén Gorilla, cơn ác mộng High Cardinality và Trade-offs hệ thống của InfluxDB, TimescaleDB, ClickHouse."
-lastUpdated: 2026-06-26
+description: "Phân tích sâu kiến trúc vật lý lưu trữ, thuật toán nén Gorilla, cơn ác mộng High Cardinality (Netflix Atlas) và Trade-offs hệ thống của InfluxDB, TimescaleDB, ClickHouse."
+lastUpdated: 2026-06-29
 ---
 
-Trong các hệ thống phân tán, dữ liệu chuỗi thời gian (Time-Series Data) phát sinh từ các cảm biến IoT, log hệ thống (Kubernetes), telemetry hay giao dịch tài chính mang một đặc thù dị biệt: **Khối lượng ghi (Write) khổng lồ, Append-only (hầu như không bao giờ Update), và các truy vấn phân tích (OLAP) thường quét dữ liệu theo một khoảng thời gian dài.**
+Trong các hệ thống phân tán, dữ liệu Chuỗi thời gian (Time-Series Data) phát sinh từ các cảm biến IoT, hệ thống giám sát (Kubernetes Metrics), Telemetry hay giao dịch tài chính mang một đặc thù vật lý vô cùng dị biệt: **Khối lượng ghi (Write) khổng lồ, luồng dữ liệu chỉ thêm mới (Append-only, hiếm khi Update), và các truy vấn phân tích thường quét dữ liệu theo một khoảng thời gian dài.**
 
-Sử dụng RDBMS truyền thống (như MySQL hay PostgreSQL thuần) làm Data Store cho Time-Series sẽ dẫn tới các điểm nghẽn nghiêm trọng về I/O đĩa và OOM (Out of Memory). Đó là lý do các hệ thống **Time-Series Databases (TSDB)** chuyên dụng ra đời.
+Sử dụng RDBMS truyền thống (như MySQL hay PostgreSQL thuần) làm Data Store cho Time-Series sẽ ngay lập tức dẫn tới các điểm nghẽn nghiêm trọng về I/O đĩa và OOM (Out of Memory). Đó là lý do các hệ thống **Time-Series Databases (TSDB)** chuyên dụng ra đời.
 
-## 1. Physical Execution: Tại sao B-Tree của RDBMS gục ngã?
+---
 
-RDBMS truyền thống mặc định sử dụng cấu trúc **B-Tree** cho primary/secondary index. 
-- **Write Amplification (Khuếch đại Ghi):** B-Tree hoạt động cực tốt cho Random Read/Write. Tuy nhiên, khi đối mặt với **High Ingestion Rate** (hàng triệu bản ghi mỗi giây), các node trong B-Tree bị đẩy nhanh đến trạng thái đầy, kích hoạt cơ chế **Page Splits** (tách trang) và cập nhật lại toàn bộ cây. Sự khuếch đại ghi này gây ra Disk Thrashing (nghẽn I/O đĩa), làm Write Throughput giảm tụt dốc.
-- **Lãng phí I/O (Row-oriented):** Khi phân tích Time-Series, ta thường quét (scan) một vài cột (ví dụ: `cpu_usage`) trong một khoảng thời gian dài. RDBMS phải nạp toàn bộ Row (chứa rất nhiều cột không liên quan) từ đĩa lên RAM.
+## 1. Physical Execution: Tại sao B-Tree của RDBMS Gục Ngã?
 
-Đó là lý do TSDB phải sử dụng kết hợp **Columnar Storage (Lưu trữ hướng cột)** và các cấu trúc Log-Structured (như LSM-Tree) để biến Random I/O thành Sequential I/O.
+RDBMS truyền thống (MySQL, Postgres) mặc định sử dụng cấu trúc **B-Tree** cho Primary/Secondary Index. 
+- **Write Amplification (Khuếch đại Ghi khốc liệt):** Cấu trúc B-Tree sinh ra để phục vụ Random Read/Write cực tốt. Tuy nhiên, khi đối mặt với **High Ingestion Rate** (Bơm hàng triệu bản ghi mỗi giây), các Node trong B-Tree bị đẩy nhanh đến trạng thái đầy, kích hoạt cơ chế **Page Splits** (Tách trang) và cập nhật lại toàn bộ cây liên tục. Sự khuếch đại Ghi này gây ra hiện tượng Disk Thrashing (Nghẽn I/O đĩa), làm Write Throughput giảm tụt dốc thê thảm.
+- **Lãng phí I/O (Row-oriented):** Khi phân tích Time-Series, ta thường quét (Scan) một vài cột (Ví dụ: Tính trung bình `cpu_usage`) trong một khoảng thời gian dài 30 ngày. B-Tree buộc RDBMS phải nạp toàn bộ Dòng (Row) chứa rất nhiều cột không liên quan từ đĩa cứng lên RAM, làm cạn kiệt băng thông bộ nhớ.
 
-## 2. Thuật toán nén Gorilla (Facebook 2015)
+Để sinh tồn, TSDB BẮT BUỘC phải sử dụng kết hợp **Columnar Storage (Lưu trữ hướng Cột)** và các cấu trúc dữ liệu Ghi tuần tự (Log-Structured / LSM-Tree) để biến Random I/O thành Sequential I/O.
 
-Dữ liệu chuỗi thời gian phình to rất nhanh, đòi hỏi các thuật toán nén chuyên biệt để hệ thống có thể lưu cache dữ liệu nóng (hot data) trên RAM. Đột phá lớn nhất chính là thuật toán **Gorilla**, được Facebook giới thiệu trong Whitepaper năm 2015, giảm kích thước lưu trữ xuống tới 10 lần.
+---
 
-Gorilla nén dữ liệu dựa trên đặc thù: Dữ liệu Time-series gửi về cực kỳ đều đặn (VD: mỗi 10 giây) và giá trị thay đổi rất ít (VD: nhiệt độ 50.1°C -> 50.2°C).
+## 2. Đột Phá Lưu Trữ: Thuật Toán Nén Gorilla (Facebook 2015)
 
-### 2.1. Delta-of-Delta (Nén Timestamp)
-Thay vì lưu Timestamp 64-bit khổng lồ, Gorilla tính khoảng cách giữa các Timestamp (`Delta`). Nếu thiết bị gửi đều đặn, `Delta` là một hằng số. Gorilla tiếp tục tính **Hiệu số của hiệu số (Delta-of-Delta)**. Vì Delta không đổi, Delta-of-Delta phần lớn sẽ bằng 0.
+Dữ liệu chuỗi thời gian phình to với tốc độ kinh hoàng. Để hệ thống có thể lưu Cache dữ liệu nóng (Hot Data) trên RAM và phục vụ Query ở tốc độ Sub-millisecond, Facebook đã công bố thuật toán **Gorilla (VLDB 2015)**. Nó giúp nén kích thước lưu trữ Time-series xuống tới 10 lần.
+
+Gorilla nén dữ liệu dựa trên đặc thù vật lý sau: Dữ liệu Sensor/Metrics gửi về cực kỳ đều đặn (Ví dụ: Cứ đúng 10 giây gửi 1 lần) và giá trị thay đổi rất ít (Ví dụ: Nhiệt độ 50.1°C lên 50.2°C).
+
+### 2.1. Nén Timestamp: Delta-of-Delta
+Thay vì lưu Timestamp 64-bit khổng lồ cho mỗi dòng, Gorilla tính khoảng cách thời gian giữa 2 lần gửi (`Delta`). Nếu thiết bị gửi cực kỳ đều đặn, `Delta` là một hằng số. Gorilla đi xa hơn bằng cách tính **Hiệu số của Hiệu số (Delta-of-Delta)**. Vì Delta là hằng số, Delta-of-Delta phần lớn sẽ bằng 0.
 
 ```mermaid
 flowchart LR
     A["T1: 10:00:00"] -->|Delta: 60s| B["T2: 10:01:00"]
     B -->|Delta: 60s| C["T3: 10:02:00"]
     
-    subgraph Delta-of-Delta
-        D("T2_Delta - T1_Delta = 0")
+    subgraph Thuật_toán_Delta_of_Delta
+        D["T2_Delta - T1_Delta = 0"]
         E("T3_Delta - T2_Delta = 0")
     end
     
     B -.-> D
     C -.-> E
 ```
-*Hệ thống mã hóa số 0 này chỉ bằng 1 bit duy nhất.*
+*Hệ thống mã hóa hàng triệu số 0 này chỉ bằng 1 bit duy nhất.*
 
-### 2.2. XOR-Based Float Compression (Nén Giá trị)
-Với các giá trị Float, Gorilla sử dụng toán tử **XOR (Exclusive OR)** giữa giá trị hiện tại và giá trị trước đó.
-- Nếu không đổi, XOR = 0 (lưu bằng 1 bit).
-- Nếu thay đổi nhỏ, XOR sẽ trả ra chuỗi bit chứa rất nhiều số 0 ở đầu (Leading zeros) và cuối (Trailing zeros). Hệ thống chỉ cần lưu số lượng zero và các bit có nghĩa ở giữa.
-
----
-
-## 3. Cơn Ác Mộng: High Cardinality
-
-**Cardinality (Độ phân cực)** là tổng số chuỗi thời gian (time-series) duy nhất trong hệ thống. Một chuỗi được định danh bằng: `Metric_Name + {Tag_Key: Tag_Value}`.
-
-- Hệ thống 100 Servers, 3 Regions -> `Cardinality = 300` (Rất an toàn).
-- Thêm tag `container_id` (được Kubernetes sinh ra ngẫu nhiên và hủy đi liên tục) -> `Cardinality = 100 * 3 * 1,000,000 = 300,000,000`.
-
-**Hậu quả của High Cardinality (Đặc biệt là Churning Cardinality):**
-Các TSDB truyền thống (như InfluxDB, Prometheus) duy trì một **Inverted Index** khổng lồ để map metadata tags tới các series vật lý. Khi Cardinality bùng nổ, Index này phình to, vượt quá dung lượng RAM. Hệ thống bắt đầu Swap xuống đĩa, dẫn đến OOMKilled (Out of Memory) hoặc Write Timeout.
+### 2.2. Nén Giá trị Float: XOR Compression
+Với các giá trị Float64, Gorilla sử dụng toán tử **XOR (Exclusive OR)** ở cấp độ Bit giữa giá trị hiện tại và giá trị trước đó.
+- Nếu Nhiệt độ không đổi, XOR = 0 (Chỉ tốn 1 bit lưu trữ).
+- Nếu thay đổi nhỏ xíu (Từ 50.1 -> 50.2), phép XOR sẽ tạo ra một chuỗi Bit chứa hàng chục số 0 ở đầu (Leading Zeros) và cuối (Trailing Zeros). Gorilla cắt bỏ toàn bộ số 0 này, chỉ lưu số lượng Zeros và mẩu dữ liệu có nghĩa ở giữa.
 
 ---
 
-## 4. Kiến trúc và Trade-offs: InfluxDB vs. TimescaleDB vs. ClickHouse
+## 3. Cơn Ác Mộng Khốc Liệt Nhất: High Cardinality
 
-Thị trường chia làm 3 trường phái chính: Purpose-built (InfluxDB), Relational Extension (TimescaleDB) và OLAP Engine (ClickHouse).
+**Cardinality (Độ phân cực)** là tổng số chuỗi thời gian (Time-series) duy nhất tồn tại trong hệ thống. Một chuỗi được định danh bằng công thức: `Metric_Name + {Tag_Key: Tag_Value}`.
+
+- Ví dụ 1: Hệ thống có 100 Servers, phân bổ ở 3 Regions -> `Cardinality = 100 * 3 = 300` (Rất an toàn).
+- Ví dụ 2: Data Engineer thiếu kinh nghiệm thêm Tag `container_id` (Do Kubernetes sinh Hash ngẫu nhiên và liên tục hủy đi tạo mới) hoặc Tag `user_id` -> `Cardinality = 100 * 3 * 1,000,000 = 300,000,000`.
+
+**Hậu quả sập hệ thống (OOMKilled):**
+Các TSDB truyền thống (như InfluxDB, Prometheus) duy trì một **Inverted Index (Chỉ mục Đảo ngược)** khổng lồ trên RAM để Map các Metadata Tags tới các Chuỗi vật lý dưới đĩa. Khi Cardinality bùng nổ, Index này phình to vượt quá dung lượng RAM vật lý. 
+Lúc này, hệ điều hành (OS) bắt đầu Swap dữ liệu xuống đĩa cứng, dẫn đến độ trễ Ghi (Write Timeout) tăng vọt. Cuối cùng, tiến trình bị OS "Bắn bỏ" (OOMKilled).
+
+**Cách Netflix đối phó (Atlas & Druid):** 
+Netflix sử dụng Atlas (In-memory TSDB) và hứng chịu nỗi đau High Cardinality với dữ liệu Event Logs. Để khắc phục, họ phải dùng kỹ thuật **Streaming Alert Evaluation** (Đánh giá cảnh báo trên Luồng ngay trước khi Ghi xuống đĩa) để né giới hạn bộ nhớ, đồng thời dùng **Apache Druid Roll-ups** để gom nhóm (Pre-aggregate) các Row có cùng Dimension (Tags) theo thời gian, ép Cardinality giảm xuống trước khi Ingest.
+
+---
+
+## 4. Kiến trúc và Trade-offs: InfluxDB vs TimescaleDB vs ClickHouse
+
+Thị trường TSDB chia làm 3 trường phái hệ thống: Purpose-built (InfluxDB), Relational Extension (TimescaleDB) và OLAP Engine (ClickHouse).
 
 ### 4.1. InfluxDB (TSM & TSI Architecture)
-
-InfluxDB được viết bằng Go/Rust, sinh ra chuyên biệt cho Time-Series.
-
-- **TSM (Time-Structured Merge Tree):** Là bản tối ưu hóa của LSM-Tree chuyên cho Time-Series.
-- **TSI (Time Series Index):** Khi nhận ra Inverted Index trên RAM không thể scale (gây ra sự cố High Cardinality), InfluxDB tạo ra TSI để đẩy Index xuống disk (sử dụng memory-mapped files để tận dụng LRU cache của OS).
-
-```bash
-# Code thực chiến: Dữ liệu InfluxDB Line Protocol
-# <measurement>[,<tag_key>=<tag_value>...] <field_key>=<field_value>[,<field2>=<field2>...] [timestamp]
-cpu,host=serverA,region=us-west usage_user=10.0,usage_system=5.0 1687799400000000000
-```
+InfluxDB được viết bằng Go/Rust, sinh ra chuyên biệt 100% cho Time-Series.
+- **TSM (Time-Structured Merge Tree):** Là bản tối ưu hóa của kiến trúc LSM-Tree chuyên cho Time-Series. Hỗ trợ Write siêu tốc và nén Gorilla.
+- **TSI (Time Series Index):** Khi nhận ra Inverted Index trên RAM không thể Scale và gây sập vì High Cardinality, InfluxDB tạo ra TSI để đẩy Index xuống Disk (Sử dụng Memory-mapped files để "Lợi dụng" tính năng LRU Cache của OS).
 
 **Trade-offs (Sự đánh đổi):**
-- *Ưu điểm:* Cài đặt siêu nhanh, nén dữ liệu cực tốt, quản lý Retention và Downsampling tích hợp sẵn (Continuous Queries).
-- *Nhược điểm:* TSI giảm tải RAM nhưng **Write Throughput vẫn bị ảnh hưởng nặng** bởi High Cardinality. Mỗi series mới sinh ra (churning) buộc engine phải cập nhật Inverted Index trên đĩa. Bản mã nguồn mở không hỗ trợ Clustering phân tán.
+- *Ưu điểm:* Cài đặt nhẹ, dễ dùng, nén dữ liệu cực gắt, hỗ trợ Data Retention (Tự động xóa rác) và Downsampling (Roll-up dữ liệu cũ) ngầm.
+- *Nhược điểm:* TSI giảm tải RAM nhưng **Write Throughput vẫn bị tụt huyết áp** bởi High Cardinality. Mỗi khi có một Series mới (Churning), Engine buộc phải cập nhật Inverted Index lề mề trên đĩa. Bản mã nguồn mở (OSS) bị khóa chức năng Clustering (Phân tán nhiều Node).
 
 ### 4.2. TimescaleDB (PostgreSQL Extension)
+Thay vì đập đi xây lại một Engine hoàn toàn mới, TimescaleDB biến PostgreSQL thành TSDB nhờ kiến trúc **Hypertables**. Lập trình viên chỉ thấy 1 Bảng (Table) duy nhất, nhưng ở tầng vật lý, dữ liệu bị băm vằn thành hàng nghìn **Chunks (Mảnh nhỏ)** theo thời gian.
 
-Thay vì tạo ra engine hoàn toàn mới, TimescaleDB biến PostgreSQL thành TSDB nhờ kiến trúc **Hypertables**. Lập trình viên tương tác với một bảng duy nhất, nhưng ở mức vật lý (Physical Layer), dữ liệu được phân mảnh thành các **Chunks**.
-
-```sql
--- Chuyển đổi bảng PostgreSQL thành Hypertable
-CREATE TABLE conditions (
-  time        TIMESTAMPTZ       NOT NULL,
-  location    TEXT              NOT NULL,
-  temperature DOUBLE PRECISION  NULL
-);
-
--- Phân mảnh (chunk) dữ liệu mỗi 7 ngày
-SELECT create_hypertable('conditions', by_range('time', INTERVAL '7 days'));
-```
-
-**Trade-offs (Tối ưu Chunk Size):**
-Bài toán kiến trúc lớn nhất của TimescaleDB là cấu hình `chunk_time_interval`. 
-- **Nếu Chunk quá lớn:** Index của Chunk đang Write (Active Chunk) vượt quá 25% RAM. OS phải đẩy Index xuống disk -> Gây Disk Thrashing trong lúc Ingest.
-- **Nếu Chunk quá nhỏ:** Gây ra **Metadata Bloat** và Query Planning Overhead. Khi SELECT, Query Planner của Postgres phải tính toán execution plan cho hàng nghìn Chunks con, làm thời gian plan query lâu hơn cả thời gian execute.
-- *Ưu điểm:* Hỗ trợ SQL chuẩn, có thể `JOIN` trực tiếp với dữ liệu nghiệp vụ (VD: `JOIN` log với bảng `User_Profile`).
+**Trade-offs (Bài toán cấu hình Chunk Size):**
+Sự sống còn của TimescaleDB nằm ở việc cấu hình tham số `chunk_time_interval`. 
+- **Nếu Chunk quá lớn (Ví dụ 1 Tháng):** B-Tree Index của Chunk đang được Ghi (Active Chunk) sẽ phình to vượt quá 25% RAM. Postgres bị ép đẩy Index xuống đĩa, gây Disk Thrashing làm sập luồng Ingest.
+- **Nếu Chunk quá nhỏ (Ví dụ 1 Giờ):** Gây ra **Metadata Bloat**. Khi bạn gõ `SELECT` 1 tháng, Query Planner của Postgres phải tính toán Execution Plan cho 720 Chunks con. Thời gian Plan Query (Lên kế hoạch) còn lâu hơn cả thời gian quét đĩa.
+- *Ưu điểm:* Hỗ trợ Full SQL chuẩn, khả năng `JOIN` bá đạo với dữ liệu Business (Ví dụ: `JOIN` log nhiệt độ với bảng `Customer_Info`).
 
 ### 4.3. ClickHouse (Sparse Index & Columnar OLAP)
+ClickHouse không thèm dùng Inverted Index cho Tags. Thay vào đó, nó là một cỗ máy cày ải OLAP dựa trên họ **MergeTree** và cấu trúc **Sparse Index (Chỉ mục Thưa)**.
 
-ClickHouse không dùng Inverted Index như InfluxDB, thay vào đó nó là một cỗ máy cày ải OLAP dựa trên họ **MergeTree** và **Sparse Index (Chỉ mục thưa)**. 
-
-Thay vì index từng dòng, ClickHouse nhóm dữ liệu thành các **Granules** (mặc định 8,192 dòng/granule). Index chỉ lưu trữ giá trị đầu tiên của mỗi granule. 
+Thay vì Index từng Dòng như Postgres, ClickHouse nhóm dữ liệu thành các **Granules (Hạt)** (Mặc định 8,192 dòng/Granule). Index chỉ lưu trữ giá trị đầu tiên của mỗi Granule. 
 
 ```mermaid
 flowchart TD
-    A["Primary Index (RAM)"] -->|Binary Search| B["Mark 0"]
-    A --> C["Mark 1"]
-    A --> D["Mark 2"]
+    A["Primary Sparse Index (Hoàn toàn trên RAM)"] -->|Binary Search| B["Mark 0 (Time: 10:00)"]
+    A --> C["Mark 1 (Time: 10:05)"]
+    A --> D["Mark 2 (Time: 10:10)"]
     
-    B -->|Disk Pointer| E["Granule 0: Row 1-8192"]
+    B -->|Disk Pointer| E["Granule 0: Row 1-8192 (Nén lốm đốm)"]
     C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
     
     style A fill:#f96,stroke:#333,stroke-width:2px
 ```
 
-```sql
--- Khởi tạo bảng MergeTree trong ClickHouse
-CREATE TABLE system_metrics (
-    timestamp DateTime,
-    container_id String,
-    cpu_usage Float32
-) ENGINE = MergeTree()
-ORDER BY (timestamp, container_id) -- Dữ liệu sắp xếp vật lý theo time
-SETTINGS index_granularity = 8192;
-```
-
-**Trade-offs (Giải quyết triệt để High Cardinality):**
-- *Ưu điểm:* **Trị tận gốc High Cardinality**. Vì không duy trì Inverted Index khổng lồ cho từng Tag, ClickHouse sử dụng sức mạnh rà soát cột (brute-force scan) kết hợp Sparse Index (nằm hoàn toàn trên RAM). Tốc độ Ingest có thể đạt hàng triệu rows/giây mà không bị ngộp.
-- *Nhược điểm:* Các thao tác UPDATE/DELETE rất nặng (phải dùng `ALTER TABLE ... UPDATE` dạng Mutation phi đồng bộ). Thiếu các hàm Time-series tích hợp sẵn (như các hàm trượt cửa sổ phức tạp), yêu cầu Data Engineer phải viết SQL phức tạp hơn.
+**Trade-offs [Chất dứt điểm High Cardinality]:**
+- *Ưu điểm:* **Tuyệt chiêu trị tận gốc High Cardinality**. Vì không có Inverted Index khổng lồ nào cả, ClickHouse sử dụng sức mạnh đọc đĩa thô bạo (Brute-force Columnar Scan) kết hợp Sparse Index cực nhẹ (Nằm gọn trên RAM). Tốc độ Ingest có thể đạt hàng chục triệu Rows/giây bất chấp có bao nhiêu Tag.
+- *Nhược điểm:* Thao tác `UPDATE/DELETE` là ác mộng (Phải dùng cơ chế `ALTER TABLE ... UPDATE` phi đồng bộ - Asynchronous Mutation). Thiếu các hàm Time-series có sẵn (Ví dụ: Trượt cửa sổ Gap-filling), buộc Data Engineer phải viết SQL phức tạp chết đi sống lại.
 
 ---
 
 ## 5. Kiến trúc Tổng kết (Decision Tree)
 
-1. Chọn **InfluxDB** nếu: Team chỉ cần xây dựng hệ thống giám sát Metrics (Monitor/Alerting), hệ sinh thái đã dùng TICK/Telegraf, Cardinality kiểm soát được.
-2. Chọn **TimescaleDB** nếu: Dữ liệu Time-series cần được `JOIN` mạnh mẽ với Business Data (Postgres), team vững SQL, quy mô không đòi hỏi một cluster phân tương lớn.
-3. Chọn **ClickHouse** nếu: Hệ thống thuộc hàng Mega-scale (hàng chục tỷ bản ghi), dữ liệu chứa logs/traces/metrics phức tạp, và hệ thống liên tục crash vì High/Churning Cardinality.
+Dành cho System Design Interview hoặc chọn Stack:
+1. Chọn **InfluxDB/Prometheus**: Nếu Team chỉ cần giám sát (Monitor/Alerting) máy chủ K8s, quy mô vửa phải, muốn có sẵn Retention/Downsampling.
+2. Chọn **TimescaleDB**: Nếu dữ liệu Time-series cần được `JOIN` chặt chẽ với dữ liệu nghiệp vụ (Postgres), Team thành thạo SQL, quy mô không đòi hỏi một Cluster phân tán quá lớn.
+3. Chọn **ClickHouse (Hoặc Apache Druid)**: Nếu hệ thống thuộc chuẩn Mega-scale (Hàng chục Tỷ bản ghi/ngày), dữ liệu chứa Logs/Metrics phức tạp, và Team liên tục mất ngủ vì sập Server do High Cardinality.
 
 ---
 
 ## Nguồn Tham Khảo (References)
 
-1. [Gorilla: A Fast, Scalable, In-Memory Time Series Database (Facebook Whitepaper, 2015)](https://www.vldb.org/pvldb/vol8/p1816-teller.pdf)
-2. [InfluxDB Storage Engine: Time-Structured Merge Tree (TSM) & Time Series Index (TSI)](https://docs.influxdata.com/influxdb/v1.8/concepts/storage_engine/)
-3. [TimescaleDB Architecture: Hypertables and Chunks (Timescale Docs)](https://docs.timescale.com/use-timescale/latest/hypertables/)
-4. [ClickHouse Sparse Indexes and Data Skipping (ClickHouse Official Blog)](https://clickhouse.com/docs/en/optimize/sparse-primary-indexes)
-
+1. **Facebook Whitepaper:** [Gorilla: A Fast, Scalable, In-Memory Time Series Database (VLDB 2015]][https://www.vldb.org/pvldb/vol8/p1816-teller.pdf]
+2. **Netflix Tech Blog:** [Atlas: Netflix's Primary Telemetry Platform][https://netflixtechblog.com/]
+3. **InfluxData Docs:** [InfluxDB Storage Engine (TSM & TSI]][https://docs.influxdata.com/influxdb/v1.8/concepts/storage_engine/]
+4. **Timescale Docs:** [Hypertables and Chunks Architecture][https://docs.timescale.com/use-timescale/latest/hypertables/]
+5. **ClickHouse Docs:** [Sparse Primary Indexes and Data Skipping](https://clickhouse.com/docs/en/optimize/sparse-primary-indexes]

@@ -1,126 +1,104 @@
 ---
-title: "Kiến trúc RAG (Retrieval-Augmented Generation)"
+title: "Kiến trúc RAG Thực Chiến: Từ Naive RAG đến Advanced RAG"
 difficulty: "Advanced"
-tags: ["rag", "genai", "llm", "vector-database", "information-retrieval", "finops"]
+tags: ["rag", "genai", "llm", "vector-database", "information-retrieval", "finops", "system-design", "data-engineering"]
 readingTime: "25 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Thiết kế Kiến trúc RAG cho Hệ thống Data"
-metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG) nâng cao từ góc nhìn Data Engineer. Phân tích Chunking, Hybrid Search, Reranking, Trade-offs và rủi ro vận hành."
-description: "RAG không chỉ là việc gọi API của OpenAI. Dưới góc độ Kỹ thuật Dữ liệu, RAG là một hệ thống phân tán phức tạp đòi hỏi luồng xử lý dữ liệu chặt chẽ và tối ưu hóa truy xuất cao độ."
+lastUpdated: 2026-06-29
+seoTitle: "Thiết kế Kiến trúc RAG Hệ thống: Advanced RAG, OOM, FinOps"
+metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG) nâng cao từ góc nhìn Data Engineer. Phân tích Query Translation, Query Routing, Trade-offs và rủi ro vận hành."
+description: "RAG không chỉ là việc gọi API của OpenAI. Dưới góc độ Kỹ thuật Hệ thống, RAG là một Data Engineering Pipeline phức tạp đòi hỏi luồng xử lý chặt chẽ (Ingestion) và tối ưu hóa truy xuất (Advanced Inference)."
 ---
 
-Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng ngôn ngữ và suy luận logic xuất sắc. Tuy nhiên, khi đưa vào môi trường doanh nghiệp Enterprise, các hệ thống AI thuần túy (chỉ dựa vào LLM prompt) sẽ gãy vỡ ngay lập tức do ba nguyên nhân chí tử:
+Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng suy luận xuất sắc. Tuy nhiên, khi đưa vào môi trường Production, các hệ thống AI thuần túy sẽ thất bại do ba nguyên nhân chí tử:
+1. **Ảo giác (Hallucination)**: LLM có xu hướng "bịa" ra thông tin khi gặp câu hỏi ngoài dữ liệu huấn luyện.
+2. **Dữ liệu lỗi thời (Knowledge Cutoff)**: Việc Fine-tuning liên tục để cập nhật thông tin mới là bài toán bất khả thi về Compute Cost.
+3. **Thiếu ngữ cảnh nội bộ (Data Silos)**: LLM không có quyền truy cập vào CSDL nội bộ của doanh nghiệp.
 
-1. **Ảo giác (Hallucination)**: LLM có xu hướng "bịa" ra thông tin (confabulation) khi gặp các câu hỏi ngoài phạm vi dữ liệu huấn luyện, gây ra những rủi ro pháp lý và vận hành khôn lường.
-2. **Dữ liệu lỗi thời (Knowledge Cutoff)**: Trọng số (weights) của mô hình bị đóng băng sau khi pre-training. Việc tái huấn luyện (retraining) hay Fine-tuning liên tục để cập nhật thông tin là bài toán bất khả thi về mặt tài chính (GPU Compute).
-3. **Thiếu ngữ cảnh nội bộ (Data Privacy & Silos)**: Các LLM thương mại không thể, và không được phép, truy cập vào cơ sở dữ liệu riêng tư (Ví dụ: dữ liệu giao dịch, tài liệu bảo mật nội bộ) của công ty.
-
-**RAG (Retrieval-Augmented Generation)** ra đời như một mẫu thiết kế (Design Pattern) tiêu chuẩn để giải quyết các hạn chế này. Nó biến LLM từ một "chuyên gia thuộc lòng" thành một "nghiên cứu viên có thư viện mở" (open-book exam).
-
-Trong bài viết này, chúng ta sẽ không nói về RAG cơ bản (đọc text -> embedding -> query). Thay vào đó, chúng ta sẽ "mổ xẻ" hệ thống RAG dưới lăng kính của một **Staff Data Engineer**: Pipeline vật lý diễn ra như thế nào, làm sao tối ưu hóa hiệu suất truy xuất, và đánh đổi (Trade-offs) trong thiết kế hệ thống.
+**RAG (Retrieval-Augmented Generation)** ra đời như một Mẫu thiết kế (Design Pattern) giải quyết triệt để 3 vấn đề trên. Tuy nhiên, RAG cấp độ doanh nghiệp (Advanced RAG) khác hoàn toàn với Naive RAG (RAG cơ bản). Bài viết này sẽ mổ xẻ hệ thống RAG dưới lăng kính của một **Staff Data Engineer**.
 
 ---
 
-## Kiến trúc Thực thi Vật lý (Physical Execution)
+## 1. Naive RAG vs. Advanced RAG
 
-Một hệ thống RAG cấp độ Enterprise (Advanced RAG) được chia làm hai luồng (pipelines) tách biệt hoàn toàn về mặt vòng đời và đặc tính workload: **Data Ingestion Pipeline** (chạy batch hoặc streaming) và **Inference Pipeline** (chạy realtime).
+### A. Naive RAG
+Kiến trúc tuyến tính đơn giản: **Index (Nhúng vector) $\rightarrow$ Retrieve (Tìm Top-K) $\rightarrow$ Generate (Sinh Text)**. 
+- **Điểm yếu:** Độ nhạy (Recall) thấp, dễ trượt các câu hỏi phức tạp (multi-hop questions), cực kỳ nhạy cảm với cách người dùng diễn đạt (phrasing).
 
-![RAG Architecture Overview](/images/9-genai-machine-learning/advanced-rag.png)
-*(Minh họa luồng kiến trúc RAG cơ bản - Nguồn: LlamaIndex)*
-
-### 1. Data Ingestion Pipeline (Luồng chuẩn bị dữ liệu)
-
-Nhiệm vụ của pipeline này là ETL (Extract, Transform, Load) dữ liệu phi cấu trúc thành các Vector và lưu trữ vào Vector Database. Quá trình này đòi hỏi Compute cao.
-
-```mermaid
-flowchart LR
-    subgraph Data Sources
-    A["S3 / GCS"] --> C("Document Parser")
-    B["Postgres CDC"] --> C
-    end
-    
-    C --> D("Chunking Strategy")
-    D --> E("Embedding Model")
-    E --> F["(Vector Database)"]
-```
-
-* **Document Parsing & Extraction:** Các tài liệu (PDF, Word, HTML) cần được parse thành text thuần. Các kỹ sư thường dùng công cụ OCR hoặc parsers (như Unstructured.io) để bóc tách cả bảng biểu và metadata (ngày tạo, tác giả).
-* **Chunking (Cắt nhỏ dữ liệu):** Dữ liệu quá lớn sẽ tràn Context Window của LLM, quá nhỏ sẽ mất ngữ cảnh. 
-* **Embedding Generation:** Gọi API (như `text-embedding-3-large`) hoặc tự host các mô hình mã nguồn mở (như `BGE-M3`) để biến các chunk thành các mảng số thực (vectors).
-* **Vector Indexing:** Ghi (Upsert) dữ liệu vào Vector Database (Milvus, Pinecone, hoặc pgvector).
-
-**Code Thực chiến (Terraform cấu hình Pinecone Index Serverless):**
-
-Thay vì click tay trên UI, các hệ thống production luôn được quản lý bằng Infrastructure as Code (IaC) để đảm bảo tính Reproducibility.
-
-```hcl
-resource "pinecone_index" "enterprise_knowledge" {
-  name      = "corp-docs-index"
-  dimension = 1536 # Kích thước vector của OpenAI text-embedding-3-small
-  metric    = "cosine"
-
-  spec {
-    serverless {
-      cloud  = "aws"
-      region = "us-west-2"
-    }
-  }
-}
-```
-
-### 2. Inference Pipeline (Luồng Suy luận)
-
-Khi user đặt câu hỏi, hệ thống yêu cầu tốc độ phản hồi cực thấp (Low Latency).
+### B. Advanced RAG
+Biến RAG thành một **Agentic Workflow** đa bước. Hệ thống không đi thẳng vào tìm kiếm mà có các lớp phân tích và định tuyến câu hỏi.
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant App as API Gateway / RAG App
-    participant Embed as Embedding Model
-    participant VDB as Vector DB
-    participant LLM as LLM("GPT-4o")
-
-    User->>App: Gửi câu hỏi (Query)
-    App->>Embed: Embed câu hỏi
-    Embed-->>App: Trả về Query Vector
-    App->>VDB: Hybrid Search("Vector + BM25")
-    VDB-->>App: Trả về Top-K Chunks
-    App->>LLM: Gửi Prompt = System + Top-K + Query
-    LLM-->>App: Sinh câu trả lời (Stream)
-    App-->>User: Trả kết quả hiển thị
+    participant U as User
+    participant Router as Query Routing
+    participant Q as Query Translation
+    participant V as Vector DB / Reranker
+    participant L as LLM
+    
+    U->>Router: "Doanh thu năm 2023 so với tài liệu chính sách A?"
+    Note over Router: Routing quyết định rẽ nhánh
+    Router->>Q: Nhánh Vector Search (Chính sách)
+    Router->>SQL DB: Nhánh Text-to-SQL (Doanh thu)
+    
+    Note over Q: Decomposition (Phân rã)
+    Q->>V: Sub-query 1: "Chính sách A 2023"
+    Q->>V: Sub-query 2: "Phiên bản sửa đổi chính sách A"
+    
+    V-->>L: Trả về Top-K đã Rerank
+    L-->>U: Tổng hợp câu trả lời
 ```
-
-#### Các kỹ thuật tối ưu hóa tại Inference (Advanced RAG):
-1. **Query Rewriting:** Người dùng thường gõ rất vắn tắt (VD: "Làm sao config cái đó?"). Hệ thống phải dùng một LLM nhỏ hoặc rules để viết lại câu hỏi rõ ràng (VD: "Làm sao cấu hình tham số acks=all trong Kafka?").
-2. **Hybrid Search (Tìm kiếm lai):** Chỉ dùng Semantic (Vector) Search là không đủ, nhất là với các mã lỗi (`OOMKilled`) hoặc tên riêng biệt. Hệ thống phải kết hợp với Keyword Search (BM25) và dùng Reciprocal Rank Fusion (RRF) để gộp kết quả.
-3. **Reranking:** Lấy Top 50 kết quả từ Vector DB (nhanh), sau đó dùng mô hình Cross-Encoder (chậm hơn, chính xác hơn) như Cohere Rerank để xếp hạng lại, rồi mới lấy Top 5 mớm cho LLM.
 
 ---
 
-## Rủi ro Vận hành (Operational Risks) & Khắc phục
+## 2. Các Kỹ thuật Inference Nâng Cao (Advanced Retrieval)
 
-Triển khai RAG không phải lúc nào cũng suôn sẻ. Dưới đây là những "vũng lầy" thực tế mà hệ thống gặp phải:
+Trong luồng Inference (Truy xuất thời gian thực), độ trễ (Latency) và độ chính xác (Precision) là hai ranh giới sống còn.
 
-### 1. Vector Database OOM (Out of Memory)
-* **Triệu chứng:** Container của Milvus hoặc Weaviate liên tục bị Restart hoặc báo lỗi OOMKilled.
-* **Nguyên nhân:** Các chỉ mục (Index) như HNSW tải toàn bộ đồ thị bộ nhớ vào RAM để truy xuất nhanh (in-memory). Khi hàng tỷ vectors được nạp, dung lượng RAM bị cạn kiệt.
-* **Khắc phục:** Đánh đổi (Trade-off) sang thuật toán Indexing khác như **IVF-PQ (Inverted File with Product Quantization)**. PQ sẽ nén các vector (làm giảm độ chính xác một chút) nhưng tiết kiệm bộ nhớ lên tới 70-80%. Hoặc cấu hình `Spill-to-disk` (ghi tạm xuống ổ cứng nếu tràn RAM).
+### 2.1. Query Translation & Expansion (Biến đổi câu hỏi)
+Người dùng thường đặt câu hỏi ngắn gọn hoặc lủng củng. Query Translation dùng một LLM nhỏ sửa lại câu hỏi trước khi tìm kiếm:
+- **Multi-Query (Fan-out):** Sinh ra 3-5 biến thể đồng nghĩa của câu hỏi gốc để vét cạn không gian Vector (Tăng Recall).
+- **Decomposition:** Chẻ một câu hỏi phức tạp ("Multi-hop question") thành nhiều Sub-queries nhỏ để trị.
+- **HyDE (Hypothetical Document Embeddings):** Thay vì nhúng (embed) trực tiếp câu hỏi của user, hệ thống yêu cầu LLM "bịa" ra một câu trả lời giả định. Sau đó, nhúng câu trả lời giả định đó để đem đi tìm kiếm trong Vector DB. 
 
-### 2. Rate Limit & API Throttling
-* **Triệu chứng:** Pipeline Ingestion (đẩy hàng triệu docs/ngày) bị nghẽn do gọi API Embedding của OpenAI bị trả về mã lỗi `429 Too Many Requests`.
-* **Khắc phục:** 
-    * Thiết kế luồng gọi API bất đồng bộ với giới hạn concurrency bằng Python `asyncio.Semaphore`.
-    * Áp dụng Exponential Backoff & Jitter.
+### 2.2. Query Routing (Định tuyến)
+Đóng vai trò là "Cảnh sát giao thông". Tuỳ vào ý định của User, Router sẽ đẩy request xuống Vector DB (để tìm text), xuống SQL Database (để tìm số liệu), hoặc ra Web Search.
 
-**Code Thực chiến (Async Batching với Python):**
+### 2.3. Hybrid Search & Reranking
+Chỉ dùng Vector Search (Semantic) sẽ bị mù với các từ khóa Exact Match (VD: Mã lỗi, Tên model, Số ID). 
+- **Hybrid Search:** Kết hợp Vector Search + Keyword Search (BM25) và hợp nhất bằng Reciprocal Rank Fusion (RRF).
+- **Reranking:** Dùng mô hình Cross-encoder (chậm, tốn GPU) để xếp hạng lại 50 kết quả tìm được từ Vector DB xuống top 3 tinh túy nhất cho LLM.
+
+---
+
+## 3. Rủi Ro Vận Hành (Operational Risks)
+
+Hệ thống RAG Production không chết ở thuật toán AI, mà chết ở Data Engineering Pipeline.
+
+### A. Vector Database OOM (Out of Memory)
+* **Căn nguyên:** Các thuật toán Indexing như **HNSW (Hierarchical Navigable Small World)** tải toàn bộ đồ thị bộ nhớ vào RAM để truy xuất siêu tốc. Khi hàng tỷ vectors được nạp, RAM cạn kiệt, Linux kích hoạt OOMKilled.
+* **Đánh đổi hệ thống (Trade-off):** Chuyển sang dùng Index **IVF-PQ (Inverted File with Product Quantization)**. IVF-PQ nén các vector (làm giảm Precision/Recall một chút) nhưng tiết kiệm bộ nhớ lên tới 80%.
+
+### B. Dữ Liệu Lỗi Thời (Stale Index)
+* **Căn nguyên:** Embedding là một "Materialized View" của dữ liệu gốc. Nếu dữ liệu gốc (trong Postgres/Confluence) bị đổi mà Vector DB chưa cập nhật, RAG sẽ trả lời sai (Ảo giác cục bộ).
+* **Khắc phục:** Áp dụng **Change Data Capture (CDC)**. Sử dụng Debezium để bắt các luồng cập nhật từ DB, đẩy vào Kafka, sau đó Flink sẽ stream và trigger Pipeline Re-embedding (nhúng lại các dòng dữ liệu thay đổi theo thời gian thực) thay vì Batch ban đêm.
+
+### C. Rate Limit & Bão Thử Lại (Throttling / Retry Storms)
+Khi đẩy hàng triệu chunk vào Embedding API, bạn sẽ gặp lỗi `HTTP 429 Too Many Requests`. Nếu không giới hạn luồng, hệ thống sẽ tự DDOS chính mình.
+
+**Code Thực chiến (Async Batching + Exponential Backoff):**
+Sử dụng `asyncio.Semaphore` để bóp băng thông và `tenacity` để lùi thời gian thử lại an toàn.
+
 ```python
 import asyncio
 from tenacity import retry, wait_exponential, stop_after_attempt
 
-# Dùng Semaphore để giới hạn số lượng request đồng thời
+# Semaphore giới hạn tối đa 50 request song song để không chọc giận Rate Limit
 sem = asyncio.Semaphore(50) 
 
-@retry(wait=wait_exponential(multiplier=1, min=2, max=10), stop=stop_after_attempt(5))
+@retry(
+    wait=wait_exponential(multiplier=1, min=2, max=60), 
+    stop=stop_after_attempt(5)
+)
 async def embed_chunk_with_retry(chunk_text, client):
     async with sem:
         response = await client.embeddings.create(
@@ -128,44 +106,24 @@ async def embed_chunk_with_retry(chunk_text, client):
         )
         return response.data[0].embedding
 
-async def process_chunks(chunks, client):
-    tasks = [embed_chunk_with_retry(chunk, client) for chunk in chunks]
+async def process_chunks[chunks, client]:
+    tasks = [embed_chunk_with_retry(chunk, client] for chunk in chunks]
     return await asyncio.gather(*tasks)
 ```
 
-### 3. Dữ liệu lỗi thời (Stale Index)
-* **Triệu chứng:** Nhân viên thay đổi chính sách trong Confluence, nhưng bot vẫn trả lời theo chính sách cũ của tuần trước.
-* **Khắc phục:** Áp dụng kiến trúc CDC (Change Data Capture). Thay vì chạy cronjob batch mỗi đêm, sử dụng Debezium để bắt sự kiện thay đổi dữ liệu từ DB (Postgres/MySQL) đẩy thẳng vào Kafka, sau đó có một Flink job hoặc Spark Structured Streaming trigger pipeline re-embedding ngay lập tức.
+---
+
+## 4. Tối Ưu Chi Phí (FinOps) Và Latency Trade-offs
+
+Việc áp dụng Advanced RAG đi kèm với một cái giá: **Thời gian và Tiền bạc**.
+- **Latency Tradeoff:** Thêm Query Translation + Reranking khiến Time-to-First-Token (TTFT) tăng mạnh. Hệ thống cần được thiết kế **Adaptive** (Chỉ trigger Rerank với câu hỏi khó, bypass với câu hỏi dễ).
+- **Semantic Caching:** Để tránh gọi LLM tốn tiền, sử dụng Semantic Cache (Redis). Nếu user gõ một câu hỏi tương tự câu hỏi 5 phút trước (Cosine distance < 0.05), Cache trả thẳng câu trả lời. Giảm chi phí API về `$0` và Latency về `10ms`.
+- **Tiered Storage:** Không lưu toàn bộ lịch sử 10 năm trên RAM Vector DB. Đẩy các vector "lạnh" xuống Object Storage (S3/GCS), chỉ giữ vector "nóng" trên SSD/RAM.
 
 ---
 
-## Systemic Trade-offs (Đánh đổi Hệ thống)
-
-Trong thiết kế hệ thống, không có "viên đạn bạc" (No Silver Bullet). Các kỹ sư cần cân nhắc kỹ các Trade-offs sau khi build RAG:
-
-| Tiêu chí | Lựa chọn A | Lựa chọn B | Đánh đổi (Trade-off) |
-| :--- | :--- | :--- | :--- |
-| **Vector Index Type** | **HNSW (Hierarchical Navigable Small World)** | **IVF-PQ (Inverted File with Product Quantization)** | **Latency vs. Resource:** HNSW cho độ trễ cực thấp và Recall cao, nhưng ăn RAM khủng khiếp. IVF-PQ nén dữ liệu giúp tiết kiệm RAM, nhưng Recall giảm và tốc độ chậm hơn ở tập dữ liệu nhỏ. |
-| **Chunk Size** | **Small (Ví dụ: 128 tokens)** | **Large (Ví dụ: 1024 tokens)** | **Precision vs. Context:** Chunk nhỏ giúp truy tìm (Precision) cực chính xác nhưng LLM thiếu ngữ cảnh tổng quan để trả lời. Chunk lớn có ngữ cảnh tốt nhưng dễ bị nhiễu do tìm nhầm (chứa cả ý không liên quan). *Giải pháp:* Dùng kỹ thuật Parent-Child Retrieval. |
-| **Embedding Location**| **Gọi API (OpenAI/Cohere)** | **Self-hosted (BGE / E5 trên GPU riêng)** | **Compute Cost vs. Operational Overhead:** API dễ dùng nhưng chi phí sẽ cao khi volume dữ liệu khổng lồ và dữ liệu nhạy cảm có thể lọt ra ngoài. Self-hosted rẻ hơn lúc scale, bảo mật 100%, nhưng tốn công kỹ sư MLOps duy trì Cluster và cấu hình Triton Inference Server. |
-
----
-
-## Tối ưu Chi phí (FinOps) cho RAG
-
-Vận hành LLM ở quy mô lớn là bài toán "đốt tiền" nếu không có kiến trúc vững.
-
-1. **Semantic Caching:**
-   Với các câu hỏi lặp lại, thay vì gọi lại LLM (tốn phí $ / 1M tokens), sử dụng Semantic Cache (như Redis với Vector Search). Hệ thống sẽ so khớp vector của câu hỏi mới với các câu hỏi cũ trong cache. Nếu độ tương đồng > 0.95, lấy thẳng câu trả lời đã sinh ra trước đó để trả về. Vừa tiết kiệm tiền LLM API, vừa giảm độ trễ (Latency từ 5s xuống 10ms).
-2. **Tiered Storage trong Vector DB:**
-   Không phải dữ liệu nào cũng cần truy xuất realtime trên bộ nhớ RAM đắt đỏ. Sử dụng các Vector DB hỗ trợ Tiered Storage (như Milvus), đẩy các tài liệu cũ (lịch sử log, báo cáo năm ngoái) xuống Object Storage (S3), và chỉ giữ các tài liệu "nóng" trên SSD/RAM.
-
----
-
-## Nguồn Tham Khảo (References)
-
-1. [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)](https://arxiv.org/abs/2005.11401) - *Paper gốc của Facebook AI giới thiệu khái niệm RAG.*
-2. [Advanced RAG Techniques - LlamaIndex Documentation](https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/advanced_retrieval/) - *Tài liệu chuẩn mực về Parent-Child Retrieval, Query Transformation.*
-3. [Vector Databases and Vector Search - Pinecone](https://www.pinecone.io/learn/vector-database/) - *Giải thích sâu về HNSW và IVF-PQ dưới góc độ cấu trúc dữ liệu.*
-4. [Databricks: Building scalable Generative AI applications with Lakehouse](https://www.databricks.com/blog/building-genai-applications-lakehouse-architecture) - *Góc nhìn Enterprise Architecture cho RAG.*
-5. Designing Data-Intensive Applications (Martin Kleppmann) - *Lý thuyết cơ bản về Indexing và Distributed Systems (Chương 3).*
+## Nguồn Tham Khảo [References]
+* [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020]][https://arxiv.org/abs/2005.11401]
+* [Advanced RAG Techniques - LlamaIndex Documentation][https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/advanced_retrieval/]
+* [Vector Databases and Vector Search - Pinecone][https://www.pinecone.io/learn/vector-database/]
+* [Databricks: Building scalable Generative AI applications with Lakehouse](https://www.databricks.com/blog/building-genai-applications-lakehouse-architecture]

@@ -25,7 +25,7 @@
     "references": [
       {
         "title": "Databricks Notebook Widgets",
-        "url": "https://docs.databricks.com/en/notebooks/widgets.html"
+        "url": "https://docs.databricks.com/en/notebooks/widgets"
       },
       {
         "title": "ExamTopics - Databricks Certified Data Engineer Associate Question 1",
@@ -59,7 +59,7 @@
     "references": [
       {
         "title": "Databricks Cluster Access Control - Permissions",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/cluster-acl.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/clusters-cli"
       }
     ]
   },
@@ -89,7 +89,7 @@
     "references": [
       {
         "title": "Databricks Structured Streaming Best Practices",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/production"
       }
     ]
   },
@@ -119,7 +119,7 @@
     "references": [
       {
         "title": "Databricks SQL Alerts",
-        "url": "https://docs.databricks.com/en/sql/user/alerts/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -149,7 +149,7 @@
     "references": [
       {
         "title": "Databricks Git folders (Repos) integration",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -179,7 +179,7 @@
     "references": [
       {
         "title": "Databricks Secrets - Redaction",
-        "url": "https://docs.databricks.com/en/security/creds-secrets/secrets.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/secrets"
       }
     ]
   },
@@ -209,7 +209,7 @@
     "references": [
       {
         "title": "MLflow Models - Spark UDF Inference and Saving",
-        "url": "https://docs.databricks.com/en/mlflow/models.html"
+        "url": "https://docs.databricks.com/en/mlflow/models"
       }
     ]
   },
@@ -269,7 +269,7 @@
     "references": [
       {
         "title": "Databricks Notebooks - Share data between Python and SQL",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code.html#mix-languages"
+        "url": "https://docs.databricks.com/en/notebooks/notebooks-code#mix-languages"
       }
     ]
   },
@@ -299,7 +299,7 @@
     "references": [
       {
         "title": "Delta Lake Data Skipping and Statistics",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -329,7 +329,7 @@
     "references": [
       {
         "title": "Delta Lake - Vacuum and Retention",
-        "url": "https://docs.databricks.com/en/delta/vacuum.html"
+        "url": "https://docs.databricks.com/en/tables/operations/vacuum"
       }
     ]
   },
@@ -359,7 +359,7 @@
     "references": [
       {
         "title": "Databricks Jobs REST API 2.1 - Create Job",
-        "url": "https://docs.databricks.com/api/workspace/jobs/create"
+        "url": "https://docs.databricks.com/en/sql/user/alerts/create"
       }
     ]
   },
@@ -389,7 +389,7 @@
     "references": [
       {
         "title": "Delta Lake Medallion Architecture - Bronze, Silver, Gold",
-        "url": "https://docs.databricks.com/en/lakehouse/medallion.html"
+        "url": "https://docs.databricks.com/en/lakehouse/medallion"
       }
     ]
   },
@@ -419,7 +419,7 @@
     "references": [
       {
         "title": "Delta Lake Merge Into - Upsert to a Table",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into"
       }
     ]
   },
@@ -449,7 +449,7 @@
     "references": [
       {
         "title": "Use Delta Lake Change Data Feed on Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -479,7 +479,7 @@
     "references": [
       {
         "title": "Databricks - Views",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
@@ -509,7 +509,7 @@
     "references": [
       {
         "title": "Databricks Auto Optimize - Autotuning file size based on workload",
-        "url": "https://docs.databricks.com/en/delta/tune-file-size.html#autotuning-file-size-based-on-workload"
+        "url": "https://docs.databricks.com/en/tables/tune-file-size#autotuning-file-size-based-on-workload"
       }
     ]
   },
@@ -539,7 +539,7 @@
     "references": [
       {
         "title": "Spark Structured Streaming - Stream-static Joins",
-        "url": "https://docs.databricks.com/en/structured-streaming/joins.html#stream-static-joins"
+        "url": "https://docs.databricks.com/en/business-semantics/metric-views/joins#stream-static-joins"
       }
     ]
   },
@@ -629,7 +629,7 @@
     "references": [
       {
         "title": "Spark Structured Streaming Triggers",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
       }
     ]
   },
@@ -656,12 +656,7 @@
     "explanation_vi": "Đáp án đúng: E. Một job chạy bất đồng bộ sau khi lệnh ghi hoàn tất để phát hiện xem các file có thể được nén thêm hay không; nếu có, một job `OPTIMIZE` sẽ được thực thi để hướng tới kích thước file mặc định là 128 MB.\n\nGiải thích:\n- **Delta Lake Auto Compaction** hoạt động bằng cách kiểm tra các file dữ liệu vừa được ghi sau mỗi giao dịch ghi thành công.\n- Nếu một phân vùng chứa số lượng file nhỏ vượt quá ngưỡng cấu hình, hệ thống sẽ kích hoạt một tiến trình chạy nền bất đồng bộ để nén các file nhỏ này thành các file có kích thước lớn hơn nhằm nâng cao hiệu năng đọc.\n- Kích thước file mục tiêu mặc định cho tính năng Auto Compaction là **128 MB**, khác với lệnh ``OPTIMIZE`` thủ công thông thường có mục tiêu kích thước mặc định là **1 GB**.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_22.jpg",
-    "references": [
-      {
-        "title": "Auto Compaction on Databricks",
-        "url": "https://docs.databricks.com/en/delta/compact-files.html#auto-compaction"
-      }
-    ]
+    "references": []
   },
   {
     "id": 23,
@@ -749,7 +744,7 @@
     "references": [
       {
         "title": "Adaptive query execution - Databricks",
-        "url": "https://docs.databricks.com/en/optimizations/aqe.html"
+        "url": "https://docs.databricks.com/en/optimizations/aqe"
       }
     ]
   },
@@ -779,7 +774,7 @@
     "references": [
       {
         "title": "Cluster configuration best practices - Databricks",
-        "url": "https://docs.databricks.com/en/compute/cluster-config-best-practices.html"
+        "url": "https://docs.databricks.com/en/compute/cluster-config-best-practices"
       }
     ]
   },
@@ -809,7 +804,7 @@
     "references": [
       {
         "title": "Delta Lake Merge Into - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into"
       }
     ]
   },
@@ -839,7 +834,7 @@
     "references": [
       {
         "title": "Use Delta Lake change data feed on Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -869,7 +864,7 @@
     "references": [
       {
         "title": "What is the medallion lakehouse architecture? - Databricks",
-        "url": "https://docs.databricks.com/en/lakehouse/medallion.html"
+        "url": "https://docs.databricks.com/en/lakehouse/medallion"
       }
     ]
   },
@@ -899,7 +894,7 @@
     "references": [
       {
         "title": "Use Delta Lake change data feed on Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -929,7 +924,7 @@
     "references": [
       {
         "title": "Schema enforcement on Databricks",
-        "url": "https://docs.databricks.com/en/delta/schema-validation.html"
+        "url": "https://docs.databricks.com/en/stateful-applications/schema-evolution"
       }
     ]
   },
@@ -959,7 +954,7 @@
     "references": [
       {
         "title": "Overwrite Delta tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta/selective-overwrite.html"
+        "url": "https://docs.databricks.com/en/delta/selective-overwrite"
       }
     ]
   },
@@ -989,7 +984,7 @@
     "references": [
       {
         "title": "Data governance with Unity Catalog - Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1019,7 +1014,7 @@
     "references": [
       {
         "title": "Create a Delta Lake table - Databricks",
-        "url": "https://docs.databricks.com/en/tables/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1049,7 +1044,7 @@
     "references": [
       {
         "title": "Views - Databricks",
-        "url": "https://docs.databricks.com/en/code/views.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/information-schema/views"
       }
     ]
   },
@@ -1079,7 +1074,7 @@
     "references": [
       {
         "title": "Data skipping for Delta Lake - Databricks",
-        "url": "https://docs.databricks.com/en/optimizations/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -1109,7 +1104,7 @@
     "references": [
       {
         "title": "Best practices for AWS region selection - Databricks",
-        "url": "https://docs.databricks.com/en/resources/regions.html"
+        "url": "https://docs.databricks.com/en/resources/supported-regions"
       }
     ]
   },
@@ -1139,7 +1134,7 @@
     "references": [
       {
         "title": "Constraints on Databricks - Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       }
     ]
   },
@@ -1169,7 +1164,7 @@
     "references": [
       {
         "title": "Data skipping for Delta Lake - Databricks",
-        "url": "https://docs.databricks.com/en/optimizations/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -1199,7 +1194,7 @@
     "references": [
       {
         "title": "Table updates - Slowly Changing Dimensions (SCD) Type 2 - Databricks",
-        "url": "https://docs.databricks.com/en/delta/slowly-changing-dimensions.html"
+        "url": "https://docs.databricks.com/en/ldp/cdc"
       }
     ]
   },
@@ -1229,7 +1224,7 @@
     "references": [
       {
         "title": "Notebook permissions - Databricks",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/notebook-acl.html"
+        "url": "https://docs.databricks.com/en/notebooks/notebook-cells"
       }
     ]
   },
@@ -1259,7 +1254,7 @@
     "references": [
       {
         "title": "Dynamic view templates - Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/create-views.html#dynamic-views"
+        "url": "https://docs.databricks.com/en/views/create-views#dynamic-views"
       }
     ]
   },
@@ -1289,7 +1284,7 @@
     "references": [
       {
         "title": "DESCRIBE TABLE - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-describe-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-describe-table"
       }
     ]
   },
@@ -1319,7 +1314,7 @@
     "references": [
       {
         "title": "Remove unused data files with vacuum - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
       }
     ]
   },
@@ -1349,7 +1344,7 @@
     "references": [
       {
         "title": "Create schema - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-schema.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-schema"
       }
     ]
   },
@@ -1379,7 +1374,7 @@
     "references": [
       {
         "title": "Secret management - Databricks",
-        "url": "https://docs.databricks.com/en/security/secrets/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1409,7 +1404,7 @@
     "references": [
       {
         "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/jobs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1439,7 +1434,7 @@
     "references": [
       {
         "title": "Configure audit logs - Databricks",
-        "url": "https://docs.databricks.com/en/admin/workspace-settings/audit-logs.html"
+        "url": "https://docs.databricks.com/en/opensharing/audit-logs"
       }
     ]
   },
@@ -1469,7 +1464,7 @@
     "references": [
       {
         "title": "What is Apache Spark in Databricks?",
-        "url": "https://docs.databricks.com/en/introduction/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1499,7 +1494,7 @@
     "references": [
       {
         "title": "View compute metrics - Databricks",
-        "url": "https://docs.databricks.com/en/compute/compute-metrics.html"
+        "url": "https://docs.databricks.com/en/integrations/compute-details"
       }
     ]
   },
@@ -1526,12 +1521,7 @@
     "explanation_vi": "Đáp án đúng: E. Predicate push-down là một cơ chế tối ưu hóa giúp đẩy bộ lọc (filter) xuống mức lưu trữ (đọc tệp tin) để giảm thiểu lượng dữ liệu cần nạp vào bộ nhớ. Để chẩn đoán xem truy vấn của bạn có tận dụng được cơ chế này hay không, bạn cần kiểm tra Kế hoạch Vật lý (`Physical Plan`) trong màn hình Query Detail thuộc tab SQL của **Spark UI**. Trong `Physical Plan`, nếu bộ lọc được đẩy xuống, nó sẽ xuất hiện trong phần `PushedFilters` hoặc `DataFilters` của toán tử quét tệp tin (`FileScan`).\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_51.jpg",
-    "references": [
-      {
-        "title": "Spark UI - Databricks",
-        "url": "https://docs.databricks.com/en/compute/web-interface.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 52,
@@ -1589,7 +1579,7 @@
     "references": [
       {
         "title": "Libraries - Databricks",
-        "url": "https://docs.databricks.com/en/libraries/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1649,7 +1639,7 @@
     "references": [
       {
         "title": "Developer tools - Databricks",
-        "url": "https://docs.databricks.com/en/dev-tools/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1679,7 +1669,7 @@
     "references": [
       {
         "title": "Developer tools - Databricks",
-        "url": "https://docs.databricks.com/en/dev-tools/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1709,7 +1699,7 @@
     "references": [
       {
         "title": "Get a job definition - Jobs API - Databricks",
-        "url": "https://docs.databricks.com/api/workspace/jobs/get"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/get"
       }
     ]
   },
@@ -1739,7 +1729,7 @@
     "references": [
       {
         "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/jobs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1769,7 +1759,7 @@
     "references": [
       {
         "title": "ALTER TABLE - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
       }
     ]
   },
@@ -1799,7 +1789,7 @@
     "references": [
       {
         "title": "What is Delta Lake?",
-        "url": "https://docs.databricks.com/en/delta/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1829,7 +1819,7 @@
     "references": [
       {
         "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/jobs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1856,12 +1846,7 @@
     "explanation_vi": "Đáp án đúng: B. Việc lên lịch (schedule) chạy pipeline mỗi giờ một lần trên một cụm job mới (transient job cluster) là giải pháp tối ưu nhất về chi phí. Cụm job chỉ hoạt động trong đúng 10 phút cần thiết để xử lý và tự động tắt ngay sau khi hoàn thành. Tổng thời gian tính phí của cụm chỉ là 10 phút * 24 lần = 4 tiếng/ngày. So với việc giữ một cụm tương tác (interactive cluster) chạy liên tục hoặc chạy Structured Streaming liên tục (cluster hoạt động 24/24), giải pháp transient job cluster giúp tiết kiệm hơn 80% chi phí compute và có đơn giá DBU rẻ hơn đáng kể.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_62.jpg",
-    "references": [
-      {
-        "title": "Compute pricing - Databricks",
-        "url": "https://docs.databricks.com/en/compute/compute-pricing-types.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 63,
@@ -1889,7 +1874,7 @@
     "references": [
       {
         "title": "What is Delta Lake? - Databricks",
-        "url": "https://docs.databricks.com/en/delta/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1919,7 +1904,7 @@
     "references": [
       {
         "title": "DROP TABLE - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-drop-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
       }
     ]
   },
@@ -1949,7 +1934,7 @@
     "references": [
       {
         "title": "What is the Databricks File System (DBFS)? - Databricks",
-        "url": "https://docs.databricks.com/en/dbfs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1979,7 +1964,7 @@
     "references": [
       {
         "title": "Develop code in Databricks notebooks - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code.html"
+        "url": "https://docs.databricks.com/en/notebooks/notebooks-code"
       }
     ]
   },
@@ -2009,7 +1994,7 @@
     "references": [
       {
         "title": "Delta Lake Data Skipping",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q67",
@@ -2043,7 +2028,7 @@
     "references": [
       {
         "title": "Databricks CLI DBFS commands",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/dbfs-cli.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/dbfs-cli"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q68",
@@ -2077,7 +2062,7 @@
     "references": [
       {
         "title": "Databricks Jobs Intro",
-        "url": "https://docs.databricks.com/en/jobs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q69",
@@ -2179,7 +2164,7 @@
     "references": [
       {
         "title": "Delta Lake Streaming Checkpoints",
-        "url": "https://docs.databricks.com/en/structured-streaming/delta-lake.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/delta-lake"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q72",
@@ -2213,7 +2198,7 @@
     "references": [
       {
         "title": "Structured Streaming Triggers",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q73",
@@ -2281,7 +2266,7 @@
     "references": [
       {
         "title": "Delta Lake Merge operations",
-        "url": "https://docs.databricks.com/en/delta/merge.html"
+        "url": "https://docs.databricks.com/en/delta/merge"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q75",
@@ -2315,7 +2300,7 @@
     "references": [
       {
         "title": "Delta Lake Schema Evolution",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q76",
@@ -2349,7 +2334,7 @@
     "references": [
       {
         "title": "Auto Loader Schema Inference & Evolution",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/schema.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamreader/schema"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q77",
@@ -2383,7 +2368,7 @@
     "references": [
       {
         "title": "Delta Lake Table Writes",
-        "url": "https://docs.databricks.com/en/delta/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q78",
@@ -2417,7 +2402,7 @@
     "references": [
       {
         "title": "Databricks CREATE TABLE USING syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q79",
@@ -2451,7 +2436,7 @@
     "references": [
       {
         "title": "Databricks CREATE VIEW syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q80",
@@ -2485,7 +2470,7 @@
     "references": [
       {
         "title": "Delta Lake Constraints",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q81",
@@ -2519,7 +2504,7 @@
     "references": [
       {
         "title": "Databricks Jobs Access Control",
-        "url": "https://docs.databricks.com/en/security/auth-authz/jobs-acl.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q82",
@@ -2553,7 +2538,7 @@
     "references": [
       {
         "title": "Delta Lake Partitions",
-        "url": "https://docs.databricks.com/en/tables/partitions.html"
+        "url": "https://docs.databricks.com/en/tables/partitions"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q83",
@@ -2587,7 +2572,7 @@
     "references": [
       {
         "title": "Databricks Table Access Control Privileges",
-        "url": "https://docs.databricks.com/en/security/auth-authz/privileges.html"
+        "url": "https://docs.databricks.com/en/volumes/privileges"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q84",
@@ -2621,7 +2606,7 @@
     "references": [
       {
         "title": "Databricks Cluster Event Log",
-        "url": "https://docs.databricks.com/en/compute/clusters-manage.html#event-log"
+        "url": "https://docs.databricks.com/en/compute/clusters-manage#event-log"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q85",
@@ -2655,7 +2640,7 @@
     "references": [
       {
         "title": "Databricks Ganglia Metrics",
-        "url": "https://docs.databricks.com/en/compute/clusters-manage.html#ganglia-metrics"
+        "url": "https://docs.databricks.com/en/compute/clusters-manage#ganglia-metrics"
       },
       {
         "title": "ExamTopics Databricks Certified Data Engineer Professional Q86",
@@ -2757,7 +2742,7 @@
     "references": [
       {
         "title": "Create and run Databricks Jobs - Task failure and dependencies",
-        "url": "https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html"
+        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
       }
     ]
   },
@@ -2787,7 +2772,7 @@
     "references": [
       {
         "title": "Spark Configuration on Databricks Clusters",
-        "url": "https://docs.databricks.com/en/compute/configure.html#spark-configuration"
+        "url": "https://docs.databricks.com/en/integrations/jdbc/configure#spark-configuration"
       }
     ]
   },
@@ -2817,7 +2802,7 @@
     "references": [
       {
         "title": "Git operations with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -2847,7 +2832,7 @@
     "references": [
       {
         "title": "Delta Lake Shallow and Deep Clone",
-        "url": "https://docs.databricks.com/en/delta/clone.html"
+        "url": "https://docs.databricks.com/en/tables/operations/clone"
       }
     ]
   },
@@ -2904,12 +2889,7 @@
     "explanation_vi": "Khi dữ liệu vượt quá dung lượng RAM được phân bổ cho mỗi phân vùng trong các phép biến đổi wide transformation, dữ liệu sẽ bị ghi tạm xuống đĩa (disk spill). Hai nơi chủ yếu để kiểm tra điều này trong Spark UI là: trang chi tiết của Stage (Stage detail screen - hiển thị thông số `Spill Memory` và `Spill Disk` trực quan) và file log của các Executor (chứa các thông báo ghi đĩa như 'Spilling to disk').\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_94.jpg",
-    "references": [
-      {
-        "title": "Diagnose Spark Performance Issues - Spill to Disk",
-        "url": "https://docs.databricks.com/en/optimizations/spark-performance-tuning.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 95,
@@ -2937,7 +2917,7 @@
     "references": [
       {
         "title": "Structured Streaming Deduplication with Watermarks",
-        "url": "https://docs.databricks.com/en/structured-streaming/watermarks.html#deduplication"
+        "url": "https://docs.databricks.com/en/structured-streaming/watermarks#deduplication"
       }
     ]
   },
@@ -2967,7 +2947,7 @@
     "references": [
       {
         "title": "Constraints on Databricks Delta Tables",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       }
     ]
   },
@@ -2997,7 +2977,7 @@
     "references": [
       {
         "title": "Delta Lake Time Travel Best Practices",
-        "url": "https://docs.databricks.com/en/delta/history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -3027,7 +3007,7 @@
     "references": [
       {
         "title": "Dynamic Views with Table Access Control Lists",
-        "url": "https://docs.databricks.com/en/data-governance/table-acls/object-privileges.html#dynamic-views"
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/object-privileges#dynamic-views"
       }
     ]
   },
@@ -3057,7 +3037,7 @@
     "references": [
       {
         "title": "Delta Lake Vacuum and GDPR Compliance",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
       }
     ]
   },
@@ -3086,7 +3066,7 @@
     "references": [
       {
         "title": "Secret Access Control in Databricks",
-        "url": "https://docs.databricks.com/en/security/secrets/secrets.html#secret-access-control"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/secrets#secret-access-control"
       }
     ]
   },
@@ -3146,7 +3126,7 @@
     "references": [
       {
         "title": "Export and Import Databricks Notebooks as Source Code",
-        "url": "https://docs.databricks.com/en/notebooks/notebook-export-import.html"
+        "url": "https://docs.databricks.com/en/notebooks/notebook-export-import"
       }
     ]
   },
@@ -3176,7 +3156,7 @@
     "references": [
       {
         "title": "Software Testing Overview and End-to-End Testing",
-        "url": "https://docs.databricks.com/en/notebooks/testing.html"
+        "url": "https://docs.databricks.com/en/notebooks/testing"
       }
     ]
   },
@@ -3206,7 +3186,7 @@
     "references": [
       {
         "title": "Databricks Jobs CLI Reference",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/jobs-cli.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       }
     ]
   },
@@ -3266,7 +3246,7 @@
     "references": [
       {
         "title": "Structured Streaming Triggers and Incrementally Processing Data",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
       }
     ]
   },
@@ -3296,7 +3276,7 @@
     "references": [
       {
         "title": "Delta Lake Optimized Writes and Auto Compaction",
-        "url": "https://docs.databricks.com/en/optimizations/auto-optimize.html#optimized-writes"
+        "url": "https://docs.databricks.com/en/tables/operations/optimize#optimized-writes"
       }
     ]
   },
@@ -3326,7 +3306,7 @@
     "references": [
       {
         "title": "What is Databricks Auto Loader?",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -3356,7 +3336,7 @@
     "references": [
       {
         "title": "When to Partition Tables on Databricks",
-        "url": "https://docs.databricks.com/en/tables/partition.html"
+        "url": "https://docs.databricks.com/en/error-messages/invalid-partition-operation-error-class"
       }
     ]
   },
@@ -3386,7 +3366,7 @@
     "references": [
       {
         "title": "Delta Lake Partitioning Best Practices",
-        "url": "https://docs.databricks.com/en/tables/partition.html"
+        "url": "https://docs.databricks.com/en/error-messages/invalid-partition-operation-error-class"
       }
     ]
   },
@@ -3416,7 +3396,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Notebook-scoped Python libraries",
-        "url": "https://docs.databricks.com/en/libraries/notebooks-python-libraries.html"
+        "url": "https://docs.databricks.com/en/libraries/notebooks-python-libraries"
       }
     ]
   },
@@ -3446,7 +3426,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Compute configuration best practices",
-        "url": "https://docs.databricks.com/en/compute/compute-best-practices.html"
+        "url": "https://docs.databricks.com/en/compute/pool-best-practices"
       }
     ]
   },
@@ -3476,7 +3456,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Work with Delta Lake table history",
-        "url": "https://docs.databricks.com/en/delta/history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -3504,7 +3484,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Structured Streaming production checklist",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html#recover-from-query-failures"
+        "url": "https://docs.databricks.com/en/structured-streaming/production#recover-from-query-failures"
       }
     ]
   },
@@ -3534,7 +3514,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Jobs API - Get job run",
-        "url": "https://docs.databricks.com/api/workspace/jobs/getrun"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/trunc"
       }
     ]
   },
@@ -3564,7 +3544,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Data governance best practices",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -3594,7 +3574,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Jobs API - Run details",
-        "url": "https://docs.databricks.com/api/workspace/jobs/getrun"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/trunc"
       }
     ]
   },
@@ -3622,7 +3602,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Schedule a notebook job",
-        "url": "https://docs.databricks.com/en/jobs/create-run-jobs.html"
+        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
       }
     ]
   },
@@ -3650,7 +3630,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Spark configuration on Databricks",
-        "url": "https://docs.databricks.com/en/compute/configure.html#spark-configuration"
+        "url": "https://docs.databricks.com/en/integrations/jdbc/configure#spark-configuration"
       }
     ]
   },
@@ -3675,12 +3655,7 @@
     "explanation_vi": "Để cập nhật dữ liệu mỗi giờ với thời gian chạy là 10 phút, việc lên lịch một job chạy trên một Job Cluster mới (transient/ephemeral cluster) là giải pháp tiết kiệm chi phí nhất.\n\nJob cluster chỉ được khởi chạy khi job bắt đầu và tự động tắt ngay sau khi job hoàn thành (chỉ tính tiền cho 10 phút chạy mỗi giờ). Việc sử dụng một Interactive Cluster chuyên dụng hoặc chạy **Structured Streaming** liên tục với trigger 60 phút sẽ khiến cluster phải chạy 24/7, phát sinh chi phí rất lớn khi cụm ở trạng thái rỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_120.jpg",
-    "references": [
-      {
-        "title": "Databricks Documentation - Job clusters vs. interactive clusters",
-        "url": "https://docs.databricks.com/en/workflows/jobs/jobs-faq.html#what-is-the-difference-between-interactive-and-job-clusters"
-      }
-    ]
+    "references": []
   },
   {
     "id": 121,
@@ -3706,7 +3681,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Delta Lake transaction log specifications",
-        "url": "https://docs.databricks.com/en/delta/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -3734,7 +3709,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Database objects in the Databricks Lakehouse - Tables",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html#tables"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#tables"
       }
     ]
   },
@@ -3762,7 +3737,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Git integration with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -3790,7 +3765,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Secret redaction",
-        "url": "https://docs.databricks.com/en/security/secrets/index.html#secret-redaction"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#secret-redaction"
       }
     ]
   },
@@ -3846,7 +3821,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Mix languages in Databricks notebooks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code.html#mix-languages"
+        "url": "https://docs.databricks.com/en/notebooks/notebooks-code#mix-languages"
       }
     ]
   },
@@ -3874,7 +3849,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Data skipping for Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -3902,7 +3877,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Remove unused data files with vacuum",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
       }
     ]
   },
@@ -3930,7 +3905,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Databricks CLI fs commands",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/fs-commands.html"
+        "url": "https://docs.databricks.com/en/dev-tools/cli/reference/fs-commands"
       }
     ]
   },
@@ -3958,7 +3933,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Delta Lake schema evolution",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html#automatic-schema-evolution"
+        "url": "https://docs.databricks.com/en/tables/update-schema#automatic-schema-evolution"
       }
     ]
   },
@@ -3986,7 +3961,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Medallion Architecture and CDC processing",
-        "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html"
+        "url": "https://docs.databricks.com/en/lakehouse-architecture/well-architected"
       }
     ]
   },
@@ -4014,7 +3989,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Merge into a Delta Lake table using upsert",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       }
     ]
   },
@@ -4070,7 +4045,7 @@
     "references": [
       {
         "title": "Delta Lake - Change Data Feed (CDF) on Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -4098,7 +4073,7 @@
     "references": [
       {
         "title": "Views in Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
@@ -4123,12 +4098,7 @@
     "explanation_vi": "Trong trường hợp không thể sử dụng các tính năng tự động tối ưu của **Delta Lake** (như Auto-Optimize & Auto-Compaction) do phải ghi ra định dạng Parquet thông thường, ta có thể đặt tham số `spark.sql.files.maxPartitionBytes` thành 512 MB. Khi nạp dữ liệu JSON, Spark sẽ tự động chia nhỏ dữ liệu thành các partition có kích thước tối đa 512 MB. Tiếp theo, việc thực hiện các phép biến đổi hẹp (narrow transformations) như map hoặc filter sẽ không gây ra hiện tượng xáo trộn dữ liệu (shuffle), giữ nguyên kích thước phân vùng để ghi ra các file Parquet có kích thước mục tiêu 512 MB với hiệu năng tối ưu nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_136.jpg",
-    "references": [
-      {
-        "title": "Configure Spark partition size with maxPartitionBytes",
-        "url": "https://docs.databricks.com/en/optimizations/spark-customize-partitioning.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 137,
@@ -4154,7 +4124,7 @@
     "references": [
       {
         "title": "Structured Streaming - Stream-static joins",
-        "url": "https://docs.databricks.com/en/structured-streaming/joins.html#stream-static-joins"
+        "url": "https://docs.databricks.com/en/business-semantics/metric-views/joins#stream-static-joins"
       }
     ]
   },
@@ -4182,7 +4152,7 @@
     "references": [
       {
         "title": "Structured Streaming - Window Operations on Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/window-operations.html"
+        "url": "https://docs.databricks.com/en/oltp/projects/operations"
       }
     ]
   },
@@ -4210,7 +4180,7 @@
     "references": [
       {
         "title": "Structured Streaming Triggers on Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
       }
     ]
   },
@@ -4235,12 +4205,7 @@
     "explanation_vi": "Tính năng ghi tối ưu (optimized writes) của **Delta Lake** hoạt động bằng cách thực hiện một lượt xáo trộn dữ liệu (shuffle) ngay trước khi ghi xuống đĩa. Mục đích của việc này là gom nhóm các dữ liệu có cùng partition hoặc thuộc tính lại với nhau trên cùng một executor, giúp ghi ra ít file hơn với kích thước lớn hơn, tránh việc mỗi executor ghi ra nhiều file nhỏ phân tán tại các thư mục partition khác nhau.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_140.jpg",
-    "references": [
-      {
-        "title": "Optimized writes for Delta Lake on Databricks",
-        "url": "https://docs.databricks.com/en/delta/optimizations-write.html#optimized-writes"
-      }
-    ]
+    "references": []
   },
   {
     "id": 141,
@@ -4266,7 +4231,7 @@
     "references": [
       {
         "title": "Structured Streaming Programming Model",
-        "url": "https://docs.databricks.com/en/structured-streaming/programming-model.html"
+        "url": "https://docs.databricks.com/en/generative-ai/pretrained-models"
       }
     ]
   },
@@ -4291,12 +4256,7 @@
     "explanation_vi": "Khi nạp dữ liệu từ các định dạng file (như Parquet, JSON, CSV, ORC) vào Spark, kích thước phân vùng (partition size) ban đầu được quyết định bởi cấu hình `spark.sql.files.maxPartitionBytes` (mặc định là 128 MB). Cấu hình này xác định dung lượng tối đa mà Spark đóng gói vào một phân vùng khi đọc các file nguồn.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_142.jpg",
-    "references": [
-      {
-        "title": "Spark configuration maxPartitionBytes on Databricks",
-        "url": "https://docs.databricks.com/en/optimizations/spark-customize-partitioning.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 143,
@@ -4319,12 +4279,7 @@
     "explanation_vi": "Khi xem Spark UI và phát hiện thời gian chạy tối thiểu (Min) và trung vị (Median) của các task trong một stage rất nhỏ và tương đương nhau, nhưng thời gian chạy tối đa (Max) lại lớn gấp 100 lần, điều đó chứng tỏ có một số lượng nhỏ các task phải xử lý khối lượng dữ liệu khổng lồ trong khi các task khác hoàn thành rất nhanh. Hiện tượng này gọi là lệch dữ liệu (data skew), gây ảnh hưởng nghiêm trọng đến tổng thời gian thực thi stage.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_143.jpg",
-    "references": [
-      {
-        "title": "Diagnose and resolve data skew in Spark UI",
-        "url": "https://docs.databricks.com/en/kb/jobs/diagnose-data-skew.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 144,
@@ -4350,7 +4305,7 @@
     "references": [
       {
         "title": "Best practices for cluster configuration on Databricks",
-        "url": "https://docs.databricks.com/en/compute/cluster-config-best-practices.html"
+        "url": "https://docs.databricks.com/en/compute/cluster-config-best-practices"
       }
     ]
   },
@@ -4378,7 +4333,7 @@
     "references": [
       {
         "title": "Structured Streaming - Stateful deduplication with watermark",
-        "url": "https://docs.databricks.com/en/structured-streaming/watermarking.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/watermarks"
       }
     ]
   },
@@ -4406,7 +4361,7 @@
     "references": [
       {
         "title": "Delta Lake - Insert-only merge for deduplication",
-        "url": "https://docs.databricks.com/en/delta/delta-update.html#write-selective-updates-and-inserts-with-merge"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-update#write-selective-updates-and-inserts-with-merge"
       }
     ]
   },
@@ -4434,7 +4389,7 @@
     "references": [
       {
         "title": "Query Change Data Feed statically in Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html#query-the-change-data-feed"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed#query-the-change-data-feed"
       }
     ]
   },
@@ -4462,7 +4417,7 @@
     "references": [
       {
         "title": "Delta Live Tables table properties - pipelines.reset.allowed",
-        "url": "https://docs.databricks.com/en/delta-live-tables/properties.html"
+        "url": "https://docs.databricks.com/en/ldp/properties"
       }
     ]
   },
@@ -4490,7 +4445,7 @@
     "references": [
       {
         "title": "Delta Lake schema evolution limitations on Databricks",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       }
     ]
   },
@@ -4518,7 +4473,7 @@
     "references": [
       {
         "title": "Structured Streaming - Streaming Table Reader",
-        "url": "https://docs.databricks.com/en/structured-streaming/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -4546,7 +4501,7 @@
     "references": [
       {
         "title": "Delta Lake Schema Enforcement and Evolution",
-        "url": "https://docs.databricks.com/en/delta/schema-validation.html"
+        "url": "https://docs.databricks.com/en/stateful-applications/schema-evolution"
       }
     ]
   },
@@ -4574,7 +4529,7 @@
     "references": [
       {
         "title": "CREATE TABLE AS SELECT (CTAS) in Databricks SQL",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
       }
     ]
   },
@@ -4602,7 +4557,7 @@
     "references": [
       {
         "title": "Data governance and environment isolation best practices on Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -4630,7 +4585,7 @@
     "references": [
       {
         "title": "Managed vs External tables in Databricks",
-        "url": "https://docs.databricks.com/en/tables/index.html#managed-and-external-tables"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#managed-and-external-tables"
       }
     ]
   },
@@ -4658,7 +4613,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Create View",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
@@ -4686,7 +4641,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Data skipping for Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -4714,7 +4669,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Region selection",
-        "url": "https://docs.databricks.com/en/resources/supported-regions.html"
+        "url": "https://docs.databricks.com/en/resources/supported-regions"
       }
     ]
   },
@@ -4742,7 +4697,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       }
     ]
   },
@@ -4770,7 +4725,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       }
     ]
   },
@@ -4798,7 +4753,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Work with Delta Lake table history",
-        "url": "https://docs.databricks.com/en/delta/history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -4826,7 +4781,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Stream-stream joins",
-        "url": "https://docs.databricks.com/en/structured-streaming/resource-management.html"
+        "url": "https://docs.databricks.com/en/dev-tools/terraform/workspace-management"
       }
     ]
   },
@@ -4854,7 +4809,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Jobs access control",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/jobs-acl.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       }
     ]
   },
@@ -4882,7 +4837,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Row-level security",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/row-level-security.html"
+        "url": "https://docs.databricks.com/en/error-messages/queried-table-incompatible-with-row-level-security-policy-error-class"
       }
     ]
   },
@@ -4910,7 +4865,7 @@
     "references": [
       {
         "title": "Databricks Documentation: When to partition tables on Databricks",
-        "url": "https://docs.databricks.com/en/tables/partitioning.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/functions/partitioning_bucket"
       }
     ]
   },
@@ -4938,7 +4893,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Remove old data files with vacuum",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
       }
     ]
   },
@@ -4966,7 +4921,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Managed tables",
-        "url": "https://docs.databricks.com/en/tables/managed.html"
+        "url": "https://docs.databricks.com/en/tables/managed"
       }
     ]
   },
@@ -4994,7 +4949,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Secret access control",
-        "url": "https://docs.databricks.com/en/security/creds-secrets/secrets.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/secrets"
       }
     ]
   },
@@ -5019,12 +4974,7 @@
     "explanation_vi": "Databricks lưu trữ lịch sử chạy job (**job run history**) trong vòng 60 ngày. Trong khoảng thời gian này, người dùng có thể xem chi tiết kết quả chạy và xuất (export) kết quả thực thi `notebook` ra định dạng `HTML` để lưu trữ hoặc chia sẻ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_168.jpg",
-    "references": [
-      {
-        "title": "Databricks Documentation: View job run history",
-        "url": "https://docs.databricks.com/en/workflows/jobs/view-job-run-history.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 169,
@@ -5050,7 +5000,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Diagnostic log reference",
-        "url": "https://docs.databricks.com/en/administration-guide/account-settings/audit-logs.html"
+        "url": "https://docs.databricks.com/en/opensharing/audit-logs"
       }
     ]
   },
@@ -5075,12 +5025,7 @@
     "explanation_vi": "**Cluster Event Log** là nơi ghi nhận đầy đủ tất cả các sự kiện thay đổi trạng thái của cluster theo dòng thời gian, bao gồm cả các sự kiện thay đổi kích thước cluster (upscaling/downscaling do tính năng **autoscaling**). Người quản trị có thể dựa vào đây để phân tích hành vi co giãn của cluster.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_170.jpg",
-    "references": [
-      {
-        "title": "Databricks Documentation: View cluster event logs",
-        "url": "https://docs.databricks.com/en/compute/cluster-event-log.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 171,
@@ -5103,12 +5048,7 @@
     "explanation_vi": "Trong hệ thống giám sát **Ganglia Metrics**, chỉ số `CPU Utilization` duy trì ổn định xung quanh mức 75% cho thấy cluster đang được tận dụng tốt tài nguyên tính toán để xử lý công việc mà không bị quá tải hay lãng phí dung lượng nhàn rỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_171.jpg",
-    "references": [
-      {
-        "title": "Databricks Documentation: Monitor cluster performance with Ganglia",
-        "url": "https://docs.databricks.com/en/compute/ganglia.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 172,
@@ -5134,7 +5074,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Web UI Storage Tab",
-        "url": "https://docs.databricks.com/en/tuning/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -5190,7 +5130,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Notebook-scoped Python libraries",
-        "url": "https://docs.databricks.com/en/libraries/notebook-scoped-libraries.html"
+        "url": "https://docs.databricks.com/en/libraries/notebooks-r-libraries"
       }
     ]
   },
@@ -5218,7 +5158,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Export and import Databricks notebooks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code.html"
+        "url": "https://docs.databricks.com/en/notebooks/notebooks-code"
       }
     ]
   },
@@ -5246,7 +5186,7 @@
     "references": [
       {
         "title": "Databricks Documentation: Unit testing with Spark",
-        "url": "https://docs.databricks.com/en/notebooks/testing.html"
+        "url": "https://docs.databricks.com/en/notebooks/testing"
       }
     ]
   },
@@ -5271,12 +5211,7 @@
     "explanation_vi": "**Integration testing** (kiểm thử tích hợp) tập trung vào việc xác thực sự tương tác và truyền thông tin giữa các hệ thống con (subsystems) hoặc các thành phần khác nhau của ứng dụng, đảm bảo chúng hoạt động nhất quán với nhau khi được kết hợp lại. Điều này khác biệt so với **unit testing** (chỉ kiểm tra các thành phần nhỏ, riêng lẻ trong môi trường cô lập) và **end-to-end testing** (kiểm tra toàn bộ luồng nghiệp vụ của ứng dụng từ đầu đến cuối).\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_177.jpg",
-    "references": [
-      {
-        "title": "Software engineering best practices on Databricks - CI/CD workflows",
-        "url": "https://docs.databricks.com/en/dev-tools/bundle-testing.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 178,
@@ -5302,7 +5237,7 @@
     "references": [
       {
         "title": "Databricks CLI - Jobs CLI run-now reference",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/jobs-cli.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       }
     ]
   },
@@ -5330,7 +5265,7 @@
     "references": [
       {
         "title": "Databricks Workflows - Create and run Databricks Jobs",
-        "url": "https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html"
+        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
       }
     ]
   },
@@ -5358,7 +5293,7 @@
     "references": [
       {
         "title": "Structured Streaming production monitoring - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/production"
       }
     ]
   },
@@ -5386,7 +5321,7 @@
     "references": [
       {
         "title": "ALTER TABLE - Databricks SQL Reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
       }
     ]
   },
@@ -5414,7 +5349,7 @@
     "references": [
       {
         "title": "Databricks SQL Alerts",
-        "url": "https://docs.databricks.com/en/sql/user/alerts/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -5442,7 +5377,7 @@
     "references": [
       {
         "title": "Git integration with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -5470,7 +5405,7 @@
     "references": [
       {
         "title": "What is the Databricks File System (DBFS)?",
-        "url": "https://docs.databricks.com/en/dbfs/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -5498,7 +5433,7 @@
     "references": [
       {
         "title": "Notebook widgets - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/widgets.html"
+        "url": "https://docs.databricks.com/en/notebooks/widgets"
       }
     ]
   },
@@ -5526,7 +5461,7 @@
     "references": [
       {
         "title": "Compute permissions - Databricks",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/compute-acl.html"
+        "url": "https://docs.databricks.com/en/sql/user/alerts/compute"
       }
     ]
   },
@@ -5554,7 +5489,7 @@
     "references": [
       {
         "title": "Write to Delta tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta/writer.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datasource/writer"
       }
     ]
   },
@@ -5582,7 +5517,7 @@
     "references": [
       {
         "title": "Mix languages in Databricks notebooks - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code.html#mix-languages"
+        "url": "https://docs.databricks.com/en/notebooks/notebooks-code#mix-languages"
       }
     ]
   },
@@ -5610,7 +5545,7 @@
     "references": [
       {
         "title": "Data skipping with relation statistics - Databricks",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -5638,7 +5573,7 @@
     "references": [
       {
         "title": "Clone a table on Databricks - Databricks",
-        "url": "https://docs.databricks.com/en/delta/clone.html"
+        "url": "https://docs.databricks.com/en/tables/operations/clone"
       }
     ]
   },
@@ -5666,7 +5601,7 @@
     "references": [
       {
         "title": "Jobs API - Databricks REST API Reference",
-        "url": "https://docs.databricks.com/api/workspace/jobs"
+        "url": "https://docs.databricks.com/en/cheat-sheet/jobs"
       }
     ]
   },
@@ -5688,7 +5623,7 @@
     "references": [
       {
         "title": "Work with Delta Lake table history - Databricks",
-        "url": "https://docs.databricks.com/en/delta/history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -5716,7 +5651,7 @@
     "references": [
       {
         "title": "Views - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-views.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-variables"
       }
     ]
   },
@@ -5744,7 +5679,7 @@
     "references": [
       {
         "title": "Support matrix for joins in Structured Streaming - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/joins.html"
+        "url": "https://docs.databricks.com/en/business-semantics/metric-views/joins"
       }
     ]
   },
@@ -5772,7 +5707,7 @@
     "references": [
       {
         "title": "Handle late data with watermarks in Structured Streaming - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/watermarks.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/watermarks"
       }
     ]
   },
@@ -5800,7 +5735,7 @@
     "references": [
       {
         "title": "Structured Streaming programming guide - Checkpointing - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html#recover-from-query-failures"
+        "url": "https://docs.databricks.com/en/structured-streaming/production#recover-from-query-failures"
       }
     ]
   },
@@ -5828,7 +5763,7 @@
     "references": [
       {
         "title": "Structured Streaming Production Patterns - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/production"
       }
     ]
   },
@@ -5856,7 +5791,7 @@
     "references": [
       {
         "title": "What is Auto Loader? - Databricks",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/index.html#file-detection-modes"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#file-detection-modes"
       }
     ]
   },
@@ -5912,7 +5847,7 @@
     "references": [
       {
         "title": "Diagnose Spill in Spark UI",
-        "url": "https://docs.databricks.com/en/resource-optimization/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -5968,7 +5903,7 @@
     "references": [
       {
         "title": "Delta Lake Merge Into",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into"
       }
     ]
   },
@@ -5996,7 +5931,7 @@
     "references": [
       {
         "title": "What is the Medallion Lakehouse Architecture?",
-        "url": "https://docs.databricks.com/en/lakehouse/medallion-architecture.html"
+        "url": "https://docs.databricks.com/en/lakehouse-architecture/well-architected"
       }
     ]
   },
@@ -6024,7 +5959,7 @@
     "references": [
       {
         "title": "Delta Table Overwrite Mode",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       }
     ]
   },
@@ -6052,7 +5987,7 @@
     "references": [
       {
         "title": "Data Governance in Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -6080,7 +6015,7 @@
     "references": [
       {
         "title": "Databricks Managed vs External Tables",
-        "url": "https://docs.databricks.com/en/tables/index.html#managed-and-external-tables"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#managed-and-external-tables"
       }
     ]
   },
@@ -6108,7 +6043,7 @@
     "references": [
       {
         "title": "Views in Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
@@ -6136,7 +6071,7 @@
     "references": [
       {
         "title": "When to Partition Tables on Databricks",
-        "url": "https://docs.databricks.com/en/tables/partition.html"
+        "url": "https://docs.databricks.com/en/error-messages/invalid-partition-operation-error-class"
       }
     ]
   },
@@ -6164,7 +6099,7 @@
     "references": [
       {
         "title": "Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/en/tables/constraints"
       }
     ]
   },
@@ -6192,7 +6127,7 @@
     "references": [
       {
         "title": "Data Skipping with Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -6220,7 +6155,7 @@
     "references": [
       {
         "title": "SCD Type 2 Pattern on Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/delta-update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       }
     ]
   },
@@ -6248,7 +6183,7 @@
     "references": [
       {
         "title": "Manage data quality with Delta Live Tables - Repetitive expectations",
-        "url": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
+        "url": "https://docs.databricks.com/en/ldp/expectations"
       }
     ]
   },
@@ -6276,7 +6211,7 @@
     "references": [
       {
         "title": "Databricks Workspace Object Permissions",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/workspace-acl.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/workspace-cli"
       }
     ]
   },
@@ -6304,7 +6239,7 @@
     "references": [
       {
         "title": "Dynamic View Masking in Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/table-acls/object-privileges.html#dynamic-view-masking"
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/object-privileges#dynamic-view-masking"
       }
     ]
   },
@@ -6332,7 +6267,7 @@
     "references": [
       {
         "title": "Databricks SQL DESCRIBE TABLE",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-describe-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-describe-table"
       }
     ]
   },
@@ -6360,7 +6295,7 @@
     "references": [
       {
         "title": "GDPR Compliance and Data Deletion on Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/vacuum.html"
+        "url": "https://docs.databricks.com/en/tables/operations/vacuum"
       }
     ]
   },
@@ -6388,7 +6323,7 @@
     "references": [
       {
         "title": "Databricks Hive Metastore Privileges (Legacy)",
-        "url": "https://docs.databricks.com/en/data-governance/table-acls/object-privileges.html"
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/object-privileges"
       }
     ]
   },
@@ -6416,7 +6351,7 @@
     "references": [
       {
         "title": "Manage data quality with Delta Live Tables - Cross-table checks",
-        "url": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
+        "url": "https://docs.databricks.com/en/ldp/expectations"
       }
     ]
   },
@@ -6444,7 +6379,7 @@
     "references": [
       {
         "title": "Spark Lazy Evaluation and Caching",
-        "url": "https://docs.databricks.com/en/spark/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -6472,7 +6407,7 @@
     "references": [
       {
         "title": "Spark SQL Query Execution Plan",
-        "url": "https://docs.databricks.com/en/spark/sql/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -6500,7 +6435,7 @@
     "references": [
       {
         "title": "Databricks CLI Pipelines Command Reference",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/pipelines-cli.html"
+        "url": "https://docs.databricks.com/en/ldp/concepts/pipelines"
       }
     ]
   },
@@ -6612,7 +6547,7 @@
     "references": [
       {
         "title": "Databricks Jobs API Reference",
-        "url": "https://docs.databricks.com/api/workspace/jobs/get"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/get"
       }
     ]
   },
@@ -6640,7 +6575,7 @@
     "references": [
       {
         "title": "Manage code with Databricks Git folders (Repos)",
-        "url": "https://docs.databricks.com/en/code/git-folders.html"
+        "url": "https://docs.databricks.com/en/repos/git-folders-concepts"
       }
     ]
   },
@@ -6665,12 +6600,7 @@
     "explanation_vi": "Trong **Delta Live Tables** (DLT), khi muốn tạo các bảng một cách lập trình (parameterized tables) từ một danh sách cấu hình, ta cần định nghĩa một hàm factory riêng biệt chứa logic tạo bảng và decorator '`@dlt.table`', sau đó gọi hàm này trong vòng lặp với các tham số tương ứng. Việc viết trực tiếp định nghĩa bảng trong vòng lặp 'for' ở mức global của file có thể gây ra lỗi scope và khiến DLT ghi nhận sai metadata cho các bảng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_227.jpg",
-    "references": [
-      {
-        "title": "Programmatically create Delta Live Tables",
-        "url": "https://docs.databricks.com/en/delta-live-tables/programmatic-tables.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 228,
@@ -6696,7 +6626,7 @@
     "references": [
       {
         "title": "Use Delta Lake Universal Format (UniForm) to read Delta tables with Iceberg clients",
-        "url": "https://docs.databricks.com/en/delta/uniform.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/uniform"
       }
     ]
   },
@@ -6724,7 +6654,7 @@
     "references": [
       {
         "title": "Delta Lake Data Skipping and Statistics",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -6752,7 +6682,7 @@
     "references": [
       {
         "title": "Unity Catalog privileges and securable objects",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/privileges.html"
+        "url": "https://docs.databricks.com/en/volumes/privileges"
       }
     ]
   },
@@ -6780,7 +6710,7 @@
     "references": [
       {
         "title": "Cluster access control privileges",
-        "url": "https://docs.databricks.com/en/compute/cluster-permissions.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/permissions"
       }
     ]
   },
@@ -6808,7 +6738,7 @@
     "references": [
       {
         "title": "Databricks CLI Clusters Command Reference",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/clusters-cli.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/clusters-cli"
       }
     ]
   },
@@ -6836,7 +6766,7 @@
     "references": [
       {
         "title": "Use Liquid Clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       }
     ]
   },
@@ -6864,7 +6794,7 @@
     "references": [
       {
         "title": "Mask sensitive column data using column masks",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/column-masking.html"
+        "url": "https://docs.databricks.com/en/tables/features/column-mapping"
       }
     ]
   },
@@ -6892,7 +6822,7 @@
     "references": [
       {
         "title": "Databricks Jobs API - Get job run",
-        "url": "https://docs.databricks.com/api/workspace/jobs/runsget"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/runtimeconfig/unset"
       }
     ]
   },
@@ -6948,7 +6878,7 @@
     "references": [
       {
         "title": "Clone a table on Databricks",
-        "url": "https://docs.databricks.com/en/delta/clone.html"
+        "url": "https://docs.databricks.com/en/tables/operations/clone"
       }
     ]
   },
@@ -6976,7 +6906,7 @@
     "references": [
       {
         "title": "Use Liquid Clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       }
     ]
   },
@@ -7004,7 +6934,7 @@
     "references": [
       {
         "title": "Manage data quality with Delta Live Tables expectations",
-        "url": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
+        "url": "https://docs.databricks.com/en/ldp/expectations"
       }
     ]
   },
@@ -7032,7 +6962,7 @@
     "references": [
       {
         "title": "Use Liquid Clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       }
     ]
   },
@@ -7057,12 +6987,7 @@
     "explanation_vi": "Trong **Unity Catalog**, row filters và column masks được triển khai bằng cách tạo các hàm SQL **UDF** định nghĩa logic lọc và ẩn dữ liệu nhạy cảm (dựa trên thông tin vùng của người dùng hoặc tư cách thành viên nhóm). Sau đó, các hàm này được áp dụng trực tiếp lên bảng bằng lệnh `ALTER TABLE SET ROW FILTER` và `ALTER COLUMN SET MASK`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_241.jpg",
-    "references": [
-      {
-        "title": "Filter sensitive table data using row filters and column masks",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/row-filters-column-masks.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 242,
@@ -7088,7 +7013,7 @@
     "references": [
       {
         "title": "What is Delta Live Tables?",
-        "url": "https://docs.databricks.com/en/delta-live-tables/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -7116,7 +7041,7 @@
     "references": [
       {
         "title": "Databricks Structured Streaming Production Best Practices",
-        "url": "https://docs.databricks.com/structured-streaming/production.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/production"
       }
     ]
   },
@@ -7144,7 +7069,7 @@
     "references": [
       {
         "title": "Databricks Spark UI reference",
-        "url": "https://docs.databricks.com/en/operating-model/troubleshooting/spark-ui.html"
+        "url": "https://docs.databricks.com/en/compute/troubleshooting/debugging-spark-ui"
       }
     ]
   },
@@ -7172,7 +7097,7 @@
     "references": [
       {
         "title": "Databricks SQL Query Profile reference",
-        "url": "https://docs.databricks.com/en/sql/admin/query-profile.html"
+        "url": "https://docs.databricks.com/en/sql/user/queries/query-profile"
       }
     ]
   },
@@ -7200,7 +7125,7 @@
     "references": [
       {
         "title": "Databricks Delta Sharing guide",
-        "url": "https://docs.databricks.com/en/data-sharing/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -7256,7 +7181,7 @@
     "references": [
       {
         "title": "Databricks Delta Lake Deletion Vectors reference",
-        "url": "https://docs.databricks.com/en/delta/deletion-vectors.html"
+        "url": "https://docs.databricks.com/en/tables/features/deletion-vectors"
       }
     ]
   },
@@ -7284,7 +7209,7 @@
     "references": [
       {
         "title": "Databricks Asset Bundles resource configuration reference",
-        "url": "https://docs.databricks.com/en/dev-tools/bundles/settings.html"
+        "url": "https://docs.databricks.com/en/dev-tools/vscode-ext/settings"
       }
     ]
   },
@@ -7312,7 +7237,7 @@
     "references": [
       {
         "title": "Databricks ALTER TABLE SQL syntax reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
       }
     ]
   },
@@ -7340,7 +7265,7 @@
     "references": [
       {
         "title": "Billing system tables reference in Databricks",
-        "url": "https://docs.databricks.com/en/admin/system-tables/billing.html"
+        "url": "https://docs.databricks.com/en/admin/system-tables/billing"
       }
     ]
   },
@@ -7368,7 +7293,7 @@
     "references": [
       {
         "title": "Optimize Spark Joins and Aggregations (Handling Skew)",
-        "url": "https://docs.databricks.com/en/optimizations/skew-join.html"
+        "url": "https://docs.databricks.com/en/archive/legacy/skew-join"
       }
     ]
   },
@@ -7396,7 +7321,7 @@
     "references": [
       {
         "title": "Repair a failed job run in Databricks Workflows",
-        "url": "https://docs.databricks.com/en/workflows/jobs/repair-job-run.html"
+        "url": "https://docs.databricks.com/en/jobs/repair-job-failures"
       }
     ]
   },
@@ -7452,7 +7377,7 @@
     "references": [
       {
         "title": "Column masks and row filters in Unity Catalog reference",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/column-masks.html"
+        "url": "https://docs.databricks.com/en/error-messages/column-masks-feature-not-supported-error-class"
       }
     ]
   },
@@ -7480,7 +7405,7 @@
     "references": [
       {
         "title": "Databricks Asset Bundles libraries configuration reference",
-        "url": "https://docs.databricks.com/en/dev-tools/bundles/library-dependencies.html"
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/library-dependencies"
       }
     ]
   },
@@ -7508,7 +7433,7 @@
     "references": [
       {
         "title": "Configure schema inference and evolution in Auto Loader reference",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/schema.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamreader/schema"
       }
     ]
   },
@@ -7536,7 +7461,7 @@
     "references": [
       {
         "title": "Databricks Jobs Access Control Lists (ACLs) reference",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/jobs-acl.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       }
     ]
   },
@@ -7561,12 +7486,7 @@
     "explanation_vi": "Khi một workspace tự động bật **Unity Catalog**, hệ thống sẽ tạo ra một workspace catalog. Theo thiết lập mặc định, tất cả người dùng trong workspace đều tự động nhận quyền `USE CATALOG` và các đặc quyền thao tác (như `USE SCHEMA`, `CREATE TABLE`) trên schema mặc định (`default` schema) của catalog đó. Tuy nhiên, quyền truy cập vào các schema khác không được cấp tự động mà quản trị viên phải cấu hình tường minh bằng lệnh `GRANT`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_259.jpg",
-    "references": [
-      {
-        "title": "Automatic enablement of Unity Catalog reference",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/automatic-enablement.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 260,
@@ -7589,12 +7509,7 @@
     "explanation_vi": "Sử dụng task `For Each` (vòng lặp) trong **Databricks Workflows** là giải pháp tối ưu. Nó cho phép truyền danh sách các loại báo cáo (report types) động làm đầu vào, thực thi song song các công việc con (concurrency) để tăng tốc độ tải, theo dõi trạng thái lỗi/thành công riêng biệt cho từng loại báo cáo, và hỗ trợ chạy lại (retry) độc lập cho từng phần bị lỗi mà không ảnh hưởng đến phần đã tải thành công.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_260.jpg",
-    "references": [
-      {
-        "title": "Run a parameterized Databricks job in a loop",
-        "url": "https://docs.databricks.com/en/workflows/jobs/how-to-use-foreach-task.html"
-      }
-    ]
+    "references": []
   },
   {
     "id": 261,
@@ -7620,7 +7535,7 @@
     "references": [
       {
         "title": "Databricks CLI Jobs command reference",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/jobs-cli.html"
+        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
       }
     ]
   },
@@ -7648,7 +7563,7 @@
     "references": [
       {
         "title": "Configure Databricks SQL Alerts",
-        "url": "https://docs.databricks.com/en/sql/user/alerts/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -7676,7 +7591,7 @@
     "references": [
       {
         "title": "Migrate a job to Databricks Asset Bundles",
-        "url": "https://docs.databricks.com/en/dev-tools/bundles/migration.html"
+        "url": "https://docs.databricks.com/en/integrations/odbc/migration"
       }
     ]
   },
@@ -7704,7 +7619,7 @@
     "references": [
       {
         "title": "Delta Sharing privileges and permissions reference",
-        "url": "https://docs.databricks.com/en/data-sharing/share-data.html"
+        "url": "https://docs.databricks.com/en/opensharing/share-data-databricks"
       }
     ]
   },
@@ -7732,7 +7647,7 @@
     "references": [
       {
         "title": "Monitor data quality with Delta Live Tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta-live-tables/observability.html"
+        "url": "https://docs.databricks.com/en/ldp/observability"
       }
     ]
   },
@@ -7762,7 +7677,7 @@
     "references": [
       {
         "title": "Predictive optimization for Unity Catalog managed tables - Databricks",
-        "url": "https://docs.databricks.com/en/unity-catalog/predictive-optimization.html"
+        "url": "https://docs.databricks.com/en/optimizations/predictive-optimization"
       }
     ],
     "isMulti": true
@@ -7791,7 +7706,7 @@
     "references": [
       {
         "title": "Use Change Data Feed in Databricks - Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -7819,7 +7734,7 @@
     "references": [
       {
         "title": "What is a materialized view? - Databricks",
-        "url": "https://docs.databricks.com/en/tables/materialized-views.html"
+        "url": "https://docs.databricks.com/en/ldp/concepts/materialized-views"
       }
     ]
   },
@@ -7847,7 +7762,7 @@
     "references": [
       {
         "title": "Monitor SQL Warehouse usage - Databricks",
-        "url": "https://docs.databricks.com/en/admin/system-tables/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -7875,7 +7790,7 @@
     "references": [
       {
         "title": "Git integration with Databricks Repos - Databricks",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -7903,7 +7818,7 @@
     "references": [
       {
         "title": "APPLY CHANGES API: Simplify Change Data Capture in Delta Live Tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta-live-tables/cdc.html"
+        "url": "https://docs.databricks.com/en/ldp/cdc"
       }
     ]
   },
@@ -7931,7 +7846,7 @@
     "references": [
       {
         "title": "Use AI to generate column descriptions in Unity Catalog - Databricks",
-        "url": "https://docs.databricks.com/en/catalog-sharing/ai-comments.html"
+        "url": "https://docs.databricks.com/en/comments/ai-comments"
       }
     ]
   },
@@ -7959,7 +7874,7 @@
     "references": [
       {
         "title": "Manage data quality with Delta Live Tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
+        "url": "https://docs.databricks.com/en/ldp/expectations"
       }
     ]
   },
@@ -8015,7 +7930,7 @@
     "references": [
       {
         "title": "Delta Lake Schema Validation and Evolution - Databricks",
-        "url": "https://docs.databricks.com/en/delta/update-schema.html"
+        "url": "https://docs.databricks.com/en/tables/update-schema"
       }
     ]
   },
@@ -8043,7 +7958,7 @@
     "references": [
       {
         "title": "Delta Lake transaction log and metadata - Databricks",
-        "url": "https://docs.databricks.com/en/delta/history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -8071,7 +7986,7 @@
     "references": [
       {
         "title": "Delta Table Properties Reference - Databricks",
-        "url": "https://docs.databricks.com/en/delta/table-properties.html"
+        "url": "https://docs.databricks.com/en/tables/table-properties"
       }
     ]
   },
@@ -8099,7 +8014,7 @@
     "references": [
       {
         "title": "Databricks Asset Bundles CI/CD workflows - Databricks",
-        "url": "https://docs.databricks.com/en/dev-tools/bundles/ci-cd.html"
+        "url": "https://docs.databricks.com/en/repos/ci-cd"
       }
     ]
   },
@@ -8211,7 +8126,7 @@
     "references": [
       {
         "title": "Auto Loader options reference - Databricks",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/options.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamwriter/options"
       }
     ]
   },
@@ -8239,7 +8154,7 @@
     "references": [
       {
         "title": "Run queries using Lakehouse Federation - Databricks",
-        "url": "https://docs.databricks.com/en/query-federation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8295,7 +8210,7 @@
     "references": [
       {
         "title": "Upsert into a Delta Lake table using merge - Databricks",
-        "url": "https://docs.databricks.com/en/delta/merge.html"
+        "url": "https://docs.databricks.com/en/delta/merge"
       }
     ]
   },
@@ -8323,7 +8238,7 @@
     "references": [
       {
         "title": "Load files with Auto Loader - Databricks",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8351,7 +8266,7 @@
     "references": [
       {
         "title": "Use liquid clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       }
     ]
   },
@@ -8381,11 +8296,11 @@
     "references": [
       {
         "title": "Use liquid clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       },
       {
         "title": "What are deletion vectors?",
-        "url": "https://docs.databricks.com/en/delta/deletion-vectors.html"
+        "url": "https://docs.databricks.com/en/tables/features/deletion-vectors"
       }
     ]
   },
@@ -8413,7 +8328,7 @@
     "references": [
       {
         "title": "Configure schema inference and evolution in Auto Loader",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/schema.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamreader/schema"
       }
     ]
   },
@@ -8441,7 +8356,7 @@
     "references": [
       {
         "title": "Data skipping for Delta Lake",
-        "url": "https://docs.databricks.com/en/delta/data-skipping.html"
+        "url": "https://docs.databricks.com/en/tables/data-skipping"
       }
     ]
   },
@@ -8469,7 +8384,7 @@
     "references": [
       {
         "title": "Manage privileges in Unity Catalog",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges.html"
+        "url": "https://docs.databricks.com/en/oltp/instances/manage-privileges"
       }
     ]
   },
@@ -8499,11 +8414,11 @@
     "references": [
       {
         "title": "Compute policies",
-        "url": "https://docs.databricks.com/en/compute/policies.html"
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/abac/policies"
       },
       {
         "title": "Use cluster-scoped init scripts",
-        "url": "https://docs.databricks.com/en/init-scripts/cluster-scoped.html"
+        "url": "https://docs.databricks.com/en/init-scripts/cluster-scoped"
       }
     ]
   },
@@ -8531,7 +8446,7 @@
     "references": [
       {
         "title": "Data warehousing modeling on Databricks",
-        "url": "https://docs.databricks.com/en/lakehouse/data-warehousing.html"
+        "url": "https://docs.databricks.com/en/sql/get-started/data-warehousing-concepts"
       }
     ]
   },
@@ -8559,7 +8474,7 @@
     "references": [
       {
         "title": "Delta table properties reference",
-        "url": "https://docs.databricks.com/en/delta/table-properties.html"
+        "url": "https://docs.databricks.com/en/tables/table-properties"
       }
     ]
   },
@@ -8587,7 +8502,7 @@
     "references": [
       {
         "title": "Secrets management on Databricks",
-        "url": "https://docs.databricks.com/en/security/secrets/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8615,7 +8530,7 @@
     "references": [
       {
         "title": "Use Delta Lake change data feed on Databricks",
-        "url": "https://docs.databricks.com/en/delta/delta-change-data-feed.html"
+        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -8673,7 +8588,7 @@
     "references": [
       {
         "title": "Auto Loader binary file support",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/binary-files.html"
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/any-file"
       }
     ]
   },
@@ -8701,7 +8616,7 @@
     "references": [
       {
         "title": "Share table history in Delta Sharing",
-        "url": "https://docs.databricks.com/en/data-sharing/share-history.html"
+        "url": "https://docs.databricks.com/en/tables/history"
       }
     ]
   },
@@ -8729,7 +8644,7 @@
     "references": [
       {
         "title": "What is Delta Sharing?",
-        "url": "https://docs.databricks.com/en/data-sharing/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8757,7 +8672,7 @@
     "references": [
       {
         "title": "Parameterize tasks in Databricks Jobs",
-        "url": "https://docs.databricks.com/en/jobs/settings.html#parameterize-tasks"
+        "url": "https://docs.databricks.com/en/dev-tools/vscode-ext/settings#parameterize-tasks"
       }
     ]
   },
@@ -8785,7 +8700,7 @@
     "references": [
       {
         "title": "What is Delta Live Tables?",
-        "url": "https://docs.databricks.com/en/delta-live-tables/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8813,7 +8728,7 @@
     "references": [
       {
         "title": "Unity Catalog privileges and securable objects",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/privileges.html#manage-privileges"
+        "url": "https://docs.databricks.com/en/volumes/privileges#manage-privileges"
       }
     ]
   },
@@ -8841,7 +8756,7 @@
     "references": [
       {
         "title": "Track data changes with Delta Live Tables",
-        "url": "https://docs.databricks.com/en/delta-live-tables/cdc.html#sequence-by"
+        "url": "https://docs.databricks.com/en/ldp/cdc#sequence-by"
       }
     ]
   },
@@ -8869,11 +8784,11 @@
     "references": [
       {
         "title": "Use liquid clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       },
       {
         "title": "Predictive optimization for Unity Catalog managed tables",
-        "url": "https://docs.databricks.com/en/optimizations/predictive-optimization.html"
+        "url": "https://docs.databricks.com/en/optimizations/predictive-optimization"
       }
     ]
   },
@@ -8901,7 +8816,7 @@
     "references": [
       {
         "title": "Watermarking in Structured Streaming",
-        "url": "https://docs.databricks.com/en/structured-streaming/watermarks.html"
+        "url": "https://docs.databricks.com/en/structured-streaming/watermarks"
       }
     ]
   },
@@ -8929,7 +8844,7 @@
     "references": [
       {
         "title": "Unity Catalog privilege inheritance",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges.html#privilege-inheritance"
+        "url": "https://docs.databricks.com/en/oltp/instances/manage-privileges#privilege-inheritance"
       }
     ]
   },
@@ -8957,7 +8872,7 @@
     "references": [
       {
         "title": "What is Delta Live Tables?",
-        "url": "https://docs.databricks.com/en/delta-live-tables/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -8985,7 +8900,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Query profile metrics",
-        "url": "https://docs.databricks.com/en/sql/admin/query-profile.html"
+        "url": "https://docs.databricks.com/en/sql/user/queries/query-profile"
       }
     ]
   },
@@ -9013,7 +8928,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Use materialized views in Databricks SQL",
-        "url": "https://docs.databricks.com/en/sql/user/materialized-views.html"
+        "url": "https://docs.databricks.com/en/ldp/concepts/materialized-views"
       }
     ]
   },
@@ -9044,7 +8959,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Memory management and out-of-memory troubleshooting",
-        "url": "https://docs.databricks.com/en/compute/best-practices.html"
+        "url": "https://docs.databricks.com/en/notebooks/best-practices"
       }
     ]
   },
@@ -9072,7 +8987,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Repair a failed job run",
-        "url": "https://docs.databricks.com/en/jobs/run-jobs.html#repair-a-failed-job-run"
+        "url": "https://docs.databricks.com/en/jobs/tasks/run-job#repair-a-failed-job-run"
       }
     ]
   },
@@ -9100,7 +9015,7 @@
     "references": [
       {
         "title": "Databricks Documentation - sha2 function",
-        "url": "https://docs.databricks.com/en/sql/language-manual/functions/sha2.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/functions/sha2"
       }
     ]
   },
@@ -9128,7 +9043,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Lakehouse Federation",
-        "url": "https://docs.databricks.com/en/query-federation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -9156,7 +9071,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Column masks",
-        "url": "https://docs.databricks.com/en/tables/column-masks.html"
+        "url": "https://docs.databricks.com/en/error-messages/column-masks-feature-not-supported-error-class"
       }
     ]
   },
@@ -9184,7 +9099,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Resolve merge conflicts in Git folders",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos.html#resolve-merge-conflicts"
+        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos#resolve-merge-conflicts"
       }
     ]
   },
@@ -9212,7 +9127,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Jobs API 2.2",
-        "url": "https://docs.databricks.com/api/workspace/jobs"
+        "url": "https://docs.databricks.com/en/cheat-sheet/jobs"
       }
     ]
   },
@@ -9240,7 +9155,7 @@
     "references": [
       {
         "title": "Databricks Documentation - OAuth machine-to-machine (M2M) authentication",
-        "url": "https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html"
+        "url": "https://docs.databricks.com/en/dev-tools/auth/oauth-m2m"
       }
     ]
   },
@@ -9268,7 +9183,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Use Liquid Clustering for Delta tables",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "url": "https://docs.databricks.com/en/tables/clustering"
       }
     ]
   },
@@ -9296,7 +9211,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Structured Streaming checkpoints",
-        "url": "https://docs.databricks.com/en/structured-streaming/production.html#enable-templated-checkpoints"
+        "url": "https://docs.databricks.com/en/structured-streaming/production#enable-templated-checkpoints"
       }
     ]
   },
@@ -9324,7 +9239,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Compute access modes for Unity Catalog",
-        "url": "https://docs.databricks.com/en/compute/access-modes.html"
+        "url": "https://docs.databricks.com/en/admin/workspace-settings/default-access-mode"
       }
     ]
   },
@@ -9352,7 +9267,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Pandas user-defined functions",
-        "url": "https://docs.databricks.com/en/udfs/pandas-udfs.html"
+        "url": "https://docs.databricks.com/en/pyspark/reference/functions/pandas_udf"
       }
     ]
   },
@@ -9377,12 +9292,7 @@
     "explanation_vi": "Khi một notebook được kết nối trực tiếp với một **Delta Live Tables** (DLT) hoặc **Lakeflow** pipeline, giao diện notebook của **Databricks** cung cấp nút **Validate** ở góc trên bên phải. Khi nhấp vào tùy chọn này, hệ thống sẽ thực hiện phân tích tĩnh mã nguồn trong notebook để phát hiện các lỗi cú pháp, lỗi định nghĩa bảng, hoặc thiếu cấu hình mà không thực tế chạy pipeline hay xử lý dữ liệu (Dry Run), giúp tiết kiệm thời gian và tài nguyên trong quá trình phát triển.\n\n*(Đáp án được gợi ý bởi AI)*",
     "page": null,
     "image": "img/q_323.jpg",
-    "references": [
-      {
-        "title": "Databricks Documentation - Development tools for Delta Live Tables",
-        "url": "https://docs.databricks.com/en/delta-live-tables/ui-create-update-run.html#validate-pipeline"
-      }
-    ]
+    "references": []
   },
   {
     "id": 324,
@@ -9408,7 +9318,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Dynamic file pruning",
-        "url": "https://docs.databricks.com/en/optimizations/dynamic-file-pruning.html"
+        "url": "https://docs.databricks.com/en/optimizations/dynamic-file-pruning"
       }
     ]
   },
@@ -9439,7 +9349,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Create and run Databricks Jobs",
-        "url": "https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html"
+        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
       }
     ]
   },
@@ -9467,7 +9377,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Predictive Optimization for Unity Catalog managed tables",
-        "url": "https://docs.databricks.com/en/optimizations/predictive-optimization.html"
+        "url": "https://docs.databricks.com/en/optimizations/predictive-optimization"
       }
     ]
   },
@@ -9495,7 +9405,7 @@
     "references": [
       {
         "title": "Databricks Documentation - Use deletion vectors to speed up deletes",
-        "url": "https://docs.databricks.com/en/delta/deletion-vectors.html"
+        "url": "https://docs.databricks.com/en/tables/features/deletion-vectors"
       }
     ]
   }

@@ -3,98 +3,100 @@ title: "Tác nhân AI (AI Agent)"
 difficulty: "Advanced"
 tags: ["ai-agent", "genai", "llm", "automation", "tool-use", "system-design", "langgraph", "finops"]
 readingTime: "25 mins"
-lastUpdated: 2026-06-26
+lastUpdated: 2026-06-29
 seoTitle: "AI Agent Architecture: System Design, Trade-offs & Production Risks"
-metaDescription: "Tìm hiểu sâu về kiến trúc AI Agent (Multi-Agent Systems) dưới góc nhìn Data Engineering. Mổ xẻ System Design, FinOps, LLM Routing, Memory Lifecycle và Operational Risks."
+metaDescription: "Tìm hiểu sâu về kiến trúc AI Agent (Multi-Agent Systems) dưới góc nhìn Staff Engineer. Mổ xẻ System Design, ReAct vs LangGraph, Memory Lifecycle và Operational Risks."
 description: "Phân tích kiến trúc cốt lõi của AI Agent trong môi trường Production: từ ReAct, LangGraph orchestration đến xử lý Context Window OOM, State Checkpointing và tối ưu chi phí (FinOps)."
 ---
 
 Nếu chỉ giao tiếp qua khung chat đơn thuần (ChatGPT, Claude), Mô hình Ngôn ngữ Lớn (LLM) giống như một "bộ não trong bình" (brain in a vat) – thông minh nhưng hoàn toàn thụ động và bị cô lập khỏi thế giới bên ngoài. 
 
-Dưới góc nhìn System Design, **AI Agent** đóng vai trò là một **vỏ bọc hệ điều hành (Operating System Wrapper)**. Nó sử dụng LLM như một công cụ tính toán logic (Reasoning Engine) trung tâm, kết nối bộ não này với **Bộ nhớ (Memory)**, **Quyền điều khiển luồng (Control Flow/Planning)**, và **Cổng tương tác ngoại vi (Tool Use / I/O)**. Thông qua AI Agent, phần mềm chuyển từ mô hình "chờ lệnh và trả lời" (Request-Response) sang mô hình "nhận mục tiêu và tự thực thi" (Goal-Oriented Autonomous Execution).
+Dưới góc nhìn **System Design** của một **Staff Engineer**, **AI Agent** đóng vai trò là một **Hệ điều hành (Operating System Wrapper)**. Nó sử dụng LLM như một công cụ tính toán logic (Reasoning Engine), kết nối bộ não này với **Bộ nhớ (Memory)**, **Quyền điều khiển luồng (Control Flow)**, và **Cổng tương tác ngoại vi (Tool Use / I/O)**. 
+
+Thông qua AI Agent, phần mềm chuyển từ mô hình "chờ lệnh và trả lời" (Request-Response) sang mô hình "nhận mục tiêu và tự thực thi" (Goal-Oriented Autonomous Execution).
 
 ---
 
-## 1. Kiến trúc Cốt lõi của một Agent (The Core Architecture)
+## 1. Sự tiến hóa của Kiến trúc Agent (Architectural Evolution)
 
-Kiến trúc Agent kinh điển được định hình rõ nét nhất qua bài viết nền tảng của Lilian Weng (OpenAI). Một Agent độc lập hoạt động dựa trên 4 phân hệ vật lý/logic:
+Trong môi trường Production, việc thiết kế luồng Agent là bài toán đánh đổi kinh điển giữa **Sự linh hoạt (Flexibility / Agency)** và **Tính xác định (Determinism / Reliability)**.
 
-![AI Agent Overview](/images/9-genai-machine-learning/agent-overview.png)
-*Nguồn: Lilian Weng (2023) - Các thành phần cốt lõi của LLM-powered Autonomous Agent.*
+### 1.1. ReAct (Reason + Act): The Pioneer Pattern
+ReAct là vòng lặp cơ bản: LLM được prompt để "Suy nghĩ" $\rightarrow$ "Hành động" $\rightarrow$ "Quan sát" $\rightarrow$ Lặp lại.
+-   **Ưu điểm:** Khả năng tự sửa sai (Self-correction) xuất sắc. Xử lý tốt các tác vụ mơ hồ (Open-ended tasks).
+-   **Đánh đổi (Trade-off):** Cực kỳ **tốn kém (Token Explosion)** và không ổn định (Non-deterministic). Ở mỗi vòng lặp, toàn bộ lịch sử (History) phải được nạp lại vào Context Window. Rất dễ rơi vào Infinite Loop nếu API trả lỗi.
 
-1. **Reasoning Engine (LLM):** Xử lý ngữ nghĩa, phân tích ý định (intent parsing) và quyết định luồng đi.
-2. **Planning & Orchestration:** 
-   - **Task Decomposition:** Phân rã mục tiêu lớn thành chuỗi đồ thị phụ thuộc (DAG) các task nhỏ.
-   - **ReAct (Reasoning and Acting):** Vòng lặp `Thought -> Action -> Observation` liên tục để tự sửa sai (Self-correction).
-3. **Memory System:**
-   - **Short-term Memory (In-context learning):** Trạng thái luồng thực thi (State) hiện tại, lưu trong Context Window giới hạn của LLM.
-   - **Long-term Memory:** Hạ tầng lưu trữ bền vững bên ngoài (Vector Databases như Qdrant, Milvus hoặc Graph Database) để gọi RAG khi cần nhớ lại thông tin quá khứ.
-4. **Tool Use / Actions:** Các API, Python REPL Sandboxes, Web Crawlers. Dưới góc độ hệ thống, đây là các HTTP/gRPC client được LLM gọi thông qua cơ chế *Function Calling* (trả về JSON payload có cấu trúc).
+### 1.2. Native Tool Calling (Cấp phát API)
+Thay vì dùng prompt ReAct phức tạp, các LLM hiện đại (GPT-4, Claude 3) được fine-tune để xuất thẳng JSON Schema (Function Calling).
+-   **Đánh đổi:** Độ trễ cực thấp (Low Latency), cấu trúc JSON nghiêm ngặt (dễ bắt lỗi `Pydantic`). Tuy nhiên, mất đi sự minh bạch trong quá trình "suy nghĩ" (Reasoning trace) của LLM.
 
----
-
-## 2. Multi-Agent Systems & Orchestration Patterns
-
-Đưa một Agent khổng lồ vào Production (God Agent) là một thảm họa System Design. Nó giống như Monolithic Architecture: Agent dễ bị "ảo giác" (Hallucinations), tràn Context Window, và cực kỳ khó debug. Thay vào đó, ngành Data/Software Engineering chuyển sang **Multi-Agent Systems (Micro-agents)**.
-
-Các Pattern định tuyến đa tác nhân phổ biến:
-
-### 2.1. Sequential Pipeline (DAG Pattern)
-Luồng đi 1 chiều: Agent A thu thập dữ liệu -> Agent B viết code -> Agent C kiểm thử. Dễ scale, dễ track state, nhưng thiếu tính linh hoạt (không có vòng lặp).
-
-### 2.2. Hierarchical / Supervisor Routing
-Sử dụng một LLM mạnh làm Router (Supervisor) để phân phối task xuống cho các "Worker Agents" chuyên biệt.
+### 1.3. State Machines & LangGraph (The Enterprise Standard)
+Giao phó luồng thực thi (Control Flow) hoàn toàn cho LLM (như ReAct) là một Anti-pattern trong môi trường Enterprise. **LangGraph** ra đời để ép Agent hoạt động như một cỗ máy trạng thái (State Machine).
 
 ```mermaid
 graph TD
-    User("(User") --> Sup["Supervisor Agent"]
-    Sup --> |Định tuyến| W1["Researcher Agent"]
-    Sup --> |Định tuyến| W2["Coder Agent"]
-    Sup --> |Định tuyến| W3["Reviewer Agent"]
+    subgraph "ReAct Pattern (Non-Deterministic)"
+        LLM_ReAct(("LLM (Vòng lặp Vô Tận)"))
+        Tool_ReAct["Tool Execution"]
+        LLM_ReAct -- Quyết định --> Tool_ReAct
+        Tool_ReAct -- Kết quả --> LLM_ReAct
+    end
+
+    subgraph "LangGraph State Machine (Deterministic Control)"
+        Start((Start)) --> Supervisor["Supervisor Node (LLM Router)"]
+        Supervisor -- Điều kiện A --> Worker1["Researcher Agent"]
+        Supervisor -- Điều kiện B --> Worker2["Coder Agent"]
+        
+        Worker1 --> Tools["Tool Node (API Calls)"]
+        Tools --> Worker1
+        Worker1 --> Supervisor
+        
+        Worker2 --> Validator["Static Code Linter (Python)"]
+        Validator --> Supervisor
+        Supervisor --> End[(End)]
+    end
     
-    W1 -.-> |Kết quả Web| Sup
-    W2 -.-> |Source Code| Sup
-    W3 -.-> |Lint Errors| Sup
-    
-    Sup --> |Trả lời cuối cùng| User
-    
-    style Sup fill:#f9f,stroke:#333,stroke-width:2px
+    style Supervisor fill:#f9f,stroke:#333,stroke-width:2px
+    style Validator fill:#bbf,stroke:#333,stroke-width:2px
 ```
+*Sự khác biệt cốt lõi: Với LangGraph, các cạnh (Edges) của đồ thị do Code Python kiểm soát, LLM chỉ đóng vai trò xử lý tại các Nodes.*
 
-### 2.3. Mã nguồn Thực chiến: Supervisor Pattern với LangGraph
+---
 
-Dưới đây là kiến trúc Graph State quản lý trạng thái của các Agent bằng Python và LangGraph. Ở quy mô Production, chúng ta **không** truyền toàn bộ hội thoại cho mọi Agent, mà chỉ truyền các `State` (trạng thái hệ thống) cần thiết.
+## 2. Mã nguồn Thực chiến: Supervisor Pattern với LangGraph
+
+Ở quy mô Production, chúng ta thiết kế Multi-Agent Systems thay vì một God Agent. Dưới đây là kiến trúc quản lý State bằng Python.
 
 ```python
 from typing import Annotated, Sequence, TypedDict
 import operator
 from langgraph.graph import StateGraph, END
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage, SystemMessage
 
-# 1. Định nghĩa System State (Nơi lưu trữ Short-term Memory chung)
+# 1. Định nghĩa System State (Short-term Memory chung)
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
     next_agent: str
-    intermediate_data: dict
 
-# 2. Định nghĩa Supervisor Node (Router)
+# 2. Supervisor Node (Router]
 def supervisor_node(state: AgentState):
-    # LLM quyết định ai sẽ làm tiếp theo dựa trên messages gần nhất
-    router_prompt = f"Ai nên xử lý tiếp theo: Coder hay Researcher? (Trả về Tên)"
-    response = llm.invoke([SystemMessage(content=router_prompt)] + state["messages"])
+    # Dùng LLM nhỏ/nhanh để định tuyến (LLM Tiering)
+    router_prompt = "Dựa vào yêu cầu, chuyển cho ai: Coder hay Researcher? Chỉ trả về tên."
+    # Giả lập LLM call
+    response_text = "Coder" # llm.invoke(...)
     
-    return {"next_agent": response.content.strip()}
+    return {"next_agent": response_text.strip()}
 
 # 3. Định nghĩa Workflow Graph (Control Flow)
 workflow = StateGraph(AgentState)
 workflow.add_node("Supervisor", supervisor_node)
-workflow.add_node("Researcher", researcher_agent)
-workflow.add_node("Coder", coder_agent)
+workflow.add_node("Researcher", researcher_agent_function)
+workflow.add_node("Coder", coder_agent_function)
 
-# Routing Logic Edge
+# 4. Routing Logic Edge (Kiểm soát bằng Code, không phải bằng LLM)
 workflow.add_conditional_edges(
     "Supervisor",
-    lambda x: x["next_agent"], # Trích xuất tên Agent từ State
+    lambda x: x["next_agent"], # Trích xuất từ State
     {
         "Researcher": "Researcher",
         "Coder": "Coder",
@@ -102,80 +104,65 @@ workflow.add_conditional_edges(
     }
 )
 workflow.set_entry_point("Supervisor")
+# Compile hệ thống thành một luồng thực thi
 app = workflow.compile()
 ```
 
 ---
 
-## 3. Quản trị State, Memory Lifecycle & Trade-offs
+## 3. Quản trị State, Memory Lifecycle & OOM
 
-Khác với Data Pipeline truyền thống (Stateless), Agentic Pipeline là **Stateful**. Quản trị vòng đời bộ nhớ (Memory Lifecycle) là điểm nghẽn vật lý lớn nhất.
+Khác với Data Pipeline truyền thống (Stateless), Agent Pipeline là **Stateful**. Quản trị vòng đời bộ nhớ (Memory Lifecycle) là điểm nghẽn vật lý lớn nhất.
 
-### 3.1. Vấn đề: Context Window Limits & OOMKilled
-Mỗi khi Agent chạy vòng lặp ReAct, History Messages to dần lên. LLM tính phí và xử lý toán học dựa trên số token truyền vào (Context Window). Khi token vượt ngưỡng (VD: > 128K tokens cho GPT-4o), API sẽ văng lỗi `RateLimitError` hoặc `ContextLengthExceeded` (tương đương với Out of Memory - OOMKilled ở JVM).
+### 3.1. Context Window Limits & OOMKilled
+Mỗi vòng lặp ReAct, History Messages phình to. LLM tính phí và xử lý toán học dựa trên số token truyền vào (Context Window). Khi token vượt ngưỡng (VD: > 128K tokens), API sẽ văng `ContextLengthExceeded` (tương đương với OOMKilled ở JVM).
 
-### 3.2. Đánh đổi Hệ thống (Systemic Trade-offs)
-*   **Latency vs. Context Retention:** Truyền toàn bộ lịch sử (Full History) đảm bảo độ chính xác cao nhưng làm tăng Time-to-First-Token (TTFT) theo cấp số nhân và chi phí cắt cổ.
-*   **Giải pháp (Context Pruning & Checkpointing):**
-    Sử dụng kỹ thuật *Sliding Window* (chỉ giữ $N$ tin nhắn gần nhất) kết hợp *Rolling Summarization* (Dùng mô hình nhỏ gọn như Claude 3.5 Haiku để tóm tắt các hội thoại cũ và lưu dưới dạng chuỗi cô đọng).
-    Trong LangGraph, ta sử dụng cơ chế `checkpointer` (ví dụ lưu State vào Redis hoặc Postgres) để cho phép **Human-in-the-loop (HITL)** và khôi phục (Resume) thay vì chạy lại từ đầu khi crash.
+### 3.2. Đánh đổi: Latency vs. Context Retention
+Truyền Full History đảm bảo độ chính xác (Recall) cao nhưng làm tăng Time-to-First-Token (TTFT) theo bậc hai ($O(N^2)$).
+-   **Giải pháp (Context Pruning):** Dùng *Sliding Window* (chỉ giữ 5 tin nhắn gần nhất) kết hợp *Rolling Summarization* (Dùng mô hình rẻ như Haiku để tóm tắt hội thoại cũ).
+-   **Giải pháp Checkpointing:** LangGraph hỗ trợ lưu State (Redis/Postgres) để **Resume** và kích hoạt **Human-in-the-loop (HITL)** (Yêu cầu kỹ sư duyệt lệnh trước khi Agent commit Database).
 
 ---
 
-## 4. Rủi ro Vận hành và Sự cố Thực tế (Operational Incidents)
+## 4. Rủi ro Vận hành (Operational Incidents)
 
-Giao quyền tự quyết cho AI gây ra những rủi ro thảm họa nếu không có Guardrails (Rào chắn) vật lý ở mức hạ tầng.
+Giao quyền tự quyết cho AI gây ra rủi ro thảm họa nếu thiếu Guardrails. Quy tắc tối thượng của System Design: **"LLM không bao giờ tự thực thi Tool. LLM chỉ yêu cầu (request), Hệ thống (Runtime) thực thi."**
 
-### Incident 1: Infinite Retry Storms (Bão Lặp Vô Tận)
-*   **Triệu chứng:** Agent gọi một API truy vấn Database bị lỗi `400 Bad Request`. Agent nhận được lỗi, nhưng không đủ thông minh để biết API schema đã đổi. Nó quyết tâm gọi đi gọi lại hàng trăm lần bằng đủ các tham số bịa đặt.
-*   **Hậu quả:** API Provider khóa IP, hóa đơn LLM Token tăng vọt lên hàng nghìn USD chỉ trong 1 đêm do Context ngày càng phình to ở mỗi vòng lặp.
-*   **Giải pháp Hệ thống:** 
-    1. Áp đặt `max_iterations = 5` tại cấp độ Graph Orchestrator.
-    2. Cấu hình **Circuit Breaker**: Sau 3 lần lỗi API liên tiếp, buộc luồng chuyển sang `HumanFallbackNode` để con người can thiệp.
+### Incident 1: Bão Lặp Vô Tận [Infinite Retry Storms]
+-   **Triệu chứng:** Agent gọi API bị lỗi `400 Bad Request`. Agent nhận lỗi, nhưng không hiểu schema đã đổi. Nó quyết tâm thử lại liên tục. Hóa đơn LLM Token tăng hàng nghìn USD/đêm do Context phình to.
+-   **Giải pháp:** Áp đặt Circuit Breaker (`max_iterations = 3`) ở cấp Graph. Hết 3 lần, fallback sang `HumanInterventionNode`.
 
-### Incident 2: Hallucinated Arguments (Ảo giác Tham số Chết người)
-*   **Triệu chứng:** Khi Agent gọi function `delete_records(ids: List[str])`, nó tự ảo giác truyền vào `ids=["*"]` vì nghĩ rằng thao tác này hợp lệ theo thói quen Bash shell.
-*   **Giải pháp Hệ thống:** 
-    Bắt buộc sử dụng Strict Typed Validation. Ví dụ cấu hình `Pydantic` schema khắt khe trước khi request thực sự rời khỏi Agent tới System API:
+### Incident 2: Ảo giác Tham số (Hallucinated Arguments)
+-   **Triệu chứng:** Khi Agent gọi function `delete_records(ids: List[str]]`, nó ảo giác truyền vào `ids=["*"]`.
+-   **Giải pháp:** Sử dụng Strict Validation bằng `Pydantic` trước khi request chạm vào API nội bộ:
     ```python
     from pydantic import BaseModel, Field, field_validator
 
-    class DeleteRecordsSchema(BaseModel):
-        ids: list[str] = Field(..., min_items=1)
+    class DeleteRecordsSchema[BaseModel]:
+        ids: list[str] = Field(..., min_items=1]
         
         @field_validator('ids')
         @classmethod
         def no_wildcards(cls, v):
             if "*" in v or "all" in v:
-                raise ValueError("Wildcards are strictly prohibited in IDs.")
+                raise ValueError("Nghiêm cấm dùng Wildcards (*).")
             return v
     ```
 
 ### Incident 3: Tool Execution Sandbox Escape
-*   **Triệu chứng:** Coder Agent được cung cấp quyền thực thi Python code bằng hàm `eval()` hoặc subprocess để test tính năng. Agent sinh ra mã có chứa `os.system("rm -rf /")`.
-*   **Giải pháp Hệ thống:** Chạy Code Execution Tools trong các môi trường **gVisor**, **Docker Sandbox** (không có network access, read-only file systems) hoặc sử dụng các dịch vụ cô lập như AWS Lambda, E2B (e2b.dev).
+-   **Sự cố:** Coder Agent được cho quyền `eval()` Python. Nó sinh ra mã `os.system("rm -rf /")`.
+-   **Khắc phục:** Chạy Code Tools trong môi trường **gVisor**, **Docker Sandbox** (Read-only, Không có Network) hoặc sử dụng dịch vụ cô lập (AWS Lambda, E2B).
 
 ---
 
-## 5. FinOps: Tối ưu Chi phí cho Agentic Systems
+## 5. FinOps: Tối ưu Chi phí cho Agent Systems
 
-Kiến trúc AI Agent cực kỳ tốn kém vì số lượng lệnh gọi inference (API calls) có thể gấp 10-20 lần so với mô hình Chatbot 1-turn.
+Agent đắt gấp 10-20 lần Chatbot thông thường do số lượng LLM Calls chồng chéo.
+1.  **LLM Tiering (Định tuyến Mô hình):** Đừng dùng GPT-4o cho mọi task. Router/Supervisor Agent chỉ phân loại luồng $\rightarrow$ Dùng model nhỏ (GPT-4o-mini). Planner Agent cần tư duy $\rightarrow$ Dùng model lớn.
+2.  **Semantic Caching:** Cache lại Graph Execution Plan. Nếu User B hỏi câu Cosine Similarity > 0.95 với User A, tái sử dụng luồng của A.
+3.  **Agentic Observability:** Phải sử dụng các công cụ như LangSmith, Phoenix để track *Tokens per Run* và *Action Success Rate*. Trace log truyền thống là vô dụng với Agent.
 
-1. **LLM Tiering (Định tuyến Mô hình):**
-   - Đừng dùng GPT-4o / Claude 3.5 Sonnet cho mọi tác vụ. 
-   - **Router/Supervisor Agent:** Dùng mô hình cực nhanh, rẻ (VD: GPT-4o-mini, Claude 3.5 Haiku, Llama-3-8B) vì tác vụ phân loại (classification) rất đơn giản.
-   - **Reasoning/Planning Agent:** Dùng mô hình đắt tiền.
-2. **Semantic Caching:**
-   - Sử dụng Redis, Momento hoặc các Vector DB kết hợp để cache. Nếu Input Intent tương tự (khoảng cách Cosine Similarity > 0.95), trả về cấu trúc Graph execution plan đã lưu từ trước thay vì yêu cầu LLM lập kế hoạch lại từ đầu.
-3. **Tracking Metrics:**
-   - Trong DataOps, chúng ta theo dõi Bytes Processed. Trong AgentOps, phải giám sát các metrics cốt lõi: *Tokens per Run*, *Action Success Rate*, *Graph Depth* (Số lần chuyển Node). Sử dụng các công cụ Observability như LangSmith, Phoenix (Arize), hoặc Datadog LLM Observability.
-
----
-
-## 6. Nguồn Tham Khảo (References)
-
-*   **LLM Powered Autonomous Agents** - Lilian Weng, OpenAI Blog. [Link](https://lilianweng.github.io/posts/2023-06-23-agent/)
-*   **LangGraph: Multi-Agent Workflows** - LangChain Docs. [Link](https://python.langchain.com/docs/langgraph/)
-*   **Building effective agents** - Anthropic Engineering Blog. [Link](https://www.anthropic.com/research/building-effective-agents)
-*   **Multi-Agent Orchestration Patterns** - AWS Architecture Blog. [Link](https://aws.amazon.com/blogs/architecture/)
-*   **Designing Data-Intensive Applications** - Martin Kleppmann (Phần liên quan đến State Management & Fault Tolerance trong Hệ thống phân tán).
+## Nguồn Tham Khảo (References)
+1.  **LLM Powered Autonomous Agents** - Lilian Weng (OpenAI Blog).
+2.  **LangGraph: Multi-Agent Workflows** - Kiến trúc Đồ thị (StateGraph).
+3.  **Building effective agents** - Anthropic Engineering Blog (Đánh giá ReAct vs Tool Calling).

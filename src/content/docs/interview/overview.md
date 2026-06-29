@@ -259,7 +259,7 @@ gitGraph
     branch feature/add-revenue-model
     checkout feature/add-revenue-model
     commit id:"Write SQL in dbt"
-    commit id:"Add dbt tests("unique, not_null")"
+    commit id:"Add dbt tests(unique, not_null)"
     checkout main
     merge feature/add-revenue-model id:"Pull Request + CI Check"
     commit id:"Airflow/Git Actions Trigger Deploy"

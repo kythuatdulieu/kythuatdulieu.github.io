@@ -1,134 +1,98 @@
 ---
 title: "Relational Database (RDBMS) - Staff Engineer Deep Dive"
 difficulty: "Advanced"
-tags: ["rdbms", "sql", "acid", "mvcc", "system-design", "database"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - Kiến trúc và Trade-offs"
-metaDescription: "Deep dive vào RDBMS dưới góc nhìn Staff Engineer: Physical Execution, MVCC, Replication Lag, Connection Pool, và các sự cố thực tế."
-description: "Vượt qua các khái niệm cơ bản, bài viết phân tích sâu vào kiến trúc bên trong của RDBMS, đánh đổi (trade-offs) giữa hiệu năng và tính nhất quán, các kỹ thuật Concurrency Control, và bài học vận hành từ các hệ thống quy mô lớn."
+tags: ["rdbms", "postgresql", "mysql", "mvcc", "system-design", "database"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-29
+seoTitle: "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - PostgreSQL vs MySQL"
+metaDescription: "Deep dive vào kiến trúc RDBMS: Phân tích MVCC, B+Tree, Write Amplification ở PostgreSQL, Clustered Index của MySQL và bài học vận hành từ Uber, GitHub."
+description: "Vượt qua các khái niệm SQL cơ bản, bài viết phân tích sâu vào kiến trúc vật lý bên trong của RDBMS, đánh đổi giữa PostgreSQL và MySQL, và các sự cố Split-Brain."
 ---
 
-Relational Database (RDBMS) không chỉ là các bảng với hàng và cột. Ở quy mô lớn, RDBMS là những cỗ máy phức tạp giải quyết bài toán đồng bộ hóa (synchronization), độ trễ (latency), và độ tin cậy (reliability) ở mức độ vật lý. Dưới góc nhìn của một Staff Engineer, chúng ta sẽ không nói về "Khóa chính là gì?", mà sẽ đi sâu vào **Cơ chế lưu trữ vật lý**, **Concurrency Control (MVCC)**, **Replication Trade-offs**, và **Operational Risks**.
+Relational Database [RDBMS] không chỉ là các bảng với hàng và cột. Ở quy mô lớn, RDBMS là những cỗ máy phức tạp giải quyết bài toán đồng bộ hóa (Synchronization), độ trễ đĩa (Disk Latency), và độ tin cậy (Reliability). Dưới góc nhìn của một Kỹ sư Hệ thống (Staff Engineer), chúng ta sẽ không học cách viết câu lệnh `SELECT`, mà sẽ đi sâu mổ xẻ **Cơ chế lưu trữ vật lý**, **Concurrency Control (MVCC)**, cuộc chiến kiến trúc giữa **PostgreSQL và MySQL**, và những sự cố sập hệ thống kinh điển.
+
+---
 
 ## 1. Kiến Trúc Vật Lý & Thực Thi (Physical Storage & Execution)
 
-### 1.1. B+Tree, Pages và Buffer Pool
-Khác với in-memory database, RDBMS tối ưu hóa cho Disk I/O. Đơn vị đọc/ghi nhỏ nhất trên đĩa không phải là một row, mà là một **Page** (thường là 8KB trong PostgreSQL hoặc 16KB trong InnoDB/MySQL).
+### 1.1. B+Tree, Data Pages và Buffer Pool
+Khác với In-memory database (như Redis), RDBMS được thiết kế tối ưu cho đĩa cứng (Disk I/O). Đơn vị đọc/ghi nhỏ nhất trên đĩa không phải là 1 byte hay 1 row, mà là một **Page** (Trang dữ liệu - thường là 8KB trong PostgreSQL hoặc 16KB trong MySQL InnoDB).
 
-Cấu trúc **B+Tree** được thiết kế đặc biệt để giảm thiểu số lần disk seek. Một B+Tree với độ sâu 3 hoặc 4 có thể lưu trữ hàng tỷ bản ghi, nghĩa là bạn chỉ tốn tối đa 3-4 thao tác I/O để tìm bất kỳ dòng dữ liệu nào.
+Cấu trúc **B+Tree** được sinh ra để giảm thiểu số lần tìm kiếm trên đĩa (Disk Seek). Một B+Tree với độ sâu (Depth) bằng 3 có thể lưu trữ hàng tỷ bản ghi. Nghĩa là hệ thống chỉ tốn tối đa 3 thao tác I/O để tìm ra dòng dữ liệu.
 
-Tuy nhiên, đọc từ đĩa luôn chậm (độ trễ milliseconds). Do đó, RDBMS sử dụng **Buffer Pool** (hay Shared Buffers) để cache các pages trên RAM.
+Tuy nhiên, đọc từ đĩa cứng luôn chậm (millisecond). Do đó, RDBMS duy trì một vùng RAM gọi là **Buffer Pool** (hay Shared Buffers) để cache các Data Pages.
 
 > [!WARNING]
-> **Trade-off:** RAM thì đắt và giới hạn. Việc quản lý Buffer Pool thường sử dụng thuật toán LRU (Least Recently Used) biến thể (như Clock-sweep) để quyết định page nào bị "evict" (đẩy ra khỏi RAM). Một truy vấn `SELECT *` quét toàn bộ bảng không cẩn thận có thể vô tình xóa sạch Buffer Pool, gây ra suy thoái hiệu năng toàn hệ thống (Cache churn).
+> **Rủi ro vận hành (Cache Churn]:** RAM rất đắt đỏ. Buffer Pool sử dụng thuật toán **LRU** (Least Recently Used) để quyết định Page nào bị đẩy ra khỏi RAM (Evict). Nếu một Data Analyst viết câu truy vấn `SELECT * FROM massive_table` mà không có index, RDBMS phải quét toàn bảng (Full Table Scan). Nó sẽ kéo hàng GB data từ đĩa lên RAM, vô tình "xóa sạch" những dữ liệu nóng (Hot data) đang nằm trong Buffer Pool của hệ thống Production. Hệ quả: Hiệu năng toàn bộ database sụp đổ đột ngột.
 
-```mermaid
-graph TD
-    Client["Client Query"] --> Parser["Parser & Optimizer"]
-    Parser --> Executor["Executor"]
-    Executor --> BufferPool["Buffer Pool / RAM"]
-    BufferPool -- Cache Miss --> DataFiles["(Data Files - B+Tree)"]
-    DataFiles -- Load Page --> BufferPool
-    BufferPool -- Write --> WAL["(Write-Ahead Log)"]
-    BufferPool -- Background Flush --> DataFiles
-```
+### 1.2. Write-Ahead Logging (WAL) & Syscall fsync()
+Khi một Transaction báo `COMMIT`, RDBMS **không** ghi trực tiếp dữ liệu thay đổi vào các Data Pages trên đĩa (vì đó là Random I/O rất chậm chạp). 
+Thay vào đó, nó ghi sự kiện thay đổi (Append-only) vào một tệp nhật ký tuần tự gọi là **WAL (Write-Ahead Log)**.
 
-### 1.2. Write-Ahead Logging (WAL) & fsync
-Khi một transaction commit, RDBMS **không** ghi trực tiếp dữ liệu thay đổi vào Data Files (vì việc đó đòi hỏi random I/O rất chậm). Thay vào đó, nó ghi tuần tự vào một tệp nhật ký gọi là **WAL (Write-Ahead Log)**.
+Chỉ khi WAL được đẩy xuống đĩa vật lý thành công (thông qua lệnh system call `fsync()`), Transaction mới được báo thành công cho Client (Đảm bảo tính **Durability** - Bền vững).
 
-Chỉ khi WAL được đẩy xuống đĩa thành công bằng lệnh syscall `fsync()`, transaction mới được báo là commit thành công (đảm bảo tính **Durability**). Các trang dữ liệu (dirty pages) trong Buffer Pool sẽ được xả (flush) xuống Data Files ở chế độ nền (Background Writer/Checkpoint).
+**Sự cố Đánh đổi (Trade-offs) thực tế:** Cấu hình `fsync` sai lệch.
+Trong MySQL InnoDB, tham số `innodb_flush_log_at_trx_commit` quyết định mạng sống của hệ thống:
+- **`1`**: Gọi `fsync` ở mỗi commit. An toàn nhất, không bao giờ mất data, nhưng chậm nhất (High Latency).
+- **`2`**: Chỉ flush vào OS Cache (Hệ điều hành), OS sẽ tự flush xuống đĩa mỗi 1 giây. Nhanh hơn rất nhiều, nhưng mất tối đa 1 giây dữ liệu nếu Server bị cúp điện.
+- **`0`**: Buffer trên RAM của MySQL và xả xuống đĩa mỗi giây. Nhanh nhất (Max Throughput), nhưng rủi ro mất dữ liệu nếu tiến trình MySQL crash.
 
-**Sự cố và Đánh đổi thực tế:** Cấu hình `fsync` sai.
-Trong MySQL InnoDB, tham số `innodb_flush_log_at_trx_commit`:
-- **`1`**: Fsync ở mỗi commit (An toàn nhất, chậm nhất - High Latency).
-- **`2`**: Chỉ flush vào OS cache, hệ điều hành sẽ flush xuống đĩa mỗi giây (Nhanh hơn, nhưng mất tối đa 1s dữ liệu nếu OS crash).
-- **`0`**: Xả log mỗi giây (Rủi ro mất dữ liệu cao nhất, nhưng Throughput cao nhất).
+---
 
-Ở quy mô lớn, việc đánh đổi giữa **Durability** và **Throughput** là quyết định kỹ thuật sống còn của Database Admin và Staff Engineer.
+## 2. Kiểm Soát Đồng Thời: MVCC vs. Khóa 2PL
 
-## 2. Kiểm Soát Đồng Thời: MVCC vs 2PL (Concurrency Control)
+Làm sao để 10,000 kết nối có thể đọc/ghi cùng một lúc mà không bị chặn (Block)?
 
-Làm sao để hàng ngàn kết nối có thể đọc/ghi cùng một dữ liệu mà không bị chặn (block) lẫn nhau?
+Cách ngây thơ nhất là Khóa (Lock) dữ liệu: Muốn đọc thì dùng Shared Lock, ghi dùng Exclusive Lock (Đây gọi là **Two-Phase Locking - 2PL**). Nhược điểm tàn khốc của 2PL là: *Người đọc sẽ chặn người ghi, và người ghi sẽ chặn người đọc.*
 
-Cách tiếp cận ngây thơ là khóa (Lock) dữ liệu: Đọc thì dùng Shared Lock, Ghi thì dùng Exclusive Lock. Đây gọi là **Two-Phase Locking (2PL)**. Nhưng 2PL khiến "người đọc chặn người ghi" và "người ghi chặn người đọc", làm giảm thê thảm Throughput.
+Giải pháp của cơ sở dữ liệu hiện đại là **MVCC (Multi-Version Concurrency Control)**.
+- **Nguyên lý:** Khi Update một dòng dữ liệu, DB không ghi đè lên dòng cũ, mà tạo ra một **phiên bản mới (Version)**.
+- **Đọc:** Mỗi Transaction được cấp một Snapshot ID. Nó chỉ được phép nhìn thấy những phiên bản đã commit trước thời điểm nó bắt đầu.
+- **Kết quả:** Người đọc không bao giờ chặn người ghi, vì người đọc cứ việc đọc phiên bản cũ, còn người ghi cứ việc tạo phiên bản mới.
 
-Giải pháp hiện đại là **MVCC (Multi-Version Concurrency Control)**.
-* **Nguyên lý:** Mỗi khi bạn Update một row, DB không ghi đè lên row cũ, mà tạo ra một **phiên bản mới** (new version) của row đó.
-* **Đọc:** Mỗi transaction được gán một Transaction ID (XID) và chỉ nhìn thấy các phiên bản dữ liệu đã commit trước khi XID của nó bắt đầu (cơ chế *Snapshot Isolation*).
-* **Kết quả:** Người đọc không chặn người ghi, và người ghi không chặn người đọc.
+---
 
-### Trận chiến kiến trúc: PostgreSQL vs MySQL (Uber's Migration)
-Cả PostgreSQL và MySQL đều dùng MVCC, nhưng cách kiến trúc lưu trữ phiên bản khác biệt đã dẫn đến các trade-off khổng lồ. Điều này được thể hiện rõ qua sự kiện **Uber chuyển đổi từ PostgreSQL sang MySQL**.
+## 3. Trận Chiến Kiến Trúc: PostgreSQL vs MySQL (Uber Migration)
 
-* **PostgreSQL (Append-only):** Lưu trực tiếp các phiên bản cũ và mới ngay trong cùng một Data Page.
-  * *Hậu quả:* Index trỏ trực tiếp vào vị trí của row. Khi update, vị trí thay đổi -> Index phải cập nhật lại dù cột Index không đổi (**Write Amplification**). Để dọn dẹp các phiên bản cũ (dead tuples), Postgres phải chạy một tiến trình gọi là **VACUUM**. Uber từng bị ảnh hưởng nặng nề bởi VACUUM overhead.
-* **MySQL InnoDB (Undo Logs):** Lưu row mới nhất ở Data Page, và đẩy row cũ vào vùng **Undo Log**.
-  * *Hậu quả:* Cập nhật nhanh hơn vì không làm phình Secondary Index (vì Secondary Index chỉ trỏ tới Primary Key, thay vì vị trí vật lý). Tuy nhiên, các truy vấn dài (Long-running queries) giữ lock quá lâu có thể gây tràn Undo Log và làm suy giảm tốc độ.
+Cả PostgreSQL và MySQL đều dùng MVCC, nhưng cách cài đặt vật lý hoàn toàn khác biệt. Quyết định này đã dẫn đến sự kiện kỹ thuật nổi tiếng: **Uber phải chuyển đổi (Migrate) từ PostgreSQL sang MySQL**. Tại sao?
 
-## 3. Kiến Trúc Mở Rộng & Nhân Bản (Replication & Scaling)
+### 3.1. PostgreSQL: Heap-based & Vấn đề Write Amplification
+- **Kiến trúc:** PostgreSQL lưu dữ liệu ở vùng **Heap**. Tất cả Index (kể cả Primary Key) đều là Secondary Index, lưu con trỏ (TID - Tuple ID) trỏ trực tiếp đến vị trí vật lý của dòng dữ liệu trong Heap.
+- **MVCC:** Khi Update, Postgres giữ nguyên phiên bản cũ, và tạo một row phiên bản mới ngay trong Heap. Vì row mới nằm ở vị trí vật lý mới (TID mới), **toàn bộ Index của bảng đó đều phải được cập nhật lại** để trỏ tới TID mới, dù bạn chỉ update một cột không liên quan đến index.
+- **Hậu quả (Write Amplification):** Một Update nhỏ xíu có thể phình to thành hàng chục thao tác I/O. Hơn nữa, Postgres phải chạy một tiến trình ngầm gọi là **VACUUM** để dọn dẹp các phiên bản cũ (Dead tuples). Ở quy mô của Uber, VACUUM bị nghẽn (Lock bloat) khiến ổ cứng bị bào mòn và hiệu năng giảm thê thảm. *(Lưu ý: Tính năng HOT - Heap Only Tuples của Postgres giúp giảm thiểu vấn đề này, nhưng chỉ khi row mới vẫn nằm vừa vặn trong cùng một Data Page).*
 
-Rất hiếm có một máy chủ vật lý nào gánh được tải của một nền tảng quy mô lớn. RDBMS sử dụng **Replication** để dự phòng và chia sẻ tải đọc.
+### 3.2. MySQL InnoDB: Clustered Index & Undo Logs
+- **Kiến trúc:** InnoDB dùng **Clustered Index**. Dữ liệu vật lý được lưu trữ ngay bên trong các nốt lá (Leaf nodes) của cây Primary Key. Secondary Index không trỏ tới vị trí vật lý, mà trỏ tới Primary Key.
+- **MVCC:** Khi Update, InnoDB ghi đè (In-place update) dòng dữ liệu mới nhất vào Clustered Index, và đẩy dòng dữ liệu cũ vào một vùng riêng gọi là **Undo Logs**.
+- **Kết quả:** Update rất nhanh. Secondary Index không cần phải cập nhật lại (vì Primary Key đâu có đổi). Giải quyết triệt để bài toán Write Amplification của Postgres. Tuy nhiên, nếu có một Long-running Query kéo dài nhiều tiếng đồng hồ, hệ thống không dám xóa Undo Logs, dẫn tới tràn đĩa cứng.
 
-### 3.1. Asynchronous vs Synchronous Replication
+---
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Leader
-    participant Follower
-    
-    Client->>Leader: UPDATE users SET balance = 100
-    activate Leader
-    Leader->>Leader: Write to local WAL & fsync
-    Leader-->>Client: 200 OK("Commit Success")
-    deactivate Leader
-    Leader->>Follower: Send WAL stream (Async)
-    Note over Leader,Follower: Replication Lag("ví dụ: 100ms - 5s")
-    Follower->>Follower: Apply WAL to local disk
-```
+## 4. Kiến Trúc Nhân Bản & Rủi Ro Vận Hành (Replication)
 
-* **Asynchronous (Bất đồng bộ):** Leader trả về success cho Client ngay khi ghi xong WAL cục bộ.
-  * *Rủi ro:* Nếu Leader crash đột ngột, dữ liệu chưa kịp truyền sang Follower. Khi hệ thống Auto-Failover đưa Follower lên làm Leader mới, chúng ta bị **Mất dữ liệu (Data Loss)** (những commit ở leader cũ biến mất). Đổi lại, Write Latency cực thấp.
-* **Synchronous (Đồng bộ):** Leader phải chờ ít nhất 1 Follower confirm đã ghi xong WAL rồi mới báo success cho client.
-  * *Rủi ro:* Nếu Follower phản hồi chậm hoặc rớt mạng, Leader sẽ bị treo (block). Tính **Availability** giảm sút nghiêm trọng để đổi lấy sự toàn vẹn **Consistency**.
+RDBMS sử dụng **Replication** để chia sẻ tải đọc. 
 
-### 3.2. Vượt qua Replication Lag (Read-After-Write Consistency)
-Mô hình Leader-Follower hay gặp lỗi kinh điển: User vừa cập nhật profile, trang web tải lại và hiển thị thông tin cũ (vì hệ thống điều hướng request đọc sang Follower đang bị lag).
+### 4.1. Sự Cố Read-After-Write (Replication Lag)
+Mô hình Leader-Follower hay gặp lỗi kinh điển: User vừa cập nhật ảnh đại diện, trang web tải lại và hiển thị ảnh cũ. Tại sao? Vì web đọc dữ liệu từ Replica (Follower) đang bị trễ 2 giây so với Leader (Replication Lag).
 
-**Giải pháp ở tầng System Architecture:**
-1. **Client Pinning / Route to Leader:** Sau khi user ghi dữ liệu, ghi đè một cờ vào Session/Cookie. Mọi request của user này trong vòng 5 giây tiếp theo sẽ bị ép trỏ thẳng (route) vào Leader.
-2. **Logical Replication & LSN:** Client gửi kèm LSN (Log Sequence Number) của lần ghi cuối cùng. API kiểm tra Follower, nếu Follower chưa đuổi kịp LSN đó, nó sẽ tự động chờ hoặc trả lỗi để client thử lại.
+**Giải pháp System Design:**
+Sử dụng **Client Pinning** hoặc đối chiếu **LSN (Log Sequence Number)**. API sẽ ghi LSN của lần Update vào Cache/Cookie. Khi User load lại trang, API kiểm tra xem Follower đã đồng bộ đến mức LSN đó chưa. Nếu chưa, API bắt buộc phải điều hướng (Route) câu lệnh SELECT thẳng vào Leader để đảm bảo Consistency.
 
-## 4. Vận Hành Thực Tế: Khủng Hoảng và Rủi Ro
+### 4.2. Cạn Kiệt Kết Nối (Connection Starvation)
+Mỗi connection vào PostgreSQL/MySQL không chỉ là một socket TCP, nó khởi tạo một Process/Thread riêng biệt, ngốn 10MB RAM. Nếu bạn có 200 microservices pods, mỗi pod mở pool 50 connections, DB sẽ phải gánh 10,000 connections. Hệ thống sẽ chết vì **OOM (Out of Memory)**.
+*   **Giải pháp:** Phải đặt một **Connection Pooler** trung gian (như `PgBouncer` hoặc `ProxySQL`). 10,000 Apps sẽ trỏ tới PgBouncer. PgBouncer chỉ duy trì 200 connection vật lý tới Database và liên tục "nhồi" [multiplexing] các câu lệnh SQL qua 200 đường ống này.
 
-### 4.1. Connection Starvation (Cạn kiệt kết nối)
-Mỗi connection vào PostgreSQL/MySQL không chỉ là một socket TCP, nó khởi tạo một process/thread riêng biệt, tốn vài MB RAM và CPU context switching. Nếu bạn có 200 microservices pods, mỗi pod mở 50 connections (Connection Pool ở app-level), DB sẽ phải chịu 10,000 connections đồng thời. RDBMS sẽ sụp đổ vì Out Of Memory (OOM) hoặc thắt cổ chai CPU.
-
-* **Giải pháp chuẩn chỉ (Best practice):** Sử dụng các **Connection Pooler trung gian** (như `PgBouncer` cho Postgres, `ProxySQL` cho MySQL). App sẽ trỏ tới Pooler, Pooler duy trì hàng ngàn connection "ảo" với app, nhưng chỉ mở giới hạn 100-200 connection thực sự tới DB thông qua cơ chế *Transaction-level pooling*.
-
-### 4.2. Split-Brain và Cơn ác mộng Failover (GitHub Outage 2018)
-Tháng 10/2018, GitHub gặp sự cố tồi tệ ngừng hoạt động dịch vụ 24 giờ.
-Nguyên nhân gốc rễ là mạng kết nối giữa hai Data Center (DC1 và DC2) bị chập chờn dưới 1 phút. 
-Hệ thống Orchestrator lầm tưởng Leader ở DC1 đã chết vì timeout, nên tự động promote Follower ở DC2 lên làm Leader mới. Thực tế Leader DC1 vẫn sống.
-Kết quả: Hệ thống có **2 Leader nhận ghi (Write) cùng lúc -> Split-Brain**.
-
-* Dữ liệu phân tách thành hai nhánh. Khi mạng ổn định, hai nhánh dữ liệu mâu thuẫn nhau (như merge conflict trong Git nhưng là SQL Data) khiến cluster bị vỡ. GitHub phải ngừng hoạt động mọi thứ để các kỹ sư khôi phục lại dữ liệu thủ công bằng tay.
-* **Bài học (Takeaways):** Các hệ thống Auto-Failover cần cơ chế **Fencing** cực đoan (như STONITH - Shoot The Other Node In The Head), chủ động ra lệnh ngắt nguồn điện hoặc tắt mạng của Leader cũ trước khi promote Leader mới để đảm bảo không bao giờ có 2 Leader.
-
-## 5. Tổng Kết: Khi nào RDBMS không còn phù hợp?
-
-Dù được trang bị tới tận răng, RDBMS sẽ lộ rõ yếu điểm khi bạn ép nó vượt qua thiết kế cốt lõi:
-1. **Sharding đau khổ:** Khi Write Throughput vượt mức 1 con máy vật lý có thể chịu tải, phân mảnh dữ liệu (Sharding) RDBMS phá vỡ toàn bộ cấu trúc `JOIN` phân tán và `Global ACID Transactions`. 
-   *(Nếu hệ thống cần quy mô này, bạn nên xem xét NewSQL như CockroachDB, Spanner).*
-2. **OLAP (Analytics trên Big Data):** RDBMS lưu theo Row (Row-oriented). Tính tổng doanh thu trên 10 tỷ dòng cần quét hết toàn bộ block đĩa dù chỉ cần 1 cột dữ liệu.
-   *(Sử dụng Columnar DB/Data Warehouse như Snowflake, ClickHouse hoặc BigQuery thay thế).*
+### 4.3. Split-Brain: Cơn Ác Mộng Của GitHub (2018 Outage)
+Tháng 10/2018, GitHub sập toàn bộ dịch vụ suốt 24 giờ. Nguyên nhân?
+- Cáp mạng nối giữa hai Data Center (DC1 và DC2) bị chập chờn dưới 1 phút.
+- Hệ thống Orchestrator lầm tưởng Leader ở DC1 đã chết, liền kích hoạt Auto-Failover, promote Follower ở DC2 lên làm Leader mới. Thực tế, Leader DC1 vẫn sống khỏe mạnh.
+- **Hệ quả (Split-Brain):** Có 2 Leader cùng lúc nhận thao tác Ghi (Write) từ người dùng. Dữ liệu rẽ thành 2 nhánh mâu thuẫn (giống hệt Git Merge Conflict nhưng ở cấp độ cơ sở dữ liệu).
+- **Khắc phục:** Các kỹ sư GitHub phải dừng toàn bộ hệ thống để merge dữ liệu bằng tay. *Bài học:* Mọi hệ thống Auto-Failover đều phải có cơ chế **Fencing / STONITH (Shoot The Other Node In The Head)**: Chủ động ra lệnh cắt nguồn điện hoặc tắt card mạng của Leader cũ trước khi dâng ngôi cho Leader mới.
 
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Designing Data-Intensive Applications (Martin Kleppmann)](https://dataintensive.net/) - "Kinh thánh" cho kỹ sư thiết kế hệ thống phân tán.
-* [Uber's move from PostgreSQL to MySQL (Uber Engineering Blog)](https://www.uber.com/en-VN/blog/postgres-to-mysql-migration/) - Lý giải chi tiết Write Amplification và MVCC.
-* [GitHub's 24-hour Outage Post-Mortem](https://github.blog/2018-10-30-oct21-post-incident-analysis/) - Sự cố Split-brain kinh điển của giới công nghệ.
-* [PostgreSQL MVCC and VACUUM internals](https://www.postgresql.org/docs/current/routine-vacuuming.html) - Documentation chính thức.
-* [MySQL/InnoDB Architecture (Buffer Pool, Undo Logs, WAL)](https://dev.mysql.com/doc/refman/8.0/en/innodb-architecture.html)
+* [Designing Data-Intensive Applications (Martin Kleppmann]](https://dataintensive.net/) - Cuốn "Kinh thánh" cho System Design.
+* [Uber's move from PostgreSQL to MySQL][https://www.uber.com/en-VN/blog/postgres-to-mysql-migration/] - Lý giải chi tiết MVCC và Write Amplification.
+* [GitHub's 24-hour Outage Post-Mortem][https://github.blog/2018-10-30-oct21-post-incident-analysis/] - Bài học xương máu về Split-brain.
+* [PostgreSQL Documentation: MVCC & VACUUM internals](https://www.postgresql.org/docs/current/routine-vacuuming.html]

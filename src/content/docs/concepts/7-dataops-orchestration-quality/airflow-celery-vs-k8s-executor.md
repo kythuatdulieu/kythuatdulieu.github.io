@@ -1,10 +1,17 @@
 ---
-title: "Architecture: Celery Executor vs Kubernetes Executor trong Apache Airflow"
-description: "Phân tích kiến trúc vật lý, trade-offs hệ thống và các sự cố vận hành (OOMKilled, API Overload) giữa Celery Executor và Kubernetes Executor."
-lastUpdated: 2026-06-26
+title: "Celery vs K8s Executor: Kiến trúc và Đánh đổi Hệ thống"
+difficulty: "Advanced"
+tags: ["airflow", "celery", "kubernetes", "executor", "finops", "architecture", "data-engineering"]
+readingTime: "25 mins"
+lastUpdated: 2026-06-29
+seoTitle: "Airflow Executors: So sánh Celery vs Kubernetes (K8s) & Tối ưu FinOps"
+metaDescription: "Phân tích sâu kiến trúc vật lý, rủi ro OOMKilled, độ trễ khởi động, và tối ưu chi phí (FinOps) giữa Celery Executor và Kubernetes Executor trong Airflow."
+description: "Sự khác biệt cốt lõi giữa kiến trúc tĩnh của Celery và kiến trúc động (Ephemeral) của Kubernetes. Cách giải quyết bài toán OOM Blast Radius và K8s API Overload."
 ---
 
-Apache Airflow không tự thực thi các task. Nó là bộ não điều phối (Control Plane) giao việc cho các **Executors** (Data Plane). Khi hệ thống mở rộng, việc chọn sai Executor không chỉ làm phình to chi phí hạ tầng (Idle Cost) mà còn gây ra các thảm họa hệ thống (System Outages) khó debug. Cuộc đối đầu kinh điển nhất về kiến trúc luôn diễn ra giữa **Celery Executor** và **Kubernetes (K8s) Executor**.
+Apache Airflow không trực tiếp thực thi mã nguồn. Nó là bộ não điều phối trung tâm (Control Plane) chịu trách nhiệm theo dõi và ném việc cho các **Executors** (Data Plane). Khi hệ thống mở rộng lên hàng nghìn DAGs mỗi ngày, quyết định chọn Executor sai lầm không chỉ làm phình to hóa đơn Cloud (FinOps) mà còn gây ra những đợt sập hệ thống (System Outages) vô cùng đau đớn.
+
+Trong thế giới Data Engineering, cuộc đối đầu kinh điển nhất luôn diễn ra giữa kiến trúc tĩnh của **Celery Executor** và kiến trúc động của **Kubernetes (K8s) Executor**.
 
 ---
 
@@ -12,15 +19,15 @@ Apache Airflow không tự thực thi các task. Nó là bộ não điều phố
 
 ### 1.1. Celery Executor: Mô hình Long-Running Workers
 
-Celery Executor áp dụng kiến trúc phân tán truyền thống (Distributed Task Queue). Các "Worker" là các máy ảo (EC2, VM) hoặc Container tĩnh được bật 24/7, liên tục pooling (nghe ngóng) các task từ một Message Broker trung gian.
+Celery Executor áp dụng kiến trúc hàng đợi phân tán (Distributed Task Queue) truyền thống. Các "Worker" ở đây là những máy ảo (EC2/VM) hoặc Docker Container tĩnh được bật 24/7. Chúng luôn trong trạng thái "warm" (nóng) và liên tục lắng nghe từ một Message Broker trung gian để kéo (pull) task về làm.
 
 ```mermaid
 flowchart LR
-    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[("Message Broker\n("Redis/RabbitMQ")")]
-    Broker -- Pull Task --> Worker1["Celery Worker 1\n("Concurrency: 16")"]
-    Broker -- Pull Task --> Worker2["Celery Worker 2\n("Concurrency: 16")"]
+    Scheduler["Airflow Scheduler"] -- Push Task --> Broker[["Message Broker\n('Redis/RabbitMQ']]]
+    Broker -- Pull Task --> Worker1["Celery Worker 1\n('Concurrency: 16')"]
+    Broker -- Pull Task --> Worker2["Celery Worker 2\n('Concurrency: 16')"]
     
-    Worker1 -- Write State --> DB[("Result Backend\n(PostgreSQL)")]
+    Worker1 -- Write State --> DB[("Metadata DB\n(PostgreSQL)")]
     Worker2 -- Write State --> DB
     
     style Broker fill:#f9f,stroke:#333,stroke-width:2px
@@ -28,14 +35,14 @@ flowchart LR
     style Worker2 fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
-*Cấu hình `airflow.cfg` kinh điển cho Celery:*
+*Cấu hình `airflow.cfg` kinh điển:*
 ```ini
 [core]
 executor = CeleryExecutor
 parallelism = 1024
 
 [celery]
-# Yêu cầu bắt buộc phải có Broker và Result Backend
+# Bắt buộc phải có Broker (Redis] và Result Backend (DB)
 broker_url = redis://redis:6379/0
 result_backend = db+postgresql://airflow:airflow@postgres/airflow
 worker_concurrency = 16 
@@ -43,16 +50,16 @@ worker_concurrency = 16
 
 ### 1.2. Kubernetes Executor: Mô hình Ephemeral Pod-per-Task
 
-Sự bùng nổ của Cloud Native mang đến Kubernetes Executor. Ở đây, khái niệm "Worker tĩnh" bị xóa bỏ. Thay vì đẩy task vào Queue, Scheduler nói chuyện trực tiếp với K8s API. Mỗi khi có task, một Pod (Container) mới tinh được khởi tạo. Chạy xong, Pod lập tức tự hủy (bốc hơi).
+Sự bùng nổ của Cloud Native mang đến khái niệm K8s Executor. Ở đây, khái niệm "Worker tĩnh" bị xóa sổ hoàn toàn. Không có Queue trung gian. Thay vào đó, mỗi khi có task mới, Scheduler nói chuyện trực tiếp với **Kubernetes API Server**. K8s sẽ khởi tạo một Pod (Container) mới tinh. Task chạy xong, Pod tự hủy (bốc hơi).
 
 ```mermaid
 flowchart TD
-    Scheduler["Airflow Scheduler"] -- API Call("Create Pod") --> K8sAPI["Kubernetes API Server"]
+    Scheduler["Airflow Scheduler"] -- Gọi API ('Create Pod') --> K8sAPI["Kubernetes API Server"]
     K8sAPI -- Schedule --> Node1["K8s Worker Node"]
     
     subgraph Node1
-        Pod1["Task A Pod\n("Image: pandas_env")"]
-        Pod2["Task B Pod\n("Image: tf_env\nGPU: 1")"]
+        Pod1["Task A Pod\n('Image: spark-env')"]
+        Pod2["Task B Pod\n('Image: tf-gpu-env')"]
     end
     
     Pod1 -- Write State --> DB[("Metadata DB")]
@@ -63,95 +70,69 @@ flowchart TD
     style Pod2 fill:#bfb,stroke:#333,stroke-width:1px
 ```
 
-*Template cấu hình `pod_template.yaml` cấp phát tài nguyên chi tiết:*
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: airflow-worker-template
-spec:
-  containers:
-    - name: base
-      image: apache/airflow:2.7.0-python3.9
-      resources:
-        requests:
-          memory: "512Mi"
-          cpu: "250m"
-        limits:
-          memory: "1Gi"  # OOMKilled nếu vượt quá giới hạn này
-          cpu: "500m"
-  restartPolicy: Never
-```
-
 ---
 
 ## 2. Phân tích Đánh đổi Hệ thống (Systemic Trade-offs)
 
-Quyết định chọn Executor phụ thuộc vào việc bạn sẵn sàng đánh đổi yếu tố nào giữa **Độ trễ (Latency)**, **Độ cô lập (Isolation)** và **Độ phức tạp vận hành (Operational Complexity)**.
+Tùy thuộc vào đặc tính Workload, Staff Data Engineer phải cân bằng giữa 3 yếu tố: **Độ trễ (Latency)**, **Độ cô lập (Isolation)** và **Chi phí (FinOps)**.
 
-| Đặc tính Kỹ thuật | Celery Executor (Static Workers) | Kubernetes Executor (Ephemeral Pods) |
+| Đặc tính Kỹ thuật | Celery Executor (Static Workers) |" Kubernetes Executor (Ephemeral Pods) "|
 | :--- | :--- | :--- |
-| **Spin-up Latency** (Độ trễ khởi động) | **Zero (Tính bằng ms)**. Worker đã nạp sẵn RAM, task vào là chạy. | **Cao (5s - 60s)**. Phải gọi K8s API -> Schedule Node -> Pull Image -> Init Container. |
-| **Environment Isolation** (Cô lập môi trường) | **Kém (Dependency Hell)**. Các task chung Worker phải dùng chung thư viện Python (`requirements.txt`). | **Tuyệt đối (Nirvana)**. Mỗi task có thể dùng một Docker Image khác nhau (Python, R, Java). |
-| **Resource Allocation** (Cấp phát tài nguyên) | Tĩnh (Static). Worker to nhưng task nhỏ sẽ gây lãng phí (Idle). | Động (Granular). Định nghĩa CPU/RAM limit chính xác đến từng task. |
-| **State Management** (Lưu trữ trạng thái) | Dựa vào Broker phụ trợ (Redis/RabbitMQ) - Thêm Single Point of Failure (SPOF). | Trực tiếp qua K8s API và Airflow DB - Lệ thuộc sức chịu tải của K8s Control Plane. |
+|" **Độ trễ khởi động (Spin-up Latency)** "| **0 giây (Zero-latency).** Worker đã nạp sẵn RAM, task vào là chạy ngay. |" **Trễ cao (10s - 60s).** Đợi K8s API -> Schedule Node -> Pull Image -> Init Container. "|
+|" **Cô lập môi trường (Environment Isolation)** "| **Kém (Dependency Hell).** 16 task trên cùng 1 Worker phải dùng chung tệp `requirements.txt`. |" **Tuyệt đối (Nirvana).** Mỗi task dùng một Docker Image khác biệt, độc lập hoàn toàn. "|
+|" **Chi phí nhàn rỗi (FinOps Idle Cost)** "| **Cao.** Dù không có task, bạn vẫn phải nuôi Worker 24/7 (hoặc dựa dẫm vào KEDA nhưng vẫn chậm chạp). | **Zero.** Tính năng True Scale-to-Zero. Chỉ trả tiền cho CPU/RAM trong đúng số giây chạy Pod. |
+| **Overhead vận hành** | Quản lý thêm thành phần ngoài (Redis/RabbitMQ) gây SPOF. | Lệ thuộc sức chịu tải của K8s Control Plane. Cần team SRE cứng. |
 
 ---
 
-## 3. Rủi ro Vận hành và Troubleshooting (Real-world Incidents)
+## 3. Rủi ro Vận hành và Sự cố (Real-world Incidents)
 
-Không có kiến trúc nào hoàn hảo. Dưới đây là các tình huống sập hệ thống (Incidents) phổ biến nhất khi vận hành ở quy mô lớn (Enterprise Scale).
+Lý thuyết là một chuyện, vận hành trên production lại là chuyện khác. Dưới đây là 2 thảm họa kinh điển.
 
-### 3.1. Thảm họa OOMKilled "Chết chùm" (Celery Executor Blast Radius)
-- **Vấn đề:** Giả sử Worker của bạn có 16GB RAM, `worker_concurrency = 16` (chạy 16 task đồng thời). Một Data Scientist push lên một task Pandas `read_csv` một file 10GB.
-- **Hệ quả:** Tiến trình ngốn cạn RAM. Linux Kernel kích hoạt `OOM Killer` (Out Of Memory) và kill luôn tiến trình Worker đó.
-- **Blast Radius (Bán kính sát thương):** Toàn bộ 15 task khác đang chạy hoàn toàn bình thường trên Worker đó lập tức bị "chết chùm" (Zombies/Failed).
-- **Khắc phục:** 
-  - Đổi sang dùng Spark/Dask thay vì Pandas cho dữ liệu lớn.
-  - Sử dụng Kubernetes Executor để giới hạn `Blast Radius` (OOM của một Pod không lan sang Pod khác).
+### 3.1. Thảm họa OOMKilled "Chết Chùm" (Celery Blast Radius)
+* **Tình huống:** Worker của bạn có 16GB RAM, được cấu hình `worker_concurrency = 16`. 15 task đầu tiên đang chạy ổn định (mỗi task ngốn 500MB). Đột nhiên, một Data Scientist kích hoạt task thứ 16, dùng Pandas đọc một tệp 10GB vào RAM.
+* **Hệ quả:** Tiến trình ngốn cạn RAM. HĐH Linux kích hoạt `OOM Killer` (Out Of Memory) và giết ngay tiến trình Worker vật lý.
+* **Blast Radius (Bán kính sát thương):** Toàn bộ 15 task chạy hoàn toàn hợp lệ kia cũng "chết chùm" oan uổng. Hệ thống chìm trong biển log lỗi.
+* **Khắc phục:** 
+  - K8s Executor xử lý triệt để OOM Blast Radius: OOM của một Pod bị giới hạn ở đúng Pod đó (do `resources.limits.memory`), 15 Pods khác vẫn sống khỏe.
 
-### 3.2. Tấn công DDoS vào Kubernetes Control Plane (K8s Executor Overload)
-- **Vấn đề:** Bạn cần Backfill lại dữ liệu của 1 năm qua cho một DAG gồm 50 tasks rất nhẹ (mỗi task chỉ chạy câu SQL mất 2 giây). Tổng cộng: \$365 \times 50 = 18,250$ tasks.
-- **Hệ quả:** Scheduler đồng loạt gửi hàng ngàn lệnh Create Pod đến **Kubernetes API Server**. ETCD Database của K8s bị quá tải (API Server Overload/Memory Pressure). K8s Control Plane bị đơ, không thể schedule Pod, dẫn đến toàn bộ cụm Airflow (kể cả Webserver) bị timeout. Hơn nữa, tổng thời gian chạy DAG chậm đi gấp 10 lần vì *Spin-up Latency* (Mất 10 giây để tạo Pod cho một task chạy 2 giây).
-- **Khắc phục:** 
-  - Không dùng K8s Executor cho các task siêu nhỏ. 
-  - Gộp các task siêu nhỏ (Task Consolidation) hoặc chuyển sang dùng Celery.
+### 3.2. DDoS vào Kubernetes Control Plane (K8s API Overload)
+* **Tình huống:** Chạy Backfill lại dữ liệu 2 năm cho một DAG gồm 50 tasks cực nhẹ (chỉ tốn 1 giây để chạy câu lệnh báo cáo `SELECT COUNT`). Tổng cộng 36.500 tasks.
+* **Hệ quả:** Scheduler Airflow đồng loạt xả 36.500 lệnh `Create Pod` vào K8s API Server. ETCD Database của Kubernetes phình to, cạn kiệt RAM (Memory Pressure). Toàn bộ cluster (không chỉ Airflow mà các Web App khác) bị sập. Tệ hơn, task mất 1 giây để chạy nhưng tốn 15 giây để tạo Pod $\rightarrow$ Lãng phí 1500% thời gian vô ích.
+* **Khắc phục:** Dùng Celery cho các task nhỏ chạy cực nhanh, K8s chỉ dành cho batch processing hạng nặng.
 
 ---
 
-## 4. Tối ưu Chi phí (FinOps) & Cấu trúc Hỗn hợp (Hybrid Routing)
+## 4. Kiến trúc Hybrid (Airflow Multi-Executor)
 
-### True Autoscaling với K8s Executor
-Nếu hệ thống của bạn có "đỉnh tải" (Spiky workloads) rõ rệt (Vd: chỉ chạy mạnh vào 2h sáng, ban ngày rảnh rỗi), Kubernetes Executor kết hợp với **Karpenter** hoặc **Cluster Autoscaler** mang lại khả năng *Scale-to-Zero* (Về 0 đồng khi không có task). Ngược lại, Celery luôn yêu cầu bạn trả tiền cho "Idle Capacity" (Dung lượng nhàn rỗi) 24/7.
+Giải pháp tối thượng trong Data Engineering: **Làm sao vừa có Zero-latency của Celery cho 80% task nhẹ, vừa có sự cô lập tuyệt đối của K8s cho 20% task nặng (Spark/AI)?**
 
-### Kiến trúc Hybrid (Airflow 2: CeleryKubernetesExecutor / Airflow 3: Multi-Executor)
-Đế giải quyết bài toán: *Làm sao vừa có Zero-latency của Celery cho 80% task nhẹ, vừa có Isolation của Kubernetes cho 20% task nặng (ML, Spark)?*
+Airflow giới thiệu kiến trúc **Định tuyến (Routing/Multi-Executor)**. Bạn thiết lập mặc định hệ thống chạy bằng Celery. Đối với các Operator nặng, bạn cấu hình `queue` hoặc chỉ định thẳng sang K8s Executor.
 
-Airflow cung cấp tính năng định tuyến. Bạn cấu hình mặc định là Celery, và chỉ định tuyến các task đặc thù sang K8s bằng tham số `queue='kubernetes'`.
-
-*Code ví dụ định tuyến Task AI/ML sang K8s Pod riêng (Cấp phát GPU):*
+*Code thực chiến: Phân luồng Task AI sang Pod K8s có GPU:*
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from kubernetes.client import models as k8s
+from datetime import datetime
 
 def heavy_ml_training():
-    # Training logic using TensorFlow
+    # Logic huấn luyện mô hình TensorFlow
     pass
 
-with DAG('hybrid_execution_dag') as dag:
+with DAG('hybrid_execution_finops', start_date=datetime(2023,1,1), schedule_interval='@daily') as dag:
     
-    # Task nhẹ: Chạy mặc định trên Celery Worker tĩnh (Nhanh, không có cold-start)
-    extract_data = PythonOperator(
-        task_id='extract_data',
-        python_callable=lambda: print("Light ELT task via Celery")
+    # 1. Task siêu nhẹ: Định tuyến mặc định chạy trên Celery Worker tĩnh
+    extract_task = PythonOperator(
+        task_id='extract_fast_data',
+        python_callable=lambda: print("Đã lấy data xong trong 0.1s")
     )
 
-    # Task nặng: Yêu cầu cô lập môi trường và cấu hình 1 GPU
+    # 2. Task siêu nặng: Ép chạy trên một Pod K8s riêng biệt với 1 GPU
     train_model = PythonOperator(
         task_id='train_model',
         python_callable=heavy_ml_training,
-        queue='kubernetes', # 🚀 Định tuyến sang Kubernetes Executor
+        queue='kubernetes', # Định tuyến thoát khỏi luồng Celery!
         executor_config={
             "pod_override": k8s.V1Pod(
                 spec=k8s.V1PodSpec(
@@ -159,7 +140,8 @@ with DAG('hybrid_execution_dag') as dag:
                         k8s.V1Container(
                             name="base",
                             resources=k8s.V1ResourceRequirements(
-                                limits={"nvidia.com/gpu": "1", "memory": "16Gi"}
+                                requests={"cpu": "4", "memory": "16Gi"},
+                                limits={"nvidia.com/gpu": "1"} # Yêu cầu 1 GPU vật lý
                             )
                         )
                     ]
@@ -168,15 +150,13 @@ with DAG('hybrid_execution_dag') as dag:
         }
     )
     
-    extract_data >> train_model
+    extract_task >> train_model
 ```
-*(Lưu ý: Bắt đầu từ Airflow 3, `CeleryKubernetesExecutor` được thay thế bằng khái niệm Multi-Executors native, cho phép khai báo nhiều executor trên cùng một cụm một cách linh hoạt hơn).*
 
----
+Kiến trúc Hybrid là biểu hiện rõ ràng nhất của tư duy FinOps: Không lãng phí Worker nhàn rỗi cấu hình "khủng", nhưng cũng không bắt hệ thống phải sinh Pod chậm chạp cho các task quá nhỏ bé.
 
-## 5. Nguồn Tham Khảo (References)
-
-* [Apache Airflow Core Concepts: Executors (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html)
-* [Astronomer: Evaluating Airflow Executors - Reliability vs Performance](https://www.astronomer.io/blog/airflow-executors-explained/)
-* [Kubernetes OOMKilled (Exit Code 137) Troubleshooting](https://sysdig.com/blog/troubleshoot-kubernetes-oom/)
-* [Airflow 3 Multi-Executor Architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html#multiple-executors)
+## Nguồn Tham Khảo [References]
+* [Apache Airflow Core Concepts: Executors (Official Docs]][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html]
+* [Astronomer: Evaluating Airflow Executors - Reliability vs Performance][https://www.astronomer.io/blog/airflow-executors-explained/]
+* [Kubernetes OOMKilled (Exit Code 137] Troubleshooting][https://sysdig.com/blog/troubleshoot-kubernetes-oom/]
+* [Airflow 3 Multi-Executor Architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html#multiple-executors]

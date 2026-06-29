@@ -1,29 +1,29 @@
 ---
-title: "Backpressure trong Data Ingestion: Xử Lý Ngập Lụt Dữ Liệu"
+title: "Backpressure: Xử Lý Ngập Lụt Dữ Liệu"
 difficulty: "Advanced"
-readingTime: "25 mins"
-lastUpdated: 2026-06-16
-seoTitle: "Backpressure trong Data Ingestion - Chiến lược & Cơ chế xử lý"
-metaDescription: "Tìm hiểu toàn diện về Backpressure trong hệ thống Data Ingestion và Streaming. Các nguyên nhân, chiến lược xử lý, và cơ chế tích hợp trong Kafka, Flink, Spark."
-description: "Hướng dẫn chi tiết về cách bảo vệ hệ thống hạ nguồn (downstream) khỏi tình trạng quá tải khi lưu lượng dữ liệu tăng đột biến thông qua cơ chế Backpressure."
+readingTime: "30 mins"
+lastUpdated: 2026-06-29
+seoTitle: "Backpressure trong Data Ingestion & Streaming: Kafka, Flink, Spark"
+metaDescription: "Tìm hiểu toàn diện về Backpressure trong hệ thống Data Ingestion. Nguyên nhân, chiến lược xử lý, cơ chế Credit-based của Flink và Pull-based của Kafka."
+description: "Hướng dẫn chi tiết về cách bảo vệ hệ thống hạ nguồn (downstream) khỏi tình trạng quá tải khi lưu lượng dữ liệu tăng đột biến thông qua cơ chế Backpressure và Load Shedding."
 ---
 
-Trong các hệ thống phân tán quy mô lớn (Distributed Systems) và đặc biệt là hệ thống xử lý dữ liệu luồng (Stream Processing), lưu lượng dữ liệu hiếm khi tuyến tính. Các đợt bùng nổ lưu lượng (Traffic Spikes) do sự kiện Black Friday, push notification, hoặc lỗi retry-storm từ client có thể đẩy rate sinh dữ liệu (Ingestion Rate) lên gấp hàng chục lần công suất thiết kế.
+Trong các hệ thống phân tán quy mô lớn (Distributed Systems) và đặc biệt là hệ thống xử lý dữ liệu luồng (Stream Processing), lưu lượng dữ liệu hiếm khi tuyến tính và dễ đoán. Các đợt bùng nổ lưu lượng (Traffic Spikes) do sự kiện Black Friday, Push Notification hàng loạt, hoặc lỗi Retry-Storm từ hàng triệu client có thể đẩy tốc độ sinh dữ liệu (Ingestion Rate) lên gấp hàng chục lần công suất thiết kế của hệ thống.
 
-Khi Producer đẩy dữ liệu nhanh hơn tốc độ tiêu thụ của Consumer, hệ thống hạ nguồn (Downstream) sẽ đối mặt với tình trạng cạn kiệt tài nguyên. **Backpressure** (Áp lực ngược) không chỉ là một cơ chế phòng thủ, nó là triết lý thiết kế bắt buộc (mandatory design philosophy) để đảm bảo tính sẵn sàng cao (High Availability) cho nền tảng dữ liệu.
+Khi Producer (hệ thống thượng nguồn) đẩy dữ liệu nhanh hơn tốc độ tiêu thụ của Consumer (hệ thống hạ nguồn), Consumer sẽ đối mặt với tình trạng cạn kiệt tài nguyên vật lý. **Backpressure** (Áp lực ngược) không chỉ là một cơ chế phòng thủ, nó là một triết lý thiết kế bắt buộc (Mandatory Design Philosophy) để đảm bảo tính sẵn sàng cao (High Availability) cho nền tảng dữ liệu của bạn.
 
 ---
 
-## 1. Bản Chất của Backpressure
+## 1. Bản Chất của Sự Sụp Đổ (The Death Spiral)
 
-Nếu không có cơ chế kiểm soát luồng (Flow Control), một hệ thống ingestion ngây thơ (naive system) sẽ sụp đổ theo kịch bản "Death Spiral" (Vòng xoáy tử thần):
+Nếu không có cơ chế kiểm soát luồng (Flow Control / Backpressure), một hệ thống Ingestion ngây thơ (naive system) sẽ sụp đổ theo một kịch bản dây chuyền gọi là "Vòng xoáy tử thần":
 
-1. **Bộ đệm phình to (Buffer Bloat):** Consumer không xử lý kịp, dữ liệu bị dồn vào bộ nhớ (RAM/Heap).
-2. **GC Pause (Stop-The-World):** Trong các ứng dụng JVM (Spark, Kafka, Flink), Heap đầy kích hoạt Garbage Collection liên tục, làm CPU spike lên 100% nhưng Throughput bằng 0.
-3. **OOMKilled:** Tiến trình sụp đổ do Out-Of-Memory. 
-4. **Cascading Failure:** Hệ thống orchestrator (ví dụ Kubernetes) restart lại pod, pod mới lên lại ngay lập tức bị lượng dữ liệu tồn đọng (backlog) đè bẹp và tiếp tục crash.
+1. **Bộ đệm phình to (Buffer Bloat):** Consumer không xử lý kịp dữ liệu đến, dữ liệu bắt đầu bị dồn ứ vào bộ nhớ (RAM/JVM Heap) hoặc các hàng đợi mạng (TCP Listen Backlog).
+2. **GC Pause (Stop-The-World):** Trong các ứng dụng chạy trên JVM (Spark, Kafka, Flink), Heap đầy sẽ kích hoạt bộ dọn rác (Garbage Collector) chạy liên tục (Full GC). Lúc này, CPU spike lên 100% nhưng Throughput (thông lượng xử lý thực tế) rớt xuống 0 vì hệ thống bị "đóng băng" (Stop-The-World).
+3. **OOMKilled:** Khi GC bất lực, tiến trình vỡ bộ nhớ và bị hệ điều hành (hoặc Kubernetes) bắn hạ bằng lỗi `Out-Of-Memory (OOMKilled)`.
+4. **Cascading Failure (Sụp đổ dây chuyền):** Kubernetes tự động restart lại Pod Consumer. Pod mới vừa khởi động xong, ngay lập tức bị lượng dữ liệu khổng lồ đang dồn ứ (Backlog) đè bẹp và tiếp tục crash. Toàn bộ Pipeline tê liệt.
 
-**Backpressure** giải quyết vấn đề này bằng cách thiết lập một kênh phản hồi (feedback loop) từ Downstream ngược lên Upstream: *"Tôi đang quá tải, hãy giảm tốc độ hoặc dừng gửi dữ liệu"*.
+**Backpressure** giải quyết bài toán này bằng cách thiết lập một kênh phản hồi (feedback loop) từ Downstream ngược lên Upstream với thông điệp: *"Tôi đang quá tải, hãy giảm tốc độ hoặc dừng gửi dữ liệu ngay lập tức"*.
 
 ```mermaid
 sequenceDiagram
@@ -31,120 +31,136 @@ sequenceDiagram
     participant Q as Network/Buffer
     participant C as Consumer (Downstream)
     
-    P->>Q: Send Data("10k EPS")
-    Q->>C: Push Data
-    Note over C: CPU/Memory usage > 85%
-    C-->>P: Backpressure Signal("Slow down!")
-    P->>Q: Send Data("Rate limited to 2k EPS")
-    Note over C: System recovers, processes backlog
+    P->>Q: Đẩy dữ liệu (10k EPS)
+    Q->>C: Nhận dữ liệu
+    Note over C: CPU > 95%, Heap > 90%
+    C-->>P: Tín hiệu Backpressure ("Chậm lại!")
+    P->>Q: Giảm tốc độ (2k EPS)
+    Note over C: Hệ thống "thở" được, xử lý dần Backlog
+    C-->>P: Tín hiệu Clear ("Gửi tiếp đi!")
 ```
 
 ---
 
-## 2. Các Chiến Lược (Systemic Strategies) Xử Lý Quá Tải
+## 2. Các Chiến Lược (Systemic Strategies) Kiểm Soát Luồng
 
-Là một Data Engineer, việc chọn chiến lược xử lý backpressure đòi hỏi bạn phải đánh đổi (Trade-offs) giữa Latency, Throughput và Data Completeness.
+Là một Staff Data Engineer, việc lựa chọn chiến lược xử lý Backpressure đòi hỏi bạn phải cân đo đong đếm (Trade-offs) giữa Latency (Độ trễ), Throughput (Thông lượng) và Data Completeness (Tính toàn vẹn dữ liệu).
 
 ### 2.1. Pull-based Architecture (Implicit Backpressure)
-Thay vì Upstream đẩy (push) dữ liệu xuống, Downstream sẽ chủ động kéo (pull) dữ liệu khi nó rảnh.
-- **Cách hoạt động:** Sử dụng Message Broker làm bộ đệm bền vững (Durable Buffer) như Apache Kafka hoặc Amazon Kinesis.
-- **Trade-off:** Chấp nhận tăng **Latency** (thời gian dữ liệu nằm trong queue) và chi phí lưu trữ (Storage Cost) để bảo vệ Downstream và giữ **Data Completeness** (Không mất dữ liệu).
+Thay vì Upstream chủ động đẩy (Push) dữ liệu xuống, Downstream sẽ chủ động kéo (Pull) dữ liệu về khi nó rảnh rỗi.
+- **Cách hoạt động:** Sử dụng Message Broker làm bộ đệm bền vững (Durable Buffer) nằm giữa như Apache Kafka, Amazon Kinesis, hoặc RabbitMQ.
+- **Trade-off (Đánh đổi):** 
+  - *Điểm lợi:* Downstream không bao giờ bị ngợp. Mức độ Backpressure được điều tiết tự nhiên bởi tốc độ Pull của Consumer. Đảm bảo 100% Data Completeness vì dữ liệu được lưu an toàn trên ổ cứng của Kafka.
+  - *Điểm yếu:* Chấp nhận tăng **Latency** (thời gian dữ liệu nằm chờ trong queue) và tốn kém chi phí lưu trữ (Storage Cost).
 
-### 2.2. Explicit Rate Limiting / Flow Control
-Upstream và Downstream liên tục đàm phán về dung lượng khả dụng.
-- **Cách hoạt động:** TCP Sliding Window, hoặc Credit-based flow control (như trong Apache Flink). Node nhận cấp cho node gửi một lượng "Credit" tương ứng với số buffer còn trống.
-- **Trade-off:** Bảo vệ hệ thống một cách linh hoạt, nhưng có thể gây hiệu ứng nghẽn mạng dây chuyền ngược về phía Client (Cascading Backpressure).
+### 2.2. Explicit Flow Control (Credit-based)
+Upstream và Downstream liên tục đàm phán với nhau về dung lượng bộ đệm khả dụng thông qua mạng.
+- **Cách hoạt động:** Tương tự cơ chế TCP Sliding Window. Ví dụ: Apache Flink sử dụng Credit-based Flow Control. Node nhận cấp cho node gửi một lượng "Credit" tương ứng với số byte bộ đệm còn trống.
+- **Trade-off:** Bảo vệ hệ thống cực kỳ linh hoạt với độ trễ siêu thấp (Ultra-low latency), nhưng rủi ro cao gây ra hiệu ứng nghẽn mạng dây chuyền ngược về tận cùng Source (Cascading Backpressure) nếu bottleneck kéo dài.
 
 ### 2.3. Load Shedding (Vứt bỏ dữ liệu)
-Khi hệ thống đối mặt với nguy cơ sập toàn tập, việc hy sinh một phần dữ liệu là cần thiết.
-- **Cách hoạt động:** Drop các event có độ ưu tiên thấp (ví dụ: telemetry logs) để dồn tài nguyên xử lý các event quan trọng (ví dụ: billing/payment transactions).
-- **Trade-off:** Ưu tiên **Availability** và **Latency** thay vì **Consistency/Completeness**.
+Khi hệ thống đối mặt với nguy cơ sập toàn tập và không thể scale kịp, việc hy sinh một phần dữ liệu là bắt buộc.
+- **Cách hoạt động:** Drop (vứt bỏ) các event có độ ưu tiên thấp (ví dụ: Telemetry logs, Clickstream vô thưởng vô phạt) để dồn tài nguyên xử lý các event sống còn (ví dụ: Billing, Payment transactions).
+- **Trade-off:** Ưu tiên **Availability** (Hệ thống sống sót) và **Latency** thay vì **Completeness** (Chấp nhận mất dữ liệu).
 
 ---
 
-## 3. Triển Khai Trong Các Framework Hiện Đại
+## 3. Triển Khai Trong Các Framework Hiện Đại (Implementation)
 
 ### 3.1. Apache Kafka: Làm chủ Pull-model
-Kafka sinh ra để làm shock-absorber (bộ giảm xóc) cho data pipeline. Consumer tự định đoạt tốc độ đọc thông qua các tham số cấu hình:
+Kafka sinh ra để làm shock-absorber (bộ giảm xóc) cho Data Pipeline. Trách nhiệm chống quá tải hoàn toàn nằm ở phía Consumer. Bạn điều khiển nó qua các tham số:
 
 ```yaml
-# Cấu hình Kafka Consumer (Java/Spring)
+# Cấu hình Kafka Consumer (Kafka Properties / YAML)
 spring:
   kafka:
     consumer:
-      # Giới hạn số lượng records mỗi lần poll
+      # Giới hạn số lượng records tối đa lấy về mỗi lần poll()
       max-poll-records: 500
-      # Giới hạn dung lượng tối đa mỗi phân vùng trả về (bytes)
+      
+      # Giới hạn dung lượng RAM tối đa cấp cho mỗi phân vùng (bytes)
+      # Ngăn chặn OOM nếu 1 record có kích thước quá lớn (VD: Message 10MB)
       max-partition-fetch-bytes: 1048576 
-      # Khoảng thời gian tối đa để xử lý xong 1 batch trước khi bị rebalance
+      
+      # Quan trọng: Thời gian tối đa để xử lý xong 1 batch.
+      # Nếu vượt quá số này, Kafka tưởng Consumer đã chết và kích hoạt Rebalance.
       max-poll-interval-ms: 300000 
 ```
-*Kỹ thuật:* Nếu downstream database bị chậm, bạn không thay đổi code Kafka, bạn chỉ cần giảm `max-poll-records` để ứng dụng không bị timeout và dính OOM.
+*Troubleshooting Rule:* Nếu Database đích (Sink) bị chậm, bạn không cần sửa code. Chỉ cần giảm `max-poll-records` xuống (ví dụ 100) để Consumer có đủ thời gian xử lý batch mà không bị dính OOM hoặc Timeout Rebalance.
 
-### 3.2. Apache Flink: Credit-Based Flow Control
-Flink là nền tảng streaming độ trễ thấp (low-latency). Thay vì dùng Kafka ở giữa các task, Flink TaskManagers giao tiếp trực tiếp qua network và sử dụng cơ chế **Credit-based Flow Control** để tránh TCP Head-of-line blocking.
+### 3.2. Apache Flink: Credit-Based Flow Control & Unaligned Checkpoints
+Khác với Spark, Flink là nền tảng streaming thuần túy (Continuous streaming). Các TaskManager giao tiếp trực tiếp qua mạng. Flink sử dụng cơ chế **Credit-based Flow Control** để tránh hiện tượng TCP Head-of-line blocking.
 
-```mermaid
-graph LR
-    subgraph TaskManager A("Upstream")
-        S["Sender Task"] --> NB1["Network Buffers"]
-    end
-    subgraph TaskManager B("Downstream")
-        NB2["Network Buffers"] --> R["Receiver Task"]
-    end
-    
-    NB1 -- "Data("Deducts Credit") --> NB2
-    NB2 -. "Send Credits("Announce capacity") .-> NB1
+Mỗi khi TaskManager B (Downstream) xử lý xong dữ liệu và giải phóng Network Buffer, nó gửi một số "Credits" ngược lại cho TaskManager A (Upstream). TaskManager A chỉ được phép nén dữ liệu và gửi đi qua TCP khi số Credit > 0. Nếu B quá tải, Credit = 0, A sẽ ngưng gửi. Hệ quả là bộ đệm của A cũng sẽ đầy, và A sẽ tiếp tục gây Backpressure lên nguồn phát (Source Kafka).
+
+**Unaligned Checkpoints (Cứu cánh khi Backpressure):**
+Khi Backpressure xảy ra khốc liệt, các rào cản checkpoint (Checkpoint Barriers) bị kẹt lại phía sau hàng đợi dữ liệu khổng lồ, khiến Checkpoint bị timeout.
+Flink 1.11+ giới thiệu Unaligned Checkpoints:
+```yaml
+# flink-conf.yaml
+execution.checkpointing.unaligned: true
+execution.checkpointing.aligned-checkpoint-timeout: 10s
 ```
-Mỗi khi TaskManager B xử lý xong dữ liệu và giải phóng buffer, nó gửi "Credits" cho TaskManager A. TaskManager A chỉ gửi dữ liệu khi số Credit > 0. Nếu B quá tải, Credit = 0, A sẽ ngưng gửi (Backpressured).
+Nó cho phép Barrier "nhảy cóc" qua hàng đợi dữ liệu, đảm bảo Checkpoint vẫn thành công dù hệ thống đang tắc nghẽn nghiêm trọng, giúp phục hồi (Recovery) nhanh chóng nếu hệ thống sập.
 
-### 3.3. Apache Spark Streaming: Dynamic PID Controller
-Trong Structured Streaming, Spark có thể tự động điều chỉnh tốc độ Ingestion nhờ vào thuật toán PID (Proportional-Integral-Derivative) controller, đánh giá thời gian xử lý của các micro-batch trước đó.
+### 3.3. Spark Structured Streaming: Dynamic PID Controller
+Spark không dùng luồng liên tục mà dùng Micro-batch. Nó chống ngợp bằng cách tự động điều chỉnh tốc độ đọc (Ingestion Rate) thông qua một bộ điều khiển PID (Proportional-Integral-Derivative) thuật toán điều khiển tự động học từ thời gian xử lý của các batch trước.
 
 ```scala
-// Bật cấu hình Backpressure trong Spark
+// Bật cấu hình Backpressure trong Spark Structured Streaming
 val spark = SparkSession.builder
   .appName("ResilientStreamingApp")
+  // Bật thuật toán PID Controller
   .config("spark.streaming.backpressure.enabled", "true")
-  // Giới hạn tốc độ khởi điểm để hệ thống không bị ngợp ở batch đầu tiên
+  
+  // RẤT QUAN TRỌNG: Khóa tốc độ khởi điểm.
+  // Tránh trường hợp batch đầu tiên kéo về 10 triệu records làm sập ngay lập tức.
   .config("spark.streaming.backpressure.initialRate", "5000") 
-  // Giới hạn trần tốc độ cho Kafka
+  
+  // Tốc độ trần (Ceiling rate) cứng trên mỗi partition của Kafka
   .config("spark.streaming.kafka.maxRatePerPartition", "10000")
   .getOrCreate()
 ```
 
 ---
 
-## 4. Troubleshooting & Real-world Incidents
+## 4. Real-world Incident: Database "Choking" Kéo Sập Pipeline
 
-### Incident 1: Elasticsearch "Too Many Requests" (HTTP 429) kéo sập Data Ingestion
-**Ngữ cảnh:** Hệ thống Flink đọc từ Kafka và ghi vào Elasticsearch (ES). ES bị quá tải IOPS do spike indexing, bắt đầu trả về HTTP 429.
-**Triệu chứng:**
-1. Flink Sink nhận 429, thực hiện Exponential Backoff Retry.
-2. Thread bị block, Flink ngưng cấp Credit cho upstream task.
-3. Backpressure lan ngược lên source (Kafka Consumer).
-4. Consumer Lag trong Kafka tăng vọt (hàng triệu messages).
-**Giải quyết:** 
-- **Ngắn hạn:** Scale-out ES cluster hoặc tăng `index.refresh_interval` trên ES để giảm I/O.
-- **Dài hạn (Kiến trúc):** Đưa Dead Letter Queue (DLQ) vào. Nếu ES từ chối sau 3 lần retry, đẩy message lỗi vào S3/Kafka DLQ để xử lý sau (Load Shedding), giữ cho pipeline chính tiếp tục trôi.
+**Bối cảnh Sự cố [Incident]:** 
+Hệ thống Flink đọc Log sự kiện từ Kafka, biến đổi và ghi (Sink) vào Elasticsearch (ES). Trong ngày hội Sale lớn, Traffic tăng x5. Elasticsearch bị quá tải IOPS ổ đĩa, không kịp Index dữ liệu và bắt đầu trả về lỗi HTTP 429 (Too Many Requests).
 
-### Giám sát (Monitoring) Backpressure
-Staff Engineer không chờ hệ thống sập mới debug. Các metrics bắt buộc phải có trên Grafana/Datadog:
-- **Kafka Consumer Lag:** Số lượng messages chưa được xử lý. Cảnh báo (Alert) nếu đường xu hướng (trend) tăng liên tục trong 15 phút.
-- **Flink `isBackPressured` metric:** Nếu Task báo > 50% thời gian đang trong trạng thái backpressured, đó là dấu hiệu nghẽn cổ chai (bottleneck) tại node đó.
-- **JVM Heap / GC Time:** Theo dõi `OOMKilled` và tỷ lệ thời gian CPU dành cho Garbage Collection (> 10% là hệ thống đang chật vật).
-- **Dropped Metrics:** Tracking tỷ lệ dữ liệu bị chủ động loại bỏ bởi Load Shedder.
+**Hiệu ứng Domino:**
+1. Flink Sink nhận HTTP 429, thực hiện cơ chế Exponential Backoff Retry (thử lại với độ trễ tăng dần).
+2. Các Thread ghi vào ES bị block hoàn toàn.
+3. Network Buffer của Flink Sink đầy, nó ngưng cấp Credit cho Flink Map (Upstream).
+4. Flink Map ngừng kéo dữ liệu từ Flink Source.
+5. Flink Source ngừng gọi `poll()` tới Kafka.
+6. **Hậu quả cuối cùng:** Lượng Consumer Lag trong Kafka tăng phi mã lên hàng trăm triệu messages, báo động đỏ (P1 Incident) trên toàn hệ thống Grafana.
+
+**Cách Khắc phục (Troubleshooting & Architecture Fix):**
+
+- **Ngắn hạn (Tức thời):** 
+  - Scale-out thêm Data Nodes cho Elasticsearch.
+  - Tăng tham số `index.refresh_interval` trên ES từ 1s lên 30s để giảm I/O cực đại.
+- **Dài hạn (Sửa đổi Kiến trúc): Áp dụng Dead Letter Queue (DLQ) & Load Shedding.**
+  Bạn không thể bắt toàn bộ Pipeline phải chết chỉ vì một vài batch bị ES từ chối. Hãy thiết lập cơ chế: Nếu ES từ chối sau 3 lần Retry, Flink sẽ đẩy các message lỗi này sang một Kafka Topic khác (gọi là DLQ - Dead Letter Queue). Flink Sink báo cáo xử lý thành công (Ack) và tiếp tục luồng dữ liệu chính, giải phóng Backpressure. Dữ liệu trong DLQ sẽ được một batch job khác quét và ghi lại vào ban đêm khi ES rảnh rỗi.
 
 ---
 
-## 5. Kết Luận
-Thiết kế hệ thống Ingestion chịu lỗi (Fault-Tolerant) là phải giả định rằng mọi downstream đều có thể và sẽ bị chậm. Cơ chế Backpressure biến một kịch bản "thảm họa sụp đổ dây chuyền" thành một sự "suy giảm hiệu năng có kiểm soát" (graceful degradation). Bằng việc tinh chỉnh bộ đệm, flow control, và áp dụng load shedding hợp lý, bạn đảm bảo được Data Platform của mình luôn "sống sót" qua những đợt sóng dữ liệu khắc nghiệt nhất.
+## 5. Giám sát (Monitoring & Alerting)
+
+Một Staff Data Engineer không bao giờ chờ hệ thống sập mới bắt đầu đi mò mẫm logs. Các Metrics sau bắt buộc phải có trên Dashboard (Grafana/Datadog):
+
+- **Kafka Consumer Lag:** Số lượng messages chưa được xử lý. Cài đặt Alert cảnh báo nếu đường xu hướng (Trend) tăng liên tục không có dấu hiệu giảm trong 15 phút.
+- **Flink `isBackPressured`:** Nếu một Task báo cáo > 50% thời gian nó đang trong trạng thái Backpressured, đó chính xác là nút thắt cổ chai (Bottleneck). Nguyên nhân luôn nằm ở các node ở phía DOWNSTREAM của node báo lỗi này.
+- **JVM Heap / GC Time:** Giám sát tỷ lệ thời gian CPU dành cho Garbage Collection. Nếu GC Time > 15%, hệ thống của bạn đang chật vật sống sót và chuẩn bị OOM.
+- **Dropped/DLQ Metrics:** Đo lường tỷ lệ dữ liệu bị chủ động loại bỏ hoặc đẩy vào DLQ để tính toán mức độ suy giảm dịch vụ (SLA degradation).
 
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Netflix Tech Blog: Mantis - A Stream Processing System](https://netflixtechblog.com/)
-* [Apache Flink Documentation: Network Flow Control and Backpressure](https://flink.apache.org/2019/07/23/flink-network-stack-2.html)
-* [Databricks: Understanding Spark Streaming Backpressure](https://www.databricks.com/blog/2015/11/12/introducing-backpressure-in-apache-spark.html)
-* [AWS Architecture Blog: Decoupling Microservices with Queues](https://aws.amazon.com/blogs/architecture/)
-* **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 11: Stream Processing)
+
+* [Apache Flink Documentation: Network Flow Control and Backpressure][https://flink.apache.org/2019/07/23/flink-network-stack-2.html]
+* [Databricks: Understanding Spark Streaming Backpressure][https://www.databricks.com/blog/2015/11/12/introducing-backpressure-in-apache-spark.html]
+* [Netflix Tech Blog: Mantis - A Stream Processing System](https://netflixtechblog.com/]
+* Sách *Designing Data-Intensive Applications* (Martin Kleppmann, Chương 11: Stream Processing - Flow Control).

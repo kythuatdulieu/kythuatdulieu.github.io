@@ -67,7 +67,7 @@ graph TD
     classDef platform fill:#f4f5f7,stroke:#6c757d,stroke-width:2px;
 
     %% Domains
-    subgraph Domain_Sales ["Domain: Sales & Marketing"]
+    subgraph Domain_Sales["Domain: Sales & Marketing"]
         S_DB[("CRM DB")]
         S_Pipe("Data Pipelines")
         DP_Sales1[["Data Product: Customer 360"]]
@@ -78,7 +78,7 @@ graph TD
         S_Pipe --> DP_Sales2
     end
     
-    subgraph Domain_Finance ["Domain: Finance & Billing"]
+    subgraph Domain_Finance["Domain: Finance & Billing"]
         F_DB[("Billing System")]
         F_Pipe("Data Pipelines")
         DP_Finance1[["Data Product: Monthly Revenue"]]
@@ -88,7 +88,7 @@ graph TD
     end
 
     %% Self Serve Platform
-    subgraph Self_Serve ["Self-Serve Data Infrastructure Platform"]
+    subgraph Self_Serve["Self-Serve Data Infrastructure Platform"]
         Storage("Cloud Storage / Data Warehouse")
         Orchestration("Airflow / Dagster")
         Catalog("Data Catalog / Amundsen")
@@ -96,7 +96,7 @@ graph TD
     end
     
     %% Governance
-    subgraph Governance ["Federated Computational Governance"]
+    subgraph Governance["Federated Computational Governance"]
         Policies("Data Contracts & Policies")
         Audit("Auditing & Compliance")
     end
@@ -184,7 +184,7 @@ Data Fabric đóng vai trò là một **màng lưới thông minh (fabric/layer)
 ```mermaid
 graph BT
     %% Sources
-    subgraph Data_Sources ["Distributed Data Sources"]
+    subgraph Data_Sources["Distributed Data Sources"]
         DB1[("Oracle On-Prem")]
         DB2[("S3 Data Lake")]
         DB3[("Snowflake Cloud")]
@@ -192,7 +192,7 @@ graph BT
     end
 
     %% Fabric Layer
-    subgraph Data_Fabric ["Data Fabric Layer"]
+    subgraph Data_Fabric["Data Fabric Layer"]
         Meta("Active Metadata System")
         KG(("Knowledge Graph\n& Semantics"))
         AI("AI / ML Recommendation Engine")

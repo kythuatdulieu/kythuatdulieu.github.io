@@ -3,60 +3,55 @@ title: "Windowing & State Management: Phân nhóm dữ liệu luồng thực chi
 difficulty: "Advanced"
 tags: ["streaming", "windowing", "watermarks", "flink", "state-management", "oom"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-26
+lastUpdated: 2026-06-29
 seoTitle: "Windowing & Watermarks: Kiến trúc xử lý Late Data trong Streaming"
-metaDescription: "Đi sâu vào kiến trúc thực thi vật lý của Windowing trong Stream Processing. Đánh đổi giữa Memory và Latency, Watermarks, xử lý Late Data và các rủi ro OOMKilled thực tế."
-description: "Phân tích sâu kiến trúc thực thi vật lý của Windowing và Watermarks trong các hệ thống Streaming quy mô lớn. Làm sao để quản lý State an toàn, tránh OOMKilled khi xử lý Late Data."
+metaDescription: "Đi sâu vào kiến trúc thực thi vật lý của Windowing trong Stream Processing. Đánh đổi giữa Memory và Latency, Watermarks, xử lý Late Data và rủi ro OOMKilled."
+description: "Phân tích sâu kiến trúc thực thi vật lý của Windowing và Watermarks trong hệ thống Streaming. Cách quản lý State an toàn, tránh OOMKilled khi xử lý Late Data."
 ---
 
-Khi xử lý luồng dữ liệu vô hạn (Unbounded Data), bài toán không nằm ở việc tính toán, mà nằm ở việc **quản lý trạng thái (State Management)**. Vì bộ nhớ vật lý (RAM/Disk) là hữu hạn, bạn không thể giữ toàn bộ dữ liệu trên memory chờ đến khi stream kết thúc. 
+Khi xử lý luồng dữ liệu vô hạn (Unbounded Data), bài toán kỹ thuật không nằm ở việc tính toán `SUM` hay `COUNT`, mà nằm ở việc **Quản lý trạng thái (State Management)**. Vì bộ nhớ vật lý (RAM/Disk) là hữu hạn, bạn không thể giữ toàn bộ luồng sự kiện vĩnh viễn trên memory chờ đến khi hệ thống ngắt kết nối. 
 
-**Windowing** về mặt vật lý là cơ chế cấp phát, lưu trữ, và giải phóng vùng nhớ (State) theo các lát cắt thời gian. Khái niệm này luôn đi kèm với **Watermarks** – tín hiệu thu dọn rác (Garbage Collection signal) để hệ thống biết khi nào có thể an toàn đóng cửa sổ, xuất kết quả, và xóa State để tránh `OOMKilled`.
+**Windowing** về mặt vật lý là cơ chế cấp phát, lưu trữ, và giải phóng vùng nhớ (State) theo các lát cắt thời gian. Khái niệm này luôn đi kèm với **Watermarks** – một tín hiệu thu dọn rác (Garbage Collection signal) để hệ thống biết khi nào có thể an toàn đóng cửa sổ, xuất kết quả, và giải phóng bộ nhớ để tránh thảm họa tràn RAM (`OOMKilled`).
 
-Bài viết này mổ xẻ sâu vào kiến trúc thực thi của Windowing, các đánh đổi hệ thống (Trade-offs), và cách thiết kế để chống lại các thảm họa tràn bộ nhớ trong môi trường Production.
+Bài viết này mổ xẻ sâu vào kiến trúc thực thi của Windowing, các đánh đổi hệ thống (Trade-offs) khốc liệt, và cách thiết kế để chống lại các sự cố Production.
 
----
+## 1. Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
-
-Trong các hệ thống phân tán như Apache Flink hay Kafka Streams, luồng thực thi của một Windowing Operator bao gồm 3 thành phần cốt lõi:
-
-1. **Window Assigner**: Khi một Record (sự kiện) đi vào, Assigner sẽ định tuyến (route) nó vào một hoặc nhiều Bucket (Cửa sổ). Nếu Record thuộc về nhiều cửa sổ (ví dụ: Sliding Window), dữ liệu gốc không được copy thành nhiều bản, mà State Backend (như RocksDB) sẽ tạo ra nhiều index point trỏ tới nó để tối ưu I/O.
-2. **Trigger**: Là bộ đánh giá điều kiện (Condition Evaluator) chạy sau mỗi record hoặc mỗi khi Watermark tiến lên. Trigger quyết định xem Window đã đủ điều kiện để tính toán (Fire) và xóa State (Purge) hay chưa.
-3. **State Backend**: Nơi lưu trữ dữ liệu của các Window đang mở (In-flight Windows). Tùy chọn In-memory (Heap) cho tốc độ siêu nhanh nhưng dễ OOM, hoặc RocksDB (Spill-to-disk) đánh đổi CPU/IO lấy sự ổn định.
+Trong các hệ thống phân tán nhạy cảm với độ trễ (như Apache Flink, Kafka Streams), luồng thực thi của một Windowing Operator bao gồm 3 Engine lõi chạy song song:
 
 ```mermaid
 graph TD
-    A["Kafka Partition"] -->|Network Shuffle| B["KeyBy Operator"]
+    A["Data Stream (Kafka)"] -->|Network Shuffle| B["KeyBy Operator"]
     B --> C{"Window Assigner"}
-    C -->|Assign| D1["Window 1 State"]
-    C -->|Assign| D2["Window 2 State"]
-    D1 -.-> E("Trigger Evaluator")
-    E -->|Fire & Purge| F["Aggregation Function"]
-    F --> G["Downstream Output"]
-    H["Watermark Generator"] --> E
     
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
+    C -->|Gắn Record vào Window| D1["Window 1 State (RocksDB)"]
+    C -->|Gắn Record vào Window| D2["Window 2 State (RocksDB)"]
+    
+    H["Watermark Generator"] -->|Phát tín hiệu thời gian| E
+    D1 -.->|Trigger Check| E("Trigger Evaluator")
+    
+    E -->|"Condition Met (Fire & Purge)"| F["Aggregation Function"]
+    F --> G["Downstream Output / Sink"]
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
 ```
-*(Kiến trúc thực thi luồng Windowing và State Evaluation)*
 
----
+1. **Window Assigner (Bộ định tuyến):** Khi một sự kiện đi vào, Assigner sẽ quyết định nhét nó vào một hoặc nhiều Bucket (Cửa sổ). Nếu một sự kiện thuộc về nhiều cửa sổ, dữ liệu gốc không bị copy thành nhiều bản trên RAM, mà State Backend sẽ tạo ra nhiều Index points trỏ tới nó để tối ưu Disk I/O.
+2. **Trigger (Bộ kích hoạt):** Là một vòng lặp kiểm tra (Evaluator) chạy ngầm sau mỗi sự kiện hoặc mỗi khi Watermark tịnh tiến. Trigger quyết định xem Window đã đủ điều kiện để tính toán (Fire) và xóa rác (Purge) hay chưa.
+3. **State Backend:** Nơi neo giữ dữ liệu của các Window đang mở (In-flight Windows). Việc chọn In-memory (Heap) cho tốc độ siêu nhanh (nhưng dễ chết OOM) hay RocksDB (Ghi xuống đĩa cứng để đổi CPU/IO lấy sự ổn định) là quyết định sống còn của Data Engineer.
 
-## 2. Các Chiến lược Chia Cửa Sổ & Systemic Trade-offs
+## 2. Chiến lược Chia Cửa Sổ & Systemic Trade-offs
+
+Ba loại Windowing phổ biến không đơn thuần là cú pháp code, chúng định hình cấu trúc dữ liệu trên bộ nhớ.
 
 ### 2.1. Tumbling Windows (Cửa sổ cuộn)
+Cắt stream thành các đoạn thời gian cố định, không chồng lấp. Mỗi sự kiện thuộc về **DUY NHẤT** một window.
+- **Đánh đổi hệ thống (Trade-off):** Thân thiện với bộ nhớ nhất. Số lượng Active State trên mỗi khóa (Key) luôn là $1$. Thông lượng (Throughput) cao nhất vì không phải phân nhánh hay tính toán lặp.
+- **Physical Impact:** Cực kỳ tối ưu. Hệ thống áp dụng được hàm tính gộp tức thì (`ReduceFunction`) ngay khi dữ liệu vào, tránh việc phải ôm toàn bộ dữ liệu thô (Raw Records) đẩy xuống đĩa cứng.
 
-Tumbling Windows cắt stream thành các đoạn cố định, không chồng lấp. Một Record chỉ thuộc về **duy nhất** một window.
-
-![Tumbling Window](/images/5-stream-processing-realtime/tumbling-windows.svg)
-*(Tumbling Window. Nguồn: Apache Flink)*
-
-- **Đánh đổi hệ thống (Trade-off):** Thân thiện với bộ nhớ nhất. Số lượng active state chỉ tương đương với số lượng Key $\times$ 1 (một window đang mở trên mỗi key). Thông lượng (Throughput) cao nhất vì ít phải phân nhánh (Routing).
-- **Physical Impact:** Cực kỳ tối ưu cho các bài toán Aggregation liên tục như Count, Sum vì hệ thống có thể áp dụng `ReduceFunction` (tính gộp ngay lập tức) thay vì lưu trữ toàn bộ records thô vào ListState.
-
-**Thực chiến Flink SQL (Tính tổng doanh thu mỗi 5 phút):**
 ```sql
+-- Flink SQL Thực chiến: Tính tổng doanh thu mỗi 5 phút bằng Tumbling
 SELECT 
     window_start, window_end, 
     store_id, SUM(revenue) as total_rev
@@ -67,111 +62,77 @@ GROUP BY window_start, window_end, store_id;
 ```
 
 ### 2.2. Sliding Windows (Cửa sổ trượt)
-
-Các cửa sổ có cùng độ dài nhưng có thể chồng lấp. Slide step (bước trượt) quy định tần suất tạo cửa sổ mới.
-
-![Sliding Window](/images/5-stream-processing-realtime/sliding-windows.svg)
-*(Sliding Window. Nguồn: Apache Flink)*
-
-- **Đánh đổi hệ thống (Trade-off):** Đây là cơn ác mộng về **Event Amplification** (Khuếch đại sự kiện). Nếu bạn cấu hình `Size = 1 giờ` và `Slide = 1 phút`, mỗi record mới tới sẽ được assign vào \$60$ cửa sổ đồng thời. Điều này đồng nghĩa với việc Write I/O vào State Backend bị nhân lên gấp 60 lần, CPU cũng phải làm việc gấp 60 lần khi Trigger đánh giá.
-- **Physical Impact:** Nếu dùng RocksDB State Backend, I/O disk sẽ bị ngẽn nghiêm trọng (Disk I/O Bound). Cần tuning kĩ RocksDB Block Cache và Write Buffer.
-
-**Cấu hình Flink DataStream API Java (Di chuyển trung bình):**
-```java
-stream
-    .keyBy(SensorData::getDeviceId)
-    // Cửa sổ 10 phút, trượt 1 phút -> Record thuộc về 10 Windows
-    .window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)))
-    // Dùng AggregateFunction (Pre-aggregation) thay vì ProcessWindowFunction
-    // để tránh lưu toàn bộ cục dữ liệu thô vào bộ nhớ
-    .aggregate(new AverageAggregate());
-```
+Các cửa sổ chồng lấp lên nhau. Slide step (Bước trượt) quy định tần suất tạo cửa sổ mới.
+- **Đánh đổi hệ thống (Trade-off):** Đây là cơn ác mộng về **Event Amplification (Khuếch đại sự kiện)**. Nếu bạn cấu hình `Size = 1 giờ` và `Slide = 1 phút`, mỗi record mới tới sẽ được assign vào $60$ cửa sổ đồng thời. Điều này đồng nghĩa với việc Disk I/O Write vào RocksDB bị nhân lên gấp 60 lần.
+- **Physical Impact:** Rất dễ làm sập cụm do thắt cổ chai I/O. Cần thiết kế "Pre-aggregation" (Tính tổng sơ bộ) trước khi đưa vào cửa sổ trượt dài.
 
 ### 2.3. Session Windows (Cửa sổ phiên)
+Gom nhóm dựa trên hành vi hoạt động. Nếu một user không click chuột trong vòng 30 phút (Session Gap), window bị đóng.
+- **Đánh đổi hệ thống (Trade-off):** Phức tạp nhất vì nó mang bản chất **Mergeable Window**. Khi 2 sự kiện rời rạc bỗng xuất hiện một sự kiện thứ 3 nối giữa, hệ thống phải thực hiện thao tác *Read-Modify-Write* nặng nề để GỘP 2 cửa sổ nhỏ thành 1 cửa sổ lớn.
+- **Physical Impact:** Rất dễ bị "State Bloat" (Phình to trạng thái). Nếu một bot liên tục ping cách nhau 29 phút, cửa sổ của user đó sẽ kéo dài bất tận, nuốt chửng toàn bộ RAM của TaskManager.
 
-Gom nhóm dựa trên hoạt động. Nếu một khóa (Key) không có event mới trong khoảng `session_gap`, window sẽ bị đóng.
+## 3. Watermarks & Quản trị dữ liệu trễ (Late Data)
 
-![Session Window](/images/5-stream-processing-realtime/session-windows.svg)
-*(Session Window. Nguồn: Apache Flink)*
+Trong phân tán, Event Time (Giờ trên máy người dùng) và Processing Time (Giờ trên Server) luôn lệch nhau do mạng lag. Dữ liệu bị đảo lộn thứ tự (Out-of-order).
 
-- **Đánh đổi hệ thống (Trade-off):** Phức tạp nhất trong thực thi vì Session Window mang tính chất **Mergeable Window** (Cửa sổ có thể gộp lại). Khi hai event gần nhau xuất hiện, hệ thống phải liên tục thao tác Read-Modify-Write trên State Backend để *merge* các vùng nhớ lại thành một Session dài hơn. Quá trình này ngốn CPU cực mạnh do serialization/deserialization.
-- **Physical Impact:** State không được thu hồi theo thời gian cố định. Rất dễ dính OOM (Out Of Memory) nếu một con bot liên tục spam event cách nhau `< session_gap`, khiến một window kéo dài bất tận và bành trướng kích thước (State Bloat).
+**Watermark ($W$)** là một biến Heuristic toàn cục: *"Hệ thống cam kết (chắc chắn đến 99%) rằng sẽ không có sự kiện nào có Event Time $t < W$ rớt vào nữa"*.
+Khi Watermark vượt qua thời gian kết thúc của cửa sổ $T_{"end"}$, cửa sổ được phép **Fire (xuất số liệu)** và **Purge (Xóa sạch State)**.
 
----
-
-## 3. Watermarks & Cơ chế xử lý Late Data
-
-Trong môi trường phân tán, Event Time (thời gian phát sinh sự kiện) và Processing Time (thời gian máy chủ tính toán) luôn có một độ trễ (Skew). Mạng chập chờn, GC Pauses, hay Mobile rớt mạng khiến dữ liệu đến không theo thứ tự (Out-of-order).
-
-**Watermark ($W$)** là một biến toàn cục mang ý nghĩa Heuristic: *"Hệ thống cam kết (một cách tương đối) rằng sẽ không có sự kiện nào có Event Time $t < W$ xuất hiện nữa"*.
-Khi Watermark vượt qua thời gian kết thúc của cửa sổ $T_{end}$, cửa sổ được phép **Fire (xuất kết quả)** và **Purge (Xóa State)** để giải phóng bộ nhớ.
-
-Tuy nhiên, sự đời hiếm khi hoàn hảo. Dữ liệu trễ (Late Data - $t < W$) vẫn có thể xuất hiện sau khi State đã bị dọn dẹp. Chúng ta xử lý bằng cách nào?
+Tuy nhiên, 1% sự kiện lạc loài (Late Data) đến trễ sau khi cửa sổ đã bị xóa thì xử lý ra sao?
 
 ### 3.1. Allowed Lateness (Cho phép trễ)
-Thay vì xóa State ngay lập tức khi Watermark đi qua, ta giữ lại (retain) State trong một khoảng `allowed_lateness`. Nếu Late Data rớt vào, Window sẽ Trigger thêm lần nữa (Retract & Accumulate) để cập nhật kết quả.
-
-- **Rủi ro:** Giữ lại State quá lâu đồng nghĩa với việc State Backend phình to. Nếu `allowed_lateness = 1 day`, bạn đang lưu rác của 24h qua trong Disk/RAM. RocksDB Compaction sẽ trở thành nút thắt cổ chai, gây rớt Throughput hệ thống trầm trọng (Backpressure).
+Thay vì xóa State ngay khi Watermark vượt qua, ta giữ lại bộ nhớ thêm một khoảng `allowed_lateness`. Nếu Late Data rớt vào, Window sẽ tính toán lại (Retract) và cập nhật số liệu.
 
 ```java
-// Flink: Cho phép trễ 30 phút, sau 30 phút rớt vào Side Output
+// Kỹ thuật Flink: Cho phép trễ 30 phút, nếu trễ hơn đẩy ra Side Output (DLQ)
 OutputTag<Event> lateTag = new OutputTag<Event>("late-data"){};
 
 WindowedStream<Event, String, TimeWindow> windowedStream = stream
     .keyBy(Event::getUserId)
     .window(TumblingEventTimeWindows.of(Time.minutes(5)))
-    .allowedLateness(Time.minutes(30)) // Giữ State thêm 30 phút
-    .sideOutputLateData(lateTag);     // Hết 30 phút đẩy ra Dead Letter Queue
+    .allowedLateness(Time.minutes(30)) // Kéo dài tuổi thọ của State trên đĩa
+    .sideOutputLateData(lateTag);     // Hết 30 phút, đẩy ra Dead Letter Queue
 ```
-
-### 3.2. Side Outputs (Mô hình Dead-Letter Queue)
-Sự kiện đến quá trễ (sau cả `allowed_lateness`) sẽ bị rẽ nhánh sang một luồng phụ (Side Output) để đẩy xuống kho lạnh lưu trữ rẻ tiền (S3, GCS) thay vì làm sập luồng tính toán chính. Sau đó, batch processing (ví dụ: Spark) sẽ tiến hành Reconcile (đối soát) lại dữ liệu cuối ngày.
-
----
+**Rủi ro hệ thống:** Nếu cấu hình `allowed_lateness = 7 days`, bạn đang bắt hệ thống ôm toàn bộ lịch sử giao dịch của 7 ngày trên đĩa cứng RocksDB. Điều này dẫn đến quá trình Compaction của RocksDB bị quá tải, gây nghẽn cổ chai.
 
 ## 4. Operational Risks & Real-world Incidents (Các thảm họa Production)
 
-### 4.1. Incident 1: "Idle Partitions" gây kẹt Watermark và tràn RAM
-**Hiện tượng:** Một cụm Flink bỗng dưng bùng nổ Memory và `OOMKilled` hàng loạt TaskManager, mặc dù lưu lượng dữ liệu không tăng. Window kết quả không chịu xuất ra.
-**Root Cause (Căn nguyên):** Khi bạn đọc từ một Kafka Topic có 100 Partitions, Watermark của Operator sẽ lấy $\min(Watermark_{p1}, ..., Watermark_{p100})$. Nếu có 1 Partition bị "đứng yên" (Idle - không có dữ liệu nào mới vào), Watermark của Partition đó sẽ kẹt vĩnh viễn ở một mốc thời gian cũ. Dẫn đến Global Watermark không thể tịnh tiến. 
-Hậu quả là các Window không bao giờ được Fire & Purge. State phình to nuốt chửng toàn bộ Heap Memory.
-**Cách khắc phục (Remediation):** Cấu hình Watermark Idle Timeout.
+### 4.1. Incident 1: "Idle Partitions" gây kẹt Watermark và Tràn RAM
+- **Hiện tượng:** Cụm Flink bỗng nhiên bùng nổ Memory và `OOMKilled`. Window không xuất kết quả.
+- **Root Cause:** Khi đọc Kafka 100 Partitions, Watermark = $\min(W_{"p1"}, ..., W_{"p100"})$. Nếu một Partition bị "đứng yên" (Idle - không có data mới), Watermark của partition đó kẹt ở quá khứ. Kéo theo Global Watermark không thể tăng lên. Cửa sổ không bao giờ được đóng, State phình to vô hạn.
+- **Giải pháp:** Cấu hình **Idleness Timeout** để Flink phớt lờ partition chết.
 ```java
-// Đánh dấu partition là idle nếu không có sự kiện mới sau 10 giây
+// Cấu hình Watermark bỏ qua partition chết sau 10 giây
 WatermarkStrategy
     .<Event>forBoundedOutOfOrderness(Duration.ofSeconds(5))
-    .withIdleness(Duration.ofSeconds(10));
+    .withIdleness(Duration.ofSeconds(10)); // Ma thuật cứu OOM
 ```
 
-### 4.2. Incident 2: Thảm họa Cartesian Explosion trong Sliding Window
-**Hiện tượng:** CPU Usage tăng 100%, Checkpoint timeout, ứng dụng bị ngẽn cục bộ (Backpressure).
-**Root Cause:** Data Engineer thiết kế Sliding Window có $Size = 24h$, $Slide = 1s$. 1 Event được nhân bản vào \$24 \times 60 \times 60 = 86400$ windows đồng thời. ListState phình to khủng khiếp.
-**Cách khắc phục:** 
-1. Không sử dụng Windowing trực tiếp. Thay vào đó lưu data vào Kafka, và dùng In-memory K-V Database (Redis/Aerospike) để tra cứu (Time-series aggregations).
-2. Tối ưu kiến trúc thành **Two-phase Aggregation**: Tumbling window nhỏ (\$1s$) tính trước tổng cục bộ (Pre-aggregation), sau đó mới trượt (Sliding) trên các cửa sổ \$1s$ đã được nén nhỏ để tính ra mốc \$24h$.
+### 4.2. Incident 2: Thảm họa Cartesian trong Sliding Window
+- **Hiện tượng:** CPU 100%, Checkpoint sập do Backpressure.
+- **Root Cause:** Cấu hình Sliding Window $Size = 24h$, $Slide = 1s$. Một sự kiện bị nhân bản vào 86,400 windows.
+- **Giải pháp:** Bỏ Windowing trong Flink. Bắn dữ liệu thô vào In-memory Database (như Redis/Pinot) và Query theo dạng Time-series Aggregation.
 
-### 4.3. Incident 3: Data Skew và OOM trên Session Window
-**Hiện tượng:** TaskManager xử lý Key "khách hàng VIP" bị sập liên tục.
-**Root Cause:** Một con cào dữ liệu (Crawler/Bot) liên tục nhả event vào hệ thống bằng UserID của "khách hàng VIP". Mật độ event dày đặc khiến Session Gap không bao giờ đạt được. Session Window của Key này mở ra và kéo dài vô tận, gom hàng triệu event vào ListState.
-**Cách khắc phục:** Custom Trigger. Không chỉ Trigger dựa trên Session Gap, mà buộc (Force fire) Trigger & Purge nếu Window State vượt quá $N$ phần tử hoặc quá thời gian tối đa tuyệt đối (Max Absolute Duration).
+### 4.3. Incident 3: Bot spam làm sập Session Window
+- **Hiện tượng:** Key của "khách hàng" nào đó làm rớt Node.
+- **Root Cause:** Crawler spam liên tục khiến Session Gap không bao giờ đạt được ngưỡng đóng.
+- **Giải pháp:** Viết **Custom Trigger** ép đóng cửa sổ nếu vượt giới hạn.
 
 ```java
-// Ví dụ logic Custom Trigger ép đóng Session Window nếu lớn hơn 1000 items
-public TriggerResult onElement(Event element, long timestamp, TimeWindow window, TriggerContext ctx) {
+// Custom Trigger: Ép đóng Session Window cứu RAM
+public TriggerResult onElement[Event element, long timestamp, TimeWindow window, TriggerContext ctx] {
     long count = ctx.getPartitionedState(countDescriptor).value();
-    if (count > 1000) {
+    if (count > 1000) { // Giới hạn an toàn tuyệt đối
         ctx.getPartitionedState(countDescriptor).clear();
-        return TriggerResult.FIRE_AND_PURGE; // Ép đóng cửa sổ cứu RAM!
+        return TriggerResult.FIRE_AND_PURGE; // Phá vỡ Session Gap, ép xóa
     }
     return TriggerResult.CONTINUE;
 }
 ```
 
----
+## Nguồn Tham Khảo (References)
 
-## 5. Nguồn Tham Khảo (References)
-
-*   **Streaming Systems** - Tyler Akidau, Slava Chernyak, Reuven Lax (O'Reilly). *Một cuốn kinh thánh về Watermarks và Late Data.*
-*   [Apache Flink Official Architecture: Windows & Watermarks](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/)
-*   [Handling Late Data in Flink - Confluent Docs & Engineering Blogs](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#windowing)
-*   [Uber Engineering: Real-time Data Processing with Flink](https://www.uber.com/en-VN/blog/data-engineering/)
+* **Streaming Systems** - Tyler Akidau (Sách gối đầu giường về Watermarks của kỹ sư Google).
+* [Apache Flink Architecture: Windows & Watermarks][https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/]
+* [Handling Late Data in Flink - Confluent Engineering Blogs][https://docs.confluent.io/]
+* [Uber Engineering: Real-time Data Processing with Flink](https://www.uber.com/en-VN/blog/data-engineering/]
