@@ -2,11 +2,11 @@
 title: "Sensors - Kiến trúc Polling & Tác vụ chờ đợi"
 difficulty: "Intermediate"
 tags: ["airflow", "sensors", "orchestration", "polling", "event-driven", "deadlock"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Airflow Sensors là gì? Cảm biến dữ liệu & Ngăn chặn Worker Starvation"
-metaDescription: "Tìm hiểu sâu về kiến trúc thực thi của Sensors trong Apache Airflow. Phân tích đánh đổi giữa Poke, Reschedule, và Deferrable Operators. Ngăn chặn Deadlock."
-description: "Lập lịch chạy job dựa trên thời gian cứng nhắc thường dẫn đến delay hệ thống hoặc chạy sai do dữ liệu chưa tới. Sensors sinh ra để giải quyết bài toán Polling (Chờ đợi sự kiện), nhưng nếu dùng sai, chúng sẽ làm sập toàn bộ cluster."
+readingTime: "25 mins"
+lastUpdated: 2026-06-29
+seoTitle: "Airflow Sensors: Cảm biến dữ liệu, Deferrable Operators & Event-driven"
+metaDescription: "Tìm hiểu sâu về kiến trúc thực thi của Sensors trong Apache Airflow. Phân tích đánh đổi giữa Poke, Reschedule, Deferrable Operators và kiến trúc Event-Driven."
+description: "Lập lịch chạy job dựa trên thời gian cứng nhắc thường dẫn đến delay hệ thống. Sensors sinh ra để giải quyết bài toán Polling (Chờ đợi), nhưng nếu dùng sai, sẽ làm sập toàn bộ cluster. Khám phá cách triển khai Deferrable Operators."
 ---
 
 Sensors (Cảm biến) trong Apache Airflow (và các bộ Orchestrator tương tự) là loại Task đặc biệt chuyên làm nhiệm vụ **Polling** (Nằm chờ và thăm dò). Thay vì thực thi mã nguồn xử lý tính toán nặng nề, Sensor liên tục "hỏi" hệ thống bên ngoài: *"Dữ liệu đã tới chưa? Job upstream chạy xong chưa?"*. Ngay khi điều kiện thỏa mãn, Sensor mới cấp quyền cho pipeline đi tiếp.
@@ -34,7 +34,8 @@ Việc Sensor liên tục kiểm tra trạng thái sẽ tiêu tốn tài nguyên
 - **Khi nào dùng:** Khi thời gian chờ dài (hàng giờ) và tần suất kiểm tra thưa (mỗi 5-10 phút).
 
 ### Mô hình 3: Deferrable Operators (Async Triggerer)
-Ra mắt từ Airflow 2.2, Deferrable Operators áp dụng mô hình I/O Non-blocking (Bất đồng bộ - Asyncio). Thay vì dùng Worker để chờ, Airflow giới thiệu một thành phần mới: **Triggerer**.
+Từ Airflow 2.2, Deferrable Operators áp dụng mô hình I/O Non-blocking (Bất đồng bộ - Asyncio). Airflow giới thiệu một thành phần mới: **Triggerer**.
+
 - **Cơ chế:** Worker chạy Sensor, đóng gói điều kiện cần chờ thành một `Trigger` và ném sang máy chủ Triggerer. Worker Slot được giải phóng lập tức. Triggerer sử dụng 1 luồng (single thread) duy nhất để quản lý hàng vạn `Trigger` thông qua `asyncio`. Khi sự kiện xảy ra, Triggerer đẩy tín hiệu về Scheduler để phục hồi task trở lại Worker.
 
 ```mermaid
@@ -67,7 +68,36 @@ sequenceDiagram
 
 ---
 
-## 2. Rủi ro Vận hành (Operational Risks)
+## 2. Kiến trúc Event-Driven với AWS EventBridge / PubSub
+
+Việc polling (dù là bất đồng bộ của Triggerer) vẫn tạo ra traffic dư thừa đến các hệ thống external. Để xây dựng hệ thống **Event-Driven Orchestration** thật sự hiệu quả (đặc biệt trong Airflow 3.0), ta chuyển sang mô hình Push từ các hệ thống đám mây.
+
+**Kiến trúc:**
+1. **Event Producer:** Hệ thống external sinh ra sự kiện (VD: File đáp xuống S3). S3 gửi thông báo qua AWS EventBridge (hoặc SNS).
+2. **Event Router (EventBridge):** Nhận sự kiện từ S3 và định tuyến (route) trực tiếp vào một Amazon SQS Queue (hoặc GCP Pub/Sub Topic).
+3. **Airflow Triggerer (SqsSensor deferrable=True):** Nằm chờ thụ động (listen) vào SQS Queue thông qua Deferrable Operator. Khi thông báo "đáp" vào hàng đợi SQS, Airflow bắt được sự kiện ngay lập tức, không lãng phí chu kỳ polling S3.
+
+**Ví dụ cấu hình Python DAG (AWS SQS Deferrable Sensor):**
+```python
+from airflow.providers.amazon.aws.sensors.sqs import SqsSensor
+from datetime import datetime
+from airflow import DAG
+
+with DAG('event_driven_pipeline', start_date=datetime(2026, 1, 1), schedule_interval=None) as dag:
+    # Sensor nằm chờ SQS Queue mà không chiếm Worker Slot
+    wait_for_s3_event = SqsSensor(
+        task_id='wait_for_sqs_message',
+        sqs_queue='my-eventbridge-queue',
+        deferrable=True,  # Giải phóng worker, giao việc cho Triggerer
+        max_messages=1,
+        wait_time_seconds=20 # Long polling SQS
+    )
+```
+Kiến trúc này **Decoupling (Tách rời)** được nguồn phát sinh sự kiện (AWS S3/EventBridge) và hệ thống orchestration (Airflow), giúp hệ thống mở rộng (Scale) vô hạn.
+
+---
+
+## 3. Rủi ro Vận hành (Operational Risks)
 
 ### Sự cố kinh điển: Sensor Deadlock (Worker Starvation)
 **Kịch bản:** Ngày 1 đầu tháng, 100 DAGs báo cáo tài chính đồng loạt chạy vào lúc 12:00 AM. Mỗi DAG có một `S3KeySensor` ở chế độ `poke` (mặc định) để đợi file từ đối tác. Đối tác thông báo 03:00 AM mới có file.
@@ -79,7 +109,6 @@ sequenceDiagram
 
 ```python
 from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
-from datetime import timedelta
 
 # ❌ BAD PRACTICE: Gây Deadlock hệ thống
 wait_for_data_bad = S3KeySensor(
@@ -98,32 +127,30 @@ wait_for_data_good = S3KeySensor(
     deferrable=True,            # Tối ưu hoá Async bằng Triggerer
     poke_interval=300,          # Kiểm tra mỗi 5 phút
     timeout=60 * 60 * 2,        # Time-to-Live tối đa 2 tiếng
-    soft_fail=True,             # Đổi thành SKIPPED thay vì FAILED (chống spam Alert ban đêm)
+    soft_fail=True,             # Đổi thành SKIPPED thay vì FAILED
     pool="sensor_pool"          # Cách ly tài nguyên, không giành giật với ETL Pool
 )
 ```
 
 ### Hiện tượng False Alarm Alerting
-Sensor mặc định sẽ bị đánh dấu `FAILED` khi hết thời gian `timeout`, kéo theo chuỗi hệ luỵ là kích hoạt PagerDuty, Slack Bot đánh thức On-call Engineer lúc 3 giờ sáng. Tuy nhiên, đôi khi nguồn cấp dữ liệu không có cập nhật trong ngày là chuyện bình thường. Bằng cách gán `soft_fail=True`, Sensor sẽ chuyển sang `SKIPPED`, giúp Pipeline bỏ qua nhẹ nhàng mà không tạo "báo động giả".
+Sensor mặc định sẽ bị đánh dấu `FAILED` khi hết thời gian `timeout`, kéo theo chuỗi hệ luỵ là kích hoạt PagerDuty đánh thức On-call Engineer lúc 3 giờ sáng. Đôi khi nguồn cấp dữ liệu không có cập nhật trong ngày là chuyện bình thường. Bằng cách gán `soft_fail=True`, Sensor sẽ chuyển sang `SKIPPED`, giúp Pipeline bỏ qua nhẹ nhàng mà không tạo "báo động giả".
 
 ---
 
-## 3. Sự chuyển dịch Kiến trúc: Từ Pull (Sensor) sang Push (Event-driven)
+## 4. Sự chuyển dịch Kiến trúc: Từ Pull (Sensor) sang Push (Event-driven)
 
-Sensor dù được tối ưu hoá bằng Triggerer vẫn mang bản chất là **Polling (Pull)**: Tức là hệ thống phải chủ động đi hỏi "Dữ liệu có chưa?".
-
-Với sự ra đời của **Data-aware Scheduling (Airflow Datasets)** từ bản 2.4, kiến trúc Data Engineering đang dịch chuyển sang **Event-driven (Push)**. 
+Với sự ra đời của **Data-aware Scheduling (Airflow Datasets)** từ bản 2.4 và tiến lên **Asset-Aware Scheduling** trong Airflow 3.0, kiến trúc Data Engineering đang dịch chuyển sang **Event-driven (Push)**. 
 
 ```mermaid
 graph LR
-    subgraph Kiến trúc Pull("Sensor")
+    subgraph Kien_truc_Pull["Kiến trúc Pull (Sensor)"]
         JobA["ETL Nguồn"] -->|Ghi file| S3["(Amazon S3)"]
         S["Sensor"] -->|Poke mỗi 5p| S3
         S -->|Thành công| JobB["Transform Job"]
     end
 
-    subgraph Kiến trúc Push("Datasets")
-        JobA_Push["ETL Nguồn"] -->|Cập nhật| DS("(Dataset")
+    subgraph Kien_truc_Push["Datasets / Assets"]
+        JobA_Push["ETL Nguồn"] -->|Cập nhật| DS["(Dataset/Asset)"]
         DS -.->|Tự động Trigger| JobB_Push["Transform Job"]
     end
     
@@ -131,13 +158,12 @@ graph LR
     style DS fill:#99ff99,stroke:#333
 ```
 
-Trong mô hình Datasets, Job A sau khi chạy xong sẽ phát đi một tín hiệu cập nhật Logical Dataset. Job B khai báo phụ thuộc vào Dataset này sẽ **tự động được kích hoạt** bởi Scheduler. 
-- **Lợi ích:** Bỏ qua hoàn toàn chi phí Polling. Giải quyết triệt để Sensor Deadlock. Giảm thiểu số lượng DAGs phụ trợ, đơn giản hóa Dependencies graph xuyên DAG.
+Trong mô hình Datasets/Assets, Job A sau khi chạy xong sẽ phát đi một tín hiệu cập nhật Logical Dataset. Job B khai báo phụ thuộc vào Dataset này sẽ **tự động được kích hoạt** bởi Scheduler. Bỏ qua hoàn toàn chi phí Polling và giải quyết triệt để Sensor Deadlock.
 
 ---
 
 ## Nguồn Tham Khảo
-* [Apache Airflow Concepts - Sensors (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/sensors.html)
-* [Deferrable Operators & Triggers (Airflow Docs)](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html)
-* [Astronomer: Sensor Best Practices và Ngăn chặn Worker Starvation](https://docs.astronomer.io/learn/what-is-a-sensor)
-* [Data-aware Scheduling - Airflow Datasets (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html)
+* [Apache Airflow Concepts - Sensors [Official Docs]][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/sensors.html]
+* [Deferrable Operators & Triggers (Airflow Docs]][https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html]
+* [Astronomer: Event-Driven Architecture with Airflow & AWS EventBridge][https://docs.astronomer.io/]
+* [Data-aware Scheduling - Airflow Datasets](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html]

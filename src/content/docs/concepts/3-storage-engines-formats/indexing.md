@@ -1,30 +1,28 @@
 ---
-title: "Database Indexing & Storage Engines"
+title: "Database Indexing & Storage Engines (B-Tree, LSM-Tree, Z-Order)"
 difficulty: "Advanced"
-tags: ["indexing", "b-tree", "lsm-tree", "performance", "data-lake"]
+tags: ["indexing", "b-tree", "lsm-tree", "performance", "data-lake", "z-ordering", "bloom-filter"]
 readingTime: "20 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Database Indexing, B-Tree, LSM-Tree & Data Lake Z-Ordering"
-metaDescription: "Đi sâu vào kiến trúc vật lý của Indexing: B-Tree, LSM-Tree, Bloom Filters, Z-Ordering và cách phân tích Trade-off giữa Read Latency và Write Amplification."
-description: "Phân tích sâu về cơ chế hoạt động vật lý của Database Indexing, từ các cấu trúc lưu trữ truyền thống (B-Tree) đến các kiến trúc Write-Optimized (LSM-Tree) và File-level Indexing trong Modern Data Stack."
+lastUpdated: 2026-06-29
+seoTitle: "Kiến trúc Database Indexing: B-Tree, LSM-Tree, Z-Ordering & Bloom Filters"
+metaDescription: "Đi sâu vào kiến trúc vật lý của Indexing: B-Tree, LSM-Tree, Bloom Filters, Bitmap, Z-Ordering và phân tích Trade-off giữa Read Latency & Write Amplification."
+description: "Phân tích cơ chế vật lý của Indexing, từ các cấu trúc lưu trữ truyền thống (B-Tree) đến kiến trúc Write-Optimized (LSM-Tree) và Data Skipping trong Data Lakehouse."
 ---
 
-Lưu trữ và truy xuất dữ liệu hiệu quả là bài toán cốt lõi của mọi hệ quản trị cơ sở dữ liệu. Indexing (đánh chỉ mục) không chỉ đơn thuần là việc "tạo một mục lục", mà thực chất là việc lựa chọn **cấu trúc dữ liệu vật lý** để tổ chức dữ liệu trên đĩa (Disk) và bộ nhớ (RAM), nhằm tối ưu hóa một dạng tải (workload) cụ thể. 
+Lưu trữ và truy xuất dữ liệu (Storage & Retrieval) là trái tim của mọi hệ quản trị cơ sở dữ liệu. **Indexing (đánh chỉ mục)** không chỉ đơn thuần là việc "tạo một mục lục sách", mà thực chất là việc lựa chọn một **cấu trúc dữ liệu vật lý** để tổ chức dữ liệu trên Ổ cứng (Disk) và Bộ nhớ (RAM), nhằm tối ưu hóa một dạng tải (workload) cụ thể. 
 
-Trong Data Engineering, việc hiểu rõ kiến trúc bên dưới của Index giúp chúng ta đưa ra quyết định thiết kế hệ thống chính xác, tránh các thảm họa về hiệu năng (Performance Bottlenecks) khi dữ liệu phình to lên mức Terabytes hay Petabytes.
+Đối với một Data Engineer, việc hiểu rõ kiến trúc bên dưới của Index giúp đưa ra các quyết định hệ thống chuẩn xác, tránh các thảm họa sụp đổ hiệu năng (Performance Bottlenecks) khi dữ liệu vượt ngưỡng Terabytes.
 
 ---
 
 ## 1. Kiến trúc B-Tree: Chuẩn mực của Hệ thống Giao dịch (OLTP)
 
-B-Tree (Balanced Tree), đặc biệt là biến thể **B+ Tree**, là cấu trúc dữ liệu nền tảng cho hầu hết các RDBMS (PostgreSQL, MySQL, SQL Server). Nó được thiết kế theo triết lý **Read-Optimized** (tối ưu cho việc đọc), đặc biệt ưu việt cho các ổ đĩa cơ học (HDD) truyền thống và SSD hiện đại.
+B-Tree (Balanced Tree), đặc biệt là biến thể **B+ Tree**, là cấu trúc dữ liệu nền tảng cho hầu hết các RDBMS truyền thống (PostgreSQL, MySQL InnoDB, SQL Server). Nó được thiết kế theo triết lý **Read-Optimized** (tối ưu cho đọc), hoạt động hoàn hảo trên các ổ đĩa HDD và SSD.
 
-### 1.1 Cơ chế hoạt động vật lý
-
-B+ Tree tổ chức dữ liệu thành các khối (Blocks/Pages) có kích thước cố định (thường là 4KB, 8KB hoặc 16KB). 
-
-*   **Internal Nodes (Node nội bộ):** Chỉ chứa các khóa (Keys) và con trỏ (Pointers) để định tuyến tìm kiếm. Các node này thường nhỏ gọn và nằm phần lớn trên RAM (Buffer Pool).
-*   **Leaf Nodes (Node lá):** Chứa dữ liệu thực tế (hoặc con trỏ đến vị trí vật lý của dòng dữ liệu - Row ID). Các leaf node được liên kết với nhau bằng danh sách liên kết đôi (Doubly Linked List), giúp tối ưu hóa cực tốt cho các truy vấn quét dải (Range Scans).
+### 1.1. Cơ chế hoạt động vật lý
+B+ Tree tổ chức dữ liệu thành các khối (Blocks/Pages) có kích thước cố định (ví dụ 4KB hoặc 8KB). 
+*   **Internal Nodes (Node nội bộ):** Chỉ chứa các khóa (Keys) và con trỏ (Pointers) để định tuyến hướng tìm kiếm. Các node này cực kỳ nhỏ gọn và thường được nạp sẵn vào RAM (Buffer Pool).
+*   **Leaf Nodes (Node lá):** Chứa dữ liệu thực tế (hoặc con trỏ đến vị trí vật lý của dòng dữ liệu). Các leaf node được liên kết với nhau bằng danh sách liên kết đôi (Doubly Linked List), giúp tối ưu hóa tuyệt đối cho các truy vấn quét dải (Range Scans).
 
 ```mermaid
 graph TD
@@ -43,25 +41,22 @@ graph TD
     class L1,L2,L3 leaf;
 ```
 
-### 1.2 Đánh đổi hệ thống (Trade-offs)
-
-*   **Ưu điểm (Low Read Latency):** Nhờ cấu trúc cân bằng hoàn hảo, mọi truy vấn tìm kiếm (Point Query) luôn có độ phức tạp thời gian cực kỳ ổn định là $O(\log N)$, tương đương với một số lượng disk seeks rất nhỏ và dự đoán được.
-*   **Nhược điểm (Write Amplification):** B-Tree sử dụng cơ chế **In-place Updates** (Cập nhật tại chỗ). Khi một bản ghi được chèn (INSERT) hoặc cập nhật (UPDATE), Database Engine phải nạp toàn bộ Page (ví dụ 16KB) chứa bản ghi đó lên RAM, sửa đổi vài bytes, rồi ghi ngược toàn bộ 16KB đó trở lại đĩa. Hiện tượng này gọi là **Write Amplification** (Khuếch đại Ghi), làm giảm nghiêm trọng băng thông (Throughput) của hệ thống khi tần suất ghi quá lớn.
+### 1.2. Systemic Trade-offs (Sự đánh đổi)
+*   **Ưu điểm (Low Read Latency):** Nhờ cấu trúc cân bằng hoàn hảo, mọi truy vấn tìm kiếm (Point Query) luôn có độ phức tạp thời gian ổn định là $O(\log N)$. Điều này tương đương với số lượng Disk Seeks rất nhỏ và dễ dự đoán.
+*   **Nhược điểm (Write Amplification):** B-Tree sử dụng cơ chế **In-place Updates** (Cập nhật tại chỗ). Khi một bản ghi được `INSERT` hoặc `UPDATE`, Database Engine phải nạp toàn bộ Page (vd: 8KB) chứa bản ghi đó lên RAM, sửa đổi vài bytes, rồi ghi đè ngược toàn bộ 8KB đó trở lại đĩa. Hiện tượng này gọi là **Write Amplification** (Khuếch đại I/O ghi), làm suy giảm nghiêm trọng băng thông (Throughput) khi tần suất ghi quá cao.
 
 ---
 
-## 2. LSM-Tree: Cứu tinh của Tải trọng Ghi (Write-Heavy Workloads)
+## 2. LSM-Tree: Kẻ thống trị Tải trọng Ghi (Write-Heavy Workloads)
 
-Khi đối mặt với các bài toán như Logging, Telemetry, hay Time-series Data, tần suất ghi (Write Throughput) trở thành ưu tiên số một. **Log-Structured Merge-Tree (LSM-Tree)**, được sử dụng trong Cassandra, RocksDB, ScyllaDB và Kafka, ra đời để giải quyết điểm yếu Write Amplification của B-Tree.
+Khi đối mặt với các bài toán như Logging, Telemetry, hay Time-series Data, tần suất ghi (Write Throughput) trở thành ưu tiên số một. **Log-Structured Merge-Tree (LSM-Tree)**, được dùng làm core engine của Cassandra, RocksDB, ScyllaDB và Kafka, ra đời để khắc phục yếu điểm Write Amplification.
 
-### 2.1 Cơ chế Append-Only
-
-LSM-Tree loại bỏ hoàn toàn In-place Updates. Mọi thao tác ghi đều được chuyển thành **Tuần tự (Sequential Writes)**.
-
-1.  **Write-Ahead Log (WAL):** Dữ liệu được ghi nối (append) vào một log file trên đĩa để đảm bảo độ bền (Durability).
-2.  **MemTable:** Đồng thời, dữ liệu được ghi vào một cấu trúc cây in-memory (như Red-Black Tree hoặc SkipList) gọi là MemTable. Thao tác này diễn ra trên RAM nên cực kỳ nhanh.
+### 2.1. Cơ chế Append-Only
+LSM-Tree từ bỏ hoàn toàn việc In-place Updates. Mọi thao tác ghi đều được chuyển thành **Ghi tuần tự (Sequential Writes)**.
+1.  **Write-Ahead Log (WAL):** Dữ liệu được ghi nối (append) vào log file trên đĩa để đảm bảo độ bền (Durability) chống mất dữ liệu khi cúp điện.
+2.  **MemTable:** Cùng lúc, dữ liệu được ghi vào một cấu trúc cây in-memory (như SkipList) gọi là MemTable. Thao tác này diễn ra trên RAM nên tốc độ là tính bằng micro-giây.
 3.  **SSTable (Sorted String Table):** Khi MemTable đầy, nó được flush (đẩy) xuống đĩa thành một file SSTable **bất biến (Immutable)**.
-4.  **Compaction (Gộp file):** Theo thời gian, một background process sẽ đọc các SSTable ở các tầng (levels) khác nhau, gộp chúng lại, loại bỏ các bản ghi cũ/bị xóa (Tombstones), và tạo ra SSTable mới.
+4.  **Compaction (Gộp file):** Một background process sẽ đọc các SSTable ở các tầng (levels) khác nhau, gộp chúng lại, loại bỏ các bản ghi cũ/bị xóa (Tombstones), và tạo ra SSTable mới lớn hơn.
 
 ```mermaid
 sequenceDiagram
@@ -70,101 +65,87 @@ sequenceDiagram
     participant WAL (Disk)
     participant SSTables (Disk)
     
-    Client->>WAL: 1. Append("Sequential Write")
-    Client->>MemTable: 2. Insert/Update("In-memory")
-    Note over MemTable: Khi MemTable đầy...
-    MemTable->>SSTables: 3. Flush to Disk("Immutable File")
+    Client->>WAL: 1. Append (Sequential Write)
+    Client->>MemTable: 2. Insert/Update (In-memory)
+    Note over MemTable: Khi MemTable đầy (ví dụ 64MB)
+    MemTable->>SSTables: 3. Flush to Disk (Immutable File)
     Note over SSTables: Background Task: Compaction
     SSTables->>SSTables: 4. Merge & Purge Tombstones
 ```
 
-### 2.2 Đánh đổi hệ thống (Trade-offs)
-
-*   **Ưu điểm (High Write Throughput):** Ghi dữ liệu tuần tự giúp tối đa hóa tốc độ I/O của ổ đĩa. Không có In-place Updates, không có Page Splits.
-*   **Nhược điểm (Read Penalty & Compaction Overhead):** Để đọc một bản ghi, hệ thống có thể phải tìm trong MemTable, sau đó quét qua nhiều tầng SSTable trên đĩa (Read Amplification). Ngoài ra, tiến trình Compaction tranh giành tài nguyên I/O và CPU với các luồng đọc/ghi chính.
+### 2.2. Đánh đổi hệ thống
+*   **Ưu điểm (High Write Throughput):** Ghi tuần tự giúp tối đa hóa tốc độ IOPS của ổ cứng. Không có Random IO, không có Page Splits.
+*   **Nhược điểm (Read Penalty & Compaction Overhead):** Để đọc một bản ghi, hệ thống phải tìm trong MemTable, sau đó có thể phải rà quét qua nhiều tầng SSTable trên đĩa (**Read Amplification**). Tiến trình Compaction cũng tranh giành tài nguyên I/O & CPU với luồng đọc/ghi chính.
 
 ---
 
-## 3. Indexing trong Modern Data Stack (Data Lakehouse/OLAP)
+## 3. Indexing trong Modern Data Stack (Data Lakehouse)
 
-Trong môi trường OLAP (như Snowflake, BigQuery) hoặc Data Lakehouse (Delta Lake, Apache Iceberg) với dung lượng hàng Petabytes, việc duyệt một cây B-Tree là bất khả thi vì dung lượng Index có thể còn lớn hơn cả dữ liệu gốc. Thay vào đó, kiến trúc chuyển sang **File-level Indexing (Chỉ mục cấp độ tệp)** và **Metadata-driven Data Skipping**.
+Trong môi trường Big Data OLAP (như BigQuery, Databricks Delta Lake, Apache Iceberg) với dung lượng hàng Petabytes, duyệt một cây B-Tree truyền thống là bất khả thi (kích thước Index có thể lớn hơn dữ liệu gốc). Kiến trúc chuyển sang **File-level Indexing** (Chỉ mục cấp độ tệp) và các kỹ thuật **Metadata-driven Data Skipping**.
 
-### 3.1 Min/Max Statistics (Zone Maps)
-
-Dữ liệu (định dạng Parquet, ORC) được lưu thành từng file/block. Tại tầng Metadata, hệ thống lưu trữ các chỉ số thống kê cơ bản cho từng cột trong mỗi file: `min_value`, `max_value`, và `null_count`.
+### 3.1. Min/Max Statistics (Zone Maps)
+Dữ liệu Columnar (Parquet, ORC) lưu thành từng file/block lớn. Tại tầng Metadata, hệ thống lưu các thống kê cơ bản cho mỗi cột trong mỗi file: `min_value`, `max_value`, `null_count`.
 
 ```json
-// Ví dụ Metadata của một file Parquet trong Iceberg
 {
   "file_path": "s3://lake/data/part-0001.parquet",
   "record_count": 10000,
   "column_stats": {
-    "timestamp": {
-      "min": "2023-10-01T00:00:00Z",
-      "max": "2023-10-01T23:59:59Z"
-    },
-    "user_id": {
-      "min": 100,
-      "max": 50000
-    }
+    "timestamp": { "min": "2023-10-01T00:00:00Z", "max": "2023-10-01T23:59:59Z" },
+    "user_id": { "min": 100, "max": 50000 }
   }
 }
 ```
+*Sức mạnh:* Nếu truy vấn `WHERE timestamp >= '2023-10-02'`, Query Engine chỉ đọc file JSON metadata này và kết luận ngay `part-0001.parquet` không thỏa mãn. Toàn bộ file bị bỏ qua mà không cần I/O mạng.
 
-**Thực thi Query:** Nếu truy vấn là `WHERE timestamp >= '2023-10-02'`, Query Engine chỉ cần đọc file JSON metadata này và kết luận ngay file `part-0001.parquet` không chứa dữ liệu cần thiết. Toàn bộ file bị bỏ qua mà không cần tải lên RAM (**Data Skipping**). Khối lượng I/O giảm theo cấp số nhân.
+### 3.2. Bloom Filters
+Một cấu trúc dữ liệu xác suất (Probabilistic Data Structure) sử dụng mảng bit và các hàm băm. Nó giải quyết bài toán Point Lookup (`WHERE user_id = 'ABC'`) trong môi trường Data Lake:
+*   Hỏi Bloom Filter: "user_id 'ABC' có mặt không?"
+*   Trả lời: **"Chắc chắn KHÔNG"** (Bỏ qua file).
+*   Trả lời: **"CÓ THỂ có"** (Tiến hành mở file để quét).
+*(Bloom Filter không bao giờ có false negatives, chỉ có false positives).*
 
-### 3.2 Bloom Filters
+### 3.3. Bitmap Indexes
+Tối ưu hóa cực độ cho các **cột có Low Cardinality** (số lượng giá trị duy nhất thấp, vd: `Gender`, `Status`). Thay vì lưu trữ cồng kềnh, hệ thống biểu diễn sự xuất hiện của giá trị bằng một mảng Bit. Khi có các truy vấn phức tạp kết hợp nhiều cột (`WHERE status = 'ACTIVE' AND gender = 'M'`), CPU chỉ cần thực hiện phép toán `Bitwise AND` siêu tốc trực tiếp trên thanh ghi (Registers) mà không cần quét dữ liệu.
 
-Bloom Filter là một cấu trúc dữ liệu xác suất (Probabilistic Data Structure). Nó giải quyết bài toán Point Lookup (`WHERE user_id = 'ABC'`) trong môi trường OLAP cực kỳ hiệu quả về mặt bộ nhớ.
+### 3.4. Z-Ordering & Liquid Clustering
+Sắp xếp tuyến tính (Linear Sorting) thường chỉ hiệu quả cho 1-2 cột đầu tiên. Nếu bạn sort theo `(Country, Date, UserID)`, việc Data Skipping cực tốt cho `Country`, nhưng vô dụng nếu query lọc theo `UserID`.
 
-*   Hỏi Bloom Filter: "user_id 'ABC' có trong file này không?"
-*   Trả lời: **"Chắc chắn không"** (Bỏ qua file).
-*   Trả lời: **"Có thể có"** (Tiến hành mở file ra đọc).
-
-Trong Apache Parquet, Bloom Filter có thể được cấu hình ở mức Column/Row Group, giúp giảm tải disk reads (đặc biệt khi lưu trữ trên Cloud Object Storage như S3 có độ trễ lớn).
-
-### 3.3 Z-Ordering & Liquid Clustering (Multi-dimensional Data Skipping)
-
-Sắp xếp tuyến tính (Linear Sorting) thường chỉ hiệu quả cho 1-2 cột đầu tiên. Nếu bạn sort theo `(Country, Date, UserID)`, Data Skipping sẽ rất tốt cho `Country`, nhưng vô dụng nếu chỉ query theo `UserID`.
-
-**Z-Ordering** ánh xạ dữ liệu nhiều chiều vào không gian một chiều trong khi vẫn bảo toàn tính gần gũi về mặt địa lý (Locality). Điều này giúp dữ liệu liên quan ở nhiều cột được nhóm vật lý gần nhau, tối ưu hóa Data Skipping cho **tất cả** các cột tham gia Z-Order.
+**Z-Ordering (Space-filling curves)** ánh xạ dữ liệu nhiều chiều vào không gian một chiều trong khi bảo toàn tính địa lý (Locality). Dữ liệu có chung cụm giá trị ở nhiều cột sẽ được xếp nằm cạnh nhau về mặt vật lý (trên cùng file Parquet).
 
 ```sql
--- Databricks Delta Lake Z-Ordering Example
+-- Delta Lake Z-Ordering Example
 OPTIMIZE events_table 
 ZORDER BY (country, event_type, user_tier);
 ```
-*(Lưu ý: Databricks gần đây đã giới thiệu **Liquid Clustering** để tự động hóa quá trình này thay vì phải manual run `OPTIMIZE`)*.
+*(Hiện nay Databricks đã nâng cấp kỹ thuật này thành **Liquid Clustering**, tự động hóa quá trình tối ưu đa chiều mà không cần chạy `OPTIMIZE` thủ công theo mẻ).*
 
 ---
 
-## 4. Các Rủi ro Vận hành (Operational Risks & Troubleshooting)
+## 4. Các Rủi ro Vận hành (Troubleshooting)
 
-Lựa chọn sai Indexing Strategy có thể dẫn đến hệ thống bị treo hoặc chi phí Cloud tăng vọt. Dưới đây là các sự cố phổ biến:
-
-### 4.1 Index Fragmentation (Phân mảnh B-Tree)
-Khi thực hiện UPDATE/DELETE liên tục trên các cột được index, B-Tree sẽ sinh ra các "lỗ hổng" (Dead space) trong các Page, hoặc Page bị chia cắt (Page Split) làm mất đi tính liên tục vật lý.
-*   **Triệu chứng:** Câu lệnh `SELECT` ngày càng chậm dù bảng không lớn thêm nhiều. Dung lượng đĩa tăng bất thường.
-*   **Khắc phục:** Thực hiện Rebuild/Reorganize Index theo chu kỳ.
+### 4.1. Index Fragmentation (Phân mảnh B-Tree)
+Khi thực hiện `UPDATE`/`DELETE` liên tục, B-Tree sẽ sinh ra các "Dead space" trong Page, hoặc bị chia cắt (Page Split).
+*   **Triệu chứng:** Câu `SELECT` ngày càng chậm, dung lượng đĩa ảo (bloat) tăng cao.
+*   **Khắc phục:** Thực thi `REBUILD` hoặc `REORGANIZE` theo chu kỳ bảo trì.
 ```sql
--- SQL Server Rebuild Index
 ALTER INDEX idx_user_id ON users REBUILD;
 ```
 
-### 4.2 OOM (Out Of Memory) với Hash Index trên bảng khổng lồ
-Hash Index có độ phức tạp $O(1)$ tuyệt vời cho truy vấn chính xác, nhưng nó yêu cầu nạp bảng băm (Hash Table) vào RAM.
-*   **Sự cố:** Nếu một bảng có hàng tỷ bản ghi và bạn tạo Hash Index trên một cột có High Cardinality (như UUID), Hash Table có thể phình to đến hàng trăm GB, dẫn đến tiến trình database bị hệ điều hành "bắn bỏ" (`OOMKilled`).
-*   **Khắc phục:** Chuyển về B-Tree nếu RAM là nút thắt, hoặc sử dụng cơ chế Phân vùng (Partitioning) kết hợp với các bộ lọc xác suất (Bloom Filters).
+### 4.2. OOMKilled với Hash Index trên bảng khổng lồ
+Hash Index có $O(1)$ tuyệt vời nhưng nạp toàn bộ Hash Table vào RAM.
+*   **Triệu chứng:** Tạo Hash Index trên cột High Cardinality (như UUID) của bảng 1 tỷ dòng khiến Memory phình to hàng chục GB. Kernel bắn `SIGKILL` (`OOMKilled`) tắt luôn DB.
+*   **Khắc phục:** Chuyển về B-Tree, hoặc dùng Partitioning kết hợp Bloom Filters.
 
-### 4.3 Over-indexing giết chết Throughput
-Trong nỗ lực "tune" các câu SELECT chậm, Data Analyst thường tạo index trên mọi cột xuất hiện trong mệnh đề `WHERE`.
-*   **Sự cố:** Ghi một bản ghi vào bảng mất 1ms, nhưng phải mất thêm 50ms để cập nhật 10 cái B-Tree khác nhau. Hệ thống bị dội ngược (Backpressure), dẫn đến Retry Storms từ phía ứng dụng (VD: Kafka Producer không nhận được ACKs kịp).
-*   **Khắc phục:** Theo dõi chỉ số `Index Usage Stats`. Xóa bỏ các Index hiếm khi được sử dụng cho việc đọc (Read) nhưng lại phải liên tục chịu tải ghi (Write).
+### 4.3. Over-indexing gây Backpressure
+Data Analyst thường tạo Index bừa bãi cho mọi cột có trong `WHERE` nhằm query nhanh.
+*   **Hậu quả:** Ghi 1 row mất 1ms, nhưng phải cập nhật 15 cái B-Tree khác nhau tốn thêm 50ms (Write Penalty). Ứng dụng dội ngược (Backpressure) làm sập hệ thống Upstream (như Kafka).
+*   **Khắc phục:** Theo dõi `Index Usage Stats`. Xóa bỏ các Index "đói" [Read cực ít nhưng luôn phải chịu tải Write].
 
-## 5. Nguồn Tham Khảo
+---
 
-1.  Kleppmann, M. (2017). *Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems*. O'Reilly Media. (Chapter 3: Storage and Retrieval)
-2.  [Databricks Blog - Processing Petabytes of Data in Seconds with Databricks Delta](https://databricks.com/blog/2018/07/31/processing-petabytes-of-data-in-seconds-with-databricks-delta.html)
-3.  [Apache Parquet Format - Bloom Filter Specifications](https://github.com/apache/parquet-format/blob/master/BloomFilter.md)
-4.  [Uber Engineering - How Uber Uses RocksDB](https://eng.uber.com/)
-5.  [MySQL 8.0 Reference Manual - The InnoDB Storage Engine (B+Tree Indexes)](https://dev.mysql.com/doc/refman/8.0/en/innodb-indexes.html)
+## Nguồn Tham Khảo (References)
+*   **Designing Data-Intensive Applications** - *Martin Kleppmann* (Chapter 3: Storage and Retrieval).
+*   [Databricks: Processing Petabytes of Data with Delta Lake (Z-Ordering]][https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-in-seconds-with-databricks-delta.html]
+*   [Apache Parquet Format - Bloom Filter Specifications][https://github.com/apache/parquet-format/blob/master/BloomFilter.md]
+*   [Uber Engineering - How Uber Uses RocksDB (LSM-Tree in production]](https://eng.uber.com/rocksdb/)

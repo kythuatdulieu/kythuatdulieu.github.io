@@ -1,47 +1,43 @@
 ---
-title: "Vòng đời Dữ liệu - Data Lifecycle: A Staff Engineer's Deep Dive"
+title: "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
 difficulty: "Advanced"
-tags: ["data-lifecycle", "data-management", "distributed-systems", "data-engineering", "architecture"]
-readingTime: "25 mins"
-lastUpdated: 2026-06-26
+tags: ["data-lifecycle", "data-management", "distributed-systems", "data-engineering", "architecture", "finops", "gdpr"]
+readingTime: "30 mins"
+lastUpdated: 2026-06-29
 seoTitle: "Vòng đời Dữ liệu (Data Lifecycle) - Staff Engineer Deep Dive"
-metaDescription: "Tìm hiểu chuyên sâu về Vòng đời Dữ liệu (Data Lifecycle) dưới góc nhìn Staff Engineer. Phân tích systemic trade-offs, architecture, CDC, FinOps, và xử lý sự cố ở scale lớn."
-description: "Vòng đời dữ liệu không chỉ là quá trình CRUD đơn giản. Ở scale của hàng PetaByte, đây là bài toán về trade-offs giữa Latency vs Throughput, Consistency vs Availability, và Cost vs Performance. Bài viết đi sâu vào kiến trúc thực tế, cấu hình hạ tầng và cách các Big Tech giải quyết sự cố."
+metaDescription: "Tìm hiểu chuyên sâu về Data Lifecycle Management (DLM). Phân tích systemic trade-offs, kiến trúc Ingestion, CDC, FinOps, Tiered Storage và tuân thủ GDPR."
+description: "Vòng đời dữ liệu không chỉ là ETL. Ở scale hàng Petabytes, Data Lifecycle Management (DLM) là bài toán về trade-offs: Latency vs Throughput, Cost vs Performance, và GDPR Compliance."
 ---
 
-Data Lifecycle (Vòng đời dữ liệu) thường được mô tả qua lăng kính khá "hồng hào": Dữ liệu sinh ra -> Thu thập -> Lưu trữ -> Xử lý -> Sử dụng. Tuy nhiên, ở scale của các hệ thống phân tán (Distributed Systems) xử lý hàng triệu events/sec (như Uber, Netflix, LinkedIn), bức tranh này trở nên cực kỳ phức tạp.
+Data Lifecycle (Vòng đời dữ liệu) thường được mô tả qua lăng kính khá đơn giản: Dữ liệu sinh ra $\rightarrow$ Thu thập $\rightarrow$ Lưu trữ $\rightarrow$ Xử lý $\rightarrow$ Phục vụ. Tuy nhiên, ở scale của các hệ thống phân tán (Distributed Systems) xử lý hàng triệu events/giây, bức tranh này đòi hỏi một khung quản trị khắt khe gọi là **Data Lifecycle Management (DLM)**.
 
-Dưới góc nhìn của một Staff Engineer, quản lý vòng đời dữ liệu là quản lý các **Systemic Trade-offs**:
+Dưới góc nhìn của một Kỹ sư Hệ thống (Staff Engineer), DLM là việc quản lý các **Systemic Trade-offs** xuyên suốt vòng đời:
 - **Latency vs. Throughput**: Làm sao đẩy hàng tỷ bản ghi mỗi ngày mà không làm sập Database nguồn?
-- **Cost vs. Performance (FinOps)**: Lưu trữ Petabytes dữ liệu thế nào để truy vấn nhanh mà không đốt cháy ngân sách?
-- **Consistency vs. Availability**: Làm sao đảm bảo Data Quality khi network partitions xảy ra?
-- **Compliance vs. Utility**: Xóa dữ liệu thế nào cho đúng luật (GDPR) mà không làm vỡ các model Machine Learning?
-
-Dưới đây là sơ đồ kiến trúc tổng thể của Vòng đời Dữ liệu hiện đại (dựa trên mô hình Kappa/Lambda Architecture):
+- **Cost vs. Performance (FinOps)**: Lưu trữ Petabytes dữ liệu thế nào để truy vấn nhanh mà không đốt cháy ngân sách đám mây?
+- **Consistency vs. Availability**: Làm sao đảm bảo Data Quality khi hệ thống mạng gặp sự cố?
+- **Compliance vs. Utility**: Xóa dữ liệu thế nào cho đúng luật (GDPR) mà không làm vỡ các mô hình Machine Learning?
 
 ```mermaid
 architecture-beta
-    group source("Nguồn Dữ Liệu")
+    group source("1. Sinh ra & Ingestion")
     service web("Web/App") in source
     service db("OLTP DB") in source
+    service kafka("Kafka/Pulsar") in source
+    service cdc("Debezium CDC") in source
     
-    group ingestion("Thu Thập - Ingestion")
-    service kafka("Kafka/Pulsar") in ingestion
-    service cdc("Debezium CDC") in ingestion
-    
-    group storage("Lưu Trữ - Lakehouse")
+    group storage("2. Storage (Lakehouse)")
     service s3("S3 / GCS") in storage
     service iceberg("Iceberg/Hudi") in storage
     
-    group processing("Xử Lý - Compute")
+    group processing("3. Processing (Compute)")
     service spark("Apache Spark") in processing
     service flink("Apache Flink") in processing
     
-    group serving("Phục Vụ - Serving")
+    group serving("4. Phục Vụ (Serving)")
     service pinot("Apache Pinot") in serving
     service trino("Trino/Presto") in serving
     
-    group archiving("FinOps & Archiving")
+    group archiving("5. Archiving & Compliance")
     service glacier("S3 Glacier") in archiving
     
     db --> cdc
@@ -59,15 +55,14 @@ architecture-beta
 
 ---
 
-## 1. Sinh ra (Generation): Nút thắt của Data Quality
+## 1. Sinh ra và Thu thập (Generation & Ingestion)
 
-Dữ liệu nguyên thủy (Raw Data) thường mang theo rất nhiều nợ kỹ thuật (Technical Debt). Theo nguyên lý GIGO (Garbage In, Garbage Out), sự lỏng lẻo ở đầu nguồn sẽ gây ra "hiệu ứng cánh bướm" làm sụp đổ toàn bộ downstream pipelines.
+Sự lỏng lẻo ở đầu nguồn sẽ gây ra "hiệu ứng cánh bướm" làm sụp đổ toàn bộ downstream pipelines (Nguyên lý Garbage In, Garbage Out).
 
-### Data Contracts: Xóa bỏ ranh giới Silo
-Ở quy mô lớn, Backend Teams thường xuyên thay đổi Schema của DB mà không báo cho Data Teams. Hậu quả là Pipeline bị gãy (Schema Drift).
-Giải pháp là **Data Contracts** - Hợp đồng dữ liệu. Dữ liệu sinh ra phải tuân thủ một IDL (Interface Definition Language) như Protobuf hoặc Apache Avro, được lưu trữ trên Schema Registry.
+### 1.1. Data Contracts: Xóa bỏ ranh giới Silo
+Ở quy mô lớn, Backend Teams thường xuyên thay đổi Schema của Database (OLTP) mà không báo cho Data Teams. Hậu quả là Pipeline bị gãy (Schema Drift).
+Giải pháp là **Data Contracts** - Hợp đồng dữ liệu. Dữ liệu sinh ra phải tuân thủ một Interface Definition Language (IDL) như Protobuf hoặc Apache Avro.
 
-Ví dụ về một Data Contract bằng Protobuf:
 ```protobuf
 syntax = "proto3";
 package events;
@@ -84,94 +79,52 @@ message UserCheckout {
 }
 ```
 
-### Phân phối ID & Time Semantics
-Trong hệ thống phân tán, việc tạo ID và ghi nhận Timestamp cực kỳ quan trọng:
-- **ID Generation**: Không dùng Auto-increment (choke point ở DB). Sử dụng **Snowflake ID** (Twitter) hoặc **UUIDv7**. Chúng đảm bảo tính k-sorted (sắp xếp theo thời gian), giúp tối ưu hóa việc ghi (write-amplification) trên các engine LSM-Tree.
-- **Time Semantics**: Phải phân biệt rõ **Event Time** (lúc user bấm nút) và **Processing Time** (lúc hệ thống nhận được). Xử lý trễ (Late data) do network lag đòi hỏi phải cấu hình Watermarks chuẩn xác trong các streaming engines.
-
----
-
-## 2. Thu thập (Ingestion): Cơn ác mộng Backpressure
-
-Ingestion là cuộc chiến bảo vệ hệ thống nguồn (Source) không bị quá tải bởi các tác vụ phân tích, đồng thời đảm bảo không mất mát dữ liệu (At-least-once hoặc Exactly-once delivery).
-
-### Change Data Capture (CDC) với Debezium
-Chạy `SELECT * FROM table` định kỳ (Batch) sẽ tạo ra các table locks và I/O spikes, giết chết OLTP DB. CDC đọc trực tiếp từ Write-Ahead Log (WAL ở Postgres, Binlog ở MySQL).
+### 1.2. Change Data Capture (CDC) & Backpressure
+Chạy `SELECT * FROM table` định kỳ (Batch) sẽ tạo ra các table locks và I/O spikes, giết chết OLTP DB. CDC đọc trực tiếp từ Write-Ahead Log (WAL ở Postgres, Binlog ở MySQL) để thu thập dữ liệu với độ trễ thấp và an toàn.
 
 ```yaml
 # Cấu hình Debezium Connector cho Postgres
 name: inventory-connector
 config:
   connector.class: io.debezium.connector.postgresql.PostgresConnector
-  database.hostname: 192.168.99.100
-  database.port: 5432
-  database.user: postgres
-  database.password: postgres
+  database.hostname: db.production.internal
+  database.user: cdc_user
   database.dbname: inventory
-  database.server.name: dbserver1
   plugin.name: pgoutput
-  # Snapshot mode: initial (chỉ lấy snapshot 1 lần rồi stream)
   snapshot.mode: initial
 ```
 
-### Thiết kế Kafka Partitioning & Head-of-Line Blocking
-Dữ liệu từ CDC thường được đẩy vào Kafka. Trade-off lớn nhất ở đây là chọn Partition Key:
-- Nếu dùng `user_id` làm key: Đảm bảo thứ tự (Ordering) cho các event của cùng một user. Nhưng rất dễ gặp **Data Skew** (ví dụ: một user VIP có số lượng transaction gấp 100 lần user bình thường, làm nghẽn một partition).
-- Giải pháp: Sử dụng Salting hoặc Composite Key.
-- **Sự cố thực tế**: Khi một Consumer bị kẹt do xử lý một message lỗi (Poison Pill), nó sẽ block toàn bộ partition (Head-of-Line Blocking).
-- **Fix**: Sử dụng Dead Letter Queue (DLQ) để đẩy các bad messages ra ngoài, cho phép consumer đi tiếp.
-
-```mermaid
-sequenceDiagram
-    participant DB as Postgres (WAL)
-    participant DBZ as Debezium
-    participant KAFKA as Kafka Topic
-    participant Flink as Apache Flink
-    participant DLQ as Dead Letter Queue
-    
-    DB->>DBZ: Stream WAL changes
-    DBZ->>KAFKA: Produce Event
-    KAFKA->>Flink: Consume Event
-    alt Parsing Error("Poison Pill")
-        Flink->>DLQ: Route to DLQ
-        Flink->>KAFKA: Commit Offset & Continue
-    else Success
-        Flink->>Flink: State Update
-    end
-```
+**Sự cố thực tế (Head-of-Line Blocking):** Khi đẩy dữ liệu vào Kafka, nếu một Consumer bị kẹt do xử lý một message lỗi (Poison Pill), nó sẽ block toàn bộ Kafka partition. Phải sử dụng **Dead Letter Queue (DLQ)** để đẩy các bad messages ra ngoài, cho phép consumer tiếp tục chạy.
 
 ---
 
-## 3. Lưu trữ (Storage): Physical Execution & Formats
+## 2. Lưu trữ (Storage): Layout & Table Formats
 
-Lưu trữ không chỉ là ném file vào S3. Cách bạn định dạng và tổ chức vật lý dữ liệu (Physical execution layout) quyết định 90% hiệu năng và chi phí của bước Xử lý (Processing).
+Cách bạn định dạng và tổ chức vật lý dữ liệu (Physical execution layout) quyết định 90% hiệu năng và chi phí của hệ thống DLM.
 
-### Row-based vs Column-based
-Data Lakehouse tiêu chuẩn sử dụng **Parquet** hoặc **ORC** (Columnar format).
-- Tại sao? Hệ thống phân tích (OLAP) thường chỉ quét vài cột (ví dụ: tính tổng doanh thu) trên hàng tỷ dòng. Columnar format cho phép **Column Pruning** (chỉ đọc những file segment chứa cột đó) và **Predicate Pushdown** (lọc dữ liệu ở tầng Storage trước khi đưa lên Compute).
+### 2.1. Columnar Storage (Parquet/ORC)
+Hệ thống phân tích (OLAP) thường chỉ quét vài cột (ví dụ: tính tổng doanh thu) trên hàng tỷ dòng. Columnar format (như Parquet) cho phép **Column Pruning** (chỉ đọc những segment chứa cột đó từ đĩa) và **Predicate Pushdown** (lọc dữ liệu ở tầng Storage trước khi đưa lên RAM).
 
-### Open Table Formats: Giải quyết bài toán ACID trên Object Storage
+### 2.2. Open Table Formats: COW vs MOR
 S3/GCS là các hệ thống object storage, mang tính chất *immutable* (không thể update một dòng trong file, phải ghi đè cả file).
-Apache Iceberg, Delta Lake, và Apache Hudi cung cấp lớp metadata ở trên, cho phép ACID transactions (Merge/Update/Delete) bằng kỹ thuật Copy-On-Write (COW) hoặc Merge-On-Read (MOR).
+Apache Iceberg, Delta Lake, và Apache Hudi cung cấp lớp metadata ở trên, cho phép ACID transactions (Merge/Update/Delete).
 
-**Trade-offs: COW vs MOR (Apache Hudi/Iceberg)**
-- **Copy-On-Write (COW)**: Khi update 1 dòng, ghi lại toàn bộ file mới. Phù hợp cho read-heavy workloads (vì file lúc nào cũng sạch). Gây ra Write Amplification lớn.
-- **Merge-On-Read (MOR)**: Update được ghi vào các delta logs nhỏ. Khi đọc, engine sẽ merge base file và log file. Tối ưu cho write-heavy (streaming ingestion), nhưng Read Latency cao hơn. Đòi hỏi chạy quá trình Compaction định kỳ ngầm (background).
+*   **Copy-On-Write (COW)**: Khi update 1 dòng, ghi lại toàn bộ file mới. Phù hợp cho Read-heavy workloads. Gây ra Write Amplification lớn.
+*   **Merge-On-Read (MOR)**: Update được ghi vào các delta logs nhỏ. Khi đọc, engine sẽ merge base file và log file. Tối ưu cho Write-heavy (streaming ingestion), đòi hỏi chạy Compaction định kỳ.
 
 ---
 
-## 4. Xử lý (Processing): Khắc phục OOM và Data Skew
+## 3. Xử lý (Processing): Khắc phục OOM và Data Skew
 
-Ở tầng Compute (Spark/Trino), các kỹ sư thường xuyên phải chiến đấu với Out Of Memory (OOM) và Network Shuffle.
+Ở tầng Compute (Apache Spark, Trino), rủi ro lớn nhất của Data Lifecycle là các job xử lý bị chết do tràn bộ nhớ (Out Of Memory - OOM).
 
-### Nỗi ám ảnh Network Shuffle
-Khi thực hiện `GROUP BY` hoặc `JOIN` trên Spark, dữ liệu có cùng key phải được di chuyển qua network để nằm trên cùng một Executor. Quá trình này gọi là Shuffle. Nó tiêu tốn CPU (để serialize/deserialize), I/O (ghi ra disk) và Network băng thông.
+### Nỗi ám ảnh Network Shuffle & Data Skew
+Khi thực hiện `GROUP BY` hoặc `JOIN`, dữ liệu có cùng key phải được di chuyển qua network để nằm trên cùng một Node/Executor (Shuffle).
+Khi một key (Ví dụ: `country = 'VN'`) chiếm 80% khối lượng dữ liệu, một Node sẽ phải gánh 80% việc, dẫn đến OOM. Hiện tượng này gọi là Data Skew.
 
-**Sự cố Data Skew**: 
-Khi một key (VD: `country = 'VN'`) chiếm 80% khối lượng dữ liệu, một Executor sẽ phải gánh 80% việc, trong khi các Executors khác ngồi chơi. Kết quả là Task chạy rất lâu hoặc chết vì OOM.
-**Cách fix (Staff Engineer level):**
-1. **Salting**: Thêm một số random (0-9) vào key bị skew (`VN_1`, `VN_2`) để phân tán dữ liệu ra nhiều Executors, sau đó aggregate lại ở bước 2 (Two-phase aggregation).
-2. **Broadcast Join**: Nếu bảng một bảng rất to join với một bảng nhỏ (Dim table < 10MB), hãy broadcast bảng nhỏ lên bộ nhớ của tất cả các Executors để loại bỏ hoàn toàn quá trình Shuffle.
+**Cách khắc phục:**
+1. **Salting**: Thêm một số ngẫu nhiên (random từ 0-9) vào key bị skew (thành `VN_1`, `VN_2`) để phân tán dữ liệu ra nhiều Nodes, sau đó Aggregate lại ở bước 2 (Two-phase aggregation).
+2. **Broadcast Join**: Nếu một bảng rất to join với một bảng siêu nhỏ (Dimension table < 10MB), hãy broadcast bảng nhỏ lên bộ nhớ của tất cả các Nodes để loại bỏ hoàn toàn quá trình Shuffle qua mạng.
 
 ```scala
 // Spark Scala: Tối ưu Broadcast Join
@@ -179,40 +132,27 @@ val largeFactDf = spark.read.parquet("s3://data-lake/sales")
 val smallDimDf = spark.read.parquet("s3://data-lake/stores")
 
 import org.apache.spark.sql.functions.broadcast
-// Bỏ qua Shuffle, tăng tốc query lên 10x
+// Bỏ qua Shuffle, tăng tốc độ truy vấn lên hàng chục lần
 val joinedDf = largeFactDf.join(broadcast(smallDimDf), "store_id")
 ```
 
 ---
 
-## 5. Sử dụng (Serving): Low-latency vs High-throughput
+## 4. Lưu trữ Dài hạn & Phá hủy (Archiving & Destruction)
 
-Phục vụ dữ liệu cho ứng dụng (User-facing analytics) đòi hỏi Latency cực thấp (<100ms), điều mà Data Warehouse (BigQuery, Snowflake) không sinh ra để làm.
+Giai đoạn cuối cùng của DLM thường bị bỏ quên cho đến khi hóa đơn Cloud hàng tháng lên tới hàng triệu đô la, hoặc công ty đối mặt với án phạt pháp lý.
 
-- **OLAP Engines (Apache Pinot, Apache Druid)**: Được thiết kế riêng cho User-facing analytics (như Dashboard của LinkedIn hay Uber Eats). Dữ liệu được index mạnh (Inverted Index, Star-Tree Index) và cache trên RAM/SSD của các node phục vụ.
-- **Query Routing**: Kiến trúc hiện đại thường sử dụng một lớp Semantic Layer (như Cube.dev) ở giữa. Nếu query nhẹ/tần suất cao, nó route vào Redis/Pinot. Nếu query cực nặng quét lịch sử 5 năm, nó route về BigQuery/Trino.
-
----
-
-## 6. Tiêu Hủy & FinOps (Archiving & Purging)
-
-Giai đoạn cuối cùng thường bị bỏ quên cho đến khi hóa đơn Cloud hàng tháng lên tới hàng triệu đô la, hoặc công ty đối mặt với án phạt GDPR.
-
-### FinOps: Storage Tiering & S3 Lifecycle
-Việc lưu mọi thứ trên S3 Standard là một thảm họa FinOps. Dữ liệu lạnh phải được chuyển xuống Storage có chi phí thấp.
+### 4.1. FinOps: Tiered Storage (S3 Lifecycle)
+Việc lưu mọi thứ trên S3 Standard vĩnh viễn là một thảm họa FinOps. Dữ liệu lạnh (Cold Data) phải được chuyển xuống Tier có chi phí thấp.
 
 ```terraform
-# Cấu hình AWS S3 Lifecycle bằng Terraform để tối ưu chi phí
+# Cấu hình AWS S3 Lifecycle bằng Terraform
 resource "aws_s3_bucket_lifecycle_configuration" "data_lake_lifecycle" {
   bucket = aws_s3_bucket.data_lake.id
 
   rule {
     id     = "archive_cold_data"
     status = "Enabled"
-
-    filter {
-      prefix = "raw_events/"
-    }
 
     # Chuyển sang S3 Standard-IA sau 90 ngày (truy xuất ít)
     transition {
@@ -226,7 +166,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "data_lake_lifecycle" {
       storage_class = "GLACIER"
     }
 
-    # Xóa hoàn toàn sau 7 năm (Tuân thủ luật lưu trữ kế toán)
+    # Hủy dữ liệu (Destruction) sau 7 năm để tuân thủ Data Minimization
     expiration {
       days = 2555
     }
@@ -234,23 +174,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "data_lake_lifecycle" {
 }
 ```
 
-### Crypto-shredding: Tuân thủ GDPR Right-to-be-Forgotten
-Xóa vật lý một user khỏi Data Lake với định dạng Parquet (immutable) là một cơn ác mộng (vì bạn phải đọc file, lọc bỏ dòng của user đó, và ghi lại file mới). Nếu có hàng ngàn yêu cầu xóa mỗi ngày, cluster Compute của bạn sẽ quá tải.
+### 4.2. Tuân thủ GDPR: Crypto-shredding (Xóa Dữ Liệu An Toàn)
+Đạo luật GDPR yêu cầu "Quyền được lãng quên" [Right to be Forgotten]. Việc tìm và xóa vật lý một User ra khỏi hàng vạn file Parquet (vốn là immutable) trên Data Lake là một cơn ác mộng I/O. Nếu có hàng ngàn yêu cầu xóa mỗi ngày, cụm Compute của bạn sẽ quá tải.
 
-**Giải pháp (Crypto-shredding)**: 
-Khi Ingestion, mọi dữ liệu PII (Personally Identifiable Information) của user được mã hóa bằng một Encryption Key duy nhất của user đó, lưu trong một Key Management Service (KMS). 
-Khi user yêu cầu "Quyền được lãng quên" (Right-to-be-Forgotten), hệ thống KHÔNG cần lục tìm file Parquet để xóa. Hệ thống chỉ cần **Xóa Key của user đó trong KMS**. Dữ liệu nằm lại trên S3 ngay lập tức trở thành một đống rác vô nghĩa mã hóa không thể đảo ngược. 
+**Kỹ thuật Crypto-shredding:**
+Khi Ingestion, mọi dữ liệu nhạy cảm (PII) của user được mã hóa bằng một Encryption Key duy nhất của chính user đó. Các Key này lưu tập trung trong hệ thống Key Management Service (KMS). 
+Khi có yêu cầu xóa, hệ thống **KHÔNG CẦN chạm vào Data Lake**. Bạn chỉ cần **xóa Key của user đó trong KMS**. Dữ liệu PII còn sót lại trên Data Lake vĩnh viễn trở thành một chuỗi mã hóa vô nghĩa không thể giải mã, thỏa mãn hoàn toàn yêu cầu hủy dữ liệu của GDPR.
 
 ---
 
-## Tổng kết
-
-Vòng đời dữ liệu là một hệ sinh thái phức tạp. Một Staff Data Engineer không chỉ chọn công cụ (Kafka, Spark, Iceberg), mà là người hiểu sâu sắc về nội tại vật lý (cách bit ghi xuống ổ đĩa, cách packet đi qua mạng), tối ưu hóa kiến trúc theo Trade-offs (Cost vs Performance, Latency vs Throughput) và xây dựng hệ thống có khả năng tự phục hồi (resilient) trước những Incident ở quy mô lớn.
-
-## Nguồn Tham Khảo (References)
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [Uber Engineering - Data Platform Architecture](https://www.uber.com/en-VN/blog/engineering/)
-* [Netflix Tech Blog - Data Mesh & Lifecycle](https://netflixtechblog.com/)
-* [LinkedIn Engineering Blog - Data Infrastructure](https://engineering.linkedin.com/blog/topic/data)
-* [Apache Iceberg: The Definitive Guide](https://iceberg.apache.org/)
-* [AWS Storage FinOps & Lifecycle Management](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)
+## Nguồn Tham Khảo
+* [Designing Data-Intensive Applications - Martin Kleppmann][https://dataintensive.net/]
+* [Uber Engineering - Data Platform Architecture][https://www.uber.com/en-VN/blog/engineering/]
+* [Netflix Tech Blog - Data Mesh & Lifecycle][https://netflixtechblog.com/]
+* [AWS Storage FinOps & Lifecycle Management](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html]

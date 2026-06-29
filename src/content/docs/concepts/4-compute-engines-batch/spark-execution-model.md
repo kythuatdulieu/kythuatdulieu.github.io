@@ -1,111 +1,133 @@
 ---
 title: "Mô hình thực thi Spark - Spark Execution Model"
+description: "Mổ xẻ kiến trúc phân tán của Apache Spark. Phân tích luồng thực thi vật lý từ Driver đến Worker nodes, các giới hạn hệ thống (OOMKilled, Network Shuffle) và chiến lược tối ưu tài nguyên."
 difficulty: "Intermediate"
 tags: ["spark-execution-model", "apache-spark", "driver", "executor", "dag", "shuffle", "task"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-26
+readingTime: "25 mins"
+lastUpdated: 2026-06-29
 seoTitle: "Spark Execution Model: Kiến trúc Driver, Cluster Manager và Executor"
 metaDescription: "Hiểu sâu về kiến trúc thực thi (Execution Model) trong Apache Spark: Vai trò của Driver, Cluster Manager, Executor, DAG, Stage, và Task."
-description: "Mổ xẻ kiến trúc phân tán của Apache Spark. Phân tích luồng thực thi vật lý từ Driver đến Worker nodes, các giới hạn hệ thống (OOMKilled, Network Shuffle) và chiến lược tối ưu tài nguyên."
 ---
 
-Mô hình thực thi (Execution Model) của Apache Spark là nền tảng cốt lõi quyết định khả năng mở rộng (scalability) và khả năng chịu lỗi (fault-tolerance) của hệ thống xử lý dữ liệu. Để vận hành một hệ thống Big Data ở quy mô Petabyte, kỹ sư dữ liệu không chỉ cần viết code đúng logic mà còn phải thấu hiểu cách code được phân rã, lập lịch và chạy trên hàng ngàn container vật lý.
+Để vận hành một hệ thống Big Data ở quy mô Petabyte, việc chỉ biết viết code PySpark hoặc Spark SQL là hoàn toàn không đủ. Kỹ sư dữ liệu (Data Engineer) cần phải thấu hiểu cách một dòng lệnh được phân rã, lập lịch và chạy song song trên hàng ngàn container vật lý. Mô hình thực thi (Execution Model) của Apache Spark chính là bộ não quyết định khả năng mở rộng (Scalability) và giới hạn chịu đựng (Fault-tolerance) của toàn bộ hệ thống.
 
-Bài viết này sẽ mổ xẻ kiến trúc thực thi của Spark dưới lăng kính System Design, tập trung vào kiến trúc phân tán, rủi ro vận hành (OOMKilled, Spill-to-disk) và các chiến lược cấp phát tài nguyên thực chiến.
+Bài viết này sẽ mổ xẻ kiến trúc thực thi của Spark dưới lăng kính System Design, tập trung vào kiến trúc phân tán, rủi ro vận hành (OOMKilled, Spill-to-disk) và các chiến lược cấp phát tài nguyên thực chiến nhằm tối ưu hóa chi phí (FinOps).
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Execution Architecture)
+## 1. Kiến trúc Vật lý: Master - Worker (Physical Architecture)
 
-Kiến trúc Spark tuân theo mô hình **Master-Worker**, trong đó các tiến trình chạy trên các Java Virtual Machines (JVM) độc lập.
-
-![Spark Cluster Overview](/images/4-compute-engines-batch/spark-cluster-overview.png)
-*Hình 1: Cấu trúc Spark Cluster (Nguồn: Apache Spark Official Documentation)*
-
-### 1.1. Driver Node (The Brain)
-Driver là tiến trình trung tâm (thường là máy chứa hàm `main()`), chịu trách nhiệm vòng đời của Spark Application thông qua đối tượng `SparkSession`.
-- **Catalyst Optimizer & DAG Scheduler**: Chuyển đổi mã nguồn (SQL/DataFrame) thành Kế hoạch thực thi logic (Logical Plan), tối ưu hóa, và biến nó thành Kế hoạch thực thi vật lý (Physical Execution Plan) dưới dạng đồ thị có hướng không tuần hoàn (DAG).
-- **Task Scheduling**: Phân rã DAG thành các Task nhỏ và phân phối xuống các Executor.
-- **State Management**: Giữ metadata về phân vùng dữ liệu (Partitions) và theo dõi trạng thái thành công/thất bại của từng Task.
-
-*Trade-off*: Driver là điểm Single Point of Failure (SPOF) ở cấp độ Application. Mặc dù Cluster Manager có thể tự động khởi động lại Driver nếu bị crash, toàn bộ progress của các job đang chạy trong session đó sẽ bị mất.
-
-### 1.2. Cluster Manager (The Negotiator)
-Spark không trực tiếp quản lý máy chủ vật lý. Nó ủy quyền việc cấp phát tài nguyên cho **Cluster Manager** (YARN, Mesos, hoặc phổ biến nhất hiện nay là Kubernetes).
-Khi Driver yêu cầu tài nguyên, Cluster Manager sẽ đánh giá dung lượng hiện tại (Capacity) của cụm và cấp phát các container để chạy Executor. Việc sử dụng K8s mang lại khả năng *Fine-grained Resource Allocation*, giúp tối ưu chi phí (FinOps) thông qua Autoscaling.
-
-### 1.3. Executor Nodes (The Muscles)
-Executors là các tiến trình Worker hoạt động song song. Chúng có 2 nhiệm vụ chính:
-- **Thực thi Task**: Mỗi Executor sở hữu một Thread Pool. Mỗi Thread (được ánh xạ từ thông số `spark.executor.cores`) có thể xử lý một Task tại một thời điểm trên một vùng nhớ dữ liệu (Partition).
-- **Lưu trữ In-Memory (Block Manager)**: Chịu trách nhiệm cache dữ liệu (RAM/Disk) phục vụ các tác vụ lặp (Iterative algorithms) hoặc broadcast variables.
-
-## 2. Vòng đời Xử lý Dữ liệu (Data Processing Lifecycle)
-
-Spark tuân thủ nguyên tắc **Lazy Evaluation** (Thực thi trễ). Khi gọi các Transformation (`map`, `filter`, `join`), Spark không thực thi ngay mà chỉ nối thêm vào Logical Plan. Chỉ khi một Action (`collect`, `write`, `count`) được gọi, luồng thực thi vật lý mới được kích hoạt.
+Kiến trúc cốt lõi của Spark tuân theo mô hình **Master-Worker**, trong đó các tiến trình chạy trên các Java Virtual Machine (JVM) hoàn toàn độc lập.
 
 ```mermaid
 graph TD
-    A["Code: PySpark/SQL"] -->|Lazy Evaluation| B("Unresolved Logical Plan")
-    B -->|Analyzer + Catalog| C("Resolved Logical Plan")
-    C -->|Catalyst Optimizer| D("Optimized Logical Plan")
-    D -->|Physical Planning| E("Physical Plans")
-    E -->|Cost Model| F{"Selected Physical Plan"}
-    F -->|DAG Scheduler| G["Stages"]
-    G -->|Task Scheduler| H["Tasks on Executors"]
+    subgraph Control_Plane
+        Driver["Driver Program (SparkContext / SparkSession)"]
+        CM["Cluster Manager (YARN / K8s / Standalone)"]
+    end
+    
+    subgraph Data_Plane
+        Worker1["Worker Node 1"]
+        Worker2["Worker Node 2"]
+        Exec1["Executor (JVM)"]
+        Exec2["Executor (JVM)"]
+        Worker1 --> Exec1
+        Worker2 --> Exec2
+        
+        Exec1 -.-> Task1["Task 1"]
+        Exec1 -.-> Task2["Task 2"]
+        Exec2 -.-> Task3["Task 3"]
+        Exec2 -.-> Task4["Task 4"]
+    end
+    
+    Driver <-->|Yêu cầu tài nguyên| CM
+    CM -->|Khởi tạo| Worker1
+    CM -->|Khởi tạo| Worker2
+    Driver <-->|Giao Task & Nhận Metadata| Exec1
+    Driver <-->|Giao Task & Nhận Metadata| Exec2
 ```
 
-Cơ chế này cho phép Catalyst Optimizer thực hiện các phép tối ưu hóa toàn cục cực kỳ mạnh mẽ như **Predicate Pushdown** (đẩy điều kiện `WHERE` xuống tận Storage layer như Parquet/Iceberg để giảm I/O) hoặc **Column Pruning** (chỉ đọc các cột cần thiết).
+### 1.1. Driver Node (The Brain)
+Driver là tiến trình trung tâm (thường là máy chủ chạy hàm `main()`), nơi chứa đối tượng `SparkSession`.
+- **Nhiệm vụ:** Duy trì thông tin vòng đời của toàn bộ Application. Chuyển đổi mã nguồn thành Kế hoạch thực thi vật lý (Physical Execution Plan) thông qua *Catalyst Optimizer* và *DAG Scheduler*.
+- **Systemic Trade-off:** Driver là điểm Single Point of Failure (SPOF). Nếu JVM của Driver bị tràn bộ nhớ (OOM) hoặc sập, toàn bộ các Executor đang chạy phân tán cũng sẽ bị mồ côi và bị hủy bỏ (Killed). 
 
-## 3. Rủi ro Vận hành (Operational Risks)
+### 1.2. Cluster Manager (The Negotiator)
+Spark không trực tiếp quản lý máy chủ vật lý. Nó ủy quyền việc cấp phát CPU và RAM cho **Cluster Manager** (như YARN, Apache Mesos, hoặc phổ biến nhất hiện nay là Kubernetes).
+Sử dụng K8s mang lại khả năng *Fine-grained Resource Allocation*, cho phép cấp phát Pod theo đúng nhu cầu tính toán, giúp tối ưu chi phí hạ tầng cực kỳ hiệu quả.
 
-Thiết kế hệ thống phân tán của Spark đi kèm với những rủi ro chết người nếu không nắm vững bản chất vật lý.
+### 1.3. Executor Nodes (The Muscles)
+Executors là các tiến trình Worker hoạt động song song. Chúng có 2 nhiệm vụ chính:
+- **Thực thi Task:** Mỗi Executor duy trì một Thread Pool. Mỗi Thread (được cấu hình bằng `spark.executor.cores`) có thể xử lý một Task tại một thời điểm trên một phân vùng dữ liệu (Partition).
+- **Lưu trữ (Block Manager):** Cache dữ liệu trên RAM hoặc Disk để phục vụ các thuật toán lặp (Iterative algorithms) hoặc phát sóng (Broadcast variables).
 
-### 3.1. Hệ lụy từ việc thu thập dữ liệu (Driver OOM)
-Lỗi kinh điển nhất là chạy lệnh `df.collect()` hoặc `df.toPandas()` trên một Dataset hàng chục GB.
-- **Sự cố**: Lệnh `collect()` buộc toàn bộ Executor gửi dữ liệu cục bộ của chúng qua mạng (Network I/O) về dồn tại JVM Heap của Driver.
-- **Hậu quả**: Tràn bộ nhớ (`java.lang.OutOfMemoryError: Java heap space`), tiến trình Driver bị hệ điều hành (OOM Killer) kết liễu, làm sập toàn bộ Spark Application.
-- **Khắc phục**: Tuyệt đối không dùng `collect()` trên production với dữ liệu lớn. Hãy dùng `df.write` để ghi thẳng dữ liệu từ Executor xuống Distributed Storage (S3/HDFS).
+## 2. Giải phẫu Vòng đời Xử lý (The Anatomy of Execution Lifecycle)
 
-### 3.2. Network Shuffle & Spill-to-Disk
-Các phép toán mang tính **Wide Dependency** (`join`, `groupBy`, `window`) yêu cầu các bản ghi có cùng khóa (Key) phải nằm trên cùng một Partition. Để làm được điều này, Spark phải kích hoạt quá trình **Shuffle** – quá trình tốn kém nhất mọi thời đại.
+Spark tuân thủ nguyên tắc **Lazy Evaluation** (Thực thi trễ). Khi gọi các Transformation (như `map`, `filter`, `join`), Spark chỉ ghi lại chuỗi thao tác này thành một Đồ thị Hướng Không Tuần hoàn (DAG - Directed Acyclic Graph). Chỉ khi một Action (`collect`, `write.parquet`, `count`) được gọi, luồng thực thi vật lý mới thực sự bùng thực thi.
 
-1. **Shuffle Write**: Các Executor ở Stage trước phải băm (hash) dữ liệu và ghi kết quả tạm xuống đĩa (Local Disk).
-2. **Network Transfer**: Executor ở Stage sau kéo (pull) dữ liệu tương ứng của nó qua mạng.
-3. **Spill-to-Disk**: Nếu RAM của Executor ở Stage sau không đủ để chứa khối lượng dữ liệu Shuffle Read, JVM không báo lỗi OOM ngay lập tức mà cố gắng ghi phần dư tràn xuống đĩa cứng (Spill-to-disk). Quá trình này gây ra I/O Bound khổng lồ, khiến tốc độ xử lý giảm từ hàng chục đến hàng trăm lần.
+Dưới nắp capo (Under the hood), Kế hoạch thực thi được phân rã theo hệ thống phân cấp khắt khe:
+**Application $\rightarrow$ Job $\rightarrow$ Stage $\rightarrow$ Task**
 
-*Real-world Incident: Cartesian Explosion.* Khi `JOIN` hai bảng lớn không có điều kiện (Cross Join) hoặc điều kiện join quá lỏng, số lượng bản ghi bùng nổ theo cấp số nhân (Cartesian product), dẫn đến Shuffle Read phình to, Spill-to-disk liên tục và Disk Full trên Worker Nodes.
+- **Job:** Mỗi khi một Action được gọi, một Job mới được sinh ra.
+- **Stage:** Là tập hợp các Task có thể chạy song song mà không cần trao đổi dữ liệu qua mạng. Một Stage bị ngắt (phải chuyển sang Stage mới) khi gặp một thao tác **Wide Dependency** (yêu cầu xáo trộn dữ liệu qua mạng - Shuffle), ví dụ như `JOIN`, `GROUP BY`, `DISTINCT`.
+- **Task:** Là đơn vị thực thi nhỏ nhất. `1 Task = 1 Partition = 1 Core`. Kích thước và số lượng Task hoàn toàn quyết định bởi cách bạn cấu hình Partitions.
 
-## 4. Tối ưu Hệ thống và Chi phí (System Optimization & FinOps)
+## 3. Rủi ro Vận hành và Đánh đổi (Systemic Trade-offs)
 
-Một hệ thống Data Platform tốt không chỉ xử lý nhanh mà còn phải tiết kiệm. Dưới đây là cấu hình tham khảo (Terraform/Spark-submit) cho việc cấp phát tài nguyên theo nguyên lý **Right-sizing**.
+### 3.1. Fat Executors vs Thin Executors
+Khi cấu hình Cluster, Kỹ sư dữ liệu luôn phải đau đầu chọn kích thước Executor:
+- **Fat Executors (Vd: 32 Cores, 128GB RAM/Executor):**
+  - *Lợi ích:* Broadcast biến lớn hiệu quả vì 32 Tasks có thể chia sẻ chung 1 bản sao In-memory.
+  - *Rủi ro:* Tràn rác (Garbage Collection - GC). Thuật toán GC của Java khi dọn dẹp 128GB RAM có thể mất hàng chục giây (Stop-The-World Pause), khiến Node bị đánh dấu là Dead. Nghẽn cổ chai HDFS I/O do quá nhiều luồng (32 luồng) cùng ghi vào ổ đĩa.
+- **Thin Executors (Vd: 1 Core, 2GB RAM/Executor):**
+  - *Lợi ích:* Gần như không có GC Pause.
+  - *Rủi ro:* Không tận dụng được In-memory Broadcast (phải copy biến ra hàng ngàn bản cho hàng ngàn JVM). Không thể xử lý các Block dữ liệu lớn (dễ OOM).
 
-```bash
-# KHÔNG NÊN: Cấp 1 Executor bự chảng với 32 cores (Fat Executor)
-# Lý do: Gây ra HDFS I/O contention (nghẽn cổ chai mạng) và Garbage Collection (GC) pauses kéo dài.
+### 3.2. Hệ lụy từ `collect()` (Driver OOM)
+Lỗi kinh điển nhất của Junior Engineer là chạy lệnh `df.collect()` hoặc `df.toPandas()` trên một Dataset hàng chục Gigabytes.
+Lệnh này ra lệnh cho toàn bộ Executor gửi luồng dữ liệu cục bộ của chúng qua mạng (Network I/O) dồn về **một JVM Heap duy nhất** của Driver. Nếu Driver chỉ có 4GB RAM, hệ điều hành (OOM Killer) sẽ ngay lập tức "bắn bỏ" tiến trình này.
+*Khắc phục:* Luôn dùng `df.write` để các Executor tự ghi trực tiếp xuống Distributed Storage (S3/GCS) song song.
 
-# KHÔNG NÊN: Cấp 32 Executors, mỗi cái 1 core (Thin Executor)
-# Lý do: Không tận dụng được lợi thế Broadcast Variables trên cùng một JVM (phải copy 32 lần).
+## 4. Mã nguồn Thực chiến: Tối ưu Cấp phát Tài nguyên (Right-sizing)
 
-# CẤU HÌNH STAFF ENGINEER ĐỀ XUẤT (Goldilocks Rule):
-spark-submit \
-  --master yarn \
-  --deploy-mode cluster \
-  --num-executors 10 \
-  --executor-cores 5 \
-  --executor-memory 18G \
-  --conf spark.yarn.executor.memoryOverhead=2G \
-  --conf spark.memory.fraction=0.6 \
-  --conf spark.sql.shuffle.partitions=200 \
-  --class com.company.pipeline.Main \
-  pipeline.jar
+Thực nghiệm từ Databricks và Cloudera chỉ ra một "Con số vàng" (Goldilocks Rule): **5 Cores cho mỗi Executor** là sự cân bằng hoàn hảo giữa Throughput của Thread Pool và HDFS I/O Contention, đồng thời giữ JVM Heap < 64GB để tránh GC Pauses kéo dài.
+
+Dưới đây là một cấu hình Terraform chuẩn Enterprise cho cụm Databricks, áp dụng nguyên tắc tối ưu tài nguyên và quản lý Off-heap Memory (tránh bị Kubernetes OOMKilled):
+
+```hcl
+resource "databricks_cluster" "optimized_batch_cluster" {
+  cluster_name            = "Staff_Engineer_ETL_Engine"
+  spark_version           = "13.3.x-scala2.12"
+  node_type_id            = "r5d.2xlarge" # 8 vCores, 64GB RAM
+  
+  autotuning {
+    min_workers = 2
+    max_workers = 20
+  }
+  
+  spark_conf = {
+    # 1. Cấu hình "Con số vàng" 5 Cores mỗi Executor
+    "spark.executor.cores" = "5",
+    
+    # 2. Cấp phát Memory cho Executor (Tính toán dựa trên Node 64GB)
+    # Giữ lại RAM cho OS, Hadoop Daemons. Cấp 32GB cho Spark Executor Heap
+    "spark.executor.memory" = "32g",
+    
+    # 3. Memory Overhead (Off-heap) cho thư viện C++ (Parquet, NIO, PySpark)
+    # Thường là 10% - 15% của executor_memory
+    "spark.executor.memoryOverhead" = "4g",
+    
+    # 4. Tối ưu Storage / Execution Fraction
+    "spark.memory.fraction" = "0.7",
+    
+    # 5. Bật AQE để xử lý Dynamic Stages
+    "spark.sql.adaptive.enabled" = "true"
+  }
+}
 ```
 
-**Tại sao lại là 5 cores?**
-Thực nghiệm của cộng đồng (Cloudera, Databricks) chỉ ra rằng **5 cores / Executor** là con số tối ưu (Sweet spot) để cân bằng giữa Throughput của Thread Pool và HDFS throughput, đồng thời giữ JVM Heap ở mức vừa phải để thuật toán Garbage Collector hoạt động mượt mà (< 64GB).
+**Memory Overhead là gì?** Khi triển khai trên K8s, Container có thể bị OOMKilled dù JVM Heap vẫn còn trống. Nguyên nhân do Spark sử dụng bộ nhớ ngoài Heap [Off-heap] cho các operations liên quan đến mạng (NIO), giải nén Parquet bằng C++, hoặc chạy tiến trình Python (PySpark). Nếu tổng (JVM Heap + Off-heap) vượt quá Limit của Pod K8s, tiến trình sẽ bị hệ điều hành tiêu diệt.
 
-**Memory Overhead**: 
-Khi triển khai trên Kubernetes (hoặc YARN), Container có thể bị OOMKilled dù JVM Heap chưa đầy. Lý do là Spark dùng một phần RAM ngoài Heap (Off-heap memory) cho các thư viện C++ (ví dụ NIO) và PySpark workers. Cần cấu hình `spark.yarn.executor.memoryOverhead` (hoặc `spark.kubernetes.memoryOverheadFactor`) tối thiểu 10% - 15% tổng bộ nhớ.
-
-## 5. Nguồn Tham Khảo
-- [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
-- [Tuning Spark - Official Documentation](https://spark.apache.org/docs/latest/tuning.html)
-- [How Does Spark Execute A Query? - Databricks Architecture](https://databricks.com/session_na21/how-does-spark-execute-a-query)
-- Thiết kế Hệ thống Dữ liệu Chuyên sâu (Designing Data-Intensive Applications - Martin Kleppmann)
+## 5. Nguồn Tham Khảo (References)
+- [Apache Spark Official Documentation: Tuning Spark][https://spark.apache.org/docs/latest/tuning.html]
+- [Databricks: How Does Spark Execute A Query?][https://databricks.com/session_na21/how-does-spark-execute-a-query]
+- [AWS Big Data Blog: Best practices for successfully managing memory for Apache Spark applications on Amazon EMR](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/]
+- Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.

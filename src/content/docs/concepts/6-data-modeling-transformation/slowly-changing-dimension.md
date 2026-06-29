@@ -1,28 +1,26 @@
 ---
 title: "Kiến trúc Slowly Changing Dimension (SCD): Physical Execution & Trade-offs"
 difficulty: "Advanced"
-tags: ["data-warehouse", "scd", "dimensional-modeling", "delta-lake", "apache-iceberg"]
+tags: ["data-warehouse", "scd", "dimensional-modeling", "delta-lake", "apache-iceberg", "dbt", "lakehouse"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-26
+lastUpdated: 2026-06-29
 seoTitle: "Slowly Changing Dimension (SCD) Architecture: Type 2, Iceberg, Delta Lake"
 metaDescription: "Phân tích kiến trúc hệ thống của Slowly Changing Dimension (SCD). Cách xử lý SCD Type 2 trên Delta Lake, Apache Iceberg, giải quyết Small Files Problem và OOM."
-description: "Phân tích chuyên sâu về kiến trúc thực thi vật lý của Slowly Changing Dimension (SCD). Từ các mô hình Type 1, 2, 6 đến cách Delta Lake và Apache Iceberg xử lý I/O penalty, Small Files Problem."
+description: "Phân tích chuyên sâu về kiến trúc thực thi vật lý của Slowly Changing Dimension (SCD). Từ các mô hình Type 1, 2, 6 đến cách Delta Lake và Apache Iceberg xử lý I/O penalty."
 ---
 
 Khi xây dựng Data Warehouse, **Slowly Changing Dimension (SCD)** là bài toán kinh điển về quản lý trạng thái dữ liệu (state management) theo thời gian. 
 
-Đối với các Data Engineer ở level Mid-Senior, chúng ta không chỉ dừng lại ở việc hiểu SCD Type 1 hay Type 2 là gì. Bài toán thực sự nằm ở **Physical Execution (Kiến trúc thực thi vật lý)**: Làm sao để cập nhật (UPDATE/MERGE) hàng tỷ dòng lịch sử mà không làm sập hệ thống (OOMKilled), không gây ra tình trạng phân mảnh dữ liệu (Small Files Problem), và không làm phình to I/O penalty trên các định dạng lưu trữ như Delta Lake hay Apache Iceberg.
+Đối với các Data Engineer ở level Staff/Senior, chúng ta không chỉ dừng lại ở việc hiểu định nghĩa SCD Type 1 hay Type 2 là gì. Bài toán thực sự nằm ở **Physical Execution (Kiến trúc thực thi vật lý)**: Làm sao để cập nhật (UPDATE/MERGE) hàng tỷ dòng lịch sử mà không làm sập hệ thống (OOMKilled), không gây ra tình trạng phân mảnh dữ liệu (Small Files Problem), và không làm phình to I/O penalty trên các định dạng lưu trữ hiện đại như Delta Lake hay Apache Iceberg.
 
 Bài viết này mổ xẻ SCD dưới lăng kính System Architecture và các Trade-offs thực chiến trên Modern Data Stack.
 
----
-
 ## 1. Bản chất Vật lý của SCD (Physical Nature of SCD)
 
-Trong môi trường lưu trữ Immutable (như HDFS, S3 sử dụng Parquet/ORC), **không có khái niệm "UPDATE" thực sự**. Mỗi thao tác cập nhật dimension (ví dụ: đổi địa chỉ khách hàng) về bản chất vật lý là một quá trình:
+Trong môi trường lưu trữ Immutable Data Lake (như HDFS, AWS S3 sử dụng định dạng Parquet/ORC), **không có khái niệm "UPDATE" thực sự**. Khác với RDBMS nơi bạn có thể sửa trực tiếp một byte trên đĩa cứng, mỗi thao tác cập nhật dimension (ví dụ: khách hàng đổi địa chỉ) về bản chất vật lý là một quá trình:
 1. Đọc (Scan) file dữ liệu cũ.
-2. Lọc và ghi file mới (Copy-on-Write) hoặc ghi file log thay đổi (Merge-on-Read).
-3. Cập nhật Metadata (bảng pointer trỏ tới file mới).
+2. Viết lại toàn bộ file mới có chứa bản ghi đã sửa (Copy-on-Write) hoặc ghi một file log nhỏ chứa thông tin xóa/thêm mới (Merge-on-Read).
+3. Cập nhật Metadata (bảng pointer trỏ tới file mới để query engine biết).
 
 Do đó, cách bạn chọn chiến lược SCD sẽ ảnh hưởng trực tiếp đến **I/O Throughput** và **Storage Cost**.
 
@@ -30,123 +28,105 @@ Do đó, cách bạn chọn chiến lược SCD sẽ ảnh hưởng trực tiế
 
 #### SCD Type 1 (Overwrite)
 Ghi đè giá trị mới nhất, xóa bỏ lịch sử.
-- **Physical Execution:** Trong RDBMS truyền thống là một lệnh `UPDATE` in-place (chỉnh sửa trực tiếp trên page memory). Trong Data Lake, nó kích hoạt Copy-on-Write: ghi lại toàn bộ file Parquet chỉ để sửa 1 dòng.
-- **Trade-off:** Rẻ về mặt logic và storage, nhưng đắt về I/O update và **mất hoàn toàn khả năng Audit/Time-travel**.
+- **Physical Execution:** Trong Data Lake, nó kích hoạt quá trình Copy-on-Write: ghi lại toàn bộ file Parquet chỉ để sửa 1 dòng.
+- **Trade-off:** Rẻ về mặt query (không bị phình to số dòng), nhưng đắt về I/O update và **mất hoàn toàn khả năng Audit/Time-travel**. Nếu một nhà phân tích muốn biết khách hàng sống ở đâu vào năm ngoái để train Machine Learning model, hệ thống sẽ mù tịt.
 
 #### SCD Type 2 (Row Versioning)
-Mỗi sự thay đổi sinh ra một dòng (record) mới với `Valid_From`, `Valid_To` và `Is_Current`. 
-- **Physical Execution:** Dòng cũ được `UPDATE` (đóng `Valid_To`), dòng mới được `INSERT`. Đây là một thao tác `UPSERT` / `MERGE`.
+Mỗi sự thay đổi sinh ra một dòng (record) mới với `valid_from`, `valid_to` và `is_current`. 
+- **Physical Execution:** Dòng cũ được `UPDATE` (đóng `valid_to`), dòng mới được `INSERT`. Đây là một thao tác `UPSERT` / `MERGE`.
 - **Trade-off:** Đảm bảo tính toàn vẹn của Event-driven time-series. Tuy nhiên, nó dẫn đến sự bùng nổ dữ liệu (Data Bloat) và làm chậm các câu lệnh `JOIN` (do cardinality của dimension table tăng lên gấp nhiều lần).
 
 ```mermaid
 sequenceDiagram
-    participant S as Source System
-    participant E as ETL Pipeline
-    participant D as Delta/Iceberg Table
+    participant S as Source System (CDC)
+    participant E as ETL Pipeline (dbt/Spark)
+    participant D as Lakehouse (Iceberg/Delta)
     
     S->>E: CDC Event("Update Address")
     E->>D: 1. Scan for matching Natural Key (Customer_ID)
-    E->>D: 2. UPDATE existing row("Set Valid_To = NOW, Is_Current = False")
-    E->>D: 3. INSERT new row("Valid_From = NOW, Is_Current = True")
-    Note over D: 2 File I/O Operations per Change
+    E->>D: 2. UPDATE existing row("Set valid_to = NOW, is_current = False")
+    E->>D: 3. INSERT new row("valid_from = NOW, is_current = True")
+    Note over D: Quá trình MERGE vật lý tạo ra Data Files mới và xoá logic file cũ.
 ```
-
-#### SCD Type 6 (Hybrid: 1 + 2 + 3)
-Kết hợp thêm dòng mới (Type 2), thêm cột lưu lịch sử (Type 3) và ghi đè giá trị hiện tại lên tất cả dòng cũ (Type 1).
-- **Physical Execution:** Cực kỳ tốn kém. Một sự thay đổi của khách hàng kích hoạt `UPDATE` trên **tất cả** các dòng lịch sử của khách hàng đó trong quá khứ.
-- **Trade-off:** Cung cấp trải nghiệm Query tuyệt vời nhất cho Data Analyst (họ có thể Group By cả địa chỉ cũ lẫn địa chỉ mới mà không cần JOIN phức tạp), nhưng Data Engineer sẽ phải gánh I/O Penalty khổng lồ.
-
----
 
 ## 2. Kiến trúc Thực thi Vật lý trên Modern Data Stack
 
-Các hệ thống hiện đại giải quyết bài toán SCD Type 2 không phải bằng vòng lặp FOR từng dòng, mà thông qua các engine tính toán phân tán.
+Các hệ thống hiện đại giải quyết bài toán SCD Type 2 không phải bằng vòng lặp FOR từng dòng, mà thông qua các engine tính toán phân tán với các cơ chế tối ưu riêng biệt.
 
-### 2.1. Databricks & Delta Lake: `APPLY CHANGES INTO`
-Databricks cung cấp framework **Delta Live Tables (DLT)** với cú pháp `APPLY CHANGES INTO`. Dưới nền tảng, DLT tự động quản lý logic SCD Type 1 và Type 2 từ một luồng CDC (Change Data Capture - ví dụ từ Debezium).
+### 2.1. Apache Iceberg: Merge-on-Read (MoR) vs Copy-on-Write (CoW)
+Iceberg hỗ trợ hai chiến lược ghi cho SCD:
+- **Copy-on-Write:** Mỗi lần `MERGE` SCD2, Iceberg đọc file Parquet chứa dòng cần `UPDATE`, ghi ra một file Parquet hoàn toàn mới, và đổi con trỏ metadata. Tối ưu cho Read (Query cực nhanh) nhưng làm chậm quá trình Write.
+- **Merge-on-Read:** Iceberg chỉ ghi các thay đổi vào những "Delete files" (chứa ID của dòng bị đóng `valid_to`) và "Data files" mới (cho dòng `INSERT`). Quá trình Write cực kỳ nhanh, nhưng khi Query, Engine (như Trino, Athena) phải tự động "hòa trộn" [merge] các file này lại trên RAM.
 
-**Code Thực Chiến (DLT SCD Type 2):**
+**Mã nguồn Thực chiến (Iceberg MERGE cho SCD2):**
 ```sql
--- Khai báo bảng đích (Target Table)
-CREATE OR REFRESH STREAMING LIVE TABLE dim_customers_scd2;
-
--- Áp dụng thay đổi từ luồng CDC vào bảng đích
-APPLY CHANGES INTO live.dim_customers_scd2
-FROM stream(live.bronze_customer_cdc_events)
-KEYS (customer_id)
-SEQUENCE BY modified_at -- Đảm bảo thứ tự sự kiện, giải quyết Out-of-order events
-STORED AS SCD TYPE 2
-TRACK HISTORY ON address, segment; -- Chỉ trigger Type 2 khi đổi Address hoặc Segment
+-- Cập nhật SCD Type 2 sử dụng SQL MERGE chuẩn trên Iceberg
+MERGE INTO prod.dim_customers t
+USING (
+  -- Source bao gồm cả dữ liệu update (cần đóng version cũ) và dữ liệu mới
+  SELECT customer_id, address, segment, updated_at FROM staging.cdc_customers
+) s
+ON t.customer_id = s.customer_id AND t.is_current = true
+WHEN MATCHED AND t.address != s.address THEN
+  -- Đóng record cũ
+  UPDATE SET is_current = false, valid_to = s.updated_at
+WHEN NOT MATCHED THEN
+  -- Insert record hoàn toàn mới
+  INSERT (customer_id, address, segment, valid_from, valid_to, is_current)
+  VALUES (s.customer_id, s.address, s.segment, s.updated_at, '9999-12-31', true);
 ```
-*Lưu ý kiến trúc:* Delta Lake sẽ thực hiện thao tác `MERGE INTO` khổng lồ ở backend. Để tăng tốc, DLT thường dùng Watermarking và Micro-batching.
+*(Lưu ý: Để MERGE hoạt động nguyên tử trong 1 pass, Iceberg yêu cầu thiết kế query phức tạp hơn với `UNION` để vừa UPDATE vừa INSERT cùng 1 `customer_id`, đoạn code trên minh họa concept logic).*
 
-### 2.2. Apache Iceberg: Metadata-Driven SCD (Change Log Views)
-Iceberg có một cách tiếp cận hoàn toàn khác biệt. Thay vì viết lại file dữ liệu liên tục để cập nhật SCD, Iceberg cho phép khai thác **Change Log Views** (lấy lịch sử trực tiếp từ metadata của bảng).
+### 2.2. dbt Snapshots: Tư duy Khai báo (Declarative)
+Thay vì tự viết câu lệnh `MERGE` phức tạp, **dbt snapshots** tự động hóa hoàn toàn việc theo dõi sự thay đổi theo thời gian.
 
-Bằng cách truy vấn bảng metadata `table.history` hoặc `table.changes`, Iceberg có thể tái tạo lại SCD Type 2 mà không cần duy trì một bảng SCD Type 2 vật lý riêng biệt (giảm chi phí lưu trữ và I/O).
-
----
+**Mã nguồn Thực chiến (dbt Snapshot config):**
+```yaml
+# snapshots/dim_customer_snapshot.sql
+{% snapshot dim_customer_snapshot %}
+{{
+    config(
+      target_schema='snapshots',
+      unique_key='customer_id',
+      strategy='check',
+      -- Tối ưu compute: Chỉ check 2 cột thay vì check_cols='all'
+      check_cols=['address', 'segment'] 
+    ]
+}}
+SELECT * FROM {{ source('raw', 'customers') }}
+{% endsnapshot %}
+```
 
 ## 3. Rủi ro Vận hành & Troubleshooting (Operational Risks)
 
 Khi triển khai SCD Type 2 ở scale lớn (hàng triệu transaction mỗi ngày), bạn sẽ đối mặt với những thảm họa kiến trúc sau:
 
 ### 3.1. Thảm họa phân mảnh file (The Small Files Problem)
-- **Vấn đề:** Các pipeline Streaming / Micro-batch ghi dữ liệu SCD2 liên tục vào Data Lake. Mỗi batch chỉ vài MB nhưng sinh ra hàng ngàn file Parquet nhỏ. Khi truy vấn, Engine mất nhiều thời gian đọc Metadata (List objects) hơn là đọc Data thực tế, gây nghẽn cổ chai I/O.
-- **Triệu chứng:** Query chậm dần đều sau vài tháng. Lệnh `MERGE` chạy mất hàng giờ. Thậm chí gây ra **OOM (Out Of Memory)** trên Driver Node khi cố gắng nạp metadata của quá nhiều file vào RAM.
+- **Vấn đề:** Các pipeline chạy dbt snapshot hoặc streaming ghi dữ liệu SCD2 liên tục hàng giờ. Mỗi batch chỉ vài MB nhưng sinh ra hàng ngàn file Parquet nhỏ. Khi truy vấn, Engine mất nhiều thời gian đọc Metadata (List objects trên S3) hơn là đọc Data thực tế, gây nghẽn cổ chai I/O.
+- **Triệu chứng:** Query chậm dần đều sau vài tháng. Lệnh `MERGE` chạy mất hàng giờ. Thậm chí gây ra **OOM (Out Of Memory)** trên Driver Node khi cố gắng nạp metadata của hàng triệu file vào RAM.
 - **Giải pháp (Physical Tuning):**
-  1. **Auto-Compaction:** Trên Databricks Unity Catalog, bật `autoOptimize.autoCompact = true` để tự động gom file nhỏ.
-  2. **Predictive Optimization / OPTIMIZE:** Chạy định kỳ lệnh `OPTIMIZE dim_customers;` để gộp file. 
-  3. **Liquid Clustering (Khuyến nghị mới nhất):** Thay vì dùng Z-Ordering (dễ bị lock và tốn compute), Databricks khuyến nghị dùng Liquid Clustering `CLUSTER BY (customer_id)` cho các bảng SCD2. Nó giúp Data Skipping hoạt động tối ưu ngay cả khi dữ liệu liên tục được append.
-
-```sql
--- Ví dụ tạo bảng với Liquid Clustering cho SCD2
-CREATE TABLE dim_customers (
-  customer_sk BIGINT GENERATED ALWAYS AS IDENTITY,
-  customer_id STRING,
-  address STRING,
-  valid_from TIMESTAMP,
-  valid_to TIMESTAMP
-)
-CLUSTER BY (customer_id); -- Tối ưu hóa đọc/ghi cho SCD
-```
+  1. **LakeOps / Maintenance:** Bắt buộc phải có một lịch trình chạy `OPTIMIZE` (trên Delta) hoặc `REWRITE DATA FILES` (trên Iceberg) để gộp các file nhỏ thành file lớn (khoảng 128MB - 256MB).
+  2. Bật tính năng **Hidden Partitioning** của Iceberg để thu hẹp phạm vi scan metadata.
 
 ### 3.2. Cartesian Explosion trong JOIN
-- **Vấn đề:** Khi `JOIN` Fact table (hàng tỷ dòng) với SCD2 Dimension (nhiều version cho mỗi ID). Nếu điều kiện JOIN thời gian `Fact.date BETWEEN Dim.valid_from AND Dim.valid_to` không được tối ưu, nó có thể dẫn đến Nested Loop Join hoặc Cartesian Explosion.
+- **Vấn đề:** Khi `JOIN` Fact table (10 tỷ dòng) với SCD2 Dimension (nhiều version cho mỗi ID). Nếu điều kiện JOIN thời gian `Fact.order_date >= Dim.valid_from AND Fact.order_date < Dim.valid_to` không được tối ưu, Spark Optimizer sẽ đánh giá nó là một `Non-Equi Join`, dẫn đến thuật toán Broadcast Nested Loop Join hoặc Cartesian Explosion làm sập toàn bộ cluster.
 - **Giải pháp:** 
-  - Đảm bảo khoảng thời gian (`valid_from`, `valid_to`) không bao giờ bị overlap (chồng chéo) cho cùng một Natural Key.
-  - Sử dụng Surrogate Key (ID tự tăng sinh ra tại lúc load dữ liệu vào DW) được gán vào Fact Table ngay từ khâu ETL. Lúc này, lúc query chỉ cần thực hiện `Equi-Join` trên Surrogate Key thay vì `Range Join` trên thời gian, biến truy vấn từ đắt đỏ thành rẻ bèo.
+  Sử dụng **Surrogate Key (Khóa thay thế)**. Trong quá trình sinh ra Fact table, hãy thực hiện lookup để lấy ra Surrogate Key của bảng Dimension tại đúng thời điểm đó, và lưu Surrogate Key vào Fact. Khi Query BI, bạn chỉ cần thực hiện `Equi-Join` (`ON Fact.customer_sk = Dim.customer_sk`), biến truy vấn từ đắt đỏ thành rẻ bèo.
 
-### 3.3. Dbt Snapshots và OOMKilled
-Nếu dùng **dbt snapshots** cho SCD2, dbt mặc định sẽ so sánh toàn bộ các cột (hash comparison) để tìm ra sự thay đổi. 
-- **Rủi ro:** Khi bảng lớn, phép so sánh Hash trên Hàng trăm cột gây tràn RAM (OOMKilled) tại Worker nodes.
-- **Giải pháp:** Chỉ định rõ cột `check_cols` thay vì dùng `check_cols='all'`.
-
-```yaml
-# dbt snapshot configuration
-snapshots:
-  - name: dim_customer_snapshot
-    config:
-      target_schema: snapshots
-      unique_key: customer_id
-      strategy: check
-      check_cols: ['address', 'segment'] # Tối ưu compute: Chỉ check 2 cột này
-```
-
----
+### 3.3. Dbt Snapshots và OOMKilled trên Worker Node
+Nếu dùng dbt snapshots cho SCD2 với cấu hình `check_cols: 'all'`, dbt mặc định sẽ băm (hash) toàn bộ các cột để tìm ra sự thay đổi. 
+- **Rủi ro:** Khi bảng lớn có hàng trăm cột (ví dụ bảng Salesforce), phép so sánh Hash String khổng lồ gây tràn RAM (OOMKilled) tại các Worker nodes của Snowflake/BigQuery.
+- **Giải pháp:** Phải tường minh khai báo các cột mang ý nghĩa nghiệp vụ cần track trong mảng `check_cols` như ví dụ ở mục 2.2.
 
 ## 4. Kết luận Đánh đổi (Architectural Summary)
 
-Không có kiến trúc nào là hoàn hảo. Việc triển khai SCD đòi hỏi Data Engineer phải cân bằng giữa 3 yếu tố:
-1. **Query Performance (Latency):** Type 6 tốt nhất cho Analyst nhưng đắt nhất cho hệ thống. Type 2 với Surrogate Key là "Sweet Spot" (điểm cân bằng).
-2. **Storage/Compute Cost (FinOps):** Update liên tục (Type 2/6) trên Data Lake tốn Compute. Cần có chiến lược Compaction (OPTIMIZE) nghiêm ngặt để giải quyết Small Files.
-3. **Data Integrity:** Đảm bảo tính toàn vẹn của Time-travel và Audit bằng cách sử dụng các framework chuẩn như DLT `APPLY CHANGES` hoặc `dbt snapshots` thay vì tự viết vòng lặp xử lý thủ công.
+Không có kiến trúc nào là hoàn hảo. Việc triển khai SCD đòi hỏi Staff Engineer phải cân bằng giữa 3 yếu tố:
+1. **Query Performance (Latency):** SCD Type 2 kết hợp Surrogate Key là "Sweet Spot" [điểm cân bằng] tốt nhất cho BI và Data Warehouse.
+2. **Storage/Compute Cost (FinOps):** Quá trình MERGE liên tục trên Data Lake (Lakehouse) tốn Compute. Cần có chiến lược Compaction nghiêm ngặt để giải quyết Small Files.
+3. **Data Integrity:** Bỏ qua việc tự viết SQL vòng lặp thủ công. Hãy sử dụng các framework chuẩn có sẵn tính năng ACID (như dbt snapshots, Delta Live Tables, Apache Iceberg) để đảm bảo an toàn cho dữ liệu lịch sử.
 
----
-
-## Nguồn Tham Khảo (References)
-* [Databricks - Slowly Changing Dimensions with Delta Live Tables](https://docs.databricks.com/en/delta-live-tables/scd.html)
-* [Databricks Blog - Solving the Small File Problem in Delta Lake](https://www.databricks.com/blog/2021/08/25/solving-the-small-file-problem-in-delta-lake.html)
-* [AWS Big Data Blog - Implement historical record lookup and Slowly Changing Dimensions Type-2 using Apache Iceberg](https://aws.amazon.com/blogs/big-data/implement-historical-record-lookup-and-slowly-changing-dimensions-type-2-using-apache-iceberg/)
-* [dbt Documentation - Snapshots](https://docs.getdbt.com/docs/build/snapshots)
+## 5. Nguồn Tham Khảo (References)
+* [dbt Documentation - Snapshots][https://docs.getdbt.com/docs/build/snapshots]
+* [AWS Big Data Blog - Implement Slowly Changing Dimensions Type-2 using Apache Iceberg][https://aws.amazon.com/blogs/big-data/implement-historical-record-lookup-and-slowly-changing-dimensions-type-2-using-apache-iceberg/]
+* [LakeOps Blog - Iceberg vs Delta Lake Trade-offs](https://www.lakeops.dev/blog/iceberg-delta-lake-tradeoffs]
 * Designing Data-Intensive Applications - Martin Kleppmann (Phân tích về Storage I/O và Immutable Data).

@@ -1,102 +1,88 @@
-import os, glob, re
+import os
+import re
 
-def fix_mermaid_block(block_text):
-    # Fix subgraph names
-    # Match `subgraph Name With Spaces` -> `subgraph "Name With Spaces"`
-    # But don't match `subgraph ID ["Name"]` or `subgraph "Name"`
-    lines = block_text.split("\n")
-    new_lines = []
-    for line in lines:
-        stripped = line.strip()
-        # 1. Fix subgraphs
-        if stripped.startswith("subgraph "):
-            # check if it already has quotes or brackets
-            if "[" not in stripped and '"' not in stripped:
-                parts = line.split("subgraph ", 1)
-                prefix = parts[0]
-                name = parts[1].strip()
-                if " " in name or re.search(r"[^\w\s]", name):
-                    line = f'{prefix}subgraph "{name}"'
-        
-        # 2. Fix invalid dotted cross link
-        line = re.sub(r"-\.-x\|", "-.->|", line)
-        line = re.sub(r"-\.-x\s", "-.-> ", line)
-        
-        new_lines.append(line)
-        
-    text = "\n".join(new_lines)
-    
-    # 3. Fix unquoted node labels in flowchart/graph
-    # We must be careful not to mess up state diagrams or sequence diagrams, which have different syntax.
-    # Flowchart/graph nodes usually appear as ID[label]
-    # We will only apply node quoting if the block starts with "graph" or "flowchart"
-    if text.strip().startswith("graph") or text.strip().startswith("flowchart"):
-        # Regex to find node definitions
-        # ID can be alphanumeric and underscore
-        # Opening bracket can be [, (, { etc.
-        # Closing bracket is the matching one, but we can just use a non-greedy match until the first closing bracket.
-        # It's safer to specify the exact pairs.
-        pairs = [
-            (r'\[\(', r'\)\]'),
-            (r'\[\[', r'\]\]'),
-            (r'\[\/', r'\/\]'),
-            (r'\[\/', r'\\\]'),
-            (r'\[\\', r'\\\]'),
-            (r'\[\\', r'\/\]'),
-            (r'\(\(', r'\)\)'),
-            (r'\{\{', r'\}\}'),
-            (r'\[', r'\]'),
-            (r'\(', r'\)'),
-            (r'\{', r'\}'),
-            (r'\>', r'\]'),
-        ]
-        
-        for open_b, close_b in pairs:
-            # Match ID + open_b + text + close_b
-            # Text should NOT start with " and end with "
-            # Text should not contain the closing bracket
-            pattern = r'([a-zA-Z0-9_-]+)(\s*)(' + open_b + r')([^\"]+?)(' + close_b + r')'
-            
-            def replacer(m):
-                id_str = m.group(1)
-                space = m.group(2)
-                op = m.group(3)
-                label = m.group(4)
-                cl = m.group(5)
-                
-                # If label is empty or just spaces, leave it
-                if not label.strip():
-                    return m.group(0)
-                
-                # If label is already quoted, it wouldn't match [^\"]+? if it has quotes, 
-                # but if it has inner quotes it might break. 
-                # Since we exclude ", it means the label has NO quotes at all.
-                # So we can safely wrap it.
-                return f'{id_str}{space}{op}"{label}"{cl}'
-                
-            text = re.sub(pattern, replacer, text)
-            
-    return text
+fixes = [
+    ("src/content/docs/concepts/3-storage-engines-formats/delta-lake.md",
+     [('C -- "Cùng sửa cùng một file("ví dụ MERGE") --> G', 'C -->|"Cùng sửa cùng một file (ví dụ MERGE)"| G')]),
+    ("src/content/docs/concepts/3-storage-engines-formats/medallion-architecture.md",
+     [('Data_Ingest("Append Only") --> BronzeTable', 'Data_Ingest -->|"Append Only"| BronzeTable')]),
+    ("src/content/docs/concepts/3-storage-engines-formats/olap.md",
+     [(' ~~~ Vectorized', ' -.-> Vectorized'),
+      ('architecture-beta\n    group disk("server")[Đĩa D cứng]', 'graph TD\n    subgraph disk[Đĩa cứng]\n'),
+      ('group ram("RAM Memory")', '    end\n    subgraph ram[RAM Memory]\n'),
+      ('service g1("database")[Granule 1: UserID 1 - 1500] in disk', 'g1["Granule 1: UserID 1 - 1500"]'),
+      ('service g2("database")[Granule 2: UserID 1500 - 3200] in disk', 'g2["Granule 2: UserID 1500 - 3200"]'),
+      ('service g3("database")[Granule 3: UserID 3200 - 5000] in disk', 'g3["Granule 3: UserID 3200 - 5000"]'),
+      ('service idx("server")[Sparse Index] in ram', 'idx["Sparse Index"]'),
+      ('service m1("bookmark")[Mark 1: UserID 1] in ram', 'm1["Mark 1: UserID 1"]'),
+      ('service m2("bookmark")[Mark 2: UserID 1500] in ram', 'm2["Mark 2: UserID 1500"]'),
+      ('service m3("bookmark")[Mark 3: UserID 3200] in ram', 'm3["Mark 3: UserID 3200"]'),
+      ('idx:B --> m1:T', 'idx --> m1'),
+      ('idx:B --> m2:T', 'idx --> m2'),
+      ('idx:B --> m3:T', 'idx --> m3'),
+      ('m1:B --> g1:T', 'm1 --> g1'),
+      ('m2:B --> g2:T', 'm2 --> g2'),
+      ('m3:B --> g3:T', 'm3 --> g3')]),
+    ("src/content/docs/concepts/3-storage-engines-formats/oltp.md",
+     [('-->|Asynchronous Checkpoint<br/>(Random I/O)|', '-->|"Asynchronous Checkpoint<br/>(Random I/O)"|')]),
+    ("src/content/docs/concepts/3-storage-engines-formats/snowflake.md",
+     [('-->|Đọc/Ghi dữ liệu vật lý (Bỏ qua Caching)|', '-->|"Đọc/Ghi dữ liệu vật lý (Bỏ qua Caching)"|')]),
+    ("src/content/docs/concepts/4-compute-engines-batch/spark-aqe-adaptive-query.md",
+     [('C["Sort \\n("Shuffle Write")}', 'C{"Sort \\n(Shuffle Write)"}')]),
+    ("src/content/docs/concepts/5-stream-processing-realtime/apache-kafka.md",
+     [('subgraph "ZooKeeper Era("Legacy")"', 'subgraph ZooKeeper_Era ["ZooKeeper Era (Legacy)"]')]),
+    ("src/content/docs/concepts/7-dataops-orchestration-quality/blue-green-deployment-data.md",
+     [('WRITE_OP["Staging/Green"]', 'WRITE_OP["Staging/Green"]'), # Not sure, will replace `WRITE["Staging/Green"]` if it's there
+      ('WRITE("Staging/Green")', 'WRITE_OP["Staging/Green"]')]),
+    ("src/content/docs/concepts/8-security-governance-finops/cost-optimization.md",
+     [('B ["(Heavy Batch Compute)"]', 'B["(Heavy Batch Compute)"]')]),
+    ("src/content/docs/concepts/8-security-governance-finops/data-ownership.md",
+     [('Data-as-a-Product / Data-Sharing("Producer")', 'Data_Product["Data-as-a-Product (Producer)"]')]),
+    ("src/content/docs/concepts/8-security-governance-finops/metadata-management.md",
+     [('Metadata Collection("DataHub / OpenLineage")', 'Metadata_Collection["Metadata Collection (DataHub / OpenLineage)"]')]),
+    ("src/content/docs/concepts/4-compute-engines-batch/databricks.md",
+     [('architecture-beta\n    group cp("cloud")[Control Plane(\'Databricks Account\')]', 'graph TD\n    subgraph cp[Control Plane: Databricks Account]\n'),
+      ("group dp('cloud')[Data Plane('Customer VPC')]", '    end\n    subgraph dp[Data Plane: Customer VPC]\n'),
+      ('service web("server")[Web UI / Notebooks] in cp', 'web["Web UI / Notebooks"]'),
+      ('service job_sched("server")[Job Scheduler] in cp', 'job_sched["Job Scheduler"]'),
+      ('service cluster_mgr("server")[Cluster Manager] in cp', 'cluster_mgr["Cluster Manager"]'),
+      ('service compute_nodes("server")[Compute Nodes (EC2 / VMs)] in dp', 'compute_nodes["Compute Nodes (EC2 / VMs)"]'),
+      ('service object_storage("database")[S3 / ADLS / GCS] in dp', 'object_storage["S3 / ADLS / GCS"]'),
+      ('web:B --> job_sched:T', 'web --> job_sched'),
+      ('job_sched:B --> cluster_mgr:T', 'job_sched --> cluster_mgr'),
+      ('cluster_mgr:B -->|Provision & Monitor("API")| compute_nodes:T', 'cluster_mgr -->|"Provision & Monitor (API)"| compute_nodes'),
+      ('compute_nodes:B -->|"Read/Write Data<br/>(High Bandwidth)"| object_storage:T', 'compute_nodes -->|"Read/Write Data (High Bandwidth)"| object_storage')]),
+]
 
-files = glob.glob("src/content/docs/**/*.md", recursive=True) + glob.glob("src/content/docs/**/*.mdx", recursive=True)
-
-fixed_count = 0
-
-for file in files:
-    with open(file, "r", encoding="utf-8") as f:
+for filepath, file_fixes in fixes:
+    if not os.path.exists(filepath): continue
+    with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
-        
-    def block_replacer(m):
-        old_block = m.group(1)
-        new_block = fix_mermaid_block(old_block)
-        return "```mermaid\n" + new_block + "```"
-        
-    new_content = re.sub(r"```mermaid\n(.*?)```", block_replacer, content, flags=re.DOTALL)
-    
-    if new_content != content:
-        with open(file, "w", encoding="utf-8") as f:
-            f.write(new_content)
-        fixed_count += 1
-        print(f"Fixed {file}")
+    for old, new in file_fixes:
+        content = content.replace(old, new)
+    # also fix missing END in olap and databricks
+    if filepath.endswith("olap.md") or filepath.endswith("databricks.md"):
+        content = content.replace('```\n', '    end\n```\n')
+        # clean up multiple ends just in case
+        content = content.replace('    end\n    end\n```', '    end\n```')
+        content = content.replace('    end\n\n    end\n```', '    end\n```')
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(content)
 
-print(f"\nTotal files fixed: {fixed_count}")
+# Additional pass with regex to fix spaces before bracket ` ["` -> `["`
+for root, dirs, files in os.walk('src/content/docs'):
+    for filename in files:
+        if filename.endswith('.md'):
+            filepath = os.path.join(root, filename)
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            blocks = re.split(r'(```mermaid\n.*?\n```)', content, flags=re.DOTALL)
+            new_blocks = []
+            for block in blocks:
+                if block.startswith('```mermaid'):
+                    block = re.sub(r'([A-Za-z0-9_]+)\s+\["', r'\1["', block)
+                new_blocks.append(block)
+            new_content = "".join(new_blocks)
+            if new_content != content:
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(new_content)

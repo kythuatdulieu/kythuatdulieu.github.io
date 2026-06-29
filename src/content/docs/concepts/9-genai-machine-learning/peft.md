@@ -1,143 +1,121 @@
 ---
-title: "Parameter-Efficient Fine-Tuning (PEFT) & LoRA"
+title: "Kiến trúc PEFT & LoRA: Tối Ưu Hóa VRAM và Multi-Tenant Serving"
 difficulty: "Advanced"
-tags: ["peft", "lora", "fine-tuning", "llm", "genai", "qlora"]
+tags: ["peft", "lora", "fine-tuning", "llm", "genai", "qlora", "finops", "system-design"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Kiến trúc hệ thống PEFT & LoRA trong tinh chỉnh LLM"
-metaDescription: "Tìm hiểu kiến trúc vật lý của PEFT, LoRA, QLoRA. Đánh đổi hệ thống (Trade-offs), FinOps và rủi ro vận hành OOM khi tinh chỉnh LLM."
-description: "Phân tích chuyên sâu về Parameter-Efficient Fine-Tuning (PEFT). Thay vì coi đây là một phép màu, hãy nhìn nó dưới góc độ thiết kế hệ thống, quản lý memory bottleneck và cost-optimization (FinOps)."
+lastUpdated: 2026-06-29
+seoTitle: "Kiến trúc hệ thống PEFT: LoRA, QLoRA, Prefix Tuning & FinOps"
+metaDescription: "Phân tích kiến trúc PEFT (LoRA, Prefix Tuning, Adapters) dưới góc nhìn hệ thống. Tối ưu hóa VRAM, xử lý OOMKilled, và chiến lược FinOps với vLLM."
+description: "Parameter-Efficient Fine-Tuning (PEFT) không phải là phép màu. Dưới góc độ Kỹ sư hệ thống, PEFT là bài toán tối ưu hóa Memory I/O để giải quyết nút thắt cổ chai của Optimizer States trong Full Fine-Tuning."
 ---
 
-Bỏ qua các định nghĩa sách giáo khoa, **Parameter-Efficient Fine-Tuning (PEFT)** không phải là một "phép màu" của AI. Dưới góc nhìn kiến trúc hệ thống, PEFT đơn thuần là một bài toán **tối ưu hóa Memory IO (VRAM) và tính toán Ma trận** để giải quyết nút thắt cổ chai (bottleneck) khổng lồ mang tên *Optimizer States* trong quá trình Full Fine-Tuning (FFT).
+Bỏ qua các định nghĩa học thuật, **Parameter-Efficient Fine-Tuning (PEFT)** không phải là một "phép màu" của AI. Dưới góc nhìn Kiến trúc Hệ thống, PEFT đơn thuần là bài toán **tối ưu hóa Memory I/O (VRAM) và tính toán Ma trận** để giải quyết nút thắt cổ chai khổng lồ mang tên *Optimizer States*.
 
-Khi train một mô hình 7B tham số (ví dụ LLaMA-2) bằng FFT với AdamW, bạn không chỉ cần lưu trọng số mô hình (14GB ở fp16). Bạn cần ít nhất **100-120GB VRAM** để chứa Gradients, Activations, và Optimizer states (Momentum, Variance). Sự ra đời của PEFT, đặc biệt là **LoRA (Low-Rank Adaptation)**, chuyển đổi bài toán cập nhật không gian trạng thái khổng lồ thành một bài toán xấp xỉ hạng thấp (low-rank approximation).
+Khi train mô hình 7B (như LLaMA-3) bằng Full Fine-Tuning (FFT) với AdamW, bạn không chỉ cần 14GB để lưu Trọng số (Weights). Bạn cần tới **>120GB VRAM** để chứa Gradients, Activations, và Optimizer states. PEFT sinh ra để giải quyết rào cản vật lý này.
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
+---
 
-### Nguyên lý hoạt động của LoRA
-Thay vì cập nhật trực tiếp ma trận trọng số $W \in \mathbb{R}^{d \times k}$ (có kích thước rất lớn), LoRA "đóng băng" (freeze) $W$ và tiêm (inject) hai ma trận hạng thấp $A$ và $B$ vào luồng tính toán (forward pass). 
+## 1. Phân Loại Kiến Trúc PEFT
 
-Sự thay đổi của trọng số được biểu diễn:
-$\Delta W = B \times A$
+Các kỹ thuật PEFT can thiệp vào mô hình theo các cách khác nhau, tạo ra các Trade-offs (Sự đánh đổi) về Compute và Expressivity (Khả năng biểu diễn):
 
-Trong đó:
-- $B \in \mathbb{R}^{d \times r}$, khởi tạo bằng 0.
-- $A \in \mathbb{R}^{r \times k}$, khởi tạo bằng phân phối Gauss.
-- $r \ll \min(d, k)$ là *rank* (hạng), thường là 8, 16, hoặc 32.
+*   **Additive Methods (Adapters & Prompt/Prefix Tuning):** Thêm các mạng neural siêu nhỏ (Bottleneck adapters) vào giữa các layer, hoặc nối thêm các Vector ảo (Prefix/Soft Prompts) vào đầu vào.
+    *   *Trade-off:* Tốn rất ít VRAM nhưng làm tăng **Inference Latency** do mô hình phải chạy qua các node mới.
+*   **Reparameterization (LoRA):** Tham số hóa lại trọng số. Thay đổi cách tính toán ma trận mà không làm thay đổi kiến trúc gốc.
+    *   *Trade-off:* Zero Inference Latency (nếu merge weights), cân bằng hoàn hảo giữa VRAM và độ chính xác.
 
-![LoRA Architecture](/images/9-genai-machine-learning/lora_architecture.png)
-*(Hình ảnh mô tả kiến trúc LoRA - Ma trận $A$ và $B$ được cộng vào đầu ra của $W$ gốc)*
+---
 
-Khi đi qua layer, output $h$ sẽ được tính bằng:
+## 2. Vật Lý Hệ Thống: LoRA & QLoRA
+
+### A. LoRA (Low-Rank Adaptation)
+Thay vì cập nhật trực tiếp ma trận trọng số $W \in \mathbb{"R"}^{d \times k}$ khổng lồ, LoRA "đóng băng" (freeze) $W$ và tiêm (inject) hai ma trận hạng thấp $A$ và $B$ song song.
+
+Sự thay đổi trọng số: $\Delta W = B \times A$
+Với $B \in \mathbb{"R"}^{d \times r}$ và $A \in \mathbb{"R"}^{r \times k}$ (Rank $r$ rất nhỏ, VD: $8, 16$).
+
+Khi đi qua layer, output $h$ được tính bằng:
 $h = Wx + \Delta Wx = Wx + BAx$
 
-**Hiệu ứng Vật lý (Physical Impact):** 
-Việc này giảm trực tiếp dung lượng RAM dành cho quá trình backward pass. Thay vì tính gradient cho ma trận $d \times k$ (hàng triệu tham số), GPU chỉ cần tính gradient cho hai ma trận $d \times r$ và $r \times k$ (vài nghìn tham số).
+**Vật lý bộ nhớ:** Thay vì tính đạo hàm (Gradients) cho ma trận 10,000 x 10,000 (100 triệu tham số), GPU chỉ tính đạo hàm cho hai ma trận $10,000 \times 8$ và $8 \times 10,000$ (160 ngàn tham số). VRAM rớt thẳng đứng từ 120GB xuống 24GB.
 
-### QLoRA: Ép kiểu dữ liệu (Quantization) kết hợp LoRA
-Nếu LoRA giải quyết bài toán Optimizer Memory, thì **QLoRA** giải quyết bài toán Model Memory. QLoRA (Quantized LoRA) ép kiểu trọng số gốc $W$ xuống định dạng 4-bit NormalFloat (NF4), trong khi vẫn tính toán gradient ở fp16 hoặc bf16.
+### B. QLoRA (Quantized LoRA)
+Nếu LoRA giải quyết bài toán *Optimizer Memory*, thì **QLoRA** giải quyết bài toán *Model Memory*. 
+QLoRA ép kiểu trọng số gốc $W$ từ 16-bit xuống định dạng **4-bit NormalFloat (NF4)**. Mô hình 7B giờ đây chỉ chiếm ~4GB VRAM, cho phép fine-tune trên card RTX 3060 dân dụng.
 
-```mermaid
-flowchart TD
-    subgraph GPU_VRAM
-        W_4bit["Frozen Base Model("4-bit NF4")\n~4GB cho 7B model"] 
-        A_bf16["LoRA Adapter A (bf16)"]
-        B_bf16["LoRA Adapter B (bf16)"]
-        Opt["Paged AdamW Optimizer States\n("Giảm từ 42GB xuống < 2GB")"]
-    end
-    W_4bit --> Forward_Pass
-    A_bf16 --> Forward_Pass
-    B_bf16 --> Forward_Pass
-    Forward_Pass --> Loss
-    Loss -->|Backward| A_bf16
-    Loss -->|Backward| B_bf16
-```
+---
 
-## 2. Show, Don't Tell: Cấu hình QLoRA Thực chiến
+## 3. FinOps & Kiến trúc Multi-Tenant Serving
 
-Dưới đây là đoạn code thực chiến khởi tạo QLoRA pipeline bằng Python. Chú ý cấu hình `BitsAndBytesConfig` để ép kiểu (Quantize) và cấu hình `LoraConfig` để tiêm Adapter.
+LoRA không chỉ tiết kiệm phần cứng huấn luyện, nó thay đổi hoàn toàn kiến trúc **Model Serving (Inference)**.
+
+Giả sử bạn làm một nền tảng SaaS có 100 khách hàng B2B. Mỗi khách hàng cần một LLM 7B được Fine-tune riêng cho data của họ.
+- **Nếu dùng FFT:** Bạn phải host 100 con LLM 7B (100 x 14GB = 1,400GB VRAM). Bạn sẽ phá sản vì tiền thuê GPU.
+- **Nếu dùng LoRA (Multi-tenant Serving):** Bạn dùng các engine như **vLLM** hoặc **SGLang**. Kiến trúc này chỉ tải đúng **1 Base Model (14GB VRAM)** lên GPU. 100 bản Fine-tune của khách hàng được lưu dưới dạng 100 LoRA Adapters (mỗi cái ~50MB). Khi Request của khách hàng A tới, vLLM sẽ **Hot-swap (Hoán đổi nóng)** Adapter A vào Base Model trong vài mili-giây.
+
+**Kết quả FinOps:** Bạn phục vụ 100 khách hàng chỉ với 1 card A10G. Tiết kiệm **99% chi phí hạ tầng**.
+
+---
+
+## 4. Rủi ro Vận hành (Operational Risks) & Troubleshooting
+
+Trong thực tế, khi cấu hình PEFT trên Production, bạn sẽ gặp các sự cố "cháy máy" sau:
+
+### Incident 1: OOMKilled do Activations
+- **Triệu chứng:** Container bị kill với mã lỗi OOM (137) ở epoch 2, dù đã dùng QLoRA.
+- **Căn nguyên:** Lượng RAM dùng cho Weights/Optimizer đã giảm, nhưng RAM dùng cho **Activations** (giá trị trung gian của Forward pass lưu lại để tính Backward) phình to khủng khiếp khi Context Window dài (VD: 4096 tokens).
+- **Khắc phục:** Bật **Gradient Checkpointing** (`model.gradient_checkpointing_enable()`). Đổi Compute lấy VRAM. Thay vì lưu toàn bộ Activations, hệ thống xóa bớt và tính lại (recompute) khi cần.
+
+### Incident 2: Tắc nghẽn PCIe (Spill-to-Disk Thrashing)
+- **Triệu chứng:** GPU utilization rớt xuống 5%, tốc độ train chậm 100x.
+- **Căn nguyên:** Dùng `device_map="auto"`. Framework phát hiện thiếu VRAM nên tự động đẩy Optimizer states ra CPU RAM hoặc ổ cứng NVMe. Băng thông PCIe bus bị bão hòa (Thrashing).
+- **Khắc phục:** Sử dụng **Paged Optimizer** (`optim="paged_adamw_32bit"`). Kỹ thuật này phân trang (paging) bộ nhớ một cách thông minh, chỉ đẩy dữ liệu ra CPU RAM khi cực kỳ cần thiết và kéo lại GPU kịp thời.
+
+---
+
+## 5. Code Thực Chiến (HuggingFace PEFT)
+
+Cấu hình an toàn để Fine-tune LLaMA-3 chống OOMKilled:
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-# 1. Cấu hình Quantization (Ép kiểu)
+# 1. Cấu hình QLoRA (4-bit NF4)
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,       # Nested quantization tiết kiệm thêm VRAM
-    bnb_4bit_quant_type="nf4",            # Định dạng tối ưu cho weights phân phối chuẩn
-    bnb_4bit_compute_dtype=torch.bfloat16 # Giữ độ chính xác khi tính toán forward/backward
+    bnb_4bit_use_double_quant=True,       # Tiết kiệm thêm VRAM
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16 # Chống Gradient Overflow (Loss Spikes)
 )
 
-# 2. Tải Base Model (Freeze automatically)
-model_id = "meta-llama/Llama-2-7b-hf"
 model = AutoModelForCausalLM.from_pretrained(
-    model_id, 
+    "meta-llama/Meta-Llama-3-8B", 
     quantization_config=bnb_config,
-    device_map="auto" # Tự động spill out sang CPU RAM nếu VRAM cạn kiệt
+    device_map="auto" 
 )
+
+# 2. Chống OOMKilled do Activations phình to
+model.gradient_checkpointing_enable()
 model = prepare_model_for_kbit_training(model)
 
 # 3. Cấu hình LoRA Adapter
 peft_config = LoraConfig(
-    r=16, 
-    lora_alpha=32,       # Scaling factor: Alpha càng lớn, trọng lượng của LoRA càng cao
-    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"], # Target các Attention Heads
+    r=32,                # Rank
+    lora_alpha=64,       # Scaling factor
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"], 
     lora_dropout=0.05,
-    bias="none",
     task_type="CAUSAL_LM"
 )
 
-# 4. Bọc Model với PEFT
-peft_model = get_peft_model(model, peft_config)
+peft_model = get_peft_model[model, peft_config]
 peft_model.print_trainable_parameters()
-# Output: trainable params: 15,990,784 || all params: 6,754,406,400 || trainable%: 0.2367%
 ```
-
-## 3. Rủi ro Vận hành (Operational Risks) & Troubleshooting
-
-Trong thực tế, khi scale việc huấn luyện lên các môi trường như Kubernetes hay Ray Clusters, hệ thống có thể gặp nhiều Incidents.
-
-### Incident 1: OOMKilled (Out-of-Memory) do Gradient Checkpointing chưa bật
-- **Triệu chứng:** Container bị kill với mã lỗi 137 (OOM) ở epoch thứ 2, mặc dù đã dùng QLoRA.
-- **Root Cause:** Dù số lượng tham số huấn luyện ít, kích thước *Activations* sinh ra trong Forward pass ở các context length dài (như 4096 tokens) vẫn lấp đầy VRAM.
-- **Cách khắc phục:** Đổi CPU tính toán thời gian (Compute) lấy VRAM (Memory) bằng kỹ thuật Gradient Checkpointing. Thay vì lưu tất cả activations, hệ thống chỉ lưu một số node và tính toán lại phần còn lại trong lúc backward.
-  ```python
-  model.gradient_checkpointing_enable()
-  ```
-
-### Incident 2: "Spill-to-disk" gây chết Throughput
-- **Triệu chứng:** GPU utilization rớt xuống 5-10%, tốc độ train cực chậm.
-- **Root Cause:** Cấu hình `device_map="auto"` của `accelerate` phát hiện thiếu VRAM và đẩy một phần weights/optimizer sang CPU RAM hoặc tệ hơn là swap disk (NVMe). IO bottleneck giữa CPU và GPU (PCIe bus) kéo sập hiệu năng.
-- **Cách khắc phục:** Sử dụng Paged Optimizer (`optim="paged_adamw_32bit"` trong TrainingArguments) để phân trang (paging) optimizer states, đẩy vào CPU RAM khi không dùng tới và kéo lại GPU khi cần, giảm thiểu overhead tắc nghẽn IO.
-
-## 4. Đánh đổi Hệ thống (Systemic Trade-offs)
-
-| Tiêu chí | Full Fine-Tuning (FFT) | LoRA | QLoRA |
-| :--- | :--- | :--- | :--- |
-| **Throughput (Training)** | Rất chậm | Nhanh | Rất chậm (Do CPU/GPU bottleneck khi de-quantize từ 4-bit lên 16-bit) |
-| **VRAM Requirement** | ~120GB (7B Model) | ~24GB | ~12GB (Vừa trên 1 RTX 3060) |
-| **Inference Latency** | Không đổi (Zero penalty) | Zero penalty (nếu merge weights) | Chậm hơn (nếu giữ nguyên base 4-bit) |
-| **Quality/Accuracy** | Cao nhất (Khó giữ kiến thức gốc) | 95-99% của FFT (Giữ vững kiến thức gốc) | Tương đương LoRA |
-
-**Merge Weights vs. Dynamic Adapters trong Serving:**
-- **Merge Weights (Static):** Bạn cộng cứng $W' = W + BA$ và lưu thành mô hình mới. Latency khi inference bằng 0. Nhưng mất đi tính linh hoạt.
-- **Multi-tenant Serving (Dynamic):** Các hệ thống hiện đại như **vLLM** hay **SGLang** hỗ trợ tải 1 Base Model duy nhất (chiếm 14GB VRAM) và hoán đổi linh hoạt (hot-swap) hàng trăm LoRA Adapters (mỗi adapter ~50MB) tuỳ theo Request (ví dụ Request A gọi bot CSKH, Request B gọi bot Sales). **Trade-off:** Giảm FinOps cost cực mạnh, nhưng tăng Compute Latency ở khâu dispatching request vào đúng Adapter.
-
-## 5. Tối ưu Chi phí (FinOps)
-
-Sử dụng LoRA không chỉ tiết kiệm phần cứng huấn luyện mà còn tác động mạnh mẽ đến FinOps trong giai đoạn Deployment (Serving).
-Giả sử bạn cần phục vụ 10 khách hàng B2B, mỗi khách hàng cần 1 model được fine-tune riêng.
-- **Nếu dùng FFT:** Bạn phải deploy 10 bản sao của LLM 7B. (10 x 14GB = 140GB VRAM). Cần thuê ít nhất 2x A100 80GB (Cost: ~\$6,000/tháng/node).
-- **Nếu dùng LoRA + vLLM:** Bạn deploy **1 Base Model (14GB)** + **10 LoRA adapters (10 x 50MB = 500MB)**. Tổng cộng < 15GB VRAM. Phục vụ toàn bộ trên một con GPU L4 hoặc A10G duy nhất. Tiết kiệm hơn **80%** chi phí cloud.
 
 ---
 
-## Nguồn Tham Khảo (References)
-1. Hu, E. J., et al. (2021). *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint [arXiv:2106.09685](https://arxiv.org/abs/2106.09685).
-2. Dettmers, T., et al. (2023). *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint [arXiv:2305.14314](https://arxiv.org/abs/2305.14314).
-3. [Hugging Face PEFT Library Documentation](https://huggingface.co/docs/peft/index)
-4. [vLLM Documentation: LoRA support](https://docs.vllm.ai/en/latest/models/lora.html)
-5. AWS Machine Learning Blog: *Memory-efficient fine-tuning of large language models on Amazon SageMaker*
+## Nguồn Tham Khảo
+1. Hu, E. J., et al. (2021). [LoRA: Low-Rank Adaptation of Large Language Models][https://arxiv.org/abs/2106.09685].
+2. Dettmers, T., et al. (2023). [QLoRA: Efficient Finetuning of Quantized LLMs][https://arxiv.org/abs/2305.14314].
+3. [vLLM Documentation: LoRA support & Multi-tenant Serving](https://docs.vllm.ai/en/latest/]

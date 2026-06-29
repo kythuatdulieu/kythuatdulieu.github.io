@@ -1,72 +1,79 @@
 ---
-title: "ACID Transactions trên Data Lake: Kiến trúc Vật lý và Trade-offs"
+title: "ACID Transactions trên Data Lake: Kiến trúc MVCC, OCC & Trade-offs"
 difficulty: "Advanced"
-tags: ["acid", "data-lakehouse", "table-format", "concurrency", "delta-lake", "iceberg", "hudi"]
-readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "ACID Transactions trên Data Lake - Kiến trúc Delta, Iceberg, Hudi"
-metaDescription: "Phân tích sâu kiến trúc vật lý của ACID Transactions trên Data Lake qua Delta Lake, Apache Iceberg, và Apache Hudi. Mổ xẻ Trade-offs giữa CoW và MoR, sự cố OOM và Troubleshooting."
-description: "Vào lúc 2 giờ sáng, Data Pipeline chèn hàng triệu bản ghi vào Data Lake thì Network Partition xảy ra. Nếu không có ACID transactions, Data Lake rơi vào 'dirty state'. Bài viết mổ xẻ cách Delta Lake, Iceberg, và Hudi thiết kế Metadata Layer để giải bài toán concurrency và consistency trên Object Storage."
+tags: ["acid", "data-lakehouse", "mvcc", "optimistic-concurrency-control", "delta-lake", "iceberg", "hudi"]
+readingTime: "20 mins"
+lastUpdated: 2026-06-29
+seoTitle: "ACID Transactions Data Lake - MVCC, OCC, Delta, Iceberg, Hudi"
+metaDescription: "Phân tích kiến trúc ACID Transactions trên Data Lake qua Delta Lake, Apache Iceberg, Hudi. Mổ xẻ MVCC, Optimistic Concurrency Control (OCC) và Trade-offs."
+description: "Data Lake truyền thống sẽ hỏng dữ liệu nếu bị Crash khi ghi. Bài viết mổ xẻ cách các Table Formats mang ACID lên Object Storage nhờ MVCC, OCC và sự tách biệt Metadata."
 ---
 
-Data Lake truyền thống (chỉ gồm HDFS hoặc S3 chứa file Parquet/ORC) không hỗ trợ giao dịch ACID. Khi một tiến trình Spark đang ghi đè một thư mục (Overwrite) mà bị Crash giữa chừng, hoặc khi hai tiến trình cùng lúc UPDATE một bảng (Concurrent Writes), kết quả là dữ liệu bị hỏng (Data Corruption), tình trạng đọc dữ liệu "rác" (Dirty Reads), hoặc mất dữ liệu.
+Data Lake truyền thống (sử dụng HDFS, S3 hoặc GCS chứa file Parquet/ORC) vốn dĩ **không hỗ trợ giao dịch ACID**. Hãy tưởng tượng kịch bản: Vào lúc 2 giờ sáng, một tiến trình Spark đang ghi đè một thư mục (Overwrite) thì Node bị tắt nguồn đột ngột, hoặc hai tiến trình (Concurrent Writes) cùng lúc cố gắng `UPDATE` một bảng. Kết quả là dữ liệu bị hỏng (Data Corruption), tình trạng đọc dữ liệu "rác" (Dirty Reads), hoặc mất dữ liệu nghiêm trọng.
 
-Các **Table Formats** (Delta Lake, Apache Iceberg, Apache Hudi) ra đời để mang ACID lên Data Lake (tạo thành Data Lakehouse). Chìa khóa thiết kế kiến trúc nằm ở việc **trừu tượng hóa hoàn toàn Metadata (Siêu dữ liệu) khỏi Data (Dữ liệu vật lý)**. 
-
-Thay vì dựa vào các lệnh như `S3 LIST` hoặc `HDFS ls` (vốn chậm chạp, không nhất quán theo Eventual Consistency và tốn kém I/O), hệ thống đọc/ghi thông qua một Metadata Layer đóng vai trò là "Single Source of Truth".
+Sự ra đời của các **Open Table Formats** (Delta Lake, Apache Iceberg, Apache Hudi) đã định hình lại khái niệm Data Lakehouse bằng cách mang các đặc tính ACID của RDBMS truyền thống lên trên Object Storage phân tán. Chìa khóa thiết kế cốt lõi nằm ở việc **trừu tượng hóa hoàn toàn Metadata (Siêu dữ liệu) khỏi Data (Dữ liệu vật lý)** và áp dụng các mô hình đồng thời nâng cao.
 
 ---
 
-## Kiến trúc Thực thi Vật lý: Tách biệt Metadata và Data
+## 1. Cơ sở lý thuyết Đồng thời: MVCC và OCC
 
-Trong hệ thống Data Lakehouse, khi bạn thực thi một câu lệnh `INSERT`, `UPDATE` hoặc `DELETE`, Engine (Spark/Trino) không sửa trực tiếp file Parquet hiện có (vì Object Storage bản chất là *Immutable*). 
+Để hỗ trợ ACID trên Cloud Object Storage — nơi không có khái niệm khóa dòng (Row-level Locks) như MySQL/PostgreSQL — các Table Formats dựa vào hai nguyên lý nền tảng:
 
-Mọi giao dịch tuân theo quy tắc:
-1. Ghi file dữ liệu (Parquet) mới ra Object Storage (Thao tác này chưa hiển thị với người đọc).
-2. Khi file dữ liệu đã nằm an toàn trên disk/S3, Engine thực hiện một thao tác **Atomic Commit** vào Metadata Log.
-3. Người đọc (Reader) luôn query Metadata Log trước, lấy Snapshot (ảnh chụp) mới nhất, sau đó mới quét (Scan) các file vật lý được chỉ định trong Snapshot đó.
+### 1.1. Multi-Version Concurrency Control (MVCC)
+MVCC là chiến lược cho phép nhiều người đọc (Readers) truy cập vào một **Snapshot (ảnh chụp) nhất quán** của dữ liệu, ngay cả khi dữ liệu đó đang bị một tiến trình khác thay đổi.
+*   Reader không bao giờ bị chặn (Block) bởi Writer.
+*   Mỗi khi Writer commit một thay đổi, nó tạo ra một Snapshot version mới hoàn toàn (ví dụ: `v1`, `v2`, `v3`).
+*   Reader bắt đầu query ở version nào thì sẽ luôn thấy dữ liệu cố định của version đó cho đến khi query hoàn tất, bất chấp thế giới bên ngoài thay đổi ra sao.
 
-### Đánh đổi Cấu trúc: Copy-on-Write (CoW) vs Merge-on-Read (MoR)
+### 1.2. Optimistic Concurrency Control (OCC)
+Thay vì sử dụng Lock cơ học (Pessimistic Locking) gây bóp nghẹt băng thông hệ thống, **Optimistic Concurrency Control (OCC)** giả định rằng: *"Xung đột dữ liệu hiếm khi xảy ra"*.
+*   Mọi Writer đều được phép thoải mái tính toán và ghi file Parquet mới (staging) ra S3 mà không bị ai cản trở.
+*   Tại thời điểm **Commit (Xác nhận)**, Engine mới bắt đầu kiểm tra xung đột. Nó so sánh version của bảng lúc bắt đầu ghi và version hiện tại.
+*   Nếu không có ai sửa bảng trong khoảng thời gian đó, thao tác Commit thành công tức thì (Atomic Swap).
+*   Nếu phát hiện xung đột, Writer sẽ bị từ chối (Fail) và phải tiến hành chu trình **Retry** ngầm hoặc báo lỗi về ứng dụng.
 
-Hai chiến lược vật lý này quyết định trực tiếp đến **Write Amplification** (Khuếch đại ghi) và **Read Amplification** (Khuếch đại đọc).
+---
+
+## 2. Kiến trúc Thực thi: Copy-on-Write vs Merge-on-Read
+
+Dù dùng format nào, các giao dịch (Transactions) đều phải xử lý cách cập nhật file tĩnh (vì Object Storage bản chất là *Immutable*). Điều này sinh ra hai chiến lược đánh đổi khốc liệt:
 
 ```mermaid
 graph TD
-    subgraph Copy-on-Write
-    A1("Parquet 1GB") -->|Update 1 row| B1("Read 1GB into RAM")
+    subgraph Copy_on_Write["Copy-on-Write (CoW)"]
+        A1["Parquet 1GB"] -->|Update 1 row| B1["Read 1GB into RAM"]
     B1 --> C1("Rewrite entire 1GB Parquet v2")
     end
     
-    subgraph Merge-on-Read
-    A2("Parquet 1GB") -->|Update 1 row| B2("Write 10KB Delta Log")
-    C2["Reader"] --> D2{"Merge in RAM"}
+    subgraph Merge_on_Read["Merge-on-Read (MoR)"]
+        A2["Parquet 1GB"] -->|Update 1 row| B2["Write 10KB Delta Log"]
+    C2["Reader"] --> D2{"Merge in RAM (Compute Cost)"}
     D2 --> A2
     D2 --> B2
     end
 ```
 
-1. **Copy-on-Write (CoW)**
-   - **Hoạt động:** Sửa 1 dòng trong file Parquet 1GB? Spark phải kéo cả 1GB lên Memory, đổi 1 dòng, và ghi đè xuống S3 thành một file Parquet 1GB hoàn toàn mới. File cũ bị đánh dấu xóa (Tombstoned).
-   - **Trade-offs:** 
-     - *Pro:* Read Latency cực thấp vì dữ liệu lúc đọc đã sạch sẽ.
-     - *Con:* Write Amplification khủng khiếp. Không thể dùng cho Streaming Ingestion hoặc CDC với tần suất UPDATE cao. Gây ra I/O Bottleneck.
+### 2.1. Copy-on-Write (CoW)
+- **Hoạt động:** Bạn muốn sửa 1 dòng trong file Parquet 1GB? Spark phải kéo cả 1GB lên Memory, đổi 1 dòng, và ghi đè xuống S3 thành một file Parquet 1GB hoàn toàn mới. File cũ bị đánh dấu là "Tombstoned" (bia mộ).
+- **Đánh đổi (Trade-offs):**
+  - *Pro:* Read Latency cực thấp vì dữ liệu lúc đọc đã sạch sẽ, quét tuần tự rất mượt.
+  - *Con:* **Write Amplification (Khuếch đại ghi)** tàn bạo. Không thể dùng cho Streaming Ingestion hoặc CDC (Change Data Capture) với tần suất UPDATE cao vì I/O cost sẽ phá nát ngân sách Cloud của bạn.
 
-2. **Merge-on-Read (MoR)**
-   - **Hoạt động:** Thay vì ghi lại cả file, nó chỉ ghi nội dung cập nhật (Delta files / Delete logs) ra một file nhỏ.
-   - **Trade-offs:**
-     - *Pro:* Write Latency rất thấp. Chịu tải tốt cho CDC và Streaming.
-     - *Con:* Read Latency bị ảnh hưởng (Read Amplification) vì Engine truy vấn (Trino/Presto) phải thực hiện `Merge` file Parquet gốc và Delta file ngay trong RAM tại Runtime. Yêu cầu chạy tiến trình Compaction định kỳ ngầm.
+### 2.2. Merge-on-Read (MoR)
+- **Hoạt động:** Thay vì ghi lại cả file to, hệ thống chỉ ghi phần nội dung vừa thay đổi (Delta/Delete logs) ra một file rất nhỏ.
+- **Đánh đổi (Trade-offs):**
+  - *Pro:* Write Latency rất thấp. Chịu tải xuất sắc cho CDC và Kafka Streaming.
+  - *Con:* **Read Amplification (Khuếch đại đọc)** và tốn Compute. Khi Engine truy vấn (Trino/Spark) đọc dữ liệu, nó phải tự động thực hiện thao tác `Merge` file Parquet gốc và Delta file ngay trong RAM tại Runtime. Bắt buộc phải có tiến trình Compaction (Gộp file) chạy ngầm định kỳ để dọn dẹp.
 
 ---
 
-## Mổ xẻ Kiến trúc 3 Ông Lớn (Delta, Iceberg, Hudi)
+## 3. Mổ xẻ Kiến trúc 3 Ông Lớn
 
-### 1. Delta Lake: Kiến trúc Transaction Log (`_delta_log`)
-
-Delta Lake thiết kế xoay quanh thư mục `_delta_log` chứa các file JSON. Mỗi file JSON (ví dụ `000001.json`) là một Atomic Commit ghi nhận hành động `add` (thêm file Parquet) hoặc `remove` (xóa file).
+### 3.1. Delta Lake: Kiến trúc Transaction Log (`_delta_log`)
+Delta Lake thiết kế xoay quanh thư mục `_delta_log` chứa các chuỗi file JSON. Mỗi file JSON (ví dụ `000001.json`) là một Atomic Commit ghi nhận hành động thêm (`add`) hoặc xóa (`remove`) file Parquet vật lý.
 
 ```json
-// Ví dụ nội dung 1 commit trong Delta Log
+// Ví dụ nội dung 1 commit (Snapshot) trong Delta Log
 {
   "add": {
     "path": "part-00000-xxx.parquet",
@@ -76,67 +83,50 @@ Delta Lake thiết kế xoay quanh thư mục `_delta_log` chứa các file JSON
   }
 }
 ```
+**Rủi ro Vận hành: The Replay Overhead**
+Nếu bảng trải qua hàng triệu transactions, thao tác khởi tạo Spark job sẽ phải đọc và replay (chơi lại) hàng vạn file JSON. Việc này gây **OOM (Out Of Memory)** trên Driver node. Delta giải quyết bằng **Checkpoints** (Lưu Snapshot định kỳ dạng Parquet sau mỗi 10 commits).
 
-**Rủi ro Vận hành (Operational Risks): The Replay Overhead**
-- **Sự cố:** Nếu bảng có hàng triệu transaction, việc Spark khởi tạo job bằng cách đọc và replay (chơi lại) hàng ngàn file JSON sẽ gây OOM (Out Of Memory) ở Driver node hoặc làm chậm thời gian lập kế hoạch truy vấn (Query Planning).
-- **Khắc phục:** Delta giải quyết bằng **Checkpoints** (lưu lại trạng thái toàn cục của metadata dưới dạng Parquet sau mỗi 10 commits). Tuy nhiên, nếu tần suất commit quá dày đặc (streaming 1s/batch), Checkpoint creation có thể trở thành bottleneck.
-
-### 2. Apache Iceberg: Hierarchical Metadata & Tránh Cartesian Explosion
-
-Iceberg sinh ra tại Netflix để trị các bảng ở mức Petabyte, nơi mà việc bỏ tất cả log vào một thư mục như Delta sẽ sụp đổ. Kiến trúc của Iceberg là một cây (Tree) Metadata:
+### 3.2. Apache Iceberg: Hierarchical Metadata & Tránh Cartesian Explosion
+Iceberg (do Netflix tạo ra) trị các bảng khổng lồ (Petabytes) nhờ tổ chức Metadata theo dạng cấu trúc Cây Phân Cấp (Hierarchical Tree) rất chặt chẽ:
 
 ```mermaid
 graph TD
-    Cat["Catalog: pointer to v2.metadata.json"] --> Meta["v2.metadata.json"]
-    Meta --> ML["Manifest List .avro"]
-    ML --> M1["Manifest File 1: partition date=2026-01"]
-    ML --> M2["Manifest File 2: partition date=2026-02"]
-    M1 --> D1["Data File 1 .parquet"]
-    M1 --> D2["Data File 2 .parquet"]
+    Cat["Catalog (Nessie/Glue): Pointer to v2.metadata.json"] --> Meta["v2.metadata.json (Snapshot)"]
+    Meta --> ML["Manifest List (.avro)"]
+    ML --> M1["Manifest File 1 (partition date=2026-01)"]
+    ML --> M2["Manifest File 2 (partition date=2026-02)"]
+    M1 --> D1["Data File 1 (.parquet)"]
+    M1 --> D2["Data File 2 (.parquet)"]
 ```
+- **Atomic Compare-and-Swap:** Commit trong Iceberg là việc Catalog (VD: Hive Metastore, AWS Glue) trỏ tham chiếu (pointer) từ `v1.metadata.json` sang `v2.metadata.json` bằng 1 nguyên tử lệnh duy nhất.
+- **Hidden Partitioning (Tuyệt kỹ ẩn mình):** Nếu bạn query lọc bằng `event_time` nhưng bảng lại partition theo `event_date`, Iceberg tự tính toán biên độ thời gian và quét chính xác thư mục (Pruning) nhờ Manifest Files. Query Engine không cần quét toàn bảng (Tránh Cartesian Scan), và Data Engineer không cần nhồi cột partition phụ vào bảng, khiến mọi thứ cực kỳ trong suốt với người dùng.
 
-**Tính năng Đỉnh cao: Hidden Partitioning**
-Trong Hive truyền thống, nếu bạn query không filter đúng cột partition (ví dụ filter bằng `event_time` thay vì cột partition `event_date`), Engine sẽ phải thực hiện "Full Table Scan".
-Iceberg Metadata theo dõi min/max values của mọi cột trong Manifest Files. Bạn đổi logic phân vùng từ ngày (Day) sang giờ (Hour), Iceberg tự động cắt tỉa (Pruning) chính xác file cần thiết mà không yêu cầu viết lại toàn bộ lịch sử, hoàn toàn trong suốt với người dùng.
-
-**Rủi ro Vận hành:** Iceberg sử dụng Optimistic Concurrency Control (OCC). Trong kịch bản *High Concurrency Writes* (nhiều Spark jobs cùng commit vào 1 bảng), sự cố **Commit Conflict** xảy ra. Job thất bại sẽ phải retry (Retry Storms), kéo theo hệ lụy OOM do cấp phát lại bộ nhớ để tính toán.
-
-### 3. Apache Hudi: Tối ưu Streaming và CDC
-
-Hudi (Hadoop Upserts Deletes and Incrementals) từ Uber không chỉ là Table Format mà thiên về một **Processing Framework**. Cốt lõi của Hudi là **Timeline** – theo dõi mọi action (`commits`, `cleans`, `compactions`) dọc theo trục thời gian.
-
-**Trade-off Đặc trưng:** 
-Hudi có kiến trúc MoR rất mạnh mẽ, sử dụng file Avro để lưu trữ row-level logs (phục vụ update) bên cạnh file Parquet (lưu base data).
-- Hỗ trợ Incremental Processing xuất sắc: Cho phép Trino hay Spark stream dữ liệu thay đổi kể từ `commit X` một cách tự nhiên (như Kafka).
-- **Sự cố:** Tiến trình Asynchronous Compaction (Gộp file ngầm) của Hudi cần cấu hình RAM cực lớn. Nếu Compaction lag (không theo kịp tốc độ Ingestion), lượng file Avro log phình to, khi query sẽ gây tràn RAM (JVM OOMKilled) trên các Executor do quá tải việc giải quyết các phiên bản record (Record-level conflict resolution).
+### 3.3. Apache Hudi: Tối ưu Streaming và CDC
+Hudi (Hadoop Upserts Deletes and Incrementals) thiên về **Processing Framework**. Cốt lõi của nó là hệ thống **Timeline**, theo dõi mọi action (`commits`, `cleans`, `compactions`) dọc trục thời gian, cực mạnh ở Incremental Processing (Xử lý tăng dần). Bạn có thể dễ dàng query "Lấy tất cả các row thay đổi từ 8h sáng hôm nay".
 
 ---
 
-## Tối ưu Hiệu năng và Troubleshooting 
+## 4. Các Sự cố Vận hành Phổ biến (Troubleshooting)
 
-### 1. Vấn đề "Small Files" (Khủng hoảng Metadata)
-Streaming liên tục vào Lakehouse sinh ra hàng ngàn file Parquet vài KB.
-- **Hậu quả:** Gây sập Metadata Layer (Metadata nở to hơn cả Data), Query Planning mất hàng chục phút, S3/GCS API throttling.
-- **Giải pháp thực chiến:** 
-  - Đẩy `OPTIMIZE` (hoặc `Clustering`) định kỳ: Dùng một luồng Airflow chạy Daily để bin-pack các file nhỏ thành file 1GB.
-  - Phải đi kèm `VACUUM` (hoặc `ExpireSnapshots`) để xóa các file rác vật lý, nếu không Storage Cost sẽ tăng theo cấp số nhân.
+Làm việc với Data Lakehouse yêu cầu Kỹ sư Dữ liệu phải thấu hiểu các Incident sau:
 
-### 2. Z-Ordering / Liquid Clustering (Chống Data Skew)
-Chỉ partition theo Ngày (Date) thường là không đủ. Khi filter bằng `user_id`, Spark vẫn phải đọc nhiều file.
-Z-Ordering (hoặc Liquid Clustering trong Delta mới) sắp xếp lại vật lý (co-locate) các dòng có cùng `user_id` vào chung một file Parquet, giúp File Statistics (Min/Max) chặt chẽ hơn -> Data Skipping hiệu quả hơn (bỏ qua 90% dữ liệu không cần thiết ở tầng I/O).
+### 4.1. Concurrency Retry Storms (Bão Retry do OCC)
+Vì Delta và Iceberg dùng OCC, nếu bạn cấu hình 20 luồng Airflow chạy ghi đồng thời (Concurrent Ingests) vào chung 1 bảng (thậm chí 1 partition), chúng sẽ dẫm đạp lên nhau lúc Commit. 
+*   **Hậu quả:** Job thất bại, tự động kích hoạt Retry. 20 luồng cùng Retry tạo thành bão (Retry Storm), Driver liên tục Re-compute lại dữ liệu trên RAM dẫn đến OOMKilled và bốc hơi ngân sách Cloud.
+*   **Giải pháp:** Áp dụng Hash-partitioning trước khi ghi, cô lập các luồng ghi vào các Partition vật lý độc lập.
 
-```sql
--- Ví dụ chạy Optimize Z-Order trong Spark Delta
-OPTIMIZE events ZORDER BY (user_id, device_type);
-```
-**Cảnh báo Đánh đổi:** Chạy Z-Ordering rất tốn Compute Cost. Cần giới hạn số lượng cột Z-Order (tối đa 2-3 cột) để tránh hiện tượng loãng không gian đa chiều (Curse of Dimensionality).
+### 4.2. Khủng hoảng "Small Files" & Nổ Metadata
+Ghi Streaming dữ liệu 5 phút/lần sinh ra hàng vạn file Parquet chỉ vài KB.
+*   **Hậu quả:** Thư mục Metadata bành trướng khổng lồ. S3/GCS chặn IP của bạn vì Request Rate [API GET/PUT] vượt quá giới hạn (Throttling). Query Planning của Spark mất 20 phút thay vì 2 giây.
+*   **Giải pháp Thực chiến:**
+    1.  Khởi chạy luồng `OPTIMIZE` (hoặc Compaction) hàng đêm để bin-pack file nhỏ thành file 512MB hoặc 1GB.
+    2.  BẮT BUỘC chạy luồng `VACUUM` (Delta) hoặc `ExpireSnapshots` (Iceberg) để dọn dẹp các file cũ không còn được tham chiếu. Nếu quên, tiền lưu trữ (Storage Cost) trên S3 sẽ thổi bay lợi nhuận của công ty.
 
 ---
 
-## Nguồn Tham Khảo
-
-1. Databricks Engineering Blog: [Delta Lake Architecture and Protocol](https://delta.io/)
-2. Netflix Tech Blog: [How Netflix uses Apache Iceberg](https://netflixtechblog.com/)
-3. Apache Iceberg Official Specification: [Iceberg Table Spec](https://iceberg.apache.org/spec/)
-4. Uber Engineering: [Apache Hudi Architecture](https://hudi.apache.org/docs/concepts)
-5. Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media. (Chapter 3: Storage and Retrieval - SSTables & LSM-Trees).
+## 5. Nguồn Tham Khảo (References)
+*   **Netflix Tech Blog:** [How Netflix uses Apache Iceberg][https://netflixtechblog.com/]
+*   **Databricks Documentation:** [Delta Lake Concurrency Control (OCC]][https://docs.databricks.com/en/optimizations/isolation-level.html]
+*   **Apache Iceberg Spec:** [Iceberg Table Spec & Metadata Hierarchy][https://iceberg.apache.org/spec/]
+*   **Designing Data-Intensive Applications** - *Martin Kleppmann* (MVCC Concepts).
+*   **Onehouse Blog:** [Apache Hudi Architecture](https://hudi.apache.org/docs/concepts/]

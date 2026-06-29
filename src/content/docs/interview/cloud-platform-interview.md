@@ -83,7 +83,7 @@ graph LR
     B --> E
     D --> F
     E --> F
-    F -. "Lifecycle Policy" .-> G
+    F -.->|"Lifecycle Policy"| G
     F --> H
     H --> J
     F --> I

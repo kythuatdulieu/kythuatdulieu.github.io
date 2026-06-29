@@ -1,137 +1,130 @@
 ---
-title: "Time Travel & Lịch sử Dữ liệu (Data Versioning)"
+title: "Time Travel & MVCC: Đánh Đổi Giữa I/O Và Lịch Sử Dữ Liệu"
 difficulty: "Intermediate"
 tags: ["time-travel", "delta-lake", "apache-iceberg", "mvcc", "data-lakehouse", "vacuum", "troubleshooting"]
 readingTime: "12 mins"
-lastUpdated: 2026-06-26
+lastUpdated: 2026-06-29
 seoTitle: "Time Travel Architecture: Deep Dive vào Delta Lake & Apache Iceberg"
 metaDescription: "Phân tích kiến trúc Time Travel (MVCC) trên Data Lakehouse, cơ chế Transaction Log, Snapshot, các Trade-off về FinOps và xử lý sự cố FileNotFoundException."
-description: "Time Travel không phải phép thuật, nó là sự đánh đổi (trade-off) giữa I/O, Storage Cost và Compute Overhead. Cùng Staff Engineer mổ xẻ cơ chế MVCC bên dưới Delta Lake và Apache Iceberg."
+description: "Time Travel không phải phép thuật, nó là sự đánh đổi (trade-off) giữa FinOps Storage Cost và sự an toàn. Cùng mổ xẻ cơ chế MVCC bên dưới Delta Lake và Iceberg."
 ---
 
-Khi một Data Pipeline vô tình chạy lệnh `DELETE` xóa trắng bảng hoặc ghi nhầm hàng triệu record lỗi (bad data), phản xạ đầu tiên của Data Engineer không còn là tìm file backup hôm qua. Nhờ tính năng **Time Travel** trên các Table Format hiện đại (Delta Lake, Apache Iceberg, Apache Hudi), việc khôi phục (rollback) chỉ tốn vài giây.
+Khi một Data Pipeline vô tình chạy lệnh `DELETE` xóa trắng bảng hoặc ghi nhầm hàng triệu record lỗi (bad data), phản xạ đầu tiên của Data Engineer truyền thống là tìm file backup hôm qua và hì hục khôi phục. Nhưng trên Data Lakehouse (Delta Lake, Apache Iceberg), việc khôi phục (rollback) chỉ tốn vài giây thông qua tính năng **Time Travel**.
 
-Tuy nhiên, Time Travel không phải là "phép thuật". Dưới góc nhìn kiến trúc hệ thống, nó là một dạng triển khai của **MVCC (Multi-Version Concurrency Control)** trên Cloud Object Storage (S3/GCS). Bài viết này sẽ mổ xẻ cách cơ chế này hoạt động ở tầng vật lý, những rủi ro vận hành (Operational Risks) và sự đánh đổi (Trade-offs) bạn phải trả.
+Tuy nhiên, Time Travel không phải là "phép thuật". Dưới góc nhìn kiến trúc hệ thống, nó là một dạng triển khai của **MVCC (Multi-Version Concurrency Control)** và **Snapshot Isolation** trên Cloud Object Storage (S3/GCS). Bạn đang dùng tiền (Storage Cost) để mua lấy sự an toàn.
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
+---
 
-Trên Data Lakehouse, dữ liệu vật lý là **bất biến (Immutable)**. Các file Parquet một khi được ghi xuống S3 sẽ không bao giờ bị sửa đổi in-place. Mọi thao tác `UPDATE`, `DELETE`, `MERGE` thực chất là tạo ra các file Parquet *mới* và đánh dấu các file cũ là "đã xóa" (Tombstoned).
+## 1. Kiến Trúc Thực Thi Vật Lý (MVCC & Immutability)
 
-### 1.1. Cơ chế Transaction Log của Delta Lake
-Delta Lake quản lý phiên bản thông qua thư mục `_delta_log`. Mỗi giao dịch (commit) tạo ra một file JSON (ví dụ `00000.json`, `00001.json`).
+Nguyên lý tối thượng của Data Lakehouse: **Dữ liệu vật lý là Bất biến (Immutable)**.
+Các file Parquet một khi được ghi xuống S3 sẽ KHÔNG BAO GIỜ bị sửa đổi (in-place update). Mọi thao tác `UPDATE` hoặc `DELETE` thực chất là:
+1. Ghi các file Parquet *mới* chứa dữ liệu đã cập nhật.
+2. Đánh dấu các file Parquet *cũ* là "đã xóa" (Tombstoned) ở tầng Metadata.
+
+### 1.1. Delta Lake: Nhật Ký Giao Dịch (Transaction Log)
+Delta quản lý phiên bản thông qua thư mục `_delta_log`. Mỗi giao dịch (commit) tạo ra một file JSON tuần tự.
 
 ```mermaid
 flowchart TD
     subgraph S3_Bucket
         direction TB
-        subgraph _delta_log
+        subgraph delta_log["_delta_log/"]
             v0["00000.json<br/>Action: Add A.parquet"]
-            v1["00001.json<br/>Action: Remove A.parquet<br/>Add B.parquet, C.parquet"]
+            v1["00001.json<br/>Action: Remove A.parquet<br/>Add B.parquet"]
         end
-        subgraph data_files
-            A["A.parquet<br/>Tombstoned"]
-            B["B.parquet<br/>Active"]
-            C["C.parquet<br/>Active"]
+        subgraph data_files["Data Files/"]
+            A["A.parquet<br/>(Tombstoned)"]
+            B["B.parquet<br/>(Active)"]
         end
         
         v0 -.-> A
         v1 --"Tombstone"--> A
         v1 -.-> B
-        v1 -.-> C
     end
 ```
+Khi bạn truy vấn `VERSION AS OF 0`, Spark sẽ đọc file `00000.json`, nhận diện file `A.parquet` và quét nó, hoàn toàn phớt lờ sự tồn tại của `B.parquet`.
 
-Khi bạn truy vấn `VERSION AS OF 0`, Spark engine sẽ đọc file `00000.json`, nhận diện file `A.parquet` và quét nó, hoàn toàn phớt lờ sự tồn tại của `B` và `C`.
+### 1.2. Apache Iceberg: Cây Metadata (Snapshot Tree)
+Iceberg tạo ra một cây phân cấp rành mạch hơn. Mỗi lần commit sinh ra một **Snapshot**.
+Snapshot trỏ tới một **Manifest List**, Manifest List trỏ tới các **Manifest Files**, và cuối cùng trỏ tới File Parquet.
+Nhờ lưu trữ Timestamp gắn chặt với Snapshot ID, Iceberg cho phép rollback về chính xác một sát na trong quá khứ một cách dễ dàng (O(1) time complexity vì chỉ đổi con trỏ Metadata).
 
-### 1.2. Cơ chế Snapshot & Manifest của Apache Iceberg
-Iceberg sử dụng mô hình cây phân cấp Metadata. Mỗi lần commit, Iceberg sinh ra một **Snapshot** mới. Snapshot trỏ tới một **Manifest List**, và Manifest List trỏ tới các **Manifest Files** chứa danh sách đường dẫn tới các file Parquet thực tế.
+---
 
-Iceberg lưu trữ mốc thời gian (timestamp) gắn liền với từng Snapshot ID. Khi bạn gọi Time Travel, engine tìm Snapshot ID gần nhất với mốc thời gian yêu cầu và nạp chính xác cây metadata đó lên RAM (Driver node).
+## 2. Thực Chiến Time Travel (Code)
 
-## 2. Code Thực chiến (Show, Don't Tell)
-
-### Truy vấn dữ liệu lịch sử (Point-in-time)
-
-**Với PySpark (Delta Lake):**
+### Truy vấn Point-in-time
+**PySpark (Delta Lake):**
 ```python
-# Đọc dữ liệu tại một version cụ thể
-df_v5 = spark.read.format("delta").option("versionAsOf", 5).load("s3://bucket/my_table")
+# Đọc dữ liệu tại Version 5
+df_v5 = spark.read.format("delta").option("versionAsOf", 5).load("s3://bucket/table")
 
-# Đọc dữ liệu tại một mốc thời gian
+# Đọc dữ liệu tại thời điểm quá khứ
 df_time = spark.read.format("delta") \
   .option("timestampAsOf", "2026-06-01T12:00:00.000Z") \
-  .load("s3://bucket/my_table")
+  .load("s3://bucket/table")
 ```
 
-**Với Trino SQL (Apache Iceberg):**
+**Trino SQL [Apache Iceberg]:**
 ```sql
--- Iceberg hỗ trợ cú pháp FOR SYSTEM_VERSION AS OF hoặc FOR TIMESTAMP AS OF
-SELECT * 
-FROM iceberg_catalog.my_db.my_table FOR TIMESTAMP AS OF TIMESTAMP '2026-06-01 12:00:00.000';
+SELECT * FROM iceberg.my_db.my_table 
+FOR TIMESTAMP AS OF TIMESTAMP '2026-06-01 12:00:00.000';
 ```
 
-### Rollback (Khôi phục thảm họa)
-
-Thay vì viết Spark job đè lại toàn bộ data, các Table Format hỗ trợ Rollback thông qua Metadata (cực nhanh, O(1) time complexity vì bản chất chỉ là thay đổi con trỏ metadata):
-
+### Khôi phục thảm họa (Rollback)
+Quá trình này diễn ra ngay lập tức, không tốn I/O để di chuyển data:
 ```sql
--- Delta Lake: Đưa bảng về Version 10
+-- Delta Lake
 RESTORE TABLE my_table TO VERSION AS OF 10;
 
--- Iceberg: Gọi system procedure để quay về snapshot trước đó
+-- Iceberg
 CALL catalog.system.rollback_to_timestamp('my_db', 'my_table', TIMESTAMP '2026-06-01 12:00:00.000');
 ```
 
-## 3. Rủi ro Vận hành & Systemic Trade-offs
+---
 
-Giữ lại mọi file Parquet để phục vụ Time Travel là một con dao hai lưỡi. Dưới đây là những góc nhìn đánh đổi mà một Staff Engineer phải cân nhắc.
+## 3. Rủi Ro Vận Hành & Systemic Trade-offs
 
-### 3.1. Sự cố Kinh điển: `FileNotFoundException` (Concurrent Reader Failure)
+Giữ lại mọi file Parquet rác để phục vụ Time Travel là một con dao hai lưỡi. Bạn phải đối mặt với các sự cố sau:
 
+### 3.1. Sự Cố Kinh Điển: `FileNotFoundException`
 **Tình huống:** 
-- Lúc 08:00 AM, một Data Scientist khởi chạy một Spark job train model trên toàn bộ lịch sử bảng, dự kiến mất 3 tiếng để chạy (bắt đầu đọc từ Version 50).
-- Lúc 09:00 AM, một cronjob bảo trì hệ thống chạy lệnh `VACUUM` (Delta) hoặc `expire_snapshots` (Iceberg) với cấu hình retention quá thấp (VD: `RETAIN 0 HOURS`).
-- Kết quả: `VACUUM` quét S3 và xóa vật lý các file Parquet bị đánh dấu tombstone của Version 50. Lúc 09:05 AM, các Executor của Spark job cố gắng fetch file Parquet đó từ S3 và văng lỗi **`FileNotFoundException`**. Toàn bộ cluster sập.
+- `08:00 AM`: Data Scientist chạy một job Spark train AI cực nặng, dự kiến quét bảng trong 3 tiếng (Bắt đầu đọc từ Version 50).
+- `09:00 AM`: Data Engineer cài cronjob chạy lệnh `VACUUM RETAIN 0 HOURS` (Xóa ngay lập tức mọi data cũ để tiết kiệm tiền S3).
+- **Kết quả:** `VACUUM` xóa vật lý các file Parquet Tombstoned của Version 50. Lúc `09:05 AM`, Spark Executor của Data Scientist gọi API `S3 GET` để lấy file Parquet đó $\rightarrow$ Văng lỗi **`FileNotFoundException`**. Toàn bộ job AI 3 tiếng sập đổ.
 
-**Troubleshooting & Best Practice:**
-- **Tuyệt đối KHÔNG** set retention threshold xuống sát 0 trên môi trường Production trừ khi bạn cực kỳ hiểu rõ luồng đọc/ghi.
-- Mức retention tiêu chuẩn thường là **7 ngày**. Đủ để Time Travel và an toàn cho các truy vấn đọc kéo dài (long-running readers).
-- *Trade-off:* **Storage Cost vs. Query Safety**. Bạn trả thêm tiền lưu trữ Cloud cho các file rác trong 7 ngày để đổi lấy tính sẵn sàng và sự an toàn.
+**Best Practice:**
+- Tuyệt đối **KHÔNG BAO GIỜ** set retention threshold xuống sát `0`.
+- Standard industry là giữ **7 ngày (168 giờ)**. Bạn chấp nhận trả thêm tiền AWS S3 cho 7 ngày dữ liệu rác để bảo vệ các Long-running Queries (Reader Isolation).
 
-### 3.2. Metadata Explosion (Nổ tung Metadata ở Driver Node)
+### 3.2. Metadata Explosion (JVM OOMKilled)
+Nếu hệ thống Kafka Streaming của bạn đẩy dữ liệu và commit mỗi giây, sau 1 tháng bạn sẽ có 2.5 triệu file JSON metadata. 
+Khi chạy câu lệnh `SELECT COUNT(*)`, Node Driver của Spark phải load 2.5 triệu file JSON lên bộ nhớ RAM (Heap) để dựng lại Snapshot.
+$\rightarrow$ Hậu quả: Spark Driver chết vì **OOMKilled** trước khi chạm vào bất kỳ file Parquet nào.
+**Giải pháp:** Giảm tần suất trigger của Streaming Job (Ví dụ: 1 phút/lần thay vì 1 giây/lần), hoặc phụ thuộc vào Checkpointing của Delta Lake.
 
-Nếu bạn ingest dữ liệu bằng Spark Structured Streaming, mỗi micro-batch (vài giây) sẽ tạo ra một commit. Sau 1 tháng, bạn có hàng triệu file `.json` (Delta) hoặc `snap-*.avro` (Iceberg). 
-
-Khi một truy vấn phân tích mới khởi chạy, Node Driver phải tải toàn bộ đống metadata khổng lồ này lên RAM để tính toán State hiện tại (quét qua hàng nghìn file logs). Hậu quả: **JVM OOMKilled (Out of Memory)** hoặc thời gian planning câu query tốn nhiều thời gian hơn cả thời gian execution thực sự.
-
-**Giải pháp & Khắc phục:**
-- **Checkpointing (Delta Lake):** Cứ sau 10 commit, Delta tự động gom metadata thành một file `.checkpoint.parquet` duy nhất. Tuy nhiên, nếu bạn time-travel về một version nằm sâu giữa 2 checkpoint xa xôi, engine vẫn phải load lại rất nhiều file JSON rời rạc.
-- **Tối ưu Tần suất Commit:** Cân nhắc tinh chỉnh lại `trigger` interval của các streaming job (ví dụ: từ 1 giây lên 1 phút) để giảm lượng commit rác, giúp metadata gọn nhẹ và query planning nhanh hơn.
-
-### 3.3. Dọn rác với VACUUM và Expire Snapshots (FinOps)
-
-Để tối ưu chi phí lưu trữ đám mây (FinOps), việc lên lịch chạy quá trình dọn dẹp định kỳ (Garbage Collection) là bắt buộc. Quá trình này sẽ rà soát metadata và gửi HTTP `DELETE` object xuống S3 để xóa file vật lý.
+### 3.3. FinOps vs History (Dọn rác vật lý)
+Để tối ưu chi phí Cloud, bạn phải chủ động dọn rác (Hard Delete) bằng các lệnh sau:
 
 **Delta Lake (VACUUM):**
 ```sql
--- Dọn dẹp các file rác không còn tham chiếu trong 168 giờ (7 ngày) qua
-VACUUM my_table RETAIN 168 HOURS;
+-- Dọn dẹp file vật lý không thuộc về bất kỳ active snapshot nào trong 7 ngày qua
+VACUUM production.orders RETAIN 168 HOURS;
 ```
-*Lưu ý:* Nếu bạn cố ép RETAIN < 168 hours (dưới 7 ngày), Spark mặc định sẽ ném ra exception để bảo vệ bạn. Để bypass, bạn phải cấu hình `set spark.databricks.delta.retentionDurationCheck.enabled = false`. Tuy nhiên, hãy nhớ lại thảm họa ở mục 3.1 trước khi quyết định.
 
-**Apache Iceberg:**
+**Apache Iceberg (Expire Snapshots):**
 ```sql
--- Dọn dẹp snapshot cũ khỏi metadata
 CALL catalog.system.expire_snapshots(
   table => 'my_db.my_table',
   older_than => TIMESTAMP '2026-06-19 00:00:00.000',
-  retain_last => 5 -- Luôn đảm bảo giữ lại ít nhất 5 snapshot gần nhất dù đã quá hạn
+  retain_last => 5 -- Safety net: Luôn giữ 5 snapshot gần nhất
 );
 ```
 
-## Nguồn Tham Khảo (References)
+---
 
-1. [Databricks: Diving Into Delta Lake - Unpacking The Transaction Log](https://www.databricks.com/blog/2019/08/21/diving-into-delta-lake-unpacking-the-transaction-log.html)
-2. [Apache Iceberg Official Docs: Snapshot Isolation and Time Travel](https://iceberg.apache.org/docs/latest/snapshots/)
-3. [Martin Kleppmann - Designing Data-Intensive Applications (Chapter 3: SSTables, LSM-Trees và B-Trees)](https://dataintensive.net/)
-4. [Delta Lake Docs: VACUUM and Safety Checks](https://docs.delta.io/latest/delta-utility.html#vacuum)
+## Nguồn Tham Khảo (References)
+* [Delta Lake Docs: VACUUM and Safety Checks][https://docs.delta.io/latest/delta-utility.html#vacuum]
+* [Apache Iceberg: Snapshot Isolation and Time Travel](https://iceberg.apache.org/docs/latest/snapshots/]
+* *Designing Data-Intensive Applications (Chapter 3: SSTables, LSM-Trees và B-Trees)* - Martin Kleppmann.

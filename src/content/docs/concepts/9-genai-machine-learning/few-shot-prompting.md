@@ -1,59 +1,60 @@
 ---
-title: "Few-shot Prompting trong Production: Kiến trúc, FinOps và Operational Risks"
+title: "System Design Few-shot Prompting: Prompt Caching và FinOps"
 difficulty: "Advanced"
-tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm", "finops", "system-design"]
+tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm", "finops", "system-design", "machine-learning"]
 readingTime: "15 mins"
-lastUpdated: 2026-06-26
-seoTitle: "Few-shot Prompting System Design: Dynamic Routing & Prompt Caching"
-metaDescription: "Thiết kế kiến trúc Few-shot Prompting ở scale production. Phân tích Operational Risks (TTFT, Throughput), FinOps (Token Tax) và cơ chế Prompt Caching (KV Cache)."
-description: "Tại sao hardcode vài ví dụ vào prompt lại biến thành cơn ác mộng tài chính và độ trễ ở quy mô lớn? Cùng Staff Engineer mổ xẻ kiến trúc Dynamic Few-shot, Prompt Caching và các giới hạn hệ thống."
+lastUpdated: 2026-06-29
+seoTitle: "Thiết kế kiến trúc Few-shot Prompting: Dynamic Routing, Prompt Caching"
+metaDescription: "Thiết kế kiến trúc Few-shot Prompting ở scale production. Phân tích Operational Risks (TTFT, KV Cache), FinOps (Token Tax) và Prompt Caching."
+description: "Tại sao hardcode vài ví dụ vào prompt lại biến thành cơn ác mộng tài chính và độ trễ ở quy mô lớn? Cùng mổ xẻ kiến trúc Dynamic Few-shot và các giới hạn hệ thống LLM."
 ---
 
-Vượt xa khỏi việc chỉ là một kỹ thuật gõ "vài ví dụ" trên giao diện ChatGPT, **Few-shot Prompting** trong môi trường Production là một bài toán System Design đầy thách thức. Việc nhồi nhét hàng chục examples vào context window của LLM sinh ra một loạt các vấn đề về **Token Tax** (Chi phí rác), **TTFT Latency** (Time To First Token) và cạn kiệt tài nguyên bộ nhớ GPU (**KV Cache Bloat**).
+Vượt xa khỏi việc chỉ là một thủ thuật gõ "vài ví dụ" trên giao diện ChatGPT, **Few-shot Prompting (In-Context Learning)** trong môi trường Production là một bài toán System Design đầy thách thức. 
 
-Dưới góc nhìn của một Data/ML Engineer, Few-shot Prompting không phải là text, nó là **Data Assets**. Nếu bạn hardcode few-shot vào source code, hệ thống của bạn đã nợ Technical Debt ngay từ ngày đầu tiên.
+Việc nhồi nhét hàng chục examples (ví dụ mẫu) vào Context Window của LLM sinh ra một loạt các vấn đề hạ tầng: **Token Tax** (Chi phí token rác), **TTFT Latency** (Độ trễ Time To First Token) và cạn kiệt tài nguyên bộ nhớ GPU (**KV Cache Exhaustion**).
 
-## 1. Kiến trúc Dynamic Few-Shot Routing
+Dưới góc nhìn của một Kỹ sư Hệ thống, nếu bạn hardcode (đóng cứng) few-shot vào source code, hệ thống của bạn đã gánh Technical Debt (Nợ kỹ thuật) ngay từ ngày đầu tiên.
 
-Thay vì ném một file text dài chứa 50 ví dụ vào mọi API request, hệ thống hiện đại sử dụng kiến trúc **Retrieval-Augmented Few-Shot (Dynamic Few-Shot)**. 
+---
+
+## 1. Kiến Trúc Dynamic Few-Shot Routing
+
+Thay vì nhét một file text dài chứa 50 ví dụ cố định vào mọi API request, các hệ thống quy mô lớn sử dụng kiến trúc **Retrieval-Augmented Few-Shot (Dynamic Few-Shot)**.
 
 ### Cơ chế hoạt động (Physical Execution)
-Ý tưởng cốt lõi là coi bộ các ví dụ (shots) như một cơ sở dữ liệu. Khi user gửi query, hệ thống sẽ nhúng (embed) query đó và dùng Vector Search (kNN) để tìm ra top `k` ví dụ tương đồng nhất từ Vector Database, sau đó mới lắp ráp thành một Mega-prompt đẩy vào LLM.
-
-![Dynamic Few-Shot Architecture](/images/9-genai-machine-learning/dynamic-few-shot-architecture.png)
+Ý tưởng cốt lõi là biến tập Examples (Golden Dataset) thành một cơ sở dữ liệu Vector. Khi User gửi query, hệ thống sẽ tính toán Embedding của query đó và dùng thuật toán kNN để tìm ra `K` ví dụ tương đồng nhất, sau đó mới lắp ráp thành một Mega-prompt đẩy vào LLM.
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant App as Orchestrator
-    participant VectorDB as Vector Store("Chroma/Milvus")
+    participant App as App Orchestrator
+    participant VectorDB as Vector Store
     participant LLM as LLM API
     
     User->>App: Gửi Query
-    App->>App: Generate Embedding (Query)
+    App->>App: Nhúng Query (Embedding)
     App->>VectorDB: kNN Search (Similarity)
-    VectorDB-->>App: Trả về Top 3 Examples liên quan nhất
-    App->>App: Compile Template("System + 3 Shots + Query")
+    VectorDB-->>App: Trả về Top 3 Examples sát nghĩa nhất
+    App->>App: Compile Template (System + 3 Shots + Query)
     App->>LLM: Gửi Inference Request
     LLM-->>App: Trả về Result
     App-->>User: Hiển thị
 ```
 
-### Show, Don't Tell: LangChain Dynamic Few-Shot Pipeline
-
-Dưới đây là pipeline thực thi bằng Python, giới hạn `k=3` để tối ưu context window:
+### Show, Don't Tell: Pipeline LangChain
+Dưới đây là mã Python mô phỏng Dynamic Few-Shot, chỉ chọn ra `k=2` ví dụ để tiết kiệm Token:
 
 ```python
 from langchain_chroma import Chroma
 from langchain_core.prompts import SemanticSimilarityExampleSelector, FewShotPromptTemplate, PromptTemplate
 from langchain_openai import OpenAIEmbeddings
 
-# 1. Tập dữ liệu vàng (Golden Dataset) - Thường load từ Data Warehouse
+# 1. Golden Dataset - Thường load từ Data Warehouse
 examples = [
-    {"input": "Drop database orders;", "output": "SQL Injection (High Risk)"},
+    {"input": "Drop database orders;", "output": "SQL Injection (High)"},
     {"input": "Select * from users where id = 1;", "output": "Safe"},
-    {"input": "1; DROP TABLE users", "output": "SQL Injection (High Risk)"},
-    {"input": "UNION SELECT username, password FROM admins", "output": "SQL Injection (High Risk)"}
+    {"input": "1; DROP TABLE users", "output": "SQL Injection (High)"},
+    {"input": "UNION SELECT username FROM admins", "output": "SQL Injection (High)"}
 ]
 
 example_prompt = PromptTemplate(
@@ -61,7 +62,7 @@ example_prompt = PromptTemplate(
     template="Input: {input}\nClassification: {output}"
 )
 
-# 2. Xây dựng Index Cache trên bộ nhớ
+# 2. Xây dựng Index Vector cho Examples
 example_selector = SemanticSimilarityExampleSelector.from_examples(
     examples,
     OpenAIEmbeddings(),
@@ -78,103 +79,69 @@ dynamic_prompt = FewShotPromptTemplate(
     input_variables=["query"]
 )
 
-# Execution thực tế:
+# Khi chạy thực tế, model chỉ nhận được đúng 2 ví dụ sát sườn nhất
 print(dynamic_prompt.format(query="SELECT * FROM products;"))
-# Model sẽ chỉ nhận được 2 ví dụ gần nhất thay vì load cả DB.
 ```
 
 ---
 
-## 2. Rủi ro Vận hành (Operational Risks)
+## 2. Rủi Ro Vận Hành (Nút thắt Context Window)
 
-Nếu không kiểm soát tốt số lượng "shots", bạn sẽ dính các sự cố kinh điển sau ở tầng hạ tầng (Infrastructure):
+Nếu không kiểm soát tốt số lượng "shots", bạn sẽ dính các sự cố kinh điển sau ở tầng hạ tầng GPU:
 
-### 2.1. Nút thắt TTFT (Time To First Token) Latency
-LLM inference có hai pha: **Prefill Phase** (đọc hiểu prompt) và **Decode Phase** (sinh ra token mới). 
-- **Prefill phase** xử lý toàn bộ prompt đầu vào song song, nhưng chi phí tính toán tăng theo bậc 2 ($O(N^2)$) của số token. 
-- Nhồi 20 examples vào prompt tương đương với việc ép GPU phải thực hiện một ma trận Attention khổng lồ. Kết quả? API của bạn sẽ bị "treo" vài giây trước khi token đầu tiên được sinh ra (TTFT Spike).
+### 2.1. Đỉnh Trễ TTFT (Time To First Token Spike)
+Quá trình xử lý LLM (Inference) có hai pha: **Prefill Phase** (Đọc hiểu prompt đầu vào) và **Decode Phase** (Sinh ra từng token output).
+Pha Prefill xử lý toàn bộ prompt song song, nhưng chi phí tính toán ma trận Attention tăng theo **bậc 2 ($O(N^2)$)** của số token.
+Nhồi 10,000 tokens tiền ví dụ (Few-shots) vào prompt tương đương với việc ép GPU thực hiện một khối lượng tính toán khổng lồ. Kết quả là API của bạn sẽ bị "treo" nhiều giây trước khi token đầu tiên được nhả ra.
 
 ### 2.2. KV Cache Exhaustion (Cạn kiệt GPU VRAM)
-Khi model đọc Few-shot prompt, nó lưu trạng thái trung gian của các token vào **KV Cache** (Key-Value Cache) trên GPU VRAM. 
-- Tại scale hàng nghìn RPS (Requests Per Second), nếu mỗi request mang theo 4000 tokens tiền xử lý từ các ví dụ Few-shot, dung lượng KV Cache sẽ phình to khủng khiếp, gây ra hiện tượng **OOMKilled** trên các container vLLM hoặc buộc hệ thống phải Evict (đẩy ra) các session khác.
+Khi model đi qua các tokens của Few-shot prompt, nó lưu trạng thái trung gian (Key/Value) vào **KV Cache** trên bộ nhớ VRAM của GPU.
+Tại quy mô 1,000 Requests/giây (RPS), nếu mỗi request đều mang theo 4,000 tokens rác từ Few-shots, dung lượng KV Cache sẽ phình to vượt quá VRAM (Ví dụ: GPU A100 80GB cũng sẽ sập). Dẫn đến hiện tượng **OOMKilled** trên các engine như vLLM.
 
 ---
 
-## 3. Tối ưu Chi phí (FinOps) với Prompt Caching
+## 3. Tối Ưu FinOps: Prompt Caching (LLM Prefix Caching)
 
-**"Token Tax"** là một thực tế tàn khốc: Nếu System prompt và 5 examples của bạn tốn 2,000 tokens, và bạn phục vụ 1 triệu requests/ngày, bạn đang trả tiền cho 2 tỷ tokens "rác" lặp đi lặp lại mỗi ngày.
+**"Token Tax"** là một thực tế tàn khốc: Nếu System prompt và Few-shots của bạn tốn 2,000 tokens, và bạn phục vụ 1 triệu requests/ngày, bạn đang trả tiền oan cho 2 Tỷ tokens "rác" lặp đi lặp lại mỗi ngày.
 
-### Giải pháp: LLM Prefix Caching (Prompt Caching)
-Các nhà cung cấp như Anthropic (Claude) hay framework mã nguồn mở (vLLM, SGLang) giới thiệu khái niệm **Prefix Caching**. 
-
-Thay vì tính toán lại ma trận Attention cho 2,000 tokens tĩnh (System prompt + Few-shots) trên mỗi request, hệ thống **chỉ tính toán 1 lần** và lưu KV Cache của đoạn đó trên VRAM. Các request sau có cùng phần "đầu" (Prefix) sẽ được ánh xạ thẳng vào Cache.
+### Giải pháp: Prefix Caching
+Các nhà cung cấp (Anthropic Claude, OpenAI) và framework mã nguồn mở (vLLM, SGLang) đã giới thiệu khái niệm **Prefix Caching**.
+Thay vì tính toán lại ma trận Attention cho phần Few-shots tĩnh trên mỗi request, hệ thống GPU **chỉ tính toán 1 lần** và lưu KV Cache của đoạn đó cố định trên VRAM. Các request sau nếu có chung phần "đầu" (Prefix) sẽ được ánh xạ thẳng vào Cache.
 
 ```mermaid
 flowchart TD
-    A["Incoming Request"] --> B{Trùng khớp Prefix?}
-    B -- Yes("Cache Hit") --> C["Lấy KV States từ VRAM"]
-    B -- No("Cache Miss") --> D["Prefill Compute: Attention Matrix O_N^2"]
+    A["Incoming Request"] --> B{"Trùng khớp Prefix?"}
+    B -- "Yes (Cache Hit)" --> C["Lấy KV States từ VRAM"]
+    B -- "No(Cache Miss)" --> D["Prefill Compute: Attention Matrix O(N^2)"]
     D --> E["Lưu KV States mới vào VRAM"]
     C --> F["Decode Phase: Generate Token"]
     E --> F
-    F --> G[Output]
 ```
 
-### Show, Don't Tell: Anthropic Prompt Caching API
-Khi triển khai với Anthropic Claude 3.5, việc khai báo `cache_control` giúp cắt giảm tới **90% chi phí input token** và giảm TTFT xuống dưới 50ms cho đoạn Few-shot dài:
-
-```python
-import anthropic
-
-client = anthropic.Anthropic()
-
-response = client.messages.create(
-    model="claude-3-5-sonnet-20240620",
-    max_tokens=1024,
-    system=[
-        {
-            "type": "text",
-            "text": "Bạn là chuyên gia Data Engineer. Dưới đây là 100 ví dụ về cấu trúc Log hệ thống..."
-        },
-        {
-            "type": "text",
-            "text": "<logs_examples>...[10,000 tokens of few-shot examples]...</logs_examples>",
-            # Đánh dấu breakpoint để Cache lại toàn bộ khối này trên server Anthropic
-            "cache_control": {"type": "ephemeral"} 
-        }
-    ],
-    messages=[
-        {"role": "user", "content": "Phân tích đoạn log: ERR 0x992 Database Deadlock"}
-    ]
-)
-
-# Kiểm tra FinOps:
-print(response.usage.cache_creation_input_tokens) # Lần 1: 10,000 tokens
-print(response.usage.cache_read_input_tokens)     # Lần sau: 10,000 tokens (Giảm 90% giá!)
-```
+Việc áp dụng cơ chế này (như dùng `cache_control` trên API của Anthropic) có thể cắt giảm tới **90% chi phí Input Token** và giảm TTFT từ vài giây xuống dưới 50ms cho các prompt siêu dài.
 
 ---
 
-## 4. Systemic Trade-offs: Few-shot vs. Fine-tuning
+## 4. Systemic Trade-offs: Few-shot vs. Fine-Tuning
 
-Khi nào nên dừng Few-shot và chuyển sang Supervised Fine-Tuning (SFT)? Hãy cân nhắc sự đánh đổi:
+Khi nào nên dừng Few-shot và chuyển sang Supervised Fine-Tuning (SFT)? Kỹ sư hệ thống cần cân nhắc sự đánh đổi (Trade-offs):
 
-| Tiêu chí | Few-shot Prompting | Fine-Tuning (SFT / LoRA) |
+| Tiêu chí | Few-shot Prompting |" Fine-Tuning (SFT / LoRA) "|
 | :--- | :--- | :--- |
-| **Compute Cost (Lúc huấn luyện)** | Rẻ (\$0) | Đắt (GPU Hours cho Training) |
-| **Compute Cost (Lúc Inference)** | **Rất Đắt** (Phải trả tiền mang theo context dài) | **Rất Rẻ** (Chỉ tốn token cho query gốc) |
-| **Latency (TTFT)** | Cao (Prefill chậm do token dài) | Thấp (Ít token đầu vào) |
-| **Agility (Khả năng cập nhật)** | Real-time (Đổi ví dụ là có tác dụng ngay) | Chậm (Cần pipeline MLOps retrain) |
-| **Data Quality Tolerance** | Dễ bị "ảo giác" nếu 1 ví dụ sai lệch | Chống chịu nhiễu tốt hơn do hàm loss hội tụ |
+|" **Compute Cost (Lúc huấn luyện)** "| Rẻ (\$0) |" Đắt (Tốn GPU Hours để train) "|
+|" **Compute Cost (Lúc Inference)** "| **Rất Đắt** (Phải trả tiền mang theo context dài) |" **Rất Rẻ** (Prompt cực ngắn) "|
+|" **Độ trễ Latency (TTFT)** "| Cao (Prefill chậm do $O(N^2)$) | Thấp |
+|" **Tính linh hoạt (Agility)** "| Real-time (Sửa text là thay đổi ngay) |" Chậm (Cần chạy lại pipeline MLOps) "|
+|" **Rủi ro sai lệch (Bias)** "| Nhạy cảm với thứ tự ví dụ (Recency Bias) | Ổn định hơn, hành vi được "khóa" vào trọng số |
 
-**Quy tắc ngón tay cái của Staff Engineer:**
-1. Dùng Few-shot (Dynamic) cho việc định dạng output JSON, XML hoặc các logic business thay đổi liên tục hàng ngày.
-2. Khi bộ Few-shot vượt quá **2,000 tokens**, hoặc cần nhồi hơn **10 ví dụ** để model đạt độ chính xác >95%, đó là lúc phải đập bỏ và chuyển sang Fine-tuning.
+**Quy tắc ngón tay cái [Rule of Thumb]:**
+1. Bắt đầu bằng Few-shot (Dynamic) để kiểm chứng tính khả thi và cho phép Business thay đổi logic nhanh chóng.
+2. Khi số lượng ví dụ Few-shot vượt quá **2,000 tokens**, hoặc mô hình đòi hỏi tới **>10 ví dụ** mới chịu hiểu đúng (đạt Accuracy >95%), đây là nút thắt cổ chai về Inference Cost. Đó là lúc bạn phải đập bỏ Few-shot và chuyển sang Fine-tuning.
 
 ---
 
-## Nguồn Tham Khảo
-- [Prompt Caching with Anthropic Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
-- [LangChain: Dynamic Few-Shot using Example Selectors](https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/)
-- [vLLM KV Cache Architecture and PagedAttention](https://blog.vllm.ai/2023/06/20/vllm.html)
-- [Language Models are Few-Shot Learners (GPT-3 Whitepaper)](https://arxiv.org/abs/2005.14165)
+## Nguồn Tham Khảo (References)
+* [Prompt Caching with Anthropic Claude][https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching]
+* [LangChain: Dynamic Few-Shot using Example Selectors][https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/]
+* [vLLM KV Cache Architecture and PagedAttention][https://blog.vllm.ai/2023/06/20/vllm.html]
+* [Language Models are Few-Shot Learners (GPT-3 Whitepaper]](https://arxiv.org/abs/2005.14165)

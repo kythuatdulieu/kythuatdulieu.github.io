@@ -26,7 +26,7 @@
     "references": [
       {
         "title": "Databricks Agent Evaluation",
-        "url": "https://docs.databricks.com/en/generative-ai/agent-evaluation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -103,7 +103,7 @@
     "references": [
       {
         "title": "Databricks Vector Search Metadata Filtering",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search"
       }
     ]
   },
@@ -156,7 +156,7 @@
     "references": [
       {
         "title": "Databricks Inference Tables",
-        "url": "https://docs.databricks.com/en/machine-learning/model-serving/inference-tables.html"
+        "url": "https://docs.databricks.com/en/ai-gateway/inference-tables"
       }
     ]
   },
@@ -238,7 +238,7 @@
     "references": [
       {
         "title": "Databricks Foundation Model APIs",
-        "url": "https://docs.databricks.com/en/machine-learning/foundation-models/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -269,7 +269,7 @@
     "references": [
       {
         "title": "Unity Catalog Volumes",
-        "url": "https://docs.databricks.com/en/connect/unity-catalog/volumes.html"
+        "url": "https://docs.databricks.com/en/sql/language-manual/information-schema/volumes"
       }
     ]
   },
@@ -404,7 +404,7 @@
     "references": [
       {
         "title": "Vector Search Access Control",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html#data-access-control"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search#data-access-control"
       }
     ]
   },
@@ -510,7 +510,7 @@
     "references": [
       {
         "title": "Databricks Vector Search with Delta Sync",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search"
       }
     ]
   },
@@ -563,7 +563,7 @@
     "references": [
       {
         "title": "Databricks RAG and Document Chunking",
-        "url": "https://docs.databricks.com/en/generative-ai/retrieval-augmented-generation.html"
+        "url": "https://docs.databricks.com/en/generative-ai/retrieval-augmented-generation"
       }
     ]
   },
@@ -592,7 +592,7 @@
     "references": [
       {
         "title": "Assessing RAG Retrieval Quality",
-        "url": "https://docs.databricks.com/en/generative-ai/agent-evaluation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -645,7 +645,7 @@
     "references": [
       {
         "title": "VectorSearchClient create_delta_sync_index API",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html#create-index"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search#create-index"
       }
     ]
   },
@@ -698,7 +698,7 @@
     "references": [
       {
         "title": "Databricks LLM extraction and AI Functions",
-        "url": "https://docs.databricks.com/en/large-language-models/ai-functions.html"
+        "url": "https://docs.databricks.com/en/large-language-models/ai-functions"
       }
     ]
   },
@@ -780,7 +780,7 @@
     "references": [
       {
         "title": "Databricks LLM-as-a-Judge Evaluation",
-        "url": "https://docs.databricks.com/en/generative-ai/agent-evaluation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -835,7 +835,7 @@
     "references": [
       {
         "title": "Managing LLM Token Limits in Databricks",
-        "url": "https://docs.databricks.com/en/generative-ai/foundation-models/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -888,7 +888,7 @@
     "references": [
       {
         "title": "RAG System Prompts and Grounding",
-        "url": "https://docs.databricks.com/en/generative-ai/retrieval-augmented-generation.html"
+        "url": "https://docs.databricks.com/en/generative-ai/retrieval-augmented-generation"
       }
     ]
   },
@@ -917,7 +917,7 @@
     "references": [
       {
         "title": "Exploding Arrays for Vector Search in Databricks",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search"
       }
     ]
   },
@@ -975,7 +975,7 @@
     "references": [
       {
         "title": "Deploying MLflow Models to Unity Catalog",
-        "url": "https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1004,7 +1004,7 @@
     "references": [
       {
         "title": "Databricks Foundation Model APIs: Pay-per-token",
-        "url": "https://docs.databricks.com/en/machine-learning/foundation-models/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1139,7 +1139,7 @@
     "references": [
       {
         "title": "Code Llama on Databricks Marketplace",
-        "url": "https://docs.databricks.com/en/machine-learning/foundation-models/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1240,7 +1240,7 @@
     "references": [
       {
         "title": "Deploying Whisper-large-v3 on Databricks",
-        "url": "https://docs.databricks.com/en/machine-learning/foundation-models/supported-models.html"
+        "url": "https://docs.databricks.com/en/machine-learning/foundation-model-apis/supported-models"
       }
     ]
   },
@@ -1269,7 +1269,7 @@
     "references": [
       {
         "title": "Inference Tables for Model Serving Monitoring",
-        "url": "https://docs.databricks.com/en/machine-learning/model-serving/inference-tables.html"
+        "url": "https://docs.databricks.com/en/ai-gateway/inference-tables"
       }
     ]
   },
@@ -1298,7 +1298,7 @@
     "references": [
       {
         "title": "Evaluating Vector Search Accuracy with Cosine Similarity",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search"
       }
     ]
   },
@@ -1411,7 +1411,7 @@
     "references": [
       {
         "title": "Databricks Vector Search with Change Data Feed",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html#enable-change-data-feed-on-the-source-delta-table"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search#enable-change-data-feed-on-the-source-delta-table"
       }
     ]
   },
@@ -1570,7 +1570,7 @@
     "references": [
       {
         "title": "OAuth machine-to-machine (M2M) authentication",
-        "url": "https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html"
+        "url": "https://docs.databricks.com/en/dev-tools/auth/oauth-m2m"
       }
     ]
   },
@@ -1625,7 +1625,7 @@
     "references": [
       {
         "title": "Model Serving - Databricks",
-        "url": "https://docs.databricks.com/en/machine-learning/model-serving/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1726,7 +1726,7 @@
     "references": [
       {
         "title": "AI Functions on Databricks",
-        "url": "https://docs.databricks.com/en/large-language-models/ai-functions.html"
+        "url": "https://docs.databricks.com/en/large-language-models/ai-functions"
       }
     ]
   },
@@ -1779,7 +1779,7 @@
     "references": [
       {
         "title": "Manage model lifecycle in Unity Catalog",
-        "url": "https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1808,7 +1808,7 @@
     "references": [
       {
         "title": "Mosaic AI Agent Evaluation",
-        "url": "https://docs.databricks.com/en/generative-ai/agent-evaluation/index.html"
+        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
       }
     ]
   },
@@ -1986,7 +1986,7 @@
     "references": [
       {
         "title": "Use metadata filtering in Databricks Vector Search",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html#metadata-filtering"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search#metadata-filtering"
       }
     ]
   },
@@ -2320,7 +2320,7 @@
     "references": [
       {
         "title": "Create and log AI agents",
-        "url": "https://docs.databricks.com/en/generative-ai/agent-framework/create-agent.html"
+        "url": "https://docs.databricks.com/en/business-semantics/metric-views/create-edit"
       }
     ]
   },
@@ -2378,7 +2378,7 @@
     "references": [
       {
         "title": "Authentication for Databricks SDK for Python",
-        "url": "https://docs.databricks.com/en/dev-tools/sdk-python.html#authentication"
+        "url": "https://docs.databricks.com/en/dev-tools/sdk-python#authentication"
       }
     ]
   },
@@ -2431,7 +2431,7 @@
     "references": [
       {
         "title": "Use reranking models with Databricks Vector Search",
-        "url": "https://docs.databricks.com/en/generative-ai/vector-search.html#reranking"
+        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/vector-search#reranking"
       }
     ]
   },
