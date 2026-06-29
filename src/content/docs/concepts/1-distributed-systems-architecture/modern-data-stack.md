@@ -34,16 +34,16 @@ Sức mạnh thực sự của MDS nằm ở việc tách rời hoàn toàn Tầ
 
 ```mermaid
 graph LR
-    subgraph Extract & Load("Ingestion (e.g. Fivetran)")
-        A["SaaS / Postgres / APIs'] -->|EL| B['(Cloud Data Warehouse<br/>Snowflake / BigQuery]"]
+    subgraph Extract_Load ["Ingestion (e.g. Fivetran)"]
+        A["SaaS / Postgres / APIs"] -->|EL| B[("Cloud Data Warehouse<br/>Snowflake / BigQuery")]
     end
     
-    subgraph TransformInWarehouseegdbt ["Transform [In-Warehouse [e.g. dbt]]"]
+    subgraph Transform_In_Warehouse ["Transform (In-Warehouse e.g. dbt)"]
         B -->|Raw Data| C{"dbt SQL Models"}
         C -->|Materialize| B
     end
     
-    subgraph Serve [Consumption]
+    subgraph Serve ["Consumption"]
         B -->|Pre-computed Tables| D["BI Tools (Looker)"]
         B -->|Reverse ETL| E["Operational Systems"]
     end

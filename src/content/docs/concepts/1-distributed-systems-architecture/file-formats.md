@@ -23,12 +23,12 @@ Parquet và ORC là trái tim của hệ sinh thái OLAP hiện đại (Spark, T
 
 ```mermaid
 graph TD
-    subgraph Parquet File
+    subgraph Parquet_File ["Parquet File"]
         Header["File Header (Magic Bytes)"]
-        subgraph Row Group 1["Row Group 1 ('128MB - 512MB')"]
+        subgraph Row_Group_1 ["Row Group 1 (128MB - 512MB)"]
             C1["Column Chunk 1<br/>e.g., 'user_id'"]
             C2["Column Chunk 2<br/>e.g., 'revenue'"]
-            subgraph Column Chunk Structure
+            subgraph Column_Chunk_Structure ["Column Chunk Structure"]
                 P1["Page 1: 1MB compressed data"]
                 P2["Page 2: 1MB compressed data"]
                 Dict["Dictionary Page"]
@@ -37,10 +37,10 @@ graph TD
         RowGroupN["Row Group N"]
         Footer["File Footer / Metadata<br/>Schema, Min/Max stats, Offsets"]
     end
-    Header --- Row Group 1
-    Row Group 1 --- RowGroupN
+    Header --- Row_Group_1
+    Row_Group_1 --- RowGroupN
     RowGroupN --- Footer
-    C1 --> Column Chunk Structure
+    C1 --> Column_Chunk_Structure
     
     style Header fill:#f9f6e5,stroke:#b8a36c
     style Footer fill:#f9f6e5,stroke:#b8a36c

@@ -42,13 +42,13 @@ Kiến trúc Data Loading luôn xoay quanh việc đánh đổi giữa **Độ t
 
 ```mermaid
 quadrantChart
-    title Phân bổ Kiến trúc Data Loading
-    x-axis Độ trễ thấp (Low) --> Độ trễ cao (High)
-    y-axis Thông lượng thấp --> Thông lượng cao
-    quadrant-1 Tối ưu Batch (ELT)
-    quadrant-2 Anti-pattern (Cần tránh)
-    quadrant-3 Kiến trúc Event-driven
-    quadrant-4 Tối ưu Streaming
+    title Data Loading Architectures
+    x-axis Low Latency --> High Latency
+    y-axis Low Throughput --> High Throughput
+    quadrant-1 Batch Optimized
+    quadrant-2 Anti-Pattern
+    quadrant-3 Event-Driven
+    quadrant-4 Stream Optimized
     "Snowpipe / Auto Loader": [0.3, 0.8]
     "Kafka to ClickHouse": [0.1, 0.9]
     "Daily dbt / Airflow Job": [0.8, 0.9]

@@ -18,27 +18,32 @@ Dưới góc nhìn của một Kỹ sư Hệ thống (Staff Engineer), DLM là v
 - **Compliance vs. Utility**: Xóa dữ liệu thế nào cho đúng luật (GDPR) mà không làm vỡ các mô hình Machine Learning?
 
 ```mermaid
-architecture-beta
-    group source("1. Sinh ra & Ingestion")
-    service web("Web/App") in source
-    service db("OLTP DB") in source
-    service kafka("Kafka/Pulsar") in source
-    service cdc("Debezium CDC") in source
+graph TD
+    subgraph source ["1. Sinh ra & Ingestion"]
+        web["Web/App"]
+        db[("OLTP DB")]
+        kafka["Kafka/Pulsar"]
+        cdc["Debezium CDC"]
+    end
     
-    group storage("2. Storage (Lakehouse)")
-    service s3("S3 / GCS") in storage
-    service iceberg("Iceberg/Hudi") in storage
+    subgraph storage ["2. Storage (Lakehouse)"]
+        s3[("S3 / GCS")]
+        iceberg["Iceberg/Hudi"]
+    end
     
-    group processing("3. Processing (Compute)")
-    service spark("Apache Spark") in processing
-    service flink("Apache Flink") in processing
+    subgraph processing ["3. Processing (Compute)"]
+        spark["Apache Spark"]
+        flink["Apache Flink"]
+    end
     
-    group serving("4. Phục Vụ (Serving)")
-    service pinot("Apache Pinot") in serving
-    service trino("Trino/Presto") in serving
+    subgraph serving ["4. Phục Vụ (Serving)"]
+        pinot["Apache Pinot"]
+        trino["Trino/Presto"]
+    end
     
-    group archiving("5. Archiving & Compliance")
-    service glacier("S3 Glacier") in archiving
+    subgraph archiving ["5. Archiving & Compliance"]
+        glacier[("S3 Glacier")]
+    end
     
     db --> cdc
     web --> kafka

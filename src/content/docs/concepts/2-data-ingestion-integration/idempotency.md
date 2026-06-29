@@ -48,13 +48,13 @@ sequenceDiagram
     participant Redis Cache
     participant Database
 
-    Client->>API Gateway: POST /charge (Header: Idempotency-Key: uuid-1)
+    Client->>API Gateway: POST /charge (Header Idempotency-Key uuid-1)
     API Gateway->>Redis Cache: Check Key
     alt Key Exists (Cached)
         Redis Cache-->>API Gateway: Return stored HTTP 200 Response
         API Gateway-->>Client: 200 OK (Cached)
     else Key Not Found
-        API Gateway->>Database: BEGIN TX; INSERT Charge; INSERT IdempotencyRecord; COMMIT;
+        API Gateway->>Database: BEGIN TX, INSERT Charge, INSERT IdempotencyRecord, COMMIT
         Database-->>API Gateway: Success
         API Gateway->>Redis Cache: Save HTTP 200 Response with TTL 24h
         API Gateway-->>Client: 200 OK (Processed)

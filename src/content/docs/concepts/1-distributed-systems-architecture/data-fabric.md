@@ -22,30 +22,31 @@ Nó sinh ra để giải quyết bài toán **Data Gravity** (Lực hấp dẫn 
 Một hệ thống Data Fabric thực sự phải tách biệt hoàn toàn giữa **Control Plane** (Bộ não: nơi quản lý Metadata, Security, Policy) và **Data Plane** (Cơ bắp: nơi thực thi tính toán thực tế).
 
 ```mermaid
-architecture-beta
-    group control_plane("server")[Control Plane - The Brain]
-    group data_plane("server")[Data Plane - The Muscle]
+graph TD
+    subgraph control_plane ["Control Plane - The Brain"]
+        metadata[("Active Metadata & Knowledge Graph")]
+        policy["Policy & Access Control"]
+        catalog["Data Catalog / Semantic Layer"]
+    end
     
-    service metadata("database")[Active Metadata & Knowledge Graph] in control_plane
-    service policy("server")[Policy & Access Control] in control_plane
-    service catalog("server")[Data Catalog / Semantic Layer] in control_plane
+    subgraph data_plane ["Data Plane - The Muscle"]
+        trino["Trino / Presto Virtualization"]
+        spark["Spark / Flink Active Data Eng"]
+    end
     
-    service trino("server")[Trino / Presto Virtualization] in data_plane
-    service spark("server")[Spark / Flink Active Data Eng] in data_plane
+    s3[("S3 / GCS Data Lake")]
+    postgres[("PostgreSQL / RDS")]
+    kafka[("Kafka Streams")]
     
-    service s3("database")[S3 / GCS Data Lake]
-    service postgres("database")[PostgreSQL / RDS]
-    service kafka("database")[Kafka Streams]
+    metadata --> catalog
+    policy --> catalog
     
-    metadata:B --> T:catalog
-    policy:B --> T:catalog
+    catalog --> trino
+    catalog --> spark
     
-    catalog:R --> L:trino
-    catalog:R --> L:spark
-    
-    trino:B --> T:s3
-    trino:B --> T:postgres
-    spark:B --> T:kafka
+    trino --> s3
+    trino --> postgres
+    spark --> kafka
 ```
 
 ### 1.1. Control Plane: Active Metadata & Knowledge Graph
