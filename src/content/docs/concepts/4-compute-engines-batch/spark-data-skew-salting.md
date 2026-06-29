@@ -119,7 +119,7 @@ result_df = salted_fact_df.join(
 
 Nhận thấy sự khốn khổ của lập trình viên, từ Apache Spark 3.0, tính năng AQE ra mắt, đưa kỹ thuật Salting thủ công vào bảo tàng. AQE can thiệp sâu vào Kế hoạch thực thi (Execution Plan) ở **thời gian chạy (Runtime)** thay vì tĩnh (Compile-time) như Catalyst truyền thống.
 
-![AQE Skew Join](/images/4-compute-engines-batch/aqe-skew-join.png]
+![AQE Skew Join](/images/4-compute-engines-batch/aqe-skew-join.png)
 *(Hình 1: Cơ chế tách Partition động của AQE để tự động hóa Salting. Nguồn: Databricks Blog)*
 
 ### 4.1. AQE xử lý Skew Join dưới tầng vật lý như thế nào?

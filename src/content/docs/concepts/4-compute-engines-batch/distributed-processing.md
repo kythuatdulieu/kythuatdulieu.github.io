@@ -17,7 +17,7 @@ Khi khối lượng dữ liệu vượt qua giới hạn của hệ thống đơ
 
 Phần lớn các Distributed Compute Engines đều tuân theo mô hình **Master/Worker (Control Plane / Data Plane)**. Trong mô hình này, việc tách bạch giữa node quản lý vòng đời truy vấn và node thực thi giúp cô lập rủi ro và tăng khả năng mở rộng (Scale-Out).
 
-![Spark Cluster Architecture](/images/4-compute-engines-batch/spark-cluster-overview.png]
+![Spark Cluster Architecture](/images/4-compute-engines-batch/spark-cluster-overview.png)
 
 ### 1.1. Control Plane (Driver/Master Node)
 - **Vai trò:** Khi nhận một job SQL hoặc đoạn script, Driver Node đóng vai trò biên dịch (Compiler). Nó chuyển đổi Logical Plan thành Physical Execution Plan dưới dạng **DAG (Directed Acyclic Graph)**.

@@ -50,7 +50,7 @@ Tuy nhiên, nó là thuật toán *gần đúng (Approximate)*. Data Engineer ph
 
 Để phá vỡ giới hạn Trade-off giữa Recall và Precision, các hệ thống RAG Enterprise (Databricks, Netflix, Pinecone) áp dụng kiến trúc **2-Stage Retrieval** (Truy xuất hai giai đoạn).
 
-![Hybrid Search Architecture](/images/9-genai-machine-learning/hybrid-search-architecture.png]
+![Hybrid Search Architecture](/images/9-genai-machine-learning/hybrid-search-architecture.png)
 *(Minh họa: Kiến trúc Hybrid Search và Reranking đẩy kịch trần Recall và Precision. Nguồn ảnh: Sanity/Pinecone)*
 
 ### Giai đoạn 1: Maximizing Recall với Hybrid Search (Candidate Generation)
@@ -147,5 +147,5 @@ hnsw_index:
 *   **Pinecone:** [Precision and Recall in Information Retrieval & RAG][https://www.pinecone.io/learn/offline-evaluation/]
 *   **Milvus Engineering:** [Hybrid Search and Reranking for better RAG][https://milvus.io/docs/multi-vector-search.md]
 *   **Elasticsearch Docs:** [kNN search, HNSW and exact filtering][https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html]
-*   **IBM Research:** [What is Candidate Generation?](https://www.ibm.com/topics/candidate-generation]
+*   **IBM Research:** [What is Candidate Generation?](https://www.ibm.com/topics/candidate-generation)
 *   *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích về Trade-offs trong lưu trữ và truy vấn thông tin.

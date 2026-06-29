@@ -9,7 +9,7 @@ metaDescription: "Phân tích kiến trúc Kappa ở mức Staff Engineer: Cơ c
 description: "Mọi dữ liệu đều là Stream. Đào sâu vào kiến trúc Kappa: Giải quyết bài toán Reprocessing, Event Sourcing, RocksDB state, Watermarks và FinOps lưu trữ log."
 ---
 
-Được đề xuất bởi **Jay Kreps** [nhà sáng lập Apache Kafka] vào năm 2014, **Kappa Architecture** sinh ra để xóa sổ tầng Batch rườm rà của [Lambda Architecture](/concepts/1-distributed-systems-architecture/lambda-architecture]. Tuyên ngôn của nó rất đơn giản: **Mọi thứ đều là một luồng (Everything is a Stream)**. 
+Được đề xuất bởi **Jay Kreps** [nhà sáng lập Apache Kafka] vào năm 2014, **Kappa Architecture** sinh ra để xóa sổ tầng Batch rườm rà của [Lambda Architecture](/concepts/1-distributed-systems-architecture/lambda-architecture). Tuyên ngôn của nó rất đơn giản: **Mọi thứ đều là một luồng (Everything is a Stream)**. 
 
 Dữ liệu lịch sử (Historical data) về cơ bản chỉ là một luồng sự kiện đã xảy ra trong quá khứ. Vậy tại sao phải duy trì hai hệ thống code khác biệt (Hadoop/Spark cho Batch, Flink/Storm cho Stream) để tính toán cùng một logic? Kappa thống nhất luồng xử lý bằng một codebase duy nhất.
 
@@ -131,4 +131,4 @@ Với sự tiến bộ của Apache Flink và sự ra đời của các chuẩn 
 * [Questioning the Lambda Architecture - Jay Kreps][https://www.oreilly.com/radar/questioning-the-lambda-architecture/]
 * [Apache Flink State Backends (RocksDB]][https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/]
 * [KIP-405: Kafka Tiered Storage][https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage]
-* [Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau](https://www.oreilly.com/library/view/streaming-systems/9781491983867/]
+* [Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau](https://www.oreilly.com/library/view/streaming-systems/9781491983867/)
