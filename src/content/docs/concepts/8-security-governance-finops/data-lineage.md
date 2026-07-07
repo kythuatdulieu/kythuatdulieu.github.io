@@ -1,140 +1,144 @@
 ---
 title: "Kiến trúc Hệ thống Data Lineage: OpenLineage, Trade-offs & FinOps"
+category: "8. Bảo Mật, Quản Trị & FinOps"
+description: "Phân tích Data Lineage ở quy mô hệ thống phân tán: Kiến trúc Event-Driven, OpenLineage, Column-Level Overhead và ứng dụng FinOps."
+definition: "Data Lineage là hệ thống thu thập và biểu diễn luồng chảy của dữ liệu từ nguồn đến đích. Ở quy mô lớn, nó là một kiến trúc Distributed Metadata Event-Driven."
+seoTitle: "Data Lineage Architecture: Kiến trúc, OpenLineage & FinOps"
+metaDescription: "Tìm hiểu kiến trúc Data Lineage thực tế với OpenLineage, đánh đổi của Column-Level Lineage, và cách dùng Lineage để tự động hóa FinOps S3 Glacier."
 difficulty: "Advanced"
-tags: ["data-lineage", "metadata", "openlineage", "system-design", "troubleshooting", "column-level-lineage"]
-readingTime: "20 mins"
-lastUpdated: 2026-06-29
-seoTitle: "Data Lineage Architecture: Thiết kế Hệ thống, Trade-offs & OpenLineage"
-metaDescription: "Phân tích kiến trúc Data Lineage ở scale Enterprise. Sự đánh đổi giữa Synchronous/Asynchronous emission, Column-Level Overhead, JVM OOMKilled, Retry Storms, và OpenLineage."
-description: "Tại các mega-tech như Netflix hay Uber, Data Lineage không chỉ là những đường vẽ trên UI. Nó là một hệ thống Metadata Event-Driven phức tạp, đối mặt với bài toán Synchronous vs Asynchronous emission, xử lý hàng tỷ runtime events và tối ưu FinOps bằng Column-Level Lineage."
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["data-lineage", "metadata", "openlineage", "system-design", "finops", "column-level-lineage"]
+aliases: ["Gia phả dữ liệu", "Lineage"]
+domains: ["DE", "DA", "Platform"]
+level: "Middle"
+refs:
+  - title: "Building and Scaling Data Lineage at Netflix"
+    org: "Netflix TechBlog"
+    url: "https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977"
+    type: "blog"
+  - title: "Column-Level Lineage"
+    org: "OpenLineage"
+    url: "https://openlineage.io/docs/spec/facets/column-level-lineage"
+    type: "docs"
 ---
 
-Khi nói về Data Lineage (Gia phả dữ liệu), hầu hết các bài viết cơ bản đều tập trung vào việc vẽ ra những biểu đồ mũi tên đẹp mắt trên giao diện UI để xem bảng nào sinh ra bảng nào. Tuy nhiên, ở góc nhìn của một Staff Data Engineer, Data Lineage là một hệ thống phân tán phức tạp (Distributed Metadata System).
+Khi nói về Data Lineage (Gia phả dữ liệu), ấn tượng đầu tiên thường là những biểu đồ mũi tên đẹp mắt trên giao diện UI, nối từ bảng nguồn đến dashboard. Tuy nhiên, đằng sau bề nổi đó, đối với một hệ thống dữ liệu quy mô lớn, Data Lineage là một bài toán hóc búa về kiến trúc phân tán (Distributed Metadata System). 
 
-Bài viết này bỏ qua các định nghĩa sách giáo khoa. Thay vào đó, chúng ta sẽ đi sâu vào thiết kế **Kiến trúc Thực thi Vật lý (Physical Execution Architecture)** của hệ thống Lineage, phân tích sâu về **Column-Level Lineage Overhead**, cách các Big Tech chuẩn hóa với **OpenLineage**, và mổ xẻ những tình huống sập hệ thống (real-world incidents) khi triển khai thu thập metadata ở scale lớn.
+Vấn đề không nằm ở việc hiển thị một cái đồ thị. Vấn đề là làm sao để thu thập hàng triệu sự kiện (events) sinh ra từ hàng chục công cụ xử lý dữ liệu khác nhau (Spark, Flink, Airflow, dbt) một cách chính xác, theo thời gian thực, mà không làm chậm các pipeline chính.
 
----
+## Kiến trúc Thực thi Vật lý (Physical Execution)
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
+Có hai trường phái kiến trúc chính để thu thập lineage: Code-time (phân tích tĩnh) và Runtime (dựa trên sự kiện).
 
-Thu thập Data Lineage ở quy mô Enterprise thường được chia làm hai hướng kiến trúc chính: **Code-time (Static Analysis)** và **Runtime (Event-driven)**.
+### 1. Static Analysis (Phân tích tĩnh lúc Code-time)
 
-### 1.1. Static Analysis (Phân tích tĩnh lúc Code-time)
-Hệ thống (như SQLMesh, dbt) sẽ parse (phân tích cú pháp) các file `.sql` hoặc DAGs để vẽ ra luồng dữ liệu trước khi Job thực sự chạy. 
--   **Trade-off:** Phương pháp này rẻ, an toàn tuyệt đối (không tác động đến execution engine trên production), nhưng hệ thống sẽ **mù hoàn toàn** trước các luồng dữ liệu động (Dynamic SQL được generate lúc chạy) hoặc các câu query Ad-hoc của Data Scientist.
+Các công cụ như dbt hoặc SQLMesh phân tích (parse) cú pháp SQL trong kho lưu trữ mã nguồn để xây dựng biểu đồ phụ thuộc (DAG) trước khi dữ liệu thực sự chạy. 
+*   **Cách hoạt động:** Dựa vào các hàm như `{{ ref('table_name') }}`, hệ thống biết được bảng nào phụ thuộc vào bảng nào.
+*   **Trade-off:** Cách này rất an toàn vì không can thiệp vào quá trình tính toán (compute engine). Nhược điểm lớn nhất là nó mù hoàn toàn trước các luồng dữ liệu động (như Dynamic SQL sinh ra lúc chạy) hoặc các truy vấn ad-hoc của Data Scientist. 
 
-### 1.2. Runtime Event-Driven Lineage (Mô hình Push)
-Netflix và Uber sử dụng kiến trúc Event-Driven, nơi các Data Processing Engines (Spark, Flink, Trino, Airflow) tự động phát xạ (emit) siêu dữ liệu ngay trong quá trình thực thi.
+### 2. Runtime Event-Driven Lineage (Mô hình Push)
+
+Đây là mô hình được Netflix và Uber lựa chọn để đối phó với quy mô hàng chục nghìn bảng dữ liệu. Thay vì đọc mã nguồn, các compute engines (Spark, Trino, Flink) sẽ tự động phát xạ (emit) các gói tin siêu dữ liệu (metadata events) ngay tại thời điểm chúng thực thi.
 
 ```mermaid
 graph TD
-    subgraph Data Processing Engines
-    A["Apache Spark Job\n(Physical Execution)"] -->|Runtime Events| B["Kafka Topic: lineage_events"]
-    C["Airflow DAG\n(Orchestration)"] -->|Runtime Events| B
-    D["dbt Core\n(Transformation)"] -->|Runtime Events| B
+    classDef engine fill:#f9f2f4,stroke:#d9534f,stroke-width:2px;
+    classDef messaging fill:#e8f4f8,stroke:#5bc0de,stroke-width:2px;
+    classDef storage fill:#fcf8e3,stroke:#f0ad4e,stroke-width:2px;
+
+    subgraph "Data Processing Engines"
+        A["Apache Spark Job<br/>(Physical Execution)"]:::engine
+        C["Airflow DAG<br/>(Orchestration)"]:::engine
+        D["dbt Core<br/>(Transformation)"]:::engine
     end
-    B --> E["Lineage Consumer Group\n(KEDA Autoscaling)"]
-    E --> F["(Graph Database - Neo4j / NebulaGraph)"]
-    E --> G["(Elasticsearch - Search Index)"]
-    F --> H["DataHub / Marquez API\n(Data Catalog)"]
+
+    B("Kafka Topic<br/>lineage_events"):::messaging
+    
+    A -->|Runtime Events| B
+    C -->|Runtime Events| B
+    D -->|Runtime Events| B
+
+    E["Lineage Consumer Group<br/>(KEDA Autoscaling)"]:::engine
+    B --> E
+    
+    F[("Graph Database<br/>Neo4j / NebulaGraph")]:::storage
+    G[("Elasticsearch<br/>Search Index")]:::storage
+    
+    E --> F
+    E --> G
+    
+    F --> H["Data Catalog API<br/>(DataHub / Marquez)"]:::engine
 ```
 
----
+Mô hình Push bắt buộc phải thiết kế dưới dạng Asynchronous (Bất đồng bộ). Nếu Spark gửi HTTP request đồng bộ (Synchronous) trực tiếp đến Data Catalog và hệ thống Catalog bị chậm, job Spark xử lý dữ liệu chính cũng sẽ bị "treo" theo. Đưa Kafka vào giữa làm bộ đệm (buffer) là tiêu chuẩn thiết kế để tách biệt (decouple) hai hệ thống này.
 
-## 2. Tiêu chuẩn Mở OpenLineage [The OpenLineage Standard]
+## Tiêu chuẩn Mở OpenLineage
 
-Việc mỗi Engine bắn ra một định dạng Lineage khác nhau sẽ tạo ra **Metadata Silos**. Nếu Spark bắn format A, dbt bắn format B, bạn sẽ phải viết hàng chục adapter để map chúng lại. [OpenLineage](https://openlineage.io/] giải quyết bài toán này bằng cách đưa ra một schema JSON chuẩn hóa dựa trên 3 thực thể lõi: `Run`, `Job`, `Dataset`, được mở rộng thông qua các `Facets`.
+Một vấn đề nghiêm trọng của kiến trúc Push là "Metadata Silos" (ốc đảo siêu dữ liệu). Nếu Spark gửi payload format A, Flink gửi format B, và dbt gửi format C, backend của bạn sẽ phải viết và bảo trì hàng chục Adapter khác nhau.
 
-### Code Thực Chiến: Cấu hình Spark phát xạ OpenLineage Async vào Kafka
+[OpenLineage](https://openlineage.io/) giải quyết bài toán này. Nó là một tiêu chuẩn (specification) JSON chung cho toàn ngành, định nghĩa ba thực thể lõi: `Run` (Một lần thực thi), `Job` (Đoạn mã/tác vụ), và `Dataset` (Dữ liệu đầu vào/ra). Thông tin chi tiết được nhúng vào các `Facets`.
 
-Tuyệt đối **không đẩy trực tiếp** HTTP Rest payload từ Spark Executors đến Catalog Server (như Marquez hay DataHub) ở môi trường Production. Việc này tạo ra Synchronous Call, nếu Catalog Server bị chậm, Spark Job của bạn cũng bị chậm theo (Thắt cổ chai mạng). Thay vào đó, ta sử dụng **Kafka Transport** để đạt **Asynchronous Emission**.
+### Cấu hình Spark phát xạ OpenLineage qua Kafka
+
+Dưới đây là cách một Data Engineer nhúng OpenLineage vào Apache Spark trên môi trường production. Chú ý cấu hình `acks` và `linger.ms` của Kafka Producer để tối ưu độ trễ, tránh làm chậm Spark:
 
 ```properties
-# spark-defaults.conf
 # 1. Thêm thư viện OpenLineage Spark Agent
 spark.jars.packages io.openlineage:openlineage-spark_2.12:1.13.0
 
-# 2. Kích hoạt OpenLineage Listener chèn vào luồng thực thi của Spark
+# 2. Kích hoạt OpenLineage Listener chèn vào luồng thực thi (ListenerBus) của Spark
 spark.extraListeners io.openlineage.spark.agent.OpenLineageSparkListener
 
-# 3. Cấu hình Kafka Transport cho OpenLineage (Bắt buộc dùng Async)
+# 3. Cấu hình Kafka Transport cho OpenLineage (Asynchronous)
 spark.openlineage.transport.type kafka
 spark.openlineage.transport.topic lineage.events.prod
 spark.openlineage.transport.properties.bootstrap.servers broker1:9092,broker2:9092
 
 # 4. Tối ưu Producer: Giảm độ trễ cho Job xử lý dữ liệu chính
-# Chấp nhận acks=1 (Hy sinh một chút độ bền của metadata để đổi lấy tốc độ)
 spark.openlineage.transport.properties.acks 1
 spark.openlineage.transport.properties.linger.ms 5
 spark.openlineage.transport.properties.compression.type snappy
 ```
 
----
+## Đánh đổi hệ thống: Nỗi đau Column-Level Lineage
 
-## 3. Systemic Trade-offs: Column-Level Lineage vs. Compute Overhead
+Lineage mức bảng (Table-Level) nói cho bạn biết bảng B được tạo từ bảng A. Tuy nhiên, khi cần gỡ lỗi một chỉ số sai (Root-Cause Analysis) hoặc truy vết lộ lọt dữ liệu nhạy cảm PII, bạn cần biết chính xác *cột* `revenue` trong bảng B được tính từ *cột* nào trong bảng A. Đây gọi là Column-Level Lineage.
 
-Lineage ở mức bảng (Table-Level) là chưa đủ. Để thực hiện các nghiệp vụ như truy vết lộ lọt dữ liệu PII (GDPR compliance) hoặc Root-Cause Analysis, hệ thống cần **Column-Level Lineage** (Biết chính xác cột `total_amount` ở bảng Fact được tính ra từ cột nào ở bảng Source).
+Để trích xuất được thông tin này lúc runtime, OpenLineage Agent bên trong Spark phải duyệt (traverse) qua **Logical Plan** của Catalyst Optimizer, móc nối các `ExprId` (Expression Identifier) từ đầu vào đến đầu ra. Việc này được đóng gói trong `ColumnLineageDatasetFacet`.
 
-**Kiến trúc bên dưới:** Để có Column-Level Lineage, OpenLineage Agent (được nhúng trong Spark) phải duyệt qua toàn bộ **LogicalPlan** của Catalyst Optimizer, móc nối các `ExprId` mapping để phân tích đầu vào và đầu ra. Việc này được tách riêng vào module `ColumnLineageDatasetFacet`.
+**Cái giá phải trả (The Trade-off):**
+Việc duyệt AST (Abstract Syntax Tree) của Catalyst Optimizer là một thao tác cực kỳ đắt đỏ về bộ nhớ. Đối với một câu lệnh `SELECT` phức tạp chứa hàng chục phép `JOIN`, Window functions, và UDF (User Defined Functions), Logical Plan bùng nổ kích thước (Cartesian Explosion).
+*   **Hệ lụy:** Spark Driver có thể bị cạn kiệt Heap Memory trong lúc cố gắng build Column-Level Lineage. Cuối cùng, container bị trình quản lý tài nguyên (YARN/Kubernetes) chém chết với lỗi `OOMKilled`. 
+*   **Khắc phục:** Hệ thống lineage thực tế luôn phải cài đặt ngưỡng cắt (depth limit). Nếu thời gian parse một Logical Plan vượt quá 2 giây, Agent tự động từ bỏ Column-Level và thoái lui (fallback) về Table-Level Lineage để bảo vệ job chính.
 
-**Sự đánh đổi khốc liệt (The Trade-off):**
--   **Granularity vs. Overhead:** Đối với một câu lệnh `SELECT` phức tạp có 15 lệnh `JOIN`, hàng chục UDFs (User Defined Functions) và Nested Structs, cây Abstract Syntax Tree (AST) / LogicalPlan trở nên khổng lồ. Việc traverse (duyệt) cây này để xuất ra Column-Level metadata có thể tiêu tốn hàng GB RAM.
--   Ở Scale của Enterprise, **overhead của việc trích xuất Lineage đôi khi nặng nề không kém gì bản thân Job xử lý dữ liệu chính**, dẫn đến các sự cố nghiêm trọng.
+## Failure Modes: Rủi ro vận hành Metadata
 
----
+### Retry Storms làm sập Lineage Backend
 
-## 4. Rủi ro Vận hành (Operational Risks) & Real-world Incidents
+Giả sử một Database nguồn bị sập mạng. Trong cụm Airflow, hàng trăm DAGs thất bại cùng lúc. Theo cấu hình mặc định, Airflow kích hoạt Retry Policy (ví dụ: thử lại 5 lần, cách nhau 1 phút).
 
-### Incident 1: JVM OOMKilled do Cartesian Explosion trong Lineage Parser
-**Bối cảnh:** Một Data Engineer viết câu SQL thực hiện Multi-Join trên 10 bảng lớn kèm theo các điều kiện lọc động (Dynamic Filtering). OpenLineage Agent bên trong Spark cố gắng duyệt qua Logical Plan để build Column-Level Lineage.
-**Sự cố:** Số lượng node trong AST tăng theo cấp số nhân (Cartesian Explosion về mặt Graph logic). Spark Driver bị cạn kiệt Heap Memory trong lúc parse metadata, quăng lỗi `java.lang.OutOfMemoryError: Java heap space` và bị YARN/K8s chém chết (`OOMKilled`). Toàn bộ Data Pipeline sụp đổ chỉ vì cố lấy Metadata!
-**Khắc phục (Troubleshooting):**
--   Giới hạn độ sâu phân tích (parsing depth limit) trong cấu hình Agent.
--   Tạo cơ chế **Fallback**: Nếu LogicalPlan quá phức tạp hoặc thời gian parse vượt quá 2 giây, Agent tự động từ bỏ Column-Level và chỉ bắn Table-Level Lineage để cứu sống Job chính.
+Mỗi lần thử lại là một chuỗi sự kiện `RUN_START`, `RUN_FAIL` bắn ồ ạt về Lineage Backend (ví dụ DataHub hoặc Marquez). Cơn bão thử lại (Retry Storm) này nhanh chóng làm cạn kiệt Connection Pool của Database lưu trữ Metadata (như PostgreSQL), tạo hiệu ứng domino kéo sập toàn bộ hệ thống Catalog của công ty.
 
-### Incident 2: Retry Storms làm sập Lineage Backend (DataHub/Marquez)
-**Bối cảnh:** Một cụm Airflow có 5,000 DAGs chạy hàng ngày. Một database nguồn (Source DB) gặp sự cố mạng (Network Partition).
-**Sự cố:** Hàng loạt Airflow Sensor và Operator thất bại đồng loạt, lập tức kích hoạt chính sách `retries=5` với `retry_delay=1m`. Một luồng **Retry Storm (Cơn bão thử lại)** bùng nổ, bắn ra hàng chục nghìn events `RUN_START`, `RUN_FAIL` liên tục vào Lineage Backend. Backend API ngập lụt, cạn kiệt Connection Pool tới Database lưu trữ (PostgreSQL), gây hiệu ứng Domino làm sập toàn bộ hệ thống Catalog của công ty.
-**Khắc phục:**
--   Triển khai **Circuit Breaker** (Ngắt mạch) ở Client Side (bên trong thư viện gửi OpenLineage).
--   Bắt buộc dùng **Exponential Backoff** cho cấu hình retry của Airflow.
+Để phòng tránh, thư viện gửi Lineage (Client Side) phải được trang bị Circuit Breaker (Ngắt mạch), và cấu hình Airflow bắt buộc phải dùng **Exponential Backoff** (tăng dần thời gian chờ giữa các lần retry) thay vì khoảng thời gian cố định.
 
-### Incident 3: Consumer Lag & Stale Metadata
-**Bối cảnh:** Spark bắn Lineage Events vào Kafka cực nhanh, nhưng Consumer Group (Python Worker đọc Kafka ghi vào GraphDB Neo4j) lại xử lý quá chậm do phải tạo các Edge trong Graph.
-**Sự cố:** Xảy ra hiện tượng **Consumer Lag** khổng lồ. Metadata bị trễ (Stale Data). Kỹ sư Data Engineer vừa đổi tên bảng lúc 8h sáng, nhưng 11h trưa lên Data Catalog tra cứu vẫn thấy tên bảng cũ.
-**Khắc phục:** Sử dụng KEDA (Kubernetes Event-driven Autoscaling) để tự động scale số lượng Consumer Pods dựa trên độ trễ Kafka Lag:
+### Consumer Lag và Stale Metadata
 
-```yaml
-# KEDA Autoscaling cho Lineage Consumer
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: lineage-consumer-scaler
-spec:
-  scaleTargetRef:
-    name: lineage-neo4j-consumer-deployment
-  minReplicaCount: 2
-  maxReplicaCount: 50 # Sẵn sàng phình to khi có Lag
-  triggers:
-  - type: kafka
-    metadata:
-      bootstrapServers: kafka-prod-cluster:9092
-      consumerGroup: lineage_graph_writer_cg
-      topic: lineage.events.prod
-      lagThreshold: "1000" # Kích hoạt scale out khi Lag > 1000 messages
-```
+Khi sử dụng Kafka Transport, Spark bắn Lineage Events cực kỳ nhanh, nhưng Consumer Group (worker ghi dữ liệu vào Graph DB) lại xử lý chậm do bản chất việc tạo Cạnh (Edge) và Nút (Node) trong Graph Database khá đắt đỏ.
 
----
+Hậu quả là Consumer Lag khổng lồ. Metadata bị trễ (Stale Data). Một kỹ sư đổi tên bảng lúc 8 giờ sáng, nhưng đến 11 giờ trưa tra cứu trên Data Catalog vẫn thấy sơ đồ cũ. Giải pháp tiêu chuẩn là sử dụng KEDA (Kubernetes Event-driven Autoscaling) kết nối thẳng vào Kafka Lag Metric để tự động scale out số lượng Consumer Pods khi có bão sự kiện.
 
-## 5. Tối ưu Chi phí (FinOps) bằng Data Lineage
+## Ứng dụng: Tối ưu Chi phí (FinOps) bằng Data Lineage
 
-Theo triết lý tại Netflix và Uber, Lineage không chỉ dùng để debug, mà còn để tính tiền (Cost Attribution & FinOps). Bằng cách kết nối Table-Level Lineage với hệ thống thanh toán (Billing API), nền tảng Data Engineering có thể:
+Tại các tập đoàn lớn, Data Lineage không chỉ dành riêng cho kỹ sư debug, mà còn là trái tim của hệ thống FinOps (Quản trị chi phí Đám mây).
 
-1.  **Chi phí lan truyền (Propagated Cost):** Phân bổ chi phí chính xác. Bạn có thể chứng minh được Dashboard của phòng Marketing không chỉ tốn \$10 tiền query, mà nó còn kéo theo \$500 tiền Compute từ tận Data Ingestion -> Bronze -> Silver -> Gold.
-2.  **Dọn rác tự động (Garbage Collection):** Dùng Lineage đếm số lượng "Đích đến (Downstream)" của một bảng. Nếu `downstream_count = 0` trong 30 ngày (không ai thèm đọc dữ liệu này), hệ thống kích hoạt xóa lạnh.
+**1. Phân bổ chi phí lan truyền (Propagated Cost):**
+Với Lineage, một phòng ban không thể nói "Dashboard của chúng tôi query trên BigQuery tốn có 10$ một ngày". Nhìn vào đồ thị Lineage, hệ thống billing tự động truy ngược (back-propagate) chi phí của toàn bộ luồng dbt transformation và Data Ingestion chạy ngầm phía trước để phục vụ riêng cho Dashboard đó. Chi phí thực tế có thể lên tới 500$.
 
-**Thực chiến: IaC Terraform Dọn Rác** 
-Terraform cấu hình Lifecycle Rule trên AWS S3, tự động đưa các bảng "mồ côi" (Orphan Tables - được Lineage Catalog đánh tag `Usage: Cold`) xuống tầng lưu trữ lạnh Glacier để tiết kiệm 90% chi phí.
+**2. Dọn rác tự động (Automated Garbage Collection):**
+Bằng cách phân tích Lineage Graph, hệ thống có thể đếm số lượng "Đích đến" (Downstream consumers) của mọi bảng. Nếu một bảng có `downstream_count = 0` trong 30 ngày (không có job nào đọc, không có dashboard nào query), nó là dữ liệu mồ côi (Orphan Data). 
+
+Pipeline quản trị tự động gán tag `Usage: Cold` cho bảng đó. Kết hợp với IaC (Terraform), đám mây sẽ tự động dọn dẹp các bảng này xuống kho lưu trữ lạnh (như Amazon S3 Glacier), tiết kiệm đến 90% chi phí.
 
 ```hcl
 resource "aws_s3_bucket_lifecycle_configuration" "finops_cold_storage" {
@@ -147,27 +151,29 @@ resource "aws_s3_bucket_lifecycle_configuration" "finops_cold_storage" {
     filter {
       tag {
         key   = "LineageUsage"
-        value = "Cold" # Tag này do Lineage Catalog tự động gán thông qua Lambda
+        value = "Cold" # Tag do Lineage Catalog quét và gán tự động
       }
     }
 
     transition {
       days          = 30
-      storage_class = "GLACIER" # Chuyển xuống kho lạnh siêu rẻ
-    }
-
-    expiration {
-      days = 365 # Xóa vĩnh viễn sau 1 năm không ai dùng
+      storage_class = "GLACIER" # Kho lạnh tối ưu chi phí
     }
   }
 }
 ```
 
----
+## Thuật ngữ chính (Key terms)
 
-## 6. Nguồn Tham Khảo [References]
+| Term | Nghĩa ngắn |
+| --- | --- |
+| Column-Level Lineage | Theo vết sự phụ thuộc dữ liệu ở mức độ chi tiết nhất: Cột. |
+| OpenLineage | Tiêu chuẩn mã nguồn mở định nghĩa JSON schema (Run, Job, Dataset) để thu thập lineage. |
+| Cartesian Explosion | Sự bùng nổ tổ hợp kích thước của Logical Plan khi parse các câu SQL quá phức tạp. |
+| Propagated Cost | Chi phí tính toán luân chuyển từ upstream xuống downstream, dùng trong FinOps. |
 
-* [Building and Scaling Data Lineage at Netflix (Netflix TechBlog]][https://netflixtechblog.com/]
-* [Data Lineage at Uber (Uber Engineering]][https://www.uber.com/en-VN/blog/data-lineage/]
-* [OpenLineage Official Documentation & Column-Level Support][https://openlineage.io/docs/]
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/]
+## References
+
+- [Building and Scaling Data Lineage at Netflix](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977) - Netflix TechBlog.
+- [Databook: Turning Big Data into Knowledge with Metadata at Uber](https://www.uber.com/en-VN/blog/databook-turning-big-data-into-knowledge-with-metadata-at-uber/) - Uber Engineering.
+- [Column-Level Lineage Specification](https://openlineage.io/docs/spec/facets/column-level-lineage) - OpenLineage.
