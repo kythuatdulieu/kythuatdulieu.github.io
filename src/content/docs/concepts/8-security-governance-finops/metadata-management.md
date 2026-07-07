@@ -1,153 +1,134 @@
 ---
 title: "Metadata Management & Data Catalog"
+category: "8. Bảo Mật, Quản Trị & FinOps"
+domains: ["DE", "DA"]
+description: "Phân tích kiến trúc Metadata Management: Push vs Pull (DataHub), giải quyết Hive Metastore OOM, và Active Metadata."
+definition: "Metadata Management là Control Plane của hệ thống dữ liệu, chịu trách nhiệm thu thập, lưu trữ, và phân phối siêu dữ liệu (schema, lineage, tags) để phục vụ quản trị và khám phá dữ liệu."
+seoTitle: "Kiến trúc Metadata Management & Data Catalog (DataHub, Amundsen)"
+metaDescription: "Phân tích chuyên sâu kiến trúc hệ thống Metadata Management: Mô hình Push vs Pull, điểm nghẽn Hive Metastore OOM, và cách thiết kế Active Metadata."
 difficulty: "Advanced"
+level: "Middle"
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
 tags: ["metadata", "data-catalog", "data-governance", "hive-metastore", "data-lineage", "datahub", "amundsen"]
-readingTime: "20 mins"
-lastUpdated: 2026-06-29
-seoTitle: "Metadata Management Architecture: Push vs Pull, DataHub vs Amundsen"
-metaDescription: "Kiến trúc hệ thống Metadata Management từ góc nhìn Staff Engineer: So sánh Push (DataHub) vs Pull (Amundsen), giải quyết Hive Metastore OOM, và Active Metadata."
-description: "Trong các kiến trúc dữ liệu phân tán (Data Mesh, Lakehouse), Metadata không đơn thuần là 'dữ liệu về dữ liệu'. Nó chính là Control Plane của toàn bộ hệ sinh thái."
+aliases: ["Metadata Management", "Data Catalog", "Active Metadata", "Hive Metastore", "HMS"]
+refs:
+  - title: "DataHub Architecture"
+    org: "LinkedIn"
+    url: "https://datahubproject.io/docs/architecture/architecture/"
+    type: "docs"
+  - title: "Databook: Uber’s Unified Portal for Metadata Management"
+    org: "Uber Engineering"
+    url: "https://eng.uber.com/databook/"
+    type: "blog"
+  - title: "Netflix Unified Data Architecture"
+    org: "Netflix Tech Blog"
+    url: "https://netflixtechblog.com/"
+    type: "blog"
 ---
 
-Trong các kiến trúc dữ liệu phân tán hiện đại (Data Mesh, Data Fabric, Lakehouse), định nghĩa sách giáo khoa "Metadata là dữ liệu về dữ liệu" đã trở nên quá ngây thơ. Ở quy mô Enterprise, **Metadata Management** chính là **Control Plane (Mặt phẳng điều khiển)** của toàn bộ hạ tầng. Nếu hệ thống lưu trữ như HDFS/S3 là Data Plane (nơi chứa cơ bắp và dữ liệu vật lý), thì Data Catalog và Metastore đóng vai trò là Control Plane (bộ não điều phối, phân quyền và định tuyến).
+Trong các hệ thống phân tán, định nghĩa "Metadata là dữ liệu về dữ liệu" chỉ đúng bề nổi. Ở quy mô enterprise, **Metadata Management** thực chất là **Control Plane (Mặt phẳng điều khiển)**. Nếu HDFS/S3 là Data Plane chứa dữ liệu vật lý, thì Data Catalog và Metastore là bộ não định tuyến truy vấn, phân quyền, và theo dõi luồng chảy dữ liệu (data lineage).
 
-Bài viết này đi sâu vào kiến trúc vật lý của hệ thống quản lý siêu dữ liệu, phân tích sự đánh đổi giữa các mô hình thu thập (Push vs Pull), và cách các Big Tech như Uber, Netflix giải quyết điểm nghẽn khi hệ thống Metastore bị quá tải.
+Khi dữ liệu phình to lên mức Petabyte, hệ thống quản lý metadata chuyển từ một công cụ tra cứu tĩnh sang một hệ thống phân tán phức tạp, đòi hỏi khả năng xử lý hàng triệu sự kiện metadata mỗi ngày. Bài viết này phân tích các kiến trúc thu thập metadata (Push vs Pull), điểm nghẽn kinh điển của Hive Metastore, và sự tiến hóa lên Active Metadata.
 
----
+## 1. Kiến Trúc Thu Thập: Pull-based vs Push-based
 
-## 1. Kiến Trúc Thu Thập Metadata: Pull-based vs Push-based
+Làm sao để gom technical metadata (schema, column types) và operational metadata (run status, lineage) từ hàng nghìn luồng Airflow, Spark, dbt về một chỗ? Có hai trường phái chính:
 
-Việc thu thập Technical Metadata (Schema), Operational Metadata (Lineage, Job Status), và Business Metadata từ hàng nghìn pipelines đòi hỏi một chiến lược rõ ràng. Có hai trường phái kiến trúc chính:
+### 1.1. Pull-based Architecture (Kiến trúc Kéo)
 
-### 1.1. Pull-based Architecture (Kiến trúc Kéo - Thế hệ cũ)
-Đại diện tiêu biểu là **Amundsen (Lyft)** thời kỳ đầu hoặc **AWS Glue Crawlers**. Một hệ thống trung tâm (Crawler/Scanner) sẽ định kỳ chạy các Batch Jobs để kết nối tới các Data Sources (S3, RDS), đọc Schema và phân tích mẫu dữ liệu.
+Đại diện bởi các hệ thống thế hệ đầu như **Amundsen (Lyft)** hoặc **AWS Glue Crawlers**. Một agent/crawler trung tâm sẽ định kỳ (batch) kết nối tới các nguồn (PostgreSQL, Snowflake, S3), quét schema và cập nhật vào Data Catalog.
 
-**Đánh đổi hệ thống (Systemic Trade-offs):**
-- **Ưu điểm:** Tách biệt hoàn toàn (Decoupled) với Data Pipelines. Việc quét metadata không làm sửa đổi code hay ảnh hưởng tới hiệu năng của luồng ghi dữ liệu chính.
-- **Rủi ro Vận hành:** 
-  - **Dữ liệu thiu (Stale Metadata):** Vì chạy theo Batch, Data Catalog luôn chậm hơn thực tế vài giờ.
-  - **S3 API Throttling:** Việc quét (Crawling) trên Object Storage với hàng triệu file Parquet nhỏ sẽ gây bùng nổ chi phí gọi `LIST` / `GET` API của AWS, dẫn đến việc bị AWS bóp băng thông (Throttling) làm sập các hệ thống khác cùng chia sẻ chung AWS Account.
+- **Ưu điểm:** Tách biệt hoàn toàn (Decoupled). Không cần sửa code của Data Pipeline gốc. Dễ dàng cắm vào các hệ thống legacy không hỗ trợ bắn sự kiện.
+- **Điểm yếu (Trade-off):** 
+  - **Độ trễ cao (Stale data):** Metadata luôn chậm hơn thực tế từ vài giờ đến một ngày.
+  - **Overhead hệ thống nguồn:** Chạy crawler trên S3 bucket chứa hàng triệu file Parquet nhỏ sẽ tạo ra bão gọi API (`LIST`, `GET`), dễ dẫn đến việc bị cloud provider bóp băng thông (throttling), ảnh hưởng đến các job khác.
 
-### 1.2. Push-based Architecture (Kiến trúc Đẩy - Thế hệ mới)
-Đại diện bởi kiến trúc của **DataHub (LinkedIn)**, chuẩn **OpenLineage**, và **Marquez**. Các Data Pipelines (Airflow, Spark, dbt) sẽ chủ động phát ra các sự kiện (Metadata Events) qua một Message Broker (như Kafka) ngay tại thời điểm Runtime mỗi khi có một task hoàn thành hoặc cấu trúc bảng thay đổi.
+### 1.2. Push-based Architecture (Kiến trúc Đẩy)
 
-**Đánh đổi hệ thống:**
-- **Ưu điểm:** Metadata được cập nhật gần như thời gian thực (Near real-time). Bắt được chính xác **Data Lineage (Luồng chảy dữ liệu)** tại cấp độ cột (Column-level) thay vì phải dùng Regex để suy đoán (Parse) từ SQL logs.
-- **Rủi ro Vận hành:** Tính phụ thuộc (Coupling) rất cao. Code của Pipeline gốc phải bị can thiệp (Instrumented) để gắn thêm thư viện đẩy sự kiện. Nếu Kafka endpoint của DataHub bị sập, hệ thống cần cơ chế Asynchronous + Dead Letter Queue để đảm bảo luồng Data Pipeline cốt lõi không bị chết lây.
+Đại diện bởi **DataHub (LinkedIn)** và chuẩn **OpenLineage**. Thay vì chờ bị quét, các Data Pipelines sẽ chủ động phát ra sự kiện metadata (ví dụ: "Job X vừa tạo bảng Y với schema Z") qua Kafka hoặc REST API ngay tại thời điểm runtime.
+
+- **Ưu điểm:** Cập nhật gần thời gian thực (Near real-time). Bắt được chính xác lineage ở cấp độ cột (column-level) vì sự kiện được sinh ra từ chính engine thực thi (Spark, dbt) thay vì phải parse SQL log một cách chắp vá.
+- **Điểm yếu (Trade-off):** Mức độ phụ thuộc (Coupling) cao. Bạn phải cài SDK/thư viện vào từng pipeline. Nếu Kafka nhận metadata bị sập, cần có cơ chế failover hoặc Dead Letter Queue để không làm chết lây luồng xử lý dữ liệu chính.
+
+Trong thực tế, các nền tảng như DataHub hỗ trợ kiến trúc Hybrid: dùng Push cho các pipeline cốt lõi (Spark, Flink, Airflow) và Pull cho các hệ thống BI hoặc RDBMS cũ.
 
 ```mermaid
 graph TD
-    subgraph Push_based_Architecture ["Push-based (DataHub / OpenLineage)"]
-        Spark["Spark Job"] -- "1. Emit Event('Schema, Metrics')" --> Kafka["Kafka Topic"]
-        dbt["dbt Model"] -- "2. Emit Event('Lineage')" --> Kafka
-        Kafka -- "3. Consume Async" --> Ingestion["Ingestion Service"]
-        Ingestion --> GraphDB["(Graph DB / Neo4j)"]
-        Ingestion --> SearchIndex["(Elasticsearch)"]
+    subgraph Push_based ["Push-based (DataHub / OpenLineage)"]
+        Spark["Spark Job"] -- "Emit Event" --> Kafka["Kafka Topic"]
+        dbt["dbt Model"] -- "Emit Event" --> Kafka
+        Kafka -- "Consume Async" --> GMS["Metadata Service"]
+        GMS --> GraphDB["Graph DB"]
+        GMS --> SearchIndex["Search Index"]
     end
     
-    subgraph Pull_based_Architecture ["Pull-based (AWS Glue Crawler / Amundsen)"]
-        Crawler["Glue Crawler"] -- "1. LIST S3 bucket" --> S3["(Amazon S3)"]
-        Crawler -- "2. Sample Parquet Footer" --> S3
-        Crawler -- "3. Infer Schema" --> HMS["(Glue Catalog / Metastore)"]
+    subgraph Pull_based ["Pull-based (Glue Crawler)"]
+        Crawler["Glue Crawler"] -- "LIST API" --> S3["Amazon S3"]
+        Crawler -- "Infer Schema" --> HMS["Metastore"]
     end
 ```
 
----
+## 2. Điểm Nghẽn Kinh Điển: Cú Sập Hive Metastore (HMS)
 
-## 2. Điểm Nghẽn Hệ Thống: Cú Sập Hive Metastore (HMS)
+**Hive Metastore (HMS)** là tiêu chuẩn de-facto của kỷ nguyên Hadoop/Spark. Tuy nhiên, nó mang kiến trúc monolith, lưu metadata trong RDBMS (thường là MySQL/PostgreSQL). 
 
-**Hive Metastore (HMS)** thường được dùng làm tiêu chuẩn de-facto Data Catalog cho các hệ sinh thái Hadoop/Spark. Tuy nhiên, bản chất HMS là một kiến trúc Monolith backed bởi một cơ sở dữ liệu quan hệ (RDBMS như MySQL/PostgreSQL).
+### OOMKilled & Cascade Timeout
+Hãy tưởng tượng một Data Analyst chạy: `SELECT * FROM fact_logs WHERE year = 2023`. Bảng này có dữ liệu 5 năm, partitioned theo `(year, month, day, hour)` — tương đương hàng chục nghìn partition.
 
-### Real-world Incident: JVM OOMKilled & Cascade Timeout
-Khi một Data Analyst chạy truy vấn một bảng được partitioned theo `(year, month, day, hour)` với lịch sử 5 năm, câu lệnh `SELECT * FROM table WHERE year = 2023` sẽ buộc Spark Driver gọi hàm `get_partitions_by_filter` qua giao thức Thrift tới HMS. 
+Spark Driver phải gọi Thrift API tới HMS để lấy danh sách các file cần đọc:
+1. HMS query MySQL, lôi toàn bộ hàng chục nghìn records partition lên RAM.
+2. HMS serialize lượng dữ liệu khổng lồ (hàng trăm MB) thành Thrift message trả về.
+3. JVM của Spark Driver (hoặc chính HMS) phình to và sập vì **OOM (Out of Memory)**.
+4. **Cascade Failure:** Khi HMS bị treo, mọi Spark job khác trong công ty đều bị block ở bước lập kế hoạch truy vấn (Query Planning), dẫn đến sập dây chuyền.
 
-Nếu bảng có hàng chục nghìn partitions, HMS sẽ phải query MySQL, load dữ liệu lên RAM, Deserialize các Object, và Serialize thành Thrift response trả về.
-- **Hệ quả 1:** CPU của MySQL backing HMS tăng vọt 100%.
-- **Hệ quả 2:** Payload Thrift trả về quá lớn (lên tới hàng trăm MB hoặc vài GB). JVM của Spark Driver (hoặc chính bản thân HMS) bị phình to và chết vì **OOMKilled** (Out Of Memory).
-- **Hệ quả 3 (Cascade Failure):** Khi HMS bị nghẽn, toàn bộ các Data Pipelines khác trong công ty đang cố gọi tới HMS đều bị Connection Timeout và sập dây chuyền.
+### Cách Các Big Tech Giải Quyết
 
-**Cách Khắc Phục (Architectural Solutions):**
-1. **Chuyển sang Open Table Formats (Iceberg/Hudi):** Apache Iceberg loại bỏ hoàn toàn sự phụ thuộc vào RDBMS của HMS trong việc lưu Metadata ở cấp độ Partition/File. Nó lưu Metadata trực tiếp trên S3 dưới dạng Cây phân cấp (Tree of Manifest files), giúp Spark Driver có thể đọc song song phân tán.
-2. **Database Federation (Cách làm của Uber):** Uber đã giải quyết HMS Monolith bằng cách phân tách (Sharding) Metastore thành các Domain-Specific Databases, sử dụng con trỏ siêu dữ liệu để giảm bán kính ảnh hưởng (Blast Radius) khi một Domain bị sập.
+- **Uber (Federation):** Khi hệ thống phình to lên 350+ PB, Uber không thể dùng một HMS duy nhất. Họ áp dụng **Federation**, chia tách HMS thành nhiều cụm độc lập theo domain.
+- **Netflix & Ngành công nghiệp (Open Table Formats):** Iceberg, Delta Lake loại bỏ hoàn toàn sự phụ thuộc vào RDBMS của HMS ở cấp độ partition. Iceberg lưu metadata (manifest files) ngay trên Object Storage, cho phép Spark tính toán metadata song song và phân tán.
+- **Databricks:** Chuyển đổi khách hàng từ HMS cục bộ sang **Unity Catalog** — một Control Plane tập trung hỗ trợ đa workspace và lineage tích hợp.
 
----
+## 3. Quản Trị Bằng Đồ Thị Tri Thức (Knowledge Graph)
 
-## 3. Kiến Trúc Đồ Thị Tri Thức (Knowledge-Graph) - Netflix UDA
+Quản lý data lineage bằng các bảng quan hệ (RDBMS) rất tốn kém khi truy vấn đệ quy (Recursive CTE). Khi một Data Engineer cần biết: *"Nếu tôi đổi kiểu dữ liệu cột `user_id`, những Dashboard nào hạ nguồn sẽ vỡ?"*, truy vấn trên MySQL có thể mất vài phút hoặc timeout.
 
-Netflix nhận ra rằng việc quản lý Data Lineage (Truy xuất nguồn gốc dữ liệu) bằng các bảng RDBMS rời rạc là một cực hình. Khi sếp hỏi *"Nếu chúng ta sửa kiểu dữ liệu cột A, những Dashboard nào hạ nguồn bị lỗi?"*, các kỹ sư phải viết các vòng lặp đệ quy JOIN (Recursive CTEs) cực kỳ tốn kém và chậm chạp trên MySQL.
+**Netflix** thiết kế **Unified Data Architecture (UDA)** sử dụng abstraction của Graph Database.
+- **Node (Đỉnh):** Table, Column, Pipeline, Dashboard, User.
+- **Edge (Cạnh):** Tương tác (`Creates`, `Consumes`, `Owns`).
 
-Họ đã thiết kế **Unified Data Architecture (UDA)** sử dụng kiến trúc Đồ thị (Graph Database).
-- Mọi thực thể (Table, Column, Pipeline, User, Dashboard) là các **Node (Đỉnh)**. 
-- Các tương tác (Creates, Consumes, Owns) là **Edges (Cạnh)**. 
-Việc truy vấn Data Lineage từ thượng nguồn xuống hạ nguồn trở thành một bài toán duyệt đồ thị (Graph Traversal) được xử lý với độ trễ tính bằng mili-giây (sub-milliseconds).
+Việc truy vết từ thượng nguồn xuống hạ nguồn trở thành bài toán duyệt đồ thị (Graph Traversal), giúp giảm độ trễ truy vấn lineage xuống mức mili-giây (sub-milliseconds) ngay cả với hàng triệu node.
 
----
+## 4. Sự Tiến Hóa Lên Active Metadata
 
-## 4. Active Metadata & Quản Lý Tự Động Bằng ML tại Uber
+Data Catalog truyền thống là **Passive Metadata** (bị động) — một trang web để data engineer vào search tài liệu. Khi quy mô chạm mức hàng vạn bảng, việc kỳ vọng con người vào gán tag bằng tay là bất khả thi.
 
-Khi hệ thống chạm ngưỡng Exabytes dữ liệu với hàng chục vạn bảng, việc yêu cầu con người gán Tag (Ví dụ: PII, Financial Data) thủ công là bất khả thi.
+Ngành data đang dịch chuyển sang **Active Metadata** (chủ động). Tại **Uber**, hệ thống Databook kết hợp với DataK9 để tạo ra vòng lặp tự động:
+1. **Phát hiện:** Khi một pipeline mới sinh ra bảng có chứa email khách hàng, engine quét mẫu sẽ nhận diện đây là dữ liệu PII (Personally Identifiable Information).
+2. **Kích hoạt:** Databook tự động gắn tag `PII=true` vào metadata.
+3. **Thực thi:** Hệ thống bắn webhook sang công cụ quản lý phân quyền (ví dụ: Ranger hoặc AWS Lake Formation), ngay lập tức chặn quyền `SELECT` ở cấp độ cột (Column-level Security) đối với nhân viên không có thẩm quyền.
 
-Hệ thống Metadata chuyển từ trạng thái thụ động (Passive - chờ người tra cứu) sang **Chủ động (Active Metadata)**. Uber phát triển hệ thống **DataK9** tích hợp với **Databook**:
-- Họ dùng Machine Learning và Rule-based Engines (Bloom Filters) quét qua các luồng dữ liệu mới để *tự động nhận diện* và phân loại dữ liệu nhạy cảm (PII - Personally Identifiable Information).
-- Ngay khi DataK9 gắn Tag `PII=true` vào ElasticSearch của Databook, hệ thống sẽ tự động gọi API kích hoạt các chính sách Role-Based Access Control (RBAC) để chặn quyền truy cập của người dùng thường ở cấp độ Cột (Column-level Security) mà không cần Admin can thiệp.
+Không có sự can thiệp thủ công của admin. Metadata điều khiển trực tiếp bảo mật và vận hành.
 
----
+## 5. Khi Nào Nên Dùng Giải Pháp Nào?
 
-## 5. Thực Chiến: Triển khai Data Catalog & LF bằng Terraform (IaC)
+| Kịch bản | Công nghệ phù hợp | Lý do |
+| :--- | :--- | :--- |
+| **Data Stack vừa/nhỏ, ưu tiên BI** | dbt docs, AWS Glue Catalog | Đơn giản, chi phí bảo trì thấp, không cần duy trì hạ tầng Kafka/Graph. |
+| **Lakehouse quy mô lớn, nhiều team** | DataHub, Amundsen | Cần search mạnh mẽ, hỗ trợ nhiều nguồn (Snowflake, Spark, Looker). |
+| **Real-time Lineage, Event-driven** | DataHub + OpenLineage | Kiến trúc Push-based giúp phát hiện lỗi vỡ schema ngay lập tức. |
+| **Sập HMS liên tục vì OOM** | Apache Iceberg / Delta Lake | Đưa metadata xuống file level, giải phóng tải cho Thrift API. |
 
-Thay vì click chuột thủ công (Click-ops) trên giao diện Web, các Staff Data Engineer sử dụng Infrastructure as Code (IaC) để thiết lập Data Catalog. Dưới đây là ví dụ dùng **AWS Glue Data Catalog** kết hợp **AWS Lake Formation** để thiết lập Tag-Based Access Control (TBAC).
+## Thuật ngữ chính (Key terms)
 
-```hcl
-# 1. Thiết lập Glue Catalog Database (Logical Layer)
-resource "aws_glue_catalog_database" "gold_layer_metrics" {
-  name        = "gold_business_metrics"
-  description = "Chứa các bảng Aggregate đã được làm sạch cho hệ thống BI"
+| Term | Nghĩa ngắn |
+| :--- | :--- |
+| **Hive Metastore (HMS)** | Dịch vụ lưu schema/partition mapping cho Hadoop/Spark, thường là nút thắt cổ chai (bottleneck) ở quy mô lớn. |
+| **Active Metadata** | Sử dụng metadata để kích hoạt hành động tự động (phân quyền, báo động, scale resource) thay vì chỉ để đọc. |
+| **Push-based Ingestion** | Mô hình pipeline chủ động bắn metadata event qua Kafka/API khi có thay đổi. |
+| **Data Lineage** | Truy xuất nguồn gốc luồng chảy dữ liệu từ nguồn (source) tới đích (dashboard/model). |
 
-  # Gắn Business Metadata trực tiếp vào IaC
-  parameters = {
-    "data_owner"     = "growth_team"
-    "classification" = "confidential"
-    "pii_data"       = "false"
-  }
-}
+## References
 
-# 2. Áp dụng Tag-based Access Control (TBAC)
-resource "aws_lakeformation_lf_tag" "sensitivity" {
-  key    = "sensitivity_level"
-  values = ["public", "high", "critical"]
-}
-
-# 3. Phân quyền Data Governance qua Lake Formation
-resource "aws_lakeformation_permissions" "bi_analyst_access" {
-  principal   = aws_iam_role.bi_analyst_role.arn
-  permissions = ["SELECT", "DESCRIBE"]
-
-  table {
-    database_name = aws_glue_catalog_database.gold_layer_metrics.name
-    name          = "fct_monthly_revenue"
-  }
-}
-```
-
-**Sự đánh đổi [Trade-off] khi dùng IaC cho Metadata:**
-- **Ưu điểm:** Khả năng Audit (Kiểm toán) xuất sắc và Review PR dễ dàng. Phân quyền cấp độ Tag linh hoạt.
-- **Rủi ro:** Khi có quá nhiều Policies và Tags, quá trình *Cross-evaluation* giữa AWS IAM và Lake Formation sẽ làm tăng độ trễ Query Planning của Amazon Athena. Hơn nữa, việc *Terraform Drift* xảy ra khi các Data Stewards tự ý sửa quyền trên UI sẽ gây vỡ luồng CI/CD, đòi hỏi chiến lược Reconcile chặt chẽ.
-
----
-
-## 6. Tổng Kết
-
-Data Catalog và Metadata Management hoàn toàn không phải là một công cụ (Tool) cài vào là xong. Nó là một **Hệ Sinh Thái (Ecosystem)**. 
-
-Việc thiết kế hệ thống này đòi hỏi kỹ sư phải giải quyết các bài toán hệ thống phân tán cốt lõi: 
-1. Làm thế nào để push metadata với throughput cao mà không làm nghẽn Data Pipeline gốc?
-2. Làm sao để đánh index hàng tỷ data files mà không gây sập (OOM) Metastore?
-3. Thiết kế kiến trúc Active Metadata để tự động hóa Governance ở quy mô Exabytes.
-
-Làm chủ kiến trúc Metadata chính là bước đệm kỹ thuật bắt buộc trước khi doanh nghiệp có thể triển khai thành công các mô hình phi tập trung như **Data Mesh** hay **Data Fabric**.
-
-## Nguồn Tham Khảo
-* **Designing Data-Intensive Applications - Martin Kleppmann**
-* [Netflix Technology Blog: Unified Data Architecture (UDA]][https://netflixtechblog.com/]
-* [Uber Engineering: Databook - Uber's Unified Portal for Metadata Management][https://eng.uber.com/databook/]
-* [DataHub Architecture - LinkedIn](https://datahubproject.io/docs/architecture/architecture/]
+- [DataHub Architecture](https://datahubproject.io/docs/architecture/architecture/) - LinkedIn
+- [Databook: Uber’s Unified Portal for Metadata Management](https://eng.uber.com/databook/) - Uber Engineering
+- [Netflix Unified Data Architecture](https://netflixtechblog.com/) - Netflix Tech Blog

@@ -1,32 +1,33 @@
 ---
 title: "Unity Catalog"
+category: "8. Bảo Mật, Quản Trị & FinOps"
+domains: ["DE", "Platform"]
+description: "Phân tích kiến trúc Decoupled Governance của Unity Catalog, cơ chế cấp phát token, quản lý Data Mesh và các đánh đổi hệ thống (Managed vs External)."
+definition: "Unity Catalog là lớp quản trị siêu dữ liệu (metadata) và bảo mật tập trung ở cấp Account của Databricks, hoạt động theo cơ chế Token Vending Machine để phân quyền truy cập xuống Data Lake."
+seoTitle: "Kiến trúc Unity Catalog: Token Vending Machine & Data Mesh"
+metaDescription: "Tìm hiểu kiến trúc Unity Catalog (Databricks) dưới góc nhìn kỹ sư hệ thống: cơ chế cấp quyền truy cập, RLS/CLS, cấu hình Terraform và đánh đổi Managed/External tables."
+level: "Senior"
 difficulty: "Advanced"
-tags: ["data-governance", "databricks", "data-lakehouse", "access-control", "architecture", "data-mesh", "abac"]
-readingTime: "25 mins"
-lastUpdated: 2026-06-29
-seoTitle: "Unity Catalog Dưới Góc Nhìn Staff Engineer: Kiến Trúc, Trade-offs và Thực Chiến"
-metaDescription: "Phân tích kiến trúc cốt lõi của Unity Catalog, mô hình ABAC/RBAC, bảo mật RLS/CLS, Trade-offs Managed/External Tables và cấu hình Terraform."
-description: "Trong kỷ nguyên Data Lakehouse, việc phân quyền qua Cloud IAM đã trở thành nút thắt cổ chai. Unity Catalog là kiến trúc Decoupled Governance đưa Metastore lên tầng Account, tách biệt hoàn toàn quản trị khỏi hạ tầng tính toán (Compute)."
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["data-governance", "databricks", "data-lakehouse", "access-control", "architecture", "data-mesh"]
+aliases: ["UC", "Databricks Unity Catalog"]
 ---
 
-Bỏ qua các định nghĩa mang tính Marketing bề nổi, Unity Catalog (UC) dưới góc nhìn kỹ thuật của một Staff Data Engineer là một **Decoupled Governance Layer** (Lớp quản trị tách rời). Trước khi có UC, nền tảng Databricks bị trói buộc bởi kiến trúc **Workspace-level Isolation** lỗi thời, nơi mỗi Workspace (Môi trường làm việc) phải cõng một Hive Metastore (HMS) cục bộ. Điều này dẫn đến sự phân mảnh siêu dữ liệu (Metadata Fragmentation) cực độ: Workspace của team Marketing không thể nhìn thấy bảng dữ liệu của team Tài chính, và các kỹ sư phải rải các IAM Roles của AWS một cách vô tội vạ.
+Trước khi có Unity Catalog (UC), Databricks và hệ sinh thái Hadoop thường quản trị siêu dữ liệu (metadata) bằng Hive Metastore (HMS) ở cấp độ từng cụm (cluster) hoặc từng không gian làm việc (workspace). Điều này dẫn đến sự phân mảnh nghiêm trọng: workspace của đội Marketing không thể thấy bảng dữ liệu của đội Tài chính mà không có sự can thiệp thủ công vào IAM (Identity and Access Management) của Cloud.
 
-Unity Catalog thay đổi hoàn toàn luật chơi bằng cách đẩy Metastore lên tầng **Account-level (Control Plane)**, đóng vai trò như một chốt chặn bảo mật (Security Gateway) duy nhất trước khi bất kỳ Compute Node (Máy ảo tính toán) nào chạm được tới Data Storage (S3/ADLS/GCS). 
+Unity Catalog thay đổi kiến trúc này bằng cách đẩy Metastore lên tầng **Account-level (Control Plane)**, đóng vai trò là một lớp quản trị tách rời (Decoupled Governance Layer) duy nhất trước khi bất kỳ Compute Node nào chạm tới Data Storage. 
 
----
+## 1. Cơ chế hoạt động: Token Vending Machine
 
-## 1. Kiến trúc Thực thi Vật lý (Physical Architecture)
+Để hiểu Unity Catalog hoạt động ra sao ở mức low-level, nguyên tắc cốt lõi cần nhớ là: **Unity Catalog không trực tiếp lưu trữ dữ liệu của bạn; nó chỉ quản lý Metadata, Access Policies và Credentials.**
 
-Để hiểu UC hoạt động ra sao ở mức Low-level, chúng ta cần mổ xẻ luồng thực thi của một truy vấn (Query Execution Flow). Bạn cần nhớ nguyên tắc cốt lõi: **Unity Catalog không trực tiếp lưu trữ dữ liệu Data của bạn; nó chỉ quản lý Metadata, Policies và Credentials (Chứng chỉ).**
+Khi một Spark SQL Job chạy trên Databricks Cluster:
 
-### 1.1. Luồng cấp phép truy cập (Credential Vending Machine)
-
-Khi một Spark SQL Job hoặc một script Python chạy trên Databricks Cluster:
-
-1. **Query Interception (Đánh chặn truy vấn)**: Spark/Photon Engine parse (phân tích) câu lệnh SQL. Thay vì trực tiếp gọi API xuống S3/ADLS để đọc File, nó bắt buộc phải gửi yêu cầu kiểm tra quyền (Authorization Request) lên Unity Catalog Metastore nằm ở Control Plane của Databricks.
-2. **Policy Evaluation (Đánh giá chính sách)**: UC kiểm tra danh tính người dùng (Identity), đánh giá các quyền truy cập được cấp qua RBAC (Role-based) hoặc ABAC (Attribute-based) và các chính sách bảo mật dòng/cột (RLS/CLS).
-3. **Token Vending (Cấp phát Token)**: Nếu truy vấn hợp lệ, UC tạo ra các chứng chỉ tạm thời thời gian ngắn (Short-lived Credentials) — ví dụ: *AWS STS Tokens*, *Azure SAS Tokens*, hoặc *GCP Downscoped Tokens* — chỉ có quyền đọc đúng File Parquet đó trong vòng vài phút.
-4. **Data Access (Truy cập dữ liệu)**: Cluster Compute ở Data Plane mang Token này xuống Object Storage để kéo dữ liệu. Khi hết hạn, Token lập tức vô dụng, chặn đứng nguy cơ rò rỉ (Data Leakage).
+1. **Query Interception**: Spark engine parse câu lệnh SQL (ví dụ: `SELECT * FROM prod.gold.users`). Thay vì gọi trực tiếp API của S3/ADLS, nó gửi yêu cầu cấp quyền (Authorization Request) lên Unity Catalog Metastore nằm ở Control Plane.
+2. **Policy Evaluation**: UC kiểm tra danh tính người dùng, đánh giá các quyền (RBAC/ABAC) và các chính sách bảo mật dòng/cột (RLS/CLS).
+3. **Token Vending**: Nếu hợp lệ, UC tạo ra chứng chỉ tạm thời thời gian ngắn (Short-lived Credentials) — ví dụ: AWS STS Tokens, Azure SAS Tokens, hoặc GCP Downscoped Tokens — chỉ có quyền đọc chính xác những file Parquet/Delta cần thiết.
+4. **Data Access**: Cluster ở Data Plane mang token này xuống Object Storage để kéo dữ liệu. Khi token hết hạn (thường sau 1 giờ), nó lập tức vô dụng, giảm thiểu tối đa rủi ro rò rỉ dữ liệu.
 
 ```mermaid
 sequenceDiagram
@@ -36,123 +37,80 @@ sequenceDiagram
     participant Storage as Cloud Object Storage<br>(S3 / ADLS)
 
     User->>Cluster: SELECT * FROM prod.gold.users
-    Cluster->>UC: Xin quyền truy cập("Parse AST & Request Auth")
+    Cluster->>UC: Xin quyền truy cập (Parse AST)
     UC->>UC: Validate RBAC / ABAC Policies
-    UC-->>Cluster: Trả về Short-lived Token("STS/SAS")
-    Cluster->>Storage: Read Data File vật lý với Token
-    Storage-->>Cluster: Trả stream dữ liệu("Parquet/Delta")
+    UC-->>Cluster: Cấp Short-lived Token (STS/SAS)
+    Cluster->>Storage: Read Data File bằng Token
+    Storage-->>Cluster: Trả stream dữ liệu (Parquet/Delta)
     Cluster-->>User: Query Results
 ```
+*Caption: Luồng thực thi cấp phát chứng chỉ (Token Vending Machine) của Unity Catalog [1].*
 
-### 1.2. Mô hình 3-Tier Namespace cho Data Mesh
-UC ánh xạ thẳng hệ tư tưởng của RDBMS truyền thống sang Data Lake bằng cấu trúc 3 tầng: `catalog_name.schema_name.table_name`. Kiến trúc này cực kỳ phù hợp cho mô hình **Data Mesh**.
+## 2. Mô hình 3-Tier Namespace cho Data Mesh
 
-- **Metastore**: Container cao nhất ở cấp Account. (Lưu ý: Chỉ nên tạo 1 Metastore trên 1 Cloud Region để tránh phí Data Transfer liên vùng đắt đỏ).
-- **Catalog**: Cấp độ cách ly vật lý. Tại đây bạn chia ranh giới cho Data Mesh: `catalog_marketing`, `catalog_finance`. Mỗi Data Product thuộc về 1 Catalog riêng do Domain Team tự quản lý.
-- **Schema (Database)**: Phân tầng logic bên trong Catalog. Thường được chia theo kiến trúc Medallion: `bronze`, `silver`, `gold`.
-- **Object**: Tables, Views, Volumes (Chứa file phi cấu trúc như ảnh, video), AI Models.
+Unity Catalog ánh xạ cấu trúc của RDBMS truyền thống sang Data Lake bằng không gian tên 3 tầng: `catalog_name.schema_name.table_name`. Cấu trúc này hỗ trợ tự nhiên cho kiến trúc [Data Mesh](/concepts/1-distributed-systems-architecture/data-mesh/).
 
----
+- **Metastore**: Container cao nhất ở cấp Account. (Lưu ý: Thường chỉ tạo 1 Metastore trên 1 Cloud Region để tránh phí Data Transfer liên vùng).
+- **Catalog**: Cấp độ cách ly vật lý. Tại đây, ranh giới cho Data Mesh được thiết lập: `sales_catalog`, `marketing_catalog`. Mỗi Data Product thuộc về 1 Catalog riêng do Domain Team tự quản lý.
+- **Schema (Database)**: Phân tầng logic bên trong Catalog, thường dùng kiến trúc Medallion: `bronze`, `silver`, `gold`.
+- **Object**: Tables, Views, Volumes (quản lý file phi cấu trúc, raw files), và ML Models.
 
-## 2. Đánh Đổi Hệ Thống: Managed Tables vs External Tables
+## 3. Đánh đổi hệ thống: Managed vs External Tables
 
-Trong thiết kế kiến trúc Dữ liệu, câu hỏi gây tranh cãi lớn nhất khi dùng UC là: *"Lưu dữ liệu dưới dạng Managed hay External?"*. Đây là một Systemic Trade-off kinh điển giữa **Sự tối ưu hóa [Optimization]** và **Quyền kiểm soát (Control)**.
+Trong thiết kế nền tảng dữ liệu, quyết định *"Lưu dữ liệu dưới dạng Managed hay External?"* là một trade-off kinh điển giữa **Tối ưu hóa (Optimization)** và **Quyền kiểm soát độc lập (Interoperability)**.
 
-| Tiêu chí | Managed Tables (Bảng được quản lý) |" External Tables (Bảng ngoại vi) "|
+| Tiêu chí | Managed Tables | External Tables |
 | :--- | :--- | :--- |
-| **Vị trí lưu trữ** | Nằm trong Root Bucket của UC. Kỹ sư không nên tự ý vào Bucket này sửa file. |" Nằm ở Bucket riêng (S3/ADLS) do tổ chức bạn tự quản lý thư mục. "|
-| **Vòng đời dữ liệu** | Khi chạy lệnh `DROP TABLE`, File vật lý tự động bị UC xóa vĩnh viễn sau 30 ngày (Time Travel retention). | Khi chạy lệnh `DROP TABLE`, UC chỉ xóa siêu dữ liệu. File vật lý **vẫn còn** nguyên vẹn trên Cloud. |
-|" **Tối ưu hóa (Under the hood)** "| Tận dụng tối đa công nghệ lõi của Databricks: **Liquid Clustering**, Auto-compaction, và Predictive I/O. | Phải tự chạy thủ công các lệnh `OPTIMIZE`, `VACUUM` bằng các Cron Jobs. |
-| **Vendor Lock-in** | Cao hơn. Dữ liệu gắn chặt với vòng đời và hệ sinh thái của Databricks. |" Thấp. Hệ thống khác (Snowflake, Trino, Athena) có thể dễ dàng đọc trực tiếp Raw files. "|
-|" **Use Case (Best Practice)** "| Các lớp phân tích cuối (Silver/Gold), nơi hiệu năng truy vấn là ưu tiên số 1. |" Dữ liệu thô (Bronze), dữ liệu Legacy cần chia sẻ cho hệ thống ngoài Databricks. "|
+| **Vị trí lưu trữ** | Nằm trong Root Storage của UC. Người dùng không tự ý vào thư mục này sửa file. | Nằm ở Bucket/Container riêng (S3/ADLS/GCS) do tổ chức tự cấu hình đường dẫn. |
+| **Vòng đời (Lifecycle)** | Khi chạy `DROP TABLE`, File vật lý tự động bị UC dọn dẹp (Garbage Collection) sau khi Time Travel hết hạn. | Khi chạy `DROP TABLE`, UC chỉ xóa metadata. File vật lý **vẫn còn** nguyên vẹn trên Cloud. |
+| **Tối ưu hóa** | Tự động áp dụng Liquid Clustering, Auto-compaction, và Predictive I/O. | Phải tự chạy thủ công hoặc lập lịch các lệnh `OPTIMIZE`, `VACUUM`. |
+| **Vendor Lock-in** | Cao hơn. Dữ liệu gắn chặt với vòng đời của Databricks, khó đọc từ engine ngoài nếu không qua Delta Sharing. | Thấp. Các engine khác (Snowflake, Trino, Athena) dễ dàng đọc thẳng Raw files. |
+| **Use Case phù hợp** | Lớp phân tích cuối (Silver/Gold), nơi hiệu năng và quản trị là ưu tiên số 1. | Dữ liệu thô (Bronze), dữ liệu legacy hoặc dữ liệu cần engine khác dùng chung trực tiếp. |
 
 > [!WARNING]
-> **Real-world Incident: Sập hệ thống vì lệnh "DROP TABLE" sai bản chất**
-> Một Junior Data Engineer từng quen dùng External Tables (Xóa bảng trên UI nhưng không mất file ổ cứng), khi chuyển sang dự án mới dùng Managed Tables, cậu ta đã vô tư chạy `DROP TABLE prod.gold.revenue_metrics` với ý định tạo lại cấu trúc bảng. Kết quả: Toàn bộ file Parquet vật lý bị UC đánh dấu Garbage Collection. Rất may mắn, tính năng Time Travel (Lưu giữ lịch sử 30 ngày mặc định của Delta Lake) đã cứu dự án khỏi thảm họa bằng lệnh `RESTORE`.
+> Khi chuyển từ External Tables sang Managed Tables, Data Engineer cần cẩn trọng với lệnh `DROP TABLE`. Một sai lầm phổ biến là dùng `DROP TABLE` để tạo lại cấu trúc thay vì `CREATE OR REPLACE`. Với Managed Tables, hành động này sẽ xóa dữ liệu vật lý và kích hoạt Garbage Collection, đòi hỏi phải dùng tính năng `RESTORE` của Delta Lake nếu lỡ tay.
 
----
+## 4. RLS, CLS và Nỗi đau Vận hành (Operational Risks)
 
-## 3. Show, Don't Tell: Code Thực Chiến
-
-### 3.1. Triển khai Unity Catalog bằng Terraform
-Việc thiết lập UC qua giao diện Web (ClickOps) là một Anti-pattern nghiêm trọng. Dưới đây là cách định nghĩa Infrastructure as Code (IaC) chuẩn mực cho một Staff Engineer, tách biệt rõ ràng quyền truy cập Cloud và Cấu trúc dữ liệu:
-
-```hcl
-# 1. Tạo Storage Credential (Tạo IAM Role cho phép UC gọi AWS STS)
-resource "databricks_storage_credential" "uc_cred" {
-  name = "aws_uc_storage_credential"
-  aws_iam_role {
-    role_arn = aws_iam_role.databricks_uc_role.arn
-  }
-}
-
-# 2. Định nghĩa External Location (Chỉ định rõ Bucket S3 nào được phép dùng làm External Table)
-resource "databricks_external_location" "gold_layer" {
-  name            = "s3_gold_layer"
-  url             = "s3://my-company-data-lake/gold/"
-  credential_name = databricks_storage_credential.uc_cred.id
-  comment         = "Lớp dữ liệu Gold cho hệ thống Analytics"
-}
-
-# 3. Gắn quyền truy cập cho Group (Data Engineers)
-resource "databricks_grants" "external_location_grants" {
-  external_location = databricks_external_location.gold_layer.id
-  grant {
-    principal  = "data-engineers-group"
-    privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES", "WRITE_FILES"]
-  }
-}
-```
-
-### 3.2. Cấu hình Row-Level Security [RLS] & Column-Level Security (CLS)
-Giờ đây, Data Engineer không cần cấu hình vòng vèo ở tầng AWS IAM Policies nữa. Bạn dùng SQL thuần để chặn đứng các truy vấn vượt quyền. Tính năng Native RLS & CLS trong Unity Catalog hỗ trợ **ABAC (Attribute-based access control)** bằng cách kiểm tra linh động (dynamic) nhóm của User hiện tại.
+### RLS và CLS bằng SQL thuần
+Thay vì cấu hình phức tạp qua IAM Policies, Data Engineer dùng SQL thuần để chặn đứng các truy vấn vượt quyền. Unity Catalog hỗ trợ Row-Level Security (RLS) và Column-Level Security (CLS) thông qua Dynamic Functions.
 
 ```sql
--- Bước 1: Tạo Filter Function kiểm tra danh tính người chạy truy vấn
+-- Hàm RLS kiểm tra danh tính người chạy truy vấn
 CREATE OR REPLACE FUNCTION dev.security.region_filter(region_col STRING)
 RETURN IF(
   is_account_group_member('admin'), true,
-  region_col = current_user() -- Giả sử username chứa mã vùng, ví dụ 'APAC_User'
+  region_col = current_user()
 );
 
--- Bước 2: Áp dụng RLS (Row-level) Masking vào Bảng
+-- Áp dụng RLS vào Bảng
 ALTER TABLE prod.gold.sales_data 
 SET ROW FILTER dev.security.region_filter ON (region_code);
-
--- Bước 3: Áp dụng CLS (Column-level) Masking (Che giấu chuỗi số thẻ tín dụng)
-CREATE OR REPLACE FUNCTION dev.security.mask_credit_card(cc_num STRING)
-RETURN IF(
-  is_account_group_member('finance_team'), cc_num,
-  concat('****-****-****-', right(cc_num, 4)) -- Che 12 số đầu nếu không phải team Finance
-);
-
-ALTER TABLE prod.gold.sales_data 
-ALTER COLUMN credit_card_number SET MASK dev.security.mask_credit_card;
 ```
 
-*Trade-off (Sự đánh đổi)*: Khi áp dụng Native RLS/CLS, Engine Spark bắt buộc phải tiêm (Inject) thêm các cụm `WHERE` clause hoặc `CASE WHEN` ẩn vào Execution Plan (Physical Plan) lúc Runtime. Điều này làm tăng độ trễ (Latency) thêm vài mili-giây và đôi khi phá vỡ một số cơ chế Query Pushdown xuống tận tầng file Parquet.
+**Trade-off:** Khi áp dụng RLS/CLS, Spark Engine bắt buộc tiêm thêm các mệnh đề `WHERE` hoặc `CASE WHEN` ẩn vào Execution Plan (Physical Plan) lúc Runtime. Điều này làm tăng độ trễ (latency) khi lập kế hoạch (planning time) và đôi khi phá vỡ các cơ chế tối ưu Query Pushdown xuống tầng file Parquet.
 
----
+### Rủi ro Rate Limiting (Throttling)
+Vì Unity Catalog dùng Short-lived Tokens (ví dụ: AWS STS) cho từng tác vụ đọc dữ liệu, trong một kiến trúc có số lượng job đồng thời quá lớn (Massive Concurrency), quá trình gọi API xin cấp Token liên tục có thể đụng trần Rate Limit của Cloud Provider.
+**Cách xử lý:** Thay vì chạy hàng nghìn job siêu nhỏ liên tục, hãy nhóm chúng lại (Micro-batching) hoặc sử dụng tính toán có kích thước lớn hơn để giảm tần suất gọi API phân mảnh.
 
-## 4. Tự Động Hóa Lineage & Nỗi Đau Vận Hành (Operational Risks)
+### Giới hạn Data Lineage
+Unity Catalog tự động theo dõi Data Lineage đến từng cột bằng cách parse AST của các lệnh SQL/PySpark chạy trong nền tảng. Tuy nhiên, nếu một job ngoại lai (ví dụ: AWS Glue, Airflow KubernetesPodOperator) ghi dữ liệu trực tiếp vào Bucket S3 bỏ qua Databricks, Unity Catalog sẽ **bị mù (blind)** và lineage bị đứt gãy [1].
 
-Unity Catalog sở hữu một cỗ máy phân tích AST (Abstract Syntax Tree) cực kỳ thông minh. Bất cứ khi nào bạn chạy một lệnh `CREATE TABLE ... AS SELECT` hoặc một Job PySpark ETL phức tạp, Engine sẽ bóc tách các DataFrames, SQL AST để tự động vẽ ra bản đồ dữ liệu (Data Lineage) xuống tận mức độ Cột (Column-level).
+## Khi nào nên dùng Unity Catalog?
+- Khi vận hành kiến trúc Data Mesh cần trung tâm kiểm soát phân quyền (Federated Governance).
+- Khi có nhiều workspaces phân tán và cần chia sẻ dữ liệu nội bộ không qua copy (Zero-copy data sharing).
+- Khi bảo mật ở mức độ cột (Column) và dòng (Row) là bắt buộc về mặt luật pháp (GDPR, HIPAA).
 
-Tuy nhiên, trong vận hành thực tế tại Production, hệ thống này không phải viên đạn bạc (Silver bullet):
+## Thuật ngữ chính (Key terms)
 
-1. **Giới hạn External Systems (Hệ thống ngoại lai)**: Nếu bạn ghi dữ liệu trực tiếp vào Bucket S3 thông qua một Job AWS Glue hoặc EMR (Chạy bên ngoài Databricks), Unity Catalog sẽ hoàn toàn **bị mù (Blind)**. Lineage sẽ bị đứt gãy. 
-   - *Giải pháp*: Sử dụng giao thức mở [Delta Sharing](https://delta.io/sharing/] để chia sẻ an toàn ra ngoài, hoặc gọi trực tiếp UC REST API để cập nhật Metadata bằng tay.
-2. **API Rate Limiting (Throttling)**: Như đã đề cập ở kiến trúc vật lý, UC dùng Short-lived Tokens (STS). Trong một Data Pipeline khổng lồ, khi bạn bắn hàng chục nghìn truy vấn song song (Massive concurrency), quá trình gọi API cấp Token liên tục có thể đụng trần Rate Limit cực nghiêm ngặt của Cloud Provider (Ví dụ lỗi AWS STS `RateExceeded`).
-   - *Cách khắc phục*: Thay vì chạy vô số Jobs siêu nhỏ lắt nhắt, hãy tăng kích thước Cluster để gom nhóm tác vụ (Micro-batching) làm giảm tần suất Hit API xin Token.
+| Term | Nghĩa ngắn |
+| --- | --- |
+| Unity Catalog (UC) | Lớp quản trị metadata và access control cấp account của Databricks. |
+| External Location | Thông tin định tuyến từ UC xuống một bucket/path lưu trữ vật lý trên Cloud, dùng để tạo External Tables. |
+| Managed Table | Bảng mà Databricks toàn quyền quản lý cả metadata lẫn vòng đời (lifecycle) của dữ liệu vật lý. |
+| Short-lived Token | Token tạm thời có vòng đời ngắn do UC cấp phát để compute node kéo dữ liệu vật lý, tránh rò rỉ credential gốc. |
 
----
-
-## Tổng Kết
-
-Unity Catalog đánh dấu sự kết thúc của kỷ nguyên "Spaghetti Security" - Nơi các chính sách IAM Role, RBAC, và Database ACLs bị xoắn rối vào nhau không thể Gỡ lỗi [Debug]. Bằng cách trừu tượng hóa Governance lên tầng Control Plane và sử dụng kiến trúc Token, Databricks cung cấp một mô hình bảo mật Zero-trust thực sự cho Dữ liệu lớn, tạo nền móng vững chắc để triển khai kiến trúc Data Mesh. Mặc dù đòi hỏi sự thiết kế chuẩn mực ngay từ ngày 1 và đối mặt với rủi ro Rate Limit, lợi ích về Quản trị tập trung là vô giá đối với Enterprise.
-
-## Nguồn Tham Khảo
-1. **Databricks Official Docs**: [What is Unity Catalog?][https://docs.databricks.com/en/data-governance/unity-catalog/index.html]
-2. **Open Source Standard**: [Delta Sharing Protocol][https://delta.io/sharing/]
-3. **Sách chuyên ngành**: *Designing Data-Intensive Applications* - Martin Kleppmann (Chương thảo luận về Metadata và System Isolation).
-4. **AWS Architecture Blog**: [Architecting a Data Mesh on AWS](https://aws.amazon.com/blogs/architecture/lets-architect-architecting-a-data-mesh/]
+## Tài liệu tham khảo
+1. Databricks, "What is Unity Catalog?". [Databricks Docs](https://docs.databricks.com/en/data-governance/unity-catalog/index.html).
+2. Databricks Engineering Blog, "Data Mesh on Databricks". [Databricks Blog](https://www.databricks.com/blog/2022/10/24/data-mesh-databricks.html).

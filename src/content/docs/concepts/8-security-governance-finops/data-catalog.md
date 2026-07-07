@@ -1,49 +1,65 @@
 ---
-title: "Danh mục dữ liệu (Data Catalog) - Kiến trúc và Trade-offs"
-difficulty: "Advanced"
-tags: ["data-catalog", "metadata", "data-discovery", "data-governance", "datahub", "amundsen"]
-readingTime: "20 mins"
-lastUpdated: 2026-06-29
+title: "Danh mục dữ liệu (Data Catalog): Kiến trúc và Trade-offs"
+category: "8. Bảo Mật, Quản Trị & FinOps"
+description: "Phân tích kiến trúc Data Catalog hiện đại dưới góc độ Data Engineer. Khám phá Push vs Pull Ingestion, Graph Storage, và các bài toán phân tán metadata tại DataHub và Amundsen."
+definition: "Data Catalog ở quy mô Enterprise là một Metadata Control Plane tập trung, giúp khám phá, truy xuất nguồn gốc (lineage) và quản trị dữ liệu tự động thay vì chỉ là một danh sách bảng tĩnh."
 seoTitle: "Kiến trúc Data Catalog hiện đại: DataHub, Amundsen và System Trade-offs"
-metaDescription: "Phân tích kiến trúc Data Catalog hiện đại dưới góc độ Staff Engineer. Khám phá Push vs Pull Ingestion, Graph Storage, và các bài toán phân tán metadata tại Netflix, LinkedIn, Lyft."
-description: "Data Catalog không chỉ là một cái mục lục (index) hiển thị tên bảng và cột. Ở quy mô Enterprise, nó là một Control Plane phân tán giải quyết bài toán Data Discovery và Data Governance."
+metaDescription: "Tìm hiểu kiến trúc Data Catalog hiện đại, so sánh mô hình Push (DataHub) và Pull (Amundsen), ứng dụng Graph Database cho Lineage, và xử lý các sự cố Elasticsearch."
+difficulty: "Advanced"
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["data-catalog", "metadata", "data-discovery", "data-governance", "datahub", "amundsen", "metadata-control-plane"]
+aliases: ["Data Catalog", "Metadata Control Plane", "Active Metadata", "DataHub", "Amundsen", "danh mục dữ liệu"]
+domains: ["DE", "DA", "DS"]
+level: "Middle"
+refs:
+  - { title: "DataHub Architecture Overview", org: "DataHub", url: "https://datahubproject.io/docs/architecture/architecture/", type: docs }
+  - { title: "Amundsen — Lyft’s data discovery & metadata engine", org: "Lyft Engineering", url: "https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9", type: blog }
 ---
 
-Data Catalog thường bị hiểu nhầm là một công cụ UI đơn giản để gõ từ khóa và tìm kiếm bảng. Tuy nhiên, ở quy mô Mega-Tech hoặc Enterprise - nơi hàng nghìn pipelines chạy liên tục tạo ra hàng Petabyte dữ liệu mỗi ngày, Data Catalog đóng vai trò là một **Metadata Control Plane** trung tâm.
+Vào một buổi sáng thứ Hai, dashboard tài chính của công ty bỗng nhiên báo số liệu doanh thu tụt giảm một nửa. Sau nhiều giờ debug, đội ngũ phát hiện ra nguyên nhân rất lãng xẹt: một kỹ sư phần mềm đã âm thầm đổi tên cột `total_amount` thành `gross_revenue` trong database gốc. Không có hệ thống cảnh báo, không có quy trình chặn (gatekeeping), và dữ liệu cứ thế vỡ vụn dọc theo luồng pipeline. Đây là điển hình của hiện tượng **Metadata Drift** và **Dark Data** – những hệ quả tất yếu khi tổ chức không có một công cụ quản lý siêu dữ liệu (metadata) hiệu quả.
 
-Nếu không có Data Catalog, các Data Engineer và Data Scientist sẽ phải đối mặt với **Dark Data** (dữ liệu rác không ai biết từ đâu tới), thời gian Data Discovery kéo dài hàng tháng, và nguy hiểm hơn là hiện tượng **Metadata Drift** - khi lược đồ (schema) vật lý đã thay đổi nhưng các hệ thống hạ nguồn (downstream) và Dashboard báo cáo vẫn dùng định nghĩa cũ, dẫn đến sai lệch nghiêm trọng về tài chính.
+Data Catalog ra đời để giải bài toán này. Tuy nhiên, Data Catalog không phải là một công cụ UI đơn giản để gõ từ khóa và tìm kiếm bảng. Ở quy mô Enterprise — nơi hàng nghìn pipelines chạy liên tục tạo ra hàng Petabyte dữ liệu mỗi ngày — Data Catalog đóng vai trò là một **Metadata Control Plane** trung tâm.
 
-Bài viết này sẽ mổ xẻ kiến trúc của các thế hệ Data Catalog hiện đại, đặc biệt tập trung vào các hệ thống mã nguồn mở kinh điển như **LinkedIn DataHub** (thế hệ 3) và **Lyft Amundsen** (thế hệ 2), từ đó rút ra các bài học về kiến trúc vật lý và những đánh đổi (Trade-offs) khốc liệt trong thiết kế phân tán.
+## Data Catalog như một Metadata Control Plane
 
----
+Theo truyền thống, Data Catalog là tài liệu thụ động. Nó trả lời câu hỏi *"Bảng này nghĩa là gì?"* do con người tự nhập liệu. Tuy nhiên, kiến trúc dữ liệu hiện đại yêu cầu **Active Metadata** [DataHub docs](https://datahubproject.io/docs/architecture/architecture/).
 
-## 1. Sự Tiến Hóa & Kiến trúc Vật lý (Physical Architecture)
+Metadata Control Plane nâng cấp Catalog từ "từ điển" thành một tầng cơ sở hạ tầng (infrastructure layer) hoạt động liên tục:
+- **Tự động hóa quản trị (Active Governance):** Nếu phát hiện cột mới có định dạng của số an sinh xã hội (SSN), Catalog lập tức phát tín hiệu cho hệ thống phân quyền để khóa bảng.
+- **Data Lineage:** Vẽ ra biểu đồ phụ thuộc từ nguồn (PostgreSQL) qua pipeline (Airflow, dbt) tới tận đích (Báo cáo Tableau). Khi một nguồn sập, kỹ sư biết chính xác dashboard nào sẽ chết theo.
+- **Vận hành (Operational Intelligence):** Lưu trữ lịch sử thực thi, số lượng hàng, và chất lượng dữ liệu. 
 
-Hệ thống Data Catalog quy mô lớn thường được cấu thành từ 4 lớp:
-1.  **Ingestion Layer:** Thu thập Metadata từ Source (Snowflake, BigQuery, Kafka, Airflow).
-2.  **Metadata Storage:** Lưu trữ dữ liệu quan hệ (schema, data types) và dữ liệu đồ thị (Graph) để phục vụ **Data Lineage**.
-3.  **Search Index:** Cung cấp Full-text search (Elasticsearch).
-4.  **Serving Layer (API):** Cung cấp GraphQL/REST API cho UI và các dịch vụ tự động hóa (Data Quality gating).
+Hệ thống Data Catalog quy mô lớn thường cấu thành từ 4 lớp:
+1. **Ingestion Layer:** Thu thập Metadata từ Source (Snowflake, BigQuery, Kafka, Airflow).
+2. **Metadata Storage:** Thường kết hợp Relational Database cho giao dịch cơ bản và Graph Database để truy xuất Lineage.
+3. **Search Index:** Cung cấp khả năng tìm kiếm Full-text tốc độ cao (thường là Elasticsearch).
+4. **Serving Layer (API):** Cung cấp API (REST, GraphQL) cho Frontend và các hệ thống khác.
 
-Sự khác biệt cốt lõi giữa các thế hệ Catalog nằm ở **Ingestion Layer**. Cuộc chiến khốc liệt nhất diễn ra giữa hai mô hình: **Pull-based (Batch)** và **Push-based (Event-Driven)**.
+Cuộc chiến kiến trúc thú vị nhất nằm ở **Ingestion Layer**, với hai mô hình đại diện: **Pull-based (Batch)** và **Push-based (Event-Driven)**.
 
-### 1.1. Thế hệ 2 (Pull-Based / Batch): Kiến trúc của Lyft Amundsen
+## Thế hệ 2 (Pull-Based / Batch): Kiến trúc của Lyft Amundsen
 
-Ở mô hình này, Catalog đóng vai trò chủ động (Active Consumer). Một cron job (trong Amundsen gọi là *Databuilder*) sẽ quét (crawl) qua các hệ thống nguồn theo lịch định kỳ (thường là nửa đêm) để kéo (pull) metadata về.
+Ở mô hình Pull, Data Catalog đóng vai trò chủ động (Active Consumer). Các cron job định kỳ quét (crawl) qua hệ thống nguồn để "kéo" metadata về. Lyft Amundsen — dự án mã nguồn mở tiên phong về Data Discovery — sử dụng kiến trúc này [Lyft Engineering](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9).
+
+Trong Amundsen, một thành phần gọi là `Databuilder` (thường chạy trên Airflow) sẽ lấy metadata, xử lý và đẩy vào Neo4j (cho Graph) và Elasticsearch (cho Search).
 
 ```mermaid
 graph LR
-    subgraph Source_Systems
-        A["(Snowflake)"]
-        B["(PostgreSQL)"]
-        C["Airflow"]
+    classDef source fill:#f9f2f4,stroke:#d0446b,stroke-width:2px;
+    classDef catalog fill:#e2f2ff,stroke:#267bbc,stroke-width:2px;
+
+    subgraph Source_Systems ["Hệ thống Nguồn"]
+        A["Snowflake"]:::source
+        B["PostgreSQL"]:::source
+        C["Airflow"]:::source
     end
     
-    subgraph Amundsen_Catalog
-        D("Databuilder (Crawler)\nChạy lúc 2:00 AM")
-        E["(Neo4j Graph)"]
-        F["(Elasticsearch)"]
-        G["Amundsen Frontend"]
+    subgraph Amundsen_Catalog ["Kiến trúc Amundsen"]
+        D("Databuilder Crawler"):::catalog
+        E[("Neo4j Graph")]:::catalog
+        F[("Elasticsearch")]:::catalog
+        G["Amundsen Frontend"]:::catalog
     end
     
     A -->|Pull via JDBC| D
@@ -56,30 +72,36 @@ graph LR
     F --> G
 ```
 
--   **Systemic Advantage (Ưu điểm):** Dễ triển khai. Hệ thống nguồn (Snowflake, Postgres) hoàn toàn "ngu ngơ" và không cần biết về sự tồn tại của Catalog (Decoupled architecture).
--   **Trade-off khốc liệt (Nhược điểm):** 
-    -   **Staleness (Độ trễ cao):** Metadata luôn bị trễ (Out-of-sync) so với thực tế. Nếu một kỹ sư Data Engineer drop một cột quan trọng lúc 9h sáng, Catalog vẫn hiển thị cột đó cho đến đợt quét đêm hôm sau.
-    -   **Thảm họa FinOps:** Khi công ty bạn có 100,000 bảng trên Snowflake, việc dùng lệnh `SHOW TABLES` hoặc quét `INFORMATION_SCHEMA` mỗi đêm sẽ đánh thức (wake up) các Warehouse đang ngủ, gây tốn Compute Credit một cách vô ích.
+**Đánh đổi (Trade-offs):**
+- **Sự đơn giản (Decoupling):** Hệ thống nguồn (Snowflake, Postgres) hoàn toàn "ngu ngơ" và không cần biết về sự tồn tại của Catalog. Bạn không cần sửa code ở nguồn.
+- **Độ trễ cao (Staleness):** Metadata luôn bị trễ (out-of-sync) so với thực tế. Nếu schema thay đổi lúc 9h sáng, Catalog vẫn hiển thị schema cũ cho đến đợt quét đêm hôm sau.
+- **Chi phí điện toán (Compute Cost):** Tại các công ty lớn có hàng trăm nghìn bảng, việc quét `INFORMATION_SCHEMA` liên tục sẽ đánh thức (wake up) các Warehouse đang ngủ, gây tốn compute credit (FinOps risk).
 
-### 1.2. Thế hệ 3 (Push-Based / Real-time): Kiến trúc của LinkedIn DataHub
+## Thế hệ 3 (Push-Based / Real-time): Kiến trúc LinkedIn DataHub
 
-Để giải quyết triệt để bài toán độ trễ, LinkedIn giới thiệu **DataHub** với kiến trúc **Event-Driven / Push-based**. Hệ thống nguồn (hoặc CI/CD pipeline) chủ động đẩy (push) metadata changes dưới dạng sự kiện (events) vào Kafka.
+Để giải bài toán độ trễ, DataHub giới thiệu kiến trúc **Push-based** hướng sự kiện (Event-Driven) [DataHub docs](https://datahubproject.io/docs/architecture/architecture/).
+
+Thay vì Catalog đi thu thập, các hệ thống nguồn (hoặc CI/CD pipeline) chủ động bắn metadata qua Kafka mỗi khi có sự kiện (tạo bảng, chạy xong task). DataHub lắng nghe Kafka và cập nhật Metadata Service theo thời gian thực. (Lưu ý: DataHub hiện đại hỗ trợ cả Pull thông qua module ingestion, nhưng linh hồn kiến trúc của nó là Push).
 
 ```mermaid
 graph TD
-    subgraph Metadata_Producers
-        A["dbt Cloud"] -->|Push Event| K
-        B["Airflow"] -->|Push Event| K
-        C["Snowflake / Kafka"] -->|CDC / Push| K
+    classDef source fill:#f9f2f4,stroke:#d0446b,stroke-width:2px;
+    classDef event fill:#fff5e6,stroke:#f59e0b,stroke-width:2px;
+    classDef control fill:#e2f2ff,stroke:#267bbc,stroke-width:2px;
+
+    subgraph Metadata_Producers ["Producers"]
+        A["dbt / Airflow"]:::source -->|Push Event| K
+        B["CI/CD Pipeline"]:::source -->|Push Event| K
+        C["Spark Jobs"]:::source -->|Push Event| K
     end
     
-    K["Kafka Topic\n(MetadataChangeEvent)"]
+    K["Kafka MetadataChangeEvent"]:::event
     
-    subgraph DataHub_Control_Plane
-        D("DataHub GMS\n(Generalized Metadata Service)")
-        E["MySQL / Postgres\n(Primary Store)"]
-        F["Neo4j / DataHub Graph"]
-        G["Elasticsearch"]
+    subgraph DataHub_Control_Plane ["Kiến trúc DataHub"]
+        D("GMS Metadata Service"):::control
+        E[("MySQL or Postgres")]:::control
+        F[("Graph or Neo4j")]:::control
+        G[("Elasticsearch")]:::control
     end
     
     K --> D
@@ -88,101 +110,50 @@ graph TD
     D --> G
 ```
 
--   **Systemic Advantage (Ưu điểm):** Real-time Metadata. DataHub đóng vai trò "Reactive". Bất kỳ sự thay đổi schema nào cũng được phát sóng (broadcast) qua Kafka và phản ánh ngay lập tức trên UI. Nó cho phép xây dựng các tính năng Active Governance (ví dụ: gửi Slack alert ngay khi phát hiện bảng có cột chứa dữ liệu PII nhạy cảm).
--   **Trade-off (Nhược điểm):** 
-    -   Yêu cầu vận hành hạ tầng Messaging phức tạp (Kafka).
-    -   Sự phụ thuộc (Coupling): Mọi hệ thống nguồn hoặc ETL engine phải được cài đặt SDK (được "độ" / instrumented) để biết cách nói chuyện với Kafka hoặc DataHub REST API.
+**Đánh đổi (Trade-offs):**
+- **Real-time Metadata:** Cho phép Active Governance. Ngay khi schema vỡ, cảnh báo Slack có thể được kích hoạt ngay lập tức.
+- **Độ phức tạp (Coupling & Overhead):** Yêu cầu vận hành hạ tầng Message Queue (Kafka). Mọi ETL engine hoặc ứng dụng gốc phải được cài đặt SDK (instrumented) để biết cách gửi gói tin đến Kafka hoặc DataHub REST API.
 
----
+## Thiết kế Schema-First vs. JSON Blob
 
-## 2. Thiết kế Mô hình Dữ liệu (Schema-First vs. JSON Blob)
+Khi thiết kế lõi lưu trữ cho Catalog, nhiều kỹ sư có xu hướng ném tất cả vào một cột JSON phi cấu trúc. Kết quả là hệ thống nhanh chóng biến thành bãi rác.
 
-Một trong những bài học đắt giá nhất từ LinkedIn DataHub là **Schema-First Approach**. Metadata rất phức tạp, phân tán và đa hình. Nếu bạn thiết kế database lưu trữ metadata dưới dạng cột JSON phi cấu trúc (NoSQL Blob), hệ thống sẽ nhanh chóng chìm trong rác.
+DataHub giải quyết việc này bằng **PDL (Pegasus Data Language)** và kiến trúc hướng Khía cạnh (Aspect-Oriented). Một Data Asset (ví dụ một Bảng) được cấu thành từ nhiều "Aspects" độc lập: `SchemaMetadata`, `Ownership`, `DatasetProfile`, `Lineage`. 
 
-DataHub sử dụng **PDL (Pegasus Data Language)** hoặc **Avro** để định nghĩa chặt chẽ metadata (entities, aspects). Một Data Asset (như một bảng) được cấu thành từ nhiều "Aspects" (khía cạnh độc lập): SchemaMetadata, Ownership, DatasetProfile, DataLineage.
+Việc module hóa này rất quan trọng: Nếu team Data Quality cập nhật `DatasetProfile` (ví dụ tỉ lệ null), thao tác này hoàn toàn độc lập và không ghi đè lên `Ownership` do team Governance quản lý.
 
-### Code Thực Chiến: Gửi Metadata Event (MCP) bằng Python SDK
-Dưới đây là cách một Staff Engineer cấu hình một tác vụ gửi Metadata Change Proposal (MCP) lên DataHub mỗi khi schema thay đổi. Code này thường được nhúng vào CI/CD pipeline của Data Warehouse.
+## Rủi ro Vận hành và Failure Modes thực tế
 
-```python
-import datahub.emitter.mce_builder as builder
-from datahub.emitter.rest_emitter import DatahubRestEmitter
-from datahub.metadata.schema_classes import (
-    SchemaMetadataClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    StringTypeClass,
-    NumberTypeClass,
-)
+Khi triển khai Data Catalog ở quy mô Enterprise, Data Engineer thường vấp phải các sự cố đặc thù:
 
-# 1. Định nghĩa các cột (Fields) với Schema chuẩn xác
-fields = [
-    SchemaFieldClass(
-        fieldPath="user_id",
-        type=SchemaFieldDataTypeClass(type=StringTypeClass()),
-        nativeDataType="VARCHAR(50)",
-        description="Mã định danh người dùng độc nhất. Cấp độ bảo mật: Cao."
-    ),
-    SchemaFieldClass(
-        fieldPath="revenue",
-        type=SchemaFieldDataTypeClass(type=NumberTypeClass()),
-        nativeDataType="DECIMAL(10,2)",
-        description="Doanh thu tính bằng USD."
-    )
-]
+### 1. Elasticsearch Mapping Explosion
+Trong Amundsen hay DataHub, Elasticsearch phục vụ Search. Nếu hệ thống cho phép kỹ sư đẩy các Custom Properties linh tinh dưới dạng JSON động (dynamic key) vào metadata payload, Elasticsearch sẽ cố gắng tạo index (mapping) cho mỗi field mới. Khi số field vượt quá limit (mặc định 1000 fields/index), cluster sẽ từ chối ghi (Write Rejection) hoặc Crash do cạn kiệt Heap RAM để lưu meta-mapping.
+**Giải pháp:** Bắt buộc đặt `dynamic: false` hoặc `dynamic: strict` trên Elasticsearch template, hoặc dùng kiểu dữ liệu `flattened` cho Custom JSON.
 
-# 2. Xây dựng Schema Metadata Aspect (Cập nhật riêng phần Schema)
-schema_metadata = SchemaMetadataClass(
-    schemaName="public.users",
-    platform="urn:li:dataPlatform:snowflake",
-    version=1,
-    hash="",
-    platformSchema=builder.make_schema_field("urn:li:dataPlatform:snowflake"),
-    fields=fields
-)
+### 2. Cartesian Explosion trong Graph (Data Lineage)
+Data Lineage thường dùng Graph Database. Giả sử bảng `Users_Core` được đọc bởi 10,000 bảng con (Downstream). Khi người dùng mở UI để xem Lineage, truy vấn Graph (Graph Traversal Query) sẽ kích hoạt bùng nổ tổ hợp chập. GraphDB ngốn 100% CPU, query timeout và sập luôn server GMS.
+**Giải pháp:** Đặt Hard-limit độ sâu của traversal (ví dụ: tối đa 2 hops). Hỗ trợ Pagination (phân trang) trên UI khi mở rộng các super-nodes.
 
-# 3. Đẩy (Push) sự kiện cập nhật Metadata (MetadataChangeEvent)
-emitter = DatahubRestEmitter("http://datahub-gms:8080")
-mcp = builder.make_mcp(
-    urn="urn:li:dataset:(urn:li:dataPlatform:snowflake,public.users,PROD)",
-    aspect=schema_metadata,
-)
-emitter.emit(mcp)
-print("Đã push schema update lên DataHub. Ownership và Lineage giữ nguyên!")
-```
+### 3. "Bãi rác có mục lục" (Garbage In, Garbage Out)
+Đây là lỗi kiến trúc thông tin (Information Architecture). Kho dữ liệu có 500,000 bảng, trong đó 90% là bảng tạm (temp tables) do dbt sinh ra hoặc nháp của Data Scientist. Nếu đẩy tất cả vào Catalog, người dùng sẽ không tìm thấy bảng chuẩn.
+**Giải pháp:** Cần hàng rào thu thập (Ingestion Filters). Chỉ lấy các bảng ở schema `PROD`. Đồng thời, khai thác tính toán PageRank dựa trên Audit Logs (bảng nào được query nhiều nhất) để đẩy lên đầu kết quả tìm kiếm (như cách Amundsen áp dụng [Lyft Engineering](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)).
 
-Việc module hóa thành các Aspect giúp kiến trúc hoạt động hoàn hảo: Nếu team Data Quality chạy job cập nhật Aspect `DatasetProfile` (ví dụ: tỉ lệ NULL), nó không hề ghi đè lên Aspect `Ownership` do team Data Governance đang quản lý.
+## Khi nào nên dùng kiến trúc nào?
 
----
+- **Chọn mô hình Pull (như Amundsen):** Khi hạ tầng đang phân mảnh, bạn muốn một quick win để lập index nhanh cho Snowflake/BigQuery mà không cần chạm vào code của các data producers. Phù hợp cho Data Discovery thông thường.
+- **Chọn mô hình Push (như DataHub):** Khi tổ chức muốn xây dựng Data Mesh hoặc Data Contracts mạnh mẽ, yêu cầu metadata phải real-time để tự động chặn các luồng dữ liệu lỗi ngay tại nguồn.
 
-## 3. Rủi ro Vận hành và Sự cố Thực tế (Real-world Incidents)
+## Thuật ngữ chính (Key terms)
 
-Khi tự host một hệ thống Data Catalog khổng lồ, đội ngũ Platform Engineering thường vấp phải các bãi mìn sau:
+| Term | Nghĩa ngắn |
+| --- | --- |
+| **Metadata Drift** | Hiện tượng logic vật lý thay đổi (đổi cột, kiểu dữ liệu) nhưng tài liệu và downstream chưa cập nhật. |
+| **Active Metadata** | Siêu dữ liệu được thu thập và tích hợp liên tục vào các công cụ vận hành để ra quyết định tự động. |
+| **Pull-based Ingestion** | Hệ thống (Catalog) chủ động đi quét và thu thập thông tin theo chu kỳ. |
+| **Push-based Ingestion** | Hệ thống Nguồn chủ động bắn thông tin dưới dạng sự kiện (Event) ngay khi có thay đổi. |
+| **Graph Database** | Cơ sở dữ liệu chuyên lưu trữ thực thể và mối quan hệ (Nodes/Edges), lý tưởng để lưu Lineage. |
 
-### 3.1. Sự cố: Elasticsearch Mapping Explosion
--   **Ngữ cảnh:** Trong DataHub hoặc Amundsen, Elasticsearch được dùng làm Text Search. Kỹ sư đôi khi ingest logs hoặc Custom Properties (với các key động do user tự sinh) vào metadata payload mà quên cấu hình Elasticsearch.
--   **Hậu quả:** Elasticsearch sẽ tự động tạo mapping fields mới cho mỗi key động. Khi số lượng fields vượt quá limit (mặc định 1000 fields/index), cluster sẽ từ chối ghi (Write Rejection) hoặc bị **OOMKilled** do tốn quá nhiều Heap RAM để quản lý meta-mapping.
--   **Khắc phục (Troubleshooting):** 
-    -   Trong Elasticsearch Index Template, bắt buộc đặt `dynamic: false` hoặc `dynamic: strict` cho các metadata index.
-    -   Sử dụng kiểu dữ liệu `flattened` cho các custom JSON properties không cần full-text search.
+## References
 
-### 3.2. Sự cố: Cartesian Explosion trong Data Lineage (Graph Query)
--   **Ngữ cảnh:** Luồng dữ liệu (Lineage) được lưu trong Graph Database (như Neo4j). Giả sử một bảng tổng hợp `Daily_Active_Users` được đọc bởi 10,000 dashboards khác nhau (Downstream), và nó lại được tạo ra từ 50 bảng gốc (Upstream).
--   **Hậu quả:** Khi người dùng mở UI để xem Lineage Graph, Graph Traversal Query sẽ bùng nổ tổ hợp chập (Cartesian Explosion). GraphDB CPU chạm mức 100%, query time-out, sập luôn GMS Server.
--   **Khắc phục:**
-    -   Cấu hình Hard-limit độ sâu của Graph Traversal (ví dụ: max 2 hops).
-    -   Phát hiện các Node có Degree quá lớn (Super-nodes - ví dụ các bảng Core Foundation) và buộc UI phải phân trang (Pagination) khi mở rộng.
-
-### 3.3. Hiện tượng "Bãi rác có mục lục" [Garbage In, Garbage Out]
-Đây là rủi ro về mặt kiến trúc thông tin (Information Architecture). Nếu công ty bạn có 500,000 bảng trên BigQuery, trong đó 90% là bảng tạm (temp tables) do dbt sinh ra hoặc bảng nháp của Data Scientist, việc đẩy tất cả lên Catalog sẽ khiến nó trở nên vô dụng.
--   **Giải pháp (Curated Data):** Catalog cần được thiết lập hàng rào (Ingestion Filters). Chỉ ingest những bảng nằm trong schema `PROD` hoặc `ANALYTICS`. Khai thác tính năng PageRank (như cách Amundsen làm) để xếp hạng bảng: Bảng nào được query nhiều nhất trong 30 ngày qua (dựa trên audit logs) sẽ được ưu tiên hiển thị trên cùng.
-
----
-
-## 4. Nguồn Tham Khảo (References)
-
-1.  **Open Sourcing DataHub: A Generalized Metadata Search & Discovery Platform** - *LinkedIn Engineering Blog*.
-2.  **Open Sourcing Amundsen: A Data Discovery And Metadata Platform** - *Lyft Engineering Blog*.
-3.  **Data Mesh Principles and Logical Architecture** - *Zhamak Dehghani (O'Reilly)*.
-4.  **Designing Data-Intensive Applications** - *Martin Kleppmann*.
-5.  **DataHub Official Architecture Documentation** - [docs.datahub.com](https://datahubproject.io/docs/architecture/architecture/]
+- DataHub Architecture Overview. *DataHub*. [https://datahubproject.io/docs/architecture/architecture/](https://datahubproject.io/docs/architecture/architecture/)
+- Amundsen — Lyft’s data discovery & metadata engine. *Lyft Engineering*. [https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)
