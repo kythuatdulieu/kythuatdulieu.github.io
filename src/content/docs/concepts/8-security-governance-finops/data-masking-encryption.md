@@ -1,171 +1,185 @@
 ---
 title: "Data Masking & Encryption: Physical Execution & FinOps"
-difficulty: "Advanced"
-tags: ["encryption", "data-masking", "security", "kms", "envelope-encryption", "finops"]
-readingTime: "25 mins"
-lastUpdated: 2026-06-29
+category: "8. Bảo Mật, Quản Trị & FinOps"
+domains: ["DE", "Platform"]
+level: "Senior"
+description: "Phân tích kiến trúc Envelope Encryption, Dynamic Data Masking, Tokenization, và giải phẫu các sự cố hệ thống (KMS Throttling, Query Bottleneck)."
+definition: "Các phương pháp bảo vệ dữ liệu nhạy cảm ở trạng thái nghỉ và trong quá trình xử lý, bao gồm mã hóa cấp độ lưu trữ (KMS) và che giấu cấp độ truy vấn (DDM)."
 seoTitle: "Data Masking & Encryption trong Data Engineering: KMS, DDM & Trade-offs"
 metaDescription: "Kiến trúc thực thi, đánh đổi hệ thống và rủi ro vận hành (KMS Throttling, OOM) khi áp dụng Envelope Encryption, Format Preserving Encryption, và Dynamic Data Masking."
-description: "Phân tích kiến trúc Envelope Encryption, Dynamic Data Masking, Tokenization, và giải phẫu các sự cố hệ thống (KMS Throttling, Query Bottleneck) khi bảo vệ dữ liệu PII/PHI."
+difficulty: "Advanced"
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["encryption", "data-masking", "security", "kms", "envelope-encryption", "finops"]
+aliases: ["Data Masking", "Envelope Encryption", "Dynamic Data Masking", "DDM", "Tokenization", "Format-Preserving Encryption", "FPE", "S3 Bucket Keys"]
+refs:
+  - title: "Envelope encryption"
+    org: "AWS KMS Documentation"
+    url: "https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#enveloping"
+    type: "docs"
+  - title: "Reducing AWS KMS costs by using Amazon S3 Bucket Keys"
+    org: "AWS Documentation"
+    url: "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html"
+    type: "docs"
+  - title: "Row filters and column masks"
+    org: "Databricks Documentation"
+    url: "https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html"
+    type: "docs"
 ---
 
-Bảo mật dữ liệu (Data Security) ở quy mô Petabyte không chỉ là câu chuyện của việc tuân thủ các chứng chỉ nhạt nhẽo như GDPR hay HIPAA. Dưới góc nhìn của một Kỹ sư Hệ thống (Staff Engineer), bảo mật là bài toán tối ưu sống còn giữa **Security (Bảo mật tuyệt đối)**, **Performance (Độ trễ I/O)**, và **Cost (Chi phí Compute & API)**. 
+Bảo mật dữ liệu (Data Security) ở quy mô Petabyte hiếm khi là một tính năng cấu hình một lần rồi quên. Dưới góc nhìn thiết kế hệ thống, bảo mật là bài toán đánh đổi sống còn giữa **Security (Bảo mật)**, **Performance (Độ trễ I/O, thời gian tính toán)**, và **Cost (Chi phí API, Compute)**.
 
-Khi mã hoá hoặc che giấu dữ liệu bị cấu hình sai thuật toán, hệ thống sẽ phải trả giá ngay lập tức bằng các sự cố thảm họa: KMS API Throttling làm sập Data Pipeline, OOMKilled trên Worker Node, hoặc Query Latency tăng gấp 100 lần do mất Predicate Pushdown.
+Nếu cấu hình sai thuật toán hoặc sai vị trí mã hóa trong luồng dữ liệu, hệ thống sẽ phải trả giá bằng các sự cố thực tế: API Throttling làm sập luồng ingestion, OOMKilled trên worker node khi join dữ liệu, hoặc query latency tăng gấp hàng trăm lần do hệ thống buộc phải quét toàn bộ bảng (full table scan). 
 
-Bài viết này đi sâu vào kiến trúc thực thi vật lý của **Envelope Encryption** (Mã hóa bao thư), **Format-Preserving Encryption (FPE)**, **Tokenization**, và **Dynamic Data Masking (DDM)**, cùng các Trade-offs hệ thống liên quan.
+Bài viết này mổ xẻ kiến trúc thực thi vật lý của ba cơ chế bảo vệ dữ liệu phổ biến nhất: **Envelope Encryption** ở tầng lưu trữ, **Dynamic Data Masking** ở tầng truy vấn, và **Tokenization / Format-Preserving Encryption** ở tầng tích hợp, cùng với những cạm bẫy vận hành của chúng.
 
 ---
 
-## 1. Kiến trúc Thực thi Vật lý: Envelope Encryption (AWS KMS)
+## 1. Tầng Storage: Envelope Encryption (Mã hóa bao thư)
 
-Mã hóa dữ liệu ở trạng thái nghỉ (Data At-rest) hiếm khi sử dụng trực tiếp một khóa duy nhất cho toàn bộ Data Lake. Thay vào đó, tiêu chuẩn công nghiệp (AWS KMS, Google Cloud KMS) bắt buộc sử dụng **Envelope Encryption** (Mã hóa bao thư).
+Để bảo vệ dữ liệu ở trạng thái nghỉ (data at-rest) trên S3 hoặc GCS, các Cloud Provider bắt buộc sử dụng cơ chế **Envelope Encryption**.
 
-Tại sao không đẩy thẳng dữ liệu lên KMS để mã hóa? Vì KMS gọi qua mạng (Network API). Việc đẩy 1TB dữ liệu Parquet qua HTTP để KMS mã hóa sẽ làm quá tải mạng lưới toàn cầu của Cloud Provider và mất hàng giờ. Do đó, ta phải mã hóa tại chỗ (Local).
+Tại sao không đẩy thẳng dữ liệu qua API của KMS (Key Management Service) để mã hóa? KMS giao tiếp qua mạng HTTP. Việc đẩy 1 TB dữ liệu Parquet qua HTTP để KMS mã hóa sẽ làm nghẽn mạng nội bộ, mất hàng giờ đồng hồ và tốn chi phí API khổng lồ (KMS giới hạn payload ở mức 4KB). Do đó, việc mã hóa phải diễn ra tại chỗ (local compute).
 
-### 1.1. Luồng thực thi (Physical Execution Flow)
+### Luồng thực thi vật lý (Physical Execution)
 
 Envelope Encryption sử dụng hai loại khóa:
-1. **KEK (Key Encryption Key - Khóa chủ):** Khóa gốc bảo vệ mọi thứ, luôn nằm an toàn bên trong phần cứng HSM (Hardware Security Module) của KMS. Không bao giờ rời khỏi KMS dưới định dạng Plaintext.
-2. **DEK (Data Encryption Key - Khóa dữ liệu):** Khóa dùng để mã hóa dữ liệu thực tế. DEK được sinh ra từ KMS, có hai phiên bản: Plaintext DEK (để giải mã trên RAM của Spark) và Encrypted DEK (lưu cứng cùng file dữ liệu S3).
+1. **KEK (Key Encryption Key - Khóa chủ):** Khóa gốc bảo vệ mọi thứ, nằm an toàn bên trong phần cứng HSM (Hardware Security Module) của KMS. Khóa này không bao giờ rời khỏi KMS dưới định dạng bản rõ (plaintext).
+2. **DEK (Data Encryption Key - Khóa dữ liệu):** Khóa dùng để mã hóa dữ liệu thực tế. KMS sinh ra DEK dưới hai định dạng: Plaintext DEK (để Compute Node dùng ngay trên RAM) và Encrypted DEK (để lưu kèm file dữ liệu).
 
 ```mermaid
 sequenceDiagram
-    participant App as Data Application ("Spark/Flink")
+    autonumber
+    participant App as Compute (Spark/Flink)
     participant KMS as AWS KMS (HSM)
-    participant Storage as S3 / GCS
+    participant Storage as Object Storage (S3)
     
-    Note over App, KMS: Write Path (Mã hoá Data)
-    App->>KMS: HTTP: GenerateDataKey (KEK_ID)
-    KMS-->>App: Return (Plaintext DEK, Encrypted DEK)
-    App->>App: (In-Memory) Mã hoá Data bằng Plaintext DEK -> Ciphertext
-    App->>App: (Security) Xóa sổ Plaintext DEK khỏi RAM
-    App->>Storage: Ghi File ["Encrypted DEK + Ciphertext"]
+    Note over App, Storage: Luồng Ghi (Write Path)
+    App->>KMS: HTTP: GenerateDataKey (Gửi KEK_ID)
+    KMS-->>App: Trả về [Plaintext DEK, Encrypted DEK]
+    App->>App: In-Memory: Mã hoá Data bằng Plaintext DEK -> Ciphertext
+    App->>App: Security: Xóa sổ Plaintext DEK khỏi RAM
+    App->>Storage: Ghi Object gồm [Encrypted DEK + Ciphertext]
     
-    Note over App, KMS: Read Path (Giải mã Data)
-    Storage-->>App: Đọc File ["Encrypted DEK + Ciphertext"]
-    App->>KMS: HTTP: Decrypt ("Encrypted DEK")
-    KMS-->>App: Return (Plaintext DEK)
-    App->>App: (In-Memory) Giải mã Ciphertext bằng Plaintext DEK -> Data
+    Note over App, Storage: Luồng Đọc (Read Path)
+    Storage-->>App: Đọc Object [Encrypted DEK + Ciphertext]
+    App->>KMS: HTTP: Decrypt (Gửi Encrypted DEK)
+    KMS-->>App: Trả về [Plaintext DEK]
+    App->>App: In-Memory: Giải mã Ciphertext bằng Plaintext DEK -> Data
 ```
 
-### 1.2. Infrastructure as Code (Terraform)
-Là kỹ sư hạ tầng, bạn phải định nghĩa KMS bằng code, thiết lập tự động luân chuyển khóa (Key Rotation) định kỳ hàng năm - một yêu cầu Audit bắt buộc.
+### Rủi ro vận hành: Throttling & Chi phí KMS
 
-```hcl
-# Terraform AWS KMS Configuration
-resource "aws_kms_key" "datalake_key" {
-  description             = "KEK for Data Lake PII Encryption"
-  deletion_window_in_days = 30
-  enable_key_rotation     = true # Tự động xoay KEK mỗi năm, DEK cũ vẫn được giải mã bình thường
-  
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
-        Principal = { AWS = "arn:aws:iam::123456789012:root" }
-        Action = "kms:*"
-        Resource = "*"
-      },
-      {
-        Sid    = "Allow Spark IAM Role to Decrypt/Encrypt"
-        Effect = "Allow"
-        Principal = { AWS = aws_iam_role.spark_worker_role.arn }
-        Action = [
-          "kms:GenerateDataKey",
-          "kms:Decrypt"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-```
+Lỗ hổng chết người của kiến trúc này nằm ở luồng đọc (Read Path) đối với các bảng dữ liệu bị phân mảnh (Small Files Problem). 
 
-### 1.3. Rủi ro Vận hành (Operational Risks) & Trade-offs
-*   **Thảm họa KMS Throttling (Rate Limit Exceeded):** Khi một Spark Job đọc hàng chục ngàn file Parquet nhỏ (The Small Files Problem), mỗi file mang một Encrypted DEK riêng biệt. 1000 Spark Executors sẽ đồng loạt gọi API `kms:Decrypt` hàng chục ngàn lần cùng lúc. AWS KMS có Hard Limit (VD: 10,000 requests/second). Kết quả: Bắn lỗi `ThrottlingException` và toàn bộ ETL Job thất bại.
-    *   *Giải pháp (FinOps/Arch):* Sử dụng **S3 Bucket Keys** (Giảm 99% request KMS bằng cách dùng 1 DEK cấp Bucket để mã hóa nhiều Object) hoặc sử dụng **AWS Encryption SDK Data Key Caching**.
-*   **JVM OOMKilled (Out of Memory):** Giải mã dữ liệu yêu cầu nạp toàn bộ block Ciphertext và Plaintext DEK vào RAM. Nếu block Parquet size quá lớn (>1GB) hoặc Data Skew, Executor JVM sẽ cạn kiệt Heap Memory và Crash.
+Nếu một Spark Job cần đọc 100,000 file Parquet nhỏ, mặc định mỗi file chứa một Encrypted DEK riêng. 1,000 Spark Executor sẽ đồng loạt gọi API `kms:Decrypt` về AWS KMS 100,000 lần. KMS có Hard Limit (ví dụ: 10,000 - 50,000 requests/second). Kết quả: AWS trả về `ThrottlingException`, toàn bộ ETL Job thất bại, và cuối tháng hóa đơn KMS tăng đột biến.
+
+**Cách giải quyết (S3 Bucket Keys):** 
+Bật tính năng **S3 Bucket Keys**. Thay vì KMS cấp một DEK cho *mỗi Object*, nó cấp một khóa tạm (Time-limited) cấp độ Bucket. S3 sử dụng khóa cấp Bucket này để tự sinh ra các DEK cho từng Object ở bên trong hạ tầng S3. Cơ chế này giảm đến 99% số lượng request gọi từ S3 ra ngoài KMS, loại bỏ hoàn toàn rủi ro Throttling và tiết kiệm phần lớn chi phí API.
 
 ---
 
-## 2. Dynamic Data Masking (DDM) ở Data Warehouse
+## 2. Tầng Compute: Dynamic Data Masking (DDM)
 
-Trong khi Encryption bảo vệ ổ đĩa cứng (Bị hacker trộm ổ cứng S3), thì **Data Masking** bảo vệ dữ liệu khỏi chính những nhân sự nội bộ (Analyst) không có quyền đọc PII (Email, SSN).
+Envelope Encryption chỉ bảo vệ ổ cứng vật lý (chống việc hacker đánh cắp data file từ S3). Nhưng nếu một Data Analyst có quyền query hợp lệ vào bảng, họ vẫn thấy toàn bộ PII (Personally Identifiable Information) dạng bản rõ.
 
-Thay vì tạo ra một bản Copy thứ 2 đã bị bôi đen (Static Data Masking) gây tốn gấp đôi tiền Storage, kiến trúc hiện đại dùng **Dynamic Data Masking (DDM)**: Dữ liệu dưới ổ cứng S3 là bản rõ (Plaintext), việc che giấu xảy ra **On-the-fly (Lúc chạy)** thông qua SQL UDF được Inject vào Query Execution Plan.
+Để giới hạn quyền truy cập logic (Column-level security), chúng ta dùng **Dynamic Data Masking (DDM)**. DDM che giấu dữ liệu *on-the-fly* (ngay lúc chạy) bằng cách chèn một hàm UDF (User-Defined Function) vào Kế hoạch thực thi truy vấn (Query Execution Plan).
 
-### 2.1. Cấu hình DDM trên Databricks Unity Catalog
+Ví dụ cấu hình DDM trên Databricks Unity Catalog:
 
 ```sql
--- 1. Tạo Masking Function
-CREATE OR REPLACE FUNCTION pii_mask_email(email STRING)
+-- Tạo Masking Function
+CREATE FUNCTION pii_mask_email(email STRING)
 RETURNS STRING
 RETURN CASE 
-    -- RBAC: Nhóm Admin/DE thấy dữ liệu gốc
     WHEN is_account_group_member('data_engineers') THEN email 
-    -- Nhóm khác thấy email bị mask một phần
     ELSE CONCAT(LEFT(email, 3), '***@***.com')               
   END;
 
--- 2. Bind (Trói) hàm Masking vào cột của Table vật lý
+-- Trói hàm Masking vào cột vật lý
 ALTER TABLE prod.customer_360.users 
 ALTER COLUMN email SET MASK pii_mask_email;
 ```
-Khi Analyst chạy `SELECT email FROM users`, Engine tự viết lại thành `SELECT pii_mask_email(email) FROM users`.
 
-### 2.2. Đánh đổi Hệ thống (Systemic Trade-offs)
-DDM là con dao hai lưỡi về mặt hiệu năng Compute:
-1.  **Phá vỡ Predicate Pushdown & Partition Pruning (Tử huyệt hiệu năng):**
-    Nếu Analyst query: `SELECT * FROM users WHERE email = 'bob@gmail.com'`. Hệ thống **KHÔNG THỂ** đẩy điều kiện này xuống tầng Parquet Reader (Storage), vì cột `email` đã bị bọc bởi hàm UDF `pii_mask_email()`. 
-    *Hậu quả:* Engine buộc phải thực hiện **Full Table Scan**, đọc toàn bộ 100TB dữ liệu lên RAM, chạy hàm Masking UDF trên từng dòng (Billion times), rồi mới chạy lệnh WHERE. Query chậm đi 100 lần.
-2.  **Lãng phí Compute (FinOps):** UDF `CASE WHEN` chạy trên từng dòng dữ liệu tiêu tốn CPU Cycles khủng khiếp. Tránh dùng DDM cho các bảng được Dashboard query liên tục mỗi 5 phút. Hãy dùng Static Masking qua dbt (Vật lý hóa) cho lớp Reporting.
+Khi người dùng chạy `SELECT email FROM users WHERE email = 'bob@gmail.com'`, Engine tự động biên dịch lại thành:
+`SELECT pii_mask_email(email) FROM users WHERE pii_mask_email(email) = 'bob@gmail.com'`.
+
+### Cái giá phải trả: Mất Predicate Pushdown
+
+Cạm bẫy lớn nhất của DDM là làm **phá vỡ Predicate Pushdown**.
+
+Predicate Pushdown là cơ chế tối ưu quan trọng nhất của các định dạng Columnar (Parquet/ORC). Nhờ metadata (min/max) ở đuôi file, hệ thống có thể bỏ qua toàn bộ các block dữ liệu không chứa giá trị cần tìm trước khi đọc chúng lên RAM.
+
+Tuy nhiên, khi cột `email` bị bọc trong một hàm UDF (như `pii_mask_email`), Engine truy vấn (Spark, Trino, Snowflake) không thể biết trước kết quả của hàm UDF này là gì. Đứng trước sự lựa chọn giữa "Tối ưu hóa" (đẩy filter xuống tầng đĩa) và "Bảo mật" (đảm bảo hàm mask luôn chạy), hệ thống luôn chọn **Bảo mật**.
+
+Kết quả là Engine không thể lọc dữ liệu từ metadata. Nó buộc phải đọc toàn bộ file Parquet từ S3 lên RAM (Network I/O bottleneck), giải nén (CPU bottleneck), chạy hàm Masking trên từng dòng dữ liệu (CPU bottleneck), rồi mới áp dụng điều kiện `WHERE`. 
+
+Một query tìm kiếm 1 email thay vì tốn 1 giây (nhờ Partition Pruning / Predicate Pushdown) có thể tốn 10 phút vì **Full Table Scan**. Để giảm thiểu rủi ro này, nguyên tắc thiết kế là: **Không sử dụng logic phức tạp hoặc Regex trong hàm Masking**, và hạn chế đặt điều kiện `WHERE` / `JOIN` trực tiếp trên các cột đã bị che giấu bằng DDM.
 
 ---
 
-## 3. Tokenization & Format-Preserving Encryption (FPE)
+## 3. Tầng Integration: Format-Preserving Encryption & Tokenization
 
-DDM giải quyết bài toán đọc (Read-path). Nhưng làm sao để lưu trữ PII một cách an toàn mà không phá vỡ Schema của các hệ thống Legacy (Hệ thống cũ)?
-Ví dụ: Cột số thẻ tín dụng (Credit Card) mang kiểu dữ liệu `INT` (Độ dài 16 số). Nếu bạn dùng mã hóa AES-256, kết quả là chuỗi String `eyJhbG...` siêu dài. Ghi chuỗi này vào cột `INT` sẽ văng lỗi `Data Type Mismatch`.
+Trong trường hợp cần luân chuyển dữ liệu từ hệ thống RDBMS cũ (Legacy) lên Cloud, Data Engineer gặp một rào cản khác: Schema Validation.
 
-Giải pháp là **Format-Preserving Encryption (FPE)** và **Tokenization**.
+Nếu cột thẻ tín dụng (Credit Card) trong database Oracle định nghĩa kiểu dữ liệu `CHAR(16)`, bạn không thể ghi chuỗi mã hóa AES-256 dài ngoằng kiểu `eyJhbG...` vào cột đó. Database sẽ báo lỗi Mismatch Data Type. Giải pháp ở đây là sử dụng FPE hoặc Tokenization.
 
-### 3.1. Format-Preserving Encryption (FPE)
-Thuật toán FPE (như AES-FF3) đảm bảo kết quả mã hóa có **cùng định dạng và độ dài** với đầu vào. 
-- Input: `4111222233334444` (16 chữ số)
-- Output: `8923412356789123` (Cũng 16 chữ số, database Legacy vẫn chấp nhận).
+### Format-Preserving Encryption (FPE)
 
-### 3.2. Tokenization (Mã thông báo hóa Vault)
-Thay vì mã hóa, Tokenization sinh ra một mã giả ngẫu nhiên (Token) và lưu bảng Map (Token <-> Real Data) vào một Database riêng biệt cực kỳ bảo mật (Token Vault).
+FPE (như chuẩn AES-FF3) là thuật toán mã hóa đảm bảo Ciphertext có **cùng định dạng và độ dài** với Plaintext.
+- Đầu vào: `4111222233334444` (16 chữ số)
+- Đầu ra sau mã hóa: `8923412356789123` (Cũng 16 chữ số).
+
+FPE giữ nguyên định dạng, không yêu cầu thay đổi Schema, và là mã hóa không trạng thái (Stateless), tức là có thể giải mã ngược lại nếu có khóa mà không cần tra cứu database.
+
+### Tokenization
+
+Tokenization thay thế dữ liệu thật bằng một mã thông báo (Token) giả ngẫu nhiên.
+- **Vaulted Tokenization:** Lưu mapping (Token <-> Dữ liệu gốc) vào một Database siêu bảo mật (Vault). Điểm yếu là Vault biến thành Single Point of Failure (SPOF). Nếu Vault bị chậm, luồng ghi Kafka Ingestion sẽ bị nghẽn (backpressure).
+- **Vaultless Tokenization:** Sinh Token thông qua thuật toán mã hóa một chiều (thường kết hợp với salt), không cần lưu mapping.
 
 ```mermaid
 graph LR
-    A["Microservice / Client App"] -->|Plain PAN: 4111-2222-3333-4444| B["Tokenization Service"]
-    B -->|Lưu Map vào Vault| C["(Token Vault Database)"]
-    B -->|Trả về Token| D["Data Lake / Data Warehouse"]
-    D -->|Lưu trữ Token: 4111-9999-9999-4444| E["Data Analyst"]
+    A[Microservice] -->|Plain PAN: 4111-2222| B(Tokenization Service)
+    B -->|Lưu Map 1:1| C[(Vault Database)]
+    B -->|Trả Token: 4111-9999| D[Data Warehouse]
     
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
+    style B fill:#3498db,color:#fff
+    style C fill:#f1c40f,color:#333
 ```
 
-**Sự đánh đổi [Trade-off]:**
-- **Cartesian Explosion khi JOIN:** Tokenization thường mang tính xác định (Deterministic) - cùng một Email luôn sinh ra cùng một Token. Điều này cho phép Data Analyst JOIN 2 bảng dựa trên cột Token mà không cần biết Email gốc. Tuy nhiên, nếu bạn DDM Mask 100,000 email không hợp lệ thành `***@***.com`, và Analyst lỡ JOIN trên cột đó, họ sẽ tạo ra ma trận Cartesian Product $100,000 \times 100,000 = 10,000,000,000$ rows, làm nổ tung Memory của Cluster ngay lập tức.
-- **Single Point of Failure (SPOF):** Tokenization Server là nút thắt cổ chai mạng lưới. Nếu Vault Database bị chậm, toàn bộ luồng Kafka Ingestion sẽ nghẽn, đẩy Consumer Lag lên vô cực. Hệ thống Vault phải scale cực lớn để chứa hàng tỷ bản ghi Mapping 1:1.
+### Rủi ro hệ thống: Vụ nổ Descartes (Cartesian Explosion)
+
+Cả Tokenization và DDM thường mang tính xác định (Deterministic) — cùng một email lỗi luôn sinh ra cùng một chuỗi mask (ví dụ `***@***.com`), hoặc các user vãng lai chưa login đều nhận chung một Token định danh `UNKNOWN_USER`.
+
+Việc này cho phép Data Analyst thực hiện phép JOIN giữa hai bảng đã mask mà không cần dữ liệu gốc. Tuy nhiên, nếu bảng `Orders` có 10 triệu dòng mang token `UNKNOWN_USER` và bảng `Clicks` có 20 triệu dòng mang token `UNKNOWN_USER`, phép JOIN trên cột định danh này sẽ tạo ra ma trận Descartes (Cartesian Product): $10,000,000 \times 20,000,000 = 200,000,000,000,000$ (200 nghìn tỷ) dòng.
+
+Cluster của bạn sẽ lập tức crash với lỗi `OOMKilled` (Out of Memory) hoặc Spill to Disk đến khi đầy ổ cứng. Để xử lý, kỹ sư phải sử dụng kỹ thuật **Salting** (thêm nhiễu ngẫu nhiên vào các key bị skew) trước khi JOIN, hoặc lọc bỏ các token vô nghĩa (như `UNKNOWN_USER`, `***@***.com`) trước khi đưa vào phép tính.
 
 ---
 
-## 4. Tổng kết của Kiến trúc sư
-- Dùng **Envelope Encryption (KMS)** ở tầng vật lý thấp nhất (S3/GCS) để chống trộm cắp vật lý. Bật Bucket Keys để tiết kiệm 99% chi phí KMS API.
-- Dùng **Tokenization/FPE** khi luân chuyển dữ liệu từ hệ thống RDBMS cũ lên Cloud mà không muốn sửa Schema. Cẩn thận SPOF.
-- Dùng **Dynamic Data Masking (ABAC)** cho lớp phân quyền Logical. Cẩn trọng rủi ro mất Predicate Pushdown gây nổ Compute Bill.
+## 4. Khung quyết định (Decision Framework)
+
+Không có công nghệ bảo mật nào giải quyết được mọi tầng của kiến trúc dữ liệu. Dưới đây là cách phối hợp chúng trong môi trường Production:
+
+1. **Ở tầng Vật lý (S3/GCS):** Luôn bật **Envelope Encryption** (AWS KMS / GCP KMS) kèm theo Bucket Keys. Điều này giải quyết rủi ro mất trộm ổ cứng đĩa và tuân thủ compliance với chi phí thấp nhất.
+2. **Ở tầng Integration (Data Ingestion từ Legacy):** Dùng **Format-Preserving Encryption (FPE)** nếu hệ thống cũ có Schema quá cứng nhắc và không thể sửa code. Hạn chế dùng Vaulted Tokenization cho Streaming Pipeline vì dễ gây thắt cổ chai mạng.
+3. **Ở tầng Truy cập (Data Warehouse / BI):** Dùng **Dynamic Data Masking (DDM)** để kiểm soát quyền truy cập theo từng Role (RBAC/ABAC). Hãy tạo ra các cụm data mart đã được mask sẵn (Static Masking) bằng dbt nếu các cột đó thường xuyên bị mang ra chạy điều kiện `WHERE` hoặc `JOIN`, để tránh vỡ Predicate Pushdown và tiết kiệm Compute.
 
 ---
 
-## Nguồn Tham Khảo (References)
-*   **AWS Architecture Blog:** [Envelope Encryption in AWS KMS][https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#enveloping].
-*   **Databricks Documentation:** [Dynamic Data Masking with Unity Catalog](https://docs.databricks.com/en/data-governance/unity-catalog/dynamic-data-masking.html].
-*   Sách chuyên ngành: **Designing Data-Intensive Applications** - Martin Kleppmann (Part 1).
-*   Nghiên cứu khoa học: Thuật toán Format-Preserving Encryption NIST SP 800-38G.
+## Thuật ngữ chính (Key terms)
+
+| Term | Nghĩa ngắn |
+| --- | --- |
+| Envelope Encryption | Mã hóa khóa dữ liệu (DEK) bằng một khóa chủ (KEK) để tối ưu hiệu năng. |
+| KMS Throttling | Lỗi vượt quá giới hạn gọi API của dịch vụ quản lý khóa. Giải quyết bằng Bucket Keys. |
+| Predicate Pushdown | Cơ chế tối ưu hóa truy vấn bằng cách lọc dữ liệu từ metadata trước khi đọc file. |
+| Format-Preserving Encryption | Mã hóa giữ nguyên định dạng và độ dài của dữ liệu gốc. |
+| Cartesian Explosion | Sự phình to dữ liệu theo cấp số nhân do JOIN trên các khóa không duy nhất. |
+
+## References
+- AWS KMS Documentation. *Envelope encryption*. [docs.aws.amazon.com](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#enveloping)
+- AWS Documentation. *Reducing AWS KMS costs by using Amazon S3 Bucket Keys*. [docs.aws.amazon.com](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
+- Databricks Documentation. *Row filters and column masks*. [docs.databricks.com](https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html)
+- NIST. *Recommendation for Block Cipher Modes of Operation: Methods for Format-Preserving Encryption (SP 800-38G)*. [csrc.nist.gov](https://csrc.nist.gov/pubs/sp/800/38/g/rev/1/final)
