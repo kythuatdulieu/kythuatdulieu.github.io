@@ -1,27 +1,40 @@
 ---
-title: "Data Governance & Data Contracts"
-difficulty: "Advanced"
-tags: ["data-governance", "security", "rbac", "abac", "data-contracts", "unity-catalog", "lake-formation"]
-readingTime: "20 mins"
-lastUpdated: 2026-06-29
-seoTitle: "Data Governance Architecture: RBAC, ABAC, Unity Catalog & Data Contracts"
+title: "Data Governance & Data Contracts: Shift-Left, Vending Credentials và PBAC"
+category: "8. Bảo Mật, Quản Trị & FinOps"
+domains: ["DE", "Platform"]
+description: "Phân tích Data Governance ở cấp độ hệ thống: từ Shift-left Data Contracts trong CI/CD, cơ chế Vending Credentials đến cách giải quyết Role Explosion bằng PBAC."
+definition: "Kiến trúc và các cơ chế kỹ thuật để đảm bảo chất lượng, phân quyền truy cập và vòng đời dữ liệu một cách tự động ở quy mô lớn, bao gồm Data Contracts, Vending Credentials và Policy-Based Access Control."
+seoTitle: "Data Governance Architecture: Data Contracts, PBAC & Vending Credentials"
 metaDescription: "Thiết kế kiến trúc Data Governance cho Enterprise: Shift-Left Data Contracts, RBAC/ABAC/PBAC, Unity Catalog, AWS Lake Formation và xử lý Token Bloat."
-description: "Mổ xẻ Data Governance ở cấp độ hệ thống. Từ kiến trúc Interception, Shift-left Data Contracts trong CI/CD, đến cách giải quyết thảm họa Role Explosion với ABAC/PBAC."
+difficulty: "Advanced"
+level: "Senior"
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["data-governance", "security", "rbac", "abac", "data-contracts", "unity-catalog", "lake-formation", "opa"]
+aliases: ["Data Governance", "Data Contract", "PBAC", "ABAC", "Vending Credentials", "Role Explosion", "Data Control Plane"]
+refs:
+  - { title: "Data Contracts: A New Architectural Pattern", org: "PayPal Engineering", url: "https://medium.com/paypal-tech/data-contracts-a-new-architectural-pattern", type: "blog" }
+  - { title: "AWS Lake Formation Credential Vending", org: "AWS Documentation", url: "https://docs.aws.amazon.com/lake-formation/latest/dg/credential-vending.html", type: "docs" }
+  - { title: "What is Unity Catalog?", org: "Databricks", url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html", type: "docs" }
+  - { title: "Policy-based Access Control with OPA", org: "Open Policy Agent", url: "https://www.openpolicyagent.org/docs/latest/", type: "docs" }
 ---
 
-Trong thế giới thực, **Data Governance** không phải là những cuốn tài liệu PDF dài dòng về các "quy chuẩn" mà không kỹ sư nào thèm đọc. Ở cấp độ hệ thống (System level), Data Governance ngày nay là sự kết hợp của hai triết lý: **Shift-Left Data Contracts** (Dịch chuyển sang trái) và **Data Control Plane** (Lớp dịch vụ đánh chặn, kiểm tra quyền và cấp phát Token).
+Trong nhiều tổ chức, **Data Governance** (Quản trị dữ liệu) thường bị nhầm lẫn với những cuốn tài liệu PDF dài hàng trăm trang về "quy chuẩn" mà không kỹ sư nào đọc. Hậu quả là dữ liệu rác vẫn chảy vào Data Warehouse, các kỹ sư dữ liệu kiệt sức vì phải liên tục sửa lỗi 파i-pline, và hệ thống phân quyền sụp đổ dưới sự phức tạp của hàng ngàn Role khác nhau.
 
-Nếu bạn thiết kế hệ thống phân quyền tồi, nó sẽ sụp đổ dưới hàng triệu request mỗi giây, tạo ra nút thắt cổ chai (Single Point of Failure) cho toàn bộ Data Platform.
+Ở cấp độ nền tảng dữ liệu hiện đại, Data Governance không phải là giấy tờ. Nó là sự kết hợp của các cơ chế kỹ thuật cứng trị giá hàng triệu đô: **Shift-Left Data Contracts** (Dịch chuyển kiểm tra chất lượng sang trái) và **Data Control Plane** (Lớp dịch vụ đánh chặn, kiểm tra quyền và cấp phát token). Nếu thiết kế tồi, Data Governance sẽ trở thành nút thắt cổ chai (Single Point of Failure) kéo sập toàn bộ Data Platform.
 
 ---
 
 ## 1. Shift-Left Governance & Data Contracts
 
-Thay vì để dữ liệu rác/lỗi chảy vào Data Warehouse rồi mới dùng Data Quality tools (như Great Expectations) để cảnh báo, các công ty công nghệ đang áp dụng triết lý **Shift-Left (Dịch sang trái)**: Đẩy trách nhiệm Governance và Quality về phía Data Producers (Team Backend/App) ngay trong luồng CI/CD.
+Cách làm truyền thống (Reactive) là để dữ liệu chảy từ database của ứng dụng (app/backend) vào Data Lake/Warehouse, sau đó chạy các công cụ kiểm tra (như Great Expectations hoặc dbt tests) để phát hiện lỗi. Khi lỗi xảy ra, Data Engineer phải đi "năn nỉ" Backend Engineer sửa. 
 
-Cốt lõi của Shift-left là **Data Contracts (Hợp đồng dữ liệu)**. Nó giống như API Swagger/OpenAPI nhưng dành cho Data.
+Triết lý **Shift-Left (Dịch sang trái)** thay đổi điều này bằng cách đẩy trách nhiệm về chất lượng và cấu trúc dữ liệu về phía hệ thống nguồn (Data Producers) ngay từ trong luồng CI/CD. 
 
-**Ví dụ một Data Contract (YAML) chặn đứng lỗi từ vòng Build (CI/CD):**
+Cốt lõi của cơ chế này là **Data Contracts (Hợp đồng dữ liệu)**. Giống như API OpenAPI/Swagger định nghĩa giao tiếp giữa các service, Data Contract là một cam kết bằng máy đọc được (machine-readable) giữa người tạo dữ liệu và người dùng dữ liệu. Tiêu chuẩn như **Open Data Contract Standard (ODCS)** do PayPal và các công ty công nghệ lớn đóng góp đang định hình cách viết các hợp đồng này.
+
+**Ví dụ một Data Contract (định dạng YAML) dùng để chặn lỗi từ vòng Build:**
+
 ```yaml
 # data_contract_orders.yaml
 dataset: sales.orders
@@ -39,51 +52,71 @@ service_level_agreement:
   freshness: "15m" # Dữ liệu không được trễ quá 15 phút
 security:
   classification: "confidential"
+  pii: false
 ```
-Nếu Team Backend vô tình sửa cột `amount` thành kiểu `string`, Data Contract validation step trong GitHub Actions sẽ đánh rớt (Fail) PR của họ ngay lập tức, bảo vệ Data Platform ở hạ nguồn.
+
+```mermaid
+graph TD
+    classDef producer fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+    classDef consumer fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
+    classDef danger fill:#ffebee,stroke:#b71c1c,stroke-width:2px;
+
+    BE[Backend Engineer PR]:::producer --> CI[CI/CD Pipeline]:::infra
+    CI --> Validator{Data Contract Validator}:::infra
+    
+    Validator -- "Schema khớp" --> Merge[Merge to Main]:::producer
+    Merge --> Kafka[(Kafka / S3)]:::infra
+    Kafka --> DE[Data Pipeline]:::consumer
+    
+    Validator -- "Đổi kiểu cột amount\ntừ decimal sang string" --> Fail[CI Fail - Chặn PR]:::danger
+```
+
+Nếu một kỹ sư backend vô tình đổi kiểu dữ liệu cột `amount` thành `string`, bước Contract Validation trong GitHub Actions/GitLab CI sẽ đánh rớt (Fail) PR ngay lập tức. Dữ liệu rác không bao giờ có cơ hội chạm tới hạ tầng dữ liệu.
 
 ---
 
-## 2. Kiến trúc Thực thi Vật lý (Physical Execution)
+## 2. Kiến trúc Thực thi Vật lý (Control Plane vs Data Plane)
 
-Một hệ thống Governance hiện đại (như Databricks Unity Catalog hoặc AWS Lake Formation) tách biệt hoàn toàn **Control Plane** (Nơi giữ Metadata, Data Contracts, Policies) và **Data Plane** (Nơi dữ liệu S3/GCS thực sự được đọc).
+Trong các hệ thống phân tán quy mô lớn, việc cấp phát tĩnh (như gán một IAM Role vĩnh viễn cho cụm Spark) là cực kỳ nguy hiểm. Các nền tảng như **Databricks Unity Catalog** hoặc **AWS Lake Formation** áp dụng kiến trúc tách biệt: **Control Plane** (chứa metadata, hợp đồng, chính sách) và **Data Plane** (nơi lưu trữ vật lý).
 
-### Kiến trúc Đánh chặn (Interception Architecture)
+### Cơ chế Vending Credentials (Cấp phát Token Tạm thời)
 
-Khi một Data Analyst chạy câu lệnh `SELECT * FROM sales_data`, request không được phép đi thẳng xuống S3. Nó phải đi qua một **Policy Enforcement Point (PEP)**.
+Khi một Data Analyst chạy câu lệnh `SELECT * FROM sales_data`, request không được cấp quyền đâm thẳng xuống bucket S3. Nó phải đi qua một **Policy Enforcement Point (PEP)** để xin quyền.
 
 ```mermaid
 sequenceDiagram
-    participant U as User / Client
-    participant C as Compute Engine("Spark/Trino")
-    participant CP as Control Plane("Unity Catalog / Lake Formation")
-    participant S as Storage("S3 / GCS")
+    participant U as Client / Trino
+    participant CP as Control Plane (Lake Formation)
+    participant STS as Security Token Service
+    participant S as Storage (S3 / GCS)
 
-    U->>C: 1. SELECT * FROM sales.us_data
-    C->>CP: 2. Request Table Metadata & Permissions
-    CP-->>C: 3. Return Temporary STS Token & Location
-    C->>S: 4. Read Parquet files("using STS Token")
-    S-->>C: 5. Return Data Blocks
-    C-->>U: 6. Return Result Set
+    U->>CP: 1. Xin quyền đọc bảng sales.us_data
+    CP->>CP: 2. Kiểm tra Policy (User có quyền?)
+    CP->>STS: 3. Sinh temporary token có giới hạn (Scoped)
+    STS-->>CP: 4. Trả về STS Token (Sống 15-60 phút)
+    CP-->>U: 5. Trả Token + Đường dẫn vật lý (S3 URI)
+    U->>S: 6. Dùng Token đọc trực tiếp Parquet files
+    S-->>U: 7. Trả dữ liệu
 ```
 
-Quá trình này sử dụng cơ chế **Vending Credentials** (Cấp phát token tạm thời). Thay vì cấp cho cụm Spark một IAM Role vĩnh viễn có quyền đọc toàn bộ bucket S3, Control Plane sẽ gọi Security Token Service (như AWS STS) để sinh ra một Token chỉ có hiệu lực 15 phút, và chỉ có quyền đọc đúng thư mục chứa bảng mà User được phép.
+Thay vì cấp cho Engine một quyền đọc toàn bộ bucket, Control Plane chỉ sinh ra một token ngắn hạn, bị giới hạn (scoped-down) đúng vào thư mục vật lý chứa bảng đó. Dù token bị lộ, nó cũng vô dụng sau 15 phút và không thể đọc bảng khác.
 
 ---
 
 ## 3. RBAC, ABAC và Nỗi đau "Role Explosion"
 
-Khi công ty lớn lên, cách bạn định nghĩa quyền truy cập sẽ quyết định sự sống còn của đội ngũ DataOps.
+Khi công ty phát triển từ 50 lên 5.000 nhân sự, cách bạn định nghĩa quyền quyết định sự sống còn của đội ngũ DataOps.
 
-### 3.1. Role-Based Access Control (RBAC)
-Trong RBAC, bạn cấp quyền dựa trên Chức vụ (Ví dụ: `Data_Analyst`). 
-**Trade-off:** Dễ cài đặt khi công ty có 50 người. Khi có 5000 người, bạn sẽ sinh ra các role như `Data_Analyst_US`, `Data_Analyst_UK`, `Data_Analyst_US_PII_Allowed`... Hiện tượng này gọi là **Role Explosion (Bùng nổ Role)**. Việc duy trì hàng ngàn Roles trong hệ thống Cloud IAM sẽ nhanh chóng chạm giới hạn Hard Limit.
+### Sự bùng nổ Role (Role Explosion) với RBAC
+**Role-Based Access Control (RBAC)** cấp quyền dựa trên chức vụ (ví dụ: `Data_Analyst`). 
+- **Vấn đề:** Ban đầu bạn chỉ có `Data_Analyst`. Khi công ty mở rộng, bạn cần `Data_Analyst_US`, `Data_Analyst_EU_NoPII`, `Data_Analyst_VN_Finance_Readonly`... Hàng ngàn roles sinh ra khiến hệ thống Cloud IAM chạm giới hạn cứng (Hard Limit), việc audit trở thành ác mộng.
 
-### 3.2. Attribute-Based Access Control (ABAC) & PBAC
-Để giải quyết Role Explosion, các hệ thống chuyển sang ABAC. Quyền truy cập được quyết định dựa trên việc khớp Thẻ thuộc tính (Tags/Attributes).
-Ví dụ: User có thẻ `Region = US` và `Clearance = High`. Data có thẻ `Region = US` và `Clearance = Medium`. Hệ thống so khớp động tại Runtime và cho phép đọc.
+### ABAC và PBAC (Policy-Based Access Control)
+Để giải quyết Role Explosion, các hệ thống chuyển sang **Attribute-Based Access Control (ABAC)** — quyết định quyền dựa trên việc so khớp Thẻ thuộc tính (Tags).
+Ví dụ: User có thẻ `Department = Finance`, dữ liệu có thẻ `Domain = Finance`. Hệ thống so khớp tại Runtime và cho phép truy cập. Không cần tạo thêm role.
 
-Cao cấp hơn, ta có **Policy-Based Access Control (PBAC)**, sử dụng Open Policy Agent (OPA) để viết Code định nghĩa quyền.
+Cao cấp hơn là **PBAC (Policy-Based Access Control)**, tiêu biểu là **Open Policy Agent (OPA)**. PBAC tách rời logic phân quyền khỏi mã nguồn ứng dụng, chuyển nó thành Code (Policy-as-Code) sử dụng ngôn ngữ Rego.
 
 ```rego
 # Ví dụ PBAC dùng ngôn ngữ Rego (OPA)
@@ -97,63 +130,66 @@ allow {
     
     # 2. User phải thuộc cùng Region, hoặc là Global Admin
     input.user.region == input.data.region
-    # HOẶC
+}
+allow {
+    # Override cho Global Admin
     input.user.is_global_admin == true
 }
 ```
+PBAC cho phép triển khai kiến trúc Zero Trust: mọi request đều được đánh giá lại trong thời gian thực dựa trên bối cảnh hiện tại.
 
 ---
 
-## 4. Rủi ro Vận hành (Operational Risks & Incidents)
+## 4. Rủi ro Vận hành (Operational Risks)
 
-Làm Data Governance không chỉ là vẽ Data Lineage cho đẹp, mà là bảo vệ hệ thống khỏi các thảm họa kỹ thuật.
+Xây dựng hệ thống Data Governance không chỉ là quản lý truy cập, mà còn là bảo vệ hạ tầng khỏi các sự cố nghẽn cổ chai.
 
-### Incident 1: "IAM Policy Limit Exceeded" & Token Bloat
-- **Triệu chứng:** Khi dùng ABAC nhồi quá nhiều Tags, kích thước của IAM Policy hoặc JWT SAML Token bị phình to (Token Bloat).
-- **Hệ quả:** User không thể đăng nhập. Các luồng gọi API AWS từ Spark Executor văng lỗi 400 Bad Request vì HTTP Header quá lớn. AWS IAM từ chối lưu Policy vì vượt giới hạn 6144 characters.
-- **Khắc phục:** Không dùng AWS IAM làm nơi chứa logic phân quyền chi tiết. Chuyển logic đó lên lớp Ứng dụng (Unity Catalog) hoặc dùng Session Tags động.
+### 4.1. Token Bloat và "IAM Policy Limit Exceeded"
+- **Triệu chứng:** Khi dùng ABAC và nhồi quá nhiều Attribute/Tags vào JWT Token hoặc SAML, kích thước token phình to (Token Bloat).
+- **Hệ quả:** Request gửi từ Spark Executor bị từ chối với lỗi HTTP 400 (Header too large). AWS IAM từ chối lưu policy vì vượt quá 6.144 ký tự.
+- **Cách xử lý:** Không dùng AWS IAM làm nơi chứa logic phân quyền chi tiết (row-level/column-level). Đẩy logic đó lên lớp Control Plane (Unity Catalog, Lake Formation) hoặc dùng OPA.
 
-### Incident 2: Control Plane Throttling (Thắt cổ chai cấp quyền)
-- **Triệu chứng:** Một cụm Spark 1000 nodes đồng loạt gửi request tới AWS Lake Formation để xin token đọc 100,000 files Parquet.
-- **Hệ quả:** Nhận lỗi `RateExceededException` (Throttling) từ AWS. Job ETL bị Delay hàng giờ đồng hồ.
-- **Khắc phục:** Thiết kế **Metadata Caching** ở Compute Engine. Spark Driver chỉ xin token 1 lần cho cả Table/Prefix, lưu vào bộ nhớ tạm (Cache), và phân phối nội bộ xuống các Worker Nodes thay vì bắt từng Worker tự đi xin quyền.
+### 4.2. Control Plane Throttling
+- **Triệu chứng:** Một cụm Spark 1.000 nodes khởi động và đồng loạt gửi 10.000 API calls tới Lake Formation để xin token.
+- **Hệ quả:** Nhận lỗi `RateExceededException` (Throttling). Pipeline bị treo.
+- **Cách xử lý:** Engine (như Spark Driver) phải cache token. Driver xin token một lần cho toàn bộ bảng, sau đó phân phối nội bộ xuống các Worker Nodes thay vì để từng Worker tự gọi API xin quyền.
 
-### Incident 3: Orphaned Data & FinOps Nightmare
-- **Triệu chứng:** Người dùng dùng lệnh `DROP TABLE` trên Data Catalog, bảng biến mất khỏi giao diện, nhưng files vật lý (Parquet) trên S3/GCS thì... vẫn còn đó (Đặc điểm của External Tables).
-- **Hệ quả:** Bãi rác khổng lồ (Orphaned Data) tiêu tốn hàng vạn USD chi phí lưu trữ mỗi tháng.
-- **Khắc phục:** Thiết lập Data Lifecycle Management (DLM) tự động bằng Terraform.
-
-```hcl
-# S3 Lifecycle Rule (Terraform) dọn rác tự động bảo vệ FinOps
-resource "aws_s3_bucket_lifecycle_configuration" "data_retention" {
-  bucket = aws_s3_bucket.sales_data.id
-
-  rule {
-    id     = "archive-and-delete"
-    status = "Enabled"
-
-    # Chuyển dữ liệu cũ sang Glacier sau 90 ngày
-    transition {
-      days          = 90
-      storage_class = "GLACIER"
-    }
-
-    # Xóa cứng sau 365 ngày nếu không có Tag [Retention = LongTerm]
-    expiration {
-      days = 365
-    }
-  }
-}
-```
+### 4.3. Cơn ác mộng FinOps: Orphaned Data
+- **Triệu chứng:** Khi sử dụng External Tables trên Data Lake, lệnh `DROP TABLE` chỉ xóa metadata trong Catalog, còn dữ liệu vật lý (file Parquet trên S3) vẫn nằm đó mãi mãi.
+- **Hệ quả:** Sinh ra một bãi rác dữ liệu vô chủ (Orphaned Data) tiêu tốn hàng ngàn đô la chi phí lưu trữ mỗi tháng.
+- **Cách xử lý:** Quản trị vòng đời dữ liệu (Data Lifecycle Management). Dùng Terraform để định nghĩa các S3 Lifecycle Rules: tự động chuyển dữ liệu cũ sang Glacier sau 90 ngày, và xóa cứng sau 365 ngày nếu không có tag `Retention = LongTerm`.
 
 ---
 
-## 5. Tổng Kết
+## 5. Khi nào nên và không nên dùng
 
-Quản trị dữ liệu [Data Governance] đang trải qua một cuộc cách mạng Kỹ thuật phần mềm (Software Engineering). Bằng cách áp dụng **Data Contracts (Shift-Left)**, cấu hình **PBAC bằng mã (Governance as Code)**, và thiết kế một Control Plane mạnh mẽ (Vending Credentials), các Kỹ sư Dữ liệu có thể xây dựng một hệ thống vừa bảo mật tuyệt đối, vừa không làm chậm đi tốc độ phát triển của toàn công ty.
+### Nên đầu tư mạnh vào Governance & Contracts khi:
+- Công ty có kiến trúc **Data Mesh** hoặc nhiều team phân tán cùng produce/consume dữ liệu.
+- Làm việc trong môi trường chịu quy định khắt khe (Finance, Healthcare) cần Audit Trail rõ ràng và phân quyền Row/Column-level.
+- Dữ liệu rác từ backend thường xuyên làm vỡ model ML hoặc báo cáo C-level.
 
-## Nguồn Tham Khảo (References)
-* [Data Contracts: A New Architectural Pattern - PayPal Engineering][https://medium.com/paypal-tech/data-contracts-a-new-architectural-pattern]
-* [AWS Architecture: Data Governance on AWS Lake Formation][https://aws.amazon.com/blogs/architecture/]
-* [Databricks: What is Unity Catalog?][https://www.databricks.com/product/unity-catalog]
-* [Open Policy Agent (OPA] Documentation](https://www.openpolicyagent.org/docs/latest/)
+### Không nên (hoặc nên làm đơn giản) khi:
+- Team dữ liệu chỉ có 2-3 người, dữ liệu chủ yếu từ các hệ thống SaaS thứ ba (như Salesforce, Google Analytics) mà bạn không kiểm soát được schema. Việc ép "Data Contracts" lên API của bên thứ ba là bất khả thi.
+- Công ty đang ở giai đoạn tìm kiếm Product-Market Fit. Hãy dùng RBAC cơ bản và dbt tests thay vì cố dựng OPA hay Unity Catalog ngay ngày đầu.
+
+---
+
+## Thuật ngữ chính (Key terms)
+
+| Thuật ngữ | Ý nghĩa |
+| --- | --- |
+| **Data Contracts** | Hợp đồng định nghĩa schema, chất lượng và SLA của dữ liệu giữa Producer và Consumer. |
+| **Shift-Left** | Đẩy việc kiểm tra chất lượng và validation về phía hệ thống nguồn (trong CI/CD) thay vì chờ dữ liệu vào kho. |
+| **RBAC** | Role-Based Access Control: Cấp quyền dựa trên vai trò tĩnh (VD: `Admin`, `Analyst`). |
+| **ABAC / PBAC** | Attribute/Policy-Based Access Control: Cấp quyền động dựa trên thuộc tính của user và data, được định nghĩa bằng Code (VD: OPA Rego). |
+| **Vending Credentials** | Cơ chế sinh token tạm thời, quyền hạn hẹp để cấp quyền truy cập dữ liệu vật lý một cách an toàn. |
+| **Orphaned Data** | Dữ liệu rác còn sót lại trên storage vật lý sau khi metadata đã bị xóa, gây lãng phí chi phí (FinOps). |
+
+---
+
+## References
+
+- [Data Contracts: A New Architectural Pattern](https://medium.com/paypal-tech/data-contracts-a-new-architectural-pattern) - PayPal Engineering.
+- [AWS Lake Formation Credential Vending](https://docs.aws.amazon.com/lake-formation/latest/dg/credential-vending.html) - AWS Documentation.
+- [What is Unity Catalog?](https://docs.databricks.com/en/data-governance/unity-catalog/index.html) - Databricks Documentation.
+- [Policy-based Access Control with OPA](https://www.openpolicyagent.org/docs/latest/) - Open Policy Agent Documentation.
