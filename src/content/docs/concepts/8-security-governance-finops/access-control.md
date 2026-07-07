@@ -1,46 +1,50 @@
 ---
 title: "Kiểm soát truy cập - Access Control (RBAC & ABAC)"
-difficulty: "Advanced"
-tags: ["access-control", "rbac", "abac", "security", "data-governance", "iam", "terraform"]
-readingTime: "25 mins"
-lastUpdated: 2026-06-29
+category: "8. Bảo Mật, Quản Trị & FinOps"
+domains: ["DE", "Platform"]
+description: "Phân quyền không chỉ là tạo user. Đánh giá sự đánh đổi hệ thống giữa RBAC và ABAC, tác động của RLS/CLS lên Execution Plan, và kiến trúc phân quyền tập trung."
+definition: "Kiểm soát truy cập (Access Control) trong hệ thống dữ liệu là kiến trúc quyết định và thực thi quyền hạn của người dùng hoặc ứng dụng, cân bằng giữa bảo mật và hiệu năng truy vấn."
 seoTitle: "Kiểm soát truy cập (Access Control) - RBAC và ABAC trong kiến trúc dữ liệu"
-metaDescription: "Phân tích kiến trúc kiểm soát truy cập (Access Control) trong Data Engineering: Đánh đổi hệ thống giữa RBAC và ABAC, RLS/CLS Execution Plan, và Terraform code."
-description: "Phân quyền không chỉ là tạo user và gán quyền. Trong các hệ thống phân tán, kiểm soát truy cập (Access Control) là bài toán cân bằng giữa bảo mật tuyệt đối và độ trễ truy vấn (Query Latency). Cùng mổ xẻ sự đánh đổi giữa RBAC, ABAC và các rủi ro vận hành thực tế."
+metaDescription: "Phân tích kiến trúc kiểm soát truy cập (Access Control) trong Data Engineering: Đánh đổi hệ thống giữa RBAC và ABAC, RLS/CLS Execution Plan, và quản trị tập trung."
+level: "Senior"
+difficulty: "Advanced"
+readingTime: "15 mins"
+lastUpdated: 2026-07-07
+tags: ["access-control", "rbac", "abac", "security", "data-governance", "iam", "terraform"]
+aliases: ["access-control", "rbac", "abac", "rls", "cls", "identity-federation", "kiểm soát truy cập", "phân quyền"]
+status: "rewritten"
+reviewed: "2026-07-07"
 ---
 
-Một thảm họa kinh điển trong Data Engineering không bắt nguồn từ một lỗi logic thuật toán phức tạp, mà thường đến từ một kỹ sư vô tình chạy lệnh `DROP TABLE` trên môi trường Production bằng tài khoản có quyền `ACCOUNTADMIN`, hoặc một nhà phân tích chạy `SELECT *` và kéo về toàn bộ lịch sử thẻ tín dụng không được che giấu (Unmasked). 
+Một thảm họa kinh điển trong Data Engineering thường không đến từ lỗi logic xử lý phức tạp, mà đến từ một thao tác vận hành đơn giản: một kỹ sư vô tình chạy `DROP TABLE` trên môi trường Production bằng tài khoản `ACCOUNTADMIN`, hoặc một Data Analyst `SELECT *` và kéo về toàn bộ lịch sử giao dịch thẻ tín dụng không được che giấu (unmasked).
 
-Kiểm soát truy cập (**Access Control**) trong hệ thống dữ liệu hiện đại không đơn thuần là bài toán định danh (Identity), mà là một bài toán **Kiến trúc Hệ thống (System Architecture)**: Làm sao để kiểm tra hàng triệu Policy phân quyền trên mỗi dòng dữ liệu mà không làm sập (Bottleneck) Execution Engine?
+Trong hệ thống dữ liệu phân tán, kiểm soát truy cập (Access Control) không đơn thuần là bài toán định danh (Identity), mà là một bài toán **Kiến trúc Hệ thống (System Architecture)**. Khi bạn áp dụng một chính sách phân quyền (Policy) lên một bảng dữ liệu 100 Terabytes, làm sao để Engine kiểm tra hàng triệu luật truy cập trên mỗi dòng dữ liệu mà không làm sập toàn bộ cluster?
 
-Bài viết này phân tích sâu vào các nguyên lý AuthZ (Phân quyền) từ góc nhìn của một Staff Data Engineer, nơi mọi quyết định đều ảnh hưởng trực tiếp đến hiệu năng và chi phí của Data Platform.
+Bài viết này đi sâu vào các cơ chế phân quyền (AuthZ) từ góc nhìn thực thi hệ thống, nơi mọi quyết định bảo mật đều trực tiếp bẻ cong Query Plan và ảnh hưởng đến chi phí hạ tầng.
 
----
+## 1. AuthN vs. AuthZ: Ranh giới của hệ thống
 
-## 1. Kiến trúc Phân quyền: Từ Tĩnh (RBAC) đến Động (ABAC)
+Trước khi đi sâu, chúng ta cần vạch rõ giới hạn trách nhiệm của hai khái niệm:
+- **AuthN (Authentication - Xác thực):** Trả lời câu hỏi *"Bạn là ai?"*. Hệ thống AuthN xử lý việc đăng nhập, kiểm tra mật khẩu, MFA, hay SSO thông qua các Identity Provider (IdP) như Okta, Microsoft Entra ID.
+- **AuthZ (Authorization - Phân quyền):** Trả lời câu hỏi *"Bạn được phép làm gì trên vùng nhớ vật lý này?"*. Đây là nơi Data Engineer phải làm việc trực tiếp: cấu hình cấp quyền SELECT, INSERT, hay Masking data. Bài viết này chỉ tập trung vào AuthZ.
 
-Trước khi đi sâu, cần rạch ròi hai khái niệm: 
-- **AuthN (Authentication - Xác thực)** trả lời câu hỏi *"Bạn là ai?"* (Sử dụng SSO, MFA, Okta).
-- **AuthZ (Authorization - Phân quyền)** xử lý câu hỏi *"Bạn được phép làm gì trên vùng nhớ vật lý nào?"*. Bài viết này tập trung vào AuthZ.
+## 2. RBAC và Vấn đề "Nổ tung Vai trò" (Role Explosion)
 
-### 1.1. Role-Based Access Control (RBAC) và Sự cố "Nổ tung Vai trò"
+**Role-Based Access Control (RBAC)** gán quyền (Privileges) cho các Vai trò (Roles), sau đó ánh xạ User vào các Role tương ứng. Đây là mô hình tiêu chuẩn được hỗ trợ bởi hầu hết các cơ sở dữ liệu truyền thống và Cloud Data Warehouse như Snowflake, PostgreSQL.
 
-RBAC gán quyền (Privileges) cho các Vai trò (Roles), sau đó ánh xạ User vào Role. Nó là nền tảng của hầu hết các Database truyền thống và Snowflake.
+RBAC hoạt động rất ổn định cho đến khi tổ chức của bạn mở rộng theo mô hình Data Mesh. Hãy tưởng tượng một yêu cầu nghiệp vụ: *"Data Analyst ở khu vực APAC cần đọc dữ liệu Marketing có chứa PII, nhưng chỉ được phép đọc trong giờ hành chính."*
 
-**Vấn đề hệ thống (Systemic Trade-off): Sự bùng nổ Vai trò (Role Explosion)**
-RBAC hoạt động hoàn hảo khi tổ chức nhỏ. Tuy nhiên, khi hệ thống Scale theo mô hình Data Mesh, một user cần truy cập chéo nhiều Domain: *"Data Analyst ở khu vực US cần đọc PII data của Marketing, nhưng chỉ trong giờ hành chính"*. 
+Để đáp ứng bằng RBAC, hệ thống IAM (Identity and Access Management) sẽ phải tạo ra các Role với mức độ chi tiết cực đoan, dẫn đến **Role Explosion** (Sự bùng nổ Vai trò). Bạn sẽ phải quản lý những Role như `role_analyst_apac_marketing_pii_businesshours`. Với hàng nghìn tổ hợp Role, việc kiểm toán bảo mật (Audit) trở nên bất khả thi, và kỹ sư dữ liệu sẽ chìm trong các kịch bản kế thừa (Role Hierarchy) đan chéo nhau.
 
-Để đáp ứng bằng RBAC, hệ thống IAM phải phình to bằng tổ hợp chập (Combinatorial Explosion) của các Roles (ví dụ: `role_analyst_us_marketing_pii_businesshours`). Quản lý hàng nghìn IAM Roles khiến hệ thống phân quyền (như AWS IAM Quotas) chạm ngưỡng giới hạn, và việc Audit (Kiểm toán bảo mật) trở nên bất khả thi. Các kỹ sư DevOps sẽ bơi trong một mớ bòng bong các Role kế thừa chéo nhau.
-
-*Đoạn mã Terraform triển khai RBAC chuẩn (Role Hierarchy) trong Snowflake:*
+*Ví dụ cấu hình RBAC sử dụng Terraform:*
 
 ```hcl
-# Terraform: Tạo Role Functional cấp thấp nhất (Chỉ đọc Raw Data)
+# Terraform: Tạo Functional Role (Quyền kỹ thuật)
 resource "snowflake_role" "raw_db_read" {
   name = "RAW_DB_READ_ROLE"
 }
 
-# Gán quyền SELECT trên toàn bộ bảng hiện tại và tương lai (ON FUTURE)
+# Cấp quyền đọc trên schema cho Functional Role
 resource "snowflake_schema_grant" "grant_read" {
   database_name = "RAW_DB"
   schema_name   = "PUBLIC"
@@ -48,133 +52,108 @@ resource "snowflake_schema_grant" "grant_read" {
   roles         = [snowflake_role.raw_db_read.name]
 }
 
-resource "snowflake_table_grant" "grant_select" {
-  database_name = "RAW_DB"
-  schema_name   = "PUBLIC"
-  privilege     = "SELECT"
-  roles         = [snowflake_role.raw_db_read.name]
-  on_future     = true # Tự động cấp quyền cho bảng tạo mới sau này
-}
-
-# Role Hierarchy: Business Role (Data Analyst] kế thừa Functional Role
-resource "snowflake_role" "data_analyst" {
-  name = "DATA_ANALYST_ROLE"
+# Tạo Business Role (Vai trò nghiệp vụ) và kế thừa Functional Role
+resource "snowflake_role" "data_analyst_apac" {
+  name = "DATA_ANALYST_APAC_ROLE"
 }
 
 resource "snowflake_role_grants" "grants" {
-  role_name = snowflake_role.data_analyst.name
-  roles     = [snowflake_role.raw_db_read.name] # Kế thừa quyền đọc
+  role_name = snowflake_role.data_analyst_apac.name
+  roles     = [snowflake_role.raw_db_read.name]
 }
 ```
 
-### 1.2. Attribute-Based Access Control (ABAC]: Cuộc cách mạng Metadata
+## 3. ABAC: Giải quyết vấn đề bằng Metadata
 
-ABAC giải quyết triệt để *Role Explosion* bằng cách tách rời Policy khỏi Object. Phân quyền được đánh giá động (Dynamic Evaluation) vào thời điểm chạy (Runtime) dựa trên **Thuộc tính (Attributes/Tags)** của người dùng, dữ liệu, và môi trường.
+**Attribute-Based Access Control (ABAC)** ra đời để giải quyết giới hạn của RBAC bằng cách tách rời Policy khỏi đối tượng vật lý. Phân quyền trong ABAC được đánh giá động (Dynamic Evaluation) tại thời điểm truy vấn (Runtime) dựa trên các **Thuộc tính (Tags/Attributes)** của người dùng, của dữ liệu và của môi trường.
 
-Ví dụ: Bạn chỉ có 1 Policy duy nhất: *"Nếu `User.ClearanceLevel >= Data.SensitivityTag` VÀ `Environment.IP == 'Corporate_VPN'`, cho phép đọc"*.
+Thay vì gán quyền thủ công cho từng bảng, bạn định nghĩa một luật duy nhất: *"Nếu `User.ClearanceLevel >= Data.SensitivityTag`, cho phép đọc."*
 
-*Đoạn mã Databricks Unity Catalog ABAC Policy SQL:*
+Databricks Unity Catalog là một ví dụ điển hình của việc ứng dụng ABAC bằng Governed Tags. Bằng cách gắn Tag (như `pii` hoặc `confidential`) cho bảng và cột, hệ thống tự động áp dụng luật bảo mật cho mọi dữ liệu có cùng Tag.
+
+*Cấu hình ABAC Policy:*
 
 ```sql
--- Gắn tag (Metadata) cho bảng và cột ngay khi dữ liệu vừa hạ cánh (Shift-left)
+-- Gắn tag cho bảng và cột ngay khi dữ liệu được tạo ra (Shift-left)
 ALTER TABLE marketing.campaigns SET TAGS ('sensitivity' = 'high');
-ALTER TABLE marketing.campaigns ALTER COLUMN customer_email SET TAGS ('pii' = 'true');
+ALTER COLUMN marketing.campaigns.email SET TAGS ('pii' = 'true');
 
--- Cấp quyền động dựa trên Tag thay vì chỉ định bảng thủ công
--- Mọi bảng tạo mới trong tương lai nếu không có tag 'high' thì Scientist tự động được đọc
+-- Cấp quyền động dựa trên Tag
 GRANT SELECT ON CATALOG marketing 
 TO ROLE data_scientists 
 WHEN TAG 'sensitivity' != 'high';
 ```
 
----
+Lợi thế cốt lõi của ABAC là khả năng mở rộng. Khi một bảng mới được tạo ra với tag `pii`, nó tự động được bảo vệ bởi chính sách hiện có mà không cần chạy thêm bất kỳ lệnh `GRANT` nào.
 
-## 2. RLS và CLS dưới góc nhìn Physical Execution (Trọng tâm Kỹ thuật)
+## 4. Thực thi RLS và CLS: Cái giá của hiệu năng
 
-Row-Level Security (RLS - Bảo mật cấp dòng) và Column-Level Security (CLS - Bảo mật cấp cột) không phải là phép màu. Chúng thực chất là các bộ lọc (Filters) được Optimizer âm thầm chèn vào Query Execution Plan. 
+Bảo mật cấp dòng (Row-Level Security - RLS) và cấp cột (Column-Level Security - CLS) cho phép che giấu hoặc lọc dữ liệu dựa trên ngữ cảnh người dùng. Tuy nhiên, dưới góc nhìn hệ thống, chúng không phải là phép màu. RLS và CLS thực chất là các bộ lọc (Filters) và hàm biến đổi (Functions) được Query Optimizer âm thầm chèn vào Execution Plan.
 
-### 2.1. Tác động của RLS tới Query Performance (Hiệu năng)
+### 4.1. Cache Invalidation và Full Table Scan
 
-Khi bật RLS, một câu query đơn giản `SELECT * FROM sales` của User thuộc khu vực 'APAC' sẽ bị Execution Engine ép buộc Rewrite (Viết lại) thành:
-`SELECT * FROM sales WHERE region = 'APAC'`.
+Khi một User chạy lệnh `SELECT * FROM global_sales`, nếu RLS được kích hoạt cho khu vực `APAC`, Execution Engine sẽ ép câu lệnh thành:
+`SELECT * FROM global_sales WHERE region = 'APAC'`.
 
-**Sự đánh đổi Hệ thống (System Trade-offs):**
-1. **Cache Invalidation (Vô hiệu hóa bộ đệm):** RLS phá vỡ cơ chế Query Result Caching. Vì kết quả phụ thuộc vào `Security Context` (Ai đang chạy), Engine không thể dùng lại kết quả Cache của User A cho User B, dẫn đến Compute Cost tăng vọt do phải tính lại từ đầu.
-2. **Full Table Scan (Spill-to-disk):** Nếu cột dùng làm điều kiện RLS (ví dụ `region`) không được Index, Partition, hoặc Z-Order hợp lý trên Parquet files, Security Filter buộc Engine phải quét toàn bộ bảng (Full Table Scan). Với hàng tỷ dòng, điều này gây tràn RAM (OOMKilled) hoặc Spill-to-disk cục bộ trên các Worker nodes, làm Query chậm đi 100 lần.
+Sự can thiệp này sinh ra hai điểm nghẽn hiệu năng (Performance Bottleneck) lớn:
+1. **Phá vỡ Query Caching:** Vì kết quả trả về phụ thuộc vào Identity của người chạy (`CURRENT_USER()`), Engine không thể tái sử dụng kết quả Cache của User A cho User B. Mọi câu query đều phải tiêu tốn Compute để tính toán lại từ đầu.
+2. **Quét toàn bộ bảng (Full Table Scan) và Partition Pruning:** Trong BigQuery, các policy RLS không tham gia vào quá trình Partition Pruning. Nếu bạn áp dụng RLS trên một bảng hàng Petabytes mà không bắt buộc user phải filter rõ cột Partition trong câu lệnh `WHERE`, hệ thống vẫn sẽ quét toàn bộ dữ liệu, gây ra chi phí khổng lồ và độ trễ cao. Trong Snowflake, nếu cột dùng để lọc RLS không được nằm trong Clustering Key, kết quả cũng tương tự.
 
-*Cấu hình Row Access Policy động trong Snowflake:*
+### 4.2. Khuyết điểm của Dynamic Data Masking (CLS)
 
-```sql
--- Tạo một Mapping Table lưu trữ quyền truy cập của từng User
-CREATE TABLE security.user_region_map (
-    user_email VARCHAR,
-    allowed_region VARCHAR
-);
+Che giấu dữ liệu động (Masking) yêu cầu xử lý mã hóa hoặc biến đổi chuỗi on-the-fly. Việc này làm tăng tải CPU của worker node. 
 
--- Tạo Policy động kiểm tra Mapping Table (Đánh đổi: Tốn thời gian JOIN ngầm)
-CREATE OR REPLACE ROW ACCESS POLICY region_policy AS (region_col VARCHAR) RETURNS BOOLEAN ->
-  EXISTS (
-    SELECT 1 FROM security.user_region_map
-    WHERE user_email = CURRENT_USER()
-      AND allowed_region = region_col
-  )
-  OR CURRENT_ROLE() = 'ACCOUNTADMIN'; -- Admin thấy tất cả
+**Kinh nghiệm thực chiến:** Đừng bao giờ sử dụng các UDF (User Defined Functions) phức tạp như gọi API ra bên ngoài (External Function) để Masking trên hàng tỷ dòng dữ liệu, việc này sẽ tạo ra nút thắt cổ chai I/O cực kỳ lớn. Luôn sử dụng các hàm Native có sẵn của Engine (như hàm SHA-256 nội tại hoặc đơn giản là thay thế bằng `***`) để đảm bảo tốc độ vectorized processing.
 
--- Áp dụng Policy vào bảng thật
-ALTER TABLE global_sales ADD ROW ACCESS POLICY region_policy ON (region);
-```
+## 5. Kiến trúc Identity Federation và Quản trị Tập trung
 
-### 2.2. Dynamic Data Masking (CLS) vs Compute Overhead
-
-Việc che giấu cột nhạy cảm (Dynamic Data Masking - DDM) đòi hỏi tính toán mã hóa/giải mã (Mask/Unmask) On-the-fly trên từng dòng dữ liệu. 
-Nếu bạn áp dụng Masking bằng một UDF (User Defined Functions) phức tạp (như SHA-256 Hashing) trên một bảng 100 Terabytes, CPU của Database (ví dụ Snowflake Virtual Warehouse) sẽ bị đẩy lên 100% chỉ để xử lý thao tác xử lý chuỗi ký tự (String manipulation). 
-
-**Giải pháp của Staff Engineer:** Luôn dùng các Masking Function nội tại (Native) viết bằng C++ của Database Engine, hoặc dùng Role-based Masking đơn giản (thay thế bằng `***`) thay vì gọi External UDF / Lambda function ra bên ngoài làm thắt cổ chai I/O.
-
----
-
-## 3. Kiến trúc Quản trị Tập trung (Identity Federation)
-
-Trong môi trường Enterprise Data Mesh, dữ liệu nằm rải rác ở S3 (Object Storage), Kafka (Streaming), Trino (Query Engine), và PostgreSQL (OLTP). Việc kỹ sư đi gán quyền (Grant) thủ công trên từng công cụ là "Tự sát" về mặt vận hành.
-
-Các hệ thống quy mô lớn sử dụng một **Centralized Policy Engine** (Như Apache Ranger, AWS Lake Formation) để đồng bộ hóa quy tắc tập trung.
+Khi dữ liệu nằm rải rác trên Object Storage (S3, GCS), Streaming (Kafka), và Query Engine (Trino, Spark), việc quản lý quyền rải rác ở từng công cụ là không thể bảo trì. Các tổ chức dữ liệu lớn thường triển khai một **Centralized Policy Engine** (như Apache Ranger hoặc AWS Lake Formation) để tập trung hóa AuthZ.
 
 ```mermaid
 sequenceDiagram
     participant User as Data Analyst
     participant Okta as Okta (IdP)
-    participant SCIM as SCIM Provisioning
-    participant Ranger as Apache Ranger ("Policy Engine")
-    participant Trino as Trino (Compute)
-    participant S3 as AWS S3 (Storage)
+    participant Ranger as Apache Ranger (Policy)
+    participant Trino as Trino Engine
+    participant S3 as Object Storage
 
-    User->>Okta: Login (SSO)
-    Okta-->>User: JWT Token ("Chứa Attributes: Department, Role")
-    Okta->>SCIM: Đồng bộ User/Group Metadata tự động
-    SCIM->>Ranger: Cập nhật User Identity & Policies
-    User->>Trino: Thực thi SQL Query ("Kèm Token")
-    Trino->>Ranger: Yêu cầu phân giải quyền AuthZ
-    Ranger-->>Trino: Trả về Policy ("RLS/CLS Masks")
-    Trino->>S3: Kéo dữ liệu vật lý (Đã chặn Data Pushdown)
-    Trino-->>User: Trả dữ liệu đã lọc và Mask
+    User->>Okta: Login (AuthN)
+    Okta-->>User: JWT Token (Chứa User/Group)
+    Okta->>Ranger: SCIM / UserSync định kỳ
+    User->>Trino: Chạy SQL Query
+    Trino->>Ranger: Yêu cầu phân giải AuthZ
+    Ranger-->>Trino: Trả về Policy (RLS/CLS)
+    Trino->>S3: Kéo dữ liệu vật lý
+    Trino-->>User: Trả dữ liệu đã lọc và mask
 ```
 
-### Rủi ro Vận hành (Operational Risks):
-*   **SCIM Sync Lag:** Hệ thống nhân sự khóa tài khoản nhân viên nghỉ việc trên IdP (Okta), nhưng tiến trình SCIM Sync mất 30 phút để lan truyền tới Database. Trong 30 phút đó, "Ghost User" [Người dùng bóng ma] vẫn có thể tải dữ liệu mật về máy. **Khắc phục:** Ép buộc Token Expiration (Thời gian sống của Token) cực ngắn (5 phút) hoặc dùng Event-driven Webhooks.
-*   **Aggregate Queries Leak (Rò rỉ qua hàm tổng hợp):** RLS và CLS có thể bị Bypass (Lách luật) nếu Engine không chặn hàm nội suy. Một User bị Mask cột lương, nhưng có thể chạy `SELECT AVG(salary) FROM employees WHERE name = 'John Doe'` để hệ thống tính ra chính xác lương của người đó.
+Trong kiến trúc này, Ranger không chịu trách nhiệm chứng thực người dùng, mà nó đồng bộ dữ liệu User/Group từ Okta (hoặc AD) thông qua cơ chế SCIM hoặc UserSync. Khi Trino nhận query, plugin của Ranger trên Trino sẽ can thiệp để kiểm tra luật.
 
----
+**Rủi ro vận hành (SCIM Sync Lag):** 
+Một nhân viên nghỉ việc và bị khóa tài khoản ngay lập tức trên Okta. Tuy nhiên, luồng đồng bộ từ Okta sang Ranger/Trino có thể mất 15-30 phút để cập nhật. Trong khoảng thời gian đó, "Ghost User" vẫn có thể chạy query. Để hạn chế rủi ro, hệ thống phải thiết lập Token Expiration (Thời gian sống của Session) đủ ngắn, hoặc tích hợp Event-driven Webhooks để thu hồi quyền ngay lập tức.
 
-## 4. Best Practices cho Data Engineers
+## 6. Best Practices cho Kỹ sư nền tảng (Platform Engineers)
 
-1. **Hạ tầng dưới dạng mã (IaC):** Quản lý quyền tuyệt đối bằng Terraform. Mọi thay đổi Role phải qua Pull Request, Code Review và CI/CD. Tuyệt đối cấm hành vi ClickOps (Click tay trên UI Console) để cấp quyền trên môi trường Production.
-2. **Service Accounts cho Automation:** Không bao giờ dùng tài khoản thật của Data Engineer để chạy Airflow hay dbt. Phải tạo các tài khoản dịch vụ phi nhân sự (Non-human accounts), gắn chứng chỉ vòng đời ngắn (Short-lived Credentials) qua AWS STS hoặc HashiCorp Vault.
-3. **Phân loại dữ liệu tại nguồn (Shift-left Data Tagging):** Tự động quét và gán Tag (PII, Financial) ngay khi dữ liệu vừa hạ cánh xuống Raw Zone (Bằng AWS Macie hoặc dbt meta tags) để kích hoạt ABAC sớm nhất có thể.
+1. **Hạ tầng dưới dạng mã (Infrastructure as Code - IaC):** Tuyệt đối cấm hành vi ClickOps (Click tay trên giao diện) để cấp quyền trên môi trường Production. Mọi phân quyền phải được định nghĩa bằng Terraform, đi qua luồng Pull Request và CI/CD.
+2. **Service Accounts cho Automation:** Không bao giờ dùng tài khoản của nhân viên để chạy Airflow, dbt hay các tác vụ Data Pipeline. Hãy sử dụng tài khoản dịch vụ (Non-human Service Accounts) kết hợp chứng chỉ vòng đời ngắn (Short-lived Credentials) thông qua AWS STS hoặc HashiCorp Vault.
+3. **Phân loại dữ liệu tại nguồn (Shift-left Tagging):** Áp dụng Data Classification và gắn Tag (PII, Financial) ngay tại bước Ingestion (ví dụ thông qua dbt meta tags hoặc AWS Macie). Dữ liệu càng được định nghĩa metadata sớm, hệ thống ABAC càng hoạt động hiệu quả.
+4. **Cẩn thận với Aggregate Queries Leak:** RLS và CLS có thể bị bypass (lách luật). Nếu cột lương bị mask, một User tinh vi vẫn có thể chạy `SELECT AVG(salary) FROM employees WHERE name = 'John Doe'` để lấy được con số thật. Bạn cần chặn quyền thực thi hàm nội suy trên các cột nhạy cảm.
 
----
+## Thuật ngữ chính (Key terms)
 
-## Nguồn Tham Khảo (References)
-1. **AWS Architecture Blog:** [Attribute-Based Access Control (ABAC]][https://aws.amazon.com/blogs/architecture/] - Định hình tương lai của IAM Cloud.
-2. **NIST Guide to ABAC:** [NIST SP 800-162][https://nvlpubs.nist.gov/nistpubs/specialpublications/NIST.SP.800-162.pdf] - Tiêu chuẩn bảo mật liên bang Mỹ về ABAC.
-3. **Databricks Unity Catalog:** [Attribute-Based Access Control](https://docs.databricks.com/en/data-governance/unity-catalog/index.html].
-4. **Designing Data-Intensive Applications (DDIA)** - Martin Kleppmann (2017).
+| Term | Nghĩa ngắn |
+| --- | --- |
+| **RBAC** (Role-Based Access Control) | Phân quyền tĩnh dựa trên Vai trò (Role) của người dùng. |
+| **ABAC** (Attribute-Based Access Control) | Phân quyền động dựa trên thuộc tính (Tag/Metadata) của dữ liệu và người dùng. |
+| **RLS** (Row-Level Security) | Bảo mật cấp dòng, lọc dữ liệu trả về dựa vào Policy và Context của user. |
+| **CLS** (Column-Level Security) / Data Masking | Bảo mật cấp cột, che giấu hoặc mã hóa giá trị của cột dữ liệu nhạy cảm. |
+| **Identity Federation** | Ủy quyền quá trình định danh (AuthN) cho một hệ thống quản lý tập trung (như Okta, AD). |
+| **SCIM** (System for Cross-domain Identity Management) | Giao thức tiêu chuẩn dùng để tự động đồng bộ User và Group giữa các hệ thống IT. |
+
+## References
+
+- Databricks. [Attribute-Based Access Control (ABAC) with Unity Catalog](https://docs.databricks.com/en/data-governance/unity-catalog/index.html).
+- Snowflake. [Understanding Row Access Policies and Query Performance](https://docs.snowflake.com/en/user-guide/security-row-intro).
+- Google Cloud. [Row-level security in BigQuery and Partition Pruning](https://cloud.google.com/bigquery/docs/row-level-security).
+- Apache Ranger. [Apache Ranger Architecture and UserSync](https://ranger.apache.org/architecture.html).
+- Martin Kleppmann (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
