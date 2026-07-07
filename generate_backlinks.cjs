@@ -73,11 +73,39 @@ function updateGlossary() {
         const title = meta.seoTitle || meta.title || key;
         const category = meta.category || 'Khái niệm';
         const definition = meta.definition || '';
+        const level = meta.level || '';
+
+        // Parse aliases (YAML array 1 dòng: aliases: ["Kafka", "Apache Kafka"])
+        let aliases = [];
+        if (meta.aliases) {
+            try {
+                aliases = JSON.parse(meta.aliases.replace(/'/g, '"'));
+            } catch (e) {
+                aliases = meta.aliases.replace(/^\[|\]$/g, '').split(',')
+                    .map(s => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+            }
+            if (!Array.isArray(aliases)) aliases = [];
+        }
+
+        // Parse domains
+        let domains = [];
+        if (meta.domains) {
+            try {
+                domains = JSON.parse(meta.domains.replace(/'/g, '"'));
+            } catch (e) {
+                domains = meta.domains.replace(/^\[|\]$/g, '').split(',')
+                    .map(s => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+            }
+            if (!Array.isArray(domains)) domains = [];
+        }
 
         concepts[key] = {
             title: title,
             category: category,
             definition: definition,
+            level: level,
+            domains: domains,
+            aliases: aliases,
             bullets: [],
             url: urlPath
         };

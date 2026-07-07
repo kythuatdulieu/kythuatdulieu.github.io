@@ -4,6 +4,9 @@
       "title": "Byzantine Fault Tolerance (BFT) trong Kỹ Thuật Dữ Liệu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/byzantine-fault-tolerance/"
     },
@@ -11,13 +14,19 @@
       "title": "Định lý CAP & PACELC - Staff Data Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/cap-theorem/"
     },
     "Consensus Raft Paxos": {
-      "title": "Thuật toán Raft & Paxos - Cốt lõi của Hệ thống Phân tán",
+      "title": "Đồng Thuận Phân Tán: Thuật toán Raft & Paxos, KRaft Kafka",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/consensus-raft-paxos/"
     },
@@ -25,6 +34,9 @@
       "title": "Vai trò Kỹ sư Dữ liệu: Phân tích từ góc độ Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/"
     },
@@ -32,6 +44,9 @@
       "title": "Kiến trúc Kỹ Thuật Dữ Liệu Hiện Đại (Data Engineering Architecture)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-engineering/"
     },
@@ -39,6 +54,9 @@
       "title": "Data Fabric - Phân Tích Kiến Trúc Hệ Thống Dữ Liệu Tự Động",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-fabric/"
     },
@@ -46,6 +64,9 @@
       "title": "Vòng đời Dữ liệu (Data Lifecycle) - Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/"
     },
@@ -53,6 +74,9 @@
       "title": "Data Mesh - Deep Dive cho Staff Data Engineer",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-mesh/"
     },
@@ -60,6 +84,9 @@
       "title": "Data Pipeline Architecture: Deep Dive, Trade-offs & Best Practices",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-pipeline/"
     },
@@ -67,20 +94,29 @@
       "title": "Kiến trúc Nền tảng Dữ liệu (Data Platform) - Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/"
     },
     "Data Warehouse": {
-      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Vectorized Execution, Shuffle",
+      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Shuffle, Snowflake & BigQuery",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-warehouse/"
     },
     "Event Driven Architecture": {
-      "title": "Event-Driven Architecture Chuyên Sâu: Kafka, Outbox Pattern, DLQ",
+      "title": "Event-Driven Architecture Chuyên Sâu: Kafka, Outbox Pattern, Saga, DLQ",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/event-driven-architecture/"
     },
@@ -88,20 +124,29 @@
       "title": "Feature Store Kiến trúc chuyên sâu: Feast, Time-travel, Redis OOM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/feature-store/"
     },
     "File Formats": {
-      "title": "Cấu trúc file Parquet, Avro chuyên sâu: Tối ưu Spark, Small Files Problem",
+      "title": "Cấu trúc file Parquet, Avro chuyên sâu: Tối ưu Spark, Vectorization và Small Files",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/file-formats/"
     },
     "Gossip Protocol Vector Clocks": {
-      "title": "Gossip Protocol và Vector Clocks Chuyên Sâu - Hệ Thống Phân Tán",
+      "title": "Gossip Protocol và Vector Clocks: Lõi Kiến Trúc Dynamo & Cassandra",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/gossip-protocol-vector-clocks/"
     },
@@ -109,6 +154,9 @@
       "title": "Gossip Protocol - Thiết Kế Mạng Phân Tán Mức Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/gossip-protocol/"
     },
@@ -116,13 +164,19 @@
       "title": "Kappa Architecture - Thiết Kế Hệ Thống Xử Lý Luồng Hiện Đại",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/kappa-architecture/"
     },
     "Lambda Architecture": {
-      "title": "Lambda Architecture - Phân Tích Chuyên Sâu Tầng Batch & Speed",
+      "title": "Lambda vs Kappa Architecture - Phân Tích Chuyên Sâu Kỹ Thuật Dữ Liệu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/lambda-architecture/"
     },
@@ -130,13 +184,19 @@
       "title": "Leader Election (Raft/ZAB) - Giải phẫu sự cố Split-Brain & Fencing Tokens",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/leader-election/"
     },
     "Modern Data Stack": {
-      "title": "Modern Data Stack (MDS) - Kiến trúc ELT và Quản trị Chi Phí",
+      "title": "Modern Data Stack (MDS): Kiến trúc ELT, Sự Phân Mảnh, và FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/modern-data-stack/"
     },
@@ -144,6 +204,9 @@
       "title": "Định lý PACELC - System Design & Data Engineering Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/pacelc-theorem/"
     },
@@ -151,6 +214,9 @@
       "title": "Push vs Pull Architecture: Deep Dive for Staff Engineers",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/push-pull-delivery/"
     },
@@ -158,13 +224,19 @@
       "title": "Kiến trúc hệ thống dữ liệu Thời gian thực dưới góc nhìn Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/"
     },
     "Relational Database": {
-      "title": "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - Kiến trúc và Trade-offs",
+      "title": "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - PostgreSQL vs MySQL",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/relational-database/"
     },
@@ -172,6 +244,9 @@
       "title": "Hệ thống Nguồn (Source Systems): Kiến trúc & Systemic Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/source-systems/"
     },
@@ -179,6 +254,9 @@
       "title": "Storage-Compute Decoupling - Data Engineering Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/storage-compute-decoupling/"
     },
@@ -186,83 +264,127 @@
       "title": "Zero-Copy Cloning Architecture: Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/zero-copy-cloning/"
     },
     "Backfill": {
-      "title": "Backfill trong Kỹ thuật Dữ liệu - Chiến lược xử lý và cập nhật dữ liệu lịch sử",
+      "title": "Backfill Data Pipeline: Kiến trúc, Trade-offs & Xử lý OOMKilled",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/backfill/"
     },
     "Backpressure Handling": {
-      "title": "Backpressure trong Data Ingestion - Chiến lược & Cơ chế xử lý",
+      "title": "Backpressure trong Data Ingestion & Streaming: Kafka, Flink, Spark",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/backpressure-handling/"
     },
     "Change Data Capture": {
-      "title": "Change Data Capture (CDC) - Kỹ thuật đồng bộ dữ liệu thời gian thực (Staff Engineer Level)",
+      "title": "Change Data Capture (CDC): Kiến trúc Debezium, Kafka & Netflix DBLog",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/change-data-capture/"
     },
     "Data Extraction": {
-      "title": "Data Extraction - Các phương pháp trích xuất dữ liệu",
+      "title": "Data Extraction & Change Data Capture (CDC) - Kiến trúc Kỹ thuật",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-extraction/"
     },
     "Data Ingestion": {
-      "title": "Data Ingestion - Quy trình thu nạp dữ liệu từ cơ bản đến nâng cao",
+      "title": "Data Ingestion - Kiến trúc Thu nạp dữ liệu ở quy mô Petabyte",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-ingestion/"
     },
     "Data Loading": {
-      "title": "Data Loading - Kỹ thuật nạp dữ liệu trong ETL/ELT",
+      "title": "Data Loading: Kỹ thuật ETL/ELT & Kiến trúc Lakehouse (Delta/Iceberg)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-loading/"
     },
     "Data Transformation": {
-      "title": "Data Transformation - Nghệ thuật làm sạch và biến đổi dữ liệu",
+      "title": "Data Transformation - Kỹ Thuật Biến Đổi Dữ Liệu Chuyên Sâu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-transformation/"
     },
     "Deduplication": {
-      "title": "Khử trùng lặp dữ liệu (Deduplication) là gì? Các kỹ thuật trong Data Engineering",
+      "title": "Khử trùng lặp dữ liệu (Deduplication) kiến trúc BigQuery, Snowflake, Databricks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/deduplication/"
     },
     "ELT": {
-      "title": "ELT (Extract, Load, Transform) - Sự thay thế cho ETL truyền thống",
+      "title": "ELT Architecture: Extract, Load, Transform & The Modern Data Stack",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/elt/"
     },
     "ETL": {
-      "title": "ETL (Extract, Transform, Load) - Khái niệm cốt lõi trong Data Engineering",
+      "title": "ETL, ELT và Zero-ETL - Kiến trúc Data Pipeline hiện đại",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/etl/"
     },
     "Idempotency": {
-      "title": "Tính lũy đẳng (Idempotency) trong Data Engineering - Khái niệm và Ứng dụng",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Idempotency (Tính lũy đẳng) trong Data Engineering: retry, upsert, exactly-once",
+      "category": "Data Ingestion & Integration",
+      "definition": "Idempotency là tính chất giúp một thao tác chạy một lần hay nhiều lần đều để hệ thống ở cùng một trạng thái cuối, nhờ đó pipeline có thể retry và backfill an toàn mà không sinh dữ liệu trùng.",
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
+      "aliases": [
+        "Idempotency",
+        "Idempotent",
+        "Tính lũy đẳng",
+        "Lũy đẳng",
+        "Idempotent pipeline"
+      ],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/idempotency/"
     },
@@ -270,41 +392,59 @@
       "title": "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipeline",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/incremental-load/"
     },
     "Log Based Cdc Internals": {
-      "title": "Log-based CDC Internals: Cách Hoạt Động Của WAL, Binlog và Debezium",
+      "title": "Log-based CDC Internals: Kiến trúc Debezium, WAL, Netflix DBLog",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/log-based-cdc-internals/"
     },
     "Webhook Idempotency": {
-      "title": "Webhooks & Tính luỹ đẳng (Idempotency) - Data Engineering Deep Dive",
+      "title": "Webhooks & Idempotency: Xử lý Trùng lặp Dữ liệu trong Hệ thống Phân tán",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/webhook-idempotency/"
     },
     "Acid Transactions On Lake": {
-      "title": "ACID Transactions trên Data Lake - Kiến trúc Delta, Iceberg, Hudi",
+      "title": "ACID Transactions Data Lake - MVCC, OCC, Delta, Iceberg, Hudi",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/acid-transactions-on-lake/"
     },
     "Amazon Redshift": {
-      "title": "Amazon Redshift Deep Dive: MPP Architecture, Storage & Zone Maps",
+      "title": "Amazon Redshift Deep Dive: MPP, Kiến Trúc RA3 & AQUA Accelerator",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/amazon-redshift/"
     },
     "Apache Hudi": {
-      "title": "Apache Hudi - Kiến trúc Data Lakehouse, Trade-offs và Streaming",
+      "title": "Apache Hudi - Kiến trúc Data Lakehouse, MoR vs CoW và CDC Streaming",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/apache-hudi/"
     },
@@ -312,6 +452,9 @@
       "title": "Apache Iceberg Architecture & Trade-offs: Cuộc cách mạng Open Table Format",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/apache-iceberg/"
     },
@@ -319,6 +462,9 @@
       "title": "Azure Synapse Analytics Architecture - MPP, Polaris Engine & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/azure-synapse/"
     },
@@ -326,13 +472,19 @@
       "title": "B-Tree vs LSM-Tree: Kiến Trúc Lưu Trữ & Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/b-tree-vs-lsm-tree/"
     },
     "Bloom Filters Sstables": {
-      "title": "Internals: Bloom Filters, SSTables & LSM-Trees",
+      "title": "Kiến trúc LSM-Tree: Bloom Filters, SSTables & RocksDB Internals",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/bloom-filters-sstables/"
     },
@@ -340,13 +492,19 @@
       "title": "Kiến trúc Cloud Object Storage: Amazon S3 Internals, HDFS vs S3",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/cloud-storage/"
     },
     "Clustering": {
-      "title": "Clustering Dữ liệu là gì? Deep dive Z-Ordering & Liquid Clustering",
+      "title": "Clustering Data: Deep Dive Z-Ordering, Liquid Clustering & Micro-partitions",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/clustering/"
     },
@@ -354,27 +512,39 @@
       "title": "Columnar Storage (Lưu trữ dạng cột) & Kiến trúc Parquet chuyên sâu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/columnar-storage/"
     },
     "Compaction": {
-      "title": "Compaction - Tối ưu hóa Data Lakehouse & Khắc phục OOM",
+      "title": "Compaction: Nghệ Thuật Tối Ưu Hóa Data Lakehouse & Khắc Phục Lỗi OOM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/compaction/"
     },
     "Compression Algorithms": {
-      "title": "Thuật toán nén dữ liệu (Compression Algorithms) - Snappy, Gzip, Zstd, LZ4",
+      "title": "Thuật toán nén dữ liệu trong Big Data: Zstd, Snappy, Gzip, LZ4",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/compression-algorithms/"
     },
     "Data Lake": {
-      "title": "Kiến trúc Data Lake: Trade-offs, Sự cố Vận hành và Tối ưu Chi phí",
+      "title": "Kiến trúc Data Lake: Data Gravity, Trade-offs và Tối ưu Chi phí",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/data-lake/"
     },
@@ -382,6 +552,9 @@
       "title": "Databricks Platform Architecture: Control Plane, Photon & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/databricks-platform/"
     },
@@ -389,13 +562,19 @@
       "title": "Kiến trúc Delta Lake: Transaction Log, OCC và Trade-offs hệ thống",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-lake/"
     },
     "Delta Optimistic Concurrency": {
-      "title": "Internals: Optimistic Concurrency Control (OCC) trong Delta Lake",
+      "title": "Optimistic Concurrency Control trong Delta Lake: Kiến trúc và Rủi ro",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-optimistic-concurrency/"
     },
@@ -403,13 +582,19 @@
       "title": "Cơ chế hoạt động của OPTIMIZE, VACUUM và Liquid Clustering trong Delta Lake",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/"
     },
     "File Formats Deep Dive": {
-      "title": "Cấu trúc định dạng File: Parquet, ORC, Avro và JSON - Deep Dive",
+      "title": "Định dạng file Big Data: Kiến trúc Parquet, Avro, ORC & CPU SIMD",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/file-formats-deep-dive/"
     },
@@ -417,41 +602,59 @@
       "title": "Kiến trúc BigQuery: Dremel, Colossus và Các Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/google-bigquery/"
     },
     "Iceberg Small Files Compaction": {
-      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg",
+      "title": "Apache Iceberg Compaction: Giải quyết Small Files với Binpack, Sort & Z-Order",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/"
     },
     "Iceberg Snapshot Isolation": {
-      "title": "Iceberg Snapshot Isolation & OCC - Data Engineering Deep Dive",
+      "title": "Apache Iceberg Architecture: Snapshot Isolation, OCC & WAP Pattern",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/iceberg-snapshot-isolation/"
     },
     "Indexing": {
-      "title": "Database Indexing, B-Tree, LSM-Tree & Data Lake Z-Ordering",
+      "title": "Kiến trúc Database Indexing: B-Tree, LSM-Tree, Z-Ordering & Bloom Filters",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/indexing/"
     },
     "Lakehouse": {
-      "title": "Kiến trúc Data Lakehouse dưới góc nhìn Staff Engineer: Iceberg, Delta Lake",
+      "title": "Kiến trúc Data Lakehouse chuyên sâu: Iceberg, Delta Lake, ACID",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/lakehouse/"
     },
     "Liquid Clustering Deep Dive": {
-      "title": "Liquid Clustering trong Databricks là gì? Thay thế Partitioning và Z-Order",
+      "title": "Liquid Clustering trong Databricks Delta Lake: Hilbert Curve & Kiến trúc",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/"
     },
@@ -459,13 +662,19 @@
       "title": "Medallion Architecture: System Design, Trade-offs & Operational Risks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/medallion-architecture/"
     },
     "OLAP": {
-      "title": "Kiến trúc OLAP: Columnar Storage, Vectorized Execution & Z-Ordering",
+      "title": "Kiến trúc OLAP: Columnar Storage, Vectorized Execution (SIMD) & Z-Ordering",
       "category": "Khái niệm",
-      "definition": "Trong kiến trúc hệ thống hiện đại, OLAP không chỉ là 'phân tích đa chiều' (Cubes) mà là sự kết hợp vật lý giữa Columnar Storage (lưu trữ dạng cột) và Vectorized Execution (thực thi vector hóa) để quét hàng tỷ bản ghi với độ trễ mili-giây.",
+      "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/olap/"
     },
@@ -473,20 +682,29 @@
       "title": "OLTP vs OLAP Storage - Row-oriented vs Column-oriented | System Design",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/oltp-vs-olap-storage/"
     },
     "OLTP": {
       "title": "Kiến trúc OLTP Database: Phân tích chuyên sâu WAL, MVCC và B-Tree",
       "category": "Khái niệm",
-      "definition": "OLTP (Online Transaction Processing) là hệ thống thiết kế tối ưu cho tần suất ghi/đọc (Read/Write) cực lớn với độ trễ thấp ở mức vật lý, kết hợp cơ chế Buffer Pool trong RAM, B-Tree trên Disk, và thuật toán MVCC để giải quyết bài toán Concurrency (Đồng thời) khốc liệt.",
+      "definition": "OLTP (Online Transaction Processing) là hệ thống thiết kế tối ưu cho tần suất ghi/đọc (Read/Write) cực lớn với độ trễ thấp ở mức vật lý, kết hợp cơ chế Buffer Pool trong RAM, B-Tree trên Disk, và thuật toán MVCC để giải quyết bài toán Concurrency.",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/oltp/"
     },
     "Parquet Internals": {
-      "title": "Apache Parquet Internals - Cấu Trúc, Encoding & Data Skipping",
+      "title": "Apache Parquet Internals - Cấu Trúc, Encoding & Predicate Pushdown",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/parquet-internals/"
     },
@@ -494,6 +712,9 @@
       "title": "Kiến trúc Phân vùng dữ liệu (Partitioning) và Các Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/partitioning/"
     },
@@ -501,13 +722,19 @@
       "title": "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lakehouse",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/schema-evolution/"
     },
     "Serverless Data": {
-      "title": "Serverless Data Processing: Kiến trúc Thực thi và Đánh đổi Hệ thống",
+      "title": "Serverless Data Processing: Kiến trúc BigQuery, Athena & Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/serverless-data/"
     },
@@ -515,6 +742,9 @@
       "title": "Kiến trúc Snowflake Data Cloud: Micro-partitions & Virtual Warehouses",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/snowflake/"
     },
@@ -522,6 +752,9 @@
       "title": "Table Format Kiến Trúc và Đánh Đổi - Iceberg, Delta Lake, Hudi",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/table-format/"
     },
@@ -529,6 +762,9 @@
       "title": "Kiến trúc Kỹ thuật Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/time-series-databases/"
     },
@@ -536,41 +772,59 @@
       "title": "Time Travel Architecture: Deep Dive vào Delta Lake & Apache Iceberg",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/time-travel/"
     },
     "Vacuum Autovacuum Mechanisms": {
-      "title": "Operational: Vacuum, MVCC & Quản lý Data Bloat trong Data Warehouse",
+      "title": "Operational: Vacuum, MVCC & Quản lý Data Bloat",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vacuum-autovacuum-mechanisms/"
     },
     "Vector Database": {
-      "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Giải thích Kiến trúc HNSW, IVF-PQ",
+      "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Kiến trúc HNSW vs IVF-PQ",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vector-database/"
     },
     "Vector Store": {
-      "title": "Cơ sở dữ liệu Vector (Vector Database): Kiến trúc, Đánh đổi HNSW vs IVF-PQ",
+      "title": "Vector Database là gì? Kiến trúc lõi HNSW, IVF-PQ và Hybrid Search",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vector-store/"
     },
     "Z Order Deep Dive": {
-      "title": "Z-Order Optimization trong Databricks và Delta Lake: Kiến Trúc & Trade-offs",
+      "title": "Z-Order Optimization & Liquid Clustering: Kiến Trúc Data Skipping",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/"
     },
     "Apache Spark": {
-      "title": "Apache Spark: Kiến trúc hệ thống, Trade-offs và Tối ưu Memory",
+      "title": "Apache Spark: Kiến trúc hệ thống, Catalyst Optimizer và Tối ưu Memory",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/apache-spark/"
     },
@@ -578,6 +832,9 @@
       "title": "Xử lý dữ liệu theo lô - Kiến trúc Phân tán và Hệ thống Core Batch",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/batch-processing/"
     },
@@ -585,6 +842,9 @@
       "title": "Data Skew trong Spark: Kỹ thuật Salting và Adaptive Query Execution (AQE)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/data-skew/"
     },
@@ -592,6 +852,9 @@
       "title": "Distributed Joins Mechanisms - Broadcast, Sort-Merge, Shuffle Hash",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/"
     },
@@ -599,6 +862,9 @@
       "title": "Distributed Processing Architecture: Big Data Computing",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/distributed-processing/"
     },
@@ -606,13 +872,19 @@
       "title": "MPP Architecture & Google Dremel - BigQuery Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/"
     },
     "Shuffle": {
-      "title": "Spark Shuffle Architecture: I/O Bottleneck & OOM Mitigation",
+      "title": "Spark Shuffle Architecture & Remote Shuffle Service (RSS/Zeus) Uber",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/shuffle/"
     },
@@ -620,20 +892,29 @@
       "title": "Spark AQE (Adaptive Query Execution): Runtime Physical Plan Optimization",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/"
     },
     "Spark Catalyst Optimizer": {
-      "title": "Spark Catalyst Optimizer: RBO, CBO & Tungsten Code Generation",
+      "title": "Spark Catalyst Optimizer: RBO, CBO & Quá Trình Biên Dịch SQL",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/"
     },
     "Spark Data Skew Salting": {
-      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting",
+      "title": "Spark Data Skew: Giải pháp Salting và AQE (Adaptive Query Execution)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/"
     },
@@ -641,6 +922,9 @@
       "title": "Spark Execution Model: Kiến trúc Driver, Cluster Manager và Executor",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-execution-model/"
     },
@@ -648,13 +932,19 @@
       "title": "Cấu trúc phân cấp thực thi: Spark Jobs, Stages và Tasks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/"
     },
     "Spark Joins": {
-      "title": "Các loại Join trong Spark",
+      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-joins/"
     },
@@ -662,13 +952,19 @@
       "title": "Spark Partition",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-partition/"
     },
     "Spark Spill To Disk": {
-      "title": "Troubleshooting: Spark Spill to Disk & Memory Tuning",
+      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/"
     },
@@ -676,6 +972,9 @@
       "title": "Spark SQL & Catalyst Optimizer: Kiến Trúc Lõi và Tối Ưu Hóa Truy Vấn",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-sql/"
     },
@@ -683,6 +982,9 @@
       "title": "Spark Tungsten Engine: Tối Ưu Hóa RAM và CPU Cấp Độ Phần Cứng",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/"
     },
@@ -690,13 +992,19 @@
       "title": "Spark OOM Troubleshooting: Bắt Bệnh YARN Killed và JVM Heap",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/"
     },
     "Apache Kafka": {
-      "title": "Apache Kafka: Kiến trúc, Trade-offs và Rủi ro Vận hành",
+      "title": "Apache Kafka: Kiến trúc Zero-Copy, KRaft và Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/apache-kafka/"
     },
@@ -704,69 +1012,99 @@
       "title": "Thuật toán Chandy-Lamport & Apache Flink Checkpointing Architecture",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/"
     },
     "Consumer Groups": {
-      "title": "Kafka Consumer Groups: Kiến trúc Thực thi và Xử lý Lỗi (Rebalance, OOMKilled)",
+      "title": "Kafka Consumer Groups: Kiến trúc, Rebalance Storms & Xử lý Lỗi",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/consumer-groups/"
     },
     "Event Time Processing Time": {
-      "title": "Event Time vs Processing Time trong Streaming Systems: Kiến trúc & Trade-offs",
+      "title": "Event Time vs Processing Time trong Streaming: Kiến trúc & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/"
     },
     "Exactly Once Semantics": {
-      "title": "Exactly-Once Semantics (EOS) trong Streaming Processing: Kiến trúc Kafka & Flink",
+      "title": "Exactly-Once Semantics (EOS) trong Kafka & Flink: Kiến trúc 2PC",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/exactly-once-semantics/"
     },
     "Flink Backpressure": {
-      "title": "Kiến trúc Thực thi: Xử lý Backpressure trong Apache Flink",
+      "title": "Apache Flink Backpressure: Credit-based Flow Control & Network Buffers",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-backpressure/"
     },
     "Flink Rocksdb State Backend": {
-      "title": "Internals: Tuning RocksDB State Backend",
+      "title": "Tuning RocksDB State Backend trong Apache Flink (Internals)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-rocksdb-state-backend/"
     },
     "Flink Watermarks Late Data": {
-      "title": "Deep Dive: Watermarks & Late Data Handling",
+      "title": "Apache Flink Watermarks & Xử lý Late Data trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-watermarks-late-data/"
     },
     "Kafka Consumer Lag Rebalance": {
-      "title": "Troubleshooting: Kafka Consumer Lag & Rebalance Storms",
+      "title": "Khắc phục Kafka Consumer Lag và Rebalance Storms (KIP-429, KIP-345)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-consumer-lag-rebalance/"
     },
     "Kafka Exactly Once Semantics": {
-      "title": "Deep Dive: Exactly-Once Semantics (EOS) & Transactional Outbox Pattern",
+      "title": "Kafka Exactly-Once Semantics & Transactional Outbox Pattern",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-exactly-once-semantics/"
     },
     "Kafka Topics Partitions": {
-      "title": "Kafka Topics và Partitions: Kiến trúc Vật lý & Đánh đổi Hệ thống",
+      "title": "Kafka Topics, Partitions, Zero-Copy và Page Cache Architecture",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-topics-partitions/"
     },
@@ -774,20 +1112,29 @@
       "title": "Stream-Table Duality: Kiến trúc cốt lõi của Kafka & Flink",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/stream-table-duality/"
     },
     "Streaming Processing": {
-      "title": "Streaming Processing là gì? Kiến trúc và Trade-offs hệ thống Real-time",
+      "title": "Streaming Processing: Kiến trúc Flink, Watermarks và Exactly-Once Semantics",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/streaming-processing/"
     },
     "Watermark": {
-      "title": "Watermark là gì? Kiến trúc xử lý Late Data & OOMKilled",
+      "title": "Watermark là gì? Kiến trúc xử lý Late Data & OOMKilled trong Flink",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/watermark/"
     },
@@ -795,34 +1142,49 @@
       "title": "Windowing & Watermarks: Kiến trúc xử lý Late Data trong Streaming",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/windowing/"
     },
     "Zero Copy Principle": {
-      "title": "Zero-copy Principle - System Architecture & Physical Execution",
+      "title": "Zero-copy Principle: Kiến trúc OS-level và Tối ưu Kafka",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/zero-copy-principle/"
     },
     "Data Contract": {
-      "title": "Hợp đồng dữ liệu (Data Contract) - Kiến trúc Thực thi và Đánh đổi Hệ thống",
+      "title": "Data Contract: Kiến trúc, Triển khai và Xử lý Sự cố (Data Engineering)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/data-contract/"
     },
     "Data Vault Modeling": {
-      "title": "Mô hình Data Vault 2.0 - Data Engineering Deep Dive",
+      "title": "Data Vault 2.0: Kiến trúc, Trade-offs và Thực chiến Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/data-vault-modeling/"
     },
     "Dbt Models": {
-      "title": "dbt Models: Thiết Kế DAG, Đánh Đổi Hệ Thống và Tối Ưu Materializations",
+      "title": "dbt Models Materialization Architecture: Snowflake, BigQuery, Databricks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dbt-models/"
     },
@@ -830,27 +1192,39 @@
       "title": "dbt Architecture: Materialization, State, và CI/CD ở quy mô lớn",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dbt/"
     },
     "Dimension Table": {
-      "title": "Dimension Table là gì? Thiết kế Dimension Table & SCD Type 2 tối ưu hệ thống",
+      "title": "Dimension Table & SCD Type 2: Thiết kế, Tối ưu Broadcast Join & Xử lý OOM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dimension-table/"
     },
     "Dimensional Modeling": {
-      "title": "Dimensional Modeling trong Lakehouse: Kiến trúc, Tối ưu & Thực chiến",
+      "title": "Dimensional Modeling: Kimball, Data Vault, OBT trên BigQuery & Snowflake",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/"
     },
     "Fact Table": {
-      "title": "Thiết kế Fact Table chuyên sâu: Kiến trúc, Trade-offs và Tối ưu (AWS, Databricks)",
+      "title": "Thiết kế Fact Table chuyên sâu: Kiến trúc, Trade-offs và Tối ưu (Snowflake, Databricks)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/fact-table/"
     },
@@ -858,6 +1232,9 @@
       "title": "Grain (Độ mịn dữ liệu) trong Data Warehouse & System Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/grain/"
     },
@@ -865,6 +1242,9 @@
       "title": "Phương pháp Inmon (Inmon Methodology): Kiến trúc System Design & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/inmon-methodology/"
     },
@@ -872,20 +1252,29 @@
       "title": "Phương pháp luận Kimball (Kimball Methodology): Kiến trúc, Trade-offs và Thực chiến",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/kimball-methodology/"
     },
     "Materialization": {
-      "title": "Materialization trong dbt - Cẩm nang Data Warehouse chuyên sâu",
+      "title": "Materialization trong dbt - BigQuery, Snowflake, Databricks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/materialization/"
     },
     "Metrics Layer": {
-      "title": "Lớp ngữ nghĩa chỉ số (Metrics Layer / Semantic Layer) Kiến trúc và Trade-offs",
+      "title": "Lớp ngữ nghĩa chỉ số (Metrics Layer / Semantic Layer) - dbt & Cube",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/metrics-layer/"
     },
@@ -893,6 +1282,9 @@
       "title": "One Big Table (OBT) Architecture & Trade-offs - Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/"
     },
@@ -900,6 +1292,9 @@
       "title": "Slowly Changing Dimension (SCD) Architecture: Type 2, Iceberg, Delta Lake",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/slowly-changing-dimension/"
     },
@@ -907,6 +1302,9 @@
       "title": "Snowflake Schema (Lược đồ bông tuyết) - Định nghĩa, So sánh và Ứng dụng",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/snowflake-schema/"
     },
@@ -914,13 +1312,19 @@
       "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/sql-transformation/"
     },
     "Star Schema": {
-      "title": "Lược đồ hình sao (Star Schema)",
+      "title": "Lược đồ Hình sao (Star Schema)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/star-schema/"
     },
@@ -928,13 +1332,19 @@
       "title": "Surrogate Key trong Distributed Data Warehouse (Snowflake, BigQuery)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/surrogate-key/"
     },
     "Airflow Celery Vs K8s Executor": {
-      "title": "Architecture: Celery Executor vs Kubernetes Executor trong Apache Airflow",
+      "title": "Airflow Executors: So sánh Celery vs Kubernetes (K8s) & Tối ưu FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/"
     },
@@ -942,20 +1352,29 @@
       "title": "Airflow Scheduler HA Architecture & Tuning Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-scheduler/"
     },
     "Airflow Zombie Tasks": {
-      "title": "Troubleshooting: Airflow Zombie Tasks & Pool Starvation",
+      "title": "Airflow Zombie Tasks & Pool Starvation: Khắc phục lỗi OOM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-zombie-tasks/"
     },
     "Alerting Incident Response": {
-      "title": "Cảnh báo và Xử lý sự cố Dữ liệu (Alerting & Incident Response)",
+      "title": "Alerting & Incident Response: SRE và Xử lý sự cố Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/alerting-incident-response/"
     },
@@ -963,6 +1382,9 @@
       "title": "Kiến trúc hệ thống Anomaly Detection trong Data Pipeline",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/anomaly-detection/"
     },
@@ -970,6 +1392,9 @@
       "title": "Kiến trúc Apache Airflow: Scheduler Bottlenecks & Executor Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/apache-airflow/"
     },
@@ -977,20 +1402,29 @@
       "title": "Blue-Green Deployment trong Data Engineering - WAP Pattern Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/blue-green-deployment-data/"
     },
     "Circuit Breakers Data": {
-      "title": "Circuit Breakers & WAP Pattern - Data Engineering Deep Dive",
+      "title": "Data Circuit Breakers & WAP Pattern (Write-Audit-Publish) Deep Dive",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/circuit-breakers-data/"
     },
     "Dag": {
-      "title": "DAG trong Data Engineering: Đánh đổi, Scheduler Tax & Spark Execution",
+      "title": "DAG trong Data Engineering: Giải phẫu Scheduler Tax & Spark Execution",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dag/"
     },
@@ -998,27 +1432,39 @@
       "title": "Data Observability: Kiến trúc, Thực chiến và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-observability/"
     },
     "Data Profiling": {
-      "title": "Data Profiling là gì? Kiến trúc và Trade-offs trong Data Engineering",
+      "title": "Data Profiling & Data Observability: Kiến trúc và Xử lý Lỗi OOMKilled",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-profiling/"
     },
     "Data Quality Dimensions": {
-      "title": "Data Quality Dimensions: Kiến trúc và Thực tiễn tại Uber, Netflix",
+      "title": "Data Quality Dimensions: Kiến trúc DataOps, WAP và Circuit Breaker",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-quality-dimensions/"
     },
     "Data Quality": {
-      "title": "Thiết kế Kiến trúc Data Quality & Data Contracts ở Quy mô Lớn",
+      "title": "Kiến trúc Data Quality, Data Observability & Data Contracts ở Quy mô Lớn",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-quality/"
     },
@@ -1026,20 +1472,29 @@
       "title": "Data Reconciliation Architecture: Kỹ thuật đối soát dữ liệu chuyên sâu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/"
     },
     "Data Testing": {
-      "title": "Data Testing & Data Quality: Kiến trúc Circuit Breaker, Write-Audit-Publish",
+      "title": "Data Testing & Data Quality: Kiến trúc WAP và Circuit Breaker",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-testing/"
     },
     "Dataops": {
-      "title": "DataOps & Data Quality: Kiến trúc, Vận hành và Đánh đổi hệ thống",
+      "title": "DataOps & Data Quality: Kiến trúc CI/CD, Airflow, Data Contracts",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dataops/"
     },
@@ -1047,34 +1502,49 @@
       "title": "Kiểm thử dữ liệu với dbt (dbt Testing): Kiến trúc và Thực chiến DataOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dbt-testing/"
     },
     "Distribution Drift": {
-      "title": "Distribution Drift (Data Drift) là gì? Kiến trúc giám sát",
+      "title": "Distribution Drift (Data Drift) là gì? Kiến trúc giám sát PSI & KL Divergence",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/"
     },
     "Freshness Monitoring": {
-      "title": "Giám sát độ trễ dữ liệu (Freshness Monitoring): Kiến trúc và Trade-offs",
+      "title": "Giám sát độ trễ dữ liệu (Freshness Monitoring): Kiến trúc và Thực tiễn",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/freshness-monitoring/"
     },
     "Orchestration": {
-      "title": "Data Orchestration Architecture: Airflow, Dagster & Trade-offs",
+      "title": "Data Orchestration Architecture: Airflow vs Dagster vs Prefect",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/orchestration/"
     },
     "Retries Sla": {
-      "title": "DataOps Retries & SLA: Thundering Herd, Jitter và Tự Phục Hồi",
+      "title": "DataOps Retries & SLA: Thundering Herd, Jitter và Tự Phục Hồi (Airflow)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/retries-sla/"
     },
@@ -1082,6 +1552,9 @@
       "title": "Root Cause Analysis (RCA) trong Kỹ thuật Dữ liệu: Kiến trúc & Troubleshooting",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/"
     },
@@ -1089,13 +1562,19 @@
       "title": "Schema Drift và Schema Evolution trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/schema-drift/"
     },
     "Sensors": {
-      "title": "Airflow Sensors là gì? Cảm biến dữ liệu & Ngăn chặn Worker Starvation",
+      "title": "Airflow Sensors: Cảm biến dữ liệu, Deferrable Operators & Event-driven",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/sensors/"
     },
@@ -1103,13 +1582,19 @@
       "title": "Software-Defined Assets - Dagster Architecture & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/software-defined-assets/"
     },
     "Task Dependency": {
-      "title": "Task Dependency & Data-Aware Scheduling trong Data Orchestration",
+      "title": "Task Dependency & Data-Aware Scheduling: Airflow Datasets, XCom, TaskFlow API",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/task-dependency/"
     },
@@ -1117,90 +1602,235 @@
       "title": "Kiến trúc Giám sát Volume Anomalies trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/volume-anomalies/"
     },
     "Access Control": {
       "title": "Kiểm soát truy cập (Access Control) - RBAC và ABAC trong kiến trúc dữ liệu",
-      "category": "Khái niệm",
-      "definition": "",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Kiểm soát truy cập (Access Control) trong hệ thống dữ liệu là kiến trúc quyết định và thực thi quyền hạn của người dùng hoặc ứng dụng, cân bằng giữa bảo mật và hiệu năng truy vấn.",
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [
+        "access-control",
+        "rbac",
+        "abac",
+        "rls",
+        "cls",
+        "identity-federation",
+        "kiểm soát truy cập",
+        "phân quyền"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/access-control/"
     },
     "Audit Logging": {
-      "title": "Nhật ký kiểm toán (Audit Logging) - Giám sát truy cập dữ liệu",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Nhật ký kiểm toán (Audit Logging) - Giám sát bảo mật dữ liệu",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Audit Logging là hệ thống ghi nhận mọi sự kiện truy cập và thay đổi hệ thống. Trong Data Engineering, nó đóng vai trò là hạ tầng bảo mật cốt lõi, phục vụ điều tra sự cố, tuân thủ SOC 2 và tối ưu chi phí FinOps.",
+      "level": "",
+      "domains": [],
+      "aliases": [
+        "Audit Log",
+        "Nhật ký kiểm toán",
+        "Audit Trail",
+        "SIEM Logging"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/audit-logging/"
     },
     "Cost Optimization": {
       "title": "Tối ưu hóa chi phí hệ thống dữ liệu đám mây (FinOps & Cost Optimization)",
-      "category": "Khái niệm",
-      "definition": "",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "FinOps trong Data Engineering là quy trình và văn hóa tích hợp trách nhiệm quản lý chi phí tài nguyên điện toán đám mây vào ngay từ giai đoạn thiết kế và vận hành Data Pipeline.",
+      "level": "",
+      "domains": [
+        "DE",
+        "DA",
+        "Platform"
+      ],
+      "aliases": [
+        "Cost Optimization",
+        "FinOps",
+        "Cloud Cost Management"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/cost-optimization/"
     },
     "Data Catalog": {
       "title": "Kiến trúc Data Catalog hiện đại: DataHub, Amundsen và System Trade-offs",
-      "category": "Khái niệm",
-      "definition": "",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Data Catalog ở quy mô Enterprise là một Metadata Control Plane tập trung, giúp khám phá, truy xuất nguồn gốc (lineage) và quản trị dữ liệu tự động thay vì chỉ là một danh sách bảng tĩnh.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA",
+        "DS"
+      ],
+      "aliases": [
+        "Data Catalog",
+        "Metadata Control Plane",
+        "Active Metadata",
+        "DataHub",
+        "Amundsen",
+        "danh mục dữ liệu"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-catalog/"
     },
     "Data Classification": {
-      "title": "Data Classification Architecture: Macie, DLP & Unity Catalog",
-      "category": "Khái niệm",
-      "definition": "Thiết kế hệ thống phân loại dữ liệu tự động (Data Classification) ở quy mô Exabyte, tối ưu hóa chi phí quét (Macie, DLP) và xử lý rò rỉ PII.",
+      "title": "Data Classification Architecture: Macie, Cloud DLP & Unity Catalog",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Data Classification tự động hóa việc phát hiện, gán nhãn (tagging) và bảo vệ dữ liệu nhạy cảm (PII) trong Data Lake, làm nền tảng cho kiểm soát truy cập ABAC.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [
+        "Phân loại dữ liệu",
+        "Automated Data Discovery",
+        "Sensitive Data Protection"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-classification/"
     },
     "Data Governance": {
-      "title": "Data Governance Architecture: Unity Catalog, Lake Formation & Data Mesh",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Data Governance Architecture: Data Contracts, PBAC & Vending Credentials",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Kiến trúc và các cơ chế kỹ thuật để đảm bảo chất lượng, phân quyền truy cập và vòng đời dữ liệu một cách tự động ở quy mô lớn, bao gồm Data Contracts, Vending Credentials và Policy-Based Access Control.",
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [
+        "Data Governance",
+        "Data Contract",
+        "PBAC",
+        "ABAC",
+        "Vending Credentials",
+        "Role Explosion",
+        "Data Control Plane"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-governance/"
     },
     "Data Lineage": {
-      "title": "Data Lineage Architecture: Thiết kế Hệ thống, Trade-offs & OpenLineage",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Data Lineage Architecture: Kiến trúc, OpenLineage & FinOps",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Data Lineage là hệ thống thu thập và biểu diễn luồng chảy của dữ liệu từ nguồn đến đích. Ở quy mô lớn, nó là một kiến trúc Distributed Metadata Event-Driven.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA",
+        "Platform"
+      ],
+      "aliases": [
+        "Gia phả dữ liệu",
+        "Lineage"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-lineage/"
     },
     "Data Masking Encryption": {
       "title": "Data Masking & Encryption trong Data Engineering: KMS, DDM & Trade-offs",
-      "category": "Khái niệm",
-      "definition": "",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Các phương pháp bảo vệ dữ liệu nhạy cảm ở trạng thái nghỉ và trong quá trình xử lý, bao gồm mã hóa cấp độ lưu trữ (KMS) và che giấu cấp độ truy vấn (DDM).",
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [
+        "Data Masking",
+        "Envelope Encryption",
+        "Dynamic Data Masking",
+        "DDM",
+        "Tokenization",
+        "Format-Preserving Encryption",
+        "FPE",
+        "S3 Bucket Keys"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-masking-encryption/"
     },
     "Data Ownership": {
-      "title": "Data Ownership là gì? Triển khai thực chiến với Data Mesh & Terraform",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Data Ownership là gì? Triển khai Data Mesh & Federated Governance",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Quyền sở hữu dữ liệu (Data Ownership) trong kỹ thuật hệ thống là việc chuyển giao trách nhiệm vận hành, chất lượng và chi phí của dữ liệu (data product) từ đội Data trung tâm về đội kỹ thuật nghiệp vụ (domain team) tạo ra nó.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA",
+        "Platform"
+      ],
+      "aliases": [
+        "Data Ownership",
+        "Data Mesh",
+        "Quyền sở hữu dữ liệu",
+        "Domain Ownership"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/data-ownership/"
     },
     "Finops Data Engineering": {
-      "title": "FinOps Data Engineering - Tối ưu Cost Hệ Thống",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "FinOps Data Engineering: Khắc Phục Lỗi OOMKilled, Tối Ưu AWS S3",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "FinOps trong Data Engineering là quá trình tối ưu hóa kiến trúc, mã nguồn và vòng đời lưu trữ (storage lifecycle) nhằm kiểm soát và giảm thiểu chi phí điện toán đám mây cho các hệ thống dữ liệu lớn.",
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DA",
+        "Platform"
+      ],
+      "aliases": [
+        "Data FinOps",
+        "Cost Optimization",
+        "FinOps Foundation",
+        "Cloud Cost Management"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/finops-data-engineering/"
     },
     "Metadata Management": {
-      "title": "Metadata Management & Data Catalog Architecture: Push vs Pull, HMS Bottlenecks",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Kiến trúc Metadata Management & Data Catalog (DataHub, Amundsen)",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Metadata Management là Control Plane của hệ thống dữ liệu, chịu trách nhiệm thu thập, lưu trữ, và phân phối siêu dữ liệu (schema, lineage, tags) để phục vụ quản trị và khám phá dữ liệu.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA"
+      ],
+      "aliases": [
+        "Metadata Management",
+        "Data Catalog",
+        "Active Metadata",
+        "Hive Metastore",
+        "HMS"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/metadata-management/"
     },
     "Unity Catalog": {
-      "title": "Unity Catalog Dưới Góc Nhìn Staff Engineer: Kiến Trúc, Trade-offs và Thực Chiến",
-      "category": "Khái niệm",
-      "definition": "",
+      "title": "Kiến trúc Unity Catalog: Token Vending Machine & Data Mesh",
+      "category": "8. Bảo Mật, Quản Trị & FinOps",
+      "definition": "Unity Catalog là lớp quản trị siêu dữ liệu (metadata) và bảo mật tập trung ở cấp Account của Databricks, hoạt động theo cơ chế Token Vending Machine để phân quyền truy cập xuống Data Lake.",
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [
+        "UC",
+        "Databricks Unity Catalog"
+      ],
       "bullets": [],
       "url": "/concepts/8-security-governance-finops/unity-catalog/"
     },
@@ -1208,62 +1838,89 @@
       "title": "AI Agent Architecture: System Design, Trade-offs & Production Risks",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/ai-agent/"
     },
     "Chunking Strategy": {
-      "title": "Chunking Strategy: Thiết kế hệ thống RAG và Tối ưu Vận hành",
+      "title": "Chunking Strategy RAG: Semantic, Parent Document Retriever, OOM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/chunking-strategy/"
     },
     "Chunking": {
-      "title": "Chunking trong RAG: Kiến trúc, Trade-offs và Rủi ro Hệ thống",
+      "title": "Chunking trong RAG: Kiến trúc Semantic, Parent-Child & Lost in the Middle",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/chunking/"
     },
     "Context Window": {
-      "title": "Context Window & KV Cache trong LLM: Kiến trúc và Tối ưu",
+      "title": "Context Window, RoPE & KV Cache trong LLM: Kiến trúc và Tối ưu",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/context-window/"
     },
     "Embedding Model": {
-      "title": "Kiến trúc hệ thống Embedding Models, Bi-Encoder, MRL và Trade-offs",
+      "title": "System Design Embedding Models: Bi-Encoder, MRL và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embedding-model/"
     },
     "Embedding Models": {
-      "title": "Embedding Models - Kiến trúc Hệ thống, FinOps & Rủi ro Vận hành",
+      "title": "Embedding Models: System Design, Matryoshka & Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embedding-models/"
     },
     "Embeddings": {
-      "title": "Thiết kế hệ thống Vector Embeddings & Vector Databases",
+      "title": "Thiết kế hệ thống Vector Embeddings & Toán học Không gian (Vector Space)",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embeddings/"
     },
     "Evaluation Metric": {
-      "title": "Chỉ số đánh giá (Evaluation Metric) trong Machine Learning và RAG: Hướng dẫn toàn tập",
+      "title": "Đánh giá RAG và LLM: LLM-as-a-Judge, Ragas, TruLens & HITL",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/evaluation-metric/"
     },
     "Few Shot Prompting": {
-      "title": "Few-shot Prompting System Design: Dynamic Routing & Prompt Caching",
+      "title": "Thiết kế kiến trúc Few-shot Prompting: Dynamic Routing, Prompt Caching",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/few-shot-prompting/"
     },
@@ -1271,13 +1928,19 @@
       "title": "Few-shot Prompting System Design & In-Context Learning",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/few-shot/"
     },
     "Fine Tuning": {
-      "title": "Fine-tuning LLM System Design: DeepSpeed ZeRO, FSDP, LoRA & FinOps",
+      "title": "Fine-tuning LLM System Design: ZeRO, FSDP, LoRA & DPO",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/fine-tuning/"
     },
@@ -1285,6 +1948,9 @@
       "title": "Thiết kế Kiến trúc chống Ảo giác (Hallucination) cho LLM trong Production",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/hallucination/"
     },
@@ -1292,6 +1958,9 @@
       "title": "Hybrid Search là gì? Kiến trúc Dual Retrieval và RRF trong Vector DB",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/hybrid-search/"
     },
@@ -1299,20 +1968,29 @@
       "title": "LLM-as-a-judge là gì? Kiến trúc Đánh giá Ứng dụng GenAI Enterprise",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/llm-as-a-judge/"
     },
     "LLM": {
-      "title": "Kiến trúc LLM Inference: KV Cache, PagedAttention và Hệ thống Đánh đổi",
+      "title": "Kiến trúc LLM Inference: KV Cache, PagedAttention, vLLM và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/llm/"
     },
     "Lora": {
-      "title": "Low-Rank Adaptation (LoRA) Architecture, FinOps & Production Risks",
+      "title": "Low-Rank Adaptation (LoRA) Architecture, QLoRA FinOps & vLLM Serving",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/lora/"
     },
@@ -1320,41 +1998,59 @@
       "title": "MLflow Architecture: Nền tảng quản lý MLOps và Model Lifecycle",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/mlflow/"
     },
     "Model Serving": {
-      "title": "Model Serving Architecture: vLLM, Triton và System Trade-offs",
+      "title": "Model Serving Architecture: vLLM, PagedAttention & Ray Serve - MLOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/model-serving/"
     },
     "Ndcg": {
-      "title": "Chỉ số NDCG là gì? Đánh giá mô hình Search và Reranking",
+      "title": "Chỉ số NDCG và MRR là gì? Đánh giá mô hình Search và RAG",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/ndcg/"
     },
     "Peft": {
-      "title": "Kiến trúc hệ thống PEFT & LoRA trong tinh chỉnh LLM",
+      "title": "Kiến trúc hệ thống PEFT: LoRA, QLoRA, Prefix Tuning & FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/peft/"
     },
     "Prompt Engineering": {
-      "title": "Prompt Engineering System Architecture & DSPy - Dành cho Data Engineer",
+      "title": "Prompt Engineering System Architecture, ReAct, CoT & DSPy - Data Engineer",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/prompt-engineering/"
     },
     "RAG": {
-      "title": "Thiết kế Kiến trúc RAG cho Hệ thống Data",
+      "title": "Thiết kế Kiến trúc RAG Hệ thống: Advanced RAG, OOM, FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/rag/"
     },
@@ -1362,6 +2058,9 @@
       "title": "Độ phủ (Recall) và Precision trong RAG: Kiến trúc 2-Stage Retrieval",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/recall/"
     },
@@ -1369,27 +2068,39 @@
       "title": "Mô hình Reranker (Cross-Encoder): Kiến trúc hệ thống và Tối ưu FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/reranker/"
     },
     "Reranking": {
-      "title": "Thiết kế Kiến trúc Reranking: Two-Stage Retrieval, Cross-Encoder và FinOps",
+      "title": "Thiết kế Kiến trúc Reranking: Two-Stage Retrieval, Cross-Encoder",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/reranking/"
     },
     "Rlhf": {
-      "title": "RLHF & DPO - Kiến trúc Hệ thống, FinOps và Vận hành",
+      "title": "RLHF & DPO - Kiến trúc Hệ thống, FinOps và Vận hành MLOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/rlhf/"
     },
     "Row Based Storage": {
-      "title": "Lưu trữ dạng Dòng (Row-based Storage) - Cơ sở cho Hệ thống OLTP",
+      "title": "Row-based Storage: OLTP, B-Tree, LSM-Tree và Write-Ahead Logging",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/row-based-storage/"
     },
@@ -1397,20 +2108,29 @@
       "title": "Tìm kiếm ngữ nghĩa (Semantic Search) & Kiến trúc Vector Database",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/semantic-search/"
     },
     "System Prompt": {
-      "title": "System Prompt Architecture trong Production: FinOps, Guardrails và Trade-offs",
+      "title": "System Prompt Architecture trong Production: Guardrails, FinOps & CoT",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/system-prompt/"
     },
     "Temperature": {
-      "title": "Temperature trong LLM: Phân Tích Kiến Trúc, FinOps và Semantic Cache",
+      "title": "Temperature, Top-P, Top-K trong LLM: Kiến Trúc & System Design",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/temperature/"
     },
@@ -1418,6 +2138,9 @@
       "title": "Thiết kế hệ thống Tokenization & Tối ưu FinOps LLM",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/token/"
     },
@@ -1425,13 +2148,19 @@
       "title": "Top-p (Nucleus Sampling) Architecture - Tinh chỉnh thông số LLM & FinOps",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/top-p/"
     },
     "Zero Shot": {
-      "title": "Zero-shot Prompting trong Data Engineering: Text-to-SQL & PII Detection",
+      "title": "Zero-shot Prompting trong Data Engineering: Text-to-SQL & PII",
       "category": "Khái niệm",
       "definition": "",
+      "level": "",
+      "domains": [],
+      "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/zero-shot/"
     }
