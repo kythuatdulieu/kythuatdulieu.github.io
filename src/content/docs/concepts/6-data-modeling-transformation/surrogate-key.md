@@ -1,6 +1,8 @@
 ---
 title: "Khóa thay thế - Surrogate Key"
 difficulty: "Intermediate"
+domains: ["DE"]
+level: "Middle"
 tags: ["data-warehouse", "surrogate-key", "distributed-systems", "dbt", "snowflake", "bigquery", "hashing"]
 readingTime: "12 mins"
 lastUpdated: 2026-06-29

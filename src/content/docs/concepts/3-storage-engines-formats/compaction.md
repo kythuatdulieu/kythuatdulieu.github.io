@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Compaction: Nghệ Thuật Tối Ưu Hóa Data Lakehouse & Khắc Phục Lỗi OOM"
 metaDescription: "Nghiên cứu kiến trúc Compaction: Size-Tiered vs Leveled, Cơ chế CoW vs MoR, đánh đổi Write/Read Amplification. Liquid Clustering vs Z-Order và cách Fix lỗi OOMKilled."
 description: "Vấn đề Small Files là kẻ thù số 1 của Data Platform. Bài viết mổ xẻ bản chất Compaction từ LSM-Tree đến Apache Iceberg/Delta Lake, và kinh nghiệm xử lý sự cố OOM trên Spark."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán xử lý Dữ liệu lớn (Big Data) hay các NoSQL Databases (như Cassandra, RocksDB), việc đẩy dữ liệu từ các luồng Streaming (Kafka, Kinesis) hoặc Micro-batching tần suất cao sẽ tạo ra hàng triệu tệp tin siêu nhỏ. Vấn đề **Small Files Problem** không chỉ làm chậm tốc độ quét dữ liệu mà còn có khả năng đánh sập hệ thống Metadata quản lý cấp phát (Ví dụ HDFS NameNode hoặc S3 API Limits). 

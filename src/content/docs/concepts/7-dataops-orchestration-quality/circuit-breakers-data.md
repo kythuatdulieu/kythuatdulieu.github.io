@@ -1,6 +1,8 @@
 ---
 title: "Circuit Breakers & WAP Pattern trong Data Pipelines"
 difficulty: "Advanced"
+domains: ["DE"]
+level: "Senior"
 tags: ["data-engineering", "data-quality", "circuit-breaker", "wap-pattern", "apache-iceberg", "airflow", "dataops"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

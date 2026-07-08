@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Extraction & Change Data Capture (CDC) - Kiến trúc Kỹ thuật"
 metaDescription: "Trích xuất dữ liệu (Data Extraction) chuyên sâu. Phân tích kiến trúc Full Load, Incremental Load, Log-based CDC (Debezium), và API Throttling."
 description: "Trong quy trình ETL kinh điển, chữ cái đầu tiên 'E' chính là đại diện cho Extraction. Mổ xẻ các kiến trúc trích xuất, đánh đổi hệ thống và sự cố thực chiến."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 Data Extraction (Trích xuất dữ liệu) không chỉ đơn thuần là "kéo" dữ liệu từ điểm A (Database/API) sang điểm B (Data Lake/Warehouse). Dưới lăng kính của một Staff Data Engineer, Extraction là bài toán kinh điển về **Phân bổ tài nguyên (Resource allocation)**, **Cô lập lỗi (Fault isolation)**, và **Đánh đổi hệ thống (Systemic trade-offs)**. 

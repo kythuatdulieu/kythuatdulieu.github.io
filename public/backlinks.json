@@ -3161,6 +3161,10 @@
       "title": "Software-Defined Assets (SDA)"
     },
     {
+      "url": "/concepts/8-security-governance-finops/access-control/",
+      "title": "Kiểm soát truy cập - Access Control (RBAC & ABAC)"
+    },
+    {
       "url": "/concepts/8-security-governance-finops/data-ownership/",
       "title": "Quyền sở hữu dữ liệu (Data Ownership) & Data Mesh"
     },

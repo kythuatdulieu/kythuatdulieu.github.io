@@ -1,5 +1,7 @@
 ---
 title: "dbt (data build tool) - Kiến trúc Transformation dưới góc nhìn Hệ thống"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["dbt", "transformation", "sql", "data-warehouse", "analytics-engineering", "jinja"]
 readingTime: "15 mins"

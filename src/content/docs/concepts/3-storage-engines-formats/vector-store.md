@@ -1,5 +1,7 @@
 ---
 title: "Vector Database: Kiến Trúc HNSW, IVF-PQ và Metadata Filtering"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Intermediate"
 tags: ["vector-database", "embeddings", "similarity-search", "rag", "hnsw", "ivf-pq", "pgvector"]
 readingTime: "20 mins"

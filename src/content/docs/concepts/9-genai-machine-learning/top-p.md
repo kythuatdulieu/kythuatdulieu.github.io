@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Top-p (Nucleus Sampling) Architecture - Tinh chỉnh thông số LLM & FinOps"
 metaDescription: "Kiến trúc hệ thống của Nucleus Sampling (Top-p) trong LLM. Phân tích chi tiết luồng xử lý, độ trễ (Latency), tối ưu throughput trên vLLM và các rủi ro vận hành."
 description: "Nucleus Sampling (Top-p) không đơn thuần là một 'Công tắc' (Switch) sáng tạo trên API. Dưới góc nhìn ML Engineering, đây là một chiến lược giải mã (Decoding Strategy) can thiệp trực tiếp vào phân phối xác suất của mô hình, có ảnh hưởng lớn đến chất lượng đầu ra, tài nguyên GPU và Time-per-Output-Token (TPOT)."
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 ---
 
 Khi tích hợp các Mô hình Ngôn ngữ Lớn (LLM) vào các sản phẩm Data Engineering, **Top-p (Nucleus Sampling)** và **Temperature** thường bị xem nhẹ như những "Nút vặn" (Knobs) ma thuật để chỉnh độ "Sáng tạo". 

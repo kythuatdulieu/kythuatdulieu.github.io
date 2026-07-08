@@ -1,5 +1,7 @@
 ---
 title: "Jobs, Stages, và Tasks trong Spark"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["spark-jobs", "spark-stages", "spark-tasks", "apache-spark", "dag"]
 readingTime: "11 mins"

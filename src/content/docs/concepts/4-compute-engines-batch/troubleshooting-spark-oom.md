@@ -1,5 +1,7 @@
 ---
 title: "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Expert"
 tags: ["troubleshooting", "oom", "apache-spark", "memory-management", "yarn"]
 readingTime: "25 mins"

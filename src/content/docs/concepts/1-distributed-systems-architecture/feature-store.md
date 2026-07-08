@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Feature Store Kiến trúc chuyên sâu: Feast, Time-travel, Redis OOM"
 metaDescription: "Thiết kế Feature Store cho MLOps: Giải quyết Online-Offline Skew, Point-in-Time Correctness, Tối ưu Redis Online Serving và Parquet Offline Store."
 description: "Khi ML Model từ Jupyter lên Production, Training-Serving Skew sẽ phá vỡ mọi thứ. Tìm hiểu cách Feature Store (Feast, Hopsworks) giải quyết bằng Dual-Storage."
+domains: ["DS", "Platform", "DE"]
+level: "Senior"
 ---
 
 Khi đội ngũ Data Science phát triển từ 2 người lên 20 người, và các mô hình học máy [Machine Learning - ML] chuyển từ việc sinh dự đoán offline (Batch) sang dự đoán trong thời gian thực (Real-time serving), vòng đời dữ liệu sẽ bộc lộ những lỗ hổng chết người. **Feature Store** không chỉ là một cơ sở dữ liệu mới, mà là một nền tảng quản lý Vòng đời Đặc trưng (Feature Lifecycle) nhằm vá lại lỗ hổng giữa nghiên cứu và sản xuất.

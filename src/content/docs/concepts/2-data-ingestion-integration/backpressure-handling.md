@@ -6,6 +6,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Backpressure trong Data Ingestion & Streaming: Kafka, Flink, Spark"
 metaDescription: "Tìm hiểu toàn diện về Backpressure trong hệ thống Data Ingestion. Nguyên nhân, chiến lược xử lý, cơ chế Credit-based của Flink và Pull-based của Kafka."
 description: "Hướng dẫn chi tiết về cách bảo vệ hệ thống hạ nguồn (downstream) khỏi tình trạng quá tải khi lưu lượng dữ liệu tăng đột biến thông qua cơ chế Backpressure và Load Shedding."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán quy mô lớn (Distributed Systems) và đặc biệt là hệ thống xử lý dữ liệu luồng (Stream Processing), lưu lượng dữ liệu hiếm khi tuyến tính và dễ đoán. Các đợt bùng nổ lưu lượng (Traffic Spikes) do sự kiện Black Friday, Push Notification hàng loạt, hoặc lỗi Retry-Storm từ hàng triệu client có thể đẩy tốc độ sinh dữ liệu (Ingestion Rate) lên gấp hàng chục lần công suất thiết kế của hệ thống.

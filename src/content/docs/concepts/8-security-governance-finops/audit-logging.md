@@ -2,10 +2,12 @@
 title: "Nhật ký kiểm toán (Audit Logging): Kiến trúc SIEM, SOC 2 và WAP"
 category: "8. Bảo Mật, Quản Trị & FinOps"
 description: "Kiến trúc hệ thống Audit Logging ở quy mô Enterprise: Tích hợp SIEM, PII Masking, WORM Storage và mô hình Write-Audit-Publish (WAP)."
-definition: "Audit Logging là hệ thống ghi nhận mọi sự kiện truy cập và thay đổi hệ thống. Trong Data Engineering, nó đóng vai trò là hạ tầng bảo mật cốt lõi, phục vụ điều tra sự cố, tuân thủ SOC 2 và tối ưu chi phí FinOps."
+definition: "Audit Logging là hệ thống ghi nhận mọi sự kiện truy cập và thay đổi hệ thống. Trong Data Engineering, đây là lớp bằng chứng phục vụ điều tra sự cố, tuân thủ SOC 2 và tối ưu chi phí FinOps."
 seoTitle: "Nhật ký kiểm toán (Audit Logging) - Giám sát bảo mật dữ liệu"
 metaDescription: "Tìm hiểu kiến trúc Audit Logging: Tích hợp SIEM, mô hình WAP của Netflix, WORM Storage cho SOC 2 và tối ưu chi phí FinOps bằng Audit Logs."
 difficulty: "Intermediate"
+domains: ["DE", "Platform"]
+level: "Middle"
 readingTime: "15 mins"
 lastUpdated: 2026-07-07
 tags: ["audit-logging", "compliance", "security", "data-governance", "monitoring", "soc2", "finops"]
@@ -18,9 +20,9 @@ refs:
 
 Một buổi sáng, hệ thống Data Warehouse của công ty bạn nhận một câu lệnh `DROP TABLE` từ một IP lạ. Hoặc hóa đơn BigQuery tháng này bất ngờ đội lên 10.000 USD do một luồng `SELECT *` quét toàn bộ bảng log 10PB mà không có mệnh đề `WHERE` (hiện tượng Cartesian Explosion). 
 
-Trong những tình huống sự cố bảo mật hoặc bùng nổ chi phí, **Audit Logging (Nhật ký kiểm toán)** chính là cứu cánh duy nhất để tìm ra bán kính ảnh hưởng (blast radius) và nguyên nhân gốc rễ (root cause). 
+Trong những tình huống sự cố bảo mật hoặc bùng nổ chi phí, **Audit Logging (Nhật ký kiểm toán)** là lớp bằng chứng giúp xác định bán kính ảnh hưởng (blast radius), truy vết hành động và tìm nguyên nhân gốc rễ (root cause). 
 
-Bài viết này bỏ qua những lý thuyết chung chung về compliance để đi thẳng vào **Kiến trúc vật lý** của Audit Logging ở quy mô Enterprise, giải quyết các bài toán về tuân thủ (SOC 2, GDPR), tích hợp SIEM, và ứng dụng cho FinOps.
+Phần quan trọng không phải là khẩu hiệu compliance, mà là kiến trúc vật lý: log phát sinh ở đâu, đi qua hàng đợi nào, được mask ra sao, lưu bao lâu, ai được query, và dùng thế nào cho điều tra sự cố lẫn FinOps.
 
 ## Audit Logging là gì và giải quyết vấn đề gì?
 
@@ -70,7 +72,7 @@ graph TD
 
 ## PII Masking: Ẩn danh dữ liệu tại nguồn (At Ingestion)
 
-Việc thu thập log sinh ra một rủi ro tuân thủ khổng lồ: vô tình ghi lại dữ liệu PII (Personally Identifiable Information) như email, số thẻ tín dụng, session token. Nếu log chứa PII bị lộ, công ty sẽ vi phạm GDPR hoặc SOC 2.
+Việc thu thập log cũng tạo ra rủi ro tuân thủ: vô tình ghi lại dữ liệu PII (Personally Identifiable Information) như email, số thẻ tín dụng, session token. Nếu log chứa PII bị lộ hoặc bị giữ quá thời hạn cần thiết, đội bảo mật sẽ phải xử lý nó như một nguồn dữ liệu nhạy cảm thật sự.
 
 **Cơ chế Mask at Ingestion:**
 Tại bước Log Routing (sử dụng Logstash, Fluentd, hoặc Vector), kỹ sư thiết lập các bộ lọc Regex để tự động phát hiện và băm (hash) hoặc che (mask) PII *trước khi* log được ghi vào SIEM hoặc S3.
@@ -107,7 +109,7 @@ sequenceDiagram
 ```
 *(Sơ đồ: Luồng thực thi Write-Audit-Publish với Apache Iceberg)*
 
-Trong kiến trúc Data Mesh, WAP đóng vai trò "người gác cổng" (Gatekeeper). Nếu dữ liệu vi phạm chính sách bảo mật hoặc data contract, nhánh tạm sẽ bị hủy, và nhánh production (`main`) vẫn an toàn tuyệt đối.
+Trong kiến trúc Data Mesh, WAP là chốt kiểm tra trước khi dữ liệu được xuất bản. Nếu dữ liệu vi phạm chính sách bảo mật hoặc data contract, nhánh tạm sẽ bị hủy, và nhánh production (`main`) không bị ảnh hưởng.
 
 Ví dụ thực thi bằng SQL trên Iceberg:
 ```sql
@@ -149,7 +151,7 @@ resource "aws_s3_bucket_object_lock_configuration" "audit_logs_lock" {
 
 ## FinOps: Khai thác Audit Logs để tối ưu chi phí
 
-Trong các Data Warehouse đám mây, hóa đơn tính tiền thường là hộp đen nếu thiếu Audit Logs. Bằng cách phân tích Query Logs, Data Engineer có thể tìm ra các cơ hội tối ưu chi phí (FinOps) khổng lồ:
+Trong các Data Warehouse đám mây, hóa đơn thường khó giải thích nếu thiếu Audit Logs. Bằng cách phân tích Query Logs, Data Engineer có thể tìm ra các điểm rò chi phí lặp lại:
 
 - **Với Snowflake:** Bảng `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY` lưu toàn bộ thông tin về các câu truy vấn. Bạn có thể group theo user hoặc dbt model để tìm ra những pipeline tiêu tốn nhiều Credit nhất. Logs cũng giúp phát hiện các Virtual Warehouse có tỷ lệ rảnh rỗi (idle) cao để điều chỉnh chính sách auto-suspend xuống 60 giây.
 - **Với BigQuery:** Xuất Cloud Audit Logs sang một dataset BigQuery riêng và query metadata `INFORMATION_SCHEMA.JOBS_BY_PROJECT`. Từ đây, kỹ sư dễ dàng tìm ra những câu lệnh `SELECT *` quét hàng Terabyte dữ liệu mà quên lọc Partition. Kỹ thuật "Dry Run" cũng thường được gọi thông qua API để ước tính chi phí trước khi thực sự chạy job.

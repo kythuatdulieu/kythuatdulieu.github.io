@@ -1,5 +1,7 @@
 ---
 title: "Task Dependency - Quản lý sự phụ thuộc tác vụ"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["orchestration", "task-dependency", "airflow", "dag", "taskflow-api", "data-aware"]
 readingTime: "20 mins"

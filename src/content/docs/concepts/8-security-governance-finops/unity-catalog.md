@@ -16,7 +16,7 @@ aliases: ["UC", "Databricks Unity Catalog"]
 
 Trước khi có Unity Catalog (UC), Databricks và hệ sinh thái Hadoop thường quản trị siêu dữ liệu (metadata) bằng Hive Metastore (HMS) ở cấp độ từng cụm (cluster) hoặc từng không gian làm việc (workspace). Điều này dẫn đến sự phân mảnh nghiêm trọng: workspace của đội Marketing không thể thấy bảng dữ liệu của đội Tài chính mà không có sự can thiệp thủ công vào IAM (Identity and Access Management) của Cloud.
 
-Unity Catalog thay đổi kiến trúc này bằng cách đẩy Metastore lên tầng **Account-level (Control Plane)**, đóng vai trò là một lớp quản trị tách rời (Decoupled Governance Layer) duy nhất trước khi bất kỳ Compute Node nào chạm tới Data Storage. 
+Unity Catalog thay đổi kiến trúc này bằng cách đẩy Metastore lên tầng **Account-level (Control Plane)**, đặt một lớp quản trị tách rời (Decoupled Governance Layer) trước khi bất kỳ Compute Node nào chạm tới Data Storage. 
 
 ## 1. Cơ chế hoạt động: Token Vending Machine
 
@@ -27,7 +27,7 @@ Khi một Spark SQL Job chạy trên Databricks Cluster:
 1. **Query Interception**: Spark engine parse câu lệnh SQL (ví dụ: `SELECT * FROM prod.gold.users`). Thay vì gọi trực tiếp API của S3/ADLS, nó gửi yêu cầu cấp quyền (Authorization Request) lên Unity Catalog Metastore nằm ở Control Plane.
 2. **Policy Evaluation**: UC kiểm tra danh tính người dùng, đánh giá các quyền (RBAC/ABAC) và các chính sách bảo mật dòng/cột (RLS/CLS).
 3. **Token Vending**: Nếu hợp lệ, UC tạo ra chứng chỉ tạm thời thời gian ngắn (Short-lived Credentials) — ví dụ: AWS STS Tokens, Azure SAS Tokens, hoặc GCP Downscoped Tokens — chỉ có quyền đọc chính xác những file Parquet/Delta cần thiết.
-4. **Data Access**: Cluster ở Data Plane mang token này xuống Object Storage để kéo dữ liệu. Khi token hết hạn (thường sau 1 giờ), nó lập tức vô dụng, giảm thiểu tối đa rủi ro rò rỉ dữ liệu.
+4. **Data Access**: Cluster ở Data Plane mang token này xuống Object Storage để kéo dữ liệu. Khi token hết hạn, nó không còn dùng được cho lần đọc mới, giúp giới hạn rủi ro so với credential dài hạn.
 
 ```mermaid
 sequenceDiagram
@@ -92,7 +92,7 @@ SET ROW FILTER dev.security.region_filter ON (region_code);
 
 ### Rủi ro Rate Limiting (Throttling)
 Vì Unity Catalog dùng Short-lived Tokens (ví dụ: AWS STS) cho từng tác vụ đọc dữ liệu, trong một kiến trúc có số lượng job đồng thời quá lớn (Massive Concurrency), quá trình gọi API xin cấp Token liên tục có thể đụng trần Rate Limit của Cloud Provider.
-**Cách xử lý:** Thay vì chạy hàng nghìn job siêu nhỏ liên tục, hãy nhóm chúng lại (Micro-batching) hoặc sử dụng tính toán có kích thước lớn hơn để giảm tần suất gọi API phân mảnh.
+**Cách xử lý:** Thay vì chạy quá nhiều job siêu nhỏ liên tục, hãy nhóm chúng lại (micro-batching), cache token ở driver khi nền tảng cho phép, hoặc thiết kế job có kích thước đủ lớn để giảm tần suất gọi API phân mảnh.
 
 ### Giới hạn Data Lineage
 Unity Catalog tự động theo dõi Data Lineage đến từng cột bằng cách parse AST của các lệnh SQL/PySpark chạy trong nền tảng. Tuy nhiên, nếu một job ngoại lai (ví dụ: AWS Glue, Airflow KubernetesPodOperator) ghi dữ liệu trực tiếp vào Bucket S3 bỏ qua Databricks, Unity Catalog sẽ **bị mù (blind)** và lineage bị đứt gãy [1].

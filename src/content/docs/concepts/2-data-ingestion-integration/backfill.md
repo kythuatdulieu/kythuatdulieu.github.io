@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Backfill Data Pipeline: Kiến trúc, Trade-offs & Xử lý OOMKilled"
 metaDescription: "Khái niệm Backfill là gì trong Data Engineering? Các trường hợp cần chạy quy trình backfill lịch sử, thách thức OOMKilled, và chiến lược xử lý hiệu quả với Airflow, Terraform."
 description: "Backfill (Quá trình tính toán lại dữ liệu lịch sử) là một tác vụ phức tạp bậc nhất trong Kỹ thuật Dữ liệu. Bài viết đi sâu vào kiến trúc cách ly tài nguyên, xử lý tắc nghẽn, và tối ưu hệ thống."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong môi trường phân tán (Distributed Systems) và xử lý dữ liệu quy mô lớn (Petabyte-scale), **Backfill** (Quá trình tái cấu trúc trạng thái lịch sử - Historical State Reconciliation) không đơn thuần là việc "chạy lại" (re-run) một Data Pipeline. Tại các công ty công nghệ lớn như Uber hay Netflix, Backfill là một operation class hạng nhất (First-class Operation), đòi hỏi kiến trúc chuyên biệt để đảm bảo tính toàn vẹn dữ liệu (Data Integrity) mà không làm gián đoạn các luồng xử lý thời gian thực (Real-time Ingestion).

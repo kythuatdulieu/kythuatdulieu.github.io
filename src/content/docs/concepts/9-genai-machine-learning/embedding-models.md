@@ -1,5 +1,7 @@
 ---
 title: "Các mô hình nhúng - Embedding Models"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["embedding-models", "nlp", "vector", "deep-learning", "representation", "system-design", "finops"]
 readingTime: "15 mins"

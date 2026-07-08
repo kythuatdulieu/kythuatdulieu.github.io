@@ -1,5 +1,7 @@
 ---
 title: "Kafka Topics và Partitions"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["kafka", "topics", "partitions", "zero-copy", "page-cache", "system-design"]
 readingTime: "25 mins"

@@ -1,6 +1,8 @@
 ---
 title: "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
 description: "Phân tích kiến trúc đối soát dữ liệu (Data Reconciliation) ở cấp độ hệ thống. Các kỹ thuật Hash, Except, Audit Framework và đánh đổi hiệu suất trong Lambda Architecture."
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["data-reconciliation", "data-quality", "eventual-consistency", "lambda-architecture", "data-engineering"]
 readingTime: "12 mins"

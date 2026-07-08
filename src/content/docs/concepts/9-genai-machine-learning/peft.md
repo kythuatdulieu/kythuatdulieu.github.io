@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc PEFT & LoRA: Tối Ưu Hóa VRAM và Multi-Tenant Serving"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["peft", "lora", "fine-tuning", "llm", "genai", "qlora", "finops", "system-design"]
 readingTime: "15 mins"

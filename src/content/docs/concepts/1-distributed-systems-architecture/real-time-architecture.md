@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc hệ thống dữ liệu Thời gian thực dưới góc nhìn Staff Engineer"
 metaDescription: "Phân tích kiến trúc dữ liệu thời gian thực: Trade-offs giữa Latency vs Throughput, Lambda vs Kappa, State Management, và các rủi ro vận hành (OOM, Data Skew)."
 description: "Phân tích kiến trúc dữ liệu thời gian thực dưới góc nhìn hệ thống: Trade-offs giữa Latency vs Throughput, Consistency, State Management, và các bài toán thực tế khi vận hành Kappa/Lambda ở quy mô lớn."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Real-time Architecture không đơn thuần là việc cài đặt Kafka rồi chạy vài job Flink. Ở quy mô lớn (hàng triệu messages/giây tương đương Gigabytes/giây), nó là bài toán tối ưu hóa vật lý ở tầng I/O, quản lý trạng thái phân tán (Distributed State), và sự giằng xé liên tục giữa độ trễ (Latency), thông lượng (Throughput) cùng chi phí vận hành đám mây (FinOps).

@@ -1,6 +1,8 @@
 ---
 title: "Kimball Methodology: Dimensional Modeling trong Kỷ nguyên Modern Data Stack"
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 tags: ["data-warehouse", "kimball", "dimensional-modeling", "star-schema", "data-vault", "medallion-architecture"]
 readingTime: "35 mins"
 lastUpdated: 2026-06-29

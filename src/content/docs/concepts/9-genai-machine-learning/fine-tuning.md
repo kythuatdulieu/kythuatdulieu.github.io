@@ -1,5 +1,7 @@
 ---
 title: "LLM Fine-tuning: ZeRO, FSDP, LoRA và Các Rủi Ro Vận Hành"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["fine-tuning", "llm", "lora", "deepspeed", "fsdp", "finops", "system-design", "machine-learning"]
 readingTime: "25 mins"

@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc hệ thống MLflow: Tracking, Model Registry và Rủi ro vận hành"
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["mlflow", "mlops", "model-registry", "experiment-tracking", "system-design", "finops"]
 readingTime: "25 mins"

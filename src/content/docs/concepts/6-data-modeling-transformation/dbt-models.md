@@ -1,5 +1,7 @@
 ---
 title: "dbt Models: Thiết Kế DAG, Đánh Đổi Hệ Thống và Tối Ưu Materializations"
+domains: ["DE"]
+level: "Senior"
 description: "Phân tích kiến trúc phân lớp dbt (Staging, Intermediate, Marts). Đi sâu vào cơ chế thực thi vật lý, hệ lụy của Materialization và giải quyết thắt cổ chai DAG trên Snowflake, BigQuery, Databricks."
 difficulty: "Advanced"
 tags: ["dbt", "data-modeling", "analytics-engineering", "dag", "optimization", "snowflake", "databricks"]

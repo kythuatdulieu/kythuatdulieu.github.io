@@ -1,5 +1,7 @@
 ---
 title: "OLTP vs OLAP: Phân Tích Kiến Trúc Vật Lý & Trade-offs"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Advanced"
 readingTime: "25 mins"
 tags: ["oltp", "olap", "storage-engine", "system-design", "database-internals", "vectorized-execution"]

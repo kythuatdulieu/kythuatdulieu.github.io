@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Cấu trúc file Parquet, Avro chuyên sâu: Tối ưu Spark, Vectorization và Small Files"
 metaDescription: "Hiểu sâu Data Lake File Formats ở mức độ Byte và CPU: Row Groups, Run Length Encoding (RLE), Vectorization (SIMD) trong Parquet/ORC và Schema Evolution trong Avro."
 description: "Phân tích chuyên sâu về File Formats trên Data Lake dưới lăng kính tối ưu hóa CPU và Disk I/O. Tại sao CPU Vectorization (SIMD) và Run Length Encoding lại làm nên sức mạnh của Columnar Storage."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Data Lake không dùng cơ sở dữ liệu truyền thống, nó là một đại dương các file tĩnh (S3, GCS, ADLS). Vì Tốc độ mạng (Network I/O) và Tốc độ Đọc/Ghi đĩa (Disk I/O) là nút thắt cổ chai đắt đỏ nhất trong Data Engineering, việc chọn đúng, hiểu sâu và Tuning cấu hình vật lý của các File Formats quyết định hệ thống phân tán của bạn sẽ phản hồi trong 2 giây hay sập sau 2 tiếng.

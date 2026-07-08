@@ -1,5 +1,7 @@
 ---
 title: "Kiểm thử chất lượng và Mạch dừng dữ liệu (Data Testing & Circuit Breaker)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-testing", "data-quality", "dbt", "great-expectations", "circuit-breaker", "write-audit-publish"]
 readingTime: "25 mins"

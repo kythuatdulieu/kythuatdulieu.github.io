@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Kỹ Thuật Dữ Liệu Hiện Đại (Data Engineering Architecture)"
 metaDescription: "Hướng dẫn toàn diện về Data Engineering kiến trúc hiện đại: Định lý CAP, Lakehouse (Apache Iceberg), Data Mesh, Spark vs MapReduce, và ELT vs ETL."
 description: "Dưới góc nhìn của một Staff Data Engineer, Data Engineering không phải là viết SQL, mà là giải bài toán Hệ thống phân tán (Distributed Systems) và Định lý CAP ở quy mô Petabyte."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Một hệ thống dữ liệu (Data Platform) là bộ não của một doanh nghiệp kỹ thuật số. Khi quy mô vươn tới hàng trăm Terabyte/Petabyte, câu hỏi đặt ra không còn là "Dùng tool nào?" mà là **"Làm sao để thiết kế một kiến trúc (Architecture) có thể mở rộng vô hạn, chịu lỗi cao, phi tập trung mà vẫn kiểm soát được chất lượng và chi phí?"**

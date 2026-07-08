@@ -1,6 +1,8 @@
 ---
 title: "Blue-Green Deployment cho Data & WAP Pattern"
 difficulty: "Advanced"
+domains: ["DE", "Platform"]
+level: "Senior"
 readingTime: "25 mins"
 tags: ["dataops", "blue-green-deployment", "wap-pattern", "snowflake", "apache-iceberg", "nessie"]
 lastUpdated: 2026-06-29

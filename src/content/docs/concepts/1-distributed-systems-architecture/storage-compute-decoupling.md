@@ -7,6 +7,8 @@ seoTitle: "Storage-Compute Decoupling - Data Engineering Deep Dive"
 metaDescription: "Phân tích kiến trúc tách biệt Storage và Compute trong Data Lakehouse hiện đại. Đi sâu vào trade-offs Network Latency, Caching, FinOps, Egress Cost và cấu hình thực tế."
 description: "Nguyên lý cốt lõi phía sau kiến trúc Cloud Data Warehouse hiện đại, phân tích từ góc độ Staff Engineer. Từ độ trễ mạng, cấu hình Cache cục bộ đến nỗi ám ảnh Small Files."
 tags: ["architecture", "data-warehouse", "data-lake", "storage-compute-decoupling", "snowflake", "system-design", "finops"]
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 ## 1. Sự Tiến Hóa Của Hệ Thống Phân Tán (Evolution of Distributed Systems)

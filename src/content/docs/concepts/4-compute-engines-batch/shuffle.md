@@ -1,5 +1,7 @@
 ---
 title: "Shuffle trong Spark và Kiến trúc Remote Shuffle Service (RSS)"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["shuffle", "apache-spark", "performance-tuning", "bottleneck", "rss"]
 readingTime: "25 mins"

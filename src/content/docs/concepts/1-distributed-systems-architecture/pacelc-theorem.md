@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Định lý PACELC - System Design & Data Engineering Deep Dive"
 metaDescription: "Góc nhìn Staff Engineer về định lý PACELC: Đánh đổi hệ thống giữa Latency, Consistency và Availability trong thực chiến."
 description: "Phân tích chuyên sâu về PACELC trong các hệ thống phân tán. Đánh đổi cấu hình quorum, replication lag, và bài học từ các sự cố thực tế."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Nếu định lý CAP (Consistency - Availability - Partition Tolerance) là bài học vỡ lòng của System Design, thì PACELC chính là thứ phân loại giữa một Kỹ sư bậc trung (Mid-level) và một Kỹ sư nòng cốt (Staff/Principal Engineer). 

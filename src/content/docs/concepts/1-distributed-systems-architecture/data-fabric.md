@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Fabric - Phân Tích Kiến Trúc Hệ Thống Dữ Liệu Tự Động"
 metaDescription: "Deep dive kiến trúc Data Fabric dưới góc nhìn Staff Engineer: Active Metadata, Knowledge Graph, Data Virtualization (Trino), và FinOps trade-offs."
 description: "Data Fabric không chỉ là buzzword marketing. Bài viết mổ xẻ Data Fabric dưới góc nhìn kỹ thuật hệ thống: kiến trúc Control Plane, Active Metadata, và trade-off vật lý về Network I/O."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Data Fabric thường bị giới Vendor (Gartner, IBM, Microsoft) biến thành một *Buzzword* (thuật ngữ sáo rỗng) về "AI-driven data integration". Tuy nhiên, dưới góc độ System Architecture và Data Engineering thực chiến, **Data Fabric** bản chất là một **Unified Control Plane (Lớp điều khiển hợp nhất)** được xây dựng dựa trên Active Metadata, Knowledge Graphs, và Data Virtualization.

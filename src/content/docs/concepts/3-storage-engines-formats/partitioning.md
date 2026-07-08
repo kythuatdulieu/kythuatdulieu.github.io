@@ -1,5 +1,7 @@
 ---
 title: "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Advanced"
 tags: ["partitioning", "performance", "data-warehouse", "big-data", "iceberg", "spark", "data-skew"]
 readingTime: "25 mins"

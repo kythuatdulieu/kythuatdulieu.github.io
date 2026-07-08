@@ -1,5 +1,7 @@
 ---
 title: "Zero-copy Principle trong Apache Kafka"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "25 mins"
 tags: ["kafka", "zero-copy", "linux", "system-design", "performance-optimization", "java-nio"]

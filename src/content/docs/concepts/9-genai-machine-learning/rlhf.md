@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "RLHF & DPO - Kiến trúc Hệ thống, FinOps và Vận hành MLOps"
 metaDescription: "Kiến trúc hệ thống phân tán của RLHF và DPO. Phân tích FinOps, quản lý VRAM với DeepSpeed ZeRO-3, Ray (OpenRLHF) và rủi ro OOMKilled."
 description: "Phân tích sâu về hệ thống Alignment cho LLMs (RLHF, DPO) dưới góc nhìn System Design. Làm thế nào để duy trì 4 Models trong VRAM mà không sập hệ thống, và tại sao ngành công nghiệp đang dịch chuyển sang DPO để tối ưu FinOps."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Trong hệ sinh thái Generative AI, **RLHF (Reinforcement Learning from Human Feedback)** không chỉ đơn thuần là một "Thuật toán" (Algorithm). Dưới góc nhìn Data/ML Engineering, đây là một hệ thống phân tán phức tạp nhằm "Căn chỉnh" (Align) các Large Language Models (LLM) đã qua giai đoạn Pre-training. 

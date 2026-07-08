@@ -1,5 +1,7 @@
 ---
 title: "Normalized Discounted Cumulative Gain - NDCG & RAG Evaluation"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["ndcg", "mrr", "rag", "metrics", "search-engine", "reranking", "information-retrieval", "machine-learning"]
 readingTime: "20 mins"

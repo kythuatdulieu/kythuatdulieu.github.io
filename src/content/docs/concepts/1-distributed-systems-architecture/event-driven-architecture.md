@@ -6,6 +6,8 @@ readingTime: "25 mins"
 lastUpdated: 2026-06-29
 seoTitle: "Event-Driven Architecture Chuyên Sâu: Kafka, Outbox Pattern, Saga, DLQ"
 metaDescription: "Thiết kế EDA ở quy mô Staff Engineer: Khắc phục Dual-Write với Transactional Outbox, Saga Pattern, Consumer Rebalance Storms và xử lý Poison Pills với DLQ."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Event-Driven Architecture (EDA - Kiến trúc hướng sự kiện) trên giấy tờ luôn mang lại một viễn cảnh màu hồng: *"Loose coupling (Kết nối lỏng lẻo), Asynchronous (Bất đồng bộ), Highly Scalable (Dễ dàng mở rộng)"*. 

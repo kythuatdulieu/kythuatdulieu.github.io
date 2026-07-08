@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Định dạng file Big Data: Kiến trúc Parquet, Avro, ORC & CPU SIMD"
 metaDescription: "Phân tích chuyên sâu kiến trúc vật lý của Parquet, ORC, Avro. Đánh đổi Row vs Columnar, thuật toán nén RLE, Predicate Pushdown, CPU SIMD và OOMKilled."
 description: "Mổ xẻ kiến trúc vật lý dưới đĩa cứng của các định dạng Big Data. Từ thuật toán mã hóa RLE, Vectorized SIMD cho đến các rủi ro tràn RAM (OOMKilled) khi ghi."
+domains: ["DE"]
+level: "Middle"
 ---
 
 Trong hệ thống xử lý dữ liệu quy mô lớn (Data-Intensive Applications), việc chọn định dạng file không chỉ dừng ở câu chuyện "đọc/ghi nhanh hơn". Định dạng file quyết định kiến trúc của toàn bộ luồng I/O mạng, mức tiêu thụ CPU (nhờ SIMD Vectorization), dung lượng RAM cấp phát cho các worker node, và hóa đơn AWS S3 API hằng tháng.

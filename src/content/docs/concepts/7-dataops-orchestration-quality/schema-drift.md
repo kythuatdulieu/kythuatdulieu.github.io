@@ -1,6 +1,8 @@
 ---
 title: "Schema Drift & Evolution: Kiến trúc chịu lỗi cấu trúc dữ liệu"
 description: "Phân tích nguyên nhân và các chiến lược xử lý Schema Drift ở cấp độ kiến trúc hệ thống, bao gồm Schema Registry, Delta Lake Schema Evolution và Data Contracts."
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["schema-drift", "schema-evolution", "data-contracts", "data-engineering", "data-quality"]
 readingTime: "12 mins"

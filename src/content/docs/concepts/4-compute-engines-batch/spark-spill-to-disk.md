@@ -1,5 +1,7 @@
 ---
 title: "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
+domains: ["DE"]
+level: "Senior"
 description: "Khám phá bản chất của OOMKilled và Spill-to-disk trong kiến trúc Unified Memory của Spark. Hướng dẫn Tuning bộ nhớ, phân tích Overhead của Serialization và Systemic Trade-offs."
 difficulty: "Advanced"
 tags: ["spark", "spill-to-disk", "oom", "memory-management", "tungsten"]

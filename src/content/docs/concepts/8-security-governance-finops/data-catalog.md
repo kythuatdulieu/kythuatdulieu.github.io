@@ -19,7 +19,7 @@ refs:
 
 Vào một buổi sáng thứ Hai, dashboard tài chính của công ty bỗng nhiên báo số liệu doanh thu tụt giảm một nửa. Sau nhiều giờ debug, đội ngũ phát hiện ra nguyên nhân rất lãng xẹt: một kỹ sư phần mềm đã âm thầm đổi tên cột `total_amount` thành `gross_revenue` trong database gốc. Không có hệ thống cảnh báo, không có quy trình chặn (gatekeeping), và dữ liệu cứ thế vỡ vụn dọc theo luồng pipeline. Đây là điển hình của hiện tượng **Metadata Drift** và **Dark Data** – những hệ quả tất yếu khi tổ chức không có một công cụ quản lý siêu dữ liệu (metadata) hiệu quả.
 
-Data Catalog ra đời để giải bài toán này. Tuy nhiên, Data Catalog không phải là một công cụ UI đơn giản để gõ từ khóa và tìm kiếm bảng. Ở quy mô Enterprise — nơi hàng nghìn pipelines chạy liên tục tạo ra hàng Petabyte dữ liệu mỗi ngày — Data Catalog đóng vai trò là một **Metadata Control Plane** trung tâm.
+Data Catalog ra đời để giải bài toán này. Tuy nhiên, Data Catalog không phải là một công cụ UI đơn giản để gõ từ khóa và tìm kiếm bảng. Ở quy mô Enterprise — nơi hàng nghìn pipelines chạy liên tục tạo ra hàng Petabyte dữ liệu mỗi ngày — Data Catalog là **Metadata Control Plane** trung tâm.
 
 ## Data Catalog như một Metadata Control Plane
 
@@ -40,7 +40,7 @@ Cuộc chiến kiến trúc thú vị nhất nằm ở **Ingestion Layer**, vớ
 
 ## Thế hệ 2 (Pull-Based / Batch): Kiến trúc của Lyft Amundsen
 
-Ở mô hình Pull, Data Catalog đóng vai trò chủ động (Active Consumer). Các cron job định kỳ quét (crawl) qua hệ thống nguồn để "kéo" metadata về. Lyft Amundsen — dự án mã nguồn mở tiên phong về Data Discovery — sử dụng kiến trúc này [Lyft Engineering](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9).
+Ở mô hình Pull, Data Catalog là bên chủ động đọc metadata từ hệ thống nguồn. Các cron job định kỳ quét (crawl) qua hệ thống nguồn để "kéo" metadata về. Lyft Amundsen — dự án mã nguồn mở tiên phong về Data Discovery — sử dụng kiến trúc này [Lyft Engineering](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9).
 
 Trong Amundsen, một thành phần gọi là `Databuilder` (thường chạy trên Airflow) sẽ lấy metadata, xử lý và đẩy vào Neo4j (cho Graph) và Elasticsearch (cho Search).
 
@@ -141,7 +141,7 @@ Data Lineage thường dùng Graph Database. Giả sử bảng `Users_Core` đư
 ## Khi nào nên dùng kiến trúc nào?
 
 - **Chọn mô hình Pull (như Amundsen):** Khi hạ tầng đang phân mảnh, bạn muốn một quick win để lập index nhanh cho Snowflake/BigQuery mà không cần chạm vào code của các data producers. Phù hợp cho Data Discovery thông thường.
-- **Chọn mô hình Push (như DataHub):** Khi tổ chức muốn xây dựng Data Mesh hoặc Data Contracts mạnh mẽ, yêu cầu metadata phải real-time để tự động chặn các luồng dữ liệu lỗi ngay tại nguồn.
+- **Chọn mô hình Push (như DataHub):** Khi tổ chức muốn xây dựng Data Mesh hoặc Data Contracts có kiểm soát chặt, metadata cần đủ mới để tự động chặn các luồng dữ liệu lỗi ngay tại nguồn.
 
 ## Thuật ngữ chính (Key terms)
 

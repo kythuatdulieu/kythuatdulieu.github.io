@@ -1,5 +1,7 @@
 ---
 title: "Mô hình Ngôn ngữ Lớn (LLM) & Kiến trúc Suy luận (Inference Architecture)"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["llm", "genai", "transformer", "vllm", "system-design", "machine-learning", "finops"]
 readingTime: "25 mins"

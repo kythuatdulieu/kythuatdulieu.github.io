@@ -1,5 +1,7 @@
 ---
 title: "Schema Evolution & Compatibility"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["schema-evolution", "data-lakehouse", "table-format", "data-engineering", "iceberg", "delta-lake", "avro", "protobuf"]
 readingTime: "25 mins"

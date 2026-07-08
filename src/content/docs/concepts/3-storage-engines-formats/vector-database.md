@@ -1,5 +1,7 @@
 ---
 title: "Cơ sở dữ liệu Vector (Vector Database)"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Intermediate"
 tags: ["vector-database", "genai", "embedding", "hnsw", "ivf-pq", "system-design", "finops"]
 readingTime: "15 mins"

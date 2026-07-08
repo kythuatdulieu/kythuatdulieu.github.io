@@ -1,5 +1,7 @@
 ---
 title: "System Design Few-shot Prompting: Prompt Caching và FinOps"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["few-shot", "prompt-engineering", "in-context-learning", "llm", "finops", "system-design", "machine-learning"]
 readingTime: "15 mins"

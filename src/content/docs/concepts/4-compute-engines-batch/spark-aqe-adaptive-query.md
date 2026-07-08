@@ -1,5 +1,7 @@
 ---
 title: "Deep Dive: Adaptive Query Execution (AQE)"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "30 mins"
 lastUpdated: 2026-06-29

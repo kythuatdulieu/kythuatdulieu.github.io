@@ -1,5 +1,7 @@
 ---
 title: "Chiến Lược Chunking Trong RAG: Đánh Đổi FinOps Và Sự Cố OOM"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["chunking", "rag", "vector-database", "nlp", "finops", "system-design", "machine-learning"]
 readingTime: "15 mins"

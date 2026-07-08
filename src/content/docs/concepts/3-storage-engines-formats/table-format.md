@@ -1,5 +1,7 @@
 ---
 title: "Table Format (Định dạng Bảng)"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["table-format", "data-lakehouse", "apache-hudi", "apache-iceberg", "delta-lake", "finops", "system-design"]
 readingTime: "20 mins"

@@ -1,5 +1,7 @@
 ---
 title: "Xử lý dữ liệu theo lô - Batch Processing"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["batch-processing", "distributed-systems", "apache-spark", "mapreduce", "shuffle"]
 readingTime: "15 mins"

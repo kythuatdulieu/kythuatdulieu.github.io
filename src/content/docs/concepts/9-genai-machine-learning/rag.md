@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Thiết kế Kiến trúc RAG Hệ thống: Advanced RAG, OOM, FinOps"
 metaDescription: "Tìm hiểu kiến trúc Retrieval-Augmented Generation (RAG) nâng cao từ góc nhìn Data Engineer. Phân tích Query Translation, Query Routing, Trade-offs và rủi ro vận hành."
 description: "RAG không chỉ là việc gọi API của OpenAI. Dưới góc độ Kỹ thuật Hệ thống, RAG là một Data Engineering Pipeline phức tạp đòi hỏi luồng xử lý chặt chẽ (Ingestion) và tối ưu hóa truy xuất (Advanced Inference)."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Các mô hình ngôn ngữ lớn (LLM) sở hữu khả năng suy luận xuất sắc. Tuy nhiên, khi đưa vào môi trường Production, các hệ thống AI thuần túy sẽ thất bại do ba nguyên nhân chí tử:

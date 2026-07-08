@@ -1,5 +1,7 @@
 ---
 title: "Deep Dive: Watermarks & Late Data Handling"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["flink", "stream-processing", "watermarks", "event-time", "late-data", "data-engineering", "architecture"]
 readingTime: "25 mins"

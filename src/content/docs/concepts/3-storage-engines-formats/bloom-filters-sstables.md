@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc LSM-Tree: Bloom Filters, SSTables & RocksDB Internals"
 metaDescription: "Khám phá kiến trúc vật lý đằng sau cơ sở dữ liệu LSM-Tree. Tối ưu Read Amplification với Bloom Filters, xử lý OOMKilled và thực chiến Code với Spark Parquet."
 description: "Khám phá chi tiết kiến trúc lưu trữ đằng sau các hệ thống phân tán, cách LSM-Trees tối ưu hóa tốc độ ghi và vai trò ma thuật của Bloom Filters (Xác suất) trong việc cứu rỗi hiệu năng đọc."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 SSTables (Sorted String Tables) và LSM-Trees (Log-Structured Merge-Trees) là kiến trúc lưu trữ nền tảng đằng sau các hệ cơ sở dữ liệu phân tán yêu cầu Write-Throughput khổng lồ như Apache Cassandra, RocksDB, HBase, và Kafka Streams. Khác với B-Trees truyền thống (sinh ra Random I/O do cơ chế In-place Updates), LSM-Trees chuyển đổi toàn bộ tác vụ Ghi (Write) thành **Sequential I/O (Ghi tuần tự)** trên đĩa.

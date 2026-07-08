@@ -1,6 +1,8 @@
 ---
 title: "Celery vs K8s Executor: Kiến trúc và Đánh đổi Hệ thống"
 difficulty: "Advanced"
+domains: ["DE", "Platform"]
+level: "Senior"
 tags: ["airflow", "celery", "kubernetes", "executor", "finops", "architecture", "data-engineering"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

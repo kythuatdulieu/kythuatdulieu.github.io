@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Clustering Data: Deep Dive Z-Ordering, Liquid Clustering & Micro-partitions"
 metaDescription: "Phân tích kiến trúc Clustering vật lý, cơ chế Data Skipping, Snowflake Micro-partitions, Z-Ordering, Databricks Liquid Clustering và rủi ro OOM/Write Amplification."
 description: "Sức mạnh thực sự của Clustering nằm ở khả năng Data Skipping. Khám phá sự khác biệt giữa Partitioning và Clustering, các thuật toán như Z-Ordering, và sự tiến hóa lên Liquid Clustering."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Clustering (Phân cụm dữ liệu) thường bị các kỹ sư mới vào nghề hiểu lầm đơn giản là hành động "sắp xếp dữ liệu" (Sorting data) cho gọn gàng. Dưới góc nhìn của một Staff Data Engineer, Clustering là một kỹ thuật **tối ưu hóa Data Layout (Bố cục Dữ liệu) vật lý**, quyết định chính xác cách hàng tỷ bản ghi được nhóm lại thành các khối (Blocks/Files) trên ổ cứng vật lý hoặc Cloud Storage. 

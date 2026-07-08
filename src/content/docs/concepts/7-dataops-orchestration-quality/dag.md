@@ -1,5 +1,7 @@
 ---
 title: "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["dag", "airflow", "spark", "orchestration", "data-engineering", "maestro", "scheduler"]
 readingTime: "25 mins"

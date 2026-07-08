@@ -27,11 +27,11 @@ refs:
     type: "docs"
 ---
 
-Vào thẳng vấn đề, Data Classification (phân loại dữ liệu) không phải là việc ngồi gán mác thủ công "Public" hay "Confidential" lên từng cột dữ liệu trong file Excel. Ở quy mô Data Lake (hàng Petabytes đến Exabytes) và kỷ nguyên Multi-Cloud, Data Classification là bài toán xây dựng các **Automated Discovery Pipeline** chạy ngầm để quét hàng tỷ object, trích xuất metadata, gán nhãn (tagging) tự động, và thực thi chính sách truy cập (Attribute-Based Access Control - ABAC) trước khi dữ liệu kịp đến tay end-user.
+Data Classification (phân loại dữ liệu) không phải là việc ngồi gán mác thủ công "Public" hay "Confidential" lên từng cột dữ liệu trong file Excel. Ở quy mô Data Lake và multi-cloud, nó là bài toán xây dựng các **Automated Discovery Pipeline** để quét object, trích xuất metadata, gán nhãn (tagging), rồi đưa nhãn đó vào chính sách truy cập (Attribute-Based Access Control - ABAC).
 
-Đồng thời, quá trình quét này phải được kiểm soát chặt chẽ bằng các nguyên tắc FinOps. Nếu không tối ưu, việc gọi API quét toàn bộ kho dữ liệu sẽ tạo ra một thảm họa về hóa đơn Cloud (Billing Incident). 
+Quá trình quét này cũng phải được kiểm soát bằng các nguyên tắc FinOps. Nếu cấu hình full scan định kỳ trên dữ liệu lớn mà không có sampling hoặc scope rõ ràng, chi phí quét có thể vượt xa giá trị bảo mật thu được.
 
-Bài viết này đi sâu vào kiến trúc Data Classification sử dụng các nền tảng tiêu chuẩn như AWS Macie, Google Cloud Sensitive Data Protection (DLP) và Databricks Unity Catalog. Chúng ta sẽ phân tích các trade-offs về chi phí, độ trễ, khả năng tương thích và cách khắc phục điểm yếu chí mạng như việc "rơi rụng" nhãn bảo mật khi dữ liệu di chuyển qua các tầng ETL.
+Một hệ thống phân loại dữ liệu hữu ích cần trả lời ba câu hỏi: quét ở đâu, nhãn được lưu và kế thừa ra sao, và lớp thực thi nào dùng nhãn đó để mask hoặc chặn truy cập. Các ví dụ dưới đây dùng AWS Macie, Google Cloud Sensitive Data Protection (DLP) và Databricks Unity Catalog để làm rõ trade-off về chi phí, độ trễ và khả năng tương thích.
 
 ## 1. Kiến trúc vật lý: Automated Data Classification Pipeline
 
@@ -44,7 +44,7 @@ Một Data Classification Pipeline tiêu chuẩn trong Modern Data Stack hoạt 
 
 ### Luồng thực thi Event-Driven (Hướng sự kiện)
 
-Cách tiếp cận an toàn nhất và tiết kiệm nhất cho dữ liệu mới (Incremental) là quét ngay khi nó hạ cánh. Thay vì sử dụng cơ chế quét định kỳ (Batch Scan) làm tăng độ trễ rủi ro, hệ thống thường sử dụng kiến trúc hướng sự kiện (Event-Driven).
+Cách tiếp cận thực dụng cho dữ liệu mới (incremental) là quét ngay khi nó hạ cánh. Thay vì chỉ dựa vào quét định kỳ (batch scan), hệ thống thường bổ sung kiến trúc hướng sự kiện (event-driven) để giảm thời gian dữ liệu nhạy cảm tồn tại mà chưa có nhãn.
 
 ```mermaid
 sequenceDiagram
@@ -75,17 +75,17 @@ Với kiến trúc này, bất cứ khi nào PII bị phát hiện, một sự k
 
 ## 2. Các engine phân loại cốt lõi và Trade-offs Hệ thống
 
-Khi kiến trúc sư quyết định thiết kế hệ thống phân loại, sự đánh đổi (trade-off) luôn xoay quanh bộ ba: **Chi phí quét (Scan Cost) vs. Độ trễ phát hiện (Detection Latency) vs. Điểm mù hệ thống (Blind Spots)**. Không có giải pháp nào là viên đạn bạc.
+Khi thiết kế hệ thống phân loại, trade-off thường xoay quanh bộ ba: **Chi phí quét (Scan Cost) vs. Độ trễ phát hiện (Detection Latency) vs. Điểm mù hệ thống (Blind Spots)**. Không có lựa chọn nào phủ hết mọi loại dữ liệu và mọi engine xử lý.
 
 | Tiêu chí | AWS Macie | Google Cloud Sensitive Data Protection (DLP) | Databricks Unity Catalog |
 | :--- | :--- | :--- | :--- |
-| **Cơ chế phát hiện** | Dùng Pattern Matching & ML quét S3. Cung cấp tính năng *Automated Sensitive Data Discovery* (lấy mẫu thông minh diện rộng). | Cung cấp API linh hoạt, hỗ trợ quét streaming (Pub/Sub) và batch, sở hữu tính năng Masking/De-identification native mạnh mẽ. | Sử dụng Agentic AI (LLMs) để tự động quét incremental các bảng và đề xuất nhãn. |
+| **Cơ chế phát hiện** | Dùng Pattern Matching & ML quét S3. Cung cấp tính năng *Automated Sensitive Data Discovery* (lấy mẫu thông minh diện rộng). | Cung cấp API linh hoạt, hỗ trợ quét streaming (Pub/Sub) và batch, kèm Masking/De-identification native. | Sử dụng Agentic AI (LLMs) để tự động quét incremental các bảng và đề xuất nhãn. |
 | **Điểm mù (Blind spot)** | Chỉ hoạt động tự nhiên với S3. Rất khó quét trực tiếp các database đang chạy (như RDS hay DynamoDB) nếu không xuất ra S3. | Yêu cầu thiết lập pipeline gọi API thủ công nếu dữ liệu không nằm sẵn trong hệ sinh thái Google (như BigQuery hoặc GCS). | Giới hạn bên trong hệ sinh thái Databricks. Data nằm ngoài Unity Catalog sẽ nằm ngoài tầm với. |
-| **Chi phí (FinOps)** | Rất đắt nếu cấu hình Full Scan định kỳ. Bắt buộc phải dùng cơ chế sampling và targeted audits để sinh tồn. | Tính phí dựa trên lượng byte truyền qua API. Tối ưu payload trước khi gọi API là yêu cầu sống còn. | Chi phí quét thực tế bị ẩn vào Compute chung của Databricks. Dễ bị ảo giác là "miễn phí". |
+| **Chi phí (FinOps)** | Có thể rất tốn kém nếu cấu hình full scan định kỳ trên bucket lớn. Sampling và targeted audits giúp kiểm soát phạm vi quét. | Tính phí dựa trên lượng byte truyền qua API. Cần tối ưu payload trước khi gọi API. | Chi phí quét thường nằm trong compute chung của Databricks, nên cần tách metric để tránh hiểu nhầm là miễn phí. |
 
 ### 2.1. AWS Macie: Cạm bẫy FinOps và Chiến lược Sampling
 
-AWS Macie tính phí theo lượng gigabyte được quét. Nếu một Data Engineer cấu hình Macie để quét 100% S3 bucket (Full Scan) trên một Data Lake lưu trữ lịch sử log clickstream dung lượng 5 PB, hệ thống sẽ gây ra hóa đơn khổng lồ vào cuối tháng (do AWS tính phí trung bình ~$1/GB cho mức đầu và $0.10/GB cho mức tiếp theo).
+AWS Macie tính phí theo lượng dữ liệu được quét và có bậc giá theo khối lượng. Nếu một Data Engineer cấu hình Macie để full scan toàn bộ S3 bucket lịch sử nhiều năm, chi phí tháng đó có thể tăng mạnh. Bài học không nằm ở con số cố định, mà ở việc phải đặt scope, sampling và lịch quét theo rủi ro thật của từng vùng dữ liệu.
 
 Để khắc phục, kiến trúc chuẩn của AWS yêu cầu áp dụng **Targeted Scanning** và **Sampling (lấy mẫu)**. 
 
@@ -111,7 +111,7 @@ resource "aws_macie2_classification_job" "sensitive_data_scan" {
     daily_schedule = true
   }
   
-  # TUYỆT ĐỐI KHÔNG để 100%. Chỉ lấy mẫu 10% dữ liệu để tiết kiệm chi phí.
+  # Không đặt 100% mặc định. Lấy mẫu theo rủi ro và yêu cầu kiểm toán.
   sampling_percentage = 10 
   
   s3_job_definition {
@@ -125,7 +125,7 @@ resource "aws_macie2_classification_job" "sensitive_data_scan" {
 }
 ```
 
-Dựa trên nguyên lý xác suất thống kê, nếu 10% các block dữ liệu trong một partition Parquet được quét chứa SSN, hệ thống hoàn toàn đủ tự tin kết luận toàn bộ thư mục đó thuộc dạng `Restricted` mà không cần phải "đốt tiền" quét 90% dung lượng còn lại. Hơn nữa, AWS khuyến nghị kích hoạt tính năng **Automated Sensitive Data Discovery**. Tính năng này liên tục đánh giá rủi ro của bucket ở mức account và tự động chọn lọc lấy mẫu các S3 object có khả năng chứa dữ liệu nhạy cảm cao, giúp công ty duy trì baseline security mà không cần quản lý job thủ công.
+Nếu mẫu quét trong một partition Parquet đã phát hiện SSN với tỉ lệ đáng kể, hệ thống có thể gán nhãn `Restricted` cho cả thư mục rồi lập lịch kiểm tra sâu hơn theo rủi ro. Cách này không thay thế audit đầy đủ trong môi trường chịu quy định nghiêm ngặt, nhưng giúp đội nền tảng tránh quét lại dữ liệu lạnh chỉ để xác nhận điều đã biết. AWS cũng khuyến nghị dùng **Automated Sensitive Data Discovery** để đánh giá rủi ro bucket ở mức account và chọn mẫu các object có khả năng chứa dữ liệu nhạy cảm.
 
 ### 2.2. Google Cloud DLP: De-identification và Tích hợp Bảo mật sâu
 
@@ -143,7 +143,7 @@ Tính năng Data Classification của Unity Catalog sử dụng các mô hình n
 
 ### 3.1. Tag Propagation (Sự di truyền Tag) và Lỗ hổng rò rỉ PII
 
-Một vấn đề chí mạng trong quá trình xử lý dữ liệu (Data Pipeline) là khi dữ liệu di chuyển qua các tầng kiến trúc Medallion (`Raw -> Silver -> Gold`), các metadata tags nhạy cảm rất dễ bị "rơi rụng" (dropped).
+Một failure mode quan trọng trong data pipeline là khi dữ liệu di chuyển qua các tầng kiến trúc Medallion (`Raw -> Silver -> Gold`), metadata tags nhạy cảm bị mất hoặc không được kế thừa.
 
 **Failure Mode:** Dữ liệu ở bảng `Raw` vừa hạ cánh, được phân loại chính xác là chứa PII và gắn tag khóa chặt. Tuy nhiên, khi Apache Spark thực thi một job ETL chạy lệnh `CREATE TABLE ... AS SELECT` (CTAS) để sinh ra bảng `Silver` (đã được làm sạch), bảng mới này lại nằm ở một logical schema khác và mất hoàn toàn nhãn `pii=true`. Hệ quả là, người dùng cuối truy cập bảng `Silver` và đọc được nguyên văn toàn bộ số thẻ tín dụng do lớp Enforcement không chặn được.
 
@@ -168,7 +168,7 @@ OPTIONS (
 ```
 
 **Systemic Trade-off:** 
-Việc sử dụng Dynamic Masking (ví dụ: băm SHA256) trên mỗi lượt chạy truy vấn sẽ đội thêm **CPU Compute Cost** và **Latency** đáng kể. Nếu dữ liệu có quy mô cực lớn và tần suất được truy cập bởi Analysts/Dashboards đạt hàng nghìn lượt mỗi ngày, việc tính toán Masking on-the-fly sẽ rất lãng phí. 
+Việc sử dụng Dynamic Masking (ví dụ: băm SHA256) trên mỗi lượt chạy truy vấn sẽ đội thêm **CPU Compute Cost** và **Latency**. Nếu cùng một bảng được truy cập liên tục bởi dashboard hoặc nhiều analyst, masking on-the-fly có thể đắt hơn so với chuẩn bị một bảng đã ẩn danh sẵn.
 
 Trong những kịch bản High-Volume Analytics này, thiết kế tốt hơn là sử dụng **Static Masking**. Nghĩa là, ta mã hóa vật lý các cột nhạy cảm ngay trong bước Spark ETL batch job và ghi hẳn ra một bảng ẩn danh (Anonymized Table) phục vụ riêng cho Analytics. Bảng thô (Raw table) chứa dữ liệu thật thì bị khóa cứng và chỉ cho phép những tiến trình đặc biệt (như Machine Learning feature extraction hoặc Compliance auditing) truy cập.
 

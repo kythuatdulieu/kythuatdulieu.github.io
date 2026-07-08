@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Gossip Protocol - Thiết Kế Mạng Phân Tán Mức Staff Engineer"
 metaDescription: "Phân tích chuyên sâu về Gossip Protocol, SWIM, Phi Accrual Failure Detector, Gossip Storms, và cách xử lý MTU fragmentation trong mạng UDP."
 description: "Cơ chế Gossip giúp hàng ngàn node đồng bộ trạng thái. Phân tích sâu về TCP/UDP, Phi Accrual, giao thức SWIM và các rủi ro vận hành (Gossip Storms)."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Gossip Protocol (hay Epidemic Protocol) là nền tảng giao tiếp ngang hàng (Peer-to-Peer) phi tập trung, đóng vai trò như "hệ thần kinh" của các hệ thống phân tán khổng lồ (Amazon Dynamo, Apache Cassandra, HashiCorp Consul). Thay vì có một Master node độc tài quản lý ai sống ai chết, thông tin trong mạng Gossip lây lan theo cấp số nhân $\mathcal{"O"}(\log N)$, giống hệt cách một bệnh dịch truyền nhiễm trong cộng đồng.

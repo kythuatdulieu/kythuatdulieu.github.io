@@ -1,10 +1,12 @@
 ---
 title: "Phân tách văn bản (Chunking) trong Hệ thống RAG"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["chunking", "rag", "preprocessing", "nlp", "vector-database", "system-design", "finops"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29
-seoTitle: "Chunking trong RAG: Kiến trúc Semantic, Parent-Child & Lost in the Middle"
+seoTitle: "Chunking trong RAG: Kiến trúc Semantic, Parent-Child & Lost in the middle"
 metaDescription: "Phân tích kỹ thuật Chunking trong RAG dưới góc độ System Design: Semantic Chunking vs Recursive, rủi ro Lost in the middle, kiến trúc Parent-Child Retrieval."
 description: "Trong hệ thống RAG, Chunking không chỉ là hàm cắt chuỗi. Nó là bài toán kiến trúc sống còn quyết định chi phí Vector DB (FinOps), tốc độ Ingestion và khả năng dẹp bỏ ảo giác của LLM."
 ---

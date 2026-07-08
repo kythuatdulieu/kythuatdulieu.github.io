@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Thiết kế Kiến trúc Reranking: Two-Stage Retrieval, Cross-Encoder"
 metaDescription: "Khám phá kiến trúc Two-Stage Retrieval. Đi sâu vào Cross-Encoder, RRF, cách xử lý lỗi Lost in the Middle và tối ưu FinOps."
 description: "Reranking không chỉ là một thủ thuật tinh chỉnh nhỏ lẻ; nó là lớp phòng ngự (gatekeeper) kiến trúc tối quan trọng trong các hệ thống Search Engine và RAG quy mô lớn."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Khi xây dựng hệ thống Retrieval-Augmented Generation (RAG) ở quy mô Enterprise, Vector Search thuần túy (Bi-encoder) nhanh chóng bộc lộ điểm yếu: **Độ nhiễu cao (Noise)**.

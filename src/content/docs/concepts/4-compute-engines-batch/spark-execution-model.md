@@ -1,5 +1,7 @@
 ---
 title: "Mô hình thực thi Spark - Spark Execution Model"
+domains: ["DE"]
+level: "Middle"
 description: "Mổ xẻ kiến trúc phân tán của Apache Spark. Phân tích luồng thực thi vật lý từ Driver đến Worker nodes, các giới hạn hệ thống (OOMKilled, Network Shuffle) và chiến lược tối ưu tài nguyên."
 difficulty: "Intermediate"
 tags: ["spark-execution-model", "apache-spark", "driver", "executor", "dag", "shuffle", "task"]

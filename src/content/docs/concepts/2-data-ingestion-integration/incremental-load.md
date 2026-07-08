@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipeline"
 metaDescription: "Tìm hiểu phương pháp Incremental Load (Nạp gia tăng) trong ETL/ELT: cách sử dụng High Watermark, quản lý trạng thái (State), Change Data Capture (CDC) và khác biệt so với Full Load."
 description: "Khi xây dựng Data Pipeline, phương pháp lấy dữ liệu tăng dần (Incremental Load) giúp tối ưu hóa hiệu suất, giảm thiểu chi phí và rút ngắn thời gian xử lý thay vì việc tải toàn bộ dữ liệu (Full Load)."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Ở quy mô dữ liệu nhỏ (vài GB), Full Load (Snapshot toàn bộ dữ liệu định kỳ mỗi đêm) là phương pháp an toàn, dễ code và dễ bảo trì nhất. Tuy nhiên, khi hệ thống vươn lên quy mô Terabyte hoặc Petabyte, việc Full Load trở thành thảm họa. Nó đốt cháy tài nguyên (Compute & Network IO) và phá vỡ hoàn toàn các hợp đồng SLA (Service Level Agreement) về độ trễ dữ liệu (Data Freshness).

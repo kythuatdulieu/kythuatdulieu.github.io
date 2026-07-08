@@ -1,5 +1,7 @@
 ---
 title: "Spark Partition"
+domains: ["DE"]
+level: "Middle"
 description: "Phân vùng vật lý dữ liệu (Partition) là đơn vị tiền tệ của tính song song (Parallelism) trong Spark. Phân tích cơ chế hoạt động, Systemic Trade-offs và kỹ thuật chống Data Skew bằng AQE và Salting."
 difficulty: "Intermediate"
 tags: ["spark-partition", "apache-spark", "parallelism", "performance", "data-skew", "big-data"]

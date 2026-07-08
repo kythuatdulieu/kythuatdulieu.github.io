@@ -2,6 +2,8 @@
 title: "Inmon Methodology - Corporate Information Factory"
 description: "Phân tích kiến trúc Enterprise Data Warehouse theo phương pháp luận Bill Inmon (Top-down, 3NF): Kiến trúc thực thi vật lý, hệ lụy cascading joins, và sự tương quan với Medallion Architecture."
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 tags: ["data-warehouse", "inmon", "top-down", "3nf", "system-design", "lakehouse"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

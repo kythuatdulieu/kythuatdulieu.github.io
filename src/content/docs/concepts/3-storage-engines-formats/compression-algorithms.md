@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Thuật toán nén dữ liệu trong Big Data: Zstd, Snappy, Gzip, LZ4"
 metaDescription: "Phân tích Trade-offs kiến trúc của các thuật toán nén (Compression Algorithms) trong Big Data. Giải phẫu sự cố OOM do Gzip và tối ưu FinOps với Zstd Level 3."
 description: "Trong thiết kế Data Platform phân tán, nén dữ liệu không phải là để tiết kiệm ổ cứng. Đó là bài toán tối ưu thông lượng I/O, giảm nghẽn mạng lúc Shuffle và đánh đổi chu kỳ tính toán của CPU."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Trong thiết kế hệ thống dữ liệu lớn (Big Data), việc tối ưu hóa dung lượng lưu trữ đôi khi chỉ là lợi ích thứ cấp. Mục tiêu tối thượng của các thuật toán nén (Compression Algorithms) là **giảm thiểu I/O bottleneck** ở các tầng Network và Storage, bằng cách đánh đổi một lượng chu kỳ tính toán của CPU (CPU Cycles). 

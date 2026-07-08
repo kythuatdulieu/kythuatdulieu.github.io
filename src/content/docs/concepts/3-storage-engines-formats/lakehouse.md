@@ -1,5 +1,7 @@
 ---
 title: "Kiến Trúc Lakehouse: Sự Hội Tụ Của Lake & Warehouse"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Advanced"
 tags: ["data-lakehouse", "data-lake", "data-warehouse", "delta-lake", "iceberg"]
 readingTime: "15 mins"

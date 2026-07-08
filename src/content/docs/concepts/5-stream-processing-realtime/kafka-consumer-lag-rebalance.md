@@ -1,5 +1,7 @@
 ---
 title: "Troubleshooting: Kafka Consumer Lag & Rebalance Storms"
+domains: ["DE", "Platform"]
+level: "Senior"
 description: "Phân tích nguyên nhân và giải pháp cho hai sự cố đau đầu nhất khi vận hành Apache Kafka: Consumer Lag và Rebalance Storms. Hướng dẫn chi tiết cách cấu hình và tối ưu Kafka Consumer chuẩn Big Tech."
 difficulty: "Advanced"
 tags: ["kafka", "stream-processing", "consumer-lag", "rebalance", "kubernetes", "uber", "netflix"]

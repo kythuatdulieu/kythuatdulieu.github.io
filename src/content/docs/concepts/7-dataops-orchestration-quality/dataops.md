@@ -1,5 +1,7 @@
 ---
 title: "DataOps & Data Quality: Kiến trúc, Vận hành và Đánh đổi hệ thống"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "25 mins"
 tags: ["dataops", "data-quality", "ci-cd", "airflow", "dagster", "data-contracts", "architecture"]

@@ -1,5 +1,7 @@
 ---
 title: "Software-Defined Assets (SDA)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-engineering", "dagster", "orchestration", "software-defined-assets", "dataops", "architecture"]
 readingTime: "15 mins"

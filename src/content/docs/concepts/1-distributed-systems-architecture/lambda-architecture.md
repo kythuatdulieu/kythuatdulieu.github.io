@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Lambda vs Kappa Architecture - Phân Tích Chuyên Sâu Kỹ Thuật Dữ Liệu"
 metaDescription: "Tìm hiểu kiến trúc Lambda và Kappa dưới góc độ Staff Engineer: Trade-offs, Data Sync, Deduplication, Semantic Drift và Stateful Streaming với Flink/Kafka."
 description: "Sự đánh đổi kinh điển giữa Latency và Accuracy. Phân tích chi tiết cách gộp dữ liệu ở Serving Layer, những nỗi đau vận hành (Tech Debt), và tại sao Kappa lại soán ngôi Lambda."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Vào đầu những năm 2010, giới Data Engineering bế tắc với một bài toán kinh điển: Các hệ thống Big Data (như Hadoop) tính toán rất chính xác nhưng quá chậm (Độ trễ tính bằng giờ), trong khi các hệ thống Real-time (như Storm) lại chạy cực nhanh nhưng thường xuyên tính sai hoặc rớt dữ liệu.

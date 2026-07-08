@@ -1,5 +1,7 @@
 ---
 title: "Snowflake: Kiến trúc Multi-Cluster Shared-Data"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["snowflake", "data-warehouse", "cloud-data-platform", "olap", "architecture", "system-design", "finops"]
 readingTime: "25 mins"

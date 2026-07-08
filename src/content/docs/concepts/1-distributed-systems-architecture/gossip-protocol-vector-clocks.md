@@ -6,6 +6,8 @@ readingTime: "30 mins"
 lastUpdated: 2026-06-29
 seoTitle: "Gossip Protocol và Vector Clocks: Lõi Kiến Trúc Dynamo & Cassandra"
 metaDescription: "Hiểu sâu kiến trúc Leaderless: Khắc phục Clock Skew bằng Vector Clocks, xử lý xung đột mạng, giải thuật Gossip/SWIM và Failure Detection."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Để đạt được tính khả dụng tuyệt đối (100% High Availability) bất chấp đứt cáp mạng, cháy Data Center hay sập toàn bộ Availability Zone, các hệ cơ sở dữ liệu lớn mạnh nhất thế giới (Amazon Dynamo, Apache Cassandra, Riak) đã từ bỏ mô hình Master-Slave (Single Leader) truyền thống. Kiến trúc Masterless (hoặc Leaderless) - Nơi mọi Node đều bình đẳng và có quyền nhận lệnh Ghi/Đọc - trở thành giải pháp tối thượng.

@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc OLAP (Online Analytical Processing) Chuyên Sâu"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "25 mins"
 tags: ["olap", "columnar", "vectorized-execution", "clickhouse", "snowflake", "data-warehouse", "simd"]

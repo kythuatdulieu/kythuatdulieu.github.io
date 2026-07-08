@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Apache Hudi - Kiến trúc Data Lakehouse, MoR vs CoW và CDC Streaming"
 metaDescription: "Phân tích kiến trúc chuyên sâu của Apache Hudi: File Layout, MoR vs CoW Trade-offs, Indexing (RLI), OCC Concurrency và Thực chiến CDC PySpark."
 description: "Được thiết kế tại Uber để giải quyết bài toán xử lý hàng nghìn tỷ bản ghi, Apache Hudi cung cấp khả năng Streaming, Upsert và Incremental Processing với độ trễ cực thấp."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Thế giới Data Lakehouse hiện đại được thống trị bởi ba ông lớn: **Apache Hudi**, **Apache Iceberg** và **Delta Lake**. Nếu Iceberg được sinh ra tại Netflix để giải quyết vấn đề quản lý Metadata khổng lồ, thì **Hudi [Hadoop Upserts Deletes and Incrementals]** được Uber thiết kế với một triết lý duy nhất: **Streaming-first và Upsert-heavy**.

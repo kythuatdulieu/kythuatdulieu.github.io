@@ -1,5 +1,7 @@
 ---
 title: "Stream-Table Duality: Nguyên lý Lưỡng tính Dòng - Bảng"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["streaming", "table", "stream-table-duality", "kafka-streams", "flink", "rocksdb"]
 readingTime: "20 mins"

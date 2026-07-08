@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Đồng Thuận Phân Tán: Thuật toán Raft & Paxos, KRaft Kafka"
 metaDescription: "Tìm hiểu sâu sắc về kiến trúc thuật toán đồng thuận Raft, Paxos, định lý FLP. Cách khắc phục lỗi Split-Brain và ứng dụng thực tế trong Apache Kafka (KRaft)."
 description: "Khám phá cốt lõi của các hệ thống phân tán: Bài toán đồng thuận (Consensus). Từ đỉnh cao hàn lâm của Paxos đến sự chế ngự phức tạp của Raft, và cuộc cách mạng KRaft của Apache Kafka."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Một hệ cơ sở dữ liệu phân tán (như Apache Kafka, Cassandra, hay etcd) có thể được ví như một dàn nhạc giao hưởng khổng lồ với hàng chục nhạc công (Các Node/Server). Nếu không có một nhạc trưởng (Leader) kiểm soát nhịp điệu và bản phổ, dàn nhạc sẽ trở nên hỗn loạn. Quá trình chọn ra nhạc trưởng và thống nhất tuyệt đối về bản nhạc mà mọi người phải chơi cùng nhau được gọi là **Bài toán Đồng thuận Phân tán (Distributed Consensus)**.

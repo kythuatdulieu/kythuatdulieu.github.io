@@ -1,5 +1,7 @@
 ---
 title: "Spark SQL & Catalyst Optimizer"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["spark-sql", "apache-spark", "catalyst-optimizer", "dataframe", "aqe"]
 readingTime: "15 mins"

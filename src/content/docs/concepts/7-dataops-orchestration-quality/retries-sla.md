@@ -1,5 +1,7 @@
 ---
 title: "Retries, Jitter và SLA: Xây dựng Data Pipeline Tự Phục Hồi"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["orchestration", "retries", "sla", "airflow", "monitoring", "data-engineering", "architecture", "dataops"]
 readingTime: "30 mins"

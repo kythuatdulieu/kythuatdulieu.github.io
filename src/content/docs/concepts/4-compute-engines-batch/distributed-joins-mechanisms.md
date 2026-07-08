@@ -1,5 +1,7 @@
 ---
 title: "Distributed Joins Mechanisms"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

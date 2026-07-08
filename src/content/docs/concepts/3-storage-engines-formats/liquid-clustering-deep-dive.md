@@ -1,5 +1,7 @@
 ---
 title: "Liquid Clustering: Kẻ Hủy Diệt Partitioning & Z-Order"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["liquid-clustering", "delta-lake", "performance", "databricks", "data-engineering"]
 readingTime: "20 mins"

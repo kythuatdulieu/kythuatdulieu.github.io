@@ -2,6 +2,8 @@
 title: "Lược đồ Hình sao (Star Schema)"
 description: "Phân tích chuyên sâu về Star Schema dưới góc nhìn thiết kế hệ thống phân tán. Medallion Architecture, sự cố OOMKilled, Cartesian Explosion và cách tối ưu hóa BHJ trên Databricks & Snowflake."
 difficulty: "Intermediate"
+domains: ["DE"]
+level: "Middle"
 tags: ["data-warehouse", "star-schema", "dimensional-modeling", "databricks", "snowflake", "medallion-architecture"]
 readingTime: "30 mins"
 lastUpdated: 2026-06-29

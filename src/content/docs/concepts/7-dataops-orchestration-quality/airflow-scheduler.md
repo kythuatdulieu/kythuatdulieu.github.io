@@ -1,6 +1,8 @@
 ---
 title: "Airflow Scheduler: Kiến Trúc Phân Tán và Đánh Đổi Hệ Thống"
 difficulty: "Advanced"
+domains: ["DE", "Platform"]
+level: "Senior"
 tags: ["airflow", "scheduler", "orchestration", "architecture", "data-engineering", "high-availability", "database-locks"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

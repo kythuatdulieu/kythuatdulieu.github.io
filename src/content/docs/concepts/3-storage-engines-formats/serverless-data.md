@@ -1,5 +1,7 @@
 ---
 title: "Xử lý Dữ liệu Không Máy Chủ - Serverless Data Processing"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["serverless", "cloud-computing", "data-engineering", "aws-lambda", "bigquery", "athena", "finops"]
 readingTime: "25 mins"

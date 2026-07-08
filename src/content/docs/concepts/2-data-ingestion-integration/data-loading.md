@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Loading: Kỹ thuật ETL/ELT & Kiến trúc Lakehouse (Delta/Iceberg)"
 metaDescription: "Tìm hiểu kiến trúc Data Loading hiện đại. Các chiến lược nạp dữ liệu (Overwrite, Append, Upsert) và sự trỗi dậy của Open Table Formats (Iceberg, Delta Lake)."
 description: "Data Loading là chốt chặn cuối cùng trong quy trình ETL/ELT. Khám phá cách các Big Tech như Netflix, Uber tối ưu hóa quá trình nạp hàng Petabyte dữ liệu bằng kiến trúc Lakehouse."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Data Loading (Tải/Nạp dữ liệu) là chữ "L" cuối cùng và quan trọng nhất trong kiến trúc **ETL/ELT**. Ở góc độ Data Engineering, đây không đơn thuần là việc gọi lệnh `INSERT` vài dòng dữ liệu vào Database. Với Scale hàng trăm triệu đến hàng tỷ rows mỗi ngày, Data Loading là bài toán tối ưu hóa I/O mạng, quản lý Memory/CPU bottleneck, và đảm bảo tính nguyên vẹn dữ liệu (Idempotency) trên Data Warehouse / Data Lake.

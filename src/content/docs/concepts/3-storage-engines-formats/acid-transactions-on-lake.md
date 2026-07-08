@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "ACID Transactions Data Lake - MVCC, OCC, Delta, Iceberg, Hudi"
 metaDescription: "Phân tích kiến trúc ACID Transactions trên Data Lake qua Delta Lake, Apache Iceberg, Hudi. Mổ xẻ MVCC, Optimistic Concurrency Control (OCC) và Trade-offs."
 description: "Data Lake truyền thống sẽ hỏng dữ liệu nếu bị Crash khi ghi. Bài viết mổ xẻ cách các Table Formats mang ACID lên Object Storage nhờ MVCC, OCC và sự tách biệt Metadata."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Data Lake truyền thống (sử dụng HDFS, S3 hoặc GCS chứa file Parquet/ORC) vốn dĩ **không hỗ trợ giao dịch ACID**. Hãy tưởng tượng kịch bản: Vào lúc 2 giờ sáng, một tiến trình Spark đang ghi đè một thư mục (Overwrite) thì Node bị tắt nguồn đột ngột, hoặc hai tiến trình (Concurrent Writes) cùng lúc cố gắng `UPDATE` một bảng. Kết quả là dữ liệu bị hỏng (Data Corruption), tình trạng đọc dữ liệu "rác" (Dirty Reads), hoặc mất dữ liệu nghiêm trọng.

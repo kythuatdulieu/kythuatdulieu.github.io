@@ -1,5 +1,7 @@
 ---
 title: "Time Travel & MVCC: Đánh Đổi Giữa I/O Và Lịch Sử Dữ Liệu"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["time-travel", "delta-lake", "apache-iceberg", "mvcc", "data-lakehouse", "vacuum", "troubleshooting"]
 readingTime: "12 mins"

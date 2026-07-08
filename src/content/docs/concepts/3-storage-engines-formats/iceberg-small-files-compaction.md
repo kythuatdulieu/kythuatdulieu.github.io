@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Apache Iceberg Compaction: Giải quyết Small Files với Binpack, Sort & Z-Order"
 metaDescription: "Phân tích chuyên sâu về vấn đề file nhỏ (Small Files) trong Data Lake, cơ chế Compaction của Apache Iceberg, và các chiến lược tối ưu hóa như Binpack, Sort, và Z-Order."
 description: "Phân tích chuyên sâu về vấn đề file nhỏ (Small Files) trong Data Lake, cơ chế Compaction của Apache Iceberg, và các chiến lược tối ưu hóa như Binpack, Sort, và Z-Order dưới góc nhìn System Design."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán (Distributed Systems) và Data Lake, "Small Files Problem" (Vấn đề file nhỏ) là một trong những nguyên nhân hàng đầu gây sụp đổ hiệu suất (Performance Degradation) và bùng nổ chi phí Cloud. 

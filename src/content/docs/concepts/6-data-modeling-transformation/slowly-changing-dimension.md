@@ -1,6 +1,8 @@
 ---
 title: "Kiến trúc Slowly Changing Dimension (SCD): Physical Execution & Trade-offs"
 difficulty: "Advanced"
+domains: ["DE"]
+level: "Senior"
 tags: ["data-warehouse", "scd", "dimensional-modeling", "delta-lake", "apache-iceberg", "dbt", "lakehouse"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

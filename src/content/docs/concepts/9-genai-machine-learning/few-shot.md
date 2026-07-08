@@ -1,5 +1,7 @@
 ---
 title: "Few-shot Prompting & In-Context Learning (System Architecture)"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["genai", "prompt-engineering", "few-shot", "llm", "in-context-learning", "system-design", "finops"]
 readingTime: "15 mins"

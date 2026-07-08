@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Ingestion - Kiến trúc Thu nạp dữ liệu ở quy mô Petabyte"
 metaDescription: "Tìm hiểu toàn diện về Data Ingestion (Thu nạp dữ liệu) ở cấp độ Enterprise. So sánh Batch, Streaming, Log-based CDC và các Systemic Trade-offs quan trọng."
 description: "Data Ingestion là bước đi đầu tiên quyết định sự sống còn của toàn bộ Data Platform. Bài viết phân tích sâu kiến trúc Batch, Streaming, Change Data Capture (CDC) và các sự cố vận hành."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Data Ingestion không chỉ đơn thuần là việc viết vài dòng script Python (như Airbyte, Fivetran hay các tool kéo-thả) để sao chép dữ liệu từ điểm A sang điểm B. Dưới góc nhìn của một Staff Data Engineer, Data Ingestion là bài toán xây dựng các hệ thống phân tán (Distributed Systems) có khả năng chịu lỗi (Fault-tolerant), đảm bảo tính lũy đẳng (Idempotency), và tối ưu hóa tài nguyên vi mô dưới áp lực của hàng triệu sự kiện mỗi giây (events per second).

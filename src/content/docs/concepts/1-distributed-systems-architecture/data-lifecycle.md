@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Vòng đời Dữ liệu (Data Lifecycle) - Staff Engineer Deep Dive"
 metaDescription: "Tìm hiểu chuyên sâu về Data Lifecycle Management (DLM). Phân tích systemic trade-offs, kiến trúc Ingestion, CDC, FinOps, Tiered Storage và tuân thủ GDPR."
 description: "Vòng đời dữ liệu không chỉ là ETL. Ở scale hàng Petabytes, Data Lifecycle Management (DLM) là bài toán về trade-offs: Latency vs Throughput, Cost vs Performance, và GDPR Compliance."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Data Lifecycle (Vòng đời dữ liệu) thường được mô tả qua lăng kính khá đơn giản: Dữ liệu sinh ra $\rightarrow$ Thu thập $\rightarrow$ Lưu trữ $\rightarrow$ Xử lý $\rightarrow$ Phục vụ. Tuy nhiên, ở scale của các hệ thống phân tán (Distributed Systems) xử lý hàng triệu events/giây, bức tranh này đòi hỏi một khung quản trị khắt khe gọi là **Data Lifecycle Management (DLM)**.

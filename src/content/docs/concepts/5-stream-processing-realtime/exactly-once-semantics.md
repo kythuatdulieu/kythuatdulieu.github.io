@@ -1,5 +1,7 @@
 ---
 title: "Exactly-Once Semantics (EOS)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["streaming", "exactly-once", "eos", "kafka", "flink", "state-management", "transactions"]
 readingTime: "20 mins"

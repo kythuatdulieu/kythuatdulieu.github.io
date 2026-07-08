@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Delta Lake: Transaction Log, OCC và Trade-offs hệ thống"
 metaDescription: "Phân tích sâu về kiến trúc Delta Lake: Transaction Log, Optimistic Concurrency Control (OCC), Data Skipping, Z-Ordering, và OOM trên Data Lakehouse."
 description: "Đối với Data Engineer, Delta Lake không chỉ là một định dạng file. Bài viết mổ xẻ cơ chế Transaction Log, Optimistic Concurrency Control, và các đánh đổi FinOps/Hiệu năng."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Lưu trữ dữ liệu thô bằng Parquet hoặc CSV trên Amazon S3 hay Google Cloud Storage từng là tiêu chuẩn vàng của kỷ nguyên Data Lake. Tuy nhiên, ở quy mô doanh nghiệp, hệ thống này bộc lộ những tử huyệt chí mạng: Thiếu giao dịch ACID dẫn đến việc đọc phải dữ liệu rác (Partial reads) khi job đang ghi dở, thao tác Cập nhật (UPDATE) đòi hỏi phải ghi đè lại toàn bộ bucket, và hiện tượng "Rác Metadata" (Small File Problem) đánh sập các cụm tính toán.

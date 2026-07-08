@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Webhooks & Idempotency: Xử lý Trùng lặp Dữ liệu trong Hệ thống Phân tán"
 metaDescription: "Tìm hiểu chi tiết về Webhooks, rủi ro trùng lặp dữ liệu và cách triển khai Tính luỹ đẳng (Idempotency) với Stripe API, Redis, DynamoDB và AWS SQS."
 description: "Xử lý dữ liệu trùng lặp khi tích hợp API Real-time bằng Idempotency. Đảm bảo tính toàn vẹn (Data Integrity) cho Data Pipeline trong kiến trúc Event-Driven."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong kiến trúc hướng sự kiện (Event-Driven Architecture - EDA), Webhooks là cơ chế đẩy (push-based mechanism) phổ biến bậc nhất để ingest dữ liệu theo thời gian thực (Real-time). Tuy nhiên, môi trường mạng (Network) luôn tiềm ẩn độ trễ (latency), rớt gói tin (packet loss), và chia cắt mạng (network partition). 

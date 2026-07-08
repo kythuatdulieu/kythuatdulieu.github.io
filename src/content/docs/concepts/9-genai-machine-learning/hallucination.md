@@ -1,5 +1,7 @@
 ---
 title: "Ảo giác LLM (Hallucination) & Cơ chế Mitigation trong Production"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["hallucination", "llm", "rag", "nemo-guardrails", "system-design", "finops"]
 readingTime: "15 mins"

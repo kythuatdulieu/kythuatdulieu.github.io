@@ -1,5 +1,7 @@
 ---
 title: "Tác nhân AI (AI Agent)"
+domains: ["DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["ai-agent", "genai", "llm", "automation", "tool-use", "system-design", "langgraph", "finops"]
 readingTime: "25 mins"

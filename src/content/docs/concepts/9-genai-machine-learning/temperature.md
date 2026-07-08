@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Temperature, Top-P, Top-K trong LLM: Kiến Trúc & System Design"
 metaDescription: "Đi sâu vào Temperature dưới góc độ Data Engineer: Cơ chế Logit Scaling, Top-P (Nucleus), Top-K, tác động đến Semantic Cache (FinOps) và cấu hình vLLM."
 description: "Dưới góc nhìn thiết kế hệ thống, Temperature không chỉ là 'độ sáng tạo' của AI. Nó là biến số cốt lõi quyết định chiến lược Decoding, tỷ lệ Cache Hit (FinOps) và độ tin cậy của các pipeline hạ nguồn."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Trong hầu hết các tài liệu vỡ lòng, **Temperature** (Nhiệt độ) được định nghĩa đơn giản là "công tắc điều chỉnh độ sáng tạo" của Mô hình Ngôn ngữ Lớn [[LLM](/concepts/9-genai-machine-learning/llm)). 

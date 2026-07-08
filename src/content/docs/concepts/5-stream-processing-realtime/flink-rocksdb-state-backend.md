@@ -1,5 +1,7 @@
 ---
 title: "Internals: Tuning RocksDB State Backend"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["stream-processing", "apache-flink", "rocksdb", "state-backend", "performance-tuning", "jvm"]
 readingTime: "15 mins"
