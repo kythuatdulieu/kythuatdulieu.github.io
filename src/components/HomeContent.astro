@@ -1,0 +1,304 @@
+---
+// Trang chủ theo bản thiết kế "Trang chủ v6" (Thiết kế lại trang chủ handbook):
+// dải 4 lối vào full-width dưới header (Luyện chứng chỉ được highlight),
+// Mục lục 3 cột đánh màu theo domain, chips lọc gộp 1 hàng,
+// Mới cập nhật 2 cột kèm tag domain, footer band.
+import { getCollection } from 'astro:content';
+import { categories, domains as DOMAINS, levels as LEVELS } from '../config/taxonomy.js';
+import { quizMeta } from '../config/quizzes.js';
+
+const quizCount = Object.keys(quizMeta).length;
+
+const all = await getCollection('docs');
+const concepts = all.filter((d) => d.id.startsWith('concepts/'));
+const totalConcepts = concepts.length;
+
+// Domain mặc định mỗi category (dùng khi concept chưa có 'domains' — sẽ tự đầy dần khi rewrite)
+const DEFAULT_DOMAINS = {
+  '1-distributed-systems-architecture': ['Foundations', 'DE'],
+  '2-data-ingestion-integration': ['DE'],
+  '3-storage-engines-formats': ['DE', 'Platform'],
+  '4-compute-engines-batch': ['DE'],
+  '5-stream-processing-realtime': ['DE'],
+  '6-data-modeling-transformation': ['DE', 'DA'],
+  '7-dataops-orchestration-quality': ['DE', 'Platform'],
+  '8-security-governance-finops': ['Platform', 'DE'],
+  '9-genai-machine-learning': ['AI', 'DS'],
+};
+
+const domainVar = (d) => `var(--domain-${(d || 'foundations').toLowerCase()})`;
+
+function shortTitle(t) {
+  const m = (t || '').match(/\s[-–]\s+([a-zA-Z0-9\s]+)$/);
+  return m && m[1] ? m[1].trim() : t;
+}
+
+const cards = categories.map((cat, i) => {
+  const inCat = concepts.filter((d) => d.id.split('/')[1] === cat.slug);
+  const domainSet = new Set();
+  const levelSet = new Set();
+  inCat.forEach((d) => {
+    (d.data.domains || []).forEach((x) => domainSet.add(x));
+    if (d.data.level) levelSet.add(d.data.level);
+  });
+  let domainList = [...domainSet];
+  if (domainList.length === 0) domainList = DEFAULT_DOMAINS[cat.slug] || ['DE'];
+  const links = inCat
+    .slice()
+    .sort((a, b) => (a.data.title || '').localeCompare(b.data.title || ''))
+    .slice(0, 3)
+    .map((d) => ({ label: shortTitle(d.data.title), href: `/${d.slug}/` }));
+  return {
+    number: i + 1,
+    slug: cat.slug,
+    title: cat.label.replace(/^\d+\.\s*/, ''),
+    domains: domainList,
+    levels: [...levelSet],
+    count: inCat.length,
+    color: domainVar(domainList[0]),
+    links,
+  };
+});
+
+// Mới cập nhật (theo lastUpdated) + tag domain chính
+const toTime = (v) => (v ? new Date(v).getTime() || 0 : 0);
+const updated = concepts
+  .filter((d) => d.data.lastUpdated)
+  .sort((a, b) => toTime(b.data.lastUpdated) - toTime(a.data.lastUpdated))
+  .slice(0, 6)
+  .map((d) => {
+    const catSlug = d.id.split('/')[1];
+    const domain = (d.data.domains || [])[0] || (DEFAULT_DOMAINS[catSlug] || ['DE'])[0];
+    return {
+      title: shortTitle(d.data.title),
+      href: `/${d.slug}/`,
+      date: new Date(d.data.lastUpdated).toISOString().slice(0, 10),
+      domain,
+      color: domainVar(domain),
+    };
+  });
+
+const purposes = [
+  { title: 'Luyện chứng chỉ', desc: 'Bộ đề Databricks, AWS, Azure, GCP…', href: '/quizzes/', highlight: true }
+];
+---
+
+<div class="home not-content">
+  <div class="purpose-band">
+    <div class="band-inner purpose-single">
+      {purposes.map((p) => (
+        <a class:list={['purpose', { highlight: p.highlight }]} href={p.href}>
+          <span class="p-title">{p.title} <span class="p-arrow" aria-hidden="true">→</span></span>
+          <span class="p-desc">{p.desc}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <main class="home-main">
+    <div class="toc-head">
+      <h2 class="serif-h">Mục lục</h2>
+      <span class="toc-count"><a href="/concepts/">bản đồ nội dung →</a></span>
+    </div>
+
+    <div class="facets" role="group" aria-label="Lọc theo lĩnh vực">
+      {DOMAINS.map((d) => <button class="chip" data-facet="domain" data-id={d.id}>{d.label}</button>)}
+    </div>
+
+    <div class="grid" id="cat-grid">
+      {cards.map((c) => (
+        <section class="cat" data-domains={c.domains.join(' ')} data-levels={c.levels.join(' ')} style={`--cat-color:${c.color};`}>
+          <div class="cat-head">
+            <span class="cat-num">{String(c.number).padStart(2, '0')}</span>
+            <h3 class="cat-title"><a href={`/concepts/#${c.slug}`}>{c.title}</a></h3>
+          </div>
+          <div class="cat-links">
+            {c.links.map((l) => <a href={l.href}>{l.label}</a>)}
+            <a class="cat-all" href={`/concepts/#${c.slug}`}>Xem tất cả →</a>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    {updated.length > 0 && (
+      <section class="updated">
+        <div class="updated-intro">
+          <h2 class="serif-h">Mới cập nhật</h2>
+          <p>Sinh tự động từ lịch sử chỉnh sửa bài viết.</p>
+        </div>
+        <div class="updated-rows">
+          {updated.map((u) => (
+            <div class="u-row">
+              <time>{u.date}</time>
+              <a href={u.href}>{u.title}</a>
+              <span class="u-domain" style={`color:${u.color};`}>{u.domain}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+
+  <div class="home-footer">
+    <div class="band-inner footer-inner">
+      <span>Sổ tay kỹ thuật dữ liệu — handbook mở cho cộng đồng Data/AI Việt Nam</span>
+      <div class="footer-links">
+        <a href="https://github.com/kythuatdulieu/kythuatdulieu.github.io">GitHub</a>
+        <a href="https://github.com/kythuatdulieu/kythuatdulieu.github.io/issues">Đóng góp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* Trang chủ tự dàn trang toàn khổ: gỡ giới hạn và padding của khung Starlight */
+  main:has(.home) .content-panel { padding: 0; }
+  main:has(.home) .sl-container { max-width: none; margin: 0; }
+</style>
+
+<style>
+  .home { font-family: var(--font-sans); }
+  .band-inner { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ---- Dải 4 lối vào ---- */
+  .purpose-band { border-bottom: 1px solid var(--border-default, var(--sl-color-hairline)); background: var(--surface-card, var(--sl-color-bg-nav)); }
+  .purpose-single { display: flex; justify-content: center; padding: 0 1.5rem; }
+  .purpose {
+    display: flex; flex-direction: column; gap: .25rem; min-width: 0;
+    padding: var(--space-4, 1rem) var(--space-5, 1.5rem);
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+    border-radius: var(--radius-md, 8px);
+    margin: var(--space-4, 1rem) 0;
+    color: inherit; text-decoration: none;
+    align-items: center; text-align: center;
+    transition: background var(--duration-fast, 120ms);
+  }
+  .purpose:first-child { border-left: none; }
+  .purpose:hover { background: var(--sl-color-accent-low); text-decoration: none; }
+  .p-title {
+    display: flex; align-items: center; justify-content: center; gap: .45rem;
+    font-size: var(--text-sm, .94rem); font-weight: 600;
+    color: var(--text-heading, var(--sl-color-white)); white-space: nowrap;
+  }
+  .p-arrow { color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 400; }
+  .p-desc { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); line-height: var(--leading-snug, 1.4); }
+  .purpose.highlight { background: var(--sl-color-accent-low); }
+  .purpose.highlight .p-title, .purpose.highlight .p-desc, .purpose.highlight .p-arrow { color: var(--sl-color-text-accent); }
+  .purpose.highlight:hover { filter: brightness(0.97); }
+
+
+  /* ---- Khối chính ---- */
+  .home-main { max-width: 1040px; margin: 0 auto; padding: var(--space-7, 3rem) 1.5rem var(--space-9, 6rem); }
+  .serif-h {
+    margin: 0; font-family: var(--font-serif); font-size: var(--text-xl, 1.75rem);
+    font-weight: 600; letter-spacing: -0.015em; color: var(--text-heading, var(--sl-color-white));
+  }
+  .toc-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4, 1rem); flex-wrap: wrap; margin-bottom: var(--space-4, 1rem); }
+  .toc-count { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); font-family: var(--font-mono); }
+  .toc-count a { color: var(--sl-color-text-accent); text-decoration: none; }
+  .toc-count a:hover { text-decoration: underline; }
+
+  .facets { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin-bottom: var(--space-7, 3rem); }
+  .facet-divider { width: 1px; height: 18px; background: var(--border-default, var(--sl-color-hairline)); margin: 0 .45rem; }
+  .chip {
+    font-size: var(--text-sm, .94rem); font-weight: 500; padding: .3em .8em;
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+    background: transparent; color: var(--text-body, var(--sl-color-text)); cursor: pointer;
+    transition: border-color var(--duration-fast, 120ms), background var(--duration-fast, 120ms);
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--sl-color-accent); }
+  .chip[aria-pressed='true'] { border-color: var(--sl-color-accent); background: var(--sl-color-accent-low); color: var(--sl-color-text-accent); }
+
+  /* ---- Mục lục 3 cột ---- */
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-7, 3rem) var(--space-8, 4rem); }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .cat { display: flex; flex-direction: column; min-width: 0; }
+  .cat[hidden] { display: none; }
+  .cat-head {
+    display: flex; align-items: baseline; gap: .6rem;
+    padding-bottom: var(--space-3, .75rem);
+    border-bottom: 2px solid var(--cat-color, var(--sl-color-accent));
+  }
+  .cat-num { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); color: var(--cat-color, var(--sl-color-accent)); font-weight: 600; }
+  .cat-title { margin: 0; font-size: var(--text-base, 1.06rem); font-weight: 650; letter-spacing: -0.005em; color: var(--text-heading, var(--sl-color-white)); line-height: var(--leading-snug, 1.4); }
+  .cat-title a { color: inherit; text-decoration: none; }
+  .cat-title a:hover { color: var(--sl-color-text-accent); }
+  .cat-links { display: flex; flex-direction: column; }
+  .cat-links > a {
+    font-size: var(--text-sm, .94rem); color: var(--text-muted, var(--sl-color-gray-3));
+    line-height: var(--leading-snug, 1.4);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    padding: .5rem 0; border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+    text-decoration: none;
+    transition: color var(--duration-fast, 120ms);
+  }
+  .cat-links > a:hover { color: var(--sl-color-text-accent); }
+  .cat-links > a.cat-all { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); padding: .55rem 0; font-weight: 500; border-bottom: none; }
+  .cat-links > a.cat-all:hover { color: var(--sl-color-text-accent); }
+
+  /* ---- Mới cập nhật ---- */
+  .updated {
+    margin-top: var(--space-8, 4rem);
+    display: grid; grid-template-columns: minmax(200px, 260px) 1fr;
+    gap: var(--space-8, 4rem); align-items: start;
+    border-top: 1px solid var(--border-default, var(--sl-color-hairline));
+    padding-top: var(--space-6, 2rem);
+  }
+  @media (max-width: 800px) { .updated { grid-template-columns: 1fr; gap: var(--space-4, 1rem); } }
+  .updated-intro { display: flex; flex-direction: column; gap: var(--space-2, .5rem); }
+  .updated-intro p { margin: 0; font-size: var(--text-sm, .94rem); color: var(--text-muted, var(--sl-color-gray-3)); max-width: 30ch; }
+  .updated-rows { display: flex; flex-direction: column; }
+  .u-row {
+    display: flex; align-items: baseline; gap: var(--space-4, 1rem);
+    padding: .5rem 0; border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+    font-size: var(--text-sm, .94rem);
+  }
+  .u-row time { color: var(--text-faint, var(--sl-color-gray-4)); font-family: var(--font-mono); font-size: var(--text-xs, .81rem); flex-shrink: 0; width: 5.2rem; }
+  .u-row a { color: var(--text-body, var(--sl-color-text)); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-decoration: none; }
+  .u-row a:hover { color: var(--sl-color-text-accent); }
+  .u-domain { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); flex-shrink: 0; }
+
+  /* ---- Footer band ---- */
+  .home-footer { border-top: 1px solid var(--border-default, var(--sl-color-hairline)); background: var(--surface-card, var(--sl-color-bg-nav)); }
+  .footer-inner {
+    padding-top: var(--space-5, 1.5rem); padding-bottom: var(--space-5, 1.5rem);
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-5, 1.5rem);
+    flex-wrap: wrap; font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4));
+  }
+  .footer-links { display: flex; gap: var(--space-5, 1.5rem); }
+  .footer-links a { color: var(--text-muted, var(--sl-color-gray-3)); text-decoration: none; }
+  .footer-links a:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
+</style>
+
+<script is:inline>
+  (function () {
+    // Facet filter client-side: domain
+    var active = { domain: new Set() };
+    var chips = document.querySelectorAll('.home .chip');
+    var cards = document.querySelectorAll('.home .cat');
+    var countEl = document.getElementById('cat-count');
+    function apply() {
+      var shown = 0;
+      cards.forEach(function (c) {
+        var ds = (c.getAttribute('data-domains') || '').split(' ').filter(Boolean);
+        var okD = active.domain.size === 0 || ds.some(function (x) { return active.domain.has(x); });
+        var show = okD;
+        c.hidden = !show;
+        if (show) shown++;
+      });
+      if (countEl) countEl.textContent = shown;
+    }
+    chips.forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        var f = ch.getAttribute('data-facet'), id = ch.getAttribute('data-id');
+        var set = active[f];
+        if (set.has(id)) { set.delete(id); ch.setAttribute('aria-pressed', 'false'); }
+        else { set.add(id); ch.setAttribute('aria-pressed', 'true'); }
+        apply();
+      });
+    });
+  })();
+</script>
