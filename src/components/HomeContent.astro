@@ -98,7 +98,10 @@ const purposes = [
   <main class="home-main">
     <div class="toc-head">
       <h2 class="serif-h">Mục lục</h2>
-      <span class="toc-count"><a href="/concepts/">bản đồ nội dung →</a></span>
+      <div class="toc-actions">
+        <a href="/quizzes/" class="cert-btn" title="Bộ đề Databricks, AWS, Azure, GCP">🎯 Luyện thi Certificate</a>
+        <a href="/concepts/" class="toc-link">Tất cả bài viết →</a>
+      </div>
     </div>
 
     <div class="facets" role="group" aria-label="Lọc theo lĩnh vực">
@@ -194,9 +197,28 @@ const purposes = [
     font-weight: 600; letter-spacing: -0.015em; color: var(--text-heading, var(--sl-color-white));
   }
   .toc-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4, 1rem); flex-wrap: wrap; margin-bottom: var(--space-4, 1rem); }
-  .toc-count { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); font-family: var(--font-mono); }
-  .toc-count a { color: var(--sl-color-text-accent); text-decoration: none; }
-  .toc-count a:hover { text-decoration: underline; }
+  .toc-actions { display: flex; align-items: baseline; gap: 1.5rem; }
+  .toc-link { font-size: var(--text-sm, .94rem); color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 500; text-decoration: none; }
+  .toc-link:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
+  
+  .cert-btn {
+    font-size: var(--text-sm, .94rem);
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.8rem;
+    background: var(--sl-color-accent-low);
+    border: 1px solid var(--sl-color-accent);
+    border-radius: var(--radius-pill, 999px);
+    transition: filter var(--duration-fast, 120ms);
+  }
+  .cert-btn:hover {
+    filter: brightness(1.2);
+    text-decoration: none;
+  }
 
   .facets { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin-bottom: var(--space-7, 3rem); }
   .facet-divider { width: 1px; height: 18px; background: var(--border-default, var(--sl-color-hairline)); margin: 0 .45rem; }
