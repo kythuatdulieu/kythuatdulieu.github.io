@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Chất lượng Dữ liệu (Data Quality): Shift-Left, Contracts & Observability"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-quality", "data-contracts", "data-observability", "dataops", "circuit-breaker", "dead-letter-queue"]
 readingTime: "25 mins"

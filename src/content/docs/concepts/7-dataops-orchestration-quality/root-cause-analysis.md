@@ -1,5 +1,7 @@
 ---
 title: "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["root-cause-analysis", "rca", "incident-response", "data-observability", "debugging", "dataops"]
 readingTime: "15 mins"

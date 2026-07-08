@@ -2,6 +2,8 @@
 title: "Grain (Độ mịn dữ liệu): Quyết Định Cốt Lõi Trong Dimensional Modeling"
 description: "Phân tích kiến trúc chuyên sâu về Grain trong Data Warehouse. Mổ xẻ nguyên nhân gây ra Cartesian Explosion, Fan Trap, Chasm Trap và lỗi OOMKilled."
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 tags: ["data-warehouse", "grain", "fact-table", "dimensional-modeling", "system-design", "fan-trap"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

@@ -1,5 +1,7 @@
 ---
 title: "Apache Parquet Internals: Physical Layout, Dremel & Execution Trade-offs"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "25 mins"
 tags: ["parquet", "storage-format", "data-engineering", "big-data", "performance", "dremel", "spark"]

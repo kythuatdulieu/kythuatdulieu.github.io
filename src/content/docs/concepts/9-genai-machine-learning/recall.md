@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Độ phủ (Recall) và Precision trong RAG: Kiến trúc 2-Stage Retrieval"
 metaDescription: "Phân tích chuyên sâu về Recall, Precision, F1-Score và Recall@K từ góc độ Data Engineer. Kiến trúc HNSW, Hybrid Search, Reranking và rủi ro vận hành OOMKilled."
 description: "Trong hệ thống RAG (Retrieval-Augmented Generation) và Information Retrieval, Recall không chỉ là một chỉ số Toán học. Nó định hình toàn bộ kiến trúc Candidate Generation, quyết định chi phí (FinOps) và gây ra các sự cố hệ thống như Latency Spike."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Khi thiết kế hệ thống truy xuất thông tin (Information Retrieval - IR) hoặc RAG (Retrieval-Augmented Generation) ở quy mô Production hàng triệu tài liệu, Data Engineer không nhìn **Recall (Độ phủ)** và **Precision (Độ chính xác)** đơn thuần qua lăng kính ma trận nhầm lẫn (Confusion Matrix). Chúng ta nhìn nó dưới góc độ thiết kế hệ thống: **Sự đánh đổi khốc liệt giữa Băng thông xử lý (Throughput), Độ trễ (Latency), và Chi phí Token (FinOps).**

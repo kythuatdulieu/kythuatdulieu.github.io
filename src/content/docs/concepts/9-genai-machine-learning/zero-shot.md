@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Zero-shot Prompting trong Data Engineering: Text-to-SQL & PII"
 metaDescription: "Phân tích Zero-shot Prompting dưới góc nhìn System Design: Trí nhớ tham số, Ứng dụng trong Streaming PII, Text-to-SQL, và rủi ro ảo giác (Hallucination)."
 description: "Vượt qua định nghĩa cơ bản, bài viết phân tích cách tích hợp Zero-shot Inference vào Data Pipeline, giải quyết bài toán PII, Text-to-SQL, và các đánh đổi FinOps."
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 ---
 
 Đa số các tài liệu về Prompt Engineering mô tả **Zero-shot Prompting** như một phép màu: Bạn ra lệnh cho LLM dịch văn bản hoặc phân loại dữ liệu mà không cần cung cấp bất kỳ ví dụ mẫu nào, và nó vẫn làm được. 

@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Nền tảng Dữ liệu (Data Platform) - Staff Engineer Deep Dive"
 metaDescription: "Phân tích chuyên sâu về Kiến trúc Nền tảng Dữ liệu. Giải phẫu hệ thống từ góc nhìn Staff Engineer: Lambda, Kappa, Medallion, OOM, Data Skew, và FinOps."
 description: "Bài viết cung cấp cái nhìn chuyên sâu về Kiến trúc Nền tảng Dữ liệu ở quy mô lớn, tập trung vào trade-offs hệ thống giữa Lambda vs Kappa, tổ chức dữ liệu Medallion, xử lý sự cố thực tế (OOM, Data Skew), và Infrastructure as Code."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Thiết kế một **Data Platform** ở quy mô Petabyte không đơn thuần là việc chọn "dùng Kafka hay Kinesis", "dùng Snowflake hay BigQuery", hay chắp vá các công cụ mã nguồn mở lại với nhau. Ở góc nhìn của một Staff Data Engineer, thách thức thực sự nằm ở việc giải quyết các **Systemic Trade-offs** (Sự đánh đổi hệ thống): Cân bằng giữa Độ trễ (Latency) và Thông lượng (Throughput), Tính nhất quán (Consistency) và Tính khả dụng (Availability) (theo định lý CAP/PACELC), và tối ưu chi phí (FinOps) trong khi vẫn đảm bảo SLA khắt khe.

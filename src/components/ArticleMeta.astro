@@ -1,0 +1,72 @@
+---
+// Hàng meta dưới tiêu đề bài: category · domains · level · difficulty · readingTime
+// Port từ design system (components/content/ArticleMeta.jsx).
+import { domainById, levelById } from '../config/taxonomy.js';
+
+const { category, domains = [], level, difficulty, readingTime } = Astro.props;
+const domainList = Array.isArray(domains) ? domains : (domains ? [domains] : []);
+const levelOrder = level ? (levelById[level]?.order ?? 1) : 0;
+---
+
+{(category || domainList.length || difficulty || readingTime) && (
+  <div class="article-meta">
+    {category && <span class="am-badge am-neutral">{category}</span>}
+    {domainList.map((d) => {
+      const info = domainById[d] || domainById['Foundations'];
+      return (
+        <span class="am-badge am-domain" style={`--d-var: var(--domain-${(info?.varName) || d.toLowerCase()}); color: var(--domain-${(info?.varName) || d.toLowerCase()}); background: var(--domain-${(info?.varName) || d.toLowerCase()}-bg);`}>
+          {info ? info.label.replace('Data Engineering', 'DE').replace('Analytics Engineering', 'DA').replace('Data Science', 'DS') : d}
+        </span>
+      );
+    })}
+
+    {difficulty && <span class="am-badge am-outline">{difficulty}</span>}
+    {readingTime && <span class="am-time">{readingTime}</span>}
+  </div>
+)}
+
+<style>
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: var(--space-5, 1.5rem);
+    margin-bottom: var(--space-5, 1.5rem);
+    border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+    font-family: var(--font-sans);
+  }
+  .am-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-weight: 600;
+    font-size: var(--text-xs, 0.8125rem);
+    line-height: 1;
+    padding: 0.32em 0.65em;
+    border-radius: var(--radius-pill, 999px);
+    white-space: nowrap;
+  }
+  .am-neutral {
+    color: var(--text-muted, var(--sl-color-gray-3));
+    background: var(--surface-sunken, var(--sl-color-gray-7));
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+  }
+  .am-outline {
+    color: var(--text-muted, var(--sl-color-gray-3));
+    background: transparent;
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+  }
+  .am-domain { border: 1px solid transparent; }
+  .am-dots { display: inline-flex; gap: 2px; }
+  .am-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--border-strong, var(--sl-color-hairline-shade));
+  }
+  .am-dot[data-on='true'] { background: var(--sl-color-text-accent); }
+  .am-time {
+    margin-left: auto;
+    font-size: var(--text-xs, 0.8125rem);
+    color: var(--text-faint, var(--sl-color-gray-4));
+  }
+</style>

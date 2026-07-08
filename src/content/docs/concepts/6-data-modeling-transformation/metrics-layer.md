@@ -1,6 +1,8 @@
 ---
 title: "Lớp ngữ nghĩa chỉ số - Metrics Layer / Semantic Layer"
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 tags: ["metrics-layer", "semantic-layer", "head-less-bi", "analytics-engineering", "single-source-of-truth"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

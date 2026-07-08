@@ -1,5 +1,7 @@
 ---
 title: "Database Indexing & Storage Engines (B-Tree, LSM-Tree, Z-Order)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["indexing", "b-tree", "lsm-tree", "performance", "data-lake", "z-ordering", "bloom-filter"]
 readingTime: "20 mins"

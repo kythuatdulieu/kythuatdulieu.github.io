@@ -1,5 +1,7 @@
 ---
 title: "Deep Dive: Exactly-Once Semantics (EOS) & Transactional Outbox Pattern"
+domains: ["DE", "Platform"]
+level: "Senior"
 description: "Phân tích kiến trúc của cơ chế Exactly-Once Semantics trong Apache Kafka và cách áp dụng Transactional Outbox Pattern kết hợp CDC (Debezium) để giải quyết bài toán Dual-Write trong hệ thống phân tán."
 difficulty: "Advanced"
 tags: ["kafka", "exactly-once", "outbox-pattern", "debezium", "cdc", "distributed-systems"]

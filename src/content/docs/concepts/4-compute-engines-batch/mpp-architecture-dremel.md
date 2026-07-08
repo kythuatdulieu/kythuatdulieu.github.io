@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc MPP & Dremel"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "20 mins"
 lastUpdated: 2026-06-29

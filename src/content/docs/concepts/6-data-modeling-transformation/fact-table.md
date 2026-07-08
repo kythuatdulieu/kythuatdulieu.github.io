@@ -1,6 +1,8 @@
 ---
 title: "Bảng Sự kiện (Fact Table): Thiết kế Kỹ thuật số lượng lớn"
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 tags: ["data-warehouse", "fact-table", "lakehouse", "delta-lake", "performance-optimization", "system-design", "kimball"]
 readingTime: "30 mins"
 lastUpdated: 2026-06-29

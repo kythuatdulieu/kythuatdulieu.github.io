@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "B-Tree vs LSM-Tree: Kiến Trúc Lưu Trữ & Đánh Đổi Hệ Thống"
 metaDescription: "Phân tích kiến trúc Storage Engines: B-Tree (Tối ưu Read) vs LSM-Tree (Tối ưu Write). Đánh đổi hệ thống, Amplification Triad và cấu hình RocksDB."
 description: "Phân tích kiến trúc cốt lõi của Storage Engines: B-Tree (In-place updates) và LSM-Tree (Append-only). Đi sâu vào The Amplification Triad (Read/Write/Space) và các rủi ro vận hành (Compaction Stalls, OOMKilled)."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Lựa chọn Storage Engine là quyết định thiết kế kiến trúc (Architecture Design) quan trọng bậc nhất, ảnh hưởng trực tiếp đến hiệu năng, chi phí vận hành (FinOps) và tính ổn định của toàn bộ hệ thống dữ liệu. Ở tầng vật lý, gần như tất cả các cơ sở dữ liệu hiện đại đều dựa trên một trong hai họ cấu trúc dữ liệu cốt lõi: **B-Tree** (và các biến thể như B+Tree) hoặc **LSM-Tree** (Log-Structured Merge-Tree).

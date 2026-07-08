@@ -1,5 +1,7 @@
 ---
 title: "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+domains: ["DE"]
+level: "Senior"
 description: "Phân tích kiến trúc thực thi vật lý của Broadcast Hash Join, Shuffle Hash Join, Sort Merge Join. Đánh giá Systemic Trade-offs và cơ chế Adaptive Query Execution (AQE)."
 difficulty: "Advanced"
 tags: ["spark-joins", "broadcast-hash-join", "shuffle-hash-join", "sort-merge-join", "aqe"]

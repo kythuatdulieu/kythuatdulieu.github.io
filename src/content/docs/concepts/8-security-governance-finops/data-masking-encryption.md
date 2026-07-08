@@ -27,11 +27,11 @@ refs:
     type: "docs"
 ---
 
-Bảo mật dữ liệu (Data Security) ở quy mô Petabyte hiếm khi là một tính năng cấu hình một lần rồi quên. Dưới góc nhìn thiết kế hệ thống, bảo mật là bài toán đánh đổi sống còn giữa **Security (Bảo mật)**, **Performance (Độ trễ I/O, thời gian tính toán)**, và **Cost (Chi phí API, Compute)**.
+Bảo mật dữ liệu (Data Security) ở quy mô Petabyte hiếm khi là một tính năng cấu hình một lần rồi quên. Dưới góc nhìn thiết kế hệ thống, bảo mật là bài toán đánh đổi giữa **Security (Bảo mật)**, **Performance (Độ trễ I/O, thời gian tính toán)**, và **Cost (Chi phí API, Compute)**.
 
-Nếu cấu hình sai thuật toán hoặc sai vị trí mã hóa trong luồng dữ liệu, hệ thống sẽ phải trả giá bằng các sự cố thực tế: API Throttling làm sập luồng ingestion, OOMKilled trên worker node khi join dữ liệu, hoặc query latency tăng gấp hàng trăm lần do hệ thống buộc phải quét toàn bộ bảng (full table scan). 
+Nếu cấu hình sai thuật toán hoặc sai vị trí mã hóa trong luồng dữ liệu, hệ thống có thể gặp các sự cố thực tế: API throttling làm nghẽn luồng ingestion, OOMKilled trên worker node khi join dữ liệu, hoặc query latency tăng mạnh do engine buộc phải quét nhiều dữ liệu hơn dự kiến.
 
-Bài viết này mổ xẻ kiến trúc thực thi vật lý của ba cơ chế bảo vệ dữ liệu phổ biến nhất: **Envelope Encryption** ở tầng lưu trữ, **Dynamic Data Masking** ở tầng truy vấn, và **Tokenization / Format-Preserving Encryption** ở tầng tích hợp, cùng với những cạm bẫy vận hành của chúng.
+Ba cơ chế cần phân biệt rõ là **Envelope Encryption** ở tầng lưu trữ, **Dynamic Data Masking** ở tầng truy vấn, và **Tokenization / Format-Preserving Encryption** ở tầng tích hợp. Chúng giải quyết các loại rủi ro khác nhau và có failure mode vận hành khác nhau.
 
 ---
 
@@ -39,7 +39,7 @@ Bài viết này mổ xẻ kiến trúc thực thi vật lý của ba cơ chế 
 
 Để bảo vệ dữ liệu ở trạng thái nghỉ (data at-rest) trên S3 hoặc GCS, các Cloud Provider bắt buộc sử dụng cơ chế **Envelope Encryption**.
 
-Tại sao không đẩy thẳng dữ liệu qua API của KMS (Key Management Service) để mã hóa? KMS giao tiếp qua mạng HTTP. Việc đẩy 1 TB dữ liệu Parquet qua HTTP để KMS mã hóa sẽ làm nghẽn mạng nội bộ, mất hàng giờ đồng hồ và tốn chi phí API khổng lồ (KMS giới hạn payload ở mức 4KB). Do đó, việc mã hóa phải diễn ra tại chỗ (local compute).
+Tại sao không đẩy thẳng dữ liệu qua API của KMS (Key Management Service) để mã hóa? KMS được thiết kế để quản lý khóa, không phải để nhận và mã hóa trực tiếp file dữ liệu lớn. Payload mã hóa trực tiếp qua KMS bị giới hạn rất nhỏ so với kích thước file Parquet, nên dữ liệu phải được mã hóa tại chỗ bằng data key, còn KMS chỉ bảo vệ khóa đó.
 
 ### Luồng thực thi vật lý (Physical Execution)
 

@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Shuffle, Snowflake & BigQuery"
 metaDescription: "Deep dive vào Data Warehouse ở góc nhìn Data Engineer: Shared-Nothing vs Separation of Compute and Storage, Tối ưu Hash Join/Broadcast, Columnar Compression."
 description: "Data Warehouse ở quy mô enterprise không chỉ là viết SQL. Khám phá cỗ máy phân tán bên dưới: Kiến trúc BigQuery/Snowflake, Vectorized Execution, Network Shuffle, và Data Skew."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Data Warehouse (DWH) ở quy mô enterprise không chỉ đơn thuần là mô hình hóa dữ liệu (Kimball hay Inmon), mà là bài toán thiết kế một cỗ máy phân tán (Distributed System) đủ sức scan hàng Petabyte dữ liệu, thực thi các phép JOIN phức tạp với hàng tỷ dòng mà không bị sập (OOM - Out of Memory) hay tắc nghẽn mạng (Network Bottleneck). 

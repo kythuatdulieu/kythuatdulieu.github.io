@@ -1,5 +1,7 @@
 ---
 title: "Tìm kiếm kết hợp (Hybrid Search)"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["hybrid-search", "vector-database", "rag", "bm25", "genai", "system-design", "elasticsearch"]
 readingTime: "15 mins"

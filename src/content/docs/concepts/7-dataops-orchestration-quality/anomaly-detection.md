@@ -1,6 +1,8 @@
 ---
 title: "Phát hiện bất thường - Anomaly Detection"
 difficulty: "Advanced"
+domains: ["DS", "DE"]
+level: "Senior"
 tags: ["anomaly-detection", "data-observability", "machine-learning", "pyspark", "data-quality"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

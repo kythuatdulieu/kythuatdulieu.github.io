@@ -1,6 +1,8 @@
 ---
 title: "Lược đồ bông tuyết - Snowflake Schema"
 difficulty: "Intermediate"
+domains: ["DE"]
+level: "Middle"
 tags: ["data-warehouse", "snowflake-schema", "dimensional-modeling", "normalization", "star-schema", "performance", "obt"]
 readingTime: "11 mins"
 lastUpdated: 2026-06-29

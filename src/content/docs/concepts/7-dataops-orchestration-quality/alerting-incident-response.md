@@ -2,6 +2,8 @@
 title: "Alerting & Incident Response: Từ Cảnh báo đến Post-mortem"
 description: "Kiến trúc Data Observability, chống Alert Fatigue và quy trình Incident Response thực chiến dành cho Kỹ sư Dữ liệu."
 difficulty: "Advanced"
+domains: ["Platform", "DE"]
+level: "Senior"
 tags: ["incident-response", "alerting", "data-observability", "sre", "on-call", "pagerduty"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

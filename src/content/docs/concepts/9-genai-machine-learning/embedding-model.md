@@ -1,5 +1,7 @@
 ---
 title: "Kiến Trúc Embedding Models: Two-Tower, MRL và Contrastive Learning"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["embedding-model", "system-design", "bi-encoder", "mrl", "finops", "vector-db", "machine-learning"]
 readingTime: "20 mins"

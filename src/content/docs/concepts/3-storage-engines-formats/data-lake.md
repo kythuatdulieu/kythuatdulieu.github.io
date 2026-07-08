@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Data Lake: Data Gravity, Trade-offs và Tối ưu Chi phí"
 metaDescription: "Đi sâu vào kiến trúc vật lý của Data Lake (S3 vs HDFS), phân tích sự cố Small File Problem, Data Swamp, Data Gravity và kỹ thuật FinOps."
 description: "Phân tích kiến trúc hệ thống của Data Lake dưới góc nhìn Data Engineering. Bài viết mổ xẻ cơ chế lưu trữ S3, bài toán nghẽn cổ chai I/O, và các Trade-offs."
+domains: ["DE"]
+level: "Middle"
 ---
 
 Data Lake không đơn thuần là một "cái kho" hay bãi rác để ném mọi dữ liệu thô vào. Dưới góc độ Kỹ thuật Hệ thống (System Design), Data Lake là một hệ thống lưu trữ phân tán (Distributed Storage) tách rời hoàn toàn với tầng tính toán (Compute), tận dụng tối đa sức mạnh của Cloud Object Storage (S3, GCS) để đạt khả năng mở rộng vô hạn với chi phí thấp nhất. 

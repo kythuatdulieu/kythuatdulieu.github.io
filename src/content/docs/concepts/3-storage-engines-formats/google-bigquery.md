@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc BigQuery: Dremel, Colossus và Các Đánh Đổi Hệ Thống"
 metaDescription: "Đi sâu vào kiến trúc vật lý của Google BigQuery (Borg, Colossus, Dremel, Jupiter). Phân tích mã nguồn Terraform, Tối ưu hoá truy vấn và các rủi ro vận hành OOMKilled, Slot Starvation."
 description: "Phân tích kiến trúc phân tách Compute và Storage của BigQuery. Mổ xẻ cách Dremel thực thi truy vấn, định dạng Capacitor, và các đánh đổi (trade-offs) để tránh sập hệ thống hoặc bùng nổ chi phí."
+domains: ["DE", "Platform", "DA"]
+level: "Senior"
 ---
 
 Khác với các hệ thống RDBMS truyền thống (PostgreSQL, MySQL, Oracle) nơi Compute (CPU/RAM) và Storage (Ổ cứng) bị trói buộc chặt chẽ vào cùng một máy chủ vật lý, Google BigQuery là một Enterprise Data Warehouse thế hệ mới theo đuổi triết lý **Decoupled Architecture (Kiến trúc Tách rời Tính toán và Lưu trữ)**. Nó cho phép một Data Analyst ném một câu truy vấn SQL phân tích hàng Petabyte dữ liệu và nhận lại kết quả chỉ trong vài giây, mà không cần quan tâm đến việc cấp phép Node, tuning RAM hay IOPS ổ cứng.

@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Kỹ thuật Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)"
+domains: ["DE", "Platform"]
+level: "Senior"
 description: "Phân tích sâu kiến trúc vật lý lưu trữ, thuật toán nén Gorilla, cơn ác mộng High Cardinality (Netflix Atlas) và Trade-offs hệ thống của InfluxDB, TimescaleDB, ClickHouse."
 lastUpdated: 2026-06-29
 ---

@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kiến trúc Cloud Object Storage: Amazon S3 Internals, HDFS vs S3"
 metaDescription: "Phân tích chuyên sâu kiến trúc Cloud Object Storage: S3 Internals, Erasure Coding, Strong Consistency, và cách giải quyết bài toán Small Files trong Data Lake."
 description: "Phân tích chuyên sâu về kiến trúc Cloud Object Storage: S3 Internals, Erasure Coding, Strong Consistency, và cách giải quyết bài toán Small Files trong Data Lake."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Cloud Object Storage (Amazon S3, GCS, Azure Blob) đã trở thành "trái tim" của Modern Data Stack, thay thế hoàn toàn kiến trúc HDFS nguyên thủy. Tuy nhiên, đằng sau giao diện API RESTful đơn giản là những hệ thống phân tán khổng lồ với hàng trăm microservices xử lý hàng chục triệu request mỗi giây. 

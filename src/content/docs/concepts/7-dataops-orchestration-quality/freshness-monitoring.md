@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Giám sát Độ trễ Dữ liệu (Freshness Monitoring)"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["freshness-monitoring", "data-observability", "sla", "data-engineering", "system-design", "dbt"]
 readingTime: "25 mins"

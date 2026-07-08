@@ -1,5 +1,7 @@
 ---
 title: "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["spark", "data-skew", "salting", "performance-tuning", "troubleshooting"]
 readingTime: "25 mins"

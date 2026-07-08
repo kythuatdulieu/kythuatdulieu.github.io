@@ -1,5 +1,7 @@
 ---
 title: "Consumer Groups trong Kafka"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["consumer-groups", "apache-kafka", "scaling", "parallelism", "rebalance", "oomkilled"]
 readingTime: "25 mins"

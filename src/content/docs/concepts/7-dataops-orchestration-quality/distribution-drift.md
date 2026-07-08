@@ -1,5 +1,7 @@
 ---
 title: "Trôi dạt phân phối - Distribution Drift (Data Drift)"
+domains: ["DE", "DS"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-drift", "distribution-drift", "data-observability", "machine-learning", "monitoring", "psi"]
 readingTime: "15 mins"

@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Advanced"
 tags: ["medallion-architecture", "data-lakehouse", "bronze", "silver", "gold", "databricks", "streaming", "liquid-clustering", "dbt"]
 readingTime: "12 mins"

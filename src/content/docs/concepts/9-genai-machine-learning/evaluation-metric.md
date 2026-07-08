@@ -1,5 +1,7 @@
 ---
 title: "Chỉ số đánh giá - Evaluation Metric & RAG Triad"
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["evaluation", "metric", "rag", "llm-as-a-judge", "ragas", "trulens", "human-in-the-loop", "finops"]
 readingTime: "30 mins"

@@ -1,5 +1,7 @@
 ---
 title: "Vector Embeddings & Toán học Không gian (Vector Space)"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["embeddings", "vector-space", "cosine-similarity", "transformers", "dimensionality-reduction", "system-design", "finops"]
 readingTime: "25 mins"

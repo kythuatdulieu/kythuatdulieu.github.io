@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Zero-Copy Cloning Architecture: Staff Engineer Deep Dive"
 metaDescription: "Phân tích kiến trúc Zero-Copy Cloning, cơ chế Copy-on-Write, quản trị Metadata (Snowflake, Iceberg) và rủi ro FinOps (Clone Sprawl, Vacuuming)."
 description: "Phân tích dưới góc độ Staff Engineer về Zero-Copy Cloning: Từ kiến trúc Metadata, cơ chế Copy-on-Write, cho đến những rủi ro về Vacuuming, phân mảnh dữ liệu và bài toán FinOps."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong các nền tảng Data Warehouse / Lakehouse hiện đại (Snowflake, BigQuery, Delta Lake, Apache Iceberg), **Zero-Copy Cloning** thường được quảng cáo như một phép màu có thể "nhân bản 1 Petabyte dữ liệu trong 1 giây mà không tốn một xu phí lưu trữ".

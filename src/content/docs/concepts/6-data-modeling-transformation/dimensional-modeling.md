@@ -1,5 +1,7 @@
 ---
 title: "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+domains: ["DE", "DA"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-warehouse", "dimensional-modeling", "kimball", "data-vault", "obt", "lakehouse"]
 readingTime: "25 mins"

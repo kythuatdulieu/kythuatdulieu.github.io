@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "ETL, ELT và Zero-ETL - Kiến trúc Data Pipeline hiện đại"
 metaDescription: "Khám phá sự tiến hóa từ ETL truyền thống sang ELT, Zero-ETL và Reverse ETL. Hướng dẫn thiết kế Data Pipeline bằng dbt và xử lý sự cố Data Skew."
 description: "Trong ngành Kỹ thuật dữ liệu, ETL là trái tim của mọi hệ thống. Bài viết mổ xẻ các mô hình ETL, ELT, Zero-ETL và cách thiết kế pipeline ở cấp độ Staff Engineer."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Ở cấp độ **Staff Data Engineer**, ETL không chỉ đơn thuần là việc viết vài đoạn script Python (pandas) hay sử dụng các công cụ kéo-thả (GUI) để di chuyển dữ liệu từ điểm A sang điểm B. Đó là bài toán thiết kế hệ thống phân tán ở quy mô Petabyte, nơi bạn phải liên tục đánh đổi (Systemic Trade-offs) giữa **Độ trễ (Latency)**, **Thông lượng (Throughput)**, **Chi phí Compute (Cost)**, và **Độ tin cậy (Reliability)**. 

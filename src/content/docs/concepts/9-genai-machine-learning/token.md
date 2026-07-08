@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Thiết kế hệ thống Tokenization & Tối ưu FinOps LLM"
 metaDescription: "Tìm hiểu kiến trúc Byte-Pair Encoding, sự đánh đổi hệ thống của Tokenizer, và cách tối ưu hóa chi phí (FinOps) bằng API Gateway Circuit Breakers khi vận hành LLM."
 description: "Token không chỉ là một khái niệm ngôn ngữ học. Trong Kỹ thuật Dữ liệu và Thiết kế Hệ thống LLM, số lượng Token quyết định trực tiếp tới chi phí hạ tầng Cloud (FinOps), độ trễ truy xuất (Latency) và giới hạn tính toán (Context Window). Bài viết này sẽ mổ xẻ Tokenization từ góc nhìn System Design và Vận hành thực chiến."
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 ---
 
 Khi vận hành các hệ thống Generative AI ở quy mô Production, Token không chỉ đơn giản là "Những mảnh ghép của từ". Token chính là **Đơn vị Tính toán Vật lý [Compute Unit]** bên trong GPU và là **Đơn vị Thanh toán Tiền (Billing Unit)** trên hóa đơn Cloud của bạn. 

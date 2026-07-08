@@ -1,5 +1,7 @@
 ---
 title: "Mô hình Data Vault 2.0"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-vault", "data-modeling", "data-warehouse", "architecture", "dbt"]
 readingTime: "25 mins"

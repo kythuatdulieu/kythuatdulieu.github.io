@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Databricks Platform Architecture: Control Plane, Photon & Trade-offs"
 metaDescription: "Phân tích kiến trúc kỹ thuật sâu của Databricks: Control Plane, Data Plane, Photon Vectorized Engine, Liquid Clustering vs Z-Ordering và Unity Catalog."
 description: "Mổ xẻ kiến trúc Databricks từ góc nhìn System Design: Các luồng thực thi vật lý, Photon C++ Engine, Liquid Clustering, Unity Catalog và các rủi ro vận hành."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Bỏ qua các định nghĩa mang tính tiếp thị về "Data Intelligence Platform", ở góc độ của một **Staff Data Engineer**, Databricks bản chất là một hệ thống phân tán mạnh mẽ kết hợp giữa năng lực điều phối cụm (Cluster Orchestration) và lõi xử lý dữ liệu được tinh chỉnh khốc liệt (Spark/Photon) chạy trực tiếp trên Cloud Object Storage.

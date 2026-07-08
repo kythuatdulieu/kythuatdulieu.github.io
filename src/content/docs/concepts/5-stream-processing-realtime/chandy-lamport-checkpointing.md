@@ -1,5 +1,7 @@
 ---
 title: "Chandy-Lamport & Distributed Checkpointing (Flink)"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 readingTime: "20 mins"
 tags: ["flink", "streaming", "checkpointing", "chandy-lamport", "distributed-systems", "java"]

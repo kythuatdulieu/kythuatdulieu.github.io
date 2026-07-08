@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Hệ thống Nguồn (Source Systems): Kiến trúc & Systemic Trade-offs"
 metaDescription: "Phân tích Staff Engineer level về hệ thống nguồn: CDC (Change Data Capture), Transactional Outbox, Dual Writes, API Pagination và Systemic Trade-offs."
 description: "Hệ thống Nguồn (Source Systems) là nơi sinh ra dữ liệu. Việc trích xuất dữ liệu từ các hệ thống này ở quy mô lớn là một cuộc chiến liên tục về Distributed Systems trade-offs."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Lấy dữ liệu từ nguồn không chỉ đơn giản là việc gọi một câu lệnh `SELECT *` hoặc một API `GET`. Khi hệ thống phục vụ hàng chục ngàn Request/giây (RPS), bất kỳ một câu lệnh truy vấn phân tích (OLAP) vô tình nào chạy nhầm vào hệ thống tác nghiệp (OLTP) cũng có thể làm cạn kiệt Connection Pool, gây khóa bảng (Table Lock), và đánh sập hệ thống (Cascading Failure). 

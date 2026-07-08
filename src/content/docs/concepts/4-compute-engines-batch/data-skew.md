@@ -1,5 +1,7 @@
 ---
 title: "Lệch dữ liệu (Data Skew)"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-skew", "performance-tuning", "spark-joins", "apache-spark", "aqe"]
 readingTime: "30 mins"

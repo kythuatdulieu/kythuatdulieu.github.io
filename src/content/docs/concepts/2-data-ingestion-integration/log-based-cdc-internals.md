@@ -6,6 +6,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Log-based CDC Internals: Kiến trúc Debezium, WAL, Netflix DBLog"
 metaDescription: "Tìm hiểu chi tiết cơ chế hoạt động của Log-based CDC, cách đọc Write-Ahead Log (WAL), và kiến trúc thực tế từ Netflix (DBLog), Uber."
 description: "Khám phá chuyên sâu cơ chế của Log-based Change Data Capture (CDC). Phân tích cách đọc WAL, Binlog, kiến trúc Debezium và cách Netflix giải quyết bài toán Snapshot với DBLog."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Thay vì liên tục query database định kỳ [Polling] và làm cạn kiệt tài nguyên I/O (Query-based CDC), **Log-based Change Data Capture (CDC)** tận dụng chính cơ chế transaction logging nội tại của Database Engine để capture thay đổi dữ liệu theo thời gian thực. Phương pháp này mang lại low-latency streaming pipeline, giảm thiểu tải (zero-impact) trên Primary Database, và đảm bảo 100% tính nguyên vẹn (consistency) của dữ liệu.

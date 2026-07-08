@@ -1,5 +1,7 @@
 ---
 title: "Operational: Vacuum, MVCC & Quản lý Data Bloat"
+domains: ["DE", "Platform"]
+level: "Senior"
 description: "Phân tích kiến trúc Multi-Version Concurrency Control (MVCC) và cơ chế dọn rác (Vacuum) trên PostgreSQL, Delta Lake, và Iceberg. Khắc phục lỗi XID Wraparound."
 lastUpdated: 2026-06-29
 ---

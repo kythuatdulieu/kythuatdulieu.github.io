@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Pipeline Architecture: Deep Dive, Trade-offs & Best Practices"
 metaDescription: "Deep dive Staff Engineer level về Data Pipeline: Thiết kế hệ thống phân tán, xử lý Data Skew, OOM, kiến trúc ETL vs ELT, Idempotency và Checkpointing."
 description: "Ở quy mô nhỏ, Data Pipeline đơn giản là việc di chuyển byte dữ liệu. Nhưng ở quy mô Petabyte, đó là bài toán khốc liệt về hệ thống phân tán: tối ưu Shuffle I/O, Idempotency, Checkpointing và xử lý Backpressure."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Ở quy mô nhỏ, Data Pipeline đơn giản là việc Copy dữ liệu từ điểm A sang điểm B. Khi khối lượng dữ liệu chạm ngưỡng hàng trăm Terabyte hay Petabyte, các Shell Script thủ công hay Cron Job đơn giản sẽ lập tức sụp đổ. Ở góc nhìn của một Staff Engineer, xây dựng Data Pipeline thực chất là giải quyết các bài toán cốt lõi của **Hệ thống phân tán (Distributed Systems)**: Quản trị tài nguyên (Compute & Memory), tính toán song song (Parallelism), xử lý trạng thái lưu (Checkpointing), và đảm bảo tính nhất quán (Idempotency) trong một mạng lưới các Node có rủi ro hỏng hóc bất cứ lúc nào.

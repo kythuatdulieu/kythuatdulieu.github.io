@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Optimistic Concurrency Control trong Delta Lake: Kiến trúc và Rủi ro"
 metaDescription: "Phân tích kiến trúc của Optimistic Concurrency Control (OCC) trong Delta Lake. Các vấn đề xung đột ghi, Atomic Commits, Deletion Vectors và Retry Storms."
 description: "Phân tích kiến trúc của Optimistic Concurrency Control (OCC) trong Delta Lake. Các vấn đề xung đột ghi, Atomic Commits trên Cloud Storage, Deletion Vectors và các rủi ro vận hành thực chiến."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Khi chuyển dịch từ Data Warehouse (RDBMS) sang kiến trúc Data Lakehouse, một trong những thách thức lớn nhất là vấn đề **Concurrency (Đồng thời)**. Các hệ thống Object Storage (như Amazon S3, ADLS Gen2) vốn được thiết kế cho thao tác *append-only* và hoàn toàn không có khái niệm "Row-level lock" hay "Table lock" như PostgreSQL hay MySQL. 

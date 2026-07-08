@@ -1,5 +1,7 @@
 ---
 title: "Xử lý phân tán - Distributed Processing"
+domains: ["DE"]
+level: "Junior"
 difficulty: "Beginner"
 tags: ["distributed-processing", "big-data", "cluster"]
 readingTime: "25 mins"

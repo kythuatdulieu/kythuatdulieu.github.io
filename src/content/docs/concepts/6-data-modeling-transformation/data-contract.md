@@ -1,5 +1,7 @@
 ---
 title: "Hợp đồng dữ liệu - Data Contract"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-contract", "data-governance", "data-quality", "data-engineering", "microservices", "data-mesh", "schema-registry"]
 readingTime: "25 mins"

@@ -1,5 +1,7 @@
 ---
 title: "Watermark - Cỗ Máy Thời Gian Của Streaming Engine"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["stream-processing", "watermark", "event-time", "late-data", "apache-flink", "architecture", "state-management"]
 readingTime: "15 mins"

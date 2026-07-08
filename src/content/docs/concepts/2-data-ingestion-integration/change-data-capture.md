@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Change Data Capture (CDC): Kiến trúc Debezium, Kafka & Netflix DBLog"
 metaDescription: "Phân tích chuyên sâu về Change Data Capture (CDC) ở quy mô hệ thống phân tán. Đánh giá Trade-offs, kiến trúc DBLog của Netflix, và kinh nghiệm xử lý sự cố thực tế với Debezium."
 description: "Change Data Capture (CDC) không đơn thuần là việc kéo dữ liệu. Khám phá kiến trúc Log-based CDC (WAL/Binlog), cách xử lý Snapshotting không lock bảng, và cấu hình Debezium chuẩn Production."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán (Distributed Systems) quy mô lớn, việc sử dụng chung một database duy nhất cho mọi tác vụ là điều bất khả thi (nguyên lý Polyglot Persistence). Dữ liệu được tạo ra ở hệ thống giao dịch OLTP (PostgreSQL, MySQL) nhưng cần được đồng bộ ngay lập tức đến Search Engine (Elasticsearch), Cache (Redis), và Data Warehouse (Snowflake, BigQuery) để phục vụ phân tích.

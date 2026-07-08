@@ -27,16 +27,16 @@ refs:
     type: docs
 ---
 
-Thay vì những lời kêu gọi "hãy tắt máy chủ khi không dùng" chung chung, FinOps đối với một Kỹ sư Dữ liệu (Data Engineer) là một cuộc chiến ở tầng **vật lý (Physical Execution Layer)**. Mỗi byte dữ liệu được tải vào RAM, ghi xuống ổ cứng (Disk I/O), hay truyền tải qua mạng (Network Shuffle) đều trực tiếp cấu thành tờ hóa đơn Cloud cuối tháng. 
+Thay vì chỉ dừng ở lời nhắc "hãy tắt máy chủ khi không dùng", FinOps đối với Data Engineer nằm ở tầng **vật lý (Physical Execution Layer)**. Mỗi byte dữ liệu được tải vào RAM, ghi xuống ổ cứng (Disk I/O), hay truyền qua mạng (Network Shuffle) đều góp phần vào hóa đơn Cloud cuối tháng. 
 
-Bài viết này đi sâu vào các quyết định thiết kế kiến trúc, phân tích các sự cố "đốt tiền" trên production (OOMKilled, Cartesian Explosion, Retry Storms), và cách cấu hình bằng mã (Terraform, Python) để xây dựng một Data Platform có Unit Economics tối ưu theo chuẩn của FinOps Foundation.
+Các phần dưới tập trung vào quyết định kiến trúc, failure mode trên production (OOMKilled, Cartesian Explosion, Retry Storms), và cách cấu hình bằng mã (Terraform, Python) để làm chi phí dễ đo, dễ quy trách nhiệm và dễ kiểm soát hơn.
 
 ## 1. Đánh đổi kiến trúc: Compute Cost vs. Storage Cost
 
 Trong các thiết kế Data Platform hiện đại, chúng ta luôn phải cân đối giữa chi phí lưu trữ (Storage) và tính toán (Compute).
 
 * **Serverless (BigQuery, Athena) vs. Provisioned (Databricks, AWS EMR):**
-  Serverless tính tiền theo lượng dữ liệu quét (khoảng $5/TB) hoặc theo slot time. Mô hình này hoàn hảo cho *spiky workloads* (các truy vấn không thường xuyên của Data Analyst). Tuy nhiên, nếu bạn có một streaming pipeline chạy 24/7 với khối lượng dữ liệu lớn, việc duy trì một cụm provisioned với Spot Instances sẽ rẻ hơn nhiều so với việc trả tiền theo TB quét liên tục.
+  Serverless tính tiền theo lượng dữ liệu quét hoặc theo slot time tùy nền tảng. Mô hình này hợp với *spiky workloads* (các truy vấn không thường xuyên của Data Analyst). Tuy nhiên, nếu bạn có một streaming pipeline chạy 24/7 với khối lượng ổn định, cụm provisioned được right-size đúng cách có thể rẻ và dễ dự báo hơn.
 * **Normalized (Chuẩn hóa) vs. Denormalized (Phi chuẩn hóa):**
   Lưu trữ dữ liệu dạng Normalized (Star Schema) giúp tiết kiệm Storage Cost (vốn rất rẻ trên S3), nhưng làm bùng nổ Compute Cost do CPU phải chạy các lệnh `JOIN` liên tục mỗi lần truy vấn. Ngược lại, Denormalized tốn Storage (lưu trùng lặp) nhưng giảm Compute. Với giá S3 Standard hiện tại chỉ khoảng $0.023/GB, xu hướng chung là ưu tiên **Denormalized** (One Big Table) để tiết kiệm Compute đắt đỏ.
 
@@ -63,7 +63,7 @@ graph TD
 ```
 *Caption: Các trụ cột trong FinOps dành cho Data Engineering, chuyển dịch từ việc quản lý chi phí thụ động sang tối ưu chủ động.*
 
-## 2. Rủi ro vận hành & Khắc phục "Sự cố đốt tiền"
+## 2. Rủi ro vận hành & kiểm soát chi phí
 
 Các Data Engineer thường đối mặt với những lỗi hệ thống không chỉ làm hỏng pipeline mà còn thổi bay ngân sách dự án chỉ trong vài giờ.
 
@@ -71,7 +71,7 @@ Các Data Engineer thường đối mặt với những lỗi hệ thống khôn
 
 **Sự cố:** Một kỹ sư thực hiện câu lệnh `JOIN` giữa hai bảng lớn mà quên điều kiện `ON`, hoặc `ON` trên một cột chứa quá nhiều giá trị trùng lặp (Data Skew). Kết quả là một tích Đề-các (Cartesian Product). Một bảng 1 triệu dòng JOIN với bảng 1 triệu dòng khác có thể tạo ra 1 nghìn tỷ dòng rác.
 
-**Hệ quả vật lý:** Khối lượng tính toán khổng lồ buộc Spark phải gửi toàn bộ dữ liệu qua mạng (Network Shuffle). Các Worker Node không đủ RAM để chứa, dẫn đến hiện tượng **Spill-to-disk** (ghi tạm ra ổ cứng) làm pipeline chậm đi hàng trăm lần, và cuối cùng chết với lỗi `java.lang.OutOfMemoryError` (OOMKilled). Chế độ Auto-retry của Airflow hoặc Databricks sẽ liên tục khởi động lại job này, đẩy hóa đơn Compute lên hàng nghìn USD vô ích.
+**Hệ quả vật lý:** Khối lượng tính toán tăng mạnh buộc Spark phải gửi nhiều dữ liệu qua mạng (Network Shuffle). Các worker node không đủ RAM để chứa sẽ **spill-to-disk** (ghi tạm ra ổ cứng), làm pipeline chậm đáng kể, rồi có thể chết với lỗi `java.lang.OutOfMemoryError` (OOMKilled). Nếu auto-retry được cấu hình mù quáng, orchestrator sẽ chạy lại cùng một job lỗi và tiếp tục tiêu compute.
 
 **Khắc phục:** Sử dụng **Broadcast Hash Join**. Nếu một bảng đủ nhỏ (Dimension table, < 1GB), hãy ép Spark phát sóng (Broadcast) nó đến bộ nhớ của tất cả các Worker Nodes. Điều này loại bỏ hoàn toàn Network Shuffle.
 
@@ -86,7 +86,7 @@ dim_df = spark.read.parquet("s3://data/dim_store/")
 optimized_df = fact_df.join(broadcast(dim_df), "store_id")
 ```
 
-Đối với các script Python thuần, tuyệt đối không dùng `fetchall()` tải toàn bộ dữ liệu vào RAM. Hãy dùng Generators (`yield`) hoặc `fetchmany()` để xử lý từng chunk dữ liệu một cách an toàn.
+Đối với các script Python thuần xử lý dữ liệu lớn, tránh dùng `fetchall()` để tải toàn bộ dữ liệu vào RAM. Hãy dùng generators (`yield`) hoặc `fetchmany()` để xử lý theo chunk.
 
 ### 2.2. The Small File Problem & Metadata Overhead
 
@@ -104,8 +104,8 @@ ZORDER BY (customer_id, event_date);
 
 ### 2.3. Cơn bão thử lại (Retry Storms)
 
-**Sự cố:** Một API bên thứ ba bị sập hoặc cơ sở dữ liệu nguồn bị quá tải. Pipeline ngây thơ được cấu hình để thử lại (retry) liên tục mỗi giây.
-**Hệ quả:** CPU của cụm orchestration tăng vọt lên 100%, log sinh ra hàng chục GB làm đầy ổ cứng, tốn kém chi phí Network Egress để đập vào một cánh cửa đã đóng.
+**Sự cố:** Một API bên thứ ba bị sập hoặc cơ sở dữ liệu nguồn bị quá tải. Pipeline được cấu hình retry liên tục mỗi giây.
+**Hệ quả:** CPU của cụm orchestration tăng cao, log phình nhanh, và hệ thống tiếp tục tốn network/compute cho những request gần như chắc chắn thất bại.
 
 **Khắc phục:** Áp dụng **Exponential Backoff & Jitter**. Độ trễ giữa các lần thử lại phải tăng theo hàm mũ để giảm tải cho hệ thống nguồn và tiết kiệm compute cục bộ.
 
@@ -174,7 +174,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "raw_lifecycle" {
   }
 }
 ```
-*Lưu ý:* Việc dùng `abort_incomplete_multipart_upload` là một thực hành nhỏ nhưng cắt giảm được một lượng chi phí "ẩn" khổng lồ do các file rác bị treo trong S3 không hiện trên console.
+*Lưu ý:* `abort_incomplete_multipart_upload` là một thực hành nhỏ nhưng hữu ích vì các multipart upload bị bỏ dở vẫn có thể giữ lại dung lượng và sinh chi phí khó thấy trên dashboard vận hành hằng ngày.
 
 ## Khi nào nên / không nên dùng các kỹ thuật này?
 

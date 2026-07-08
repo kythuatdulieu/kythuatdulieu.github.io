@@ -1,5 +1,7 @@
 ---
 title: "Xử lý Thời gian thực (Streaming Processing)"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["streaming-processing", "real-time", "apache-flink", "kafka", "exactly-once", "watermarks", "system-design"]
 readingTime: "30 mins"

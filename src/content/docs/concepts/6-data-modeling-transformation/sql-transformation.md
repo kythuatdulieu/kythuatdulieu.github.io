@@ -1,6 +1,8 @@
 ---
 title: "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng"
 difficulty: "Advanced"
+domains: ["DE", "DA"]
+level: "Senior"
 tags: ["sql", "transformation", "dbt", "data-warehouse", "analytics-engineering", "elt", "performance", "snowflake", "databricks"]
 readingTime: "30 mins"
 lastUpdated: 2026-06-29

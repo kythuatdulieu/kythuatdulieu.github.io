@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Mesh - Deep Dive cho Staff Data Engineer"
 metaDescription: "Đi sâu vào Data Mesh từ góc độ kiến trúc hệ thống, trade-offs, thiết kế hạ tầng tự phục vụ và các bài toán thực tế về quản trị phân tán."
 description: "Data Mesh phá vỡ mô hình kiến trúc dữ liệu tập trung (monolithic data lake/warehouse). Bài viết này sẽ phân tích chi tiết Data Mesh dưới lăng kính của một Staff Engineer: từ thiết kế Data Plane vs Control Plane, Data Contracts, cho đến các systemic trade-offs về tính nhất quán, độ trễ và FinOps."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Data Mesh không phải là một công cụ phần mềm (như Spark hay Snowflake), mà là một **mô hình kiến trúc phân tán tổ chức-xã hội và công nghệ (socio-technical architecture)** được khởi xướng bởi Zhamak Dehghani vào năm 2019. Nếu mô hình Microservices đã giải phóng backend khỏi vòng kim cô của các hệ thống nguyên khối (Monolith), thì Data Mesh sinh ra để phá vỡ "cổ chai" của kiến trúc dữ liệu tập trung (Centralized Data Lake/Data Warehouse).

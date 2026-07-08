@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Push vs Pull Architecture: Deep Dive for Staff Engineers"
 metaDescription: "Phân tích chuyên sâu về kiến trúc Push và Pull trong hệ thống phân tán. Trade-offs về latency, throughput, backpressure và cascading failures (Kafka vs RabbitMQ)."
 description: "Lựa chọn giữa Push và Pull không đơn thuần là cách gọi API. Nó quyết định khả năng sinh tồn của hệ thống dưới áp lực tải đột biến (traffic spikes) và khả năng xử lý Backpressure."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Trong thiết kế hệ thống phân tán (Distributed Systems), quyết định cách dữ liệu di chuyển giữa các node—Push (Đẩy) hay Pull (Kéo)—là một trong những lựa chọn kiến trúc nền tảng nhất. Lựa chọn này không đơn thuần là việc gọi API theo cách nào, mà nó định hình **Topology của dòng chảy dữ liệu (Data Flow)**, **Cơ chế chịu lỗi (Fault Tolerance)**, và **Mô hình tài nguyên (Resource Model)** của toàn bộ hệ thống.

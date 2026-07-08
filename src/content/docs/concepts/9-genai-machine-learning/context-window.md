@@ -1,5 +1,7 @@
 ---
 title: "Cửa sổ ngữ cảnh - Context Window"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["llm", "context-window", "transformers", "kv-cache", "rope", "paged-attention", "rag"]
 readingTime: "20 mins"

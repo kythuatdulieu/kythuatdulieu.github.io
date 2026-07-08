@@ -1,5 +1,7 @@
 ---
 title: "Iceberg: Snapshot Isolation & WAP Pattern"
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["apache-iceberg", "snapshot", "metadata", "concurrency", "wap-pattern", "lakehouse"]
 readingTime: "15 mins"

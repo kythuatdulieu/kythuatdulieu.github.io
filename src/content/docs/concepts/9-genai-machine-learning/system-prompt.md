@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "System Prompt Architecture trong Production: Guardrails, FinOps & CoT"
 metaDescription: "Thiết kế System Prompt như một Context Engine ở mức kiến trúc hệ thống (System Design). Phân tích Prompt Injection, Chain of Thought, FinOps và độ trễ (Latency)."
 description: "Trong môi trường Production, System Prompt không chỉ là một chuỗi văn bản. Nó đóng vai trò như một lớp Control Layer (Context Engine) thiết lập Guardrails, bảo vệ hệ thống khỏi Injection và tối ưu chi phí (FinOps)."
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 ---
 
 System Prompt (Lời nhắc Hệ thống) không chỉ là một chuỗi văn bản "chỉ thị" hay đóng vai trò (Persona) đơn thuần cho một Mô hình Ngôn ngữ Lớn (LLM). Trong các kiến trúc ứng dụng Generative AI cấp độ doanh nghiệp (Enterprise-grade), System Prompt đóng vai trò là một **Control Layer (Context Engine)**. Tại đây, mọi sự cân nhắc về kỹ thuật lời nhắc (Prompt Engineering), bảo mật (Guardrails), tối ưu chi phí (FinOps), và độ trễ (Latency) đều hội tụ. 

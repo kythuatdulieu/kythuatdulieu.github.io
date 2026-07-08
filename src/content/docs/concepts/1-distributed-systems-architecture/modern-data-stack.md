@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Modern Data Stack (MDS): Kiến trúc ELT, Sự Phân Mảnh, và FinOps"
 metaDescription: "Tìm hiểu Modern Data Stack (MDS) dưới góc nhìn hệ thống: ELT vs ETL, Sự phân mảnh kiến trúc (Fragmented MDS), FinOps trong Snowflake, Incremental dbt."
 description: "MDS đã cách mạng hóa quy trình ETL bằng kiến trúc Cloud-Native ELT. Khám phá sự tách biệt Compute/Storage, bài toán FinOps (chống đốt tiền) và hậu quả của sự phân mảnh công cụ."
+domains: ["DE"]
+level: "Middle"
 ---
 
 **Modern Data Stack (MDS)** - Ngăn xếp Dữ liệu Hiện đại - không chỉ là việc mua một loạt các công cụ phần mềm dạng dịch vụ (SaaS) như Fivetran, Snowflake, dbt rồi ghép nối lại với nhau. Dưới lăng kính Kỹ thuật Hệ thống (Systems Engineering), MDS đại diện cho một sự chuyển dịch mô hình vật lý khổng lồ: **Sự Phân Tách Giữa Lưu Trữ (Storage) và Tính Toán (Compute)**, đi kèm với sự đổi ngôi từ mô hình ETL sang **ELT**.

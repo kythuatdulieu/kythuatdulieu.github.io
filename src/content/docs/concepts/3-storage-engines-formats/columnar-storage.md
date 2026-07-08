@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Columnar Storage (Lưu trữ dạng cột) & Kiến trúc Parquet chuyên sâu"
 metaDescription: "Phân tích kiến trúc lưu trữ dạng cột (Columnar Storage), cấu trúc vật lý Apache Parquet, Vectorized Execution (SIMD), Late Materialization và OOMKilled."
 description: "Columnar Storage không chỉ là lưu dữ liệu dọc. Nó quyết định CPU Cache Locality và I/O Minimization của mọi hệ thống OLAP hiện đại. Khám phá kiến trúc Apache Parquet và Rủi ro vận hành."
+domains: ["DE"]
+level: "Middle"
 ---
 
 Columnar Storage (Lưu trữ dạng cột) không đơn thuần là "lưu dữ liệu theo chiều dọc". Ở cấp độ Kỹ thuật Hệ thống (Systems Engineering), đó là một sự thay đổi hoàn toàn về cách tổ chức bộ nhớ trên đĩa (Disk Layout), cách CPU nạp dữ liệu vào Cache (Memory Layout), và cơ chế thực thi truy vấn (Execution Model). 

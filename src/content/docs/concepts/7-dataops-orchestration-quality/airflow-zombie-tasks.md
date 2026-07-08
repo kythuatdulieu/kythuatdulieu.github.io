@@ -2,6 +2,8 @@
 title: "Troubleshooting: Airflow Zombie Tasks & Pool Starvation"
 description: "Phân tích kiến trúc cốt lõi đằng sau Zombie Tasks và Pool Starvation trong Apache Airflow. Giải pháp cấu hình Executor, quản lý State và Deferrable Operators dành cho Staff Data Engineer."
 difficulty: "Advanced"
+domains: ["DE", "Platform"]
+level: "Senior"
 tags: ["airflow", "orchestration", "zombie-tasks", "kubernetes", "celery", "oom"]
 readingTime: "15 mins"
 lastUpdated: 2026-06-29

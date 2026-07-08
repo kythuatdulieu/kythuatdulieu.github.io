@@ -1,5 +1,7 @@
 ---
 title: "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
+domains: ["DE", "DA"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-quality", "data-dimensions", "dataops", "dama", "wap", "observability", "dbt", "circuit-breaker"]
 readingTime: "20 mins"

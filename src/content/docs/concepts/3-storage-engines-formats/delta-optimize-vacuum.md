@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Cơ chế hoạt động của OPTIMIZE, VACUUM và Liquid Clustering trong Delta Lake"
 metaDescription: "Phân tích sâu rủi ro I/O Bottleneck, sự tích tụ Tombstones trong Delta Log và cách khắc phục lỗi JVM OOMKilled bằng OPTIMIZE, VACUUM và Liquid Clustering."
 description: "Khám phá bản chất vật lý của bài toán Small Files trong Big Data. Hiểu rõ cách lệnh OPTIMIZE (Bin-packing, Z-Ordering), Liquid Clustering và VACUUM hoạt động dưới nền tảng Databricks."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 Hiệu năng của hệ thống Data Lakehouse có thể suy giảm nghiêm trọng dù tổng lượng dữ liệu không tăng đáng kể. Vấn đề này thường bắt nguồn từ hai yếu tố vật lý cơ bản nhất của kiến trúc phân tán: **Small Files Syndrome** (Hội chứng tệp siêu nhỏ) và **Tombstone Accumulation** (Tích tụ rác lịch sử trong Transaction Log).

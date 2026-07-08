@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Azure Synapse Analytics Architecture - MPP, Polaris Engine & Trade-offs"
 metaDescription: "Deep dive vào kiến trúc Azure Synapse Analytics: Dedicated SQL Pool (MPP), Serverless SQL (Polaris Engine), Data Movement Service, và sự cố TempDB Spill-to-disk."
 description: "Vượt qua những lời hoa mỹ marketing, bài viết này mổ xẻ kiến trúc vật lý bên dưới Azure Synapse Analytics: Cách MPP phân tán dữ liệu, Polaris Engine tách biệt Compute/State, Synapse Link Zero-ETL, và những cạm bẫy chí mạng (TempDB Spill, Data Skew)."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Trong các doanh nghiệp Enterprise, dữ liệu thường bị phân mảnh: Dữ liệu có cấu trúc ổn định nằm trong Data Warehouse (phục vụ BI/Report), còn dữ liệu phi cấu trúc khổng lồ nằm rải rác trên Data Lake (phục vụ Data Science/AI). **Azure Synapse Analytics** ra đời với tham vọng hợp nhất (Unified) hai thế giới này vào chung một Studio. 

@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Mô hình Reranker (Cross-Encoder): Kiến trúc hệ thống và Tối ưu FinOps"
 metaDescription: "Phân tích sâu kiến trúc hệ thống Reranker (Cross-Encoder) trong Two-Stage Retrieval. Giải quyết các rủi ro vận hành như CUDA OOM, Latency spikes và bài toán Trade-off chi phí."
 description: "Trong hệ thống RAG, sự khác biệt giữa PoC và Production nằm ở chất lượng Retrieval. Bài viết phân tích sâu kiến trúc Two-Stage Retrieval với Cross-Encoder (Reranker), tập trung vào Physical Execution, Rủi ro Vận hành và FinOps."
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 ---
 
 Để xây dựng một hệ thống RAG (Retrieval-Augmented Generation) đạt chuẩn Enterprise, việc chỉ sử dụng **Bi-Encoder** (Vector Embeddings) cho Semantic Search là sự ngây thơ về mặt thiết kế. 

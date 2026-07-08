@@ -1,5 +1,7 @@
 ---
 title: "Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["streaming", "event-time", "processing-time", "data-engineering", "flink", "spark-streaming", "architecture"]
 readingTime: "15 mins"

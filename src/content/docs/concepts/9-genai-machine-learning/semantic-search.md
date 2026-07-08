@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Tìm kiếm ngữ nghĩa (Semantic Search) & Kiến trúc Vector Database"
 metaDescription: "Mổ xẻ kiến trúc Semantic Search và Vector Database: Thuật toán HNSW vs IVFPQ, xử lý OOMKilled, Stale Index và tối ưu chi phí (FinOps) qua Product Quantization."
 description: "Semantic Search không chỉ dừng lại ở lý thuyết 'Khớp ý nghĩa thay vì khớp từ khóa'. Đối với Kỹ sư Dữ liệu, nó là bài toán về kiến trúc hệ thống, đánh đổi giữa Recall và Latency, quản trị Memory OOMKilled và quản lý hàng tỷ Vector (Billion-scale) một cách tối ưu chi phí."
+domains: ["DE", "DS", "Platform"]
+level: "Middle"
 ---
 
 Tìm kiếm ngữ nghĩa (Semantic Search) là trụ cột không thể thay thế của hệ sinh thái RAG (Retrieval-Augmented Generation) và GenAI hiện đại. Đối với một Data Engineer, việc hiểu Semantic Search không dừng lại ở khái niệm "Máy tính hiểu được ngôn ngữ tự nhiên". Bản chất cốt lõi của nó là **Bài toán Thiết kế Hệ thống (System Design)**: Làm sao xây dựng một **Vector Database** đủ sức chịu tải hàng tỷ bản ghi (Billion-scale) với độ trễ dưới 10ms (Sub-10ms Latency) và không làm sập ngân sách Cloud (FinOps).

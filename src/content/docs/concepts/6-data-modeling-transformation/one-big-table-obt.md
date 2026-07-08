@@ -1,6 +1,8 @@
 ---
 title: "One Big Table (OBT)"
 difficulty: "Advanced"
+domains: ["DE", "BI"]
+level: "Senior"
 readingTime: "15 mins"
 tags: ["data-warehouse", "obt", "one-big-table", "denormalization", "bigquery", "columnar"]
 lastUpdated: 2026-06-29

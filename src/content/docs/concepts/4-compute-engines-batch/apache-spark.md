@@ -1,5 +1,7 @@
 ---
 title: "Apache Spark"
+domains: ["DE"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["apache-spark", "big-data", "in-memory", "cluster", "distributed-systems"]
 readingTime: "20 mins"

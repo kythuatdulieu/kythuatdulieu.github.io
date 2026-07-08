@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Kappa Architecture - Thiết Kế Hệ Thống Xử Lý Luồng Hiện Đại"
 metaDescription: "Phân tích kiến trúc Kappa ở mức Staff Engineer: Cơ chế Reprocessing, Event Sourcing, Flink vs Kafka Streams, State Management, và Late Events."
 description: "Mọi dữ liệu đều là Stream. Đào sâu vào kiến trúc Kappa: Giải quyết bài toán Reprocessing, Event Sourcing, RocksDB state, Watermarks và FinOps lưu trữ log."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Được đề xuất bởi **Jay Kreps** [nhà sáng lập Apache Kafka] vào năm 2014, **Kappa Architecture** sinh ra để xóa sổ tầng Batch rườm rà của [Lambda Architecture](/concepts/1-distributed-systems-architecture/lambda-architecture). Tuyên ngôn của nó rất đơn giản: **Mọi thứ đều là một luồng (Everything is a Stream)**. 

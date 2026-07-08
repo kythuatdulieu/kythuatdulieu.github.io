@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Apache Iceberg Architecture & Trade-offs: Cuộc cách mạng Open Table Format"
 metaDescription: "Phân tích kiến trúc Apache Iceberg chuyên sâu. Cơ chế Metadata Tree, Hidden Partitioning, O(1) RPC, COW vs MOR, giải quyết bài toán Small Files và Z-Ordering Trade-offs."
 description: "Khi vận hành Data Lake quy mô Petabyte, kiến trúc Directory-based của Hive sụp đổ vì List API quá chậm. Apache Iceberg thay đổi hoàn toàn cuộc chơi với Metadata Tree, Hidden Partitioning và cơ chế ACID ở cấp độ File. Phân tích kiến trúc và Trade-offs thực chiến."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Khi vận hành Data Lake ở quy mô siêu khổng lồ (Petabyte-scale) tại các Big Tech như Netflix hay Apple, kiến trúc "Directory-based" truyền thống của Apache Hive nhanh chóng bộc lộ điểm yếu chí mạng: **Directory Listing Problem**. Việc engine tính toán phải gọi S3/GCS `List` API hàng triệu lần để quét các thư mục con tạo ra độ trễ (latency) khổng lồ trước khi truy vấn thực sự bắt đầu. 

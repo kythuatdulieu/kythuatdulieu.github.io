@@ -1,5 +1,7 @@
 ---
 title: "Phục vụ mô hình (Model Serving) & Kiến trúc GPU Inference"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["mlops", "model-serving", "inference", "vllm", "triton", "genai", "paged-attention", "ray-serve"]
 readingTime: "25 mins"

@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - PostgreSQL vs MySQL"
 metaDescription: "Deep dive vào kiến trúc RDBMS: Phân tích MVCC, B+Tree, Write Amplification ở PostgreSQL, Clustered Index của MySQL và bài học vận hành từ Uber, GitHub."
 description: "Vượt qua các khái niệm SQL cơ bản, bài viết phân tích sâu vào kiến trúc vật lý bên trong của RDBMS, đánh đổi giữa PostgreSQL và MySQL, và các sự cố Split-Brain."
+domains: ["DE", "Platform"]
+level: "Senior"
 ---
 
 Relational Database [RDBMS] không chỉ là các bảng với hàng và cột. Ở quy mô lớn, RDBMS là những cỗ máy phức tạp giải quyết bài toán đồng bộ hóa (Synchronization), độ trễ đĩa (Disk Latency), và độ tin cậy (Reliability). Dưới góc nhìn của một Kỹ sư Hệ thống (Staff Engineer), chúng ta sẽ không học cách viết câu lệnh `SELECT`, mà sẽ đi sâu mổ xẻ **Cơ chế lưu trữ vật lý**, **Concurrency Control (MVCC)**, cuộc chiến kiến trúc giữa **PostgreSQL và MySQL**, và những sự cố sập hệ thống kinh điển.

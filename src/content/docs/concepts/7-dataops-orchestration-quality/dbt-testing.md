@@ -1,5 +1,7 @@
 ---
 title: "Kiểm thử tự động - dbt Testing"
+domains: ["DE", "DA"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["dbt", "data-testing", "data-quality", "unit-testing", "great-expectations", "ci-cd"]
 readingTime: "20 mins"

@@ -1,6 +1,8 @@
 ---
 title: "Phương thức lưu trữ kết quả dbt - Materialization"
 difficulty: "Intermediate"
+domains: ["DE"]
+level: "Middle"
 tags: ["dbt", "materialization", "analytics-engineering", "data-warehouse", "snowflake", "databricks", "bigquery"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

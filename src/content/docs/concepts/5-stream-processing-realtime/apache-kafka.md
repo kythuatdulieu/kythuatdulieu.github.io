@@ -1,5 +1,7 @@
 ---
 title: "Apache Kafka"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["apache-kafka", "message-broker", "event-streaming", "kraft", "distributed-systems", "zero-copy"]
 readingTime: "30 mins"

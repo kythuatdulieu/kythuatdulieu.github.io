@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Thực thi: Xử lý Backpressure trong Apache Flink"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["stream-processing", "backpressure", "apache-flink", "tcp", "network-buffer", "architecture"]
 readingTime: "15 mins"

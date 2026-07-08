@@ -1,5 +1,7 @@
 ---
 title: "Kiến trúc Hệ thống OLTP: B-Tree, WAL, MVCC và Troubleshooting"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Advanced"
 tags: ["oltp", "database", "transactions", "rdbms", "mvcc", "postgresql", "mysql"]
 readingTime: "15 mins"

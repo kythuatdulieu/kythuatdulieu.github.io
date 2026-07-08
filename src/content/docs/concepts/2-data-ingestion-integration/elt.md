@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "ELT Architecture: Extract, Load, Transform & The Modern Data Stack"
 metaDescription: "Tìm hiểu kiến trúc ELT trong Modern Data Stack. Cơ chế hoạt động của Medallion Architecture, so sánh với ETL, và xử lý rủi ro OOM/Consumer Lag trên Production."
 description: "Phân tích sâu sắc sự chuyển dịch từ ETL sang ELT trong thời đại Cloud Data Warehouse và Data Lakehouse. Tại sao Trích xuất, Nạp rồi mới Biến đổi lại thống trị kỷ nguyên dữ liệu hiện tại?"
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 Trong nhiều thập kỷ, ETL (Extract, Transform, Load) là mô hình chuẩn mực độc tôn của Data Engineering. Các công cụ như Informatica hay Talend yêu cầu một Server trung gian chuyên dụng chỉ để biến đổi dữ liệu trước khi nạp vào kho. Tuy nhiên, với sự ra đời của Cloud Data Warehouse (Snowflake, BigQuery) và Data Lakehouse (Databricks), mô hình **ELT (Extract, Load, Transform)** đã trỗi dậy, định hình lại toàn bộ hệ sinh thái **Modern Data Stack (MDS)**.

@@ -1,6 +1,8 @@
 ---
 title: "Data Orchestration & DataOps: Điều phối và Chất lượng Dữ liệu"
 description: "Phân tích kiến trúc của các hệ thống Data Orchestration (Airflow, Dagster, Prefect) và xử lý sự cố kinh điển như Retry Storms, OOMKilled, Dependency Hell."
+domains: ["DE", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["orchestration", "airflow", "dagster", "dataops", "idempotency", "architecture"]
 readingTime: "25 mins"

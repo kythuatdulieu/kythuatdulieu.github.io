@@ -1,5 +1,7 @@
 ---
 title: "Spark Tungsten Engine"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["tungsten", "apache-spark", "memory-management", "jvm", "code-generation"]
 readingTime: "30 mins"

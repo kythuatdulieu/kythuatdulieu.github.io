@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Amazon Redshift Deep Dive: MPP, Kiến Trúc RA3 & AQUA Accelerator"
 metaDescription: "Đi sâu vào kiến trúc Amazon Redshift: MPP (Leader/Compute Nodes), Lưu trữ Cột 1MB, RA3 Managed Storage, AQUA Hardware Cache, và khắc phục Data Skew."
 description: "Phân tích kiến trúc Physical Execution, cơ chế lưu trữ Columnar của Amazon Redshift và các Trade-offs hệ thống (Data Skew, Network Shuffle, OOM) mà Kỹ sư dữ liệu cần nắm."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Amazon Redshift là hệ thống Enterprise Data Warehouse thế hệ đầu tiên trên Cloud sở hữu kiến trúc xử lý song song khổng lồ (MPP - Massively Parallel Processing). Dù được fork (Tách nhánh) từ lõi mã nguồn PostgreSQL, Redshift đã được AWS đập đi xây lại hoàn toàn Hệ thống lưu trữ (Storage Engine) theo định dạng cột (Columnar) để tối ưu hóa đặc thù cho các truy vấn phân tích (OLAP).

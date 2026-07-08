@@ -1,5 +1,7 @@
 ---
 title: "Bảng chiều - Dimension Table"
+domains: ["DE", "DA"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["data-warehouse", "dimension-table", "dimensional-modeling", "star-schema", "scd", "dbt", "spark"]
 readingTime: "25 mins"

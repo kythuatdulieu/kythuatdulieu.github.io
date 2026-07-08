@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Data Transformation - Kỹ Thuật Biến Đổi Dữ Liệu Chuyên Sâu"
 metaDescription: "Tìm hiểu chi tiết Data Transformation: Kiến trúc EtLT, Medallion Architecture, cách xử lý Late-Arriving Data bằng dbt, Data Skew bằng PySpark Salting."
 description: "Dưới lăng kính kỹ thuật hệ thống, Data Transformation không chỉ là lệnh SQL. Nó là bài toán về xử lý phân tán, tối ưu I/O, và đối mặt với rác dữ liệu."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 Nếu coi dữ liệu thô (raw data) giống như dầu mỏ vừa khai thác từ lòng đất, thì **Data Transformation (Biến đổi dữ liệu)** chính là tổ hợp các nhà máy lọc hóa dầu. 

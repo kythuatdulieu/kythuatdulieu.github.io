@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Vai trò Kỹ sư Dữ liệu: Phân tích từ góc độ Staff Engineer"
 metaDescription: "Data Engineer không chỉ là thợ viết SQL. Khám phá kiến trúc, T-shaped engineer, Data Contracts, FinOps và những thách thức kỹ thuật hardcore của Staff Data Engineer."
 description: "Khám phá kiến trúc, Data Contracts, FinOps và những thách thức kỹ thuật hardcore của Kỹ sư dữ liệu hiện đại qua lăng kính của một Staff Engineer. Từ việc xây dựng Platform đến việc quản trị chi phí Cloud."
+domains: ["DE"]
+level: "Senior"
 ---
 
 Lịch sử ngành dữ liệu đã trải qua sự tiến hóa mạnh mẽ: từ những quản trị viên cơ sở dữ liệu (DBA) quản lý các máy chủ Oracle khép kín, đến những lập trình viên ETL nhào nặn dữ liệu bằng SSIS/Informatica, và hiện tại là kỷ nguyên của các **Kỹ sư Dữ liệu (Data Engineer)** - những người đóng vai trò Software Engineer mang trọng trách xây dựng Hệ thống Phân tán (Distributed Systems) khổng lồ.

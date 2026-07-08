@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Leader Election (Raft/ZAB) - Giải phẫu sự cố Split-Brain & Fencing Tokens"
 metaDescription: "Phân tích sâu về Consensus, Raft, ZAB, các sự cố Split-brain do GC Pauses, Network Partitions và cách khắc phục triệt để bằng Fencing Tokens."
 description: "Tại sao hệ thống phân tán cần Leader? Cách Raft hoạt động. Các sự cố sập hệ thống (Split-brain, GC Pauses) và Fencing Tokens để bảo vệ dữ liệu."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán quy mô lớn, khi hàng chục node (máy chủ) cùng chia sẻ chung một tài nguyên (ví dụ: cùng ghi vào một thư mục trên HDFS, hoặc cùng đóng vai trò Controller phân bổ tác vụ cho Worker), hệ thống sẽ nhanh chóng rơi vào hỗn loạn. Cơ chế **Leader Election (Bầu Cử Thủ Lĩnh)** ra đời để đảm bảo tại một thời điểm, chỉ duy nhất **một node** (Leader / Master) có quyền ra quyết định, các node còn lại (Followers / Standby) sẽ phục tùng và đồng bộ trạng thái.

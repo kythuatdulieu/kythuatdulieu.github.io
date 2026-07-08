@@ -1,5 +1,7 @@
 ---
 title: "Lập hồ sơ dữ liệu - Data Profiling"
+domains: ["DE", "DA"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["data-profiling", "data-quality", "amazon-deequ", "spark", "oom", "data-observability"]
 readingTime: "25 mins"

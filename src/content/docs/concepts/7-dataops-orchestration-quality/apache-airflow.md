@@ -1,6 +1,8 @@
 ---
 title: "Apache Airflow - Kiến trúc Hệ thống & Đánh đổi (System Architecture & Trade-offs)"
 difficulty: "Advanced"
+domains: ["DE", "Platform"]
+level: "Senior"
 tags: ["airflow", "orchestration", "python", "dag", "scheduler", "data-engineering"]
 readingTime: "25 mins"
 lastUpdated: 2026-06-29

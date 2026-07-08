@@ -1,5 +1,7 @@
 ---
 title: "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["streaming", "windowing", "watermarks", "flink", "state-management", "oom"]
 readingTime: "15 mins"

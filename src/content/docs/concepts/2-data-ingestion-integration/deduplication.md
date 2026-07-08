@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Khử trùng lặp dữ liệu (Deduplication) kiến trúc BigQuery, Snowflake, Databricks"
 metaDescription: "Tìm hiểu deduplication là gì. Phân tích kiến trúc khử trùng lặp dữ liệu trong Batch (BigQuery, Snowflake) và Streaming (Databricks) thực chiến."
 description: "Deduplication (khử trùng lặp) là kỹ thuật sống còn để loại bỏ các bản ghi nhân đôi trong hệ thống. Khám phá các chiến lược từ SQL Window Functions, MERGE INTO đến Stateful Streaming với Watermarks."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 ## Khái Niệm Deduplication (Khử Trùng Lặp)

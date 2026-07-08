@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Row-based Storage: OLTP, B-Tree, LSM-Tree và Write-Ahead Logging"
 metaDescription: "Tìm hiểu kiến trúc lưu trữ dạng dòng (Row-based storage) truyền thống. Phân tích B-Tree vs LSM-Tree, WAL, Memory Pages, và rủi ro OOMKilled trong OLTP."
 description: "Phân tích chuyên sâu về kiến trúc lưu trữ Row-based Storage từ góc độ I/O, Page Layout, B-Tree vs LSM-Tree, WAL (Write-Ahead Logging) và các rủi ro vận hành (OOMKilled, Page Fragmentation)."
+domains: ["DE", "Platform"]
+level: "Junior"
 ---
 
 **Row-based Storage** (Lưu trữ hướng dòng) không chỉ là một khái niệm học thuật. Khi bạn chạy một lệnh `INSERT` vào PostgreSQL hoặc MySQL, toàn bộ dữ liệu của một hàng (row/record/tuple) vật lý phải được ghi xuống đĩa (disk) và nằm kề sát nhau (contiguous) trong cùng một block bộ nhớ.

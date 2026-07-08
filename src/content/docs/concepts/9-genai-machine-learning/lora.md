@@ -1,5 +1,7 @@
 ---
 title: "Low-Rank Adaptation (LoRA) - Tối Ưu LLMs & Multi-LoRA Serving"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["lora", "peft", "llm", "fine-tuning", "genai", "finops", "vllm", "qlora"]
 readingTime: "30 mins"

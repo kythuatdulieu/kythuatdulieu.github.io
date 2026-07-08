@@ -29,7 +29,7 @@ refs:
 
 Trong các hệ thống phân tán, định nghĩa "Metadata là dữ liệu về dữ liệu" chỉ đúng bề nổi. Ở quy mô enterprise, **Metadata Management** thực chất là **Control Plane (Mặt phẳng điều khiển)**. Nếu HDFS/S3 là Data Plane chứa dữ liệu vật lý, thì Data Catalog và Metastore là bộ não định tuyến truy vấn, phân quyền, và theo dõi luồng chảy dữ liệu (data lineage).
 
-Khi dữ liệu phình to lên mức Petabyte, hệ thống quản lý metadata chuyển từ một công cụ tra cứu tĩnh sang một hệ thống phân tán phức tạp, đòi hỏi khả năng xử lý hàng triệu sự kiện metadata mỗi ngày. Bài viết này phân tích các kiến trúc thu thập metadata (Push vs Pull), điểm nghẽn kinh điển của Hive Metastore, và sự tiến hóa lên Active Metadata.
+Khi dữ liệu phình to lên mức Petabyte, hệ thống quản lý metadata chuyển từ một công cụ tra cứu tĩnh sang một hệ thống phân tán phức tạp. Nó phải xử lý schema, partition, lineage, ownership và signal vận hành từ nhiều engine khác nhau. Ba vấn đề cần nắm là kiến trúc thu thập metadata (Push vs Pull), điểm nghẽn của Hive Metastore, và sự tiến hóa lên Active Metadata.
 
 ## 1. Kiến Trúc Thu Thập: Pull-based vs Push-based
 
@@ -78,7 +78,7 @@ Hãy tưởng tượng một Data Analyst chạy: `SELECT * FROM fact_logs WHERE
 
 Spark Driver phải gọi Thrift API tới HMS để lấy danh sách các file cần đọc:
 1. HMS query MySQL, lôi toàn bộ hàng chục nghìn records partition lên RAM.
-2. HMS serialize lượng dữ liệu khổng lồ (hàng trăm MB) thành Thrift message trả về.
+2. HMS serialize một lượng metadata lớn thành Thrift message trả về.
 3. JVM của Spark Driver (hoặc chính HMS) phình to và sập vì **OOM (Out of Memory)**.
 4. **Cascade Failure:** Khi HMS bị treo, mọi Spark job khác trong công ty đều bị block ở bước lập kế hoạch truy vấn (Query Planning), dẫn đến sập dây chuyền.
 
@@ -114,7 +114,7 @@ Không có sự can thiệp thủ công của admin. Metadata điều khiển tr
 | Kịch bản | Công nghệ phù hợp | Lý do |
 | :--- | :--- | :--- |
 | **Data Stack vừa/nhỏ, ưu tiên BI** | dbt docs, AWS Glue Catalog | Đơn giản, chi phí bảo trì thấp, không cần duy trì hạ tầng Kafka/Graph. |
-| **Lakehouse quy mô lớn, nhiều team** | DataHub, Amundsen | Cần search mạnh mẽ, hỗ trợ nhiều nguồn (Snowflake, Spark, Looker). |
+| **Lakehouse quy mô lớn, nhiều team** | DataHub, Amundsen | Cần search tốt, hỗ trợ nhiều nguồn (Snowflake, Spark, Looker). |
 | **Real-time Lineage, Event-driven** | DataHub + OpenLineage | Kiến trúc Push-based giúp phát hiện lỗi vỡ schema ngay lập tức. |
 | **Sập HMS liên tục vì OOM** | Apache Iceberg / Delta Lake | Đưa metadata xuống file level, giải phóng tải cho Thrift API. |
 

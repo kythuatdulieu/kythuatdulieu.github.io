@@ -1,5 +1,7 @@
 ---
 title: "Data Observability: Giám sát Hệ thống và Quản trị Data Downtime"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["data-observability", "data-quality", "monitoring", "reliability", "dataops", "monte-carlo", "great-expectations"]
 readingTime: "15 mins"

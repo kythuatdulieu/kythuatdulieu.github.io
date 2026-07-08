@@ -1,5 +1,7 @@
 ---
 title: "Data Observability: Phát hiện bất thường khối lượng (Volume Anomalies)"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["volume-anomalies", "data-observability", "anomaly-detection", "monitoring", "data-quality"]
 readingTime: "15 mins"

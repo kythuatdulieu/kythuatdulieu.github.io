@@ -1,5 +1,7 @@
 ---
 title: "Z-Order Deep Dive: Cấu Trúc Đa Chiều & Bài Toán Data Skipping"
+domains: ["DE"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["z-order", "delta-lake", "performance", "databricks", "data-engineering", "morton-code", "liquid-clustering"]
 readingTime: "25 mins"

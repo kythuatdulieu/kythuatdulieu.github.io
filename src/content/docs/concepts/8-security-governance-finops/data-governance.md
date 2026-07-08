@@ -19,9 +19,9 @@ refs:
   - { title: "Policy-based Access Control with OPA", org: "Open Policy Agent", url: "https://www.openpolicyagent.org/docs/latest/", type: "docs" }
 ---
 
-Trong nhiều tổ chức, **Data Governance** (Quản trị dữ liệu) thường bị nhầm lẫn với những cuốn tài liệu PDF dài hàng trăm trang về "quy chuẩn" mà không kỹ sư nào đọc. Hậu quả là dữ liệu rác vẫn chảy vào Data Warehouse, các kỹ sư dữ liệu kiệt sức vì phải liên tục sửa lỗi 파i-pline, và hệ thống phân quyền sụp đổ dưới sự phức tạp của hàng ngàn Role khác nhau.
+Trong nhiều tổ chức, **Data Governance** (Quản trị dữ liệu) thường bị nhầm lẫn với những cuốn tài liệu PDF dài hàng trăm trang về "quy chuẩn" mà không kỹ sư nào đọc. Hậu quả là dữ liệu rác vẫn chảy vào Data Warehouse, các kỹ sư dữ liệu phải liên tục sửa lỗi pipeline, và hệ thống phân quyền phình to dưới sự phức tạp của quá nhiều role khác nhau.
 
-Ở cấp độ nền tảng dữ liệu hiện đại, Data Governance không phải là giấy tờ. Nó là sự kết hợp của các cơ chế kỹ thuật cứng trị giá hàng triệu đô: **Shift-Left Data Contracts** (Dịch chuyển kiểm tra chất lượng sang trái) và **Data Control Plane** (Lớp dịch vụ đánh chặn, kiểm tra quyền và cấp phát token). Nếu thiết kế tồi, Data Governance sẽ trở thành nút thắt cổ chai (Single Point of Failure) kéo sập toàn bộ Data Platform.
+Ở cấp độ nền tảng dữ liệu hiện đại, Data Governance không phải là giấy tờ. Nó là sự kết hợp của các cơ chế kỹ thuật có thể thực thi: **Shift-Left Data Contracts** (dịch chuyển kiểm tra chất lượng sang trái) và **Data Control Plane** (lớp dịch vụ đánh chặn, kiểm tra quyền và cấp phát token). Nếu thiết kế tồi, lớp governance có thể trở thành nút thắt cổ chai (Single Point of Failure) của Data Platform.
 
 ---
 
@@ -100,17 +100,17 @@ sequenceDiagram
     S-->>U: 7. Trả dữ liệu
 ```
 
-Thay vì cấp cho Engine một quyền đọc toàn bộ bucket, Control Plane chỉ sinh ra một token ngắn hạn, bị giới hạn (scoped-down) đúng vào thư mục vật lý chứa bảng đó. Dù token bị lộ, nó cũng vô dụng sau 15 phút và không thể đọc bảng khác.
+Thay vì cấp cho engine một quyền đọc toàn bộ bucket, Control Plane chỉ sinh ra một token ngắn hạn, bị giới hạn (scoped-down) vào đúng vùng dữ liệu cần đọc. Nếu token bị lộ, phạm vi thiệt hại nhỏ hơn nhiều so với credential dài hạn, miễn là thời gian sống và phạm vi token được cấu hình đúng.
 
 ---
 
 ## 3. RBAC, ABAC và Nỗi đau "Role Explosion"
 
-Khi công ty phát triển từ 50 lên 5.000 nhân sự, cách bạn định nghĩa quyền quyết định sự sống còn của đội ngũ DataOps.
+Khi công ty phát triển từ vài chục lên hàng nghìn nhân sự, cách định nghĩa quyền quyết định DataOps có còn audit được hệ thống hay không.
 
 ### Sự bùng nổ Role (Role Explosion) với RBAC
 **Role-Based Access Control (RBAC)** cấp quyền dựa trên chức vụ (ví dụ: `Data_Analyst`). 
-- **Vấn đề:** Ban đầu bạn chỉ có `Data_Analyst`. Khi công ty mở rộng, bạn cần `Data_Analyst_US`, `Data_Analyst_EU_NoPII`, `Data_Analyst_VN_Finance_Readonly`... Hàng ngàn roles sinh ra khiến hệ thống Cloud IAM chạm giới hạn cứng (Hard Limit), việc audit trở thành ác mộng.
+- **Vấn đề:** Ban đầu bạn chỉ có `Data_Analyst`. Khi công ty mở rộng, bạn cần `Data_Analyst_US`, `Data_Analyst_EU_NoPII`, `Data_Analyst_VN_Finance_Readonly`... Số role tăng nhanh khiến hệ thống Cloud IAM dễ chạm giới hạn cứng (hard limit), còn audit thì khó chứng minh vì quyền bị phân tán qua nhiều tầng kế thừa.
 
 ### ABAC và PBAC (Policy-Based Access Control)
 Để giải quyết Role Explosion, các hệ thống chuyển sang **Attribute-Based Access Control (ABAC)** — quyết định quyền dựa trên việc so khớp Thẻ thuộc tính (Tags).
@@ -154,7 +154,7 @@ Xây dựng hệ thống Data Governance không chỉ là quản lý truy cập,
 - **Hệ quả:** Nhận lỗi `RateExceededException` (Throttling). Pipeline bị treo.
 - **Cách xử lý:** Engine (như Spark Driver) phải cache token. Driver xin token một lần cho toàn bộ bảng, sau đó phân phối nội bộ xuống các Worker Nodes thay vì để từng Worker tự gọi API xin quyền.
 
-### 4.3. Cơn ác mộng FinOps: Orphaned Data
+### 4.3. Failure mode FinOps: Orphaned Data
 - **Triệu chứng:** Khi sử dụng External Tables trên Data Lake, lệnh `DROP TABLE` chỉ xóa metadata trong Catalog, còn dữ liệu vật lý (file Parquet trên S3) vẫn nằm đó mãi mãi.
 - **Hệ quả:** Sinh ra một bãi rác dữ liệu vô chủ (Orphaned Data) tiêu tốn hàng ngàn đô la chi phí lưu trữ mỗi tháng.
 - **Cách xử lý:** Quản trị vòng đời dữ liệu (Data Lifecycle Management). Dùng Terraform để định nghĩa các S3 Lifecycle Rules: tự động chuyển dữ liệu cũ sang Glacier sau 90 ngày, và xóa cứng sau 365 ngày nếu không có tag `Retention = LongTerm`.

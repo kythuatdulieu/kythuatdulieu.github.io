@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Định lý CAP & PACELC - Staff Data Engineer Deep Dive"
 metaDescription: "Phân tích chuyên sâu về CAP Theorem và PACELC, Quorum (W+R>N), Split-Brain, và cách cấu hình Kafka/Cassandra trong thực chiến."
 description: "Phân tích chuyên sâu về CAP Theorem và PACELC, Quorum (W+R>N), Split-Brain, và cách cấu hình Kafka/Cassandra trong thực chiến."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Một trong những bài học đắt giá nhất đối với một Kỹ sư Hệ thống Dữ liệu (Data Engineer) là việc nhận ra rằng cơ sở dữ liệu không bao giờ hoàn hảo. Khi quy mô hạ tầng của bạn mở rộng ra hàng trăm node, vượt qua các ranh giới địa lý (multi-region/multi-datacenter), sự cố về mạng (Network Partition) không còn là câu hỏi "Có xảy ra hay không?", mà là **"Khi nào thì xảy ra?"**.

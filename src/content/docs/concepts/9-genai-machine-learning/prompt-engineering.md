@@ -1,5 +1,7 @@
 ---
 title: "Kỹ nghệ Gợi ý - Prompt Engineering trong Hệ thống Thực chiến"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["prompt-engineering", "genai", "llm", "dspy", "llm-gateway", "finops", "react", "cot"]
 readingTime: "25 mins"

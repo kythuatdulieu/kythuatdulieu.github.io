@@ -7,6 +7,8 @@ lastUpdated: 2026-06-29
 seoTitle: "Byzantine Fault Tolerance (BFT) trong Kỹ Thuật Dữ Liệu"
 metaDescription: "Khám phá BFT dưới góc nhìn System Design: Crash Fault Tolerance (Raft) vs BFT (PBFT), Silent Data Corruption, Merkle Trees, và kiến trúc Zero-Trust."
 description: "Phân tích BFT không chỉ giới hạn ở Blockchain, mà là bài toán chống lại sự suy thoái dữ liệu thầm lặng (Silent Data Corruption) và áp dụng Merkle Trees trong Kỹ thuật Dữ liệu."
+domains: ["Platform", "DE"]
+level: "Senior"
 ---
 
 Trong các hệ thống phân tán (Distributed Systems) quy mô lớn như HDFS, Kafka, hay Cassandra, chúng ta thường giả định rằng các Node (máy chủ) khi gặp sự cố sẽ đơn giản là "chết" hoặc "treo" (Crash-stop failure / Fail-stop model). Đây là nền tảng cho các thuật toán đồng thuận kinh điển như **Raft** hay **Paxos**. 

@@ -4,8 +4,11 @@
       "title": "Byzantine Fault Tolerance (BFT) trong Kỹ Thuật Dữ Liệu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/byzantine-fault-tolerance/"
@@ -14,8 +17,11 @@
       "title": "Định lý CAP & PACELC - Staff Data Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/cap-theorem/"
@@ -24,8 +30,11 @@
       "title": "Đồng Thuận Phân Tán: Thuật toán Raft & Paxos, KRaft Kafka",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/consensus-raft-paxos/"
@@ -34,8 +43,10 @@
       "title": "Vai trò Kỹ sư Dữ liệu: Phân tích từ góc độ Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/"
@@ -44,8 +55,10 @@
       "title": "Kiến trúc Kỹ Thuật Dữ Liệu Hiện Đại (Data Engineering Architecture)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-engineering/"
@@ -54,8 +67,11 @@
       "title": "Data Fabric - Phân Tích Kiến Trúc Hệ Thống Dữ Liệu Tự Động",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-fabric/"
@@ -64,8 +80,11 @@
       "title": "Vòng đời Dữ liệu (Data Lifecycle) - Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/"
@@ -74,8 +93,11 @@
       "title": "Data Mesh - Deep Dive cho Staff Data Engineer",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-mesh/"
@@ -84,8 +106,10 @@
       "title": "Data Pipeline Architecture: Deep Dive, Trade-offs & Best Practices",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-pipeline/"
@@ -94,8 +118,11 @@
       "title": "Kiến trúc Nền tảng Dữ liệu (Data Platform) - Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/"
@@ -104,8 +131,11 @@
       "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Shuffle, Snowflake & BigQuery",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/data-warehouse/"
@@ -114,8 +144,11 @@
       "title": "Event-Driven Architecture Chuyên Sâu: Kafka, Outbox Pattern, Saga, DLQ",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/event-driven-architecture/"
@@ -124,8 +157,12 @@
       "title": "Feature Store Kiến trúc chuyên sâu: Feast, Time-travel, Redis OOM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DS",
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/feature-store/"
@@ -134,8 +171,10 @@
       "title": "Cấu trúc file Parquet, Avro chuyên sâu: Tối ưu Spark, Vectorization và Small Files",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/file-formats/"
@@ -144,8 +183,11 @@
       "title": "Gossip Protocol và Vector Clocks: Lõi Kiến Trúc Dynamo & Cassandra",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/gossip-protocol-vector-clocks/"
@@ -154,8 +196,11 @@
       "title": "Gossip Protocol - Thiết Kế Mạng Phân Tán Mức Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/gossip-protocol/"
@@ -164,8 +209,11 @@
       "title": "Kappa Architecture - Thiết Kế Hệ Thống Xử Lý Luồng Hiện Đại",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/kappa-architecture/"
@@ -174,8 +222,11 @@
       "title": "Lambda vs Kappa Architecture - Phân Tích Chuyên Sâu Kỹ Thuật Dữ Liệu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/lambda-architecture/"
@@ -184,8 +235,11 @@
       "title": "Leader Election (Raft/ZAB) - Giải phẫu sự cố Split-Brain & Fencing Tokens",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/leader-election/"
@@ -194,8 +248,10 @@
       "title": "Modern Data Stack (MDS): Kiến trúc ELT, Sự Phân Mảnh, và FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/modern-data-stack/"
@@ -204,8 +260,11 @@
       "title": "Định lý PACELC - System Design & Data Engineering Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/pacelc-theorem/"
@@ -214,8 +273,11 @@
       "title": "Push vs Pull Architecture: Deep Dive for Staff Engineers",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/push-pull-delivery/"
@@ -224,8 +286,11 @@
       "title": "Kiến trúc hệ thống dữ liệu Thời gian thực dưới góc nhìn Staff Engineer",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/"
@@ -234,8 +299,11 @@
       "title": "Cơ sở Dữ liệu Quan hệ (RDBMS) Chuyên Sâu - PostgreSQL vs MySQL",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/relational-database/"
@@ -244,8 +312,11 @@
       "title": "Hệ thống Nguồn (Source Systems): Kiến trúc & Systemic Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/source-systems/"
@@ -254,8 +325,11 @@
       "title": "Storage-Compute Decoupling - Data Engineering Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/storage-compute-decoupling/"
@@ -264,8 +338,11 @@
       "title": "Zero-Copy Cloning Architecture: Staff Engineer Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/1-distributed-systems-architecture/zero-copy-cloning/"
@@ -274,8 +351,11 @@
       "title": "Backfill Data Pipeline: Kiến trúc, Trade-offs & Xử lý OOMKilled",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/backfill/"
@@ -284,8 +364,11 @@
       "title": "Backpressure trong Data Ingestion & Streaming: Kafka, Flink, Spark",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/backpressure-handling/"
@@ -294,8 +377,11 @@
       "title": "Change Data Capture (CDC): Kiến trúc Debezium, Kafka & Netflix DBLog",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/change-data-capture/"
@@ -304,8 +390,11 @@
       "title": "Data Extraction & Change Data Capture (CDC) - Kiến trúc Kỹ thuật",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-extraction/"
@@ -314,8 +403,11 @@
       "title": "Data Ingestion - Kiến trúc Thu nạp dữ liệu ở quy mô Petabyte",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-ingestion/"
@@ -324,8 +416,11 @@
       "title": "Data Loading: Kỹ thuật ETL/ELT & Kiến trúc Lakehouse (Delta/Iceberg)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-loading/"
@@ -334,8 +429,11 @@
       "title": "Data Transformation - Kỹ Thuật Biến Đổi Dữ Liệu Chuyên Sâu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/data-transformation/"
@@ -344,8 +442,11 @@
       "title": "Khử trùng lặp dữ liệu (Deduplication) kiến trúc BigQuery, Snowflake, Databricks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/deduplication/"
@@ -354,8 +455,11 @@
       "title": "ELT Architecture: Extract, Load, Transform & The Modern Data Stack",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/elt/"
@@ -364,8 +468,11 @@
       "title": "ETL, ELT và Zero-ETL - Kiến trúc Data Pipeline hiện đại",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/etl/"
@@ -392,8 +499,11 @@
       "title": "Incremental Load - Nạp dữ liệu gia tăng tối ưu Data Pipeline",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/incremental-load/"
@@ -402,8 +512,11 @@
       "title": "Log-based CDC Internals: Kiến trúc Debezium, WAL, Netflix DBLog",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/log-based-cdc-internals/"
@@ -412,8 +525,11 @@
       "title": "Webhooks & Idempotency: Xử lý Trùng lặp Dữ liệu trong Hệ thống Phân tán",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/2-data-ingestion-integration/webhook-idempotency/"
@@ -422,8 +538,10 @@
       "title": "ACID Transactions Data Lake - MVCC, OCC, Delta, Iceberg, Hudi",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/acid-transactions-on-lake/"
@@ -432,8 +550,10 @@
       "title": "Amazon Redshift Deep Dive: MPP, Kiến Trúc RA3 & AQUA Accelerator",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/amazon-redshift/"
@@ -442,8 +562,10 @@
       "title": "Apache Hudi - Kiến trúc Data Lakehouse, MoR vs CoW và CDC Streaming",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/apache-hudi/"
@@ -452,8 +574,10 @@
       "title": "Apache Iceberg Architecture & Trade-offs: Cuộc cách mạng Open Table Format",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/apache-iceberg/"
@@ -462,8 +586,10 @@
       "title": "Azure Synapse Analytics Architecture - MPP, Polaris Engine & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/azure-synapse/"
@@ -472,8 +598,11 @@
       "title": "B-Tree vs LSM-Tree: Kiến Trúc Lưu Trữ & Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/b-tree-vs-lsm-tree/"
@@ -482,8 +611,11 @@
       "title": "Kiến trúc LSM-Tree: Bloom Filters, SSTables & RocksDB Internals",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/bloom-filters-sstables/"
@@ -492,8 +624,11 @@
       "title": "Kiến trúc Cloud Object Storage: Amazon S3 Internals, HDFS vs S3",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/cloud-storage/"
@@ -502,8 +637,10 @@
       "title": "Clustering Data: Deep Dive Z-Ordering, Liquid Clustering & Micro-partitions",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/clustering/"
@@ -512,8 +649,10 @@
       "title": "Columnar Storage (Lưu trữ dạng cột) & Kiến trúc Parquet chuyên sâu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/columnar-storage/"
@@ -522,8 +661,11 @@
       "title": "Compaction: Nghệ Thuật Tối Ưu Hóa Data Lakehouse & Khắc Phục Lỗi OOM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/compaction/"
@@ -532,8 +674,10 @@
       "title": "Thuật toán nén dữ liệu trong Big Data: Zstd, Snappy, Gzip, LZ4",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/compression-algorithms/"
@@ -542,8 +686,10 @@
       "title": "Kiến trúc Data Lake: Data Gravity, Trade-offs và Tối ưu Chi phí",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/data-lake/"
@@ -552,8 +698,11 @@
       "title": "Databricks Platform Architecture: Control Plane, Photon & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/databricks-platform/"
@@ -562,8 +711,10 @@
       "title": "Kiến trúc Delta Lake: Transaction Log, OCC và Trade-offs hệ thống",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-lake/"
@@ -572,8 +723,10 @@
       "title": "Optimistic Concurrency Control trong Delta Lake: Kiến trúc và Rủi ro",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-optimistic-concurrency/"
@@ -582,8 +735,11 @@
       "title": "Cơ chế hoạt động của OPTIMIZE, VACUUM và Liquid Clustering trong Delta Lake",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/"
@@ -592,8 +748,10 @@
       "title": "Định dạng file Big Data: Kiến trúc Parquet, Avro, ORC & CPU SIMD",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/file-formats-deep-dive/"
@@ -602,8 +760,12 @@
       "title": "Kiến trúc BigQuery: Dremel, Colossus và Các Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/google-bigquery/"
@@ -612,8 +774,11 @@
       "title": "Apache Iceberg Compaction: Giải quyết Small Files với Binpack, Sort & Z-Order",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/"
@@ -622,8 +787,11 @@
       "title": "Apache Iceberg Architecture: Snapshot Isolation, OCC & WAP Pattern",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/iceberg-snapshot-isolation/"
@@ -632,8 +800,11 @@
       "title": "Kiến trúc Database Indexing: B-Tree, LSM-Tree, Z-Ordering & Bloom Filters",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/indexing/"
@@ -642,8 +813,11 @@
       "title": "Kiến trúc Data Lakehouse chuyên sâu: Iceberg, Delta Lake, ACID",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/lakehouse/"
@@ -652,8 +826,11 @@
       "title": "Liquid Clustering trong Databricks Delta Lake: Hilbert Curve & Kiến trúc",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/"
@@ -662,8 +839,10 @@
       "title": "Medallion Architecture: System Design, Trade-offs & Operational Risks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/medallion-architecture/"
@@ -672,8 +851,11 @@
       "title": "Kiến trúc OLAP: Columnar Storage, Vectorized Execution (SIMD) & Z-Ordering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/olap/"
@@ -682,8 +864,10 @@
       "title": "OLTP vs OLAP Storage - Row-oriented vs Column-oriented | System Design",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/oltp-vs-olap-storage/"
@@ -692,8 +876,11 @@
       "title": "Kiến trúc OLTP Database: Phân tích chuyên sâu WAL, MVCC và B-Tree",
       "category": "Khái niệm",
       "definition": "OLTP (Online Transaction Processing) là hệ thống thiết kế tối ưu cho tần suất ghi/đọc (Read/Write) cực lớn với độ trễ thấp ở mức vật lý, kết hợp cơ chế Buffer Pool trong RAM, B-Tree trên Disk, và thuật toán MVCC để giải quyết bài toán Concurrency.",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/oltp/"
@@ -702,8 +889,10 @@
       "title": "Apache Parquet Internals - Cấu Trúc, Encoding & Predicate Pushdown",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/parquet-internals/"
@@ -712,8 +901,11 @@
       "title": "Kiến trúc Phân vùng dữ liệu (Partitioning) và Các Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/partitioning/"
@@ -722,8 +914,11 @@
       "title": "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lakehouse",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/schema-evolution/"
@@ -732,8 +927,11 @@
       "title": "Serverless Data Processing: Kiến trúc BigQuery, Athena & Đánh Đổi Hệ Thống",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/serverless-data/"
@@ -742,8 +940,11 @@
       "title": "Kiến trúc Snowflake Data Cloud: Micro-partitions & Virtual Warehouses",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/snowflake/"
@@ -752,8 +953,11 @@
       "title": "Table Format Kiến Trúc và Đánh Đổi - Iceberg, Delta Lake, Hudi",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/table-format/"
@@ -762,8 +966,11 @@
       "title": "Kiến trúc Kỹ thuật Time Series Databases (InfluxDB, TimescaleDB, ClickHouse)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/time-series-databases/"
@@ -772,8 +979,10 @@
       "title": "Time Travel Architecture: Deep Dive vào Delta Lake & Apache Iceberg",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/time-travel/"
@@ -782,8 +991,11 @@
       "title": "Operational: Vacuum, MVCC & Quản lý Data Bloat",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vacuum-autovacuum-mechanisms/"
@@ -792,8 +1004,12 @@
       "title": "Cơ sở dữ liệu Vector (Vector Database) là gì? Kiến trúc HNSW vs IVF-PQ",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vector-database/"
@@ -802,8 +1018,12 @@
       "title": "Vector Database là gì? Kiến trúc lõi HNSW, IVF-PQ và Hybrid Search",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/vector-store/"
@@ -812,8 +1032,10 @@
       "title": "Z-Order Optimization & Liquid Clustering: Kiến Trúc Data Skipping",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/"
@@ -822,8 +1044,10 @@
       "title": "Apache Spark: Kiến trúc hệ thống, Catalyst Optimizer và Tối ưu Memory",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/apache-spark/"
@@ -832,8 +1056,10 @@
       "title": "Xử lý dữ liệu theo lô - Kiến trúc Phân tán và Hệ thống Core Batch",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/batch-processing/"
@@ -842,8 +1068,10 @@
       "title": "Data Skew trong Spark: Kỹ thuật Salting và Adaptive Query Execution (AQE)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/data-skew/"
@@ -852,8 +1080,10 @@
       "title": "Distributed Joins Mechanisms - Broadcast, Sort-Merge, Shuffle Hash",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/"
@@ -862,8 +1092,10 @@
       "title": "Distributed Processing Architecture: Big Data Computing",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Junior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/distributed-processing/"
@@ -872,8 +1104,10 @@
       "title": "MPP Architecture & Google Dremel - BigQuery Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/"
@@ -882,8 +1116,10 @@
       "title": "Spark Shuffle Architecture & Remote Shuffle Service (RSS/Zeus) Uber",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/shuffle/"
@@ -892,8 +1128,10 @@
       "title": "Spark AQE (Adaptive Query Execution): Runtime Physical Plan Optimization",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/"
@@ -902,8 +1140,10 @@
       "title": "Spark Catalyst Optimizer: RBO, CBO & Quá Trình Biên Dịch SQL",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/"
@@ -912,8 +1152,10 @@
       "title": "Spark Data Skew: Giải pháp Salting và AQE (Adaptive Query Execution)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/"
@@ -922,8 +1164,10 @@
       "title": "Spark Execution Model: Kiến trúc Driver, Cluster Manager và Executor",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-execution-model/"
@@ -932,8 +1176,10 @@
       "title": "Cấu trúc phân cấp thực thi: Spark Jobs, Stages và Tasks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/"
@@ -942,8 +1188,10 @@
       "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-joins/"
@@ -952,8 +1200,10 @@
       "title": "Spark Partition",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-partition/"
@@ -962,8 +1212,10 @@
       "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/"
@@ -972,8 +1224,10 @@
       "title": "Spark SQL & Catalyst Optimizer: Kiến Trúc Lõi và Tối Ưu Hóa Truy Vấn",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-sql/"
@@ -982,8 +1236,10 @@
       "title": "Spark Tungsten Engine: Tối Ưu Hóa RAM và CPU Cấp Độ Phần Cứng",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/"
@@ -992,8 +1248,10 @@
       "title": "Spark OOM Troubleshooting: Bắt Bệnh YARN Killed và JVM Heap",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/"
@@ -1002,8 +1260,10 @@
       "title": "Apache Kafka: Kiến trúc Zero-Copy, KRaft và Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/apache-kafka/"
@@ -1012,8 +1272,10 @@
       "title": "Thuật toán Chandy-Lamport & Apache Flink Checkpointing Architecture",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/"
@@ -1022,8 +1284,11 @@
       "title": "Kafka Consumer Groups: Kiến trúc, Rebalance Storms & Xử lý Lỗi",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/consumer-groups/"
@@ -1032,8 +1297,10 @@
       "title": "Event Time vs Processing Time trong Streaming: Kiến trúc & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/"
@@ -1042,8 +1309,11 @@
       "title": "Exactly-Once Semantics (EOS) trong Kafka & Flink: Kiến trúc 2PC",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/exactly-once-semantics/"
@@ -1052,8 +1322,10 @@
       "title": "Apache Flink Backpressure: Credit-based Flow Control & Network Buffers",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-backpressure/"
@@ -1062,8 +1334,10 @@
       "title": "Tuning RocksDB State Backend trong Apache Flink (Internals)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-rocksdb-state-backend/"
@@ -1072,8 +1346,10 @@
       "title": "Apache Flink Watermarks & Xử lý Late Data trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/flink-watermarks-late-data/"
@@ -1082,8 +1358,11 @@
       "title": "Khắc phục Kafka Consumer Lag và Rebalance Storms (KIP-429, KIP-345)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-consumer-lag-rebalance/"
@@ -1092,8 +1371,11 @@
       "title": "Kafka Exactly-Once Semantics & Transactional Outbox Pattern",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-exactly-once-semantics/"
@@ -1102,8 +1384,11 @@
       "title": "Kafka Topics, Partitions, Zero-Copy và Page Cache Architecture",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/kafka-topics-partitions/"
@@ -1112,8 +1397,10 @@
       "title": "Stream-Table Duality: Kiến trúc cốt lõi của Kafka & Flink",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/stream-table-duality/"
@@ -1122,8 +1409,10 @@
       "title": "Streaming Processing: Kiến trúc Flink, Watermarks và Exactly-Once Semantics",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/streaming-processing/"
@@ -1132,8 +1421,10 @@
       "title": "Watermark là gì? Kiến trúc xử lý Late Data & OOMKilled trong Flink",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/watermark/"
@@ -1142,8 +1433,10 @@
       "title": "Windowing & Watermarks: Kiến trúc xử lý Late Data trong Streaming",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/windowing/"
@@ -1152,8 +1445,11 @@
       "title": "Zero-copy Principle: Kiến trúc OS-level và Tối ưu Kafka",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/5-stream-processing-realtime/zero-copy-principle/"
@@ -1162,8 +1458,10 @@
       "title": "Data Contract: Kiến trúc, Triển khai và Xử lý Sự cố (Data Engineering)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/data-contract/"
@@ -1172,8 +1470,10 @@
       "title": "Data Vault 2.0: Kiến trúc, Trade-offs và Thực chiến Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/data-vault-modeling/"
@@ -1182,8 +1482,10 @@
       "title": "dbt Models Materialization Architecture: Snowflake, BigQuery, Databricks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dbt-models/"
@@ -1192,8 +1494,10 @@
       "title": "dbt Architecture: Materialization, State, và CI/CD ở quy mô lớn",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dbt/"
@@ -1202,8 +1506,11 @@
       "title": "Dimension Table & SCD Type 2: Thiết kế, Tối ưu Broadcast Join & Xử lý OOM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dimension-table/"
@@ -1212,8 +1519,11 @@
       "title": "Dimensional Modeling: Kimball, Data Vault, OBT trên BigQuery & Snowflake",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/"
@@ -1222,8 +1532,11 @@
       "title": "Thiết kế Fact Table chuyên sâu: Kiến trúc, Trade-offs và Tối ưu (Snowflake, Databricks)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/fact-table/"
@@ -1232,8 +1545,11 @@
       "title": "Grain (Độ mịn dữ liệu) trong Data Warehouse & System Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/grain/"
@@ -1242,8 +1558,11 @@
       "title": "Phương pháp Inmon (Inmon Methodology): Kiến trúc System Design & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/inmon-methodology/"
@@ -1252,8 +1571,11 @@
       "title": "Phương pháp luận Kimball (Kimball Methodology): Kiến trúc, Trade-offs và Thực chiến",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/kimball-methodology/"
@@ -1262,8 +1584,10 @@
       "title": "Materialization trong dbt - BigQuery, Snowflake, Databricks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/materialization/"
@@ -1272,8 +1596,11 @@
       "title": "Lớp ngữ nghĩa chỉ số (Metrics Layer / Semantic Layer) - dbt & Cube",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/metrics-layer/"
@@ -1282,8 +1609,11 @@
       "title": "One Big Table (OBT) Architecture & Trade-offs - Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "BI"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/"
@@ -1292,8 +1622,10 @@
       "title": "Slowly Changing Dimension (SCD) Architecture: Type 2, Iceberg, Delta Lake",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/slowly-changing-dimension/"
@@ -1302,8 +1634,10 @@
       "title": "Snowflake Schema (Lược đồ bông tuyết) - Định nghĩa, So sánh và Ứng dụng",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/snowflake-schema/"
@@ -1312,8 +1646,11 @@
       "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/sql-transformation/"
@@ -1322,8 +1659,10 @@
       "title": "Lược đồ Hình sao (Star Schema)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/star-schema/"
@@ -1332,8 +1671,10 @@
       "title": "Surrogate Key trong Distributed Data Warehouse (Snowflake, BigQuery)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/6-data-modeling-transformation/surrogate-key/"
@@ -1342,8 +1683,11 @@
       "title": "Airflow Executors: So sánh Celery vs Kubernetes (K8s) & Tối ưu FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/"
@@ -1352,8 +1696,11 @@
       "title": "Airflow Scheduler HA Architecture & Tuning Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-scheduler/"
@@ -1362,8 +1709,11 @@
       "title": "Airflow Zombie Tasks & Pool Starvation: Khắc phục lỗi OOM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/airflow-zombie-tasks/"
@@ -1372,8 +1722,11 @@
       "title": "Alerting & Incident Response: SRE và Xử lý sự cố Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "Platform",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/alerting-incident-response/"
@@ -1382,8 +1735,11 @@
       "title": "Kiến trúc hệ thống Anomaly Detection trong Data Pipeline",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DS",
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/anomaly-detection/"
@@ -1392,8 +1748,11 @@
       "title": "Kiến trúc Apache Airflow: Scheduler Bottlenecks & Executor Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/apache-airflow/"
@@ -1402,8 +1761,11 @@
       "title": "Blue-Green Deployment trong Data Engineering - WAP Pattern Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/blue-green-deployment-data/"
@@ -1412,8 +1774,10 @@
       "title": "Data Circuit Breakers & WAP Pattern (Write-Audit-Publish) Deep Dive",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/circuit-breakers-data/"
@@ -1422,8 +1786,11 @@
       "title": "DAG trong Data Engineering: Giải phẫu Scheduler Tax & Spark Execution",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dag/"
@@ -1432,8 +1799,11 @@
       "title": "Data Observability: Kiến trúc, Thực chiến và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-observability/"
@@ -1442,8 +1812,11 @@
       "title": "Data Profiling & Data Observability: Kiến trúc và Xử lý Lỗi OOMKilled",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-profiling/"
@@ -1452,8 +1825,11 @@
       "title": "Data Quality Dimensions: Kiến trúc DataOps, WAP và Circuit Breaker",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-quality-dimensions/"
@@ -1462,8 +1838,11 @@
       "title": "Kiến trúc Data Quality, Data Observability & Data Contracts ở Quy mô Lớn",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-quality/"
@@ -1472,8 +1851,11 @@
       "title": "Data Reconciliation Architecture: Kỹ thuật đối soát dữ liệu chuyên sâu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/"
@@ -1482,8 +1864,11 @@
       "title": "Data Testing & Data Quality: Kiến trúc WAP và Circuit Breaker",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/data-testing/"
@@ -1492,8 +1877,11 @@
       "title": "DataOps & Data Quality: Kiến trúc CI/CD, Airflow, Data Contracts",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dataops/"
@@ -1502,8 +1890,11 @@
       "title": "Kiểm thử dữ liệu với dbt (dbt Testing): Kiến trúc và Thực chiến DataOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DA"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/dbt-testing/"
@@ -1512,8 +1903,11 @@
       "title": "Distribution Drift (Data Drift) là gì? Kiến trúc giám sát PSI & KL Divergence",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/"
@@ -1522,8 +1916,11 @@
       "title": "Giám sát độ trễ dữ liệu (Freshness Monitoring): Kiến trúc và Thực tiễn",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/freshness-monitoring/"
@@ -1532,8 +1929,11 @@
       "title": "Data Orchestration Architecture: Airflow vs Dagster vs Prefect",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/orchestration/"
@@ -1542,8 +1942,11 @@
       "title": "DataOps Retries & SLA: Thundering Herd, Jitter và Tự Phục Hồi (Airflow)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/retries-sla/"
@@ -1552,8 +1955,11 @@
       "title": "Root Cause Analysis (RCA) trong Kỹ thuật Dữ liệu: Kiến trúc & Troubleshooting",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/"
@@ -1562,8 +1968,11 @@
       "title": "Schema Drift và Schema Evolution trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/schema-drift/"
@@ -1572,8 +1981,11 @@
       "title": "Airflow Sensors: Cảm biến dữ liệu, Deferrable Operators & Event-driven",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/sensors/"
@@ -1582,8 +1994,11 @@
       "title": "Software-Defined Assets - Dagster Architecture & Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/software-defined-assets/"
@@ -1592,8 +2007,11 @@
       "title": "Task Dependency & Data-Aware Scheduling: Airflow Datasets, XCom, TaskFlow API",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/task-dependency/"
@@ -1602,8 +2020,11 @@
       "title": "Kiến trúc Giám sát Volume Anomalies trong Data Engineering",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/7-dataops-orchestration-quality/volume-anomalies/"
@@ -1633,9 +2054,12 @@
     "Audit Logging": {
       "title": "Nhật ký kiểm toán (Audit Logging) - Giám sát bảo mật dữ liệu",
       "category": "8. Bảo Mật, Quản Trị & FinOps",
-      "definition": "Audit Logging là hệ thống ghi nhận mọi sự kiện truy cập và thay đổi hệ thống. Trong Data Engineering, nó đóng vai trò là hạ tầng bảo mật cốt lõi, phục vụ điều tra sự cố, tuân thủ SOC 2 và tối ưu chi phí FinOps.",
-      "level": "",
-      "domains": [],
+      "definition": "Audit Logging là hệ thống ghi nhận mọi sự kiện truy cập và thay đổi hệ thống. Trong Data Engineering, đây là lớp bằng chứng phục vụ điều tra sự cố, tuân thủ SOC 2 và tối ưu chi phí FinOps.",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [
         "Audit Log",
         "Nhật ký kiểm toán",
@@ -1649,7 +2073,7 @@
       "title": "Tối ưu hóa chi phí hệ thống dữ liệu đám mây (FinOps & Cost Optimization)",
       "category": "8. Bảo Mật, Quản Trị & FinOps",
       "definition": "FinOps trong Data Engineering là quy trình và văn hóa tích hợp trách nhiệm quản lý chi phí tài nguyên điện toán đám mây vào ngay từ giai đoạn thiết kế và vận hành Data Pipeline.",
-      "level": "",
+      "level": "Senior",
       "domains": [
         "DE",
         "DA",
@@ -1838,8 +2262,11 @@
       "title": "AI Agent Architecture: System Design, Trade-offs & Production Risks",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/ai-agent/"
@@ -1848,18 +2275,26 @@
       "title": "Chunking Strategy RAG: Semantic, Parent Document Retriever, OOM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/chunking-strategy/"
     },
     "Chunking": {
-      "title": "Chunking trong RAG: Kiến trúc Semantic, Parent-Child & Lost in the Middle",
+      "title": "Chunking trong RAG: Kiến trúc Semantic, Parent-Child & Lost in the middle",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/chunking/"
@@ -1868,8 +2303,12 @@
       "title": "Context Window, RoPE & KV Cache trong LLM: Kiến trúc và Tối ưu",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/context-window/"
@@ -1878,8 +2317,12 @@
       "title": "System Design Embedding Models: Bi-Encoder, MRL và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embedding-model/"
@@ -1888,8 +2331,12 @@
       "title": "Embedding Models: System Design, Matryoshka & Rủi ro Vận hành",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embedding-models/"
@@ -1898,8 +2345,12 @@
       "title": "Thiết kế hệ thống Vector Embeddings & Toán học Không gian (Vector Space)",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/embeddings/"
@@ -1908,8 +2359,12 @@
       "title": "Đánh giá RAG và LLM: LLM-as-a-Judge, Ragas, TruLens & HITL",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/evaluation-metric/"
@@ -1918,8 +2373,12 @@
       "title": "Thiết kế kiến trúc Few-shot Prompting: Dynamic Routing, Prompt Caching",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/few-shot-prompting/"
@@ -1928,8 +2387,12 @@
       "title": "Few-shot Prompting System Design & In-Context Learning",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/few-shot/"
@@ -1938,8 +2401,12 @@
       "title": "Fine-tuning LLM System Design: ZeRO, FSDP, LoRA & DPO",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/fine-tuning/"
@@ -1948,8 +2415,12 @@
       "title": "Thiết kế Kiến trúc chống Ảo giác (Hallucination) cho LLM trong Production",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/hallucination/"
@@ -1958,8 +2429,12 @@
       "title": "Hybrid Search là gì? Kiến trúc Dual Retrieval và RRF trong Vector DB",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/hybrid-search/"
@@ -1968,8 +2443,12 @@
       "title": "LLM-as-a-judge là gì? Kiến trúc Đánh giá Ứng dụng GenAI Enterprise",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/llm-as-a-judge/"
@@ -1978,8 +2457,12 @@
       "title": "Kiến trúc LLM Inference: KV Cache, PagedAttention, vLLM và Trade-offs",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/llm/"
@@ -1988,8 +2471,12 @@
       "title": "Low-Rank Adaptation (LoRA) Architecture, QLoRA FinOps & vLLM Serving",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/lora/"
@@ -1998,8 +2485,12 @@
       "title": "MLflow Architecture: Nền tảng quản lý MLOps và Model Lifecycle",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/mlflow/"
@@ -2008,8 +2499,12 @@
       "title": "Model Serving Architecture: vLLM, PagedAttention & Ray Serve - MLOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/model-serving/"
@@ -2018,8 +2513,12 @@
       "title": "Chỉ số NDCG và MRR là gì? Đánh giá mô hình Search và RAG",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/ndcg/"
@@ -2028,8 +2527,12 @@
       "title": "Kiến trúc hệ thống PEFT: LoRA, QLoRA, Prefix Tuning & FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/peft/"
@@ -2038,8 +2541,12 @@
       "title": "Prompt Engineering System Architecture, ReAct, CoT & DSPy - Data Engineer",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/prompt-engineering/"
@@ -2048,8 +2555,12 @@
       "title": "Thiết kế Kiến trúc RAG Hệ thống: Advanced RAG, OOM, FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/rag/"
@@ -2058,8 +2569,12 @@
       "title": "Độ phủ (Recall) và Precision trong RAG: Kiến trúc 2-Stage Retrieval",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/recall/"
@@ -2068,8 +2583,12 @@
       "title": "Mô hình Reranker (Cross-Encoder): Kiến trúc hệ thống và Tối ưu FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/reranker/"
@@ -2078,8 +2597,12 @@
       "title": "Thiết kế Kiến trúc Reranking: Two-Stage Retrieval, Cross-Encoder",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/reranking/"
@@ -2088,8 +2611,12 @@
       "title": "RLHF & DPO - Kiến trúc Hệ thống, FinOps và Vận hành MLOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/rlhf/"
@@ -2098,8 +2625,11 @@
       "title": "Row-based Storage: OLTP, B-Tree, LSM-Tree và Write-Ahead Logging",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Junior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/row-based-storage/"
@@ -2108,8 +2638,12 @@
       "title": "Tìm kiếm ngữ nghĩa (Semantic Search) & Kiến trúc Vector Database",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/semantic-search/"
@@ -2118,8 +2652,12 @@
       "title": "System Prompt Architecture trong Production: Guardrails, FinOps & CoT",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/system-prompt/"
@@ -2128,8 +2666,12 @@
       "title": "Temperature, Top-P, Top-K trong LLM: Kiến Trúc & System Design",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Senior",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/temperature/"
@@ -2138,8 +2680,12 @@
       "title": "Thiết kế hệ thống Tokenization & Tối ưu FinOps LLM",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/token/"
@@ -2148,8 +2694,12 @@
       "title": "Top-p (Nucleus Sampling) Architecture - Tinh chỉnh thông số LLM & FinOps",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/top-p/"
@@ -2158,8 +2708,12 @@
       "title": "Zero-shot Prompting trong Data Engineering: Text-to-SQL & PII",
       "category": "Khái niệm",
       "definition": "",
-      "level": "",
-      "domains": [],
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "DS",
+        "Platform"
+      ],
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/zero-shot/"

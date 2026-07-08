@@ -1,5 +1,7 @@
 ---
 title: "LLM làm Giám khảo (LLM-as-a-judge) - MLOps Thực Chiến"
+domains: ["DE", "DS", "Platform"]
+level: "Senior"
 difficulty: "Advanced"
 tags: ["llm-evaluation", "llm-as-a-judge", "genai", "prompt-engineering", "mlops", "finops"]
 readingTime: "25 mins"

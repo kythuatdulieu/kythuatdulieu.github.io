@@ -1,5 +1,7 @@
 ---
 title: "Sensors - Kiến trúc Polling & Tác vụ chờ đợi"
+domains: ["DE", "Platform"]
+level: "Middle"
 difficulty: "Intermediate"
 tags: ["airflow", "sensors", "orchestration", "polling", "event-driven", "deadlock"]
 readingTime: "25 mins"
