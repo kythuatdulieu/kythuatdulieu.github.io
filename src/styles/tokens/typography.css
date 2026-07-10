@@ -1,0 +1,84 @@
+/* ==========================================================
+   TYPE TOKENS
+   Vietnamese long-form reading is the primary use case, so the
+   scale favors generous line-height and a serif "reading mode"
+   alongside the default UI sans.
+
+   FONT SUBSTITUTION FLAG: the source codebase ships no brand
+   webfonts — Starlight's `--sl-font-system` (OS system-ui stack)
+   is used as-is. For this system we picked the closest Google
+   Fonts pairing with full Vietnamese glyph coverage: Inter (UI/
+   sans reading) and Source Serif 4 (serif reading mode). Swap
+   the @font-face below for real brand fonts if/when supplied.
+   ========================================================== */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/fontsource/fonts/inter:vf@latest/vietnamese-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/fontsource/fonts/inter:vf@latest/vietnamese-wght-italic.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/fontsource/fonts/source-serif-4:vf@latest/vietnamese-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono:vf@latest/vietnamese-wght-normal.woff2') format('woff2-variations');
+}
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Starlight reads these two directly */
+  --sl-font: var(--font-sans);
+  --sl-font-system: var(--font-sans);
+  --sl-font-mono: var(--font-mono);
+
+  /* the reading-mode font toggle (panel 'C' in the brief) swaps this */
+  --font-reading: var(--font-sans);
+
+  /* type scale — 1.2 minor-third-ish, generous for long reads */
+  --text-xs: 0.8125rem;   /* 13px  — meta/badges */
+  --text-sm: 0.9375rem;   /* 15px  — captions, nav */
+  --text-base: 1.0625rem; /* 17px  — body default (Vietnamese diacritics need room) */
+  --text-md: 1.1875rem;   /* 19px */
+  --text-lg: 1.375rem;    /* 22px  — h3 */
+  --text-xl: 1.75rem;     /* 28px  — h2 */
+  --text-2xl: 2.25rem;    /* 36px  — h1 */
+  --text-3xl: 2.75rem;    /* 44px  — display, homepage only */
+
+  /* body reading tuning — adjustable via the reading panel */
+  --reading-line-height: 1.72;
+  --reading-measure: 72ch;    /* narrow=60ch / medium=72ch / wide=88ch */
+  --reading-font-scale: 1;    /* panel slider multiplies --text-base by this */
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.4;
+  --leading-normal: 1.6;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.01em;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.06em;
+}

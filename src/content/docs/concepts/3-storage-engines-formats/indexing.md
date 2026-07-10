@@ -38,8 +38,6 @@ graph TD
     
     L1 -.->|Next/Prev| L2
     L2 -.->|Next/Prev| L3
-    
-    classDef leaf fill:#f9f,stroke:#333,stroke-width:2px;
     class L1,L2,L3 leaf;
 ```
 

@@ -33,18 +33,14 @@ graph TD
     direction LR
     Z1("(1") --> Z2("(2")
     Z2 -->|BƯỚC NHẢY XA| Z3("(3")
-    Z3 --> Z4("(4")
-    style Z2 fill:#f99,stroke:#333
-    style Z3 fill:#f99,stroke:#333
+    Z3 --> Z4("(4")
     end
 
     subgraph hilbert["Hilbert Curve: Continuous Locality"]
     direction LR
     H1("(1") --> H2("(2")
     H2 -->|LIỀN KỀ| H3("(3")
-    H3 --> H4("(4")
-    style H2 fill:#9f9,stroke:#333
-    style H3 fill:#9f9,stroke:#333
+    H3 --> H4("(4")
     end
 ```
 

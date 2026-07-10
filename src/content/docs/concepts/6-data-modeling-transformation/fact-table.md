@@ -87,8 +87,9 @@ WHEN NOT MATCHED THEN
     VALUES (source.order_id, source.customer_sk, source.product_sk, source.amount, source.date, source.status);
 ```
 
-> [!CAUTION] 
-> **Performance Trap (Bẫy Hiệu năng]:** Rất nhiều Kỹ sư ngây thơ dùng `MERGE INTO` chỉ với điều kiện `ON target.order_id = source.order_id`. Query Engine sẽ buộc phải quét lại **toàn bộ Petabyte Fact Table (Full Table Scan)** để tìm kiếm `order_id`. Bạn bắt buộc phải đính kèm **Partition Key** (thường là `date`) vào mệnh đề `ON` để giới hạn phạm vi quét (Pruning) xuống mức nhỏ nhất có thể.
+:::danger
+**Performance Trap (Bẫy Hiệu năng]:** Rất nhiều Kỹ sư ngây thơ dùng `MERGE INTO` chỉ với điều kiện `ON target.order_id = source.order_id`. Query Engine sẽ buộc phải quét lại **toàn bộ Petabyte Fact Table (Full Table Scan)** để tìm kiếm `order_id`. Bạn bắt buộc phải đính kèm **Partition Key** (thường là `date`) vào mệnh đề `ON` để giới hạn phạm vi quét (Pruning) xuống mức nhỏ nhất có thể.
+:::
 
 ---
 

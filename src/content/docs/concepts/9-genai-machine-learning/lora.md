@@ -38,11 +38,7 @@ graph TD
     W0 --> Sum("( + )")
     B --> Scaling["Scale: Alpha / Rank"]
     Scaling --> Sum
-    Sum --> H("Output h")
-
-    style W0 fill:#f9f,stroke:#333,stroke-width:2px
-    style A fill:#bbf,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
+    Sum --> H("Output h")
 ```
 
 ### Đánh đổi Hệ thống (Systemic Trade-offs)

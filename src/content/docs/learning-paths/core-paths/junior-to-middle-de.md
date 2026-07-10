@@ -1,74 +1,138 @@
 ---
-title: Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)
-description: Lộ trình nâng cao năng lực thực chiến, từ kỹ sư sơ cấp lên trung cấp với Dimensional Modeling, ETL/ELT và Cloud Data Warehouse.
+title: "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
+description: "Lộ trình từ pipeline cơ bản sang production: mô hình dữ liệu, orchestration, warehouse, CDC, test và backfill."
 sidebar:
   order: 2
 prev:
   link: /learning-paths/core-paths/beginner-de/
-  label: Beginner Data Engineer
+  label: "Beginner Data Engineer"
 next:
   link: /learning-paths/core-paths/middle-to-senior-de/
-  label: Middle to Senior Data Engineer
+  label: "Middle to Senior Data Engineer"
 ---
 
-Sự thăng tiến từ Junior lên Middle Data Engineer không nằm ở số năm kinh nghiệm, mà ở sự chuyển dịch từ việc "viết script thực thi" sang **"làm chủ hệ thống" (ownership)** từ đầu đến cuối.
+Ở cấp Junior, bạn chứng minh mình viết được pipeline. Ở cấp Middle, bạn chứng minh pipeline đó có thể sống trong production: chạy đúng lịch, chạy lại được, có test, có cảnh báo, có tài liệu, và không làm downstream mất niềm tin.
 
-## Mục tiêu lộ trình
+Chặng này nên học bằng cách xây một pipeline ELT hoàn chỉnh, không học từng công cụ rời rạc.
 
-* Xây dựng tư duy thiết kế hệ thống và giải quyết các bài toán dữ liệu thực tế tại doanh nghiệp.
-* Làm chủ Modern Data Stack (dbt, Cloud Data Warehouse).
-* Nâng cao hiệu năng thông qua tối ưu hóa lưu trữ và mô hình hóa.
+## Checkpoint cần đạt
 
-## Bắt đầu từ đâu? (Prerequisites)
+- Thiết kế bảng fact/dimension ở mức cơ bản, biết khai báo grain.
+- Dùng Airflow hoặc công cụ tương đương để điều phối DAG.
+- Hiểu partitioning, clustering và incremental load.
+- Biết xử lý dữ liệu đến muộn, backfill và retry an toàn.
+- Viết data tests: uniqueness, not null, accepted values, freshness.
+- Tạo dashboard hoặc bảng mart có người dùng thực sự đọc được.
 
-* **Hoàn thành chặng đường:** 👉 **[Beginner Data Engineer](/learning-paths/core-paths/beginner-de/)**.
-* **Kinh nghiệm:** 1-2 năm thực chiến với SQL, Python, và có hiểu biết về cơ sở dữ liệu.
-* **Mong muốn:** Nâng tầm bản thân khỏi các script ETL thủ công, hướng tới tự động hóa và phân tích chuyên sâu.
+## 1. Mô hình hóa dữ liệu
 
-## Kỹ năng cốt lõi
+Trước khi viết pipeline, hãy trả lời: mỗi dòng trong bảng đại diện cho điều gì? Kimball Group gọi đây là grain của fact table; nếu grain mơ hồ, số liệu downstream rất dễ sai dù SQL vẫn chạy thành công: [Fact Tables and Dimension Tables](https://www.kimballgroup.com/2003/01/fact-tables-and-dimension-tables/).
 
-### 1. Mô hình hóa đa chiều (Dimensional Modeling)
-Nền tảng của kiến trúc kho dữ liệu.
-* Phân biệt **[Fact table](/concepts/6-data-modeling-transformation/fact-table)** (bảng sự kiện/đo lường) và **[Dimension table](/concepts/6-data-modeling-transformation/dimension-table)** (bảng ngữ cảnh/chiều).
-* Nắm vững thiết kế **[Star Schema](/concepts/6-data-modeling-transformation/star-schema)** (Lược đồ hình sao) tối ưu cho các truy vấn phân tích (OLAP).
-* Xử lý lịch sử thay đổi với Slowly Changing Dimensions (SCD Type 1, 2, 3).
+Ví dụ bảng `fact_orders` có grain là “một dòng cho một order item”. Nếu sau đó bạn join với bảng payment ở grain “một dòng cho một payment attempt”, số tiền có thể bị nhân lên. Đây là lỗi rất phổ biến và rất khó phát hiện nếu chỉ nhìn tổng doanh thu.
 
-### 2. Kỹ nghệ Tích hợp dữ liệu (ETL vs ELT)
-Sự chuyển dịch kiến trúc dữ liệu đám mây:
-* **[ETL](/concepts/2-data-ingestion-integration/etl):** Trích xuất -> Biến đổi -> Tải.
-* **[ELT](/concepts/2-data-ingestion-integration/elt):** Trích xuất -> Tải thô vào kho -> Biến đổi bằng sức mạnh của Data Warehouse.
-* Sử dụng **dbt (data build tool)** để thực hiện các quy trình `Transform` chuẩn chỉ như phát triển phần mềm (có Version Control, Testing).
+Học theo thứ tự:
 
-### 3. Phân vùng & Phân cụm (Partitioning & Clustering)
-Kỹ thuật tối ưu hóa chi phí và tốc độ truy vấn trên dữ liệu cực lớn.
-* **[Partitioning](/concepts/3-storage-engines-formats/partitioning):** Chia vật lý dữ liệu (thường theo cột ngày tháng) để engine bỏ qua các phần không liên quan (Partition Pruning).
-* **[Clustering](/concepts/3-storage-engines-formats/clustering):** Sắp xếp dữ liệu trong từng phân vùng theo các khóa tìm kiếm phổ biến (ví dụ: `user_id`).
+1. Grain, fact, dimension.
+2. Star schema và slowly changing dimension.
+3. Snapshot, incremental model, audit columns.
+4. Data mart cho một nghiệp vụ cụ thể.
 
-### 4. Đồng bộ thời gian thực với CDC
-Chuyển đổi từ nạp dữ liệu toàn bộ (Full Load) sang luồng đồng bộ liên tục.
-* **[Change Data Capture (CDC)](/concepts/2-data-ingestion-integration/change-data-capture):** Bắt các sự kiện `INSERT`, `UPDATE`, `DELETE` từ [OLTP](/concepts/3-storage-engines-formats/oltp) database (thông qua Write-Ahead Logs hoặc binlogs) để đồng bộ vào Data Warehouse với độ trễ thấp (Near Real-time).
+Đọc trong site: [Grain](/concepts/6-data-modeling-transformation/grain/), [Fact Table](/concepts/6-data-modeling-transformation/fact-table/), [Dimension Table](/concepts/6-data-modeling-transformation/dimension-table/), [Dimensional Modeling](/concepts/6-data-modeling-transformation/dimensional-modeling/), [Star Schema](/concepts/6-data-modeling-transformation/star-schema/), [Slowly Changing Dimension](/concepts/6-data-modeling-transformation/slowly-changing-dimension/).
 
-### 5. Kho dữ liệu đám mây (Cloud Data Warehouse)
-Kiến trúc tách biệt Lưu trữ (Storage) và Tính toán (Compute) - Decoupled Architecture.
-* Vận hành và tối ưu chi phí trên các nền tảng MPP (Massively Parallel Processing) như **[Google BigQuery](/concepts/3-storage-engines-formats/google-bigquery)** hoặc **[Snowflake](/concepts/3-storage-engines-formats/snowflake)**.
+## 2. Orchestration và DAG
+
+Airflow/Dagster/Prefect không làm dữ liệu đúng thay bạn. Chúng giúp biểu diễn phụ thuộc, lịch chạy, retry và quan sát trạng thái. Airflow định nghĩa DAG là mô hình các task và dependency, nên phần thiết kế dependency phải rõ trước khi viết operator: [Airflow DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html).
+
+Một DAG production tối thiểu cần:
+
+- Task nhỏ, tên rõ, không nhồi toàn bộ logic vào một file.
+- Retry có giới hạn và hiểu được task có idempotent không.
+- Backfill chạy được theo khoảng ngày.
+- Alert gửi đúng người, có link đến log và runbook.
+- SLA hoặc freshness expectation cho bảng đầu ra.
+
+```mermaid
+flowchart TD
+    A["extract_orders"] --> B["load_raw_orders"]
+    B --> C["validate_raw"]
+    C --> D["build_staging"]
+    D --> E["build_marts"]
+    E --> F["run_data_tests"]
+```
+
+Đọc trong site: [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration/), [DAG](/concepts/7-dataops-orchestration-quality/dag/), [Task Dependency](/concepts/7-dataops-orchestration-quality/task-dependency/), [Retries SLA](/concepts/7-dataops-orchestration-quality/retries-sla/), [Apache Airflow](/concepts/7-dataops-orchestration-quality/apache-airflow/).
+
+## 3. Warehouse và incremental processing
+
+Cloud warehouse như BigQuery, Snowflake, Redshift hoặc Fabric Warehouse đều có cách tối ưu riêng, nhưng nguyên tắc chung giống nhau:
+
+| Chủ đề | Cần nắm |
+|---|---|
+| Partition | Cắt dữ liệu theo ngày/tháng hoặc khóa lọc chính. |
+| Clustering/sort key | Sắp xếp dữ liệu theo cột hay filter/join. |
+| Incremental load | Chỉ xử lý phần thay đổi, nhưng phải có chiến lược late-arriving data. |
+| Cost | Query ít cột, lọc partition sớm, tránh rebuild toàn bảng khi không cần. |
+
+Đọc trong site: [Incremental Load](/concepts/2-data-ingestion-integration/incremental-load/), [Partitioning](/concepts/3-storage-engines-formats/partitioning/), [Clustering](/concepts/3-storage-engines-formats/clustering/), [Google BigQuery](/concepts/3-storage-engines-formats/google-bigquery/), [Snowflake](/concepts/3-storage-engines-formats/snowflake/).
+
+## 4. CDC và dữ liệu thay đổi
+
+Change Data Capture giúp lấy thay đổi từ hệ thống nguồn mà không phải scan toàn bộ. Nhưng CDC đi kèm nhiều tình huống khó: update nhiều lần, delete, event đến trễ, schema đổi, transaction bị chia nhỏ.
+
+Khi làm CDC, hãy lưu raw event trước. Đừng vội overwrite bảng đích nếu chưa có audit trail.
+
+Đọc trong site: [Change Data Capture](/concepts/2-data-ingestion-integration/change-data-capture/), [Log-based CDC Internals](/concepts/2-data-ingestion-integration/log-based-cdc-internals/), [Schema Evolution](/concepts/3-storage-engines-formats/schema-evolution/).
+
+## 5. Testing và data quality
+
+Test tốt không chỉ kiểm tra null. Test tốt phản ánh hợp đồng với người dùng dữ liệu:
+
+- `order_id` không được trùng trong mart order-level.
+- `paid_amount` không âm.
+- `event_time` không được lớn hơn thời gian hiện tại quá xa.
+- Bảng dashboard phải fresh trước 8 giờ sáng.
+- Tổng doanh thu mart phải reconcile được với raw/payment source trong ngưỡng chấp nhận.
+
+Đọc trong site: [Data Quality](/concepts/7-dataops-orchestration-quality/data-quality/), [Data Testing](/concepts/7-dataops-orchestration-quality/data-testing/), [dbt Testing](/concepts/7-dataops-orchestration-quality/dbt-testing/), [Freshness Monitoring](/concepts/7-dataops-orchestration-quality/freshness-monitoring/), [Data Reconciliation](/concepts/7-dataops-orchestration-quality/data-reconciliation/).
+
+## Checklist đọc concept
+
+| Mốc học | Concept nội bộ cần đọc |
+|---|---|
+| Thiết kế mart | [Grain](/concepts/6-data-modeling-transformation/grain/), [Fact Table](/concepts/6-data-modeling-transformation/fact-table/), [Dimension Table](/concepts/6-data-modeling-transformation/dimension-table/) |
+| Điều phối pipeline | [DAG](/concepts/7-dataops-orchestration-quality/dag/), [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration/), [Retries SLA](/concepts/7-dataops-orchestration-quality/retries-sla/) |
+| Load tăng dần | [Incremental Load](/concepts/2-data-ingestion-integration/incremental-load/), [Backfill](/concepts/2-data-ingestion-integration/backfill/), [Idempotency](/concepts/2-data-ingestion-integration/idempotency/) |
+| Kiểm tra dữ liệu | [Data Testing](/concepts/7-dataops-orchestration-quality/data-testing/), [Freshness Monitoring](/concepts/7-dataops-orchestration-quality/freshness-monitoring/), [Data Reconciliation](/concepts/7-dataops-orchestration-quality/data-reconciliation/) |
 
 ## Dự án thực hành
 
-**Dự án:** Luồng dữ liệu phân tích doanh thu E-commerce bằng Modern Data Stack
-* **Công cụ:** PostgreSQL, Airbyte/Fivetran (Ingestion), Google BigQuery (Kho), dbt (Transformation).
-* **Nhiệm vụ:**
-  1. Cấu hình luồng Ingestion tự động kéo dữ liệu giao dịch từ PostgreSQL vào BigQuery.
-  2. Thiết kế mô hình `Star Schema` cho dữ liệu bán hàng.
-  3. Viết mô hình dbt để chuẩn hóa và tổng hợp dữ liệu thành bảng báo cáo cuối cùng (Data Mart).
-* **Kết quả:** Hiểu rõ cách Modern Data Stack lắp ghép với nhau trong môi trường thực tế.
+**Dự án: E-commerce ELT pipeline**
 
-## Góc phỏng vấn (Interview QA)
+1. Tạo dữ liệu giả lập: customers, products, orders, payments, events.
+2. Load raw vào PostgreSQL hoặc DuckDB/BigQuery.
+3. Dùng dbt hoặc SQL thuần để tạo staging, dimension, fact.
+4. Điều phối bằng Airflow.
+5. Thêm data tests và freshness check.
+6. Viết một runbook: pipeline fail ở task nào thì kiểm tra gì.
 
-* **Mô hình hóa:** Yêu cầu vẽ nhanh kiến trúc bảng cho bài toán ứng dụng gọi xe (Ride-hailing) hoặc chuỗi bán lẻ.
-* **OLTP vs OLAP:** Phân tích vì sao hệ thống xử lý giao dịch lại chậm khi phân tích, và giải pháp.
-* **Tối ưu:** Làm thế nào để giải quyết sự cố truy vấn quét toàn bộ bảng (Full Table Scan) tốn kém?
+Kết quả tốt không phải là dashboard đẹp. Kết quả tốt là người khác có thể nhìn vào repo và hiểu pipeline đang đảm bảo điều gì.
 
-## Bước tiếp theo
+## Góc phỏng vấn
 
-Khi bạn đã làm chủ hệ thống kho dữ liệu đám mây và mô hình hóa, thách thức tiếp theo là xử lý dữ liệu quy mô "Khổng lồ" (Petabytes) với Spark và Kafka. Hãy tiến lên:
-👉 **[Middle to Senior Data Engineer](/learning-paths/core-paths/middle-to-senior-de/)**
+- Grain là gì? Cho ví dụ lỗi do join khác grain.
+- Retry khác backfill như thế nào?
+- Pipeline chạy lại vì task fail thì làm sao tránh duplicate?
+- Partition theo `created_at` hay `event_date`, chọn thế nào?
+- CDC xử lý delete và late event ra sao?
+
+## Khi nào nên đi tiếp?
+
+Bạn sẵn sàng sang Middle to Senior khi có thể vận hành một pipeline production nhỏ trong vài tuần, xử lý được sự cố thường gặp, và biết diễn giải trade-off giữa độ đúng, độ trễ, chi phí và độ phức tạp.
+
+## References
+
+- [Fact Tables and Dimension Tables](https://www.kimballgroup.com/2003/01/fact-tables-and-dimension-tables/) - Kimball Group.
+- [DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html) - Apache Airflow.
+- [What is dbt?](https://docs.getdbt.com/docs/introduction) - dbt Labs.
+- [Data contracts](https://docs.getdbt.com/docs/build/data-contracts) - dbt Labs.
+- [PostgreSQL Indexes](https://www.postgresql.org/docs/current/indexes.html) - PostgreSQL Global Development Group.

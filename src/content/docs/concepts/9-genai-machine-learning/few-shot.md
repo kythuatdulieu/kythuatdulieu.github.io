@@ -32,9 +32,7 @@ graph TD
         C --> E("Decode Phase (O(1))")
         E --> F["Output Token"]
         F -->|Loop back| E
-    end
-    style B fill:#FF3D00,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#00B0FF,stroke:#333,stroke-width:2px,color:#fff
+    end
 ```
 
 Mỗi token trong các ví dụ Few-shot phải trải qua pha tính toán ban đầu gọi là **Prefill Phase**. LLM tính toán các ma trận Key và Value cho từng token và lưu chúng vào VRAM (KV Cache) để tránh việc phải tính toán lại trong pha **Decode Phase** (sinh từ tiếp theo).

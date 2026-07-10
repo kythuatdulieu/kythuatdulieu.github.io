@@ -1,0 +1,1291 @@
+{
+  "exam": "DP-420",
+  "provider": "microsoft",
+  "code": "dp-420",
+  "total_questions": 109,
+  "questions": [
+    {
+      "id": 1,
+      "question": "You are designing an Azure Cosmos DB for NoSQL solution to store data from IoT devices. Writes from the devices will occur every second. Data will be retained indefinitely.\nThe following is a sample of the data.\nYou need to select a partition key that meets the following requirements for writes:\n• Minimizes the partition skew• Avoids capacity limits• Avoids hot partitions\nWhat should you do?",
+      "choices": {
+        "A": "Use deviceManufacturer as the partition key.",
+        "B": "Create a new synthetic key that contains deviceId and timestamp.",
+        "C": "Create a new synthetic key that contains deviceId and deviceManufacturer.",
+        "D": "Use deviceId as the partition key."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Do các lượt ghi từ thiết bị IoT diễn ra mỗi giây và dữ liệu được lưu giữ vô hạn, việc sử dụng các phân vùng đơn giản như `deviceId` có thể dẫn đến các phân vùng bị nóng (hot partitions) nếu một thiết bị gửi quá nhiều dữ liệu, đồng thời sẽ sớm chạm ngưỡng giới hạn dung lượng phân vùng logic (20 GB).\n\nTạo một khóa tổng hợp (synthetic key) kết hợp giữa `deviceId` và `timestamp` (như giây hoặc mili giây) giúp tạo ra các giá trị khóa có tính phân tán cao (high cardinality), từ đó phân phối đều tải ghi trên toàn bộ hệ thống phân vùng vật lý, tránh tình trạng lệch phân vùng (skew) và không bao giờ bị chạm giới hạn dung lượng phân vùng logic."
+    },
+    {
+      "id": 2,
+      "question": "You plan to create an Azure Cosmos DB account that will use the NoSQL API.\nYou need to create a grouping strategy for items that will be stored in the account. The solution must ensure that write and read operations on the items can be performed within the same transaction.\nWhat should you use to group the items?",
+      "choices": {
+        "A": "logical partitions",
+        "B": "physical partitions",
+        "C": "databases",
+        "D": "containers"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Azure Cosmos DB, các giao dịch (transactional batches) chứa các thao tác đọc ghi đồng thời chỉ có thể được thực thi thành công nếu tất cả các mục (items) trong giao dịch đó thuộc về cùng một phân vùng logic (logical partition) - tức là có chung một giá trị Partition Key. Do đó, ta cần sử dụng các phân vùng logic làm chiến lược nhóm các mục."
+    },
+    {
+      "id": 3,
+      "question": "You have an Azure Cosmos DB database that contains a container named container1. The container1 container is configured with a maximum of 20,000 RU/s and currently contains 240 GB of data.\nYou need to estimate the costs of container1 based on the current usage.\nHow many RU/s will be charged?",
+      "choices": {
+        "A": "240",
+        "B": "4,000",
+        "C": "20,000",
+        "D": "24,000"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong mô hình Provisioned Throughput (manual), chi phí hàng tháng được tính dựa trên lượng throughput cấu hình tối đa cho container (ở đây là 20.000 RU/s), bất kể mức sử dụng thực tế là bao nhiêu (miễn là không thấp hơn ngưỡng tối thiểu dựa trên dung lượng lưu trữ, cụ thể 240 GB yêu cầu tối thiểu 2.400 RU/s). Do đó, bạn sẽ bị tính phí cho 20.000 RU/s."
+    },
+    {
+      "id": 4,
+      "question": "You have an Azure Cosmos DB for NoSQL account configured for global distribution across four regions.\nAt connection time, the SQL SDK needs to identify the optimal endpoint for reading and writing.\nWhich two factors can influence the SDK? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "the consistency level in RequestOptions",
+        "B": "regional latency",
+        "C": "the default consistency level",
+        "D": "the PreferredLocations configuration",
+        "E": "a region being available"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Khi khởi tạo kết nối, SQL SDK tự động xác định endpoint tối ưu dựa trên hai yếu tố chính:\n1. **Độ trễ mạng của các vùng (regional latency)**: SDK đo đạc độ trễ thực tế để chọn vùng có kết nối nhanh nhất.\n2. **Cấu hình PreferredLocations**: Danh sách các vùng ưu tiên do lập trình viên thiết lập trong SDK để định hướng thứ tự ưu tiên vùng kết nối."
+    },
+    {
+      "id": 5,
+      "question": "You have an Azure Cosmos DB for NoSQL account named account1.\nYou need to create a container named Container1 in account1 by using the Azure Cosmos DB .NET SDK. The solution must ensure that the items in Container1 never expire.\nWhat should you set?",
+      "choices": {
+        "A": "TimeToLivePropertyPath to null",
+        "B": "TimeToLivePropertyPath to 0",
+        "C": "DefaultTimeToLive to null",
+        "D": "DefaultTimeToLive to –1"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đảm bảo các mục trong container không bao giờ hết hạn, ta cần tắt tính năng Time to Live (TTL) ở cấp container. Việc đặt thuộc tính `DefaultTimeToLive` thành `null` sẽ vô hiệu hóa hoàn toàn chính sách TTL của container đó, khiến mọi cấu hình TTL riêng lẻ tại cấp độ mục đều bị bỏ qua và các tài liệu sẽ được lưu trữ vĩnh viễn."
+    },
+    {
+      "id": 6,
+      "question": "Your company develops an application named App1 that uses the Azure Cosmos DB SDK and the Eventual consistency level.\nApp1 queries an Azure Cosmos DB for NoSQL account named account1.\nYou need to identify which consistency level to assign to App1 to meet the following requirements:\n• Maximize the throughput of the queries generated by App1 without increasing the number of request units currently used by the queries.• Provide the highest consistency guarantees.\nWhich consistency level should you identify?",
+      "choices": {
+        "A": "Strong",
+        "B": "Bounded Staleness",
+        "C": "Session",
+        "D": "Consistent Prefix"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 7,
+      "question": "You have operational data in an Azure Cosmos DB for NoSQL database.\nDatabase users report that the performance of the database degrades significantly when a business analytics team runs large Apache Spark-based queries against the database.\nYou need to reduce the impact that running the Spark-based queries has on the database users.\nWhat should you implement?",
+      "choices": {
+        "A": "Azure Synapse Link",
+        "B": "a default consistency level of Consistent Prefix",
+        "C": "a default consistency level of Strong",
+        "D": "the Spark connector"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Tính năng **Azure Synapse Link** hỗ trợ kiến trúc HTAP (giao dịch và phân tích kết hợp) bằng cách tự động đồng bộ hóa dữ liệu từ kho lưu trữ giao dịch (transactional store - dạng dòng) sang kho lưu trữ phân tích (analytical store - dạng cột) được tối ưu hóa cho các truy vấn phân tích quy mô lớn mà không làm tiêu hao RU/s của mặt phẳng giao dịch. Nhờ đó, việc chạy các truy vấn Spark sẽ không ảnh hưởng đến hiệu năng của người dùng nghiệp vụ thông thường."
+    },
+    {
+      "id": 8,
+      "question": "You have an Azure Cosmos DB for NoSQL account.\nYou configure the diagnostic settings to send all log information to a Log Analytics workspace.\nYou need to identify when the provisioned request units per second (RU/s) for resources within the account were modified.\nYou write the following query.\nAzureDiagnostics -| where Category == \"ControlPlaneRequests\"\nWhat should you include in the query?",
+      "choices": {
+        "A": "| where OperationName startswith \"RegionAddComplete\"",
+        "B": "| where OperationName startswith \"SqlContainersCreate\"",
+        "C": "| where OperationName startswith \"MongoCollectionsThroughputUpdate\"",
+        "D": "| where OperationName startswith \"SqlContainersThroughputUpdate\""
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi kiểm tra nhật ký KQL Log Analytics cho hoạt động thay đổi cấu hình Provisioned Throughput (RU/s) của container dùng NoSQL API (SQL API), tên thao tác trong cột `OperationName` được hệ thống ghi nhận là `SqlContainersThroughputUpdate`."
+    },
+    {
+      "id": 9,
+      "question": "You have a container in an Azure Cosmos DB for NoSQL account.\nYou need to create an alert based on a custom Log Analytics query.\nWhich signal type should you use?",
+      "choices": {
+        "A": "Log",
+        "B": "Metrics",
+        "C": "Activity Log",
+        "D": "Resource Health"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tạo một cảnh báo (alert) dựa trên kết quả của một truy vấn Log Analytics tùy chỉnh (KQL query), loại tín hiệu (signal type) cần cấu hình là **Log** (Log Search Alert). Cảnh báo dạng này hoạt động bằng cách chạy truy vấn theo tần suất định sẵn và đánh giá dựa trên số dòng kết quả trả về."
+    },
+    {
+      "id": 10,
+      "question": "You provision an Azure Cosmos DB for NoSQL container. You set the throughput to Autoscale, and the maximum request units per second (RU/s) to 20,000.\nFor how many RU/s will you be charged when the actual RU/s usage is zero?",
+      "choices": {
+        "A": "0",
+        "B": "200",
+        "C": "2,000",
+        "D": "4,000",
+        "E": "10,000"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đối với chế độ tự động điều chỉnh quy mô (Autoscale throughput), hệ thống sẽ co giãn lượng RU/s thực tế dựa trên lưu lượng tải, nhưng có giới hạn tối thiểu là 10% của lượng RU/s tối đa đã thiết lập (Max RU/s). Với Max RU/s = 20.000, khi không có lưu lượng truy cập (usage = 0), hệ thống sẽ giảm quy mô về mức tối thiểu là 10% * 20.000 = 2.000 RU/s và bạn vẫn bị tính phí cho 2.000 RU/s này."
+    },
+    {
+      "id": 11,
+      "question": "You are creating an Azure Cosmos DB for NoSQL account.\nYou need to choose whether to configure capacity by using either provisioned throughput or serverless mode.\nWhich two workload characteristics cause you to choose serverless mode? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "geo-distribution requirements",
+        "B": "low average-to-peak traffic ratio",
+        "C": "25 TB of data in a single container",
+        "D": "high average-to-peak traffic ratio",
+        "E": "intermittent traffic"
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Chế độ Serverless (không máy chủ) của Azure Cosmos DB được thiết kế tối ưu nhất cho các trường hợp:\n1. **Lưu lượng truy cập ngắt quãng (intermittent traffic)**: Hệ thống có những khoảng thời gian dài không có truy vấn nào.\n2. **Tỷ lệ lưu lượng trung bình so với lưu lượng đỉnh thấp (low average-to-peak traffic ratio)**: Hầu hết thời gian tải rất thấp nhưng thỉnh thoảng xuất hiện các đợt bùng nổ truy cập ngắn hạn.\nHai đặc điểm này giúp chế độ Serverless tiết kiệm chi phí vượt trội so với provisioned throughput."
+    },
+    {
+      "id": 12,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account named account1.\nBackups for account1 have the following configurations:\n• Interval: 2 hours• Retention period: 4 days\nYou need to estimate the charges associated with the retention of the backups.\nHow many copies of the backups will incur additional charges?",
+      "choices": {
+        "A": "8",
+        "B": "12",
+        "C": "46",
+        "D": "48"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Thời gian lưu trữ sao lưu (retention period) là 4 ngày (tương đương 96 giờ), chu kỳ sao lưu là 2 giờ/lần. Tổng số bản sao lưu được lưu trữ trong chu kỳ này là: 96 / 2 = 48 bản sao lưu.\nTheo chính sách mặc định của Azure Cosmos DB, 2 bản sao lưu đầu tiên là miễn phí. Do đó, số bản sao lưu phải chịu thêm phí sẽ là: 48 - 2 = 46 bản sao lưu."
+    },
+    {
+      "id": 13,
+      "question": "You plan to create an Azure Cosmos DB for NoSQL database named db1 that will contain two containers. One of the containers will contain blog posts, and the other will contain users. Each item in the blog post container will include:\n• A single blog post• The top 10 comments associated to the blog post• The names of the users who created the blog post and the associated comments\nYou need to automatically update the usernames in the blog post container whenever a username in the user container changes.\nWhat should you implement for the user container?",
+      "choices": {
+        "A": "a stored procedure",
+        "B": "a change feed processor",
+        "C": "a post-trigger",
+        "D": "a user-defined function (UDF)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tự động cập nhật tên người dùng đồng bộ sang container bài viết (blog posts) mỗi khi có thay đổi trong container người dùng (users), giải pháp tối ưu và chuẩn nhất là triển khai một **change feed processor** lắng nghe trên container `users`. Khi phát hiện sự thay đổi, CFP sẽ xử lý dữ liệu và thực hiện cập nhật phi cấu trúc hóa (denormalization) các bản ghi tương ứng bên container `blog posts`."
+    },
+    {
+      "id": 14,
+      "question": "You plan to create an Azure Cosmos DB for NoSQL account that will have a single write region and three read regions.\nYou need to set the consistency level for the account. The solution must meet the following requirements:\n• In the write region, writes must replicate synchronously across at least three replicas.• In the read regions, reads must see writes in order for transactional batches.• Throughput for reads and writes must be maximized.\nWhich consistency level should you select?",
+      "choices": {
+        "A": "Consistent Prefix",
+        "B": "Bounded Staleness",
+        "C": "Eventual",
+        "D": "Strong"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Azure Cosmos DB, để tối đa hóa băng thông đọc ghi nhưng vẫn đảm bảo tại các vùng đọc các truy vấn đọc luôn nhìn thấy các cập nhật ghi theo đúng thứ tự (đặc biệt đối với các lô giao dịch - transactional batches), ta nên chọn cấp độ nhất quán **Consistent Prefix**. Nó cung cấp throughput cao hơn và độ trễ thấp hơn so với Session, Bounded Staleness hay Strong, trong khi vẫn đáp ứng yêu cầu đọc dữ liệu theo trình tự ghi."
+    },
+    {
+      "id": 15,
+      "question": "You have an Azure Cosmos DB for NoSQL account that contains a database named DB1 and a container named Container1.\nYou need to manage the account by using the Azure Cosmos DB SDK.\nWhat should you do?",
+      "choices": {
+        "A": "Create a container in DB1.",
+        "B": "List the physical partitions of Container1.",
+        "C": "Read a stored procedure in Container1.",
+        "D": "Create a user defined function (UDF) in Container1."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Azure Cosmos DB SDK cung cấp khả năng thực hiện các hoạt động trên mặt phẳng dữ liệu (data plane) và quản lý cấu trúc cơ sở dữ liệu. Để quản lý các cấu trúc tài nguyên bên trong tài khoản bằng SDK, hành động tạo mới một container trong database DB1 (ví dụ sử dụng `CreateContainerIfNotExistsAsync` trong .NET SDK) là phương án chính xác và thực hiện trực tiếp thông qua SDK."
+    },
+    {
+      "id": 16,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a container named container1 in an Azure Cosmos DB Core (SQL) API account.\nYou need to make the contents of container1 available as reference data for an Azure Stream Analytics job.\nSolution: You create an Azure function that uses Azure Cosmos DB for NoSQL change feed as a trigger and Azure event hub as the output.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 17,
+      "question": "You have an Azure Cosmos DB for NoSQL account that has multiple write regions.\nYou need to receive an alert when requests that target the database exceed the available request units per second (RU/s).\nWhich Azure Monitor signal should you use?",
+      "choices": {
+        "A": "Region Removed",
+        "B": "Metadata Requests",
+        "C": "Provisioned Throughput",
+        "D": "Data Usage"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tạo cảnh báo trong Azure Monitor khi lưu lượng yêu cầu gửi tới cơ sở dữ liệu vượt quá giới hạn throughput được cung cấp (gây ra lỗi 429), bạn cần chọn tín hiệu **Provisioned Throughput** (Băng thông được cấp phát). Tín hiệu này cho phép theo dõi việc tiêu thụ RU/s của container/database để kịp thời gửi cảnh báo khi vượt ngưỡng mong muốn."
+    },
+    {
+      "id": 18,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a database in an Azure Cosmos DB for NoSQL account that is configured for multi-region writes.\nYou need to use the Azure Cosmos DB SDK to implement the conflict resolution policy for a container. The solution must ensure that any conflicts are sent to the conflicts feed.\nSolution: You set ConflictResolutionMode to Custom. You set ResolutionProcedure to a custom stored procedure. You configure the custom stored procedure to use the isTombstone parameter to resolve conflicts.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cấu hình chính sách giải quyết xung đột (conflict resolution policy) trên container sao cho tất cả các bản ghi xung đột sẽ được chuyển hướng trực tiếp vào feed xung đột (conflicts feed) để xử lý thủ công hoặc bằng tiến trình ngoài, bạn phải đặt `ConflictResolutionMode` thành `Custom` và không gán stored procedure nào cho thuộc tính `ResolutionProcedure` (để giá trị null/trống). Việc chỉ định một stored procedure giải quyết xung đột tùy chỉnh sẽ giải quyết trực tiếp xung đột mà không đẩy vào conflicts feed, do đó giải pháp trong đề bài là không đáp ứng yêu cầu (chọn No/B)."
+    },
+    {
+      "id": 19,
+      "question": "You have an application named App1 that reads the data in an Azure Cosmos DB Core (SQL) API account. App1 runs the same read queries every minute. The default consistency level for the account is set to eventual.You discover that every query consumes request units (RUs) instead of using the cache.You verify the IntegratedCacheiteItemHitRate metric and the IntegratedCacheQueryHitRate metric. Both metrics have values of 0.You verify that the dedicated gateway cluster is provisioned and used in the connection string.You need to ensure that App1 uses the Azure Cosmos DB integrated cache.What should you configure?",
+      "choices": {
+        "A": "the indexing policy of the Azure Cosmos DB container",
+        "B": "the consistency level of the requests from App1",
+        "C": "the connectivity mode of the App1 CosmosClient",
+        "D": "the default consistency level of the Azure Cosmos DB account"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bộ nhớ đệm tích hợp (Integrated Cache) của Azure Cosmos DB hoạt động trên Dedicated Gateway. Để ứng dụng của bạn có thể sử dụng được bộ đệm này thay vì gửi truy vấn trực tiếp đến các phân vùng dữ liệu, bạn cần định cấu hình chế độ kết nối (connectivity mode) của đối tượng `CosmosClient` sang **Gateway mode** (mặc định của SDK thường là Direct mode)."
+    },
+    {
+      "id": 20,
+      "question": "You need to implement a trigger in Azure Cosmos DB Core (SQL) API that will run before an item is inserted into a container.Which two actions should you perform to ensure that the trigger runs? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Append pre to the name of the JavaScript function trigger.",
+        "B": "For each create request, set the access condition in RequestOptions.",
+        "C": "Register the trigger as a pre-trigger.",
+        "D": "For each create request, set the consistency level to session in RequestOptions.",
+        "E": "For each create request, set the trigger name in RequestOptions."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để triển khai và thực thi một trigger trước khi chèn tài liệu vào container (pre-trigger), bạn cần thực hiện đồng thời hai việc:\n1. Đăng ký trigger đó dưới dạng một pre-trigger trong container của Azure Cosmos DB (Đáp án C).\n2. Khi thực hiện yêu cầu tạo tài liệu (create request) từ phía mã nguồn của ứng dụng (SDK), bạn phải truyền tên của trigger đó vào trong thuộc tính `PreTriggers` của `RequestOptions` (Đáp án E).\nTệp đề bài ghi nhận đáp án đúng là C, hoàn toàn khớp với bước đăng ký bắt buộc này."
+    },
+    {
+      "id": 21,
+      "question": "You have a container named container1 in an Azure Cosmos DB Core (SQL) API account.You need to provide a user named User1 with the ability to insert items into container1 by using role-based access control (RBAC). The solution must use the principle of least privilege.Which roles should you assign to User1?",
+      "choices": {
+        "A": "CosmosDB Operator only",
+        "B": "DocumentDB Account Contributor and Cosmos DB Built-in Data Contributor",
+        "C": "DocumentDB Account Contributor only",
+        "D": "Cosmos DB Built-in Data Contributor only"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cho phép User1 có khả năng chèn tài liệu vào container bằng RBAC theo nguyên tắc đặc quyền tối thiểu, ta chỉ cần gán vai trò **Cosmos DB Built-in Data Contributor** (cho phép đọc ghi dữ liệu trên data plane). Các vai trò quản trị hoặc quản lý ở cấp độ control plane (như DocumentDB Account Contributor hay CosmosDB Operator) không cần thiết và cấp quá nhiều quyền hạn cho tài khoản này."
+    },
+    {
+      "id": 22,
+      "question": "You maintain a relational database for a book publisher. The database contains the following tables.\nThe most common query lists the books for a given authorId.You need to develop a non-relational data model for Azure Cosmos DB Core (SQL) API that will replace the relational database. The solution must minimize latency and read operation costs.What should you include in the solution?",
+      "choices": {
+        "A": "Create a container for Author and a container for Book. In each Author document, embed bookId for each book by the author. In each Book document embed authorId of each author.",
+        "B": "Create Author, Book, and Bookauthorlnk documents in the same container.",
+        "C": "Create a container that contains a document for each Author and a document for each Book. In each Book document, embed authorId.",
+        "D": "Create a container for Author and a container for Book. In each Author document and Book document embed the data from Bookauthorlnk."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong mô hình dữ liệu phi quan hệ của Cosmos DB, để tối ưu hóa hiệu năng đọc và giảm thiểu chi phí RUs khi truy vấn danh sách sách của một tác giả (authorId), phương án tốt nhất là gộp Author và Book vào **cùng một container**. Đồng thời, nhúng trực tiếp `authorId` vào tài liệu Book để cho phép truy vấn trực tiếp danh sách sách theo tác giả mà không cần phép Join hay gọi chéo các container."
+    },
+    {
+      "id": 23,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account that uses a custom conflict resolution policy. The account has a registered merge procedure that throws a runtime exception.The runtime exception prevents conflicts from being resolved.You need to use an Azure function to resolve the conflicts.What should you use?",
+      "choices": {
+        "A": "a function that pulls items from the conflicts feed and is triggered by a timer trigger",
+        "B": "a function that receives items pushed from the change feed and is triggered by an Azure Cosmos DB trigger",
+        "C": "a function that pulls items from the change feed and is triggered by a timer trigger",
+        "D": "a function that receives items pushed from the conflicts feed and is triggered by an Azure Cosmos DB trigger"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi chính sách giải quyết xung đột tùy chỉnh bị lỗi và các xung đột được lưu trữ trong conflicts feed, vì Azure Cosmos DB hiện chưa hỗ trợ trigger đẩy (push trigger) tự động cho conflicts feed, ta cần cấu hình một Azure Function được kích hoạt bởi **Timer trigger** để định kỳ thực hiện kéo (pull) dữ liệu xung đột từ feed này về và xử lý."
+    },
+    {
+      "id": 24,
+      "question": "The following is a sample of a document in orders.\nThe orders container uses customerId as the partition key.You need to provide a report of the total items ordered per month by item type. The solution must meet the following requirements:✑ Ensure that the report can run as quickly as possible.✑ Minimize the consumption of request units (RUs).What should you do?",
+      "choices": {
+        "A": "Configure the report to query orders by using a SQL query.",
+        "B": "Configure the report to query a new aggregate container. Populate the aggregates by using the change feed.",
+        "C": "Configure the report to query orders by using a SQL query through a dedicated gateway.",
+        "D": "Configure the report to query a new aggregate container. Populate the aggregates by using SQL queries that run daily."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thực hiện báo cáo tổng hợp nhanh chóng và tiêu thụ ít RUs nhất, ta nên tránh chạy các câu lệnh truy vấn tổng hợp trực tiếp trên container chứa dữ liệu giao dịch gốc. Thay vào đó, ta sử dụng **change feed** để tự động lắng nghe thay đổi trên container gốc và thực hiện tổng hợp dữ liệu (aggregation) ghi vào một container tổng hợp riêng biệt. Báo cáo sau đó chỉ việc truy vấn trực tiếp trên container tổng hợp này với chi phí RU cực kỳ nhỏ."
+    },
+    {
+      "id": 25,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cosmos DB Core (SQL) API account named account 1 that uses autoscale throughput.You need to run an Azure function when the normalized request units per second for a container in account1 exceeds a specific value.Solution: You configure an Azure Monitor alert to trigger the function.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Chỉ số tiêu thụ RU chuẩn hóa (Normalized RU Consumption) là một metric tiêu chuẩn được cung cấp sẵn qua Azure Monitor cho Cosmos DB. Ta hoàn toàn có thể thiết lập một cảnh báo (alert rule) trong Azure Monitor dựa trên metric này để tự động kích hoạt (trigger) một Azure Function khi chỉ số vượt ngưỡng xác định. Do đó giải pháp này đáp ứng yêu cầu (chọn Yes/A)."
+    },
+    {
+      "id": 26,
+      "question": "You need to configure an Apache Kafka instance to ingest data from an Azure Cosmos DB Core (SQL) API account. The data from a container named telemetry must be added to a Kafka topic named iot. The solution must store the data in a compact binary format.Which three configuration items should you include in the solution? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "\"connector.class\": \"com.azure.cosmos.kafka.connect.source.CosmosDBSourceConnector\"",
+        "B": "\"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\"",
+        "C": "\"key.converter\": \"io.confluent.connect.avro.AvroConverter\"",
+        "D": "\"connect.cosmos.containers.topicmap\": \"iot#telemetry\"",
+        "E": "\"connect.cosmos.containers.topicmap\": \"iot\"",
+        "F": "\"connector.class\": \"com.azure.cosmos.kafka.connect.source.CosmosDBSinkConnector\""
+      },
+      "correctAnswer": "ACD",
+      "explanation_vi": "Để lấy dữ liệu từ một container của Azure Cosmos DB (nguồn) và chuyển vào một Kafka topic (đích), chúng ta cần cấu hình lớp connector là `CosmosDBSourceConnector` (lựa chọn A). Để lưu trữ dữ liệu dưới định dạng nhị phân nhỏ gọn trong Kafka, chúng ta sử dụng định dạng Avro thay vì JSON thông thường, vì vậy cấu hình `\"key.converter\": \"io.confluent.connect.avro.AvroConverter\"` (lựa chọn C) là lựa chọn phù hợp. Thuộc tính `\"connect.cosmos.containers.topicmap\"` dùng để ánh xạ mối quan hệ giữa Kafka topic và Cosmos DB container theo định dạng `topic#container`, do đó cấu hình `\"connect.cosmos.containers.topicmap\": \"iot#telemetry\"` (lựa chọn D) là chính xác."
+    },
+    {
+      "id": 27,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account named account1 that is configured for automatic failover. The account1 account has a single read-write region in West US and a read region in East US.You run the following PowerShell command.Update-AzCosmosDBAccountFailoverPriority -ResourceGroupNamerg1-Nameaccount1-FailoverPolicy @(East US,West   US)What is the effect of running the command?",
+      "choices": {
+        "A": "The account will be unavailable to writes during the change",
+        "B": "The provisioned throughput for account1 will increase",
+        "C": "The account will be configured for multi-region writes",
+        "D": "A manual failover will occur"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lệnh `Update-AzCosmosDBAccountFailoverPriority` được sử dụng để thay đổi thứ tự ưu tiên chuyển vùng của tài khoản Azure Cosmos DB. Trong câu lệnh trên, thứ tự ưu tiên được thiết lập lại với `East US` là vùng có mức ưu tiên cao nhất (vùng ghi mới) và `West US` là vùng tiếp theo. Điều này sẽ thay đổi vùng ghi chính của tài khoản từ `West US` sang `East US` và kích hoạt một quá trình chuyển vùng thủ công (manual failover). Do đó, đáp án đúng là D."
+    },
+    {
+      "id": 28,
+      "question": "You have a database named db1 in an Azure Cosmos DB Core (SQL) API account named account1.You need to write JSON data to db1 by using Azure Stream Analytics. The solution must minimize costs.Which should you do before you can use db1 as an output of Stream Analytics?",
+      "choices": {
+        "A": "In account1, add a private endpoint",
+        "B": "In db1, create containers that have a custom indexing policy and analytical store disabled",
+        "C": "In db1, create containers that have an automatic indexing policy and analytical store enabled",
+        "D": "In account1, enable a dedicated gateway"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để giảm thiểu chi phí khi ghi dữ liệu JSON từ Azure Stream Analytics vào Azure Cosmos DB:\n1. Chúng ta nên tắt tính năng kho lưu trữ phân tích (analytical store disabled) vì dữ liệu chỉ cần ghi vào kho lưu trữ giao dịch thông thường và không cần kết nối phân tích Synapse Link trực tiếp, tránh phát sinh thêm phí.\n2. Cấu hình một chính sách chỉ mục tùy chỉnh (custom indexing policy) để tắt hoặc hạn chế chỉ mục đối với các trường không cần thiết (mặc định Cosmos DB sẽ tự động lập chỉ mục cho tất cả các trường, gây tốn kém nhiều RU khi thực hiện thao tác ghi).\nDo đó, cấu hình phù hợp nhất để giảm thiểu chi phí là phương án B."
+    },
+    {
+      "id": 29,
+      "question": "You have the following query.\nYou need to recommend a composite index strategy that will minimize the request units (RUs) consumed by the query.What should you recommend?",
+      "choices": {
+        "A": "a composite index for (sensor ASC, value ASC) and a composite index for (sensor ASC, timestamp ASC)",
+        "B": "a composite index for (sensor ASC, value ASC, timestamp ASC) and a composite index for (sensor DESC, value DESC, timestamp DESC)",
+        "C": "a composite index for (value ASC, sensor ASC) and a composite index for (timestamp ASC, sensor ASC)",
+        "D": "a composite index for (sensor ASC, value ASC, timestamp ASC)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Truy vấn mẫu cần lọc theo điều kiện bằng (`equality filter` trên trường `sensor`) và đồng thời có hai điều kiện phạm vi (`range filters` trên trường `value` và `timestamp`). Trong Azure Cosmos DB, một chỉ mục hỗn hợp (composite index) chỉ có thể tối ưu hóa cho tối đa một bộ lọc phạm vi duy nhất. Vì vậy, ta không thể tạo một chỉ mục hỗn hợp đơn lẻ để tối ưu cho cả hai thuộc tính phạm vi cùng lúc. Giải pháp tối ưu nhất để giảm thiểu RU tiêu thụ là tạo hai chỉ mục hỗn hợp riêng biệt: một cho `(sensor ASC, value ASC)` và một cho `(sensor ASC, timestamp ASC)`. Do đó, đáp án đúng là A."
+    },
+    {
+      "id": 30,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a database in an Azure Cosmos DB Core (SQL) API account that is configured for multi-region writes.You need to use the Azure Cosmos DB SDK to implement the conflict resolution policy for a container. The solution must ensure that any conflicts are sent to the conflicts feed.Solution: You set ConflictResolutionMode to LastWriterWins and you use the default settings for the policy.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi chế độ giải quyết xung đột được thiết lập là `LastWriterWins` (LWW), Azure Cosmos DB sẽ tự động giải quyết các xung đột phát sinh dựa trên thuộc tính thời gian (hoặc thuộc tính số tùy chỉnh) mà không ghi nhận chúng vào nguồn cấp dữ liệu xung đột (conflicts feed). Do đó, phương án cài đặt `LastWriterWins` này không đáp ứng được yêu cầu đưa các xung đột vào conflicts feed. Đáp án là B (No)."
+    },
+    {
+      "id": 31,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a database in an Azure Cosmos DB Core (SQL) API account that is configured for multi-region writes.You need to use the Azure Cosmos DB SDK to implement the conflict resolution policy for a container. The solution must ensure that any conflicts are sent to the conflicts feed.Solution: You set ConflictResolutionMode to Custom and you use the default settings for the policy.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để cấu hình hệ thống gửi tất cả các xung đột phát sinh vào nguồn cấp dữ liệu xung đột (conflicts feed) của container nhằm xử lý thủ công hoặc xử lý qua ứng dụng bên ngoài, chúng ta cần đặt thuộc tính `ConflictResolutionMode` thành `Custom` và sử dụng các thiết lập mặc định (tức là không chỉ định thủ tục lưu sẵn xử lý xung đột `ResolutionProcedure`). Do đó, giải pháp này đáp ứng được mục tiêu đề ra. Đáp án là A (Yes)."
+    },
+    {
+      "id": 32,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a database in an Azure Cosmos DB Core (SQL) API account that is configured for multi-region writes.You need to use the Azure Cosmos DB SDK to implement the conflict resolution policy for a container. The solution must ensure that any conflicts are sent to the conflicts feed.Solution: You set ConflictResolutionMode to Custom. You set ResolutionProcedure to a custom stored procedure. You configure the custom stored procedure to use the conflictingItems parameter to resolve conflicts.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bằng cách đặt `ConflictResolutionMode` thành `Custom` và đồng thời chỉ định một thủ tục lưu sẵn (stored procedure) cho `ResolutionProcedure`, Cosmos DB sẽ tự động thực thi stored procedure đó để giải quyết xung đột khi có sự kiện xảy ra, thay vì chuyển các xung đột chưa được giải quyết đó vào nguồn cấp dữ liệu xung đột (conflicts feed) để xử lý sau. Hơn nữa, các tham số hợp lệ của stored procedure xử lý xung đột là `incomingItem` và `existingItem` chứ không phải `conflictingItems`. Do đó, giải pháp này không đáp ứng được mục tiêu. Đáp án là B (No)."
+    },
+    {
+      "id": 33,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account.The change feed is enabled on a container named invoice.You create an Azure function that has a trigger on the change feed.What is received by the Azure function?",
+      "choices": {
+        "A": "only the changed properties and the system-defined properties of the updated items",
+        "B": "only the partition key and the changed properties of the updated items",
+        "C": "all the properties of the original items and the updated items",
+        "D": "all the properties of the updated items"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB Core (SQL) API, nguồn cấp dữ liệu thay đổi (change feed) hoạt động theo mô hình mặc định sẽ cung cấp toàn bộ tài liệu (tất cả các thuộc tính) của các mục đã được thêm mới hoặc cập nhật trong container. Nó không chỉ chứa các thuộc tính bị thay đổi hay chỉ chứa partition key. Do đó, Azure Function khi được kích hoạt bởi change feed sẽ nhận được tất cả các thuộc tính của các mục đã cập nhật. Đáp án đúng là D."
+    },
+    {
+      "id": 34,
+      "question": "You are troubleshooting the current issues caused by the application updates.Which action can address the application updates issue without affecting the functionality of the application?",
+      "choices": {
+        "A": "Enable time to live for the con-product container.",
+        "B": "Set the default consistency level of account1 to strong.",
+        "C": "Set the default consistency level of account1 to bounded staleness.",
+        "D": "Add a custom indexing policy to the con-product container."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Các bản cập nhật ứng dụng thường xuyên ghi vào container `con-product` gây ra lỗi HTTP 429 (Too many requests) do tiêu thụ quá nhiều RU. Theo mặc định, Azure Cosmos DB lập chỉ mục cho tất cả các đường dẫn (`/*`), điều này làm tăng đáng kể lượng RU tiêu thụ cho mỗi thao tác ghi/cập nhật. Bằng cách áp dụng chính sách chỉ mục tùy chỉnh (custom indexing policy) để loại bỏ các trường không cần thiết khỏi chỉ mục, ta có thể giảm chi phí RU của các thao tác ghi dữ liệu mà không làm ảnh hưởng đến chức năng hiện tại của ứng dụng. Do đó, đáp án đúng là D."
+    },
+    {
+      "id": 35,
+      "question": "You need to select the partition key for con-iot1. The solution must meet the IoT telemetry requirements.What should you select?",
+      "choices": {
+        "A": "the timestamp",
+        "B": "the humidity",
+        "C": "the temperature",
+        "D": "the device ID"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đối với dữ liệu telemetry từ thiết bị IoT trong container `con-iot1`, các thao tác ghi diễn ra liên tục theo thời gian thực từ rất nhiều thiết bị. Để phân bổ đều dữ liệu và tải ghi/đọc tránh tạo ra hot partition, ta cần một partition key có tính phân tán cao (high cardinality). `deviceId` là lựa chọn tối ưu nhất vì mỗi thiết bị có một mã định danh riêng biệt, giúp phân tán đều các yêu cầu ghi trên các phân vùng vật lý. Trái lại, sử dụng `timestamp` sẽ dẫn đến hot partition khi ghi dữ liệu hiện tại, còn `temperature` hay `humidity` không có độ phân tán tốt. Do đó, đáp án đúng là D."
+    },
+    {
+      "id": 36,
+      "question": "You have a container in an Azure Cosmos DB Core (SQL) API account.Data update volumes are unpredictable.You need to process the change feed of the container by using a web app that has multiple instances. The change feed will be processed by using the change feed processor from the Azure Cosmos DB SDK. The multiple instances must share the workload.Which three actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Configure the same processor name for all the instances",
+        "B": "Configure a different processor name for each instance",
+        "C": "Configure a different instance name for each instance",
+        "D": "Configure a different lease container configuration for each instance",
+        "E": "Configure the same instance name for all the instances",
+        "F": "Configure the same lease container configuration for all the instances"
+      },
+      "correctAnswer": "ACF",
+      "explanation_vi": "Để nhiều instance của một ứng dụng web cùng chia sẻ tải xử lý change feed của một container bằng cách sử dụng Change Feed Processor của Azure Cosmos DB SDK:\n1. Các instance phải được cấu hình cùng một tên bộ xử lý (processor name) để chúng được nhận diện thuộc cùng một nhóm logic (lựa chọn A).\n2. Mỗi instance phải có một tên gọi instance riêng biệt (instance name) để hệ thống phân biệt và phân chia các phân vùng (leases) cho từng worker chạy song song (lựa chọn C).\n3. Tất cả các instance phải sử dụng chung một cấu hình container chứa lease (lease container) để đồng bộ hóa trạng thái chia sẻ công việc (lựa chọn F).\nDo đó, ba hành động cần thực hiện là A, C, F."
+    },
+    {
+      "id": 37,
+      "question": "You need to implement a solution for the planned changes and meet the product catalog requirements.What should you do to implement the conflict resolution policy?",
+      "choices": {
+        "A": "Set the default consistency level for account1 to eventual",
+        "B": "Remove frequently changed fields from the index policy of the con-product container",
+        "C": "Create a new container and migrate the product catalog data to the new container",
+        "D": "Disable indexing on all fields in the index policy of the con-product container"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Chính sách giải quyết xung đột (conflict resolution policy) của một container trong Azure Cosmos DB chỉ có thể được thiết lập tại thời điểm container đó được tạo mới và không thể chỉnh sửa trực tiếp trên một container đang hoạt động. Do đó, để thay đổi chính sách giải quyết xung đột cho container danh mục sản phẩm `con-product` hiện có, giải pháp duy nhất là tạo một container mới với cấu hình chính sách mong muốn, sau đó di chuyển (migrate) toàn bộ dữ liệu từ container cũ sang container mới. Đáp án đúng là C."
+    },
+    {
+      "id": 38,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account.You run the following query against a container in the account.\nWhat is the output of the query?",
+      "choices": {},
+      "correctAnswer": "A",
+      "explanation_vi": "Hàm hệ thống `IS_NUMBER` trong Azure Cosmos DB kiểm tra xem kiểu dữ liệu của một biểu thức có phải là kiểu số (number) hay không và trả về giá trị boolean (`true` hoặc `false`). Nó không tự động chuyển đổi kiểu dữ liệu từ chuỗi sang số.\n- `IS_NUMBER(\"1234\")` trả về `false` vì giá trị truyền vào thuộc kiểu chuỗi (string).\n- `IS_NUMBER(1234)` trả về `true` vì giá trị truyền vào thuộc kiểu số (number).\n- `IS_NUMBER({prop: 1234})` trả về `false` vì giá trị truyền vào là một đối tượng (object).\nDo đó, kết quả đầu ra của truy vấn là `[{\"A\": false, \"B\": true, \"C\": false}]` (tương ứng với đáp án A)."
+    },
+    {
+      "id": 39,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account.You need to create an Azure Monitor query that lists recent modifications to the regional failover policy.Which Azure Monitor table should you query?",
+      "choices": {
+        "A": "CDBControlPlaneRequests",
+        "B": "CDBQueryRunTimeStatistics",
+        "C": "CDBPartitionKeyStatistics",
+        "D": "CDBDataPlaneRequests"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Các thao tác chỉnh sửa chính sách chuyển vùng tự động/thủ công (failover policy) của tài khoản Azure Cosmos DB là các hoạt động quản trị tài nguyên thuộc mặt phẳng điều khiển (Control Plane). Trong Azure Monitor, các log ghi lại yêu cầu thuộc mặt phẳng điều khiển này được lưu trữ trong bảng `CDBControlPlaneRequests` (hoặc `AzureDiagnostics` với điều kiện lọc danh mục là `ControlPlaneRequests`). Do đó, đáp án đúng là A."
+    },
+    {
+      "id": 40,
+      "question": "You plan to create an Azure Cosmos DB Core (SQL) API account that will use customer-managed keys stored in Azure Key Vault.You need to configure an access policy in Key Vault to allow Azure Cosmos DB access to the keys.Which three permissions should you enable in the access policy? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Wrap Key",
+        "B": "Get",
+        "C": "List",
+        "D": "Update",
+        "E": "Sign",
+        "F": "Verify"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Để cấu hình mã hóa bằng khóa do khách hàng quản lý (CMK) lưu trữ trong Azure Key Vault cho Azure Cosmos DB, chính sách quyền truy cập của Key Vault cần cấp cho danh tính của Cosmos DB 3 quyền thao tác khóa cụ thể sau: `Get` (lấy thông tin khóa), `Wrap Key` (mã hóa khóa) và `Unwrap Key` (giải mã khóa). Trong số các lựa chọn được đưa ra, `Wrap Key` (lựa chọn A) và `Get` (lựa chọn B) là hai quyền bắt buộc nằm trong danh sách này. Do đó, đáp án đúng là A và B."
+    },
+    {
+      "id": 41,
+      "question": "You need to identify which connectivity mode to use when implementing App2. The solution must support the planned changes and meet the business requirements.Which connectivity mode should you identify?",
+      "choices": {
+        "A": "Direct mode over HTTPS",
+        "B": "Gateway mode (using HTTPS)",
+        "C": "Direct mode over TCP"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ứng dụng `App2` được triển khai tại các cửa hàng bán lẻ nằm trong mạng nội bộ của doanh nghiệp với chính sách bảo mật tường lửa rất nghiêm ngặt. Yêu cầu nghiệp vụ đặt ra là ứng dụng chỉ được truy cập qua một điểm cuối DNS duy nhất và sử dụng giao thức HTTPS tiêu chuẩn. Chế độ kết nối trực tiếp (Direct mode over TCP) yêu cầu mở một phạm vi cổng rất rộng và kết nối đến nhiều địa chỉ IP backend khác nhau của Cosmos DB nên thường bị chặn bởi tường lửa doanh nghiệp. Chế độ cổng kết nối (Gateway mode sử dụng HTTPS qua cổng 443) đi qua một điểm cuối DNS duy nhất và hoạt động giống như một proxy, giúp đáp ứng hoàn hảo các ràng buộc bảo mật này. Do đó, đáp án đúng là B."
+    },
+    {
+      "id": 42,
+      "question": "You have a container in an Azure Cosmos DB Core (SQL) API account that stores data about orders.The following is a sample of an order document.\nDocuments are up to 2 KB.You plan to receive one million orders daily.Customers will frequently view their past order history.You are the evaluating whether to use orderDate as the partition key.What are two effects of using orderDate as the partition key? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "You will exceed the maximum number of partition key values",
+        "B": "You will exceed the maximum storage per partition",
+        "C": "There will always be a hot partition",
+        "D": "Queries will run cross-partition"
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "If chọn `orderDate` (ngày đặt hàng) làm partition key:\n- **C (There will always be a hot partition)**: Vì hệ thống tiếp nhận khoảng một triệu đơn hàng mỗi ngày, toàn bộ các đơn hàng được tạo trong cùng một ngày hiện tại sẽ được ghi vào cùng một giá trị partition key (ngày hiện hành), dẫn đến tất cả tải ghi tập trung vào một phân vùng vật lý duy nhất tại thời điểm đó.\n- **D (Queries will run cross-partition)**: Khách hàng thường xuyên truy vấn lịch sử đơn hàng của họ (order history). Vì các đơn hàng của một khách hàng được đặt ở các ngày khác nhau, chúng sẽ có các giá trị `orderDate` khác nhau và nằm ở các phân vùng khác nhau. Truy vấn lịch sử theo khách hàng sẽ buộc phải quét qua nhiều phân vùng (cross-partition queries), gây tốn kém RU.\nDo đó, hai tác động là C và D."
+    },
+    {
+      "id": 43,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cosmos DB Core (SQL) API account named account1 that uses autoscale throughput.You need to run an Azure function when the normalized request units per second for a container in account1 exceeds a specific value.Solution: You configure Azure Event Grid to send events to the function by using an Event Grid trigger in the function.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Azure Event Grid hỗ trợ gửi các sự kiện khi có thay đổi về mặt dữ liệu trong container (như tạo, cập nhật, xóa tài liệu). Tuy nhiên, Event Grid không hỗ trợ phát hiện hay gửi sự kiện khi mức tiêu thụ request units chuẩn hóa (normalized request units per second) vượt quá một ngưỡng nhất định. Để kích hoạt Azure Function khi mức RU của container vượt ngưỡng, ta cần thiết lập cảnh báo chỉ số trong Azure Monitor (Azure Monitor metric alerts) để gọi Webhook hoặc Action Group chứa hàm đó. Giải pháp dùng Event Grid này không đáp ứng được yêu cầu. Chọn B (No)."
+    },
+    {
+      "id": 44,
+      "question": "You have a global ecommerce application that stores data in an Azure Cosmos DB Core (SQL) API account. The account is configured for multi-region writes.You need to create a stored procedure for a custom conflict resolution policy for a new container. In the event of a conflict caused by a deletion, the deletion must always take priority.Which parameter should you check in the stored procedure function?",
+      "choices": {
+        "A": "isTombstone",
+        "B": "conflictingItems",
+        "C": "existingItem",
+        "D": "incomingItem"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Azure Cosmos DB, khi một tài liệu bị xóa, hệ thống sẽ tạo ra một bản ghi đánh dấu đặc biệt gọi là tombstone. Trong thủ tục lưu sẵn (stored procedure) tùy chỉnh dùng để giải quyết xung đột ở tài khoản có nhiều vùng ghi (multi-region writes), tham số cho biết một thao tác xung đột có phải là thao tác xóa hay không chính là `isTombstone`. Bằng cách kiểm tra thuộc tính `isTombstone`, stored procedure có thể xác định xem có phải thao tác xóa đang xảy ra hay không và ưu tiên giữ nguyên thao tác xóa này theo yêu cầu nghiệp vụ. Do đó, đáp án đúng là A."
+    },
+    {
+      "id": 45,
+      "question": "You are building an application that will store data in an Azure Cosmos DB Core (SQL) API account. The account uses the session default consistency level. The account is used by five other applications. The account has a single read-write region and 10 additional read region.Approximately 20 percent of the items stored in the account are updated hourly.Several users will access the new application from multiple devices.You need to ensure that the users see the same item values consistently when they browse from the different devices. The solution must NOT affect the other applications.Which two actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Set the default consistency level to eventual",
+        "B": "Associate a session token to the device",
+        "C": "Use implicit session management when performing read requests",
+        "D": "Provide a stored session token when performing read requests",
+        "E": "Associate a session token to the user account"
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Tài khoản Cosmos DB sử dụng mức độ nhất quán mặc định là Session. Để đảm bảo người dùng thấy cùng một giá trị nhất quán khi truy cập ứng dụng từ nhiều thiết bị khác nhau (multiple devices) mà không cần thay đổi mức độ nhất quán mặc định của tài khoản (tránh ảnh hưởng đến các ứng dụng khác), chúng ta cần chia sẻ session token giữa các thiết bị này. Quy trình thực hiện bao gồm: lưu trữ và liên kết session token với tài khoản người dùng (lựa chọn E), và khi thực hiện yêu cầu đọc dữ liệu từ một thiết bị, ứng dụng sẽ cung cấp session token đã được lưu này trong tùy chọn yêu cầu đọc (lựa chọn D). Do đó, hai hành động đúng là D và E."
+    },
+    {
+      "id": 46,
+      "question": "You need to create a data store for a directory of small and medium-sized businesses (SMBs). The data store must meet the following requirements:✑ Store companies and the users employed by them. Each company will have less than 1,000 users.✑ Some users have data that is greater than 2 KB.✑ Associate each user to only one company.✑ Provide the ability to browse by company.✑ Provide the ability to browse the users by company.✑ Whenever a company or user profile is selected, show a details page for the company and all the related users.✑ Be optimized for reading data.Which design should you implement to optimize the data store for reading data?",
+      "choices": {
+        "A": "In a directory container, create a document for each company and a document for each user. Use the company ID as the partition key.",
+        "B": "Create a user container that uses the user ID as the partition key and a company container that uses the company ID as the partition key. Add the company ID to each user document.",
+        "C": "In a user container, create a document for each user. Embed the company into each user document. Use the user ID as the partition key.",
+        "D": "In a company container, create a document for each company. Embed the users into company documents. Use the company ID as the partition key."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đề bài yêu cầu tối ưu hóa cho việc đọc dữ liệu (read-optimized) khi hiển thị trang thông tin chi tiết của một công ty và tất cả người dùng thuộc công ty đó. Vì số lượng người dùng của mỗi doanh nghiệp nhỏ và vừa đều dưới 1,000 người dùng và kích thước tài liệu nhỏ, việc nhúng danh sách người dùng trực tiếp vào trong tài liệu của công ty (lựa chọn D) sẽ mang lại hiệu năng đọc tốt nhất. Khi người dùng chọn xem chi tiết một doanh nghiệp, ứng dụng chỉ cần thực hiện một thao tác đọc đơn lẻ (single point read) trên container chứa công ty để lấy toàn bộ thông tin thay vì phải truy vấn chéo hoặc thực hiện nhiều yêu cầu đọc khác nhau. Do đó, thiết kế nhúng (Embed) này là tối ưu nhất. Chọn D."
+    },
+    {
+      "id": 47,
+      "question": "You plan to store order data in an Azure Cosmos DB Core (SQL) API account. The data contains information about orders and their associated items.You need to develop a model that supports order read operations. The solution must minimize the number of requests.What should you do?",
+      "choices": {
+        "A": "Create a database for orders and a database for order items.",
+        "B": "Create a single database that contains a container for orders and a container for order items.",
+        "C": "Create a single database that contains one container. Store orders and order items in separate documents in the container.",
+        "D": "Create a single database that contains one container. Create a separate document for each order and embed the order items into the order documents."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tối ưu hóa hoạt động đọc thông tin đơn hàng và giảm thiểu số lượng yêu cầu gửi lên hệ thống (minimize the number of requests), phương án thiết kế tốt nhất là nhúng trực tiếp danh sách các mặt hàng của đơn hàng (`order items`) vào trong chính tài liệu của đơn hàng tương ứng (lựa chọn D). Khi đó, thông tin chi tiết của toàn bộ đơn hàng và các mặt hàng đi kèm có thể được truy xuất hoàn chỉnh chỉ bằng một thao tác đọc tài liệu duy nhất, thay vì phải thực hiện các truy vấn tham chiếu giữa các tài liệu hay container khác nhau. Chọn D."
+    },
+    {
+      "id": 48,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account named account1 that supports an application named App1. App1 uses the consistent prefix consistency level.You configure account1 to use a dedicated gateway and integrated cache.You need to ensure that App1 can use the integrated cache.Which two actions should you perform for App1? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Change the consistency level of requests to session.",
+        "B": "Change the account endpoint to http://account1.documents.azure.com.",
+        "C": "Change the account endpoint to http://account1.sqlx.cosmos.azure.com.",
+        "D": "Change the connection mode to direct.",
+        "E": "Change the consistency level of requests to strong."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Để ứng dụng App1 có thể sử dụng bộ tích hợp bộ nhớ đệm (integrated cache) của Azure Cosmos DB, ta cần cấu hình:\n1. Điểm cuối kết nối (account endpoint) của ứng dụng phải được trỏ đến địa chỉ của dedicated gateway có dạng `*.sqlx.cosmos.azure.com` thay vì địa chỉ mặc định `*.documents.azure.com` (lựa chọn C).\n2. Bộ tích hợp bộ nhớ đệm chỉ hỗ trợ các truy vấn có mức độ nhất quán là Session hoặc Eventual. Vì App1 đang được cấu hình sử dụng Consistent Prefix, ta cần đổi mức độ nhất quán của các yêu cầu đọc từ ứng dụng sang Session (hoặc Eventual) để có thể lưu kết quả vào cache (lựa chọn A).\nDo đó, hai hành động đúng là A và C."
+    },
+    {
+      "id": 49,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cosmos DB Core (SQL) API account named account 1 that uses autoscale throughput.You need to run an Azure function when the normalized request units per second for a container in account1 exceeds a specific value.Solution: You configure an application to use the change feed processor to read the change feed and you configure the application to trigger the function.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Nguồn cấp dữ liệu thay đổi (change feed) của Azure Cosmos DB chỉ theo dõi và ghi nhận các sự kiện ghi, cập nhật hoặc xóa tài liệu trong container. Nó không có khả năng theo dõi tải tài nguyên hệ thống hay mức tiêu thụ Request Units (RU) chuẩn hóa. Do đó, việc cấu hình ứng dụng sử dụng change feed processor để đọc change feed không thể phát hiện tình trạng vượt ngưỡng RU để kích hoạt Azure Function. Giải pháp này không đáp ứng được mục tiêu. Chọn B (No)."
+    },
+    {
+      "id": 50,
+      "question": "You have a container in an Azure Cosmos DB Core (SQL) API account. The container stores data about families. Data about parents, children, and pets are stored as separate documents.Each document contains the address of each family. Members of the same family share the same partition key named familyId.You need to update the address for each member of the same family that share the same address. The solution must meet the following requirements:✑ Be atomic, consistent, isolated, and durable (ACID).✑ Provide the lowest latency.What should you do?",
+      "choices": {
+        "A": "Update the document of each family member separately by using a patch operation",
+        "B": "Update the document of each family member separately and set the consistency level to strong",
+        "C": "Update the document of each family member by using a transactional batch operation"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Azure Cosmos DB Core (SQL) API, tính năng nhóm giao dịch (Transactional Batch) cho phép thực hiện nhiều thao tác ghi hoặc cập nhật đối với các tài liệu có cùng giá trị partition key (ở đây là cùng gia đình có chung `familyId`) trong một giao dịch đơn lẻ đảm bảo tính ACID (tất cả cùng thành công hoặc thất bại). Phương pháp này giúp đạt độ trễ thấp nhất vì toàn bộ nhóm thao tác được đóng gói và xử lý phía máy chủ trong một yêu cầu duy nhất thay vì gửi nhiều yêu cầu riêng lẻ. Do đó, đáp án đúng là C."
+    },
+    {
+      "id": 51,
+      "question": "You have a database named db1 in an Azure Cosmos DB Core (SQL) API account.You are designing an application that will use db1.In db1, you are creating a new container named coll1 that will store online orders.The following is a sample of a document that will be stored in coll1.\nThe application will have the following characteristics:✑ New orders will be created frequently by different customers.✑ Customers will often view their past order history.You need to select the partition key value for coll1 to support the application. The solution must minimize costs.To what should you set the partition key?",
+      "choices": {
+        "A": "orderId",
+        "B": "customerId",
+        "C": "orderDate",
+        "D": "id"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tối ưu hóa chi phí và giảm các truy vấn liên phân vùng (cross-partition queries), khóa phân vùng (partition key) nên được chọn dựa trên các mẫu truy vấn phổ biến nhất của ứng dụng. Theo mô tả, khách hàng sẽ thường xuyên xem lịch sử đơn hàng của họ (Customers will often view their past order history). Nếu cấu hình khóa phân vùng là `customerId`, toàn bộ đơn hàng của cùng một khách hàng sẽ nằm trong cùng một phân vùng logic. Khi đó, các truy vấn lấy lịch sử đơn hàng theo khách hàng sẽ là truy vấn đơn phân vùng (single-partition query), tiêu thụ tối thiểu lượng Request Units (RUs)."
+    },
+    {
+      "id": 52,
+      "question": "You have a container in an Azure Cosmos DB Core (SQL) API account. The container stores telemetry data from IoT devices. The container uses telemetryId as the partition key and has a throughput of 1,000 request units per second (RU/s). Approximately 5,000 IoT devices submit data every five minutes by using the same telemetryId value.You have an application that performs analytics on the data and frequently reads telemetry data for a single IoT device to perform trend analysis.The following is a sample of a document in the container.\nYou need to reduce the amount of request units (RUs) consumed by the analytics application.What should you do?",
+      "choices": {
+        "A": "Decrease the offerThroughput value for the container.",
+        "B": "Increase the offerThroughput value for the container.",
+        "C": "Move the data to a new container that uses a partition key of deviceId.",
+        "D": "Move the data to a new container that uses a partition key of temp."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong thiết kế ban đầu, khóa phân vùng là `telemetryId` nhưng có tới 5.000 thiết bị IoT gửi dữ liệu lặp đi lặp lại với cùng một giá trị `telemetryId`. Điều này tạo ra một phân vùng bị quá tải (hot partition) và làm giảm hiệu năng hệ thống. Ngoài ra, ứng dụng phân tích thường xuyên thực hiện đọc dữ liệu cho một thiết bị đơn lẻ để phân tích xu hướng. Bằng cách di chuyển dữ liệu sang một container mới sử dụng `deviceId` làm khóa phân vùng, dữ liệu sẽ được phân phối đều trên nhiều phân vùng khác nhau. Khi đó, các truy vấn phân tích cho từng thiết bị đơn lẻ sẽ trở thành truy vấn đơn phân vùng (single-partition query), giúp tiết kiệm đáng kể lượng Request Units (RUs) tiêu thụ."
+    },
+    {
+      "id": 53,
+      "question": "You have a database named db1 in an Azure Cosmos DB Core (SQL) API account.You have a third-party application that is exposed through a REST API.You need to migrate data from the application to a container in db1 on a weekly basis.What should you use?",
+      "choices": {
+        "A": "Azure Migrate",
+        "B": "Azure Data Factory",
+        "C": "Database Migration Assistant"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Azure Data Factory (ADF) là một dịch vụ tích hợp dữ liệu dựa trên đám mây, hỗ trợ đắc lực cho các quy trình ETL/ELT. ADF có sẵn các đầu nối (connectors) để đọc dữ liệu từ nguồn REST API (của ứng dụng bên thứ ba) và ghi trực tiếp vào đích đến (sink) là container Azure Cosmos DB Core (SQL) API. ADF cũng cung cấp cơ chế lập lịch mạnh mẽ, cho phép chạy định kỳ hàng tuần (on a weekly basis) một cách tự động mà không cần viết mã nguồn phức tạp."
+    },
+    {
+      "id": 54,
+      "question": "You have a database in an Azure Cosmos DB Core (SQL API) account. The database contains a container named container1. The indexing mode of container1 is set to none.You configure Azure Cognitive Search to extract data from container1 and make the data searchable.You discover that the Cognitive Search index is missing all the data from the Azure Cosmos DB index.What should you do to resolve the issue?",
+      "choices": {
+        "A": "Modify the index attributes in Cognitive Search to Searchable",
+        "B": "Modify the index attributes in Cognitive Search to Retrievable",
+        "C": "Modify the indexing policy of container1 to exclude the /* path",
+        "D": "Change the indexing mode of container1 to consistent"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trình lập chỉ mục (indexer) của Azure Cognitive Search (nay là Azure AI Search) khi làm việc với Azure Cosmos DB yêu cầu chế độ lập chỉ mục (indexing mode) của container phải được đặt là `consistent`. Nếu cấu hình indexing mode là `none`, Cosmos DB sẽ không lưu trữ bất kỳ chỉ mục nào cho dữ liệu, dẫn đến việc Cognitive Search indexer không thể thực hiện các câu lệnh truy vấn tìm kiếm hoặc theo dõi các thay đổi từ Change Feed để đồng bộ dữ liệu."
+    },
+    {
+      "id": 55,
+      "question": "You have a container named container1 in an Azure Cosmos DB Core (SQL) API account named account1 that is set to the session default consistency level. The average size of an item in contained is 20 KB.You have an application named App1 that uses the Azure Cosmos DB SDK and performs a point read on the same set of items in container1 every minute.You need to minimize the consumption of the request units (RUs) associated to the reads by App1.What should you do?",
+      "choices": {
+        "A": "In App1, modify the connection policy settings",
+        "B": "In App1, change the consistency level of read requests to consistent prefix",
+        "C": "In account1, provision a dedicated gateway and integrated cache",
+        "D": "In account1, change the default consistency level to bounded staleness"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Azure Cosmos DB Integrated Cache (Bộ nhớ đệm tích hợp) được lưu trữ trên Dedicated Gateway (Cổng kết nối chuyên dụng). Bộ đệm này tự động lưu trữ kết quả của các point read và các truy vấn phân tích lặp đi lặp lại. Vì ứng dụng thực hiện point read định kỳ mỗi phút một lần trên cùng một tập hợp tài liệu, việc sử dụng dedicated gateway kết hợp với integrated cache giúp trả về kết quả trực tiếp từ bộ nhớ đệm (cache hit) mà không tiêu tốn thêm bất kỳ Request Units (RU) nào từ cơ sở dữ liệu."
+    },
+    {
+      "id": 56,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account named account1 that has a single read-write region and one additional read region. Account1 uses the strong default consistency level.You have an application that uses the eventual consistency level when submitting requests to account1.How will writes from the application be handled?",
+      "choices": {
+        "A": "Writes will use the eventual consistency level.",
+        "B": "Azure Cosmos DB will reject writes from the application.",
+        "C": "Writes will use the strong consistency level.",
+        "D": "The write order is not guaranteed during replication."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Azure Cosmos DB, mức độ nhất quán (consistency level) chỉ có thể được cấu hình đè (override) sang mức độ yếu hơn cho các tác vụ đọc (read requests). Mức độ nhất quán cho các tác vụ ghi (write requests) luôn luôn tuân theo cấu hình mặc định ở cấp độ tài khoản (default consistency level). Do tài khoản đang được thiết lập mức độ nhất quán mặc định là `strong`, nên tất cả các tác vụ ghi từ ứng dụng sẽ luôn sử dụng mức độ `strong` này bất kể ứng dụng gửi yêu cầu sử dụng `eventual consistency`."
+    },
+    {
+      "id": 57,
+      "question": "You have an Azure Cosmos DB Core (SQL) API account that is used by 10 web apps.You need to analyze the data stored in the account by using Apache Spark to create machine learning models. The solution must NOT affect the performance of the web apps.Which two actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "In an Apache Spark pool in Azure Synapse, create a table that uses cosmos.olap as the data source.",
+        "B": "Create a private endpoint connection to the account.",
+        "C": "In an Azure Synapse Analytics serverless SQL pool, create a view that uses OPENROWSET and the CosmosDB provider.",
+        "D": "Enable Azure Synapse Link for the account and Analytical store on the container.",
+        "E": "In an Apache Spark pool in Azure Synapse, create a table that uses cosmos.oltp as the data source."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để phân tích dữ liệu lưu trữ trong Azure Cosmos DB mà không làm ảnh hưởng đến hiệu năng của các ứng dụng web đang phục vụ khách hàng trực tuyến, giải pháp tối ưu là sử dụng Azure Synapse Link. 1. Kích hoạt Azure Synapse Link ở cấp tài khoản và kích hoạt Analytical store (kho lưu trữ phân tích) trên container (Lựa chọn D). Việc này giúp dữ liệu tự động đồng bộ sang kho lưu trữ dạng cột (columnar store) tách biệt mà không gây tiêu tốn RU của kho dữ liệu giao dịch (transactional store). 2. Trong Apache Spark pool của Azure Synapse, ta tạo bảng truy vấn sử dụng nguồn dữ liệu là `cosmos.olap` (Lựa chọn A) để đọc trực tiếp từ Analytical store, tránh tác động đến hiệu năng giao dịch (nếu dùng `cosmos.oltp` sẽ truy vấn vào kho giao dịch)."
+    },
+    {
+      "id": 58,
+      "question": "You need to create a database in an Azure Cosmos DB Core (SQL) API account. The database will contain three containers named coll1, coll2, and coll3. The coll1 container will have unpredictable read and write volumes. The coll2 and coll3 containers will have predictable read and write volumes. The expected maximum throughput for coll1 and coll2 is 50,000 request units per second (RU/s) each.How should you provision the collection while minimizing costs?",
+      "choices": {
+        "A": "Create a serverless account.",
+        "B": "Create a provisioned throughput account. Set the throughput for coll1 to Autoscale. Set the throughput for coll2 and coll3 to Manual.",
+        "C": "Create a provisioned throughput account. Set the throughput for coll1 to Manual. Set the throughput for coll2 and coll3 to Autoscale."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tối ưu hóa chi phí: Đối với container `coll1` có lượng tải đọc/ghi biến động không thể dự đoán được (unpredictable), thiết lập chế độ Autoscale (Tự động mở rộng) là phù hợp nhất, giúp tự động điều chỉnh RU/s theo nhu cầu thực tế và tránh lãng phí khi hệ thống nhàn rỗi. Đối với `coll2` và `coll3` có lượng tải ổn định, có thể dự đoán được (predictable), thiết lập chế độ Manual (Thủ công) giúp kiểm soát chính xác lượng RU/s cần thiết mà không phải trả chi phí chênh lệch (premium) của chế độ Autoscale. Chế độ serverless (Lựa chọn A) không đáp ứng được mức hiệu năng yêu cầu tối đa lên tới 50,000 RU/s."
+    },
+    {
+      "id": 59,
+      "question": "You are implementing an Azure Data Factory data flow that will use an Azure Cosmos DB (SQL API) sink to write a dataset. The data flow will use 2,000 ApacheSpark partitions.You need to ensure that the ingestion from each Spark partition is balanced to optimize throughput.Which sink setting should you configure?",
+      "choices": {
+        "A": "Throughput",
+        "B": "Write throughput budget",
+        "C": "Batch size",
+        "D": "Collection action"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Azure Data Factory Mapping Data Flow, khi sử dụng sink là Azure Cosmos DB (SQL API) với số lượng phân vùng Apache Spark rất lớn (2,000 phân vùng), cấu hình `Write throughput budget` (Ngân sách thông lượng ghi) cho phép ta giới hạn số lượng Request Units (RUs) mà tác vụ ghi trong data flow có thể tiêu thụ. Nhờ đó, Spark engine sẽ tự động điều phối để cân bằng lượng tải ghi từ tất cả các phân vùng Spark vào Cosmos DB một cách đồng đều, ngăn chặn tình trạng quá tải cục bộ dẫn đến lỗi nghẽn cổ chai hoặc lỗi Rate-limiting (HTTP 429) và tối ưu hóa tổng thông lượng ghi."
+    },
+    {
+      "id": 60,
+      "question": "The settings for a container in an Azure Cosmos DB Core (SQL) API account are configured as shown in the following exhibit.\nWhich statement describes the configuration of the container?",
+      "choices": {
+        "A": "All items will be deleted after one year.",
+        "B": "Items stored in the collection will be retained always, regardless of the items time to live value.",
+        "C": "Items stored in the collection will expire only if the item has a time to live value.",
+        "D": "All items will be deleted after one hour."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Azure Cosmos DB, tính năng Time to Live (TTL) kiểm soát thời gian tồn tại của tài liệu. Khi cài đặt TTL của container ở chế độ 'On (no default)' (hoặc đặt giá trị là `-1`), các tài liệu trong container mặc định sẽ không bao giờ bị hết hạn (tồn tại vĩnh viễn), trừ khi một tài liệu cụ thể tự định nghĩa thuộc tính `ttl` trong cấu hình JSON của nó với một giá trị số nguyên dương. Do đó, các tài liệu trong container chỉ bị xóa khi bản thân tài liệu đó chứa giá trị TTL."
+    },
+    {
+      "id": 61,
+      "question": "You have an application that queries an Azure Cosmos DB Core (SQL) API account.You discover that the following two queries run frequently.\nYou need to minimize the request units (RUs) consumed by reads and writes.What should you create?",
+      "choices": {
+        "A": "a composite index for (name DESC, timestamp ASC)",
+        "B": "a composite index for (name ASC, timestamp ASC) and a composite index for (name DESC, timestamp DESC)",
+        "C": "a composite index for (name ASC, timestamp ASC)",
+        "D": "a composite index for (name ASC, timestamp DESC)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tối ưu hóa chi phí RU cho cả tác vụ đọc và ghi khi thực hiện các truy vấn thường xuyên có lọc dữ liệu và sắp xếp thứ tự (ORDER BY), ta nên tạo chỉ mục hỗn hợp (composite index). Do Azure Cosmos DB hỗ trợ việc quét chỉ mục hỗn hợp theo cả chiều xuôi lẫn chiều ngược với hiệu năng như nhau, chỉ cần tạo duy nhất một chỉ mục hỗn hợp trên `(name ASC, timestamp ASC)` là đủ để phục vụ tốt cho cả hai truy vấn: sắp xếp theo `timestamp ASC` và sắp xếp theo `timestamp DESC` (khi lọc theo thuộc tính `name` là một hằng số). Việc này giúp tiết kiệm tài nguyên ghi so với việc tạo hai chỉ mục hỗn hợp riêng biệt."
+    },
+    {
+      "id": 62,
+      "question": "You have a database in an Azure Cosmos DB Core (SQL) API account. The database is backed up every two hours.You need to implement a solution that supports point-in-time restore.What should you do first?",
+      "choices": {
+        "A": "Enable Continuous Backup for the account.",
+        "B": "Configure the Backup & Restore settings for the account.",
+        "C": "Create a new account that has a periodic backup policy.",
+        "D": "Configure the Point In Time Restore settings for the account."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để triển khai giải pháp khôi phục dữ liệu tại một thời điểm (Point-in-Time Restore - PITR), tài khoản Azure Cosmos DB bắt buộc phải sử dụng chế độ sao lưu liên tục (Continuous Backup). Chế độ sao lưu định kỳ (Periodic Backup - như cấu hình mặc định sao lưu mỗi 2 giờ) không hỗ trợ tính năng PITR. Do đó, bước đầu tiên cần làm là kích hoạt chế độ Continuous Backup cho tài khoản."
+    },
+    {
+      "id": 63,
+      "question": "You have a database in an Azure Cosmos DB Core (SQL) API account.You need to create an Azure function that will access the database to retrieve records based on a variable named accountnumber. The solution must protect against SQL injection attacks.How should you define the command statement in the function?",
+      "choices": {
+        "A": "cmd = \"SELECT * FROM Persons p WHERE p.accountnumber = 'accountnumber'\"",
+        "B": "cmd = \"SELECT * FROM Persons p WHERE p.accountnumber = LIKE @accountnumber\"",
+        "C": "cmd = \"SELECT * FROM Persons p WHERE p.accountnumber = @accountnumber\"",
+        "D": "cmd = \"SELECT * FROM Persons p WHERE p.accountnumber = '\" + accountnumber + \"'\""
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để bảo vệ ứng dụng khỏi các cuộc tấn công SQL Injection, chúng ta cần sử dụng các truy vấn được tham số hóa (parameterized queries) thay vì ghép chuỗi thủ công. Trong cú pháp SQL của Azure Cosmos DB, các tham số bắt đầu bằng ký tự `@`. Câu lệnh `cmd = \"SELECT * FROM Persons p WHERE p.accountnumber = @accountnumber\"` sử dụng đúng tham số hóa để ngăn ngừa việc chèn các câu lệnh SQL độc hại thông qua biến đầu vào."
+    },
+    {
+      "id": 64,
+      "question": "You have a container named container1 in an Azure Cosmos DB Core (SQL) API account. Upserts of items in container1 occur every three seconds.You have an Azure Functions app named function1 that is supposed to run whenever items are inserted or replaced in container1.You discover that function1 runs, but not on every upsert.You need to ensure that function1 processes each upsert within one second of the upsert.Which property should you change in the Function.json file of function1?",
+      "choices": {
+        "A": "checkpointInterval",
+        "B": "leaseCollectionsThroughput",
+        "C": "maxItemsPerInvocation",
+        "D": "feedPollDelay"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bộ kích hoạt Azure Functions (Cosmos DB Trigger) thực hiện thăm dò (polling) Change Feed của Cosmos DB để phát hiện các thay đổi. Khoảng thời gian trễ giữa các lần thăm dò này được cấu hình bằng thuộc tính `feedPollDelay` trong file `function.json`, có giá trị mặc định là 5,000 ms (5 giây). Khi các thao tác cập nhật (upsert) diễn ra liên tục mỗi 3 giây và yêu cầu xử lý phải diễn ra trong vòng 1 giây, độ trễ mặc định 5 giây là quá lớn. Việc giảm giá trị `feedPollDelay` xuống mức phù hợp (ví dụ: dưới 1,000 ms) sẽ đảm bảo hàm thăm dò thường xuyên hơn và xử lý kịp thời các thay đổi."
+    },
+    {
+      "id": 65,
+      "question": "You configure multi-region writes for account1.You need to ensure that App1 supports the new configuration for account1. The solution must meet the business requirements and the product catalog requirements.What should you do?",
+      "choices": {
+        "A": "Set the default consistency level of account1 to bounded staleness.",
+        "B": "Create a private endpoint connection.",
+        "C": "Modify the connection policy of App1.",
+        "D": "Increase the number of request units per second (RU/s) allocated to the con-product and con-productVendor containers."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi kích hoạt chế độ ghi nhiều vùng (multi-region writes) cho tài khoản Azure Cosmos DB, chúng ta cần cập nhật cấu hình SDK của ứng dụng khách (App1) để tận dụng tính năng này. Việc chỉnh sửa chính sách kết nối (connection policy) của ứng dụng (ví dụ: kích hoạt `UseMultipleWriteLocations` hoặc chỉ định `ApplicationRegion` thích hợp) sẽ hướng dẫn SDK thực hiện các thao tác ghi trực tiếp vào vùng gần nhất, giảm thiểu độ trễ và tối ưu hóa hiệu năng ghi."
+    },
+    {
+      "id": 66,
+      "question": "You need to provide a solution for the Azure Functions notifications following updates to con-product. The solution must meet the business requirements and the product catalog requirements.Which two actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Configure the trigger for each function to use a different leaseCollectionPrefix",
+        "B": "Configure the trigger for each function to use the same leaseCollectionName",
+        "C": "Configure the trigger for each function to use a different leaseCollectionName",
+        "D": "Configure the trigger for each function to use the same leaseCollectionPrefix"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Khi có nhiều hàm Azure Functions cùng lắng nghe sự kiện Change Feed từ một container Cosmos DB (ở đây là `con-product`), mỗi hàm cần có một trạng thái theo dõi lease độc lập để không ghi đè lên nhau. Để tiết kiệm chi phí và tài nguyên, các hàm này có thể chia sẻ chung một container chứa lease (cấu hình cùng `leaseCollectionName` - Lựa chọn B). Tuy nhiên, để phân biệt trạng thái của từng hàm, chúng ta bắt buộc phải cấu hình các giá trị tiền tố lease khác nhau cho mỗi hàm thông qua thuộc tính `leaseCollectionPrefix` (Lựa chọn A)."
+    },
+    {
+      "id": 67,
+      "question": "You have an Azure Cosmos DB database.\nYou plan to create a new container named container1 that will store product data and product category data and will primarily support read requests.\nYou need to configure a partition key for container1. The solution must meet the following requirements:\n• Minimize the size of the partition.• Minimize maintenance effort.\nWhich two characteristics should you prioritize? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "unique",
+        "B": "high cardinality",
+        "C": "low cardinality",
+        "D": "static"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để tối ưu hóa thiết kế khóa phân vùng (partition key) cho container mới: Chọn khóa phân vùng có độ phong phú cao (high cardinality - Lựa chọn B) giúp phân phối đều dữ liệu ra nhiều phân vùng logic khác nhau, từ đó giảm thiểu kích thước tối đa của mỗi phân vùng và tránh hiện tượng phân vùng bị quá tải (hot partition). Ưu tiên chọn thuộc tính tĩnh (static - Lựa chọn D) vì trong Cosmos DB, giá trị khóa phân vùng của tài liệu không thể chỉnh sửa trực tiếp mà bắt buộc phải xóa tài liệu cũ và tạo mới, việc giữ khóa phân vùng tĩnh giúp giảm tối đa công sức lập trình và bảo trì dữ liệu."
+    },
+    {
+      "id": 68,
+      "question": "You develop an application that uses Azure Cosmos DB Core (SQL) API.\nYou create an Azure pipeline to build and deploy the application.\nYou need to change the pipeline to run integration tests that you wrote for the application. The solution must execute entirely in the pipeline.\nWhat should you add to the pipeline?",
+      "choices": {
+        "A": "a deployment group named Cosmos DB testing",
+        "B": "an Azure Cosmos DB Emulator task",
+        "C": "a NuGet service connection that uses an Azure Cosmos DB API key",
+        "D": "a secret variable that has a connection string to an Azure Cosmos DB database"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 69,
+      "question": "You plan to create an operational system that will store data in an Azure Cosmos DB Core (SQL) API account.\nYou need to configure the account to meet the following requirements:\n• Support Spark queries.• Support the analysis of data from the last six months.• Only pay for analytical compute when running queries.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Enable Azure Synapse Link for the account.",
+        "B": "Create a container and set the analyticalTTL property to six months.",
+        "C": "Create an Azure Databricks notebook.",
+        "D": "Create an Azure Synapse linked service.",
+        "E": "Create a container and set the time to live to six months.",
+        "F": "Create an Azure Synapse pipeline."
+      },
+      "correctAnswer": "ABC"
+    },
+    {
+      "id": 70,
+      "question": "You have an Azure Cosmos DB account named account1.\nYou have several apps that connect to account1 by using the account's secondary key.\nYou then configure the apps to authenticate by using service principals.\nYou need to ensure that account1 will only allow apps to connect by using an Azure AD identity.\nWhich account property should you modify?",
+      "choices": {
+        "A": "disableKeyBasedMetadataWriteAccess",
+        "B": "disableLocalAuth",
+        "C": "userAssignedIdentities",
+        "D": "allowedOrigins"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi đã cấu hình các ứng dụng khách xác thực bằng Service Principal (danh tính quản lý), để đảm bảo an toàn tối đa và chặn hoàn toàn các kết nối sử dụng khóa (key-based), ta cần thiết lập thuộc tính `disableLocalAuth` của tài khoản Cosmos DB thành `true`. Cấu hình này sẽ chặn toàn bộ các kết nối sử dụng Primary Key hoặc Secondary Key, bắt buộc mọi ứng dụng kết nối vào chỉ được phép sử dụng danh tính Azure Active Directory (Azure AD / Entra ID)."
+    },
+    {
+      "id": 71,
+      "question": "You have an Azure Cosmos DB account named account1.\nYou need to access account1 from an on-premises environment by using a Site-to-Site VPN.\nWhat should you use?",
+      "choices": {
+        "A": "a private endpoint",
+        "B": "a dedicated gateway",
+        "C": "Azure Synapse Link"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để thiết lập kết nối an toàn và bảo mật từ môi trường on-premises tới Azure Cosmos DB thông qua đường truyền Site-to-Site VPN, giải pháp tốt nhất là sử dụng Private Endpoint (Điểm cuối riêng tư). Private Endpoint sẽ ánh xạ một địa chỉ IP riêng từ mạng ảo Azure Virtual Network (VNet) cho tài khoản Cosmos DB, cho phép lưu lượng mạng đi từ on-premises qua VPN có thể định tuyến trực tiếp đến IP riêng này một cách an toàn mà không cần tiếp xúc với internet công cộng."
+    },
+    {
+      "id": 72,
+      "question": "You have an Azure Cosmos DB database named database1 that contains a container named container1. The container1 container stores product data and has the following indexing policy.\nWhich path will be indexed?",
+      "choices": {
+        "A": "/product/category",
+        "B": "/product/brand/tailspin",
+        "C": "/product/brand",
+        "D": "/product/[]/category"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong chính sách lập chỉ mục (indexing policy) của Azure Cosmos DB, ký tự đại diện `?` khớp với bất kỳ giá trị vô hướng (scalar value) nào ở cấp độ con trực tiếp của đường dẫn. Khi cấu hình included paths chứa `/product/brand/?` và loại trừ `/*`, hệ thống sẽ chỉ lập chỉ mục cho các thuộc tính con trực tiếp của `/product/brand`. Do đó, đường dẫn `/product/brand/tailspin` đại diện cho một thuộc tính con trực tiếp của `brand` và chứa giá trị vô hướng sẽ được lập chỉ mục (Lựa chọn B)."
+    },
+    {
+      "id": 73,
+      "question": "You have an Azure Cosmos DB for NoSQL container.\nAll queries to the container use the Bounded Staleness consistency level.\nYou discover that when many queries are executed against the container, an HTTP 429 error is returned.\nWhat are two ways to reduce the number of HTTP 429 errors? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Use a query request option to change the consistency level to Strong.",
+        "B": "Add a post-trigger to the container.",
+        "C": "Add a pre-trigger to the container.",
+        "D": "Add query retry logic to the client application.",
+        "E": "Increase the maximum throughput."
+      },
+      "correctAnswer": "BE"
+    },
+    {
+      "id": 74,
+      "question": "You have an Azure subscription.\nYou plan to create an Azure Cosmos DB for NoSQL database named DB1 that will store author and book data for authors that have each published up to ten books. Typical and frequent queries of the data will include:\n• All books written by an individual author• The synopsis of individual books\nYou need to recommend a data model for DB1. The solution must meet the following requirements:\n• Support transactional updates of the author and book data.• Minimize read operation costs.\nWhat should you recommend?",
+      "choices": {
+        "A": "Create a single container that stores author items and book items, and then items that represent the relationship between the authors and their books.",
+        "B": "Create three containers, one that stores author items, a second that stores book items, and a third that stores items that represent the relationship between the authors and their books.",
+        "C": "Create two containers, one that stores author items and another that stores book items. Embed a list of each author’s books in the corresponding author item.",
+        "D": "Create a single container that stores author items and book items. Embed a list of each author’s books in the corresponding author item."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để giảm thiểu chi phí đọc và hỗ trợ các giao dịch (transactional updates) đồng thời giữa tác giả và sách, giải pháp tốt nhất là nhúng (embed) danh sách sách trực tiếp vào trong tài liệu tác giả (author item) trong cùng một container. Do mỗi tác giả chỉ xuất bản tối đa 10 cuốn sách (số lượng hữu hạn và nhỏ), thiết kế này hoàn toàn không lo bị vượt giới hạn kích thước tài liệu (2MB). Thiết kế này cũng đảm bảo các giao dịch diễn ra nguyên tử (atomic) trên cùng một phân vùng logic và tối ưu hóa tác vụ đọc vì toàn bộ thông tin tác giả và sách được trả về trong duy nhất một lần đọc điểm (point read)."
+    },
+    {
+      "id": 75,
+      "question": "You have an Azure Cosmos DB for NoSQL container named Container1 that contains 20,000 items. The items have 1,000 unique partition key values. Each item is 50 KB.\nYou need to evaluate the cost of running cross-partition queries by using Container1.\nWhat should you do first?",
+      "choices": {
+        "A": "Recreate Container1 by using a partition key that has higher cardinality.",
+        "B": "Increase the number of items in Container1.",
+        "C": "Recreate Container1 by using a partition key that has lower cardinality.",
+        "D": "Decrease the number of items in Container1."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Với 20,000 tài liệu có kích thước 50 KB mỗi bản, tổng dung lượng dữ liệu trong Container1 chỉ vào khoảng 1 GB. Kích thước này hoàn toàn nằm gọn trong giới hạn lưu trữ của một phân vùng vật lý đơn lẻ (lên tới 50 GB). Do đó, nếu chạy các truy vấn liên phân vùng (cross-partition queries) trên tập dữ liệu này, chi phí RU đo được sẽ cực kỳ thấp do thực chất dữ liệu không bị phân tán trên nhiều phân vùng vật lý khác nhau. Để đánh giá chính xác chi phí này trong thực tế sản xuất khi dữ liệu lớn lên, ta cần làm cho container phân tách thành nhiều phân vùng vật lý bằng cách tăng lượng tài liệu (Increase the number of items in Container1) để dung lượng vượt quá giới hạn của một phân vùng vật lý đơn lẻ."
+    },
+    {
+      "id": 76,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL database named DB1.\nIn DB1, you plan to create a container that will use a hierarchical partition key.\nYou need to identify which hierarchical partition key path to use when adding new items to the container.\nWhich SDK class should you use?",
+      "choices": {
+        "A": "CompositePath",
+        "B": "PartitionKeyDefinition",
+        "C": "PartitionKey",
+        "D": "PartitionKeyBuilder"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tạo hoặc xác định một khóa phân vùng phân cấp (hierarchical partition key) khi thêm các mục mới vào container bằng .NET SDK của Azure Cosmos DB, lớp `PartitionKeyBuilder` được sử dụng để xây dựng các giá trị khóa phân vùng theo đúng thứ tự các đường dẫn phân cấp được thiết lập trong container."
+    },
+    {
+      "id": 77,
+      "question": "You plan to implement an Azure Cosmos DB container that will store telemetry data from 1,000 IoT devices. The data will be updated once every minute. An app will read the data once daily and generate aggregated reports that summarize the state of each device.\nYou need to configure a partition key for the container. The solution must meet the following requirements:\n• Minimize the possibility of reaching the partition limits.• Spread read and write operations evenly across the partitions.• Minimize how long it takes to locate a specific set of telemetry values.\nTo what should you set the partition key?",
+      "choices": {
+        "A": "the device ID and date",
+        "B": "the device ID",
+        "C": "the date and a random value",
+        "D": "the date"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Sử dụng partition key là `device ID` giúp phân phối đều các hoạt động ghi từ 1,000 thiết bị IoT vào các logical partition khác nhau, tránh hiện tượng hot partition. Khi ứng dụng đọc dữ liệu hàng ngày để tổng hợp báo cáo cho từng thiết bị, việc truy vấn theo `device ID` sẽ là in-partition query (truy vấn trong một phân vùng), giúp tối ưu hóa hiệu năng và giảm chi phí (RU) đáng kể so với việc phải quét qua nhiều phân vùng."
+    },
+    {
+      "id": 78,
+      "question": "You have an Azure Cosmos DB for NoSQL container named Contained that has a provisioned throughput of 1,000 request units per second (RU/s). Contained is queried by using an app named App1.\nUsers of App1 report that several times a day, they receive the following error message: “HTTP error code 429”\nYou need to improve the reliability of App1 without affecting the performance of the app.\nWhat are two ways to improve the reliability? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Add a trigger to Container1.",
+        "B": "Update App1 to split large requests into several smaller requests.",
+        "C": "Update App1 to reduce the size of each request to less than 1 MB.",
+        "D": "Increase the provisioned throughout of Container1.",
+        "E": "Add retry logic to App1."
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Mã lỗi HTTP 429 xuất hiện khi số lượng Request Units (RU/s) yêu cầu vượt quá dung lượng đã được cung cấp (throttling). Hai giải pháp tiêu chuẩn để khắc phục và nâng cao độ tin cậy của ứng dụng là:\n1. Tăng lượng throughput được cung cấp (provisioned throughput) cho container (đáp án D) để nâng giới hạn RU/s, từ đó giảm khả năng bị quá tải.\n2. Thêm cơ chế thử lại (retry logic) vào ứng dụng (đáp án E) để khi gặp lỗi 429, ứng dụng sẽ tự động chờ (back-off) và thử lại thay vì trả lỗi trực tiếp cho người dùng."
+    },
+    {
+      "id": 79,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account. The account hosts a container named Container1.\nAt some point during the past 4S hours, Container1 was deleted.\nYou need to restore the account to immediately before the deletion of Container1. The solution must minimize administrative effort.\nWhat should you do first?",
+      "choices": {
+        "A": "Review the event feed blade.",
+        "B": "Identify the last restorable timestamp.",
+        "C": "Create a new Azure Cosmos DB for NoSQL account.",
+        "D": "Restore Container1 to a different Azure Cosmos DB for NoSQL account."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để khôi phục tài khoản về thời điểm ngay trước khi Container1 bị xóa bằng tính năng khôi phục Point-in-time restore (PITR) với nỗ lực quản trị tối thiểu, bước đầu tiên cần thực hiện là xác định mốc thời gian có thể khôi phục cuối cùng (last restorable timestamp) thông qua cổng thông tin hoặc API sự kiện xóa của Cosmos DB."
+    },
+    {
+      "id": 80,
+      "question": "You have an Azure subscription. The subscription contains an Azure Cosmos DB for NoSQL account named account1 that uses a default consistency level of Consistent Prefix.\nYou execute a SELECT query and specify the Consistent Prefix consistency level.\nYou need to execute a second SELECT query during the same session and specify a lower consistency level.\nWhich consistency level can be used for the second SELECT query?",
+      "choices": {
+        "A": "Session",
+        "B": "Strong",
+        "C": "Bounded Staleness",
+        "D": "Eventual"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Các mức độ nhất quán (consistency levels) trong Azure Cosmos DB được sắp xếp từ mạnh nhất đến yếu nhất như sau: Strong > Bounded Staleness > Session > Consistent Prefix > Eventual.\nDo truy vấn thứ hai cần chỉ định một mức độ nhất quán thấp hơn (yếu hơn) Consistent Prefix, mức duy nhất thấp hơn nó trong danh sách các lựa chọn là Eventual (đáp án D)."
+    },
+    {
+      "id": 81,
+      "question": "You have an app named App1 that uses an Azure Cosmos DB for NoSQL database.\nApp1 uses the spatial columns shown in the following table.\nYou need to design an indexing strategy for App1.\nWhich columns can be indexed by using spatial indexes?",
+      "choices": {
+        "A": "Col1 only",
+        "B": "Col1 and Col2 only",
+        "C": "Col1, Col2, and Col3 only",
+        "D": "Col1, Col2, and Col4 only"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Azure Cosmos DB hỗ trợ đánh chỉ mục không gian (spatial index) cho các kiểu dữ liệu hình học GeoJSON sau: `Point`, `Polygon`, `MultiPolygon`, và `LineString`.\nNó không hỗ trợ kiểu `GeometryCollection` (thường ứng với Col3 trong bảng dữ liệu của câu hỏi này). Do đó, chỉ có các cột Col1 (Point), Col2 (Polygon), và Col4 (LineString) là có thể được đánh chỉ mục không gian."
+    },
+    {
+      "id": 82,
+      "question": "You have an Azure subscription. The subscription contains an Azure Cosmos DB for NoSQL account named account1 that hosts a container named Devices. Devices has a partition key named type.\nYou plan to execute the following query.\nSELECT d.deviceName -\nFROM d -WHERE d.deviceId = 'ABC102'AND d.type = 'car'\nAND d.importanceId = 4 -\nYou are evaluating the resource utilization of the query.\nHow will the query be executed?",
+      "choices": {
+        "A": "as an in-partition query",
+        "B": "as a parallel cross-partition query",
+        "C": "as a cross-partition query"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khóa phân vùng (partition key) của container `Devices` được thiết lập là `type`. Trong câu truy vấn, điều kiện lọc có chứa phép so sánh bằng trực tiếp đối với thuộc tính này (`d.type = 'car'`). Do đó, Cosmos DB sẽ định tuyến truy vấn này thẳng tới phân vùng logic cụ thể chứa giá trị `'car'`, giúp truy vấn được thực hiện như một truy vấn trong phân vùng (in-partition query) thay vì phải quét qua toàn bộ các phân vùng (cross-partition query)."
+    },
+    {
+      "id": 83,
+      "question": "You plan to create an Azure Cosmos DB account that will use an integrated cache.\nWhat will prevent you from using an integrated cache?",
+      "choices": {
+        "A": "a user-assigned managed identity",
+        "B": "Azure Private Link",
+        "C": "a default consistency level of Session",
+        "D": "availability zones"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 84,
+      "question": "You have an Azure subscription. The subscription contains an Azure Cosmos DB for NoSQL account named account1 that hosts a container named Container1. Container1 has a provisioned throughput of 100 request units per second (RU/s) and uses a single physical partition.\nYou are evaluating the available throughput for Container1.\nWhat is the maximum burst capacity that Container1 can accumulate?",
+      "choices": {
+        "A": "300 RU/s",
+        "B": "1,000 RU/s",
+        "C": "30,000 RU/s",
+        "D": "100,000 RU/s"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Azure Cosmos DB cho phép tích lũy lưu lượng không sử dụng (idle throughput) để phục vụ cho tính năng Burst Capacity. Khoảng thời gian tích lũy tối đa là 300 giây (5 phút).\nCông thức tính dung lượng burst tối đa tích lũy được:\nDung lượng burst tối đa = 300 giây * throughput cung cấp (RU/s).\nVới throughput cung cấp là 100 RU/s, container có thể tích lũy tối đa: 300 * 100 = 30,000 RU."
+    },
+    {
+      "id": 85,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account.\nYou need to write a SQL query that will return multiple items. The solution must meet the following requirements:\n• For each item returned, include the current Coordinated Universal Time (UTC) date and time, formatted as an ISO 8601 string.• Minimize development effort.\nWhat should you use?",
+      "choices": {
+        "A": "a user-defined function",
+        "B": "GetCurrentTimestamp()",
+        "C": "GetCurrentDateTime()",
+        "D": "DateTimePart()"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm tích hợp `GetCurrentDateTime()` của Azure Cosmos DB SQL API trả về ngày giờ hiện tại theo giờ quốc tế phối hợp (UTC) dưới dạng chuỗi định dạng ISO 8601 (ví dụ: `YYYY-MM-DDThh:mm:ss.fffffffZ`). Sử dụng hàm này giúp giảm thiểu công sức phát triển nhất so với việc tự viết User-Defined Function (UDF) hoặc xử lý chuyển đổi từ dấu thời gian số (timestamp)."
+    },
+    {
+      "id": 86,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a container named container1 in an Azure Cosmos DB for NoSQL account.\nYou need to make the contents of container1 available as reference data for an Azure Stream Analytics job.\nSolution: You create an Azure Synapse pipeline that uses Azure Cosmos DB for NoSQL as the input and Azure Blob Storage as the output.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Azure Stream Analytics không hỗ trợ trực tiếp Azure Cosmos DB làm nguồn dữ liệu tham chiếu (reference data). Tuy nhiên, giải pháp đề xuất ở đây là tạo một Synapse pipeline để sao chép dữ liệu từ Azure Cosmos DB sang Azure Blob Storage (là nguồn dữ liệu tham chiếu được Stream Analytics hỗ trợ). Mặc dù về mặt kỹ thuật có thể đạt được mục đích gián tiếp qua việc sao chép này, nhưng trong các câu hỏi dạng sê-ri của kỳ thi Microsoft (như DP-420), giải pháp này thường được đánh giá là không tối ưu hoặc không trực tiếp giải quyết yêu cầu mà không làm phát sinh thêm các thành phần trung gian phức tạp, hoặc câu hỏi có giải pháp thay thế tốt hơn. Do đó đáp án là No."
+    },
+    {
+      "id": 87,
+      "question": "You are designing an Azure Cosmos DB for NoSQL data model that will contain authors, books the authors have written, and reviews of the books.\nYou need to maintain referential integrity between entities by using server-side transactional support.\nWhat is the largest scope of the transactions you can use?",
+      "choices": {
+        "A": "items in the same container",
+        "B": "a single item",
+        "C": "items in the same database",
+        "D": "items in the same logical partition"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB, các giao dịch ACID (thông qua stored procedures, triggers, hoặc TransactionalBatch) chỉ được hỗ trợ và thực thi trong phạm vi của một phân vùng logic đơn lẻ (single logical partition). Không thể thực hiện giao dịch liên phân vùng (cross-partition transactions). Do đó, phạm vi lớn nhất của giao dịch mà bạn có thể sử dụng là các mục trong cùng một phân vùng logic (items in the same logical partition)."
+    },
+    {
+      "id": 88,
+      "question": "You have an Azure Cosmos DB for NoSQL account. The account hosts a container that has the change feed enabled.\nYou are building an app by using the Azure Cosmos DB SDK. The app will read items from the change feed by using a pull model.\nYou need to ensure that multiple threads can read the change feed in parallel.\nWhat should you include?",
+      "choices": {
+        "A": "the ChangeFeedStartFrom value",
+        "B": "the pagesize value",
+        "C": "the FeedRange value",
+        "D": "a stream-based iterator"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi sử dụng mô hình kéo (pull model) của SDK Azure Cosmos DB để đọc change feed, bạn có thể song song hóa quá trình đọc bằng cách chia nhỏ dữ liệu theo các dải phân vùng (`FeedRange`). Việc chia container thành các `FeedRange` khác nhau cho phép mỗi luồng xử lý độc lập và song song trên một dải phân vùng cụ thể, tối ưu hóa hiệu năng đọc."
+    },
+    {
+      "id": 89,
+      "question": "You have an Azure subscription. The subscription contains an Azure Cosmos DB for NoSQL account named account1 that uses strong consistency and is deployed to the East US, West US, and Central US Azure regions.\nThe round-trip time (RTT) between the regions is shown in the following table.\nWhich write latency should you estimate for write requests against account1?",
+      "choices": {
+        "A": "150 ms",
+        "B": "232 ms",
+        "C": "282 ms",
+        "D": "572 ms"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Với mức độ nhất quán mạnh (Strong Consistency) trong Azure Cosmos DB, một yêu cầu ghi phải được gửi và xác nhận thành công bởi tất cả các phân vùng replica ở các vùng địa lý khác trước khi hoàn thành.\nCông thức ước lượng độ trễ ghi (write latency) cho Strong Consistency là:\nĐộ trễ ghi = 2 * (RTT giữa vùng ghi và vùng xa nhất) + độ trễ ghi cục bộ (thường giả định là 10 ms).\nDựa trên bảng RTT (với RTT lớn nhất giữa East US và West US là 136 ms):\nĐộ trễ ghi = 2 * 136 ms + 10 ms = 282 ms."
+    },
+    {
+      "id": 90,
+      "question": "You have an Azure Cosmos DB for NoSQL account that contains a database named DB1.\nUsers run the following query against DB1.\nSELECT *\nFROM c -WHERE c.bikeParts = \"Frame, Chain, Peddles\"\nORDER BY c.bikeParts ASC -\nYou add an index to the recordset.\nYou need to change the ORDER BY syntax of the query to optimize the use of the index. The solution must NOT change the result set.\nWhich syntax should you use?",
+      "choices": {
+        "A": "ORDER BY c._ts ASC, c.bikeParts DESC",
+        "B": "ORDER BY c._ts DESC, c.bikeParts ASC",
+        "C": "ORDER BY c.bikeParts ASC, c._ts ASC",
+        "D": "ORDER BY c.bikeParts DESC, c._ts ASC"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Do câu truy vấn có điều kiện lọc bằng (`c.bikeParts = \"Frame, Chain, Peddles\"`), toàn bộ các tài liệu trong tập kết quả đều có giá trị `bikeParts` giống hệt nhau. Vì vậy, việc sắp xếp theo `c.bikeParts ASC` hay `c.bikeParts DESC` đều không làm thay đổi thứ tự kết quả trả về.\nKhi thêm một composite index để tối ưu hóa, nếu composite index đó được định nghĩa là `(bikeParts DESC, _ts ASC)`, ta cần thay đổi cú pháp tương ứng thành `ORDER BY c.bikeParts DESC, c._ts ASC` để tối ưu hóa hiệu năng truy vấn thông qua chỉ mục này mà vẫn giữ nguyên kết quả."
+    },
+    {
+      "id": 91,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account named account1.\nYou plan to configure the Apache Kafka service as a data source for account1.\nWhat should you use to store the Kafka configuration?",
+      "choices": {
+        "A": "Apache Gremlin",
+        "B": "Apache ZooKeeper",
+        "C": "Apache Tomcat",
+        "D": "Azure Key Vault"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cấu hình dịch vụ Apache Kafka kết nối với Azure Cosmos DB (sử dụng Cosmos DB Kafka Connector), các thông tin cấu hình nhạy cảm như khóa kết nối (connection keys), thông tin xác thực, và cấu hình bảo mật của Kafka cần được lưu trữ bảo mật trong Azure Key Vault để đảm bảo an toàn thông tin và tuân thủ các tiêu chuẩn bảo mật."
+    },
+    {
+      "id": 92,
+      "question": "You have an on-premises computer named Computer1 that runs Windows 11.\nOn Computer1, you install the Azure Cosmos DB Emulator by using the default settings.\nYou need to connect to the API for NoSQL clients hosted by the emulator.\nWhat should you use?",
+      "choices": {
+        "A": "Computer1 and the credentials used when installing the emulator",
+        "B": "localhost:443 and the built-in Administrator user account credentials",
+        "C": "Computer1 and a randomly-generated key",
+        "D": "localhost:8081 and a well-known key"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi cài đặt Azure Cosmos DB Emulator với thiết lập mặc định trên máy cục bộ, giả lập sẽ lắng nghe trên cổng `8081` (địa chỉ mặc định là `https://localhost:8081/`). Đồng thời, trình giả lập sử dụng một khóa kết nối công khai được biết đến rộng rãi (well-known key) cho mọi cài đặt để các ứng dụng khách (clients) dễ dàng kết nối mà không cần cấu hình khóa ngẫu nhiên. Do đó, phương án đúng là kết nối qua `localhost:8081` và sử dụng well-known key (đáp án D)."
+    },
+    {
+      "id": 93,
+      "question": "You have an Azure Cosmos DB for NoSQL database named db1 that writes to multiple Azure regions.\nYou need to test the performance of db1 in the secondary region.\nWhich command should you run first?",
+      "choices": {
+        "A": "az cosmosdb location show",
+        "B": "az cosmosdb failover-priority-change",
+        "C": "az cosmosdb network-rule remove",
+        "D": "az cosmosdb sql database merge"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kiểm tra hiệu năng ghi/đọc của cơ sở dữ liệu Cosmos DB tại một vùng thứ cấp (secondary region), ta cần thực hiện chuyển vùng đó thành vùng sơ cấp (primary region) thông qua việc thay đổi độ ưu tiên chuyển vùng thất bại. Lệnh `az cosmosdb failover-priority-change` được sử dụng để kích hoạt quá trình chuyển vùng thủ công (manual failover) này trước tiên."
+    },
+    {
+      "id": 94,
+      "question": "You have an Azure Cosmos DB for NoSQL account that uses the default consistency level.\nHow can the consistency level be modified as part of a query request?",
+      "choices": {
+        "A": "stronger consistency for write operations",
+        "B": "weaker consistency for write operations",
+        "C": "stronger consistency for read operations",
+        "D": "weaker consistency for read operations"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB, bạn có thể ghi đè (override) mức độ nhất quán mặc định của tài khoản trên từng yêu cầu (per-request) nhưng chỉ áp dụng cho các hoạt động đọc (read operations) và chỉ có thể chọn mức độ nhất quán bằng hoặc yếu hơn (weaker consistency) so với mức độ nhất quán mặc định của tài khoản. Bạn không thể yêu cầu mức độ nhất quán mạnh hơn hoặc thay đổi mức độ nhất quán cho các yêu cầu ghi (write operations)."
+    },
+    {
+      "id": 95,
+      "question": "You have an Azure subscription that contains the resources shown in the following table.\nYou need to store the account key of account1 in KV1.\nWhat should you use?",
+      "choices": {
+        "A": "a key",
+        "B": "a secret",
+        "C": "a certificate"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Azure Cosmos DB, ta sử dụng một `secret` trong Azure Key Vault để lưu trữ khóa tài khoản (account key), chuỗi kết nối (connection strings) hoặc mật khẩu dưới dạng chuỗi văn bản thông thường. Đối tượng `key` được dùng cho mã hóa dữ liệu, còn `certificate` dùng cho chứng chỉ số SSL/TLS."
+    },
+    {
+      "id": 96,
+      "question": "You have an Azure Cosmos DB database that hosts a container named container1.\nYou need to ensure that the items stored in container1 will NOT expire unless their TTL value is set explicitly.\nWhat should you do?",
+      "choices": {
+        "A": "Set the DefaultTimeToLive property to 0.",
+        "B": "Remove the DefaultTimeToLive property.",
+        "C": "Set the DefaultTimeToLive property to null.",
+        "D": "Set the DefaultTimeToLive property to –1."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cấu hình các tài liệu trong container không tự động hết hạn trừ khi chúng có thuộc tính `ttl` được đặt rõ ràng, chúng ta cần đặt thuộc tính `DefaultTimeToLive` của container thành `-1` (tương đương với việc bật tính năng TTL ở mức container nhưng không áp dụng thời gian hết hạn mặc định cho các tài liệu). Nếu đặt thành `null` (hoặc tắt TTL), các tài liệu sẽ không bao giờ hết hạn ngay cả khi chúng có trường `ttl` riêng."
+    },
+    {
+      "id": 97,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a container named container1 in an Azure Cosmos DB for NoSQL account.\nYou need to make the contents of container1 available as reference data for an Azure Stream Analytics job.\nSolution: You create an Azure function to copy data to another Azure Cosmos DB for NoSQL container.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Azure Stream Analytics hiện chỉ hỗ trợ các nguồn dữ liệu tham chiếu (reference data) sau: Azure Blob Storage, Azure Data Lake Storage Gen2 và Azure SQL Database. Việc sao chép dữ liệu sang một container Azure Cosmos DB khác không giải quyết được vấn đề vì Azure Cosmos DB không được hỗ trợ làm nguồn dữ liệu tham chiếu trực tiếp cho Stream Analytics."
+    },
+    {
+      "id": 98,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a container named container1 in an Azure Cosmos DB Core (SQL) API account.\nYou need to make the contents of container1 available as reference data for an Azure Stream Analytics job.\nSolution: You create an Azure Data Factory pipeline that uses Azure Cosmos DB for NoSQL as the input and Azure Blob Storage as the output.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Azure Stream Analytics hỗ trợ Azure Blob Storage làm nguồn dữ liệu tham chiếu (reference data). Bằng cách sử dụng đường ống dẫn dữ liệu (pipeline) của Azure Data Factory để xuất dữ liệu từ Azure Cosmos DB sang Azure Blob Storage, chúng ta có thể cung cấp dữ liệu tham chiếu này cho công việc Stream Analytics một cách hợp lệ."
+    },
+    {
+      "id": 99,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a container named container1 in an Azure Cosmos DB for NoSQL account.\nYou need to make the contents of container1 available as reference data for an Azure Stream Analytics job.\nSolution: You create an Azure Synapse pipeline that uses Azure Cosmos DB for NoSQL change feed as a trigger and an Azure event hub as the output.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Azure Event Hubs được sử dụng làm nguồn dữ liệu phát trực tuyến (streaming data input) chứ không phải nguồn dữ liệu tham chiếu (reference data input) trong Azure Stream Analytics. Do đó, giải pháp này không đáp ứng được yêu cầu."
+    },
+    {
+      "id": 100,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL database named DB1.\nYou develop a software as a service (SaaS) app named App1 that uses DB1. App1 will be used by multiple vendors to manage their customers.\nYou need to create a container in DB1 that will store customer and order details for each vendor. The solution must meet the following requirements:\n• Each vendor must have a unique tenant ID.• The performance of the container must be optimized for reads.• Customer IDs can be duplicated across the container but must be unique for each vendor.• The container must be optimized for concurrent queries from multiple customers. Each query will return data for a single vendor.\nHow should you configure the container?",
+      "choices": {
+        "A": "Add a partition key to the tenant ID and a unique key policy to the customer ID.",
+        "B": "Add hierarchical partition key on (tenant identifier, customer identifier).",
+        "C": "Add a partition key to the customer ID and a unique key policy to the tenant ID.",
+        "D": "Add hierarchical partition key on (customer identifier, tenant identifier)."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đáp ứng các yêu cầu tối ưu hóa hiệu năng và mở rộng trong mô hình multitenant:\n\n1. **Tối ưu hóa cho các truy vấn đồng thời từ nhiều khách hàng**: Nếu chỉ phân vùng theo `tenant ID`, tất cả dữ liệu của một nhà cung cấp (vendor) sẽ nằm chung một phân vùng logic (bị giới hạn ở 20 GB dung lượng và tối đa 10,000 RU/s). Bằng cách sử dụng **phân vùng phân cấp (hierarchical partition key)** trên cặp `(tenant identifier, customer identifier)`, dữ liệu của từng khách hàng sẽ nằm ở các phân vùng logic riêng biệt, giúp phân tán tải và tránh hiện tượng phân vùng nóng (hot partition).\n2. **Truy vấn lấy dữ liệu của một vendor duy nhất**: Cosmos DB định tuyến truy vấn hiệu quả dựa trên cấp đầu tiên của khóa phân cấp (`tenant identifier`) mà không cần quét chéo phân vùng trên toàn bộ container (cross-partition query).\n3. **Tính duy nhất**: Vì khóa phân vùng chứa cả `tenant ID` và `customer ID`, sự kết hợp này tạo nên phân vùng logic độc lập, giúp đảm bảo mã định danh khách hàng (`customer ID`) là duy nhất đối với mỗi nhà cung cấp (mỗi vendor)."
+    },
+    {
+      "id": 101,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account named account1.\nIn account1, you create a container that has the following configurations:\n• Partition key: CompanyID• Composite unique key: UserName and EmailAddress\nTo the container, you plan to add the data items shown in the following table.\nHow many conflicts will occur?",
+      "choices": {
+        "A": "0",
+        "B": "1",
+        "C": "2",
+        "D": "3"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Một ràng buộc khóa duy nhất hỗn hợp (composite unique key) trên `UserName` và `EmailAddress` trong Azure Cosmos DB đảm bảo rằng sự kết hợp giữa hai trường này là duy nhất **trong phạm vi của cùng một khóa phân vùng** (`CompanyID`).\n- Các tài liệu có thể trùng cặp `(UserName, EmailAddress)` nếu chúng thuộc về các `CompanyID` khác nhau (nằm ở các phân vùng logic khác nhau).\n- Trong cùng một `CompanyID`, các tài liệu có thể trùng `UserName` (miễn là khác `EmailAddress`) hoặc trùng `EmailAddress` (miễn là khác `UserName`).\nVì danh sách dữ liệu được cung cấp không chứa bất kỳ bản ghi nào trùng lặp đồng thời cả `UserName` và `EmailAddress` trên cùng một `CompanyID`, nên số lượng xung đột (conflict) xảy ra là 0."
+    },
+    {
+      "id": 102,
+      "question": "You have an Azure Cosmos DB for NoSQL database that hosts a container named Container1.\nYou are developing a new app named App1 that will use Container1.\nYou need to ensure that when App1 attempts to delete a document in Container1, the action is blocked, and an error is returned to the app.\nWhat should you use?",
+      "choices": {
+        "A": "a post-trigger",
+        "B": "a stored procedure",
+        "C": "a user-defined function (UDF)",
+        "D": "a pre-trigger"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB, một **pre-trigger** (trình kích hoạt trước) chạy trước khi thao tác cơ sở dữ liệu (trong trường hợp này là xóa tài liệu) được thực thi. Nếu pre-trigger ném ra một ngoại lệ (exception), thao tác đó sẽ bị hủy bỏ (aborted) và một thông báo lỗi sẽ được trả về cho ứng dụng gọi (App1). Trái lại, post-trigger chạy sau khi thao tác đã được thực hiện, UDF dùng cho truy vấn đọc, và stored procedure cần được gọi trực tiếp thay vì tự động kích hoạt khi có yêu cầu xóa thông thường."
+    },
+    {
+      "id": 103,
+      "question": "You have an Azure Cosmos DB for NoSQL account named account1.\nIn account1, you plan to create a container named container1 that will contain data continuously collected from self-driving cars. The items in container1 will be accessed mostly by using queries that target data collected from a specific car during a given day. Each car is identifiable by using a property named Vehicle-Identification-Number.\nYou need to identify a partition strategy for container1. The strategy must meet the following requirements:\n• Maximize read and write performance.• Minimize the costs of data reads and writes.\nWhat should you identify?",
+      "choices": {
+        "A": "Use a partition key based on the Vehicle-Identification-Number property.",
+        "B": "Construct a synthetic key by concatenating the current date and a random suffix.",
+        "C": "Use a partition key based on the current date.",
+        "D": "Construct a synthetic key by concatenating the current date and a hash of the Vehicle-Identification-Number property value."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tối ưu hóa hiệu năng và chi phí cho cả thao tác đọc và ghi:\n\n1. **Tránh phân vùng nóng khi ghi**: Nếu chỉ phân vùng theo ngày hiện tại (`current date`), tất cả các xe tự hành sẽ ghi dữ liệu vào cùng một phân vùng trong ngày hôm đó, gây ra phân vùng nóng (hot partition). Việc kết hợp ngày và mã định danh xe sẽ giúp phân tán dữ liệu ghi ra nhiều phân vùng khác nhau.\n2. **Đảm bảo truy vấn đọc hiệu quả**: Truy vấn chủ yếu tìm kiếm dữ liệu của một xe cụ thể trong một ngày cụ thể. Bằng cách tạo khóa tổng hợp (synthetic key) ghép giữa ngày hiện tại và giá trị băm (hash) của `Vehicle-Identification-Number` (VIN), ứng dụng có thể tính toán chính xác khóa phân vùng này khi thực hiện truy vấn đọc (truy vấn đơn phân vùng - single-partition query) mà không cần quét toàn bộ các phân vùng. Cách tiếp cận này mang tính xác định (deterministic), khác với việc dùng hậu tố ngẫu nhiên (random suffix) ở đáp án B vốn bắt buộc phải quét chéo phân vùng khi đọc dữ liệu."
+    },
+    {
+      "id": 104,
+      "question": "You have an Azure subscription.\nYou plan to implement an Azure Cosmos DB for NoSQL single-region write account named account1 that will replicate across two Azure regions.\nYou need to set the default consistency level for account1. The solution must meet the following requirements:\n• Writes must be performed to a local majority in a single region.• Reads must be performed from a local minority in a single region.\nWhich consistency level should you select?",
+      "choices": {
+        "A": "Session",
+        "B": "Consistent Prefix",
+        "C": "Strong",
+        "D": "Bounded Staleness"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB, cơ chế quorum (số lượng bản sao tối thiểu đồng ý) cho việc đọc và ghi ở các cấp độ nhất quán khác nhau được cấu hình như sau:\n- **Bounded Staleness**: Việc ghi được thực hiện trên một số lượng đa số cục bộ (**Local Majority** - 3 trong 4 bản sao trong vùng) và việc đọc được thực hiện từ một số lượng thiểu số cục bộ (**Local Minority** - 2 trong 4 bản sao trong vùng).\n- **Strong**: Yêu cầu ghi trên đa số toàn cầu (**Global Majority** - xác nhận trên tất cả các vùng) để đảm bảo không bị trễ dữ liệu giữa các vùng, còn đọc là Local Minority.\n- **Session, Consistent Prefix, Eventual**: Ghi trên Local Majority, nhưng đọc chỉ từ một bản sao duy nhất (**Single Replica**).\nDo đó, cấp độ nhất quán đáp ứng đúng yêu cầu ghi vào Local Majority và đọc từ Local Minority của một vùng duy nhất là **Bounded Staleness**."
+    },
+    {
+      "id": 105,
+      "question": "You have an Azure Cosmos DB for NoSQL account named account1.\nYou plan to implement a multi-region write scenario.\nYou enable multi-region writes for account1.\nWhich two actions should you perform next? Each correct answer presents part of the solution.\nNOTE: Each correct answer is worth one point.",
+      "choices": {
+        "A": "Set ApplicationRegion to the name of the deployed region.",
+        "B": "Set UseMultipleWriteLocations to True.",
+        "C": "Set consistencyLevel to Eventual.",
+        "D": "Update connectionString."
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Khi bật tính năng ghi nhiều vùng (multi-region writes) cho tài khoản Azure Cosmos DB, ở phía ứng dụng sử dụng SDK, ta cần thực hiện:\n1. Đặt thuộc tính `UseMultipleWriteLocations` thành `true` để cho phép SDK gửi các yêu cầu ghi đến vùng ghi gần nhất thay vì chuyển hướng tất cả yêu cầu ghi về một vùng chính duy nhất.\n2. Đặt thuộc tính `ApplicationRegion` (hoặc `ApplicationPreferredRegions`) thành tên của vùng mà ứng dụng được triển khai (ví dụ: `East US`) để định tuyến các thao tác đọc và ghi đến vùng địa lý gần nhất nhằm giảm thiểu độ trễ."
+    },
+    {
+      "id": 106,
+      "question": "You have an Azure Cosmos DB for NoSQL container named Container1 that stores 500 GB of data.\nYou plan to run cross-partition queries that target Container1. The queries will include the partition key values specified in the db filters.\nYou need to minimize the cost of the queries.\nWhat should you do?",
+      "choices": {
+        "A": "Decrease the value of the MaxBufferedItemCount parameter.",
+        "B": "Add the DISTINCT keyword to the queries.",
+        "C": "Decrease the value of the MaxConcurrency parameter.",
+        "D": "Add the in keyword to the queries."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi thực hiện truy vấn trên một container lớn (500 GB dữ liệu, chắc chắn có nhiều phân vùng vật lý), một truy vấn chéo phân vùng (cross-partition query) thông thường sẽ phải quét toàn bộ các phân vùng vật lý, gây tốn rất nhiều Request Units (RUs) và chi phí cao. Bằng cách sử dụng từ khóa `IN` để lọc cụ thể danh sách các giá trị khóa phân vùng mong muốn (ví dụ: `WHERE c.companyId IN ('id1', 'id2')`), Cosmos DB có thể xác định trước và chỉ định tuyến truy vấn đến đúng các phân vùng vật lý chứa các giá trị này, giúp giảm thiểu đáng kể số lượng phân vùng cần quét và tối ưu hóa chi phí truy vấn."
+    },
+    {
+      "id": 107,
+      "question": "You have an Azure Cosmos DB for NoSQL database that hosts a container named Container1. Container1 stores product details.\nYou have a query named Query1 that contains the following statements.\nSELECT p.ProductGroup, p.Color -\nFROM products AS p -WHERE p.ProductName = \"100mm Return Valve\"\nAND p.ListPrice > 120 -\nYou need to optimize the performance of Query1 by using custom indexing.\nWhich set of index components will optimize Query1?",
+      "choices": {
+        "A": "ListPrice DESC, ProductName ASC, ProductGroup ASC, Color ASC",
+        "B": "ListPrice ASC, ProductName ASC, ProductGroup ASC, Color ASC",
+        "C": "ListPrice ASC, ProductName ASC",
+        "D": "ProductName DESC, ListPrice ASC"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Azure Cosmos DB, khi sử dụng chỉ mục hỗn hợp (composite index) để tối ưu hóa hiệu năng cho các truy vấn có bộ lọc (WHERE) trên nhiều trường, ta cần tuân theo quy tắc xếp thứ tự các trường trong chỉ mục:\n1. Các trường sử dụng bộ lọc so sánh bằng (equality filter, ví dụ: `p.ProductName = ...`) phải được định nghĩa trước.\n2. Các trường sử dụng bộ lọc so sánh khoảng (range filter, ví dụ: `p.ListPrice > ...`) phải được định nghĩa sau.\nTrong các đáp án, chỉ có đáp án **D** đặt trường bằng `ProductName` lên trước trường khoảng `ListPrice` (`ProductName DESC, ListPrice ASC`), do đó đây là chỉ mục tối ưu nhất cho truy vấn. Thứ tự ASC hay DESC không ảnh hưởng lớn đến kết quả lọc nếu truy vấn không có mệnh đề `ORDER BY`."
+    },
+    {
+      "id": 108,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL account named account1.\nIn account1, you plan to create a container that will store the data items shown in the following table.\nEach customer item will have customer sales by month values embedded.\nThe most executed query will return data for a matrix that aggregates the monthly sales of each business category. The matrix will use customer business categories as columns and months as rows.\nYou need to configure the partition key for the container. The solution must minimize the request units (RUs) required to run the query.\nWhich property should you use for the partition key?",
+      "choices": {
+        "A": "customerBusinessCategoryId",
+        "B": "customerSalesForMonth",
+        "C": "customerId",
+        "D": "customerName"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để giảm thiểu Request Units (RUs) cho truy vấn được thực thi nhiều nhất, ta nên phân vùng container sao cho truy vấn đó có thể chạy dưới dạng truy vấn đơn phân vùng (single-partition query) hoặc giới hạn trong số lượng phân vùng tối thiểu.\nTruy vấn phổ biến nhất yêu cầu tổng hợp doanh số bán hàng hàng tháng theo từng danh mục kinh doanh của khách hàng (customer business category). Nếu chọn `customerBusinessCategoryId` làm khóa phân vùng (partition key), tất cả dữ liệu của các khách hàng thuộc cùng một danh mục kinh doanh sẽ được lưu trữ cùng nhau trong một phân vùng logic. Khi thực hiện truy vấn tổng hợp cho một danh mục cụ thể, hệ thống chỉ cần truy cập vào đúng phân vùng đó, tránh việc quét chéo phân vùng (cross-partition query) và giúp tối ưu hóa đáng kể lượng RU tiêu thụ."
+    },
+    {
+      "id": 109,
+      "question": "You have an Azure subscription that contains an Azure Cosmos DB for NoSQL database named db1. The subscription is linked to a Microsoft Entra tenant that contains a user named User1.\nYou need to delegate permissions to User1 to meet the following requirements:\n• Ensure that User1 can manage db1.• Prevent User1 from accessing connection strings.• Prevent User1 from accessing the data stored in db1.\nWhich role should you assign to User1?",
+      "choices": {
+        "A": "Cosmos DB Account Reader Role",
+        "B": "Cosmos DB Built-in Data Contributor",
+        "C": "Cosmos DB Built-in Data Reader",
+        "D": "Cosmos DB Operator"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đáp ứng các yêu cầu bảo mật:\n1. **Quản lý db1**: Người dùng cần có quyền thực hiện các thao tác trên control plane (như quản lý tài khoản, cơ sở dữ liệu, container).\n2. **Không được truy cập connection string**: Để ngăn chặn việc lấy khóa truy cập (keys).\n3. **Không được truy cập dữ liệu trong db1**: Không được đọc hoặc sửa đổi dữ liệu thực tế bên trong container (data plane).\nVai trò **Cosmos DB Operator** là vai trò tích hợp (built-in role) được thiết kế riêng cho mục đích này. Nó cho phép quản lý tài nguyên Cosmos DB nhưng không cấp quyền truy cập vào các khóa/chuỗi kết nối (keys/connection strings) và không có quyền đọc/ghi dữ liệu.\n- Vai trò *Account Reader* chỉ được đọc cấu hình mà không quản lý được.\n- Các vai trò *Data Contributor* và *Data Reader* hoạt động trên data plane, tức là cho phép truy cập trực tiếp vào dữ liệu bên trong database, vi phạm yêu cầu số 3."
+    }
+  ]
+}

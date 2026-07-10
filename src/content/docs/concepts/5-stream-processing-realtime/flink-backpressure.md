@@ -82,15 +82,13 @@ Trong cơ chế Checkpoint tiêu chuẩn (Aligned Checkpoint), các Checkpoint B
 graph TD
     subgraph Aligned_Checkpoint ["Aligned Checkpoint (Bị Block)"]
         direction LR
-        A1["Data 1"] --> B1["Data 2"] --> C1["(Barrier 1)"] --> D1["Data 3"]
-        style C1 fill:#f96,stroke:#333,stroke-width:2px
+        A1["Data 1"] --> B1["Data 2"] --> C1["(Barrier 1)"] --> D1["Data 3"]
     end
     
     subgraph Unaligned_Checkpoint ["Unaligned Checkpoint (Vượt lên)"]
         direction LR
         C2["(Barrier 1)"] -.->|"Overtakes Data"| A2["Data 1"]
-        A2 --> B2["Data 2"] --> D2["Data 3"]
-        style C2 fill:#f96,stroke:#333,stroke-width:2px
+        A2 --> B2["Data 2"] --> D2["Data 3"]
     end
 ```
 

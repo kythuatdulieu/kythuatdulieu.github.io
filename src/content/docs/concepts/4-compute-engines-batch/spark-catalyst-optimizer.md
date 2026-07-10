@@ -29,11 +29,7 @@ graph TD
     ALP -->|RBO: Rule-Based Optimizer| OLP["3. Optimized Logical Plan"]
     OLP -->|CBO: Cost-Based Optimizer| PP["4. Physical Plans (Nhiều phương án)"]
     PP -->|Chọn Cost thấp nhất| SPP["5. Selected Physical Plan"]
-    SPP -->|Tungsten WSCG| RDD["Thực thi trên RDD / Máy Ảo"]
-
-    style SQL fill:#e1f5fe,stroke:#01579b
-    style AST fill:#fff3e0,stroke:#e65100
-    style SPP fill:#e8f5e9,stroke:#1b5e20
+    SPP -->|Tungsten WSCG| RDD["Thực thi trên RDD / Máy Ảo"]
 ```
 
 ### Giai đoạn 1: Phân tích Cú pháp (Unresolved Logical Plan)

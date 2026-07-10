@@ -1,63 +1,110 @@
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'neutral',
-  fontFamily: 'Inter, sans-serif',
-  securityLevel: 'loose'
-});
+function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function mermaidColorVars() {
+    return {
+        background: cssVar('--mermaid-bg') || cssVar('--sl-color-bg-nav'),
+        primaryColor: cssVar('--mermaid-node-primary-bg'),
+        primaryBorderColor: cssVar('--mermaid-node-primary-border'),
+        primaryTextColor: cssVar('--mermaid-node-primary-text'),
+        secondaryColor: cssVar('--mermaid-node-secondary-bg'),
+        secondaryBorderColor: cssVar('--mermaid-node-secondary-border'),
+        secondaryTextColor: cssVar('--mermaid-node-secondary-text'),
+        tertiaryColor: cssVar('--mermaid-node-tertiary-bg'),
+        tertiaryBorderColor: cssVar('--mermaid-node-tertiary-border'),
+        tertiaryTextColor: cssVar('--mermaid-node-tertiary-text'),
+        mainBkg: cssVar('--mermaid-node-primary-bg'),
+        secondBkg: cssVar('--mermaid-node-secondary-bg'),
+        tertiaryBkg: cssVar('--mermaid-node-tertiary-bg'),
+        mainContrastColor: cssVar('--mermaid-node-primary-text'),
+        darkTextColor: cssVar('--mermaid-text'),
+        textColor: cssVar('--mermaid-text'),
+        lineColor: cssVar('--mermaid-line'),
+        border1: cssVar('--mermaid-node-primary-border'),
+        border2: cssVar('--mermaid-node-secondary-border'),
+        clusterBkg: cssVar('--mermaid-cluster-bg'),
+        clusterBorder: cssVar('--mermaid-cluster-border'),
+        defaultLinkColor: cssVar('--mermaid-line'),
+        titleColor: cssVar('--mermaid-text'),
+        edgeLabelBackground: cssVar('--mermaid-bg'),
+        nodeTextColor: cssVar('--mermaid-node-primary-text'),
+        actorBkg: cssVar('--mermaid-node-primary-bg'),
+        actorBorder: cssVar('--mermaid-node-primary-border'),
+        actorTextColor: cssVar('--mermaid-node-primary-text'),
+        actorLineColor: cssVar('--mermaid-line'),
+        signalColor: cssVar('--mermaid-line'),
+        signalTextColor: cssVar('--mermaid-text'),
+        noteBkgColor: cssVar('--mermaid-node-secondary-bg'),
+        noteBorderColor: cssVar('--mermaid-node-secondary-border'),
+        noteTextColor: cssVar('--mermaid-node-secondary-text'),
+        labelBoxBkgColor: cssVar('--mermaid-node-tertiary-bg'),
+        labelBoxBorderColor: cssVar('--mermaid-node-tertiary-border'),
+        labelTextColor: cssVar('--mermaid-node-tertiary-text'),
+        loopTextColor: cssVar('--mermaid-text'),
+        activationBkgColor: cssVar('--mermaid-node-primary-bg'),
+        activationBorderColor: cssVar('--mermaid-node-primary-border'),
+    };
+}
+
+function mermaidThemeConfig() {
+    return {
+        startOnLoad: false,
+        theme: 'base',
+        fontFamily: 'Inter, sans-serif',
+        securityLevel: 'loose',
+        themeVariables: mermaidColorVars(),
+    };
+}
+
+mermaid.initialize(mermaidThemeConfig());
 
 async function initAndRender() {
     if (document.fonts && document.fonts.ready) {
         await document.fonts.ready;
     }
-    
+
     setTimeout(async () => {
         const mermaidNodes = document.querySelectorAll('pre.mermaid');
         if (mermaidNodes.length === 0) return;
-        
+
         for (let i = 0; i < mermaidNodes.length; i++) {
             const pre = mermaidNodes[i];
-            
             if (pre.dataset.mermaidRendered) continue;
-            
-            // Apply wrapper styles directly to the pre element
+            if (!pre.dataset.mermaidSource) {
+                pre.dataset.mermaidSource = pre.textContent.trim();
+            }
+
             pre.style.width = '100%';
             pre.style.overflow = 'visible';
             pre.style.margin = '2rem 0';
-            pre.style.padding = '0'; // Let zoom container handle padding
-            pre.style.backgroundColor = 'var(--sl-color-bg-nav)';
+            pre.style.padding = '0';
+            pre.style.backgroundColor = 'var(--mermaid-bg)';
             pre.style.borderRadius = '0.5rem';
             pre.style.textAlign = 'center';
-            pre.style.border = '1px solid var(--sl-color-hairline)';
-            pre.style.position = 'relative'; // Crucial for floating controls
-            
+            pre.style.border = '1px solid var(--mermaid-cluster-border)';
+            pre.style.position = 'relative';
             pre.dataset.mermaidRendered = 'true';
         }
-        
+
         try {
-            await mermaid.run({
-                querySelector: 'pre.mermaid'
-            });
-            
-            // Add zoom and pan functionality to each rendered SVG
+            await mermaid.run({ querySelector: 'pre.mermaid' });
+
             document.querySelectorAll('pre.mermaid').forEach(pre => {
                 const svg = pre.querySelector('svg');
                 if (!svg) return;
-                
-                // Prevent duplicate wrapper injection
                 if (svg.parentElement.classList.contains('mermaid-zoom-container')) return;
-                
-                // Style the SVG for transforms
+
                 svg.style.transition = 'transform 0.1s ease-out';
                 svg.style.transformOrigin = 'center center';
                 svg.style.cursor = 'grab';
                 svg.style.display = 'block';
                 svg.style.margin = '0 auto';
-                svg.style.maxWidth = 'none'; // Prevent Starlight scaling
+                svg.style.maxWidth = 'none';
                 svg.style.height = 'auto';
-                
-                // Create zoom container
+
                 const container = document.createElement('div');
                 container.className = 'mermaid-zoom-container';
                 container.style.position = 'relative';
@@ -69,12 +116,11 @@ async function initAndRender() {
                 container.style.padding = '2.5rem 1.5rem';
                 container.style.minHeight = '300px';
                 container.style.userSelect = 'none';
-                
-                // Wrap the SVG
+                container.style.backgroundColor = 'var(--mermaid-bg)';
+
                 svg.parentNode.insertBefore(container, svg);
                 container.appendChild(svg);
-                
-                // Create floating controls overlay
+
                 const controls = document.createElement('div');
                 controls.className = 'mermaid-controls';
                 controls.style.position = 'absolute';
@@ -86,62 +132,59 @@ async function initAndRender() {
                 controls.style.flexWrap = 'nowrap';
                 controls.style.alignItems = 'center';
                 controls.style.gap = '6px';
-                
-                const btnStyle = 'width: 32px !important; height: 32px !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; border-radius: 6px !important; border: 1px solid var(--sl-color-hairline) !important; background-color: var(--sl-color-bg-nav) !important; color: var(--sl-color-text) !important; cursor: pointer !important; font-weight: bold !important; font-size: 16px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; transition: all 0.2s !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important; flex-shrink: 0 !important;';
-                
+
+                const btnStyle = 'width: 32px !important; height: 32px !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; border-radius: 6px !important; border: 1px solid var(--mermaid-cluster-border) !important; background-color: var(--mermaid-bg) !important; color: var(--mermaid-text) !important; cursor: pointer !important; font-weight: bold !important; font-size: 16px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; transition: all 0.2s !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important; flex-shrink: 0 !important;';
+
                 const zoomIn = document.createElement('button');
-                zoomIn.innerHTML = '+';
+                zoomIn.textContent = '+';
                 zoomIn.title = 'Zoom In';
                 zoomIn.style.cssText = btnStyle;
-                
+
                 const zoomOut = document.createElement('button');
-                zoomOut.innerHTML = '-';
+                zoomOut.textContent = '-';
                 zoomOut.title = 'Zoom Out';
                 zoomOut.style.cssText = btnStyle;
-                
+
                 const reset = document.createElement('button');
-                reset.innerHTML = '⟲';
+                reset.textContent = 'R';
                 reset.title = 'Reset Zoom';
                 reset.style.cssText = btnStyle;
                 reset.style.fontSize = '14px';
-                
+
                 const download = document.createElement('button');
-                download.innerHTML = '⬇';
+                download.textContent = 'D';
                 download.title = 'Download SVG';
                 download.style.cssText = btnStyle;
                 download.style.fontSize = '14px';
-                
+
                 controls.appendChild(zoomIn);
                 controls.appendChild(zoomOut);
                 controls.appendChild(reset);
                 controls.appendChild(download);
                 pre.appendChild(controls);
-                
-                // Add hover states
+
                 [zoomIn, zoomOut, reset, download].forEach(btn => {
                     btn.onmouseover = () => {
-                        btn.style.borderColor = 'var(--sl-color-accent)';
-                        btn.style.backgroundColor = 'rgba(var(--sl-color-accent-rgb), 0.1)';
+                        btn.style.borderColor = 'var(--mermaid-node-primary-border)';
+                        btn.style.backgroundColor = 'var(--mermaid-node-primary-bg)';
                     };
                     btn.onmouseout = () => {
-                        btn.style.borderColor = 'var(--sl-color-hairline)';
-                        btn.style.backgroundColor = 'var(--sl-color-bg-nav)';
+                        btn.style.borderColor = 'var(--mermaid-cluster-border)';
+                        btn.style.backgroundColor = 'var(--mermaid-bg)';
                     };
                 });
-                
-                // Zoom & Pan state variables
+
                 let scale = 1.0;
                 let panX = 0;
                 let panY = 0;
                 let isPanning = false;
                 let startX = 0;
                 let startY = 0;
-                
+
                 function updateTransform() {
                     svg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
                 }
-                
-                // Drag to Pan
+
                 container.addEventListener('mousedown', (e) => {
                     if (e.button !== 0 || e.target.closest('.mermaid-controls')) return;
                     isPanning = true;
@@ -150,53 +193,48 @@ async function initAndRender() {
                     startY = e.clientY - panY;
                     e.preventDefault();
                 });
-                
+
                 window.addEventListener('mousemove', (e) => {
                     if (!isPanning) return;
                     panX = e.clientX - startX;
                     panY = e.clientY - startY;
                     updateTransform();
                 });
-                
-                window.addEventListener('mouseup', () => {
-                    if (isPanning) {
-                        isPanning = false;
-                        svg.style.cursor = 'grab';
-                    }
-                });
-                
 
-                
-                // Button Actions
+                window.addEventListener('mouseup', () => {
+                    if (!isPanning) return;
+                    isPanning = false;
+                    svg.style.cursor = 'grab';
+                });
+
                 zoomIn.addEventListener('click', () => {
                     if (scale < 6.0) scale *= 1.25;
                     updateTransform();
                 });
-                
+
                 zoomOut.addEventListener('click', () => {
                     if (scale > 0.2) scale /= 1.25;
                     updateTransform();
                 });
-                
+
                 reset.addEventListener('click', () => {
                     scale = 1.0;
                     panX = 0;
                     panY = 0;
                     updateTransform();
                 });
-                
+
                 download.addEventListener('click', () => {
                     const svgClone = svg.cloneNode(true);
                     svgClone.style.transform = 'none';
                     svgClone.style.cursor = 'default';
-                    
+
                     const svgData = new XMLSerializer().serializeToString(svgClone);
                     const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
                     const svgUrl = URL.createObjectURL(svgBlob);
-                    
                     const downloadLink = document.createElement('a');
                     downloadLink.href = svgUrl;
-                    
+
                     let filename = 'mermaid-diagram.svg';
                     const heading = pre.previousElementSibling;
                     if (heading && heading.tagName.match(/^H[1-6]$/)) {
@@ -207,7 +245,7 @@ async function initAndRender() {
                             filename = pageTitle.textContent.toLowerCase().trim().replace(/[\s\W]+/g, '-') + '-diagram.svg';
                         }
                     }
-                    
+
                     downloadLink.download = filename;
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
@@ -224,6 +262,29 @@ async function initAndRender() {
 document.addEventListener('DOMContentLoaded', initAndRender);
 
 document.addEventListener('astro:page-load', async () => {
-    mermaid.initialize({ theme: 'neutral' });
+    mermaid.initialize(mermaidThemeConfig());
     await initAndRender();
 });
+
+let mermaidThemeTimer = null;
+function rerenderMermaidForTheme() {
+    clearTimeout(mermaidThemeTimer);
+    mermaidThemeTimer = setTimeout(async () => {
+        document.querySelectorAll('pre.mermaid').forEach(pre => {
+            const source = pre.dataset.mermaidSource;
+            if (!source) return;
+            pre.innerHTML = '';
+            pre.textContent = source;
+            delete pre.dataset.mermaidRendered;
+            pre.removeAttribute('data-processed');
+        });
+        mermaid.initialize(mermaidThemeConfig());
+        await initAndRender();
+    }, 80);
+}
+
+new MutationObserver((mutations) => {
+    if (mutations.some(m => m.attributeName === 'data-theme')) {
+        rerenderMermaidForTheme();
+    }
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

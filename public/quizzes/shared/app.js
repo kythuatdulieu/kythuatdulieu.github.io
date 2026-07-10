@@ -5,6 +5,12 @@
 (function () {
     'use strict';
 
+    // Áp theme của blog ngay khi script chạy, trước khi init() chờ fetch câu hỏi
+    try {
+        const t = localStorage.getItem('dehb-theme');
+        if (t) document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* ignore */ }
+
     // ========================
     // State
     // ========================
@@ -22,9 +28,10 @@
     let userAnswers = {};
     let showVietnamese = false;
     let showImage = false;
+    let redoIncorrectIds = []; // Store IDs of questions to redo
+    let unansweredIds = []; // Store IDs of unanswered questions for the review session
     let shuffleMode = false;
     let filterMode = 'all';
-    let darkTheme = false; // Default to Light theme as per GenAI Associate style
 
     // ========================
     // DOM References
@@ -52,9 +59,6 @@
         btnGrid: $('btnGrid'),
         btnViToggle: $('btnViToggle'),
         btnShuffle: $('btnShuffle'),
-        btnTheme: $('btnTheme'),
-        themeIconSun: $('themeIconSun'),
-        themeIconMoon: $('themeIconMoon'),
         btnMenu: $('btnMenu'),
         sidePanel: $('sidePanel'),
         overlay: $('overlay'),
@@ -64,7 +68,6 @@
         btnCloseGrid: $('btnCloseGrid'),
         toggleVi: $('toggleVi'),
         toggleShuffle: $('toggleShuffle'),
-        toggleTheme: $('toggleTheme'),
         statCorrect: $('statCorrect'),
         statIncorrect: $('statIncorrect'),
         statUnanswered: $('statUnanswered'),
@@ -72,10 +75,12 @@
         countAll: $('countAll'),
         countCorrect: $('countCorrect'),
         countIncorrect: $('countIncorrect'),
+        countRedoIncorrect: $('countRedoIncorrect'),
         countUnanswered: $('countUnanswered'),
         btnReviewAll: $('btnReviewAll'),
         btnReviewCorrect: $('btnReviewCorrect'),
         btnReviewIncorrect: $('btnReviewIncorrect'),
+        btnRedoIncorrect: $('btnRedoIncorrect'),
         btnReviewUnanswered: $('btnReviewUnanswered'),
         btnResetAll: $('btnResetAll'),
         btnResetIncorrect: $('btnResetIncorrect'),
@@ -92,9 +97,6 @@
                 userAnswers,
                 showVietnamese,
                 shuffleMode,
-                darkTheme,
-                currentIndex,
-                filterMode,
                 questionOrder: shuffleMode ? questionOrder : null,
             };
             localStorage.setItem(STATE_KEY, JSON.stringify(state));
@@ -109,37 +111,14 @@
             userAnswers = state.userAnswers || {};
             showVietnamese = state.showVietnamese || false;
             shuffleMode = state.shuffleMode || false;
-            darkTheme = state.darkTheme !== undefined ? state.darkTheme : true;
-            currentIndex = state.currentIndex || 0;
-            filterMode = state.filterMode || 'all';
+            // Always default to 'all' on page load to prevent confusing empty states
+            filterMode = 'all';
             if (state.questionOrder && shuffleMode) {
                 questionOrder = state.questionOrder;
             }
         } catch (e) { /* ignore */ }
     }
 
-    // ========================
-    // Theme
-    // ========================
-    function applyTheme() {
-        if (darkTheme) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            els.themeIconSun.style.display = '';
-            els.themeIconMoon.style.display = 'none';
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            els.themeIconSun.style.display = 'none';
-            els.themeIconMoon.style.display = '';
-        }
-        if (els.toggleTheme) els.toggleTheme.checked = !darkTheme;
-    }
-
-    function toggleTheme() {
-        darkTheme = !darkTheme;
-        applyTheme();
-        showToast(darkTheme ? '🌙 Giao diện tối' : '☀️ Giao diện sáng');
-        saveState();
-    }
 
     // ========================
     // Scoring
@@ -171,6 +150,7 @@
         els.countAll.textContent = questions.length;
         els.countCorrect.textContent = correct;
         els.countIncorrect.textContent = incorrect;
+        if (els.countRedoIncorrect) els.countRedoIncorrect.textContent = incorrect;
         els.countUnanswered.textContent = unanswered;
 
         const answered = correct + incorrect;
@@ -187,8 +167,10 @@
             indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
         } else if (filterMode === 'incorrect') {
             indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+        } else if (filterMode === 'redo_incorrect') {
+            indices = indices.filter(i => redoIncorrectIds.includes(questions[i].id));
         } else if (filterMode === 'unanswered') {
-            indices = indices.filter(i => userAnswers[questions[i].id] === undefined);
+            indices = indices.filter(i => unansweredIds.includes(questions[i].id));
         }
         return indices;
     }
@@ -226,9 +208,25 @@
         return null;
     }
 
-    // Helper to append text with bold and inline code formatted
+    async function fetchTranslation(text) {
+        if (!text) return '';
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=${encodeURIComponent(text)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data && data[0]) {
+                return data[0].map(item => item[0]).join('');
+            }
+        } catch (e) {
+            console.error(e);
+            return '*Lỗi dịch: ' + e.message + '*';
+        }
+        return '*Không thể dịch*';
+    }
+
+    // Helper to append text with bold, inline code, and images formatted
     function appendFormattedText(element, text) {
-        const parts = text.split(/(\*\*.*?\*\*|`{3,}[\s\S]*?`{3,}|``.*?``|`.*?`)/);
+        const parts = text.split(/(\*\*.*?\*\*|`{3,}[\s\S]*?`{3,}|``.*?``|`.*?`|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\))/);
         parts.forEach(part => {
             if (part.startsWith('**') && part.endsWith('**')) {
                 const bold = document.createElement('strong');
@@ -250,6 +248,29 @@
                 const code = document.createElement('code');
                 code.textContent = part.slice(1, -1);
                 element.appendChild(code);
+            } else if (part.startsWith('![') && part.includes('](') && part.endsWith(')')) {
+                const img = document.createElement('img');
+                const altEnd = part.indexOf('](');
+                const altText = part.slice(2, altEnd);
+                const url = part.slice(altEnd + 2, -1);
+                img.src = url;
+                img.alt = altText;
+                img.className = 'markdown-img';
+                img.style.maxWidth = '100%';
+                img.style.display = 'block';
+                img.style.margin = '10px 0';
+                element.appendChild(img);
+            } else if (part.startsWith('[') && part.includes('](') && part.endsWith(')')) {
+                const a = document.createElement('a');
+                const textEnd = part.indexOf('](');
+                const linkText = part.slice(1, textEnd);
+                const url = part.slice(textEnd + 2, -1);
+                a.href = url;
+                a.textContent = linkText;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'markdown-link';
+                element.appendChild(a);
             } else if (part) {
                 element.appendChild(document.createTextNode(part));
             }
@@ -329,7 +350,7 @@
             els.topicBadge.textContent = '';
             els.questionText.textContent = filterMode === 'correct' ? 'Chưa có câu trả lời đúng nào.' :
                 filterMode === 'incorrect' ? 'Chưa có câu trả lời sai nào.' :
-                    filterMode === 'unanswered' ? 'Đã hoàn thành tất cả câu hỏi! 🎉' :
+                    filterMode === 'unanswered' ? 'Đã hoàn thành tất cả câu hỏi.' :
                         'Không có câu hỏi.';
             els.questionTextVi.style.display = 'none';
             els.optionsList.innerHTML = '';
@@ -389,10 +410,24 @@
         appendFormattedText(els.questionText, q.question);
 
         // Vietnamese question text
-        if (showVietnamese && q.question_vi) {
-            els.questionTextVi.replaceChildren();
-            appendFormattedText(els.questionTextVi, q.question_vi);
-            els.questionTextVi.style.display = 'block';
+        if (showVietnamese) {
+            if (q.question_vi) {
+                els.questionTextVi.replaceChildren();
+                appendFormattedText(els.questionTextVi, q.question_vi);
+                els.questionTextVi.style.display = 'block';
+            } else {
+                els.questionTextVi.replaceChildren();
+                els.questionTextVi.innerHTML = '<span style="color:var(--sl-color-gray-4);font-style:italic">✨ Đang dịch tự động...</span>';
+                els.questionTextVi.style.display = 'block';
+                
+                fetchTranslation(q.question).then(translated => {
+                    q.question_vi = translated;
+                    if (window.currentSelectionQId === q.id) {
+                        els.questionTextVi.replaceChildren();
+                        appendFormattedText(els.questionTextVi, translated);
+                    }
+                });
+            }
         } else {
             els.questionTextVi.style.display = 'none';
         }
@@ -458,6 +493,21 @@
                     appendFormattedText(viSpan, viOpt);
                     viSpan.style.display = 'block';
                     textSpan.appendChild(viSpan);
+                } else {
+                    const viSpan = document.createElement('div');
+                    viSpan.className = 'option-text-vi';
+                    viSpan.innerHTML = '<span style="color:var(--sl-color-gray-4);font-style:italic">✨ Đang dịch...</span>';
+                    viSpan.style.display = 'block';
+                    textSpan.appendChild(viSpan);
+                    
+                    fetchTranslation(q.options[letter]).then(translated => {
+                        q.options_vi = q.options_vi || {};
+                        q.options_vi[letter] = translated;
+                        if (window.currentSelectionQId === q.id) {
+                            viSpan.replaceChildren();
+                            appendFormattedText(viSpan, translated);
+                        }
+                    });
                 }
             }
 
@@ -515,51 +565,83 @@
             els.optionsList.parentNode.insertBefore(explanationDiv, els.optionsList.nextSibling);
         }
 
-        if (answered && q.explanation_vi) {
+        if (answered) {
             explanationDiv.replaceChildren();
 
-            const title = document.createElement('div');
-            title.className = 'explanation-title';
-            title.textContent = '💡 Giải thích';
-            explanationDiv.appendChild(title);
+            if (q.explanation_vi) {
+                const title = document.createElement('div');
+                title.className = 'explanation-title';
+                title.textContent = '💡 Giải thích';
+                explanationDiv.appendChild(title);
 
-            const contentContainer = document.createElement('div');
-            contentContainer.className = 'explanation-content';
-            renderMarkdownSafely(contentContainer, q.explanation_vi);
-            explanationDiv.appendChild(contentContainer);
+                const contentContainer = document.createElement('div');
+                contentContainer.className = 'explanation-content';
+                renderMarkdownSafely(contentContainer, q.explanation_vi);
+                explanationDiv.appendChild(contentContainer);
 
-            // References (Citations)
-            if (q.references && q.references.length > 0) {
-                const refBox = document.createElement('div');
-                refBox.className = 'references-box';
+                // References (Citations)
+                if (q.references && q.references.length > 0) {
+                    const refBox = document.createElement('div');
+                    refBox.className = 'references-box';
 
-                const refTitle = document.createElement('div');
-                refTitle.className = 'references-title';
-                refTitle.textContent = '📚 Tài liệu tham khảo:';
-                refBox.appendChild(refTitle);
+                    const refTitle = document.createElement('div');
+                    refTitle.className = 'references-title';
+                    refTitle.textContent = '📚 Tài liệu tham khảo:';
+                    refBox.appendChild(refTitle);
 
-                const refList = document.createElement('ul');
-                refList.className = 'references-list';
+                    const refList = document.createElement('ul');
+                    refList.className = 'references-list';
 
-                q.references.forEach(ref => {
-                    if (ref.title && ref.url) {
-                        const li = document.createElement('li');
-                        const a = document.createElement('a');
-                        a.setAttribute('href', ref.url);
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('rel', 'noopener noreferrer');
-                        a.className = 'reference-link';
-                        a.textContent = ref.title;
-                        li.appendChild(a);
-                        refList.appendChild(li);
-                    }
-                });
+                    q.references.forEach(ref => {
+                        if (ref.title && ref.url) {
+                            const li = document.createElement('li');
+                            const a = document.createElement('a');
+                            a.setAttribute('href', ref.url);
+                            a.setAttribute('target', '_blank');
+                            a.setAttribute('rel', 'noopener noreferrer');
+                            a.className = 'reference-link';
+                            a.textContent = ref.title;
+                            li.appendChild(a);
+                            refList.appendChild(li);
+                        }
+                    });
 
-                refBox.appendChild(refList);
-                explanationDiv.appendChild(refBox);
+                    refBox.appendChild(refList);
+                    explanationDiv.appendChild(refBox);
+                }
+
+                explanationDiv.style.display = 'block';
+            } else if (showVietnamese) {
+                const title = document.createElement('div');
+                title.className = 'explanation-title';
+                title.textContent = '💡 Gợi ý';
+                explanationDiv.appendChild(title);
+
+                const contentContainer = document.createElement('div');
+                contentContainer.className = 'explanation-content';
+                
+                if (q.explanation) {
+                    const trPlaceholder = document.createElement('div');
+                    trPlaceholder.innerHTML = '<p><span style="color:var(--sl-color-gray-4);font-style:italic">✨ Đang dịch giải thích...</span></p>';
+                    contentContainer.appendChild(trPlaceholder);
+                    
+                    fetchTranslation(q.explanation).then(translated => {
+                        q.explanation_vi = translated;
+                        if (window.currentSelectionQId === q.id) {
+                            trPlaceholder.replaceChildren();
+                            renderMarkdownSafely(trPlaceholder, translated);
+                        }
+                    });
+                } else {
+                    contentContainer.innerHTML = '<p><em>Chưa có giải thích chi tiết bằng tiếng Việt cho câu hỏi này.</em></p>';
+                }
+                
+                explanationDiv.appendChild(contentContainer);
+                
+                explanationDiv.style.display = 'block';
+            } else {
+                explanationDiv.style.display = 'none';
             }
-
-            explanationDiv.style.display = 'block';
         } else {
             explanationDiv.style.display = 'none';
         }
@@ -651,8 +733,10 @@
             indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
         } else if (gridFilter === 'incorrect') {
             indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+        } else if (gridFilter === 'redo_incorrect') {
+            indices = indices.filter(i => redoIncorrectIds.includes(questions[i].id));
         } else if (gridFilter === 'unanswered') {
-            indices = indices.filter(i => userAnswers[questions[i].id] === undefined);
+            indices = indices.filter(i => unansweredIds.includes(questions[i].id));
         }
 
         const filtered = getFilteredIndices();
@@ -756,7 +840,7 @@
 
         applyShuffle();
         renderQuestion();
-        showToast(on ? '🔀 Đã bật xáo trộn' : '📋 Thứ tự gốc');
+        showToast(on ? 'Đã bật xáo trộn' : 'Thứ tự gốc');
         saveState();
     }
 
@@ -765,13 +849,20 @@
     // ========================
     function setReviewMode(mode) {
         filterMode = mode;
+        els.btnReviewAll.classList.toggle('active', mode === 'all');
+        els.btnReviewCorrect.classList.toggle('active', mode === 'correct');
+        els.btnReviewIncorrect.classList.toggle('active', mode === 'incorrect');
+        if (els.btnRedoIncorrect) els.btnRedoIncorrect.classList.toggle('active', mode === 'redo_incorrect');
+        els.btnReviewUnanswered.classList.toggle('active', mode === 'unanswered');
+
         currentIndex = 0;
         renderQuestion();
         closePanel();
         const labels = {
-            all: '📋 Tất cả câu hỏi',
-            correct: '✅ Câu trả lời đúng',
-            incorrect: '❌ Câu trả lời sai',
+            all: 'Tất cả câu hỏi',
+            correct: 'Câu trả lời đúng',
+            incorrect: 'Câu trả lời sai',
+            redo_incorrect: 'Làm lại câu sai',
             unanswered: '⬜ Câu chưa làm',
         };
         showToast(labels[mode] || mode);
@@ -779,8 +870,28 @@
     }
 
     // ========================
-    // Reset
+    // Reset Handlers
     // ========================
+    function handleRedoIncorrect() {
+        // Lấy danh sách ID các câu đang sai
+        redoIncorrectIds = questions
+            .filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.answer)
+            .map(q => q.id);
+            
+        if (redoIncorrectIds.length === 0) {
+            alert('Tuyệt vời! Bạn không có câu sai nào để làm lại.');
+            return;
+        }
+
+        // Xóa kết quả của các câu sai
+        redoIncorrectIds.forEach(id => delete userAnswers[id]);
+        
+        saveState();
+        updateScores();
+        setReviewMode('redo_incorrect');
+        closePanel();
+    }
+
     function resetAll() {
         if (!confirm('Bạn có chắc muốn reset tất cả? Mọi tiến trình sẽ bị xóa.')) return;
         userAnswers = {};
@@ -796,7 +907,7 @@
         updateScores();
         renderQuestion();
         closePanel();
-        showToast('🔄 Đã reset tất cả');
+        showToast('Đã reset tất cả');
         saveState();
     }
 
@@ -913,21 +1024,20 @@
         els.btnViToggle.addEventListener('click', () => toggleVietnamese(!showVietnamese));
         els.toggleVi.addEventListener('change', (e) => toggleVietnamese(e.target.checked));
 
-        // Theme toggle
-        els.btnTheme.addEventListener('click', toggleTheme);
-        if (els.toggleTheme) {
-            els.toggleTheme.addEventListener('change', () => toggleTheme());
-        }
-
         // Shuffle toggle
         els.btnShuffle.addEventListener('click', () => toggleShuffleMode(!shuffleMode));
         els.toggleShuffle.addEventListener('change', (e) => toggleShuffleMode(e.target.checked));
 
         // Review modes
-        els.btnReviewAll.addEventListener('click', () => setReviewMode('all'));
-        els.btnReviewCorrect.addEventListener('click', () => setReviewMode('correct'));
-        els.btnReviewIncorrect.addEventListener('click', () => setReviewMode('incorrect'));
-        els.btnReviewUnanswered.addEventListener('click', () => setReviewMode('unanswered'));
+        els.btnReviewAll.addEventListener('click', () => { redoIncorrectIds = []; unansweredIds = []; setReviewMode('all'); });
+        els.btnReviewCorrect.addEventListener('click', () => { redoIncorrectIds = []; unansweredIds = []; setReviewMode('correct'); });
+        els.btnReviewIncorrect.addEventListener('click', () => { redoIncorrectIds = []; unansweredIds = []; setReviewMode('incorrect'); });
+        if (els.btnRedoIncorrect) els.btnRedoIncorrect.addEventListener('click', handleRedoIncorrect);
+        els.btnReviewUnanswered.addEventListener('click', () => {
+            redoIncorrectIds = [];
+            unansweredIds = questions.filter(q => userAnswers[q.id] === undefined).map(q => q.id);
+            setReviewMode('unanswered');
+        });
 
         // Reset
         els.btnResetAll.addEventListener('click', resetAll);
@@ -942,14 +1052,44 @@
         quizContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
         quizContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-        // Quiz selector
+        // Quiz selector (trỏ index.html để chạy được cả ở dev server lẫn GitHub Pages)
         const selectQuiz = $('selectQuiz');
         if (selectQuiz) {
             selectQuiz.addEventListener('change', (e) => {
                 const targetQuiz = e.target.value;
-                window.location.href = `/quizzes/${targetQuiz}/`;
+                window.location.href = `/quizzes/${targetQuiz}/index.html`;
             });
         }
+    }
+
+    // Dựng dropdown chọn bộ đề từ manifest (sinh bởi scripts/generate_quiz_manifest.mjs)
+    async function populateQuizSelect() {
+        const sel = $('selectQuiz');
+        if (!sel) return;
+        try {
+            const res = await fetch('/quizzes/manifest.json');
+            if (!res.ok) return;
+            const list = await res.json();
+            if (!Array.isArray(list) || list.length === 0) return;
+            const groups = new Map();
+            list.forEach(q => {
+                if (!groups.has(q.provider)) groups.set(q.provider, []);
+                groups.get(q.provider).push(q);
+            });
+            sel.innerHTML = '';
+            groups.forEach((items, provider) => {
+                const og = document.createElement('optgroup');
+                og.label = provider;
+                items.forEach(q => {
+                    const o = document.createElement('option');
+                    o.value = q.id;
+                    o.textContent = q.vi ? q.name + ' — tiếng Việt' : q.name;
+                    og.appendChild(o);
+                });
+                sel.appendChild(og);
+            });
+            sel.value = quizId;
+        } catch (e) { /* giữ options tĩnh trong HTML */ }
     }
 
     // ========================
@@ -957,14 +1097,25 @@
     // ========================
     async function init() {
         try {
-            // Check if questions are already embedded (legacy support) or if we need to fetch
+            const normalizeQ = q => {
+                let ans = q.answer || '';
+                let isMulti = q.isMulti;
+                if (ans.length > 1 && !ans.includes(',')) {
+                    ans = ans.split('').join(',');
+                }
+                if (ans.includes(',')) {
+                    isMulti = true;
+                }
+                return { ...q, answer: ans, isMulti };
+            };
+            
             if (typeof QUESTIONS_DATA !== 'undefined') {
-                questions = QUESTIONS_DATA.map(q => ({ ...q }));
+                questions = QUESTIONS_DATA.map(normalizeQ);
             } else {
                 const response = await fetch(`/quizzes/${quizId}/questions.json`);
                 const data = await response.json();
                 const questionsArray = Array.isArray(data) ? data : (data.questions || []);
-                questions = questionsArray.map(q => ({ ...q }));
+                questions = questionsArray.map(normalizeQ);
             }
         } catch (err) {
             console.error('Failed to load questions.json:', err);
@@ -976,18 +1127,44 @@
         
         loadState();
 
-        // Apply saved UI states
-        applyTheme();
+        // Kiểm tra xem bộ đề này có dữ liệu tiếng Việt hay không
+        const hasVi = questions.some(q => q.question_vi || (q.options_vi && Object.keys(q.options_vi).length > 0) || q.explanation_vi);
+        if (!hasVi) {
+            if (els.btnViToggle) els.btnViToggle.style.display = 'none';
+            if (els.toggleVi) {
+                const settingRow = els.toggleVi.closest('.setting-item') || els.toggleVi.parentElement;
+                if (settingRow) settingRow.style.display = 'none';
+            }
+            // Nếu không có tiếng Việt, ép tắt showVietnamese
+            showVietnamese = false;
+        } else {
+            if (els.btnViToggle) els.btnViToggle.style.display = '';
+            if (els.toggleVi) {
+                const settingRow = els.toggleVi.closest('.setting-item') || els.toggleVi.parentElement;
+                if (settingRow) settingRow.style.display = '';
+            }
+        }
+
+        // Theme người dùng đã chọn trên blog được ưu tiên hơn state cũ của quiz
+        // Site theme will be handled by reading-panel.js
+        applyShuffle();
+        renderQuestion();
+        updateScores();
+        renderGrid(filterMode);
         els.btnViToggle.classList.toggle('active', showVietnamese);
         els.toggleVi.checked = showVietnamese;
         els.btnShuffle.classList.toggle('active', shuffleMode);
         els.toggleShuffle.checked = shuffleMode;
 
-        // Set quiz selector value
-        const selectQuiz = $('selectQuiz');
-        if (selectQuiz) {
-            selectQuiz.value = quizId;
-        }
+        // Dựng danh sách bộ đề từ manifest rồi chọn quiz hiện tại
+        populateQuizSelect();
+
+        // Cập nhật trạng thái active cho menu review
+        els.btnReviewAll.classList.toggle('active', filterMode === 'all');
+        els.btnReviewCorrect.classList.toggle('active', filterMode === 'correct');
+        els.btnReviewIncorrect.classList.toggle('active', filterMode === 'incorrect');
+        if (els.btnRedoIncorrect) els.btnRedoIncorrect.classList.toggle('active', filterMode === 'redo_incorrect');
+        els.btnReviewUnanswered.classList.toggle('active', filterMode === 'unanswered');
 
         if (!shuffleMode) {
             questionOrder = questions.map((_, i) => i);

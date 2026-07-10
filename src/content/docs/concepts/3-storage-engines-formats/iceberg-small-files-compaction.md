@@ -48,17 +48,13 @@ graph TD
     C1 --> D2["Data File 2 (12KB)"]
     C1 --> D3["... 99,998 Data Files khác"]
     
-    C2 --> D4["Data File X (512MB)<br/>Đã được Compaction"]
-    
-    style A fill:#2962FF,stroke:#333,stroke-width:2px,color:#fff
-    style B fill:#00B0FF,stroke:#333,stroke-width:2px,color:#fff
-    style C1 fill:#FF3D00,stroke:#333,stroke-width:2px,color:#fff
-    style D4 fill:#00E676,stroke:#333,color:#000
+    C2 --> D4["Data File X (512MB)<br/>Đã được Compaction"]
 ```
 
-> [!WARNING]
-> **Query Planning Bottleneck:** 
-> Trước khi thực thi bất kỳ query nào, Engine (Trino/Spark] phải đọc file Metadata để quyết định loại bỏ (Skip) các file không cần thiết dựa trên mệnh đề `WHERE` (Min/Max filtering). Nếu Manifest File phải lưu trữ metadata của hàng triệu Data Files, giai đoạn Query Planning có thể kéo dài hàng chục phút và làm tràn RAM của Spark Driver (lỗi `java.lang.OutOfMemoryError: Java heap space`).
+:::danger
+**Query Planning Bottleneck:** 
+Trước khi thực thi bất kỳ query nào, Engine (Trino/Spark] phải đọc file Metadata để quyết định loại bỏ (Skip) các file không cần thiết dựa trên mệnh đề `WHERE` (Min/Max filtering). Nếu Manifest File phải lưu trữ metadata của hàng triệu Data Files, giai đoạn Query Planning có thể kéo dài hàng chục phút và làm tràn RAM của Spark Driver (lỗi `java.lang.OutOfMemoryError: Java heap space`).
+:::
 
 ---
 
@@ -108,9 +104,10 @@ CALL catalog.system.rewrite_data_files(
 
 **Cơ chế:** Sort thông thường bị "thiên vị" [Biased]. Nếu sort theo `(A, B, C)`, query `WHERE A = x` rất nhanh, nhưng `WHERE B = y` phải Full Scan. **Z-Order Clustering** xen kẽ các bit nhị phân của nhiều cột, tạo ra tính cục bộ (Locality) đồng đều cho tất cả các cột tham gia Z-Order.
 
-> [!TIP]
-> **Best Practice thiết kế Z-Order:** 
-> Tính toán Z-Order cực kỳ đắt đỏ về mặt CPU. Chỉ nên chọn tối đa **2-4 cột** thường xuyên xuất hiện nhất trong các bộ lọc `WHERE`. Đưa quá nhiều cột sẽ gây ra hiệu ứng pha loãng [Curse of Dimensionality], làm suy giảm hiệu năng.
+:::tip
+**Best Practice thiết kế Z-Order:** 
+Tính toán Z-Order cực kỳ đắt đỏ về mặt CPU. Chỉ nên chọn tối đa **2-4 cột** thường xuyên xuất hiện nhất trong các bộ lọc `WHERE`. Đưa quá nhiều cột sẽ gây ra hiệu ứng pha loãng [Curse of Dimensionality], làm suy giảm hiệu năng.
+:::
 
 ```sql
 CALL catalog.system.rewrite_data_files(
@@ -147,9 +144,10 @@ CALL catalog.system.expire_snapshots(
 
 ### Bước 2: Remove Orphan Files
 Xóa các file vật lý mồ côi (không nằm trong bất kỳ Snapshot nào).
-> [!CAUTION]
-> **Rủi ro xóa nhầm In-flight Files:** 
-> Đừng bao giờ cấu hình `older_than = NOW(]` cho Orphan Files. Nếu một Spark Streaming Job đang ghi file xuống S3 nhưng chưa kịp commit Metadata lên Iceberg, việc quét Orphan ngay lúc đó sẽ xem file này là rác và xóa sổ nó (Data Corruption). Luôn lùi lại tối thiểu 3-5 ngày.
+:::danger
+**Rủi ro xóa nhầm In-flight Files:** 
+Đừng bao giờ cấu hình `older_than = NOW(]` cho Orphan Files. Nếu một Spark Streaming Job đang ghi file xuống S3 nhưng chưa kịp commit Metadata lên Iceberg, việc quét Orphan ngay lúc đó sẽ xem file này là rác và xóa sổ nó (Data Corruption). Luôn lùi lại tối thiểu 3-5 ngày.
+:::
 
 ```sql
 CALL catalog.system.remove_orphan_files(

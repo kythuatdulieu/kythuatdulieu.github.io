@@ -84,8 +84,6 @@ graph TD
         K -->|PSI > 0.25| M["PagerDuty Alert"]
         M -.->|Webhook Trigger| N["Auto-Retraining Pipeline"]
     end
-    
-    classDef storage fill:#f9f6e5,stroke:#b8a36c;
     class B,C,D,E,G,K storage;
 ```
 

@@ -114,16 +114,10 @@
         let node;
         while (node = walk.nextNode()) {
             const parent = node.parentNode;
-            if (parent && (
-                parent.tagName === 'CODE' || 
-                parent.tagName === 'PRE' || 
-                parent.tagName === 'A' || 
-                parent.tagName === 'H1' || 
-                parent.tagName === 'H2' || 
-                parent.tagName === 'H3' || 
-                parent.tagName === 'H4' || 
-                parent.classList.contains('concept-link')
-            )) {
+            // Bỏ qua cả tổ tiên (không chỉ parent trực tiếp): link lồng link là HTML sai,
+            // và vùng .not-content (trang chủ, danh sách quiz) là chrome, không phải bài viết.
+            if (parent && parent.closest &&
+                parent.closest('a, code, pre, h1, h2, h3, h4, .concept-link, .not-content')) {
                 continue;
             }
             textNodes.push(node);

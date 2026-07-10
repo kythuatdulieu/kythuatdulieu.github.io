@@ -1,0 +1,427 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "What is the definition of generative AI?",
+    "options": {
+      "A": "A type of predictive model that estimates a relationship by fitting a line to the observed data.",
+      "B": "A type of artificial intelligence that can create new content and ideas, including text, images, music, and code.",
+      "C": "A type of machine learning algorithm inspired by the human brain that is made up of interconnected nodes.",
+      "D": "A type of artificial intelligence that enables a system to autonomously learn and improve using neural networks and deep learning."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Generative AI (AI tạo sinh) là một nhánh của trí tuệ nhân tạo tập trung vào việc tạo ra nội dung mới như văn bản, hình ảnh, âm nhạc, mã nguồn, v.v., thay vì chỉ phân tích dữ liệu có sẵn.",
+    "references": null
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "A company wants to use an AI agent to automate some tasks. They want everyone to understand the different functions of an AI agent. What is the function of an AI agent in the context of gen AI?",
+    "options": {
+      "A": "To provide the computational resources needed to train and run gen AI models.",
+      "B": "To store and manage large datasets used for training and running gen AI models.",
+      "C": "To provide a user-friendly interface for interacting with gen AI models.",
+      "D": "To analyze situations, use multiple tools, and make informed decisions without requiring constant human input."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong ngữ cảnh Gen AI, một tác nhân AI (AI agent) có khả năng tự động phân tích các tình huống, lập kế hoạch, sử dụng các công cụ khác nhau và đưa ra quyết định độc lập để hoàn thành mục tiêu mà không cần sự giám sát hay can thiệp liên tục của con người.",
+    "references": null
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "What is the definition of an AI agent?",
+    "options": {
+      "A": "An application that learns how to achieve a goal based on inputs and tools available to it.",
+      "B": "A human expert who oversees and manages the operation of a gen AI application.",
+      "C": "A type of user interface that allows users to interact with a gen AI application.",
+      "D": "A static component of a gen AI application that provides information to the user."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "AI Agent (Tác nhân AI) được định nghĩa là một ứng dụng có khả năng học hỏi và tự động tìm cách đạt được mục tiêu đề ra dựa trên các thông tin đầu vào (inputs) và các công cụ (tools) có sẵn.",
+    "references": null
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "A company is developing an AI character for a video game. The AI character needs to learn how to navigate a complex environment and make decisions to achieve certain objectives within the game. When the AI takes actions that lead to positive outcomes like finding a reward or overcoming an obstacle, it receives a positive score. When it takes actions that lead to negative outcomes, like hitting a wall or losing progress, it receives a negative score. Through this process of trial and error, the AI gradually improves the character’s ability to play the game effectively. What machine learning should the company use?",
+    "options": {
+      "A": "Unsupervised learning",
+      "B": "Reinforcement learning",
+      "C": "Supervised learning",
+      "D": "Deep learning"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Học tăng cường (Reinforcement learning) là phương pháp học máy dựa trên cơ chế thử và sai (trial and error), trong đó mô hình (hoặc tác nhân) học cách tối đa hóa điểm thưởng (phần thưởng tích lũy) thông qua các hành động tương tác với môi trường xung quanh.",
+    "references": null
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "A financial services company receives a high volume of loan applications daily submitted as scanned documents and PDFs with varying layouts. The manual process of extracting key information is time-consuming and prone to errors. This causes delays in loan processing and impacts customer satisfaction. The company wants to automate the extraction of this critical data to improve efficiency and accuracy. Which Google Cloud tool should they use?",
+    "options": {
+      "A": "Document AI API",
+      "B": "Natural Language API",
+      "C": "Vision AI",
+      "D": "Dataflow"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Google Cloud Document AI là dịch vụ chuyên dụng giúp tự động hóa việc trích xuất dữ liệu có cấu trúc từ các tài liệu như hóa đơn, đơn xin vay vốn, hợp đồng dưới dạng file quét (scanned documents) hoặc PDF, giúp tăng tốc độ xử lý và giảm thiểu sai sót thủ công.",
+    "references": null
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "A research team has collected a large dataset of sensor readings from various industrial machines. This dataset includes measurements like temperature, pressure vibration levels and electrical current recorded at regular intervals. The team has not yet assigned any labels or categories to these readings and wants to identify potential anomalies, malfunctions or natural groupings of machine behavior based on the sensor data alone. What type of machine learning should they use?",
+    "options": {
+      "A": "Deep learning",
+      "B": "Reinforcement learning",
+      "C": "Supervised learning",
+      "D": "Unsupervised learning"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Học không giám sát (Unsupervised learning) là phương pháp học máy được sử dụng khi dữ liệu không có nhãn hoặc phân loại trước. Nó giúp tìm ra các cấu trúc ẩn, các nhóm tự nhiên (clustering) hoặc phát hiện bất thường (anomaly detection) dựa trên các thuộc tính của chính dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "A company has a machine learning project that involves diverse data types like streaming data and structured databases. How does Google Cloud support data gathering for this project?",
+    "options": {
+      "A": "Google Cloud’s strengths are in the data analysis tools such as BigQuery.",
+      "B": "The Gemini app is the primary Google Cloud tool for directly collecting data.",
+      "C": "Google Cloud relies on Vertex AI to connect to external data.",
+      "D": "Google Cloud provides tools such as Pub/Sub, Cloud Storage, and Cloud SQL."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Google Cloud cung cấp một dải rộng các công cụ để thu thập và lưu trữ dữ liệu đa dạng bao gồm dữ liệu truyền phát (streaming data) qua Pub/Sub, dữ liệu phi cấu trúc qua Cloud Storage và dữ liệu có cấu trúc qua các dịch vụ cơ sở dữ liệu như Cloud SQL.",
+    "references": null
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "A security team needs a centralized platform to gain a comprehensive overview of their organization’s security health across their entire Google Cloud environment, including potential threats to their generative AI deployments. Which Google Cloud security offering is specifically for this purpose?",
+    "options": {
+      "A": "Identity and Access Management",
+      "B": "Workload monitoring tools",
+      "C": "Security Command Center",
+      "D": "Secure-Py-design infrastructure"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Security Command Center (SCC) là nền tảng quản lý rủi ro và bảo mật tập trung của Google Cloud, cung cấp khả năng hiển thị toàn diện về tình trạng bảo mật, phát hiện các mối đe dọa và cấu hình sai trên toàn bộ tài nguyên cloud, bao gồm cả các ứng dụng Generative AI.",
+    "references": null
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "An organization with a team of live customer service agents wants to improve agent efficiency and customer satisfaction during support interactions. They are looking for a tool that can provide real-time guidance to agents, suggest helpful information, and streamline the support process without fully automating customer conversations. Which component of Google’s Customer Engagement Suite should they use?",
+    "options": {
+      "A": "Google Cloud Contact Center as a Service",
+      "B": "Conversational Insights",
+      "C": "Agent Assist",
+      "D": "Conversational Agents"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Agent Assist là thành phần trong bộ giải pháp Customer Engagement của Google được thiết kế đặc biệt nhằm hỗ trợ các nhân viên chăm sóc khách hàng bằng cách đưa ra gợi ý, tài liệu tham khảo và câu trả lời theo thời gian thực trong cuộc hội thoại để tối ưu hóa hiệu suất làm việc.",
+    "references": null
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "What is a characteristic of Google Cloud as a generative AI company?",
+    "options": {
+      "A": "Google Cloud relies on proprietary, closed-source AI technologies for maximum security benefits.",
+      "B": "Google Cloud has an AI-first focus that enables innovation, with continuous updates and broad integration across its platform.",
+      "C": "Google Cloud ensures that all generative AI models and data are completely secured and isolated from external networks.",
+      "D": "Google Cloud provides fully autonomous AI agents that require zero configuration or management overhead."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một đặc điểm nổi bật của Google Cloud là định hướng tập trung vào \"AI-first\", liên tục đổi mới sáng tạo, cập nhật nhanh chóng các mô hình và công cụ AI mới, đồng thời tích hợp rộng rãi các tính năng AI này trên toàn bộ hệ sinh thái dịch vụ đám mây của mình.",
+    "references": null
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "A highly regulated financial institution wants to use Gemini as the core decision engine for a loan approval system that will deterministically approve or reject loan applications based on a strict set of predefined criteria. Why is this an inappropriate use case for Gemini?",
+    "options": {
+      "A": "Gemini deployment for this scenario would be too expensive and complex.",
+      "B": "Gemini’s designed for flexible content generation and inference, not rigid rule-based decisions.",
+      "C": "Gemini is not equipped to handle structured numerical data for financial assessments.",
+      "D": "Gemini cannot integrate with required financial databases."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Gemini là một mô hình ngôn ngữ lớn (LLM) được thiết kế cho việc suy luận ngữ cảnh và tạo nội dung linh hoạt, có tính chất xác suất. Do đó, nó không phù hợp để làm công cụ quyết định tất định (deterministic) dựa trên các quy tắc cứng nhắc và nghiêm ngặt của hệ thống duyệt khoản vay.",
+    "references": null
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "A pharmaceutical company’s research and development department spends significant time manually reviewing new scientific papers to identify potential drug targets. They need a solution that can answer questions about these documents and provide summarized insights to researchers without requiring extensive coding expertise. What should the organization do?",
+    "options": {
+      "A": "Use Vertex AI Agent Builder to create a custom AI agent.",
+      "B": "Use Vertex AI Search to index the papers and enable keyword-based searches.",
+      "C": "Use Gemini for Google Workspace to facilitate collaborative document review.",
+      "D": "Use Vertex AI AutoML to train a model that classifies papers into predefined research areas."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Vertex AI Agent Builder cho phép các tổ chức nhanh chóng xây dựng và triển khai các tác nhân AI (AI agents) tùy chỉnh có khả năng tìm kiếm, trả lời câu hỏi và tóm tắt thông tin trên tập tài liệu nội bộ (như tài liệu nghiên cứu y khoa) mà không đòi hỏi kỹ năng lập trình chuyên sâu.",
+    "references": null
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "A company’s development team is eager to start building generative AI solutions with Google Cloud, but has limited experience in AI development. They need to launch their gen AI solution quickly. What Google Cloud benefit would help the company achieve their goal?",
+    "options": {
+      "A": "Google Cloud’s pre-trained models and low- and no-code AI tools and services.",
+      "B": "Google Cloud’s focus on continuous improvement provides access to the latest AI tools, features, and best practices.",
+      "C": "Google Cloud’s comprehensive training materials and tutorials to help developers.",
+      "D": "Google Cloud’s collaborative AI community and support forums connect developers with AI experts."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Đối với đội ngũ phát triển chưa có nhiều kinh nghiệm về AI, việc sử dụng các mô hình đã được huấn luyện sẵn (pre-trained models) và các dịch vụ AI low-code hoặc no-code của Google Cloud là giải pháp tối ưu giúp họ xây dựng và triển khai ứng dụng Gen AI một cách nhanh chóng.",
+    "references": null
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "A marketing team wants to use a foundation model to create social media and advertising campaigns. They want to create written articles and images from text. They lack deep AI expertise and need a versatile solution. Which Google foundation model should they use?",
+    "options": {
+      "A": "Gemini",
+      "B": "Gemma",
+      "C": "Veo",
+      "D": "Imagen"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Gemini là mô hình nền tảng đa phương thức (multimodal) linh hoạt của Google, có khả năng xử lý và tạo ra nhiều dạng nội dung khác nhau như văn bản (viết bài quảng cáo) và hình ảnh từ các câu lệnh (prompts), rất phù hợp cho đội ngũ marketing cần giải pháp đa năng.",
+    "references": null
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "The office of the CISO wants to use generative AI (gen AI) to help automate tasks like summarizing case information, researching threats, and taking actions like creating detection rules. What agent should they use?",
+    "options": {
+      "A": "Data agent",
+      "B": "Security agent",
+      "C": "Customer service agent",
+      "D": "Code agent"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một tác nhân bảo mật (security agent) được thiết kế chuyên biệt để hỗ trợ văn phòng Giám đốc An ninh thông tin (CISO) thực hiện các tác vụ tự động hóa liên quan đến phân tích mối đe dọa, tóm tắt sự cố bảo mật và đề xuất các quy tắc phát hiện mã độc.",
+    "references": null
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "What will Google Cloud’s Agent Assist help a company achieve?",
+    "options": {
+      "A": "The ability to analyze conversational data to identify customer sentiment, common topics of discussion, and insights into agent performance and customer experience.",
+      "B": "The ability to provide real-time assistance and recommended responses to live customer service agents during their interactions.",
+      "C": "The infrastructure to provide an enterprise-grade contact center solution with omnichannel support, routing, and integration with CRM systems.",
+      "D": "The ability to build and deploy deterministic and generative chatbot agents for automated customer support."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Agent Assist giúp cải thiện hiệu quả của trung tâm chăm sóc khách hàng bằng cách cung cấp các gợi ý câu trả lời và tài liệu hỗ trợ theo thời gian thực cho nhân viên tư vấn trong lúc họ đang trò chuyện trực tiếp với khách hàng.",
+    "references": null
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "A software developer needs a highly efficient, open-source large language model that can be fine-tuned on a local machine for rapid prototyping of a chatbot application. They require a model that offers strong performance in natural language understanding and generation, while being lightweight enough to run on limited hardware. Which Google-developed family of models should they use?",
+    "options": {
+      "A": "Gemma",
+      "B": "Imagen",
+      "C": "Gemini",
+      "D": "Veo"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Gemma là dòng mô hình ngôn ngữ mở (open-source), gọn nhẹ và hiệu năng cao do Google phát triển, cho phép các lập trình viên dễ dàng chạy thử nghiệm, tinh chỉnh (fine-tune) và vận hành trực tiếp trên phần cứng máy cá nhân hoặc máy có tài nguyên hạn chế.",
+    "references": null
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "A company is exploring Google Agentspace to improve how its employees search for information on their enterprise systems and automate certain tasks. What is the key business advantage of using Agentspace?",
+    "options": {
+      "A": "Enhanced real-time communication and collaboration among team members.",
+      "B": "More granular control over support team access and permissions for sensitive data.",
+      "C": "Improved productivity and data interaction using AI assistants and advanced document analysis.",
+      "D": "Greater interoperability with legacy software systems and databases."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Google Agentspace mang lại lợi ích kinh doanh cốt lõi là tăng cường năng suất và khả năng tương tác với dữ liệu của nhân viên nhờ vào các trợ lý AI thông minh cùng với các tính năng phân tích tài liệu nâng cao trên toàn hệ thống doanh nghiệp.",
+    "references": null
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "An organization wants granular control over who can use and see their generative AI models and related resources on Google Cloud. Which Google Cloud security offering is specifically for this purpose?",
+    "options": {
+      "A": "Workload monitoring tools.",
+      "B": "Secure-by-design infrastructure.",
+      "C": "Identity and Access Management.",
+      "D": "Security Command Center."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Identity and Access Management (IAM) của Google Cloud cung cấp khả năng kiểm soát truy cập chi tiết (granular control), cho phép quản trị viên xác định ai (hoặc ứng dụng nào) có quyền sử dụng và xem các tài nguyên AI tạo sinh cùng các tài nguyên liên quan.",
+    "references": null
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "A company wants a generative AI platform that provides the infrastructure, tools, and pre-trained models needed to build, deploy, and manage its generative AI solutions. Which Google Cloud offering should the company use?",
+    "options": {
+      "A": "BigQuery",
+      "B": "Google Kubernetes Engine (GKE)",
+      "C": "Google Cloud Storage",
+      "D": "Vertex AI"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Vertex AI là nền tảng máy học và trí tuệ nhân tạo toàn diện của Google Cloud, cung cấp đầy đủ cơ sở hạ tầng, công cụ phát triển, cùng các mô hình nền tảng được huấn luyện sẵn để xây dựng, triển khai và quản lý các giải pháp Gen AI.",
+    "references": null
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "A company wants to create an AI-powered educational solution that provides personalized learning experiences for students. This platform will assess a student’s knowledge, recommend relevant learning materials and generate personalized exercises. The application would provide the structure for lessons and track progress. What type of AI solution should they use?",
+    "options": {
+      "A": "A learning management system (LMS)",
+      "B": "A customized learning agent",
+      "C": "An AI-powered recommendation system for learning resources",
+      "D": "A large language model fine-tuned on educational content"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một tác nhân học tập tùy chỉnh (customized learning agent) có khả năng tự động hóa và cá nhân hóa trải nghiệm học tập cho từng học sinh thông qua việc đánh giá kiến thức, đề xuất lộ trình và tạo các bài tập phù hợp với tiến độ riêng của từng cá nhân.",
+    "references": null
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "A data science team needs a centralized and organized location to store its various model versions, track their metadata, and easily deploy them to the respective applications. What Google Cloud service should they use?",
+    "options": {
+      "A": "Cloud Storage",
+      "B": "Verte AI Pipelines",
+      "C": "BigQuery",
+      "D": "Model Registry"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Vertex AI Model Registry là kho lưu trữ tập trung của Google Cloud giúp quản lý các phiên bản mô hình máy học, theo dõi siêu dữ liệu của chúng và hỗ trợ triển khai nhanh chóng các mô hình này lên các môi trường ứng dụng thực tế.",
+    "references": null
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "What is an example of unsupervised machine learning?",
+    "options": {
+      "A": "Predicting subscription renewal based on past renewal status data.",
+      "B": "Training a system to recognize product images using labeled categories.",
+      "C": "Analyzing customer purchase patterns to identify natural groupings.",
+      "D": "Forecasting sales figures using historical sales and marketing spend."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc phân tích hành vi mua sắm của khách hàng để tìm ra các nhóm tự nhiên (phân khúc khách hàng) mà không dựa trên bất kỳ nhãn định sẵn nào là một ví dụ điển hình của học không giám sát (unsupervised learning) sử dụng thuật toán phân cụm (clustering).",
+    "references": null
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "A large multinational corporation with geographically dispersed teams struggles with knowledge silos and inconsistent access to crucial internal information. What is a key business benefit of using Google Agentspace in this scenario?",
+    "options": {
+      "A": "Automation of employee performance reviews using AI.",
+      "B": "Seamless knowledge sharing and collaboration across internal systems.",
+      "C": "Improved IT infrastructure management across offices.",
+      "D": "Enhanced data encryption and compliance for internal communications."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Google Agentspace giúp phá bỏ các rào cản thông tin (knowledge silos) trong các tổng công ty đa quốc gia bằng cách kết nối và tự động tìm kiếm, chia sẻ tri thức một cách liền mạch giữa các hệ thống nội bộ khác nhau.",
+    "references": null
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "A company’s sales team spends a significant amount of time researching potential leads and manually entering data into their customer relationship management (CRM) tool. They want to improve the team’s efficiency and enable them to focus on building relationships and closing deals. What should the organization do?",
+    "options": {
+      "A": "Develop a custom AI solution using Google Cloud’s AutoML Natural Language to analyze lead communications and automatically update the CRM.",
+      "B": "Implement Google Cloud’s Contact Center AI to qualify leads and route them to the appropriate sales representatives.",
+      "C": "Implement Google Agentspace \"unified enterprise search\" including a CRM agent to automate lead research and data entry.",
+      "D": "Integrate the CRM with a popular sales intelligence platform to automatically enrich lead profiles with valuable data."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Triển khai Google Agentspace tích hợp tính năng \"tìm kiếm doanh nghiệp hợp nhất\" kết hợp với tác nhân CRM giúp tự động hóa quá trình nghiên cứu khách hàng tiềm năng và nhập liệu trực tiếp vào hệ sinh thái CRM, giảm tải công việc thủ công cho đội ngũ bán hàng.",
+    "references": null
+  }
+]

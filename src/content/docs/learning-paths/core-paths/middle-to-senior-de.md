@@ -1,77 +1,144 @@
 ---
-title: Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)
-description: Lộ trình trở thành kỹ sư cao cấp, làm chủ các hệ thống phân tán, xử lý dữ liệu lớn Big Data, tối ưu hiệu năng và triển khai CI/CD hạ tầng.
+title: "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+description: "Lộ trình lên Senior Data Engineer: hệ thống phân tán, Spark, lakehouse, observability, reliability và thiết kế kiến trúc."
 sidebar:
   order: 3
 prev:
   link: /learning-paths/core-paths/junior-to-middle-de/
-  label: Junior to Middle Data Engineer
-next:
-  link: /learning-paths/leadership-culture/de-traits-and-mindset/
-  label: Lãnh đạo & Văn hóa Data
+  label: "Junior to Middle Data Engineer"
 ---
 
-Tại cấp độ Senior, bạn không chỉ tạo ra các đường ống dữ liệu (pipelines) chạy được, mà phải đảm bảo chúng chạy **nhanh nhất, rẻ nhất, và không thể gãy (fault-tolerant)** dưới áp lực của hàng Petabytes dữ liệu.
+Senior Data Engineer không được đánh giá bằng số tool biết dùng. Điểm khác biệt nằm ở khả năng nhìn pipeline như một hệ thống: dữ liệu lớn lên, schema đổi, job chậm dần, chi phí tăng, sự cố xảy ra ngoài giờ, và nhiều đội phụ thuộc vào cùng một bảng.
 
-## Mục tiêu lộ trình
+Chặng này tập trung vào năng lực thiết kế, tối ưu và vận hành.
 
-* Xử lý độ trễ (latency), khả năng mở rộng (scalability) ở quy mô Big Data.
-* Tối ưu hóa chuyên sâu các công cụ tính toán phân tán (như Apache Spark).
-* Xây dựng kiến trúc Data Lakehouse và tự động hóa chất lượng dữ liệu.
+## Checkpoint cần đạt
 
-## Bắt đầu từ đâu? (Prerequisites)
+- Đọc được execution plan và hiểu chi phí của shuffle, join, scan, spill.
+- Tối ưu Spark hoặc warehouse bằng partitioning, join strategy, file layout và incremental design.
+- Hiểu lakehouse/table format: schema evolution, snapshot, compaction, time travel.
+- Thiết kế data observability: freshness, volume, schema, distribution, lineage.
+- Viết design doc cho thay đổi lớn và bảo vệ trade-off trước team.
+- Biết khi nào không nên thêm công nghệ mới.
 
-* **Hoàn thành chặng đường:** 👉 **[Junior to Middle Data Engineer](/learning-paths/core-paths/junior-to-middle-de/)**.
-* **Kinh nghiệm:** Trên 3 năm thực chiến.
-* **Mong muốn:** Trở thành người thiết kế hệ thống (System Architect) hoặc giải quyết các sự cố dữ liệu phức tạp nhất trong tổ chức.
+## 1. Hệ thống phân tán thực tế
 
-## Kỹ năng cốt lõi
+Ở cấp này, “dữ liệu lớn” không chỉ là nhiều GB/TB. Nó là tập hợp các vấn đề:
 
-### 1. Kiến trúc Hệ thống Phân tán (Distributed Systems)
-Làm việc với mạng lưới hàng trăm máy chủ chạy song song.
-* Hiểu sâu về định lý **CAP Theorem** (Sự đánh đổi giữa Nhất quán - Sẵn sàng - Chịu lỗi).
-* Khái niệm Master-Worker, cơ chế đồng thuận (Consensus), Network Partitions.
+| Vấn đề | Dấu hiệu |
+|---|---|
+| Data skew | Một vài task chạy rất lâu trong khi task khác đã xong. |
+| Shuffle lớn | Job tốn network và disk, dễ spill. |
+| Small files | Metadata nhiều, query chậm, compaction cần thiết. |
+| Late data | Dashboard hôm qua thay đổi sau khi đã công bố. |
+| Schema drift | Source thêm/sửa/xóa field làm downstream fail hoặc sai âm thầm. |
+| Retry không an toàn | Một lỗi tạm thời biến thành duplicate data. |
 
-### 2. Tối ưu hóa Apache Spark chuyên sâu
-Vượt xa việc chỉ dùng `.filter()` hay `.groupBy()`.
-* Nắm vững cơ chế của **[Catalyst Optimizer](/concepts/4-compute-engines-batch/apache-spark)**.
-* Xử lý "ác mộng" **[Out of Memory (OOM) / Data Skew](/concepts/4-compute-engines-batch/data-skew)**.
-* Tối ưu hóa **[Shuffle](/concepts/4-compute-engines-batch/shuffle)** và sử dụng `Broadcast Joins` để tránh dữ liệu chạy chéo mạng.
+Senior cần biết phân biệt triệu chứng và nguyên nhân. Job chậm không nhất thiết do “thiếu cluster”; có thể do model sai grain, join key lệch, partition quá nhỏ hoặc query scan toàn bảng.
 
-### 3. Open Table Formats (Iceberg / Delta / Hudi)
-Chuyển đổi [Data Lake](/concepts/3-storage-engines-formats/data-lake) thô sơ thành [Data Lakehouse](/concepts/3-storage-engines-formats/lakehouse) có tính năng giao dịch ACID.
-* **[Delta Lake](/concepts/3-storage-engines-formats/delta-lake):** Nhật ký giao dịch (Transaction Log).
-* **[Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg):** Cây siêu dữ liệu (Metadata Tree) khắc phục điểm yếu của Hive Metastore.
-* **[Apache Hudi](/concepts/3-storage-engines-formats/apache-hudi):** Tối ưu hóa cho Streaming (Merge-on-Read).
+Đọc trong site: [Distributed Processing](/concepts/4-compute-engines-batch/distributed-processing/), [Shuffle](/concepts/4-compute-engines-batch/shuffle/), [Data Skew](/concepts/4-compute-engines-batch/data-skew/), [Spark Data Skew Salting](/concepts/4-compute-engines-batch/spark-data-skew-salting/), [Backpressure Handling](/concepts/2-data-ingestion-integration/backpressure-handling/).
 
-### 4. Khung quản trị chất lượng dữ liệu (Data Quality Framework)
-Dữ liệu sai nguy hiểm hơn không có dữ liệu. Áp dụng mô hình **WAP (Write-Audit-Publish)**:
-* **Write:** Ghi dữ liệu vào vùng đệm (Staging).
-* **Audit:** Kiểm định tự động với `Great Expectations` hoặc `Soda`.
-* **Publish:** Chỉ cấp quyền truy cập nếu dữ liệu "Sạch".
+## 2. Spark và compute engine
 
-### 5. Infrastructure as Code (IaC)
-Tự động hóa hoàn toàn cơ sở hạ tầng.
-* Dùng **Terraform** để định nghĩa S3 Buckets, IAM Roles, Databricks Clusters bằng code. Đảm bảo môi trường (Dev/Staging/Prod) đồng nhất và có thể dễ dàng khôi phục.
+Spark đáng học vì nó buộc bạn hiểu cách distributed compute vận hành: driver, executor, task, stage, shuffle, broadcast, cache, spill. Tài liệu Spark chính thức mô tả Spark như một engine cho xử lý dữ liệu lớn, có Spark SQL, DataFrame/Dataset và Structured Streaming, nên nó là một nền tốt để học cơ chế hơn là học API rời rạc: [Apache Spark Documentation](https://spark.apache.org/docs/latest/).
+
+Thứ tự học nên là:
+
+1. DataFrame/Spark SQL trước RDD.
+2. Lazy evaluation, stage và task.
+3. Join strategy: broadcast, sort-merge, shuffle hash.
+4. Partition sizing và file sizing.
+5. Adaptive Query Execution, skew handling.
+6. Monitoring qua Spark UI.
+
+Một Senior không chỉ “tăng executor”. Senior hỏi: dữ liệu có đang được phân phối đều không, query có filter partition không, bảng dimension có đủ nhỏ để broadcast không, và output có tạo hàng nghìn file bé không.
+
+Đọc trong site: [Apache Spark](/concepts/4-compute-engines-batch/apache-spark/), [Spark Execution Model](/concepts/4-compute-engines-batch/spark-execution-model/), [Spark Jobs, Stages, Tasks](/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/), [Spark Joins](/concepts/4-compute-engines-batch/spark-joins/), [Spark AQE](/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/), [Troubleshooting Spark OOM](/concepts/4-compute-engines-batch/troubleshooting-spark-oom/).
+
+## 3. Lakehouse và open table format
+
+Parquet là file format, không phải hệ quản trị bảng. Khi dữ liệu cần update, delete, schema evolution, snapshot isolation hoặc time travel, bạn cần table format như Apache Iceberg, Delta Lake hoặc Hudi. Iceberg và Delta Lake đều tài liệu hóa các khái niệm bảng, snapshot và thao tác trên lakehouse ở mức table format, không chỉ ở mức file: [Apache Iceberg](https://iceberg.apache.org/docs/latest/) và [Delta Lake](https://docs.delta.io/).
+
+| Năng lực | Cần hiểu |
+|---|---|
+| Snapshot | Query đọc một phiên bản nhất quán của bảng. |
+| Schema evolution | Thêm/sửa field mà không phá reader cũ. |
+| Partition evolution | Thay đổi chiến lược partition theo thời gian. |
+| Compaction | Gom file nhỏ để giảm metadata và tăng tốc query. |
+| Retention/VACUUM | Dọn dữ liệu cũ nhưng không phá rollback/time travel. |
+
+Đọc trong site: [Lakehouse](/concepts/3-storage-engines-formats/lakehouse/), [Table Format](/concepts/3-storage-engines-formats/table-format/), [Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg/), [Delta Lake](/concepts/3-storage-engines-formats/delta-lake/), [Schema Evolution](/concepts/3-storage-engines-formats/schema-evolution/), [Compaction](/concepts/3-storage-engines-formats/compaction/), [Time Travel](/concepts/3-storage-engines-formats/time-travel/).
+
+## 4. Observability cho dữ liệu
+
+Monitoring hạ tầng chưa đủ. Pipeline có thể “xanh” nhưng dữ liệu vẫn sai. Hãy đo:
+
+- Freshness: bảng có cập nhật đúng kỳ vọng không?
+- Volume: số dòng hôm nay có bất thường không?
+- Schema: field có đổi kiểu hoặc biến mất không?
+- Distribution: giá trị có drift không?
+- Lineage: bảng nào bị ảnh hưởng nếu source đổi?
+- Business checks: tổng doanh thu, số đơn, tỷ lệ hoàn tiền có hợp lý không?
+
+```mermaid
+flowchart LR
+    A["Source"] --> B["Raw"]
+    B --> C["Staging"]
+    C --> D["Mart"]
+    D --> E["Dashboard / ML"]
+    B -. "schema, volume" .-> O["Observability"]
+    C -. "tests, freshness" .-> O
+    D -. "business reconciliation" .-> O
+```
+
+Đọc trong site: [Data Observability](/concepts/7-dataops-orchestration-quality/data-observability/), [Freshness Monitoring](/concepts/7-dataops-orchestration-quality/freshness-monitoring/), [Volume Anomalies](/concepts/7-dataops-orchestration-quality/volume-anomalies/), [Schema Drift](/concepts/7-dataops-orchestration-quality/schema-drift/), [Data Lineage](/concepts/8-security-governance-finops/data-lineage/), [Root Cause Analysis](/concepts/7-dataops-orchestration-quality/root-cause-analysis/).
+
+## 5. Thiết kế và giao tiếp
+
+Senior thường chịu trách nhiệm cho quyết định khó đổi. Trước khi migration orchestration, đổi table format, tách platform hay thêm streaming, hãy viết design doc:
+
+- Bối cảnh và vấn đề hiện tại.
+- Mục tiêu và non-goals.
+- Phương án đề xuất.
+- Các phương án bị loại và lý do.
+- Rủi ro vận hành, bảo mật, chi phí.
+- Kế hoạch rollout, rollback, đo thành công.
+
+Không có design doc thì review kiến trúc dễ biến thành tranh luận cảm tính.
+
+## Checklist đọc concept
+
+| Mốc học | Concept nội bộ cần đọc |
+|---|---|
+| Debug compute | [Shuffle](/concepts/4-compute-engines-batch/shuffle/), [Spark Execution Model](/concepts/4-compute-engines-batch/spark-execution-model/), [Data Skew](/concepts/4-compute-engines-batch/data-skew/) |
+| Tối ưu Spark | [Spark Joins](/concepts/4-compute-engines-batch/spark-joins/), [Spark AQE](/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/), [Spark Spill to Disk](/concepts/4-compute-engines-batch/spark-spill-to-disk/) |
+| Lakehouse | [Lakehouse](/concepts/3-storage-engines-formats/lakehouse/), [Table Format](/concepts/3-storage-engines-formats/table-format/), [Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg/) |
+| Vận hành | [Data Observability](/concepts/7-dataops-orchestration-quality/data-observability/), [Alerting Incident Response](/concepts/7-dataops-orchestration-quality/alerting-incident-response/), [Cost Optimization](/concepts/8-security-governance-finops/cost-optimization/) |
 
 ## Dự án thực hành
 
-**Dự án:** Kiến tạo và Tối ưu Data Lakehouse quy mô lớn
-* **Công cụ:** AWS S3, Apache Iceberg, Apache Spark, Terraform.
-* **Nhiệm vụ:**
-  1. Dùng Terraform tự động hóa khởi tạo S3 Bucket và cấp quyền IAM.
-  2. Xây dựng Data Lakehouse bằng định dạng Iceberg.
-  3. Viết script Spark sinh ra 1 Terabyte dữ liệu "bị lệch" (Data skew) cố ý.
-  4. Thực hiện Tối ưu hóa Spark (Salting key, Broadcast join) để giải quyết lỗi tràn RAM.
-* **Kết quả:** Sở hữu kỹ năng phân tích lỗi hệ thống phân tán và quản trị bằng Code.
+**Dự án: Lakehouse performance and reliability lab**
 
-## Góc phỏng vấn (Interview QA)
+1. Tạo dataset clickstream hoặc order lớn theo ngày.
+2. Lưu dạng Parquet, sau đó chuyển sang Iceberg hoặc Delta.
+3. Chạy các truy vấn có filter, join, aggregation.
+4. Tạo tình huống small files và compaction.
+5. Tạo schema evolution có kiểm soát.
+6. Thêm freshness, volume và reconciliation checks.
+7. Viết design doc giải thích lựa chọn kiến trúc.
 
-* **Thiết kế hệ thống (System Design):** Vẽ kiến trúc hệ thống tổng hợp Clickstream theo thời gian thực (Real-time).
-* **Spark Internals:** Giải thích cách Spark thực thi một truy vấn `JOIN` phân tán dưới mui xe?
-* **Tối ưu Lakehouse:** Trình bày nguyên nhân và giải pháp cho vấn đề "Nhiều tệp tin nhỏ" (**Small files problem**) trên Data Lake.
+## Góc phỏng vấn
 
-## Bước tiếp theo
+- Vì sao shuffle đắt? Khi nào broadcast join có lợi?
+- Data skew phát hiện và xử lý thế nào?
+- Lakehouse khác data lake lưu Parquet thuần ở điểm nào?
+- Observability khác data quality test ra sao?
+- Nếu pipeline quan trọng bị trễ 2 giờ, bạn xử lý theo thứ tự nào?
 
-Khi bạn đã vững vàng với công nghệ, con đường tiếp theo là nhân rộng tầm ảnh hưởng (Impact) và dẫn dắt đội ngũ.
-👉 **[Lãnh đạo & Văn hóa Kỹ thuật](/learning-paths/leadership-culture/de-traits-and-mindset/)**
+## References
+
+- [Apache Spark Documentation](https://spark.apache.org/docs/latest/) - Apache Software Foundation.
+- [Apache Iceberg Documentation](https://iceberg.apache.org/docs/latest/) - Apache Software Foundation.
+- [Delta Lake Documentation](https://docs.delta.io/) - Linux Foundation Delta Lake.
+- [Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) - Google SRE.
+- [Architecture decision records](https://cloud.google.com/architecture/architecture-decision-records) - Google Cloud.

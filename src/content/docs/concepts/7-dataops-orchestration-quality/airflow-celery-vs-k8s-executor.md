@@ -30,11 +30,7 @@ flowchart LR
     Broker -- Pull Task --> Worker2["Celery Worker 2 ('Concurrency: 16')"]
     
     Worker1 -- Write State --> DB[("Metadata DB\n(PostgreSQL)")]
-    Worker2 -- Write State --> DB
-    
-    style Broker fill:#f9f,stroke:#333,stroke-width:2px
-    style Worker1 fill:#bbf,stroke:#333,stroke-width:2px
-    style Worker2 fill:#bbf,stroke:#333,stroke-width:2px
+    Worker2 -- Write State --> DB
 ```
 
 *Cấu hình `airflow.cfg` kinh điển:*
@@ -65,11 +61,7 @@ flowchart TD
     end
     
     Pod1 -- Write State --> DB[("Metadata DB")]
-    Pod2 -- Write State --> DB
-    
-    style K8sAPI fill:#f96,stroke:#333,stroke-width:2px
-    style Pod1 fill:#bfb,stroke:#333,stroke-width:1px
-    style Pod2 fill:#bfb,stroke:#333,stroke-width:1px
+    Pod2 -- Write State --> DB
 ```
 
 ---

@@ -9,7 +9,7 @@ difficulty: "Intermediate"
 domains: ["DE"]
 level: "Middle"
 readingTime: "12 mins"
-lastUpdated: 2026-07-07
+lastUpdated: 2026-07-09
 tags: ["idempotency", "etl", "data-pipeline", "data-engineering", "kafka", "airflow"]
 aliases: ["Idempotency", "Idempotent", "Tính lũy đẳng", "Lũy đẳng", "Idempotent pipeline"]
 refs:

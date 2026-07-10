@@ -45,11 +45,7 @@ graph TD
     D -->|Cắt bỏ đuôi dài| E{"Top-P (Nucleus)"}
     E -->|Cắt theo độ tự tự tin| F{"Min-P"}
     F --> G["Stochastic Sampling"]
-    G --> H["Output Token"]
-    
-    style B fill:#FF3D00,stroke:#333,stroke-width:2px,color:#fff
-    style D fill:#00B0FF,stroke:#333,stroke-width:2px,color:#fff
-    style E fill:#00E676,stroke:#333,stroke-width:2px,color:#000
+    G --> H["Output Token"]
 ```
 
 - **Top-K:** Cắt gọt cứng (Hard cutoff). Chỉ giữ lại K token có xác suất cao nhất. Tránh việc LLM chọn các token hoàn toàn vô nghĩa (vốn đã bị Temperature cao khuếch đại).
@@ -90,9 +86,10 @@ outputs = llm.generate([
 ], [params_deterministic, params_stochastic]]
 ```
 
-> [!WARNING]
-> **Ảo tưởng về sự "Chính xác tuyệt đối" khi T=0**
-> Đặt `temperature=0` không đảm bảo output giống nhau 100% bit-for-bit trên GPU. Trong Distributed Inference, các thao tác toán học như *floating-point atomic additions* trong Flash-Attention có tính bất định (nondeterministic). Kết quả có thể sai lệch nhỏ ở cấp độ dấu phẩy động, đôi khi dẫn đến token divergence trên các cụm H100.
+:::danger
+**Ảo tưởng về sự "Chính xác tuyệt đối" khi T=0**
+Đặt `temperature=0` không đảm bảo output giống nhau 100% bit-for-bit trên GPU. Trong Distributed Inference, các thao tác toán học như *floating-point atomic additions* trong Flash-Attention có tính bất định (nondeterministic). Kết quả có thể sai lệch nhỏ ở cấp độ dấu phẩy động, đôi khi dẫn đến token divergence trên các cụm H100.
+:::
 
 ---
 

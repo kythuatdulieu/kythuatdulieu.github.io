@@ -67,8 +67,9 @@ Trong thiết kế nền tảng dữ liệu, quyết định *"Lưu dữ liệu 
 | **Vendor Lock-in** | Cao hơn. Dữ liệu gắn chặt với vòng đời của Databricks, khó đọc từ engine ngoài nếu không qua Delta Sharing. | Thấp. Các engine khác (Snowflake, Trino, Athena) dễ dàng đọc thẳng Raw files. |
 | **Use Case phù hợp** | Lớp phân tích cuối (Silver/Gold), nơi hiệu năng và quản trị là ưu tiên số 1. | Dữ liệu thô (Bronze), dữ liệu legacy hoặc dữ liệu cần engine khác dùng chung trực tiếp. |
 
-> [!WARNING]
-> Khi chuyển từ External Tables sang Managed Tables, Data Engineer cần cẩn trọng với lệnh `DROP TABLE`. Một sai lầm phổ biến là dùng `DROP TABLE` để tạo lại cấu trúc thay vì `CREATE OR REPLACE`. Với Managed Tables, hành động này sẽ xóa dữ liệu vật lý và kích hoạt Garbage Collection, đòi hỏi phải dùng tính năng `RESTORE` của Delta Lake nếu lỡ tay.
+:::danger
+Khi chuyển từ External Tables sang Managed Tables, Data Engineer cần cẩn trọng với lệnh `DROP TABLE`. Một sai lầm phổ biến là dùng `DROP TABLE` để tạo lại cấu trúc thay vì `CREATE OR REPLACE`. Với Managed Tables, hành động này sẽ xóa dữ liệu vật lý và kích hoạt Garbage Collection, đòi hỏi phải dùng tính năng `RESTORE` của Delta Lake nếu lỡ tay.
+:::
 
 ## 4. RLS, CLS và Nỗi đau Vận hành (Operational Risks)
 

@@ -56,10 +56,7 @@ graph TD
         Worker2 --> Validator["Static Code Linter (Python)"]
         Validator --> Supervisor
         Supervisor --> End[(End)]
-    end
-    
-    style Supervisor fill:#f9f,stroke:#333,stroke-width:2px
-    style Validator fill:#bbf,stroke:#333,stroke-width:2px
+    end
 ```
 *Sự khác biệt cốt lõi: Với LangGraph, các cạnh (Edges) của đồ thị do Code Python kiểm soát, LLM chỉ đóng vai trò xử lý tại các Nodes.*
 

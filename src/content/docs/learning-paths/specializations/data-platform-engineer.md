@@ -1,260 +1,133 @@
 ---
-title: 'Data Platform Engineer: Sứ Mệnh Xây Dựng Hạ Tầng Dữ Liệu Ở Cấp Độ Tổ Chức'
-description: 'Khám phá sâu sắc vai trò của Data Platform Engineer. Phân biệt với Data Engineer, kiến trúc hệ thống, Internal Developer Platforms (IDP) với Kubernetes, Terraform, và thiết kế hạ tầng dữ liệu tự phục vụ (self-service) ở quy mô enterprise.'
+title: "Data Platform Engineer"
+description: "Lộ trình Data Platform Engineer: xây nền tảng dữ liệu tự phục vụ bằng Terraform, Kubernetes, orchestration, observability, security và developer experience."
 ---
 
+Data Platform Engineer không chỉ viết pipeline cho một use case. Họ xây nền tảng để nhiều team tự tạo, chạy và vận hành pipeline an toàn hơn. Nếu Data Engineer là người xây đường ống, Data Platform Engineer là người làm hệ thống đường, biển báo, trạm kiểm soát và quy chuẩn thi công.
 
+Vai trò này giao giữa Data Engineering, DevOps, SRE và Platform Engineering.
 
-Sự bùng nổ của Cloud Computing và Modern Data Stack (MDS) trong thập kỷ qua đã định hình lại hoàn toàn cách các tổ chức xây dựng và vận hành hệ thống dữ liệu. Sự phức tạp gia tăng không ngừng từ việc quản lý hàng tá công cụ SaaS, PaaS, IaaS đã dẫn đến một sự phân hóa tất yếu trong ngành Dữ liệu. "Data Engineer" không còn là một chức danh "ôm show" tất cả mọi thứ từ cấu hình server đến viết câu lệnh SQL. Thay vào đó, ngành công nghiệp chứng kiến sự trỗi dậy mạnh mẽ của một nhánh chuyên biệt hóa: **Data Platform Engineer** (Kỹ sư Nền tảng Dữ liệu).
+## Khi nào tổ chức cần Data Platform?
 
-Nếu Data Engineer là "người lái xe buýt" vận chuyển hành khách (dữ liệu) đến đúng nơi quy định đúng giờ, thì Data Platform Engineer chính là "kỹ sư cầu đường", người quy hoạch đô thị, xây dựng đường cao tốc, thiết lập trạm thu phí và hệ thống đèn tín hiệu giao thông để hàng ngàn chiếc xe buýt có thể vận hành trơn tru mà không bị tắc nghẽn.
+- Nhiều team cùng viết pipeline nhưng mỗi team có chuẩn riêng.
+- Onboarding pipeline mới mất nhiều tuần vì phải xin quyền, tạo infra, cấu hình CI/CD thủ công.
+- Sự cố lặp lại vì không có template, observability hoặc runbook chung.
+- Chi phí cloud khó quy về team/dataset/workload.
+- Dữ liệu nhạy cảm được xử lý thiếu kiểm soát.
 
-Bài viết này sẽ đi sâu vào khía cạnh kỹ thuật, kiến trúc hệ thống, và những thách thức thực tế mà một Data Platform Engineer phải giải quyết ở quy mô tổ chức (Enterprise-scale).
+Nếu công ty chỉ có vài pipeline đơn giản, một platform lớn có thể là over-engineering. Nền tảng chỉ đáng xây khi nó giảm ma sát thật cho nhiều người.
 
----
+## Checkpoint cần đạt
 
-## 1. Sự Khác Biệt Cốt Lõi: Data Engineer vs. Data Platform Engineer
+| Mảng | Cần biết |
+|---|---|
+| Infrastructure as Code | Terraform module, environment, state, review plan. |
+| Kubernetes/container | Workload, secret, config, resource limit, operator. |
+| Orchestration platform | Airflow/Dagster/Prefect deployment, executor, scaling. |
+| Observability | Logs, metrics, traces, data freshness, alert routing. |
+| Security | IAM, network boundary, secret management, audit. |
+| Developer experience | Template, CLI, documentation, golden path. |
 
+## 1. Golden path cho pipeline
 
+Một platform tốt không ép mọi người học hết hạ tầng. Nó đưa ra “golden path”:
 
-Theo triết lý quản lý nhóm từ cuốn sách nổi tiếng *Team Topologies*, một trong những nguyên nhân chính khiến các Data Engineer bị quá tải là do **Cognitive Load** (Tải trọng nhận thức) quá lớn. Họ vừa phải am hiểu sâu sắc về Business Logic, Data Modeling, Data Quality, lại vừa phải biết cách viết Terraform, cấu hình Kubernetes Ingress, và tối ưu hóa AWS IAM Policies. 
+1. Tạo repo từ template.
+2. Khai báo source, schedule, owner, SLA.
+3. CI chạy lint, unit test, data contract check.
+4. Terraform tạo quyền và tài nguyên cần thiết.
+5. Deploy DAG/job lên môi trường phù hợp.
+6. Observability và alert tự gắn theo owner.
 
-Data Platform Engineer xuất hiện để "hấp thụ" phần tải trọng hạ tầng này, cho phép Data Engineer tập trung 100% vào việc tạo ra giá trị nghiệp vụ từ dữ liệu.
+Mục tiêu là giảm quyết định lặp lại, không phải xóa hết quyền tự chủ của team dữ liệu.
 
-| Tiêu Chí | Data Engineer (Software Engineer - Data) | Data Platform Engineer (SRE / Platform for Data) |
-| :--- | :--- | :--- |
-| **Trọng tâm (Focus)** | Logic nghiệp vụ (Business Logic), Pipeline ETL/ELT, Data Modeling, Chất lượng dữ liệu (Data Quality). | Hạ tầng (Infrastructure), Công cụ (Tooling), Tự động hóa, Developer Experience (DevEx). |
-| **Sản phẩm đầu ra (Output)** | Các bảng dữ liệu sạch (Clean tables), Data Marts, Features cho Machine Learning, Dashboards. | Các module Terraform, Helm charts, CI/CD pipelines, APIs, Internal Developer Platform (IDP). |
-| **Chỉ số đánh giá (Key Metrics)** | Data freshness (độ trễ dữ liệu), SLA/SLO của từng dataset, độ chính xác của dữ liệu. | Uptime của hệ thống (Airflow, Kafka), Time-to-provision (Thời gian cấp phát tài nguyên), Tối ưu chi phí Cloud (FinOps). |
-| **Công cụ chủ đạo (Tech Stack)** | SQL, Python, Apache Spark, dbt, Flink, Pandas. | Terraform, Kubernetes, Docker, ArgoCD, Bash, Golang/Python. |
-| **Người dùng (Stakeholders)** | Data Analysts, Data Scientists, C-level, Business Users. | Data Engineers, Analytics Engineers, Security Team, FinOps Team. |
-
-> [!IMPORTANT]
-> **Platform as a Product:** Một triết lý quan trọng của Data Platform Engineer là coi nền tảng hạ tầng như một "sản phẩm" (Product), và "khách hàng" của họ chính là các Data Engineers trong công ty. Mục tiêu tối thượng là tạo ra trải nghiệm tự phục vụ (Self-service), giảm thiểu tối đa các JIRA tickets yêu cầu cấp quyền hay tạo database.
-
----
-
-## 2. Kiến Trúc Hạ Tầng Tiêu Biểu Của Modern Data Platform
-
-Một Data Platform hiện đại ở quy mô lớn thường được thiết kế theo nguyên lý **Compute & Storage Separation** (Tách biệt Lưu trữ và Tính toán) và được chia thành 3 mặt phẳng (Planes) chính. Một Data Platform Engineer phải là chuyên gia trong việc kết nối các mặt phẳng này lại với nhau một cách an toàn và tự động.
+Đọc trong site: [Data Platform Architecture](/concepts/1-distributed-systems-architecture/data-platform-architecture/), [DataOps](/concepts/7-dataops-orchestration-quality/dataops/), [Software-defined Assets](/concepts/7-dataops-orchestration-quality/software-defined-assets/), [Data Ownership](/concepts/8-security-governance-finops/data-ownership/).
 
 ```mermaid
-graph TD
-    subgraph Control_Plane["Control Plane (Điều phối & Tự động hóa)"]
-        GitOps["GitOps / ArgoCD / GitHub Actions"]
-        IaC["Terraform / Pulumi"]
-        Orchestrator["Apache Airflow / Dagster"]
-    end
-
-    subgraph Data_Plane["Data Plane (Lưu trữ & Xử lý)"]
-        Ingestion["Kafka / Kinesis / Fivetran"]
-        Storage[("Data Lake: AWS S3 / GCS")]
-        Compute_Batch["Apache Spark on K8s"]
-        Warehouse[("Snowflake / BigQuery")]
-        
-        Ingestion --> Storage
-        Storage --> Compute_Batch
-        Compute_Batch --> Warehouse
-    end
-
-    subgraph Observability_Governance["Observability & Governance Plane (Giám sát & Bảo mật)"]
-        Monitoring["Prometheus + Grafana + Datadog"]
-        Catalog["DataHub / Amundsen"]
-        Security["Apache Ranger / AWS IAM"]
-    end
-
-    GitOps -->|Triggers| IaC
-    IaC -.->|Provisions| Data_Plane
-    Orchestrator -.->|Schedules Jobs| Compute_Batch
-    Orchestrator -.->|Triggers Queries| Warehouse
-    
-    Monitoring -.->|Scrapes Metrics| Data_Plane
-    Security -.->|Enforces Policies| Data_Plane
-    Catalog -.->|Extracts Metadata| Data_Plane
+flowchart TD
+    A["Pipeline template"] --> B["CI checks"]
+    B --> C["Terraform plan"]
+    C --> D["Deploy orchestration"]
+    D --> E["Run workload"]
+    E --> F["Logs, metrics, freshness"]
+    F --> G["Alert owner"]
 ```
 
-### 2.1. Data Plane (Mặt phẳng Dữ liệu)
-Nơi dữ liệu thực sự di chuyển và được xử lý. Dù không trực tiếp viết job xử lý, Data Platform Engineer là người thiết lập "sân chơi" này:
-- Cấu hình các **Kafka Brokers** với phân vùng (partitions) tối ưu cho streaming thông lượng cao.
-- Thiết lập Data Lake (AWS S3, GCS) với cấu hình phân tầng lưu trữ (Storage Tiering) để tối ưu chi phí.
-- Khởi tạo và quản lý các cụm tính toán (Compute Clusters) như Databricks hoặc tự build hệ thống Spark trên Kubernetes.
+## 2. Terraform và hạ tầng có review
 
-### 2.2. Control Plane (Mặt phẳng Điều khiển)
-Nơi quản lý trạng thái, lịch trình và vòng đời của cơ sở hạ tầng.
-- **Orchestration:** Triển khai và duy trì Apache Airflow ở chế độ High Availability (HA). 
-- **Infrastructure Provisioning:** Mọi thay đổi hạ tầng đều phải thông qua Code (IaC) chứ không được "click chuột" trên giao diện Cloud.
+Terraform hữu ích vì biến hạ tầng thành code có version, review và plan trước khi apply. HashiCorp mô tả Terraform như công cụ định nghĩa và quản lý infrastructure bằng configuration files, phù hợp với nhu cầu review hạ tầng trước khi thay đổi: [Terraform intro](https://developer.hashicorp.com/terraform/intro). Với data platform, Terraform thường quản lý:
 
-### 2.3. Observability & Governance Plane (Mặt phẳng Giám sát và Quản trị)
-- **Giám sát (Monitoring):** Đảm bảo hệ thống có đủ logs, metrics, traces. Thiết lập các cảnh báo (Alerts) khi CPU của cụm Airflow Worker quá tải hoặc Kafka Consumer Lag tăng đột biến.
-- **Bảo mật (Security & Access Control):** Triển khai Zero Trust, phân quyền truy cập chi tiết đến từng cột/dòng (Column/Row-level security) bằng Apache Ranger hoặc AWS Lake Formation.
+- Bucket/container và lifecycle policy.
+- IAM role/service account.
+- Warehouse dataset/schema.
+- Kubernetes namespace, secret reference, resource quota.
+- Monitoring dashboard và alert rule.
 
----
+Quy tắc thực tế: module nên che bớt độ phức tạp nhưng không giấu những quyết định quan trọng như retention, quyền truy cập và chi phí.
 
-## 3. Tech Stack & Năng Lực Cốt Lõi (Deep Dive)
+Đọc trong site: [Access Control](/concepts/8-security-governance-finops/access-control/), [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage/), [Cost Optimization](/concepts/8-security-governance-finops/cost-optimization/).
 
-Một Data Platform Engineer đòi hỏi tư duy của một DevOps/SRE, nhưng áp dụng chuyên biệt cho các công cụ dữ liệu.
+## 3. Kubernetes có cần thiết không?
 
-### 3.1. Infrastructure as Code (IaC) & Tự động hóa
+Kubernetes mạnh nhưng không miễn phí về vận hành. Kubernetes cung cấp abstraction cho workload, service discovery, rollout và resource scheduling, nhưng abstraction đó kéo theo chi phí vận hành riêng: [Kubernetes overview](https://kubernetes.io/docs/concepts/overview/). Dùng khi bạn cần chuẩn hóa workload container, autoscaling, isolation, operator hoặc chạy nhiều engine trên cùng nền.
 
-Terraform là ngôn ngữ "mẹ đẻ" của Platform Engineer. Thay vì cấu hình thủ công từng bucket hay IAM Role, mọi thứ được module hóa.
+Không nên dùng Kubernetes chỉ vì “hiện đại”. Nếu managed workflow/serverless giải quyết đủ tốt, hãy dùng managed service. Platform Engineer giỏi là người giảm gánh nặng vận hành, không thêm một cụm mới để chăm.
 
-**Ví dụ:** Một Data Engineer cần một S3 Bucket mới cho dự án Data Lake. Platform Engineer đã viết sẵn một module Terraform chuẩn hóa, tự động áp dụng các chính sách bảo mật khắt khe nhất (Mã hóa KMS, chặn truy cập công khai, lưu trữ version).
+Đọc trong site: [Airflow Celery vs K8s Executor](/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/), [Airflow Scheduler](/concepts/7-dataops-orchestration-quality/airflow-scheduler/), [Serverless Data](/concepts/3-storage-engines-formats/serverless-data/).
 
-```hcl
-# Terraform module: aws_secure_data_lake_bucket
-resource "aws_s3_bucket" "data_lake_raw" {
-  bucket = "company-data-lake-raw-${var.environment}"
-  tags   = var.tags
-}
+## 4. Observability cho cả platform lẫn dữ liệu
 
-# Chặn hoàn toàn truy cập từ Public Internet (Bắt buộc cho Data Lake)
-resource "aws_s3_bucket_public_access_block" "block_public" {
-  bucket                  = aws_s3_bucket.data_lake_raw.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+Bạn cần hai lớp:
 
-# Bắt buộc mã hóa dữ liệu tại chỗ (Encryption at Rest) bằng AWS KMS
-resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt" {
-  bucket = aws_s3_bucket.data_lake_raw.id
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = var.kms_key_arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
-}
+- Platform observability: pod/job fail, CPU/memory, queue backlog, scheduler health, API latency.
+- Data observability: freshness, volume, schema, distribution, reconciliation, lineage.
 
-# Lifecycle Policy: Tự động chuyển dữ liệu cũ sang kho lạnh để tiết kiệm chi phí
-resource "aws_s3_bucket_lifecycle_configuration" "tiering" {
-  bucket = aws_s3_bucket.data_lake_raw.id
-  rule {
-    id     = "archive_old_data"
-    status = "Enabled"
-    transition {
-      days          = 90
-      storage_class = "GLACIER"
-    }
-  }
-}
-```
+Nếu chỉ có lớp platform, job có thể xanh nhưng dữ liệu sai. Nếu chỉ có lớp data, bạn biết dữ liệu trễ nhưng không biết scheduler nghẽn hay cluster thiếu tài nguyên.
 
-### 3.2. Containerization & Kubernetes (Trái Tim Của Data Platform)
+Đọc trong site: [Data Observability](/concepts/7-dataops-orchestration-quality/data-observability/), [Freshness Monitoring](/concepts/7-dataops-orchestration-quality/freshness-monitoring/), [Alerting Incident Response](/concepts/7-dataops-orchestration-quality/alerting-incident-response/), [Root Cause Analysis](/concepts/7-dataops-orchestration-quality/root-cause-analysis/).
 
-Kubernetes (K8s) đã trở thành "hệ điều hành" chuẩn mực cho Cloud. Các Data Platform hiện đại hiếm khi dùng Hadoop YARN nữa, mà chuyển sang chạy trực tiếp trên K8s (EKS, GKE).
+## 5. Platform như một sản phẩm
 
-Data Platform Engineer đóng gói các ứng dụng dữ liệu bằng Docker và quản lý chúng bằng **Helm Charts** hoặc Kubernetes Manifests. Một ví dụ điển hình là việc chạy **Apache Spark trên Kubernetes** bằng `spark-operator`. Điều này cho phép tận dụng Node Auto-scaling của K8s, tự động cấp phát hàng trăm Pods làm Spark Executors khi chạy Job nặng, và thu hồi lại khi Job kết thúc để tiết kiệm tiền.
+Data platform có người dùng: Data Engineer, Analyst, Scientist, BI, Security, Finance. Vì vậy cần product thinking:
 
-```yaml
-# Ví dụ cấu hình SparkApplication CRD chạy trên Kubernetes
-apiVersion: "sparkoperator.k8s.io/v1beta2"
-kind: SparkApplication
-metadata:
-  name: daily-sales-aggregation
-  namespace: data-processing
-spec:
-  type: Scala
-  mode: cluster
-  image: "gcr.io/company-registry/spark:v3.3.0"
-  mainClass: com.company.data.DailySalesJob
-  mainApplicationFile: "s3a://company-artifacts/jars/daily-sales.jar"
-  sparkVersion: "3.3.0"
-  restartPolicy:
-    type: OnFailure
-    onFailureRetries: 3
-    onFailureRetryInterval: 10
-  driver:
-    cores: 1
-    memory: "1024m"
-    serviceAccount: spark-operator-sa
-  executor:
-    instances: 50 # Sẽ tự động scale up 50 Pods
-    cores: 2
-    memory: "8192m"
-    nodeSelector:
-      # Tối ưu chi phí bằng cách buộc các Executors chạy trên Spot Instances
-      karpenter.sh/capacity-type: spot 
-```
+- Ai là user chính?
+- Việc gì đang mất thời gian nhất?
+- Golden path có giảm ticket không?
+- Documentation có giúp người mới tự làm không?
+- Metric thành công là adoption, lead time, incident reduction hay cost visibility?
 
-> [!TIP]
-> Việc sử dụng Spot Instances cho Spark Executors (như cấu hình nodeSelector ở trên) có thể tiết kiệm tới 70-80% chi phí Compute cho doanh nghiệp so với việc chạy các cụm EMR/Databricks truyền thống hoạt động 24/7.
+## Checklist đọc concept
 
-### 3.3. Quản Trị Hệ Thống Điều Phối (Orchestration Management)
+| Mốc học | Concept nội bộ cần đọc |
+|---|---|
+| Platform foundation | [Data Platform Architecture](/concepts/1-distributed-systems-architecture/data-platform-architecture/), [DataOps](/concepts/7-dataops-orchestration-quality/dataops/) |
+| Orchestration platform | [Apache Airflow](/concepts/7-dataops-orchestration-quality/apache-airflow/), [Airflow Scheduler](/concepts/7-dataops-orchestration-quality/airflow-scheduler/), [Airflow Celery vs K8s Executor](/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/) |
+| Observability | [Data Observability](/concepts/7-dataops-orchestration-quality/data-observability/), [Freshness Monitoring](/concepts/7-dataops-orchestration-quality/freshness-monitoring/), [Schema Drift](/concepts/7-dataops-orchestration-quality/schema-drift/) |
+| Governance | [Access Control](/concepts/8-security-governance-finops/access-control/), [Data Lineage](/concepts/8-security-governance-finops/data-lineage/), [Data Catalog](/concepts/8-security-governance-finops/data-catalog/) |
 
-Nhiều người nghĩ Airflow chỉ là việc viết file Python (DAGs). Thực tế, ở quy mô enterprise (hàng ngàn DAGs, hàng chục ngàn Tasks mỗi ngày), Airflow là một hệ thống phân tán phức tạp. 
+## Dự án thực hành
 
-Data Platform Engineer không viết DAG ETL, họ duy trì kiến trúc của Airflow:
-- Thay thế SQLite/SequentialExecutor mặc định bằng **PostgreSQL** và **CeleryExecutor** cùng với Redis/RabbitMQ để phân phối tasks.
-- Hoặc hiện đại hơn, sử dụng **KubernetesExecutor**, nơi mỗi Task của Airflow khi chạy sẽ sinh ra một Pod riêng biệt, đảm bảo cách ly tuyệt đối về tài nguyên và thư viện (dependency isolation) giữa các team khác nhau.
-- Tích hợp **HashiCorp Vault** hoặc AWS Secrets Manager để Data Engineer không bao giờ được phép lưu plain-text password của database trực tiếp trong mã nguồn hay giao diện Airflow.
+**Dự án: Internal data pipeline starter kit**
 
-### 3.4. FinOps: Nghệ Thuật Tối Ưu Chi Phí Đám Mây
+1. Tạo template repo cho pipeline Python/SQL.
+2. Thêm CI: lint, test, secret scan, markdown check.
+3. Viết Terraform module tạo bucket, IAM và dataset.
+4. Deploy DAG lên Airflow local/Kubernetes.
+5. Tự động tạo alert theo owner trong config.
+6. Viết docs: “từ repo trống đến pipeline chạy production”.
 
-Hạ tầng dữ liệu là "con quái vật ngốn tiền" lớn nhất trong hạ tầng IT. Data Platform Engineer đóng vai trò trung tâm trong **FinOps** (Financial Operations):
-- Cấu hình Auto-suspend cho các Warehouse của Snowflake.
-- Giám sát các câu query "quét full bảng" (Full Table Scan) bất thường trong BigQuery để cảnh báo người dùng.
-- Thiết lập giới hạn bộ nhớ và CPU (Resource Quotas) trên Kubernetes namespaces để không một team nào có thể độc chiếm tài nguyên chung.
+## Góc phỏng vấn
 
----
+- Data Platform khác Data Engineering thông thường ở đâu?
+- Khi nào nên dùng Kubernetes, khi nào không?
+- Terraform state hỏng hoặc drift thì xử lý thế nào?
+- Golden path nên linh hoạt đến mức nào?
+- Làm sao đo platform có tạo giá trị thật?
 
-## 4. Xây Dựng Internal Developer Platform (IDP): Đỉnh Cao Của Tự Phục Vụ (Self-Service)
+## References
 
-Lý do lớn nhất để thuê một Data Platform Engineer là giải quyết **"Operational Toil"** - những công việc vận hành tay chân, lặp đi lặp lại.
-
-Khi quy mô tăng lên 50-100 Data Engineers & Analysts, nếu mỗi lần cần tạo một schema mới trên Redshift, tạo một S3 bucket, hay xin quyền đọc dữ liệu, họ phải tạo JIRA ticket và chờ đợi Platform team xử lý (mất vài ngày), thì tốc độ sáng tạo sẽ bị bóp nghẹt.
-
-**Giải pháp:** Xây dựng một **Internal Developer Platform (IDP)**.
-
-Các Data Platform team tiên tiến hiện nay sử dụng các công cụ như **Backstage.io** (được tạo ra bởi Spotify) để làm Cổng thông tin nội bộ (Developer Portal).
-Platform Engineer sẽ định nghĩa các **"Golden Paths"** (Con đường vàng). 
-
-**Kịch bản thực tế với IDP:**
-1. Một Data Engineer tên là Alice muốn khởi tạo một dự án dbt mới để transform dữ liệu Marketing.
-2. Thay vì xin xỏ cấu hình từ DevOps, Alice truy cập vào web portal nội bộ (IDP).
-3. Alice chọn template: *"New dbt + Snowflake Project"*. Điền tên project là `marketing_dbt`.
-4. Portal tự động gọi một API ngầm để kích hoạt CI/CD Pipeline:
-   - Tạo một Repository Github mới với cấu trúc thư mục chuẩn.
-   - Terraform chạy ngầm để tạo một Database riêng biệt trên Snowflake cho môi trường Dev/Prod của Alice, kèm theo các Role/User (RBAC) tương ứng.
-   - Tạo cấu hình bí mật (Secrets) trong Vault.
-5. Chỉ sau 3 phút, Alice nhận được link Github và có thể bắt đầu viết SQL ngay lập tức, với một môi trường hạ tầng hoàn hảo, bảo mật và chuẩn chỉnh.
-
-> [!NOTE]
-> IDP thay đổi mô hình từ "Ticket-based" (xin-cho) sang "API-driven" (tự phục vụ qua API/Portal). Platform Engineer là người viết code đằng sau các nút bấm trên portal đó.
-
----
-
-## 5. Sự Tiến Hóa Lên Data Mesh
-
-Khái niệm **Data Mesh** (Lưới Dữ Liệu) đang là xu hướng kiến trúc mạnh mẽ nhất hiện nay. Trong Data Mesh, dữ liệu không được quản lý tập trung bởi một Data Team duy nhất nữa, mà được phân quyền sở hữu về các team nghiệp vụ (Domain Teams như Marketing, HR, Finance). Các team này tự xây dựng và quản lý các "Data Products" của riêng họ.
-
-Tuy nhiên, các team Marketing/HR không thể tự build hệ thống Kafka hay Spark. Đây chính là lúc vai trò của Data Platform Engineer tỏa sáng.
-
-Trong mô hình Data Mesh, Data Platform Team hoạt động như một nhà cung cấp dịch vụ nội bộ (giống như "AWS thu nhỏ" trong công ty). Họ cung cấp **"Self-serve data infrastructure as a platform"** (Nền tảng hạ tầng tự phục vụ). Nhờ có hạ tầng vững chắc, trừu tượng hóa mọi sự phức tạp của Kubernetes/Cloud mà Platform team cung cấp, các team nghiệp vụ có thể dễ dàng quản trị dữ liệu của mình.
-
----
-
-## 6. Tổng Kết
-
-Data Platform Engineer là những "kiến trúc sư thầm lặng" đứng sau sự thành công của các công ty định hướng dữ liệu (Data-driven). Bằng cách kết hợp các kỹ năng của Software Engineering, DevOps, Cloud Architecture và sự am hiểu về bản chất của dữ liệu, họ biến một mớ hỗn độn các công cụ Big Data thành một dây chuyền sản xuất tự động, an toàn và tối ưu chi phí. 
-
-Việc chuyển dịch từ Data Engineer truyền thống sang Data Platform Engineer là một lộ trình phát triển nghề nghiệp đầy hứa hẹn cho những kỹ sư yêu thích hệ thống phân tán chuyên sâu, cơ sở hạ tầng mạng, và nghệ thuật tối ưu hóa tự động hóa (Automation).
-
----
-
-## Tài Liệu Tham Khảo Nâng Cao
-
-Để tiến sâu vào con đường Data Platform Engineering, đây là các nguồn tài nguyên vô giá:
-
-*   **Sách thiết kế hệ thống:**
-    *   [Designing Data-Intensive Applications](https://dataintensive.net/) của Martin Kleppmann - "Kinh thánh" bắt buộc phải đọc về hệ thống phân tán và dữ liệu.
-    *   [Team Topologies](https://teamtopologies.com/) - Kiến trúc tổ chức team công nghệ, lý thuyết nền tảng cho Platform Engineering.
-*   **Blog Công Nghệ (Engineering Blogs):**
-    *   **Uber Engineering: From ETL to Data Platform** - Hành trình tiến hóa kiến trúc dữ liệu của Uber.
-    *   **Building a Self-Service Data Platform - Airbnb Tech Blog**
-    *   [The Rise of the Data Platform Engineer - The Pragmatic Engineer](https://blog.pragmaticengineer.com/)
-*   **Thực hành & Công cụ:**
-    *   [Infrastructure as Code in Data Engineering with Terraform - HashiCorp](https://www.hashicorp.com/resources)
-    *   **Data Engineer vs Data Platform Engineer - SeattleDataGuy**
-    *   [Backstage.io Documentation](https://backstage.io/docs/overview/what-is-backstage) - Hệ sinh thái IDP chuẩn công nghiệp.
+- [Terraform intro](https://developer.hashicorp.com/terraform/intro) - HashiCorp.
+- [Kubernetes overview](https://kubernetes.io/docs/concepts/overview/) - Kubernetes.
+- [DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html) - Apache Airflow.
+- [Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) - Google SRE.
+- [DORA metrics](https://dora.dev/guides/dora-metrics/) - DORA.

@@ -146,13 +146,7 @@ flowchart TD
     end
 
     T1["Task D (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
-    T2["Task E (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
-    
-    style S1 fill:#f9acaa,stroke:#333
-    style S2 fill:#f9acaa,stroke:#333
-    style S3 fill:#f9acaa,stroke:#333
-    style T1 fill:#e6e6e6,stroke:#333
-    style T2 fill:#e6e6e6,stroke:#333
+    T2["Task E (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
 ```
 
 ### 2.1. Trade-off Giữa Các Cơ Chế Chờ Đợi (Waiting Mechanisms)

@@ -66,10 +66,7 @@ graph TD
         ML -->|Alert| PagerDuty("PagerDuty / Slack")
         ML -->|Trigger| CB{"Circuit Breaker"}
         CB -->|Kill Job| DWH
-    end
-    
-    style Metastore fill:#f9f,stroke:#333,stroke-width:2px
-    style CB fill:#f9acaa,stroke:#333,stroke-width:2px
+    end
 ```
 
 ---

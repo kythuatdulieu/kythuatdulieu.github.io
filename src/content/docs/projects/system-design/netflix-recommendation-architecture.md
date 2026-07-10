@@ -23,9 +23,10 @@ Khi bạn mở ứng dụng Netflix, giao diện trang chủ không tĩnh (stati
 *   **Video Ranking:** Trong mỗi hàng, phim nào đứng đầu, phim nào đứng cuối.
 *   **Artwork Personalization:** Cùng một bộ phim, nhưng người thích phim Hài sẽ thấy ảnh bìa khác với người thích phim Hành động.
 
-> [!IMPORTANT]
-> **Tác động Kinh Doanh (Business Impact):**
-> Netflix ước tính hệ thống Recommendation giúp họ tiết kiệm hơn **1 Tỷ USD mỗi năm** nhờ vào việc giảm tỷ lệ rời bỏ dịch vụ (Churn Rate). Người dùng tìm thấy nội dung họ yêu thích nhanh hơn, giữ chân họ ở lại nền tảng lâu hơn.
+:::note
+**Tác động Kinh Doanh (Business Impact):**
+Netflix ước tính hệ thống Recommendation giúp họ tiết kiệm hơn **1 Tỷ USD mỗi năm** nhờ vào việc giảm tỷ lệ rời bỏ dịch vụ (Churn Rate). Người dùng tìm thấy nội dung họ yêu thích nhanh hơn, giữ chân họ ở lại nền tảng lâu hơn.
+:::
 
 ---
 
@@ -47,9 +48,10 @@ Thay vì dùng các Data Warehouse truyền thống quá đắt đỏ cho lượ
 
 Đó là lý do Netflix đã tự phát triển và nguồn mở **Apache Iceberg** - một định dạng bảng (table format) dành cho Data Lake khổng lồ.
 
-> [!TIP]
-> **Tại sao lại là Iceberg?**
-> Apache Iceberg mang lại khả năng truy vấn như SQL (ACID transactions, Schema evolution, Time travel) trực tiếp trên file Parquet lưu ở S3. Điều này cho phép hàng ngàn Data Engineer và Data Scientist tại Netflix có thể truy vấn hàng PetaByte dữ liệu một cách nhất quán mà không lo bị lock dữ liệu khi có các job đang write.
+:::tip
+**Tại sao lại là Iceberg?**
+Apache Iceberg mang lại khả năng truy vấn như SQL (ACID transactions, Schema evolution, Time travel) trực tiếp trên file Parquet lưu ở S3. Điều này cho phép hàng ngàn Data Engineer và Data Scientist tại Netflix có thể truy vấn hàng PetaByte dữ liệu một cách nhất quán mà không lo bị lock dữ liệu khi có các job đang write.
+:::
 
 ```sql
 -- Ví dụ: Truy vấn dữ liệu tương tác (Implicit Feedback) của user bằng Spark SQL trên Iceberg
@@ -105,8 +107,6 @@ graph TD
     FeatStore --> Online
     Cache --> Online
     Online -->|Response Payload| User
-    
-    classDef layer fill:#f9f9f9,stroke:#333,stroke-width:2px;
     class Online,Nearline,Offline layer;
 ```
 
@@ -152,8 +152,9 @@ Cùng một bộ phim *Good Will Hunting*, Netflix có thể hiển thị hàng 
 - Nếu bạn hay xem phim **Lãng mạn (Romance)**: Ảnh bìa sẽ là cảnh nam nữ chính ôm nhau.
 - Nếu bạn hay xem phim **Hài (Comedy)**: Ảnh bìa sẽ tập trung vào gương mặt của diễn viên hài Robin Williams.
 
-> [!CAUTION]
-> **Rủi ro của sự Thiên Kiến (Bias):** Làm sao để biết bạn thực sự thích ảnh bìa nào mà không làm cho mô hình bị bias? Nếu hệ thống chỉ hiển thị mãi 1 ảnh bìa, nó sẽ không bao giờ biết liệu ảnh bìa khác có mang lại lượt click cao hơn không.
+:::danger
+**Rủi ro của sự Thiên Kiến (Bias):** Làm sao để biết bạn thực sự thích ảnh bìa nào mà không làm cho mô hình bị bias? Nếu hệ thống chỉ hiển thị mãi 1 ảnh bìa, nó sẽ không bao giờ biết liệu ảnh bìa khác có mang lại lượt click cao hơn không.
+:::
 
 ### Thuật Toán Contextual Bandits (Học Tăng Cường)
 Để giải quyết bài toán này, Netflix sử dụng thuật toán **Contextual Bandits** (một dạng của Reinforcement Learning). Hệ thống liên tục phải đối mặt với bài toán Đánh đổi: **Exploration vs. Exploitation** (Khám phá vs Khai thác).

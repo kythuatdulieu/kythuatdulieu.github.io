@@ -1,278 +1,131 @@
 ---
 title: "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-description: "Lộ trình học tập chuyên sâu để làm chủ hệ thống xử lý dòng sự kiện với Apache Kafka, Spark Streaming và Flink."
+description: "Lộ trình Streaming Data Engineer: Kafka, event-time, watermark, stateful processing, exactly-once, Flink/Spark Streaming và vận hành độ trễ thấp."
 ---
 
-Lộ trình **Streaming Data Engineer** cung cấp hướng dẫn thiết kế, xây dựng và vận hành các hệ thống xử lý dòng dữ liệu thời gian thực (Real-time Streaming) với độ trễ thấp (low-latency) ở quy mô lớn. Nội dung tập trung vào kiến trúc cốt lõi của [Apache Kafka](/concepts/5-stream-processing-realtime/apache-kafka), tư duy xử lý thời gian sự kiện (Event-time), kỹ thuật quản lý trạng thái (Stateful Processing), và các mô hình tính toán phân tán mạnh mẽ nhất hiện nay như Apache Flink hay Spark Streaming.
+Streaming Data Engineering xử lý dữ liệu khi sự kiện đang xảy ra, không đợi đến batch cuối ngày. Công việc này phù hợp với fraud detection, realtime dashboard, IoT, personalization, operational monitoring và các luồng cần phản ứng nhanh.
 
-Trong thời đại dữ liệu lên ngôi, các doanh nghiệp không còn thỏa mãn với việc nhận báo cáo sau 24 giờ. Từ gợi ý sản phẩm thời gian thực (real-time recommendation), cảnh báo gian lận tài chính chỉ trong vài mili-giây, đến giám sát hệ thống IoT hàng triệu thiết bị, **Streaming Data Engineering** đã trở thành kỹ năng "phải có" đối với một Senior Data Engineer.
+Điểm khó của streaming không chỉ là Kafka hay Flink. Điểm khó là thời gian, trạng thái, thứ tự sự kiện, retry, duplicate và late data.
 
-## Lộ trình này hướng đến ai?
+## Ai nên học hướng này?
 
-Chúng tôi thiết kế lộ trình chuyên sâu này đặc biệt dành cho:
+- Data Engineer đã vững batch processing và muốn làm realtime.
+- Backend Engineer đang xây hệ thống event-driven.
+- Data Architect cần chọn giữa batch, micro-batch và streaming.
+- Team có use case cần latency tính bằng giây hoặc phút, không phải giờ.
 
-* **Các kỹ sư dữ liệu (Data Engineer)** đã vững vàng với hệ thống xử lý theo lô (Batch Processing) và muốn bước vào thế giới sự kiện (Event Streaming) thời gian thực đầy thử thách.
-* **Kỹ sư Backend / Software Engineer** chịu trách nhiệm thiết kế các hệ thống có độ trễ cực thấp (low-latency), thông lượng cao (high-throughput), và khả năng phục hồi nhanh khi có sự cố.
-* **Data Architect / Solution Architect** cần nắm rõ các pattern thiết kế như Lambda Architecture, Kappa Architecture để tư vấn và xây dựng hệ thống nền tảng dữ liệu cho doanh nghiệp.
+## Checkpoint cần đạt
 
-> [!NOTE]
-> Sự khác biệt lớn nhất giữa Batch và Streaming không chỉ nằm ở công cụ (tooling), mà nằm ở **tư duy thời gian** và **tính không giới hạn của dữ liệu** (unbounded data).
-
-## Hành trang cần thiết (Prerequisites)
-
-Để sẵn sàng chinh phục thế giới Streaming, bạn cần có một nền tảng vững chắc:
-
-| Nhóm kỹ năng | Yêu cầu chi tiết |
+| Năng lực | Cần hiểu |
 |---|---|
-| **Lập trình (Programming)** | Thành thạo ít nhất một ngôn ngữ xử lý dữ liệu mạnh như Java, Scala hoặc Python. Java/Scala đặc biệt quan trọng khi làm việc sâu với JVM-based frameworks (Kafka, Flink, Spark). |
-| **Hệ thống phân tán (Distributed Systems)** | Hiểu rõ các khái niệm: Replication, Partitioning, Consensus (Zookeeper/Raft), Fault-tolerance, Network I/O. |
-| **Batch Processing** | Đã hoàn thành các khái niệm cơ bản trong lộ trình Middle/Senior Data Engineer, nắm vững MapReduce, Spark Batch. |
-| **Hệ điều hành / Mạng** | Hiểu cơ chế quản lý bộ nhớ (Heap/Off-heap), Garbage Collection (GC) tuning, TCP/IP và socket. |
+| Kafka fundamentals | Topic, partition, consumer group, offset, retention. |
+| Event-time | Phân biệt event-time, ingestion-time, processing-time. |
+| Watermark | Chấp nhận dữ liệu trễ có kiểm soát. |
+| State | Window, aggregation, join, TTL, checkpoint. |
+| Delivery semantics | At-most-once, at-least-once, exactly-once theo ngữ cảnh. |
+| Operations | Lag, backpressure, rebalancing, schema evolution, replay. |
 
-## Từng Bước Làm Chủ Dòng Dữ Liệu Thời Gian Thực
+## 1. Kafka là log phân tán, không chỉ là queue
 
-Hành trình trở thành chuyên gia Streaming Data Engineer đòi hỏi bạn đi qua 5 cột mốc cốt lõi:
+Kafka lưu sự kiện theo topic và partition. Consumer đọc bằng offset, vì vậy nhiều consumer group có thể đọc cùng một topic cho các mục đích khác nhau. Các khái niệm topic, partition, consumer group, configuration và operations đều nằm trong tài liệu Kafka chính thức: [Apache Kafka Documentation](https://kafka.apache.org/documentation/).
 
-### Bước 1: Làm chủ hạ tầng thông điệp với Apache Kafka
+Điều cần học:
 
-Apache Kafka không chỉ là một hàng đợi (message queue) đơn thuần, mà là một **Distributed Commit Log** (Nhật ký giao dịch phân tán). Đây là "trái tim" của hầu hết các kiến trúc dữ liệu hiện đại.
+- Chọn key để giữ thứ tự theo entity như `user_id` hoặc `account_id`.
+- Partition nhiều quá hay ít quá đều có chi phí.
+- Consumer lag là tín hiệu quan trọng nhưng không nói hết nguyên nhân.
+- Retention quyết định bạn replay được bao lâu.
+- Schema Registry hoặc quy ước schema giúp tránh phá consumer khi event đổi.
 
-#### Kiến trúc lõi của Kafka
-Bạn cần hiểu sâu các thành phần cấu thành:
-* **Brokers & Cluster**: Cách các node (broker) phối hợp với nhau.
-* **Topics & Partitions**: Cơ chế lưu trữ phân tán. Partition chính là đơn vị mở rộng (unit of scale) của Kafka.
-* **Replication & ISR (In-Sync Replicas)**: Cơ chế sao lưu dữ liệu để đảm bảo High Availability (HA).
+Đọc trong site: [Apache Kafka](/concepts/5-stream-processing-realtime/apache-kafka/), [Kafka Topics Partitions](/concepts/5-stream-processing-realtime/kafka-topics-partitions/), [Consumer Groups](/concepts/5-stream-processing-realtime/consumer-groups/), [Kafka Consumer Lag Rebalance](/concepts/5-stream-processing-realtime/kafka-consumer-lag-rebalance/).
 
-```mermaid
-graph TD
-    P1["Producer 1"] -->|Send| K["Kafka Cluster"]
-    P2["Producer 2"] -->|Send| K
-    
-    subgraph "Kafka Cluster"
-        B1["Broker 1"]
-        B2["Broker 2"]
-        B3["Broker 3"]
-        
-        B1 --- B2
-        B2 --- B3
-        
-        T1_P0["Topic A - Partition 0<br/>Leader"]:::leader
-        T1_P1["Topic A - Partition 1<br/>Replica"]:::replica
-        T1_P2["Topic A - Partition 2<br/>Replica"]:::replica
-        
-        B1 -.-> T1_P0
-        B2 -.-> T1_P1
-        B3 -.-> T1_P2
-    end
-    
-    K -->|Consume| C1["Consumer Group A<br/>(Real-time Dashboard)"]
-    K -->|Consume| C2["Consumer Group B<br/>(Data Lake Ingestion)"]
-    
-    classDef leader fill:#d4edda,stroke:#28a745,stroke-width:2px;
-    classDef replica fill:#fff3cd,stroke:#ffc107,stroke-width:1px;
-```
+## 2. Tư duy thời gian
 
-#### Consumer Groups & Rebalancing
-Một tính năng đột phá của Kafka là **[Consumer Groups](/concepts/5-stream-processing-realtime/consumer-groups)**. Khác với RabbitMQ, Kafka cho phép nhiều nhóm Consumer cùng đọc một Topic mà không tiêu hủy dữ liệu. Khi số lượng Consumer thay đổi, Kafka kích hoạt quá trình **Rebalancing** để phân bổ lại các Partitions, đây thường là nguyên nhân gây nghẽn cục bộ (Stop-The-World) mà một kỹ sư cần tối ưu.
+Trong batch, dữ liệu thường đã “nằm yên”. Trong streaming, dữ liệu đến muộn là chuyện bình thường.
 
-**Ví dụ Code (Python bằng `confluent-kafka`): Tạo một Producer cơ bản**
-```python
-from confluent_kafka import Producer
-import json
+| Loại thời gian | Ý nghĩa |
+|---|---|
+| Event-time | Thời điểm sự kiện thật sự xảy ra. |
+| Ingestion-time | Thời điểm event vào hệ thống như Kafka. |
+| Processing-time | Thời điểm job xử lý event. |
 
-conf = {
-    'bootstrap.servers': 'localhost:9092',
-    'client.id': 'python-producer'
-}
-producer = Producer(conf)
+Nếu dùng processing-time cho mọi thứ, báo cáo realtime có thể sai khi mobile app offline gửi event muộn. Watermark giúp hệ thống nói rõ: “tôi chờ dữ liệu trễ tối đa bao lâu trước khi đóng window”.
 
-def delivery_report(err, msg):
-    if err is not None:
-        print(f'Message delivery failed: {err}')
-    else:
-        print(f'Message delivered to {msg.topic()} [{msg.partition()}] at offset {msg.offset()}')
+Đọc trong site: [Event-time vs Processing-time](/concepts/5-stream-processing-realtime/event-time-processing-time/), [Watermark](/concepts/5-stream-processing-realtime/watermark/), [Flink Watermarks Late Data](/concepts/5-stream-processing-realtime/flink-watermarks-late-data/), [Windowing](/concepts/5-stream-processing-realtime/windowing/).
 
-# Gửi dữ liệu sự kiện
-event_data = {"user_id": 123, "action": "click", "timestamp": "2024-01-01T10:00:00Z"}
-producer.produce(
-    topic='user-clicks',
-    key=str(event_data['user_id']),
-    value=json.dumps(event_data),
-    callback=delivery_report
-)
-producer.flush()
-```
-> [!TIP]
-> Việc sử dụng **Key** khi gửi message rất quan trọng. Các sự kiện có chung Key (ví dụ `user_id`) sẽ luôn được đưa vào cùng một Partition, đảm bảo thứ tự xử lý (Order Guarantee) cho user đó.
+## 3. Stateful processing
 
----
+Streaming mạnh khi xử lý trạng thái: đếm sự kiện theo cửa sổ, join stream, phát hiện pattern, tính session.
 
-### Bước 2: Thấu hiểu Event-time, Processing-time và Watermark
+Nhưng state cần vận hành cẩn thận:
 
-Trong Batch Processing, bạn phân tích dữ liệu tĩnh (đã nằm sẵn trong DB). Trong Streaming, dữ liệu đến liên tục và thường xuyên bị trễ do độ trễ mạng hoặc thiết bị mất kết nối.
+- State lớn làm checkpoint chậm.
+- TTL quá ngắn làm mất ngữ cảnh.
+- TTL quá dài làm tăng chi phí.
+- Key skew làm một task nóng hơn phần còn lại.
+- Schema đổi có thể làm state không đọc lại được.
 
-#### Các khái niệm thời gian:
-1. **Event-time (Thời gian sự kiện)**: Thời điểm sự kiện thực sự sinh ra (ví dụ: giờ thiết bị điện thoại ghi nhận cú click).
-2. **Processing-time (Thời gian xử lý)**: Thời điểm server/hệ thống của bạn nhận được dữ liệu.
-3. **Ingestion-time**: Thời điểm dữ liệu đi vào Kafka.
+Đọc trong site: [Streaming Processing](/concepts/5-stream-processing-realtime/streaming-processing/), [Windowing](/concepts/5-stream-processing-realtime/windowing/), [Flink RocksDB State Backend](/concepts/5-stream-processing-realtime/flink-rocksdb-state-backend/), [Flink Backpressure](/concepts/5-stream-processing-realtime/flink-backpressure/).
+
+## 4. Exactly-once: hiểu đúng trước khi hứa
+
+“Exactly-once” không phải phép màu. Nó phụ thuộc vào source, processing engine, sink và cách transaction/idempotency được thiết kế. Nhiều hệ thống thực tế dùng at-least-once processing kết hợp idempotent sink để đạt kết quả cuối không trùng.
+
+Khi phỏng vấn hoặc thiết kế, hãy nói rõ phạm vi: exactly-once trong engine, khi ghi vào warehouse, hay ở mức business outcome.
+
+Đọc trong site: [Exactly-once Semantics](/concepts/5-stream-processing-realtime/exactly-once-semantics/), [Kafka Exactly-once Semantics](/concepts/5-stream-processing-realtime/kafka-exactly-once-semantics/), [Idempotency](/concepts/2-data-ingestion-integration/idempotency/).
 
 ```mermaid
-sequenceDiagram
-    participant User as User Device
-    participant Kafka as Kafka Broker
-    participant Flink as Flink Processor
-    
-    User->>User: Event Occurs (T=10:00) <br/> [Event-time]
-    Note over User: User goes offline
-    User-->>Kafka: Reconnects & Sends (T=10:05)
-    Note over Kafka: Data ingested <br/> [Ingestion-time]
-    Kafka->>Flink: Reads data (T=10:06) <br/> [Processing-time]
+flowchart LR
+    A["Producers"] --> B["Kafka topics"]
+    B --> C["Flink / Spark Streaming"]
+    C --> D["State + checkpoint"]
+    C --> E["Lakehouse / OLAP sink"]
+    E --> F["Realtime dashboard / alert"]
 ```
 
-#### Watermark là gì?
-Nếu bạn đếm số lượt click từ `10:00` đến `10:05` dựa trên Event-time, làm sao bạn biết khi nào có thể "đóng" kết quả lại để tính tổng? Có thể một thiết bị gửi dữ liệu của lúc `10:01` nhưng đến tận `10:06` mới tới.
-**[Watermark](/concepts/5-stream-processing-realtime/watermark)** là một ngưỡng thời gian "heuristic" báo hiệu cho hệ thống: *"Tôi tự tin rằng sẽ không còn sự kiện nào có Event-time < X đến hệ thống nữa"*. Nhờ Watermark, hệ thống có thể đóng các cửa sổ thời gian (Window) và tiến hành tính toán mà không bị chờ đợi vô hạn.
+## 5. Spark Structured Streaming hay Flink?
 
----
+Không có câu trả lời cố định:
 
-### Bước 3: Khung thời gian (Windowing) và Stateful Processing
+- Spark Structured Streaming phù hợp nếu team đã dùng Spark, workload micro-batch ổn, tích hợp lakehouse mạnh: [Spark Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html).
+- Flink phù hợp hơn cho event-time phức tạp, stateful streaming dài hạn, latency thấp và continuous processing: [Apache Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/).
+- Kafka Streams phù hợp khi logic gần service, team JVM mạnh và use case gọn trong Kafka ecosystem.
 
-Phân tích dữ liệu vô hạn yêu cầu cắt chúng thành các đoạn nhỏ (Windows) dựa trên thời gian.
+Chọn engine theo độ trễ, state, kỹ năng team, vận hành và hệ sinh thái sink/source.
 
-#### 1. Tumbling Windows (Cửa sổ trượt cố định)
-Cửa sổ thời gian cố định, không chồng chéo.
-*Ví dụ*: Tính tổng doanh thu mỗi 5 phút một lần (0:00-0:05, 0:05-0:10).
-*Sử dụng*: Báo cáo định kỳ (Hourly reports, Minutely rollups).
+## Checklist đọc concept
 
-#### 2. Sliding Windows (Cửa sổ trượt gối đầu)
-Cửa sổ có độ dài cố định nhưng trượt đi (slide) một khoảng thời gian nhỏ hơn độ dài của nó.
-*Ví dụ*: Độ dài 10 phút, trượt mỗi 1 phút. Ở phút 0:01 tính (23:51-0:01), phút 0:02 tính (23:52-0:02).
-*Sử dụng*: Phát hiện xu hướng tức thời (Trending topics in the last 10 mins).
+| Mốc học | Concept nội bộ cần đọc |
+|---|---|
+| Kafka foundation | [Apache Kafka](/concepts/5-stream-processing-realtime/apache-kafka/), [Kafka Topics Partitions](/concepts/5-stream-processing-realtime/kafka-topics-partitions/), [Consumer Groups](/concepts/5-stream-processing-realtime/consumer-groups/) |
+| Time semantics | [Event-time vs Processing-time](/concepts/5-stream-processing-realtime/event-time-processing-time/), [Watermark](/concepts/5-stream-processing-realtime/watermark/), [Windowing](/concepts/5-stream-processing-realtime/windowing/) |
+| Reliability | [Exactly-once Semantics](/concepts/5-stream-processing-realtime/exactly-once-semantics/), [Backpressure Handling](/concepts/2-data-ingestion-integration/backpressure-handling/), [Kafka Consumer Lag Rebalance](/concepts/5-stream-processing-realtime/kafka-consumer-lag-rebalance/) |
 
-#### 3. Session Windows (Cửa sổ theo phiên)
-Cửa sổ không có độ dài cố định, mà được nhóm theo hoạt động của người dùng. Một session kết thúc khi có một khoảng "Gap" (thời gian không hoạt động) đủ lớn.
-*Sử dụng*: Phân tích hành vi người dùng (User Session Analysis).
+## Dự án thực hành
 
-#### Quản lý trạng thái (Stateful Processing)
-Để tính tổng (sum), đếm (count), hoặc join dữ liệu, hệ thống streaming (như Flink) phải lưu trữ trạng thái trung gian (State). State này phải được backup liên tục (Checkpointing) xuống bộ lưu trữ bền vững (HDFS/S3) để có thể phục hồi nếu máy chủ bị sập, đảm bảo không mất dữ liệu.
+**Dự án: Realtime fraud signal**
 
----
+1. Sinh event giao dịch vào Kafka.
+2. Key theo `account_id`.
+3. Tính tổng giao dịch 5 phút theo event-time.
+4. Dùng watermark để xử lý event trễ.
+5. Ghi cảnh báo vào topic hoặc OLAP table.
+6. Theo dõi consumer lag, throughput và checkpoint duration.
+7. Replay dữ liệu một khoảng thời gian để kiểm tra idempotency.
 
-### Bước 4: Đảm bảo xử lý chính xác một lần duy nhất (Exactly-Once Semantics - EOS)
+## Góc phỏng vấn
 
-Trong Streaming, khi một server sập và restart lại, nó có thể đọc lại dữ liệu cũ. Việc này dẫn đến 3 mức độ bảo đảm gửi/xử lý tin nhắn (Delivery Semantics):
+- Kafka partition quyết định thứ tự như thế nào?
+- Consumer lag tăng thì có thể do những nguyên nhân nào?
+- Watermark là gì và trade-off của nó?
+- Exactly-once khác idempotent sink ra sao?
+- Khi nào không nên dùng streaming?
 
-1. **At-most-once (Nhiều nhất một lần)**: Dữ liệu có thể bị mất, nhưng không bao giờ trùng lặp. (Dễ nhất, hiệu năng cao nhất).
-2. **At-least-once (Ít nhất một lần)**: Không bao giờ mất dữ liệu, nhưng có thể bị trùng lặp (Duplicate) khi restart. (Phổ biến, yêu cầu các hệ thống đích (sink) phải có tính Idempotent - ghi đè an toàn).
-3. **Exactly-Once (Chính xác một lần)**: Lý tưởng nhất. Mỗi sự kiện chỉ được xử lý cập nhật trạng thái đúng một lần duy nhất, dù hệ thống có sập. 
+## References
 
-> [!IMPORTANT]
-> Để đạt được Exactly-Once End-to-End, hệ thống yêu cầu sự kết hợp giữa: Source (Kafka hỗ trợ replay), Processing Engine (Flink Checkpointing/Barrier mechanism), và Sink (Hỗ trợ Two-Phase Commit hoặc Idempotent updates).
-
----
-
-### Bước 5: Thực chiến với các Engine xử lý - Spark vs Flink vs Kafka Streams
-
-Thế giới Streaming hiện bị thống trị bởi 3 gã khổng lồ. Việc lựa chọn công cụ phụ thuộc rất nhiều vào bài toán.
-
-| Tiêu chí | Apache Spark (Structured Streaming) | Apache Flink | Kafka Streams |
-|---|---|---|---|
-| **Mô hình kiến trúc** | Micro-batching (Lô nhỏ liên tục) / Continuous Processing (Mới) | True-Streaming (Xử lý từng sự kiện một) | Native Kafka Library |
-| **Độ trễ (Latency)** | Trung bình (Vài trăm ms đến giây) | Cực thấp (Mili-giây) | Thấp (Mili-giây) |
-| **Quản lý State** | Tương đối cơ bản, gắn liền với HDFS checkpoint. | Rất mạnh mẽ (RocksDB State Backend), tối ưu cho state lớn. | Mạnh mẽ, dựa trên RocksDB nội bộ. |
-| **Sức mạnh kết hợp Batch** | Cực kỳ xuất sắc. Chung API với Spark Batch. Tốt cho Data Lake. | Mạnh, Flink coi Batch là một trường hợp đặc biệt của Streaming. | Không có Batch Processing. |
-| **Use case lý tưởng** | ETL streaming vào Data Lake/Lakehouse, khi team đã quá rành Spark. | Hệ thống Fraud Detection, Rule-engine phức tạp, độ trễ cực thấp. | Các microservices nhỏ cần đọc/ghi lại Kafka không muốn setup Cluster nặng nề. |
-
----
-
-## Kiến trúc hệ thống Streaming Thực tiễn
-
-Một hệ thống Streaming hiện đại thường được thiết kế theo kiến trúc **Kappa Architecture** (thay thế Lambda Architecture bằng cách dùng Streaming để xử lý cả realtime và reprocessing dữ liệu cũ).
-
-```mermaid
-graph LR
-    subgraph "Data Sources"
-        DB[("OLTP Database<br/>PostgreSQL")]
-        Apps["Web/Mobile Apps"]
-        IoT["IoT Devices"]
-    end
-
-    subgraph "Data Ingestion"
-        CDC["Debezium CDC"]
-        API["REST API / Gateway"]
-    end
-
-    subgraph "Streaming Backbone"
-        Kafka["Apache Kafka<br/>Event Bus"]
-        Schema["Schema Registry<br/>Avro/Protobuf"]
-    end
-
-    subgraph "Stream Processing"
-        Flink["Apache Flink<br/>Stateful Processing"]
-    end
-
-    subgraph "Serving & Storage"
-        Redis[("Redis/Cassandra<br/>Fast Query")]
-        Iceberg[("Apache Iceberg<br/>Data Lakehouse")]
-    end
-
-    DB -->|Binlog| CDC
-    Apps --> API
-    IoT --> API
-    
-    CDC -->|Produce| Kafka
-    API -->|Produce| Kafka
-    
-    Kafka <-->|Validate| Schema
-    
-    Kafka -->|Consume| Flink
-    
-    Flink -->|Real-time Sink| Redis
-    Flink -->|Periodic Sink| Iceberg
-```
-
-### Best Practices & Vận hành (Operations & Tuning)
-1. **Schema Management**: Đừng bao giờ gửi JSON thô (raw JSON) không kiểm soát qua Kafka. Hãy sử dụng **Schema Registry** (ví dụ Confluent Schema Registry) kết hợp với định dạng `Avro` hoặc `Protobuf`. Điều này giúp tiết kiệm băng thông và đảm bảo tính tương thích ngược/xuôi (Backward/Forward compatibility) khi cấu trúc dữ liệu thay đổi.
-2. **Theo dõi Consumer Lag**: Số liệu quan trọng nhất trong Streaming là `Consumer Lag` (Sự chênh lệch giữa lượng data đẩy vào và lượng data đã xử lý). Sử dụng Prometheus/Grafana để alert nếu Lag tăng cao liên tục.
-3. **Xử lý Data Skew**: Khi một key bị dồn quá nhiều dữ liệu (ví dụ: event của một siêu sao trên mạng xã hội), partition chứa key đó sẽ phình to. Cần sử dụng kỹ thuật "Salting" (thêm muối) vào key để phân tán đều ra các partitions.
-
----
-
-## Dự án thực hành: Phát hiện gian lận tài chính thời gian thực
-
-Đưa lý thuyết vào thực tế bằng cách xây dựng hệ thống **Fraud Detection** end-to-end:
-
-* **Mô tả chi tiết:**
-  1. Viết một script Python/Faker tạo lập dòng sự kiện giao dịch thẻ tín dụng và đẩy vào Kafka Topic `transactions`. Mỗi sự kiện có `transaction_id`, `card_id`, `amount`, `location`, `timestamp`.
-  2. Triển khai **Apache Flink** cluster. Viết ứng dụng đọc topic `transactions`.
-  3. Áp dụng kỹ thuật **Sliding Window** độ dài 5 phút, trượt mỗi 1 phút theo `card_id`.
-  4. Nếu trong một window, một `card_id` thực hiện > 5 giao dịch, hoặc có 2 giao dịch cách nhau vài phút nhưng vị trí địa lý cách xa nhau hàng ngàn km (Impossible Travel Rule).
-  5. Đánh dấu giao dịch đó là gian lận, đẩy kết quả ra topic `fraud_alerts` trên Kafka.
-  6. Một Consumer khác đọc `fraud_alerts` và lưu vào Elasticsearch để hiển thị trên Kibana Dashboard theo thời gian thực.
-
-* **Công nghệ khuyên dùng:** Docker Compose (Kafka, Zookeeper, JobManager/TaskManager Flink, Elasticsearch, Kibana).
-
----
-
-## Trọng tâm ôn luyện phỏng vấn
-
-Các vị trí Streaming Data Engineer yêu cầu tư duy giải quyết vấn đề dưới áp lực hệ thống phân tán. Hãy chuẩn bị các câu hỏi sau:
-
-1. **Vận hành Consumer Group**: Giải thích chi tiết cơ chế lưu vết vị trí đọc dữ liệu (*offset commit*) trong Kafka. Quá trình tái phân bổ phân vùng (**Rebalancing**) xảy ra khi nào? Làm sao để giảm thiểu ảnh hưởng của Rebalancing?
-2. **Xử lý độ trễ và Watermark**: Trình bày rõ cách Flink sử dụng Watermark để quyết định khi nào đóng một cửa sổ (window). Nếu data đến trễ hơn cả mức Watermark (Late Data) thì làm thế nào? (Gợi ý: Bàn về Side Output / Allowed Lateness).
-3. **Cơ chế chịu lỗi (Fault-Tolerance)**: Phân biệt Checkpoint và Savepoint trong Flink. Giải thích thuật toán Chandy-Lamport dùng trong Flink Distributed Snapshot.
-4. **Data Skew & Tối ưu Partition**: Đưa ra kịch bản và giải pháp khắc phục khi dữ liệu bị phân bổ lệch giữa các partition (Partition Imbalance).
-5. **Exactly-once End-to-end**: Trình bày cơ chế Two-Phase Commit (2PC) giữa Flink và Kafka để đạt được Exactly-once.
-
----
-
-## Tài Liệu Tham Khảo Chuyên Sâu
-
-Để đi sâu hơn vào lĩnh vực này, đây là những tài liệu gối đầu giường bạn không thể bỏ qua:
-
-* **[Sách] Designing Data-Intensive Applications** - *Martin Kleppmann*. Cuốn sách kinh điển nhất mọi thời đại về thiết kế hệ thống phân tán và dữ liệu.
-* **[Sách] Kafka: The Definitive Guide** - *Gwen Shapira, Todd Palino*. Sách gối đầu giường để vận hành và tối ưu Apache Kafka.
-* **[Sách] Stream Processing with Apache Flink** - *Fabian Hueske, Vasiliki Kalavri*. Bóc tách toàn bộ kiến trúc lõi và kỹ năng viết ứng dụng Flink.
-* **[Blog] The Pragmatic Engineer** - *Gergely Orosz* ([Link](https://blog.pragmaticengineer.com/))
-* **[Blog] Building Data Infrastructure at Airbnb** - Bài viết từ team Engineering Airbnb về kinh nghiệm xây dựng data platform ([Link])
-* **[Tài liệu] Confluent Blog / Flink Forward** - Nơi cập nhật các best practices mới nhất từ những người đóng góp cốt lõi của Kafka và Flink.
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/) - Apache Software Foundation.
+- [Apache Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/) - Apache Software Foundation.
+- [Structured Streaming Programming Guide](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) - Apache Spark.
+- [Spark Structured Streaming](https://iceberg.apache.org/docs/latest/spark-structured-streaming/) - Apache Iceberg.
+- [Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) - Google SRE.

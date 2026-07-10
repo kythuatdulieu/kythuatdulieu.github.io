@@ -33,10 +33,7 @@ flowchart TD
     C -->|"Top-p (Nucleus)"| E["Cắt động theo Xác suất tích lũy (Dynamic Truncation)"]
     D --> F("Lấy mẫu ngẫu nhiên (Multinomial Sampling)")
     E --> F
-    F --> G("Trả về Next Token ID")
-    
-    style E fill:#e6ffed,stroke:#2ea043
-    style C fill:#e6f3ff,stroke:#4a90e2
+    F --> G("Trả về Next Token ID")
 ```
 
 Các phương pháp đời đầu bộc lộ nhiều điểm yếu chí mạng ở quy mô sản xuất (Production):

@@ -1,0 +1,668 @@
+{
+  "exam": "AI Fundamentals",
+  "provider": "isaca",
+  "code": "ai-fundamentals",
+  "total_questions": 60,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which of the following properties is fundamental to artificial intelligence (AI)?",
+      "choices": {
+        "A": "AI learning",
+        "B": "AI predicting",
+        "C": "AI reasoning"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lập luận (AI reasoning) là một đặc tính cơ bản của trí tuệ nhân tạo, giúp hệ thống suy luận, rút ra kết luận và giải quyết vấn đề từ các dữ liệu và luật lệ sẵn có."
+    },
+    {
+      "id": 2,
+      "question": "Which of the following trains a predictive model from input data?",
+      "choices": {
+        "A": "Expert system",
+        "B": "Artificial intelligence",
+        "C": "Machine learning"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Học máy (Machine Learning) là một lĩnh vực con của AI tập trung vào việc huấn luyện các mô hình dự báo từ dữ liệu đầu vào."
+    },
+    {
+      "id": 3,
+      "question": "XAI is a term used to reference which of the following?",
+      "choices": {
+        "A": "The module explaining how the system reached its conclusion",
+        "B": "The user interface of an AI system",
+        "C": "An expert system's knowledge base"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "XAI (Explainable AI - Trí tuệ nhân tạo có thể giải thích được) là thuật ngữ dùng để chỉ các phương pháp và kỹ thuật cho phép con người hiểu và tin tưởng vào kết quả và đầu ra được tạo ra bởi các thuật toán học máy, cụ thể là module giải thích cách hệ thống đạt được kết luận."
+    },
+    {
+      "id": 4,
+      "question": "Which of the following non-probability sampling methods is the MOST susceptible to bias?",
+      "choices": {
+        "A": "Judgment",
+        "B": "Convenience",
+        "C": "Quota"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lấy mẫu thuận tiện (Convenience sampling) là phương pháp lấy mẫu phi xác suất dễ bị thiên vị (chệch) nhất vì nó chỉ chọn những mẫu dễ tiếp cận nhất mà không đảm bảo tính đại diện cho tổng thể."
+    },
+    {
+      "id": 5,
+      "question": "When an organization has an individual create digital data for a specific purpose and then shares that same data without consent, it is a violation of which of the following?",
+      "choices": {
+        "A": "Integrity",
+        "B": "Privacy",
+        "C": "Security"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc chia sẻ dữ liệu số của cá nhân mà không có sự đồng ý của họ là hành vi vi phạm quyền riêng tư (Privacy)."
+    },
+    {
+      "id": 6,
+      "question": "Which of the following is the MOST important data governance consideration related to AI?",
+      "choices": {
+        "A": "Cost and resource reductions",
+        "B": "Ethical and privacy prioritization",
+        "C": "Improved efficiency and effectiveness"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ưu tiên đạo đức và quyền riêng tư (Ethical and privacy prioritization) là yếu tố quản trị dữ liệu quan trọng nhất liên quan đến AI để đảm bảo AI được phát triển và sử dụng một cách có trách nhiệm."
+    },
+    {
+      "id": 7,
+      "question": "Which of the following collects anonymous data?",
+      "choices": {
+        "A": "Data Management Platform",
+        "B": "Website cookies",
+        "C": "Customer Data Platform"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nền tảng Quản lý Dữ liệu (DMP - Data Management Platform) chủ yếu thu thập và quản lý dữ liệu ẩn danh (như cookie, ID thiết bị) phục vụ quảng cáo, trong khi CDP (Customer Data Platform) thu thập dữ liệu định danh khách hàng cụ thể."
+    },
+    {
+      "id": 8,
+      "question": "Compromised health, marketing, and financial data obtained by bad actors is MOST likely to result in:",
+      "choices": {
+        "A": "inaccurate targeted marketing.",
+        "B": "creation of false identities.",
+        "C": "incorrect medical diagnoses."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc kẻ xấu đánh cắp và kết hợp các dữ liệu về sức khỏe, tiếp thị và tài chính của một cá nhân có khả năng cao nhất dẫn đến việc tạo ra các danh tính giả (creation of false identities) hoặc giả mạo danh tính."
+    },
+    {
+      "id": 9,
+      "question": "In cases where an algorithm has more than two classes, which technique BEST enables a data scientist to ensure its accuracy?",
+      "choices": {
+        "A": "Linear regression",
+        "B": "Confusion matrix",
+        "C": "K-NN"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ma trận nhầm lẫn (Confusion matrix) là công cụ tốt nhất giúp nhà khoa học dữ liệu đánh giá độ chính xác của thuật toán phân loại, đặc biệt là khi bài toán có nhiều hơn hai lớp (multi-class)."
+    },
+    {
+      "id": 10,
+      "question": "Which of the following should be considered FIRST prior to the adoption of AI technology?",
+      "choices": {
+        "A": "Identifying the problem AI can solve",
+        "B": "Ensuring AI training is available",
+        "C": "Defining key performance indicators (KPIs)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trước khi áp dụng công nghệ AI, tổ chức cần phải xác định rõ vấn đề cụ thể mà AI có thể giải quyết (Identifying the problem AI can solve) để tránh lãng phí nguồn lực vào các giải pháp không thiết thực."
+    },
+    {
+      "id": 11,
+      "question": "The term \"data owner\":",
+      "choices": {
+        "A": "is defined as the organization aggregating data.",
+        "B": "is defined as the organization collecting data.",
+        "C": "can only be defined given context."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Thuật ngữ 'chủ sở hữu dữ liệu' (data owner) có thể có nhiều định nghĩa khác nhau và chỉ có thể được xác định cụ thể tùy theo ngữ cảnh pháp lý hoặc cấu trúc tổ chức."
+    },
+    {
+      "id": 12,
+      "question": "Which of the following is a significant issue in data mining that can result in higher error rates due to the training data used?",
+      "choices": {
+        "A": "Class imbalance",
+        "B": "Digital tracking",
+        "C": "Dimension reduction"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mất cân bằng lớp (Class imbalance) là một vấn đề lớn trong khai thác dữ liệu, khiến mô hình thiên lệch về phía lớp đa số và dẫn đến tỷ lệ lỗi cao đối với các lớp thiểu số."
+    },
+    {
+      "id": 13,
+      "question": "Using AI to tailor pricing and personalize ads in real time is defined as:",
+      "choices": {
+        "A": "behavioral AI.",
+        "B": "superintelligence.",
+        "C": "targeted marketing."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Sử dụng AI để điều chỉnh giá cả và cá nhân hóa quảng cáo theo thời gian thực được định nghĩa là tiếp thị hướng đối tượng (Targeted marketing)."
+    },
+    {
+      "id": 14,
+      "question": "Which of the following is an example of a properly defined and scoped key performance indicator (KPI)?",
+      "choices": {
+        "A": "Reduce customer complaints.",
+        "B": "Increase customer satisfaction for the month of May.",
+        "C": "Increase phone sales by 15% this year."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Một chỉ số đo lường hiệu quả công việc (KPI) được định nghĩa và giới hạn phạm vi đúng chuẩn phải tuân theo tiêu chí SMART (cụ thể, đo lường được, có thời hạn). Lựa chọn C đáp ứng đầy đủ các yếu tố này: tăng doanh số bán hàng qua điện thoại thêm 15% (đo lường được) trong năm nay (thời gian rõ ràng)."
+    },
+    {
+      "id": 15,
+      "question": "Which of the following is a type of job considered to be resistant to automation?",
+      "choices": {
+        "A": "Teller",
+        "B": "Cashier",
+        "C": "Daycare worker"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Công việc của nhân viên chăm sóc trẻ em (Daycare worker) đòi hỏi trí tuệ cảm xúc cao, khả năng tương tác xã hội linh hoạt và các kỹ năng chăm sóc thể chất phức tạp, do đó rất khó bị tự động hóa so với giao dịch viên ngân hàng hay thu ngân."
+    },
+    {
+      "id": 16,
+      "question": "Which of the following acts as the intermediary between the human operator and an expert system's inference engine?",
+      "choices": {
+        "A": "Knowledge base",
+        "B": "Chatbot",
+        "C": "User interface"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giao diện người dùng (User interface) đóng vai trò là cầu nối trung gian giữa người vận hành và công cụ suy luận (inference engine) của hệ thống chuyên gia."
+    },
+    {
+      "id": 17,
+      "question": "How does AI negatively affect potential applicants new to the job market?",
+      "choices": {
+        "A": "Global competitiveness has become more important.",
+        "B": "Education requirements are increasing.",
+        "C": "Entry-level jobs are being automated."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "AI ảnh hưởng tiêu cực đến những ứng viên mới gia nhập thị trường lao động bằng cách tự động hóa các công việc ở cấp độ khởi đầu (entry-level jobs), làm giảm cơ hội thực hành và tích lũy kinh nghiệm thực tế của họ."
+    },
+    {
+      "id": 18,
+      "question": "Natural language processing (NLP) may include which of the following aspects of speech?",
+      "choices": {
+        "A": "Translation",
+        "B": "Morphology",
+        "C": "Dictation"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hình thái học (Morphology) là nghiên cứu về cấu trúc và sự hình thành của từ ngữ, đây là một khía cạnh ngôn ngữ học cốt lõi được sử dụng trong xử lý ngôn ngữ tự nhiên (NLP) để phân tích từ tố."
+    },
+    {
+      "id": 19,
+      "question": "AI can be helpful in combating bias by utilizing which of the following inherent qualities?",
+      "choices": {
+        "A": "Automated decision making",
+        "B": "Robust programming code",
+        "C": "Effective regulatory compliance"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "AI có thể giúp chống lại định kiến/thiên vị nhờ vào tính chất ra quyết định tự động (Automated decision making), giúp loại bỏ các yếu tố cảm tính và định kiến chủ quan của con người khi xử lý công việc."
+    },
+    {
+      "id": 20,
+      "question": "AI lacks which of the following?",
+      "choices": {
+        "A": "Artificial general intelligence (AGI)",
+        "B": "Unbiased data",
+        "C": "Specific domain intelligence"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trí tuệ nhân tạo hiện nay (Narrow AI) vẫn thiếu trí tuệ nhân tạo tổng quát (AGI - khả năng hiểu, học và áp dụng kiến thức vào bất kỳ nhiệm vụ trí tuệ nào như con người)."
+    },
+    {
+      "id": 21,
+      "question": "Which of the following is the MOST significant outcome from flawed program code that is likely to lead to ethical concerns?",
+      "choices": {
+        "A": "Additional training requirements for developers",
+        "B": "Increased costs of writing new code",
+        "C": "Greater unpredictability of results"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Kết quả ngày càng khó dự đoán (Greater unpredictability of results) từ mã chương trình bị lỗi là mối lo ngại đạo đức lớn nhất, vì nó có thể dẫn đến các quyết định tự động không công bằng, sai lệch hoặc gây hại ngoài ý muốn."
+    },
+    {
+      "id": 22,
+      "question": "Which of the following risks does data augmentation BEST help mitigate?",
+      "choices": {
+        "A": "Feature scaling",
+        "B": "Normalization",
+        "C": "Overfitting"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tăng cường dữ liệu (Data augmentation) giúp đa dạng hóa dữ liệu huấn luyện, từ đó hạn chế tối đa hiện tượng quá khớp (Overfitting), giúp mô hình tổng quát hóa tốt hơn trên dữ liệu mới."
+    },
+    {
+      "id": 23,
+      "question": "Which of the following is the simplest example of previously hidden, non-consensual data collection that is widespread online?",
+      "choices": {
+        "A": "CAPTCHAs",
+        "B": "Job applications",
+        "C": "Cookies"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cookie là ví dụ phổ biến nhất về việc thu thập dữ liệu người dùng trực tuyến một cách âm thầm và không có sự đồng ý rõ ràng trước đây để theo dõi hành vi duyệt web."
+    },
+    {
+      "id": 24,
+      "question": "Which of the following types of jobs is AI expected to replace?",
+      "choices": {
+        "A": "Jobs usually performed by experts in the field",
+        "B": "Entry-level monotonous jobs",
+        "C": "Human service sector jobs"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "AI được dự báo sẽ thay thế các công việc đơn điệu, lặp đi lặp lại ở cấp độ khởi đầu (Entry-level monotonous jobs) do chúng dễ dàng được lập trình và tự động hóa."
+    },
+    {
+      "id": 25,
+      "question": "Which of the following is the GREATEST concern as an AI system becomes more autonomous and expands its ability to learn unsupervised?",
+      "choices": {
+        "A": "Its treatment of humans",
+        "B": "Its impact on the job market",
+        "C": "The intrusion on individuals’ privacy"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi hệ thống AI ngày càng tự chủ và có khả năng tự học không giám sát mạnh mẽ hơn, mối quan ngại lớn nhất là cách hệ thống này đối xử với con người (Its treatment of humans) nhằm bảo đảm an toàn và đạo đức."
+    },
+    {
+      "id": 26,
+      "question": "Which of the following is an enterprise usage example of robotic motion planning?",
+      "choices": {
+        "A": "Automated digital assistants",
+        "B": "Robots pressing buttons in a manufacturing plant",
+        "C": "Self-driving cars"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Robot nhấn các nút bấm trong nhà máy sản xuất (Robots pressing buttons in a manufacturing plant) là một ví dụ thực tế về lập kế hoạch chuyển động của robot (robotic motion planning) trong môi trường doanh nghiệp/công nghiệp."
+    },
+    {
+      "id": 27,
+      "question": "In deep learning, which of the following is the PRIMARY benefit of hierarchical feature learning?",
+      "choices": {
+        "A": "It allows models to manually define features.",
+        "B": "It reduces the need for labeled data.",
+        "C": "It enables models to learn complex patterns from raw data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Học tính năng theo cấp bậc (Hierarchical feature learning) cho phép các mô hình deep learning tự động trích xuất các đặc trưng từ mức độ đơn giản đến phức tạp trực tiếp từ dữ liệu thô mà không cần định nghĩa thủ công."
+    },
+    {
+      "id": 28,
+      "question": "Which of the following algorithms divides data instances into groups in real time and is especially beneficial for unknown data?",
+      "choices": {
+        "A": "Clustering",
+        "B": "Classification",
+        "C": "Partitioning"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Thuật toán phân cụm (Clustering) nhóm các thực thể dữ liệu tương tự nhau thành các cụm mà không cần nhãn từ trước, rất hữu ích cho việc khám phá cấu trúc ẩn của các tập dữ liệu chưa biết."
+    },
+    {
+      "id": 29,
+      "question": "Leveraging AI, data processing to scan systems for threats and weaknesses supports which of the following functions?",
+      "choices": {
+        "A": "Cybersecurity",
+        "B": "Superintelligence",
+        "C": "Marketing"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Quét hệ thống để tìm kiếm các mối đe dọa và điểm yếu bảo mật bằng công nghệ AI là hoạt động hỗ trợ cho lĩnh vực An ninh mạng (Cybersecurity)."
+    },
+    {
+      "id": 30,
+      "question": "Which of the following is used as a reporting tool to enable appropriate allocation of organizational needs?",
+      "choices": {
+        "A": "Governance",
+        "B": "Balanced scorecard",
+        "C": "Business intelligence"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Thẻ điểm cân bằng (Balanced scorecard) là một công cụ báo cáo và quản lý chiến lược giúp các tổ chức phân bổ nguồn lực hợp lý dựa trên các mục tiêu và thước đo hiệu suất toàn diện."
+    },
+    {
+      "id": 31,
+      "question": "An example of AI usage in healthcare is the analysis of which of the following in order to predict diseases?",
+      "choices": {
+        "A": "Surgeries",
+        "B": "Biodata",
+        "C": "Genomes"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong lĩnh vực y tế, việc phân tích bộ gen (Genomes) bằng AI giúp dự đoán nguy cơ mắc các bệnh di truyền hoặc bệnh lý phức tạp ở cá nhân."
+    },
+    {
+      "id": 32,
+      "question": "Which of the following would combat the loss of jobs to AI?",
+      "choices": {
+        "A": "Free healthcare",
+        "B": "Creation of digital footprints",
+        "C": "Continuous education"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giáo dục và đào tạo liên tục (Continuous education) giúp người lao động cập nhật kỹ năng mới, chuyển đổi sang các công việc khó bị tự động hóa hơn để đối phó với tình trạng mất việc làm do AI."
+    },
+    {
+      "id": 33,
+      "question": "An online AI-based symptom and cure checker that uses algorithms to diagnose and treat illness is an example of which type of AI?",
+      "choices": {
+        "A": "Expert system",
+        "B": "Temporal reasoning",
+        "C": "Robotics"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hệ thống chuyên gia (Expert system) chẩn đoán và gợi ý hướng điều trị dựa trên việc mô phỏng năng lực ra quyết định của các chuyên gia y tế."
+    },
+    {
+      "id": 34,
+      "question": "Which of the following expertise domains can be used to simulate crimes and detect patterns?",
+      "choices": {
+        "A": "Business expertise",
+        "B": "Forensic science",
+        "C": "Human science"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khoa học pháp y (Forensic science) là lĩnh vực chuyên môn sử dụng các kỹ thuật khoa học để mô phỏng tội phạm, phân tích chứng cứ và phát hiện các mô hình hành vi phạm tội."
+    },
+    {
+      "id": 35,
+      "question": "Which term is used to describe the transformation of high-dimensionality data to lower-dimensionality data while retaining meaningful attributes of the original data?",
+      "choices": {
+        "A": "Regression",
+        "B": "Dimension reduction",
+        "C": "Dimension enhancement"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giảm chiều dữ liệu (Dimension reduction) là quá trình chuyển đổi dữ liệu từ không gian nhiều chiều về không gian ít chiều hơn nhưng vẫn giữ lại các thuộc tính quan trọng của dữ liệu gốc."
+    },
+    {
+      "id": 36,
+      "question": "How can the use of AI cause damage to an individual's character?",
+      "choices": {
+        "A": "Increased regulatory requirements",
+        "B": "Gathering of personal information posted on social media",
+        "C": "Information distortion"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Việc xuyên tạc thông tin (Information distortion) thông qua deepfake hoặc tin giả do AI tạo ra có thể gây tổn hại nghiêm trọng đến danh dự và uy tín của một cá nhân."
+    },
+    {
+      "id": 37,
+      "question": "Expert systems utilize a knowledge base that is created via elicitation of knowledge, coding, testing, and which of the following?",
+      "choices": {
+        "A": "Call centers",
+        "B": "Knowledge fusion",
+        "C": "Ethical modules"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hệ thống chuyên gia xây dựng cơ sở tri thức thông qua việc khai thác tri thức, mã hóa, kiểm thử và hợp nhất tri thức (Knowledge fusion) từ nhiều nguồn khác nhau."
+    },
+    {
+      "id": 38,
+      "question": "A class imbalance problem occurs when there are:",
+      "choices": {
+        "A": "an unequal number of samples.",
+        "B": "a lack of quality of samples.",
+        "C": "a clustering balancing equation of samples."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Vấn đề mất cân bằng lớp xảy ra khi có số lượng mẫu không đồng đều (an unequal number of samples) giữa các phân lớp dữ liệu trong tập dữ liệu huấn luyện."
+    },
+    {
+      "id": 39,
+      "question": "A clustering method is considered good when it produces which of the following?",
+      "choices": {
+        "A": "Partitions",
+        "B": "Intra-classes",
+        "C": "Inter-classes"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Một phương pháp phân cụm tốt khi nó tạo ra các cụm có độ tương đồng nội bộ cao (Intra-classes similarity), tức là các phần tử trong cùng một cụm rất giống nhau."
+    },
+    {
+      "id": 40,
+      "question": "Which of the following is the MOST common reason for enterprises to incorporate AI in order to achieve a competitive advantage?",
+      "choices": {
+        "A": "Cost reductions",
+        "B": "Risk remediation",
+        "C": "Targeted marketing"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giảm thiểu chi phí (Cost reductions) là lý do phổ biến nhất thúc đẩy các doanh nghiệp tích hợp AI vào quy trình vận hành để đạt được lợi thế cạnh tranh."
+    },
+    {
+      "id": 41,
+      "question": "Which of the following is an example of a job that can now be performed by an AI?",
+      "choices": {
+        "A": "Valet parking",
+        "B": "Online Instruction",
+        "C": "Commercial flying"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giảng dạy trực tuyến (Online Instruction) là một ví dụ về công việc hiện có thể được hỗ trợ hoặc thực hiện bởi các hệ thống AI (như các gia sư ảo, hệ thống học tập thích ứng)."
+    },
+    {
+      "id": 42,
+      "question": "Which of the following is of GREATEST concern given that AI's ethical framework is still in its infancy?",
+      "choices": {
+        "A": "Financial responsibility",
+        "B": "Accountability",
+        "C": "Intellectual property"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trách nhiệm giải trình (Accountability) là mối quan tâm hàng đầu khi khung đạo đức của AI vẫn còn sơ khai, nhằm xác định ai sẽ chịu trách nhiệm cho các hành vi và quyết định sai sót của hệ thống AI."
+    },
+    {
+      "id": 43,
+      "question": "Machine learning can be defined as:",
+      "choices": {
+        "A": "a predetermined set of rules.",
+        "B": "a type of automation.",
+        "C": "a predictive model."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Học máy (Machine learning) có thể được định nghĩa một cách tổng quát là việc xây dựng một mô hình dự báo (predictive model) dựa trên việc phân tích dữ liệu lịch sử."
+    },
+    {
+      "id": 44,
+      "question": "Combining AI with an individual's digital footprint can pose a significant risk due to which of the following algorithms?",
+      "choices": {
+        "A": "Cryptoeconomics",
+        "B": "Generative adversarial networks",
+        "C": "Watson"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Kết hợp AI với dấu chân số (digital footprint) của cá nhân có thể tạo ra rủi ro lớn khi sử dụng các Mạng đối nghịch tạo (GAN - Generative Adversarial Networks) để tạo ra các hình ảnh, video hoặc giọng nói giả mạo cực kỳ chân thực (deepfakes)."
+    },
+    {
+      "id": 45,
+      "question": "Which of the following is a type of probability sampling?",
+      "choices": {
+        "A": "Sampling fraction",
+        "B": "Cluster",
+        "C": "Judgment"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lấy mẫu theo cụm (Cluster sampling) là một phương pháp lấy mẫu xác suất phổ biến, trong đó tổng thể được chia thành các cụm và các cụm được chọn ngẫu nhiên."
+    },
+    {
+      "id": 46,
+      "question": "Which of the following expert system components retrieves the information when a user queries the system?",
+      "choices": {
+        "A": "Knowledge base",
+        "B": "Inference engine",
+        "C": "Explanation module"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bộ suy luận (Inference engine) là thành phần áp dụng các quy tắc logic lên cơ sở tri thức để trích xuất hoặc suy luận ra câu trả lời khi người dùng truy vấn hệ thống."
+    },
+    {
+      "id": 47,
+      "question": "Which of the following can be used by organizations to detect possible anomalies in employee actions?",
+      "choices": {
+        "A": "Deep neural networks",
+        "B": "Confusion matrix",
+        "C": "Behavioral AI"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "AI hành vi (Behavioral AI) có thể được sử dụng để phân tích các thói quen, hành động thường ngày của nhân viên nhằm phát hiện những hành vi bất thường (anomalies) có khả năng gây rủi ro bảo mật."
+    },
+    {
+      "id": 48,
+      "question": "The R2 notation can range from 0-100%. An R2 value of 0.845 signifies which type of a relationship?",
+      "choices": {
+        "A": "Neutral association",
+        "B": "Positive linear association",
+        "C": "Negative association"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giá trị R2 (hệ số xác định) bằng 0.845 biểu thị mối quan hệ tuyến tính đồng biến mạnh (Positive linear association) giữa các biến trong mô hình hồi quy tuyến tính."
+    },
+    {
+      "id": 49,
+      "question": "Which of the following methods scales poorly with large data sets?",
+      "choices": {
+        "A": "Fuzzy",
+        "B": "Density-based",
+        "C": "Hierarchical"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phân cụm phân cấp (Hierarchical clustering) có độ phức tạp tính toán và bộ nhớ rất cao (thường là bậc hai hoặc bậc ba theo số lượng mẫu), do đó có khả năng mở rộng kém (scales poorly) khi làm việc với các tập dữ liệu lớn."
+    },
+    {
+      "id": 50,
+      "question": "Classification models are a form of which model type?",
+      "choices": {
+        "A": "Supervised learning",
+        "B": "Reinforcement learning",
+        "C": "Unsupervised learning"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Các mô hình phân loại (Classification models) thuộc phương pháp học có giám sát (Supervised learning) vì chúng yêu cầu dữ liệu huấn luyện đã được gắn nhãn trước."
+    },
+    {
+      "id": 51,
+      "question": "Which of the following ethical challenges is the use of AI MOST likely to present?",
+      "choices": {
+        "A": "Bias in content output",
+        "B": "Unauthorized alteration of data",
+        "C": "Data misuse"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Định kiến trong nội dung đầu ra (Bias in content output) là thách thức đạo đức phổ biến nhất mà việc sử dụng AI mang lại, thường do dữ liệu huấn luyện chứa sẵn các thiên vị lịch sử."
+    },
+    {
+      "id": 52,
+      "question": "Which of the following logic types is BEST to use for an AI algorithm that determines whether drivers are stopping for red traffic lights?",
+      "choices": {
+        "A": "Spatiotemporal",
+        "B": "Temporal",
+        "C": "Boolean"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Logic thời gian (Temporal logic) là lựa chọn phù hợp nhất cho thuật toán xác định xem người lái xe có dừng lại khi đèn đỏ hay không, vì bài toán cần phân tích chuỗi hành động diễn ra theo thời gian."
+    },
+    {
+      "id": 53,
+      "question": "Which type of data is MOST commonly augmented using techniques like pitch shifting and time stretching?",
+      "choices": {
+        "A": "Text",
+        "B": "Audio",
+        "C": "Images"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Pitch shifting (thay đổi cao độ) và time stretching (kéo giãn thời gian) là hai kỹ thuật tăng cường dữ liệu đặc thù dành riêng cho dữ liệu âm thanh (Audio)."
+    },
+    {
+      "id": 54,
+      "question": "Which of the following is an example of the use of AI to assist consumers in finding new or old relationship connections?",
+      "choices": {
+        "A": "Apps that use facial recognition",
+        "B": "Apps that use a global positioning system (GPS)",
+        "C": "Apps that look at possible connection proximity"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Ứng dụng sử dụng nhận dạng khuôn mặt (facial recognition) là ví dụ điển hình về việc dùng AI để giúp người dùng tìm kiếm và kết nối lại các mối quan hệ mới hoặc cũ dựa trên hình ảnh."
+    },
+    {
+      "id": 55,
+      "question": "Which of the following is an example of video synthesis?",
+      "choices": {
+        "A": "Object resolution",
+        "B": "Face-swapping",
+        "C": "Image classification"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hoán đổi khuôn mặt (Face-swapping) trong các video là một ví dụ điển hình về tổng hợp video (video synthesis), thường được tạo ra bằng các công nghệ Generative AI."
+    },
+    {
+      "id": 56,
+      "question": "What is PowerShell?",
+      "choices": {
+        "A": "Malware detection software",
+        "B": "A team of sophisticated hackers",
+        "C": "An advanced hacking tool"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "PowerShell tuy là một công cụ quản lý cấu hình và tự động hóa tác vụ của Microsoft, nhưng trong các bài kiểm tra bảo mật (như của ISACA), nó thường được xem như một công cụ tấn công nâng cao (advanced hacking tool) khi bị kẻ tấn công lợi dụng để thực thi mã độc và điều khiển hệ thống."
+    },
+    {
+      "id": 57,
+      "question": "An organization wants to create measurements to determine the efficiency levels of organizational processes. What is the starting point to articulate the current state of the item to be measured?",
+      "choices": {
+        "A": "Lead indicator",
+        "B": "Benchmark",
+        "C": "Internal process perspective"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Điểm chuẩn (Benchmark) là điểm bắt đầu được sử dụng để xác định trạng thái hiện tại của quy trình cần đo lường, làm cơ sở để so sánh và cải tiến hiệu suất sau này."
+    },
+    {
+      "id": 58,
+      "question": "Which of the following is a practical example of AI natural language processing (NLP)?",
+      "choices": {
+        "A": "Siri on Apple devices",
+        "B": "Roomba (automatic vacuum cleaner)",
+        "C": "Red light cameras"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trợ lý ảo Siri trên các thiết bị Apple là một ví dụ thực tế phổ biến về xử lý ngôn ngữ tự nhiên (NLP) khi nó có thể hiểu và phản hồi lại giọng nói của con người."
+    },
+    {
+      "id": 59,
+      "question": "Which of the following platforms collects first-party natural personal data and creates nodes or contextual relationships between the data?",
+      "choices": {
+        "A": "Customer data",
+        "B": "Data management",
+        "C": "Data Lake storage"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nền tảng dữ liệu khách hàng (Customer Data Platform - ở đây ghi tắt là Customer data) là hệ thống thu thập dữ liệu cá nhân bên thứ nhất (first-party data) và tạo lập các mối quan hệ ngữ cảnh giữa các điểm dữ liệu để xây dựng hồ sơ khách hàng hợp nhất."
+    },
+    {
+      "id": 60,
+      "question": "Which of the following is an example of weaponizing AI?",
+      "choices": {
+        "A": "Preventing individuals from driving without a driver's license",
+        "B": "Preventing individuals from reproducing due to certain genetic markers",
+        "C": "Using electric smart meters"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ngăn cản các cá nhân sinh sản dựa trên các dấu hiệu di truyền (eugenics kỹ thuật số) là một ví dụ cực đoan về việc vũ khí hóa AI (weaponizing AI), vi phạm nghiêm trọng quyền con người và các nguyên tắc đạo đức."
+    }
+  ]
+}

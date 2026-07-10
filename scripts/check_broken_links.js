@@ -68,10 +68,9 @@ internalLinks.forEach(link => {
   
   let found = false;
   
-  // Clean up trailing slash
-  if (targetPath.endsWith('/')) {
-    targetPath = targetPath.slice(0, -1);
-  }
+  // Clean up trailing path separator. On Windows, path.join turns URL slashes
+  // into backslashes, so handle both forms.
+  targetPath = targetPath.replace(/[\\/]+$/, '');
 
   const possiblePaths = [
     targetPath,

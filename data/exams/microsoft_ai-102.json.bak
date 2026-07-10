@@ -1,0 +1,1908 @@
+{
+  "exam": "AI-102",
+  "provider": "microsoft",
+  "code": "ai-102",
+  "total_questions": 167,
+  "questions": [
+    {
+      "id": 1,
+      "question": "You are building an app that will include one million scanned magazine articles. Each article will be stored as an image file.\nYou need to configure the app to extract text from the images. The solution must minimize development effort.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "Computer Vision Image Analysis",
+        "B": "the Read API in Computer Vision",
+        "C": "Form Recognizer",
+        "D": "Azure Cognitive Service for Language"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (the Read API in Computer Vision)** vì đây là API được thiết kế chuyên biệt để trích xuất văn bản (OCR) từ các hình ảnh hoặc tài liệu PDF có dung lượng lớn, văn bản dày đặc (như bài báo, sách scan), giúp tối ưu hóa hiệu suất và giảm thiểu công sức phát triển.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Computer Vision Image Analysis):** Dùng để phân tích hình ảnh tổng quát (nhận diện vật thể, mô tả ảnh...) mặc dù có tính năng OCR cơ bản nhưng không tối ưu cho tài liệu nhiều chữ như Read API.\n  - **C (Form Recognizer - nay là Azure AI Document Intelligence):** Dùng để trích xuất cấu trúc dữ liệu từ các biểu mẫu có định dạng cụ thể (invoices, receipts...). Dùng cho bài báo scan sẽ phức tạp hơn và không tối ưu bằng Read API.\n  - **D (Azure Cognitive Service for Language):** Dùng để xử lý ngôn ngữ tự nhiên (NLP) như phân tích cảm xúc, dịch thuật, tóm tắt văn bản chứ không có chức năng trích xuất văn bản từ hình ảnh (OCR).",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-ocr"
+      ]
+    },
+    {
+      "id": 2,
+      "question": "You have a 20-GB video file named File1.avi that is stored on a local drive.\nYou need to index File1.avi by using the Azure Video Indexer website.\nWhat should you do first?",
+      "choices": {
+        "A": "Upload File1.avi to an Azure Storage queue.",
+        "B": "Upload File1.avi to the Azure Video Indexer website.",
+        "C": "Upload File1.avi to Microsoft OneDrive.",
+        "D": "Upload File1.avi to the www.youtube.com webpage."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "• **Đáp án đúng: C (Upload File1.avi to Microsoft OneDrive.)**\n\n• **Giải thích:**\n  - Azure AI Video Indexer giới hạn kích thước tệp tải lên trực tiếp từ thiết bị cục bộ thông qua trang web là tối đa **2 GB**.\n  - Đối với các tệp tin lớn hơn (như tệp tin 20-GB này), bạn cần tải tệp tin lên một dịch vụ lưu trữ đám mây (như Microsoft OneDrive hoặc Azure Blob Storage) và sử dụng tùy chọn tải lên qua URL công khai (URL Upload hỗ trợ tệp lên đến 30 GB). Do đó, bước đầu tiên cần làm là tải tệp tin lên OneDrive để lấy đường dẫn chia sẻ trực tiếp (direct download link).\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Upload File1.avi to an Azure Storage queue):** Hàng đợi Azure Storage Queue chỉ lưu trữ các thông điệp văn bản nhỏ (tối đa 64 KB), không thể lưu trữ tệp video 20 GB.\n  - **B (Upload File1.avi to the Azure Video Indexer website):** Tải trực tiếp từ máy cục bộ sẽ thất bại do vượt quá giới hạn 2 GB.\n  - **D (Upload File1.avi to the www.youtube.com webpage):** Video Indexer không hỗ trợ lấy dữ liệu từ các liên kết dịch vụ truyền phát như YouTube (chỉ hỗ trợ URL trực tiếp của tệp đa phương tiện như MP4, AVI, v.v.).",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-video-indexer/video-indexer-use-apis"
+      ]
+    },
+    {
+      "id": 3,
+      "question": "You are building an app that will use the Speech service.\nYou need to ensure that the app can authenticate to the service by using a Microsoft Azure Active Directory (Azure AD), part of Microsoft Entra, token.\nWhich two actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Enable a virtual network service endpoint.",
+        "B": "Configure a custom subdomain.",
+        "C": "Request an X.509 certificate.",
+        "D": "Create a private endpoint.",
+        "E": "Create a Conditional Access policy."
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "• **Đáp án đúng: B (Configure a custom subdomain.) và D (Create a private endpoint.)**\n\n• **Giải thích:**\n  - Để có thể xác thực với dịch vụ Speech Service thông qua Microsoft Entra ID (Azure AD) token, Microsoft yêu cầu tài nguyên Cognitive Services đó phải có cấu hình **custom subdomain** (ví dụ: `https://mycustomsubdomain.cognitiveservices.azure.com/`). Mặc định khi tạo tài nguyên, nó sử dụng endpoint khu vực (regional endpoint) và endpoint này không hỗ trợ xác thực bằng Entra ID.\n  - Đồng thời, khi bật custom subdomain cho dịch vụ Speech Service, bạn cần tạo **private endpoint** trong cấu hình mạng để đảm bảo rằng lưu lượng truy cập được định tuyến an toàn và hỗ trợ giao tiếp xác thực dựa trên tên miền tùy chỉnh này.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Enable a virtual network service endpoint):** Service endpoints chỉ cung cấp kết nối bảo mật đến dịch vụ từ một mạng ảo cụ thể chứ không cấu hình cơ chế định danh/tên miền tùy chỉnh cần thiết cho việc xác thực Entra ID của Speech Service.\n  - **C (Request an X.509 certificate):** Speech SDK xác thực qua Entra ID token hoặc API key, không sử dụng chứng chỉ X.509 để xác thực kết nối ứng dụng trực tiếp đến API.\n  - **E (Create a Conditional Access policy):** Mặc dù Conditional Access có thể dùng để kiểm soát quyền truy cập ở cấp độ tổ chức, nhưng đây là một thiết lập chính sách bảo mật phía Entra ID chung chung, không phải là bước cấu hình kỹ thuật bắt buộc trên tài nguyên Speech Service để cho phép nó hỗ trợ token authentication.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/ai-services/cognitive-services-custom-subdomains",
+        "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/speech-encryption-of-data-at-rest"
+      ]
+    },
+    {
+      "id": 4,
+      "question": "You have the following C# function.\nYou call the function by using the following code.\nWhich output will you receive?",
+      "choices": {
+        "A": "The quick -The lazy",
+        "B": "the quick brown fox jumps over the lazy dog",
+        "C": "jumps over the",
+        "D": "quick brown foxlazy dog"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "• **Đáp án đúng: D (quick brown fox\\nlazy dog)** (Trong các lựa chọn đề bài hiển thị dạng chuỗi liền nhau hoặc dạng rút gọn `quick brown foxlazy dog` do lỗi định dạng dòng, nhưng về bản chất đầu ra sẽ là các cụm từ khóa được in trên các dòng riêng biệt).\n\n• **Giải thích:**\n  - Cấu trúc hàm C# (sử dụng dịch vụ **Azure Cognitive Service for Language** - cụ thể là phương thức `ExtractKeyPhrases` của `TextAnalyticsClient`) có nhiệm vụ phân tích và trích xuất các cụm từ khóa chính (key phrases) từ một đoạn văn bản.\n  - Từ câu đầu vào: `\"the quick brown fox jumps over the lazy dog\"`, dịch vụ sẽ lọc bỏ các từ dừng (stop words) như `\"the\"`, giới từ và động từ `\"jumps over\"`, chỉ giữ lại các cụm danh từ mang thông tin chính là:\n    1. `\"quick brown fox\"`\n    2. `\"lazy dog\"`\n  - Vòng lặp `foreach (string keyphrase in response.Value)` sẽ in từng cụm từ này trên một dòng mới (`Console.WriteLine`), dẫn đến kết quả đầu ra chứa hai cụm từ này. Do đó, đáp án D là phản ánh chính xác nhất các cụm từ khóa được trích xuất.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, B, C:** Đều chứa các từ dừng (như `\"the\"`) hoặc động từ/giới từ (`\"jumps over\"`, `\"over the\"`), vốn không phải là các cụm từ khóa chính được trích xuất bởi dịch vụ Text Analytics Key Phrase Extraction.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/ai-services/language-service/key-phrase-extraction/overview"
+      ]
+    },
+    {
+      "id": 5,
+      "question": "You have the following Python method.\nYou need to deploy an Azure resource to the East US Azure region. The resource will be used to perform sentiment analysis.\nHow should you call the method?",
+      "choices": {
+        "A": "create_resource(\"res1\", \"TextAnalytics\", \"Standard\", \"East US\")",
+        "B": "create_resource(\"res1\", \"ContentModerator\", \"S0\", \"eastus\")",
+        "C": "create_resource(\"res1\", \"ContentModerator\", \"Standard\", \"East US\")",
+        "D": "create_resource(\"res1\", \"TextAnalytics\", \"S0\", \"eastus\")"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "• **Đáp án đúng: D (create_resource(\"res1\", \"TextAnalytics\", \"S0\", \"eastus\"))**\n\n• **Giải thích:**\n  - Để thực hiện phân tích cảm xúc (sentiment analysis), bạn cần khởi tạo tài nguyên dịch vụ phân tích văn bản của Azure, có tên định danh dịch vụ (resource kind) là `\"TextAnalytics\"`.\n  - Giá trị SKU (account tier/pricing tier) chính thức cho phân khúc Standard của các dịch vụ Azure Cognitive Services trong cấu hình API/ARM template là `\"S0\"` (không phải `\"Standard\"`).\n  - Vị trí vùng (location) trong Azure Resource Manager được viết dưới dạng mã vùng chuẩn viết liền không dấu, ví dụ như `\"eastus\"` thay vì `\"East US\"`.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A:** Sử dụng SKU `\"Standard\"` và location `\"East US\"` sai định dạng chuỗi tham số của Azure API.\n  - **B, C:** Sử dụng loại dịch vụ `\"ContentModerator\"` (dùng để kiểm duyệt nội dung như hình ảnh, văn bản nhạy cảm), không phải để phân tích cảm xúc (Sentiment Analysis).",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts"
+      ]
+    },
+    {
+      "id": 6,
+      "question": "You build a bot.\nYou create an Azure Bot resource.\nYou need to deploy the bot to Azure.\nWhat else should you create?",
+      "choices": {
+        "A": "only an app registration in Microsoft Azure Active Directory (Azure AD), part of Microsoft Entra, an Azure App Service instance, and an App Service plan",
+        "B": "only an app registration in Microsoft Azure Active Directory (Azure AD), part of Microsoft Entra, an Azure Kubernetes Service (AKS) instance, and a container image",
+        "C": "only an Azure App Service instance, and an App Service plan",
+        "D": "only an Azure Machine Learning workspace and an app registration in Microsoft Azure Active Directory (Azure AD), part of Microsoft Entra"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "• **Đáp án đúng: A (only an app registration in Microsoft Azure Active Directory (Azure AD), part of Microsoft Entra, an Azure App Service instance, and an App Service plan)**\n\n• **Giải thích:**\n  - Khi triển khai một chatbot (xây dựng bằng Bot Framework SDK) lên Azure, bạn cần hai thành phần chính:\n    1. **Azure Bot Service resource (Azure Bot):** Quản lý kết nối giữa các kênh (Teams, Web Chat...) và bot.\n    2. **Web App (Hosting):** Nơi chứa mã nguồn thực thi của bot. Thông thường sẽ được triển khai trên **Azure App Service** đi kèm với **App Service plan** tương ứng.\n    3. **App Registration (Microsoft Entra ID / Azure AD):** Cung cấp Application ID và Password (client secret) để xác thực các yêu cầu giao tiếp giữa Azure Bot Service và mã nguồn Web App của bot một cách bảo mật.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **B:** Mặc dù có thể chạy bot trên AKS (Azure Kubernetes Service), nhưng AKS và container image phức tạp hơn nhiều và không phải là mô hình triển khai bot thông thường tiêu chuẩn như App Service (hơn nữa, lựa chọn A dùng từ \"only\" cho một bộ thành phần tối giản chuẩn).\n  - **C:** Thiếu App Registration (đăng ký ứng dụng trong Microsoft Entra ID) để xác thực bảo mật, bot sẽ không hoạt động được.\n  - **D:** Azure Machine Learning workspace không liên quan đến việc triển khai một bot thông thường.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/bot-service/bot-service-quickstart-deploy"
+      ]
+    },
+    {
+      "id": 7,
+      "question": "You are building a chatbot by using the Microsoft Bot Framework SDK. The bot will be used to accept food orders from customers and allow the customers to customize each food item.\nYou need to configure the bot to ask the user for additional input based on the type of item ordered. The solution must minimize development effort.\nWhich two types of dialogs should you use? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "adaptive",
+        "B": "action",
+        "C": "waterfall",
+        "D": "prompt",
+        "E": "input"
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "• **Đáp án đúng: C (waterfall) và D (prompt)**\n\n• **Giải thích:**\n  - **Waterfall dialog (Hội thoại dạng thác nước):** Định nghĩa một chuỗi các bước tuyến tính, tuần tự để thu thập thông tin từ người dùng. Rất thích hợp cho quy trình đặt món ăn (ví dụ: Bước 1: Chọn món, Bước 2: Hỏi tùy chọn thêm, Bước 3: Xác nhận đơn hàng). Nó giúp giảm thiểu công sức phát triển vì lập trình viên không phải tự quản lý trạng thái phức tạp của các câu hỏi.\n  - **Prompt dialog (Hội thoại gợi nhắc):** Là các hộp thoại chuyên dụng dùng để hỏi người dùng các thông tin cụ thể (chữ, số, ngày tháng, danh sách lựa chọn...) và tự động kiểm tra tính hợp lệ của dữ liệu đầu vào. Các Prompt này được nhúng trực tiếp vào các bước của Waterfall dialog để hỏi người dùng thông tin tùy chỉnh cho từng món ăn.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (adaptive):** Adaptive dialogs linh hoạt hơn nhưng phức tạp hơn rất nhiều, đòi hỏi nhiều công sức phát triển và thiết kế hơn, không phù hợp với mục tiêu \"minimize development effort\" của đề bài.\n  - **B (action):** Không phải là một kiểu dialog chuẩn trong Bot Framework SDK.\n  - **E (input):** Input dialogs thường là thành phần con bên trong Adaptive dialogs chứ không phải là loại dialog độc lập kết hợp với Waterfall.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-concept-dialogs",
+        "https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-prompts"
+      ]
+    },
+    {
+      "id": 8,
+      "question": "You need to build a chatbot that meets the following requirements:✑ Supports chit-chat, knowledge base, and multilingual models✑ Performs sentiment analysis on user messages✑ Selects the best language model automaticallyWhat should you integrate into the chatbot?",
+      "choices": {
+        "A": "QnA Maker, Language Understanding, and Dispatch",
+        "B": "Translator, Speech, and Dispatch",
+        "C": "Language Understanding, Text Analytics, and QnA Maker",
+        "D": "Text Analytics, Translator, and Dispatch"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "• **Đáp án đúng: C (Language Understanding, Text Analytics, and QnA Maker)**\n\n• **Giải thích:**\n  - **QnA Maker:** Hỗ trợ tạo cơ sở tri thức (knowledge base) từ các tài liệu FAQ có sẵn và tích hợp sẵn tính năng trò chuyện xã giao (chit-chat).\n  - **Text Analytics (Phân tích văn bản):** Thực hiện phân tích cảm xúc (sentiment analysis) trên tin nhắn của người dùng và phát hiện ngôn ngữ tự động (multilingual support) để biết tin nhắn đó viết bằng tiếng gì.\n  - **Language Understanding (LUIS):** Giúp bot hiểu ý định (intent) và thực thể (entity) để điều hướng câu hỏi đến mô hình ngôn ngữ phù hợp một cách chính xác.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, B, D:** Chứa các dịch vụ như **Dispatch** (để định tuyến tin nhắn giữa LUIS và QnA Maker) hoặc **Translator** (để dịch trực tiếp) hoặc **Speech** (xử lý giọng nói). Dù Dispatch hữu ích trong việc chọn mô hình tốt nhất tự động, nhưng phương án C là sự kết hợp đầy đủ nhất các dịch vụ cốt lõi để thỏa mãn toàn bộ các yêu cầu chức năng (Chit-chat + Knowledge base + Sentiment analysis + Multilingual/Language Detection).",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-enterprise-template-overview"
+      ]
+    },
+    {
+      "id": 9,
+      "question": "You are building a Language Understanding model for an e-commerce platform.You need to construct an entity to capture billing addresses.Which entity type should you use for the billing address?",
+      "choices": {
+        "A": "machine learned",
+        "B": "Regex",
+        "C": "geographyV2",
+        "D": "Pattern.any",
+        "E": "list"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "• **Đáp án đúng: A (machine learned)**\n\n• **Giải thích:**\n  - Địa chỉ thanh toán (billing address) là một thực thể phức tạp, có cấu trúc thay đổi linh hoạt và phụ thuộc nhiều vào ngữ cảnh của câu. LUIS khuyến nghị sử dụng thực thể **machine learned (học máy)** cho những cấu trúc dữ liệu phức tạp như thế này, vì nó cho phép bạn định nghĩa các thực thể con (sub-entities) như số nhà, tên đường, thành phố, mã bưu chính... và huấn luyện mô hình nhận diện dựa trên ngữ cảnh xung quanh câu nói.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **B (Regex):** Chỉ phù hợp với các chuỗi có định dạng cố định (như mã sản phẩm, số điện thoại), không thể bao quát hết sự đa dạng của địa chỉ thanh toán.\n  - **C (geographyV2):** Đây là thực thể có sẵn (prebuilt entity) để nhận diện các địa danh địa lý (như tên thành phố, quốc gia), nhưng không thể tự động trích xuất toàn bộ thông tin chi tiết của một địa chỉ nhà riêng lẻ.\n  - **D (Pattern.any):** Thường dùng trong các Pattern để bắt phần còn lại của một câu phát biểu có cấu trúc rất cố định, không phù hợp để bắt địa chỉ một cách tự nhiên trong nhiều câu thoại khác nhau.\n  - **E (list):** Chỉ nhận diện các giá trị khớp chính xác với một danh sách đóng (như danh sách các tỉnh thành), không thể dùng cho địa chỉ thanh toán của khách hàng vốn vô cùng đa dạng.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-entity-types"
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You build a language model by using a Language Understanding service. The language model is used to search for information on a contact list by using an intent named FindContact.A conversational expert provides you with the following list of phrases to use for training.✑ Find contacts in London.✑ Who do I know in Seattle?✑ Search for contacts in Ukraine.You need to implement the phrase list in Language Understanding.Solution: You create a new intent for location.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (No)**\n\n• **Giải thích:**\n  - Mục tiêu của người dùng là trích xuất địa điểm (London, Seattle, Ukraine) trong các câu thoại tìm kiếm danh bạ để phục vụ cho ý định `FindContact`.\n  - Giải pháp đề xuất là tạo một **intent (ý định)** mới cho địa điểm (location). Điều này là không chính xác vì \"địa điểm\" không phải là một hành động hay mục đích giao tiếp của người dùng (intent), mà nó là một **entity (thực thể)** chứa dữ liệu chi tiết bổ sung cho ý định tìm kiếm liên hệ (`FindContact`). Tạo một intent mới cho location sẽ làm lệch hướng phân loại ý định của mô hình LUIS. Do đó, giải pháp này không đáp ứng được mục tiêu.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-intent"
+      ]
+    },
+    {
+      "id": 11,
+      "question": "You successfully run the following HTTP request.\nPOST https://management.azure.com/subscriptions/18c51a87-3a69-47a8-aedc-a54745f708a1/resourceGroups/RG1/providers/  \nMicrosoft.CognitiveServices/accounts/contoso1/regenerateKey?api-version=2017-04-18  \nBody{\"keyName\": \"Key2\"}\nWhat is the result of the request?",
+      "choices": {
+        "A": "A key for Azure Cognitive Services was generated in Azure Key Vault.",
+        "B": "A new query key was generated.",
+        "C": "The primary subscription key and the secondary subscription key were rotated.",
+        "D": "The secondary subscription key was reset."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "• **Đáp án đúng: D (The secondary subscription key was reset.)**\n\n• **Giải thích:**\n  - Yêu cầu HTTP POST được thực hiện đối với API quản lý của Azure (`management.azure.com`) để gọi hành động `regenerateKey` trên tài nguyên Cognitive Services tên là `contoso1`.\n  - Trong phần thân của yêu cầu (Body), tham số `\"keyName\": \"Key2\"` được truyền vào. Điều này chỉ định rõ ràng rằng chỉ có **Key2** (khóa đăng ký phụ - secondary subscription key) được làm mới/tạo lại (regenerate/reset).\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (A key for Azure Cognitive Services was generated in Azure Key Vault):** API này trực tiếp tương tác với tài nguyên Cognitive Services, không liên quan đến việc tạo hay lưu trữ khóa trong Azure Key Vault tại bước này.\n  - **B (A new query key was generated):** Query keys là khái niệm riêng của Azure Cognitive Search để truy vấn chỉ mục, không phải là khóa đăng ký (subscription key) của dịch vụ Cognitive Services.\n  - **C (The primary subscription key and the secondary subscription key were rotated):** Chỉ có `Key2` được chỉ định để khởi tạo lại, `Key1` (primary key) vẫn giữ nguyên không bị xoay vòng (rotated).",
+      "references": [
+        "https://learn.microsoft.com/en-us/rest/api/cognitiveservices/accountmanagement/accounts/regenerate-key"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "You deploy a web app that is used as a management portal for indexing in Azure Cognitive Search. The app is configured to use the primary admin key.During a security review, you discover unauthorized changes to the search index. You suspect that the primary access key is compromised.You need to prevent unauthorized access to the index management endpoint. The solution must minimize downtime.What should you do next?",
+      "choices": {
+        "A": "Regenerate the primary admin key, change the app to use the secondary admin key, and then regenerate the secondary admin key.",
+        "B": "Change the app to use a query key, and then regenerate the primary admin key and the secondary admin key.",
+        "C": "Regenerate the secondary admin key, change the app to use the secondary admin key, and then regenerate the primary key.",
+        "D": "Add a new query key, change the app to use the new query key, and then delete all the unused query keys."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "• **Đáp án đúng: C (Regenerate the secondary admin key, change the app to use the secondary admin key, and then regenerate the primary key.)**\n\n• **Giải thích:**\n  - Để thay thế khóa quản trị bị lộ mà không gây gián đoạn dịch vụ (minimize downtime), ta cần thực hiện cơ chế xoay vòng khóa (key rotation) bằng cách tận dụng cả hai khóa Admin (Primary và Secondary):\n    1. Đầu tiên, tiến hành **tạo lại khóa phụ** (Regenerate secondary admin key) để chắc chắn khóa phụ an toàn và sẵn sàng sử dụng.\n    2. Cập nhật cấu hình ứng dụng Web App để chuyển từ việc sử dụng khóa chính (đã bị lộ) sang **sử dụng khóa phụ** vừa được tạo mới này. Lúc này, ứng dụng vẫn hoạt động bình thường mà không bị gián đoạn.\n    3. Sau khi ứng dụng đã chạy ổn định với khóa phụ, tiến hành **tạo lại khóa chính** (Regenerate primary key). Khóa chính bị lộ trước đó sẽ lập tức bị vô hiệu hóa, ngăn chặn hoàn toàn truy cập trái phép.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A:** Nếu tạo lại khóa chính ngay từ bước đầu tiên trong khi ứng dụng vẫn đang dùng khóa chính, ứng dụng sẽ lập tức bị lỗi kết nối (dẫn đến downtime).\n  - **B, D:** Cổng quản lý lập chỉ mục (index management portal) yêu cầu quyền hạn Admin (Admin key) để tạo/xóa/sửa cấu hình indexer và index. Query key chỉ cho phép đọc/tìm kiếm dữ liệu (read-only queries), không có quyền quản trị chỉ mục nên không thể dùng để cấu hình cho app này.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/search/search-security-api-keys"
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You build a language model by using a Language Understanding service. The language model is used to search for information on a contact list by using an intent named FindContact.A conversational expert provides you with the following list of phrases to use for training.✑ Find contacts in London.✑ Who do I know in Seattle?✑ Search for contacts in Ukraine.You need to implement the phrase list in Language Understanding.Solution: You create a new pattern in the FindContact intent.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (No)**\n\n• **Giải thích:**\n  - Đề bài yêu cầu triển khai một **Phrase list** (danh sách cụm từ) trong LUIS để hỗ trợ nhận diện các từ/cụm từ có liên quan đến địa điểm (London, Seattle, Ukraine).\n  - Giải pháp đề xuất là tạo một **Pattern (mẫu câu)** mới trong intent `FindContact`. Mặc dù Pattern giúp tăng độ chính xác khi nhận diện các câu có cấu trúc tương tự nhau, nhưng nó không phải là cách triển khai \"Phrase list\" (Phrase lists là một tính năng đặc thù trong LUIS dùng để cung cấp các từ đồng nghĩa hoặc các từ cùng nhóm ngữ nghĩa cho mô hình máy học). Do đó, giải pháp này không đáp ứng đúng yêu cầu của đề bài.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-feature"
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You develop an application to identify species of flowers by training a Custom Vision model.You receive images of new flower species.You need to add the new images to the classifier.Solution: You add the new images, and then use the Smart Labeler tool.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (No)**\n\n• **Giải thích:**\n  - Quy trình để bổ sung các loài hoa mới vào bộ phân loại Custom Vision hiện có đòi hỏi: Tải ảnh lên, dán nhãn (gán thẻ), **huấn luyện lại (retrain) mô hình** và **xuất bản (publish)** mô hình mới.\n  - Công cụ **Smart Labeler** chỉ là một tiện ích hỗ trợ gợi ý nhãn tự động dựa trên những gì mô hình *đã học*. Nó không thể tự động nhận biết hoặc gợi ý nhãn chính xác cho một loài hoa *hoàn toàn mới* mà mô hình chưa bao giờ được huấn luyện. Hơn nữa, việc chỉ sử dụng Smart Labeler mà không thực hiện huấn luyện lại và xuất bản mô hình sẽ không giúp mô hình học thêm được kiến thức mới. Do đó giải pháp này không đáp ứng được mục tiêu.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/suggested-tags"
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You develop an application to identify species of flowers by training a Custom Vision model.You receive images of new flower species.You need to add the new images to the classifier.Solution: You add the new images and labels to the existing model. You retrain the model, and then publish the model.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "• **Đáp án đúng: A (Yes)**\n\n• **Giải thích:**\n  - Đây là quy trình chuẩn xác để cập nhật bộ phân loại Custom Vision khi có dữ liệu mới.\n  - Để mô hình nhận diện được các loài hoa mới, bạn cần tải các hình ảnh mới lên dự án hiện tại, gán thẻ (nhãn) tương ứng với loài hoa mới đó cho ảnh, chạy quá trình **huấn luyện lại mô hình (retrain)** để tạo ra một phiên bản (iteration) mới chứa kiến thức cập nhật, và cuối cùng là **xuất bản (publish)** phiên bản này để ứng dụng có thể gọi API và nhận dạng loài hoa mới.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/getting-started-build-a-classifier"
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You develop an application to identify species of flowers by training a Custom Vision model.You receive images of new flower species.You need to add the new images to the classifier.Solution: You create a new model, and then upload the new images and labels.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (No)**\n\n• **Giải thích:**\n  - Việc tạo một mô hình hoàn toàn mới rồi chỉ tải hình ảnh và nhãn của các loài hoa mới lên sẽ khiến mô hình mới này mất đi khả năng nhận diện các loài hoa cũ đã huấn luyện trước đó.\n  - Để mở rộng bộ phân loại mà vẫn giữ nguyên khả năng nhận diện các loài hoa cũ, bạn phải cập nhật trực tiếp trên dự án hiện tại chứ không phải tạo mới một mô hình độc lập. Do đó giải pháp này không đáp ứng được mục tiêu.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/getting-started-build-a-classifier"
+      ]
+    },
+    {
+      "id": 17,
+      "question": "You have an existing Azure Cognitive Search service.You have an Azure Blob storage account that contains millions of scanned documents stored as images and PDFs.You need to make the scanned documents available to search as quickly as possible.What should you do?",
+      "choices": {
+        "A": "Split the data into multiple blob containers. Create a Cognitive Search service for each container. Within each indexer definition, schedule the same runtime execution pattern.",
+        "B": "Split the data into multiple blob containers. Create an indexer for each container. Increase the search units. Within each indexer definition, schedule a sequential execution pattern.",
+        "C": "Create a Cognitive Search service for each type of document.",
+        "D": "Split the data into multiple virtual folders. Create an indexer for each folder. Increase the search units. Within each indexer definition, schedule the same runtime execution pattern."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "• **Đáp án đúng: D (Split the data into multiple virtual folders. Create an indexer for each folder. Increase the search units. Within each indexer definition, schedule the same runtime execution pattern.)**\n\n• **Giải thích:**\n  - Để lập chỉ mục (index) hàng triệu tài liệu một cách nhanh nhất có thể, chúng ta cần chạy **lập chỉ mục song song (parallel indexing)**.\n  - Azure AI Search cho phép chạy đồng thời nhiều indexer nếu dịch vụ có đủ đơn vị tìm kiếm (Search Units - SU) được cấp phát. Do đó, việc **tăng các đơn vị tìm kiếm (increase search units)** là cần thiết để có thêm năng lực tính toán và xử lý song song.\n  - Để thực hiện song song, ta chia dữ liệu lớn thành nhiều phần bằng các thư mục ảo (virtual folders) trong Azure Blob Storage, tạo một indexer tương ứng cho từng thư mục ảo này và cấu hình cho chúng chạy cùng một lúc (cùng lịch biểu thực thi/same runtime execution pattern), cùng đổ dữ liệu về một index đích duy nhất.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A:** Tạo nhiều dịch vụ Cognitive Search độc lập cho từng container sẽ làm phân tán dữ liệu tìm kiếm thành các chỉ mục ở các dịch vụ khác nhau, rất khó khăn cho ứng dụng truy vấn tập trung và lãng phí chi phí không cần thiết.\n  - **B:** Lên lịch chạy tuần tự (sequential execution pattern) sẽ làm các indexer chạy lần lượt chứ không chạy song song, không tận dụng được tài nguyên tăng thêm và làm chậm quá trình lập chỉ mục.\n  - **C:** Phân loại theo loại tài liệu không giải quyết được vấn đề phân chia tải hiệu quả cho hàng triệu tài liệu và không đề cập đến việc chạy song song hay tăng Search Units.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/search/search-howto-large-index"
+      ]
+    },
+    {
+      "id": 18,
+      "question": "You are building a bot on a local computer by using the Microsoft Bot Framework. The bot will use an existing Language Understanding model.You need to translate the Language Understanding model locally by using the Bot Framework CLI.What should you do first?",
+      "choices": {
+        "A": "From the Language Understanding portal, clone the model.",
+        "B": "Export the model as an .lu file.",
+        "C": "Create a new Speech service.",
+        "D": "Create a new Language Understanding service."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "• **Đáp án đúng: B (Export the model as an .lu file.)**\n\n• **Giải thích:**\n  - Để dịch mô hình Language Understanding (LUIS) cục bộ bằng công cụ dòng lệnh Bot Framework CLI (ví dụ như lệnh `bf lu:translate`), bạn cần có tệp định nghĩa mô hình đó ở dưới máy khách (local). Định dạng chuẩn mà các công cụ Bot Framework CLI sử dụng để định nghĩa tài nguyên ngôn ngữ là tệp `.lu` (hoặc `.json`).\n  - Do đó, bước đầu tiên cần làm là xuất (export) mô hình LUIS hiện có từ cổng thông tin trực tuyến (LUIS portal) thành một tệp `.lu` cục bộ.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Clone the model):** Nhân bản mô hình trực tuyến trên cổng LUIS không giúp tải mô hình về máy cục bộ để xử lý bằng CLI.\n  - **C, D:** Tạo mới các dịch vụ Speech hoặc LUIS trên đám mây không phải là bước đầu tiên để biên dịch hoặc dịch mô hình cục bộ bằng CLI từ một mô hình hiện có.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-howto-v4-luis"
+      ]
+    },
+    {
+      "id": 19,
+      "question": "You build a conversational bot named bot1.You need to configure the bot to use a QnA Maker application.From the Azure Portal, where can you find the information required by bot1 to connect to the QnA Maker application?",
+      "choices": {
+        "A": "Access control (IAM)",
+        "B": "Properties",
+        "C": "Keys and Endpoint",
+        "D": "Identity"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "• **Đáp án đúng: C (Keys and Endpoint)**\n\n• **Giải thích:**\n  - Để cấu hình chatbot kết nối và gửi câu hỏi đến cơ sở tri thức QnA Maker, ứng dụng bot cần hai thông tin quan trọng: Khóa truy cập (API Key) và Địa chỉ máy chủ (Endpoint URL).\n  - Trên Azure Portal, đối với các tài nguyên dịch vụ AI (như QnA Maker / Azure AI Services), các thông tin bảo mật và định tuyến này luôn được tìm thấy tập trung tại mục **Keys and Endpoint** trong menu quản lý của tài nguyên.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Access control - IAM):** Dùng để phân quyền vai trò (RBAC) cho người dùng hoặc danh tính khác truy cập tài nguyên Azure, không chứa API key hoặc Endpoint để mã nguồn bot kết nối.\n  - **B (Properties):** Chứa các thông tin cấu hình cơ bản như Subscription ID, Resource Group, Location... nhưng không chứa API key bảo mật.\n  - **D (Identity):** Dùng để cấu hình danh tính được quản lý (Managed Identity) cho tài nguyên, không chứa khóa kết nối trực tiếp đến QnA Maker.",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/cognitive-services-apis-create-account"
+      ]
+    },
+    {
+      "id": 20,
+      "question": "You have the following C# method for creating Azure Cognitive Services resources programmatically.\nYou need to call the method to create a free Azure resource in the West US Azure region. The resource will be used to generate captions of images automatically.Which code should you use?",
+      "choices": {
+        "A": "create_resource(client, \"res1\", \"ComputerVision\", \"F0\", \"westus\")",
+        "B": "create_resource(client, \"res1\", \"CustomVision.Prediction\", \"F0\", \"westus\")",
+        "C": "create_resource(client, \"res1\", \"ComputerVision\", \"S0\", \"westus\")",
+        "D": "create_resource(client, \"res1\", \"CustomVision.Prediction\", \"S0\", \"westus\")"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "• **Đáp án đúng: A (create_resource(client, \"res1\", \"ComputerVision\", \"F0\", \"westus\"))**\n\n• **Giải thích:**\n  - Tính năng tự động tạo mô tả (caption) cho hình ảnh là một khả năng dựng sẵn (pre-trained) thuộc dịch vụ **Computer Vision** của Azure. Do đó, tham số loại tài nguyên (kind) phải là `\"ComputerVision\"`.\n  - Yêu cầu của đề bài là tạo tài nguyên ở tầng miễn phí (**free**), tương đương với SKU là `\"F0\"` (trong khi `\"S0\"` là tầng tính phí/Standard).\n  - Vùng West US được viết dưới dạng mã vùng trong API là `\"westus\"`. Kết hợp các yếu tố trên, phương án A là chính xác nhất.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **B, D:** Sử dụng loại dịch vụ `\"CustomVision.Prediction\"`. Đây là dịch vụ chạy dự đoán cho mô hình thị giác tùy chỉnh do người dùng tự huấn luyện, không dùng cho việc tự động tạo mô tả ảnh có sẵn của hệ thống.\n  - **C:** Sử dụng SKU `\"S0\"` (tầng trả phí), không đáp ứng yêu cầu tạo tài nguyên miễn phí (\"free Azure resource\").",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/overview"
+      ]
+    },
+    {
+      "id": 21,
+      "question": "A customer uses Azure Cognitive Search.The customer plans to enable a server-side encryption and use customer-managed keys (CMK) stored in Azure.What are three implications of the planned change? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "The index size will increase.",
+        "B": "Query times will increase.",
+        "C": "A self-signed X.509 certificate is required.",
+        "D": "The index size will decrease.",
+        "E": "Query times will decrease.",
+        "F": "Azure Key Vault is required."
+      },
+      "correctAnswer": "ABF",
+      "explanation_vi": "• **Đáp án đúng: A (The index size will increase.), B (Query times will increase.), và F (Azure Key Vault is required.)**\n\n• **Giải thích:**\n  - **F (Azure Key Vault is required):** Khóa do khách hàng quản lý (Customer-Managed Key - CMK) phải được lưu trữ và quản lý an toàn trong dịch vụ **Azure Key Vault** (hoặc Azure Key Vault Managed HSM) để Azure AI Search có thể kết nối và sử dụng.\n  - **A (The index size will increase):** Khi bật mã hóa bằng khóa riêng, việc thêm dữ liệu mã hóa, padding và siêu dữ liệu bảo mật sẽ làm tăng dung lượng lưu trữ cần thiết cho các chỉ mục (index size).\n  - **B (Query times will increase):** Quá trình giải mã dữ liệu theo thời gian thực (real-time decryption) khi thực hiện các truy vấn tìm kiếm sẽ tạo ra một lượng tài nguyên tính toán overhead nhất định, dẫn đến thời gian phản hồi truy vấn tăng nhẹ.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **C (A self-signed X.509 certificate is required):** CMK sử dụng các khóa mã hóa đối xứng hoặc bất đối xứng trong Key Vault, không yêu cầu cấu hình chứng chỉ X.509 tự ký trên dịch vụ Search.\n  - **D, E:** Ngược lại với A và B (kích thước chỉ mục không thể giảm và thời gian truy vấn không thể nhanh hơn khi gánh thêm lớp mã hóa/giải mã).",
+      "references": [
+        "https://learn.microsoft.com/en-us/azure/search/search-security-manage-encryption-keys"
+      ]
+    },
+    {
+      "id": 22,
+      "question": "You are developing a new sales system that will process the video and text from a public-facing website.You plan to notify users that their data has been processed by the sales system.Which responsible AI principle does this help meet?",
+      "choices": {
+        "A": "transparency",
+        "B": "fairness",
+        "C": "inclusiveness",
+        "D": "reliability and safety"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 23,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You create a web app named app1 that runs on an Azure virtual machine named vm1. Vm1 is on an Azure virtual network named vnet1.You plan to create a new Azure Cognitive Search service named service1.You need to ensure that app1 can connect directly to service1 without routing traffic over the public internet.Solution: You deploy service1 and a public endpoint to a new virtual network, and you configure Azure Private Link.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 24,
+      "question": "You are building an Azure WebJob that will create knowledge bases from an array of URLs.You instantiate a QnAMakerClient object that has the relevant API keys and assign the object to a variable named client.You need to develop a method to create the knowledge bases.Which two actions should you include in the method? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Create a list of FileDTO objects that represents data from the WebJob.",
+        "B": "Call the client.Knowledgebase.CreateAsync method.",
+        "C": "Create a list of QnADTO objects that represents data from the WebJob.",
+        "D": "Create a CreateKbDTO object."
+      },
+      "correctAnswer": "BD"
+    },
+    {
+      "id": 25,
+      "question": "You are developing a solution to generate a word cloud based on the reviews of a company's products.Which Text Analytics REST API endpoint should you use?",
+      "choices": {
+        "A": "keyPhrases",
+        "B": "sentiment",
+        "C": "languages",
+        "D": "entities/recognition/general"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 26,
+      "question": "You plan to provision a QnA Maker service in a new resource group named RG1.In RG1, you create an App Service plan named AP1.Which two Azure resources are automatically created in RG1 when you provision the QnA Maker service? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Language Understanding",
+        "B": "Azure SQL Database",
+        "C": "Azure Storage",
+        "D": "Azure Cognitive Search",
+        "E": "Azure App Service"
+      },
+      "correctAnswer": "DE"
+    },
+    {
+      "id": 27,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You create a web app named app1 that runs on an Azure virtual machine named vm1. Vm1 is on an Azure virtual network named vnet1.You plan to create a new Azure Cognitive Search service named service1.You need to ensure that app1 can connect directly to service1 without routing traffic over the public internet.Solution: You deploy service1 and a public endpoint, and you configure an IP firewall rule.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 28,
+      "question": "You build a bot by using the Microsoft Bot Framework SDK and the Azure Bot Service.You plan to deploy the bot to Azure.You register the bot by using the Bot Channels Registration service.Which two values are required to complete the deployment? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "botId",
+        "B": "tenantId",
+        "C": "appId",
+        "D": "objectId",
+        "E": "appSecret"
+      },
+      "correctAnswer": "CE"
+    },
+    {
+      "id": 29,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You create a web app named app1 that runs on an Azure virtual machine named vm1. Vm1 is on an Azure virtual network named vnet1.You plan to create a new Azure Cognitive Search service named service1.You need to ensure that app1 can connect directly to service1 without routing traffic over the public internet.Solution: You deploy service1 and a public endpoint, and you configure a network security group (NSG) for vnet1.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 30,
+      "question": "You are developing the smart e-commerce project.You need to implement autocompletion as part of the Cognitive Search solution.Which three actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Make API queries to the autocomplete endpoint and include suggesterName in the body.",
+        "B": "Add a suggester that has the three product name fields as source fields.",
+        "C": "Make API queries to the search endpoint and include the product name fields in the searchFields query parameter.",
+        "D": "Add a suggester for each of the three product name fields.",
+        "E": "Set the searchAnalyzer property for the three product name variants.",
+        "F": "Set the analyzer property for the three product name variants."
+      },
+      "correctAnswer": "ABF"
+    },
+    {
+      "id": 31,
+      "question": "You are developing an app that will use the text-to-speech capability of the Azure AI Speech service. The app will be used in motor vehicles.\nYou need to optimize the quality of the synthesized voice output.\nWhich Speech Synthesis Markup Language (SSML) attribute should you configure?",
+      "choices": {
+        "A": "the style attribute of the mstts:express-as element",
+        "B": "the effect attribute of the voice element",
+        "C": "the pitch attribute of the prosody element",
+        "D": "the level attribute of the emphasis element"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 32,
+      "question": "You build a bot by using the Microsoft Bot Framework SDK.\nYou start the bot on a local computer.\nYou need to validate the functionality of the bot.\nWhat should you do before you connect to the bot?",
+      "choices": {
+        "A": "Run the Bot Framework Emulator.",
+        "B": "Run the Bot Framework Composer.",
+        "C": "Register the bot with Azure Bot Service.",
+        "D": "Run Windows Terminal."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 33,
+      "question": "You plan to perform predictive maintenance.\nYou collect IoT sensor data from 100 industrial machines for a year. Each machine has 50 different sensors that generate data at one-minute intervals. In total, you have 5,000 time series datasets.\nYou need to identify unusual values in each time series to help predict machinery failures.\nWhich Azure service should you use?",
+      "choices": {
+        "A": "Azure AI Computer Vision",
+        "B": "Cognitive Search",
+        "C": "Azure AI Document Intelligence",
+        "D": "Azure AI Anomaly Detector"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 34,
+      "question": "You are designing a content management system.\nYou need to ensure that the reading experience is optimized for users who have reduced comprehension and learning differences, such as dyslexia. The solution must minimize development effort.\nWhich Azure service should you include in the solution?",
+      "choices": {
+        "A": "Azure AI Immersive Reader",
+        "B": "Azure AI Translator",
+        "C": "Azure AI Document Intelligence",
+        "D": "Azure AI Language"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 35,
+      "question": "You are developing a system that will monitor temperature data from a data stream. The system must generate an alert in response to atypical values. The solution must minimize development effort.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "Multivariate Anomaly Detection",
+        "B": "Azure Stream Analytics",
+        "C": "metric alerts in Azure Monitor",
+        "D": "Univariate Anomaly Detection"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 36,
+      "question": "You are building a solution in Azure that will use Azure Cognitive Service for Language to process sensitive customer data.\nYou need to ensure that only specific Azure processes can access the Language service. The solution must minimize administrative effort.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "IPsec rules",
+        "B": "Azure Application Gateway",
+        "C": "a virtual network gateway",
+        "D": "virtual network rules"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 37,
+      "question": "You are building a chatbot for a travel agent. The chatbot will use the Azure OpenAI GPT 3.5 model and will be used to make travel reservations.\nYou need to maximize the accuracy of the responses from the chatbot.\nWhat should you do?",
+      "choices": {
+        "A": "Configure the model to include data from the travel agent's database.",
+        "B": "Set the Top P parameter for the model to 0.",
+        "C": "Set the Temperature parameter for the model to 0.",
+        "D": "Modify the system message used by the model to specify that the answers must be accurate."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 38,
+      "question": "You have an Azure subscription that contains an Azure AI Service resource named CSAccount1 and a virtual network named VNet1. CSAaccount1 is connected to VNet1.\nYou need to ensure that only specific resources can access CSAccount1. The solution must meet the following requirements:\n• Prevent external access to CSAccount1.• Minimize administrative effort.\nWhich two actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct answer is worth one point.",
+      "choices": {
+        "A": "In VNet1, enable a service endpoint for CSAccount1.",
+        "B": "In CSAccount1, configure the Access control (IAM) settings.",
+        "C": "In VNet1, modify the virtual network settings.",
+        "D": "In VNet1, create a virtual subnet.",
+        "E": "In CSAccount1, modify the virtual network settings."
+      },
+      "correctAnswer": "AE"
+    },
+    {
+      "id": 39,
+      "question": "You are developing an app that will use the Decision and Language APIs.\nYou need to provision resources for the app. The solution must ensure that each service is accessed by using a single endpoint and credential.\nWhich type of resource should you create?",
+      "choices": {
+        "A": "Language",
+        "B": "Speech",
+        "C": "Azure Cognitive Services",
+        "D": "Content Moderator"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 40,
+      "question": "You are building a chatbot.\nYou need to ensure that the bot will recognize the names of your company’s products and codenames. The solution must minimize development effort.\nWhich Azure Cognitive Service for Language service should you include in the solution?",
+      "choices": {
+        "A": "custom text classification",
+        "B": "entity linking",
+        "C": "custom Named Entity Recognition (NER)",
+        "D": "key phrase extraction"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 41,
+      "question": "You have an Azure subscription that contains an Azure App Service app named App1.\nYou provision a multi-service Azure Cognitive Services resource named CSAccount1.\nYou need to configure App1 to access CSAccount1. The solution must minimize administrative effort.\nWhat should you use to configure App1?",
+      "choices": {
+        "A": "a system-assigned managed identity and an X.509 certificate",
+        "B": "the endpoint URI and an OAuth token",
+        "C": "the endpoint URI and a shared access signature (SAS) token",
+        "D": "the endpoint URI and subscription key"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 42,
+      "question": "You have an app named App1 that uses a custom Azure AI Document Intelligence model to recognize contract documents.\nYou need to ensure that the model supports an additional contract format. The solution must minimize development effort.\nWhat should you do?",
+      "choices": {
+        "A": "Lower the confidence score threshold of App1.",
+        "B": "Create a new training set and add the additional contract format to the new training set. Create and train a new custom model.",
+        "C": "Add the additional contract format to the existing training set. Retrain the model.",
+        "D": "Lower the accuracy threshold of App1."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 43,
+      "question": "You are building an app named App1 that will use Azure AI Document Intelligence to extract the following data from scanned documents:\n• Shipping address• Billing address• Customer ID• Amount due• Due date• Total tax• Subtotal\nYou need to identify which model to use for App1. The solution must minimize development effort.\nWhich model should you use?",
+      "choices": {
+        "A": "custom extraction model",
+        "B": "contract",
+        "C": "invoice",
+        "D": "general document"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 44,
+      "question": "You are building an internet-based training solution. The solution requires that a user's camera and microphone remain enabled.\nYou need to monitor a video stream of the user and verify that the user is alone and is not collaborating with another user. The solution must minimize development effort.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "speech-to-text in the Azure AI Speech service",
+        "B": "object detection in Azure AI Custom Vision",
+        "C": "Spatial Analysis in Azure AI Vision",
+        "D": "object detection in Azure AI Custom Vision"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 45,
+      "question": "You are building an Azure AI Language Understanding solution.\nYou discover that many intents have similar utterances containing airport names or airport codes.\nYou need to minimize the number of utterances used to train the model.\nWhich type of custom entity should you use?",
+      "choices": {
+        "A": "Pattern.any",
+        "B": "machine-learning",
+        "C": "regular expression",
+        "D": "list"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 46,
+      "question": "You have the following data sources:\n• Finance: On-premises Microsoft SQL Server database• Sales: Azure Cosmos DB using the Core (SQL) API• Logs: Azure Table storage• HR: Azure SQL database\nYou need to ensure that you can search all the data by using the Azure AI Search REST API.\nWhat should you do?",
+      "choices": {
+        "A": "Migrate the data in HR to Azure Blob storage.",
+        "B": "Migrate the data in HR to the on-premises SQL server.",
+        "C": "Export the data in Finance to Azure Data Lake Storage.",
+        "D": "Migrate the data in Sales to the MongoDB API."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 47,
+      "question": "You are building an app that will process scanned expense claims and extract and label the following data:\n• Merchant information• Time of transaction• Date of transaction• Taxes paid• Total cost\nYou need to recommend an Azure AI Document Intelligence model for the app. The solution must minimize development effort.\nWhat should you use?",
+      "choices": {
+        "A": "the prebuilt Read model",
+        "B": "a custom template model",
+        "C": "a custom neural model",
+        "D": "the prebuilt receipt model"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 48,
+      "question": "You have an Azure subscription.\nYou need to build an app that will compare documents for semantic similarity. The solution must meet the following requirements:\n• Return numeric vectors that represent the tokens of each document.• Minimize development effort.\nWhich Azure OpenAI model should you use?",
+      "choices": {
+        "A": "GPT-3.5",
+        "B": "GPT-4",
+        "C": "embeddings",
+        "D": "DALL-E"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 49,
+      "question": "You are developing a method that uses the Azure AI Vision client library. The method will perform optical character recognition (OCR) in images. The method has the following code.\nDuring testing, you discover that the call to the get_read_result method occurs before the read operation is complete.\nYou need to prevent the get_read_result method from proceeding until the read operation is complete.\nWhich two actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Remove the operation_id parameter.",
+        "B": "Add code to verify the read_results.status value.",
+        "C": "Add code to verify the status of the read_operation_location value.",
+        "D": "Wrap the call to get_read_result within a loop that contains a delay."
+      },
+      "correctAnswer": "BD"
+    },
+    {
+      "id": 50,
+      "question": "You have receipts that are accessible from a URL.You need to extract data from the receipts by using Form Recognizer and the SDK. The solution must use a prebuilt model.Which client and method should you use?",
+      "choices": {
+        "A": "the FormRecognizerClient client and the StartRecognizeContentFromUri method",
+        "B": "the FormTrainingClient client and the StartRecognizeContentFromUri method",
+        "C": "the FormRecognizerClient client and the StartRecognizeReceiptsFromUri method",
+        "D": "the FormTrainingClient client and the StartRecognizeReceiptsFromUri method"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 51,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You build a language model by using a Language Understanding service. The language model is used to search for information on a contact list by using an intent named FindContact.A conversational expert provides you with the following list of phrases to use for training.✑ Find contacts in London.✑ Who do I know in Seattle?Search for contacts in Ukraine.\nYou need to implement the phrase list in Language Understanding.Solution: You create a new entity for the domain.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 52,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cognitive Search service.During the past 12 months, query volume steadily increased.You discover that some search query requests to the Cognitive Search service are being throttled.You need to reduce the likelihood that search query requests are throttled.Solution: You migrate to a Cognitive Search service that uses a higher tier.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 53,
+      "question": "You are developing a new sales system that will process the video and text from a public-facing website.You plan to monitor the sales system to ensure that it provides equitable results regardless of the user's location or background.Which two responsible AI principles provide guidance to meet the monitoring requirements? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "transparency",
+        "B": "fairness",
+        "C": "inclusiveness",
+        "D": "reliability and safety",
+        "E": "privacy and security"
+      },
+      "correctAnswer": "BC"
+    },
+    {
+      "id": 54,
+      "question": "You have a collection of 50,000 scanned documents that contain text.You plan to make the text available through Azure Cognitive Search.You need to configure an enrichment pipeline to perform optical character recognition (OCR) and text analytics. The solution must minimize costs.What should you attach to the skillset?",
+      "choices": {
+        "A": "a new Computer Vision resource",
+        "B": "a free (Limited enrichments) Cognitive Services resource",
+        "C": "an Azure Machine Learning Designer pipeline",
+        "D": "a new Cognitive Services resource that uses the S0 pricing tier"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 55,
+      "question": "You have a Language Understanding resource named lu1.You build and deploy an Azure bot named bot1 that uses lu1.You need to ensure that bot1 adheres to the Microsoft responsible AI principle of inclusiveness.How should you extend bot1?",
+      "choices": {
+        "A": "Implement authentication for bot1.",
+        "B": "Enable active learning for lu1.",
+        "C": "Host lu1 in a container.",
+        "D": "Add Direct Line Speech to bot1."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 56,
+      "question": "You use the Custom Vision service to build a classifier.After training is complete, you need to evaluate the classifier.Which two metrics are available for review? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "recall",
+        "B": "F-score",
+        "C": "weighted accuracy",
+        "D": "precision",
+        "E": "area under the curve (AUC)"
+      },
+      "correctAnswer": "AD"
+    },
+    {
+      "id": 57,
+      "question": "You have a chatbot that was built by using the Microsoft Bot Framework.You need to debug the chatbot endpoint remotely.Which two tools should you install on a local computer? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Fiddler",
+        "B": "Bot Framework Composer",
+        "C": "Bot Framework Emulator",
+        "D": "Bot Framework CLI",
+        "E": "ngrok",
+        "F": "nginx"
+      },
+      "correctAnswer": "CE"
+    },
+    {
+      "id": 58,
+      "question": "You need to implement a table projection to generate a physical expression of an Azure Cognitive Search index.Which three properties should you specify in the skillset definition JSON configuration table node? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "tableName",
+        "B": "generatedKeyName",
+        "C": "dataSource",
+        "D": "dataSourceConnection",
+        "E": "source"
+      },
+      "correctAnswer": "ABE"
+    },
+    {
+      "id": 59,
+      "question": "You are developing the chatbot.You create the following components:✑ A QnA Maker resource✑ A chatbot by using the Azure Bot Framework SDKYou need to integrate the components to meet the chatbot requirements.Which property should you use?",
+      "choices": {
+        "A": "QnAMakerOptions.StrictFilters",
+        "B": "QnADialogResponseOptions.CardNoMatchText",
+        "C": "QnAMakerOptions.RankerType",
+        "D": "QnAMakerOptions.ScoreThreshold"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 60,
+      "question": "You are building a chatbot by using the Microsoft Bot Framework Composer as shown in the exhibit. (Click the Exhibit tab.)\nThe chatbot contains a dialog named GetUserDetails. GetUserDetails contains a TextInput control that prompts users for their name.The user input will be stored in a property named name.You need to ensure that you can dispose of the property when the last active dialog ends.Which scope should you assign to name?",
+      "choices": {
+        "A": "dialog",
+        "B": "user",
+        "C": "turn",
+        "D": "conversation"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 61,
+      "question": "You build a custom Form Recognizer model.You receive sample files to use for training the model as shown in the following table.\nWhich three files can you use to train the model? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "File1",
+        "B": "File2",
+        "C": "File3",
+        "D": "File4",
+        "E": "File5",
+        "F": "File6"
+      },
+      "correctAnswer": "ACF"
+    },
+    {
+      "id": 62,
+      "question": "You have an Azure Video Analyzer for Media (previously Video Indexer) service that is used to provide a search interface over company videos on your company's website.You need to be able to search for videos based on who is present in the video.What should you do?",
+      "choices": {
+        "A": "Create a person model and associate the model to the videos.",
+        "B": "Create person objects and provide face images for each object.",
+        "C": "Invite the entire staff of the company to Video Indexer.",
+        "D": "Edit the faces in the videos.",
+        "E": "Upload names to a language model."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 63,
+      "question": "You are developing the chatbot.You create the following components:✑ A QnA Maker resource✑ A chatbot by using the Azure Bot Framework SDKYou need to add an additional component to meet the technical requirements and the chatbot requirements.What should you add?",
+      "choices": {
+        "A": "Microsoft Translator",
+        "B": "Language Understanding",
+        "C": "Orchestrator",
+        "D": "chatdown"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 64,
+      "question": "You are developing the knowledgebase by using Azure Cognitive Search.You need to process wiki content to meet the technical requirements.What should you include in the solution?",
+      "choices": {
+        "A": "an indexer for Azure Blob storage attached to a skillset that contains the language detection skill and the text translation skill",
+        "B": "an indexer for Azure Blob storage attached to a skillset that contains the language detection skill",
+        "C": "an indexer for Azure Cosmos DB attached to a skillset that contains the document extraction skill and the text translation skill",
+        "D": "an indexer for Azure Cosmos DB attached to a skillset that contains the language detection skill and the text translation skill"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 65,
+      "question": "You are building a conversational language understanding model.You need to enable active learning.What should you do?",
+      "choices": {
+        "A": "Add show-all-intents=true to the prediction endpoint query.",
+        "B": "Enable speech priming.",
+        "C": "Add log=true to the prediction endpoint query.",
+        "D": "Enable sentiment analysis."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 66,
+      "question": "You are training a Language Understanding model for a user support system.You create the first intent named GetContactDetails and add 200 examples.You need to decrease the likelihood of a false positive.What should you do?",
+      "choices": {
+        "A": "Enable active learning.",
+        "B": "Add a machine learned entity.",
+        "C": "Add additional examples to the GetContactDetails intent.",
+        "D": "Add examples to the None intent."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 67,
+      "question": "You are developing the document processing workflow.You need to identify which API endpoints to use to extract text from the financial documents. The solution must meet the document processing requirements.Which two API endpoints should you identify? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {},
+      "correctAnswer": "BC"
+    },
+    {
+      "id": 68,
+      "question": "You are developing the knowledgebase.You use Azure Video Analyzer for Media (previously Video indexer) to obtain transcripts of webinars.You need to ensure that the solution meets the knowledgebase requirements.What should you do?",
+      "choices": {
+        "A": "Create a custom language model",
+        "B": "Configure audio indexing for videos only",
+        "C": "Enable multi-language detection for videos",
+        "D": "Build a custom Person model for webinar presenters"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 69,
+      "question": "You need to develop an extract solution for the receipt images. The solution must meet the document processing requirements and the technical requirements.You upload the receipt images to the Form Recognizer API for analysis, and the API returns the following JSON.\nWhich expression should you use to trigger a manual review of the extracted information by a member of the Consultant-Bookkeeper group?",
+      "choices": {
+        "A": "documentResults.docType == \"prebuilt:receipt\"",
+        "B": "documentResults.fields.*.confidence < 0.7",
+        "C": "documentResults.fields.ReceiptType.confidence > 0.7",
+        "D": "documentResults.fields.MerchantName.confidence < 0.7"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 70,
+      "question": "Your company wants to reduce how long it takes for employees to log receipts in expense reports. All the receipts are in English.You need to extract top-level information from the receipts, such as the vendor and the transaction total. The solution must minimize development effort.Which Azure service should you use?",
+      "choices": {
+        "A": "Custom Vision",
+        "B": "Personalizer",
+        "C": "Form Recognizer",
+        "D": "Computer Vision"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 71,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cognitive Search service.During the past 12 months, query volume steadily increased.You discover that some search query requests to the Cognitive Search service are being throttled.You need to reduce the likelihood that search query requests are throttled.Solution: You enable customer-managed key (CMK) encryption.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 72,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You create a web app named app1 that runs on an Azure virtual machine named vm1. Vm1 is on an Azure virtual network named vnet1.You plan to create a new Azure Cognitive Search service named service1.You need to ensure that app1 can connect directly to service1 without routing traffic over the public internet.Solution: You deploy service1 and a private endpoint to vnet1.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 73,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cognitive Search service.During the past 12 months, query volume steadily increased.You discover that some search query requests to the Cognitive Search service are being throttled.You need to reduce the likelihood that search query requests are throttled.Solution: You add indexes.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 74,
+      "question": "You need to upload speech samples to a Speech Studio project for use in training.How should you upload the samples?",
+      "choices": {
+        "A": "Combine the speech samples into a single audio file in the .wma format and upload the file.",
+        "B": "Upload a .zip file that contains a collection of audio files in the .wav format and a corresponding text transcript file.",
+        "C": "Upload individual audio files in the FLAC format and manually upload a corresponding transcript in Microsoft Word format.",
+        "D": "Upload individual audio files in the .wma format."
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 75,
+      "question": "Your company uses an Azure Cognitive Services solution to detect faces in uploaded images. The method to detect the faces uses the following code.\nYou discover that the solution frequently fails to detect faces in blurred images and in images that contain sideways faces.You need to increase the likelihood that the solution can detect faces in blurred images and images that contain sideways faces.What should you do?",
+      "choices": {
+        "A": "Use a different version of the Face API.",
+        "B": "Use the Computer Vision service instead of the Face service.",
+        "C": "Use the Identify method instead of the Detect method.",
+        "D": "Change the detection model."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 76,
+      "question": "You are developing a method for an application that uses the Translator API.The method will receive the content of a webpage, and then translate the content into Greek (el). The result will also contain a transliteration that uses the Roman alphabet.You need to create the URI for the call to the Translator API.You have the following URI.https://api.cognitive.microsofttranslator.com/translate?api-version=3.0Which three additional query parameters should you include in the URI? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "toScript=Cyrl",
+        "B": "from=el",
+        "C": "textType=html",
+        "D": "to=el",
+        "E": "textType=plain",
+        "F": "toScript=Latn"
+      },
+      "correctAnswer": "CDF"
+    },
+    {
+      "id": 77,
+      "question": "You have the following data sources:✑ Finance: On-premises Microsoft SQL Server database✑ Sales: Azure Cosmos DB using the Core (SQL) API✑ Logs: Azure Table storage\nHR: Azure SQL database -\nYou need to ensure that you can search all the data by using the Azure Cognitive Search REST API.What should you do?",
+      "choices": {
+        "A": "Configure multiple read replicas for the data in Sales.",
+        "B": "Mirror Finance to an Azure SQL database.",
+        "C": "Ingest the data in Logs into Azure Data Explorer.",
+        "D": "Ingest the data in Logs into Azure Sentinel."
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 78,
+      "question": "You need to enable speech capabilities for a chatbot.Which three actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Enable WebSockets for the chatbot app.",
+        "B": "Create a Speech service.",
+        "C": "Register a Direct Line Speech channel.",
+        "D": "Register a Cortana channel.",
+        "E": "Enable CORS for the chatbot app.",
+        "F": "Create a Language Understanding service."
+      },
+      "correctAnswer": "ABC"
+    },
+    {
+      "id": 79,
+      "question": "You are developing the knowledgebase by using Azure Cognitive Search.You need to meet the knowledgebase requirements for searching equivalent terms.What should you include in the solution?",
+      "choices": {
+        "A": "synonym map",
+        "B": "a suggester",
+        "C": "a custom analyzer",
+        "D": "a built-in key phrase extraction skill"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 80,
+      "question": "You are developing an application that will use Azure Cognitive Search for internal documents.You need to implement document-level filtering for Azure Cognitive Search.Which three actions should you include in the solution? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Send Azure AD access tokens with the search request.",
+        "B": "Retrieve all the groups.",
+        "C": "Retrieve the group memberships of the user.",
+        "D": "Add allowed groups to each index entry.",
+        "E": "Create one index per group.",
+        "F": "Supply the groups as a filter for the search requests."
+      },
+      "correctAnswer": "CDF"
+    },
+    {
+      "id": 81,
+      "question": "You have an Azure Cognitive Search solution and a collection of blog posts that include a category field.You need to index the posts. The solution must meet the following requirements:\nInclude the category field in the search results.Ensure that users can search for words in the category field.Ensure that users can perform drill down filtering based on category.Which index attributes should you configure for the category field?",
+      "choices": {
+        "A": "searchable, sortable, and retrievable",
+        "B": "searchable, facetable, and retrievable",
+        "C": "retrievable, filterable, and sortable",
+        "D": "retrievable, facetable, and key"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 82,
+      "question": "You use the Microsoft Bot Framework Composer to build a chatbot that enables users to purchase items.You need to ensure that the users can cancel in-progress transactions. The solution must minimize development effort.What should you add to the bot?",
+      "choices": {
+        "A": "a language generator",
+        "B": "a custom event",
+        "C": "a dialog trigger",
+        "D": "a conversation activity"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 83,
+      "question": "You have an Azure Cognitive Search solution and an enrichment pipeline that performs Sentiment Analysis on social media posts.You need to define a knowledge store that will include the social media posts and the Sentiment Analysis results.Which two fields should you include in the definition? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "storageContainer",
+        "B": "storageConnectionString",
+        "C": "files",
+        "D": "tables",
+        "E": "objects"
+      },
+      "correctAnswer": "BE"
+    },
+    {
+      "id": 84,
+      "question": "You have the following Python function for creating Azure Cognitive Services resources programmatically. def create_resource (resource_name, kind, account_tier, location) : parameters = CognitiveServicesAccount(sku=Sku(name=account_tier), kind=kind, location=location, properties=) result = client.accounts.create(resource_group_name, resource_name, parameters)You need to call the function to create a free Azure resource in the West US Azure region. The resource will be used to generate captions of images automatically.Which code should you use?",
+      "choices": {
+        "A": "create_resource(\"res1\", \"ComputerVision\", \"F0\", \"westus\")",
+        "B": "create_resource(\"res1\", \"CustomVision.Prediction\", \"F0\", \"westus\")",
+        "C": "create_resource(\"res1\", \"ComputerVision\", \"S0\", \"westus\")",
+        "D": "create_resource(\"res1\", \"CustomVision.Prediction\", \"S0\", \"westus\")"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 85,
+      "question": "You have an Azure Cognitive Search instance that indexes purchase orders by using Form Recognizer.You need to analyze the extracted information by using Microsoft Power BI. The solution must minimize development effort.What should you add to the indexer?",
+      "choices": {
+        "A": "a projection group",
+        "B": "a table projection",
+        "C": "a file projection",
+        "D": "an object projection"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 86,
+      "question": "You have a factory that produces food products.You need to build a monitoring solution for staff compliance with personal protective equipment (PPE) requirements. The solution must meet the following requirements:\nIdentify staff who have removed masks or safety glasses.Perform a compliance check every 15 minutes.Minimize development effort.Minimize costs.Which service should you use?",
+      "choices": {
+        "A": "Face",
+        "B": "Computer Vision",
+        "C": "Azure Video Analyzer for Media (formerly Video Indexer)"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 87,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have an Azure Cognitive Search service.During the past 12 months, query volume steadily increased.You discover that some search query requests to the Cognitive Search service are being throttled.You need to reduce the likelihood that search query requests are throttled.Solution: You add replicas.Does this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 88,
+      "question": "You build a Conversational Language Understanding model by using the Language Services portal.You export the model as a JSON file as shown in the following sample.\nTo what does the Weather.Historic entity correspond in the utterance?",
+      "choices": {
+        "A": "by month",
+        "B": "chicago",
+        "C": "rain",
+        "D": "location"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 89,
+      "question": "You are building a language model by using a Language Understanding (classic) service.You create a new Language Understanding (classic) resource.You need to add more contributors.What should you use?",
+      "choices": {
+        "A": "a conditional access policy in Azure Active Directory (Azure AD)",
+        "B": "the Access control (IAM) page for the authoring resources in the Azure portal",
+        "C": "the Access control (IAM) page for the prediction resources in the Azure portal"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 90,
+      "question": "You are examining the Text Analytics output of an application.The text analyzed is:Our tour guide took us up the Space Needle during our trip to Seattle last week.The response contains the data shown in the following table.\nWhich Text Analytics API is used to analyze the text?",
+      "choices": {
+        "A": "Entity Linking",
+        "B": "Named Entity Recognition",
+        "C": "Sentiment Analysis",
+        "D": "Key Phrase Extraction"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 91,
+      "question": "You need to measure the public perception of your brand on social media by using natural language processing.Which Azure service should you use?",
+      "choices": {
+        "A": "Language service",
+        "B": "Content Moderator",
+        "C": "Computer Vision",
+        "D": "Form Recognizer"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 92,
+      "question": "You need to build a solution that will use optical character recognition (OCR) to scan sensitive documents by using the Computer Vision API. The solution mustNOT be deployed to the public cloud.What should you do?",
+      "choices": {
+        "A": "Build an on-premises web app to query the Computer Vision endpoint.",
+        "B": "Host the Computer Vision endpoint in a container on an on-premises server.",
+        "C": "Host an exported Open Neural Network Exchange (ONNX) model on an on-premises server.",
+        "D": "Build an Azure web app to query the Computer Vision endpoint."
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 93,
+      "question": "You are building a multilingual chatbot.You need to send a different answer for positive and negative messages.Which two Language service APIs should you use? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Linked entities from a well-known knowledge base",
+        "B": "Sentiment Analysis",
+        "C": "Key Phrases",
+        "D": "Detect Language",
+        "E": "Named Entity Recognition"
+      },
+      "correctAnswer": "BD"
+    },
+    {
+      "id": 94,
+      "question": "You have an app that captures live video of exam candidates.\nYou need to use the Face service to validate that the subjects of the videos are real people.\nWhat should you do?",
+      "choices": {
+        "A": "Call the face detection API and retrieve the face rectangle by using the FaceRectangle attribute.",
+        "B": "Call the face detection API repeatedly and check for changes to the FaceAttributes.HeadPose attribute.",
+        "C": "Call the face detection API and use the FaceLandmarks attribute to calculate the distance between pupils.",
+        "D": "Call the face detection API repeatedly and check for changes to the FaceAttributes.Accessories attribute."
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 95,
+      "question": "You have a Language service resource that performs the following:\n• Sentiment analysis• Named Entity Recognition (NER)• Personally Identifiable Information (PII) identification\nYou need to prevent the resource from persisting input data once the data is analyzed.\nWhich query parameter in the Language service API should you configure?",
+      "choices": {
+        "A": "model-version",
+        "B": "piiCategories",
+        "C": "showStats",
+        "D": "loggingOptOut"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 96,
+      "question": "You have an Azure Cognitive Services model named Model1 that identifies the intent of text input.\nYou develop an app in C# named App1.\nYou need to configure App1 to use Model1.\nWhich package should you add to App1?",
+      "choices": {
+        "A": "Universal.Microsoft.CognitiveServices.Speech",
+        "B": "SpeechServicesToolkit",
+        "C": "Azure.AI.Language.Conversations",
+        "D": "Xamarin.Cognitive.Speech"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 97,
+      "question": "You are building a social media extension that will convert text to speech. The solution must meet the following requirements:\n• Support messages of up to 400 characters.• Provide users with multiple voice options.• Minimize costs.\nYou create an Azure Cognitive Services resource.\nWhich Speech API endpoint provides users with the available voice options?",
+      "choices": {},
+      "correctAnswer": "C"
+    },
+    {
+      "id": 98,
+      "question": "You have an app that analyzes images by using the Computer Vision API.\nYou need to configure the app to provide an output for users who are vision impaired. The solution must provide the output in complete sentences.\nWhich API call should you perform?",
+      "choices": {
+        "A": "readInStreamAsync",
+        "B": "analyzeImagesByDomainInStreamAsync",
+        "C": "tagImageInStreamAsync",
+        "D": "describeImageInStreamAsync"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 99,
+      "question": "You have an Azure Cognitive Search solution and a collection of handwritten letters stored as JPEG files.\nYou plan to index the collection. The solution must ensure that queries can be performed on the contents of the letters.\nYou need to create an indexer that has a skillset.\nWhich skill should you include?",
+      "choices": {
+        "A": "image analysis",
+        "B": "optical character recognition (OCR)",
+        "C": "key phrase extraction",
+        "D": "document extraction"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 100,
+      "question": "You create a bot by using the Microsoft Bot Framework SDK.\nYou need to configure the bot to respond to events by using custom text responses.\nWhat should you use?",
+      "choices": {
+        "A": "a dialog",
+        "B": "an activity handler",
+        "C": "an adaptive card",
+        "D": "a skill"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 101,
+      "question": "You create five bots by using Microsoft Bot Framework Composer.\nYou need to make a single bot available to users that combines the bots. The solution must support dynamic routing to the bots based on user input.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Create a composer extension.",
+        "B": "Change the Recognizer/Dispatch type.",
+        "C": "Create an Orchestrator model.",
+        "D": "Enable WebSockets.",
+        "E": "Create a custom recognizer JSON file.",
+        "F": "Install the Orchestrator package."
+      },
+      "correctAnswer": "BCF"
+    },
+    {
+      "id": 102,
+      "question": "You develop a custom question answering project in Azure Cognitive Service for Language. The project will be used by a chatbot.\nYou need to configure the project to engage in multi-turn conversations.\nWhat should you do?",
+      "choices": {
+        "A": "Add follow-up prompts.",
+        "B": "Enable active learning.",
+        "C": "Add alternate questions.",
+        "D": "Enable chit-chat."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 103,
+      "question": "You are designing a conversational interface for an app that will be used to make vacation requests. The interface must gather the following data:\n• The start date of a vacation• The end date of a vacation• The amount of required paid time off\nThe solution must minimize dialog complexity.\nWhich type of dialog should you use?",
+      "choices": {
+        "A": "adaptive",
+        "B": "skill",
+        "C": "waterfall",
+        "D": "component"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 104,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a chatbot that uses question answering in Azure Cognitive Service for Language.\nUsers report that the responses of the chatbot lack formality when answering spurious questions.\nYou need to ensure that the chatbot provides formal responses to spurious questions.\nSolution: From Language Studio, you change the chitchat source to qna_chitchat_friendly.tsv, and then retrain and republish the model.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 105,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a chatbot that uses question answering in Azure Cognitive Service for Language.\nUsers report that the responses of the chatbot lack formality when answering spurious questions.\nYou need to ensure that the chatbot provides formal responses to spurious questions.\nSolution: From Language Studio, you modify the question and answer pairs for the custom intents, and then retrain and republish the model.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 106,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a chatbot that uses question answering in Azure Cognitive Service for Language.\nUsers report that the responses of the chatbot lack formality when answering spurious questions.\nYou need to ensure that the chatbot provides formal responses to spurious questions.\nSolution: From Language Studio, you change the chitchat source to qna_chitchat_professional.tsv, and then retrain and republish the model.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 107,
+      "question": "You have an Azure IoT hub that receives sensor data from machinery.\nYou need to build an app that will perform the following actions:\n• Perform anomaly detection across multiple correlated sensors.• Identify the root cause of process stops.• Send incident alerts.\nThe solution must minimize development time.\nWhich Azure service should you use?",
+      "choices": {
+        "A": "Azure Metrics Advisor",
+        "B": "Form Recognizer",
+        "C": "Azure Machine Learning",
+        "D": "Anomaly Detector"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 108,
+      "question": "You plan to build an app that will generate a list of tags for uploaded images. The app must meet the following requirements:\n• Generate tags in a user's preferred language.• Support English, French, and Spanish.• Minimize development effort.\nYou need to build a function that will generate the tags for the app.\nWhich Azure service endpoint should you use?",
+      "choices": {
+        "A": "Content Moderator Image Moderation",
+        "B": "Custom Vision image classification",
+        "C": "Computer Vision Image Analysis",
+        "D": "Custom Translator"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 109,
+      "question": "You have a chatbot that was built by using Microsoft Bot Framework and deployed to Azure.\nYou need to configure the bot to support voice interactions. The solution must support multiple client apps.\nWhich type of channel should you use?",
+      "choices": {
+        "A": "Cortana",
+        "B": "Microsoft Teams",
+        "C": "Direct Line Speech"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 110,
+      "question": "You are building a bot by using Microsoft Bot Framework.\nYou need to configure the bot to respond to spoken requests. The solution must minimize development effort.\nWhat should you do?",
+      "choices": {
+        "A": "Deploy the bot to Azure and register the bot with a Direct Line Speech channel.",
+        "B": "Integrate the bot with Cortana by using the Bot Framework SDK.",
+        "C": "Create an Azure function that will call the Speech service and connect the bot to the function.",
+        "D": "Deploy the bot to Azure and register the bot with a Microsoft Teams channel."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 111,
+      "question": "You have a text-based chatbot.\nYou need to enable content moderation by using the Text Moderation API of Content Moderator.\nWhich two service responses should you use? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "personal data",
+        "B": "the adult classification score",
+        "C": "text classification",
+        "D": "optical character recognition (OCR)",
+        "E": "the racy classification score"
+      },
+      "correctAnswer": "BE"
+    },
+    {
+      "id": 112,
+      "question": "You are building a retail kiosk system that will use a custom neural voice.\nYou acquire audio samples and consent from the voice talent.\nYou need to create a voice talent profile.\nWhat should you upload to the profile?",
+      "choices": {
+        "A": "a .zip file that contains 10-second .wav files and the associated transcripts as .txt files",
+        "B": "a five-minute .flac audio file and the associated transcript as a .txt file",
+        "C": "a .wav or .mp3 file of the voice talent consenting to the creation of a synthetic version of their voice",
+        "D": "a five-minute .wav or .mp3 file of the voice talent describing the kiosk system"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 113,
+      "question": "You have an Azure subscription that contains an AI enrichment pipeline in Azure Cognitive Search and an Azure Storage account that has 10 GB of scanned documents and images.\nYou need to index the documents and images in the storage account. The solution must minimize how long it takes to build the index.\nWhat should you do?",
+      "choices": {
+        "A": "From the Azure portal, configure parallel indexing.",
+        "B": "From the Azure portal, configure scheduled indexing.",
+        "C": "Configure field mappings by using the REST API.",
+        "D": "Create a text-based indexer by using the REST API."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 114,
+      "question": "You have a mobile app that manages printed forms.\nYou need the app to send images of the forms directly to Forms Recognizer to extract relevant information. For compliance reasons, the image files must not be stored in the cloud.\nIn which format should you send the images to the Form Recognizer API endpoint?",
+      "choices": {
+        "A": "raw image binary",
+        "B": "form URL encoded",
+        "C": "JSON"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 115,
+      "question": "You have an app named App1 that uses an Azure Cognitive Services model to identify anomalies in a time series data stream.\nYou need to run App1 in a location that has limited connectivity. The solution must minimize costs.\nWhat should you use to host the model?",
+      "choices": {
+        "A": "Azure Kubernetes Service (AKS)",
+        "B": "Azure Container Instances",
+        "C": "a Kubernetes cluster hosted in an Azure Stack Hub integrated system",
+        "D": "the Docker Engine"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 116,
+      "question": "You have an Azure subscription that contains a Language service resource named ta1 and a virtual network named vnet1.\nYou need to ensure that only resources in vnet1 can access ta1.\nWhat should you configure?",
+      "choices": {
+        "A": "a network security group (NSG) for vnet1",
+        "B": "Azure Firewall for vnet1",
+        "C": "the virtual network settings for ta1",
+        "D": "a Language service container for ta1"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 117,
+      "question": "You plan create an index for an Azure Cognitive Search service by using the Azure portal. The Cognitive Search service will connect to an Azure SQL database.\nThe Azure SQL database contains a table named UserMessages. Each row in UserMessages has a field named MessageCopy that contains the text of social media messages sent by a user.\nUsers will perform full text searches against the MessageCopy field, and the values of the field will be shown to the users.\nYou need to configure the properties of the index for the MessageCopy field to support the solution.\nWhich attributes should you enable for the field?",
+      "choices": {
+        "A": "Sortable and Retrievable",
+        "B": "Filterable and Retrievable",
+        "C": "Searchable and Facetable",
+        "D": "Searchable and Retrievable"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 118,
+      "question": "You are developing a monitoring system that will analyze engine sensor data, such as rotation speed, angle, temperature, and pressure. The system must generate an alert in response to atypical values.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "Application Insights in Azure Monitor",
+        "B": "metric alerts in Azure Monitor",
+        "C": "Multivariate Anomaly Detection",
+        "D": "Univariate Anomaly Detection"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 119,
+      "question": "You train a Conversational Language Understanding model to understand the natural language input of users.\nYou need to evaluate the accuracy of the model before deploying it.\nWhat are two methods you can use? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "From the language authoring REST endpoint, retrieve the model evaluation summary.",
+        "B": "From Language Studio, enable Active Learning, and then validate the utterances logged for review.",
+        "C": "From Language Studio, select Model performance.",
+        "D": "From the Azure portal, enable log collection in Log Analytics, and then analyze the logs."
+      },
+      "correctAnswer": "AC"
+    },
+    {
+      "id": 120,
+      "question": "You are building a chatbot by using Microsoft Bot Framework Composer.\nYou need to configure the chatbot to present a list of available options. The solution must ensure that an image is provided for each option.\nWhich two features should you use? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "an entity",
+        "B": "an Azure function",
+        "C": "an utterance",
+        "D": "an adaptive card",
+        "E": "a dialog"
+      },
+      "correctAnswer": "DE"
+    },
+    {
+      "id": 121,
+      "question": "You are building an AI solution that will use Sentiment Analysis results from surveys to calculate bonuses for customer service staff.\nYou need to ensure that the solution meets the Microsoft responsible AI principles.\nWhat should you do?",
+      "choices": {
+        "A": "Add a human review and approval step before making decisions that affect the staff's financial situation.",
+        "B": "Include the Sentiment Analysis results when surveys return a low confidence score.",
+        "C": "Use all the surveys, including surveys by customers who requested that their account be deleted and their data be removed.",
+        "D": "Publish the raw survey data to a central location and provide the staff with access to the location."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 122,
+      "question": "You have an Azure subscription that contains an Azure Cognitive Service for Language resource.\nYou need to identify the URL of the REST interface for the Language service.\nWhich blade should you use in the Azure portal?",
+      "choices": {
+        "A": "Identity",
+        "B": "Keys and Endpoint",
+        "C": "Networking",
+        "D": "Properties"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 123,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou are building a chatbot that will use question answering in Azure Cognitive Service for Language.\nYou have a PDF named Doc1.pdf that contains a product catalogue and a price list.\nYou upload Doc1.pdf and train the model.\nDuring testing, users report that the chatbot responds correctly to the following question: What is the price of ?\nThe chatbot fails to respond to the following question: How much does cost?\nYou need to ensure that the chatbot responds correctly to both questions.\nSolution: From Language Studio, you add alternative phrasing to the question and answer pair, and then retrain and republish the model.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 124,
+      "question": "You are building a chatbot.\nYou need to configure the bot to guide users through a product setup process.\nWhich type of dialog should you use?",
+      "choices": {
+        "A": "component",
+        "B": "action",
+        "C": "waterfall",
+        "D": "adaptive"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 125,
+      "question": "You have a Conversational Language Understanding model.\nYou export the model as a JSON file. The following is a sample of the file.\nWhat represents the Weather.Historic entity in the sample utterance?",
+      "choices": {
+        "A": "last year",
+        "B": "by month",
+        "C": "amount of",
+        "D": "average"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 126,
+      "question": "You are building a chatbot for a travel agent. The bot will ask users for a destination and must repeat the question until a valid input is received, or the user closes the conversation.\nWhich type of dialog should you use?",
+      "choices": {
+        "A": "prompt",
+        "B": "input",
+        "C": "adaptive",
+        "D": "QnA Maker"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 127,
+      "question": "You are building a chatbot.\nYou need to configure the chatbot to query a knowledge base.\nWhich dialog class should you use?",
+      "choices": {
+        "A": "QnAMakerDialog",
+        "B": "AdaptiveDialog",
+        "C": "SkillDialog",
+        "D": "ComponentDialog"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 128,
+      "question": "You are building a solution that will detect anomalies in sensor data from the previous 24 hours.\nYou need to ensure that the solution scans the entire dataset, at the same time, for anomalies.\nWhich type of detection should you use?",
+      "choices": {
+        "A": "batch",
+        "B": "streaming",
+        "C": "change points"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 129,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou build a language model by using a Conversational Language Understanding. The language model is used to search for information on a contact list by using an intent named FindContact.\nA conversational expert provides you with the following list of phrases to use for training.\n• Find contacts in London.• Who do I know in Seattle?• Search for contacts in Ukraine.\nYou need to implement the phrase list in Conversational Language Understanding.\nSolution: You create a new utterance for each phrase in the FindContact intent.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 130,
+      "question": "You develop a Conversational Language Understanding model by using Language Studio.\nDuring testing, users receive incorrect responses to requests that do NOT relate to the capabilities of the model.\nYou need to ensure that the model identifies spurious requests.\nWhat should you do?",
+      "choices": {
+        "A": "Enable active learning.",
+        "B": "Add entities.",
+        "C": "Add examples to the None intent.",
+        "D": "Add examples to the custom intents."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 131,
+      "question": "You have a Speech resource and a bot that was built by using the Microsoft Bot Framework Composer.\nYou need to add support for speech-based channels to the bot.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Configure the language and voice settings for the Speech resource.",
+        "B": "Add the endpoint and key of the Speech resource to the bot.",
+        "C": "Add language understanding to dialogs.",
+        "D": "Add Orchestrator to the bot.",
+        "E": "Add Speech to the bot responses.",
+        "F": "Remove the setSpeak configuration."
+      },
+      "correctAnswer": "ABE"
+    },
+    {
+      "id": 132,
+      "question": "You are building a flight booking bot by using the Microsoft Bot Framework SDK.\nThe bot will ask users for the departure date. The bot must repeat the question until a valid date is given, or the users cancel the transaction.\nWhich type of dialog should you use?",
+      "choices": {
+        "A": "prompt",
+        "B": "adaptive",
+        "C": "waterfall",
+        "D": "action"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 133,
+      "question": "You have an Azure subscription that contains an Anomaly Detector resource.\nYou deploy a Docker host server named Server1 to the on-premises network.\nYou need to host an instance of the Anomaly Detector service on Server1.\nWhich parameter should you include in the docker run command?",
+      "choices": {
+        "A": "Fluentd",
+        "B": "Billing",
+        "C": "Http Proxy",
+        "D": "Mounts"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 134,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have a chatbot that uses question answering in Azure Cognitive Service for Language.\nUsers report that the responses of the chatbot lack formality when answering spurious questions.\nYou need to ensure that the chatbot provides formal responses to spurious questions.\nSolution: From Language Studio, you remove all the chit-chat question and answer pairs, and then retrain and republish the model.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 135,
+      "question": "You have an Azure subscription. The subscription contains an Azure OpenAI resource that hosts a GPT-4 model named Model1 and an app named App1. App1 uses Model1.\nYou need to ensure that App1 will NOT return answers that include hate speech.\nWhat should you configure for Model1?",
+      "choices": {
+        "A": "the Frequency penalty parameter",
+        "B": "abuse monitoring",
+        "C": "a content filter",
+        "D": "the Temperature parameter"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 136,
+      "question": "You are building an app that will share user images.\nYou need to configure the app to perform the following actions when a user uploads an image:\n• Categorize the image as either a photograph or a drawing.• Generate a caption for the image.\nThe solution must minimize development effort.\nWhich two services should you include in the solution? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "object detection in Azure AI Computer Vision",
+        "B": "content tags in Azure AI Computer Vision",
+        "C": "image descriptions in Azure AI Computer Vision",
+        "D": "image type detection in Azure AI Computer Vision",
+        "E": "image classification in Azure AI Custom Vision"
+      },
+      "correctAnswer": "CD"
+    },
+    {
+      "id": 137,
+      "question": "You are building an app that will use the Azure AI Video Indexer service.\nYou plan to train a language model to recognize industry-specific terms.\nYou need to upload a file that contains the industry-specific terms.\nWhich file format should you use?",
+      "choices": {
+        "A": "XML",
+        "B": "TXT",
+        "C": "XLS",
+        "D": "PDF"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 138,
+      "question": "You have an Azure subscription that contains a multi-service Azure Cognitive Services Translator resource named Translator1.\nYou are building an app that will translate text and documents by using Translator1.\nYou need to create the REST API request for the app.\nWhich headers should you include in the request?",
+      "choices": {
+        "A": "the access control request, the content type, and the content length",
+        "B": "the subscription key and the client trace ID",
+        "C": "the resource ID and the content language",
+        "D": "the subscription key, the subscription region, and the content type"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 139,
+      "question": "You have an Azure subscription. The subscription contains an Azure OpenAI resource that hosts a GPT-3.5 Turbo model named Model1.\nYou configure Model1 to use the following system message: “You are an AI assistant that helps people solve mathematical puzzles. Explain your answers as if the request is by a 4-year-old.”\nWhich type of prompt engineering technique is this an example of?",
+      "choices": {
+        "A": "few-shot learning",
+        "B": "affordance",
+        "C": "chain of thought",
+        "D": "priming"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 140,
+      "question": "You have a file share that contains 5,000 images of scanned invoices.\nYou need to analyze the images. The solution must extract the following data:\n• Invoice items• Sales amounts• Customer details\nWhat should you use?",
+      "choices": {
+        "A": "Custom Vision",
+        "B": "Azure AI Computer Vision",
+        "C": "Azure AI Immersive Reader",
+        "D": "Azure AI Document Intelligence"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 141,
+      "question": "You have a Microsoft OneDrive folder that contains a 20-GB video file named File1.avi.\nYou need to index File1.avi by using the Azure Video Indexer website.\nWhat should you do?",
+      "choices": {
+        "A": "Upload File1.avi to the www.youtube.com webpage, and then copy the URL of the video to the Azure AI Video Indexer website.",
+        "B": "Download File1.avi to a local computer, and then upload the file to the Azure AI Video Indexer website.",
+        "C": "From OneDrive, create a download link, and then copy the link to the Azure AI Video Indexer website.",
+        "D": "From OneDrive, create a sharing link for File1.avi, and then copy the link to the Azure AI Video Indexer website."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 142,
+      "question": "You have an Azure AI service model named Model1 that identifies the intent of text input.\nYou develop a Python app named App1.\nYou need to configure App1 to use Model1.\nWhich package should you add to App1?",
+      "choices": {
+        "A": "azure-cognitiveservices-language-textanalytics",
+        "B": "azure-ai-language-conversations",
+        "C": "azure-mgmt-cognitiveservices",
+        "D": "azure-cognitiveservices-speech"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 143,
+      "question": "You build a chatbot that uses the Azure OpenAI GPT 3.5 model.\nYou need to improve the quality of the responses from the chatbot. The solution must minimize development effort.\nWhat are two ways to achieve the goal? Each correct answer presents a complete solution.\nNOTE: Each correct answer is worth one point.",
+      "choices": {
+        "A": "Fine-tune the model.",
+        "B": "Provide grounding content.",
+        "C": "Add sample request/response pairs.",
+        "D": "Retrain the language model by using your own data.",
+        "E": "Train a custom large language model (LLM)."
+      },
+      "correctAnswer": "BC"
+    },
+    {
+      "id": 144,
+      "question": "You have an Azure OpenAI model named AI1.\nYou are building a web app named App1 by using the Azure OpenAI SDK.\nYou need to configure App1 to connect to AI1.\nWhat information must you provide?",
+      "choices": {
+        "A": "the endpoint, key, and model name",
+        "B": "the deployment name, key, and model name",
+        "C": "the deployment name, endpoint, and key",
+        "D": "the endpoint, key, and model type"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 145,
+      "question": "You are building an internet-based training solution. The solution requires that a user's camera and microphone remain enabled.\nYou need to monitor a video stream of the user and detect when the user asks an instructor a question. The solution must minimize development effort.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "speech-to-text in the Azure AI Speech service",
+        "B": "language detection in Azure AI Language Service",
+        "C": "the Face service in Azure AI Vision",
+        "D": "object detection in Azure AI Custom Vision"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 146,
+      "question": "You have a custom Azure OpenAI model.\nYou have the files shown in the following table.\nYou need to prepare training data for the model by using the OpenAI CLI data preparation tool.\nWhich files can you upload to the tool?",
+      "choices": {
+        "A": "File1.tsv only",
+        "B": "File2.xml only",
+        "C": "File3.pdf only",
+        "D": "File4.xlsx only",
+        "E": "File1.tsv and File4.xslx only",
+        "F": "File1.tsv, File2.xml and File4.xslx only"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 147,
+      "question": "You have an Azure subscription that contains an Azure AI Content Safety resource named CS1.\nYou create a test image that contains a circle.\nYou submit the test image to CS1 by using the curl command and the following command-line parameters.\nWhat should you expect as the output?",
+      "choices": {
+        "A": "0",
+        "B": "0.0",
+        "C": "7",
+        "D": "100"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 148,
+      "question": "You have an Azure subscription.\nYou are building a social media app that will enable users to share images.\nYou need to ensure that inappropriate content uploaded by the users is blocked. The solution must minimize development effort.\nWhat are two tools that you can use? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Azure AI Document Intelligence",
+        "B": "Microsoft Defender for Cloud Apps",
+        "C": "Azure AI Content Safety",
+        "D": "Azure AI Vision",
+        "E": "Azure AI Custom Vision"
+      },
+      "correctAnswer": "CD"
+    },
+    {
+      "id": 149,
+      "question": "You have an Azure subscription that contains an Azure AI Document Intelligence resource named DI1. DI1 uses the Standard S0 pricing tier.\nYou have the files shown in the following table.\nWhich files can you analyze by using DI1?",
+      "choices": {
+        "A": "File 1.pdf only",
+        "B": "File2.jpg only",
+        "C": "File3.tiff only",
+        "D": "File2.jpg and File3.tiff only",
+        "E": "File1.pdf, File2.jpg, and File3.tiff"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 150,
+      "question": "You have an Azure subscription that contains an Azure AI Document Intelligence resource named AIdoc1.\nYou have an app named App1 that uses AIdoc1. App1 analyzes business cards by calling business card model v2.1.\nYou need to update App1 to ensure that the app can interpret QR codes. The solution must minimize administrative effort.\nWhat should you do first?",
+      "choices": {
+        "A": "Upgrade the business card model to v3.0.",
+        "B": "Implement the read model.",
+        "C": "Deploy a custom model.",
+        "D": "Implement the contract model."
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 151,
+      "question": "You have an Azure OpenAI model.\nYou have 500 prompt-completion pairs that will be used as training data to fine-tune the model.\nYou need to prepare the training data.\nWhich format should you use for the training data file?",
+      "choices": {
+        "A": "CSV",
+        "B": "XML",
+        "C": "JSONL",
+        "D": "TSV"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 152,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure subscription that contains an Azure OpenAI resource named AI1 and an Azure AI Content Safety resource named CS1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions and CS1 to check input and output for objectionable content.\nYou need to optimize the content filter configurations by running tests on sample questions.\nSolution: From Content Safety Studio, you use the Protected material detection feature to run the tests.\nDoes this meet the requirement?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 153,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure subscription that contains an Azure OpenAI resource named AI1 and an Azure AI Content Safety resource named CS1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions and CS1 to check input and output for objectionable content.\nYou need to optimize the content filter configurations by running tests on sample questions.\nSolution: From Content Safety Studio, you use the Moderate text content feature to run the tests.\nDoes this meet the requirement?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 154,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure subscription that contains an Azure OpenAI resource named AI1 and an Azure AI Content Safety resource named CS1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions and CS1 to check input and output for objectionable content.\nYou need to optimize the content filter configurations by running tests on sample questions.\nSolution: From Content Safety Studio, you use the Monitor online activity feature to run the tests.\nDoes this meet the requirement?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 155,
+      "question": "You have an Azure subscription that contains an Azure OpenAI resource named AI1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions.\nYou need to ensure that questions intended to circumvent built-in safety features are blocked.\nWhich Azure AI Content Safety feature should you implement?",
+      "choices": {
+        "A": "Monitor online activity",
+        "B": "Jailbreak risk detection",
+        "C": "Moderate text content",
+        "D": "Protected material text detection"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 156,
+      "question": "You have an Azure subscription that contains an Azure OpenAI resource named OpenAI1 and a user named User1.\nYou need to ensure that User1 can upload datasets to OpenAI1 and finetune the existing models. The solution must follow the principle of least privilege.\nWhich role should you assign to User1?",
+      "choices": {
+        "A": "Cognitive Services OpenAI Contributor",
+        "B": "Cognitive Services Contributor",
+        "C": "Cognitive Services OpenAI User",
+        "D": "Contributor"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 157,
+      "question": "You have an Azure subscription that contains an Azure OpenAI resource named AI1 and a user named User1.\nYou need to ensure that User1 can perform the following actions in Azure OpenAI Studio:\n• Identify resource endpoints.• View models that are available for deployment.• Generate text and images by using the deployed models.\nThe solution must follow the principle of least privilege.\nWhich role should you assign to User1?",
+      "choices": {
+        "A": "Cognitive Services OpenAI User",
+        "B": "Cognitive Services Contributor",
+        "C": "Contributor",
+        "D": "Cognitive Services OpenAI Contributor"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 158,
+      "question": "You have an Azure AI Search resource named Search1.\nYou have an app named App1 that uses Search1 to index content.\nYou need to add a custom skill to App1 to ensure that the app can recognize and retrieve properties from invoices by using Search1.\nWhat should you include in the solution?",
+      "choices": {
+        "A": "Azure AI Immersive Reader",
+        "B": "Azure OpenAI",
+        "C": "Azure AI Document Intelligence",
+        "D": "Azure AI Custom Vision"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 159,
+      "question": "You have a local folder that contains the files shown in the following table.\nYou need to analyze the files by using Azure AI Video Indexer.\nWhich files can you upload to the Video Indexer website?",
+      "choices": {
+        "A": "File1 and File3 only",
+        "B": "File1, File2, File3 and File4",
+        "C": "File1, File2, and File3 only",
+        "D": "File1 and File2 only",
+        "E": "File1, File2, and File4 only"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 160,
+      "question": "You have an Azure subscription that contains an Azure AI Document Intelligence resource named AIdoc1 in the S0 tier.\nYou have the files shown in the following table.\nYou need to train a custom extraction model by using AIdoc1.\nWhich files can you upload to Document Intelligence Studio?",
+      "choices": {
+        "A": "File1, File2, and File4 only",
+        "B": "File2, and File5 only",
+        "C": "File2, File4, and File5 only",
+        "D": "File1, File2, File3, File4, and File5",
+        "E": "File1 and File2 only"
+      },
+      "correctAnswer": "E"
+    },
+    {
+      "id": 161,
+      "question": "You have an Azure subscription.\nYou need to deploy an Azure AI Search resource that will recognize geographic locations.\nWhich built-in skill should you include in the skillset for the resource?",
+      "choices": {
+        "A": "AzureOpenAIEmbeddingSkill",
+        "B": "DocumentExtractionSkill",
+        "C": "EntityRecognitionSkill",
+        "D": "EntityLinkingSkill"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 162,
+      "question": "You have an Azure subscription and 10,000 ASCII files.\nYou need to identify files that contain specific phrases. The solution must use cosine similarity.\nWhich Azure OpenAI model should you use?",
+      "choices": {
+        "A": "text-embedding-ada-002",
+        "B": "GPT-4",
+        "C": "GPT-35 Turbo",
+        "D": "GPT-4-32k"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 163,
+      "question": "You have an Azure subscription that contains an Azure OpenAI resource named AI1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions.\nYou need to ensure that the chatbot checks all input and output for objectionable content.\nWhich type of resource should you create first?",
+      "choices": {
+        "A": "Microsoft Defender Threat Intelligence (Defender TI)",
+        "B": "Azure AI Content Safety",
+        "C": "Log Analytics",
+        "D": "Azure Machine Leaning"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 164,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure subscription that contains an Azure OpenAI resource named AI1 and an Azure AI Content Safety resource named CS1.\nYou build a chatbot that uses AI1 to provide generative answers to specific questions and CS1 to check input and output for objectionable content.\nYou need to optimize the content filter configurations by running tests on sample questions.\nSolution: From Content Safety Studio, you use the Safety metaprompt feature to run the tests.\nDoes this meet the requirement?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 165,
+      "question": "You have an Azure subscription that contains an Azure AI Content Safety resource named CS1.\nYou plan to build an app that will analyze user-generated documents and identify obscure offensive terms.\nYou need to create a dictionary that will contain the offensive terms. The solution must minimize development effort.\nWhat should you use?",
+      "choices": {
+        "A": "a text classifier",
+        "B": "language detection",
+        "C": "text moderation",
+        "D": "a blocklist"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 166,
+      "question": "You have an Azure DevOps pipeline named Pipeline1 that is used to deploy an app. Pipeline1 includes a step that will create an Azure AI services account.\nYou need to add a step to Pipeline1 that will identify the created Azure AI services account. The solution must minimize development effort.\nWhich Azure Command-Line Interface (CLI) command should you run?",
+      "choices": {
+        "A": "az resource link",
+        "B": "az cognitiveservices account network-rule",
+        "C": "az cognitiveservices account show",
+        "D": "az account list"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 167,
+      "question": "You are developing a text processing solution.\nYou have the following function.\nYou call the function and use the following string as the second argument.\nOur tour of London included a visit to Buckingham Palace\nWhat will the function return?",
+      "choices": {
+        "A": "London and Buckingham Palace only",
+        "B": "Tour and visit only",
+        "C": "London and Tour only",
+        "D": "Our tour of London included visit to Buckingham Palace"
+      },
+      "correctAnswer": "A"
+    }
+  ]
+}

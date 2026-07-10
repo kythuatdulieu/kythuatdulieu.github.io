@@ -43,11 +43,7 @@ graph TD
         AD -->|SLO Burn / Critical| P["PagerDuty / Opsgenie (Page)"]
         AD -->|Warning / High| TKT["Jira / ServiceNow (Ticket)"]
         AD -->|Info| SL["Slack / Teams (Log)"]
-    end
-    
-    style S fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#bbf,stroke:#333,stroke-width:2px
-    style P fill:#f66,stroke:#333,stroke-width:2px
+    end
 ```
 
 ### Trade-off: Polling vs. Push-based Observability

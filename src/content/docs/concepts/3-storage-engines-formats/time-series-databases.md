@@ -103,9 +103,7 @@ flowchart TD
     A --> D["Mark 2 (Time: 10:10)"]
     
     B -->|Disk Pointer| E["Granule 0: Row 1-8192 (Nén lốm đốm)"]
-    C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
-    
-    style A fill:#f96,stroke:#333,stroke-width:2px
+    C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
 ```
 
 **Trade-offs [Chất dứt điểm High Cardinality]:**

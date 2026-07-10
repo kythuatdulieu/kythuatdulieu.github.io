@@ -47,10 +47,9 @@ Thay vì ghi trực tiếp log vào file cục bộ (dễ mất khi server crash
 
 ```mermaid
 graph TD
-    classDef source fill:#f9f2f4,stroke:#d9534f,stroke-width:2px;
-    classDef broker fill:#e8f4f8,stroke:#5bc0de,stroke-width:2px;
-    classDef process fill:#fcf8e3,stroke:#f0ad4e,stroke-width:2px;
-    classDef storage fill:#dff0d8,stroke:#5cb85c,stroke-width:2px;
+
+
+
 
     A1[Databricks / Spark]:::source -->|Emit JSON| B(Kafka / AWS Kinesis):::broker
     A2[Snowflake / BigQuery]:::source -->|Activity Stream| B

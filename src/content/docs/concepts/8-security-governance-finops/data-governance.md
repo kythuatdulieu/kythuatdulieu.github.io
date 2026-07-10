@@ -57,10 +57,9 @@ security:
 
 ```mermaid
 graph TD
-    classDef producer fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
-    classDef consumer fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
-    classDef danger fill:#ffebee,stroke:#b71c1c,stroke-width:2px;
+
+
+
 
     BE[Backend Engineer PR]:::producer --> CI[CI/CD Pipeline]:::infra
     CI --> Validator{Data Contract Validator}:::infra

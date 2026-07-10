@@ -54,12 +54,7 @@ graph TD
         
         Worker1 -->|Write I/O| S3_Clean
         Worker2 -->|Write I/O| S3_Clean
-    end
-    
-    style S3_Raw fill:#f9f6e5,stroke:#b8a36c
-    style S3_Clean fill:#f9f6e5,stroke:#b8a36c
-    style Worker1 fill:#e6f3ff,stroke:#4a90e2
-    style Worker2 fill:#e6f3ff,stroke:#4a90e2
+    end
 ```
 
 ---

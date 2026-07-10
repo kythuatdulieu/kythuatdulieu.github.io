@@ -56,8 +56,6 @@ graph TD
     E --> G("Base File: .parquet")
     E --> H("Log File: .avro (Delta Commit)")
     E --> I("Log File: .avro (Delta Commit)")
-    
-    classDef fg fill:#f9f,stroke:#333,stroke-width:2px;
     class B,C fg;
 ```
 - **File Group:** Nhóm các phiên bản của cùng một tập hợp bản ghi. Hudi luôn cố pack dữ liệu vào đúng dung lượng mục tiêu [ví dụ 120MB] cho một File Group.

@@ -1,0 +1,68 @@
+---
+// Danh sách dự án thực chiến: e2e pipelines + system design, cùng ngôn ngữ
+// thiết kế với trang /quizzes/ và /concepts/.
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('docs');
+const projects = all.filter((d) => d.id.startsWith('projects/'));
+
+const GROUPS = [
+  { dir: 'e2e', label: 'Dự án end-to-end', desc: 'Pipeline hoàn chỉnh: thu nạp, xử lý, lưu trữ, trực quan hóa.' },
+  { dir: 'system-design', label: 'Thiết kế hệ thống', desc: 'Phân tích kiến trúc và trade-off cho các bài toán dữ liệu.' },
+];
+
+const groups = GROUPS.map((g) => ({
+  ...g,
+  items: projects
+    .filter((d) => d.id.split('/')[1] === g.dir)
+    .map((d) => ({ title: d.data.title, desc: d.data.description || '', href: `/${d.slug}/` }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'vi')),
+})).filter((g) => g.items.length > 0);
+
+const total = projects.length;
+---
+
+<div class="project-index not-content">
+  <p class="lead">{total} dự án thực chiến để áp dụng các khái niệm trong cẩm nang vào hệ thống chạy được.</p>
+
+  {groups.map((g) => (
+    <section>
+      <h2 class="section-h">{g.label} ({g.items.length})</h2>
+      <p class="group-desc">{g.desc}</p>
+      <ul class="project-list">
+        {g.items.map((p) => (
+          <li>
+            <a href={p.href}>
+              <span class="p-name">{p.title}</span>
+              <span class="p-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .project-index { max-width: 780px; margin: 0 auto; padding: var(--space-4, 1rem) var(--space-5, 1.5rem) var(--space-9, 6rem); font-family: var(--font-sans); }
+  .lead { color: var(--text-muted, var(--sl-color-gray-3)); font-size: var(--text-md, 1.19rem); margin: 0 0 var(--space-6, 2rem); max-width: 60ch; }
+  .project-index section + section { margin-top: var(--space-7, 3rem); }
+  .section-h {
+    font-size: var(--text-sm, .94rem); text-transform: uppercase; letter-spacing: var(--tracking-wider, .06em);
+    color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 600; margin: 0 0 var(--space-2, .5rem); border: none;
+  }
+  .group-desc { margin: 0 0 var(--space-3, .75rem); font-size: var(--text-sm, .94rem); color: var(--text-muted, var(--sl-color-gray-3)); }
+  .project-list { list-style: none; margin: 0; padding: 0; }
+  .project-list a {
+    display: flex; align-items: baseline; gap: var(--space-3, .75rem);
+    padding: var(--space-3, .75rem) var(--space-2, .5rem);
+    border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+    color: inherit; text-decoration: none;
+    transition: background var(--duration-fast, 120ms), border-color var(--duration-fast, 120ms);
+  }
+  .project-list a:hover { background: var(--sl-color-accent-low); border-color: var(--sl-color-accent); }
+  .p-name { flex: 1; font-size: var(--text-base, 1.06rem); font-weight: 500; color: var(--text-body, var(--sl-color-text)); }
+  .project-list a:hover .p-name { color: var(--sl-color-text-accent); }
+  .p-arrow { color: var(--text-faint, var(--sl-color-gray-4)); flex-shrink: 0; }
+  .project-list a:hover .p-arrow { color: var(--sl-color-text-accent); }
+</style>

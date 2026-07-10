@@ -39,10 +39,7 @@ flowchart TD
     E -->|"2. Auto Evolve (Tiến hóa)"| G["Thêm cột vào Metadata Log"]
     G --> D
     E -->|"3. Ignore (Phớt lờ)"| H["Drop cột mới, chỉ ghi cột cũ"]
-    H --> D
-    
-    style E fill:#f9acaa,stroke:#333,stroke-width:2px
-    style G fill:#bbf,stroke:#333,stroke-width:2px
+    H --> D
 ```
 
 ---

@@ -1,59 +1,44 @@
-import os
 import json
-import subprocess
+import os
 
-subagents = {
-    "991ed135-f281-415b-8f2a-6cae7f8b638b": "E2E Projects Specialist",
-    "e2f24b9c-a2ce-4f4e-a547-77f3d9d6af14": "DE Interview Specialist"
-}
+SUBAGENTS = [
+    ("Chunk 1", "1d234f4b-90a4-438b-b3e6-0df80ecb75c3"),
+    ("Chunk 2", "1af2d477-79ff-4744-b3f3-dc3faa61744e"),
+    ("Chunk 3", "c1a02ded-8155-45b4-87b9-9ba6fc1c55ee"),
+    ("Chunk 4", "9993aed2-13e5-4ba6-b70f-a64ac4e4128e"),
+    ("Chunk 5", "3c314e3b-e631-45e2-a7f5-50579dd1ebba")
+]
 
-brain_dir = "/home/duclinh/.gemini/antigravity-cli/brain"
+BRAIN_DIR = "C:/Users/ducli/.gemini/antigravity-cli/brain"
 
-print(f"{'Subagent Role':<30} | {'Modified Files':<15} | {'Last Step Type':<15} | {'Log Status':<55}")
-print("-" * 125)
-
-for cid, role in subagents.items():
-    log_path = os.path.join(brain_dir, cid, ".system_generated/logs/transcript.jsonl")
-    wt_path = os.path.join(brain_dir, "9bbc864e-0bcb-4583-a560-369f9a736ba3/.system_generated/worktrees")
-    
-    # find worktree matching branch or role
-    wt_dir = None
-    if os.path.exists(wt_path):
-        for entry in os.listdir(wt_path):
-            if cid in entry or role.split(" ")[0] in entry:
-                wt_dir = os.path.join(wt_path, entry)
-                break
-    
-    modified_count = 0
-    if wt_dir and os.path.exists(wt_dir):
-        try:
-            status_out = subprocess.check_output(["git", "-C", wt_dir, "status", "-s"], text=True)
-            modified_count = len([line for line in status_out.splitlines() if line.strip()])
-        except Exception:
-            pass
+def main():
+    for name, cid in SUBAGENTS:
+        path = os.path.join(BRAIN_DIR, cid, ".system_generated", "logs", "transcript.jsonl")
+        if not os.path.exists(path):
+            print(f"{name} ({cid}): Transcript path does not exist.")
+            continue
             
-    last_step_type = "N/A"
-    log_status = "Not started"
-    
-    if os.path.exists(log_path):
-        try:
-            with open(log_path, "r", encoding="utf-8") as f:
-                lines = f.readlines()
-                if lines:
-                    last_line = lines[-1].strip()
-                    try:
-                        data = json.loads(last_line)
-                        last_step_type = data.get("type", "N/A")
-                        content = data.get("content", "")
-                        # truncate content for display
-                        if content:
-                            first_line = content.splitlines()[0] if content.splitlines() else ""
-                            log_status = (first_line[:53] + "...") if len(first_line) > 53 else first_line
-                        else:
-                            log_status = f"Step {data.get('step_index')} finished"
-                    except Exception as e:
-                        log_status = f"JSON parse err: {str(e)}"
-        except Exception as e:
-            log_status = f"Read error: {str(e)}"
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
             
-    print(f"{role:<30} | {modified_count:<15} | {last_step_type:<15} | {log_status:<55}")
+        print(f"=== {name} ({cid}) - Total Lines: {len(lines)} ===")
+        # Look back from the end to find the latest PLANNER_RESPONSE
+        found = False
+        for line in reversed(lines):
+            try:
+                obj = json.loads(line)
+                if obj.get("type") == "PLANNER_RESPONSE":
+                    calls = obj.get("tool_calls", [])
+                    for call in calls:
+                        print(f"  Tool: {call.get('name')}")
+                        if call.get('name') == 'run_command':
+                            print(f"    CommandLine: {call.get('args', {}).get('CommandLine')}")
+                    found = True
+                    break
+            except Exception as e:
+                pass
+        if not found:
+            print("  No planner response found.")
+
+if __name__ == "__main__":
+    main()

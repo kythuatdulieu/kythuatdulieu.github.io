@@ -44,10 +44,7 @@ flowchart TD
     MemTable -->|"Spill-to-disk (Chống OOM)"| RocksDB
     RocksDB -.->|"Ad-hoc Query / Join"| TableOut
     MemTable -- "Async flush" --> Changelog
-    Changelog -.->|"Replay (Fault Tolerance)"| MemTable
-    
-    style StreamingNode fill:#f9f,stroke:#333,stroke-width:2px
-    style Changelog fill:#bbf,stroke:#333,stroke-width:2px
+    Changelog -.->|"Replay (Fault Tolerance)"| MemTable
 ```
 
 Dữ liệu mới đến sẽ đi vào bộ đệm trên RAM (MemTable). Khi MemTable đầy, nó sẽ xả xuống đĩa cứng (Spill-to-disk) dưới dạng SSTables (Sorted String Tables) của RocksDB. Table mà developer thao tác thực chất chỉ là giao diện truy vấn ảo (Virtual View) phủ lên trên cấu trúc vật lý này.
@@ -108,7 +105,6 @@ CREATE TABLE mysql_orders_cdc (
   'database-name' = 'ecommerce',
   'table-name' = 'orders'
 );
-
 -- 2. Khai báo Output Table (Materialized View) trỏ thẳng vào Elasticsearch
 CREATE TABLE user_spend_summary (
   user_id INT,

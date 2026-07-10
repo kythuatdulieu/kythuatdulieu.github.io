@@ -106,9 +106,7 @@ Các hệ thống OLAP hiện đại (ClickHouse, Databricks Photon Engine) từ
 flowchart LR
     A["Mảng Age [Vector]: [25, 30, 22, 40]"] --> B["CPU L1 Cache"]
     B --> C{"SIMD Instruction:\n _mm256_add_epi32() \n (Cộng 8 số trong 1 Clock Cycle)"}
-    C --> D["Result Vector"]
-    
-    style C fill:#f9f,stroke:#333,stroke-width:2px
+    C --> D["Result Vector"]
 ```
 
 **4. Late Materialization (Vật Chất Hóa Trễ):**

@@ -53,10 +53,7 @@ graph LR
     StarSchema --> Trino["Trino/Presto\n('SQL Engine')"]
     StarSchema --> FeatureStore["Feature Store\n('AI/ML')"]
     
-    Trino --> BI["BI Dashboards"]
-    
-    style Kafka fill:#ffcc00,stroke:#333
-    style Iceberg fill:#88ccff,stroke:#333
+    Trino --> BI["BI Dashboards"]
 ```
 
 - **Ingestion (Thu thập):** Xu hướng hiện nay là loại bỏ việc truy vấn định kỳ (Batch query) vào DB nguồn gây quá tải. Thay vào đó, ta sử dụng **CDC (Change Data Capture)** qua Debezium. Debezium đọc trực tiếp file log giao dịch (WAL/Binlog) của DB và đẩy từng lệnh Insert/Update/Delete vào Kafka với độ trễ tính bằng mili-giây mà không làm chậm DB gốc.

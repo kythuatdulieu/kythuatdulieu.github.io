@@ -131,25 +131,19 @@ function evaluateFile(filePath) {
     const refSectionIndex = body.indexOf('## Tài liệu tham khảo') !== -1 ? body.indexOf('## Tài liệu tham khảo') : body.indexOf('## References');
     let refScore = 0;
     
-    // Reduce strictness for interview
-    let minLinks = filePath.includes('/interview/') ? 2 : 5;
-    
+    // Policy 2026-07: KHÔNG ép format/số lượng cứng như bản cũ, nhưng cuối bài NÊN có
+    // mục References/Tài liệu tham khảo đầy đủ. Thiếu -> phạt nhẹ; có nhưng markdown gãy -> phạt nhẹ.
     if (refSectionIndex === -1 && !filePath.includes('/learning-paths/')) {
-        reports.push({ section: "Citations", passed: false, score: 0, max: 15, message: "Missing '## Tài liệu tham khảo' or '## References' section" });
+        reports.push({ section: "Citations", passed: false, score: 8, max: 15, message: "Nên có mục '## References' hoặc '## Tài liệu tham khảo' ở cuối bài (backlink/nguồn đầy đủ)" });
+        refScore = 8;
     } else {
+        refScore = 15;
         const refText = refSectionIndex !== -1 ? body.slice(refSectionIndex) : '';
-        const mdLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
-        const links = [];
-        let match;
-        while ((match = mdLinkRegex.exec(refText)) !== null) {
-            links.push(match[2]);
-        }
-
-        if (links.length >= minLinks || filePath.includes('/learning-paths/')) {
-            refScore = 15;
-        } else {
-            reports.push({ section: "Citations", passed: false, score: 5, max: 15, message: `Found only ${links.length} references (minimum ${minLinks} required)` });
-            refScore = 5;
+        // Bắt lỗi markdown gãy kiểu [text][url] hoặc [text](url] của bản cũ
+        const brokenRef = /\]\[https?:\/\/|\]\(https?:\/\/[^\s)]*\](?!\))/.test(refText);
+        if (brokenRef) {
+            reports.push({ section: "Citations", passed: false, score: 12, max: 15, message: "References section có link markdown gãy (kiểu [text][url] hoặc [text](url])" });
+            refScore = 12;
         }
     }
     score += refScore;
@@ -166,8 +160,8 @@ function evaluateFile(filePath) {
     }
 
     let intScore = 0;
-    // Projects might not have internal links naturally yet
-    let minIntLinks = filePath.includes('/projects/') ? 0 : 3;
+    // Internal links tay là OPTIONAL: auto-link (remark-auto-link) tự chèn lúc build từ prose.
+    let minIntLinks = 0;
     if (internalLinks.length >= minIntLinks) {
         intScore = 10;
     } else {
@@ -181,11 +175,10 @@ function evaluateFile(filePath) {
     let requiredSections = [];
 
     if (filePath.includes('/concepts/')) {
-        requiredSections = [
-            { regex: /##\s+Điểm mạnh\s+\(Pros\)|##\s+Điểm mạnh\s+và\s+điểm\s+yếu/i, name: "Pros/Cons section" },
-            { regex: /##\s+Khi nào\s+(nên|không nên)\s+dùng/i, name: "When to use / not to use section" },
-            { regex: /##\s+English\s+Summary/i, name: "English Summary section" }
-        ];
+        // Khung v2 (2026-07): KHÔNG ràng section cứng. Nội dung phát triển theo từng bài,
+        // miễn logic + dễ hiểu (phần này người review đánh giá, không auto-check).
+        // Yêu cầu còn lại chỉ là: có sơ đồ (check riêng), và cuối bài có backlink/reference.
+        requiredSections = [];
     } else if (filePath.includes('/projects/')) {
         requiredSections = [
             { regex: /##\s+Business\s+Problem|##\s+Bài toán\s+kinh\s+doanh/i, name: "Business Problem section" },

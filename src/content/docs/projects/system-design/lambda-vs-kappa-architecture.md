@@ -38,8 +38,6 @@ flowchart TD
     F --> G
     
     G --> H["Client Apps / BI Dashboards"]
-
-    classDef layer fill:#f9f2f4,stroke:#333,stroke-width:2px;
     class C,E layer;
     class D,F layer;
 ```
@@ -96,9 +94,10 @@ realtime_sales.writeStream \
     .start()
 ```
 
-> [!WARNING]
-> **Nhược điểm chí mạng của Lambda:** 
-> Gánh nặng bảo trì (Maintenance Overhead) là ác mộng của kỹ sư. Bạn phải duy trì hai luồng code (Ví dụ: Code Java cho Storm/Flink ở tầng Stream và Python/SQL cho Spark ở tầng Batch) để thực thi cùng một nghiệp vụ phân tích. Đội ngũ Data Engineer thường xuyên cạn kiệt tài nguyên cho việc giải quyết các ticket bug dạng: *"Tại sao con số doanh thu ở Real-time Dashboard và báo cáo ngày hôm sau lại chênh lệch nhau?"*. Sự phân mảnh logic giữa hai engine này mang lại chi phí phát triển quá đắt đỏ.
+:::danger
+**Nhược điểm chí mạng của Lambda:** 
+Gánh nặng bảo trì (Maintenance Overhead) là ác mộng của kỹ sư. Bạn phải duy trì hai luồng code (Ví dụ: Code Java cho Storm/Flink ở tầng Stream và Python/SQL cho Spark ở tầng Batch) để thực thi cùng một nghiệp vụ phân tích. Đội ngũ Data Engineer thường xuyên cạn kiệt tài nguyên cho việc giải quyết các ticket bug dạng: *"Tại sao con số doanh thu ở Real-time Dashboard và báo cáo ngày hôm sau lại chênh lệch nhau?"*. Sự phân mảnh logic giữa hai engine này mang lại chi phí phát triển quá đắt đỏ.
+:::
 
 ---
 
@@ -164,11 +163,12 @@ Dù tinh gọn về mặt thiết kế codebase, Kappa Architecture trong thực
 2. **Quản lý Trạng thái khổng lồ (State Management):** Khi Reprocess nhiều Terabytes dữ liệu stream, Stream Engine bắt buộc phải ghi nhớ Trạng thái (State) của tất cả các phép Joins, Windows hay Deduplications. Kích thước State (thường lưu ở RocksDB) có thể phình to vô tận, khiến quá trình Checkpoint mất hàng chục phút, gây ra nghẽn I/O, Out-of-Memory (OOM) làm sập cụm tính toán một cách thường xuyên.
 3. **Thứ tự dữ liệu và Event Time:** Trong quá trình backfill lịch sử, do phải đọc từ nhiều Kafka Partitions khác nhau với tốc độ tối đa, tình trạng out-of-order (dữ liệu đến không theo thứ tự thời gian) xảy ra trầm trọng. Kỹ sư phải có kiến thức sâu rộng về thiết lập **Watermarks** và Allowed Lateness để đảm bảo tính chuẩn xác.
 
-> [!IMPORTANT]  
-> **Đạt được Exactly-Once Semantics (EOS) với Two-Phase Commit:**
-> Lambda xử lý trùng lặp rất dễ bằng cách (Overwrite) đè sạch dữ liệu cũ. Với Kappa, Engine phải đảm bảo không bao giờ ghi double dữ liệu khi có sự cố mạng. Apache Flink áp dụng **Two-Phase Commit (2PC)** kết nối với Kafka:
-> - **Phase 1 (Pre-commit):** Flink xử lý xong lô sự kiện, tạo Snapshot/Checkpoint (lưu state vào S3) và gửi dữ liệu lên Kafka nhưng đánh dấu là "chưa được commit".
-> - **Phase 2 (Commit):** Khi hệ thống giám sát Checkpoint phân tán (Dựa trên thuật toán Chandy-Lamport) xác nhận tất cả node đều thành công, tín hiệu Commit chính thức được phát ra. Dữ liệu trên Kafka mới hiện hình (visible) cho người dùng cuối. Bất cứ lỗi nhỏ nào cũng sẽ trigger Rollback. Cơ chế này siêu an toàn nhưng đòi hỏi băng thông mạng và sức mạnh CPU rất lớn.
+:::note
+**Đạt được Exactly-Once Semantics (EOS) với Two-Phase Commit:**
+Lambda xử lý trùng lặp rất dễ bằng cách (Overwrite) đè sạch dữ liệu cũ. Với Kappa, Engine phải đảm bảo không bao giờ ghi double dữ liệu khi có sự cố mạng. Apache Flink áp dụng **Two-Phase Commit (2PC)** kết nối với Kafka:
+- **Phase 1 (Pre-commit):** Flink xử lý xong lô sự kiện, tạo Snapshot/Checkpoint (lưu state vào S3) và gửi dữ liệu lên Kafka nhưng đánh dấu là "chưa được commit".
+- **Phase 2 (Commit):** Khi hệ thống giám sát Checkpoint phân tán (Dựa trên thuật toán Chandy-Lamport) xác nhận tất cả node đều thành công, tín hiệu Commit chính thức được phát ra. Dữ liệu trên Kafka mới hiện hình (visible) cho người dùng cuối. Bất cứ lỗi nhỏ nào cũng sẽ trigger Rollback. Cơ chế này siêu an toàn nhưng đòi hỏi băng thông mạng và sức mạnh CPU rất lớn.
+:::
 
 ---
 
@@ -218,8 +218,6 @@ flowchart LR
     D -->|Aggregations| E[("Gold Layer\nBusiness Level Metrics")]
     
     C -.->|"Time-travel Reprocessing\n(Unified API)"| C
-    
-    classDef lakehouse fill:#e6f3ff,stroke:#333,stroke-width:2px;
     class C,D,E lakehouse;
 ```
 

@@ -1,0 +1,21 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import ArticleMeta from './ArticleMeta.astro';
+
+const { entry } = Astro.props;
+const data = entry?.data ?? {};
+const isSplash = data.template === 'splash';
+const hasMeta = !isSplash && (data.category || data.domains || data.level || data.difficulty || data.readingTime);
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+{hasMeta && (
+  <ArticleMeta
+    category={data.category}
+    domains={data.domains}
+    level={data.level}
+    difficulty={data.difficulty}
+    readingTime={data.readingTime}
+  />
+)}

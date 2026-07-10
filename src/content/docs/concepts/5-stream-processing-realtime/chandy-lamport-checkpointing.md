@@ -173,8 +173,9 @@ state.backend.incremental: true
 execution.checkpointing.aligned-checkpoint-timeout: 5000 ms
 ```
 
-> [!TIP]
-> Việc sử dụng tính năng **Alignment Timeout** [`execution.checkpointing.aligned-checkpoint-timeout`] là một Best Practice ở tầm cỡ Staff Engineer. Nó kết hợp được ưu điểm của cả hai thế giới: Giữ dung lượng Checkpoint nhỏ trong điều kiện bình thường (Aligned), nhưng lập tức bẻ lái sang Unaligned để cứu Job không bị sập khi có sự cố mạng.
+:::tip
+Việc sử dụng tính năng **Alignment Timeout** [`execution.checkpointing.aligned-checkpoint-timeout`] là một Best Practice ở tầm cỡ Staff Engineer. Nó kết hợp được ưu điểm của cả hai thế giới: Giữ dung lượng Checkpoint nhỏ trong điều kiện bình thường (Aligned), nhưng lập tức bẻ lái sang Unaligned để cứu Job không bị sập khi có sự cố mạng.
+:::
 
 ---
 

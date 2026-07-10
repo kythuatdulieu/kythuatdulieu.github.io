@@ -57,10 +57,7 @@ graph TD
     B -.-> IS
     C -.-> IS
     IS -.->|Logs/Metadata| M
-    C -.->|SELECT sampling| D_Scan
-    
-    style M fill:#d4edda,stroke:#28a745
-    style D_Scan fill:#f8d7da,stroke:#dc3545
+    C -.->|SELECT sampling| D_Scan
 ```
 
 ### Đánh đổi Hệ thống (Systemic Trade-offs)

@@ -1,0 +1,147 @@
+---
+// Bản đồ nội dung: toàn bộ bài concepts nhóm theo 9 category, mỗi nhóm có anchor
+// theo slug để trang chủ link "Xem tất cả N bài" nhảy thẳng tới.
+import { getCollection } from 'astro:content';
+import { categories } from '../config/taxonomy.js';
+
+const all = await getCollection('docs');
+const concepts = all.filter((d) => d.id.startsWith('concepts/'));
+
+function shortTitle(t) {
+  const m = (t || '').match(/\s[-–]\s+([a-zA-Z0-9\s]+)$/);
+  return m && m[1] ? m[1].trim() : t;
+}
+
+const groups = categories.map((cat, i) => {
+  const items = concepts
+    .filter((d) => d.id.split('/')[1] === cat.slug)
+    .map((d) => ({ title: shortTitle(d.data.title), href: `/${d.slug}/` }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'vi'));
+  return {
+    number: i + 1,
+    slug: cat.slug,
+    title: cat.label.replace(/^\d+\.\s*/, ''),
+    items,
+  };
+});
+const total = concepts.length;
+---
+
+<div class="concept-map not-content">
+  <div class="map-header">
+    <p class="lead">Dùng tìm kiếm (phím <kbd>/</kbd>) hoặc duyệt theo danh sách bên dưới khi cần tra nhanh một khái niệm.</p>
+    <a href="/quizzes/" class="cert-btn">🔥 Ôn thi Certificate →</a>
+  </div>
+
+  <nav class="map-toc" aria-label="Nhóm chủ đề">
+    {groups.map((g) => (
+      <a href={`#${g.slug}`}>{String(g.number).padStart(2, '0')} · {g.title}</a>
+    ))}
+  </nav>
+
+  {groups.map((g) => (
+    <section id={g.slug}>
+      <h2 class="map-h">
+        <span class="map-num">{String(g.number).padStart(2, '0')}</span>
+        {g.title}
+      </h2>
+      <ul class="map-list">
+        {g.items.map((it) => <li><a href={it.href}>{it.title}</a></li>)}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .concept-map { max-width: 1080px; margin: 0 auto; padding: var(--space-4, 1rem) var(--space-5, 1.5rem) var(--space-9, 6rem); font-family: var(--font-sans); }
+  .map-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: var(--space-5, 1.5rem); }
+  .lead { color: var(--text-muted, var(--sl-color-gray-3)); font-size: var(--text-md, 1.19rem); margin: 0; max-width: 60ch; }
+  .lead kbd { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: var(--radius-sm, 6px); padding: .05rem .35rem; }
+  .cert-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem; border-radius: var(--radius-md, 8px);
+    background: var(--sl-color-accent); color: var(--sl-color-text-invert, #fff) !important;
+    font-weight: 600; font-size: var(--text-sm, 0.94rem);
+    text-decoration: none; box-shadow: 0 4px 12px rgba(var(--sl-color-accent-rgb), 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+  }
+  .cert-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(var(--sl-color-accent-rgb), 0.4); }
+  .map-toc { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.75rem; 
+    margin-bottom: var(--space-7, 3rem); 
+  }
+  .map-toc a {
+    font-size: var(--text-sm, .94rem); 
+    font-weight: 500;
+    color: var(--text-body, var(--sl-color-text));
+    background: var(--surface-card, var(--sl-color-bg-nav));
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+    border-radius: var(--radius-pill, 999px); 
+    padding: 0.5em 1.2em; 
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .map-toc a:hover { 
+    border-color: var(--sl-color-accent); 
+    background: var(--sl-color-accent); 
+    color: var(--sl-color-text-invert, #fff); 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--sl-color-accent-rgb), 0.3);
+  }
+  .concept-map section { margin-bottom: var(--space-7, 3rem); scroll-margin-top: 5rem; }
+  .map-h {
+    display: flex; align-items: baseline; gap: .6rem;
+    font-size: var(--text-lg, 1.375rem); font-weight: 600;
+    color: var(--text-heading, var(--sl-color-white));
+    margin: 0 0 var(--space-4, 1rem); padding-bottom: var(--space-2, .5rem);
+    border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+  }
+  .map-num { font-family: var(--font-mono); font-size: var(--text-sm, .94rem); color: var(--text-faint, var(--sl-color-gray-4)); }
+  .map-count { margin-left: auto; font-family: var(--font-mono); font-size: var(--text-xs, .81rem); font-weight: 400; color: var(--text-faint, var(--sl-color-gray-4)); white-space: nowrap; }
+  .map-list {
+    list-style: none; margin: 0; padding: 0;
+    columns: 2; column-gap: 3rem;
+  }
+  @media (max-width: 800px) { .map-list { columns: 1; } }
+  .map-list li { 
+    break-inside: avoid; 
+    margin-bottom: 0.85rem; 
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .map-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--sl-color-gray-4);
+    font-size: 1.2rem;
+    line-height: 1;
+    top: -0.1rem;
+  }
+  .map-list a { 
+    font-size: 0.95rem; 
+    color: var(--text-body, var(--sl-color-text)); 
+    text-decoration: none; 
+    line-height: 1.5;
+    display: block;
+    transition: color 0.15s ease;
+  }
+  .map-list a:hover { color: var(--sl-color-accent); }
+</style>
+
+<style is:global>
+  /* Xóa hộp background/border của content-panel theo yêu cầu, nhưng giữ lại padding và căn giữa để h1 không dính mép màn hình */
+  main:has(.concept-map) .content-panel { 
+    border: none !important; 
+    background: transparent !important; 
+    padding: 2rem 1.5rem !important;
+  }
+  main:has(.concept-map) .sl-container { 
+    max-width: 1080px !important; 
+    margin: 0 auto !important; 
+  }
+</style>

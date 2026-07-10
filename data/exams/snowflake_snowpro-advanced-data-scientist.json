@@ -1,0 +1,1304 @@
+{
+  "exam": "SnowPro Advanced Data Scientist",
+  "provider": "snowflake",
+  "code": "snowpro-advanced-data-scientist",
+  "total_questions": 85,
+  "questions": [
+    {
+      "id": 1,
+      "question": "A Data Scientist wants to get the coefficient of determination for two columns in a table.Which function can be used for that?",
+      "choices": {
+        "A": "REGR_INTERCEPT",
+        "B": "REGR_SLOPE",
+        "C": "REGR_R2",
+        "D": "REGR_SXY"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm `REGR_R2` trong SQL và Snowflake được sử dụng để tính hệ số xác định (R-squared / Coefficient of Determination) của mô hình hồi quy tuyến tính giữa hai cột số.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/regr_r2"
+      ]
+    },
+    {
+      "id": 2,
+      "question": "A Data Scientist noticed a high usage on Snowflake Cortex LLM functions.Which command will restrict user access?",
+      "choices": {
+        "A": "REVOKE ROLE SNOWFLAKE.CORTEX_USERFROM ROLE PUBLIC;",
+        "B": "DROP DATABASE ROLE SNOWFLAKE.CORTEX_USER;",
+        "C": "DROP ROLE SNOWFLAKE.CORTEX_USER;",
+        "D": "REVOKE DATABASE ROLE SNOWFLAKE.CORTEX_USERFROM ROLE PUBLIC;"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để hạn chế quyền truy cập các hàm LLM của Cortex, cần thu hồi vai trò cơ sở dữ liệu (database role) `SNOWFLAKE.CORTEX_USER` khỏi vai trò `PUBLIC` bằng câu lệnh `REVOKE DATABASE ROLE`.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      ]
+    },
+    {
+      "id": 3,
+      "question": "A Data Scientist is tasked with gathering a summary of each customer review. The data is stored in a Snowflake table in a column named reviews.How should they do this with the LEAST operational overhead?",
+      "choices": {
+        "A": "Use the SQL function snow1ake.cortex.summarize (‘reviews’) to summarize using the built-in summarization model.",
+        "B": "Use the SQL function snowlake.cortex.embed('e5-base-v2, ‘reviews’) to summarize using the built-in text embedding model",
+        "C": "Use the SQL function call snowlake.cortex.complete(‘llama3.1-405b’, ‘reviews’) to summarize with the llama3.1-405b model.",
+        "D": "Use Snowpark Container Services to deploy the llama3.1-405b model from the Hugging Face Hub and submit the ‘text_data’ column to the model API."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hàm SQL tích hợp sẵn `SNOWFLAKE.CORTEX.SUMMARIZE` cung cấp giải pháp có ít chi phí vận hành nhất (least operational overhead) để tóm tắt văn bản đánh giá của khách hàng mà không cần cài đặt container hay viết prompt phức tạp.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/summarize-snowflake-cortex"
+      ]
+    },
+    {
+      "id": 4,
+      "question": "A Data Scientist trained a neural network with 50 epochs. After training the network, the results showed a high accuracy on training data but a fairly low accuracy on test data (for example, overfitting problem).Which technique would help in resolving the overfitting issue? (Choose two.)",
+      "choices": {
+        "A": "Use regularization.",
+        "B": "Use gradient descent",
+        "C": "Modify the learning rate.",
+        "D": "Implement early stopping,",
+        "E": "Add additional features to the training data."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để giải quyết vấn đề quá khớp (overfitting) của mạng nơ-ron, hai kỹ thuật phổ biến được sử dụng là: áp dụng phương pháp chuẩn hóa (Regularization - A) để giảm độ phức tạp của trọng số, và triển khai dừng sớm (Early stopping - D) để ngừng huấn luyện khi hiệu suất trên tập validation bắt đầu giảm.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 5,
+      "question": "A Data Scientist has noticed that a model is producing more accurate predictions.What metric should be used to evaluate why the model predictions have improved?",
+      "choices": {
+        "A": "Confidence intervals",
+        "B": "Shapley Additive exPlanations (SHAP)",
+        "C": "Root Mean Squared Error (RMSE)",
+        "D": "R2"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giá trị SHAP (Shapley Additive exPlanations) được sử dụng để giải thích đóng góp của từng tính năng (feature) vào kết quả dự báo của mô hình, giúp giải thích tại sao dự báo của mô hình được cải thiện.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 6,
+      "question": "A Data Scientist executed this command to create a task:\nWhat is the reason?",
+      "choices": {
+        "A": "The task has not been set to resume.",
+        "B": "The cron job must be specified in UTC.",
+        "C": "The SQL is invalid for calling a stored procedure.",
+        "D": "The ALLOW_OV ERLAPPING_EXECUTION command is not valid with a fixed SCHEDULE."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi một tác vụ (task) mới được tạo trong Snowflake, nó sẽ ở trạng thái tạm dừng (suspended) theo mặc định. Lập trình viên phải kích hoạt nó bằng lệnh `ALTER TASK ... RESUME` trước khi tác vụ có thể chạy theo lịch trình.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tasks-intro"
+      ]
+    },
+    {
+      "id": 7,
+      "question": "A Data Scientist wants to capture customer profiles likely to churn for a company. The training data set has 2% churn and 98% no churn, and they set 1 to churn and 0 to no churn. Then the Data Scientist ran the model in Snowpark.After capturing the confusion matrix, what value could be misleading on how the model is performing due to an imbalanced data set?",
+      "choices": {
+        "A": "Accuracy",
+        "B": "F-measure",
+        "C": "Precision",
+        "D": "Recall"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đối với một tập dữ liệu mất cân bằng nghiêm trọng (như tỷ lệ rời bỏ chỉ chiếm 2%), chỉ số Độ chính xác tổng quan (Accuracy) sẽ rất dễ gây hiểu nhầm (misleading), vì một mô hình đoán tất cả khách hàng đều không rời bỏ vẫn đạt được độ chính xác 98%.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Which algorithms are examples of supervised learning? (Choose two.)",
+      "choices": {
+        "A": "Apriori",
+        "B": "CART",
+        "C": "K-Means",
+        "D": "PCA",
+        "E": "SVM"
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Trong các thuật toán được liệt kê, CART (Cây phân loại và hồi quy - B) và SVM (Máy vector hỗ trợ - E) là các thuật toán thuộc học máy có giám sát (supervised learning).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 9,
+      "question": "A Data Scientist created a session with Snowpark Python (snowflake-snowpark-python package) with this code:\nWhich parameters are required to authenticate the session? (Choose two.)",
+      "choices": {
+        "A": "Account",
+        "B": "Database",
+        "C": "Role",
+        "D": "User",
+        "E": "Virtual warehouse"
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để thiết lập và xác thực một phiên kết nối (session) trong Snowpark Python, hai thông số tối thiểu bắt buộc phải có là Tài khoản (`account` - A) và Tên người dùng (`user` - D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-session"
+      ]
+    },
+    {
+      "id": 10,
+      "question": "What does variance measure in statistics?",
+      "choices": {
+        "A": "The variability from the minimum value",
+        "B": "The variability from the median value",
+        "C": "The variability from the mean value",
+        "D": "The variability from the mode value"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong thống kê, phương sai (variance) đo lường mức độ phân tán hoặc biến thiên của các điểm dữ liệu so với giá trị trung bình (`mean`).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/var_pop"
+      ]
+    },
+    {
+      "id": 11,
+      "question": "While logging a model with the Snowflake Model Registry by calling the registry’s log_model method, which arguments are required? (Choose two.)",
+      "choices": {
+        "A": "code_paths",
+        "B": "model",
+        "C": "model_name",
+        "D": "python_version",
+        "E": "version_name"
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Khi đăng ký một mô hình trong Snowflake Model Registry bằng phương thức `log_model`, các đối số bắt buộc bao gồm đối tượng mô hình (`model` - B) và tên phiên bản của mô hình (`version_name` - E).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "A Data Scientist needs to present results from a linear regression model used to estimate the quality of a user’s experience. The model performed measurements using multiple standardized numeric features that were then applied to a numeric satisfaction scale.What diagram should be used to present the effect of each feature on user satisfaction scores?",
+      "choices": {
+        "A": "Confusion matrix",
+        "B": "Correlation matrix",
+        "C": "Scatterplot",
+        "D": "Coefficient plot"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Biểu đồ hệ số (Coefficient plot) là công cụ trực quan hóa phù hợp nhất để thể hiện độ lớn và hướng ảnh hưởng của các hệ số hồi quy (coefficients) của từng tính năng đối với biến mục tiêu (điểm hài lòng của người dùng) trong mô hình hồi quy tuyến tính.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 13,
+      "question": "A Data Scientist has a trained a model that has been stored as a file on a Snowflake stage. Now they want to use a Python User-Defined Function (UDF) for scoring data in Snowflake with the modelOne requirement is that they should be able to replace the mode file with a new one without having to recreate the UDF.What is required in order to accomplish this?",
+      "choices": {
+        "A": "Load the model file using the path to the model file including stage and file name in the UDF.",
+        "B": "Deploy the UDF using Snowpark for Python and use the trained model object in the UDF.",
+        "C": "Provide the path to the model file including stage and file name as a parameter to the function and load the file in the UDF.",
+        "D": "Add the path to the model file including stage and file name to the IMPORT parameter for the UDF and load the file in the UDF."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bằng cách thêm đường dẫn tệp mô hình trên stage vào tham số `IMPORTS` của UDF và tải tệp từ thư mục import trong mã nguồn UDF, người dùng có thể thay thế tệp mô hình cũ bằng tệp mới trên stage mà không cần phải định nghĩa lại (recreate) UDF.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
+      ]
+    },
+    {
+      "id": 14,
+      "question": "A Data Scientist at a telecommunications company wants to store churn scores that are calculated with a Snowflake external function, configured to connect a model endpoint.The environment conditions are as follows:The External Function DDL:\nThe CUSTOMER_DAILY table:\nThe churn value stored in a new table called CUSTOMER_CHURN:\nBased on the environmental conditions, how could the Data Scientist persistently store the churn scores from the external function in Showflake?",
+      "choices": {
+        "A": "insert into customer_churnselectcust_id,get_churn(*) as churn_scorefromcustomer_daily;",
+        "B": "insert into customer_churnselectcust_id,call get_churn(object_construct(*)) as churn_scorefromcustomer_daily;",
+        "C": "insert into customer_churnselectcust_id,call get_churn(*) as churn_scorefromcustomer_daily;",
+        "D": "insert into customer_churnselectcust_id,get_churn(object_construct(*)) as churn_scorefromcustomer_daily;"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm ngoại vi (External Function) trong Snowflake được gọi như một hàm SQL bình thường trong câu lệnh `SELECT` (không dùng từ khóa `CALL` vốn chỉ dành cho stored procedure). Vì hàm ngoại vi này được thiết kế để nhận một tài liệu JSON dạng đối tượng, đối số truyền vào cần được bọc bởi `OBJECT_CONSTRUCT(*)` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Which features can be used with the Snowflake Model Registry to seamlessly manage models from development to production lifecycles? (Choose two.)",
+      "choices": {
+        "A": "Tags",
+        "B": "Zero-copy clones",
+        "C": "Account replication",
+        "D": "Model Copy",
+        "E": "Time Travel"
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Snowflake Model Registry hỗ trợ việc gán thẻ phân loại (`Tags` - A) giúp tăng tính quản trị, và tính năng sao chép mô hình (`Model Copy` / Model Replication - D) giúp chuyển dịch mô hình một cách liền mạch giữa môi trường phát triển và sản xuất.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 16,
+      "question": "A Data Scientist is training a model. They used scikit-learn to create a partial dependency plot using the following command:\nThe following charts are created as a result:\nWhich statements reflect what is depicted in the chats? (Choose three.)",
+      "choices": {
+        "A": "As Median income increases, the target housing price decreases.",
+        "B": "As Median income increases, the target housing price increases.",
+        "C": "As the Age of the House increases, the target housing price decreases.",
+        "D": "As the Age of the House increases, the target housing price is fairly constant.",
+        "E": "As the Average Occupancy increases, the target housing price decreases.",
+        "F": "As the Average Occupancy increases, the target housing price increases."
+      },
+      "correctAnswer": "BDE",
+      "explanation_vi": "Phân tích biểu đồ phụ thuộc riêng phần (Partial Dependency Plots) đối với dữ liệu nhà đất California cho thấy: thu nhập trung bình tăng làm tăng giá nhà mục tiêu (B); tuổi thọ của nhà tăng thì giá nhà mục tiêu giữ ở mức khá ổn định/hằng số (D); và mật độ cư trú trung bình tăng làm giảm giá nhà mục tiêu (E).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 17,
+      "question": "This correlation matrix was created when performing feature engineering:\nWhich combination of variables is the MOST correlated and could possibly help with feature reduction?",
+      "choices": {
+        "A": "DIS and CRIM",
+        "B": "DIS and TAX",
+        "C": "RAD and TAX",
+        "D": "INDUS and CRIM"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong ma trận tương quan của tập dữ liệu Boston Housing, cặp biến `RAD` (chỉ số tiếp cận đường cao tốc hướng tâm) và `TAX` (thuế suất tài sản) có hệ số tương quan rất cao (~0.91), do đó là ứng viên hàng đầu cho việc giảm bớt tính năng (feature reduction) nhằm tránh đa cộng tuyến.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 18,
+      "question": "A Data Scientist is building a data pipeline for a customer churn model. To enable efficient processing of the model, they add a stream to the customer table.Which function should be used to check if the stream has new or updated data?",
+      "choices": {
+        "A": "SYSTEM$STREAM_STATUS(‘MYSTREAM’)",
+        "B": "SYSTEM$STREAM_HAS_DATA(‘MYSTREAM')",
+        "C": "SYSTEM$STREAM_GET UPDATES (‘MYSTREAM’)",
+        "D": "SYSTEM$STREAM_GET_ TABLE_TIMESTAMP (‘MYSTREAM’)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm hệ thống `SYSTEM$STREAM_HAS_DATA` được sử dụng để kiểm tra xem một stream cụ thể có chứa dữ liệu thay đổi mới (chưa tiêu thụ) hay không, giúp tối ưu hóa việc chạy các tác vụ xử lý chỉ khi có dữ liệu mới.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_stream_has_data"
+      ]
+    },
+    {
+      "id": 19,
+      "question": "A Data Scientist executes a SQL NULL argument to a Python User-Defined Function (UDF) in a Snowflake string data type.What will be returned as a translated Python value?",
+      "choices": {
+        "A": "1",
+        "B": "False",
+        "C": "None",
+        "D": "An empty string"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi truyền một giá trị `NULL` trong SQL Snowflake vào một hàm tự định nghĩa Python (Python UDF), giá trị này sẽ tự động được ánh xạ thành giá trị `None` trong Python.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Which step of the machine learning lifecycle does hyperparameter tuning fall under?",
+      "choices": {
+        "A": "Model training",
+        "B": "Model deployment",
+        "C": "Model validation",
+        "D": "Feature engineering"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Điều chỉnh siêu tham số (Hyperparameter tuning) là một bước nằm trong giai đoạn Huấn luyện mô hình (Model training) nhằm tìm ra tập hợp tham số tối ưu trước khi huấn luyện mô hình cuối cùng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 21,
+      "question": "A remote weather sensor malfunctions and produces temperature readings higher than the normal range which was around 69.8°F (21°C).Ignoring units, what is the correct order of the magnitude of these key measures?",
+      "choices": {
+        "A": "Mean> Median > Skewness > 0(A right skew and a mean greater than the median)",
+        "B": "Median > Mean > Skewness > 0(A right skew and a median greater than the mean)",
+        "C": "Mean > Median > 0 > Skewness(A left skew and a mean greater than the median)",
+        "D": "Median > Mean > 0 > Skewness(A left skew and a median greater than the mean)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi xuất hiện các giá trị ngoại lai cực lớn phía bên phải (nhiệt độ cao bất thường), phân phối dữ liệu sẽ bị lệch phải (right-skewed / skewness > 0). Đối với phân phối lệch phải, giá trị trung bình (Mean) sẽ lớn hơn số trung vị (Median). Do đó, thứ tự độ lớn đúng là Mean > Median > Skewness > 0.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 22,
+      "question": "This chart in Snowsight for a New York City ride-share bike service shows the number of trips taken to the destination borough:\nA Data Scientist wants to build a classifier that predicts which borough will be the most likely destination when a trip is initiated.Which techniques should be used to handle the class imbalance depicted in the Snowsight chart? (Choose two.)",
+      "choices": {
+        "A": "Introduce regularization parameters.",
+        "B": "Collapse all minority classes into a single class.",
+        "C": "Undersample the Manhattan borough for training.",
+        "D": "Utilize bootstrapping to synthesize additional data for the non-Manhattan boroughs.",
+        "E": "Utilize Synthetic Minority Oversampling Technique (SMOTE) to oversample the non-Manhattan boroughs for training."
+      },
+      "correctAnswer": "CE",
+      "explanation_vi": "Để giải quyết vấn đề mất cân bằng nhóm (Manhattan chiếm đa số lớn so với các quận khác), lập trình viên có thể áp dụng các kỹ thuật: Giảm mẫu lớp đa số (Undersample Manhattan - C) hoặc Tăng mẫu lớp thiểu số bằng thuật toán SMOTE (E) để cân bằng dữ liệu huấn luyện.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 23,
+      "question": "For which Snowflake Cortex LLM functions would both input and output tokens be counted? (Choose three.)",
+      "choices": {
+        "A": "SUMMARIZE",
+        "B": "SENTIMENT",
+        "C": "TRANSLATE",
+        "D": "EMBED_TEXT_768",
+        "E": "EMBED_TEXT_1024",
+        "F": "CLASSIFY_TEXT"
+      },
+      "correctAnswer": "ACF",
+      "explanation_vi": "Các hàm Cortex sinh văn bản mới gồm `SUMMARIZE` (A), `TRANSLATE` (C), và `CLASSIFY_TEXT` (F) đều tính phí trên cả số lượng token đầu vào (input tokens) và token đầu ra (output tokens).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      ]
+    },
+    {
+      "id": 24,
+      "question": "A company’s platform team wants to integrate their existing data lake with Snowflake. The data lake is hundreds of TBs in size and the team does not want to duplicate most of the data into Snowflake. A Data Scientist at the company wants to be able to query and access the data lake’s metadata. There is already an external stage in Snowflake referencing the data lake’s location.What is the MOST efficient way to integrate the existing data lake into the Snowflake environment?",
+      "choices": {
+        "A": "Move the data lake files to an internal stage in Snowflake to allow for access to the metadata and data from the data lake.",
+        "B": "Using the existing external stage, create SELECT statements that can be run on-demand, referencing the files in the data lake directly.",
+        "C": "Create a PIPE for each data lake table which will allow for on-demand querying of the data lake files by leveraging the Snowpipe service.",
+        "D": "Create an external table for each corresponding data lake table to enable querying data stored in files in the data lake as if the data lake table was inside a database."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Cách hiệu quả nhất để tích hợp dữ liệu hồ dữ liệu (data lake) khổng lồ mà không sao chép dữ liệu là tạo các bảng ngoại vi (`External Tables` - D), cho phép truy vấn trực tiếp dữ liệu từ các tệp tin lưu trên data lake như các bảng thông thường trong database.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-external-intro"
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Which characteristic applies to Snowpark Python stored procedures?",
+      "choices": {
+        "A": "They must return a value.",
+        "B": "They need to have session as an input.",
+        "C": "They have to contain a process method",
+        "D": "They cannot contain Snowpark API calls."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Các thủ tục lưu trữ Snowpark Python (Stored Procedures) bắt buộc phải có đối số đầu tiên nhận đối tượng phiên làm việc (`Session` - B) để thực hiện các thao tác API của Snowpark.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
+      ]
+    },
+    {
+      "id": 26,
+      "question": "A Data Scientist wants to increase the performance of model inference for a model that has been trained and deployed in a production environment.Use of which tools will support this task? (Choose two.)",
+      "choices": {
+        "A": "Imputation",
+        "B": "Python bytecode",
+        "C": "Cachetool library",
+        "D": "User-Defined Table Function (UDTF)",
+        "E": "Vectorized User-Defined Function (UDF)"
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Để tăng hiệu năng chạy suy luận (model inference) trong Snowflake, lập trình viên nên sử dụng Hàm bảng tự định nghĩa (UDTF - D) để xử lý song song hoặc Hàm tự định nghĩa vector hóa (Vectorized UDF - E) để nhận đầu vào theo lô dạng Pandas DataFrame thay vì xử lý từng hàng (row-by-row).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-vectorized"
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Which Cursor statements should be used to put data into a pandas DataFrame using Snowflake Connector for Python? (Choose two.)",
+      "choices": {
+        "A": "fetchall()",
+        "B": "fetch_pandas_all()",
+        "C": "fetch_pandas_batches()",
+        "D": "write_to_pandas()",
+        "E": "to_pandas()"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Trình kết nối Snowflake Connector cho Python cung cấp hai phương thức trên đối tượng Cursor để lấy dữ liệu trực tiếp dưới dạng Pandas DataFrame là `fetch_pandas_all()` (B - lấy toàn bộ) và `fetch_pandas_batches()` (C - lấy theo lô).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Which statement will add a column based on the following condition:A Data Scientist wants to change Product 1 to P1, Product 1A to P1A, and Product 1B to P1B. If none of those are met, the record should be Not P1.",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774852888937-usegyzy9.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774852891493-dm3pu5k5.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774852894256-hsdl26c7.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774852896743-2p8ihq5g.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Biểu thức SQL trong đáp án D sử dụng mệnh đề `CASE WHEN` hoặc các hàm điều kiện tương đương của Snowpark để chuyển đổi tên sản phẩm chính xác theo các quy tắc nghiệp vụ đã cho.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
+      ]
+    },
+    {
+      "id": 29,
+      "question": "When running a regression, how will the points forming a null residual plot form around the identity line?",
+      "choices": {
+        "A": "An increasing width band",
+        "B": "A decreasing width band",
+        "C": "A constant width band",
+        "D": "A non-constant width band"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Biểu đồ phần dư rỗng (null residual plot) thể hiện rằng sai số có phương sai không đổi (homoscedasticity), tức là các điểm phần dư sẽ phân bố ngẫu nhiên và tạo thành một dải có độ rộng không đổi (constant width band) xung quanh đường tham chiếu 0.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 30,
+      "question": "A Data Scientist is building a marketing campaign model using lead data. The raw data has a states column that has 50 unique state names.Which preprocessing class should be used to generate new features?",
+      "choices": {
+        "A": "snowflake.ml.modeling.preprocessing.Binarizer",
+        "B": "snowflake.ml.modeling.preprocessing.MinMaxScaler",
+        "C": "snowflake.ml.modeling.preprocessing.OneHotEncoder",
+        "D": "snowflake.ml.modeling.preprocessing.RobustScaler"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tiền xử lý cột dữ liệu phân loại (categorical) như tên các bang (`states` với 50 giá trị duy nhất) thành các đặc trưng dạng số cho mô hình, lớp tiền xử lý thích hợp nhất là `OneHotEncoder` (phương án C).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      ]
+    },
+    {
+      "id": 31,
+      "question": "A Data Scientist is building a fraud detection model for a shopping website that has a large number of daily transactions. For each transaction, the model will perform one of three things: give a binary recommendation, terminate the transaction, or proceed with the transaction.Which function should be used to evaluate the model performance?",
+      "choices": {
+        "A": "snowflake-ml.modeling.metrics.d2_pinbal_score",
+        "B": "snowflake.ml.modeling.metrics.r2_score",
+        "C": "snowflake.ml.modeling.metrics.fbeta_score",
+        "D": "snowflake.ml.modeling-metrics.mean_absolute_error"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đối với bài toán phân loại phát hiện gian lận (fraud detection), hai chỉ số hồi quy R2 và MAE không thể sử dụng. Chỉ số `fbeta_score` (phương án C) là một chỉ số phân loại cho phép điều chỉnh trọng số giữa Precision (độ chính xác) và Recall (độ phủ), rất thích hợp để đánh giá mô hình phát hiện gian lận.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Which Snowflake functions are used in Linear Regression to find the equation of the best fit line? (Choose two.)",
+      "choices": {
+        "A": "REGR_INTERCEPT",
+        "B": "REGR_SLOPE",
+        "C": "REGR_SXX",
+        "D": "REGR_SXY",
+        "E": "REGR_SYY"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Phương trình của đường thẳng hồi quy tuyến tính phù hợp nhất có dạng y = mx + c. Để xác định phương trình này, ta cần tìm độ dốc `m` bằng hàm `REGR_SLOPE` (B) và điểm cắt trục tung `c` bằng hàm `REGR_INTERCEPT` (A).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/regr_slope"
+      ]
+    },
+    {
+      "id": 33,
+      "question": "A Data Scientist needs to remove the “ssn” field from this data set they are working on for a customer DataFrame in Snowpark:\nWhich functions can they use to accomplish this? (Choose two.)",
+      "choices": {
+        "A": "df.drop(“ssn”)",
+        "B": "df.remove(“ssn”)",
+        "C": "df.update(col(“ssn”).remove())",
+        "D": "df.select(“id”, “name”. “gender”).save()",
+        "E": "df_new = df.select(“id”, “name”, “gender”)"
+      },
+      "correctAnswer": "AE",
+      "explanation_vi": "Trong Snowpark DataFrame, để loại bỏ một cột (như cột “ssn”), ta có thể sử dụng phương thức `drop()` trực tiếp trên cột đó (A) hoặc sử dụng phương thức `select()` để chỉ chọn các cột còn lại (E).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.drop"
+      ]
+    },
+    {
+      "id": 34,
+      "question": "A clothing company wants to add new apparel based on customer requests. In order to prioritize the requests, the company collects customer demographic surveys that include age. The company is not concerned with a customer’s specific age, but instead what age group the customer belongs to (for example, Youth, Junior, Adult).Which approach will prepare the data for analysis?",
+      "choices": {
+        "A": "Use the K-Means algorithm to cluster the data.",
+        "B": "Group the data into bin ranges aligned with the age group.",
+        "C": "Group the data into bin ranges aligned to a customer’s specific age.",
+        "D": "Group the data into bin ranges aligned to each purchased product."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Gom nhóm dữ liệu tuổi liên tục thành các khoảng/khoang (bin ranges) tương ứng với các nhóm tuổi (như Youth, Junior, Adult) là kỹ thuật chia nhóm (binning), giúp chuẩn bị dữ liệu phù hợp với nhu cầu phân tích theo nhóm tuổi thay vì tuổi cụ thể.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 35,
+      "question": "A Data Scientist wants to build an LLM-based application for categorizing transcripts of customer support calls into predefined categories in Snowflake. A large data set of labeled transcripts is available. The categories are not expected to change over time, but inference will need to be run on a very large number of transcripts. The first priority for the evaluation methodology is to optimize costs, and the second priority is accuracy.What should the Data Scientist do to meet these requirements?",
+      "choices": {
+        "A": "Use the training data set to fine-tune the mistral-7b model and run inference with the SNOWFLAKE.CORTEX.COMPLETE function with the fine-tuned well.",
+        "B": "Use the training data set to fine-tune the mixtral-8x-7b model and run inference with the SNOWFLAKE.CORTEX.COMPLETE function with the fine-tuned model.",
+        "C": "Use the mixtral-8x-7b model to run inference with the SNOW LAKE.CORTEX.COMPLETE function and include as much training data as possible in the prompt.",
+        "D": "Use the mistral-7b model to run inference with the SNOWFLAKE.CORTEX.COMPLETE function and include as much training data as possible in the prompt."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tối ưu hóa chi phí hàng đầu (1st priority) và độ chính xác (2nd priority), việc tinh chỉnh (fine-tuning) một mô hình nền tảng nhỏ hơn như `mistral-7b` (A) sẽ tiêu thụ ít credit/token hơn nhiều so với mô hình lớn `mixtral-8x-7b` trong khi vẫn đạt được độ chính xác rất cao cho một tác vụ phân loại cụ thể.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
+      ]
+    },
+    {
+      "id": 36,
+      "question": "After training a model with a stored procedure, a Data Scientist wants the output to have more than one variable to assess the accuracy, precision, and recall values.What should the output type of the stored procedure be?",
+      "choices": {
+        "A": "DataFrame",
+        "B": "Integer",
+        "C": "String",
+        "D": "Variant"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi thủ tục lưu trữ (stored procedure) cần trả về nhiều giá trị khác nhau (như các chỉ số đo lường accuracy, precision, recall), kiểu dữ liệu đầu ra phù hợp nhất là `VARIANT` (D) vì kiểu dữ liệu này hỗ trợ lưu cấu trúc JSON/bán cấu trúc.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
+      ]
+    },
+    {
+      "id": 37,
+      "question": "A Data Scientist wants to compare the model performance between model versions and use the originally trained model as a benchmark.Which Snowpark Model Registry system alias can the Data Scientist use to refer to the oldest version of the model?",
+      "choices": {
+        "A": "DEFAULT",
+        "B": "FIRST",
+        "C": "INITIAL",
+        "D": "LAST"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Snowflake Model Registry, bí danh hệ thống `FIRST` (B) được sử dụng để tham chiếu đến phiên bản mô hình cũ nhất đã được đăng ký (dùng làm chuẩn đối sánh).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 38,
+      "question": "To manually produce a Receiver Operating Characteristic (ROC) plot, what would a Data Scientist have to vary each time before re-running inference?",
+      "choices": {
+        "A": "True Positive Rate (TPR)",
+        "B": "False Positive Rate (FPR)",
+        "C": "Classification Threshold",
+        "D": "Validation Threshold"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đường cong ROC biểu diễn mối quan hệ giữa Tỷ lệ dương tính thật (TPR) và Tỷ lệ dương tính giả (FPR) ở các ngưỡng phân loại khác nhau. Do đó, để vẽ thủ công đường cong này, chuyên gia cần thay đổi Ngưỡng phân loại (`Classification Threshold` - C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 39,
+      "question": "A Data Scientist is developing a two-stage machine learning process for fraud detection. The process needs to first group customers with similar buying behavior into peer groups, and then try to detect abnormal purchase behavior relative to a customer’s peer group.What should the Data Scientist do?",
+      "choices": {
+        "A": "Use a supervised model to segment customers into peer groups. Then train another supervised model based on the labeled data to perform fraud detection within each peer group.",
+        "B": "Use an unsupervised model for customer segmentation into peer groups. Then use derived examples of normal and abnormal purchases to train a supervised model for fraud detection.",
+        "C": "Use labeled data to train association rules for customer segmentation into peer groups. Then train an unsupervised regression model to detect customer behavior that deviates from the average behavior in the peer group.",
+        "D": "Use a neural network with two inner layers. The first layer should assign a given customer to a peer group. Then the second layer should perform anomaly detection within the peer group that a customer has been assigned to."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để phân cụm khách hàng vào các nhóm tương đồng (peer groups) khi không có nhãn trước, ta sử dụng mô hình học không giám sát (unsupervised model). Sau đó, để phát hiện hành vi gian lận dựa trên các ví dụ giao dịch bình thường và bất thường, ta sử dụng mô hình học có giám sát (supervised model) (phương án B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 40,
+      "question": "What metric should be used to check the effectiveness of a regression model?",
+      "choices": {
+        "A": "Precision score",
+        "B": "Recall score",
+        "C": "F1 score",
+        "D": "Mean squared error"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Sai số bình phương trung bình (`Mean squared error` - D) là chỉ số đo lường hiệu suất tiêu chuẩn cho bài toán hồi quy (regression), trong khi Precision, Recall và F1-score dành cho bài toán phân loại (classification).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      ]
+    },
+    {
+      "id": 41,
+      "question": "A Data Scientist executes this code to convert the value of one data type into another data type:\nWhat will be the output?",
+      "choices": {
+        "A": "Null",
+        "B": "1",
+        "C": "2",
+        "D": "The error SnowparkSQLException will be received."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đoạn mã chuyển đổi kiểu dữ liệu thực thi thành công và trả về giá trị số đã được chuyển đổi là 2 (C) theo đúng đặc tả của hàm chuyển đổi trong Snowpark.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
+      ]
+    },
+    {
+      "id": 42,
+      "question": "A Data Science team plotted a scatterplot between the residuals and predicted values in a linear regression. A team member found that there is a relationship between the values and a pattern.Which conclusion can be made about this linear regression?",
+      "choices": {
+        "A": "Since there is a relationship, the mode is good.",
+        "B": "Since there is a relationship, the model is not good.",
+        "C": "Since there is a relationship, the prediction and residuals need to be recalculated.",
+        "D": "Another model should be used to validate that the relationship and patterns are accurate."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với một mô hình hồi quy tuyến tính tốt, biểu đồ phần dư (residuals plot) phải phân bố hoàn toàn ngẫu nhiên và không có mẫu hình hay mối quan hệ nào rõ rệt. Nếu phát hiện ra bất kỳ mối quan hệ hay mẫu hình nào, điều đó có nghĩa là mô hình chưa nắm bắt tốt cấu trúc dữ liệu và không phải là một mô hình tốt (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Which statement defines a Receiver Operating Characteristics (ROC) curve?",
+      "choices": {
+        "A": "A measure of an attribute’s usefulness and related classification value.",
+        "B": "A measure of central tendency to show how an outlier related to a defined value.",
+        "C": "A plot of values of the false positive rate as compared to the true positive rate for a specified value.",
+        "D": "A plot of values that maps a linear relationship between input variables (x) and an output variable (y)."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đường cong ROC là biểu đồ thể hiện mối quan hệ giữa Tỷ lệ dương tính giả (False Positive Rate) trên trục hoành và Tỷ lệ dương tính thật (True Positive Rate) trên trục tung ở các ngưỡng phân loại khác nhau.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 44,
+      "question": "A model is registered with this code into the Snowflake Model Registry:\nWhich calls will run predictions with the model? (Choose two.)",
+      "choices": {
+        "A": "prediction_df = mv.run(test_data, function_name= “predict”)prediction_df.show()",
+        "B": "prediction_df =session.sql(“SELECT my_model!predict(t.feature1, t.feature2 ) FROM test_data t”).show()",
+        "C": "prediction_df = mv.predict(test_data)prediction_df.show()",
+        "D": "prediction_df =session.sql(“SELECT my_model!predict FROM test_data t”).show()",
+        "E": "prediction_df = mv.run(test_data, my_model)prediction_df.show()"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Để chạy dự báo bằng phiên bản mô hình đăng ký (`mv`), ta có thể gọi phương thức `mv.run(test_data, function_name=\"predict\")` (A) hoặc gọi trực tiếp phương thức `mv.predict(test_data)` (C).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 45,
+      "question": "A Data Scientist is creating a Snowflake-managed view using the Snowpark Feature Store.What will happen if the refresh_freq parameter is NOT specified?",
+      "choices": {
+        "A": "A view will be created.",
+        "B": "A materialized view will be created.",
+        "C": "A table will be created.",
+        "D": "A dynamic table will be created."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Feature Store của Snowpark, nếu tham số tần suất làm mới `refresh_freq` không được chỉ định, Snowflake sẽ tạo ra một khung nhìn (view) tĩnh thông thường thay vì một bảng động (dynamic table).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/feature-store/overview"
+      ]
+    },
+    {
+      "id": 46,
+      "question": "A Data Scientist is trying to predict gross sales for the upcoming week based on daily gross sales data of the past two years.What should be used?",
+      "choices": {
+        "A": "ARIMA model",
+        "B": "Eclat algorithm",
+        "C": "K-means clustering",
+        "D": "Principal component analysis (PCA)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để dự báo doanh thu của tuần tới dựa trên chuỗi thời gian doanh thu hàng ngày trong 2 năm qua, mô hình chuỗi thời gian ARIMA (Autoregressive Integrated Moving Average - A) là lựa chọn chính xác.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/forecasting"
+      ]
+    },
+    {
+      "id": 47,
+      "question": "A Data Scientist needs to make an initial exploration of new data using pandas.What is the MOST efficient way to load the data into a pandas DataFrame?",
+      "choices": {
+        "A": "Unload the data to a file on a local machine and use Snowpark to analyze the data with pandas.",
+        "B": "Unload the data to a file on a local machine and use a Jupyter Notebook running on a local machine to analyze the data with pandas.",
+        "C": "Unload the data to a file in an external stage and access the file through a third-party tool on the external stage.",
+        "D": "Use a Snowflake Notebook in Snowsight to analyze the data with pandas."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Sử dụng trực tiếp Sổ tay Snowflake (Snowflake Notebook) trong giao diện Snowsight là cách nhanh chóng và bảo mật nhất để đọc dữ liệu và phân tích bằng thư viện Pandas mà không cần tải dữ liệu ra máy cục bộ.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      ]
+    },
+    {
+      "id": 48,
+      "question": "A Data Scientist has a column in a table that consists of the values “Yes” and “No” which they want to transform to 1 and 0 instead. The transformation should be part of a SELECT statement.Which functions can be used to accomplish this? (Choose two.)",
+      "choices": {
+        "A": "AS_BINARY",
+        "B": "AS_BOOLEAN",
+        "C": "COALESCE",
+        "D": "DECODE",
+        "E": "IFF"
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Để chuyển đổi giá trị từ “Yes”/”No” thành 1/0 trực tiếp trong câu lệnh SELECT, quản trị viên có thể sử dụng hàm `DECODE` (D) hoặc hàm điều kiện `IFF` (E).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/decode",
+        "https://docs.snowflake.com/en/sql-reference/functions/iff"
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Which use case is MOST suitable for supervised learning?",
+      "choices": {
+        "A": "Creating new art and music for a marketing campaign.",
+        "B": "Creating a propensity to spend model with historical data.",
+        "C": "Identifying customer segmentation for a marketing strategy.",
+        "D": "Identifying defective machine parts for preventative maintenance."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Học máy có giám sát (supervised learning) yêu cầu dữ liệu lịch sử đã được gán nhãn. Bài toán xây dựng mô hình dự báo xu hướng chi tiêu (propensity to spend) từ hành vi tiêu dùng trong quá khứ (B) là một ứng dụng điển hình của học máy có giám sát.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 50,
+      "question": "A Data Scientist is using the snowflake.cortex.complete function to generate a response for a company’s knowledge base model.What parameters are required? (Choose two.)",
+      "choices": {
+        "A": "deadline",
+        "B": "model",
+        "C": "prompt",
+        "D": "session",
+        "E": "options"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Hàm Python `snowflake.cortex.complete` yêu cầu hai tham số bắt buộc đầu vào là tên mô hình (`model` - B) và câu lệnh truy vấn (`prompt` - C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      ]
+    },
+    {
+      "id": 51,
+      "question": "A Data Scientist is developing a real-time detection model for a call center. The data is the audio transcript of the live calls between customers and agents.The model needs to identify if a call is abnormal so the system can send the supervisor an alert immediately. There was a negligible percentage of calls that were reviewed and flagged.Which method should be used FIRST to separate abnormal calls?",
+      "choices": {
+        "A": "Audio signal processing",
+        "B": "Unsupervised learning: Clustering",
+        "C": "Supervised learning: Customer segmentation",
+        "D": "Supervised learning: Call agent segmentation"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Do số lượng cuộc gọi bất thường đã được gán nhãn trong quá khứ là quá nhỏ (không đủ để huấn luyện mô hình có giám sát), giải pháp đầu tiên là sử dụng thuật toán phân cụm không giám sát (Clustering - B) để Gom nhóm các cuộc gọi bình thường và phát hiện các cuộc gọi lệch nhóm (outliers) là cuộc gọi bất thường.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 52,
+      "question": "A Data Scientist needs to build a data set using columns in multiple tables and keep it automatically updated in an incremental fashion.How can this be done without the need for writing an INSERT or checks for changes in the required tables?",
+      "choices": {
+        "A": "Materialized views",
+        "B": "Views",
+        "C": "Streams and tasks",
+        "D": "Dynamic tables"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bảng động (Dynamic Tables - D) trong Snowflake là giải pháp tự động cập nhật dữ liệu một cách tăng trưởng (incremental) từ nhiều bảng nguồn dựa trên một câu lệnh truy vấn định nghĩa trước, giúp loại bỏ sự phức tạp khi tự viết mã điều phối bằng Streams và Tasks hay viết lệnh INSERT.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/dynamic-tables-intro"
+      ]
+    },
+    {
+      "id": 53,
+      "question": "A binary JAR file is outputted to score data within Snowflake.What steps are necessary to get the scoring code functioning in Snowflake? (Choose two.)",
+      "choices": {
+        "A": "Create and call a stored procedure.",
+        "B": "Load the JAR file into a Snowflake stage.",
+        "C": "Load the JAR file into a table as a VARIANT column.",
+        "D": "Use an external function to call the JAR file.",
+        "E": "Create and call a User-Defined Function (UDF)."
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Để thực thi mã nguồn biên dịch dạng tệp JAR (Java) trong Snowflake, lập trình viên cần tải tệp JAR lên một stage của Snowflake (B) và tạo một Hàm tự định nghĩa (Java UDF - E) trỏ tới tệp JAR này để gọi mã chạy dự báo.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction"
+      ]
+    },
+    {
+      "id": 54,
+      "question": "A Data Scientist wants to train a supervised machine learning model on a data set containing multiple numeric continuous features. During the exploration phase, the Data Scientist observed that the features are roughly normally distributed with mean and variance being different between features. The Data Scientist built the pipeline leveraging Snowpark ML.Which class from snowflake.ml.modeling.preprocessing should the Data Scientist use to obtain features with mean zero and unit variance?",
+      "choices": {
+        "A": "StandardScaler",
+        "B": "MinMaxScaler",
+        "C": "MaxAbsScaler",
+        "D": "Normalizer"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lớp tiền xử lý `StandardScaler` (A) trong bộ thư viện `snowflake.ml.modeling.preprocessing` được sử dụng để chuẩn hóa các đặc trưng số liên tục về dạng có trung bình bằng 0 và phương sai bằng 1 (Z-score normalization).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      ]
+    },
+    {
+      "id": 55,
+      "question": "A Data Scientist has trained a scikit-learn model called cf.Which snowflake.ml.registry Python code will register the model into the Snowpark Model Registry?",
+      "choices": {},
+      "correctAnswer": "C",
+      "explanation_vi": "Đoạn mã Python trong phương án C sử dụng đúng phương thức `log_model` của đối tượng registry để đăng ký mô hình `cf` vào hệ thống Snowflake Model Registry.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 56,
+      "question": "What are considerations for using Snowflake Notebooks? (Choose two.)",
+      "choices": {
+        "A": "Notebooks support only SQL and Python cells.",
+        "B": "Notebook drafts are automatically saved every three seconds.",
+        "C": "Notebooks can be scheduled with third-party tools using the EXECUTE NOTEBOOK DB.SCHEMA.NOTEBOOK_NAME(); command.",
+        "D": "The default state of a Notebook is to be connected to a virtual warehouse so that when opened, results are automatically generated.",
+        "E": "A Notebook will keep its virtual warehouse active for 10 minutes after the last use of the websocket connection, if not closed."
+      },
+      "correctAnswer": "AE",
+      "explanation_vi": "Khi sử dụng Sổ tay Snowflake (Snowflake Notebooks): các ô tính toán chỉ hỗ trợ ngôn ngữ SQL và Python (A); đồng thời Sổ tay sẽ giữ cho kho tính toán (virtual warehouse) hoạt động trong vòng 10 phút sau khi kết nối websocket cuối cùng bị ngắt nếu người dùng không chủ động đóng lại (E).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      ]
+    },
+    {
+      "id": 57,
+      "question": "How can the use of confidence intervals in data analysis help a Data Scientist interpret a model? (Choose three.)",
+      "choices": {
+        "A": "They identify unimportant or redundant columns that can be dropped.",
+        "B": "They show how each independent variable is related to other independent variables.",
+        "C": "They are most often constructed using confidence levels of 5% or 95%.",
+        "D": "They are used in hypothesis testing and regression analysis.",
+        "E": "They measure the degree of uncertainty or certainty in a sampling method.",
+        "F": "They display the probability that a parameter will fall between a pair of values around the mean."
+      },
+      "correctAnswer": "DEF",
+      "explanation_vi": "Khoảng tin cậy (Confidence Intervals) giúp chuyên gia: áp dụng trong kiểm định giả thuyết và hồi quy (D); đo lường mức độ không chắc chắn hoặc chắc chắn của phương pháp lấy mẫu (E); và chỉ ra khoảng giá trị mà tham số tổng thể có xác suất cao sẽ rơi vào xung quanh giá trị trung bình (F).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 58,
+      "question": "A Data Scientist wants to incorporate extensive fraud analysis in the transactions that are being fed into a data pipeline. One of the features they want to create is how many transactions a customer is doing over a period of time, going back to the last day, last seven days, and last year.What is the MOST efficient way to build that feature?",
+      "choices": {
+        "A": "Write a SQL statement to retrieve data into memory and use Python code to calculate the new feature.",
+        "B": "Copy the data into a bucket location, preprocess it using an external tool, and ingest it into Snowflake.",
+        "C": "Use window functions to partition by customer and use sum functions to calculate the number of transactions.",
+        "D": "Use a DataFrame to pull the data into memory to use Python functions to calculate the feature and write back into a table."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cách hiệu quả nhất để tính toán các chỉ số thống kê cộng dồn theo thời gian của khách hàng là sử dụng hàm cửa sổ (`Window Functions` - C) trong SQL, cho phép tính toán trực tiếp trên hạ tầng tính toán song song của Snowflake mà không cần đưa dữ liệu vào bộ nhớ máy ảo.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions-analytic"
+      ]
+    },
+    {
+      "id": 59,
+      "question": "A Data Scientist needs to track prediction accuracy across model versions in Snowflake Model Registry.How can the Data Scientist associate an accuracy score with a model version with the LEAST operational overhead?",
+      "choices": {
+        "A": "Set a prediction accuracy as a key-value pair metric score when creating a model version.",
+        "B": "Create pre-define tags for prediction accuracy and tag model versions with accuracy scores.",
+        "C": "Create a prediction accuracy time series with Snowpark ML time series package to keep track of the metric.",
+        "D": "Create a Snowflake table to track prediction score by model version. Then write prediction accuracy scores into the table after registering a model version."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cách đơn giản nhất để liên kết điểm chính xác với một phiên bản mô hình mà không mất nhiều công vận hành là truyền trực tiếp điểm số này dưới dạng một cặp khóa-giá trị (key-value metrics) khi gọi phương thức đăng ký mô hình (A).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      ]
+    },
+    {
+      "id": 60,
+      "question": "A Data Scientist is creating a model that can predict the number of patients suffering from migraines. The following are the confusion matrix values:\nTrue Positive – 100 -\nFalse Positive – 20 -\nFalse Negative – 30 -\nTrue Negative – 150 -Which of the model’s key indicators is correct?",
+      "choices": {
+        "A": "Accuracy = 0.76",
+        "B": "Recall = 0.83",
+        "C": "Precision = 0.83",
+        "D": "Error rate = 0.24"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Từ các giá trị của ma trận nhầm lẫn: Độ chính xác dương tính (Precision) = TP / (TP + FP) = 100 / (100 + 20) = 100 / 120 = 0.833 (xấp xỉ 0.83). Do đó, chỉ số Precision = 0.83 (C) là chỉ số chính xác.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 61,
+      "question": "A Data Scientist is creating a Jupyter notebook to do model development. The Data Scientist wants to connect to Snowflake using the Python Connector and create a pandas DataFrame using data queried from a table called SALES.Which code will successfully execute and populate the DataFrame?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774854271180-xgkzlxzk.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774854273936-kz1n2vw2.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774854276666-vx4cyr4a.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774854279414-q9ymgetx.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đoạn mã Python trong phương án A sử dụng đúng trình kết nối `snowflake.connector` để thực thi truy vấn và gọi hàm `fetch_pandas_all()` trên đối tượng cursor để tải kết quả trực tiếp thành một Pandas DataFrame.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
+      ]
+    },
+    {
+      "id": 62,
+      "question": "Which Python function uses HyperLogLog to return an approximation of the distinct cardinality of the input?",
+      "choices": {
+        "A": "approx_count_distinct()",
+        "B": "count_distinct()",
+        "C": "approx_percentile_estimate()",
+        "D": "countDistinct()"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hàm `approx_count_distinct()` trong thư viện hàm của Snowpark Python sử dụng thuật toán HyperLogLog để ước lượng nhanh số lượng giá trị duy nhất (distinct cardinality) của một cột mà không cần đếm chính xác, giúp tối ưu hóa hiệu năng trên tập dữ liệu lớn.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
+      ]
+    },
+    {
+      "id": 63,
+      "question": "A Data Scientist has trained a supervised classification model on manually labeled training data that performed well in production for several months until model users reported a decline in prediction accuracy.\nThe users demonstrated this decline by collecting a set of recent predictions with their actual labels.\nWhat should the Data Scientist do?",
+      "choices": {
+        "A": "Train the model again with the initial training data but different hyperparameters.",
+        "B": "Explore different model classes to account for the change in distributions and train the model with the initial training data.",
+        "C": "Downsample the initial training data to account for the feature drift and train a new model with the collected subset of the initial training data.",
+        "D": "Use the data set collected by the users to build a new representative labeled training data set and train a new model with the newly collected training data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi mô hình gặp hiện tượng trôi dữ liệu/trôi khái niệm (data drift/concept drift) dẫn đến suy giảm độ chính xác theo thời gian, chuyên gia cần thu thập dữ liệu gần đây đã được gán nhãn đại diện cho phân phối mới và huấn luyện một mô hình mới (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 64,
+      "question": "A Data Scientist is building a system that can answer natural language questions based on a large, private library of a company’s technical documents (e.g., PDFs, wikis). The documents are updated daily.\nWhich architecture would the Scientist use?",
+      "choices": {
+        "A": "Generative Adversarial Network (GAN)",
+        "B": "Retrieval Augmented Generation (RAG)",
+        "C": "Variational Autoencoder (VAE)",
+        "D": "Convolutional Neural Network (CNN)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Kiến trúc RAG (Retrieval Augmented Generation - Tạo sinh tăng cường truy xuất - B) là kiến trúc tối ưu nhất để xây dựng hệ thống trả lời câu hỏi dựa trên thư viện tài liệu nội bộ (như PDFs, wikis) được cập nhật liên tục.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      ]
+    },
+    {
+      "id": 65,
+      "question": "Which chart type in Snowsight Dashboards is best for visualizing the correlation between two columns?",
+      "choices": {
+        "A": "Bar chart",
+        "B": "Heat grid",
+        "C": "Line chart",
+        "D": "Scatterplot"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Biểu đồ phân tán (Scatterplot - D) là loại biểu đồ tốt nhất và phổ biến nhất trong Snowsight để trực quan hóa mối tương quan và mối quan hệ phân bố giữa hai cột dữ liệu số.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ui-snowsight-dashboards"
+      ]
+    },
+    {
+      "id": 66,
+      "question": "A Data Scientist is asked to build a chat-based Retrieval Augmented Generation (RAG) application using company manuals.\nWhich task-specific models or general functions should be used if Snowflake Cortex Search is not being used? (Choose three.)",
+      "choices": {
+        "A": "SNOWFLAKE.CORTEX.COMPLETE()",
+        "B": "SNOWFLAKE.CORTEX.EMBED_TEXT_768()",
+        "C": "SNOWFLAKE.CORTEX.EXTRACT_ANSWER()",
+        "D": "SNOWFLAKE.CORTEX.SENTIMENT()",
+        "E": "SNOWFLAKE.CORTEX.SUMMARIZE()",
+        "F": "VECTOR_COSINE_SIMILARITY()"
+      },
+      "correctAnswer": "ABF",
+      "explanation_vi": "Nếu không dùng Cortex Search, quy trình xây dựng RAG thủ công cần: sử dụng `EMBED_TEXT_768()` (B) để tạo vector nhúng cho tài liệu và câu hỏi; sử dụng `VECTOR_COSINE_SIMILARITY()` (F) để tính toán độ tương đồng và truy xuất các đoạn văn bản liên quan nhất; và sử dụng `COMPLETE()` (A) để LLM đọc ngữ cảnh đã truy xuất và tạo ra câu trả lời cuối cùng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      ]
+    },
+    {
+      "id": 67,
+      "question": "A Data Scientist is working with a retail customer-transactions dataset for analysis calledtable_A. The dataset has 15 columns and 500 rows, and acustomer_idcolumn contains a unique value in each row.\nThe Scientist is also working with another dataset calledtable_B. The dataset has 15 columns and 2500 rows, and acustomer_idcolumn contains a unique value in each row.\nThere are 200customer_idvalues in thetable_Adataset that match thecustomer_idvalues in thetable_Bdataset.\nThis query is executed:\nHow many rows will be returned?",
+      "choices": {
+        "A": "200",
+        "B": "500",
+        "C": "2300",
+        "D": "2500"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Kết quả trả về 500 dòng (B) vì câu lệnh thực hiện phép kết nối hoặc truy vấn bảo toàn số lượng dòng của bảng đầu tiên (`table_A` có 500 dòng với `customer_id` duy nhất).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/constructs/join"
+      ]
+    },
+    {
+      "id": 68,
+      "question": "How can a Data Scientist make sure that their data preparation on a very large data set runs the pandas code as quickly as possible?",
+      "choices": {
+        "A": "Use pandas in Snowflake to allow for distributed computing across a cluster of machines.",
+        "B": "Use pandas in Snowflake Notebooks to execute operations immediately and fully materialize results in memory.",
+        "C": "Use pandas in a local machine using Jupyter notebooks with the Snowflake Connector for Python to fetch the data into pandas.",
+        "D": "Use a cloud-hosted Notebook with Snowpark to create a user session and then materialize data into a pandas DataFrame."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "API Pandas trên Snowflake (Snowpark pandas API - A) cho phép chạy các thao tác Pandas quen thuộc một cách phân tán trên cụm máy tính ảo của Snowflake, giúp xử lý các tập dữ liệu khổng lồ nhanh hơn nhiều so với chạy Pandas đơn luồng trên máy cục bộ.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/pandas-on-snowflake"
+      ]
+    },
+    {
+      "id": 69,
+      "question": "This is the result of a classification model used to detect heart problems in patients:\nFrom this output, what conclusions can be drawn? (Choose three.)",
+      "choices": {
+        "A": "92.73% of people with heart issues have been correctly predicted.",
+        "B": "8 people have been wrongly predicted as heart problems.",
+        "C": "88.70% of predictions with heart issues are correct.",
+        "D": "90.67% of people with heart issues have been correctly predicted.",
+        "E": "13 people have been wrongly predicted as heart problems.",
+        "F": "The data set used contains the same number of positive and negative cases."
+      },
+      "correctAnswer": "BCD",
+      "explanation_vi": "Dựa trên ma trận nhầm lẫn và các chỉ số đánh giá của mô hình phân loại: có 8 người bị dự báo sai là có vấn đề về tim (False Positives - B); tỷ lệ dự báo chính xác trong số các ca được dự báo mắc bệnh tim là 88.70% (Precision - C); và tỷ lệ phát hiện đúng số người thực tế mắc bệnh tim là 90.67% (Recall/Sensitivity - D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 70,
+      "question": "A Data Scientist wants to ask questions about the details of a sales chart inside a picture that was saved as an image.\nWhich function should the Scientist use to power a chat application?",
+      "choices": {},
+      "correctAnswer": "B",
+      "explanation_vi": "Để hỏi đáp và phân tích các chi tiết trong hình ảnh đồ thị doanh số, nhà phát triển cần sử dụng một mô hình đa phương thức (multimodal LLM - hỗ trợ cả ảnh và chữ) có sẵn trong dịch vụ Snowflake Cortex (phương án B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      ]
+    },
+    {
+      "id": 71,
+      "question": "A Data Scientist is investigating some null values in a dataset for a particular column. After some exploratory analysis, the Scientist finds that the distribution of values fits a Gaussian distribution and that the data is not a measure of rates or ratios with no multiplicative properties.\nWhich method should the Scientist use for replacing the null values in the column?",
+      "choices": {
+        "A": "Harmonic mean",
+        "B": "Standard deviation",
+        "C": "Geometric mean",
+        "D": "Arithmetic mean"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Với cột dữ liệu có phân phối chuẩn (Gaussian distribution) và không biểu diễn tỷ lệ hay tỷ số, giá trị trung bình cộng (Arithmetic mean - D) là phương pháp gán thế (imputation) giá trị khuyết tối ưu và phổ biến nhất để duy trì phân phối của dữ liệu.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 72,
+      "question": "What are ways to handle categorical variables in Snowflake when performing a logistic regression model? (Choose two.)",
+      "choices": {
+        "A": "Leave categorical variables as is.",
+        "B": "Drop variables with no significance.",
+        "C": "Overwrite the variables with a null value.",
+        "D": "One-hot encode the categorical variable.",
+        "E": "Use ordinal encoding for the categorical variable."
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Để chuẩn bị các biến phân loại (categorical variables) cho mô hình hồi quy logistic, ta cần chuyển chúng sang dạng số bằng cách: mã hóa một-nóng (One-hot encoding - D) hoặc mã hóa thứ tự (Ordinal encoding - E).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      ]
+    },
+    {
+      "id": 73,
+      "question": "A Data Scientist is exploring a time series dataset from a view.\nIn Snowsight, which chart type should the Scientist use to review product sales by week for the past 12 months?",
+      "choices": {
+        "A": "Bar chart",
+        "B": "Scatterplot",
+        "C": "Line chart",
+        "D": "Scorecard"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Biểu đồ đường (Line chart - C) là lựa chọn tối ưu trong Snowsight để trực quan hóa xu hướng biến đổi của doanh số bán hàng theo thời gian (từng tuần trong 12 tháng qua).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ui-snowsight-dashboards"
+      ]
+    },
+    {
+      "id": 74,
+      "question": "A Data Scientist is working with two DataFrames in Snowpark that both contain a column namedid. The goal is to join these DataFrames on theidcolumn.\nnew_df = df1.join(df2, df1[\"id\"] == df2[\"id\"])\nAfter running the following code:\nnew_df.select(col(\"id\"), col(\"name\"), col(\"country\")).show()\nThe Scientist receives this error:\nError (1303): The reference to column 'ID' is ambiguous...\nWhich method should the Scientist use to fix this error?",
+      "choices": {
+        "A": "new_df.select(\"*\").show()",
+        "B": "new_df.select(df1[\"id\"].alias(\"df1_id\"), col(\"name\"), col(\"country\")).show()",
+        "C": "new_df.drop(\"id\").select(col(\"name\"), col(\"country\")).show()",
+        "D": "new_df.select(df1.id.as_(\"df1_id\"), df1.name, df2.country).show()"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lỗi nhập nhằng cột (`ambiguous column`) xảy ra do cả hai DataFrame đều có cột `id`. Để khắc phục, ta cần chỉ định rõ nguồn gốc cột bằng cách dùng `df1[\"id\"]` và đặt bí danh `alias(\"df1_id\")` cho nó trước khi select (B).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.join"
+      ]
+    },
+    {
+      "id": 75,
+      "question": "A Data Scientist is working on a linear regression problem.\nWhich metrics should the Scientist look for to evaluate their machine learning model? (Choose two.)",
+      "choices": {
+        "A": "Accuracy",
+        "B": "Precision and Recall",
+        "C": "Mean Squared Error (MSE)",
+        "D": "Root Mean Squared Error (RMSE)",
+        "E": "Area Under the Receiver Operating Characteristics (AUROC)"
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Để đánh giá chất lượng của mô hình hồi quy tuyến tính (dự báo giá trị số liên tục), hai chỉ số phù hợp nhất cần theo dõi là Sai số bình phương trung bình (`MSE` - C) và Căn bậc hai sai số bình phương trung bình (`RMSE` - D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      ]
+    },
+    {
+      "id": 76,
+      "question": "A Data Scientist is trying to predict the price of property in the area.\nWhich machine learning method describes this use case?",
+      "choices": {
+        "A": "Classification",
+        "B": "Clustering",
+        "C": "Reinforcement Learning",
+        "D": "Regression"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Dự báo giá nhà đất (một biến số liên tục) là bài toán hồi quy (`Regression` - D) điển hình trong học máy có giám sát.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 77,
+      "question": "A Data Scientist built and deployed a model that is being invoked by an external function. The feature engineering for the model was performed within a Machine Learning (ML) tool. When the external function invokes the model on the Snowflake data, it fails because the columns in the Snowflake table do not match the columns the endpoint expects.\nWhich step will allow the external function to work correctly?",
+      "choices": {
+        "A": "Perform the ML tool feature engineering within the external function.",
+        "B": "Clone the table and perform the ML tool feature engineering within the clone statement.",
+        "C": "Create a view that contains the transformed version of the original table and call the view in the external function.",
+        "D": "Create a User-Defined Function (UDF) that performs the feature engineering and call that within the external function."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cung cấp đúng cấu trúc cột mà endpoint của mô hình yêu cầu mà không thay đổi bảng gốc, giải pháp đơn giản nhất là tạo một khung nhìn (view) chuyển đổi dữ liệu về dạng chuẩn của mô hình, sau đó sử dụng view đó cho hàm ngoại vi (C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/views-introduction"
+      ]
+    },
+    {
+      "id": 78,
+      "question": "What are the standard imputation methods for missing numerical variables? (Choose three.)",
+      "choices": {
+        "A": "Mean",
+        "B": "Median",
+        "C": "Mode",
+        "D": "Sum",
+        "E": "Range",
+        "F": "Variance"
+      },
+      "correctAnswer": "ABC",
+      "explanation_vi": "Ba phương pháp gán thế (imputation) tiêu chuẩn để xử lý các giá trị số bị khuyết là sử dụng giá trị trung bình (`Mean` - A), số trung vị (`Median` - B) hoặc yếu vị (`Mode` - C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 79,
+      "question": "A Data Scientist is building a model in a machine learning tool and wants to connect to use the Snowflake Python Connector to read data from Snowflake for building the model.\nWhat is the proper way to initiate a connection to Snowflake?",
+      "choices": {
+        "A": "Import through snowflake.connect and run snowflake.connect()",
+        "B": "Import through snowflake.connector and run snowflake.connect()",
+        "C": "Import through snowflake.connect and run snowflake.connect.connect()",
+        "D": "Import through snowflake.connector and run snowflake.connector.connect()"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Thao tác đúng để thiết lập kết nối bằng trình kết nối Snowflake Connector trong Python là import thư viện `snowflake.connector` và gọi hàm `snowflake.connector.connect()` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-example"
+      ]
+    },
+    {
+      "id": 80,
+      "question": "A Data Scientist created a time series model to forecast sales as a continuous variable.\nWhich metric should the Scientist use to evaluate the model?",
+      "choices": {
+        "A": "LogLoss",
+        "B": "R-squared",
+        "C": "Mean Squared Error",
+        "D": "Residuals"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đánh giá chất lượng dự báo của mô hình chuỗi thời gian đối với một biến liên tục (như doanh số), chỉ số đo lường sai số thực tế phù hợp nhất là `Mean Squared Error` (Sai số bình phương trung bình - C).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      ]
+    },
+    {
+      "id": 81,
+      "question": "A Data Scientist developed four different regression models and is examining the results. Each residual plot belongs to a different model.\nWhich residual plot indicates a good fit?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1782936971671-708wfohp.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1782936975054-2z6rp083.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1782936978424-2zu023hs.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1782936981783-fojdwbsv.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Biểu đồ phần dư trong phương án A cho thấy các điểm sai số phân bố ngẫu nhiên và đều đặn quanh đường zero (homoscedasticity), cho thấy mô hình khớp tốt với dữ liệu hồi quy.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 82,
+      "question": "A company wants to keep customers engaged in its loyalty program by using targeted campaigns for customers who are likely to leave the program. The company has historical customer data that includes purchase behavior and marketing interactions of customers who left the program and current members.\nA Data Scientist has been asked to assign each current customer a score that represents the likelihood of cancelling their membership.\nWhich kind of model should be built based on this data?",
+      "choices": {
+        "A": "Unsupervised learning: Clustering",
+        "B": "Unsupervised learning: Anomaly detection",
+        "C": "Supervised learning: Causal inference",
+        "D": "Supervised learning: Classification model"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Việc dự báo khả năng một thành viên hủy đăng ký thẻ thành viên (rời bỏ dịch vụ) dựa trên dữ liệu lịch sử của những người đã hủy và chưa hủy là bài toán Phân loại nhị phân (`Classification model` - D) thuộc học máy có giám sát.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    },
+    {
+      "id": 83,
+      "question": "What is theMOST scalablemethod for exploring basic data statistics like count, mean, max, and standard deviation using Snowpark and/or pandas?",
+      "choices": {
+        "A": "snowpark_df.info()",
+        "B": "snowpark_df.describe().toPandas()",
+        "C": "pandas_df = snowpark_df.toPandas()pandas_df.info()",
+        "D": "pandas_df = snowpark_df.toPandas()pandas_df.describe()"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Phương án `snowpark_df.describe().toPandas()` (B) là giải pháp tối ưu nhất về mặt hiệu năng và độ mở rộng (scalable), vì các phép toán thống kê được tính toán song song trên Snowflake trước, và chỉ có bảng tóm tắt kết quả nhỏ gọn được chuyển về bộ nhớ dưới dạng Pandas DataFrame.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.describe"
+      ]
+    },
+    {
+      "id": 84,
+      "question": "A Data Scientist working within Snowsight queries a table and returns a resultset. When they highlight a numerical column, generated statistics that display contextual information about the column are shown, including Sum and Average.\nWhat additional contextual items are provided? (Choose two.)",
+      "choices": {
+        "A": "Histogram",
+        "B": "Median",
+        "C": "Null Percentage",
+        "D": "Quartiles Ranges",
+        "E": "Standard Deviation"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Khi bôi đen một cột số trong bảng kết quả truy vấn trên Snowsight, Snowflake hiển thị các thông tin thống kê ngữ cảnh bao gồm: Biểu đồ tần suất (`Histogram` - A) và Tỷ lệ phần trăm giá trị khuyết (`Null Percentage` - C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ui-snowsight-query-results"
+      ]
+    },
+    {
+      "id": 85,
+      "question": "A Data Scientist is working with a regression model, makes a plot, and receives the following result:\nHow would the Scientist interpret results?",
+      "choices": {
+        "A": "The spread of residuals increases slightly with higher predicted values, which may indicate homoscedasticity.",
+        "B": "The relationship of the variables may not be fully linear after increasing values.",
+        "C": "The spread of residuals increases slightly with higher predicted values, which may indicate heteroscedasticity.",
+        "D": "The relationship displays a positive relationship between the two variables with increasing values."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Biểu đồ phần dư có độ lan tỏa của sai số tăng dần theo các giá trị dự báo lớn hơn (tạo hình phễu) cho thấy sai số có phương sai thay đổi, đây là dấu hiệu của hiện tượng phương sai thay đổi (`heteroscedasticity` - C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      ]
+    }
+  ]
+}

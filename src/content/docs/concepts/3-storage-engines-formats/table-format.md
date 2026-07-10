@@ -47,10 +47,7 @@ graph TD
         DL1 --> DL2["_delta_log/00002.json"]
         DL2 --> CP["_delta_log/00002.checkpoint.parquet"]
         CP --> P2["File2.parquet"]
-    end
-    
-    style Iceberg_Architecture fill:#f4f4f9,stroke:#333
-    style Delta_Architecture fill:#f9f4f4,stroke:#333
+    end
 ```
 
 ### 2.1. Apache Iceberg: Cây Metadata Phân Cấp

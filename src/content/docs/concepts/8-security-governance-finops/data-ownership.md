@@ -60,9 +60,8 @@ graph TD
     C -. "Cross-Domain Query\n(Network I/O Overhead)" .-> E["Trino / Presto Cluster"]
     D -.->|"Cross-Domain Query"| E
     E --> F["Dashboard: Daily Revenue"]
-    
-    classDef producer fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#000;
-    classDef consumer fill:#cce5ff,stroke:#007bff,stroke-width:2px,color:#000;
+
+
     class C producer
     class D consumer
 ```

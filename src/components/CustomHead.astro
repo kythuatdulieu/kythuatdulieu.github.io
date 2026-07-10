@@ -35,3 +35,22 @@ if (isDoc && entry.data) {
 {schema && (
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 )}
+
+<script is:inline>
+  // Pre-paint: áp lựa chọn đọc từ localStorage trước khi render để không nháy màn hình.
+  (function () {
+    try {
+      var d = document.documentElement;
+      var theme = localStorage.getItem('dehb-theme') || localStorage.getItem('starlight-theme');
+      if (theme === 'auto' || !theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      d.setAttribute('data-theme', theme);
+      d.setAttribute('data-measure', localStorage.getItem('dehb-measure') || 'medium');
+      d.setAttribute('data-font', localStorage.getItem('dehb-font') || 'sans');
+      var scale = localStorage.getItem('dehb-font-scale');
+      if (scale) d.style.setProperty('--reading-font-scale', scale);
+    } catch (e) {}
+  })();
+</script>
+

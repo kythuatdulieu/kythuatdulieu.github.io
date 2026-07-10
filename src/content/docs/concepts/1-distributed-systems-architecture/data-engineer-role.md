@@ -37,10 +37,7 @@ graph TD
         C["Junior/Mid"] -->|Writes| D["Individual ETL Pipelines"]
         E["Senior/Tech Lead"] -->|Owns| F["Project Architecture & Delivery"]
         G["Staff/Principal"] -->|Builds| H["Data Platform & Tech Strategy"]
-    end
-    
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style G fill:#bbf,stroke:#333,stroke-width:2px
+    end
 ```
 
 ---

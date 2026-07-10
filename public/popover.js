@@ -104,7 +104,7 @@
                 link.dataset.hasPopover = "true";
 
                 const url = link.getAttribute('href');
-                if (url.startsWith('#') || url === '/learning-paths/' || url === '/interview/') return;
+                if (url.startsWith('#') || url === '/learning-paths/' || url === '/interview/' || url === '/concepts/' || url.includes('#')) return;
 
                 tippy(link, {
                     content: '<div class="popover-loading"><div class="spinner"></div> Đang tải...</div>',

@@ -67,10 +67,9 @@ graph TD
     B -->|Thực thi JOIN & Aggregations nặng| C
     C -->|"Direct Scan (Tránh Compute lại)"| D
     C -->|Direct Scan| E
-    
-    style A fill:#f9d0c4,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#d4f1f4,stroke:#333,stroke-width:2px
+
+
+
 ```
 *Sơ đồ đánh đổi chi phí Compute và Storage: Đẩy tải tính toán nặng vào Batch Job ban đêm để giảm thiểu chi phí khi người dùng truy vấn.*
 

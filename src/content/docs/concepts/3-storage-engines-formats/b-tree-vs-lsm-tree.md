@@ -39,11 +39,7 @@ graph TD
     Root --> Branch2["Branch Node - Page 2"]
     Branch1 --> Leaf1["Leaf Node - Page 3: Khóa 1-10"]
     Branch1 --> Leaf2["Leaf Node - Page 4: Khóa 11-20"]
-    Branch2 --> Leaf3["Leaf Node - Page 5: Khóa 21-30"]
-    
-    style Leaf1 fill:#f9f,stroke:#333,stroke-width:2px
-    style Leaf2 fill:#f9f,stroke:#333,stroke-width:2px
-    style Leaf3 fill:#f9f,stroke:#333,stroke-width:2px
+    Branch2 --> Leaf3["Leaf Node - Page 5: Khóa 21-30"]
 ```
 
 **Tại sao In-place update lại đắt đỏ (The Write Penalty)?**
@@ -64,12 +60,7 @@ flowchart LR
     Client("(Client Application)") --> |1. Write| WAL["Write-Ahead Log (WAL)<br/>Disk - Sequential I/O"]
     Client --> |2. Write| MemTable["MemTable (RAM)<br/>Balanced Tree / SkipList"]
     MemTable --> |"3. Flush (When full)"| SST1["SSTable L0<br/>Disk - Immutable"]
-    SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged & Sorted"]
-    
-    style MemTable fill:#bbf,stroke:#333,stroke-width:2px
-    style WAL fill:#f96,stroke:#333,stroke-width:2px
-    style SST1 fill:#dfd,stroke:#333,stroke-width:2px
-    style SST2 fill:#dfd,stroke:#333,stroke-width:2px
+    SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged & Sorted"]
 ```
 
 1. **Write-Ahead Log (WAL):** Dữ liệu đến được ghi nối tiếp vào cuối một file log trên đĩa. Thao tác này cực nhanh vì nó là Sequential I/O, mục đích duy nhất là để chống mất dữ liệu khi sập nguồn (Crash Recovery).

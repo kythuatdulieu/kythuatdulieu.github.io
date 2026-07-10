@@ -1,0 +1,233 @@
+[
+ {
+  "id": "databricks-de-advanced",
+  "name": "Data Engineer Professional",
+  "provider": "Databricks",
+  "vi": true,
+  "count": 327
+ },
+ {
+  "id": "databricks-genai-associate",
+  "name": "Generative AI Engineer Associate",
+  "provider": "Databricks",
+  "vi": true,
+  "count": 92
+ },
+ {
+  "id": "certified-data-analyst-associate",
+  "name": "Data Analyst Associate",
+  "provider": "Databricks",
+  "vi": false,
+  "count": 140
+ },
+ {
+  "id": "certified-data-engineer-associate",
+  "name": "Data Engineer Associate",
+  "provider": "Databricks",
+  "vi": false,
+  "count": 191
+ },
+ {
+  "id": "certified-machine-learning-associate",
+  "name": "Machine Learning Associate",
+  "provider": "Databricks",
+  "vi": false,
+  "count": 133
+ },
+ {
+  "id": "certified-machine-learning-professional",
+  "name": "Machine Learning Professional",
+  "provider": "Databricks",
+  "vi": false,
+  "count": 212
+ },
+ {
+  "id": "aws-certified-ai-practitioner-aif-c01",
+  "name": "AI Practitioner (AIF-C01)",
+  "provider": "AWS",
+  "vi": false,
+  "count": 416
+ },
+ {
+  "id": "aws-certified-data-engineer-associate-dea-c01",
+  "name": "Data Engineer Associate (DEA-C01)",
+  "provider": "AWS",
+  "vi": false,
+  "count": 352
+ },
+ {
+  "id": "aws-certified-generative-ai-developer-professional-aip-c01",
+  "name": "Generative AI Developer Professional (AIP-C01)",
+  "provider": "AWS",
+  "vi": false,
+  "count": 97
+ },
+ {
+  "id": "aws-certified-machine-learning-engineer-associate-mla-c01",
+  "name": "ML Engineer Associate (MLA-C01)",
+  "provider": "AWS",
+  "vi": false,
+  "count": 248
+ },
+ {
+  "id": "ai-102",
+  "name": "AI-102: Azure AI Engineer Associate",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 167
+ },
+ {
+  "id": "ai-900",
+  "name": "AI-900: Azure AI Fundamentals",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 115
+ },
+ {
+  "id": "dp-100",
+  "name": "DP-100: Azure Data Scientist Associate",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 285
+ },
+ {
+  "id": "dp-203",
+  "name": "DP-203: Azure Data Engineer Associate",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 2
+ },
+ {
+  "id": "dp-300",
+  "name": "DP-300: Azure Database Administrator",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 189
+ },
+ {
+  "id": "dp-420",
+  "name": "DP-420: Azure Cosmos DB Developer",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 109
+ },
+ {
+  "id": "dp-600",
+  "name": "DP-600: Fabric Analytics Engineer",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 122
+ },
+ {
+  "id": "dp-700",
+  "name": "DP-700: Fabric Data Engineer",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 79
+ },
+ {
+  "id": "dp-900",
+  "name": "DP-900: Azure Data Fundamentals",
+  "provider": "Microsoft",
+  "vi": false,
+  "count": 138
+ },
+ {
+  "id": "associate-data-practitioner",
+  "name": "Associate Data Practitioner",
+  "provider": "Google Cloud",
+  "vi": false,
+  "count": 102
+ },
+ {
+  "id": "generative-ai-leader",
+  "name": "Generative AI Leader",
+  "provider": "Google Cloud",
+  "vi": false,
+  "count": 25
+ },
+ {
+  "id": "professional-cloud-database-engineer",
+  "name": "Professional Cloud Database Engineer",
+  "provider": "Google Cloud",
+  "vi": false,
+  "count": 197
+ },
+ {
+  "id": "professional-data-engineer",
+  "name": "Professional Data Engineer",
+  "provider": "Google Cloud",
+  "vi": false,
+  "count": 343
+ },
+ {
+  "id": "professional-machine-learning-engineer",
+  "name": "Professional Machine Learning Engineer",
+  "provider": "Google Cloud",
+  "vi": false,
+  "count": 324
+ },
+ {
+  "id": "snowpro-advanced-data-engineer",
+  "name": "SnowPro Advanced: Data Engineer",
+  "provider": "Snowflake",
+  "vi": false,
+  "count": 161
+ },
+ {
+  "id": "snowpro-advanced-data-scientist",
+  "name": "SnowPro Advanced: Data Scientist",
+  "provider": "Snowflake",
+  "vi": false,
+  "count": 85
+ },
+ {
+  "id": "snowpro-specialty-gen-ai-ges-c01",
+  "name": "SnowPro Specialty: Gen AI (GES-C01)",
+  "provider": "Snowflake",
+  "vi": false,
+  "count": 59
+ },
+ {
+  "id": "certified-ai-specialist",
+  "name": "Certified AI Specialist",
+  "provider": "Salesforce",
+  "vi": false,
+  "count": 115
+ },
+ {
+  "id": "certified-data-architect",
+  "name": "Data Architect",
+  "provider": "Salesforce",
+  "vi": false,
+  "count": 136
+ },
+ {
+  "id": "certified-data-cloud-consultant",
+  "name": "Data Cloud Consultant",
+  "provider": "Salesforce",
+  "vi": false,
+  "count": 147
+ },
+ {
+  "id": "ai-fundamentals",
+  "name": "AI Fundamentals",
+  "provider": "Khác",
+  "vi": false,
+  "count": 60
+ },
+ {
+  "id": "d-dp-fn-01",
+  "name": "Dell Data Protection Foundations (D-DP-FN-01)",
+  "provider": "Khác",
+  "vi": false,
+  "count": 118
+ },
+ {
+  "id": "aigp",
+  "name": "IAPP AI Governance Professional (AIGP)",
+  "provider": "Khác",
+  "vi": false,
+  "count": 216
+ }
+]

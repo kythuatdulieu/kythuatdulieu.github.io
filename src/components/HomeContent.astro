@@ -15,7 +15,7 @@ const totalConcepts = concepts.length;
 
 // Domain mặc định mỗi category (dùng khi concept chưa có 'domains' — sẽ tự đầy dần khi rewrite)
 const DEFAULT_DOMAINS = {
-  '1-distributed-systems-architecture': ['Foundations', 'DE'],
+  '1-distributed-systems-architecture': ['DE'],
   '2-data-ingestion-integration': ['DE'],
   '3-storage-engines-formats': ['DE', 'Platform'],
   '4-compute-engines-batch': ['DE'],
@@ -23,10 +23,10 @@ const DEFAULT_DOMAINS = {
   '6-data-modeling-transformation': ['DE', 'DA'],
   '7-dataops-orchestration-quality': ['DE', 'Platform'],
   '8-security-governance-finops': ['Platform', 'DE'],
-  '9-genai-machine-learning': ['AI', 'DS'],
+  '9-genai-machine-learning': ['DS'],
 };
 
-const domainVar = (d) => `var(--domain-${(d || 'foundations').toLowerCase()})`;
+const domainVar = (d) => `var(--domain-${(d || 'de').toLowerCase()})`;
 
 function shortTitle(t) {
   const m = (t || '').match(/\s[-–]\s+([a-zA-Z0-9\s]+)$/);
@@ -45,8 +45,8 @@ const cards = categories.map((cat, i) => {
   if (domainList.length === 0) domainList = DEFAULT_DOMAINS[cat.slug] || ['DE'];
   const links = inCat
     .slice()
-    .sort((a, b) => (a.data.title || '').localeCompare(b.data.title || ''))
-    .slice(0, 3)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 8)
     .map((d) => ({ label: shortTitle(d.data.title), href: `/${d.slug}/` }));
   return {
     number: i + 1,
@@ -60,53 +60,54 @@ const cards = categories.map((cat, i) => {
   };
 });
 
-// Mới cập nhật (theo lastUpdated) + tag domain chính
-const toTime = (v) => (v ? new Date(v).getTime() || 0 : 0);
-const updated = concepts
-  .filter((d) => d.data.lastUpdated)
-  .sort((a, b) => toTime(b.data.lastUpdated) - toTime(a.data.lastUpdated))
-  .slice(0, 6)
-  .map((d) => {
-    const catSlug = d.id.split('/')[1];
-    const domain = (d.data.domains || [])[0] || (DEFAULT_DOMAINS[catSlug] || ['DE'])[0];
-    return {
-      title: shortTitle(d.data.title),
-      href: `/${d.slug}/`,
-      date: new Date(d.data.lastUpdated).toISOString().slice(0, 10),
-      domain,
-      color: domainVar(domain),
-    };
-  });
-
-const purposes = [
-  { title: 'Luyện chứng chỉ', desc: 'Bộ đề Databricks, AWS, Azure, GCP…', href: '/quizzes/', highlight: true }
+// Mới cập nhật (theo lastUpdated) - Lấy 1 bài mới nhất từ mỗi chuyên mục
+const targetFolders = [
+  { prefix: 'quizzes/', label: 'Trắc nghiệm', fallbackDomain: 'DE' },
+  { prefix: 'learning-paths/', label: 'Lộ trình', fallbackDomain: 'Platform' },
+  { prefix: 'interview/', label: 'Phỏng vấn', fallbackDomain: 'DA' },
+  { prefix: 'projects/', label: 'Dự án', fallbackDomain: 'DS' },
+  { prefix: 'concepts/', label: 'Kiến thức', fallbackDomain: 'DE' }
 ];
+
+const toTime = (v) => (v ? new Date(v).getTime() || 0 : 0);
+
+const updated = targetFolders.map(folder => {
+  const items = all.filter(d => d.id.startsWith(folder.prefix));
+  if (items.length === 0) return null;
+  items.sort((a, b) => toTime(b.data.lastUpdated) - toTime(a.data.lastUpdated));
+  const top = items[0];
+  
+  let domain = folder.fallbackDomain;
+  if (top.data.domains && top.data.domains.length > 0) {
+    domain = top.data.domains[0];
+  } else if (folder.prefix === 'concepts/') {
+    const catSlug = top.id.split('/')[1];
+    domain = (DEFAULT_DOMAINS[catSlug] || ['DE'])[0];
+  }
+  
+  let title = shortTitle(top.data.title);
+  if (folder.prefix === 'quizzes/' && top.slug === 'quizzes') title = 'Tổng hợp bộ đề thi Certificate';
+
+  return {
+    title: title,
+    href: `/${top.slug}/`,
+    date: top.data.lastUpdated ? new Date(top.data.lastUpdated).toISOString().slice(0, 10) : '',
+    domain: folder.label,
+    color: domainVar(domain),
+  };
+}).filter(Boolean);
 ---
 
 <div class="home not-content">
-  <div class="purpose-band">
-    <div class="band-inner purpose-single">
-      {purposes.map((p) => (
-        <a class:list={['purpose', { highlight: p.highlight }]} href={p.href}>
-          <span class="p-title">{p.title} <span class="p-arrow" aria-hidden="true">→</span></span>
-          <span class="p-desc">{p.desc}</span>
-        </a>
-      ))}
-    </div>
-  </div>
-
   <main class="home-main">
     <div class="toc-head">
       <h2 class="serif-h">Mục lục</h2>
       <div class="toc-actions">
-        <a href="/quizzes/" class="cert-btn" title="Bộ đề Databricks, AWS, Azure, GCP">🎯 Luyện thi Certificate</a>
+        <a href="/quizzes/" class="cert-btn" title="Bộ đề Databricks, AWS, Azure, GCP">🔥 Luyện thi Certificate</a>
         <a href="/concepts/" class="toc-link">Tất cả bài viết →</a>
       </div>
     </div>
 
-    <div class="facets" role="group" aria-label="Lọc theo lĩnh vực">
-      {DOMAINS.map((d) => <button class="chip" data-facet="domain" data-id={d.id}>{d.label}</button>)}
-    </div>
 
     <div class="grid" id="cat-grid">
       {cards.map((c) => (
@@ -116,7 +117,7 @@ const purposes = [
             <h3 class="cat-title"><a href={`/concepts/#${c.slug}`}>{c.title}</a></h3>
           </div>
           <div class="cat-links">
-            {c.links.map((l) => <a href={l.href}>{l.label}</a>)}
+            {c.links.map((l, idx) => <a class="ticker-item" href={l.href} style={idx >= 3 ? 'display: none;' : ''}>{l.label}</a>)}
             <a class="cat-all" href={`/concepts/#${c.slug}`}>Xem tất cả →</a>
           </div>
         </section>
@@ -155,40 +156,20 @@ const purposes = [
 
 <style is:global>
   /* Trang chủ tự dàn trang toàn khổ: gỡ giới hạn và padding của khung Starlight */
-  main:has(.home) .content-panel { padding: 0; }
-  main:has(.home) .sl-container { max-width: none; margin: 0; }
+  main:has(.home) .content-panel { padding: 0 !important; }
+  main:has(.home) .sl-container { 
+    max-width: none !important; 
+    margin: 0 !important; 
+    padding-bottom: 0 !important; 
+  }
+  .main-pane:has(.home) { padding-bottom: 0 !important; }
+  /* Ẩn phần footer mặc định của Starlight (tạo ra khoảng trắng thừa) */
+  .sl-container:has(.home) > footer { display: none !important; }
 </style>
 
 <style>
   .home { font-family: var(--font-sans); }
   .band-inner { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
-
-  /* ---- Dải 4 lối vào ---- */
-  .purpose-band { border-bottom: 1px solid var(--border-default, var(--sl-color-hairline)); background: var(--surface-card, var(--sl-color-bg-nav)); }
-  .purpose-single { display: flex; justify-content: center; padding: 0 1.5rem; }
-  .purpose {
-    display: flex; flex-direction: column; gap: .25rem; min-width: 0;
-    padding: var(--space-4, 1rem) var(--space-5, 1.5rem);
-    border: 1px solid var(--border-default, var(--sl-color-hairline));
-    border-radius: var(--radius-md, 8px);
-    margin: var(--space-4, 1rem) 0;
-    color: inherit; text-decoration: none;
-    align-items: center; text-align: center;
-    transition: background var(--duration-fast, 120ms);
-  }
-  .purpose:first-child { border-left: none; }
-  .purpose:hover { background: var(--sl-color-accent-low); text-decoration: none; }
-  .p-title {
-    display: flex; align-items: center; justify-content: center; gap: .45rem;
-    font-size: var(--text-sm, .94rem); font-weight: 600;
-    color: var(--text-heading, var(--sl-color-white)); white-space: nowrap;
-  }
-  .p-arrow { color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 400; }
-  .p-desc { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); line-height: var(--leading-snug, 1.4); }
-  .purpose.highlight { background: var(--sl-color-accent-low); }
-  .purpose.highlight .p-title, .purpose.highlight .p-desc, .purpose.highlight .p-arrow { color: var(--sl-color-text-accent); }
-  .purpose.highlight:hover { filter: brightness(0.97); }
-
 
   /* ---- Khối chính ---- */
   .home-main { max-width: 1040px; margin: 0 auto; padding: var(--space-7, 3rem) 1.5rem var(--space-9, 6rem); }
@@ -197,27 +178,30 @@ const purposes = [
     font-weight: 600; letter-spacing: -0.015em; color: var(--text-heading, var(--sl-color-white));
   }
   .toc-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4, 1rem); flex-wrap: wrap; margin-bottom: var(--space-4, 1rem); }
-  .toc-actions { display: flex; align-items: baseline; gap: 1.5rem; }
+  .toc-actions { display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap; }
   .toc-link { font-size: var(--text-sm, .94rem); color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 500; text-decoration: none; }
   .toc-link:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
   
   .cert-btn {
     font-size: var(--text-sm, .94rem);
     font-weight: 600;
-    color: var(--sl-color-text-accent);
+    color: var(--sl-color-text-invert);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.3rem 0.8rem;
-    background: var(--sl-color-accent-low);
+    padding: 0.4rem 1rem;
+    background: var(--sl-color-accent);
     border: 1px solid var(--sl-color-accent);
     border-radius: var(--radius-pill, 999px);
-    transition: filter var(--duration-fast, 120ms);
+    box-shadow: 0 0 15px rgba(var(--sl-color-accent-rgb, 100, 150, 255), 0.3);
+    transition: filter var(--duration-fast, 120ms), transform var(--duration-fast, 120ms);
   }
   .cert-btn:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.15);
+    transform: translateY(-1px);
     text-decoration: none;
+    color: var(--sl-color-text-invert);
   }
 
   .facets { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin-bottom: var(--space-7, 3rem); }
@@ -244,22 +228,61 @@ const purposes = [
     padding-bottom: var(--space-3, .75rem);
     border-bottom: 2px solid var(--cat-color, var(--sl-color-accent));
   }
+  .cat.is-next .cat-head::after {
+    content: "";
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--cat-color, var(--sl-color-accent));
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin-left: auto;
+    animation: cat-spin 2.5s linear infinite;
+  }
+  #cat-grid:hover .cat.is-next .cat-head::after {
+    animation-play-state: paused;
+  }
+  @keyframes cat-spin { 
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); } 
+  }
   .cat-num { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); color: var(--cat-color, var(--sl-color-accent)); font-weight: 600; }
   .cat-title { margin: 0; font-size: var(--text-base, 1.06rem); font-weight: 650; letter-spacing: -0.005em; color: var(--text-heading, var(--sl-color-white)); line-height: var(--leading-snug, 1.4); }
   .cat-title a { color: inherit; text-decoration: none; }
   .cat-title a:hover { color: var(--sl-color-text-accent); }
   .cat-links { display: flex; flex-direction: column; }
-  .cat-links > a {
+  .cat-links .ticker-item {
+    position: relative;
+    display: flex; align-items: center;
     font-size: var(--text-sm, .94rem); color: var(--text-muted, var(--sl-color-gray-3));
     line-height: var(--leading-snug, 1.4);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    padding: .5rem 0; border-bottom: 1px solid var(--border-default, var(--sl-color-hairline));
+    padding: .45rem .5rem; margin-left: -.5rem; border-radius: var(--radius-sm, 6px);
+    border-bottom: 1px solid transparent;
     text-decoration: none;
-    transition: color var(--duration-fast, 120ms);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .cat-links > a:hover { color: var(--sl-color-text-accent); }
-  .cat-links > a.cat-all { font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); padding: .55rem 0; font-weight: 500; border-bottom: none; }
-  .cat-links > a.cat-all:hover { color: var(--sl-color-text-accent); }
+  .cat-links .ticker-item::before {
+    content: "›";
+    font-size: 1.2em; font-weight: 700; color: var(--cat-color, var(--sl-color-accent));
+    opacity: 0; transform: translateX(-8px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-right: 0.4rem;
+  }
+  .cat-links .ticker-item:hover { 
+    color: var(--cat-color, var(--sl-color-accent)); 
+    background: color-mix(in srgb, var(--cat-color, var(--sl-color-accent)) 8%, transparent);
+    transform: translateX(4px);
+  }
+  .cat-links .ticker-item:hover::before {
+    opacity: 1; transform: translateX(0);
+  }
+  .cat-links > a.cat-all { 
+    display: inline-block;
+    font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); 
+    padding: .55rem 0; margin-left: 0; font-weight: 500; border-bottom: none; 
+    transition: color 0.2s;
+  }
+  .cat-links > a.cat-all:hover { color: var(--cat-color, var(--sl-color-text-accent)); }
 
   /* ---- Mới cập nhật ---- */
   .updated {
@@ -297,30 +320,67 @@ const purposes = [
 
 <script is:inline>
   (function () {
-    // Facet filter client-side: domain
-    var active = { domain: new Set() };
-    var chips = document.querySelectorAll('.home .chip');
-    var cards = document.querySelectorAll('.home .cat');
-    var countEl = document.getElementById('cat-count');
-    function apply() {
-      var shown = 0;
-      cards.forEach(function (c) {
-        var ds = (c.getAttribute('data-domains') || '').split(' ').filter(Boolean);
-        var okD = active.domain.size === 0 || ds.some(function (x) { return active.domain.has(x); });
-        var show = okD;
-        c.hidden = !show;
-        if (show) shown++;
-      });
-      if (countEl) countEl.textContent = shown;
+    const cats = document.querySelectorAll('.cat');
+    if (!cats.length) return;
+    
+    let currentCatIdx = 0;
+    let elapsed = 0;
+    let isHovering = false;
+    const intervalTime = 2500;
+    const tick = 100;
+
+    const grid = document.getElementById('cat-grid');
+    if (grid) {
+      grid.addEventListener('mouseenter', () => isHovering = true);
+      grid.addEventListener('mouseleave', () => isHovering = false);
     }
-    chips.forEach(function (ch) {
-      ch.addEventListener('click', function () {
-        var f = ch.getAttribute('data-facet'), id = ch.getAttribute('data-id');
-        var set = active[f];
-        if (set.has(id)) { set.delete(id); ch.setAttribute('aria-pressed', 'false'); }
-        else { set.add(id); ch.setAttribute('aria-pressed', 'true'); }
-        apply();
-      });
-    });
+    
+    cats[currentCatIdx].classList.add('is-next');
+    
+    setInterval(() => {
+      if (isHovering) return;
+      
+      elapsed += tick;
+      if (elapsed >= intervalTime) {
+        elapsed = 0;
+        const cat = cats[currentCatIdx];
+        const catLinks = cat.querySelector('.cat-links');
+        
+        if (catLinks) {
+          const items = Array.from(catLinks.querySelectorAll('.ticker-item'));
+          
+          if (items.length > 3) {
+            const first = items[0];
+            const fourth = items[3];
+            const catAllBtn = catLinks.querySelector('.cat-all');
+            
+            first.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            first.style.opacity = '0';
+            first.style.transform = 'translateX(-10px)';
+            
+            setTimeout(() => {
+              first.style.display = 'none';
+              first.style.transform = 'none';
+              catLinks.insertBefore(first, catAllBtn);
+              
+              fourth.style.transition = 'none';
+              fourth.style.opacity = '0';
+              fourth.style.transform = 'translateX(10px)';
+              fourth.style.display = 'flex';
+              
+              void fourth.offsetWidth;
+              
+              fourth.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              fourth.style.opacity = '1';
+              fourth.style.transform = 'none';
+            }, 300);
+          }
+        }
+        
+        cat.classList.remove('is-next');
+        currentCatIdx = (currentCatIdx + 1) % cats.length;
+        cats[currentCatIdx].classList.add('is-next');
+      }
+    }, tick);
   })();
 </script>

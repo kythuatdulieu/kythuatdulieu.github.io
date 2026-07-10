@@ -42,9 +42,7 @@ flowchart TD
     end
     
     Metric --> Dashboard["Grafana / BI Dashboard"]
-    
-    classDef path fill:#f9f2f4,stroke:#d9534f,stroke-width:2px;
-    classDef eval fill:#e9f7ef,stroke:#27ae60,stroke-width:2px;
+
     class Execution_Path path;
     class Evaluation_Path eval;
 ```

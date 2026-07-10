@@ -19,3 +19,25 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+.env
+
+# Working history and temp files
+PLAN.md
+AGENTS.md
+.claude/
+.antigravity/
+.codex/
+scratch/
+rewrite/
+tmp_sql_dwh/
+
+# Scripts and batch data
+*.py
+batch_*.json
+rewrite_queue*.json
+missing_classification.txt
+
+# Any other local scratch files
+scratch_*.js
+test_*.js

@@ -49,10 +49,7 @@ graph TD
     ETL1 --> ODS
     ODS --> ETL2
     ETL2 --> EDW
-    EDW --> DM1 & DM2 & DM3
-
-    style EDW fill:#f9f,stroke:#333,stroke-width:2px
-    style ODS fill:#bbf,stroke:#333,stroke-width:2px
+    EDW --> DM1 & DM2 & DM3
 ```
 
 ### Các Component Cốt Lõi:
@@ -75,7 +72,6 @@ CREATE TABLE edw.customers (
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
-
 CREATE TABLE edw.customer_addresses (
     address_hk VARCHAR(64) PRIMARY KEY,
     customer_hk VARCHAR(64) REFERENCES edw.customers(customer_hk),

@@ -42,11 +42,7 @@ graph TD
     Header --- Row_Group_1
     Row_Group_1 --- RowGroupN
     RowGroupN --- Footer
-    C1 --> Column_Chunk_Structure
-    
-    style Header fill:#f9f6e5,stroke:#b8a36c
-    style Footer fill:#f9f6e5,stroke:#b8a36c
-    style C1 fill:#e6f3ff,stroke:#4a90e2
+    C1 --> Column_Chunk_Structure
 ```
 
 1. **Row Group (Block):** File được chia ngang thành các khối dữ liệu khổng lồ (ví dụ 128MB). Một Row Group chứa đầy đủ các cột cho một khoảng dòng nhất định (ví dụ 10 triệu dòng đầu tiên). **Khả năng phân tán:** Spark có thể cử 10 Worker, mỗi Worker đọc 1 Row Group hoàn toàn độc lập qua mạng.

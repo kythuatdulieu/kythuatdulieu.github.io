@@ -29,8 +29,9 @@ Quá trình Inference chia làm hai pha cực kỳ khác biệt về đặc tín
 ### Bài toán Cổ chai: Sự bùng nổ của KV Cache
 Để tránh việc phải tính toán lại Attention Score từ đầu, hệ thống lưu trữ các vector **Key (K)** và **Value (V)** vào VRAM. Đây gọi là **KV Cache**.
 
-> [!WARNING]
-> VRAM của GPU không bị chiếm dụng chủ yếu bởi Model Weights, mà bởi KV Cache. Một sequence dài 8,000 tokens của mô hình 70B có thể ngốn hàng Gigabytes KV Cache *cho mỗi user request*. Ở quy mô 100 concurrent requests, GPU sẽ nhanh chóng sập (OOMKilled] dù Compute (TFLOPS) vẫn đang rảnh rỗi.
+:::danger
+VRAM của GPU không bị chiếm dụng chủ yếu bởi Model Weights, mà bởi KV Cache. Một sequence dài 8,000 tokens của mô hình 70B có thể ngốn hàng Gigabytes KV Cache *cho mỗi user request*. Ở quy mô 100 concurrent requests, GPU sẽ nhanh chóng sập (OOMKilled] dù Compute (TFLOPS) vẫn đang rảnh rỗi.
+:::
 
 ---
 
@@ -72,11 +73,7 @@ flowchart TD
 
     T1 --> P5
     T2 --> P2
-    T3 --> P8
-    
-    style Physical fill:#2d3436,stroke:#74b9ff,stroke-width:2px,color:#fff
-    style BlockTable fill:#0984e3,stroke:#74b9ff,color:#fff
-    style Logical fill:#d63031,stroke:#ff7675,color:#fff
+    T3 --> P8
 ```
 
 **Tại sao nó đột phá?**

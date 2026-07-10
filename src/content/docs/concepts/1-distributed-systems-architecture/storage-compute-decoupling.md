@@ -93,12 +93,7 @@ flowchart TD
     
     S3 -.->|"10-20ms Latency"| L2
     L2 -.->|"100μs Latency"| L1
-    L1 -.->|"Nanoseconds"| WH
-    
-    style C fill:#f9f6e5,stroke:#b8a36c
-    style L1 fill:#e6f3ff,stroke:#4a90e2
-    style L2 fill:#e6f3ff,stroke:#4a90e2
-    style S3 fill:#f0f0f0,stroke:#666
+    L1 -.->|"Nanoseconds"| WH
 ```
 
 1. **Result Cache:** Nếu truy vấn giống hệt một truy vấn đã chạy trước đó và Data nền chưa thay đổi, hệ thống trả luôn kết quả từ Metadata Layer trong vòng 5 mili-giây. Compute Layer thậm chí không bị đánh thức.

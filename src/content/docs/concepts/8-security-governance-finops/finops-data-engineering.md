@@ -21,10 +21,6 @@ refs:
     org: "AWS"
     url: "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
     type: docs
-  - title: "Cluster configuration best practices"
-    org: "Databricks"
-    url: "https://docs.databricks.com/en/compute/clusters-best-practices.html"
-    type: docs
 ---
 
 Thay vì chỉ dừng ở lời nhắc "hãy tắt máy chủ khi không dùng", FinOps đối với Data Engineer nằm ở tầng **vật lý (Physical Execution Layer)**. Mỗi byte dữ liệu được tải vào RAM, ghi xuống ổ cứng (Disk I/O), hay truyền qua mạng (Network Shuffle) đều góp phần vào hóa đơn Cloud cuối tháng. 
@@ -42,9 +38,8 @@ Trong các thiết kế Data Platform hiện đại, chúng ta luôn phải cân
 
 ```mermaid
 graph TD
-    classDef compute fill:#f9d0c4,stroke:#333,stroke-width:2px;
-    classDef storage fill:#cce5ff,stroke:#333,stroke-width:2px;
-    classDef culture fill:#d4edda,stroke:#333,stroke-width:2px;
+
+
 
     A["Data FinOps Framework"] --> B["Compute Optimization"]
     A --> C["Storage Lifecycle"]
@@ -194,6 +189,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "raw_lifecycle" {
 
 ## References
 - FinOps Foundation. [FinOps Framework and Principles](https://www.finops.org/framework/)
-- Databricks Docs. [Cluster configuration best practices](https://docs.databricks.com/en/compute/clusters-best-practices.html)
 - AWS Documentation. [Amazon S3 Object Lifecycle Management](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)
 - Martin Kleppmann. *Designing Data-Intensive Applications* (Chương 3).

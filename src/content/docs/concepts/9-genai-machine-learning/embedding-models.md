@@ -79,9 +79,10 @@ embedding_vector = response.data[0].embedding
 print(f"Kích thước vector thực tế: {len(embedding_vector)}") # Output: 256
 ```
 
-> [!TIP]
-> **Best Practice cho MRL:** 
-> Sử dụng chiến lược **Multi-stage Retrieval**. Bạn lưu vector 256 chiều vào RAM (Vector DB] để tìm kiếm nhanh (Shortlisting Top 100). Sau đó, bạn lấy 100 ID đó truy xuất vector gốc (3072 chiều) từ Disk/S3 để Rerank lại Top 10. Cách này đạt tốc độ của 256D và độ chính xác của 3072D.
+:::tip
+**Best Practice cho MRL:** 
+Sử dụng chiến lược **Multi-stage Retrieval**. Bạn lưu vector 256 chiều vào RAM (Vector DB] để tìm kiếm nhanh (Shortlisting Top 100). Sau đó, bạn lấy 100 ID đó truy xuất vector gốc (3072 chiều) từ Disk/S3 để Rerank lại Top 10. Cách này đạt tốc độ của 256D và độ chính xác của 3072D.
+:::
 
 ---
 

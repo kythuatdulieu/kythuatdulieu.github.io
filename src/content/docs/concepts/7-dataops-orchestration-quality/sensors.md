@@ -154,10 +154,7 @@ graph LR
     subgraph Kien_truc_Push["Datasets / Assets"]
         JobA_Push["ETL Nguồn"] -->|Cập nhật| DS["(Dataset/Asset)"]
         DS -.->|Tự động Trigger| JobB_Push["Transform Job"]
-    end
-    
-    style S fill:#ff9999,stroke:#333
-    style DS fill:#99ff99,stroke:#333
+    end
 ```
 
 Trong mô hình Datasets/Assets, Job A sau khi chạy xong sẽ phát đi một tín hiệu cập nhật Logical Dataset. Job B khai báo phụ thuộc vào Dataset này sẽ **tự động được kích hoạt** bởi Scheduler. Bỏ qua hoàn toàn chi phí Polling và giải quyết triệt để Sensor Deadlock.

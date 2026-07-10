@@ -8,22 +8,7 @@ const domainList = Array.isArray(domains) ? domains : (domains ? [domains] : [])
 const levelOrder = level ? (levelById[level]?.order ?? 1) : 0;
 ---
 
-{(category || domainList.length || difficulty || readingTime) && (
-  <div class="article-meta">
-    {category && <span class="am-badge am-neutral">{category}</span>}
-    {domainList.map((d) => {
-      const info = domainById[d] || domainById['Foundations'];
-      return (
-        <span class="am-badge am-domain" style={`--d-var: var(--domain-${(info?.varName) || d.toLowerCase()}); color: var(--domain-${(info?.varName) || d.toLowerCase()}); background: var(--domain-${(info?.varName) || d.toLowerCase()}-bg);`}>
-          {info ? info.label.replace('Data Engineering', 'DE').replace('Analytics Engineering', 'DA').replace('Data Science', 'DS') : d}
-        </span>
-      );
-    })}
 
-    {difficulty && <span class="am-badge am-outline">{difficulty}</span>}
-    {readingTime && <span class="am-time">{readingTime}</span>}
-  </div>
-)}
 
 <style>
   .article-meta {

@@ -33,11 +33,7 @@ graph TD
     C --> E["month=02/"]
     D --> F["part-0001.parquet"]
     D --> G["part-0002.parquet"]
-    E --> H["part-0001.parquet"]
-    
-    style A fill:#f9f6e5,stroke:#b8a36c
-    style D fill:#e6f3ff,stroke:#4a90e2
-    style E fill:#e6f3ff,stroke:#4a90e2
+    E --> H["part-0001.parquet"]
 ```
 
 **Cơ chế hoạt động:**

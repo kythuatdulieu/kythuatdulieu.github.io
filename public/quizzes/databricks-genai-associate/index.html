@@ -42,24 +42,6 @@
       <button class="icon-btn" id="btnViToggle" title="Bật/Tắt Tiếng Việt">
         <span class="btn-label">VI</span>
       </button>
-      <button class="icon-btn" id="btnTheme" title="Chuyển giao diện Sáng/Tối">
-        <svg id="themeIconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg id="themeIconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
       <button class="icon-btn" id="btnShuffle" title="Xáo trộn câu hỏi">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -161,7 +143,7 @@
     <div class="panel-content">
       <!-- Stats -->
       <div class="panel-section">
-        <h3>📊 Thống kê</h3>
+        <h3>Thống kê</h3>
         <div class="stats-grid">
           <div class="stat-box stat-correct">
             <div class="stat-number" id="statCorrect">0</div>
@@ -184,7 +166,7 @@
 
       <!-- Settings -->
       <div class="panel-section">
-        <h3>⚙️ Cài đặt</h3>
+        <h3>Cài đặt</h3>
         <div class="setting-row">
           <label for="toggleVi">Hiện bản dịch tiếng Việt</label>
           <label class="switch">
@@ -199,31 +181,27 @@
             <span class="slider"></span>
           </label>
         </div>
-        <div class="setting-row">
-          <label for="toggleTheme">Giao diện sáng</label>
-          <label class="switch">
-            <input type="checkbox" id="toggleTheme">
-            <span class="slider"></span>
-          </label>
-        </div>
       </div>
 
       <!-- Review Modes -->
       <div class="panel-section">
-        <h3>🔄 Chế độ ôn tập</h3>
+        <h3>Chế độ ôn tập</h3>
         <div class="review-buttons">
           <button class="review-btn review-all" id="btnReviewAll">
-            <span class="review-icon">📋</span>
+            
             <span>Tất cả câu hỏi</span>
             <span class="review-count" id="countAll">92</span>
           </button>
-          <button class="review-btn review-incorrect" id="btnReviewIncorrect">
-            <span class="review-icon">❌</span>
+          <button class="review-btn redo-incorrect" id="btnRedoIncorrect">
             <span>Làm lại câu sai</span>
+            <span class="review-count" id="countRedoIncorrect">0</span>
+          </button>
+          <button class="review-btn review-incorrect" id="btnReviewIncorrect">
+            <span>Xem lại câu sai</span>
             <span class="review-count" id="countIncorrect">0</span>
           </button>
           <button class="review-btn review-correct" id="btnReviewCorrect">
-            <span class="review-icon">✅</span>
+            
             <span>Xem lại câu đúng</span>
             <span class="review-count" id="countCorrect">0</span>
           </button>
@@ -240,7 +218,7 @@
         <h3>🗑️ Đặt lại</h3>
         <div class="review-buttons">
           <button class="reset-btn" id="btnResetAll">
-            <span>🔄 Reset tất cả</span>
+            <span>Reset tất cả</span>
           </button>
           <button class="reset-btn reset-incorrect" id="btnResetIncorrect">
             <span>↩️ Reset câu sai</span>
@@ -270,6 +248,7 @@
     </div>
   <!-- Scripts -->
   <script src="../shared/app.js?v=20260608"></script>
+  <script src="../../reading-panel.js" defer></script>
 </body>
 
 </html>

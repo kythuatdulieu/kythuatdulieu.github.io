@@ -31,11 +31,7 @@ graph TD
     B -->|"Precomputed Batch Views<br/>(100% Accurate)"| D["Serving Layer<br/>(Cassandra/Druid/ClickHouse)"]
     C -->|"Real-time Views<br/>(Approximation / Fast)"| D
     
-    D --> E["Query / Dashboard:<br/>Merge('Batch + Realtime')"]
-    
-    style B fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
-    style C fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style D fill:#f0f4c8,stroke:#827717,stroke-width:2px
+    D --> E["Query / Dashboard:<br/>Merge('Batch + Realtime')"]
 ```
 
 ### 1.1. Batch Layer (Tầng Chân Lý)

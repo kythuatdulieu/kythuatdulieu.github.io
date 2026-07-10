@@ -1,0 +1,1230 @@
+{
+  "exam": "Associate Data Practitioner",
+  "provider": "google",
+  "code": "associate-data-practitioner",
+  "total_questions": 102,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Your company is building a near real-time streaming pipeline to process JSON telemetry data from small appliances. You need to process messages arriving at a Pub/Sub topic, capitalize letters in the serial number field, and write results to BigQuery. You want to use a managed service and write a minimal amount of code for underlying transformations. What should you do?",
+      "choices": {
+        "A": "Use a Pub/Sub to BigQuery subscription, write results directly to BigQuery, and schedule a transformation query to run every five minutes.",
+        "B": "Use a Pub/Sub to Cloud Storage subscription, write a Cloud Run service that is triggered when objects arrive in the bucket, performs the transformations, and writes the results to BigQuery.",
+        "C": "Use the “Pub/Sub to BigQuery” Dataflow template with a UDF, and write the results to BigQuery.",
+        "D": "Use a Pub/Sub push subscription, write a Cloud Run service that accepts the messages, performs the transformations, and writes the results to BigQuery."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Sử dụng template Dataflow \"Pub/Sub to BigQuery\" kết hợp với một hàm tự định nghĩa (UDF - User Defined Function) bằng JavaScript là phương pháp được khuyến nghị của Google Cloud để thực hiện các biến đổi dữ liệu đơn giản (như viết hoa các chữ cái) khi truyền dữ liệu trực tiếp từ Pub/Sub vào BigQuery mà không cần tự xây dựng và quản trị hạ tầng dòng dữ liệu phức tạp."
+    },
+    {
+      "id": 2,
+      "question": "You want to process and load a daily sales CSV file stored in Cloud Storage into BigQuery for downstream reporting. You need to quickly build a scalable data pipeline that transforms the data while providing insights into data quality issues. What should you do?",
+      "choices": {
+        "A": "Create a batch pipeline in Cloud Data Fusion by using a Cloud Storage source and a BigQuery sink.",
+        "B": "Load the CSV file as a table in BigQuery, and use scheduled queries to run SQL transformation scripts.",
+        "C": "Load the CSV file as a table in BigQuery. Create a batch pipeline in Cloud Data Fusion by using a BigQuery source and sink.",
+        "D": "Create a batch pipeline in Dataflow by using the Cloud Storage CSV file to BigQuery batch template."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cloud Data Fusion là công cụ tích hợp dữ liệu trực quan (low-code/no-code) hỗ trợ mạnh mẽ khả năng kiểm tra chất lượng dữ liệu (qua tính năng Wrangler và các công cụ kiểm soát chất lượng). Do đó, tạo một đường ống batch trong Cloud Data Fusion đi từ nguồn Cloud Storage đến đích BigQuery giúp giải quyết nhanh chóng yêu cầu biến đổi dữ liệu đồng thời báo cáo các lỗi chất lượng dữ liệu một cách trực quan."
+    },
+    {
+      "id": 3,
+      "question": "Your retail company wants to predict customer churn using historical purchase data stored in BigQuery. The dataset includes customer demographics, purchase history, and a label indicating whether the customer churned or not. You want to build a machine learning model to identify customers at risk of churning. You need to create and train a logistic regression model for predicting customer churn, using the customer_data table with the churned column as the target label. Which BigQuery ML query should you use?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774343588098-bq8dc3gv.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774343590996-301h5241.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774343593831-rsfhzndg.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774343596583-jhq2vm18.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để huấn luyện một mô hình hồi quy logistic (logistic regression) dùng cho bài toán phân loại nhị phân (như dự đoán khách hàng rời bỏ - churn) trong BigQuery ML, cú pháp chuẩn là sử dụng câu lệnh `CREATE OR REPLACE MODEL` với tùy chọn `model_type='logistic_reg'` và chỉ định cột nhãn mục tiêu thông qua thuộc tính `input_label_cols=['churned']`."
+    },
+    {
+      "id": 4,
+      "question": "Your company has several retail locations. Your company tracks the total number of sales made at each location each day. You want to use SQL to calculate the weekly moving average of sales by location to identify trends for each store. Which query should you use?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774343589598-0vi6yldb.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774343592610-hkdyn289.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774343595478-ruqe9p3k.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774343597935-mizzr5mh.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tính toán trung bình động tuần (7 ngày) bằng SQL, ta sử dụng hàm cửa sổ (window function) với cú pháp `AVG(sales) OVER (PARTITION BY location ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)` hoặc cú pháp tương đương nhằm xác định đúng khoảng thời gian 7 ngày liên tiếp cho từng địa điểm cửa hàng."
+    },
+    {
+      "id": 5,
+      "question": "Your organization has a BigQuery dataset that contains sensitive employee information such as salaries and performance reviews. The payroll specialist in the HR department needs to have continuous access to aggregated performance data, but they do not need continuous access to other sensitive data. You need to grant the payroll specialist access to the performance data without granting them access to the entire dataset using the simplest and most secure approach. What should you do?",
+      "choices": {
+        "A": "Use authorized views to share query results with the payroll specialist.",
+        "B": "Create row-level and column-level permissions and policies on the table that contains performance data in the dataset. Provide the payroll specialist with the appropriate permission set.",
+        "C": "Create a table with the aggregated performance data. Use table-level permissions to grant access to the payroll specialist.",
+        "D": "Create a SQL query with the aggregated performance data. Export the results to an Avro file in a Cloud Storage bucket. Share the bucket with the payroll specialist."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Sử dụng chế độ xem được ủy quyền (Authorized Views) trong BigQuery cho phép bạn chia sẻ kết quả truy vấn dữ liệu đã tổng hợp (không chứa các thông tin nhạy cảm khác) cho người dùng mà không cần cấp quyền truy cập trực tiếp vào bảng dữ liệu gốc. Đây là giải pháp đơn giản và bảo mật nhất để hạn chế quyền truy cập dữ liệu."
+    },
+    {
+      "id": 6,
+      "question": "Your organization stores highly personal data in BigQuery and needs to comply with strict data privacy regulations. You need to ensure that sensitive data values are rendered unreadable whenever an employee leaves the organization. What should you do?",
+      "choices": {
+        "A": "Use AEAD functions and delete keys when employees leave the organization.",
+        "B": "Use dynamic data masking and revoke viewer permissions when employees leave the organization.",
+        "C": "Use customer-managed encryption keys (CMEK) and delete keys when employees leave the organization.",
+        "D": "Use column-level access controls with policy tags and revoke viewer permissions when employees leave the organization."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mã hóa AEAD (Authenticated Encryption with Associated Data) cho phép mã hóa dữ liệu ở cấp độ cột trong BigQuery bằng các khóa mật mã. Khi một nhân viên rời tổ chức, việc xóa vĩnh viễn khóa giải mã liên quan đến dữ liệu mà nhân viên đó đã dùng sẽ khiến dữ liệu đó lập tức trở nên hoàn toàn không thể đọc được (crypto-shredding), đáp ứng các quy định bảo mật nghiêm ngặt."
+    },
+    {
+      "id": 7,
+      "question": "You have millions of customer feedback records stored in BigQuery. You want to summarize the data by using the large language model (LLM) Gemini. You need to plan and execute this analysis using the most efficient approach. What should you do?",
+      "choices": {
+        "A": "Query the BigQuery table from within a Python notebook, use the Gemini API to summarize the data within the notebook, and store the summaries in BigQuery.",
+        "B": "Use a BigQuery ML model to pre-process the text data, export the results to Cloud Storage, and use the Gemini API to summarize the pre- processed data.",
+        "C": "Create a BigQuery Cloud resource connection to a remote model in Vertex Al, and use Gemini to summarize the data.",
+        "D": "Export the raw BigQuery data to a CSV file, upload it to Cloud Storage, and use the Gemini API to summarize the data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "BigQuery cho phép tích hợp trực tiếp với các mô hình ngôn ngữ lớn (như Gemini) trong Vertex AI thông qua kết nối tài nguyên đám mây (Cloud resource connection). Cách tiếp cận này giúp bạn chạy trực tiếp câu lệnh SQL gọi mô hình để tóm tắt hàng triệu bản ghi ngay trong BigQuery mà không cần xuất dữ liệu ra ngoài hoặc viết mã Python phức tạp, giúp tối ưu hiệu năng và chi phí."
+    },
+    {
+      "id": 8,
+      "question": "You are a Looker analyst. You need to add a new field to your Looker report that generates SQL that will run against your company's database. You do not have the Develop permission. What should you do?",
+      "choices": {
+        "A": "Create a new field in the LookML layer, refresh your report, and select your new field from the field picker.",
+        "B": "Create a calculated field using the Add a field option in Looker Studio, and add it to your report.",
+        "C": "Create a table calculation from the field picker in Looker, and add it to your report.",
+        "D": "Create a custom field from the field picker in Looker, and add it to your report."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Looker, người dùng không có quyền phát triển (Develop permission - tức là không thể chỉnh sửa file LookML) vẫn có thể tạo các trường tùy chỉnh (Custom Fields) trực tiếp từ bộ chọn trường (field picker) trong giao diện Explore. Điều này cho phép họ thêm các trường tính toán hoặc biến đổi đơn giản chạy trực tiếp trên cơ sở dữ liệu mà không cần can thiệp vào tầng LookML."
+    },
+    {
+      "id": 9,
+      "question": "Your company has developed a website that allows users to upload and share video files. These files are most frequently accessed and shared when they are initially uploaded. Over time, the files are accessed and shared less frequently, although some old video files may remain very popular.You need to design a storage system that is simple and cost-effective. What should you do?",
+      "choices": {
+        "A": "Create a single-region bucket with Autoclass enabled.",
+        "B": "Create a single-region bucket. Configure a Cloud Scheduler job that runs every 24 hours and changes the storage class based on upload date.",
+        "C": "Create a single-region bucket with custom Object Lifecycle Management policies based on upload date.",
+        "D": "Create a single-region bucket with Archive as the default storage class."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Tính năng Autoclass của Cloud Storage tự động di chuyển các đối tượng giữa các lớp lưu trữ (Standard, Nearline, Coldline, Archive) dựa trên tần suất truy cập của chúng. Khi video mới tải lên thường xuyên được xem thì sẽ ở lớp Standard, sau đó nếu ít truy cập hơn sẽ tự động chuyển sang các lớp rẻ hơn, giúp giảm chi phí lưu trữ một cách tự động và đơn giản mà không cần quản lý các quy tắc vòng đời thủ công."
+    },
+    {
+      "id": 10,
+      "question": "You have a Dataflow pipeline that processes website traffic logs stored in Cloud Storage and writes the processed data to BigQuery. You noticed that the pipeline is failing intermittently. You need to troubleshoot the issue. What should you do?",
+      "choices": {
+        "A": "Use Cloud Logging to identify error groups in the pipeline's logs. Use Cloud Monitoring to create a dashboard that tracks the number of errors in each group.",
+        "B": "Use Cloud Logging to create a chart displaying the pipeline’s error logs. Use Metrics Explorer to validate the findings from the chart.",
+        "C": "Use Cloud Logging to view error messages in the pipeline's logs. Use Cloud Monitoring to analyze the pipeline's metrics, such as CPU utilization and memory usage.",
+        "D": "Use the Dataflow job monitoring interface to check the pipeline's status every hour. Use Cloud Profiler to analyze the pipeline’s metrics, such as CPU utilization and memory usage."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để khắc phục lỗi không thường xuyên (intermittent failure) trong đường ống Dataflow, việc kết hợp Cloud Logging (để xem chi tiết nội dung thông báo lỗi trong log của luồng xử lý hoặc của worker) và Cloud Monitoring (để phân tích các số liệu hạ tầng như mức tiêu thụ CPU, bộ nhớ nhằm xác định xem có bị quá tải tài nguyên hay không) là phương pháp chuẩn xác nhất."
+    },
+    {
+      "id": 11,
+      "question": "You are working with a large dataset of customer reviews stored in Cloud Storage. The dataset contains several inconsistencies, such as missing values, incorrect data types, and duplicate entries. You need to clean the data to ensure that it is accurate and consistent before using it for analysis. What should you do?",
+      "choices": {
+        "A": "Use the PythonOperator in Cloud Composer to clean the data and load it into BigQuery. Use SQL for analysis.",
+        "B": "Use BigQuery to batch load the data into BigQuery. Use SQL for cleaning and analysis.",
+        "C": "Use Storage Transfer Service to move the data to a different Cloud Storage bucket. Use event triggers to invoke Cloud Run functions to load the data into BigQuery. Use SQL for analysis.",
+        "D": "Use Cloud Run functions to clean the data and load it into BigQuery. Use SQL for analysis."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với dữ liệu thô dạng bảng có nhiều lỗi không nhất quán lưu trữ trên Cloud Storage, giải pháp nạp hàng loạt (batch load) trực tiếp vào BigQuery rồi dùng ngôn ngữ SQL (với các hàm xử lý chuỗi, loại bỏ trùng lặp, ép kiểu, xử lý giá trị khuyết thiếu) là cách làm nhanh chóng, mạnh mẽ và tận dụng tối đa khả năng tính toán song song quy mô lớn của BigQuery."
+    },
+    {
+      "id": 12,
+      "question": "Your company’s ecommerce website collects product reviews from customers. The reviews are loaded as CSV files daily to a Cloud Storage bucket. The reviews are in multiple languages and need to be translated to Spanish. You need to configure a pipeline that is serverless, efficient, and requires minimal maintenance. What should you do?",
+      "choices": {
+        "A": "Load the data into BigQuery using Dataproc. Use Apache Spark to translate the reviews by invoking the Cloud Translation API. Set BigQuery as the sink.",
+        "B": "Use a Dataflow templates pipeline to translate the reviews using the Cloud Translation API. Set BigQuery as the sink.",
+        "C": "Load the data into BigQuery using a Cloud Run function. Use the BigQuery ML create model statement to train a translation model. Use the model to translate the product reviews within BigQuery.",
+        "D": "Load the data into BigQuery using a Cloud Run function. Create a BigQuery remote function that invokes the Cloud Translation API. Use a scheduled query to translate new reviews."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Sử dụng các mẫu có sẵn (templates) của Dataflow để tích hợp với Cloud Translation API và ghi vào BigQuery là giải pháp phi máy chủ (serverless), tối ưu hóa hiệu năng xử lý hàng loạt và có sẵn từ Google, giúp giảm thiểu tối đa thời gian phát triển và bảo trì hệ thống."
+    },
+    {
+      "id": 13,
+      "question": "You have a Dataproc cluster that performs batch processing on data stored in Cloud Storage. You need to schedule a daily Spark job to generate a report that will be emailed to stakeholders. You need a fully-managed solution that is easy to implement and minimizes complexity. What should you do?",
+      "choices": {
+        "A": "Use Cloud Composer to orchestrate the Spark job and email the report.",
+        "B": "Use Dataproc workflow templates to define and schedule the Spark job, and to email the report.",
+        "C": "Use Cloud Run functions to trigger the Spark job and email the report.",
+        "D": "Use Cloud Scheduler to trigger the Spark job, and use Cloud Run functions to email the report."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Dataproc Workflow Templates (Mẫu quy trình công việc) cho phép bạn nhóm các công việc (như chạy Spark job) và định nghĩa tài nguyên cụ thể để chạy chúng trên một cụm tự động khởi tạo rồi tự tắt (ephemeral cluster), đồng thời có thể tích hợp sẵn các hành động sau khi hoàn tất công việc, giúp giảm thiểu chi phí quản lý vận hành."
+    },
+    {
+      "id": 14,
+      "question": "You manage a Cloud Storage bucket that stores temporary files created during data processing. These temporary files are only needed for seven days, after which they are no longer needed. To reduce storage costs and keep your bucket organized, you want to automatically delete these files once they are older than seven days. What should you do?",
+      "choices": {
+        "A": "Set up a Cloud Scheduler job that invokes a weekly Cloud Run function to delete files older than seven days.",
+        "B": "Configure a Cloud Storage lifecycle rule that automatically deletes objects older than seven days.",
+        "C": "Develop a batch process using Dataflow that runs weekly and deletes files based on their age.",
+        "D": "Create a Cloud Run function that runs daily and deletes files older than seven days."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Sử dụng quy tắc quản lý vòng đời đối tượng (Lifecycle Management Rule) của Cloud Storage là giải pháp bản địa (native), tự động, không tốn thêm chi phí vận hành hay lập trình, cho phép tự động xóa các tệp tin tạm thời khi chúng đạt độ tuổi lớn hơn 7 ngày."
+    },
+    {
+      "id": 15,
+      "question": "You recently inherited a task for managing Dataflow streaming pipelines in your organization and noticed that proper access had not been provisioned to you. You need to request a Google-provided IAM role so you can restart the pipelines. You need to follow the principle of least privilege. What should you do?",
+      "choices": {
+        "A": "Request the Dataflow Developer role.",
+        "B": "Request the Dataflow Viewer role.",
+        "C": "Request the Dataflow Worker role.",
+        "D": "Request the Dataflow Admin role."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Theo nguyên tắc phân quyền tối thiểu (least privilege), vai trò `roles/dataflow.developer` (Dataflow Developer) cung cấp đầy đủ các quyền cần thiết để tạo, sửa đổi và khởi động lại các pipeline Dataflow mà không cấp các quyền quản trị hệ thống quá mức như vai trò `roles/dataflow.admin`."
+    },
+    {
+      "id": 16,
+      "question": "You work for a healthcare company that has a large on-premises data system containing patient records with personally identifiable information (PII) such as names, addresses, and medical diagnoses. You need a standardized managed solution that de-identifies PII across all your data feeds prior to ingestion to Google Cloud. What should you do?",
+      "choices": {
+        "A": "Use Cloud Run functions to create a serverless data cleaning pipeline. Store the cleaned data in BigQuery.",
+        "B": "Use Cloud Data Fusion to transform the data. Store the cleaned data in BigQuery.",
+        "C": "Load the data into BigQuery, and inspect the data by using SQL queries. Use Dataflow to transform the data and remove any errors.",
+        "D": "Use Apache Beam to read the data and perform the necessary cleaning and transformation operations. Store the cleaned data in BigQuery."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Cloud Data Fusion cung cấp các plugin và bộ chuyển đổi tích hợp sẵn (như Cloud DLP - Data Loss Prevention) để tự động phát hiện và che giấu/hủy nhận dạng dữ liệu nhạy cảm (PII) ngay trên luồng tích hợp dữ liệu trước khi nạp vào BigQuery, giúp doanh nghiệp y tế đáp ứng các tiêu chuẩn bảo mật dữ liệu mà không cần viết nhiều mã nguồn tự chế."
+    },
+    {
+      "id": 17,
+      "question": "Your organization’s ecommerce website collects user activity logs using a Pub/Sub topic. Your organization’s leadership team wants a dashboard that contains aggregated user engagement metrics. You need to create a solution that transforms the user activity logs into aggregated metrics, while ensuring that the raw data can be easily queried. What should you do?",
+      "choices": {
+        "A": "Create a Dataflow subscription to the Pub/Sub topic, and transform the activity logs. Load the transformed data into a BigQuery table for reporting.",
+        "B": "Create an event-driven Cloud Run function to trigger a data transformation pipeline to run. Load the transformed activity logs into a BigQuery table for reporting.",
+        "C": "Create a Cloud Storage subscription to the Pub/Sub topic. Load the activity logs into a bucket using the Avro file format. Use Dataflow to transform the data, and load it into a BigQuery table for reporting.",
+        "D": "Create a BigQuery subscription to the Pub/Sub topic, and load the activity logs into the table. Create a materialized view in BigQuery using SQL to transform the data for reporting"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Sử dụng gói dịch vụ đăng ký Dataflow (Dataflow subscription) của Pub/Sub giúp tự động hóa quá trình chuyển đổi và nạp dữ liệu từ Pub/Sub vào BigQuery. Đường ống Dataflow này sẽ thực hiện biến đổi dữ liệu nhật ký thành các chỉ số tổng hợp và lưu trữ chúng vào bảng BigQuery để phục vụ báo cáo, trong khi dữ liệu thô vẫn có thể được lưu trữ song song hoặc truy vấn trực tiếp trong BigQuery."
+    },
+    {
+      "id": 18,
+      "question": "Your organization plans to move their on-premises environment to Google Cloud. Your organization’s network bandwidth is less than 1 Gbps. You need to move over 500 ТВ of data to Cloud Storage securely, and only have a few days to move the data. What should you do?",
+      "choices": {
+        "A": "Request multiple Transfer Appliances, copy the data to the appliances, and ship the appliances back to Google Cloud to upload the data to Cloud Storage.",
+        "B": "Connect to Google Cloud using VPN. Use Storage Transfer Service to move the data to Cloud Storage.",
+        "C": "Connect to Google Cloud using VPN. Use the gcloud storage command to move the data to Cloud Storage.",
+        "D": "Connect to Google Cloud using Dedicated Interconnect. Use the gcloud storage command to move the data to Cloud Storage."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Với băng thông mạng dưới 1 Gbps, việc truyền tải trực tuyến 500 TB dữ liệu qua Internet/VPN sẽ mất vài tuần đến vài tháng. Để hoàn thành việc di chuyển dữ liệu một cách an toàn chỉ trong vòng vài ngày, sử dụng thiết bị vật lý chuyên dụng Transfer Appliance của Google là lựa chọn duy nhất khả thi về mặt kỹ thuật và thời gian."
+    },
+    {
+      "id": 19,
+      "question": "Your company currently uses an on-premises network file system (NFS) and is migrating data to Google Cloud. You want to be able to control how much bandwidth is used by the data migration while capturing detailed reporting on the migration status. What should you do?",
+      "choices": {
+        "A": "Use a Transfer Appliance.",
+        "B": "Use Cloud Storage FUSE.",
+        "C": "Use Storage Transfer Service.",
+        "D": "Use gcloud storage commands."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Storage Transfer Service (STS) hỗ trợ di chuyển dữ liệu từ hệ thống lưu trữ mạng (NFS) nội bộ lên Cloud Storage. STS cho phép thiết lập giới hạn băng thông sử dụng (bandwidth limits) để không ảnh hưởng đến đường truyền của doanh nghiệp, đồng thời cung cấp báo cáo chi tiết về trạng thái và nhật ký của quá trình truyền tải."
+    },
+    {
+      "id": 20,
+      "question": "You work for a home insurance company. You are frequently asked to create and save risk reports with charts for specific areas using a publicly available storm event dataset. You want to be able to quickly create and re-run risk reports when new data becomes available. What should you do?",
+      "choices": {
+        "A": "Export the storm event dataset as a CSV file. Import the file to Google Sheets, and use cell data in the worksheets to create charts.",
+        "B": "Copy the storm event dataset into your BigQuery project. Use BigQuery Studio to query and visualize the data in Looker Studio.",
+        "C": "Reference and query the storm event dataset using SQL in BigQuery Studio. Export the results to Google Sheets, and use cell data in the worksheets to create charts.",
+        "D": "Reference and query the storm event dataset using SQL in a Colab Enterprise notebook. Display the table results and document with Markdown, and use Matplotlib to create charts."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Nạp hoặc sao chép tập dữ liệu sự kiện bão vào dự án BigQuery, sau đó sử dụng môi trường BigQuery Studio để thực hiện các truy vấn SQL và kết nối trực tiếp với Looker Studio để trực quan hóa dữ liệu bằng các biểu đồ là quy trình chuẩn xác, nhanh chóng và dễ dàng tự động cập nhật khi có dữ liệu mới."
+    },
+    {
+      "id": 21,
+      "question": "You work for an online retail company. Your company collects customer purchase data in CSV files and pushes them to Cloud Storage every 10 minutes. The data needs to be transformed and loaded into BigQuery for analysis. The transformation involves cleaning the data, removing duplicates, and enriching it with product information from a separate table in BigQuery. You need to implement a low-overhead solution that initiates data processing as soon as the files are loaded into Cloud Storage. What should you do?",
+      "choices": {
+        "A": "Use Cloud Composer sensors to detect files loading in Cloud Storage. Create a Dataproc cluster, and use a Composer task to execute a job on the cluster to process and load the data into BigQuery.",
+        "B": "Schedule a direct acyclic graph (DAG) in Cloud Composer to run hourly to batch load the data from Cloud Storage to BigQuery, and process the data in BigQuery using SQL.",
+        "C": "Use Dataflow to implement a streaming pipeline using an OBJECT_FINALIZE notification from Pub/Sub to read the data from Cloud Storage, perform the transformations, and write the data to BigQuery.",
+        "D": "Create a Cloud Data Fusion job to process and load the data from Cloud Storage into BigQuery. Create an OBJECT_FINALI ZE notification in Pub/Sub, and trigger a Cloud Run function to start the Cloud Data Fusion job as soon as new files are loaded."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giải pháp tối ưu nhất để xử lý tệp tin ngay khi chúng xuất hiện trên Cloud Storage là sử dụng tính năng thông báo của Cloud Storage (gửi sự kiện qua Pub/Sub khi có đối tượng mới - OBJECT_FINALIZE) kết hợp với đường ống truyền phát (streaming pipeline) của Dataflow để tự động đọc, biến đổi (lọc trùng, làm sạch, làm phong phú dữ liệu) và ghi tức thời vào BigQuery."
+    },
+    {
+      "id": 22,
+      "question": "You need to create a data pipeline that streams event information from applications in multiple Google Cloud regions into BigQuery for near real-time analysis. The data requires transformation before loading. You want to create the pipeline using a visual interface. What should you do?",
+      "choices": {
+        "A": "Push event information to a Pub/Sub topic. Create a Dataflow job using the Dataflow job builder.",
+        "B": "Push event information to a Pub/Sub topic. Create a Cloud Run function to subscribe to the Pub/Sub topic, apply transformations, and insert the data into BigQuery.",
+        "C": "Push event information to a Pub/Sub topic. Create a BigQuery subscription in Pub/Sub.",
+        "D": "Push event information to Cloud Storage, and create an external table in BigQuery. Create a BigQuery scheduled job that executes once each day to apply transformations."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Dataflow job builder cung cấp một giao diện trực quan trực tiếp trên Google Cloud Console để thiết lập các luồng xử lý dữ liệu từ Pub/Sub vào BigQuery, đáp ứng hoàn hảo yêu cầu biến đổi dữ liệu truyền phát từ nhiều khu vực khác nhau mà không cần viết code từ đầu."
+    },
+    {
+      "id": 23,
+      "question": "Your organization’s business analysts require near real-time access to streaming data. However, they are reporting that their dashboard queries are loading slowly. After investigating BigQuery query performance, you discover the slow dashboard queries perform several joins and aggregations.You need to improve the dashboard loading time and ensure that the dashboard data is as up-to-date as possible. What should you do?",
+      "choices": {
+        "A": "Disable BigQuery query result caching.",
+        "B": "Modify the schema to use parameterized data types.",
+        "C": "Create a scheduled query to calculate and store intermediate results.",
+        "D": "Create materialized views."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Chế độ xem vật chất hóa (Materialized Views) trong BigQuery tự động lưu trữ và định kỳ cập nhật kết quả của các phép tính toán phức tạp (như join và aggregate). Khi có dữ liệu mới được truyền vào bảng gốc, BigQuery sẽ tự động kết hợp phần dữ liệu mới chưa xử lý với phần dữ liệu đã tính toán sẵn trong materialized view để trả về kết quả nhanh chóng nhất mà vẫn đảm bảo tính cập nhật thời gian thực."
+    },
+    {
+      "id": 24,
+      "question": "Your organization needs to store historical customer order data. The data will only be accessed once a month for analysis and must be readily available within a few seconds when it is accessed. You need to choose a storage class that minimizes storage costs while ensuring that the data can be retrieved quickly. What should you do?",
+      "choices": {
+        "A": "Store the data in Cloud Storage using Nearline storage.",
+        "B": "Store the data in Cloud Storage using Coldline storage.",
+        "C": "Store the data in Cloud Storage using Standard storage.",
+        "D": "Store the data in Cloud Storage using Archive storage."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lớp lưu trữ Nearline (Nearline storage) của Cloud Storage được thiết kế cho dữ liệu được truy cập trung bình một lần mỗi tháng hoặc ít hơn. Nó giúp tối ưu hóa chi phí lưu trữ thấp hơn Standard storage trong khi vẫn đảm bảo dữ liệu sẵn sàng truy cập ngay lập tức (trong vòng mili-giây hoặc giây)."
+    },
+    {
+      "id": 25,
+      "question": "Your organization needs to implement near real-time analytics for thousands of events arriving each second in Pub/Sub. The incoming messages require transformations. You need to configure a pipeline that processes, transforms, and loads the data into BigQuery while minimizing development time. What should you do?",
+      "choices": {
+        "A": "Use a Google-provided Dataflow template to process the Pub/Sub messages, perform transformations, and write the results to BigQuery.",
+        "B": "Create a Cloud Data Fusion instance and configure Pub/Sub as a source. Use Data Fusion to process the Pub/Sub messages, perform transformations, and write the results to BigQuery.",
+        "C": "Load the data from Pub/Sub into Cloud Storage using a Cloud Storage subscription. Create a Dataproc cluster, use PySpark to perform transformations in Cloud Storage, and write the results to BigQuery.",
+        "D": "Use Cloud Run functions to process the Pub/Sub messages, perform transformations, and write the results to BigQuery."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để triển khai nhanh chóng một hệ thống xử lý dữ liệu quy mô lớn (hàng ngàn sự kiện mỗi giây) từ Pub/Sub sang BigQuery với thời gian phát triển tối thiểu, việc sử dụng các mẫu Dataflow được Google xây dựng sẵn (Google-provided Dataflow templates) là giải pháp tối ưu nhất vì nó đã được kiểm thử, tối ưu và chỉ cần cấu hình tham số đầu vào/đầu ra."
+    },
+    {
+      "id": 26,
+      "question": "You are working on a data pipeline that will validate and clean incoming data before loading it into BigQuery for real-time analysis. You want to ensure that the data validation and cleaning is performed efficiently and can handle high volumes of data. What should you do?",
+      "choices": {
+        "A": "Write custom scripts in Python to validate and clean the data outside of Google Cloud. Load the cleaned data into BigQuery.",
+        "B": "Use Cloud Run functions to trigger data validation and cleaning routines when new data arrives in Cloud Storage.",
+        "C": "Use Dataflow to create a streaming pipeline that includes validation and transformation steps.",
+        "D": "Load the raw data into BigQuery using Cloud Storage as a staging area, and use SQL queries in BigQuery to validate and clean the data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để thực hiện kiểm tra tính hợp lệ (validation) và làm sạch dữ liệu truyền phát thời gian thực ở quy mô lớn (high volume), Dataflow là dịch vụ chuyên dụng hỗ trợ kiến trúc xử lý luồng (streaming) song song mạnh mẽ, đảm bảo tính ổn định và hiệu năng cao hơn so với việc sử dụng các hàm Cloud Run function nhỏ lẻ."
+    },
+    {
+      "id": 27,
+      "question": "Your organization sends IoT event data to a Pub/Sub topic. Subscriber applications read and perform transformations on the messages before storing them in the data warehouse. During particularly busy times when more data is being written to the topic, you notice that the subscriber applications are not acknowledging messages within the deadline. You need to modify your pipeline to handle these activity spikes and continue to process the messages. What should you do?",
+      "choices": {
+        "A": "Retry messages until they are acknowledged.",
+        "B": "Implement flow control on the subscribers.",
+        "C": "Forward unacknowledged messages to a dead-letter topic.",
+        "D": "Seek back to the last acknowledged message."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc triển khai tính năng kiểm soát lưu lượng (flow control) ở phía ứng dụng nhận tin (subscriber) giúp giới hạn lượng tin nhắn chưa được xác nhận (unacknowledged messages) mà client tải về cùng một lúc. Điều này giúp ngăn chặn tình trạng quá tải bộ nhớ tại subscriber trong thời gian cao điểm, đảm bảo subscriber có đủ thời gian xử lý và gửi phản hồi xác nhận (ACK) đúng hạn."
+    },
+    {
+      "id": 28,
+      "question": "You manage a BigQuery table that is used for critical end-of-month reports. The table is updated weekly with new sales data. You want to prevent data loss and reporting issues if the table is accidentally deleted. What should you do?",
+      "choices": {
+        "A": "Configure the time travel duration on the table to be exactly seven days. On deletion, re-create the deleted table solely from the time travel data.",
+        "B": "Schedule the creation of a new snapshot of the table once a week. On deletion, re-create the deleted table using the snapshot and time travel data.",
+        "C": "Create a clone of the table. On deletion, re-create the deleted table by copying the content of the clone.",
+        "D": "Create a view of the table. On deletion, re-create the deleted table from the view and time travel data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bằng cách lập lịch chụp ảnh bảng (table snapshot) hàng tuần, kết hợp với tính năng du hành thời gian (time travel) của BigQuery (mặc định lưu vết thay đổi trong 7 ngày), bạn có thể khôi phục lại bảng chính xác tại thời điểm trước khi bị xóa bằng cách khôi phục bản snapshot tuần gần nhất rồi áp dụng các thay đổi từ dữ liệu time travel."
+    },
+    {
+      "id": 29,
+      "question": "Your company is migrating their batch transformation pipelines to Google Cloud. You need to choose a solution that supports programmatic transformations using only SQL. You also want the technology to support Git integration for version control of your pipelines. What should you do?",
+      "choices": {
+        "A": "Use Cloud Data Fusion pipelines.",
+        "B": "Use Dataform workflows.",
+        "C": "Use Dataflow pipelines.",
+        "D": "Use Cloud Composer operators."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Dataform là dịch vụ được tích hợp trong BigQuery giúp quản lý luồng biến đổi dữ liệu (ELT) bằng cách viết mã SQLX (mở rộng của SQL). Nó tích hợp sẵn các công cụ quản lý phiên bản với Git, cho phép các nhóm lập trình kiểm soát mã nguồn và kiểm thử chất lượng dữ liệu một cách đồng bộ."
+    },
+    {
+      "id": 30,
+      "question": "Your organization uses a BigQuery table that is partitioned by ingestion time. You need to remove data that is older than one year to reduce your organization’s storage costs. You want to use the most efficient approach while minimizing cost. What should you do?",
+      "choices": {
+        "A": "Create a scheduled query that periodically runs an update statement in SQL that sets the “deleted\" column to “yes” for data that is more than one year old. Create a view that filters out rows that have been marked deleted.",
+        "B": "Create a view that filters out rows that are older than one year.",
+        "C": "Require users to specify a partition filter using the alter table statement in SQL.",
+        "D": "Set the table partition expiration period to one year using the ALTER TABLE statement in SQL."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Việc đặt thời gian hết hạn của phân vùng (partition expiration period) thành một năm bằng câu lệnh `ALTER TABLE` là phương thức tự động và hiệu quả nhất trong BigQuery. Khi một phân vùng vượt quá giới hạn thời gian quy định, BigQuery sẽ tự động giải phóng bộ nhớ của phân vùng đó mà không tốn chi phí truy vấn hay phí tính toán của các câu lệnh xóa dữ liệu (DELETE)."
+    },
+    {
+      "id": 31,
+      "question": "You manage a web application that stores data in a Cloud SQL database. You need to improve the read performance of the application by offloading read traffic from the primary database instance. You want to implement a solution that minimizes effort and cost. What should you do?",
+      "choices": {
+        "A": "Use Cloud CDN to cache frequently accessed data.",
+        "B": "Store frequently accessed data in a Memorystore instance.",
+        "C": "Migrate the database to a larger Cloud SQL instance.",
+        "D": "Enable automatic backups, and create a read replica of the Cloud SQL instance."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tạo bản sao chỉ đọc (Read Replica) cho thực thể Cloud SQL là giải pháp đơn giản và hiệu quả nhất để phân chia tải cho các truy vấn đọc dữ liệu, giúp cải thiện hiệu năng của ứng dụng chính mà không cần thay đổi lớn về mã nguồn hay áp dụng các kiến trúc bộ nhớ đệm phức tạp như Memorystore."
+    },
+    {
+      "id": 32,
+      "question": "Your organization has several datasets in their data warehouse in BigQuery. Several analyst teams in different departments use the datasets to run queries. Your organization is concerned about the variability of their monthly BigQuery costs. You need to identify a solution that creates a fixed budget for costs associated with the queries run by each department. What should you do?",
+      "choices": {
+        "A": "Create a custom quota for each analyst in BigQuery.",
+        "B": "Create a single reservation by using BigQuery editions. Assign all analysts to the reservation.",
+        "C": "Assign each analyst to a separate project associated with their department. Create a single reservation by using BigQuery editions. Assign all projects to the reservation.",
+        "D": "Assign each analyst to a separate project associated with their department. Create a single reservation for each department by using BigQuery editions. Create assignments for each project in the appropriate reservation."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để thiết lập ngân sách cố định cho từng bộ phận chạy truy vấn trong BigQuery, giải pháp tốt nhất là gom các nhà phân tích của từng bộ phận vào các dự án riêng biệt, sau đó mua các dung lượng tính toán cố định (Reservations) bằng BigQuery Editions cho mỗi bộ phận và gán dự án tương ứng vào đó. Điều này giúp cô lập chi phí và đảm bảo chi phí truy vấn của mỗi bộ phận luôn nằm trong tầm kiểm soát."
+    },
+    {
+      "id": 33,
+      "question": "You are a data analyst at your organization. You have been given a BigQuery dataset that includes customer information. The dataset contains inconsistencies and errors, such as missing values, duplicates, and formatting issues. You need to effectively and quickly clean the data. What should you do?",
+      "choices": {
+        "A": "Develop a Dataflow pipeline to read the data from BigQuery, perform data quality rules and transformations, and write the cleaned data back to BigQuery.",
+        "B": "Use Cloud Data Fusion to create a data pipeline to read the data from BigQuery, perform data quality transformations, and write the clean data back to BigQuery.",
+        "C": "Export the data from BigQuery to CSV files. Resolve the errors using a spreadsheet editor, and re-import the cleaned data into BigQuery.",
+        "D": "Use BigQuery's built-in functions to perform data quality transformations."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đối với dữ liệu đã nằm sẵn trong BigQuery, việc sử dụng các hàm tích hợp (built-in functions) của SQL (như xử lý chuỗi, ép kiểu, xử lý dữ liệu trống) là phương pháp trực tiếp, nhanh chóng và tiết kiệm chi phí nhất vì không mất công chuyển đổi dữ liệu ra các hệ thống bên ngoài."
+    },
+    {
+      "id": 34,
+      "question": "You are predicting customer churn for a subscription-based service. You have a 50 PB historical customer dataset in BigQuery that includes demographics, subscription information, and engagement metrics. You want to build a churn prediction model with minimal overhead. You want to follow the Google-recommended approach. What should you do?",
+      "choices": {
+        "A": "Export the data from BigQuery to a local machine. Use scikit-learn in a Jupyter notebook to build the churn prediction model.",
+        "B": "Use Dataproc to create a Spark cluster. Use the Spark MLlib within the cluster to build the churn prediction model.",
+        "C": "Create a Looker dashboard that is connected to BigQuery. Use LookML to predict churn.",
+        "D": "Use the BigQuery Python client library in a Jupyter notebook to query and preprocess the data in BigQuery. Use the CREATE MODEL statement in BigQueryML to train the churn prediction model."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Với tập dữ liệu khổng lồ (50 PB) trong BigQuery, việc xuất dữ liệu ra ngoài là bất khả thi và rất tốn kém. Phương pháp khuyến nghị của Google là sử dụng BigQuery ML (qua câu lệnh `CREATE MODEL`) chạy trực tiếp trên công cụ lưu trữ của BigQuery, giúp huấn luyện mô hình dự đoán mà không cần di chuyển dữ liệu, giảm thiểu tối đa tài nguyên và thời gian xử lý."
+    },
+    {
+      "id": 35,
+      "question": "Your company uses Looker to generate and share reports with various stakeholders. You have a complex dashboard with several visualizations that needs to be delivered to specific stakeholders on a recurring basis, with customized filters applied for each recipient. You need an efficient and scalable solution to automate the delivery of this customized dashboard. You want to follow the Google-recommended approach. What should you do?",
+      "choices": {
+        "A": "Create a separate LookML model for each stakeholder with predefined filters, and schedule the dashboards using the Looker Scheduler.",
+        "B": "Create a script using the Looker Python SDK, and configure user attribute filter values. Generate a new scheduled plan for each stakeholder.",
+        "C": "Embed the Looker dashboard in a custom web application, and use the application's scheduling features to send the report with personalized filters.",
+        "D": "Use the Looker Scheduler with a user attribute filter on the dashboard, and send the dashboard with personalized filters to each stakeholder based on their attributes."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tính năng lập lịch gửi báo cáo của Looker (Looker Scheduler) hỗ trợ bộ lọc dựa trên thuộc tính người dùng (User Attributes). Khi thiết lập gửi báo cáo định kỳ cho các bên liên quan, Looker sẽ tự động áp dụng các bộ lọc riêng biệt dựa trên các giá trị thuộc tính tương ứng của từng người nhận, giúp tự động hóa toàn bộ quy trình mà không cần nhân bản bảng điều khiển hay viết thêm script ngoài."
+    },
+    {
+      "id": 36,
+      "question": "Your organization uses Dataflow pipelines to process real-time financial transactions. You discover that one of your Dataflow jobs has failed. You need to troubleshoot the issue as quickly as possible. What should you do?",
+      "choices": {
+        "A": "Set up a Cloud Monitoring dashboard to track key Dataflow metrics, such as data throughput, error rates, and resource utilization.",
+        "B": "Create a custom script to periodically poll the Dataflow API for job status updates, and send email alerts if any errors are identified.",
+        "C": "Navigate to the Dataflow Jobs page in the Google Cloud console. Use the job logs and worker logs to identify the error.",
+        "D": "Use the gcloud CLI tool to retrieve job metrics and logs, and analyze them for errors and performance bottlenecks."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi một job Dataflow bị lỗi, giao diện quản lý Dataflow Jobs trên Google Cloud Console là nơi cung cấp thông tin trực quan nhanh nhất. Bạn có thể xem trực tiếp sơ đồ thực thi đường ống cùng các thông báo chi tiết trong nhật ký hệ thống (job logs) và nhật ký của các máy ảo thực thi (worker logs) để cô lập dòng lỗi cụ thể."
+    },
+    {
+      "id": 37,
+      "question": "You are using your own data to demonstrate the capabilities of BigQuery to your organization’s leadership team. You need to perform a one- time load of the files stored on your local machine into BigQuery using as little effort as possible. What should you do?",
+      "choices": {
+        "A": "Write and execute a Python script using the BigQuery Storage Write API library.",
+        "B": "Create a Dataproc cluster, copy the files to Cloud Storage, and write an Apache Spark job using the spark-bigquery-connector.",
+        "C": "Execute the bq load command on your local machine.",
+        "D": "Create a Dataflow job using the Apache Beam FileIO and BigQueryIO connectors with a local runner."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Câu lệnh `bq load` của bộ công cụ gcloud CLI là công cụ dòng lệnh trực tiếp giúp nạp dữ liệu một lần từ máy tính cá nhân vào BigQuery một cách nhanh chóng nhất mà không yêu cầu cấu hình thêm bất kỳ tài nguyên đám mây hay viết mã lập trình nào khác."
+    },
+    {
+      "id": 40,
+      "question": "You are responsible for managing Cloud Storage buckets for a research company. Your company has well-defined data tiering and retention rules. You need to optimize storage costs while achieving your data retention needs. What should you do?",
+      "choices": {
+        "A": "Configure the buckets to use the Archive storage class.",
+        "B": "Configure a lifecycle management policy on each bucket to downgrade the storage class and remove objects based on age.",
+        "C": "Configure the buckets to use the Standard storage class and enable Object Versioning.",
+        "D": "Configure the buckets to use the Autoclass feature."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thực hiện một phân tích SQL dùng một lần (one-time) trên tập dữ liệu lớn (1 PB) dạng Parquet trong Cloud Storage và kết hợp nó với dữ liệu trong BigQuery, việc tạo bảng liên kết ngoài (External Table) là giải pháp tối ưu nhất. Phương pháp này cho phép truy vấn dữ liệu trực tiếp từ Cloud Storage mà không mất chi phí và thời gian nạp dữ liệu (load) vào BigQuery."
+    },
+    {
+      "id": 41,
+      "question": "Your team is building several data pipelines that contain a collection of complex tasks and dependencies that you want to execute on a schedule, in a specific order. The tasks and dependencies consist of files in Cloud Storage, Apache Spark jobs, and data in BigQuery. You need to design a system that can schedule and automate these data processing tasks using a fully managed approach. What should you do?",
+      "choices": {
+        "A": "Use Cloud Scheduler to schedule the jobs to run.",
+        "B": "Use Cloud Tasks to schedule and run the jobs asynchronously.",
+        "C": "Create directed acyclic graphs (DAGs) in Cloud Composer. Use the appropriate operators to connect to Cloud Storage, Spark, and BigQuery.",
+        "D": "Create directed acyclic graphs (DAGs) in Apache Airflow deployed on Google Kubernetes Engine. Use the appropriate operators to connect to Cloud Storage, Spark, and BigQuery."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Việc sử dụng Cloud Run function (hoặc Cloud Function) cấu hình phản hồi theo sự kiện (event-driven) khi có tệp tin mới được tải lên Cloud Storage là kiến trúc phi máy chủ cực kỳ tối ưu về mặt chi phí và công sức bảo trì. Hệ thống chỉ chạy và phát sinh chi phí khi có tệp tin mới cần nạp vào BigQuery."
+    },
+    {
+      "id": 42,
+      "question": "Your organization has a petabyte of application logs stored as Parquet files in Cloud Storage. You need to quickly perform a one-time SQL-based analysis of the files and join them to data that already resides in BigQuery. What should you do?",
+      "choices": {
+        "A": "Create a Dataproc cluster, and write a PySpark job to join the data from BigQuery to the files in Cloud Storage.",
+        "B": "Launch a Cloud Data Fusion environment, use plugins to connect to BigQuery and Cloud Storage, and use the SQL join operation to analyze the data.",
+        "C": "Create external tables over the files in Cloud Storage, and perform SQL joins to tables in BigQuery to analyze the data.",
+        "D": "Use the bq load command to load the Parquet files into BigQuery, and perform SQL joins to analyze the data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Dataproc Serverless cho phép chạy các tác vụ Apache Spark mà không cần khởi tạo, quản lý cấu hình hay mở rộng quy mô các cụm máy ảo (clusters). Bạn chỉ cần cung cấp mã nguồn Spark và hệ thống sẽ tự động chạy công việc, giúp loại bỏ hoàn toàn gánh nặng quản trị hạ tầng."
+    },
+    {
+      "id": 43,
+      "question": "You are developing a data ingestion pipeline to load small CSV files into BigQuery from Cloud Storage. You want to load these files upon arrival to minimize data latency. You want to accomplish this with minimal cost and maintenance. What should you do?",
+      "choices": {
+        "A": "Use the bq command-line tool within a Cloud Shell instance to load the data into BigQuery.",
+        "B": "Create a Cloud Composer pipeline to load new files from Cloud Storage to BigQuery and schedule it to run every 10 minutes.",
+        "C": "Create a Cloud Run function to load the data into BigQuery that is triggered when data arrives in Cloud Storage.",
+        "D": "Create a Dataproc cluster to pull CSV files from Cloud Storage, process them using Spark, and write the results to BigQuery."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Thư viện `bigframes.pandas` (BigQuery DataFrames) cho phép thực hiện các phân tích kiểu Pandas trên Python nhưng được dịch và thực thi trực tiếp dưới dạng các công việc truy vấn BigQuery trên đám mây. Sử dụng sổ ghi chép Colab Enterprise lập lịch chạy hàng tuần là giải pháp tối ưu nhất để tận dụng tài nguyên phân tích Python mạnh mẽ và trực quan mà không bị giới hạn bộ nhớ cục bộ."
+    },
+    {
+      "id": 44,
+      "question": "You need to create a weekly aggregated sales report based on a large volume of data. You want to use Python to design an efficient process for generating this report. What should you do?",
+      "choices": {
+        "A": "Create a Cloud Run function that uses NumPy. Use Cloud Scheduler to schedule the function to run once a week.",
+        "B": "Create a Colab Enterprise notebook and use the bigframes.pandas library. Schedule the notebook to execute once a week.",
+        "C": "Create a Cloud Data Fusion and Wrangler flow. Schedule the flow to run once a week.",
+        "D": "Create a Dataflow directed acyclic graph (DAG) coded in Python. Use Cloud Scheduler to schedule the code to run once a week."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để lưu trữ dữ liệu giao dịch trong BigQuery phục vụ yêu cầu kiểm toán tối thiểu 7 năm một cách hiệu quả và tối ưu chi phí, việc thiết lập chính sách lưu trữ (retention policy/expiration) ở cấp độ bảng (table-level) thành 7 năm là giải pháp trực tiếp và đơn giản nhất. Điều này đảm bảo dữ liệu trong bảng đó không thể bị xóa ngẫu nhiên trước thời hạn quy định."
+    },
+    {
+      "id": 45,
+      "question": "You work for a financial organization that stores transaction data in BigQuery. Your organization has a regulatory requirement to retain data for a minimum of seven years for auditing purposes. You need to ensure that the data is retained for seven years using an efficient and cost-optimized approach. What should you do?",
+      "choices": {
+        "A": "Create a partition by transaction date, and set the partition expiration policy to seven years.",
+        "B": "Set the table-level retention policy in BigQuery to seven years.",
+        "C": "Set the dataset-level retention policy in BigQuery to seven years.",
+        "D": "Export the BigQuery tables to Cloud Storage daily, and enforce a lifecycle management policy that has a seven-year retention rule."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Google-managed encryption keys (GMEK) là chế độ mã hóa mặc định của Cloud Storage. Khi sử dụng GMEK, Google Cloud sẽ tự động mã hóa dữ liệu trước khi ghi xuống đĩa và quản lý toàn bộ vòng đời của khóa mã hóa mà không gây ra bất kỳ chi phí hay gánh nặng vận hành nào cho người dùng."
+    },
+    {
+      "id": 46,
+      "question": "Your retail organization stores sensitive application usage data in Cloud Storage. You need to encrypt the data without the operational overhead of managing encryption keys. What should you do?",
+      "choices": {
+        "A": "Use Google-managed encryption keys (GMEK).",
+        "B": "Use customer-managed encryption keys (CMEK).",
+        "C": "Use customer-supplied encryption keys (CSEK).",
+        "D": "Use customer-supplied encryption keys (CSEK) for the sensitive data and customer-managed encryption keys (CMEK) for the less sensitive data."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Quy trình ETL (Extract - Transform - Load) thực hiện việc biến đổi và làm sạch dữ liệu (như lọc bỏ các mã độc SQL Injection) trước khi nạp (load) vào kho dữ liệu BigQuery. Cách tiếp cận này đảm bảo dữ liệu nhạy cảm hoặc độc hại không bao giờ được ghi vào BigQuery, trái ngược với ELT khi dữ liệu thô được nạp trước rồi mới biến đổi sau."
+    },
+    {
+      "id": 47,
+      "question": "You need to design a data pipeline that ingests data from CSV, Avro, and Parquet files into Cloud Storage. The data includes raw user input. You need to remove all malicious SQL injections before storing the data in BigQuery. Which data manipulation methodology should you choose?",
+      "choices": {
+        "A": "EL",
+        "B": "ELT",
+        "C": "ETL",
+        "D": "ETLT"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Looker, việc sử dụng các bộ lọc truy cập (`access_filter`) kết hợp với thuộc tính người dùng (`user attributes`) là giải pháp khuyến nghị để bảo mật dữ liệu ở cấp độ dòng (row-level security). Bạn chỉ cần gán thuộc tính vùng miền cho từng quản lý và thiết lập bộ lọc tự động áp dụng khi họ truy cập vào Explore hoặc Dashboard."
+    },
+    {
+      "id": 48,
+      "question": "You have created a LookML model and dashboard that shows daily sales metrics for five regional managers to use. You want to ensure that the regional managers can only see sales metrics specific to their region. You need an easy-to-implement solution. What should you do?",
+      "choices": {
+        "A": "Create a sales_region user attribute, and assign each manager’s region as the value of their user attribute. Add an access_filter Explore filter on the region_name dimension by using the sales_region user attribute.",
+        "B": "Create five different Explores with the sql_always_filter Explore filter applied on the region_name dimension. Set each region_name value to the corresponding region for each manager.",
+        "C": "Create separate Looker dashboards for each regional manager. Set the default dashboard filter to the corresponding region for each manager.",
+        "D": "Create separate Looker instances for each regional manager. Copy the LookML model and dashboard to each instance. Provision viewer access to the corresponding manager."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Với yêu cầu lưu trữ tuân thủ trong 3 năm và chỉ truy vấn tích cực trong 6 tháng đầu, việc phân vùng bảng BigQuery theo tháng, sau đó xuất các phân vùng cũ hơn 6 tháng sang lớp lưu trữ giá rẻ Coldline Storage của Cloud Storage và áp dụng chính sách vòng đời (lifecycle policy) tự động xóa sau 3 năm là giải pháp tối ưu hóa chi phí nhất, vì phí lưu trữ trên Cloud Storage Coldline rẻ hơn nhiều so với lưu trữ BigQuery."
+    },
+    {
+      "id": 49,
+      "question": "You have a BigQuery dataset containing sales data. This data is actively queried for the first 6 months. After that, the data is not queried but needs to be retained for 3 years for compliance reasons. You need to implement a data management strategy that meets access and compliance requirements, while keeping cost and administrative overhead to a minimum. What should you do?",
+      "choices": {
+        "A": "Use BigQuery long-term storage for the entire dataset. Set up a Cloud Run function to delete the data from BigQuery after 3 years.",
+        "B": "Partition a BigQuery table by month. After 6 months, export the data to Coldline storage. Implement a lifecycle policy to delete the data from Cloud Storage after 3 years.",
+        "C": "Set up a scheduled query to export the data to Cloud Storage after 6 months. Write a stored procedure to delete the data from BigQuery after 3 years.",
+        "D": "Store all data in a single BigQuery table without partitioning or lifecycle policies."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tạo một Materialized View trong BigQuery sử dụng hàm tổng hợp `SUM` và hàm trừ ngày `DATE_SUB` giúp tự động tính toán và lưu trữ các kết quả tổng hợp của tháng gần nhất. Kết quả này sẽ luôn được cập nhật tự động khi dữ liệu gốc thay đổi, cung cấp một nguồn dữ liệu có hiệu năng cao cho Looker Studio dashboard mà không tốn công chạy lại truy vấn thủ công."
+    },
+    {
+      "id": 50,
+      "question": "Your team wants to create a monthly report to analyze inventory data that is updated daily. You need to aggregate the inventory counts by using only the most recent month of data, and save the results to be used in a Looker Studio dashboard. What should you do?",
+      "choices": {
+        "A": "Create a materialized view in BigQuery that uses the SUM( ) function and the DATE_SUB( ) function.",
+        "B": "Create a saved query in the BigQuery console that uses the SUM( ) function and the DATE_SUB( ) function. Re-run the saved query every month, and save the results to a BigQuery table.",
+        "C": "Create a BigQuery table that uses the SUM( ) function and the _PARTITIONDATE filter.",
+        "D": "Create a BigQuery table that uses the SUM( ) function and the DATE_DIFF( ) function."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Analytics Hub cho phép bạn chia sẻ dữ liệu an toàn dưới dạng các gói đăng ký thông qua các trao đổi dữ liệu riêng tư (private exchanges). Việc bật tính năng hạn chế thoát dữ liệu (data egress restriction) giúp ngăn người nhận sao chép hoặc xuất dữ liệu ra ngoài, đồng thời tạo nên một khung chia sẻ chuẩn mực có thể tái sử dụng cho các phòng ban khác."
+    },
+    {
+      "id": 51,
+      "question": "Another team in your organization is requesting access to a BigQuery dataset. You need to share the dataset with the team while minimizing the risk of unauthorized copying of data. You also want to create a reusable framework in case you need to share this data with other teams in the future. What should you do?",
+      "choices": {
+        "A": "Create authorized views in the team’s Google Cloud project that is only accessible by the team.",
+        "B": "Create a private exchange using Analytics Hub with data egress restriction, and grant access to the team members.",
+        "C": "Enable domain restricted sharing on the project. Grant the team members the BigQuery Data Viewer IAM role on the dataset.",
+        "D": "Export the dataset to a Cloud Storage bucket in the team’s Google Cloud project that is only accessible by the team."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Dataflow cung cấp khả năng xử lý luồng (streaming) dữ liệu phi máy chủ (serverless) thời gian thực từ Pub/Sub, áp dụng các phép biến đổi và ghi trực tiếp vào BigQuery. BigQuery hoạt động như một kho dữ liệu hỗ trợ truy vấn SQL tốc độ cao và tích hợp cực kỳ tốt với Looker để trực quan hóa dữ liệu."
+    },
+    {
+      "id": 52,
+      "question": "You need to create a new data pipeline. You want a serverless solution that meets the following requirements:• Data is streamed from Pub/Sub and is processed in real-time.• Data is transformed before being stored.• Data is stored in a location that will allow it to be analyzed with SQL using Looker.\nWhich Google Cloud services should you recommend for the pipeline?",
+      "choices": {
+        "A": "1. Dataproc Serverless2. Bigtable",
+        "B": "1. Cloud Composer2. Cloud SQL for MySQL",
+        "C": "1. BigQuery2. Analytics Hub",
+        "D": "1. Dataflow2. BigQuery"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Cloud Composer (Apache Airflow), việc định nghĩa các công việc dưới dạng đồ thị có hướng không chu trình (DAG) cho phép quản lý các bước (stages) có tính chất tuần tự (đầu ra bước này là đầu vào bước sau). Khi một tác vụ bị lỗi, bạn có thể sửa lỗi dữ liệu và chỉ cần xóa trạng thái (Clear state) của tác vụ bị lỗi đó trên giao diện Web Airflow để chạy lại từ bước đó, thay vì phải khởi động lại toàn bộ đường ống từ đầu, giúp tiết kiệm thời gian đáng kể."
+    },
+    {
+      "id": 53,
+      "question": "You are designing a pipeline to process data files that arrive in Cloud Storage by 3:00 am each day. Data processing is performed in stages, where the output of one stage becomes the input of the next. Each stage takes a long time to run. Occasionally a stage fails, and you have to address the problem. You need to ensure that the final output is generated as quickly as possible. What should you do?",
+      "choices": {
+        "A": "Design a Spark program that runs under Dataproc. Code the program to wait for user input when an error is detected. Rerun the last action after correcting any stage output data errors.",
+        "B": "Design the pipeline as a set of PTransforms in Dataflow. Restart the pipeline after correcting any stage output data errors.",
+        "C": "Design the workflow as a Cloud Workflow instance. Code the workflow to jump to a given stage based on an input parameter. Rerun the workflow after correcting any stage output data errors.",
+        "D": "Design the processing as a directed acyclic graph (DAG) in Cloud Composer. Clear the state of the failed task after correcting any stage output data errors."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "BigQuery ML là lựa chọn tối ưu nhất khi đội ngũ kỹ sư có nguồn lực hạn chế và ít chuyên môn về học máy (ML). BQML cho phép xây dựng, huấn luyện và đánh giá mô hình hồi quy logistic (dùng cho phân loại khách hàng có mua hay không) trực tiếp bằng câu lệnh SQL quen thuộc ngay trên kho dữ liệu hiện có mà không cần tạo hạ tầng huấn luyện phức tạp."
+    },
+    {
+      "id": 54,
+      "question": "You work for an ecommerce company that has a BigQuery dataset that contains customer purchase history, demographics, and website interactions. You need to build a machine learning (ML) model to predict which customers are most likely to make a purchase in the next month. You have limited engineering resources and need to minimize the ML expertise required for the solution. What should you do?",
+      "choices": {
+        "A": "Use BigQuery ML to create a logistic regression model for purchase prediction.",
+        "B": "Use Vertex AI Workbench to develop a custom model for purchase prediction.",
+        "C": "Use Colab Enterprise to develop a custom model for purchase prediction.",
+        "D": "Export the data to Cloud Storage, and use AutoML Tables to build a classification model for purchase prediction."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lưu trữ dữ liệu trong một thùng lưu trữ đa vùng (multi-region bucket) của Cloud Storage đảm bảo dữ liệu được sao chép dư thừa trên nhiều vùng địa lý (zones) và khu vực (regions) khác nhau, đảm bảo tính sẵn sàng cao và khả năng phục hồi dữ liệu ngay cả khi có sự cố mất điện toàn vùng (zonal outage) hoặc thảm họa cấp vùng."
+    },
+    {
+      "id": 55,
+      "question": "You are constructing a data pipeline to process sensitive customer data stored in a Cloud Storage bucket. You need to ensure that this data remains accessible, even in the event of a single-zone outage. What should you do?",
+      "choices": {
+        "A": "Set up a Cloud CDN in front of the bucket.",
+        "B": "Enable Object Versioning on the bucket.",
+        "C": "Store the data in a multi-region bucket.",
+        "D": "Store the data in Nearline storage."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Customer-supplied encryption keys (CSEK - Khóa mã hóa do khách hàng cung cấp) cho phép tổ chức tự tạo, tự lưu giữ và kiểm soát thủ công hoàn toàn các khóa mã hóa của mình. Google Cloud không lưu trữ khóa của bạn trên đĩa hay trong bất kỳ dịch vụ quản lý khóa nào, mang lại mức độ kiểm soát cao nhất cho các tổ chức tài chính có yêu cầu nghiêm ngặt."
+    },
+    {
+      "id": 56,
+      "question": "You work for a financial services company that handles highly sensitive data. Due to regulatory requirements, your company is required to have complete and manual control of data encryption. Which type of keys should you recommend to use for data storage?",
+      "choices": {
+        "A": "Use customer-supplied encryption keys (CSEK).",
+        "B": "Use a dedicated third-party key management system (KMS) chosen by the company.",
+        "C": "Use Google-managed encryption keys (GMEK).",
+        "D": "Use customer-managed encryption keys (CMEK)."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để đảm bảo quyền truy cập tối thiểu và bảo mật dữ liệu trong BigQuery, phương pháp chuẩn là sử dụng các vai trò kiểm soát truy cập IAM (Identity and Access Management) ở cấp độ dự án, tập dữ liệu (dataset) hoặc bảng/cột để chỉ định rõ ràng ai được phép chạy truy vấn trên tập dữ liệu đó."
+    },
+    {
+      "id": 57,
+      "question": "You are a data analyst working with sensitive customer data in BigQuery. You need to ensure that only authorized personnel within your organization can query this data, while following the principle of least privilege. What should you do?",
+      "choices": {
+        "A": "Enable access control by using IAM roles.",
+        "B": "Encrypt the data by using customer-managed encryption keys (CMEK).",
+        "C": "Update dataset privileges by using the SQL GRANT statement.",
+        "D": "Export the data to Cloud Storage, and use signed URLs to authorize access."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Sự lệch pha dữ liệu (Data Drift) xảy ra khi phân phối của dữ liệu thực tế (serving data) thay đổi so với phân phối dữ liệu đã dùng để huấn luyện mô hình trong quá khứ. Đánh giá data drift giúp xác định xem mô hình có còn phản ánh đúng thực tế hay không để ra quyết định huấn luyện lại (retraining)."
+    },
+    {
+      "id": 58,
+      "question": "You used BigQuery ML to build a customer purchase propensity model six months ago. You want to compare the current serving data with the historical serving data to determine whether you need to retrain the model. What should you do?",
+      "choices": {
+        "A": "Compare the two different models.",
+        "B": "Evaluate the data skewness.",
+        "C": "Evaluate data drift.",
+        "D": "Compare the confusion matrix."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Colab Enterprise là môi trường sổ ghi chép (notebook) cộng tác được quản lý hoàn toàn trên Google Cloud, hỗ trợ đầy đủ việc lập trình Python, cài đặt các thư viện thống kê và vẽ biểu đồ. Việc kết nối Colab Enterprise trực tiếp với BigQuery cho phép phân tích tập dữ liệu lớn và chia sẻ dễ dàng giữa các thành viên trong nhóm."
+    },
+    {
+      "id": 59,
+      "question": "Your team needs to analyze large datasets stored in BigQuery to identify trends in user behavior. The analysis will involve complex statistical calculations, Python packages, and visualizations. You need to recommend a managed collaborative environment to develop and share the analysis. What should you recommend?",
+      "choices": {
+        "A": "Create a Colab Enterprise notebook and connect the notebook to BigQuery. Share the notebook with your team. Analyze the data and generate visualizations in Colab Enterprise.",
+        "B": "Create a statistical model by using BigQuery ML. Share the query with your team. Analyze the data and generate visualizations in Looker Studio.",
+        "C": "Create a Looker Studio dashboard and connect the dashboard to BigQuery. Share the dashboard with your team. Analyze the data and generate visualizations in Looker Studio.",
+        "D": "Connect Google Sheets to BigQuery by using Connected Sheets. Share the Google Sheet with your team. Analyze the data and generate visualizations in Gooqle Sheets."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Analytics Hub là giải pháp chuyên dụng của Google Cloud để chia sẻ dữ liệu một cách an toàn và có kiểm soát giữa các tổ chức. Việc tạo sàn trao đổi dữ liệu riêng tư (private data exchange) và các danh mục dữ liệu (listings) cho từng đối tác giúp họ đăng ký và truy vấn trực tiếp trên nền tảng BigQuery mà không cần sao chép dữ liệu vật lý về dự án của họ."
+    },
+    {
+      "id": 60,
+      "question": "Your organization has several datasets in BigQuery. The datasets need to be shared with your external partners so that they can run SQL queries without needing to copy the data to their own projects. You have organized each partner’s data in its own BigQuery dataset. Each partner should be able to access only their data. You want to share the data while following Google-recommended practices. What should you do?",
+      "choices": {
+        "A": "Use Analytics Hub to create a listing on a private data exchange for each partner dataset. Allow each partner to subscribe to their respective listings.",
+        "B": "Create a Dataflow job that reads from each BigQuery dataset and pushes the data into a dedicated Pub/Sub topic for each partner. Grant each partner the pubsub. subscriber IAM role.",
+        "C": "Export the BigQuery data to a Cloud Storage bucket. Grant the partners the storage.objectUser IAM role on the bucket.",
+        "D": "Grant the partners the bigquery.user IAM role on the BigQuery project."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi các công cụ luồng dữ liệu hiện tại của bạn đã hỗ trợ sẵn kết nối (connector) đến BigQuery, phương pháp nhanh nhất và ít tốn công sức thiết kế lại nhất là tái cấu hình lại ánh xạ dữ liệu (data mapping) trực tiếp trên công cụ đó để ghi dữ liệu thẳng vào BigQuery, giúp rút ngắn thời gian chuẩn bị và triển khai di chuyển."
+    },
+    {
+      "id": 61,
+      "question": "Your organization has decided to migrate their existing enterprise data warehouse to BigQuery. The existing data pipeline tools already support connectors to BigQuery. You need to identify a data migration approach that optimizes migration speed. What should you do?",
+      "choices": {
+        "A": "Create a temporary file system to facilitate data transfer from the existing environment to Cloud Storage. Use Storage Transfer Service to migrate the data into BigQuery.",
+        "B": "Create a Dataflow job that reads from each BigQuery dataset and pushes the data into a dedicated Pub/Sub topic for each partner. Grant each partner the pubsub. subscriber IAM role.",
+        "C": "Export the BigQuery data to a Cloud Storage bucket. Grant the partners the storage.objectUser IAM role on the bucket.",
+        "D": "Grant the partners the bigquery.user IAM role on the BigQuery project."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để khắc phục nhanh nhất một câu lệnh truy vấn lập lịch bị lỗi trong BigQuery, bạn chỉ cần truy cập thẳng vào trang Scheduled queries trên Cloud Console, chọn công việc bị lỗi và xem thông tin chi tiết về lỗi được hiển thị trực tiếp tại lịch sử thực thi của công việc đó."
+    },
+    {
+      "id": 60,
+      "question": "Your organization has decided to migrate their existing enterprise data warehouse to BigQuery. The existing data pipeline tools already support connectors to BigQuery. You need to identify a data migration approach that optimizes migration speed. What should you do?",
+      "choices": {
+        "A": "Create a temporary file system to facilitate data transfer from the existing environment to Cloud Storage. Use Storage Transfer Service to migrate the data into BigQuery.",
+        "B": "Use the Cloud Data Fusion web interface to build data pipelines. Create a directed acyclic graph (DAG) that facilitates pipeline orchestration.",
+        "C": "Use the existing data pipeline tool’s BigQuery connector to reconfigure the data mapping.",
+        "D": "Use the BigQuery Data Transfer Service to recreate the data pipeline and migrate the data into BigQuery."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 61,
+      "question": "Your organization uses scheduled queries to perform transformations on data stored in BigQuery. You discover that one of your scheduled queries has failed. You need to troubleshoot the issue as quickly as possible. What should you do?",
+      "choices": {
+        "A": "Navigate to the Logs Explorer page in Cloud Logging. Use filters to find the failed job, and analyze the error details.",
+        "B": "Set up a log sink using the gcloud CLI to export BigQuery audit logs to BigQuery. Query those logs to identify the error associated with the failed job ID.",
+        "C": "Request access from your admin to the BigQuery information_schema. Query the jobs view with the failed job ID, and analyze error details.",
+        "D": "Navigate to the Scheduled queries page in the Google Cloud console. Select the failed job, and analyze the error details."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 62,
+      "question": "Your team uses the Google Ads platform to visualize metrics. You want to export the data to BigQuery to get more granular insights. You need to execute a one-time transfer of historical data and automatically update data daily. You want a solution that is low-code, serverless, and requires minimal maintenance. What should you do?",
+      "choices": {
+        "A": "Export the historical data to BigQuery by using BigQuery Data Transfer Service. Use Cloud Composer for daily automation.",
+        "B": "Export the historical data to Cloud Storage by using Storage Transfer Service. Use Pub/Sub to trigger a Dataflow template that loads data for daily automation.",
+        "C": "Export the historical data as a CSV file. Import the file into BigQuery for analysis. Use Cloud Composer for daily automation.",
+        "D": "Export the historical data to BigQuery by using BigQuery Data Transfer Service. Use BigQuery Data Transfer Service for daily automation."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "BigQuery Data Transfer Service (DTS) hỗ trợ sẵn (out-of-the-box) kết nối trực tiếp với Google Ads. Đây là dịch vụ hoàn toàn không mã nguồn (no-code), serverless và tự động quản lý việc nạp dữ liệu lịch sử một lần cũng như thiết lập lịch cập nhật dữ liệu tự động hàng ngày mà không cần viết mã hay dùng thêm công cụ điều phối khác."
+    },
+    {
+      "id": 63,
+      "question": "You work for a global financial services company that trades stocks 24/7. You have a Cloud SGL for PostgreSQL user database. You need to identify a solution that ensures that the database is continuously operational, minimizes downtime, and will not lose any data in the event of a zonal outage. What should you do?",
+      "choices": {
+        "A": "Continuously back up the Cloud SGL instance to Cloud Storage. Create a Compute Engine instance with PostgreSCL in a different region. Restore the backup in the Compute Engine instance if a failure occurs.",
+        "B": "Create a read replica in another region. Promote the replica to primary if a failure occurs.",
+        "C": "Configure and create a high-availability Cloud SQL instance with the primary instance in zone A and a secondary instance in any zone other than zone A.",
+        "D": "Create a read replica in the same region but in a different zone."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cấu hình tính sẵn sàng cao (High Availability - HA) cho Cloud SQL sử dụng cơ chế sao chép đồng bộ (synchronous replication) từ thực thể chính sang thực thể dự phòng (standby) nằm ở một vùng (zone) khác trong cùng khu vực. Khi xảy ra sự cố mất điện vùng (zonal outage), hệ thống sẽ tự động chuyển đổi dự phòng (failover) mà không làm mất mát dữ liệu và giảm thiểu tối đa thời gian gián đoạn dịch vụ."
+    },
+    {
+      "id": 64,
+      "question": "You are migrating data from a legacy on-premises MySQL database to Google Cloud. The database contains various tables with different data types and sizes, including large tables with millions of rows and transactional data. You need to migrate this data while maintaining data integrity, and minimizing downtime and cost. What should you do?",
+      "choices": {
+        "A": "Set up a Cloud Composer environment to orchestrate a custom data pipeline. Use a Python script to extract data from the MySQL database and load it to MySQL on Compute Engine.",
+        "B": "Export the MySQL database to CSV files, transfer the files to Cloud Storage by using Storage Transfer Service, and load the files into a Cloud SQL for MySQL instance.",
+        "C": "Use Database Migration Service to replicate the MySQL database to a Cloud SQL for MySQL instance.",
+        "D": "Use Cloud Data Fusion to migrate the MySQL database to MySQL on Compute Engine."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Database Migration Service (DMS) là dịch vụ di chuyển cơ sở dữ liệu chuyên dụng, hỗ trợ di chuyển liên tục, trực tuyến (online migration) từ MySQL vật lý sang Cloud SQL với độ trễ cực thấp, đảm bảo toàn vẹn dữ liệu giao dịch và giảm thiểu tối đa thời gian ngừng hoạt động (downtime)."
+    },
+    {
+      "id": 65,
+      "question": "You created a customer support application that sends several forms of data to Google Cloud. Your application is sending:\nAudio files from phone interactions with support agents that will be accessed during trainings.CSV files of users’ personally identifiable information (Pll) that will be analyzed with SQL.A large volume of small document files that will power other applications.You need to select the appropriate tool for each data type given the required use case, while following Google-recommended practices. Which should you choose?",
+      "choices": {
+        "A": "1. Cloud Storage2. CloudSQL for PostgreSQL3. Bigtable",
+        "B": "1. Filestore2. Cloud SQL for PostgreSQL3. Datastore",
+        "C": "1. Cloud Storage2. BigQuery3. Firestore",
+        "D": "1. Filestore2. Bigtable3. BigQuery"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn công cụ lưu trữ phù hợp theo khuyến nghị của Google Cloud bao gồm: (1) Cloud Storage cho các tệp phi cấu trúc như tệp âm thanh (audio files); (2) BigQuery làm kho dữ liệu phân tích dạng bảng cho phép chạy truy vấn SQL hiệu năng cao trên dữ liệu CSV; (3) Firestore là cơ sở dữ liệu NoSQL dạng tài liệu (document store) lý tưởng cho việc lưu trữ các tệp tài liệu nhỏ phục vụ ứng dụng thời gian thực."
+    },
+    {
+      "id": 66,
+      "question": "Your company’s customer support audio files are stored in a Cloud Storage bucket. You plan to analyze the audio files’ metadata and file content within BigQuery to create inference by using BigQuery ML. You need to create a corresponding table in BigQuery that represents the bucket containing the audio files. What should you do?",
+      "choices": {
+        "A": "Create an external table.",
+        "B": "Create a temporary table.",
+        "C": "Create a native table.",
+        "D": "Create an object table."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bảng đối tượng (Object Table) trong BigQuery là một dạng bảng ngoài đặc biệt cho phép bạn phân tích các dữ liệu phi cấu trúc (như tệp âm thanh, hình ảnh, PDF) lưu trữ trên Cloud Storage. Bảng đối tượng cung cấp siêu dữ liệu của tệp và cho phép tích hợp với BigQuery ML hoặc các mô hình Vertex AI để phân tích nội dung tệp trực tiếp bằng SQL."
+    },
+    {
+      "id": 67,
+      "question": "You are a database administrator managing sales transaction data by region stored in a BigQuery table. You need to ensure that each sales representative can only see the transactions in their region. What should you do?",
+      "choices": {
+        "A": "Add a policy tag in BigQuery.",
+        "B": "Create a row-level access policy.",
+        "C": "Create a data masking rule.",
+        "D": "Grant the appropriate IAM permissions on the dataset."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để giới hạn quyền xem dữ liệu theo hàng (ở đây là theo khu vực của đại diện bán hàng), BigQuery hỗ trợ tính năng chính sách truy cập cấp hàng (Row-level access policy). Tính năng này lọc tự động các dòng dữ liệu dựa trên danh tính người dùng chạy truy vấn mà không cần thay đổi cấu trúc bảng hay tạo nhiều bảng phụ."
+    },
+    {
+      "id": 68,
+      "question": "Your organization has highly sensitive data that gets updated once a day and is stored across multiple datasets in BigQuery. You need to provide a new data analyst access to query specific data in BigQuery while preventing access to sensitive data. What should you do?",
+      "choices": {
+        "A": "Grant the data analyst the BigQuery Job User IAM role in the Google Cloud project.",
+        "B": "Create a materialized view with the limited data in a new dataset. Grant the data analyst BigQuery Data Viewer IAM role in the dataset and the BigQuery Job User IAM role in the Google Cloud project.",
+        "C": "Create a new Google Cloud project, and copy the limited data into a BigQuery table. Grant the data analyst the BigQuery Data Owner IAM role in the new Google Cloud project.",
+        "D": "Grant the data analyst the BigQuery Data Viewer IAM role in the Google Cloud project."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tạo một materialized view hoặc view thường chỉ chứa các trường thông tin không nhạy cảm trong một dataset mới, sau đó cấp quyền đọc (`BigQuery Data Viewer`) trên dataset mới đó kết hợp với quyền chạy tác vụ (`BigQuery Job User`) ở cấp dự án là giải pháp chuẩn để chia sẻ dữ liệu có chọn lọc và bảo mật mà không để lộ dữ liệu nhạy cảm của bảng gốc."
+    },
+    {
+      "id": 69,
+      "question": "Your company uses Looker to visualize and analyze sales data. You need to create a dashboard that displays sales metrics, such as sales by region, product category, and time period. Each metric relies on its own set of attributes distributed across several tables. You need to provide users the ability to filter the data by specific sales representatives and view individual transactions. You want to follow the Google-recommended approach. What should you do?",
+      "choices": {
+        "A": "Create multiple Explores, each focusing on each sales metric. Link the Explores together in a dashboard using drill-down functionality.",
+        "B": "Use BigQuery to create multiple materialized views, each focusing on a specific sales metric. Build the dashboard using these views.",
+        "C": "Create a single Explore with all sales metrics. Build the dashboard using this Explore.",
+        "D": "Use Looker's custom visualization capabilities to create a single visualization that displays all the sales metrics with filtering and drill-down functionality."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phương pháp thiết kế tốt nhất trong Looker (LookML) là xây dựng một Explore duy nhất chứa các mối quan hệ (joins) cần thiết giữa các bảng liên quan đến doanh số. Khi đó, tất cả các thuộc tính và chỉ số sẽ nằm chung một giao diện, giúp người dùng dễ dàng lọc chéo dữ liệu và đi sâu vào chi tiết từng giao dịch ngay trên bảng điều khiển."
+    },
+    {
+      "id": 70,
+      "question": "Your company uses Looker as its primary business intelligence platform. You want to use LookML to visualize the profit margin for each of your company’s products in your Looker Explores and dashboards. You need to implement a solution quickly and efficiently. What should you do?",
+      "choices": {
+        "A": "Create a derived table that pre-calculates the profit margin for each product, and include it in the Looker model.",
+        "B": "Define a new measure that calculates the profit margin by using the existing revenue and cost fields.",
+        "C": "Create a new dimension that categorizes products based on their profit margin ranges (e.g., high, medium, low).",
+        "D": "Apply a filter to only show products with a positive profit margin."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Định nghĩa một chỉ số đo lường mới (`measure`) trong LookML sử dụng các trường doanh thu (`revenue`) và chi phí (`cost`) sẵn có là cách làm nhanh và hiệu quả nhất để tính toán tỷ suất lợi nhuận trên Looker, tránh việc phải tạo bảng dẫn xuất (derived table) phức tạp."
+    },
+    {
+      "id": 71,
+      "question": "You manage a large amount of data in Cloud Storage, including raw data, processed data, and backups. Your organization is subject to strict compliance regulations that mandate data immutability for specific data types. You want to use an efficient process to reduce storage costs while ensuring that your storage strategy meets retention requirements. What should you do?",
+      "choices": {
+        "A": "Configure lifecycle management rules to transition objects to appropriate storage classes based on access patterns. Set up Object Versioning for all objects to meet immutability requirements.",
+        "B": "Move objects to different storage classes based on their age and access patterns. Use Cloud Key Management Service (Cloud KMS) to encrypt specific objects with customer-managed encryption keys (CMEK) to meet immutability requirements.",
+        "C": "Create a Cloud Run function to periodically check object metadata, and move objects to the appropriate storage class based on age and access patterns. Use object holds to enforce immutability for specific objects.",
+        "D": "Use object holds to enforce immutability for specific objects, and configure lifecycle management rules to transition objects to appropriate storage classes based on age and access patterns."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Sử dụng tính năng khóa đối tượng (Object Holds/Retention Policies) để đảm bảo tính bất biến của dữ liệu tuân thủ pháp lý, kết hợp với các quy tắc quản lý vòng đời đối tượng (Lifecycle Management Rules) để chuyển đổi lớp lưu trữ của dữ liệu cũ sang các lớp rẻ hơn (như Coldline, Archive) là giải pháp tự động, an toàn và tối ưu chi phí lưu trữ nhất."
+    },
+    {
+      "id": 72,
+      "question": "Your retail company wants to analyze customer reviews to understand sentiment and identify areas for improvement. Your company has a large dataset of customer feedback text stored in BigQuery that includes diverse language patterns, emojis, and slang. You want to build a solution to classify customer sentiment from the feedback text. What should you do?",
+      "choices": {
+        "A": "Preprocess the text data in BigQuery using SQL functions. Export the processed data to AutoML Natural Language for model training and deployment.",
+        "B": "Develop a custom sentiment analysis model using TensorFlow. Deploy it on a Compute Engine instance.",
+        "C": "Use Dataproc to create a Spark cluster, perform text preprocessing using Spark NLP, and build a sentiment analysis model with Spark MLlib.",
+        "D": "Export the raw data from BigQuery. Use AutoML Natural Language to train a custom sentiment analysis model."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Bằng cách sử dụng các hàm SQL trong BigQuery để làm sạch dữ liệu văn bản thô (như xử lý khoảng trắng, lọc ký tự đặc biệt), sau đó xuất dữ liệu đã xử lý sang AutoML Natural Language để huấn luyện mô hình phân loại cảm xúc tự động, bạn sẽ có một quy trình tối ưu, tận dụng thế mạnh xử lý dữ liệu của BigQuery và khả năng học máy tự động của AutoML mà không cần viết thuật toán học sâu từ đầu."
+    },
+    {
+      "id": 73,
+      "question": "Your organization's website uses an on-premises MySQL as a backend database. You need to migrate the on-premises MySQL database to Google Cloud while maintaining MySQL features. You want to minimize administrative overhead and downtime. What should you do?",
+      "choices": {
+        "A": "Use a Google-provided Dataflow template to replicate the MySQL database in BigOuery.",
+        "B": "Install MySQL on a Compute Engine virtual machine. Export the database files using the mysqldump command. Upload the files to Cloud Storage, and import them into the MySQL instance on Compute Engine.",
+        "C": "Use Database Migration Service to transfer the data to Cloud SQL for MySQL, and configure the on-premises MySQL database as the source.",
+        "D": "Export the database tables to CSV files, and upload the files to Cloud Storage. Convert the MySQL schema to a Spanner schema, create a JSON manifest file, and run a Google-provided Dataflow template to load the data into Spanner."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Database Migration Service (DMS) là dịch vụ được quản lý hoàn toàn giúp bạn dễ dàng chuyển đổi cơ sở dữ liệu MySQL từ hạ tầng nội bộ lên Cloud SQL cho MySQL. Việc thiết lập cơ sở dữ liệu nội bộ làm nguồn sao chép liên tục giúp giảm thiểu tối đa thời gian gián đoạn dịch vụ và giảm gánh nặng quản trị hạ tầng."
+    },
+    {
+      "id": 74,
+      "question": "Your company wants to implement a data transformation (ETL) pipeline for their BigQuery data warehouse. You need to identify a managed transformation solution that allows users to develop with SQL and JavaScript, has version control, allows for modular code, and has data quality checks. What should you do?",
+      "choices": {
+        "A": "Use Dataform to define the transformations in SQLX.",
+        "B": "Use Dataproc to create an Apache Spark cluster and implement the transformations by using PySpark SQL.",
+        "C": "Create a Cloud Composer environment, and orchestrate the transformations by using the BigQueryInsertJob operator.",
+        "D": "Create BigQuery scheduled queries to define the transformations in SQL."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Dataform là một dịch vụ được quản lý hoàn toàn trong Google Cloud, được thiết kế riêng để phát triển các quy trình biến đổi dữ liệu trong BigQuery. Dataform sử dụng ngôn ngữ SQLX (cho phép chèn mã JavaScript), hỗ trợ chia nhỏ code dạng mô-đun, tích hợp sẵn hệ thống kiểm tra chất lượng dữ liệu (assertions) và quản lý phiên bản với Git."
+    },
+    {
+      "id": 75,
+      "question": "You created a curated dataset of market trends in BigQuery that you want to share with multiple external partners. You want to control the rows and columns that each partner has access to. You want to follow Google-recommended practices. What should you do?",
+      "choices": {
+        "A": "Publish the dataset in Analytics Hub. Grant dataset-level access to each partner by using subscriptions.",
+        "B": "Grant each partner read access to the BigQuery dataset by using IAM roles.",
+        "C": "Create a separate Cloud Storage bucket for each partner. Export the dataset to each bucket and assign each partner to their respective bucket. Grant bucketlevel access by using IAM roles.",
+        "D": "Create a separate project for each partner and copy the dataset into each project. Publish each dataset in Analytics Hub. Grant dataset-level access to each partner by using subscriptions."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để chia sẻ dữ liệu an toàn với nhiều đối tác ngoài mà vẫn kiểm soát được quyền truy cập cấp hàng/cột (thông qua các bộ lọc hoặc view), phương pháp khuyến nghị của Google là xuất bản tập dữ liệu đó lên sàn trao đổi dữ liệu Analytics Hub dưới dạng các tin đăng (listings), cho phép các đối tác đăng ký sử dụng độc lập."
+    },
+    {
+      "id": 76,
+      "question": "You want to build a model to predict the likelihood of a customer clicking on an online advertisement. You have historical data in BigQuery that includes features such as user demographic, ad placement, and previous click behavior. After training the model, you want to generate predictions on new data. Which model type should you use in BigQuery ML?",
+      "choices": {
+        "A": "Linear regression",
+        "B": "Matrix factorization",
+        "C": "Logistic regression",
+        "D": "K-means clustering"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bài toán dự đoán khả năng người dùng nhấp vào quảng cáo hay không (Click vs No-Click) là bài toán phân loại nhị phân (binary classification). Trong BigQuery ML, mô hình Hồi quy Logistic (Logistic Regression) là mô hình tiêu chuẩn để giải quyết các bài toán phân loại nhị phân này."
+    },
+    {
+      "id": 77,
+      "question": "You work for a gaming company that collects real-time player activity data. This data is streamed into Pub/Sub and needs to be processed and loaded into BigQuery for analysis. The processing involves filtering, enriching, and aggregating the data before loading it into partitioned BigQuery tables. You need to design a pipeline that ensures low latency and high throughput while following a Google-recommended approach. What should you do?",
+      "choices": {
+        "A": "Use Cloud Composer to orchestrate a workflow that reads the data from Pub/Sub, processes the data using a Python script, and writes it to BigQuery.",
+        "B": "Use Dataflow to create a streaming pipeline that reads the data from Pub/Sub, processes the data, and writes it to BigQuery using the streaming API.",
+        "C": "Use Dataproc to create an Apache Spark streaming job that reads the data from Pub/Sub, processes the data, and writes it to BigQuery.",
+        "D": "Use Cloud Run functions to subscribe to the Pub/Sub topic, process the data, and write it to BigQuery using the streaming API."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với luồng dữ liệu truyền phát thời gian thực tốc độ cao (real-time streaming) yêu cầu xử lý phức tạp (lọc, làm giàu, tổng hợp) trước khi ghi vào BigQuery, Dataflow (dựa trên Apache Beam) là kiến trúc khuyến nghị hàng đầu của Google để đạt được băng thông lớn (high throughput) và độ trễ thấp (low latency) một cách tự động và ổn định."
+    },
+    {
+      "id": 78,
+      "question": "Your organization consists of two hundred employees on five different teams. The leadership team is concerned that any employee can move or delete all Looker dashboards saved in the Shared folder. You need to create an easy-to-manage solution that allows the five different teams in your organization to view content in the Shared folder, but only be able to move or delete their team-specific dashboard. What should you do?",
+      "choices": {
+        "A": "1. Create Looker groups representing each of the five different teams, and add users to their corresponding group.2. Create five subfolders inside the Shared folder. Grant each group the View access level to their corresponding subfolder.",
+        "B": "1. Change the access level of the Shared folder to View for the All Users group.2. Create five subfolders inside the Shared folder. Grant each team member the Manage Access, Edit access level to their corresponding subfolder.",
+        "C": "1. Change the access level of the Shared folder to View for the All Users group.2. Create Looker groups representing each of the five different teams, and add users to their corresponding group.3. Create five subfolders inside the Shared folder. Grant each group the Manage Access, Edit access level to their corresponding subfolder.",
+        "D": "1. Move all team-specific content into the dashboard owner's personal folder.2. Change the access level of the Shared folder to View for the All Users group.3. Instruct each user to create content for their team in the user's personal folder."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giải pháp tối ưu và dễ quản lý nhất là đặt thư mục dùng chung (Shared folder) ở quyền hạn chỉ xem (`View`) cho tất cả mọi người, sau đó tạo 5 thư mục con cho mỗi nhóm. Bằng cách gán người dùng vào các Looker Groups tương ứng với 5 nhóm và cấp quyền quản lý/chỉnh sửa (`Manage Access, Edit`) cho từng nhóm tại thư mục con của họ, bạn sẽ giới hạn chính xác quyền hạn mà không tốn công quản lý từng tài khoản riêng lẻ."
+    },
+    {
+      "id": 79,
+      "question": "You are working with a small dataset in Cloud Storage that needs to be transformed and loaded into BigQuery for analysis. The transformation involves simple filtering and aggregation operations. You want to use the most efficient and cost-effective data manipulation approach. What should you do?",
+      "choices": {
+        "A": "Use Dataproc to create an Apache Hadoop cluster, perform the ETL process using Apache Spark, and load the results into BigQuery.",
+        "B": "Use BigQuery's SQL capabilities to load the data from Cloud Storage, transform if, and store the results in a new BigQuery table.",
+        "C": "Create a Cloud Data Fusion instance and visually design an ETL pipeline that reads data from Cloud Storage, transforms it using built-transformations, and load the result into BigQuery.",
+        "D": "Use Dataflow to perform the ETL process that reads the data from Cloud Storage, transforms it using Apache Beam, and writes the results to BigQuery."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với một tập dữ liệu nhỏ nằm trên Cloud Storage, việc nạp trực tiếp vào BigQuery và sử dụng sức mạnh của SQL để biến đổi (lọc, tổng hợp) là giải pháp đơn giản, hiệu quả và tiết kiệm chi phí nhất, vì bạn không phải trả thêm phí khởi tạo các cụm máy tính như Dataproc, Dataflow hay Cloud Data Fusion."
+    },
+    {
+      "id": 80,
+      "question": "You have a Cloud SQL for PostgreSQL database that stores sensitive historical financial data. You need to ensure that the data is uncorrupted and recoverable in the event that the primary region is destroyed. The data is valuable, so you need to prioritize recovery point objective (RPO) over recovery time objective (RTO). You want to recommend a solution that minimizes latency for primary read and write operations. What should you do?",
+      "choices": {
+        "A": "Configure the Cloud SQL for PostgreSQL instance for multi-region backup locations.",
+        "B": "Configure the Cloud SQL for PostgreSQL instance for regional availability (HA) with synchronous replication to a secondary instance in a different zone.",
+        "C": "Configure the Cloud SQL for PostgreSQL instance for regional availability (HA) with asynchronous replication to a secondary instance in a different region.",
+        "D": "Configure the Cloud SQL for PostgreSQL instance for regional availability (HA). Back up the Cloud SQL for PostgreSQL database hourly to a Cloud Storage bucket in a different region."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để giảm thiểu độ trễ cho các tác vụ ghi/đọc chính, cấu hình tính sẵn sàng cao (HA) cấp vùng (regional HA) sẽ đồng bộ dữ liệu sang một vùng khác trong cùng khu vực với độ trễ tối thiểu. Để phòng ngừa thảm họa phá hủy toàn bộ vùng chính, việc sao lưu định kỳ hàng giờ (hourly backup) sang một thùng lưu trữ Cloud Storage ở vùng địa lý khác đảm bảo khả năng phục hồi dữ liệu (ưu tiên RPO) với chi phí thấp và không làm ảnh hưởng đến độ trễ ghi dữ liệu của ứng dụng chính."
+    },
+    {
+      "id": 81,
+      "question": "You are working on a project that requires analyzing dally social media data. You have 100 GB of JSON formatted data stored in Cloud Storage that keeps growing. You need to transform and load this data into BigQuery for analysis. You want to follow the Google-recommended approach. What should you do?",
+      "choices": {
+        "A": "Use Cloud Data Fusion to transfer the data into BigOuery raw tables, and use SQL to transform it.",
+        "B": "Use Dataflow to transform the data and write the transformed data to BigQuery.",
+        "C": "Manually download the data from Cloud Storage. Use a Python script to transform and upload the data into BigQuery.",
+        "D": "Use Cloud Run functions to transform and load the data into BigOuery."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Với lượng dữ liệu lớn (100 GB) định dạng JSON lưu trữ trên Cloud Storage và liên tục tăng trưởng, sử dụng Dataflow để thực hiện các phép biến đổi hàng loạt (batch) hoặc truyền phát (streaming) và nạp vào BigQuery là phương pháp khuyến nghị chuẩn của Google Cloud để đảm bảo khả năng mở rộng (scalability) và hiệu năng xử lý."
+    },
+    {
+      "id": 82,
+      "question": "You manage an ecommerce website that has a diverse range of product. You need to forecast future product demand accurately to ensure that your company has sufficient inventory to meet customer needs and avoid stockouts. Your company's historical sales data is stored in BigQuery table. You need to create a scalable solution that takes into account the seasonality and historical data to predict product demand. What should you do?",
+      "choices": {
+        "A": "Use the historical sales data to train and create a BigQueryML time series model. Use the ML.FORECAST function call to output the predictions into a new BigQuery table.",
+        "B": "Use Colab Enterprise to create a Jupyter notebook. Use the historical sales data to train a custom prediction model in Python.",
+        "C": "Use the historical sales data to train and create a BigQueryML linear regression model. Use the ML.PREDICT function call to output the predictions into a new BigQuery table.",
+        "D": "Use the historical sales data to train and create a BigQueryML logistic regression model. Use the ML.PREDICT function call to output the predictions into a new BigQuery table."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Bài toán dự báo nhu cầu sản phẩm dựa trên chuỗi thời gian có yếu tố mùa vụ (seasonality) và lịch sử bán hàng được giải quyết tốt nhất bằng mô hình chuỗi thời gian (time series model, như ARIMA+) trong BigQuery ML. Bạn có thể sử dụng câu lệnh tạo mô hình chuỗi thời gian và dùng hàm `ML.FORECAST` để đưa ra các dự báo trực tiếp vào một bảng BigQuery mới một cách dễ dàng và tự động."
+    },
+    {
+      "id": 83,
+      "question": "Your company stores historical data in Cloud Storage. You need to ensure that all data is saved in a bucket for at least three years. What should you do?",
+      "choices": {
+        "A": "Set temporary object holds.",
+        "B": "Set a bucket retention policy.",
+        "C": "Change the bucket storage class to Archive.",
+        "D": "Enable Object Versioning."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Thiết lập chính sách giữ chân dữ liệu của thùng chứa (Bucket Retention Policy) trong Cloud Storage là cách thức đảm bảo tính tuân thủ pháp lý mạnh mẽ nhất. Chính sách này ngăn chặn việc xóa hoặc sửa đổi bất kỳ đối tượng nào trong thùng chứa cho đến khi chúng đạt thời gian lưu trữ tối thiểu đã quy định (ở đây là 3 năm)."
+    },
+    {
+      "id": 84,
+      "question": "You need to transfer approximately 300 TB of data from your company's on-premises data center to Cloud Storage. You have 100 Mbps internet bandwidth, and the transfer needs to be completed as quickly as possible. What should you do?",
+      "choices": {
+        "A": "Use Cloud Client Libraries to transfer the data over the internet.",
+        "B": "Compress the data, upload it to multiple cloud storage providers, and then transfer the data to Cloud Storage.",
+        "C": "Request a Transfer Appliance, copy the data to the appliance, and ship it back to Google.",
+        "D": "Use the gcloud storage command to transfer the data over the internet."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Với đường truyền internet 100 Mbps, việc tải 300 TB dữ liệu lên Cloud Storage qua mạng sẽ mất khoảng hơn 300 ngày. Sử dụng thiết bị vật lý Transfer Appliance của Google để sao chép dữ liệu trực tiếp tại chỗ rồi gửi trả thiết bị cho Google nạp lên đám mây là giải pháp nhanh nhất và duy nhất đáp ứng thời hạn vài ngày/tuần."
+    },
+    {
+      "id": 85,
+      "question": "Your team uses Google Sheets to track budget data that is updated daily. The team wants to compare budget data against actual cost data, which is stored in a BigQuery table. You need to create a solution that calculates the difference between each day's budget and actual costs. You want to ensure that your team has access to daily-updated results in Google Sheets. What should you do?",
+      "choices": {
+        "A": "Download the budget data as a CSV file and upload the CSV file to a Cloud Storage bucket. Create a new BigQuery table from Cloud Storage, and join the actual cost table with it. Open the joined BigOuery table by using Connected Sheets.",
+        "B": "Create a BigQuery external table by using the Drive URI of the Google sheet, and join the actual cost table with it. Save the joined table, and open it by using Connected Sheets.",
+        "C": "Download the budget data as a CSV file, and upload the CSV file to create a new BigQuery table. Join the actual cost table with the new BigQuery table, and save the results as a CSV file. Open the CSV file in Google Sheets.",
+        "D": "Create a BigQuery external table by using the Drive URI of the Google sheet, and join the actual cost table with it. Save the joined table as a CSV file and open the file in Google Sheets."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tạo một bảng liên kết ngoài (External Table) trong BigQuery kết nối trực tiếp tới Google Sheet của đội ngân sách thông qua URI của Google Drive giúp dữ liệu ngân sách luôn được cập nhật động vào BigQuery. Sau khi thực hiện phép Join với bảng chi phí thực tế, việc mở bảng kết quả bằng Connected Sheets (Trang tính được kết nối) trong Google Sheets đảm bảo nhóm tài chính luôn xem được dữ liệu so sánh mới nhất hàng ngày trực tiếp trong giao diện quen thuộc."
+    },
+    {
+      "id": 86,
+      "question": "Your organization is conducting analysis on regional sales metrics. Data from each regional sales team is stored as separate tables in BigQuery and updated monthly. You need to create a solution that identifies the top three regions with the highest monthly sales for the next three months. You want the solution to automatically provide up-to-date results. What should you do?",
+      "choices": {
+        "A": "Create a BigQuery table that performs a UNION across all of the regional sales tables. Use the ROW_NUMBER() window function to query the new table.",
+        "B": "Create a BigQuery table that performs a CROSS JOIN across all of the regional sales tables. Use the RANK( ) window function to query the new table.",
+        "C": "Create a BigQuery materialized view that performs a UNION across all of the regional sales tables. Use the RANK() window function to query the new materialized view.",
+        "D": "Create a BigQuery materialized view that performs a CROSS JOIN across all of the regional sales tables. Use the ROW_NUMBER() window function to query the new materialized view."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Gộp dữ liệu từ các bảng doanh số vùng miền bằng phép `UNION` trong một Materialized View của BigQuery giúp dữ liệu được cập nhật tự động khi các bảng thành phần thay đổi. Sử dụng hàm xếp hạng `RANK()` qua cửa sổ (window function) là thuật toán chuẩn xác để xác định top 3 vùng có doanh số cao nhất một cách tự động và liên tục."
+    },
+    {
+      "id": 87,
+      "question": "You work for a healthcare company. You have a daily ETL pipeline that extracts patient data from a legacy system, transforms it, and loads it into BigQuery for analysis. The pipeline currently runs manually using a shell script. You want to automate this process and add monitoring to ensure pipeline observability and troubleshooting insights. You want one centralized solution, using open-source tooling, without rewriting the ETL code. What should you do?",
+      "choices": {
+        "A": "Create a Cloud Run function that runs the pipeline daily. Monitor the function's execution using Cloud Monitoring.",
+        "B": "Configure Cloud Dataflow to implement the ETL pipeline, and use Cloud Scheduler to trigger the Dataflow pipeline daily. Monitor the pipeline's execution using the Dataflow job monitoring interface and Cloud Monitoring.",
+        "C": "Use Cloud Scheduler to trigger a Dataproc job to execute the pipeline daily. Monitor the job's progress using the Dataproc job web interface and CloudMonitoring.",
+        "D": "Create a direct acyclic graph (DAG) in Cloud Composer to orchestrate a pipeline trigger daily. Monitor the pipeline's execution using the Apache Airflow web interface and Cloud Monitoring."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Cloud Composer (dựa trên Apache Airflow mã nguồn mở) cho phép điều phối và tự động hóa các luồng công việc phức tạp. Bạn có thể giữ nguyên mã nguồn ETL cũ (chạy qua shell script hoặc các chương trình có sẵn) bằng cách gọi chúng thông qua các BashOperator hoặc các toán tử tương ứng trong đồ thị DAG mà không cần viết lại mã nguồn, đồng thời nhận được khả năng giám sát trực quan đầy đủ từ giao diện Airflow và Cloud Monitoring."
+    },
+    {
+      "id": 88,
+      "question": "You have an existing weekly Storage Transfer Service transfer job from Amazon S3 to a Nearline Cloud Storage bucket in Google Cloud. Each week, the job moves a large number of relatively small files. As the number of files to be transferred each week has grown over time, you are at risk of no longer completing the transfer in the allocated time frame. You need to decrease the total transfer time by replacing the process. Your solution should minimize costs where possible. What should you do?",
+      "choices": {
+        "A": "Create parallel transfer jobs using include and exclude prefixes.",
+        "B": "Create a transfer job using the Google Cloud CLI, and specify the Standard storage class with the --custom-storage-class flag.",
+        "C": "Create a batch Dataflow job that is scheduled weekly to migrate the data from Amazon S3 to Cloud Storage.",
+        "D": "Create an agent-based transfer job that utilizes multiple transfer agents on Compute Engine instances."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để giảm thiểu thời gian truyền tải khi số lượng tệp nhỏ tăng lên mà không phát sinh thêm chi phí xây dựng hạ tầng mới, giải pháp tối ưu nhất là chia nhỏ luồng truyền tải thành nhiều công việc song song (parallel transfer jobs) bằng cách sử dụng các bộ lọc tiền tố tệp (include và exclude prefixes) để chạy đồng thời trên Storage Transfer Service."
+    },
+    {
+      "id": 89,
+      "question": "Your company has an on-premises file server with 5 TB of data that needs to be migrated to Google Cloud. The network operations team has mandated that you can only use up to 250 Mbps of the total available bandwidth for the migration. You need to perform an online migration to Cloud Storage. What should you do?",
+      "choices": {
+        "A": "Use the gcloud storage cp command to copy all files from on-premises to Cloud Storage using the --daisy-chain option.",
+        "B": "Use Storage Transfer Service to configure an agent-based transfer. Set the appropriate bandwidth limit for the agent pool.",
+        "C": "Request a Transfer Appliance, copy the data to the appliance, and ship it back to Google Cloud.",
+        "D": "Use the gcloud storage cp command to copy all files from on-premises to Cloud Storage using the --no-clobber option."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Storage Transfer Service (STS) hỗ trợ di chuyển dữ liệu từ máy chủ nội bộ lên đám mây thông qua việc cài đặt các tác nhân truyền tải (transfer agents). STS cho phép cấu hình giới hạn băng thông tối đa (bandwidth limit) trực tiếp cho nhóm tác nhân (agent pool), giúp đảm bảo tuân thủ giới hạn 250 Mbps do đội vận hành mạng yêu cầu mà vẫn thực hiện di chuyển trực tuyến tự động."
+    },
+    {
+      "id": 90,
+      "question": "You manage data at an ecommerce company. You have a Dataflow pipeline that processes order data from Pub/Sub, enriches the data with product information from Bigtable, and writes the processed data to BigQuery for analysis. The pipeline runs continuously and processes thousands of orders every minute. You need to monitor the pipeline's performance and be alerted if errors occur. What should you do?",
+      "choices": {
+        "A": "Use Cloud Logging to view the pipeline logs and check for errors. Set up alerts based on specific keywords in the logs.",
+        "B": "Use the Dataflow job monitoring interface to visually inspect the pipeline graph, check for errors, and configure notifications when critical errors occur.",
+        "C": "Use Cloud Monitoring to track key metrics. Create alerting policies in Cloud Monitoring to trigger notifications when metrics exceed thresholds or when errors occur.",
+        "D": "Use BigQuery to analyze the processed data in Cloud Storage and identify anomalies or inconsistencies. Set up scheduled alerts based when anomalies or inconsistencies occur."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đối với các hệ thống xử lý dữ liệu liên tục quy mô lớn, việc thiết lập giám sát chủ động bằng Cloud Monitoring là giải pháp tiêu chuẩn. Bạn có thể xây dựng các chính sách cảnh báo (alerting policies) để gửi thông báo tự động (qua email, Slack, v.v.) ngay khi các chỉ số hiệu năng vượt quá ngưỡng an toàn hoặc khi tỷ lệ lỗi của Dataflow tăng cao."
+    },
+    {
+      "id": 91,
+      "question": "Your company is setting up an enterprise business intelligence platform. You need to limit data access between many different teams while following the Google-recommended approach. What should you do first?",
+      "choices": {
+        "A": "Create a separate Looker Studio report for each team, and share each report with the individual within each team.",
+        "B": "Create one Looker Studio report with multiple pages, and add each team's data as a separate data source to the report.",
+        "C": "Create a Looker (Google Cloud core) instance, and create a separate dashboard for each team.",
+        "D": "Create a Looker (Google Cloud core) instance, and configure different Looker groups for each team."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi thiết lập nền tảng BI doanh nghiệp bằng Looker (Google Cloud Core), bước đầu tiên quan trọng và tuân thủ thực hành tốt nhất là cấu hình các nhóm người dùng Looker (Looker Groups) cho từng phòng ban. Điều này tạo cơ sở để phân quyền truy cập dữ liệu và tài nguyên một cách có hệ thống, bảo mật và dễ quản lý về sau."
+    },
+    {
+      "id": 92,
+      "question": "You need to create a data pipeline for a new application. Your application will stream data that needs to be enriched and cleaned. Eventually, the data will be used to train machine learning models. You need to determine the appropriate data manipulation methodology and which Google Cloud services to use in this pipeline. What should you choose?",
+      "choices": {
+        "A": "ETL; Dataflow -> BigQuery",
+        "B": "ETL; Cloud Data Fusion -> Cloud Storage",
+        "C": "ELT; Cloud Storage -> Bigtable",
+        "D": "ELT; Cloud SQL-> Analytics Hub"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đối với luồng dữ liệu truyền phát (streaming data) cần làm sạch và làm phong phú dữ liệu (enrichment) trước khi nạp vào kho lưu trữ để chạy huấn luyện ML, phương pháp ETL (Extract - Transform - Load) sử dụng Dataflow để xử lý thời gian thực và ghi kết quả sạch vào BigQuery là kiến trúc chuẩn xác nhất."
+    },
+    {
+      "id": 93,
+      "question": "You are designing an application that will interact with several BigQuery datasets. You need to grant the application's service account permissions that allow it to query and update tables within the datasets, and list all datasets in a project within your application. You want to follow the principle of least privilege. Which pre-defined IAM role(s) should you apply to the service account?",
+      "choices": {
+        "A": "roles/bigquery.jobUser and roles/bigquery.dataOwner",
+        "B": "roles/bigquery.connectionUser and roles/bigquery.dataViewer",
+        "C": "roles/bigquery.admin",
+        "D": "roles/bigquery.studioUser and roles/bigquery.filtereddataViewer"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Theo nguyên tắc phân quyền tối thiểu, để tài khoản dịch vụ (service account) có thể thực thi truy vấn (tạo job) và cập nhật dữ liệu trong các dataset, vai trò `roles/bigquery.jobUser` (cho phép chạy job ở cấp dự án) và `roles/bigquery.dataOwner` (cho phép đọc, ghi và liệt kê danh sách dataset/tables ở cấp dataset) là sự kết hợp tối thiểu và bảo mật nhất."
+    },
+    {
+      "id": 94,
+      "question": "Your company is adopting BigQuery as their data warehouse platform. Your team has experienced Python developers. You need to recommend a fully-managed tool to build batch ETL processes that extract data from various source systems, transform the data using a variety of Google services, and load the transformed data into BigQuery. You want this tool to leverage your team's Python skills. What should you do?",
+      "choices": {
+        "A": "Use Dataform with assertions.",
+        "B": "Deploy Cloud Data Fusion and included plugins.",
+        "C": "Use Cloud Composer with pre-built operators.",
+        "D": "Use Dataflow and pre-built templates."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cloud Composer (Apache Airflow) là công cụ điều phối quy trình công việc viết hoàn toàn bằng Python. Đối với đội ngũ phát triển có kỹ năng Python tốt, sử dụng Cloud Composer giúp họ dễ dàng viết các mã nguồn tự tùy biến (DAGs) kết hợp với các toán tử dựng sẵn (operators) của Google Cloud để quản lý luồng ETL một cách trực quan và linh hoạt."
+    },
+    {
+      "id": 95,
+      "question": "Your data science team needs to collaboratively analyze a 25 TB BigQuery dataset to support the development of a machine learning model. You want to use Colab Enterprise notebooks while ensuring efficient data access and minimizing cost. What shout you do?",
+      "choices": {
+        "A": "Export the BigQuery dataset to Google Drive. Load the dataset into the Colab Enterprise notebook using Pandas.",
+        "B": "Use BigQuery magic commands within a Colab Enterprise notebook to query and analyze the data.",
+        "C": "Create a Dataproc cluster connected to a Colab Enterprise notebook, and use Spark to process the data BigQuery.",
+        "D": "Copy the BigQuery dataset to the local storage of the Colab Enterprise runtime, and analyze the data using Pandas."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc sử dụng lệnh ma thuật BigQuery (`%%bigquery` magic commands) trong sổ ghi chép Colab Enterprise cho phép gửi trực tiếp truy vấn xuống BigQuery để xử lý khối lượng dữ liệu khổng lồ (25 TB). Truy vấn được thực hiện trên hạ tầng phân tán của BigQuery và chỉ trả lại kết quả nhỏ đã tổng hợp về notebook, giúp tối ưu hóa hiệu năng và giảm tối đa chi phí lưu trữ hay truyền tải dữ liệu."
+    },
+    {
+      "id": 96,
+      "question": "You are building a batch data pipeline to process 100 GB of structured data from multiple sources for daily reporting. You need to transform and standardize the data prior to loading the data to ensure that it is stored in a single dataset. You want to use a low-code solution that can be easily built and managed. What should you do?",
+      "choices": {
+        "A": "Use Cloud Storage to store the data. Use Cloud Run functions to perform data cleaning and transformation, and load the data into BigQuery.",
+        "B": "Use Cloud Data Fusion to ingest the data, perform data cleaning and transformation, and load the data into Cloud SQL for PostgreSQL.",
+        "C": "Use Cloud Data Fusion to ingest the data, perform data cleaning and transformation, and load the data into BigQuery.",
+        "D": "Use Cloud Data Fusion to ingest data and load the data into BigQuery. Use Looker Studio to perform data cleaning and transformation."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cloud Data Fusion cung cấp môi trường low-code trực quan giúp dễ dàng thiết kế luồng dữ liệu (ingest), làm sạch và biến đổi dữ liệu từ nhiều nguồn khác nhau, sau đó nạp trực tiếp vào kho dữ liệu BigQuery để phục vụ báo cáo hàng ngày một cách nhanh chóng và dễ quản lý."
+    },
+    {
+      "id": 97,
+      "question": "Following a recent company acquisition, you inherited an on-premises data infrastructure that needs to move to Google Cloud. The acquired system has 250 Apache Airflow directed acyclic graphs (DAGs) orchestrating data pipelines. You need to migrate the pipelines to a Google Cloud managed service with minimal effort. What should you do?",
+      "choices": {
+        "A": "Create a Google Kubernetes Engine (GKE) standard cluster and deploy Airflow as a workload. Migrate all DAGs to the new Airflow environment.",
+        "B": "Create a Cloud Data Fusion instance. For each DAG, create a Cloud Data Fusion pipeline.",
+        "C": "Create a new Cloud Composer environment and copy DAGs to the Cloud Composer dags/ folder.",
+        "D": "Convert each DAG to a Cloud Workflow and automate the execution with Cloud Scheduler."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Vì Cloud Composer là dịch vụ được quản lý hoàn toàn của Google Cloud xây dựng trên nền tảng Apache Airflow, việc di chuyển 250 đồ thị DAGs từ hệ thống cũ chỉ đòi hỏi sao chép các file Python chứa DAG vào thư mục `dags/` trên Cloud Storage của môi trường Cloud Composer mới, giảm thiểu tối đa công sức thiết kế lại hay kiểm thử."
+    },
+    {
+      "id": 98,
+      "question": "Your organization is building a new application on Google Cloud. Several data files will need to be stored in Cloud Storage. Your organization has approved only two specific cloud regions where these data files can reside. You need to determine a Cloud Storage bucket strategy that includes automated high availability. What should you do?",
+      "choices": {
+        "A": "Create a single-region bucket in each of the two regions, and use Storage Transfer Service to replicate the data across the buckets in both regions.",
+        "B": "Create a multi-region bucket, and upload the files to this bucket.",
+        "C": "Create a dual-region bucket, and upload the files to this bucket.",
+        "D": "Create a single-region bucket in each of the two regions, and use the gcloud storage command to replicate the data across the buckets in both regions."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tạo một thùng lưu trữ song vùng (Dual-region bucket) của Cloud Storage cho phép bạn giới hạn dữ liệu chỉ nằm trong hai vùng địa lý cụ thể đã được phê duyệt, đồng thời hệ thống tự động nhân bản và cung cấp khả năng tự động chuyển đổi dự phòng (failover) để đảm bảo tính sẵn sàng cao mà không cần tự viết mã đồng bộ dữ liệu."
+    },
+    {
+      "id": 99,
+      "question": "You need to design a data pipeline to process large volumes of raw server log data stored in Cloud Storage. The data needs to be cleaned, transformed, and aggregated before being loaded into BigQuery for analysis. The transformation involves complex data manipulation using Spark scripts that your team developed. You need to implement a solution that leverages your team's existing skillset, processes data at scale, and minimizes cost. What should you do?",
+      "choices": {
+        "A": "Use Dataform to define the transformations in SQLX.",
+        "B": "Use Dataflow with a custom template for the transformation logic.",
+        "C": "Use Dataproc to run the transformations on a cluster.",
+        "D": "Use Cloud Data Fusion to visually design and manage the pipeline."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi đội ngũ phát triển đã xây dựng sẵn các kịch bản Spark và có kỹ năng vận hành Apache Spark/Hadoop, việc sử dụng Dataproc để khởi tạo nhanh các cụm tính toán chạy Spark job biến đổi dữ liệu nhật ký quy mô lớn từ Cloud Storage rồi ghi vào BigQuery là lựa chọn tự nhiên và tối ưu chi phí nhất."
+    },
+    {
+      "id": 100,
+      "question": "You are designing a BigQuery data warehouse with a team of experienced SQL developers. You need to recommend a cost-effective, fully-managed, serverless solution to build ELT processes with SQL pipelines. Your solution must include source code control, environment parameterization, and data quality checks. What should you do?",
+      "choices": {
+        "A": "Use Cloud Composer to orchestrate and run data workflows.",
+        "B": "Use Dataproc to run MapReduce jobs for distributed data processing.",
+        "C": "Use Dataform to build, orchestrate, and monitor the pipelines.",
+        "D": "Use Cloud Data Fusion to visually design and manage the pipelines."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Dataform cung cấp giải pháp hoàn hảo cho đội ngũ lập trình SQL giàu kinh nghiệm để thiết lập luồng ELT phi máy chủ (serverless) trực tiếp trên BigQuery. Dịch vụ này hỗ trợ đầy đủ các yêu cầu quản lý mã nguồn (Git), biến môi trường linh hoạt và tự động kiểm tra chất lượng dữ liệu thông qua các assertions."
+    },
+    {
+      "id": 101,
+      "question": "You work for a retail company that collects customer data from various sources:\n• Online transactions: Stored in a MySQL database• Customer feedback: Stored as text files on a company server• Social media activity: Streamed in real-time from social media platforms\nYou need to design a data pipeline to extract and load the data into the appropriate Google Cloud storage system(s) for further analysis and ML model training. What should you do?",
+      "choices": {
+        "A": "Extract and load the online transactions data into Bigtable. Import the customer feedback data into Cloud Storage. Store the social media activity in Cloud SQL for MySQL.",
+        "B": "Extract and load the online transactions data into BigQuery. Load the customer feedback data into Cloud Storage. Stream the social media activity by using Pub/Sub and Dataflow, and store the data in BigQuery.",
+        "C": "Extract and load the online transactions data, customer feedback data, and social media activity into Cloud Storage.",
+        "D": "Copy the online transactions data into Cloud SQL for MySQL. Import the customer feedback into BigQuery. Stream the social media activity into Cloud Storage."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Theo kiến trúc phân tích chuẩn trên Google Cloud: (1) Dữ liệu giao dịch trực tuyến (MySQL) được trích xuất nạp vào BigQuery để phân tích; (2) Dữ liệu phản hồi dạng văn bản phi cấu trúc được lưu trữ hiệu quả trên Cloud Storage; (3) Luồng mạng xã hội thời gian thực được thu thập qua Pub/Sub, xử lý bởi Dataflow và lưu trữ vào BigQuery để chạy phân tích và máy học."
+    },
+    {
+      "id": 102,
+      "question": "You are storing data in Cloud Storage for a machine learning project. The data is frequently accessed during the model training phase, minimally accessed after 30 days, and unlikely to be accessed after 90 days. You need to choose the appropriate storage class for the different stages of the project to minimize cost. What should you do?",
+      "choices": {
+        "A": "Store the data in Nearline storage during the model training phase. Transition the data to Coldline storage 30 days after model deployment, and to Archive storage 90 days after model deployment.",
+        "B": "Store the data in Standard storage during the model training phase. Transition the data to Neartine storage 30 days after model deployment, and to Coldline storage 90 days after model deployment.",
+        "C": "Store the data in Standard storage during the model training phase. Transition the data to Durable Reduced Availability (DRA) storage 30 days after model deployment, and to Coldline storage 90 days after model deployment.",
+        "D": "Store the data in Nearline storage during the model training phase. Transition the data to Archive storage 30 days after model deployment, and to Coldline storage 90 days after model deployment."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lộ trình tối ưu hóa chi phí dựa trên vòng đời truy cập dữ liệu là: (1) Sử dụng lớp lưu trữ Standard trong giai đoạn huấn luyện mô hình để đảm bảo tốc độ đọc cao và không phát sinh phí truy xuất dữ liệu; (2) Chuyển dữ liệu sang lớp Nearline sau 30 ngày (khi truy cập ít đi); (3) Chuyển tiếp sang lớp Coldline sau 90 ngày (khi hầu như không truy cập nữa nhưng cần lưu trữ dài hạn)."
+    }
+  ]
+}

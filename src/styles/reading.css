@@ -1,0 +1,121 @@
+/* Reading customization — map data-* trên <html> sang biến, + style panel/nút.
+   Cặp với public/reading-panel.js và pre-paint script trong CustomHead.astro. */
+
+:root[data-measure='narrow'] { --reading-measure: 60ch; --sl-content-width: 60ch; }
+:root[data-measure='medium'] { --reading-measure: 72ch; --sl-content-width: 72ch; }
+:root[data-measure='wide']   { --reading-measure: 88ch; --sl-content-width: 88ch; }
+
+:root[data-font='sans']  { --font-reading: var(--font-sans); }
+:root[data-font='serif'] { --font-reading: var(--font-serif); }
+
+/* Áp measure + font cho phần nội dung bài (không đụng sidebar/nav) */
+.sl-markdown-content {
+  font-family: var(--font-reading, var(--font-sans));
+}
+
+/* Trang splash (trang chủ, danh sách bộ đề, bản đồ nội dung, dự án) tự quản độ rộng */
+:root:has(.home), :root:has(.quiz-index), :root:has(.concept-map), :root:has(.project-index) {
+  --sl-content-width: 100%;
+}
+.sl-markdown-content:has(.home),
+.sl-markdown-content:has(.quiz-index),
+.sl-markdown-content:has(.concept-map),
+.sl-markdown-content:has(.project-index) {
+  /* Các thẻ bên trong tự dàn trang toàn khổ */
+}
+
+/* Nút mở panel: nổi cố định góc phải dưới, xếp trên nút focus (48px, bottom 2rem) */
+.reading-toggle-btn {
+  position: fixed;
+  bottom: calc(2rem + 60px);
+  right: 2rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border-default, var(--sl-color-hairline));
+  background: var(--surface-card, var(--sl-color-bg-nav));
+  color: var(--text-body, var(--sl-color-text));
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(15, 15, 20, 0.08));
+  cursor: pointer;
+  transition: border-color var(--duration-fast, 120ms) var(--ease-standard, ease),
+              background var(--duration-fast, 120ms) var(--ease-standard, ease);
+}
+/* Dưới 1024px nút focus bị ẩn — kéo nút đọc xuống chỗ của nó */
+@media (max-width: 1024px) {
+  .reading-toggle-btn { bottom: 2rem; }
+}
+
+/* Biến thể trên header: đứng cạnh nút đổi theme của Starlight */
+.reading-toggle-btn.in-header {
+  position: static;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md, 8px);
+  box-shadow: none;
+  background: transparent;
+  border-color: transparent;
+  color: var(--sl-color-gray-1, currentColor);
+}
+.reading-toggle-btn.in-header:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+}
+.reading-toggle-btn:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+}
+
+.reading-panel {
+  position: fixed;
+  z-index: 90;
+  width: 300px;
+  max-width: calc(100vw - 2rem);
+  padding: var(--space-5, 1.5rem);
+  background: var(--surface-card, var(--sl-color-bg-nav));
+  border: 1px solid var(--border-default, var(--sl-color-hairline));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(15,15,20,0.08));
+  font-family: var(--font-sans);
+}
+.reading-panel[hidden] { display: none; }
+.reading-panel h3 {
+  margin: 0 0 var(--space-5, 1.5rem);
+  font-size: var(--text-md, 1.1875rem);
+  color: var(--text-heading, var(--sl-color-white));
+}
+.rp-head { display: flex; justify-content: space-between; align-items: center; }
+.rp-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-faint, var(--sl-color-gray-4)); font-size: 1.2rem; line-height: 1;
+}
+.rp-row { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: var(--space-5, 1.5rem); }
+.rp-row:last-child { margin-bottom: 0; }
+.rp-label {
+  font-size: var(--text-xs, 0.8125rem); font-weight: 600;
+  color: var(--text-faint, var(--sl-color-gray-4));
+  text-transform: uppercase; letter-spacing: var(--tracking-wider, 0.06em);
+}
+.rp-seg { display: flex; border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: var(--radius-md, 8px); overflow: hidden; }
+.rp-seg button {
+  flex: 1; padding: 0.4rem 0.5rem; border: none; cursor: pointer;
+  background: transparent; color: var(--text-muted, var(--sl-color-gray-3));
+  font-family: var(--font-sans); font-size: var(--text-sm, 0.9375rem);
+  border-right: 1px solid var(--border-default, var(--sl-color-hairline));
+  transition: background var(--duration-fast,120ms), color var(--duration-fast,120ms);
+}
+.rp-seg button:last-child { border-right: none; }
+.rp-seg button[aria-pressed='true'] {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+  font-weight: 600;
+}
+.rp-range { width: 100%; accent-color: var(--sl-color-accent); }
+.rp-check {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: var(--text-sm, 0.9375rem); color: var(--text-body, var(--sl-color-text));
+}
+.rp-check input { accent-color: var(--sl-color-accent); }

@@ -24,12 +24,7 @@ Trên thực tế, Kiến trúc Medallion hoạt động dựa trên các địn
 ```mermaid
 graph TD
     %% Define Styles
-    classDef source fill:#f9f9f9,stroke:#333,stroke-width:2px;
-    classDef bronze fill:#cd7f32,stroke:#333,stroke-width:2px,color:#fff;
-    classDef silver fill:#c0c0c0,stroke:#333,stroke-width:2px,color:#000;
-    classDef gold fill:#ffd700,stroke:#333,stroke-width:2px,color:#000;
-    classDef compute fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,stroke-dasharray: 5 5;
-
+
     subgraph Sources["Data Sources"]
         Kafka["Apache Kafka / Kinesis"]:::source
         OLTP["PostgreSQL / MySQL CDC"]:::source

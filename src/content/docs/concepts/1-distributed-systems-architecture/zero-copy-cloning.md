@@ -44,9 +44,7 @@ graph TD
     end
     
     B -.->|CoW - New Pointer| P4
-    
-    classDef metadata fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef storage fill:#bbf,stroke:#333,stroke-width:2px;
+
     class A,B metadata;
     class P1,P2,P3,P4 storage;
 ```
