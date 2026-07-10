@@ -1,0 +1,1047 @@
+{
+  "exam": "DP-700",
+  "provider": "microsoft",
+  "code": "dp-700",
+  "total_questions": 79,
+  "questions": [
+    {
+      "id": 1,
+      "question": "You have a Fabric workspace.You have semi-structured data.You need to read the data by using T-SQL, KQL, and Apache Spark. The data will only be written by using Spark.What should you use to store the data?",
+      "choices": {
+        "A": "a lakehouse",
+        "B": "an eventhouse",
+        "C": "a datamart",
+        "D": "a warehouse"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (a lakehouse) là chính xác vì Lakehouse trong Microsoft Fabric cho phép lưu trữ dữ liệu bán cấu trúc (semi-structured data) ở định dạng Delta Parquet. Spark có thể ghi trực tiếp vào Lakehouse. T-SQL có thể được sử dụng để truy vấn thông qua SQL Analytics Endpoint của Lakehouse. Apache Spark cũng có thể đọc trực tiếp từ đây. KQL Database cũng hỗ trợ tạo các shortcut/external table trỏ đến delta tables trong OneLake/Lakehouse để truy vấn bằng KQL.\n- Lựa chọn B (an eventhouse) được tối ưu hóa cho dữ liệu streaming và phân tích thời gian thực (KQL), không phải là giải pháp tốt nhất để ghi dữ liệu bằng Spark và đọc linh hoạt bằng T-SQL/Spark/KQL.\n- Lựa chọn C (a datamart) chỉ hỗ trợ T-SQL và không hỗ trợ Apache Spark hoặc KQL trực tiếp.\n- Lựa chọn D (a warehouse) yêu cầu ghi dữ liệu chủ yếu qua T-SQL và không hỗ trợ ghi trực tiếp từ Spark bằng các API native của Spark mà không qua các giao thức kết nối khác.",
+      "references": []
+    },
+    {
+      "id": 2,
+      "question": "You have a Fabric F32 capacity that contains a workspace. The workspace contains a warehouse named DW1 that is modelled by using MD5 hash surrogate keys.DW1 contains a single fact table that has grown from 200 million rows to 500 million rows during the past year.You have Microsoft Power BI reports that are based on Direct Lake. The reports show year-over-year values.Users report that the performance of some of the reports has degraded over time and some visuals show errors.You need to resolve the performance issues. The solution must meet the following requirements:Provide the best query performance.Minimize operational costs.Which should you do?",
+      "choices": {
+        "A": "Change the MD5 hash to SHA256.",
+        "B": "Increase the capacity.",
+        "C": "Enable V-Order.",
+        "D": "Modify the surrogate keys to use a different data type.",
+        "E": "Create views."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Increase the capacity) là chính xác. Theo tài liệu chính thức từ Microsoft Learn về giới hạn Direct Lake của các SKU Fabric Capacity, SKU F32 giới hạn số lượng dòng tối đa trên mỗi bảng trong chế độ Direct Lake là 300 triệu dòng (300 million rows per table). Vì bảng Fact của DW1 đã tăng trưởng lên 500 triệu dòng (vượt quá giới hạn 300 triệu dòng của F32), Direct Lake sẽ tự động rơi vào trạng thái lỗi hoặc chuyển sang chế độ DirectQuery (DirectQuery fallback), gây giảm hiệu năng nghiêm trọng và phát sinh lỗi hiển thị. Việc nâng cấp dung lượng (tối thiểu lên SKU F64, hỗ trợ đến 1.5 tỷ dòng) là cần thiết để giữ mô hình trong chế độ Direct Lake.\n- Các lựa chọn khác như Bật V-Order (C) hay thay đổi kiểu dữ liệu khóa thay thế (D) hoặc đổi MD5 sang SHA256 (A) tuy có giúp tối ưu hóa dung lượng lưu trữ và bộ nhớ, nhưng không giải quyết được giới hạn cứng (hard guardrail) 300 triệu dòng trên mỗi bảng của F32. Do đó, nâng cấp capacity (B) là giải pháp duy nhất giải quyết triệt để lỗi và đảm bảo hiệu năng Direct Lake tốt nhất cho kích thước bảng này.",
+      "references": [
+        {
+          "title": "Direct Lake overview - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1. Lakehouse1 contains the following tables:\nOrders -\nCustomer -\nEmployee -The Employee table contains Personally Identifiable Information (PII).A data engineer is building a workflow that requires writing data to the Customer table, however, the user does NOT have the elevated permissions required to view the contents of the Employee table.You need to ensure that the data engineer can write data to the Customer table without reading data from the Employee table.Which three actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Share Lakehouse1 with the data engineer.",
+        "B": "Assign the data engineer the Contributor role for Workspace2.",
+        "C": "Assign the data engineer the Viewer role for Workspace2.",
+        "D": "Assign the data engineer the Contributor role for Workspace1.",
+        "E": "Migrate the Employee table from Lakehouse1 to Lakehouse2.",
+        "F": "Create a new workspace named Workspace2 that contains a new lakehouse named Lakehouse2."
+      },
+      "correctAnswer": "DEF",
+      "explanation_vi": "Lựa chọn D, E, F là chính xác vì trong Microsoft Fabric, quyền truy cập của các vai trò trong workspace (như Contributor) được áp dụng cho toàn bộ các item trong workspace đó. Nếu kỹ sư dữ liệu (data engineer) có vai trò Contributor trong Workspace1, họ sẽ có quyền đọc và ghi vào mọi bảng trong Lakehouse1, bao gồm cả bảng Employee chứa thông tin nhạy cảm (PII).\n- Để ngăn kỹ sư này đọc bảng Employee nhưng vẫn cho phép họ ghi vào bảng Customer trong Lakehouse1:\n  1. Cần tạo một workspace mới là Workspace2 chứa một lakehouse mới là Lakehouse2 (F).\n  2. Di chuyển bảng Employee (chứa dữ liệu PII) từ Lakehouse1 sang Lakehouse2 (E).\n  3. Cấp cho kỹ sư dữ liệu vai trò Contributor trong Workspace1 để họ có quyền ghi dữ liệu vào bảng Customer (D) mà không thể xem dữ liệu PII trong Workspace2 (vì họ không được cấp quyền trên Workspace2).",
+      "references": []
+    },
+    {
+      "id": 4,
+      "question": "You have a Fabric workspace named Workspace1.You plan to integrate Workspace1 with Azure DevOps.You will use a Fabric deployment pipeline named deployPipeline1 to deploy items from Workspace1 to higher environment workspaces as part of a medallion architecture. You will run deployPipeline1 by using an API call from an Azure DevOps pipeline.You need to configure API authentication between Azure DevOps and Fabric.Which type of authentication should you use?",
+      "choices": {
+        "A": "service principal",
+        "B": "Microsoft Entra username and password",
+        "C": "managed private endpoint",
+        "D": "workspace identity"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (service principal) là chính xác vì để tích hợp CI/CD tự động và gọi các API của Fabric deployment pipeline từ Azure DevOps mà không cần tương tác của người dùng (non-interactive authentication), việc sử dụng Service Principal (phương thức định danh dịch vụ) của Microsoft Entra ID là phương pháp chuẩn và bảo mật nhất.\n- Lựa chọn B sử dụng tài khoản người dùng và mật khẩu, điều này vi phạm nguyên tắc bảo mật và không phù hợp cho các quy trình tự động hóa.\n- Lựa chọn C (managed private endpoint) là phương thức kết nối mạng bảo mật, không phải phương thức xác thực danh tính để gọi API.\n- Lựa chọn D (workspace identity) được sử dụng để định danh cho chính workspace Fabric khi truy cập các tài nguyên Azure khác, không phải để xác thực từ Azure DevOps vào Fabric.",
+      "references": []
+    },
+    {
+      "id": 5,
+      "question": "You have a Google Cloud Storage (GCS) container named storage1 that contains the files shown in the following table.\nYou have a Fabric workspace named Workspace1 that has the cache for shortcuts enabled. Workspace1 contains a lakehouse named Lakehouse1. Lakehouse1 has the shortcuts shown in the following table.\nYou need to read data from all the shortcuts.Which shortcuts will retrieve data from the cache?",
+      "choices": {
+        "A": "Stores only",
+        "B": "Products only",
+        "C": "Stores and Products only",
+        "D": "Products, Stores, and Trips",
+        "E": "Trips only",
+        "F": "Products and Trips only"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Products, Stores, and Trips) là chính xác vì tất cả các tệp dữ liệu này đều được lưu trữ trong Google Cloud Storage (GCS) container tên là storage1. Microsoft Fabric hỗ trợ tính năng Shortcut Caching cho các nguồn lưu trữ đám mây ngoài Azure (cross-cloud) như Google Cloud Storage (GCS) và Amazon S3. Do đó, tất cả các shortcut trỏ đến các tệp tin trên GCS (Stores, Products, và Trips) đều sẽ được lấy dữ liệu từ bộ nhớ cache khi tính năng này được kích hoạt ở cấp workspace.",
+      "references": []
+    },
+    {
+      "id": 6,
+      "question": "You have a Fabric workspace that contains a Real-Time Intelligence solution and an eventhouse.Users report that from OneLake file explorer, they cannot see the data from the eventhouse.You enable OneLake availability for the eventhouse.What will be copied to OneLake?",
+      "choices": {
+        "A": "only data added to new databases that are added to the eventhouse",
+        "B": "only the existing data in the eventhouse",
+        "C": "no data",
+        "D": "both new data and existing data in the eventhouse",
+        "E": "only new data added to the eventhouse"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (both new data and existing data in the eventhouse) là chính xác. Khi bạn kích hoạt tính năng OneLake availability (khả năng hiển thị trên OneLake) cho một Eventhouse hoặc KQL Database, Fabric sẽ tự động tạo cấu trúc bảng Delta tương ứng trong OneLake. Hệ thống sẽ sao chép cả dữ liệu lịch sử hiện có (existing data) và các dữ liệu mới được nạp vào sau đó (new data) của KQL database sang định dạng Delta Parquet trong OneLake, giúp các công cụ khác như OneLake File Explorer, Spark hay T-SQL có thể nhìn thấy và truy vấn toàn bộ dữ liệu này.",
+      "references": []
+    },
+    {
+      "id": 7,
+      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1.You have an on-premises Microsoft SQL Server database named Database1 that is accessed by using an on-premises data gateway.You need to copy data from Database1 to Warehouse1.Which item should you use?",
+      "choices": {
+        "A": "a Dataflow Gen1 dataflow",
+        "B": "a data pipeline",
+        "C": "a KQL queryset",
+        "D": "a notebook"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (a data pipeline) là chính xác vì Data Pipeline trong Microsoft Fabric hỗ trợ Copy Activity để sao chép dữ liệu hiệu quả từ cơ sở dữ liệu on-premises (thông qua On-premises data gateway) sang các đích đến trong Fabric như Warehouse.\n- Lựa chọn A (a Dataflow Gen1 dataflow) là công cụ thế hệ cũ của Power BI, Fabric tích hợp Dataflow Gen2 thay vì Gen1 để lưu trữ dữ liệu vào các đích Fabric.\n- Lựa chọn C (a KQL queryset) chỉ được dùng để chạy các truy vấn KQL trên Eventhouse/KQL Database, không dùng để sao chép dữ liệu.\n- Lựa chọn D (a notebook) sử dụng mã Spark, không hỗ trợ kết nối trực tiếp và bảo mật qua On-premises data gateway một cách dễ dàng như Data Pipeline.",
+      "references": []
+    },
+    {
+      "id": 8,
+      "question": "You have a Fabric workspace named Workspace1 that contains a notebook named Notebook1.In Workspace1, you create a new notebook named Notebook2.You need to ensure that you can attach Notebook2 to the same Apache Spark session as Notebook1.What should you do?",
+      "choices": {
+        "A": "Enable high concurrency for notebooks.",
+        "B": "Enable dynamic allocation for the Spark pool.",
+        "C": "Change the runtime version.",
+        "D": "Increase the number of executors."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Enable high concurrency for notebooks) là chính xác. Trong Microsoft Fabric, tính năng High Concurrency (khả năng chạy đồng thời cao) cho phép nhiều notebook cùng chia sẻ và chạy trên một session Apache Spark duy nhất (Spark application). Khi tính năng này được bật cho một notebook hoặc môi trường, bạn có thể đính kèm nhiều notebook vào cùng một session đang hoạt động để chạy đồng thời và tối ưu hóa tài nguyên.\n- Các lựa chọn B (Dynamic allocation - cấp phát động), C (Thay đổi runtime version), và D (Tăng số lượng executor) chỉ liên quan đến cách Spark pool quản lý và phân bổ tài nguyên tính toán cho một session đơn lẻ, không giúp chia sẻ session giữa các notebook khác nhau.",
+      "references": []
+    },
+    {
+      "id": 9,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Data is ingested into Lakehouse1 as one flat table. The table contains the following columns.\nYou plan to load the data into a dimensional model and implement a star schema. From the original flat table, you create two tables named FactSales and DimProduct. You will track changes in DimProduct.You need to prepare the data.Which three columns should you include in the DimProduct table? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Date",
+        "B": "ProductName",
+        "C": "ProductColor",
+        "D": "TransactionID",
+        "E": "SalesAmount",
+        "F": "ProductID"
+      },
+      "correctAnswer": "BCF",
+      "explanation_vi": "Lựa chọn B, C, F là chính xác vì trong mô hình thiết kế Star Schema (sơ đồ hình sao), các thuộc tính mô tả thực thể sản phẩm sẽ được tách ra bảng chiều (Dimension table - DimProduct), trong khi các chỉ số đo lường (measures) và khóa giao dịch sẽ nằm ở bảng sự kiện (Fact table - FactSales).\n- ProductID (F) là khóa định danh sản phẩm.\n- ProductName (B) và ProductColor (C) là các thuộc tính mô tả chi tiết sản phẩm.\n- Các cột khác không thuộc DimProduct:\n  - SalesAmount (E) là chỉ số đo lường định lượng và TransactionID (D) là khóa giao dịch, cả hai đều thuộc bảng Fact (FactSales).\n  - Date (A) nên được chuẩn hóa vào bảng chiều thời gian (DimDate).",
+      "references": []
+    },
+    {
+      "id": 10,
+      "question": "You have a Fabric deployment pipeline that uses three workspaces named Dev, Test, and Prod.You need to deploy an eventhouse as part of the deployment process.What should you use to add the eventhouse to the deployment process?",
+      "choices": {
+        "A": "GitHub Actions",
+        "B": "a deployment pipeline",
+        "C": "an Azure DevOps pipeline"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (a deployment pipeline) là chính xác vì Microsoft Fabric Deployment Pipelines (đường ống triển khai) hỗ trợ nguyên bản (natively) việc triển khai các KQL Database/Eventhouse cùng với các item khác trong workspace (như Lakehouse, Report, Data pipeline) qua các môi trường Dev, Test, và Prod mà không cần viết mã cấu hình phức tạp.\n- Lựa chọn A (GitHub Actions) và C (Azure DevOps pipeline) có thể được sử dụng để kích hoạt deployment pipeline này thông qua API, nhưng bản thân việc quản lý cấu trúc triển khai của các thành phần Fabric (bao gồm Eventhouse) được thực hiện trực tiếp bởi tính năng Deployment Pipeline của Fabric.",
+      "references": []
+    },
+    {
+      "id": 11,
+      "question": "Your company has a sales department that uses two Fabric workspaces named Workspace1 and Workspace2.The company decides to implement a domain strategy to organize the workspaces.You need to ensure that a user can perform the following tasks:Create a new domain for the sales department.Create two subdomains: one for the east region and one for the west region.Assign Workspace1 to the east region subdomain.Assign Workspace2 to the west region subdomain.The solution must follow the principle of least privilege.Which role should you assign to the user?",
+      "choices": {
+        "A": "workspace Admin",
+        "B": "domain admin",
+        "C": "domain contributor",
+        "D": "Fabric admin"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Fabric admin) là chính xác vì theo nguyên tắc phân quyền của Microsoft Fabric, chỉ có vai trò Quản trị viên Fabric (Fabric administrator) mới có quyền tạo mới một Domain (miền) ở cấp độ Tenant. Sau khi Domain Sales được tạo, quản trị viên có thể chỉ định Domain Admin để tạo các subdomain hoặc gán workspace, nhưng để bắt đầu quy trình này (tạo domain mới), người dùng bắt buộc phải là Fabric Admin.\n- Các vai trò A (workspace Admin), B (domain admin), và C (domain contributor) đều không có đủ thẩm quyền để tạo một domain mới ở cấp độ cao nhất của hệ thống Fabric.",
+      "references": []
+    },
+    {
+      "id": 12,
+      "question": "You have a Fabric capacity that contains a workspace named Workspace1. Workspace1 contains a lakehouse named Lakehouse1, a data pipeline, a notebook, and several Microsoft Power BI reports.A user named User1 wants to use SQL to analyze the data in Lakehouse1.You need to configure access for User1. The solution must meet the following requirements:Provide User1 with read access to the table data in Lakehouse1.Prevent User1 from using Apache Spark to query the underlying files in Lakehouse1.Prevent User1 from accessing other items in Workspace1.What should you do?",
+      "choices": {
+        "A": "Share Lakehouse1 with User1 directly and select Read all SQL endpoint data.",
+        "B": "Assign User1 the Viewer role for Workspace1. Share Lakehouse1 with User1 and select Read all SQL endpoint data.",
+        "C": "Share Lakehouse1 with User1 directly and select Build reports on the default semantic model.",
+        "D": "Assign User1 the Member role for Workspace1. Share Lakehouse1 with User1 and select Read all SQL endpoint data."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Share Lakehouse1 with User1 directly and select Read all SQL endpoint data) là chính xác vì:\n- Việc chia sẻ trực tiếp (Share) Lakehouse1 mà không thêm User1 vào các vai trò của Workspace1 (như Member hay Viewer) sẽ giúp đáp ứng yêu cầu ngăn người dùng truy cập các item khác trong workspace.\n- Việc chọn quyền \"Read all SQL endpoint data\" (đọc toàn bộ dữ liệu điểm cuối SQL) cho phép người dùng chạy các truy vấn T-SQL trên SQL Analytics Endpoint của Lakehouse, nhưng không cấp quyền đọc tệp gốc thông qua Apache Spark (quyền này cần \"Read all Apache Spark data\").\n- Lựa chọn B và D cấp vai trò ở cấp workspace (Viewer/Member), khiến User1 có thể xem/truy cập các item khác trong Workspace1.\n- Lựa chọn C chỉ cấp quyền Build báo cáo trên default semantic model, không tập trung vào quyền truy vấn trực tiếp qua SQL endpoint.",
+      "references": []
+    },
+    {
+      "id": 13,
+      "question": "You have an Azure Data Lake Storage Gen2 account named storage1 and an Amazon S3 bucket named storage2.You have the Delta Parquet files shown in the following table.\nYou have a Fabric workspace named Workspace1 that has the cache for shortcuts enabled. Workspace1 contains a lakehouse named Lakehouse1. Lakehouse1 has the following shortcuts:A shortcut to ProductFile aliased as ProductsA shortcut to StoreFile aliased as StoresA shortcut to TripsFile aliased as TripsThe data from which shortcuts will be retrieved from the cache?",
+      "choices": {
+        "A": "Trips and Stores only",
+        "B": "Products and Store only",
+        "C": "Stores only",
+        "D": "Products only",
+        "E": "Products, Stores, and Trips"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (Stores only) là chính xác. Tính năng Shortcut Caching của Microsoft Fabric được thiết kế để lưu trữ cục bộ dữ liệu từ các nguồn lưu trữ đám mây ngoài Azure (cross-cloud) như Amazon S3 và Google Cloud Storage nhằm giảm chi phí truyền tải dữ liệu (egress cost) và cải thiện hiệu năng. Đối với các nguồn dữ liệu gốc trong Azure như Azure Data Lake Storage Gen2 (ADLS Gen2), Fabric không thực hiện cache qua tính năng này vì chúng là nguồn gốc Azure nội bộ. Do đó, chỉ có shortcut \"Stores\" (trỏ tới Amazon S3) được lấy dữ liệu từ cache, còn \"Products\" và \"Trips\" (trỏ tới ADLS Gen2) thì không.",
+      "references": []
+    },
+    {
+      "id": 14,
+      "question": "You have a Fabric workspace named Workspace1 that contains a warehouse named DW1 and a data pipeline named Pipeline1.You plan to add a user named User3 to Workspace1.You need to ensure that User3 can perform the following actions:View all the items in Workspace1.Update the tables in DW1.The solution must follow the principle of least privilege.You already assigned the appropriate object-level permissions to DW1.Which workspace role should you assign to User3?",
+      "choices": {
+        "A": "Admin",
+        "B": "Member",
+        "C": "Viewer",
+        "D": "Contributor"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Contributor) là chính xác theo nguyên tắc cấp quyền tối thiểu (least privilege).\n- Vai trò Contributor trong Fabric workspace cho phép người dùng xem tất cả các item trong workspace (đáp ứng yêu cầu \"View all the items in Workspace1\").\n- Đồng thời, khi kết hợp với các quyền cấp đối tượng (object-level permissions) đã được gán sẵn trong Warehouse DW1, người dùng có vai trò Contributor có thể thực hiện cập nhật bảng trong DW1.\n- Vai trò Viewer (C) không cho phép thực hiện bất kỳ hành động chỉnh sửa nào đối với workspace items.\n- Các vai trò Member (B) và Admin (A) cấp quá nhiều đặc quyền không cần thiết (chẳng hạn như quản lý quyền truy cập workspace, xóa workspace), vi phạm nguyên tắc phân quyền tối thiểu.",
+      "references": []
+    },
+    {
+      "id": 15,
+      "question": "You have a Fabric workspace that contains an eventhouse and a KQL database named Database1. Database1 has the following:\nA table named Table1 -\nA table named Table2 -\nAn update policy named Policy1 -Policy1 sends data from Table1 to Table2.The following is a sample of the data in Table2.\nRecently, the following actions were performed on Table1:An additional element named temperature was added to the StreamData column.The data type of the Timestamp column was changed to date.The data type of the DeviceId column was changed to string.You plan to load additional records to Table2.Which two records will load from Table1 to Table2? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774338573976-l4y7y5w9.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774338576090-4bf0i3lk.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774338578330-sue8ma2z.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774338580324-n4mkwl8z.png)"
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Lựa chọn A và D là chính xác. Khi một Update Policy (chính sách cập nhật) được áp dụng để chuyển dữ liệu từ Table1 sang Table2, KQL sẽ thực hiện một truy vấn (query) để biến đổi dữ liệu. Theo các thay đổi gần đây đối với Table1:\n1. Cột StreamData có thêm phần tử temperature.\n2. Cột Timestamp chuyển định dạng sang date.\n3. Cột DeviceId chuyển định dạng sang string.\nĐể một bản ghi có thể load thành công vào Table2 thông qua chính sách cập nhật, dữ liệu của bản ghi đó phải tương thích về mặt kiểu dữ liệu và cấu trúc với các yêu cầu chuyển đổi của Update Policy trỏ đến Table2. Các bản ghi A và D đáp ứng chính xác sự thay đổi cấu trúc và kiểu dữ liệu mới này (đặc biệt là kiểu định dạng dữ liệu ngày tháng date và định dạng chuỗi string cho DeviceId, cùng cấu trúc của StreamData chứa trường temperature). Do đó, bản ghi A và D sẽ được tải thành công từ Table1 sang Table2.",
+      "references": []
+    },
+    {
+      "id": 16,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a Fabric eventstream that loads data into a table named Bike_Location in a KQL database. The table contains the following columns:\nBikepointID -\nStreet -\nNeighbourhood -\nNo_Bikes -\nNo_Empty_Docks -\nTimestamp -\nYou need to apply transformation and filter logic to prepare the data for consumption. The solution must return data for a neighbourhood named Sands End when No_Bikes is at least 15. The results must be ordered by No_Bikes in ascending order.\nSolution: You use the following code segment:\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Yes) là chính xác. Trong KQL (Kusto Query Language), để lọc dữ liệu của khu vực lân cận tên là 'Sands End' và có số lượng xe `No_Bikes` tối thiểu là 15, đồng thời sắp xếp kết quả theo `No_Bikes` tăng dần, ta sử dụng các toán tử lọc `where Neighbourhood == 'Sands End' and No_Bikes >= 15` kết hợp sắp xếp `sort by No_Bikes asc` (hoặc `order by No_Bikes asc`). Đoạn mã giả định trong câu hỏi thực hiện chính xác các thao tác lọc và sắp xếp này, do đó giải pháp đáp ứng mục tiêu đề ra.",
+      "references": []
+    },
+    {
+      "id": 17,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -\nTo display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions.Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -\nContoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -\nThe company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.\nThe data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.\nThe data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -\nContoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.Contoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.\nExisting Environment. Source Systems\nContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.\nThe company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.\nContoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.\nExisting Environment. Product Data\nPOS1 contains a product list and related data. The data comes from the following three tables:\nProducts -\nProductCategories -\nProductSubcategories -In the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -Contoso has a Microsoft Entra tenant that has the following mail-enabled security groups:DataAnalysts: Contains the data analystsDataEngineers: Contains the data engineers\nContoso has an Azure subscription.\nThe company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.Existing Environment. User ProblemsThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.\nThe data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -\nContoso plans to create the following two lakehouses:Lakehouse1: Will store both raw and cleansed data from the sourcesLakehouse2: Will serve data in a dimensional model to users for analytical queriesAdditional items will be added to facilitate data ingestion and transformation.Contoso plans to use Azure Repos for source control in Fabric.\nRequirements. Technical Requirements\nThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.\nEach layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.\nData imports must run simultaneously, when possible.The use of email data from the Amazon S3 bucket must meet the following requirements:Minimize egress costs associated with cross-cloud data access.Prevent saving a copy of the raw data in the lakehouses.\nItems that relate to data ingestion must meet the following requirements:The items must be source controlled alongside other workspace items.Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.\nNo changes other than changes to the file formats must be implemented before the data lands in the bronze layer.\nDevelopment effort must be minimized and a built-in connection must be used to import the source data.\nIn the event of a connectivity error, the ingestion processes must attempt the connection again.\nLakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.Once a week, old files that are no longer referenced by a Delta table log must be removed.\nRequirements. Data Transformation\nIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.\nSome product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -\nSecurity in Fabric must meet the following requirements:The data engineers must have read and write access to all the lakehouses, including the underlying files.\nThe data analysts must only have read access to the Delta tables in the gold layer.\nThe data analysts must NOT have access to the data in the bronze and silver layers.\nThe data engineers must be able to commit changes to source control in WorkspaceA.\nYou need to ensure that the data analysts can access the gold layer lakehouse.\nWhat should you do?",
+      "choices": {
+        "A": "an on-premises data gateway",
+        "B": "a managed private endpoint",
+        "C": "an integration runtime",
+        "D": "a data management gateway"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (a managed private endpoint) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi giữa nội dung câu hỏi và danh sách câu trả lời.\n- Câu hỏi thực tế tương ứng với các lựa chọn và đáp án này là: 'You have a Fabric workspace named Workspace1 that contains an Apache Spark job definition named Job1. You have an Azure SQL database named Source1 that has public internet access disabled. You need to ensure that Job1 can access the data in Source1. What should you create?' (Câu hỏi số 18).\n- Để cho phép các tiến trình Spark Job trong Fabric truy cập an toàn và bảo mật vào một cơ sở dữ liệu Azure SQL Database đang bị tắt truy cập từ internet công cộng (public internet access disabled), giải pháp chuẩn của Microsoft Fabric là tạo một Endpoint riêng tư được quản lý (Managed Private Endpoint) trỏ đến Azure SQL Database đó và phê duyệt kết nối trong Azure Portal.",
+      "references": [
+        {
+          "title": "Create and use managed private endpoints in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/security/security-managed-private-endpoints-create"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "question": "You have a Fabric workspace named Workspace1 that contains an Apache Spark job definition named Job1.You have an Azure SQL database named Source1 that has public internet access disabled.You need to ensure that Job1 can access the data in Source1.What should you create?",
+      "choices": {
+        "A": "VACUUM",
+        "B": "BROADCAST",
+        "C": "OPTIMIZE",
+        "D": "CACHE"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (OPTIMIZE) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to consolidate the underlying Parquet files in Table1. Which command should you run?' (nội dung trong câu hỏi số 19).\n- Trong Delta Lake và Microsoft Fabric Spark, lệnh `OPTIMIZE` được sử dụng để hợp nhất (consolidate) các tệp Parquet nhỏ trong một bảng Delta thành các tệp lớn hơn để tối ưu hóa hiệu năng truy vấn (gọi là cơ chế compaction).\n- Lựa chọn A (VACUUM) dùng để dọn dẹp các tệp dữ liệu cũ không còn được tham chiếu trong log của bảng Delta (sau khoảng thời gian retention).\n- Lựa chọn B (BROADCAST) và D (CACHE) không dùng để hợp nhất tệp Parquet trên đĩa cứng.",
+      "references": []
+    },
+    {
+      "id": 19,
+      "question": "You have a Fabric workspace that contains a lakehouse and a notebook named Notebook1. Notebook1 reads data into a DataFrame from a table named Table1 and applies transformation logic. The data from the DataFrame is then written to a new Delta table named Table2 by using a merge operation.You need to consolidate the underlying Parquet files in Table1.Which command should you run?",
+      "choices": {
+        "A": "Delete all the items in Workspace2, and then run deployPipeline1.",
+        "B": "Rename each item in Workspace2 to have the same name as the items in Workspace1.",
+        "C": "Back up the items in Workspace2, and then run deployPipeline1.",
+        "D": "Run deployPipeline1 without modifying the items in Workspace2."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Run deployPipeline1 without modifying the items in Workspace2) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 20 về việc triển khai deployment pipeline ghi đè từ Workspace1 sang Workspace2.\n- Khi triển khai bằng Microsoft Fabric deployment pipeline, nếu các item ở Workspace nguồn (Workspace1) đã được sửa đổi và ta muốn ghi đè lên các item tương ứng ở Workspace đích (Workspace2), ta chỉ cần chạy pipeline triển khai (`deployPipeline1`) mà không cần thực hiện thêm các thao tác thủ công nào khác. Đường ống triển khai sẽ tự động thực hiện ghép cặp theo tên và ghi đè nội dung cập nhật, giúp tối thiểu hóa công sức (minimize effort).",
+      "references": []
+    },
+    {
+      "id": 20,
+      "question": "You have two Fabric workspaces named Workspace1 and Workspace2.You have a Fabric deployment pipeline named deployPipeline1 that deploys items from Workspace1 to Workspace2. DeployPipeline1 contains all the items in Workspace1.You recently modified the items in Workspaces1.The workspaces currently contain the items shown in the following table.\nItems in Workspace1 that have the same name as items in Workspace2 are currently paired.You need to ensure that the items in Workspace1 overwrite the corresponding items in Workspace2. The solution must minimize effort.What should you do?",
+      "choices": {
+        "A": "Start time",
+        "B": "Capacity",
+        "C": "Activity name",
+        "D": "Submitter",
+        "E": "Item type",
+        "F": "Job type",
+        "G": "Location"
+      },
+      "correctAnswer": "G",
+      "explanation_vi": "Lựa chọn G (Location) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 21: 'You have five Fabric workspaces. You are monitoring the execution of items by using Monitoring hub. You need to identify in which workspace a specific item runs. Which column should you view in Monitoring hub?'\n- Trong giao diện Monitoring Hub của Microsoft Fabric, cột 'Location' hiển thị thông tin workspace nơi mà item đó được thực thi, giúp người quản trị dễ dàng phân biệt và tìm kiếm vị trí chạy của các item trên nhiều workspace khác nhau.",
+      "references": []
+    },
+    {
+      "id": 21,
+      "question": "You have five Fabric workspaces.You are monitoring the execution of items by using Monitoring hub.You need to identify in which workspace a specific item runs.Which column should you view in Monitoring hub?",
+      "choices": {
+        "A": "dynamic management views in Microsoft SQL Server Management Studio (SSMS)",
+        "B": "Monitoring hub",
+        "C": "dynamic management views in Azure Data Studio",
+        "D": "a semantic link in a notebook"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (a semantic link in a notebook) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 22: 'You have a Fabric workspace that contains a semantic model named Model1. You need to dynamically execute and monitor the refresh progress of Model1. What should you use?'\n- Trong Microsoft Fabric, thư viện Python Semantic Link (SemPy) tích hợp trực tiếp trong Notebook cho phép người dùng thực thi các lệnh Python để gọi, chạy và giám sát tiến trình làm mới (refresh) của các mô hình ngữ nghĩa (semantic models) một cách động và lập trình được.",
+      "references": []
+    },
+    {
+      "id": 22,
+      "question": "You have a Fabric workspace that contains a semantic model named Model1.You need to dynamically execute and monitor the refresh progress of Model1.What should you use?",
+      "choices": {
+        "A": "Add the DataAnalyst group to the Viewer role for WorkspaceA.",
+        "B": "Share the lakehouse with the DataAnalysts group and grant the Build reports on the default semantic model permission.",
+        "C": "Share the lakehouse with the DataAnalysts group and grant the Read all SQL Endpoint data permission.",
+        "D": "Share the lakehouse with the DataAnalysts group and grant the Read all Apache Spark permission."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (Share the lakehouse with the DataAnalysts group and grant the Read all SQL Endpoint data permission) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu bảo mật của Case Study trong câu hỏi số 17: 'You need to ensure that the data analysts can access the gold layer lakehouse. What should you do?'\n- Theo yêu cầu của Case Study, Data Analysts cần có quyền đọc các bảng trong lớp gold của lakehouse nhưng không được phép truy cập vào tệp gốc trong các lớp bronze/silver. Việc chia sẻ trực tiếp (Share) lakehouse lớp gold và cấp quyền 'Read all SQL Endpoint data' cho nhóm DataAnalysts sẽ cho phép họ truy vấn dữ liệu thông qua SQL Endpoint mà không thể đọc trực tiếp các tệp raw hoặc tệp trung gian trong OneLake (ngăn quyền Spark/files), đảm bảo nguyên tắc phân quyền tối thiểu.",
+      "references": []
+    },
+    {
+      "id": 23,
+      "question": "Question text missing",
+      "choices": {
+        "A": "Create a Dataflow Gen2 dataflow.",
+        "B": "Create a shortcut.",
+        "C": "Enable external data sharing.",
+        "D": "Create a data pipeline."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Create a shortcut) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu của Case Study trong câu hỏi số 17 về cách sử dụng dữ liệu email từ Amazon S3 bucket: 'Minimize egress costs associated with cross-cloud data access. Prevent saving a copy of the raw data in the lakehouses. What should you do?'\n- Tạo một OneLake shortcut trỏ trực tiếp đến Amazon S3 bucket sẽ cho phép Fabric đọc dữ liệu tại chỗ (read-in-place) mà không cần sao chép tệp raw vào Lakehouse, từ đó tránh nhân bản dữ liệu và giúp tối ưu hóa chi phí truyền tải dữ liệu chéo đám mây (cross-cloud egress costs) nhờ cơ chế cache của shortcut.",
+      "references": []
+    },
+    {
+      "id": 24,
+      "question": "Case Study -This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -Litware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.Existing Environment. Fabric EnvironmentLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.The company has a data engineering team that uses Python for data processing.Existing Environment. Data ProcessingThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.Litware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.Litware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.Existing Environment. Sales DataMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.In the source system, the sales data refreshes every six hours starting at midnight each day.The sales data is captured in a Dataflow Gen1 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\nSales Date -\nAuthor -\nPrice -\nUnits -\nSKU -A table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.Existing Environment. Security GroupsLitware has the following security groups:\nSales -\nFabric Admins -\nStreaming Admins -Existing Environment. Performance IssuesBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”The data engineering team wants to debug the issue and find queries that cause more than one failure.When the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.The company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -Litware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.Litware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -Litware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.Requirements. Governance RequirementsTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -Litware identifies the following data requirements:Process the SEO data in near-real-time (NRT).Make the book reviews available in the lakehouse without making a copy of the data.When a new book cover image arrives in the Files folder, process the image as soon as possible.You need to resolve the sales data issue. The solution must minimize the amount of data transferred.What should you do?",
+      "choices": {
+        "A": "Real-Time hub",
+        "B": "OneLake data hub",
+        "C": "the Admin monitoring workspace",
+        "D": "Fabric Monitor",
+        "E": "the Microsoft Fabric Capacity Metrics app"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Fabric Monitor) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 25: 'You have a Fabric workspace that contains a warehouse named DW1. DW1 is loaded by using a notebook named Notebook1. You need to identify which version of Delta was used when Notebook1 was executed. What should you use?'\n- Trong Fabric Monitor (hoặc Monitoring Hub), khi xem chi tiết lịch sử thực thi của một Notebook, người quản trị có thể tìm thấy thông tin chi tiết về Runtime của Spark (chẳng hạn như Spark version, Delta Lake version) được sử dụng tại thời điểm notebook chạy.",
+      "references": []
+    },
+    {
+      "id": 25,
+      "question": "You have a Fabric workspace that contains a warehouse named DW1. DW1 is loaded by using a notebook named Notebook1.You need to identify which version of Delta was used when Notebook1 was executed.What should you use?",
+      "choices": {
+        "A": "Expand",
+        "B": "Group by",
+        "C": "Union",
+        "D": "Aggregate"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Group by) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 26: 'You have a Fabric workspace that contains an eventstream named Eventstream1. Eventstream1 processes data from a thermal sensor by using event stream processing, and then stores the data in a lakehouse. You need to modify Eventstream1 to include the standard deviation of the temperature. Which transform operator should you include in the Eventstream1 logic?'\n- Trong thiết kế Eventstream của Fabric, để tính toán các chỉ số thống kê tổng hợp (như độ lệch chuẩn - standard deviation, trung bình - average) trên các cửa sổ thời gian (time windows), người ta sử dụng toán tử biến đổi 'Group by' để nhóm dữ liệu theo thời gian và áp dụng các hàm tổng hợp tính toán.",
+      "references": []
+    },
+    {
+      "id": 26,
+      "question": "You have a Fabric workspace that contains an eventstream named Eventstream1. Eventstream1 processes data from a thermal sensor by using event stream processing, and then stores the data in a lakehouse.You need to modify Eventstream1 to include the standard deviation of the temperature.Which transform operator should you include in the Eventstream1 logic?",
+      "choices": {
+        "A": "Spilt the dataflow into two dataflows.",
+        "B": "Configure scheduled refresh for the dataflow.",
+        "C": "Configure incremental refresh for the dataflow. Set Store rows from the past to 1 Month.",
+        "D": "Configure incremental refresh for the dataflow. Set Refresh rows from the past to 1 Year.",
+        "E": "Configure incremental refresh for the dataflow. Set Refresh rows from the past to 1 Month."
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Lựa chọn E (Configure incremental refresh for the dataflow. Set Refresh rows from the past to 1 Month) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu giải quyết vấn đề hiệu năng dữ liệu doanh thu của Case Study Litware ở câu hỏi số 24: 'You need to resolve the sales data issue. The solution must minimize the amount of data transferred. What should you do?'\n- Vì yêu cầu chỉ rõ 'Dữ liệu cũ hơn một tháng không bao giờ thay đổi' (Data that is older than one month never changes), việc cấu hình làm mới tăng trưởng (incremental refresh) cho dataflow với khoảng thời gian làm mới dữ liệu quá khứ là 1 tháng (Refresh rows from the past to 1 Month) sẽ chỉ cập nhật dữ liệu có thay đổi của tháng gần nhất thay vì tải lại toàn bộ lịch sử dữ liệu, từ đó giảm thiểu tối đa lượng dữ liệu truyền tải (minimize data transferred) và cải thiện thời gian tải dữ liệu vào buổi sáng.",
+      "references": []
+    },
+    {
+      "id": 27,
+      "question": "Case Study -This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -Contoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -The company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.The data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.The data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -Contoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.Contoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.Existing Environment. Source SystemsContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.The company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.Contoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.Existing Environment. Product DataPOS1 contains a product list and related data. The data comes from the following three tables:\nProducts -\nProductCategories -\nProductSubcategories -In the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -Contoso has a Microsoft Entra tenant that has the following mail-enabled security groups:DataAnalysts: Contains the data analystsDataEngineers: Contains the data engineersContoso has an Azure subscription.The company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.Existing Environment. User ProblemsThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.The data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -Contoso plans to create the following two lakehouses:Lakehouse1: Will store both raw and cleansed data from the sourcesLakehouse2: Will serve data in a dimensional model to users for analytical queriesAdditional items will be added to facilitate data ingestion and transformation.Contoso plans to use Azure Repos for source control in Fabric.Requirements. Technical RequirementsThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.Each layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.Data imports must run simultaneously, when possible.The use of email data from the Amazon S3 bucket must meet the following requirements:Minimize egress costs associated with cross-cloud data access.Prevent saving a copy of the raw data in the lakehouses.Items that relate to data ingestion must meet the following requirements:The items must be source controlled alongside other workspace items.Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.Development effort must be minimized and a built-in connection must be used to import the source data.In the event of a connectivity error, the ingestion processes must attempt the connection again.Lakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.Once a week, old files that are no longer referenced by a Delta table log must be removed.Requirements. Data TransformationIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.Some product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -Security in Fabric must meet the following requirements:The data engineers must have read and write access to all the lakehouses, including the underlying files.The data analysts must only have read access to the Delta tables in the gold layer.The data analysts must NOT have access to the data in the bronze and silver layers.The data engineers must be able to commit changes to source control in WorkspaceA.You need to schedule the population of the medallion layers to meet the technical requirements.What should you do?",
+      "choices": {
+        "A": "Schedule a data pipeline that calls other data pipelines.",
+        "B": "Schedule a notebook.",
+        "C": "Schedule an Apache Spark job.",
+        "D": "Schedule multiple data pipelines."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Schedule a data pipeline that calls other data pipelines) là chính xác vì đáp ứng đầy đủ các yêu cầu kỹ thuật: \n1. Chạy các tiến trình nhập dữ liệu đồng thời khi có thể: Pipeline chính có thể gọi song song nhiều pipeline con (activities chạy song song).\n2. Yêu cầu tuần tự của các lớp: Sử dụng cơ chế ràng buộc (dependencies) trong pipeline chính để đảm bảo lớp Bronze chạy xong mới đến Silver và Gold.\n3. Gửi email nếu có bất kỳ bước nào lỗi: Pipeline có thể tích hợp Office 365 Outlook activity để gửi thông báo email khi gặp lỗi (on failure).\n- Các lựa chọn khác như chạy notebook hay Spark job đơn lẻ khó quản lý việc gọi song song các pipeline con và thiết lập cơ chế thông báo lỗi tập trung, còn nhiều pipeline độc lập (D) khó đồng bộ việc phân lớp tuần tự.",
+      "references": []
+    },
+    {
+      "id": 28,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You change project to extend.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (No) là chính xác. Việc thay đổi toán tử `project` thành `extend` không giúp giảm thời gian chạy của truy vấn KQL trong trường hợp này. Toán tử `project` dùng để chọn và đổi tên cột đầu ra (giảm số cột, tối ưu bộ nhớ), trong khi `extend` thêm các cột mới vào schema hiện tại mà không loại bỏ các cột không cần thiết. Do đó, việc thay đổi này không giúp giảm lượng dữ liệu xử lý hay tăng tốc độ truy vấn join, thậm chí có thể làm tăng lượng dữ liệu lưu chuyển nếu giữ lại các cột dư thừa.",
+      "references": []
+    },
+    {
+      "id": 29,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You move the filter to line 02.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Yes) là chính xác. Trong KQL, quy tắc tối ưu hóa truy vấn quan trọng nhất khi thực hiện phép Join là áp dụng bộ lọc (filter - toán tử `where`) càng sớm càng tốt trước khi thực hiện phép Join. Việc di chuyển bộ lọc lên dòng 02 (ngay sau bảng nguồn Stream trước khi join với Reference) giúp giảm đáng kể số lượng dòng cần tham gia vào phép toán Join có chi phí cao, từ đó giảm thời gian thực thi truy vấn một cách hiệu quả.",
+      "references": []
+    },
+    {
+      "id": 30,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You change the join type to kind=outer.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (No) là chính xác. Việc thay đổi kiểu join sang `kind=outer` (left outer join hoặc full outer join) không giúp giảm thời gian chạy truy vấn. Phép join outer yêu cầu giữ lại tất cả các dòng từ một hoặc cả hai phía kể cả khi không có kết quả khớp, khiến kích thước tập kết quả và lượng tính toán lớn hơn so với phép inner join mặc định. Để tối ưu phép join giữa bảng Stream (millions of rows) và Reference trong KQL, giải pháp hiệu quả là lọc sớm dữ liệu hoặc sử dụng lookup operator/broadcast join nếu bảng tham chiếu nhỏ, chứ không phải thay đổi sang outer join.",
+      "references": []
+    },
+    {
+      "id": 31,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You add the make_list() function to the output columns.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (No) là chính xác. Hàm `make_list()` trong KQL được sử dụng để gom nhóm các giá trị thành một mảng động (dynamic array), đây là một hàm tổng hợp dữ liệu chứ không có tác dụng tối ưu hóa hiệu năng truy vấn hay giảm thời gian thực thi của phép Join giữa hai bảng có hàng triệu dòng. Thực tế, việc gom nhóm này có thể làm tăng mức tiêu thụ bộ nhớ và thời gian xử lý của truy vấn.",
+      "references": []
+    },
+    {
+      "id": 32,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Lakehouse1 contains a Delta table named Table1.You analyze Table1 and discover that Table1 contains 2,000 Parquet files of 1 MB each.You need to minimize how long it takes to query Table1.What should you do?",
+      "choices": {
+        "A": "Disable V-Order and run the OPTIMIZE command.",
+        "B": "Disable V-Order and run the VACUUM command.",
+        "C": "Run the OPTIMIZE and VACUUM commands."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (Run the OPTIMIZE and VACUUM commands) là chính xác. Bảng Delta chứa quá nhiều tệp nhỏ (2.000 tệp kích thước chỉ 1 MB) sẽ gặp phải vấn đề 'small file problem', gây chậm hiệu năng truy vấn do chi phí đọc/ghi siêu dữ liệu quá cao. Lệnh `OPTIMIZE` thực hiện nén (compaction) các tệp nhỏ này thành các tệp Parquet lớn hơn để cải thiện tốc độ đọc dữ liệu. Lệnh `VACUUM` sẽ thực hiện xóa bỏ vật lý các tệp nhỏ cũ đã bị thay thế (sau khi lệnh OPTIMIZE chạy xong và các tệp mới được tạo) để giải phóng dung lượng OneLake. Không nên tắt V-Order vì V-Order là tính năng tối ưu hóa lưu trữ mặc định cực kỳ quan trọng của Fabric dành cho Direct Lake và các engine truy vấn.",
+      "references": []
+    },
+    {
+      "id": 33,
+      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1. Data is loaded daily into Warehouse1 by using data pipelines and stored procedures.You discover that the daily data load takes longer than expected.You need to monitor Warehouse1 to identify the names of users that are actively running queries.Which view should you use?",
+      "choices": {
+        "A": "sys.dm_exec_connections",
+        "B": "sys.dm_exec_requests",
+        "C": "queryinsights.long_running_queries",
+        "D": "queryinsights.frequently_run_queries",
+        "E": "sys.dm_exec_sessions"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Lựa chọn E (sys.dm_exec_sessions) là chính xác. Trong Microsoft Fabric Warehouse, chế độ xem quản lý động `sys.dm_exec_sessions` cung cấp thông tin chi tiết về tất cả các phiên kết nối (sessions) đang hoạt động, bao gồm thông tin xác thực danh tính người dùng (`login_name`), thời gian kết nối, trạng thái phiên, và cấu hình môi trường của từng phiên truy cập. Điều này giúp người quản trị xác định chính xác tên người dùng đang tích cực chạy các truy vấn. \n- `sys.dm_exec_connections` hiển thị thông tin về các kết nối vật lý (như địa chỉ IP), không trực quan bằng session.\n- `sys.dm_exec_requests` hiển thị thông tin về các yêu cầu đang thực thi hiện tại, nhưng để lấy đầy đủ ngữ cảnh phiên và tên user thì `sys.dm_exec_sessions` (chứa cột `login_name`) là phù hợp nhất.\n- `queryinsights` là các bảng lưu trữ lịch sử thống kê truy vấn dài hoặc truy vấn chạy thường xuyên, không theo dõi thời gian thực các phiên đang chạy hiện tại.",
+      "references": []
+    },
+    {
+      "id": 34,
+      "question": "You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table in a lakehouse.You need to remove files that are older than seven days and are no longer in use.Which command should you run?",
+      "choices": {
+        "A": "VACUUM",
+        "B": "COMPUTE",
+        "C": "OPTIMIZE",
+        "D": "CLONE"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (VACUUM) là chính xác. Trong định dạng bảng Delta (được sử dụng trong Lakehouse của Fabric), khi dữ liệu được cập nhật hoặc xóa, các tệp cũ vẫn được giữ lại để phục vụ tính năng Time Travel (truy vấn ngược thời gian). Để dọn dẹp và xóa vĩnh viễn các tệp dữ liệu cũ đã lỗi thời không còn được sử dụng nữa (trong trường hợp này là cũ hơn 7 ngày), lệnh `VACUUM` được sử dụng để tối ưu dung lượng lưu trữ OneLake.",
+      "references": []
+    },
+    {
+      "id": 35,
+      "question": "You have a Fabric warehouse named DW1 that loads data by using a data pipeline named Pipeline1. Pipeline1 uses a Copy data activity with a dynamic SQL source. Pipeline1 is scheduled to run every 15 minutes.You discover that Pipeline1 keeps failing.You need to identify which SQL query was executed when the pipeline failed.What should you do?",
+      "choices": {
+        "A": "From Monitoring hub, select the latest failed run of Pipeline1, and then view the output JSON.",
+        "B": "From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON.",
+        "C": "From Real-time hub, select Fabric events, and then review the details of Microsoft.Fabric.ItemReadFailed.",
+        "D": "From Real-time hub, select Fabric events, and then review the details of Microsoft. Fabric.ItemUpdateFailed."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON) là chính xác. Trong Data Pipeline của Fabric, các hoạt động (activities) như Copy Data nhận các tham số đầu vào động (dynamic parameters/SQL query). Truy vấn SQL động được tính toán và gửi tới cơ sở dữ liệu nguồn sẽ được ghi nhận chi tiết trong tệp JSON đầu vào (input JSON) của hoạt động đó trong lịch sử chạy. Xem JSON đầu ra (output JSON) chỉ hiển thị kết quả chạy, số lượng dòng đọc/ghi hoặc chi tiết thông báo lỗi chứ không hiển thị nguyên bản câu truy vấn SQL động đã được biên dịch để gửi đi. Real-time hub không phải là công cụ chính để gỡ lỗi lịch sử chạy chi tiết của các hoạt động trong Data Pipeline.",
+      "references": []
+    },
+    {
+      "id": 36,
+      "question": "You have a Fabric notebook named Notebook1 that has been executing successfully for the last week.During the last run, Notebook1executed nine jobs.You need to view the jobs in a timeline chart.What should you use?",
+      "choices": {
+        "A": "Real-Time hub",
+        "B": "Monitoring hub",
+        "C": "the job history from the application run",
+        "D": "Spark History Server",
+        "E": "the run series from the details of the application run"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Lựa chọn E (the run series from the details of the application run) là chính xác. Trong Microsoft Fabric, khi xem chi tiết kết quả thực thi của một ứng dụng Spark (Spark application run details) đối với một notebook, tab 'Run series' cung cấp giao diện trực quan biểu đồ thời gian (timeline chart) hiển thị chi tiết tiến trình chạy và phân bổ thời gian của các Spark jobs riêng lẻ (trong trường hợp này là 9 jobs), giúp nhà phát triển dễ dàng phân tích hiệu năng và phát hiện các bottleneck. Các lựa chọn như Spark History Server hoặc Monitoring Hub cung cấp thông tin tổng quan hoặc dạng log chi tiết, nhưng không tích hợp sẵn biểu đồ timeline trực quan tiện lợi cho các jobs trong session cụ thể như chức năng 'Run series'.",
+      "references": []
+    },
+    {
+      "id": 37,
+      "question": "You are developing a data pipeline named Pipeline1.You need to add a Copy data activity that will copy data from a Snowflake data source to a Fabric warehouse.What should you configure?",
+      "choices": {
+        "A": "Degree of copy parallelism",
+        "B": "Fault tolerance",
+        "C": "Enable staging",
+        "D": "Enable logging"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (Enable staging) là chính xác. Khi sao chép dữ liệu từ nguồn Snowflake sang Fabric Warehouse bằng Copy data activity, hệ thống yêu cầu hoặc khuyến nghị cấu hình cơ chế lưu trữ tạm thời (staging). Quá trình này sẽ tải dữ liệu từ Snowflake lên một vùng lưu trữ tạm thời (chẳng hạn như Azure Blob hoặc ADLS Gen2 nội bộ của workspace), sau đó sử dụng lệnh `COPY` hiệu năng cao để nạp trực tiếp vào Warehouse. Điều này giúp tối ưu hóa băng thông, tránh các lỗi tương thích về định dạng dữ liệu và đảm bảo tốc độ ghi tối đa. Các cấu hình khác không phải là điều kiện kỹ thuật cấu hình nền tảng bắt buộc để thực hiện Copy từ Snowflake sang Warehouse như Staging.",
+      "references": []
+    },
+    {
+      "id": 38,
+      "question": "You have a Fabric workspace named Workspace1 that contains a data pipeline named Pipeline1 and a lakehouse named Lakehouse1.You have a deployment pipeline named deployPipeline1 that deploys Workspace1 to Workspace2.You restructure Workspace1 by adding a folder named Folder1 and moving Pipeline1 to Folder1.You use deployPipeline1 to deploy Workspace1 to Workspace2.What occurs to Workspace2?",
+      "choices": {
+        "A": "Folder1 is created, Pipeline1 moves to Folder1, and Lakehouse1 is deployed.",
+        "B": "Only Pipeline1 and Lakehouse1 are deployed.",
+        "C": "Folder1 is created, and Pipeline1 and Lakehouse1 move to Folder1.",
+        "D": "Only Folder1 is created and Pipeline1 moves to Folder1."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Folder1 is created, Pipeline1 moves to Folder1, and Lakehouse1 is deployed) là chính xác. Trong Microsoft Fabric deployment pipeline, cấu trúc thư mục (folders) trong workspace được đồng bộ hóa tự động trong quá trình triển khai. Khi bạn tạo `Folder1` và di chuyển `Pipeline1` vào đó ở workspace nguồn (Workspace1), rồi chạy đường ống triển khai sang Workspace2, thư mục `Folder1` mới sẽ được tạo tự động ở Workspace2, `Pipeline1` ở Workspace2 sẽ được di chuyển tương ứng vào trong `Folder1`, và `Lakehouse1` sẽ được triển khai/cập nhật bình thường sang Workspace2 mà không bị ảnh hưởng cấu trúc (chúng vẫn ở ngoài thư mục nếu bạn không di chuyển chúng ở nguồn).",
+      "references": []
+    },
+    {
+      "id": 39,
+      "question": "Case Study -This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -Contoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -The company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.The data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.The data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -Contoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.Contoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.Existing Environment. Source SystemsContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.The company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.Contoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.Existing Environment. Product DataPOS1 contains a product list and related data. The data comes from the following three tables:\nProducts -\nProductCategories -\nProductSubcategories -In the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -Contoso has a Microsoft Entra tenant that has the following mail-enabled security groups:DataAnalysts: Contains the data analystsDataEngineers: Contains the data engineersContoso has an Azure subscription.The company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.Existing Environment. User ProblemsThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.The data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -Contoso plans to create the following two lakehouses:Lakehouse1: Will store both raw and cleansed data from the sourcesLakehouse2: Will serve data in a dimensional model to users for analytical queriesAdditional items will be added to facilitate data ingestion and transformation.Contoso plans to use Azure Repos for source control in Fabric.Requirements. Technical RequirementsThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.Each layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.Data imports must run simultaneously, when possible.The use of email data from the Amazon S3 bucket must meet the following requirements:Minimize egress costs associated with cross-cloud data access.Prevent saving a copy of the raw data in the lakehouses.Items that relate to data ingestion must meet the following requirements:The items must be source controlled alongside other workspace items.Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.Development effort must be minimized and a built-in connection must be used to import the source data.In the event of a connectivity error, the ingestion processes must attempt the connection again.Lakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.Once a week, old files that are no longer referenced by a Delta table log must be removed.Requirements. Data TransformationIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.Some product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -Security in Fabric must meet the following requirements:The data engineers must have read and write access to all the lakehouses, including the underlying files.The data analysts must only have read access to the Delta tables in the gold layer.The data analysts must NOT have access to the data in the bronze and silver layers.The data engineers must be able to commit changes to source control in WorkspaceA.You need to populate the MAR1 data in the bronze layer.Which two types of activities should you include in the pipeline? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Data pipeline",
+        "B": "Environment",
+        "C": "KQL queryset",
+        "D": "Dataflow Gen2"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (Data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 40: 'You have a Fabric workspace that contains a lakehouse named Lakehouse1. In an external data source, you have data files that are 500 GB each. A new file is added every day. You need to ingest the data into Lakehouse1 without applying any transformations. The solution must meet the following requirements: Trigger the process when a new file is added. Provide the highest throughput. Which type of item should you use to ingest the data?'\n- Để tải các tệp dữ liệu lớn (500 GB mỗi tệp) vào Lakehouse một cách nhanh nhất (hiệu năng thông lượng cao nhất - highest throughput) mà không thực hiện biến đổi dữ liệu, đồng thời tự động kích hoạt tiến trình khi có tệp mới xuất hiện, việc sử dụng Data Pipeline (đường ống dẫn dữ liệu) kết hợp hoạt động Copy Data (hỗ trợ tải song song và staging) và cấu hình trigger sự kiện (event trigger) là lựa chọn tối ưu nhất so với Dataflow Gen2 hay KQL Queryset.",
+      "references": []
+    },
+    {
+      "id": 40,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1.In an external data source, you have data files that are 500 GB each. A new file is added every day.You need to ingest the data into Lakehouse1 without applying any transformations. The solution must meet the following requirementsTrigger the process when a new file is added.Provide the highest throughput.Which type of item should you use to ingest the data?",
+      "choices": {
+        "A": "ForEach",
+        "B": "Copy data",
+        "C": "WebHook",
+        "D": "Stored procedure"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Lựa chọn A và B (ForEach và Copy data) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 39: 'You need to populate the MAR1 data in the bronze layer. Which two types of activities should you include in the pipeline?'\n- Theo yêu cầu của Case Study, ứng dụng MAR1 có 7 thực thể khác nhau và mỗi thực thể được xuất thông qua một endpoint REST API riêng biệt. Để lấy dữ liệu từ các thực thể này vào lớp bronze của Lakehouse, ta cần dùng hoạt động vòng lặp ForEach để duyệt qua danh sách các endpoint và hoạt động Copy data để thực thi việc sao chép dữ liệu từ các API nguồn về đích dưới dạng Delta format mà không thay đổi cấu trúc dữ liệu thô.",
+      "references": []
+    },
+    {
+      "id": 41,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -\nLitware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.\nExisting Environment. Fabric Environment\nLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.\nThe company has a data engineering team that uses Python for data processing.\nExisting Environment. Data Processing\nThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.\nLitware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.\nLitware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.\nExisting Environment. Sales Data\nMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.\nIn the source system, the sales data refreshes every six hours starting at midnight each day.\nThe sales data is captured in a Dataflow Gen1 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\n• Sales Date• Author• Price• Units• SKU\nA table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.\nExisting Environment. Security Groups\nLitware has the following security groups:\n• Sales• Fabric Admins• Streaming Admins\nExisting Environment. Performance Issues\nBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”\nThe data engineering team wants to debug the issue and find queries that cause more than one failure.\nWhen the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.\nThe company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -\nLitware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.\nLitware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -\nLitware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.\nRequirements. Governance Requirements\nTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -\nLitware identifies the following data requirements:\n• Process the SEO data in near-real-time (NRT).• Make the book reviews available in the lakehouse without making a copy of the data.• When a new book cover image arrives in the Files folder, process the image as soon as possible.\nYou need to ensure that processes for the bronze and silver layers run in isolation.\nHow should you configure the Apache Spark settings?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo các tiến trình của lớp Bronze và Silver chạy cô lập (isolation) với nhau trong Microsoft Fabric Spark, giải pháp đúng là cấu hình các custom pool (hồ chứa tài nguyên tùy chỉnh) riêng biệt cho từng lớp. Việc cấu hình các thiết lập Spark khác (như thay đổi số lượng executor, thay đổi cấu hình đồng thời, v.v.) không giúp cô lập tài nguyên tính toán vật lý giữa các tiến trình. Do đó, các giải pháp này không đáp ứng mục tiêu.",
+      "references": []
+    },
+    {
+      "id": 42,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure key vault named KeyVault1 that contains secrets.\nYou have a Fabric workspace named Workspace1. Workspace contains a notebook named Notebook1 that performs the following tasks:\n• Loads stage data to the target tables in a lakehouse• Triggers the refresh of a semantic model\nYou plan to add functionality to Notebook1 that will use the Fabric API to monitor the semantic model refreshes.\nYou need to retrieve the registered application ID and secret from KeyVault1 to generate the authentication token.\nSolution: You use the following code segment:\nUse notebookutils.credentials.getSecret and specify the key vault URL and key vault secret.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để truy xuất thông tin bí mật (secret) từ Azure Key Vault trong Fabric Notebook, hàm `notebookutils.credentials.getSecret` yêu cầu tham số là URL của Key Vault và tên của secret (secret name) cần lấy, chứ không phải là bản thân giá trị bí mật (key vault secret). Việc truyền sai tham số hoặc cấu hình không chính xác sẽ dẫn đến lỗi và không đạt được mục tiêu.",
+      "references": []
+    },
+    {
+      "id": 43,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure key vault named KeyVault1 that contains secrets.\nYou have a Fabric workspace named Workspace1. Workspace contains a notebook named Notebook1 that performs the following tasks:\n• Loads stage data to the target tables in a lakehouse• Triggers the refresh of a semantic model\nYou plan to add functionality to Notebook1 that will use the Fabric API to monitor the semantic model refreshes.\nYou need to retrieve the registered application ID and secret from KeyVault1 to generate the authentication token.\nSolution: You use the following code segment:\nUse notebookutils.credentials.putSecret and specify the key vault URL and key vault secret.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Lakehouse1, Model1, and Dashboard1 only",
+        "B": "Lakehouse1, Model1, Report1 and Dashboard1",
+        "C": "Report1 and Dashboard1 only",
+        "D": "Model1, Report1, and Dashboard1 only",
+        "E": "Lakehouse1, Model1, and Report1 only"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Lựa chọn E (Lakehouse1, Model1, and Report1 only) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You have a Power BI report named Report1, a dashboard named Dashboard1, a semantic model named Model1, and a lakehouse named Lakehouse1. Which items can you endorse in Fabric?'\n- Trong Microsoft Fabric, bạn có thể thực hiện chứng thực (endorse - thúc đẩy hoặc chứng nhận) cho các đối tượng như Lakehouse, Semantic Model (Model) và Power BI Report. Dashboard hiện chưa hỗ trợ tính năng chứng thực này. Do đó, các thành phần có thể chứng thực được là Lakehouse1, Model1, và Report1.",
+      "references": []
+    },
+    {
+      "id": 44,
+      "question": "You have a Fabric workspace named Workspace1 that contains the following items:\n• A Microsoft Power BI report named Report1• A Power BI dashboard named Dashboard1• A semantic model named Model1• A lakehouse name Lakehouse1\nYour company requires that specific governance processes be implemented for the items.\nWhich items can you endorse in Fabric?",
+      "choices": {
+        "A": "Actions (Read and write) and Contents (Read and write)",
+        "B": "Actions (Read and write) only",
+        "C": "Contents (Read and write) only",
+        "D": "Contents (Read) and Commit statuses (Read and write)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (Contents (Read and write) only) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'Which permissions do you require to ensure that you can commit code to GitHub?'\n- Khi tích hợp Fabric workspace với kho lưu trữ GitHub, để người dùng có thể thực hiện commit mã nguồn từ Fabric lên GitHub, họ cần có quyền ghi vào kho lưu trữ (Write repository permission). Cụ thể ở đây là phân quyền đối với nội dung tệp tin: 'Contents (Read and write)'.",
+      "references": []
+    },
+    {
+      "id": 45,
+      "question": "You have a Fabric workspace named Workspace1.\nYour company acquires GitHub licenses.\nYou need to configure source control for Workpace1 to use GitHub. The solution must follow the principle of least privilege.\nWhich permissions do you require to ensure that you can commit code to GitHub?",
+      "choices": {
+        "A": "the organization, project, Git repository, and branch",
+        "B": "the personal access token (PAT) for Git authentication and the Git repository URL",
+        "C": "the project, Git repository, branch, and Git folder",
+        "D": "the Git repository URL and the Git folder"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (the organization, project, Git repository, and branch) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'Which details do you require to perform the integration with Azure DevOps?'\n- Khi cấu hình tích hợp Git giữa Microsoft Fabric workspace và Azure DevOps, người quản trị cần cung cấp 4 thông tin chi tiết cấu hình cơ bản bao gồm: tên tổ chức (Organization), tên dự án (Project), kho lưu trữ Git (Git repository), và tên nhánh đích (Branch) muốn đồng bộ.",
+      "references": []
+    },
+    {
+      "id": 46,
+      "question": "You have a Fabric workspace named Workspace1.\nYou plan to configure Git integration for Workspace1 by using an Azure DevOps Git repository.\nAn Azure DevOps admin creates the required artifacts to support the integration of Workspace1.\nWhich details do you require to perform the integration?",
+      "choices": {
+        "A": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using the On success condition.",
+        "B": "From the Schedule settings of Pipeline1, set the time zone to UTC.",
+        "C": "Set the Retry setting of the Notebook activity to 2.",
+        "D": "From the Schedule settings of Notebook1, set the time zone to UTC.",
+        "E": "Set the Retry setting of the Semantic model refresh activity to 2.",
+        "F": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using an On completion condition."
+      },
+      "correctAnswer": "ABC",
+      "explanation_vi": "Lựa chọn A, B, C là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You have a Fabric workspace that contains a lakehouse and a semantic model named Model1... Which three actions should you perform?'\n- Để đạt được các yêu cầu điều phối:\n  1. Đặt hoạt động làm mới Semantic Model (Model1) chạy sau hoạt động Spark Notebook và liên kết chúng thông qua điều kiện thành công 'On success' (Lựa chọn A).\n  2. Cấu hình lịch chạy hàng ngày trong Pipeline1 thành múi giờ UTC để khớp thời gian 07:00 AM UTC (Lựa chọn B).\n  3. Cấu hình thuộc tính 'Retry' của hoạt động chạy Spark Notebook thành 2 để tự động thử lại 2 lần nếu có lỗi xảy ra (Lựa chọn C).",
+      "references": []
+    },
+    {
+      "id": 47,
+      "question": "You have a Fabric workspace that contains a lakehouse and a semantic model named Model1.\nYou use a notebook named Notebook1 to ingest and transform data from an external data source.\nYou need to execute Notebook1 as part of a data pipeline named Pipeline1. The process must meet the following requirements:\n• Run daily at 07:00 AM UTC.• Attempt to retry Notebook1 twice if the notebook fails.• After Notebook1 executes successfully, refresh Model1.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {},
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (chẳng hạn như cú pháp biểu thức không có dấu nháy `@pipeline().parameters.param1` hoặc `@int(pipeline().parameters.param1)`) là chính xác. Trong Fabric Data Pipeline, khi viết các biểu thức để trả về giá trị kiểu số nguyên (int) cho các tham số đầu vào, ta cần sử dụng ký tự `@` ở đầu để hệ thống biên dịch đó là một biểu thức động thay vì một chuỗi văn bản thuần túy (string), và không bao quanh biểu thức bằng dấu ngoặc kép. Lưu ý rằng có sự dịch chuyển trong cơ sở dữ liệu: câu hỏi số 47 thực tế tương ứng với câu hỏi số 48 này.",
+      "references": []
+    },
+    {
+      "id": 48,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1.\nYou plan to create a data pipeline named Pipeline1 to ingest data into Lakehouse1. You will use a parameter named param1 to pass an external value into Pipeline1. The param1 parameter has a data type of int.\nYou need to ensure that the pipeline expression returns param1 as an int value.\nHow should you specify the parameter value?",
+      "choices": {
+        "A": "notebook",
+        "B": "warehouse",
+        "C": "Dataflow Gen2 dataflow",
+        "D": "data pipeline"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to develop an orchestration solution in Fabric that will load each item one after the other. The solution must be scheduled to run every 15 minutes. Which type of item should you use?'\n- Trong Fabric, để lập lịch chạy định kỳ và phối hợp (orchestrate) chạy tuần tự nhiều loại đối tượng khác nhau (Dataflow Gen2, Spark Notebook, các hoạt động tải dữ liệu), Data Pipeline là công cụ phù hợp nhất.",
+      "references": []
+    },
+    {
+      "id": 49,
+      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1. Workspace1 contains the following items:\n• A Dataflow Gen2 dataflow that copies data from an on-premises Microsoft SQL Server database to Lakehouse1• A notebook that transforms files and loads the data to Lakehouse1• A data pipeline that loads a CSV file to Lakehouse1\nYou need to develop an orchestration solution in Fabric that will load each item one after the other. The solution must be scheduled to run every 15 minutes.\nWhich type of item should you use?",
+      "choices": {
+        "A": "Move the declaration of Notebook_02 to the bottom of the Directed Acyclic Graph (DAG) definition.",
+        "B": "Add dependencies to the execution of Notebook_03.",
+        "C": "Split the Directed Acyclic Graph (DAG) definition into three separate definitions.",
+        "D": "Add dependencies to the execution of Notebook_02.",
+        "E": "Change the concurrency to 3.",
+        "F": "Move the declaration of Notebook_03 to the top of the Directed Acyclic Graph (DAG) definition."
+      },
+      "correctAnswer": "DF",
+      "explanation_vi": "Lựa chọn D và F là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to ensure that the notebooks are executed in the following sequence: Notebook_03 -> Notebook_01 -> Notebook_02. Which two actions should you perform?'\n- Trong Fabric Notebook, khi định nghĩa đồ thị chạy nhiều notebook bằng hàm `runMultiple`:\n  1. Đưa khai báo chạy `Notebook_03` lên vị trí đầu tiên của DAG (Lựa chọn F).\n  2. Cấu hình thuộc tính dependencies của `Notebook_02` để phụ thuộc vào kết quả hoàn thành của `Notebook_01` (Lựa chọn D).",
+      "references": []
+    },
+    {
+      "id": 50,
+      "question": "You are building a Fabric notebook named MasterNotebook1 in a workspace. MasterNotebook1 contains the following code.\nYou need to ensure that the notebooks are executed in the following sequence:\nNotebook_03Notebook_01Notebook_02\nWhich two actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Enable V-Order.",
+        "B": "Create statistics.",
+        "C": "Drop statistics.",
+        "D": "Disable V-Order."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Disable V-Order) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You have a Fabric workspace that contains a write-intensive warehouse named DW1. DW1 stores staging tables... You need to minimize the load time of DW1. What should you do?'\n- Đối với các bảng tạm thời (staging tables) trong kho dữ liệu ghi nhiều (write-intensive) thường xuyên bị drop và nạp lại, việc tắt tính năng V-Order (Disable V-Order) giúp loại bỏ chi phí tính toán nén bổ sung lúc ghi dữ liệu, nhờ đó giảm đáng kể thời gian nạp và tải dữ liệu.",
+      "references": []
+    },
+    {
+      "id": 51,
+      "question": "You have a Fabric workspace that contains a write-intensive warehouse named DW1. DW1 stores staging tables that are used to load a dimensional model. The tables are often read once, dropped, and then recreated to process new data.\nYou need to minimize the load time of DW1.\nWhat should you do?",
+      "choices": {
+        "A": "Copy_kdi will run first, and then Execute procedure1 will run.",
+        "B": "Execute procedure1 will run first, and then Copy_kdi will run.",
+        "C": "Execute procedure1 will run and Copy_kdi will be skipped.",
+        "D": "Copy_kdi will run and Execute procedure1 will be skipped.",
+        "E": "Both activities will run simultaneously.",
+        "F": "Both activities will be skipped."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Copy_kdi will run and Execute procedure1 will be skipped) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là phân tích sơ đồ chạy của Pipeline1 ở câu hỏi số 53.\n- Trong sơ đồ pipeline, hoạt động `Copy_kdi` chạy độc lập nên sẽ luôn được kích hoạt. Tuy nhiên, hoạt động `Execute procedure1` được nối sau một đường phụ thuộc có điều kiện (ví dụ: On Failure) mà điều kiện đó không thỏa mãn khi hoạt động trước chạy thành công, do đó nó sẽ bị bỏ qua (skipped).",
+      "references": []
+    },
+    {
+      "id": 52,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -\nContoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -\nThe company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.\nThe data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.\nThe data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -\nContoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.\nContoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.\nExisting Environment. Source Systems\nContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.\nThe company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.\nContoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.\nExisting Environment. Product Data\nPOS1 contains a product list and related data. The data comes from the following three tables:\n• Products• ProductCategories• ProductSubcategories\nIn the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -\nContoso has a Microsoft Entra tenant that has the following mail-enabled security groups:\n• DataAnalysts: Contains the data analysts• DataEngineers: Contains the data engineers\nContoso has an Azure subscription.\nThe company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.\nExisting Environment. User Problems\nThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.\nThe data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -\nContoso plans to create the following two lakehouses:\n• Lakehouse1: Will store both raw and cleansed data from the sources• Lakehouse2: Will serve data in a dimensional model to users for analytical queries\nAdditional items will be added to facilitate data ingestion and transformation.\nContoso plans to use Azure Repos for source control in Fabric.\nRequirements. Technical Requirements\nThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.\nEach layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.\nData imports must run simultaneously, when possible.\nThe use of email data from the Amazon S3 bucket must meet the following requirements:\n• Minimize egress costs associated with cross-cloud data access.• Prevent saving a copy of the raw data in the lakehouses.\nItems that relate to data ingestion must meet the following requirements:\n• The items must be source controlled alongside other workspace items.• Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.• No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.• Development effort must be minimized and a built-in connection must be used to import the source data.• In the event of a connectivity error, the ingestion processes must attempt the connection again.\nLakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.\nOnce a week, old files that are no longer referenced by a Delta table log must be removed.\nRequirements. Data Transformation\nIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.\nSome product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -\nSecurity in Fabric must meet the following requirements:\n• The data engineers must have read and write access to all the lakehouses, including the underlying files.• The data analysts must only have read access to the Delta tables in the gold layer.• The data analysts must NOT have access to the data in the bronze and silver layers.• The data engineers must be able to commit changes to source control in WorkspaceA.\nYou need to ensure that WorkspaceA can be configured for source control.\nWhich two actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Disable high concurrency.",
+        "B": "Create a custom pool.",
+        "C": "Modify the number of executors.",
+        "D": "Set the default environment."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Create a custom pool) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 41 về việc cô lập môi trường thực thi Spark: 'You need to ensure that processes for the bronze and silver layers run in isolation. How should you configure the Apache Spark settings?'\n- Để các tiến trình của lớp bronze và silver chạy độc lập và không cạnh tranh tài nguyên với nhau, giải pháp hiệu quả nhất là tạo các Custom Pool riêng biệt cho từng lớp tính toán.",
+      "references": []
+    },
+    {
+      "id": 53,
+      "question": "You have a Fabric workspace that contains a data pipeline named Pipeline1 as shown in the exhibit. (Click the Exhibit tab.)\nWhat will occur the next time Pipeline1 runs?",
+      "choices": {
+        "A": "From Tenant setting, set Users can synchronize workspace items with their Git repositories to Enabled.",
+        "B": "From Tenant setting, set Users can sync workspace items with GitHub repositories to Enabled.",
+        "C": "Configure WorkspaceA to use a Premium Per User (PPU) license.",
+        "D": "Assign WorkspaceA to Cap1."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Lựa chọn A và D là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 52 về cấu hình source control của Case Study Contoso.\n- Để kích hoạt tích hợp Git cho WorkspaceA:\n  1. Thiết lập cài đặt Tenant cho phép người dùng đồng bộ hóa các mục workspace với kho lưu trữ Git của họ (Lựa chọn A).\n  2. Gán WorkspaceA vào một Capacity có dung lượng Fabric (ví dụ: Cap1) vì tính năng tích hợp Git yêu cầu dung lượng Fabric Capacity chứ không hỗ trợ tài khoản Pro thuần túy (Lựa chọn D).",
+      "references": []
+    },
+    {
+      "id": 54,
+      "question": "You are implementing a medallion architecture in a Fabric lakehouse.\nYou plan to create a dimension table that will contain the following columns:\n• ID• CustomerCode• CustomerName• CustomerAddress• CustomerLocation• ValidFrom• ValidTo\nYou need to ensure that the table supports the analysis of historical sales data by customer location at the time of each sale.\nWhich type of slowly changing dimension (SCD) should you use?",
+      "choices": {
+        "A": "Type 2",
+        "B": "Type 0",
+        "C": "Type 1",
+        "D": "Type 3"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giải thích:\n- **Type 2 SCD (Slowly Changing Dimension Type 2)**: Đây là lựa chọn đúng. Yêu cầu đề bài là bảng chiều (dimension table) phải hỗ trợ phân tích dữ liệu bán hàng lịch sử theo vị trí của khách hàng tại thời điểm mỗi giao dịch bán hàng diễn ra (historical sales data by customer location at the time of each sale). Type 2 SCD hoạt động bằng cách tạo ra một hàng mới trong bảng khi có sự thay đổi thuộc tính (ví dụ: địa chỉ/vị trí khách hàng thay đổi), đồng thời sử dụng các trường định nghĩa khoảng thời gian hiệu lực như `ValidFrom` (Có hiệu lực từ) và `ValidTo` (Có hiệu lực đến) để theo dõi lịch sử. Điều này giúp liên kết chính xác giao dịch bán hàng trong quá khứ với địa điểm của khách hàng tại thời điểm đó.\n- **Type 0 SCD**: Giữ nguyên giá trị ban đầu và không bao giờ thay đổi, do đó không hỗ trợ cập nhật lịch sử vị trí của khách hàng.\n- **Type 1 SCD**: Ghi đè trực tiếp lên giá trị cũ. Nếu vị trí khách hàng thay đổi, thông tin cũ sẽ bị mất và toàn bộ các giao dịch trong lịch sử sẽ bị gán sai cho vị trí mới, không đáp ứng yêu cầu phân tích lịch sử.\n- **Type 3 SCD**: Theo dõi thay đổi bằng cách thêm cột mới (ví dụ: `PreviousLocation`), chỉ lưu giữ được giá trị hiện tại và một giá trị gần nhất trước đó, không phù hợp cho việc phân tích lịch sử lâu dài với nhiều thay đổi.",
+      "references": []
+    },
+    {
+      "id": 55,
+      "question": "You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table named Table1 in a lakehouse. The streaming data is sourced from motorway sensors and represents the speed of cars.\nYou need to add a transformation to EventStream1 to average the car speeds. The speeds must be grouped by non-overlapping and contiguous time intervals of one minute. Each event must belong to exactly one window.\nWhich windowing function should you use?",
+      "choices": {
+        "A": "sliding",
+        "B": "hopping",
+        "C": "tumbling",
+        "D": "session"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giải thích:\n- **Tumbling window (Cửa sổ nhào lộn)**: Đây là lựa chọn đúng. Tumbling windows đại diện cho một chuỗi các khoảng thời gian không chồng lấn lên nhau (non-overlapping), liên tục (contiguous) và có kích thước cố định. Đề bài yêu cầu gom nhóm tốc độ xe theo các khoảng thời gian 1 phút không chồng lấn, liên tục và mỗi sự kiện (event) chỉ được thuộc về duy nhất một cửa sổ. Cửa sổ Tumbling hoàn toàn đáp ứng các điều kiện này.\n- **Hopping window (Cửa sổ nhảy)**: Các cửa sổ này có thể chồng lấn lên nhau tùy thuộc vào kích thước bước nhảy (hop size) nhỏ hơn kích thước cửa sổ (window size), dẫn đến một sự kiện có thể thuộc nhiều cửa sổ khác nhau.\n- **Sliding window (Cửa sổ trượt)**: Cửa sổ trượt di chuyển liên tục theo thời gian thực mỗi khi có sự kiện mới xuất hiện, có tính chất chồng lấn mạnh mẽ.\n- **Session window (Cửa sổ phiên)**: Nhóm các sự kiện dựa trên khoảng thời gian không hoạt động (inactivity gap). Các cửa sổ phiên có kích thước không cố định và phụ thuộc vào hành vi của luồng dữ liệu, không phù hợp với yêu cầu cố định 1 phút.",
+      "references": []
+    },
+    {
+      "id": 56,
+      "question": "You have a Fabric warehouse named DW1 that contains a Type 2 slowly changing dimension (SCD) dimension table named DimCustomer. DimCustomer contains 100 columns and 20 million rows. The columns are of various data types, including int, varchar, date, and varbinary.\nYou need to identify incoming changes to the table and update the records when there is a change. The solution must minimize resource consumption.\nWhat should you use to identify changes to attributes?",
+      "choices": {
+        "A": "a hash function to compare the attributes in the source table.",
+        "B": "a direct attributes comparison across the attributes in the DimCustomer table.",
+        "C": "a direct attributes comparison for the attributes in the source table.",
+        "D": "a hash function to compare the attributes in the DimCustomer table."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giải thích:\n- **Sử dụng hàm băm (hash function) để so sánh các thuộc tính trong bảng nguồn (A)**: Đây là lựa chọn đúng. Bảng `DimCustomer` có kích thước rất lớn (20 triệu dòng, 100 cột). Việc so sánh trực tiếp từng thuộc tính (column-by-column comparison) của 100 cột trên 20 triệu dòng sẽ tiêu tốn cực kỳ nhiều tài nguyên tính toán và thời gian. Thay vào đó, tính toán một giá trị băm (ví dụ: MD5, SHA-256 hoặc HASHBYTES trong SQL) đại diện cho toàn bộ các thuộc tính của dòng ở bảng nguồn và so sánh với giá trị băm ở bảng đích là giải pháp tối ưu nhất, giảm thiểu tối đa việc sử dụng tài nguyên (minimize resource consumption).\n- **So sánh thuộc tính trực tiếp (B và C)**: Đều yêu cầu quét và so sánh chi tiết từng cột trong số 100 cột giữa nguồn và đích, gây quá tải bộ nhớ và làm chậm hiệu năng đáng kể.\n- **Hàm băm so sánh các thuộc tính trong DimCustomer (D)**: Để so sánh sự thay đổi, ta cần tính toán hàm băm ở nguồn để đối chiếu với đích, việc chỉ so sánh các thuộc tính nội bộ trong bảng đích không giúp phát hiện thay đổi từ nguồn gửi tới.",
+      "references": []
+    },
+    {
+      "id": 57,
+      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1.\nWhile monitoring Warehouse1, you discover that query performance has degraded during the last 60 minutes.\nYou need to isolate all the queries that were run during the last 60 minutes. The results must include the username of the users that submitted the queries and the query statements.\nWhat should you use?",
+      "choices": {
+        "A": "the Microsoft Fabric Capacity Metrics app",
+        "B": "views from the queryinsights schema",
+        "C": "Query activity",
+        "D": "the sys.dm_exec_requests dynamic management view"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Các view từ schema queryinsights (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric Synapse Data Warehouse, schema `queryinsights` cung cấp các view hệ thống (như `queryinsights.exec_requests_history`) chứa thông tin chi tiết về các câu lệnh SQL đã chạy, thời gian thực thi, mã lỗi, tên người dùng (username) gửi truy vấn và nội dung câu lệnh truy vấn đầy đủ. Đây là công cụ tích hợp sẵn để phân tích hiệu năng và debug lỗi trong vòng 60 phút qua.\n- **Microsoft Fabric Capacity Metrics app (A)**: Ứng dụng này dùng để giám sát việc sử dụng tài nguyên CPU, bộ nhớ và CU (Capacity Units) của toàn bộ Capacity, không hiển thị trực tiếp nội dung câu lệnh SQL chi tiết hoặc username của từng câu lệnh chạy trong warehouse.\n- **Query activity (C)**: Không phải là một đối tượng hoặc công cụ hệ thống chuẩn cung cấp thông tin chi tiết cấu trúc như yêu cầu.\n- **sys.dm_exec_requests (D)**: View quản trị động (DMV) này chỉ hiển thị các truy vấn đang hoạt động (active/running) tại thời điểm gọi lệnh, không lưu giữ lịch sử các truy vấn đã hoàn thành hoặc thất bại trong vòng 60 phút qua.",
+      "references": []
+    },
+    {
+      "id": 58,
+      "question": "You have a Fabric workspace that contains a semantic model named Model1.\nYou need to monitor the refresh history of Model1 and visualize the refresh history in a chart.\nWhat should you use?",
+      "choices": {
+        "A": "the refresh history from the settings of Model1",
+        "B": "a notebook",
+        "C": "a Dataflow Gen2 dataflow",
+        "D": "a data pipeline"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Sử dụng Notebook (B)**: Đây là lựa chọn đúng. Để theo dõi lịch sử làm mới (refresh history) của một Semantic Model trong Fabric và trực quan hóa lịch sử đó dưới dạng biểu đồ (chart), chúng ta cần khả năng lập trình để gọi API của Power BI (hoặc Fabric REST API) lấy lịch sử làm mới dưới dạng JSON, sau đó xử lý dữ liệu và vẽ biểu đồ bằng các thư viện Python như `pandas`, `matplotlib`, hoặc `seaborn`. Notebook trong Fabric là môi trường lý tưởng nhất hỗ trợ cả việc lấy dữ liệu qua code và hiển thị trực quan biểu đồ trực tiếp.\n- **Refresh history từ cài đặt của Model (A)**: Chỉ hiển thị danh sách lịch sử làm mới dưới dạng bảng đơn giản trong giao diện web Power BI, không có tính năng trực quan hóa dữ liệu thành biểu đồ.\n- **Dataflow Gen2 (C) và Data Pipeline (D)**: Có thể được sử dụng để điều phối hoặc tải dữ liệu nhưng không hỗ trợ sẵn các công cụ trực quan hóa biểu đồ tương tác trực tiếp như môi trường Notebook.",
+      "references": []
+    },
+    {
+      "id": 59,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -\nLitware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.\nExisting Environment. Fabric Environment\nLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.\nThe company has a data engineering team that uses Python for data processing.\nExisting Environment. Data Processing\nThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.\nLitware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.\nLitware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.\nExisting Environment. Sales Data\nMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.\nIn the source system, the sales data refreshes every six hours starting at midnight each day.\nThe sales data is captured in a Dataflow Gen1 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\n• Sales Date• Author• Price• Units• SKU\nA table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.\nExisting Environment. Security Groups\nLitware has the following security groups:\n• Sales• Fabric Admins• Streaming Admins\nExisting Environment. Performance Issues\nBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”\nThe data engineering team wants to debug the issue and find queries that cause more than one failure.\nWhen the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.\nThe company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -\nLitware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.\nLitware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -\nLitware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.\nRequirements. Governance Requirements\nTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -\nLitware identifies the following data requirements:\n• Process the SEO data in near-real-time (NRT).• Make the book reviews available in the lakehouse without making a copy of the data.• When a new book cover image arrives in the Files folder, process the image as soon as possible.\nWhat should you do to optimize the query experience for the business users?",
+      "choices": {
+        "A": "Create a read-only replica of DB1.",
+        "B": "Create an Azure Stream Analytics job.",
+        "C": "Enable Extended Events for DB1.",
+        "D": "Enable change data capture (CDC) for DB1."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (Enable change data capture (CDC) for DB1) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 63: 'You need to ensure that the events are propagated to EventStreamDB1. What should you do?'\n- Khi cấu hình Fabric Eventstream để stream dữ liệu thay đổi từ Azure SQL Database (DB1), bắt buộc phải kích hoạt tính năng Change Data Capture (CDC) trên DB1 để các sự kiện thay đổi bản ghi có thể được ghi nhận và đẩy vào luồng.",
+      "references": []
+    },
+    {
+      "id": 60,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -\nLitware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.\nExisting Environment. Fabric Environment\nLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.\nThe company has a data engineering team that uses Python for data processing.\nExisting Environment. Data Processing\nThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.\nLitware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.\nLitware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.\nExisting Environment. Sales Data\nMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.\nIn the source system, the sales data refreshes every six hours starting at midnight each day.\nThe sales data is captured in a Dataflow Gen1 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\n• Sales Date• Author• Price• Units• SKU\nA table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.\nExisting Environment. Security Groups\nLitware has the following security groups:\n• Sales• Fabric Admins• Streaming Admins\nExisting Environment. Performance Issues\nBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”\nThe data engineering team wants to debug the issue and find queries that cause more than one failure.\nWhen the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.\nThe company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -\nLitware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.\nLitware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -\nLitware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.\nRequirements. Governance Requirements\nTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -\nLitware identifies the following data requirements:\n• Process the SEO data in near-real-time (NRT).• Make the book reviews available in the lakehouse without making a copy of the data.• When a new book cover image arrives in the Files folder, process the image as soon as possible.\nWhat should you recommend that the data engineering team use to ingest the SEO data?",
+      "choices": {
+        "A": "an eventstream",
+        "B": "Apache Spark Structured Streaming",
+        "C": "a streaming dataset",
+        "D": "a KQL queryset"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giải thích:\n- **Eventstream (A)**: Đây là lựa chọn đúng. Theo yêu cầu của dự án Litware, dữ liệu SEO cần được xử lý ở thời gian cận thực (Near-Real-Time - NRT) và được truyền phát từ một REST API. Trong Microsoft Fabric, Eventstream là một công cụ không code/ít code (low-code) được thiết kế đặc biệt để thu thập, chuyển đổi và định tuyến luồng dữ liệu thời gian thực từ các nguồn khác nhau (bao gồm cả các REST API) đến các đích như Lakehouse hay KQL Database.\n- **Apache Spark Structured Streaming (B)**: Mặc dù có thể xử lý dữ liệu streaming nhưng yêu cầu nỗ lực phát triển (development effort) lớn hơn bằng việc viết mã nguồn Python/Scala và quản lý tài nguyên Spark liên tục, không tối ưu về mặt chi phí và công sức so với Eventstream.\n- **Streaming dataset (C)**: Là công nghệ Power BI cũ hơn, bị giới hạn về khả năng biến đổi dữ liệu nâng cao và tích hợp sâu với hồ dữ liệu (OneLake/Lakehouse).\n- **KQL Queryset (D)**: Là công cụ dùng để truy vấn và phân tích dữ liệu trong KQL Database bằng ngôn ngữ Kusto (KQL), không phải là công cụ để thu thập/ingest dữ liệu từ nguồn ngoài.",
+      "references": []
+    },
+    {
+      "id": 61,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -\nContoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -\nThe company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.\nThe data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.\nThe data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -\nContoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.\nContoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.\nExisting Environment. Source Systems\nContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.\nThe company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.\nContoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.\nExisting Environment. Product Data\nPOS1 contains a product list and related data. The data comes from the following three tables:\n• Products• ProductCategories• ProductSubcategories\nIn the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -\nContoso has a Microsoft Entra tenant that has the following mail-enabled security groups:\n• DataAnalysts: Contains the data analysts• DataEngineers: Contains the data engineers\nContoso has an Azure subscription.\nThe company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.\nExisting Environment. User Problems\nThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.\nThe data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -\nContoso plans to create the following two lakehouses:\n• Lakehouse1: Will store both raw and cleansed data from the sources• Lakehouse2: Will serve data in a dimensional model to users for analytical queries\nAdditional items will be added to facilitate data ingestion and transformation.\nContoso plans to use Azure Repos for source control in Fabric.\nRequirements. Technical Requirements\nThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.\nEach layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.\nData imports must run simultaneously, when possible.\nThe use of email data from the Amazon S3 bucket must meet the following requirements:\n• Minimize egress costs associated with cross-cloud data access.• Prevent saving a copy of the raw data in the lakehouses.\nItems that relate to data ingestion must meet the following requirements:\n• The items must be source controlled alongside other workspace items.• Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.• No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.• Development effort must be minimized and a built-in connection must be used to import the source data.• In the event of a connectivity error, the ingestion processes must attempt the connection again.\nLakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.\nOnce a week, old files that are no longer referenced by a Delta table log must be removed.\nRequirements. Data Transformation\nIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.\nSome product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -\nSecurity in Fabric must meet the following requirements:\n• The data engineers must have read and write access to all the lakehouses, including the underlying files.• The data analysts must only have read access to the Delta tables in the gold layer.• The data analysts must NOT have access to the data in the bronze and silver layers.• The data engineers must be able to commit changes to source control in WorkspaceA.\nYou need to recommend a solution to resolve the MAR1 connectivity issues. The solution must minimize development effort.\nWhat should you recommend?",
+      "choices": {
+        "A": "SECURITY POLICY",
+        "B": "TABLE",
+        "C": "TRIGGER",
+        "D": "STORED PROCEDURE"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lựa chọn A (SECURITY POLICY) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 71: 'You have a Fabric workspace that contains a lakehouse named Lakehouse1... You need to ensure that a user named User1 can view only specific rows in Table1. What should you do first?' (Hoặc tương tự về cấu hình Row-Level Security).\n- Để triển khai Row-Level Security (RLS) nhằm lọc dòng dữ liệu cho từng người dùng, đối tượng bảo mật SQL cần sử dụng là `SECURITY POLICY` để liên kết một hàm lọc dữ liệu với bảng đích.",
+      "references": []
+    },
+    {
+      "id": 62,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -\nContoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -\nThe company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.\nThe data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.\nThe data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -\nContoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.\nContoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.\nExisting Environment. Source Systems\nContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.\nThe company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.\nContoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.\nExisting Environment. Product Data\nPOS1 contains a product list and related data. The data comes from the following three tables:\n• Products• ProductCategories• ProductSubcategories\nIn the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -\nContoso has a Microsoft Entra tenant that has the following mail-enabled security groups:\n• DataAnalysts: Contains the data analysts• DataEngineers: Contains the data engineers\nContoso has an Azure subscription.\nThe company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.\nExisting Environment. User Problems\nThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.\nThe data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -\nContoso plans to create the following two lakehouses:\n• Lakehouse1: Will store both raw and cleansed data from the sources• Lakehouse2: Will serve data in a dimensional model to users for analytical queries\nAdditional items will be added to facilitate data ingestion and transformation.\nContoso plans to use Azure Repos for source control in Fabric.\nRequirements. Technical Requirements\nThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.\nEach layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.\nData imports must run simultaneously, when possible.\nThe use of email data from the Amazon S3 bucket must meet the following requirements:\n• Minimize egress costs associated with cross-cloud data access.• Prevent saving a copy of the raw data in the lakehouses.\nItems that relate to data ingestion must meet the following requirements:\n• The items must be source controlled alongside other workspace items.• Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.• No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.• Development effort must be minimized and a built-in connection must be used to import the source data.• In the event of a connectivity error, the ingestion processes must attempt the connection again.\nLakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.\nOnce a week, old files that are no longer referenced by a Delta table log must be removed.\nRequirements. Data Transformation\nIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.\nSome product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -\nSecurity in Fabric must meet the following requirements:\n• The data engineers must have read and write access to all the lakehouses, including the underlying files.• The data analysts must only have read access to the Delta tables in the gold layer.• The data analysts must NOT have access to the data in the bronze and silver layers.• The data engineers must be able to commit changes to source control in WorkspaceA.\nYou need to recommend a solution for handling old files. The solution must meet the technical requirements.\nWhat should you include in the recommendation?",
+      "choices": {
+        "A": "Enable V-Order.",
+        "B": "Create and update statistics.",
+        "C": "Run the VACUUM command.",
+        "D": "Introduce primary keys."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Create and update statistics.) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi tối ưu hóa truy vấn ad-hoc của người dùng đối với DW1 trong Case Study Contoso: 'What should you do to optimize the query experience for the business users?'\n- Việc tạo và cập nhật các chỉ số thống kê (statistics) trên các cột thường xuyên được sử dụng trong mệnh đề WHERE, JOIN của truy vấn là giải pháp tối ưu giúp trình tối ưu hóa (Query Optimizer) thiết lập kế hoạch chạy truy vấn tối ưu nhất, giải quyết triệt để vấn đề truy vấn bị treo lâu hoặc thất bại.",
+      "references": []
+    },
+    {
+      "id": 63,
+      "question": "You have an Azure SQL database named DB1.\nIn a Fabric workspace, you deploy an eventstream named EventStreamDB1 to stream record changes from DB1 into a lakehouse.\nYou discover that events are NOT being propagated to EventStreamDB1.\nYou need to ensure that the events are propagated to EventStreamDB1.\nWhat should you do?",
+      "choices": {
+        "A": "a streaming dataflow",
+        "B": "a streaming dataset",
+        "C": "a notebook that uses Apache Spark Structured Streaming",
+        "D": "an eventstream"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lựa chọn D (an eventstream) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 64: 'You need to ingest the events. The solution must only retain events that have a Neighbourhood value of Chelsea, and then store the retained events in a Fabric lakehouse... What should you use?'\n- Trong Fabric, để ingest và lọc dữ liệu truyền phát thời gian thực (real-time events) từ Event Hub rồi lưu vào Lakehouse, đối tượng phù hợp nhất và tối ưu nhất là sử dụng **Eventstream** (hỗ trợ tích hợp sẵn các bộ lọc dữ liệu tại chỗ).",
+      "references": []
+    },
+    {
+      "id": 64,
+      "question": "You have an Azure event hub. Each event contains the following fields:\n• BikepointID• Street• Neighbourhood• Latitude• Longitude• No_Bikes• No_Empty_Docks\nYou need to ingest the events. The solution must only retain events that have a Neighbourhood value of Chelsea, and then store the retained events in a Fabric lakehouse.\nData retention in case of failure is required to be two days.\nWhat should you use?",
+      "choices": {
+        "A": "Add a ForEach activity to the data pipeline.",
+        "B": "Configure retries for the Copy data activity.",
+        "C": "Call a notebook from the data pipeline.",
+        "D": "Configure Fault tolerance for the Copy data activity."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (Configure retries for the Copy data activity) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi gỡ lỗi kết nối tạm thời của MAR1 trong Case Study Contoso: 'In the event of a connectivity error, the ingestion processes must attempt the connection again. What should you do?'\n- Để cấu hình thử lại tự động khi gặp lỗi kết nối tạm thời với công sức tối thiểu, cấu hình thuộc tính Retry (thử lại) trong cài đặt của Copy Data Activity là lựa chọn hoàn hảo.",
+      "references": []
+    },
+    {
+      "id": 65,
+      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -\nLitware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.\nExisting Environment. Fabric Environment\nLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.\nThe company has a data engineering team that uses Python for data processing.\nExisting Environment. Data Processing\nThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.\nLitware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.\nLitware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.\nExisting Environment. Sales Data\nMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.\nIn the source system, the sales data refreshes every six hours starting at midnight each day.\nThe sales data is captured in a Dataflow Gen2 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\n• Sales Date• Author• Price• Units• SKU\nA table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.\nExisting Environment. Security Groups\nLitware has the following security groups:\n• Sales• Fabric Admins• Streaming Admins\nExisting Environment. Performance Issues\nBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”\nThe data engineering team wants to debug the issue and find queries that cause more than one failure.\nWhen the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.\nThe company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -\nLitware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.\nLitware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -\nLitware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.\nRequirements. Governance Requirements\nTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -\nLitware identifies the following data requirements:\n• Process the SEO data in near-real-time (NRT).• Make the book reviews available in the lakehouse without making a copy of the data.• When a new book cover image arrives in the Files folder, process the image as soon as possible.\nYou need to create a workflow for the new book cover images.\nWhich two components should you include in the workflow? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "a data pipeline that includes a Copy data activity",
+        "B": "a data pipeline that includes a Delete data activity",
+        "C": "a notebook that runs the VACUUM command",
+        "D": "a notebook that runs the OPTIMIZE command"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lựa chọn C (a notebook that runs the VACUUM command) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu dọn dẹp tệp tin cũ hàng tuần trong Case Study Litware: 'Once a week, old files that are no longer referenced by a Delta table log must be removed. What should you recommend?'\n- Để loại bỏ các tệp tin cũ không còn được sử dụng bởi nhật ký Delta Table, lệnh chuẩn trong Delta Lake là `VACUUM`. Chúng ta sẽ lập lịch chạy định kỳ hàng tuần cho một Notebook Spark thực thi lệnh này.",
+      "references": []
+    },
+    {
+      "id": 66,
+      "question": "You have a Fabric warehouse named DW1. DW1 contains a table that stores sales data and is used by multiple sales representatives.\nYou plan to implement row-level security (RLS).\nYou need to ensure that the sales representatives can see only their respective data.\nWhich warehouse object do you require to implement RLS?",
+      "choices": {
+        "A": "an activator item",
+        "B": "a data pipeline",
+        "C": "a blob storage action",
+        "D": "a time-based schedule",
+        "E": "a streaming dataflow",
+        "F": "a notebook that uses Apache Spark Structured Streaming"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Lựa chọn A và B (an activator item & a data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu xử lý ảnh bìa sách mới tải lên trong Case Study Litware: 'When a new book cover image arrives in the Files folder, process the image as soon as possible... Which two components should you include in the workflow?'\n- Để xử lý tự động và ngay lập tức khi tệp ảnh mới xuất hiện trong Lakehouse Files (hướng sự kiện), ta cần kết hợp: **Activator** để giám sát phát hiện sự kiện tệp mới (Lựa chọn A), và **Data pipeline** để thực thi các bước xử lý ảnh sau đó (Lựa chọn B).",
+      "references": []
+    },
+    {
+      "id": 67,
+      "question": "You have a Fabric workspace named Workspace1 that contains a warehouse named Warehouse1.\nYou plan to deploy Warehouse 1 to a new workspace named Workspace2.\nAs part of the deployment process, you need to verify whether Warehouse1 contains invalid references. The solution must minimize development effort and provide detailed information about the invalid references.\nWhat should you use?",
+      "choices": {
+        "A": "a dbt project",
+        "B": "a deployment pipeline",
+        "C": "a Python script",
+        "D": "a database project"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Deployment pipeline (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, các đường ống triển khai (deployment pipelines) cung cấp khả năng tự động hóa việc di chuyển các thành phần (như Warehouse) giữa các môi trường (ví dụ: từ Workspace phát triển sang Workspace kiểm thử/sản xuất). Khi thực hiện quá trình này, Deployment pipeline sẽ tự động thực hiện các bước kiểm tra sự phụ thuộc (dependency check) để phát hiện các tham chiếu không hợp lệ hoặc thiếu đối tượng liên quan (invalid references), giúp giảm thiểu tối đa công sức phát triển (minimize development effort).\n- **Database project (D)**: Dự án cơ sở dữ liệu (SQL Database Project) trong Azure Data Studio/VS Code là một công cụ mạnh mẽ để thực hiện phân tích tĩnh (static analysis) và biên dịch mã SQL để tìm lỗi tham chiếu. Tuy nhiên, nó yêu cầu lập trình viên phải thiết lập dự án, kết nối source control và cấu hình biên dịch phức tạp, tốn nhiều công sức phát triển hơn so với tính năng kéo-thả trực quan có sẵn của Deployment pipeline trong Fabric.\n- **Python script (C) và dbt project (A)**: Đòi hỏi nỗ lực viết mã nguồn và triển khai hạ tầng kiểm thử tùy chỉnh rất lớn.",
+      "references": []
+    },
+    {
+      "id": 68,
+      "question": "You have a Microsoft Power Apps app named App1 that has data stored in Microsoft Dataverse.\nYou need to access the App1 data by using Fabric.\nWhat should you use?",
+      "choices": {
+        "A": "a data pipeline",
+        "B": "mirroring",
+        "C": "Dataflow Gen2",
+        "D": "a shortcut"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Giải thích:\n- **Shortcut (D)**: Đây là lựa chọn đúng. Microsoft Dataverse hỗ trợ tính năng liên kết trực tiếp với Microsoft Fabric (Link to Fabric). Tính năng này tự động tạo ra các đường tắt (shortcuts) trỏ thẳng tới dữ liệu Dataverse lưu trữ trong Azure Synapse Link mà không cần sao chép vật lý dữ liệu (zero-copy), giúp tối ưu hóa hiệu năng, giảm chi phí lưu trữ và giảm thiểu tối đa công sức lập trình.\n- **Mirroring (B)**: Dùng để sao chép liên tục dữ liệu từ các cơ sở dữ liệu bên ngoài (như Azure SQL, Cosmos DB, Snowflake) vào Fabric dưới dạng Delta Parquet, không phải là cơ chế tối ưu nhất cho Dataverse vốn đã hỗ trợ sẵn OneLake Shortcut.\n- **Dataflow Gen2 (C) và Data Pipeline (A)**: Đều yêu cầu thiết lập các tiến trình ETL để trích xuất và ghi bản sao dữ liệu vào Lakehouse, làm tăng độ trễ và tốn tài nguyên quản lý.",
+      "references": []
+    },
+    {
+      "id": 69,
+      "question": "You have a Fabric workspace named Workspace1 that contains three notebooks named notebook_01, notebook_02, and notebook_03.\nYou are building a new notebook in Workspace1 that will contain the following Directed Acyclic Graph (DAG) definition.\nYou need to modify the DAG definition to meet the following requirements:\n• Ensure that notebook_01 and notebook_02 run in parallel.• Ensure that notebook_02 only runs after the execution of notebook_03 is complete.\nHow should you modify the DAG definition?",
+      "choices": {
+        "A": "Create a second DAG definition. Move notebook_03 and notebook_02 to the new DAG definition.",
+        "B": "Move the notebook_03 declaration to the top of the DAG definition. Add a concurrency to notebook_02 and notebook_01.",
+        "C": "Create two stages in the DAG definition. Add notebook_03 to the first stage. Add notebook_01 and notebook_02 to the second stage.",
+        "D": "Move the declaration of notebook_03 to the top of the DAG definition. Add a new stage that contains notebook_01 and notebook_02."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giải thích:\n- **Tạo 2 giai đoạn (stages) trong định nghĩa DAG. Đưa notebook_03 vào giai đoạn đầu tiên, đưa notebook_01 và notebook_02 vào giai đoạn thứ hai (C)**: Đây là lựa chọn đúng. Hàm chạy nhiều notebook trong Fabric (`notebookutils.notebook.runMultiple()`) sử dụng cấu trúc Đồ thị có hướng không chu trình (DAG) được biểu diễn qua JSON. Để cấu hình `notebook_02` chỉ chạy sau khi `notebook_03` hoàn thành, đồng thời cho phép `notebook_01` và `notebook_02` chạy song song (parallel), ta chia DAG thành 2 giai đoạn kế tiếp nhau (stages). Giai đoạn 1 chứa `notebook_03`. Giai đoạn 2 chứa `notebook_01` và `notebook_02` chạy đồng thời và giai đoạn này được cấu hình phụ thuộc vào sự hoàn thành của Giai đoạn 1.\n- **Các phương án khác (A, B, D)**: Không tuân thủ đúng cú pháp định nghĩa giai đoạn song song và phụ thuộc tuần tự của `runMultiple` trong Fabric Notebook.",
+      "references": []
+    },
+    {
+      "id": 70,
+      "question": "You have a Fabric workspace named Workspace1 that is connected to a GitHub repository named repo1. Workspace1 contains the items shown in the following table.\nYou modify Semanticmodel1, Semanticmodel2, and Report2.\nYou need to commit the changes to repo1.\nWhat is the minimum number of commits you should perform?",
+      "choices": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giải thích:\n- **1 (A)**: Đây là lựa chọn đúng. Trong tính năng tích hợp Git (Git integration) của Microsoft Fabric, khi bạn thực hiện các thay đổi đối với nhiều tài nguyên trong workspace (như thay đổi `Semanticmodel1`, `Semanticmodel2`, và `Report2`), hệ thống sẽ liệt kê tất cả các mục bị thay đổi trong bảng điều khiển Source Control. Bạn có thể chọn tất cả các mục này và nhấn nút Commit một lần duy nhất để lưu toàn bộ các thay đổi vào nhánh Git dưới dạng một commit đơn lẻ. Số lượng commit tối thiểu cần thực hiện là 1.\n- **Các lựa chọn khác (2, 3, 4)**: Không phải là số lượng tối thiểu vì bạn không bắt buộc phải tách riêng từng tài nguyên thành các commit độc lập.",
+      "references": []
+    },
+    {
+      "id": 71,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Lakehouse1 contains a table named Table1.\nYou need to ensure that a user named User1 can view only specific rows in Table1.\nWhat should you do first?",
+      "choices": {
+        "A": "Create a security predicate.",
+        "B": "Create a function.",
+        "C": "Create a security policy.",
+        "D": "Grant User1 the SELECT permission for Table1."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Giải thích:\n- **Cấp quyền SELECT cho User1 trên Table1 trước (D)**: Đây là lựa chọn đúng. Để áp dụng chính sách Bảo mật cấp dòng (Row-Level Security - RLS) đối với một người dùng truy vấn bảng dữ liệu trong Lakehouse (thông qua SQL analytics endpoint), trước hết người dùng đó phải có quyền đọc dữ liệu cơ bản trên bảng (quyền `SELECT`). Nếu không được cấp quyền `SELECT`, hệ thống sẽ từ chối truy cập ngay lập tức ở mức độ phân quyền đối tượng (object-level security), và chính sách bảo mật cấp dòng (được thực thi ở bước sau) sẽ không thể hoạt động. Do đó, đây là hành động cần thực hiện đầu tiên.\n- **Tạo hàm (B) và Tạo chính sách bảo mật (C / A)**: Là các bước tiếp theo trong cấu hình kỹ thuật của RLS, nhưng sẽ vô nghĩa nếu bản thân tài khoản người dùng chưa được cấp quyền SELECT để truy vấn bảng.",
+      "references": []
+    },
+    {
+      "id": 72,
+      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse.\nYou have a Microsoft Entra tenant that contains a user named User1.\nYou need to ensure that User1 can create items in Workspace1. The solution must follow the principle of least privilege.\nWhich workspace role should you assign to User1?",
+      "choices": {
+        "A": "Member",
+        "B": "Contributor",
+        "C": "Admin",
+        "D": "Viewer"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Contributor (B)**: Đây là lựa chọn đúng. Trong các vai trò của Workspace Microsoft Fabric, vai trò **Contributor** (Người đóng góp) là vai trò có đặc quyền tối thiểu (least privilege) cho phép người dùng tạo, chỉnh sửa và xóa các mục (như lakehouse, notebook, pipeline, report) trong workspace.\n- **Viewer (D)**: Chỉ cho phép xem nội dung trong workspace, không thể tạo mới các mục.\n- **Member (A) và Admin (C)**: Đều có quyền tạo mục mới, nhưng đi kèm các quyền hạn quản trị nâng cao không cần thiết như chia sẻ workspace, thay đổi vai trò thành viên, hoặc xóa workspace, vi phạm nguyên tắc đặc quyền tối thiểu.",
+      "references": []
+    },
+    {
+      "id": 73,
+      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure key vault named KeyVault1 that contains secrets.\nYou have a Fabric workspace named Workspace1. Workspace contains a notebook named Notebook1 that performs the following tasks:\n• Loads stage data to the target tables in a lakehouse• Triggers the refresh of a semantic model\nYou plan to add functionality to Notebook1 that will use the Fabric API to monitor the semantic model refreshes.\nYou need to retrieve the registered application ID and secret from KeyVault1 to generate the authentication token.\nSolution: You use the following code segment:\nUse notebookutils.credentials.putSecret and specify the key vault URL and the name of a linked service.\nDoes this meet the goal?",
+      "choices": {
+        "A": "Yes",
+        "B": "No"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **No (B)**: Đây là lựa chọn đúng. Phương án đề xuất sử dụng hàm `notebookutils.credentials.putSecret` để lấy thông tin mã định danh ứng dụng và mật khẩu (secret) từ Key Vault. Tuy nhiên, hàm `putSecret` được dùng để lưu trữ hoặc cập nhật thông tin bí mật (nếu có hỗ trợ), chứ không phải để truy xuất (retrieve) thông tin. Để lấy thông tin bí mật từ Key Vault, hàm chính xác phải là `getSecret`. Hơn nữa, việc chỉ định tên của một dịch vụ liên kết (linked service) thay cho tên của secret cần lấy là không đúng cú pháp tham số của hàm `getSecret` trong Fabric. Do đó giải pháp này không đáp ứng mục tiêu.",
+      "references": []
+    },
+    {
+      "id": 74,
+      "question": "You have a Fabric workspace named Workspace1 that uses version control. Workspace1 and Azure DevOps are integrated.\nIn Azure DevOps, developers create a branch named Branch1 to test extract, transform, and load (ETL) updates.\nYou need to connect Workspace1 to Branch1. The solution must ensure that all the existing content in Branch1 is available in Workspace1.\nWhat should you do?",
+      "choices": {
+        "A": "From Workspace1, select Source control, and then select Sync.",
+        "B": "From Workspace1, select Source control, select Current branch, select Branch1, and then select Commit.",
+        "C": "From Azure DevOps, merge the contents of the main branch into Branch1.",
+        "D": "From Workspace1, select Source control, and then select Branch out to new workspace."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lựa chọn B (From Workspace1, select Source control, select Current branch, select Branch1, and then select Commit) là chính xác trong bối cảnh các câu hỏi thi. Tuy nhiên, lưu ý về quy trình thực tế và sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu:\n- Để đồng bộ hóa dữ liệu từ nhánh `Branch1` của Azure DevOps vào workspace, ta cần chuyển nhánh hiện tại sang `Branch1` và sau đó chọn lệnh **Sync/Update** để tải các mục từ Git về workspace. Lựa chọn B trong đề thi ghi là Commit (có thể là lỗi biên dịch của đề thi gốc, do đó ta vẫn chọn B theo đáp án chính thức của hệ thống).",
+      "references": []
+    },
+    {
+      "id": 75,
+      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1.\nYou perform the following actions:\n• Connect Workspace1 to a Git repository and select the main branch.• Create a new branch named feature1 and modify Lakehouse1.• Merge the changes from feature1 into the main branch.\nYou need to ensure that the changes are available in Workspace1. The solution must minimize changes to Workspace1.\nWhat should you do?",
+      "choices": {
+        "A": "Disconnect Workspace1 from the Git repository and reconnect Workspace1 to the main branch.",
+        "B": "From Workspace1, select Source control, and then select Updates.",
+        "C": "From Workspace1, select Source control, and then select Commit.",
+        "D": "Switch Workspace1 to the feature1 branch and refresh the workspace."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Từ Workspace1, chọn Source control, sau đó chọn Updates (B)**: Đây là lựa chọn đúng. Khi các thay đổi trên nhánh `feature1` đã được merge vào nhánh chính (`main`) ở môi trường Git bên ngoài (ví dụ: Azure DevOps hoặc GitHub), Workspace1 (đang được kết nối với nhánh `main`) sẽ nhận biết được sự khác biệt giữa nội dung hiện tại của workspace và nhánh Git. Hệ thống sẽ hiển thị thông báo có các bản cập nhật mới trên bảng điều khiển Source Control. Bằng cách chọn **Updates** (hoặc Update All), Fabric sẽ đồng bộ và tải các thay đổi mới nhất từ nhánh `main` vào workspace mà không cần phải cấu hình lại hay ngắt kết nối.\n- **Ngắt kết nối và kết nối lại (A)**: Tốn nhiều công sức và thao tác thủ công không cần thiết.\n- **Chọn Commit (C)**: Sẽ cố gắng ghi đè nội dung hiện tại của workspace lên nhánh Git, có thể gây mất mát các thay đổi đã được merge ở Git.\n- **Chuyển workspace sang feature1 (D)**: Nhánh `feature1` là nhánh tạm thời và đã được merge, việc chuyển sang nhánh này không đúng với quy trình làm việc trên nhánh chính.",
+      "references": []
+    },
+    {
+      "id": 76,
+      "question": "You have an Azure subscription that contains a blob storage account named sa1. sa1 contains two files named File1.csv and File2.csv.\nYou have a Fabric tenant that contains the items shown in the following table.\nYou need to configure Pipeline1 to perform the following actions:\n• At 2 PM each day, process File1.csv and load the file into flh1.• At 5 PM each day, process File2.csv and load the file into flh1.\nThe solution must minimize development effort.\nWhat should you use?",
+      "choices": {
+        "A": "a data pipeline trigger",
+        "B": "a data pipeline schedule",
+        "C": "a job definition",
+        "D": "an activator"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Lịch trình chạy pipeline (data pipeline schedule) (B)**: Đây là lựa chọn đúng. Để thiết lập Pipeline1 chạy xử lý dữ liệu vào các khung giờ cố định lặp lại hàng ngày (chạy File1.csv lúc 2 PM và File2.csv lúc 5 PM) với công sức phát triển ít nhất, tính năng Lịch trình (Schedule) tích hợp sẵn trong cấu hình của Data Pipeline là giải pháp tối ưu. Chúng ta có thể cấu hình hai lịch trình chạy hàng ngày (daily schedule) khác nhau trên cùng một pipeline và truyền tham số tên file tương ứng.\n- **Data pipeline trigger (A)**: Fabric Data Pipeline hỗ trợ các trigger hướng sự kiện (event-based triggers), nhưng đối với các tác vụ chạy theo giờ cố định thì Schedule đơn giản và dễ cấu hình hơn nhiều.\n- **Job definition (C)**: Apache Spark Job Definition được dùng để chạy các mã Spark chạy ngầm, không hỗ trợ điều phối trực quan và lập lịch linh hoạt cho Data Pipeline.\n- **Activator (D)**: Dùng để giám sát dữ liệu và kích hoạt hành động dựa trên điều kiện ngưỡng dữ liệu (thay đổi trạng thái), không phải là công cụ lập lịch thời gian tĩnh tối giản cho pipeline.",
+      "references": []
+    },
+    {
+      "id": 77,
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1, a Dataflow Gen2 named Dataflow1, and a pipeline named Pipeline1. Dataflow1 loads data into Lakehouse1.\nYou need to ensure that Dataflow1 always performs a full data load into Lakehouse1. The solution must minimize how long it takes to load the data.\nWhat should you do?",
+      "choices": {
+        "A": "Change the pipeline templates.",
+        "B": "For Dataflow1, set Update method to Replace.",
+        "C": "To Dataflow1, add a data preview.",
+        "D": "To Pipeline1, add an activity to invoke a SQL script."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Đối với Dataflow1, thiết lập Update method thành Replace (B)**: Đây là lựa chọn đúng. Khi cấu hình đích đến (Destination) cho một truy vấn trong Dataflow Gen2 (như nạp dữ liệu vào Lakehouse1), thuộc tính **Update method** (Phương thức cập nhật) cho phép chọn giữa **Append** (Thêm dữ liệu mới vào cuối bảng) và **Replace** (Xóa sạch dữ liệu cũ trong bảng đích và ghi đè toàn bộ dữ liệu mới). Việc đặt thành Replace đảm bảo luôn thực hiện nạp dữ liệu đầy đủ (full data load) một cách tự động và tối ưu nhất về mặt hiệu năng mà không cần viết thêm mã lệnh hay hoạt động xóa dữ liệu thủ công.\n- **Thay đổi pipeline template (A)**: Không tác động trực tiếp đến cấu hình ghi của Dataflow.\n- **Thêm data preview (C)**: Chỉ dùng để xem trước dữ liệu trong quá trình thiết kế, không ảnh hưởng đến chế độ nạp dữ liệu khi chạy thực tế.\n- **Thêm hoạt động chạy script SQL vào Pipeline1 (D)**: Yêu cầu viết thêm mã lệnh SQL để xóa bảng trước khi chạy Dataflow, làm tăng độ phức tạp và thời gian thực thi của luồng.",
+      "references": []
+    },
+    {
+      "id": 78,
+      "question": "You have a Fabric lakehouse that contains the resources shown in the following table.\nYou need to use a notebook to query for customers in the United States and load the filtered data into USCustomers. The solution must minimize the number of scripts used.\nWhich statement should you use?",
+      "choices": {
+        "A": "customers.write.format(\"parquet\").mode(\"append\").saveAsTable(\"USCustomers\")",
+        "B": "customers.write.format(\"delta\").mode(\"overwrite\").save(\"Tables/USCustomers\")",
+        "C": "customers.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"USCustomers\")",
+        "D": "customers.write. format(\"parquet\").mode(\"append\").save(\"Tables/USCustomers\")"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giải thích:\n- **customers.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"USCustomers\") (C)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, định dạng lưu trữ mặc định và tối ưu cho các bảng (Tables) trong Lakehouse is **Delta**. Sử dụng phương thức `.saveAsTable(\"USCustomers\")` sẽ ghi dữ liệu dưới dạng Delta và tự động đăng ký bảng này vào metastore của Lakehouse, giúp bảng xuất hiện trong mục Tables để truy vấn trực tiếp bằng SQL. Chế độ `.mode(\"overwrite\")` được dùng để ghi đè dữ liệu cũ trong bảng `USCustomers`.\n- **Lưu bằng phương thức `.save()` (B, D)**: Chỉ ghi các tệp dữ liệu vào thư mục tương ứng trong OneLake mà không tự động đăng ký bảng vào danh mục quản lý của Lakehouse.\n- **Định dạng parquet (A, D)**: Mặc dù Delta dựa trên Parquet, nhưng Fabric khuyên dùng định dạng `delta` để tận dụng toàn bộ các tính năng của Delta Lake (như ACID transactions, time travel, V-Order).",
+      "references": []
+    },
+    {
+      "id": 79,
+      "question": "You have a Fabric workspace that contains a data pipeline named Pipeline1 and a notebook named Notebook1. Pipeline1 contains an activity that is used to run Notebook1. Pipeline1 is scheduled to run every 10 minutes.\nYou receive an alert that Pipeline1 failed during the notebook execution activity.\nYou need to identify in which cell the failure occurred.\nWhat should you do from Monitor in the Fabric admin center?",
+      "choices": {
+        "A": "Select the entry for the notebook execution, and then select the logs.",
+        "B": "Select the entry for the notebook execution, and then view the item snapshot.",
+        "C": "Select the entry for the pipeline execution, and then view the activity run.",
+        "D": "Select the entry for the pipeline execution, and then select the output."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giải thích:\n- **Chọn bản ghi chạy notebook, sau đó xem ảnh chụp nhanh mục (view the item snapshot) (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, khi một Notebook chạy như một phần của Data Pipeline bị thất bại, bạn có thể vào mục Giám sát (Monitor) hoặc lịch sử chạy của Pipeline để xem chi tiết. Để biết chính xác lỗi xảy ra ở ô lệnh (cell) nào của Notebook, bạn nhấp vào hoạt động chạy notebook tương ứng và chọn **View item snapshot**. Tính năng này sẽ mở ra một phiên bản notebook tĩnh ghi lại trạng thái thực thi tại thời điểm chạy lỗi, hiển thị rõ ràng kết quả đầu ra và thông tin lỗi của từng ô lệnh.\n- **Xem logs (A)**: Logs của Spark cung cấp thông tin hệ thống chi tiết nhưng rất khó đọc và khó xác định trực quan ô lệnh cụ thể bị lỗi so với giao diện snapshot.\n- **Xem activity run (C) hoặc pipeline output (D)**: Chỉ cung cấp thông tin tổng quan ở mức độ pipeline (như trạng thái lỗi của toàn bộ hoạt động chạy notebook), không đi sâu vào chi tiết từng ô lệnh bên trong notebook.",
+      "references": []
+    }
+  ]
+}

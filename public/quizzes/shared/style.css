@@ -1,56 +1,93 @@
 /* ===================================
-   Design System - CSS Custom Properties
+   Design tokens — đồng bộ với blog
+   Cùng bộ --sl-color-* như src/styles/tokens/colors.css; quiz đứng
+   ngoài Starlight nên tự định nghĩa lại. 3 theme: light, dark, sepia.
+   Các biến cũ của quiz được trỏ về token chung ở cuối khối :root.
    =================================== */
 :root {
-  /* Colors - Light Theme (default - GenAI style) */
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.95);
-  --bg-glass: rgba(0, 0, 0, 0.03);
-  --bg-glass-hover: rgba(0, 0, 0, 0.06);
-  --bg-header: rgba(255, 255, 255, 0.95);
-  --bg-nav: rgba(255, 255, 255, 0.98);
+  /* ---- base neutrals (light) ---- */
+  --sl-color-white: #17181c;
+  --sl-color-gray-1: #313339;
+  --sl-color-gray-2: #4a4d55;
+  --sl-color-gray-3: #64676f;
+  --sl-color-gray-4: #86898f;
+  --sl-color-gray-5: #c2c4c9;
+  --sl-color-gray-6: #e7e8eb;
+  --sl-color-gray-7: #f3f3f5;
+  --sl-color-black: #ffffff;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-nav: #fbfbfc;
+  --sl-color-bg-inline-code: #f0f0f2;
+  --sl-color-hairline: #e4e5e8;
+  --sl-color-hairline-shade: #d5d6da;
 
-  --accent: #2563eb;
-  --accent-glow: rgba(37, 99, 235, 0.2);
-  --accent-light: #eff6ff;
+  --sl-color-text: #24252a;
+  --sl-color-text-invert: #ffffff;
 
-  --correct: #10b981;
-  --correct-bg: rgba(16, 185, 129, 0.08);
-  --correct-border: rgba(16, 185, 129, 0.25);
-  --correct-glow: rgba(16, 185, 129, 0.12);
+  --sl-color-accent-low: #dbe4f3;
+  --sl-color-accent: #2f5fa8;
+  --sl-color-accent-high: #1e407a;
+  --sl-color-text-accent: #2f5fa8;
 
-  --incorrect: #ef4444;
-  --incorrect-bg: rgba(239, 68, 68, 0.08);
-  --incorrect-border: rgba(239, 68, 68, 0.25);
-  --incorrect-glow: rgba(239, 68, 68, 0.12);
+  --color-success: #2f7a4f;
+  --color-success-bg: #e7f3ec;
+  --color-danger: #b5432f;
+  --color-danger-bg: #f8e9e5;
+  --color-warning: #a3730f;
+  --color-warning-bg: #f7eedd;
 
-  --unanswered: #f59e0b;
-  --unanswered-bg: rgba(245, 158, 11, 0.08);
+  /* ---- biến cũ của quiz, trỏ về token chung ---- */
+  --bg-primary: var(--sl-color-bg);
+  --bg-secondary: var(--sl-color-bg-nav);
+  --bg-card: var(--sl-color-bg-nav);
+  --bg-glass: var(--sl-color-gray-7);
+  --bg-glass-hover: var(--sl-color-gray-6);
+  --bg-header: var(--sl-color-bg-nav);
+  --bg-nav: var(--sl-color-bg-nav);
 
-  --border: #e2e8f0;
-  --border-light: rgba(0, 0, 0, 0.06);
+  --text-primary: var(--sl-color-text);
+  --text-secondary: var(--sl-color-gray-2);
+  --text-muted: var(--sl-color-gray-3);
+  --text-main: var(--sl-color-text);
 
-  --option-letter-bg: #f1f5f9;
-  --vi-bg: rgba(37, 99, 235, 0.05);
-  --vi-text: #2563eb;
-  --explanation-bg: rgba(37, 99, 235, 0.04);
-  --explanation-border: rgba(37, 99, 235, 0.15);
+  --accent: var(--sl-color-accent);
+  --accent-glow: var(--sl-color-accent-low);
+  --accent-light: var(--sl-color-accent-high);
+  --primary: var(--sl-color-accent);
+  --primary-hover: var(--sl-color-accent-high);
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --correct: var(--color-success);
+  --correct-bg: var(--color-success-bg);
+  --correct-border: var(--color-success);
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --incorrect: var(--color-danger);
+  --incorrect-bg: var(--color-danger-bg);
+  --incorrect-border: var(--color-danger);
 
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --unanswered: var(--color-warning);
+  --unanswered-bg: var(--color-warning-bg);
+
+  --border: var(--sl-color-hairline);
+  --border-light: var(--sl-color-hairline-shade);
+
+  --option-letter-bg: var(--sl-color-gray-7);
+  --vi-bg: var(--sl-color-accent-low);
+  --vi-text: var(--sl-color-text-accent);
+  --explanation-bg: var(--sl-color-bg);
+  --explanation-border: var(--sl-color-blue-low);
+
+  /* shadows gần phẳng, không glow màu */
+  --shadow-sm: 0 1px 2px rgba(15, 15, 20, 0.06);
+  --shadow-md: 0 2px 8px rgba(15, 15, 20, 0.08);
+  --shadow-lg: 0 2px 8px rgba(15, 15, 20, 0.08);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Safe area for notch phones */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -61,43 +98,72 @@
    Dark Theme
    =================================== */
 [data-theme="dark"] {
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-card: rgba(17, 24, 39, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --bg-glass-hover: rgba(255, 255, 255, 0.08);
-  --bg-header: rgba(10, 14, 26, 0.92);
-  --bg-nav: rgba(10, 14, 26, 0.95);
+  --sl-color-white: #f4f4f6;
+  --sl-color-gray-1: #d6d7db;
+  --sl-color-gray-2: #aeb0b6;
+  --sl-color-gray-3: #86888f;
+  --sl-color-gray-4: #616269;
+  --sl-color-gray-5: #3a3b40;
+  --sl-color-gray-6: #2a2b2f;
+  --sl-color-gray-7: #202126;
+  --sl-color-black: #131417;
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --sl-color-bg: #131417;
+  --sl-color-bg-nav: #191a1e;
+  --sl-color-bg-inline-code: #202126;
+  --sl-color-hairline: #2b2c31;
+  --sl-color-hairline-shade: #35363c;
 
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.3);
-  --accent-light: #818cf8;
+  --sl-color-text: #e4e4e7;
+  --sl-color-text-invert: #131417;
 
-  --correct: #10b981;
-  --correct-bg: rgba(16, 185, 129, 0.12);
-  --correct-border: rgba(16, 185, 129, 0.3);
-  --correct-glow: rgba(16, 185, 129, 0.2);
+  --sl-color-accent-low: #223250;
+  --sl-color-accent: #7fa6e8;
+  --sl-color-accent-high: #a9c4f2;
+  --sl-color-text-accent: #7fa6e8;
 
-  --incorrect: #ef4444;
-  --incorrect-bg: rgba(239, 68, 68, 0.12);
-  --incorrect-border: rgba(239, 68, 68, 0.3);
-  --incorrect-glow: rgba(239, 68, 68, 0.2);
+  --color-success: #6fbf8e;
+  --color-success-bg: #1d2e23;
+  --color-danger: #e0806c;
+  --color-danger-bg: #35211c;
+  --color-warning: #d9ac5c;
+  --color-warning-bg: #362a16;
+}
 
-  --unanswered: #f59e0b;
-  --unanswered-bg: rgba(245, 158, 11, 0.12);
+/* ===================================
+   Sepia Theme (chế độ đọc của blog)
+   =================================== */
+[data-theme="sepia"] {
+  --sl-color-white: #2c2110;
+  --sl-color-gray-1: #3c2f1a;
+  --sl-color-gray-2: #55442a;
+  --sl-color-gray-3: #74603e;
+  --sl-color-gray-4: #93815d;
+  --sl-color-gray-5: #cbb894;
+  --sl-color-gray-6: #e8dabd;
+  --sl-color-gray-7: #f1e6cd;
+  --sl-color-black: #f4ecd8;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-light: rgba(255, 255, 255, 0.12);
+  --sl-color-bg: #f4ecd8;
+  --sl-color-bg-nav: #efe4c9;
+  --sl-color-bg-inline-code: #e8dabd;
+  --sl-color-hairline: #ddceac;
+  --sl-color-hairline-shade: #cbb894;
 
-  --option-letter-bg: rgba(255, 255, 255, 0.06);
-  --vi-bg: rgba(99, 102, 241, 0.06);
-  --vi-text: #818cf8;
-  --explanation-bg: rgba(99, 102, 241, 0.06);
-  --explanation-border: rgba(99, 102, 241, 0.15);
+  --sl-color-text: #33270f;
+  --sl-color-text-invert: #f4ecd8;
+
+  --sl-color-accent-low: #e3d3ad;
+  --sl-color-accent: #7a5324;
+  --sl-color-accent-high: #5c3e1a;
+  --sl-color-text-accent: #7a5324;
+
+  --color-success: #3f6e3f;
+  --color-success-bg: #e2dcb8;
+  --color-danger: #97432b;
+  --color-danger-bg: #ecd9bb;
+  --color-warning: #86611c;
+  --color-warning-bg: #ecdfb9;
 }
 
 /* ===================================
@@ -128,26 +194,6 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Ambient background gradient */
-body::before {
-  content: '';
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
-  z-index: -1;
-  pointer-events: none;
-}
-
-[data-theme="light"] body::before {
-  background: radial-gradient(ellipse at 20% 20%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
-}
-
 button {
   font-family: inherit;
   cursor: pointer;
@@ -170,8 +216,6 @@ button {
   padding: 12px 16px;
   padding-top: calc(12px + var(--safe-top));
   background: var(--bg-header);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   transition: background 0.3s ease;
 }
@@ -196,16 +240,7 @@ button {
 }
 
 .title-text {
-  background: linear-gradient(135deg, var(--accent-light), #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-[data-theme="light"] .title-text {
-  background: linear-gradient(135deg, var(--accent), #7c3aed);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: var(--sl-color-white);
 }
 
 .question-counter {
@@ -246,9 +281,8 @@ button {
 
 .icon-btn.active {
   background: var(--accent);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .btn-label {
@@ -326,7 +360,7 @@ button {
 .progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--correct), var(--accent-light));
+  background: var(--accent);
   border-radius: 2px;
   transition: width 0.5s ease;
 }
@@ -337,7 +371,7 @@ button {
 .quiz-container {
   padding: 16px;
   padding-bottom: calc(80px + var(--safe-bottom));
-  max-width: 800px;
+  max-width: var(--reading-measure, 800px);
   margin: 0 auto;
 }
 
@@ -346,9 +380,7 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 20px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: fadeInUp 0.3s ease;
+  animation: fadeInUp 0.18s ease;
   transition: background 0.3s ease;
   box-shadow: var(--shadow-sm);
 }
@@ -374,8 +406,8 @@ button {
 }
 
 .question-badge {
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
-  color: white;
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -459,10 +491,6 @@ button {
   border-color: var(--border-light);
 }
 
-.option-item:active {
-  transform: scale(0.99);
-}
-
 .option-letter {
   flex-shrink: 0;
   width: 32px;
@@ -508,7 +536,7 @@ button {
 
 .option-item.selected .option-letter {
   background: var(--accent);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--accent);
 }
 
@@ -516,12 +544,11 @@ button {
 .option-item.correct-answer {
   border-color: var(--correct);
   background: var(--correct-bg);
-  box-shadow: 0 0 16px var(--correct-glow);
 }
 
 .option-item.correct-answer .option-letter {
   background: var(--correct);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--correct);
 }
 
@@ -529,12 +556,11 @@ button {
 .option-item.wrong-answer {
   border-color: var(--incorrect);
   background: var(--incorrect-bg);
-  box-shadow: 0 0 16px var(--incorrect-glow);
 }
 
 .option-item.wrong-answer .option-letter {
   background: var(--incorrect);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--incorrect);
 }
 
@@ -568,11 +594,13 @@ button {
    Explanation Box
    =================================== */
 .explanation-box {
-  margin-top: 20px;
-  padding: 16px;
-  background: var(--explanation-bg);
-  border: 1px solid var(--explanation-border);
-  border-radius: var(--radius-md);
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 2px solid var(--explanation-border);
+  border-left: 6px solid var(--accent-light);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: var(--sl-shadow-sm), 0 12px 32px rgba(0, 0, 0, 0.18);
   animation: fadeInUp 0.3s ease;
 }
 
@@ -583,7 +611,9 @@ button {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--accent-light);
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--explanation-border);
 }
 
 .explanation-content,
@@ -612,8 +642,6 @@ button {
   padding: 10px 16px;
   padding-bottom: calc(10px + var(--safe-bottom));
   background: var(--bg-nav);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   gap: 8px;
   transition: background 0.3s ease;
@@ -644,25 +672,13 @@ button {
 
 .nav-btn.grid-btn {
   flex: 1.2;
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(37, 99, 235, 0.15);
-  color: var(--accent);
+  background: var(--sl-color-accent-low);
+  border-color: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
 }
 
 .nav-btn.grid-btn:hover {
-  background: rgba(37, 99, 235, 0.15);
-  border-color: rgba(37, 99, 235, 0.25);
-}
-
-[data-theme="dark"] .nav-btn.grid-btn {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.2);
-  color: var(--accent-light);
-}
-
-[data-theme="dark"] .nav-btn.grid-btn:hover {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: rgba(99, 102, 241, 0.35);
+  border-color: var(--sl-color-accent);
 }
 
 /* ===================================
@@ -865,7 +881,7 @@ button {
 
 .switch input:checked+.slider::before {
   transform: translateX(20px);
-  background: white;
+  background: var(--sl-color-text-invert);
 }
 
 /* Review Buttons */
@@ -916,19 +932,19 @@ button {
   justify-content: center;
   gap: 6px;
   padding: 12px 14px;
-  background: rgba(239, 68, 68, 0.06);
-  border: 1px solid rgba(239, 68, 68, 0.15);
+  background: var(--incorrect-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--incorrect);
   font-size: 0.85rem;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
   min-height: 44px;
 }
 
 .reset-btn:hover,
 .reset-btn:active {
-  background: rgba(239, 68, 68, 0.12);
+  border-color: var(--incorrect);
 }
 
 /* ===================================
@@ -1005,7 +1021,7 @@ button {
 
 .grid-tab.active {
   background: var(--accent);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--accent);
 }
 
@@ -1036,14 +1052,10 @@ button {
   min-height: 38px;
 }
 
-.grid-item:active {
-  transform: scale(0.95);
-}
-
 .grid-item.current {
   border-color: var(--accent);
-  color: var(--accent-light);
-  box-shadow: 0 0 8px var(--accent-glow);
+  color: var(--sl-color-text-accent);
+  background: var(--sl-color-accent-low);
 }
 
 .grid-item.answered-correct {
@@ -1070,7 +1082,6 @@ button {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
-  backdrop-filter: blur(20px);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-primary);
@@ -1224,12 +1235,7 @@ button {
 
 /* Selection */
 ::selection {
-  background: rgba(99, 102, 241, 0.3);
-  color: white;
-}
-
-[data-theme="light"] ::selection {
-  color: #1e293b;
+  background: var(--sl-color-accent-low);
 }
 /* Concept Link/Highlight Style */
 .concept-link {
@@ -1254,25 +1260,23 @@ button {
     position: absolute;
     z-index: 1000;
     width: 340px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 16px -6px rgba(0, 0, 0, 0.05);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     padding: 1.25rem;
     font-size: 0.9rem;
     line-height: 1.5;
     color: var(--text-main);
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(8px);
     transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none; /* Ignore pointer events when invisible */
 }
 
 .concept-popover.visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     pointer-events: auto; /* Enable pointer events when visible */
 }
 
@@ -1392,11 +1396,6 @@ button {
   gap: 6px;
 }
 
-[data-theme="light"] .references-title,
-[data-theme="light"] .explanation-title {
-  color: var(--accent);
-}
-
 .references-list {
   list-style-type: none;
   padding: 0;
@@ -1428,10 +1427,6 @@ button {
 .reference-link:hover {
   color: var(--accent-light);
   text-decoration: underline;
-}
-
-[data-theme="light"] .reference-link:hover {
-  color: #1d4ed8; /* darker blue */
 }
 
 /* Quiz Selector styles */
@@ -1499,16 +1494,157 @@ button {
 
 .multi-submit-btn:not(:disabled) {
   background: var(--accent);
-  color: white;
+  color: var(--sl-color-text-invert);
   border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .multi-submit-btn:not(:disabled):hover {
   background: var(--accent-light);
-  transform: translateY(-1px);
 }
 
 
 
 
+/* Reading customization — map data-* trên <html> sang biến, + style panel/nút.
+   Cặp với public/reading-panel.js và pre-paint script trong CustomHead.astro. */
+
+:root[data-measure='narrow'] { --reading-measure: 60ch; --sl-content-width: 60ch; }
+:root[data-measure='medium'] { --reading-measure: 72ch; --sl-content-width: 72ch; }
+:root[data-measure='wide']   { --reading-measure: 88ch; --sl-content-width: 88ch; }
+
+:root[data-font='sans']  { --font-reading: var(--font-sans); }
+:root[data-font='serif'] { --font-reading: var(--font-serif); }
+
+/* Áp measure + font cho phần nội dung bài (không đụng sidebar/nav) */
+.sl-markdown-content {
+  font-family: var(--font-reading, var(--font-sans));
+}
+
+/* Trang splash (trang chủ, danh sách bộ đề, bản đồ nội dung, dự án) tự quản độ rộng */
+:root:has(.home), :root:has(.quiz-index), :root:has(.concept-map), :root:has(.project-index) {
+  --sl-content-width: 100%;
+}
+.sl-markdown-content:has(.home),
+.sl-markdown-content:has(.quiz-index),
+.sl-markdown-content:has(.concept-map),
+.sl-markdown-content:has(.project-index) {
+  /* Các thẻ bên trong tự dàn trang toàn khổ */
+}
+
+/* Nút mở panel: nổi cố định góc phải dưới, xếp trên nút focus (48px, bottom 2rem) */
+.reading-toggle-btn {
+  position: fixed;
+  bottom: calc(2rem + 60px);
+  right: 2rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border-default, var(--sl-color-hairline));
+  background: var(--surface-card, var(--sl-color-bg-nav));
+  color: var(--text-body, var(--sl-color-text));
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(15, 15, 20, 0.08));
+  cursor: pointer;
+  transition: border-color var(--duration-fast, 120ms) var(--ease-standard, ease),
+              background var(--duration-fast, 120ms) var(--ease-standard, ease);
+}
+/* Dưới 1024px nút focus bị ẩn — kéo nút đọc xuống chỗ của nó */
+@media (max-width: 1024px) {
+  .reading-toggle-btn { bottom: 2rem; }
+}
+
+/* Biến thể trên header: đứng cạnh nút đổi theme của Starlight */
+.reading-toggle-btn.in-header {
+  position: static;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md, 8px);
+  box-shadow: none;
+  background: transparent;
+  border-color: transparent;
+  color: var(--sl-color-gray-1, currentColor);
+}
+.reading-toggle-btn.in-header:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+}
+.reading-toggle-btn:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+}
+
+.reading-panel {
+  position: fixed;
+  z-index: 90;
+  width: 300px;
+  max-width: calc(100vw - 2rem);
+  padding: var(--space-5, 1.5rem);
+  background: var(--surface-card, var(--sl-color-bg-nav));
+  border: 1px solid var(--border-default, var(--sl-color-hairline));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(15,15,20,0.08));
+  font-family: var(--font-sans);
+}
+.reading-panel[hidden] { display: none; }
+.reading-panel h3 {
+  margin: 0 0 var(--space-5, 1.5rem);
+  font-size: var(--text-md, 1.1875rem);
+  color: var(--text-heading, var(--sl-color-white));
+}
+.rp-head { display: flex; justify-content: space-between; align-items: center; }
+.rp-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-faint, var(--sl-color-gray-4)); font-size: 1.2rem; line-height: 1;
+}
+.rp-row { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: var(--space-5, 1.5rem); }
+.rp-row:last-child { margin-bottom: 0; }
+.rp-label {
+  font-size: var(--text-xs, 0.8125rem); font-weight: 600;
+  color: var(--text-faint, var(--sl-color-gray-4));
+  text-transform: uppercase; letter-spacing: var(--tracking-wider, 0.06em);
+}
+.rp-seg { display: flex; border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: var(--radius-md, 8px); overflow: hidden; }
+.rp-seg button {
+  flex: 1; padding: 0.4rem 0.5rem; border: none; cursor: pointer;
+  background: transparent; color: var(--text-muted, var(--sl-color-gray-3));
+  font-family: var(--font-sans); font-size: var(--text-sm, 0.9375rem);
+  border-right: 1px solid var(--border-default, var(--sl-color-hairline));
+  transition: background var(--duration-fast,120ms), color var(--duration-fast,120ms);
+}
+.rp-seg button:last-child { border-right: none; }
+.rp-seg button[aria-pressed='true'] {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+  font-weight: 600;
+}
+.rp-range { width: 100%; accent-color: var(--sl-color-accent); }
+.rp-check {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: var(--text-sm, 0.9375rem); color: var(--text-body, var(--sl-color-text));
+}
+.rp-check input { accent-color: var(--sl-color-accent); }
+
+.btn-translate-fallback {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--sl-color-accent);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.btn-translate-fallback:hover {
+  background-color: var(--sl-color-accent);
+  color: var(--sl-color-white);
+  text-decoration: none;
+}

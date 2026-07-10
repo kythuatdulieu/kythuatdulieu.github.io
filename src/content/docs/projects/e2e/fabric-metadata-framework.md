@@ -19,7 +19,7 @@ Hôm nay, chúng ta sẽ tìm hiểu về **Fabric Metadata-Driven Framework (FM
 
 Thay vì tạo riêng biệt hàng tá Data Factory Pipelines cho mỗi nguồn dữ liệu khác nhau (như SQL Server, API, Oracle, CSV files), FMD tập trung logic vào **Metadata** (các bảng cấu hình trong cơ sở dữ liệu Fabric SQL Database). Hệ thống sẽ đọc các siêu dữ liệu này ở thời điểm thực thi (runtime) để tự động sinh ra các tham số và linh hoạt xử lý luồng di chuyển dữ liệu.
 
-![FMD Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_Overview.png)
+![FMD Overview](/images/projects/e2e/fabric-metadata-framework/f446039a.png)
 *Hình 1: Kiến trúc tổng quan của FMD Framework, từ Source Systems đi qua các luồng xử lý tự động đến Business Domains*
 
 ### Tại sao lại chọn FMD Framework?
@@ -42,13 +42,13 @@ Trái tim của hệ thống là một cơ sở dữ liệu (Fabric SQL Database
 - Các luật làm sạch và biến đổi dữ liệu (Cleansing Rules).
 - Tình trạng xử lý của từng thực thể (Load Statuses).
 
-![Metadata Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_METADATA_OVERVIEW.png)
+![Metadata Overview](/images/projects/e2e/fabric-metadata-framework/b0fd2128.png)
 *Hình 2: Cấu trúc các bảng Metadata điều khiển toàn bộ luồng chạy của hệ thống*
 
 ### 2.2. Tiến Trình Xử Lý Dữ Liệu (Medallion Architecture)
 FMD tích hợp chặt chẽ với kiến trúc huy chương của Microsoft Fabric:
 
-![Lakehouse Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_LAKEHOUSE_OVERVIEW.png)
+![Lakehouse Overview](/images/projects/e2e/fabric-metadata-framework/036f4143.png)
 *Hình 3: Thiết kế Data Lakehouse tuân theo kiến trúc Medallion (Landing -> Bronze -> Silver -> Gold)*
 
 *   **Landing Zone / Bronze Layer:** Nơi dữ liệu thô (Raw) được kéo vào hệ thống một cách tự động thông qua các Copy Data Activities động, hỗ trợ đa dạng nguồn dữ liệu.
@@ -58,7 +58,7 @@ FMD tích hợp chặt chẽ với kiến trúc huy chương của Microsoft Fab
 ### 2.3. Điều Phối Bằng Taskflow
 Thay vì dùng các hệ thống orchestration bên ngoài, FMD tận dụng sức mạnh điều phối ngay bên trong Fabric thông qua **Taskflow**. 
 
-![Process Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_PROCESS_OVERVIEW.png)
+![Process Overview](/images/projects/e2e/fabric-metadata-framework/04b27131.png)
 *Hình 4: Cách Taskflow phối hợp các Pipeline và Notebooks để chuyển đổi dữ liệu qua các lớp*
 
 Nó hỗ trợ kích hoạt tuần tự (Sequential) hoặc song song (Parallel) các chuỗi pipeline và quản lý dependencies chặt chẽ từ lúc Load Data đến lúc Transformation.
@@ -71,7 +71,7 @@ Một tính năng cực kỳ mạnh mẽ của FMD là khả năng phân bổ th
 
 Cụ thể, FMD cung cấp module giúp tự động hóa quá trình sinh ra các Workspace riêng biệt trên Microsoft Fabric cho từng phòng ban (ví dụ: Sales, HR, Marketing). Mỗi Domain sẽ tự sở hữu hạ tầng Lakehouse của mình, tự quản lý dữ liệu đặc thù nhưng toàn bộ tiến trình vẫn tuân thủ theo các siêu dữ liệu quản trị tập trung (Centralized Governance).
 
-![Workspace Overview](https://raw.githubusercontent.com/kythuatdulieu/FMD_FRAMEWORK/main/Images/FMD_WORKSPACE_OVERVIEW.png)
+![Workspace Overview](/images/projects/e2e/fabric-metadata-framework/a15e905e.png)
 *Hình 5: Chiến lược phân tách Workspaces giữa Admin (quản trị tập trung) và các Domain nghiệp vụ*
 
 ---

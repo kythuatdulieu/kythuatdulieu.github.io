@@ -46,10 +46,7 @@ Mỗi vùng nhớ do Tungsten kiểm soát được quản lý bởi một **Pag
 ```mermaid
 graph LR
     A["Java Object \n (String, Int)"] -.->|GC Overhead, \n Cache Miss| JVM["JVM Heap Memory"]
-    B["Tungsten UnsafeRow \n (Binary Data)"] ==>|Direct Memory Access, \n No GC| OS["Off-Heap Memory"]
-    
-    style A fill:#ffcccc,stroke:#333
-    style B fill:#ccffcc,stroke:#333,stroke-width:2px
+    B["Tungsten UnsafeRow \n (Binary Data)"] ==>|Direct Memory Access, \n No GC| OS["Off-Heap Memory"]
 ```
 
 Bằng cách loại bỏ Object Header, một row dữ liệu qua Tungsten nhỏ gọn hơn rất nhiều. Hơn thế nữa, vì dữ liệu nằm ở Off-Heap memory [hoặc được nhúng trong một `byte[]` cực lớn trên Heap], JVM GC hoàn toàn "mù" trước lượng dữ liệu này. Chi phí dọn rác giảm xuống gần bằng 0.

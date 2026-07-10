@@ -41,10 +41,7 @@ graph LR
     subgraph Transformer_Dynamic["Dynamic Embedding (Transformers)"]
         D["River Bank"] --> E["Self-Attention"] --> V2("[0.5, 0.8, -0.1]")
         F["Bank Account"] --> G["Self-Attention"] --> V3("[-0.9, 0.1, 0.4]")
-    end
-    
-    style Word2Vec_Static fill:#ffe6e6,stroke:#ff0000
-    style Transformer_Dynamic fill:#e6ffe6,stroke:#00aa00
+    end
 ```
 
 ---

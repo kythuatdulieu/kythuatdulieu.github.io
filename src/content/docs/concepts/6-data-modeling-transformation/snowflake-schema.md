@@ -13,8 +13,9 @@ description: "Khi thiết kế mô hình dữ liệu đa chiều cho Data Wareho
 
 Snowflake Schema là một kiến trúc Dimensional Modeling trong Data Warehouse, sinh ra với mục tiêu **chuẩn hóa [Normalization]** các bảng chiều (Dimension) của mô hình Star Schema thành các phân cấp thứ bậc (hierarchy) tương tự như chuẩn 3NF (Third Normal Form) trong cơ sở dữ liệu quan hệ.
 
-> [!NOTE]
-> Khác với Star Schema [hy sinh không gian lưu trữ để giảm bớt số lần JOIN], Snowflake Schema đặt nặng tính **toàn vẹn dữ liệu (Data Integrity)** và giảm thiểu I/O thông qua việc thu hẹp kích thước bản ghi (record size). Nhưng ở kỷ nguyên của Cloud Data Warehouse (BigQuery, Redshift, Snowflake), nơi Storage cực rẻ và Compute (CPU) cực đắt, Snowflake Schema mang lại những Systemic Trade-offs vô cùng lớn mà một Staff Data Engineer cần phải cân nhắc kỹ lưỡng.
+:::note
+Khác với Star Schema [hy sinh không gian lưu trữ để giảm bớt số lần JOIN], Snowflake Schema đặt nặng tính **toàn vẹn dữ liệu (Data Integrity)** và giảm thiểu I/O thông qua việc thu hẹp kích thước bản ghi (record size). Nhưng ở kỷ nguyên của Cloud Data Warehouse (BigQuery, Redshift, Snowflake), nơi Storage cực rẻ và Compute (CPU) cực đắt, Snowflake Schema mang lại những Systemic Trade-offs vô cùng lớn mà một Staff Data Engineer cần phải cân nhắc kỹ lưỡng.
+:::
 
 ## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 

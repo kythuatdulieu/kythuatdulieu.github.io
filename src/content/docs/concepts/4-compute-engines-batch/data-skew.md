@@ -35,11 +35,7 @@ Khi Hash Function gặp phải các Key có tần suất xuất hiện khổng l
 graph LR
     A["Node 1: Key A, B, B"] -->|Shuffle Hash| C["Partition 0: Key A"]
     B["Node 2: Key B, C, B"] -->|Shuffle Hash| D["Partition 1: Key B, B, B, B, B, B..."]
-    E["Node 3: Key D, E, B"] -->|Shuffle Hash| F["Partition 2: Key C, D, E"]
-    
-    style D fill:#ffcdd2,stroke:#c62828,stroke-width:4px
-    style C fill:#c8e6c9
-    style F fill:#c8e6c9
+    E["Node 3: Key D, E, B"] -->|Shuffle Hash| F["Partition 2: Key C, D, E"]
 ```
 
 ### Hậu quả Cấp Hệ thống (Systemic Consequences)

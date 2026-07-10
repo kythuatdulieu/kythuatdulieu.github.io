@@ -52,8 +52,9 @@ graph TD
 *   **Run-Length Encoding (RLE):** Nếu dữ liệu lặp lại liên tiếp nhau (thường có được sau lệnh `ORDER BY` hoặc Z-Ordering), chuỗi `M, M, M, M, F, F` được mã hóa thành `4M, 2F`.
 *   **Compression Codec:** Sau khi các encoding hạng nhẹ đã loại bỏ triệt để sự dư thừa cấu trúc, một thuật toán "hạng nặng" [như Zstd, Snappy] mới được áp dụng lên Data Page đó để nén byte-level (thu nhỏ dung lượng file cuối cùng).
 
-> [!TIP]
-> **Performance Tip:** Để tối đa hóa tỉ lệ nén, hãy dùng `ORDER BY` (Sorting] hoặc `Z-ORDER` theo các cột có Cardinality thấp trước khi ghi (Write) ra Parquet. Việc này dồn các giá trị giống nhau nằm cạnh nhau, giúp RLE phát huy sức mạnh 100%, có thể giảm dung lượng file xuống còn 1/10 mà không tiêu tốn thêm bất kỳ chu kỳ CPU nào cho Codec nén.
+:::tip
+**Performance Tip:** Để tối đa hóa tỉ lệ nén, hãy dùng `ORDER BY` (Sorting] hoặc `Z-ORDER` theo các cột có Cardinality thấp trước khi ghi (Write) ra Parquet. Việc này dồn các giá trị giống nhau nằm cạnh nhau, giúp RLE phát huy sức mạnh 100%, có thể giảm dung lượng file xuống còn 1/10 mà không tiêu tốn thêm bất kỳ chu kỳ CPU nào cho Codec nén.
+:::
 
 ---
 

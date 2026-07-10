@@ -61,10 +61,7 @@ graph TD
     MF1 -.-> D1
     MF2 --> D2
     MF3 --> D3
-    MF3 --> D4
-    
-    style C fill:#f9d0c4,stroke:#333,stroke-width:2px
-    style M2 fill:#d4f1f4,stroke:#333,stroke-width:2px
+    MF3 --> D4
 ```
 
 ### 1.1. Luồng thực thi truy vấn (Query Execution Flow) với Data Skipping

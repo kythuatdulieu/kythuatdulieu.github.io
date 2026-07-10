@@ -45,10 +45,7 @@ graph TD
     subgraph "Backfill Environment (Offline / Transient)"
         S3["S3 / GCS Cold Storage"] -->|"Batch Read (High Throughput)"| F2["Transient Backfill Cluster"]
         F2 -->|Static Partition Overwrite| DL
-    end
-
-    style F1 fill:#e6ffe6,stroke:#333,stroke-width:2px
-    style F2 fill:#ffe6e6,stroke:#333,stroke-width:2px
+    end
     
     DL -.->|Metadata Sync| C["Data Catalog (Glue/Hive)"]
 ```

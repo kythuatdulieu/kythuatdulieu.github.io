@@ -4,63 +4,54 @@ category: "Interview Preparation"
 difficulty: "Advanced"
 tags: ["data-pipeline", "etl", "elt", "interview", "system-design", "fault-tolerance"]
 readingTime: "16 mins"
-lastUpdated: 2026-06-07
+lastUpdated: 2026-07-10
 seoTitle: "Pipeline Design Interview - Thiết kế Data Pipeline hệ thống dữ liệu"
-metaDescription: "Hướng dẫn thiết kế kiến trúc Data Pipeline (ETL/ELT) trong phỏng vấn Data Engineering: Khả năng mở rộng, tính lũy đẳng (Idempotency) và Data Quality."
+metaDescription: "Thiết kế Data Pipeline trong phỏng vấn Data Engineering: idempotency, backfill, late-arriving data, CDC, WAP pattern và các trade-off giữa batch và streaming."
 ---
 
+Vòng thiết kế [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline) — system design dành riêng cho dữ liệu — thường là vòng có trọng số cao nhất khi tuyển Data Engineer từ Mid trở lên. Lý do: nó là vòng duy nhất mô phỏng được công việc thật. Viết SQL hay tinh chỉnh Spark là kỹ năng; thiết kế một pipeline sống sót qua sự cố mới là nghề.
 
-
-Trong quy trình tuyển dụng Data Engineer (từ cấp độ Mid, Senior cho đến Staff), vòng phỏng vấn **Thiết kế [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline)** (đôi khi gọi là System Design cho Data) luôn là vòng thi quan trọng nhất. Vòng này kiểm tra toàn diện khả năng tư duy hệ thống, thiết kế kiến trúc và giải quyết các bài toán dữ liệu thực tế của ứng viên.
-
----
-
-## Khi đường ống dữ liệu đối mặt với thực tế tàn khốc
-
-Môi trường Production thực tế luôn diễn ra vô số sự cố ngoài tầm kiểm soát: các đối tác API đột ngột thay đổi cấu trúc dữ liệu mà không báo trước, cụm Apache Spark bị tràn bộ nhớ RAM giữa chừng, đường truyền internet bị gián đoạn, hay dữ liệu rác trôi vào làm hỏng toàn bộ báo cáo doanh thu gửi ban giám đốc. 
-
-Nhà tuyển dụng muốn thông qua vòng phỏng vấn này để đánh giá xem hệ thống bạn thiết kế có đủ bền bỉ để đứng vững trước những sóng gió đó hay không, hay nó sẽ dễ dàng bị gãy đổ và bắt các kỹ sư phải thức đêm để chạy lại luồng dữ liệu một cách thủ công.
+Và sự cố là chuyện chắc chắn xảy ra: đối tác đổi cấu trúc API không báo trước, Spark tràn bộ nhớ giữa chừng, mạng gián đoạn, dữ liệu rác trôi vào báo cáo doanh thu. Người phỏng vấn không hỏi "pipeline của bạn chạy thế nào khi mọi thứ ổn" — họ hỏi nó gãy ở đâu, và bạn đã thiết kế sẵn gì cho lúc đó.
 
 ---
 
-## Bản chất của việc thiết kế Data Pipeline
+## Thiết kế pipeline không phải là vẽ mũi tên nối các tool
 
-Thiết kế một đường ống dữ liệu (Data Pipeline) không đơn thuần chỉ là vẽ các mũi tên kết nối các công cụ lại với nhau (ví dụ vẽ sơ đồ: *Airbyte $\rightarrow$ S3 $\rightarrow$ Spark $\rightarrow$ [Snowflake](/concepts/3-storage-engines-formats/snowflake)*). 
+Sơ đồ *Airbyte → S3 → Spark → [Snowflake](/concepts/3-storage-engines-formats/snowflake)* chưa phải là một thiết kế — nó mới là danh sách công cụ. Thiết kế thật sự nằm ở các quyết định phía sau mỗi mũi tên:
 
-Đó là quá trình bạn phải định nghĩa chi tiết toàn bộ vòng đời của dữ liệu:
-* **Phương thức trích xuất**: Kéo dữ liệu (Pull) hay đẩy dữ liệu (Push)?
-* **Tần suất cập nhật**: Xử lý theo lô (Batch) hay thời gian thực (Streaming)?
-* **Mô hình biến đổi**: [ETL](/concepts/2-data-ingestion-integration/etl) (Extract - Transform - Load) truyền thống hay [ELT](/concepts/2-data-ingestion-integration/elt) (Extract - Load - Transform) hiện đại?
-* **Khả năng phục hồi**: Làm thế nào để xử lý dữ liệu bị trễ (Late arriving data), cơ chế báo lỗi, và chiến lược nạp lại dữ liệu lịch sử (Backfilling) an toàn?
+* **Trích xuất**: kéo (pull) theo lịch hay nhận đẩy (push) theo sự kiện?
+* **Tần suất**: batch hay streaming — và nghiệp vụ có thật sự cần độ trễ tính bằng giây không?
+* **Mô hình biến đổi**: [ETL](/concepts/2-data-ingestion-integration/etl) hay [ELT](/concepts/2-data-ingestion-integration/elt)?
+* **Khả năng phục hồi**: dữ liệu đến muộn xử lý ra sao, lỗi báo cho ai, nạp lại lịch sử (backfill) có an toàn không?
 
----
-
-## Những nguyên tắc thiết kế sống còn đối với một kỹ sư dữ liệu
-
-Một Data Pipeline được thiết kế chuẩn chỉnh bởi các kỹ sư Senior phải tuân thủ nghiêm ngặt các nguyên tắc sau:
-
-* **Tính lũy đẳng (Idempotency)**: Đây là nguyên tắc quan trọng bậc nhất. Một pipeline dù được chạy 1 lần hay 100 lần với cùng một tham số đầu vào (ví dụ: cùng chạy cho ngày hôm qua) thì kết quả cuối cùng ghi nhận trong Data Warehouse phải hoàn toàn trùng khớp nhau, tuyệt đối không được xảy ra hiện tượng nhân đôi dữ liệu.
-* **Tách rời Compute và Storage**: Phân tách rõ ràng tài nguyên tính toán (như Spark, dbt) và tài nguyên lưu trữ (như S3, BigQuery) để hệ thống có thể co giãn tài nguyên một cách độc lập và giúp tiết kiệm tối đa chi phí hạ tầng.
-* **Chốt chặn chất lượng dữ liệu (Data Quality Gates)**: Xây dựng các cơ chế tự động kiểm tra tính bất thường (Anomalies) hoặc sai lệch định dạng dữ liệu ở ngay đầu vào và giữa các tầng lưu trữ, ngăn chặn triệt để tình trạng dữ liệu rác chảy vào các báo cáo cuối (áp dụng triết lý *Garbage in, Garbage out*).
-* **Khả năng Backfill dễ dàng**: Cho phép hệ thống dễ dàng nạp lại dữ liệu của một khoảng thời gian bất kỳ trong quá khứ khi phát hiện lỗi nghiệp vụ mà không làm ảnh hưởng hay xáo trộn dữ liệu của các ngày khác.
+Nhóm câu hỏi cuối là nơi phân định đẳng cấp ứng viên, vì nó chỉ trả lời được bằng kinh nghiệm vận hành.
 
 ---
 
-## Bộ khung tư duy giải quyết bài toán thiết kế Pipeline
+## Bốn nguyên tắc thiết kế phải nói được thành lời
 
-Khi nhận được đề bài thiết kế hệ thống, hãy bình tĩnh dẫn dắt người phỏng vấn qua 5 giai đoạn tư duy mạch lạc sau:
+**Idempotency — nguyên tắc số một.** Pipeline chạy 1 lần hay 100 lần với cùng tham số đầu vào (ví dụ cùng chạy cho ngày hôm qua) phải cho cùng một kết quả trong warehouse, không nhân đôi dữ liệu. Đây không phải yêu cầu thẩm mỹ: pipeline *sẽ* lỗi và *sẽ* được chạy lại — retry của Airflow, backfill thủ công, sự cố giữa chừng. Pipeline append-only không lũy đẳng biến mỗi lần retry thành một lần nhân bản dữ liệu.
 
-1. **Xác định quy mô hệ thống (Scope the System)**: Làm rõ dung lượng dữ liệu cần xử lý hàng ngày (Gigabytes, Terabytes hay Petabytes), định dạng của nguồn dữ liệu đầu vào (JSON, CSV, DB logs) và yêu cầu về tần suất cập nhật dữ liệu (Real-time, Hourly hay Daily).
-2. **Thiết kế kiến trúc tổng thể (High-Level Design)**: Đưa ra lựa chọn mô hình ETL hay ELT, và lựa chọn công nghệ lưu trữ tương ứng (Object Storage hay Cloud [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)).
-3. **Thu nhận dữ liệu ([Data Ingestion](/concepts/2-data-ingestion-integration/data-ingestion))**: Thiết kế luồng kéo dữ liệu định kỳ hay bắt sự kiện thay đổi. Thảo luận cách thức tải dữ liệu tăng thêm ([Incremental Load](/concepts/2-data-ingestion-integration/incremental-load)) thay vì tải lại toàn bộ.
-4. **Biến đổi và Lưu trữ (Transformation & Storage)**: Thiết kế luồng dữ liệu đi qua các tầng của kiến trúc Medallion (từ tầng thô Bronze, tầng làm sạch Silver cho đến tầng tổng hợp Gold).
-5. **Điều phối và Quan sát ([Orchestration](/concepts/7-dataops-orchestration-quality/orchestration) & Observability)**: Đề xuất các công cụ điều phối (như [Apache Airflow](/concepts/7-dataops-orchestration-quality/apache-airflow), Dagster), thiết lập cơ chế giám sát lỗi, theo dõi nguồn gốc dữ liệu ([Data Lineage](/concepts/8-security-governance-finops/data-lineage)) và tự động chạy lại (Retry) khi gặp lỗi tạm thời.
+**Tách compute khỏi storage.** Tài nguyên tính toán (Spark, dbt) và lưu trữ (S3, BigQuery) co giãn độc lập: cluster tắt đi khi không chạy job mà dữ liệu vẫn còn nguyên. Đây là lý do kiến trúc data lake/warehouse hiện đại rẻ hơn hẳn các cụm Hadoop gắn chặt đĩa với máy tính toán thế hệ trước.
+
+**Chốt chặn chất lượng dữ liệu.** Kiểm tra tự động ở đầu vào và giữa các tầng: schema đúng không, volume có bất thường không, các cột khóa có NULL không. Dữ liệu rác lọt qua sẽ lan xuống mọi báo cáo phía sau, và chi phí sửa tăng theo mỗi tầng nó đi qua.
+
+**Backfill là tính năng, không phải tai nạn.** Logic nghiệp vụ đổi, bug được phát hiện sau ba tháng — nạp lại lịch sử là việc định kỳ. Pipeline tốt nhận tham số ngày và xử lý đúng ngày đó (trong Airflow là dùng `data_interval` của lần chạy thay vì `datetime.now()`), để chạy lại một khoảng quá khứ không đụng đến dữ liệu các ngày khác.
 
 ---
 
-## Trực quan hóa kiến trúc Medallion trong mô hình ELT
+## Khung 5 bước dẫn dắt buổi phỏng vấn
 
-Sơ đồ dưới đây mô tả luồng di chuyển dữ liệu áp dụng kiến trúc Medallion kết hợp mô hình ELT hiện đại:
+1. **Chốt quy mô**: bao nhiêu GB/TB mỗi ngày, nguồn dạng gì (JSON, CSV, DB log), độ trễ chấp nhận được là bao nhiêu. Thiết kế cho 10GB/ngày và 10TB/ngày là hai bài toán khác nhau.
+2. **Kiến trúc tổng thể**: chọn ETL hay ELT, chọn nơi lưu (object storage, cloud [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse)) — kèm lý do gắn với quy mô vừa chốt.
+3. **[Data Ingestion](/concepts/2-data-ingestion-integration/data-ingestion)**: kéo định kỳ hay CDC; full load hay [Incremental Load](/concepts/2-data-ingestion-integration/incremental-load). Mặc định nên là incremental — full load hàng ngày chỉ hợp lý với bảng nhỏ.
+4. **Biến đổi và lưu trữ**: luồng dữ liệu qua các tầng Medallion — Bronze (thô, giữ nguyên trạng để còn đường quay lại), Silver (làm sạch, khử trùng lặp), Gold (tổng hợp theo nghiệp vụ).
+5. **[Orchestration](/concepts/7-dataops-orchestration-quality/orchestration) và observability**: công cụ điều phối ([Apache Airflow](/concepts/7-dataops-orchestration-quality/apache-airflow), Dagster), cơ chế retry cho lỗi tạm thời, cảnh báo, và [Data Lineage](/concepts/8-security-governance-finops/data-lineage) để truy nguồn khi số liệu sai.
+
+---
+
+## Kiến trúc Medallion trong mô hình ELT
+
 ```mermaid
 graph LR
     subgraph "Data Sources"
@@ -91,88 +82,74 @@ graph LR
     G -.->|"Trigger Ingestion"| C
     G -.->|"Trigger Transform"| D
     H -.->|"Data Quality Check"| E
-
-
 ```
 
----
-
-## Tình huống thực tế: Thiết kế pipeline đối soát giao dịch ngân hàng
-
-**Đề bài từ người phỏng vấn**: *"Hãy thiết kế một hệ thống Data Pipeline thu thập thông tin giao dịch hàng ngày để phục vụ báo cáo đối soát tài chính (Reconciliation). Nguồn dữ liệu đến từ một hệ thống cơ sở dữ liệu Oracle cũ kỹ của ngân hàng."*
-
-**Phân tích & Hướng thiết kế**:
-
-* **Ingestion (Thu nhận)**: Do hệ thống cơ sở dữ liệu Oracle cũ không thể chịu nổi các truy vấn quét dữ liệu lớn hàng ngày, tôi sẽ không dùng phương thức Full Load. Thay vào đó, tôi thiết lập cơ chế bắt sự kiện thay đổi dữ liệu (CDC - [Change Data Capture](/concepts/2-data-ingestion-integration/change-data-capture)) bằng cách dùng Debezium để đọc file ghi nhật ký giao dịch (Transaction Log) của Oracle, sau đó đẩy các sự kiện INSERT/UPDATE/DELETE này vào Kafka.
-* **Storage (Lưu trữ thô)**: Viết một chương trình Consumer để đẩy dữ liệu từ Kafka xuống Amazon S3 (Bronze Layer) theo định dạng Parquet để tối ưu hóa hiệu năng đọc ghi, phân chia phân vùng theo ngày xảy ra giao dịch (`year/month/day/`).
-* **Transformation (Biến đổi)**: Sử dụng [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) (hoặc [dbt](/concepts/6-data-modeling-transformation/dbt) trên Snowflake) để đọc dữ liệu từ tầng Bronze, tiến hành loại bỏ các bản ghi trùng lặp (do cơ chế At-least-once của Kafka), áp dụng cấu trúc bảng (schema) chuẩn hóa và lưu trữ kết quả đã làm sạch vào tầng Silver.
-* **Orchestration (Điều phối)**: Cấu hình Apache Airflow chạy định kỳ vào 00:30 sáng hàng ngày để kích hoạt các job tính toán tổng hợp dữ liệu từ tầng Silver sang Gold Layer để phục vụ trực tiếp cho báo cáo đối soát.
-* **[Data Quality](/concepts/7-dataops-orchestration-quality/data-quality) (Kiểm soát chất lượng)**: Chèn thêm bước kiểm tra dữ liệu tự động giữa tầng Silver và Gold: so sánh tổng số tiền giao dịch tính được với checksum từ hệ thống nguồn gửi sang. Nếu phát hiện độ lệch vượt quá 0.01%, hệ thống sẽ lập tức dừng quy trình báo cáo và gửi cảnh báo khẩn cấp qua Slack cho đội vận hành.
+Điểm đáng chỉ vào khi vẽ sơ đồ này: transform chạy *bên trong* warehouse (ELT), nên tầng Bronze giữ dữ liệu thô nguyên trạng. Khi logic biến đổi có bug, chỉ cần sửa SQL và chạy lại từ Bronze — không phải gọi lại API nguồn hay xin trích xuất lại từ hệ thống vận hành.
 
 ---
 
-## Những kinh nghiệm vàng và Best Practices
+## Bài toán thực chiến: pipeline đối soát giao dịch ngân hàng
 
-* **Phân vùng dữ liệu (Partitioning) theo thời gian logic**: Luôn phân vùng dữ liệu trên Data Lake bằng cột mốc thời gian thực tế xảy ra sự kiện (`event_time`) chứ không chỉ dùng thời gian xử lý của hệ thống (`processing_time`). Việc này giúp các câu truy vấn sau này chỉ quét đúng thư mục cần tìm, tiết kiệm đáng kể chi phí điện toán.
-* **Áp dụng mẫu thiết kế WAP (Write-Audit-Publish)**: Dữ liệu sau khi biến đổi xong sẽ được ghi vào một bảng tạm (Write), sau đó chạy các bài test kiểm tra chất lượng tự động (Audit). Chỉ khi mọi bài test đều đạt kết quả màu xanh, hệ thống mới thực hiện tráo đổi siêu dữ liệu (metadata swap) để đưa dữ liệu mới sang bảng chính cho người dùng sử dụng (Publish).
-* **Ưu tiên mô hình ELT hơn ETL**: Tận dụng sức mạnh tính toán khổng lồ của các Cloud Data Warehouse hiện đại (như Snowflake, BigQuery) bằng cách đưa dữ liệu thô vào kho trước (Load), rồi mới sử dụng công cụ dbt để viết các câu lệnh SQL biến đổi dữ liệu (Transform). Cách làm này trực quan, dễ bảo trì và cho phép đội ngũ Data Analyst có thể cùng tham gia viết logic biến đổi.
+**Đề bài**: *"Thiết kế pipeline thu thập giao dịch hàng ngày phục vụ báo cáo đối soát tài chính (reconciliation). Nguồn là một hệ Oracle cũ của ngân hàng."*
 
----
+Đề này có hai ràng buộc ngầm mà ứng viên tốt phải tự nhận ra: nguồn Oracle cũ *không chịu nổi* truy vấn quét lớn, và dữ liệu đối soát tài chính *không được phép sai*.
 
-## Những sai lầm kinh điển dễ làm "đổ vỡ" hệ thống
-
-* **Bỏ quên dữ liệu đến muộn (Late Arriving Data)**: Pipeline của bạn chốt số liệu ngày hôm qua vào đúng 00:00. Tuy nhiên, một số giao dịch phát sinh lúc 23:59 ngày hôm qua có thể bị trễ và chỉ truyền đến hệ thống vào lúc 00:05 ngày hôm nay do lỗi mạng điện thoại. Nếu không thiết kế cơ chế cập nhật đè (merge/upsert) cho dữ liệu đến trễ, báo cáo tài chính của bạn chắc chắn sẽ bị thiếu hụt số liệu.
-* **Lạm dụng lệnh UPDATE/DELETE trên [Data Lake](/concepts/3-storage-engines-formats/data-lake)**: Các hệ thống Object Storage như Amazon S3 hay Google [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage) được thiết kế để lưu trữ các file tĩnh bất biến. Việc cố gắng chạy lệnh Update hay Delete trên các file này sẽ bắt hệ thống phải đọc và ghi lại toàn bộ file vật lý mới, cực kỳ tốn tài nguyên. Hãy cân nhắc áp dụng kiến trúc Data [Lakehouse](/concepts/3-storage-engines-formats/lakehouse) (như [Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg), [Delta Lake](/concepts/3-storage-engines-formats/delta-lake)) để được hỗ trợ các giao dịch ACID mạnh mẽ.
-* **Thiết lập chuỗi phụ thuộc quá sâu (Hard Dependency)**: Thiết kế một [DAG](/concepts/7-dataops-orchestration-quality/dag) trong Airflow chứa hàng chục tác vụ chạy nối tiếp nhau kiểu chuỗi dài (Task A $\rightarrow$ Task B $\rightarrow$ ... $\rightarrow$ Task Z). Khi có một tác vụ ở giữa gặp lỗi (ví dụ Task Y), việc xử lý sự cố và chạy lại (retry) một chuỗi dài như vậy sẽ là một cực hình đối với đội ngũ vận hành.
+* **Ingestion**: không full load. Dùng CDC ([Change Data Capture](/concepts/2-data-ingestion-integration/change-data-capture)) — Debezium đọc transaction log của Oracle, đẩy các sự kiện INSERT/UPDATE/DELETE vào Kafka. Đọc log gần như không tạo tải lên database nguồn, khác hẳn với việc query trực tiếp.
+* **Lưu trữ thô**: consumer ghi từ Kafka xuống S3 (Bronze) dạng Parquet, phân vùng theo ngày giao dịch.
+* **Biến đổi**: [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) hoặc [dbt](/concepts/6-data-modeling-transformation/dbt) đọc Bronze, khử bản ghi trùng — bước bắt buộc, vì Kafka mặc định giao hàng at-least-once nên trùng lặp là hành vi bình thường chứ không phải lỗi — rồi chuẩn hóa schema vào Silver.
+* **Điều phối**: Airflow chạy 00:30 hàng ngày, tổng hợp Silver → Gold cho báo cáo.
+* **[Data Quality](/concepts/7-dataops-orchestration-quality/data-quality)**: giữa Silver và Gold, so tổng số tiền tính được với checksum từ hệ thống nguồn. Lệch quá 0.01% → dừng pipeline, cảnh báo khẩn qua Slack. Với dữ liệu đối soát, dừng-và-báo tốt hơn xuất-báo-cáo-sai; với dữ liệu ít nhạy cảm hơn, cảnh báo nhưng vẫn chạy tiếp có thể hợp lý hơn — nêu được sự phân biệt này là điểm cộng.
 
 ---
 
-## Đặt lên bàn cân: Xử lý theo lô (Batch) hay Thời gian thực (Streaming)?
+## Ba kỹ thuật nâng tầm câu trả lời
 
-* **Pipeline xử lý theo lô (Batch)**: Thiết kế đơn giản, dễ debug lỗi, dễ dàng đảm bảo tính lũy đẳng (chỉ cần xóa phân vùng của ngày đó đi và chạy lại) và chi phí vận hành rẻ. Tuy nhiên, dữ liệu trả về sẽ có độ trễ lớn (thường là 24 giờ).
-* **Pipeline xử lý thời gian thực (Streaming)**: Cung cấp thông tin tức thì với độ trễ tính bằng giây. Đổi lại, hệ thống có chi phí vận hành máy chủ chạy liên tục cực kỳ cao, mã nguồn lập trình rất phức tạp vì phải tự quản lý bộ nhớ đệm (state), xử lý các cửa sổ thời gian (Window) và dữ liệu đến lệch giờ.
+**Phân vùng theo event time.** Phân vùng data lake bằng thời điểm sự kiện *xảy ra* (`event_time`), không phải thời điểm hệ thống *xử lý* (`processing_time`). Truy vấn phân tích hỏi "chuyện gì xảy ra ngày X" — phân vùng đúng câu hỏi thì chỉ quét đúng thư mục, tiết kiệm cả thời gian lẫn tiền.
 
----
+**Write-Audit-Publish (WAP).** Ghi dữ liệu biến đổi vào bảng/nhánh tạm (Write), chạy các bài kiểm tra chất lượng trên đó (Audit), chỉ khi tất cả pass mới hoán đổi metadata để đưa vào bảng chính (Publish). Người dùng cuối không bao giờ nhìn thấy dữ liệu chưa qua kiểm — kể cả trong lúc pipeline đang chạy dở. Netflix là nơi phổ biến pattern này, và các table format như Apache Iceberg hỗ trợ nó trực tiếp qua branch.
 
-## Bộ câu hỏi phỏng vấn thực tế và Gợi ý trả lời
-
-### 1. Làm thế nào để bạn thiết kế một Data Pipeline có tính chất lũy đẳng (Idempotent)?
-* **Gợi ý trả lời**: 
-  Để đảm bảo tính lũy đẳng, tôi sẽ thiết kế quy trình ghi dữ liệu theo dạng **"Xóa trước ghi sau" (Delete-then-Insert)** hoặc **Ghi đè (Overwrite/Merge)** thay vì ghi nối đuôi (Append-only). 
-  Ví dụ, khi chạy một job cho ngày `2026-06-07`, bước đầu tiên của job sẽ là thực hiện xóa toàn bộ dữ liệu hiện có trong thư mục phân vùng của ngày đó hoặc chạy câu lệnh `DELETE FROM table WHERE date = '2026-06-07'`. Sau đó, hệ thống mới tiến hành ghi dữ liệu mới vào. 
-  Bằng cách này, dù job có bị lỗi và phải chạy lại bao nhiêu lần đi nữa, dữ liệu của ngày hôm đó vẫn hoàn toàn nhất quán và không bị nhân đôi. Nếu sử dụng kiến trúc Data Lakehouse hiện đại, tôi sẽ dùng câu lệnh `MERGE INTO` (Upsert) dựa trên một khóa chính duy nhất của bảng.
-
-### 2. Sự khác biệt giữa Event Time và Processing Time là gì? Tại sao điều này lại cực kỳ quan trọng trong phân tích?
-* **Gợi ý trả lời**: 
-  * **Event Time** là mốc thời gian thực tế khi sự kiện xảy ra ở phía thiết bị của người dùng (ví dụ: người dùng thực hiện giao dịch vào lúc 10:00).
-  * **Processing Time** là mốc thời gian khi hệ thống pipeline của chúng ta thực sự nhận được và xử lý sự kiện đó (ví dụ: là 11:00 do thiết bị người dùng bị mất sóng và đồng bộ muộn).
-  Điều này rất quan trọng khi chạy các phép toán tổng hợp (aggregation). Nếu chúng ta tính doanh thu hàng ngày dựa trên Processing Time, số liệu báo cáo sẽ bị sai lệch nghiêm trọng khi hệ thống pipeline gặp sự cố gián đoạn hoặc bị chậm mạng. Vì vậy, đối với các báo cáo kinh doanh chính xác, chúng ta luôn phải phân vùng và tổng hợp dữ liệu dựa trên Event Time.
-
-### 3. Bạn sẽ xử lý thế nào để tải dữ liệu (Load) từ một cơ sở dữ liệu giao dịch (OLTP DB) có kích thước khổng lồ vào kho dữ liệu?
-* **Gợi ý trả lời**: 
-  Tôi tuyệt đối sẽ không sử dụng phương pháp quét toàn bộ bảng (`SELECT *`) hàng ngày vì việc này sẽ làm sập hoặc nghẽn băng thông của hệ thống cơ sở dữ liệu vận hành. 
-  Thay vào đó, tôi áp dụng mô hình **Change Data Capture (CDC)**:
-  * Đầu tiên, tôi thực hiện chạy một bản chụp lịch sử một lần duy nhất (Historical Snapshot) ở thời điểm bắt đầu hệ thống để làm tầng dữ liệu nền tảng.
-  * Sau đó, tôi sử dụng các công cụ như Debezium để bắt các sự kiện thay đổi dữ liệu (Insert, Update, Delete) trực tiếp từ Transaction Log (file nhật ký giao dịch) của cơ sở dữ liệu nguồn theo thời gian thực.
-  * Định kỳ trong kho dữ liệu, tôi sẽ chạy các job để áp dụng các sự kiện thay đổi này (Incremental Load) lên tầng dữ liệu nền tảng bằng câu lệnh `MERGE INTO` để cập nhật trạng thái mới nhất của dữ liệu.
+**ELT với dbt cho phần biến đổi.** Đưa dữ liệu thô vào warehouse trước rồi biến đổi bằng SQL tận dụng sức tính toán của Snowflake/BigQuery, cho phép Analyst cùng tham gia viết logic, và mọi biến đổi được version control. Trade-off thật của ELT đáng nói kèm: chi phí compute của warehouse có thể phình nhanh nếu model dbt viết ẩu — ELT chuyển gánh nặng từ hạ tầng sang kỷ luật viết SQL.
 
 ---
 
-## Sách hay và tài liệu tham khảo gối đầu giường
+## Ba lỗi thiết kế người phỏng vấn sẽ gài
 
-1. **Fundamentals of Data Engineering** - Joe Reis, Matt Housley (Chương 6 phân tích cực kỳ sâu sắc về thiết kế kiến trúc pipeline dữ liệu).
-2. **Data Pipelines Pocket Reference** - James Densmore (Cuốn sách tóm tắt thực tế các mẫu thiết kế pipeline).
-3. **Netflix TechBlog** - Các bài viết chuyên sâu chia sẻ về kiến trúc chất lượng dữ liệu (Data Quality) và quản lý nguồn gốc dữ liệu (Data Lineage) của Netflix.
+**Bỏ quên late-arriving data.** Pipeline chốt số ngày hôm qua lúc 00:00, nhưng giao dịch phát sinh 23:59 có thể đến hệ thống lúc 00:05 hôm sau vì thiết bị người dùng mất sóng. Không có cơ chế merge/upsert cho dữ liệu đến muộn thì báo cáo thiếu số một cách hệ thống — và thiếu đúng vào những ngày mạng có vấn đề, tức những ngày khó truy nhất.
+
+**UPDATE/DELETE trực tiếp trên [Data Lake](/concepts/3-storage-engines-formats/data-lake).** Object storage như S3 hay [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage) lưu file bất biến — sửa một dòng nghĩa là đọc và ghi lại cả file. Nếu nghiệp vụ cần update/delete thường xuyên (CDC là ví dụ điển hình), đó là tín hiệu cần table format của kiến trúc [Lakehouse](/concepts/3-storage-engines-formats/lakehouse) — [Apache Iceberg](/concepts/3-storage-engines-formats/apache-iceberg) hoặc [Delta Lake](/concepts/3-storage-engines-formats/delta-lake) — với transaction ACID và `MERGE INTO`.
+
+**Chuỗi phụ thuộc quá sâu trong [DAG](/concepts/7-dataops-orchestration-quality/dag).** DAG hàng chục task nối đuôi A → B → ... → Z: một task giữa chuỗi lỗi là cả đoạn sau đứng chờ, và người vận hành phải lần ngược cả chuỗi để chạy lại. Thiết kế tốt chia thành các đoạn độc lập có điểm checkpoint, để lỗi ở đâu chạy lại từ gần đó.
 
 ---
 
-## English Summary
+## Batch hay Streaming: câu trả lời đúng là một câu hỏi ngược
 
-The Pipeline Design Interview evaluates a candidate's capability to build scalable, resilient, and accurate data movement systems. It focuses heavily on crucial principles such as [Idempotency](/concepts/2-data-ingestion-integration/idempotency) (ensuring multiple pipeline runs produce the exact same outcome without data duplication), decoupling storage and compute, handling late-arriving data, and implementing data quality checks (Data Contracts/WAP pattern). Candidates should be prepared to discuss the trade-offs between Batch and Streaming architectures, justify the shift from ETL to ELT (e.g., using [Medallion Architecture](/concepts/3-storage-engines-formats/medallion-architecture) with dbt and cloud warehouses), and design robust data ingestion strategies using Change Data Capture (CDC) over repetitive full database loads.
+Batch: thiết kế đơn giản, dễ debug, idempotency dễ đạt (xóa partition của ngày đó, chạy lại), chi phí thấp — đổi bằng độ trễ hàng giờ đến một ngày. Streaming: độ trễ giây — đổi bằng hạ tầng chạy liên tục, code phức tạp hơn hẳn (quản lý state, windowing, dữ liệu lệch giờ), và vận hành khó hơn.
 
-## Tài Liệu Tham Khảo
-* **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
-* [The Pragmatic Engineer - Gergely Orosz](https://blog.pragmaticengineer.com/)
-* **Data Engineering at Scale: Netflix Tech Blog**
-* **Building Data Infrastructure at Airbnb**
+Câu trả lời ăn điểm không phải chọn phe, mà là hỏi ngược: *"Ai dùng dữ liệu này, và quyết định gì thay đổi nếu độ trễ giảm từ 1 giờ xuống 1 giây?"* Dashboard ban giám đốc xem mỗi sáng không cần streaming. Hệ thống chống gian lận thì có. Streaming không tự làm dữ liệu đúng hơn — nó chỉ làm dữ liệu đến sớm hơn, với giá đắt hơn.
+
+---
+
+## Ba câu hỏi thực tế và cách trả lời
+
+### 1. Thiết kế pipeline lũy đẳng (idempotent) như thế nào?
+
+Chọn chiến lược ghi mà chạy lại không sinh trùng lặp: **delete-then-insert** theo phân vùng (job chạy cho ngày `2026-07-09` thì bước đầu là `DELETE FROM table WHERE date = '2026-07-09'` hoặc ghi đè nguyên partition, rồi mới insert), hoặc **`MERGE INTO`/upsert** theo khóa duy nhất trên lakehouse. Kèm điều kiện tiên quyết: job phải nhận ngày xử lý làm *tham số* thay vì tự lấy "hôm nay" — không tham số hóa thì không backfill được, và mọi lần chạy lại đều lệch ngữ nghĩa.
+
+### 2. Event time khác processing time thế nào, vì sao quan trọng?
+
+**Event time** là lúc sự kiện thực sự xảy ra phía người dùng (giao dịch lúc 10:00); **processing time** là lúc pipeline nhận và xử lý nó (11:00, vì thiết bị mất sóng đồng bộ muộn). Tổng hợp doanh thu theo processing time nghĩa là số liệu của một ngày phụ thuộc vào... sức khỏe hạ tầng của chính pipeline ngày hôm đó — pipeline chậm là doanh thu "dịch chuyển" sang ngày khác. Báo cáo nghiệp vụ phải phân vùng và tổng hợp theo event time; phân biệt này cũng là nền của mọi cơ chế windowing trong streaming (Flink, Beam đều xây quanh nó).
+
+### 3. Load dữ liệu từ một OLTP database khổng lồ vào warehouse ra sao?
+
+Không `SELECT *` quét bảng hàng ngày — nghẽn database vận hành là tự tạo sự cố cho hệ thống đang phục vụ khách hàng. Cách chuẩn: chụp **snapshot lịch sử một lần** làm nền, rồi dùng **CDC** (Debezium đọc transaction log) bắt các thay đổi Insert/Update/Delete gần thời gian thực, và định kỳ áp các thay đổi lên nền bằng `MERGE INTO`. Điểm cộng nếu nêu thêm mặt khó của CDC: schema nguồn thay đổi cần được truyền tải xuống (schema evolution), và thứ tự áp sự kiện phải đúng để trạng thái cuối chính xác.
+
+---
+
+## Tài liệu tham khảo
+
+* **Fundamentals of Data Engineering — Joe Reis & Matt Housley (O'Reilly)** — chương về kiến trúc pipeline và vòng đời dữ liệu, sát nhất với nội dung vòng phỏng vấn này.
+* [Apache Airflow Documentation — Best Practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html) — hướng dẫn chính thức về idempotent task, catchup và backfill.
+* [Start Data Engineering — How to Make Data Pipelines Idempotent](https://www.startdataengineering.com/post/why-how-idempotent-data-pipeline/) — ví dụ code cụ thể cho các pattern delete-then-insert và merge.
+* **Designing Data-Intensive Applications — Martin Kleppmann (O'Reilly)** — chương 10-11 về batch/stream processing và nền tảng của event time vs. processing time.
+* **Data Pipelines Pocket Reference — James Densmore (O'Reilly)** — tóm tắt thực dụng các pattern ingestion và transform.

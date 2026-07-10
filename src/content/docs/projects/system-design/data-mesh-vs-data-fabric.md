@@ -62,9 +62,7 @@ Việc phân tán quyền lực dễ dẫn đến tình trạng hỗn loạn (Da
 ```mermaid
 graph TD
     %% Define Styles
-    classDef domain fill:#f9f2f4,stroke:#e83e8c,stroke-width:2px;
-    classDef product fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px;
-    classDef platform fill:#f4f5f7,stroke:#6c757d,stroke-width:2px;
+
 
     %% Domains
     subgraph Domain_Sales["Domain: Sales & Marketing"]

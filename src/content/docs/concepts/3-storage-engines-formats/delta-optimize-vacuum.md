@@ -85,9 +85,10 @@ Nhờ cơ chế MVCC, `OPTIMIZE` tạo ra file 1GB mới và ghi vào Delta Log 
 ### 3.1. The "7-Day Rule" Trade-off [Safety vs. Storage Cost]
 Tại sao Databricks thiết lập mặc định Retention là 7 ngày? Đó là sự đánh đổi giữa **Chi phí Lưu trữ** và **Khả năng chịu lỗi / Time Travel**.
 
-> [!CAUTION] 
-> **Incident: FileNotFoundException & Job Crash dây chuyền**
-> Nếu bạn chạy `VACUUM events RETAIN 0 HOURS` để xóa sạch rác. Cùng lúc đó, một Pipeline ML cực lớn đã chạy được 10 tiếng, vô tình cần đọc tới một file mà bạn vừa ép xóa. Pipeline ML lập tức văng lỗi `FileNotFoundException` và sập toàn bộ hệ thống. Xóa Time Travel history cũng có thể vi phạm các quy định Audit.
+:::danger
+**Incident: FileNotFoundException & Job Crash dây chuyền**
+Nếu bạn chạy `VACUUM events RETAIN 0 HOURS` để xóa sạch rác. Cùng lúc đó, một Pipeline ML cực lớn đã chạy được 10 tiếng, vô tình cần đọc tới một file mà bạn vừa ép xóa. Pipeline ML lập tức văng lỗi `FileNotFoundException` và sập toàn bộ hệ thống. Xóa Time Travel history cũng có thể vi phạm các quy định Audit.
+:::
 
 ```sql
 -- Lệnh chuẩn mực dọn dẹp hệ thống [An toàn]

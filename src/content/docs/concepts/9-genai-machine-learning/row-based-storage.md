@@ -45,14 +45,7 @@ graph TD
     FS --- T3
     T3 --- T2
     T2 --- T1
-  end
-  
-  style H fill:#f9f,stroke:#333,stroke-width:2px
-  style LP fill:#bbf,stroke:#333,stroke-width:2px
-  style FS fill:#eee,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
-  style T1 fill:#dfd,stroke:#333,stroke-width:2px
-  style T2 fill:#dfd,stroke:#333,stroke-width:2px
-  style T3 fill:#dfd,stroke:#333,stroke-width:2px
+  end
 ```
 
 **Phân tích kỹ thuật (Technical Deep-dive]:**

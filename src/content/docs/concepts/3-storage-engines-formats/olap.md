@@ -49,10 +49,7 @@ flowchart LR
     subgraph Vectorized["Vectorized Execution - Nhanh"]
         V1("[Vector: 8192 Rows]") ===> CPU2{"CPU + AVX-512 \n (1 Lệnh SIMD)"}
     end
-    Row_Based -.-> Vectorized
-    
-    style Row_Based fill:#ffe6e6,stroke:#ff6666
-    style Vectorized fill:#e6ffed,stroke:#2ea043
+    Row_Based -.-> Vectorized
 ```
 
 ---
@@ -82,10 +79,7 @@ graph TD
     service_idx1 --> g1
     service_idx2 --> g2
     service_idx3 --> g3
-    end
-    
-    style group_disk fill:#f9f6e5,stroke:#b8a36c
-    style group_ram fill:#e6f3ff,stroke:#4a90e2
+    end
 ```
 
 *Cơ chế Query:* Khi User query `WHERE UserID = 2000`, ClickHouse dùng thuật toán Binary Search trên RAM để tìm ra giá trị nằm giữa Mark 2 và Mark 3. Nó sẽ lọc bỏ (Skip) hoàn toàn Granule 1 và 3, chỉ nạp Granule 2 từ đĩa cứng (Disk) lên RAM (Buffer) và thực hiện SIMD Scan.
@@ -101,7 +95,7 @@ CREATE TABLE events (
 -- Xác định cấu trúc Sparse Index và thứ tự vật lý lưu trữ trên đĩa
 ORDER BY (event_time, user_id) 
 -- Điều chỉnh kích thước Vector tùy vào độ phân tán dữ liệu
-SETTINGS index_granularity = 8192; 
+SETTINGS index_granularity = 8192;
 ```
 
 ### 2.2. Sự Đánh Đổi: Late vs Early Materialization

@@ -1,0 +1,1838 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "An AI Specialist needs to create a Sales Email with a custom prompt template. They need to ground on the following data.\nOpportunity Products -\nEvents near the customer -\nTone and voice examples -How should the AI Specialist obtain related items?",
+    "options": {
+      "A": "Call a prompt initiated flow to fetch and ground the required data.",
+      "B": "Utilize a standard email template and manually insert the required data fields.",
+      "C": "Create a flex template that takes the records in question as inputs."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để lấy dữ liệu liên quan và thực hiện grounding cho Prompt Template từ nhiều nguồn phức tạp (như Opportunity Products, các sự kiện gần khách hàng, ví dụ về giọng điệu), AI Specialist nên sử dụng Flow được kích hoạt bởi prompt (Template-Triggered Prompt Flow). Flow này có thể truy vấn các đối tượng liên quan và trả về dữ liệu có cấu trúc để đưa vào prompt.",
+    "references": null
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "Universal Containers (UC) recently rolled out Einstein Generative AI capabilities and has created a custom prompt to summarize case records. Users have reported that the case summaries generated are not returning the appropriate information.What is a possible explanation for the poor prompt performance?",
+    "options": {
+      "A": "The Einstein Trust Layer is incorrectly configured.",
+      "B": "The data being used for grounding is incorrect or incomplete.",
+      "C": "The prompt template version is incompatible with the chosen LLM."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hiệu suất và chất lượng câu trả lời của AI tạo sinh phụ thuộc rất lớn vào dữ liệu grounding (dữ liệu làm nền tảng đầu vào). Nếu dữ liệu dùng để grounding bị thiếu hoặc không chính xác, Einstein LLM sẽ không thể tạo ra bản tóm tắt tình huống (case summary) chính xác và đầy đủ.",
+    "references": null
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "An administrator wants to check the response of the Flex prompt template they’ve built, but the preview button is greyed out.What is the reason for this?",
+    "options": {
+      "A": "A merge field has not been inserted in the prompt.",
+      "B": "The records related to the prompt have not been selected.",
+      "C": "The prompt has not been saved and activated."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Salesforce Prompt Builder, nút Preview (Xem trước) sẽ bị vô hiệu hóa (xám màu) nếu quản trị viên chưa chọn một bản ghi cụ thể (test records) cho các tham số đầu vào được định nghĩa trong Flex prompt template.",
+    "references": null
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to offer personalized service experiences and reduce agent handling time with AI-generated email responses, grounded in Knowledge base.Which AI capability should UC use?",
+    "options": {
+      "A": "Einstein Email Replies",
+      "B": "Einstein Generative Service Replies for Email",
+      "C": "Einstein Service Replies for Email"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Service Replies for Email là tính năng AI tạo sinh được thiết kế riêng để tự động soạn thảo các phản hồi email cá nhân hóa cho nhân viên hỗ trợ, dựa trên dữ liệu từ Salesforce Knowledge base và lịch sử tình huống (Case history).",
+    "references": null
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "An AI Specialist configured Data Masking within the Einstein Trust Layer.How should the AI Specialist begin validating that the correct fields are being masked?",
+    "options": {
+      "A": "Use a Flow-based resource in Prompt Builder to debug the fields merge values using Flow Debugger.",
+      "B": "Enable the collection and storage of Einstein Generative AI Audit Data on the Einstein Feedback setup page.",
+      "C": "Request the Einstein Generative AI Audit Data from the Security section of the Setup menu."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để kiểm tra và xác thực các trường thông tin nhạy cảm có được che giấu (masking) đúng cách qua Einstein Trust Layer hay không, quản trị viên cần bật tính năng thu thập và lưu trữ Dữ liệu Kiểm toán AI Tạo sinh (Einstein Generative AI Audit Data) trong trang thiết lập Einstein Feedback.",
+    "references": null
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "An AI Specialist needs to create a prompt template to fill a custom field named Latest Opportunities Summary on the Account object with information from the three most recently opened opportunities.How should the AI Specialist gather the necessary data for the prompt template?",
+    "options": {
+      "A": "Select the Account Opportunity object as a resource when creating the prompt template.",
+      "B": "Create a flow to retrieve the opportunity information.",
+      "C": "Select the latest Opportunities related list as a merge field."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để truy vấn các bản ghi liên quan có điều kiện phức tạp (như lấy ra 3 cơ hội mở gần đây nhất liên kết với Account), các trường hợp ghép dữ liệu tiêu chuẩn không hỗ trợ trực tiếp. Quản trị viên cần tạo một Flow kích hoạt bởi prompt để truy vấn dữ liệu này và truyền vào prompt template.",
+    "references": null
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "An AI Specialist is considering using a Field Generation prompt template type.What should the AI Specialist check before creating the Field Generation prompt to ensure it is possible for the field to be enabled for generative AI?",
+    "options": {
+      "A": "That the Lightning page layout where the field will reside has been upgraded to Dynamic Forms",
+      "B": "That the field chosen must be a rich text field with 255 characters or more",
+      "C": "That the org is set to API version 59 or higher"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để bật tính năng sinh dữ liệu cho trường (Field Generation) bằng AI tạo sinh trên giao diện người dùng, trang Lightning page chứa trường đó bắt buộc phải được nâng cấp lên Dynamic Forms. Nút kích hoạt AI chỉ xuất hiện trên các trường thuộc Dynamic Forms.",
+    "references": null
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "Universal Containers (UC) plans to send one of three different emails to its customers based on the customer’s lifetime value score and their market segment.Considering that UC are required to explain why an e-mail was selected, which AI model should UC use to achieve this?",
+    "options": {
+      "A": "Predictive model and generative model",
+      "B": "Predictive model",
+      "C": "Generative model"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chấm điểm giá trị trọn đời của khách hàng và phân khúc thị trường, đồng thời có khả năng giải thích rõ ràng các yếu tố tác động đến quyết định lựa chọn email (Explainable AI), doanh nghiệp cần sử dụng Mô hình Dự đoán (Predictive model) như Einstein Prediction Builder hoặc Einstein Discovery.",
+    "references": null
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "The sales team at a hotel resort would like to generate a guest summary about the guests’ interests and provide recommendations based on their activity preferences captured in each guest profile. They want the summary to be available only on the contact record page.Which AI capability should the team use?",
+    "options": {
+      "A": "Model Builder",
+      "B": "Einstein Copilot",
+      "C": "Prompt Builder"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo bản tóm tắt khách hàng dựa trên sở thích và hiển thị trực tiếp trên trang Contact (Contact record page), công cụ phù hợp nhất là Prompt Builder. Nó cho phép thiết kế các prompt template tùy chỉnh để lấy dữ liệu Contact và hiển thị thông tin sinh bởi AI ngay trên trang đó.",
+    "references": null
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "Universal Containers wants to reduce overall agent handling time by minimizing the time spent typing routine answers for common questions in-chat, and reducing the post-chat analysis by suggesting values for case fields.",
+    "options": {
+      "A": "Einstein Service Replies and Work Summaries",
+      "B": "Einstein Reply Recommendations and Case Classification",
+      "C": "Einstein Reply Recommendations and Case Summaries"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để giảm thời gian xử lý của tổng đài viên:\n- Einstein Reply Recommendations đề xuất các câu trả lời soạn sẵn cho các câu hỏi phổ biến trong chat.\n- Einstein Case Classification tự động dự đoán và đề xuất giá trị cho các trường thông tin trên Case dựa trên dữ liệu lịch sử.",
+    "references": null
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "Universal Containers needs its sales reps to be able to only execute prompt templates.What should an AI Specialist recommend to achieve this requirement?",
+    "options": {
+      "A": "Prompt Template Manager permission set",
+      "B": "Prompt Execute Template permission set",
+      "C": "Prompt Template User permission set"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Quyền Prompt Template User cho phép nhân viên bán hàng chỉ thực thi (chạy) các prompt template đã có sẵn mà không có quyền chỉnh sửa hay tạo mới.",
+    "references": null
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "An AI Specialist implements Einstein Sales Emails for a sales team. The team wants to send personalized follow-up emails to leads based on their interactions and data stored in Salesforce. The AI Specialist needs to configure the system to use the most accurate and up-to-date information for email generation.Which grounding technique should the AI Specialist use?",
+    "options": {
+      "A": "Automatic grounding using Draft with Einstein feature",
+      "B": "Ground with Apex Merge Fields",
+      "C": "Ground with Record Merge Fields"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để email bán hàng tự động được cá nhân hóa bằng thông tin chính xác và cập nhật nhất từ bản ghi Lead hiện tại, AI Specialist nên sử dụng phương pháp grounding bằng các trường bản ghi (Ground with Record Merge Fields).",
+    "references": null
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "What is best practice when refining Einstein Copilot custom action Instructions?",
+    "options": {
+      "A": "Provide examples of user messages that are expected to trigger the action.",
+      "B": "Use consistent introductory phrases and verbs across multiple action instructions.",
+      "C": "Specify the persona who will request the action."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi tinh chỉnh hướng dẫn (Instructions) cho các hành động tùy chỉnh (custom actions) trong Einstein Copilot, thực hành tốt nhất là cung cấp các ví dụ thực tế về tin nhắn người dùng dự kiến sẽ kích hoạt hành động này, giúp mô hình phân lập ý định chính xác hơn.",
+    "references": null
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "Universal Containers wants to utilize Einstein for Sales to help sales reps reach their sales quotas by providing AI-generated plans containing guidance and steps for closing deals.Which feature should the AI Specialist recommend to the sales team?",
+    "options": {
+      "A": "Create Account Plan",
+      "B": "Find Similar Deals",
+      "C": "Create Close Plan"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Create Close Plan là tính năng AI tạo sinh hỗ trợ nhân viên bán hàng xây dựng các kế hoạch hành động cụ thể và các bước chi tiết để thúc đẩy và đóng các cơ hội kinh doanh (Opportunities) thành công.",
+    "references": null
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "Universal Containers has an active standard email prompt template that does not fully deliver on the business requirements.Which steps should an AI Specialist take to use the content of the standard prompt email template in question and customize it to fully meet the business requirements?",
+    "options": {
+      "A": "Save as New Template and edit as needed.",
+      "B": "Clone the existing template and modify as needed.",
+      "C": "Save as New Version and edit as needed."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Các prompt template tiêu chuẩn (standard prompt templates) của Salesforce không thể chỉnh sửa trực tiếp. Để tùy biến, nhà phát triển cần nhân bản (Clone) template tiêu chuẩn đó thành một template tùy chỉnh mới và tiến hành chỉnh sửa.",
+    "references": null
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "How does the Einstein Trust Layer ensure that sensitive data is protected while generating useful and meaningful responses?",
+    "options": {
+      "A": "Responses that do not meet the relevance threshold will be automatically rejected.",
+      "B": "Masked data will be de-masked during response journey.",
+      "C": "Masked data will be de-masked during request journey."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Trust Layer bảo vệ dữ liệu nhạy cảm bằng cách che giấu (masking) thông tin PII trước khi gửi đến LLM bên ngoài. Trên đường phản hồi (response journey), dữ liệu đã che giấu này sẽ được giải che giấu (de-masked) để khôi phục lại nội dung ban đầu trước khi hiển thị cho người dùng.",
+    "references": null
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "The marketing team at Universal Containers is looking for a way to personalize emails based on customer behavior, preferences, and purchase history.Why should the team use Einstein Copilot as the solution?",
+    "options": {
+      "A": "To generate relevant content when engaging with each customer",
+      "B": "To analyze past campaign performance",
+      "C": "To send automated emails to all customers"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot hoạt động như một trợ lý ảo thông minh, có khả năng tạo nội dung cá nhân hóa ngay lập tức dựa trên ngữ cảnh thực tế của khách hàng (hành vi, sở thích, lịch sử mua hàng) tại thời điểm tương tác trực tiếp.",
+    "references": null
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to enable its sales team to get insights into product and competitor names mentioned during calls.How should UC meet this requirement?",
+    "options": {
+      "A": "Enable Einstein Conversation Insights, assign permission sets, define recording managers, and customize insights with up to 50 competitor names.",
+      "B": "Enable Einstein Conversation Insights, enable sales recording, assign permission sets, and customize insights with up to 50 products.",
+      "C": "Enable Einstein Conversation Insights, connect a recording provider, assign permission sets, and customize insights with up to 25 products."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thiết lập Einstein Conversation Insights (ECI) cho đội ngũ bán hàng: cần kết nối với nhà cung cấp dịch vụ ghi âm thoại (recording provider), gán các bộ quyền ECI tương ứng, và cấu hình tối đa 25 sản phẩm trong phần cài đặt để hệ thống tự động nhận diện và phân tích.",
+    "references": null
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "Universal Containers is evaluating Einstein Generative AI features to improve the productivity of the service center operation.Which features should the AI Specialist recommend?",
+    "options": {
+      "A": "Service Replies and Case Summaries",
+      "B": "Reply Recommendations and Sales Summaries",
+      "C": "Service Replies and Work Summaries"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Các tính năng AI tạo sinh giúp nâng cao hiệu suất trung tâm dịch vụ khách hàng bao gồm:\n- Service Replies: Tự động soạn thảo câu trả lời trong khung chat.\n- Work Summaries: Tự động tóm tắt cuộc hội thoại hoặc công việc khi kết thúc ca làm việc.",
+    "references": null
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "A data scientist needs to view and manage models in Einstein Studio. The data scientist also needs to create prompt templates in Prompt Builder.Which permission sets should an AI Specialist assign to the data scientist?",
+    "options": {
+      "A": "Prompt Template Manager and Prompt Template User",
+      "B": "Prompt Template User and Data Cloud Admin",
+      "C": "Data Cloud Admin and Prompt Template Manager"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để quản lý và xem các mô hình học máy trong Einstein Studio, cần gán quyền Data Cloud Admin. Để tạo prompt template trong Prompt Builder, cần gán quyền Prompt Template Manager.",
+    "references": null
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "An AI Specialist has created a copilot custom action using flow as the reference action type. However, it is not delivering the expected results to the conversation preview, and therefore needs troubleshooting.What should the AI Specialist do to identify the root cause of the problem?",
+    "options": {
+      "A": "In Copilot Builder within the Dynamic Panel, turn on dynamic debugging to show the inputs and outputs.",
+      "B": "In Copilot Builder within the Dynamic Panel, confirm selected action and observe the values in Input and Output sections.",
+      "C": "In Copilot Builder, verify the utterance entered by the user and review session event logs for debug information."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để khắc phục sự cố một hành động tùy chỉnh (custom action) trong Einstein Copilot không mang lại kết quả mong muốn trong giao diện xem trước (conversation preview), AI Specialist nên xác nhận hành động được chọn trong Dynamic Plan (Bảng động) của Copilot Builder và quan sát các giá trị ở phần Input và Output để kiểm tra tính chính xác của dữ liệu truyền vào và ra.",
+    "references": null
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "Universal Containers has seen a high adoption rate of a new feature that uses generative AI to populate a summary field of a custom object, Competitor Analysis. All sales users have the same profile but one user cannot see the generative AI-enabled field icon next to the summary field.What is the most likely cause of the issue?",
+    "options": {
+      "A": "The prompt template associated with summary field is not activated for that user.",
+      "B": "The user does not have the field Generative AI User permission set assigned.",
+      "C": "The user does not have the Prompt Template User permission set assigned."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để một người dùng cụ thể có thể nhìn thấy nút/biểu tượng AI tạo sinh bên cạnh trường tóm tắt (summary field), người dùng đó phải được gán bộ quyền Generative AI User. Các người dùng khác có cùng profile nhưng xem được là do họ đã được gán trực tiếp bộ quyền này.",
+    "references": null
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "A support team handles a high volume of chat interactions and needs a solution to provide quick, relevant responses to customer inquiries. Responses must be grounded in the organization’s knowledge base to maintain consistency and accuracy.Which feature in Einstein for Service should the support team use?",
+    "options": {
+      "A": "Einstein Service Replies",
+      "B": "Einstein Reply Recommendations",
+      "C": "Einstein Knowledge Recommendations"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Service Replies cung cấp các câu trả lời soạn sẵn dựa trên AI tạo sinh trực tiếp trong cửa sổ chat của tổng đài viên, được grounding trên cơ sở tri thức (Knowledge base) để đảm bảo tính nhất quán và chính xác cao.",
+    "references": null
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "Amid their busy schedules, sales reps at Universal Containers dedicate time to follow up with prospects and existing clients via email regarding renewals or new deals. They spend many hours throughout the week reviewing past communications and details about their customers before performing their outreach.Which standard Copilot action helps sales reps draft personalized emails to prospects by generating text based on previous successful communications?",
+    "options": {
+      "A": "Einstein Copilot Action: Summarize Record",
+      "B": "Einstein Copilot Action: Find Similar Opportunities",
+      "C": "Einstein Copilot Action: Draft or Revise Sales Email"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot Action: Draft or Revise Sales Email là hành động chuẩn (standard action) giúp sales rep soạn thảo hoặc chỉnh sửa các email bán hàng được cá nhân hóa cho khách hàng tiềm năng dựa trên ngữ cảnh lịch sử hội thoại.",
+    "references": null
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "An AI Specialist is tasked with configuring a generative model to create personalized sales emails using customer data stored in Salesforce. The AI Specialist has already fine-tuned a large language model (LLM) on the OpenAI platform. Security and data privacy are critical concerns for the client.How should the AI Specialist integrate the custom LLM into Salesforce?",
+    "options": {
+      "A": "Create an application of the custom LLM and embed It in Sales Cloud via iFrame.",
+      "B": "Enable model endpoint on OpenAI and make callouts to the model to generate emails.",
+      "C": "Add the fine-tuned LLM in Einstein Studio Model Builder."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tích hợp một mô hình ngôn ngữ lớn (LLM) đã được tinh chỉnh (fine-tuned) từ bên ngoài (như OpenAI) vào Salesforce một cách an toàn và tuân thủ chính sách bảo mật dữ liệu, AI Specialist nên thêm mô hình đó thông qua Model Builder trong Einstein Studio.",
+    "references": null
+  },
+  {
+    "id": 26,
+    "topic": 1,
+    "question": "An AI Specialist at Universal Containers (UC) is tasked with creating a new custom prompt template to populate a field with generated output. UC enabled the Einstein Trust Layer to ensure AI Audit data is captured and monitored for adoption and possible enhancements.Which prompt template type should the AI Specialist use and which consideration should they review?",
+    "options": {
+      "A": "Field Generation, and that Dynamic Forms is enabled",
+      "B": "Flex, and that Dynamic Fields is enabled",
+      "C": "Field Generation, and that Dynamic Fields is enabled"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để điền nội dung vào một trường bằng AI tạo sinh, ta sử dụng prompt template loại Field Generation. Đồng thời, Lightning page layout chứa trường này phải được kích hoạt Dynamic Forms để hỗ trợ hiển thị biểu tượng Einstein Generative AI.",
+    "references": null
+  },
+  {
+    "id": 27,
+    "topic": 1,
+    "question": "In Model Playground, which hyperparameters of an existing Salesforce-enabled foundational model can an AI Specialist change?",
+    "options": {
+      "A": "Temperature, Frequency Penalty, Presence Penalty",
+      "B": "Temperature, Top-к sampling, Presence Penalty",
+      "C": "Temperature, Frequency Penalty, Output Tokens"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Model Playground của Salesforce, AI Specialist có thể điều chỉnh các tham số siêu tham số (hyperparameters) của mô hình nền tảng bao gồm: Temperature (nhiệt độ/độ sáng tạo), Frequency Penalty (phạt tần suất xuất hiện từ) và Presence Penalty (phạt sự hiện diện của từ).",
+    "references": null
+  },
+  {
+    "id": 28,
+    "topic": 1,
+    "question": "Before activating a custom copilot action, an AI Specialist would like to understand multiple real-world user utterances to ensure the action is being selected appropriately.Which tool should the AI Specialist recommend?",
+    "options": {
+      "A": "Einstein Copilot",
+      "B": "Copilot Builder",
+      "C": "Model Playground"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 29,
+    "topic": 1,
+    "question": "A Salesforce Administrator is exploring the capabilities of Einstein Copilot to enhance user interaction within their organization. They are particularly interested in how Einstein Copilot processes user requests and the mechanism it employs to deliver responses. The administrator is evaluating whether Einstein Copilot directly interfaces with a large language model (LLM) to fetch and display responses to user inquiries, facilitating a broad range of requests from users.How does Einstein Copilot handle user requests in Salesforce?",
+    "options": {
+      "A": "Einstein Copilot will trigger a flow that utilizes a prompt template to generate the message.",
+      "B": "Einstein Copilot analyzes the user’s request and LLM technology is used to generate and display the appropriate response.",
+      "C": "Einstein Copilot will perform an HTTP callout to an LLM provider."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot xử lý các yêu cầu của người dùng bằng cách phân tích câu hỏi của họ, sử dụng công nghệ LLM (Mô hình ngôn ngữ lớn) kết hợp với công cụ lập kế hoạch (planner) để xác định các hành động phù hợp, thực thi chúng và hiển thị câu trả lời tương ứng.",
+    "references": null
+  },
+  {
+    "id": 30,
+    "topic": 1,
+    "question": "What is the role of the large language model (LLM) in executing an Einstein Copilot Action?",
+    "options": {
+      "A": "Determine a user’s access and sort actions by priority to be executed",
+      "B": "Find similar requests and provide the actions that need to be executed",
+      "C": "Identify the best matching actions and correct order of execution"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong quá trình thực thi một Einstein Copilot Action, LLM đóng vai trò như một bộ não lập kế hoạch (planner) để phân tích yêu cầu của người dùng, xác định các hành động phù hợp nhất cần thực hiện và sắp xếp thứ tự thực thi chính xác của các hành động đó.",
+    "references": null
+  },
+  {
+    "id": 31,
+    "topic": 1,
+    "question": "When a customer chat is initiated, which functionality in Salesforce provides generative AI replies or draft emails based on recommended Knowledge articles?",
+    "options": {
+      "A": "Einstein Service Replies",
+      "B": "Einstein Grounding",
+      "C": "Einstein Reply Recommendations"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Service Replies là tính năng tự động tạo phản hồi AI tạo sinh hoặc bản nháp email cho khách hàng ngay khi cuộc trò chuyện (chat) bắt đầu, sử dụng dữ liệu được grounding từ các bài viết Knowledge được đề xuất.",
+    "references": null
+  },
+  {
+    "id": 32,
+    "topic": 1,
+    "question": "Universal Containers needs a tool that can analyze voice and video call records to provide insights on competitor mentions, coaching opportunities, and other key information. The goal is to enhance the team’s performance by identifying areas for improvement and competitive intelligence.Which feature provides insights about competitor mentions and coaching opportunities?",
+    "options": {
+      "A": "Einstein Sales Insights",
+      "B": "Call Explorer",
+      "C": "Call Summaries"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Conversation Insights (ECI) sử dụng tính năng Call Explorer (sử dụng AI tạo sinh để truy vấn thông tin cuộc gọi) giúp phân tích các bản ghi cuộc gọi video và âm thoại, từ đó nhanh chóng tìm ra các lượt đề cập đến đối thủ cạnh tranh, các cơ hội đào tạo (coaching), cũng như các thông tin quan trọng khác để cải thiện hiệu suất của đội ngũ bán hàng.",
+    "references": null
+  },
+  {
+    "id": 33,
+    "topic": 1,
+    "question": "How does an Agent respond when it can’t understand the request or find any requested information?",
+    "options": {
+      "A": "With a general message asking the user to rephrase the request.",
+      "B": "With a generated error message.",
+      "C": "With a preconfigured message, based on the action type."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi Agent (hoặc Copilot) không thể hiểu được yêu cầu của người dùng hoặc không tìm thấy thông tin được yêu cầu, nó sẽ phản hồi bằng một thông điệp chung chung yêu cầu người dùng diễn đạt lại (rephrase) yêu cầu của mình để làm rõ ý định.",
+    "references": null
+  },
+  {
+    "id": 34,
+    "topic": 1,
+    "question": "Universal Containers has a strict change management process that requires all possible configuration to be completed in a sandbox which will be deployed to production. The Al Specialist is tasked with setting up Work Summaries for Enhanced Messaging. Einstein Generative Al is already enabled in production, and the Einstein Work Summaries permission set is already available in production.\nWhich other configuration steps should the AI Specialist take In the sandbox that can be deployed to the production org?",
+    "options": {
+      "A": "From the Einstein setup menu, select Turn on Einstein; create custom fields to store Issue, Resolution, and Summary; create a Quick Action that updates these files; and add the Wrap Up component to the Messaging Session record page layout.",
+      "B": "Create custom fields to store Issue, Resolution and Summary; create a Quick Action that updates these fields; and add the Wrap Up component to the Messaging Session record page layout.",
+      "C": "Create custom fields to store Issue, Resolution and Summary; create a Quick Action that updates these fields; add the Wrap Up component to the Messaging Session record page layout; and create Permission Set Assignments for the intended Agents."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thiết lập và triển khai tính năng Tóm tắt Công việc (Work Summaries) cho Enhanced Messaging từ Sandbox lên Production, quản trị viên cần thực hiện các cấu hình sau: tạo các trường tùy chỉnh để lưu trữ Vấn đề (Issue), Giải pháp (Resolution) và Tóm tắt (Summary); tạo Quick Action để cập nhật các trường này; thêm cấu phần Wrap Up vào bố cục trang (page layout) của bản ghi Messaging Session; và gán Permission Set Assignments cho các Agent được chỉ định sử dụng.",
+    "references": null
+  },
+  {
+    "id": 35,
+    "topic": 1,
+    "question": "Universal Containers needs to provide insights on the usability of Agents to drive adoption in the organization.\nWhat should the AI Specialist recommend?",
+    "options": {
+      "A": "Agent Analytics",
+      "B": "Agentforce Analytics",
+      "C": "Agent Studio Analytics"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để cung cấp các thông tin chuyên sâu (insights) về mức độ sử dụng và hiệu quả của các Agent nhằm thúc đẩy tỷ lệ áp dụng trong doanh nghiệp, AI Specialist nên đề xuất sử dụng công cụ Agent Analytics để theo dõi các chỉ số hoạt động.",
+    "references": null
+  },
+  {
+    "id": 36,
+    "topic": 1,
+    "question": "Universal Containers’ sales team engages in numerous video sales calls with prospects across the nation. Sales management wants an easy way to understand key information such as deal terms or customer sentiments.\nWhich Einstein Generative AI feature should an AI Specialist recommend for this request?",
+    "options": {
+      "A": "Einstein Call Summaries",
+      "B": "Einstein Conversation Insights",
+      "C": "Einstein Video KPI"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Call Summaries là tính năng AI tạo sinh tự động tóm tắt các cuộc gọi thoại và video bán hàng, trích xuất các điều khoản thỏa thuận quan trọng, hành động tiếp theo, và sắc thái cảm xúc (sentiment) của khách hàng để giúp quản lý dễ dàng nắm bắt thông tin.",
+    "references": null
+  },
+  {
+    "id": 37,
+    "topic": 1,
+    "question": "How should an organization use the Einstein Trust layer to audit, track, and view masked data?",
+    "options": {
+      "A": "Utilize the audit trail that captures and stores all LLM submitted prompts in Data Cloud.",
+      "B": "In Setup, use Prompt Builder to send a prompt to the LLM requesting for the masked data.",
+      "C": "Access the audit trail in Setup and export all user-generated prompts."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để kiểm toán, theo dõi và xem dữ liệu đã được che giấu qua Einstein Trust Layer, tổ chức cần truy cập vào đường dẫn kiểm toán (audit trail) trong phần Setup của Salesforce để xem hoặc xuất các thông tin lịch sử của các prompt được người dùng tạo ra.",
+    "references": null
+  },
+  {
+    "id": 38,
+    "topic": 1,
+    "question": "Universal Containers (UC) is using Einstein Generative AI to generate an account summary. UC aims to ensure the content safe and inclusive, utilizing the Einstein Trust Layer’s toxicity scoring to assess the content’s safety level.What does a safety category score of 1 indicate in the Einstein Generative AI Toxicity Score?",
+    "options": {
+      "A": "Moderately safe",
+      "B": "Not safe",
+      "C": "Safe"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong hệ thống đánh giá tính an toàn của Einstein Generative AI, điểm số của danh mục an toàn (safety category score) nằm trong khoảng từ 0 đến 1. Điểm số bằng 1 thể hiện mức độ an toàn cao nhất, tức là nội dung hoàn toàn an toàn (Safe).",
+    "references": null
+  },
+  {
+    "id": 39,
+    "topic": 1,
+    "question": "Which configuration must an AI Specialist complete for users to access generative AI-enabled fields in the Salesforce mobile app?",
+    "options": {
+      "A": "Enable Dynamic Forms on Mobile.",
+      "B": "Enable Mobile Generative AI.",
+      "C": "Enable Mobile Prompt Responses."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 40,
+    "topic": 1,
+    "question": "An AI Specialist at Universal Containers is working on a prompt template to generate personalized emails for product demonstration requests from customers. It is important for the AI-generated email to adhere strictly to the guidelines, using only associated opportunity information, and to encourage the recipient to take the desired action.How should the AI Specialist include these instructions on a new line in the prompt template?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 41,
+    "topic": 1,
+    "question": "Universal Containers has a new AI project.\nWhat should an AI Specialist consider when adding a related list on the Account object to be used in the prompt template?",
+    "options": {
+      "A": "The fields for the related list are based on the default page layout of the Account for the current user.",
+      "B": "Prompt Builder must be used to assign the fields from the related list as a JSON format.",
+      "C": "After selecting a related list from the Account, use the field picker to choose merge fields in Prompt Builder."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi thêm một related list (danh sách liên quan) trên đối tượng Account để sử dụng trong prompt template của Prompt Builder, AI Specialist cần chọn danh sách liên quan từ Account, sau đó sử dụng bộ chọn trường (field picker) để chọn các trường merge fields cụ thể muốn đưa vào làm dữ liệu grounding.",
+    "references": null
+  },
+  {
+    "id": 42,
+    "topic": 1,
+    "question": "Universal Containers (UC) needs to save agents time with AI-generated case summaries. UC has implemented the Work Summary feature.\nWhat does Einstein consider when generating a summary?",
+    "options": {
+      "A": "Generation is grounded with conversation context, Knowledge articles, and cases.",
+      "B": "Generation is grounded with exiting conversation context only.",
+      "C": "Generation is grounded with conversation context and Knowledge articles."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi tạo tóm tắt công việc (Work Summaries), Einstein sử dụng dữ liệu làm nền tảng (grounding) từ ba nguồn chính để đảm bảo tính chính xác: ngữ cảnh cuộc trò chuyện trực tiếp (conversation context), các bài viết tri thức liên quan (Knowledge articles), và thông tin từ chính hồ sơ ca hỗ trợ (Cases).",
+    "references": null
+  },
+  {
+    "id": 43,
+    "topic": 1,
+    "question": "Universal Containers wants to make a marketing newsletter and to directly use data from five unrelated objects (two standard and three custom) in a prompt template.\nWhat should the AI Specialist recommend?",
+    "options": {
+      "A": "Create a prompt template passing in special custom object that connects the records temporarily.",
+      "B": "Create a prompt template-triggered flow to access the data from five objects.",
+      "C": "Create a flex template and use the five objects as inputs."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi cần tạo một prompt template sử dụng dữ liệu trực tiếp từ nhiều đối tượng không có mối quan hệ liên kết với nhau (ví dụ: 5 đối tượng gồm 2 tiêu chuẩn và 3 tùy chỉnh), giải pháp phù hợp nhất là tạo một Flex template và truyền các đối tượng này làm tham số đầu vào (inputs) cho template.",
+    "references": null
+  },
+  {
+    "id": 44,
+    "topic": 1,
+    "question": "An AI Specialist is setting up a new org and needs to ensure that users can create and execute prompt templates. The AI Specialist is unsure which roles are necessary for these tasks.\nWhich permission sets should the AI Specialist assign to users who need to create and execute prompt templates?",
+    "options": {
+      "A": "Prompt Template Manager for creating templates and Data Cloud Admin for executing templates",
+      "B": "Prompt Template Manager for creating templates and Prompt Template User for executing templates",
+      "C": "Data Cloud Admin for creating templates and Prompt Template User for executing templates"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để người dùng có thể tạo và thực thi các prompt template trong Salesforce, AI Specialist cần gán bộ quyền Prompt Template Manager (để tạo và quản lý các template) và Prompt Template User (để thực thi/chạy các template).",
+    "references": null
+  },
+  {
+    "id": 45,
+    "topic": 1,
+    "question": "What is a Salesforce AI Specialist able to configure in Data Masking within the Einstein Trust Layer?",
+    "options": {
+      "A": "The privacy data entities to be masked",
+      "B": "The profiles exempt from masking",
+      "C": "The encryption keys for masking"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong cấu hình Data Masking (Che giấu dữ liệu) thuộc Einstein Trust Layer, AI Specialist có quyền cấu hình các thực thể dữ liệu riêng tư (privacy data entities) cụ thể cần được che giấu (như tên, số điện thoại, địa chỉ email, v.v.) trước khi dữ liệu được gửi tới LLM.",
+    "references": null
+  },
+  {
+    "id": 46,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to improve the productivity of its sales team with generative AI technology. However, UC is concerned that public AI virtual assistants lack adequate company data to generate useful responses.\nWhich solution should UC consider?",
+    "options": {
+      "A": "Enable Agentforce and deploy to sales users.",
+      "B": "Build AI model with Einstein Discovery and deploy to sales users.",
+      "C": "Fine-tune the Einstein AI model with CRM data."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để giải quyết lo ngại rằng các trợ lý AI công cộng thiếu dữ liệu doanh nghiệp để tạo phản hồi hữu ích, UC nên cân nhắc tinh chỉnh (Fine-tune) mô hình AI của Einstein bằng dữ liệu CRM của chính họ. Việc này giúp mô hình hiểu sâu hơn về ngữ cảnh kinh doanh đặc thù của doanh nghiệp mà vẫn đảm bảo tính an toàn dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 47,
+    "topic": 1,
+    "question": "Which business requirement presents a good use case for leveraging Einstein Prompt Builder?",
+    "options": {
+      "A": "Forecast future sales trends based on historical data.",
+      "B": "Identify potential high-value leads for targeted marketing campaigns.",
+      "C": "Send reply to a request for proposal via a personalized email."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Prompt Builder được dùng để tạo các mẫu prompt tùy chỉnh nhằm sinh văn bản bằng AI tạo sinh (như soạn thảo email phản hồi đề xuất được cá nhân hóa). Các nhiệm vụ như dự báo xu hướng bán hàng (A) hoặc phân loại lead tiềm năng (B) là các bài toán dự đoán, phù hợp hơn với các mô hình học máy truyền thống (Predictive AI) thay vì Prompt Builder.",
+    "references": null
+  },
+  {
+    "id": 48,
+    "topic": 1,
+    "question": "Universal Containers (UC) is tracking web activities in Data Cloud for a unified contact, and wants to use that in a prompt template to help extract insights from the data.\nAssuming that the Contact object is one of the objects associated with the prompt template, what is a valid way for UC to do this?",
+    "options": {
+      "A": "Add the activity records as an enrichment related list to the Contact, then pass the Contact into a prompt template workspace using related list grounding.",
+      "B": "Call the prompt directly from Data Cloud with a web tracking activity included in the prompt definition.",
+      "C": "Create a prompt template that takes a list of all Data Cloud activity records as input to pass to the large language model (LLM)."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để sử dụng dữ liệu theo dõi hoạt động web từ Data Cloud trong một prompt template liên kết với đối tượng Contact, quản trị viên có thể thêm các bản ghi hoạt động này dưới dạng một enrichment related list (danh sách liên quan được làm giàu) vào đối tượng Contact, sau đó thực hiện grounding thông qua tính năng Related List Grounding trong Prompt Builder.",
+    "references": null
+  },
+  {
+    "id": 49,
+    "topic": 1,
+    "question": "Universal Containers plans to implement prompt templates that utilize the standard foundation models.\nWhat should the AI Specialist consider when building prompt templates In Prompt Builder?",
+    "options": {
+      "A": "Include multiple-choice questions within the prompt to test the LLM’s understanding of the context.",
+      "B": "Train LLM with data using different writing styles including word choice, listeners, enrolls, and punctuation.",
+      "C": "Ask it to role-play as a character in the prompt template to provide more context to the LLM."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi xây dựng các prompt template trong Prompt Builder sử dụng mô hình nền tảng tiêu chuẩn, một trong những kỹ thuật hiệu quả (kỹ thuật đóng vai - role-playing) là yêu cầu mô hình đóng vai một nhân vật hoặc vai trò cụ thể trong prompt để cung cấp thêm ngữ cảnh và định hình phong cách phản hồi mong muốn của LLM.",
+    "references": null
+  },
+  {
+    "id": 50,
+    "topic": 1,
+    "question": "Universal Container (UC) has effectively utilized prompt templates to update summary fields on Lightning record pages. An admin now wishes to incorporate similar functionality into UC’s automation processes using Flow.\nHow can the admin get a response from this prompt template from within a flow to use as part of UC’s automation?",
+    "options": {
+      "A": "Invocable Apex",
+      "B": "Einstein for Flow",
+      "C": "Flow Action"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 51,
+    "topic": 1,
+    "question": "Which mechanism within the Einstein Trust Layer helps to ensure that personal data is handled in compliance with data protection regulations like GDPR?",
+    "options": {
+      "A": "Data Masking",
+      "B": "Prompt Defense",
+      "C": "Toxicity Scoring"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Data Masking (Che giấu dữ liệu) là cơ chế trong Einstein Trust Layer giúp bảo vệ thông tin cá nhân bằng cách tự động thay thế các dữ liệu nhạy cảm (PII) bằng các ký tự ẩn danh trước khi gửi tới LLM bên ngoài, giúp tổ chức tuân thủ các quy định bảo vệ dữ liệu như GDPR.",
+    "references": null
+  },
+  {
+    "id": 52,
+    "topic": 1,
+    "question": "Universal Containers wants to incorporate CRM data as well-formatted JSON in a prompt to a large language model (LLM).\nWhat is an important consideration for this requirement?",
+    "options": {
+      "A": "JSON format should be enabled in Prompt Builder Settings.",
+      "B": "Apex code can be used to return a JSON formatted merge field.",
+      "C": "“CRM data to JSON” checkbox must be selected when creating a prompt template."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đưa dữ liệu CRM vào prompt dưới dạng chuỗi định dạng JSON chuẩn xác, quản trị viên có thể sử dụng mã Apex (Apex code) để trả về một merge field đã được định dạng JSON từ hệ thống, do các merge field thông thường không hỗ trợ tự động chuyển đổi sang cấu trúc JSON phức tạp.",
+    "references": null
+  },
+  {
+    "id": 53,
+    "topic": 1,
+    "question": "A data science team has trained an XGBoost classification model for product recommendations on Databricks. The AI Specialist is tasked with bringing inferences for product recommendations from this model into Data Cloud as a stand-alone data model object (DMO).\nHow should the AI Specialist set this up?",
+    "options": {
+      "A": "Create the serving endpoint in Databricks, then configure the model using Model Builder.",
+      "B": "Create the serving endpoint in Einstein Studio, then configure the model using Model Builder.",
+      "C": "Create the serving endpoint in Databricks, then configure the model using a Python SKD connector."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đưa các suy luận (inferences) từ một mô hình XGBoost được huấn luyện trên Databricks vào Salesforce Data Cloud, trước tiên quản trị viên cần tạo một serving endpoint (điểm cuối phục vụ) trực tiếp trong Databricks. Sau đó, sử dụng Model Builder trong Einstein Studio để kết nối và cấu hình mô hình BYOM này.",
+    "references": null
+  },
+  {
+    "id": 54,
+    "topic": 1,
+    "question": "Universal Containers (UC) has a legacy system that needs to integrate with Salesforce. UC wishes to create a digest of account action plans using the generative API feature.Which API service should UC use to meet this requirement?",
+    "options": {
+      "A": "SOAP API",
+      "B": "Metadata API",
+      "C": "REST API"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tích hợp hệ thống kế thừa với Salesforce và gọi các tính năng generative AI (như Einstein Generate API) để tạo các tóm tắt/digest, API phù hợp và thường dùng nhất là REST API vì nó hỗ trợ các endpoints của Einstein Platform một cách hiệu quả và linh hoạt.",
+    "references": null
+  },
+  {
+    "id": 55,
+    "topic": 1,
+    "question": "Universal Containers’ current AI data masking rules do not align with organizational privacy and security policies and requirements.What should an AI Specialist recommend to resolve the issue?",
+    "options": {
+      "A": "Add new data masking rules in LLM setup.",
+      "B": "Enable data masking for sandbox refreshes.",
+      "C": "Configure data masking in the Einstein Trust Layer setup."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thay đổi các quy tắc che giấu dữ liệu (data masking rules) của AI nhằm tuân thủ đúng chính sách bảo mật của tổ chức, AI Specialist nên đề xuất cấu hình Data Masking trực tiếp trong phần thiết lập Einstein Trust Layer (Einstein Trust Layer setup).",
+    "references": null
+  },
+  {
+    "id": 56,
+    "topic": 1,
+    "question": "Universal Containers is planning a marketing email about products that most closely match a customer’s expressed interests.What should an AI Specialist recommend to generate this email?",
+    "options": {
+      "A": "Custom sales email template which is grounded with interest and product information",
+      "B": "Standard email draft with Einstein and choose standard email template",
+      "C": "Standard email marketing template using Apex or flows for matching interest in products"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo một email tiếp thị chứa các sản phẩm khớp nhất với sở thích của khách hàng, AI Specialist nên đề xuất sử dụng một Custom Sales Email prompt template được làm nền tảng (grounded) bằng dữ liệu sở thích và thông tin sản phẩm từ Salesforce để tự động tạo nội dung cá nhân hóa.",
+    "references": null
+  },
+  {
+    "id": 57,
+    "topic": 1,
+    "question": "Northern Trail Outfitters (NTO) wants to configure Einstein Trust Layer in its production org but is unable to see the option on the Setup page.After provisioning Data Cloud, which step must an AI Specialist take to make this option available to NTO?",
+    "options": {
+      "A": "Turn on Einstein Copilot.",
+      "B": "Turn on Prompt Builder.",
+      "C": "Turn on Einstein Generative AI."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để hiển thị tùy chọn cấu hình Einstein Trust Layer trong trang Setup của Salesforce sau khi đã cung cấp Data Cloud, AI Specialist bắt buộc phải kích hoạt tính năng Einstein Generative AI (Turn on Einstein Generative AI) trong phần thiết lập.",
+    "references": null
+  },
+  {
+    "id": 58,
+    "topic": 1,
+    "question": "Universal Containers implemented Einstein Copilot for its users. One user complains that Einstein Copilot is not deleting activities from the past 7 days.What is the reason for this issue?",
+    "options": {
+      "A": "Einstein Copilot Delete Record Action permission is not associated to the user.",
+      "B": "Einstein Copilot does not have the permission to delete the user’s records.",
+      "C": "Einstein Copilot does not support the Delete Record action."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot được thiết kế chủ yếu để hỗ trợ truy vấn, tóm tắt, tạo mới hoặc cập nhật thông tin trong hệ thống. Theo mặc định, Einstein Copilot không hỗ trợ hành động Xóa bản ghi (Delete Record action), do đó nó không thể thực hiện yêu cầu xóa hoạt động.",
+    "references": null
+  },
+  {
+    "id": 59,
+    "topic": 1,
+    "question": "A service agent is looking at a custom object that stores travel information. They recently received a weather alert and now need to cancel flights for the customers that are related with this itinerary. The service agent needs to review the Knowledge articles about canceling and rebooking the customer flights.Which Einstein Copilot capability helps the agent accomplish this?",
+    "options": {
+      "A": "Generate a Knowledge article based off the prompts that the agent enters to create steps to cancel flights.",
+      "B": "Invoke a flow which makes a call to external data to create a Knowledge article.",
+      "C": "Execute tasks based on available actions, answering questions using information from accessible Knowledge articles."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot có khả năng thực thi các tác vụ dựa trên các hành động (actions) có sẵn được cấu hình và trả lời trực tiếp các câu hỏi của tổng đài viên bằng cách trích xuất thông tin từ các bài viết tri thức (Knowledge articles) mà agent có quyền truy cập.",
+    "references": null
+  },
+  {
+    "id": 60,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to use Flow to bring data from unified Data Cloud objects to prompt templates.Which type of flow should UC use?",
+    "options": {
+      "A": "Template-triggered prompt flow",
+      "B": "Data Cloud-triggered flow",
+      "C": "Unified-object linking flow"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 61,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to assess Salesforce’s generative AI features but has concerns over its company data being exposed to third-party large language models (LLMs). Specifically, UC wants the following capabilities to be part of Einstein’s generative AI service.No data is used for LLM training or product improvements by third-party LLMs.No data is retained outside of UC’s Salesforce org.The data sent cannot be accessed by the LLM provider.Which property of the Einstein Trust Layer should the AI Specialist highlight to UC that addresses these requirements?",
+    "options": {
+      "A": "Data Masking",
+      "B": "Zero-Data Retention Policy",
+      "C": "Prompt Defense"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chính sách Không Lưu trữ Dữ liệu (Zero-Data Retention Policy) của Einstein Trust Layer đảm bảo rằng dữ liệu của khách hàng không bị nhà cung cấp LLM bên ngoài lưu giữ, không được dùng để huấn luyện mô hình của họ hay cải tiến sản phẩm của bên thứ ba.",
+    "references": null
+  },
+  {
+    "id": 62,
+    "topic": 1,
+    "question": "Universal Containers (UC) has recently received an increased number of support cases. As a result, UC has hired more customer support reps and has started to assign some of the ongoing cases to newer reps.Which generative AI solution should the new support reps use to understand the details of a case without reading through each case comment?",
+    "options": {
+      "A": "Einstein Work Summaries",
+      "B": "Einstein Sales Summaries",
+      "C": "Einstein Copilot"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Work Summaries (Tóm tắt Công việc) là giải pháp AI tạo sinh cho phép tạo ra các bản tóm tắt ngắn gọn về ca hỗ trợ (bao gồm vấn đề chính, giải pháp và tóm tắt cuộc trò chuyện), giúp nhân viên mới hiểu nhanh chi tiết Case mà không cần đọc hết các bình luận (comments).",
+    "references": null
+  },
+  {
+    "id": 63,
+    "topic": 1,
+    "question": "Universal Containers (UC) has implemented Generative AI within Salesforce to enable summarization of a custom object called Guest. Users have reported mismatches in the generated information.In refining its prompt design strategy, which key practices should UC prioritize?",
+    "options": {
+      "A": "Submit a prompt review case to Salesforce and conduct thorough testing in the playground to refine outputs until they meet user expectations.",
+      "B": "Create concise, clear, and consistent prompt templates with effective grounding, contextual role-playing, clear instructions, and iterative feedback.",
+      "C": "Enable prompt test mode, allocate different prompt variations to a subset of users for evaluation, and standardize the most effective model based on performance feedback."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tối ưu và tinh chỉnh chiến lược thiết kế prompt, doanh nghiệp nên tập trung vào các thực hành tốt nhất: tạo ra các prompt template ngắn gọn, rõ ràng, nhất quán; thực hiện grounding hiệu quả với dữ liệu CRM; xác định vai trò ngữ cảnh (role-playing) cho AI; đưa ra hướng dẫn rõ ràng và kiểm thử lặp đi lặp lại.",
+    "references": null
+  },
+  {
+    "id": 64,
+    "topic": 1,
+    "question": "Universal Containers recently launched a pilot program to integrate conversational AI into its CRM business operations with Einstein Copilot.How should the AI Specialist monitor Copilot’s usability and the assignment of actions?",
+    "options": {
+      "A": "Run a report on the Platform Debug logs.",
+      "B": "Run Einstein Copilot Analytics.",
+      "C": "Query the Copilot log data using the metadata API."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để giám sát khả năng sử dụng (usability) của Einstein Copilot cũng như tần suất và độ chính xác khi các hành động (actions) được kích hoạt, quản trị viên nên sử dụng công cụ phân tích Einstein Copilot Analytics.",
+    "references": null
+  },
+  {
+    "id": 65,
+    "topic": 1,
+    "question": "Universal Containers is considering leveraging the Einstein Trust Layer in conjunction with Einstein Generative AI Audit Data.Which audit data is available using the Einstein Trust Layer?",
+    "options": {
+      "A": "Response accuracy and offensiveness score",
+      "B": "Masked data and toxicity score",
+      "C": "Hallucination score and bias score"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhật ký kiểm toán của Einstein Trust Layer cung cấp các thông tin chi tiết về quá trình xử lý prompt, bao gồm dữ liệu nào đã được che giấu (masked data) để bảo vệ PII và điểm số độ độc hại (toxicity score) của phản hồi được sinh ra từ LLM.",
+    "references": null
+  },
+  {
+    "id": 66,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to use the Draft with Einstein feature in Sales Cloud to create a personalized introduction email.After creating a proposed draft email, which predefined adjustment should UC choose to revise the draft with a more casual tone?",
+    "options": {
+      "A": "Optimize for Clarity",
+      "B": "Enhance Friendliness",
+      "C": "Make Less Formal"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong tính năng Draft with Einstein (Soạn thảo email bằng Einstein), để điều chỉnh bản thảo email hiện tại sang giọng điệu thân mật, gần gũi và ít trang trọng hơn, người dùng nên chọn bộ điều chỉnh định sẵn là Make Less Formal (Giảm bớt tính trang trọng).",
+    "references": null
+  },
+  {
+    "id": 67,
+    "topic": 1,
+    "question": "Universal Containers’ service team wants to customize the standard case summary response from Einstein Copilot.What should the AI Specialist do to achieve this?",
+    "options": {
+      "A": "Summarize the Case with a standard copilot action.",
+      "B": "Customize the standard Record Summary template for the Case object.",
+      "C": "Create a custom Record Summary prompt template for the Case object."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tùy biến cách Einstein Copilot tóm tắt bản ghi Case theo yêu cầu đặc thù của doanh nghiệp, AI Specialist cần tạo mới một custom Record Summary prompt template dành riêng cho đối tượng Case trong Prompt Builder.",
+    "references": null
+  },
+  {
+    "id": 68,
+    "topic": 1,
+    "question": "The AI Specialist of Northern Trail Outfitters reviewed the organization’s data masking settings within the Configure Data Masking menu within Setup. Upon assessing all of the fields, a few additional fields were deemed sensitive and have been masked within Einstein’s Trust Layer.Which steps should the AI Specialist take upon modifying the masked fields?",
+    "options": {
+      "A": "Turn off the Einstein Trust Layer and turn it on again.",
+      "B": "Test and confirm that the responses generated from prompts that utilize the data and masked data do not adversely affect the quality of the generated response",
+      "C": "Turn on Einstein Feedback so that end users can report if there are any negative side effects on AI features."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sau khi bổ sung các trường thông tin nhạy cảm mới vào danh sách che giấu (masking) của Trust Layer, AI Specialist cần tiến hành kiểm thử và xác nhận rằng việc che giấu dữ liệu này không làm giảm chất lượng phản hồi được sinh ra từ các prompt template sử dụng dữ liệu đó.",
+    "references": null
+  },
+  {
+    "id": 69,
+    "topic": 1,
+    "question": "An AI Specialist is creating a custom action in Einstein Copilot.Which option is available for the AI Specialist to choose for the custom copilot action?",
+    "options": {
+      "A": "SOQL",
+      "B": "Flows",
+      "C": "Apex trigger"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi tạo các hành động tùy chỉnh (custom actions) cho Einstein Copilot, quản trị viên có thể sử dụng các luồng Salesforce Flow (Autolaunched Flows) làm nguồn thực thi chính cho hành động.",
+    "references": null
+  },
+  {
+    "id": 70,
+    "topic": 1,
+    "question": "An AI Specialist wants to use the related lists from an account in a custom prompt template.What should the AI Specialist consider when configuring the prompt template?",
+    "options": {
+      "A": "The text encoding (for example, UTF-8, ASCII) option",
+      "B": "The maximum number of related list merge fields",
+      "C": "The choice between XML and JSON rendering formats for the list"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi sử dụng danh sách liên quan (related lists) trong prompt template của Prompt Builder, AI Specialist cần lưu ý đến giới hạn về số lượng trường danh sách liên quan tối đa được phép chèn làm merge fields trong một template.",
+    "references": null
+  },
+  {
+    "id": 71,
+    "topic": 1,
+    "question": "An AI Specialist wants to include data from the response of external service invocation (REST API callout) into the prompt template.How should the AI Specialist meet this requirement?",
+    "options": {
+      "A": "Convert the JSON to an XML merge field.",
+      "B": "Use External Service Record merge fields.",
+      "C": "Use “Add Prompt Instructions” flow element."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đưa dữ liệu phản hồi từ việc gọi một dịch vụ bên ngoài (qua REST API callout) vào prompt template, AI Specialist có thể sử dụng các trường hợp trộn của Dịch vụ Bên ngoài (External Service Record merge fields) được liên kết với prompt.",
+    "references": null
+  },
+  {
+    "id": 72,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to improve the efficiency of addressing customer questions and reduce agent handling time with AI-generated responses. The agents should be able to leverage their existing knowledge base and identify whether the responses are coming from the large language model (LLM) or from Salesforce Knowledge.Which step should UC take to meet this requirement?",
+    "options": {
+      "A": "Turn on Service AI Grounding, Grounding with Case, and Service Replies.",
+      "B": "Turn on Service AI Grounding and Grounding with Knowledge.",
+      "C": "Turn on Service Replies, Service AI Grounding, and Grounding with Knowledge."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để nhân viên hỗ trợ có thể sử dụng câu trả lời sinh bởi AI dựa trên cơ sở tri thức và biết rõ câu trả lời đó đến từ đâu, doanh nghiệp cần kích hoạt cả ba tính năng: Service Replies, Service AI Grounding và Grounding với Knowledge (Grounding with Knowledge).",
+    "references": null
+  },
+  {
+    "id": 73,
+    "topic": 1,
+    "question": "Universal Containers implements Custom Copilot Actions to enhance its customer service operations. The development team needs to understand the core components of a Custom Copilot Action to ensure proper configuration and functionality.What should the development team review in the Custom Copilot Action configuration to identify one of the core components of a Custom Copilot Action?",
+    "options": {
+      "A": "Output Types",
+      "B": "Action Triggers",
+      "C": "Instructions"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi cấu hình một Custom Copilot Action, trường Instructions (Hướng dẫn dành cho Copilot) là một thành phần cốt lõi quan trọng nhất vì planner sử dụng hướng dẫn này để hiểu mục đích của hành động và quyết định thời điểm kích hoạt nó.",
+    "references": null
+  },
+  {
+    "id": 74,
+    "topic": 1,
+    "question": "What should an AI Specialist consider when using related list merge fields in a prompt template associated with an Account object in Prompt Builder?",
+    "options": {
+      "A": "Prompt generation will yield no response when there is no related list associated with an Account in runtime.",
+      "B": "If person accounts have been enabled, merge fields will not be available for the Account object.",
+      "C": "The Activities related list on the Account object is not supported because it is a polymorphic field."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Prompt Builder, danh sách liên quan Activities trên đối tượng Account không được hỗ trợ để làm merge field trực tiếp do tính chất là một trường đa hình (polymorphic field) liên kết với nhiều đối tượng khác nhau.",
+    "references": null
+  },
+  {
+    "id": 75,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to enable its sales team to use AI to suggest recommended products from its catalog.Which type of prompt template should UC use?",
+    "options": {
+      "A": "Record summary prompt template",
+      "B": "Email generation prompt template",
+      "C": "Flex prompt template"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đề xuất các sản phẩm phù hợp từ danh mục sản phẩm cho đội ngũ bán hàng, đây là một nghiệp vụ tùy biến không gắn chặt vào một bản ghi hay loại email tiêu chuẩn nào. Do đó, UC nên sử dụng Flex prompt template để nhận các thông tin đầu vào linh hoạt và sinh nội dung gợi ý.",
+    "references": null
+  },
+  {
+    "id": 76,
+    "topic": 1,
+    "question": "What is the primary function of the planner service in the Einstein Copilot system?",
+    "options": {
+      "A": "Generating record queries based on conversation history",
+      "B": "Identifying copilot actions to respond to user utterances",
+      "C": "Offering real-time language translation during conversations"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dịch vụ lập kế hoạch (planner service) trong Einstein Copilot đóng vai trò phân tích ý định của người dùng qua các câu lệnh tự nhiên (user utterances) để xác định và chọn ra các hành động (actions) phù hợp nhất cần thực thi.",
+    "references": null
+  },
+  {
+    "id": 77,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to create a new Sales Email prompt template in Prompt Builder using the “Save As” function. However, UC notices that the new template produces different results compared to the standard Sales Email prompt due to missing hyperparameters.What should UC do to ensure the new prompt template produces results comparable to the standard Sales Email prompts?",
+    "options": {
+      "A": "Manually add the hyperparameters to the new template.",
+      "B": "Use Model Playground to create a model configuration with the specified parameters.",
+      "C": "Revert to using the standard template without modifications."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi nhân bản (Save As) một Sales Email template tiêu chuẩn thành template tùy chỉnh mới, các tham số mô hình (hyperparameters) đặc thù của email tiêu chuẩn có thể không tự động đi kèm. Quản trị viên cần tự tay bổ sung/chỉnh sửa các hướng dẫn hyperparameters này vào nội dung prompt template mới.",
+    "references": null
+  },
+  {
+    "id": 78,
+    "topic": 1,
+    "question": "Universal Containers wants to implement a solution in Salesforce with a custom UX that allows users to enter a sales order number. Subsequently, the system will invoke a custom prompt template to create and display a summary of the sales order header and sales order details.Which solution should an AI Specialist implement to meet this requirement?",
+    "options": {
+      "A": "Create an autolaunched flow and invoke the prompt template using the standard “Prompt Template” flow action.",
+      "B": "Create a screen flow to collect sales order number and invoke the prompt template using the standard “Prompt Template” flow action.",
+      "C": "Create a template-triggered prompt flow and invoke the prompt template using the standard “Prompt Template” flow action."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xây dựng một giao diện người dùng tùy chỉnh thu thập số đơn hàng từ người dùng và sau đó gọi prompt template để hiển thị tóm tắt, giải pháp tối ưu là sử dụng một Screen Flow (để làm giao diện UX) phối hợp với phần tử Flow Action gọi prompt template.",
+    "references": null
+  },
+  {
+    "id": 79,
+    "topic": 1,
+    "question": "Universal Containers is very concerned about security compliance and wants to understand:Which prompt text is sent to the large language model (LLM)\nHow it is masked -\nThe masked response -What should the AI Specialist recommend?",
+    "options": {
+      "A": "Review the debug logs of the running user.",
+      "B": "Enable audit trail in the Einstein Trust Layer.",
+      "C": "Ingest the Einstein Shield Event logs into CRM Analytics."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để kiểm tra văn bản prompt gửi tới LLM, cách dữ liệu được che giấu, và phản hồi sau khi che giấu nhằm phục vụ mục đích tuân thủ bảo mật, AI Specialist nên khuyên doanh nghiệp bật và kiểm tra nhật ký kiểm toán (audit trail) của Einstein Trust Layer.",
+    "references": null
+  },
+  {
+    "id": 80,
+    "topic": 1,
+    "question": "Universal Containers (UC) uses Salesforce Service Cloud to support its customers and agents handling cases. UC is considering implementing Einstein Copilot and extending Service Cloud to mobile users.When would Einstein Copilot implementation be most advantageous?",
+    "options": {
+      "A": "When the focus is on optimizing marketing campaigns and strategies",
+      "B": "When the main objective is to enhance data security and compliance measures",
+      "C": "When the goal is to streamline customer support processes and improve response times"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot mang lại lợi ích lớn nhất khi mục tiêu của tổ chức là hợp lý hóa các quy trình hỗ trợ khách hàng, tăng năng suất của nhân viên thông qua các tác vụ hội thoại và giảm thiểu thời gian phản hồi yêu cầu.",
+    "references": null
+  },
+  {
+    "id": 81,
+    "topic": 1,
+    "question": "Where should the AI Specialist go to add/update actions assigned to a copilot?",
+    "options": {
+      "A": "Copilot Actions page, the record page for the copilot action, or the Copilot Action Library tab",
+      "B": "Copilot Actions page or Global Actions",
+      "C": "Copilot Detail page, Global Actions, or the record page for the copilot action"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để quản lý (thêm/cập nhật) các hành động được gán cho một copilot, quản trị viên có thể truy cập trang cài đặt Copilot Actions, trang bản ghi chi tiết của hành động đó, hoặc tab Copilot Action Library trong Setup.",
+    "references": null
+  },
+  {
+    "id": 82,
+    "topic": 1,
+    "question": "Which feature in the Einstein Trust Layer helps to minimize the risks of jailbreaking and prompt injection attacks?",
+    "options": {
+      "A": "Secure Data Retrieval and Grounding",
+      "B": "Prompt Defense",
+      "C": "Data Masking"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cơ chế Bảo vệ Prompt (Prompt Defense) trong Einstein Trust Layer được thiết kế chuyên biệt để lọc và ngăn chặn các hành vi tấn công tiêm nhiễm câu lệnh (prompt injection) hoặc phá vỡ rào cản hệ thống (jailbreaking).",
+    "references": null
+  },
+  {
+    "id": 83,
+    "topic": 1,
+    "question": "Universal Containers (UC) noticed an increase in customer contract cancellations in the last few months. UC is seeking ways to address this issue by implementing a proactive outreach program to customers before they cancel their contracts and is asking the Salesforce team to provide suggestions.Which use case functionality of Model Builder aligns with UC’s request?",
+    "options": {
+      "A": "Contract Renewal Date prediction",
+      "B": "Customer chum prediction",
+      "C": "Product recommendation prediction"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chủ động liên hệ và giữ chân những khách hàng có nguy cơ hủy hợp đồng, tính năng phù hợp nhất trong Model Builder là dự đoán khả năng rời bỏ của khách hàng (Customer churn prediction) dựa trên hành vi lịch sử.",
+    "references": null
+  },
+  {
+    "id": 84,
+    "topic": 1,
+    "question": "Universal Containers wants to allow its service agents to query the current fulfillment status of an order with natural language. There is an existing autolaunched flow to query the information from Oracle ERP, which is the system of record for the order fulfillment process.How should an AI Specialist apply the power of conversational AI to this use case?",
+    "options": {
+      "A": "Configure the Integration Flow Standard Action in Einstein Copilot.",
+      "B": "Create a custom copilot action which calls a flow.",
+      "C": "Create a Flex prompt template in Prompt Builder."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để cho phép nhân viên dịch vụ truy vấn thông tin trạng thái đơn hàng bằng ngôn ngữ tự nhiên thông qua Einstein Copilot, đồng thời tái sử dụng luồng Autolaunched Flow sẵn có để gọi API đến hệ thống ngoài, quản trị viên nên tạo một custom copilot action để gọi luồng đó.",
+    "references": null
+  },
+  {
+    "id": 85,
+    "topic": 1,
+    "question": "What is an AI Specialist able to do when the “Enrich event logs with conversation data” setting in Einstein Copilot is enabled?",
+    "options": {
+      "A": "View the user click path that led to each copilot action.",
+      "B": "View session data including user input and copilot responses for sessions over the past 7 days.",
+      "C": "Generate details reports on all Copilot conversations over any time period."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi bật thiết lập 'Làm phong phú nhật ký sự kiện bằng dữ liệu hội thoại' (Enrich event logs with conversation data) trong Einstein Copilot, AI Specialist có thể xem toàn bộ dữ liệu phiên làm việc chi tiết bao gồm các câu lệnh của người dùng và phản hồi của Copilot trong vòng 7 ngày qua.",
+    "references": null
+  },
+  {
+    "id": 86,
+    "topic": 1,
+    "question": "Universal Containers wants to be able to detect with a high level of confidence if content generated by a large language model (LLM) contains toxic language.Which action should an AI Specialist take in the Trust Layer to confirm toxicity is being appropriately managed?",
+    "options": {
+      "A": "Create a flow that sends an email to a specified address each time the toxicity score from the response exceeds a predefined threshold.",
+      "B": "Access the Toxicity Detection log in Setup and export all entries where isToxicitvDetected is true.",
+      "C": "Create a Trust Layer audit report within Data Cloud that uses a toxicity detector type filter to display toxic responses and their respective scores."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để theo dõi độ độc hại trong các phản hồi của LLM một cách có hệ thống, AI Specialist nên tạo báo cáo kiểm toán Trust Layer trong Data Cloud, lọc theo loại công cụ phát hiện độc hại (toxicity detector) để xem các nội dung độc hại và điểm số tương ứng.",
+    "references": null
+  },
+  {
+    "id": 87,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to enable its sales reps to explore opportunities that are similar to previously won opportunities by entering the utterance, “Show me other opportunities like this one.”How should UC achieve this in Einstein Copilot?",
+    "options": {
+      "A": "Create a custom Copilot action calling a flow.",
+      "B": "Use the standard Copilot action.",
+      "C": "Create a custom Copilot action calling an Apex class."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Salesforce Einstein Copilot cung cấp sẵn hành động tiêu chuẩn (standard action) là 'Find Similar Opportunities' để tìm kiếm các cơ hội kinh doanh tương tự dựa trên ngữ cảnh bản ghi hiện tại mà không cần thiết lập cấu hình tùy chỉnh.",
+    "references": null
+  },
+  {
+    "id": 88,
+    "topic": 1,
+    "question": "Universal Containers tests out a new Einstein Generative AI feature for its sales team to create personalized and contextualized emails for its customers. Sometimes, users find that the draft email contains placeholders for attributes that could have been derived from the recipient’s contact record.What is the most likely explanation for why the draft email shows these placeholders?",
+    "options": {
+      "A": "The user’s locale language is not supported by Prompt Builder.",
+      "B": "The user does not have Einstein Sales Emails permission assigned.",
+      "C": "The user does not have permission to access the fields."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nếu bản thảo email sinh bởi Einstein chứa các trường giữ chỗ (placeholders) thay vì dữ liệu thực tế từ bản ghi của người nhận, lý do phổ biến nhất là người dùng hiện tại không có quyền truy cập FLS (Field-Level Security) vào các trường thông tin đó trên đối tượng Contact.",
+    "references": null
+  },
+  {
+    "id": 89,
+    "topic": 1,
+    "question": "What is the correct process to leverage Prompt Builder in a Salesforce org?",
+    "options": {
+      "A": "Select the appropriate prompt template type to use, select one of Salesforce’s standard prompts, determine the object to associate the prompt, select a record to validate against, and associate the prompt to an action.",
+      "B": "Select the appropriate prompt template type to use, develop the prompt within the prompt workspace, select resources to dynamically insert CRM-derived grounding data, pick the model to use, and test and validate the generated responses.",
+      "C": "Enable the target object for generative prompting, develop the prompt within the prompt workspace, select records to fine-tune and ground the response, enable the Trust Layer, and associate the prompt to an action."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Quy trình chuẩn để sử dụng Prompt Builder trong Salesforce bao gồm: chọn loại prompt template phù hợp với mục đích sử dụng; viết nội dung prompt trong không gian soạn thảo; lựa chọn các tài nguyên (như các trường bản ghi, Apex, Flow) để chèn dữ liệu grounding động; chọn mô hình LLM kiểm thử; và kiểm tra, xác thực phản hồi sinh ra.",
+    "references": null
+  },
+  {
+    "id": 90,
+    "topic": 1,
+    "question": "Universal Containers is using Einstein Copilot for Sales to find similar opportunities to help close deals faster. The team wants to understand the criteria used by the copilot to match opportunities.What is one criteria that Einstein Copilot for Sales uses to match similar opportunities?",
+    "options": {
+      "A": "Matched opportunities are limited to the same account.",
+      "B": "Matched opportunities have a status of Closed Won from last 12 months.",
+      "C": "Matched opportunities were created in the last 12 months."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đề xuất các cơ hội tương tự cho đội ngũ bán hàng thông qua Einstein Copilot, một trong những tiêu chí khớp của hệ thống là tìm kiếm các cơ hội có trạng thái Closed Won (Đã đóng và Thắng) trong vòng 12 tháng qua.",
+    "references": null
+  },
+  {
+    "id": 91,
+    "topic": 1,
+    "question": "An AI Specialist turned on Einstein Generative AI in Setup. Now, the AI Specialist would like to create custom prompt templates in Prompt Builder. However, they cannot access Prompt Builder in the Setup menu.What is causing the problem?",
+    "options": {
+      "A": "The large language model (LLM) was not configured correctly in Data Cloud.",
+      "B": "The Prompt Template Manager permission set was not assigned correctly.",
+      "C": "The Prompt Template User permission set was not assigned correctly."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc kích hoạt Einstein Generative AI trong Setup mới chỉ mở tính năng ở cấp tổ chức. Để truy cập và thiết kế prompt template trong Prompt Builder, tài khoản của AI Specialist bắt buộc phải được gán bộ quyền Prompt Template Manager.",
+    "references": null
+  },
+  {
+    "id": 92,
+    "topic": 1,
+    "question": "An AI Specialist built a Field Generation prompt template that worked for many records, but users are reporting random failures with token limit errors.What is the cause of the random nature of this error?",
+    "options": {
+      "A": "The number of tokens generated by the dynamic nature of the prompt template will vary by record.",
+      "B": "The template type needs to be switched to Flex to accommodate the variable amount of tokens generated by the prompt grounding.",
+      "C": "The number of tokens that can be processed by the LLM varies with total user demand."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lỗi token limit xảy ra một cách ngẫu nhiên là do số lượng token của mỗi bản ghi thay đổi dựa trên nội dung thực tế của các trường dữ liệu dùng để grounding. Các bản ghi chứa lượng dữ liệu quá lớn sẽ vượt quá giới hạn token của LLM.",
+    "references": null
+  },
+  {
+    "id": 93,
+    "topic": 1,
+    "question": "Universal Containers wants to use an external large language model (LLM) in Prompt Builder.What should an AI Specialist recommend?",
+    "options": {
+      "A": "Use Flow and External Services to bring data from an external LLM.",
+      "B": "Use BYO-LLM functionality in Einstein Studio.",
+      "C": "Use Apex to connect to an external LLM and ground the prompt."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để kết nối và sử dụng một mô hình ngôn ngữ lớn (LLM) tự sở hữu của bên thứ ba trong Prompt Builder, quản trị viên nên sử dụng tính năng BYO-LLM (Bring Your Own LLM) được cấu hình thông qua Einstein Studio.",
+    "references": null
+  },
+  {
+    "id": 94,
+    "topic": 1,
+    "question": "Which use case is best supported by Salesforce Einstein Copilot’s capabilities?",
+    "options": {
+      "A": "Bring together a conversational Interface for Interacting with AI for all Salesforce users, such as developers and ecommerce retailers.",
+      "B": "Enable Salesforce admin users to create and train custom large language models (LLMs) using CRM data.",
+      "C": "Enable data scientists to train predictive AI models with historical CRM data using built-in machine learning capabilities."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Copilot hỗ trợ tốt nhất việc cung cấp một giao diện hội thoại (conversational interface) thống nhất để tất cả các nhóm người dùng trong Salesforce (bao gồm nhà phát triển, nhà quản lý, nhân viên hỗ trợ) tương tác và làm việc hiệu quả với AI.",
+    "references": null
+  },
+  {
+    "id": 95,
+    "topic": 1,
+    "question": "A sales rep at Universal Containers is extremely busy and sometimes will have very long sales calls on voice and video calls and might miss key details. They are just starting to adopt new generative AI features.Which Einstein Generative AI feature should an AI Specialist recommend to help the rep get the details they might have missed during a conversation?",
+    "options": {
+      "A": "Sales Summary",
+      "B": "Call Explorer",
+      "C": "Call Summary"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng Einstein Call Summaries (Tóm tắt Cuộc gọi) giúp nhân viên bán hàng nhanh chóng nắm bắt lại các chi tiết quan trọng, nội dung chính và các bước hành động tiếp theo của một cuộc gọi dài mà không cần phải nghe lại toàn bộ bản ghi âm.",
+    "references": null
+  },
+  {
+    "id": 96,
+    "topic": 1,
+    "question": "Universal Containers (UC) is experimenting with using public Generative AI models and is familiar with the language required to get the information it needs. However, it can be time consuming for both UC’s sales and service reps to type in the prompt to get the information they need, and ensure prompt consistency.Which Salesforce feature should a Salesforce AI Specialist recommend to address these concerns?",
+    "options": {
+      "A": "Einstein Recommendation Builder",
+      "B": "Einstein Copilot Action: Query Records",
+      "C": "Einstein Prompt Builder and Prompt Templates"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chuẩn hóa phong cách viết, đảm bảo tính nhất quán và tiết kiệm thời gian soạn thảo prompt lặp đi lặp lại cho nhân viên bán hàng và hỗ trợ khách hàng, giải pháp tối ưu là sử dụng Einstein Prompt Builder để tạo các prompt template có sẵn.",
+    "references": null
+  },
+  {
+    "id": 97,
+    "topic": 1,
+    "question": "What is the main purpose of Prompt Builder?",
+    "options": {
+      "A": "A tool that enables companies to create reusable prompts for large language models (LLMs), bringing generative AI responses to their flow of work.",
+      "B": "A tool within Salesforce offering real-time AI-powered suggestions and guidance to users, improving productivity and decision-making.",
+      "C": "A tool for developers to use in Visual Studio Code that creates prompts for Apex programming, assisting developers in writing code more efficiently."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mục đích chính của Prompt Builder là cung cấp một công cụ cho phép doanh nghiệp thiết kế, thử nghiệm và quản lý các mẫu prompt (prompt templates) có khả năng tái sử dụng với LLM, nhằm đưa các phản hồi AI tạo sinh trực tiếp vào quy trình làm việc hàng ngày của họ.",
+    "references": null
+  },
+  {
+    "id": 98,
+    "topic": 1,
+    "question": "Universal Containers (UC) wants to enable its sales team with automatic post-call visibility into mention of competitors, products, and other custom phrases.Which feature should the AI Specialist set up to enable UC’s sales team?",
+    "options": {
+      "A": "Call Insights",
+      "B": "Call Explorer",
+      "C": "Call Summaries"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng Call Insights (nằm trong Einstein Conversation Insights) tự động đánh dấu và phân tích các lượt đề cập đến đối thủ cạnh tranh, sản phẩm và các từ khóa tùy chỉnh trong cuộc gọi bán hàng ngay sau khi cuộc gọi kết thúc.",
+    "references": null
+  },
+  {
+    "id": 99,
+    "topic": 1,
+    "question": "When configuring a prompt template, an AI Specialist previews the results of the prompt template they’ve written. They see two distinct text outputs: Resolution and Response.Which information does the Resolution text provide?",
+    "options": {
+      "A": "It shows the response from the LLM based on the sample record.",
+      "B": "It shows which sensitive data is masked before it is sent to the LLM.",
+      "C": "It shows the full text that is sent to the Trust Layer."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong giao diện xem trước của Prompt Builder, Resolution (Độ phân giải/Văn bản phân giải) hiển thị toàn bộ nội dung văn bản prompt hoàn chỉnh (sau khi đã điền đầy đủ dữ liệu grounding từ bản ghi mẫu) được chuẩn bị để gửi qua Einstein Trust Layer tới LLM.",
+    "references": null
+  },
+  {
+    "id": 100,
+    "topic": 1,
+    "question": "An administrator is responsible for ensuring the security and reliability of Universal Containers’ (UC) CRM data. UC needs enhanced data protection and up-to-date AI capabilities. UC also needs to include relevant information from a Salesforce record to be merged with the prompt.Which feature in the Einstein Trust Layer best supports UC’s need?",
+    "options": {
+      "A": "Zero-data retention policy",
+      "B": "Dynamic grounding with secure data retrieval",
+      "C": "Data masking"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng Dynamic Grounding (Grounding động) với cơ chế truy xuất dữ liệu an toàn của Einstein Trust Layer cho phép gộp thông tin thực tế từ bản ghi Salesforce vào prompt một cách bảo mật, đáp ứng nhu cầu cá nhân hóa câu trả lời mà vẫn an toàn dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 101,
+    "topic": 1,
+    "question": "Universal Containers is rolling out a new generative AI initiative.\nWhich Prompt Builder limitations should the AI Specialist be aware of?",
+    "options": {
+      "A": "Rich text area fields are only supported in Flex template types.",
+      "B": "Creations or updates to the prompt templates are not recorded in the Setup Audit Trail.",
+      "C": "Custom objects are supported only for Flex template types."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một trong những giới hạn hiện tại của Prompt Builder là các hành động tạo mới hoặc cập nhật các prompt template sẽ không được ghi lại trong nhật ký Setup Audit Trail của hệ thống.",
+    "references": null
+  },
+  {
+    "id": 102,
+    "topic": 1,
+    "question": "Universal Containers implements three custom actions to get three distinct types of sales summaries for its users. Users are complaining that they are not getting the right summary based on their utterances.\nWhat should the AI Specialist Investigate as the root cause?",
+    "options": {
+      "A": "Review that the custom action is assigned to an Agent.",
+      "B": "Ensure the input and output types are correctly chosen.",
+      "C": "Review the Action Instructions to ensure they are unique."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nếu Einstein Copilot kích hoạt sai hành động tóm tắt so với yêu cầu của người dùng, AI Specialist nên kiểm tra và tinh chỉnh lại Action Instructions (Hướng dẫn hành động) của các custom action để đảm bảo chúng rõ ràng, đặc thù và không bị trùng lặp ý định.",
+    "references": null
+  },
+  {
+    "id": 103,
+    "topic": 1,
+    "question": "Universal Containers (UC) plans to automatically populate the Description field on the Account object.\nWhich type of prompt template should UC use?",
+    "options": {
+      "A": "Field Generation prompt template",
+      "B": "Sales Email prompt template",
+      "C": "Flex prompt template"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tự động điền dữ liệu sinh bởi AI vào một trường cụ thể (như Description) trên đối tượng Account, loại prompt template được thiết kế cho tác vụ này là Field Generation prompt template.",
+    "references": null
+  },
+  {
+    "id": 104,
+    "topic": 1,
+    "question": "Universal Containers (UC) is discussing its AI strategy in an agile Scrum meeting.\nWhich business requirement would lead an AI Specialist to recommend connecting to an external foundational model via Einstein Studio (Model Builder)?",
+    "options": {
+      "A": "UC wants to fine-tune model temperature.",
+      "B": "UC wants a model fine-tuned using company data.",
+      "C": "UC wants to change frequency penalty of the model."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi doanh nghiệp muốn sử dụng một mô hình ngôn ngữ lớn (LLM) đã được tinh chỉnh (fine-tuned) bằng chính dữ liệu của họ từ bên ngoài, AI Specialist nên đề xuất kết nối và tích hợp mô hình ngoại vi này thông qua Einstein Studio.",
+    "references": null
+  },
+  {
+    "id": 105,
+    "topic": 1,
+    "question": "Universal Containers (UC) is looking to improve its sales team’s productivity by providing real-time insights and recommendations during customer interactions.\nWhy should UC consider using Agentforce Sales Agent?",
+    "options": {
+      "A": "To track customer interactions for future analysis",
+      "B": "To automate the entire sales process for maximum efficiency",
+      "C": "To streamline the sales process and increase conversion rates"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng Agentforce Sales Agent giúp hợp lý hóa và rút ngắn quy trình bán hàng, cung cấp các gợi ý và phân tích hành vi khách hàng theo thời gian thực để thúc đẩy tỷ lệ chuyển đổi cơ hội thành công.",
+    "references": null
+  },
+  {
+    "id": 106,
+    "topic": 1,
+    "question": "Universal Containers wants support agents to use Agentforce to ask questions about its product tutorials and product guides.\nWhat should the AI Specialist do to meet this requirement?",
+    "options": {
+      "A": "Add an Answer Questions custom field in the product object for tutorial instructions.",
+      "B": "Publish product tutorials and guides as Knowledge articles.",
+      "C": "Create a prompt template for product tutorials and guides."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để nhân viên hỗ trợ có thể đặt câu hỏi cho Agentforce và nhận được câu trả lời chính xác từ các tài liệu hướng dẫn sản phẩm, giải pháp tốt nhất là xuất bản các tài liệu này dưới dạng bài viết tri thức (Knowledge articles) trong Salesforce.",
+    "references": null
+  },
+  {
+    "id": 107,
+    "topic": 1,
+    "question": "An AI Specialist is creating a custom action for Agentforce.\nWhich setting should the AI Specialist test and iterate on to ensure the action performs as expected?",
+    "options": {
+      "A": "Action Name",
+      "B": "Action Input",
+      "C": "Action Instructions"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi xây dựng hành động tùy chỉnh (custom action) cho Agentforce, phần cấu hình quan trọng nhất cần kiểm thử và tinh chỉnh liên tục là Action Instructions (Hướng dẫn hành động), giúp mô hình hiểu rõ điều kiện và cách thức thực hiện hành động.",
+    "references": null
+  },
+  {
+    "id": 108,
+    "topic": 1,
+    "question": "Universal Containers is interested in using Call Explorer to quickly gain insights from meetings recorded by its sales team.\nWhat should the AI Specialist be aware of before enabling this feature?",
+    "options": {
+      "A": "Call Explorer operates independently of Salesforce Knowledge, requiring no prior setup.",
+      "B": "Custom Call Explorer actions need to be built before it can be configured.",
+      "C": "Call Explorer requires the Einstein Conversation Insights permissions set to be enabled."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trước khi kích hoạt tính năng Call Explorer để truy vấn nội dung cuộc họp, AI Specialist cần đảm bảo rằng bộ quyền kiểm soát Einstein Conversation Insights (ECI) đã được gán và kích hoạt cho người dùng tương ứng.",
+    "references": null
+  },
+  {
+    "id": 109,
+    "topic": 1,
+    "question": "An AI Specialist is tasked with creating a prompt template for a sales team. The template needs to generate a summary of all related opportunities for a given Account.\nWhich grounding technique should the AI Specialist use to include data from the related list of opportunities in the prompt template?",
+    "options": {
+      "A": "Use formula fields to reference the Einstein related list of opportunities.",
+      "B": "Use the merge fields to reference a custom related list of opportunities.",
+      "C": "Use merge fields to reference the default related list of opportunities."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để nhúng danh sách các cơ hội liên kết vào prompt template của một Account, quản trị viên nên sử dụng kỹ thuật grounding bằng danh sách liên quan mặc định (default related list) của đối tượng Account thông qua merge fields trong Prompt Builder.",
+    "references": null
+  },
+  {
+    "id": 110,
+    "topic": 1,
+    "question": "Universal Containers (UC) needs to improve the agent productivity in replying to customer chats.\nWhich generative AI feature should help UC address this issue?",
+    "options": {
+      "A": "Case Summaries",
+      "B": "Service Replies",
+      "C": "Case Escalation"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Einstein Service Replies là tính năng AI tạo sinh tự động đề xuất các câu trả lời trò chuyện trực tiếp theo ngữ cảnh cuộc hội thoại của khách hàng, giúp tăng tốc độ phản hồi và nâng cao năng suất cho nhân viên hỗ trợ.",
+    "references": null
+  },
+  {
+    "id": 111,
+    "topic": 1,
+    "question": "Universal Containers plans to enhance the customer support team’s productivity using AI.\nWhich specific use case necessitates the use of Prompt Builder?",
+    "options": {
+      "A": "Creating a draft of a support bulletin post for new product patches",
+      "B": "Estimating support ticket volume based on historical data and seasonal trends",
+      "C": "Creating an AI-generated customer support agent performance score"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tác vụ tự động soạn thảo một bản nháp cho bài đăng thông báo hỗ trợ kỹ thuật về các bản vá sản phẩm mới là một hoạt động sinh nội dung văn bản sáng tạo, đòi hỏi sử dụng Prompt Builder. Các tác vụ dự báo (B) hoặc chấm điểm hiệu suất (C) thuộc loại Predictive AI.",
+    "references": null
+  },
+  {
+    "id": 112,
+    "topic": 1,
+    "question": "Universal Containers plans to enhance its sales team’s productivity using AI.\nWhich specific requirement necessitates the use of Prompt Builder?",
+    "options": {
+      "A": "Predicting the likelihood of customers chumming or discontinuing their relationship with the company",
+      "B": "Creating an estimated Customer Lifetime Value (CLV) with historical purchase data",
+      "C": "Creating a draft newsletter for an upcoming tradeshow"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Yêu cầu tự động tạo dự thảo bản tin tiếp thị (draft newsletter) cho một triển lãm thương mại sắp tới là một bài toán sinh nội dung văn bản sáng tạo (Generative AI), đòi hỏi phải sử dụng Prompt Builder để thiết kế prompt template. Việc dự báo (A) và tính giá trị CLV (B) là các bài toán dự đoán (Predictive AI).",
+    "references": null
+  },
+  {
+    "id": 113,
+    "topic": 1,
+    "question": "Universal Containers (UC) is building a Flex prompt template. UC needs to use data returned by the flow in the prompt template.\nWhich flow element should UC use?",
+    "options": {
+      "A": "Add Prompt Instructions",
+      "B": "Add Flow Instructions",
+      "C": "Add Flex Instructions"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 114,
+    "topic": 1,
+    "question": "An AI Specialist is tasked with analyzing Agent interactions looking into user inputs, requests, and queries to identify patterns and trends.\nWhat functionality allows the AI Specialist to achieve this?",
+    "options": {
+      "A": "AI Audit & Feedback Data dashboard",
+      "B": "User Utterances dashboard",
+      "C": "Agent Event Logs dashboard"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để phân tích các tương tác của Agent, tìm hiểu các đầu vào, yêu cầu và truy vấn của người dùng nhằm xác định các mẫu và xu hướng hành vi, AI Specialist có thể sử dụng bảng điều khiển User Utterances (User Utterances dashboard).",
+    "references": null
+  },
+  {
+    "id": 115,
+    "topic": 1,
+    "question": "Universal Container’s internal auditing team asks an AI Specialist to verify that address information is properly masked in the prompt being generated.\nHow should the AI Specialist verify the privacy of the masked data in the Einstein Trust Layer?",
+    "options": {
+      "A": "Enable data encryption on the address field",
+      "B": "Review the platform event logs",
+      "C": "Inspect the AI audit trail"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác minh thông tin địa chỉ đã được che giấu (masked) đúng cách trong prompt hay chưa, AI Specialist nên kiểm tra nhật ký kiểm toán AI (AI audit trail) trong Setup để xem chi tiết các dữ liệu trước và sau khi được xử lý bởi Einstein Trust Layer.",
+    "references": null
+  }
+]

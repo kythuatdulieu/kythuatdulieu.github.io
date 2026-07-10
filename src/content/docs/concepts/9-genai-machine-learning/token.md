@@ -36,10 +36,7 @@ graph TD
     C -- Có --> D["Merge: Gộp Cặp Bytes thành một Sub-word ID mới"]
     D --> C
     C -- Không (Đạt Target Vocab Size) --> E["Trả về mảng Token IDs (Integers)"]
-    E --> F["Truyền vào LLM Embedding Layer"]
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
+    E --> F["Truyền vào LLM Embedding Layer"]
 ```
 
 ### Tiktoken: Tokenizer tốc độ cao

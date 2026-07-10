@@ -1,0 +1,1772 @@
+{
+  "exam": "Certified Data Cloud Consultant",
+  "provider": "salesforce",
+  "code": "certified-data-cloud-consultant",
+  "total_questions": 147,
+  "questions": [
+    {
+      "id": 1,
+      "question": "A consultant has an activation that is set to publish every 12 hours, but has discovered that updates to the data prior to activation are delayed by up to 24 hours.Which two areas should a consultant review to troubleshoot this issue? (Choose two.)",
+      "choices": {
+        "A": "Review data transformations to ensure they're run after calculated insights.",
+        "B": "Review calculated insights to make sure they're run after the segments are refreshed.",
+        "C": "Review segments to ensure they’re refreshed after the data is ingested.",
+        "D": "Review calculated insights to make sure they're run before segments are refreshed."
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Khi cập nhật dữ liệu trước kích hoạt bị trễ tới 24 giờ dù chu kỳ xuất bản là 12 giờ, nhà tư vấn cần kiểm tra:\n- Xem các phân khúc (segments) đã được làm mới (refreshed) ngay sau khi dữ liệu được nạp vào hay chưa (C).\n- Xem các chỉ số tính toán (calculated insights) đã được chạy trước khi các phân khúc được làm mới hay chưa (D) để đảm bảo dữ liệu mới nhất được áp dụng."
+    },
+    {
+      "id": 2,
+      "question": "Cumulus Financial wants to segregate Salesforce CRM Account data based on Country for its Data Cloud users.What should the consultant do to accomplish this?",
+      "choices": {
+        "A": "Use Salesforce sharing rules on the Account object to filter and segregate records based on Country.",
+        "B": "Use formula fields based on the Account Country field to filter incoming records.",
+        "C": "Use streaming transforms to filter out Account data based on Country and map to separate data model objects accordingly.",
+        "D": "Use the data spaces feature and apply filtering on the Account data lake object based on Country."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để phân tách dữ liệu tài khoản CRM dựa trên quốc gia cho các nhóm người dùng Data Cloud khác nhau, giải pháp phù hợp nhất là sử dụng tính năng Không gian dữ liệu (Data Spaces) và cấu hình bộ lọc dữ liệu dựa trên quốc gia đối với đối tượng hồ chứa dữ liệu (Data Lake Object) tương ứng."
+    },
+    {
+      "id": 3,
+      "question": "Which configuration supports separate Amazon S3 buckets for data ingestion and activation?",
+      "choices": {
+        "A": "Multiple S3 connectors in Data Cloud setup",
+        "B": "Dedicated S3 data sources in Data Cloud setup",
+        "C": "Dedicated S3 data sources in activation setup",
+        "D": "Separate user credentials for data stream and activation target"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để hỗ trợ cấu hình các thùng chứa Amazon S3 riêng biệt cho việc nạp dữ liệu (ingestion) và kích hoạt (activation), cấu hình cần thiết là thiết lập nhiều kết nối S3 (Multiple S3 connectors) trong mục cài đặt Data Cloud."
+    },
+    {
+      "id": 4,
+      "question": "What does the Source Sequence reconciliation rule do in identity resolution?",
+      "choices": {
+        "A": "Identifies which data sources should be used in the process of reconciliation by prioritizing the most recently updated data source",
+        "B": "Includes data from sources where the data is most frequently occurring",
+        "C": "Sets the priority of specific data sources when building attributes in a unified profile, such as a first or last name",
+        "D": "Identifies which individual records should be merged into a unified profile by setting a priority for specific data sources"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Quy tắc hòa giải theo thứ tự nguồn (Source Sequence reconciliation rule) trong phân giải thực thể (identity resolution) được sử dụng để thiết lập mức độ ưu tiên của các nguồn dữ liệu cụ thể khi xây dựng các thuộc tính của một hồ sơ hợp nhất (ví dụ: ưu tiên chọn trường Tên hoặc Họ từ nguồn đáng tin cậy hơn)."
+    },
+    {
+      "id": 5,
+      "question": "A client wants to bring in loyalty data from a custom object in Salesforce CRM that contains a point balance for accrued hotel points and airline points within the same record. The client wants to split these point systems into two separate records for better tracking and processing.What should a consultant recommend in this scenario?",
+      "choices": {
+        "A": "Use batch transforms to create a second data lake object.",
+        "B": "Create a junction object in Salesforce CRM and modify the ingestion strategy.",
+        "C": "Clone the data source object.",
+        "D": "Create a data kit from the data lake object and deploy it to the same Data Cloud org."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để phân chia thông tin điểm thưởng tích lũy (khách sạn và chuyến bay) đang nằm chung trong một bản ghi của đối tượng tùy chỉnh CRM thành các bản ghi riêng biệt trong Data Cloud, giải pháp tối ưu là sử dụng tính năng Batch Transforms để tạo ra một đối tượng hồ chứa dữ liệu (DLO) thứ hai."
+    },
+    {
+      "id": 6,
+      "question": "A customer requests that their personal data be deleted.Which action should the consultant take to accommodate this request in Data Cloud?",
+      "choices": {
+        "A": "Use Consent API to request deletion of the customer's information.",
+        "B": "Use a streaming API call to delete the customer's information.",
+        "C": "Use the Data Rights Subject Request tool to request deletion of the customer's information.",
+        "D": "Use Profile Explorer to delete the customer data from Data Cloud."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để thực hiện yêu cầu xóa dữ liệu cá nhân của khách hàng nhằm tuân thủ quyền được quên, nhà tư vấn nên sử dụng Consent API để gửi yêu cầu xóa thông tin của khách hàng trong Data Cloud."
+    },
+    {
+      "id": 7,
+      "question": "How does Data Cloud handle an individual's Right to be Forgotten?",
+      "choices": {
+        "A": "Deletes the specified Individual and records from any data source object mapped to the Individual data model object.",
+        "B": "Deletes the specified Individual and records from any data model object/data lake object related to the Individual.",
+        "C": "Deletes the records from all data source objects, and any downstream data model objects are updated at the next scheduled ingestion.",
+        "D": "Deletes the specified Individual record and its Unified Individual Link record."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi xử lý yêu cầu Quyền được quên (Right to be Forgotten) của một cá nhân, Data Cloud sẽ tự động xóa bản ghi cá nhân (Individual) được chỉ định và tất cả các bản ghi liên quan trong bất kỳ đối tượng mô hình dữ liệu (DMO) hoặc đối tượng hồ chứa dữ liệu (DLO) nào có liên kết với cá nhân đó."
+    },
+    {
+      "id": 8,
+      "question": "Which data model subject area defines the revenue or quantity for an opportunity by product family?",
+      "choices": {
+        "A": "Engagement",
+        "B": "Sales Order",
+        "C": "Product",
+        "D": "Party"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong cấu trúc mô hình dữ liệu của Data Cloud, vùng chủ đề Đơn hàng bán hàng (Sales Order subject area) là nơi định nghĩa doanh thu hoặc số lượng cho một cơ hội kinh doanh phân tách theo nhóm sản phẩm (product family)."
+    },
+    {
+      "id": 9,
+      "question": "Which method should a consultant use when performing aggregations in windows of 15 minutes on data collected via the Interactions SDK or Mobile SDK?",
+      "choices": {
+        "A": "Formula fields",
+        "B": "Streaming insight",
+        "C": "Calculated insight",
+        "D": "Batch transform"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thực hiện các phép toán tổng hợp dữ liệu theo chu kỳ thời gian thực 15 phút (time windows) đối với dữ liệu thu thập qua Interactions SDK hoặc Mobile SDK, phương pháp phù hợp nhất là sử dụng tính năng Phân tích luồng (Streaming Insight)."
+    },
+    {
+      "id": 10,
+      "question": "A new user of Data Cloud only needs to be able to review individual rows of ingested data and validate that it has been modeled successfully to its linked data model object. The user will also need to make changes if required.What is the minimum permission set needed to accommodate this use case?",
+      "choices": {
+        "A": "Data Cloud for Marketing Specialist",
+        "B": "Data Cloud Admin",
+        "C": "Data Cloud for Marketing Data Aware Specialist",
+        "D": "Data Cloud User"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cấp quyền tối thiểu cho một người dùng chỉ cần xem các dòng dữ liệu đã nạp (DLO), kiểm tra xem chúng đã được ánh xạ thành công sang đối tượng mô hình dữ liệu (DMO) hay chưa và thực hiện các chỉnh sửa nếu cần, bộ quyền phù hợp nhất là Data Cloud for Marketing Data Aware Specialist."
+    },
+    {
+      "id": 11,
+      "question": "Northern Trail Outfitters unifies individuals in its Data Cloud instance.Which three features can the consultant use to validate the data on a unified profile? (Choose three.)",
+      "choices": {
+        "A": "Query API",
+        "B": "Data Explorer",
+        "C": "Identity Resolution",
+        "D": "Data Actions",
+        "E": "Profile Explorer"
+      },
+      "correctAnswer": "ABE",
+      "explanation_vi": "Để kiểm tra và xác thực dữ liệu trên một hồ sơ khách hàng hợp nhất (unified profile), nhà tư vấn có thể sử dụng ba tính năng sau:\n- Query API (A) để truy vấn trực tiếp dữ liệu cấu trúc.\n- Data Explorer (B) để xem dữ liệu thô của DLO và DMO.\n- Profile Explorer (E) để trực quan hóa hồ sơ hợp nhất và các điểm liên hệ liên kết."
+    },
+    {
+      "id": 12,
+      "question": "Cumulus Financial wants to be able to track the daily transaction volume of each of its customers in real time and send out a notification as soon as it detects volume outside a customer's normal range.What should a consultant do to accommodate this request?",
+      "choices": {
+        "A": "Use streaming data transform combined with a data action.",
+        "B": "Use streaming data transform with a flow.",
+        "C": "Use a streaming insight paired with a data action.",
+        "D": "Use a calculated insight paired with a flow."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để theo dõi khối lượng giao dịch hàng ngày của khách hàng theo thời gian thực và gửi cảnh báo ngay khi phát hiện hoạt động bất thường, giải pháp tối ưu là sử dụng Phân tích luồng (Streaming Insight) để giám sát và kết hợp với Hành động dữ liệu (Data Action) để kích hoạt thông báo."
+    },
+    {
+      "id": 13,
+      "question": "Northern Trail Outfitters wants to use some of its Marketing Cloud data in Data Cloud.Which engagement channel data will require custom integration?",
+      "choices": {
+        "A": "SMS",
+        "B": "CloudPage",
+        "C": "Mobile push",
+        "D": "Email"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi kết nối dữ liệu từ Marketing Cloud vào Data Cloud thông qua các Starter Data Bundles có sẵn, kênh trang CloudPage không được hỗ trợ mặc định và sẽ yêu cầu tích hợp tùy chỉnh (custom integration) để nạp dữ liệu."
+    },
+    {
+      "id": 14,
+      "question": "A consultant is building a segment to announce a new product launch for customers that have previously purchased black pants.How should the consultant place the attributes for product color and product type from the Order Product object to meet this criteria?",
+      "choices": {
+        "A": "Place an attribute for the \"black pants\" calculated insight to dynamically apply.",
+        "B": "Place the attribute for product color in one container and the attribute for product type in another container.",
+        "C": "Place the attributes for product color and product type as direct attributes.",
+        "D": "Place the attributes for product color and product type in a single container."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi xây dựng phân khúc khách hàng mua sản phẩm dựa trên đồng thời nhiều thuộc tính của cùng một đối tượng (ví dụ: màu sắc là 'đen' và loại sản phẩm là 'quần' từ đối tượng Order Product), các thuộc tính này phải được đặt chung trong một container duy nhất (single container) để đảm bảo điều kiện AND áp dụng trên cùng một dòng sản phẩm."
+    },
+    {
+      "id": 15,
+      "question": "What is the result of a segmentation criteria filtering on City | Is Equal To | 'San José'?",
+      "choices": {
+        "A": "Cities containing 'San Jose', ’San José', 'san josé, or 'san jose'",
+        "B": "Cities only containing 'San José or 'san josé'",
+        "C": "Cities only containing 'San José' or 'San Jose'",
+        "D": "Cities only containing 'San Jose' or 'san jose'"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong bộ lọc phân khúc của Data Cloud, toán tử 'Is Equal To' có phân biệt chữ hoa chữ thường đối với các ký tự có dấu. Do đó, bộ lọc 'San José' sẽ chỉ khớp chính xác với các chuỗi chứa 'San José' hoặc 'san josé' (nếu hệ thống không phân biệt chữ hoa thường nhưng vẫn giữ nguyên dấu), không khớp với 'San Jose' (không có dấu sắc)."
+    },
+    {
+      "id": 16,
+      "question": "Northern Trail Outfitters is using the Marketing Cloud Starter Data Bundles to bring Marketing Cloud data into Data Cloud.What are two of the available datasets in Marketing Cloud Starter Data Bundles? (Choose two.)",
+      "choices": {
+        "A": "MobilePush",
+        "B": "Personalization",
+        "C": "MobileConnect",
+        "D": "Loyalty Management"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Trong các gói dữ liệu khởi đầu của Marketing Cloud (Marketing Cloud Starter Data Bundles) cung cấp sẵn để nạp vào Data Cloud, hai bộ dữ liệu có sẵn là MobilePush (A) và MobileConnect (C)."
+    },
+    {
+      "id": 17,
+      "question": "Cumulus Financial uses Data Cloud to segment banking customers and activate them for direct mail via a Cloud File Storage activation. The company also wants to analyze individuals who have been in the segment within the last 2 years.Which Data Cloud component allows for this?",
+      "choices": {
+        "A": "Calculated insights",
+        "B": "Segment membership data model object",
+        "C": "Segment exclusion",
+        "D": "Nested segments"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để phân tích và theo dõi danh sách các cá nhân đã từng thuộc về một phân khúc cụ thể trong vòng 2 năm qua, cấu phần thích hợp cần sử dụng là đối tượng mô hình dữ liệu Thành viên phân khúc (Segment Membership Data Model Object - DMO)."
+    },
+    {
+      "id": 18,
+      "question": "Cumulus Financial uses Service Cloud as its CRM and stores mobile phone, home phone, and work phone as three separate fields for its customers on the Contact record. The company plans to use Data Cloud and ingest the Contact object via the CRM Connector.What is the most efficient approach that a consultant should take when ingesting this data to ensure all the different phone numbers are properly mapped and available for use in activation?",
+      "choices": {
+        "A": "Ingest the Contact object and map the Work Phone, Mobile Phone, and Home Phone to the Contact Point Phone data map object from the Contact data stream by adding custom fields for Work and Home Phone.",
+        "B": "Ingest the Contact object and use streaming transforms to normalize the phone numbers from the Contact data stream into a separate Phone data lake object (DLO) that contains three rows, and then map this new DLO to the Contact Point Phone data map object.",
+        "C": "Ingest the Contact object and create formula fields in the Contact data stream on the phone numbers, and then map to the Contact Point Phone data map object.",
+        "D": "Ingest the Contact object and then create a calculated insight to normalize the phone numbers, and then map to the Contact Point Phone data map object."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để ánh xạ ba trường số điện thoại khác nhau (di động, nhà riêng, cơ quan) từ một bản ghi Contact duy nhất vào đối tượng Contact Point Phone (vốn lưu trữ dưới dạng danh sách dòng), giải pháp tối ưu là sử dụng chuyển đổi luồng (Streaming Transforms) để chuẩn hóa và tách 3 trường này thành 3 dòng dữ liệu trong một DLO trung gian, sau đó ánh xạ DLO này sang Contact Point Phone DMO."
+    },
+    {
+      "id": 19,
+      "question": "What should a user do to pause a segment activation with the intent of using that segment again?",
+      "choices": {
+        "A": "Skip the activation.",
+        "B": "Stop the publish schedule.",
+        "C": "Deactivate the segment.",
+        "D": "Delete the segment."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tạm dừng việc kích hoạt phân khúc (segment activation) nhưng vẫn giữ phân khúc đó để sử dụng lại sau này, người dùng nên chọn dừng lịch trình xuất bản (Stop the publish schedule) của phân khúc đó."
+    },
+    {
+      "id": 20,
+      "question": "Cumulus Financial needs to create a composite key on an incoming data source that combines the fields Customer Region and Customer Identifier.\nWhich formula function should a consultant use to create a composite key when a primary key is not available in a data stream?",
+      "choices": {
+        "A": "CAST",
+        "B": "CONCAT",
+        "C": "COALESCE",
+        "D": "COMBINE"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi luồng dữ liệu đầu vào không có khóa chính sẵn có, hàm công thức chuẩn dùng để ghép nối nhiều trường thông tin (như Region và Customer ID) thành một khóa tổng hợp (Composite Key) duy nhất là hàm CONCAT."
+    },
+    {
+      "id": 21,
+      "question": "A Data Cloud consultant is in the process of setting up data streams for a new service-based data source.\nWhen ingesting Case data, which field is recommended to be associated with the Event Time field?",
+      "choices": {
+        "A": "Last Modified Date",
+        "B": "Escalation Date",
+        "C": "Resolution Date",
+        "D": "Creation Date"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi nạp dữ liệu đối tượng Case (Yêu cầu hỗ trợ) vào Data Cloud, trường được khuyến nghị liên kết với thuộc tính Thời gian sự kiện (Event Time) là Ngày tạo (Creation Date) để phản ánh chính xác thời điểm sự kiện bắt đầu phát sinh."
+    },
+    {
+      "id": 22,
+      "question": "Northern Trail Outfitters (NTO) is configuring an identity resolution ruleset based on Fuzzy Name and Normalized Email.\nWhat should NTO do to ensure the best email address is activated?",
+      "choices": {
+        "A": "Use the source priority order in activations to make sure a contact point from the desired source is delivered to the activation target.",
+        "B": "Set the default reconciliation rule to Last Updated.",
+        "C": "Ensure Marketing Cloud is prioritized as the first data source in the Source Priority reconciliation rule.",
+        "D": "Include Contact Point Email object Is Active field as a match rule."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi cấu hình quy tắc phân giải thực thể dựa trên tên mờ (Fuzzy Name) và email chuẩn hóa (Normalized Email), để đảm bảo địa chỉ email tốt nhất/chính xác nhất được sử dụng khi kích hoạt chiến dịch, nhà tư vấn nên cấu hình thứ tự ưu tiên nguồn dữ liệu (source priority order) trong thiết lập kích hoạt (activations)."
+    },
+    {
+      "id": 23,
+      "question": "A customer needs to integrate in real time with Salesforce CRM.\nWhich feature accomplishes this requirement?",
+      "choices": {
+        "A": "Data model triggers",
+        "B": "Data actions and Lightning web components",
+        "C": "Streaming transforms",
+        "D": "Sales and Service bundle"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tích hợp dữ liệu thời gian thực từ Data Cloud ngược trở lại Salesforce CRM khi có thay đổi trên các đối tượng mô hình dữ liệu (DMO), giải pháp cấu hình chuẩn là sử dụng các Trình kích hoạt mô hình dữ liệu (Data Model Triggers) để chạy Salesforce Flows tự động."
+    },
+    {
+      "id": 24,
+      "question": "Northern Trail Outfitters (NTO), an outdoor lifestyle clothing brand, recently started a new line of business. The new business specializes in gourmet camping food. For business reasons as well as security reasons, it's important to NTO to keep all Data Cloud data separated by brand.\nWhich capability best supports NTO's desire to separate its data by brand?",
+      "choices": {
+        "A": "Data sources for each brand",
+        "B": "Data model objects for each brand",
+        "C": "Data spaces for each brand",
+        "D": "Data streams for each brand"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để phân chia và bảo mật dữ liệu riêng biệt theo từng thương hiệu (brand) trong cùng một tổ chức Data Cloud, giải pháp tối ưu nhất là sử dụng tính năng Không gian dữ liệu (Data Spaces) cho mỗi thương hiệu."
+    },
+    {
+      "id": 25,
+      "question": "An organization wants to enable users with the ability to identify and select text attributes from a picklist of options.\nWhich Data Cloud feature should help with this use case?",
+      "choices": {
+        "A": "Value suggestion",
+        "B": "Data harmonization",
+        "C": "Global picklist",
+        "D": "Transformation formulas"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Tính năng Đề xuất giá trị (Value Suggestion) trong Data Cloud cho phép hệ thống tự động gợi ý và hiển thị danh sách các tùy chọn giá trị văn bản từ dữ liệu đã nạp khi người dùng xây dựng bộ lọc phân khúc."
+    },
+    {
+      "id": 26,
+      "question": "Cloud Kicks received a Request to be Forgotten by a customer.\nIn which two ways should a consultant use Data Cloud to honor this request? (Choose two.)",
+      "choices": {
+        "A": "Use the Consent API to suppress processing and delete the individual and related records from source data streams.",
+        "B": "Use Data Explorer to locate and manually remove the Individual.",
+        "C": "Delete the data from the incoming data stream and perform a full refresh.",
+        "D": "Add the Individual ID to a headerless file and use the delete from file functionality."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để đáp ứng yêu cầu Quyền được quên (Request to be Forgotten) của khách hàng, nhà tư vấn nên thực hiện đồng thời:\n- Gửi yêu cầu qua Consent API để dừng xử lý dữ liệu của cá nhân này (A).\n- Đưa ID của cá nhân vào một tệp tin không chứa tiêu đề và sử dụng tính năng xóa dữ liệu từ tệp (Delete from file) để xóa bỏ hoàn toàn (D)."
+    },
+    {
+      "id": 27,
+      "question": "Cumulus Financial uses calculated insights to compute the total banking value per branch for its high net worth customers. In the calculated insight, \"banking value\" is a metric, \"branch\" is a dimension, and \"high net worth\" is a filter.What can be included as an attribute in activation?",
+      "choices": {
+        "A": "\"branch\" (dimension) and \"banking value\" (metric)",
+        "B": "\"banking value\" (metric)",
+        "C": "\"high net worth\" (filter)",
+        "D": "\"branch\" (dimension)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong một chỉ số phân tích tính toán (Calculated Insight) có chứa Dimension (chi nhánh), Metric (giá trị ngân hàng) và Filter (khách hàng VIP), chỉ có trường Dimension (chi nhánh - branch) là có thể được đưa vào làm thuộc tính trong cấu hình kích hoạt phân khúc (activation)."
+    },
+    {
+      "id": 28,
+      "question": "Which two dependencies prevent a data stream from being deleted? (Choose two.)",
+      "choices": {
+        "A": "The underlying data lake object is mapped to a data model object.",
+        "B": "The underlying data lake object is used in segmentation.",
+        "C": "The underlying data lake object is used in a data transform.",
+        "D": "The underlying data lake object is used in activation."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Hai ràng buộc phụ thuộc chính ngăn cản việc xóa một luồng dữ liệu (data stream) là:\n- Đối tượng hồ chứa dữ liệu (DLO) bên dưới của luồng đó đang được ánh xạ (mapped) sang đối tượng mô hình dữ liệu (DMO) (A).\n- DLO đó đang được sử dụng trong một tiến trình chuyển đổi dữ liệu (Data Transform) (C)."
+    },
+    {
+      "id": 29,
+      "question": "Which two dependencies need to be removed prior to disconnecting a data source? (Choose two.)",
+      "choices": {
+        "A": "Activation target",
+        "B": "Segment",
+        "C": "Data stream",
+        "D": "Activation"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Trước khi có thể ngắt kết nối hoàn toàn một nguồn dữ liệu (Data Source), hai cấu phần phụ thuộc cần phải được gỡ bỏ trước là các phân khúc (Segments) đang sử dụng dữ liệu đó (B) và các luồng dữ liệu (Data Streams) liên quan (C)."
+    },
+    {
+      "id": 30,
+      "question": "How can a consultant modify attribute names to match a naming convention in Cloud File Storage targets?",
+      "choices": {
+        "A": "Update attribute names in the data stream configuration.",
+        "B": "Use a formula field to update the field name in an activation.",
+        "C": "Set preferred attribute names when configuring activation.",
+        "D": "Update field names in the data model object."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đổi tên các thuộc tính khi xuất dữ liệu ra tệp tin trên Cloud File Storage sao cho phù hợp với quy ước đặt tên của hệ thống đích, nhà tư vấn nên cấu hình trực tiếp tên thuộc tính mong muốn (preferred attribute names) trong bước thiết lập kích hoạt (activation)."
+    },
+    {
+      "id": 31,
+      "question": "During a privacy law discussion with a customer, the customer indicates they need to honor requests for the right to be forgotten. The consultant determines that Consent API will solve this business need.\nWhich two considerations should the consultant inform the customer about? (Choose two.)",
+      "choices": {
+        "A": "Data deletion requests are submitted for Individual profiles.",
+        "B": "Data deletion requests submitted to Data Cloud are passed to all connected Salesforce clouds.",
+        "C": "Data deletion requests are reprocessed at 30, 60, and 90 days.",
+        "D": "Data deletion requests are processed within 1 hour."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Khi sử dụng Consent API để thực thi quyền được quên (right to be forgotten), hai điểm quan trọng cần lưu ý khách hàng là:\n- Yêu cầu xóa dữ liệu được gửi đi dựa trên hồ sơ Cá nhân (Individual profiles) (A).\n- Các yêu cầu xóa dữ liệu này sẽ được hệ thống chạy kiểm tra và xử lý lại tại các mốc thời gian 30, 60 và 90 ngày (C) để đảm bảo không bị nạp lại từ nguồn."
+    },
+    {
+      "id": 32,
+      "question": "A user is not seeing suggested values from newly-modeled data when building a segment.\nWhat is causing this issue?",
+      "choices": {
+        "A": "Value suggestion will only return results for the first 50 values of a specific attribute.",
+        "B": "Value suggestion can only work on direct attributes and not related attributes.",
+        "C": "Value suggestion requires Data Aware Specialist permissions at a minimum.",
+        "D": "Value suggestion is still processing and takes up to 24 hours to be available."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi người dùng không thấy các gợi ý giá trị (suggested values) từ các đối tượng dữ liệu mới được mô hình hóa khi xây dựng phân khúc, nguyên nhân là do tiến trình xử lý gợi ý giá trị (Value Suggestion) đang chạy ngầm và có thể mất tới 24 giờ để hoàn thành và khả dụng."
+    },
+    {
+      "id": 33,
+      "question": "Northern Trail Outfitters uses B2C Commerce and is exploring implementing Data Cloud to get a unified view of its customers and all their order transactions.\nWhat should the consultant keep in mind with regard to historical data when ingesting order data using the B2C Commerce Order Bundle?",
+      "choices": {
+        "A": "The B2C Commerce Order Bundle does not ingest any historical data and only ingests new orders from that point on.",
+        "B": "The B2C Commerce Order Bundle ingests 30 days of historical data.",
+        "C": "The B2C Commerce Order Bundle ingests 6 months of historical data.",
+        "D": "The B2C Commerce Order Bundle ingests 12 months of historical data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi sử dụng gói dữ liệu B2C Commerce Order Bundle để nạp thông tin đơn hàng từ B2C Commerce vào Data Cloud, gói này chỉ hỗ trợ nạp sẵn tối đa 30 ngày dữ liệu lịch sử đơn hàng trước đó."
+    },
+    {
+      "id": 34,
+      "question": "A customer has two Data Cloud orgs. A new configuration has been completed and tested for an Amazon S3 data stream and its mappings in one of the Data Cloud orgs.\nWhat is recommended to package and promote this configuration to the customer's second org?",
+      "choices": {
+        "A": "Package as an AppExchange application.",
+        "B": "Create a data kit.",
+        "C": "Use the Metadata API.",
+        "D": "Use the Salesforce CRM connector."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đóng gói các cấu hình luồng dữ liệu từ Amazon S3 và các ánh xạ trường (mappings) liên quan từ tổ chức Data Cloud thử nghiệm sang tổ chức sản xuất của khách hàng, phương pháp khuyên dùng là tạo một bộ công cụ dữ liệu (Data Kit)."
+    },
+    {
+      "id": 35,
+      "question": "A consultant needs to publish segment data to the Audience DMO that can be retrieved using the Query APIs.\nWhen creating the activation target, which type of target should the consultant select?",
+      "choices": {
+        "A": "External Activation Target",
+        "B": "Marketing Cloud",
+        "C": "Marketing Cloud Personalization",
+        "D": "Data Cloud"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để xuất bản dữ liệu phân khúc sang đối tượng mô hình dữ liệu Audience DMO phục vụ cho việc truy vấn thông qua Query APIs, nhà tư vấn phải chọn loại đích kích hoạt là Data Cloud khi cấu hình Activation Target."
+    },
+    {
+      "id": 36,
+      "question": "A consultant notices that the unified individual profile is not storing the latest email address.\nWhich action should the consultant take to troubleshoot this issue?",
+      "choices": {
+        "A": "Confirm that the reconciliation rules are correctly used.",
+        "B": "Check if the mapping of DLO objects is correct to Contact Point Email.",
+        "C": "Remove any old email addresses from Salesforce CRM.",
+        "D": "Verify and update the email address in the source systems if needed."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nếu hồ sơ cá nhân hợp nhất (unified individual profile) không lưu giữ địa chỉ email mới nhất được cập nhật, hành động khắc phục lỗi của nhà tư vấn là kiểm tra lại xem các quy tắc hòa giải (reconciliation rules) đã được cấu hình và áp dụng đúng thứ tự ưu tiên hay chưa."
+    },
+    {
+      "id": 37,
+      "question": "Northern Trail Outfitters wants to be able to calculate each customer's lifetime value (LTV) but also create breakdowns of the revenue sourced by website, mobile app, and retail channels.\nWhat should a consultant use to address this use case in Data Cloud?",
+      "choices": {
+        "A": "Metrics on metrics",
+        "B": "Nested segments",
+        "C": "Streaming data transform",
+        "D": "Flow Orchestration"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tính toán giá trị trọn đời của khách hàng (LTV) đồng thời phân tách chi tiết doanh thu theo từng kênh (website, mobile, retail), giải pháp tối ưu trong Data Cloud là sử dụng tính năng Số liệu trên số liệu (Metrics on metrics) để thực hiện tính toán lồng nhau."
+    },
+    {
+      "id": 38,
+      "question": "A customer is trying to activate data from Data Cloud to an Amazon S3 Cloud File Storage Bucket.Which authentication type should the consultant recommend to connect to the S3 bucket from Data Cloud?",
+      "choices": {
+        "A": "Use a JWT Token generated on S3.",
+        "B": "Use an S3 Private Key Certificate.",
+        "C": "Use an S3 Encrypted Username and Password.",
+        "D": "Use an S3 Access Key and Secret Key."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi cấu hình kết nối từ Data Cloud để xuất kích hoạt dữ liệu sang thùng chứa Amazon S3 Cloud File Storage, phương thức xác thực chuẩn được khuyên dùng là sử dụng cặp khóa S3 Access Key và Secret Key."
+    },
+    {
+      "id": 39,
+      "question": "A consultant is integrating an Amazon S3 activated campaign with the customer's destination system.In order for the destination system to find the metadata about the segment, which file on the S3 will contain this information for processing?",
+      "choices": {
+        "A": "The .json file",
+        "B": "The .txt file",
+        "C": "The .zip file",
+        "D": "The .csv file"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi xuất chiến dịch kích hoạt dữ liệu ra Amazon S3, hệ thống đích sẽ tìm kiếm thông tin siêu dữ liệu (metadata) của phân khúc trong tệp tin định dạng .json được xuất kèm theo."
+    },
+    {
+      "id": 40,
+      "question": "The Salesforce CRM Connector is configured and the Case object data stream is set up. Subsequently, a new custom field named Business Priority is created on the Case object in Salesforce CRM. However, the new field is not available when trying to add it to the data stream.Which statement addresses the cause of this issue?",
+      "choices": {
+        "A": "The Salesforce Data Loader application should be used to perform a bulk upload from a desktop.",
+        "B": "After 24 hours when the data stream refreshes, it will automatically include any new fields that were added to the Salesforce CRM.",
+        "C": "The Salesforce Integration User is missing Read permissions on the newly created field.",
+        "D": "Custom fields on the Case object are not supported for ingesting into Data Cloud."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi một trường tùy chỉnh mới được tạo trên CRM nhưng không xuất hiện trong danh sách trường để thêm vào luồng dữ liệu Case của Data Cloud, nguyên nhân phổ biến là do tài khoản người dùng tích hợp (Salesforce Integration User) chưa được cấp quyền đọc (Read permission) đối với trường mới đó."
+    },
+    {
+      "id": 41,
+      "question": "What is the first step to set up and configure a Data Cloud instance after it has been provisioned?",
+      "choices": {
+        "A": "Connect to the Salesforce CRM org that Data Cloud is provisioned in.",
+        "B": "Complete the Salesforce Data Cloud \"Get Started\" process.",
+        "C": "Enable the Data Cloud Admin permission set to the relevant Salesforce CRM user.",
+        "D": "Connect to the Marketing Cloud Account that Data Cloud is provisioned in."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bước đầu tiên để cấu hình và thiết lập một thực thể Data Cloud sau khi được cấp phát thành công là gán bộ quyền Quản trị Data Cloud (Data Cloud Admin permission set) cho tài khoản người dùng Salesforce CRM chịu trách nhiệm quản trị."
+    },
+    {
+      "id": 42,
+      "question": "A consultant wants to ensure that every segment managed by multiple brand teams adheres to the same set of exclusion criteria, that are updated on a monthly basis.What is the most efficient option to allow for this capability?",
+      "choices": {
+        "A": "Create, publish, and deploy a data kit.",
+        "B": "Create a nested segment.",
+        "C": "Create a reusable container block with common criteria.",
+        "D": "Create a segment and copy it for each brand."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đảm bảo mọi phân khúc được quản lý bởi nhiều thương hiệu khác nhau đều áp dụng chung một bộ tiêu chí loại trừ (exclusion criteria) được cập nhật hàng tháng, giải pháp hiệu quả nhất là tạo một khối chứa điều kiện dùng chung có thể tái sử dụng (reusable container block with common criteria)."
+    },
+    {
+      "id": 43,
+      "question": "What does the Ignore Empty Value option do in identity resolution?",
+      "choices": {
+        "A": "Ignores Contact Point object records with empty fields when running identity resolution rules.",
+        "B": "Ignores Individual object records with empty fields when running identity resolution rules.",
+        "C": "Ignores empty fields when running match rules.",
+        "D": "Ignores empty fields when running reconciliation rules."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong thiết lập phân giải thực thể (identity resolution), tùy chọn Bỏ qua giá trị trống (Ignore Empty Value) có tác dụng bỏ qua các trường trống (null/empty) khi chạy các quy tắc hòa giải dữ liệu (reconciliation rules) để tránh ghi đè các giá trị hợp lệ sẵn có bằng giá trị trống."
+    },
+    {
+      "id": 44,
+      "question": "Which solution provides an easy way to ingest Marketing Cloud subscriber profile attributes into Data Cloud on a daily basis?",
+      "choices": {
+        "A": "Marketing Cloud Connect API",
+        "B": "Email Studio Starter Data Bundle",
+        "C": "Automation Studio and Profile API",
+        "D": "Marketing Cloud Data Extension Data Stream"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để nạp các thuộc tính hồ sơ người đăng ký của Marketing Cloud vào Data Cloud hàng ngày một cách dễ dàng, giải pháp là sử dụng luồng dữ liệu Marketing Cloud Data Extension Data Stream."
+    },
+    {
+      "id": 45,
+      "question": "A customer is concerned that the consolidation rate displayed in the identity resolution is quite low compared to their initial estimations.\nWhich configuration change should a consultant consider in order to increase the consolidation rate?",
+      "choices": {
+        "A": "Include additional attributes in the existing matching rules.",
+        "B": "Change reconciliation rules to Most Occuring.",
+        "C": "Reduce the number of matching rules.",
+        "D": "Increase the number of matching rules."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tăng tỷ lệ hợp nhất hồ sơ (consolidation rate) trong phân giải thực thể khi tỷ lệ này đang ở mức thấp hơn so với dự kiến, nhà tư vấn nên đề xuất tăng số lượng quy tắc so khớp (matching rules) trong bộ quy tắc."
+    },
+    {
+      "id": 46,
+      "question": "What are two benefits of calculated insights over segmentation criteria? (Choose two.)",
+      "choices": {
+        "A": "Calculated insights results can be included as attributes in activation.",
+        "B": "Calculated insights refresh automatically upon reference in segments and activation.",
+        "C": "Calculated insights can query engagement data greater than 2 years.",
+        "D": "Calculated insights are better suited for single row based operation."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Hai lợi ích vượt trội của chỉ số tính toán (Calculated Insights) so với tiêu chí phân khúc (Segmentation criteria) là:\n- Kết quả của Calculated Insights có thể được đưa vào làm thuộc tính trực tiếp trong quá trình kích hoạt (activation attributes) (A).\n- Calculated Insights hỗ trợ truy vấn và xử lý dữ liệu tương tác (engagement data) có thời gian lưu trữ dài hơn 2 năm (C)."
+    },
+    {
+      "id": 47,
+      "question": "A customer notices that their consolidation rate has recently increased. They contact the consultant to ask why.What are two likely explanations for the increase? (Choose two.)",
+      "choices": {
+        "A": "Duplicates have been removed from source system data streams.",
+        "B": "Identity resolution rules have been added to the ruleset to increase the number of matched profiles.",
+        "C": "New data sources have been added to Data Cloud that largely overlap with the existing profiles.",
+        "D": "Identity resolution rules have been removed to reduce the number of matched profiles."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Tỷ lệ hợp nhất hồ sơ (consolidation rate) tăng lên có thể do hai nguyên nhân:\n- Có thêm các quy tắc khớp dữ liệu (match rules) mới được thêm vào bộ quy tắc identity resolution để tăng số lượng hồ sơ được liên kết với nhau (B).\n- Các nguồn dữ liệu mới được nạp vào Data Cloud có sự trùng lặp và giao thoa lớn với các hồ sơ hiện có (C)."
+    },
+    {
+      "id": 48,
+      "question": "Northern Trail Outfitters (NTO) creates a calculated insight to compute recency, frequency, monetary (RFM) scores on its unified individuals. NTO then creates a segment based on these scores that it activates to a Marketing Cloud activation target.Which two actions are required when configuring the activation? (Choose two.)",
+      "choices": {
+        "A": "Select contact points.",
+        "B": "Add additional attributes.",
+        "C": "Choose a segment.",
+        "D": "Add the calculated insight in the activation."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Khi cấu hình kích hoạt một phân khúc dựa trên các điểm số RFM được tính toán từ Calculated Insights sang Marketing Cloud, hai hành động bắt buộc cần thực hiện là:\n- Lựa chọn các điểm liên hệ (Contact Points) để gửi thông điệp (A).\n- Lựa chọn phân khúc (Segment) cần kích hoạt (C)."
+    },
+    {
+      "id": 49,
+      "question": "During an implementation project, a consultant completed ingestion of all data streams for their customer.Prior to segmenting and acting on that data, which additional configuration is required?",
+      "choices": {
+        "A": "Data Mapping",
+        "B": "Identity Resolution",
+        "C": "Data Activation",
+        "D": "Calculated Insights"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Sau khi hoàn thành việc nạp tất cả các luồng dữ liệu (Data Streams), để có thể tiến hành phân khúc (segmentation) và kích hoạt hành động trên dữ liệu đó, cấu hình bắt buộc tiếp theo là thiết lập Phân giải Thực thể (Identity Resolution)."
+    },
+    {
+      "id": 50,
+      "question": "A consultant is planning the ingestion of a data stream that has profile information including a mobile phone number.\nTo ensure that the phone number can be used for future SMS campaigns, they need to confirm the phone number field is in the proper E164 Phone Number format. However, the phone numbers in the file appear to be in varying formats.\nWhat is the most efficient way to guarantee that the various phone number formats are standardized?",
+      "choices": {
+        "A": "Create a formula field to standardize the format.",
+        "B": "Create a calculated insight after ingestion.",
+        "C": "Edit and update the data in the source system prior to sending to Data Cloud.",
+        "D": "Assign the PhoneNumber field type when creating the data stream."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đảm bảo các định dạng số điện thoại khác nhau được tự động chuẩn hóa về định dạng E164 phục vụ cho các chiến dịch gửi tin nhắn SMS sau này, giải pháp nhanh nhất là gán kiểu dữ liệu trường là PhoneNumber khi tạo luồng dữ liệu (Data Stream)."
+    },
+    {
+      "id": 51,
+      "question": "Which statement about Data Cloud's Web and Mobile Application Connector is true?",
+      "choices": {
+        "A": "The Tenant Specific Endpoint is auto-generated in Data Cloud when setting the connector.",
+        "B": "Any data streams associated with the connector will be automatically deleted upon deleting the app from Data Cloud Setup.",
+        "C": "A standard schema containing event, profile, and transaction data is created at the time the connector is configured.",
+        "D": "The connector schema can be updated to delete an existing field."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đối với bộ kết nối Web and Mobile Application Connector của Data Cloud, Endpoint riêng của tổ chức (Tenant Specific Endpoint) sẽ tự động được hệ thống tạo ra khi cấu hình bộ kết nối."
+    },
+    {
+      "id": 52,
+      "question": "Which data stream category should be assigned to use the data for time-based operations in segmentation and calculated insights?",
+      "choices": {
+        "A": "Sales Order",
+        "B": "Individual",
+        "C": "Transaction",
+        "D": "Engagement"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để sử dụng dữ liệu cho các phép toán dựa trên thời gian (time-based operations) trong phân khúc và Calculated Insights, luồng dữ liệu đó phải được gán danh mục (Data Stream Category) là Tương tác (Engagement)."
+    },
+    {
+      "id": 53,
+      "question": "A consultant is ingesting a list of employees from their human resources database that they want to segment on.\nWhich data stream category should the consultant choose when ingesting this data?",
+      "choices": {
+        "A": "Contact Data",
+        "B": "Other Data",
+        "C": "Engagement Data",
+        "D": "Profile Data"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi nạp danh sách nhân viên từ cơ sở dữ liệu nhân sự để thực hiện phân khúc dựa trên các thuộc tính của họ, danh mục luồng dữ liệu (Data Stream Category) phù hợp nhất cần chọn là Hồ sơ (Profile Data)."
+    },
+    {
+      "id": 54,
+      "question": "A consultant wants to build a new audience in Data Cloud.\nWhich three criteria can the consultant include when building a segment? (Choose three.)",
+      "choices": {
+        "A": "Related attributes",
+        "B": "Direct attributes",
+        "C": "Streaming insights",
+        "D": "Calculated insights",
+        "E": "Data stream attributes"
+      },
+      "correctAnswer": "ABD",
+      "explanation_vi": "Khi xây dựng phân khúc (segment) đối tượng mới trong Data Cloud, nhà tư vấn có thể kết hợp ba loại tiêu chí:\n- Thuộc tính trực tiếp (Direct attributes) (B).\n- Thuộc tính liên quan (Related attributes) (A).\n- Các chỉ số phân tích tính toán (Calculated Insights) (D)."
+    },
+    {
+      "id": 55,
+      "question": "A consultant is reviewing a recent activation using engagement-based related attributes but is not seeing any related attributes in their payload for the majority of their segment members.\nWhich two areas should the consultant review to help troubleshoot this issue? (Choose two.)",
+      "choices": {
+        "A": "The related engagement events occurred within the last 90 days.",
+        "B": "The related engagement events occurred within the last 24 months.",
+        "C": "The correct path is selected for the related attributes.",
+        "D": "The activated profiles have a Unified Contact Point."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Khi không thấy dữ liệu thuộc tính liên quan (related attributes) dựa trên tương tác trong payload của đa số thành viên phân khúc, nhà tư vấn nên kiểm tra:\n- Các sự kiện tương tác liên quan có phát sinh trong vòng 90 ngày gần đây hay không (A) (giới hạn thời gian mặc định của dữ liệu tương tác trong phân khúc).\n- Đường dẫn thiết lập thuộc tính liên quan (related attributes path) đã được chọn chính xác trong Canvas hay chưa (C)."
+    },
+    {
+      "id": 56,
+      "question": "Which data model subject area should be used for any Organization, Individual, or Member in the Customer 360 data model?",
+      "choices": {
+        "A": "Party",
+        "B": "Global Account",
+        "C": "Membership",
+        "D": "Engagement"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong mô hình dữ liệu Customer 360, tất cả các thực thể đại diện cho một Tổ chức (Organization), Cá nhân (Individual), hoặc Thành viên (Member) đều thuộc vùng chủ đề Đối tác (Party subject area)."
+    },
+    {
+      "id": 57,
+      "question": "A company wants to test its marketing campaigns with different target populations.\nWhat should the consultant adjust in the Segment Canvas interface to get different populations?",
+      "choices": {
+        "A": "Population filters and direct attributes",
+        "B": "Segmentation filters, direct attributions, and data sources",
+        "C": "Direct attributes, related attributes, and population filters",
+        "D": "Direct attributes and related attributes"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để thay đổi cấu phần dân số và thử nghiệm chiến dịch với các đối tượng mục tiêu khác nhau trên giao diện Canvas Phân khúc, nhà tư vấn cần điều chỉnh các thuộc tính trực tiếp (Direct attributes) và thuộc tính liên quan (Related attributes) làm bộ lọc."
+    },
+    {
+      "id": 58,
+      "question": "Which information is provided in a .csv file when activating to Amazon S3?",
+      "choices": {
+        "A": "The activated data payload",
+        "B": "An audit log showing the user who activated the segment and when it was activated",
+        "C": "The manifest of origin sources within Data Cloud",
+        "D": "The metadata regarding the segment definition"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi thực hiện kích hoạt xuất dữ liệu phân khúc sang Amazon S3, tệp tin định dạng .csv được tạo ra sẽ chứa chính xác nội dung payload dữ liệu đã được kích hoạt (như thông tin liên hệ và các thuộc tính đi kèm)."
+    },
+    {
+      "id": 59,
+      "question": "Which operator should a consultant use to create a segment for a birthday campaign that is evaluated daily?",
+      "choices": {
+        "A": "Is Today",
+        "B": "Is Birthday",
+        "C": "Is Between",
+        "D": "Is Anniversary Of"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tạo một phân khúc cho chiến dịch chúc mừng sinh nhật chạy đánh giá tự động hàng ngày, nhà tư vấn nên sử dụng toán tử 'Is Anniversary Of' kết hợp với trường ngày sinh."
+    },
+    {
+      "id": 60,
+      "question": "A consultant is discussing the benefits of Data Cloud with a customer that has multiple disjointed data sources.Which two functional areas should the consultant highlight in relation to managing customer data? (Choose two.)",
+      "choices": {
+        "A": "Unified Profiles",
+        "B": "Data Harmonization",
+        "C": "Master Data Management",
+        "D": "Data Marketplace"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Khi thảo luận về lợi ích của Data Cloud đối với doanh nghiệp có nhiều nguồn dữ liệu rời rạc, hai khía cạnh chức năng quan trọng cần nhấn mạnh là:\n- Hồ sơ khách hàng hợp nhất (Unified Profiles) (A).\n- Đồng bộ và chuẩn hóa mô hình dữ liệu (Data Harmonization) (B)."
+    },
+    {
+      "id": 61,
+      "question": "What does it mean to build a trust-based, first-party data asset?",
+      "choices": {
+        "A": "To ensure opt-in consents are collected for all email marketing as required by law",
+        "B": "To provide transparency and security for data gathered from individuals who provide consent for its use and receive value in exchange",
+        "C": "To obtain competitive data from reliable sources through interviews, surveys, and polls",
+        "D": "To provide trusted, first-party data in the Data Cloud Marketplace that follows all compliance regulations"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Xây dựng tài sản dữ liệu bên thứ nhất dựa trên sự tin cậy (trust-based, first-party data asset) có nghĩa là cung cấp tính minh bạch và bảo mật cho dữ liệu thu thập được từ các cá nhân tự nguyện đồng ý chia sẻ và nhận lại giá trị tương xứng từ doanh nghiệp."
+    },
+    {
+      "id": 62,
+      "question": "Data Cloud receives a nightly file of all ecommerce transactions from the previous day. Several segments and activations depend upon calculated insights from the updated data in order to maintain accuracy in the customer's scheduled campaign messages.What should the consultant do to ensure the ecommerce data is ready for use for each of the scheduled activations?",
+      "choices": {
+        "A": "Ensure the activations are set to Incremental Activation and automatically publish every hour.",
+        "B": "Use Flow to trigger a change data event on the ecommerce data to refresh calculated insights and segments before the activations are scheduled to run.",
+        "C": "Set a refresh schedule for the calculated insights to occur every hour.",
+        "D": "Ensure the segments are set to Rapid Publish and set to refresh every hour."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo dữ liệu giao dịch thương mại điện tử nạp hàng đêm sẵn sàng cho các chiến dịch kích hoạt đã lên lịch, nhà tư vấn nên sử dụng công cụ Flow để kích hoạt sự kiện thay đổi dữ liệu (Change Data Event) nhằm cập nhật mới Calculated Insights và phân khúc trước khi các activations bắt đầu chạy."
+    },
+    {
+      "id": 63,
+      "question": "A consultant is setting up a data stream with transactional data.\nWhich field type should the consultant choose to ensure that leading zeros in the purchase order number are preserved?",
+      "choices": {
+        "A": "Number",
+        "B": "Decimal",
+        "C": "Text",
+        "D": "Serial"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đảm bảo các chữ số 0 ở đầu (leading zeros) trong mã số đơn hàng (purchase order number) không bị hệ thống tự động loại bỏ khi nạp vào Data Cloud, nhà tư vấn nên chọn kiểu dữ liệu cho trường này là Văn bản (Text)."
+    },
+    {
+      "id": 64,
+      "question": "How does identity resolution select attributes for unified individuals when there is conflicting information in the data model?",
+      "choices": {
+        "A": "Leverages reconciliation rules",
+        "B": "Leverages match rules",
+        "C": "Creates additional contact points",
+        "D": "Creates additional rulesets"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi xảy ra xung đột thông tin giữa các nguồn dữ liệu trong mô hình, tiến trình Phân giải Thực thể (Identity Resolution) sẽ dựa vào các Quy tắc hòa giải (Reconciliation Rules) được cấu hình để lựa chọn giá trị thuộc tính chính xác nhất cho hồ sơ hợp nhất."
+    },
+    {
+      "id": 65,
+      "question": "Which two common use cases can be addressed with Data Cloud? (Choose two.)",
+      "choices": {
+        "A": "Safeguard critical business data by serving as a centralized system for backup and disaster recovery.",
+        "B": "Harmonize data from multiple sources with a standardized and extendable data model.",
+        "C": "Understand and act upon customer data to drive more relevant experiences.",
+        "D": "Govern enterprise data lifecycle through a centralized set of policies and processes."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Hai bài toán nghiệp vụ phổ biến nhất được giải quyết bằng Data Cloud là:\n- Đồng bộ dữ liệu từ nhiều nguồn khác nhau dựa trên một mô hình dữ liệu chuẩn hóa và có thể mở rộng (B).\n- Thấu hiểu và kích hoạt hành động dựa trên dữ liệu khách hàng để mang lại trải nghiệm cá nhân hóa tốt hơn (C)."
+    },
+    {
+      "id": 66,
+      "question": "During discovery, which feature should a consultant highlight for a customer who has multiple data sources and needs to match and reconcile data about individuals into a single unified profile?",
+      "choices": {
+        "A": "Harmonization",
+        "B": "Identity Resolution",
+        "C": "Data Cleansing",
+        "D": "Data Consolidation"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tính năng cốt lõi giúp kết nối và gộp các hồ sơ cá nhân trùng lặp từ nhiều nguồn dữ liệu khác nhau thành một thực thể duy nhất trong Data Cloud là Phân giải Thực thể (Identity Resolution)."
+    },
+    {
+      "id": 67,
+      "question": "Data Cloud consultant recently discovered that their identity resolution process is matching individuals that share email addresses or phone numbers, but are not actually the same individual.What should the consultant do to address this issue?",
+      "choices": {
+        "A": "Modify the existing ruleset to use fewer matching rules, run the ruleset and review the updated results, then adjust as needed until the individuals are matching correctly.",
+        "B": "Create and run a new ruleset with stricter matching criteria, compare the two rulesets to review and verify the results, and then migrate to the new ruleset once approved.",
+        "C": "Create and run a new ruleset with fewer matching rules, compare the two rulesets to review and verify the results, and then migrate to the new ruleset once approved.",
+        "D": "Modify the existing ruleset with stricter matching criteria, run the ruleset and review the updated results, then adjust as needed until the individuals are matching correctly."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi bộ quy tắc phân giải thực thể hiện tại quá lỏng lẻo dẫn đến việc gộp sai các cá nhân khác nhau (chia sẻ email hoặc số điện thoại gia đình), quy trình chuẩn là tạo và chạy một bộ quy tắc (ruleset) mới với các tiêu chí so khớp chặt chẽ hơn, sau đó đối chiếu kết quả và chuyển đổi sang ruleset mới khi được phê duyệt."
+    },
+    {
+      "id": 68,
+      "question": "A segment fails to refresh with the error “Segment references too many data lake objects (DLOs)”.\nWhich two troubleshooting tips should help remedy this issue? (Choose two.)",
+      "choices": {
+        "A": "Refine segmentation criteria to limit up to five custom data model objects (DMOs).",
+        "B": "Space out the segment schedules to reduce DLO load.",
+        "C": "Split the segment into smaller segments.",
+        "D": "Use calculated insights in order to reduce the complexity of the segmentation query."
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Khi một phân khúc bị lỗi làm mới do tham chiếu đến quá nhiều đối tượng hồ chứa dữ liệu (DLOs), hai biện pháp khắc phục hiệu quả là:\n- Giới hạn điều kiện phân khúc sử dụng tối đa 5 đối tượng mô hình dữ liệu (DMOs) tùy chỉnh (A).\n- Chia nhỏ phân khúc lớn đó thành các phân khúc nhỏ hơn có độ phức tạp thấp hơn (C)."
+    },
+    {
+      "id": 69,
+      "question": "Which tool allows users to visualize and analyze unified customer data in Data Cloud?",
+      "choices": {
+        "A": "Intelligence Reports Advanced",
+        "B": "Tableau",
+        "C": "Salesforce CLI",
+        "D": "Heroku"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 70,
+      "question": "A bank collects customer data for its loan applicants and high net worth customers. A customer can be both a loan applicant and a high net worth customer, resulting in duplicate data.\nHow should a consultant ingest and map this data in Data Cloud?",
+      "choices": {
+        "A": "Ingest the data into two DLOs and map each to the individual and Contact Point Email DMOs.",
+        "B": "Ingest the data into two DLOs and then map to two custom DMOs.",
+        "C": "Use a data transform to consolidate the data into one DLO and then map it to the Individual and Contact Point Email DMOs.",
+        "D": "Ingest the data into one DLO and then map to one custom DMO."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để nạp và xử lý dữ liệu khách hàng từ hai nhóm đối tượng khác nhau (người đăng ký vay và khách hàng VIP) vốn có nguy cơ trùng lặp cao, phương án chuẩn trong Data Cloud là nạp dữ liệu vào hai DLO riêng biệt rồi thực hiện ánh xạ đồng thời sang đối tượng Individual DMO và Contact Point Email DMO để chạy phân giải thực thể."
+    },
+    {
+      "id": 71,
+      "question": "A customer has a calculated insight about lifetime value.\nWhat does the consultant need to be aware of if the calculated insight needs to be modified?",
+      "choices": {
+        "A": "New dimensions can be added.",
+        "B": "New measures can be added.",
+        "C": "Existing dimensions can be removed.",
+        "D": "Existing measures can be removed."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi cần chỉnh sửa một chỉ số phân tích tính toán (Calculated Insight) đang hoạt động, nhà tư vấn cần lưu ý rằng hệ thống hỗ trợ việc thêm các chiều (dimensions) mới vào chỉ số nhưng không cho phép xóa bỏ hoặc thay đổi các chiều/số đo sẵn có đang được sử dụng."
+    },
+    {
+      "id": 72,
+      "question": "A consultant at Northern Trail Outfitters is implementing Data Cloud and creating an activation target for their segment.\nFor activation membership, which object should the consultant choose?",
+      "choices": {
+        "A": "Data Model Object",
+        "B": "Data Segmentation Object",
+        "C": "Data Activation Object",
+        "D": "Data Lake Object"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi thiết lập đối tượng thành viên cho một mục tiêu kích hoạt (Activation Target), đối tượng được lựa chọn bắt buộc phải là đối tượng mô hình dữ liệu (Data Model Object - DMO) đại diện cho thực thể khách hàng."
+    },
+    {
+      "id": 73,
+      "question": "Cumulus Financial wants its service agents to view a display of all cases associated with a Unified Individual on a contract record.\nWhich two features should a consultant consider for this use case? (Choose two.)",
+      "choices": {
+        "A": "Query API",
+        "B": "Data Action",
+        "C": "Lightning Web Components",
+        "D": "Profile API"
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Để hỗ trợ nhân viên CSKH hiển thị danh sách các ca hỗ trợ (Cases) liên kết với một Unified Individual trực tiếp trên giao diện Salesforce CRM, hai giải pháp hỗ trợ là:\n- Sử dụng Profile API (D) để truy vấn thông tin hồ sơ và quan hệ.\n- Xây dựng cấu phần Lightning Web Components (C) nhúng trực tiếp vào trang để hiển thị thông tin trả về."
+    },
+    {
+      "id": 74,
+      "question": "Northern Trail Outfitters (NTO) owns and operates six unique brands, each with their own set of customers, transactions, and loyalty information. The marketing director wants to ensure that segments and activations from the NTO Outlet brand do not reference customers or transactions from the other brands.\nWhat is the most efficient approach to handle this requirement?",
+      "choices": {
+        "A": "Create a baton data transform to generate a DLO for the Outlet brand.",
+        "B": "Separate the Outlet brand into a data space.",
+        "C": "Separate the brands into six different data spaces.",
+        "D": "Use Business Unit Aware activation."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đảm bảo phân tách hoàn toàn dữ liệu giao dịch và phân khúc giữa 6 thương hiệu khác nhau thuộc cùng một tổng công ty nhằm tránh truy cập chéo, giải pháp hiệu quả và triệt để nhất là cấu hình 6 không gian dữ liệu (Data Spaces) riêng biệt cho từng thương hiệu."
+    },
+    {
+      "id": 75,
+      "question": "A consultant needs to package Data Cloud components from one organization to another.\nWhich two Data Cloud components should the consultant include in a data it to achieve this goal? (Choose two.)",
+      "choices": {
+        "A": "Identity resolution rulesets",
+        "B": "Calculated insights",
+        "C": "Data model objects",
+        "D": "Segments"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Khi đóng gói cấu hình Data Cloud từ môi trường này sang môi trường khác bằng Data Kit, hai thành phần được hỗ trợ bao gồm trong gói là:\n- Các chỉ số phân tích tính toán (Calculated Insights) (B).\n- Các bộ quy tắc phân giải thực thể (Identity Resolution rulesets) (A)."
+    },
+    {
+      "id": 76,
+      "question": "Every day, Northern Trail Outfitters uploads a summary of the last 24 hours of store transactions to a new file in an Amazon S3 bucket, and files older than seven days are automatically deleted. Each file contains a timestamp in a standardized naming convention.Which two options should a consultant configure when ingesting this data stream? (Choose two.)",
+      "choices": {
+        "A": "Ensure the filename contains a wildcard to accommodate the timestamp.",
+        "B": "Ensure that deletion of old files is enabled.",
+        "C": "Ensure the refresh mode is set to \"Full Refresh\".",
+        "D": "Ensure the refresh mode is set to \"Upsert\"."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Khi cấu hình nạp tệp tin giao dịch hàng ngày từ Amazon S3 có tên chứa mốc thời gian thay đổi, nhà tư vấn cần:\n- Sử dụng ký tự đại diện (wildcard) trong định nghĩa tên tệp để khớp định dạng tên chứa timestamp (A).\n- Đặt chế độ làm mới là Upsert (D) để cập nhật các bản ghi cũ và chèn thêm các bản ghi mới."
+    },
+    {
+      "id": 77,
+      "question": "A Data Cloud consultant recently added a new data source and mapped some of the data to a new custom data model object (DMO) that they want to use for creating segments. However, they cannot view the newly created DMO when trying to create a new segment.What is the cause of this issue?",
+      "choices": {
+        "A": "Data has not yet been ingested into the DMO.",
+        "B": "The new DMO does not have a relationship to the Individual DMO.",
+        "C": "The new DMO is not of category Profile.",
+        "D": "Segmentation is only supported for the Individual and Unified Individual DMOs."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi đã tạo và ánh xạ dữ liệu thành công sang đối tượng mô hình dữ liệu (DMO) mới nhưng không thể tìm thấy DMO đó khi tạo phân khúc, nguyên nhân phổ biến là do DMO mới này chưa được thiết lập mối quan hệ (Relationship) liên kết trực tiếp hoặc gián tiếp với đối tượng Individual DMO."
+    },
+    {
+      "id": 78,
+      "question": "A global fashion retailer operates online sales platforms across AMER, EMEA, and APAC. The data formats for customer, order, and product information vary by region, and compliance regulations require data to remain unchanged in the original data sources. They also require a unified view of customer profiles for real-time personalization and analytics.\nGiven these requirements, which transformation approach should the company implement to standardize and cleanse incoming data streams?",
+      "choices": {
+        "A": "Transform data before ingesting into Data Cloud.",
+        "B": "Implement batch data transformations.",
+        "C": "Implement streaming data transformations.",
+        "D": "Use Apex to transform and cleanse data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để chuẩn hóa và làm sạch dữ liệu từ nhiều khu vực có định dạng khác nhau mà không làm thay đổi dữ liệu gốc ở các nguồn hệ thống (đáp ứng yêu cầu tuân thủ), giải pháp tối ưu là triển khai các tiến trình biến đổi dữ liệu hàng loạt (Batch Data Transformations) trực tiếp trong Data Cloud."
+    },
+    {
+      "id": 79,
+      "question": "Cloud Kicks plans to do a full deletion of one of its existing data streams and its underlying data lake object (DLO).\nWhat should the consultant consider before deleting the data stream?",
+      "choices": {
+        "A": "The data stream can be deleted without implicitly deleting the underlying DLO.",
+        "B": "The underlying DLO can be used in a data transform.",
+        "C": "The underlying DLO cannot be mapped to a data model object.",
+        "D": "The data stream must be associated with a data kit."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trước khi có thể thực hiện xóa hoàn toàn một luồng dữ liệu (Data Stream) và đối tượng hồ chứa dữ liệu (DLO) liên quan, nhà tư vấn phải đảm bảo rằng DLO đó đã được gỡ bỏ ánh xạ (not mapped) khỏi bất kỳ đối tượng mô hình dữ liệu (DMO) nào."
+    },
+    {
+      "id": 80,
+      "question": "Northern Trail Outfitters (NTO) asks its Data Cloud consultant for a list of contacts who fit within a certain segment for a direct mail campaign.\nHow should the consultant provide this list to NTO?",
+      "choices": {
+        "A": "Create the segment, select Email as the activation target, and activate the segment directly to NTO.",
+        "B": "Create the segment and then activate the segment to NTO’s Salesforce CRM.",
+        "C": "Create a new fie storage activation target, create the segment, and then activate the segment to the new activation target.",
+        "D": "Create the segment and then click Download to obtain the segment membership details to provide to NTO."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cung cấp danh sách liên hệ thuộc một phân khúc cụ thể cho chiến dịch gửi thư trực tiếp của doanh nghiệp, nhà tư vấn nên tạo phân khúc đó và thực hiện tải xuống (Download) danh sách chi tiết thành viên phân khúc trực tiếp từ giao diện Data Cloud."
+    },
+    {
+      "id": 81,
+      "question": "Cumulus Financial is experiencing delays in publishing multiple segments simultaneously. The company wants to avoid reducing the frequency at which segments are published, while retaining the same segments in place today.\nWhich action should a consultant take to alleviate this issue?",
+      "choices": {
+        "A": "Enable rapid segment publishing to all segments to reduce segment generation time.",
+        "B": "Adjust the publish schedule start time of each segment to prevent overloading processes.",
+        "C": "Increase the Data Cloud segmentation concurrency limit.",
+        "D": "Reduce the number of segments being published."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi gặp tình trạng chậm trễ do xuất bản đồng thời nhiều phân khúc mà không muốn giảm tần suất cập nhật, nhà tư vấn nên liên hệ hỗ trợ kỹ thuật để yêu cầu nâng cao giới hạn xử lý phân khúc đồng thời (segmentation concurrency limit) của Data Cloud."
+    },
+    {
+      "id": 82,
+      "question": "A consultant is setting up Data Cloud for a multi-brand organization and is using data spaces to segregate its data for various brands. While starting the mapping of a data stream, the consultant notices that they cannot map the object for one of the brands.\nWhat should the consultant do to make the object available for a new data space?",
+      "choices": {
+        "A": "Navigate to the Data Space tab and select the object to be included in the new data space.",
+        "B": "Create a new data stream and map the second data stream to the data space.",
+        "C": "Create a batch transform to split data between different data spaces.",
+        "D": "Copy data from the default data space to a new DMO using the Data Copy feature and link this DMO to the new data space."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để đưa một đối tượng dữ liệu sẵn có vào một không gian dữ liệu (Data Space) mới thành lập, nhà tư vấn cần truy cập tab Data Space trong Setup, chọn không gian dữ liệu đích và thêm đối tượng đó vào danh sách chia sẻ."
+    },
+    {
+      "id": 83,
+      "question": "A rideshare company wants to send an email to customers that provides a year-in-review with five “fun” trip statistics, such as top destination, distance traveled, etc. This raw data arrives into Data Cloud and is not aggregated at source\nThe company creates a segment of customers that had at least one ride in the last 365 days.\nFollowing best practices, which solution should the consultant recommend in Data Cloud to personalize the content of the email?",
+      "choices": {
+        "A": "Create five calculated insights for the activation and add dimension filters.",
+        "B": "Use a data transform to aggregate the statistics and map them to direct attributes on Individual to include in the activation.",
+        "C": "Include related attributes in the activation for the last 365 days.",
+        "D": "Use a data action to send each ride as an event to Marketing Cloud Engagement, then use AMPscript to summarize this data in the email."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cá nhân hóa email chứa 5 thống kê chuyến đi cho khách hàng, giải pháp tối ưu là sử dụng công cụ Data Transform để tính toán tổng hợp các chỉ số này từ dữ liệu thô và ánh xạ chúng thành các thuộc tính trực tiếp (direct attributes) trên đối tượng Individual để xuất kèm theo trong payload kích hoạt."
+    },
+    {
+      "id": 84,
+      "question": "Below is a sample of a .csv file that a company wants to ingest into Data Cloud.\nHow should a consultant work with this data?",
+      "choices": {
+        "A": "Create one batch data transform with one source DLO and three output DLOs.",
+        "B": "Ingest the file three times and create different primary keys for each source DLO.",
+        "C": "Create three batch data transforms so each batch transform only has one output DLO.",
+        "D": "Map the single DLO to standard DMOs with the correct attributes mapped to the primary key of each DMO."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi ingest một tệp .csv duy nhất chứa nhiều loại thông tin, giải pháp đơn giản nhất là ánh xạ (map) trực tiếp đối tượng DLO duy nhất đó sang nhiều đối tượng DMO tiêu chuẩn khác nhau bằng cách ánh xạ chính xác các trường định danh làm khóa chính cho từng DMO tương ứng."
+    },
+    {
+      "id": 85,
+      "question": "Cumulus Financial is currently using Data Cloud and ingesting transactional data from its backend system via an S3 Connector in upsert mode. During the initial setup six months ago, the company created a formula field in Data Cloud to create a custom classification. It now needs to update this formula to account for more classifications.\nWhat should the consultant keep in mind with regard to formula field updates when using the S3 Connector?",
+      "choices": {
+        "A": "Data Cloud will only update the formula on a go-forward basis for new records.",
+        "B": "Data Cloud will update the formula for all records at the next incremental upsert refresh.",
+        "C": "Data Cloud does not support formula field updates for data streams of type upsert.",
+        "D": "Data Cloud will initiate a full refresh of data from S3 and will update the formula on all records."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi cập nhật công thức của một trường tùy chỉnh trong luồng dữ liệu S3 đang chạy ở chế độ Upsert, Data Cloud sẽ tự động tính toán lại và áp dụng công thức mới này cho toàn bộ các bản ghi hiện có ở lần đồng bộ làm mới tăng cường (incremental upsert refresh) tiếp theo."
+    },
+    {
+      "id": 86,
+      "question": "What is Data Cloud's primary value to customers?",
+      "choices": {
+        "A": "To provide a unified view of a customer and their related data",
+        "B": "To create personalized campaigns by listening, understanding, and acting on customer behavior",
+        "C": "To connect all systems with a golden record",
+        "D": "To create a single source of truth for all anonymous data"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giá trị cốt lõi và quan trọng nhất của Salesforce Data Cloud mang lại cho doanh nghiệp là cung cấp một góc nhìn hợp nhất 360 độ về khách hàng (Unified View) cùng toàn bộ các dữ liệu hành vi và tương tác liên quan của họ."
+    },
+    {
+      "id": 87,
+      "question": "A customer has a requirement to receive a notification whenever an activation fails for a particular segment.\nWhich feature should the consultant use to solution for this use case?",
+      "choices": {
+        "A": "Activation alert",
+        "B": "Dashboard",
+        "C": "Flow",
+        "D": "Report"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tự động nhận cảnh báo bất cứ khi nào tiến trình kích hoạt phân khúc gặp sự cố thất bại, nhà tư vấn nên cấu hình tính năng Cảnh báo kích hoạt (Activation Alert) tích hợp sẵn trong Data Cloud."
+    },
+    {
+      "id": 88,
+      "question": "Cumulus Financial (CF) wants to target loyal and engaged customers. When a platinum tier customer visits their investment pages more than three times in a 24-hour period, CF wants to immediately send an email that offers a private consultation.\nWhat should a consultant recommend for this business requirement?",
+      "choices": {
+        "A": "Streaming insight with a data action into a journey in Marketing Cloud Engagement",
+        "B": "Standard segment with activation into Marketing Cloud Engagement",
+        "C": "Calculated insight with a date action to a Marketing Cloud Engagement transactional email",
+        "D": "Rapid segment to a data action journey in Marketing Cloud Engagement"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để gửi email ưu đãi ngay lập tức khi phát hiện khách hàng hạng Platinum truy cập trang đầu tư quá 3 lần trong vòng 24 giờ, giải pháp tối ưu là cấu hình tính năng Phân tích luồng (Streaming Insight) kết hợp với Hành động dữ liệu (Data Action) để kích hoạt ngay một hành trình (journey) trong Marketing Cloud Engagement."
+    },
+    {
+      "id": 89,
+      "question": "Northern Trail Outfitters uploads new customer data to an Amazon S3 Bucket on a daily basis to be ingested in Data Cloud. Based on this, a calculated insight is created that shows the total spend per customer in the last 30 days.\nIn which sequence should each process be run to ensure that freshly imported data is ready and available to use for any segment?",
+      "choices": {
+        "A": "Refresh Data Stream > Calculated Insight > Identity Resolution",
+        "B": "Refresh Data Stream > Identity Resolution > Calculated Insight",
+        "C": "Identity Resolution > Refresh Data Stream > Calculated Insight",
+        "D": "Calculated Insight > Refresh Data Stream > Identity Resolution"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo các phân khúc luôn có dữ liệu Spend mới nhất đã được tính toán đầy đủ, quy trình vận hành tuần tự bắt buộc phải là: Làm mới luồng dữ liệu (Refresh Data Stream) để nạp dữ liệu mới -> Chạy Phân giải thực thể (Identity Resolution) để gộp danh tính -> Chạy Phân tích tính toán (Calculated Insight) trên dữ liệu đã gộp để cập nhật Spend."
+    },
+    {
+      "id": 90,
+      "question": "Northern Trail Outfitters (NTO) is getting ready to start ingesting its CRM data into Data Cloud.\nWhile setting up the connector, which type of refresh should NTO expect when the data stream is deployed for the first time?",
+      "choices": {
+        "A": "Full refresh",
+        "B": "Increment refresh",
+        "C": "Partial refresh",
+        "D": "Manual refresh"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi cấu hình và kích hoạt triển khai luồng dữ liệu (Data Stream) từ CRM lần đầu tiên, Data Cloud sẽ luôn thực hiện chế độ nạp đầy đủ (Full Refresh) để lấy toàn bộ dữ liệu lịch sử hiện có sang."
+    },
+    {
+      "id": 91,
+      "question": "A user needs permissions to access Data Cloud to create, manage, and activate segments. However, the user should not be allowed to create reports or manage data sources.\nWhich permission set should the consultant assign?",
+      "choices": {
+        "A": "Data Cloud Marketing Specialist",
+        "B": "Data Cloud Data Aware Specialist",
+        "C": "Data Cloud User",
+        "D": "Data Cloud Marketing Manager"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để cấp quyền cho một nhân viên tiếp thị chỉ thực hiện các công việc tạo, quản lý và kích hoạt phân khúc mà không được phép tạo báo cáo hay cấu hình nguồn dữ liệu, bộ quyền tối thiểu phù hợp nhất là Data Cloud Marketing Specialist."
+    },
+    {
+      "id": 92,
+      "question": "A consultant at Northern Trail Outfitters is attempting to ingest a field from the Contact object in Salesforce CRM that contains both yyyy-mm-dd and yyyy-mm-dd hh:mm:ss values. The target field is set to Date datatype.\nWhich statement is true in this situation?",
+      "choices": {
+        "A": "The target field will throw an error and store null values.",
+        "B": "The target field will only hold the date part and ignore the time part.",
+        "C": "The target field will be able to hold both types of values.",
+        "D": "The target field will only hold the time part and ignore the date part."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi nạp một trường chứa cả giá trị chỉ có ngày (yyyy-mm-dd) và giá trị chứa cả giờ (yyyy-mm-dd hh:mm:ss) vào một trường đích có kiểu dữ liệu là Date (chỉ lưu ngày) trong Data Cloud, hệ thống sẽ chỉ giữ lại phần ngày và tự động loại bỏ phần thông tin thời gian đi kèm."
+    },
+    {
+      "id": 93,
+      "question": "A Data Cloud consultant is evaluating the initial phase of the Data Cloud lifecycle for a company.\nWhich action is essential to effectively begin the Data Cloud lifecycle?",
+      "choices": {
+        "A": "Use calculated insights to determine the benefits of Data Cloud for this company.",
+        "B": "Migrate the existing data into the Customer 360 Data Model.",
+        "C": "Identify use cases and the required data sources and data quality.",
+        "D": "Analyze and logically partition the data into data spaces."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hành động đầu tiên và cốt lõi nhất để bắt đầu chu kỳ dự án Data Cloud một cách hiệu quả là xác định rõ ràng các bài toán nghiệp vụ (use cases), các nguồn dữ liệu cần thiết và đánh giá chất lượng nguồn dữ liệu đó."
+    },
+    {
+      "id": 94,
+      "question": "A finance company that uses Data Cloud wants to simplify how its users can view all the various channels a customer engages with.\nWhich feature should the consultant recommend to meet this requirement?",
+      "choices": {
+        "A": "Use Data Cloud to ingest data from various available data sources.",
+        "B": "Use calculated insights to determine when and how to engage with various customers.",
+        "C": "Create segments based on the ingested data and insights to activate in Marketing Cloud.",
+        "D": "Use Data Cloud to connect with analytic tools, like Tableau."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đơn giản hóa và hỗ trợ trực quan hóa toàn bộ các kênh tương tác của khách hàng cho người dùng khai thác, nhà tư vấn nên đề xuất kết nối dữ liệu từ Data Cloud sang các công cụ phân tích chuyên sâu như Tableau."
+    },
+    {
+      "id": 95,
+      "question": "Which functionality does Data Cloud offer to improve customer support interactions when a customer is working with an agent?",
+      "choices": {
+        "A": "Real-time data integration",
+        "B": "Enhanced reporting tools",
+        "C": "Predictive troubleshooting",
+        "D": "Automated customer service replies"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Data Cloud hỗ trợ cải thiện tương tác hỗ trợ khách hàng bằng cách tích hợp dữ liệu thời gian thực (Real-time data integration) giúp hiển thị ngay tức khắc các thông tin giao dịch hoặc sự cố mới nhất cho nhân viên tổng đài khi họ đang đàm thoại."
+    },
+    {
+      "id": 96,
+      "question": "A consultant is connecting sales order data to Data Cloud and considers whether to use the Profile, Engagement, or Other categories to map the DLO. The consultant chooses to map the DLO called Order-Headers to the Sales Order MO using the Engagement category.\nWhat is the impact of this action on future mappings?",
+      "choices": {
+        "A": "A DLO with category Engagement can be mapped to any DMO using ether Profile, Engagement, or Other categories.",
+        "B": "Sales Order DMO gets assigned to both the Profile and Engagement categories when mapping a Profile DLO.",
+        "C": "Only Engagement category DLOs can be mapped to the Sales Order DMO. Sales Order gets assigned to the Engagement Category.",
+        "D": "When mapping a Profile DLO to the Sales Order DMO, the category gets updated to Profile."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi ánh xạ một đối tượng hồ chứa dữ liệu (DLO) thuộc danh mục Engagement vào đối tượng mô hình dữ liệu Sales Order DMO, hệ thống sẽ tự động chỉ định Sales Order DMO đó vào danh mục Engagement. Về sau, chỉ các DLOs có cùng danh mục Engagement mới có thể tiếp tục ánh xạ vào Sales Order DMO này."
+    },
+    {
+      "id": 97,
+      "question": "What is the role of artificial intelligence (AI) in Data Cloud?",
+      "choices": {
+        "A": "Enhancing customer interactions through insights and predictions",
+        "B": "Creating dynamic data-driven management dashboards",
+        "C": "Automating data validation",
+        "D": "Generating email templates for use cases"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Vai trò chính của Trí tuệ nhân tạo (AI) trong nền tảng Data Cloud là phân tích dữ liệu hành vi để đưa ra các dự đoán và chỉ số phân tích chuyên sâu nhằm nâng cao chất lượng các tương tác cá nhân hóa với khách hàng."
+    },
+    {
+      "id": 98,
+      "question": "The recruiting team at Cumulus Financial wants to Identity which candidates have browsed the jobs page on its website at least twice within the last 24 hours. They want the Information about these candidates to be available for segmentation in Data Cloud and the candidates added to their recruiting system.\nWhich feature should a consultant recommend to achieve this goal?",
+      "choices": {
+        "A": "Batch data transform",
+        "B": "Streaming data transform",
+        "C": "Calculated insight",
+        "D": "Steaming insight"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để phát hiện và lọc ra danh sách các ứng viên truy cập trang tuyển dụng ít nhất 2 lần trong vòng 24 giờ qua theo thời gian thực để đưa vào phân khúc và đẩy sang hệ thống tuyển dụng, giải pháp phù hợp nhất là sử dụng tính năng Phân tích luồng (Streaming Insight)."
+    },
+    {
+      "id": 99,
+      "question": "An automotive dealership wants to implement Data Cloud.\nWhat is a use case for Data Cloud’s capabilities?",
+      "choices": {
+        "A": "Implement a full archive solution with version management.",
+        "B": "Ingest customer interaction across different touch points, harmonize, and build a data model for analytical reporting.",
+        "C": "Build a source of truth for consent management across all unified individuals.",
+        "D": "Use browser cookies to track visitor activity on the website and display personalized recommendations."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Một kịch bản ứng dụng điển hình của Data Cloud đối với đại lý ô tô là nạp toàn bộ các điểm tương tác của khách hàng từ nhiều kênh tiếp xúc khác nhau, đồng bộ chuẩn hóa dữ liệu đó và xây dựng mô hình dữ liệu khách hàng hợp nhất để phục vụ cho việc phân tích báo cáo nâng cao."
+    },
+    {
+      "id": 100,
+      "question": "A financial services firm specializing in wealth management contacts a Data Cloud consultant with an identity resolution request. The company wants to enhance its strategy to better manage individual client profiles within family portfolios.\nFamily members often share addresses and sometimes phone numbers but have distinct investment preferences and financial goals. The firm aims to avoid blending Individual family profiles into a single entity to maintain personalized service and accurate financial advice.\nWhich Identity resolution strategy should the consultant put in place?",
+      "choices": {
+        "A": "Use multiple contact points without individual attributes in the match rules.",
+        "B": "Use a more restrictive design approach to ensure the match rules perform as desired.",
+        "C": "Configure a single match rule with a single connected contact point based an address.",
+        "D": "Configure a single match rule based on a custom identifier."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để quản lý hồ sơ của các thành viên trong cùng gia đình (thường chia sẻ chung địa chỉ, số điện thoại) một cách riêng biệt mà không bị gộp nhầm thành một khách hàng duy nhất, nhà tư vấn nên cấu hình bộ quy tắc so khớp (match rules) chặt chẽ hơn (ví dụ: yêu cầu khớp chính xác cả họ tên đầy đủ thay vì chỉ khớp địa chỉ hoặc số điện thoại)."
+    },
+    {
+      "id": 101,
+      "question": "A company is seeking advice from a consultant on how to address the challenge of having multiple leads and contacts in Salesforce that share the same email address. The consultant wants to provide a detailed and comprehensive explanation on how Data Cloud can be leveraged to effectively solve this issue.\nWhat should the consultant highlight to address this company’s business challenge?",
+      "choices": {
+        "A": "Identity Resolution",
+        "B": "Data Lake Objects",
+        "C": "Calculated Insights",
+        "D": "Data Bundles"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để giải quyết vấn đề nhiều bản ghi leads và contacts dùng chung một địa chỉ email trong Salesforce CRM, Data Architect/Consultant nên đề xuất sử dụng tính năng Phân giải Thực thể (Identity Resolution) để hợp nhất hồ sơ khách hàng 360 độ."
+    },
+    {
+      "id": 102,
+      "question": "What is a key functionality of Data Cloud?",
+      "choices": {
+        "A": "To build insights on unified profiles",
+        "B": "To create a master data management (MDM) strategy",
+        "C": "To give a persistent ID for unified profiles",
+        "D": "To help users build a heat map using their data"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Một trong những chức năng cốt lõi của Salesforce Data Cloud là cho phép người dùng xây dựng các chỉ số phân tích tính toán (Calculated Insights) trên các hồ sơ khách hàng hợp nhất (unified profiles)."
+    },
+    {
+      "id": 103,
+      "question": "A consultant is preparing to Implement Data Cloud.\nWhich ethic should the consultant adhere to regarding customer data?",
+      "choices": {
+        "A": "Map sensitive data to the same DMO for ease of deletion.",
+        "B": "Allow senior leaders in the firm to access customer data for audit purposes.",
+        "C": "Carefully consider asking for sensitive data such as age, gender, or ethnicity.",
+        "D": "Collect and use all of the data to create more personalized experiences."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Về mặt đạo đức sử dụng dữ liệu khách hàng, nhà tư vấn cần đặc biệt cân nhắc kỹ lưỡng và thận trọng trước khi yêu cầu thu thập các thông tin nhạy cảm như độ tuổi, giới tính, hay sắc tộc trừ khi thực sự cần thiết cho hoạt động nghiệp vụ được khách hàng cho phép."
+    },
+    {
+      "id": 104,
+      "question": "Cumulus Financial segregates its sales CRM data based on Region for its Data Cloud users. Multiple data spaces are configured: a default space and two additional spaces tailored for EMEA and APAC regions.\nEMEA sales reps who need temporary access to visualize data for both regions say that they cannot visualize APAC data. APAC sales reps can visualize the corresponding segmented data.\nWhich statement describes the cause of this issue?",
+      "choices": {
+        "A": "The EMEA sales reps have not been assigned to the permission set associated with the APAC data space.",
+        "B": "The EMEA sales reps have not been assigned to the profile associated with the APAC data space.",
+        "C": "The APAC data space is not associated with any profile.",
+        "D": "The APAC data space is not associated with any permission set."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi nhân viên kinh doanh của EMEA không thể xem dữ liệu phân khúc của APAC dù đã được cấu hình không gian dữ liệu (Data Spaces) riêng biệt, nguyên nhân là do tài khoản của họ chưa được gán bộ quyền (permission set) liên kết với không gian dữ liệu APAC đó."
+    },
+    {
+      "id": 105,
+      "question": "A customer has a Master Customer table from their CRM to ingest into Data Cloud. The table contains a name and primary email address, along with other personally identifiable information (PII).\nHow should the fields be mapped to support identity resolution?",
+      "choices": {
+        "A": "Create a new custom object with fields that directly match the incoming table.",
+        "B": "Map all fields to the Individual object, adding a custom field for the email address.",
+        "C": "Map name to the Individual object and email address to the Contact Point Email object.",
+        "D": "Map all fields to the Customer object."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để hỗ trợ tốt nhất cho quy trình phân giải thực thể (identity resolution), khi nạp bảng dữ liệu khách hàng CRM, thông tin họ tên nên được ánh xạ vào đối tượng Individual DMO, còn thông tin địa chỉ email cần được ánh xạ vào đối tượng Contact Point Email DMO."
+    },
+    {
+      "id": 106,
+      "question": "What is the primary purpose of Data Cloud?",
+      "choices": {
+        "A": "Integrating and unifying customer data",
+        "B": "Managing sales cycles and opportunities",
+        "C": "Analyzing marketing data results",
+        "D": "Providing a golden record of a customer"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mục đích cốt lõi và quan trọng nhất của Salesforce Data Cloud là tích hợp và hợp nhất dữ liệu khách hàng từ nhiều nguồn phân mảnh khác nhau về một nơi duy nhất."
+    },
+    {
+      "id": 107,
+      "question": "How does Data Cloud ensure high availability and fault tolerance for customer data?",
+      "choices": {
+        "A": "By distributing data across multiple regions and data centers",
+        "B": "By limiting data access to essential personnel",
+        "C": "By implementing automatic data recovery procedures",
+        "D": "By using a data center with robust backups"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để đảm bảo tính sẵn sàng cao (high availability) và khả năng chống lỗi (fault tolerance), Data Cloud phân phối và lưu trữ dữ liệu của khách hàng trên nhiều khu vực vật lý và trung tâm dữ liệu (data centers) khác nhau."
+    },
+    {
+      "id": 108,
+      "question": "A customer notices that their consolidation rate is low across their account unification. They have mapped Account to the Individual and Contact Point Email DMOs.\nWhat should they do to increase their consolidation rate?",
+      "choices": {
+        "A": "Change reconciliation rules to Most Occurring.",
+        "B": "Update their account address details in the data source.",
+        "C": "Increase the number of matching rules.",
+        "D": "Disable the individual identity ruleset."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cải thiện tỷ lệ hợp nhất hồ sơ (consolidation rate) khi tỷ lệ này đang quá thấp do quy tắc khớp lỏng lẻo, nhà tư vấn nên đề xuất tăng số lượng quy tắc khớp (matching rules) trong cấu hình Identity Resolution ruleset."
+    },
+    {
+      "id": 109,
+      "question": "How should a Data Cloud consultant successfully apply consent during segmentation?",
+      "choices": {
+        "A": "Include the Unified Profile during segmentation for any applicable channels of engagement.",
+        "B": "Include Party Identification for any applicable channels of engagement in the filter criteria for each segment.",
+        "C": "Include the Consent Status for any applicable channels of engagement in the filter criteria for each segment.",
+        "D": "Include the Consent Status from the golden record during activation for any applicable channels of engagement."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để áp dụng đúng sự chấp thuận liên hệ (consent) của khách hàng khi xây dựng các phân khúc, nhà tư vấn nên đưa trực tiếp trạng thái chấp thuận (Consent Status) tương ứng với từng kênh liên lạc làm tiêu chí lọc (filter criteria) cho phân khúc đó."
+    },
+    {
+      "id": 110,
+      "question": "A retail customer wants to bring customer data from different sources and wants to take advantage of identity resolution so that it can be used in segmentation.\nOn which entity should this be segmented for activation membership?",
+      "choices": {
+        "A": "Unified Contact",
+        "B": "Subscriber",
+        "C": "Unified Individual",
+        "D": "Individual"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tận dụng tối đa sức mạnh của phân giải thực thể khi tạo phân khúc khách hàng từ nhiều nguồn khác nhau, đối tượng được chọn làm thành viên kích hoạt (activation membership) phải là Unified Individual (Cá nhân Hợp nhất)."
+    },
+    {
+      "id": 111,
+      "question": "To import campaign members into a campaign in Salesforce CRM, a user wants to export the segment to Amazon S3. The resulting file needs to include the Salesforce CRM Campaign ID in the name.\nWhat are two ways to achieve this outcome? (Choose two.)",
+      "choices": {
+        "A": "Hard code the campaign identifier as a new attribute in the campaign activation.",
+        "B": "Include campaign identifier in the filename specification.",
+        "C": "Include campaign identifier in the segment name.",
+        "D": "Include campaign identifier in the activation name."
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để xuất tệp dữ liệu phân khúc sang Amazon S3 có tên chứa sẵn mã chiến dịch Salesforce (Campaign ID), nhà tư vấn có thể:\n- Đặt tên tệp xuất có chứa Campaign ID (B).\n- Đặt tên cho cấu phần kích hoạt (Activation Name) có chứa Campaign ID (D)."
+    },
+    {
+      "id": 112,
+      "question": "If a data source does not have a field that can be designated as a primary key, what should the consultant do?",
+      "choices": {
+        "A": "Use the default primary key recommended by Data Cloud.",
+        "B": "Create a composite key by combining two or more source fields through a formula field.",
+        "C": "Select a field as a primary key and then add a key qualifier.",
+        "D": "Remove duplicates from the data source and then select a primary key."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Nếu nguồn dữ liệu nạp vào không có sẵn trường làm khóa chính (Primary Key), nhà tư vấn nên tạo một khóa tổng hợp (Composite Key) bằng cách kết hợp hai hoặc nhiều trường nguồn thông qua việc cấu hình một trường công thức (Formula Field)."
+    },
+    {
+      "id": 113,
+      "question": "What are the two minimum requirements needed when using the Visual Insights Builder to create a calculated insight? (Choose two.)",
+      "choices": {
+        "A": "A WHERE clause",
+        "B": "At least two objects to join",
+        "C": "At least one dimension",
+        "D": "At least one measure"
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Hai yêu cầu tối thiểu bắt buộc phải có khi sử dụng Visual Insights Builder để xây dựng một Calculated Insight là:\n- Chọn ít nhất một Dimension (chiều thông tin) (C).\n- Chọn ít nhất một Measure (chỉ số đo lường) (D)."
+    },
+    {
+      "id": 114,
+      "question": "A consultant is helping a beauty company ingest its profile data into Data Cloud. The company's source data includes several fields, such as eye color, skin type, and hair color, that are not fields in the standard Individual data model object (DMO).\nWhat should the consultant recommend to map this data to be used for both segmentation and identity resolution?",
+      "choices": {
+        "A": "Create a custom DMO with only the additional fields and map it to the standard Individual DMO.",
+        "B": "Duplicate the standard Individual DMO and add the additional fields.",
+        "C": "Create custom fields on the standard Individual DMO.",
+        "D": "Create a custom DMO from scratch that has all fields that are needed."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi nạp các trường thông tin đặc thù (như màu mắt, màu tóc) không có sẵn trong đối tượng tiêu chuẩn Individual DMO, giải pháp chuẩn trong Data Cloud là tạo các trường tùy chỉnh (Custom Fields) trực tiếp trên đối tượng tiêu chuẩn Individual DMO đó."
+    },
+    {
+      "id": 115,
+      "question": "A Data Cloud customer wants to adjust their identity resolution rules to increase their accuracy of matches. Rather than matching on email address, they want to review a rule that joins their CRM Contacts with their Marketing Contacts, where both use the CRM ID as their primary key.\nWhich two steps should the consultant take to address this new use case? (Choose two.)",
+      "choices": {
+        "A": "Create a matching rule based on party identification that matches on CRM ID as the party identification name.",
+        "B": "Map the primary key from the two systems to party identification, using CRM ID as the identification name for individuals coming from the CRM, and Marketing ID as the identification name for individuals coming from the marketing platform.",
+        "C": "Create a custom matching rule for an exact match on the Individual ID attribute.",
+        "D": "Map the primary key from the two systems to Party Identification, using CRM ID as the identification name for both."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để cấu hình quy tắc so khớp Identity Resolution dựa trên trường khóa chính CRM ID thay vì email, nhà tư vấn cần:\n- Ánh xạ trường khóa chính của cả hai hệ thống CRM và Marketing vào trường Party Identification, chọn tên định danh là CRM ID cho cả hai nguồn (D).\n- Tạo một quy tắc khớp (matching rule) dựa trên Party Identification để so khớp theo CRM ID (A)."
+    },
+    {
+      "id": 116,
+      "question": "Northern Trail Outfitters (NTO) wants to send a promotional campaign for customers that have purchased within the past 6 months. The consultant created a segment to meet this requirement.\nNow, NTO brings an additional requirement to suppress customers who have made purchases within the last week.\nWhat should the consultant use to remove the recent customers?",
+      "choices": {
+        "A": "Related attributes",
+        "B": "Streaming Insights",
+        "C": "Batch transforms",
+        "D": "Segmentation exclude rules"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để loại trừ (suppress) nhóm khách hàng đã mua hàng trong vòng một tuần qua ra khỏi phân khúc khách hàng mua hàng trong 6 tháng, nhà tư vấn nên cấu hình các Quy tắc loại trừ phân khúc (Segmentation Exclude Rules)."
+    },
+    {
+      "id": 117,
+      "question": "What should an organization use to stream inventory levels from an inventory management system into Data Cloud in a fast and scalable, near-real-time way?",
+      "choices": {
+        "A": "Ingestion API",
+        "B": "Cloud Storage Connector",
+        "C": "Marketing Cloud Personalization Connector",
+        "D": "Commerce Cloud Connector"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để đẩy dữ liệu mức tồn kho từ hệ thống quản lý kho vào Data Cloud một cách nhanh chóng, có khả năng mở rộng cao và gần như thời gian thực (near-real-time), nhà tư vấn nên sử dụng Ingestion API."
+    },
+    {
+      "id": 118,
+      "question": "A user has built a segment in Data Cloud and is in the process of creating an activation. When selecting related attributes, they cannot find a specific set of attributes they know to be related to the individual.\nWhich statement explains why these attributes are not available?",
+      "choices": {
+        "A": "The segment is not segmenting on profile data.",
+        "B": "The desired attributes reside on different related paths.",
+        "C": "The attributes are being used in another activation.",
+        "D": "Activations can only include 1-to-l attributes"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi tạo kích hoạt phân khúc và không thể tìm thấy một nhóm thuộc tính liên quan cụ thể của cá nhân, nguyên nhân là do các thuộc tính mong muốn đó đang nằm trên các đường dẫn quan hệ (related paths) khác nhau và chưa được cấu hình liên kết chính xác."
+    },
+    {
+      "id": 119,
+      "question": "When creating a segment on an individual, what is the result of using two separate containers linked by an AND as shown below?",
+      "choices": {
+        "A": "Individuals who purchased at least one red shoes' as a single line item in a purchase",
+        "B": "Individual who purchased at least one of any 'red' product and also purchased at least one pair of 'shoes'",
+        "C": "Individuals who made a purchase of at least one 'red shoes' and nothing else",
+        "D": "Individuals who purchased at least one of any 'red' product or purchased at least one pair of 'shoes'"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi thiết lập bộ lọc phân khúc sử dụng hai container riêng biệt liên kết bằng điều kiện AND (như một container chứa màu sắc 'red' và container kia chứa loại 'shoes'), kết quả trả về sẽ là các cá nhân đã từng mua ít nhất một sản phẩm màu đỏ bất kỳ VÀ đồng thời cũng từng mua ít nhất một sản phẩm là giày (không bắt buộc đôi giày đó phải có màu đỏ)."
+    },
+    {
+      "id": 120,
+      "question": "The leadership team at Cumulus Financial has determined that customers who deposited more than $250,000 in the last five years and are not using advisory services will be the central focus for all new campaigns in the next year.\nWhich features support this use case?",
+      "choices": {
+        "A": "Streaming insight and segment",
+        "B": "Streaming insight and data action",
+        "C": "Calculated insight and data action",
+        "D": "Calculated insight and segment"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để nhắm mục tiêu đến các khách hàng đã gửi trên 250.000 USD trong 5 năm qua và không sử dụng dịch vụ tư vấn, hai cấu phần cần thiết kế là: Calculated Insight để tính toán số tiền tích lũy và Phân khúc (Segment) để lọc đối tượng dựa trên kết quả insight đó."
+    },
+    {
+      "id": 121,
+      "question": "Which two requirements must be met for a calculated insight to appear in the segmentation canvas? (Choose two.)",
+      "choices": {
+        "A": "The calculated insight must contain a dimension including the Individual or Unified Individual Id.",
+        "B": "The metrics of the calculated insights must only contain numeric values.",
+        "C": "The primary key of the segmented table must be a metric in the calculated insight.",
+        "D": "The primary key of the segmented table must be a dimension in the calculated insight."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để một chỉ số tính toán (Calculated Insight) có thể hiển thị và sử dụng được trên giao diện Canvas Phân khúc, hai điều kiện bắt buộc là:\n- Chỉ số phải chứa một Dimension là Individual ID hoặc Unified Individual ID (A).\n- Khóa chính của bảng được phân khúc phải là một Dimension trong Calculated Insight (D)."
+    },
+    {
+      "id": 122,
+      "question": "Which permission setting should a consultant check if the custom Salesforce CRM object is not available in New Data Stream configuration?",
+      "choices": {
+        "A": "Confirm the View All object permission is enabled in the source Salesforce CRM org.",
+        "B": "Confirm the Create Object permission is enabled in the Data Cloud org.",
+        "C": "Confirm the Ingest Object permission is enabled in the Salesforce CRM org.",
+        "D": "Confirm that the Modify Object permission is enabled in the Data Cloud org."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nếu một đối tượng tùy chỉnh (Custom Object) trong Salesforce CRM không hiển thị khi cấu hình luồng dữ liệu mới trong Data Cloud, nhà tư vấn nên kiểm tra quyền View All đối với đối tượng đó trên tài khoản người dùng tích hợp tại tổ chức CRM nguồn."
+    },
+    {
+      "id": 123,
+      "question": "Luxury Retailers created a segment targeting high value customers that it activates through Marketing Cloud for email communication. The company notices that the activated count is smaller than the segment count.What is a reason for this?",
+      "choices": {
+        "A": "Marketing Cloud activations only activate those individuals that already exist in Marketing Cloud. They do not allow activation of new records.",
+        "B": "Data Cloud enforces the presence of Contact Point for Marketing Cloud activations. If the individual does not have a related Contact Point, it will not be activated.",
+        "C": "Marketing Cloud activations apply a frequency cap and limit the number of records that can be sent in an activation.",
+        "D": "Marketing Cloud activations automatically suppress individuals who are unengaged and have not opened or clicked on an email in the last six months."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi thực hiện kích hoạt phân khúc sang Marketing Cloud, Data Cloud bắt buộc phải có thông tin điểm liên hệ (Contact Point) tương ứng (như địa chỉ email). Nếu một cá nhân trong phân khúc không có điểm liên hệ hợp lệ, bản ghi đó sẽ bị loại bỏ khỏi danh sách kích hoạt."
+    },
+    {
+      "id": 124,
+      "question": "A consultant is working in a customer's Data Cloud org and is asked to delete the existing identity resolution ruleset.Which two impacts should the consultant communicate as a result of this action? (Choose two.)",
+      "choices": {
+        "A": "All individual data will be removed.",
+        "B": "All source profile data will be removed.",
+        "C": "Unified customer data associated with this ruleset will be removed.",
+        "D": "Dependencies on data model objects will be removed."
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Khi thực hiện xóa một bộ quy tắc phân giải thực thể (Identity Resolution ruleset) đang hoạt động, hai ảnh hưởng chính xảy ra là:\n- Toàn bộ dữ liệu khách hàng hợp nhất (Unified customer data) được tạo bởi ruleset đó sẽ bị xóa (C).\n- Các mối quan hệ phụ thuộc cấu hình trên đối tượng mô hình dữ liệu (DMO) liên quan cũng bị gỡ bỏ (D)."
+    },
+    {
+      "id": 125,
+      "question": "Cumulus Financial created a segment called Multiple Investments that contains individuals who have invested in two or more mutual funds.The company plans to send an email to this segment regarding a new mutual fund offering, and wants to personalize the email content with information about each customer's current mutual fund investments.How should the Data Cloud consultant configure this activation?",
+      "choices": {
+        "A": "Choose the Multiple Investments segment, choose the Email contact point, and add related attribute Fund Type.",
+        "B": "Choose the Multiple Investments segment, choose the Email contact point, add related attribute Fund Name, and add related attribute filter for Fund Type equal to \"Mutual Fund\".",
+        "C": "Include Fund Name and Fund Type by default for post processing in the target system.",
+        "D": "Include Fund Type equal to \"Mutual Fund\" as a related attribute. Configure an activation based on the new segment with no additional attributes."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cá nhân hóa email gửi cho phân khúc khách hàng đầu tư nhiều quỹ, nhà tư vấn nên chọn phân khúc Multiple Investments, chọn điểm liên hệ Email, thêm thuộc tính liên quan Fund Name (Tên quỹ) và cấu hình bộ lọc cho thuộc tính này với điều kiện Fund Type bằng 'Mutual Fund' để lấy chính xác danh sách các quỹ tương hỗ khách hàng đang sở hữu."
+    },
+    {
+      "id": 126,
+      "question": "Cumulus Financial created a segment called High Investment Balance Customers. This is a foundational segment that includes several segmentation criteria the marketing team should consistently use.Which feature should the consultant suggest the marketing team use to ensure this consistency when creating future, more refined segments?",
+      "choices": {
+        "A": "Package High Investment Balance Customers in a data kit.",
+        "B": "Create new segments using nested segments.",
+        "C": "Create new segments by cloning High Investment Balance Customers.",
+        "D": "Create a High Investment Balance calculated insight."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để sử dụng lại bộ tiêu chuẩn lọc nền tảng của phân khúc High Investment Balance Customers cho các phân khúc chi tiết hơn sau này nhằm đảm bảo tính nhất quán, giải pháp tối ưu là sử dụng tính năng Phân khúc lồng nhau (Nested Segments)."
+    },
+    {
+      "id": 127,
+      "question": "A retailer wants to unify profiles using Loyalty ID which is different than the unique ID of their customers.Which object should the consultant use in identity resolution to perform exact match rules on the Loyalty ID?",
+      "choices": {
+        "A": "Individual object",
+        "B": "Party Identification object",
+        "C": "Loyalty Identification object",
+        "D": "Contact Identification object"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thực hiện các quy tắc khớp chính xác (exact match) trên mã Loyalty ID (vốn khác với mã định danh khách hàng duy nhất), đối tượng phù hợp nhất mà nhà tư vấn cần sử dụng trong identity resolution là đối tượng Party Identification DMO."
+    },
+    {
+      "id": 128,
+      "question": "A user wants to be able to create a multi-dimensional metric to identify unified individual lifetime value (LTV).Which sequence of data model object (DMO) joins is necessary within the calculated insight to enable this calculation?",
+      "choices": {
+        "A": "Unified Individual > Individual > Sales Order",
+        "B": "Unified Individual > Unified Link Individual > Sales Order",
+        "C": "Sales Order > Unified Individual",
+        "D": "Sales Order > Individual > Unified Individual"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tính toán giá trị trọn đời (LTV) cho cá nhân hợp nhất, chuỗi liên kết các đối tượng mô hình dữ liệu (DMO joins) bắt buộc trong Calculated Insight phải là: Unified Individual -> Unified Link Individual (đối tượng liên kết trung gian) -> Sales Order."
+    },
+    {
+      "id": 129,
+      "question": "A customer has a custom Customer_Email_c object related to the standard Contact object in Salesforce CRM. This custom object stores the email address for a Contact that they want to use for activation.To which data entity is this mapped?",
+      "choices": {
+        "A": "Custom Customer_Email_c object",
+        "B": "Individual",
+        "C": "Contact",
+        "D": "Contact Point Email"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đối tượng tùy chỉnh Customer_Email_c từ CRM chứa địa chỉ email của Contact phục vụ kích hoạt chiến dịch tiếp thị nên được ánh xạ sang thực thể tiêu chuẩn Contact Point Email của Data Cloud."
+    },
+    {
+      "id": 130,
+      "question": "A Data Cloud consultant is working with data that is clean and organized. However, the various schemas refer to a person by multiple names — such as user, contact, and subscriber — and need a standard mapping.\nWhich term describes the process of mapping these different schema points into a standard data model?",
+      "choices": {
+        "A": "Unify",
+        "B": "Harmonize",
+        "C": "Transform",
+        "D": "Segment"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Thuật ngữ mô tả quá trình ánh xạ các trường thông tin có tên gọi khác nhau từ các nguồn khác nhau (như user, contact, subscriber) về một mô hình dữ liệu tiêu chuẩn duy nhất trong Data Cloud được gọi là Đồng bộ hóa mô hình dữ liệu (Harmonize)."
+    },
+    {
+      "id": 131,
+      "question": "Northern Trail Outfitters wants to implement Data Cloud and has several use cases in mind.Which two use cases are considered a good fit for Data Cloud? (Choose two.)",
+      "choices": {
+        "A": "To eliminate the need for separate business intelligence and IT data management tools",
+        "B": "To use harmonized data to more accurately understand the customer and business impact",
+        "C": "To ingest and unify data from various sources to reconcile customer identity",
+        "D": "To create and orchestrate cross-channel marketing messages"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Hai bài toán nghiệp vụ phù hợp nhất để ứng dụng Salesforce Data Cloud là:\n- Sử dụng dữ liệu đã đồng bộ chuẩn hóa để thấu hiểu khách hàng và đo lường tác động kinh doanh một cách chính xác (B).\n- Nạp và hợp nhất dữ liệu từ nhiều nguồn khác nhau để phân giải danh tính khách hàng 360 độ (C)."
+    },
+    {
+      "id": 132,
+      "question": "A healthcare client wants to make use of identity resolution, but does not want to risk unifying profiles that may share certain personally identifying information (PII).Which matching rule criteria should a consultant recommend for the most accurate matching results?",
+      "choices": {
+        "A": "Fuzzy First Name, Exact Last Name, and Email",
+        "B": "Party Identification on Patient ID",
+        "C": "Exact Last Name and Email",
+        "D": "Email Address and Phone"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với khách hàng lĩnh vực y tế cần tránh tuyệt đối việc gộp nhầm hồ sơ của các bệnh nhân trong cùng gia đình (dùng chung email, số điện thoại), nhà tư vấn nên khuyến nghị sử dụng quy tắc khớp dựa trên Party Identification đối với Patient ID (Mã bệnh nhân) để đảm bảo độ chính xác tuyệt đối."
+    },
+    {
+      "id": 133,
+      "question": "A customer wants to create segments of users based on their Customer Lifetime Value. However, the source data that will be brought into Data Cloud does not include that key performance indicator (KPI).Which sequence of steps should the consultant follow to achieve this requirement?",
+      "choices": {
+        "A": "Create Calculated Insight > Map Data to Data Model > Ingest Data> Use in Segmentation",
+        "B": "Create Calculated Insight > Ingest Data > Map Data to Data Model> Use in Segmentation",
+        "C": "Ingest Data > Map Data to Data Model > Create Calculated Insight > Use in Segmentation",
+        "D": "Ingest Data > Create Calculated Insight > Map Data to Data Model> Use in Segmentation"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để phân khúc khách hàng theo giá trị trọn đời (LTV) khi nguồn dữ liệu chưa có sẵn chỉ số này, quy trình thực hiện tuần tự là: Nạp dữ liệu thô (Ingest Data) -> Ánh xạ dữ liệu sang mô hình (Map Data to Data Model) -> Tạo chỉ số tính toán Calculated Insight để tính LTV -> Sử dụng chỉ số LTV này trong Phân khúc (Segmentation)."
+    },
+    {
+      "id": 134,
+      "question": "Cloud Kicks wants to be able to build a segment of customers who have visited its website within the previous 7 days.Which filter operator on the EngagementDate field fits this use case?",
+      "choices": {
+        "A": "Last Number of Days",
+        "B": "Is Between",
+        "C": "Greater than Last Number of Days",
+        "D": "Next Number of Days"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để lọc ra nhóm khách hàng đã truy cập website trong vòng 7 ngày qua, toán tử lọc phù hợp nhất cần áp dụng trên trường EngagementDate là 'Last Number of Days' với giá trị là 7."
+    },
+    {
+      "id": 135,
+      "question": "A customer wants to use the transactional data from their data warehouse in Data Cloud. They are only able to export the data via an SFTP site.How should the file be brought into Data Cloud?",
+      "choices": {
+        "A": "Manually import the file using the Data Import Wizard.",
+        "B": "Ingest the file through the Cloud Storage Connector.",
+        "C": "Ingest the file with the SFTP Connector.",
+        "D": "Use Salesforce's Dataloader application to perform a bulk upload from a desktop."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi dữ liệu giao dịch từ kho dữ liệu chỉ có thể kết xuất qua máy chủ SFTP, nhà tư vấn nên cấu hình nạp tệp tin này vào Data Cloud bằng bộ kết nối SFTP Connector có sẵn."
+    },
+    {
+      "id": 136,
+      "question": "Northern Trail Outfitters (NTO) wants to connect their B2C Commerce data with Data Cloud and bring two years of transactional history into Data Cloud.What should NTO use to achieve this?",
+      "choices": {
+        "A": "B2C Commerce Starter Bundles plus a custom extract",
+        "B": "Direct Sales Order entity ingestion",
+        "C": "Direct Sales Product entity ingestion",
+        "D": "B2C Commerce Starter Bundles"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Vì gói dữ liệu B2C Commerce Starter Bundles chỉ hỗ trợ nạp sẵn 30 ngày dữ liệu lịch sử đơn hàng, để mang được đầy đủ 2 năm lịch sử giao dịch vào Data Cloud, doanh nghiệp cần sử dụng kết hợp B2C Commerce Starter Bundles cùng với một quy trình trích xuất dữ liệu tùy chỉnh (custom extract) bên ngoài."
+    },
+    {
+      "id": 137,
+      "question": "A customer has a requirement to be able to view the last time each segment was published within their Data Cloud org.Which two features should the consultant recommend to best address this requirement? (Choose two.)",
+      "choices": {
+        "A": "Report",
+        "B": "Dashboard",
+        "C": "Profile Explorer",
+        "D": "Calculated insights"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Để theo dõi mốc thời gian xuất bản (publish time) gần nhất của mỗi phân khúc trong Data Cloud, hai cấu phần báo cáo đề xuất là sử dụng Reports (Báo cáo) (A) kết hợp Dashboards (Bảng thông tin trực quan) (B)."
+    },
+    {
+      "id": 138,
+      "question": "Which data stream category type should be assigned in order to use the dataset for date and time-based operations in segmentation and calculated insights?",
+      "choices": {
+        "A": "Profile",
+        "B": "Sales Order",
+        "C": "Individual",
+        "D": "Engagement"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 139,
+      "question": "Northern Trail Outfitters unifies individuals in its Data Cloud instance.\nWhich two features can the consultant use to validate the data on a specific unified profile? (Choose two.)",
+      "choices": {
+        "A": "Data Actions",
+        "B": "Profile Explorer",
+        "C": "Identity Resolution",
+        "D": "Query API"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để kiểm tra và xác thực dữ liệu trên một hồ sơ khách hàng hợp nhất (unified profile) cụ thể, nhà tư vấn có thể dùng:\n- Profile Explorer (B) để xem trực quan các điểm liên hệ liên kết.\n- Query API (D) để truy vấn cấu trúc dữ liệu của profile đó."
+    },
+    {
+      "id": 140,
+      "question": "A consultant needs to create a data graph based on several DLOs.\nWhich step should the consultant take to make this work?",
+      "choices": {
+        "A": "Map the DLOs to DMOs and use these in the data graph.",
+        "B": "Use a data action to update the data graph with the DLO data.",
+        "C": "Map the DLOs directly to a data graph.",
+        "D": "Batch transform the DLOs to multiple DMOs and activate these with the data graph."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để xây dựng một đồ thị dữ liệu (Data Graph) dựa trên thông tin từ nhiều đối tượng hồ chứa dữ liệu (DLOs), bước thực hiện bắt buộc là ánh xạ các DLOs này sang các đối tượng mô hình dữ liệu (DMOs) tương ứng trước, sau đó sử dụng các DMOs này để xây dựng Data Graph."
+    },
+    {
+      "id": 141,
+      "question": "What is a reason to create a formula when ingesting a data stream?",
+      "choices": {
+        "A": "To remove duplicate rows of data from the data stream",
+        "B": "To add a unique external identifier to an existing ruleset",
+        "C": "To concatenate files so they are ingested in the correct sequence",
+        "D": "To transform a datetime field into a date field for use in data mapping"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Một lý do phổ biến để tạo trường công thức (Formula Field) khi nạp luồng dữ liệu (Data Stream) là để chuyển đổi một trường kiểu ngày-giờ (datetime) thành kiểu ngày (date) nhằm mục đích ánh xạ dữ liệu chuẩn xác sang các đối tượng mô hình."
+    },
+    {
+      "id": 142,
+      "question": "An analyst from Cloud Kicks needs to get quick insights to determine the average sales per day during the past week.\nWhat should a consultant recommend?",
+      "choices": {
+        "A": "Segment activation to Azure",
+        "B": "Lightning web component utilizing Query API",
+        "C": "Salesforce reports",
+        "D": "Salesforce flows"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để nhà phân tích có thể nhanh chóng xem báo cáo về doanh số trung bình hàng ngày trong tuần qua, giải pháp nhanh nhất và sẵn có là sử dụng tính năng Báo cáo của Salesforce (Salesforce Reports)."
+    },
+    {
+      "id": 143,
+      "question": "A consultant needs to minimize the difference between a Data Cloud segment population and Marketing Cloud data extension count to determine the true size of segments for campaign planning.\nWhat should the consultant recommend to filter the segments by to accomplish this?",
+      "choices": {
+        "A": "User preferences for marketing outreach",
+        "B": "Geographical divisions",
+        "C": "Business units",
+        "D": "Marketing Cloud Journeys"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để giảm thiểu sự chênh lệch số lượng bản ghi giữa phân khúc Data Cloud và Marketing Cloud Data Extension, nhà tư vấn nên cấu hình lọc phân khúc theo các Đơn vị kinh doanh (Business Units) tương ứng để đảm bảo dữ liệu được kích hoạt đúng phạm vi."
+    },
+    {
+      "id": 144,
+      "question": "What is a typical use case for Salesforce Data Cloud?",
+      "choices": {
+        "A": "Data synchronization across the Salesforce ecosystem",
+        "B": "Sending personalized emails at scale",
+        "C": "Data harmonization across multiple platforms",
+        "D": "Storing CRM data on-premises"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Một tình huống sử dụng điển hình và quan trọng nhất của Salesforce Data Cloud là đồng bộ hóa và chuẩn hóa dữ liệu (data harmonization) từ nhiều nền tảng và nguồn dữ liệu khác nhau về một mô hình dữ liệu chung."
+    },
+    {
+      "id": 145,
+      "question": "A marketing manager at Northern Trail Outfitters wants to improve marketing return on investment (ROI) by tapping into insights from Data Cloud Segment Intelligence.\nWhich permission set does a user need to set this up?",
+      "choices": {
+        "A": "Data Cloud Admin",
+        "B": "Data Cloud Marketing Manager",
+        "C": "Data Cloud Data Aware Specialist",
+        "D": "Data Cloud User"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thiết lập cấu hình và khai thác các thông tin phân tích từ Data Cloud Segment Intelligence, tài khoản người dùng cần được gán bộ quyền Data Cloud Marketing Manager."
+    },
+    {
+      "id": 146,
+      "question": "The marketing manager at Cloud Kicks plans to bring in corporate phone numbers for its ac-counts into Data Cloud. They plan to use a custom field with data type set to Phone to store these phone numbers.\nWhich statement is true when ingesting phone numbers?",
+      "choices": {
+        "A": "Data Cloud validates the format of the phone number at the time of ingestion.",
+        "B": "The phone number field should be used as a primary key.",
+        "C": "Text value can be accepted for ingestion into a phone data type field.",
+        "D": "The phone number field can only accept 10-digit values."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi nạp dữ liệu số điện thoại vào một trường kiểu Phone trong Data Cloud, hệ thống vẫn chấp nhận giá trị văn bản (text value) để đảm bảo không bị lỗi luồng nạp, tuy nhiên việc định dạng chuẩn sẽ cần được xử lý sau."
+    },
+    {
+      "id": 147,
+      "question": "Northern Trail Outfitters wants to create a segment with customers that have purchased in the last 24 hours. The segment data must be as up to date as possible.\nWhat should the consultant implement when creating the segment?",
+      "choices": {
+        "A": "Use streaming insights for near real-time segmentation results.",
+        "B": "Use rapid segments with a publish interval of 1 hour.",
+        "C": "Use Einstein segmentation optimization to collect data from the last 24 hours.",
+        "D": "Use standard segment with a publish interval of 30 minutes."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tạo một phân khúc khách hàng mua hàng trong vòng 24 giờ qua với dữ liệu cập nhật liên tục và gần thời gian thực nhất có thể, nhà tư vấn nên sử dụng tính năng phân tích luồng (Streaming Insights) cho phân khúc."
+    }
+  ]
+}

@@ -41,10 +41,7 @@ graph TD
     F --> H
     G --> H
     
-    H --> I["(Vector Database - Pinecone / Milvus)"]
-    
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style I fill:#bbf,stroke:#333,stroke-width:2px
+    H --> I["(Vector Database - Pinecone / Milvus)"]
 ```
 
 ---

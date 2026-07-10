@@ -68,9 +68,10 @@ Trước tháng 12/2020, Amazon S3 chỉ đảm bảo **Eventual Consistency** [
 Từ cuối 2020, S3 chính thức hỗ trợ **Strong Read-After-Write Consistency** (Nhất quán mạnh).
 Để làm được điều này mà không tăng độ trễ (latency), hệ thống Metadata của S3 phải triển khai các thuật toán đồng thuận (Consensus Protocols) kết hợp với các cơ chế Witness node và Time synchronization cực kỳ phức tạp để đảm bảo mọi node trong Metadata Fleet đều đồng ý với phiên bản mới nhất trước khi trả về HTTP `200 OK`. AWS đã gánh vác toàn bộ sự phức tạp (Complexity) thay cho Client.
 
-> [!TIP]
-> **Conditional Writes (Mới ra mắt T8/2024]:** 
-> AWS vừa cung cấp khả năng Conditional Writes (`Put-If-Absent`). Bạn có thể dùng Boto3 để yêu cầu S3 chỉ ghi file nếu file đó chưa tồn tại. Đây là "chén thánh" cho phép Delta Lake và Apache Iceberg thực hiện Optimistic Concurrency Control (OCC) trực tiếp trên S3 mà không cần DynamoDB.
+:::tip
+**Conditional Writes (Mới ra mắt T8/2024]:** 
+AWS vừa cung cấp khả năng Conditional Writes (`Put-If-Absent`). Bạn có thể dùng Boto3 để yêu cầu S3 chỉ ghi file nếu file đó chưa tồn tại. Đây là "chén thánh" cho phép Delta Lake và Apache Iceberg thực hiện Optimistic Concurrency Control (OCC) trực tiếp trên S3 mà không cần DynamoDB.
+:::
 
 **Thực chiến (Code Python/Boto3 cho Conditional Write):**
 ```python

@@ -1,0 +1,2429 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "Which of the following layers of the medallion architecture is most commonly used by data analysts?",
+    "options": {
+      "A": "None of these layers are used by data analysts",
+      "B": "Gold",
+      "C": "All of these layers are used equally by data analysts",
+      "D": "Silver",
+      "E": "Bronze"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tầng Gold trong kiến trúc medallion chứa dữ liệu đã được làm sạch, tổng hợp và chuẩn hóa theo các mô hình phân tích kinh doanh (như star schema), rất phù hợp và thường xuyên được sử dụng nhất bởi các nhà phân tích dữ liệu (data analysts) để xây dựng báo cáo và dashboard.",
+    "references": null
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "Which of the following approaches can be used to connect Databricks to Fivetran for data ingestion?",
+    "options": {
+      "A": "Use Workflows to establish a SQL warehouse (formerly known as a SQL endpoint) for Fivetran to interact with",
+      "B": "Use Delta Live Tables to establish a cluster for Fivetran to interact with",
+      "C": "Use Partner Connect's automated workflow to establish a cluster for Fivetran to interact with",
+      "D": "Use Partner Connect's automated workflow to establish a SQL warehouse (formerly known as a SQL endpoint) for Fivetran to interact with",
+      "E": "Use Workflows to establish a cluster for Fivetran to interact with"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Partner Connect trong Databricks cung cấp quy trình tự động hóa (automated workflow) giúp kết nối nhanh chóng với các công cụ đối tác như Fivetran bằng cách tự động tạo và cấu hình một SQL warehouse để Fivetran có thể kết nối và nạp dữ liệu vào Lakehouse.",
+    "references": null
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "Which of the following describes how Databricks SQL should be used in relation to other business intelligence (BI) tools like Tableau, Power BI, and looker?",
+    "options": {
+      "A": "As an exact substitute with the same level of functionality",
+      "B": "As a substitute with less functionality",
+      "C": "As a complete replacement with additional functionality",
+      "D": "As a complementary tool for professional-grade presentations",
+      "E": "As a complementary tool for quick in-platform BI work"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks SQL được thiết kế bổ trợ (complementary) cho các công cụ BI chuyên sâu khác như Tableau, Power BI hay Looker. Nó giúp thực hiện các công việc BI nhanh chóng ngay trên nền tảng (in-platform) như viết truy vấn SQL nhanh, tạo dashboard đơn giản trước khi chuyển sang các công cụ BI chính thức để trình diễn chuyên nghiệp.",
+    "references": null
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "A data analyst has recently joined a new team that uses Databricks SQL, but the analyst has never used Databricks before. The analyst wants to know where in Databricks SQL they can write and execute SQL queries.On which of the following pages can the analyst write and execute SQL queries?",
+    "options": {
+      "A": "Data page",
+      "B": "Dashboards page",
+      "C": "Queries page",
+      "D": "Alerts page",
+      "E": "SQL Editor page"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trang SQL Editor trong Databricks SQL là nơi chính thức để các nhà phân tích viết, chỉnh sửa và thực thi các câu lệnh SQL truy vấn dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "A data analyst wants to create a dashboard with three main sections: Development, Testing, and Production. They want all three sections on the same dashboard, but they want to clearly designate the sections using text on the dashboard.Which of the following tools can the data analyst use to designate the Development, Testing, and Production sections using text?",
+    "options": {
+      "A": "Separate endpoints for each section",
+      "B": "Separate queries for each section",
+      "C": "Markdown-based text boxes",
+      "D": "Direct text written into the dashboard in editing mode",
+      "E": "Separate color palettes for each section"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Các hộp văn bản (text boxes) trong Dashboard của Databricks SQL hỗ trợ ngôn ngữ đánh dấu Markdown, cho phép người dùng tự do định dạng văn bản (tiêu đề, phân đoạn, danh sách) để phân chia rõ ràng các phân đoạn như Development, Testing và Production.",
+    "references": null
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "A data analyst needs to use the Databricks Lakehouse Platform to quickly create SQL queries and data visualizations. It is a requirement that the compute resources in the platform can be made serverless, and it is expected that data visualizations can be placed within a dashboard.Which of the following Databricks Lakehouse Platform services/capabilities meets all of these requirements?",
+    "options": {
+      "A": "Delta Lake",
+      "B": "Databricks Notebooks",
+      "C": "Tableau",
+      "D": "Databricks Machine Learning",
+      "E": "Databricks SQL"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks SQL đáp ứng đầy đủ các yêu cầu này: cung cấp tài nguyên tính toán serverless (Serverless SQL Warehouses), hỗ trợ viết truy vấn SQL nhanh, tạo trực quan hóa (visualizations) và gộp chúng vào các dashboard.",
+    "references": null
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "Which of the following should data analysts consider when working with personally identifiable information (PII) data?",
+    "options": {
+      "A": "Organization-specific best practices for PII data",
+      "B": "Legal requirements for the area in which the data was collected",
+      "C": "None of these considerations",
+      "D": "Legal requirements for the area in which the analysis is being performed",
+      "E": "All of these considerations"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi làm việc với dữ liệu định danh cá nhân (PII), nhà phân tích dữ liệu cần tuân thủ tất cả các yếu tố: quy định nội bộ của tổ chức (organization-specific best practices), luật pháp tại nơi dữ liệu được thu thập (ví dụ: GDPR, CCPA) cũng như quy định pháp lý tại nơi thực hiện phân tích dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "Delta Lake stores table data as a series of data files, but it also stores a lot of other information.Which of the following is stored alongside data files when using Delta Lake?",
+    "options": {
+      "A": "None of these",
+      "B": "Table metadata, data summary visualizations, and owner account information",
+      "C": "Table metadata",
+      "D": "Data summary visualizations",
+      "E": "Owner account information"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Delta Lake lưu trữ dữ liệu dưới dạng các tệp Parquet và đi kèm với một nhật ký giao dịch (_delta_log) chứa siêu dữ liệu của bảng (table metadata) bao gồm lược đồ (schema), phiên bản bảng, các thống kê phục vụ tối ưu hóa truy vấn.",
+    "references": null
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "Which of the following benefits of using Databricks SQL is provided by Data Explorer?",
+    "options": {
+      "A": "It can be used to run UPDATE queries to update any tables in a database.",
+      "B": "It can be used to view metadata and data, as well as view/change permissions.",
+      "C": "It can be used to produce dashboards that allow data exploration.",
+      "D": "It can be used to make visualizations that can be shared with stakeholders.",
+      "E": "It can be used to connect to third party BI cools."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Data Explorer (hay Catalog Explorer) trong Databricks SQL được sử dụng để khám phá cấu trúc bảng, xem trước dữ liệu và siêu dữ liệu (metadata), đồng thời phân quyền hoặc thay đổi quyền truy cập (permissions) trên các đối tượng dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "A data analyst created and is the owner of the managed table my_ table. They now want to change ownership of the table to a single other user using Data Explorer.Which of the following approaches can the analyst use to complete the task?",
+    "options": {
+      "A": "Edit the Owner field in the table page by removing their own account",
+      "B": "Edit the Owner field in the table page by selecting All Users",
+      "C": "Edit the Owner field in the table page by selecting the new owner's account",
+      "D": "Edit the Owner field in the table page by selecting the Admins group",
+      "E": "Edit the Owner field in the table page by removing all access"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chuyển quyền sở hữu (ownership) của một bảng được quản lý (managed table) thông qua Data Explorer, chủ sở hữu hiện tại có thể nhấp vào trường Owner trên giao diện chi tiết của bảng đó và chọn tài khoản của người sở hữu mới.",
+    "references": null
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "A data analyst has a managed table table_name in database database_name. They would now like to remove the table from the database and all of the data files associated with the table. The rest of the tables in the database must continue to exist.Which of the following commands can the analyst use to complete the task without producing an error?",
+    "options": {
+      "A": "DROP DATABASE database_name;",
+      "B": "DROP TABLE database_name.table_name;",
+      "C": "DELETE TABLE database_name.table_name;",
+      "D": "DELETE TABLE table_name FROM database_name;",
+      "E": "DROP TABLE table_name FROM database_name;"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xóa một bảng được quản lý (managed table) khỏi cơ sở dữ liệu cùng với tất cả các tệp dữ liệu vật lý đi kèm của nó, cú pháp chuẩn trong SQL là `DROP TABLE database_name.table_name;`. Vì đây là managed table nên cả siêu dữ liệu và tệp dữ liệu thực tế đều sẽ bị xóa sạch.",
+    "references": null
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "A data analyst runs the following command:\nSELECT age, country -\nFROM my_table -WHERE age >= 75 AND country = 'canada';Which of the following tables represents the output of the above command?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774296799555-cvyc1wuz.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774296801281-7fj4qlxx.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774296803300-xvrejb8u.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774296808744-dh3k7n2t.png)",
+      "E": "![](https://cdn.examcademy.com/images/questions/1774296810557-n61iv28v.png)"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Câu lệnh SQL `SELECT age, country FROM my_table WHERE age >= 75 AND country = 'canada';` thực hiện lọc các bản ghi có cột `age` lớn hơn hoặc bằng 75 và cột `country` có giá trị là 'canada', đồng thời kết quả trả về chỉ hiển thị duy nhất hai cột là `age` và `country`. Bảng ở đáp án E hiển thị đúng bộ lọc và các cột được chọn này.",
+    "references": null
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "A data analyst has created a user-defined function using the following line of code:CREATE FUNCTION price(spend DOUBLE, units DOUBLE)\nRETURNS DOUBLE -RETURN spend / units;Which of the following code blocks can be used to apply this function to the customer_spend and customer_units columns of the table customer_summary to create column customer_price?",
+    "options": {
+      "A": "SELECT PRICE customer_spend, customer_units AS customer_priceFROM customer_summary",
+      "B": "SELECT price -FROM customer_summary",
+      "C": "SELECT function(price(customer_spend, customer_units)) AS customer_priceFROM customer_summary",
+      "D": "SELECT double(price(customer_spend, customer_units)) AS customer_priceFROM customer_summary",
+      "E": "SELECT price(customer_spend, customer_units) AS customer_priceFROM customer_summary"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để sử dụng hàm tự định nghĩa (UDF) đã được khai báo là `price(spend, units)`, ta gọi hàm này trực tiếp trong mệnh đề `SELECT` bằng cách truyền các cột đối số tương ứng vào: `price(customer_spend, customer_units) AS customer_price` từ bảng `customer_summary`.",
+    "references": null
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "Consider the following two statements:Statement 1:\nStatement 2:\nWhich of the following describes how the result sets will differ for each statement when they are run in Databricks SQL?",
+    "options": {
+      "A": "The first statement will return all data from the customers table and matching data from the orders table. The second statement will return all data from the orders table and matching data from the customers table. Any missing data will be filled in with NULL.",
+      "B": "When the first statement is run, only rows from the customers table that have at least one match with the orders table on customer_id will be returned. When the second statement is run, only those rows in the customers table that do not have at least one match with the orders table on customer_id will be returned.",
+      "C": "There is no difference between the result sets for both statements.",
+      "D": "Both statements will fail because Databricks SQL does not support those join types.",
+      "E": "When the first statement is run, all rows from the customers table will be returned and only the customer_id from the orders table will be returned. When the second statement is run, only those rows in the customers table that do not have at least one match with the orders table on customer_id will be returned."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Đáp án B mô tả hoạt động của phép kết hợp Left Semi Join và Left Anti Join. Cụ thể, câu lệnh thứ nhất (Left Semi Join) trả về các dòng từ bảng bên trái (`customers`) có ít nhất một dòng khớp ở bảng bên phải (`orders`) dựa trên `customer_id`. Câu lệnh thứ hai (Left Anti Join) chỉ trả về các dòng từ bảng bên trái không có bất kỳ dòng khớp nào ở bảng bên phải.",
+    "references": null
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "A data analyst has been asked to count the number of customers in each region and has written the following query:\nIf there is a mistake in the query, which of the following describes the mistake?",
+    "options": {
+      "A": "The query is using count(*), which will count all the customers in the customers table, no matter the region.",
+      "B": "The query is missing a GROUP BY region clause.",
+      "C": "The query is using ORDER BY, which is not allowed in an aggregation.",
+      "D": "There are no mistakes in the query.",
+      "E": "The query is selecting region, but region should only occur in the ORDER BY clause."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi thực hiện đếm số lượng khách hàng theo từng khu vực (region), câu lệnh SQL cần có mệnh đề `GROUP BY region`. Nếu thiếu mệnh đề này, hệ quản trị cơ sở dữ liệu sẽ báo lỗi vì cột `region` không nằm trong một hàm tổng hợp và cũng không được nhóm lại.",
+    "references": null
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "Which of the following is a benefit of Databricks SQL using ANSI SQL as its standard SQL dialect?",
+    "options": {
+      "A": "It has increased customization capabilities",
+      "B": "It is easy to migrate existing SQL queries to Databricks SQL",
+      "C": "It allows for the use of Photon's computation optimizations",
+      "D": "It is more performant than other SQL dialects",
+      "E": "It is more compatible with Spark's interpreters"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc sử dụng chuẩn ANSI SQL làm phương ngữ (dialect) mặc định giúp người dùng dễ dàng chuyển đổi các câu lệnh truy vấn SQL hiện có từ các hệ thống cơ sở dữ liệu hoặc kho dữ liệu khác sang Databricks SQL mà không cần viết lại nhiều mã lệnh.",
+    "references": null
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "A business analyst has been asked to create a data entity/object called sales_by_employee. It should always stay up-to-date when new data are added to the sales table. The new entity should have the columns sales_person, which will be the name of the employee from the employees table, and sales, which will be all sales for that particular sales person. Both the sales table and the employees table have an employee_id column that is used to identify the sales person.Which of the following code blocks will accomplish this task?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774296868836-tweumkqz.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774296871766-vpabqfxl.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774296873854-zeazvyem.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774296876047-o1vxvaob.png)",
+      "E": "![](https://cdn.examcademy.com/images/questions/1774296878545-uh35i6i1.png)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đối tượng dữ liệu `sales_by_employee` luôn cập nhật tự động khi dữ liệu mới được thêm vào bảng gốc, ta nên sử dụng một View thay vì Table. Câu lệnh đúng ở đáp án D thực hiện `CREATE VIEW` kết hợp thông tin nhân viên từ bảng `employees` và bảng `sales` thông qua liên kết `employee_id`.",
+    "references": null
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "A data analyst has been asked to use the below table sales_table to get the percentage rank of products within region by the sales:\nThe result of the query should look like this:\nWhich of the following queries will accomplish this task?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774296875240-t0danvi0.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774296877091-gt8v7ssa.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774296879028-x86iir5c.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774296880993-s4euor4g.png)",
+      "E": "![](https://cdn.examcademy.com/images/questions/1774296882919-h38cvzoh.png)"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tính thứ hạng phần trăm (percentage rank) của các sản phẩm trong từng khu vực (region) dựa trên doanh số (sales), ta sử dụng hàm cửa sổ (window function) `PERCENT_RANK()`. Cú pháp phân vùng theo vùng và sắp xếp theo doanh số là `PERCENT_RANK() OVER (PARTITION BY region ORDER BY sales)`. Câu lệnh ở đáp án B thực hiện chính xác yêu cầu này.",
+    "references": null
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "A data analyst is processing a complex aggregation on a table with zero null values and their query returns the following result:\nWhich of the following queries did the analyst run to obtain the above result?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774296880111-rztm0svg.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774296882072-9cb9aaqo.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774296884047-ylj3mj5y.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774296886219-tb8130s6.png)",
+      "E": "![](https://cdn.examcademy.com/images/questions/1774296888181-ngl0rpys.png)"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kết quả truy vấn hiển thị việc tổng hợp dữ liệu ở nhiều mức độ nhóm khác nhau (bao gồm tổng hợp theo từng nhóm con và tổng hợp toàn bộ - đại diện bởi giá trị NULL ở cột phân nhóm). Hàm `ROLLUP` hoặc `CUBE` hoặc mệnh đề `GROUPING SETS` được dùng cho mục đích này. Câu lệnh ở đáp án E sử dụng đúng tính năng tổng hợp đa chiều này để sinh ra kết quả phù hợp.",
+    "references": null
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "A data analyst has been asked to produce a visualization that shows the flow of users through a website.Which of the following is used for visualizing this type of flow?",
+    "options": {
+      "A": "Heatmap",
+      "B": "Choropleth",
+      "C": "Word Cloud",
+      "D": "Pivot Table",
+      "E": "Sankey"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Biểu đồ Sankey (Sankey diagram) là loại biểu đồ chuyên dụng được sử dụng để trực quan hóa luồng di chuyển hoặc dòng chảy (flow) của các thực thể qua các giao đoạn khác nhau, ví dụ như đường đi của người dùng qua các trang trên một website.",
+    "references": null
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "A data analyst has been asked to configure an alert for a query that returns the income in the accounts_receivable table for a date range. The date range is configurable using a Date query parameter.The Alert does not work.Which of the following describes why the Alert does not work?",
+    "options": {
+      "A": "Alerts don't work with queries that access tables.",
+      "B": "Queries that return results based on dates cannot be used with Alerts.",
+      "C": "The wrong query parameter is being used. Alerts only work with Date and Time query parameters.",
+      "D": "Queries that use query parameters cannot be used with Alerts.",
+      "E": "The wrong query parameter is being used. Alerts only work with dropdown list query parameters, not dates."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks SQL, tính năng cảnh báo (Alerts) không hỗ trợ các câu truy vấn có sử dụng tham số truy vấn (query parameters). Do đó, nếu một truy vấn có chứa tham số, hệ thống sẽ không cho phép cấu hình Alert chạy tự động.",
+    "references": null
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "A data analyst is working with gold-layer tables to complete an ad-hoc project. A stakeholder has provided the analyst with an additional dataset that can be used to augment the gold-layer tables already in use.Which of the following terms is used to describe this data augmentation?",
+    "options": {
+      "A": "Data testing",
+      "B": "Ad-hoc improvements",
+      "C": "Last-mile dashboarding",
+      "D": "Last-mile ETL",
+      "E": "Data enhancement"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Thuật ngữ 'Data enhancement' (tăng cường dữ liệu) được sử dụng để mô tả việc bổ sung thêm các bộ dữ liệu bên ngoài hoặc bổ trợ vào các bảng tầng Gold hiện tại nhằm làm phong phú thông tin và nâng cao chất lượng phân tích cho dự án.",
+    "references": null
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "A data analyst runs the following command:INSERT INTO stakeholders.suppliers TABLE stakeholders.new_suppliers;What is the result of running this command?",
+    "options": {
+      "A": "The suppliers table now contains both the data it had before the command was run and the data from the new_suppliers table, and any duplicate data is deleted.",
+      "B": "The command fails because it is written incorrectly.",
+      "C": "The suppliers table now contains both the data it had before the command was run and the data from the new_suppliers table, including any duplicate data.",
+      "D": "The suppliers table now contains the data from the new_suppliers table, and the new_suppliers table now contains the data from the suppliers table.",
+      "E": "The suppliers table now contains only the data from the new_suppliers table."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lệnh `INSERT INTO` thực hiện chèn thêm (append) dữ liệu từ bảng nguồn `stakeholders.new_suppliers` vào bảng đích `stakeholders.suppliers`. Phép toán này giữ lại toàn bộ dữ liệu hiện có và thêm dữ liệu mới vào, bao gồm cả các dòng trùng lặp (nếu có), không tự động lọc bỏ bản ghi trùng.",
+    "references": null
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "Data professionals with varying titles use the Databricks SQL service as the primary touchpoint with the Databricks Lakehouse Platform. However, some users will use other services like Databricks Machine Learning or Databricks Data Science and Engineering.Which of the following roles uses Databricks SQL as a secondary service while primarily using one of the other services?",
+    "options": {
+      "A": "Business analyst",
+      "B": "SQL analyst",
+      "C": "Data engineer",
+      "D": "Business intelligence analyst",
+      "E": "Data analyst"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kỹ sư dữ liệu (Data Engineer) chủ yếu làm việc trên các dịch vụ như Databricks Data Science & Engineering hoặc Delta Live Tables để xây dựng đường ống dữ liệu (data pipelines). Tuy nhiên, họ vẫn sử dụng Databricks SQL như một công cụ phụ trợ (secondary service) để kiểm tra nhanh chất lượng dữ liệu, kiểm tra quyền truy cập hoặc gán quyền trên bảng.",
+    "references": null
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "After running DESCRIBE EXTENDED accounts.customers;, the following was returned:\nNow, a data analyst runs the following command:DROP accounts.customers;Which of the following describes the result of running this command?",
+    "options": {
+      "A": "Running SELECT * FROM delta. `dbfs:/stakeholders/customers` results in an error.",
+      "B": "Running SELECT * FROM accounts.customers will return all rows in the table.",
+      "C": "All files with the .customers extension are deleted.",
+      "D": "The accounts.customers table is removed from the metastore, and the underlying data files are deleted.",
+      "E": "The accounts.customers table is removed from the metastore, but the underlying data files are untouched."
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Do `accounts.customers` là một bảng ngoại (external table) - được xác định qua trường địa chỉ lưu trữ tùy chỉnh trong kết quả lệnh `DESCRIBE EXTENDED` - việc thực hiện lệnh `DROP TABLE` chỉ xóa thông tin định nghĩa bảng (metadata) khỏi metastore, còn toàn bộ tệp dữ liệu thực tế bên dưới vẫn được giữ nguyên và không bị ảnh hưởng.",
+    "references": null
+  },
+  {
+    "id": 26,
+    "topic": 1,
+    "question": "Which of the following is an advantage of using a Delta Lake-based data lakehouse over common data lake solutions?",
+    "options": {
+      "A": "ACID transactions",
+      "B": "Flexible schemas",
+      "C": "Data deletion",
+      "D": "Scalable storage",
+      "E": "Open-source formats"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một trong những ưu điểm vượt trội của kiến trúc data lakehouse dựa trên Delta Lake so với các giải pháp data lake thông thường là khả năng hỗ trợ các giao dịch ACID (Atomicity, Consistency, Isolation, Durability), giúp đảm bảo tính nhất quán và toàn vẹn của dữ liệu khi có nhiều tiến trình đọc ghi đồng thời.",
+    "references": null
+  },
+  {
+    "id": 27,
+    "topic": 1,
+    "question": "A data analyst has set up a SQL query to run every four hours on a SQL endpoint, but the SQL endpoint is taking too long to start up with each run.Which of the following changes can the data analyst make to reduce the start-up time for the endpoint while managing costs?",
+    "options": {
+      "A": "Reduce the SQL endpoint cluster size",
+      "B": "Increase the SQL endpoint cluster size",
+      "C": "Turn off the Auto stop feature",
+      "D": "Increase the minimum scaling value",
+      "E": "Use a Serverless SQL endpoint"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng Serverless SQL Warehouse (endpoint serverless) giúp giảm thời gian khởi động xuống chỉ còn vài giây (thay vì vài phút đối với các cụm tính toán truyền thống), giúp chạy truy vấn định kỳ nhanh chóng mà vẫn tối ưu hóa chi phí vì tài nguyên chỉ được cấp phát khi có yêu cầu và tự giải phóng ngay sau đó.",
+    "references": null
+  },
+  {
+    "id": 28,
+    "topic": 1,
+    "question": "Which of the following approaches can be used to ingest data directly from cloud-based object storage?",
+    "options": {
+      "A": "Create an external table while specifying the DBFS storage path to FROM",
+      "B": "Create an external table while specifying the DBFS storage path to PATH",
+      "C": "It is not possible to directly ingest data from cloud-based object storage",
+      "D": "Create an external table while specifying the object storage path to FROM",
+      "E": "Create an external table while specifying the object storage path to LOCATION"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để nạp hoặc liên kết dữ liệu trực tiếp từ kho lưu trữ đối tượng đám mây (như AWS S3, Azure ADLS Gen2), người dùng có thể tạo một bảng ngoại (external table) bằng cách sử dụng mệnh đề `LOCATION` trỏ thẳng tới đường dẫn của kho lưu trữ đối tượng đó.",
+    "references": null
+  },
+  {
+    "id": 29,
+    "topic": 1,
+    "question": "A data analyst is attempting to drop a table my_table. The analyst wants to delete all table metadata and data.They run the following command:DROP TABLE IF EXISTS my_table;While the object no longer appears when they run SHOW TABLES, the data files still exist.Which of the following describes why the data files still exist and the metadata files were deleted?",
+    "options": {
+      "A": "The table's data was larger than 10 GB",
+      "B": "The table did not have a location",
+      "C": "The table was external",
+      "D": "The table's data was smaller than 10 GB",
+      "E": "The table was managed"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi thực hiện `DROP TABLE` trên một bảng ngoại (external table), hệ thống chỉ xóa siêu dữ liệu (metadata) khỏi metastore để bảng không còn xuất hiện trong danh sách nữa, còn các tệp dữ liệu thực tế tại vị trí lưu trữ ngoài vẫn tồn tại. Đối với managed table (bảng được quản lý), cả dữ liệu lẫn siêu dữ liệu sẽ bị xóa.",
+    "references": null
+  },
+  {
+    "id": 30,
+    "topic": 1,
+    "question": "The stakeholders.customers table has 15 columns and 3,000 rows of data. The following command is run:\nAfter running SELECT * FROM stakeholders.eur_customers, 15 rows are returned. After the command executes completely, the user logs out of Databricks.After logging back in two days later, what is the status of the stakeholders.eur_customers view?",
+    "options": {
+      "A": "The view remains available and SELECT * FROM stakeholders.eur_customers will execute correctly.",
+      "B": "The view has been dropped.",
+      "C": "The view is not available in the metastore, but the underlying data can be accessed with SELECT * FROM delta. `stakeholders.eur_customers`.",
+      "D": "The view remains available but attempting to SELECT from it results in an empty result set because data in views are automatically deleted after logging out.",
+      "E": "The view has been converted into a table."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi tạo một View tạm thời (`CREATE TEMPORARY VIEW`), phạm vi hoạt động của nó chỉ nằm trong phiên làm việc hiện tại (session-scoped). Khi người dùng đăng xuất hoặc phiên kết thúc, view tạm thời này sẽ tự động bị hủy bỏ (dropped) và không còn tồn tại trong metastore khi đăng nhập lại.",
+    "references": null
+  },
+  {
+    "id": 31,
+    "topic": 1,
+    "question": "A data engineering team has created a Structured Streaming pipeline that processes data in micro-batches and populates gold-level tables. The microbatches are triggered every minute.A data analyst has created a dashboard based on this gold-level data. The project stakeholders want to see the results in the dashboard updated within one minute or less of new data becoming available within the gold-level tables.Which of the following cautions should the data analyst share prior to setting up the dashboard to complete this task?",
+    "options": {
+      "A": "The required compute resources could be costly",
+      "B": "The gold-level tables are not appropriately clean for business reporting",
+      "C": "The streaming data is not an appropriate data source for a dashboard",
+      "D": "The streaming cluster is not fault tolerant",
+      "E": "The dashboard cannot be refreshed that quickly"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc cập nhật liên tục dashboard theo thời gian thực (dưới 1 phút) yêu cầu cụm tính toán (SQL Warehouse) phải chạy liên tục hoặc khởi động thường xuyên để xử lý truy vấn, dẫn đến chi phí tài nguyên tính toán (compute costs) phát sinh rất lớn. Đây là lưu ý quan trọng về mặt ngân sách cần chia sẻ với các bên liên quan.",
+    "references": null
+  },
+  {
+    "id": 32,
+    "topic": 1,
+    "question": "In which of the following situations should a data analyst use higher-order functions?",
+    "options": {
+      "A": "When custom logic needs to be applied to simple, unnested data",
+      "B": "When custom logic needs to be converted to Python-native code",
+      "C": "When custom logic needs to be applied at scale to array data objects",
+      "D": "When built-in functions are taking too long to perform tasks",
+      "E": "When built-in functions need to run through the Catalyst Optimizer"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Các hàm bậc cao (higher-order functions) như `TRANSFORM`, `FILTER`, hoặc `REDUCE` trong SQL rất hữu ích khi nhà phân tích cần áp dụng các logic tùy chỉnh trực tiếp lên các đối tượng dữ liệu dạng mảng (array) hoặc cấu trúc phức tạp mà không cần phải phân rã (explode) dữ liệu thành nhiều dòng.",
+    "references": null
+  },
+  {
+    "id": 33,
+    "topic": 1,
+    "question": "A data analyst creates a Databricks SQL Query where the result set has the following schema: region STRING number_of_customer INTWhen the analyst clicks on the \"Add visualization\" button on the SQL Editor page, which of the following types of visualizations will be selected by default?",
+    "options": {
+      "A": "Violin Chart",
+      "B": "Line Chart",
+      "C": "Bar Chart",
+      "D": "Histogram",
+      "E": "There is no default. The user must choose a visualization type."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi nhấp vào 'Add visualization' cho một tập kết quả chứa một cột chuỗi (region - đại diện cho danh mục) và một cột số (number_of_customer - đại diện cho số lượng), hệ thống Databricks SQL sẽ tự động chọn mặc định kiểu biểu đồ cột (Bar Chart) để biểu diễn dữ liệu này.",
+    "references": null
+  },
+  {
+    "id": 34,
+    "topic": 1,
+    "question": "Which of the following statements describes descriptive statistics?",
+    "options": {
+      "A": "A branch of statistics that uses summary statistics to quantitatively describe and summarize data.",
+      "B": "A branch of statistics that uses a variety of data analysis techniques to infer properties of an underlying distribution of probability.",
+      "C": "A branch of statistics that uses quantitative variables that must take on a finite or countably infinite set of values.",
+      "D": "A branch of statistics that uses summary statistics to categorically describe and summarize data.",
+      "E": "A branch of statistics that uses quantitative variables that must take on an uncountable set of values."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Thống kê mô tả (descriptive statistics) là một phân nhánh của thống kê học, sử dụng các số liệu tổng hợp (như trung bình, trung vị, độ lệch chuẩn) để mô tả và tóm tắt các đặc điểm định lượng của một tập dữ liệu cụ thể một cách trực quan và dễ hiểu.",
+    "references": null
+  },
+  {
+    "id": 35,
+    "topic": 1,
+    "question": "In which of the following situations will the mean value and median value of variable be meaningfully different?",
+    "options": {
+      "A": "When the variable contains no outliers",
+      "B": "When the variable contains no missing values",
+      "C": "When the variable is of the boolean type",
+      "D": "When the variable is of the categorical type",
+      "E": "When the variable contains a lot of extreme outliers"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Giá trị trung bình (mean) rất nhạy cảm với các giá trị cực biên (outliers), trong khi giá trị trung vị (median) lại có tính bền vững cao trước các ngoại lệ này. Do đó, khi tập dữ liệu chứa nhiều giá trị ngoại lệ cực đoan (extreme outliers), giá trị trung bình và trung vị sẽ khác biệt nhau một cách rõ rệt.",
+    "references": null
+  },
+  {
+    "id": 36,
+    "topic": 1,
+    "question": "Which of the following statements about adding visual appeal to visualizations in the Visualization Editor is incorrect?",
+    "options": {
+      "A": "Visualization scale can be changed.",
+      "B": "Data Labels can be formatted.",
+      "C": "Colors can be changed.",
+      "D": "Borders can be added.",
+      "E": "Tooltips can be formatted."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Trình chỉnh sửa trực quan hóa (Visualization Editor) của Databricks SQL, người dùng có thể định dạng nhãn dữ liệu, đổi màu sắc, thay đổi tỷ lệ trục tọa độ và định dạng hộp chú thích (tooltips). Tuy nhiên, nền tảng không hỗ trợ việc vẽ hoặc thêm khung viền (borders) cho các biểu đồ. Do đó phát biểu D là sai.",
+    "references": null
+  },
+  {
+    "id": 37,
+    "topic": 1,
+    "question": "A data team has been given a series of projects by a consultant that need to be implemented in the Databricks Lakehouse Platform.Which of the following projects should be completed in Databricks SQL?",
+    "options": {
+      "A": "Testing the quality of data as it is imported from a source",
+      "B": "Tracking usage of feature variables for machine learning projects",
+      "C": "Combining two data sources into a single, comprehensive dataset",
+      "D": "Segmenting customers into like groups using a clustering algorithm",
+      "E": "Automating complex notebook-based workflows with multiple tasks"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc kết hợp các nguồn dữ liệu khác nhau (bằng các lệnh JOIN, UNION trong SQL) để tạo ra một tập dữ liệu tổng hợp phục vụ báo cáo là tác vụ phân tích dữ liệu chuẩn và cực kỳ phù hợp để thực hiện trên Databricks SQL. Các tác vụ khác như máy học (clustering), quản lý tính năng hay tự động hóa luồng phức tạp thường được thực hiện ở các dịch vụ chuyên biệt khác như Databricks Machine Learning hay Workflows.",
+    "references": null
+  },
+  {
+    "id": 38,
+    "topic": 1,
+    "question": "Which of the following statements about a refresh schedule is incorrect?",
+    "options": {
+      "A": "A query can be refreshed anywhere from 1 minute to 2 weeks.",
+      "B": "Refresh schedules can be configured in the Query Editor.",
+      "C": "A query being refreshed on a schedule does not use a SQL Warehouse (formerly known as SQL Endpoint).",
+      "D": "A refresh schedule is not the same as an alert.",
+      "E": "You must have workspace administrator privileges to configure a refresh schedule."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mọi truy vấn được lập lịch chạy tự động (refresh schedule) đều bắt buộc phải khởi chạy và sử dụng tài nguyên tính toán của một SQL Warehouse để thực thi các lệnh SQL truy xuất dữ liệu. Do đó, phát biểu C (nói rằng lịch làm mới không dùng SQL Warehouse) là sai.",
+    "references": null
+  },
+  {
+    "id": 39,
+    "topic": 1,
+    "question": "A data analyst has created a Query in Databricks SQL, and now they want to create two data visualizations from that Query and add both of those data visualizations to the same Databricks SQL Dashboard.Which of the following steps will they need to take when creating and adding both data visualizations to the Databricks SQL Dashboard?",
+    "options": {
+      "A": "They will need to alter the Query to return two separate sets of results.",
+      "B": "They will need to add two separate visualizations to the dashboard based on the same Query.",
+      "C": "They will need to create two separate dashboards.",
+      "D": "They will need to decide on a single data visualization to add to the dashboard.",
+      "E": "They will need to copy the Query and create one data visualization per query."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks SQL, từ kết quả của duy nhất một câu truy vấn (Query), người dùng có thể tạo ra nhiều hình ảnh trực quan hóa khác nhau (ví dụ: một biểu đồ cột và một biểu đồ đường). Sau đó, hoàn toàn có thể thêm đồng thời cả hai trực quan hóa này vào cùng một Dashboard.",
+    "references": null
+  },
+  {
+    "id": 40,
+    "topic": 1,
+    "question": "A data engineer is working with a nested array column products in table transactions. They want to expand the table so each unique item in products for each row has its own row where the transaction_id column is duplicated as necessary.They are using the following incomplete command:\nWhich of the following lines of code can they use to fill in the blank in the above code block so that it successfully completes the task?",
+    "options": {
+      "A": "array distinct(products)",
+      "B": "explode(products)",
+      "C": "reduce(products)",
+      "D": "array(products)",
+      "E": "flatten(products)"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hàm `explode(products)` trong SQL được sử dụng để phân rã một cột chứa định dạng mảng (array) thành nhiều dòng dữ liệu riêng biệt, trong đó các cột khác của dòng gốc (như `transaction_id`) sẽ được nhân bản tương ứng cho từng phần tử của mảng.",
+    "references": null
+  },
+  {
+    "id": 41,
+    "topic": 1,
+    "question": "A data analysis team is working with the table_bronze SQL table as a source for one of its most complex projects. A stakeholder of the project notices that some of the downstream data is duplicative. The analysis team identifies table_bronze as the source of the duplication.Which of the following queries can be used to deduplicate the data from table_bronze and write it to a new table table_silver?",
+    "options": {
+      "A": "CREATE TABLE table_silver AS -SELECT DISTINCT *FROM table_bronze;",
+      "B": "CREATE TABLE table_silver AS -INSERT *FROM table_bronze;",
+      "C": "CREATE TABLE table_silver AS -MERGE DEDUPLICATE *FROM table_bronze;",
+      "D": "INSERT INTO TABLE table_silver -SELECT * FROM table_bronze;",
+      "E": "INSERT OVERWRITE TABLE table_silverSELECT * FROM table_bronze;"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo một bảng mới `table_silver` chứa dữ liệu đã loại bỏ hoàn toàn các bản ghi trùng lặp từ bảng nguồn `table_bronze`, cú pháp SQL đơn giản và chính xác nhất là `CREATE TABLE table_silver AS SELECT DISTINCT * FROM table_bronze;`.",
+    "references": null
+  },
+  {
+    "id": 42,
+    "topic": 1,
+    "question": "How can a data analyst determine if query results were pulled from the cache?",
+    "options": {
+      "A": "Go to the Query History tab and click on the text of the query. The slideout shows if the results came from the cache.",
+      "B": "Go to the Alerts tab and check the Cache Status alert.",
+      "C": "Go to the Queries tab and click on Cache Status. The status will be green if the results from the last run came from the cache.",
+      "D": "Go to the SQL Warehouse (formerly SQL Endpoints) tab and click on Cache. The Cache file will show the contents of the cache.",
+      "E": "Go to the Data tab and click Last Query. The details of the query will show if the results came from the cache."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để kiểm tra xem kết quả của một truy vấn có được lấy từ bộ nhớ đệm (cache) hay không, nhà phân tích có thể vào tab Query History (Lịch sử truy vấn), nhấp vào câu lệnh truy vấn đó để mở bảng chi tiết (slideout). Tại đây hệ thống sẽ ghi rõ nguồn kết quả là từ cache.",
+    "references": null
+  },
+  {
+    "id": 43,
+    "topic": 1,
+    "question": "A data analyst has been asked to provide a list of options on how to share a dashboard with a client. It is a security requirement that the client does not gain access to any other information, resources, or artifacts in the database.Which of the following approaches cannot be used to share the dashboard and meet the security requirement?",
+    "options": {
+      "A": "Download the Dashboard as a PDF and share it with the client.",
+      "B": "Set a refresh schedule for the dashboard and enter the client's email address in the \"Subscribers\" box.",
+      "C": "Take a screenshot of the dashboard and share it with the client.",
+      "D": "Generate a Personal Access Token that is good for 1 day and share it with the client.",
+      "E": "Download a PNG file of the visualizations in the dashboard and share them with the client."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc tạo và chia sẻ Mã thông báo truy cập cá nhân (Personal Access Token - PAT) sẽ cấp quyền cho khách hàng truy cập API vào không gian làm việc của Databricks dưới danh nghĩa của nhà phân tích đó, vi phạm nghiêm trọng yêu cầu bảo mật là không cho phép họ tiếp cận các tài nguyên hoặc dữ liệu khác trong hệ thống. Do đó phương án D là không thể sử dụng.",
+    "references": null
+  },
+  {
+    "id": 44,
+    "topic": 1,
+    "question": "An analyst writes a query that contains a query parameter. They then add an area chart visualization to the query. While adding the area chart visualization to a dashboard, the analyst chooses \"Dashboard Parameter\" for the query parameter associated with the area chart.Which of the following statements is true?",
+    "options": {
+      "A": "The area chart will use whatever is selected in the Dashboard Parameter while all or the other visualizations will remain changed regardless of their parameter use.",
+      "B": "The area chart will use whatever is selected in the Dashboard Parameter along with all of the other visualizations in the dashboard that use the same parameter.",
+      "C": "The area chart will use whatever value is chosen on the dashboard at the time the area chart is added to the dashboard.",
+      "D": "The area chart will use whatever value is input by the analyst when the visualization is added to the dashboard. The parameter cannot be changed by the user afterwards.",
+      "E": "The area chart will convert to a Dashboard Parameter."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi ánh xạ một tham số truy vấn thành 'Dashboard Parameter', biểu đồ vùng sẽ sử dụng giá trị được lựa chọn ở bộ lọc cấp Dashboard. Đồng thời, bất kỳ trực quan hóa nào khác trên dashboard có cùng tham số cũng sẽ được điều khiển đồng loạt bởi bộ lọc này.",
+    "references": null
+  },
+  {
+    "id": 45,
+    "topic": 1,
+    "question": "A data organization has a team of engineers developing data pipelines following the medallion architecture using Delta Live Tables. While the data analysis team working on a project is using gold-layer tables from these pipelines, they need to perform some additional processing of these tables prior to performing their analysis.Which of the following terms is used to describe this type of work?",
+    "options": {
+      "A": "Data blending",
+      "B": "Last-mile dashboarding",
+      "C": "Data testing",
+      "D": "Last-mile ETL",
+      "E": "Data enhancement"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc thực hiện thêm các bước biến đổi dữ liệu, làm sạch bổ sung hoặc kết hợp cục bộ ngay trước khi đưa dữ liệu tầng Gold vào các báo cáo cụ thể được gọi là quy trình 'Last-mile ETL' (quy trình trích xuất, biến đổi và nạp dữ liệu chặng cuối).",
+    "references": null
+  },
+  {
+    "id": 46,
+    "topic": 1,
+    "question": "A data analyst is processing a complex aggregation on a table with zero null values and the query returns the following result:\nWhich query did the analyst execute in order to get this result?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774678632044-jtleo5o3.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774678634243-q3ddv7dk.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774678636283-u3nun51m.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774678638455-zxjr4klg.png)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tập kết quả trả về của phép phân tích cho thấy dữ liệu được tổng hợp theo các tổ hợp nhóm khác nhau. Trong SQL, điều này được thực hiện thông qua mệnh đề `GROUP BY CUBE` hoặc `GROUP BY ROLLUP` hoặc `GROUPING SETS`. Lựa chọn C chứa câu lệnh SQL được viết đúng chuẩn với các mệnh đề phân nhóm nâng cao này để tạo ra kết quả tương ứng.",
+    "references": null
+  },
+  {
+    "id": 47,
+    "topic": 1,
+    "question": "What is an advantage of using a Delta Lake-based data lakehouse over classic enterprise data warehouse solutions?",
+    "options": {
+      "A": "Open-source formats",
+      "B": "Schema enforcement",
+      "C": "ACID transactions",
+      "D": "Generic optimizations"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "So với các giải pháp kho dữ liệu doanh nghiệp truyền thống (classic EDW) thường sử dụng các định dạng lưu trữ độc quyền (proprietary formats), kiến trúc Lakehouse dựa trên Delta Lake sử dụng định dạng mở (open-source formats) dựa trên Parquet. Điều này giúp loại bỏ nguy cơ bị khóa bởi nhà cung cấp (vendor lock-in) và cho phép các công cụ khác dễ dàng đọc dữ liệu trực tiếp.",
+    "references": null
+  },
+  {
+    "id": 48,
+    "topic": 1,
+    "question": "A data analyst has opened up the SQL Editor page and written a new SQL statement. The data analyst now wants to save that statement to easily refer back to it later to add it to a dashboard. The results of the SQL statement must be able to be displayed as a counter, table, or a data visualization.\nWhich approach should the data analyst use to accomplish this task?",
+    "options": {
+      "A": "Save the SQL statement as a Dashboard",
+      "B": "Save the SQL statement within a Notebook",
+      "C": "Save the SQL statement as a Query",
+      "D": "Save the SQL statement in the Query History page"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks SQL, để lưu lại một câu lệnh truy vấn và có thể biểu diễn kết quả của nó dưới dạng bảng, biểu đồ hay bộ đếm (counter) để gắn vào dashboard sau này, nhà phân tích cần lưu câu lệnh đó dưới dạng một 'Query' (Truy vấn).",
+    "references": null
+  },
+  {
+    "id": 49,
+    "topic": 1,
+    "question": "Which example of data projects represents a common analytics application to be completed in Databricks SQL?",
+    "options": {
+      "A": "Augmenting gold-layer tables with additional external information",
+      "B": "Automating complex notebook-based workflows with multiple tasks",
+      "C": "Testing the quality of data as it is imported from a source",
+      "D": "Segmenting customers into like groups using a clustering algorithm"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một ứng dụng phân tích phổ biến trong Databricks SQL là bổ sung thông tin (augmenting) cho các bảng tầng Gold bằng các dữ liệu bên ngoài để làm phong phú dữ liệu báo cáo. Các dự án phát triển mô hình máy học (như phân nhóm khách hàng) hay tự động hóa quy trình phức tạp thuộc phạm vi của các công cụ khác.",
+    "references": null
+  },
+  {
+    "id": 50,
+    "topic": 1,
+    "question": "A data analyst needs to query the data in my_table. They want to return the values in columns user_id and email_address where records fit the following filter criteria: age is greater than 25 and country is Canada. The analyst does not want to return values from any other columns.\nWhich code block will accomplish the above task?",
+    "options": {
+      "A": "SELECT * FROM my_table WHERE age > 25 AND country = ’Canada’;",
+      "B": "SELECT user_id, email_address FROM my_table WHERE age > 25 AND country = ’Canada’;",
+      "C": "SELECT age, country FROM my_table WHERE age > 25 AND country = ’Canada’;",
+      "D": "SELECT user_id, email_address FROM my_table WHERE age = 25 AND country > ’Canada’;"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chỉ trả về thông tin hai cột `user_id` và `email_address` kèm theo bộ lọc tuổi lớn hơn 25 (`age > 25`) và quốc gia là Canada (`country = 'Canada'`), câu lệnh SQL chính xác phải chọn đúng tên các cột cần hiển thị và thiết lập điều kiện lọc trong mệnh đề `WHERE` như ở đáp án B.",
+    "references": null
+  },
+  {
+    "id": 51,
+    "topic": 1,
+    "question": "What is a benefit of using Databricks SQL for business intelligence (BI) analytics projects instead of using third-party BI tools?",
+    "options": {
+      "A": "Computations, data, and analytical tools on the same platform",
+      "B": "Advanced dashboarding capabilities",
+      "C": "Simultaneous multi-user support",
+      "D": "Automated alerting systems"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lợi ích chính của việc sử dụng Databricks SQL so với các công cụ BI bên thứ ba là nó tích hợp cả tài nguyên tính toán (compute), lưu trữ dữ liệu (data lakehouse) và các công cụ phân tích trên cùng một nền tảng duy nhất. Điều này giúp tăng tốc độ truy vấn, đơn giản hóa quản trị và giảm thiểu việc phải chuyển dịch dữ liệu ra bên ngoài.",
+    "references": null
+  },
+  {
+    "id": 52,
+    "topic": 1,
+    "question": "Query History provides Databricks SQL users with a lot of benefits. A data analyst has been asked to share all of these benefits with their team as part of a training exercise. One of the benefit statements the analyst provided to their team is incorrect.\nWhich statement about Query History is incorrect?",
+    "options": {
+      "A": "It can be used to troubleshoot slow running queries.",
+      "B": "It can be used to view the query plan of queries that have run.",
+      "C": "It can be used to debug queries.",
+      "D": "It can be used to automate query execution on multiple warehouses (formerly endpoints)."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Query History là công cụ ghi nhận nhật ký hoạt động để phân tích hiệu năng, gỡ lỗi và xem kế hoạch thực thi truy vấn. Nó không hỗ trợ tính năng tự động hóa việc chạy các câu truy vấn trên nhiều SQL Warehouse khác nhau. Vì vậy, phát biểu D là sai.",
+    "references": null
+  },
+  {
+    "id": 53,
+    "topic": 1,
+    "question": "What does Partner Connect do when connecting Power BI and Tableau?",
+    "options": {
+      "A": "Creates a Personal Access Token, downloads and installs an ODBC driver, and downloads a configuration file for connection by Power BI or Tableau to a SQL Warehouse (formerly known as a SQL Endpoint).",
+      "B": "Creates a Personal Access Token for authentication into Databricks SQL and emails it to you.",
+      "C": "Downloads a configuration file for connection by Power BI or Tableau to a SQL Warehouse (formerly known as a SQL Endpoint).",
+      "D": "Downloads and installs an ODBC driver."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi kết nối Power BI hoặc Tableau qua Partner Connect, hệ thống sẽ thực hiện một quy trình tự động hóa toàn diện bao gồm: tạo Mã thông báo truy cập cá nhân (PAT) để xác thực, hỗ trợ tải/cài đặt driver ODBC cần thiết và tải xuống tệp cấu hình kết nối được cấu hình sẵn để người dùng mở trực tiếp trong công cụ BI.",
+    "references": null
+  },
+  {
+    "id": 54,
+    "topic": 1,
+    "question": "A data analyst needs to share a Databricks SQL dashboard with stakeholders that are not permitted to have accounts in the Databricks deployment. The stakeholders need to be notified every time the dashboard is refreshed.\nWhich approach can the data analyst use to accomplish this task with minimal effort?",
+    "options": {
+      "A": "By granting the stakeholders’ email addresses permissions to the dashboard",
+      "B": "By adding the stakeholders’ email addresses to the refresh schedule subscribers list",
+      "C": "By granting the stakeholders’ email addresses to the SQL Warehouse (formerly known as endpoint) subscribers list",
+      "D": "By downloading the dashboard as a PDF and emailing it to the stakeholders each time it is refreshed"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tự động thông báo và gửi kết quả cập nhật dashboard cho các bên liên quan không có tài khoản Databricks một cách đơn giản nhất, nhà phân tích có thể thêm trực tiếp địa chỉ email của họ vào danh sách đăng ký nhận tin (subscribers list) trong cấu hình lịch làm mới (refresh schedule) của dashboard đó.",
+    "references": null
+  },
+  {
+    "id": 55,
+    "topic": 1,
+    "question": "A database was created in Databricks SQL using the following statement:\nCREATE SCHEMA accounting LOCATION ’dbfs:/accounting/data’;\nWhere will data for this database be stored?",
+    "options": {
+      "A": "dbfs:/accounting/data/accounting.db",
+      "B": "dbfs:/accounting/data",
+      "C": "dbfs:/accounting/data.db",
+      "D": "dbfs:/user/hive/warehouse/accounting.db"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi khai báo tường minh vị trí lưu trữ bằng mệnh đề `LOCATION 'dbfs:/accounting/data'` trong lệnh tạo schema (database), dữ liệu của các bảng thuộc schema này sẽ được lưu trữ trực tiếp tại thư mục được chỉ định đó chứ không lưu tại thư mục mặc định của hệ thống.",
+    "references": null
+  },
+  {
+    "id": 56,
+    "topic": 1,
+    "question": "A data analyst has written and saved a series of queries that reveal trends that need to be monitored by several stakeholders.\nWhich tool should the data analyst use to share the results of all of the queries to be viewed at once?",
+    "options": {
+      "A": "A SQL warehouse (formerly known as a SQL endpoint)",
+      "B": "A Query History page",
+      "C": "A dashboard",
+      "D": "A data visualization tab on a Query page"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để hiển thị và chia sẻ kết quả của nhiều câu truy vấn khác nhau cùng một lúc trên một giao diện thống nhất cho các bên liên quan theo dõi, công cụ phù hợp nhất là Dashboard trong Databricks SQL.",
+    "references": null
+  },
+  {
+    "id": 57,
+    "topic": 1,
+    "question": "A data analyst wants the following output:\nWhich statement will produce this output?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774683626510-69c8h27b.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774683629254-619yva3g.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774683632077-uqhlu84i.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774683634460-bgjknuzj.png)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Câu lệnh SQL ở đáp án D sử dụng đúng các mệnh đề chọn cột, các hàm xử lý chuỗi hoặc lọc dữ liệu để hiển thị kết quả khớp hoàn toàn với định dạng bảng đầu ra được yêu cầu trong câu hỏi.",
+    "references": null
+  },
+  {
+    "id": 58,
+    "topic": 1,
+    "question": "Which statement about visualizations is true?",
+    "options": {
+      "A": "All visualizations must use the same data in order to be included in the same Databricks SQL dashboard.",
+      "B": "Line charts are the preferred visualization type for categorical data.",
+      "C": "Different visualizations can be used to tell different stories about the data.",
+      "D": "There is no difference between the bar chart and a histogram in Databricks SQL."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mỗi loại biểu đồ (visualizations) có một thế mạnh riêng và được thiết kế để truyền tải các góc nhìn khác nhau từ cùng một tập dữ liệu (ví dụ: biểu đồ đường biểu thị xu hướng, biểu đồ cột biểu thị sự so sánh). Do đó, việc lựa chọn biểu đồ phù hợp sẽ giúp kể câu chuyện dữ liệu hiệu quả nhất.",
+    "references": null
+  },
+  {
+    "id": 59,
+    "topic": 1,
+    "question": "What is used as a compute resource for Databricks SQL?",
+    "options": {
+      "A": "Standard clusters",
+      "B": "Single-node clusters",
+      "C": "SQL warehouses",
+      "D": "Downstream BI tools integrated with Databricks SQL"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tài nguyên tính toán chuyên dụng được sử dụng để thực thi các truy vấn trong phân hệ Databricks SQL là các SQL Warehouse (trước đây gọi là SQL Endpoints).",
+    "references": null
+  },
+  {
+    "id": 60,
+    "topic": 1,
+    "question": "A stakeholder has provided a data analyst with a lookup dataset in the form of a 50-row CSV file. The data analyst needs to upload this dataset for use as a table in Databricks SQL.\nWhich approach should the data analyst use to quickly upload the file into a table for use in Databricks SQL?",
+    "options": {
+      "A": "Create a table by uploading the file using the Create page within Databricks SQL.",
+      "B": "Create a table via a connection between Databricks and the desktop facilitated by Partner Connect.",
+      "C": "Create a table by uploading the file to cloud storage and then importing the data to Databricks.",
+      "D": "Create a table by manually copying and pasting the data values into cloud storage and then importing the data to Databricks."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cách nhanh nhất và tốn ít công sức nhất để tải một tệp dữ liệu nhỏ (50 dòng CSV) lên Databricks SQL làm bảng là sử dụng tính năng tải tệp lên trực tiếp giao diện người dùng (giao diện Create > Table trong Databricks SQL).",
+    "references": null
+  },
+  {
+    "id": 61,
+    "topic": 1,
+    "question": "A data analyst needs to create an empty managed table table_name in database database_name with a specific schema. The table needs to be recreated and empty, regardless of whether or not the table already exists.\nWhich command can the analyst use to complete the task?",
+    "options": {
+      "A": "CREATE TABLE database_name.table_name USING (width INT, length INT, height INT);",
+      "B": "CREATE OR REPLACE TABLE database_name.table_name USING (width INT, length INT, height INT);",
+      "C": "CREATE OR REPLACE TABLE database_name.table_name (width INT, length INT, height INT);",
+      "D": "CREATE OR REPLACE TABLE table_name FROM database_name USING (width INT, length INT, height INT);"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo mới hoặc thay thế hoàn toàn một bảng đã có (làm trống bảng) với cấu trúc cột xác định mà không quan tâm bảng đó đã tồn tại trước đó hay chưa, cú pháp chuẩn là `CREATE OR REPLACE TABLE database_name.table_name (width INT, length INT, height INT);`.",
+    "references": null
+  },
+  {
+    "id": 62,
+    "topic": 1,
+    "question": "A data analyst has two data sources that are providing similar but complementary information. The analyst wants to combine these sources of data into a single, comprehensive dataset for ongoing use for their team in a variety of different projects.\nWhich terms is used to describe this type of work?",
+    "options": {
+      "A": "Last-mile ETL",
+      "B": "Ad-hoc improvements",
+      "C": "Data testing",
+      "D": "Data blending"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Thuật ngữ 'Data blending' (pha trộn dữ liệu) được sử dụng để mô tả việc kết hợp dữ liệu từ nhiều nguồn khác nhau có tính chất bổ trợ cho nhau thành một tập dữ liệu hợp nhất nhằm phục vụ cho mục đích phân tích.",
+    "references": null
+  },
+  {
+    "id": 63,
+    "topic": 1,
+    "question": "An analyst has been asked to combine the data in two tables: suppliers and new_suppliers. It’s possible that some of the supplier_id values match in both tables, meaning that those particular suppliers have already been added to the suppliers table. If that is the case, the data should be unchanged.\nWhich command will combine the two tables without duplicating the rows with the same supplier_id?",
+    "options": {
+      "A": "MERGE INTO suppliers -USING new_suppliers -ON suppliers.supplier_id = new_suppliers.supplier_idWHEN NOT MATCHED THEN INSERT *",
+      "B": "COPY INTO suppliers -USING new_suppliers -ON suppliers.supplier_id = new_suppliers.supplier_idWHEN NOT MATCHED THEN INSERT *",
+      "C": "UPDATE suppliers -USING new_suppliers -ON suppliers.supplier_id = new_suppliers.supplier_idWHEN NOT MATCHED THEN INSERT *",
+      "D": "INSERT INTO suppliers -USING new_suppliers -ON suppliers.supplier_id = new_suppliers.supplier_idWHEN NOT MATCHED THEN INSERT *"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Câu lệnh `MERGE INTO` (hợp nhất) kết hợp mệnh đề `WHEN NOT MATCHED THEN INSERT *` giúp kiểm tra sự tồn tại của `supplier_id` ở bảng nguồn trong bảng đích. Nếu chưa tồn tại thì mới thực hiện thêm mới, giúp tránh được việc nhân bản các dòng dữ liệu bị trùng lặp khóa chính.",
+    "references": null
+  },
+  {
+    "id": 64,
+    "topic": 1,
+    "question": "A data engineering team has created a Structured Streaming pipeline that processes data in micro-batches and populates gold-level tables. The microbatches are triggered every 10 minutes.\nA data analyst has created a dashboard based on this gold-level data. The project stakeholders want to see the results in the dashboard updated within 10 minutes or less of new data becoming available within the gold-level tables.\nWhat is the ability to ensure the streamed data is included in the dashboard at the standard requested by the project stakeholders?",
+    "options": {
+      "A": "A refresh schedule with an always-on SQL Warehouse (formerly known as SQL Endpoint)",
+      "B": "A refresh schedule with an interval of 10 minutes or less",
+      "C": "A refresh schedule with stakeholders included as subscribers",
+      "D": "A refresh schedule with a Structured Streaming cluster"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đảm bảo dữ liệu mới nhất từ luồng dữ liệu (streaming) được phản ánh trên dashboard trong khoảng thời gian tối đa 10 phút, nhà phân tích cần thiết lập lịch làm mới (refresh schedule) cho dashboard với khoảng thời gian làm mới là từ 10 phút trở xuống.",
+    "references": null
+  },
+  {
+    "id": 65,
+    "topic": 1,
+    "question": "A data analyst wants to create a Databricks SQL dashboard with multiple data visualizations and multiple counters.\nWhat must be completed before adding the data visualizations and counters to the dashboard?",
+    "options": {
+      "A": "All data visualizations and counters must be created using Queries.",
+      "B": "A SQL warehouse (formerly known as SQL endpoint) must be turned on and selected.",
+      "C": "A markdown-based tile must be added to the top of the dashboard displaying the dashboard’s name.",
+      "D": "The dashboard owner must also be the owner of the queries, data visualizations, and counters."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trước khi có thể hiển thị dữ liệu hoặc thêm các trực quan hóa (visualizations) và bộ đếm vào dashboard, cần phải khởi động và lựa chọn một SQL Warehouse hoạt động làm tài nguyên tính toán để xử lý các truy vấn nằm bên dưới các trực quan hóa đó.",
+    "references": null
+  },
+  {
+    "id": 66,
+    "topic": 1,
+    "question": "A data analyst has been asked to use the below table sales_table to rank products within region by the sales:\nThe result of the query should look like this:\nWhich query will accomplish this task?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774683640628-vpz9oyzn.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774683643203-dzqd11xy.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774683645564-17seycr1.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774683648181-klzyfy1y.png)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xếp hạng (rank) sản phẩm trong từng vùng (region) dựa trên doanh số (sales), ta sử dụng hàm cửa sổ `RANK()` hoặc `DENSE_RANK()`. Câu lệnh SQL chính xác ở đáp án D phân vùng theo region và sắp xếp giảm dần theo doanh số (`RANK() OVER (PARTITION BY region ORDER BY sales DESC)`), khớp hoàn hảo với bảng đầu ra mong muốn.",
+    "references": null
+  },
+  {
+    "id": 67,
+    "topic": 1,
+    "question": "Data professionals with varying responsibilities use the Databricks Lakehouse Platform.\nWhich role in the Databricks Lakehouse Platform use Databricks SQL as their primary service?",
+    "options": {
+      "A": "Data scientist",
+      "B": "Data engineer",
+      "C": "Platform architect",
+      "D": "Business analyst"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhà phân tích kinh doanh (Business Analyst) hoặc nhà phân tích SQL là đối tượng chính sử dụng phân hệ Databricks SQL làm công cụ làm việc hàng ngày để viết truy vấn SQL, xây dựng trực quan hóa và thiết kế các báo cáo, dashboard.",
+    "references": null
+  },
+  {
+    "id": 68,
+    "topic": 1,
+    "question": "Which data visualization use cases is best completed using Databricks SQL relative to other visualization tools?",
+    "options": {
+      "A": "Presentation-grade visualizations for publication",
+      "B": "Organization-branded visualizations for marketing material",
+      "C": "Custom, interactive visualizations on small data",
+      "D": "Simple, exploratory visualizations on big data"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks SQL rất tối ưu cho các trường hợp cần tạo trực quan hóa nhanh chóng để khám phá và phân tích (simple, exploratory visualizations) trực tiếp trên các bộ dữ liệu lớn (big data) được lưu ở Lakehouse mà không cần di chuyển dữ liệu đi nơi khác.",
+    "references": null
+  },
+  {
+    "id": 69,
+    "topic": 1,
+    "question": "Which statement about subqueries is correct?",
+    "options": {
+      "A": "Subqueries are not available in Databricks SQL.",
+      "B": "Subqueries can be used like other user-defined functions to transform data into different data types.",
+      "C": "Subqueries can retrieve data without requiring the creation of a table or view.",
+      "D": "Subqueries can be used like other built-in functions to transform data into different data types."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Truy vấn con (subquery) cho phép người dùng truy xuất dữ liệu tạm thời từ các bảng khác để làm điều kiện lọc hoặc bảng phụ trong câu lệnh lớn mà không bắt buộc phải tạo và lưu trữ một bảng hoặc view chính thức trong cơ sở dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 70,
+    "topic": 1,
+    "question": "Which example of data projects represents a common analytics application to be completed in Databricks SQL?",
+    "options": {
+      "A": "Testing the latency of real-time streaming workloads",
+      "B": "Performing analysis-specific ETL on gold-layer tables",
+      "C": "Predicting customer churn by automatically developing time-series models",
+      "D": "Monitoring the performance of deployed machine learning solutions"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tác vụ làm sạch, biến đổi và tinh chỉnh dữ liệu ở tầng Gold phục vụ riêng cho các mục đích phân tích cụ thể (analysis-specific ETL on gold-layer tables) là một công việc phổ biến và rất phù hợp để thực hiện trên Databricks SQL bằng cách sử dụng ngôn ngữ SQL tiêu chuẩn.",
+    "references": null
+  },
+  {
+    "id": 71,
+    "topic": 1,
+    "question": "A data analyst is working with a nested array column products in table transactions. The analyst wants to return the first item in the array for each row.\nThe data analyst is using the following incomplete command:\nWhich lines of code should the data analyst use to fill in the blank in the above code block so that it successfully completes the task?",
+    "options": {
+      "A": "products.1",
+      "B": "products.0",
+      "C": "products[0]",
+      "D": "products[1]"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks SQL (phương ngữ ANSI), để truy cập phần tử đầu tiên của một mảng (array) trong Spark SQL (lưu ý Spark SQL sử dụng chỉ số mảng bắt đầu từ 0), ta sử dụng cú pháp dấu ngoặc vuông với chỉ số 0: `products[0]`.",
+    "references": null
+  },
+  {
+    "id": 72,
+    "topic": 1,
+    "question": "Where in the Databricks SQL workspace can a data analyst configure a refresh schedule for a query when the query is not attached to a dashboard or alert?",
+    "options": {
+      "A": "Data Explorer",
+      "B": "The Visualization Editor",
+      "C": "The Query Editor",
+      "D": "The Dashboard Editor"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi một truy vấn (query) độc lập chưa được đưa vào dashboard hay cấu hình alert, nhà phân tích có thể cấu hình lịch làm mới (refresh schedule) trực tiếp tại giao diện soạn thảo truy vấn (The Query Editor).",
+    "references": null
+  },
+  {
+    "id": 73,
+    "topic": 1,
+    "question": "A data analyst is working in an organization that utilizes a multi-hop, medallion architecture. They have been tasked with creating a new Gold table from an existing Silver table.\nWhich query is performing a hop from a Silver table to a Gold table?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774683650710-xq35p3bk.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774683653219-35jk2f2u.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774683656038-5e09y586.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774683658760-yrggk0y2.png)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bước nhảy (hop) từ bảng tầng Silver sang tầng Gold liên quan đến việc tổng hợp dữ liệu, lọc và cấu trúc lại theo nhu cầu phân tích kinh doanh cụ thể. Lệnh tạo bảng Gold ở đáp án C sử dụng đúng nguồn dữ liệu đầu vào từ bảng Silver để sinh ra bảng Gold đã được chuẩn hóa.",
+    "references": null
+  },
+  {
+    "id": 74,
+    "topic": 1,
+    "question": "Which location can be used to determine the owner of a managed table?",
+    "options": {
+      "A": "Review the Owner field in the table page using Catalog Explorer",
+      "B": "Review the Owner field in the database page using Data Explorer",
+      "C": "Review the Owner field in the schema page using Data Explorer",
+      "D": "Review the Owner field in the table page using the SQL Editor"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác định ai hoặc nhóm nào đang sở hữu một bảng được quản lý (managed table), người dùng có thể mở Catalog Explorer (hoặc Data Explorer cũ), tìm đến bảng cần xem và kiểm tra trường 'Owner' hiển thị chi tiết tại trang thông tin của bảng đó.",
+    "references": null
+  },
+  {
+    "id": 75,
+    "topic": 1,
+    "question": "What describes the variance of a set of values?",
+    "options": {
+      "A": "Variance is a measure of how far a single observed value is from a set of values.",
+      "B": "Variance is a measure of how far an observed value is from the variable’s maximum or minimum value.",
+      "C": "Variance is a measure of central tendency of a set of values.",
+      "D": "Variance is a measure of how far a set of values is spread out from the set's central value."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phương sai (variance) là một đại lượng thống kê đo lường mức độ phân tán (spread out) của các giá trị trong tập dữ liệu so với giá trị trung tâm (giá trị trung bình) của tập dữ liệu đó.",
+    "references": null
+  },
+  {
+    "id": 76,
+    "topic": 1,
+    "question": "A data analyst has been asked to determine which customers have placed an order in the past year and which customers have not placed an order in the past year. This can be determined with one statement by joining the customers table (which is unique by customer ID) and the orders table.\nWhich type of join should the data analyst use?",
+    "options": {
+      "A": "Left Semi Join",
+      "B": "Left Join",
+      "C": "Middle Join",
+      "D": "Left Anti Join"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phép nối Left Join (nối trái) giữ lại tất cả các dòng từ bảng bên trái (`customers`) và tìm dữ liệu tương thích ở bảng bên phải (`orders`). Nếu một khách hàng không có đơn hàng nào trong năm qua, các trường từ bảng `orders` sẽ có giá trị NULL. Nhờ đó, ta dễ dàng phân biệt được khách hàng nào có đơn hàng và khách hàng nào không trong cùng một tập kết quả.",
+    "references": null
+  },
+  {
+    "id": 77,
+    "topic": 1,
+    "question": "What describes Partner Connect in Databricks?",
+    "options": {
+      "A": "It allows for free use of Databricks partner tools through a common API.",
+      "B": "It allows multi-directional connection between Databricks and Databricks partners easier.",
+      "C": "It exposes connection information to third-party tools via Databricks partners.",
+      "D": "It is a feature that runs Databricks partner tools on a Databricks SQL Warehouse (formerly known as a SQL Endpoint)."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Partner Connect trong Databricks là một tính năng giúp đơn giản hóa việc thiết lập và quản lý các kết nối đa chiều giữa Databricks với các công cụ của bên thứ ba đối tác (như công cụ nạp dữ liệu, công cụ BI, khoa học dữ liệu) một cách dễ dàng và nhanh chóng.",
+    "references": null
+  },
+  {
+    "id": 78,
+    "topic": 1,
+    "question": "A data analyst has come across a column in a table that contains personally identifiable information (PII). The data analyst should not have access to this type of PII data.\nHow should the data analyst proceed?",
+    "options": {
+      "A": "Stop working with the data and delete the table and any existing metadata or data files.",
+      "B": "Stop working with the data and proceed with the project using other data.",
+      "C": "Stop working with the data and notify their supervisor to ensure the data is handled following organizational and legal best practices.",
+      "D": "Drop the column containing PII data and continue with the project without notifying anybody."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi phát hiện dữ liệu PII mà bản thân không có quyền tiếp cận, hành động đúng đắn và an toàn nhất là dừng làm việc với nguồn dữ liệu đó và thông báo ngay cho cấp trên hoặc bộ phận quản trị dữ liệu để xử lý và tuân thủ các chính sách bảo mật cũng như quy định pháp lý.",
+    "references": null
+  },
+  {
+    "id": 79,
+    "topic": 1,
+    "question": "A managed table and an unmanaged (external) table were both created in Databricks SQL, and data were ingested into each table. Later, both tables were dropped.\nWhat is the status of data for each of those tables?",
+    "options": {
+      "A": "The data in both tables were deleted.",
+      "B": "The data in the managed table were deleted, and the data in the unmanaged (external) table were left untouched.",
+      "C": "The data in the unmanaged (external) table were deleted and the data in the managed table were left untouched, for both tables the metadata was the same.",
+      "D": "The data in both tables were left untouched."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi thực hiện lệnh `DROP TABLE`, đối với bảng được quản lý (managed table), Databricks sẽ xóa cả siêu dữ liệu và tệp dữ liệu thực tế. Trong khi đó, đối với bảng ngoại (unmanaged/external table), chỉ có thông tin đăng ký bảng (metadata) bị xóa khỏi metastore, còn tệp dữ liệu gốc tại kho lưu trữ đám mây vẫn được giữ nguyên không đổi.",
+    "references": null
+  },
+  {
+    "id": 80,
+    "topic": 1,
+    "question": "A data scientist has asked a data analyst to create histograms for every continuous variable in a data set. The data analyst needs to identify which columns are continuous in the data set.\nWhat describes a continuous variable?",
+    "options": {
+      "A": "A quantitative variable that never stops changing",
+      "B": "A quantitative variable that can take on a finite or countably infinite set of values",
+      "C": "A quantitative variable that can take on an uncountable set of values",
+      "D": "A categorical variable in which the number of categories continues to increase over time"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Biến liên tục (continuous variable) là biến định lượng có thể nhận bất kỳ giá trị nào trong một khoảng xác định (tức là có thể nhận vô số giá trị không thể đếm được giữa hai giá trị bất kỳ, ví dụ như chiều cao, cân nặng, thời gian).",
+    "references": null
+  },
+  {
+    "id": 81,
+    "topic": 1,
+    "question": "Which SQL standards does Databricks SQL use as its default SQL dialect?",
+    "options": {
+      "A": "Databricks SQL",
+      "B": "Spark SQL",
+      "C": "ANSI",
+      "D": "Delta SQL"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks SQL tuân theo chuẩn ANSI SQL làm phương ngữ (dialect) mặc định để đảm bảo tính tương thích cao và dễ dàng chuyển dịch các câu truy vấn từ các hệ quản trị cơ sở dữ liệu quan hệ truyền thống khác.",
+    "references": null
+  },
+  {
+    "id": 82,
+    "topic": 1,
+    "question": "A dashboard contains a bar chart visualization. The bar chart has a Date widget parameter associated with it.\nWhich statement about the Date widget parameter is true?",
+    "options": {
+      "A": "The Date widget parameter provides a start date and an end date that is used by a WHERE clause in the query that provides data to the bar chart.",
+      "B": "The Date widget parameter provides a start date and an end date that sets the x-axis range of the bar chart.",
+      "C": "The Date widget parameter provides a start date and an end date that filters all visualizations in the dashboard.",
+      "D": "The Date widget parameter functions only as a text box that tells the dashboard's users what date range the dashboard is using."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi một widget tham số ngày (Date widget parameter) được kết hợp với một biểu đồ, giá trị ngày được người dùng chọn trên widget sẽ được truyền trực tiếp làm đối số lọc vào mệnh đề `WHERE` của câu lệnh SQL bên dưới để lọc dữ liệu nguồn trước khi vẽ biểu đồ.",
+    "references": null
+  },
+  {
+    "id": 83,
+    "topic": 1,
+    "question": "In which scenario should a data analyst create and use a user-defined function (UDF)?",
+    "options": {
+      "A": "When the result of logic needs to be restricted to certain users",
+      "B": "When logic needs to be deployed within a subquery",
+      "C": "When complex logic cannot be implemented with built-in capabilities",
+      "D": "When simple logic needs to be optimized for scaling purposes"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhà phân tích dữ liệu nên tạo và sử dụng hàm tự định nghĩa (UDF) khi cần áp dụng các phép tính hoặc lô-gíc xử lý dữ liệu phức tạp đặc thù của doanh nghiệp mà các hàm dựng sẵn (built-in functions) của hệ thống không hỗ trợ trực tiếp.",
+    "references": null
+  },
+  {
+    "id": 84,
+    "topic": 1,
+    "question": "A data analyst has produced a visualization. A stakeholder has viewed the visualization and is complaining that the visualization is difficult to interpret. After looking at the visualization, the analyst determines that the scale of the y-axis must be changed.\nWhere are the controls for changing the scale of the y-axis in Databricks SQL?",
+    "options": {
+      "A": "Query Editor -> Y Axis",
+      "B": "Dashboard Editor -> Axes -> Y Axis",
+      "C": "Visualization Editor -> Y Axis",
+      "D": "Settings -> User Settings -> Scaling"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thay đổi tỷ lệ (scale) hoặc cấu hình trục tung (Y-axis) của biểu đồ trong Databricks SQL, người dùng cần vào giao diện chỉnh sửa biểu đồ (Visualization Editor) và chọn tab 'Y Axis'.",
+    "references": null
+  },
+  {
+    "id": 85,
+    "topic": 1,
+    "question": "Which open-source project helps to enable the data lakehouse by adding organization, reliability, performance, and data governance to data lake architectures?",
+    "options": {
+      "A": "MLflow",
+      "B": "Apache Spark",
+      "C": "Delta Lake",
+      "D": "Databricks SQL"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Delta Lake là dự án nguồn mở đóng vai trò nền tảng để xây dựng kiến trúc Data Lakehouse bằng cách bổ sung khả năng quản lý giao dịch ACID, thực thi lược đồ (schema enforcement), quản lý phiên bản và tối ưu hóa hiệu năng truy xuất trên nền tảng Data Lake thông thường.",
+    "references": null
+  },
+  {
+    "id": 86,
+    "topic": 1,
+    "question": "A data analyst is working with the following table my_table:\ncustomer_name dollars_spentHex Sprockets [125.34, 100.15, 9003.99]Dented Fenders [16.99, 200.85, 33.49, 88.17]\nThe analyst now wants to divide each value in the dollars_spent array by 100 to get the spend in terms of hundreds of dollars using the following code block:\nSELECT -customer_name,\nFROM my_table -\nWhich line of code can be used to fill in the blank so that the above code block successfully completes the task?",
+    "options": {
+      "A": "TRANSFORM(hundreds_spent, dollars_spent / 100)",
+      "B": "TRANSFORM(dollars_spent, value / 100) AS hundreds_spent",
+      "C": "TRANSFORM(dollars_spent, value -> value / 100) AS hundreds_spent",
+      "D": "TRANSFORM(dollars_spent, dollars_spent / 100) AS hundreds_spent"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cú pháp chuẩn của hàm bậc cao `TRANSFORM` trong Spark SQL để biến đổi các phần tử của một mảng là: `TRANSFORM(array_column, element -> expression)`. Vì vậy câu lệnh đúng là `TRANSFORM(dollars_spent, value -> value / 100) AS hundreds_spent`.",
+    "references": null
+  },
+  {
+    "id": 87,
+    "topic": 1,
+    "question": "Where can an admin or Data owner grant database, table, and view permissions to a group?",
+    "options": {
+      "A": "Dashboard",
+      "B": "Data",
+      "C": "SQL Warehouses (formerly SQL Endpoints)",
+      "D": "Settings"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks SQL (trước khi ra mắt Catalog Explorer đầy đủ), giao diện quản lý dữ liệu (Data Explorer/Data page) là nơi các quản trị viên hoặc chủ sở hữu dữ liệu có thể xem cấu trúc và gán quyền (GRANT/REVOKE) truy cập trên các đối tượng cơ sở dữ liệu, bảng và view cho các nhóm người dùng.",
+    "references": null
+  },
+  {
+    "id": 88,
+    "topic": 1,
+    "question": "A data architect has informed a data analyst team that its organization will now use a data design pattern that will logically organize data in a lakehouse, with the goal of incrementally and progressively improving the structure and quality of data as it flows through each layer of the architecture.\nWhich term is used to describe this data design pattern?",
+    "options": {
+      "A": "Medallion architecture",
+      "B": "Change data feed",
+      "C": "Delta Lake",
+      "D": "Data mesh"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kiến trúc Medallion (Medallion architecture) là một mẫu thiết kế dữ liệu tổ chức dữ liệu thành các tầng Bronze (dữ liệu thô), Silver (dữ liệu đã làm sạch/chuẩn hóa) và Gold (dữ liệu tổng hợp phục vụ nghiệp vụ) để cải thiện dần chất lượng và cấu trúc dữ liệu khi dòng chảy đi qua mỗi tầng.",
+    "references": null
+  },
+  {
+    "id": 89,
+    "topic": 1,
+    "question": "Which Databricks SQL action is used to audit and view the history of operations performed on a Delta Lake table in Databricks?",
+    "options": {
+      "A": "Run a SELECT logs FROM table_name query",
+      "B": "Use the SHOW TRANSACTIONS table_name command",
+      "C": "Execute a VACUUM table_name statement",
+      "D": "Use the DESCRIBE HISTORY table_name command"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lệnh `DESCRIBE HISTORY table_name` được dùng để xem lịch sử hoạt động (audit logs) của một bảng Delta Lake, cho biết các phiên bản thay đổi, loại thao tác (như WRITE, UPDATE, MERGE) và người thực hiện.",
+    "references": null
+  },
+  {
+    "id": 90,
+    "topic": 1,
+    "question": "Despite having SELECT permission on tables and USAGE on schemas, a data analyst is unable to access the objects.\nWhich action enables the data analyst to access the objects?",
+    "options": {
+      "A": "Grant OWNERSHIP of the table to the Data Analyst.",
+      "B": "Grant MANAGE DATABASE access on the containing catalog.",
+      "C": "Grant MANAGE TABLE access.",
+      "D": "Grant USE CATALOG on the containing catalog."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong mô hình phân quyền của Unity Catalog, quyền hạn được kế thừa theo cấp bậc từ Catalog -> Schema -> Table/View. Dù người dùng đã có quyền `SELECT` trên bảng và `USAGE` trên schema, họ vẫn cần có thêm quyền `USE CATALOG` trên catalog chứa chúng để có thể truy cập thành công vào các đối tượng dữ liệu này.",
+    "references": null
+  },
+  {
+    "id": 91,
+    "topic": 1,
+    "question": "A data analyst is reviewing the status of alerts in the Databricks SQL Alerts listing page. One alert was recently executed, and the monitored value met the defined condition and exceeded the threshold, meaning the alert criteria were met.\nWhich status should appear for this alert in the listing?",
+    "options": {
+      "A": "Status: YES",
+      "B": "Status: TRIGGERED",
+      "C": "Status: OK",
+      "D": "Status: SUCCESS"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi điều kiện của một Cảnh báo (Alert) được thỏa mãn (giá trị giám sát vượt ngưỡng thiết lập), trạng thái của Alert đó sẽ chuyển sang hiển thị là `TRIGGERED`.",
+    "references": null
+  },
+  {
+    "id": 92,
+    "topic": 1,
+    "question": "A data analyst wants to compare the contents of a Delta table as they existed last week to the current state in order to track changes in sales records.\nWhich Delta Lake feature enables this comparison?",
+    "options": {
+      "A": "RESTORE command",
+      "B": "VACUUM retention settings",
+      "C": "Time travel querying",
+      "D": "CLONE with VERSION AS OF"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Delta Lake hỗ trợ tính năng truy vấn ngược thời gian (Time travel querying) bằng cách chỉ định phiên bản hoặc mốc thời gian cụ thể (sử dụng mệnh đề `FOR SYSTEM_TIME AS OF` hoặc `FOR VERSION AS OF`), cho phép nhà phân tích dễ dàng so sánh dữ liệu quá khứ và hiện tại.",
+    "references": null
+  },
+  {
+    "id": 93,
+    "topic": 1,
+    "question": "A data analyst wants to generate insights from large, complex datasets. The analyst needs to quickly understand the meaning of various data columns, ask questions in natural language, and receive AI-driven recommendations for optimizing data queries and workflows.\nWhich Databricks component is primarily responsible for enabling these capabilities?",
+    "options": {
+      "A": "Data Intelligence Engine",
+      "B": "Unity Catalog",
+      "C": "Genie Spaces",
+      "D": "Databricks Assistant"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Data Intelligence Engine của Databricks (được xây dựng trên nền tảng mô hình ngôn ngữ lớn và hiểu sâu sắc ngữ cảnh dữ liệu của tổ chức) là thành phần cốt lõi giúp phân tích cấu trúc cột, trả lời các câu hỏi tự nhiên và đưa ra các đề xuất thông minh giúp tối ưu hóa truy vấn.",
+    "references": null
+  },
+  {
+    "id": 94,
+    "topic": 1,
+    "question": "A data analyst filters rows where the tags array includes the value ‘sql’ using this query:\nSELECT * FROM main.analytics.articles WHERE tags = ‘sql’;\nThis query returns no results.\nHow should the analyst query to filter for rows where the tags array contains ‘sql’?",
+    "options": {
+      "A": "SELECT * FROM main.analytics.articles WHERE tags IN (‘sql’);",
+      "B": "SELECT * FROM main.analytics.articles WHERE tags LIKE ‘%sql%’;",
+      "C": "SELECT * FROM main.analytics.articles WHERE ‘sql’ IN tags;",
+      "D": "SELECT * FROM main.analytics.articles WHERE array_conatins (tags, ‘sql’);"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 95,
+    "topic": 1,
+    "question": "A data analyst needs to programmatically mark a Unity Catalog table, sales_data, as certified so that it is discoverable as a trusted asset across their organization.\nWhich SQL command can be used to meet the requirement?",
+    "options": {
+      "A": "ALTER TABLE sales_data SET TAGS (‘system.Certified’);",
+      "B": "ALTER TABLE sales_data SET TAGS (‘certified’ = ‘true’);",
+      "C": "GRANT CERTIFY ON TABLE sales_data TO analyst_group;",
+      "D": "UPDATE TABLE sales_data ADD COMMENT ‘Certified dataset’;"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để gán thẻ (tag) cho một bảng trong Unity Catalog nhằm đánh dấu bảng là đã được chứng nhận (certified), ta sử dụng câu lệnh `ALTER TABLE table_name SET TAGS ('key' = 'value')`. Trong các lựa chọn, câu lệnh ở đáp án B thực hiện đúng cú pháp này bằng cách gán khóa `certified` với giá trị `'true'`.",
+    "references": null
+  },
+  {
+    "id": 96,
+    "topic": 1,
+    "question": "A data analyst is troubleshooting a query in Databricks SQL that fails when processing large datasets and complex join operations. Logs indicate that the job consistently aborts due to resource constraint errors on the cluster.\nWhich Query Profile metric should the analyst use to identify the operator that is causing resource overuse?",
+    "options": {
+      "A": "Time spent per operator",
+      "B": "Shuffle read size per operator",
+      "C": "Memory peak per operator",
+      "D": "Bytes spilled to disk per operator"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi truy vấn bị hủy (abort) do lỗi giới hạn tài nguyên hệ thống (resource constraints) trong các phép JOIN lớn hoặc phức tạp, chỉ số 'Memory peak per operator' (đỉnh sử dụng bộ nhớ trên mỗi toán tử) trong Query Profile là chỉ số quan trọng nhất giúp xác định toán tử cụ thể nào đang tiêu tốn lượng bộ nhớ lớn nhất dẫn đến tràn bộ nhớ.",
+    "references": null
+  },
+  {
+    "id": 97,
+    "topic": 1,
+    "question": "A data analyst encounters an unclear error while running a SQL query in the Databricks SQL Editor. The analyst wants to quickly understand and resolve the issue.\nHow can Databricks Assistant help the analyst diagnose and fix the error?",
+    "options": {
+      "A": "Databricks Assistant requires switching to a notebook environment to provide any debugging support.",
+      "B": "Databricks Assistant only supports Python code and cannot help with SQL queries.",
+      "C": "Databricks Assistant can only create new queries and does not assist with debugging.",
+      "D": "Databricks Assistant can analyze the error, suggest solutions, and provide corrected code directly in the SQL Editor."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks Assistant được tích hợp trực tiếp vào SQL Editor để hỗ trợ các nhà phân tích dữ liệu. Trợ lý này có khả năng tự động phân tích mã lỗi, giải thích nguyên nhân và đề xuất các giải pháp khắc phục cũng như cung cấp đoạn mã SQL đã được sửa đổi ngay tại giao diện viết truy vấn.",
+    "references": null
+  },
+  {
+    "id": 98,
+    "topic": 1,
+    "question": "A BI analyst is building an analytical data model in Databricks using Delta Lake tables. The source system contains transactional sales data that changes frequently. The analyst chooses to apply the Data Vault 2.0 methodology to manage historical changes while ensuring scalability and auditability across multiple business domains.\nWhich component is used to capture the many-to-many relationship between hubs in a Data Vault v2 model?",
+    "options": {
+      "A": "Hub Table",
+      "B": "Satellite Table",
+      "C": "Link Table",
+      "D": "Reference Table"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong phương pháp luận mô hình hóa dữ liệu Data Vault 2.0, bảng liên kết (Link Table) là thành phần chuyên dụng dùng để biểu diễn các mối quan hệ nhiều-nhiều (many-to-many) hoặc các mối liên kết giao dịch giữa các thực thể cốt lõi (được đại diện bởi các Hub Table).",
+    "references": null
+  },
+  {
+    "id": 99,
+    "topic": 1,
+    "question": "A data analyst is using Databricks Unity Catalog. The datasets are tagged by sensitivity, and confidential data is marked with the tag key confidential. The data analyst needs to quickly find all tables tagged as confidential to review their access permissions in the Databricks workspace search bar.\nWhich search key text should the data analyst use to find these tables?",
+    "options": {
+      "A": "confidential:true",
+      "B": "tag=confidential",
+      "C": "tag:confidential",
+      "D": "search tag = ‘confidential’"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong thanh tìm kiếm của giao diện Databricks, để tìm nhanh các bảng được gán một thẻ (tag) cụ thể, cú pháp tìm kiếm chuẩn là `tag:<tên_thẻ>`, trong trường hợp này là `tag:confidential`.",
+    "references": null
+  },
+  {
+    "id": 100,
+    "topic": 1,
+    "question": "How are analytical models mapped to the Gold layer in the Delta Lake medallion architecture on Databricks?",
+    "options": {
+      "A": "The Gold layer is primarily used for storing backup copies of all data for disaster recovery purposes.",
+      "B": "The Gold layer stores raw, unprocessed data for initial ingestion and schema evolution.",
+      "C": "The Gold layer is used for data cleaning, deduplication, and joining across domains to establish data integrity.",
+      "D": "The Gold layer contains de-normalized data models optimized for analytics, reporting, and machine learning."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tầng Gold trong kiến trúc medallion chứa dữ liệu đã được khử chuẩn hóa (de-normalized), làm sạch, tổng hợp và tối ưu hóa tối đa phục vụ trực tiếp cho các tác vụ phân tích, báo cáo nghiệp vụ (BI) và học máy (machine learning).",
+    "references": null
+  },
+  {
+    "id": 101,
+    "topic": 1,
+    "question": "A data analyst team is building reliable, production-grade data pipelines on Databricks. They require a solution that allows them to define data transformations declaratively, automatically enforce data quality expectations, and handle errors without manual intervention.\nWhich Databricks capability addresses these requirements?",
+    "options": {
+      "A": "Lakeflow Tables",
+      "B": "Lakeflow Spark Declarative Pipelines",
+      "C": "Lakeflow Jobs",
+      "D": "Lakeflow Connect"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lakeflow Spark Declarative Pipelines (hoặc Delta Live Tables) trong Databricks cho phép các kỹ sư và nhà phân tích định nghĩa các quy trình biến đổi dữ liệu một cách khai báo (declaratively), tự động áp dụng các ràng buộc chất lượng dữ liệu (expectations) và quản lý luồng dữ liệu cũng như xử lý lỗi một cách tự động mà không cần can thiệp thủ công.",
+    "references": null
+  },
+  {
+    "id": 102,
+    "topic": 1,
+    "question": "A data analyst has configured a Delta table with default retention settings. The analyst runs VACUUM operations weekly to manage storage costs. A business user asks to access data from 10 days ago for a compliance audit.\nWhat is the result of a time travel query in this scenario?",
+    "options": {
+      "A": "The time travel query will succeed because Delta Lake automatically backs up data for compliance purposes, regardless of VACUUM operations.",
+      "B": "The time travel query will succeed because the default log retention period is 30 days, which is sufficient to access 10-day-old data.",
+      "C": "The time travel query will fail because the default maximum table version is 7 and numbering resets after each VACUUM operation, making historical versions inaccessible.",
+      "D": "The time travel query will fail because the default data file retention period is 7 days, and VACUUM operations have likely removed the required data files."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mặc định, lệnh `VACUUM` trong Delta Lake sẽ loại bỏ các tệp dữ liệu cũ đã bị đánh dấu xóa (do các thao tác UPDATE/DELETE) có tuổi thọ lớn hơn thời gian giữ lại mặc định là 7 ngày (7 days retention period). Khi chạy VACUUM hàng tuần, các tệp dữ liệu cũ của 10 ngày trước đã bị xóa vĩnh viễn khỏi kho lưu trữ, khiến cho câu truy vấn ngược thời gian (time travel) về thời điểm 10 ngày trước bị thất bại.",
+    "references": null
+  },
+  {
+    "id": 103,
+    "topic": 1,
+    "question": "A data analyst is preparing a dataset that includes customer information such as email addresses and birthdates. This dataset will be used by multiple teams for generating reports, but some teams should not have permissions to access sensitive data. The analyst must ensure the data is stored securely and that personally identifiable information (PII) is protected according to organizational standards and best practices in Databricks.\nWhich action should the analyst take to secure the PII data while allowing safe reporting access to other teams?",
+    "options": {
+      "A": "Grant SELECT privileges to all report writers for the required subset of data from the base table.",
+      "B": "Use Dynamic Views with IS_MEMBER() functions to restrict PII columns based on user roles.",
+      "C": "Store the PII data in a shared CSV file on DBFS and apply access control at the folder level.",
+      "D": "Mask PII data by obfuscating it in the source table before conducting analysis."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để bảo mật thông tin PII một cách linh hoạt, giải pháp tốt nhất là sử dụng Dynamic Views (View động) kết hợp với các hàm kiểm tra phân quyền như `IS_MEMBER()`. Điều này cho phép tự động ẩn hoặc che (mask) các cột chứa thông tin nhạy cảm đối với những người dùng không thuộc nhóm phân quyền phù hợp, trong khi vẫn cho phép các nhóm được cấp quyền xem dữ liệu đầy đủ mà không cần nhân bản bảng dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 104,
+    "topic": 1,
+    "question": "A data analyst is working in a Databricks workspace with Unity Catalog enabled. While using a shared SQL Warehouse, the analyst runs the following query:\nSELECT * FROM sales_data;\nThis query results in a “TABLE_OR_VIEW_NOT_FOUND” error, even though:\n• The table sales_data exists in the reporting schema of the corp_data catalog.• The analyst has SELECT and USAGE privileges on the corp_data.reporting.sales_data table.• Another user running the same query in a notebook attached to a cluster is able to retrieve results without fully qualifying the table.\nWhich action helps the analyst to resolve the issue without rewriting the query?",
+    "options": {
+      "A": "Set the spark.databricks.sql.initial.catalog.namespace Spark configuration in the cluster attached to the SQL Warehouse.",
+      "B": "Run the following command to set the default catalog and schema for the current session:USE CATALOG corp_data;USE SCHEMA reporting;",
+      "C": "Modify the workspace-level catalog default so that all SQL Warehouses automatically point to corp_data.reporting.",
+      "D": "Set spark.sql.default.database to corp_data.reporting.sales_data in the SQL Warehouse runtime configuration."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lỗi `TABLE_OR_VIEW_NOT_FOUND` xảy ra do phiên làm việc (session) hiện tại của SQL Warehouse chưa được thiết lập catalog và schema mặc định. Bằng cách thực thi lệnh `USE CATALOG corp_data; USE SCHEMA reporting;`, nhà phân tích thiết lập không gian tên mặc định cho phiên làm việc hiện tại, nhờ đó có thể truy vấn trực tiếp bảng `sales_data` mà không cần viết tên đầy đủ (fully qualified name) của nó.",
+    "references": null
+  },
+  {
+    "id": 105,
+    "topic": 1,
+    "question": "How are privileges inherited in Unity Catalog across the hierarchy levels of metastore, catalog, schema, and table/view?",
+    "options": {
+      "A": "Privileges granted at a higher level (such as a catalog) automatically apply to all child objects (schemas and tables) unless overridden by more specific permissions at a lower level.",
+      "B": "Privileges are only inherited from the metastore level, and no inheritance occurs between catalogs, schemas, or tables.",
+      "C": "Privileges must be granted individually for each object, regardless of their position in the hierarchy, to ensure secure access control.",
+      "D": "Privileges granted at the schema level have no impact on tables or views in that schema unless directly applied to them."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong cơ chế quản trị của Unity Catalog, các quyền hạn (privileges) được kế thừa từ trên xuống dưới theo thứ tự: Metastore -> Catalog -> Schema -> Table/View. Khi gán một quyền (ví dụ: SELECT) ở cấp Catalog, người dùng sẽ tự động có quyền đó trên tất cả các schema và bảng trực thuộc bên trong catalog đó mà không cần phải gán lại ở từng cấp dưới.",
+    "references": null
+  },
+  {
+    "id": 106,
+    "topic": 1,
+    "question": "A data analyst needs to create a table in Unity Catalog for a production analytics workload. The table will be frequently queried and needs automatic performance optimization. The data should be governed by Unity Catalog with lifecycle management.\nWhich approach should the data analyst use?",
+    "options": {
+      "A": "Create a foreign table using CREATE FOREIGN TABLE with external connections to maintain compatibility with external systems while keeping data in original location and get benefits like Liquid Clustering and Deletion Vectors.",
+      "B": "Create a managed table using CREATE TABLE catalog.schema.table_name (columns...) allowing Unity Catalog to manage the data lifecycle, storage location, and provide automatic optimizations like Predictive Optimization.",
+      "C": "Create a temporary table using CREATE TEMPORARY TABLE for better performance and then convert it to a managed table later using ALTER TABLE SET MANAGED.",
+      "D": "Create an external table using CREATE EXTERNAL TABLE catalog.schema.table_name LOCATION ‘s3://bucket/path/’ to maintain control over the data location while benefiting from Unity Catalog governance."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc tạo bảng được quản lý (Managed Table) bằng lệnh `CREATE TABLE catalog.schema.table_name` là cách tốt nhất cho các luồng công việc phân tích chính thức. Khi đó, Unity Catalog sẽ hoàn toàn chịu trách nhiệm quản lý vòng đời dữ liệu, vị trí lưu trữ vật lý, đồng thời tự động áp dụng các tối ưu hóa hiệu năng tiên tiến như Predictive Optimization (Tối ưu hóa dự đoán).",
+    "references": null
+  },
+  {
+    "id": 107,
+    "topic": 1,
+    "question": "A data analyst team is working with large datasets stored as Delta tables (Parquet format) in Databricks on Azure Data Lake. The teams want to speed up query performance and reduce repeated computation by leveraging caching. However, they notice that sometimes caching does not improve performance or even slows down queries. The team wants to understand the best practices and limitations of caching in Databricks to optimize their workflows.\nWhat is the limitation when using caching in Databricks to reduce development time and query latency?",
+    "options": {
+      "A": "Query result caching in Databricks SQL works best with non-deterministic queries that use functions like NOW() or RAND().",
+      "B": "Caching CSV or JSON files with Delta Cache is fully supported and recommended for best performance.",
+      "C": "Delta Cache (disk cache) automatically caches Parquet files on local SSDs and improves read performance, but only supports Parquet files stored on Azure Blob Storage or Azure Data Lake.",
+      "D": "Spark caching always improves performance and should be applied liberally to all dataframes regardless of size or query complexity."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bộ đệm Delta Cache (hay disk cache) lưu trữ bản sao dữ liệu từ kho lưu trữ đám mây (như ADLS Gen2, AWS S3) vào ổ SSD cục bộ của các nút tính toán để tăng tốc các lần đọc sau. Tuy nhiên, nó bị giới hạn ở chỗ chỉ hỗ trợ tự động lưu trữ các tệp ở định dạng Parquet (bao gồm cả bảng Delta) được truy xuất từ các kho lưu trữ đối tượng đám mây được hỗ trợ.",
+    "references": null
+  },
+  {
+    "id": 108,
+    "topic": 1,
+    "question": "A data analyst needs to share a certified dataset containing approved public economic indicators with an external research institution. The institution does not have access to the Databricks workspace. The dataset is managed in Unity Catalog and has already been reviewed and tagged appropriately.\nThe analyst’s requirements are:\n• Share the dataset securely and read-only• Ensure the institution receives only the specified tables• Avoid giving access to the full catalog or workspace• Maintain auditability and governance using Unity Catalog\nHow should the analyst share the dataset?",
+    "options": {
+      "A": "Grant the external users access to Unity Catalog by adding their emails to the workspace.",
+      "B": "Use COPY INTO to export the dataset into a managed Delta table, then use Unity Catalog’s GRANT SELECT to provide access to the institution.",
+      "C": "Use the GRANT SELECT command to give the external group’s principal access to the table.",
+      "D": "Create a Delta Share, add the required table, define a recipient, and ensure that a Unity Catalog metastore admin or privileged user in the recipient’s workspace grants appropriate access permissions to their users."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng Delta Sharing trong Databricks cho phép chia sẻ dữ liệu lớn một cách an toàn và đọc duy nhất (read-only) với các tổ chức bên ngoài mà không yêu cầu họ phải có tài khoản trong cùng không gian làm việc Databricks. Nhà phân tích có thể tạo một Share, thêm bảng cần thiết và cấu hình thông tin người nhận (recipient) để chia sẻ một cách bảo mật và có thể kiểm tra (audit) được.",
+    "references": null
+  },
+  {
+    "id": 109,
+    "topic": 1,
+    "question": "A data analyst is monitoring delivery delays in real time using a Databricks dashboard shared with the operations team. After a meeting, the manager asks to add a new widget that graphically displays, with a gauge, the percentage of on-time shipments compared to the total. The data analyst needs to quickly modify the dashboard to add this information element.\nHow should the analyst add a new widget to an existing dashboard in Databricks?",
+    "options": {
+      "A": "Export the data from a notebook as a static image and upload it to the dashboard as a visual reference.",
+      "B": "Ask a platform administrator to add a materialized view for the on-time percentage, since visualizations require pre-aggregated values from the source to display correctly.",
+      "C": "Click “Add Visualization” in the dashboard, select the desired type, and associate a query that calculates the requested percentage.",
+      "D": "Clone the existing dashboard, add the new visualization in the duplicate, and replace the original dashboard after review."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thêm một widget trực quan hóa mới vào dashboard sẵn có, nhà phân tích chỉ cần chỉnh sửa dashboard, chọn 'Add Visualization' (Thêm trực quan hóa), chọn kiểu trực quan hóa mong muốn (ví dụ: Gauge) và liên kết nó với một câu truy vấn tính toán sẵn tỷ lệ phần trăm tương ứng.",
+    "references": null
+  },
+  {
+    "id": 110,
+    "topic": 1,
+    "question": "A data analyst needs to improve the performance of a daily sales report that aggregates data from a large transactions table. The report is run multiple times a day, but the underlying data only changes once daily.\nWhich approach should the analyst use to improve performance while minimizing redundant computation?",
+    "options": {
+      "A": "Use a standard view and schedule a notebook to cache results.",
+      "B": "Create a materialized view that precomputes the daily sales aggregation.",
+      "C": "Use a dynamic view to compute the aggregation on each query.",
+      "D": "Set up a streaming table to ingest new sales data in real time."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Do bảng giao dịch nguồn rất lớn nhưng dữ liệu chỉ thay đổi một lần mỗi ngày, việc sử dụng Materialized View (View vật lý hóa) để tính toán và lưu trữ sẵn kết quả tổng hợp doanh số hàng ngày là giải pháp tối ưu nhất. Nhờ đó, các lần chạy báo cáo trong ngày sẽ truy cập trực tiếp kết quả đã tính toán sẵn cực nhanh mà không phải quét lại toàn bộ bảng giao dịch lớn.",
+    "references": null
+  },
+  {
+    "id": 111,
+    "topic": 1,
+    "question": "A data analyst discovers that a group named developers has unauthorized access to sensitive data within the Unity Catalog catalog finance_catalog, which should be accessible only by the finance team.\nWhich SQL command should the analyst use to remove the developers group’s access to the catalog?",
+    "options": {
+      "A": "GRANT USAGE ON CATALOG ‘finance_catalog’ TO ‘finance’;",
+      "B": "ALTER CATALOG ‘finance_catalog’ DROP PERMISSIONS FOR ‘developers’;",
+      "C": "REVOKE USAGE ON CATALOG ‘finance_catalog’ FROM ‘developers’;",
+      "D": "REVOKE USE ON CATALOG ‘finance_catalog’ FROM ‘developers’;"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cú pháp chuẩn trong SQL để thu hồi quyền truy cập (usage) đối với một catalog trong Unity Catalog là `REVOKE USAGE ON CATALOG catalog_name FROM principal_name;`. Câu lệnh ở đáp án C thực hiện chính xác thao tác này đối với nhóm `developers` trên catalog `finance_catalog`.",
+    "references": null
+  },
+  {
+    "id": 112,
+    "topic": 1,
+    "question": "A data analyst needs to join two tables, orders and customers, using both customer_id and region_id as join keys. The goal is to return only rows where both values match in the two tables.\nWhich SQL query correctly performs this join?",
+    "options": {
+      "A": "SELECT * FROM orders INNER JOIN customers ON orders.customer_id = customers.customer_id;",
+      "B": "SELECT * FROM orders INNER JOIN customers USING (customer_id, region_id);",
+      "C": "SELECT * FROM orders INNER JOIN customers ON orders.customer_id = customers.customer_id AND orders.region_id = customers.region_id;",
+      "D": "SELECT * FROM orders LEFT JOIN customers ON orders.customer_id = customers.customer_id AND orders.region_id = customers.region_id;"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phép kết nối bằng (INNER JOIN) được sử dụng để chỉ lấy các dòng khớp nhau ở cả hai bảng. Khi kết nối dựa trên nhiều khóa (cột), ta sử dụng toán tử logic `AND` trong mệnh đề `ON` để kết hợp các điều kiện lọc: `ON orders.customer_id = customers.customer_id AND orders.region_id = customers.region_id`.",
+    "references": null
+  },
+  {
+    "id": 113,
+    "topic": 1,
+    "question": "A data analyst is reviewing a Genie space used by operations managers and notices that multiple responses have been flagged as inaccurate.\nWhich action should the analyst take to improve performance?",
+    "options": {
+      "A": "Add more tables and columns to the space because increasing the data volume improves Genie’s ability to find the correct answers.",
+      "B": "Update the instructions and add example SQL queries because this guides Genie to generate correct and context-aware responses.",
+      "C": "Turn off the feedback feature because it prevents noise from influencing Genie’s learning mechanism.",
+      "D": "Delete the flagged responses because this clears prior data that is biasing Genie’s answer generation."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi không gian Genie (Genie space) trả về kết quả không chính xác, cách hiệu quả nhất để cải thiện chất lượng câu trả lời là cập nhật thêm các hướng dẫn nghiệp vụ rõ ràng (instructions) và cung cấp các câu lệnh SQL mẫu (sample SQL queries) để làm ngữ cảnh tham chiếu giúp mô hình AI sinh câu hỏi chính xác hơn.",
+    "references": null
+  },
+  {
+    "id": 114,
+    "topic": 1,
+    "question": "A data analyst needs to programmatically mark the sales_data table in Unity Catalog as deprecated so that users across their organization can clearly see that it is no longer recommended for use.\nWhich SQL command should they use?",
+    "options": {
+      "A": "ALTER TABLE sales_data SET TAGS (‘deprecated’ = ‘true’);",
+      "B": "UPDATE TABLE sales_data ADD COMMENT ‘Deprecated dataset’;",
+      "C": "ALTER TABLE sales_data SET TBLPROPERTIES (‘system. certification_status’=‘deprecated’);",
+      "D": "ALTER TABLE sales_data SET TAGS (‘system.certification_status’ = ‘deprecated’);"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Như đã đề cập ở tài liệu Unity Catalog, hệ thống cung cấp một thẻ hệ thống đặc biệt là `system.certification_status` để quản lý trạng thái chứng nhận của các tài sản dữ liệu. Để đánh dấu bảng là lỗi thời (deprecated), câu lệnh SQL đúng là gán thẻ hệ thống này với giá trị tương ứng: `ALTER TABLE sales_data SET TAGS ('system.certification_status' = 'deprecated');`.",
+    "references": null
+  },
+  {
+    "id": 115,
+    "topic": 1,
+    "question": "A data analyst is curating a Genie space for the marketing team to explore campaign performance data. To ensure accurate and context-aware responses, the analyst includes curated Unity Catalog tables, writes clear domain instructions, and adds sample questions.\nWhich additional step can the analyst take to maximize trust and reuse of frequently asked queries?",
+    "options": {
+      "A": "Disable the use of domain instructions to prevent bias in AI-generated answers.",
+      "B": "Mark commonly used queries as Trusted Assets after verifying their correctness.",
+      "C": "Enable automatic query generation so users receive instant responses without review.",
+      "D": "Allow users to edit the underlying datasets to improve Genie responses."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc đánh dấu các câu truy vấn phổ biến và đã được kiểm chứng tính đúng đắn làm 'Trusted Assets' (Tài sản đáng tin cậy) giúp người dùng cuối yên tâm tái sử dụng các kết quả này trực tiếp mà không cần lo ngại về tính chính xác của dữ liệu do AI sinh ra.",
+    "references": null
+  },
+  {
+    "id": 116,
+    "topic": 1,
+    "question": "A data analyst wants to identify product categories that meet two criteria:\nEach category contains more than 10 products.The average price of products in the category is greater than $50.\nWhich SQL statement applies aggregate functions to return only the categories that meet these requirements?",
+    "options": {
+      "A": "SELECT category, COUNT(*) FROM products GROUP BY category HAVING COUNT(*) > 10 AND AVG(price) > 50;",
+      "B": "SELECT category, COUNT(*) FROM products WHERE COUNT(*) > 10 GROUP BY category HAVING AVG(price) > 50;",
+      "C": "SELECT category, COUNT(*) FROM products HAVING COUNT(*) > 10 GROUP BY category WHERE AVG(price) > 50;",
+      "D": "SELECT category, COUNT(*) FROM products GROUP BY category WHERE COUNT(*) > 10 AND AVG(price) > 50;"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong SQL, các bộ lọc áp dụng trên dữ liệu đã được nhóm lại (các hàm tổng hợp như `COUNT(*)` và `AVG(price)`) bắt buộc phải được đặt trong mệnh đề `HAVING`, sau khi đã thực hiện mệnh đề `GROUP BY`. Do đó, câu lệnh ở đáp án A là câu lệnh SQL hợp lệ và chính xác nhất.",
+    "references": null
+  },
+  {
+    "id": 117,
+    "topic": 1,
+    "question": "A data analyst wants to implement a use case that requires managing both structured and unstructured data.\nHow will Unity Catalog help in this scenario?",
+    "options": {
+      "A": "It allows for the management of both structured data and unstructured data through objects such as tables and volumes.",
+      "B": "It requires all unstructured data to be converted into Delta Lake format before it can be managed.",
+      "C": "It can catalog data coming from relational databases, excluding files and non-tabular data.",
+      "D": "It manages structured data in tabular format and unstructured files like images in blob storage."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Unity Catalog hỗ trợ quản lý tập trung cả dữ liệu có cấu trúc (qua các đối tượng bảng - tables) và dữ liệu phi cấu trúc (như tệp tin hình ảnh, âm thanh thông qua đối tượng phân vùng tệp - volumes), giúp tổ chức áp dụng một chính sách bảo mật và giám sát chung cho cả hai loại dữ liệu này.",
+    "references": null
+  },
+  {
+    "id": 118,
+    "topic": 1,
+    "question": "A data analyst is working with a Unity Catalog table named sales_data that contains customer order information. The order_quantity column is defined as an INTEGER, but occasionally has values of -1, indicating a data entry error. To support accurate reporting, the analyst needs to create a new view named clean_sales_data, that excludes these erroneous entries.\nWhich SQL query creates the clean_sales_data view by filtering out records where order_quantity is -1?",
+    "options": {
+      "A": "CREATE VIEW clean_sales_data AS SELECT * FROM sales_data WHERE order_quantity IS NOT NULL AND order_quantity > 0;",
+      "B": "CREATE VIEW clean_sales_data AS SELECT * FROM sales_data WHERE ABS(order_quantity) != 1;",
+      "C": "CREATE VIEW clean_sales_data AS SELECT * FROM sales_data HAVING order_quantity != -1;",
+      "D": "CREATE VIEW clean_sales_data AS SELECT * FROM sales_data WHERE order_quantity != -1;"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo một View loại bỏ các dòng có `order_quantity` bằng -1, ta sử dụng mệnh đề `WHERE order_quantity != -1` để lọc trực tiếp dữ liệu nguồn trước khi định nghĩa View. Do bộ lọc này áp dụng trên từng dòng dữ liệu chưa được nhóm, ta phải dùng `WHERE` chứ không dùng `HAVING`. Do đó lựa chọn D là chính xác.",
+    "references": null
+  },
+  {
+    "id": 119,
+    "topic": 1,
+    "question": "A data analyst is building a parameterized SQL query in Databricks to filter sales data by region and year. The analyst wants to test the query with different parameter values before adding it to a dashboard.\nWhich approach should the analyst use to allow for dynamic testing of the parameters in the Databricks SQL editor?",
+    "options": {
+      "A": "Hard-code the region and year values directly into the SQL query and rerun it for each test.",
+      "B": "Use parameter markers (e.g., :region, :year) in the SQL query and enter their values in the input boxes before running the query.",
+      "C": "Replace the column names (e.g., region, year) with question marks (“?”) and expect Databricks to prompt for values at runtime.",
+      "D": "Add the parameters as variables in a Python notebook cell and reference them in the SQL query."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Giao diện Databricks SQL Editor hỗ trợ tạo các tham số động bằng cách viết tên tham số đi kèm dấu hai chấm phía trước (ví dụ: `:region`, `:year`). Khi đó, trình soạn thảo sẽ tự động hiển thị các ô nhập liệu (input boxes) bên dưới để người dùng có thể thay đổi nhanh các giá trị tham số này nhằm chạy thử nghiệm truy vấn dễ dàng.",
+    "references": null
+  },
+  {
+    "id": 120,
+    "topic": 1,
+    "question": "What is the primary role of a SQL Warehouse in Databricks?",
+    "options": {
+      "A": "SQL Warehouses are primarily used for ETL operations and data transformations, offering better performance for batch processing compared to interactive queries",
+      "B": "SQL Warehouses are specialized compute resources designed specifically for SQL query execution, powered by the Photon engine for accelerated performance and optimized for BI tool integration",
+      "C": "SQL Warehouses are general-purpose compute resources that support Python, Scala, R, and SQL workloads, with automatic library management and custom runtime configurations for enhanced performance",
+      "D": "SQL Warehouses function as data storage systems that maintain cached query results and provide direct access to Delta tables without requiring additional compute resources"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "SQL Warehouse trong Databricks là tài nguyên tính toán (compute resource) được tối ưu hóa đặc biệt chuyên dùng cho việc thực thi các truy vấn SQL. Nó được tăng tốc bởi công cụ thực thi Photon và hỗ trợ tích hợp mượt mà với các công cụ BI bên thứ ba.",
+    "references": null
+  },
+  {
+    "id": 121,
+    "topic": 1,
+    "question": "A data analyst is setting up a Genie space in Databricks.\nWhich sequence should the analyst use for defining reasonable sample questions to help guide user interactions and improve Genie’s accuracy?",
+    "options": {
+      "A": "Create a dedicated notebook for each sample question, write the corresponding SQL query in the notebook, and link these notebooks to the Genie space using a workspace object reference.",
+      "B": "Navigate to “Configure” > “Settings” and enter the sample questions directly into the “Description” field. Genie automatically parses this text to guide users.",
+      "C": "Upload a spreadsheet with sample questions to the space, manually map each question to a SQL query in a separate document, and periodically update the mappings as new questions arise.",
+      "D": "Click “Configure” > “Context” in the Genie space, use the “SQL Queries” tab to add sample questions and matching SQL, then review and resolve any inconsistencies in the guidance provided."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong cấu hình của một Genie space, để thêm các câu hỏi mẫu đi kèm với câu lệnh SQL mẫu tương ứng giúp định hướng cho AI, nhà phân tích truy cập vào mục 'Configure' > 'Context', sau đó dùng tab 'SQL Queries' để thiết lập và kiểm tra các câu lệnh mẫu này.",
+    "references": null
+  },
+  {
+    "id": 122,
+    "topic": 1,
+    "question": "A data analyst has noticed that a key dashboard is loading slowly and suspects a specific SQL query may be causing performance issues. To diagnose the root cause, the analyst wants to review query execution characteristics, such as execution time, data scanned, and rows processed over time. The analyst is using the Databricks SQL environment and has access to admin tools and workspace objects.\nHow should the analyst investigate query performance over time?",
+    "options": {
+      "A": "Use the SQL Dashboard Editor to identify slow-performing queries by reviewing visualization types and layout.",
+      "B": "Use Lakehouse Monitoring to view real-time alerts and trends across all data pipelines that run in Unity Catalog.",
+      "C": "Use the Query Profiler to examine long-term trends in query performance across multiple executions.",
+      "D": "Use Query Insights to view metrics, such as duration, rows read, and execution history for the query."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng Query Insights trong Databricks SQL cung cấp cái nhìn chi tiết và thống kê xu hướng hiệu năng của các câu lệnh truy vấn qua các lần chạy (bao gồm thời gian thực thi, lượng dữ liệu đã đọc, số lượng dòng được quét), giúp dễ dàng chuẩn đoán các vấn đề giảm hiệu suất.",
+    "references": null
+  },
+  {
+    "id": 123,
+    "topic": 1,
+    "question": "A BI analyst has created a Genie space containing customer sales data and needs to share it with external stakeholders who are not workspace members. The stakeholders require the ability to ask questions about the data but should not have access to the underlying Databricks workspace or compute resources.\nHow should the BI analyst share the Genie space with external stakeholders?",
+    "options": {
+      "A": "Share the Genie space with embedded credentials and assign the stakeholders as account users with published dashboard access.",
+      "B": "Export the Genie space data to CSV files and share via email with instructions to upload to their own Databricks workspace.",
+      "C": "Create individual workspace accounts for each stakeholder and assign Databricks SQL access entitlement with CAN RUN permissions.",
+      "D": "Grant the stakeholders workspace membership with Consumer access entitlement and CAN VIEW permissions on the Genie space."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chia sẻ Genie space cho đối tượng bên ngoài mà không cần cấp quyền truy cập không gian làm việc hay tài nguyên tính toán cục bộ của doanh nghiệp, giải pháp là cấu hình embedded credentials (nhúng thông tin xác thực dữ liệu) vào Genie space và chỉ định các tài khoản người dùng cấp Account (Account-level users) có quyền truy cập vào các dashboard đã xuất bản tương ứng.",
+    "references": null
+  },
+  {
+    "id": 124,
+    "topic": 1,
+    "question": "A company uses a star schema to analyze sales data. The sales fact table records transactions, and dimension tables include products, stores, and dates.\nHow are primary and foreign keys used to enable efficient joining between these tables?",
+    "options": {
+      "A": "The fact table and dimension tables are joined using arbitrary columns, and primary/foreign key relationships are not required in a star schema.",
+      "B": "The fact table contains primary keys that directly match the primary keys in each dimension table, allowing for one-to-one joins.",
+      "C": "Both fact and dimension tables use only foreign keys, and joins are performed using non-unique columns.",
+      "D": "Each dimension table has a primary key, which is referenced as a foreign key in the fact table. This structure allows the fact table to join with multiple dimension tables for analytical queries."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong mô hình thiết kế hình sao (star schema), mỗi bảng chiều (dimension table) được định nghĩa bằng một khóa chính (primary key) đại diện cho các đối tượng duy nhất. Khóa chính này sẽ được liên kết và xuất hiện như một khóa ngoại (foreign key) trong bảng thực tế (fact table), giúp dễ dàng thực hiện các phép kết nối để tổng hợp và lọc dữ liệu đa chiều.",
+    "references": null
+  },
+  {
+    "id": 125,
+    "topic": 1,
+    "question": "A BI analyst is designing a Databricks SQL dashboard that tracks monthly revenue for three product categories across two years. Leadership wants a chart that makes it straightforward to compare each category’s trend over time and quickly spot seasonal patterns or declines without relying on additional filters or calculations.\nWhich visualization type in Databricks SQL will clearly communicate the revenue trends and category comparisons described?",
+    "options": {
+      "A": "Multi-series line chart plotting month on the x-axis and revenue on the y-axis for each category.",
+      "B": "Single-value counter displaying combined revenue for the entire two-year period.",
+      "C": "Pie chart showing each category’s percentage of total revenue for the final month.",
+      "D": "Scatter chart with revenue on the x-axis and profit margin on the y-axis for all transactions."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Biểu đồ đường nhiều chuỗi (multi-series line chart) là lựa chọn tối ưu nhất để trực quan hóa xu hướng biến động theo thời gian (như doanh thu hàng tháng) và so sánh trực quan giữa các nhóm danh mục khác nhau nhằm nhận diện nhanh các chu kỳ theo mùa (seasonal patterns).",
+    "references": null
+  },
+  {
+    "id": 126,
+    "topic": 1,
+    "question": "A data engineer is ingesting large volumes of semi-structured log data stored in an S3 bucket into Databricks. The data arrives continuously throughout the day, and the engineer needs to implement an efficient, scalable solution that supports incremental loads, handles schema changes gracefully, and minimizes manual intervention.\nWhich approach should be used for ingesting this data?",
+    "options": {
+      "A": "Build a custom Spark Structured Streaming job that tracks processed files via checkpointing and manual schema management.",
+      "B": "Use Auto Loader to incrementally ingest data from S3.",
+      "C": "Build a custom API-driven ingestion pipeline to pull data from S3.",
+      "D": "Use Delta Sharing to share data with Databricks from external systems."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Auto Loader trong Databricks là công cụ chuyên dụng tối ưu nhất để nạp dữ liệu gia tăng (incremental load) từ các kho lưu trữ đối tượng đám mây như AWS S3. Nó có khả năng phát hiện tệp mới tự động, xử lý linh hoạt sự thay đổi lược đồ (schema evolution) mà không đòi hỏi thiết lập cấu hình phức tạp.",
+    "references": null
+  },
+  {
+    "id": 127,
+    "topic": 1,
+    "question": "A data analyst needs to quickly estimate the number of unique user sessions in a dataset containing billions of records on Databricks SQL. Due to performance constraints, the analyst must ensure the query runs efficiently and delivers results with acceptable accuracy.\nWhat is the primary advantage of using APPROX_COUNT_DISTINCT instead of COUNT_DISTINCT in this scenario?",
+    "options": {
+      "A": "APPROX_COUNT_DISTINCT provides exact counts, while COUNT DISTINCT only provides estimates.",
+      "B": "APPROX_COUNT_DISTINCT can only be used with string columns, while COUNT DISTINCT works with numeric columns.",
+      "C": "APPROX_COUNT_DISTINCT uses the HyperLogLog++ algorithm to provide fast approximate counts with configurable accuracy (default 5% relative standard deviation).",
+      "D": "APPROX_COUNT_DISTINCT requires less memory by storing only the first 1000 unique values."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hàm `APPROX_COUNT_DISTINCT` sử dụng thuật toán HyperLogLog++ để tính toán lượng giá trị phân biệt xấp xỉ một cách cực kỳ nhanh chóng và tốn rất ít tài nguyên bộ nhớ so với `COUNT(DISTINCT)` (vốn đòi hỏi sắp xếp và quét toàn bộ dữ liệu chính xác), đặc biệt hữu ích trên các tập dữ liệu có quy mô hàng tỷ bản ghi.",
+    "references": null
+  },
+  {
+    "id": 128,
+    "topic": 1,
+    "question": "A data analyst is evaluating options to optimize query performance on a large table with frequently changing query filters. The analyst is considering using Liquid Clustering versus traditional Hive-style partitioning.\nWhat is the primary advantage of Liquid Clustering over traditional partitioning for tables with evolving query patterns?",
+    "options": {
+      "A": "Liquid Clustering provides better compression ratios than partitioned tables, reducing storage costs.",
+      "B": "Liquid Clustering allows changing clustering columns without rewriting existing data, while partitioning requires reprocessing and rewriting data to change the partitioning structure.",
+      "C": "Liquid Clustering automatically creates backup copies of data files, while partitioning does not.",
+      "D": "Liquid Clustering supports more data types than partitioning, including nested structures and arrays."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Ưu điểm vượt trội của Liquid Clustering so với phương pháp phân vùng Hive truyền thống (partitioning) là tính linh hoạt cao: nó cho phép thay đổi các cột gom cụm (clustering keys) bất kỳ lúc nào mà không cần phải thực hiện ghi lại toàn bộ dữ liệu lịch sử hiện có, giúp tiết kiệm thời gian và chi phí vận hành đáng kể khi nhu cầu truy vấn thay đổi.",
+    "references": null
+  },
+  {
+    "id": 129,
+    "topic": 1,
+    "question": "A data analyst is configuring a Genie space to support natural language questions about product sales, including fields like region_code, sku, and channel_type. The analyst notices that Genie often generates ambiguous or incorrect queries due to unclear column meanings.\nWhich two actions will help to improve Genie’s accuracy and relevance when interpreting user questions? (Choose two.)",
+    "options": {
+      "A": "Provide sample values for ambiguous columns to help Genie infer the data’s meaning and usage.",
+      "B": "Write domain-specific instructions that describe how terms like region and channel relate to the business.",
+      "C": "Add more columns from the underlying tables to give Genie access to a broader set of data points for reasoning.",
+      "D": "Add descriptions to columns using Unity Catalog so Genie can use them as context during query generation.",
+      "E": "Include example queries that reflect how business users refer to the data in everyday language."
+    },
+    "answer": "BD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để nâng cao độ chính xác của Genie space khi biên dịch ngôn ngữ tự nhiên: việc viết các hướng dẫn đặc thù của miền nghiệp vụ (B) giúp định nghĩa rõ ràng cách hiểu các thuật ngữ kinh doanh; và việc thêm mô tả chi tiết cho từng cột dữ liệu trực tiếp trong Unity Catalog (D) cung cấp thêm thông tin ngữ cảnh kỹ thuật quý giá để Genie xây dựng câu lệnh SQL chính xác.",
+    "references": null
+  },
+  {
+    "id": 130,
+    "topic": 1,
+    "question": "A data analyst is preparing a quarterly analytics dashboard in Databricks and needs to share it with external stakeholders who are not members of the Databricks workspace. The stakeholders should be able to view the dashboard securely without being granted workspace access or edit permissions.\nWhich approach should the analyst use to meet the requirements?",
+    "options": {
+      "A": "Enable external sharing by publishing the dashboard, turning on embedded credentials, and sharing the link with stakeholders.",
+      "B": "Add the external stakeholders as workspace admins in the Databricks environment and grant them CAN MANAGE permissions on the dashboard.",
+      "C": "Assign the stakeholders to the All workspace users group and provide them with CAN EDIT permissions on the dashboard, even if they are not currently members of the workspace.",
+      "D": "Export the dashboard as a PDF file and email it to the stakeholders, since Databricks dashboards offer an export-to-PDF feature."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks AI/BI Dashboards cho phép xuất bản (publish) báo cáo và chia sẻ liên kết trực tiếp ra bên ngoài với tùy chọn sử dụng thông tin xác thực nhúng (embedded credentials). Nhờ đó, người dùng bên ngoài hoàn toàn có thể xem trực tuyến thông tin cập nhật trên dashboard một cách bảo mật mà không cần phải cấp tài khoản không gian làm việc.",
+    "references": null
+  },
+  {
+    "id": 131,
+    "topic": 1,
+    "question": "A data analyst is setting up a new AI/BI Genie space in Databricks to support natural language querying and ensure high-quality, governed responses.\nWhich component is essential for configuring an effective Genie space that returns accurate and useful results?",
+    "options": {
+      "A": "An external data warehouse configured to store and replicate all data used by the Genie space.",
+      "B": "A standalone chatbot application integrated with Databricks through custom APIs for user interaction.",
+      "C": "Well-annotated datasets registered to Unity Catalog, curated sample queries, and domain-specific instructions to guide natural language translation.",
+      "D": "A dedicated physical server allocated for the Genie space to maximize availability and scalability."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một không gian Genie (Genie space) hoạt động hiệu quả bắt buộc phải được cung cấp các tập dữ liệu được ghi chú rõ ràng trong Unity Catalog (well-annotated datasets), các câu lệnh SQL mẫu đã được kiểm chứng (sample queries) và các tài liệu hướng dẫn ngữ cảnh nghiệp vụ (instructions) để dẫn dắt việc chuyển đổi ngôn ngữ tự nhiên sang SQL một cách chính xác.",
+    "references": null
+  },
+  {
+    "id": 132,
+    "topic": 1,
+    "question": "A company has started using the Databricks Platform and currently has only one workspace. They need to manage data access across different teams and want to ensure proper isolation and security controls.\nGiven this setup, which approach should be used?",
+    "options": {
+      "A": "Create a unique catalog with all schemas inside of it.",
+      "B": "Use Unity Catalog’s built-in environment separation features.",
+      "C": "Create a schema and share the schema for production, development, and testing.",
+      "D": "Create a catalog for production, another for development, and another for testing."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong mô hình quản lý của Unity Catalog, Catalog là cấp độ phân tách dữ liệu cao nhất và là biên giới bảo mật lý tưởng. Để quản lý quyền truy cập và đảm bảo cách ly an toàn giữa các môi trường trong một không gian làm việc duy nhất, giải pháp chuẩn là tạo các Catalog riêng biệt cho Production, Development và Testing.",
+    "references": null
+  },
+  {
+    "id": 133,
+    "topic": 1,
+    "question": "A data analyst is exploring user engagement trends and wants to create a visualization while working interactively in a Databricks notebook. The analyst executes a SQL query using %sql and wants to turn the result into a line chart showing weekly user counts over time.\nWhich step allows the analyst to create the chart directly in the notebook?",
+    "options": {
+      "A": "Save the query as a table, export it to Excel, and use Excel’s charting tools.",
+      "B": "Wrap the SQL query in a Python plotly.express call using %python.",
+      "C": "Use %sql to run the query, then copy the result into a new dashboard to access visualization options.",
+      "D": "Use the display() function or %sql to run the query, then click the + icon in the result cell to add a visualization."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong Databricks Notebook, sau khi thực thi truy vấn SQL bằng lệnh `%sql` hoặc hàm `display()`, kết quả trả về sẽ hiển thị một bảng dữ liệu. Người dùng chỉ cần nhấp vào biểu tượng dấu cộng `+` tại góc của ô kết quả đó và chọn 'Visualization' để thiết kế trực tiếp biểu đồ mong muốn (ví dụ: line chart) ngay bên trong sổ tay.",
+    "references": null
+  },
+  {
+    "id": 134,
+    "topic": 1,
+    "question": "A data analyst needs to generate a sales report by joining a Unity Catalog-managed table with a table stored in a MySQL database. The analyst wants the join to be efficient, performed within Databricks, and governed using Unity Catalog permissions and lineage.\nWhich approach should the data analyst use to meet these requirements?",
+    "options": {
+      "A": "Use Lakehouse Federation to create a foreign catalog for the MySQL database, then write a SQL query joining the Delta table and the federated MySQL table directly in Databricks.",
+      "B": "Write a Python script to connect to both sources separately, download the data and join them in memory outside Databricks.",
+      "C": "Fully ingest the MySQL table into Databricks and store it as a new Delta table before joining.",
+      "D": "Register the MySQL table as a temporary view in Databricks using a standard Spark JDBC read, then join it with the Unity Catalog-managed table using Databricks SQL."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lakehouse Federation trong Databricks cho phép liên kết trực tiếp với các nguồn cơ sở dữ liệu bên ngoài (như MySQL) dưới dạng các catalog ngoại (foreign catalogs). Điều này giúp nhà phân tích dễ dàng viết truy vấn nối (join) trực tiếp giữa bảng Delta hiện tại và bảng trong MySQL một cách hiệu quả, đồng thời kế thừa toàn bộ cơ chế bảo mật và theo dõi nguồn gốc dữ liệu (lineage) của Unity Catalog.",
+    "references": null
+  },
+  {
+    "id": 135,
+    "topic": 1,
+    "question": "A data analyst is enabling analytics on raw Parquet files stored in an external Amazon S3 bucket. The files must be queried directly using Databricks SQL without duplicating the data. The analyst also wants to register the table with Unity Catalog to enforce data governance policies such as access control and lineage tracking.\nWhich SQL command should the analyst use to create a Unity Catalog-enabled external table that directly references the Parquet files?",
+    "options": {
+      "A": "CREATE TABLE catalog.schema.table_name USING PARQUET AS SELECT * FROM parquet.‘s3://my-bucket/data/’;",
+      "B": "CREATE TABLE catalog.schema.table_name OPTIONS (‘path’ ‘s3://my-bucket/data/’) STORED AS PARQUET;",
+      "C": "CREATE EXTERNAL TABLE catalog.schema.table_name USING DELTA LOCATION ‘s3://my-bucket/data/’;",
+      "D": "CREATE TABLE catalog.schema.table_name USING PARQUET LOCATION ‘s3://my-bucket/data/’;"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tạo một bảng ngoại trỏ đến thư mục chứa các tệp Parquet sẵn có trên S3 mà không di chuyển dữ liệu, ta dùng cú pháp `CREATE TABLE table_name USING PARQUET LOCATION 's3://...'`. Bằng cách chỉ định catalog và schema trong đường dẫn bảng (`catalog.schema.table_name`), bảng này sẽ được đăng ký và chịu sự quản lý trực tiếp của Unity Catalog.",
+    "references": null
+  },
+  {
+    "id": 136,
+    "topic": 1,
+    "question": "A data analyst is migrating data lakehouse workloads to Databricks. The analyst manages a large table with thousands of columns and several billion rows. The analyst is concerned about scan performance, query speed, and handling the overhead of processing such a large volume of data.\nIn which two ways does the Photon engine help the team address these challenges? (Choose two.)",
+    "options": {
+      "A": "Photon uses a caching layer to transcode data into a CPU-efficient format for faster scan performance.",
+      "B": "Photon processes data row by row for maximum compatibility with legacy systems.",
+      "C": "Photon automatically parallelizes all queries across multiple clusters without additional configuration.",
+      "D": "Photon automatically merges small files into a single large file before processing.",
+      "E": "Photon leverages a columnar, vectorized execution engine for efficient scan and aggregation operations."
+    },
+    "answer": "AE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bộ máy thực thi Photon (Photon engine) cải thiện hiệu năng truy vấn trên các bảng dữ liệu khổng lồ bằng hai cơ chế chính: (A) sử dụng một lớp bộ đệm đĩa (caching layer) chuyển đổi dữ liệu sang định dạng tối ưu hóa cho CPU nhằm đẩy nhanh tốc độ quét tệp; và (E) tận dụng công cụ xử lý dữ liệu dạng cột và vectorized (vector hóa) giúp tối đa hóa tốc độ của các thao tác quét (scan) và tổng hợp dữ liệu (aggregation) quy mô lớn.",
+    "references": null
+  },
+  {
+    "id": 137,
+    "topic": 1,
+    "question": "An analyst needs external datasets and analytics assets to enrich their lakehouse reporting. The organization uses Databricks with Unity Catalog enabled and wants fast, governed access to third-party data without complex ETL or replication.\nWhat is the benefit of using Databricks Marketplace in this context?",
+    "options": {
+      "A": "It provides a marketplace for purchasing compute resources and serverless SQL warehouses that are managed outside the Unity Catalog framework.",
+      "B": "It enables scheduling of ETL pipelines to load partner data into proprietary formats before use in Databricks SQL.",
+      "C": "It allows the BI Analyst to copy external datasets into their workspace for offline analysis, eliminating dependency on provider access.",
+      "D": "It enables direct, governed access to live external data, notebooks, models, and dashboards via Delta Sharing—without data replication."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Databricks Marketplace cho phép các tổ chức tiếp cận nhanh chóng và có kiểm soát đến các bộ dữ liệu trực tiếp (live data), sổ tay mã nguồn, mô hình và báo cáo từ các nhà cung cấp bên thứ ba thông qua giao thức Delta Sharing mà không cần phải thực hiện sao chép hay xây dựng đường ống ETL phức tạp để di chuyển dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 138,
+    "topic": 1,
+    "question": "A data analyst uses Databricks to create a dashboard that monitors daily sales volumes and store performance. To ensure that area managers always see up-to-date data without having to manually intervene, the data analyst wants to automate the dashboard data refresh.\nWhich process should the data analyst use to automatically refresh the data displayed, avoiding manual intervention?",
+    "options": {
+      "A": "Set the Dashboard query to ‘auto-update’ by using a browser extension that reloads the tab at set intervals.",
+      "B": "Export the dashboard as a PDF the night before, so the team can see “recent” data the next day.",
+      "C": "Use the dashboard’s built-in scheduling option to set an automatic refresh at regular intervals.",
+      "D": "Ask all users to press the “Refresh” button on the dashboard whenever they want updated data."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tự động làm mới dữ liệu hiển thị trên Databricks dashboard định kỳ mà không cần người dùng thao tác thủ công, nhà phân tích sử dụng tùy chọn lập lịch tích hợp sẵn trên Dashboard (built-in scheduling) để cài đặt thời gian làm mới tự động theo chu kỳ mong muốn.",
+    "references": null
+  },
+  {
+    "id": 139,
+    "topic": 1,
+    "question": "A data analyst needs to automate scheduled ETL jobs that ingest and transform data from multiple sources. The analyst wants to use multiple programming languages for flexibility and ensure that the pipeline can automatically handle schema changes as new data arrives.\nWhich approach in Databricks should be used to meet this requirement?",
+    "options": {
+      "A": "Databricks Workflows with Apache Spark notebooks and manual schema management",
+      "B": "Unity Catalog with manual ETL scripts and cron-based scheduling",
+      "C": "Separate Delta tables for each data source with fixed schemas",
+      "D": "Lakeflow Spark Declarative Pipelines with Auto Loader"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xây dựng quy trình ETL tự động hỗ trợ nhiều ngôn ngữ lập trình khác nhau, kết hợp nạp dữ liệu gia tăng và tự động xử lý các thay đổi về cấu trúc dữ liệu (schema evolution), giải pháp tốt nhất là kết hợp công cụ nạp dữ liệu Auto Loader với Lakeflow Spark Declarative Pipelines (Delta Live Tables).",
+    "references": null
+  },
+  {
+    "id": 140,
+    "topic": 1,
+    "question": "A data analyst is given a sales table with the columns product_id, sale_date, and sale_amount. The analyst’s goal is to calculate the total sales per product per day, with exactly one row per product per day.\nThey first try the following SQL query:\nSELECT product_id, sale_date, sale_amount, SUM(sale_amount) OVER (PARTITION BY product_id ORDER BY sale_date) AS daily_total FROM sales ORDER BY product_id, sale_date;\nHowever, this produces multiple rows for the same product and date instead of one aggregated row per product/date combination.\nWhich corrected SQL query will produce exactly one row per product per day with the total sales for that day?",
+    "options": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774859906879-nnoy45hn.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774859909489-igjo8tok.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774859911953-nlpauoq3.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774859914492-iwbj99pd.png)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Câu hỏi yêu cầu tính tổng doanh thu theo từng sản phẩm theo từng ngày sao cho mỗi sản phẩm/ngày chỉ có đúng 1 dòng kết quả. Câu lệnh ban đầu bị sai vì sử dụng hàm cửa sổ (window function `OVER (PARTITION BY...)`) mà không gom nhóm dữ liệu. Để giải quyết đúng, ta phải dùng mệnh đề `GROUP BY product_id, sale_date` kết hợp hàm tổng hợp `SUM(sale_amount)`. Câu lệnh đúng ở đáp án D thực hiện chính xác việc gom nhóm này.",
+    "references": null
+  }
+]

@@ -53,10 +53,7 @@ graph TD
     A["File 1: Min(0,0), Max(1,1)"] --> B["File 2: Min(2,0), Max(3,1)"]
     B --> C["File 3: Min(0,2), Max(1,3)"]
     C --> D["File 4: Min(2,2), Max(3,3)"]
-    end
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#bbf,stroke:#333,stroke-width:2px
+    end
 ```
 
 **Kết quả Kiến trúc (Architectural Outcome):** 
@@ -90,7 +87,6 @@ Z-Order là một chiến lược đánh đổi cực lớn: Lấy sức mạnh 
 ```sql
 -- BAD: Gây bùng nổ Shuffle và bốc hơi ngân sách (FinOps Incident)
 OPTIMIZE user_events ZORDER BY (device_id, event_type);
-
 -- GOOD: Giới hạn không gian Shuffle, giảm Write Amplification triệt để
 OPTIMIZE user_events 
 WHERE event_date >= current_date() - INTERVAL 7 DAYS

@@ -30,10 +30,7 @@ flowchart LR
     A["Event Generated\n(User Clicks)"] -->|Ingestion Lag| B["Kafka/Kinesis"]
     B -->|Processing Time| C("Spark/Flink/dbt")
     C -->|Commit Time| D["(Iceberg/Delta Lake)"]
-    D -->|Query Wait| E["Dashboard BI"]
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#bbf,stroke:#333,stroke-width:2px
+    D -->|Query Wait| E["Dashboard BI"]
 ```
 
 ---

@@ -48,10 +48,7 @@ graph LR
     subgraph Serve ["Consumption"]
         B -->|Pre-computed Tables| D["BI Tools (Looker)"]
         B -->|Reverse ETL| E["Operational Systems"]
-    end
-    
-    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    end
 ```
 
 ---

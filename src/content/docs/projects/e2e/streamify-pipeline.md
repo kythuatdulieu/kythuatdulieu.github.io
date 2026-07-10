@@ -13,7 +13,7 @@ Trong kỷ nguyên dữ liệu hiện đại, việc phân tích log sau một n
 
 Dưới đây là sơ đồ kiến trúc tổng quan của dự án Streamify:
 
-![Streamify Architecture](https://raw.githubusercontent.com/ankurchavda/streamify/main/images/Streamify-Architecture.jpg)
+![Streamify Architecture](/images/projects/e2e/streamify-pipeline/9ef8cdc5.jpg)
 
 Thay vì chỉ là một đường ống đơn giản, kiến trúc áp dụng mô hình **Lambda Architecture** kết hợp với **Modern Data Stack**, nơi dòng dữ liệu (data stream) được phân tách thành tốc độ nhanh (speed layer) và lưu trữ lâu dài để batch processing (batch layer).
 
@@ -42,9 +42,10 @@ flowchart LR
     end
 ```
 
-> [!NOTE]
-> **Vai trò của từng thành phần:**
-> Dữ liệu được sinh ra liên tục -> Đẩy vào hệ thống Message Queue (Kafka) -> Xử lý Streaming (Spark) -> Lưu trữ thô vào Data Lake (GCS) -> Chuyển hóa và đưa lên Data Warehouse (BigQuery thông qua Airflow & dbt) -> Trực quan hóa dữ liệu (Looker).
+:::note
+**Vai trò của từng thành phần:**
+Dữ liệu được sinh ra liên tục -> Đẩy vào hệ thống Message Queue (Kafka) -> Xử lý Streaming (Spark) -> Lưu trữ thô vào Data Lake (GCS) -> Chuyển hóa và đưa lên Data Warehouse (BigQuery thông qua Airflow & dbt) -> Trực quan hóa dữ liệu (Looker).
+:::
 
 ---
 
@@ -62,9 +63,10 @@ Dự án sử dụng các công nghệ hiện đại và phổ biến nhất tro
 | **Transformation** | dbt (Data Build Tool)| Áp dụng software engineering best practices (version control, testing, documentation) vào SQL. | Dataform, viết SQL chay trong Airflow |
 | **Orchestration** | Apache Airflow | Chuẩn công nghiệp cho việc lên lịch, dependencies management qua DAGs. | Prefect, Dagster |
 
-> [!TIP]
-> **Tại sao lại dùng Spark Streaming thay vì Flink?**
-> Spark Streaming sử dụng cơ chế *micro-batch* (tập hợp dữ liệu theo chu kỳ rất ngắn) trong khi Flink cung cấp *true streaming* (xử lý từng event một). Đối với bài toán Streamify (đẩy log vào GCS mỗi vài phút), micro-batch của Spark hoàn toàn đáp ứng được và dễ dàng viết code bằng PySpark hơn cho đội ngũ đã quen với Pandas/SQL.
+:::tip
+**Tại sao lại dùng Spark Streaming thay vì Flink?**
+Spark Streaming sử dụng cơ chế *micro-batch* (tập hợp dữ liệu theo chu kỳ rất ngắn) trong khi Flink cung cấp *true streaming* (xử lý từng event một). Đối với bài toán Streamify (đẩy log vào GCS mỗi vài phút), micro-batch của Spark hoàn toàn đáp ứng được và dễ dàng viết code bằng PySpark hơn cho đội ngũ đã quen với Pandas/SQL.
+:::
 
 ---
 
@@ -148,8 +150,9 @@ query = parsed_df.writeStream \
 query.awaitTermination()
 ```
 
-> [!IMPORTANT]
-> Việc cấu hình `checkpointLocation` là bắt buộc trong Spark Structured Streaming để đảm bảo khả năng chịu lỗi (Fault Tolerance) và ngữ nghĩa phân phối **Exactly-once**. Nếu ứng dụng Spark sập, nó sẽ đọc từ checkpoint để tiếp tục xử lý chính xác vị trí bị gián đoạn.
+:::note
+Việc cấu hình `checkpointLocation` là bắt buộc trong Spark Structured Streaming để đảm bảo khả năng chịu lỗi (Fault Tolerance) và ngữ nghĩa phân phối **Exactly-once**. Nếu ứng dụng Spark sập, nó sẽ đọc từ checkpoint để tiếp tục xử lý chính xác vị trí bị gián đoạn.
+:::
 
 ### 3. Data Orchestration & Batch Processing với Airflow
 Mặc dù dữ liệu đã được stream liên tục vào GCS, chúng ta cần một quy trình tự động đưa nó vào Data Warehouse để phân tích sâu hơn. **Apache Airflow** được thiết lập để chạy DAG (Directed Acyclic Graph) theo định kỳ hàng giờ (Hourly).

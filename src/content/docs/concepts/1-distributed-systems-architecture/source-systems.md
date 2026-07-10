@@ -55,12 +55,7 @@ graph LR
     end
 
     WAL -->|Logical Replication| Debezium
-    Debezium -->|JSON/Avro Events| Topic
-    
-    style DB fill:#f9f,stroke:#333
-    style WAL fill:#fbf,stroke:#333
-    style Debezium fill:#bbf,stroke:#333
-    style Topic fill:#bfb,stroke:#333
+    Debezium -->|JSON/Avro Events| Topic
 ```
 
 ### Deep Dive: PostgreSQL WAL & Replication Slots
@@ -82,8 +77,7 @@ Nhiều kỹ sư Backend thiết kế code như sau:
 ```javascript
 async function placeOrder(orderData) {
     // 1. Lưu vào Database
-    await db.query('INSERT INTO orders ...'); 
-    
+    await db.query('INSERT INTO orders ...');
     // 2. Publish sự kiện vào Kafka (Dual Write)
     await kafka.publish('orders_topic', orderData); 
 }

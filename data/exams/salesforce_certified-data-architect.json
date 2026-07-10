@@ -1,0 +1,1656 @@
+{
+  "exam": "Certified Data Architect",
+  "provider": "salesforce",
+  "code": "certified-data-architect",
+  "total_questions": 136,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Northern Trail Outfitters (NTO) has outgrown its current Salesforce org and will be migrating to a new org shortly. As part of this process, NTO will be migrating all of its metadata and data. NTO's data model in the source org has a complex relationship hierarchy with several master-detail and lookup relationships across objects, which should be maintained in the target org.Which three things should a data architect do to maintain the relationship hierarchy during migration? (Choose three.)",
+      "choices": {
+        "A": "Redefine the master-detail relationship fields to lookup relationship fields in the target org.",
+        "B": "Use Data Loader to export the data from the source org and then import/upsert into the target org in sequential order.",
+        "C": "Keep the relationship fields populated with the source record IDs in the import file.",
+        "D": "Replace source record IDs with new record IDs from the target org in the import file.",
+        "E": "Create an external ID field for each object in the target org and map source record IDs to this field."
+      },
+      "correctAnswer": "BDE",
+      "explanation_vi": "Để duy trì cấu trúc phân cấp mối quan hệ phức tạp giữa các đối tượng khi chuyển đổi hệ thống, quy trình thực hiện tốt nhất bao gồm: thực hiện xuất và nhập dữ liệu theo thứ tự tuần tự chuẩn (bản ghi cha trước, bản ghi con sau) (B); tạo trường External ID trên đối tượng đích để ánh xạ ID từ hệ thống nguồn (E); và thực hiện mapping các trường liên kết dựa trên External ID này để tránh phải thay thế ID thủ công trong file CSV (D)."
+    },
+    {
+      "id": 2,
+      "question": "Northern Trail Outfitters (NTO) has a variety of customers that include households, businesses, and individuals.The following conditions exist within its system:\nNTO has a total of five million customers.Duplicate records exist, which is replicated across many systems, including Salesforce.Given these conditions, there is a lack of consistent presentation and clear identification of a customer record.Which three options should a data architect perform to resolve the Issues with the customer data? (Choose three.)",
+      "choices": {
+        "A": "Invest in data duplication tool to de-dupe and merge duplicate records across all systems.",
+        "B": "Use Salesforce CDC to sync customer data across all systems to keep customer record in sync.",
+        "C": "Create a customer master database external to Salesforce as a system of truth and sync the customer data with all systems.",
+        "D": "Create a unique global customer ID for each customer and store that in all systems for referential identity.",
+        "E": "Duplicate customer records across the systems and provide a two-way sync of data between the systems."
+      },
+      "correctAnswer": "ACD",
+      "explanation_vi": "Để xử lý triệt để tình trạng trùng lặp dữ liệu khách hàng trên nhiều hệ thống và thiếu mã định danh thống nhất, Data Architect nên: đầu tư công cụ lọc trùng dữ liệu (de-duplication tool) để làm sạch (A); xây dựng hệ thống cơ sở dữ liệu khách hàng master (MDM) bên ngoài làm nguồn chân lý (C); và tạo mã định danh duy nhất toàn cầu (Unique Global Customer ID) lưu trữ trên tất cả hệ thống để đồng bộ danh tính (D)."
+    },
+    {
+      "id": 3,
+      "question": "Northern Trail Outfitters (NTO) operates a majority of its business from a central Salesforce org. NTO also owns several secondary orgs that the service, finance, and marketing teams work out of. At the moment, there is no integration between central and secondary orgs, leading to data visibility issues.Moving forward, NTO has identified that a hub-and-spoke model is the proper architecture to manage its data, where the central org is the hub and the secondary orgs are the spokes.Which tool should a data architect use to orchestrate data between the hub org and spoke orgs?",
+      "choices": {
+        "A": "A middleware solution that extracts and distributes data across both the hub and spokes.",
+        "B": "Develop custom APIs to poll the spoke org for change data and push into the hub org.",
+        "C": "Develop custom APIs to poll the hub org for change data and push into the spoke orgs.",
+        "D": "A backup and archive solution that extracts and restores data across orgs."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong mô hình kiến trúc dữ liệu Hub-and-Spoke (trung tâm và nhánh) kết nối nhiều Salesforce orgs với nhau, sử dụng một giải pháp phần mềm trung gian (middleware) là phương án tối ưu để điều phối, chuyển đổi và phân phối dữ liệu tự động giữa Hub và các Spokes."
+    },
+    {
+      "id": 4,
+      "question": "A large retail B2C customer wants to build a 360-degree view of its customers for its call center agents. The customer information is currently maintained in the following systems:\nSalesforce CRMCustom billing solutionCustomer master data management (MDM)Contract management systemMarketing solutionWhat should a data architect recommend that would help uniquely identify the customer across multiple systems?",
+      "choices": {
+        "A": "Store the Salesforce ID in all the solutions to identify the customer.",
+        "B": "Create a custom field as external ID to maintain the customer ID from the MDM solution.",
+        "C": "Create a custom object that will serve as a cross-reference for the customer ID.",
+        "D": "Create a customer database, and use this ID in all systems."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để định danh duy nhất một khách hàng trên nhiều hệ thống khác nhau (CRM, Billing, MDM, Marketing), giải pháp chuẩn là tạo một trường tùy chỉnh được cấu hình là External ID trong Salesforce để lưu trữ mã ID khách hàng được cung cấp từ hệ thống MDM trung tâm."
+    },
+    {
+      "id": 5,
+      "question": "Northern Trail Outfitters (NTO) has the following systems:Customer master—source of truth for customer information\nService cloud—customer support -Marketing cloud—marketing communicationsEnterprise data warehouse-business reportingThe customer data is duplicated across all these systems and are not kept in sync. Customers are also complaining that they get repeated marketing emails and have to call in to update their information.NTO is planning to implement a master data management (MDM) solution across the enterprise.Which three data issues will an MDM tool solve? (Choose three.)",
+      "choices": {
+        "A": "Data loss and recovery",
+        "B": "Data accuracy and quality",
+        "C": "Data completeness",
+        "D": "Data duplication",
+        "E": "Data standardization"
+      },
+      "correctAnswer": "BCD"
+    },
+    {
+      "id": 6,
+      "question": "A casino is implementing Salesforce and is planning to build a customer 360-degree view for a customer who visits its resorts. The casino currently maintains the following systems that record customer activity:\nPoint-of-sale system: All purchases for a customerSalesforce: Ail customer service activity and sales activities for a customerMobile app: All bookings, preferences, and browser activity for a customerMarketing: All email, SMS, and social campaigns for a customerCustomer service agents using Salesforce would like to view the activities from all four systems to provide support to customers. The information has to be current and real time.What strategy should the data architect implement to satisfy this requirement?",
+      "choices": {
+        "A": "Use a customer data mart to create the 360-degree view of the customer.",
+        "B": "Periodically upload summary information in Salesforce to build a 360-degree view.",
+        "C": "Migrate customer activities from all four systems into Salesforce.",
+        "D": "Explore external data sources in Salesforce to build a 360-degree view of the customer."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tích hợp dữ liệu thời gian thực từ Point-of-sale, Salesforce, Mobile app, và Marketing nhằm cung cấp góc nhìn 360 độ về khách hàng cho tổng đài viên, giải pháp tối ưu là sử dụng Salesforce Connect (External Data Sources) để hiển thị dữ liệu trực tiếp mà không cần sao chép dữ liệu vật lý vào Salesforce."
+    },
+    {
+      "id": 7,
+      "question": "Universal Containers (UC) has the following systems:\nBilling systemCustomer support systemCRM systemUC has been having trouble with business intelligence across the different systems. Recently UC implemented a master data management (MDM) solution that will be the system of truth for the customer records.Which MDM data element is needed to allow reporting across these systems?",
+      "choices": {
+        "A": "Phone number",
+        "B": "Email address",
+        "C": "Full name",
+        "D": "Globally Unique Identifier"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để có thể chạy báo cáo và phân tích dữ liệu thống nhất giữa các hệ thống (Billing, Support, CRM) thông qua giải pháp MDM, phần tử dữ liệu quan trọng nhất cần có là Mã định danh duy nhất toàn cầu (Globally Unique Identifier - GUID) nhằm liên kết chính xác các bản ghi khách hàng giữa các hệ thống."
+    },
+    {
+      "id": 8,
+      "question": "During the implementation of Salesforce, a customer has the following requirements for Sales Order:\nSales Order information needs to be shown to users in Salesforce.Sales Orders are maintained in the on-premise enterprise resource planning (ERP).Sales Order information has more than 150 million records.Sales Orders will not be updated in Salesforce.What should a data architect recommend for maintaining Sales Orders in Salesforce?",
+      "choices": {
+        "A": "Use custom objects to maintain Sales Orders in Salesforce.",
+        "B": "Use external objects to maintain Sales Orders in Salesforce.",
+        "C": "Use custom big objects to maintain Sales Orders in Salesforce.",
+        "D": "Use Standard Order object to maintain Sale Orders in Salesforce."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Với nhu cầu hiển thị thông tin Đơn hàng từ ERP có khối lượng dữ liệu cực lớn (hơn 150 triệu bản ghi) và không có nhu cầu cập nhật trong Salesforce, sử dụng Salesforce Connect (External Objects) là phương án tối ưu để truy vấn và hiển thị dữ liệu theo thời gian thực mà không tiêu tốn dung lượng lưu trữ của Salesforce."
+    },
+    {
+      "id": 9,
+      "question": "Universal Containers is preparing to implement Sales Cloud and would like its users to have Read Only access to an Account record if they have access to its child Opportunity record.How would a data architect implement this sharing requirement between objects?",
+      "choices": {
+        "A": "Implicit sharing will automatically handle this with standard functionality.",
+        "B": "Create an owner-based sharing rule.",
+        "C": "Add appropriate users to the Account team.",
+        "D": "Create a criteria-based sharing rule."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Salesforce cung cấp cơ chế chia sẻ ngầm định (Implicit Sharing) tích hợp sẵn. Khi người dùng có quyền truy cập vào một bản ghi Cơ hội (Opportunity - con), hệ thống sẽ tự động cấp quyền truy cập Read Only (chỉ đọc) vào bản ghi Tài khoản (Account - cha) liên kết."
+    },
+    {
+      "id": 10,
+      "question": "Universal Containers is using Salesforce for Opportunity management and enterprise resource planning (ERP) for order management. Sales reps do not have access to the ERP and have no visibility into order status.What solution should a data architect recommend to give the sales team visibility into order status?",
+      "choices": {
+        "A": "Leverage Canvas to bring the order management UI in to the Salesforce tab.",
+        "B": "Build real-time integration to pull order line items into Salesforce when viewing orders.",
+        "C": "Build batch jobs to push order line items to Salesforce.",
+        "D": "Leverage Salesforce Connect to bring the order line item from the legacy system to Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cung cấp cho đội ngũ bán hàng khả năng xem trạng thái đơn hàng thời gian thực từ hệ thống ERP cũ mà không cần di chuyển dữ liệu vật lý, sử dụng Salesforce Connect là giải pháp tối ưu để đưa các bản ghi chi tiết đơn hàng (Order line items) hiển thị trực tiếp trong Salesforce."
+    },
+    {
+      "id": 11,
+      "question": "A large multinational B2C Salesforce customer is looking to implement their distributor management application in Salesforce. The application has the following capabilities:\nDistributors create Sales Orders in Salesforce.Sales Orders are based on Product prices applicable to their region.Sales Orders are closed once they are fulfilled.It is decided to maintain Sales Orders in Opportunities object.How should the data architect model this requirement?",
+      "choices": {
+        "A": "Create lookup to Custom Price object and share with distributors.",
+        "B": "Manually update Opportunities with Prices applicable to distributors",
+        "C": "Configure Price Books for each region and share with distributors.",
+        "D": "Add custom fields in Opportunity and use triggers to update prices."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để áp dụng giá sản phẩm khác nhau theo từng khu vực cho các nhà phân phối khi họ tạo đơn hàng, giải pháp chuẩn trong Salesforce là cấu hình các Sổ bảng giá (Price Books) riêng biệt cho từng khu vực và thực hiện chia sẻ Price Books đó với các nhà phân phối tương ứng."
+    },
+    {
+      "id": 12,
+      "question": "Universal Containers (UC) is migrating from a legacy system to Salesforce CRM. UC is concerned about the quality of data being entered by users and through external integrations.Which two solutions should a data architect recommend to mitigate data quality issues? (Choose two.)",
+      "choices": {
+        "A": "Leverage third-party AppExchange tools.",
+        "B": "Leverage Apex to validate the format of data being entered via a mobile device.",
+        "C": "Leverage validation rules and workflows.",
+        "D": "Leverage picklist and lookup fields where possible."
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Để hạn chế tối qua các vấn đề về chất lượng dữ liệu khi người dùng hoặc tích hợp bên ngoài nhập vào Salesforce, quản trị viên nên:\n- Sử dụng các Quy tắc kiểm tra tính hợp lệ (Validation Rules) và quy trình tự động hóa (Workflows) để kiểm soát định dạng.\n- Tận dụng các trường danh sách chọn (Picklists) và trường liên kết (Lookups) bất cứ khi nào có thể để chuẩn hóa dữ liệu đầu vào."
+    },
+    {
+      "id": 13,
+      "question": "A large Insurance provider is looking to implement Salesforce. The following conditions exist:\nMultiple channels for lead acquisitionDuplicate leads across channelsPoor customer experience and higher costsOn analysis, it was found that there are duplicate leads that are resulting in multiple quotes and opportunities.Which three actions should a data architect recommend to mitigate the issues? (Choose three.)",
+      "choices": {
+        "A": "Implement third-party solution to dean and enrich lead data.",
+        "B": "Implement de-duplication strategy to prevent duplicate leads.",
+        "C": "Build a custom solution to identify and merge duplicate leads.",
+        "D": "Standardize lead information across all channels.",
+        "E": "Build process to manually search and merge duplicates."
+      },
+      "correctAnswer": "ABD",
+      "explanation_vi": "Để giảm thiểu tình trạng trùng lặp leads từ nhiều kênh thu nhận gây ảnh hưởng đến trải nghiệm khách hàng và tăng chi phí, Data Architect nên:\n- Sử dụng giải pháp của bên thứ ba (A) để làm sạch và làm phong phú dữ liệu lead.\n- Triển khai chiến lược ngăn chặn trùng lặp dữ liệu lead (B) bằng Duplicate Rules.\n- Chuẩn hóa thông tin lead nhập vào (D) đồng bộ trên tất cả các kênh acquisition."
+    },
+    {
+      "id": 14,
+      "question": "A large automobile company has implemented Salesforce for its sales associates. Leads flow from its website to Salesforce using a batch integration in Salesforce. The batch job converts the leads to Accounts in Salesforce. Customers visiting their retail stores are also created in Salesforce as Accounts.The company has noticed a large number of duplicate Accounts in Salesforce. On analysis, it was found that certain customers could interact with its website and also visit the store. The sales associates use Global Search to search for customers in Salesforce before they create the customers.Which option should a data architect choose to implement to avoid duplicates?",
+      "choices": {
+        "A": "Develop an Apex class that searches for duplicates and removes them nightly.",
+        "B": "Build a custom search functionality that allows sales associates to search for customer in real time upon visiting their retail stores.",
+        "C": "Leverage duplicate rules in Salesforce to validate duplicates during the account creation process.",
+        "D": "Implement an MDM solution to validate the customer information before creating Accounts in Salesforce."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để ngăn chặn việc tạo tài khoản trùng lặp khi khách hàng tương tác qua cả website và cửa hàng bán lẻ, giải pháp tối ưu và sẵn có của Salesforce là cấu hình các quy tắc trùng lặp (Duplicate Rules) kết hợp Matching Rules để cảnh báo hoặc ngăn chặn nhân viên khi họ cố tình tạo tài khoản trùng."
+    },
+    {
+      "id": 15,
+      "question": "Universal Containers is experiencing frequent and persistent group membership locking issues that severely restricts its ability to manage manual and automated updates at the same time.What should a data architect do in order to resolve the issue?",
+      "choices": {
+        "A": "Enable granular locking.",
+        "B": "Enable parallel sharing rule calculation.",
+        "C": "Enable defer sharing calculation.",
+        "D": "Enable implicit sharing."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi gặp sự cố khóa bản ghi thành viên nhóm (group membership locking) liên tục do các cập nhật thủ công và tự động diễn ra đồng thời, giải pháp là kích hoạt tính năng khóa chi tiết (Granular Locking) trong Salesforce để giảm phạm vi khóa tài nguyên xuống mức tối thiểu cần thiết."
+    },
+    {
+      "id": 16,
+      "question": "A large retail company has recently chosen Salesforce as Its CRM solution. They have the following record counts:2,500,000 Accounts25,000,000 ContactsWhen doing an initial performance test, the data architect noticed an extremely slow response-time for reports and list views.What should a data architect do to solve the performance issues?",
+      "choices": {
+        "A": "Create a Skinny Table to represent Account and Contact objects.",
+        "B": "Limit data loading to the 2,000 most recently created records.",
+        "C": "Add Custom Indexes on frequently searched Account and Contact fields.",
+        "D": "Load only data that the user is permitted to access."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi số lượng bản ghi quá lớn (2,5 triệu Accounts và 25 triệu Contacts) gây chậm hiệu năng truy vấn, giải pháp đầu tiên và hiệu quả nhất là thêm các Chỉ mục tùy chỉnh (Custom Indexes) trên các trường thường xuyên được sử dụng làm bộ lọc trong báo cáo và list views."
+    },
+    {
+      "id": 17,
+      "question": "Universal Containers (UC) is replacing a home grown CRM solution with Salesforce. UC has decided to migrate operational (open and active) records to Salesforce, while keeping historical records in legacy system. UC would like historical records to be available in Salesforce on an as needed basis.Which solution should a data architect recommend to meet business requirement?",
+      "choices": {
+        "A": "Leverage real-time integration to pull records into Salesforce.",
+        "B": "Build a swivel chair solution to go into the legacy system and display records.",
+        "C": "Leverage mashup to display historical records in Salesforce.",
+        "D": "Bring all data in Salesforce, and delete it after a year."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để hiển thị thông tin lịch sử từ hệ thống cũ trong Salesforce khi cần thiết mà không muốn lưu trữ trực tiếp (tránh tốn dung lượng), giải pháp phù hợp nhất là sử dụng kỹ thuật Mashup (nhúng trang hoặc dịch vụ web của hệ thống cũ vào Salesforce UI)."
+    },
+    {
+      "id": 18,
+      "question": "Universal Container has implemented Sales Cloud to manage patient and related health records. During a recent security audit of the system, it was discovered that some standard and custom fields need to encrypted.Which solution should a data architect recommend to encrypt existing fields?",
+      "choices": {
+        "A": "Implement shield platform encryption to encrypt custom and standard fields.",
+        "B": "Export data out of Salesforce and encrypt custom and standard fields.",
+        "C": "Implement classic encryption to encrypt custom and standard fields.",
+        "D": "Use Apex Crypto Class to encrypt custom and standard fields."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để mã hóa cả các trường tiêu chuẩn và tùy chỉnh nhằm đáp ứng yêu cầu kiểm toán bảo mật trong ứng dụng quản lý hồ sơ y tế Health Cloud, giải pháp phù hợp nhất là triển khai tính năng Shield Platform Encryption có sẵn của Salesforce."
+    },
+    {
+      "id": 19,
+      "question": "As part of addressing General Data Protection Regulation (GDPR) requirements, Universal Containers (UC) plans to implement a data classification policy for all of its internal systems that store customer information including Salesforce.What should a data architect recommend so that UC can easily classify customer information maintained in Salesforce under both standard and custom objects?",
+      "choices": {
+        "A": "Use Data Classification metadata fields available in Field definition.",
+        "B": "Build reports that contain customer data and classify manually.",
+        "C": "Create a custom picklist field to capture classification of information on the Contact object.",
+        "D": "Use an AppExchange product to classify fields based on policy."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để thực hiện phân loại dữ liệu (Data Classification) nhằm tuân thủ quy định GDPR, Salesforce cung cấp sẵn các trường metadata phân loại dữ liệu trực tiếp trong định nghĩa trường (Field definition) của cả đối tượng standard và custom."
+    },
+    {
+      "id": 20,
+      "question": "Universal Containers requires all customers to provide either a phone number or an email address when registering for an account.What should the data architect use to ensure this requirement is met?",
+      "choices": {
+        "A": "Validation Rule",
+        "B": "Apex Class",
+        "C": "Process Builder",
+        "D": "Required Fields"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để bắt buộc khách hàng phải cung cấp ít nhất một trong hai thông tin là số điện thoại hoặc địa chỉ email khi đăng ký tài khoản, ta sử dụng Quy tắc kiểm tra tính hợp lệ (Validation Rule) với công thức kiểm tra tính trống của cả hai trường."
+    },
+    {
+      "id": 21,
+      "question": "Universal Containers (UC) owns a complex Salesforce org with many Apex classes, triggers, and automated processes that will modify records if available. UC has identified that, in its current development state, UC runs chance of encountering race conditions on the same record.What should a data architect recommend to guarantee that records are not being updated at the same time?",
+      "choices": {
+        "A": "Embed the keywords FOR UPDATE after SOQL statements.",
+        "B": "Refactor or optimize classes and triggers for maximum CPU performance.",
+        "C": "Migrate programmatic logic to processes and flows.",
+        "D": "Disable classes or triggers that have the potential to obtain the same record."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để ngăn chặn tình trạng tranh chấp tài nguyên (race conditions) khi nhiều luồng xử lý cố gắng cập nhật cùng một bản ghi đồng thời, nhà phát triển nên sử dụng từ khóa 'FOR UPDATE' trong các câu lệnh SOQL để thực hiện khóa bản ghi (record locking) cho đến khi giao dịch kết thúc."
+    },
+    {
+      "id": 22,
+      "question": "Universal Containers has a rollup summary field on account to calculate the number of contacts associated with an account. During the account load, Salesforce is throwing an \"UNABLE_TO_LOCK_ROW\" error.Which solution should a data architect recommend to resolve the error?",
+      "choices": {
+        "A": "Perform a batch job in parallel mode and reduce the batch size.",
+        "B": "Defer rollup summary field calculation during data migration.",
+        "C": "Perform a batch job in serial mode and reduce the batch size.",
+        "D": "Leverage Data Loader’s platform API to load data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi tải dữ liệu lớn gặp lỗi 'UNABLE_TO_LOCK_ROW' do trường rollup summary trên Account tính toán số lượng Contact, Data Architect nên đề xuất chạy công việc import ở chế độ tuần tự (Serial mode) và giảm kích thước lô (batch size) để tránh khóa chéo tài nguyên."
+    },
+    {
+      "id": 23,
+      "question": "Universal Containers (UC) needs to run monthly and yearly reports on opportunities and orders for sales reporting. There are 5 million opportunities and 10 million orders. Sales users are complaining that the report will regularly timeout.What is the fastest and most effective way for a data architect to solve the time-out issue?",
+      "choices": {
+        "A": "Create a skinny table in Salesforce, and copy order and opportunity fields into the skinny table and create the required reports on it.",
+        "B": "Extract opportunity and order data from Salesforce, and use a third-party reporting tool to run reports outside of Salesforce.",
+        "C": "Create custom fields on opportunity, and copy data from order into those custom fields and run all reports on Opportunity object.",
+        "D": "Create an aggregate custom object that summarizes the monthly and yearly values into the required format for the required reports."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Với số lượng bản ghi rất lớn (5 triệu opportunities và 10 triệu orders) làm báo cáo bị timeout, phương án hiệu quả nhất là xây dựng một đối tượng tùy chỉnh tổng hợp (Aggregate Custom Object) để tính toán trước và lưu trữ các giá trị tổng hợp hàng tháng/hàng năm, sau đó chạy báo cáo trực tiếp trên đối tượng này."
+    },
+    {
+      "id": 24,
+      "question": "Northern Trail Outfitters has implemented Salesforce for its sales associates nationwide. Senior management is concerned that the executive dashboards are not reliable for their real-time decision-making. On analysis, the team found the following issues with data entered inSalesforce:\nInformation in certain records is incomplete.Incorrect entry in certain fields causes records to be excluded in report filters.Duplicate entries cause incorrect counts.Which three steps should a data architect recommend to address the issues? (Choose three.)",
+      "choices": {
+        "A": "Explore third-party data providers to enrich and augment information entered in Salesforce.",
+        "B": "Build a sales data warehouse with purpose-built data marts for dashboards and senior management reporting.",
+        "C": "Design and implement data-quality dashboard to monitor and act on records that are incomplete or incorrect.",
+        "D": "Periodically export data to cleanse data and import them back into Salesforce for executive reports.",
+        "E": "Leverage Salesforce features, such as validation rules, to avoid incomplete and incorrect records."
+      },
+      "correctAnswer": "ACE",
+      "explanation_vi": "Để nâng cao chất lượng dữ liệu phục vụ các báo cáo của ban điều hành, Data Architect nên đề xuất:\n- Sử dụng dịch vụ cung cấp dữ liệu của bên thứ ba (A) để bổ sung và cập nhật thông tin.\n- Thiết kế và triển khai data-quality dashboard (C) để giám sát định kỳ các bản ghi không đầy đủ hoặc sai sót.\n- Sử dụng các tính năng sẵn có như quy tắc xác thực (Validation Rules) (E) để ngăn chặn việc nhập dữ liệu sai ngay từ đầu."
+    },
+    {
+      "id": 25,
+      "question": "Northern Trail Outfitters (NTO) has been using Salesforce for Sales and Service for 10 years. For the past two years, the marketing group has noticed a rise from 0% to 35% in returned mail when sending mail using the contact information stored in Salesforce.Which solution should the data architect use to reduce the amount of returned mail?",
+      "choices": {
+        "A": "Email all customers and ask them to verify their information and to call NTO if their address is incorrect.",
+        "B": "Delete contacts when the mail is returned to save postal costs for NTO.",
+        "C": "Have the sales team call all existing customers and ask to verify the contact details.",
+        "D": "Use a third-party data source to update the contact information in Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để xử lý triệt để tình trạng thư gửi bị trả lại (tỷ lệ tăng từ 0% lên 35%) do thông tin liên hệ trong Salesforce bị cũ/sai lệch, giải pháp hiệu quả nhất là tích hợp dịch vụ dữ liệu của bên thứ ba (Third-party data source) để tự động xác thực và cập nhật thông tin địa chỉ mới cho khách hàng."
+    },
+    {
+      "id": 26,
+      "question": "Universal Containers has been a customer of Salesforce for 10 years. Currently they have 2 million accounts in the system. Due to an erroneous integration built 3 years ago, it is estimated there are 500,000 duplicates in the system.\nWhich solution should a data architect recommend to remediate the duplication issue?",
+      "choices": {
+        "A": "Extract the data using data loader and use excel to merge the duplicate records",
+        "B": "Utilize a data warehouse as the system of truth",
+        "C": "Develop an ETL process that utilizes the merge API to merge the duplicate records",
+        "D": "Implement duplicate rules"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để xử lý và dọn dẹp lượng lớn dữ liệu tài khoản bị trùng lặp hiện có trong hệ thống (ước tính khoảng 500.000 bản ghi trùng), Data Architect nên đề xuất thiết lập các quy tắc trùng lặp (Duplicate Rules) kết hợp Matching Rules để giúp xác định, phân loại và hỗ trợ gộp các bản ghi này."
+    },
+    {
+      "id": 27,
+      "question": "Universal Containers (UC) has adopted Salesforce as its primary sales automation tool. UC has 100,000 customers with a growth rate of 10% a year. UC uses an on-premise web-based billing and invoice system that generates over 1 million invoices a year supporting a monthly billing cycle.The UC sales team needs to be able to pull up a customer record and view their account status, invoice history, and open opportunities without navigating outside of Salesforce.What should a data architect use to provide the sales team with the required functionality?",
+      "choices": {
+        "A": "Create a visual force tab with the billing system encapsulated within an iframe.",
+        "B": "Create a custom object and migrate the last 12 months of invoice data into Salesforce so it can be displayed on the Account layout.",
+        "C": "Write an Apex callout and populate a related list to display on the account record.",
+        "D": "Create a mashup page that will present the billing system records within Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đội ngũ bán hàng có thể xem trạng thái tài khoản, lịch sử hóa đơn và cơ hội mở từ hệ thống lập hóa đơn bên ngoài trực tiếp trên trang Account mà không cần di chuyển dữ liệu vật lý vào Salesforce, giải pháp phù hợp nhất là thiết lập trang Mashup (nhúng giao diện hệ thống ngoài vào Salesforce)."
+    },
+    {
+      "id": 28,
+      "question": "Universal Containers developers have created a new Lightning component that leverages an Apex controller using a SOQL query to populate a custom list view. Users are complaining that the component often fails to load and returns a timeout error.What tool should a data architect use to identify why the query is taking too long?",
+      "choices": {
+        "A": "Use Salesforce's query optimizer to analyze the query in the developer console.",
+        "B": "Use Splunk to query the system logs looking for transaction time and CPU usage.",
+        "C": "Enable and use the Query Plan tool in the developer console.",
+        "D": "Open a ticket with Salesforce support to retrieve transaction logs to be analyzed for processing time."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để phân tích lý do tại sao một câu lệnh SOQL trong bộ điều khiển Apex (Apex controller) chạy quá chậm gây lỗi timeout khi tải Lightning component, Data Architect nên kích hoạt và sử dụng công cụ Kế hoạch Truy vấn (Query Plan tool) trong Developer Console của Salesforce."
+    },
+    {
+      "id": 29,
+      "question": "Universal Containers (UC) has lead assignment rules to assign leads to owners. Leads not routed by assignment rules are assigned to a dummy user. Sales rep are complaining of high load times and issues with accessing leads assigned to the dummy user.\nWhat should a data architect recommend to solve these performance issues?",
+      "choices": {
+        "A": "Assign dummy user last role in role hierarchy.",
+        "B": "Assign dummy user to highest role in role hierarchy.",
+        "C": "Periodically delete leads to reduce number of leads.",
+        "D": "Create multiple dummy user and assign leads to them."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi một người dùng ảo (dummy user) sở hữu số lượng bản ghi quá lớn, hiện tượng lệch quyền sở hữu (ownership skew) sẽ xảy ra gây chậm hệ thống và khóa tính toán chia sẻ. Giải pháp là tạo ra nhiều người dùng ảo khác nhau và phân chia đều số lượng lead cho họ để giảm thiểu độ lệch."
+    },
+    {
+      "id": 30,
+      "question": "Universal Containers (UC) Is migrating data from a legacy system to Salesforce. UC would like to preserve the following information on records being migrated:\nDate time stamps for created date and last modified dateOwnership of records belonging to inactive users being migrated to SalesforceWhich two solutions should a data architect recommend to preserve date timestamps and ownership on records? (Choose two.)",
+      "choices": {
+        "A": "Log a case with Salesforce to allow updating these fields.",
+        "B": "Enable Modify All and View All permissions.",
+        "C": "Enable Update Records with Inactive Owners permission.",
+        "D": "Enable Set Audit Fields upon Record Creation permission."
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Khi di chuyển dữ liệu từ hệ thống cũ sang Salesforce và muốn bảo toàn mốc thời gian tạo/chỉnh sửa cũng như quyền sở hữu của những người dùng đã ngưng hoạt động (inactive users), Data Architect nên:\n- Kích hoạt quyền 'Update Records with Inactive Owners' (C) để cho phép gán bản ghi cho các user đã inactive.\n- Kích hoạt quyền 'Set Audit Fields upon Record Creation' (D) để cho phép ghi đè các trường audit như CreatedDate."
+    },
+    {
+      "id": 31,
+      "question": "A large healthcare provider wishes to use Salesforce to track patient care. The following actors are in Salesforce:\nPayment providers: Organizations who pay for the care to patients.Doctors: They provide care plans for patients and need to support multiple patients. They are provided access to patient information.Patients: These are individuals who need care.A data architect needs to map the actors to Salesforce objects.What should be the optimal selection by the data architect?",
+      "choices": {
+        "A": "Patients as Person Accounts, Payment providers as Accounts, and Doctors as Person Accounts",
+        "B": "Patients as Person Accounts, Payment providers as Accounts, and Doctors as Contacts",
+        "C": "Patients as Contacts, Payment providers as Accounts, and Doctors as Accounts",
+        "D": "Patients as Accounts, Payment providers as Accounts, and Doctors as Person Accounts"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mô hình thiết lập đối tượng tối ưu cho các tác nhân y tế là:\n- Bệnh nhân (Patients) làm Person Accounts vì họ là cá nhân nhận dịch vụ chăm sóc.\n- Nhà cung cấp thanh toán (Payment providers) làm Accounts thông thường (Business Accounts) vì họ là tổ chức doanh nghiệp.\n- Bác sĩ (Doctors) làm Person Accounts vì họ cũng là các cá nhân cung cấp dịch vụ độc lập cần lưu trữ thông tin cá nhân và chứng chỉ chuyên môn."
+    },
+    {
+      "id": 32,
+      "question": "Universal Containers has a large number of orders coming in from its online portal. Historically all orders are assigned to a generic user.Which two measures should a data architect recommend to avoid any performance issues while working with a large number of order records? (Choose two.)",
+      "choices": {
+        "A": "Salesforce handles the assignment of orders automatically and there is no performance impact.",
+        "B": "Clear the role field in the generic user record.",
+        "C": "Create a pool of generic users and distribute the assignment of owners to the pool of users.",
+        "D": "Create a role at the top of the role hierarchy and assign the role to the generic user."
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Khi số lượng đơn hàng đổ về từ cổng trực tuyến quá lớn và được gán cho một tài khoản người dùng chung (generic user), để tránh các vấn đề về hiệu năng do ownership skew, Data Architect nên:\n- Xóa trường Vai trò (Role) trong bản ghi của generic user này (B) để tránh việc tính toán lại chia sẻ trên Role hierarchy.\n- Tạo một vai trò (Role) riêng biệt nằm ở vị trí cao nhất trong cây vai trò (D) và gán vai trò này cho generic user."
+    },
+    {
+      "id": 33,
+      "question": "Universal Containers is migrating individual customers (B2C) data from legacy systems to Salesforce. There are millions of customers stored as accounts and contacts in the legacy database.Which object model should a data architect configure within Salesforce?",
+      "choices": {
+        "A": "Leverage a custom person account object in Salesforce.",
+        "B": "Leverage a custom account and contact object in Salesforce.",
+        "C": "Leverage the standard account and contact object in Salesforce.",
+        "D": "Leverage the person account object in Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để quản lý thông tin của hàng triệu khách hàng cá nhân (B2C) khi di chuyển từ hệ thống cũ sang Salesforce, giải pháp mô hình đối tượng chuẩn và tối ưu nhất là sử dụng tính năng Person Accounts có sẵn của Salesforce."
+    },
+    {
+      "id": 34,
+      "question": "Universal Containers (UC) is migrating data from legacy system to Salesforce. During data analysis it was discovered that data types of fields being migrated do not match with Salesforce data types.\nWhich solution should a data architect use to ensure successful data migrations?",
+      "choices": {
+        "A": "Migrate legacy data to a staging database for mapping then leverage an ETL tool to transform the data and load into Salesforce.",
+        "B": "Migrate the legacy data leveraging an ETL tool to transform data types and load data into Salesforce.",
+        "C": "Export legacy data into CSV files and leverage data loader to load data into Salesforce.",
+        "D": "Export legacy data into the staging database and leverage stored procedures to transform data types before loading into Salesforce."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi các kiểu dữ liệu của hệ thống cũ không tương thích với các kiểu dữ liệu của Salesforce, Data Architect nên đề xuất sử dụng một công cụ ETL (Extract, Transform, Load) để thực hiện chuyển đổi định dạng kiểu dữ liệu (data type transformation) trong quá trình di chuyển dữ liệu vào Salesforce."
+    },
+    {
+      "id": 35,
+      "question": "Universal Containers (UC) has implemented a master data management strategy, which uses a central system of truth, to ensure the entire company has the same customer information in all systems. UC customer data changes need to be accurate at all times in all of the systems. Salesforce is the identified system of record for this information.\nWhat is the correct solution for ensuring all systems using customer data are kept up to date?",
+      "choices": {
+        "A": "Send customer record changes from Salesforce to the system of truth in real time.",
+        "B": "Send customer data nightly to the system of truth in a scheduled batch job.",
+        "C": "Have each system pull the record changes from Salesforce using change data capture.",
+        "D": "Send customer record changes from Salesforce to each system in a nightly batch job."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Vì Salesforce là hệ thống gốc (system of record) và các thay đổi cần được cập nhật chính xác trên toàn hệ thống vào mọi lúc, giải pháp tối ưu là sử dụng tính năng Change Data Capture (CDC) của Salesforce để các hệ thống khác có thể đăng ký nhận và đồng bộ các thay đổi bản ghi theo thời gian thực."
+    },
+    {
+      "id": 36,
+      "question": "Universal Containers (UC) is going through major reorganization of their sales team. This would require changes to a large a number of group membership and sharing rules. UCs administrator is concerned about long processing time and failures during the process.What should a Data Architect implement to make changes efficiently?",
+      "choices": {
+        "A": "Log out all users and make change to sharing rules.",
+        "B": "Enable Defer Sharing Calculation prior to making sharing rule changes.",
+        "C": "Log a case with salesforce to make sharing rule changes.",
+        "D": "Delete old sharing rules and build new sharing rules."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi tiến hành tái cấu trúc lớn cho đội ngũ bán hàng liên quan đến số lượng lớn thành viên nhóm và quy tắc chia sẻ, quản trị viên nên bật tính năng Trì hoãn Tính toán Chia sẻ (Defer Sharing Calculation) trước khi thực hiện để tạm dừng tính toán lại chia sẻ sau mỗi thay đổi nhỏ, tránh bị lỗi khóa bản ghi và rút ngắn thời gian xử lý."
+    },
+    {
+      "id": 37,
+      "question": "Northern Trail Outfitters (NTO) has a complex Salesforce org which has been developed over the past five years. Internal users are complaining about multiple data issues, including incomplete and duplicate data in the org. NTO has decided to engage a data architect to analyze and define data quality standards.Which three key factors should a data architect consider while defining data quality standards? (Choose three.)",
+      "choices": {
+        "A": "Measure data timeliness and consistency.",
+        "B": "Define key fields in a staging database for data cleansing.",
+        "C": "Identify an extract, transform, load (ETL) tool for more complete data migrations.",
+        "D": "Measure data completeness and accuracy.",
+        "E": "Define data duplication standards and rules."
+      },
+      "correctAnswer": "ADE",
+      "explanation_vi": "Khi định nghĩa các tiêu chuẩn chất lượng dữ liệu để giải quyết các vấn đề dữ liệu trùng lặp và không đầy đủ trong Salesforce, Data Architect nên xem xét ba yếu tố chính:\n- Đo lường độ đầy đủ và độ chính xác của dữ liệu (Data completeness and accuracy) (D).\n- Đo lường tính kịp thời và tính nhất quán của dữ liệu (Data timeliness and consistency) (A).\n- Định nghĩa các quy tắc và tiêu chuẩn trùng lặp dữ liệu (Data duplication standards and rules) (E)."
+    },
+    {
+      "id": 38,
+      "question": "Northern Trail Outfitters (NTO) has one million customer records spanning 25 years. As part of its new Salesforce project, NTO would like to create a master data management strategy to help preserve the history and relevance of its customer data.Which three activities will be required to identify a successful master data management strategy? (Choose three.)",
+      "choices": {
+        "A": "Choose a business intelligence tool.",
+        "B": "Install a data warehouse.",
+        "C": "Create a data archive strategy.",
+        "D": "Identify data to be replicated.",
+        "E": "Define the system of record for critical data."
+      },
+      "correctAnswer": "CDE",
+      "explanation_vi": "Để xây dựng một chiến lược quản trị dữ liệu master (MDM) thành công cho kho dữ liệu lịch sử 25 năm, Data Architect cần xác định:\n- Định nghĩa hệ thống gốc (System of Record) cho các dữ liệu quan trọng (E).\n- Xác định dữ liệu nào cần được sao chép/đồng bộ (D).\n- Xây dựng chiến lược lưu trữ dữ liệu lịch sử (Data archive strategy) (C)."
+    },
+    {
+      "id": 39,
+      "question": "Universal Containers (UC) has built a B2C ecommerce site on Heroku that shares customer and order data with a Heroku Postgres database. UC is currently utilizing Postgres as the Single Source of Truth for both customers and orders. UC has asked a data architect to replicate this data into Salesforce so that Salesforce can now act as the System of Record.What are the three considerations that a data architect should weigh before implementing this requirement? (Choose three.)",
+      "choices": {
+        "A": "Ensure there is a tight relationship between order data and an enterprise resource planning (ERP) application.",
+        "B": "Determine if the data is a driver of key processes implemented within Salesforce.",
+        "C": "Consider whether the data is required for sales reports, dashboards, and KPIs.",
+        "D": "Ensure the data is CRM-centric and able to populate standard or custom objects.",
+        "E": "A selection of the tool required to replicate the data."
+      },
+      "correctAnswer": "BCD",
+      "explanation_vi": "Trước khi nhân bản dữ liệu từ Heroku Postgres vào Salesforce để Salesforce đóng vai trò là System of Record, ba yếu tố cần cân nhắc kỹ lưỡng là:\n- Xác định xem dữ liệu đó có là động lực thúc đẩy các quy trình nghiệp vụ cốt lõi trong Salesforce hay không (B).\n- Cân nhắc xem dữ liệu đó có thực sự cần thiết cho các báo cáo, dashboard và chỉ số KPI bán hàng hay không (C).\n- Đảm bảo dữ liệu tập trung vào CRM và có thể lưu trữ được trên các đối tượng standard hoặc custom của Salesforce (D)."
+    },
+    {
+      "id": 40,
+      "question": "Universal Containers has millions of cases and are running out storage. Some user groups need to have access to historical cases for up to seven years.Which two solutions should a data architect recommend in order to minimize performance and storage issues? (Choose two.)",
+      "choices": {
+        "A": "Export data out of Salesforce and store in flat files on external system.",
+        "B": "Leverage Salesforce Privacy Center to archive case data and view archived cases through an external object.",
+        "C": "Create a custom object to store case history and run reports on it.",
+        "D": "Leverage big objects to archive case data and Lightning components to show archived data."
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để lưu trữ hàng triệu ca hỗ trợ lịch sử lên đến 7 năm mà không làm ảnh hưởng đến dung lượng lưu trữ của tổ chức và hiệu năng hệ thống, Data Architect nên:\n- Sử dụng Salesforce Privacy Center để lưu trữ (archive) dữ liệu Case lịch sử và truy cập chúng thông qua Đối tượng bên ngoài (External Object) (B).\n- Sử dụng Đối tượng lớn (Big Objects) để lưu trữ dữ liệu Case và xây dựng cấu phần Lightning Component để hiển thị chúng cho người dùng (D)."
+    },
+    {
+      "id": 41,
+      "question": "United Containers (UC) has released a new disaster recovery (DR) policy that states that cloud solutions need a business continuity plan in place separate from the cloud provider's built-in data recovery solution.Which solution should a data architect use to comply with the DR policy?",
+      "choices": {
+        "A": "Leverage a third-party tool that extracts Salesforce data/metadata, and stores the information in an external protected system.",
+        "B": "Utilize an ETL tool to migrate data to an on-premise archival solution.",
+        "C": "Leverage Salesforce weekly exports, and store data in flat files on a protected system.",
+        "D": "Write a custom batch Job to extract data changes nightly, and store on an external protected system."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tuân thủ chính sách khôi phục sau thảm họa (Disaster Recovery) độc lập với nhà cung cấp Salesforce, giải pháp tốt nhất là sử dụng một công cụ của bên thứ ba (Third-party tool) để tự động sao lưu cả dữ liệu và siêu dữ liệu (metadata) của Salesforce, sau đó lưu trữ thông tin này tại một hệ thống bảo vệ độc lập bên ngoài."
+    },
+    {
+      "id": 42,
+      "question": "Northern Trail Outfitters (NTO) has decided to franchise its brand. Upon implementation 1,000 franchisees will be able to access NTO's product information and track large customer sales and opportunities through a portal. The franchisees will also be able to run monthly and quarterly sales reports and projections as well as view the reports in dashboards.Which license does NTO need to provide these features to the franchisees?",
+      "choices": {
+        "A": "Customer Community License",
+        "B": "Lighting Platform License",
+        "C": "Salesforce Sales Cloud License",
+        "D": "Partner Community License"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cho phép 1.000 đối tác nhận nhượng quyền (franchisees) truy cập thông tin sản phẩm, quản lý cơ hội kinh doanh quy mô lớn và xem báo cáo/dashboard thông qua một cổng thông tin (portal), giấy phép phù hợp nhất NTO cần cung cấp là Partner Community License."
+    },
+    {
+      "id": 43,
+      "question": "Northern Trail Outfitters (NTO) has multiple Salesforce orgs based on geographical regions (AMER, EMEA, APAC). NTO products are mastered in the AMER org and need to be created in the EMEA and APAC orgs after the products are approved.Which two features should a data architect recommend to share records between Salesforce orgs? (Choose two.)",
+      "choices": {
+        "A": "Federated Search",
+        "B": "Salesforce 2 Salesforce",
+        "C": "Change Data Capture (CDC)",
+        "D": "Salesforce Connect"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Để chia sẻ dữ liệu sản phẩm đã được phê duyệt giữa nhiều Salesforce orgs ở các khu vực địa lý khác nhau, Data Architect nên đề xuất:\n- Sử dụng tính năng Salesforce to Salesforce (S2S) (B) để kết nối và tự động chia sẻ hồ sơ bản ghi giữa các org.\n- Sử dụng Change Data Capture (CDC) (C) kết hợp tích hợp để tự động gửi thông tin cập nhật sản phẩm khi có thay duyệt."
+    },
+    {
+      "id": 44,
+      "question": "Northern Trail Outfitters is planning to build a consent form to record customer authorization for marketing purposes.\nWhat should a data architect recommend to fulfill this requirement?",
+      "choices": {
+        "A": "Use AppExchange solution to address the requirement.",
+        "B": "Utilize the Authorization Form Consent object to capture the consent.",
+        "C": "Use custom fields to capture the authorization details.",
+        "D": "Create a custom object to maintain the authorization."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để ghi lại sự đồng ý của khách hàng đối với mục đích tiếp thị (consent) một cách chuẩn hóa, Salesforce cung cấp sẵn đối tượng tiêu chuẩn là Authorization Form Consent nhằm lưu trữ và quản lý thông tin chấp thuận của khách hàng."
+    },
+    {
+      "id": 45,
+      "question": "Northern Trail Outfitters (NTO) plans to maintain contact preferences for customers and employees. NTO has implemented the following:\nCustomers are Person Accounts for their retail business.Customers are represented as Contacts for their commercial business.Employees are maintained as Users.Prospects are maintained as Leads.\nNTO needs to implement a standard communication preference management model for Person Accounts, Contacts, Users, and Leads.\nWhich option should the data architect recommend NTO to satisfy this requirement?",
+      "choices": {
+        "A": "Create case for contact preferences, and use this to validate the preferences for Lead, Person Accounts, and Users.",
+        "B": "Use Individual objects to maintain the preferences with relationships to Lead, Person Account, and Users.",
+        "C": "Create custom fields for contact preferences in Lead, Person Account, and Users objects.",
+        "D": "Create a custom object to maintain preferences and build relationships to Lead, Person Account, and Users."
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 46,
+      "question": "Northern Trail Outfitters (NTO) has multiple Salesforce orgs based on regions. Users need read-only access to customers across all Salesforce orgs.\nWhich feature in Salesforce can be used to provide access to customer records across all NTO orgs?",
+      "choices": {
+        "A": "Salesforce 2 Salesforce",
+        "B": "External APIs",
+        "C": "Salesforce Connect",
+        "D": "Federated Search"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cấp quyền truy cập chỉ đọc đối với thông tin khách hàng nằm rải rác trên nhiều Salesforce orgs của các khu vực khác nhau từ một giao diện tìm kiếm duy nhất, giải pháp phù hợp nhất là cấu hình tính năng Tìm kiếm liên hợp (Federated Search) của Salesforce."
+    },
+    {
+      "id": 47,
+      "question": "A national nonprofit organization is using Salesforce to recruit members. The recruitment process requires a member to be matched with a volunteer opportunity. Given the following:\nA record is created in Project__c and used to track the project through completion.The member may then start volunteering and is required to track their volunteer hours, which is stored in VTOTime__c object related to the project.Ability to view or edit the VTOTime__c object needs to be the same as the Project__c record.Managers must see total hours volunteered while viewing the Project__c record.\nWhich data relationship should the data architect use to support this requirement when creating the custom VTOTime__c object?",
+      "choices": {
+        "A": "Master Detail field on Project__c to VTOTime__c showing a list of VTOTime__c Records in a related list.",
+        "B": "Lookup field on VTOTime__c to Project__c with formula filed on Project__c showing Sum of hours from VTOTime__c records.",
+        "C": "Lookup Field on Project__c to VTOTime__C displaying a list of VTOTime__C in a related list.",
+        "D": "Master Detail Field on VTOTime__c to Project__c with rollup summary field on Project__c showing sum of hours from VTOTime__c records."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để thỏa mãn các yêu cầu: quyền xem/sửa bản ghi con (VTOTime__c) đồng bộ với bản ghi cha (Project__c) và hiển thị tổng số giờ làm việc trên bản ghi cha, mối quan hệ tối ưu cần thiết lập là Master-Detail relationship field trên VTOTime__c trỏ đến Project__c, kết hợp trường Roll-up Summary field trên Project__c để tính tổng số giờ."
+    },
+    {
+      "id": 48,
+      "question": "A customer is operating in a highly regulated industry and is planning to implement Salesforce. The customer information maintained in Salesforce. includes the following:\nPersonally Identifiable information (PII)IP restrictions on profiles organized by geographic locationFinancial records that need to be private and accessible only by the assigned sales associateEnterprise Security has mandated access to be restricted to users within a specific geography with detailed monitoring of user activity. Additionally, users should not be allowed to export information from Salesforce.Which three Salesforce Shield capabilities should a data architect recommend? (Choose three.)",
+      "choices": {
+        "A": "Event monitoring to monitor all user activity.",
+        "B": "Encrypt sensitive customer information maintained in Salesforce.",
+        "C": "Prevent sales users access to customer PII information.",
+        "D": "Restrict access to Salesforce from users outside specific geography.",
+        "E": "Transaction Security policies to prevent export of Salesforce data."
+      },
+      "correctAnswer": "ABE",
+      "explanation_vi": "Đối với khách hàng hoạt động trong lĩnh vực có quy định quản lý nghiêm ngặt cần giám sát chi tiết hoạt động người dùng và ngăn chặn xuất dữ liệu, ba cấu phần của Salesforce Shield cần đề xuất là:\n- Event Monitoring (A) để theo dõi và giám sát chi tiết mọi hoạt động của người dùng.\n- Platform Encryption (B) để mã hóa thông tin khách hàng nhạy cảm (PII) được lưu trữ.\n- Transaction Security policies (E) để ngăn chặn việc người dùng thực hiện hành vi xuất (export) dữ liệu ra khỏi Salesforce."
+    },
+    {
+      "id": 49,
+      "question": "Universal Containers (UC) is in the process of migrating legacy inventory data from an enterprise resource planning (ERP) system into Sales Cloud with the following requirements:\nLegacy inventory data will be stored in a custom child object called Inventory__c.Inventory data should be related to the standard Account object.The Inventory__c object should inherit the same sharing rules as the Account object.Anytime an Account record is deleted in Salesforce. the related Inventory__c record(s) should be deleted as well.What type of relationship field should a data architect recommend in this scenario?",
+      "choices": {
+        "A": "Lookup relationship field on Inventory__c, related to Account",
+        "B": "Indirect lookup relationship field on Account, related to Inventory__c",
+        "C": "Master-detail relationship field on Inventory__c, related to Account",
+        "D": "Master-detail relationship field on Account, related to Inventory__c"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đối tượng con Inventory__c kế thừa hoàn toàn các quy tắc chia sẻ của đối tượng cha Account, và tự động bị xóa khi Account liên kết bị xóa, Data Architect nên tạo một trường quan hệ Master-Detail relationship field trên Inventory__c liên kết với Account."
+    },
+    {
+      "id": 50,
+      "question": "Universal Containers (UC) is implementing Salesforce and will be using Salesforce to track customer complaints, provide white papers on products, and provide subscription based support.Which license type will UC users need to fulfill UC's requirements?",
+      "choices": {
+        "A": "Sales Cloud License",
+        "B": "Salesforce License",
+        "C": "Service Cloud License",
+        "D": "Lightning Platform Starter License"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đáp ứng các yêu cầu về theo dõi khiếu nại khách hàng (Cases), cung cấp tài liệu kỹ thuật (Knowledge base) và quản lý hỗ trợ đăng ký (Subscription support), giấy phép phù hợp nhất doanh nghiệp cần trang bị cho người dùng là Service Cloud License."
+    },
+    {
+      "id": 51,
+      "question": "Universal Containers (UC) is in the process of selling half of its company. As part of this split, UC’s main Salesforce org will be divided into two orgs: Org A and Org B. UC has delivered these requirements to its data architect:\nThe data model for Org B will drastically change with different objects, fields, and picklist values.Three million records will need to be migrated from Org A to Org B for compliance reasons.The migration will need occur within the next two months, prior to the spilt.Which migration strategy should a data architect use to successfully migrate the data?",
+      "choices": {
+        "A": "Use an ETL tool to orchestrate the migration.",
+        "B": "Write a script to use the Bulk API.",
+        "C": "Use the Salesforce CLI to query, export, and import.",
+        "D": "Use Data Loader for export and Data Import Wizard for import."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để di chuyển dữ liệu (3 triệu bản ghi) giữa hai tổ chức Salesforce có mô hình dữ liệu (objects, fields, picklists) thay đổi hoàn toàn khác biệt trong thời gian ngắn (2 tháng), giải pháp tối ưu là sử dụng một công cụ ETL (Extract, Transform, Load) để điều phối luồng di chuyển và tự động chuyển đổi cấu trúc dữ liệu."
+    },
+    {
+      "id": 52,
+      "question": "Universal Containers has a legacy client server app that has a relational database that needs to be migrated to Salesforce.What are the three key actions that should be done when data modeling in Salesforce? (Choose three.)",
+      "choices": {
+        "A": "Work with legacy application owner to analyze the legacy data model.",
+        "B": "Map legacy data to Salesforce objects.",
+        "C": "Implement the legacy data model within Salesforce using custom fields.",
+        "D": "Identify data elements to be persisted in Salesforce.",
+        "E": "Map legacy data to custom metadata types."
+      },
+      "correctAnswer": "ABD",
+      "explanation_vi": "Khi thực hiện chuyển đổi mô hình dữ liệu quan hệ từ hệ thống legacy client-server sang Salesforce, ba hoạt động cốt lõi cần thực hiện là:\n- Phối hợp với chủ sở hữu ứng dụng cũ để phân tích sâu mô hình dữ liệu legacy (A).\n- Xác định các thành phần dữ liệu thực sự cần thiết phải lưu trữ lâu dài trong Salesforce (D).\n- Thực hiện ánh xạ (mapping) dữ liệu legacy vào các đối tượng tương ứng của Salesforce (B)."
+    },
+    {
+      "id": 53,
+      "question": "Universal Containers has a requirement to store more than 100 million records in Salesforce and needs to create a custom big object to support this business requirement.Which two tools should a data architect use to build custom big object? (Choose two.)",
+      "choices": {
+        "A": "Go to Big Object in Setup and select new to create big object.",
+        "B": "Use Metadata API to create big object.",
+        "C": "Go to Object Manager in Setup and select new to create big object.",
+        "D": "Use DX to create big object."
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Để tạo một đối tượng lớn tùy chỉnh (Custom Big Object) phục vụ lưu trữ hơn 100 triệu bản ghi, hai phương pháp được hỗ trợ là:\n- Tạo trực tiếp thông qua giao diện Big Object trong phần thiết lập Setup của Salesforce (A).\n- Sử dụng Metadata API để định nghĩa và tạo đối tượng lớn từ xa (B)."
+    },
+    {
+      "id": 54,
+      "question": "Northern Trail Outfitters (NTO) has a loyalty program to reward repeat customers. The following conditions exist:\nReward levels are earned based on the amount spent during the previous 12 months.The program will track every item a customer has bought and grant them points for discounts.The program generates 100 million records each month.NTO Customer Support would like to see a summary of a customer's recent transactions and the reward level(s) they have attained.Which solution should the data architect use to provide the information within Salesforce for the customer support agents?",
+      "choices": {
+        "A": "Create a custom big object to capture the reward program data, display it on the contact record, and update nightly from the point-of-sale system.",
+        "B": "Create a custom object in Salesforce to capture and store all reward programs, populate nightly from the point-of-sale system, and present on the customer record.",
+        "C": "Provide a button so that the agent can quickly open the point-of-sale system that displays the customer’s history.",
+        "D": "Capture the reward program data in an external data store, and present the 12-month trailing summary in Salesforce using Salesforce Connect and an external object."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để hiển thị tóm tắt dữ liệu tích lũy 12 tháng từ chương trình khách hàng thân thiết sinh ra 100 triệu bản ghi mỗi tháng cho tổng đài viên mà không làm quá tải dung lượng lưu trữ của Salesforce, phương án tối ưu là lưu trữ dữ liệu này ở một hệ thống bên ngoài và sử dụng Salesforce Connect để hiển thị thông tin thời gian thực qua đối tượng ngoại vi (External Object)."
+    },
+    {
+      "id": 55,
+      "question": "Universal Containers needs to load a large volume of leads into Salesforce on a weekly basis. During this process the validation rules are disabled.What should a data architect recommend to ensure data quality is maintained in Salesforce?",
+      "choices": {
+        "A": "Allow validation rules to be activated during the load of leads into Salesforce.",
+        "B": "Develop a custom Batch Apex process to improve quality once the load is completed.",
+        "C": "Activate validation rules once the leads are loaded into Salesforce to maintain quality.",
+        "D": "Ensure the lead data is preprocessed for quality before loading into Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi thực hiện import dữ liệu lớn (lead) và bắt buộc phải tắt các quy tắc kiểm tra (Validation Rules) để tối ưu hiệu năng và tránh lỗi, biện pháp tốt nhất để duy trì chất lượng dữ liệu là thực hiện xử lý trước dữ liệu (data preprocessing) để đảm bảo chất lượng, tính hợp lệ và sạch sẽ trước khi tiến hành import vào Salesforce."
+    },
+    {
+      "id": 56,
+      "question": "Universal Containers (UC) has implemented Salesforce. UC is running out of storage and needs to have an archiving solution. UC would like to maintain two years of data in Salesforce and archive older data out of Salesforce.Which solution should a data architect recommend as an archiving solution?",
+      "choices": {
+        "A": "Build a batch job to move all records off platform, and delete all records from Salesforce.",
+        "B": "Build a batch job to move two-year-old records off platform, and delete old records from Salesforce.",
+        "C": "Build a batch job to move all records off platform, and delete old records from Salesforce.",
+        "D": "Use a third-party backup solution to back up all data off platform."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để giải quyết vấn đề đầy dung lượng lưu trữ, giải pháp lưu trữ lưu trữ (data archiving) chuẩn là xây dựng một tiến trình tự động (batch job) định kỳ di chuyển các bản ghi đã quá 2 năm tuổi ra khỏi Salesforce lưu trữ bên ngoài, sau đó thực hiện xóa vĩnh viễn các bản ghi cũ này khỏi Salesforce."
+    },
+    {
+      "id": 57,
+      "question": "Universal Containers has 30 million case records. The Case object has 80 fields. Agents are reporting performance Issues and time-outs while running case reports in the Salesforce org.Which solution should a data architect recommend to improve reporting performance?",
+      "choices": {
+        "A": "Contact Salesforce support to enable skinny table for cases.",
+        "B": "Build reports using custom Lightning components.",
+        "C": "Create a custom object to store aggregate data and run reports.",
+        "D": "Move data off of the platform and run reporting outside Salesforce, and give access to reports."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi hệ thống có 30 triệu ca hỗ trợ (Cases) với 80 trường thông tin làm các báo cáo của nhân viên thường xuyên bị timeout, giải pháp cải thiện hiệu năng báo cáo nhanh nhất và hiệu quả nhất là liên hệ với bộ phận hỗ trợ của Salesforce để kích hoạt skinny table dành riêng cho đối tượng Case."
+    },
+    {
+      "id": 58,
+      "question": "Universal Containers (UC) is transitioning from Classic to Lightning Experience.What does UC need to do to ensure users have access to its notes and attachments in Lightning Experience?",
+      "choices": {
+        "A": "Manually upload Notes in Lightning Experience.",
+        "B": "Manually upload Attachments in Lightning Experience.",
+        "C": "Add Notes and Attachments Related Lists to Page Layouts in Lightning Experience.",
+        "D": "Migrate Notes and Attachments to Enhanced Notes and Piles using a migration tool."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi chuyển đổi từ giao diện Classic sang Lightning Experience, để đảm bảo người dùng truy cập và sử dụng tốt các ghi chú và tệp đính kèm cũ, quản trị viên cần sử dụng công cụ di chuyển để chuyển đổi dữ liệu từ cấu trúc cũ (Notes & Attachments) sang định dạng mới tối ưu hơn (Enhanced Notes và Files)."
+    },
+    {
+      "id": 59,
+      "question": "Northern Trail Outfitters (NTO) is in the process of evaluating big objects to store large amounts of asset data from an external system. NTO will need to report on this asset data weekly.Which two native tools should a data architect recommend to achieve this reporting requirement? (Choose two.)",
+      "choices": {
+        "A": "Standard SOQL queries",
+        "B": "Async SOQL with a custom object",
+        "C": "Standard reports and dashboards",
+        "D": "Einstein Analytics"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để có thể báo cáo hàng tuần trên dữ liệu tài sản khổng lồ lưu trữ trong Big Objects, hai công cụ gốc của Salesforce hỗ trợ khai thác dữ liệu này là:\n- Sử dụng Async SOQL (SOQL bất đồng bộ) để truy vấn và đẩy kết quả tổng hợp sang một đối tượng tùy chỉnh (Custom Object) để chạy báo cáo tiêu chuẩn (B).\n- Sử dụng Einstein Analytics (CRM Analytics) để kết nối trực tiếp và phân tích dữ liệu Big Objects (D)."
+    },
+    {
+      "id": 60,
+      "question": "Universal Containers (UC) uses the following Salesforce products:Sales Cloud for customer management.Marketing Cloud for marketing.Einstein Analytics for business reporting.UC occasionally gets a list of prospects from third-party sources as comma-separated values (CSV) files for marketing purposes. Historically, UC would load these contacts into Lead object in Salesforce and sync to Marketing cloud to send marketing communications. The number of records in the Lead object has grown over time and has been consuming large amounts of storage in Sales Cloud. UC is looking for recommendations to reduce the storage and advice on how to optimize the marketing process.What should a data architect recommend to UC in order to immediately avoid storage issues in the future?",
+      "choices": {
+        "A": "Load the CSV files in an external database and sync with Marketing Cloud prior to sending marketing communications.",
+        "B": "Continue to use the existing process to use Lead object to sync with Marketing Cloud and delete Lead records from Sales Cloud after the sync is complete.",
+        "C": "Load the contacts directly to Marketing Cloud and have a reconciliation process to track prospects that are converted to customers.",
+        "D": "Load the CSV files in Einstein Analytics and sync with Marketing Cloud prior to sending marketing communications."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để ngăn chặn vấn đề cạn kiệt dung lượng lưu trữ do tải hàng loạt tệp CSV chứa danh sách khách hàng triển vọng cho chiến dịch tiếp thị vào đối tượng Lead, giải pháp tối ưu là tải trực tiếp danh sách này vào Marketing Cloud để chạy chiến dịch tiếp thị, đồng thời thiết lập quy trình đối chiếu để chỉ tạo bản ghi khách hàng trong Salesforce khi họ thực sự chuyển đổi."
+    },
+    {
+      "id": 61,
+      "question": "To address different compliance requirements such as General Data Protection Regulation (GDPR), personally identifiable information (PII), Health Insurance Portability and Accountability Act (HIPPA) and others, a Salesforce customer decided to categorize each data element in Salesforce with the following:\nData ownerSecurity level (i.e. confidential)Compliance type (i.e. GDPR. PII, HIPAA)A compliance audit would require Salesforce admins to generate reports to manage compliance.What should a data architect recommend to address this requirement?",
+      "choices": {
+        "A": "Build reports for field Information, then export the information to classify and report for audits.",
+        "B": "Create a custom object and field to capture necessary compliance information and build custom reports.",
+        "C": "Use the Metadata API to extract field attribute information and use the extract to classify and build reports.",
+        "D": "Use field metadata attributes for compliance categorization, data owner, and data sensitivity level."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Salesforce cung cấp sẵn tính năng phân loại dữ liệu (Data Classification) cho phép cấu hình trực tiếp các thuộc tính metadata của trường bao gồm: Chủ sở hữu dữ liệu (Data Owner), Mức độ nhạy cảm của dữ liệu (Data Sensitivity Level), và Loại tuân thủ (Compliance Categorization) phục vụ kiểm toán bảo mật và tuân thủ GDPR, HIPAA."
+    },
+    {
+      "id": 62,
+      "question": "Universal Containers (UC) is in the process of implementing an enterprise data warehouse (EDW). UC needs to extract 100 million records from Salesforce for migration to the EDW.What data extraction strategy should a data architect use for maximum performance?",
+      "choices": {
+        "A": "Utilize PK Chunking with the Bulk API.",
+        "B": "Install a third-party AppExchange tool.",
+        "C": "Use the Bulk API in parallel mode.",
+        "D": "Call the REST API in successive queries."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi cần kết xuất (extract) khối lượng dữ liệu khổng lồ lên tới 100 triệu bản ghi từ Salesforce ra kho dữ liệu doanh nghiệp (EDW), giải pháp đạt hiệu năng tối đa và tránh lỗi timeout là sử dụng tính năng PK Chunking (phân mảnh khóa chính) kết hợp với Bulk API."
+    },
+    {
+      "id": 63,
+      "question": "A customer wants to maintain geographic location information including latitude and longitude in a custom object.What should a data architect recommend to satisfy this requirement?",
+      "choices": {
+        "A": "Create formula fields with geolocation functions for this requirement.",
+        "B": "Create custom fields to maintain latitude and longitude information.",
+        "C": "Create a geolocation custom field to maintain this requirement.",
+        "D": "Recommend AppExchange packages to support this requirement."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để lưu trữ thông tin tọa độ địa lý (vĩ độ và kinh độ) trên một đối tượng tùy chỉnh một cách chuẩn hóa và hỗ trợ tốt các tính năng bản đồ/tìm kiếm khoảng cách, Data Architect nên đề xuất tạo một trường tùy chỉnh kiểu Geolocation."
+    },
+    {
+      "id": 64,
+      "question": "Universal Containers (UC) would like to build a Human Resources application on Salesforce to manage employee details, payroll, and hiring efforts. To adequately maintain and store the relevant data, the application will need to leverage 45 custom objects. In addition to this, UC expects roughly 20,000 API calls into Salesforce from an on-premise application dally.Which license type should a data architect recommend that best fits these requirements?",
+      "choices": {
+        "A": "Lightning Platform Plus",
+        "B": "Service Cloud",
+        "C": "Lightning External Apps Starter",
+        "D": "Lightning Platform Starter"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giấy phép Lightning Platform Starter chỉ hỗ trợ tối đa 10 đối tượng tùy chỉnh (Custom Objects) cho mỗi người dùng. Do ứng dụng quản lý nhân sự yêu cầu sử dụng tới 45 đối tượng tùy chỉnh, giấy phép phù hợp nhất cần trang bị cho đội ngũ là Lightning Platform Plus (hỗ trợ tối đa 110 đối tượng tùy chỉnh)."
+    },
+    {
+      "id": 65,
+      "question": "Universal Containers (UC) has a Salesforce org with multiple automated processes defined for group membership processing. UC also has multiple admins on staff that perform manual adjustments to the role hierarchy. The automated tasks and manual tasks overlap daily, andUC is experiencing \"lock errors\" consistently.What should a data architect recommend to mitigate these errors?",
+      "choices": {
+        "A": "Remove SOQL statements from Apex Loops.",
+        "B": "Enable sharing recalculations.",
+        "C": "Ask Salesforce support for additional CPU power.",
+        "D": "Enable granular locking."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi các tiến trình tự động cập nhật phân cấp vai trò và các thao tác thủ công của admin xảy ra đồng thời gây ra lỗi khóa dữ liệu (lock errors), giải pháp tối ưu để giảm thiểu xung đột khóa là kích hoạt tính năng khóa chi tiết (Granular Locking) để Salesforce tự động tối ưu hóa cơ chế khóa đối tượng."
+    },
+    {
+      "id": 66,
+      "question": "Northern Trail Outfitters is migrating to Salesforce from a legacy CRM system that identifies the agent relationships in a look-up table.What should the data architect do in order to migrate the data to Salesforce?",
+      "choices": {
+        "A": "Migrate to Salesforce without a record owner.",
+        "B": "Migrate the data and assign to a non-person system user.",
+        "C": "Create custom object to store agent relationships.",
+        "D": "Assign record owners based on relationship."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi di chuyển dữ liệu đại lý từ hệ thống cũ có bảng tra cứu mối quan hệ sở hữu, Data Architect nên đề xuất thực hiện gán quyền sở hữu bản ghi (Record Owners) trong Salesforce dựa trên chính các mối quan hệ đại lý đã được định nghĩa trong bảng tra cứu cũ đó."
+    },
+    {
+      "id": 67,
+      "question": "Northern Trail Outfitters (NTO) uses Sales Cloud and Service Cloud to manage their sales and support processes. Some of NTOs teams are complaining they see new fields on their page and are unsure of which values need be input. NTO is concerned about lack of governance in making changes to Salesforce.Which governance measure should a data architect recommend to solve this issue?",
+      "choices": {
+        "A": "Create reports to identify which fields users are leaving blank, and use external data sources to augment the missing data.",
+        "B": "Add description fields to explain why the field is used, and mark the fields as Required.",
+        "C": "Create and manage a data dictionary, and use a governance process for changes made to common objects.",
+        "D": "Create validation rules with error messages to explain why the field is used."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để kiểm soát việc tạo các trường mới và thay đổi trên các đối tượng dùng chung, tránh gây hoang mang cho người dùng, tổ chức nên xây dựng và duy trì một từ điển dữ liệu (Data Dictionary) rõ ràng, kết hợp với một quy trình quản trị thay đổi (Governance process) chặt chẽ."
+    },
+    {
+      "id": 68,
+      "question": "Universal Containers (UC) stores 10 million rows of inventory data in a cloud database. As part of creating a connected experience in Salesforce, UC would like to expose this inventory data to Sales Cloud without a direct import. UC has asked its data architect to determine if Salesforce Connect is needed.Which three considerations should the data architect make when evaluating the need for Salesforce Connect? (Choose three.)",
+      "choices": {
+        "A": "You want real-time access to the latest data from other systems.",
+        "B": "You need small amounts of external data at any one time.",
+        "C": "You need to expose data via a virtual private connection.",
+        "D": "You have a large amount of data and would like to copy subsets of it into Salesforce.",
+        "E": "You have a large amount of data that you don't want to copy into your Salesforce org."
+      },
+      "correctAnswer": "ABE",
+      "explanation_vi": "Khi đánh giá nhu cầu sử dụng Salesforce Connect để kết nối với cơ sở dữ liệu kho chứa 10 triệu dòng dữ liệu ngoài, ba yếu tố cốt lõi cần xem xét là:\n- Doanh nghiệp có yêu cầu truy cập dữ liệu thời gian thực (real-time) với phiên bản mới nhất từ hệ thống ngoài hay không (A).\n- Mỗi lần truy vấn người dùng chỉ cần xem một lượng nhỏ dữ liệu ngoại vi tương ứng (B).\n- Khối lượng dữ liệu ngoài quá lớn và doanh nghiệp không mong muốn sao chép (copy) vật lý chúng vào Salesforce org để tiết kiệm dung lượng (E)."
+    },
+    {
+      "id": 69,
+      "question": "Northern Trail Outfitters (NTO) wants to implement backup and restore for Salesforce data. Currently, it has data backup processes that runs weekly, which backs up all Salesforce data to an enterprise data warehouse (EDW). NTO wants to move to daily backups and provide restore capability to avoid any data loss in case of outage.What should a data architect recommend for a daily backup and restore solution?",
+      "choices": {
+        "A": "Change weekly backup process to daily backup, and implement a custom restore solution.",
+        "B": "Use Bulk API to extract data on daily basis to EDW and REST API for restore.",
+        "C": "Use ETL tool for backup and restore from EDW.",
+        "D": "Use AppExchange package for backup and restore."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để triển khai quy trình sao lưu và phục hồi dữ liệu hàng ngày (daily backup & restore) tự động nhằm giảm thiểu mất mát dữ liệu và phục hồi nhanh khi có sự cố, giải pháp nhanh chóng và an toàn nhất là cài đặt một gói sản phẩm chuyên dụng từ AppExchange."
+    },
+    {
+      "id": 70,
+      "question": "Universal Containers is migrating 100,000 accounts from an enterprise resource planning (ERP) to Salesforce and is concerned about ownership skew and performances.Which three recommendations should a data architect provide to prevent ownership skew? (Choose three.)",
+      "choices": {
+        "A": "Assign a default user as owner of accounts and assign the user to the top most role in the hierarchy.",
+        "B": "Assign a default user as owner of accounts and do not assign any role to the default user.",
+        "C": "Keep users out of public groups that can be used as the source for sharing rules.",
+        "D": "Assign a default user as owner of accounts and assign them a role in the hierarchy.",
+        "E": "Assign View All permissions to a group of users for the Account object."
+      },
+      "correctAnswer": "ABC",
+      "explanation_vi": "Để ngăn chặn hiện tượng lệch quyền sở hữu (ownership skew) khi di chuyển 100.000 tài khoản sang Salesforce, Data Architect nên đề xuất:\n- Gán tài khoản người dùng chung làm owner và đặt user này ở vai trò cao nhất trong cây vai trò (Role hierarchy) (A).\n- Gán tài khoản người dùng chung làm owner và không gán bất kỳ vai trò nào cho user này (B).\n- Không đưa tài khoản người dùng chung đó vào các nhóm công khai (Public Groups) dùng làm nguồn cho các quy tắc chia sẻ (Sharing Rules) (C)."
+    },
+    {
+      "id": 71,
+      "question": "Northern Trail Outfitters (NTO) runs its entire business out of an enterprise data warehouse (EDW). NTO’s sales team is starting to use Salesforce after a recent implementation, but currently lacks the data required to advance leads and opportunities to the next stage.NTO’s management has researched Salesforce Connect and would like to use it to virtualize and report on data from the EOW within Salesforce. NTO will be running thousands of reports per day across 10 to 15 external objects.What should a data architect consider before implementing Salesforce Connect for reporting?",
+      "choices": {
+        "A": "Maximum page size for server-driven paging",
+        "B": "Maximum external objects per org",
+        "C": "OData callout limits per day",
+        "D": "Maximum number of records returned"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi sử dụng Salesforce Connect để chạy hàng ngàn báo cáo mỗi ngày trên 10-15 đối tượng ngoại vi kết nối với EDW, Data Architect cần lưu ý giới hạn số cuộc gọi OData callout tối đa mỗi ngày (OData callout limits per day) của Salesforce Connect để tránh làm gián đoạn hệ thống."
+    },
+    {
+      "id": 72,
+      "question": "Universal Containers (UC) has implemented Sales Cloud for its entire sales organization. UC has built a custom object called Projects__c that stores customer project details and employee billable hours.The following requirements are needed:\nA subset of individuals from the finance team will need access to the Projects object for reporting and adjusting employee utilization.The finance users will not need access to any sales objects, but they will need to interact with the custom object.Which license type should a data architect recommend for the finance team that best meets the requirements?",
+      "choices": {
+        "A": "Lightning Platform Starter",
+        "B": "Service Cloud",
+        "C": "Lightning Platform Plus",
+        "D": "Sales Cloud"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để cấp quyền truy cập cho nhân viên tài chính vào một đối tượng tùy chỉnh Projects__c (chạy báo cáo và sửa dữ liệu giờ làm việc) mà không cần truy cập vào bất kỳ đối tượng bán hàng tiêu chuẩn nào, giấy phép tiết kiệm và phù hợp nhất là Lightning Platform Starter (hỗ trợ tối đa 10 đối tượng tùy chỉnh)."
+    },
+    {
+      "id": 73,
+      "question": "A custom pricing engine for a Salesforce customer has to be decided by factors with the following hierarchy:\nState in which the customer is locatedCity in which the customer is located if availableZip code in which the customer is located if availableChanges to this information should have minimum code changeWhat should a data architect recommend to maintain this information for the custom pricing engine that is to be built in Salesforce?",
+      "choices": {
+        "A": "Configure the pricing criteria in price books.",
+        "B": "Maintain required pricing criteria in custom metadata types.",
+        "C": "Assign the pricing criteria within custom pricing engine.",
+        "D": "Create a custom object to maintain the pricing criteria."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để xây dựng một công cụ tính giá tùy chỉnh dựa trên cấu trúc phân cấp vị trí địa lý (Bang -> Thanh pho -> Ma buu dien) mà ít phải chỉnh sửa mã nguồn nhất khi có thay đổi tiêu chí, giải pháp tối ưu là lưu trữ các tiêu chí tính giá này trong các Custom Metadata Types."
+    },
+    {
+      "id": 74,
+      "question": "Universal Containers has a Sales Cloud implementation for a sales team and an enterprise resource planning (ERP) as a customer master. Sales teams are complaining about duplicate account records and data quality issues with account data.Which two solutions should a data architect recommend to resolve the complaints? (Choose two.)",
+      "choices": {
+        "A": "Build a nightly batch job to de-dupe data, and merge account records.",
+        "B": "Integrate Salesforce with ERP, and make ERP as system of truth.",
+        "C": "Build a nightly sync job from ERP to Salesforce.",
+        "D": "Implement a de-dupe solution and establish account ownership in Salesforce."
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để giải quyết vấn đề trùng lặp tài khoản và chất lượng dữ liệu giữa Salesforce và hệ thống ERP (Customer Master), Data Architect nên:\n- Tích hợp Salesforce với ERP và xác định ERP làm nguồn chân lý duy nhất (System of Truth) (B).\n- Triển khai giải pháp lọc trùng dữ liệu (De-duplication solution) và thiết lập rõ ràng quyền sở hữu tài khoản trong Salesforce (D)."
+    },
+    {
+      "id": 75,
+      "question": "The data architect for Universal Containers has written a SOQL query that will return all records from the Task object that do not have a value in the whatID field:SELECT ID, Description, subject FROM Task WHERE WhatID != NULLWhen the data architect uses the query to select values for a process, a time-out error occurs.What does the data architect need to change to make this query more performant?",
+      "choices": {
+        "A": "Change the WHERE clause to filter by a deterministic defined value.",
+        "B": "Change query to SOSL.",
+        "C": "Remove description from the requested field set.",
+        "D": "Add LIMIT 100 to the query."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong câu lệnh SOQL trên đối tượng Task, trường Description là trường kiểu văn bản dài (Long Text Area), không thể tạo chỉ mục và tiêu tốn nhiều tài nguyên khi quét qua mạng. Loại bỏ trường Description khỏi danh sách trường truy vấn sẽ giúp câu lệnh chạy nhanh hơn đáng kể và tránh lỗi timeout."
+    },
+    {
+      "id": 76,
+      "question": "Universal Containers (UC) has a very large and complex Salesforce org with hundreds of validation rules and triggers. The triggers are responsible for system updates and data manipulation as records are created or updated by users. A majority of the automation tools within UC's org were not designed to run during a data load. UC is importing 100,000 records into Salesforce across several objects over the weekend.What should a data architect do to mitigate any unwanted results during the import?",
+      "choices": {
+        "A": "Ensure validation rules, triggers, and other automation tools are disabled",
+        "B": "Ensure duplication and matching rules are defined",
+        "C": "Bulkify the triggers to handle import loads",
+        "D": "Import the data is smaller batches over a 24-hour period"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi tiến hành import 100.000 bản ghi vào Salesforce vào cuối tuần, để tránh kích hoạt ngoài ý muốn các quy tắc nghiệp vụ tự động hóa và tăng tốc độ tải, Data Architect cần đảm bảo tất cả các Validation Rules, Triggers và các công cụ tự động hóa khác được tạm thời vô hiệu hóa trước khi import."
+    },
+    {
+      "id": 77,
+      "question": "Universal Containers (UC) has accumulated data over years and has never deleted data from its Salesforce org. UC is now exceeding the storage allocations in the org. UC is now looking for options to delete unused records from the org.Which three recommendations should a data architect make in order to reduce the number of records from the org? (Choose three.)",
+      "choices": {
+        "A": "Use hard delete in Bulk API to permanently delete records from Salesforce.",
+        "B": "Identify records in objects that have not been modified or used in last 3 years.",
+        "C": "Use hard delete in Batch Apex to permanently delete records from salesforce.",
+        "D": "Use Rest API to permanently delete records from the Salesforce org.",
+        "E": "Archive the records in enterprise data warehouse (EDW) before deleting from Salesforce."
+      },
+      "correctAnswer": "ABE",
+      "explanation_vi": "Để giảm thiểu dung lượng lưu trữ đang vượt quá giới hạn bằng cách xóa các bản ghi không sử dụng, Data Architect nên đề xuất:\n- Xác định các bản ghi thuộc các đối tượng không được chỉnh sửa hoặc sử dụng trong 3 năm qua (B).\n- Thực hiện lưu trữ các bản ghi cũ này vào kho dữ liệu doanh nghiệp (EDW) để dự phòng (E).\n- Sử dụng tính năng Hard Delete (xóa cứng vĩnh viễn không qua thùng rác) của Bulk API để giải phóng ngay dung lượng lưu trữ (A)."
+    },
+    {
+      "id": 78,
+      "question": "Universal Containers (UC) is implementing Salesforce for lead management. UC procures lead data from multiple sources and would like to make sure lead data has company profile and location information.Which solution should a data architect recommend to make sure lead data has both profile and location information?",
+      "choices": {
+        "A": "Export data out of Salesforce and send to another team to populate company profile and location data.",
+        "B": "Leverage external data providers to populate company profile and location data.",
+        "C": "Run reports to identify records which do not have company profile and location data.",
+        "D": "Ask sales people to search for and populate company profile and location data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo dữ liệu lead nhập vào có đầy đủ thông tin hồ sơ công ty và vị trí địa lý tự động, giải pháp tối ưu là tích hợp và sử dụng các dịch vụ cung cấp dữ liệu từ bên thứ ba (External Data Providers) để tự động làm giàu thông tin."
+    },
+    {
+      "id": 79,
+      "question": "Northern Trail Outfitters (NTO) has implemented Salesforce for its sales users. The opportunity management in Salesforce is implemented as follows:\nSales users enter their opportunities in Salesforce for forecasting and reporting purposes.NTO has a product pricing system (PPS) that is used to update the Opportunity Amount field on opportunities on a daily basis.PPS is the trusted source within NTO for Opportunity Amount.NTO uses Opportunity Forecast for its sales planning and management.Sales users have noticed that their updates to the Opportunity Amount field are overwritten when PPS updates their opportunities.How should a data architect address this overwriting issue?",
+      "choices": {
+        "A": "Change PPS integration to update only Opportunity Amount field when the value is null.",
+        "B": "Create a custom field for Opportunity Amount that sales users update separating the field that PPS updates.",
+        "C": "Create a custom field for Opportunity amount that PPS updates separating the field sales user updates.",
+        "D": "Change Opportunity Amount field access to Read Only for sales users using field-level security."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vì hệ thống PPS là nguồn chân lý đáng tin cậy nhất đối với trường Opportunity Amount, để ngăn chặn nhân viên bán hàng ghi đè thủ công lên giá trị này, Data Architect nên đề xuất chuyển quyền truy cập của trường Opportunity Amount thành chỉ đọc (Read Only) đối với nhân viên bán hàng thông qua Field-Level Security."
+    },
+    {
+      "id": 80,
+      "question": "Universal Containers (UC) has one Salesforce org (Org A) and recently acquired a secondary company with its own Salesforce org (Org B). UC has decided to keep the orgs running separately, but would like to bidirectionally share Opportunities between orgs in near-real time.Which three options should a data architect recommend to share data between Org A and Org B? (Choose three.)",
+      "choices": {
+        "A": "Install a third-party AppExchange tool to handle the data sharing.",
+        "B": "Leverage Heroku Connect and Heroku Postgres to bidirection ally sync Opportunities.",
+        "C": "Develop an Apex class that pushes Opportunity data between orgs daily via the Apex scheduler.",
+        "D": "Use Salesforce Connect and the cross-org adapter to virtualize Opportunities into external objects.",
+        "E": "Leverage middleware tools to bidirectionally send Opportunity data across orgs."
+      },
+      "correctAnswer": "ABE",
+      "explanation_vi": "Để chia sẻ cơ hội kinh doanh hai chiều gần như thời gian thực giữa hai Salesforce orgs độc lập của hai công ty, ba phương án khả thi là:\n- Sử dụng một giải pháp phần mềm trung gian (middleware) để đồng bộ dữ liệu hai chiều (E).\n- Cài đặt một gói sản phẩm chuyên dụng từ AppExchange để quản lý chia sẻ dữ liệu (A).\n- Sử dụng Heroku Connect kết hợp Heroku Postgres làm cơ sở dữ liệu trung gian để đồng bộ dữ liệu hai chiều giữa hai org (B)."
+    },
+    {
+      "id": 81,
+      "question": "Universal Containers (UC) has millions of case records with case history and service level agreement data. UC's compliance team would like historical cases to be accessible for 10 years for audit purposes.What solution should a data architect recommend?",
+      "choices": {
+        "A": "Purchase more data storage to support the case object.",
+        "B": "Use a custom big object to store archived case data.",
+        "C": "Archive case data using a Salesforce Archival solution.",
+        "D": "Use a custom object to store archived case data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để lưu trữ dữ liệu lịch sử ca hỗ trợ và cam kết dịch vụ (SLA) lên tới 10 năm phục vụ mục tích kiểm toán mà không làm cạn kiệt bộ nhớ tiêu chuẩn của Salesforce, giải pháp phù hợp nhất là định nghĩa và sử dụng Custom Big Object để lưu trữ các bản ghi lưu trữ này."
+    },
+    {
+      "id": 82,
+      "question": "Universal Containers (UC) requires 2 years of customer related cases to be available on Salesforce for operational reporting. Any cases older than 2 years and up to 7 years need to be available on demand to service agents. UC creates 5 million cases per year.Which two data archiving strategies should a data architect recommend? (Choose two.)",
+      "choices": {
+        "A": "Sync cases older than 2 years to an external database and provide service agents access to the database.",
+        "B": "Use Custom objects for cases older than 2 years and use a nightly batch to move them.",
+        "C": "Use Heroku and external objects to display cases older than 2 years and the Bulk API to hard delete them from Salesforce.",
+        "D": "Use Big objects for cases older than 2 years and use a nightly batch to move them."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để lưu giữ 2 năm dữ liệu ca hỗ trợ hoạt động trong Salesforce và cho phép truy vấn dữ liệu từ 2 đến 7 năm theo yêu cầu, Data Architect nên đề xuất:\n- Chuyển các ca hỗ trợ cũ hơn 2 năm sang cơ sở dữ liệu bên ngoài và cung cấp quyền truy cập cho nhân viên hỗ trợ (A).\n- Sử dụng đối tượng lớn (Big Objects) để lưu trữ các ca hỗ trợ cũ hơn 2 năm và chạy tiến trình batch hàng đêm để di chuyển chúng (D)."
+    },
+    {
+      "id": 83,
+      "question": "Northern Trail Outfitters (NTO) needs to extract 50 million records from a custom object every day from its Salesforce org. NTO is facing query time-out issues while extracting these records.What should a data architect recommend in order to get around the time-out issue?",
+      "choices": {
+        "A": "Use a custom auto number and formula field to chunk records while extracting data,",
+        "B": "Use the Rest API to extract data as it automatically chunks records by 200.",
+        "C": "Use extract, transform, load (ETL) tool for extraction of records.",
+        "D": "Ask Salesforce support to increase the query timeout value."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi gặp lỗi timeout trong quá trình kết xuất 50 triệu bản ghi hàng ngày từ một đối tượng tùy chỉnh, sử dụng một công cụ ETL (Extract, Transform, Load) chuyên dụng là phương án tối ưu vì các công cụ này hỗ trợ sẵn cơ chế gọi Bulk API và PK Chunking để tải dữ liệu lớn một cách hiệu quả."
+    },
+    {
+      "id": 84,
+      "question": "Northern Trail Outfitters uses Salesforce to manage relationships and track sales opportunities. It has 10 million customers and 100 million opportunities. The CEO has been complaining that a dashboard is taking 10 minutes to run and sometimes fails to load, throwing a time-out error.Which three options should help improve the dashboard performance? (Choose three.)",
+      "choices": {
+        "A": "Denormalize the data by reducing the number of joins.",
+        "B": "Run the dashboard for the CEO and send it via email.",
+        "C": "Reduce the amount of data queried by archiving unused opportunity records.",
+        "D": "Remove widgets from the dashboard to reduce the number of graphics loaded.",
+        "E": "Use selective queries to reduce the amount of data being returned."
+      },
+      "correctAnswer": "ACE",
+      "explanation_vi": "Để cải thiện hiệu năng tải của dashboard lớn thường xuyên bị timeout trên 100 triệu opportunities, Data Architect nên đề xuất:\n- Thực hiện lưu trữ (archive) các cơ hội cũ không dùng đến để giảm lượng dữ liệu quét (C).\n- Sử dụng các câu lệnh truy vấn có tính chọn lọc cao (selective queries) cho các báo cáo nguồn của dashboard (E).\n- Khử chuẩn hóa dữ liệu (denormalize) bằng cách giảm số lượng liên kết (joins) giữa các đối tượng để tối ưu hóa truy vấn (A)."
+    },
+    {
+      "id": 85,
+      "question": "Universal Containers (UC) is planning a massive Salesforce implementation with large volumes of data. As part of the org's implementation, several roles, territories, groups, and sharing rules have been configured. The data architect has been tasked with loading all of the required data, including user data, in a timely manner.What should a data architect do to minimize data load times due to system calculations?",
+      "choices": {
+        "A": "Enable granular locking to avoid the \"UNABLE_TO_LOCK_ROW error.",
+        "B": "Enable defer sharing calculations and suspend sharing rule calculations.",
+        "C": "Leverage the Bulk API and concurrent processes with multiple batches.",
+        "D": "Load the data through Data Loader and turn on parallel processing."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tối ưu hóa thời gian tải dữ liệu lớn và giảm tải tính toán của hệ thống, quản trị viên nên tạm thời kích hoạt tính năng Trì hoãn Tính toán Chia sẻ (Defer Sharing Calculations) để hoãn việc tính toán lại các quy tắc chia sẻ và phân cấp vai trò cho đến khi toàn bộ dữ liệu được tải xong."
+    },
+    {
+      "id": 86,
+      "question": "Northern Trail Outfitters has these simple requirements for a data export process:\nFile format should be in CSV.Process should be scheduled and run once per week.The export should be configurable through the Salesforce UI.Which tool should a data architect leverage to accomplish these requirements?",
+      "choices": {
+        "A": "Data loader",
+        "B": "Third-party ETL tool",
+        "C": "Data export wizard",
+        "D": "Bulk API"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Yêu cầu cấu hình xuất dữ liệu định kỳ hàng tuần ra file CSV trực tiếp từ giao diện người dùng Salesforce được đáp ứng hoàn hảo bằng tính năng Data Export Wizard (hoặc Data Export Service) có sẵn của Salesforce."
+    },
+    {
+      "id": 87,
+      "question": "Universal Containers is implementing Salesforce and needs to migrate data from two legacy systems. UC would like to clean and deduplicate data before migrating to Salesforce.Which solution should a data architect recommend a clean migration?",
+      "choices": {
+        "A": "Define deduplicate rules in Salesforce, and load data into Salesforce from both databases.",
+        "B": "Set up staging data base, and define external IDs to merge, clean, deduplicate data, and load into Salesforce.",
+        "C": "Define external IDs for an object, migrate second database to first database, and load into Salesforce.",
+        "D": "Define external IDs for an object, insert data from one database, and use upsert for a second database."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thực hiện di chuyển và làm sạch dữ liệu từ hai hệ thống cũ vào Salesforce một cách an toàn và lọc trùng tốt nhất, giải pháp tối ưu là dựng một cơ sở dữ liệu trung gian (staging database) để thực hiện gộp, làm sạch, loại bỏ trùng lặp và định nghĩa External IDs trước khi load vào Salesforce."
+    },
+    {
+      "id": 88,
+      "question": "Universal Containers is implementing Sales Cloud for patient management and would like to encrypt sensitive patient records being stored in files.Which solution should a data architect recommend to solve this requirement?",
+      "choices": {
+        "A": "Implement a third-party AppExchange app to encrypt files.",
+        "B": "Store files outside of Salesforce and access them in real time.",
+        "C": "Use classic encryption to encrypt files.",
+        "D": "Implement Shield Platform Encryption to encrypt files."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để bảo mật và mã hóa các tệp tin chứa hồ sơ bệnh nhân nhạy cảm trong ứng dụng Sales Cloud, giải pháp phù hợp nhất là triển khai tính năng mã hóa tệp tin thuộc bộ sản phẩm Salesforce Shield (Shield Platform Encryption)."
+    },
+    {
+      "id": 89,
+      "question": "Universal Containers uses classic encryption for custom fields and Is leveraging weekly data export for data backups. During a validation process, UC discovered that encrypted field values are still being exported as part of the data export.What should a data architect recommend to make sure decrypted values are exported during data export?",
+      "choices": {
+        "A": "Set up a custom profile for the data migration user, and assign View Encrypted Data.",
+        "B": "Set up a standard profile for the data migration user, and assign View Encrypted Data.",
+        "C": "Create another field to copy data from the encrypted field, and use this field in export.",
+        "D": "Leverage an Apex class to decrypt data before exporting it."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Salesforce, khi sử dụng tính năng Weekly Data Export để sao lưu dữ liệu, các trường được mã hóa cổ điển (Classic Encryption) sẽ xuất hiện dưới dạng dữ liệu đã được giải mã trong file backup nếu tài khoản thực hiện export được gán quyền 'View Encrypted Data' thông qua một custom profile."
+    },
+    {
+      "id": 90,
+      "question": "Universal Containers (UC) has a variety of systems across its technology landscape, including Salesforce, legacy enterprise resource planning (ERP) applications, and homegrown CRM tools. UC has decided that they would like to consolidate all customer, opportunity, and order data into Salesforce as part of its master data management strategy.What are the three key steps that a data architect should take when merging data from multiple systems into Salesforce? (Choose three.)",
+      "choices": {
+        "A": "Work with stakeholders to define record and field survivorship rules.",
+        "B": "Analyze each system's data model and perform gap analysis.",
+        "C": "Utilize an ETL tool to migrate, transform, and deduplicate data.",
+        "D": "Install a third-party AppExchange tool to handle the merger.",
+        "E": "Create new fields to store additional values from all of the systems."
+      },
+      "correctAnswer": "ABC",
+      "explanation_vi": "Khi thực hiện hợp nhất dữ liệu từ nhiều hệ thống cũ vào Salesforce, ba bước then chốt mà Data Architect cần thực hiện là:\n- Phối hợp với các bên liên quan để định nghĩa các quy tắc giữ lại trường và bản ghi chân lý (record and field survivorship rules) (A).\n- Phân tích chi tiết mô hình dữ liệu của từng hệ thống và thực hiện phân tích khoảng cách (gap analysis) (B).\n- Sử dụng một công cụ ETL để di chuyển, biến đổi và loại bỏ trùng lặp dữ liệu trong quá trình load (C)."
+    },
+    {
+      "id": 91,
+      "question": "Northern Trail Outfitters (NTO) has multiple systems across its enterprise landscape, including Salesforce, with disparate versions of the customer record. In Salesforce. the customer is represented by the Contact object. NTO utilizes a master data management (MDM) solution with these attributes:\nThe MDM solution keeps track of the Customer Master with a Master Key.The Master Key is a map to the record IDs from each external system that customer data is stored within.The MDM solution provides deduplication features, so it acts as the Single Source of Truth.How should a Data Architect implement the storage of the Master Key within Salesforce?",
+      "choices": {
+        "A": "Create a custom object to store the Master Key with a lookup field to Contact.",
+        "B": "Store the Master Key in Heroku Postgres and use Heroku Connect for synchronization.",
+        "C": "Create an external object to store the Master Key with a lookup field to Contact.",
+        "D": "Store the Master Key on the Contact object as an External ID field for referential integrity."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để liên kết danh tính khách hàng giữa Salesforce (Contact) và hệ thống MDM trung tâm chứa Master Key, Data Architect nên lưu trữ khóa Master Key này trực tiếp trên đối tượng Contact dưới dạng một trường tùy chỉnh cấu hình là External ID để đảm bảo tính toàn vẹn tham chiếu."
+    },
+    {
+      "id": 92,
+      "question": "Universal Containers is rolling out a Sales App globally to bring sales teams together on one platform. UC expects millions of opportunities and accounts to be created and is concerned about the performance of the application.Which three recommendations should the data architect make to avoid data skew? (Choose three.)",
+      "choices": {
+        "A": "Assign 10,000 opportunities to one account.",
+        "B": "Limit associating 10,000 Opportunities to one account.",
+        "C": "Use picklist fields rather than a lookup to a custom object.",
+        "D": "Limit associating 10,000 records looking up to same records.",
+        "E": "Limit assigning one user ownership of 10,000 records."
+      },
+      "correctAnswer": "BDE",
+      "explanation_vi": "Để ngăn chặn hiện tượng lệch dữ liệu (data skew) khi hệ thống có hàng triệu cơ hội và tài khoản, Data Architect nên đề xuất các biện pháp:\n- Giới hạn số lượng cơ hội liên kết tối đa với một tài khoản ở mức dưới 10.000 bản ghi (B).\n- Giới hạn số lượng bản ghi tối đa cùng liên kết (lookup) đến một bản ghi cha duy nhất ở mức dưới 10.000 bản ghi (D).\n- Giới hạn quyền sở hữu bản ghi của một người dùng duy nhất ở mức dưới 10.000 bản ghi để tránh ownership skew (E)."
+    },
+    {
+      "id": 93,
+      "question": "Universal Containers (UC) recently migrated 1 billion customer related records from a legacy datastore to Heroku Postgres. A subset of the data needs to be synchronized with Salesforce so that service agents are able to support customers directly within the service console. The remaining non-synchronized set of data will need to be accessed by Salesforce at any point in time, but UC management is concerned about storage limitations.What should a data architect recommend to meet these requirements with minimal effort?",
+      "choices": {
+        "A": "Migrate the data to big objects and leverage Async SOQL with custom objects.",
+        "B": "Use Heroku Connect to bidirectionally sync all data between systems.",
+        "C": "Virtualize the remaining set of data with Salesforce Connect and external objects.",
+        "D": "As needed, make callouts into Heroku Postgres and persist the data in Salesforce."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cho phép nhân viên hỗ trợ khách hàng truy vấn 1 tỷ bản ghi lịch sử lưu trữ trên Heroku Postgres khi cần thiết mà không gặp giới hạn dung lượng lưu trữ của Salesforce, giải pháp hiệu quả nhất là ảo hóa tập dữ liệu lịch sử này bằng cách sử dụng Salesforce Connect và đối tượng ngoại vi (External Objects)."
+    },
+    {
+      "id": 94,
+      "question": "Universal Containers has been using Salesforce for 10 years. Lately, users have noticed that the pages load slowly when viewing customer and account list views.To mitigate. UC will implement a data archival strategy to reduce the amount of data actively loaded.Which two tasks are required to define the strategy? (Choose two.)",
+      "choices": {
+        "A": "Identify the recovery point objective.",
+        "B": "Identify the data retention requirements.",
+        "C": "Identify how the archived data will be accessed and used.",
+        "D": "Identify the recovery time objective."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Để thiết lập một chiến lược lưu trữ dữ liệu lịch sử (data archival strategy) hiệu quả nhằm tăng tốc độ tải trang, hai nhiệm vụ cốt lõi cần xác định là:\n- Xác định rõ các yêu cầu về lưu giữ dữ liệu (data retention requirements) (B).\n- Xác định cách thức người dùng sẽ truy cập và sử dụng lại các dữ liệu đã lưu trữ đó khi cần thiết (C)."
+    },
+    {
+      "id": 95,
+      "question": "Universal Containers (UC) owns multiple Salesforce orgs that are distributed across regional branches. Each branch stores local customer data inside of its org s Account and Contact objects. This creates a scenario where UC is unable to view customers across all orgs.UC has an initiative to create a 360-degree view of the customer, as UC would like to see Account and Contact data from all of its orgs in one place.Which solution should a data architect suggest to achieve a 360-degree view of the customer?",
+      "choices": {
+        "A": "Build a bidirectional integration between all orgs.",
+        "B": "Use the Salesforce Connect cross-org adapter.",
+        "C": "Use an ETL tool to migrate gap Accounts and Contacts into each org.",
+        "D": "Consolidate the data from each org into a centralized datastore."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để xây dựng góc nhìn khách hàng 360 độ từ nhiều Salesforce orgs độc lập của các chi nhánh khu vực, giải pháp hiệu quả nhất là tổng hợp và hợp nhất dữ liệu Account/Contact từ tất cả các orgs đó vào một kho dữ liệu trung tâm (centralized datastore) để phân tích và quản lý danh tính duy nhất."
+    },
+    {
+      "id": 96,
+      "question": "Which two data management policies does the Data Classification feature allow customers to classify in Salesforce? (Choose two.)",
+      "choices": {
+        "A": "Data Governance policy",
+        "B": "Data Sensitivity Level",
+        "C": "Reference Data policy",
+        "D": "Compliance Categorization policy"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Tính năng Phân loại dữ liệu (Data Classification) của Salesforce cho phép khách hàng phân loại hai chính sách quản lý dữ liệu chính là:\n- Mức độ nhạy cảm của dữ liệu (Data Sensitivity Level) (B).\n- Danh mục tuân thủ quy định (Compliance Categorization policy) (D)."
+    },
+    {
+      "id": 97,
+      "question": "Universal Containers (UC) has a requirement to migrate 100 million order records from a legacy enterprise resource planning (ERP) application into the Salesforce platform. UC does not have any requirements around reporting on the migrated data.What should a data architect recommend to reduce performance degradation of the platform?",
+      "choices": {
+        "A": "Use the standard 'Order' object to store the data.",
+        "B": "Create a custom object to store the data.",
+        "C": "Implement a custom big object to store the data.",
+        "D": "Use a standard big object defined by Salesforce"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Với yêu cầu di chuyển 100 triệu bản ghi đơn hàng từ ERP vào Salesforce mà không có nhu cầu chạy báo cáo trên nền tảng, giải pháp tốt nhất để tránh làm giảm hiệu năng hệ thống là lưu trữ dữ liệu này trong Custom Big Objects."
+    },
+    {
+      "id": 98,
+      "question": "What should a data architect do to provide additional guidance for users when they enter information in a Standard field?",
+      "choices": {
+        "A": "Add a label field with help text adjacent to the custom field.",
+        "B": "Add custom help text in default value for the field.",
+        "C": "Provide custom help text under field properties.",
+        "D": "Create a custom page with help text for user guidance."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cung cấp thêm hướng dẫn hiển thị cho người dùng khi họ nhập liệu trên một trường tiêu chuẩn (Standard Field), Data Architect nên cấu hình thuộc tính văn bản trợ giúp tùy chỉnh (custom help text) trực tiếp trong trang cài đặt thuộc tính trường đó."
+    },
+    {
+      "id": 99,
+      "question": "Universal Containers (UC) is using Salesforce CRM. UC sales managers are complaining about data quality and would like to monitor and measure the data that is input in to the system.Which two solutions should a data architect recommend to monitor and measure data quality? (Choose two.)",
+      "choices": {
+        "A": "Review the data quality reports and dashboards.",
+        "B": "Export data and check for data completeness outside of Salesforce.",
+        "C": "Use custom objects and fields to identify issues.",
+        "D": "Install and run the “Data Quality Analysis” dashboard app."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Để giám sát và đo lường chất lượng dữ liệu đầu vào trong Salesforce CRM, Data Architect nên đề xuất:\n- Đánh giá định kỳ các báo cáo và dashboard chất lượng dữ liệu (Data Quality Reports & Dashboards) (A).\n- Cài đặt và sử dụng ứng dụng 'Data Quality Analysis Dashboard' từ AppExchange để tự động chấm điểm chất lượng dữ liệu bản ghi (D)."
+    },
+    {
+      "id": 100,
+      "question": "Northern Trail Outfitters has decided that it is going to build a channel sales portal with the following requirements:\nExternal resellers are able to authenticate to the portal with a login.Lead data. Opportunity data, and Order data are available to authenticated users.Authenticated users may need to run reports and dashboards.There is no need for more than 10 custom objects or additional file storage.Which Community Cloud license type should a data architect recommend to meet the portal requirements?",
+      "choices": {
+        "A": "Lightning External Apps Starter",
+        "B": "Customer Community Plus",
+        "C": "Partner Community",
+        "D": "Customer Community"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để xây dựng cổng thông tin bán hàng cho đối tác đại lý (resellers) có truy cập các đối tượng Leads, Opportunities, Orders và có nhu cầu chạy báo cáo/dashboard trực tiếp, loại giấy phép phù hợp nhất là Partner Community License."
+    },
+    {
+      "id": 101,
+      "question": "Universal Containers (UC) is migrating from an on-premise homegrown customer relationship management (CRM) system. During analysis, UC users highlight a pain point that there are multiple versions of many customers.What should the data architect do for a successful migration to mitigate the pain point?",
+      "choices": {
+        "A": "Migrate the data as is, and use Salesforce's de-duplicating feature.",
+        "B": "Store the data in a staging database, and de-duplicate identical records.",
+        "C": "Hire an intern manually de-duplicate the records after migrating to Salesforce.",
+        "D": "Have the users manually clean the data in the old system prior to migration."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để di chuyển dữ liệu từ hệ thống CRM cũ có quá nhiều khách hàng bị trùng lặp, Data Architect nên đề xuất thiết lập một cơ sở dữ liệu trung gian (staging database) để thực hiện chuẩn hóa, làm sạch và loại bỏ trùng lặp triệt để trước khi tải vào Salesforce."
+    },
+    {
+      "id": 102,
+      "question": "Northern Trail Outfitters (NTO) processes orders from its website via an order management system (OMS). The OMS stores over 2 million historical records and is currently not integrated with Salesforce.The sales team at NTO is using Sales Cloud and would like visibility into related customer orders, yet they do not want to persist millions of records directly in Salesforce. NTO has asked the data architect to evaluate Salesforce Connect and the concept of data virtualization.Which three key considerations are needed prior to a Salesforce Connect implementation? (Choose three.)",
+      "choices": {
+        "A": "Assess whether the external data source is reachable via an OData endpoint.",
+        "B": "Identify the external tables to sync into external objects.",
+        "C": "Develop an object relationship strategy.",
+        "D": "Create a second system admin user for authentication to the external source.",
+        "E": "Configure a middleware tool to poll external table data."
+      },
+      "correctAnswer": "ABC",
+      "explanation_vi": "Trước khi triển khai Salesforce Connect để ảo hóa dữ liệu đơn hàng lớn (2 triệu bản ghi) từ hệ thống ngoài, ba yếu tố cốt lõi cần chuẩn bị là:\n- Xác minh hệ thống ngoài có hỗ trợ giao tiếp qua endpoint OData hay không (A).\n- Xác định rõ các bảng dữ liệu bên ngoài nào cần đồng bộ thành đối tượng ngoại vi (External Objects) trong Salesforce (B).\n- Thiết kế chiến lược thiết lập mối quan hệ (Lookup/External Lookup relationships) giữa các đối tượng trong Salesforce (C)."
+    },
+    {
+      "id": 103,
+      "question": "Universal Containers (UC) has migrated its back-office data into an on-premise database with REST API access. UC recently implemented Sales Cloud for its sales organization, but users are complaining about a lack of order data inside Salesforce.UC is concerned about Salesforce storage limits but would still like Sales Cloud to have access to the data.Which design pattern should a data architect select to satisfy the requirement?",
+      "choices": {
+        "A": "Develop a bidirectional integration between the on-premise system and Salesforce.",
+        "B": "Use Salesforce Connect to virtualize the data in Salesforce and avoid storage limits.",
+        "C": "Build a UI for the on-premise system and iframe it in Salesforce.",
+        "D": "Migrate and persist the data in Salesforce to take advantage of native functionality."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cấp quyền truy cập dữ liệu đơn hàng từ cơ sở dữ liệu on-premise vào Salesforce cho đội ngũ bán hàng mà không làm cạn kiệt dung lượng lưu trữ của Salesforce org, giải pháp phù hợp nhất là sử dụng Salesforce Connect để ảo hóa dữ liệu dưới dạng đối tượng ngoại vi (External Objects)."
+    },
+    {
+      "id": 104,
+      "question": "Northern Trail Outfitters would like to retrieve their Salesforce org’s metadata programmatically for backup within a version control system.Which API is the best fit for accomplishing this task?",
+      "choices": {
+        "A": "Tooling API",
+        "B": "SOAP API",
+        "C": "Bulk API in serial mode",
+        "D": "Metadata API"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để sao lưu toàn bộ cấu hình hệ thống bao gồm siêu dữ liệu (metadata) của Salesforce org vào hệ thống quản lý phiên bản (Version Control System) một cách lập trình, Metadata API là API phù hợp nhất để sử dụng."
+    },
+    {
+      "id": 105,
+      "question": "A customer needs a sales model that allows the following:\nOpportunities need to be assigned to sales people based on the zip code.Each salesperson can be assigned to multiple zip codes.Each zip code is assigned to a sales area definition. Sales are aggregated by sales area for reporting.What should a data architect recommend?",
+      "choices": {
+        "A": "Configure the Territory Management feature to support opportunity assignment.",
+        "B": "Allow sales users to manually assign opportunity ownership based on zip code.",
+        "C": "Add custom fields in opportunities for zip code and use assignment rules.",
+        "D": "Assign opportunities using list views using zip code."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tự động gán cơ hội kinh doanh cho nhân viên bán hàng dựa trên mã bưu chính (zip code) và hỗ trợ tổng hợp báo cáo doanh số theo khu vực bán hàng (sales areas), giải pháp chuẩn và mạnh mẽ nhất của Salesforce là cấu hình tính năng Quản lý Lãnh thổ (Territory Management)."
+    },
+    {
+      "id": 106,
+      "question": "Universal Containers is building a Salesforce application to track Contacts and the respective Conferences that they have attended with the following requirements:\nContacts will be stored in the standard Contact object.Conferences will be stored in a custom Conference__c object.Each Contact may attend multiple Conferences and each Conference may be related to multiple Contacts.How should a data architect model the relationship between the Contact and Conference__c objects?",
+      "choices": {
+        "A": "Create a lookup relationship field on the Contact object.",
+        "B": "Create a master-detail relationship field on the Contact object.",
+        "C": "Create a master-detail relationship field on the Conference__c object.",
+        "D": "Implement a Contact Conference Junction object with master-detail relationships to both Contact and Conference__c."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để mô hình hóa mối quan hệ nhiều-nhiều (Many-to-Many) giữa Liên hệ (Contact) và Hội thảo (Conference__c) - tức một Liên hệ có thể dự nhiều Hội thảo và ngược lại, Data Architect nên đề xuất tạo một đối tượng liên kết trung gian (Junction Object) có hai trường Master-Detail quan hệ trỏ đến cả Contact và Conference__c."
+    },
+    {
+      "id": 107,
+      "question": "Northern Trail Outfitters (NTO) is streaming IoT data from connected devices to a cloud database. Every 24 hours, 100,000 records are generated.\nNTO employees will need to see these IoT records within Salesforce and generate weekly reports on it. Developers may also need to write programmatic logic to aggregate the records and incorporate them into workflows.\nWhich data pattern will allow a data architect to satisfy these requirements, while also keeping limits in mind?",
+      "choices": {
+        "A": "Virtualization",
+        "B": "Persistence",
+        "C": "Unidirectional integration",
+        "D": "Bidirectional integration"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đáp ứng các yêu cầu về chạy báo cáo hàng tuần trên dữ liệu IoT (100.000 bản ghi mỗi ngày) và viết logic tự động hóa (workflows, Apex triggers), Data Architect nên đề xuất mô hình lưu trữ vật lý (Persistence) để lưu trữ thực tế dữ liệu này trong Salesforce nhằm tận dụng tối đa các tính năng báo cáo và trigger gốc."
+    },
+    {
+      "id": 108,
+      "question": "Universal Containers has implemented Salesforce for its operations. In order for customers to be created in their MDM solution, the customer record needs to have the following attributes:\nFirst NameLast NameEmail\nWhich option should the data architect recommend to mandate this when customers are created in Salesforce?",
+      "choices": {
+        "A": "Build validation in Integration with MDM to check required attributes.",
+        "B": "Configure Page Layout marking attributes as required fields.",
+        "C": "Create validation rules to check if the required attributes are entered.",
+        "D": "Mark Fields for the attributes as required under Setup."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Vì First Name và Last Name là các trường tiêu chuẩn không thể đánh dấu bắt buộc ở mức định nghĩa trường (Field Definition) trong Setup, và Page Layout chỉ bắt buộc khi thao tác trên giao diện UI, giải pháp duy nhất để bắt buộc nhập các thông tin này trên mọi kênh (bao gồm cả tích hợp qua API) là thiết lập Quy tắc kiểm tra tính hợp lệ (Validation Rules)."
+    },
+    {
+      "id": 109,
+      "question": "Universal Containers has multiple systems all containing and maintaining customer data. Although point-to-point integrations are in place, customers are complaining about consistency in the data.\nWhat solution should the data architect recommend?",
+      "choices": {
+        "A": "Improve existing point-to-point integrations",
+        "B": "Perform a one-time synchronization to level set the built-up inconsistencies",
+        "C": "An MDM solution as the customer master, with centralized integrations to ensure consistency across all systems",
+        "D": "Data cleanse each system"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để khắc phục triệt để tình trạng dữ liệu khách hàng không đồng nhất giữa nhiều hệ thống do tích hợp điểm-điểm (point-to-point) rời rạc, Data Architect nên đề xuất triển khai một giải pháp Quản lý dữ liệu Master (MDM) làm nguồn chân lý duy nhất và thiết lập các tích hợp trung tâm."
+    },
+    {
+      "id": 110,
+      "question": "Which API should a data architect use if exporting 1 million records from Salesforce?",
+      "choices": {
+        "A": "REST API",
+        "B": "SOAP API",
+        "C": "Streaming API",
+        "D": "Bulk API"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi cần kết xuất (export) hoặc nạp một lượng dữ liệu lớn khoảng 1 triệu bản ghi từ Salesforce, Bulk API là lựa chọn tối ưu nhất vì nó được thiết kế riêng để xử lý các lô dữ liệu cực lớn một cách bất đồng bộ và hiệu quả."
+    },
+    {
+      "id": 111,
+      "question": "Northern Trail Outfitters (NTO) wants to capture a list of customers that have bought a particular product. The solution architect has recommended to create a custom object for product, and to create a lookup relationship between its customers and its products. Products will be modeled as a custom object (NTO_Product__c) and customers are modeled as person accounts. Every NTO product may have millions of customers looking up a single product, resulting in a lookup skew.\nWhat should a data architect suggest to mitigate issues related to lookup skew?",
+      "choices": {
+        "A": "Change the lookup relationship to master-detail relationship.",
+        "B": "Create a custom object to maintain the relationship between products and customers.",
+        "C": "Create multiple similar products and distribute the skew across those products.",
+        "D": "Select Clear the value of this field option while configuring the lookup relationship."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi có mối quan hệ lookup từ hàng triệu khách hàng đến một sản phẩm duy nhất (gây ra hiện tượng lookup skew), để tránh lỗi khóa bản ghi khi cập nhật, Data Architect nên thiết lập một đối tượng tùy chỉnh liên kết trung gian (Junction Object) để giãn biên độ kết nối giữa khách hàng và sản phẩm."
+    },
+    {
+      "id": 112,
+      "question": "Universal Containers (UC) needs to aggregate monthly and yearly metrics using standard reports. UC's monthly and yearly details are stored in custom objects with four million monthly records and nine million yearly records. The reports are aggregating millions of records across the two objects and taking long time to return results.\nWhat solution should a data architect recommend to improve report performance?",
+      "choices": {
+        "A": "Create an aggregation custom object that summarized the monthly and yearly values.",
+        "B": "Delete old data from Salesforce and run reports on it.",
+        "C": "Move data out of Salesforce and run reporting on it.",
+        "D": "Leverage big object to store data and run reports on it."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi báo cáo bị chậm do phải quét qua hàng triệu bản ghi chi tiết hàng tháng và hàng năm, giải pháp cải thiện hiệu năng báo cáo tốt nhất là tạo một đối tượng tùy chỉnh tổng hợp dữ liệu (Aggregation Custom Object) để lưu trữ các giá trị tổng hợp sẵn và chạy báo cáo trực tiếp trên đối tượng này."
+    },
+    {
+      "id": 113,
+      "question": "Universal Containers (UC) has decided that they are going to retire a homegrown CRM application and move to Salesforce. As part of the implementation, they will need to migrate 5 billion records in a series of batches. The records are a collection of Accounts, Contacts, Opportunities, Products, and Orders.\nSince the legacy CRM application and Salesforce have different data models, the data will need to be transformed and normalized before it is loaded into the system.\nWhat should a data architect recommend as a migration and storage strategy?",
+      "choices": {
+        "A": "Import all data into custom objects with data loader.",
+        "B": "Migrate data to a centralized datastore first with ETL tools.",
+        "C": "Import all data into custom objects with middleware.",
+        "D": "Use an ETL tool to extract and transform the data, then load into standard objects."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để di chuyển và chuyển đổi cấu trúc dữ liệu khổng lồ (5 tỷ bản ghi) từ hệ thống CRM cũ sang Salesforce với các mô hình dữ liệu khác biệt, giải pháp phù hợp nhất là sử dụng công cụ ETL để trích xuất, biến đổi/chuẩn hóa dữ liệu bên ngoài rồi nạp trực tiếp vào các đối tượng chuẩn (Standard Objects) của Salesforce."
+    },
+    {
+      "id": 114,
+      "question": "Universal Containers has provided a web order form for its customer and has noticed invalid data coming in on orders.\nWhat should be used to mitigate this problem?",
+      "choices": {
+        "A": "Apex Trigger",
+        "B": "Formatted Fields",
+        "C": "Work Flow Rules",
+        "D": "Validation Rules"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để ngăn chặn các dữ liệu không hợp lệ hoặc sai định dạng được gửi về từ biểu mẫu đặt hàng trực tuyến trên website, Salesforce cung cấp quy tắc kiểm tra tính hợp lệ (Validation Rules) để kiểm tra dữ liệu đầu vào ngay tại thời điểm tạo bản ghi."
+    },
+    {
+      "id": 115,
+      "question": "A consumer products company has decided to use Salesforce for its contact center. The contact center agents need access to the following information in Service Console when a customer contacts them:\nCustomer browsing activity on its website stored on its on-premise system.Customer interactions with sales associates at its retail stores maintained in Salesforce.Contact center interactions maintained in Salesforce.Email campaign activity to customer from its marketing systems.\nWhat should a data architect do to fulfill these requirements with minimum development effort in Salesforce?",
+      "choices": {
+        "A": "Build custom components in Service Console to bring information from the marketing and website information.",
+        "B": "Create web tabs in Service Console to show website and marketing activities.",
+        "C": "Build customer view in Service Console with components that show website data and marketing data as mashup.",
+        "D": "Use Salesforce Connect to integrate the website and the marketing system into Service Console using external objects."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để hiển thị tích hợp nhiều luồng thông tin khách hàng từ website và chiến dịch email tiếp thị trực tiếp trên Service Console cho nhân viên tổng đài mà ít tốn công phát triển nhất, sử dụng Salesforce Connect và đối tượng ngoại vi (External Objects) là giải pháp tối ưu và cấu hình nhanh chóng."
+    },
+    {
+      "id": 116,
+      "question": "Northern Trail Outfitters would like to report on the type of customers. A custom field for customer type was created in Account object. Users need to be limited to the following defined choices when entering information in this field:\nHigh ValueMedium ValueLow Value\nWhich strategy should a data architect recommend to configure customer type?",
+      "choices": {
+        "A": "Create a validation rule to limit entry to defined choices.",
+        "B": "Single-select restricted picklist with defined choices.",
+        "C": "Provide help text to guide users with defined choices.",
+        "D": "Lookup to a custom object with defined choices."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để giới hạn người dùng chỉ được chọn các giá trị phân loại khách hàng xác định sẵn (High/Medium/Low Value) nhằm chuẩn hóa dữ liệu báo cáo, giải pháp cấu hình chuẩn và tốt nhất trong Salesforce là tạo một trường danh sách chọn bị giới hạn (Restricted Picklist)."
+    },
+    {
+      "id": 117,
+      "question": "Universal Containers uses Apex jobs to create leads in Salesforce. The business team has requested that lead creation failures should be reported to them.\nWhich option does Apex provide to report errors from this Apex job?",
+      "choices": {
+        "A": "Use Custom Object to store leads, and allow unprocessed leads to be reported.",
+        "B": "Use AppExchange package to clean lead information before Apex job processes them.",
+        "C": "Use Apex services to email failures to business when error occurs.",
+        "D": "Save Apex errors in a custom object, and allow access to this object for reporting."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để báo cáo cho đội ngũ vận hành kinh doanh về các lỗi xảy ra trong quá trình chạy tác vụ Apex tạo lead hàng loạt, giải pháp tối ưu là bắt các ngoại lệ (exceptions) trong code Apex và ghi lại thông tin lỗi đó vào một đối tượng tùy chỉnh lưu lỗi (Custom Object) để chạy báo cáo."
+    },
+    {
+      "id": 118,
+      "question": "Universal Containers (UC) is building a Service Cloud call center application and has a multi-system support solution. UC would like to ensure that all systems have access to the same customer information.\nWhat solution should a data architect recommend?",
+      "choices": {
+        "A": "Let each system be an owner of data it generates.",
+        "B": "Make Salesforce the system of record for all data.",
+        "C": "Load customer data in all systems.",
+        "D": "Implement a master data management (MDM) strategy for customer data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đảm bảo tất cả các hệ thống trong tổ chức đều có quyền truy cập và sử dụng thông tin khách hàng đồng nhất, tránh phân mảnh dữ liệu, Data Architect nên đề xuất xây dựng và thực thi một chiến lược Quản lý dữ liệu Master (MDM strategy)."
+    },
+    {
+      "id": 119,
+      "question": "Universal Containers (UC) owns several Salesforce orgs across a variety of business units. UC management has declared that it needs the ability to report on Accounts and Opportunities from each org in one place. Once the data is brought together into a global view, management would like to use advanced AI-driven analytics on the dataset.\nWhich tool should a data architect recommend to accomplish this reporting requirement?",
+      "choices": {
+        "A": "Use Einstein Analytics for multi-org.",
+        "B": "Install a third-party AppExchange tool for multi-org reporting.",
+        "C": "Run standard reports and dashboards.",
+        "D": "Write a Python script to aggregate and visualize the data."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tổng hợp dữ liệu Accounts và Opportunities từ nhiều Salesforce orgs khác nhau về một nơi phục vụ phân tích báo cáo và áp dụng các mô hình phân tích AI nâng cao, giải pháp tốt nhất là sử dụng công cụ Einstein Analytics cho Multi-Org."
+    },
+    {
+      "id": 120,
+      "question": "Based on government regulations, a Salesforce customer plans to implement the following in Salesforce for compliance:\nAccess to customer information based on record ownershipAbility for customers to request removal of their information from SalesforcePrevent users from accessing Salesforce from outside company network (virtual private network, or VPN)\nWhat should a data architect recommend to address these requirements?",
+      "choices": {
+        "A": "Allow users access to Salesforce through a custom web application hosted within VPN.",
+        "B": "Implement Salesforce shield with Event Monitoring to address the requirement.",
+        "C": "Implement IP restrictions, sharing settings, and custom Apex to support customer requests.",
+        "D": "Contact Salesforce support to restrict access only with VPN and other requirements."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đáp ứng đồng thời cả ba yêu cầu tuân thủ: chỉ truy cập bản ghi sở hữu, hỗ trợ xóa thông tin khách hàng theo yêu cầu và chặn truy cập ngoài mạng công ty, giải pháp kết hợp là cấu hình dải IP an toàn (IP Restrictions), thiết lập chia sẻ dữ liệu (Sharing Settings), và viết code Apex tùy chỉnh để tự động hóa quy trình xóa thông tin khi được yêu cầu."
+    },
+    {
+      "id": 121,
+      "question": "Northern Trail Outfitters (NTO) has recently implemented Salesforce to track opportunities across all their regions. NTO sales teams across all regions have historically managed their sales process in Microsoft Excel. NTO sales teams are complaining that their data from the Excel files were not migrated as part of the implementation and NTO is now facing low Salesforce adoption.\nWhat should a data architect recommend to increase Salesforce adoption?",
+      "choices": {
+        "A": "Create a chatter group and upload all Excel files to the group.",
+        "B": "Load data in external database and provide access to database to sales users.",
+        "C": "Define a standard mapping and train sales users to import opportunity data.",
+        "D": "Use the Excel connector to Salesforce to sync data from individual Excel files."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để giúp người dùng nhanh chóng chuyển đổi thói quen quản lý cơ hội kinh doanh từ file Excel sang Salesforce, Data Architect nên đề xuất định nghĩa bảng ánh xạ chuẩn (Standard Mapping) giữa các cột Excel và các trường trong Salesforce, đồng thời đào tạo người dùng tự nạp dữ liệu của họ lên Salesforce."
+    },
+    {
+      "id": 122,
+      "question": "Northern Trail Outfitters needs to implement an archive solution for Salesforce data. This archive solution needs to help NTO do the following:\nRemove outdated information not required on a day-to-day basis.Improve Salesforce performance.\nWhich solution should be used to meet these requirements?",
+      "choices": {
+        "A": "Use a formula field that shows true when a record reaches a defined age and use that field to run a report and export a report into SharePoint.",
+        "B": "Identify a location to store archived data, and move data to the location using a time-based workflow.",
+        "C": "Create a full copy sandbox, and use it as a source for retaining archived data.",
+        "D": "Identify a location to store archived data and use scheduled batch jobs to migrate and purge the aged data on a nightly basis."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để định kỳ loại bỏ các dữ liệu lỗi thời không cần dùng hàng ngày và cải thiện hiệu năng hệ thống, phương án tối ưu là xác định một vị trí lưu trữ dữ liệu lưu trữ bên ngoài và viết các tác vụ Batch chạy định kỳ hàng đêm để di chuyển dữ liệu cũ đó ra ngoài và giải phóng bộ nhớ Salesforce."
+    },
+    {
+      "id": 123,
+      "question": "Northern Trail Outfitters (NTO) has an external product master system that syncs product and pricing information with Salesforce. Users have been complaining that they are seeing discrepancies in product and pricing information displayed on the NTO website and Salesforce.\nAs a data architect, which action is recommended to avoid data sync issues?",
+      "choices": {
+        "A": "Implement a manual process to update the products from an extract from the products master on a weekly basis.",
+        "B": "Build a custom integration for two-way sync of product and pricing information between product master to Salesforce.",
+        "C": "Use the Customer 360 data manager to sync product and pricing information from product master database to Salesforce.",
+        "D": "Build a custom integration for one way sync of product and pricing information from product master to Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vì hệ thống Product Master là nguồn dữ liệu gốc đáng tin cậy về sản phẩm và giá cả, để tránh sự bất đồng bộ giữa website và Salesforce, giải pháp đề xuất là xây dựng tích hợp một chiều (One-way synchronization) để tự động đẩy dữ liệu cập nhật từ Product Master sang Salesforce."
+    },
+    {
+      "id": 124,
+      "question": "Universal Containers's system administrators have been complaining that they are not able to make changes to its users' records, including moving them to new territories without getting \"unable to lock row\" errors. This is causing the system admins to spend hours updating user records every day.\nWhat should the data architect do to prevent the errors?",
+      "choices": {
+        "A": "Increase CPU for the Salesforce org.",
+        "B": "Analyze Splunk query to spot offending records.",
+        "C": "Reduce number of users updated concurrently.",
+        "D": "Enable granular locking."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi các quản trị viên gặp lỗi khóa dòng (unable to lock row) liên tục khi điều chỉnh phân cấp lãnh thổ và cập nhật người dùng đồng thời, giải pháp là kích hoạt tính năng khóa chi tiết (Granular Locking) để hệ thống tự tối ưu hóa phạm vi khóa bản ghi."
+    },
+    {
+      "id": 125,
+      "question": "Universal Containers is establishing a call center that will use Salesforce. UC receives 10 million calls and creates 100 million cases every month. Cases are linked to a custom call object using lookup relationship. UC would like to run reports and dashboard to better understand different case types being created on calls to better serve customers.\nWhat solution should a data architect recommend to meet the business requirement?",
+      "choices": {
+        "A": "Leverage out-of-the-box reports and dashboard on case and interactive voice response (IVR) custom object.",
+        "B": "Archive records to a data warehouse and run analytics on the data warehouse.",
+        "C": "Leverage custom objects to store aggregate data and run analytics.",
+        "D": "Leverage big objects to archive records and Einstein Analytics to run reports."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Với quy mô cực lớn 100 triệu cases mỗi tháng, việc lưu trữ vật lý thông thường sẽ nhanh chóng vượt quá giới hạn bộ nhớ của Salesforce. Giải pháp tối ưu là sử dụng đối tượng lớn (Big Objects) để lưu trữ các ca hỗ trợ cũ và kết nối với Einstein Analytics (CRM Analytics) để kết xuất dữ liệu phân tích và lập báo cáo."
+    },
+    {
+      "id": 126,
+      "question": "A large telecommunication provider that provides internet services to both residences and businesses has the following attributes:\nA customer who purchases its services for their home will be created as an Account in Salesforce.Individuals within the same house address will be created as Contact in Salesforce.Businesses are created as Accounts in Salesforce.\nSome of the customers have both services at their home and business.\nWhat should a data architect recommend for a single view of these customers without creating multiple customer records?",
+      "choices": {
+        "A": "Customers are created as Contacts and related to Business and Residential Accounts using the Account Contact Relationships.",
+        "B": "Customers are created as Accounts for Residence Account and use Parent Account to relate Business Account.",
+        "C": "Customers are created as Individual objects and relate with Accounts for Business and Residence accounts.",
+        "D": "Customers are created as Person Accounts and related to Business and Residential Accounts using the Account Contact relationship."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để quản lý khách hàng có cả dịch vụ nhà riêng và dịch vụ doanh nghiệp mà không tạo trùng lặp bản ghi, giải pháp chuẩn là tạo khách hàng dưới dạng bản ghi Liên hệ (Contacts) và liên kết liên hệ đó với cả hai Tài khoản (Business Account và Residential Account) bằng tính năng Account Contact Relationships."
+    },
+    {
+      "id": 127,
+      "question": "Universal Containers (UC) needs to move millions of records from an external enterprise resource planning (ERP) system into Salesforce.\nWhat should a data architect recommend to be done while using the Bulk API in serial mode instead of parallel mode?",
+      "choices": {
+        "A": "Leveraging a controlled feed load with 10 batches per job.",
+        "B": "Inserting 1 million orders distributed across a variety of accounts with lock exceptions eliminated and managed.",
+        "C": "Inserting 1 million orders distributed across a variety of accounts with potential lock exceptions.",
+        "D": "Placing 20 batches on the queue for upsert jobs."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi nạp hàng triệu đơn hàng phân bổ trên nhiều tài khoản khác nhau bằng Bulk API, việc chuyển sang chế độ tuần tự (Serial Mode) thay vì song song (Parallel Mode) giúp loại bỏ nguy cơ xảy ra lỗi khóa bản ghi (lock exceptions) do nhiều luồng cùng cố gắng cập nhật tài khoản cha đồng thời."
+    },
+    {
+      "id": 128,
+      "question": "Northern Trail Outfitters (NTO) wants to start a loyalty program to reward repeat customers. The program will track every item a customer has bought and grants them points for discounts. The following conditions will exist upon implementation:\nData will be used to drive marketing and product development initiatives.NTO estimates that the program will generate 100 million rows of data monthly.NTO will use Salesforce's Einstein Analytics and Discovery to leverage their data and make business and marketing decisions.\nWhat should the Data Architect do to store, collect, and use the reward program data?",
+      "choices": {
+        "A": "Have Einstein connect to the point of sales system to capture the Reward Program data.",
+        "B": "Create a custom big object in Salesforce which will be used to capture the Reward Program data for consumption by Einstein.",
+        "C": "Create a big object in Einstein Analytics to capture the Loyalty Program data.",
+        "D": "Create a custom object in Salesforce that will be used to capture the Reward Program data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Với quy mô sinh ra 100 triệu dòng dữ liệu tích lũy điểm thưởng mỗi tháng cần đưa vào phân tích trong Einstein Analytics, phương án lưu trữ tối ưu trong Salesforce là tạo một Custom Big Object để lưu trữ dữ liệu lớn này mà không làm tăng dung lượng lưu trữ thông thường."
+    },
+    {
+      "id": 129,
+      "question": "A large automobile manufacturer has decided to use Salesforce as its CRM. It needs to maintain the following dealer types in their CRM:\nLocal dealersRegional distributorState distributorService dealer\nThe attributes are different for each of the customer types. The CRM users should be allowed to enter only attributes related to the customer types. The processes and business rules for each of the customer types could be different.\nHow should the different dealers be maintained in Salesforce?",
+      "choices": {
+        "A": "Create dealers as Accounts, and build custom views for each of the dealer types.",
+        "B": "Create Custom objects for each dealer types and custom fields for dealer attributes.",
+        "C": "Use Accounts for dealers, and create record types for each of the dealer types.",
+        "D": "Use Accounts for dealers and custom picklist field for each of the dealer types."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để quản lý nhiều loại đại lý khác nhau trên đối tượng Account với các quy trình nghiệp vụ và thuộc tính hiển thị khác nhau, giải pháp chuẩn là sử dụng tính năng Record Types kết hợp Page Layouts tương ứng cho từng loại đại lý."
+    },
+    {
+      "id": 130,
+      "question": "Universal Containers has a Sales Cloud implementation for a sales team and an enterprise resource planning (ERP) as a customer master. Sales teams are complaining about duplicate account records and data quality issues with account data.\nWhich solution should a data architect recommend to resolve the complaints?",
+      "choices": {
+        "A": "Do a bulk delete of all account records in Salesforce and a complete reload from the ERP.",
+        "B": "Build a nightly sync job from ERP to Salesforce.",
+        "C": "Build a nightly batch job to de-dupe data, and merge account records.",
+        "D": "Implement a de-dupe solution and establish account ownership in Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để giải quyết khiếu nại về trùng lặp dữ liệu và chất lượng dữ liệu tài khoản giữa Salesforce và hệ thống ERP gốc, giải pháp đề xuất là triển khai công cụ lọc trùng dữ liệu (de-duplication) và quy định rõ ràng chính sách sở hữu tài khoản (account ownership) trong Salesforce."
+    },
+    {
+      "id": 131,
+      "question": "Universal Containers (UC) has built a custom application on Salesforce to help track shipments around the world. A majority of the shipping records are stored on-premise in an external data source. UC needs shipment details to be exposed to the custom application, and the data needs to be accessible in real time. The external data source is not OData enabled, and UC does not own a middleware tool.\nWhich Salesforce Connect procedure should a data architect use to ensure UC's requirements are met?",
+      "choices": {
+        "A": "Write a custom adapter with the Apex Connector Framework.",
+        "B": "Write an Apex class that makes a REST callout to the external API.",
+        "C": "Develop a process that calls an invocable web service method.",
+        "D": "Migrate the data to Heroku and register Postgres as a data source."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi cơ sở dữ liệu lưu trữ thông tin vận chuyển bên ngoài không hỗ trợ giao thức OData tiêu chuẩn và doanh nghiệp không có middleware để chuyển đổi, giải pháp để kết nối thời gian thực qua Salesforce Connect là viết một bộ chuyển đổi tùy chỉnh (Custom Adapter) bằng Apex Connector Framework."
+    },
+    {
+      "id": 132,
+      "question": "Northern Trail Outfitters is concerned because some of its data is sensitive and needs to be identified for access.\nWhat should be used to provide ways to filter and identify the sensitive data?",
+      "choices": {
+        "A": "Define data classification metadata.",
+        "B": "Implement field-level security.",
+        "C": "Custom checkbox denoting sensitive data.",
+        "D": "Define data grouping metadata."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để phân loại và lọc các dữ liệu nhạy cảm phục vụ bảo mật và tuân thủ quy định, giải pháp chuẩn có sẵn của Salesforce là cấu hình Metadata Phân loại Dữ liệu (Data Classification metadata) trực tiếp trên các thuộc tính của trường."
+    },
+    {
+      "id": 133,
+      "question": "Universal Containers (UC) has SO million customers and stores customer order history on an ERP system. UC also uses Salesforce to manage opportunities and customer support.\nIn order to provide seamless customer support, UC would like to see the customers order history when viewing the customer record during a sales or support call.\nWhat should a data architect do in order to provide this functionality, while preserving the user experience?",
+      "choices": {
+        "A": "Import the order history into a custom Salesforce object, update nightly.",
+        "B": "Embed the ERP system in an iframe and display on a custom tab.",
+        "C": "Use an Apex callout to populate a text area field for displaying the order history.",
+        "D": "Use Salesforce Connect and an external object to display the order history in Salesforce."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để hiển thị thông tin lịch sử mua hàng cực lớn (50 triệu khách hàng) từ hệ thống ERP bên ngoài cho nhân viên CSKH xem trực tiếp trên trang Salesforce mà không làm ảnh hưởng dung lượng lưu trữ và trải nghiệm người dùng, giải pháp chuẩn là sử dụng Salesforce Connect và đối tượng ngoại vi (External Objects)."
+    },
+    {
+      "id": 134,
+      "question": "Universal Containers (UC) plans to implement consent management for its customers to be compliant with General Data Protection Regulation (GDPR). UC has the following requirements:\nUC uses Person Accounts and Contacts in Salesforce for its customers.Data Protection and Privacy is enabled in Salesforce.Consent should be maintained in both these objects.UC plans to verify the consent provided by customers before contacting them through email or phone.\nWhich option should the data architect recommend to implement these requirements?",
+      "choices": {
+        "A": "Configure custom fields in Person Account and Contact to store consent provided by customers, and validate consent against the fields.",
+        "B": "Delete contact information from customers who have declined consent to be contacted.",
+        "C": "Build Custom Object to store consent information in Person Account and Contact; validate against this object before contacting customers.",
+        "D": "Use the Consent Management feature to validate consent provided under the Person Account and Contact that is provided by the customer."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để quản lý sự đồng ý/chấp thuận liên hệ của khách hàng trên cả hai đối tượng Person Account và Contact tuân thủ GDPR, giải pháp đề xuất là kích hoạt và cấu hình tính năng Quản lý Chấp thuận (Consent Management) tích hợp sẵn của Salesforce."
+    },
+    {
+      "id": 135,
+      "question": "A data architect is working with a large B2C retailer and needs to model the consumer account structure in Salesforce.\nWhat standard feature should be selected in this scenario?",
+      "choices": {
+        "A": "Individual Accounts",
+        "B": "Contacts",
+        "C": "Person Accounts",
+        "D": "Account Contact"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để mô hình hóa cấu trúc tài khoản của khách hàng cá nhân (B2C) trong Salesforce một cách chuẩn hóa, giải pháp khuyên dùng là kích hoạt và sử dụng tính năng Person Accounts."
+    },
+    {
+      "id": 136,
+      "question": "Universal Containers (UC) manages Vehicle and Service History in Salesforce. Vehicle (Vehicle_c) and Service History (Service_History_c) are both custom objects related through a lookup relationship. Every week a batch synchronization process updates the Vehicle and Service History records in Salesforce. UC has two hours of migration window every week and is facing locking issues as part of the data migration process.\nWhat should a data architect recommend to avoid locking issues without affecting performance of data migration?",
+      "choices": {
+        "A": "Use Bulk API serial mode for data migration.",
+        "B": "Insert the order in another custom object and use Batch Apex to move the records to Service_Order__c object.",
+        "C": "Use Bulk API parallel mode for data migration.",
+        "D": "Change the lookup configuration to \"Clear the value of this field\" when lookup record is deleted."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi chạy tiến trình đồng bộ cập nhật dữ liệu hàng tuần cho các đối tượng có quan hệ với nhau gặp lỗi khóa dòng (locking issues), giải pháp tối ưu là sử dụng Bulk API ở chế độ tuần tự (Serial Mode) để xếp hàng các tác vụ cập nhật một cách có trật tự, tránh tranh chấp tài nguyên khóa chéo."
+    }
+  ]
+}

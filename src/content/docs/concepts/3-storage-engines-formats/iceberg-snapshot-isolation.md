@@ -37,11 +37,7 @@ graph TD
         D --> F["Data File 1 (.parquet)"]
         D --> G["Data File 2 (.parquet)"]
         E --> H["Data File 3 (.parquet)"]
-    end
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#bfb,stroke:#333,stroke-width:2px
+    end
 ```
 
 1. **Catalog Layer:** Trái tim của sự nhất quán. Nó lưu đúng một con trỏ [Pointer] duy nhất trỏ đến file Metadata hiện tại của bảng. Đây là nơi diễn ra các thao tác Atomic.
@@ -96,7 +92,6 @@ CALL my_catalog.system.expire_snapshots(
   older_than => TIMESTAMP '2026-06-19 00:00:00',
   retain_last => 10
 );
-
 -- 2. Xóa các file vật lý mồ côi (Orphan Files) trên S3
 CALL my_catalog.system.remove_orphan_files(
   table => 'database.fact_transactions'

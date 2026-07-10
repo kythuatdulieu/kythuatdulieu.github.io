@@ -1,0 +1,36 @@
+/* ==========================================================
+   SPACING, RADIUS, SHADOW, MOTION TOKENS
+   Deliberately modest: this is a reading handbook, not a product
+   marketing surface. Radii stay small, shadows stay near-flat,
+   motion is a quick fade/slide — never a bounce or a glow.
+   ========================================================== */
+
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* shadows: one subtle elevation step, no colored/glow shadows */
+  --shadow-1: 0 1px 2px rgba(15, 15, 20, 0.06);
+  --shadow-2: 0 2px 8px rgba(15, 15, 20, 0.08);
+
+  --border-width: 1px;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* @kind other */
+  --duration-fast: 120ms; /* @kind other */
+  --duration-base: 180ms; /* @kind other */
+
+  --content-width: 1180px;
+  --sl-content-width: var(--content-width);
+}

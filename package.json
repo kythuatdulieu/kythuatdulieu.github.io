@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "node generate_backlinks.cjs && astro dev",
-    "start": "node generate_backlinks.cjs && astro dev",
-    "build": "node generate_backlinks.cjs && astro build",
+    "dev": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
+    "start": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
+    "build": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky"
@@ -13,6 +13,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/starlight": "^0.23.4",
+    "dotenv": "^17.4.2",
     "mdast-util-find-and-replace": "^3.0.2",
     "mermaid": "^11.15.0",
     "playwright": "^1.60.0",

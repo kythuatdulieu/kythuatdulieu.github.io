@@ -26,20 +26,17 @@ Thay vì ghi trực tiếp vào bảng đang phục vụ (Production), luồng d
 ```mermaid
 graph TD
     subgraph WRITE_OP ["1. WRITE (Staging/Green)"]
-        A["Kafka / S3 Raw Data"] -->|Spark / dbt ETL| B["(Uncommitted Snapshot / \n Staging Schema)"]
-        style B fill:#e6f4ea,stroke:#1e8e3e
+        A["Kafka / S3 Raw Data"] -->|Spark / dbt ETL| B["(Uncommitted Snapshot / \n Staging Schema)"]
     end
 
     subgraph AUDIT ["2. AUDIT (Validation)"]
         B --> C{"Data Quality Tests \n dbt test / Great Expectations"}
-        C -- Fails --> D["Alert & Halt Pipeline. \n Prod is untouched!"]
-        style D fill:#fce8e6,stroke:#d93025
+        C -- Fails --> D["Alert & Halt Pipeline. \n Prod is untouched!"]
     end
 
     subgraph PUBLISH ["3. PUBLISH (Production/Blue)"]
         C -- Passes --> E["Metadata Swap / \n Branch Merge"]
-        E --> F["(Production Table / View)"]
-        style F fill:#e8f0fe,stroke:#1a73e8
+        E --> F["(Production Table / View)"]
     end
     
     F -.->|Downstream Consumers| G["BI Dashboards / ML Models"]

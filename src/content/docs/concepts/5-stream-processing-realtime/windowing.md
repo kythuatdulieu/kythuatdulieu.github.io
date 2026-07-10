@@ -33,10 +33,7 @@ graph TD
     D1 -.->|Trigger Check| E("Trigger Evaluator")
     
     E -->|"Condition Met (Fire & Purge)"| F["Aggregation Function"]
-    F --> G["Downstream Output / Sink"]
-    
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#bbf,stroke:#333,stroke-width:2px
+    F --> G["Downstream Output / Sink"]
 ```
 
 1. **Window Assigner (Bộ định tuyến):** Khi một sự kiện đi vào, Assigner sẽ quyết định nhét nó vào một hoặc nhiều Bucket (Cửa sổ). Nếu một sự kiện thuộc về nhiều cửa sổ, dữ liệu gốc không bị copy thành nhiều bản trên RAM, mà State Backend sẽ tạo ra nhiều Index points trỏ tới nó để tối ưu Disk I/O.

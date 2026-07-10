@@ -143,9 +143,8 @@ graph LR
     A[Microservice] -->|Plain PAN: 4111-2222| B(Tokenization Service)
     B -->|Lưu Map 1:1| C[(Vault Database)]
     B -->|Trả Token: 4111-9999| D[Data Warehouse]
-    
-    style B fill:#3498db,color:#fff
-    style C fill:#f1c40f,color:#333
+
+
 ```
 
 ### Rủi ro hệ thống: Vụ nổ Descartes (Cartesian Explosion)

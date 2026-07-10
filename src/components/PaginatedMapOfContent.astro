@@ -48,13 +48,11 @@ contentDocs.forEach(doc => {
   }
 
   if (!tree[rootFolder].categories[catSlug]) {
-      tree[rootFolder].categories[catSlug] = { label: catLabel, docs: [] };
+      tree[rootFolder].categories[catSlug] = { slug: catSlug, label: catLabel, docs: [] };
   }
 
   let title = doc.data.title;
-  const match = title.match(/-\s*([a-zA-Z0-9\s]+)$/);
-  if (match && match[1]) title = match[1].trim();
-
+  
   tree[rootFolder].categories[catSlug].docs.push({ title, url: `/${doc.slug}/` });
 });
 
@@ -93,230 +91,314 @@ const domainsData = sortedRoots.map(rootKey => {
 });
 ---
 
-<div class="interactive-explorer">
-  <div class="sidebar-tabs">
+<div class="minimal-explorer">
+  <!-- Tab Navigation -->
+  <nav class="explorer-tabs">
     {domainsData.map((domain, index) => (
-      <button class={`tab-btn ${index === 0 ? 'active' : ''}`} data-target={domain.id}>
+      <div class={`tab-btn ${index === 0 ? 'active' : ''}`} data-target={domain.id} tabindex="0" role="button">
         <span class="tab-icon" set:html={domain.svg} />
         <span class="tab-label">{domain.label.split('. ')[1] || domain.label}</span>
-      </button>
+      </div>
     ))}
-  </div>
+    <div class="tab-divider"></div>
+    <a href="/quizzes/" class="tab-btn quiz-btn">
+      <span class="tab-icon">🔥</span>
+      <span class="tab-label">Luyện thi Certificate</span>
+    </a>
+  </nav>
 
-  <div class="content-panels">
-    {domainsData.map((domain, index) => {
-      return (
-        <div class={`tab-content ${index === 0 ? 'active' : ''}`} id={`panel-${domain.id}`}>
-          <div class="docs-grid-container">
-            <div class="moc-table">
-              {domain.categories.map((cat) => (
-                <div class="moc-row">
-                  <div class="moc-col-cat">
-                    <span class="cat-label-text">{cat.label}</span>
-                  </div>
-                  <div class="moc-col-links">
-                    {cat.docs.map((doc) => (
-                      <a href={doc.url} class="concept-link-item">{doc.title}</a>
-                    ))}
-                  </div>
-                </div>
-              ))}
+  <!-- Tab Contents -->
+  <div class="explorer-content">
+    {domainsData.map((domain, index) => (
+      <div class={`tab-panel ${index === 0 ? 'active' : ''}`} id={`panel-${domain.id}`}>
+        
+        <div class="clean-table">
+          {domain.categories.map((cat) => (
+            <div class="table-row" id={cat.slug}>
+              <!-- Left Column: Category Name -->
+              <div class="table-col-cat">
+                <h3 class="cat-title">{cat.label}</h3>
+                <span class="cat-count">{cat.docs.length} bài viết</span>
+              </div>
+              
+              <!-- Right Column: Links -->
+              <div class="table-col-links">
+                {cat.docs.map((doc) => (
+                  <a href={doc.url} class="doc-link">
+                    <span class="link-bullet"></span>
+                    <span class="link-text">{doc.title}</span>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      );
-    })}
+        
+      </div>
+    ))}
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const tabBtns = document.querySelectorAll('.tab-btn:not(a)');
+    const panels = document.querySelectorAll('.tab-panel');
 
-    // Tab Switching Only (No Pagination, No Timer)
+    function activateTab(targetId) {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      
+      const btn = document.querySelector(`.tab-btn[data-target="${targetId}"]`);
+      if (btn) btn.classList.add('active');
+      
+      const targetPanel = document.getElementById(`panel-${targetId}`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+      }
+    }
+
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        btn.classList.add('active');
-        const targetId = btn.getAttribute('data-target');
-        document.getElementById(`panel-${targetId}`).classList.add('active');
+        activateTab(btn.getAttribute('data-target'));
       });
     });
+
+    // Handle hash links (Anchor)
+    if (window.location.hash) {
+      const targetHash = window.location.hash.substring(1);
+      const targetEl = document.getElementById(targetHash);
+      if (targetEl) {
+        const parentPanel = targetEl.closest('.tab-panel');
+        if (parentPanel) {
+          const panelId = parentPanel.id.replace('panel-', '');
+          activateTab(panelId);
+          setTimeout(() => {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            targetEl.classList.add('highlight-row');
+            setTimeout(() => {
+              targetEl.classList.remove('highlight-row');
+            }, 2000);
+          }, 100);
+        }
+      }
+    }
   });
 </script>
 
 <style is:global>
-  /* Removed page-level overflow constraints so scrolling is native */
+  /* Hide default Starlight title */
+  .sl-markdown-content > h1#_top,
+  .content-panel:has(h1#_top) {
+    display: none !important;
+  }
 </style>
+
 <style>
-.interactive-explorer {
-  display: flex;
-  flex-direction: column;
-  background: var(--sl-color-bg-nav, rgba(20, 20, 25, 0.4));
-  border: 1px solid var(--sl-color-hairline, rgba(255, 255, 255, 0.08));
+/* Minimalist Container */
+.minimal-explorer {
+  margin-top: 1rem;
+  background: var(--sl-color-bg);
+  border: 1px solid var(--sl-color-hairline, rgba(128,128,128,0.2));
   border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-@media (min-width: 768px) {
-  .interactive-explorer {
-    flex-direction: row;
-  }
-}
-
-.sidebar-tabs {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--sl-color-hairline);
-  padding: 0.5rem;
-  gap: 0.5rem;
-  scrollbar-width: thin;
-}
-
-@media (min-width: 768px) {
-  .sidebar-tabs {
-    flex-direction: column;
-    min-width: 240px;
-    max-width: 280px;
-    border-bottom: none;
-    border-right: 1px solid var(--sl-color-hairline);
-    padding: 1rem;
-    overflow-y: auto;
-  }
-}
-
-.tab-btn {
+/* Tabs */
+.explorer-tabs {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--sl-color-hairline, rgba(128,128,128,0.2));
+  background: var(--sl-color-bg-nav);
+  padding: 0.5rem;
+  gap: 0.5rem;
+  scrollbar-width: none;
+  min-height: 58px;
+}
+.explorer-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  box-sizing: border-box !important;
+  gap: 0.5rem !important;
+  padding: 0 1rem !important;
+  margin: 0 !important;
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
+  border: 1px solid transparent !important;
+  border-radius: 6px;
   color: var(--sl-color-gray-2);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  text-decoration: none !important;
+}
+
+.tab-btn * {
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .tab-btn:hover {
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--sl-color-white);
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--sl-color-text);
 }
 
 .tab-btn.active {
-  background: rgba(var(--sl-color-accent-rgb, 100, 100, 255), 0.1);
-  border-color: rgba(var(--sl-color-accent-rgb, 100, 100, 255), 0.2);
-  color: var(--sl-color-white);
+  background: var(--sl-color-text-accent);
+  color: var(--sl-color-bg);
 }
 
 .tab-icon {
   display: flex;
-  color: var(--sl-color-accent);
+  opacity: 0.8;
+  font-size: 1.1rem; /* For emoji sizing */
+}
+.tab-btn.active .tab-icon {
+  opacity: 1;
 }
 
-.content-panels {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.tab-label {
+  transform: translateY(1px); /* Micro-adjustment if needed, but flex should handle it */
 }
 
-.tab-content {
+.tab-divider {
+  width: 1px;
+  background: var(--sl-color-hairline);
+  margin: 0.5rem 0.25rem;
+}
+
+.quiz-btn {
+  color: #ea580c;
+  text-decoration: none !important;
+}
+.quiz-btn:hover {
+  background: rgba(234, 88, 12, 0.1);
+}
+
+/* Content */
+.explorer-content {
+  padding: 0;
+}
+
+.tab-panel {
   display: none;
-  flex-direction: column;
+}
+.tab-panel.active {
+  display: block;
 }
 
-.tab-content.active {
-  display: flex;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.docs-grid-container {
-  padding: 1.5rem;
-}
-
-/* Table Style Layout */
-.moc-table {
+/* Clean Table */
+.clean-table {
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.moc-row {
+.table-row {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--sl-color-hairline, rgba(128,128,128,0.15));
+  transition: background-color 0.3s ease;
 }
-
-.moc-row:last-child {
+.table-row:last-child {
   border-bottom: none;
 }
 
-@media (min-width: 640px) {
-  .moc-row {
+@media (min-width: 768px) {
+  .table-row {
     flex-direction: row;
   }
 }
 
-.moc-col-cat {
-  padding: 1.25rem 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  font-weight: 600;
-  color: var(--sl-color-white);
-  font-size: 0.95rem;
-  line-height: 1.4;
+.highlight-row {
+  background-color: rgba(var(--sl-color-text-accent-rgb, 100, 150, 255), 0.1);
 }
 
-@media (min-width: 640px) {
-  .moc-col-cat {
-    width: 30%;
-    min-width: 200px;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+/* Left Column: Category */
+.table-col-cat {
+  padding: 1.5rem;
+  background: rgba(128, 128, 128, 0.03);
+}
+
+@media (min-width: 768px) {
+  .table-col-cat {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--sl-color-hairline, rgba(128,128,128,0.15));
   }
 }
 
-/* CSS Grid for Article Links */
-.moc-col-links {
-  padding: 1.25rem 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.75rem 1rem;
-  flex: 1;
-}
-
-.concept-link-item {
-  display: flex;
-  align-items: flex-start;
-  font-size: 0.95rem;
-  color: var(--sl-color-accent);
-  text-decoration: none !important;
-  transition: color 0.2s ease;
+.cat-title {
+  margin: 0 !important;
+  font-size: 1.1rem !important;
+  font-weight: 600;
+  color: var(--sl-color-text);
   line-height: 1.4;
 }
 
-.concept-link-item::before {
-  content: '→';
-  color: var(--sl-color-gray-4);
-  margin-right: 0.4rem;
-  font-size: 0.9rem;
-  margin-top: 0.1rem;
+.cat-count {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--sl-color-gray-3);
 }
 
-.concept-link-item:hover {
-  color: var(--sl-color-accent-high);
-  text-decoration: underline !important;
+/* Right Column: Links */
+.table-col-links {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .table-col-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem 2rem;
+  }
+}
+
+.doc-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--sl-color-text-accent);
+  text-decoration: none !important;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+}
+
+.link-bullet {
+  margin-top: 0.4rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--sl-color-text-accent);
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.doc-link:hover {
+  color: var(--sl-color-text);
+}
+.doc-link:hover .link-bullet {
+  opacity: 1;
+}
+
+.link-text {
+  flex: 1;
 }
 </style>

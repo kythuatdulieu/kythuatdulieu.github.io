@@ -1,0 +1,2463 @@
+{
+  "exam": "SnowPro Advanced Data Engineer",
+  "provider": "snowflake",
+  "code": "snowpro-advanced-data-engineer",
+  "total_questions": 161,
+  "questions": [
+    {
+      "id": 1,
+      "question": "A new CUSTOMER table is created by a data pipeline in a Snowflake schema where MANAGED ACCESS is enabled.Which roles can grant access to the CUSTOMER table? (Choose three.)",
+      "choices": {
+        "A": "The role that owns the schema",
+        "B": "The role that owns the database",
+        "C": "The role that owns the CUSTOMER table",
+        "D": "The SYSADMIN role",
+        "E": "The SECURITYADMIN role",
+        "F": "The USERADMIN role with the MANAGE GRANTS privilege"
+      },
+      "correctAnswer": "AEF",
+      "explanation_vi": "Trong một lược đồ có cấu trúc truy cập được quản lý (Managed Access Schema), quyền quyết định cấp quyền truy cập đối tượng không còn thuộc về chủ sở hữu đối tượng nữa (object owner). Thay vào đó, chỉ có vai trò sở hữu lược đồ (schema owner - A), vai trò quản trị bảo mật (`SECURITYADMIN` - E), hoặc bất kỳ vai trò nào có quyền `MANAGE GRANTS` (F) mới có quyền cấp phát.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-access-control-configure#managed-access-schemas"
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Given the table SALES which has a clustering key of column CLOSED_DATE, which table function will return the average clustering depth for the SALES_REPRESENTATIVE column for the North American region?",
+      "choices": {
+        "A": "select system$clustering_information('Sales', 'sales_representative', 'region = ''North America''');",
+        "B": "select system$clustering_depth('Sales', 'sales_representative', 'region = ''North America''');",
+        "C": "select system$clustering_depth('Sales', 'sales_representative') where region = 'North America';",
+        "D": "select system$clustering_information('Sales', 'sales_representative') where region = 'North America’;"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm hệ thống `SYSTEM$CLUSTERING_DEPTH` nhận đối số gồm tên bảng, các cột cần phân tích độ sâu phân cụm, và một chuỗi điều kiện lọc tùy chọn. Trong câu lệnh, điều kiện lọc được viết dưới dạng chuỗi nằm trong cặp nháy đơn kép (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_depth"
+      ]
+    },
+    {
+      "id": 3,
+      "question": "A Data Engineer is working on a Snowflake deployment in AWS eu-west-1 (Ireland). The Engineer is planning to load data from staged files into target tables using the COPY INTO command.Which sources are valid? (Choose three.)",
+      "choices": {
+        "A": "Internal stage on GCP us-central1 (Iowa)",
+        "B": "Internal stage on AWS eu-central-1 (Frankfurt)",
+        "C": "External stage on GCP us-central1 (Iowa)",
+        "D": "External stage in an Amazon S3 bucket on AWS eu-west-1 (Ireland)",
+        "E": "External stage in an Amazon S3 bucket on AWS eu-central-1 (Frankfurt)",
+        "F": "SSD attached to an Amazon EC2 instance on AWS eu-west-1 (Ireland)"
+      },
+      "correctAnswer": "CDE",
+      "explanation_vi": "Khi thực hiện lệnh `COPY INTO` trong Snowflake, các nguồn dữ liệu bên ngoài (External Stages) có thể nằm ở bất kỳ nhà cung cấp đám mây (AWS, GCP, Azure) và khu vực địa lý nào (C, D, E). Ngược lại, các Internal Stage bắt buộc phải nằm trong cùng một tài khoản và khu vực của Snowflake.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/copy-into-table"
+      ]
+    },
+    {
+      "id": 4,
+      "question": "A large table with 200 columns contains two years of historical data. When queried, the table is filtered on a single day. Below is the Query Profile:\nUsing a size 2XL virtual warehouse, this query took over an hour to complete.What will improve the query performance the MOST?",
+      "choices": {
+        "A": "Increase the size of the virtual warehouse.",
+        "B": "Increase the number of clusters in the virtual warehouse.",
+        "C": "Implement the search optimization service on the table.",
+        "D": "Add a date column as a cluster key on the table."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vì câu truy vấn lọc theo ngày cụ thể trên tập dữ liệu lịch sử kéo dài 2 năm, việc cấu hình cột ngày làm khóa phân cụm (`Clustering Key` - D) sẽ giúp tăng hiệu năng truy vấn nhiều nhất nhờ khả năng loại bỏ các vi phân vùng (micro-partitions) không chứa dữ liệu cần tìm (partition pruning).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-clustering-keys"
+      ]
+    },
+    {
+      "id": 5,
+      "question": "A Data Engineer wants to create a new development database (DEV) as a clone of the permanent production database (PROD). There is a requirement to disable Fail-safe for all tables.Which command will meet these requirements?",
+      "choices": {
+        "A": "CREATE DATABASE DEV -CLONE PROD -FAIL_SAFE = FALSE;",
+        "B": "CREATE DATABASE DEV -CLONE PROD;",
+        "C": "CREATE TRANSIENT DATABASE DEV -CLONE PROD;",
+        "D": "CREATE DATABASE DEV -CLONE PROD -DATA_RETENTION_TIME_IN DAYS = 0;"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Các bảng và cơ sở dữ liệu tạm thời (Transient) trong Snowflake không có thời gian lưu trữ Fail-safe (để tiết kiệm chi phí lưu trữ). Việc tạo cơ sở dữ liệu clone dưới dạng `TRANSIENT DATABASE` (C) sẽ tự động vô hiệu hóa tính năng Fail-safe cho tất cả các bảng bên trong.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-temp-transient#transient-tables"
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Which query will show a list of the 20 most recent executions of a specified task, MYTASK, that have been scheduled within the last hour that have ended or are still running?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774281111886-yb4iigyd.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774281114246-oxndahtf.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774281116613-d7xi2x0j.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774281118961-6x61craq.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm bảng `INFORMATION_SCHEMA.TASK_HISTORY` cho phép truy vấn lịch sử thực thi của các tác vụ. Phương án B chứa câu lệnh SQL sử dụng đúng hàm này với các tham số giới hạn thời gian (trong vòng 1 giờ qua) và giới hạn số dòng kết quả là 20.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/task_history"
+      ]
+    },
+    {
+      "id": 7,
+      "question": "A stream called TRANSACTIONS_STM is created on top of a TRANSACTIONS table in a continuous pipeline running in Snowflake. After a couple of months, the TRANSACTIONS table is renamed TRANSACTIONS_RAW to comply with new naming standards.What will happen to the TRANSACTIONS_STM object?",
+      "choices": {
+        "A": "TRANSACTIONS_STM will keep working as expected.",
+        "B": "TRANSACTIONS_STM will be stale and will need to be re-created.",
+        "C": "TRANSACTIONS_STM will be automatically renamed TRANSACTIONS_RAW_STM.",
+        "D": "Reading from the TRANSACTIONS_STM stream will succeed for some time after the expected STALE_TIME."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Snowflake, việc đổi tên bảng nguồn không làm ảnh hưởng đến luồng dữ liệu của stream được định nghĩa trên bảng đó. Stream `TRANSACTIONS_STM` sẽ tự động liên kết với bảng mới `TRANSACTIONS_RAW` và tiếp tục hoạt động bình thường (A).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/streams-intro"
+      ]
+    },
+    {
+      "id": 8,
+      "question": "A database contains a table and a stored procedure defined as:\nThe log_table is initially empty and a Data Engineer issues the following command:CALL insert_log(NULL::VARCHAR);No other operations are affecting the log_table.What will be the outcome of the procedure call?",
+      "choices": {
+        "A": "The log_table contains zero records and the stored procedure returned 1 as a return value.",
+        "B": "The log_table contains one record and the stored procedure returned 1 as a return value.",
+        "C": "The log_table contains one record and the stored procedure returned NULL as a return value.",
+        "D": "The log_table contains zero records and the stored procedure returned NULL as a return value."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi truyền tham số `NULL` vào stored procedure, do lô-gích kiểm tra hoặc thiết lập xử lý đầu vào của thủ tục, không có bản ghi nào được chèn vào bảng `log_table` và giá trị trả về của thủ tục là `NULL` (D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-overview"
+      ]
+    },
+    {
+      "id": 9,
+      "question": "A Data Engineer has developed a dashboard that will issue the same SQL select clause to Snowflake every 12 hours.How long will Snowflake use the persisted query results from the result cache, provided that the underlying data has not changed?",
+      "choices": {
+        "A": "12 hours",
+        "B": "24 hours",
+        "C": "14 days",
+        "D": "31 days"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bộ nhớ đệm kết quả truy vấn (Result Cache) của Snowflake lưu trữ kết quả trong 24 giờ. Tuy nhiên, mỗi lần câu truy vấn được gọi lại và trúng cache (hit cache), bộ đếm thời gian 24 giờ sẽ được gia hạn thêm, kéo dài tối đa lên đến 31 ngày (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/querying-persisted-results"
+      ]
+    },
+    {
+      "id": 10,
+      "question": "A Data Engineer executes a complex query and wants to make use of Snowflake’s query results caching capabilities to reuse the results.Which conditions must be met? (Choose three.)",
+      "choices": {
+        "A": "The results must be reused within 72 hours.",
+        "B": "The query must be executed using the same virtual warehouse.",
+        "C": "The USED_CACHED_RESULT parameter must be included in the query.",
+        "D": "The table structure contributing to the query result cannot have changed.",
+        "E": "The new query must have the same syntax as the previously executed query.",
+        "F": "The micro-partitions cannot have changed due to changes to other data in the table."
+      },
+      "correctAnswer": "DEF",
+      "explanation_vi": "Để tái sử dụng kết quả từ bộ nhớ đệm kết quả truy vấn (Result Cache), các điều kiện sau phải được thỏa mãn: cấu trúc bảng của câu truy vấn không bị thay đổi (D); cú pháp của câu truy vấn mới phải hoàn toàn trùng khớp với câu truy vấn cũ (E); và các vi phân vùng (micro-partitions) của dữ liệu nguồn không bị thay đổi do các hoạt động cập nhật/chèn dữ liệu khác (F).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/querying-persisted-results"
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Which Snowflake objects does the Snowflake Kafka connector use? (Choose three.)",
+      "choices": {
+        "A": "Pipe",
+        "B": "Serverless task",
+        "C": "Internal user stage",
+        "D": "Internal table stage",
+        "E": "Internal named stage",
+        "F": "Storage integration"
+      },
+      "correctAnswer": "ADE",
+      "explanation_vi": "Trình kết nối Snowflake Kafka Connector sử dụng các đối tượng Snowflake gồm: Pipe (A) để thực hiện nạp dữ liệu bằng Snowpipe, cùng các loại Internal Stage như Table Stage (D) và Named Stage (E) để làm nơi lưu trữ tạm thời các tệp tin trước khi tải.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-kafka"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "A Data Engineer needs to load JSON output from some software into Snowflake using Snowpipe.Which recommendations apply to this scenario? (Choose three.)",
+      "choices": {
+        "A": "Load large files (1 GB or larger).",
+        "B": "Ensure that data files are 100-250 MB (or larger) in size, compressed.",
+        "C": "Load a single huge array containing multiple records into a single table row.",
+        "D": "Verify each value of each unique element stores a single native data type (string or number).",
+        "E": "Extract semi-structured data elements containing null values into relational columns before loading.",
+        "F": "Create data files that are less than 100 MB and stage them in cloud storage at a sequence greater than once each minute."
+      },
+      "correctAnswer": "BDE",
+      "explanation_vi": "Khi nạp dữ liệu JSON bằng Snowpipe, nhà phát triển nên tuân thủ các khuyến nghị: đảm bảo các tệp dữ liệu đã nén có kích thước từ 100-250 MB (B); đảm bảo mỗi phần tử duy nhất trong JSON chỉ lưu một kiểu dữ liệu gốc cố định (D); và trích xuất hoặc xử lý trước các thuộc tính bán cấu trúc chứa giá trị null thành các cột quan hệ (E) để tối ưu hóa hiệu suất lưu trữ và phân tích.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-best-practices"
+      ]
+    },
+    {
+      "id": 13,
+      "question": "How can the following relational data be transformed into semi-structured data using the LEAST amount of operational overhead?",
+      "choices": {
+        "A": "Use the TO_JSON function.",
+        "B": "Use the PARSE_JSON function to produce a VARIANT value.",
+        "C": "Use the OBJECT_CONSTRUCT function to return a Snowflake object.",
+        "D": "Use the TO_VARIANT function to convert each of the relational columns to VARIANT."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm `OBJECT_CONSTRUCT` trong SQL Snowflake cho phép chuyển đổi các cột dữ liệu quan hệ (relational columns) thành một đối tượng bán cấu trúc (JSON object) một cách nhanh chóng với ít chi phí xử lý nhất.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/object_construct"
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Which methods can be used to create a DataFrame object in Snowpark? (Choose three.)",
+      "choices": {
+        "A": "session.jdbc_connection()",
+        "B": "session.read.json()",
+        "C": "session.table()",
+        "D": "DataFrame.write()",
+        "E": "session.builder()",
+        "F": "session.sql()"
+      },
+      "correctAnswer": "BCF",
+      "explanation_vi": "Ba phương thức chuẩn trong thư viện Snowpark để tạo một đối tượng DataFrame là: `session.read.json()` để đọc tệp JSON (B), `session.table()` để đọc dữ liệu từ một bảng có sẵn (C), và `session.sql()` để thực thi một câu lệnh SQL và lấy kết quả (F).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 15,
+      "question": "What is the purpose of the BUILD_STAGE_FILE_URL function in Snowflake?",
+      "choices": {
+        "A": "It generates an encrypted URL for accessing a file in a stage.",
+        "B": "It generates a staged URL for accessing a file in a stage.",
+        "C": "It generates a permanent URL for accessing files in a stage.",
+        "D": "It generates a temporary URL for accessing a file in a stage."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm `BUILD_STAGE_FILE_URL` được sử dụng để sinh ra một URL vĩnh viễn (permanent URL) giúp các ứng dụng hoặc người dùng bên ngoài có thể truy cập tệp tin được lưu trên một stage của Snowflake thông qua REST API.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/build_stage_file_url"
+      ]
+    },
+    {
+      "id": 16,
+      "question": "A company has an extensive script in Scala that transforms data by leveraging DataFrames. A Data Engineer needs to move these transformations to Snowpark.What characteristics of data transformations in Snowpark should be considered to meet this requirement? (Choose two.)",
+      "choices": {
+        "A": "It is possible to join multiple tables using DataFrames.",
+        "B": "Snowpark operations are executed lazily on the server.",
+        "C": "User-Defined Functions (UDFs) are not pushed down to Snowflake.",
+        "D": "Snowpark requires a separate cluster outside of Snowflake for computations.",
+        "E": "Columns in different DataFrames with the same name should be referred to with squared brackets."
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Khi chuyển dịch mã nguồn DataFrame sang Snowpark, cần lưu ý hai đặc điểm chính: Snowpark hỗ trợ kết nối (JOIN) nhiều bảng bằng DataFrame (A), và các phép toán biến đổi dữ liệu trong Snowpark được thực thi một cách trì hoãn (lazy evaluation) trên máy chủ Snowflake để tối ưu hóa hiệu năng (B).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 17,
+      "question": "The following is returned from SYSTEM$CLUSTERING_INFORMATION() for a table named ORDERS with a DATE column named O_ORDERDATE:\nWhat does the total_constant_partition_count value indicate about this table?",
+      "choices": {
+        "A": "The table is clustered very well on O_ORDERDATE, as there are 493 micro-partitions that could not be significantly improved by reclustering.",
+        "B": "The table is not clustered well on O_ORDERDATE, as there are 493 micro-partitions where the range of values in that column overlap with every other micro-partition in the table.",
+        "C": "The data in O_ORDERDATE does not change very often, as there are 493 micro-partitions containing rows where that column has not been modified since the row was created.",
+        "D": "The data in O_ORDERDATE has a very low cardinality, as there are 493 micro-partitions where there is only a single distinct value in that column for all rows in the micro-partition."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Chỉ số `total_constant_partition_count` cho biết số lượng vi phân vùng (micro-partitions) mà dải giá trị của khóa phân cụm hoàn toàn không chồng chéo với các phân vùng khác. Giá trị lớn (493) cho thấy bảng được phân cụm rất tốt và không cần phải chạy tái phân cụm (reclustering) (A).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_information"
+      ]
+    },
+    {
+      "id": 18,
+      "question": "The JSON below is stored in a VARIANT column named V in a table named jCustRaw:\nWhich query will return one row per team member (stored in the teamMembers array) along with all of the attributes of each team member?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774282331705-8o8fquv0.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774282333752-k77u33ed.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774282335813-yaoc7yh4.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774282339465-eq9amuge.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tách mảng JSON `teamMembers` thành các dòng dữ liệu riêng biệt, ta sử dụng hàm `LATERAL FLATTEN` với đầu vào là trường chứa mảng. Phương án B chứa cú pháp SQL chính xác để thực hiện việc phân rã mảng này.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/flatten"
+      ]
+    },
+    {
+      "id": 19,
+      "question": "A company is building a dashboard for thousands of Analysts. The dashboard presents the results of a few summary queries on tables that are regularly updated. The query conditions vary by topic according to what data each Analyst needs. Responsiveness of the dashboard queries is a top priority, and the data cache should be preserved.How should the Data Engineer configure the compute resources to support this dashboard?",
+      "choices": {
+        "A": "Assign queries to a multi-cluster virtual warehouse with economy auto-scaling. Allow the system to automatically start and stop clusters according to demand.",
+        "B": "Assign all queries to a multi-cluster virtual warehouse set to maximized mode. Monitor to determine the smallest suitable number of clusters.",
+        "C": "Create a virtual warehouse for every 250 Analysts. Monitor to determine how many of these virtual warehouses are being utilized at capacity.",
+        "D": "Create a size XL virtual warehouse to support all the dashboard queries. Monitor query runtimes to determine whether the virtual warehouse should be resized."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo thời gian phản hồi nhanh nhất cho hàng ngàn nhà phân tích và tận dụng bộ nhớ đệm (data cache), kỹ sư nên cấu hình kho dữ liệu đa cụm ở chế độ tối đa hóa (`Maximized Mode` - B). Chế độ này khởi động toàn bộ các cụm tính toán ngay từ đầu và nhân bản bộ nhớ đệm giữa các cụm để tránh độ trễ.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/warehouses-multicluster#maximized-mode"
+      ]
+    },
+    {
+      "id": 20,
+      "question": "A Data Engineer ran a stored procedure containing various transactions. During the execution, the session abruptly disconnected, preventing one transaction from committing or rolling back. The transaction was left in a detached state and created a lock on resources.What step must the Engineer take to immediately run a new transaction?",
+      "choices": {
+        "A": "Call the system function SYSTEM$ABORT_TRANSACTION.",
+        "B": "Call the system function SYSTEM$CANCEL_TRANSACTION.",
+        "C": "Set the LOCK_TIMEOUT to FALSE in the stored procedure.",
+        "D": "Set the TRANSACTION_ABORT_ON_ERROR to TRUE in the stored procedure."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi một giao dịch (transaction) bị treo ở trạng thái ngắt kết nối và giữ khóa (lock) trên bảng dữ liệu, kỹ sư cần gọi hàm hệ thống `SYSTEM$ABORT_TRANSACTION` (A) kèm theo mã giao dịch để hủy bỏ nó và giải phóng tài nguyên bị khóa ngay lập tức.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_abort_transaction"
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Which output is provided by both the SYSTEM$CLUSTERING_DEPTH function and the SYSTEM$CLUSTERING_INFORMATION function?",
+      "choices": {
+        "A": "average_depth",
+        "B": "notes",
+        "C": "average_overlaps",
+        "D": "total_partition_count"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cả hai hàm kiểm tra phân cụm của Snowflake là `SYSTEM$CLUSTERING_DEPTH` và `SYSTEM$CLUSTERING_INFORMATION` đều cung cấp thông số độ sâu phân cụm trung bình (`average_depth` - A) của bảng dữ liệu.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_depth"
+      ]
+    },
+    {
+      "id": 22,
+      "question": "A table is loaded using Snowpipe and truncated afterwards. Later, a Data Engineer finds that the table needs to be reloaded, but the metadata of the pipe will not allow the same files to be loaded again.How can this issue be solved using the LEAST amount of operational overhead?",
+      "choices": {
+        "A": "Wait until the metadata expires and then reload the file using Snowpipe.",
+        "B": "Modify the file by adding a blank row to the bottom and re-stage the file.",
+        "C": "Set the FORCE=TRUE option in the Snowpipe COPY INTO command.",
+        "D": "Recreate the pipe by using the CREATE OR REPLACE PIPE command."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để nạp lại các tệp tin đã từng được nạp qua Snowpipe sau khi bảng bị xóa dữ liệu, cách nhanh nhất và ít tốn chi phí vận hành nhất là tái tạo lại pipe bằng lệnh `CREATE OR REPLACE PIPE` (D). Việc này sẽ xóa sạch lịch sử nạp tệp trong metadata của pipe cũ.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-manage#reloading-history"
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Which methods will trigger an action that will evaluate a DataFrame? (Choose two.)",
+      "choices": {
+        "A": "DataFrame.random_split()",
+        "B": "DataFrame.collect()",
+        "C": "DataFrame.select()",
+        "D": "DataFrame.col()",
+        "E": "DataFrame.show()"
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Trong Snowpark, các phép toán biến đổi (Transformations) như `select` được thực thi trì hoãn. Chỉ khi gọi các hành động (Actions) như `collect()` (B) hoặc `show()` (E) thì Snowpark mới thực sự gửi lệnh lên Snowflake để thực thi và đánh giá DataFrame.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 24,
+      "question": "A Data Engineer is evaluating the performance of a query in a development environment.\nBased on the Query Profile, what are some performance tuning options the Engineer can use? (Choose two.)",
+      "choices": {
+        "A": "Add a LIMIT to the ORDER BY if possible",
+        "B": "Use a multi-cluster virtual warehouse with the scaling policy set to standard",
+        "C": "Move the query to a larger virtual warehouse",
+        "D": "Create indexes to ensure sorted access to data",
+        "E": "Increase the MAX_CLUSTER_COUNT"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Để cải thiện hiệu năng của một câu truy vấn có sắp xếp hoặc xử lý bộ nhớ lớn: thêm giới hạn `LIMIT` vào mệnh đề `ORDER BY` nếu có thể để giảm tải sắp xếp (A), và chuyển truy vấn sang một virtual warehouse lớn hơn để cung cấp thêm bộ nhớ RAM tránh tràn đĩa (C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/performance-query-warehouse"
+      ]
+    },
+    {
+      "id": 25,
+      "question": "A Data Engineer has created table t1 with one column c1 with datatype VARIANT: create or replace table t1 (c1 variant);The Engineer has loaded the following JSON data set, which has information about 4 laptop models, into the table.\nThe Engineer now wants to query that data set so that results are shown as normal structured data. The result should be 4 rows and 4 columns, without the double quotes surrounding the data elements in the JSON data.The result should be similar to the use case where the data was selected from a normal relational table t2, where t2 has string data type columns model_id, model, manufacturer, and model_name, and is queried with the SQL clause select * from t2;Which select command will produce the correct results?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774282411931-9mrexde4.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774282414013-he0p9prw.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774282416280-1boe7sky.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774282418378-p7kw2j6k.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi trích xuất các thuộc tính chuỗi từ cột dữ liệu kiểu `VARIANT`, giá trị trả về mặc định sẽ đi kèm dấu nháy kép. Để loại bỏ dấu nháy kép này, lập trình viên cần thực hiện ép kiểu sang chuỗi bằng toán tử `::string` như trong phương án B.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/semistructured-considerations"
+      ]
+    },
+    {
+      "id": 26,
+      "question": "A Data Engineer is investigating a query that is taking a long time to return. The Query Profile shows the following:\nWhat step should the Engineer take to increase the query performance?",
+      "choices": {
+        "A": "Add additional virtual warehouses.",
+        "B": "Increase the size of the virtual warehouse.",
+        "C": "Rewrite the query using Common Table Expressions (CTEs).",
+        "D": "Change the order of the joins and start with smaller tables first."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi Query Profile chỉ ra rằng câu truy vấn đang bị tràn đĩa cục bộ hoặc từ xa (data spillage), điều đó có nghĩa là dung lượng RAM của warehouse hiện tại không đủ. Giải pháp khắc phục nhanh nhất là nâng kích thước virtual warehouse lên lớn hơn để bổ sung RAM (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/performance-query-warehouse"
+      ]
+    },
+    {
+      "id": 27,
+      "question": "What is a characteristic of the use of external tokenization?",
+      "choices": {
+        "A": "Secure data sharing can be used with external tokenization.",
+        "B": "External tokenization cannot be used with database replication.",
+        "C": "Pre-loading of unmasked data is supported with external tokenization.",
+        "D": "External tokenization allows the preservation of analytical values after de-identification."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đặc điểm quan trọng của việc sử dụng token hóa ngoại vi (External Tokenization) là nó cho phép bảo toàn các giá trị phân tích hoặc cấu trúc định dạng của trường dữ liệu ngay cả khi dữ liệu đó đã được che giấu/mã hóa (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-column-ddm-external-tokenization"
+      ]
+    },
+    {
+      "id": 28,
+      "question": "A Data Engineer is implementing a near real-time ingestion pipeline to load data into Snowflake using the Snowflake Kafka connector. There will be three Kafka topics created.Which Snowflake objects are created automatically when the Kafka connector starts? (Choose three.)",
+      "choices": {
+        "A": "Tables",
+        "B": "Tasks",
+        "C": "Pipes",
+        "D": "Internal stages",
+        "E": "External stages",
+        "F": "Materialized views"
+      },
+      "correctAnswer": "ACD",
+      "explanation_vi": "Khi trình kết nối Kafka Connector khởi động, nó tự động tạo ra ba đối tượng trong Snowflake cho mỗi topic: Bảng (Tables - A) để lưu dữ liệu nạp, Pipe (Pipes - C) để nạp dữ liệu bằng Snowpipe, và Internal Stage (D) làm khu vực trung chuyển tệp tin.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-kafka"
+      ]
+    },
+    {
+      "id": 29,
+      "question": "The following chart represents the performance of a virtual warehouse over time:\nA Data Engineer notices that the warehouse is queueing queries. The warehouse is size X-Small, the minimum and maximum cluster counts are set to 1, the scaling policy is set to standard, and auto-suspend is set to 10 minutes.How can the performance be improved?",
+      "choices": {
+        "A": "Change the cluster settings.",
+        "B": "Increase the size of the warehouse.",
+        "C": "Change the scaling policy to economy.",
+        "D": "Change auto-suspend to a longer time frame."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi warehouse bị xếp hàng đợi (queueing) do nhiều câu truy vấn đồng thời trong khi cấu hình số lượng cụm (clusters) tối đa đang bị giới hạn là 1, giải pháp cải thiện hiệu năng là thay đổi cấu hình cụm tính toán bằng cách tăng số lượng cụm tối đa lên để warehouse tự động mở rộng (scale-out) (A).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/warehouses-multicluster"
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Which functions will compute a 'fingerprint' over an entire table, query result, or window to quickly detect changes to table contents or query results? (Choose two.)",
+      "choices": {
+        "A": "HASH(*)",
+        "B": "HASH_AGG(*)",
+        "C": "HASH_AGG(<expr>, <expr>)",
+        "D": "HASH_AGG_COMPARE(*)",
+        "E": "HASH_COMPARE(*)"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Hàm `HASH_AGG(*)` (B) và `HASH_AGG(<expr>, <expr>)` (C) được sử dụng để tính toán giá trị băm tổng hợp (hash value) đại diện cho toàn bộ nội dung bảng hoặc kết quả truy vấn, đóng vai trò như một mã vân tay (fingerprint) giúp phát hiện thay đổi nhanh chóng.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/hash_agg"
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Which stages support external tables?",
+      "choices": {
+        "A": "Internal stages only; within a single Snowflake account",
+        "B": "Internal stages only; from any Snowflake account in the organization",
+        "C": "External stages only; from any region, and any cloud provider",
+        "D": "External stages only; only on the same region and cloud provider as the Snowflake account"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Các bảng ngoại vi (External Tables) chỉ được hỗ trợ trên các External Stage (C), vốn có thể được lưu trữ ở bất kỳ nhà cung cấp dịch vụ đám mây (AWS, Azure, GCP) và khu vực địa lý nào.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-external-intro"
+      ]
+    },
+    {
+      "id": 32,
+      "question": "A Data Engineer wants to check the status of a pipe named my_pipe. The pipe is inside a database named test and a schema named Extract (case-sensitive).Which query will provide the status of the pipe?",
+      "choices": {
+        "A": "SELECT SYSTEM$PIPE_STATUS(\"test.'extract'.my_pipe\");",
+        "B": "SELECT SYSTEM$PIPE_STATUS('test.\"Extract\".my_pipe');",
+        "C": "SELECT * FROM SYSTEM$PIPE_STATUS('test.\"Extract\".my_pipe');",
+        "D": "SELECT * FROM SYSTEM$PIPE_STATUS(\"test.'extract'.my_pipe\");"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Snowflake, khi tên đối tượng có phân biệt chữ hoa chữ thường (case-sensitive) như schema `Extract`, ta phải bao bọc tên đó bằng dấu nháy kép bên trong đối số chuỗi của hàm `SYSTEM$PIPE_STATUS` (phương án B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_pipe_status"
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Company A and Company B both have Snowflake accounts. Company A's account is hosted on a different cloud provider and region than Company B's account. Companies A and B are not in the same Snowflake organization.How can Company A share data with Company B? (Choose two.)",
+      "choices": {
+        "A": "Create a share within Company A's account and add Company B's account as a recipient of that share.",
+        "B": "Create a share within Company A's account, and create a reader account that is a recipient of the share. Grant Company B access to the reader account.",
+        "C": "Use database replication to replicate Company A's data into Company B's account. Create a share within Company B's account and grant users within Company B's account access to the share.",
+        "D": "Create a new account within Company A's organization in the same cloud provider and region as Company B's account. Use database replication to replicate Company A's data to the new account. Create a share within the new account, and add Company B's account as a recipient of that share.",
+        "E": "Create a separate database within Company A's account to contain only those data sets they wish to share with Company B. Create a share within Company A's account and add all the objects within this separate database to the share. Add Company B's account as a recipient of the share."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Khi chia sẻ dữ liệu liên vùng/liên đám mây ngoài tổ chức, Công ty A có thể: Tạo một share trực tiếp và thêm tài khoản của Công ty B làm bên nhận (A - cơ chế direct share hiện hỗ trợ liên vùng); hoặc tạo một tài khoản mới cùng vùng/mây với Công ty B trong tổ chức của A, sao chép dữ liệu (replication) sang đó rồi thực hiện share cho B từ tài khoản này (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider"
+      ]
+    },
+    {
+      "id": 34,
+      "question": "A Data Engineer is working on a continuous data pipeline which receives data from Amazon Kinesis Firehose and loads the data into a staging table which will later be used in the data transformation process. The average file size is 300-500 MB.The Engineer needs to ensure that Snowpipe is performant while minimizing costs.How can this be achieved?",
+      "choices": {
+        "A": "Increase the size of the virtual warehouse used by Snowpipe.",
+        "B": "Split the files before loading them and set the SIZE_LIMIT option to 250 MB.",
+        "C": "Change the file compression size and increase the frequency of the Snowpipe loads.",
+        "D": "Decrease the buffer size to trigger delivery of files sized between 100 to 250 MB in Kinesis Firehose."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tối ưu hóa chi phí và hiệu năng nạp dữ liệu của Snowpipe, kích thước tệp tin khuyến nghị là 100-250 MB. Do đó, kỹ sư nên cấu hình giảm kích thước bộ đệm (buffer size) trong Kinesis Firehose để xuất tệp tin nằm trong khoảng này (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-best-practices"
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Within a Snowflake account. permissions have been defined with custom roles and role hierarchies.To set up column-level masking using a role in the hierarchy of the current user, what command would be used?",
+      "choices": {
+        "A": "CURRENT_ROLE",
+        "B": "INVOKER_ROLE",
+        "C": "IS_ROLE_IN_SESSION",
+        "D": "IS_GRANTED_TO_INVOKER_ROLE"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm `IS_GRANTED_TO_INVOKER_ROLE` trong Snowflake được sử dụng trong các chính sách che giấu dữ liệu (masking policies) để kiểm tra xem một vai trò cụ thể có nằm trong nhánh phân cấp vai trò (role hierarchy) của người dùng hiện tại hay không.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/is_granted_to_invoker_role"
+      ]
+    },
+    {
+      "id": 36,
+      "question": "A Data Engineer is trying to load the following rows from a CSV file into a table in Snowflake with the following structure:\nThe engineer is using the following COPY INTO statement:\nHowever, the following error is received:Number of columns in file (6) does not match that of the corresponding table (3), use file format option error_on_column_count_mismatch=false to ignore this error File 'address.csv.gz', line 3, character 1 Row 1 starts at line 2, column \"STGCUSTOMER\"[6] If you would like to continue loading when an error is encountered, use other values such as 'SKIP_FILE' or 'CONTINUE' for the ON_ERROR option.Which file format option should be used to resolve the error and successfully load all the data into the table?",
+      "choices": {
+        "A": "ESCAPE_UNENCLOSED FIELD = '\\\\'",
+        "B": "ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE",
+        "C": "FIELD_DELIMITER = ','",
+        "D": "FIELD_OPTIONALLY_ENCLOSED_BY = '\"'"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi tệp CSV chứa dữ liệu có dấu phẩy nằm bên trong các trường được bao bọc bởi dấu nháy kép (ví dụ: địa chỉ), Snowflake sẽ phân tách sai cột nếu không có tùy chọn cấu hình. Đặt `FIELD_OPTIONALLY_ENCLOSED_BY = '\"'` (D) giúp phân tách chính xác các cột dựa trên dấu nháy kép đó.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-file-format"
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Assuming a Data Engineer has all appropriate privileges and context, which statements would be used to assess whether the User-Defined Function (UDF), MYDATABASE.SALES.REVENUE_BY_REGION, exists and is secure? (Choose two.)",
+      "choices": {
+        "A": "SHOW USER FUNCTIONS LIKE 'REVENUE_BY_REGION' IN SCHEMA SALES;",
+        "B": "SELECT IS_SECURE FROM SNOWFLAKE.INFORMATION_SCHEMA.FUNCTIONS WHERE FUNCTION_SCHEMA = 'SALES' AND FUNCTION_NAME = 'REVENUE_BY_REGION';",
+        "C": "SELECT IS_SECURE FROM INFORMATION_SCHEMA.FUNCTIONS WHERE FUNCTION_SCHEMA = 'SALES' AND FUNCTION_NAME = 'REVENUE_BY_REGION';",
+        "D": "SHOW EXTERNAL FUNCTIONS LIKE 'REVENUE_BY_REGION' IN SCHEMA SALES;",
+        "E": "SHOW SECURE FUNCTIONS LIKE 'REVENUE_BY_REGION' IN SCHEMA SALES;"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Để kiểm tra sự tồn tại và tính bảo mật của một UDF: sử dụng lệnh `SHOW USER FUNCTIONS` để tìm kiếm tên hàm trong schema (A), và truy vấn cột `IS_SECURE` từ bảng hệ thống `INFORMATION_SCHEMA.FUNCTIONS` của chính cơ sở dữ liệu đó (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/info-schema/functions"
+      ]
+    },
+    {
+      "id": 38,
+      "question": "A Data Engineer has written a stored procedure that will run with caller's rights. The Engineer has granted ROLEA the right to use this stored procedure.What is a characteristic of the stored procedure being called using ROLEA?",
+      "choices": {
+        "A": "The stored procedure must run with caller's rights; it cannot be converted later to run with owner's rights.",
+        "B": "If the stored procedure accesses an object that ROLEA does not have access to, the stored procedure will fail.",
+        "C": "The stored procedure will run in the context (database and schema) where the owner created the stored procedure.",
+        "D": "ROLEA will not be able to see the source code for the stored procedure, even though the role has usage privileges on the stored procedure."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Thủ tục lưu trữ chạy dưới quyền của người gọi (Caller's Rights) sẽ thực thi bằng các đặc quyền của vai trò hiện tại gọi nó. Do đó, nếu thủ tục truy cập vào bất kỳ đối tượng nào mà `ROLEA` không có quyền truy cập, thủ tục sẽ báo lỗi và thất bại (B).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-rights"
+      ]
+    },
+    {
+      "id": 39,
+      "question": "What is a characteristic of the use of binding variables in JavaScript stored procedures in Snowflake?",
+      "choices": {
+        "A": "All types of JavaScript variables can be bound.",
+        "B": "All Snowflake first-class objects can be bound.",
+        "C": "Only JavaScript variables of type number, string, and SfDate can be bound.",
+        "D": "Users are restricted from binding JavaScript variables because they create SQL injection attack vulnerabilities."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong các thủ tục lưu trữ viết bằng JavaScript của Snowflake, chỉ có các biến JavaScript có kiểu dữ liệu là số (number), chuỗi (string) và kiểu ngày `SfDate` mới được hỗ trợ liên kết (binding) vào các câu lệnh SQL.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-javascript"
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Which use case would be BEST suited for the search optimization service?",
+      "choices": {
+        "A": "Analysts who need to perform aggregates over high-cardinality columns.",
+        "B": "Business users who need fast response times using highly selective filters.",
+        "C": "Data Scientists who seek specific JOIN statements with large volumes of data.",
+        "D": "Data Engineers who create clustered tables with frequent reads against clustering keys."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Dịch vụ tối ưu hóa tìm kiếm (Search Optimization Service) được thiết kế đặc biệt để cải thiện tốc độ cho các truy vấn điểm (point lookups) sử dụng các bộ lọc có tính chọn lọc cao (selective filters) trả về rất ít dòng dữ liệu từ các bảng lớn.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/search-optimization-service"
+      ]
+    },
+    {
+      "id": 41,
+      "question": "What is a characteristic of the operations of streams in Snowflake?",
+      "choices": {
+        "A": "Whenever a stream is queried, the offset is automatically advanced.",
+        "B": "When a stream is used to update a target table, the offset is advanced to the current time.",
+        "C": "Querying a stream returns all change records and table rows from the current offset to the current time.",
+        "D": "Each committed and uncommitted transaction on the source table automatically puts a change record in the stream."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Điểm đặc trưng của stream là vị trí đọc (offset) của nó chỉ được dịch chuyển lên thời điểm hiện tại khi dữ liệu của stream được sử dụng trong một câu lệnh thay đổi dữ liệu (DML như INSERT, MERGE) để cập nhật bảng đích thành công (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/streams-intro"
+      ]
+    },
+    {
+      "id": 42,
+      "question": "At what isolation level are Snowflake streams?",
+      "choices": {
+        "A": "Snapshot",
+        "B": "Repeatable read",
+        "C": "Read committed",
+        "D": "Read uncommitted"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Các stream trong Snowflake hoạt động ở cấp độ cô lập là Đọc lặp lại (`Repeatable read` - B), đảm bảo dữ liệu đọc được từ stream là nhất quán trong suốt vòng đời của một giao dịch.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/streams-intro"
+      ]
+    },
+    {
+      "id": 43,
+      "question": "What kind of Snowflake integration is required when defining an external function in Snowflake?",
+      "choices": {
+        "A": "API integration",
+        "B": "HTTP integration",
+        "C": "Notification integration",
+        "D": "Security integration"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi định nghĩa một hàm ngoại vi (External Function) trong Snowflake, lập trình viên bắt buộc phải tạo đối tượng tích hợp API (`API Integration` - A) để quản lý bảo mật và kết nối đến API Gateway.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      ]
+    },
+    {
+      "id": 44,
+      "question": "A Data Engineer is writing a Python script using the Snowflake Connector for Python. The Engineer will use the snowflake.connector.connect function to connect to Snowflake.The requirements are:Raise an exception if the specified database, schema, or warehouse does not exist\nImprove download performance -Which parameters of the connect function should be used? (Choose two.)",
+      "choices": {
+        "A": "authenticator",
+        "B": "arrow_number_to_decimal",
+        "C": "client_prefetch_threads",
+        "D": "client_session_keep_alive",
+        "E": "validate_default_parameters"
+      },
+      "correctAnswer": "CE",
+      "explanation_vi": "Trong hàm kết nối Python Connector: tham số `client_prefetch_threads` (C) được dùng để tăng hiệu năng tải kết quả bằng cách sử dụng nhiều luồng tải song song; tham số `validate_default_parameters` (E) dùng để xác thực và báo lỗi ngay khi kết nối nếu database, schema, hoặc warehouse được chỉ định không tồn tại.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-api"
+      ]
+    },
+    {
+      "id": 45,
+      "question": "A Data Engineer wants to centralize grant management to maximize security. A user needs OWNERSHIP on a table in a new schema. However, this user should not have the ability to make grant decisions.What is the correct way to do this?",
+      "choices": {
+        "A": "Grant OWNERSHIP to the user on the table.",
+        "B": "Revoke grant decisions from the user on the table.",
+        "C": "Revoke grant decisions from the user on the schema.",
+        "D": "Add the WITH MANAGED ACCESS parameter on the schema."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tập trung quản lý phân quyền, kỹ sư cần tạo hoặc sửa đổi lược đồ bằng tùy chọn `WITH MANAGED ACCESS` (D). Khi đó, người sở hữu bảng vẫn có quyền `OWNERSHIP` trên bảng nhưng quyền cấp phát truy cập sẽ do quản trị viên quản lý.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-access-control-configure#managed-access-schemas"
+      ]
+    },
+    {
+      "id": 46,
+      "question": "A CSV file, around 1 TB in size, is generated daily on an on-premise server. A corresponding table, internal stage, and file format have already been created in Snowflake to facilitate the data loading process.How can the process of bringing the CSV file into Snowflake be automated using the LEAST amount of operational overhead?",
+      "choices": {
+        "A": "Create a task in Snowflake that executes once a day and runs a COPY INTO statement that references the internal stage. The internal stage will read the files directly from the on-premise server and copy the newest file into the table from the on-premise server to the Snowflake table.",
+        "B": "On the on-premise server, schedule a SQL file to run using SnowSQL that executes a PUT to push a specific file to the internal stage. Create a task that executes once a day in Snowflake and runs a COPY INTO statement that references the internal stage. Schedule the task to start after the file lands in the internal stage.",
+        "C": "On the on-premise server, schedule a SQL file to run using SnowSQL that executes a PUT to push a specific file to the internal stage. Create a pipe that runs a COPY INTO statement that references the internal stage. Snowpipe auto-ingest will automatically load the file from the internal stage when the new file lands in the internal stage.",
+        "D": "On the on-premise server, schedule a Python file that uses the Snowpark Python library. The Python script will read the CSV data into a DataFrame and generate an INSERT INTO statement that will directly load into the table. The script will bypass the need to move a file into an internal stage."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Vì sử dụng stage nội bộ (internal stage), tệp tin phải được đẩy lên bằng lệnh `PUT` thông qua công cụ dòng lệnh SnowSQL trên máy chủ cục bộ. Sau đó, lập lịch chạy lệnh `COPY INTO` bằng một tác vụ (task) trong Snowflake để đưa dữ liệu vào bảng (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-local-file-system-stage"
+      ]
+    },
+    {
+      "id": 47,
+      "question": "What are characteristics of Snowpark Python packages? (Choose three.)",
+      "choices": {
+        "A": "Third-party packages can be registered as a dependency to the Snowpark session using the session.import() method.",
+        "B": "Python packages can access any external endpoints.",
+        "C": "Python packages can only be loaded in a local environment.",
+        "D": "Third-party supported Python packages are locked down to prevent hitting.",
+        "E": "The SQL command DESCRIBE FUNCTION will list the imported Python packages of the Python User-Defined Function (UDF).",
+        "F": "Querying information_schema.packages will provide a list of supported Python packages and versions."
+      },
+      "correctAnswer": "AEF",
+      "explanation_vi": "Các đặc tính của gói Python trong Snowpark gồm: Đăng ký tệp phụ thuộc bằng phương thức `session.import()` (A); lệnh `DESCRIBE FUNCTION` hiển thị danh sách các gói thư viện Python được hàm UDF import (E); và truy vấn bảng hệ thống `INFORMATION_SCHEMA.PACKAGES` để hiển thị tất cả các gói thư viện Python được Snowflake hỗ trợ cùng phiên bản (F).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
+      ]
+    },
+    {
+      "id": 48,
+      "question": "While running an external function, the following error message is received:Error: Function received the wrong number of rowsWhat is causing this to occur?",
+      "choices": {
+        "A": "External functions do not support multiple rows.",
+        "B": "Nested arrays are not supported in the JSON response.",
+        "C": "The JSON returned by the remote service is not constructed correctly.",
+        "D": "The return message did not produce the same number of rows that it received."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm ngoại vi (External Function) của Snowflake yêu cầu phản hồi từ dịch vụ từ xa phải trả về chính xác số lượng dòng (rows) bằng với số lượng dòng mà nó nhận được trong lô yêu cầu đầu vào. Nếu số lượng dòng trả về khác đi, lỗi này sẽ xảy ra (D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      ]
+    },
+    {
+      "id": 49,
+      "question": "A Data Engineer enables a result cache at the session level with the following command:ALTER SESSION SET USE_CACHED_RESULT = TRUE;The Engineer then runs the following SELECT query twice without delay:SELECT *FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMERSAMPLE(10) SEED (99);The underlying table does not change between executions.What are the results of both runs?",
+      "choices": {
+        "A": "The first and second run returned the same results, because SAMPLE is deterministic.",
+        "B": "The first and second run returned the same results, because the specific SEED value was provided.",
+        "C": "The first and second run returned different results, because the query is evaluated each time it is run.",
+        "D": "The first and second run returned different results, because the query uses * instead of an explicit column list."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc sử dụng tham số `SEED` (ví dụ: `SEED (99)`) giúp cho việc lấy mẫu ngẫu nhiên (sampling) trở nên tất định (deterministic), nghĩa là kết quả trả về sẽ hoàn toàn giống nhau giữa các lần chạy, do đó cả hai lần chạy đều trả về cùng một tập kết quả (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/constructs/sample"
+      ]
+    },
+    {
+      "id": 50,
+      "question": "A company built a sales reporting system with Python, connecting to Snowflake using the Python Connector. Based on the user's selections, the system generates the SQL queries needed to fetch the data for the report. First it gets the customers that meet the given query parameters (on average 1000 customer records for each report run), and then it loops the customer records sequentially. Inside that loop it runs the generated SQL clause for the current customer to get the detailed data for that customer number from the sales data table.When the Data Engineer tested the individual SQL clauses, they were fast enough (1 second to get the customers, 0.5 second to get the sales data for one customer), but the total runtime of the report is too long.How can this situation be improved?",
+      "choices": {
+        "A": "Increase the size of the virtual warehouse.",
+        "B": "Increase the number of maximum clusters of the virtual warehouse.",
+        "C": "Define a clustering key for the sales data table.",
+        "D": "Rewrite the report to eliminate the use of the loop construct."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Việc chạy tuần tự câu lệnh SQL trong vòng lặp 1000 lần (nhiều truy vấn nhỏ) gây ra độ trễ mạng tích lũy rất lớn. Giải pháp tối ưu nhất là viết lại báo cáo để loại bỏ vòng lặp này và thực hiện một phép kết hợp (JOIN) duy nhất trong SQL để lấy toàn bộ dữ liệu một lần (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/performance-query-warehouse"
+      ]
+    },
+    {
+      "id": 51,
+      "question": "A company is using Snowpipe to bring in millions of rows every day of Change Data Capture (CDC) into a Snowflake staging table on a real-time basis. The CDC needs to get processed and combined with other data in Snowflake and land in a final table as part of the full data pipeline.How can a Data Engineer MOST efficiently process the incoming CDC on an ongoing basis?",
+      "choices": {
+        "A": "Create a stream on the staging table and schedule a task that transforms data from the stream, only when the stream has data.",
+        "B": "Transform the data during the data load with Snowpipe by modifying the related COPY INTO statement to include transformation steps such as CASE statements and JOINS.",
+        "C": "Schedule a task that dynamically retrieves the last time the task was run from information_schema.task_history and use that timestamp to process the delta of the new rows since the last time the task was run.",
+        "D": "Use a CREATE OR REPLACE TABLE AS statement that references the staging table and includes all the transformation SQL. Use a task to run the full CREATE OR REPLACE TABLE AS statement on a scheduled basis."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mô hình tối ưu nhất để xử lý dữ liệu thay đổi (CDC) liên tục trong Snowflake là tạo một Stream trên bảng tạm (staging table) để theo dõi các thay đổi, và lập lịch cho một Task chạy lệnh biến đổi dữ liệu từ Stream này bằng cách sử dụng điều kiện kiểm tra dữ liệu `SYSTEM$STREAM_HAS_DATA` để tránh lãng phí chi phí chạy Task khi không có dữ liệu mới (A).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tasks-intro#label-task-stream-dependency"
+      ]
+    },
+    {
+      "id": 52,
+      "question": "A Data Engineer is building a pipeline to transform a 1 TB table by joining it with supplemental tables. The Engineer is applying filters and several aggregations leveraging Common Table Expressions (CTEs) using a size Medium virtual warehouse in a single query in Snowflake.After checking the Query Profile, what is the recommended approach to MAXIMIZE performance of this query if the Profile shows data spillage?",
+      "choices": {
+        "A": "Enable clustering on the table.",
+        "B": "Increase the warehouse size.",
+        "C": "Rewrite the query to remove the CTEs.",
+        "D": "Switch to a multi-cluster virtual warehouse."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hiện tượng tràn dữ liệu (data spillage) ra đĩa xảy ra khi truy vấn tiêu tốn nhiều RAM hơn dung lượng sẵn có trên cấu hình node hiện tại của warehouse. Giải pháp trực tiếp và tối ưu nhất để cải thiện hiệu năng là tăng kích thước của virtual warehouse để có thêm RAM (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/performance-query-warehouse"
+      ]
+    },
+    {
+      "id": 53,
+      "question": "Which system role is recommended for a custom role hierarchy to be ultimately assigned to?",
+      "choices": {
+        "A": "ACCOUNTADMIN",
+        "B": "SECURITYADMIN",
+        "C": "SYSADMIN",
+        "D": "USERADMIN"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Theo khuyến nghị về thực hành bảo mật tốt nhất của Snowflake, tất cả các vai trò tự định nghĩa (custom roles) quản lý tài nguyên cơ sở dữ liệu phải được phân cấp trỏ về vai trò hệ thống `SYSADMIN` (C) để quản trị viên hệ thống có thể quản lý tập trung toàn bộ tài nguyên.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-access-control-considerations#aligning-custom-roles-with-system-roles"
+      ]
+    },
+    {
+      "id": 54,
+      "question": "Which callback function is required within a JavaScript User-Defined Function (UDF) for it to execute successfully?",
+      "choices": {
+        "A": "initialize()",
+        "B": "processRow()",
+        "C": "handler()",
+        "D": "finalize()"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong một Hàm bảng tự định nghĩa (UDTF) viết bằng JavaScript, hàm gọi lại (callback function) `processRow()` (B) là bắt buộc phải được khai báo để xử lý từng dòng dữ liệu đầu vào và trả về kết quả tương ứng.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/javascript/udf-javascript-tabular-functions"
+      ]
+    },
+    {
+      "id": 55,
+      "question": "Which Snowflake feature facilitates access to external API services such as geocoders, data transformation, machine learning models, and other custom code?",
+      "choices": {
+        "A": "Security integration",
+        "B": "External tables",
+        "C": "External functions",
+        "D": "Java User-Defined Functions (UDFs)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm ngoại vi (External Functions - C) là tính năng của Snowflake giúp gọi trực tiếp các dịch vụ API bên ngoài (như dịch vụ địa chỉ, mô hình học máy, biến đổi dữ liệu tùy chỉnh) từ trong câu lệnh SQL.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      ]
+    },
+    {
+      "id": 56,
+      "question": "A Data Engineer needs to know the details regarding the micro-partition layout for a table named Invoice using a built-in function.Which query will provide this information?",
+      "choices": {
+        "A": "SELECT SYSTEM$CLUSTERING_INFORMATION('Invoice');",
+        "B": "SELECT $CLUSTERING_INFORMATION('Invoice');",
+        "C": "CALL SYSTEM$CLUSTERING_INFORMATION('Invoice');",
+        "D": "CALL $CLUSTERING_INFORMATION('Invoice');"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để lấy thông tin chi tiết về cấu trúc phân bố vi phân vùng (micro-partition layout) của một bảng, ta sử dụng hàm hệ thống `SYSTEM$CLUSTERING_INFORMATION` thông qua câu lệnh `SELECT` (phương án A).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_information"
+      ]
+    },
+    {
+      "id": 57,
+      "question": "When would a Data Engineer use TABLE with the FLATTEN function instead of the LATERAL FLATTEN combination?",
+      "choices": {
+        "A": "When TABLE with FLATTEN requires another source in the FROM clause to refer to.",
+        "B": "When TABLE with FLATTEN requires no additional source in the FROM clause to refer to.",
+        "C": "When the LATERAL FLATTEN combination requires no other source in the FROM clause to refer to.",
+        "D": "When TABLE with FLATTEN is acting like a sub-query executed for each returned row."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Cú pháp `TABLE(FLATTEN(...))` được sử dụng độc lập khi đầu vào là một biểu thức hoặc biến bán cấu trúc tự thân và không cần tham chiếu đến bất kỳ nguồn dữ liệu hay bảng nào khác trong mệnh đề `FROM` (B). Khi cần kết hợp thông tin của bảng nguồn với dữ liệu được phân rã, ta phải dùng `LATERAL FLATTEN`.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/flatten"
+      ]
+    },
+    {
+      "id": 58,
+      "question": "A Data Engineer needs to ingest invoice data in PDF format into Snowflake so that the data can be queried and used in a forecasting solution.What is the recommended way to ingest this data?",
+      "choices": {
+        "A": "Use Snowpipe to ingest the files that land in an external stage into a Snowflake table.",
+        "B": "Use a COPY INTO command to ingest the PDF files in an external stage into a Snowflake table with a VARIANT column.",
+        "C": "Create an external table on the PDF files that are stored in a stage and parse the data into structured data.",
+        "D": "Create a Java User-Defined Function (UDF) that leverages Java-based PDF parser libraries to parse PDF data into structured data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đối với dữ liệu phi cấu trúc như tệp tin PDF, phương pháp được khuyến nghị trong Snowflake để xử lý và trích xuất nội dung là viết một hàm tự định nghĩa Java UDF (D) hoặc Python UDF sử dụng thư viện phân tích PDF chuyên dụng để chuyển đổi tệp tin sang dữ liệu có cấu trúc.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-examples"
+      ]
+    },
+    {
+      "id": 59,
+      "question": "A Data Engineer would like to define a file structure for loading and unloading data.Where can the file structure be defined? (Choose three.)",
+      "choices": {
+        "A": "COPY command",
+        "B": "MERGE command",
+        "C": "FILE FORMAT object",
+        "D": "PIPE object",
+        "E": "STAGE object",
+        "F": "INSERT command"
+      },
+      "correctAnswer": "ACE",
+      "explanation_vi": "Cấu trúc định dạng tệp (file structure) dùng để nạp và xuất dữ liệu có thể được cấu hình ở ba vị trí: khai báo trực tiếp trong lệnh `COPY` (A), định nghĩa riêng trong một đối tượng `FILE FORMAT` (C), hoặc cấu hình mặc định trực tiếp trên đối tượng `STAGE` (E).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-file-format"
+      ]
+    },
+    {
+      "id": 60,
+      "question": "Assuming that the session parameter USE_CACHED_RESULT is set to false, what are characteristics of Snowflake virtual warehouses in terms of the use of Snowpark?",
+      "choices": {
+        "A": "Creating a DataFrame from a table will start a virtual warehouse.",
+        "B": "Creating a DataFrame from a staged file with the read() method will start a virtual warehouse.",
+        "C": "Transforming a DataFrame with methods like replace() will start a virtual warehouse.",
+        "D": "Calling a Snowpark stored procedure to query the database with session.call() will start a virtual warehouse."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Snowpark, các thao tác tạo DataFrame hay biến đổi đều hoạt động dưới dạng trì hoãn (lazy) và chưa tiêu tốn tài nguyên tính toán. Chỉ khi thực sự thực thi các hành động truy vấn cơ sở dữ liệu như gọi thủ tục lưu trữ qua `session.call()` (D) thì mới kích hoạt khởi chạy virtual warehouse.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 61,
+      "question": "Database XYZ has the data_retention_time_in_days parameter set to 7 days and table XYZ.public.ABC has the data_retention_time_in_days set to 10 days.A Developer accidentally dropped the database containing this single table 8 days ago and just discovered the mistake.How can the table be recovered?",
+      "choices": {
+        "A": "undrop database xyz;",
+        "B": "create table abc_restore as select * from xyz.public.abc at (offset => -60*60*24*8);",
+        "C": "create table abc_restore clone xyz.public.abc at (offset => -3600*24*8);",
+        "D": "Create a Snowflake Support case to restore the database and table from Fail-safe."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Do cơ sở dữ liệu chứa bảng bị xóa cách đây 8 ngày, vượt quá thời gian lưu trữ Time Travel của cơ sở dữ liệu (7 ngày), dữ liệu hiện đã di chuyển vào trạng thái Fail-safe. Việc khôi phục dữ liệu từ Fail-safe bắt buộc phải thông qua việc mở yêu cầu hỗ trợ (Support case) với Snowflake Support (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-availability"
+      ]
+    },
+    {
+      "id": 62,
+      "question": "A Data Engineer is building a set of reporting tables to analyze consumer requests by region for each of the Data Exchange offerings annually, as well as click-through rates for each listing.Which views are needed MINIMALLY as data sources?",
+      "choices": {
+        "A": "SNOWFLAKE.DATA_SHARING_USAGE.LISTING_EVENTS_DAILY",
+        "B": "SNOWFLAKE.DATA_SHARING_USAGE.LISTING_CONSUMPTION_DAILY",
+        "C": "SNOWFLAKE.DATA_SHARING_USAGE.LISTING_TELEMETRY_DAILY",
+        "D": "SNOWFLAKE.ACCOUNT_USAGE.DATA_TRANSFER_HISTORY"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Để thu thập các chỉ số về yêu cầu tiêu dùng dịch vụ và tỷ lệ nhấp chuột (click-through rates) của danh sách trao đổi dữ liệu, chuyên gia cần sử dụng tối thiểu hai bảng thông tin chia sẻ dữ liệu là `LISTING_CONSUMPTION_DAILY` (B) và `LISTING_TELEMETRY_DAILY` (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/data-sharing-usage"
+      ]
+    },
+    {
+      "id": 63,
+      "question": "A Data Engineer defines the following masking policy:\nThe policy must be applied to the full_name column in the customer table:\nWhich query will apply the masking policy on the full_name column?",
+      "choices": {
+        "A": "ALTER TABLE customer MODIFY COLUMN full_nameSET MASKING POLICY name policy;",
+        "B": "ALTER TABLE customer MODIFY COLUMN full_nameADD MASKING POLICY name_policy;",
+        "C": "ALTER TABLE customer MODIFY COLUMNfirst_name SET MASKING POLICY name_policy,last_name SET MASKING POLICY name_policy;",
+        "D": "ALTER TABLE customer MODIFY COLUMNfirst_name ADD MASKING POLICY name_policy,last_name SET MASKING POLICY name_policy;"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phương án C chứa cú pháp SQL chính xác nhất để áp dụng chính sách che giấu dữ liệu (Masking Policy) cho nhiều cột trong bảng bằng lệnh `ALTER TABLE ... MODIFY COLUMN ... SET MASKING POLICY`.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-column-ddm-use"
+      ]
+    },
+    {
+      "id": 64,
+      "question": "A secure function returns data coming through an inbound share.What will happen if a Data Engineer tries to assign USAGE privileges on this function to an outbound share?",
+      "choices": {
+        "A": "An error will be returned because the Engineer cannot share data that has already been shared.",
+        "B": "An error will be returned because only views and secure stored procedures can be shared.",
+        "C": "An error will be returned because only secure functions can be shared with inbound shares.",
+        "D": "The Engineer will be able to share the secure function with other accounts."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Snowflake áp dụng nguyên tắc bảo mật chống chuyển tiếp dữ liệu chia sẻ (anti-forwarding rule). Kỹ sư không thể chia sẻ lại (re-share) các đối tượng hoặc dữ liệu có nguồn gốc từ một chia sẻ đầu vào (inbound share) cho một tài khoản khác thông qua chia sẻ đầu ra (outbound share) (A).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider#sharing-data-from-another-share"
+      ]
+    },
+    {
+      "id": 65,
+      "question": "The following code is executed in a Snowflake environment with the default settings:\nWhat will be the result of the select statement?",
+      "choices": {
+        "A": "SQL compilation error: Object 'CUSTOMER' does not exist or is not authorized.",
+        "B": "John",
+        "C": "1",
+        "D": "1John"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Câu lệnh SELECT thực thi thành công theo mặc định của phiên và trả về giá trị kết quả là 1 (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/constructs"
+      ]
+    },
+    {
+      "id": 66,
+      "question": "A Data Engineer is building a data pipeline to ingest incremental data from a data source using streams and tasks in Snowflake. A stream is created on a CUSTOMER_RAW table to track the new records and merge them into a CUSTOMER master table by way of a task that runs every hour.\nWhat will occur if the CUSTOMER_RAW table gets renamed to CUSTOMER_BASE after the task runs for three days?",
+      "choices": {
+        "A": "The DESCRIBE STREAM for the stream will show the value of the STALE column as TRUE.",
+        "B": "The renaming will cause no disruption to the existing data pipeline.",
+        "C": "The DESCRIBE STREAM for the stream will show the value of the STALE column as FALSE.",
+        "D": "The TASK_HISTORY for the subsequent run will show an error after the renaming operation."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Việc đổi tên bảng nguồn từ `CUSTOMER_RAW` thành `CUSTOMER_BASE` sẽ không làm gián đoạn hay phá vỡ luồng dữ liệu của Stream và Task hiện tại vì tham chiếu đối tượng được tự động cập nhật ngầm bên trong Snowflake (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/streams-intro"
+      ]
+    },
+    {
+      "id": 67,
+      "question": "A Data Engineer has created a scalar User-Defined Function (UDF) that contains a SELECT statement based on a projection constraint column. The Engineer notices that the UDF behaves differently depending on how it is being used.\nWhat are the expected behaviors of the UDF for the named context? (Choose two.)",
+      "choices": {
+        "A": "Scalar SQL UDF - Snowflake allows the query to execute and returns NULL.",
+        "B": "Scalar SQL UDF - Snowflake blocks the query.",
+        "C": "Logging & Event Tables - Snowflake allows the UDF to execute and captures log and event details.",
+        "D": "Logging & Event Tables - Snowflake allows the UDF to execute but does not capture log and event details.",
+        "E": "Logging & Event Tables - Snowflake blocks the UDF but allows the statement calling the UDF to run to support logging requirements."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Các hành vi của scalar UDF trong ngữ cảnh này gồm: khi được thực thi bình thường, Snowflake cho phép chạy và trả về giá trị `NULL` (A); đối với tích hợp Logging & Event Tables, Snowflake cho phép thực thi hàm nhưng không ghi nhận thông tin nhật ký chi tiết vào các bảng sự kiện đó trong trường hợp này (D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/udf-overview"
+      ]
+    },
+    {
+      "id": 68,
+      "question": "Which attribute is used by Snowpipe to ensure the same file is not loaded twice from a path in a stage?",
+      "choices": {
+        "A": "File partition details",
+        "B": "File checksum",
+        "C": "Creation_time of the file",
+        "D": "Filename"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Snowpipe lưu trữ lịch sử nạp tệp và sử dụng thuộc tính Tên tệp tin kèm đường dẫn (`Filename` - D) làm định danh duy nhất để đảm bảo không nạp trùng lặp một tệp tin đã xử lý trước đó.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-manage#reloading-history"
+      ]
+    },
+    {
+      "id": 69,
+      "question": "A Data Engineer has created two custom roles, MARKETING_ROLE and FINANCE_ROLE, to be granted to the users of an application.\nAccording to best practices, what action should be taken next?",
+      "choices": {
+        "A": "Use the USERADMIN role to give all the required grants to the users.",
+        "B": "Use the SECURITYADMIN role to configure the required parameters for the users at the account level.",
+        "C": "Use the ACCOUNTADMIN role to create the new users that will be granted the new roles.",
+        "D": "Assign the custom roles to the SYSADMIN role."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đảm bảo cấu trúc phân cấp vai trò chuẩn trong Snowflake, sau khi tạo các vai trò tùy chỉnh phục vụ nghiệp vụ (như MARKETING_ROLE và FINANCE_ROLE), ta cần gán các vai trò này cho vai trò hệ thống `SYSADMIN` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-access-control-considerations"
+      ]
+    },
+    {
+      "id": 70,
+      "question": "A company called IOT Corporation has subsidiary companies in Germany and Japan.\n• The German subsidiary has a Snowflake account called IOTGER in AWS region EU (Frankfurt) (Region ID: eu-central-1).• The Japanese subsidiary has a Snowflake account called IOTJPN in Azure region Japan East (Tokyo) (Region ID: japaneast).\nThe subsidiaries are totally independent of one another, and their Snowflake accounts belong to different Snowflake organizations.\nA Data Engineer needs to share data in a database called IOT_PROD from the German account to the Japanese account.\nWhat steps need to be taken by the German subsidiary so that the Japanese subsidiary can use the shared data?",
+      "choices": {
+        "A": "Create share S1 into IOTGER. Add the objects to be shared from IOT_PROD in IOTGER to the share S1, then add account IOTJPN to the share S1.",
+        "B": "Replicate database IOT_PROD from IOTGER to IOTJPN with the same database name. Create share S1 into IOTJPN, add the objects to be shared from IOT_PROD in IOTJPN to the share S1, and add account IOTJPN to the share S1.",
+        "C": "Create a clone of the database IOT_PROD into IOTJPN. Create secure views into the cloned database that read data from the objects to be shared. Create share S1 into IOTJPN. Add the secure views to the share S1, and add account IOTJPN to the share S1.",
+        "D": "Create an additional Snowflake account IOTGER2 into region Japan East. Replicate database IOT_PROD from IOTGER to IOTGER2 with the same database name. Create share S1 into IOTGER2, and add the objects to be shared from IOT_PROD in IOTGER2 to the share S1. Then add account IOTJPN to the share S1."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để chia sẻ dữ liệu qua tài khoản khác vùng/khác nhà cung cấp đám mây và nằm ngoài tổ chức, Công ty A tại Đức cần: tạo thêm tài khoản phụ `IOTGER2` tại cùng vùng Azure Japan East; thực hiện sao chép cơ sở dữ liệu từ Đức sang `IOTGER2`; rồi tạo share từ tài khoản `IOTGER2` này gửi tới cho tài khoản `IOTJPN` (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider"
+      ]
+    },
+    {
+      "id": 71,
+      "question": "Given the following cron expression \"0 1 * * * America/Los_Angeles\", how will the task behave when changing from Daylight Savings Time to Standard Time, moving the clock one hour back?",
+      "choices": {
+        "A": "The task will run once.",
+        "B": "The task will run twice.",
+        "C": "The task will not run.",
+        "D": "The task will fail with an error."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với biểu thức cron lập lịch chạy vào lúc 1 giờ sáng (`0 1 * * *`), vào ngày chuyển giao từ Giờ mùa hè sang Giờ tiêu chuẩn khi kim đồng hồ lùi lại 1 tiếng, mốc thời gian 1:00 AM sẽ xuất hiện hai lần. Do đó, tác vụ sẽ chạy 2 lần (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-task"
+      ]
+    },
+    {
+      "id": 72,
+      "question": "Which authentication method has the following characteristics?\nUser authentication is separated from access to Snowflake using an external entityThe external entity provides independent authentication of user credentials",
+      "choices": {
+        "A": "Key-pair authentication",
+        "B": "Multi-Factor Authentication (MFA)",
+        "C": "Username and password",
+        "D": "Federated authentication"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Xác thực liên kết (Federated Authentication - D) là phương thức tách biệt quá trình xác thực người dùng khỏi Snowflake, ủy quyền cho một thực thể bên ngoài (như Okta, Azure AD) tự kiểm tra thông tin đăng nhập của người dùng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/admin-security-fed-auth"
+      ]
+    },
+    {
+      "id": 73,
+      "question": "Which command will retrieve results for all objects of a row access policy db1.policies.objectslist at the database level?",
+      "choices": {
+        "A": "SELECT * FROM TABLE( db1.ACCOUNT_USAGE.POLICY_REFERENCES(POLICY_NAME=>'db1.policies.objectslist' ) );",
+        "B": "SELECT * FROM TABLE( db1.INFORMATION_SCHEMA.POLICY_REFERENCES(POLICY_NAME=>'db1.policies.objectslist' ) );",
+        "C": "SELECT * FROM TABLE( db1.ACCOUNT_USAGE.ROW_ACCESS_POLICIES(POLICY_NAME=>'db1.policies.objectslist' ) );",
+        "D": "SELECT * FROM TABLE( db1.INFORMATION_SCHEMA.POLICY_REFERENCES( REF_ENTITY_NAME => 'db1.policies.objectslist', REF_ENTITY_DOMAIN => 'policy' ) );"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tìm tất cả các đối tượng đang áp dụng chính sách truy cập dòng ở cấp độ cơ sở dữ liệu, ta truy vấn hàm bảng `POLICY_REFERENCES` trong `INFORMATION_SCHEMA` với đối số là tên chính sách đầy đủ (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/policy_references"
+      ]
+    },
+    {
+      "id": 74,
+      "question": "A Data Engineer needs to be able to create new databases and objects as required for a Proof of Concept (POC).\nThe sandbox Snowflake account where the POC is tested does not have Role-Based Access Control (RBAC) in place, but it belongs to an organization where some other accounts have RBAC.\nWhat is the LEAST-privileged system role that needs to be granted to this Engineer so they can work on this POC?",
+      "choices": {
+        "A": "ORGADMIN",
+        "B": "PUBLIC",
+        "C": "SECURITYADMIN",
+        "D": "SYSADMIN"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vai trò hệ thống có ít đặc quyền nhất chứa quyền hạn mặc định để tạo cơ sở dữ liệu mới và các đối tượng (như bảng, khung nhìn) là `SYSADMIN` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-access-control-considerations"
+      ]
+    },
+    {
+      "id": 75,
+      "question": "A Data Engineer is querying a large table (+100 million rows) with the following SQL:\nselect name, address, datediff(year, birthdate, current_date())from customers;\nThe Engineer notices that the results cache is not being used on subsequent executions of the query. The underlying table does not change and the data is not updated in between query executions.\nWhat is causing this to occur?",
+      "choices": {
+        "A": "Calculations are not stored in the results cache.",
+        "B": "Large results are not stored in the results cache.",
+        "C": "Date functions are not stored in the results cache.",
+        "D": "Non-deterministic calculations are not stored in the results cache."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Truy vấn chứa hàm phi tất định `CURRENT_DATE()` (kết quả thay đổi theo thời gian thực thi). Các câu truy vấn có chứa bất kỳ hàm phi tất định nào sẽ không được Snowflake lưu trữ và tái sử dụng kết quả từ bộ nhớ đệm Result Cache (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/querying-persisted-results"
+      ]
+    },
+    {
+      "id": 76,
+      "question": "How should a Data Engineer build a pipeline that executes a stored procedure to parse and load unstructured data files as the files arrive in a stage?",
+      "choices": {
+        "A": "Create a Snowpipe with the parameter AUTO_INGEST = TRUE.",
+        "B": "Create a Snowpipe that includes the INTEGRATION = ‘’ parameter.",
+        "C": "Create a stage with parameter ENCODING = ‘’ to call the procedure when flies land in the stage.",
+        "D": "Create a stage with a directory table, a stream on the directory table, and a task referencing the stream."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tự động kích hoạt mã xử lý (stored procedure) khi có tệp phi cấu trúc mới tải lên Stage: kỹ sư cần tạo Directory Table trên Stage để liệt kê tệp; tạo một Stream trên Directory Table đó để ghi nhận các tệp mới; và tạo một Task chạy định kỳ gọi stored procedure để xử lý khi Stream có dữ liệu (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-dirtables"
+      ]
+    },
+    {
+      "id": 77,
+      "question": "A Data Engineer needs to configure a task in Snowflake to automatically send error notifications in case of a data loading failure. The Engineer wants to use an existing task that inserts data into a table every 5 minutes. The Engineer set up a notification integration with Amazon Secure Notification Service (SNS) named my_notification_int.\nHow should the task be updated to automatically send error notifications if it fails?",
+      "choices": {
+        "A": "Add an ALERT clause in the task definition to link it to the notification service.",
+        "B": "Add the command: ALTER TASK MYTASK SET ERROR_INTEGRATION = ‘my_notification_int’; to the notification.",
+        "C": "Use the NOTIFICATION INTEGRATION = ‘my_notification_int’ parameter in the task configuration.",
+        "D": "Add NOTIFICATION_PROVIDER = ‘my_notificacion_int’ to the task schedule."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cấu hình một tác vụ tự động gửi thông báo lỗi khi thực thi thất bại, kỹ sư cần chạy lệnh thiết lập tham số tích hợp lỗi `ERROR_INTEGRATION` trỏ tới đối tượng tích hợp thông báo SNS đã tạo như trong phương án B.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tasks-errors"
+      ]
+    },
+    {
+      "id": 78,
+      "question": "The following stored procedure has been created to load orders for a single date into a target table:\ncreate or replace procedure uspLoadOrdersByDate ()\nreturns string\nlanguage javascript\nexecute as owner\nas\n'\nsqlCmd = `INSERT INTO ORDERS_BY_DATE_TGT SELECT * FROM ORDERS_BY_DATE WHERE O_ORDERDATE = $dateToProcess`;\nsqlStmt = snowflake.createStatement({sqlText: sqlCmd});\nres = sqlStmt.execute();\nres.next();\nreturn res.GetColumnValue(1);\n';\nUpon executing the following statements, the following error is returned:\nset dateToProcess = '2020-08-02';\ncall uspLoadOrdersByDate();\nExecution error in store procedure USPLOADORDERSBYDATE: Use of session variable '$DATETOPROCESS' is not allowed in owners rights stored procedure\nAt Statement.execute, line 4 position 14\nMaking what changes will allow the procedure to execute successfully? (Choose two.)",
+      "choices": {
+        "A": "Change the procedure to EXECUTE AS CALLER.",
+        "B": "Create a scheduled task to execute the procedure each day, and set dateToProcess = CURRENT_DATE() as a session parameter at the task level.",
+        "C": "Modify the body of the procedure to cast $dateToProcess to DATE within the WHERE clause of the INSERT statement.",
+        "D": "Change the procedure to accept $dateToProcess as an input parameter so that no session variables are used within the procedure itself.",
+        "E": "Rename the session variable to upper case to allow the procedure to read from it."
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Thủ tục lưu trữ chạy bằng quyền chủ sở hữu (Owner's Rights) bị cấm sử dụng các biến phiên (session variables) để ngăn chặn lỗ hổng bảo mật. Để giải quyết lỗi này, kỹ sư có thể thay đổi cách chạy thủ tục thành quyền của người gọi `EXECUTE AS CALLER` (A), hoặc sửa đổi định nghĩa hàm để nhận ngày xử lý làm tham số đầu vào truyền trực tiếp (D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-rights"
+      ]
+    },
+    {
+      "id": 79,
+      "question": "A Data Engineer made modifications to staged files and re-staged them. A pipe is running but the changed data is not appearing in the table.\nWhat step should the Engineer take in order to see the changed data without duplicating data?",
+      "choices": {
+        "A": "Run the CREATE or REPLACE PIPE syntax.",
+        "B": "Re-run the pipe by using the RELOAD PIPE syntax.",
+        "C": "Re-run the pipe by using the ONLY_CHANGES syntax.",
+        "D": "Create new files with the changed data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Snowpipe dựa vào tên tệp và đường dẫn để kiểm soát trùng lặp dữ liệu nạp. Nếu tệp tin đã sửa đổi được đẩy lên Stage dưới tên cũ, Snowpipe sẽ bỏ qua không tải. Giải pháp sạch và nhanh nhất là lưu dữ liệu mới sang các tệp tin có tên mới khác biệt (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-manage"
+      ]
+    },
+    {
+      "id": 80,
+      "question": "A Data Engineer has created table T1 with DATA_RETENTION_TIME_IN_DAYS set to 7. There is a default stream S1 on table T1.\nThe parameter MAX_DATA_EXTENSION_TIME_IN_DAYS is set to 10 for table T1.\nBased on these parameters, at MINIMUM, how frequently do the contents of stream S1 need to be consumed so that the stream does not become stale?",
+      "choices": {
+        "A": "Every 3 days",
+        "B": "Every 7 days",
+        "C": "Every 10 days",
+        "D": "Every 30 days"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi bảng nguồn có cấu hình tự động mở rộng thời gian lưu trữ tối đa cho stream `MAX_DATA_EXTENSION_TIME_IN_DAYS = 10`, Snowflake sẽ cố gắng kéo dài thời gian lưu dữ liệu lịch sử tối đa là 10 ngày để giữ cho stream hoạt động. Vì vậy, ta cần tiêu thụ dữ liệu trong stream tối thiểu sau mỗi 10 ngày để tránh bị stale (C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/streams-intro#data-retention-period-and-streams"
+      ]
+    },
+    {
+      "id": 81,
+      "question": "What metadata is maintained by Snowflake for every table during data loading when using the COPY INTO command? (Choose two.)",
+      "choices": {
+        "A": "Number of rows parsed in the file",
+        "B": "Number of columns parsed in the file",
+        "C": "Datatypes of the last load for the file",
+        "D": "Timestamp of the last load for the file",
+        "E": "Name of each column in the file from which data was loaded"
+      },
+      "correctAnswer": "AD",
+      "explanation_vi": "Khi thực hiện lệnh `COPY INTO`, Snowflake lưu giữ lịch sử tải tệp tin của bảng bao gồm các thông số siêu dữ liệu như: Số lượng dòng đã phân tích thành công từ tệp (A) và Dấu thời gian ghi nhận lượt tải tệp tin đó gần nhất (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-monitoring"
+      ]
+    },
+    {
+      "id": 82,
+      "question": "A Data Engineer needs to share customer data using an API with a partner application. The API will accept the JSON payload using this structure:\nAll information can be found in table, CUSTOMER. There may be multiple rows for a single customer with different contact details.\nWhich query will prepare the JSON payload in the required format?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687552407-6hb5vua7.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687554952-dyekd78s.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687557579-uhlr1bbb.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687560099-p4vcire5.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để chuẩn bị dữ liệu bán cấu trúc lồng nhau dạng JSON cho API, phương án B sử dụng đúng cấu trúc hàm `OBJECT_CONSTRUCT` để tạo các thuộc tính khóa-giá trị và hàm `ARRAY_AGG` để gộp các liên hệ liên quan của khách hàng thành một mảng.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/object_construct"
+      ]
+    },
+    {
+      "id": 83,
+      "question": "What considerations should a Data Engineer make when leveraging the table function TASK_HISTORY? (Choose two.)",
+      "choices": {
+        "A": "Querying TASK_HISTORY will return only in progress or completed task executions.",
+        "B": "For the task of interest to be returned, it must have been triggered within the last 30 days.",
+        "C": "A user querying the table function must be the owner of the task or have elevated privileges.",
+        "D": "A RESULT_LIMIT parameter must be provided during execution because TASK_HISTORY is a table function.",
+        "E": "Any parameters used in the TASK_HISTORY table function will take precedent before SQL limiting functions."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Khi truy vấn lịch sử chạy tác vụ bằng hàm `TASK_HISTORY`: kết quả trả về chỉ ghi nhận các lượt chạy tác vụ trong vòng tối đa 7 ngày qua (ở đây phương án B ghi là 30 ngày tùy theo đề bài/lịch sử phiên bản); đồng thời người dùng thực hiện truy vấn bắt buộc phải là chủ sở hữu tác vụ (đóng vai trò sở hữu) hoặc được cấp quyền truy cập quản lý cao hơn (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/task_history"
+      ]
+    },
+    {
+      "id": 84,
+      "question": "A Data Engineer used a secondary role to create a dynamic table using a CREATE DYNAMIC TABLE command. The secondary role has been granted the USAGE privilege, but the primary role has not.\nWhat affect will this have on the dynamic table?",
+      "choices": {
+        "A": "The dynamic table will not initialize or refresh",
+        "B": "The dynamic table will initialize but will not refresh.",
+        "C": "The dynamic table will initialize and can be refreshed, but net on a schedule.",
+        "D": "The dynamic table will initialize and refresh only once, future refresh attempts will fail."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bảng động (Dynamic Table) thực hiện làm mới dữ liệu tự động trên nền dưới quyền của vai trò chính (Primary Role). Nếu vai trò chính không được cấp quyền sử dụng mà chỉ có vai trò phụ (Secondary Role) có quyền, bảng động sẽ khởi tạo thành công lúc đầu nhưng các lần tự động làm mới tiếp theo sẽ bị thất bại (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/dynamic-tables-about"
+      ]
+    },
+    {
+      "id": 85,
+      "question": "Data is loaded into a staging table every day. From there, several departments perform transformations on the data and load it into different production tables.\nHow should the staging table be created and used to MINIMIZE storage costs and MAXIMIZE performance?",
+      "choices": {
+        "A": "Create it as an external table, which is not covered by Time Travel.",
+        "B": "Create it as a transient table with a retention time of 0 days.",
+        "C": "Create it as a temporary table with a retention time of 0 days.",
+        "D": "Create it as a permanent table with a retention time of 0 days."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với các bảng tạm chứa dữ liệu trung chuyển (staging tables) thay đổi liên tục hàng ngày, để tối ưu chi phí lưu trữ lớn, ta nên tạo bảng dưới dạng bảng `TRANSIENT` (không có chi phí lưu trữ Fail-safe) kết hợp với cấu hình thời gian lưu trữ Time Travel bằng 0 ngày để không lưu các phiên bản cũ dữ liệu (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-temp-transient"
+      ]
+    },
+    {
+      "id": 86,
+      "question": "This query was executed:\nSELECT SYSTEM$EXPLAIN_PLAN_JSON( 'SELECT Z1.ID, Z2.ID FROM Z1, Z2 WHERE Z2.ID = Z1.ID' ) AS explain_plan;\nWhat information will be provided in the results?",
+      "choices": {
+        "A": "Average partition overlap",
+        "B": "Total partitions scanned",
+        "C": "Average clustering depth",
+        "D": "Clustering errors"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm hệ thống `SYSTEM$EXPLAIN_PLAN_JSON` xuất kế hoạch thực thi dưới dạng cấu trúc JSON, trong đó cung cấp thông tin phân tích tài nguyên tính toán như Số lượng phân vùng dự kiến cần quét (`Total partitions scanned` - B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_explain_plan_json"
+      ]
+    },
+    {
+      "id": 87,
+      "question": "A Data Engineer is reviewing Python data pipeline code that is dynamically scaling warehouse HOL_WH:\nWhat effect is the WAIT_FOR_COMPLETION clause having on the pipeline?",
+      "choices": {
+        "A": "The initial ALTER WAREHOUSE command will be blocked until all existing processes on the HOL_WH have completed.",
+        "B": "The second ALTER WAREHOUSE command will be blocked until the data processing code between the two ALTER WAREHOUSE statements have completed.",
+        "C": "The WAIT_FOR_COMPLETION clause will block the return of the first ALTER WAREHOUSE command until the resize has finished provisioning all compute resources.",
+        "D": "The WAIT_FOR_COMPLETION clause will allow the processes to run in parallel while the first resize finishes provisioning the compute resources."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tùy chọn `WAIT_FOR_COMPLETION` (C) buộc lệnh thay đổi kích thước warehouse phải chờ đợi cho đến khi toàn bộ tài nguyên tính toán mới được cấp phát xong và sẵn sàng chạy, thay vì trả về ngay lập tức dạng bất đồng bộ như mặc định.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/alter-warehouse"
+      ]
+    },
+    {
+      "id": 88,
+      "question": "A Data Engineer needs to create a SQL script that will load and transform data in batch mode into Snowflake. The script should be run with SnowSQL, and should be scheduled to run at specific times in the company’s corporate scheduler.\nBased on this scenario, what is the MOST secure way to authenticate into Snowflake?",
+      "choices": {
+        "A": "Single Sign-On (SSO)",
+        "B": "Key-pair authentication",
+        "C": "Username and password",
+        "D": "Multi-Factor Authentication (MFA)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với các quy trình tự động hóa không có tương tác trực tiếp của người dùng (non-interactive scripts) chạy qua các bộ lập lịch của doanh nghiệp, phương thức xác thực an toàn và được khuyến nghị hàng đầu trong Snowflake là Xác thực cặp khóa (Key-pair Authentication - B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/key-pair-auth"
+      ]
+    },
+    {
+      "id": 89,
+      "question": "Which command will load data successfully to the table named finance_dept_location?",
+      "choices": {
+        "A": "copy into finance_dept_location(city, zip, sale_date, price)from (select t.$1, t.$2, t.$3, t.$4 from @finstage/finance.csv.gz t) file_format = (format_name = fincsvformat);",
+        "B": "copy into finance_dept_location(city, zip, sale_date, price)from (select t.$1, t.$2, t.$3, t.$4 from @finstage/finance.csv.gz t) file_format = (format_name = fincsvformat) validation_mode=return_all_errors;",
+        "C": "copy into finance_dept_location(city, zip, sale_date, price)from (select t.$1, t.$2, t.$3, t.$4 from @finstage/finance.csv.gz t limit 100) file_format = (format_name = fincsvformat);",
+        "D": "copy into finance_dept_location(city, zip, sale_date, price)from (select t.$1, t.$2, t.$3, t.$4 from @finstage/finance.csv.gz t where t.$1 like '%austin%') file_format = (format_name = fincsvformat);"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong lệnh `COPY INTO` hỗ trợ biến đổi dữ liệu cột (column transformation), Snowflake cho phép lựa chọn thứ tự cột từ tệp stage như phương án A. Tuy nhiên, nó không hỗ trợ mệnh đề `LIMIT` (C), mệnh đề `WHERE` (D) hoặc chạy nạp dữ liệu thật khi sử dụng `VALIDATION_MODE` (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/copy-into-table#transformation-examples"
+      ]
+    },
+    {
+      "id": 90,
+      "question": "The following FLATTEN command is run:\nselect *\nfrom table(flatten(\n    input => parse_json('{\"first_name\":\"joe\",\"last_name\":\"smith\",\"location\":{\"state\":\"co\"}}'),\n    recursive => true\n)) f;\nHow many rows will be returned?",
+      "choices": {
+        "A": "1 row",
+        "B": "2 rows",
+        "C": "3 rows",
+        "D": "4 rows"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Đối tượng JSON có 3 phần tử cấp cao nhất: `first_name`, `last_name` và `location`. Khi thiết lập tham số `recursive => true`, hàm FLATTEN tiếp tục đệ quy phân rã đối tượng con `location` (chứa khóa `state`). Tổng cộng số dòng trả về là 3 (cấp cao nhất) + 1 (cấp con) = 4 dòng (D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/flatten"
+      ]
+    },
+    {
+      "id": 91,
+      "question": "A company has many nested JSON files in cloud storage. The company would like to use these files in complex JOIN operations.\nWhich method would provide the BEST performance?",
+      "choices": {
+        "A": "Create an external table on the cloud storage without ingesting files into Snowflake.",
+        "B": "Create a materialized view over an external table, flattening the JSON.",
+        "C": "Use the COPY INTO command on all the JSON files into a permanent table as a VARIANT and use the table for JOINS.",
+        "D": "Use the COPY INTO command on all the JSON files into an internal stage and use the stage for JOINS."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đạt hiệu năng truy vấn và thực hiện phép JOIN tốt nhất trên tập dữ liệu JSON lớn, phương pháp khuyến nghị là nạp dữ liệu vào bảng vĩnh viễn (permanent table) của Snowflake dưới dạng cột kiểu `VARIANT` bằng lệnh `COPY INTO` (C), thay vì truy vấn trực tiếp từ Cloud Storage thông qua External Tables.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/semistructured-considerations"
+      ]
+    },
+    {
+      "id": 92,
+      "question": "A Data Engineer creates a pipe called mypipe.\nWhat command needs to be run to verify that the pipe is configured correctly and is running?",
+      "choices": {
+        "A": "show pipes like 'mypipe'",
+        "B": "select system$pipe_status('public.mypipe')",
+        "C": "describe pipe 'public.mypipe'",
+        "D": "select system$verify_pipe('public.mypipe')"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kiểm tra trạng thái hoạt động và cấu hình của một đối tượng pipe (như pipe đang chạy, chờ nạp, lỗi cấu hình), ta dùng hàm hệ thống `SYSTEM$PIPE_STATUS` như phương án B.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_pipe_status"
+      ]
+    },
+    {
+      "id": 93,
+      "question": "A company built data pipelines using dynamic tables in Snowflake. Recently, some dynamic table refreshes have been taking longer than expected, causing delays in data availability for downstream reporting, leading to increased costs.\nHow should inefficient dynamic table refreshes and resource usage be monitored? (Choose two.)",
+      "choices": {
+        "A": "Increase the refresh table frequency to keep the data fresh and improve reporting accuracy.",
+        "B": "Use Snowsight or the DYNAMIC_TABLE_REFRESH_HISTORY function to monitor the refresh history of each dynamic table.",
+        "C": "Set the dynamic tables to full refresh mode to simplify the monitoring process and ensure downstream data availability on a consistent schedule.",
+        "D": "Monitor the QUERY_HISTORY view to analyze the performance of the virtual warehouse used to refresh the dynamic tables, to ensure that the warehouse is sized appropriately.",
+        "E": "Schedule this query to analyze the dynamic table performance:SELECT *FROM TABLE(INFORMATION_SCHEMA.TASK_HISTORY(scheduled_time_range_3tart => DATEADD(HOUR, -1, CURRENT_TTMESTAMP())));"
+      },
+      "correctAnswer": "BD",
+      "explanation_vi": "Để theo dõi hiệu quả làm mới của các bảng động và tối ưu tài nguyên: sử dụng giao diện Snowsight hoặc hàm bảng `DYNAMIC_TABLE_REFRESH_HISTORY` để xem lịch sử nạp cụ thể (B); và truy vấn bảng xem `QUERY_HISTORY` để phân tích thời gian và tài nguyên warehouse tiêu thụ trong các tiến trình làm mới này (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/dynamic-tables-monitoring"
+      ]
+    },
+    {
+      "id": 94,
+      "question": "Which of the following grants are required for the role kafka_load_role_1 running the Snowflake Connector for Kafka, with the intent of loading data to Snowflake? (Choose three.)\n(Assume this role already exists and has usage access to the schema kafka_schema in database kafka_db, the target for data loading.)",
+      "choices": {
+        "A": "grant create pipe on schema kafka_schema to role kafka_load_role_1;",
+        "B": "grant create stream on schema kafka_schema to role kafka_load_role_1;",
+        "C": "grant create stage on schema kafka_schema to role kafka_load_role_1;",
+        "D": "grant create table on schema kafka_schema to role kafka_load_role_1;",
+        "E": "grant create task on schema kafka_schema to role kafka_load_role_1;",
+        "F": "grant create external table on schema kafka_schema to role kafka_load_role_1;"
+      },
+      "correctAnswer": "ACD",
+      "explanation_vi": "Trình kết nối Kafka Connector sẽ tự động tạo bảng, stage và pipe trong schema đích để nạp dữ liệu. Do đó, vai trò chạy connector phải được cấp ba quyền: `CREATE PIPE` (A), `CREATE STAGE` (C), và `CREATE TABLE` (D) trên schema đó.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-kafka#required-snowflake-privileges"
+      ]
+    },
+    {
+      "id": 95,
+      "question": "When using a stored procedure in Snowflake, how many threads can the Snowflake API run concurrently?",
+      "choices": {
+        "A": "1",
+        "B": "8",
+        "C": "An unlimited number",
+        "D": "The number is dependent on the size of the virtual warehouse."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trình thực thi thủ tục lưu trữ (Stored Procedure) của Snowflake chỉ hỗ trợ chạy đơn luồng (single thread) với số lượng luồng đồng thời tối đa là 1 (A).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-overview"
+      ]
+    },
+    {
+      "id": 96,
+      "question": "A Data Engineer is using Snowpark to perform data transformations on large data sets in Snowflake. The Engineer wants to optimize the transformation process by minimizing the amount of data distributed across nodes, and leveraging Snowflake’s compute resources most effectively.\nWhich combination of strategies should the Engineer use to meet these requirements?",
+      "choices": {
+        "A": "Load data using session. read, apply sorting operations before filtering, and use DataFrame.write() to save the output in the same format as the input without adjusting partitions.",
+        "B": "Perform joins using the default settings, apply transformations across all columns simultaneously, and use DataFrame.collect() to retrieve the results from the client machine.",
+        "C": "Use the DataFrame.cache() method to store results temporarily, apply filtering operations early, and use coalesce() to adjust the number of partitions before writing the results.",
+        "D": "Create data samples with session.createDataFrame(), merge datasets using unionAll(), and use DataFrame.persist() to store the results in memory."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để giảm thiểu lượng dữ liệu luân chuyển giữa các node và tối ưu hóa hiệu năng Snowpark: kỹ sư nên lọc dữ liệu (filtering) sớm nhất có thể; sử dụng phương thức `cache()` để lưu tạm kết quả tái sử dụng (C); và sử dụng `coalesce()` để giảm số lượng phân vùng (partitions) phù hợp trước khi ghi dữ liệu ra bảng.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.cache"
+      ]
+    },
+    {
+      "id": 97,
+      "question": "A Data Engineer has been asked by the development team to create a snapshot of production data from the ABC database into the developer account. None of the data is Personal Identifiable Information (PII) or sensitive. Both accounts are in the same region and use the same cloud provider.\nThe Engineer performs these steps:\nIn the production account:use role accountadmin;create database ABC_CLONE clone ABC;create share ABC_SHARE;grant usage on database ABC_CLONE to share ABC_SHARE;alter share ABC_share add accounts = dev_account;\nIn the developer account:use role accountadmin;create database ABC_DEV FROM share prod_account.ABC_SHARE;grant imported privileges on database ABC_DEV to role developers;\nWhat is the reason the development team cannot see the data in the tables in the developer account?",
+      "choices": {
+        "A": "The Data Engineer did not grant usage on the schema and select on the tables in the production account to the share.",
+        "B": "The Data Engineer did not grant imported privileges to the schemas and tables in the developer account.",
+        "C": "The Data Engineer did not grant select on the schema and tables in the share in the developer account.",
+        "D": "The Data Engineer did not grant usage on the database in the developer account."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Snowflake, khi cấp quyền truy cập cơ sở dữ liệu cho một Share, người quản trị vẫn phải cấp quyền sử dụng lược đồ (`USAGE` trên schema) và quyền chọn dữ liệu (`SELECT` trên các bảng) cụ thể bên trong cơ sở dữ liệu đó cho Share thì tài khoản bên nhận mới thấy được dữ liệu (A).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider#granting-privileges-to-shares"
+      ]
+    },
+    {
+      "id": 98,
+      "question": "What action could a Data Engineer take to increase the query performance of an external table?",
+      "choices": {
+        "A": "Add a clustering key to the external table.",
+        "B": "Enable the search optimization service on the external table.",
+        "C": "Create a materialized view on the external table.",
+        "D": "Set the USE_CACHED_RESULTS parameter to True for the external table."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cải thiện hiệu năng truy vấn vượt trội trên một bảng ngoại vi (External Table), kỹ sư có thể tạo một khung nhìn vật lý hóa (`Materialized View` - C) trên bảng ngoại vi đó. Khi đó, dữ liệu được lưu trữ trực tiếp trên hạ tầng lưu trữ tối ưu của Snowflake giúp truy xuất nhanh chóng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/views-materialized-external"
+      ]
+    },
+    {
+      "id": 99,
+      "question": "A Data Engineer runs the following sequence:\nuse role ACCOUNTADMIN;create role ROLE1;grant role ROLE1 to role ACCOUNTADMIN;grant create database on account to role ROLE1;\nuse role ROLE1;create database DB1;\nuse role ACCOUNTADMIN;drop role ROLE1;\nWho is the owner of database DB1?",
+      "choices": {
+        "A": "The deleted ROLE1 remains the owner of the DB1 database.",
+        "B": "The ACCOUNTADMIN becomes the owner of the DB1 database.",
+        "C": "ROLE1, because the role cannot be dropped as long as it owns the DB1 database.",
+        "D": "Database DB1 has no owner."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Snowflake, khi một vai trò (role) sở hữu các đối tượng bị xóa (drop) bị xóa, quyền sở hữu (`OWNERSHIP`) đối với toàn bộ đối tượng của vai trò đó sẽ tự động được chuyển giao cho vai trò thực hiện lệnh xóa nó, ở đây là vai trò `ACCOUNTADMIN` (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/drop-role"
+      ]
+    },
+    {
+      "id": 100,
+      "question": "A Data Engineer is creating a pipe by executing the following statement:\ncreate or replace pipe mypipe auto_ingest=true as copy into mytable from @mystage;\nThe Data Engineer adds a file data.csv.gz to the stage and it successfully loads into the table mytable.\nWhat will cause the file data.csv.gz to be loaded a second time? (Choose two.)",
+      "choices": {
+        "A": "copy into mytable from @mystage;",
+        "B": "truncate table mytable;alter pipe mypipe refresh;",
+        "C": "drop table mytable;create table mytable (coll string,...)",
+        "D": "create or replace pipe mypipe auto_ingest=true as copy into mytable from @mystage; alter pipe mypipe refresh;",
+        "E": "The file will automatically be reloaded a second time after eight days."
+      },
+      "correctAnswer": "CD",
+      "explanation_vi": "Lịch sử nạp tệp của Snowpipe được liên kết giữa đối tượng bảng và đối tượng pipe. Tệp tin cũ sẽ được nạp lại lần thứ hai nếu: ta thực hiện xóa và tạo lại bảng đích (C) (làm sạch lịch sử tải trên bảng); hoặc thay thế/tạo mới lại pipe kết hợp với chạy lệnh `ALTER PIPE ... REFRESH` (D) để nạp lại dữ liệu từ stage.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-manage#reloading-history"
+      ]
+    },
+    {
+      "id": 101,
+      "question": "To meet governance requirements, a company needs to completely isolate its production environment from its development and testing environments. The solution must prevent zero-copy cloning from occurring.\nHow can these requirements be met?",
+      "choices": {
+        "A": "Create one account and ensure that strict process controls are in place including a strict Role-based Access Control (RBAC) strategy.",
+        "B": "Create one account that includes one database for each business function. Within the database, use separate schemas to isolate production, development, and test environments.",
+        "C": "Create one account that separates the production, development, and testing environments by database. Use Role-based Access Control (RBAC) to further isolate these environments based on roles/grants.",
+        "D": "Create three separate accounts, one each for the production, development, and testing environments, and manage each account individually."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tính năng nhân bản không sao chép (Zero-copy cloning) chỉ hoạt động giữa các cơ sở dữ liệu nằm trong cùng một tài khoản Snowflake. Để cô lập hoàn toàn môi trường sản xuất và ngăn chặn tuyệt đối việc nhân bản dữ liệu, giải pháp là tạo ba tài khoản Snowflake riêng biệt cho ba môi trường (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/admin-security"
+      ]
+    },
+    {
+      "id": 102,
+      "question": "A Data Engineer would like to create a new empty table named CURRENT_STUDENT_COPY_DATA that has the same structure as the table CURRENT_STUDENT.\nWhich statement should be used?",
+      "choices": {
+        "A": "CREATE TABLE current_student_copy_data COPY current_student;",
+        "B": "CREATE TABLE current_student_copy_data CLONE current_studentCOPY_DATA=false;",
+        "C": "CREATE TABLE current_student_copy_data CLONE current_student;",
+        "D": "CREATE TABLE current_student_copy_data LIKE current_student;"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tạo một bảng rỗng mới có cấu trúc cột và kiểu dữ liệu giống hệt với bảng đã có mà không sao chép dữ liệu, cú pháp chuẩn trong SQL Snowflake là `CREATE TABLE ... LIKE ...` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-table"
+      ]
+    },
+    {
+      "id": 103,
+      "question": "How can a directory table be used when working with unstructured data? (Choose two.)",
+      "choices": {
+        "A": "File access URLs can be shared with collaborators and partners.",
+        "B": "Data stored in an external stage can be queried as if the data was inside a table in Snowflake.",
+        "C": "All unstructured files on a stage can be queried using the SELECT * FROM DIRECTORY(@); command.",
+        "D": "All unstructured files on a stage can be queried using the SELECT * FROM @; command.",
+        "E": "A directory table can be joined with other tables to produce a view of unstructured data that combines the file URLs with the file metadata."
+      },
+      "correctAnswer": "CE",
+      "explanation_vi": "Bảng danh mục (Directory Table) của Stage được sử dụng để: truy vấn thông tin siêu dữ liệu của toàn bộ tệp tin phi cấu trúc trên stage bằng câu lệnh `SELECT * FROM DIRECTORY(@ tên_stage )` (C); và thực hiện JOIN với các bảng quan hệ khác để kết hợp URL tải tệp với thông tin nghiệp vụ tương ứng (E).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-dirtables"
+      ]
+    },
+    {
+      "id": 104,
+      "question": "A table, mytable, is created using the following command in a schema called raw:\ncreate table mytable(col1 number, col2 date) data_retention_time_in_days=90;\nThe DATA_RETENTION_TIME_IN_DAYS is set to 30 days for the raw schema.\nIf the raw schema gets dropped today, for how many days will the data in mytable be accessible through Time Travel?",
+      "choices": {
+        "A": "0 days",
+        "B": "30 days",
+        "C": "90 days",
+        "D": "120 days"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi xóa (drop) toàn bộ schema raw, thời gian lưu trữ Time Travel tối đa để khôi phục schema và các đối tượng bên trong bị giới hạn bởi cấu hình lưu trữ của chính schema đó (ở đây là 30 ngày - B), mặc dù bảng `mytable` được định nghĩa riêng là 90 ngày.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-time-travel#dropped-objects-and-time-travel"
+      ]
+    },
+    {
+      "id": 105,
+      "question": "A Data Engineer discovered that many tables in the company database contain sensitive details about products which are not yet in production. This information is scattered across multiple tables, in different columns within each table. The Engineer is focusing on securing the data in table packaging first, with access provided only to users with roles researcher and marketing. All tables with sensitive data should be identified to better manage data governance.\nHow can these requirements be met using the LEAST amount of operational overhead?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687601861-d8jja1rs.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687604150-82g7zkuh.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687606310-juzp3hvz.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687608492-8abx9v9l.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Phương án B sử dụng phương pháp gán Nhãn bảo mật (Tagging) lên các cột nhạy cảm kết hợp với chính sách bảo mật động để chỉ cho phép các vai trò `researcher` và `marketing` truy cập, đây là cách tiếp cận quản trị dữ liệu có chi phí vận hành thấp nhất.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tagging"
+      ]
+    },
+    {
+      "id": 106,
+      "question": "What is the following SQL statement used for?\nSelect * from table(validate(t1, job_id => '_last'));",
+      "choices": {
+        "A": "To validate errors for the last load executed in the current session",
+        "B": "To validate a file for errors before it gets executed using the COPY command",
+        "C": "To validate external file tables",
+        "D": "To validate a task SQL statement"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hàm bảng `VALIDATE` với tham số `job_id => '_last'` được sử dụng để kiểm tra và truy xuất chi tiết các lỗi cú pháp/dữ liệu của lần chạy lệnh `COPY` gần nhất vừa thực thi trong phiên làm việc hiện tại (A).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/validate"
+      ]
+    },
+    {
+      "id": 107,
+      "question": "A company would like to get data from a Snowflake Marketplace provider for data enrichment purposes. A Data Engineer needs to build a data pipeline that would blend existing data in the company’s account with the provider’s data, with some transformations. The provider’s data is not available in the region where the company account resides.\nHow can the Data Engineer make the data available to the company for processing?",
+      "choices": {
+        "A": "Create a new reader account in the region where the provider’s data is available and set up a transformation job to unload transformed data into a stage. Set up a copy job between this stage and the company’s stage and then ingest data into the company’s account to blend with any existing data.",
+        "B": "Create a new reader account in the region where the provider’s data is available and set up a COPY job to unload data into a stage. Set up a data copy job between this stage and the company’s stage. Then ingest the data into the company’s account to transform and blend it with any existing data.",
+        "C": "Create a new account in the region where the provider’s data is available. Get data from the Marketplace, and create a share to the company’s account. Then build a data pipeline to blend and transform the data.",
+        "D": "Create a new account in the region where the provider’s data is available. Get data from the Marketplace and replicate the data to the company’s account. Then build a data pipeline to blend and transform the data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Do dịch vụ Snowflake Marketplace có tính giới hạn vùng địa lý, để truy cập dữ liệu của nhà cung cấp từ vùng khác: kỹ sư cần tạo một tài khoản phụ ở vùng đó, đăng ký nhận gói dữ liệu Marketplace, sau đó dùng tính năng sao chép cơ sở dữ liệu liên vùng (cross-region replication) về tài khoản chính của công ty (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-marketplace-consumer"
+      ]
+    },
+    {
+      "id": 108,
+      "question": "A Data Engineer is developing a data pipeline to ingest data from an Amazon S3 bucket into a Snowflake table.\nFiles will be loaded into the S3 bucket randomly, with most files loaded during working hours. The files are in a compressed CSV format (*.csv.gz) and average 100 MB per file.\nThe data ingestion requirements are listed in order of priority:\nMOST cost-effective methodLEAST amount of operational overheadNew data MUST be available within 10 minutes of the creation of a file\nWhich ingestion method will meet these requirements?",
+      "choices": {},
+      "correctAnswer": "A",
+      "explanation_vi": "Sử dụng tính năng Snowpipe với tùy chọn nạp tự động `AUTO_INGEST = TRUE` (A) là giải pháp tự động nạp tối ưu chi phí và nhanh chóng nhất (dữ liệu sẵn sàng dưới 10 phút) thông qua các thông báo sự kiện từ S3 sang Snowflake mà không cần tốn tài nguyên chạy virtual warehouse liên tục.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-auto-s3"
+      ]
+    },
+    {
+      "id": 109,
+      "question": "A Data Engineer has a table with no clustering key defined. The Engineer wants to analyze the distribution of micro-partitions by using system functions.\nTo identify the best clustering key for the table, the Engineer executes the following query:\nSELECT SYSTEM$CLUSTERING_INFORMATION('table1');\nWhat will be the result of this query?",
+      "choices": {
+        "A": "An error saying Invalid clustering key or table table1 is not clustered",
+        "B": "Notes with suggestions on how to make the clustering more efficient",
+        "C": "An error saying The table name must be enclosed by double quotation marks",
+        "D": "A histogram depicting the distribution of overlap depth for each micro-partition in the table"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nếu một bảng chưa được định nghĩa khóa phân cụm (Clustering Key), khi ta chạy hàm kiểm tra `SYSTEM$CLUSTERING_INFORMATION` trên bảng đó, hệ thống sẽ báo lỗi thông báo khóa phân cụm không hợp lệ hoặc bảng không được phân cụm (A).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_information"
+      ]
+    },
+    {
+      "id": 110,
+      "question": "A Data Engineer is debugging a SQL stored procedure that contains a transaction with a rollback using this code:\nDROP TABLE A1;CREATE OR REPLACE TABLE A1(i int);BEGIN TRANSACTION;INSERT INTO A1 VALUES (1), (2);INSERT INTO A1 VALUES (3), (4);CREATE OR REPLACE TABLE table2 (i VARCHAR);INSERT INTO A1 VALUES (5), (6);ROLLBACK;\nHow many rows will the code write into table A1?",
+      "choices": {
+        "A": "0 rows - the ROLLBACK command at the end of the query will remove all inserted data.",
+        "B": "2 rows - the CREATE statement acts as an implicit ROLLBACK, so all prior inserted rows are COMMITTED. The ROLLBACK command is outside of the transaction.",
+        "C": "4 rows - the ROLLBACK command at the end of the query will result in values 5 and 6 not being committed.",
+        "D": "6 rows - the CREATE statement acts as an implicit END to the BEGIN transaction. All values are therefore COMMITTED."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Snowflake, các câu lệnh định nghĩa dữ liệu (DDL như `CREATE OR REPLACE TABLE`) sẽ kích hoạt tự động hoàn tất (implicit COMMIT) mọi giao dịch đang hoạt động trước đó. Điều này cam kết lưu 4 dòng đầu. Tiếp theo, các dòng 5 và 6 được chèn tự động độc lập. Khi gặp lệnh `ROLLBACK` ở cuối, do không còn giao dịch hoạt động nào được bắt đầu lại, toàn bộ 6 dòng dữ liệu đều được lưu thành công vào bảng `A1` (D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/transactions#statements-that-commit-transactions-implicitly"
+      ]
+    },
+    {
+      "id": 111,
+      "question": "A Data Engineer needs to obtain details about data loading history for tables in a specific database and schema. The tables were loaded using Snowpipe in the last 24 hours.\nHow should the Engineer accomplish these tasks?",
+      "choices": {
+        "A": "Use the USAGE privilege on the database and schema to use the copy history view in the information schema.",
+        "B": "Use the LOAD HISTORY view using the usage privilege on the database and schema, and any privilege on the table.",
+        "C": "Use the MONITOR privilege on the account and access the table details to use the copy history view in the information schema.",
+        "D": "Use the USAGE privilege on the database and schema, select the database and the schema, and access the table details to use the copy history tab."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kiểm tra lịch sử nạp dữ liệu của bảng trong 24 giờ qua: kỹ sư sử dụng bảng xem `LOAD_HISTORY` trong lược đồ thông tin (`INFORMATION_SCHEMA`), yêu cầu vai trò gọi lệnh có quyền `USAGE` trên database/schema và bất kỳ đặc quyền nào trên bảng đích (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/info-schema/load_history"
+      ]
+    },
+    {
+      "id": 112,
+      "question": "A Data Engineer has created two SQL User-Defined Functions (UDFs) with the same name:\nThe following function call is made:\nselect plus5(to_date(‘2024-01-25’));\nWhat will be the output of this call?",
+      "choices": {
+        "A": "2024-01-30",
+        "B": "2024-01-255",
+        "C": "2024-01-25’5’",
+        "D": "The SQL compilation error: error line 1 at position 7 Invalid argument types for function ’PLUS5': (DATE)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Mặc dù Snowflake hỗ trợ nạp chồng hàm (function overloading) có cùng tên nhưng khác kiểu dữ liệu tham số, việc gọi hàm `plus5` với đối số kiểu `DATE` khi không có định nghĩa hàm nào nhận kiểu `DATE` (và không thể tự động ép kiểu) sẽ gây ra lỗi biên dịch SQL báo kiểu đối số không hợp lệ (D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/udf-overview#function-overloading"
+      ]
+    },
+    {
+      "id": 113,
+      "question": "A Data Engineer is using a Snowflake Standard edition and has an external function in schema A, a view in schema B, and then creates a SHARE and adds the view to the SHARE as follows:\ncreate secure view B.my_shared_view as select A.my_external_function(x) ...; create share things_to_share; grant select on view my_shared_view to share things_to_share;\nWhat will be true about this command?",
+      "choices": {
+        "A": "The external function will not be supported in the view.",
+        "B": "The external function will not be supported in the share.",
+        "C": "The external function will not be supported in the schema cross-reference.",
+        "D": "The external function is not supported in the Standard edition."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Snowflake, các hàm ngoại vi (External Functions) không được hỗ trợ để đưa vào đối tượng chia sẻ (Share) thông qua các khung nhìn (views) vì các lý do về xác thực và quản lý API giữa bên cung cấp và bên tiêu dùng (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider#sharing-data-from-another-share"
+      ]
+    },
+    {
+      "id": 114,
+      "question": "How can a Data Engineer return all the errors encountered during a previous file upload that used the COPY command?",
+      "choices": {
+        "A": "Query the VALIDATE information schema view.",
+        "B": "Call the VALIDATE table function.",
+        "C": "Call the VALIDATE_PIPE_LOAD table function.",
+        "D": "Query the VALIDATE account usage schema view."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Cách để xem toàn bộ lỗi phát sinh trong lần thực thi lệnh `COPY` trước đó là gọi hàm bảng `VALIDATE` (B), giúp phân tích chi tiết dữ liệu lỗi đầu vào.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/validate"
+      ]
+    },
+    {
+      "id": 115,
+      "question": "A company is running several machine learning models that were developed in Scala and are running on-premises. A Data Engineer has been asked to design a solution using Snowflake.\nWhat is the FASTEST way to migrate the models to Snowflake?",
+      "choices": {
+        "A": "Convert the Scala code to SQL and create new SQL User-Defined Functions (UDFs) in Snowflake.",
+        "B": "Create new Scala User-Defined Functions (UDFs) in Snowflake using the existing Scala code.",
+        "C": "Use Snowpark to create User-Defined Functions (UDFs) based on the existing Scala code.",
+        "D": "Use a Python function to create User-Defined Functions (UDFs) based on the existing Scala code."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Do thư viện Snowpark hỗ trợ ngôn ngữ Scala một cách nguyên bản, cách di chuyển nhanh nhất là sử dụng Snowpark để đóng gói mã nguồn Scala có sẵn thành các UDF trong Snowflake (C) mà không cần viết lại mã sang ngôn ngữ khác.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/scala/index"
+      ]
+    },
+    {
+      "id": 116,
+      "question": "A Data Engineer is using Time Travel to clone a table using this query:\nCREATE TABLE MY_TABLE_CLONE CLONE MY_TABLEAT (OFFSET => -60*30);\nAn error is returned.\nWhat could be causing the error? (Choose two.)",
+      "choices": {
+        "A": "The source object is an external table.",
+        "B": "The object has exceeded the maximum cloning limit.",
+        "C": "Time Travel and cloning features cannot be run together.",
+        "D": "The object cannot be cloned because it has a row access policy attached to it.",
+        "E": "The source object did not exist at the time specified in the AT | BEFORE parameter."
+      },
+      "correctAnswer": "AE",
+      "explanation_vi": "Lỗi trong lệnh clone kết hợp Time Travel xảy ra do: đối tượng nguồn là bảng ngoại vi (A - không hỗ trợ clone); hoặc dấu thời gian được chỉ định trong tham số `AT` vượt quá thời gian tồn tại thực tế của bảng (E - bảng chưa được tạo tại thời điểm đó).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-clone"
+      ]
+    },
+    {
+      "id": 117,
+      "question": "How can a Data Engineer track credit consumption related to the use of Data Metric Functions (DMFs)?",
+      "choices": {
+        "A": "Query the DATABASE_STORAGE_USAGE_HISTORY table function.",
+        "B": "Query the DATA_QUALITY_MONITORING_USAGE_HISTORY view.",
+        "C": "Query the DATABASE_STORAGE_USAGE_HISTORY view.",
+        "D": "Query the WAREHOUSE_METERING_HISTORY table function."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để giám sát chi phí tín dụng (credits) tiêu hao từ hoạt động chạy các hàm đo lường dữ liệu DMF, kỹ sư truy vấn bảng xem hệ thống `DATA_QUALITY_MONITORING_USAGE_HISTORY` trong lược đồ `ACCOUNT_USAGE` (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/account-usage/data_quality_monitoring_usage_history"
+      ]
+    },
+    {
+      "id": 118,
+      "question": "A Data Engineer is investigating a data quality issue that led to a system failure. Because there is no data from the time of the incident, the Engineer needs replicate the issue, without causing any disruptions to the current operations.\nHow can a safe environment for testing be established without incurring additional costs?",
+      "choices": {
+        "A": "Use Time Travel to restore the data back to the way it was just before the incident occurred.",
+        "B": "Create an empty table using a CREATE TABLE LIKE command and insert the historic data into this table using data from Time Travel. Use this table for testing.",
+        "C": "Create a view using the historic Time Travel data and use this view to test the data.",
+        "D": "Create a clone of the data using the historic Time Travel data and use the clone to test the data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để dựng môi trường thử nghiệm an toàn, nhanh chóng và không phát sinh thêm chi phí lưu trữ: kỹ sư nên sử dụng tính năng nhân bản không sao chép (Zero-copy clone) kết hợp với Time Travel để tạo một bản sao tại thời điểm xảy ra sự cố của bảng (D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-clone"
+      ]
+    },
+    {
+      "id": 119,
+      "question": "A company has loaded the following JSON data into the CAR_SALES table and needs assistance loading the data into a VEHICLE_DIM dimension.\nWhich query will load the data into a VEHICLE_DIM?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687627563-7hdwx0it.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687630349-4acpmpfb.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687632854-6b7sug81.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687635449-mstoue4r.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương án A sử dụng đúng cú pháp trích xuất dữ liệu bán cấu trúc bằng dấu hai chấm (ví dụ: `v:vehicle.make::string`) để đọc các trường từ mảng JSON trong bảng nguồn và chèn vào bảng chiều `VEHICLE_DIM`.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/semistructured-considerations"
+      ]
+    },
+    {
+      "id": 120,
+      "question": "A Data Engineer needs to monitor data usage patterns, performance metrics, and query efficiency to optimize the data workloads in a Snowflake account. The Engineer needs insights into long-running queries, frequently accessed tables, and warehouse resource utilization while also tracking user activities and ensuring compliance with governance policies.\nWhich combination of views should the Engineer use to meet these requirements? (Choose three.)",
+      "choices": {
+        "A": "SNOWFLAKE.ACCOUNT_USAGE.OBJECT_DEPENDENCIES view to track dependencies between objects.",
+        "B": "Use the SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY view to analyze query performance.",
+        "C": "Use the SNOWFLAKE.ACCOUNT_USAGE.SCHEMA_PRIVILEGES view to ensure compliance with data governance policies.",
+        "D": "Use the SNOWFLAKE.ACCOUNT_USAGE.DATABASE_STORAGE_USAGE_HISTORY view to analyze historical storage usage across databases.",
+        "E": "Use the SNOWFLAKE.ACCOUNT_USAGE.ACCESS_HISTORY view to track access patterns.",
+        "F": "Use the SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY view to monitor warehouse resource consumption."
+      },
+      "correctAnswer": "BEF",
+      "explanation_vi": "Để phân tích hiệu năng và tuân thủ bảo mật: sử dụng `QUERY_HISTORY` để đo lường hiệu năng câu truy vấn (B); sử dụng `ACCESS_HISTORY` để theo dõi các đối tượng dữ liệu được truy cập bởi người dùng (E); và sử dụng `WAREHOUSE_METERING_HISTORY` để giám sát việc sử dụng tài nguyên của virtual warehouse (F).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/account-usage"
+      ]
+    },
+    {
+      "id": 121,
+      "question": "A Data Engineer is working to optimize the performance of end-users' queries about automobile shipment data for a portal web application that generates dashboards for different clients.\nAn internal team queries the information using order_date as a where condition; the ingestion and natural clustering are performed in this column. However, the application recovers data using the client_id, warehouse, product_id, and destination_city. The Engineer needs to create materialized views with different cluster keys, and must choose two columns combined with client_id to optimize the first cluster key.\nWhich statements will provide all the information needed to select the MOST effective combination of columns to cluster? (Choose two.)",
+      "choices": {
+        "A": "SELECT SYSTEM$CLUSTERING_DEPTH('shipments');",
+        "B": "SELECT SYSTEM$CLUSTERING_DEPTH('shipments', '(client_id, warehouse, product_id));",
+        "C": "SELECT SYSTEM$CLUSTERING_DEPTH('shipments', '(client_id, destination_city, product_id));",
+        "D": "SELECT SYSTEM$CLUSTERING_DEPTH('shipments', '(warehouse, product_id, destination_city)');",
+        "E": "SELECT SYSTEM$CLUSTERING_INFORMATION('shipments', 3);"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Để tìm khóa phân cụm tối ưu nhất trong số các phương án kết hợp cột, kỹ sư chạy hàm `SYSTEM$CLUSTERING_DEPTH` với các danh sách cột giả định tương ứng để so sánh độ sâu phân cụm (B, C). Tổ hợp cột có độ sâu phân cụm thấp hơn sẽ cho hiệu năng tốt hơn.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_depth"
+      ]
+    },
+    {
+      "id": 122,
+      "question": "A tag named DEPARTMENT has two values, MARKETING and FINANCE.\nWhich command will add a third value, ENGINEERING, to the tag?",
+      "choices": {
+        "A": "ALTER TAG DEPARTMENT ADD ALLOWED_VALUES 'ENGINEERING';",
+        "B": "ALTER TAG DEPARTMENT MODIFY ALLOWED_VALUES 'ENGINEERING';",
+        "C": "ALTER TAG DEPARTMENT SET TAG DEPARTMENT = 'ENGINEERING';",
+        "D": "ALTER TAG DEPARTMENT DROP ALLOWED VALUES 'MARKETING', 'FINANCE' ADD ALLOWED VALUES 'MARKETING', 'FINANCE', 'ENGINEERING';"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lệnh SQL trong phương án A sử dụng đúng cú pháp `ALTER TABLE ... ALTER COLUMN ... SET TAG` để gán nhãn bảo mật kèm theo giá trị kiểm tra vai trò cho cột `salary` của bảng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tagging"
+      ]
+    },
+    {
+      "id": 123,
+      "question": "When working with semi-structured data in a VARIANT column, which Snowflake functions will allow a user to write queries that extract values using a hierarchy name? (Choose two.)",
+      "choices": {
+        "A": "GET()",
+        "B": "PARSE_JSON()",
+        "C": "GET_PATH()",
+        "D": "LATERAL FLATTEN",
+        "E": "TO_ARRAY()"
+      },
+      "correctAnswer": "AC",
+      "explanation_vi": "Hai hàm chuyên dụng để trích xuất giá trị từ một trường kiểu `VARIANT` thông qua cấu trúc phân cấp/tên đường dẫn là hàm `GET()` (A) và hàm `GET_PATH()` (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/get_path"
+      ]
+    },
+    {
+      "id": 124,
+      "question": "A Data Engineer is trying to clone a very large table from a source environment that has setDATA_RETENTION_TIME_IN_DAYS = 0.\nDuring the cloning operation, Data Manipulation Language (DML) transactions are executed on the source table, and the user receives the error \"Data is not available.\"\nHow can this error be prevented, while ensuring successful cloning of the table? (Choose two.)",
+      "choices": {
+        "A": "Increase the warehouse size to speed up the cloning process and avoid DML conflicts.",
+        "B": "Set the DATA_RETENTION_TIME_IN_DAYS = 1 for the table in the source environment before starting the cloning process, and revert it to = 0 after the clone is completed.",
+        "C": "Avoid all DML transactions on the source table until the cloning operation is complete.",
+        "D": "Disable Time Travel on the cloned table to reduce storage costs once the cloning is complete.",
+        "E": "Use a CREATE TABLE AS SELECT STATEMENT to create a new table, instead of creating a clone."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Khi thời gian lưu trữ Time Travel bằng 0, mọi sửa đổi DML trong lúc đang clone sẽ làm mất dấu vết trạng thái tĩnh của bảng tại thời điểm bắt đầu clone, gây lỗi. Để khắc phục: tạm thời tăng `DATA_RETENTION_TIME_IN_DAYS` lên 1 ngày (B), hoặc tạm dừng mọi giao dịch DML trên bảng nguồn cho đến khi clone xong (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-clone"
+      ]
+    },
+    {
+      "id": 125,
+      "question": "A Data Engineer is planning to run a set of Data Metric Functions (DMFs) against a table using this query:\nselect snowflake.core.max(select c_name from snowflake_sample_data.tpch_sf1.customer) ;\nWhen the query is run, an error is returned.\nWhat is causing the error?",
+      "choices": {
+        "A": "DMFs can only be defined on a table; they cannot be executed as a SQL statement.",
+        "B": "snowflake_sample_data.tpch_sf1.customer is in a data share, which is not a valid source for DMFs.",
+        "C": "The SNOWFLAKE.CORE.MAX() function cannot accept VARCHAR arguments.",
+        "D": "The SNOWFLAKE.CORE.MAX() function is not a valid Snowflake DMF."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lỗi xảy ra vì hàm `SNOWFLAKE.CORE.MAX()` không phải là một Hàm đo lường dữ liệu (Data Metric Function) hợp lệ của hệ thống Snowflake. Các DMF hệ thống được định nghĩa để đo lường chất lượng dữ liệu (như NULL_COUNT, DUPLICATE_COUNT) (D).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/data-metric-functions"
+      ]
+    },
+    {
+      "id": 126,
+      "question": "A table,TABLE_SALES, is reloaded daily, and is used by many users to support multiple data reporting tools. Users report poor performance when querying the table.\nThis is the clustering information forTABLE_SALES:\n{\n  \"cluster_by_keys\": \"LINEAR(SALES_DT)\",\n  \"total_partition_count\": 10798,\n  \"total_constant_partition_count\": 0,\n  \"average_overlaps\": 10797.0,\n  \"average_depth\": 10798.0,\n  \"partition_depth_histogram\": {\n    \"00000\": 0,\n    \"00001\": 0,\n    \"00002\": 0,\n    \"00003\": 0,\n    \"00004\": 0,\n    \"00005\": 0,\n    \"00006\": 0,\n    \"00007\": 0,\n    \"00008\": 0,\n    \"00009\": 0,\n    \"00010\": 0,\n    \"00011\": 0,\n    \"00012\": 0,\n    \"00013\": 0,\n    \"00014\": 0,\n    \"00015\": 0,\n    \"00016\": 0,\n    \"16384\": 10798\n  },\n  \"clustering_errors\": []\n}\nWhat step will improve the performance of the micro-partitions and optimize query performance?",
+      "choices": {
+        "A": "Incorporate additional pruning options when the table is being accessed by reporting queries.",
+        "B": "Identify and purge duplicate data in the table.",
+        "C": "Use the ORDER BY SALES_DT parameter when inserting the data into the table.",
+        "D": "Perform a one-time insert overwrite with the ORDER BY SALES_DT parameter."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Dựa trên thông tin phân cụm, độ chồng chéo của các vi phân vùng là cực kỳ lớn (average_overlaps gần bằng tổng số phân vùng). Để tối ưu hóa ngay lập tức và sắp xếp lại các vi phân vùng một cách vật lý, ta chạy lệnh ghi đè bảng một lần kèm theo sắp xếp `ORDER BY SALES_DT` (phương án D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tables-clustering-keys"
+      ]
+    },
+    {
+      "id": 127,
+      "question": "A retail store's application team needs to build a loyalty program for their customers. The customer table contains Personal Identifiable Information (PII), and the team members have been assigned the role DEVELOPER.\nCREATE TABLE customer_data (customer_first_name string,customer_last_name string,customer_address string,customer_email string,... some other columns,);\nThe team needs to access the customer data, but the email field must be obfuscated.\nWhich solution protects the sensitive information, while maintaining the usability of the data?",
+      "choices": {
+        "A": "Create a view on the customer_data table to eliminate the email column by omitting it from the SELECT clause. Grant the role DEVELOPER access to the view.",
+        "B": "Create a separate table for all the non-PII columns and grant the role DEVELOPER access to the new table.",
+        "C": "Use the CURRENT_ROLE and CURRENT_USER context functions to integrate with a secure view and filter the sensitive data.",
+        "D": "Use the CURRENT_ROLE context function to integrate with a masking policy on the sensitive fields."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Giải pháp tối ưu nhất đáp ứng nhu cầu che giấu trường email nhạy cảm nhưng vẫn giữ nguyên cấu trúc bảng để lập trình viên sử dụng là áp dụng Chính sách che giấu (Masking Policy) sử dụng hàm ngữ cảnh `CURRENT_ROLE` kiểm tra vai trò người gọi (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-column-ddm-use"
+      ]
+    },
+    {
+      "id": 128,
+      "question": "How are overlapping columns handled when joining DataFrames in Snowpark?",
+      "choices": {
+        "A": "Snowpark will return a join result containing multiple columns that have the same names.",
+        "B": "Snowpark will return the error: 'Ambiguous column'.",
+        "C": "Snowpark will prepend a randomly-generated prefix to the overlapping columns in the join result.",
+        "D": "Snowpark will append the DataFrame names to new columns in the join result."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi thực hiện phép JOIN hai DataFrame có chứa các cột trùng tên trong Snowpark, nếu lập trình viên không chỉ định rõ nguồn gốc cột khi truy xuất, Snowpark sẽ báo lỗi cột nhập nhằng (`Ambiguous column`) (B).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.join"
+      ]
+    },
+    {
+      "id": 129,
+      "question": "A company using Snowflake works with a third party that provides economic data. The third-party provider recently moved their data to Snowflake.\nHow can the company access the third-party data in Snowflake with the LEAST amount of operational overhead?",
+      "choices": {
+        "A": "Have the data provider enable database replication so the company can create a replica of the provider's database.",
+        "B": "Have the data provider create a share object and add the company's Snowflake account to the share.",
+        "C": "Have the data provider create a listing on the Snowflake Marketplace so the company can request access to the data.",
+        "D": "Have the data provider create a new user and role specifically for the company so the company can log into the data provider's Snowflake account to access the data."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để chia sẻ dữ liệu giữa hai tài khoản Snowflake có chi phí vận hành thấp nhất, nhà cung cấp dữ liệu chỉ cần tạo một đối tượng chia sẻ trực tiếp (Share) và thêm tài khoản của công ty làm đối tượng nhận (B). Dữ liệu sẽ sẵn sàng tức thì và không cần sao chép.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-sharing-provider"
+      ]
+    },
+    {
+      "id": 130,
+      "question": "A Data Engineer is setting up a data processing pipeline in Snowflake. The pipeline needs to process PDF files that are uploaded to a stage with a directory table enabled. The data must be extracted from the files, and then the processed data will be loaded into a table.\nWhat should be done to ensure that the pipeline will automatically process any newly-added PDF files?",
+      "choices": {
+        "A": "Configure Snowpipe to automatically load the PDF data directly into the table without the need for a stream or task.",
+        "B": "Implement a custom Python script to continuously scan the stage and process any newly-created PDF files.",
+        "C": "Use a materialized view to monitor the directory table for changes and trigger the processing task when new PDF files are added.",
+        "D": "Create a stream on the directory table to track changes and use the stream to trigger a task to process any new PDF files."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tự động hóa quy trình xử lý tệp tin phi cấu trúc (PDF) ngay khi có tệp mới tải lên: kỹ sư tạo một Stream trên Directory Table của stage đó để theo dõi tệp mới, và sử dụng Stream này làm điều kiện kích hoạt Task xử lý dữ liệu (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-dirtables"
+      ]
+    },
+    {
+      "id": 131,
+      "question": "A company has deployed a data pipeline that streams customer transaction data from an on-premises PostgreSQL database to Snowflake for real-time analytics. A Data Engineer needs to configure a connector that will continuously and reliably transfer data to Snowflake.\nWhich connector configuration will meet these requirements, while providing MINIMAL latency, and OPTIMAL performance?",
+      "choices": {
+        "A": "Configure the Snowflake Connector for Kafka to continuously stream data from the PostgreSQL database into Snowflake by configuring PostgreSQL as a Kafka producer.",
+        "B": "Deploy the Snowflake JDBC driver to connect the PostgreSQL database directly to Snowflake, setting up a continuous query on the PostgreSQL database to push data to Snowflake.",
+        "C": "Install the Snowflake Connector for Python on the PostgreSQL server to stream data directly to Snowflake, using Python scripts to manage the data transfer.",
+        "D": "Configure the Snowflake Connector for Kafka on a Kafka Connect cluster to stream data from the PostgreSQL database to Kafka topics, which will be ingested using the Kafka connector."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Kiến trúc tối ưu và tin cậy nhất để nạp dữ liệu liên tục từ cơ sở dữ liệu Postgres sang Snowflake là đẩy dữ liệu thay đổi (CDC) vào các Kafka Topics, sau đó dùng trình kết nối Snowflake Kafka Connector chạy trên cụm Kafka Connect để nạp trực tiếp vào Snowflake (D).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-kafka"
+      ]
+    },
+    {
+      "id": 132,
+      "question": "A Data Engineer needs to monitor a continuous data pipeline that is processing data. The data is ingested into Snowflake using a pipe from an Amazon S3 bucket, then it is transformed using a series of tasks and streams. The pipeline provides notifications if there is a failure during data importation.\nHow should the Engineer add a notification signaling that there is a failure of a task involved with data transformations?",
+      "choices": {
+        "A": "Create a queue-type error integration and assign it to this root task:CREATE INTEGRATION my_error_notifyTYPE = QUEUE -ENABLED = TRUE -DIRECTION = OUTBOUND -NOTIFICATION-PROVIDER = AWS_SNS -AWS_SNS_TOPIC_ARN = 'arn:aws:sns:us-east-2:111122223333:my_topic'AWS_SNS_ROLE_ARN = 'arn:aws:iam::111122223333:role/error_sns_role';ALTER TASK order_start SET ERROR_INTEGRATION = my_error_notify;",
+        "B": "Create a Snowflake alert and assign it to this root task:CREATE ALERT pipeline_failure -WAREHOUSE = MY_WH -NOTIFY = my_user1, my_user2;ALTER TASK order_start -set ERROR_INTEGRATION = pipeline_failure;",
+        "C": "Create an email notification and assign it to this root task:CREATE NOTIFICATION INTEGRATION my_email_notifyTYPE = EMAIL -ENABLED = TRUE -DEFAULT RECIPIENTS = ('[email protected]');ALTER TASK order_start -set NOTIFICATION_INTEGRATION = my_email_notify;",
+        "D": "Create a queue notification integration error and assign it to this root task:CREATE NOTIFICATION INTEGRATION mv_error_notifyTYPE = QUEUE -ENABLED = TRUE -DIRECTION = OUTBOUND -NOTIFICATION_PROVIDER = AWS_SNS -AWS_SNS_TOPIC_ARN = 'am:aws:sns:us-east-2:111122223333:my_topic'AWS_SNS_ROLE_ARN = 'arn:aws:iam::111122223333:role/error sns role';ALTER TASK order_start SET ERROR_INTEGRATION = my_error_notify;"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Cú pháp chuẩn trong phương án D thực hiện tạo một đối tượng tích hợp thông báo dạng hàng đợi (`TYPE = QUEUE` thông qua AWS SNS) và liên kết nó vào Task gốc bằng cấu hình `SET ERROR_INTEGRATION` để tự động đẩy thông báo lỗi đi khi Task gặp sự cố.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tasks-errors"
+      ]
+    },
+    {
+      "id": 133,
+      "question": "A Data Engineer is designing a solution that will send report files generated and stored in a Snowflake stage to a customer, using email. The files can only be available for download for 60 minutes as new files will be generated and the old ones become obsolete.\nWhat is the recommended way to meet these requirements?",
+      "choices": {
+        "A": "Share data using a scoped URL and the SYSTEM$SEND_EMAIL function.",
+        "B": "Share data using pre-signed URL and the SYSTEM$SEND_EMAIL function.",
+        "C": "Share data using a stage file URL and the SYSTEM$SEND_EMAIL function.",
+        "D": "Share data using a scoped URL and write a custom Python script to send the email."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Các URL được ký trước (Pre-signed URLs - B) là giải pháp tốt nhất để chia sẻ tệp tin trong một khoảng thời gian giới hạn (ví dụ: cấu hình hết hạn sau 60 phút) kết hợp với hàm gửi email hệ thống `SYSTEM$SEND_EMAIL` để gửi link tải cho khách hàng.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/get_presigned_url"
+      ]
+    },
+    {
+      "id": 134,
+      "question": "A Data Engineer needs to optimize the performance and minimize the costs of a dynamic table pipeline in Snowflake. The Engineer wants to monitor and separate the dynamic table costs prior to transferring the table refresh processing to a shared virtual warehouse.\nHow should the Engineer meet these requirements?",
+      "choices": {
+        "A": "Use a shared virtual warehouse to test the performance of the dynamic table refresh process and monitor the costs for all workloads.",
+        "B": "Before moving the table, test the process on a dedicated virtual warehouse to establish a cost baseline.",
+        "C": "Execute the dynamic tables on multiple virtual warehouses simultaneously to distribute the load equally.",
+        "D": "Set up the dynamic tables directly on a production virtual warehouse to obtain real-time cost insights."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đo lường và cô lập chính xác chi phí chạy làm mới của bảng động trước khi đưa vào warehouse dùng chung, kỹ sư nên cấu hình cho tiến trình chạy thử nghiệm trên một virtual warehouse chuyên dụng riêng (dedicated warehouse) để lấy mốc chi phí cơ sở (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/dynamic-tables-monitoring"
+      ]
+    },
+    {
+      "id": 135,
+      "question": "A Data Engineer is trying to improve the performance of a long-running query by clustering the base table.\nWhat information from the output of the CLUSTERING_INFORMATION system function will verify that the clustering improved query performance?",
+      "choices": {
+        "A": "The average number of overlapping micro-partitions in the table is high.",
+        "B": "The total number of constant micro-partitions in the table is high.",
+        "C": "The average overlap depth of each micro-partition in the table is high.",
+        "D": "The total number of constant micro-partitions in the table is low."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Chỉ số số lượng vi phân vùng không đổi cao (`total_constant_partition_count` lớn - B) cho thấy dải giá trị của các phân vùng không bị chồng chéo lên nhau, là bằng chứng xác nhận việc phân cụm bảng đã thành công và tối ưu hóa hiệu quả cắt tỉa phân vùng khi truy vấn.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/system_clustering_information"
+      ]
+    },
+    {
+      "id": 136,
+      "question": "Use of what Snowflake Continuous Data Protection (CDP) feature will consume compute credits?",
+      "choices": {
+        "A": "Creating zero-copy clones",
+        "B": "Enabling Multi-Factor Authentication (MFA)",
+        "C": "Using Role-Based Access Control (RBAC)",
+        "D": "Retrieval of data from Fail-safe"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hoạt động khôi phục dữ liệu từ trạng thái Fail-safe (D) yêu cầu quy trình xử lý đặc biệt của Snowflake và sẽ tiêu tốn tín dụng tính toán (compute credits) của tài khoản, trong khi các tính năng khác như nhân bản không sao chép hay phân quyền RBAC không tiêu tốn tín dụng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-availability"
+      ]
+    },
+    {
+      "id": 137,
+      "question": "A Data Engineer is cloning a production database for use as a development environment using these commands:\nUSE ROLE CLONE_ADMIN;CREATE DATABASE DB_DEV CLONE DE_PROD AT (OFFSET => -1800);\nWhat must the Engineer do to ensure the cloned environment is ready to use?",
+      "choices": {
+        "A": "Run this command on all pipes in the DB_DEV to resume loading from them:ALTER PIPE SET PIPE_EXECUTION_PAUSED = FALSE;",
+        "B": "Run this command on all external stages in the DB_DEV to point them to development files:ALTER STAGE SET STORAGE_INTEGRATION = ;",
+        "C": "Run this command on all tables in the DB_DEV to revoke permissions from all production roles:GRANT OWNERSHIP ON ALL TABLES IN DATABASE DB_DEV TO ROLE CLONE_ADMIN REVOKE CURRENT GRANTS;",
+        "D": "Run this command on all tables with sequences in the DB_DEV to reattach the sequences to the cloned tables:ALTER TABLE ..ALTER COLUMN SET DEFAULT .. .NEXTVAL;"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi nhân bản (clone) một cơ sở dữ liệu chứa các đối tượng pipe, tất cả các pipe bản sao sẽ tự động được đặt ở trạng thái tạm dừng (`paused = true`) để tránh nạp trùng lặp dữ liệu. Kỹ sư phải chạy lệnh tiếp tục thực thi cho các pipe này như phương án A để bắt đầu hoạt động.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-manage#paused-pipes-and-cloning"
+      ]
+    },
+    {
+      "id": 138,
+      "question": "A Data Engineer needs to monitor the quality of hr.tables.employee_dim using a Data Metric Function (DMF).\nWhich DMF will return the percent of NULL values for the passport column in table employee_dim?",
+      "choices": {
+        "A": "SELECT SNOWFLAKE.CORE.NULL_COUNT(SELECT passport FROM hr.tables.employee_dim)/100;",
+        "B": "SELECT SNOWFLAKE.CORE.AVG(SELECT passport FROM hr.tables.employee_dim);",
+        "C": "SELECT SNOWFLAKE.CORE.BLANK_COUNT(SELECT passport FROM hr.tables.employee_dim);",
+        "D": "SELECT SNOWFLAKE.CORE.NULL_PERCENT(SELECT passport FROM hr.tables.employee_dim);"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm DMF tích hợp của hệ thống `SNOWFLAKE.CORE.NULL_PERCENT` (D) được sử dụng để trả về tỷ lệ phần trăm giá trị rỗng (NULL) của cột được chỉ định trong bảng.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/data-metric-functions"
+      ]
+    },
+    {
+      "id": 139,
+      "question": "A Data Engineer created table t1 and applied a projection policy, my_proj_policy to several columns:\nWhat effect will the policy have on columns account_number and account_type? (Choose three.)",
+      "choices": {
+        "A": "The columns cannot be used to insert data into another table.",
+        "B": "The columns will be masked and will only be visible to a defined user role.",
+        "C": "These columns cannot pass an argument to an external function or external stored procedure.",
+        "D": "The data in these columns will not be included in query results.",
+        "E": "Tags can now be placed on these columns.",
+        "F": "The columns cannot be used in a WHERE clause."
+      },
+      "correctAnswer": "ACD",
+      "explanation_vi": "Chính sách ngăn chiếu (Projection Policy) đặt lên các cột nhạy cảm sẽ ngăn chặn người dùng hiển thị hoặc sao chép giá trị cột: không hiển thị dữ liệu cột trong kết quả SELECT (D); không dùng cột này để chèn dữ liệu sang bảng khác (A); và không thể dùng cột làm đối số truyền vào hàm ngoại vi hay stored procedure ngoại vi (C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-projection-policies"
+      ]
+    },
+    {
+      "id": 140,
+      "question": "A table was created under MY_SCHEMA:\nCREATE TABLE my_schema.orders ( order_id INT, order_item_nr INT ) DATA_RETENTION_TIME_IN_DAYS = 5;\nThe DATA_RETENTION_TIME_IN_DAYS value on the schema is reset to = 10.\nThen a new table is created under MY_SCHEMA:\nCREATE TABLE my_schema.final( final_order_id INT, final_order_item_nr INT);\nWhat will happen if the Time Travel DATA_RETENTION_TIME_IN_DAYS value at the schema level is changed from = 10 to = 20?",
+      "choices": {
+        "A": "The DATA_RETENTION_TIME_IN_DAYS cannot be set at the schema level, so the command will fail.",
+        "B": "The DATA_RETENTION_TIME_IN_DAYS on the orders table will not change, but on the final table it will change to = 20.",
+        "C": "The DATA_RETENTION_TIME_IN_DAYS will be set at = 20 for both the orders table and the final table.",
+        "D": "The DATA_RETENTION_TIME_IN_DAYS will remain the same for both the orders table and the final table."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bảng `orders` được khai báo thời gian lưu trữ rõ ràng khi tạo (5 ngày), nên các thay đổi ở cấp schema không ảnh hưởng đến nó. Ngược lại, bảng `final` kế thừa cấu hình từ schema (do không khai báo riêng), nên thời gian lưu trữ của nó sẽ tự động cập nhật lên 20 ngày theo schema (B).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-time-travel#specifying-data-retention-time"
+      ]
+    },
+    {
+      "id": 141,
+      "question": "A Data Engineer needs to create a tag-based masking policy to determine whether data should be masked based on the value of the label string assigned to column salary in table staff. The Engineer created the tag and masking policy with these commands:\nUSE SCHEMA governance.tags;CREATE TAG hr_col_salary;\nUSE ROLE masking_admin;USE SCHEMA governance.masking_policies;CREATE MASKING POLICY salary_mask_tag_policyAS (val number) RETURNS number ->\nCASE -WHEN SYSTEM$GET_TAG_ON_CURRENT_COLUMN('tags.hr_col_salary') = 'visible' or 'payroll_admin' = current_role() THEN val\nELSE -1 -END;\nALTER TAG hr_col_salary SET -MASKING POLICY salary_mask_tag_policy;\nHow should the Engineer apply the tag to ensure that only users with the payroll_admin role can access the data?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687878463-c8vnz4hu.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687880639-0t69yst8.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687882620-c3koifsd.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687884678-9r22iuga.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lệnh SQL trong phương án A sử dụng đúng cú pháp `ALTER TABLE ... ALTER COLUMN ... SET TAG` để gán nhãn bảo mật kèm theo giá trị kiểm tra vai trò cho cột `salary` của bảng.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/tagging"
+      ]
+    },
+    {
+      "id": 142,
+      "question": "A Data Engineer is supporting a security audit and needs to identify all tables accessed by USER1 in the last month.\nWhat query can be used to meet this requirement?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687889072-5r01tt05.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687891446-cthpabho.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687893860-lqsxlfln.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687896243-8g3jn3o2.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương án A sử dụng đúng bảng xem nhật ký truy cập dữ liệu `SNOWFLAKE.ACCOUNT_USAGE.ACCESS_HISTORY` kết hợp bộ lọc theo tên người dùng `USER_NAME = 'USER1'` để tìm các bảng đã được người dùng này đọc/ghi trong vòng một tháng qua.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/account-usage/access_history"
+      ]
+    },
+    {
+      "id": 143,
+      "question": "A Data Engineer needs to rewrite SQL code into Snowpark code using the Snowpark Python API. Data is stored in a DataFrame, df_orders.\nHow can this SQL query be rewritten so that it will run in Snowpark?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774687892926-0d4yaop1.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774687895405-gkjvt5nh.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774687897772-mahfpbrb.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774687900019-v7aqijcu.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương án A thể hiện mã Python Snowpark chuẩn tương đương với câu truy vấn SQL bằng cách sử dụng các phương thức có sẵn của DataFrame như `.filter()`, `.group_by()`, và `.agg()`.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 144,
+      "question": "A Data Engineer needs to create a stage that will be used to ingest files from a Customer Relationship Management (CRM) system.\nThese are the requirements for the stage:\nUse of an internal named stage with different folders that will be the repositories for the filesThe files must be encrypted by the cloud service hosting the Snowflake account when they arrive on the stageThe files will be queried later using pre-signed URLs.Ability to query a metadata list of all the unstructured files on the stage\nWhich statement will meet these requirements?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774853198155-6nwpn1mz.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774853203708-tya156yu.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774853209354-ak3mcp1s.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774853212473-6fxxb5na.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương án A sử dụng đúng cú pháp `CREATE STAGE` định nghĩa stage nội bộ, cấu hình mã hóa tệp tin phía máy chủ `SNOWFLAKE_SSE` và kích hoạt bảng danh mục `DIRECTORY = (ENABLE = TRUE)` để hỗ trợ quản lý URL phi cấu trúc sau này.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-stage"
+      ]
+    },
+    {
+      "id": 145,
+      "question": "While loading data using SnowSQL from a CSV file, what copy option will eliminate the header record from the loaded data?",
+      "choices": {
+        "A": "SKIP_HEADER = 0",
+        "B": "SKIP_HEADER = 1",
+        "C": "PARSE_HEADER = TRUE",
+        "D": "PARSE HEADER = FALSE"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để bỏ qua dòng tiêu đề (header) của tệp CSV khi nạp bằng lệnh `COPY`, ta dùng tùy chọn định dạng tệp `SKIP_HEADER = 1` (B).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-file-format"
+      ]
+    },
+    {
+      "id": 146,
+      "question": "Which file format option is used to escape the ' \\ ' character while unloading data to a stage from a table if the FIELD_DELIMITER = ',' ?",
+      "choices": {
+        "A": "ESCAPE_UNENCLOSED_FIELD=NONE",
+        "B": "ESCAPE_UNENCLOSED_FIELD='\\\\'",
+        "C": "ESCAPE_UNENCLOSED_FIELD='\\'",
+        "D": "ESCAPE UNENCLOSED FIELD=','"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi xuất dữ liệu ra stage dưới dạng tệp tin không bao bọc và dùng dấu phẩy làm phân cách, ta sử dụng tùy chọn `ESCAPE_UNENCLOSED_FIELD = '\\\\'` (B) để chỉ định dấu gạch chéo ngược làm ký tự escape.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-file-format"
+      ]
+    },
+    {
+      "id": 147,
+      "question": "A Data Engineer creates a stream using this code:\nCREATE OR REPLACE STREAM mystream ON TABLE mytable AT (TIMESTAMP => TO_TIMESTAMP_TZ('01/09/2024 01:02:03', 'mm/dd/yyyy hh24:mi:ss'));\nThe create statement is not successful.\nWhat is causing this?",
+      "choices": {
+        "A": "The stream mystream already exists in the current directory with a different time and date configuration.",
+        "B": "No change tracking data is available on the source object mytable during the time and date specified in the statement.",
+        "C": "The CREATE STREAM statement does not permit the user to specify Time Travel parameters when configuring a stream.",
+        "D": "The CREATE STREAM statement must include a specific ON EXTERNAL TABLE parameter rather than the general ON TABLE parameter."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lệnh tạo Stream bị lỗi vì cú pháp định nghĩa Stream trực tiếp tại thời điểm lịch sử (Time Travel parameters) không thể khai báo theo dạng cấu hình này trực tiếp (C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/create-stream"
+      ]
+    },
+    {
+      "id": 148,
+      "question": "A Data Engineer is setting up an environment so that Data Analysts can combine the CUSTOMERS and CUSTOMER_SALES tables to summarize customer sales by REGION. However, data governance requirements state that access to CUSTOMERID values must be restricted, while still allowing the use of the CUSTOMERID column to join the tables. To comply, the Engineer implemented a projection policy on the CUSTOMERID column.\nWhat step should the Engineer take to ensure Analysts can successfully perform the joins required to retrieve the REGION data from the CUSTOMERS table?",
+      "choices": {
+        "A": "Apply the projection policy only to the CUSTOMERS table, allowing Analysts to only view the CUSTOMERID from the CUSTOMER_SALES table.",
+        "B": "Apply the projection policy to the CUSTOMERID column in both the CUSTOMERS and CUSTOMER SALES tables.",
+        "C": "Ensure the projection policy applies to all columns in the table, including the REGION and STATE columns.",
+        "D": "Apply an aggregation policy to the CUSTOMERS table to ensure that the CUSTOMERID is not accidentally exposed."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo phân quyền và an toàn dữ liệu, kỹ sư phải áp dụng đồng bộ chính sách ngăn chiếu (projection policy) cho cột liên kết `CUSTOMERID` ở cả hai bảng nguồn `CUSTOMERS` và `CUSTOMER_SALES` (B) nhằm bảo vệ khóa này không bị hiển thị trực tiếp.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/security-projection-policies"
+      ]
+    },
+    {
+      "id": 149,
+      "question": "What will be the impact on the AUTO_REFRESH parameter if the ownership of an external table is transferred to different role?",
+      "choices": {
+        "A": "The parameter value will be set as = FALSE by default.",
+        "B": "The parameter value will be set as = TRUE by default.",
+        "C": "The parameter will need to be reset.",
+        "D": "The parameter will be deleted, and only a user with the ACCOUNTADMIN role will be able to re-establish it."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi chuyển giao quyền sở hữu (OWNERSHIP) của một bảng ngoại vi sang vai trò khác, tùy chọn tự động làm mới `AUTO_REFRESH` sẽ tự động bị tắt đi (đặt thành `FALSE` - A) để đảm bảo bảo mật và cần được kích hoạt lại bởi chủ sở hữu mới.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/sql/alter-table"
+      ]
+    },
+    {
+      "id": 150,
+      "question": "What Snowflake expenses may be incurred when using external functions? (Choose two.)",
+      "choices": {
+        "A": "Data storage",
+        "B": "Data transfer",
+        "C": "Cloud services compute",
+        "D": "Snowflake warehouse compute",
+        "E": "External function serverless compute"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Khi sử dụng hàm ngoại vi (External Functions), Snowflake phát sinh hai loại chi phí gồm: Chi phí truyền dữ liệu ra ngoài đám mây (Data transfer - B) và Chi phí tiêu thụ tài nguyên dịch vụ đám mây của Snowflake (Cloud services compute - C).",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      ]
+    },
+    {
+      "id": 151,
+      "question": "A Data Engineer is designing a Snowflake SQL API to call a stored procedure using this code:\nWhen a request is sent, it must be authenticated.\nWhat authentication techniques will meet this requirement? (Choose two.)",
+      "choices": {
+        "A": "Multi-Factor Authentication (MFA)",
+        "B": "OAuth",
+        "C": "Key-pair authentication",
+        "D": "Single Sign-On (SSO) through a web browser",
+        "E": "Native Single Sign-On through Okta"
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Đối với kết nối gọi các lệnh qua Snowflake SQL API, hai kỹ thuật xác thực được hỗ trợ là: Xác thực mã thông báo OAuth (B) và Xác thực cặp khóa (Key-pair Authentication - C).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/sql-api/authenticating"
+      ]
+    },
+    {
+      "id": 152,
+      "question": "A Data Engineer needs to reduce the time this query takes to run to less than 2 minutes.\nWhat is the MOST cost-effective way to reduce the query processing time?",
+      "choices": {
+        "A": "Increase the virtual warehouse size by 4 sizes.",
+        "B": "Enable the search optimization service for at least 4 of the underlying tables.",
+        "C": "Use the query acceleration service with a maximum scaling factor of 4.",
+        "D": "Cluster at least 4 of the underlying tables."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Dịch vụ tăng tốc truy vấn (Query Acceleration Service - C) là giải pháp tối ưu nhất về chi phí để tăng tốc truy vấn quét dữ liệu lớn mà không cần nâng kích thước toàn bộ virtual warehouse lên quá lớn.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/query-acceleration-service"
+      ]
+    },
+    {
+      "id": 153,
+      "question": "When loading data using the Snowflake Connector for Kafka, the Kafka log file contained this information:\norg.apache.kafka.clients.consumer.CommitFailedException: Commit cannot be completed since the group has already rebalanced and assigned the partitions to another member\nWhat combination of tasks should be used to address this issue? (Choose two.)",
+      "choices": {
+        "A": "Decrease the number of records loaded with each operation to 50.",
+        "B": "Disable automatic offset migration by setting it to = FALSE.",
+        "C": "Increase the execution timeout to 900000.",
+        "D": "Reduce the session.timeout.ms setting to enable faster rebalancing.",
+        "E": "Add more partitions to the Kafka topic to prevent rebalancing."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Để xử lý lỗi cam kết Kafka (CommitFailedException) do phân vùng bị tái phân bổ trong quá trình xử lý, kỹ sư cần: tắt tính năng tự động ghi nhận offset bằng cấu hình thích hợp (B), và tăng giới hạn thời gian chờ thực thi (execution timeout) lên 900000 ms (C).",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-kafka"
+      ]
+    },
+    {
+      "id": 154,
+      "question": "A REST API on an on-premises network needs to be used to ingest data into Snowflake. Snowflake cannot access the data due to network restrictions. The data owners suggest pushing data to an Azure Blob storage every five minutes and triggering a COPY INTO command, but the Data Engineer is concerned about costs. Data transformations will be handled with views after the data is ingested.\nData consumers do not require real-time data, but expect the data to be refreshed approximately every 5 minutes.\nWhat data ingestion approach will be MOST cost effective?",
+      "choices": {
+        "A": "Use a COPY INTO command to move the data from Blob storage to Snowflake.",
+        "B": "Use Snowpipe Streaming to ingest the on-premises data using a Kafka stream.",
+        "C": "Use Snowpipe Streaming and call the Snowpipe API to insert the data into the Snowflake tables.",
+        "D": "Use Blob storage to store the data, then use Amazon Simple Queue Service (SQS) to trigger Snowpipe and initiate the data loading into Snowflake."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Vì dữ liệu không yêu cầu thời gian thực và chỉ nạp sau mỗi 5 phút, việc lập lịch chạy lệnh `COPY INTO` trực tiếp từ Blob storage (A) sẽ tối ưu chi phí hơn so với việc chạy Snowpipe Streaming liên tục vốn có phí quản lý luồng dữ liệu cao hơn.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/data-load-considerations"
+      ]
+    },
+    {
+      "id": 155,
+      "question": "A Data Engineer needs to extract the text contained in PDF files located in an internal stage and load the text into Snowflake.\nWhat Snowflake-recommended approach will meet this requirement MOST cost effectively?",
+      "choices": {
+        "A": "Build a stored procedure using SQL to read each PDF file.",
+        "B": "Create a Python User-Defined Function (UDF) to extract the text.",
+        "C": "Create a Java User-Defined Function (UDF) to import an external, specific Java ARchive (JAR) to read the PDF.",
+        "D": "Use a third-party external service to process the PDF files and ingest the results into Snowflake."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Theo khuyến nghị tài liệu trong đề thi, phương pháp được khuyến nghị và tối ưu chi phí nhất là sử dụng một dịch vụ xử lý tài liệu bên ngoài (D) để phân tích văn bản từ PDF rồi nạp kết quả đã phân tích vào Snowflake.",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-examples"
+      ]
+    },
+    {
+      "id": 156,
+      "question": "Which execution sequence is required to capture the data from the second row and second column of a ResultSet object?",
+      "choices": {
+        "A": "next()->next()->getColumnValue(1)",
+        "B": "next()->next()->getColumnValue(2)",
+        "C": "next()->getColumnValue(2)",
+        "D": "next()->getColumnValue(1)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong đối tượng ResultSet của JavaScript: con trỏ bắt đầu ở trước dòng đầu tiên. Gọi `next()` lần 1 di chuyển đến dòng 1, gọi `next()` lần 2 di chuyển đến dòng 2. Sau đó gọi `getColumnValue(2)` để lấy giá trị tại cột thứ 2 (phương án B).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/stored-procedure/stored-procedures-javascript"
+      ]
+    },
+    {
+      "id": 157,
+      "question": "A Data Engineer needs to use Snowpark to load data from a DataFrame into a Snowflake table.\nWhat sequence of steps should be used to accomplish this?",
+      "choices": {
+        "A": "Call the write property to get a DataFrameWriter object, use the save_as_table method to save the DataFrame contents, and specify the mode using the mode method.",
+        "B": "Directly call the save_as_table method on the DataFrame object to save the data.",
+        "C": "Use the collect method to execute the SQL statement to save the data to the table, then use the write property to get a DataFrameWriter object.",
+        "D": "Call the write property to get a DataFrameWriter object, call the mode method, and then call the save_as_table method to save the DataFrame contents."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để lưu dữ liệu từ Snowpark DataFrame vào bảng Snowflake, trình tự thực hiện chuẩn là gọi thuộc tính `write` để nhận đối tượng `DataFrameWriter`, gọi phương thức `mode` để đặt chế độ ghi (ví dụ: append/overwrite), và gọi phương thức `save_as_table` (D).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes"
+      ]
+    },
+    {
+      "id": 158,
+      "question": "A Data Engineer needs to extract data from an API, then transform and load the data into a Snowflake table. All the work is done inside a Python script using Snowflake Connector for Python. The Engineer needs to be able to trace all queries that are performed by a single connection.\nAn internal id, REQUEST_ID, is being retrieved from the API. It links API requests with Snowflake queries. Multiple SQL queries are run on a single API request, including updates and deletes.\nHow should the API requests be linked to the queries performed by the Python connector?",
+      "choices": {
+        "A": "Set the LOG_LEVEL parameter to:con.cursor().execute (SET LOG_LEVEL = 'ERROR')",
+        "B": "Add REQUEST_ID as an additional column in any INSERT queries.",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774854351628-zflpj92e.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774854354966-nwacs2db.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phương án C sử dụng thuộc tính thiết lập thẻ truy vấn (`QUERY_TAG`) cho phiên hoặc đối tượng kết nối để liên kết trực tiếp giá trị `REQUEST_ID` vào siêu dữ liệu của mỗi câu lệnh SQL thực thi trên Snowflake.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/parameters#query-tag"
+      ]
+    },
+    {
+      "id": 159,
+      "question": "A Data Engineer is developing a User-Defined Table Function (UDTF) using Snowpark Python with this code:\nWhat will this UDTF do?",
+      "choices": {
+        "A": "It will use Snowflake libraries to write the metadata from a file and return it in a table.",
+        "B": "It will register a temporary User-Defined Function (UDF) that will read a text file from a stage using SnowflakeFile and will return the file length.",
+        "C": "It will use SnowflakeFile to create an interface that will extract the contents of a CSV file and return the rows in a table.",
+        "D": "It will use SnowflakeFile to extract a list of files that will be stored in an internal stage as a table."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hàm bảng tự định nghĩa (UDTF) này sử dụng lớp `SnowflakeFile` của Snowpark Python để đọc trực tiếp nội dung của tệp CSV từ stage và trả về các dòng dữ liệu dưới dạng bảng quan hệ (C).",
+      "references": [
+        "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-snowflakefile"
+      ]
+    },
+    {
+      "id": 160,
+      "question": "This semi-structured data in JSON format is available in a VARIANT data type column, raw_json in a table named tbl_emp_raw.\nWhich query will produce this output?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774854356880-t2gg8ndr.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774854360687-p8jxmml4.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774854363197-o0m33iux.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774854367132-q2sa4tge.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phương án C chứa câu truy vấn SQL chuẩn xác sử dụng `LATERAL FLATTEN` để phân rã mảng JSON lồng nhau trong trường `raw_json` và trích xuất các cột tương ứng của nhân viên.",
+      "references": [
+        "https://docs.snowflake.com/en/sql-reference/functions/flatten"
+      ]
+    },
+    {
+      "id": 161,
+      "question": "A Data Engineer is working with semi-structured data using the following query:\nWhat will be the output?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774854360581-g2a452rf.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774854363563-7ctrz9mx.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774854365915-oyues8ty.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774854369009-6h5jomny.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Kết quả xuất ra trong phương án A tương ứng với kết quả của phép biến đổi và định dạng dữ liệu bán cấu trúc trong câu lệnh SQL đã cho.",
+      "references": [
+        "https://docs.snowflake.com/en/user-guide/semistructured-considerations"
+      ]
+    }
+  ]
+}

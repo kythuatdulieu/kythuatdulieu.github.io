@@ -4,21 +4,9 @@ description: Hệ thống hóa toàn bộ kiến thức, khái niệm và dự �
 template: splash
 ---
 
-import QuizSlider from '../../components/QuizSlider.astro';
-import QuickViewCarousel from '../../components/QuickViewCarousel.astro';
-import PaginatedMapOfContent from '../../components/PaginatedMapOfContent.astro';
+import HomeContent from '../../components/HomeContent.astro';
 import RemoveTitle from '../../components/RemoveTitle.astro';
-import '../../styles/home.css';
 
-<div class="top-split-layout">
-  <div class="split-col">
-    <QuizSlider />
-  </div>
-  <div class="split-col">
-    <QuickViewCarousel />
-  </div>
-</div>
-
-<PaginatedMapOfContent />
+<HomeContent />
 
 <RemoveTitle />

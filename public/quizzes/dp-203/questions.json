@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "You have an Azure subscription that includes two Azure Synapse Analytics workspaces named Workspace1 and Workspace2.\nYou use Workspace1 to develop new artifacts. You use Workspace2 to store production versions of artifacts.\nYou need to implement continuous integration.\nWhat should you do first in Synapse Studio?",
+    "options": {
+      "A": "Deploy an integration runtime.",
+      "B": "For Workspace2, configure a Git repository.",
+      "C": "For Workspace1, configure a Git repository.",
+      "D": "Create a service principal."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để triển khai tích hợp liên tục (CI/CD) trong Azure Synapse Analytics, bước đầu tiên là cấu hình kho lưu trữ Git (Git repository) cho workspace phát triển (Workspace1). Các thay đổi/artifact sẽ được phát triển và lưu vào Git từ Workspace1, sau đó qua các công cụ CI/CD (như Azure Pipelines hoặc GitHub Actions) để deploy sang workspace sản xuất (Workspace2). Do đó, cấu hình Git cho Workspace1 là việc cần làm đầu tiên.",
+    "references": null
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "You have an Azure Stream Analytics job that reads data from an Azure event hub.\nYou need to determine whether the job processes data as quickly as the data arrives or cannot keep up.\nWhich metric should you review?",
+    "options": {
+      "A": "Backlogged Input Events",
+      "B": "Late input Events",
+      "C": "Input Sources Received",
+      "D": "InputEventsLastPunctuationTime"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chỉ số `Backlogged Input Events` (Sự kiện đầu vào bị tồn đọng) trong Azure Stream Analytics đo lường số lượng sự kiện đã nhận được từ nguồn dữ liệu (như Event Hub) nhưng chưa được xử lý bởi công việc Stream Analytics. Nếu chỉ số này tăng lên hoặc liên tục lớn hơn 0, điều đó có nghĩa là công việc Stream Analytics không xử lý kịp tốc độ dữ liệu đổ về (cannot keep up). Do đó, để xác định công việc có xử lý dữ liệu kịp hay không, ta cần xem xét chỉ số này.",
+    "references": null
+  }
+]

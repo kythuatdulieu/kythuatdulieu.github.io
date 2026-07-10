@@ -36,10 +36,7 @@ graph LR
     A["Data Sources"] -->|Events| B["Kafka / Event Log (SSOT)"]
     B -->|Stream/Replay| C{"Stream Processor<br/>(Flink / Kafka Streams)"}
     C -->|Real-time Updates| D["(Serving Layer<br/>ClickHouse / Druid)"]
-    D --> E["Dashboards / APIs"]
-    
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
+    D --> E["Dashboards / APIs"]
 ```
 
 ### Immutable Log & Vấn Đề Lưu Trữ (FinOps)

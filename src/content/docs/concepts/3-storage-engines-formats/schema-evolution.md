@@ -68,10 +68,7 @@ graph TD
     L1 -.-> F2
     L2 -.-> F1
     L2 -.-> F2
-    L3 -.-> F2
-    
-    style Logical_Schema fill:#f9f6e5,stroke:#b8a36c
-    style Physical_Files fill:#e6f3ff,stroke:#4a90e2
+    L3 -.-> F2
 ```
 
 **Cơ chế hoạt động ở tầng vật lý:**

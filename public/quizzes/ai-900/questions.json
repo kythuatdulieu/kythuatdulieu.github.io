@@ -1,0 +1,1786 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "You need to identify street names based on street signs in photographs.\nWhich type of computer vision should you use?",
+    "options": {
+      "A": "object detection",
+      "B": "optical character recognition (OCR)",
+      "C": "image classification",
+      "D": "facial recognition"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhận dạng ký tự quang học (OCR) là tính năng của Computer Vision chuyên dùng để phát hiện, nhận dạng và trích xuất chữ viết (in hoặc viết tay) từ hình ảnh (ví dụ như văn bản trên biển hiệu giao thông).\n\n- **A sai** vì Object detection dùng để xác định vị trí các vật thể chứ không dùng để đọc nội dung chữ bên trong biển hiệu.\n- **C sai** vì Image classification dùng để phân loại toàn bộ bức ảnh thành một lớp duy nhất, không trích xuất thông tin cụ thể.\n- **D sai** vì Facial recognition dùng để nhận diện khuôn mặt người.",
+    "references": []
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "You have a bot that identifies the brand names of products in images of supermarket shelves.\nWhich service does the bot use?",
+    "options": {
+      "A": "AI enrichment for Azure Search capabilities",
+      "B": "Computer Vision Image Analysis capabilities",
+      "C": "Custom Vision Image Classification capabilities",
+      "D": "Language Understanding capabilities"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khả năng phân tích hình ảnh (Image Analysis) của Azure Computer Vision có hỗ trợ phát hiện các thương hiệu nổi tiếng (brand detection) trong các bức ảnh (như sản phẩm trên kệ hàng siêu thị) dưới dạng các mô hình dựng sẵn mà không cần người dùng tự xây dựng và huấn luyện mô hình riêng.\n\n- **A sai** vì AI enrichment của Azure Search dùng để làm phong phú dữ liệu phục vụ tìm kiếm, không phải dịch vụ trực tiếp của bot.\n- **C sai** vì Custom Vision phân loại ảnh (Classification) yêu cầu người dùng phải tự huấn luyện mô hình bằng dữ liệu tự cấp, trong khi tác vụ nhận dạng các brand lớn đã được tích hợp sẵn trong Image Analysis.\n- **D sai** vì LUIS (nay là CLU) dùng để xử lý ngôn ngữ tự nhiên dưới dạng văn bản chứ không xử lý hình ảnh.",
+    "references": []
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "A smart device that responds to the question “What is the stock price of Contoso. Ltd.?” is an example of which AI workload?",
+    "options": {
+      "A": "knowledge mining",
+      "B": "natural language processing",
+      "C": "computer vision",
+      "D": "anomaly detection"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Xử lý ngôn ngữ tự nhiên (Natural Language Processing - NLP) là nhóm tác vụ AI cho phép máy tính hiểu và phản hồi lại ngôn ngữ tự nhiên của con người qua văn bản hoặc giọng nói (như câu hỏi về giá cổ phiếu).\n\n- **A sai** vì Knowledge mining (khai thác tri thức) tập trung vào việc tìm kiếm thông tin từ lượng lớn dữ liệu phi cấu trúc.\n- **C sai** vì Computer vision là thị giác máy tính, dùng cho hình ảnh và video.\n- **D sai** vì Anomaly detection dùng để phát hiện các bất thường trong chuỗi dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "You are building a tool that will process images from retail stores and identify the products of competitors.\nThe solution must be trained on images provided by your company.\nWhich Azure AI service should you use?",
+    "options": {
+      "A": "Form Recognizer",
+      "B": "Custom Vision",
+      "C": "Face",
+      "D": "Computer Vision"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Custom Vision cho phép người dùng tự tải lên các hình ảnh riêng của công ty và tiến hành gán nhãn, huấn luyện mô hình thị giác máy tính tùy chỉnh để nhận diện các sản phẩm cụ thể của đối thủ.\n\n- **A sai** vì Form Recognizer (nay là Document Intelligence) dùng để trích xuất dữ liệu từ các tài liệu, biểu mẫu dạng giấy tờ.\n- **C sai** vì Face chỉ dùng để phát hiện, phân tích và nhận diện khuôn mặt người.\n- **D sai** vì Computer Vision cung cấp các mô hình có sẵn cho các tác vụ phân tích chung, không tự động nhận biết được các sản phẩm đặc thù của đối thủ nếu không được huấn luyện tùy biến.",
+    "references": []
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "You have a security system that analyzes images from CCTV to provide authorized staff entry into restricted area.\nWhich type of computer vision does the system use?",
+    "options": {
+      "A": "optical character recognition (OCR)",
+      "B": "semantic segmentation",
+      "C": "facial detection and facial recognition",
+      "D": "image analysis"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hệ thống giám sát CCTV để xác thực quyền ra vào của nhân viên yêu cầu hai bước: trước hết cần phát hiện khuôn mặt trong ảnh chụp từ camera (facial detection) và sau đó đối chiếu khuôn mặt đó với cơ sở dữ liệu nhân viên để xác định danh tính (facial recognition).\n\n- **A sai** vì OCR dùng để đọc chữ từ ảnh.\n- **B sai** vì Semantic segmentation phân đoạn ảnh ở mức điểm ảnh cho các lớp vật thể chung, không xác định danh tính cá nhân.\n- **D sai** vì Image analysis phân tích nội dung hình ảnh chung chung chứ không tập trung vào việc đối chiếu danh tính khuôn mặt để xác thực truy cập.",
+    "references": []
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "You have an app that identifies the coordinates of a product in an image of a supermarket shelf.\nWhich service does the app use?",
+    "options": {
+      "A": "Custom Vision classification",
+      "B": "Custom Vision object detection",
+      "C": "Computer Vision Read",
+      "D": "Computer Vision optical character recognition (OCR)"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác định tọa độ vị trí (bounding box) của một sản phẩm cụ thể trên kệ hàng siêu thị, chúng ta phải sử dụng kỹ thuật phát hiện vật thể (object detection). Vì đây là sản phẩm đặc thù cần huấn luyện riêng bằng dữ liệu của doanh nghiệp, Custom Vision object detection là lựa chọn chính xác.\n\n- **A sai** vì Custom Vision classification chỉ cho biết sản phẩm có xuất hiện trong ảnh hay không chứ không cung cấp tọa độ vị trí của sản phẩm đó.\n- **C và D sai** vì Computer Vision Read và OCR chỉ dùng để nhận diện chữ viết trong ảnh.",
+    "references": []
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "You have a solution that reads manuscripts in different languages and categorizes the manuscripts based on topic.\nWhich types of natural language processing (NLP) workloads does the solution use?",
+    "options": {
+      "A": "speech recognition and entity recognition",
+      "B": "speech recognition and language modeling",
+      "C": "translation and key phrase extraction",
+      "D": "translation and sentiment analysis"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xây dựng giải pháp đọc bản thảo bằng nhiều ngôn ngữ và phân loại theo chủ đề, hệ thống cần:\n1. Dịch thuật (translation) để hiểu nội dung từ các ngôn ngữ khác nhau.\n2. Trích xuất cụm từ khóa (key phrase extraction) để xác định các ý chính, từ đó phân loại tài liệu theo chủ đề.\n\n- **A và B sai** vì bản thảo là tài liệu viết (manuscripts) nên không cần đến nhận dạng giọng nói (speech recognition).\n- **D sai** vì phân tích cảm xúc (sentiment analysis) chỉ xác định thái độ tích cực/tiêu cực chứ không giúp phân loại chủ đề của bản thảo.",
+    "references": []
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "Which Azure Cognitive Services service can be used to identify documents that contain sensitive information?",
+    "options": {
+      "A": "Custom Vision",
+      "B": "Conversational Language Understanding",
+      "C": "Form Recognizer"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Form Recognizer (nay là Azure AI Document Intelligence) sử dụng học máy để trích xuất văn bản, bảng biểu và cấu trúc dữ liệu từ các tài liệu. Nó có thể giúp phát hiện và phân loại các tài liệu để xác định xem chúng có chứa các thông tin nhạy cảm (như thông tin cá nhân PII) hay không.\n\n- **A sai** vì Custom Vision dùng cho hình ảnh chung, không tối ưu cho tài liệu văn bản.\n- **B sai** vì Conversational Language Understanding dùng để xây dựng chatbot đàm thoại, không dùng để xử lý và phân loại tài liệu nhạy cảm.",
+    "references": []
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "Predicting agricultural yields based on weather conditions and soil quality measurements is an example of which type of machine learning model?",
+    "options": {
+      "A": "classification",
+      "B": "regression",
+      "C": "clustering"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dự đoán năng suất nông nghiệp (agricultural yields) là việc dự đoán một giá trị số liên tục (ví dụ: số tấn thu hoạch trên mỗi hecta). Đây là bài toán Hồi quy (Regression) điển hình trong Học máy.\n\n- **A sai** vì Phân loại (Classification) dùng để dự đoán các nhãn danh mục rời rạc (ví dụ: Đạt hay Không đạt).\n- **C sai** vì Phân cụm (Clustering) là học không giám sát dùng để nhóm các điểm dữ liệu tự động chứ không phải dự đoán giá trị cụ thể.",
+    "references": []
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "What is a use case for classification?",
+    "options": {
+      "A": "predicting how many cups of coffee a person will drink based on how many hours the person slept the previous night.",
+      "B": "analyzing the contents of images and grouping images that have similar colors",
+      "C": "predicting whether someone uses a bicycle to travel to work based on the distance from home to work",
+      "D": "predicting how many minutes it will take someone to run a race based on past race times"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dự đoán một người có sử dụng xe đạp để đi làm hay không (kết quả chỉ có thể là Có hoặc Không) là một bài toán phân loại nhị phân (binary classification).\n\n- **A sai** vì dự đoán số lượng tách cà phê (giá trị số) là bài toán Hồi quy.\n- **B sai** vì gom nhóm ảnh theo màu sắc tương tự là bài toán Phân cụm.\n- **D sai** vì dự đoán số phút chạy đua (giá trị số liên tục) là bài toán Hồi quy.",
+    "references": []
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "Which type of machine learning should you use to predict the number of gift cards that will be sold next month?",
+    "options": {
+      "A": "classification",
+      "B": "regression",
+      "C": "clustering"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Số lượng thẻ quà tặng được bán ra (number of gift cards sold) là một giá trị số lượng cụ thể. Tác vụ dự đoán một giá trị số lượng dựa trên các yếu tố đầu vào thuộc về bài toán Hồi quy (Regression).\n\n- **A sai** vì Phân loại dùng cho nhãn danh mục.\n- **C sai** vì Phân cụm dùng để nhóm các điểm dữ liệu không có nhãn.",
+    "references": []
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "What are two tasks that can be performed by using computer vision? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Predict stock prices.",
+      "B": "Detect brands in an image.",
+      "C": "Detect the color scheme in an image",
+      "D": "Translate text between languages.",
+      "E": "Extract key phrases."
+    },
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dịch vụ Computer Vision hỗ trợ các tác vụ phân tích hình ảnh sau:\n- **B. Detect brands in an image**: Phát hiện logo hoặc thương hiệu của các nhãn hàng xuất hiện trong ảnh.\n- **C. Detect the color scheme in an image**: Phân tích và phát hiện màu sắc chủ đạo của bức ảnh.\n\n- **A sai** vì dự đoán giá cổ phiếu là tác vụ Hồi quy của Machine Learning.\n- **D và E sai** vì dịch thuật và trích xuất cụm từ khóa là các tác vụ của Xử lý ngôn ngữ tự nhiên (NLP).",
+    "references": []
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "For a machine learning progress, how should you split data for training and evaluation?",
+    "options": {
+      "A": "Use features for training and labels for evaluation.",
+      "B": "Randomly split the data into rows for training and rows for evaluation.",
+      "C": "Use labels for training and features for evaluation.",
+      "D": "Randomly split the data into columns for training and columns for evaluation."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong quy trình xây dựng mô hình học máy, tập dữ liệu ban đầu thường được phân chia ngẫu nhiên theo hàng (các mẫu dữ liệu) thành hai phần riêng biệt: một phần dùng để huấn luyện mô hình (training set) và phần còn lại dùng để kiểm tra, đánh giá (evaluation set).\n\n- **A và C sai** vì cả tập training và tập evaluation đều cần phải có đầy đủ cả đặc trưng (features) và nhãn (labels).\n- **D sai** vì chia theo cột nghĩa là chia các biến đặc trưng, điều này làm mất cấu trúc dữ liệu của các mẫu.",
+    "references": []
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "A company employs a team of customer service agents to provide telephone and email support to customers.The company develops a webchat bot to provide automated answers to common customer queries.Which business benefit should the company expect as a result of creating the webchat bot solution?",
+    "options": {
+      "A": "increased sales",
+      "B": "a reduced workload for the customer service agents",
+      "C": "improved product reliability"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi công ty xây dựng một chatbot hỗ trợ trực tuyến để tự động trả lời các câu hỏi thường gặp (common queries), các yêu cầu đơn giản và lặp đi lặp lại của khách hàng sẽ được bot giải quyết. Điều này trực tiếp giúp giảm bớt khối lượng công việc cho các nhân viên hỗ trợ (customer service agents).\n\n- **A sai** vì chatbot hỗ trợ giải đáp thắc mắc thông thường không đảm bảo tăng doanh số bán hàng.\n- **C sai** vì chất lượng/độ tin cậy của sản phẩm không bị ảnh hưởng bởi dịch vụ chatbot chăm sóc khách hàng.",
+    "references": []
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "What are two tasks that can be performed by using the Computer Vision service? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Train a custom image classification model.",
+      "B": "Detect faces in an image.",
+      "C": "Recognize handwritten text.",
+      "D": "Translate the text in an image between languages."
+    },
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dịch vụ Computer Vision của Azure cung cấp các tính năng có sẵn bao gồm:\n- **B. Detect faces in an image**: Phát hiện sự hiện diện của khuôn mặt cùng với các thuộc tính cơ bản như tuổi, giới tính.\n- **C. Recognize handwritten text**: Tính năng Read API hỗ trợ nhận dạng cả chữ in và chữ viết tay thông qua OCR.\n\n- **A sai** vì huấn luyện mô hình phân loại hình ảnh tùy chỉnh là nhiệm vụ của dịch vụ **Custom Vision**.\n- **D sai** vì dịch văn bản trong ảnh là tác vụ kết hợp và dịch thuật do dịch vụ **Translator** đảm nhận.",
+    "references": []
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "You use natural language processing to process text from a Microsoft news story.You receive the output shown in the following exhibit.\nWhich type of natural languages processing was performed?",
+    "options": {
+      "A": "entity recognition",
+      "B": "key phrase extraction",
+      "C": "sentiment analysis",
+      "D": "translation"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhận dạng thực thể (Entity Recognition / Named Entity Recognition - NER) là một tác vụ của NLP giúp xác định các thành phần định danh trong văn bản và phân loại chúng vào các nhóm thực tế như Tên tổ chức (như Microsoft), Địa điểm, Ngày tháng, v.v.\n\n- **B sai** vì Trích xuất cụm từ khóa chỉ lấy ra các từ quan trọng của văn bản để biết ý chính chứ không phân loại thực thể cụ thể.\n- **C sai** vì Phân tích cảm xúc dùng để đánh giá thái độ (tích cực/tiêu cực).\n- **D sai** vì Dịch thuật dùng để chuyển đổi ngôn ngữ.",
+    "references": []
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "Your company wants to build a recycling machine for bottles. The recycling machine must automatically identify bottles of the correct shape and reject all other items.Which type of AI workload should the company use?",
+    "options": {
+      "A": "anomaly detection",
+      "B": "conversational AI",
+      "C": "computer vision",
+      "D": "natural language processing"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tác vụ nhận diện hình dạng của các chai nhựa và phân loại chúng dựa trên hình ảnh thu được từ camera của máy tái chế thuộc về nhóm Thị giác máy tính (Computer vision).\n\n- **A sai** vì Phát hiện bất thường dùng để nhận biết sự sai lệch trong chuỗi dữ liệu thời gian.\n- **B sai** vì Conversational AI dùng cho hội thoại.\n- **D sai** vì NLP dùng để xử lý ngôn ngữ tự nhiên.",
+    "references": []
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "You have a dataset that contains information about taxi journeys that occurred during a given period.You need to train a model to predict the fare of a taxi journey.What should you use as a feature?",
+    "options": {
+      "A": "the number of taxi journeys in the dataset",
+      "B": "the trip distance of individual taxi journeys",
+      "C": "the fare of individual taxi journeys",
+      "D": "the trip ID of individual taxi journeys"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong mô hình dự đoán giá cước (fare) của chuyến taxi, giá cước là biến mục tiêu cần dự đoán (nhãn - label). Khoảng cách chuyến đi (trip distance) là một thuộc tính đầu vào (đặc trưng - feature) có ảnh hưởng lớn và trực tiếp đến giá cước nên được dùng làm đặc trưng để huấn luyện mô hình.\n\n- **C sai** vì giá cước là nhãn cần dự đoán, không thể dùng làm đặc trưng đầu vào.\n- **A sai** vì tổng số chuyến đi là số liệu thống kê của cả tập dữ liệu chứ không phải đặc trưng cho mỗi chuyến đi đơn lẻ.\n- **D sai** vì ID của chuyến đi chỉ là thông tin định danh không mang giá trị quy luật toán học.",
+    "references": []
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "You need to develop a mobile app for employees to scan and store their expenses while travelling.Which type of computer vision should you use?",
+    "options": {
+      "A": "semantic segmentation",
+      "B": "image classification",
+      "C": "object detection",
+      "D": "optical character recognition (OCR)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Ứng dụng quét hóa đơn chi phí yêu cầu đọc và trích xuất văn bản, số tiền từ hóa đơn giấy thông qua camera điện thoại, đây là tác vụ cốt lõi của Nhận dạng ký tự quang học (Optical Character Recognition - OCR).\n\n- **A sai** vì Phân đoạn ngữ nghĩa phân chia ảnh theo pixel.\n- **B sai** vì Phân loại hình ảnh chỉ dán nhãn ảnh chứ không đọc chữ.\n- **C sai** vì Phát hiện vật thể chỉ xác định vị trí vật thể chứ không trích xuất văn bản.",
+    "references": []
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "Which metric can you use to evaluate a classification model?",
+    "options": {
+      "A": "true positive rate",
+      "B": "mean absolute error (MAE)",
+      "C": "coefficient of determination (R2)",
+      "D": "root mean squared error (RMSE)"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "True positive rate (tỷ lệ dương tính thật / Recall) là chỉ số đo lường tỷ lệ các mẫu dương tính được mô hình dự đoán chính xác, là độ đo cốt lõi dùng để đánh giá mô hình Phân loại (Classification).\n\n- **B, C và D sai** vì MAE, R2, và RMSE là các chỉ số đo lường sai số dành riêng cho mô hình Hồi quy (Regression).",
+    "references": []
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "Which two components can you drag onto a canvas in Azure Machine Learning designer? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "dataset",
+      "B": "compute",
+      "C": "pipeline",
+      "D": "module"
+    },
+    "answer": "AD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong giao diện thiết kế kéo thả Azure Machine Learning designer, hai thành phần chính mà người dùng kéo vào canvas là:\n- **A. dataset**: Tập dữ liệu làm đầu vào.\n- **D. module**: Các khối chức năng thực hiện tiền xử lý dữ liệu, thuật toán huấn luyện hoặc đánh giá mô hình.\n\n- **B sai** vì Compute là tài nguyên tính toán được thiết lập cấu hình chạy chứ không kéo thả trực tiếp lên canvas.\n- **C sai** vì Pipeline là tập hợp tất cả các thành phần được kết nối trên canvas.",
+    "references": []
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "You need to create a training dataset and validation dataset from an existing dataset.Which module in the Azure Machine Learning designer should you use?",
+    "options": {
+      "A": "Select Columns in Dataset",
+      "B": "Add Rows",
+      "C": "Split Data",
+      "D": "Join Data"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mô-đun **Split Data** trong Azure Machine Learning designer được thiết kế để phân chia tập dữ liệu đầu vào thành hai tập dữ liệu riêng biệt (ví dụ tập huấn luyện và tập kiểm định) theo tỷ lệ xác định trước.\n\n- **A sai** vì Select Columns dùng để lọc cột đặc trưng.\n- **B sai** vì Add Rows dùng để cộng thêm hàng từ nguồn khác.\n- **D sai** vì Join Data dùng để ghép nối các tập dữ liệu dựa trên một khóa chung.",
+    "references": []
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "You build a machine learning model by using the automated machine learning user interface (UI).You need to ensure that the model meets the Microsoft transparency principle for responsible AI.What should you do?",
+    "options": {
+      "A": "Set Validation type to Auto.",
+      "B": "Enable Explain best model.",
+      "C": "Set Primary metric to accuracy.",
+      "D": "Set Max concurrent iterations to 0."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nguyên tắc minh bạch (Transparency) của AI có trách nhiệm yêu cầu hệ thống phải cung cấp thông tin giúp người dùng hiểu cách thức mô hình đưa ra quyết định. Việc kích hoạt lựa chọn **Explain best model** sẽ tạo ra các báo cáo giải thích độ quan trọng của các đặc trưng (feature importance), giúp làm sáng tỏ quyết định của mô hình AutoML.\n\n- **A sai** vì Validation type quyết định phương pháp kiểm định chéo chứ không giải thích cách mô hình dự đoán.\n- **C sai** vì Primary metric để tối ưu hiệu năng chứ không tạo ra sự minh bạch.\n- **D sai** vì Max concurrent iterations dùng để cấu hình số tiến trình chạy song song.",
+    "references": []
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "You are designing an AI system that empowers everyone, including people who have hearing, visual, and other impairments.This is an example of which Microsoft guiding principle for responsible AI?",
+    "options": {
+      "A": "fairness",
+      "B": "inclusiveness",
+      "C": "reliability and safety",
+      "D": "accountability"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nguyên tắc **Tính bao trùm/toàn diện (inclusiveness)** của Microsoft hướng tới việc thiết kế và phát triển các hệ thống AI sao cho tất cả mọi người đều có thể tiếp cận và hưởng lợi ích, bất kể khả năng thể chất hay khiếm khuyết khác.\n\n- **A sai** vì Sự công bằng (fairness) tập trung vào tránh phân biệt đối xử và thiên vị.\n- **C sai** vì Độ tin cậy và an toàn (reliability and safety) yêu cầu hệ thống hoạt động chính xác và không gây hại.\n- **D sai** vì Trách nhiệm giải trình (accountability) yêu cầu con người chịu trách nhiệm về hoạt động của AI.",
+    "references": []
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "You need to predict the sea level in meters for the next 10 years.Which type of machine learning should you use?",
+    "options": {
+      "A": "classification",
+      "B": "regression",
+      "C": "clustering"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mực nước biển tính bằng mét (sea level in meters) là một giá trị số liên tục. Việc dự đoán một giá trị số liên tục cho tương lai thuộc về bài toán Hồi quy (Regression).\n\n- **A sai** vì Phân loại (Classification) dùng để dự đoán nhãn lớp rời rạc.\n- **C sai** vì Phân cụm (Clustering) dùng để tự động gom nhóm dữ liệu không có nhãn.",
+    "references": []
+  },
+  {
+    "id": 26,
+    "topic": 1,
+    "question": "You need to determine the location of cars in an image so that you can estimate the distance between the cars.Which type of computer vision should you use?",
+    "options": {
+      "A": "optical character recognition (OCR)",
+      "B": "object detection",
+      "C": "image classification",
+      "D": "face detection"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác định vị trí của từng chiếc xe ô tô (dưới dạng các hộp giới hạn bounding box) trong hình ảnh và từ đó tính toán khoảng cách giữa chúng, ta phải sử dụng kỹ thuật Phát hiện vật thể (Object detection).\n\n- **A sai** vì OCR dùng để đọc văn bản.\n- **C sai** vì Phân loại hình ảnh chỉ dán nhãn bức ảnh có xe hay không chứ không định vị vị trí cụ thể của từng xe.\n- **D sai** vì Phát hiện khuôn mặt chỉ áp dụng đối với người.",
+    "references": []
+  },
+  {
+    "id": 27,
+    "topic": 1,
+    "question": "You are developing a natural language processing solution in Azure. The solution will analyze customer reviews and determine how positive or negative each review is.This is an example of which type of natural language processing workload?",
+    "options": {
+      "A": "language detection",
+      "B": "sentiment analysis",
+      "C": "key phrase extraction",
+      "D": "entity recognition"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phân tích cảm xúc (Sentiment Analysis) là tác vụ xử lý ngôn ngữ tự nhiên giúp đánh giá các nhận xét, đánh giá của khách hàng để nhận biết thái độ biểu đạt bên trong là tích cực (positive) hay tiêu cực (negative).\n\n- **A sai** vì Phát hiện ngôn ngữ chỉ xác định tài liệu dùng tiếng nước nào.\n- **C sai** vì Trích xuất cụm từ khóa tìm ra các cụm từ quan trọng của tài liệu.\n- **D sai** vì Nhận dạng thực thể lọc các danh từ riêng như tên người, tổ chức.",
+    "references": []
+  },
+  {
+    "id": 28,
+    "topic": 1,
+    "question": "You are developing a solution that uses the Text Analytics service.You need to identify the main talking points in a collection of documents.Which type of natural language processing should you use?",
+    "options": {
+      "A": "entity recognition",
+      "B": "key phrase extraction",
+      "C": "sentiment analysis",
+      "D": "language detection"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để trích xuất các luận điểm chính hoặc từ khóa quan trọng (main talking points) từ một tập hợp các tài liệu văn bản lớn, ta sử dụng kỹ thuật Trích xuất cụm từ khóa (Key phrase extraction).\n\n- **A sai** vì Nhận dạng thực thể chỉ tìm kiếm tên riêng, địa điểm chứ không tổng hợp luận điểm thảo luận.\n- **C sai** vì Phân tích cảm xúc đánh giá thái độ vui/buồn của văn bản.\n- **D sai** vì Phát hiện ngôn ngữ xác định ngôn ngữ sử dụng.",
+    "references": []
+  },
+  {
+    "id": 29,
+    "topic": 1,
+    "question": "Which two scenarios are examples of a conversational AI workload? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "a telephone answering service that has a pre-recorder message",
+      "B": "a chatbot that provides users with the ability to find answers on a website by themselves",
+      "C": "telephone voice menus to reduce the load on human resources",
+      "D": "a service that creates frequently asked questions (FAQ) documents by crawling public websites"
+    },
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "AI hội thoại (Conversational AI) là ứng dụng cho phép máy tính tương tác đàm thoại hai chiều tự nhiên với con người qua giọng nói hoặc văn bản:\n- **B. Chatbot hỗ trợ tự động trên website**: Giúp người dùng trò chuyện và tìm kiếm câu trả lời một cách chủ động.\n- **C. Menu thoại tự động trên điện thoại**: Tích hợp nhận diện giọng nói tự động để hiểu ý kiến và phân loại cuộc gọi của người dùng nhằm giảm tải cho nhân viên.\n\n- **A sai** vì hộp thư trả lời tự động ghi âm sẵn tĩnh không có tương tác động của AI.\n- **D sai** vì việc tự động tạo tài liệu FAQ từ các trang web là tác vụ thu thập/khai thác tri thức, không phải hội thoại hai chiều.",
+    "references": []
+  },
+  {
+    "id": 30,
+    "topic": 1,
+    "question": "You need to provide content for a business chatbot that will help answer simple user queries.What are three ways to create question and answer text by using QnA Maker? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Generate the questions and answers from an existing webpage.",
+      "B": "Use automated machine learning to train a model based on a file that contains the questions.",
+      "C": "Manually enter the questions and answers.",
+      "D": "Connect the bot to the Cortana channel and ask questions by using Cortana.",
+      "E": "Import chit-chat content from a predefined data source."
+    },
+    "answer": "ACE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "QnA Maker của Azure hỗ trợ ba phương pháp chính để nạp và xây dựng cơ sở tri thức (Knowledge Base) câu hỏi và trả lời:\n- **A. Trích xuất tự động từ một trang web câu hỏi thường gặp (FAQ webpage)** có sẵn.\n- **C. Nhập thủ công các câu hỏi và câu trả lời (manually enter)** trực tiếp từ giao diện.\n- **E. Nhập dữ liệu trò chuyện tự do (chit-chat)** từ nguồn định nghĩa sẵn.\n\n- **B sai** vì AutoML dùng để huấn luyện mô hình dự đoán, không dùng để nạp câu hỏi cho QnA Maker.\n- **D sai** vì kết nối với kênh Cortana là để triển khai sử dụng bot chứ không phải phương pháp xây dựng nội dung câu hỏi trả lời cho bot.",
+    "references": []
+  },
+  {
+    "id": 31,
+    "topic": 1,
+    "question": "You have a frequently asked questions (FAQ) PDF file.You need to create a conversational support system based on the FAQ.Which service should you use?",
+    "options": {
+      "A": "QnA Maker",
+      "B": "Text Analytics",
+      "C": "Computer Vision",
+      "D": "Language Understanding (LUIS)"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "QnA Maker (nay đã được tích hợp vào Azure AI Language dưới tên gọi Custom Question Answering) là dịch vụ chuyên biệt để tạo hệ thống hỗ trợ đối thoại từ các nguồn tài liệu có sẵn như PDF FAQ, tệp Word hoặc trang web. Dịch vụ tự động trích xuất các cặp câu hỏi - trả lời.\n- Text Analytics: Dùng để phân tích văn bản (cảm xúc, thực thể, cụm từ khóa), không dùng để xây dựng hệ thống đối thoại.\n- Computer Vision: Dùng xử lý hình ảnh và video.\n- LUIS: Thiết kế để phân tích ý định và thực thể từ câu lệnh hội thoại phức tạp, không tự động trích xuất từ FAQ.",
+    "references": []
+  },
+  {
+    "id": 32,
+    "topic": 1,
+    "question": "You need to develop a web-based AI solution for a customer support system. Users must be able to interact with a web app that will guide them to the best resource or answer.Which service should you use?",
+    "options": {
+      "A": "Custom Vision",
+      "B": "QnA Maker",
+      "C": "Translator Text",
+      "D": "Face"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "QnA Maker là dịch vụ lý tưởng để tạo các giải pháp hỗ trợ khách hàng dựa trên web, giúp dẫn dắt người dùng tương tác đến tài nguyên hoặc câu trả lời tốt nhất trong cơ sở tri thức câu hỏi thường gặp.\n- Custom Vision: Phân loại hình ảnh hoặc phát hiện vật thể.\n- Translator Text: Dịch thuật văn bản.\n- Face: Nhận diện khuôn mặt.",
+    "references": []
+  },
+  {
+    "id": 33,
+    "topic": 1,
+    "question": "Which AI service should you use to create a bot from a frequently asked questions (FAQ) document?",
+    "options": {
+      "A": "QnA Maker",
+      "B": "Language Understanding (LUIS)",
+      "C": "Text Analytics",
+      "D": "Speech"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "QnA Maker được thiết kế riêng để tự động xây dựng cơ sở tri thức (knowledge base) và tạo chatbot hỏi đáp từ tài liệu câu hỏi thường gặp (FAQ) có sẵn.\n- LUIS: Dùng để phân tích ý định của người dùng.\n- Text Analytics: Trích xuất thông tin văn bản.\n- Speech: Chuyển đổi giọng nói - văn bản.",
+    "references": []
+  },
+  {
+    "id": 34,
+    "topic": 1,
+    "question": "You are building an AI system.Which task should you include to ensure that the service meets the Microsoft transparency principle for responsible AI?",
+    "options": {
+      "A": "Ensure that all visuals have an associated text that can be read by a screen reader.",
+      "B": "Enable autoscaling to ensure that a service scales based on demand.",
+      "C": "Provide documentation to help developers debug code.",
+      "D": "Ensure that a training dataset is representative of the population."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nguyên tắc Minh bạch (Transparency) của Microsoft yêu cầu hệ thống AI phải rõ ràng, dễ hiểu về nguyên lý hoạt động và các giới hạn. Việc cung cấp tài liệu chi tiết giúp lập trình viên hiểu và gỡ lỗi (debug) mã nguồn là một hành động thực thi tính minh bạch.\n- Lựa chọn A (văn bản thay thế cho hình ảnh) tương ứng với nguyên tắc Bao trùm (Inclusiveness).\n- Lựa chọn B liên quan đến mở rộng hệ thống (scaling).\n- Lựa chọn D (dữ liệu đại diện đầy đủ) thuộc nguyên tắc Công bằng (Fairness).",
+    "references": []
+  },
+  {
+    "id": 35,
+    "topic": 1,
+    "question": "What are three Microsoft guiding principles for responsible AI? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "knowledgeability",
+      "B": "decisiveness",
+      "C": "inclusiveness",
+      "D": "fairness",
+      "E": "opinionatedness",
+      "F": "reliability and safety"
+    },
+    "answer": "CDF",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sáu nguyên tắc AI có trách nhiệm của Microsoft bao gồm: Công bằng (Fairness), Độ tin cậy và An toàn (Reliability and safety), Quyền riêng tư và Bảo mật (Privacy and security), Tính bao trùm (Inclusiveness), Tính minh bạch (Transparency), và Trách nhiệm giải trình (Accountability).\n- Các đáp án đúng là C (inclusiveness), D (fairness) và F (reliability and safety). Các lựa chọn khác như knowledgeability, decisiveness, opinionatedness không nằm trong danh sách này.",
+    "references": []
+  },
+  {
+    "id": 36,
+    "topic": 1,
+    "question": "You run a charity event that involves posting photos of people wearing sunglasses on Twitter.You need to ensure that you only retweet photos that meet the following requirements:✑ Include one or more faces.✑ Contain at least one person wearing sunglasses.What should you use to analyze the images?",
+    "options": {
+      "A": "the Verify operation in the Face service",
+      "B": "the Detect operation in the Face service",
+      "C": "the Describe Image operation in the Computer Vision service",
+      "D": "the Analyze Image operation in the Computer Vision service"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phép toán Detect trong dịch vụ Face của Azure giúp phát hiện khuôn mặt người trong ảnh và trả về các thuộc tính như giới tính, tuổi tác và việc đeo kính (bao gồm kính râm/sunglasses). Do đó, nó đáp ứng đầy đủ yêu cầu tìm ảnh có khuôn mặt và có người đeo kính râm.\n- Verify: So sánh hai khuôn mặt xem có cùng một người hay không.\n- Describe Image/Analyze Image: Dùng cho ảnh tổng quát, không tối ưu và trả về thuộc tính chi tiết về kính trên khuôn mặt như dịch vụ Face chuyên biệt.",
+    "references": []
+  },
+  {
+    "id": 37,
+    "topic": 1,
+    "question": "When training a model, why should you randomly split the rows into separate subsets?",
+    "options": {
+      "A": "to train the model twice to attain better accuracy",
+      "B": "to train multiple models simultaneously to attain better performance",
+      "C": "to test the model by using data that was not used to train the model"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc chia ngẫu nhiên dữ liệu thành các phần riêng biệt (thông thường là tập huấn luyện và tập kiểm thử) giúp đánh giá mô hình bằng cách sử dụng dữ liệu độc lập chưa từng được dùng để huấn luyện, đảm bảo mô hình có khả năng tổng quát hóa tốt trên dữ liệu mới thực tế.\n- Các lựa chọn khác sai vì chia dữ liệu không phải để huấn luyện hai lần hay tăng hiệu năng xử lý đồng thời.",
+    "references": []
+  },
+  {
+    "id": 38,
+    "topic": 1,
+    "question": "In which two scenarios can you use the Form Recognizer service? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Extract the invoice number from an invoice.",
+      "B": "Translate a form from French to English.",
+      "C": "Find image of product in a catalog.",
+      "D": "Identify the retailer from a receipt."
+    },
+    "answer": "AD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Form Recognizer (Azure AI Document Intelligence) trích xuất văn bản, bảng biểu và cấu trúc cặp khóa-giá trị từ tài liệu:\n- A (Trích xuất số hóa đơn từ hóa đơn) là chức năng có sẵn của mô hình Invoice.\n- D (Xác định nhà bán lẻ từ biên lai) là chức năng của mô hình Receipt.\n- B (Dịch thuật) dùng Translator.\n- C (Tìm ảnh sản phẩm) dùng Computer Vision/Custom Vision.",
+    "references": []
+  },
+  {
+    "id": 39,
+    "topic": 1,
+    "question": "In which two scenarios can you use speech recognition? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "an in-car system that reads text messages aloud",
+      "B": "providing closed captions for recorded or live videos",
+      "C": "creating an automated public address system for a train station",
+      "D": "creating a transcript of a telephone call or meeting"
+    },
+    "answer": "BD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Speech recognition (Nhận dạng giọng nói / Speech-to-Text) chuyển đổi lời nói thành văn bản:\n- B: Tạo phụ đề cho video trực tiếp hoặc ghi hình cần chuyển lời nói thành văn bản.\n- D: Tạo bản ghi chép cuộc họp/cuộc gọi cũng chuyển âm thanh lời nói thành văn bản.\n- A và C là kịch bản của Speech synthesis (Tổng hợp giọng nói / Text-to-Speech) khi chuyển từ chữ viết sang giọng nói đọc lên.",
+    "references": []
+  },
+  {
+    "id": 40,
+    "topic": 1,
+    "question": "You need to build an app that will read recipe instructions aloud to support users who have reduced vision.Which version service should you use?",
+    "options": {
+      "A": "Text Analytics",
+      "B": "Translator",
+      "C": "Speech",
+      "D": "Language Understanding (LUIS)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để chuyển đổi văn bản hướng dẫn công thức nấu ăn thành giọng đọc âm thanh (Text-to-Speech), dịch vụ phù hợp nhất là Speech.\n- Text Analytics: Phân tích ngữ nghĩa văn bản.\n- Translator: Dịch thuật ngôn ngữ.\n- LUIS: Hiểu ý định của người dùng từ văn bản.",
+    "references": []
+  },
+  {
+    "id": 41,
+    "topic": 1,
+    "question": "Which scenario is an example of a webchat bot?",
+    "options": {
+      "A": "Determine whether reviews entered on a website for a concert are positive or negative, and then add a thumbs up or thumbs down emoji to the reviews.",
+      "B": "Translate into English questions entered by customers at a kiosk so that the appropriate person can call the customers back.",
+      "C": "Accept questions through email, and then route the email messages to the correct person based on the content of the message.",
+      "D": "From a website interface, answer common questions about scheduled events and ticket purchases for a music festival."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Webchat bot là ứng dụng hội thoại tích hợp trực tiếp trên giao diện trang web, cho phép người dùng nhập câu hỏi và nhận về phản hồi tự động lập tức. Lựa chọn D mô tả chính xác kịch bản này.\n- A là ứng dụng Phân tích cảm xúc.\n- B là ứng dụng Dịch thuật.\n- C là quy trình Phân loại/Định tuyến thư điện tử.",
+    "references": []
+  },
+  {
+    "id": 42,
+    "topic": 1,
+    "question": "A medical research project uses a large anonymized dataset of brain scan images that are categorized into predefined brain haemorrhage types.You need to use machine learning to support early detection of the different brain haemorrhage types in the images before the images are reviewed by a person.This is an example of which type of machine learning?",
+    "options": {
+      "A": "clustering",
+      "B": "regression",
+      "C": "classification"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nhiệm vụ yêu cầu phân loại hình ảnh chụp quét não vào các loại xuất huyết não đã được định nghĩa từ trước (dữ liệu có nhãn rời rạc). Đây là bài toán học có giám sát thuộc thể loại Phân loại (Classification).\n- Clustering: Gom nhóm dữ liệu chưa được dán nhãn.\n- Regression: Dự đoán giá trị số liên tục.",
+    "references": []
+  },
+  {
+    "id": 43,
+    "topic": 1,
+    "question": "You have the Predicted vs. True chart shown in the following exhibit.\nWhich type of model is the chart used to evaluate?",
+    "options": {
+      "A": "classification",
+      "B": "regression",
+      "C": "clustering"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Biểu đồ Predicted vs. True (Dự đoán so với Thực tế) là biểu đồ phân tán so sánh giá trị số mà mô hình dự đoán được với giá trị thực tế của tập dữ liệu. Biểu đồ này được thiết kế riêng để đánh giá mô hình Hồi quy (Regression).\n- Classification dùng ma trận nhầm lẫn (confusion matrix), ROC curve, v.v.\n- Clustering dùng các chỉ số như Silhouette score.",
+    "references": []
+  },
+  {
+    "id": 44,
+    "topic": 1,
+    "question": "You are evaluating whether to use a basic workspace or an enterprise workspace in Azure Machine Learning.What are two tasks that require an enterprise workspace? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Use a graphical user interface (GUI) to run automated machine learning experiments.",
+      "B": "Create a compute instance to use as a workstation.",
+      "C": "Use a graphical user interface (GUI) to define and run machine learning experiments from Azure Machine Learning designer.",
+      "D": "Create a dataset from a comma-separated value (CSV) file."
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Theo thiết kế phân hạng cũ của Azure Machine Learning:\n- Giao diện đồ họa để chạy các thí nghiệm học máy tự động (AutoML UI) (A) và Azure Machine Learning designer (C) là các tính năng kéo thả trực quan từng yêu cầu phiên bản Workspace Enterprise.\n- Việc tạo compute instance (B) hay tạo dataset từ file CSV (D) có thể thực hiện trên phiên bản Basic.",
+    "references": []
+  },
+  {
+    "id": 45,
+    "topic": 1,
+    "question": "You need to predict the income range of a given customer by using the following dataset.\nWhich two fields should you use as features? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Education Level",
+      "B": "Last Name",
+      "C": "Age",
+      "D": "Income Range",
+      "E": "First Name"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Feature (Đặc trưng) là các thuộc tính đầu vào hữu ích giúp mô hình học và dự đoán biến mục tiêu (ở đây là nhãn Income Range). Trình độ học vấn (Education Level - A) và Tuổi (Age - C) là hai yếu tố có tương quan logic cao nhất đối với thu nhập.\n- Tên riêng (First Name, Last Name) mang tính ngẫu nhiên, không đóng góp giá trị dự báo và dễ gây nhiễu dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 46,
+    "topic": 1,
+    "question": "You plan to develop a bot that will enable users to query a knowledge base by using natural language processing.Which two services should you include in the solution? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "QnA Maker",
+      "B": "Azure Bot Service",
+      "C": "Form Recognizer",
+      "D": "Anomaly Detector"
+    },
+    "answer": "AB",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xây dựng chatbot cho phép người dùng truy vấn cơ sở tri thức bằng ngôn ngữ tự nhiên, giải pháp cần tích hợp:\n- QnA Maker (A): Xây dựng kho dữ liệu câu hỏi - trả lời và trả về câu trả lời phù hợp nhất.\n- Azure Bot Service (B): Làm trung gian kết nối, quản lý hội thoại và phân phối chatbot lên các kênh giao tiếp.\n- Form Recognizer và Anomaly Detector không dùng cho mục đích này.",
+    "references": []
+  },
+  {
+    "id": 47,
+    "topic": 1,
+    "question": "You are developing a chatbot solution in Azure.Which service should you use to determine a user's intent?",
+    "options": {
+      "A": "Translator",
+      "B": "QnA Maker",
+      "C": "Speech",
+      "D": "Language Understanding (LUIS)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Language Understanding (LUIS) được thiết kế đặc biệt để phân tích các câu nói của người dùng nhằm xác định ý định (intent) của họ và trích xuất các thông tin thực thể (entity) cần thiết.\n- Translator: Dịch văn bản.\n- QnA Maker: Trả lời câu hỏi dựa trên độ tương đồng văn bản từ FAQ.\n- Speech: Chuyển đổi giọng nói thành văn bản hoặc ngược lại.",
+    "references": []
+  },
+  {
+    "id": 48,
+    "topic": 1,
+    "question": "You have a webchat bot that provides responses from a QnA Maker knowledge base.You need to ensure that the bot uses user feedback to improve the relevance of the responses over time.What should you use?",
+    "options": {
+      "A": "key phrase extraction",
+      "B": "sentiment analysis",
+      "C": "business logic",
+      "D": "active learning"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Active learning (Học chủ động) trong QnA Maker sử dụng các phản hồi hoặc cụm câu hỏi từ thực tế người dùng tương tác để gợi ý điều chỉnh, ghép nối câu hỏi tương đồng, giúp cải thiện độ chính xác và tính liên quan của câu trả lời theo thời gian.\n- Key phrase extraction, sentiment analysis, business logic không hỗ trợ khả năng tự đề xuất nâng cao cơ sở tri thức từ phản hồi người dùng.",
+    "references": []
+  },
+  {
+    "id": 49,
+    "topic": 1,
+    "question": "You are developing a conversational AI solution that will communicate with users through multiple channels including email, Microsoft Teams, and webchat.Which service should you use?",
+    "options": {
+      "A": "Text Analytics",
+      "B": "Azure Bot Service",
+      "C": "Translator",
+      "D": "Form Recognizer"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Bot Service là dịch vụ hỗ trợ phát triển và tích hợp chatbot lên nhiều kênh giao tiếp khác nhau như Microsoft Teams, email, webchat, v.v. thông qua một điểm kết nối thống nhất.\n- Các dịch vụ khác (Text Analytics, Translator, Form Recognizer) không có chức năng quản lý kênh kết nối đàm thoại.",
+    "references": []
+  },
+  {
+    "id": 50,
+    "topic": 1,
+    "question": "Which service should you use to extract text, key/value pairs, and table data automatically from scanned documents?",
+    "options": {
+      "A": "Form Recognizer",
+      "B": "Text Analytics",
+      "C": "Language Understanding",
+      "D": "Custom Vision"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Form Recognizer là dịch vụ chuyên biệt sử dụng máy học để tự động phân tích và trích xuất văn bản thô, cấu trúc bảng biểu cùng các cặp khóa-giá trị (key/value pairs) từ tài liệu quét hoặc ảnh tài liệu.\n- Text Analytics: Phân tích ngữ nghĩa văn bản đã số hóa.\n- Language Understanding: Hiểu ý định người dùng.\n- Custom Vision: Phân loại hình ảnh hoặc phát hiện vật thể tùy chỉnh.",
+    "references": []
+  },
+  {
+    "id": 51,
+    "topic": 1,
+    "question": "Which type of machine learning should you use to identify groups of people who have similar purchasing habits?",
+    "options": {
+      "A": "classification",
+      "B": "regression",
+      "C": "clustering"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bài toán gom nhóm người tiêu dùng có hành vi/thói quen mua sắm tương tự nhau mà không có nhãn định nghĩa sẵn là bài toán học không giám sát điển hình mang tên Phân cụm (Clustering).\n- Classification: Phân loại dữ liệu vào các nhóm đã biết trước.\n- Regression: Dự đoán giá trị số liên tục.",
+    "references": []
+  },
+  {
+    "id": 52,
+    "topic": 1,
+    "question": "When you design an AI system to assess whether loans should be approved, the factors used to make the decision should be explainable.This is an example of which Microsoft guiding principle for responsible AI?",
+    "options": {
+      "A": "transparency",
+      "B": "inclusiveness",
+      "C": "fairness",
+      "D": "privacy and security"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Nguyên tắc Minh bạch (Transparency) của Microsoft yêu cầu các mô hình AI phải có tính giải thích được (explainability) - người dùng hoặc chuyên gia phải hiểu rõ các yếu tố nào dẫn đến quyết định của hệ thống (ở đây là quyết định duyệt khoản vay).\n- Inclusiveness: Tính bao trùm.\n- Fairness: Tính công bằng.\n- Privacy and security: Quyền riêng tư và bảo mật.",
+    "references": []
+  },
+  {
+    "id": 53,
+    "topic": 1,
+    "question": "In which scenario should you use key phrase extraction?",
+    "options": {
+      "A": "identifying whether reviews of a restaurant are positive or negative",
+      "B": "generating captions for a video based on the audio track",
+      "C": "identifying which documents provide information about the same topics",
+      "D": "translating a set of documents from English to German"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trích xuất cụm từ khóa (Key phrase extraction) giúp lọc ra các từ/cụm từ quan trọng đại diện cho nội dung chính của văn bản. So sánh các từ khóa này giúp xác định những tài liệu nào cùng nói về một chủ đề (C).\n- A dùng Sentiment Analysis.\n- B dùng Speech-to-Text.\n- D dùng Translator.",
+    "references": []
+  },
+  {
+    "id": 54,
+    "topic": 1,
+    "question": "You have the process shown in the following exhibit.\nWhich type of AI solution is shown in the diagram?",
+    "options": {
+      "A": "a sentiment analysis solution",
+      "B": "a chatbot",
+      "C": "a machine learning model",
+      "D": "a computer vision application"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Quy trình trong hình thể hiện luồng tương tác đàm thoại đa kênh kết hợp xử lý ngôn ngữ tự nhiên để phản hồi cho người dùng, đây chính là quy trình hoạt động của một Chatbot (B).\n- Các lựa chọn còn lại chỉ là các cấu phần đơn lẻ, không đại diện cho quy trình đàm thoại khép kín.",
+    "references": []
+  },
+  {
+    "id": 55,
+    "topic": 1,
+    "question": "You are building an AI-based app.You need to ensure that the app uses the principles for responsible AI.Which two principles should you follow? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Implement an Agile software development methodology",
+      "B": "Implement a process of AI model validation as part of the software review process",
+      "C": "Establish a risk governance committee that includes members of the legal team, members of the risk management team, and a privacy officer",
+      "D": "Prevent the disclosure of the use of AI-based algorithms for automated decision making"
+    },
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để thực hiện nguyên tắc AI có trách nhiệm:\n- B (Xác thực mô hình AI trước khi phát hành): Đảm bảo tính tin cậy, an toàn và công bằng.\n- C (Thành lập ủy ban quản trị rủi ro đa ngành): Bảo đảm tính trách nhiệm giải trình và tuân thủ bảo mật.\n- A là quy trình phát triển Agile nói chung.\n- D vi phạm nguyên tắc Minh bạch (Transparency) khi che giấu việc sử dụng thuật toán tự động.",
+    "references": []
+  },
+  {
+    "id": 56,
+    "topic": 1,
+    "question": "What are two metrics that you can use to evaluate a regression model? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "coefficient of determination (R2)",
+      "B": "F1 score",
+      "C": "root mean squared error (RMSE)",
+      "D": "area under curve (AUC)",
+      "E": "balanced accuracy"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đánh giá mô hình hồi quy (Regression):\n- A (coefficient of determination - R2): Đo tỷ lệ phương sai của biến mục tiêu được giải thích bởi mô hình.\n- C (root mean squared error - RMSE): Đo sai số trung bình giữa dự đoán và thực tế.\n- B (F1 score), D (AUC), E (balanced accuracy) dùng để đánh giá mô hình phân loại (Classification).",
+    "references": []
+  },
+  {
+    "id": 57,
+    "topic": 1,
+    "question": "You use drones to identify where weeds grow between rows of crops to send an instruction for the removal of the weeds.This is an example of which type of computer vision?",
+    "options": {
+      "A": "object detection",
+      "B": "optical character recognition (OCR)",
+      "C": "scene segmentation"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Yêu cầu vừa nhận diện cỏ dại vừa xác định vị trí của chúng trên ảnh để gửi lệnh loại bỏ tương ứng với bài toán Phát hiện vật thể (Object detection).\n- OCR: Nhận dạng chữ viết.\n- Scene segmentation: Phân đoạn ảnh ở mức pixel, chi tiết hơn mức hộp giới hạn (bounding box) cần thiết trong bài toán này.",
+    "references": []
+  },
+  {
+    "id": 58,
+    "topic": 1,
+    "question": "You need to make the written press releases of your company available in a range of languages.Which service should you use?",
+    "options": {
+      "A": "Translator",
+      "B": "Text Analytics",
+      "C": "Speech",
+      "D": "Language Understanding (LUIS)"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để dịch các bản thông cáo báo chí bằng văn bản sang nhiều ngôn ngữ khác nhau, dịch vụ phù hợp nhất là Translator.\n- Text Analytics: Phân tích ngữ nghĩa văn bản.\n- Speech: Chuyển đổi giọng nói/văn bản.\n- LUIS: Xác định ý định câu lệnh.",
+    "references": []
+  },
+  {
+    "id": 59,
+    "topic": 1,
+    "question": "Your website has a chatbot to assist customers.You need to detect when a customer is upset based on what the customer types in the chatbot.Which type of AI workload should you use?",
+    "options": {
+      "A": "anomaly detection",
+      "B": "computer vision",
+      "C": "regression",
+      "D": "natural language processing"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Việc phát hiện cảm xúc (lo lắng, tức giận, vui vẻ) dựa trên văn bản nhập vào chatbot là nhiệm vụ phân tích cảm xúc (Sentiment Analysis), thuộc nhóm Xử lý ngôn ngữ tự nhiên (Natural Language Processing).\n- Anomaly detection: Phát hiện bất thường dữ liệu số.\n- Computer vision: Xử lý ảnh.\n- Regression: Dự đoán số liên tục.",
+    "references": []
+  },
+  {
+    "id": 60,
+    "topic": 1,
+    "question": "You need to develop a chatbot for a website. The chatbot must answer users' questions based on the information in the following documents:✑ A product troubleshooting guide in a Microsoft Word document✑ A frequently asked questions (FAQ) list on a webpageWhich service should you use to process the documents?",
+    "options": {
+      "A": "Azure Bot Service",
+      "B": "Language Understanding",
+      "C": "Text Analytics",
+      "D": "QnA Maker"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "QnA Maker là dịch vụ lý tưởng để nhập và xử lý các nguồn tài liệu đa dạng như tệp Word hướng dẫn xử lý sự cố và trang web FAQ nhằm tự động trích xuất kho tri thức câu hỏi - trả lời cho chatbot.\n- Azure Bot Service: Dùng kết nối chatbot với người dùng.\n- Language Understanding/Text Analytics: Không hỗ trợ tự động nạp tài liệu trích xuất FAQ.",
+    "references": []
+  },
+  {
+    "id": 61,
+    "topic": 1,
+    "question": "You build a QnA Maker bot by using a frequently asked questions (FAQ) page.You need to add professional greetings and other responses to make the bot more user friendly.What should you do?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Chit-chat (trò chuyện xã giao) là tính năng của QnA Maker (Language Service) cho phép tích hợp các câu chào hỏi, đối thoại thông thường với nhiều phong cách khác nhau (như chuyên nghiệp, thân thiện, hài hước), giúp chatbot phản hồi tự nhiên và thân thiện hơn với người dùng.\n- **A là sai**: Việc tăng ngưỡng tin cậy (confidence threshold) chỉ lọc bỏ các câu trả lời có độ tin cậy thấp, không giúp tạo lời chào hay phản hồi thân thiện.\n- **B là sai**: Active learning (học chủ động) được dùng để gợi ý các câu hỏi tương tự dựa trên phản hồi của người dùng để cải thiện độ chính xác của cơ sở tri thức.\n- **C là sai**: Multi-turn questions (câu hỏi đa lượt) dùng để dẫn dắt người dùng qua các bước hỏi đáp tiếp theo, không phải để thêm lời chào xã giao.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/qnamaker/how-to/chit-chat-knowledge-base"
+    ]
+  },
+  {
+    "id": 62,
+    "topic": 1,
+    "question": "You are building a Language Understanding model for an e-commerce business.You need to ensure that the model detects when utterances are outside the intended scope of the model.What should you do?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Intent \"None\" trong LUIS/CLU được sử dụng để xử lý các phát ngôn nằm ngoài phạm vi hoạt động của mô hình. Việc thêm các phát ngôn mẫu nằm ngoài phạm vi vào None intent giúp mô hình nhận diện chính xác các câu hỏi không liên quan thay vì dự đoán sai vào các intent nghiệp vụ khác.\n- **A là sai**: Kiểm thử mô hình bằng các câu nói mới chỉ giúp đánh giá chất lượng chứ không dạy cho mô hình cách phân loại các câu nằm ngoài phạm vi.\n- **C là sai**: Thực thể (entity) dùng để trích xuất thông tin chi tiết, không dùng để nhận diện câu ngoài phạm vi.\n- **D là sai**: Tạo mô hình mới không giải quyết được vấn đề cho mô hình hiện tại.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/luis/luis-concept-intent#none-intent"
+    ]
+  },
+  {
+    "id": 63,
+    "topic": 1,
+    "question": "You have insurance claim reports that are stored as text.You need to extract key terms from the reports to generate summaries.Which type of AI workload should you use?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Natural Language Processing (NLP - Xử lý ngôn ngữ tự nhiên) là phân hệ AI được sử dụng để xử lý, phân tích văn bản và trích xuất các từ khóa chính (key phrase extraction) từ văn bản báo cáo để tạo tóm tắt.\n- **B là sai**: Conversational AI (AI hội thoại) dùng cho chatbot hoặc hệ thống tương tác giọng nói/chữ với người dùng.\n- **C là sai**: Anomaly detection (Phát hiện bất thường) dùng để tìm kiếm các điểm dữ liệu bất thường trong dữ liệu chuỗi thời gian hoặc dữ liệu số.\n- **D là sai**: Computer vision (Thị giác máy tính) dùng để xử lý hình ảnh và video.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/key-phrase-extraction/overview"
+    ]
+  },
+  {
+    "id": 64,
+    "topic": 1,
+    "question": "In which two scenarios can you use a speech synthesis solution? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "AD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A và D là đúng**: Speech synthesis (Tổng hợp giọng nói - Text-to-Speech) chuyển đổi văn bản thành âm thanh nói. Đọc lại số thẻ tín dụng (A) và nhân vật AI trong game tự động nói chuyện (D) đều là chuyển đổi văn bản/dữ liệu thành giọng nói.\n- **B là sai**: Tạo phụ đề trực tiếp (captions) là Speech-to-text (chuyển giọng nói thành văn bản).\n- **C là sai**: Trích xuất cụm từ khóa từ âm thanh ghi âm yêu cầu Speech-to-text sau đó dùng NLP trích xuất từ khóa, không phải Speech synthesis.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/text-to-speech"
+    ]
+  },
+  {
+    "id": 65,
+    "topic": 1,
+    "question": "You are building a knowledge base by using QnA Maker.Which file format can you use to populate the knowledge base?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: QnA Maker/Language Service hỗ trợ các định dạng tệp FAQ phổ biến để nhập dữ liệu bao gồm .pdf, .docx, .xlsx, .txt, .tsv. Do đó PDF là lựa chọn chính xác.\n- **A, B, C là sai**: Các định dạng PPTX (PowerPoint), XML, và ZIP không được hỗ trợ trực tiếp để tạo nguồn dữ liệu cho cơ sở tri thức QnA Maker.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/qnamaker/concepts/content-types"
+    ]
+  },
+  {
+    "id": 66,
+    "topic": 1,
+    "question": "You use Azure Machine Learning designer to publish an inference pipeline.Which two parameters should you use to access the web service? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "CD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C và D là đúng**: Khi xuất bản một inference pipeline (quy trình suy luận) trong Azure Machine Learning designer thành một dịch vụ web (web service), bạn cần REST endpoint (đường dẫn URL dịch vụ) để gửi yêu cầu và authentication key (khóa xác thực) để được cấp quyền truy cập.\n- **A là sai**: Tên mô hình (model name) không đủ để truy cập dịch vụ web từ xa.\n- **B là sai**: Training endpoint được dùng cho quá trình huấn luyện lại, không dùng để truy cập dịch vụ suy luận.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-designer-automobile-price-deploy"
+    ]
+  },
+  {
+    "id": 67,
+    "topic": 1,
+    "question": "You need to reduce the load on telephone operators by implementing a chatbot to answer simple questions with predefined answers.Which two AI services should you use to achieve the goal? Each correct answers presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B và C là đúng**: Để triển khai một chatbot trả lời các câu hỏi đơn giản có sẵn:\n  - Language Service (hoặc QnA Maker trước đây) được sử dụng để xây dựng và quản lý cơ sở tri thức câu hỏi thường gặp (predefined answers).\n  - Azure Bot Service được sử dụng để tạo khung giao tiếp kết nối cơ sở tri thức này với các kênh liên lạc (như điện thoại, chat).\n- **A là sai**: Azure Machine Learning dùng để xây dựng các mô hình máy học tùy chỉnh phức tạp, không cần thiết cho chatbot câu hỏi thường gặp.\n- **D là sai**: Translator dùng để dịch thuật ngôn ngữ, không phải dịch vụ tạo bot hỏi đáp.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/question-answering/overview"
+    ]
+  },
+  {
+    "id": 68,
+    "topic": 1,
+    "question": "Which two actions are performed during the data ingestion and data preparation stage of an Azure Machine Learning process? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "CE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C và E là đúng**: Giai đoạn thu nhận dữ liệu (data ingestion) và chuẩn bị dữ liệu (data preparation) bao gồm các công việc làm sạch và biến đổi dữ liệu.\n  - Kết hợp nhiều tập dữ liệu (C) là việc tích hợp dữ liệu từ nhiều nguồn.\n  - Loại bỏ các bản ghi bị thiếu giá trị (E) là một kỹ thuật làm sạch dữ liệu cơ bản.\n- **A, B là sai**: Đánh giá độ chính xác (A) và chấm điểm dữ liệu kiểm thử (B) là các bước thuộc giai đoạn huấn luyện và đánh giá mô hình.\n- **D là sai**: Sử dụng mô hình cho dự đoán thời gian thực là giai đoạn triển khai và vận hành (deployment).",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-data-ingestion-and-preparation"
+    ]
+  },
+  {
+    "id": 69,
+    "topic": 1,
+    "question": "You need to predict the animal population of an area.Which Azure Machine Learning type should you use?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Dự đoán số lượng cá thể động vật trong một khu vực là dự đoán một giá trị số liên tục (continuous numeric value). Đây là bài toán hồi quy (Regression).\n- **B là sai**: Clustering (Phân cụm) được dùng để nhóm các điểm dữ liệu tương đồng mà không có nhãn trước.\n- **C là sai**: Classification (Phân loại) dùng để dự đoán nhãn danh mục rời rạc (ví dụ: loài động vật nào).",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/regression"
+    ]
+  },
+  {
+    "id": 70,
+    "topic": 1,
+    "question": "Which two languages can you use to write custom code for Azure Machine Learning designer? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "AB",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A và B là đúng**: Azure Machine Learning designer cung cấp các mô-đun mã tùy chỉnh để người dùng viết mã riêng, đó là \"Execute Python Script\" và \"Execute R Script\". Vì vậy, Python và R là hai ngôn ngữ được hỗ trợ.\n- **C và D là sai**: C# và Scala không được hỗ trợ để viết mã trực tiếp trong các mô-đun mã tùy chỉnh của designer.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/execute-python-script"
+    ]
+  },
+  {
+    "id": 71,
+    "topic": 1,
+    "question": "You send an image to a Computer Vision API and receive back the annotated image shown in the exhibit.\nWhich type of computer vision was used?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Object detection (Phát hiện đối tượng) là tác vụ thị giác máy tính giúp xác định vị trí của các đối tượng trong ảnh, vẽ hộp bao (bounding box) quanh chúng và gắn nhãn cho từng đối tượng (ảnh được chú thích - annotated image).\n- **B là sai**: Face detection chỉ phát hiện khuôn mặt người, không phát hiện các đối tượng khác.\n- **C là sai**: OCR dùng để trích xuất văn bản từ hình ảnh.\n- **D là sai**: Image classification chỉ phân loại toàn bộ bức ảnh thuộc danh mục nào mà không chỉ ra vị trí và hộp bao của từng đối tượng.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-object-detection"
+    ]
+  },
+  {
+    "id": 72,
+    "topic": 1,
+    "question": "You have an AI solution that provides users with the ability to control smart devices by using verbal commands.Which two types of natural language processing (NLP) workloads does the solution use? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "CD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C và D là đúng**: Hệ thống điều khiển thiết bị thông minh bằng giọng nói cần thực hiện hai tác vụ NLP chính:\n  - Speech-to-text (C): Chuyển câu lệnh giọng nói của người dùng thành văn bản.\n  - Language modeling / Language understanding (D): Phân tích văn bản lệnh đó để hiểu ý định (intent) và thực thể (entity) cần điều khiển.\n- **A là sai**: Text-to-speech dùng để phát giọng nói từ văn bản, không dùng để nhận lệnh.\n- **B là sai**: Key phrase extraction chỉ trích xuất từ khóa chính, không đủ để phân tích ý định hành động của câu lệnh.\n- **E là sai**: Translation dùng để dịch thuật giữa các ngôn ngữ, không liên quan đến việc hiểu lệnh điều khiển.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/speech-to-text"
+    ]
+  },
+  {
+    "id": 73,
+    "topic": 1,
+    "question": "You have an Azure Machine Learning pipeline that contains a Split Data module.The Split Data module outputs to a Train Model module and a Score Model module.What is the function of the Split Data module?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Mô-đun Split Data (Chia tách dữ liệu) trong Azure Machine Learning pipeline được sử dụng để phân chia tập dữ liệu đầu vào thành hai tập dữ liệu riêng biệt: một tập dùng để huấn luyện mô hình (Training dataset) truyền vào Train Model, và một tập dùng để đánh giá/kiểm thử mô hình (Validation/Testing dataset) truyền vào Score Model.\n- **A là sai**: Việc chuẩn hóa/tỷ lệ hóa biến số là nhiệm vụ của mô-đun Normalize Data.\n- **C là sai**: Xử lý dữ liệu thiếu được thực hiện bởi mô-đun Clean Missing Data.\n- **D là sai**: Chọn cột được thực hiện bởi mô-đun Select Columns in Dataset.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/split-data"
+    ]
+  },
+  {
+    "id": 74,
+    "topic": 1,
+    "question": "Which two scenarios are examples of a natural language processing workload? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B và C là đúng**: Các tác vụ xử lý ngôn ngữ tự nhiên (NLP) liên quan đến việc hiểu hoặc tạo ra ngôn ngữ của con người.\n  - Kịch bản B: Thiết bị thông minh hiểu câu hỏi thời tiết và trả lời bằng giọng nói/văn bản.\n  - Kịch bản C: Website sử dụng cơ sở tri thức để trò chuyện và trả lời người dùng.\n- **A là sai**: Đây là bài toán giám sát nhiệt độ dựa trên ngưỡng (rule-based hoặc anomaly detection).\n- **D là sai**: Đây là tác vụ của robot công nghiệp kết hợp thị giác máy tính để lắp ráp bộ phận, không liên quan đến ngôn ngữ tự nhiên.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/overview"
+    ]
+  },
+  {
+    "id": 75,
+    "topic": 1,
+    "question": "Which statement is an example of a Microsoft responsible AI principle?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: \"Transparency\" (Minh bạch) và \"Inclusiveness\" (Bao trùm) là hai trong số sáu nguyên tắc AI có trách nhiệm (Responsible AI) của Microsoft. Nguyên tắc minh bạch yêu cầu hệ thống AI phải dễ hiểu, còn bao trùm yêu cầu hệ thống AI phải tiếp cận và mang lại lợi ích cho tất cả mọi người.\n- **A, C, D là sai**: Các phát biểu này không thuộc các nguyên tắc Responsible AI của Microsoft. AI có trách nhiệm tôn trọng quyền riêng tư cá nhân (không công khai thông tin cá nhân) và hướng tới lợi ích cộng đồng chứ không chỉ bảo vệ lợi ích công ty.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 76,
+    "topic": 1,
+    "question": "You are authoring a Language Understanding (LUIS) application to support a music festival.You want users to be able to ask questions about scheduled shows, such as:Which act is playing on the main stage?The questionWhich act is playing on the main stage?is an example of which type of element?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Utterance (phát ngôn) là câu nói/đoạn văn bản đầu vào mà người dùng nhập vào ứng dụng LUIS/CLU để hệ thống phân tích. Ví dụ: \"Which act is playing on the main stage?\".\n- **A là sai**: Intent (Ý định) là mục đích của câu nói (ví dụ: tìm kiếm lịch diễn).\n- **D là sai**: Entity (Thực thể) là các thông tin chi tiết trong câu nói (ví dụ: \"main stage\" là địa điểm sân khấu).\n- **C là sai**: Domain không phải là một thành phần cơ bản trong định nghĩa câu nói của LUIS.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/luis/luis-concept-utterance"
+    ]
+  },
+  {
+    "id": 77,
+    "topic": 1,
+    "question": "In a machine learning model, the data that is used as inputs are called ________.\nSelect the answer that correctly completes the sentence.",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Trong một mô hình máy học, các dữ liệu đầu vào dùng để dự đoán nhãn được gọi là các biến số (variables - cụ thể là biến độc lập hay các đặc trưng/features).\n- **A là sai**: Dataset (Tập dữ liệu) là toàn bộ tập hợp các mẫu dữ liệu bao gồm cả đầu vào và đầu ra.\n- **B là sai**: Labels (Nhãn) là dữ liệu đầu ra/kết quả cần dự đoán của mô hình.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-automated-ml"
+    ]
+  },
+  {
+    "id": 78,
+    "topic": 1,
+    "question": "You have a natural language processing (NLP) model that was created by using data obtained without permission.\nWhich Microsoft principle for responsible AI does this breach?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Việc thu thập và sử dụng dữ liệu cá nhân hoặc dữ liệu của người khác mà không có sự cho phép (without permission) vi phạm trực tiếp nguyên tắc \"Privacy and Security\" (Quyền riêng tư và Bảo mật) của Microsoft, yêu cầu các hệ thống AI phải tuân thủ luật pháp về quyền riêng tư và bảo vệ thông tin người dùng.\n- **A là sai**: Reliability and safety liên quan đến độ tin cậy và vận hành an toàn của hệ thống.\n- **C là sai**: Inclusiveness liên quan đến việc không loại trừ bất kỳ nhóm người dùng nào.\n- **D là sai**: Transparency liên quan đến việc giải thích cách hoạt động của mô hình.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 79,
+    "topic": 1,
+    "question": "You have a website that includes customer reviews.\nYou need to store the reviews in English and present the reviews to users in their respective language by recognizing each user's geographical location.\nWhich type of natural language processing workload should you use?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Yêu cầu tự động nhận diện vị trí địa lý của người dùng và chuyển đổi (dịch) các đánh giá từ tiếng Anh sang ngôn ngữ tương ứng của họ là một tác vụ dịch thuật (Translation).\n- **A là sai**: Key phrase extraction dùng để trích xuất các từ khóa quan trọng.\n- **B là sai**: Speech recognition dùng để chuyển đổi giọng nói thành văn bản.\n- **C là sai**: Language modeling dùng để hiểu ý định hoặc cấu trúc câu văn bản.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/translator/translator-overview"
+    ]
+  },
+  {
+    "id": 80,
+    "topic": 1,
+    "question": "During the process of Machine Learning, when should you review evaluation metrics.",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Các chỉ số đánh giá mô hình (evaluation metrics) được tính toán và xem xét sau khi mô hình đã được huấn luyện xong và được chạy thử nghiệm (kiểm thử/test) trên dữ liệu xác thực (validation data) để xem mô hình hoạt động tốt đến mức nào.\n- **A, B, C là sai**: Bạn không thể đánh giá hiệu suất của mô hình trước khi huấn luyện (A), sau khi làm sạch dữ liệu nhưng chưa có mô hình (B), hoặc trước khi chọn thuật toán mô hình (C).",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/how-to-understand-automated-ml#classification-metrics"
+    ]
+  },
+  {
+    "id": 81,
+    "topic": 1,
+    "question": "You have a solution that analyzes social media posts to extract the mentions of city names and the city names discussed most frequently.\nWhich type of natural language processing (NLP) workload does the solution use?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Entity recognition (Nhận dạng thực thể) được sử dụng để xác định và phân loại các thực thể cụ thể trong văn bản như tên người, tổ chức, ngày tháng, và địa điểm (ở đây là tên thành phố - city names).\n- **A là sai**: Speech recognition chuyển giọng nói thành văn bản.\n- **B là sai**: Sentiment analysis phân tích cảm xúc (tích cực/tiêu cực) của văn bản.\n- **C là sai**: Key phrase extraction trích xuất các cụm từ quan trọng đại diện cho nội dung chính, không tập trung vào phân loại thực thể cụ thể như tên thành phố.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/named-entity-recognition/overview"
+    ]
+  },
+  {
+    "id": 82,
+    "topic": 1,
+    "question": "Your company manufactures widgets.\nYou have 1,000 digital photos of the widgets.\nYou need to identify the location of the widgets within the photos.\nWhat should you use?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**:\n  - Để xác định vị trí của đối tượng trong ảnh (vẽ bounding box quanh widget), ta cần sử dụng Object Detection (Phát hiện đối tượng).\n  - Vì widget là sản phẩm riêng của công ty (không có sẵn trong thư viện chung của mô hình pre-trained), ta cần huấn luyện một mô hình tùy chỉnh bằng Custom Vision. Do đó, \"Custom Vision object detection\" là lựa chọn chính xác.\n- **A là sai**: Spatial Analysis dùng để phân tích không gian/chuyển động của con người trong các khu vực vật lý qua video.\n- **C là sai**: Image Analysis của Computer Vision cung cấp phân tích chung với các đối tượng phổ biến có sẵn, không tối ưu cho sản phẩm đặc thù của doanh nghiệp.\n- **D là sai**: Custom Vision classification chỉ phân loại xem ảnh có chứa widget hay không chứ không xác định vị trí của widget trong ảnh.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/custom-vision-service/get-started-build-detector"
+    ]
+  },
+  {
+    "id": 83,
+    "topic": 1,
+    "question": "You need to convert handwritten notes into digital text.\nWhich type of computer vision should you use?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Optical Character Recognition (OCR - Nhận dạng ký tự quang học) là công nghệ chuyên dụng để phát hiện và trích xuất chữ viết tay (handwritten notes) hoặc chữ in từ hình ảnh thành văn bản số.\n- **A, C, D là sai**: Các tác vụ này (phát hiện khuôn mặt, phân loại ảnh, phát hiện đối tượng) không dùng để chuyển văn bản trong ảnh thành ký tự số.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-ocr"
+    ]
+  },
+  {
+    "id": 84,
+    "topic": 1,
+    "question": "You need to implement a pre-built solution that will identify well-known brands in digital photographs.\nWhich Azure Cognitive Services service should you use?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Azure Computer Vision (hiện nay là Azure AI Vision) cung cấp một mô hình phân tích ảnh được huấn luyện sẵn (pre-built) có khả năng nhận diện hàng ngàn thương hiệu nổi tiếng toàn cầu (brands) trong các bức ảnh kỹ thuật số.\n- **A là sai**: Custom Vision yêu cầu người dùng tự huấn luyện mô hình của riêng họ.\n- **B là sai**: Form Recognizer dùng để phân tích tài liệu, biểu mẫu hóa đơn.\n- **C là sai**: Face chuyên dùng cho phân tích khuôn mặt.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-brand-detection"
+    ]
+  },
+  {
+    "id": 85,
+    "topic": 1,
+    "question": "Natural language processing can be used to __________.\nSelect the answer that correctly completes the sentence.",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Phân loại email thành email công việc (work-related) hoặc cá nhân (personal) là một ứng dụng phân loại văn bản (text classification), thuộc lĩnh vực Xử lý ngôn ngữ tự nhiên (NLP).\n- **A và D là sai**: Phân tích nội dung video và phân loại hình ảnh thuộc lĩnh vực Thị giác máy tính (Computer Vision).\n- **B là sai**: Tạo giọng nói từ văn bản là tác vụ Speech synthesis (Tổng hợp giọng nói), thường được phân loại vào Speech workload.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/custom-text-classification/overview"
+    ]
+  },
+  {
+    "id": 86,
+    "topic": 1,
+    "question": "You need to create a model that labels a collection of your personal digital photographs.\nWhich Azure Cognitive Services service should you use?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Để gán nhãn tùy chỉnh cho một bộ sưu tập ảnh cá nhân (personal digital photographs), bạn cần huấn luyện một bộ phân loại hình ảnh với các nhãn do chính bạn định nghĩa. Azure Custom Vision là dịch vụ cho phép bạn dễ dàng tải ảnh lên, gắn nhãn tùy chỉnh và huấn luyện mô hình phân loại ảnh của riêng mình.\n- **A là sai**: Form Recognizer dùng để trích xuất thông tin từ biểu mẫu/tài liệu giấy.\n- **C là sai**: Language là dịch vụ xử lý ngôn ngữ tự nhiên.\n- **D là sai**: Computer Vision cung cấp mô hình gán nhãn được xây dựng sẵn (generic tags), không thể tùy chỉnh theo nhãn cá nhân của bạn.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/custom-vision-service/overview"
+    ]
+  },
+  {
+    "id": 87,
+    "topic": 1,
+    "question": "You have a dataset.\nYou need to build an Azure Machine Learning classification model that will identify defective products.\nWhat should you do first?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Bước đầu tiên trong quy trình xây dựng bất kỳ mô hình học máy nào trên Azure Machine Learning (và khoa học dữ liệu nói chung) là tải tập dữ liệu (Load the dataset). Bạn không thể thực hiện các bước khác như chia tách dữ liệu hay huấn luyện nếu không có dữ liệu đầu vào.\n- **B là sai**: Clustering là bài toán học không giám sát, ở đây bài toán yêu cầu phát hiện sản phẩm lỗi (Defective products) là phân loại (classification).\n- **C và D là sai**: Các bước chia tách dữ liệu và tạo mô hình phân loại chỉ có thể thực hiện sau khi đã tải dữ liệu vào hệ thống.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-designer"
+    ]
+  },
+  {
+    "id": 88,
+    "topic": 1,
+    "question": "You are processing photos of runners in a race.You need to read the numbers on the runners' shirts to identity the runners in the photos.Which type of computer vision should you use?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Việc đọc/trích xuất các số (kí tự số) trên áo của các vận động viên từ hình ảnh là tác vụ nhận diện văn bản từ ảnh. Do đó ta cần sử dụng công nghệ Nhận dạng ký tự quang học (OCR).\n- **A là sai**: Facial recognition dùng để nhận diện danh tính khuôn mặt.\n- **C là sai**: Image classification chỉ giúp phân loại ảnh (ví dụ: ảnh chạy bộ).\n- **D là sai**: Object detection giúp xác định vị trí của vận động viên/áo thun nhưng không trích xuất ký tự chữ số ghi trên đó.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-ocr"
+    ]
+  },
+  {
+    "id": 89,
+    "topic": 1,
+    "question": "Which Computer Vision feature can you use to generate automatic captions for digital photographs?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Tính năng \"Describe Image\" (Mô tả hình ảnh) của Azure Computer Vision cho phép tạo ra một câu mô tả/chú thích (caption) tự động bằng ngôn ngữ tự nhiên mô tả các đối tượng và bối cảnh được tìm thấy trong bức ảnh.\n- **A là sai**: Recognize text dùng để đọc chữ trong ảnh.\n- **B là sai**: Identify the areas of interest tìm kiếm các vùng ảnh nổi bật để cắt (crop).\n- **C là sai**: Detect objects chỉ xác định danh sách các đối tượng và vị trí của chúng.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-describing-images"
+    ]
+  },
+  {
+    "id": 90,
+    "topic": 1,
+    "question": "Which AI service can you use to interpret the meaning of a user input such asCall me back later?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: LUIS (Language Understanding - nay là Conversational Language Understanding trong Azure AI Language) được thiết kế đặc biệt để phân tích các câu thoại đầu vào tự nhiên từ người dùng (như \"Call me back later\") nhằm hiểu được ý định/ý nghĩa (intent - ví dụ: \"Yêu cầu gọi lại\") và trích xuất các thực thể (entities).\n- **A là sai**: Translator dùng để dịch thuật ngôn ngữ.\n- **B là sai**: Text Analytics dùng để phân tích cảm xúc, trích xuất từ khóa chung, không tập trung vào phân tích ý định hành động (intent) của câu thoại.\n- **C là sai**: Speech dùng để chuyển giọng nói sang văn bản hoặc ngược lại, không có nhiệm vụ phân tích ý nghĩa văn bản ngữ nghĩa.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/luis/what-is-luis"
+    ]
+  },
+  {
+    "id": 91,
+    "topic": 1,
+    "question": "An app that analyzes social media posts to identify their tone is an example of which type of natural language processing (NLP) workload?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Phân tích cảm xúc (Sentiment Analysis) là một tác vụ trong NLP được sử dụng để xác định thái độ, cảm xúc hoặc giọng điệu (tone) của người viết (ví dụ: tích cực, tiêu cực, trung lập) thông qua văn bản viết trên mạng xã hội.\n- **B là sai**: Nhận dạng giọng nói (speech recognition) chuyển đổi giọng nói nói trực tiếp thành văn bản.\n- **C là sai**: Trích xuất cụm từ khóa (key phrase extraction) xác định các khái niệm hoặc chủ đề chính trong văn bản, không xác định tông giọng/cảm xúc.\n- **D là sai**: Nhận dạng thực thể (entity recognition) xác định và phân loại các thực thể cụ thể (như ngày tháng, địa điểm, tên người) trong văn bản.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/sentiment-opinion-mining/overview"
+    ]
+  },
+  {
+    "id": 92,
+    "topic": 1,
+    "question": "Predicting how many vehicles will travel across a bridge on a give day is an example of _______.\nSelect the answer that correctly completes the sentence.",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Dự đoán số lượng phương tiện di chuyển qua cầu (một giá trị số liên tục - continuous numeric value) là bài toán hồi quy (Regression).\n- **B là sai**: Dịch thuật (translation) chuyển đổi văn bản từ ngôn ngữ này sang ngôn ngữ khác.\n- **C là sai**: Phân loại (classification) dự đoán nhãn danh mục rời rạc (ví dụ: có ùn tắc hay không).\n- **D là sai**: Phân cụm (clustering) dùng để nhóm các điểm dữ liệu tương tự nhau mà không cần nhãn từ trước.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/regression"
+    ]
+  },
+  {
+    "id": 93,
+    "topic": 1,
+    "question": "You are developing a system to predict the prices of insurance for drivers in the United Kingdom.\nYou need to minimize bias in the system.\nWhat should you do?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Để giảm thiểu sự sai lệch (bias) và đảm bảo tính công bằng cho mô hình dự đoán giá bảo hiểm tại Anh, tập dữ liệu huấn luyện cần phải mang tính đại diện cho toàn bộ dân số tại Vương quốc Anh (United Kingdom).\n- **A là sai**: Việc chỉ loại bỏ các đặc trưng được bảo vệ (như giới tính, tuổi tác) không đảm bảo loại bỏ được bias nếu dữ liệu huấn luyện vẫn không mang tính đại diện, hoặc các đặc trưng khác có mối tương quan mạnh với các thuộc tính bị loại bỏ.\n- **C là sai**: Dữ liệu từ các nhà bảo hiểm toàn cầu có thể không phản ánh đúng hành vi và phân bố của tài xế tại Anh, thậm chí làm tăng bias.\n- **D là sai**: Lấy mẫu ngẫu nhiên hoàn toàn có thể bỏ sót các nhóm thiểu số nếu không được thiết kế lấy mẫu phân tầng đại diện.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 94,
+    "topic": 1,
+    "question": "You need to track multiple versions of a model that was trained by using Azure Machine Learning.\nWhat should you do?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Đăng ký mô hình (Register the model) trong Azure Machine Learning cho phép bạn lưu trữ, quản lý phiên bản (versioning) và theo dõi siêu dữ liệu của các mô hình đã được huấn luyện trong không gian làm việc (workspace).\n- **A là sai**: Giải thích mô hình (Explain the model) giúp hiểu cách mô hình đưa ra dự đoán, không liên quan đến theo dõi phiên bản.\n- **C là sai**: Đăng ký dữ liệu huấn luyện (Register the training data) theo dõi phiên bản của tập dữ liệu, không phải của mô hình.\n- **D là sai**: Cung cấp cụm suy luận (Provision an inference cluster) là thiết lập tài nguyên tính toán để triển khai mô hình để dự đoán, không dùng để quản lý phiên bản.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-model-management-and-deployment#register-the-model"
+    ]
+  },
+  {
+    "id": 95,
+    "topic": 1,
+    "question": "You are building a chatbot that will use natural language processing (NLP) to perform the following actions based on the text input of a user.\n• Accept customer orders.• Retrieve support documents.• Retrieve order status updates.\nWhich type of NLP should you use?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Mô hình hóa ngôn ngữ / Hiểu ngôn ngữ (Language modeling / Language understanding) là kỹ thuật NLP được dùng để phân tích ngữ nghĩa, phân loại ý định (intent classification) của người dùng (như đặt hàng, truy vấn tài liệu, kiểm tra trạng thái đơn hàng) nhằm điều hướng chatbot thực hiện hành động chính xác.\n- **A là sai**: Phân tích cảm xúc (sentiment analysis) chỉ xác định tông giọng tích cực hay tiêu cực, không phân loại ý định hành động.\n- **B là sai**: Nhận dạng thực thể có tên (named entity recognition) trích xuất các từ cụ thể như tên riêng, mã đơn hàng, không giúp hiểu ý định tổng thể của câu.\n- **C là sai**: Dịch thuật (translation) chỉ chuyển đổi ngôn ngữ, không xử lý phân tích ý định để thực hiện tác vụ.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/conversational-language-understanding/overview"
+    ]
+  },
+  {
+    "id": 96,
+    "topic": 1,
+    "question": "You need to create a customer support solution to help customers access information. The solution must support email, phone, and live chat channels.\nWhich type of Al solution should you use?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Chatbot (hoặc AI hội thoại) là giải pháp phù hợp nhất để xây dựng hệ thống hỗ trợ khách hàng đa kênh (email, điện thoại, live chat) giúp tự động trả lời câu hỏi và hướng dẫn khách hàng truy cập thông tin.\n- **A là sai**: Máy học (machine learning) là nền tảng công nghệ chung, không phải là một giải pháp ứng dụng cụ thể cho tương tác đa kênh.\n- **B là sai**: Thị giác máy tính (computer vision) dùng để xử lý hình ảnh và video.\n- **D là sai**: Xử lý ngôn ngữ tự nhiên (NLP) là công nghệ thành phần giúp hiểu ngôn ngữ, trong khi chatbot mới là giải pháp hoàn chỉnh tích hợp được trên nhiều kênh giao tiếp.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/conversational-ai"
+    ]
+  },
+  {
+    "id": 97,
+    "topic": 1,
+    "question": "You have a dataset that contains the columns shown in the following table.\nYou have a machine learning model that predicts the value of ColumnE based on the other numeric columns.\nWhich type of model is this?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Do mô hình dự đoán giá trị của ColumnE (được mô tả là một cột số/numeric column) dựa trên các cột số khác, đây là bài toán hồi quy (Regression) nhằm dự đoán một giá trị số liên tục.\n- **A là sai**: Phân tích (analysis) là thuật ngữ chung, không phải một loại mô hình máy học cụ thể.\n- **B là sai**: Phân cụm (clustering) dùng để gom nhóm các dòng dữ liệu tương tự nhau, không phải để dự đoán một cột mục tiêu cụ thể.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/regression"
+    ]
+  },
+  {
+    "id": 98,
+    "topic": 1,
+    "question": "You plan to develop a bot that will enable users to query a knowledge base by using natural language processing.\nWhich two services should you include in the solution? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "AB",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A và B là đúng**:\n  - **Language Service** (cụ thể là tính năng Question Answering) được sử dụng để xây dựng và truy vấn cơ sở tri thức (knowledge base) từ tài liệu nguồn bằng ngôn ngữ tự nhiên.\n  - **Azure Bot Service** cung cấp nền tảng và môi trường để triển khai giao diện hội thoại (bot) tương tác với người dùng.\n- **C là sai**: Form Recognizer (nay là Azure AI Document Intelligence) dùng để trích xuất cấu trúc văn bản từ biểu mẫu, không phải để tạo bot hỏi đáp.\n- **D là sai**: Anomaly Detector dùng để phát hiện bất thường trong dữ liệu chuỗi thời gian.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/question-answering/overview"
+    ]
+  },
+  {
+    "id": 99,
+    "topic": 1,
+    "question": "You use Azure Machine Learning designer to build a model pipeline.\nWhat should you create before you can run the pipeline?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Trước khi chạy (run) một pipeline trong Azure Machine Learning designer, bạn cần phải có hoặc cấu hình một tài nguyên tính toán (compute resource/compute target) làm môi trường thực thi các khối lệnh xử lý và huấn luyện dữ liệu.\n- **A là sai**: Đăng ký mô hình (registered model) là kết quả nhận được sau khi huấn luyện xong, không phải là điều kiện tiên quyết để chạy pipeline.\n- **C là sai**: Jupyter notebook dùng để viết mã lập trình độc lập, không bắt buộc phải có để chạy pipeline trong công cụ đồ họa designer.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-designer"
+    ]
+  },
+  {
+    "id": 100,
+    "topic": 1,
+    "question": "You need to identify groups of rows with similar numeric values in a dataset.\nWhich type of machine learning should you use?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Phân cụm (Clustering) là phương pháp học không giám sát được thiết kế đặc biệt để nhóm các dòng dữ liệu (hoặc điểm dữ liệu) có các đặc trưng tương tự nhau vào các cụm riêng biệt.\n- **B là sai**: Hồi quy (regression) dùng để dự đoán một giá trị số liên tục, không phải để gom nhóm dữ liệu.\n- **C là sai**: Phân loại (classification) dùng để dự đoán nhãn danh mục rời rạc đã biết từ trước cho các dòng dữ liệu mới.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/clustering-models"
+    ]
+  },
+  {
+    "id": 101,
+    "topic": 1,
+    "question": "Which machine learning technique can be used for anomaly detection?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Phát hiện bất thường (Anomaly Detection) là kỹ thuật máy học giúp phân tích dữ liệu theo thời gian (time-series data) và xác định các thay đổi, mẫu hình hoặc sự kiện bất thường (unusual changes) lệch khỏi hành vi thông thường.\n- **A, C là sai**: Đây là các kỹ thuật phân loại hình ảnh (image classification/object detection) thuộc thị giác máy tính.\n- **B là sai**: Đây là các kỹ thuật xử lý ngôn ngữ tự nhiên (NLP) hoặc nhận dạng giọng nói.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview"
+    ]
+  },
+  {
+    "id": 102,
+    "topic": 1,
+    "question": "You have an AI-based loan approval system.\nDuring testing, you discover that the system has a gender bias.\nWhich responsible Al principle does this violate?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Sự thiên vị về giới tính (gender bias) trong hệ thống phê duyệt khoản vay vi phạm trực tiếp nguyên tắc Công bằng (Fairness) của Microsoft. Nguyên tắc này yêu cầu hệ thống AI phải đối xử bình đẳng và không phân biệt đối xử với tất cả mọi người dựa trên các đặc tính được bảo vệ (như giới tính, chủng tộc, tôn giáo).\n- **A là sai**: Tính giải trình (accountability) yêu cầu những người thiết kế và triển khai AI phải chịu trách nhiệm về hoạt động của hệ thống.\n- **B là sai**: Độ tin cậy và an toàn (reliability and safety) yêu cầu hệ thống hoạt động chính xác, ổn định và không gây hại.\n- **C là sai**: Tính minh bạch (transparency) yêu cầu hệ thống AI phải giải thích được các quyết định của mình cho người dùng hiểu.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 103,
+    "topic": 1,
+    "question": "A historian can use ________ to digitize newspaper articles.\nSelect the answer that correctly completes the sentence.",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Nhận dạng ký tự quang học (OCR) giúp phát hiện và trích xuất chữ in hoặc viết tay từ hình ảnh (ở đây là các bản chụp bài báo cũ) thành văn bản số có thể tìm kiếm và chỉnh sửa được, phục vụ cho việc số hóa tài liệu lịch sử.\n- **A là sai**: Object detection dùng để xác định vị trí của các vật thể trong ảnh.\n- **B là sai**: Facial recognition dùng để nhận diện danh tính khuôn mặt.\n- **C là sai**: Image classification dùng để gán nhãn thể loại cho toàn bộ bức ảnh.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-ocr"
+    ]
+  },
+  {
+    "id": 104,
+    "topic": 1,
+    "question": "You need to create a clustering model and evaluate the model by using Azure Machine Learning designer.\nWhat should you do?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Trong Azure Machine Learning designer, để đánh giá mô hình phân cụm (clustering), bạn sử dụng tập dữ liệu gốc (original dataset) truyền vào mô-đun Assign Data to Clusters cùng với mô hình đã huấn luyện, sau đó kết quả được chuyển tiếp vào mô-đun Evaluate Model để tính toán các chỉ số đánh giá phân cụm (như Silhouette).\n- **A và D là sai**: Việc phân chia tập dữ liệu huấn luyện và kiểm thử (Split Data) là quy trình điển hình cho các thuật toán học máy có giám sát (như phân loại và hồi quy) để tránh quá khớp, không phải là cách làm tiêu chuẩn trong mô-đun đánh giá phân cụm của Designer.\n- **C là sai**: Phân cụm là học không giám sát nên không có tập nhãn (labels) riêng biệt để chia tách.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/evaluate-model"
+    ]
+  },
+  {
+    "id": 105,
+    "topic": 1,
+    "question": "You have a knowledge base of frequently asked questions (FAQ).You create a bot that uses the knowledge base to respond to customer requests.You need to identify what the bot can perform without adding additional skills.What should you identify?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Một chatbot kết nối với cơ sở tri thức QnA Maker/Language Service mặc định có thể tự động trả lời các câu hỏi từ nhiều người dùng đồng thời (simultaneously) mà không cần cài đặt hoặc lập trình thêm bất kỳ kỹ năng (skills) đặc biệt nào.\n- **A, B, D là sai**: Đăng ký đơn hàng, khiếu nại hoặc cấp mã RMA là các nghiệp vụ giao dịch đòi hỏi kết nối với hệ thống backend bên ngoài (CRM/ERP), do đó yêu cầu phải lập trình và tích hợp các kỹ năng bổ sung (custom skills) cho bot.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/question-answering/overview"
+    ]
+  },
+  {
+    "id": 106,
+    "topic": 1,
+    "question": "Which type of natural language processing (NLP) entity is used to identify a phone number?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Số điện thoại tuân theo một khuôn mẫu định dạng ký tự số có cấu trúc cố định. Thực thể biểu thức chính quy (regular expression entity) là lựa chọn tốt nhất để trích xuất chính xác loại dữ liệu có cấu trúc định dạng rõ ràng này.\n- **B là sai**: Thực thể máy học (machine-learned) dùng cho dữ liệu phi cấu trúc, phụ thuộc vào ngữ cảnh xung quanh.\n- **C là sai**: Thực thể danh sách (list entity) dùng để so khớp một danh sách các từ hoặc từ đồng nghĩa cố định (ví dụ: danh sách tên thành phố).\n- **D là sai**: `Pattern.any` là thực thể giữ chỗ (placeholder) được sử dụng để trích xuất dữ liệu từ các mẫu câu phức tạp mà không có định dạng cố định, không tối ưu cho số điện thoại.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/luis/luis-concept-entity-types#regex-entity"
+    ]
+  },
+  {
+    "id": 107,
+    "topic": 1,
+    "question": "Which AI service can you use to extract intent from a user input such as “Call me back later”?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Dịch vụ Azure AI Language (cụ thể là tính năng Conversational Language Understanding - CLU) được thiết kế để phân tích văn bản ngôn ngữ tự nhiên từ người dùng và trích xuất ý định (intent - ví dụ: \"Yêu cầu gọi lại\") và thực thể (entity).\n- **A là sai**: Azure Cognitive Search (nay là Azure AI Search) là dịch vụ tìm kiếm thông tin trên dữ liệu lớn, không phải dịch vụ hiểu ý định hội thoại.\n- **B là sai**: Translator dùng để dịch thuật văn bản giữa các ngôn ngữ.\n- **D là sai**: Speech dùng để chuyển đổi giữa giọng nói và văn bản, không phân tích ngữ nghĩa để trích xuất ý định.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/conversational-language-understanding/overview"
+    ]
+  },
+  {
+    "id": 108,
+    "topic": 1,
+    "question": "You have 100 instructional videos that do NOT contain any audio. Each instructional video has a script.\nYou need to generate a narration audio file for each video based on the script.\nWhich type of workload should you use?",
+    "options": {},
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C là đúng**: Tổng hợp giọng nói (Speech synthesis - hay Text-to-Speech) chuyển đổi văn bản (ở đây là kịch bản video) thành tệp âm thanh nói tự nhiên làm lời thuyết minh cho video.\n- **A là sai**: Mô hình hóa ngôn ngữ (language modeling) dùng để phân tích ngữ nghĩa và cấu trúc câu văn bản.\n- **B là sai**: Nhận dạng giọng nói (speech recognition - hay Speech-to-Text) chuyển đổi âm thanh nói thành văn bản chữ viết.\n- **D là sai**: Dịch thuật (translation) dùng để chuyển ngữ văn bản từ ngôn ngữ này sang ngôn ngữ khác.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/text-to-speech"
+    ]
+  },
+  {
+    "id": 109,
+    "topic": 1,
+    "question": "What is an example of the Microsoft responsible AI principle of transparency?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Nguyên tắc Minh bạch (Transparency) trong AI có trách nhiệm yêu cầu hệ thống AI phải dễ hiểu, giúp người dùng hiểu rõ cách thức hoạt động của mô hình và lý do hệ thống đưa ra các quyết định hoặc dự đoán cụ thể.\n- **A là sai**: Phân bổ cơ hội bình đẳng cho mọi người thuộc nguyên tắc Công bằng (Fairness).\n- **C là sai**: Đảm bảo các nhà phát triển chịu trách nhiệm về giải pháp của họ thuộc nguyên tắc Tính giải trình (Accountability).\n- **D là sai**: Đảm bảo dữ liệu người dùng được lưu trữ an toàn thuộc nguyên tắc Quyền riêng tư và Bảo mật (Privacy and Security).",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 110,
+    "topic": 1,
+    "question": "You need to build an image tagging solution for social media that tags images of your friends automatically.\nWhich Azure Cognitive Services service should you use?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Dịch vụ Face (Azure AI Face) cung cấp khả năng phát hiện khuôn mặt và nhận dạng khuôn mặt (facial recognition) để xác định danh tính cụ thể của từng người (bằng cách so khớp với nhóm ảnh mẫu của bạn bè đã đăng ký trước).\n- **B là sai**: Form Recognizer dùng để trích xuất thông tin có cấu trúc từ tài liệu và hóa đơn.\n- **C là sai**: Language là dịch vụ xử lý ngôn ngữ tự nhiên.\n- **D là sai**: Computer Vision (Azure AI Vision) chỉ cung cấp khả năng phát hiện khuôn mặt chung chung hoặc gắn thẻ (tagging) các đối tượng phổ biến, không hỗ trợ nhận dạng danh tính từng người cụ thể nếu không tự huấn luyện phức tạp.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/desktop-wrapper/face-api-reference"
+    ]
+  },
+  {
+    "id": 111,
+    "topic": 1,
+    "question": "Your company is exploring the use of voice recognition technologies in its smart home devices. The company wants to identify any barriers that might unintentionally leave out specific user groups.\nThis is an example of which Microsoft guiding principle for responsible AI?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D là đúng**: Nguyên tắc Bao trùm (Inclusiveness) yêu cầu các hệ thống AI phải tiếp cận, phục vụ và mang lại lợi ích cho tất cả mọi người, không phân biệt chủng tộc, giới tính, khả năng thể chất hay bất kỳ đặc tính nào khác. Việc xác định và loại bỏ rào cản ngăn cản một nhóm người sử dụng công nghệ nhận dạng giọng nói là minh chứng trực tiếp cho nguyên tắc này.\n- **A là sai**: Tính giải trình (accountability) liên quan đến việc chịu trách nhiệm về hệ thống.\n- **B là sai**: Công bằng (fairness) tập trung vào việc ngăn chặn sự phân biệt đối xử trong các quyết định phân bổ cơ hội/tài nguyên của AI.\n- **C là sai**: Quyền riêng tư và bảo mật (privacy and security) liên quan đến bảo vệ thông tin người dùng.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+    ]
+  },
+  {
+    "id": 112,
+    "topic": 1,
+    "question": "You need to convert receipts into transactions in a spreadsheet. The spreadsheet must include the date of the transaction, the merchant, the total spent, and any taxes paid.\nWhich Azure AI service should you use?",
+    "options": {},
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B là đúng**: Form Recognizer (nay là Azure AI Document Intelligence) cung cấp mô hình biên lai có sẵn (prebuilt-receipt model) giúp tự động trích xuất các trường thông tin có cấu trúc từ hóa đơn/biên lai như: tên cửa hàng (merchant), ngày giao dịch (date), tổng tiền (total spent), thuế (taxes).\n- **A là sai**: Custom Vision dùng để huấn luyện mô hình phân loại hoặc phát hiện đối tượng trong ảnh, không chuyên về trích xuất chữ viết có cấu trúc phức tạp từ tài liệu.\n- **C là sai**: Face dùng để phân tích và nhận diện khuôn mặt người.\n- **D là sai**: Language dùng để xử lý văn bản ngôn ngữ tự nhiên đầu vào, không dùng để đọc ảnh chụp hóa đơn.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/receipt"
+    ]
+  },
+  {
+    "id": 113,
+    "topic": 1,
+    "question": "For which two workloads can you use computer vision? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "AE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A và E là đúng**:\n  - **Tác vụ A** là phân đoạn ngữ nghĩa (semantic segmentation), trong đó các điểm ảnh (pixels) được gán màu sắc tương ứng với tên của các đối tượng được xác định trong bức ảnh.\n  - **Tác vụ E** là mô tả hình ảnh (image description/captioning), tạo ra văn bản tự nhiên để tóm tắt hoặc mô tả nội dung trực quan của ảnh.\n- **B là sai**: Đây là bài toán phát hiện bất thường (anomaly detection), thuộc nhóm dữ liệu số hoặc chuỗi thời gian.\n- **C là sai**: Đây là biểu diễn dữ liệu (data visualization), không phải tác vụ computer vision.\n- **D là sai**: Đây là tác vụ đồ họa máy tính 3D (3D computer graphics/rendering), không phải computer vision.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview"
+    ]
+  },
+  {
+    "id": 114,
+    "topic": 1,
+    "question": "You plan to build a conversational AI solution that can be surfaced in Microsoft Teams, Microsoft Cortana, and Amazon Alexa.\nWhich service should you use?",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A là đúng**: Azure Bot Service hỗ trợ việc cấu hình và tích hợp chatbot lên nhiều kênh (channels) giao tiếp phổ biến khác nhau như Microsoft Teams, Cortana, Amazon Alexa, Facebook Messenger... từ cùng một mã nguồn chatbot duy nhất.\n- **B là sai**: Azure Cognitive Search là dịch vụ tìm kiếm chỉ mục, không dùng để xây dựng chatbot đa kênh.\n- **C là sai**: Speech cung cấp khả năng xử lý giọng nói, không phải dịch vụ kết nối đa kênh cho chatbot.\n- **D là sai**: Language service cung cấp khả năng hiểu ngôn ngữ (NLP), cần kết hợp với Bot Service để tích hợp lên các giao diện giao tiếp khác nhau.",
+    "references": [
+      "https://learn.microsoft.com/en-us/azure/bot-service/bot-service-manage-channels"
+    ]
+  },
+  {
+    "id": 115,
+    "topic": 1,
+    "question": "You need to provide customers with the ability to query the status of orders by using phones, social media, or digital assistants.\nWhat should you use?",
+    "options": {},
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "**Đáp án đúng: D (Azure Bot Service)** vì dịch vụ này cung cấp khả năng tạo ra các tác nhân trò chuyện thông minh (chatbot) có khả năng tương tác với khách hàng qua nhiều kênh khác nhau như điện thoại, mạng xã hội, và các trợ lý kỹ thuật số.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Azure Machine Learning model):** Dùng để huấn luyện và triển khai các mô hình học máy dự báo, không trực tiếp hỗ trợ xây dựng giao diện hội thoại đa kênh.\n  - **B (the Translator service):** Dùng để dịch văn bản giữa các ngôn ngữ, không hỗ trợ chức năng truy vấn trạng thái đơn hàng.\n  - **C (a Form Recognizer model):** Dùng để trích xuất thông tin từ tài liệu giấy/số hóa cấu trúc, không dùng cho giao tiếp hội thoại đa kênh.",
+    "references": []
+  }
+]

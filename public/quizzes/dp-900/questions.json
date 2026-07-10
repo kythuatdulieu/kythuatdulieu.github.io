@@ -1,0 +1,2347 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "Which statement is an example of Data Manipulation Language (DML)?",
+    "options": {
+      "A": "INSERT",
+      "B": "ALTER",
+      "C": "DROP",
+      "D": "CREATE"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "DML (Data Manipulation Language - Ngôn ngữ thao tác dữ liệu) được sử dụng để truy vấn, thêm, xóa, sửa dữ liệu trong cơ sở dữ liệu. Các câu lệnh phổ biến gồm SELECT, INSERT, UPDATE, DELETE. Do đó, INSERT (A) là câu lệnh DML.\nCác lựa chọn khác:\n- B (ALTER), C (DROP), và D (CREATE) đều là các câu lệnh thuộc nhóm DDL (Data Definition Language - Ngôn ngữ định nghĩa dữ liệu), dùng để định nghĩa hoặc thay đổi cấu trúc của các đối tượng trong cơ sở dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "Your company is designing a data store that will contain student data. The data has the following format.\nWhich type of data store should you use?",
+    "options": {
+      "A": "graph",
+      "B": "key/value",
+      "C": "object",
+      "D": "columnar"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn đúng là D (columnar) vì dữ liệu được mô tả dưới dạng một cơ sở dữ liệu cột (column-family/wide-column store) hoặc để phân tích tối ưu theo cột (OLAP) trong đó các truy vấn thường truy xuất dữ liệu theo từng cột cụ thể của học sinh qua số lượng bản ghi lớn.\nCác lựa chọn khác:\n- A (graph): Dùng khi cần phân tích mối quan hệ phức tạp và các kết nối giữa các đối tượng (như mạng xã hội, phát hiện gian lận). Ở đây không nhấn mạnh vào liên kết phức tạp.\n- B (key/value): Phù hợp với việc tra cứu điểm (point lookup) nhanh dựa trên một khóa duy nhất, nhưng không tối ưu cho dữ liệu có cấu trúc cột linh hoạt và phân tích như trong đề bài.\n- C (object): Dùng để lưu trữ dữ liệu phi cấu trúc dung lượng lớn (như file hình ảnh, video, sao lưu) chứ không phải dữ liệu học sinh có cấu trúc bảng rõ ràng.",
+    "references": []
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "You have a quality assurance application that reads data from a data warehouse.Which type of processing does the application use?",
+    "options": {
+      "A": "Online Transaction Processing (OLTP)",
+      "B": "batch processing",
+      "C": "Online Analytical Processing (OLAP)",
+      "D": "stream processing"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "OLAP (Online Analytical Processing - Xử lý phân tích trực tuyến) được thiết kế để phân tích dữ liệu lịch sử, chạy các câu lệnh truy vấn phức tạp và báo cáo từ kho dữ liệu (data warehouse) mà không làm ảnh hưởng đến hệ thống giao dịch trực tiếp. Do đó, một ứng dụng kiểm định chất lượng (QA) đọc dữ liệu từ kho dữ liệu để phân tích sẽ sử dụng OLAP (C).\nCác lựa chọn khác:\n- A (OLTP - Online Transaction Processing): Dùng cho các hệ thống giao dịch trực tuyến hàng ngày, có tần suất ghi và cập nhật dữ liệu cao (như giao dịch ngân hàng, đặt hàng), không phù hợp cho kho dữ liệu lớn.\n- B (batch processing): Xử lý lô, là phương pháp xử lý dữ liệu theo từng nhóm lớn sau một khoảng thời gian nhất định, không mô tả đặc tính xử lý phân tích của ứng dụng này.\n- D (stream processing): Xử lý luồng, dùng cho dữ liệu thời gian thực được xử lý ngay lập tức khi phát sinh (như dữ liệu cảm biến IoT).",
+    "references": []
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "You have a transactional application that stores data in an Azure SQL managed instance.When should you implement a read-only database replica?",
+    "options": {
+      "A": "You need to generate reports without affecting the transactional workload.",
+      "B": "You need to audit the transactional application.",
+      "C": "You need to implement high availability in the event of a regional outage.",
+      "D": "You need to improve the recovery point objective (RPO)."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bản sao chỉ đọc (Read-only replica) giúp giảm tải cho cơ sở dữ liệu chính bằng cách chuyển các truy vấn đọc (như báo cáo, thống kê) sang bản sao này. Việc này giúp đảm bảo hiệu năng cho các giao dịch ghi của ứng dụng giao dịch chính không bị ảnh hưởng. Do đó, lựa chọn A là chính xác.\nCác lựa chọn khác:\n- B (Audit): Việc kiểm toán (audit) được thực hiện thông qua tính năng SQL Auditing cấu hình trên database, không cần dùng read-only replica.\n- C (High availability): Tính năng sẵn sàng cao khi có sự cố vùng đòi hỏi geo-replication hoặc failover groups, chứ không đơn thuần chỉ là tạo một read-only replica cục bộ.\n- D (RPO): Recovery Point Objective (RPO) liên quan đến tần suất sao lưu và đồng bộ dữ liệu để giảm thiểu mất mát dữ liệu khi gặp sự cố, chứ không trực tiếp giải quyết bằng việc triển khai read-only replica.",
+    "references": []
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "You manage an application that stores data in a shared folder on a Windows server.You need to move the shared folder to Azure Storage.Which type of Azure Storage should you use?",
+    "options": {
+      "A": "queue",
+      "B": "blob",
+      "C": "file",
+      "D": "table"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Files cung cấp các chia sẻ tệp (file shares) được quản lý hoàn toàn trên đám mây, hỗ trợ giao thức tiêu chuẩn SMB và NFS. Đây là giải pháp thay thế hoàn hảo và trực tiếp cho các thư mục chia sẻ (shared folder) truyền thống trên Windows Server. Do đó, chọn C (file).\nCác lựa chọn khác:\n- A (queue): Lưu trữ hàng đợi tin nhắn để truyền thông điệp giữa các ứng dụng.\n- B (blob): Lưu trữ đối tượng phi cấu trúc (hình ảnh, video, file sao lưu), không hỗ trợ chia sẻ tệp mạng qua SMB như thư mục chia sẻ.\n- D (table): Dịch vụ lưu trữ NoSQL dạng bảng khóa/giá trị cho dữ liệu có cấu trúc phi quan hệ.",
+    "references": []
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "Which command-line tool can you use to query Azure SQL databases?",
+    "options": {
+      "A": "sqlcmd",
+      "B": "bcp",
+      "C": "azdata",
+      "D": "Azure CLI"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "sqlcmd là công cụ dòng lệnh tiêu chuẩn được sử dụng để kết nối và thực thi các câu lệnh SQL (query) trực tiếp trên SQL Server, Azure SQL Database hoặc Azure SQL Managed Instance. Do đó, chọn A.\nCác lựa chọn khác:\n- B (bcp - bulk copy program): Dùng để sao chép hàng loạt dữ liệu (import/export) giữa SQL Server và tệp tin, chứ không dùng để chạy truy vấn SQL thông thường.\n- C (azdata): Dùng để quản lý các Big Data Clusters trên SQL Server, hiện đã ít phổ biến và không chuyên dụng để truy vấn SQL Database.\n- D (Azure CLI): Dùng để quản lý, cấu hình và triển khai các tài nguyên trên Azure (như tạo database, bật tường lửa), chứ không dùng để truy vấn dữ liệu bên trong database.",
+    "references": []
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "You need to design and model a database by using a graphical tool that supports project-oriented offline database development.What should you use?",
+    "options": {
+      "A": "Microsoft SQL Server Data Tools (SSDT)",
+      "B": "Microsoft SQL Server Management Studio (SSMS)",
+      "C": "Azure Databricks",
+      "D": "Azure Data Studio"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Microsoft SQL Server Data Tools (SSDT) là một công cụ tích hợp trong Visual Studio, hỗ trợ phát triển cơ sở dữ liệu dưới dạng dự án ngoại tuyến (offline database projects). SSDT cho phép thiết kế, xây dựng mô hình, so sánh schema và phát triển cơ sở dữ liệu một cách độc lập trước khi triển khai (deploy). Do đó, chọn A.\nCác lựa chọn khác:\n- B (SSMS): Công cụ quản lý trực tuyến (online) chủ yếu phục vụ quản trị viên hệ thống để giám sát, cấu hình và chạy script nhanh, không chuyên dụng cho mô hình hóa dự án offline.\n- C (Azure Databricks): Nền tảng phân tích dữ liệu lớn dựa trên Apache Spark, không phải công cụ thiết kế cơ sở dữ liệu quan hệ ngoại tuyến.\n- D (Azure Data Studio): Công cụ gọn nhẹ chạy đa nền tảng, phù hợp để viết truy vấn và sử dụng SQL Notebook, không mạnh về quản lý vòng đời dự án cơ sở dữ liệu offline như SSDT.",
+    "references": []
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "You are writing a set of SQL queries that administrators will use to troubleshoot an Azure SQL database.You need to embed documents and query results into a SQL notebook.What should you use?",
+    "options": {
+      "A": "Microsoft SQL Server Management Studio (SSMS)",
+      "B": "Azure Data Studio",
+      "C": "Azure CLI",
+      "D": "Azure PowerShell"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Data Studio hỗ trợ mặc định tính năng SQL Notebooks (tương tự Jupyter Notebooks). Tính năng này cho phép tích hợp tài liệu hướng dẫn viết bằng Markdown, mã SQL và kết quả thực thi truy vấn trực tiếp trong cùng một tài liệu (notebook). Rất hữu ích cho việc khắc phục sự cố (troubleshooting). Do đó, chọn B.\nCác lựa chọn khác:\n- A (SSMS): Không hỗ trợ tính năng SQL Notebooks nguyên bản.\n- C (Azure CLI) và D (Azure PowerShell): Là các công cụ dòng lệnh để quản lý hạ tầng Azure, không hỗ trợ giao diện lập trình notebook.",
+    "references": []
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "What is a benefit of hosting a database on Azure SQL managed instance as compared to an Azure SQL database?",
+    "options": {
+      "A": "built-in high availability",
+      "B": "native support for cross-database queries and transactions",
+      "C": "system-initiated automatic backups",
+      "D": "support for encryption at rest"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure SQL Managed Instance được thiết kế để tương thích gần như 100% với SQL Server phiên bản cài đặt thực tế (on-premises). Một trong những tính năng vượt trội của nó so với Azure SQL Database (Single/Elastic Pool) là hỗ trợ truy vấn và giao dịch liên cơ sở dữ liệu (cross-database queries and transactions) nguyên bản trong cùng một thực thể. Do đó, chọn B.\nCác lựa chọn khác:\n- A (Built-in high availability), C (System-initiated automatic backups), và D (Support for encryption at rest) đều là các tính năng được tích hợp sẵn trên cả Azure SQL Database lẫn Azure SQL Managed Instance, không phải là lợi thế riêng biệt của Managed Instance.",
+    "references": []
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "Your company is designing a database that will contain session data for a website. The data will include notifications, personalization attributes, and products that are added to a shopping cart.Which type of data store will provide the lowest latency to retrieve the data?",
+    "options": {
+      "A": "key/value",
+      "B": "graph",
+      "C": "columnar",
+      "D": "document"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Key/value (Khóa/giá trị) là loại kho lưu trữ cung cấp độ trễ thấp nhất (sub-millisecond) cho việc ghi và đọc dữ liệu phiên làm việc (session data), giỏ hàng, hoặc cấu hình người dùng, nơi dữ liệu được truy xuất trực tiếp qua một khóa duy nhất (như Session ID). Do đó, chọn A.\nCác lựa chọn khác:\n- B (graph): Thích hợp cho dữ liệu mạng lưới quan hệ phức tạp, độ trễ truy xuất một bản ghi đơn lẻ sẽ cao hơn.\n- C (columnar): Tối ưu cho các truy vấn phân tích trên tập dữ liệu lớn, không tối ưu cho truy xuất phiên làm việc độ trễ cực thấp.\n- D (document): Cho phép lưu trữ tài liệu JSON phức tạp và hỗ trợ tìm kiếm trên nhiều thuộc tính, nhưng tốc độ và độ trễ truy xuất theo khóa đơn thuần vẫn kém tối ưu hơn key/value store chuyên dụng (như Redis).",
+    "references": []
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "Which storage solution supports role-based access control (RBAC) at the file and folder level?",
+    "options": {
+      "A": "Azure Disk Storage",
+      "B": "Azure Data Lake Storage",
+      "C": "Azure Blob storage",
+      "D": "Azure Queue storage"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Data Lake Storage (ADLS Gen2) sở hữu tính năng Không gian tên phân cấp (Hierarchical Namespace - HNS), cho phép quản lý cấu trúc thư mục thực sự và áp dụng cơ chế kiểm soát truy cập (Access Control Lists - ACLs / RBAC) chi tiết đến tận cấp độ tệp tin (file) và thư mục (folder). Do đó, chọn B.\nCác lựa chọn khác:\n- A (Azure Disk Storage): Cung cấp ổ đĩa ảo cho máy ảo, phân quyền truy cập thông qua hệ điều hành của máy ảo chứ bản thân đĩa Azure không hỗ trợ phân quyền tệp/thư mục qua RBAC của Azure.\n- C (Azure Blob storage): Phiên bản Blob thông thường không có không gian tên phân cấp (chỉ có thư mục ảo) nên chỉ hỗ trợ phân quyền ở cấp độ Container chứ không hỗ trợ phân quyền sâu đến cấp thư mục/tệp.\n- D (Azure Queue storage): Dùng để lưu trữ hàng đợi tin nhắn, không có khái niệm tệp và thư mục.",
+    "references": []
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "You need to store data in Azure Blob storage for seven years to meet your company's compliance requirements. The retrieval time of the data is unimportant. The solution must minimize storage costs.Which storage tier should you use?",
+    "options": {
+      "A": "Archive",
+      "B": "Hot",
+      "C": "Cool"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Archive tier (Lớp lưu trữ lưu kho) có chi phí lưu trữ dữ liệu thấp nhất trong số các lớp truy cập của Azure Blob Storage. Lớp này cực kỳ phù hợp cho dữ liệu ít khi truy cập (như dữ liệu tuân thủ pháp lý lưu trữ trong 7 năm) và chấp nhận thời gian khôi phục (rehydration) lâu (vài giờ). Do đó, chọn A.\nCác lựa chọn khác:\n- B (Hot tier): Phù hợp dữ liệu truy cập thường xuyên, chi phí lưu trữ cao nhất.\n- C (Cool tier): Phù hợp dữ liệu ít truy cập hơn (ít nhất 30 ngày), chi phí lưu trữ thấp hơn Hot nhưng cao hơn nhiều so với Archive.",
+    "references": []
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "Which type of non-relational data store supports a flexible schema, stores data as JSON files, and stores the all the data for an entity in the same document?",
+    "options": {
+      "A": "document",
+      "B": "columnar",
+      "C": "graph",
+      "D": "time series"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Document (Cơ sở dữ liệu tài liệu) lưu trữ dữ liệu dưới dạng các tài liệu tự mô tả (thường là định dạng JSON hoặc XML). Mỗi tài liệu chứa toàn bộ thông tin của một đối tượng (entity) trong cùng một cấu trúc và hỗ trợ lược đồ linh hoạt (flexible schema - không bắt buộc mọi tài liệu phải có các trường giống hệt nhau). Do đó, chọn A.\nCác lựa chọn khác:\n- B (columnar): Lưu trữ dữ liệu theo họ cột (column families) thay vì tài liệu JSON.\n- C (graph): Lưu trữ dữ liệu dưới dạng các đỉnh (node) và cạnh (edge) để biểu diễn mối quan hệ.\n- D (time series): Tối ưu hóa cho việc ghi và truy vấn dữ liệu theo thời gian (ví dụ: dữ liệu cảm biến theo từng giây).",
+    "references": []
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "Which Azure Data Factory component initiates the execution of a pipeline?",
+    "options": {
+      "A": "a control flow",
+      "B": "a trigger",
+      "C": "a parameter",
+      "D": "an activity"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trigger (Bộ kích hoạt) trong Azure Data Factory là thành phần chịu trách nhiệm xác định thời điểm và điều kiện để tự động khởi chạy (execute) một pipeline (ví dụ: theo lịch trình thời gian, theo sự kiện tệp tin được tải lên, v.v.). Do đó, chọn B.\nCác lựa chọn khác:\n- A (control flow - luồng điều khiển): Là sự phối hợp các hoạt động bên trong pipeline.\n- C (parameter - tham số): Là giá trị đầu vào truyền vào pipeline để tăng tính linh hoạt.\n- D (activity - hoạt động): Là một bước thực thi hành động cụ thể bên trong pipeline (ví dụ: Copy activity, Databricks notebook activity).",
+    "references": []
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "Which scenario is an example of a streaming workload?",
+    "options": {
+      "A": "sending transactions that are older than a month to an archive",
+      "B": "sending transactions daily from point of sale (POS) devices",
+      "C": "sending telemetry data from edge devices",
+      "D": "sending cloud infrastructure metadata every 30 minutes"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Streaming workload (Xử lý dữ liệu luồng/thời gian thực) là quá trình thu nhận và xử lý dữ liệu diễn ra liên tục, ngay lập tức khi dữ liệu phát sinh. Việc truyền dữ liệu đo lường từ xa (telemetry data) từ các thiết bị ngoại vi/thiết bị IoT (edge devices) là một ví dụ điển hình của xử lý luồng. Do đó, chọn C.\nCác lựa chọn khác:\n- A, B, và D đều là các hoạt động xử lý theo lô (batch processing), trong đó dữ liệu được thu thập và xử lý định kỳ theo các khoảng thời gian nhất định (mỗi tháng, mỗi ngày, hoặc mỗi 30 phút).",
+    "references": []
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "You need to gather real-time telemetry data from a mobile application.Which type of workload describes this scenario?",
+    "options": {
+      "A": "Online Transaction Processing (OLTP)",
+      "B": "batch",
+      "C": "massively parallel processing (MPP)",
+      "D": "streaming"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Streaming workload (Xử lý dữ liệu luồng) mô tả việc thu thập và xử lý liên tục dữ liệu đo lường từ xa (telemetry) theo thời gian thực từ các ứng dụng di động hoặc thiết bị IoT ngay khi chúng được tạo ra. Do đó, chọn D.\nCác lựa chọn khác:\n- A (OLTP): Phù hợp cho xử lý giao dịch có tính nhất quán cao, ghi chép vào database quan hệ.\n- B (batch): Xử lý theo lô, thu thập dữ liệu lại rồi chạy định kỳ.\n- C (MPP): Kiến trúc xử lý song song phân tán cho kho dữ liệu lớn (như Azure Synapse), không phải là loại khối lượng công việc thu thập dữ liệu thời gian thực.",
+    "references": []
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "You need to ensure that users use multi-factor authentication (MFA) when connecting to an Azure SQL database.Which type of authentication should you use?",
+    "options": {
+      "A": "service principal authentication",
+      "B": "Azure Active Directory (Azure AD) authentication",
+      "C": "SQL authentication",
+      "D": "certificate authentication"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Active Directory (Azure AD / Microsoft Entra ID) authentication hỗ trợ tích hợp với các chính sách bảo mật nâng cao như Xác thực đa yếu tố (Multi-Factor Authentication - MFA) và Conditional Access khi kết nối đến Azure SQL Database. Do đó, chọn B.\nCác lựa chọn khác:\n- A (service principal authentication): Dành cho xác thực không cần người dùng (ứng dụng/máy móc tự kết nối), không dùng cho xác thực đa yếu tố của người dùng cuối.\n- C (SQL authentication): Sử dụng tên đăng nhập và mật khẩu cục bộ được lưu trong database, không hỗ trợ MFA.\n- D (certificate authentication): Xác thực bằng chứng thư số, không hỗ trợ tính năng MFA của người dùng.",
+    "references": []
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "You have an inventory management database that contains the following table.\nWhich statement should you use in a SQL query to change the inventory quantity of Product1 to 270?",
+    "options": {
+      "A": "INSERT",
+      "B": "MERGE",
+      "C": "UPDATE",
+      "D": "CREATE"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "UPDATE là câu lệnh SQL thuộc nhóm DML được sử dụng để sửa đổi/cập nhật dữ liệu hiện có trong một bảng cơ sở dữ liệu. Để thay đổi số lượng tồn kho của Product1 thành 270, ta sử dụng câu lệnh UPDATE. Do đó, chọn C.\nCác lựa chọn khác:\n- A (INSERT): Dùng để chèn thêm một dòng dữ liệu mới hoàn toàn vào bảng.\n- B (MERGE): Dùng để kết hợp các thao tác INSERT, UPDATE, DELETE tùy theo điều kiện khớp dữ liệu, quá phức tạp và không cần thiết cho yêu cầu cập nhật đơn thuần này.\n- D (CREATE): Lệnh DDL dùng để tạo các đối tượng cơ sở dữ liệu mới (như bảng, view), không dùng để sửa đổi bản ghi.",
+    "references": []
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "Your company needs to implement a relational database in Azure. The solution must minimize ongoing maintenance.Which Azure service should you use?",
+    "options": {
+      "A": "Azure HDInsight",
+      "B": "Azure SQL Database",
+      "C": "Azure Cosmos DB",
+      "D": "SQL Server on Azure Virtual Machines"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure SQL Database là một dịch vụ cơ sở dữ liệu quan hệ được quản lý hoàn toàn dưới dạng PaaS (Platform as a Service). Dịch vụ này tự động đảm nhận việc nâng cấp, vá lỗi hệ điều hành, sao lưu và giám sát hiệu năng, giúp giảm thiểu tối đa công việc bảo trì vận hành (ongoing maintenance). Do đó, chọn B.\nCác lựa chọn khác:\n- A (Azure HDInsight): Là dịch vụ phân tích dữ liệu lớn mã nguồn mở (Hadoop, Spark), không phải dịch vụ cơ sở dữ liệu quan hệ tiêu chuẩn.\n- C (Azure Cosmos DB): Chủ yếu là cơ sở dữ liệu NoSQL (phi quan hệ).\n- D (SQL Server on Azure VMs): Là giải pháp IaaS (Infrastructure as a Service), yêu cầu người dùng phải tự quản lý, cấu hình, và vá lỗi hệ điều hành cũng như SQL Server, tốn nhiều công sức bảo trì nhất.",
+    "references": []
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "Your company has a reporting solution that has paginated reports. The reports query a dimensional model in a data warehouse.Which type of processing does the reporting solution use?",
+    "options": {
+      "A": "stream processing",
+      "B": "batch processing",
+      "C": "Online Analytical Processing (OLAP)",
+      "D": "Online Transaction Processing (OLTP)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "OLAP (Online Analytical Processing - Xử lý phân tích trực tuyến) là loại hình xử lý tối ưu cho việc truy vấn mô hình dữ liệu đa chiều (dimensional model) trong kho dữ liệu (data warehouse) để phục vụ cho các báo cáo phân tích và báo cáo phân trang (paginated reports). Do đó, chọn C.\nCác lựa chọn khác:\n- A (stream processing): Xử lý dữ liệu liên tục theo thời gian thực.\n- B (batch processing): Gom nhóm dữ liệu và xử lý định kỳ.\n- D (OLTP): Tối ưu cho xử lý các giao dịch ghi chép nhỏ lẻ, nhanh chóng hàng ngày của các ứng dụng nghiệp vụ (như bán hàng, kế toán).",
+    "references": []
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "You need to use Transact-SQL to query files in Azure Data Lake Storage Gen 2 from an Azure Synapse Analytics data warehouse.What should you use to query the files?",
+    "options": {
+      "A": "Azure Functions",
+      "B": "Microsoft SQL Server Integration Services (SSIS)",
+      "C": "PolyBase",
+      "D": "Azure Data Factory"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "PolyBase là công nghệ cho phép người dùng chạy các truy vấn Transact-SQL (T-SQL) trực tiếp từ Azure Synapse Analytics để đọc và phân tích dữ liệu đang lưu trữ dưới dạng tệp tin ở các nguồn bên ngoài như Azure Data Lake Storage Gen2 hoặc Azure Blob Storage mà không cần import dữ liệu vào database trước. Do đó, chọn C.\nCác lựa chọn khác:\n- A (Azure Functions): Dùng để chạy các đoạn code dạng serverless, không phải công cụ truy vấn T-SQL trực tiếp lên Data Lake.\n- B (SSIS) và D (Azure Data Factory): Là các công cụ tích hợp dữ liệu (ETL/ELT) dùng để di chuyển và biến đổi dữ liệu, không phải là công cụ truy vấn trực tiếp từ Synapse bằng T-SQL.",
+    "references": []
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "Your company is designing an application that will write a high volume of JSON data and will have an application-defined schema.Which type of data store should you use?",
+    "options": {
+      "A": "columnar",
+      "B": "key/value",
+      "C": "document",
+      "D": "graph"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Document (Cơ sở dữ liệu tài liệu) là lựa chọn tối ưu nhất khi làm việc với định dạng dữ liệu JSON. Nó hỗ trợ lược đồ linh hoạt do ứng dụng tự định nghĩa (application-defined schema), cho phép ghi lượng lớn tài liệu JSON mà không bắt buộc cấu trúc cột nghiêm ngặt như SQL hay Columnar. Do đó, chọn C.\nCác lựa chọn khác:\n- A (columnar): Lưu trữ theo họ cột tối ưu phân tích, không thiết kế chuyên để lưu trữ dạng tài liệu JSON gốc tự do.\n- B (key/value): Lưu dạng khóa/giá trị đơn giản, khó thực hiện các câu truy vấn phức tạp đi sâu vào các trường bên trong tệp JSON.\n- D (graph): Phù hợp để mô hình hóa và truy vấn các mối quan hệ mạng lưới giữa các đối tượng.",
+    "references": []
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "Your company is designing a data store for internet-connected temperature sensors.The collected data will be used to analyze temperature trends.Which type of data store should you use?",
+    "options": {
+      "A": "relational",
+      "B": "time series",
+      "C": "graph",
+      "D": "columnar"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Time series (Cơ sở dữ liệu chuỗi thời gian) được thiết kế đặc biệt để lưu trữ và truy vấn dữ liệu đo lường liên tục đi kèm mốc thời gian (timestamp), rất phù hợp với dữ liệu cảm biến IoT (như cảm biến nhiệt độ) nhằm phục vụ cho phân tích xu hướng biến đổi theo thời gian. Do đó, chọn B.\nCác lựa chọn khác:\n- A (relational): Cơ sở dữ liệu quan hệ, không tối ưu cho tần suất ghi cực lớn của các chuỗi thời gian liên tục từ hàng nghìn cảm biến.\n- C (graph): Dùng để truy vấn các mối quan hệ thực thể, không phù hợp cho phân tích xu hướng chuỗi thời gian.\n- D (columnar): Dùng cho phân tích dữ liệu kho dữ liệu lớn chung, không tối ưu chuyên sâu cho dữ liệu chuỗi thời gian của cảm biến như time series database.",
+    "references": []
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "You have an e-commerce application that reads and writes data to an Azure SQL database.Which type of processing does the application use?",
+    "options": {
+      "A": "stream processing",
+      "B": "batch processing",
+      "C": "Online Analytical Processing (OLAP)",
+      "D": "Online Transaction Processing (OLTP)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "OLTP (Online Transaction Processing - Xử lý giao dịch trực tuyến) là loại hình xử lý tối ưu cho các hệ thống có lượng giao dịch ghi, đọc diễn ra liên tục, tức thời với khối lượng nhỏ và yêu cầu tính nhất quán cao (như các hệ thống e-commerce xử lý đơn hàng, thanh toán). Do đó, chọn D.\nCác lựa chọn khác:\n- A (stream processing): Xử lý luồng dữ liệu thời gian thực (ví dụ telemetry từ thiết bị).\n- B (batch processing): Xử lý theo lô định kỳ.\n- C (OLAP): Tối ưu cho các truy vấn đọc phân tích dữ liệu lịch sử số lượng lớn để làm báo cáo, không dùng để xử lý giao dịch mua bán trực tiếp của ứng dụng e-commerce.",
+    "references": []
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "What should you use to build a Microsoft Power BI paginated report?",
+    "options": {
+      "A": "Charticulator",
+      "B": "Power BI Desktop",
+      "C": "the Power BI service",
+      "D": "Power BI Report Builder"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Power BI Report Builder là công cụ chuyên dụng, độc lập của Microsoft được sử dụng để thiết kế và xây dựng các báo cáo phân trang (paginated reports - định dạng .rdl) để xuất bản lên Power BI Service. Do đó, chọn D.\nCác lựa chọn khác:\n- A (Charticulator): Là công cụ tạo biểu đồ tùy biến cho Power BI.\n- B (Power BI Desktop): Dùng để thiết kế các báo cáo tương tác thông thường (interactive reports), không dùng để xây dựng báo cáo phân trang.\n- C (the Power BI service): Nền tảng đám mây để xem, chia sẻ và quản lý báo cáo, không phải công cụ để thiết kế báo cáo phân trang từ đầu.",
+    "references": []
+  },
+  {
+    "id": 26,
+    "topic": 1,
+    "question": "You need to recommend a non-relational data store that is optimized for storing and retrieving text files, videos, audio streams, and virtual disk images. The data store must store data, some metadata, and a unique ID for each file.Which type of data store should you recommend?",
+    "options": {
+      "A": "key/value",
+      "B": "columnar",
+      "C": "object",
+      "D": "document"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Object (Lưu trữ đối tượng - ví dụ Azure Blob Storage) là giải pháp lưu trữ phi cấu trúc tối ưu nhất để lưu các tệp tin lớn như video, âm thanh, tệp văn bản và các file ảnh đĩa ảo (VHD). Nó cho phép gán ID duy nhất và siêu dữ liệu (metadata) đi kèm với mỗi đối tượng. Do đó, chọn C.\nCác lựa chọn khác:\n- A (key/value): Tối ưu cho việc lưu các cặp khóa/giá trị có dung lượng nhỏ dưới dạng văn bản/JSON đơn giản.\n- B (columnar) và D (document): Phù hợp lưu trữ dữ liệu có cấu trúc hoặc bán cấu trúc kiểu bảng/JSON để truy vấn sâu, không dùng để lưu trữ file đa phương tiện nhị phân kích thước lớn.",
+    "references": []
+  },
+  {
+    "id": 27,
+    "topic": 1,
+    "question": "You have an application that runs on Windows and requires access to a mapped drive.Which Azure service should you use?",
+    "options": {
+      "A": "Azure Files",
+      "B": "Azure Blob storage",
+      "C": "Azure Cosmos DB",
+      "D": "Azure Table storage"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Files hỗ trợ giao thức SMB tiêu chuẩn của Windows, cho phép người dùng ánh xạ (mount/map) thư mục chia sẻ trên đám mây thành một ổ đĩa mạng trên hệ điều hành Windows (ví dụ ổ đĩa Z:). Do đó, chọn A.\nCác lựa chọn khác:\n- B (Azure Blob storage): Lưu trữ đối tượng, không hỗ trợ ánh xạ ổ đĩa mạng qua SMB trực tiếp theo cách truyền thống cho các ứng dụng Windows cũ.\n- C (Azure Cosmos DB) và D (Azure Table storage): Là các dịch vụ cơ sở dữ liệu, không dùng để ánh xạ làm ổ đĩa lưu trữ tệp tin.",
+    "references": []
+  },
+  {
+    "id": 28,
+    "topic": 1,
+    "question": "When can you use an Azure Resource Manager template?",
+    "options": {
+      "A": "to automate the creation of an interdependent group of Azure resources in a repeatable way",
+      "B": "to apply Azure policies for multi-tenant deployments",
+      "C": "to provision Azure subscriptions",
+      "D": "to control which services and feature administrators and developers can deploy from the Azure portal"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Resource Manager (ARM) templates là các tệp JSON dùng để định nghĩa hạ tầng dưới dạng mã (Infrastructure as Code - IaC). Chúng giúp tự động hóa việc triển khai một nhóm tài nguyên Azure có liên kết với nhau một cách đồng bộ và có tính lặp lại cao (repeatable way). Do đó, chọn A.\nCác lựa chọn khác:\n- B (Azure Policies): Được dùng để áp đặt các quy định tuân thủ trên tài nguyên (ví dụ: chỉ cho phép tạo VM ở một vùng nhất định), không phải nhiệm vụ của ARM Template.\n- C (Azure Subscriptions): ARM templates dùng để triển khai tài nguyên bên trong subscription, không dùng để cấp phát subscription mới.\n- D (Azure Portal Controls): Phân quyền và kiểm soát dịch vụ được triển khai thuộc phạm vi của Azure Role-Based Access Control (RBAC) và Azure Policy.",
+    "references": []
+  },
+  {
+    "id": 29,
+    "topic": 1,
+    "question": "You need to create an Azure Storage account.Data in the account must replicate outside the Azure region automatically.Which two types of replication can you use for the storage account? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "zone-redundant storage (ZRS)",
+      "B": "read-access geo-redundant storage (RA-GRS)",
+      "C": "locally-redundant storage (LRS)",
+      "D": "geo-redundant storage (GRS)"
+    },
+    "answer": "BD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để tự động sao chép dữ liệu ra ngoài vùng Azure hiện tại (primary region) nhằm phòng ngừa thiên tai cấp vùng, ta phải chọn các giải pháp sao chép địa lý (geo-replication):\n- B (RA-GRS - Read-Access Geo-Redundant Storage): Sao chép dữ liệu sang vùng thứ hai và cho phép truy cập đọc ở vùng thứ hai này.\n- D (GRS - Geo-Redundant Storage): Sao chép dữ liệu sang vùng thứ hai (chỉ cho phép truy cập khi xảy ra sự cố chuyển vùng - failover).\nCác lựa chọn khác:\n- A (ZRS) và C (LRS): Chỉ sao chép dữ liệu trong phạm vi nội bộ của vùng chính (giữa các tòa nhà/datacenter trong cùng một vùng), không sao chép ra ngoài vùng Azure.",
+    "references": []
+  },
+  {
+    "id": 30,
+    "topic": 1,
+    "question": "What is a benefit of the Azure Cosmos DB Table API as compared to Azure Table storage?",
+    "options": {
+      "A": "provides resiliency if an Azure region fails",
+      "B": "supports partitioning",
+      "C": "provides a higher storage capacity",
+      "D": "supports a multi-master model"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Cosmos DB Table API cung cấp các tính năng cao cấp hơn hẳn so với Azure Table Storage thông thường, nổi bật là việc hỗ trợ mô hình đa ghi (multi-master model / multi-region writes), cho phép ghi dữ liệu đồng thời ở nhiều vùng địa lý khác nhau trên thế giới với độ trễ cực thấp. Do đó, chọn D.\nCác lựa chọn khác:\n- A (Resiliency): Cả hai dịch vụ đều có cơ chế sao chép địa lý để đảm bảo an toàn khi mất một vùng Azure.\n- B (Partitioning): Cả hai đều hỗ trợ phân vùng (partitioning) dữ liệu qua PartitionKey.\n- C (Storage capacity): Cả hai đều có khả năng lưu trữ rất lớn và có thể tự động mở rộng, không phải là ưu điểm độc quyền khác biệt lớn của Cosmos DB so với Azure Table Storage.",
+    "references": []
+  },
+  {
+    "id": 31,
+    "topic": 1,
+    "question": "When you create an Azure SQL database, which account can always connect to the database?",
+    "options": {
+      "A": "the Azure Active Directory (Azure AD) account that created the database",
+      "B": "the server admin login account of the logical server",
+      "C": "the Azure Active Directory (Azure AD) administrator account",
+      "D": "the sa account"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi khởi tạo một máy chủ cơ sở dữ liệu logical server cho Azure SQL, bạn bắt buộc phải chỉ định một tài khoản quản trị máy chủ (server admin login account). Tài khoản này là quản trị viên hệ thống cục bộ và luôn có quyền kết nối đến bất kỳ cơ sở dữ liệu nào trên máy chủ đó. Do đó, chọn B.\nCác lựa chọn khác:\n- A và C: Việc tích hợp Azure AD là tùy chọn (optional). Nếu không cấu hình, tài khoản Azure AD hoặc quản trị viên Azure AD sẽ không thể kết nối.\n- D (sa account): Azure SQL Database không sử dụng tài khoản sa truyền thống như trên SQL Server cài đặt cục bộ (on-premises) mà thay thế bằng tài khoản quản trị máy chủ được định nghĩa khi tạo.",
+    "references": []
+  },
+  {
+    "id": 32,
+    "topic": 1,
+    "question": "What are two characteristics of real-time data processing? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Data is processed periodically",
+      "B": "Low latency is expected",
+      "C": "High latency is acceptable",
+      "D": "Data is processed as it is created"
+    },
+    "answer": "BD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Xử lý dữ liệu thời gian thực (real-time data processing) có hai đặc trưng cốt lõi:\n- B (Low latency is expected): Kỳ vọng độ trễ cực thấp (phản hồi trong tích tắc hoặc vài giây).\n- D (Data is processed as it is created): Dữ liệu được xử lý ngay lập tức khi vừa được tạo ra.\nCác lựa chọn khác:\n- A (Data is processed periodically) và C (High latency is acceptable) là các đặc tính của xử lý theo lô (batch processing), không phải xử lý thời gian thực.",
+    "references": []
+  },
+  {
+    "id": 33,
+    "topic": 1,
+    "question": "When provisioning an Azure Cosmos DB account, which feature provides redundancy within an Azure region?",
+    "options": {
+      "A": "multi-master replication",
+      "B": "Availability Zones",
+      "C": "the strong consistency level",
+      "D": "automatic failover"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Availability Zones (Vùng khả dụng) cung cấp khả năng dự phòng cục bộ bên trong một vùng Azure (within an Azure region) bằng cách phân tán và sao chép dữ liệu qua các trung tâm dữ liệu độc lập về mặt vật lý (điện, mạng, tản nhiệt) trong cùng một vùng. Do đó, chọn B.\nCác lựa chọn khác:\n- A (multi-master replication) và D (automatic failover): Được dùng để đảm bảo tính sẵn sàng cao và dự phòng trên quy mô toàn cầu (cross-region / liên vùng), không giới hạn trong một vùng.\n- C (consistency level): Định nghĩa tính nhất quán của dữ liệu đọc/ghi, không phải là tính năng dự phòng vật lý.",
+    "references": []
+  },
+  {
+    "id": 34,
+    "topic": 1,
+    "question": "Your company needs to design a database that shows how changes in network traffic in one area of a network affect network traffic in other areas of the network.Which type of data store should you use?",
+    "options": {
+      "A": "graph",
+      "B": "key/value",
+      "C": "document",
+      "D": "columnar"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Graph (Cơ sở dữ liệu đồ thị) là loại kho lưu trữ dữ liệu được tối ưu hóa tốt nhất để lưu trữ và truy vấn các mối quan hệ phức tạp giữa các thực thể. Việc phân tích lưu lượng mạng truyền dẫn từ vùng này sang vùng khác trong mạng lưới thiết bị (các nút và các cạnh kết nối) là một bài toán đồ thị điển hình. Do đó, chọn A.\nCác lựa chọn khác:\n- B (key/value), C (document), và D (columnar): Đều không tối ưu cho việc biểu diễn và truy vấn sâu các mối quan hệ kết nối chéo phức tạp như đồ thị.",
+    "references": []
+  },
+  {
+    "id": 35,
+    "topic": 1,
+    "question": "You are deploying a software as a service (SaaS) application that requires a relational database for Online Transaction Processing (OLTP).Which Azure service should you use to support the application?",
+    "options": {
+      "A": "Azure Cosmos DB",
+      "B": "Azure HDInsight",
+      "C": "Azure SQL Database",
+      "D": "Azure Synapse Analytics"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure SQL Database là dịch vụ cơ sở dữ liệu quan hệ (relational) được quản lý hoàn toàn, tối ưu hóa cho các tác vụ xử lý giao dịch trực tuyến (OLTP), cực kỳ thích hợp làm database backend cho các ứng dụng SaaS. Do đó, chọn C.\nCác lựa chọn khác:\n- A (Azure Cosmos DB): Cơ sở dữ liệu phi quan hệ (NoSQL).\n- B (Azure HDInsight): Dịch vụ xử lý dữ liệu lớn (Spark/Hadoop).\n- D (Azure Synapse Analytics): Được thiết kế cho xử lý phân tích (OLAP) và kho dữ liệu quy mô lớn, không dùng cho xử lý giao dịch nhanh (OLTP) của ứng dụng SaaS.",
+    "references": []
+  },
+  {
+    "id": 36,
+    "topic": 1,
+    "question": "What are two benefits of platform as a service (PaaS) relational database offerings in Azure, such as Azure SQL Database? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "access to the latest features",
+      "B": "complete control over backup and restore processes",
+      "C": "in-database machine learning services",
+      "D": "reduced administrative effort for managing the server infrastructure"
+    },
+    "answer": "AD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hai lợi ích lớn của các dịch vụ cơ sở dữ liệu quan hệ dạng PaaS (như Azure SQL Database) là:\n- A (access to the latest features): Luôn được tiếp cận với các tính năng mới nhất của công cụ cơ sở dữ liệu mà không cần phải thực hiện nâng cấp thủ công phức tạp.\n- D (reduced administrative effort for managing the server infrastructure): Giảm thiểu đáng kể công sức quản trị hệ thống do Microsoft tự động quản lý phần cứng, vá lỗi OS và vận hành hạ tầng máy chủ bên dưới.\nCác lựa chọn khác:\n- B (complete control over backup/restore): Sai vì đây là tính năng được tự động hóa bởi đám mây, bạn không có quyền kiểm soát toàn diện (như lấy file .bak thô trực tiếp ra ổ đĩa) như trên IaaS hoặc máy chủ vật lý.\n- C (in-database ML services): Không phải là lợi thế đặc trưng hoặc áp dụng chung cho mọi dịch vụ PaaS quan hệ.",
+    "references": []
+  },
+  {
+    "id": 37,
+    "topic": 1,
+    "question": "Which statement is an example of Data Definition Language (DDL)?",
+    "options": {
+      "A": "SELECT",
+      "B": "JOIN",
+      "C": "UPDATE",
+      "D": "CREATE"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "DDL (Data Definition Language - Ngôn ngữ định nghĩa dữ liệu) được dùng để tạo lập, sửa đổi cấu trúc hoặc xóa các đối tượng trong cơ sở dữ liệu (như bảng, view, index). Lệnh CREATE (D) là ví dụ điển hình của DDL.\nCác lựa chọn khác:\n- A (SELECT) và C (UPDATE): Thuộc nhóm câu lệnh thao tác dữ liệu (DML).\n- B (JOIN): Là một mệnh đề liên kết các bảng trong câu truy vấn, không phải câu lệnh độc lập.",
+    "references": []
+  },
+  {
+    "id": 38,
+    "topic": 1,
+    "question": "A team of developers has computers that run Windows 10 and Ubuntu Desktop.The developers need to connect to and query an Azure SQL database from each of their computers. The developers require code assistance features such asIntelliSense.What should the developers use?",
+    "options": {
+      "A": "sqlcmd",
+      "B": "Microsoft SQL Server Management Studio (SSMS)",
+      "C": "Azure Data Studio",
+      "D": "Azure Data Explorer"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure Data Studio là công cụ truy vấn cơ sở dữ liệu đa nền tảng (chạy được trên cả Windows, macOS và Linux/Ubuntu), hỗ trợ giao diện đồ họa trực quan và các tính năng hỗ trợ viết code thông minh như IntelliSense. Do đó, chọn C.\nCác lựa chọn khác:\n- A (sqlcmd): Công cụ dòng lệnh, không có giao diện hỗ trợ IntelliSense.\n- B (SSMS): Chỉ chạy trên hệ điều hành Windows, không hỗ trợ Linux/Ubuntu Desktop.\n- D (Azure Data Explorer): Dịch vụ phân tích dữ liệu nhật ký lớn sử dụng ngôn ngữ KQL (Kusto Query Language), không dùng để truy vấn SQL Database truyền thống.",
+    "references": []
+  },
+  {
+    "id": 39,
+    "topic": 1,
+    "question": "What is the primary purpose of a data warehouse?",
+    "options": {
+      "A": "to provide answers to complex queries that rely on data from multiple sources",
+      "B": "to provide transformation services between source and target data stores",
+      "C": "to provide read-only storage of relational and non-relational historical data",
+      "D": "to provide storage for transactional line-of-business (LOB) applications"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mục đích chính của kho dữ liệu (data warehouse) là tích hợp dữ liệu từ nhiều nguồn khác nhau vào một nơi tập trung, được thiết kế tối ưu hóa để trả lời các câu hỏi truy vấn phân tích phức tạp phục vụ cho việc ra quyết định kinh doanh. Do đó, chọn A.\nCác lựa chọn khác:\n- B: Là vai trò của các công cụ tích hợp dữ liệu (ETL như Azure Data Factory) chứ không phải kho dữ liệu.\n- C: Kho dữ liệu không chỉ lưu trữ ở dạng chỉ đọc (nó vẫn được cập nhật dữ liệu mới định kỳ) và thường tập trung vào dữ liệu quan hệ có cấu trúc.\n- D: Đây là nhiệm vụ của các cơ sở dữ liệu giao dịch (OLTP/LOB).",
+    "references": []
+  },
+  {
+    "id": 40,
+    "topic": 1,
+    "question": "Your company needs to design a database that illustrates the relationships between utilization levels of individual network devices across a local area network.Which type of data store should you use?",
+    "options": {
+      "A": "graph",
+      "B": "key/value",
+      "C": "document",
+      "D": "columnar"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Graph (Cơ sở dữ liệu đồ thị) là loại cơ sở dữ liệu chuyên biệt và tối ưu nhất để biểu diễn và phân tích mối quan hệ (relationships) kết nối chéo phức tạp giữa các thực thể (như các thiết bị mạng trong mạng nội bộ LAN). Do đó, chọn A.\nCác lựa chọn khác:\n- B (key/value), C (document), và D (columnar): Không được thiết kế tối ưu để biểu diễn các đỉnh và cạnh kết nối chéo phức tạp trong cấu trúc liên mạng.",
+    "references": []
+  },
+  {
+    "id": 41,
+    "topic": 1,
+    "question": "Your company needs to implement a relational database in Azure. The solution must minimize ongoing maintenance.\nWhich Azure service should you use?",
+    "options": {
+      "A": "Azure SQL Database",
+      "B": "Azure Cosmos DB",
+      "C": "Azure Databricks",
+      "D": "SQL Server on Azure Virtual Machines"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Azure SQL Database là dịch vụ cơ sở dữ liệu quan hệ PaaS được quản lý hoàn toàn, tự động thực hiện các công việc vá lỗi, nâng cấp và sao lưu, giúp giảm thiểu tối đa chi phí và công sức bảo trì hệ thống. Do đó, chọn A.\nCác lựa chọn khác:\n- B (Azure Cosmos DB): Là dịch vụ NoSQL (phi quan hệ).\n- C (Azure Databricks): Nền tảng phân tích Spark.\n- D (SQL Server on Azure VMs): Dạng IaaS, đòi hỏi tự cài đặt và bảo trì hệ điều hành cũng như SQL Server.",
+    "references": []
+  },
+  {
+    "id": 42,
+    "topic": 1,
+    "question": "You need to store data by using Azure Table storage.What should you create first?",
+    "options": {
+      "A": "an Azure Cosmos DB instance",
+      "B": "a storage account",
+      "C": "a blob container",
+      "D": "a table"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để sử dụng Azure Table Storage, bước đầu tiên bạn cần thực hiện là tạo một tài khoản lưu trữ (storage account). Tất cả các dịch vụ như Blobs, Files, Queues và Tables đều phải nằm trong một Storage account. Do đó, chọn B.\nCác lựa chọn khác:\n- A (Azure Cosmos DB): Mặc dù Cosmos DB có Table API, nhưng đề bài hỏi về \"Azure Table Storage\" tiêu chuẩn của Storage Account.\n- C (blob container): Dùng để lưu trữ Blob, không liên quan đến Table.\n- D (table): Bạn không thể tạo bảng nếu chưa có tài khoản lưu trữ (storage account) chứa nó.",
+    "references": []
+  },
+  {
+    "id": 43,
+    "topic": 1,
+    "question": "You have a SQL query that combines customer data and order data. The query includes calculated columns.You need to create a database object that would allow other users to rerun the same SQL query.What should you create?",
+    "options": {
+      "A": "an index",
+      "B": "a view",
+      "C": "a scalar function",
+      "D": "a table"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một view (khung nhìn) là một bảng ảo chứa kết quả của một câu lệnh truy vấn SQL được định nghĩa trước (kết hợp dữ liệu, tính toán cột). Tạo một view giúp người dùng khác có thể dễ dàng chạy lại truy vấn phức tạp đó bằng cách gọi tên view như gọi một bảng bình thường. Do đó, chọn B.\nCác lựa chọn khác:\n- A (index - chỉ mục): Dùng để tăng tốc truy vấn dữ liệu, không dùng để lưu trữ định nghĩa truy vấn.\n- C (scalar function - hàm vô hướng): Trả về một giá trị đơn lẻ, không đại diện cho toàn bộ câu truy vấn bảng.\n- D (table - bảng): Việc tạo bảng thực tế đòi hỏi nhân bản và lưu trữ cứng dữ liệu, không tự động cập nhật động theo truy vấn gốc như view.",
+    "references": []
+  },
+  {
+    "id": 44,
+    "topic": 1,
+    "question": "Which statement is an example of Data Definition Language (DDL)?",
+    "options": {
+      "A": "SELECT",
+      "B": "INSERT",
+      "C": "DELETE",
+      "D": "DROP"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "DDL (Data Definition Language) gồm các lệnh thay đổi cấu trúc schema. Lệnh DROP (D) dùng để xóa một đối tượng trong database (như xóa bảng, xóa chỉ mục) nên thuộc nhóm DDL.\nCác lựa chọn khác:\n- A (SELECT), B (INSERT), và C (DELETE): Đều thuộc nhóm DML dùng để truy vấn và thao tác trực tiếp trên dữ liệu dòng của bảng.",
+    "references": []
+  },
+  {
+    "id": 45,
+    "topic": 1,
+    "question": "Which statement is an example of Data Manipulation Language (DML)?",
+    "options": {
+      "A": "REVOKE",
+      "B": "DISABLE",
+      "C": "CREATE",
+      "D": "UPDATE"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "DML (Data Manipulation Language) là các câu lệnh dùng để truy vấn hoặc thao tác trên dữ liệu hiện có. Lệnh UPDATE (D) dùng để cập nhật giá trị dữ liệu trong bảng nên là DML.\nCác lựa chọn khác:\n- A (REVOKE): Câu lệnh thuộc nhóm DCL (Data Control Language) dùng để thu hồi quyền truy cập.\n- B (DISABLE): Lệnh quản trị hoặc vô hiệu hóa cấu hình hệ thống.\n- C (CREATE): Thuộc nhóm câu lệnh DDL dùng để tạo cấu trúc đối tượng mới.",
+    "references": []
+  },
+  {
+    "id": 46,
+    "topic": 1,
+    "question": "Your company recently reported sales from the third quarter.You have the chart shown in the following exhibit.\nWhich type of analysis is shown in the fourth quarter?",
+    "options": {
+      "A": "predictive",
+      "B": "prescriptive",
+      "C": "descriptive",
+      "D": "diagnostic"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (predictive) là chính xác. Phân tích dự báo (Predictive analytics) sử dụng dữ liệu lịch sử để dự đoán các xu hướng, hành vi và kết quả trong tương lai. Ở đây, việc phân tích doanh số của quý 4 dựa trên dữ liệu doanh số thực tế của các quý trước (như quý 3) là ví dụ điển hình của phân tích dự báo.\n- Descriptive (C): Phân tích mô tả, trả lời câu hỏi 'điều gì đã xảy ra'.\n- Diagnostic (D): Phân tích chẩn đoán, trả lời câu hỏi 'tại sao nó xảy ra'.\n- Prescriptive (B): Phân tích đề xuất, trả lời câu hỏi 'chúng ta nên làm gì tiếp theo'.",
+    "references": []
+  },
+  {
+    "id": 47,
+    "topic": 1,
+    "question": "You need to recommend a data store service that meets the following requirements:✑ Native SQL API access✑ Configurable indexesWhat should you recommend?",
+    "options": {
+      "A": "Azure Files",
+      "B": "Azure Blob storage",
+      "C": "Azure Table storage",
+      "D": "Azure Cosmos DB"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (Azure Cosmos DB) là chính xác. Azure Cosmos DB hỗ trợ API SQL (Core API) nguyên bản cho phép truy vấn dữ liệu NoSQL bằng cú pháp SQL quen thuộc, đồng thời hỗ trợ tính năng tự động đánh chỉ mục (automatic indexing) có thể cấu hình được để tối ưu hóa hiệu năng truy vấn.\n- Azure Blob storage (B) và Azure Files (A): Là dịch vụ lưu trữ tệp tin/đối tượng không hỗ trợ API truy vấn SQL nguyên bản và đánh chỉ mục cấu trúc dữ liệu bên trong.\n- Azure Table storage (C): Lưu trữ dạng Key-Value đơn giản, không hỗ trợ SQL API đầy đủ và có khả năng cấu hình chỉ mục rất hạn chế (chỉ đánh chỉ mục theo PartitionKey và RowKey).",
+    "references": []
+  },
+  {
+    "id": 48,
+    "topic": 1,
+    "question": "A bar chart showing year-to-date sales by region is an example of which type of analytics?",
+    "options": {
+      "A": "predictive",
+      "B": "prescriptive",
+      "C": "descriptive",
+      "D": "diagnostic"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (descriptive) là chính xác. Phân tích mô tả (Descriptive analytics) giúp tóm tắt dữ liệu lịch sử để biểu diễn những gì đã xảy ra trong quá khứ. Biểu đồ cột hiển thị doanh số bán hàng từ đầu năm đến nay (year-to-date sales) theo khu vực chỉ đơn thuần mô tả lại tình hình thực tế đã diễn ra, không dự đoán hay đề xuất hành động.",
+    "references": []
+  },
+  {
+    "id": 49,
+    "topic": 1,
+    "question": "You need to modify a view in a relational database by adding a new column.Which statement should you use?",
+    "options": {
+      "A": "MERGE",
+      "B": "ALTER",
+      "C": "INSERT",
+      "D": "UPDATE"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (ALTER) là chính xác. Lệnh `ALTER` (cụ thể là `ALTER VIEW` hoặc `ALTER TABLE`) trong SQL được sử dụng để sửa đổi cấu trúc của một đối tượng cơ sở dữ liệu đã tồn tại (như thêm, sửa hoặc xóa cột).\n- INSERT (C): Dùng để thêm dòng dữ liệu mới vào bảng.\n- UPDATE (D): Dùng để cập nhật giá trị dữ liệu hiện có trong bảng.\n- MERGE (A): Dùng để thực hiện đồng thời các thao tác INSERT, UPDATE, hoặc DELETE dựa trên sự khớp nhau của dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 50,
+    "topic": 1,
+    "question": "You need to create an Azure resource to store data in Azure Table storage.Which command should you run?",
+    "options": {
+      "A": "az storage share create",
+      "B": "az storage account create",
+      "C": "az cosmosdb create",
+      "D": "az storage container create"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (az storage account create) là chính xác. Azure Table storage là một dịch vụ nằm trong Azure Storage Account. Do đó, để sử dụng Table storage, trước tiên bạn phải tạo một tài khoản lưu trữ Azure bằng lệnh `az storage account create`.\n- az storage container create (D): Dùng để tạo container lưu trữ Blob.\n- az storage share create (A): Dùng để tạo file share trong Azure Files.\n- az cosmosdb create (C): Dùng để tạo tài khoản Azure Cosmos DB (mặc dù Cosmos DB có Table API, nhưng câu hỏi hỏi về dịch vụ Azure Table storage truyền thống).",
+    "references": []
+  },
+  {
+    "id": 51,
+    "topic": 1,
+    "question": "What are two uses of data visualization? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Represent trends and patterns over time",
+      "B": "Implement machine learning to predict future values",
+      "C": "Communicate the significance of data",
+      "D": "Enforce business logic across reports"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A và C là chính xác. Trực quan hóa dữ liệu (Data visualization) giúp:\n1. Biểu diễn các xu hướng và quy luật của dữ liệu theo thời gian một cách trực quan qua biểu đồ (Lựa chọn A).\n2. Truyền đạt ý nghĩa, thông điệp và tầm quan trọng của dữ liệu cho người xem một cách nhanh chóng (Lựa chọn C).\n- Lựa chọn B liên quan đến học máy (machine learning) chứ không phải trực quan hóa.\n- Lựa chọn D liên quan đến logic nghiệp vụ và mô hình hóa dữ liệu (data modeling).",
+    "references": []
+  },
+  {
+    "id": 52,
+    "topic": 1,
+    "question": "Which Azure storage solution provides native support for POSIX-compliant access control lists (ACLs)?",
+    "options": {
+      "A": "Azure Table storage",
+      "B": "Azure Data Lake Storage",
+      "C": "Azure Queue storage",
+      "D": "Azure Files"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (Azure Data Lake Storage) là chính xác. Azure Data Lake Storage (ADLS Gen2) hỗ trợ cơ chế bảo mật thư mục và tệp tin thông qua danh sách kiểm soát truy cập (ACL) tương thích với chuẩn POSIX, cho phép phân quyền chi tiết cho người dùng và nhóm trên từng thư mục/tệp.\n- Azure Files (D) hỗ trợ ACL chuẩn NTFS khi kết hợp với AD nhưng không phải POSIX nguyên bản của hệ thống tệp dữ liệu lớn.\n- Azure Table (A) và Queue (C) không có cấu trúc hệ thống tệp tin nên không hỗ trợ POSIX ACLs.",
+    "references": []
+  },
+  {
+    "id": 53,
+    "topic": 1,
+    "question": "Which Azure Data Factory component provides the compute environment for activities?",
+    "options": {
+      "A": "SSIS packages",
+      "B": "an integration runtime",
+      "C": "a control flow",
+      "D": "a pipeline"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (an integration runtime) là chính xác. Integration Runtime (IR) là hạ tầng tính toán (compute infrastructure) được Azure Data Factory sử dụng để cung cấp năng lực thực thi cho các hoạt động (activities) như sao chép dữ liệu, chạy luồng dữ liệu, và điều phối.\n- Pipeline (D): Là nhóm logic của các hoạt động.\n- Control flow (C): Là luồng điều khiển điều phối các hoạt động.",
+    "references": []
+  },
+  {
+    "id": 54,
+    "topic": 1,
+    "question": "Which setting can only be configured during the creation of an Azure Cosmos DB account?",
+    "options": {
+      "A": "geo-redundancy",
+      "B": "multi-region writes",
+      "C": "production or non-production account type",
+      "D": "API"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (API) là chính xác. Khi tạo tài khoản Azure Cosmos DB, bạn phải chọn một API duy nhất (như NoSQL, MongoDB, Cassandra, Gremlin, hoặc Table) phù hợp với mô hình dữ liệu. Cài đặt API này là cố định và không thể thay đổi sau khi tài khoản đã được tạo. Các cài đặt khác như phân tán toàn cầu (geo-redundancy), ghi nhiều vùng (multi-region writes) có thể bật/tắt linh hoạt sau đó.",
+    "references": []
+  },
+  {
+    "id": 55,
+    "topic": 1,
+    "question": "What is a characteristic of batch processing?",
+    "options": {
+      "A": "The data ingested during batch processing must be processed as soon as the data is received.",
+      "B": "Large datasets must be split into batches of less than 1 GB before the data can be processed.",
+      "C": "There is a noticeable time delay between ingesting data and obtaining the data processing results.",
+      "D": "Batch processing can only process data that is structured."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (There is a noticeable time delay between ingesting data and obtaining the data processing results) là chính xác. Xử lý theo lô (Batch processing) thu thập dữ liệu và xử lý chúng cùng một lúc theo các khoảng thời gian định kỳ (hàng giờ, hàng ngày). Do đó, có một độ trễ thời gian nhất định (time delay) giữa thời điểm dữ liệu được sinh ra/thu thập và thời điểm có kết quả xử lý.\n- Xử lý ngay lập tức (A) là đặc điểm của xử lý luồng (Stream processing).",
+    "references": []
+  },
+  {
+    "id": 56,
+    "topic": 1,
+    "question": "Which two Azure services can be used to provision Apache Spark clusters? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Azure Time Series Insights",
+      "B": "Azure HDInsight",
+      "C": "Azure Databricks",
+      "D": "Azure Log Analytics"
+    },
+    "answer": "BC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B và C là chính xác. Cả Azure HDInsight và Azure Databricks đều cung cấp khả năng khởi tạo và quản lý các cụm Apache Spark (Apache Spark clusters) chạy trên đám mây để xử lý dữ liệu lớn.\n- Azure Log Analytics (D): Dùng để giám sát và phân tích nhật ký (logs).\n- Azure Time Series Insights (A): Dùng để trực quan hóa dữ liệu chuỗi thời gian của IoT.",
+    "references": []
+  },
+  {
+    "id": 57,
+    "topic": 1,
+    "question": "Which storage solution supports access control lists (ACLs) at the file and folder level?",
+    "options": {
+      "A": "Azure Data Lake Storage",
+      "B": "Azure Queue storage",
+      "C": "Azure Blob storage",
+      "D": "Azure Cosmos DB"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (Azure Data Lake Storage) là chính xác. Azure Data Lake Storage Gen2 hỗ trợ cơ chế bảo mật và phân quyền chi tiết thông qua Access Control Lists (ACLs) ở cả cấp độ thư mục (folder) và tệp tin (file).\n- Azure Blob storage (C) hỗ trợ phân quyền ở mức độ container (nhưng không hỗ trợ ACL cấp tệp/thư mục chi tiết nếu không bật tính năng Hierarchical Namespace của ADLS Gen2).\n- Azure Queue (B) và Azure Cosmos DB (D) không lưu trữ dạng cây thư mục tệp tin.",
+    "references": []
+  },
+  {
+    "id": 58,
+    "topic": 1,
+    "question": "You have an Azure SQL database that you access directly from the Internet.You recently changed the public IP address of your computer.After changing the IP address, you can no longer access the database. You can connect to other resources in Azure.What is a possible cause of the issue?",
+    "options": {
+      "A": "role-based access control (RBAC)",
+      "B": "Dynamic Host Configuration Protocol (DHCP)",
+      "C": "Domain Name Service (DNS)",
+      "D": "a database-level firewall"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (a database-level firewall) là chính xác. Azure SQL Database sử dụng tường lửa (firewall) ở cấp độ máy chủ và cơ sở dữ liệu để chặn truy cập từ các địa chỉ IP không được phép. Khi địa chỉ IP công cộng của máy tính thay đổi, kết nối sẽ bị tường lửa chặn lại cho đến khi địa chỉ IP mới được thêm vào danh sách quy tắc tường lửa (firewall rules).",
+    "references": []
+  },
+  {
+    "id": 59,
+    "topic": 1,
+    "question": "Which clause should you use in a SELECT statement to combine rows in one table with rows in another table?",
+    "options": {
+      "A": "SET",
+      "B": "VALUES",
+      "C": "KEY",
+      "D": "JOIN"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (JOIN) là chính xác. Phép `JOIN` trong mệnh đề `SELECT` được sử dụng để kết hợp các hàng (rows) từ hai hoặc nhiều bảng khác nhau dựa trên một cột chung giữa chúng.",
+    "references": []
+  },
+  {
+    "id": 60,
+    "topic": 1,
+    "question": "Your company needs to ensure that an Azure virtual machine can connect to Azure SQL databases without exposing the databases to the internet.What should you use?",
+    "options": {
+      "A": "Azure Application Gateway",
+      "B": "Azure Traffic Manager",
+      "C": "Azure DNS",
+      "D": "Azure Private Link"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (Azure Private Link) là chính xác. Azure Private Link cho phép bạn kết nối bảo mật từ máy ảo Azure đến dịch vụ PaaS như Azure SQL Database thông qua một điểm cuối riêng tư (Private Endpoint) có địa chỉ IP nội bộ trong mạng ảo (VNet). Điều này giúp dữ liệu không đi qua internet công cộng.",
+    "references": []
+  },
+  {
+    "id": 61,
+    "topic": 1,
+    "question": "You have an Azure Cosmos DB account that uses the Core (SQL) API.Which two settings can you configure at the container level? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "the throughput",
+      "B": "the read region",
+      "C": "the partition key",
+      "D": "the API"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A và C là chính xác. Trong Azure Cosmos DB, ở cấp độ container, bạn có thể định nghĩa khóa phân vùng (partition key) để phân bổ dữ liệu và cấu hình thông lượng (throughput - đo bằng RU/s) dành riêng cho container đó.\n- API (D) và Vùng đọc (B - read region) được cấu hình ở mức tài khoản (account level).",
+    "references": []
+  },
+  {
+    "id": 62,
+    "topic": 1,
+    "question": "You need to query a table named Products in an Azure SQL database.Which three requirements must be met to query the table from the internet? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "You must be assigned the Reader role for the resource group that contains the database.",
+      "B": "You must have SELECT access to the Products table.",
+      "C": "You must have a user in the database.",
+      "D": "You must be assigned the Contributor role for the resource group that contains the database.",
+      "E": "Your IP address must be allowed to connect to the database."
+    },
+    "answer": "BCE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B, C và E là chính xác. Để truy vấn thành công bảng dữ liệu từ internet:\n1. Địa chỉ IP công cộng của bạn phải được cho phép đi qua tường lửa (Lựa chọn E).\n2. Bạn phải có tài khoản người dùng (user) hợp lệ trong cơ sở dữ liệu để xác thực kết nối (Lựa chọn C).\n3. Tài khoản của bạn phải được cấp quyền đọc (`SELECT`) trên bảng Products đó (Lựa chọn B).\n- Quyền Azure RBAC (Reader/Contributor) trên Resource Group không cấp quyền truy cập dữ liệu trực tiếp bên trong Azure SQL Database.",
+    "references": []
+  },
+  {
+    "id": 63,
+    "topic": 1,
+    "question": "Which type of database is Azure Database for PostgreSQL?",
+    "options": {
+      "A": "Platform as a service (PaaS)",
+      "B": "Infrastructure as a service (IaaS)",
+      "C": "Microsoft SQL Server",
+      "D": "on-premises"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (Platform as a service (PaaS)) là chính xác. Azure Database for PostgreSQL là một dịch vụ cơ sở dữ liệu được quản lý hoàn toàn (fully managed database service) của Microsoft, tự động thực hiện các tác vụ như vá lỗi, sao lưu, nâng cấp và bảo mật, thuộc mô hình dịch vụ đám mây PaaS.",
+    "references": []
+  },
+  {
+    "id": 64,
+    "topic": 1,
+    "question": "At which two levels can you set the throughput for an Azure Cosmos DB account? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "database",
+      "B": "item",
+      "C": "container",
+      "D": "partition"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A và C là chính xác. Azure Cosmos DB hỗ trợ cấu hình thông lượng (throughput - RU/s) ở hai cấp độ: cấp độ cơ sở dữ liệu (database-level throughput - chia sẻ RU/s cho tất cả container bên trong) và cấp độ container (container-level throughput - dành riêng RU/s cho container đó).",
+    "references": []
+  },
+  {
+    "id": 65,
+    "topic": 1,
+    "question": "You have a dedicated SQL pool in Azure Synapse Analytics that is only used actively every night for eight hours.You need to minimize the cost of the dedicated SQL pool as much as possible during idle times. The solution must ensure that the data remains intact.What should you do on the dedicated SQL pool?",
+    "options": {
+      "A": "Scale down the data warehouse units (DWUs).",
+      "B": "Pause the pool.",
+      "C": "Create a user-defined restore point.",
+      "D": "Delete the pool"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (Pause the pool) là chính xác. Khi tạm dừng (Pause) cụm SQL chuyên dụng (dedicated SQL pool), tài nguyên tính toán (compute) sẽ được giải phóng và bạn sẽ không bị tính phí tính toán trong thời gian đó. Dữ liệu vẫn được lưu trữ an toàn trên đĩa và bạn chỉ phải trả chi phí lưu trữ (storage) tối thiểu.",
+    "references": []
+  },
+  {
+    "id": 66,
+    "topic": 1,
+    "question": "What are three characteristics of an Online Transaction Processing (OLTP) workload? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "denormalized data",
+      "B": "heavy writes and moderate reads",
+      "C": "light writes and heavy reads",
+      "D": "schema on write",
+      "E": "schema on read",
+      "F": "normalized data"
+    },
+    "answer": "BDF",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B, D và F là chính xác. Đặc điểm của hệ thống xử lý giao dịch trực tuyến (OLTP) bao gồm:\n1. Dữ liệu thường được chuẩn hóa (normalized) để tránh dư thừa dữ liệu và đảm bảo tính toàn vẹn (Lựa chọn F).\n2. Hỗ trợ ghi nhiều (heavy writes - thêm/sửa/xóa liên tục) và đọc vừa phải (moderate reads) (Lựa chọn B).\n3. Áp dụng cơ chế Schema on Write (cấu trúc dữ liệu được xác định và kiểm tra nghiêm ngặt trước khi ghi vào cơ sở dữ liệu) (Lựa chọn D).\n- Denormalized data (A), Schema on read (E) và Light writes/heavy reads (C) là đặc điểm của hệ thống phân tích OLAP.",
+    "references": []
+  },
+  {
+    "id": 67,
+    "topic": 1,
+    "question": "Which two activities can be performed entirely by using the Microsoft Power BI service without relying on Power BI Desktop? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "report and dashboard creation",
+      "B": "report sharing and distribution",
+      "C": "data modeling",
+      "D": "data acquisition and preparation"
+    },
+    "answer": "AB",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A và B là chính xác. Trên Power BI Service (phiên bản trình duyệt web), bạn có thể:\n1. Tạo trực tiếp các báo cáo mới dựa trên tập dữ liệu có sẵn và tạo Dashboard (Lựa chọn A).\n2. Chia sẻ và phân phối báo cáo cho đồng nghiệp hoặc tổ chức (Lựa chọn B).\n- Việc mô hình hóa dữ liệu chuyên sâu (C) và chuẩn bị/làm sạch dữ liệu bằng Power Query (D) phải sử dụng Power BI Desktop.",
+    "references": []
+  },
+  {
+    "id": 68,
+    "topic": 1,
+    "question": "You need to develop a solution to provide data to executives. The solution must provide an interactive graphical interface, depict various key performance indicators, and support data exploration by using drill down.What should you use in Microsoft Power BI?",
+    "options": {
+      "A": "a view",
+      "B": "a report",
+      "C": "a dataflow",
+      "D": "Microsoft Power Apps"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (a report) là chính xác. Báo cáo trong Power BI (Power BI Report) hỗ trợ giao diện đồ họa tương tác cao, cho phép thiết kế nhiều loại biểu đồ KPI và hỗ trợ các tính năng phân tích đi sâu (drill-down/drill-through) để khám phá dữ liệu. Dashboard chỉ hiển thị các thẻ tĩnh và không hỗ trợ drill-down trực tiếp như Report.",
+    "references": []
+  },
+  {
+    "id": 69,
+    "topic": 1,
+    "question": "Which three objects can be added to a Microsoft Power BI dashboard? Each correct answer presents a complete solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "a report page",
+      "B": "a Microsoft PowerPoint slide",
+      "C": "a visualization from a report",
+      "D": "a dataflow",
+      "E": "a text box"
+    },
+    "answer": "ACE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A, C và E là chính xác. Trên một Power BI Dashboard, bạn có thể ghim (pin) các đối tượng:\n1. Ghim toàn bộ một trang báo cáo (Lựa chọn A).\n2. Ghim một biểu đồ/hình ảnh trực quan đơn lẻ từ báo cáo (Lựa chọn C).\n3. Thêm các ô văn bản (text boxes) để chú thích (Lựa chọn E).\n- Các đối tượng như PowerPoint (B) hay Dataflow (D) không thể ghim trực tiếp lên Dashboard.",
+    "references": []
+  },
+  {
+    "id": 70,
+    "topic": 1,
+    "question": "Which T-SQL statement should be used to instruct a database management system to use an index instead of performing a full table scan?",
+    "options": {
+      "A": "WHERE",
+      "B": "SELECT",
+      "C": "UNION"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (WHERE) là chính xác. Khi sử dụng mệnh đề `WHERE` để lọc dữ liệu dựa trên một cột đã được đánh chỉ mục (index), hệ thống quản trị cơ sở dữ liệu sẽ tự động sử dụng chỉ mục đó (index seek/scan) để tìm kiếm nhanh thay vì quét toàn bộ bảng (full table scan) không hiệu quả.",
+    "references": []
+  },
+  {
+    "id": 71,
+    "topic": 1,
+    "question": "You need to create a visualization of running sales totals per quarter as shown in the following exhibit.\nWhat should you create in Power BI Desktop?",
+    "options": {
+      "A": "a waterfall chart",
+      "B": "a ribbon chart",
+      "C": "a bar chart",
+      "D": "a decomposition tree"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. a waterfall chart**: Đúng. Biểu đồ thác nước (waterfall chart) hiển thị tổng lũy kế khi các giá trị được cộng thêm hoặc trừ đi. Nó rất phù hợp để trực quan hóa sự thay đổi tích lũy (như doanh số cộng dồn qua từng quý) và cách các giá trị thành phần đóng góp vào tổng số cuối cùng.\n- **B. a ribbon chart**: Sai. Ribbon chart được sử dụng để hiển thị thứ hạng (rank) của các danh mục thay đổi như thế nào theo thời gian, chứ không hiển thị tổng lũy kế.\n- **C. a bar chart**: Sai. Bar chart (biểu đồ cột) hiển thị các giá trị độc lập giữa các nhóm/danh mục mà không tự động thể hiện luồng thay đổi lũy kế một cách trực quan như waterfall chart.\n- **D. a decomposition tree**: Sai. Decomposition tree (sơ đồ phân rã) được sử dụng để phân tích dữ liệu qua nhiều thứ bậc/kích thước khác nhau, giúp tìm ra các yếu tố đóng góp lớn nhất vào một chỉ số, không dùng để vẽ biểu đồ tổng lũy kế theo thời gian.",
+    "references": null
+  },
+  {
+    "id": 72,
+    "topic": 1,
+    "question": "You need to perform hybrid transactional and analytical processing (HTAP) queries against Azure Cosmos DB data sources by using Azure Synapse Analytics.What should you use?",
+    "options": {
+      "A": "Synapse pipelines",
+      "B": "a Synapse SQL pool",
+      "C": "Synapse Link",
+      "D": "Synapse Studio"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Synapse Link**: Đúng. Azure Synapse Link cho Azure Cosmos DB là một khả năng xử lý giao dịch và phân tích hỗn hợp (HTAP) cloud-native. Nó liên kết Azure Cosmos DB với Azure Synapse Analytics, cho phép chạy các truy vấn phân tích thời gian thực (near real-time) trên dữ liệu vận hành mà không ảnh hưởng đến hiệu năng của hệ thống giao dịch gốc.\n- **A. Synapse pipelines**: Sai. Pipelines được sử dụng để điều phối luồng công việc và ETL dữ liệu, không phải là cơ chế HTAP trực tiếp để truy vấn Cosmos DB mà không làm gián đoạn hệ thống.\n- **B. a Synapse SQL pool**: Sai. Synapse SQL pool là công cụ tính toán để truy vấn dữ liệu, nhưng để thực hiện HTAP trực tiếp với Cosmos DB một cách tối ưu thì phải thông qua Synapse Link.\n- **D. Synapse Studio**: Sai. Synapse Studio là giao diện quản lý và phát triển dựa trên web cho Azure Synapse Analytics, chứ không phải là một công nghệ kết nối dữ liệu HTAP.",
+    "references": null
+  },
+  {
+    "id": 73,
+    "topic": 1,
+    "question": "You have data saved in the following format.\nWhich format was used?",
+    "options": {
+      "A": "YAML",
+      "B": "CSV",
+      "C": "JSON",
+      "D": "HTML"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. CSV**: Đúng. CSV (Comma-Separated Values) là định dạng tệp văn bản đơn giản dùng để lưu trữ dữ liệu dạng bảng, trong đó mỗi dòng đại diện cho một bản ghi và các trường thông tin được phân tách với nhau bằng dấu phẩy (hoặc ký tự phân tách khác).\n- **A. YAML**: Sai. YAML sử dụng thụt lề bằng khoảng trắng để cấu trúc dữ liệu dưới dạng các cặp key-value hoặc danh sách phân cấp.\n- **C. JSON**: Sai. JSON sử dụng các cặp khóa-giá trị được bao quanh bởi dấu ngoặc nhọn `{}` và dấu ngoặc vuông `[]`.\n- **D. HTML**: Sai. HTML là ngôn ngữ đánh dấu sử dụng các thẻ như `<table>`, `<tr>`, `<td>` để cấu trúc và hiển thị trang web.",
+    "references": null
+  },
+  {
+    "id": 74,
+    "topic": 1,
+    "question": "Which database transaction property ensures that individual transactions are executed only once and either succeed in their entirety or roll back?",
+    "options": {
+      "A": "atomicity",
+      "B": "durability",
+      "C": "isolation",
+      "D": "consistency"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. atomicity**: Đúng. Tính nguyên tố (Atomicity) trong thuộc tính ACID đảm bảo rằng một giao dịch (transaction) được thực hiện như một đơn vị duy nhất: hoặc là tất cả các thao tác trong giao dịch đều thành công, hoặc là không có thao tác nào được áp dụng (roll back lại trạng thái trước đó).\n- **B. durability**: Sai. Tính bền vững (Durability) đảm bảo rằng một khi giao dịch đã được commit, dữ liệu sẽ được lưu trữ vĩnh viễn và không bị mất ngay cả khi hệ thống gặp sự cố.\n- **C. isolation**: Sai. Tính cô lập (Isolation) đảm bảo rằng các giao dịch chạy đồng thời không can thiệp hay ảnh hưởng lẫn nhau; kết quả của một giao dịch đang chạy sẽ không hiển thị với các giao dịch khác cho đến khi nó được commit.\n- **D. consistency**: Sai. Tính nhất quán (Consistency) đảm bảo rằng một giao dịch chỉ chuyển cơ sở dữ liệu từ trạng thái hợp lệ này sang trạng thái hợp lệ khác.",
+    "references": null
+  },
+  {
+    "id": 75,
+    "topic": 1,
+    "question": "You have an on-premises Microsoft SQL Server database.You need to migrate the database to the cloud. The solution must meet the following requirements:\nMinimize maintenance effort.Support the Database Mail and Service Broker features.What should you include in the solution?",
+    "options": {
+      "A": "Azure SQL Database single database",
+      "B": "an Azure SQL Database elastic pool",
+      "C": "Azure SQL Managed instance",
+      "D": "SQL Server on Azure virtual machines"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Azure SQL Managed Instance**: Đúng. Azure SQL Managed Instance cung cấp khả năng tương thích gần như 100% với SQL Server phiên bản on-premises (bao gồm các tính năng cấp instance như Database Mail và Service Broker), đồng thời là mô hình PaaS giúp giảm thiểu tối đa nỗ lực quản trị, bảo trì, vá lỗi hệ điều hành và phần cứng so với SQL Server trên VM.\n- **A. Azure SQL Database single database**: Sai. Azure SQL Database là dịch vụ PaaS nhưng không hỗ trợ trực tiếp các tính năng cấp instance như Database Mail hay Service Broker của SQL Server truyền thống.\n- **B. an Azure SQL Database elastic pool**: Sai. Elastic pool dùng để quản lý tài nguyên dùng chung cho nhiều cơ sở dữ liệu Azure SQL Database đơn lẻ, cũng không hỗ trợ Database Mail hay Service Broker.\n- **D. SQL Server on Azure virtual machines**: Sai. Giải pháp IaaS này hỗ trợ đầy đủ Database Mail và Service Broker nhưng đòi hỏi nỗ lực bảo trì và quản trị rất lớn (phải tự quản lý hệ điều hành, cài đặt SQL Server, vá lỗi, v.v.), không đáp ứng yêu cầu tối thiểu hóa nỗ lực bảo trì.",
+    "references": null
+  },
+  {
+    "id": 76,
+    "topic": 1,
+    "question": "You have the following two tables of customer data.\nWhich type of data do the tables contain?",
+    "options": {
+      "A": "structured",
+      "B": "non-relational",
+      "C": "semi-structured",
+      "D": "unstructured"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. structured**: Đúng. Dữ liệu có cấu trúc (Structured data) là dữ liệu tuân theo một lược đồ nghiêm ngặt, được tổ chức dưới dạng hàng và cột trong các bảng có mối quan hệ với nhau (cơ sở dữ liệu quan hệ).\n- **B. non-relational**: Sai. Non-relational (phi quan hệ) đề cập đến các mô hình cơ sở dữ liệu phi quan hệ (NoSQL) như document, key-value, graph chứ không phải là phân loại định dạng dữ liệu cơ bản.\n- **C. semi-structured**: Sai. Dữ liệu bán cấu trúc (Semi-structured data) không tuân theo bảng quan hệ nhưng vẫn chứa các thẻ hoặc nhãn phân tách (như JSON, XML, YAML).\n- **D. unstructured**: Sai. Dữ liệu phi cấu trúc (Unstructured data) không có cấu trúc định trước, ví dụ như video, hình ảnh, tệp âm thanh, hoặc văn bản tự do.",
+    "references": null
+  },
+  {
+    "id": 77,
+    "topic": 1,
+    "question": "You have a data store that has the structure shown in the following exhibit.\nWhich type of data store is this?",
+    "options": {
+      "A": "key/value",
+      "B": "object data",
+      "C": "graph",
+      "D": "time series"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. graph**: Đúng. Cơ sở dữ liệu đồ thị (Graph database) lưu trữ dữ liệu dưới dạng các thực thể (đỉnh/nút) và mối quan hệ giữa chúng (cạnh). Đây là mô hình lý tưởng để lưu trữ và truy vấn các mối quan hệ phức tạp như mạng xã hội, phát hiện gian lận.\n- **A. key/value**: Sai. Cơ sở dữ liệu khóa/giá trị lưu trữ dữ liệu dưới dạng các bản ghi chứa một khóa duy nhất và một giá trị tương ứng.\n- **B. object data**: Sai. Kho lưu trữ đối tượng (Object storage/Blob) lưu trữ dữ liệu dưới dạng các tệp nhị phân không cấu trúc cùng với siêu dữ liệu.\n- **D. time series**: Sai. Cơ sở dữ liệu chuỗi thời gian được tối ưu hóa để lưu trữ các phép đo hoặc sự kiện được gắn nhãn thời gian thay đổi theo thời gian.",
+    "references": null
+  },
+  {
+    "id": 78,
+    "topic": 1,
+    "question": "In Azure Table storage, each row in a table must be uniquely identified by which two components? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "a partition key",
+      "B": "a range",
+      "C": "a row key",
+      "D": "a timestamp"
+    },
+    "answer": "AC",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. a partition key** và **C. a row key**: Đúng. Trong Azure Table storage, khóa chính của một thực thể (dòng) được tạo thành bởi sự kết hợp giữa PartitionKey (khóa phân vùng, dùng để nhóm các thực thể lại với nhau và phục vụ phân tải) và RowKey (khóa hàng, định danh duy nhất cho thực thể trong phân vùng đó).\n- **B. a range**: Sai. Đây không phải là thuộc tính định danh của hàng trong Azure Table.\n- **D. a timestamp**: Sai. Mặc dù mỗi thực thể trong Azure Table storage đều có một thuộc tính Timestamp do hệ thống tự động quản lý để theo dõi thời gian cập nhật gần nhất, nhưng nó không dùng để định danh duy nhất cho hàng.",
+    "references": null
+  },
+  {
+    "id": 79,
+    "topic": 1,
+    "question": "What should you use to automatically delete blobs from Azure Blob Storage?",
+    "options": {
+      "A": "archive storage",
+      "B": "the change feed",
+      "C": "soft delete",
+      "D": "a lifecycle management policy"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. a lifecycle management policy**: Đúng. Chính sách quản lý vòng đời (Lifecycle management policy) trong Azure Blob Storage cho phép tạo ra các quy tắc tự động chuyển các blob sang các phân lớp lưu trữ tối ưu hơn hoặc tự động xóa (delete/expire) blob sau một số ngày nhất định kể từ khi tạo hoặc sửa đổi.\n- **A. archive storage**: Sai. Archive storage là một phân lớp truy cập chi phí thấp dùng để lưu trữ dữ liệu hiếm khi truy cập, không có tính năng tự động xóa dữ liệu.\n- **B. the change feed**: Sai. Change feed cung cấp nhật ký giao dịch ghi lại tất cả các thay đổi đối với các blob, dùng cho mục đích theo dõi và đồng bộ, không dùng để thực hiện hành động xóa tự động.\n- **C. soft delete**: Sai. Xóa mềm (Soft delete) bảo vệ dữ liệu blob khỏi bị xóa nhầm bằng cách giữ lại dữ liệu đã xóa trong một khoảng thời gian quy định để có thể khôi phục lại.",
+    "references": null
+  },
+  {
+    "id": 80,
+    "topic": 1,
+    "question": "What is a characteristic of a non-relational database?",
+    "options": {
+      "A": "full support for Transact-SQL",
+      "B": "a fixed schema",
+      "C": "self-describing entities"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. self-describing entities**: Đúng. Cơ sở dữ liệu phi quan hệ thường lưu trữ dữ liệu dưới dạng các thực thể tự mô tả (self-describing), chẳng hạn như tệp JSON/XML trong document database, nơi mỗi bản ghi tự định nghĩa các thuộc tính/trường dữ liệu của chính nó mà không cần phụ thuộc vào một lược đồ chung.\n- **A. full support for Transact-SQL**: Sai. Transact-SQL (T-SQL) là ngôn ngữ truy vấn mở rộng của Microsoft dành riêng cho hệ quản trị cơ sở dữ liệu quan hệ SQL Server.\n- **B. a fixed schema**: Sai. Lược đồ cố định là đặc trưng của cơ sở dữ liệu quan hệ, trong khi cơ sở dữ liệu phi quan hệ có lược đồ linh hoạt.",
+    "references": null
+  },
+  {
+    "id": 81,
+    "topic": 1,
+    "question": "What is a primary characteristic of a relational database?",
+    "options": {
+      "A": "a flexible data structure",
+      "B": "data is queried and manipulated by using a variant of the SQL language",
+      "C": "a lack of dependencies between tables",
+      "D": "a large amount of duplicate data"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. data is queried and manipulated by using a variant of the SQL language**: Đúng. Đặc trưng chính của cơ sở dữ liệu quan hệ là dữ liệu được tổ chức chặt chẽ dưới dạng bảng và được truy vấn, thao tác bằng ngôn ngữ SQL hoặc các biến thể của nó.\n- **A. a flexible data structure**: Sai. Cơ sở dữ liệu quan hệ có cấu trúc dữ liệu cố định, nghiêm ngặt (schema-on-write), không linh hoạt như cơ sở dữ liệu phi quan hệ.\n- **C. a lack of dependencies between tables**: Sai. Cơ sở dữ liệu quan hệ dựa vào các khóa ngoại để thiết lập và duy trì các mối quan hệ chặt chẽ giữa các bảng.\n- **D. a large amount of duplicate data**: Sai. Bằng kỹ thuật chuẩn hóa dữ liệu, cơ sở dữ liệu quan hệ cố gắng loại bỏ trùng lặp dữ liệu để đảm bảo tính nhất quán.",
+    "references": null
+  },
+  {
+    "id": 82,
+    "topic": 1,
+    "question": "What is used to define a query in a stream processing jobs in Azure Stream Analytics?",
+    "options": {
+      "A": "YAML",
+      "B": "KQL",
+      "C": "SQL",
+      "D": "XML"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. SQL**: Đúng. Azure Stream Analytics sử dụng ngôn ngữ truy vấn dựa trên chuẩn SQL để thực hiện các phép biến đổi, lọc và phân tích dữ liệu dạng luồng.\n- **A. YAML**: Sai. YAML là ngôn ngữ tuần tự hóa dữ liệu dùng để cấu hình cấu trúc, không phải ngôn ngữ viết truy vấn xử lý luồng.\n- **B. KQL**: Sai. Kusto Query Language (KQL) được sử dụng trong Azure Data Explorer, Azure Monitor, Log Analytics, chứ không dùng trong Azure Stream Analytics.\n- **D. XML**: Sai. XML là ngôn ngữ đánh dấu dùng để trao đổi dữ liệu, không phải ngôn ngữ truy vấn.",
+    "references": null
+  },
+  {
+    "id": 83,
+    "topic": 1,
+    "question": "What is required to provision Azure Data Lake Storage in an Azure Storage account?",
+    "options": {
+      "A": "Versioning must be disabled.",
+      "B": "Hierarchical namespace must be disabled.",
+      "C": "Versioning must be enabled.",
+      "D": "Hierarchical namespace must be enabled."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Hierarchical namespace must be enabled.**: Đúng. Để kích hoạt tính năng Azure Data Lake Storage Gen2 trên một Azure Storage account tiêu chuẩn, bạn bắt buộc phải bật tính năng Không gian tên phân cấp (Hierarchical Namespace - HNS). HNS cho phép tổ chức dữ liệu thành các thư mục và thư mục con thực tế, cải thiện hiệu năng truy xuất.\n- **A. Versioning must be disabled.**: Sai. Trạng thái bật hay tắt Versioning không quyết định việc kích hoạt Data Lake Storage Gen2.\n- **B. Hierarchical namespace must be disabled.**: Sai. Nếu tắt Hierarchical namespace thì tài khoản chỉ hoạt động như một Azure Blob Storage thông thường.\n- **C. Versioning must be enabled.**: Sai. Versioning là tính năng tùy chọn, không bắt buộc khi kích hoạt Data Lake Storage Gen2.",
+    "references": null
+  },
+  {
+    "id": 84,
+    "topic": 1,
+    "question": "Which property of a transactional workload guarantees that each transaction is treated as a single unit that either succeeds completely or fails completely?",
+    "options": {
+      "A": "atomicity",
+      "B": "isolation",
+      "C": "durability",
+      "D": "consistency"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. atomicity**: Đúng. Tính nguyên tố (Atomicity) đảm bảo một giao dịch (transaction) được thực hiện như một đơn vị công việc duy nhất: tất cả các câu lệnh trong đó phải chạy thành công hoàn toàn, nếu có bất kỳ lỗi nào xảy ra, toàn bộ giao dịch sẽ bị hủy bỏ (roll back).\n- **B. isolation**: Sai. Tính cô lập (Isolation) đảm bảo các giao dịch chạy song song không nhìn thấy dữ liệu trung gian của nhau trước khi commit.\n- **C. durability**: Sai. Tính bền vững (Durability) đảm bảo dữ liệu của giao dịch đã thành công được lưu trữ vĩnh viễn.\n- **D. consistency**: Sai. Tính nhất quán (Consistency) đảm bảo cơ sở dữ liệu chuyển từ trạng thái hợp lệ này sang trạng thái hợp lệ khác.",
+    "references": null
+  },
+  {
+    "id": 85,
+    "topic": 1,
+    "question": "Which T-SQL statement should be used to instruct a database management system to use an index instead of performing a full table scan?",
+    "options": {
+      "A": "SELECT",
+      "B": "WHERE",
+      "C": "JOIN"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. WHERE**: Đúng. Mệnh đề `WHERE` được sử dụng để lọc dữ liệu dựa trên các điều kiện cụ thể. Khi các cột trong điều kiện `WHERE` có chỉ mục tương ứng, bộ tối ưu hóa truy vấn có thể sử dụng chỉ mục đó (ví dụ như Index Seek) để tìm nhanh các bản ghi thỏa mãn điều kiện thay vì phải quét toàn bộ bảng (Full Table Scan).\n- **A. SELECT**: Sai. Mệnh đề `SELECT` chỉ xác định danh sách các cột sẽ được trả về trong kết quả truy vấn, không quyết định điều kiện lọc dữ liệu để hệ thống sử dụng chỉ mục.\n- **C. JOIN**: Sai. Mệnh đề `JOIN` được sử dụng để kết hợp các hàng từ hai hoặc nhiều bảng dựa trên cột liên quan, không phải mệnh đề lọc bản ghi chính để chỉ mục được áp dụng thay thế full scan.",
+    "references": null
+  },
+  {
+    "id": 86,
+    "topic": 1,
+    "question": "Which Azure service provides the highest compatibility for databases migrated from Microsoft SQL Server 2019 Enterprise edition?",
+    "options": {
+      "A": "Azure SQL Database",
+      "B": "Azure Database for MySQL",
+      "C": "Azure SQL Managed Instance",
+      "D": "an Azure SQL Database elastic pool"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Azure SQL Managed Instance**: Đúng. Azure SQL Managed Instance cung cấp khả năng tương thích cao nhất (gần như 100%) với công cụ cơ sở dữ liệu SQL Server Enterprise Edition, hỗ trợ các tính năng cấp instance (SQL Agent, Database Mail, Linked Servers, Service Broker) mà không cần thay đổi nhiều mã nguồn ứng dụng khi di chuyển từ on-premises.\n- **A. Azure SQL Database**: Sai. Đây là cơ sở dữ liệu đơn lẻ thuộc mô hình PaaS, không hỗ trợ các tính năng cấp instance một cách trực tiếp.\n- **B. Azure Database for MySQL**: Sai. Đây là dịch vụ cơ sở dữ liệu MySQL, hoàn toàn không tương thích với cơ sở dữ liệu Microsoft SQL Server.\n- **D. an Azure SQL Database elastic pool**: Sai. Elastic pool chỉ là một cơ chế chia sẻ tài nguyên cho nhiều cơ sở dữ liệu Azure SQL Database đơn lẻ, không giúp tăng độ tương thích với SQL Server Enterprise Edition.",
+    "references": null
+  },
+  {
+    "id": 87,
+    "topic": 1,
+    "question": "Which Azure Blob Storage feature enables you to sync a Blob Storage account to an external cache?",
+    "options": {
+      "A": "the Hot access tier",
+      "B": "change feed",
+      "C": "snapshots",
+      "D": "versioning"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. change feed**: Đúng. Tính năng Change Feed (luồng thay đổi) trong Azure Blob Storage cung cấp nhật ký giao dịch ghi nhận tất cả các sự kiện tạo, sửa đổi và xóa blob. Dịch vụ bên ngoài có thể đọc luồng này để đồng bộ hóa dữ liệu sang một bộ nhớ đệm bên ngoài (external cache), kho lưu trữ dữ liệu khác, hoặc chỉ mục tìm kiếm.\n- **A. the Hot access tier**: Sai. Hot access tier là phân lớp truy cập được tối ưu hóa cho dữ liệu thường xuyên truy cập, không có chức năng đồng bộ hóa hay cung cấp sự kiện thay đổi.\n- **C. snapshots**: Sai. Snapshot là bản sao chỉ đọc của một blob tại một thời điểm cụ thể, dùng để sao lưu và khôi phục, không dùng để đồng bộ hóa thời gian thực tới bộ nhớ đệm ngoài.\n- **D. versioning**: Sai. Versioning (phân bản) lưu trữ các phiên bản lịch sử của blob khi có sự thay đổi để có thể khôi phục lại, không phục vụ mục đích đồng bộ cache ngoài.",
+    "references": null
+  },
+  {
+    "id": 88,
+    "topic": 1,
+    "question": "Which Azure Cosmos DB API should you use for a graph database?",
+    "options": {
+      "A": "Table",
+      "B": "Cassandra",
+      "C": "Core (SQL)",
+      "D": "Gremlin"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Gremlin**: Đúng. API Gremlin của Azure Cosmos DB dựa trên Apache TinkerPop và được thiết kế chuyên biệt cho mô hình cơ sở dữ liệu đồ thị (graph database), sử dụng các truy vấn đồ thị để tìm kiếm và duyệt qua các nút (nodes) và các mối quan hệ (edges).\n- **A. Table**: Sai. API Table dùng cho dữ liệu dạng bảng khóa/giá trị (key-value) tương tự Azure Table Storage.\n- **B. Cassandra**: Sai. API Cassandra dùng cho mô hình dữ liệu dạng cột (column-family/wide-column storage) tương thích với Apache Cassandra.\n- **C. Core (SQL)**: Sai. API Core (SQL) là API tài liệu (document database) lưu trữ dữ liệu dưới dạng JSON, truy vấn bằng cú pháp giống SQL.",
+    "references": null
+  },
+  {
+    "id": 89,
+    "topic": 1,
+    "question": "Which type of database contains nodes and edges?",
+    "options": {
+      "A": "graph",
+      "B": "key/value",
+      "C": "columnar",
+      "D": "time series"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. graph**: Đúng. Cơ sở dữ liệu đồ thị (Graph database) là loại cơ sở dữ liệu phi quan hệ lưu trữ dữ liệu dưới dạng các đỉnh (nodes/vertices) đại diện cho các đối tượng và các cạnh (edges) đại diện cho các mối quan hệ nối giữa các đối tượng đó.\n- **B. key/value**: Sai. Cơ sở dữ liệu khóa/giá trị lưu trữ dữ liệu dưới dạng cặp key-value duy nhất, không dùng mô hình nodes/edges.\n- **C. columnar**: Sai. Columnar (cơ sở dữ liệu dạng cột) tổ chức dữ liệu theo cột thay vì theo hàng để tối ưu hóa truy vấn phân tích, không chứa nodes/edges.\n- **D. time series**: Sai. Time series (chuỗi thời gian) lưu dữ liệu được sắp xếp theo thời gian, tối ưu cho việc ghi nhận chuỗi đo lường theo thời gian thực.",
+    "references": null
+  },
+  {
+    "id": 90,
+    "topic": 1,
+    "question": "What is a function of a modern data warehouse?",
+    "options": {
+      "A": "supports batch processing only",
+      "B": "supports real-time and batch processing",
+      "C": "provides built-in or native online analytical processing",
+      "D": "stores raw data only"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. supports real-time and batch processing**: Đúng. Một kho dữ liệu hiện đại (modern data warehouse) không chỉ xử lý dữ liệu theo lô (batch processing) định kỳ mà còn hỗ trợ tích hợp và phân tích dữ liệu theo thời gian thực (real-time processing) từ các luồng streaming để đưa ra quyết định kinh doanh tức thì.\n- **A. supports batch processing only**: Sai. Các kho dữ liệu truyền thống chỉ hỗ trợ xử lý theo lô, trong khi kho dữ liệu hiện đại hỗ trợ cả hai.\n- **C. provides built-in or native online analytical processing**: Sai. Bản thân kho dữ liệu hiện đại là một giải pháp MPP cho OLAP, nhưng chức năng định nghĩa rộng hơn và trọng tâm là hỗ trợ luồng dữ liệu đa dạng.\n- **D. stores raw data only**: Sai. Kho lưu trữ dữ liệu thô thường là Data Lake, còn Data Warehouse lưu trữ dữ liệu đã được làm sạch, chuyển đổi và mô hình hóa để sẵn sàng phục vụ phân tích báo cáo.",
+    "references": null
+  },
+  {
+    "id": 91,
+    "topic": 1,
+    "question": "What can be used with native notebook support to query and visualize data by using a web-based interface?",
+    "options": {
+      "A": "Azure Databricks",
+      "B": "pgAdmin",
+      "C": "Microsoft Power BI"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. Azure Databricks**: Đúng. Azure Databricks cung cấp môi trường làm việc cộng tác dựa trên web với sự hỗ trợ mặc định cho Notebooks. Lập trình viên có thể viết mã bằng Python, Scala, SQL, R để truy vấn, phân tích và trực quan hóa dữ liệu trực tiếp trên giao diện web.\n- **B. pgAdmin**: Sai. pgAdmin là một công cụ quản trị dành riêng cho cơ sở dữ liệu PostgreSQL, không phải là nền tảng phân tích cộng tác hỗ trợ native notebooks cho phân tích dữ liệu lớn.\n- **C. Microsoft Power BI**: Sai. Power BI là công cụ Business Intelligence dùng để thiết kế báo cáo trực quan hóa dữ liệu, không phải là công cụ chạy mã trên notebook.",
+    "references": null
+  },
+  {
+    "id": 92,
+    "topic": 1,
+    "question": "Which database transaction property ensures that transactional changes to a database are preserved during unexpected operating system restarts?",
+    "options": {
+      "A": "consistency",
+      "B": "atomicity",
+      "C": "durability",
+      "D": "isolation"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. durability**: Đúng. Tính bền vững (Durability) trong hệ quản trị cơ sở dữ liệu đảm bảo rằng các thay đổi dữ liệu từ một giao dịch đã được xác nhận (commit) thành công sẽ được ghi nhận vào bộ nhớ lưu trữ vĩnh viễn và không bị mất đi, ngay cả khi xảy ra sự cố đột ngột như khởi động lại hệ điều hành hoặc mất điện.\n- **A. consistency**: Sai. Tính nhất quán đảm bảo rằng giao dịch không vi phạm các ràng buộc dữ liệu.\n- **B. atomicity**: Sai. Tính nguyên tố đảm bảo giao dịch hoàn thành toàn bộ hoặc không gì cả.\n- **D. isolation**: Sai. Tính cô lập đảm bảo các giao dịch chạy song song độc lập với nhau.",
+    "references": null
+  },
+  {
+    "id": 93,
+    "topic": 1,
+    "question": "You have data saved in the following format.\nWhich format was used?",
+    "options": {
+      "A": "XML",
+      "B": "HTML",
+      "C": "YAML",
+      "D": "JSON"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. JSON**: Đúng. JSON (JavaScript Object Notation) là định dạng trao đổi dữ liệu gọn nhẹ, dễ đọc ghi đối với con người và dễ phân tích đối với máy tính. Dữ liệu trong JSON được cấu trúc dưới dạng các cặp khóa-giá trị (key-value) được bao quanh bởi dấu ngoặc nhọn `{}` và các danh sách/mảng được bao quanh bởi dấu ngoặc vuông `[]`.\n- **A. XML**: Sai. XML sử dụng cấu trúc phân cấp dựa trên các thẻ mở và đóng tự định nghĩa.\n- **B. HTML**: Sai. HTML sử dụng các thẻ định dạng chuẩn để trình bày văn bản trên trình duyệt web.\n- **C. YAML**: Sai. YAML sử dụng thụt lề bằng khoảng trắng và dấu gạch đầu dòng để biểu diễn cấu trúc dữ liệu mà không cần nhiều dấu ngoặc.",
+    "references": null
+  },
+  {
+    "id": 94,
+    "topic": 1,
+    "question": "Which Azure Storage service implements the key/value model?",
+    "options": {
+      "A": "Azure Queue",
+      "B": "Azure Files",
+      "C": "Azure Table",
+      "D": "Azure Blob"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Azure Table**: Đúng. Azure Table storage là dịch vụ lưu trữ NoSQL dạng khóa/giá trị (key-value). Nó lưu trữ các thực thể phi lược đồ, mỗi thực thể bao gồm một tập hợp các thuộc tính dạng cặp tên-giá trị, được định danh duy nhất bởi PartitionKey và RowKey.\n- **A. Azure Queue**: Sai. Azure Queue storage là dịch vụ lưu trữ thông điệp phục vụ cho hàng đợi bất đồng bộ giữa các thành phần ứng dụng.\n- **B. Azure Files**: Sai. Azure Files cung cấp các chia sẻ tệp trên đám mây dựa trên giao thức SMB hoặc NFS tiêu chuẩn.\n- **D. Azure Blob**: Sai. Azure Blob storage là dịch vụ lưu trữ đối tượng dùng để lưu trữ dữ liệu phi cấu trúc dung lượng lớn như tài liệu, video, hình ảnh.",
+    "references": null
+  },
+  {
+    "id": 95,
+    "topic": 1,
+    "question": "You plan to deploy an app. The app requires a nonrelational data service that will provide latency guarantees of less than 10-ms for reads and writes.What should you include in the solution?",
+    "options": {
+      "A": "Azure Blob storage",
+      "B": "Azure Files",
+      "C": "Azure Table storage",
+      "D": "Azure Cosmos DB"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Azure Cosmos DB**: Đúng. Azure Cosmos DB là dịch vụ cơ sở dữ liệu phân tán toàn cầu phi quan hệ (NoSQL) cam kết độ trễ cực thấp bằng thỏa thuận dịch vụ (SLA) rõ ràng: thời gian phản hồi cho cả thao tác đọc và ghi đều dưới 10 mili-giây ở phân vị thứ 99.\n- **A. Azure Blob storage**: Sai. Azure Blob storage được thiết kế để lưu trữ lượng lớn dữ liệu phi cấu trúc, không có cam kết về độ trễ cực thấp dưới 10ms cho các thao tác đọc ghi ứng dụng.\n- **B. Azure Files**: Sai. Azure Files là dịch vụ lưu trữ tệp tin chia sẻ, không được tối ưu cho các truy xuất đọc ghi cơ sở dữ liệu độ trễ siêu thấp dưới 10ms.\n- **C. Azure Table storage**: Sai. Mặc dù Azure Table storage có hiệu năng tốt nhưng không có các cam kết SLA nghiêm ngặt về độ trễ dưới 10ms cho cả đọc và ghi như Cosmos DB.",
+    "references": null
+  },
+  {
+    "id": 96,
+    "topic": 1,
+    "question": "In a fully normalized database, how is data read and written for a single entity?",
+    "options": {
+      "A": "Data is read from multiple tables and written to multiple tables.",
+      "B": "Data is read from a single table and written to a single table.",
+      "C": "Data is read from a single table and written to multiple tables.",
+      "D": "Data is read from multiple tables and written to a single table."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. Data is read from multiple tables and written to multiple tables.**: Đúng. Trong một cơ sở dữ liệu được chuẩn hóa hoàn toàn (fully normalized database), mục tiêu là loại bỏ sự trùng lặp thông tin và đảm bảo tính toàn vẹn dữ liệu. Do đó, thông tin chi tiết về một thực thể thực tế sẽ được chia tách ra nhiều bảng khác nhau. Khi muốn đọc đầy đủ thông tin thực thể, hệ thống phải thực hiện liên kết (JOIN) từ nhiều bảng, và khi ghi/cập nhật thông tin thực thể, dữ liệu cũng phải được ghi vào nhiều bảng tương ứng.\n- Các phương án **B, C, D** đều sai vì chúng không phản ánh đúng bản chất của cơ sở dữ liệu đã chuẩn hóa hoàn toàn.",
+    "references": null
+  },
+  {
+    "id": 97,
+    "topic": 1,
+    "question": "A bank has a system that manages financial transactions.When transferring money between accounts. the system must never retrieve a value for the source account that reflects the balance before the transfer and a value for the destination account that reflects the balance after the transfer.Of which ACID semantic is this an example?",
+    "options": {
+      "A": "atomicity",
+      "B": "durability",
+      "C": "consistency",
+      "D": "isolation"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. isolation**: Đúng. Tính cô lập (Isolation) đảm bảo rằng trạng thái trung gian của một giao dịch đang diễn ra sẽ không hiển thị đối với các giao dịch khác chạy đồng thời. Trong ví dụ này, việc hệ thống ngăn không cho các giao dịch khác đọc được số dư cũ của tài khoản nguồn đồng thời với số dư mới của tài khoản đích là để duy trì tính cô lập của giao dịch chuyển tiền.\n- **A. atomicity**: Sai. Tính nguyên tố đảm bảo toàn bộ giao dịch chuyển tiền hoặc phải thành công hết hoặc thất bại hết, chứ không trực tiếp nói về việc che giấu trạng thái trung gian khỏi các tiến trình đọc đồng thời khác.\n- **B. durability**: Sai. Tính bền vững liên quan đến việc bảo toàn dữ liệu sau khi giao dịch thành công.\n- **C. consistency**: Sai. Tính nhất quán đảm bảo tổng số tiền trong ngân hàng không đổi trước và sau giao dịch, hoặc các quy tắc ràng buộc không bị vi phạm.",
+    "references": null
+  },
+  {
+    "id": 98,
+    "topic": 1,
+    "question": "You need to store event log data that is semi-structured and received as the logs occur.What should you use?",
+    "options": {
+      "A": "Azure Table storage",
+      "B": "Azure Queue storage",
+      "C": "Azure Files"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. Azure Table storage**: Đúng. Azure Table storage là một dịch vụ lưu trữ NoSQL rất phù hợp để lưu trữ lượng lớn dữ liệu bán cấu trúc (như tệp nhật ký sự kiện) được ghi nhận liên tục theo thời gian thực nhờ chi phí rẻ, tốc độ ghi nhanh và lược đồ linh hoạt.\n- **B. Azure Queue storage**: Sai. Queue storage chỉ dùng để lưu trữ tạm thời các tin nhắn phục vụ giao tiếp bất đồng bộ giữa các dịch vụ.\n- **C. Azure Files**: Sai. Azure Files dùng để chia sẻ tệp tin dạng thư mục, không tối ưu cho việc ghi nhận nhanh và truy vấn linh hoạt dữ liệu nhật ký bán cấu trúc.",
+    "references": null
+  },
+  {
+    "id": 99,
+    "topic": 1,
+    "question": "What is a characteristic of non-relational data?",
+    "options": {
+      "A": "no indexes",
+      "B": "self-describing entities",
+      "C": "a well-defined schema",
+      "D": "no unique key values"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **B. self-describing entities**: Đúng. Dữ liệu phi quan hệ thường được lưu trữ dưới dạng các thực thể tự mô tả, nơi định dạng của dữ liệu (như các khóa/thuộc tính) nằm ngay bên trong bản ghi (ví dụ: tài liệu JSON) thay vì tuân theo một lược đồ định nghĩa trước bên ngoài.\n- **A. no indexes**: Sai. Cơ sở dữ liệu phi quan hệ vẫn hỗ trợ và sử dụng chỉ mục để tăng tốc độ truy vấn dữ liệu.\n- **C. a well-defined schema**: Sai. Cơ sở dữ liệu phi quan hệ có lược đồ linh hoạt hoặc không cần lược đồ cố định trước.\n- **D. no unique key values**: Sai. Hầu hết các cơ sở dữ liệu phi quan hệ đều dựa vào khóa duy nhất để định danh các bản ghi.",
+    "references": null
+  },
+  {
+    "id": 100,
+    "topic": 1,
+    "question": "What is the typical latency for read operations against media files stored in the Cool access tier of Azure Blob Storage?",
+    "options": {
+      "A": "a few milliseconds",
+      "B": "a few seconds",
+      "C": "a few minutes",
+      "D": "a few hours"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. a few milliseconds**: Đúng. Trong Azure Blob Storage, cả phân lớp truy cập Hot và Cool đều cung cấp độ trễ truy xuất dữ liệu ở mức mili-giây tương tự nhau. Điểm khác biệt giữa chúng nằm ở chi phí lưu trữ và chi phí truy cập dữ liệu. Chỉ có phân lớp Archive mới có độ trễ truy cập lên tới vài giờ.\n- Các phương án **B, C, D** đều sai vì độ trễ của lớp Cool là tức thì (mili-giây), không phải vài giây, vài phút hay vài giờ.",
+    "references": null
+  },
+  {
+    "id": 101,
+    "topic": 1,
+    "question": "You have a database that stores data in the format shown in the following table.\nOf which type of database is this an example?",
+    "options": {
+      "A": "column family",
+      "B": "relational",
+      "C": "key-value",
+      "D": "document"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. column family**: Đúng. Cơ sở dữ liệu họ cột (Column Family / Wide-Column Store) tổ chức dữ liệu dưới dạng các họ cột thay vì hàng và cột truyền thống. Mỗi dòng có thể chứa số lượng cột khác nhau, và các cột liên quan thường được gom nhóm và lưu trữ vật lý cùng nhau để tăng hiệu suất truy vấn.\n- **B. relational**: Sai. Cơ sở dữ liệu quan hệ yêu cầu mọi dòng trong một bảng phải có chung một cấu trúc cột (lược đồ cố định).\n- **C. key-value**: Sai. Cơ sở dữ liệu khóa-giá trị chỉ đơn giản lưu trữ một khóa duy nhất trỏ tới một giá trị, không tổ chức thành cấu trúc cột phức tạp.\n- **D. document**: Sai. Cơ sở dữ liệu tài liệu lưu trữ dữ liệu dưới dạng các tài liệu tự mô tả (như JSON), không dựa trên mô hình column family.",
+    "references": null
+  },
+  {
+    "id": 102,
+    "topic": 1,
+    "question": "You need to accept and store large quantities of IoT streaming data.\nWhich database solution should you use?",
+    "options": {
+      "A": "Azure Database for PostgreSQL",
+      "B": "Azure Database for MariaDB",
+      "C": "Azure Cache for Redis",
+      "D": "Azure Cosmos DB"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Azure Cosmos DB**: Đúng. Azure Cosmos DB là sự lựa chọn lý tưởng cho các ứng dụng IoT nhờ khả năng phân tán toàn cầu, hỗ trợ lược đồ linh hoạt của dữ liệu cảm biến, khả năng ghi với tốc độ cực cao, độ trễ cực thấp và khả năng mở rộng tài nguyên linh hoạt để xử lý lượng lớn dữ liệu truyền phát liên tục.\n- **A. Azure Database for PostgreSQL** và **B. Azure Database for MariaDB**: Sai. Đây là các dịch vụ cơ sở dữ liệu quan hệ truyền thống, không được thiết kế tối ưu cho việc ghi nhận đồng thời lượng dữ liệu IoT khổng lồ với độ trễ siêu thấp và cấu trúc thay đổi liên tục.\n- **C. Azure Cache for Redis**: Sai. Redis là bộ nhớ đệm trong RAM, chủ yếu dùng để tăng tốc truy xuất dữ liệu tạm thời, không phải là giải pháp lưu trữ lâu dài dung lượng cực lớn cho dữ liệu lịch sử IoT.",
+    "references": null
+  },
+  {
+    "id": 103,
+    "topic": 1,
+    "question": "How is raw data stored in a data lakehouse?",
+    "options": {
+      "A": "as tables",
+      "B": "as queues",
+      "C": "as files",
+      "D": "as disks"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. as files**: Đúng. Trong kiến trúc Data Lakehouse, dữ liệu thô (raw data) được lưu trữ dưới dạng các tệp tin (như tệp Parquet, CSV, JSON, hoặc Delta Lake) trên hệ thống lưu trữ đối tượng đám mây. Một tầng siêu dữ liệu (metadata/schema layer) được phủ lên trên các tệp này để cung cấp các tính năng quản lý giao dịch giống như bảng.\n- **A. as tables**: Sai. Mặc dù có thể truy vấn dữ liệu dưới dạng bảng thông qua tầng quản lý (như Delta Lake), nhưng ở mức lưu trữ vật lý cơ bản, dữ liệu thô vẫn được lưu trữ dưới dạng các tệp.\n- **B. as queues**: Sai. Hàng đợi chỉ dùng để truyền tải thông điệp tạm thời, không dùng làm nơi lưu trữ dữ liệu thô.\n- **D. as disks**: Sai. Disks là thiết bị phần cứng lưu trữ vật lý, không phải là định dạng lưu trữ logic của dữ liệu thô.",
+    "references": null
+  },
+  {
+    "id": 104,
+    "topic": 1,
+    "question": "A data engineer is responsible for which task?",
+    "options": {
+      "A": "Explore data to identify trends.",
+      "B": "Implement policies, tools, and processes for backup and recovery plans.",
+      "C": "Design and build analytical models.",
+      "D": "Design and implement data stores for analytical workloads."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Design and implement data stores for analytical workloads.**: Đúng. Kỹ sư dữ liệu (Data Engineer) có nhiệm vụ thiết kế, xây dựng và duy trì các hệ thống lưu trữ dữ liệu (như Data Lakes, Data Warehouses) và các đường ống dẫn dữ liệu để chuẩn bị dữ liệu sẵn sàng phục vụ cho các tác vụ phân tích.\n- **A. Explore data to identify trends.** và **C. Design and build analytical models.**: Sai. Đây là các trách nhiệm chính của nhà khoa học dữ liệu (Data Scientist) hoặc nhà phân tích dữ liệu (Data Analyst).\n- **B. Implement policies, tools, and processes for backup and recovery plans.**: Sai. Đây là nhiệm vụ cốt lõi của quản trị viên cơ sở dữ liệu (DBA).",
+    "references": null
+  },
+  {
+    "id": 105,
+    "topic": 1,
+    "question": "Which file format has defined names and data types for each column and uses compressed columnar storage?",
+    "options": {
+      "A": "HTML",
+      "B": "CSV",
+      "C": "Apache Parquet",
+      "D": "JSON"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Apache Parquet**: Đúng. Apache Parquet là định dạng lưu trữ dữ liệu dạng cột (columnar storage) hiệu năng cao. Nó lưu trữ siêu dữ liệu mô tả rõ tên cột và kiểu dữ liệu của từng cột, đồng thời áp dụng các thuật toán nén mạnh mẽ để giảm dung lượng lưu trữ và tối ưu tốc độ truy vấn phân tích.\n- **A. HTML**: Sai. HTML là ngôn ngữ hiển thị web.\n- **B. CSV**: Sai. CSV là định dạng văn bản thô phân tách bằng dấu phẩy, không chứa định nghĩa kiểu dữ liệu trực tiếp trong tệp và lưu trữ dạng hàng.\n- **D. JSON**: Sai. JSON là định dạng bán cấu trúc, không nén theo cột và không có cấu trúc lược đồ cột cố định bắt buộc cho mọi bản ghi.",
+    "references": null
+  },
+  {
+    "id": 106,
+    "topic": 1,
+    "question": "A retail point of sale (POS) system is an example of which type of solution?",
+    "options": {
+      "A": "a data warehouse",
+      "B": "online analytical processing (OLAP)",
+      "C": "extract, transform, and load (ETL)",
+      "D": "online transaction processing (OLTP)"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. online transaction processing (OLTP)**: Đúng. Hệ thống điểm bán hàng (POS) ghi lại các giao dịch mua bán hàng ngày theo thời gian thực (nhanh chóng, tần suất cao). Đây là ví dụ kinh điển của hệ thống xử lý giao dịch trực tuyến (OLTP), tập trung vào các hoạt động đọc/ghi nhanh.\n- **A. a data warehouse**: Sai. Kho dữ liệu là hệ thống tập trung dùng để tích hợp dữ liệu từ nhiều nguồn phục vụ phân tích lâu dài, không trực tiếp xử lý các giao dịch bán lẻ tại quầy.\n- **B. online analytical processing (OLAP)**: Sai. OLAP là hệ thống phân tích dữ liệu nhiều chiều phục vụ báo cáo, không dùng để ghi nhận các giao dịch mua hàng tức thời.\n- **C. extract, transform, and load (ETL)**: Sai. ETL là quá trình trích xuất, chuyển đổi và nạp dữ liệu từ hệ thống nguồn sang hệ thống đích, không phải là loại hệ thống ứng dụng như POS.",
+    "references": null
+  },
+  {
+    "id": 107,
+    "topic": 1,
+    "question": "Which type of Azure resource supports the serverless configuration of an Azure SQL database?",
+    "options": {
+      "A": "SQL Server on Azure Virtual Machines",
+      "B": "an Azure SQL Database elastic pool",
+      "C": "a single database in Azure SQL Database",
+      "D": "Azure SQL Managed Instance"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. a single database in Azure SQL Database**: Đúng. Cấp tính toán không máy chủ (Serverless compute tier) - tự động điều chỉnh quy mô tài nguyên tính toán dựa trên nhu cầu sử dụng và tự động tạm dừng/kích hoạt lại khi không hoạt động - hiện chỉ được hỗ trợ cho mô hình Cơ sở dữ liệu đơn lẻ trong dịch vụ Azure SQL Database.\n- **A. SQL Server on Azure Virtual Machines**: Sai. SQL Server trên VM là mô hình IaaS, bạn phải tự cấu hình và quản lý tài nguyên của máy ảo, không hỗ trợ tính năng serverless PaaS tự động.\n- **B. an Azure SQL Database elastic pool**: Sai. Elastic pool chia sẻ tài nguyên tính toán cố định cho nhiều cơ sở dữ liệu, không hỗ trợ chế độ serverless tự động tạm dừng.\n- **D. Azure SQL Managed Instance**: Sai. Dịch vụ Azure SQL Managed Instance hiện không hỗ trợ cấp tính toán Serverless.",
+    "references": null
+  },
+  {
+    "id": 108,
+    "topic": 1,
+    "question": "Which Azure SQL offering provides near-100 percent compatibility with on-premises Microsoft SQL Server instances, while providing automated updates. backups, and maintenance tasks?",
+    "options": {
+      "A": "Azure SQL Managed Instance",
+      "B": "SQL Server on Azure Virtual Machines",
+      "C": "Azure SQL Database",
+      "D": "Azure SQL Edge"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. Azure SQL Managed Instance**: Đúng. Azure SQL Managed Instance là một dịch vụ PaaS cung cấp khả năng tương thích gần như 100% với công cụ cơ sở dữ liệu SQL Server on-premises mới nhất, đồng thời tự động hóa các tác vụ quản trị như cập nhật hệ điều hành/phần mềm, sao lưu dữ liệu và bảo trì thường niên.\n- **B. SQL Server on Azure Virtual Machines**: Sai. Giải pháp IaaS này yêu cầu bạn tự thực hiện hầu hết các tác vụ cập nhật, sao lưu và bảo trì.\n- **C. Azure SQL Database**: Sai. Azure SQL Database là dịch vụ PaaS được quản lý hoàn toàn nhưng không hỗ trợ khả năng tương thích ở cấp độ instance gần như 100% với SQL Server on-premises.\n- **D. Azure SQL Edge**: Sai. Đây là phiên bản rút gọn của SQL Server được tối ưu hóa cho các thiết bị IoT biên, không phải dịch vụ đám mây tương thích 100% thay thế SQL Server doanh nghiệp.",
+    "references": null
+  },
+  {
+    "id": 109,
+    "topic": 1,
+    "question": "You have structured data in tabular format.\nWhat represents an individual instance of a data entity?",
+    "options": {
+      "A": "a column",
+      "B": "a table",
+      "C": "a cell",
+      "D": "a row"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. a row**: Đúng. Trong dữ liệu có cấu trúc dạng bảng, mỗi hàng đại diện cho một trường hợp/đối tượng cụ thể (instance) của một thực thể dữ liệu (ví dụ: một khách hàng cụ thể trong bảng Khách hàng).\n- **A. a column**: Sai. Cột đại diện cho một thuộc tính hoặc đặc điểm của thực thể dữ liệu.\n- **B. a table**: Sai. Bảng đại diện cho một tập hợp tất cả các thực thể cùng loại.\n- **C. a cell**: Sai. Ô đại diện cho giá trị của một thuộc tính cụ thể cho một thực thể cụ thể tại giao điểm của một hàng và một cột.",
+    "references": null
+  },
+  {
+    "id": 110,
+    "topic": 1,
+    "question": "You need to analyze data by using Azure Databricks.\nWhich two ways can be used to achieve the goal? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Create a Microsoft Power BI report.",
+      "B": "Create an Azure Data Factory pipeline.",
+      "C": "Use an Apache Spark job to process data stored in an Azure Cosmos DB database.",
+      "D": "Create a data flow in Azure Data Factory.",
+      "E": "Create an Apache Spark job that will run in a Spark cluster."
+    },
+    "answer": "CE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. Use an Apache Spark job to process data stored in an Azure Cosmos DB database.**: Đúng. Azure Databricks tích hợp trực tiếp với Azure Cosmos DB thông qua Spark connector. Bạn có thể viết và chạy các tác vụ Apache Spark trên Databricks để đọc, xử lý và phân tích dữ liệu lưu trong Cosmos DB.\n- **E. Create an Apache Spark job that will run in a Spark cluster.**: Đúng. Cách hoạt động cốt lõi của Azure Databricks là chạy các công việc Apache Spark trên các cụm máy tính do Databricks quản lý để xử lý các phân tích dữ liệu lớn.\n- **A. Create a Microsoft Power BI report.**: Sai. Power BI dùng để trực quan hóa dữ liệu, không phải là phương thức thực thi phân tích tính toán trực tiếp bên trong Azure Databricks.\n- **B. Create an Azure Data Factory pipeline.** và **D. Create a data flow in Azure Data Factory.**: Sai. Azure Data Factory là công cụ điều phối và tích hợp dữ liệu (ETL/ELT), không phải là công cụ phân tích chạy trực tiếp của Databricks.",
+    "references": null
+  },
+  {
+    "id": 111,
+    "topic": 1,
+    "question": "Which language is used to define queries in Azure Synapse Data Explorer?",
+    "options": {
+      "A": "Bash",
+      "B": "PowerShell",
+      "C": "KQL",
+      "D": "SQL"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **C. KQL**: Đúng. Ngôn ngữ truy vấn Kusto (Kusto Query Language - KQL) được sử dụng để định nghĩa và thực hiện các truy vấn dữ liệu lớn, nhật ký và dữ liệu chuỗi thời gian trong Azure Synapse Data Explorer.\n- **A. Bash** và **B. PowerShell**: Sai. Đây là các ngôn ngữ kịch bản dòng lệnh dùng để quản lý hệ thống và tài nguyên, không phải ngôn ngữ truy vấn dữ liệu.\n- **D. SQL**: Sai. Mặc dù SQL rất phổ biến, nhưng Synapse Data Explorer sử dụng KQL làm ngôn ngữ truy vấn chính.",
+    "references": null
+  },
+  {
+    "id": 112,
+    "topic": 1,
+    "question": "Which Azure Cosmos DB API should you use for a graph database?",
+    "options": {
+      "A": "Azure Cosmos DB for Table",
+      "B": "Azure Cosmos DB for Apache Cassandra",
+      "C": "Azure Cosmos DB for NoSQL",
+      "D": "Azure Cosmos DB for Apache Gremlin"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. Azure Cosmos DB for Apache Gremlin**: Đúng. API Gremlin trong Azure Cosmos DB được thiết kế chuyên biệt để làm việc với dữ liệu đồ thị, lưu trữ các nút và cạnh và thực hiện các truy vấn mối quan hệ phức tạp.\n- **A. Azure Cosmos DB for Table**: Sai. Dùng cho lưu trữ khóa-giá trị dạng bảng.\n- **B. Azure Cosmos DB for Apache Cassandra**: Sai. Dùng cho lưu trữ dạng họ cột.\n- **C. Azure Cosmos DB for NoSQL**: Sai. Dùng cho dữ liệu bán cấu trúc tài liệu dạng JSON.",
+    "references": null
+  },
+  {
+    "id": 113,
+    "topic": 1,
+    "question": "A bank needs to ensure that after an account transfer transaction completes, the revised account balances persists even if the database system hosting the transaction becomes temporarily unavailable.\nOf which ACID semantic is this an example?",
+    "options": {
+      "A": "durability",
+      "B": "isolation",
+      "C": "atomicity",
+      "D": "consistency"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. durability**: Đúng. Tính bền vững (Durability) trong thuộc tính ACID đảm bảo rằng một khi giao dịch đã được hoàn thành (commit), kết quả và dữ liệu của giao dịch đó (số dư tài khoản mới) sẽ được ghi lại vĩnh viễn vào bộ lưu trữ và tồn tại bền vững ngay cả khi hệ thống cơ sở dữ liệu gặp sự cố ngừng hoạt động ngay sau đó.\n- **B. isolation**: Sai. Tính cô lập đảm bảo các giao dịch chạy song song không can thiệp lẫn nhau.\n- **C. atomicity**: Sai. Tính nguyên tố đảm bảo tất cả các bước của giao dịch thành công hoặc không bước nào.\n- **D. consistency**: Sai. Tính nhất quán đảm bảo tính hợp lệ của dữ liệu theo các quy tắc ràng buộc của cơ sở dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 114,
+    "topic": 1,
+    "question": "What is a difference between structured data and semi-structured data?",
+    "options": {
+      "A": "Structured data has a fixed schema and semi-structured data has a flexible schema.",
+      "B": "Only Structured data supports entities.",
+      "C": "Structured data has a flexible schema and semi-structured data has a fixed schema.",
+      "D": "Only Structured data supports attributes."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **A. Structured data has a fixed schema and semi-structured data has a flexible schema.**: Đúng. Sự khác biệt cơ bản nhất giữa dữ liệu có cấu trúc và dữ liệu bán cấu trúc là dữ liệu có cấu trúc có lược đồ cố định, nghiêm ngặt, trong khi dữ liệu bán cấu trúc có lược đồ linh hoạt, tự mô tả và có thể thay đổi tùy ý cho từng bản ghi.\n- Các phương án **B, C, D** đều sai vì semi-structured data vẫn hỗ trợ các thực thể và thuộc tính bình thường, và dữ liệu cấu trúc không phải có schema linh hoạt.",
+    "references": null
+  },
+  {
+    "id": 115,
+    "topic": 1,
+    "question": "What is the responsibility of a database administrator?",
+    "options": {
+      "A": "applying data cleaning routines",
+      "B": "creating data visualizations",
+      "C": "managing data integration processes",
+      "D": "storing backup copies of data"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "- **D. storing backup copies of data**: Đúng. Nhiệm vụ cốt lõi của Quản trị viên cơ sở dữ liệu (DBA) bao gồm việc quản lý, bảo mật, giám sát hiệu năng hệ thống, và đặc biệt là lập kế hoạch, thực hiện và lưu trữ các bản sao lưu dữ liệu để đảm bảo an toàn dữ liệu và khả năng khôi phục khi gặp sự cố.\n- **A. applying data cleaning routines** và **C. managing data integration processes**: Sai. Đây là trách nhiệm của Kỹ sư dữ liệu (Data Engineer) hoặc nhà phân tích dữ liệu.\n- **B. creating data visualizations**: Sai. Đây là công việc của Nhà phân tích dữ liệu hoặc Nhà phát triển báo cáo.",
+    "references": null
+  },
+  {
+    "id": 116,
+    "topic": 1,
+    "question": "You have the following T-SQL statement.\nSELECT o.OrderNo, o.OrderDate, c.Address, c.City\nFROM Order AS o -\nJOIN Customer AS c -ON o.Customer = c.ID;\nWhat is the function of the ON clause?",
+    "options": {
+      "A": "to update data in the Customer table",
+      "B": "to match data in the Customer table to data in the Order table",
+      "C": "to define an alias for the Customer table",
+      "D": "to update data in the Order table"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (to match data in the Customer table to data in the Order table) là chính xác. Trong phép JOIN của SQL, mệnh đề `ON` xác định điều kiện liên kết để so khớp dữ liệu giữa các bảng (ở đây là liên kết trường `Customer` trong bảng `Order` với khóa chính `ID` trong bảng `Customer`).",
+    "references": []
+  },
+  {
+    "id": 117,
+    "topic": 1,
+    "question": "Which three services support Apache Spark? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "Azure Data Explorer",
+      "B": "Azure Synapse Analytics",
+      "C": "Azure Databricks",
+      "D": "Azure Stream Analytics",
+      "E": "Azure HDInsight"
+    },
+    "answer": "BCE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B, C và E là chính xác. Cả ba dịch vụ Azure Synapse Analytics, Azure Databricks và Azure HDInsight đều hỗ trợ và tích hợp sẵn công cụ tính toán Apache Spark để xử lý dữ liệu lớn trên quy mô lớn.",
+    "references": []
+  },
+  {
+    "id": 118,
+    "topic": 1,
+    "question": "What can you use to create data ingestion pipelines?",
+    "options": {
+      "A": "Azure HDInsight",
+      "B": "Azure SQL Database",
+      "C": "Azure Data Factory",
+      "D": "Azure Cosmos DB"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (Azure Data Factory) là chính xác. Azure Data Factory là dịch vụ tích hợp dữ liệu (data integration service) đám mây hàng đầu của Microsoft, được thiết kế chuyên biệt để xây dựng các đường ống (pipelines) trích xuất, nạp và biến đổi dữ liệu (ETL/ELT).",
+    "references": []
+  },
+  {
+    "id": 119,
+    "topic": 1,
+    "question": "You have data in a tabular format as shown in the following table.\nOf which type of data is this an example?",
+    "options": {
+      "A": "unstructured data",
+      "B": "semi-structured data",
+      "C": "document",
+      "D": "structured data"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (structured data) là chính xác. Dữ liệu dạng bảng (tabular data) có cấu trúc hàng và cột rõ ràng, trong đó mỗi hàng đại diện cho một đối tượng dữ liệu và mỗi cột đại diện cho một thuộc tính được xác định kiểu dữ liệu nghiêm ngặt, là ví dụ điển hình của dữ liệu cấu trúc (structured data).",
+    "references": []
+  },
+  {
+    "id": 120,
+    "topic": 1,
+    "question": "Which service is optimized for IoT scenarios that involve streaming time series data?",
+    "options": {
+      "A": "SQL Server on Azure Virtual Machines",
+      "B": "Azure SQL Managed Instance",
+      "C": "Azure SQL Database",
+      "D": "Azure SQL Edge"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (Azure SQL Edge) là chính xác. Azure SQL Edge là một cơ sở dữ liệu SQL tối ưu hóa dung lượng thấp được thiết kế dành cho thiết bị ngoại vi (IoT Edge), hỗ trợ xử lý dữ liệu truyền phát thời gian thực (real-time data streaming) và dữ liệu chuỗi thời gian (time series) tích hợp sẵn cho các kịch bản IoT.",
+    "references": []
+  },
+  {
+    "id": 121,
+    "topic": 1,
+    "question": "Which schema design process minimizes data duplication and enforces data integrity?",
+    "options": {
+      "A": "normalization",
+      "B": "batch processing",
+      "C": "extraction",
+      "D": "virtualization"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (normalization) là chính xác. Chuẩn hóa (Normalization) là quá trình thiết kế lược đồ cơ sở dữ liệu quan hệ bằng cách tổ chức các bảng dữ liệu nhằm giảm thiểu tối đa dư thừa dữ liệu (data duplication) và đảm bảo tính toàn vẹn của dữ liệu (data integrity) thông qua các ràng buộc khóa ngoại.",
+    "references": []
+  },
+  {
+    "id": 122,
+    "topic": 1,
+    "question": "Which type of Microsoft Power BI visual can you use to examine trends over time for one or more series of values?",
+    "options": {
+      "A": "funnel chart",
+      "B": "pie chart",
+      "C": "table",
+      "D": "line chart"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (line chart) là chính xác. Biểu đồ đường (Line chart) là hình ảnh trực quan tốt nhất để theo dõi và so sánh xu hướng thay đổi theo thời gian (trends over time) của một hoặc nhiều chuỗi giá trị số liên tục.",
+    "references": []
+  },
+  {
+    "id": 123,
+    "topic": 1,
+    "question": "Which service can be used to build extract, transform, and load (ETL) pipelines?",
+    "options": {
+      "A": "Azure Data Factory",
+      "B": "Azure Pipelines",
+      "C": "Azure SQL Database",
+      "D": "Azure Cosmos DB",
+      "E": "Azure Databricks"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (Azure Data Factory) là chính xác. Azure Data Factory được thiết kế chuyên để xây dựng và điều phối các đường ống trích xuất, biến đổi và nạp dữ liệu (ETL/ELT).",
+    "references": []
+  },
+  {
+    "id": 124,
+    "topic": 1,
+    "question": "Which Azure Cosmos DB API stores data in the BSON format and uses MQL to query the data?",
+    "options": {
+      "A": "MongoDB",
+      "B": "Apache Gremlin",
+      "C": "Table",
+      "D": "PostgreSQL"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (MongoDB) là chính xác. MongoDB API của Azure Cosmos DB hỗ trợ định dạng lưu trữ BSON (Binary JSON) tương thích hoàn toàn với MongoDB và cho phép sử dụng ngôn ngữ truy vấn MongoDB (MQL - MongoDB Query Language) để thao tác dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 125,
+    "topic": 1,
+    "question": "A bank needs to ensure that a transaction involving debiting funds from a source account and crediting the same funds to a destination account must complete both actions. If either action falls to complete, the other action must fail.\nOf which ACID semantic is this an example?",
+    "options": {
+      "A": "consistency",
+      "B": "durability",
+      "C": "atomicity",
+      "D": "isolation"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (atomicity) là chính xác. Tính nguyên tử (Atomicity) trong thuộc tính ACID của cơ sở dữ liệu đảm bảo rằng một giao dịch gồm nhiều thao tác phải được thực thi trọn vẹn: tất cả thành công hoặc tất cả thất bại (All-or-Nothing). Trong ví dụ này, giao dịch chuyển khoản chỉ thành công nếu cả hai thao tác trừ tiền tài khoản nguồn và cộng tiền tài khoản đích đều hoàn tất thành công, nếu một bước lỗi thì toàn bộ giao dịch sẽ bị phục hồi (rollback).",
+    "references": []
+  },
+  {
+    "id": 126,
+    "topic": 1,
+    "question": "Blob rehydration occurs in Azure Blob storage when a blob moves between which access tiers?",
+    "options": {
+      "A": "Hot to Cool",
+      "B": "Hot to Archive",
+      "C": "Cool to Archive",
+      "D": "Archive to Cool"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn D (Archive to Cool) là chính xác. Quá trình giải phóng/rehydration (Rehydration) xảy ra khi bạn chuyển đổi một tệp tin (blob) từ tầng lưu trữ lưu trữ lạnh (Archive tier - không thể truy cập trực tiếp) sang tầng có thể truy xuất dữ liệu (như Cool hoặc Hot tier).",
+    "references": []
+  },
+  {
+    "id": 127,
+    "topic": 1,
+    "question": "Which activity is most common for transactional workloads?",
+    "options": {
+      "A": "recording small units of work events in real time",
+      "B": "aggregating massive amounts of data",
+      "C": "producing complex reports",
+      "D": "performing self-service data exploration"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (recording small units of work events in real time) là chính xác. Các tác vụ giao dịch (transactional workloads) thường liên quan đến việc ghi nhận các giao dịch kinh doanh nhỏ lẻ, diễn ra liên tục theo thời gian thực (ví dụ: tạo đơn hàng, chuyển khoản, thay đổi thông tin khách hàng).\n- Các lựa chọn B, C, D là các hoạt động phân tích dữ liệu lịch sử quy mô lớn (analytical workloads).",
+    "references": []
+  },
+  {
+    "id": 128,
+    "topic": 1,
+    "question": "You have a banking application that transfers money in to and out of accounts.\nOf which type of solution is this is an example?",
+    "options": {
+      "A": "online transaction processing (OLTP)",
+      "B": "online analytical processing (OLAP)",
+      "C": "extract, transform and load (ETL)",
+      "D": "a data warehouse"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (online transaction processing (OLTP)) là chính xác. Ứng dụng ngân hàng thực hiện chuyển tiền ra và vào tài khoản là ví dụ điển hình của hệ thống Xử lý giao dịch trực tuyến (OLTP). Các hệ thống này yêu cầu tính toàn vẹn dữ liệu cao, tốc độ phản hồi nhanh đối với các tác vụ ghi nhỏ lẻ liên tục.",
+    "references": []
+  },
+  {
+    "id": 129,
+    "topic": 1,
+    "question": "SELECT, INSERT, and UPDATE are examples of which type of SQL statement?",
+    "options": {
+      "A": "Data Definition Language (DDL)",
+      "B": "Data Control Language (DCL)",
+      "C": "Data Manipulation Language (DML)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (Data Manipulation Language (DML)) là chính xác. Ngôn ngữ thao tác dữ liệu (DML) bao gồm các câu lệnh SQL dùng để truy vấn, chèn, cập nhật và xóa dữ liệu trong cơ sở dữ liệu (như SELECT, INSERT, UPDATE, DELETE).\n- DDL (A): Dùng để định nghĩa cấu trúc đối tượng (CREATE, ALTER, DROP).\n- DCL (B): Dùng để quản lý phân quyền (GRANT, REVOKE).",
+    "references": []
+  },
+  {
+    "id": 130,
+    "topic": 1,
+    "question": "In an analytical data model, which type of table contains entities that are used to aggregate numeric values, where each entity is represented by a row with a unique key value?",
+    "options": {
+      "A": "bridge",
+      "B": "dimension",
+      "C": "fact"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C (fact) là chính xác. Trong mô hình dữ liệu phân tích (như sơ đồ hình sao - Star Schema), bảng thực tế (Fact table) chứa các giá trị số đo (measures/metrics) dùng để tính toán và tổng hợp (aggregate). Mỗi dòng trong bảng Fact thường có một khóa duy nhất (hoặc khóa tổng hợp) liên kết đến các bảng chiều (Dimension tables).\n- Dimension table (B): Chứa các thuộc tính mô tả đối tượng để phân nhóm, lọc dữ liệu.",
+    "references": []
+  },
+  {
+    "id": 131,
+    "topic": 1,
+    "question": "In a fully denormalized database, how is data read and written for a single entity?",
+    "options": {
+      "A": "Data is read from a single table and written to a single table.",
+      "B": "Data is read from multiple tables and written to a single table.",
+      "C": "Data is read from a single table and written to multiple tables.",
+      "D": "Data is read from multiple tables and written to multiple tables."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (Data is read from a single table and written to a single table) là chính xác. Trong một cơ sở dữ liệu được phi chuẩn hóa hoàn toàn (fully denormalized), tất cả các thuộc tính liên quan đến một thực thể được gộp chung vào một bảng duy nhất. Do đó, việc đọc và ghi dữ liệu cho thực thể đó chỉ cần thực hiện trên một bảng duy nhất này mà không cần thực hiện phép Join phức tạp qua nhiều bảng.",
+    "references": []
+  },
+  {
+    "id": 132,
+    "topic": 1,
+    "question": "You need to implement an Azure platform as a service (PaaS) service that will host a relational database. The solution must support built-in autoscaling.\nWhich service should you implement?",
+    "options": {
+      "A": "Azure SQL Database",
+      "B": "SQL Server on Azure Virtual Machines",
+      "C": "Azure SQL Managed Instance",
+      "D": "Azure SQL Edge"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn A (Azure SQL Database) là chính xác. Azure SQL Database (đặc biệt là tầng Serverless) cung cấp tính năng tự động mở rộng (built-in autoscaling) tài nguyên tính toán dựa trên mức độ sử dụng thực tế. Nó là dịch vụ PaaS hoàn toàn tự động.",
+    "references": []
+  },
+  {
+    "id": 133,
+    "topic": 1,
+    "question": "GRANT, REVOKE, and DENY are examples of which type of SQL statement?",
+    "options": {
+      "A": "Data Definition language (DDL)",
+      "B": "Data Control Language (DCL)",
+      "C": "Data Manipulation Language (DML)"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (Data Control Language (DCL)) là chính xác. Ngôn ngữ điều khiển dữ liệu (DCL) bao gồm các câu lệnh SQL dùng để cấp quyền, thu hồi quyền hoặc từ chối quyền truy cập vào cơ sở dữ liệu đối với người dùng (như GRANT, REVOKE, DENY).",
+    "references": []
+  },
+  {
+    "id": 134,
+    "topic": 1,
+    "question": "Structured data where each row represents a single data entity uses which type of schema?",
+    "options": {
+      "A": "XML",
+      "B": "tabular",
+      "C": "blob",
+      "D": "JSON"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (tabular) là chính xác. Dữ liệu cấu trúc có dạng dòng và cột (mỗi dòng đại diện cho một thực thể dữ liệu) sử dụng lược đồ dạng bảng (tabular schema). Đây là định dạng chuẩn của các cơ sở dữ liệu quan hệ.",
+    "references": []
+  },
+  {
+    "id": 135,
+    "topic": 1,
+    "question": "You have the following data.\nWhich type of data is this?",
+    "options": {
+      "A": "unstructured",
+      "B": "semi-structured",
+      "C": "structured"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (semi-structured) là chính xác. Dữ liệu bán cấu trúc (semi-structured data) không tuân theo cấu trúc bảng quan hệ chặt chẽ nhưng chứa các thẻ đánh dấu hoặc thẻ phân tách (như JSON, XML, YAML) để phân định các trường dữ liệu bên trong.",
+    "references": []
+  },
+  {
+    "id": 136,
+    "topic": 1,
+    "question": "Which two features distinguish Delta Lake from Azure Data Lake Storage? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "support for batch data",
+      "B": "schema enforcement",
+      "C": "support for an Apache Spark runtime",
+      "D": "transactional consistency",
+      "E": "support for streaming data"
+    },
+    "answer": "BD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B và D là chính xác. Delta Lake cung cấp hai tính năng vượt trội so với Azure Data Lake Storage truyền thống bao gồm:\n1. Kiểm soát và áp đặt lược đồ (Schema enforcement) để ngăn dữ liệu sai định dạng ghi vào bảng.\n2. Đảm bảo tính nhất quán của giao dịch (transactional consistency) thông qua các giao dịch ACID (nhật ký Delta Log).\n- Cả hai đều hỗ trợ tốt dữ liệu batch (A) và streaming (E).",
+    "references": []
+  },
+  {
+    "id": 137,
+    "topic": 1,
+    "question": "You have an Azure SQL database that contains tables for customers and orders.\nYou need to create a query that will return the orders placed by each customer.\nWhich two Transact-SOL statements should you include in the query? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {
+      "A": "INDEX",
+      "B": "EXISTS",
+      "C": "JOIN",
+      "D": "ORDERBY",
+      "E": "SELECT"
+    },
+    "answer": "CE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn C và E là chính xác. Để truy vấn dữ liệu từ hai bảng Customers và Orders nhằm trả về thông tin đơn hàng tương ứng của từng khách hàng, ta sử dụng câu lệnh `SELECT` để lựa chọn các cột đầu ra và mệnh đề `JOIN` để kết hợp dữ liệu từ hai bảng này dựa trên khóa ngoại liên kết.",
+    "references": []
+  },
+  {
+    "id": 138,
+    "topic": 1,
+    "question": "Which statement accurately describes data processing?",
+    "options": {
+      "A": "Batch processing requires that data be processed immediately upon arrival.",
+      "B": "Stream processing is typically used for time-critical operations that require an instant response.",
+      "C": "Stream processing is typically used for analyzing larger datasets in less time.",
+      "D": "Batch processing is typically used for scenarios that require continuous, real-time insights from rapidly arriving data."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lựa chọn B (Stream processing is typically used for time-critical operations that require an instant response) là chính xác. Xử lý luồng (Stream processing) phân tích và xử lý dữ liệu liên tục ngay khi nó xuất hiện, phù hợp cho các hoạt động cần phản hồi tức thời như phát hiện gian lận ngân hàng, giám sát thiết bị y tế.\n- Xử lý lô (Batch) không xử lý ngay lập tức (A), mà dùng để phân tích tập dữ liệu lớn không yêu cầu thời gian thực.",
+    "references": []
+  }
+]

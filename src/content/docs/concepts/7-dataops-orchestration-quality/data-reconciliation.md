@@ -44,10 +44,7 @@ graph TD
     D -->|"Match (Khớp)"| F("(Pipeline Success - Stop)")
     D -->|"Mismatch (Lệch)"| E
     E -->|Isolate Bad Records| G["Quarantine Table (DLQ)"]
-    G -->|Alert Data Downtime| H["PagerDuty / Slack"]
-    
-    style E fill:#f9acaa,stroke:#333,stroke-width:2px
-    style G fill:#f9f,stroke:#333,stroke-width:2px
+    G -->|Alert Data Downtime| H["PagerDuty / Slack"]
 ```
 
 ### 1.2. Kỹ thuật Hashing (MD5 / SHA-256) chống Cartesian Explosion

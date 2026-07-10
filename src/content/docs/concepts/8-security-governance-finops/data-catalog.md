@@ -46,8 +46,7 @@ Trong Amundsen, một thành phần gọi là `Databuilder` (thường chạy tr
 
 ```mermaid
 graph LR
-    classDef source fill:#f9f2f4,stroke:#d0446b,stroke-width:2px;
-    classDef catalog fill:#e2f2ff,stroke:#267bbc,stroke-width:2px;
+
 
     subgraph Source_Systems ["Hệ thống Nguồn"]
         A["Snowflake"]:::source
@@ -85,9 +84,8 @@ Thay vì Catalog đi thu thập, các hệ thống nguồn (hoặc CI/CD pipelin
 
 ```mermaid
 graph TD
-    classDef source fill:#f9f2f4,stroke:#d0446b,stroke-width:2px;
-    classDef event fill:#fff5e6,stroke:#f59e0b,stroke-width:2px;
-    classDef control fill:#e2f2ff,stroke:#267bbc,stroke-width:2px;
+
+
 
     subgraph Metadata_Producers ["Producers"]
         A["dbt / Airflow"]:::source -->|Push Event| K

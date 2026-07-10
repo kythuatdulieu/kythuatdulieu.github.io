@@ -35,10 +35,7 @@ graph LR
         E --> F["Offset 5: LEO"]
     end
     Consumer -- "Poll & Commit" --> C
-    Producer -- "Append" --> F
-    
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
+    Producer -- "Append" --> F
 ```
 
 *Lag trong trường hợp trên = LEO (5) - Current Offset (2) = 3 messages.*

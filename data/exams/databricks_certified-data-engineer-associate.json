@@ -1,0 +1,2338 @@
+{
+  "exam": "Certified Data Engineer Associate",
+  "provider": "databricks",
+  "code": "certified-data-engineer-associate",
+  "total_questions": 191,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which of the following is a benefit of the Databricks Lakehouse Platform embracing open source technologies?",
+      "choices": {
+        "A": "Cloud-specific integrations",
+        "B": "Simplified governance",
+        "C": "Ability to scale storage",
+        "D": "Ability to scale workloads",
+        "E": "Avoiding vendor lock-in"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Một trong những lợi ích lớn nhất của việc nền tảng Databricks Lakehouse áp dụng các công nghệ mã nguồn mở (như Apache Spark, Delta Lake, MLflow) là giúp tổ chức tránh bị ràng buộc bởi nhà cung cấp (avoiding vendor lock-in), cho phép di chuyển giải pháp hoặc dữ liệu sang các nền tảng khác dễ dàng."
+    },
+    {
+      "id": 2,
+      "question": "A data engineer is working with two tables. Each of these tables is displayed below in its entirety.\nThe data engineer runs the following query to join these tables together:\nWhich of the following will be returned by the above query?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774280608652-j5dsu9n5.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774280610772-2diqdrsy.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774280613038-yuvg2xgy.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774280615334-1r6otcb4.png)",
+        "E": "![](/images/quizzes/certified-data-engineer-associate/1774280617500-umcaa0gj.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Truy vấn thực hiện phép nối (JOIN) giữa hai bảng dựa trên khóa chung. Kết quả của phép nối khớp các dòng có giá trị khóa tương ứng từ cả hai bảng để tạo thành bảng kết quả C."
+    },
+    {
+      "id": 3,
+      "question": "Which of the following describes a scenario in which a data engineer will want to use a single-node cluster?",
+      "choices": {
+        "A": "When they are working interactively with a small amount of data",
+        "B": "When they are running automated reports to be refreshed as quickly as possible",
+        "C": "When they are working with SQL within Databricks SQL",
+        "D": "When they are concerned about the ability to automatically scale with larger data",
+        "E": "When they are manually running reports with a large amount of data"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Single-node cluster (cụm đơn nút) không có worker node và rất thích hợp cho việc chạy các tác vụ thử nghiệm tương tác (interactive), phát triển mã nguồn (development) với lượng dữ liệu nhỏ để tiết kiệm chi phí."
+    },
+    {
+      "id": 4,
+      "question": "A data engineer has realized that the data files associated with a Delta table are incredibly small. They want to compact the small files to form larger files to improve performance.\nWhich of the following keywords can be used to compact the small files?",
+      "choices": {
+        "A": "REDUCE",
+        "B": "OPTIMIZE",
+        "C": "COMPACTION",
+        "D": "REPARTITION",
+        "E": "VACUUM"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lệnh `OPTIMIZE` trong Delta Lake được sử dụng để nén (compact) các tệp tin dữ liệu nhỏ thành các tệp tin lớn hơn (thường là khoảng 1GB), giúp cải thiện đáng kể hiệu suất truy vấn nhờ giảm số lượng tệp cần đọc."
+    },
+    {
+      "id": 5,
+      "question": "Which of the following can be used to simplify and unify siloed data architectures that are specialized for specific use cases?",
+      "choices": {
+        "A": "None of these",
+        "B": "Data lake",
+        "C": "Data warehouse",
+        "D": "All of these",
+        "E": "Data lakehouse"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Kiến trúc Data Lakehouse kết hợp các đặc tính tốt nhất của Data Lake (khả năng lưu trữ dữ liệu phi cấu trúc chi phí thấp) và Data Warehouse (đảm bảo tính toàn vẹn giao dịch ACID, quản trị tốt và hiệu năng cao) giúp đơn giản hóa và thống nhất các kiến trúc dữ liệu phân tán (siloed) trước đây."
+    },
+    {
+      "id": 6,
+      "question": "A Delta Live Table pipeline includes two datasets defined using STREAMING LIVE TABLE. Three datasets are defined against Delta Lake table sources using LIVE TABLE.\nThe table is configured to run in Development mode using the Continuous Pipeline Mode.\nAssuming previously unprocessed data exists and all definitions are valid, what is the expected outcome after clicking Start to update the pipeline?",
+      "choices": {
+        "A": "All datasets will be updated once and the pipeline will shut down. The compute resources will be terminated.",
+        "B": "All datasets will be updated at set intervals until the pipeline is shut down. The compute resources will persist until the pipeline is shut down.",
+        "C": "All datasets will be updated once and the pipeline will persist without any processing. The compute resources will persist but go unused.",
+        "D": "All datasets will be updated once and the pipeline will shut down. The compute resources will persist to allow for additional testing.",
+        "E": "All datasets will be updated at set intervals until the pipeline is shut down. The compute resources will persist to allow for additional testing."
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Khi chạy ở chế độ Continuous Pipeline Mode trong Development mode, hệ thống sẽ liên tục kiểm tra và cập nhật các tập dữ liệu khi có dữ liệu mới xuất hiện. Đồng thời, tài nguyên tính toán (cluster) sẽ được giữ lại (persist) thay vì tự động tắt, giúp nhà phát triển có thể kiểm thử và chạy lại nhanh chóng mà không mất thời gian khởi động cụm."
+    },
+    {
+      "id": 7,
+      "question": "A data engineer wants to schedule their Databricks SQL dashboard to refresh every hour, but they only want the associated SQL endpoint to be running when it is necessary. The dashboard has multiple queries on multiple datasets associated with it. The data that feeds the dashboard is automatically processed using a Databricks Job.\nWhich of the following approaches can the data engineer use to minimize the total running time of the SQL endpoint used in the refresh schedule of their dashboard?",
+      "choices": {
+        "A": "They can turn on the Auto Stop feature for the SQL endpoint.",
+        "B": "They can ensure the dashboard's SQL endpoint is not one of the included query's SQL endpoint.",
+        "C": "They can reduce the cluster size of the SQL endpoint.",
+        "D": "They can ensure the dashboard's SQL endpoint matches each of the queries' SQL endpoints.",
+        "E": "They can set up the dashboard's SQL endpoint to be serverless."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Tính năng Auto Stop (Tự động dừng) cho phép SQL warehouse (endpoint) tự động tắt sau một khoảng thời gian không có hoạt động truy vấn nào, giúp tối thiểu hóa chi phí và thời gian chạy khi thực hiện cập nhật định kỳ mỗi giờ."
+    },
+    {
+      "id": 8,
+      "question": "Which of the following describes a benefit of creating an external table from Parquet rather than CSV when using a CREATE TABLE AS SELECT statement?",
+      "choices": {
+        "A": "Parquet files can be partitioned",
+        "B": "CREATE TABLE AS SELECT statements cannot be used on files",
+        "C": "Parquet files have a well-defined schema",
+        "D": "Parquet files have the ability to be optimized",
+        "E": "Parquet files will become Delta tables"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Định dạng Parquet là định dạng lưu trữ dạng cột (columnar) tự định nghĩa và chứa sẵn metadata về lược đồ (schema) cùng kiểu dữ liệu của các cột trong phần đuôi tệp (footer). Ngược lại, tệp CSV là tệp văn bản thô không lưu thông tin lược đồ cụ thể, đòi hỏi suy diễn kiểu dữ liệu dẫn đến nguy cơ sai lệch."
+    },
+    {
+      "id": 9,
+      "question": "Which of the following SQL keywords can be used to convert a table from a long format to a wide format?",
+      "choices": {
+        "A": "TRANSFORM",
+        "B": "PIVOT",
+        "C": "SUM",
+        "D": "CONVERT",
+        "E": "WHERE"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Từ khóa `PIVOT` trong SQL được sử dụng để xoay dòng thành cột, tức là chuyển đổi cấu trúc bảng từ định dạng dọc (long format) sang định dạng ngang (wide format)."
+    },
+    {
+      "id": 10,
+      "question": "A data engineer has a Python notebook in Databricks, but they need to use SQL to accomplish a specific task within a cell. They still want all of the other cells to use Python without making any changes to those cells.\nWhich of the following describes how the data engineer can use SQL within a cell of their Python notebook?",
+      "choices": {
+        "A": "It is not possible to use SQL in a Python notebook",
+        "B": "They can attach the cell to a SQL endpoint rather than a Databricks cluster",
+        "C": "They can simply write SQL syntax in the cell",
+        "D": "They can add %sql to the first line of the cell",
+        "E": "They can change the default language of the notebook to SQL"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để chạy mã SQL trong một ô (cell) của sổ tay Python (Python notebook), nhà phát triển chỉ cần khai báo lệnh ma thuật `%sql` ở dòng đầu tiên của ô đó."
+    },
+    {
+      "id": 11,
+      "question": "A data engineer has developed a data pipeline to ingest data from a JSON source using Auto Loader, but the engineer has not provided any type inference or schema hints in their pipeline. Upon reviewing the data, the data engineer has noticed that all of the columns in the target table are of the string type despite some of the fields only including float or boolean values.\nWhich of the following describes why Auto Loader inferred all of the columns to be of the string type?",
+      "choices": {
+        "A": "There was a type mismatch between the specific schema and the inferred schema",
+        "B": "JSON data is a text-based format",
+        "C": "Auto Loader only works with string data",
+        "D": "All of the fields had at least one null value",
+        "E": "Auto Loader cannot infer the schema of ingested data"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Do định dạng JSON là định dạng dạng văn bản (text-based) và không nhúng sẵn thông tin kiểu dữ liệu (data types) như Parquet hay Avro, Auto Loader mặc định suy diễn tất cả các cột thành kiểu dữ liệu String để đảm bảo không bị lỗi dữ liệu và dễ quản lý schema."
+    },
+    {
+      "id": 12,
+      "question": "Which of the following data workloads will utilize a Gold table as its source?",
+      "choices": {
+        "A": "A job that enriches data by parsing its timestamps into a human-readable format",
+        "B": "A job that aggregates uncleaned data to create standard summary statistics",
+        "C": "A job that cleans data by removing malformatted records",
+        "D": "A job that queries aggregated data designed to feed into a dashboard",
+        "E": "A job that ingests raw data from a streaming source into the Lakehouse"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bảng Gold trong kiến trúc Medallion chứa dữ liệu đã được làm sạch, tổng hợp (aggregated) và tối ưu hóa cho các mục đích kinh doanh cụ thể. Do đó, một công việc truy vấn dữ liệu tổng hợp để đưa vào các bảng điều khiển (dashboard) sẽ sử dụng nguồn dữ liệu từ bảng Gold."
+    },
+    {
+      "id": 13,
+      "question": "A data engineer that is new to using Python needs to create a Python function to add two integers together and return the sum?\nWhich of the following code blocks can the data engineer use to complete this task?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774281047912-4p3gihtc.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774281050434-14hxqpo7.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774281052402-o56t88kv.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774281054443-jtosgqdp.png)",
+        "E": "![](/images/quizzes/certified-data-engineer-associate/1774281056160-o5s2lc04.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Một hàm Python cơ bản để tính tổng hai số nguyên được định nghĩa bằng từ khóa `def`, theo sau là tên hàm, các tham số đầu vào và trả về giá trị bằng từ khóa `return` (ví dụ: `def add(a, b): return a + b`). Khối mã D triển khai chính xác cú pháp này."
+    },
+    {
+      "id": 14,
+      "question": "A data engineer needs to apply custom logic to identify employees with more than 5 years of experience in array column employees in table stores. The custom logic should create a new column exp_employees that is an array of all of the employees with more than 5 years of experience for each row. In order to apply this custom logic at scale, the data engineer wants to use the FILTER higher-order function.\nWhich of the following code blocks successfully completes this task?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774281042446-42cymgyv.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774281044496-mfwmnuuo.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774281053495-uacylli4.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774281055659-q1oalrv7.png)",
+        "E": "![](/images/quizzes/certified-data-engineer-associate/1774281060642-26qug9gu.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hàm bậc cao (higher-order function) `FILTER` trong Spark SQL dùng để lọc các phần tử trong một mảng. Khối mã A sử dụng đúng cú pháp: `FILTER(employees, x -> x.experience > 5)` để tạo ra mảng mới chỉ chứa các nhân viên thỏa mãn điều kiện kinh nghiệm lớn hơn 5 năm."
+    },
+    {
+      "id": 15,
+      "question": "Which of the following describes the type of workloads that are always compatible with Auto Loader?",
+      "choices": {
+        "A": "Streaming workloads",
+        "B": "Machine learning workloads",
+        "C": "Serverless workloads",
+        "D": "Batch workloads",
+        "E": "Dashboard workloads"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Auto Loader được thiết kế tối ưu để xử lý và nạp dữ liệu một cách gia tăng (incrementally) từ bộ nhớ đám mây khi các tệp mới xuất hiện, do đó nó luôn tương thích và hoạt động dưới dạng các luồng xử lý dữ liệu (streaming workloads)."
+    },
+    {
+      "id": 16,
+      "question": "A dataset has been defined using Delta Live Tables and includes an expectations clause:\nCONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION FAIL UPDATE\nWhat is the expected behavior when a batch of data containing data that violates these constraints is processed?",
+      "choices": {
+        "A": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.",
+        "B": "Records that violate the expectation cause the job to fail.",
+        "C": "Records that violate the expectation are dropped from the target dataset and loaded into a quarantine table.",
+        "D": "Records that violate the expectation are added to the target dataset and recorded as invalid in the event log.",
+        "E": "Records that violate the expectation are added to the target dataset and flagged as invalid in a field added to the target dataset."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ràng buộc (expectation) trong Delta Live Tables có chỉ thị `ON VIOLATION FAIL UPDATE`. Điều này có nghĩa là nếu có bất kỳ bản ghi nào vi phạm điều kiện ràng buộc (ở đây là `timestamp > '2020-01-01'`), toàn bộ tiến trình cập nhật bảng (job/pipeline) sẽ bị thất bại (fail) và dừng lại ngay lập tức."
+    },
+    {
+      "id": 17,
+      "question": "A data engineer is using the following code block as part of a batch ingestion pipeline to read from a composable table:\nWhich of the following changes needs to be made so this code block will work when the transactions table is a stream source?",
+      "choices": {
+        "A": "Replace predict with a stream-friendly prediction function",
+        "B": "Replace schema(schema) with option (\"maxFilesPerTrigger\", 1)",
+        "C": "Replace \"transactions\" with the path to the location of the Delta table",
+        "D": "Replace format(\"delta\") with format(\"stream\")",
+        "E": "Replace spark.read with spark.readStream"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Trong Spark Structured Streaming, để chuyển một nguồn đọc dữ liệu từ dạng lô (batch - sử dụng `spark.read`) sang dạng luồng (streaming), chúng ta cần thay thế bằng phương thức `spark.readStream`."
+    },
+    {
+      "id": 18,
+      "question": "Which of the following statements regarding the relationship between Silver tables and Bronze tables is always true?",
+      "choices": {
+        "A": "Silver tables contain a less refined, less clean view of data than Bronze data.",
+        "B": "Silver tables contain aggregates while Bronze data is unaggregated.",
+        "C": "Silver tables contain more data than Bronze tables.",
+        "D": "Silver tables contain a more refined and cleaner view of data than Bronze tables.",
+        "E": "Silver tables contain less data than Bronze tables."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong kiến trúc Medallion (Bronze -> Silver -> Gold), các bảng Silver luôn chứa dữ liệu đã được lọc sạch, định dạng cấu trúc rõ ràng và làm giàu thông tin (enriched), tạo nên một góc nhìn dữ liệu sạch hơn và tinh lọc hơn so với dữ liệu thô ban đầu ở bảng Bronze."
+    },
+    {
+      "id": 19,
+      "question": "A data engineering team has noticed that their Databricks SQL queries are running too slowly when they are submitted to a non-running SQL endpoint. The data engineering team wants this issue to be resolved.\nWhich of the following approaches can the team use to reduce the time it takes to return results in this scenario?",
+      "choices": {
+        "A": "They can turn on the Serverless feature for the SQL endpoint and change the Spot Instance Policy to \"Reliability Optimized.\"",
+        "B": "They can turn on the Auto Stop feature for the SQL endpoint.",
+        "C": "They can increase the cluster size of the SQL endpoint.",
+        "D": "They can turn on the Serverless feature for the SQL endpoint.",
+        "E": "They can increase the maximum bound of the SQL endpoint's scaling range."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Việc kích hoạt tính năng Serverless cho SQL Warehouse (endpoint) giúp loại bỏ thời gian khởi động lạnh (cold start) kéo dài vài phút của các cụm máy ảo truyền thống. Các warehouse serverless có khả năng khởi động gần như ngay lập tức (dưới 15 giây), giúp giảm thiểu thời gian chờ phản hồi truy vấn khi endpoint đang ở trạng thái không chạy."
+    },
+    {
+      "id": 20,
+      "question": "Which of the following approaches should be used to send the Databricks Job owner an email in the case that the Job fails?",
+      "choices": {
+        "A": "Manually programming in an alert system in each cell of the Notebook",
+        "B": "Setting up an Alert in the Job page",
+        "C": "Setting up an Alert in the Notebook",
+        "D": "There is no way to notify the Job owner in the case of Job failure",
+        "E": "MLflow Model Registry Webhooks"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để gửi email thông báo khi công việc (Job) thất bại, nhà phát triển có thể cấu hình phần cảnh báo (Alerts/Notifications) trực tiếp ngay trên giao diện trang quản lý Job (Job page) của Databricks."
+    },
+    {
+      "id": 21,
+      "question": "A data engineer has been using a Databricks SQL dashboard to monitor the cleanliness of the input data to a data analytics dashboard for a retail use case. The job has a Databricks SQL query that returns the number of store-level records where sales is equal to zero. The data engineer wants their entire team to be notified via a messaging webhook whenever this value is greater than 0.\nWhich of the following approaches can the data engineer use to notify their entire team via a messaging webhook whenever the number of stores with $0 in sales is greater than zero?",
+      "choices": {
+        "A": "They can set up an Alert with a custom template.",
+        "B": "They can set up an Alert with a new email alert destination.",
+        "C": "They can set up an Alert with one-time notifications.",
+        "D": "They can set up an Alert with a new webhook alert destination.",
+        "E": "They can set up an Alert without notifications."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Databricks SQL Cảnh báo (Alerts) cho phép gửi thông báo tới nhiều điểm đến khác nhau (alert destinations). Để gửi thông báo qua webhook của ứng dụng tin nhắn (như Slack hay Teams), kỹ sư dữ liệu cần cấu hình một Alert trong Databricks SQL gắn với một điểm đến webhook (webhook alert destination) mới."
+    },
+    {
+      "id": 22,
+      "question": "Which of the following queries is performing a streaming hop from raw data to a Bronze table?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774283101108-j7ojnmiv.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774283103124-ipfpztja.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774283105159-41kxos4a.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774283107011-chfry2sw.png)",
+        "E": "![](/images/quizzes/certified-data-engineer-associate/1774283108909-arq95tfv.png)"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Khối mã E thực hiện đúng quy trình truyền luồng dữ liệu (streaming hop) từ thư mục chứa tệp dữ liệu thô (raw data) sang định dạng Delta ở bảng Bronze bằng cách kết hợp `spark.readStream` với `writeStream`."
+    },
+    {
+      "id": 23,
+      "question": "A data engineer is attempting to drop a Spark SQL table my_table and runs the following command:\nDROP TABLE IF EXISTS my_table;\nAfter running this command, the engineer notices that the data files and metadata files have been deleted from the file system.\nWhat is the reason behind the deletion of all these files?",
+      "choices": {
+        "A": "The table was managed",
+        "B": "The table's data was smaller than 10 GB",
+        "C": "The table did not have a location",
+        "D": "The table was external"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi thực hiện lệnh `DROP TABLE` trên một bảng được quản lý (managed table), Databricks sẽ xóa cả thông tin lược đồ (metadata) trong metastore lẫn toàn bộ tệp dữ liệu thực tế lưu trên hệ thống tệp tin. Đối với bảng ngoài (external table), dữ liệu thực tế vẫn được giữ nguyên."
+    },
+    {
+      "id": 24,
+      "question": "A data engineer that is new to using Python needs to create a Python function to add two integers together and return the sum?\nWhich code block can the data engineer use to complete this task?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774311149571-iqeuzr50.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774311151462-8psj22bx.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774311153363-opdpcjuj.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774311155266-vc992j4e.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khối mã D định nghĩa một hàm Python hợp lệ bằng từ khóa `def`, nhận hai đối số và trả về tổng của chúng bằng từ khóa `return`."
+    },
+    {
+      "id": 25,
+      "question": "Which file format is used for storing Delta Lake Table?",
+      "choices": {
+        "A": "CSV",
+        "B": "Parquet",
+        "C": "JSON",
+        "D": "Delta"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bảng Delta Lake được lưu trữ vật lý dưới định dạng tệp Parquet (cho dữ liệu) kết hợp với nhật ký giao dịch (transaction log) dạng JSON trong thư mục `_delta_log`."
+    },
+    {
+      "id": 26,
+      "question": "A data engineer is working with two tables. Each of these tables is displayed below in its entirety.\nThe data engineer runs the following query to join these tables together:",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774313876272-j1acrwsa.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774313878364-xqoby89q.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774313880625-rjkeswkj.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774313882713-3xz9w571.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khối kết quả C hiển thị chính xác kết quả của phép nối (join) hai bảng dữ liệu tương tự như Câu 2."
+    },
+    {
+      "id": 27,
+      "question": "In which scenario will a data team want to utilize cluster pools?",
+      "choices": {
+        "A": "An automated report needs to be version-controlled across multiple collaborators.",
+        "B": "An automated report needs to be runnable by all stakeholders.",
+        "C": "An automated report needs to be refreshed as quickly as possible.",
+        "D": "An automated report needs to be made reproducible."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cụm tài nguyên đệm (cluster pools) duy trì sẵn một số lượng máy ảo nhàn rỗi đã khởi động trước. Sử dụng cluster pools giúp giảm thiểu tối đa thời gian khởi động cụm máy tính khi chạy tác vụ, đáp ứng hoàn hảo cho các báo cáo tự động cần làm mới nhanh nhất có thể."
+    },
+    {
+      "id": 28,
+      "question": "A data engineer has been given a new record of data:\nid STRING = 'a1'rank INTEGER = 6rating FLOAT = 9.4\nWhich SQL commands can be used to append the new record to an existing Delta table my_table?",
+      "choices": {
+        "A": "INSERT INTO my_table VALUES ('a1', 6, 9.4)",
+        "B": "INSERT VALUES ('a1', 6, 9.4) INTO my_table",
+        "C": "UPDATE my_table VALUES ('a1', 6, 9.4)",
+        "D": "UPDATE VALUES ('a1', 6, 9.4) my_table"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cú pháp SQL chuẩn để thêm (append) dòng dữ liệu mới vào bảng Delta hiện có là `INSERT INTO <tên_bảng> VALUES (<giá_trị_1>, <giá_trị_2>, ...)`."
+    },
+    {
+      "id": 29,
+      "question": "A data architect has determined that a table of the following format is necessary:\nWhich code block is used by SQL DDL command to create an empty Delta table in the above format regardless of whether a table already exists with this name?",
+      "choices": {
+        "A": "CREATE OR REPLACE TABLE table_name ( employeeId STRING, startDate DATE, avgRating FLOAT )",
+        "B": "CREATE OR REPLACE TABLE table_name WITH COLUMNS ( employeeId STRING, startDate DATE, avgRating FLOAT ) USING DELTA",
+        "C": "CREATE TABLE IF NOT EXISTS table_name ( employeeId STRING, startDate DATE, avgRating FLOAT )",
+        "D": "CREATE TABLE table_name AS SELECT employeeId STRING, startDate DATE, avgRating FLOAT"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Câu lệnh DDL `CREATE OR REPLACE TABLE` sẽ tạo mới một bảng trống với các cột xác định và thay thế (replace) toàn bộ bảng cũ có cùng tên nếu nó tồn tại trước đó."
+    },
+    {
+      "id": 30,
+      "question": "A data analyst has created a Delta table sales that is used by the entire data analysis team. They want help from the data engineering team to implement a series of tests to ensure the data is clean. However, the data engineering team uses Python for its tests rather than SQL.\nWhich command could the data engineering team use to access sales in PySpark?",
+      "choices": {
+        "A": "SELECT * FROM sales",
+        "B": "spark.table(\"sales\")",
+        "C": "spark.sql(\"sales\")",
+        "D": "spark.delta.table(\"sales\")"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong PySpark, phương thức `spark.table(\"sales\")` được dùng để đọc và trả về một DataFrame chứa dữ liệu từ bảng Hive metastore hoặc bảng Delta có tên \"sales\"."
+    },
+    {
+      "id": 31,
+      "question": "A data engineer has created a new database using the following command:\nCREATE DATABASE IF NOT EXISTS customer360;\nIn which location will the customer360 database be located?",
+      "choices": {
+        "A": "dbfs:/user/hive/database/customer360",
+        "B": "dbfs:/user/hive/warehouse",
+        "C": "dbfs:/user/hive/customer360",
+        "D": "dbfs:/user/hive/database"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Theo mặc định trong Databricks, khi một cơ sở dữ liệu (database) mới được tạo mà không chỉ định rõ tham số `LOCATION`, thư mục lưu trữ thực tế của nó sẽ được tạo bên dưới đường dẫn lưu trữ mặc định của Hive metastore (Hive warehouse), đó là `dbfs:/user/hive/warehouse/customer360.db` (nằm trong thư mục cha `dbfs:/user/hive/warehouse`)."
+    },
+    {
+      "id": 32,
+      "question": "A data engineer needs to use a Delta table as part of a data pipeline, but they do not know if they have the appropriate permissions.\nIn which location can the data engineer review their permissions on the table?",
+      "choices": {
+        "A": "Jobs",
+        "B": "Dashboards",
+        "C": "Catalog Explorer",
+        "D": "Repos"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Catalog Explorer (Bộ khám phá danh mục) trong Databricks cung cấp giao diện trực quan cho phép người dùng xem, quản trị và kiểm tra các quyền truy cập (permissions/grants) đối với các đối tượng dữ liệu như Catalog, Schema, Table, và View."
+    },
+    {
+      "id": 33,
+      "question": "A data analysis team has noticed that their Databricks SQL queries are running too slowly when connected to their always-on SQL endpoint. They claim that this issue is present when many members of the team are running small queries simultaneously. They ask the data engineering team for help. The data engineering team notices that each of the team’s queries uses the same SQL endpoint.\nWhich approach can the data engineering team use to improve the latency of the team’s queries?",
+      "choices": {
+        "A": "They can increase the cluster size of the SQL endpoint.",
+        "B": "They can increase the maximum bound of the SQL endpoint’s scaling range.",
+        "C": "They can turn on the Auto Stop feature for the SQL endpoint.",
+        "D": "They can turn on the Serverless feature for the SQL endpoint."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi nhiều thành viên cùng lúc chạy các truy vấn nhỏ, hiệu năng bị giảm do nghẽn hàng đợi (hạn chế về số lượng truy vấn đồng thời). Việc tăng giới hạn trên (maximum bound) của phạm vi co giãn tự động (scaling range) giúp SQL Warehouse tự động bổ sung thêm các cụm máy (scale out) để xử lý lượng lớn truy vấn đồng thời, giúp cải thiện độ trễ."
+    },
+    {
+      "id": 34,
+      "question": "A new data engineering team team has been assigned to an ELT project. The new data engineering team will need full privileges on the table sales to fully manage the project.\nWhich command can be used to grant full permissions on the database to the new data engineering team?",
+      "choices": {
+        "A": "GRANT ALL PRIVILEGES ON TABLE sales TO team;",
+        "B": "GRANT SELECT CREATE MODIFY ON TABLE sales TO team;",
+        "C": "GRANT SELECT ON TABLE sales TO team;",
+        "D": "GRANT ALL PRIVILEGES ON TABLE team TO sales;"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cú pháp chuẩn SQL trong Databricks để cấp toàn bộ đặc quyền (full privileges) trên một bảng dữ liệu cho một nhóm người dùng (principal) là `GRANT ALL PRIVILEGES ON TABLE <tên_bảng> TO <nhóm_người_dùng>;`."
+    },
+    {
+      "id": 35,
+      "question": "A single Job runs two notebooks as two separate tasks. A data engineer has noticed that one of the notebooks is running slowly in the Job’s current run. The data engineer asks a tech lead for help in identifying why this might be the case.\nWhich approach can the tech lead use to identify why the notebook is running slowly as part of the Job?",
+      "choices": {
+        "A": "They can navigate to the Runs tab in the Jobs UI to immediately review the processing notebook.",
+        "B": "They can navigate to the Tasks tab in the Jobs UI and click on the active run to review the processing notebook.",
+        "C": "They can navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.",
+        "D": "They can navigate to the Tasks tab in the Jobs UI to immediately review the processing notebook."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong giao diện Jobs UI của Databricks, để kiểm tra chi tiết trạng thái hoạt động của một Job đang chạy, người dùng cần truy cập vào thẻ 'Runs' (Lịch sử chạy), bấm chọn lượt chạy hiện tại (active run). Từ đó, họ có thể nhấp vào nhiệm vụ cụ thể để theo dõi mã nguồn đang chạy thực tế và xác định nguyên nhân nghẽn hiệu năng."
+    },
+    {
+      "id": 36,
+      "question": "What describes the relationship between Gold tables and Silver tables?",
+      "choices": {
+        "A": "Gold tables are more likely to contain aggregations than Silver tables.",
+        "B": "Gold tables are more likely to contain valuable data than Silver tables.",
+        "C": "Gold tables are more likely to contain a less refined view of data than Silver tables.",
+        "D": "Gold tables are more likely to contain truthful data than Silver tables."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong kiến trúc Medallion, dữ liệu đi từ Bronze (dữ liệu thô) -> Silver (dữ liệu sạch mức giao dịch) -> Gold (dữ liệu tổng hợp mức kinh doanh). Do đó, các bảng Gold chứa dữ liệu đã qua tổng hợp (aggregations) nhiều hơn so với các bảng Silver."
+    },
+    {
+      "id": 37,
+      "question": "What is used by Spark to record the offset range of the data being processed in each trigger in order for Structured Streaming to reliably track the exact progress of the processing so that it can handle any kind of failure by restarting and/or reprocessing?",
+      "choices": {
+        "A": "Checkpointing and Write-ahead Logs",
+        "B": "Replayable Sources and Idempotent Sinks",
+        "C": "Write-ahead Logs and Idempotent Sinks",
+        "D": "Checkpointing and Idempotent Sinks"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 38,
+      "question": "A Delta Live Table pipeline includes two datasets defined using STREAMING LIVE TABLE. Three datasets are defined against Delta Lake table sources using LIVE TABLE.\nThe table is configured to run in Production mode using the Continuous Pipeline Mode.\nWhat is the expected outcome after clicking Start to update the pipeline assuming previously unprocessed data exists and all definitions are valid?",
+      "choices": {
+        "A": "All datasets will be updated at set intervals until the pipeline is shut down. The compute resources will persist to allow for additional testing.",
+        "B": "All datasets will be updated once and the pipeline will shut down. The compute resources will persist to allow for additional testing.",
+        "C": "All datasets will be updated at set intervals until the pipeline is shut down. The compute resources will be deployed for the update and terminated when the pipeline is stopped.",
+        "D": "All datasets will be updated once and the pipeline will shut down. The compute resources will be terminated."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong chế độ chạy Production của Delta Live Tables (DLT) với cấu hình Continuous Pipeline Mode, hệ thống sẽ chạy liên tục để cập nhật dữ liệu. Các tài nguyên tính toán (compute resources) sẽ được duy trì hoạt động liên tục phục vụ cho việc cập nhật dữ liệu và chỉ bị chấm dứt (terminated) khi người dùng chủ động dừng (stop) pipeline."
+    },
+    {
+      "id": 39,
+      "question": "A data engineer needs to create a table in Databricks using data from a CSV file at location /path/to/csv.\nThey run the following command:\nWhich of the following lines of code fills in the above blank to successfully complete the task?",
+      "choices": {
+        "A": "FROM \"path/to/csv\"",
+        "B": "USING CSV",
+        "C": "FROM CSV",
+        "D": "USING DELTA"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tạo một bảng từ tệp CSV trong Databricks sử dụng câu lệnh SQL DDL, chúng ta cần chỉ định định dạng nguồn dữ liệu bằng từ khóa `USING CSV`."
+    },
+    {
+      "id": 40,
+      "question": "Which query is performing a streaming hop from raw data to a Bronze table?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774327095276-c495xgha.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774327097430-ydjt89ng.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774327099572-x9t11t3c.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774327101768-slan0dhm.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khối mã D sử dụng `spark.readStream` từ thư mục raw và `writeStream` ghi vào bảng Bronze dưới định dạng Delta, đây chính là quy trình truyền luồng dữ liệu (streaming hop) chuẩn từ Raw lên Bronze."
+    },
+    {
+      "id": 41,
+      "question": "A data engineer needs to determine whether to use the built-in Databricks Notebooks versioning or version their project using Databricks Repos.\nWhat is an advantage of using Databricks Repos over the Databricks Notebooks versioning?",
+      "choices": {
+        "A": "Databricks Repos allows users to revert to previous versions of a notebook",
+        "B": "Databricks Repos is wholly housed within the Databricks Data Intelligence Platform",
+        "C": "Databricks Repos provides the ability to comment on specific changes",
+        "D": "Databricks Repos supports the use of multiple branches"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Databricks Repos (nay là Git Folders) hỗ trợ quy trình làm việc chuẩn của Git bao gồm cả việc tạo và chuyển đổi qua lại giữa nhiều nhánh khác nhau (multiple branches), giúp các kỹ sư dữ liệu dễ dàng phát triển độc lập và quản lý phiên bản so với tính năng quản lý lịch sử cơ bản của Databricks Notebooks."
+    },
+    {
+      "id": 42,
+      "question": "A data engineer has a Python variabletable_namethat they would like to use in a SQL query. They want to construct a Python code block that will run the query usingtable_name.\nThey have the following incomplete code block:\n____(f\"SELECT customer_id, spend FROM {table_name}\")\nWhat can be used to fill in the blank to successfully complete the task?",
+      "choices": {
+        "A": "spark.delta.sql",
+        "B": "spark.sql",
+        "C": "spark.table",
+        "D": "dbutils.sql"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong PySpark, để chạy một câu lệnh SQL từ mã Python, chúng ta sử dụng phương thức `spark.sql(\"...\")`."
+    },
+    {
+      "id": 43,
+      "question": "Identify how the count_if function and the count where x is null can be used\nConsider a table random_values with below data.\nWhat would be the output of below query?select count_if(col > 1) as count_a. count(*) as count_b.count(col1) as count_c from random_values col1012\nNULL -23",
+      "choices": {
+        "A": "3 6 5",
+        "B": "4 6 5",
+        "C": "3 6 6",
+        "D": "4 6 6"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "- `count_if(col > 1)`: Trả về số lượng các bản ghi thỏa mãn điều kiện lớn hơn 1.\n- `count(*)`: Đếm tổng số dòng trong bảng (bao gồm cả các giá trị NULL), kết quả là 6.\n- `count(col1)`: Đếm số lượng các dòng có giá trị không NULL trong cột `col1`, kết quả là 5 (do có 1 dòng NULL).\nDựa vào phân tích trên, chỉ có tùy chọn A (3, 6, 5) khớp với các giá trị `count(*)` và `count(col1)`."
+    },
+    {
+      "id": 44,
+      "question": "Which two components function in the DB platform architecture’s control plane? (Choose two.)",
+      "choices": {
+        "A": "Virtual Machines",
+        "B": "Compute Orchestration",
+        "C": "Serverless Compute",
+        "D": "Compute",
+        "E": "Unity Catalog"
+      },
+      "correctAnswer": "BE",
+      "explanation_vi": "Kiến trúc nền tảng Databricks chia thành Control Plane (Mặt điều khiển - do Databricks quản lý) và Data Plane (Mặt dữ liệu - chạy trong tài khoản đám mây của khách hàng). Control Plane chịu trách nhiệm điều phối tính toán (Compute Orchestration) và quản lý siêu dữ liệu/bảo mật thông qua Unity Catalog."
+    },
+    {
+      "id": 45,
+      "question": "In a healthcare provider organization using Delta Lake to store electronic health records (EHRs), a data analyst needs to analyze a snapshot of the patient_records table from two weeks ago before some recent data corrections were applied.\nWhat approach should the Data Engineer take to allow the analyst to query that specific prior version?",
+      "choices": {
+        "A": "Truncate the table to remove all data, then reload the data from two weeks ago into the truncated table for the analyst to query.",
+        "B": "Identify the version number corresponding to two weeks ago from the Delta transaction log, share that version number with the analyst to query using VERSION AS OF syntax, or export that version to a new Delta table for the analyst to query.",
+        "C": "Restore the table to the version from two weeks ago using the RESTORE command, and have the analyst query the restored table.",
+        "D": "Use the VACUUM command to remove all versions of the table older than two weeks, then the analyst can query the remaining version."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để truy vấn dữ liệu tại một thời điểm lịch sử (hai tuần trước) mà không ảnh hưởng đến bảng hiện tại, kỹ sư dữ liệu có thể tìm số phiên bản (version number) từ nhật ký giao dịch (transaction log) và sử dụng tính năng Time Travel của Delta Lake với cú pháp `VERSION AS OF` để truy vấn trực tiếp phiên bản cũ đó."
+    },
+    {
+      "id": 46,
+      "question": "Which two conditions are applicable for governance in Databricks Unity Catalog? (Choose two.)",
+      "choices": {
+        "A": "You can have more than 1 metastore within a databricks account console but only 1 per region.",
+        "B": "Both catalog and schema must have a managed location in Unity Catalog provided metastore is not associated with a location",
+        "C": "You can have multiple catalogs within metastore and 1 catalog can be associated with multiple metastore",
+        "D": "If catalog is not associated with location, it’s mandatory to associate schema with managed locations",
+        "E": "If metastore is not associated with location, it’s mandatory to associate catalog with managed locations"
+      },
+      "correctAnswer": "AE",
+      "explanation_vi": "Trong cơ chế quản trị của Unity Catalog:\n1. Mỗi tài khoản Databricks có thể tạo nhiều metastore khác nhau, nhưng giới hạn chỉ được gán tối đa 1 metastore cho mỗi vùng (region).\n2. Nếu metastore không được liên kết với một vị trí lưu trữ mặc định (managed location), bắt buộc người dùng phải định nghĩa vị trí lưu trữ này ở cấp độ Catalog (hoặc Schema)."
+    },
+    {
+      "id": 47,
+      "question": "Identify the impact of ON VIOLATION DROP ROW and ON VIOLATION FAIL UPDATE for a constraint violation.\nA data engineer has created an ETL pipeline using Delta Live table to manage their company travel reimbursement detail, they want to ensure that the if the location details has not been provided by the employee, the pipeline needs to be terminated.\nHow can the scenario be implemented?",
+      "choices": {
+        "A": "CONSTRAINT valid_location EXPECT (location = NULL)",
+        "B": "CONSTRAINT valid_location EXPECT (location != NULL) ON VIOLATION FAIL UPDATE",
+        "C": "CONSTRAINT valid_location EXPECT (location != NULL) ON DROP ROW",
+        "D": "CONSTRAINT valid_location EXPECT (location != NULL) ON VIOLATION FAIL"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để đảm bảo đường ống dữ liệu (pipeline) dừng hoạt động ngay lập tức khi phát hiện dữ liệu lỗi (trong trường hợp này là thiếu thông tin địa điểm), kỹ sư dữ liệu sử dụng ràng buộc Delta Live Tables với cú pháp `CONSTRAINT ... EXPECT (location != NULL) ON VIOLATION FAIL UPDATE`."
+    },
+    {
+      "id": 48,
+      "question": "A data engineer has configured a Structured Streaming job to read from a table, manipulate the data, and then perform a streaming write into a new table.\nThe code block used by the data engineer is below:\nThe data engineer only wants the query to process all of the available data in as many batches as required.\nWhich line of code should the data engineer use to fill in the blank?",
+      "choices": {
+        "A": "trigger(availableNow=True)",
+        "B": "trigger(processingTime= “once”)",
+        "C": "trigger(continuous= “once”)",
+        "D": "trigger(once=True)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Chỉ thị `trigger(availableNow=True)` trong Spark Structured Streaming hướng dẫn hệ thống xử lý toàn bộ dữ liệu hiện có sẵn tại thời điểm kích hoạt, chia thành nhiều lô (batch) nhỏ nếu cần, và tự động tắt luồng sau khi hoàn thành. Điều này hiệu quả hơn so với `once=True` vốn chỉ giới hạn xử lý trong duy nhất một lô."
+    },
+    {
+      "id": 49,
+      "question": "A data engineer needs to access the view created by the sales team, using a shared cluster. The data engineer has been provided usage permissions on the catalog and schema. In order to access the view created by sales team.\nWhat are the minimum permissions the data engineer would require in addition?",
+      "choices": {
+        "A": "Needs SELECT permission on the VIEW and the underlying TABLE.",
+        "B": "Needs SELECT permission only on the VIEW",
+        "C": "Needs ALL PRIVILEGES on the VIEW",
+        "D": "Needs ALL PRIVILEGES at the SCHEMA level"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Unity Catalog, người dùng khi truy vấn một View (Khung nhìn) chỉ cần quyền `SELECT` trên chính View đó. Họ không cần quyền truy cập vào các bảng cơ sở (underlying tables) tạo nên View nhờ vào cơ chế ủy quyền của chủ sở hữu View."
+    },
+    {
+      "id": 50,
+      "question": "Differentiate between all-purpose clusters and jobs clusters.\nA data engineering team has created a python notebook to load data from cloud storage, this job has been tested and now needs to be scheduled in production.\nWhich would be the best cluster to be used in this case?",
+      "choices": {
+        "A": "All purpose cluster",
+        "B": "Any Unity Catalog-enabled cluster",
+        "C": "Jobs Cluster",
+        "D": "Serverless SQL warehouse"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đối với các tác vụ định kỳ chạy trong môi trường sản xuất (production), sử dụng Cụm công việc (Jobs Cluster) là lựa chọn tối ưu nhất vì cụm này sẽ tự động khởi tạo khi công việc bắt đầu và tự động tắt khi hoàn thành, giúp tiết kiệm tối đa chi phí tài nguyên (thường rẻ hơn khoảng một nửa so với All-Purpose Cluster)."
+    },
+    {
+      "id": 51,
+      "question": "Identify a scenario to use an external table.A Data Engineer needs to create a parquet bronze table and wants to ensure that it gets stored in a specific path in an external location.\nWhich table can be created in this scenario?",
+      "choices": {
+        "A": "An external table where the location is pointing to specific path in external location.",
+        "B": "An external table where the schema has managed location pointing to specific path in external location.",
+        "C": "A managed table where the catalog has managed location pointing to specific path in external location.",
+        "D": "A managed table where the location is pointing to specific path in external location."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để lưu trữ dữ liệu tại một thư mục tùy chỉnh trên kho lưu trữ đám mây ngoài khu vực quản lý mặc định của Databricks, kỹ sư dữ liệu cần tạo một bảng ngoài (External Table) và thiết lập tham số vị trí (`LOCATION`) trỏ chính xác đến đường dẫn đó."
+    },
+    {
+      "id": 52,
+      "question": "The Delta transaction log for the ‘students’ tables is shown using the ‘DESCRIBE HISTORY students’ command. A Data Engineer needs to query the table as it existed before the UPDATE operation listed in the log.\nWhich command should the Data Engineer use to achieve this? (Choose two.)",
+      "choices": {
+        "A": "SELECT * FROM students@v4",
+        "B": "SELECT * FROM students TIMESTAMP AS OF ‘2024-04-22T 14:32:47.000+00:00’",
+        "C": "SELECT * FROM students FROM HISTORY VERSION AS OF 3",
+        "D": "SELECT * FROM students VERSION AS OF 5",
+        "E": "SELECT * FROM students TIMESTAMP AS OF ‘2024-04-22T 14:32:58.000+00:00’"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Delta Lake hỗ trợ tính năng Time Travel (Du hành thời gian) qua hai cú pháp chính:\n1. Sử dụng cú pháp `@v<version>` viết trực tiếp sau tên bảng, ví dụ: `students@v4`.\n2. Sử dụng mệnh đề `TIMESTAMP AS OF` kèm theo chuỗi thời gian chính xác cần truy vấn ngược lại."
+    },
+    {
+      "id": 53,
+      "question": "A data engineer only wants to execute the final block of a Python program if the Python variable day_of_week is equal to 1 and the Python variable review_period is True.\nWhich of the following control flow statements should the data engineer use to begin this conditionally executed code block?",
+      "choices": {
+        "A": "if day_of_week = 1 and review_period:",
+        "B": "if day_of_week = 1 and review_period = \"True\":",
+        "C": "if day_of_week = 1 & review_period: = \"True\":",
+        "D": "if day_of_week == 1 and review_period:"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Python, cú pháp chuẩn cho câu lệnh rẽ nhánh có điều kiện kết hợp sử dụng toán tử so sánh bằng `==` và toán tử logic `and` (ví dụ: `if day_of_week == 1 and review_period:`)."
+    },
+    {
+      "id": 54,
+      "question": "A data organization leader is upset about the data analysis team’s reports being different from the data engineering team’s reports. The leader believes the siloed nature of their organization’s data engineering and data analysis architectures is to blame.\nWhich of the following describes how a data lakehouse could alleviate this issue?",
+      "choices": {
+        "A": "Both teams would respond more quickly to ad-hoc requests",
+        "B": "Both teams would use the same source of truth for their work",
+        "C": "Both teams would reorganize to report to the same department",
+        "D": "Both teams would be able to collaborate on projects in real-time"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Kiến trúc Data Lakehouse cung cấp một nguồn dữ liệu duy nhất đáng tin cậy (single source of truth) cho cả đội ngũ kỹ sư dữ liệu và đội ngũ phân tích dữ liệu, giúp loại bỏ sự không nhất quán giữa các báo cáo do dữ liệu bị chia cắt (siloed) gây ra."
+    },
+    {
+      "id": 55,
+      "question": "A data analyst has developed a query that runs against Delta table. They want help from the data engineering team to implement a series of tests to ensure the data returned by the query is clean. However, the data engineering team uses Python for its tests rather than SQL.\nWhich of the following operations could the data engineering team use to run the query and operate with the results in PySpark?",
+      "choices": {
+        "A": "SELECT * FROM sales",
+        "B": "spark.delta.table",
+        "C": "spark.sql",
+        "D": "spark.table"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để chạy một truy vấn SQL tùy chỉnh (query) được phát triển bởi nhà phân tích và làm việc với kết quả đó dưới dạng DataFrame trong môi trường PySpark, đội ngũ kỹ sư dữ liệu sử dụng phương thức `spark.sql(\"...\")`."
+    },
+    {
+      "id": 56,
+      "question": "A data engineer needs to apply custom logic to string column city in table stores for a specific use case. In order to apply this custom logic at scale, the data engineer wants to create a SQL user-defined function (UDF).\nWhich of the following code blocks creates this SQL UDF?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774337811372-s4xasbfh.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774337813444-btqack1i.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774337815525-bwl3wtjy.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774337817787-eymsk41t.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khối mã A khai báo hàm SQL UDF bằng cú pháp chuẩn: `CREATE FUNCTION ... RETURNS ... RETURN ...` giúp xử lý biến đổi chuỗi dữ liệu trong cột `city` một cách hiệu quả ở quy mô lớn."
+    },
+    {
+      "id": 57,
+      "question": "A data engineer and data analyst are working together on a data pipeline. The data engineer is working on the raw, bronze, and silver layers of the pipeline using Python, and the data analyst is working on the gold layer of the pipeline using SQL. The raw source of the pipeline is a streaming input. They now want to migrate their pipeline to use Delta Live Tables.\nWhich of the following changes will need to be made to the pipeline when migrating to Delta Live Tables?",
+      "choices": {
+        "A": "The pipeline will need to be written entirely in Python",
+        "B": "The pipeline will need to stop using the medallion-based multi-hop architecture",
+        "C": "The pipeline will need to be written entirely in SQL",
+        "D": "The pipeline will need to use a batch source in place of a streaming source"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "id": 58,
+      "question": "Which Structured Streaming query is performing a hop from a Silver table to a Gold table?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774337814009-wuu1uewa.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774337816156-lu3ynmm3.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774337818398-m072lrt3.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774337820603-wkna8rmd.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khối mã D thực hiện biến đổi và tổng hợp dữ liệu từ một bảng Silver để ghi vào bảng Gold, đây chính là quy trình truyền luồng dữ liệu chuẩn từ Silver lên Gold."
+    },
+    {
+      "id": 59,
+      "question": "Which method should a Data Engineer apply to ensure Workflows are being triggered on schedule?",
+      "choices": {
+        "A": "Scheduled Workflows require an always-running cluster, which is more expensive but reduces processing latency.",
+        "B": "Scheduled Workflows process data as it arrives at configured sources.",
+        "C": "Scheduled Workflows can reduce resource consumption and expense since the cluster runs only long enough to execute the pipeline.",
+        "D": "Scheduled Workflows run continuously until manually stopped."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Việc chạy các luồng công việc theo lịch trình (Scheduled Workflows) giúp giảm thiểu mức tiêu thụ tài nguyên và chi phí tối đa, vì cụm máy tính (jobs cluster) chỉ được kích hoạt và chạy trong khoảng thời gian vừa đủ để hoàn thành xử lý dữ liệu rồi tự động tắt ngay lập tức."
+    },
+    {
+      "id": 60,
+      "question": "An engineering manager uses a Databricks SQL query to monitor ingestion latency for each data source. The manager checks the results of the query every day, but they are manually rerunning the query each day and waiting for the results.\nWhich of the following approaches can the manager use to ensure the results of the query are updated each day?",
+      "choices": {
+        "A": "They can schedule the query to refresh every 1 day from the SQL endpoint's page in Databricks SQL.",
+        "B": "They can schedule the query to refresh every 12 hours from the SQL endpoint's page in Databricks SQL.",
+        "C": "They can schedule the query to refresh every 1 day from the query's page in Databricks SQL.",
+        "D": "They can schedule the query to run every 12 hours from the Jobs UI."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Databricks SQL, người dùng có thể lên lịch làm mới truy vấn (schedule refresh) trực tiếp ngay trên trang chi tiết của truy vấn đó (query's page) để thiết lập chu kỳ tự động chạy mỗi ngày một lần."
+    },
+    {
+      "id": 61,
+      "question": "A data engineer has realized that they made a mistake when making a daily update to a table. They need to use Delta time travel to restore the table to a version that is 3 days old. However, when the data engineer attempts to time travel to the older version, they are unable to restore the data because the data files have been deleted.\nWhich of the following explains why the data files are no longer present?",
+      "choices": {
+        "A": "The VACUUM command was run on the table",
+        "B": "The TIME TRAVEL command was run on the table",
+        "C": "The DELETE HISTORY command was run on the table",
+        "D": "The OPTIMIZE command was nun on the table"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lệnh `VACUUM` trong Delta Lake được sử dụng để dọn dẹp và xóa vĩnh viễn các tệp tin dữ liệu cũ không còn được tham chiếu bởi phiên bản hiện tại của bảng. Nếu lệnh này được chạy với thời gian lưu trữ (retention threshold) ngắn hơn 3 ngày, các tệp dữ liệu lịch sử từ 3 ngày trước sẽ bị xóa, làm mất khả năng khôi phục hoặc truy vết lịch sử (Time Travel)."
+    },
+    {
+      "id": 62,
+      "question": "Which of the following describes the relationship between Bronze tables and raw data?",
+      "choices": {
+        "A": "Bronze tables contain less data than raw data files.",
+        "B": "Bronze tables contain more truthful data than raw data.",
+        "C": "Bronze tables contain raw data with a schema applied.",
+        "D": "Bronze tables contain a less refined view of data than raw data."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bảng Bronze đóng vai trò là nơi đầu tiên tiếp nhận dữ liệu thô trong kiến trúc Medallion. Dữ liệu trong bảng Bronze về cơ bản giữ nguyên cấu trúc thô ban đầu của tệp nguồn (như JSON, CSV) nhưng đã được ghi dưới dạng bảng Delta có áp dụng một lược đồ (schema) rõ ràng."
+    },
+    {
+      "id": 63,
+      "question": "Which of the following must be specified when creating a new Delta Live Tables pipeline?",
+      "choices": {
+        "A": "A key-value pair configuration",
+        "B": "At least one notebook library to be executed",
+        "C": "A path to cloud storage location for the written data",
+        "D": "A location of a target database for the written data"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi tạo một đường ống Delta Live Tables (DLT pipeline) mới, trường thông tin bắt buộc phải khai báo là đường dẫn tới ít nhất một thư viện mã nguồn (như notebook hoặc tệp Python/SQL) để hệ thống biết cần thực thi các định nghĩa bảng nào."
+    },
+    {
+      "id": 64,
+      "question": "In which of the following scenarios should a data engineer select a Task in the Depends On field of a new Databricks Job Task?",
+      "choices": {
+        "A": "When another task needs to be replaced by the new task",
+        "B": "When another task needs to successfully complete before the new task begins",
+        "C": "When another task has the same dependency libraries as the new task",
+        "D": "When another task needs to use as little compute resources as possible"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Databricks Workflows, trường `Depends On` (Phụ thuộc vào) dùng để thiết lập mối quan hệ phụ thuộc giữa các nhiệm vụ (tasks). Chọn một task trong trường này nghĩa là task mới sẽ chỉ được khởi chạy sau khi task kia đã hoàn thành thành công."
+    },
+    {
+      "id": 65,
+      "question": "A data engineering team has two tables. The first table march_transactions is a collection of all retail transactions in the month of March. The second table april_transactions is a collection of all retail transactions in the month of April. There are no duplicate records between the tables.\nWhich of the following commands should be run to create a new table all_transactions that contains all records from march_transactions and april_transactions without duplicate records?",
+      "choices": {
+        "A": "CREATE TABLE all_transactions ASSELECT * FROM march_transactionsINNER JOIN SELECT * FROM april_transactions;",
+        "B": "CREATE TABLE all_transactions ASSELECT * FROM march_transactionsUNION SELECT * FROM april_transactions;",
+        "C": "CREATE TABLE all_transactions ASSELECT * FROM march_transactionsOUTER JOIN SELECT * FROM april_transactions;",
+        "D": "CREATE TABLE all_transactions ASSELECT * FROM march_transactionsINTERSECT SELECT * from april_transactions;"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để gộp tất cả các bản ghi từ hai bảng có cùng cấu trúc (`march_transactions` và `april_transactions`) thành một bảng mới không chứa các dòng trùng lặp, câu lệnh SQL chuẩn là sử dụng toán tử `UNION`."
+    },
+    {
+      "id": 66,
+      "question": "How can Git operations must be performed outside of Databricks Repos?",
+      "choices": {
+        "A": "Commit",
+        "B": "Pull",
+        "C": "Merge",
+        "D": "Clone"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giao diện Databricks Repos hỗ trợ hầu hết các thao tác Git cơ bản như Commit, Pull, Push, Clone, tạo nhánh mới. Tuy nhiên, các thao tác phức tạp như hợp nhất các nhánh (Merge) và giải quyết xung đột (Merge conflicts) bắt buộc phải được thực hiện bên ngoài Databricks (ví dụ: trên trang web của nhà cung cấp Git như GitHub/GitLab)."
+    },
+    {
+      "id": 67,
+      "question": "A data engineer has joined an existing project and they see the following query in the project repository:\nCREATE STREAMING LIVE TABLE loyal_customers AS\nSELECT customer_id -FROM STREAM(LIVE.customers)WHERE loyalty_level = 'high';\nWhich of the following describes why the STREAM function is included in the query?",
+      "choices": {
+        "A": "The STREAM function is not needed and will cause an error.",
+        "B": "The data in the customers table has been updated since its last run.",
+        "C": "The customers table is a streaming live table.",
+        "D": "The customers table is a reference to a Structured Streaming query on a PySpark DataFrame."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Delta Live Tables, hàm `STREAM()` được sử dụng để bao bọc một bảng đích (như `LIVE.customers`) nhằm báo hiệu cho DLT biết rằng bảng này cần được đọc dưới dạng nguồn dữ liệu dạng luồng (streaming source), giúp xử lý dữ liệu tăng dần (incrementally) thay vì đọc toàn bộ bảng dưới dạng tĩnh (static)."
+    },
+    {
+      "id": 68,
+      "question": "A data engineer has a Job that has a complex run schedule, and they want to transfer that schedule to other Jobs.\nRather than manually selecting each value in the scheduling form in Databricks, which of the following tools can the data engineer use to represent and submit the schedule programmatically?",
+      "choices": {
+        "A": "pyspark.sql.types.DateType",
+        "B": "datetime",
+        "C": "pyspark.sql.types.TimestampType",
+        "D": "Cron syntax"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để biểu diễn và lập lịch chạy các công việc (Jobs) một cách lập trình và linh hoạt thay vì chọn thủ công trên giao diện, Databricks sử dụng cú pháp Cron (Cron syntax) tiêu chuẩn."
+    },
+    {
+      "id": 69,
+      "question": "A data engineer needs access to a table new_table, but they do not have the correct permissions. They can ask the table owner for permission, but they do not know who the table owner is.\nWhich of the following approaches can be used to identify the owner of new_table?",
+      "choices": {
+        "A": "Review the Permissions tab in the table's page in Data Explorer",
+        "B": "There is no way to identify the owner of the table",
+        "C": "Review the Owner field in the table's page in Data Explorer",
+        "D": "Review the Owner field in the table's page in the cloud storage solution"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để biết ai là chủ sở hữu của một bảng dữ liệu nhằm xin cấp quyền truy cập, kỹ sư dữ liệu có thể mở trang thông tin chi tiết của bảng đó trong Data Explorer (Catalog Explorer) và xem giá trị hiển thị ở trường dữ liệu `Owner` (Chủ sở hữu)."
+    },
+    {
+      "id": 70,
+      "question": "A data engineer needs to create a table in Databricks using data from their organization’s existing SQLite database.\nThey run the following command:\nWhich of the following lines of code fills in the above blank to successfully complete the task?",
+      "choices": {
+        "A": "org.apache.spark.sql.jdbc",
+        "B": "autoloader",
+        "C": "org.apache.spark.sql.sqlite",
+        "D": "sqlite"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để kết nối và đọc dữ liệu từ một cơ sở dữ liệu quan hệ bên ngoài như SQLite, Spark SQL sử dụng trình kết nối JDBC thông qua lớp nguồn dữ liệu `org.apache.spark.sql.jdbc`."
+    },
+    {
+      "id": 71,
+      "question": "In which of the following scenarios should a data engineer use the MERGE INTO command instead of the INSERT INTO command?",
+      "choices": {
+        "A": "When the location of the data needs to be changed",
+        "B": "When the target table is an external table",
+        "C": "When the source is not a Delta table",
+        "D": "When the target table cannot contain duplicate records"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lệnh `MERGE INTO` được sử dụng thay thế cho `INSERT INTO` khi chúng ta muốn thực hiện các thao tác cập nhật hoặc thêm mới có điều kiện (upsert). Điều này giúp đối chiếu khóa chính giữa bảng nguồn và bảng đích nhằm ngăn chặn việc chèn các bản ghi trùng lặp (duplicate records) vào bảng đích."
+    },
+    {
+      "id": 72,
+      "question": "A data engineer is designing a data pipeline. The source system generates files in a shared directory that is also used by other processes. As a result, the files should be kept as is and will accumulate in the directory. The data engineer needs to identify which files are new since the previous run in the pipeline, and set up the pipeline to only ingest those new files with each run.\nWhich of the following tools can the data engineer use to solve this problem?",
+      "choices": {
+        "A": "Unity Catalog",
+        "B": "Delta Lake",
+        "C": "Databricks SQL",
+        "D": "Auto Loader"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Auto Loader là công cụ lý tưởng được thiết kế riêng để tự động theo dõi, phát hiện và chỉ nạp các tệp tin mới xuất hiện trong một thư mục lưu trữ mà không cần di chuyển hay xóa các tệp cũ, giúp tiết kiệm chi phí và tài nguyên xử lý dữ liệu gia tăng."
+    },
+    {
+      "id": 73,
+      "question": "What is stored in the Databricks customer's cloud account?",
+      "choices": {
+        "A": "Databricks web application",
+        "B": "Cluster management metadata",
+        "C": "Notebooks",
+        "D": "Data"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong kiến trúc phân tách của Databricks, toàn bộ dữ liệu thực tế (Data) và các cụm tài nguyên tính toán (clusters) được lưu trữ trực tiếp bên trong tài khoản đám mây của chính khách hàng (Data Plane) để đảm bảo tính an toàn bảo mật dữ liệu tối đa."
+    },
+    {
+      "id": 74,
+      "question": "A data engineer wants to create a relational object by pulling data from two tables. The relational object does not need to be used by other data engineers in other sessions. In order to save on storage costs, the data engineer wants to avoid copying and storing physical data.\nWhich of the following relational objects should the data engineer create?",
+      "choices": {
+        "A": "Spark SQL Table",
+        "B": "View",
+        "C": "Delta Table",
+        "D": "Temporary view"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Một Khung nhìn tạm thời (Temporary View) chỉ tồn tại trong phạm vi phiên làm việc hiện tại (session-scoped), không hiển thị cho các phiên làm việc khác và không sao chép hay lưu trữ vật lý dữ liệu trên ổ đĩa, giúp tiết kiệm tối đa chi phí lưu trữ."
+    },
+    {
+      "id": 75,
+      "question": "Which of the following commands will return the number of null values in the member_id column?",
+      "choices": {
+        "A": "SELECT count(member_id) FROM my_table;",
+        "B": "SELECT count(member_id) - count_null(member_id) FROM my_table;",
+        "C": "SELECT count_if(member_id IS NULL) FROM my_table;",
+        "D": "SELECT null(member_id) FROM my_table;"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đếm số lượng các giá trị rỗng (NULL) trong một cột, câu lệnh hiệu quả nhất là sử dụng hàm `count_if` kết hợp điều kiện kiểm tra NULL: `SELECT count_if(member_id IS NULL) FROM my_table;`."
+    },
+    {
+      "id": 76,
+      "question": "Which tool is used by Auto Loader to process data incrementally?",
+      "choices": {
+        "A": "Checkpointing",
+        "B": "Spark Structured Streaming",
+        "C": "Databricks SQL",
+        "D": "Unity Catalog"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Auto Loader được xây dựng dựa trên nền tảng của công cụ xử lý dữ liệu luồng Spark Structured Streaming để thực hiện việc quét và nạp dữ liệu một cách gia tăng và tin cậy."
+    },
+    {
+      "id": 77,
+      "question": "Which of the following benefits is provided by the array functions from Spark SQL?",
+      "choices": {
+        "A": "An ability to work with data in a variety of types at once",
+        "B": "An ability to work with data within certain partitions and windows",
+        "C": "An ability to work with time-related data in specified intervals",
+        "D": "An ability to work with complex, nested data ingested from JSON files"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Các hàm xử lý mảng (array functions) trong Spark SQL hỗ trợ các nhà phát triển thao tác và biến đổi các cấu trúc dữ liệu phức tạp, lồng nhau (complex, nested data) thường xuất hiện khi ingest dữ liệu từ tệp JSON."
+    },
+    {
+      "id": 78,
+      "question": "Which of the following is hosted completely in the control plane of the classic Databricks architecture?",
+      "choices": {
+        "A": "Worker node",
+        "B": "JDBC data source",
+        "C": "Databricks web application",
+        "D": "Databricks Filesystem",
+        "E": "Driver node"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Ứng dụng web Databricks (web application), trình quản lý công việc và các dịch vụ quản trị hệ thống được lưu trữ và chạy hoàn toàn trong Control Plane do Databricks quản lý trực tiếp."
+    },
+    {
+      "id": 79,
+      "question": "Which of the following benefits of using the Databricks Lakehouse Platform is provided by Delta Lake?",
+      "choices": {
+        "A": "The ability to manipulate the same data using a variety of languages",
+        "B": "The ability to collaborate in real time on a single notebook",
+        "C": "The ability to set up alerts for query failures",
+        "D": "The ability to support batch and streaming workloads",
+        "E": "The ability to distribute complex data operations"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Delta Lake mang lại khả năng hợp nhất việc xử lý dữ liệu lô (batch) và dữ liệu luồng (streaming) trên cùng một bảng dữ liệu một cách đồng thời và tin cậy."
+    },
+    {
+      "id": 80,
+      "question": "Which of the following describes the storage organization of a Delta table?",
+      "choices": {
+        "A": "Delta tables are stored in a single file that contains data, history, metadata, and other attributes.",
+        "B": "Delta tables store their data in a single file and all metadata in a collection of files in a separate location.",
+        "C": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.",
+        "D": "Delta tables are stored in a collection of files that contain only the data stored within the table.",
+        "E": "Delta tables are stored in a single file that contains only the data stored within the table."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bảng Delta được lưu trữ dưới dạng một thư mục chứa tập hợp nhiều tệp tin bao gồm các tệp dữ liệu thực tế (Parquet files) và thư mục `_delta_log` chứa nhật ký giao dịch định dạng JSON ghi lại lược đồ, lịch sử và các siêu dữ liệu khác."
+    },
+    {
+      "id": 81,
+      "question": "Which of the following code blocks will remove the rows where the value in column age is greater than 25 from the existing Delta table my_table and save the updated table?",
+      "choices": {
+        "A": "SELECT * FROM my_table WHERE age > 25;",
+        "B": "UPDATE my_table WHERE age > 25;",
+        "C": "DELETE FROM my_table WHERE age > 25;",
+        "D": "UPDATE my_table WHERE age <= 25;",
+        "E": "DELETE FROM my_table WHERE age <= 25;"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để xóa các dòng dữ liệu thỏa mãn điều kiện nhất định khỏi bảng Delta hiện có, chúng ta sử dụng câu lệnh SQL: `DELETE FROM my_table WHERE age > 25;`."
+    },
+    {
+      "id": 82,
+      "question": "Which of the following data lakehouse features results in improved data quality over a traditional data lake?",
+      "choices": {
+        "A": "A data lakehouse provides storage solutions for structured and unstructured data.",
+        "B": "A data lakehouse supports ACID-compliant transactions.",
+        "C": "A data lakehouse allows the use of SQL queries to examine data.",
+        "D": "A data lakehouse stores data in open formats.",
+        "E": "A data lakehouse enables machine learning and artificial Intelligence workloads."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hỗ trợ các giao dịch tuân thủ tính chất ACID (Tính nguyên tố, nhất quán, cô lập, bền vững) giúp Data Lakehouse vượt trội hơn Data Lake truyền thống về chất lượng dữ liệu, ngăn ngừa tình trạng dữ liệu ghi dở dang hoặc xung đột khi ghi đồng thời."
+    },
+    {
+      "id": 83,
+      "question": "A data engineer has left the organization. The data team needs to transfer ownership of the data engineer’s Delta tables to a new data engineer. The new data engineer is the lead engineer on the data team.Assuming the original data engineer no longer has access, which of the following individuals must be the one to transfer ownership of the Delta tables in Data Explorer?",
+      "choices": {
+        "A": "Databricks account representative",
+        "B": "This transfer is not possible",
+        "C": "Workspace administrator",
+        "D": "New lead data engineer",
+        "E": "Original data engineer"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi chủ sở hữu hiện tại của bảng đã rời công ty và không còn quyền truy cập, chỉ có Quản trị viên không gian làm việc (Workspace administrator) mới có quyền can thiệp để chuyển quyền sở hữu (ownership) các bảng Delta đó sang kỹ sư mới."
+    },
+    {
+      "id": 84,
+      "question": "Which of the following commands will return the location of database customer360?",
+      "choices": {},
+      "correctAnswer": "C",
+      "explanation_vi": "Để xem chi tiết thông tin của một cơ sở dữ liệu bao gồm cả đường dẫn vị trí lưu trữ thực tế của nó (Location), chúng ta sử dụng câu lệnh: `DESCRIBE DATABASE customer360;` (hoặc `DESCRIBE SCHEMA customer360;`)."
+    },
+    {
+      "id": 85,
+      "question": "A data engineer is attempting to drop a Spark SQL table my_table. The data engineer wants to delete all table metadata and data.They run the following command:\nDROP TABLE IF EXISTS my_table -While the object no longer appears when they run SHOW TABLES, the data files still exist.Which of the following describes why the data files still exist and the metadata files were deleted?",
+      "choices": {
+        "A": "The table’s data was larger than 10 GB",
+        "B": "The table’s data was smaller than 10 GB",
+        "C": "The table was external",
+        "D": "The table did not have a location",
+        "E": "The table was managed"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi thực hiện lệnh `DROP TABLE` trên một bảng ngoài (External Table), hệ thống chỉ xóa định nghĩa lược đồ (metadata) trong catalog mà không can thiệp hay xóa các tệp dữ liệu vật lý lưu trên hệ thống lưu trữ đám mây của bạn."
+    },
+    {
+      "id": 86,
+      "question": "A data engineer wants to create a data entity from a couple of tables. The data entity must be used by other data engineers in other sessions. It also must be saved to a physical location.Which of the following data entities should the data engineer create?",
+      "choices": {
+        "A": "Database",
+        "B": "Function",
+        "C": "View",
+        "D": "Temporary view",
+        "E": "Table"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Để tạo một thực thể dữ liệu có thể được truy cập bởi nhiều phiên làm việc của các kỹ sư khác nhau và đồng thời lưu trữ vật lý dữ liệu trên đĩa, kỹ sư dữ liệu cần tạo một Bảng (Table)."
+    },
+    {
+      "id": 87,
+      "question": "A data engineer is maintaining a data pipeline. Upon data ingestion, the data engineer notices that the source data is starting to have a lower level of quality. The data engineer would like to automate the process of monitoring the quality level.Which of the following tools can the data engineer use to solve this problem?",
+      "choices": {
+        "A": "Unity Catalog",
+        "B": "Data Explorer",
+        "C": "Delta Lake",
+        "D": "Delta Live Tables",
+        "E": "Auto Loader"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Delta Live Tables cung cấp tính năng giám sát chất lượng dữ liệu tích hợp sẵn thông qua cơ chế ràng buộc (Expectations). Công cụ này tự động kiểm tra chất lượng dữ liệu nạp vào và ghi nhận báo cáo giúp kỹ sư dữ liệu tự động hóa quy trình quản lý chất lượng."
+    },
+    {
+      "id": 88,
+      "question": "A dataset has been defined using Delta Live Tables and includes an expectations clause:CONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION DROP ROWWhat is the expected behavior when a batch of data containing data that violates these constraints is processed?",
+      "choices": {
+        "A": "Records that violate the expectation are dropped from the target dataset and loaded into a quarantine table.",
+        "B": "Records that violate the expectation are added to the target dataset and flagged as invalid in a field added to the target dataset.",
+        "C": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.",
+        "D": "Records that violate the expectation are added to the target dataset and recorded as invalid in the event log.",
+        "E": "Records that violate the expectation cause the job to fail."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Ràng buộc `ON VIOLATION DROP ROW` chỉ thị cho hệ thống tự động loại bỏ (drop) các dòng dữ liệu không đáp ứng điều kiện ra khỏi bảng kết quả, đồng thời ghi nhận sự kiện vi phạm này vào nhật ký hệ thống DLT (event log) để theo dõi."
+    },
+    {
+      "id": 89,
+      "question": "A data engineer has configured a Structured Streaming job to read from a table, manipulate the data, and then perform a streaming write into a new table.The cade block used by the data engineer is below:\nIf the data engineer only wants the query to execute a micro-batch to process data every 5 seconds, which of the following lines of code should the data engineer use to fill in the blank?",
+      "choices": {
+        "A": "trigger(\"5 seconds\")",
+        "B": "trigger()",
+        "C": "trigger(once=\"5 seconds\")",
+        "D": "trigger(processingTime=\"5 seconds\")",
+        "E": "trigger(continuous=\"5 seconds\")"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Spark Structured Streaming, để cấu hình thời gian kích hoạt (trigger) định kỳ thực hiện một lô nhỏ (micro-batch) sau mỗi 5 giây, cú pháp chính xác là sử dụng `.trigger(processingTime=\"5 seconds\")`."
+    },
+    {
+      "id": 90,
+      "question": "Which of the following describes when to use the CREATE STREAMING LIVE TABLE (formerly CREATE INCREMENTAL LIVE TABLE) syntax over the CREATE LIVE TABLE syntax when creating Delta Live Tables (DLT) tables using SQL?",
+      "choices": {
+        "A": "CREATE STREAMING LIVE TABLE should be used when the subsequent step in the DLT pipeline is static.",
+        "B": "CREATE STREAMING LIVE TABLE should be used when data needs to be processed incrementally.",
+        "C": "CREATE STREAMING LIVE TABLE is redundant for DLT and it does not need to be used.",
+        "D": "CREATE STREAMING LIVE TABLE should be used when data needs to be processed through complicated aggregations.",
+        "E": "CREATE STREAMING LIVE TABLE should be used when the previous step in the DLT pipeline is static."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Delta Live Tables, cú pháp `CREATE STREAMING LIVE TABLE` được sử dụng khi chúng ta muốn dữ liệu được đọc và xử lý một cách gia tăng (incrementally), tức là chỉ xử lý phần dữ liệu mới xuất hiện kể từ lượt chạy trước thay vì tính toán lại toàn bộ bảng như `CREATE LIVE TABLE`."
+    },
+    {
+      "id": 91,
+      "question": "Which of the following commands can be used to write data into a Delta table while avoiding the writing of duplicate records?",
+      "choices": {
+        "A": "DROP",
+        "B": "IGNORE",
+        "C": "MERGE",
+        "D": "APPEND",
+        "E": "INSERT"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để ghi dữ liệu vào bảng Delta mà không tạo ra các bản ghi trùng lặp (duplicates), kỹ sư dữ liệu sử dụng lệnh `MERGE INTO` để đối chiếu các bản ghi dựa trên khóa liên kết và quyết định cập nhật hoặc chèn mới."
+    },
+    {
+      "id": 92,
+      "question": "A data engineer wants to create a new table containing the names of customers that live in France.They have written the following command:\nA senior data engineer mentions that it is organization policy to include a table property indicating that the new table includes personally identifiable information (PII).Which of the following lines of code fills in the above blank to successfully complete the task?",
+      "choices": {
+        "A": "There is no way to indicate whether a table contains PII.",
+        "B": "\"COMMENT PII\"",
+        "C": "TBLPROPERTIES PII",
+        "D": "COMMENT \"Contains PII\"",
+        "E": "PII"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để thêm ghi chú mô tả thông tin (ví dụ: chỉ ra rằng bảng chứa thông tin nhạy cảm PII) cho một bảng SQL, chúng ta sử dụng mệnh đề `COMMENT \"Contains PII\"` khi tạo bảng."
+    },
+    {
+      "id": 93,
+      "question": "A new data engineering team has been assigned to work on a project. The team will need access to database customers in order to see what tables already exist. The team has its own group team.Which of the following commands can be used to grant the necessary permission on the entire database to the new team?",
+      "choices": {
+        "A": "GRANT VIEW ON CATALOG customers TO team;",
+        "B": "GRANT CREATE ON DATABASE customers TO team;",
+        "C": "GRANT USAGE ON CATALOG team TO customers;",
+        "D": "GRANT CREATE ON DATABASE team TO customers;",
+        "E": "GRANT USAGE ON DATABASE customers TO team;"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Để cho phép một nhóm người dùng (team) có thể xem cấu trúc và thông tin danh sách các bảng trong một cơ sở dữ liệu (database `customers`), chúng ta cần cấp đặc quyền sử dụng bằng lệnh: `GRANT USAGE ON DATABASE customers TO team;`."
+    },
+    {
+      "id": 94,
+      "question": "A data engineer has a Job with multiple tasks that runs nightly. Each of the tasks runs slowly because the clusters take a long time to start.Which of the following actions can the data engineer perform to improve the start up time for the clusters used for the Job?",
+      "choices": {
+        "A": "They can use endpoints available in Databricks SQL",
+        "B": "They can use jobs clusters instead of all-purpose clusters",
+        "C": "They can configure the clusters to be single-node",
+        "D": "They can use clusters that are from a cluster pool",
+        "E": "They can configure the clusters to autoscale for larger data sizes"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để cải thiện thời gian khởi động cụm máy tính cho các tác vụ của Job chạy ban đêm, kỹ sư dữ liệu có thể sử dụng các cụm máy lấy từ Cụm tài nguyên đệm (cluster pool), giúp bỏ qua bước chờ cấp phát và chuẩn bị máy ảo từ nhà cung cấp đám mây."
+    },
+    {
+      "id": 95,
+      "question": "A new data engineering team team. has been assigned to an ELT project. The new data engineering team will need full privileges on the database customers to fully manage the project.Which of the following commands can be used to grant full permissions on the database to the new data engineering team?",
+      "choices": {
+        "A": "GRANT USAGE ON DATABASE customers TO team;",
+        "B": "GRANT ALL PRIVILEGES ON DATABASE team TO customers;",
+        "C": "GRANT SELECT PRIVILEGES ON DATABASE customers TO teams;",
+        "D": "GRANT SELECT CREATE MODIFY USAGE PRIVILEGES ON DATABASE customers TO team;",
+        "E": "GRANT ALL PRIVILEGES ON DATABASE customers TO team;"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Để cấp toàn bộ các quyền quản lý (full privileges) trên một cơ sở dữ liệu cho nhóm người dùng, cú pháp SQL chuẩn trong Databricks là: `GRANT ALL PRIVILEGES ON DATABASE customers TO team;`."
+    },
+    {
+      "id": 96,
+      "question": "A data analyst has a series of queries in a SQL program. The data analyst wants this program to run every day. They only want the final query in the program to run on Sundays. They ask for help from the data engineering team to complete this task.Which of the following approaches could be used by the data engineering team to complete this task?",
+      "choices": {
+        "A": "They could submit a feature request with Databricks to add this functionality.",
+        "B": "They could wrap the queries using PySpark and use Python’s control flow system to determine when to run the final query.",
+        "C": "They could only run the entire program on Sundays.",
+        "D": "They could automatically restrict access to the source table in the final query so that it is only accessible on Sundays.",
+        "E": "They could redesign the data model to separate the data used in the final query into a new table."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để điều khiển việc thực thi có điều kiện các truy vấn SQL (chỉ chạy một truy vấn nhất định vào ngày Chủ Nhật), giải pháp tốt nhất là bao bọc (wrap) các truy vấn này trong môi trường PySpark bằng lệnh `spark.sql` và dùng cấu trúc rẽ nhánh điều kiện của Python để kiểm tra ngày trong tuần."
+    },
+    {
+      "id": 97,
+      "question": "A data engineer runs a statement every day to copy the previous day’s sales into the table transactions. Each day’s sales are in their own file in the location \"/transactions/raw\".Today, the data engineer runs the following command to complete this task:\nAfter running the command today, the data engineer notices that the number of records in table transactions has not changed.Which of the following describes why the statement might not have copied any new records into the table?",
+      "choices": {
+        "A": "The format of the files to be copied were not included with the FORMAT_OPTIONS keyword.",
+        "B": "The names of the files to be copied were not included with the FILES keyword.",
+        "C": "The previous day’s file has already been copied into the table.",
+        "D": "The PARQUET file format does not support COPY INTO.",
+        "E": "The COPY INTO statement requires the table to be refreshed to view the copied rows."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Lệnh `COPY INTO` trong Databricks có tính chất bất biến (idempotent), nó tự động lưu lại lịch sử các tệp tin đã được tải thành công. Nếu tệp dữ liệu của ngày hôm trước đã được nạp từ trước, câu lệnh chạy lại sẽ không nạp lại tệp đó nữa, dẫn đến số lượng bản ghi trong bảng không thay đổi."
+    },
+    {
+      "id": 98,
+      "question": "A data engineer has a single-task Job that runs each morning before they begin working. After identifying an upstream data issue, they need to set up another task to run a new notebook prior to the original task.Which of the following approaches can the data engineer use to set up the new task?",
+      "choices": {
+        "A": "They can clone the existing task in the existing Job and update it to run the new notebook.",
+        "B": "They can create a new task in the existing Job and then add it as a dependency of the original task.",
+        "C": "They can create a new task in the existing Job and then add the original task as a dependency of the new task.",
+        "D": "They can create a new job from scratch and add both tasks to run concurrently.",
+        "E": "They can clone the existing task to a new Job and then edit it to run the new notebook."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để thiết lập một nhiệm vụ mới chạy trước (prior to) một nhiệm vụ sẵn có trong cùng một Job, kỹ sư dữ liệu cần tạo một task mới trong Job đó, sau đó chỉnh sửa task cũ ban đầu và thêm task mới này vào danh sách phụ thuộc (dependency) của task cũ."
+    },
+    {
+      "id": 99,
+      "question": "An engineering manager wants to monitor the performance of a recent project using a Databricks SQL query. For the first week following the project’s release, the manager wants the query results to be updated every minute. However, the manager is concerned that the compute resources used for the query will be left running and cost the organization a lot of money beyond the first week of the project’s release.Which of the following approaches can the engineering team use to ensure the query does not cost the organization any money beyond the first week of the project’s release?",
+      "choices": {
+        "A": "They can set a limit to the number of DBUs that are consumed by the SQL Endpoint.",
+        "B": "They can set the query’s refresh schedule to end after a certain number of refreshes.",
+        "C": "They cannot ensure the query does not cost the organization money beyond the first week of the project’s release.",
+        "D": "They can set a limit to the number of individuals that are able to manage the query’s refresh schedule.",
+        "E": "They can set the query’s refresh schedule to end on a certain date in the query scheduler."
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Để tự động dừng việc làm mới truy vấn sau một tuần thử nghiệm nhằm tránh phát sinh thêm chi phí, kỹ sư dữ liệu có thể thiết lập ngày kết thúc lịch trình làm mới (end date) trực tiếp trong cấu hình lập lịch của truy vấn SQL."
+    },
+    {
+      "id": 100,
+      "question": "A data engineer has three tables in a Delta Live Tables (DLT) pipeline. They have configured the pipeline to drop invalid records at each table. They notice that some data is being dropped due to quality concerns at some point in the DLT pipeline. They would like to determine at which table in their pipeline the data is being dropped.Which of the following approaches can the data engineer take to identify the table that is dropping the records?",
+      "choices": {
+        "A": "They can set up separate expectations for each table when developing their DLT pipeline.",
+        "B": "They cannot determine which table is dropping the records.",
+        "C": "They can set up DLT to notify them via email when records are dropped.",
+        "D": "They can navigate to the DLT pipeline page, click on each table, and view the data quality statistics.",
+        "E": "They can navigate to the DLT pipeline page, click on the “Error” button, and review the present errors."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong giao diện quản lý Delta Live Tables (DLT Pipeline UI), người dùng có thể nhấp vào biểu tượng của từng bảng trên đồ thị luồng dữ liệu (pipeline graph) để xem thống kê chất lượng dữ liệu chi tiết, bao gồm số lượng bản ghi bị loại bỏ (dropped) do vi phạm ràng buộc."
+    },
+    {
+      "id": 101,
+      "question": "What is the maximum output supported by a job cluster to ensure a notebook does not fail?",
+      "choices": {
+        "A": "25MBs",
+        "B": "10MBs",
+        "C": "30MBs",
+        "D": "15MBs"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Databricks giới hạn kích thước tối đa cho kết quả đầu ra (output) hiển thị trong sổ tay (notebook) chạy dưới dạng Job là 30 MB. Nếu kết quả đầu ra vượt quá giới hạn 30 MB này, tiến trình sẽ bị lỗi và dừng lại."
+    },
+    {
+      "id": 102,
+      "question": "A data engineer is managing a data pipeline in Databricks, where multiple Delta tables are used for various transformations. The team wants to track how data flows through the pipeline, including identifying dependencies between Delta tables, notebooks, jobs, and dashboards. The data engineer is utilizing the Unity Catalog lineage feature to monitor this process.\nHow does Unity Catalog’s data lineage feature support the visualization of relationships between Delta tables, notebooks, jobs, and dashboards?",
+      "choices": {
+        "A": "Unity Catalog lineage visualizes dependencies between Delta tables, notebooks, and jobs, but does not provide column-level tracing or relationships with dashboards.",
+        "B": "Unity Catalog lineage only supports visualizing relationships at the table level and does not extend to notebooks, jobs, or dashboards.",
+        "C": "Unity Catalog lineage provides an interactive graph that tracks dependencies between tables and notebooks but excludes any job-related dependencies or dashboard visualizations.",
+        "D": "Unity Catalog provides an interactive graph that visualizes the dependencies between Delta tables, notebooks, jobs, and dashboards, while also supporting column-level tracking of data transformations."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tính năng dòng dữ liệu (data lineage) của Unity Catalog cung cấp biểu đồ trực quan tương tác ghi lại các mối quan hệ phụ thuộc chéo giữa các bảng Delta, sổ tay, tiến trình công việc (jobs) và bảng điều khiển (dashboards), đồng thời hỗ trợ truy vết nguồn gốc dữ liệu ở mức độ cột (column-level)."
+    },
+    {
+      "id": 103,
+      "question": "A data engineer needs to parse only png files in a directory that contains files with different suffixes.\nWhich code should the data engineer use to achieve this task?",
+      "choices": {
+        "A": "df = spark.readStream.format(\"cloudFiles\") \\ .option(\"cloudFiles.format\", \"binaryFile\") \\.append(\"/*.png\")",
+        "B": "df = spark.readstream. format(\"cloudFiles\") \\.option(\"cloudFiles.format\", \"binaryFile\") \\.option(\"pathGlobfilter\", \"*.png\") \\.load()",
+        "C": "df = spark.readStream.format(\"cloudFiles\") \\ .option(\"cloudFiles.format\", \"binaryFile\") \\.option(\"pathGlobfilter\", \"*.png\") \\ .append()",
+        "D": "df = spark.readstream.format(\"cloudFiles\") \\ .option(\"cloudFiles.format\", \"binaryFile\") \\.load(\"/*.png\")"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để cấu hình Auto Loader chỉ đọc các tệp hình ảnh có đuôi `.png` từ thư mục chứa nhiều loại định dạng tệp khác nhau, chúng ta sử dụng tùy chọn lọc mẫu đường dẫn `.option(\"pathGlobFilter\", \"*.png\")` kết hợp phương thức `.load()`."
+    },
+    {
+      "id": 104,
+      "question": "Which Databricks asset bundle format is valid?",
+      "choices": {},
+      "correctAnswer": "A"
+    },
+    {
+      "id": 105,
+      "question": "A data engineer is debugging a Python notebook in Databricks that processes a dataset using PySpark. The notebook fails with an error during a DataFrame transformation. The engineer wants to inspect the state of variables, such as the input DataFrame and intermediate results, to identify where the error occurs.\nWhich tool should the engineer use to debug the notebook and inspect the values of variables like DataFrames?",
+      "choices": {
+        "A": "Use the Databricks CLI to download and analyze driver logs for detailed error messages",
+        "B": "Use the Python Notebook Interactive Debugger to set breakpoints and inspect variable values in real-time",
+        "C": "Use the Ganglia UI to monitor cluster resource usage and identify hardware issues",
+        "D": "Use the Spark UI to analyze the execution plan and identify stages where the job failed"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để gỡ lỗi (debug) sổ tay Python trong Databricks và trực tiếp theo dõi trạng thái các biến số hoặc DataFrame thời gian thực, nhà phát triển sử dụng công cụ Trình gỡ lỗi tương tác của sổ tay (Python Notebook Interactive Debugger)."
+    },
+    {
+      "id": 106,
+      "question": "A data engineer is developing a small proof of concept in a notebook. When running the entire notebook, the Cluster usage spikes. The data engineer wants to keep the development requirements and get real-time results.\nWhich Cluster meets these requirements?",
+      "choices": {
+        "A": "All Purpose Cluster with autoscaling",
+        "B": "Job Cluster with Photon enabled and autoscaling",
+        "C": "Job Cluster with autoscaling enabled",
+        "D": "All-Purpose Cluster with a large fixed memory size"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để phát triển thử nghiệm ý tưởng (PoC) trong notebook và nhận kết quả tương tác thời gian thực, kỹ sư cần dùng Cụm đa năng (All Purpose Cluster). Cấu hình tự động co giãn (autoscaling) giúp cụm máy tự động mở rộng để xử lý các đỉnh tải đột biến và tự động co lại khi rảnh rỗi để tiết kiệm chi phí."
+    },
+    {
+      "id": 107,
+      "question": "A Databricks single-task workflow fails at the last task due to an error in a notebook. The data engineer fixes the mistake in the notebook.\nWhat should the data engineer do to rerun the workflow?",
+      "choices": {
+        "A": "Repair the task",
+        "B": "Rerun the pipeline",
+        "C": "Restart the cluster",
+        "D": "Switch the cluster"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Sau khi đã sửa lỗi mã nguồn trong sổ tay của một quy trình làm việc đơn tác vụ (single-task workflow) bị thất bại, kỹ sư dữ liệu chỉ cần thực hiện chạy lại quy trình (Rerun the pipeline / Rerun the job) để bắt đầu một lượt thực thi mới."
+    },
+    {
+      "id": 108,
+      "question": "A data engineer has written a function in a Databricks Notebook to calculate the population of bacteria in a given medium.\nAnalysts use this function in the notebook and sometimes provide input arguments of the wrong data type, which can cause errors during execution.\nWhich Databricks feature will help the data engineer quickly identify if an incorrect data type has been provided as input?",
+      "choices": {
+        "A": "The Spark User interface has a debug tab that contains the variables that are used in this session.",
+        "B": "The Databricks debugger enables breakpoints that will raise an error if the wrong data type is submitted.",
+        "C": "The Databricks debugger enables the use of a variable explorer to see at a glance the value of the variables.",
+        "D": "The Data Engineer should add print statements to find out what the variable is."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Bảng trình gỡ lỗi của Databricks (Databricks debugger) cung cấp tính năng variable explorer (trình khám phá biến) cho phép kỹ sư dữ liệu xem nhanh danh sách toàn bộ các biến số cùng kiểu dữ liệu hiện tại của chúng trong phiên làm việc, giúp dễ dàng nhận biết lỗi kiểu dữ liệu truyền vào."
+    },
+    {
+      "id": 109,
+      "question": "Which compute option should be chosen in a scenario where small-scale ad-hoc Python scripts need to be run at high frequency and should wind down quickly after these queries have finished running?",
+      "choices": {
+        "A": "All-purpose Cluster",
+        "B": "Job Cluster",
+        "C": "Serverless Compute",
+        "D": "SQL Warehouse"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "id": 110,
+      "question": "A data engineer streams customer orders into a Kafka topic (orders_topic) and is currently writing the ingestion script of a DLT pipeline. The data engineer needs to ingest the data from Kafka brokers to DLT using Databricks.\nWhat is the correct code for ingesting the data?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774693436290-4ol4gv59.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774693438475-2rqnyd5p.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774693440593-9tfr5erm.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774693442650-db06gf8n.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khối mã A thực hiện đúng việc đọc dữ liệu truyền luồng (streaming ingestion) từ hàng đợi Kafka bằng cách sử dụng `spark.readStream` với định dạng nguồn `.format(\"kafka\")` và đăng ký chủ đề `.option(\"subscribe\", \"orders_topic\")`."
+    },
+    {
+      "id": 111,
+      "question": "Which SQL code snippet will correctly demonstrate a Data Definition Language (DDL) operation used to create a table?",
+      "choices": {
+        "A": "CREATE TABLE employees (id INT,name STRING);",
+        "B": "DROP TABLE employees;",
+        "C": "ALTER TABLE employees ADD COLUMN salary DECIMAL(10,2);",
+        "D": "INSERT INTO employees (id, name) VALUES (1 'Alice');"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mệnh đề `CREATE TABLE` trong SQL là câu lệnh Ngôn ngữ định nghĩa dữ liệu (DDL - Data Definition Language) được sử dụng để tạo mới cấu trúc bảng dữ liệu trong cơ sở dữ liệu."
+    },
+    {
+      "id": 112,
+      "question": "A data engineer has inherited a Databricks pipeline from a previous team. The pipeline is missing SLAs and costs more than the allotted budget. On analysis, it is noted that the cluster is not being fully utilized, and the dataset is getting skewed.\nHow should the data engineer resolve this issue?",
+      "choices": {
+        "A": "Use coalesce() on the dataset to merge partitions and reduce skew.",
+        "B": "Increase the number of executors for the job.",
+        "C": "Repartition the dataset to have it be more optimally spread across all nodes.",
+        "D": "Increase the executor memory for the job."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Hiện tượng lệch dữ liệu (data skew) xảy ra khi một số phân vùng (partitions) chứa lượng dữ liệu lớn hơn nhiều so với phần còn lại, dẫn đến tình trạng một số nút hoạt động quá tải trong khi các nút khác nhàn rỗi. Việc phân chia lại dữ liệu (`repartition`) sẽ giúp phân phối dữ liệu đồng đều hơn trên toàn bộ các nút của cụm máy tính, tối ưu hóa hiệu năng và sử dụng tài nguyên tốt hơn."
+    },
+    {
+      "id": 113,
+      "question": "What are the transformations typically included in building the Bronze layer?",
+      "choices": {
+        "A": "Include columns Load date/time, process ID",
+        "B": "Business rules and transformations",
+        "C": "Perform extensive data cleansing",
+        "D": "Aggregate data from multiple sources"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Bảng Bronze giữ dữ liệu ở trạng thái gần nhất với dữ liệu thô ban đầu để tránh mất mát thông tin. Các biến đổi duy nhất được áp dụng ở lớp này thường chỉ là thêm các cột siêu dữ liệu (metadata) phục vụ đối soát, chẳng hạn như thời gian nạp dữ liệu (load date/time) và ID tiến trình (process ID)."
+    },
+    {
+      "id": 114,
+      "question": "A data engineer is designing an ETL pipeline to process both streaming and batch data from multiple sources. The pipeline must ensure data quality, handle schema evolution, and provide easy maintenance. The team is considering using Delta Live Tables (DLT) in Databricks to achieve these goals. They want to understand the key features and benefits of DLT that make it suitable for this use case.\nWhy is Delta Live Tables (DLT) an appropriate choice?",
+      "choices": {
+        "A": "Automatic data quality checks, built-in support for schema evolution, and declarative pipeline development",
+        "B": "Manual schema enforcement, high operational overhead, and limited scalability",
+        "C": "Requires custom code for data quality checks, no support for streaming data, and complex pipeline maintenance",
+        "D": "Supports only batch processing, no data versioning, and high infrastructure costs"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Delta Live Tables (DLT) là lựa chọn phù hợp nhất cho bài toán này vì nó cung cấp các tính năng tự động kiểm tra chất lượng dữ liệu (Expectations), tự động xử lý và tiến hóa lược đồ (schema evolution), và cho phép phát triển đường ống dữ liệu một cách khai báo (declarative) đơn giản, giúp giảm chi phí bảo trì."
+    },
+    {
+      "id": 115,
+      "question": "A data engineer needs to ingest from both streaming and batch sources for a firm that relies on highly accurate data. Occasionally, some of the data picked up by the sensors that provide a streaming input are outside the expected parameters. If this occurs, the data must be dropped, but the stream should not fail.\nWhich feature of Delta Live Tables meets this requirement?",
+      "choices": {
+        "A": "Change Data Capture",
+        "B": "Error Handling",
+        "C": "Monitoring",
+        "D": "Expectations"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tính năng ràng buộc dữ liệu (Expectations) của Delta Live Tables cho phép định nghĩa các quy tắc kiểm tra chất lượng dữ liệu. Khi dữ liệu cảm biến vượt ngoài tầm kiểm soát, kỳ vọng với chỉ thị `ON VIOLATION DROP ROW` sẽ tự động loại bỏ bản ghi lỗi đó mà không làm hỏng hay gián đoạn luồng stream."
+    },
+    {
+      "id": 116,
+      "question": "An organization needs to share a dataset stored in its Databricks Unity Catalog with an external partner who uses a different data platform that is not Databricks. The goal is to maintain data security and ensure the partner can access the data efficiently..Which method should the data engineer use to securely share the dataset with the external partner?",
+      "choices": {
+        "A": "Using Delta Sharing with the open sharing protocol",
+        "B": "Exporting data as CSV files and emailing them",
+        "C": "Using a third-party API to access the Delta table",
+        "D": "Databricks-to-Databricks Sharing"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giao thức Delta Sharing (giao thức chia sẻ mở - open sharing protocol) cho phép chia sẻ dữ liệu một cách bảo mật với các đối tác bên ngoài mà không yêu cầu đối tác đó phải sử dụng nền tảng Databricks, thông qua các trình kết nối mở chuẩn hóa."
+    },
+    {
+      "id": 117,
+      "question": "A data engineer is working on a personal laptop and needs to perform complex transformations on data stored in a Delta Lake on cloud storage. The engineer decides to use Databricks Connect to interact with Databricks clusters and work in their local IDE.\nHow does Databricks Connect enable the engineer to develop, test, and debug code seamlessly on their local machine while interacting with Databricks clusters?",
+      "choices": {
+        "A": "By providing a local environment that mimics the Databricks runtime, enabling the engineer to develop, test, and debug code using a specific IDE that is required by Databricks",
+        "B": "By providing a local environment that mimics the Databricks runtime, enabling the engineer to develop, test, and debug code only through Databricks’ own web interface",
+        "C": "By allowing direct execution of Spark jobs from the local machine without needing a network connection",
+        "D": "By providing a local environment that mimics the Databricks runtime, enabling the engineer to develop, test, and debug code using their preferred IDE"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Databricks Connect là thư viện khách cho phép các kỹ sư phát triển, chạy thử và gỡ lỗi (debug) mã nguồn Spark trực tiếp ngay trên máy tính cá nhân bằng cách sử dụng các môi trường phát triển tích hợp (IDE) ưa thích (như VS Code hoặc PyCharm) trong khi vẫn kết nối và tận dụng tài nguyên tính toán mạnh mẽ của cụm Databricks."
+    },
+    {
+      "id": 118,
+      "question": "A data engineer at a company that uses Databricks with Unity Catalog needs to share a collection of tables with an external partner who also uses a Databricks workspace enabled for Unity Catalog. The data engineer decides to use Delta Sharing to accomplish this.\nWhat is the first piece of information the data engineer should request from the external partner to set up Delta Sharing?",
+      "choices": {
+        "A": "The IP address of their Databricks workspace",
+        "B": "The name of their Databricks cluster",
+        "C": "The sharing identifier of their Unity Catalog metastore",
+        "D": "Their Databricks account password"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để thiết lập chia sẻ dữ liệu trực tiếp giữa hai hệ thống Databricks (Databricks-to-Databricks Delta Sharing) thông qua Unity Catalog, thông tin đầu tiên cần yêu cầu từ phía đối tác là Định danh chia sẻ (sharing identifier) của metastore Unity Catalog của họ."
+    },
+    {
+      "id": 119,
+      "question": "A data engineer team has decided to implement a new data platform on Databricks and is currently deciding how to store each kind of data on each data layer.\nWhat is the appropriate layer and data pairing for medallion architecture?",
+      "choices": {
+        "A": "Silver Layer - Raw data from deposit account application",
+        "B": "Bronze Layer - Summary of cash deposit amount for each country and city",
+        "C": "Silver Layer - Cleansed master customer data",
+        "D": "Gold Layer - Deduplicated money transfer transaction"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong kiến trúc Medallion: lớp Bronze chứa dữ liệu thô gần nhất với nguồn; lớp Silver chứa dữ liệu đã được làm sạch, lọc và cấu trúc hóa (như dữ liệu khách hàng đã làm sạch - cleansed master customer data); lớp Gold chứa dữ liệu tổng hợp mức kinh doanh."
+    },
+    {
+      "id": 120,
+      "question": "An organization has data stored across multiple external systems, including MySQL, Amazon Redshift, and Google BigQuery. The data engineer wants to perform analytics without ingesting directly into Databricks, ensuring unified governance and minimizing data duplication.\nWhich feature of Databricks enables querying these external data sources while maintaining centralized governance?",
+      "choices": {
+        "A": "Delta Lake",
+        "B": "Lakehouse Federation",
+        "C": "MLflow",
+        "D": "Databricks Connect"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Lakehouse Federation (Liên kết Lakehouse) trong Databricks cho phép người dùng chạy các truy vấn trực tiếp trên các nguồn dữ liệu bên ngoài (như Redshift, BigQuery, MySQL) mà không cần sao chép hay di chuyển dữ liệu vào Databricks, trong khi vẫn duy trì quyền quản trị tập trung thông qua Unity Catalog."
+    },
+    {
+      "id": 121,
+      "question": "A data engineer wants to create an external table in Databricks that references data stored in an Azure Data Lake Storage (ADLS) location. The goal is to enable Databricks to access and query this external data without moving it into the Databricks-managed storage.\nWhich step should the data engineer take to successfully create the external table?",
+      "choices": {
+        "A": "Use the CREATE MANAGED TABLE statement and specify the LOCATION clause with the path to the external data.",
+        "B": "CREATE UNMANAGED TABLE statement without specifying a LOCATION clause.",
+        "C": "Use the CREATE TABLE statement and specify the LOCATION clause with the path to the external data.",
+        "D": "CREATE EXTERNAL TABLE statement without specifying a LOCATION clause."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tạo một bảng ngoài (external table) liên kết tới dữ liệu lưu trên Azure Data Lake Storage (ADLS), kỹ sư sử dụng câu lệnh `CREATE TABLE` kèm theo mệnh đề vị trí `LOCATION` trỏ tới đường dẫn ADLS chứa tệp dữ liệu."
+    },
+    {
+      "id": 122,
+      "question": "A data engineering team is using Kafka to capture event data and then ingest it into Databricks. The team wants to be able to see these historical events. Medallion architecture is already in place. The team wants to be mindful of costs.\nWhere should this historical event data be stored?",
+      "choices": {
+        "A": "Gold",
+        "B": "Silver",
+        "C": "Bronze",
+        "D": "Raw layer"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong kiến trúc Medallion, toàn bộ dữ liệu lịch sử thô nhận được từ các nguồn (như Kafka) được lưu trữ tập trung ở lớp Bronze (bảng Bronze) để phục vụ cho việc lưu giữ lịch sử lâu dài với chi phí tối ưu."
+    },
+    {
+      "id": 123,
+      "question": "A data engineer is processing ingested streaming tables and needs to filter out NULL values in the order_datetime column from the raw streaming table orders_raw and store the results in a new table orders_valid using DLT.\nWhich code snippet should the data engineer use?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774694204967-9mm44adw.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774694207282-q98pcubm.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774694209292-pjbl0iz4.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774694211450-f8tsdz6g.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khối mã A sử dụng đúng cú pháp Python của DLT để đọc luồng từ bảng thô `dlt.read_stream(\"orders_raw\")` và lọc loại bỏ các giá trị NULL bằng `.filter(...)` để lưu vào bảng mới."
+    },
+    {
+      "id": 124,
+      "question": "A data engineer needs to process SQL queries on a large dataset with fluctuating workloads. The workload requires automatic scaling based on the volume of queries, without the need to manage or provision infrastructure. The solution should be cost-efficient and charge only for the compute resources used during query execution.\nWhich compute option should the data engineer use?",
+      "choices": {
+        "A": "Databricks SQL Analytics",
+        "B": "Databricks Runtime for ML",
+        "C": "Databricks Jobs",
+        "D": "Serverless SQL Warehouse"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Serverless SQL Warehouse là lựa chọn tối ưu cho các truy vấn SQL có tải biến động mạnh nhờ khả năng tự động co giãn (auto-scaling) tức thì, tự động tắt khi không có truy vấn và mô hình tính phí chỉ tính trên tài nguyên tính toán thực chạy (pay-as-you-use)."
+    },
+    {
+      "id": 125,
+      "question": "A data engineer is attempting to write Python and SQL in the same command cell and is running into an error. The engineer thought that it was possible to use a Python variable in a select statement.\nWhy does the command fail?",
+      "choices": {
+        "A": "Databricks supports language interoperability in the same cell but only between Scala and SQL.",
+        "B": "Databricks supports multiple languages but only one per notebook.",
+        "C": "Databricks supports one language per cell.",
+        "D": "Databricks supports language interoperability but only if a special character is used."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Databricks Notebook, mỗi ô lệnh (command cell) chỉ hỗ trợ thực thi một ngôn ngữ lập trình duy nhất tại một thời điểm (được xác định bởi ngôn ngữ mặc định hoặc lệnh ma thuật đầu ô như `%python`, `%sql`). Viết trực tiếp mã SQL và Python trộn lẫn trong cùng một ô sẽ dẫn đến lỗi cú pháp."
+    },
+    {
+      "id": 126,
+      "question": "A data engineer is working in a Databricks notebook to design and manage a batch ETL pipeline. The engineer is writing SQL and Python code to clean data, transform it, and join large datasets from different sources. The engineer wants to organize these steps into a structured process that can be run regularly and scheduled as part of a data pipeline.\nWhich Databricks notebook feature is applicable in the use case?",
+      "choices": {
+        "A": "Real-time streaming support",
+        "B": "Collaborative editing",
+        "C": "Task workflows and job scheduling",
+        "D": "Notebook version control"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tính năng lập lịch chạy và tạo quy trình nhiệm vụ (Task workflows and job scheduling) của Databricks cho phép biến sổ tay phát triển (notebook) thành các bước xử lý dữ liệu tự động chạy định kỳ trong môi trường sản xuất."
+    },
+    {
+      "id": 127,
+      "question": "A global retail company sells products across multiple categories (e.g., Electronics, Clothing) and regions (e.g., North, South, East, West). The sales team has provided the data engineer with a PySpark dataframe named sales_df as below and the team wants the data engineer to analyze the sales data to help them make strategic decisions.\nCalculate the total sales amount for each product category and store the results in a new dataframe called category_sales.\nWhat will generate the expected result of category_sales?",
+      "choices": {
+        "A": "category_sales = sales_df.groupBy(\"category\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\"))",
+        "B": "category_sales = sales_df.sum(\"sales_amount\").groupBy(\"category\").alias(\"total_sales_amount\"))",
+        "C": "category_sales = sales_df.agg(sum(\"sales_amount\").groupBy(\"category\").alias(\"total_sales_amount\"))",
+        "D": "category_sales = sales_df.groupBy(\"region\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\"))"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Cú pháp PySpark chuẩn để nhóm dữ liệu theo cột `category` và tính tổng cột `sales_amount` kèm theo đặt lại tên cột (alias) mới là: `sales_df.groupBy(\"category\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\"))`."
+    },
+    {
+      "id": 128,
+      "question": "A data engineer needs to develop integration tests for an ETL process and deploy a version-controlled, packaged workflow into production using an external job scheduler.\nWhich tool should the data engineer use for this job?",
+      "choices": {
+        "A": "Databricks Connect",
+        "B": "Databricks Asset Bundles",
+        "C": "Databricks Command Line Interface",
+        "D": "Databricks Software Development Kit"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Databricks Asset Bundles (DABs) là công cụ chuyên dụng cho phép các nhà phát triển đóng gói, kiểm thử và triển khai các dự án Databricks (như Jobs, DLT pipelines, Notebooks) dưới dạng các tài nguyên được quản lý mã nguồn rõ ràng, phù hợp cho quy trình CI/CD sản xuất."
+    },
+    {
+      "id": 129,
+      "question": "A company is collaborating with a partner that does not use Databricks but needs access to a large historical dataset stored in Delta format. The data engineer needs to ensure that the partner can access the data securely, without the need for them to set up an account, and with read-only access.\nHow should the data be shared?",
+      "choices": {
+        "A": "Share the dataset by exporting it to a CSV file and manually transferring the file to the partner’s system.",
+        "B": "Grant your partner access to your Databricks workspace and assign them full write permissions to the Delta table, enabling them to modify the dataset.",
+        "C": "Share the dataset using Unity Catalog, ensuring that both teams have full write access to the data within the same organization.",
+        "D": "Share the dataset using Delta Sharing, which allows your partner to access the data using a secure, read-only URL without requiring a Databricks account, ensuring that they cannot modify the data."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để chia sẻ dữ liệu an toàn dưới dạng chỉ đọc (read-only) với một đối tác không sử dụng nền tảng Databricks và không muốn tạo tài khoản, giải pháp phù hợp nhất là dùng giao thức Delta Sharing chia sẻ tệp chứng thực bảo mật chứa URL chỉ đọc."
+    },
+    {
+      "id": 130,
+      "question": "A data engineer has developed an ETL that produce a Delta managed table with liquid clustering feature activated as output. Several consumers are having issues regarding time delay when reading this table.\nHow could the Data Engineer be sure about the OPTIMIZE command has been executed explicitly?",
+      "choices": {
+        "A": "Check the system table system.storage.predictive_optimization_operations_history",
+        "B": "Use SHOW TABLES EXTENDED to check the partitions columns used",
+        "C": "Use DESCRIBE DETAIL table to see the file size and number of files for the table",
+        "D": "Use DESCRIBE HISTORY table to check if exists any OPTIMIZE operation"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Lệnh `DESCRIBE HISTORY <tên_bảng>` trả về lịch sử đầy đủ của mọi giao dịch và thao tác (như `WRITE`, `MERGE`, `OPTIMIZE`) đã được thực thi trên bảng Delta đó, giúp kỹ sư dữ liệu dễ dàng kiểm tra xem lệnh `OPTIMIZE` đã được chạy hay chưa."
+    },
+    {
+      "id": 131,
+      "question": "A data engineer is configuring Unity Catalog in Databricks and needs to assign a role to a user who should have the ability to grant and revoke privileges on various data objects within a specific schema, but should not have read/write access over the schema or its objects.\nWhich role should the data engineer assign to this user?",
+      "choices": {
+        "A": "Table Owner",
+        "B": "Catalog Owner",
+        "C": "Schema Owner",
+        "D": "USE catalog/schema privilege on the schema"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Unity Catalog, chủ sở hữu của một lược đồ (Schema Owner) là người có thẩm quyền cao nhất để cấp quyền (grant) hoặc thu hồi quyền (revoke) đối với các đối tượng dữ liệu thuộc lược đồ đó cho các người dùng khác."
+    },
+    {
+      "id": 132,
+      "question": "Which languages are supported by Serverless compute clusters? (Choose two.)",
+      "choices": {
+        "A": "SQL",
+        "B": "Python",
+        "C": "R",
+        "D": "Scala",
+        "E": "Java"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Tính năng điện toán máy chủ dùng chung (Serverless compute) dành cho sổ tay trong Databricks hiện tại chỉ hỗ trợ hai ngôn ngữ lập trình là SQL và Python."
+    },
+    {
+      "id": 133,
+      "question": "A company uses Delta Sharing to collaborate with partners across different cloud providers and geographic regions.\nWhat will result in additional costs due to cross-region or egress fees?",
+      "choices": {
+        "A": "Sharing data within the same cloud provider and region",
+        "B": "Transferring data via Delta Sharing across clouds and across different geographic regions",
+        "C": "Accessing Delta Sharing data using a VPN within the same data center",
+        "D": "Utilizing Delta Sharing for internal data analytics within a single cloud environment"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi chia sẻ dữ liệu qua Delta Sharing xuyên biên giới giữa các nhà cung cấp đám mây khác nhau hoặc qua các vùng địa lý khác nhau, hệ thống sẽ phát sinh thêm chi phí chuyển dữ liệu ra ngoài (data egress fees) do nhà cung cấp đám mây tính phí."
+    },
+    {
+      "id": 134,
+      "question": "A company sells products across multiple categories (e.g., Electronics, Clothing) and regions. The sales team has provided you with a PySpark dataframe named sales_df as below, and the team wants the data engineer to analyze the sales data to help make strategic decisions.\nCalculate the total sales amount for each region and store the results in a new dataframe called region_sales.\nGiven the expected result:\nWhich code will generate the expected result?",
+      "choices": {
+        "A": "region_sales = sales_df.groupBy(\"category\").sum(\"sales_amount\").alias(\"total_sales_amount\")",
+        "B": "region_sales = sales_df.groupBy(\"region\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\"))",
+        "C": "region_sales = sales_df.sum(\"sales_amount\").groupBy(\"region\").alias(\"total_sales_amount\")",
+        "D": "region_sales = sales_df.agg(sum(\"sales_amount\").groupBy(\"region\").alias(\"total_sales_amount\"))"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để nhóm dữ liệu theo cột khu vực (`region`) và tính tổng doanh thu (`sales_amount`) trong PySpark, chúng ta sử dụng phương thức: `sales_df.groupBy(\"region\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\"))`."
+    },
+    {
+      "id": 135,
+      "question": "A data engineer is developing an ETL process based on Spark SQL. The execution fails. The data engineer checks the Spark UI and can see the ERRORS as follows:\n\"java.lang.OutofMemoryError: Java heap space\"\nWhich two corrective actions should the data engineer perform to resolve this issue? (Choose two.)",
+      "choices": {
+        "A": "Narrow the filters in order to collect less data in the query",
+        "B": "Upsize the worker nodes and activate autoshuffle partitions",
+        "C": "Upsize the driver node and deactivate autoshuffle partitions",
+        "D": "Cache the dataset in order to boost the query performance",
+        "E": "Fix the shuffle partitions to 50 to ensure the allocation"
+      },
+      "correctAnswer": "AB",
+      "explanation_vi": "Lỗi bộ nhớ `OutOfMemoryError: Java heap space` trong Spark thường do lượng dữ liệu xử lý vượt quá dung lượng RAM khả dụng của cụm máy. Hai biện pháp khắc phục chính xác là:\n1. Thắt chặt các điều kiện lọc dữ liệu (narrow filters) để thu thập ít dữ liệu hơn trong truy vấn.\n2. Nâng cấp cấu hình nút thợ (worker nodes) để có nhiều bộ nhớ hơn và kích hoạt tính năng tự động co giãn phân vùng trộn dữ liệu (autoshuffle partitions)."
+    },
+    {
+      "id": 136,
+      "question": "A data engineer is writing a script that is meant to ingest new data from cloud storage. In the event of the Schema change, the ingestion should fail. It should fail until the changes downstream source can be found and verified as intended changes.\nWhich command will meet the requirements?",
+      "choices": {
+        "A": "failOnNewColumns",
+        "B": "none",
+        "C": "rescue",
+        "D": "addNewColumns"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Auto Loader, tùy chọn chế độ tiến hóa lược đồ `failOnNewColumns` giúp hệ thống ném ra lỗi và dừng tiến trình tải dữ liệu ngay khi phát hiện có thêm các cột mới chưa được khai báo trước đó."
+    },
+    {
+      "id": 137,
+      "question": "A data engineer is inspecting an ETL pipeline based on a Pyspark job that consistently encounters performance bottlenecks. Based on developer feedback, the data engineer assumes the job is low on compute resources. To pinpoint the issue, the data engineer observes the Spark UI and finds out the job has a high CPU time vs Task time.\nWhich course of action should the data engineer take?",
+      "choices": {
+        "A": "High CPU time vs Task time means an under-utilized cluster. The data engineer may need to repartition data to spread the jobs more evenly throughout the cluster.",
+        "B": "High CPU time vs Task time means efficient use of cluster and no change needed",
+        "C": "High CPU time vs Task time means a CPU over-utilized job. The data engineer may need to consider executor and core tuning or resizing the cluster",
+        "D": "High CPU time vs Task time means over-utilized memory and the need to increase parallelism"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi tỷ lệ thời gian CPU (CPU time) so với tổng thời gian thực hiện tác vụ (Task time) ở mức cao trên Spark UI, điều này chỉ ra rằng tác vụ đang tiêu tốn phần lớn thời gian hoạt động để xử lý CPU tích cực. Biện pháp xử lý là kỹ sư cần tối ưu cấu hình số nhân (core tuning) hoặc tăng kích thước cụm máy tính để bổ sung tài nguyên CPU."
+    },
+    {
+      "id": 138,
+      "question": "An organization has implemented a data pipeline in Databricks and needs to ensure it can scale automatically based on varying workloads without manual cluster management. The goal is to meet the company’s Service Level Agreements (SLAs), which require high availability and minimal downtime, while Databricks automatically handles resource allocation and optimization.\nWhich approach fulfills these requirements?",
+      "choices": {
+        "A": "Deploy Job Clusters with fixed configurations, dedicated to specific tasks, without automatic scaling.",
+        "B": "Use Spot Instances to allocate resources dynamically while minimizing costs, with potential interruptions.",
+        "C": "Use Interactive Clusters in Databricks, adjusting cluster sizes manually based on workload demands.",
+        "D": "Use Serverless compute in Databricks to automatically scale and provision resources with minimal manual intervention."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Sử dụng tính năng điện toán Serverless (Serverless compute) trong Databricks giúp tự động quản lý vòng đời tài nguyên, co giãn quy mô linh hoạt theo tải thực tế và tối ưu hóa hiệu năng mà không cần quản trị thủ công cụm máy ảo."
+    },
+    {
+      "id": 139,
+      "question": "What is the functionality of AutoLoader in Databricks?",
+      "choices": {
+        "A": "Auto Loader automatically ingests and processes new files from cloud storage, handling both batch and streaming data with support for schema evolution.",
+        "B": "Auto Loader automatically ingests and processes new files from cloud storage, handling batch and streaming data with no support for schema evolution.",
+        "C": "Auto Loader automatically ingests and processes new files from cloud storage, handling only streaming data with no support for schema evolution.",
+        "D": "Auto Loader automatically ingests and processes new files from cloud storage, handling batch data with support for schema evolution."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Auto Loader tự động nạp và xử lý các tệp mới xuất hiện trong bộ nhớ đám mây dưới cả dạng luồng (streaming) hoặc lô (batch), đồng thời hỗ trợ suy diễn và tiến hóa lược đồ tự động (schema evolution)."
+    },
+    {
+      "id": 140,
+      "question": "A data engineer has been provided a PySpark DataFrame named df with columns product and revenue. The data engineer needs to compute complex aggregations to determine each product’s total revenue, average revenue, and transaction count.\nWhich code snippet should the data engineer use?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774694238041-ysknyybq.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774694240477-7iocw1k5.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774694242701-z9714oun.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774694245129-05g8b54x.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khối mã A thực hiện chính xác phép nhóm dữ liệu theo cột `product` và áp dụng các hàm tổng hợp PySpark `sum(\"revenue\")`, `avg(\"revenue\")`, và `count(\"revenue\")` trong phương thức `.agg()`."
+    },
+    {
+      "id": 141,
+      "question": "An organization is looking for an optimized storage layer that supports ACID transactions and schema enforcement.\nWhich technology should the organization use?",
+      "choices": {
+        "A": "Delta Lake",
+        "B": "Unity Catalog",
+        "C": "Cloud File Storage",
+        "D": "Data lake"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Delta Lake là tầng lưu trữ được tối ưu hóa chạy trên nền tảng hồ dữ liệu, cung cấp các giao dịch ACID mạnh mẽ, tính năng khống chế lược đồ (schema enforcement) và quản lý lịch sử tệp dữ liệu."
+    },
+    {
+      "id": 142,
+      "question": "A Data Engineer is building a simple data pipeline using Delta Live Tables (DLT) in Databricks to ingest customer data. The raw customer data is stored in a cloud storage location in JSON format. The task is to create a DLT pipeline that reads the raw JSON data and writes it into a Delta table for further processing.\nWhich code snippet will correctly ingest the raw JSON data and create a Delta table using DLT?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774694238854-b62cb3q9.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774694241162-4a8jgo74.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774694243341-pgh6qmy2.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774694246136-3at4qott.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khối mã C định nghĩa chính xác một bảng DLT sử dụng bộ trang trí `@dlt.table` và hàm trả về đối tượng đọc luồng dữ liệu JSON thông qua định dạng Auto Loader `cloudFiles`."
+    },
+    {
+      "id": 143,
+      "question": "A data engineer is using the Databricks OPTIMIZE command on a Delta table.\nWhat happens when OPTIMIZE is run twice on the same table with the same data?",
+      "choices": {
+        "A": "It has no effect because it is idempotent.",
+        "B": "It changes the number of tuples per file significantly.",
+        "C": "It further reduces file sizes by re-clustering the data.",
+        "D": "It triggers a full liquid clustering process."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Lệnh `OPTIMIZE` trong Delta Lake có tính chất bất biến (idempotent). Nếu bảng không có thêm dữ liệu mới hoặc không có các tệp tin nhỏ phát sinh, việc chạy lại lệnh `OPTIMIZE` lần thứ hai sẽ không có tác dụng gì và không tốn thêm tài nguyên nén file."
+    },
+    {
+      "id": 144,
+      "question": "A data engineer is reviewing the documentation on audit logs in Databricks for compliance purposes and needs to understand the format in which audit logs output events.\nHow are events formatted in Databricks audit logs?",
+      "choices": {
+        "A": "In Databricks, audit logs output events in a JSON format.",
+        "B": "In Databricks, audit logs output events in a CSV format.",
+        "C": "In Databricks, audit logs output events in an XML format.",
+        "D": "In Databricks, audit logs output events in a plain text format."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Các sự kiện (events) trong nhật ký kiểm tra (audit logs) của Databricks được định dạng và ghi lại dưới dạng tài liệu JSON (JSON format) giúp dễ dàng phân tích và tích hợp với các hệ thống giám sát."
+    },
+    {
+      "id": 145,
+      "question": "Which two items are characteristics of the Gold Layer? (Choose two.)",
+      "choices": {
+        "A": "Historical lineage",
+        "B": "Raw Data",
+        "C": "Normalised",
+        "D": "De-normalised",
+        "E": "Read-optimized"
+      },
+      "correctAnswer": "DE",
+      "explanation_vi": "Hai đặc tính quan trọng của lớp Gold (Gold Layer) trong kiến trúc Medallion là:\n1. Dữ liệu thường được khử chuẩn hóa (De-normalised) để hạn chế các phép nối (join) phức tạp khi truy vấn.\n2. Bảng được tối ưu hóa cho việc đọc (Read-optimized) để tối đa hóa hiệu năng hiển thị báo cáo hoặc chạy mô hình."
+    },
+    {
+      "id": 146,
+      "question": "A Python file is ready to go into production and the client wants to use the cheapest but most efficient type of cluster possible. The workload is quite small, only processing 10GBs of data with only simple joins and no complex aggregations or wide transformations.\nWhich cluster meets the requirement?",
+      "choices": {
+        "A": "Interactive cluster",
+        "B": "Job cluster with spot instances enabled",
+        "C": "Job cluster with spot instances disabled",
+        "D": "Job cluster with Photon enabled"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để chạy tác vụ sản xuất (production) với chi phí rẻ nhất nhưng vẫn hiệu quả cho lượng dữ liệu nhỏ (10GB), lựa chọn tốt nhất là sử dụng Cụm công việc (Job cluster) kết hợp với việc kích hoạt các máy ảo dư thừa giá rẻ (spot instances)."
+    },
+    {
+      "id": 147,
+      "question": "A data engineer needs to provide access to a group named manufacturing-team. The team needs privileges to create tables in the quality schema.\nWhich set of SQL commands will grant a group named manufacturing-team to create tables in a schema named production with the parent catalog named manufacturing with the least privileges?",
+      "choices": {
+        "A": "GRANT CREATE TABLE ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT USE SCHEMA ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT USE CATALOG ON CATALOG manufacturing TO manufacturing-team;",
+        "B": "GRANT USE TABLE ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT USE SCHEMA ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT USE CATALOG ON CATALOG manufacturing TO manufacturing-team;",
+        "C": "GRANT CREATE TABLE ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT CREATE SCHEMA ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT CREATE CATALOG ON CATALOG manufacturing TO manufacturing-team;",
+        "D": "GRANT CREATE TABLE ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT CREATE SCHEMA ON SCHEMA manufacturing.quality TO manufacturing-team; GRANT USE CATALOG ON CATALOG manufacturing TO manufacturing-team;"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Unity Catalog, để cấp quyền tối thiểu cho một nhóm người dùng có thể tạo bảng trong một lược đồ (`schema`), kỹ sư dữ liệu phải cấp 3 quyền theo thứ tự phân cấp:\n1. Quyền `USE CATALOG` đối với catalog chứa schema đó.\n2. Quyền `USE SCHEMA` đối với chính schema đó.\n3. Quyền `CREATE TABLE` trên schema đó để cho phép tạo bảng mới."
+    },
+    {
+      "id": 148,
+      "question": "A data engineer is working on a Databricks project that utilizes cloud storage. The data engineer wants to load several JSON files from containers on a storage account as soon as the file arrives within the storage account.\nWhich syntax should the data engineer follow to first load the files into a dataframe and check that it is working as expected using Python?",
+      "choices": {
+        "A": "df = spark.read.json(\"input/path\")",
+        "B": "df = spark.readStream.format(\"cloud\").option(\"json\").load(\"/input/path\")",
+        "C": "df = spark.readStream.format(\"json\".load(\"input/path\")",
+        "D": "df = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"json\").load(\"/input/path\")"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Cú pháp PySpark chuẩn để sử dụng Auto Loader nạp các tệp JSON một cách gia tăng ngay khi chúng xuất hiện trên bộ nhớ đám mây là: `spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"json\").load(\"/input/path\")`."
+    },
+    {
+      "id": 149,
+      "question": "A data engineer is facing performance bottlenecks in an e-commerce transactions Delta table. The table is a managed Unity Catalog table, and it uses partitioning and Z-ordering in its data layout scheme. The predictive optimization for Unity Catalog tables is also enabled. The table has a frequently changing query filter, and the data engineer does not observe a benefit of the Data Layout or the Predictive Optimization.\nHow should the data engineer fix the data layout bottlenecks?",
+      "choices": {
+        "A": "Re-write the Data Layout with Liquid Clustering and cluster by the Z-Ordered columns.",
+        "B": "Enable Delta Caching so that query results can be read through caches.",
+        "C": "Tweak the Z-Order columns and run OPTIMIZE manually.",
+        "D": "Switch the Data layout from Partition+Z-Ordering to Automatic Liquid Clustering."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để khắc phục triệt để các nút thắt cổ chai về bố cục dữ liệu trên bảng Delta có bộ lọc thay đổi thường xuyên, kỹ sư dữ liệu nên chuyển đổi cấu trúc bảng từ dạng phân vùng kết hợp Z-Ordering truyền thống sang cơ chế Gom cụm động (Liquid Clustering) tự động gom cụm theo các trường tìm kiếm."
+    },
+    {
+      "id": 150,
+      "question": "A data engineer manages multiple external tables linked to various data sources. The data engineer wants to manage these external tables efficiently and ensure that only the necessary permissions are granted to users for accessing specific external tables.\nHow should the data engineer manage access to these external tables?",
+      "choices": {
+        "A": "Set up Azure Blob Storage permissions at the container level, allowing access to all external tables.",
+        "B": "Create a single user role with full access to all external tables and assign it to all users.",
+        "C": "Grant permissions on the Databricks workspace level, which will automatically apply to all external tables.",
+        "D": "Use Unity Catalog to manage access controls and permissions for each external table individually."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Giải pháp tốt nhất để quản lý quyền truy cập hiệu quả và phân quyền tối thiểu đối với các bảng ngoài (external tables) là sử dụng công cụ quản trị dữ liệu Unity Catalog để quản lý và kiểm soát quyền truy cập chi tiết cho từng bảng riêng biệt."
+    },
+    {
+      "id": 151,
+      "question": "What is the structure of an Asset Bundle?",
+      "choices": {
+        "A": "A Docker image containing runtime environments and the source code of the assets",
+        "B": "A compressed archive (ZIP) that solely contains workspace assets without any accompanying metadata",
+        "C": "A single plain text file enumerating the names of assets to be migrated to a new workspace",
+        "D": "A YAML configuration file that specifies the artifacts, resources, and configurations for the project"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Cấu trúc lõi của một Databricks Asset Bundle (DAB) bao gồm một tệp cấu hình định dạng YAML (như `databricks.yml`) định nghĩa các tài nguyên (workflows, pipelines), cấu hình và các tệp mã nguồn liên quan cho dự án."
+    },
+    {
+      "id": 152,
+      "question": "A data engineer is configuring Delta Sharing for a multi-team project where teams from different departments will need to access shared data. The data engineer has successfully created a Unity Catalog metastore and is now setting up the Delta Share. The goal is to ensure that internal teams can access the shared data with full permissions, while external partners can only read the data.\nWhich action should the Data Engineer take to configure the sharing correctly?",
+      "choices": {
+        "A": "Create a Delta Share, set up a secure access URL for internal teams and external partners, and distribute the URL to provide them access to the shared data.",
+        "B": "Create a Delta Share, add the internal team's tables and views, and assign READ/WRITE permissions to both external partners and internal teams.",
+        "C": "Assign READ permissions to external partners through the Delta Share and READ/WRITE permissions to internal teams, and ensure the correct tables and views are shared.",
+        "D": "Grant READ permissions to external partners and READ/WRITE permissions to internal teams through the Delta Share."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cấu hình chia sẻ chính xác, kỹ sư dữ liệu gán quyền chỉ đọc (`READ`) cho đối tác bên ngoài thông qua cơ chế Delta Share, đồng thời cấp quyền đọc/ghi (`READ/WRITE`) cho các đội ngũ nội bộ trực tiếp trên các đối tượng dữ liệu trong Unity Catalog."
+    },
+    {
+      "id": 153,
+      "question": "A data engineer is maintaining an ETL pipeline code with a GitHub repository linked to their Databricks account. The data engineer wants to deploy the ETL pipeline to production as a databricks workflow.\nWhich approach should the data engineer use?",
+      "choices": {
+        "A": "Databricks Asset Bundles (DAB) + GitHub Integration",
+        "B": "Maintain workflow_config.json and deploy it using Databricks CLI",
+        "C": "Maintain workflow_config.json and deploy it using Terraform",
+        "D": "Manually create and manage the workflow in UI"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giải pháp tối ưu và hiện đại nhất để triển khai đường ống ETL từ kho lưu trữ GitHub lên môi trường sản xuất dưới dạng Databricks Workflow là sử dụng kết hợp bộ đóng gói dự án Databricks Asset Bundles (DAB) với quy trình tích hợp tự động GitHub Actions."
+    },
+    {
+      "id": 154,
+      "question": "A data engineer is setting up access control in Unity Catalog and needs to ensure that a group of data analysts can query tables but not modify data.\nWhich permission should the data engineer grant to the data analysts?",
+      "choices": {
+        "A": "ALL PRIVILEGES",
+        "B": "MODIFY",
+        "C": "SELECT",
+        "D": "INSERT"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để cấp quyền cho các nhà phân tích dữ liệu chỉ được phép truy vấn dữ liệu từ bảng mà không được chỉnh sửa hoặc ghi đè dữ liệu, kỹ sư dữ liệu cần cấp đặc quyền `SELECT`."
+    },
+    {
+      "id": 155,
+      "question": "A data engineer needs to optimize the data layout and query performance for an e-commerce transactions Delta table. The table is partitioned by \"purchase_date\" a date column which helps with time-based queries but does not optimize searches on user statistics \"customer_id\", a high-cardinality column.\nThe table is usually queried with filters on \"customer_id\" within specific date ranges, but since this data is spread across multiple files in each partition, it results in full partition scans and increased runtime and costs.\nHow should the data engineer optimize the Data Layout for efficient reads?",
+      "choices": {
+        "A": "Alter table implementing liquid clustering on \"customer_id\" while keeping the existing partitioning.",
+        "B": "Alter the table implementing liquid clustering by \"customer_id\" and \"purchase_date\".",
+        "C": "Alter the table to partition by \"customer_id\".",
+        "D": "Enable delta caching on the cluster so that frequent reads are cached for performance."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Vì tính năng gom cụm động (Liquid Clustering) thay thế hoàn toàn và không tương thích đồng thời với cơ chế phân vùng (partitioning) cũ, kỹ sư dữ liệu cần thay đổi bố cục bảng bằng cách bật Liquid Clustering gom cụm theo cả hai trường dữ liệu thường xuyên lọc là `customer_id` và `purchase_date`."
+    },
+    {
+      "id": 156,
+      "question": "An organization plans to share a large dataset stored in a Databricks workspace on AWS with a partner organization whose Databricks workspace is hosted on Azure. The data engineer wants to minimize data transfer costs while ensuring secure and efficient data sharing.\nWhich strategy will reduce data egress costs associated with cross-cloud data sharing?",
+      "choices": {
+        "A": "Migrating the dataset to Cloudflare R2 object storage before sharing",
+        "B": "Configure VPN connection between AWS and Azure for faster data sharing",
+        "C": "Using Delta Sharing without any additional configurations",
+        "D": "Sharing data via pre-signed URLs without monitoring egress costs"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để chia sẻ một tập dữ liệu lớn giữa hai tài khoản đám mây khác nhau (như từ AWS sang Azure) một cách bảo mật và hiệu quả với chi phí tối thiểu, giải pháp tối ưu và mặc định là sử dụng Delta Sharing (mà không cần cấu hình phức tạp thêm như VPN hay di chuyển bộ lưu trữ)."
+    },
+    {
+      "id": 157,
+      "question": "What is the primary function of the Silver layer in the Databricks medallion architecture?",
+      "choices": {
+        "A": "Store historical data solely for auditing purposes",
+        "B": "Aggregate and enrich data for business analytics",
+        "C": "Validate, clean, and deduplicate data for further processing",
+        "D": "Ingest raw data in its original state"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Chức năng chính của lớp Silver (Silver layer) trong kiến trúc Medallion là thực hiện kiểm tra tính hợp lệ (validate), làm sạch dữ liệu (clean) và loại bỏ các bản ghi trùng lặp (deduplicate) để chuẩn bị cho các bước phân tích và tổng hợp tiếp theo."
+    },
+    {
+      "id": 158,
+      "question": "What Databricks feature can be used to check the data sources and tables used in a workspace?",
+      "choices": {
+        "A": "Use the lineage feature to visualize a graph that highlights where the table is used only in reports.",
+        "B": "Use the lineage feature to visualize a graph that highlights where the table is used only in notebooks.",
+        "C": "Use the lineage feature to visualize a graph that shows all dependencies, including where the table is used in notebooks, other tables, and reports.",
+        "D": "Do not use the lineage feature as it only tracks activity from the last 3 months and will not provide full details on dependencies."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tính năng dòng dữ liệu (Lineage) trong Unity Catalog cho phép trực quan hóa biểu đồ hiển thị tất cả các mối quan hệ phụ thuộc chéo, bao gồm nơi bảng được sử dụng trong notebook, các bảng khác và các báo cáo/dashboard."
+    },
+    {
+      "id": 159,
+      "question": "A data engineer needs to combine sales data from an on-premises PostgreSQL database with customer data in Azure Synapse for a comprehensive report. The goal is to avoid data duplication and ensure up-to-date information.\nHow should the data engineer achieve this using Databricks?",
+      "choices": {
+        "A": "Export data from both sources to CSV files and upload them to Databricks",
+        "B": "Use Lakehouse Federation to query both data sources directly",
+        "C": "Manually synchronize data from both sources into a single database",
+        "D": "Develop custom ETL pipelines to ingest data into Databricks"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kết hợp dữ liệu từ PostgreSQL và Azure Synapse mà không cần sao chép dữ liệu vật lý về Databricks, kỹ sư dữ liệu nên sử dụng tính năng Liên kết Lakehouse (Lakehouse Federation) để truy vấn trực tiếp trên hai nguồn dữ liệu này."
+    },
+    {
+      "id": 160,
+      "question": "A data engineer is working in a Python notebook on Databricks to process data, but notices that the output is not as expected. The data engineer wants to investigate the issue by stepping through the code and checking the values of certain variables during execution.\nWhich tool should the data engineer use to inspect the code execution and variables in real-time?",
+      "choices": {
+        "A": "Cluster Logs",
+        "B": "Job Execution Dashboard",
+        "C": "Python Notebook Interactive Debugger",
+        "D": "SQL Analytics"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để trực tiếp theo dõi quá trình thực thi mã nguồn và kiểm tra giá trị của các biến số thời gian thực nhằm gỡ lỗi trong notebook, kỹ sư dữ liệu sử dụng Trình gỡ lỗi tương tác của sổ tay (Python Notebook Interactive Debugger)."
+    },
+    {
+      "id": 161,
+      "question": "A data engineering project involves processing large batches of data on a daily schedule using ETL. The jobs are resource-intensive and vary in size, requiring a scalable, cost-efficient compute solution that can automatically scale based on the workload.\nWhich compute approach will satisfy the needs described?",
+      "choices": {
+        "A": "Job Cluster",
+        "B": "Dedicated Cluster",
+        "C": "All-Purpose Cluster",
+        "D": "Databricks SQL Serverless"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đối với các tiến trình ETL chạy định kỳ hàng ngày, sử dụng Cụm công việc (Job Cluster) là giải pháp điện toán tiết kiệm chi phí nhất vì nó hỗ trợ tự động co giãn và chỉ tiêu thụ tài nguyên trong thời gian chạy tác vụ rồi tự động hủy."
+    },
+    {
+      "id": 162,
+      "question": "A data engineer wants to reduce costs and optimize cloud spending. The data engineer has decided to use Databricks Serverless for lowering cloud costs while maintaining existing SLAs.\nWhat is the first step in migrating to Databricks Serverless?",
+      "choices": {
+        "A": "Legacy Ingestion pipelines that include ingestion from sources API’s, files, JDBC/ODBC connections",
+        "B": "A frequently running and efficient Python-based data transformation pipeline compatible with the latest Databricks runtime and Unity Catalog",
+        "C": "A frequently running and efficient Scala-based data transformation pipeline compatible with the latest Databricks runtime and Unity Catalog",
+        "D": "Low frequency BI Dashboarding and Adhoc SQL Analytics"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Bước đầu tiên để di chuyển các đường ống dữ liệu sang Serverless Compute của Databricks là lựa chọn các đường ống chuyển đổi dữ liệu bằng Python hoặc SQL đang chạy ổn định, hiệu quả và tương thích với Unity Catalog (do Serverless hiện tại chưa hỗ trợ Scala)."
+    },
+    {
+      "id": 163,
+      "question": "A data engineer is getting a partner organization up to speed with Databricks account. Both the teams share some business use cases. The data engineer has to share some of your Unity-Catalog managed delta tables and the notebook jobs creating those tables with the partner organization.\nHow can the data engineer seamlessly share the required information?",
+      "choices": {
+        "A": "Zip all the code and share via email and allow data ingestion from your data lake",
+        "B": "Share required datasets and notebooks via Delta Sharing. Manage permissions via Unity Catalog.",
+        "C": "Data and Notebooks can be shared simply using Unity Catalog.",
+        "D": "Share access to codebase via Github and allow them to ingest datasets from your Datalake."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để chia sẻ đồng thời cả các bảng dữ liệu quản lý bởi Unity Catalog và các sổ tay (notebooks) đi kèm một cách an toàn cho đối tác, kỹ sư dữ liệu sử dụng Delta Sharing và thực hiện quản lý phân quyền qua Unity Catalog."
+    },
+    {
+      "id": 164,
+      "question": "A data engineer has inherited a Databricks pipeline from a previous team. The pipeline is missing its SLAs, and an initial investigation has identified memory spills in Spark. These increased runtimes are also driving up costs. The data engineer needs to reduce the runtime without significantly increasing costs.\nWhat should the data engineer do first to address this issue?",
+      "choices": {
+        "A": "Tweak the \"spark.sql.shuffle.partitions\" configuration.",
+        "B": "Enable autoscaling in the cluster to match the requirements",
+        "C": "Use a photon enabled execution engine.",
+        "D": "Ensure the cluster uses memory optimized node types."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hiện tượng tràn bộ nhớ (memory spill) ra đĩa xảy ra khi số lượng phân vùng trộn dữ liệu quá ít, dẫn đến dung lượng dữ liệu trên mỗi phân vùng quá lớn không thể chứa hết trong bộ nhớ của các executors. Việc đầu tiên cần làm là tăng giá trị cấu hình `spark.sql.shuffle.partitions` để chia nhỏ dữ liệu phân vùng, loại bỏ lỗi tràn bộ nhớ mà không làm tăng chi phí hạ tầng."
+    },
+    {
+      "id": 165,
+      "question": "A data engineer works for an organization that must meet a stringent Service Level Agreement (SLA) that demands minimal runtime errors and high availability for its data processing pipelines. The data engineer wants to avoid the operational overhead of managing and tuning clusters.\nWhich architectural solution will meet the requirements?",
+      "choices": {
+        "A": "Use an auto-scaling cluster configured and monitored by the user.",
+        "B": "Implement a hybrid approach with scheduled batch jobs on custom cloud VMs.",
+        "C": "Deploy a dedicated, manually managed cluster optimized by in-house IT staff.",
+        "D": "Utilize Databricks serverless compute that automatically optimizes resources and abstracts cluster management."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Sử dụng tài nguyên Serverless Compute của Databricks là giải pháp tốt nhất để đáp ứng các cam kết dịch vụ (SLA) khắt khe mà không mất thời gian và công sức quản trị, cấu hình hoặc tinh chỉnh thủ công các cụm máy chủ."
+    },
+    {
+      "id": 166,
+      "question": "A Data Engineer is designing Bronze layer in Databricks Medallion Architecture. The raw data is collected from multiple sources (Clickstream in JSON, Transactions in CSV).\nThe task is to design the Bronze layer of the Medallion Architecture to ingest and store this raw data for further processing.\nWhich operation applies to the Bronze layer?",
+      "choices": {
+        "A": "Ingest raw data without transformations, preserving original schemas, and store in Delta format.",
+        "B": "Clean and standardize raw data by removing null values and enforcing schemas.",
+        "C": "Apply complex business logic to enrich raw data with customer segmentation labels.",
+        "D": "Aggregate and transform source data to calculate daily sales performance metrics."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Quy tắc thiết kế lớp Bronze trong kiến trúc Medallion là nạp toàn bộ dữ liệu thô từ các nguồn khác nhau mà không áp dụng bất kỳ bước làm sạch hay biến đổi phức tạp nào, giúp bảo lưu dữ liệu gốc toàn vẹn và lưu trữ dưới định dạng bảng Delta."
+    },
+    {
+      "id": 167,
+      "question": "A data engineer needs to conduct Exploratory Analysis on data residing in a database that is within the company’s custom-defined network in the cloud. The data engineer is using SQL for this task.\nWhich type of SQL Warehouse will enable the data engineer to process large numbers of queries quickly and cost-effectively?",
+      "choices": {
+        "A": "Classic SQL Warehouse",
+        "B": "Serverless SQL Warehouse",
+        "C": "Pro SQL Warehouse",
+        "D": "All-purpose compute cluster"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Serverless SQL Warehouse cung cấp hiệu năng truy vấn cao, thời gian khởi động tính bằng giây và khả năng co giãn tự động thông qua Công cụ Photon và Quản lý tải thông minh (Intelligent Workload Management), giúp xử lý lượng lớn truy vấn phân tích một cách nhanh chóng và tối ưu hóa chi phí nhất."
+    },
+    {
+      "id": 168,
+      "question": "A data engineer is onboarding a new bronze ingestion pipeline in Databricks with Unity Catalog. The team wants Databricks to handle storage layout, apply platform optimizations over time, and simplify lifecycle management so that when a table is dropped, its underlying data is also cleaned up according to Databricks-managed retention policies.\nWhich table type should the data engineer create for these ingestion tables?",
+      "choices": {
+        "A": "Managed tables so that Unity Catalog manages both metadata and underlying data lifecycle.",
+        "B": "External tables with a LOCATION pointing to an external volume for full control of file layout.",
+        "C": "Foreign tables federated from an external catalog to delegate optimization to the source system.",
+        "D": "Temporary views over files to avoid table-level governance and lifecycle coupling."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để Databricks và Unity Catalog tự động quản lý toàn bộ vòng đời của bảng (bao gồm việc tự động xóa dữ liệu vật lý trên lưu trữ đám mây khi bảng bị xóa - dropped), kỹ sư dữ liệu nên tạo bảng dưới dạng Bảng được quản lý (Managed tables)."
+    },
+    {
+      "id": 169,
+      "question": "A data engineer is decommissioning a sandbox schema in Unity Catalog. Some tables are ephemeral staging outputs that can be safety removed entirely, but a few tables point at shared cloud storage used by downstream jobs outside Databricks. The engineer must avoid deleting any shared files when cleaning up catalog objects.\nHow does Unity Catalog behave when dropping Managed vs External tables?",
+      "choices": {
+        "A": "DROP all tables; Databricks will only remove metadata for both managed and external tables.",
+        "B": "DROP managed tables that are ephemeral and DROP external tables; files for both remain for 7 days.",
+        "C": "DROP managed staging tables to remove data and metadata, and DROP external tables to remove only metadata",
+        "D": "DROP external tables first to delete their files, then DROP managed tables to keep their files for recovery."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Unity Catalog, khi bạn thực hiện lệnh `DROP` đối với bảng được quản lý (Managed tables), cả dữ liệu thực tế và siêu dữ liệu đều bị xóa sạch. Còn đối với bảng ngoài (External tables), lệnh `DROP` chỉ xóa siêu dữ liệu (metadata), giữ nguyên tệp dữ liệu vật lý trên kho lưu trữ đám mây."
+    },
+    {
+      "id": 170,
+      "question": "A data engineer wants to delegate day-to-day permission management for the schema main marketing to the mkt-admins group, without making them workspace admins. They should be able to grant and revoke privileges for other users on objects within that schema.\nWhich approach aligns with UC’s ownership and privilege model?",
+      "choices": {
+        "A": "Grant MANAGE permissions on the metastore to mkt-admins, which allows managing privileges for all schemas and tables globally.",
+        "B": "Make mkt-admins a workspace-level admins group, then SELECT on main.marketing to allow privilege delegation.",
+        "C": "Transfer ownership of the schema main. marketing to mkt-admins; owners can manage privileges on the schema and its contained objects.",
+        "D": "Grant USE SCHEMA on main.marketing and MODIFY on all tables to mkt-admins, which enables managing grants within the schema."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để ủy quyền quản lý quyền truy cập trên lược đồ `main.marketing` cho nhóm `mkt-admins` mà không cần cấp quyền quản trị không gian làm việc (workspace admin), giải pháp chuẩn nhất là chuyển quyền sở hữu (transfer ownership) của lược đồ đó sang nhóm `mkt-admins`."
+    },
+    {
+      "id": 171,
+      "question": "A data engineer is standardizing repository layouts for multiple teams adopting Databricks Asset Bundles. The engineer wants to ensure every project has a single authoritative configuration file at the repository root that defines the bundle name, targets, workspace settings, permissions, and resource mappings (for jobs and pipelines).\nWhat strategy should the data engineer use to meet the goal?",
+      "choices": {
+        "A": "Place multiple databricks.yml files under each subfolder (for example, jobs/pipelines/, workspace/) and merge them at deploy time using the include mapping.",
+        "B": "Place exactly one databricks.yml at the repository root; it is the main configuration file and may reference additional configuration files via the include mapping.",
+        "C": "Place a databricks.yml in a databricks/hidden folder at the repository root; only hidden locations are valid for bundle configs.",
+        "D": "Place a databricks.yaml at the repository root and optional databricks.yml in subfolders; the CLI prefers .yaml over .yml when both exist."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Quy chuẩn thiết kế Databricks Asset Bundle (DAB) là đặt duy nhất một tệp cấu hình `databricks.yml` tại thư mục gốc của repository. Tệp này đóng vai trò là cấu hình chính và có thể tham chiếu/gộp các tệp cấu hình phụ khác thông qua tùy chọn `include`."
+    },
+    {
+      "id": 172,
+      "question": "A data engineer is migrating pipeline tasks to reduce operational toil. The workspace used Unity Catalog and is in a region that supports serverless. The engineer wants Databricks to auto-select instance types, manage scaling, apply Photon, and handle runtime upgrades automatically for job runs.\nHow should the data engineer meet this requirement while adhering to Databricks constraints?",
+      "choices": {
+        "A": "Run the job on a serverless compute for workflows configuration, ensuring Unity Catalog is enabled and regional support is available.",
+        "B": "Use a Pro SQL warehouse and schedule Python notebook tasks to execute as pipeline steps.",
+        "C": "Create a job with a single-task job cluster and manually set instance families and min/max workers.",
+        "D": "Use an all-purpose cluster with cluster policies to enforce standard sizes and enable autoscaling."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Kích hoạt chạy công việc trên tài nguyên Serverless Compute dành cho Workflows (Jobs) là giải pháp đáp ứng toàn bộ các yêu cầu tự động quản lý phần cứng, Photon, co giãn và nâng cấp runtime, với điều kiện Workspace có bật Unity Catalog và nằm ở khu vực địa lý được hỗ trợ Serverless."
+    },
+    {
+      "id": 173,
+      "question": "A data engineer is building a PySpark ingestion pipeline in a local IDE and must execute heavy DataFrame transformations on a remote Databricks cluster for scale while stepping through business logic locally. The workspace uses Unity Catalog and a cluster running Databricks Runtime 15.4 LTS. The engineer also plans to register UDFs.\nWhat should the data engineer do to avoid runtime issues during development with Databricks Connect?",
+      "choices": {
+        "A": "Match the local Python minor version to the cluster’s Python minor version when using UDF’s, and use a Databricks Connect package compatible with the cluster’s Runtime version",
+        "B": "Use any local Python version as long as the PySpark minor version matches, because the cluster’s Python version is isolated from the client.",
+        "C": "Use serverless, because Databricks Connect does not support assigned or shared clusters.",
+        "D": "Disable Unity Catalog on the workspace because it conflicts with remote execution through Databricks Connect."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để tránh lỗi phát sinh khi phát triển và gỡ lỗi cục bộ bằng Databricks Connect (đặc biệt khi dùng UDFs), kỹ sư dữ liệu cần đảm bảo phiên bản Python phụ (minor version) ở máy cục bộ trùng khớp với phiên bản Python của cụm máy chủ Databricks, và cài đặt gói Databricks Connect tương thích với phiên bản Runtime của cụm."
+    },
+    {
+      "id": 174,
+      "question": "A data engineer is setting up a new Databricks pipeline that ingests clickstream events from Kafka and daily product catalogs from cloud object storage. To ensure auditability and easy reprocessing, the engineer wants to land all source data. Later stages will handle cleaning, deduplication, and business modeling before the data is used in dashboards.\nWhich approach aligns to Medallion Architecture principles?",
+      "choices": {
+        "A": "Land both sources in Gold with denormalized star schemas to optimize BI while retaining full source fidelity.",
+        "B": "Land streaming events from Kafka in silver, and the product catalog directly in Gold to minimize layers for batch data.",
+        "C": "Land both sources in the Bronze layer append-only with minimal validation, then build Silver/Gold downstream for quality and analytics.",
+        "D": "Land both sources directly into the Silver layer with schema enforcement and deduplication to reduce downstream complexity."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Theo nguyên tắc của kiến trúc Medallion, toàn bộ dữ liệu từ các nguồn (như luồng sự kiện Kafka hay danh mục sản phẩm từ cloud storage) cần được đưa vào tầng Bronze dưới dạng chỉ thêm (append-only) và giữ nguyên cấu trúc thô, sau đó mới xây dựng các tầng Silver và Gold để làm sạch và tổng hợp dữ liệu."
+    },
+    {
+      "id": 175,
+      "question": "A data engineer requires rapid iteration on pipelines while maintaining reliable rollbacks after bad ingests, ensuring audit trails for regulatory compliance, and providing consistent access to a single source of truth for both AI and BI workloads.\nWhich strategy should the data engineer apply to meet the needs?",
+      "choices": {
+        "A": "Delta Lake ACID transactions and time travel, governed by Unity Catalog for consistent access and lineage.",
+        "B": "DBFS CSV storage with manual file versioning and nightly copies for rollback.",
+        "C": "Ephemeral in-memory DataFrames for audit trails and BI distribution.",
+        "D": "Cloud objects storage only, with ad hoc SQL queries for recovery and governance."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Sử dụng định dạng Delta Lake mang lại các tính năng giao dịch ACID mạnh mẽ và khả năng truy vết lịch sử (time travel) để hỗ trợ phục hồi dữ liệu nhanh chóng, kết hợp với quản lý truy cập và lịch sử dữ liệu (lineage) tập trung của Unity Catalog."
+    },
+    {
+      "id": 176,
+      "question": "A data engineer must deliver a trustworthy customer 360 dataset in Databricks for data scientists and BI teams. The engineer plans to join deduplicated customer records with cleaned transaction data, enforce schema and data quality checks, and create a conformed “customer_transactions” view. Later, highly aggregated, domain-specific tables (for weekly spend and executive summaries) will be produced for dashboards.\nWhere should the engineer build the conformed “customer_transactions” dataset, and where should the aggregated, report-ready tables reside?",
+      "choices": {
+        "A": "Build both “customer_transactions” and aggregated, report-ready tables in Silver to keep the model simpler.",
+        "B": "Build “customer_transactions” in Bronze and put the aggregated, report-ready tables in Silver.",
+        "C": "Build “customer_transactions” in Gold and put the aggregated, report-ready tables in Silver.",
+        "D": "Build “customer_transactions” in Silver and put the aggregated, report-ready tables in Gold."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Bảng dữ liệu giao dịch khách hàng đã được làm sạch và nối ghép (`customer_transactions`) thuộc về tầng Silver. Trong khi đó, các bảng báo cáo đã được tổng hợp sâu và tối ưu hóa phục vụ dashboard sẽ nằm ở tầng Gold."
+    },
+    {
+      "id": 177,
+      "question": "A data engineering team wants to validate a new ingestion pipeline locally while ensuring large aggregations run in serverless compute in their Databricks workspace. They plan to use Databricks Connect and have the option to attach to either a shared cluster or serverless.\nWhich workspace requirement should be confirmed first to avoid connection failures?",
+      "choices": {
+        "A": "Verify that the workspace has Unity Catalog disabled and the Databricks Connect version is less than the serverless Runtime version.",
+        "B": "Verify that the workspace has Unity Catalog enabled and that the Databricks Connect version supports serverless for the target Runtime release.",
+        "C": "Verify that only assigned access mode clusters are used because serverless is not supported by Databricks Connect.",
+        "D": "Verify that the local Spark version equals the serverless Spark version to satisfy Spark Connect parity."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kết nối thành công từ máy cục bộ tới tài nguyên tính toán Serverless của Databricks qua Databricks Connect, yêu cầu tiên quyết là Workspace phải bật Unity Catalog và phiên bản Databricks Connect phải hỗ trợ tính năng serverless tương ứng."
+    },
+    {
+      "id": 178,
+      "question": "A data engineer working in Databricks needs to control BI query latency and cost for a sales analytics domain. Silver tables already contain validated, normalized sales and product data. The team wants dashboard-friendly query performance and to align datasets with business concepts (e.g., weekly_sales and account_performance) without overloading analysts with complex joins.\nWhich design approach should a data engineer choose for the Gold layer in a medallion architecture?",
+      "choices": {
+        "A": "Move raw, append-only source data directly into Gold to avoid transformation costs and enable time travel.",
+        "B": "Create denormalized, domain-aligned tables and materialized aggregates (e.g., weekly_sales) optimized for reporting and dashboards.",
+        "C": "Build only lightly cleansed views in Gold and preserve most business logic in Silver to reduce duplication.",
+        "D": "Keep all data heavily normalized in Gold to minimize storage and rely on BI tools to join data at query time."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Ở tầng Gold của kiến trúc Medallion, kỹ sư dữ liệu nên thiết kế các bảng dữ liệu đã khử chuẩn hóa (denormalized), hướng doanh nghiệp và chứa các dữ liệu đã tổng hợp sẵn (như doanh thu tuần) giúp tối ưu hóa hiệu năng đọc báo cáo."
+    },
+    {
+      "id": 179,
+      "question": "A team is designing their Data bricks Asset Bundle for deployment. They want to ensure their bundle includes all necessary resources, targeted environment configurations, and deployment settings in a single version-controlled file.\nWhat is required as the main configuration file at the root of their project?",
+      "choices": {
+        "A": "A Python script called configure_bundle.py that dynamically creates resources at runtime",
+        "B": "A databricks.yml YAML file that contains the bundle's name, targets, includes resources, and variables",
+        "C": "A directory with multiple TXT files, each describing a single resource for the bundle",
+        "D": "A JSON file named bundle_config.json that stores all resource details and environment variables"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tệp cấu hình chính bắt buộc ở thư mục gốc của dự án Databricks Asset Bundle là tệp `databricks.yml` (định dạng YAML) dùng để cấu hình tên bundle, các môi trường đích, tài nguyên và các biến sử dụng."
+    },
+    {
+      "id": 180,
+      "question": "A developer has configured Databricks Connect and starts running PySpark code locally. They notice that Data Frame operations are executed on the remote cluster, but actions like .show() return results directly in their local console.\nWhat does this behaviour illustrate about how Databricks Connect is used?",
+      "choices": {
+        "A": "It requires manual synchronization of results from the cluster",
+        "B": "It runs all Spark compute locally and only reads remote files",
+        "C": "It proxies Spark commands from the local client to the remote cluster",
+        "D": "It mirrors the entire cluster environment on the developer's machine"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cơ chế hoạt động của Databricks Connect là chuyển tiếp (proxies) các lệnh thực thi Spark từ máy khách cục bộ lên cụm máy chủ Databricks từ xa để tính toán, sau đó chuyển trả kết quả cuối cùng về hiển thị trên máy cục bộ."
+    },
+    {
+      "id": 181,
+      "question": "A data engineer needs to configure an external location and a storage credential so that a new bronze ingestion pipeline can land data in cloud storage governed by Unity Catalog. The engineer has CREATE TABLE permission on schemas but receives a permission error when attempting to create the external location.\nWhich role is required to unblock this setup, the principle of least privilege?",
+      "choices": {
+        "A": "Grant CREATE EXTERNAL LOCATION on both the metastore and the referenced storage credential so the engineer can define the external location.",
+        "B": "Grant ALL PRIVILEGES on the catalog so the engineer can create external locations under its schemas.",
+        "C": "Promote the engineer to Workspace Admin so they can manage objects and jobs.",
+        "D": "Assign the engineer as Metastore Admin because only Metastore Admins can create external locations."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Theo nguyên tắc đặc quyền tối thiểu trong Unity Catalog, để tạo một vị trí lưu trữ ngoài (external location), người dùng cần được cấp đặc quyền `CREATE EXTERNAL LOCATION` trên metastore và có quyền trên thông tin xác thực lưu trữ (storage credential) được liên kết."
+    },
+    {
+      "id": 182,
+      "question": "A data engineer needs to compute metrics such as:\n• rolling 7-day sales• percent of total revenue• top-N most profitable categories\nWhich two approaches are appropriate for implementing these metrics with PySpark DataFrames? (Choose two.)",
+      "choices": {
+        "A": "Using RDD aggregations for better performance.",
+        "B": "Using mapPartitions to manually implement rolling windows.",
+        "C": "Using window functions for rolling and ranking calculations.",
+        "D": "Collecting the DataFrame to the driver for faster iterative processing.",
+        "E": "Using joins and groupBy to compute percent-of-total metrics."
+      },
+      "correctAnswer": "CE",
+      "explanation_vi": "Để triển khai các chỉ số phức tạp này trong PySpark DataFrame:\n1. Sử dụng hàm cửa sổ (window functions) để thực hiện tính toán trượt (như tổng doanh thu 7 ngày qua) và xếp hạng (như top-N).\n2. Sử dụng kết hợp phép gộp nhóm (`groupBy`) và phép nối (`joins`) để tính toán phần trăm trên tổng số (percent-of-total)."
+    },
+    {
+      "id": 183,
+      "question": "After a failed multi-task job run, a data engineer changes the cluster size and updates a notebook path for one task. The data engineer wants to re-run just the failed/skipped tasks with the updated settings and keep the run lineage intact.\nWhich strategy should the data engineer use to preserve the run history?",
+      "choices": {
+        "A": "Use Jobs REST API repairRun to re-run failed tasks; the repair uses the current job and task settings and appears in the run history.",
+        "B": "Increase the task retry count and click 'Retry' on the failed task to automatically apply new cluster settings within the same run.",
+        "C": "Export the job as a Databricks Asset Bundle, redeploy it, and re-run only the modified tasks from the bundle.",
+        "D": "Use 'Run now' to start a new run, so that the updated settings apply; the new run replaces the prior run history."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Sử dụng tính năng sửa lỗi lượt chạy (Repair Run) thông qua API hoặc giao diện Jobs UI giúp kỹ sư dữ liệu chỉ chạy lại những nhiệm vụ bị lỗi hoặc bị bỏ qua với cấu hình mới cập nhật, đồng thời giữ nguyên lịch sử và quan hệ dòng dữ liệu (lineage) của lượt chạy ban đầu."
+    },
+    {
+      "id": 184,
+      "question": "When using MERGE INTO in Delta Lake on Databricks, which clause allows you to atomically delete target rows that no longer match any source rows?",
+      "choices": {
+        "A": "WHEN MATCHED BY SOURCE THEN UPDATE SET NULL",
+        "B": "WHEN MATCHED AND THEN DELETE",
+        "C": "WHEN NOT MATCHED BY SOURCE THEN DELETE",
+        "D": "WHEN NOT MATCHED THEN DELETE"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong câu lệnh `MERGE INTO` của Delta Lake, mệnh đề `WHEN NOT MATCHED BY SOURCE THEN DELETE` được sử dụng để tự động xóa các dòng dữ liệu ở bảng đích nếu các dòng đó không còn tồn tại trong bảng nguồn."
+    },
+    {
+      "id": 185,
+      "question": "A data engineer must support self-serve BI dashboards for hundreds of business users who run ad hoc, high-concurrency SQL queries throughout the day against governed Unity Catalog tables. The team needs a near-instant start, autoscaling without manual tuning, and the best performance for SQL while minimizing operational overhead.\nWhich Databricks compute should the data engineer use?",
+      "choices": {
+        "A": "SQL Warehouse (Classic) with a fixed cluster size.",
+        "B": "Jobs compute clusters triggered by dashboards on a schedule.",
+        "C": "All-purpose classic cluster with manual autoscaling enabled.",
+        "D": "SQL Warehouse (Serverless) with Photon enabled."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để phục vụ hàng trăm người dùng truy vấn BI đồng thời với độ trễ thấp và độ co giãn tự động không mất công cấu hình, giải pháp tối ưu nhất là sử dụng SQL Warehouse (Serverless) có kích hoạt công cụ tăng tốc Photon."
+    },
+    {
+      "id": 186,
+      "question": "A Lakeflow Jobs workflow fails at the last task because of an error in a notebook task. This workflow is scheduled to run daily. The data engineer fixes the notebook and wants to rerun the pipeline. This workflow is very compute-intensive and expensive to run.\nWhich action should the data engineer take in order to minimize downtime and compute cost?",
+      "choices": {
+        "A": "Restart the cluster",
+        "B": "Re-run the entire workflow",
+        "C": "Switch to another cluster",
+        "D": "Repair run"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để giảm thiểu chi phí tính toán và thời gian chờ đợi đối với một quy trình công việc tốn kém tài nguyên, kỹ sư dữ liệu nên sử dụng tính năng Sửa lượt chạy (Repair run) để chỉ thực thi lại tác vụ cuối cùng bị lỗi thay vì chạy lại toàn bộ quy trình từ đầu."
+    },
+    {
+      "id": 187,
+      "question": "A data engineer is investigating a Lakehouse ETL job on Databricks that has suddenly become four times slower.\nThey need to:\n• Identify the specific Spark stages that regressed.• Drill down to per-task metrics such as shuffle read/write size, spill, and GC time.• Correlate these with the executor resource usage during that run.\nWhich Databricks-native capability is the starting point for this detailed job-level root-cause analysis?",
+      "choices": {
+        "A": "Cluster Metrics (Metrics tab on the compute) to view historical Spark and hardware metrics, without using the Spark UI.",
+        "B": "The Jobs run details page timeline and graph views, without opening the Spark UI, to analyze all stage and task-level Spark metrics.",
+        "C": "Ganglia metrics for the cluster, which provide full visibility into Spark stages, tasks, and shuffle metrics for the job run.",
+        "D": "Spark UI opened from the job run's compute, using the Jobs and Stages tabs to inspect task metrics."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để phân tích chi tiết nguyên nhân nghẽn hiệu năng ở mức độ tác vụ (task-level) và giai đoạn (stage-level), kỹ sư dữ liệu sử dụng giao diện điều khiển Spark UI được mở từ chi tiết lượt chạy của Job để kiểm tra các thông số kỹ thuật chuyên sâu."
+    },
+    {
+      "id": 188,
+      "question": "A data engineer is troubleshooting a Lakeflow Spark Declarative Pipelines (SDP) where several rows are dropped by expectations. The product owner requests details on which expectation failed most frequently during the last run and the corresponding affected table. The engineer wants to use Databricks' built-in observability data to answer this without adding new logging code.\nHow should the data engineer troubleshoot SDP to verify the expectation failure?",
+      "choices": {
+        "A": "Export notebook run results to HTML and search for the expectations summary in the rendered output to compile the metrics.",
+        "B": "Query the Lakeflow Spark Declarative Pipelines event log to retrieve expectation metrics and failure details for the pipeline's most recent update.",
+        "C": "Use the Spark UI's SQL tab to identify failed rows and expectation names from physical query plans.",
+        "D": "Increase the cluster's log level to DEBUG and parse the driver's Log4j logs for expectation metrics for the last run."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để theo dõi tần suất thất bại của các ràng buộc Expectations mà không cần cài đặt thêm mã ghi nhật ký, kỹ sư dữ liệu có thể trực tiếp truy vấn nhật ký sự kiện (event log) của đường ống để lấy thông tin chi tiết về các lỗi này."
+    },
+    {
+      "id": 189,
+      "question": "A data engineering team is analyzing customer transactions using a PySpark DataFrame named transactions with columns customer_id, amount, and category.\nThe team needs to compute, for each customer, the total transaction amount, the average transaction amount, and the maximum amount - all in a single operation for efficiency.\nWhich code fragment should be used to achieve this in PySpark?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774878044426-3f09p6wa.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774878047242-zmizapv1.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774878049472-6vsdocn2.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774878051750-1sx3wa30.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khối mã A thực hiện đúng cú pháp PySpark để nhóm theo `customer_id` và đồng thời tính toán tổng (`sum`), trung bình (`avg`), và giá trị lớn nhất (`max`) của trường `amount` trong một thao tác duy nhất."
+    },
+    {
+      "id": 190,
+      "question": "A team is using a Databricks workspace and needs to continuously ingest JSON files as they arrive.\nWhich code snippet shows a valid Auto Loader source configuration?",
+      "choices": {
+        "A": "![](/images/quizzes/certified-data-engineer-associate/1774878042691-vuaecb6z.png)",
+        "B": "![](/images/quizzes/certified-data-engineer-associate/1774878049370-lr23tukj.png)",
+        "C": "![](/images/quizzes/certified-data-engineer-associate/1774878051896-0y839d0j.png)",
+        "D": "![](/images/quizzes/certified-data-engineer-associate/1774878054193-2z1awx3h.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khối mã D khai báo chính xác cấu hình nguồn của Auto Loader để đọc luồng dữ liệu liên tục với định dạng nguồn `cloudFiles` và định dạng tệp JSON."
+    },
+    {
+      "id": 191,
+      "question": "A data engineer is running code in a Databricks Repo that is cloned from a central Git repository. A colleague of the data engineer informs them that changes have been made and synced to the central Git repository. The data engineer now needs to sync their Databricks Repo to get the changes from the central Git repository.\nWhich of the following Git operations does the data engineer need to run to accomplish this task?",
+      "choices": {
+        "A": "Merge",
+        "B": "Push",
+        "C": "Pull",
+        "D": "Commit",
+        "E": "Clone"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đồng bộ hóa các thay đổi mới nhất từ kho chứa Git trung tâm về thư mục làm việc (Databricks Repo) của mình, kỹ sư dữ liệu cần thực hiện thao tác Kéo dữ liệu (`Pull`)."
+    }
+  ]
+}

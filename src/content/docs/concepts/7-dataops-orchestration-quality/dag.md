@@ -38,9 +38,7 @@ graph TD
     C -- Không --> E["Xây dựng DAG Object trong RAM"]
     D --> E
     E -->|Serialize| F["(Metadata DB)"]
-    F --> G["Scheduler ra quyết định chạy Task"]
-    
-    style D fill:#ffcccc,stroke:#ff0000,stroke-width:2px
+    F --> G["Scheduler ra quyết định chạy Task"]
 ```
 
 ### 1.2. Thảm họa "Scheduler Tax"
@@ -112,10 +110,7 @@ graph LR
     subgraph Stage 2: Wide Dependency
     C -->|Network Shuffle| D("GroupBy: City")
     D --> E("Write to Postgres")
-    end
-    
-    style Stage 1 fill:#e6f3ff,stroke:#0066cc
-    style Stage 2 fill:#ffe6e6,stroke:#cc0000
+    end
 ```
 
 Kiến trúc này chia DAG thành các **Stages (Giai đoạn)** bị ngăn cách bởi **Shuffle Boundaries (Ranh giới xáo trộn)**:

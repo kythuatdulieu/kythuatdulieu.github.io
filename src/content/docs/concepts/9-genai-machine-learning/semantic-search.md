@@ -46,11 +46,7 @@ graph TD
         
         RRF --> RE[Cross-Encoder Reranker]
         RE --> FR[Final Results / RAG Context]
-    end
-    
-    style Offline_Ingestion_Pipeline fill:#f4f4f8,stroke:#333
-    style Online_Retrieval_Pipeline fill:#e6f3ff,stroke:#0066cc
-    style RRF fill:#fff3cd,stroke:#ffc107
+    end
 ```
 
 **Sự Đánh Đổi (Trade-offs] của Hybrid Search:**

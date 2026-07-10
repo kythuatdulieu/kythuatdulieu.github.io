@@ -1,0 +1,220 @@
+---
+// Trang danh sách bộ đề: đọc public/quizzes/* lúc build, nhóm theo nhà cung cấp,
+// có ô tìm kiếm lọc client-side. Bộ song ngữ (vi) được xếp đầu nhóm kèm badge.
+// Link trỏ thẳng index.html để hoạt động cả ở dev server lẫn GitHub Pages.
+import fs from 'node:fs';
+import path from 'node:path';
+import { quizMeta, quizProviders, quizHidden } from '../config/quizzes.js';
+
+const quizRoot = path.resolve('./public/quizzes');
+const ids = fs
+  .readdirSync(quizRoot, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && d.name !== 'shared' && !quizHidden.includes(d.name))
+  .map((d) => d.name);
+
+function countQuestions(id) {
+  try {
+    const j = JSON.parse(fs.readFileSync(path.join(quizRoot, id, 'questions.json'), 'utf8'));
+    const arr = Array.isArray(j) ? j : j.questions || [];
+    return arr.length;
+  } catch {
+    return null;
+  }
+}
+
+const groups = quizProviders.map((provider) => ({ provider, items: [] }));
+for (const id of ids) {
+  const meta = quizMeta[id] || { name: id, provider: 'Khác' };
+  const group = groups.find((g) => g.provider === meta.provider) || groups[groups.length - 1];
+  group.items.push({ id, name: meta.name, vi: !!meta.vi, count: countQuestions(id) });
+}
+for (const g of groups) {
+  g.items.sort((a, b) => {
+    if (a.vi !== b.vi) return a.vi ? -1 : 1;
+    return a.name.localeCompare(b.name, 'vi');
+  });
+}
+const visible = groups.filter((g) => g.items.length > 0);
+const total = ids.length;
+
+const providerInfo = {
+  'Databricks': { url: 'https://cdn.simpleicons.org/databricks/FF3621' },
+  'AWS': { url: '/icons/aws.svg' },
+  'Microsoft': { url: '/icons/microsoft.svg' },
+  'Google Cloud': { url: 'https://cdn.simpleicons.org/googlecloud/4285F4' },
+  'Snowflake': { url: 'https://cdn.simpleicons.org/snowflake/29B5E8' },
+  'Salesforce': { url: '/icons/salesforce.svg' },
+  'Khác': { url: 'https://cdn.simpleicons.org/stackexchange/6B7280' },
+};
+---
+
+<div class="quiz-index not-content">
+  <p class="lead">
+    {total} bộ đề trắc nghiệm về dữ liệu và AI. Tiến độ làm bài lưu tự động trên trình duyệt.
+  </p>
+
+  <label class="q-search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="quiz-filter" type="search" placeholder="Tìm bộ đề: Databricks, DP-203, machine learning…" autocomplete="off" />
+    <span class="q-search-count" id="quiz-filter-count">{total} bộ đề</span>
+  </label>
+
+  <div id="quiz-groups">
+    {visible.map((g) => {
+      const info = providerInfo[g.provider] || providerInfo['Khác'];
+      return (
+      <section data-provider={g.provider}>
+        <h2 class="section-h">
+          <img src={info.url} alt={g.provider} class="provider-icon" loading="lazy" />
+          {g.provider} (<span class="g-count">{g.items.length}</span>)
+        </h2>
+        <ul class="quiz-list">
+          {g.items.map((q) => (
+            <li data-search={`${q.name} ${g.provider} ${q.id}${q.vi ? ' tiếng việt tieng viet vi' : ''}`.toLowerCase()}>
+              <a href={`/quizzes/${q.id}/index.html`}>
+                <span class="q-name">
+                  <img src={info.url} alt="" class="card-provider-icon" loading="lazy" />
+                  {q.name}
+                </span>
+                <div class="q-meta">
+                  {q.vi && (
+                    <span class="q-vi" title="Có bản dịch tiếng Việt cho từng câu hỏi">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      Tiếng Việt
+                    </span>
+                  )}
+                  {q.count ? <span class="q-count">{q.count} câu</span> : null}
+                  <span class="q-arrow" aria-hidden="true">→</span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+      );
+    })}
+  </div>
+
+  <p class="q-empty" id="quiz-empty" hidden>Không có bộ đề nào khớp. Thử từ khóa khác.</p>
+</div>
+
+<style is:global>
+  /* Gỡ giới hạn khung mặc định của Starlight để mở rộng diện tích */
+  main:has(.quiz-index) .content-panel { padding: 0; }
+  main:has(.quiz-index) .sl-container { max-width: none; margin: 0; }
+  /* Ẩn tiêu đề h1 của trang (title) */
+  main:has(.quiz-index) h1 { display: none; }
+</style>
+
+<style>
+  .provider-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 6px;
+    margin-top: -2px;
+  }
+  .card-provider-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 6px;
+    margin-top: -3px;
+    opacity: 0.9;
+  }
+  .quiz-index { max-width: 1040px; margin: 0 auto; padding: var(--space-4, 1rem) var(--space-5, 1.5rem) var(--space-9, 6rem); font-family: var(--font-sans); }
+  .lead { color: var(--text-muted, var(--sl-color-gray-3)); font-size: var(--text-md, 1.19rem); margin: 0 0 var(--space-5, 1.5rem); max-width: 60ch; }
+  .q-search {
+    display: flex; align-items: center; gap: .6rem; width: 100%;
+    padding: .75rem 1rem; margin-bottom: var(--space-6, 2rem);
+    background: var(--surface-card, var(--sl-color-bg-nav));
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+    border-radius: var(--radius-md, 8px);
+    color: var(--text-faint, var(--sl-color-gray-4));
+    transition: border-color var(--duration-fast, 120ms);
+  }
+  .q-search:focus-within { border-color: var(--sl-color-accent); }
+  .q-search input {
+    flex: 1; border: none; outline: none; background: transparent;
+    font: inherit; font-size: var(--text-base, 1.06rem);
+    color: var(--text-body, var(--sl-color-text));
+  }
+  .q-search-count { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); white-space: nowrap; }
+  #quiz-groups section { margin-bottom: var(--space-7, 3rem); }
+  #quiz-groups section[hidden] { display: none; }
+  .section-h {
+    font-size: var(--text-sm, .94rem); text-transform: uppercase; letter-spacing: var(--tracking-wider, .06em);
+    color: var(--text-faint, var(--sl-color-gray-4)); font-weight: 600; margin: 0 0 var(--space-3, .75rem); border: none;
+  }
+  .quiz-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .quiz-list li[hidden] { display: none; }
+  .quiz-list a {
+    display: flex; flex-direction: column; gap: var(--space-3, .75rem);
+    padding: var(--space-4, 1rem);
+    border: 1px solid var(--border-default, var(--sl-color-hairline));
+    border-radius: var(--radius-md, 8px);
+    background: var(--surface-card, var(--sl-color-bg-nav));
+    color: inherit; text-decoration: none;
+    transition: background var(--duration-fast, 120ms), border-color var(--duration-fast, 120ms), transform var(--duration-fast, 120ms);
+    height: 100%;
+  }
+  .quiz-list a:hover {
+    background: var(--sl-color-accent-low);
+    border-color: var(--sl-color-accent);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .q-name { font-size: var(--text-base, 1.06rem); font-weight: 600; color: var(--text-heading, var(--sl-color-white)); line-height: 1.4; }
+  .quiz-list a:hover .q-name { color: var(--sl-color-text-accent); }
+  
+  .q-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin-top: auto; }
+  .q-vi {
+    display: inline-flex; align-items: center; gap: .3em; align-self: center;
+    font-size: var(--text-xs, .81rem); font-weight: 600;
+    color: var(--sl-color-text-accent); background: var(--sl-color-accent-low);
+    border-radius: var(--radius-pill, 999px); padding: .2em .6em; white-space: nowrap;
+  }
+  .q-count { font-family: var(--font-mono); font-size: var(--text-xs, .81rem); color: var(--text-faint, var(--sl-color-gray-4)); }
+  .q-arrow { margin-left: auto; color: var(--text-faint, var(--sl-color-gray-4)); transition: color var(--duration-fast, 120ms), transform var(--duration-fast, 120ms); }
+  .quiz-list a:hover .q-arrow { color: var(--sl-color-text-accent); transform: translateX(2px); }
+  .q-empty { color: var(--text-muted, var(--sl-color-gray-3)); font-size: var(--text-base, 1.06rem); }
+</style>
+
+<script is:inline>
+  (function () {
+    var input = document.getElementById('quiz-filter');
+    var countEl = document.getElementById('quiz-filter-count');
+    var empty = document.getElementById('quiz-empty');
+    if (!input) return;
+    var sections = Array.prototype.slice.call(document.querySelectorAll('#quiz-groups section'));
+    function norm(s) {
+      return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
+    }
+    function apply() {
+      var q = norm(input.value.trim());
+      var shown = 0;
+      sections.forEach(function (sec) {
+        var visibleInSec = 0;
+        sec.querySelectorAll('.quiz-list li').forEach(function (li) {
+          var ok = !q || norm(li.getAttribute('data-search') || '').indexOf(q) !== -1;
+          li.hidden = !ok;
+          if (ok) visibleInSec++;
+        });
+        sec.hidden = visibleInSec === 0;
+        var gc = sec.querySelector('.g-count');
+        if (gc) gc.textContent = visibleInSec;
+        shown += visibleInSec;
+      });
+      if (countEl) countEl.textContent = shown + ' bộ đề';
+      if (empty) empty.hidden = shown !== 0;
+    }
+    input.addEventListener('input', apply);
+  })();
+</script>

@@ -71,11 +71,8 @@ graph LR
     G --> BI
     S --> ML
     G --> ML
-    
-    classDef bronze fill:#cd7f32,stroke:#333,stroke-width:2px;
-    classDef silver fill:#c0c0c0,stroke:#333,stroke-width:2px;
-    classDef gold fill:#ffd700,stroke:#333,stroke-width:2px;
-    
+
+
     class B bronze;
     class S silver;
     class G gold;

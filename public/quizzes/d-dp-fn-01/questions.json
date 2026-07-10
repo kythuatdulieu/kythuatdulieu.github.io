@@ -1,0 +1,2013 @@
+[
+  {
+    "id": 1,
+    "topic": 1,
+    "question": "An organization is deploying Kubernetes on bare metal.What essential action must be taken to ensure data protection?",
+    "options": {
+      "A": "Disable firewall from the system",
+      "B": "Remove all data from the system",
+      "C": "Disable volume snapshots completely",
+      "D": "Carve out Persistent Volumes from existing storage"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi triển khai Kubernetes trên môi trường bare metal, để bảo vệ và lưu trữ dữ liệu bền vững cho các container, bước thiết yếu là phải phân bổ (carve out) các Phân vùng lưu trữ bền vững (Persistent Volumes) từ hạ tầng lưu trữ vật lý hoặc mạng hiện có.",
+    "references": null
+  },
+  {
+    "id": 2,
+    "topic": 1,
+    "question": "An organization realizes that it frequently exceeds its data storage capacities.What monitoring strategy should they implement?",
+    "options": {
+      "A": "Enable data deduplication",
+      "B": "Compress the existing data",
+      "C": "Establish regular capacity monitoring",
+      "D": "Decrease the frequency of data operations"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Thiết lập giám sát dung lượng thường xuyên (capacity monitoring) giúp tổ chức chủ động theo dõi xu hướng tăng trưởng dữ liệu, dự báo nhu cầu dung lượng trước khi xảy ra sự cố quá tải.",
+    "references": null
+  },
+  {
+    "id": 3,
+    "topic": 1,
+    "question": "A storage system is configured with erasure coding, divided up into 10 data segments and 2 coding segments. Each segment is written to different drives.What is the maximum number of drive failures that can be withstood without losing the data in this configuration?",
+    "options": {
+      "A": "2",
+      "B": "3",
+      "C": "4",
+      "D": "5"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Với cấu hình Erasure Coding chia thành 10 phân đoạn dữ liệu (data segments) và 2 phân đoạn mã hóa (coding segments - parity), hệ thống có thể chịu được tối đa 2 ổ đĩa bị lỗi cùng lúc mà không làm mất dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 4,
+    "topic": 1,
+    "question": "How does local replication help organizations meet compliance requirements?",
+    "options": {
+      "A": "By enabling faster data migration",
+      "B": "By reducing the overall data footprint",
+      "C": "By simplifying data encryption processes",
+      "D": "By providing a reliable data protection solution"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao chép cục bộ (local replication) giúp tổ chức đáp ứng các yêu cầu tuân thủ quy định bằng cách cung cấp một giải pháp bảo vệ dữ liệu đáng tin cậy, sẵn sàng phục hồi nhanh chóng khi xảy ra sự cố.",
+    "references": null
+  },
+  {
+    "id": 5,
+    "topic": 1,
+    "question": "An organization is transitioning to a more agile data protection environment using new technologies.What should be their primary focus in security management?",
+    "options": {
+      "A": "Increase manual processes to control agility",
+      "B": "Identify the different availability issues.",
+      "C": "Adapt security policies to new technologies",
+      "D": "Stick to existing security measures only"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi chuyển sang môi trường bảo vệ dữ liệu linh hoạt hơn với các công nghệ mới, trọng tâm quản lý bảo mật là phải điều chỉnh và thích ứng các chính sách bảo mật (security policies) cho phù hợp với các công nghệ mới đó.",
+    "references": null
+  },
+  {
+    "id": 6,
+    "topic": 1,
+    "question": "Which processes aid in planning and implementing security controls while ensuring compliance with internal and external policies?",
+    "options": {
+      "A": "Secure Product Life Cycle (SPLC)",
+      "B": "Governance, Risk, and Compliance (GRC)",
+      "C": "General Data Protection Regulation (GDPR)",
+      "D": "Local Security Authority Subsystem (LSASS)"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Quản trị, Rủi ro và Tuân thủ (GRC - Governance, Risk, and Compliance) là các quy trình hỗ trợ lập kế hoạch, triển khai các kiểm soát bảo mật, đồng thời đảm bảo tuân thủ cả chính sách nội bộ và các quy định pháp lý bên ngoài.",
+    "references": null
+  },
+  {
+    "id": 7,
+    "topic": 1,
+    "question": "Which two methods should the company do to measure their data availability? (Choose two.)",
+    "options": {
+      "A": "Monitor the uptime of their systems",
+      "B": "Calculate the total downtime",
+      "C": "Exclude the time during backup restore",
+      "D": "Calculate the mean time to report incident"
+    },
+    "answer": "AB",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đo lường tính sẵn sàng của dữ liệu (data availability), tổ chức cần giám sát thời gian hoạt động của hệ thống (uptime) và tính toán tổng thời gian ngừng hoạt động (downtime).",
+    "references": null
+  },
+  {
+    "id": 8,
+    "topic": 1,
+    "question": "An organization wants to ensure that its key applications have uninterrupted and reliable access to data.Which aspect of data protection should they prioritize?",
+    "options": {
+      "A": "Business Continuity",
+      "B": "Data Encryption",
+      "C": "Disaster Recovery",
+      "D": "Data Backup"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Đảm bảo hoạt động liên tục của doanh nghiệp (Business Continuity) tập trung vào việc duy trì khả năng truy cập dữ liệu không bị gián đoạn và đáng tin cậy cho các ứng dụng quan trọng trong suốt thời gian xảy ra sự cố.",
+    "references": null
+  },
+  {
+    "id": 9,
+    "topic": 1,
+    "question": "In a remote office branch office environment with limited storage space and network bandwidth, which deduplication method is most suitable?",
+    "options": {
+      "A": "Implement source-based deduplication to reduce data transfer.",
+      "B": "Perform post-process deduplication at the target.",
+      "C": "Apply inline deduplication at the backup device.",
+      "D": "Use target-based deduplication to minimize client CPU usage."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong môi trường văn phòng chi nhánh từ xa (ROBO) có băng thông mạng và không gian lưu trữ hạn chế, phương pháp chống trùng lặp tại nguồn (source-based deduplication) là tối ưu nhất vì nó giảm dung lượng dữ liệu cần truyền tải qua mạng WAN ngay từ đầu.",
+    "references": null
+  },
+  {
+    "id": 10,
+    "topic": 1,
+    "question": "A development team is looking to enhance the security of their Kubernetes applications.Which feature of container data protection should they focus on to ensure compliance?",
+    "options": {
+      "A": "Using shared namespaces for all applications",
+      "B": "Configuring security contexts to limit pod access",
+      "C": "Implementing container updates to restrict access",
+      "D": "Implementing reactive security audits of container infrastructure"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cấu hình ngữ cảnh bảo mật (Security Contexts) để giới hạn quyền truy cập của Pod trong Kubernetes giúp kiểm soát chặt chẽ đặc quyền của container, nâng cao tính bảo mật và đảm bảo tuân thủ các tiêu chuẩn an toàn.",
+    "references": null
+  },
+  {
+    "id": 11,
+    "topic": 1,
+    "question": "A critical virtual machine needs to be protected against the failure of its host physical server.Which technique provides immediate failover for the virtual machine in such a scenario?",
+    "options": {
+      "A": "Load balancing of virtual machine across multiple servers",
+      "B": "Virtual machine hardening",
+      "C": "Virtual machine live shadow copy",
+      "D": "Redundant hardware components within the virtual machine"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kỹ thuật bản sao bóng trực tiếp của máy ảo (VM live shadow copy hoặc Fault Tolerance) duy trì một máy ảo phụ chạy song song đồng bộ để thực hiện chuyển dự phòng (failover) ngay lập tức khi máy chủ vật lý chính bị lỗi.",
+    "references": null
+  },
+  {
+    "id": 12,
+    "topic": 1,
+    "question": "Which security control examines a data packet traversing a network and compares it to a set of filtering rules?",
+    "options": {
+      "A": "VPN",
+      "B": "Zoning",
+      "C": "LUN masking",
+      "D": "Firewall"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tường lửa (Firewall) là cơ chế kiểm soát bảo mật kiểm tra các gói tin đi qua mạng và so sánh chúng với các quy tắc lọc (filtering rules) được xác định trước để quyết định cho phép hay chặn.",
+    "references": null
+  },
+  {
+    "id": 13,
+    "topic": 1,
+    "question": "What happens when a small change is made to a file when using file-level deduplication?",
+    "options": {
+      "A": "The file is broken down into smaller segments",
+      "B": "Another copy of the file is created",
+      "C": "The original file is modified",
+      "D": "The file is stored as an object"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong chống trùng lặp mức độ tệp (file-level deduplication), toàn bộ tệp được coi là một thực thể duy nhất. Khi có bất kỳ thay đổi nhỏ nào xảy ra trên tệp, tệp gốc đó sẽ được cập nhật hoặc chỉnh sửa và lưu lại như một tệp mới hoàn toàn.",
+    "references": null
+  },
+  {
+    "id": 14,
+    "topic": 1,
+    "question": "A financial institution wants to archive sensitive customer data securely while utilizing both on-premises and cloud resources.What option should they implement?",
+    "options": {
+      "A": "Archive data entirely in the cloud",
+      "B": "Analyze data to determine sensitivity",
+      "C": "Employ hybrid archiving strategies",
+      "D": "Store backups on local servers"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Áp dụng chiến lược lưu trữ hỗn hợp (hybrid archiving) cho phép tổ chức tài chính kết hợp lưu trữ tại chỗ (on-premises) đối với dữ liệu cực kỳ nhạy cảm và lưu trữ đám mây để tận dụng tính linh hoạt và tối ưu chi phí.",
+    "references": null
+  },
+  {
+    "id": 15,
+    "topic": 1,
+    "question": "A storage system is configured with erasure coding, divided up into 10 data segments and 4 coding segments. Each segment is written to different drives.What is the maximum number of drive failures that can be withstood without losing the data in this configuration?",
+    "options": {
+      "A": "3",
+      "B": "4",
+      "C": "5",
+      "D": "6"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Với cấu hình Erasure Coding 10+4 (10 data, 4 coding segments), hệ thống có thể chịu được tối đa 4 ổ đĩa bị hỏng đồng thời mà không làm mất mát dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 16,
+    "topic": 1,
+    "question": "In a compute cluster environment, which mechanism helps to determine the health of each system in the cluster?",
+    "options": {
+      "A": "Time to live value",
+      "B": "Notifications",
+      "C": "Heartbeat signal",
+      "D": "Shared storage"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tín hiệu nhịp tim (Heartbeat signal) là cơ chế gửi định kỳ giữa các nút trong một cụm tính toán để kiểm tra trạng thái hoạt động và đảm bảo tính sẵn sàng của từng hệ thống.",
+    "references": null
+  },
+  {
+    "id": 17,
+    "topic": 1,
+    "question": "Which product provides long-term data retention for large-scale data?",
+    "options": {
+      "A": "Dell APEX AIOps Infrastructure Observability",
+      "B": "Dell Unity XT",
+      "C": "Dell NetWorker",
+      "D": "Dell PowerScale Archive"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dell PowerScale Archive là dòng sản phẩm lưu trữ được thiết kế chuyên dụng cho việc lưu trữ dữ liệu quy mô lớn và lưu giữ lâu dài (long-term data retention) với chi phí tối ưu.",
+    "references": null
+  },
+  {
+    "id": 18,
+    "topic": 1,
+    "question": "Which countermeasure is used to protect data against unauthorized access, deletion, modification, or disruption?",
+    "options": {
+      "A": "Data sovereignty",
+      "B": "Data locality",
+      "C": "Data governance",
+      "D": "Data security"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bảo mật dữ liệu (Data security) là tập hợp các biện pháp phòng vệ và kiểm soát được áp dụng nhằm bảo vệ dữ liệu khỏi các hành vi truy cập, xóa, sửa đổi hoặc phá hoại trái phép.",
+    "references": null
+  },
+  {
+    "id": 19,
+    "topic": 1,
+    "question": "An IT manager needs to create an inventory of infrastructure components.Which feature of the discovery tool should be utilized?",
+    "options": {
+      "A": "Track the availability and utilization of components",
+      "B": "Generate a list of configuration and connectivity details",
+      "C": "Identify physical-to-virtual dependencies",
+      "D": "Monitor the performance and capacity of component"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tính năng phát hiện (discovery tool) thu thập cấu hình và chi tiết kết nối (configuration and connectivity details) của các thành phần phần cứng và phần mềm để tạo lập danh mục tài sản hạ tầng CNTT.",
+    "references": null
+  },
+  {
+    "id": 20,
+    "topic": 1,
+    "question": "What is the advantage of using the highest storage tier in a data center environment?",
+    "options": {
+      "A": "Reduction in storage write latency",
+      "B": "Ability to replicate data in real-time",
+      "C": "Improvement in application performance",
+      "D": "Reduction in storage cost"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tầng lưu trữ cao nhất (như ổ SSD/NVMe tốc độ cao) giúp cải thiện hiệu suất ứng dụng (application performance) nhờ tốc độ đọc/ghi dữ liệu vượt trội.",
+    "references": null
+  },
+  {
+    "id": 21,
+    "topic": 1,
+    "question": "A cybersecurity team is tasked with identifying potential security threats.What should they monitor in their data protection environment?",
+    "options": {
+      "A": "Configure multiple network ports",
+      "B": "Reduce the number of personnel with access",
+      "C": "Focus on user activity logs",
+      "D": "Track unauthorized access attempts"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Theo dõi các nỗ lực truy cập trái phép (unauthorized access attempts) là hoạt động then chốt giúp đội ngũ an ninh mạng phát hiện sớm các dấu hiệu tấn công và đe dọa bảo mật.",
+    "references": null
+  },
+  {
+    "id": 22,
+    "topic": 1,
+    "question": "What is the primary benefit of data deduplication for organizations with extensive backup data?",
+    "options": {
+      "A": "Extends the backup window duration",
+      "B": "Requires data retention to be increased",
+      "C": "Minimizes infrastructure requirements",
+      "D": "Increases the frequency of full backups"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lợi ích cốt lõi của chống trùng lặp dữ liệu (data deduplication) đối với hoạt động sao lưu là giảm dung lượng lưu trữ vật lý cần thiết, từ đó giảm thiểu yêu cầu về mặt hạ tầng (infrastructure requirements).",
+    "references": null
+  },
+  {
+    "id": 23,
+    "topic": 1,
+    "question": "What tactic might an attacker use to gain unauthorized access to an organization's primary storage?",
+    "options": {
+      "A": "Ensure full user compliance with security training",
+      "B": "Regularly monitor storage access logs",
+      "C": "Bypass access control measures",
+      "D": "Utilize strong physical security measures"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kẻ tấn công có thể cố gắng vượt qua các biện pháp kiểm soát truy cập (Bypass access control measures) thông qua các lỗ hổng hệ thống hoặc rò rỉ tài khoản để truy cập trái phép vào kho lưu trữ chính.",
+    "references": null
+  },
+  {
+    "id": 24,
+    "topic": 1,
+    "question": "An organization needs to improve the performance of its virtual machines (VMs) during peak hours.Which action should be taken?",
+    "options": {
+      "A": "Add new VMs or allocate more resources to the existing VMs",
+      "B": "Change storage tiering and cache configuration to optimize access",
+      "C": "Increase the number of network ports of VMs",
+      "D": "Reduce the storage size of the VM"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để cải thiện hiệu suất máy ảo (VM) vào giờ cao điểm, giải pháp trực tiếp là tăng số lượng máy ảo hoặc phân bổ thêm tài nguyên (vCPU, RAM) cho các máy ảo hiện tại.",
+    "references": null
+  },
+  {
+    "id": 25,
+    "topic": 1,
+    "question": "A company wants to limit the impact of a failure in one part of their system, preventing it from affecting other unrelated components.Which key requirement of fault tolerance helps contain the effects of failures and prevent them from spreading?",
+    "options": {
+      "A": "Load Balancing",
+      "B": "Redundancy Implementation",
+      "C": "Fault Isolation",
+      "D": "Fault Recovery",
+      "E": "Elimination of Single Points of Failure"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cô lập lỗi (Fault Isolation) là một yêu cầu quan trọng trong thiết kế chịu lỗi, giúp giới hạn phạm vi ảnh hưởng của sự cố tại một khu vực nhất định và ngăn ngừa nó lan sang các thành phần khác.",
+    "references": null
+  },
+  {
+    "id": 26,
+    "topic": 1,
+    "question": "A company is experiencing operational complexity due to the use of multiple data protection vendors.What is the most effective way to simplify their operations?",
+    "options": {
+      "A": "Outsource data protection to multiple channel partners",
+      "B": "Increase the number of IT management and monitoring tools",
+      "C": "Train staff to manage multiple vendors more efficiently",
+      "D": "Consolidate to a single cloud-based data protection vendor"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hợp nhất việc bảo vệ dữ liệu về một nhà cung cấp duy nhất dựa trên đám mây (Consolidate to a single cloud-based data protection vendor) là giải pháp hiệu quả nhất để giảm bớt sự phức tạp và tối ưu hóa quản lý vận hành.",
+    "references": null
+  },
+  {
+    "id": 27,
+    "topic": 1,
+    "question": "What is the purpose of the discovery function in data protection management?",
+    "options": {
+      "A": "Classify, organize, and investigate all related incidents",
+      "B": "Standardize on-going data protection operations, and assess the potential risks",
+      "C": "Detect potential security attacks, and recommend appropriate solutions",
+      "D": "Create an inventory of protected components, and provide information about them"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chức năng phát hiện (discovery) trong quản lý bảo vệ dữ liệu có vai trò quét toàn bộ hệ thống để tự động lập danh mục các thành phần cần bảo vệ và cung cấp thông tin chi tiết về chúng.",
+    "references": null
+  },
+  {
+    "id": 28,
+    "topic": 1,
+    "question": "A major breach has highlighted weaknesses in an organization's problem management approach.What immediately necessary step should they take?",
+    "options": {
+      "A": "Investigate the root causes of recent incidents",
+      "B": "Focus only on resolving ongoing issues",
+      "C": "Refer to the documentation on current incidents",
+      "D": "Inform the law enforcement immediately"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi quy trình quản lý vấn đề gặp điểm yếu, bước đi cấp thiết ngay lập tức là điều tra nguyên nhân gốc rễ (root causes) của các sự cố gần đây để đưa ra giải pháp khắc phục triệt để.",
+    "references": null
+  },
+  {
+    "id": 29,
+    "topic": 1,
+    "question": "What type of recovery restores small numbers of files if they have been accidentally deleted or corrupted?",
+    "options": {
+      "A": "Operational Recovery",
+      "B": "Full VM Recovery",
+      "C": "Disaster Recovery",
+      "D": "Cloud Disaster Recovery"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phục hồi vận hành (Operational Recovery) là kiểu phục hồi dùng để khôi phục một lượng nhỏ tệp tin bị xóa nhầm hoặc hỏng hóc trong các sự cố nhỏ hàng ngày.",
+    "references": null
+  },
+  {
+    "id": 30,
+    "topic": 1,
+    "question": "A company wants to distribute incoming web traffic across multiple servers to prevent overload and ensure high availability of their website.Which technique would best achieve this goal?",
+    "options": {
+      "A": "Each server with redundant hardware",
+      "B": "NIC teaming",
+      "C": "Compute clustering",
+      "D": "Caching enabled on each server"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phân cụm tính toán (Compute clustering) liên kết nhiều máy chủ hoạt động cùng nhau để xử lý tải công việc chung, phân phối lưu lượng truy cập và đảm bảo tính sẵn sàng cao khi có máy chủ bị quá tải.",
+    "references": null
+  },
+  {
+    "id": 31,
+    "topic": 1,
+    "question": "Which product is a complete on-premises solution that protects their critical data against the increasing threat of security attacks and ransomware?",
+    "options": {
+      "A": "Dell ObjectScale",
+      "B": "Dell PowerFlex",
+      "C": "Dell APEX Cyber Recovery Services",
+      "D": "Dell APEX AIOps Infrastructure Observability"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Dell APEX Cyber Recovery Services cung cấp giải pháp bảo vệ và khôi phục dữ liệu an toàn tại chỗ (on-premises), bảo vệ các dữ liệu quan trọng chống lại ransomware và các cuộc tấn công mạng.",
+    "references": null
+  },
+  {
+    "id": 32,
+    "topic": 1,
+    "question": "A storage administrator wants to protect the data on a remote site with Zero RPO.Which replication mode can achieve this?",
+    "options": {
+      "A": "Clone",
+      "B": "Pointer-based",
+      "C": "Synchronous",
+      "D": "Asynchronous"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chế độ sao chép đồng bộ (Synchronous replication) đảm bảo dữ liệu ghi thành công trên cả hai trang web cùng lúc, từ đó đạt được chỉ số RPO bằng 0 (không mất dữ liệu).",
+    "references": null
+  },
+  {
+    "id": 33,
+    "topic": 1,
+    "question": "An organization needs to manage inactive data that is not regularly accessed but must be retained.Which approach should they adopt to efficiently archive data while reducing costs?",
+    "options": {
+      "A": "Use cloud-based data archiving",
+      "B": "Archive data only on-premises",
+      "C": "Store data in multiple formats",
+      "D": "Remove inactive data completely"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng lưu trữ lưu trữ đám mây (cloud-based data archiving) là giải pháp hiệu quả giúp giảm chi phí lưu trữ vật lý tại chỗ đối với dữ liệu ít truy cập nhưng cần lưu giữ lâu dài.",
+    "references": null
+  },
+  {
+    "id": 34,
+    "topic": 1,
+    "question": "A government agency needs to retain historical records for compliance and audit purposes. These records are rarely accessed but must be preserved for many years.Which solution is the most cost effective for storing this type of data?",
+    "options": {
+      "A": "Frequent data backups to the cloud",
+      "B": "Data replication to a hot standby site",
+      "C": "Data archiving to a low-cost storage medium",
+      "D": "Implementing a fault tolerant server cluster"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lưu trữ dữ liệu vào các phương tiện lưu trữ giá rẻ (như băng từ hoặc lưu trữ đám mây dạng lạnh) là giải pháp tiết kiệm chi phí nhất để bảo quản hồ sơ lịch sử ít khi dùng tới.",
+    "references": null
+  },
+  {
+    "id": 35,
+    "topic": 1,
+    "question": "A company intends to implement a comprehensive monitoring strategy for its data protection infrastructure.What should be their first step?",
+    "options": {
+      "A": "Integrate third-party applications",
+      "B": "Define monitoring parameters clearly",
+      "C": "Focus on monitoring critical applications",
+      "D": "Begin with performance reviews"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bước đầu tiên khi lập chiến lược giám sát hạ tầng bảo vệ dữ liệu là phải xác định rõ ràng các tham số giám sát (monitoring parameters) để biết chính xác những gì cần đo lường.",
+    "references": null
+  },
+  {
+    "id": 36,
+    "topic": 1,
+    "question": "A data center requires protection against two simultaneous disk failures.Which RAID level provides this protection?",
+    "options": {
+      "A": "Use RAID 1",
+      "B": "Use RAID 0",
+      "C": "Use RAID 6",
+      "D": "Use RAID 5"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "RAID 6 sử dụng kỹ thuật phân bổ mã lỗi kép (dual parity), cung cấp khả năng bảo vệ dữ liệu chống lại sự cố hỏng hóc đồng thời của 2 ổ đĩa.",
+    "references": null
+  },
+  {
+    "id": 37,
+    "topic": 1,
+    "question": "A backup solution is required that integrates primary storage and backup devices, eliminating the impact on applications.Which backup approach meets this requirement?",
+    "options": {
+      "A": "Direct Primary Storage backup",
+      "B": "Agent-based backup",
+      "C": "NDMP-based backup",
+      "D": "Image-based backup"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao lưu dựa trên NDMP (Network Data Management Protocol) tích hợp trực tiếp NAS với thiết bị sao lưu, truyền dữ liệu trực tiếp giúp loại bỏ gánh nặng tài nguyên lên các máy chủ ứng dụng.",
+    "references": null
+  },
+  {
+    "id": 38,
+    "topic": 1,
+    "question": "Which statement is true about CDP?",
+    "options": {
+      "A": "Provides capability to restore data to only one point in time",
+      "B": "Supports only remote replication for operational and disaster recovery",
+      "C": "Supports capability to replicate data only across one type of storage system",
+      "D": "Provides capability to restore data to any previous point in time"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "CDP (Bảo vệ dữ liệu liên tục) ghi lại mọi thay đổi dữ liệu theo thời gian thực, cho phép khôi phục dữ liệu về bất kỳ thời điểm nào trong quá khứ (any previous point in time).",
+    "references": null
+  },
+  {
+    "id": 39,
+    "topic": 1,
+    "question": "Your organization is backing up data to a backup infrastructure in a cloud environment using a cloud backup agent.Which backup service type is referred?",
+    "options": {
+      "A": "Local backup service",
+      "B": "Remote backup service",
+      "C": "Replicated backup service",
+      "D": "Cloud-to-cloud backup"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi thực hiện sao lưu dữ liệu từ hạ tầng cục bộ lên đám mây thông qua tác nhân sao lưu đám mây, dịch vụ này được gọi là Dịch vụ sao lưu từ xa (Remote backup service).",
+    "references": null
+  },
+  {
+    "id": 40,
+    "topic": 1,
+    "question": "A software company wants to ensure that their application remains available in outages in one of their data centers.Which process should they implement to support continuous data availability?",
+    "options": {
+      "A": "Implement synchronous remote replication",
+      "B": "Review storage capacity",
+      "C": "Document outage recovery plans",
+      "D": "Initiate periodic backups"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Triển khai sao lưu từ xa đồng bộ (Synchronous remote replication) đảm bảo dữ liệu tại cả hai trung tâm dữ liệu luôn khớp nhau theo thời gian thực, duy trì hoạt động của ứng dụng khi một trung tâm gặp sự cố.",
+    "references": null
+  },
+  {
+    "id": 41,
+    "topic": 1,
+    "question": "A company faces data unavailability due to power outages.How can the company ensure data availability during power outages?",
+    "options": {
+      "A": "Implement load shedding strategies",
+      "B": "Optimize data center energy efficiency",
+      "C": "Install uninterruptible power supplies (UPS)",
+      "D": "Install input power conditioning systems"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lắp đặt nguồn điện dự phòng không ngắt quãng (UPS) cung cấp năng lượng tạm thời đủ để hệ thống duy trì hoạt động liên tục hoặc tắt máy an toàn khi mất điện lưới.",
+    "references": null
+  },
+  {
+    "id": 42,
+    "topic": 1,
+    "question": "Which refers to the process of moving a backup from one storage device to another, then removing the original backup?",
+    "options": {
+      "A": "Staging",
+      "B": "Cloning",
+      "C": "Multiplexing",
+      "D": "Copying"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Staging (sao lưu chuyển tiếp) là quá trình sao lưu dữ liệu tạm thời lên một thiết bị lưu trữ trung gian tốc độ cao, sau đó di chuyển sang thiết bị đích dài hạn và giải phóng không gian lưu trữ ban đầu.",
+    "references": null
+  },
+  {
+    "id": 43,
+    "topic": 1,
+    "question": "Which is a benefit of asynchronous replication?",
+    "options": {
+      "A": "Has near zero RPO",
+      "B": "Uses less WAN bandwidth",
+      "C": "Has low impact on application's response time",
+      "D": "Provides instant recovery from remote site"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao chép không đồng bộ (Asynchronous replication) xác nhận việc ghi dữ liệu ngay khi lưu xong ở cục bộ mà không đợi phản hồi từ xa, do đó ít ảnh hưởng đến thời gian phản hồi (latency) của ứng dụng.",
+    "references": null
+  },
+  {
+    "id": 44,
+    "topic": 1,
+    "question": "Which remote replication method signals a write complete to the compute host before a write is committed to replica?",
+    "options": {
+      "A": "Clone",
+      "B": "Snapshot",
+      "C": "Synchronous",
+      "D": "Asynchronous"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Phương pháp sao chép không đồng bộ (Asynchronous) gửi tín hiệu hoàn thành ghi dữ liệu tới máy chủ tính toán trước khi dữ liệu đó thực sự được đồng bộ xong sang bản sao lưu ở xa.",
+    "references": null
+  },
+  {
+    "id": 45,
+    "topic": 1,
+    "question": "During a SAN-based backup, what is the primary advantage of using Fiber Channel (FC) for data movement?",
+    "options": {
+      "A": "Improves backup and restore performance",
+      "B": "Simplifies the backup configuration process",
+      "C": "Reduces the cost of backup operations",
+      "D": "Improves the performance of the backup device"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng mạng lưu trữ cáp quang (Fibre Channel SAN) cung cấp băng thông truyền tải tốc độ cao chuyên dụng, giúp tăng cường hiệu suất sao lưu và khôi phục đáng kể.",
+    "references": null
+  },
+  {
+    "id": 46,
+    "topic": 1,
+    "question": "A microservice-based application experiences transient faults due to network instability.What is the best practice for handling these transient faults?",
+    "options": {
+      "A": "Switching to a different network provider",
+      "B": "Implementing retry logic with exponential backoff",
+      "C": "Logging the faults and alerting the support team",
+      "D": "Increasing the timeout period for requests"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Triển khai cơ chế thử lại với thời gian chờ tăng dần (retry logic with exponential backoff) giúp ứng dụng vượt qua các sự cố mạng tạm thời một cách thông minh mà không làm quá tải hệ thống.",
+    "references": null
+  },
+  {
+    "id": 47,
+    "topic": 1,
+    "question": "An attacker gains unauthorized access to the management application of a data protection environment.What is the most likely consequence of this breach?",
+    "options": {
+      "A": "Modifying system configurations to disrupt protection operations",
+      "B": "Installing firewall to monitor all activities within the management application",
+      "C": "Modifying the source code of the management application to disrupt operations",
+      "D": "Moving data from backup to archive using the management application"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi truy cập trái phép vào ứng dụng quản lý bảo vệ dữ liệu, kẻ tấn công có quyền thay đổi các cấu hình hệ thống nhằm vô hiệu hóa hoặc làm gián đoạn toàn bộ hoạt động sao lưu.",
+    "references": null
+  },
+  {
+    "id": 48,
+    "topic": 1,
+    "question": "What solution should you implement to allow consumers to backup cloud-hosted applications data to another cloud?",
+    "options": {
+      "A": "Verify data in the original cloud",
+      "B": "Initiate automatic backup processes",
+      "C": "Keep track of data updates",
+      "D": "Analyze backup schedules regularly"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khởi động các quy trình sao lưu tự động (Initiate automatic backup processes) giữa các môi trường đám mây cho phép chuyển và lưu trữ dữ liệu ứng dụng sang một nhà cung cấp đám mây độc lập khác một cách an toàn.",
+    "references": null
+  },
+  {
+    "id": 49,
+    "topic": 1,
+    "question": "An IT manager is tasked with ensuring business continuity in the event of a natural disaster.Which practice should they implement to protect the organization’s data?",
+    "options": {
+      "A": "Restricting access on all types of data",
+      "B": "Keeping all data onsite using encryption",
+      "C": "Storing a copy of data in a remote site",
+      "D": "Using data archives for all data"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lưu trữ một bản sao dữ liệu tại vị trí từ xa (offsite/remote site) là nguyên tắc cốt lõi giúp bảo vệ dữ liệu trước thiên tai gây hư hại vật lý cho trung tâm dữ liệu chính.",
+    "references": null
+  },
+  {
+    "id": 50,
+    "topic": 1,
+    "question": "A startup's data protection strategy emphasizes the importance of constant evaluation.What should they regularly assess to improve their infrastructure?",
+    "options": {
+      "A": "Configuration and connectivity of components",
+      "B": "Vendor performance reviews",
+      "C": "Trends in popular technologies",
+      "D": "Employee knowledge of basic IT protocols"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Thường xuyên đánh giá cấu hình và kết nối của các thành phần hạ tầng (Configuration and connectivity of components) giúp phát hiện sớm các cấu hình sai lệch, rủi ro bảo mật hoặc nghẽn mạng.",
+    "references": null
+  },
+  {
+    "id": 51,
+    "topic": 1,
+    "question": "A data center needs to ensure continuous availability of its services during hardware maintenance.Which availability management activity is most appropriate?",
+    "options": {
+      "A": "Implement data archiving solution",
+      "B": "Deploy redundant, fault-tolerant, and hot-swappable components",
+      "C": "Establish guidelines based on defined availability levels",
+      "D": "Monitor availability of protection components and services"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Triển khai các thành phần phần cứng dự phòng, chịu lỗi và có thể cắm nóng (hot-swappable) cho phép kỹ sư thay thế thiết bị hỏng mà không cần tắt nguồn hay làm gián đoạn dịch vụ.",
+    "references": null
+  },
+  {
+    "id": 52,
+    "topic": 1,
+    "question": "A company discovers that a recent software update from a third-party vendor has introduced malware into their system. The malware has compromised several internal applications.What should the company do to address this supply chain attack?",
+    "options": {
+      "A": "Continue using the software while monitoring for further issues",
+      "B": "Isolate the affected systems and notify the vendor immediately",
+      "C": "Uninstall the software and switch to a different vendor",
+      "D": "Scan the systems with anti-malware application"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi gặp sự cố tấn công chuỗi cung ứng, hành động khẩn cấp là cô lập các hệ thống bị ảnh hưởng (isolate systems) nhằm ngăn chặn mã độc lây lan rộng hơn, đồng thời thông báo ngay cho nhà cung cấp phần mềm.",
+    "references": null
+  },
+  {
+    "id": 53,
+    "topic": 1,
+    "question": "An organization has decided to fully transition its inactive data management to the cloud.What type of archiving should they choose to ensure complete cloud integration?",
+    "options": {
+      "A": "Utilize distributed storage options",
+      "B": "Adopt cloud-only archiving practices",
+      "C": "Initiate partial cloud archiving",
+      "D": "Archive data on physical disks"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi quyết định chuyển đổi hoàn toàn việc quản lý dữ liệu lưu trữ không hoạt động lên đám mây, tổ chức nên áp dụng các giải pháp lưu trữ đám mây thuần túy (cloud-only archiving).",
+    "references": null
+  },
+  {
+    "id": 54,
+    "topic": 1,
+    "question": "Repeated incidents of data corruption have been reported.What is the primary focus of problem management in this scenario?",
+    "options": {
+      "A": "Detect and record all incidents in the data protection environment",
+      "B": "Provide immediate solutions to resolve the incidents",
+      "C": "Identify the underlying root cause that creates the problem",
+      "D": "Monitor the availability of protection components and services"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trọng tâm của quy trình quản lý vấn đề (Problem management) khi có nhiều sự cố lặp lại là tìm ra nguyên nhân gốc rễ (root cause) gây ra lỗi dữ liệu để loại bỏ nó vĩnh viễn.",
+    "references": null
+  },
+  {
+    "id": 55,
+    "topic": 1,
+    "question": "What data protection principle is compromised if the network connection at the datacenter is damaged during a storm, with no data in transit?",
+    "options": {
+      "A": "Data integrity",
+      "B": "Data availability",
+      "C": "Data confidentiality",
+      "D": "Data security"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi kết nối mạng của trung tâm dữ liệu bị hỏng trong một cơn bão, người dùng không thể truy cập vào dữ liệu của họ, điều này vi phạm nguyên tắc tính sẵn sàng của dữ liệu (Data availability).",
+    "references": null
+  },
+  {
+    "id": 56,
+    "topic": 1,
+    "question": "An application server crashes, but a new server instance can resume processing using data from a centralized repository.What design principle does this scenario illustrate?",
+    "options": {
+      "A": "Graceful Degradation",
+      "B": "Database Rollback",
+      "C": "Stateless Design",
+      "D": "Circuit Breakers"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng các giải pháp bảo vệ dữ liệu dựa trên đám mây giúp tinh giản hóa và tự động hóa quy trình vận hành, mang lại lợi ích quản lý đơn giản hơn (Simplified management).",
+    "references": null
+  },
+  {
+    "id": 57,
+    "topic": 1,
+    "question": "What is a result of using cloud-based data protection?",
+    "options": {
+      "A": "Increased САРЕХ",
+      "B": "Recover data only to on-premise",
+      "C": "Limited scalability",
+      "D": "Simplified management"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sử dụng các giải pháp bảo vệ dữ liệu dựa trên đám mây giúp tinh giản hóa và tự động hóa quy trình vận hành, mang lại lợi ích quản lý đơn giản hơn (Simplified management).",
+    "references": null
+  },
+  {
+    "id": 58,
+    "topic": 1,
+    "question": "A data center experiences a sudden switch failure.What should the incident management team do immediately?",
+    "options": {
+      "A": "Ignore the incident if it seems minor",
+      "B": "Review the switch logs",
+      "C": "Delay any action until the next scheduled meeting",
+      "D": "Instantly replace the switch immediately",
+      "E": "Detect and record the incident"
+    },
+    "answer": "E",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong quy trình quản trị dịch vụ CNTT, hành động đầu tiên của đội quản lý sự cố là phát hiện và ghi nhận sự cố (Detect and record the incident) vào hệ thống để theo dõi và xử lý.",
+    "references": null
+  },
+  {
+    "id": 59,
+    "topic": 1,
+    "question": "A company wants to improve the performance of their application by distributing user requests across multiple servers.Which solution can help achieve this goal?",
+    "options": {
+      "A": "Data replication to create multiple copies of the application data",
+      "B": "Implementing a circuit breaker pattern in the application code",
+      "C": "Storing all application data on a single, high-capacity server",
+      "D": "Data archiving of old user data from multiple servers"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao chép dữ liệu (Data replication) tạo ra nhiều bản sao dữ liệu ứng dụng trên các máy chủ khác nhau, hỗ trợ phân phối yêu cầu của người dùng nhằm tăng tốc độ xử lý và cải thiện hiệu suất.",
+    "references": null
+  },
+  {
+    "id": 60,
+    "topic": 1,
+    "question": "What is the primary purpose of data deduplication in a data center environment?",
+    "options": {
+      "A": "Increases the speed of data backups.",
+      "B": "Simplifies the backup configuration process.",
+      "C": "Reduces storage requirements.",
+      "D": "Enhances the security of backup data."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mục đích cốt lõi của công nghệ chống trùng lặp dữ liệu (data deduplication) là loại bỏ các khối dữ liệu thừa trùng lặp, từ đó giảm tối đa dung lượng lưu trữ cần thiết.",
+    "references": null
+  },
+  {
+    "id": 61,
+    "topic": 1,
+    "question": "A company needs to dynamically distribute application I/O traffic and detect unhealthy VM instances.Which technique should they implement?",
+    "options": {
+      "A": "Implement link aggregation",
+      "B": "Enable multipathing software",
+      "C": "Use elastic load balancing",
+      "D": "Configure NIC teaming"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cân bằng tải linh hoạt (Elastic load balancing) tự động phân phối lưu lượng truy cập ứng dụng tới nhiều máy chủ đích và liên tục kiểm tra sức khỏe của các máy ảo để phát hiện và cô lập các thực thể bị lỗi.",
+    "references": null
+  },
+  {
+    "id": 62,
+    "topic": 1,
+    "question": "Using a new storage system with multiple disk drives, you want to ensure data protection against drive failures while also improving read/write performance.Which storage fault tolerance technique best meets these requirements?",
+    "options": {
+      "A": "Redundant Array of Independent Disks",
+      "B": "Content Delivery Networks",
+      "C": "High availability cluster",
+      "D": "Cold spare"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "RAID (Mảng ổ đĩa dự phòng) là giải pháp kết hợp nhiều ổ cứng vật lý thành một đơn vị logic để vừa bảo vệ dữ liệu chống lại sự cố hỏng ổ đĩa vừa tăng cường tốc độ đọc/ghi dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 63,
+    "topic": 1,
+    "question": "After gaining access to the management application, an attacker attempts to delete resource configurations.What security measure could have prevented this action?",
+    "options": {
+      "A": "Enhancing the user interface security",
+      "B": "Using multi-factor authentication for all users",
+      "C": "Increasing the frequency of security audits",
+      "D": "Implementing role-based access controls"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Kiểm soát truy cập dựa trên vai trò (Role-based access controls - RBAC) giới hạn quyền hạn của từng tài khoản, đảm bảo rằng một tài khoản thông thường nếu bị đánh cắp cũng không thể thực hiện các thao tác quản trị nguy hiểm như xóa cấu hình tài nguyên.",
+    "references": null
+  },
+  {
+    "id": 64,
+    "topic": 1,
+    "question": "What are two network-based fault tolerance techniques?",
+    "options": {
+      "A": "Multipathing and NIC isolation",
+      "B": "Traffic shaping and VLAN configuration",
+      "C": "VLAN configuration and NIC isolation",
+      "D": "NIC teaming and switch aggregation"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "NIC teaming (nhóm các card mạng vật lý) và switch aggregation (gộp liên kết các bộ chuyển mạch) là hai kỹ thuật chịu lỗi ở cấp độ mạng giúp duy trì kết nối khi có sự cố trên cáp hoặc thiết bị mạng.",
+    "references": null
+  },
+  {
+    "id": 65,
+    "topic": 1,
+    "question": "Which router in the Virtual Router Redundancy Protocol (VRRP) group is elected as the primary router?",
+    "options": {
+      "A": "The first router in the VRRP group",
+      "B": "The router with the highest priority",
+      "C": "The router with the highest bandwidth link",
+      "D": "The router with the most active connections"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong giao thức VRRP (Virtual Router Redundancy Protocol), bộ định tuyến có độ ưu tiên cao nhất (highest priority) trong nhóm sẽ được bầu làm bộ định tuyến chính (primary/master) để điều phối lưu lượng.",
+    "references": null
+  },
+  {
+    "id": 66,
+    "topic": 1,
+    "question": "An organization is implementing multicloud backups to meet governance and compliance requirements.What is a crucial advantage of utilizing such a strategy?",
+    "options": {
+      "A": "Provides a remote site for data protection",
+      "B": "Reduces the need for data audits",
+      "C": "Minimizes the number of cloud vendors",
+      "D": "Simplifies regulatory documentation"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lợi thế lớn nhất của chiến lược sao lưu đa đám mây (multicloud backups) là cung cấp các vị trí lưu trữ từ xa độc lập, giảm thiểu rủi ro khi một nhà cung cấp đám mây gặp sự cố nghiêm trọng.",
+    "references": null
+  },
+  {
+    "id": 67,
+    "topic": 1,
+    "question": "A company needs to protect data generated by virtual machines and containers.Which component of the data protection architecture encompasses all these elements that require protection?",
+    "options": {
+      "A": "Data security",
+      "B": "Data sources",
+      "C": "Data management",
+      "D": "Data Storage"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong kiến trúc bảo vệ dữ liệu, Nguồn dữ liệu (Data sources) là thuật ngữ bao hàm tất cả các thực thể phát sinh hoặc lưu trữ dữ liệu cần bảo vệ, bao gồm cả máy ảo và container.",
+    "references": null
+  },
+  {
+    "id": 68,
+    "topic": 1,
+    "question": "A data center needs to find information about a failed storage controller.What action should the administrators take to facilitate this?",
+    "options": {
+      "A": "Review alerts generated from the system",
+      "B": "Backup the hardware configuration of the storage controller",
+      "C": "Restore the snapshot from the backup",
+      "D": "Review hardware configuration of the storage controller"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác định nguyên nhân và thông tin chi tiết về sự cố hỏng bộ điều khiển lưu trữ, quản trị viên cần kiểm tra các cảnh báo (alerts) do hệ thống tự động ghi nhận tại thời điểm xảy ra lỗi.",
+    "references": null
+  },
+  {
+    "id": 69,
+    "topic": 1,
+    "question": "A retail company needs to ensure their application can continue to operate during partial system outages.Which design principle should they adopt?",
+    "options": {
+      "A": "Configure multiple availability zones",
+      "B": "Implement stateless design",
+      "C": "Use microservices architecture",
+      "D": "Use synchronous replication"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cấu hình ứng dụng chạy trên nhiều vùng sẵn sàng (multiple availability zones) đảm bảo rằng nếu một vùng bị mất điện hoặc gặp sự cố, các vùng còn lại vẫn duy trì hoạt động bình thường của ứng dụng.",
+    "references": null
+  },
+  {
+    "id": 70,
+    "topic": 1,
+    "question": "A company is concerned about the risk of a fire or flood damaging their on-site backup data. They need a solution to protect their backups from such local disasters.What is the most effective way for the company to protect their backup data from local disasters?",
+    "options": {
+      "A": "Store backup data at a remote site or in the cloud",
+      "B": "Store backup data on the same storage device as the original data",
+      "C": "Archive all backup data immediately",
+      "D": "Backup to another Storage in the same location",
+      "E": "Only keep backup data on local servers for easy access"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lưu trữ dữ liệu sao lưu ở một địa điểm vật lý khác hoặc đưa lên đám mây (remote site/cloud) là cách bảo vệ dữ liệu an toàn nhất trước các thảm họa tự nhiên như hỏa hoạn, lũ lụt tại văn phòng chính.",
+    "references": null
+  },
+  {
+    "id": 71,
+    "topic": 1,
+    "question": "An organization aims to achieve business objectives reliably while addressing fairness.What should the organization focus on? (Choose all that apply.)",
+    "options": {
+      "A": "Conduct regular compliance audits",
+      "B": "Use frameworks for resource optimization",
+      "C": "Develop a risk management framework",
+      "D": "Perform on-going IT management activities",
+      "E": "Implement GRC processes"
+    },
+    "answer": "CE",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để đạt được mục tiêu kinh doanh một cách đáng tin cậy và đảm bảo tính công bằng, tổ chức cần tập trung vào việc xây dựng khung quản lý rủi ro (Risk management framework) và triển khai các quy trình quản lý GRC.",
+    "references": null
+  },
+  {
+    "id": 72,
+    "topic": 1,
+    "question": "A high-end network switch is experiencing intermittent power outages. Upon investigation, it is determined that one of the power supply units has failed.Given that the switch has hot-swappable components, what is the most likely outcome of the power supply failure?",
+    "options": {
+      "A": "Manual intervention in replacing the failed power supply",
+      "B": "Automatic failover to a redundant power supply",
+      "C": "System performance degradation but no shutdown",
+      "D": "Immediate high-end switch shutdown"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Với các thiết bị mạng cao cấp hỗ trợ cắm nóng và dự phòng nguồn, khi một bộ cấp nguồn (PSU) bị hỏng, hệ thống sẽ tự động chuyển đổi sang bộ cấp nguồn dự phòng (Automatic failover) mà không gây tắt máy.",
+    "references": null
+  },
+  {
+    "id": 73,
+    "topic": 1,
+    "question": "In a NAS environment, what is the role of NDMP data server component during backup?",
+    "options": {
+      "A": "Reads data from the NAS systems storage",
+      "B": "Instructs the NAS system to start the backup",
+      "C": "Encrypts the data to be backed up",
+      "D": "Schedules the backup and retains the information"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong kiến trúc NDMP, máy chủ dữ liệu NDMP (NDMP data server) có nhiệm vụ đọc dữ liệu trực tiếp từ hệ thống lưu trữ NAS và chuyển nó đến thiết bị sao lưu.",
+    "references": null
+  },
+  {
+    "id": 74,
+    "topic": 1,
+    "question": "A company is experiencing performance issues with their application servers during backup operations. The backup process consumes significant system resources, impacting the application's responsiveness.What is a potential drawback of the backup approach being used in this scenario?",
+    "options": {
+      "A": "It uses a network-based protocol for backups.",
+      "B": "It employs image-based backups for virtual machines.",
+      "C": "It backs up data directly from primary storage.",
+      "D": "It utilizes an agent installed on the application servers."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Điểm yếu của phương pháp sao lưu dựa trên tác nhân (agent-based backup) là tác nhân cài đặt trực tiếp trên máy chủ ứng dụng sẽ tiêu thụ tài nguyên phần cứng (CPU, RAM, I/O) khi thực hiện sao lưu, làm giảm hiệu năng của ứng dụng chính.",
+    "references": null
+  },
+  {
+    "id": 75,
+    "topic": 1,
+    "question": "What type of security control is the swipe card system primarily classified as?",
+    "options": {
+      "A": "Deterrent control",
+      "B": "Preventive control",
+      "C": "Corrective control",
+      "D": "Detective control"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hệ thống quẹt thẻ ra vào cửa (swipe card system) ngăn chặn trực tiếp những người không có thẩm quyền đi vào khu vực hạn chế, do đó được xếp vào nhóm kiểm soát phòng ngừa (Preventive control).",
+    "references": null
+  },
+  {
+    "id": 76,
+    "topic": 1,
+    "question": "A hypervisor vulnerability has been identified, which could expose user data in a critical business application.What is a crucial immediate action for the IT team?",
+    "options": {
+      "A": "Perform vulnerability assessment",
+      "B": "Shut down the hypervisor",
+      "C": "Apply necessary security patches",
+      "D": "Update the risk register with identified risk"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi phát hiện một lỗ hổng bảo mật đã biết trên hypervisor, hành động trực tiếp và khẩn cấp nhất là áp dụng ngay bản vá bảo mật (security patches) để vá lỗ hổng đó.",
+    "references": null
+  },
+  {
+    "id": 77,
+    "topic": 1,
+    "question": "A company is selecting a storage solution to store their backup data and replicas. They need a solution that can protect against data loss due to disk failures within the storage system located in their data center.Which feature should the company prioritize when choosing their data protection storage solution?",
+    "options": {
+      "A": "Support for Redundant Array of Inexpensive Disks (RAID)",
+      "B": "Integration with a cloud service provider",
+      "C": "Automated data discovery capabilities",
+      "D": "A built-in orchestrator for workflow automation"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để bảo vệ dữ liệu chống lại sự cố hỏng đĩa vật lý ngay bên trong hệ thống lưu trữ cục bộ, tổ chức cần ưu tiên lựa chọn thiết bị hỗ trợ cấu hình mảng đĩa dự phòng RAID.",
+    "references": null
+  },
+  {
+    "id": 78,
+    "topic": 1,
+    "question": "An organization wants to ensure the security of its data at rest.What is the best practice to achieve this?",
+    "options": {
+      "A": "Implement strong encryption for all stored data",
+      "B": "Restrict access to the data using strong firewall rules",
+      "C": "Regularly back up the data to a secure location",
+      "D": "Monitor the data for unauthorized access attempts"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Mã hóa dữ liệu lưu trữ (Encryption for data at rest) là biện pháp tốt nhất để bảo vệ dữ liệu nhạy cảm ở trạng thái tĩnh, đảm bảo dữ liệu không thể bị đọc được ngay cả khi thiết bị lưu trữ vật lý bị đánh cắp.",
+    "references": null
+  },
+  {
+    "id": 79,
+    "topic": 1,
+    "question": "A data breach is traced back to an attacker exploiting management application vulnerabilities.What should the IT team prioritize in their response?",
+    "options": {
+      "A": "Conduct penetration testing of the entire application",
+      "B": "Implement role-based access control (RBAC) on the entire application",
+      "C": "Perform immediate patching of the management application",
+      "D": "Deploy hardware-based firewall"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi cuộc tấn công xuất phát từ việc khai thác lỗ hổng phần mềm quản lý, hành động ứng phó ưu tiên hàng đầu là thực hiện vá lỗi khẩn cấp (immediate patching) phần mềm đó để ngăn chặn lỗ hổng tiếp tục bị khai thác.",
+    "references": null
+  },
+  {
+    "id": 80,
+    "topic": 1,
+    "question": "A data protection service needs to ensure that service levels are maintained as committed.What should be implemented?",
+    "options": {
+      "A": "Automate operations management",
+      "B": "Perform regularly audits",
+      "C": "Bundle discovery with management software",
+      "D": "Schedule periodic discovery intervals"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tự động hóa quản lý vận hành (Automate operations management) giúp giám sát liên tục trạng thái hệ thống, thực thi đúng các cam kết mức dịch vụ (SLA) một cách tự động và nhất quán.",
+    "references": null
+  },
+  {
+    "id": 81,
+    "topic": 1,
+    "question": "A company is using a storage tiering solution. They want to retain the data for long-term to comply with the regulations.Where should they store the data within the tiered storage environment?",
+    "options": {
+      "A": "On the backup storage tier",
+      "B": "On the archive tier",
+      "C": "On a cloud block storage tier",
+      "D": "On a high-performance tier"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong môi trường lưu trữ phân tầng, tầng lưu trữ (archive tier) là nơi phù hợp nhất để lưu giữ dữ liệu lâu dài phục vụ tuân thủ quy chế vì nó tối ưu hóa chi phí tốt nhất.",
+    "references": null
+  },
+  {
+    "id": 82,
+    "topic": 1,
+    "question": "The operating time of a system is 24 hours per day, Monday through Sunday, Failure of the system occurs.\nMonday: No failure -Tuesday: 5 A.M. to 7 A.M.\nWednesday: No failure -Thursday: 4 P.M. to 8 P.M.Friday: 8 A.M. to 11 A.M.\nSaturday: No failure -\nSunday: No failure -What is the Mean Time Between Failures of the system?",
+    "options": {
+      "A": "9 hours",
+      "B": "3 hours",
+      "C": "53 hours",
+      "D": "45 hours"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tổng thời gian thiết kế của hệ thống trong một tuần là 7 ngày x 24 giờ = 168 giờ. Tổng thời gian gặp sự cố (downtime) là: 2 giờ (Thứ Ba) + 4 giờ (Thứ Năm) + 3 giờ (Thứ Sáu) = 9 giờ. Tổng thời gian hoạt động thực tế (uptime) = 168 - 9 = 159 giờ. Với 3 lần xảy ra lỗi, thời gian trung bình giữa các lần lỗi (MTBF) = 159 / 3 = 53 giờ.",
+    "references": null
+  },
+  {
+    "id": 83,
+    "topic": 1,
+    "question": "What is alerting in a data protection environment?",
+    "options": {
+      "A": "Tracking of unauthorized access and configuration changes",
+      "B": "Analysis of how efficiently various protection components and services work",
+      "C": "Availability status check of the hardware and software components",
+      "D": "Notification that provides information about events and impending threats"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cảnh báo (alerting) là các thông báo tự động cung cấp thông tin về các sự kiện bất thường hoặc các mối đe dọa sắp xảy ra đối với hệ thống bảo vệ dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 84,
+    "topic": 1,
+    "question": "A company wants to minimize the impact of component failures within their application. They need a design principle that allows the application to continue functioning with reduced functionality rather than failing completely.Which principle should the company implement to achieve this goal?",
+    "options": {
+      "A": "Graceful degradation",
+      "B": "Virtualized servers",
+      "C": "Fault detection and retry logic",
+      "D": "Stateless design"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Suy giảm chức năng êm ái (Graceful degradation) là nguyên tắc thiết kế cho phép hệ thống duy trì các hoạt động cơ bản nhất khi một số thành phần gặp sự cố, thay vì ngừng hoạt động toàn bộ.",
+    "references": null
+  },
+  {
+    "id": 85,
+    "topic": 1,
+    "question": "A hypervisor in your organization has been compromised by an attacker using hyperjacking.What is the most likely consequence of this attack?",
+    "options": {
+      "A": "Prevents the hypervisor from creating new virtual machines",
+      "B": "Causes the hypervisor to shut down unexpectedly",
+      "C": "Limits the hypervisor’s ability to manage network traffic",
+      "D": "Allows the attacker to control all virtual machines"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hyperjacking là hình thức tấn công chiếm quyền kiểm soát trực tiếp lớp hypervisor, cho phép kẻ tấn công kiểm soát toàn bộ các máy ảo đang chạy trên máy chủ vật lý đó.",
+    "references": null
+  },
+  {
+    "id": 86,
+    "topic": 1,
+    "question": "A company is concerned about the risk of data loss due to device failure.What should the company do to protect archived data?",
+    "options": {
+      "A": "Increase the frequency of data integrity checks",
+      "B": "Implement a more robust disaster recovery plan",
+      "C": "Store multiple copies of data in primary storage",
+      "D": "Use backup or replication for the archived data"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để bảo vệ dữ liệu lưu trữ (archive) khỏi nguy cơ hỏng hóc thiết bị, tổ chức vẫn cần thực hiện sao lưu (backup) hoặc sao chép (replication) định kỳ cho chính kho dữ liệu lưu trữ đó.",
+    "references": null
+  },
+  {
+    "id": 87,
+    "topic": 1,
+    "question": "What is a characteristic of data backup?",
+    "options": {
+      "A": "Long-term retention",
+      "B": "Long-term archival",
+      "C": "Secondary copy of data",
+      "D": "Fixed content"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Đặc điểm cơ bản của sao lưu (backup) là tạo ra một bản sao thứ cấp của dữ liệu (secondary copy) dùng để phục hồi khi bản chính gặp sự cố, phân biệt với dữ liệu lưu trữ (archive) là các tệp tin tĩnh cố định.",
+    "references": null
+  },
+  {
+    "id": 88,
+    "topic": 1,
+    "question": "What is the key benefit of having the web application deployed across multiple availability zones?",
+    "options": {
+      "A": "Reduced costs",
+      "B": "Enhanced reliability",
+      "C": "Increased security",
+      "D": "Improved consistency"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lợi ích cốt lõi của việc triển khai ứng dụng trên nhiều vùng sẵn sàng (AZ) là tăng cường độ tin cậy (reliability), đảm bảo dịch vụ không bị sập nếu một vùng gặp sự cố.",
+    "references": null
+  },
+  {
+    "id": 89,
+    "topic": 1,
+    "question": "What can a company do to minimize server downtime?",
+    "options": {
+      "A": "Enhance server cooling systems",
+      "B": "Implement high availability",
+      "C": "Automate server restarts",
+      "D": "Increase server memory resources"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để giảm thiểu thời gian ngừng hoạt động của máy chủ (downtime), giải pháp hiệu quả nhất là triển khai kiến trúc có tính sẵn sàng cao (High availability) để tự động chuyển đổi khi có máy chủ lỗi.",
+    "references": null
+  },
+  {
+    "id": 90,
+    "topic": 1,
+    "question": "Which replication technology is known as pointer-based replication?",
+    "options": {
+      "A": "Snapshot",
+      "B": "Asynchronous Replication",
+      "C": "Clone",
+      "D": "Mirror"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": null,
+    "references": null
+  },
+  {
+    "id": 91,
+    "topic": 1,
+    "question": "Which control mechanisms can reduce security threats to data protection applications?",
+    "options": {
+      "A": "Identity and access management and regular installation of security updates",
+      "B": "Use physical security controls such as CCTV cameras, on premise security guard, and badge IDs",
+      "C": "Encrypt the data and ship the backup media to a DR site or back up to cloud",
+      "D": "Remote replication of data and backing up to block-based, file-based or object-based storage"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Các cơ chế kiểm soát như quản lý định danh và truy cập (IAM) cùng việc thường xuyên cài đặt các bản cập nhật bảo mật là cách tốt nhất để giảm thiểu các mối đe dọa an ninh nhắm vào chính các ứng dụng bảo vệ dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 92,
+    "topic": 1,
+    "question": "During a backup operation in a NAS environment, what is the role of the NAS head?",
+    "options": {
+      "A": "Manage the backup catalog and metadata.",
+      "B": "Retrieve data from storage and transfer it to the backup client.",
+      "C": "Initiate the backup process and verify data integrity after completion",
+      "D": "Send backup data directly to the backup device."
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong quá trình sao lưu ở môi trường NAS, NAS head (đầu đọc NAS/bộ điều khiển) đóng vai trò truy xuất dữ liệu từ các thiết bị lưu trữ vật lý và chuyển dữ liệu đó tới máy khách sao lưu (backup client) hoặc máy chủ sao lưu qua mạng.",
+    "references": null
+  },
+  {
+    "id": 93,
+    "topic": 1,
+    "question": "How does target-based deduplication handle data deduplication?",
+    "options": {
+      "A": "Deduplicates data at the application server",
+      "B": "Deduplicates data at the source using agents",
+      "C": "Deduplicates data at the source",
+      "D": "Deduplicates data at the backup device"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chống trùng lặp tại đích (target-based deduplication) thực hiện việc phân tích và loại bỏ dữ liệu trùng lặp ngay tại thiết bị sao lưu nhận dữ liệu (backup device), thay vì xử lý trên máy chủ nguồn.",
+    "references": null
+  },
+  {
+    "id": 94,
+    "topic": 1,
+    "question": "A backup application is being updated, but the security team is concerned about the updates.What should they specifically focus on regarding potential threats to the application?",
+    "options": {
+      "A": "Exploitation of vulnerabilities in the application",
+      "B": "Modification of application architecture to eliminate risks",
+      "C": "Increase in number of backup destinations for the application",
+      "D": "Reduction of user permissions within the application"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Khi cập nhật ứng dụng sao lưu, đội ngũ bảo mật cần tập trung cao độ vào nguy cơ khai thác các lỗ hổng (Exploitation of vulnerabilities) trong ứng dụng có thể phát sinh từ phiên bản mới hoặc chưa được vá.",
+    "references": null
+  },
+  {
+    "id": 95,
+    "topic": 1,
+    "question": "How does block-level deduplication with variable-length segments improve storage efficiency?",
+    "options": {
+      "A": "Adjusts segments based on data changes",
+      "B": "Uses object IDs to store and retrieve data",
+      "C": "Stores multiple copies of the same data segment",
+      "D": "Breaks files down into fixed-length segments"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Chống trùng lặp mức độ khối với các phân đoạn có độ dài thay đổi (variable-length) giúp cải thiện hiệu suất lưu trữ bằng cách điều chỉnh động kích thước các phân đoạn dựa trên sự thay đổi của dữ liệu, tối ưu hóa khả năng phát hiện các phần trùng lặp.",
+    "references": null
+  },
+  {
+    "id": 96,
+    "topic": 1,
+    "question": "A backup administrator has defined a backup policy where full backups are scheduled at 8 PM every Saturday and incremental backups for the rest of the week at same time. A data loss happened on Wednesday at 11 AM.How many backup copies are required to restore the requested files?",
+    "options": {
+      "A": "2",
+      "B": "4",
+      "C": "5",
+      "D": "6"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để khôi phục dữ liệu bị mất vào lúc 11 giờ sáng thứ Tư, quản trị viên cần tổng cộng 4 bản sao lưu bao gồm: 1 bản sao lưu đầy đủ (Full Backup) vào tối thứ Bảy tuần trước, và 3 bản sao lưu cộng dồn (Incremental Backups) của Chủ Nhật, thứ Hai và thứ Ba.",
+    "references": null
+  },
+  {
+    "id": 97,
+    "topic": 1,
+    "question": "An organization requires employees to use a password and a token-generated passcode to access internal applications.Which security mechanism is being utilized?",
+    "options": {
+      "A": "Digital signatures",
+      "B": "Role-based access control (RBAC)",
+      "C": "Multi-factor authentication (MFA)",
+      "D": "Single sign-on (SSO)"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Yêu cầu nhân viên sử dụng đồng thời mật khẩu (yếu tố ghi nhớ) và mã xác thực từ token (yếu tố sở hữu) là việc áp dụng cơ chế xác thực nhiều yếu tố (MFA - Multi-factor authentication).",
+    "references": null
+  },
+  {
+    "id": 98,
+    "topic": 1,
+    "question": "Which scenario is Image-based backup uniquely suitable for?",
+    "options": {
+      "A": "Restoring individual files.",
+      "B": "Backing up application data only.",
+      "C": "Performing incremental backups.",
+      "D": "Restoring an entire virtual machine (VM)."
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao lưu dạng ảnh (Image-based backup) chụp lại toàn bộ đĩa trạng thái của máy ảo, do đó cực kỳ phù hợp và thuận tiện cho việc khôi phục lại nguyên vẹn toàn bộ máy ảo (VM).",
+    "references": null
+  },
+  {
+    "id": 99,
+    "topic": 1,
+    "question": "Which type of virtual machine (VM) is created from a snapshot of the parent VM in a clone operation?",
+    "options": {
+      "A": "A snapshot clone",
+      "B": "A replicated clone",
+      "C": "A full clone",
+      "D": "A linked clone"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bản sao liên kết (Linked clone) là loại máy ảo được tạo ra từ ảnh chụp nhanh (snapshot) của máy ảo cha, chia sẻ chung các đĩa ảo gốc giúp tiết kiệm dung lượng lưu trữ đáng kể và triển khai cực nhanh.",
+    "references": null
+  },
+  {
+    "id": 100,
+    "topic": 1,
+    "question": "A full backup of a production volume is created on Sunday, and cumulative backups are created for the rest of the week.What are the contents of the cumulative backup on Thursday?",
+    "options": {
+      "A": "All the data on the production volume",
+      "B": "All the data that has changed since Sunday",
+      "C": "All the data that has changed since Monday",
+      "D": "All the data that has changed since Wednesday"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bản sao lưu tích lũy/cộng dồn (Cumulative/Differential Backup) vào thứ Năm sẽ chứa toàn bộ các dữ liệu đã có sự thay đổi tính từ thời điểm bản sao lưu đầy đủ gần nhất được thực hiện vào Chủ Nhật.",
+    "references": null
+  },
+  {
+    "id": 101,
+    "topic": 1,
+    "question": "A company needs to restore a specific directory from a backup.Which type of recovery operation should they perform?",
+    "options": {
+      "A": "Block-level recovery",
+      "B": "Image-level recovery",
+      "C": "File-level recovery",
+      "D": "Full system recovery"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để khôi phục một thư mục cụ thể từ bản sao lưu mà không cần tải lại toàn bộ hệ thống, quản trị viên thực hiện hoạt động khôi phục cấp độ tệp tin (File-level recovery).",
+    "references": null
+  },
+  {
+    "id": 102,
+    "topic": 1,
+    "question": "A company wants to ensure minimal data loss in case of a system failure.How does synchronous replication benefit the company in this scenario?",
+    "options": {
+      "A": "Reduces storage costs by using less space",
+      "B": "Encrypts data to enhance security",
+      "C": "Archives data to improve retrieval times",
+      "D": "Replicates data in real-time to ensure data availability"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sao chép đồng bộ (Synchronous replication) sao chép dữ liệu theo thời gian thực tới vị trí dự phòng, đảm bảo tính sẵn sàng cao và giảm thiểu tối đa lượng dữ liệu bị mất khi hệ thống chính gặp lỗi.",
+    "references": null
+  },
+  {
+    "id": 103,
+    "topic": 1,
+    "question": "An organization requires a backup solution that allows for quick recovery of individual files without restoring the entire system.Which backup solution is most suitable?",
+    "options": {
+      "A": "Use Incremental Backups",
+      "B": "Utilize a Continuous Data Protection (CDP) system",
+      "C": "Deploy Differential Backups",
+      "D": "Implement a Full Backup strategy"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Hệ thống bảo vệ dữ liệu liên tục (CDP) ghi nhận mọi thay đổi dữ liệu tức thời và hỗ trợ khôi phục cấp độ tệp cực nhanh về bất kỳ thời điểm nào trước đó mà không cần phục hồi toàn bộ hệ thống.",
+    "references": null
+  },
+  {
+    "id": 104,
+    "topic": 1,
+    "question": "A company needs to ensure that their centralized backup system can handle large volumes of data with minimal impact on LAN network performance.Which backup topology should they implement?",
+    "options": {
+      "A": "Deploy a SAN for backups.",
+      "B": "Implement a NAS solution.",
+      "C": "Use Cloud Storage for all backup operations.",
+      "D": "Utilize a DAS system for backups."
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Triển khai mạng lưu trữ SAN (Storage Area Network) cho hoạt động sao lưu giúp cô lập và truyền tải dữ liệu sao lưu dung lượng lớn qua một mạng cáp quang tốc độ cao chuyên dụng, tránh làm nghẽn mạng LAN của doanh nghiệp.",
+    "references": null
+  },
+  {
+    "id": 105,
+    "topic": 1,
+    "question": "An organization has implemented alerts for various system statuses.What type of alert is triggered when intervention is needed for a failing component?",
+    "options": {
+      "A": "Information alert",
+      "B": "Routine maintenance alert",
+      "C": "Fatal alert",
+      "D": "Warning alert"
+    },
+    "answer": "D",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Cảnh báo dạng Warning (Warning alert) được kích hoạt khi một thành phần hệ thống đang gặp lỗi hoặc sắp hỏng, yêu cầu quản trị viên can thiệp kịp thời trước khi sự cố trở nên nghiêm trọng (Fatal).",
+    "references": null
+  },
+  {
+    "id": 106,
+    "topic": 1,
+    "question": "After a failover in a VM live shadow copy setup, what happens to maintain redundancy?",
+    "options": {
+      "A": "The failed VM is automatically repaired using live shadow copy.",
+      "B": "No further action is taken, and the system runs with a single VM.",
+      "C": "A new secondary VM is created to re-establish the live shadow copy.",
+      "D": "The secondary VM becomes the permanent primary VM."
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sau khi chuyển đổi dự phòng (failover) thành công, máy ảo phụ sẽ đảm nhận vai trò máy ảo chính mới, và hệ thống sẽ tự động tạo một máy ảo phụ mới để tái lập liên kết đồng bộ và khôi phục tính dự phòng.",
+    "references": null
+  },
+  {
+    "id": 107,
+    "topic": 1,
+    "question": "An organization is experiencing slow application performance due to overloaded primary storage.How can the organization improve performance?",
+    "options": {
+      "A": "Configure alerts to monitor the storage utilization",
+      "B": "Move less-frequently accessed data to archive storage",
+      "C": "Use a single-tier storage system with archiving enabled",
+      "D": "Delete old files from primary storage on the server"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Di chuyển các dữ liệu ít truy cập (cold data) sang phân tầng lưu trữ lưu trữ (archive storage) giúp giải phóng không gian và giảm tải I/O trên ổ đĩa chính, từ đó cải thiện tốc độ và hiệu suất ứng dụng.",
+    "references": null
+  },
+  {
+    "id": 108,
+    "topic": 1,
+    "question": "After identifying potential risks, an organization needs to evaluate their likelihood and impact.What should the organization do next?",
+    "options": {
+      "A": "Implement risk mitigation strategies",
+      "B": "Conduct a risk assessment",
+      "C": "Monitor the risks continuously",
+      "D": "Develop a compliance management plan"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Sau khi xác định các rủi ro tiềm ẩn, bước tiếp theo tổ chức cần tiến hành đánh giá rủi ro (Risk assessment) bằng cách định lượng/định tính khả năng xảy ra (likelihood) và mức độ ảnh hưởng (impact) của chúng.",
+    "references": null
+  },
+  {
+    "id": 109,
+    "topic": 1,
+    "question": "An employee in the finance department receives an email from what looks like the Chief Financial Officer (CFO), asking for an urgent transfer of funds to a new account. The email includes specific project details and a sense of urgency.What should the employee do to confirm the authenticity of the request?",
+    "options": {
+      "A": "Proceed with the transfer as instructed in the email",
+      "B": "Ignore the email and report it as spam",
+      "C": "Call the sender directly to confirm the request",
+      "D": "Forward the email to the finance team for approval"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để xác thực một yêu cầu chuyển tiền khẩn cấp có dấu hiệu lừa đảo giả mạo (phishing), nhân viên nên trực tiếp gọi điện (out-of-band communication) xác minh với người gửi thông qua số điện thoại đã biết trước đó.",
+    "references": null
+  },
+  {
+    "id": 110,
+    "topic": 1,
+    "question": "Data unavailability has occurred in your organization due to natural disasters.Which two actions should the company have taken prior to the disaster to safeguard their data? (Choose two.)",
+    "options": {
+      "A": "Collaborate with disaster response agencies",
+      "B": "Implement data encryption",
+      "C": "Implement a robust disaster recovery plan",
+      "D": "Establish geographically distributed backups",
+      "E": "Minimize reliance on on-site storage"
+    },
+    "answer": "CD",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để bảo vệ dữ liệu trước thiên tai, tổ chức cần chủ động xây dựng một kế hoạch khôi phục sau thảm họa (Disaster Recovery Plan) mạnh mẽ và triển khai hệ thống sao lưu phân tán về mặt địa lý (Geographically distributed backups).",
+    "references": null
+  },
+  {
+    "id": 111,
+    "topic": 1,
+    "question": "A company wants to test an untrusted application in an environment that mimics their production setup.Which security practice should they use?",
+    "options": {
+      "A": "Staging",
+      "B": "Sandboxing",
+      "C": "Application hardening",
+      "D": "Role-based access control"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Tạo hộp cát (Sandboxing) là biện pháp cô lập ứng dụng không đáng tin cậy trong một môi trường thử nghiệm riêng biệt, ngăn chặn ứng dụng đó gây hại hoặc sửa đổi trái phép các hệ thống sản xuất bên ngoài.",
+    "references": null
+  },
+  {
+    "id": 112,
+    "topic": 1,
+    "question": "A company wants to resolve imminent issues before they escalate into incidents.Which problem management activity should be prioritized?",
+    "options": {
+      "A": "Use integrated incident and problem management tools",
+      "B": "Analyze and solve errors proactively before they become an incident",
+      "C": "Provide most appropriate solution or preventive remediation",
+      "D": "Review incident history to detect problems"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Để giải quyết các vấn đề trước khi chúng bùng phát thành sự cố làm gián đoạn hệ thống, tổ chức cần thực hiện quy trình quản lý vấn đề chủ động (Proactive problem management), phân tích và xử lý các lỗi tiềm ẩn trước.",
+    "references": null
+  },
+  {
+    "id": 113,
+    "topic": 1,
+    "question": "An organization wants to reduce its backup time and costs.What should they do with their fixed data before performing backups?",
+    "options": {
+      "A": "Archive infrequently accessed data to exclude it from nightly backups",
+      "B": "Compress fixed data to reduce its size",
+      "C": "Store infrequently accessed data on high-performance storage",
+      "D": "Increase the frequency of backups to ensure data availability"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Lưu trữ dữ liệu ít truy cập (Archive) giúp đưa các tệp tin tĩnh cố định ra khỏi tập sao lưu hàng đêm, nhờ đó giảm đáng kể thời gian thực hiện sao lưu và chi phí tài nguyên lưu trữ bản sao lưu.",
+    "references": null
+  },
+  {
+    "id": 114,
+    "topic": 1,
+    "question": "A company plans to use data replication to handle backup operations separately from their production storage. They need to identify a backup strategy that minimizes disruption to production system performance.Which source should they select for their backups?",
+    "options": {
+      "A": "Perform backups directly from the production storage",
+      "B": "Use the replica as the source for backups",
+      "C": "Use previous full backup copy as source for new backup",
+      "D": "Use archive data as source for backup"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Bằng cách sử dụng bản sao (replica) làm nguồn thực hiện sao lưu thay vì hệ thống lưu trữ chính, tổ chức có thể loại bỏ hoàn toàn ảnh hưởng về mặt hiệu năng lên môi trường sản xuất (production storage).",
+    "references": null
+  },
+  {
+    "id": 115,
+    "topic": 1,
+    "question": "A public cloud provider wants to demonstrate its commitment to data privacy.Which code of practice should they adopt to ensure adherence to privacy law, such as CCPA?",
+    "options": {
+      "A": "General Data Protection Regulation (GDPR) Compliance",
+      "B": "ISO 27007",
+      "C": "ISO 27018",
+      "D": "ISO 27001"
+    },
+    "answer": "C",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "ISO/IEC 27018 là bộ quy tắc thực hành quốc tế tiêu chuẩn tập trung vào bảo vệ thông tin nhận dạng cá nhân (PII) trên các nền tảng điện toán đám mây công cộng, phù hợp với các luật quyền riêng tư dữ liệu.",
+    "references": null
+  },
+  {
+    "id": 116,
+    "topic": 1,
+    "question": "How should a fault-tolerant system handle multiple simultaneous failures?",
+    "options": {
+      "A": "Isolate the failures and continue operating",
+      "B": "Notify administrator and restart operations",
+      "C": "Shut down to prevent further issues",
+      "D": "Restart the affected components only"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Một hệ thống chịu lỗi (fault-tolerant system) phải có khả năng cô lập các lỗi xảy ra đồng thời và duy trì hoạt động liên tục (continue operating) mà không làm sụp đổ toàn bộ hệ thống.",
+    "references": null
+  },
+  {
+    "id": 117,
+    "topic": 1,
+    "question": "What is the role of the archive server in the archiving architecture?",
+    "options": {
+      "A": "Store the fixed data",
+      "B": "Configure data archiving policies",
+      "C": "Create policies based on file names",
+      "D": "Scan and archive files"
+    },
+    "answer": "B",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Trong kiến trúc lưu trữ (archiving), máy chủ lưu trữ (archive server) chịu trách nhiệm chính trong việc thiết lập và cấu hình các chính sách lưu trữ dữ liệu (data archiving policies) để tự động hóa quá trình di chuyển tệp.",
+    "references": null
+  },
+  {
+    "id": 118,
+    "topic": 1,
+    "question": "A company measures its system’s availability as 99.99%.What does this imply about its downtime?",
+    "options": {
+      "A": "Implies downtime of approximately 52 minutes annually",
+      "B": "Implies downtime of approximately 8 hours annually",
+      "C": "Implies downtime of approximately 5 hours annually",
+      "D": "Implies downtime of approximately 1 hour annually"
+    },
+    "answer": "A",
+    "isMulti": false,
+    "page": null,
+    "image": null,
+    "explanation_vi": "Độ sẵn sàng hệ thống đạt mức 99.99% (bốn số 9) tương đương với việc tổng thời gian ngừng hoạt động cho phép tối đa chỉ khoảng 52 phút trong một năm.",
+    "references": null
+  }
+]

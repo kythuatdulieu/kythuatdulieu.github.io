@@ -31,11 +31,7 @@ graph TD
     A["Client Write"] --> B["Write-Ahead Log (WAL)"]
     A --> C("Active MemTable (RAM)")
     C -- "Reaches 64MB" --> D("Immutable MemTable (RAM)")
-    D -- "Background Flush" --> E["SSTable L0 on Disk"]
-    
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-    style E fill:#bfb,stroke:#333,stroke-width:2px
+    D -- "Background Flush" --> E["SSTable L0 on Disk"]
 ```
 
 ### 1.2. Giải phẫu SSTable (Sorted String Table)

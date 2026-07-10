@@ -44,11 +44,7 @@ graph TD
         F -->|Anomaly Detected| G["Alert Aggregator\n(Circuit Breaker)"]
         G --> H["PagerDuty / Slack"]
         F -->|Normal| I["Metadata Store\n(Postgres/DynamoDB)"]
-    end
-
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-    style G fill:#f9acaa,stroke:#333,stroke-width:2px
+    end
 ```
 
 **Luồng dữ liệu (Data Flow):**

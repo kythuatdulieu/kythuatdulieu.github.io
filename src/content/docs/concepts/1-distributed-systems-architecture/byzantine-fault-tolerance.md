@@ -110,9 +110,7 @@ graph TD
     H0 --> Data0["Data Block 0"]
     H0 --> Data1["Data Block 1"]
     H1 --> Data2["Data Block 2"]
-    H1 --> Data3["Data Block 3 (Corrupted)"]
-    
-    style Data3 fill:#ff9999,stroke:#333,stroke-width:2px
+    H1 --> Data3["Data Block 3 (Corrupted)"]
 ```
 
 ### 4.3. Data Mesh và Zero-Trust Cross-Validation

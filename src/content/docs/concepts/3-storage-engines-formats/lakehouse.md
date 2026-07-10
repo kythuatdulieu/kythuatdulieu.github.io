@@ -39,11 +39,7 @@ graph TD
     
     M1 --> D1["001.parquet <br/> id: 1-100"]
     M1 --> D2["002.parquet <br/> id: 101-200"]
-    M2 --> D3["003.parquet <br/> id: 201-300"]
-    
-    style Catalog fill:#f9f,stroke:#333,stroke-width:2px
-    style Meta2 fill:#bbf,stroke:#333,stroke-width:2px
-    style ML1 fill:#bfb,stroke:#333,stroke-width:2px
+    M2 --> D3["003.parquet <br/> id: 201-300"]
 ```
 - **Manifest List**: Lưu Min/Max Stats ở cấp độ Snapshot, giúp Query Engine (Spark/Trino) bỏ qua nguyên một nhánh dữ liệu mà không cần tải các Manifest Files bên dưới.
 
@@ -55,9 +51,7 @@ graph TD
     DL["_delta_log Directory"] --> C1["0000.json <br/> Action: Add part-01"]
     DL --> C2["0001.json <br/> Action: Add part-02"]
     DL --> C3["0002.json <br/> Action: Remove part-01, Add part-03"]
-    DL -.-> CP["0010.checkpoint.parquet <br/> Tóm tắt 10 JSONs"]
-    
-    style DL fill:#f9f,stroke:#333,stroke-width:2px
+    DL -.-> CP["0010.checkpoint.parquet <br/> Tóm tắt 10 JSONs"]
 ```
 Mỗi thao tác [INSERT, UPDATE] sinh ra một file JSON chứa mảng các `add` (thêm file Parquet mới) và `remove` (đánh dấu xóa logic file Parquet cũ). Cứ 10 commits, Delta gom chúng lại thành file `checkpoint.parquet` để tăng tốc đọc Metadata.
 

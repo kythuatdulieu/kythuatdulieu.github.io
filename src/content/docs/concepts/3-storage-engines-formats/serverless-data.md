@@ -33,8 +33,6 @@ Khi bạn gõ `SELECT country, SUM(amount) FROM sales GROUP BY country`, Dremel 
 
 ```mermaid
 graph TD
-    classDef storage fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef compute fill:#bbf,stroke:#333,stroke-width:2px;
 
     Client("Client / BI Tool") -->|SQL Query| Root["Root Node (Query Master)"]
     

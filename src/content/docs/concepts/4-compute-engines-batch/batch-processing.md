@@ -61,11 +61,7 @@ graph TD
     A["Input HDFS/S3 (Disk)"] -->|Map / Filter| B["Stage 1: RAM (RDD 1)"]
     B -->|Project| C("Stage 1: RAM (RDD 2)")
     C -.->|"Network Shuffle Boundary"| D("Stage 2: RAM (RDD 3)")
-    D -->|Aggregation| E["Output Data Lake (Disk)"]
-    
-    style B fill:#e1f5fe,stroke:#01579b
-    style C fill:#e1f5fe,stroke:#01579b
-    style D fill:#ffe0b2,stroke:#e65100
+    D -->|Aggregation| E["Output Data Lake (Disk)"]
 ```
 
 ## 3. Giải phẫu Nút Thắt Hệ Thống (System Bottlenecks)

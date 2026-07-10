@@ -35,11 +35,7 @@ graph TD
     D -->|"Cost-based Optimization (CBO)"| E["Physical Plans (Multiple Options)"]
     E --> F["Selected Physical Plan"]
     F -->|Tungsten Engine| G["Whole-Stage Code Generation"]
-    G --> H["RDDs / Bytecode Thực Thi"]
-    
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#bbf,stroke:#333,stroke-width:2px
-    style F fill:#bfb,stroke:#333,stroke-width:2px
+    G --> H["RDDs / Bytecode Thực Thi"]
 ```
 
 1. **Analysis (Phân tích & Xác thực):** Chuyển từ *Unresolved* sang *Resolved Logical Plan*. Spark tra cứu Catalog (thường liên kết với Hive Metastore) để đảm bảo các bảng, cột có tồn tại và tương thích kiểu dữ liệu (Data types).

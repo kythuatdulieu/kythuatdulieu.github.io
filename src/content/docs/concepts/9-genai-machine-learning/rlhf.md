@@ -49,12 +49,7 @@ graph TD
     Combine --> C
     C -->|5. Advantage Estimation| PPO_Loss["Hàm Loss PPO"]
     PPO_Loss -->|6. Backward Pass| A
-    PPO_Loss -->|6. Backward Pass| C
-    
-    style A fill:#ffe6e6,stroke:#ff0000
-    style C fill:#ffe6e6,stroke:#ff0000
-    style B fill:#e6ffe6,stroke:#00aa00
-    style D fill:#e6ffe6,stroke:#00aa00
+    PPO_Loss -->|6. Backward Pass| C
 ```
 
 *Bài toán Toán học về FinOps:* Nếu bạn Train một Model Llama-3 8B, bản thân trọng số (fp16) đã chiếm khoảng 16GB.

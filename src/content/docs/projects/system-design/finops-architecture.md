@@ -48,11 +48,7 @@ Theo FinOps Foundation, thực hành FinOps bao gồm ba giai đoạn liên tụ
 graph TD
     A["Inform: Visibility & Allocation"] -->|Identify Waste| B["Optimize: Rates & Usage"]
     B -->|Implement Controls| C["Operate: Continuous Improvement"]
-    C -->|New Insights| A
-    
-    style A fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px
-    style B fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-    style C fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    C -->|New Insights| A
 ```
 
 ---
@@ -98,11 +94,7 @@ flowchart LR
     C --> D[("Snowflake / BigQuery")]
     D -->|dbt transformations| E["Aggregated Cost Models"]
     E -->|Superset / Tableau| F["FinOps Dashboard"]
-    E -->|Slack Bot| G["Daily Cost Alerts to Teams"]
-    
-    style A fill:#ececff
-    style D fill:#d4edda
-    style F fill:#f8d7da
+    E -->|Slack Bot| G["Daily Cost Alerts to Teams"]
 ```
 
 **Mô tả quy trình:**
@@ -136,11 +128,7 @@ graph TD
     B --> D["Core Nodes: R5.2xlarge - On-Demand"]
     B --> E["Task Nodes: R5.4xlarge - 100% Spot Instances"]
     E -->|Scale out when load increases| E
-    E -->|Terminate when Spot is reclaimed| B
-    
-    style C fill:#d1e7dd
-    style D fill:#d1e7dd
-    style E fill:#ffe69c
+    E -->|Terminate when Spot is reclaimed| B
 ```
 
 *Giải thích kiến trúc:* 
@@ -215,7 +203,6 @@ PARTITION BY DATE(event_timestamp)
 CLUSTER BY user_id, event_type
 AS 
 SELECT * FROM `company_data.clickstream_logs`;
-
 -- Bước 2: Truy vấn sau khi tối ưu CHỈ quét phân vùng của 1 ngày duy nhất
 SELECT user_id, count(*) 
 FROM `company_data.clickstream_logs_optimized` 

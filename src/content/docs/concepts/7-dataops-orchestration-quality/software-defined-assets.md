@@ -30,12 +30,7 @@ Trong mô hình này, bạn viết các đoạn mã **mệnh lệnh (imperative)
 graph LR
     A["Task: extract_api_events"] --> B["Task: upload_to_s3"]
     B --> C["Task: copy_into_snowflake"]
-    C --> D["Task: run_dbt_models"]
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#f9f,stroke:#333,stroke-width:2px
+    C --> D["Task: run_dbt_models"]
 ```
 
 *   **Lỗ hổng Kiến trúc (Architectural Flaw):** Orchestrator (ví dụ: Airflow) chỉ giám sát được *Trạng thái của Task* (Success, Failed, Retrying). Nó hoàn toàn **"mù" về Dữ liệu (Data Blind)**. Khi Task `run_dbt_models` thành công, Airflow không biết bảng nào vừa được cập nhật, dung lượng bao nhiêu, hay có bao nhiêu bản ghi bị null. Việc Debugging và truy xuất Data Lineage bắt buộc phải phụ thuộc vào các công cụ bên ngoài (ví dụ: DataHub, dbt docs, OpenLineage). Khi task fail, bạn phải tự suy luận xem dữ liệu ở hạ nguồn đã bị hỏng đến mức nào.
@@ -46,11 +41,7 @@ Thay vì ra lệnh cho hệ thống "làm việc A rồi làm việc B", bạn *
 ```mermaid
 graph LR
     A["(Asset: raw_api_events)<br/>S3 Parquet"] --> B["(Asset: stg_events)<br/>Snowflake Table"]
-    B --> C["(Asset: fct_daily_revenue)<br/>Snowflake Table"]
-    
-    style A fill:#bbf,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
+    B --> C["(Asset: fct_daily_revenue)<br/>Snowflake Table"]
 ```
 
 *   **Bản chất hệ thống:** Orchestrator (Dagster) tự suy luận (infer) đồ thị thực thi (Execution Graph) dựa trên các dependencies được khai báo giữa các Assets. Dagster liên tục so sánh trạng thái hiện tại của dữ liệu với trạng thái được khai báo trong code, và tự tạo ra kế hoạch để "vật chất hóa" (materialize) các tài sản này.

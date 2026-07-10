@@ -43,9 +43,8 @@ Các công cụ như dbt hoặc SQLMesh phân tích (parse) cú pháp SQL trong 
 
 ```mermaid
 graph TD
-    classDef engine fill:#f9f2f4,stroke:#d9534f,stroke-width:2px;
-    classDef messaging fill:#e8f4f8,stroke:#5bc0de,stroke-width:2px;
-    classDef storage fill:#fcf8e3,stroke:#f0ad4e,stroke-width:2px;
+
+
 
     subgraph "Data Processing Engines"
         A["Apache Spark Job<br/>(Physical Execution)"]:::engine

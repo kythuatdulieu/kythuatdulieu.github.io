@@ -1,0 +1,234 @@
+/* ==========================================================
+   COLOR TOKENS
+   Naming mirrors Starlight's --sl-color-* convention so this
+   design system drops straight into the Astro/Starlight site
+   (kythuatdulieu.github.io) without renaming anything.
+   Three themes: light (default), dark, sepia (reading mode).
+   No hardcoded colors anywhere else — everything reads these.
+   ========================================================== */
+
+:root:not([data-theme='dark']):not([data-theme='sepia']),
+:root[data-theme='light'] {
+  /* ---- base neutrals (light) ---- */
+  --sl-color-white: #17181c;
+  --sl-color-gray-1: #313339;
+  --sl-color-gray-2: #4a4d55;
+  --sl-color-gray-3: #64676f;
+  --sl-color-gray-4: #86898f;
+  --sl-color-gray-5: #c2c4c9;
+  --sl-color-gray-6: #e7e8eb;
+  --sl-color-gray-7: #f3f3f5;
+  --sl-color-black: #ffffff;
+
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-nav: #fbfbfc;
+  --sl-color-bg-sidebar: #fbfbfc;
+  --sl-color-bg-inline-code: #f0f0f2;
+  --sl-color-hairline: #e4e5e8;
+  --sl-color-hairline-shade: #d5d6da;
+
+  --sl-color-text: #24252a;
+  --sl-color-text-invert: #ffffff;
+
+  /* quiet, single accent — a muted ink-blue, not a marketing purple */
+  --sl-color-accent-low: #dbe4f3;
+  --sl-color-accent: #2f5fa8;
+  --sl-color-accent-high: #1e407a;
+  --sl-color-text-accent: #2f5fa8;
+  --sl-color-accent-rgb: 47, 95, 168;
+  --sl-color-bg-nav-rgb: 251, 251, 252;
+
+  /* semantic status (used sparingly: quiz correct/incorrect only) */
+  --color-success: #2f7a4f;
+  --color-success-bg: #e7f3ec;
+  --color-danger: #b5432f;
+  --color-danger-bg: #f8e9e5;
+  --color-warning: #a3730f;
+  --color-warning-bg: #f7eedd;
+
+  /* Mermaid / flowchart colors */
+  --mermaid-bg: #fbfbfc;
+  --mermaid-text: #24252a;
+  --mermaid-line: #6f7784;
+  --mermaid-node-primary-bg: #e8f0fb;
+  --mermaid-node-primary-border: #2f5fa8;
+  --mermaid-node-primary-text: #173967;
+  --mermaid-node-secondary-bg: #f8e8df;
+  --mermaid-node-secondary-border: #b8621b;
+  --mermaid-node-secondary-text: #6f3511;
+  --mermaid-node-tertiary-bg: #e5f3ea;
+  --mermaid-node-tertiary-border: #2f7a4f;
+  --mermaid-node-tertiary-text: #1f5536;
+  --mermaid-cluster-bg: #f3f3f5;
+  --mermaid-cluster-border: #d5d6da;
+
+  color-scheme: light;
+}
+
+/* semantic aliases used across UI kits/components — unscoped so they
+   resolve in every theme (they only reference --sl-color-* tokens) */
+:root {
+  --surface-page: var(--sl-color-bg);
+  --surface-card: var(--sl-color-bg-nav);
+  --surface-sunken: var(--sl-color-gray-7);
+  --border-default: var(--sl-color-hairline);
+  --border-strong: var(--sl-color-hairline-shade);
+  --text-body: var(--sl-color-text);
+  --text-muted: var(--sl-color-gray-3);
+  --text-faint: var(--sl-color-gray-4);
+  --text-heading: var(--sl-color-white);
+}
+
+/* ---- dark theme ---- */
+:root[data-theme='dark'] {
+  --sl-color-white: #f4f4f6;
+  --sl-color-gray-1: #d6d7db;
+  --sl-color-gray-2: #aeb0b6;
+  --sl-color-gray-3: #86888f;
+  --sl-color-gray-4: #616269;
+  --sl-color-gray-5: #3a3b40;
+  --sl-color-gray-6: #2a2b2f;
+  --sl-color-gray-7: #202126;
+  --sl-color-black: #131417;
+
+  --sl-color-bg: #131417;
+  --sl-color-bg-nav: #191a1e;
+  --sl-color-bg-sidebar: #17181b;
+  --sl-color-bg-inline-code: #202126;
+  --sl-color-hairline: #2b2c31;
+  --sl-color-hairline-shade: #35363c;
+
+  --sl-color-text: #e4e4e7;
+  --sl-color-text-invert: #131417;
+
+  --sl-color-accent-low: #223250;
+  --sl-color-accent: #7fa6e8;
+  --sl-color-accent-high: #a9c4f2;
+  --sl-color-text-accent: #7fa6e8;
+  --sl-color-accent-rgb: 127, 166, 232;
+  --sl-color-bg-nav-rgb: 25, 26, 30;
+
+  --color-success: #6fbf8e;
+  --color-success-bg: #1d2e23;
+  --color-danger: #e0806c;
+  --color-danger-bg: #35211c;
+  --color-warning: #d9ac5c;
+  --color-warning-bg: #362a16;
+
+  --mermaid-bg: #191a1e;
+  --mermaid-text: #f0f1f5;
+  --mermaid-line: #aeb7c5;
+  --mermaid-node-primary-bg: #203148;
+  --mermaid-node-primary-border: #8fb7f0;
+  --mermaid-node-primary-text: #f4f8ff;
+  --mermaid-node-secondary-bg: #392a22;
+  --mermaid-node-secondary-border: #e7a17e;
+  --mermaid-node-secondary-text: #fff1e8;
+  --mermaid-node-tertiary-bg: #1e3729;
+  --mermaid-node-tertiary-border: #78c99a;
+  --mermaid-node-tertiary-text: #edf9f1;
+  --mermaid-cluster-bg: #202126;
+  --mermaid-cluster-border: #3a3f49;
+
+  color-scheme: dark;
+}
+
+/* ---- sepia theme: paper reading mode, requested in brief ---- */
+:root[data-theme='sepia'] {
+  --sl-color-white: #1a0f08;
+  --sl-color-gray-1: #2b1c10;
+  --sl-color-gray-2: #4a3625;
+  --sl-color-gray-3: #6b513a;
+  --sl-color-gray-4: #8c7054;
+  --sl-color-gray-5: #c2aa8f;
+  --sl-color-gray-6: #e3d1be;
+  --sl-color-gray-7: #f2e8dd;
+  --sl-color-black: #faf6eb;
+
+  --sl-color-bg: #fdf6e3; /* Màu nền kem rất dịu mắt */
+  --sl-color-bg-nav: #f2e9cd;
+  --sl-color-bg-sidebar: #f2e9cd;
+  --sl-color-bg-inline-code: #ebdabc;
+  --sl-color-hairline: #e3d5b8;
+  --sl-color-hairline-shade: #d3c2a1;
+
+  --sl-color-text: #2b1c10; /* Chữ màu nâu sô-cô-la đen đậm (tương phản cao) */
+  --sl-color-text-invert: #fdf6e3;
+
+  --sl-color-accent-low: #f5e4c3;
+  --sl-color-accent: #b8621b;
+  --sl-color-accent-high: #8b440e;
+  --sl-color-text-accent: #b8621b;
+  --sl-color-accent-rgb: 184, 98, 27;
+  --sl-color-bg-nav-rgb: 242, 233, 205;
+
+  /* Starlight Aside/State colors cho Sepia - tông màu đất nhẹ nhàng, êm mắt */
+  --sl-color-blue-low: #eef2ec;  /* Nền note (xanh lam ngả ghi) */
+  --sl-color-blue: #4f6b7c;      /* Viền/Icon note */
+  --sl-color-blue-high: #2f4554; /* Chữ note */
+
+  --sl-color-green-low: #eaf0e1; /* Nền tip (xanh lục ngả vàng) */
+  --sl-color-green: #677d4f;     /* Viền/Icon tip */
+  --sl-color-green-high: #3d4f2b;/* Chữ tip */
+
+  --sl-color-orange-low: #f7e6d0;/* Nền caution (cam gạch nhạt) */
+  --sl-color-orange: #b8621b;    /* Viền/Icon caution */
+  --sl-color-orange-high: #8b440e;/* Chữ caution */
+
+  --sl-color-red-low: #f5dede;   /* Nền danger (đỏ đất nhạt) */
+  --sl-color-red: #b34d4d;       /* Viền/Icon danger */
+  --sl-color-red-high: #752626;  /* Chữ danger */
+
+  --color-success: #437d43;
+  --color-success-bg: #e5ebcd;
+  --color-danger: #b33939;
+  --color-danger-bg: #f2d1d1;
+  --color-warning: #9e701a;
+  --color-warning-bg: #f3e9c8;
+
+  --mermaid-bg: #f7efd9;
+  --mermaid-text: #2b1c10;
+  --mermaid-line: #7b6046;
+  --mermaid-node-primary-bg: #efe0bd;
+  --mermaid-node-primary-border: #8b440e;
+  --mermaid-node-primary-text: #3a230e;
+  --mermaid-node-secondary-bg: #ecd8c3;
+  --mermaid-node-secondary-border: #9a5330;
+  --mermaid-node-secondary-text: #442211;
+  --mermaid-node-tertiary-bg: #e4e9cf;
+  --mermaid-node-tertiary-border: #667a3a;
+  --mermaid-node-tertiary-text: #2f3d1b;
+  --mermaid-cluster-bg: #f2e9cd;
+  --mermaid-cluster-border: #cdb98f;
+
+  color-scheme: light;
+}
+
+/* Default to system preference on first paint (before user picks a theme);
+   the reading-customization panel then persists an explicit choice to
+   data-theme via localStorage, applied pre-render to avoid flashing. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+  }
+}
+
+/* ==========================================================
+   DOMAIN COLORS — from src/config/taxonomy.js (career-field axis)
+   Used for facet chips + in-article domain badges. Fixed hues,
+   same across all three themes so the taxonomy stays recognizable.
+   ========================================================== */
+:root {
+  --domain-de: #2f6fb0;
+  --domain-de-bg: rgba(47, 111, 176, 0.12);
+  --domain-da: #1f8a5f;
+  --domain-da-bg: rgba(31, 138, 95, 0.12);
+  --domain-ds: #6a5fc2;
+  --domain-ds-bg: rgba(106, 95, 194, 0.12);
+  --domain-ai: #c05a2c;
+  --domain-ai-bg: rgba(192, 90, 44, 0.12);
+  --domain-platform: #5f5e5a;
+  --domain-platform-bg: rgba(95, 94, 90, 0.12);
+  --domain-foundations: #7c7a72;
+  --domain-foundations-bg: rgba(124, 122, 114, 0.12);
+}

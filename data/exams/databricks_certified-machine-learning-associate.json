@@ -1,0 +1,1638 @@
+{
+  "exam": "Certified Machine Learning Associate",
+  "provider": "databricks",
+  "code": "certified-machine-learning-associate",
+  "total_questions": 133,
+  "questions": [
+    {
+      "id": 1,
+      "question": "A data scientist has a Spark DataFrame spark_df. They want to create a new Spark DataFrame that contains only the rows from spark_df where the value in column price is greater than 0.Which of the following code blocks will accomplish this task?",
+      "choices": {
+        "A": "spark_df[spark_df[\"price\"] > 0]",
+        "B": "spark_df.filter(col(\"price\") > 0)",
+        "C": "SELECT * FROM spark_df WHERE price > 0",
+        "D": "spark_df.loc[spark_df[\"price\"] > 0,:]",
+        "E": "spark_df.loc[:,spark_df[\"price\"] > 0]"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Phương thức `filter` hoặc `where` của Spark DataFrame được sử dụng để lọc các dòng dựa trên một điều kiện. Cú pháp `col(\"price\") > 0` xác định điều kiện trên cột `price`. Các phương án khác như sử dụng `.loc` hay chỉ số mảng là cú pháp của Pandas và không hợp lệ trong PySpark DataFrame."
+    },
+    {
+      "id": 2,
+      "question": "Which of the following statements describes a Spark ML estimator?",
+      "choices": {
+        "A": "An estimator is a hyperparameter grid that can be used to train a model",
+        "B": "An estimator chains multiple algorithms together to specify an ML workflow",
+        "C": "An estimator is a trained ML model which turns a DataFrame with features into a DataFrame with predictions",
+        "D": "An estimator is an algorithm which can be fit on a DataFrame to produce a Transformer",
+        "E": "An estimator is an evaluation tool to assess to the quality of a model"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Spark ML, một Estimator đại diện cho một thuật toán có thể được khớp (fit) trên một DataFrame để huấn luyện và tạo ra một Transformer (thường là một mô hình máy học đã được huấn luyện)."
+    },
+    {
+      "id": 3,
+      "question": "A data scientist wants to tune a set of hyperparameters for a machine learning model. They have wrapped a Spark ML model in the objective function objective_function and they have defined the search space search_space.As a result, they have the following code block:\nWhich of the following changes do they need to make to the above code block in order to accomplish the task?",
+      "choices": {
+        "A": "Change SparkTrials() to Trials()",
+        "B": "Reduce num_evals to be less than 10",
+        "C": "Change fmin() to fmax()",
+        "D": "Remove the trials=trials argument",
+        "E": "Remove the algo=tpe.suggest argument"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Hyperopt, `SparkTrials` được thiết kế để phân phối các lần chạy thử nghiệm song song trên cụm Spark. Tuy nhiên, nó yêu cầu mô hình chạy trên mỗi worker là đơn luồng (single-node). Do mô hình Spark ML vốn là phân tán và chạy trên toàn cụm Spark, việc sử dụng `SparkTrials` sẽ gây xung đột tài nguyên (lồng các công việc Spark). Do đó, ta phải sử dụng `Trials()` để chạy tuần tự trên driver node."
+    },
+    {
+      "id": 4,
+      "question": "A data scientist has a Spark DataFrame spark_df. They want to create a new Spark DataFrame that contains only the rows from spark_df where the value in column discount is less than or equal 0.Which of the following code blocks will accomplish this task?",
+      "choices": {
+        "A": "spark_df.loc[:,spark_df[\"discount\"] <= 0]",
+        "B": "spark_df[spark_df[\"discount\"] <= 0]",
+        "C": "spark_df.filter (col(\"discount\") <= 0)",
+        "D": "spark_df.loc(spark_df[\"discount\"] <= 0, :]"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tương tự như câu 1, ta sử dụng phương thức `.filter()` của Spark DataFrame kết hợp với điều kiện cột `col(\"discount\") <= 0` để thực hiện lọc dòng dữ liệu."
+    },
+    {
+      "id": 5,
+      "question": "A data scientist is utilizing MLflow Autologging to automatically track their machine learning experiments. After completing a series of runs for the experiment experiment_id, the data scientist wants to identify the run_id of the run with the best root-mean-square error (RMSE).Which of the following lines of code can be used to identify the run_id of the run with the best RMSE in experiment_id?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774315721544-lnixbpb9.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774315724132-zmanq1wb.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774315726624-sv5mdg2w.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774315729125-74c1s47u.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tìm `run_id` có chỉ số RMSE tốt nhất (nhỏ nhất) bằng `mlflow.search_runs`, ta cần sắp xếp các runs theo metric `metrics.rmse` theo thứ tự tăng dần (`metrics.rmse ASC` hoặc mặc định là tăng dần) và lấy bản ghi đầu tiên bằng `.iloc[0]['run_id']` vì hàm này trả về một Pandas DataFrame."
+    },
+    {
+      "id": 6,
+      "question": "A data scientist has defined a Pandas UDF function predict to parallelize the inference process for a single-node model:\nThey have written the following incomplete code block to use predict to score each record of Spark DataFrame spark_df:\nWhich of the following lines of code can be used to complete the code block to successfully complete the task?",
+      "choices": {
+        "A": "predict(*spark_df.columns)",
+        "B": "mapInPandas(predict)",
+        "C": "predict(Iterator(spark_df))",
+        "D": "mapInPandas(predict(spark_df.columns))",
+        "E": "predict(spark_df.columns)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để gọi hàm Pandas UDF `predict` dạng scalar trên Spark DataFrame `spark_df`, ta cần truyền vào các cột của DataFrame dưới dạng đối số. Cú pháp `predict(*spark_df.columns)` sử dụng toán tử giải nén `*` để truyền toàn bộ các cột của DataFrame vào hàm."
+    },
+    {
+      "id": 7,
+      "question": "A machine learning engineer has created a Feature Table new_table using Feature Store Client fs. When creating the table, they specified a metadata description with key information about the Feature Table. They now want to retrieve that metadata programmatically.Which of the following lines of code will return the metadata description?",
+      "choices": {
+        "A": "There is no way to return the metadata description programmatically.",
+        "B": "fs.create_training_set(\"new_table\")",
+        "C": "fs.get_table(\"new_table\").description",
+        "D": "fs.get_table(\"new_table\").load_df()",
+        "E": "fs.get_table(\"new_table\")"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Databricks Feature Store, đối tượng Feature Table được lấy ra qua phương thức `fs.get_table()`. Thuộc tính `.description` của đối tượng này sẽ trả về mô tả siêu dữ liệu (metadata description) của bảng đó."
+    },
+    {
+      "id": 8,
+      "question": "A health organization is developing a classification model to determine whether or not a patient currently has a specific type of infection. The organization's leaders want to maximize the number of positive cases identified by the model.Which of the following classification metrics should be used to evaluate the model?",
+      "choices": {
+        "A": "RMSE",
+        "B": "Precision",
+        "C": "Area under the residual operating curve",
+        "D": "Accuracy",
+        "E": "Recall"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Recall (độ thu hồi) là tỷ lệ số trường hợp thực tế dương tính được mô hình phát hiện đúng. Để tối đa hóa số ca dương tính được phát hiện (giảm thiểu bỏ sót ca nhiễm - False Negatives), đơn vị y tế cần ưu tiên tối đa hóa chỉ số Recall."
+    },
+    {
+      "id": 9,
+      "question": "In which of the following situations is it preferable to impute missing feature values with their median value over the mean value?",
+      "choices": {
+        "A": "When the features are of the categorical type",
+        "B": "When the features are of the boolean type",
+        "C": "When the features contain a lot of extreme outliers",
+        "D": "When the features contain no outliers",
+        "E": "When the features contain no missing values"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Giá trị trung vị (median) có tính bền vững cao và ít bị ảnh hưởng bởi các giá trị ngoại lai cực đoan (outliers) hơn so với giá trị trung bình (mean). Do đó, khi dữ liệu có nhiều outliers, việc điền khuyết bằng trung vị được ưu tiên hơn."
+    },
+    {
+      "id": 10,
+      "question": "An organization is developing a feature repository and is electing to one-hot encode all categorical feature variables. A data scientist suggests that the categorical feature variables should not be one-hot encoded within the feature repository.Which of the following explanations justifies this suggestion?",
+      "choices": {
+        "A": "One-hot encoding is not supported by most machine learning libraries.",
+        "B": "One-hot encoding is dependent on the target variable’s values which differ for each application.",
+        "C": "One-hot encoding is computationally intensive and should only be performed on small samples of training sets for individual machine learning problems.",
+        "D": "One-hot encoding is not a common strategy for representing categorical feature variables numerically.",
+        "E": "One-hot encoding is a potentially problematic categorical variable strategy for some machine learning algorithms."
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "One-hot encoding có thể làm tăng đáng kể số lượng đặc trưng (chiều dữ liệu), tạo ra các đặc trưng thưa thớt (sparse) và gây khó khăn cho một số thuật toán như cây quyết định (decision trees). Do đó, không nên một-hot encode sẵn trong kho đặc trưng chung, mà nên lưu biến phân loại gốc để các ứng dụng hạ nguồn tự chọn phương án mã hóa thích hợp."
+    },
+    {
+      "id": 11,
+      "question": "A machine learning engineer is trying to scale a machine learning pipeline by distributing its feature engineering process.Which of the following feature engineering tasks will be the least efficient to distribute?",
+      "choices": {
+        "A": "One-hot encoding categorical features",
+        "B": "Target encoding categorical features",
+        "C": "Imputing missing feature values with the mean",
+        "D": "Imputing missing feature values with the true median",
+        "E": "Creating binary indicator features for missing values"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Tính toán giá trị trung vị thực tế (true median) trên dữ liệu phân tán đòi hỏi phải sắp xếp toàn bộ dữ liệu hoặc thực hiện shuffle diện rộng giữa các executor, là tác vụ tốn kém và kém hiệu quả nhất khi phân tán. Các tác vụ khác như mean imputation, one-hot hay binary indicators chỉ yêu cầu tính toán cục bộ hoặc ít shuffle hơn."
+    },
+    {
+      "id": 12,
+      "question": "A data scientist is developing a machine learning pipeline using AutoML on Databricks Machine Learning.Which of the following steps will the data scientist need to perform outside of their AutoML experiment?",
+      "choices": {
+        "A": "Model tuning",
+        "B": "Model evaluation",
+        "C": "Model deployment",
+        "D": "Exploratory data analysis"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Databricks AutoML hỗ trợ tự động chuẩn bị dữ liệu, huấn luyện, tinh chỉnh siêu tham số và đánh giá mô hình. Tuy nhiên, việc triển khai mô hình (model deployment) sang môi trường phục vụ thực tế (serving endpoint) nằm ngoài phạm vi AutoML và phải do người dùng thực hiện."
+    },
+    {
+      "id": 13,
+      "question": "A data scientist has been given an incomplete notebook from the data engineering team. The notebook uses a Spark DataFrame spark_df on which the data scientist needs to perform further feature engineering. Unfortunately, the data scientist has not yet learned the PySpark DataFrame API.Which of the following blocks of code can the data scientist run to be able to use the pandas API on Spark?",
+      "choices": {
+        "A": "import pyspark.pandas as psdf = ps.DataFrame(spark_df)",
+        "B": "import pyspark.pandas as psdf = ps.to_pandas(spark_df)",
+        "C": "spark_df.to_sql()",
+        "D": "import pandas as pddf = pd.DataFrame(spark_df)",
+        "E": "spark_df.to_pandas()"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để chuyển đổi Spark DataFrame thành một DataFrame hỗ trợ API của Pandas nhưng vẫn chạy phân tán trên Spark, ta sử dụng thư viện `pyspark.pandas` (thường viết tắt là `ps`) bằng cú pháp `ps.DataFrame(spark_df)`. Các cách khác như `.to_pandas()` của Spark DataFrame sẽ chuyển thành Pandas DataFrame thông thường trên single-node driver, dễ gây tràn bộ nhớ (OOM)."
+    },
+    {
+      "id": 14,
+      "question": "Which of the following is a benefit of using vectorized pandas UDFs instead of standard PySpark UDFs?",
+      "choices": {
+        "A": "The vectorized pandas UDFs allow for the use of type hints",
+        "B": "The vectorized pandas UDFs process data in batches rather than one row at a time",
+        "C": "The vectorized pandas UDFs allow for pandas API use inside of the function",
+        "D": "The vectorized pandas UDFs work on distributed DataFrames",
+        "E": "The vectorized pandas UDFs process data in memory rather than spilling to disk"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Vectorized pandas UDFs sử dụng Apache Arrow để truyền dữ liệu và thực hiện xử lý dữ liệu theo từng lô (batches) dưới dạng Pandas Series/DataFrame thay vì xử lý từng dòng một (row-at-a-time) như PySpark UDF thông thường, giúp tăng hiệu năng đáng kể."
+    },
+    {
+      "id": 15,
+      "question": "A machine learning engineer is converting a decision tree from sklearn to Spark ML. They notice that they are receiving different results despite all of their data and manually specified hyperparameter values being identical.Which of the following describes a reason that the single-node sklearn decision tree and the Spark ML decision tree can differ?",
+      "choices": {
+        "A": "Spark ML decision trees test every feature variable in the splitting algorithm",
+        "B": "Spark ML decision trees automatically prune overfit trees",
+        "C": "Spark ML decision trees test more split candidates in the splitting algorithm",
+        "D": "Spark ML decision trees test a random sample of feature variables in the splitting algorithm",
+        "E": "Spark ML decision trees test binned features values as representative split candidates"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Spark ML xây dựng cây quyết định trên dữ liệu phân tán bằng cách chia nhỏ (binning) các đặc trưng liên tục thành các khoảng đại diện (mặc định là 32 bins) để giảm chi phí giao tiếp giữa các worker node, trong khi scikit-learn trên single-node kiểm tra tất cả các điểm chia có thể có, dẫn đến sự khác biệt nhỏ giữa hai kết quả."
+    },
+    {
+      "id": 16,
+      "question": "A data scientist has replaced missing values in their feature set with each respective feature variable’s median value. A colleague suggests that the data scientist is throwing away valuable information by doing this.Which of the following approaches can they take to include as much information as possible in the feature set?",
+      "choices": {
+        "A": "Impute the missing values using each respective feature variable’s mean value instead of the median value",
+        "B": "Refrain from imputing the missing values in favor of letting the machine learning algorithm determine how to handle them",
+        "C": "Remove all feature variables that originally contained missing values from the feature set",
+        "D": "Create a binary feature variable for each feature that contained missing values indicating whether each row’s value has been imputed",
+        "E": "Create a constant feature variable for each feature that contained missing values indicating the percentage of rows from the feature that was originally missing"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi điền khuyết bằng trung vị, thông tin về việc giá trị đó từng bị khuyết sẽ bị mất đi. Để giữ lại thông tin này (vốn có thể có giá trị dự báo), cách tốt nhất là tạo thêm một biến chỉ báo nhị phân (binary indicator variable) cho biết giá trị tại dòng đó có phải là giá trị được điền khuyết hay không."
+    },
+    {
+      "id": 17,
+      "question": "Which of the Spark operations can be used to randomly split a Spark DataFrame into a training DataFrame and a test DataFrame for downstream use?",
+      "choices": {
+        "A": "TrainValidationSplit",
+        "B": "DataFrame.where",
+        "C": "CrossValidator",
+        "D": "TrainValidationSplitModel",
+        "E": "DataFrame.randomSplit"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Phương thức `DataFrame.randomSplit` của Spark DataFrame được sử dụng để chia ngẫu nhiên dữ liệu thành các tập con (như training set và test set) theo tỷ lệ phần trăm chỉ định."
+    },
+    {
+      "id": 18,
+      "question": "A data scientist wants to efficiently tune the hyperparameters of a scikit-learn model. They elect to use the Hyperopt library's fmin operation to facilitate this process. Unfortunately, the final model is not very accurate. The data scientist suspects that there is an issue with the objective_function being passed as an argument to fmin.They use the following code block to create the objective_function:\nWhich of the following changes does the data scientist need to make to their objective_function in order to produce a more accurate model?",
+      "choices": {
+        "A": "Add test set validation process",
+        "B": "Add a random_state argument to the RandomForestRegressor operation",
+        "C": "Remove the mean operation that is wrapping the cross_val_score operation",
+        "D": "Replace the r2 return value with -r2",
+        "E": "Replace the fmin operation with the fmax operation"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm `fmin` của Hyperopt được thiết kế để tìm điểm tối thiểu (minimize) của một hàm mất mát (loss). Hệ số xác định $R^2$ là chỉ số đo lường độ chính xác với giá trị càng lớn càng tốt. Để tối đa hóa $R^2$ thông qua `fmin`, ta cần đảo ngược dấu của nó thành `-r2` để chuyển bài toán tối đa hóa thành tối thiểu hóa."
+    },
+    {
+      "id": 19,
+      "question": "A data scientist is using Spark ML to engineer features for an exploratory machine learning project.They decide they want to standardize their features using the following code block:\nUpon code review, a colleague expressed concern with the features being standardized prior to splitting the data into a training set and a test set.Which of the following changes can the data scientist make to address the concern?",
+      "choices": {
+        "A": "Utilize the MinMaxScaler object to standardize the training data according to global minimum and maximum values",
+        "B": "Utilize the MinMaxScaler object to standardize the test data according to global minimum and maximum values",
+        "C": "Utilize a cross-validation process rather than a train-test split process to remove the need for standardizing data",
+        "D": "Utilize the Pipeline API to standardize the training data according to the test data's summary statistics",
+        "E": "Utilize the Pipeline API to standardize the test data according to the training data's summary statistics"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Để tránh rò rỉ thông tin từ tập test sang tập train (data leakage), ta phải tính toán các thông số chuẩn hóa (như mean, stddev) chỉ trên tập train. Khi sử dụng Pipeline API, bộ chuẩn hóa (scaler) sẽ được fit trên tập train và dùng mô hình đã fit đó để transform trên tập test."
+    },
+    {
+      "id": 20,
+      "question": "A machine learning engineer would like to develop a linear regression model with Spark ML to predict the price of a hotel room. They are using the Spark DataFrame train_df to train the model.The Spark DataFrame train_df has the following schema:\nThe machine learning engineer shares the following code block:\nWhich of the following changes does the machine learning engineer need to make to complete the task?",
+      "choices": {
+        "A": "They need to call the transform method on train_df",
+        "B": "They need to convert the features column to be a vector",
+        "C": "They do not need to make any changes",
+        "D": "They need to utilize a Pipeline to fit the model",
+        "E": "They need to split the features column out into one column for each feature"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Thuật toán hồi quy tuyến tính trong Spark ML (`LinearRegression`) yêu cầu tất cả các đặc trưng đầu vào phải được tích hợp thành một cột vector duy nhất (kiểu `Vector`), thường được thực hiện thông qua `VectorAssembler` trước khi huấn luyện."
+    },
+    {
+      "id": 21,
+      "question": "A data scientist uses 3-fold cross-validation and the following hyperparameter grid when optimizing model hyperparameters via grid search for a classification problem:Hyperparameter 1: [2, 5, 10]Hyperparameter 2: [50, 100]Which of the following represents the number of machine learning models that can be trained in parallel during this process?",
+      "choices": {
+        "A": "3",
+        "B": "5",
+        "C": "6",
+        "D": "18"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Số lượng tổ hợp siêu tham số là $3 \\times 2 = 6$ tổ hợp. Với 3-fold cross-validation, mỗi tổ hợp sẽ được huấn luyện trên 3 tập dữ liệu khác nhau. Tổng số mô hình cần huấn luyện là $6 \\times 3 = 18$ mô hình. Các mô hình này độc lập và có thể chạy song song."
+    },
+    {
+      "id": 22,
+      "question": "A data scientist is wanting to explore summary statistics for Spark DataFrame spark_df. The data scientist wants to see the count, mean, standard deviation, minimum, maximum, and interquartile range (IQR) for each numerical feature.Which of the following lines of code can the data scientist run to accomplish the task?",
+      "choices": {
+        "A": "spark_df.summary ()",
+        "B": "spark_df.stats()",
+        "C": "spark_df.describe().head()",
+        "D": "spark_df.printSchema()",
+        "E": "spark_df.toPandas()"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương thức `summary()` của Spark DataFrame trả về các thống kê mô tả chi tiết bao gồm: count, mean, stddev, min, max và các phân vị (25%, 50%, 75% - cần để tính khoảng liên tứ phân vị IQR). Phương thức `describe()` mặc định không bao gồm các phân vị này."
+    },
+    {
+      "id": 23,
+      "question": "A data scientist is wanting to explore the Spark DataFrame spark_df. The data scientist wants visual histograms displaying the distribution of numeric features to be included in the exploration.Which of the following lines of code can the data scientist run to accomplish the task?",
+      "choices": {
+        "A": "spark_df.describe()",
+        "B": "dbutils.data(spark_df).summarize()",
+        "C": "This task cannot be accomplished in a single line of code.",
+        "D": "spark_df.summary()",
+        "E": "dbutils.data.summarize (spark_df)"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "Trong môi trường Databricks, hàm tiện ích `dbutils.data.summarize(spark_df)` cung cấp giao diện trực quan tóm tắt phân phối dữ liệu cực kỳ chi tiết bao gồm cả các biểu đồ tần suất (histograms) trực tiếp trên notebook."
+    },
+    {
+      "id": 24,
+      "question": "A machine learning engineer is trying to perform batch model inference. They want to get predictions using the linear regression model saved at the path model_uri for the DataFrame batch_df. batch_df has the following schema: customer_id STRINGThe machine learning engineer runs the following code block to perform inference on batch_df using the linear regression model at model_uri:\nIn which situation will the machine learning engineer’s code block perform the desired inference?",
+      "choices": {
+        "A": "When the Feature Store feature set was logged with the model at model_uri",
+        "B": "When all of the features used by the model at model_uri are in a Spark DataFrame in the PySpark",
+        "C": "When the model at model_uri only uses customer_id as a feature",
+        "D": "This code block will not perform the desired inference in any situation.",
+        "E": "When all of the features used by the model at model_uri are in a single Feature Store table"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi mô hình được huấn luyện bằng các đặc trưng từ Feature Store và được đăng ký (logged) kèm theo thông tin của Feature Store, mô hình sẽ tự động biết cách join và truy xuất các đặc trưng cần thiết từ Feature Store dựa trên khóa chính (`customer_id`) có trong DataFrame đầu vào."
+    },
+    {
+      "id": 25,
+      "question": "A data scientist uses 3-fold cross-validation when optimizing model hyperparameters for a regression problem. The following root-mean-squared-error values are calculated on each of the validation folds:• 10.0• 12.0• 17.0Which of the following values represents the overall cross-validation root-mean-squared error?",
+      "choices": {
+        "A": "13.0",
+        "B": "17.0",
+        "C": "12.0",
+        "D": "39.0",
+        "E": "10.0"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Giá trị sai số kiểm chéo (cross-validation error) tổng thể được tính bằng trung bình cộng các giá trị sai số trên các fold: $(10.0 + 12.0 + 17.0) / 3 = 13.0$."
+    },
+    {
+      "id": 26,
+      "question": "What is the name of the method that transforms categorical features into a series of binary indicator feature variables?",
+      "choices": {
+        "A": "Leave-one-out encoding",
+        "B": "Target encoding",
+        "C": "One-hot encoding",
+        "D": "Categorical embeddings",
+        "E": "String indexing"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "One-hot encoding (mã hóa một-nóng) là kỹ thuật chuyển đổi các biến phân loại thành một chuỗi các biến nhị phân chỉ báo (0 hoặc 1)."
+    },
+    {
+      "id": 27,
+      "question": "A machine learning engineer is trying to scale a machine learning pipeline pipeline that contains multiple feature engineering stages and a modeling stage. As part of the cross-validation process, they are using the following code block:\nA colleague suggests that the code block can be changed to speed up the tuning process by passing the model object to the estimator parameter and then placing the updated cv object as the final stage of the pipeline in place of the original model.Which of the following is a negative consequence of the approach suggested by the colleague?",
+      "choices": {
+        "A": "The model will take longer to train for each unique combination of hyperparameter values",
+        "B": "The feature engineering stages will be computed using validation data",
+        "C": "The cross-validation process will no longer be parallelizable",
+        "D": "The cross-validation process will no longer be reproducible",
+        "E": "The model will be refit one more per cross-validation fold"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Nếu đặt `CrossValidator` vào cuối Pipeline (chỉ bọc mô hình), các bước tiền xử lý đặc trưng ở các stage trước đó sẽ được khớp (fit) trên toàn bộ dữ liệu trước khi chia fold, khiến dữ liệu của tập xác thực (validation) bị rò rỉ vào quá trình tiền xử lý, làm mất đi tính khách quan khi đánh giá."
+    },
+    {
+      "id": 28,
+      "question": "A data scientist wants to parallelize the training of trees in a gradient boosted tree to speed up the training process. A colleague suggests that parallelizing a boosted tree algorithm can be difficult.Which of the following describes why?",
+      "choices": {
+        "A": "Gradient boosting is not a linear algebra-based algorithm which is required for parallelization.",
+        "B": "Gradient boosting requires access to all data at once which cannot happen during parallelization.",
+        "C": "Gradient boosting calculates gradients in evaluation metrics using all cores which prevents parallelization.",
+        "D": "Gradient boosting is an iterative algorithm that requires information from the previous iteration to perform the next step.",
+        "E": "Gradient boosting uses decision trees in each iteration which cannot be parallelized."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Gradient Boosting là thuật toán huấn luyện cây tuần tự (iterative), trong đó mỗi cây mới được xây dựng để giảm thiểu sai số của các cây trước đó. Do bước sau phụ thuộc trực tiếp vào kết quả của bước trước nên rất khó song song hóa việc huấn luyện các cây."
+    },
+    {
+      "id": 29,
+      "question": "Which of the following tools can be used to parallelize the hyperparameter tuning process for single-node machine learning models using a Spark cluster?",
+      "choices": {
+        "A": "MLflow Experiment Tracking",
+        "B": "Spark ML",
+        "C": "Autoscaling clusters",
+        "D": "Hyperopt",
+        "E": "Delta Lake"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hyperopt là thư viện chuyên dùng để tối ưu hóa siêu tham số. Khi kết hợp với đối tượng `SparkTrials`, Hyperopt có thể phân phối song song việc huấn luyện các cấu hình mô hình đơn node (như scikit-learn) trên các node worker của cụm Spark."
+    },
+    {
+      "id": 30,
+      "question": "A data scientist is attempting to tune a logistic regression model logistic using scikit-learn. They want to specify a search space for two hyperparameters and let the tuning process randomly select values for each evaluation.They attempt to run the following code block, but it does not accomplish the desired task:\nWhich of the following changes can the data scientist make to accomplish the task?",
+      "choices": {
+        "A": "Replace the GridSearchCV operation with RandomizedSearchCV",
+        "B": "Replace the GridSearchCV operation with cross_validate",
+        "C": "Replace the GridSearchCV operation with ParameterGrid",
+        "D": "Replace the random_state=0 argument with random_state=1",
+        "E": "Replace the penalty= ['12', '11'] argument with penalty=uniform ('12', '11')"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để chọn ngẫu nhiên các giá trị siêu tham số từ không gian tìm kiếm thay vì thử nghiệm vét cạn toàn bộ lưới tham số, nhà khoa học dữ liệu cần thay thế `GridSearchCV` bằng `RandomizedSearchCV`."
+    },
+    {
+      "id": 31,
+      "question": "Which of the following describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?",
+      "choices": {
+        "A": "pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata",
+        "B": "pandas API on Spark DataFrames are more performant than Spark DataFrames",
+        "C": "pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata",
+        "D": "pandas API on Spark DataFrames are less mutable versions of Spark DataFrames",
+        "E": "pandas API on Spark DataFrames are unrelated to Spark DataFrames"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "pandas API on Spark (trước đây là Koalas) hoạt động như một lớp bọc bên ngoài Spark DataFrame tiêu chuẩn kèm theo các siêu dữ liệu bổ sung (chẳng hạn như cấu trúc index) để cung cấp hành vi và cú pháp tương tự như thư viện Pandas."
+    },
+    {
+      "id": 32,
+      "question": "A data scientist has written a data cleaning notebook that utilizes the pandas library, but their colleague has suggested that they refactor their notebook to scale with big data.Which of the following approaches can the data scientist take to spend the least amount of time refactoring their notebook to scale with big data?",
+      "choices": {
+        "A": "They can refactor their notebook to process the data in parallel.",
+        "B": "They can refactor their notebook to use the PySpark DataFrame API.",
+        "C": "They can refactor their notebook to use the Scala Dataset API.",
+        "D": "They can refactor their notebook to use Spark SQL.",
+        "E": "They can refactor their notebook to utilize the pandas API on Spark."
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "pandas API on Spark cho phép chạy mã nguồn viết bằng Pandas trên môi trường phân tán của Spark với rất ít thay đổi (chỉ cần thay đổi lệnh import từ `import pandas` thành `import pyspark.pandas`), giúp tiết kiệm thời gian tái cấu trúc mã nguồn tối đa."
+    },
+    {
+      "id": 33,
+      "question": "A data scientist wants to use Spark ML to impute missing values in their PySpark DataFrame features_df. They want to replace missing values in all numeric columns in features_df with each respective numeric column’s median value.They have developed the following code block to accomplish this task:\nThe code block is not accomplishing the task.Which reasons describes why the code block is not accomplishing the imputation task?",
+      "choices": {
+        "A": "It does not impute both the training and test data sets.",
+        "B": "The inputCols and outputCols need to be exactly the same.",
+        "C": "The fit method needs to be called instead of transform.",
+        "D": "It does not fit the imputer on the data to create an ImputerModel."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Trong Spark ML, `Imputer` là một Estimator. Ta phải gọi phương thức `fit()` trên dữ liệu để sinh ra một `ImputerModel` (là một Transformer), sau đó mới có thể gọi `transform()` trên mô hình này để thực hiện điền khuyết."
+    },
+    {
+      "id": 34,
+      "question": "A data scientist wants to use Spark ML to one-hot encode the categorical features in their PySpark DataFrame features_df. A list of the names of the string columns is assigned to the input_columns variable.They have developed this code block to accomplish this task:\nThe code block is returning an error.Which of the following adjustments does the data scientist need to make to accomplish this task?",
+      "choices": {
+        "A": "They need to specify the method parameter to the OneHotEncoder.",
+        "B": "They need to remove the line with the fit operation.",
+        "C": "They need to use StringIndexer prior to one-hot encoding the features.",
+        "D": "They need to use VectorAssembler prior to one-hot encoding the features."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Spark ML, lớp `OneHotEncoder` yêu cầu các đặc trưng đầu vào phải ở dạng chỉ mục số (numeric/category indices) chứ không chấp nhận chuỗi trực tiếp. Do đó, ta cần sử dụng `StringIndexer` để mã hóa các chuỗi thành chỉ mục số trước khi đưa qua `OneHotEncoder`."
+    },
+    {
+      "id": 35,
+      "question": "Which of the following tools can be used to distribute large-scale feature engineering without the use of a UDF or pandas Function API for machine learning pipelines?",
+      "choices": {
+        "A": "Keras",
+        "B": "pandas",
+        "C": "PyTorch",
+        "D": "Spark ML",
+        "E": "Scikit-learn"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Spark ML cung cấp các transformer và estimator tích hợp sẵn (ví dụ OneHotEncoder, StandardScaler) hỗ trợ kỹ nghệ đặc trưng phân tán trên quy mô lớn trực tiếp trên Spark DataFrame mà không cần định nghĩa thêm UDF."
+    },
+    {
+      "id": 36,
+      "question": "A machine learning engineer wants to parallelize the training of group-specific models using the Pandas Function API. They have developed the train_model function, and they want to apply it to each group of DataFrame df.They have written the following incomplete code block:\nWhich of the following pieces of code can be used to fill in the above blank to complete the task?",
+      "choices": {
+        "A": "applyInPandas",
+        "B": "mapInPandas",
+        "C": "predict",
+        "D": "train_model",
+        "E": "groupedApplyIn"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để áp dụng một hàm xử lý dạng Pandas trên từng nhóm dữ liệu của Spark DataFrame, ta sử dụng phương thức `applyInPandas` sau khi đã thực hiện nhóm bằng `groupBy`."
+    },
+    {
+      "id": 37,
+      "question": "A data scientist has produced two models for a single machine learning problem. One of the models performs well when one of the features has a value of less than 5, and the other model performs well when the value of that feature is greater than or equal to 5. The data scientist decides to combine the two models into a single machine learning solution.Which of the following terms is used to describe this combination of models?",
+      "choices": {
+        "A": "Bootstrap aggregation",
+        "B": "Support vector machines",
+        "C": "Bucketing",
+        "D": "Ensemble learning",
+        "E": "Stacking"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Ensemble learning (học máy kết hợp/học đồng bộ) là thuật ngữ mô tả việc kết hợp nhiều mô hình máy học riêng lẻ để cùng giải quyết một bài toán nhằm đạt được độ chính xác và tính ổn định cao hơn."
+    },
+    {
+      "id": 38,
+      "question": "A data scientist has developed a linear regression model using Spark ML and computed the predictions in a Spark DataFrame preds_df with the following schema: prediction DOUBLE actual DOUBLEWhich of the following code blocks can be used to compute the root mean-squared-error of the model according to the data in preds_df and assign it to the rmse variable?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774615030048-hrjpc19x.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774615032565-0u54zxo6.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774615034961-qzshr39n.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774615037560-unsx7ki8.png)",
+        "E": "![](https://cdn.examcademy.com/images/questions/1774615040177-1fb8hs3w.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Spark ML, ta sử dụng `RegressionEvaluator` để đánh giá mô hình hồi quy. Cần chỉ định cột dự đoán (`predictionCol=\"prediction\"`), cột thực tế (`labelCol=\"actual\"`) và metric đánh giá (`metricName=\"rmse\"`), sau đó gọi phương thức `.evaluate(preds_df)`."
+    },
+    {
+      "id": 39,
+      "question": "Which of the following machine learning algorithms typically uses bagging?",
+      "choices": {
+        "A": "Gradient boosted trees",
+        "B": "K-means",
+        "C": "Random forest",
+        "D": "Linear regression",
+        "E": "Decision tree"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Thuật toán Random Forest (Rừng ngẫu nhiên) sử dụng kỹ thuật Bagging (Bootstrap Aggregating) để xây dựng nhiều cây quyết định độc lập trên các tập mẫu được rút gọn ngẫu nhiên có lặp lại, rồi gộp các dự đoán của chúng."
+    },
+    {
+      "id": 40,
+      "question": "The implementation of linear regression in Spark ML first attempts to solve the linear regression problem using matrix decomposition, but this method does not scale well to large datasets with a large number of variables.Which of the following approaches does Spark ML use to distribute the training of a linear regression model for large data?",
+      "choices": {
+        "A": "Logistic regression",
+        "B": "Spark ML cannot distribute linear regression training",
+        "C": "Iterative optimization",
+        "D": "Least-squares method",
+        "E": "Singular value decomposition"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để huấn luyện mô hình hồi quy tuyến tính trên lượng dữ liệu lớn nơi phương pháp phân tích ma trận (matrix decomposition) bị giới hạn về bộ nhớ, Spark ML sử dụng phương pháp tối ưu hóa lặp (iterative optimization) như thuật toán tối ưu hóa Gradient Descent phân tán để cập nhật trọng số dần dần."
+    },
+    {
+      "id": 41,
+      "question": "A data scientist is using MLflow to track their machine learning experiment. As a part of each of their MLflow runs, they are performing hyperparameter tuning. The data scientist would like to have one parent run for the tuning process with a child run for each unique combination of hyperparameter values. All parent and child runs are being manually started with mlflow.start_run.Which of the following approaches can the data scientist use to accomplish this MLflow run organization?",
+      "choices": {
+        "A": "They can turn on Databricks Autologging",
+        "B": "They can specify nested=True when starting the child run for each unique combination of hyperparameter values",
+        "C": "They can start each child run inside the parent run's indented code block using mlflow.start_run()",
+        "D": "They can start each child run with the same experiment ID as the parent run",
+        "E": "They can specify nested=True when starting the parent run for the tuning process"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong MLflow, để tổ chức cấu trúc cha-con (parent-child runs) khi chạy tinh chỉnh siêu tham số, ta cần truyền tham số `nested=True` vào hàm `mlflow.start_run()` khi khởi tạo các child run nằm trong ngữ cảnh của parent run."
+    },
+    {
+      "id": 42,
+      "question": "Which of the following approaches can be used to view the notebook that was run to create an MLflow run?",
+      "choices": {
+        "A": "Open the MLmodel artifact in the MLflow run page",
+        "B": "Click the “Models” link in the row corresponding to the run in the MLflow experiment page",
+        "C": "Click the “Source” link in the row corresponding to the run in the MLflow experiment page",
+        "D": "Click the “Start Time” link in the row corresponding to the run in the MLflow experiment page"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong giao diện MLflow UI (trang Experiment), cột \"Source\" hiển thị liên kết đến notebook hoặc mã nguồn đã chạy để tạo ra run đó. Nhấp vào link này sẽ mở trực tiếp mã nguồn tương ứng."
+    },
+    {
+      "id": 43,
+      "question": "A machine learning engineer has grown tired of needing to install the MLflow Python library on each of their clusters. They ask a senior machine learning engineer how their notebooks can load the MLflow library without installing it each time. The senior machine learning engineer suggests that they use Databricks Runtime for Machine Learning.Which of the following approaches describes how the machine learning engineer can begin using Databricks Runtime for Machine Learning?",
+      "choices": {
+        "A": "They can add a line enabling Databricks Runtime ML in their init script when creating their clusters.",
+        "B": "They can check the Databricks Runtime ML box when creating their clusters.",
+        "C": "They can select a Databricks Runtime ML version from the Databricks Runtime Version dropdown when creating their clusters.",
+        "D": "They can set the runtime-version variable in their Spark session to “ml”."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để sử dụng Databricks Runtime cho Machine Learning (môi trường tích hợp sẵn các thư viện ML thông dụng như MLflow), người dùng chỉ cần chọn một phiên bản Runtime ML từ hộp thoại thả xuống \"Databricks Runtime Version\" khi tạo cấu hình cho cluster."
+    },
+    {
+      "id": 44,
+      "question": "A machine learning engineer has been notified that a new Staging version of a model registered to the MLflow Model Registry has passed all tests. As a result, the machine learning engineer wants to put this model into production by transitioning it to the Production stage in the Model Registry.From which of the following pages in Databricks Machine Learning can the machine learning engineer accomplish this task?",
+      "choices": {
+        "A": "The home page of the MLflow Model Registry",
+        "B": "The experiment page in the Experiments observatory",
+        "C": "The model version page in the MLflow Model Registry",
+        "D": "The model page in the MLflow Model Registry"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để chuyển đổi giai đoạn trạng thái (stage transition - như chuyển từ Staging sang Production) của một phiên bản mô hình đã đăng ký, người dùng cần truy cập vào trang chi tiết của phiên bản mô hình đó (model version page) trong MLflow Model Registry."
+    },
+    {
+      "id": 45,
+      "question": "A machine learning engineer has identified the best run from an MLflow Experiment. They have stored the run ID in the run_id variable and identified the logged model name as \"model\". They now want to register that model in the MLflow Model Registry with the name \"best_model\".Which lines of code can they use to register the model associated with run_id to the MLflow Model Registry?",
+      "choices": {},
+      "correctAnswer": "B",
+      "explanation_vi": "Để đăng ký một mô hình đã log trong MLflow vào Model Registry, ta sử dụng hàm `mlflow.register_model()`. Đường dẫn URI của mô hình cần tuân theo định dạng `runs:/<run_id>/<artifact_path>` (ví dụ: `f\"runs:/{run_id}/model\"`) kèm theo tên đăng ký mong muốn."
+    },
+    {
+      "id": 46,
+      "question": "A new data scientist has started working on an existing machine learning project. The project is a scheduled Job that retrains every day. The project currently exists in a Repo in Databricks. The data scientist has been tasked with improving the feature engineering of the pipeline’s preprocessing stage. The data scientist wants to make necessary updates to the code that can be easily adopted into the project without changing what is being run each day.Which approach should the data scientist take to complete this task?",
+      "choices": {
+        "A": "They can create a new branch in Databricks, commit their changes, and push those changes to the Git provider.",
+        "B": "They can clone the notebooks in the repository into a Databricks Workspace folder and make the necessary changes.",
+        "C": "They can create a new Git repository, import it into Databricks, and copy and paste the existing code from the original repository before making changes.",
+        "D": "They can clone the notebooks in the repository into a new Databricks Repo and make the necessary changes."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Khi sử dụng Databricks Repos đã được kết nối với Git provider, quy trình làm việc chuẩn là tạo một nhánh Git mới (branch), thực hiện chỉnh sửa mã nguồn tiền xử lý trên nhánh đó, commit và push lên Git để tạo Pull Request. Cách này đảm bảo không làm gián đoạn Job huấn luyện chạy hàng ngày trên nhánh chính."
+    },
+    {
+      "id": 47,
+      "question": "A machine learning engineering team has a Job with three successive tasks. Each task runs a single notebook. The team has been alerted that the Job has failed in its latest run.Which of the following approaches can the team use to identify which task is the cause of the failure?",
+      "choices": {
+        "A": "Run each notebook interactively",
+        "B": "Review the matrix view in the Job’s runs",
+        "C": "Migrate the Job to a Delta Live Tables pipeline",
+        "D": "Change each Task’s setting to use a dedicated cluster"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Giao diện hiển thị lịch sử chạy Job (Job runs) của Databricks cung cấp chế độ xem ma trận (matrix view) trực quan hiển thị mối quan hệ và trạng thái của các tác vụ con. Người dùng có thể dễ dàng nhìn thấy tác vụ nào bị lỗi (màu đỏ) và nhấp vào đó để xem log chi tiết."
+    },
+    {
+      "id": 48,
+      "question": "A data scientist is using Spark SQL to import their data into a machine learning pipeline. Once the data is imported, the data scientist performs machine learning tasks using Spark ML.Which of the following compute tools is best suited for this use case?",
+      "choices": {
+        "A": "Single Node cluster",
+        "B": "Standard cluster",
+        "C": "SQL Warehouse",
+        "D": "None of these compute tools support this task"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Cụm máy chủ tiêu chuẩn (Standard cluster) hỗ trợ đầy đủ môi trường đa ngôn ngữ và chạy phân tán cả các truy vấn Spark SQL lẫn các tác vụ máy học phân tán của Spark ML. SQL Warehouse chỉ tối ưu cho các truy vấn SQL thông thường và không hỗ trợ Spark ML chạy bằng Python."
+    },
+    {
+      "id": 49,
+      "question": "Which of the following evaluation metrics is not suitable to evaluate runs in AutoML experiments for regression problems?",
+      "choices": {
+        "A": "F1",
+        "B": "R-squared",
+        "C": "MAE",
+        "D": "MSE"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "F1-score là chỉ số đánh giá dành riêng cho các bài toán phân loại (classification). Đối với bài toán hồi quy (regression) dự báo giá trị liên tục, các chỉ số phù hợp là R-squared, MAE, MSE và RMSE."
+    },
+    {
+      "id": 50,
+      "question": "A data scientist wants to efficiently tune the hyperparameters of a scikit-learn model in parallel. They elect to use the Hyperopt library to facilitate this process.Which of the following Hyperopt tools provides the ability to optimize hyperparameters in parallel?",
+      "choices": {
+        "A": "fmin",
+        "B": "SparkTrials",
+        "C": "quniform",
+        "D": "search_space",
+        "E": "objective_function"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Hyperopt, đối tượng `SparkTrials` được sử dụng để chỉ định việc phân phối và song song hóa quá trình chạy thử nghiệm các tổ hợp siêu tham số trên cụm Spark."
+    },
+    {
+      "id": 51,
+      "question": "A data scientist has created a linear regression model that uses log(price) as a label variable. Using this model, they have performed inference and the predictions and actual label values are in Spark DataFrame preds_df.They are using the following code block to evaluate the model: regression_evaluator.setMetricName(\"rmse\").evaluate(preds_df)Which of the following changes should the data scientist make to evaluate the RMSE in a way that is comparable with price?",
+      "choices": {
+        "A": "They should exponentiate the computed RMSE value",
+        "B": "They should take the log of the predictions before computing the RMSE",
+        "C": "They should evaluate the MSE of the log predictions to compute the RMSE",
+        "D": "They should exponentiate the predictions before computing the RMSE"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vì nhãn thực tế của mô hình là `log(price)`, các dự đoán đầu ra cũng nằm ở quy mô logarit. Để tính toán RMSE ở đơn vị gốc (so sánh trực tiếp được với `price`), ta cần áp dụng hàm mũ (exponentiate) lên các giá trị dự đoán trước khi tính RMSE."
+    },
+    {
+      "id": 52,
+      "question": "A data scientist is working with a feature set with the following schema:\nThe customer_id column is the primary key in the feature set. Each of the columns in the feature set has missing values. They want to replace the missing values by imputing a common value for each feature.Which of the following lists all of the columns in the feature set that need to be imputed using the most common value of the column?",
+      "choices": {
+        "A": "customer_id, loyalty_tier",
+        "B": "loyalty_tier",
+        "C": "units",
+        "D": "spend",
+        "E": "customer_id"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Phương pháp điền khuyết bằng giá trị xuất hiện nhiều nhất (mode imputation) được thiết kế cho các biến phân loại (categorical). Trong lược đồ đặc trưng, `loyalty_tier` là biến phân loại duy nhất có chứa giá trị khuyết cần điền theo cách này."
+    },
+    {
+      "id": 53,
+      "question": "A data scientist is performing hyperparameter tuning using an iterative optimization algorithm. Each evaluation of unique hyperparameter values is being trained on a single compute node. They are performing eight total evaluations across eight total compute nodes. While the accuracy of the model does vary over the eight evaluations, they notice there is no trend of improvement in the accuracy. The data scientist believes this is due to the parallelization of the tuning process.Which change could the data scientist make to improve their model accuracy over the course of their tuning process?",
+      "choices": {
+        "A": "Change the number of compute nodes to be half or less than half of the number of evaluations.",
+        "B": "Change the number of compute nodes and the number of evaluations to be much larger but equal.",
+        "C": "Change the iterative optimization algorithm used to facilitate the tuning process.",
+        "D": "Change the number of compute nodes to be double or more than double the number of evaluations."
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "id": 54,
+      "question": "A data scientist learned during their training to always use 5-fold cross-validation in their model development workflow. A colleague suggests that there are cases where a train-validation split could be preferred over k-fold cross-validation when k > 2.Which of the following describes a potential benefit of using a train-validation split over k-fold cross-validation in this scenario?",
+      "choices": {
+        "A": "A holdout set is not necessary when using a train-validation split",
+        "B": "Reproducibility is achievable when using a train-validation split",
+        "C": "Fewer hyperparameter values need to be tested when using a train-validation split",
+        "D": "Bias is avoidable when using a train-validation split",
+        "E": "Fewer models need to be trained when using a train-validation split"
+      },
+      "correctAnswer": "E",
+      "explanation_vi": "K-fold cross-validation yêu cầu huấn luyện mô hình $k$ lần cho mỗi bộ siêu tham số. Trong khi đó, việc chia train-validation đơn giản chỉ huấn luyện duy nhất 1 lần cho mỗi bộ siêu tham số, giúp giảm thiểu đáng kể số lượng mô hình cần huấn luyện, tiết kiệm tài nguyên và thời gian."
+    },
+    {
+      "id": 55,
+      "question": "Which of the following hyperparameter optimization methods automatically makes informed selections of hyperparameter values based on previous trials for each iterative model evaluation?",
+      "choices": {
+        "A": "Random Search",
+        "B": "Halving Random Search",
+        "C": "Tree of Parzen Estimators",
+        "D": "Grid Search"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tree of Parzen Estimators (TPE) là thuật toán tối ưu hóa Bayes. Nó xây dựng một mô hình xác suất từ kết quả của các thử nghiệm trước đó để đưa ra quyết định chọn bộ siêu tham số tiếp theo một cách thông minh, thay vì tìm kiếm ngẫu nhiên hay vét cạn."
+    },
+    {
+      "id": 56,
+      "question": "A team is developing guidelines on when to use various evaluation metrics for classification problems. The team needs to provide input on when to use the F1 score over accuracy.\nWhich of the following suggestions should the team include in their guidelines?",
+      "choices": {
+        "A": "The F1 score should be utilized over accuracy when the number of actual positive cases is identical to the number of actual negative cases.",
+        "B": "The F1 score should be utilized over accuracy when there are greater than two classes in the target variable.",
+        "C": "The F1 score should be utilized over accuracy when there is significant imbalance between positive and negative classes and avoiding false negatives is a priority.",
+        "D": "The F1 score should be utilized over accuracy when identifying true positives and true negatives are equally important to the business problem."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi dữ liệu bị mất cân bằng lớp nghiêm trọng (imbalanced classes) và việc tránh bỏ sót các ca dương tính (false negatives) là cực kỳ quan trọng, F1-score (trung bình điều hòa giữa Precision và Recall) phản ánh hiệu năng thực tế của mô hình tốt hơn nhiều so với Accuracy vốn bị thiên lệch bởi lớp đa số."
+    },
+    {
+      "id": 57,
+      "question": "A data scientist has developed a random forest regressor rfr and included it as the final stage in a Spark MLPipeline pipeline. They then set up a cross-validation process with pipeline as the estimator in the following code block:\nWhich of the following is a negative consequence of including pipeline as the estimator in the cross-validation process rather than rfr as the estimator?",
+      "choices": {
+        "A": "The process will have a longer runtime because all stages of pipeline need to be refit or retransformed with each model",
+        "B": "The process will leak data from the training set to the test set during the evaluation phase",
+        "C": "The process will be unable to parallelize tuning due to the distributed nature of pipeline",
+        "D": "The process will leak data prep information from the validation sets to the training sets for each model"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Nếu đặt toàn bộ Pipeline làm `estimator` trong `CrossValidator`, Spark sẽ phải chạy lại toàn bộ các bước tiền xử lý (fit/transform của tất cả các stage trước đó) cho mỗi fold kiểm chéo và mọi tổ hợp siêu tham số, dẫn đến thời gian thực thi lâu hơn rất nhiều so với việc chỉ đặt mô hình `rfr` làm estimator chạy trên dữ liệu đã tiền xử lý sẵn."
+    },
+    {
+      "id": 58,
+      "question": "A data scientist has written a feature engineering notebook that utilizes the pandas library. As the size of the data processed by the notebook increases, the notebook's runtime is drastically increasing, but it is processing slowly as the size of the data included in the process increases.Which of the following tools can the data scientist use to spend the least amount of time refactoring their notebook to scale with big data?",
+      "choices": {
+        "A": "PySpark DataFrame API",
+        "B": "pandas API on Spark",
+        "C": "Spark SQL",
+        "D": "Feature Store"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "pandas API on Spark cung cấp khả năng phân phối tính toán phân tán cho mã nguồn Pandas mà không cần viết lại toàn bộ mã sang PySpark DataFrame API, giúp tiết kiệm thời gian tối đa."
+    },
+    {
+      "id": 59,
+      "question": "A machine learning engineer is using the following code block to scale the inference of a single-node model on a Spark DataFrame with one million records:\nAssuming the default Spark configuration is in place, which of the following is a benefit of using an Iterator?",
+      "choices": {
+        "A": "The data will be limited to a single executor preventing the model from being loaded multiple times",
+        "B": "The model will be limited to a single executor preventing the data from being distributed",
+        "C": "The model only needs to be loaded once per executor rather than once per batch during the inference process",
+        "D": "The data will be distributed across multiple executors during the inference process"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi sử dụng Pandas UDF kiểu Iterator, dữ liệu được truyền theo từng lô thông qua một iterator. Điều này cho phép tải mô hình học máy một lần duy nhất cho mỗi executor (đặt ngoài vòng lặp iterator) thay vì tải lại mô hình cho mỗi lô dữ liệu, giúp tối ưu hóa bộ nhớ và tăng tốc độ xử lý."
+    },
+    {
+      "id": 60,
+      "question": "A data scientist has developed a linear regression model using Spark ML and computed the predictions in a Spark DataFrame preds_df with the following schema: prediction DOUBLE actual DOUBLEWhich of the following code blocks can be used to compute the root mean-squared-error of the model according to the data in preds_df and assign it to the rmse variable?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774615211296-0x0ankm8.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774615215721-hus2t39u.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774615219421-ory0dxab.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774615223041-czy9xc2d.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tính toán RMSE trên DataFrame `preds_df` có cột dự đoán là `prediction` và cột thực tế là `actual`, ta cần khởi tạo `RegressionEvaluator` với cấu hình: `predictionCol=\"prediction\"`, `labelCol=\"actual\"`, và `metricName=\"rmse\"`, sau đó gọi phương thức `.evaluate(preds_df)`."
+    },
+    {
+      "id": 61,
+      "question": "Which statement describes a Spark ML transformer?",
+      "choices": {
+        "A": "A transformer is an algorithm which can transform one DataFrame into another DataFrame",
+        "B": "A transformer is a hyperparameter grid that can be used to train a model",
+        "C": "A transformer chains multiple algorithms together to transform an ML workflow",
+        "D": "A transformer is a learning algorithm that can use a DataFrame to train a model"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Spark ML, một Transformer đại diện cho một thuật toán có thể chuyển đổi một DataFrame này thành một DataFrame khác (bằng cách thêm cột mới như dự đoán, đặc trưng biến đổi) thông qua phương thức `transform()`."
+    },
+    {
+      "id": 62,
+      "question": "A data scientist is using the following code block to tune hyperparameters for a machine learning model:\nWhich change can they make the above code block to improve the likelihood of a more accurate model?",
+      "choices": {
+        "A": "Increase num_evals to 100",
+        "B": "Change fmin() to fmax()",
+        "C": "Change sparkTrials() to Trials()",
+        "D": "Change tpe.suggest to random.suggest"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Tăng tham số `num_evals` (số lần đánh giá thử nghiệm) trong Hyperopt giúp không gian siêu tham số được tìm kiếm kỹ lưỡng hơn, từ đó tăng khả năng tìm ra bộ tham số tối ưu giúp mô hình đạt độ chính xác cao hơn."
+    },
+    {
+      "id": 63,
+      "question": "A machine learning engineer wants to parallelize the inference of group-specific models using the Pandas Function API. They have developed the apply_model function that will look up and load the correct model for each group, and they want to apply it to each group of DataFrame df.They have written the following incomplete code block:\nWhich piece of code can be used to fill in the above blank to complete the task?",
+      "choices": {
+        "A": "applyInPandas",
+        "B": "groupedApplyInPandas",
+        "C": "mapInPandas",
+        "D": "predict"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Phương thức `applyInPandas` của đối tượng GroupedData được sử dụng để áp dụng một hàm Python tự định nghĩa (ở đây là `apply_model`) trên từng nhóm dữ liệu của DataFrame sau khi gom nhóm."
+    },
+    {
+      "id": 64,
+      "question": "A machine learning engineer is trying to scale a machine learning pipeline by distributing its single-node model tuning process. After broadcasting the entire training data onto each core, each core in the cluster can train one model at a time. Because the tuning process is still running slowly, the engineer wants to increase the level of parallelism from 4 cores to 8 cores to speed up the tuning process. Unfortunately, the total memory in the cluster cannot be increased.In which of the following scenarios will increasing the level of parallelism from 4 to 8 speed up the tuning process?",
+      "choices": {
+        "A": "When the tuning process in randomized",
+        "B": "When the entire data can fit on each core",
+        "C": "When the model is unable to be parallelized",
+        "D": "When the data is particularly long in shape",
+        "E": "When the data is particularly wide in shape"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Quá trình tuning song song các mô hình đơn node yêu cầu phát quảng bá (broadcast) toàn bộ tập dữ liệu đến mỗi core. Vì tổng bộ nhớ không đổi, tăng số core chạy song song lên gấp đôi (từ 4 lên 8) sẽ nhân đôi số lượng bản sao dữ liệu trong bộ nhớ. Do đó, việc này chỉ thành công và nhanh hơn khi toàn bộ dữ liệu huấn luyện đủ nhỏ để vừa khít với bộ nhớ phân bổ cho mỗi core."
+    },
+    {
+      "id": 65,
+      "question": "A data scientist is developing a single-node machine learning model. They have a large number of model configurations to test as a part of their experiment. As a result, the model tuning process takes too long to complete. Which of the following approaches can be used to speed up the model tuning process?",
+      "choices": {
+        "A": "Implement MLflow Experiment Tracking",
+        "B": "Scale up with Spark ML",
+        "C": "Enable autoscaling clusters",
+        "D": "Parallelize with Hyperopt"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tăng tốc độ tinh chỉnh siêu tham số cho các mô hình chạy đơn node (như scikit-learn), ta sử dụng thư viện **Hyperopt** kết hợp với `SparkTrials` để phân phối song song việc huấn luyện các cấu hình tham số trên các máy worker của cụm Spark."
+    },
+    {
+      "id": 66,
+      "question": "A data scientist has developed a machine learning pipeline with a static input data set using Spark ML, but the pipeline is taking too long to process. They increase the number of workers in the cluster to get the pipeline to run more efficiently. They notice that the number of rows in the training set after reconfiguring the cluster is different from the number of rows in the training set prior to reconfiguring the cluster.Which of the following approaches will guarantee a reproducible training and test set for each model?",
+      "choices": {
+        "A": "Manually configure the cluster",
+        "B": "Write out the split data sets to persistent storage",
+        "C": "Set a speed in the data splitting operation",
+        "D": "Manually partition the input data"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong Spark, do tính chất thực thi lười biếng (lazy evaluation) và sự thay đổi phân vùng khi thay đổi số lượng worker, việc sử dụng `randomSplit` với seed cố định vẫn có thể trả về các tập dữ liệu khác nhau. Giải pháp tối ưu để đảm bảo tính tái lập 100% là ghi các tập dữ liệu sau khi chia ra ổ lưu trữ bền vững (như Delta hoặc Parquet) rồi đọc lại."
+    },
+    {
+      "id": 67,
+      "question": "A data scientist has produced three new models for a single machine learning problem. In the past, the solution used just one model. All four models have nearly the same prediction latency, but a machine learning engineer suggests that the new solution will be less time efficient during inference.In which situation will the machine learning engineer be correct?",
+      "choices": {
+        "A": "When the new solution requires if-else logic determining which model to use to compute each prediction",
+        "B": "When the new solution’s models have an average latency that is larger than the size of the original model",
+        "C": "When the new solution requires the use of fewer feature variables than the original model",
+        "D": "When the new solution requires that each model computes a prediction for every record",
+        "E": "When the new solution’s models have an average size that is larger than the size of the original model"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Nếu giải pháp mới yêu cầu mọi mô hình đều phải đưa ra dự đoán cho mỗi bản ghi (ví dụ: mô hình Ensemble, Voting, Stacking), thời gian suy luận tổng thể sẽ kém hiệu quả hơn đáng kể so với việc sử dụng một mô hình đơn lẻ vì phải gánh chi phí tính toán của tất cả các mô hình đồng thời."
+    },
+    {
+      "id": 68,
+      "question": "A data scientist has created a Python function compute_features that returns a Spark DataFrame with the following schema:\nThe resulting DataFrame is assigned to the features_df variable. The data scientist wants to create a Feature Store table using features_df.\nWhich of the following code blocks can they use to create and populate the Feature Store table using the Feature Store Client fs?",
+      "choices": {
+        "D": "features_df.write.mode(\"feature\").path(\"new_table\")",
+        "A": "![](https://cdn.examcademy.com/images/questions/1774681775103-2r2tb8l3.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774681777191-i6nomvts.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774681779224-11exjb9w.png)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để tạo và điền dữ liệu vào một bảng Feature Store mới từ Spark DataFrame `features_df`, ta gọi phương thức `create_table()` của Feature Store Client (`fs`) và truyền các tham số: `name`, `primary_keys` và `df=features_df`."
+    },
+    {
+      "id": 69,
+      "question": "Which of the following approaches makes the Python library gensim available to all notebooks run on a cluster?",
+      "choices": {
+        "A": "Set the runtime-version variable in their Spark session to \"ml\"",
+        "B": "Adding /databricks/python/bin/pip install genism to the cluster's bash init script",
+        "C": "Running %pip install gensim once on any notebook attached to the cluster",
+        "D": "Edit the cluster to use the Databricks Runtime for Machine Learning"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Databricks Runtime for Machine Learning tích hợp sẵn rất nhiều thư viện máy học và xử lý ngôn ngữ tự nhiên phổ biến như `gensim`. Chuyển đổi cấu hình cụm máy chủ sang sử dụng Runtime ML này sẽ tự động giúp thư viện `gensim` khả dụng trên toàn bộ các notebook attached."
+    },
+    {
+      "id": 70,
+      "question": "A machine learning engineer would like to develop a linear regression model with Spark ML to predict the price of a hotel room. They are using the Spark DataFrame train_df to train the model.\nThe Spark DataFrame train_df has the following schema:\nThe machine learning engineer shares the following code block:\nWhich of the following changes does the machine learning engineer need to make to complete the task?",
+      "choices": {
+        "A": "They need to use the lr object as a stage in a Pipeline to fit the model",
+        "B": "They need to call the transform method from the lr_model object on train_df",
+        "C": "They do not need to make any changes",
+        "D": "They need to convert the stars,year_updated, and beds columns to be a single vector column"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Thuật toán hồi quy tuyến tính trong Spark ML yêu cầu các thuộc tính đầu vào (các cột số như `stars`, `year_updated`, `beds`) phải được kết hợp lại thành một cột vector duy nhất (thường sử dụng `VectorAssembler`) trước khi thực hiện huấn luyện mô hình."
+    },
+    {
+      "id": 71,
+      "question": "Which of the following describes boosting for machine learning models?",
+      "choices": {
+        "A": "Boosting is the ensemble process of training machine learning models sequentially with each model learning from the previously trained models.",
+        "B": "Boosting is the ensemble process of training machine learning models sequentially with each model being trained on a unique subset of the data.",
+        "C": "Boosting is the ensemble process of training a machine learning model for each sample in a set of bootstrapped samples of the training data, and then appending the model estimates as a feature variable on the training set which is used to train another model.",
+        "D": "Boosting is the ensemble process of training a machine learning model for each sample in a set of bootstrapped samples of the training data and aggregating the predictions of each model to obtain a final estimate."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Boosting là phương pháp học máy kết hợp trong đó các mô hình cơ sở được huấn luyện một cách tuần tự. Mỗi mô hình mới sẽ tập trung học tập từ các lỗi sai (residuals) của mô hình được huấn luyện trước đó để cải thiện dự đoán."
+    },
+    {
+      "id": 72,
+      "question": "A data scientist is refactoring their pandas DataFrame code to utilize the pandas API on Spark.\nThey are using the following incomplete code block:\nWhich line of code can they use to fill in the blank to successfully refactor their code to utilize the pandas API on Spark?",
+      "choices": {
+        "A": "import pandas as ps",
+        "B": "import databricks.pandas as ps",
+        "C": "import pyspark.pandas as ps",
+        "D": "import pandas.spark as ps"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để sử dụng pandas API trên Spark, thư viện chuẩn trong PySpark là `pyspark.pandas`, thường được import với biệt danh là `ps` (`import pyspark.pandas as ps`)."
+    },
+    {
+      "id": 73,
+      "question": "Which of the following tools can be used to facilitate a Bayesian hyperparameter tuning process for distributed Spark ML machine learning models?",
+      "choices": {
+        "A": "AutoML",
+        "B": "Hyperopt",
+        "C": "MLflow Experiment Tracking",
+        "D": "Autoscaling clusters"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hyperopt là thư viện hỗ trợ tối ưu hóa siêu tham số bằng thuật toán tối ưu hóa Bayes. Nó có thể được sử dụng để điều phối và tối ưu hóa song song cho các mô hình phân tán chạy bằng Spark ML."
+    },
+    {
+      "id": 74,
+      "question": "A data scientist is utilizing MLflow Autologging to automatically track their machine learning experiments. After completing a series of runs for the experiment experiment_id, the data scientist wants to identify the run with the best root-mean-square error (RMSE).\nThey have written the following incomplete block of code:\nWhich of the following pieces of code should the data scientist use to fill in the above blank to complete the code block to identify the run with the best RMSE?",
+      "choices": {
+        "A": "show_runs",
+        "B": "search_runs",
+        "C": "experiment",
+        "D": "client"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm `mlflow.search_runs` được sử dụng để tìm kiếm và truy vấn thông tin tất cả các lượt chạy trong một experiment dưới dạng một DataFrame của Pandas, từ đó có thể lọc để tìm ra run có RMSE tốt nhất."
+    },
+    {
+      "id": 75,
+      "question": "Which of the following describes why pandas API syntax works inside of a Pandas UDF function applied on a Spark DataFrame?",
+      "choices": {
+        "A": "The Pandas UDF uses Apache Arrow to transfer data between Spark and pandas formats",
+        "B": "The Pandas UDF is calling the Pandas Function APIs inside of the function",
+        "C": "The Pandas UDF automatically rewrites the function to Spark DataFrame syntax",
+        "D": "The Pandas UDF is utilizing the pandas API on Spark inside of the function"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Pandas UDF sử dụng thư viện Apache Arrow để chuyển đổi định dạng dữ liệu bộ nhớ cực nhanh giữa Spark DataFrame (chạy trên JVM) và các cấu trúc dữ liệu Pandas (chạy trên Python), cho phép viết và chạy trực tiếp cú pháp Pandas trong hàm."
+    },
+    {
+      "id": 76,
+      "question": "A data scientist is calculating the importance of features as a part of an MLflow run. The feature importance values are being stored in the pandas DataFrame importance_df and being written as a CSV to the DBFS location importance_path. They would like to log these values with their active MLflow run.\nWhich of the following lines of code can the data scientist use to log the feature importance values with their active MLflow run?",
+      "choices": {
+        "A": "mlflow.log_metric(importance_df, “importance_df”)",
+        "B": "mlflow.log_artifact(importance_df)",
+        "C": "mlflow.log_artifact(importance_path, “importance.csv”)",
+        "D": "mlflow.log_artifact(importance_df, “importance_df”)"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để ghi log một tệp tin (như file CSV chứa độ quan trọng đặc trưng tại `importance_path`) vào run đang hoạt động của MLflow dưới dạng artifact, ta sử dụng hàm `mlflow.log_artifact(local_path, artifact_path)`."
+    },
+    {
+      "id": 77,
+      "question": "Which of the following approaches can be used to determine the exact date and time that an MLflow run was executed?",
+      "choices": {
+        "A": "Viewing the “Start Time” value in the MLflow experiment page",
+        "B": "Viewing the “Duration” value in the MLflow experiment page",
+        "C": "Viewing the “Duration” value in the MLflow run page",
+        "D": "Viewing the “Date” value in the MLflow run page"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để biết thời gian chính xác (ngày và giờ) mà một run của MLflow được thực thi, người dùng cần xem giá trị hiển thị tại cột \"Start Time\" trên trang danh sách các run thuộc Experiment đó."
+    },
+    {
+      "id": 78,
+      "question": "A data science team is refactoring their machine learning projects to distribute model inference. They organize their projects by the modeling library used in an effort to identify which projects will need a UDF to distribute the inference process.\nWhich of the following modeling libraries will need a UDF to distribute model inference?",
+      "choices": {
+        "A": "Spark MLlib",
+        "B": "Spark ML",
+        "C": "scikit-learn",
+        "D": "spacy"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Vì `scikit-learn` là một thư viện máy học đơn node (single-node), nên để thực hiện suy luận phân tán trên một Spark DataFrame lớn, ta bắt buộc phải bọc mô hình đó trong một hàm tự định nghĩa (UDF) như Pandas UDF để chạy song song trên các worker node."
+    },
+    {
+      "id": 79,
+      "question": "A data scientist has developed a three-class decision tree classifier using Spark ML and computed the predictions in a Spark DataFrame preds_df with the following schema:\nprediction DOUBLEactual DOUBLE\nWhich of the following code blocks can be used to compute the accuracy of the model according to the data in preds_df and assign it to the accuracy variable?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774688772982-xmok472r.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774688775091-12dwa30k.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774688777129-1cpfaljo.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774688779118-5pdwy734.png)"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để tính toán độ chính xác (accuracy) cho mô hình phân loại đa lớp trong Spark ML, ta sử dụng `MulticlassClassificationEvaluator` với thiết lập `predictionCol=\"prediction\"`, `labelCol=\"actual\"`, và `metricName=\"accuracy\"`, sau đó gọi `.evaluate(preds_df)`."
+    },
+    {
+      "id": 80,
+      "question": "A machine learning engineering team has started using Repos in Databricks for its projects. One of the machine learning engineers wants to save the new notebooks they have developed in Databricks to a remote Git provider.\nWhich of the following approaches can the machine learning engineer use to complete this task?",
+      "choices": {
+        "A": "They can commit and push the changes from the Repos dialog box.",
+        "B": "They can commit the changes from the notebook’s Revision History and push the changes from the Repos dialog box.",
+        "C": "They can commit the changes from the Repos dialog box and push the changes from the notebook’s Revision History.",
+        "D": "They can commit and push the changes from the notebook’s Revision History."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trong Databricks Repos, giao diện đối thoại Repos (Repos dialog box) cung cấp đầy đủ các thao tác Git như commit và push các thay đổi trực tiếp lên kho chứa từ xa (Git provider)."
+    },
+    {
+      "id": 81,
+      "question": "A machine learning engineer is converting a decision tree from sklearn to Spark ML.\nDuring the training process following this conversion, they receive the following error describing that need to set the maxBins parameter to at least 515 (or remove the feature):\nWhich of the following results in Spark ML needing the maxBins parameter to be at least as large as the number values in each categorical feature?",
+      "choices": {
+        "A": "Spark ML tests a limit of 32 split candidates for categorical features in the splitting algorithm",
+        "B": "Spark ML needs more split candidates in the splitting algorithm than single-node implementations",
+        "C": "Spark ML needs at least one bin for each category in each categorical feature",
+        "D": "Spark ML tests only categorical features in the splitting algorithm"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Spark ML decision trees, tham số `maxBins` quy định số lượng khoảng tối đa để phân chia đặc trưng. Với đặc trưng phân loại, thuật toán cần ít nhất một bin cho mỗi danh mục cụ thể của đặc trưng đó để tìm điểm phân tách chính xác. Do đó, `maxBins` phải tối thiểu bằng số lượng danh mục của đặc trưng lớn nhất."
+    },
+    {
+      "id": 82,
+      "question": "A machine learning engineer is updating a machine learning project to automatically refresh its model each time it runs. The project is attached to the existing model model_name in the MLflow Model Registry.\nThey are using the following code block as part of their solution:\nWhich of the following describes the impact of the registered_model_name=model_name parameter and argument given that model_name already exists in the MLflow Model Registry?",
+      "choices": {
+        "A": "It identifies the name of the logged model in the MLflow Experiment.",
+        "B": "It registers a new model called model_name in the MLflow Model Registry.",
+        "C": "It avoids the need to specify the model name in the subsequent required call to mlflow.register_model.",
+        "D": "It registers the new version of the model_name model in the MLflow Model Registry."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Khi tham số `registered_model_name` được thiết lập và mô hình đó đã tồn tại trong Model Registry, MLflow sẽ không tạo mới mà tự động đăng ký mô hình này thành một phiên bản (version) tiếp theo của mô hình hiện tại."
+    },
+    {
+      "id": 83,
+      "question": "Which of the following causes the performance speed of using the pandas API on Spark to be slower than that of native Spark DataFrames for large datasets?",
+      "choices": {
+        "A": "The usage of an InternalFrame to track metadata",
+        "B": "The increased amount of required code",
+        "C": "The lack of data distribution",
+        "D": "The eager evaluation of all processing"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "pandas API on Spark sử dụng một cấu trúc dữ liệu nội bộ gọi là `InternalFrame` để theo dõi và quản lý siêu dữ liệu (như index, thứ tự dòng) để đảm bảo cú pháp giống hệt Pandas. Chi phí phụ trội (metadata overhead) để duy trì cấu trúc này làm cho hiệu năng của nó đôi khi chậm hơn so với native Spark DataFrame trên các tập dữ liệu rất lớn."
+    },
+    {
+      "id": 84,
+      "question": "A data scientist is developing a machine learning pipeline using AutoML on Databricks Machine Learning, and they have identified the best model in the experiment. Now, they want to view the source code used to generate the best run.\nWhich of the following approaches can the data scientist use to view the code that produced the best model?",
+      "choices": {
+        "A": "They can click on the “View notebook for best model” button in the AutoML Experiment page",
+        "B": "They can click on the link in the “Model” field for the appropriate row in the AutoML Experiment page's table",
+        "C": "They can click on the link in the “Start Time” field for the appropriate row in the AutoML Experiment page's table",
+        "D": "They can click on the “Share” button in the AutoML Experiment page"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Trang kết quả thí nghiệm Databricks AutoML cung cấp nút \"View notebook for best model\". Khi nhấp vào nút này, hệ thống sẽ mở ra một notebook chứa toàn bộ mã nguồn huấn luyện đã được AutoML sinh tự động cho mô hình tốt nhất."
+    },
+    {
+      "id": 85,
+      "question": "A data scientist is developing a predictive model for customer churn using a Random Forest algorithm from the scikit-learn library. They are optimizing the algorithm's hyperparameters with Hyperopt on a Databricks cluster. However, the optimization process is slow because it is being executed on the driver node of the cluster. They attempted to use Optuna. a recommended alternative, but encountered the same issue. They want to distribute Hyperopt or Optuna trials to multiple machines on the Databricks cluster.\nWhat action will do this?",
+      "choices": {
+        "A": "Use the MLflow implementation of those libraries to automatically distribute hyperparameter tuning.",
+        "B": "Use the GridSearchCV implementation from Spark ML, which uses parallel execution.",
+        "C": "If using Optuna. use the Joblib Apache Spark Backend library. If using Hyperopt. use SparkTrials library.",
+        "D": "Use the parameters distributed=True in Optuna or parallel=True in Hyperopt."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để phân phối song song các thử nghiệm tối ưu hóa siêu tham số của mô hình đơn node trên cụm Spark: nếu dùng Hyperopt, ta sử dụng thư viện `SparkTrials`; nếu dùng Optuna, ta sử dụng Joblib với backend là Apache Spark (`joblibspark`)."
+    },
+    {
+      "id": 86,
+      "question": "A financial services company is considering different data processing approaches for their proposed machine learning projects. They have the following requirements:• Daily Financial Reports: The company needs to generate comprehensive financial reports at the end of each day, which involve processing large volumes of transaction data.• Fraud Detection System: The company wants to identify and stop fraudulent transactions as they occur, requiring immediate processing of transaction data.• Customer Behavior Analysis: The company aims to analyze customer behavior patterns in near real-time to offer personalized recommendations and promotions.\nTheir machine learning engineer needs to choose the combinations of data processing approaches for the projects that meet all their requirements effectively while also taking cost into consideration.\nWhich combination of approaches will do this?",
+      "choices": {
+        "A": "Real-time processing for daily financial reports, batch processing for fraud detection, and stream processing for customer behavior analysis.",
+        "B": "Batch processing for daily financial reports, stream processing for fraud detection, and real-time processing for customer behavior analysis.",
+        "C": "Stream processing for daily financial reports, batch processing for fraud detection, and real-time processing for customer behavior analysis.",
+        "D": "Batch processing for daily financial reports, real-time processing for fraud detection, and stream processing for customer behavior analysis."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Daily reports (báo cáo hàng ngày) xử lý dữ liệu tích lũy phù hợp nhất với **Batch processing**. Fraud detection (phát hiện gian lận) yêu cầu phản hồi lập tức phù hợp nhất với **Real-time processing**. Customer behavior analysis (phân tích hành vi) trong thời gian gần thực tế phù hợp nhất với **Stream processing**."
+    },
+    {
+      "id": 87,
+      "question": "Which statement correctly describes the benefits and downsides of using cross-validation compared to a simple train-validation split?",
+      "choices": {
+        "A": "Cross-validation always results in a higher model accuracy compared to a train-validation split because it uses the entire dataset for training.",
+        "B": "Cross-validation provides a more reliable estimate of model performance but is computationally more expensive than a train-validation split.",
+        "C": "Cross-validation uses only a single subset of data for validation, which can lead to overfitting, whereas a train-validation split uses multiple subsets for validation.",
+        "D": "Cross-validation is faster and less computationally intensive than a train-validation split, but it provides a less reliable estimate of model performance."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Cross-validation (kiểm chéo) huấn luyện mô hình nhiều lần trên các tập dữ liệu chia nhỏ khác nhau, cung cấp ước lượng hiệu năng mô hình tin cậy và khách quan hơn, tránh hiện tượng quá khớp do phân chia ngẫu nhiên nhưng tốn kém tài nguyên tính toán hơn so với chia train-validation đơn giản (chỉ huấn luyện 1 lần)."
+    },
+    {
+      "id": 88,
+      "question": "An e-commerce company has used Databricks Model Serving to deploy a factorization machines (FM) model to suggest products for customers. The company's data science team has developed two new models using the TensorFlow and PyTorch deep learning frameworks. The company needs to use A/В testing to evaluate the new models against the deployed model.\nThe required A/В testing setup is as follows:• Send 70% of traffic to the existing FM model• Send 15% of traffic to the TensorFlow model• Send 15% of traffic to the PyTorch model\nWhich architecture approach will implement the required A/В testing setup?",
+      "choices": {
+        "A": "Update the existing Model Serving endpoint to add the TensorFlow and PyTorch models. Configure the traffic splitting in the endpoint to be 70/15/15.",
+        "B": "As new models cannot be added to an existing endpoint, create a new Model Serving endpoint with the 3 models. Configure the traffic splitting in the endpoint to be 70/15/15.",
+        "C": "Create two new Model Serving endpoints for the TensorFlow and PyTorch models in addition to the existing endpoint. Configure the traffic splitting in the calling application to be 70/15/15.",
+        "D": "Create a new endpoint with the two TensorFlow and PyTorch models and sets the endpoint traffic split to be 50/50 between those models. Configure the traffic splitting in the calling application to be 70/30."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Databricks Model Serving cho phép cập nhật và cấu hình nhiều mô hình chạy trên cùng một endpoint duy nhất và hỗ trợ chia lưu lượng truy cập trực tiếp tại endpoint (ví dụ cấu hình chia lưu lượng 70% / 15% / 15% giữa ba mô hình)."
+    },
+    {
+      "id": 89,
+      "question": "A data scientist is using MLflow to optimize a complex deep learning model with the following hyperparameters:• learning_rate: continuous (range: 0.0001 to 0.1)• num_layers: discrete (range: 2 to 10)• dxopout_rate: continuous (range: 0.1 to 0.5)• batch_size: discrete (range: 32 to 256)\nThe model takes about 2 hours to train on a single set of hyperparameters, and the data scientist has a time budget of 24 hours for tuning.\nWhich hyperparameter tuning method is correct for this scenario?",
+      "choices": {
+        "A": "Grid Search",
+        "B": "Tree-structured Parzen Estimator (TPE)",
+        "C": "Exhaustive Search",
+        "D": "Random Search"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Với thời gian huấn luyện 2 giờ mỗi lượt và tổng thời gian tối đa 24 giờ (chỉ chạy tối đa 12 thử nghiệm), phương pháp tối ưu hóa Bayes sử dụng thuật toán TPE là tối ưu nhất vì nó học hỏi từ các lượt chạy trước để chọn tham số thông minh, nhanh chóng hội tụ về vùng tối ưu với số lượt chạy tối thiểu."
+    },
+    {
+      "id": 90,
+      "question": "A machine learning engineer has developed a classification model to predict whether a customer will renew their gym membership. They are unsure if the model they developed is accurate enough to be used in a production environment.\nWhich evaluation metric should they use to assess the model's performance?",
+      "choices": {
+        "A": "Root Mean Squared Error (RMSE)",
+        "B": "Mean Absolute Error (MAE)",
+        "C": "R-Squared (R2)",
+        "D": "ROC-AUC"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để đánh giá hiệu năng của một mô hình phân loại nhị phân (khách hàng sẽ gia hạn hay không), ROC-AUC là chỉ số đánh giá tiêu chuẩn và phù hợp nhất. Các chỉ số khác như RMSE, MAE, R-Squared dành riêng cho các bài toán hồi quy (regression)."
+    },
+    {
+      "id": 91,
+      "question": "A data scientist in an investment banking company has been asked to accelerate their model development process on certain tasks of their everyday job so they can free up time for other ones.\nWhich task is typically automated by AutoML in Databricks for that purpose?",
+      "choices": {
+        "A": "Monitoring model performance for inference.",
+        "B": "Training and optimizing different models.",
+        "C": "Deploying the model on a serving endpoint.",
+        "D": "Creating a feature engineering set for model development."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Databricks AutoML tập trung tự động hóa các bước huấn luyện (training) và tối ưu hóa, tinh chỉnh siêu tham số (optimization/tuning) cho nhiều thuật toán mô hình khác nhau để tìm ra mô hình tốt nhất từ dữ liệu đầu vào."
+    },
+    {
+      "id": 92,
+      "question": "A machine learning practitioner needs to build a linear regression model but wants to know if the dataset conforms to one of the four assumptions of linear regression. They know that data visualizations can provide a quick and easy way to test for one of their concerns: linearity.\nWhich visualization technique will show linearity between the independent and dependent variables?",
+      "choices": {
+        "A": "Plot each independent variable against other independent variables and visually inspect for linearity.",
+        "B": "Plot the independent variable against the dependent variable and visually inspect for linearity.",
+        "C": "Plot the average of the dependent variable vs the residual of the predicted value and visually inspect for linearity.",
+        "D": "Plot the residuals of the predicted variable vs the actual dependent variable and visually inspect for linearity."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Để kiểm tra trực quan mối quan hệ tuyến tính (linearity) giữa một biến độc lập và một biến phụ thuộc, kỹ thuật đơn giản và phổ biến nhất là vẽ biểu đồ phân tán (scatter plot) giữa biến độc lập và biến phụ thuộc rồi quan sát xu hướng phân bố của các điểm dữ liệu."
+    },
+    {
+      "id": 93,
+      "question": "A data scientist is building a logistic regression model using sklearn pipelines. They currently have the following code that only accounts for numeric features:\nThe data scientist wants to update the pipeline to account for both numeric and categorical features.\nWhich code block will do this?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774693789744-sucnyxox.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774693792525-i1nvu1jz.png)",
+        "C": "![](https://cdn.examcademy.com/images/questions/1774693795522-5ts5x4ld.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774693798760-tr4ciz0d.png)"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để xử lý đồng thời cả đặc trưng dạng số và phân loại trong pipeline của scikit-learn, ta sử dụng `ColumnTransformer`. Lớp này cho phép áp dụng các phép biến đổi riêng biệt (ví dụ imputer/scaler cho cột số, và OneHotEncoder cho cột phân loại) trên các nhóm cột tương ứng trước khi đưa vào bước phân loại."
+    },
+    {
+      "id": 94,
+      "question": "What is a key advantage of creating feature store tables at the account level in Unity Catalog compared to the workspace level in Databricks?",
+      "choices": {
+        "A": "Improved isolation and security through strict data segregation",
+        "B": "Reduced storage costs",
+        "C": "Simplified data discovery across workspaces",
+        "D": "Automatic data encryption"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Việc tạo các bảng Feature Store trong Unity Catalog ở cấp tài khoản (account level) cho phép tất cả các workspace khác nhau trong cùng một tài khoản Databricks có thể dễ dàng truy cập và tái sử dụng các đặc trưng này, giúp đơn giản hóa việc tìm kiếm và quản lý đặc trưng chung."
+    },
+    {
+      "id": 95,
+      "question": "A data scientist has run several trials with different parameters and logged them under an MLflow experiment churn_prediction. Now they want to retrieve the run that performed best according to certain model metrics.\nHow can the data scientist perform this task?",
+      "choices": {
+        "A": "Use the mlflow.get_best_run() function with the necessary filter",
+        "B": "Use the mlflow.client.MlflowClient.search_runs() function with search_all_experiments=True and filter on the pandas DataFrame returned.",
+        "C": "Use the mlflow.get_experiment() function to retrieve the experiment. Filter on the runs property which has the list of all metadata for each run including the model metric",
+        "D": "Use the mlflow.search_runs() function with the experiment name and filter on the pandas DataFrame returned."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Hàm `mlflow.search_runs` trả về một DataFrame chứa siêu dữ liệu và các metric của toàn bộ các runs trong experiment. Người dùng có thể dễ dàng lọc và sắp xếp trên DataFrame này để tìm ra run có hiệu năng tốt nhất."
+    },
+    {
+      "id": 96,
+      "question": "The data science team at a retailer has developed a custom MLflow pyfunc model with private Python dependencies. They now want to deploy and serve the model for real-time inference using Databricks Model Serving. However, they are getting dependency errors during deployment.\nWhich is the correct approach to resolve the issue?",
+      "choices": {
+        "A": "Add the dependencies to the MLflow model using the add_libraries_to_model method",
+        "B": "Log the dependencies separately using the log_dependencies method",
+        "C": "Log the dependencies together with the model using log_model method with pip_requirements or extra_pip_requirements parameter",
+        "D": "Use an MLflow native flavor model instead of the custom pyfunc model"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Khi log một mô hình custom pyfunc có các thư viện Python phụ thuộc riêng, ta cần khai báo chúng thông qua tham số `pip_requirements` hoặc `extra_pip_requirements` trong hàm `log_model()` để MLflow đóng gói chính xác môi trường phục vụ cho Databricks Model Serving."
+    },
+    {
+      "id": 97,
+      "question": "A machine learning engineer working for an Energy Distributor wants to perform a time-series forecast of critical turbines sensor measures.\nHere is the feature set under consideration:\nThe machine learning engineer creates a first model and gets a higher than expected RMSE. They believe the model can be improved using data imputation. They will use data science best practices for imputation.\nWhich data imputation strategy is most likely to enhance the dataset's quality and predictive performance?",
+      "choices": {
+        "A": "For sensor type use mode, for temperature and vibration use mean (per day).",
+        "B": "They can just remove all out of range values and missing values from the training set.",
+        "C": "For sensor type use mode, for temperature use median (per day) and for vibration use mean (per day).",
+        "D": "For sensor type use mode, for temperature use mean (per day) and for vibration use median (per day)."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Với cột phân loại `sensor type`, mode là phương pháp điền khuyết tiêu chuẩn. Đối với `temperature`, nhiệt độ biến thiên mượt mà và ít outliers nên dùng `mean per day`. Đối với `vibration`, rung động cơ khí có thể có các giá trị đột biến cực lớn (outliers), do đó điền khuyết bằng `median per day` sẽ bền vững (robust) hơn so với mean."
+    },
+    {
+      "id": 98,
+      "question": "A machine learning engineer is evaluating a dataset to determine if it is viable for the creation of a machine learning predictive model. They are concerned that there may be a strong relationship between two of the independent variables that could indicate that they are confounding. The variables in question are gender and highest education level as shown:\nThe machine learning engineer must investigate and rule out that these variables are confounding.\nWhat action will do this?",
+      "choices": {
+        "A": "Use the Random Forest algorithm to calculate feature importance and isolate features that are not independent",
+        "B": "Perform Pearson Correlation Coefficient test to evaluate for independence",
+        "C": "Calculate IQR on the features and compare the 25th percentile against the 75th percentile to determine if either feature is statistically independent",
+        "D": "Perform Chi-Squared Test to evaluate for independence"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Vì `gender` và `highest education level` đều là các biến phân loại (categorical), phương pháp kiểm định thống kê chuẩn để xác định xem hai biến này có độc lập hay có mối tương quan phụ thuộc (confounding) là sử dụng kiểm định Chi-bình phương (Chi-Squared Test of Independence)."
+    },
+    {
+      "id": 99,
+      "question": "A data scientist has a Spark DataFrame df of new customers that they would like to add to their existing customer feature table in Unity Catalog. The following parameters are available for them to use when writing to the feature table.• name - the name of the feature table to write to.• df - a Spark DataFrame with feature data to be written to the feature table.• mode - the write operation to use when writing to the feature table (e.g. merge)• primary key - the primary key of the feature table.\nUsing the Databricks Feature Store, if the FeatureEngineeringClient is instantiated, what are the minimum parameters required for the write_table function?",
+      "choices": {
+        "A": "name, df, primary key",
+        "B": "name, df",
+        "C": "df",
+        "D": "name, df, mode"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi ghi dữ liệu vào một bảng đặc trưng đã tồn tại bằng hàm `write_table()`, hai tham số tối thiểu bắt buộc phải cung cấp là tên bảng đặc trưng cần ghi (`name`) và DataFrame chứa dữ liệu mới cần ghi (`df`)."
+    },
+    {
+      "id": 100,
+      "question": "A data scientist is preparing a dataset for machine learning in Databricks. The dataset contains a categorical feature called color with values “red\", \"blue\", and \"green\". They want to use one-hot encoding to transform this feature for model training.\nWhich approach correctly implements one-hot encoding for the color feature using PySpark?",
+      "choices": {
+        "A": "Apply the pd.get_dummies function after converting the Spark DataFrame to a Pandas DataFrame",
+        "B": "Use Spark's built-in functions to one-hot encode the color column of the Spark DataFrame",
+        "C": "Use the StringIndexer followed by the OneHotEncoder, then the VectorAssembler to create the final feature vector.",
+        "D": "Apply the categorical_column function to the color column, then use the OneHotEncodingEstimator"
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong PySpark ML, quy trình chuẩn để mã hóa một-nóng bao gồm: sử dụng `StringIndexer` để đổi chuỗi thành chỉ mục số, chuyển chỉ mục số qua `OneHotEncoder` thành vector nhị phân, và dùng `VectorAssembler` để gộp vector này với các đặc trưng khác thành một cột vector duy nhất trước khi đưa vào mô hình."
+    },
+    {
+      "id": 101,
+      "question": "A data scientist wants to train a model using an existing Delta table as a feature table, in a workspace with Unity Catalog enabled. As this Delta table already contains data that is constantly being updated, they want to avoid duplicating data or having to keep another table synchronized. This table was created with the following code, with the customer_id column as the unique identifier:\nWhich SQL code statement will enable them to use this Delta table as a feature table?",
+      "choices": {
+        "A": "CREATE FEATURE TABLE store.rfv_analysis.customer_features USING PRIMARY KEY (customer_id);",
+        "C": "ALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY(customer id);",
+        "D": "ALTER TABLE store.rfv_analysis.customer_features ALTER COLUMN customer_id SET NOT NULL;ALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY (customer_id);",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774693814330-e0rj294u.png)"
+      },
+      "correctAnswer": "A"
+    },
+    {
+      "id": 102,
+      "question": "A data scientist is considering two common model deployment patterns:• Promoting the model artifact towards production (deploy model)• Promoting the code that products the model artifact towards production (deploy code)\nWhich scenario is inappropriate for the deploy model approach?",
+      "choices": {
+        "A": "The data scientist is not working with external repos or a CI/CD process.",
+        "B": "Model training is very expensive or hard to reproduce.",
+        "C": "Production data is not accessible from the development environment.",
+        "D": "All work is done in a single Databricks workspace."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Phương pháp \"deploy model\" (triển khai mô hình bằng cách train ở Dev rồi copy file model sang Prod) sẽ không phù hợp nếu môi trường phát triển (Dev) hoàn toàn không có quyền truy cập vào dữ liệu sản xuất (Production data), trong khi mô hình bắt buộc phải huấn luyện trên dữ liệu thật này. Khi đó, ta bắt buộc phải sử dụng phương pháp \"deploy code\" để đưa code huấn luyện lên chạy trực tiếp trên môi trường Prod."
+    },
+    {
+      "id": 103,
+      "question": "A machine learning engineer would like to calculate summary statistics on a dataset in Databricks. Specifically, they are looking for count, mean, stddev, min, max, and IQR. They are using SparkML on Databricks but also want the code to be portable to Spark not running onDatabricks.\nWhat approach will do this?",
+      "choices": {
+        "A": "Use the SparkML API function .describe()",
+        "B": "Use the built in Data Profile functionality in Databricks Notebooks",
+        "C": "Use dbutils.data.summarize",
+        "D": "Use the SparkML API function .summary()"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để tính toán các số liệu thống kê mô tả bao gồm cả IQR mà vẫn đảm bảo mã nguồn có thể chạy trên mọi môi trường Spark tiêu chuẩn (không phụ thuộc vào các thư viện riêng của Databricks như `dbutils`), ta sử dụng phương thức `summary()` của Spark DataFrame."
+    },
+    {
+      "id": 104,
+      "question": "A data scientist is working with a Spark DataFrame df containing numerical data. They want to remove outliers from the salary column based on the Interquartile Range (IQR) method. The cleaned DataFrame should be assigned to the variable cleaned_df.\nWhich approach correctly removes the outliers?",
+      "choices": {
+        "A": "![](https://cdn.examcademy.com/images/questions/1774693801942-nh5x8vis.png)",
+        "B": "![](https://cdn.examcademy.com/images/questions/1774693804361-pq57wipa.png)",
+        "C": "![](https://img.examtopics.com/certified-machine-learning-associate/image55.png)",
+        "D": "![](https://cdn.examcademy.com/images/questions/1774693817063-ono2c1b2.png)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để lọc outliers bằng phương pháp IQR trong PySpark: sử dụng `df.approxQuantile` để tính các phân vị 25% ($Q_1$) và 75% ($Q_3$), tính $IQR = Q_3 - Q_1$, sau đó dùng `.filter()` để chỉ giữ lại các dòng có giá trị `salary` nằm trong khoảng $[Q_1 - 1.5 \\times IQR, Q_3 + 1.5 \\times IQR]$."
+    },
+    {
+      "id": 105,
+      "question": "A data scientist has completed a featurization process on a new dataset. They are considering if the resulting features should be saved to an online or offline feature table. They know that the features will be used primarily for real-time inference. After some thought, they decide to use an online feature table instead of an offline feature table.\nWhat aspect of online feature tables enabled their decision for this scenario?",
+      "choices": {
+        "A": "They prioritize low-latency access and are optimized for point lookups, typically supported by key-value stores or column-oriented databases.",
+        "B": "They only support real-time inference so they are the only option.",
+        "C": "They support both batch and real-time inference equally in terms of cost and performance, providing the most flexibility.",
+        "D": "They prioritize batch inference and leverage traditional data warehouses or data lakes, making them more cost-effective."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Đặc điểm nổi bật của online feature tables (kho đặc trưng trực tuyến) là tối ưu hóa cho truy cập độ trễ cực thấp (low-latency) và các câu lệnh truy vấn điểm (point lookups) theo khóa chính, phù hợp nhất với các bài toán dự báo thời gian thực (real-time inference)."
+    },
+    {
+      "id": 106,
+      "question": "A data scientist applies random splits to train and test a time-series model but observes poor predictive performance. They know that they need to make an adjustment to their evaluation strategy to better suit time-series data.\nWhich approach will do that?",
+      "choices": {
+        "A": "Increase the number of time-series features and apply cross-validation.",
+        "B": "Preserve the temporal order of observations and use rolling cross-validation.",
+        "C": "Use larger random splits.",
+        "D": "Use a different forecasting algorithm."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Đối với dữ liệu chuỗi thời gian, việc phân chia ngẫu nhiên sẽ làm rò rỉ dữ liệu tương lai vào dữ liệu huấn luyện quá khứ. Do đó, ta cần bảo toàn thứ tự thời gian của các quan sát và sử dụng phương pháp kiểm chéo cuốn chiếu (rolling cross-validation) để đánh giá mô hình khách quan."
+    },
+    {
+      "id": 107,
+      "question": "A machine learning engineer is tasked with developing a model to classify emails as spam or not spam. After evaluating several models, they observe the following:• Model A: High training accuracy, low test accuracy• Model B: Low training accuracy, low test accuracy• Model C: Moderate training accuracy, moderate test accuracy• Model D: Low training accuracy, high test accuracy\nBased on these observations, which model is most likely to suffer from high variance?",
+      "choices": {
+        "A": "Model A",
+        "B": "Model B",
+        "C": "Model C",
+        "D": "Model D"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Mô hình A có độ chính xác rất cao trên tập huấn luyện nhưng độ chính xác rất thấp trên tập kiểm thử. Đây là dấu hiệu rõ ràng của hiện tượng quá khớp (overfitting), tương ứng với việc mô hình có phương sai cao (high variance)."
+    },
+    {
+      "id": 108,
+      "question": "A data scientist is working on a project to predict house prices based on various features such as square footage, number of bedrooms, and location. They notice that the distribution of house prices is heavily skewed. Additionally, the residuals from their initial linear regression model show a clear pattern, indicating a violation of the homoscedasticity assumption.\nWhich action would account for the stated problems with the model?",
+      "choices": {
+        "A": "Use a polynomial regression model to capture the non-linear relationship between the features and house prices.",
+        "B": "Apply a log transformation to the dependent variable (house prices) to reduce skewness and improve model assumptions.",
+        "C": "Remove the outliers from the dataset to achieve a more normal distribution of house prices.",
+        "D": "Apply a square root transformation to the independent variables to achieve linearity."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Khi biến phụ thuộc (`house prices`) bị lệch nghiêm trọng và phần dư vi phạm giả định phương sai sai số không đổi (homoscedasticity), việc áp dụng phép biến đổi logarit (log transformation) lên biến phụ thuộc sẽ giúp ổn định phương sai sai số và giảm độ lệch phân phối dữ liệu hiệu quả."
+    },
+    {
+      "id": 109,
+      "question": "A data scientist wants to tune hyperparameters for an sklearn model using the Hyperopt library. They have written the following code:\nWhich statement explains the problem with the above Hyperopt code?",
+      "choices": {
+        "A": "Values of max_evals greater than 64 require SparkTrials() instead of Trials().",
+        "B": "Hyperopt fmin optimizes for the minimum value, so taking the negative of F1 score will return the worst performing model.",
+        "C": "Trials() does not distribute trials to Spark workers, so the trial argument must be SparkTrials().",
+        "D": "The hyperopt.tpe.suggest algorithm does not work with sklearn, so the algorithm needs to be hyperopt.rand.suggest."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Đối tượng `Trials()` mặc định trong Hyperopt chỉ chạy tuần tự các thử nghiệm trên node driver duy nhất của cụm máy chủ. Để phân phối song song việc huấn luyện trên các máy worker của cụm Spark trong môi trường Databricks, ta phải thay thế bằng `SparkTrials()`."
+    },
+    {
+      "id": 110,
+      "question": "A data scientist is experimenting with different models and parameters using MLflow in a Databricks notebook. For this experiment, they need a cleaner view of the runs and therefore need to pick and choose which parameters, metrics and models are going to be logged.\nWhat is the correct way of achieving this?",
+      "choices": {
+        "A": "Use log_param, log_metric and log_model from MLflow client within a with mlflow.start_run() block",
+        "B": "Setting MLflow Autologging to not exclusive using mlflow.autolog(exclusive=False), then logging parameters, metrics and models manually using log_param, log_metric and log_model from MLfloW Client",
+        "C": "Using log_param, log_metric and log_model from MLflow client anywhere in the notebook without requiring additional code.",
+        "D": "Calling mlflow.autolog() before starting model training."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để kiểm soát và chọn lọc chính xác các thông số và metric được ghi log (nhằm làm sạch giao diện MLflow runs), nhà khoa học dữ liệu nên tắt tính năng autologging tự động và tự gọi các hàm ghi log thủ công như `log_param`, `log_metric`, và `log_model` bên trong khối ngữ cảnh quản lý run `with mlflow.start_run():`."
+    },
+    {
+      "id": 111,
+      "question": "A machine learning engineer has trained a machine learning model to predict customer churn. They want to use this model to perform streaming predictions on streaming data using Delta Live Tables (DLT). The model is saved as a SparkML pipeline in MLflow and new customer data is streaming into a Delta table. They want to implement streaming inference using Delta Live Tables and MLflow.\nWhich approach does this?",
+      "choices": {
+        "A": "Load the MLflow model directly within the Delta Live Tables function using mlflow.pyfunc.load_model(). Then, within a streaming Delta Live Tables function, read the streaming data using dlt.read() and apply the loaded model to each row of the streaming customer data using a Pandas UDF.",
+        "B": "Use mlflow.sklearn.load_model() to load the MLflow model as a scikit-learn object inside the Delta Live Tables function. Then, use spark.readstream() to read the streaming customer data, convert each batch to a pandas DataFrame, apply the scikit-learn model using df.apply(), and write the results back to a Delta table using spark.writeStream().",
+        "C": "Create a Spark UDF from the MLflow model using miflow.pyfunc.spark_udf(). Then, within a streaming Delta Live Tables function, use dlt.read_stream() to read the streaming customer data and apply the UDF to create predictions.",
+        "D": "Download the MLflow model artifacts to DBFS, then define a Spark ML Pipeline within the Delta Live Tables function. Use this pipeline model to transform the streaming customer data read using dlt.read_stream()."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để thực hiện suy luận trực tuyến trong Delta Live Tables (DLT) sử dụng mô hình MLflow: ta tạo một Spark UDF từ mô hình bằng cách dùng `mlflow.pyfunc.spark_udf()`, sau đó áp dụng UDF này lên luồng dữ liệu đọc từ `dlt.read_stream()`."
+    },
+    {
+      "id": 112,
+      "question": "A data scientist has developed a machine learning model using scikit-learn. The scientist now faces the task of performing batch inference on a substantial dataset of 100 GB. To efficiently process this large volume of data they plan to utilize an available Spark cluster consisting of 10 nodes. They want to process this in the shortest time possible.\nWhat set of steps will do this?",
+      "choices": {
+        "A": "Because a Spark cluster is being used for model inference, the cluster will automatically distribute the inference process across all the nodes.",
+        "B": "Convert the SKlearn model to a SparkML model using the .convert_model function. The model will now be able to natively take advantage of all the nodes.",
+        "C": "Serialize the model using a Python UDF, convert inference data to Pandas dataframe, create a job to load data and perform inference via the Python UDF.",
+        "D": "Serialize the model using a Pandas UDF, convert inference data to Spark dataframe, create a job to load data and perform inference via the Pandas UDF."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Để thực hiện batch inference phân tán nhanh nhất cho mô hình scikit-learn trên tập dữ liệu lớn: ta lưu trữ dữ liệu dưới dạng Spark DataFrame phân tán, bọc mô hình scikit-learn trong một Pandas UDF (Vectorized UDF) để xử lý theo lô hiệu năng cao bằng Apache Arrow trên toàn bộ các node worker của cụm Spark."
+    },
+    {
+      "id": 113,
+      "question": "A data scientist is hyperparameter tuning a RandomForestClassifier model. They will use the GridSearchCV function in scikit-learn with the following parameters:• cross validation = 5• param_grid has 3 parameters to considero max_depth: [5, 10, 15, 20]o max_features: ['auto', 'sqrt', 'log2']o n_estimators: [200, 500]\nHow many models will be trained in total?",
+      "choices": {
+        "A": "14",
+        "B": "24",
+        "C": "45",
+        "D": "120"
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Số tổ hợp tham số trong lưới tìm kiếm là $4 \\times 3 \\times 2 = 24$ tổ hợp. Với 5-fold cross-validation, mỗi tổ hợp sẽ huấn luyện trên 5 tập fold dữ liệu khác nhau. Tổng số mô hình được huấn luyện là $24 \\times 5 = 120$ mô hình."
+    },
+    {
+      "id": 114,
+      "question": "A major real estate company has successfully developed a predictive analytics model through its in-house data science team. This model serves two primary purposes:• To forecast future home prices in various markets• To explain the factors contributing to variability in observed home prices\nThe model utilizes historical data, market trends, and various property attributes to generate its predictions and insights. By leveraging this advanced analytics tool, the company aims to make more informed decisions in property valuation, investment strategies, and market analysis.\nThe team wants to assess how well the model fits the training data and measure the model errors.\nWhich two evaluation metrics do this?",
+      "choices": {
+        "A": "RMSE and R-Squared (R2)",
+        "B": "RMSE and MSE",
+        "C": "Accuracy and F1 Score",
+        "D": "Precision and Recall"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Để đánh giá một mô hình hồi quy (dự báo giá nhà): $R^2$ (R-Squared) đo lường độ phù hợp của mô hình (tỷ lệ phương sai được giải thích), trong khi RMSE (Root Mean Squared Error) trực tiếp đo lường độ lớn sai số của các dự báo so với thực tế ở cùng thang đo gốc."
+    },
+    {
+      "id": 115,
+      "question": "The data scientist team is discussing their MLOps strategy. The current topic is on how to achieve different ModelOps tasks in Databricks.\nWhich approach is a correct use of Databricks features?",
+      "choices": {
+        "A": "Use Delta Live Tables for no-code model development.",
+        "B": "Use AutoML to monitor model performance",
+        "C": "Use MLflow to track model development.",
+        "D": "Use Unity Catalog to version control model code."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong hệ sinh thái Databricks, MLflow là công cụ chuyên dụng được tích hợp để quản lý vòng đời phát triển mô hình, bao gồm theo dõi các lượt chạy huấn luyện, lưu trữ tham số, ghi nhận metric và quản lý mô hình."
+    },
+    {
+      "id": 116,
+      "question": "A data scientist is evaluating the implementation of machine learning (ML) runtimes in their workflow and wants to understand the advantages of using Databricks ML runtimes over standard runtimes.\nWhich aspect is a key advantage of using ML runtimes?",
+      "choices": {
+        "A": "They automatically generate and optimize machine learning models without human intervention.",
+        "B": "They eliminate the need for data preprocessing and feature engineering in machine learning pipelines.",
+        "C": "They protect against model bias and drift by continuously retraining on new data.",
+        "D": "They provide an optimized environment for model development and deployment, ensuring reproducibility and easier management of dependencies."
+      },
+      "correctAnswer": "D",
+      "explanation_vi": "Databricks ML Runtime cung cấp một môi trường máy ảo được cấu hình và tối ưu hóa sẵn cho các công việc học máy, tích hợp các thư viện ML phổ biến và tương thích nhất, giúp đơn giản hóa việc quản lý phụ thuộc (dependencies) và tăng tính tái lập (reproducibility) của các thí nghiệm."
+    },
+    {
+      "id": 117,
+      "question": "A data scientist is developing a machine learning model to predict house prices in a competitive real estate market. They initially select a loss function that heavily penalizes large errors, hoping it will improve the model’s performance. However, after training, they observe that the model struggles to converge and produces unstable predictions, with large variations in price predictions for similar houses. The data scientist suspects that the chosen loss function is causing these issues.\nWhy is it crucial to select the right loss function in this situation?",
+      "choices": {
+        "A": "The loss faction ensures that the data is balanced.",
+        "B": "The loss function directly influences how the model's parameters are updated during training.",
+        "C": "The loss function controls the size of the training set.",
+        "D": "The loss function determines the computational efficiency of the model."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm mất mát (loss function) đo lường sai số dự đoán của mô hình. Các thuật toán tối ưu hóa (như Gradient Descent) tính toán đạo hàm của hàm mất mát này để xác định hướng và mức độ cập nhật các tham số (trọng số) của mô hình trong quá trình học. Do đó, chọn hàm mất mát không thích hợp sẽ khiến quá trình học bị mất ổn định và không thể hội tụ."
+    },
+    {
+      "id": 118,
+      "question": "A data scientist who is part of their organization’s finance team is looking for a way to indicate that certain models are approved for use with Personally Identifiable Information (PII). The data scientist determines that setting a tag on the models with PII is the best way to categorize the models. The models are registered in Unity Catalog and they determine that they can apply the tag to the models to accomplish this goal using the function set_registered_model_tag\nWhich set of parameters must the data scientist provide to correctly execute the function set_registered_model_tag?",
+      "choices": {
+        "A": "name, version, value",
+        "B": "name, key, value",
+        "C": "name, value",
+        "D": "name, version, key, value"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Hàm `set_registered_model_tag()` của MLflow Client thiết lập nhãn (tag) ở mức mô hình đã đăng ký (registered model level) và yêu cầu ba tham số chính: tên mô hình (`name`), khóa của tag (`key`), và giá trị tương ứng (`value`)."
+    },
+    {
+      "id": 119,
+      "question": "A machine learning engineer at a health insurance company is going to deploy a model in Databricks to a real-time Model Serving endpoint. The Model Serving endpoint is in the company's development environment so that other teams can test the endpoint and model. The company is very cost conscious when it comes to IT spend and the engineer knows that the model only needs to be tested during normal business hours. They want to use the least amount of effort to reduce the overall cost of hosting the model using a real-time Model Serving endpoint.\nWhat approach does this?",
+      "choices": {
+        "A": "Delete the endpoint at the end of business hours and recreate it at the beginning of business hours.",
+        "B": "Set the Compute scale-out to Small.",
+        "C": "Set Scale to zero in the endpoint s configuration.",
+        "D": "Turn the endpoint off at the end of business hours and turn it back on at the beginning of business hours."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Tính năng co giãn về 0 (Scale to zero) trong cấu hình endpoint của Databricks Model Serving cho phép hệ thống tự động tắt hoàn toàn tài nguyên phục vụ mô hình khi không phát sinh yêu cầu suy luận nào (ví dụ ngoài giờ làm việc), giúp giảm thiểu chi phí tự động mà không mất công sức quản lý thủ công."
+    },
+    {
+      "id": 120,
+      "question": "A data scientist is working on a machine learning project involving a dataset with the following features:\nCustomerID: A unique identifier for each customer.Age: The age of the customer.Gender: The gender of the customer (Male. Female).ZipCode: The United States Zip Code where the customer resides.PurchaseAmount: The total amount spent by the customer.\nThey are building a linear regression model to predict PurchaseAmount. Given the features in the data set, to which column and why should the machine learning engineer apply one hot encoding to prepare this dataset for training a machine learning model?",
+      "choices": {
+        "A": "CustomerID column to ensure each customer is uniquely represented in the model.",
+        "B": "Age column to handle the numerical values appropriately.",
+        "C": "Gender column as it has a small number of categories and no ordinal relationship.",
+        "D": "ZipCode column to capture all possible zip code values in the model."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Cột `Gender` là biến phân loại có lực lượng nhỏ (Male/Female) và không có mối quan hệ thứ tự, rất thích hợp cho mã hóa một-nóng. `CustomerID` là định danh cá nhân độc nhất, mã hóa một-nóng sẽ tạo ra quá nhiều đặc trưng thưa thớt vô nghĩa. `ZipCode` cũng có lực lượng quá lớn (high cardinality), nếu mã hóa một-nóng sẽ làm bùng nổ số lượng cột và làm loãng thông tin. `Age` là biến số liên tục không cần mã hóa."
+    },
+    {
+      "id": 121,
+      "question": "A data scientist is developing a model to predict the likelihood of a customer making a purchase based on browsing behavior and demographic data. The predictions must be generated in real-time to support immediate recommendations or offers to the customer.\nWhat is the main reason for using features from an online feature store in this scenario?",
+      "choices": {
+        "A": "Update the model's weights and biases using online learning.",
+        "B": "Make predictions on new incoming data in real time.",
+        "C": "Train a new model using historical online data for that specific customer.",
+        "D": "Monitor the performance of the model in real time."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong các kịch bản suy luận thời gian thực (real-time inference) để đưa ra khuyến nghị lập tức cho khách hàng, hệ thống cần truy xuất nhanh các đặc trưng mới nhất của người dùng. Online feature store cung cấp các đặc trưng này với độ trễ cực thấp (mili-giây) trực tiếp cho mô hình tại thời điểm suy luận."
+    },
+    {
+      "id": 122,
+      "question": "Consider the following code block:\nWhich statement is true about this code block?",
+      "choices": {
+        "A": "VectorAssembler is an Estimator, StandardScaler is an Estimator, and LogisticRegression is a Transformer.",
+        "B": "VectorAssembler is a Transformer, StandardScaler is a Transformer, and LogisticRegression is an Estimator.",
+        "C": "VectorAssembler is a Transformer, StandardScaler is an Estimator, and LogisticRegression is an Estimator.",
+        "D": "VectorAssembler is an Estimator, StandardScaler is a Transformer, and LogisticRegression is a Transformer."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Trong Spark ML: `VectorAssembler` chỉ thực hiện gộp các cột thành cột vector mà không học gì từ dữ liệu nên là một **Transformer**; `StandardScaler` cần tính toán mean và stddev thông qua `.fit()` nên là một **Estimator**; `LogisticRegression` cần tối ưu hóa trọng số thông qua `.fit()` nên là một **Estimator**."
+    },
+    {
+      "id": 123,
+      "question": "A data scientist at a large e-commerce company has been experimenting with different machine learning models to predict customer churn. They’ve trained several models using different algorithms and hyperparameters. Now, they want to compare the performance of these models and select the best one for deployment They are using the managed MLflow UI on Databricks and are comparing the performance metrics of multiple runs.\nWhich feature should the data scientist use?",
+      "choices": {
+        "A": "Experiment Notes",
+        "B": "Run Comparison",
+        "C": "Model Registry",
+        "D": "Artifact Logging"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Tính năng \"Run Comparison\" (So sánh các lượt chạy) trong giao diện MLflow UI cho phép người dùng chọn và so sánh trực quan các tham số và chỉ số đánh giá của nhiều runs khác nhau cạnh nhau để dễ dàng đánh giá và chọn ra mô hình tốt nhất."
+    },
+    {
+      "id": 124,
+      "question": "An organization has over 100 data scientists, so the organization’s leadership is concerned that it will be difficult to understand which data was used to train the machine learning models. All of the organization’s training data is saved in Unity Catalog tables. An enterprise architect has been tasked with solving the problem and is considering whether to register models in the Unity Catalog registry or the workspace registry.\nWhich feature of the Unity Catalog model registry solves this problem?",
+      "choices": {
+        "A": "Model auditing",
+        "B": "Data lineage",
+        "C": "Centralized access control",
+        "D": "Chronological model lineage"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Unity Catalog Model Registry tích hợp tính năng Data Lineage (phả hệ dữ liệu), tự động ghi lại vết và liên kết phả hệ từ bảng dữ liệu nguồn trong Unity Catalog cho tới mô hình được huấn luyện. Điều này giúp kiểm tra rõ ràng mô hình đã sử dụng dữ liệu nào để huấn luyện."
+    },
+    {
+      "id": 125,
+      "question": "A data scientist intends to implement a champion/challenger framework for model management. As new model versions are released, this framework will evaluate each as a challenger to determine if it should replace the current champion model. The framework should support automated updates through a CI/CD process.\nWhich approach is a best practice for implementing this framework?",
+      "choices": {
+        "A": "Update the model aliases to the appropriate versions in the Databricks Ul.",
+        "B": "Use MLflow client.set_registered_model_alias() to define the Champion alias used in the model deployment code.",
+        "C": "Update the Challenger model version to the maximum model version number available.",
+        "D": "Use MLflow client.set_registered_model_tag() to define the Champion tag used in the model deployment code"
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Trong MLOps, sử dụng Model Aliases (Bí danh mô hình, ví dụ `@Champion` và `@Challenger`) là best practice. Bằng cách dùng hàm `client.set_registered_model_alias()`, ta có thể cập nhật bí danh `@Champion` sang phiên bản mô hình mới mà không cần thay đổi bất kỳ dòng mã nguồn nào trong ứng dụng triển khai."
+    },
+    {
+      "id": 126,
+      "question": "A machine learning engineer in a telecommunications company wants to create a predictive model to predict customer churn using Databricks. The required dataset has been prepared and is available in Unity Catalog. They set F1 as their evaluation metric and begin an AutoML experiment.\nAfter the AutoML experiment, they review the listed runs but are not convinced the selected model is the best-performing one that yields the best results based on the specified evaluation metric.\nWhat action will assist them in analyzing the results?",
+      "choices": {
+        "A": "Review the best run notebook from the AutoML experiment to determine if further refinements can be made to improve the F1 score",
+        "B": "Review the training dataset data types in Unity Catalog",
+        "C": "Run the experiment again using AUC-ROC evaluations metrics and compare",
+        "D": "Run the experiment again with a different ML problem type"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Databricks AutoML tự động tạo ra một notebook đi kèm cho mỗi run. Nếu chưa hài lòng với kết quả F1-score của mô hình được chọn, kỹ sư có thể mở notebook của run tốt nhất (best run notebook), xem xét quy trình tiền xử lý, cấu trúc mô hình và tự thực hiện thêm các cải tiến, tinh chỉnh thủ công để tối ưu hóa chỉ số F1-score."
+    },
+    {
+      "id": 127,
+      "question": "A data scientist is tasked with building a predictive model for a healthcare application that identifies patients at risk of developing a rare disease. The dataset is highly imbalanced, with only 1% of the samples representing patients with the disease. This imbalance is causing the model to predict the majority class (healthy patients) almost exclusively, resulting in poor detection of the rare disease cases. They need to address this class imbalance to improve the model's performance on the minority class.\nWhich strategy should they implement to effectively mitigate the class imbalance in their training data?",
+      "choices": {
+        "A": "Apply an oversampling technique to increase the number of samples from the minority class (patients with the disease).",
+        "B": "Perform dimensionality reduction to decrease the number of features in the dataset",
+        "C": "Increase the number of epochs during model training to allow the model to learn better from the data.",
+        "D": "Implement a cross-validation technique to ensure the model generalizes well to unseen data."
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Với dữ liệu mất cân bằng lớp nghiêm trọng (chỉ 1% số mẫu thuộc lớp thiểu số), kỹ thuật lấy mẫu dư (oversampling) giúp tạo thêm các mẫu thuộc lớp thiểu số trong tập huấn luyện, giúp mô hình học được các đặc trưng đại diện của lớp này tốt hơn, cải thiện khả năng phát hiện bệnh hiếm."
+    },
+    {
+      "id": 128,
+      "question": "A machine learning engineer is developing a model to predict whether an item purchased from a store will be returned. They plan to use Databricks AutoML to train a series of models and then they will pick the best performing one. As they explore the data the models will be trained on, they find that many key numerical columns have a high percentage of null values.\nWhich approach requires the least amount of code to impute the missing values?",
+      "choices": {
+        "A": "Let AutoML select and perform the best imputation approach",
+        "B": "Prior to executing the AutoML experiment, perform the imputation by leveraging PySpark MLlib’s Imputer class",
+        "C": "Select the imputation approach and let AutoML perform the imputation",
+        "D": "Prior to executing the AutoML experiment, perform the imputation by leveraging SimpleImputer simple imputer class"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Databricks AutoML tích hợp quy trình chuẩn bị dữ liệu tự động, tự phát hiện các cột số có giá trị bị khuyết và áp dụng phương pháp điền khuyết phù hợp nhất mà không yêu cầu người dùng phải viết bất kỳ dòng mã tiền xử lý nào."
+    },
+    {
+      "id": 129,
+      "question": "An environmental scientist is researching the relationship between various environmental factors and the viability of a specific invasive plant species. They have developed a linear regression model to measure growth rate in relation to temperature, humidity, air quality index, and other variables. The scientist now aims to assess the performance of the model, focusing particularly on its goodness of fit. They need to select a metric that will indicate the proportion of the variance in the growth rate that is predicted from the independent variables.\nWhich metric will do this?",
+      "choices": {
+        "A": "R-Squared (R2)",
+        "B": "Mean Squared Error (MSE)",
+        "C": "Mean Absolute Error (MAE)",
+        "D": "Root Mean Squared Error (RMSE)"
+      },
+      "correctAnswer": "A",
+      "explanation_vi": "Hệ số xác định $R^2$ (R-Squared) đo lường tỷ lệ phương sai của biến phụ thuộc được giải thích hoặc dự báo bởi các biến độc lập trong mô hình hồi quy, đại diện cho độ phù hợp (goodness of fit) của mô hình hồi quy tuyến tính."
+    },
+    {
+      "id": 130,
+      "question": "A machine learning engineer wants to register a model from a logged MLflow training run that was previously executed by a data scientist. They are using a workspace with Unity Catalog enabled and want this model to be registered in a project-specific catalog in Unity Catalog.\nHow can they achieve this?",
+      "choices": {
+        "A": "Use mlflow.log_model and specify the three-level name of the model using the registered_model_name parameter.",
+        "B": "Call mlflow.register_model with the desired name for the model on a Unity Catalog-enabled workspace that will automatically register the model on Unity Catalog.",
+        "C": "Ensure the model is logged with a model signature, set the Mlflow registry to Unity Catalog and then call mlflow.register_model passing the three-level name of the model.",
+        "D": "Use mlflow.log_model and provide an input example to the input_example parameter to automatically generate the model signature and the name of the model using the registered_model_name parameter on a Unity Catalog-enabled workspace which will automatically register the model on Unity Catalog."
+      },
+      "correctAnswer": "C",
+      "explanation_vi": "Để đăng ký mô hình MLflow vào Unity Catalog: đảm bảo mô hình đã được log kèm chữ ký (model signature), cấu hình MLflow registry URI sang Unity Catalog (`databricks-uc`), sau đó gọi hàm `mlflow.register_model` và truyền tên mô hình theo định dạng cấu trúc 3 cấp của Unity Catalog: `<catalog>.<schema>.<model_name>`."
+    },
+    {
+      "id": 131,
+      "question": "A Machine Learning engineer has been tasked with training a model using features from a Unity Catalog feature store table. They have access to multiple feature Store tables and are considering using the FeatureEngineeringClient.create_training_set method to create a training set with features from these tables.\nWhich TWO statements are true about using FeatureEngineeringClient.create_training_set in this scenario? (Choose two.)",
+      "choices": {
+        "A": "It requires the Machine Learning engineer to manually specify the schema of the training set.",
+        "B": "It can be used to create a training set with features from multiple feature store tables.",
+        "C": "It allows the Machine Learning engineer to create a training set using the same feature multiple times.",
+        "D": "It automatically handles feature engineering tasks such as normalization and feature scaling.",
+        "E": "It can only be used with a single feature store table."
+      },
+      "correctAnswer": "BC",
+      "explanation_vi": "Phương thức `create_training_set()` của Unity Catalog Feature Store Client cho phép kết hợp (join) các đặc trưng từ nhiều bảng đặc trưng (feature store tables) khác nhau dựa trên các khóa tương ứng (phương án B) và cho phép tham chiếu cùng một đặc trưng nhiều lần bằng các khóa phụ khác nhau (phương án C)."
+    },
+    {
+      "id": 132,
+      "question": "A data scientist has developed 2 regression models and wants to compare the performance of them using RMSE. In model A, they have applied a log transformation on the dependent variable, whereas in model B, they have left the dependent variable unchanged.\nWhat is the correct way to perform the comparison?",
+      "choices": {
+        "A": "The model with higher RMSE is better.",
+        "B": "Exponentiate the predictions of model A first before calculating the RMSE. The model with lower RMSE is better.",
+        "C": "Exponentiate the predictions of model A first before calculating the RMSE. The model with higher RMSE is better.",
+        "D": "The model with lower RMSE is better."
+      },
+      "correctAnswer": "B",
+      "explanation_vi": "Vì mô hình A dự báo nhãn ở dạng log, RMSE của nó được tính trên thang đo logarit và không thể so sánh trực tiếp với RMSE của mô hình B (thang đo gốc). Ta cần đưa các dự đoán của mô hình A trở lại thang đo gốc bằng cách áp dụng hàm mũ (exponentiate), sau đó tính toán lại RMSE trên thang đo gốc và so sánh với mô hình B. Mô hình nào có RMSE thấp hơn (lower RMSE) sẽ tốt hơn."
+    },
+    {
+      "id": 133,
+      "question": "A data scientist has created two linear regression models. The first model uses price as a label variable and the second model uses log(price) as a label variable. When evaluating the RMSE of each model by comparing the label predictions to the actual price values, the data scientist notices that the RMSE for the second model is much larger than the RMSE of the first model.Which of the following possible explanations for this difference is invalid?",
+      "choices": {
+        "A": "The second model is much more accurate than the first model",
+        "B": "The data scientist failed to exponentiate the predictions in the second model prior to computing the RMSE",
+        "C": "The data scientist failed to take the log of the predictions in the first model prior to computing the RMSE",
+        "D": "The first model is much more accurate than the second model",
+        "E": "The RMSE is an invalid evaluation metric for regression problems"
+      },
+      "correctAnswer": "B"
+    }
+  ]
+}

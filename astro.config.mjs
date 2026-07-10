@@ -6,10 +6,41 @@ import rehypeKatex from 'rehype-katex';
 import rehypeMermaidLite from 'rehype-mermaid-lite';
 import { conceptCategories } from './src/config/categories.js';
 import { remarkAutoLink } from './src/plugins/remark-auto-link.js';
+import fs from 'fs';
+import path from 'path';
+
+const quizManifest = JSON.parse(fs.readFileSync(path.resolve('./public/quizzes/manifest.json'), 'utf-8'));
+const quizGroups = {};
+for (const q of quizManifest) {
+	if (!quizGroups[q.provider]) quizGroups[q.provider] = [];
+	quizGroups[q.provider].push({
+		label: q.name + (q.vi ? ' (song ngữ)' : ''),
+		link: `/quizzes/${q.id}/index.html?v=1`,
+		attrs: { target: '_blank', rel: 'noopener noreferrer' }
+	});
+}
+const quizSidebarItems = [{ label: 'Danh sách bộ đề', link: '/quizzes/' }];
+for (const [provider, items] of Object.entries(quizGroups)) {
+	quizSidebarItems.push({
+		label: provider,
+		collapsed: true,
+		items: items.sort((a, b) => a.label.localeCompare(b.label))
+	});
+}
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
+	// Redirect các slug bị gộp trong audit 2026-07 (giữ link cũ không gãy)
+	redirects: {
+		'/concepts/9-genai-machine-learning/embedding-model/': '/concepts/9-genai-machine-learning/embedding-models/',
+		'/concepts/9-genai-machine-learning/reranker/': '/concepts/9-genai-machine-learning/reranking/',
+		'/concepts/9-genai-machine-learning/few-shot/': '/concepts/9-genai-machine-learning/few-shot-prompting/',
+		'/concepts/9-genai-machine-learning/chunking-strategy/': '/concepts/9-genai-machine-learning/chunking/',
+		'/concepts/3-storage-engines-formats/vector-store/': '/concepts/3-storage-engines-formats/vector-database/',
+		'/concepts/9-genai-machine-learning/row-based-storage/': '/concepts/3-storage-engines-formats/row-based-storage/',
+		'/concepts/1-distributed-systems-architecture/file-formats/': '/concepts/3-storage-engines-formats/file-formats-deep-dive/',
+	},
 	markdown: {
 		remarkPlugins: [remarkMath, remarkAutoLink],
 		rehypePlugins: [
@@ -21,7 +52,7 @@ export default defineConfig({
 	},
 	integrations: [
 		starlight({
-			title: 'Data Engineering Handbook',
+			title: 'Sổ tay Kỹ thuật Dữ liệu',
 			defaultLocale: 'root',
 			locales: {
 				root: { label: 'Tiếng Việt', lang: 'vi' }
@@ -29,8 +60,15 @@ export default defineConfig({
 			components: {
 				Footer: './src/components/BacklinksFooter.astro',
 				Head: './src/components/CustomHead.astro',
+				PageTitle: './src/components/PageTitle.astro',
 			},
 			customCss: [
+				// Design system tokens (thứ tự: colors -> type -> spacing -> base) trước custom.css
+				'./src/styles/tokens/colors.css',
+				'./src/styles/tokens/typography.css',
+				'./src/styles/tokens/spacing.css',
+				'./src/styles/tokens/base.css',
+				'./src/styles/reading.css',
 				'./src/styles/custom.css'
 			],
 			head: [
@@ -74,6 +112,10 @@ export default defineConfig({
 				{
 					tag: 'script',
 					attrs: { src: '/focus.js', defer: true },
+				},
+				{
+					tag: 'script',
+					attrs: { src: '/reading-panel.js', defer: true },
 				},
 				{
 					tag: 'script',
@@ -183,21 +225,8 @@ export default defineConfig({
 				},
 				{
 					label: 'Ôn thi Certificate (Quizzes)',
-
 					collapsed: true,
-
-					items: [
-						{ 
-							label: 'Databricks Certified Data Engineer Professional',
-							link: '/quizzes/databricks-de-advanced/',
-							attrs: { 'data-astro-reload': true }
-						},
-						{ 
-							label: 'Databricks Certified Generative AI Engineer Associate',
-							link: '/quizzes/databricks-genai-associate/',
-							attrs: { 'data-astro-reload': true }
-						}
-					]
+					items: quizSidebarItems
 				}
 			],
 		}),

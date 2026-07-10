@@ -43,11 +43,7 @@ flowchart TD
 
     CloudServices ==>|Chỉ đạo, Pruning & Lập kế hoạch| Compute
     Compute ==>|"Đọc/Ghi dữ liệu (Local SSD Cache miss)"| Storage
-    CloudServices -.->|Truy xuất Metadata min/max| Storage
-    
-    style CloudServices fill:#f9f6e5,stroke:#b8a36c
-    style Compute fill:#e6f3ff,stroke:#4a90e2
-    style Storage fill:#e6ffed,stroke:#2ea043
+    CloudServices -.->|Truy xuất Metadata min/max| Storage
 ```
 
 ### 1.1. Lớp Storage (Centralized Persistent Storage)
