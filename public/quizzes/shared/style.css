@@ -1370,13 +1370,33 @@ button {
   color: var(--text-primary);
 }
 
-.explanation-content code {
+.explanation-content code,
+.explanation-body code {
   background: var(--bg-glass-hover);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.85em;
   border: 1px solid var(--border);
+}
+
+.explanation-content pre,
+.explanation-body pre {
+  background: var(--bg-glass-hover);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.explanation-content pre code,
+.explanation-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 0.85em;
+  border-radius: 0;
 }
 
 /* References section */

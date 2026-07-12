@@ -281,67 +281,111 @@
         });
     }
 
-    // Helper to render markdown-like text to a container safely
-    function renderMarkdownSafely(container, markdownText) {
-        container.replaceChildren();
-        if (!markdownText) return;
+    function parseMarkdown(markdownText) {
+        if (!markdownText) return "";
+        
+        const codeBlocks = [];
+        let processedText = markdownText.replace(/```([\s\S]*?)```/g, (match, codeContent) => {
+            const placeholder = `___CODE_BLOCK_${codeBlocks.length}___`;
+            let cleanCode = codeContent.trim();
+            const langMatch = cleanCode.match(/^(kusto|python|yaml|sql|bash|json|javascript|js|html|css)\r?\n/i);
+            if (langMatch) {
+                cleanCode = cleanCode.substring(langMatch[0].length);
+            }
+            codeBlocks.push(cleanCode);
+            return placeholder;
+        });
 
-        const lines = markdownText.split('\n');
+        const lines = processedText.split('\n');
+        let htmlLines = [];
         let currentList = null;
+
+        const closeListIfNeeded = () => {
+            if (currentList) {
+                htmlLines.push(`</${currentList}>`);
+                currentList = null;
+            }
+        };
+
+        const formatInline = (text) => {
+            if (!text) return "";
+            
+            let escaped = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+                
+            escaped = escaped.replace(/``(.*?)``/g, '<code>$1</code>');
+            escaped = escaped.replace(/`(.*?)`/g, '<code>$1</code>');
+            escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="markdown-link">$1</a>');
+            escaped = escaped.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="markdown-img" style="max-width:100%; display:block; margin:10px 0;" />');
+
+            return escaped;
+        };
 
         lines.forEach(line => {
             const trimmed = line.trim();
             if (!trimmed) {
-                currentList = null;
+                closeListIfNeeded();
                 return;
             }
 
-            // Bullet list item
-            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-                if (!currentList || currentList.tagName !== 'UL') {
-                    currentList = document.createElement('ul');
-                    currentList.className = 'explanation-list';
-                    container.appendChild(currentList);
-                }
-                const li = document.createElement('li');
-                appendFormattedText(li, trimmed.substring(2));
-                currentList.appendChild(li);
+            const codeBlockMatch = trimmed.match(/^___CODE_BLOCK_(\d+)___$/);
+            if (codeBlockMatch) {
+                closeListIfNeeded();
+                const index = parseInt(codeBlockMatch[1], 10);
+                const codeContent = codeBlocks[index];
+                const escapedCode = codeContent
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+                htmlLines.push(`<pre><code class="code-block">${escapedCode}</code></pre>`);
+                return;
             }
-            // Numbered list item
+
+            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                if (currentList !== 'ul') {
+                    closeListIfNeeded();
+                    htmlLines.push('<ul class="explanation-list">');
+                    currentList = 'ul';
+                }
+                const content = trimmed.substring(2);
+                htmlLines.push(`<li>${formatInline(content)}</li>`);
+            }
             else if (/^(?:\-\s*)?\d+\.\s+/.test(trimmed)) {
                 const match = trimmed.match(/^(?:\-\s*)?(\d+\.\s+)(.*)/);
-                if (!currentList || currentList.tagName !== 'OL') {
-                    currentList = document.createElement('ol');
-                    currentList.className = 'explanation-list';
-                    container.appendChild(currentList);
+                if (currentList !== 'ol') {
+                    closeListIfNeeded();
+                    htmlLines.push('<ol class="explanation-list">');
+                    currentList = 'ol';
                 }
-                const li = document.createElement('li');
-                appendFormattedText(li, match[2]);
-                currentList.appendChild(li);
+                const content = match[2];
+                htmlLines.push(`<li>${formatInline(content)}</li>`);
             }
-            // Headings
             else if (trimmed.startsWith('### ')) {
-                currentList = null;
-                const h4 = document.createElement('h4');
-                h4.className = 'explanation-heading';
-                appendFormattedText(h4, trimmed.substring(4));
-                container.appendChild(h4);
+                closeListIfNeeded();
+                const content = trimmed.substring(4);
+                htmlLines.push(`<h4 class="explanation-heading">${formatInline(content)}</h4>`);
             } else if (trimmed.startsWith('## ')) {
-                currentList = null;
-                const h3 = document.createElement('h3');
-                h3.className = 'explanation-heading';
-                appendFormattedText(h3, trimmed.substring(3));
-                container.appendChild(h3);
+                closeListIfNeeded();
+                const content = trimmed.substring(3);
+                htmlLines.push(`<h3 class="explanation-heading">${formatInline(content)}</h3>`);
             }
-            // Paragraph
             else {
-                currentList = null;
-                const p = document.createElement('p');
-                p.className = 'explanation-paragraph';
-                appendFormattedText(p, trimmed);
-                container.appendChild(p);
+                closeListIfNeeded();
+                htmlLines.push(`<p class="explanation-paragraph">${formatInline(trimmed)}</p>`);
             }
         });
+
+        closeListIfNeeded();
+        return htmlLines.join('\n');
+    }
+
+    // Helper to render markdown-like text to a container safely
+    function renderMarkdownSafely(container, markdownText) {
+        container.innerHTML = parseMarkdown(markdownText);
     }
 
     function renderQuestionText(element, text, imagesStr) {

@@ -439,6 +439,10 @@
       "title": "Modern Data Stack (MDS): Phân mảnh, ELT và Quản trị Chi Phí"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
       "url": "/projects/e2e/spark-data-lakehouse/",
       "title": "Xây dựng Data Lakehouse với Apache Spark, MinIO & Airflow"
     }
@@ -961,6 +965,14 @@
       "title": "Deep Dive: Adaptive Query Execution (AQE)"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
       "url": "/concepts/6-data-modeling-transformation/data-contract/",
       "title": "Hợp đồng dữ liệu - Data Contract"
     },
@@ -1157,16 +1169,1398 @@
       "title": "Xử lý phân tán - Distributed Processing"
     }
   ],
+  "/concepts/4-compute-engines-batch/apache-spark/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/interview/pipeline-design-interview/",
+      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
+    },
+    {
+      "url": "/interview/spark-optimization-interview/",
+      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/learning-paths/specializations/cloud-data-engineer/",
+      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
+    },
+    {
+      "url": "/projects/e2e/spark-data-lakehouse/",
+      "title": "Xây dựng Data Lakehouse với Apache Spark, MinIO & Airflow"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
+      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-engineering/",
+      "title": "Kỹ Thuật Dữ Liệu Toàn Tập (Data Engineering Architecture)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
+      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-loading/",
+      "title": "Data Loading & Lakehouse Architecture"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
+      "title": "Data Transformation"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/incremental-load/",
+      "title": "Incremental Load"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compaction/",
+      "title": "Compaction"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
+      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
+      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
+      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/partitioning/",
+      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/batch-processing/",
+      "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/data-skew/",
+      "title": "Lệch dữ liệu (Data Skew)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
+      "title": "Distributed Joins Mechanisms"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
+      "title": "Xử lý phân tán - Distributed Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/shuffle/",
+      "title": "Shuffle trong Spark và Kiến trúc Remote Shuffle Service (RSS)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
+      "title": "Deep Dive: Adaptive Query Execution (AQE)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
+      "title": "Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
+      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
+      "title": "Mô hình thực thi Spark - Spark Execution Model"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
+      "title": "Jobs, Stages, và Tasks trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-joins/",
+      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-partition/",
+      "title": "Spark Partition"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
+      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-sql/",
+      "title": "Spark SQL & Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
+      "title": "Spark Tungsten Engine"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
+      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/",
+      "title": "Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/grain/",
+      "title": "Grain (Độ mịn dữ liệu): Quyết Định Cốt Lõi Trong Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
+      "title": "One Big Table (OBT)"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/star-schema/",
+      "title": "Lược đồ Hình sao (Star Schema)"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/anomaly-detection/",
+      "title": "Phát hiện bất thường - Anomaly Detection"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/dag/",
+      "title": "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
+      "title": "Lập hồ sơ dữ liệu - Data Profiling"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
+      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/data-classification/",
+      "title": "Data Classification: Kiến trúc Phân loại và Bảo vệ Dữ liệu Nhạy cảm"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/data-lineage/",
+      "title": "Kiến trúc Hệ thống Data Lineage: OpenLineage, Trade-offs & FinOps"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/mlflow/",
+      "title": "Kiến trúc hệ thống MLflow: Tracking, Model Registry và Rủi ro vận hành"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/model-serving/",
+      "title": "Phục vụ mô hình (Model Serving) & Kiến trúc GPU Inference"
+    },
+    {
+      "url": "/learning-paths/interview-prep/",
+      "title": "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
+    },
+    {
+      "url": "/learning-paths/specializations/streaming-data-engineer/",
+      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
+      "url": "/projects/e2e/kafka-spark-airflow/",
+      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
+    },
+    {
+      "url": "/projects/e2e/reddit-data-pipeline/",
+      "title": "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
+    },
+    {
+      "url": "/projects/e2e/showpulse-ticketmaster/",
+      "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
+    },
+    {
+      "url": "/projects/e2e/streamify-pipeline/",
+      "title": "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
+    },
+    {
+      "url": "/projects/system-design/airbnb-dynamic-pricing/",
+      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
+    },
+    {
+      "url": "/projects/system-design/finops-architecture/",
+      "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
+    },
+    {
+      "url": "/projects/system-design/idempotency-in-data-pipelines/",
+      "title": "Design Pattern: Idempotency trong Data Pipelines"
+    },
+    {
+      "url": "/projects/system-design/lambda-vs-kappa-architecture/",
+      "title": "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakehouse"
+    },
+    {
+      "url": "/projects/system-design/modern-vs-post-modern-data-stack/",
+      "title": "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-tungsten-engine/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-persist-storage-levels/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/shuffle/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/interview/spark-optimization-interview/",
+      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
+      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
+      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-mesh/",
+      "title": "Data Mesh: Kiến trúc phi tập trung"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
+      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
+      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-warehouse/",
+      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Columnar, và Thực thi Truy vấn"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/file-formats/",
+      "title": "Định dạng Dữ liệu Data Lake: Parquet, ORC, Avro internals"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/storage-compute-decoupling/",
+      "title": "Tách biệt Storage và Compute (Storage-Compute Decoupling)"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
+      "title": "Data Transformation"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/amazon-redshift/",
+      "title": "Amazon Redshift"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/apache-iceberg/",
+      "title": "Apache Iceberg - Kiến trúc cốt lõi và Đánh đổi Hệ thống (System Trade-offs)"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/azure-synapse/",
+      "title": "Azure Synapse Analytics: Kiến trúc MPP, Polaris Engine & Trade-offs"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/bloom-filters-sstables/",
+      "title": "Internals: Bloom Filters, SSTables & LSM-Trees"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/clustering/",
+      "title": "Phân cụm Dữ liệu (Clustering) - Kiến trúc Vật lý & Đánh đổi Hệ thống"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/columnar-storage/",
+      "title": "Lưu trữ dạng Cột - Columnar Storage & Parquet"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compaction/",
+      "title": "Compaction"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
+      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/databricks-platform/",
+      "title": "Databricks Platform: System Architecture & Execution Engines"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/delta-lake/",
+      "title": "Delta Lake - Bảng dữ liệu giao dịch mở (Open Table Format)"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
+      "title": "Databricks Under The Hood: Kiến trúc Vật lý của OPTIMIZE, VACUUM & Liquid Clustering"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/google-bigquery/",
+      "title": "Google BigQuery - Phân Tích Kiến Trúc Máy Chủ Ảo (Serverless Data Warehouse)"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
+      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
+      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/partitioning/",
+      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/serverless-data/",
+      "title": "Xử lý Dữ liệu Không Máy Chủ - Serverless Data Processing"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Cấu Trúc Đa Chiều & Bài Toán Data Skipping"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/apache-spark/",
+      "title": "Apache Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/batch-processing/",
+      "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/data-skew/",
+      "title": "Lệch dữ liệu (Data Skew)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
+      "title": "Distributed Joins Mechanisms"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
+      "title": "Xử lý phân tán - Distributed Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/",
+      "title": "Kiến trúc MPP & Dremel"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
+      "title": "Deep Dive: Adaptive Query Execution (AQE)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
+      "title": "Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
+      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
+      "title": "Mô hình thực thi Spark - Spark Execution Model"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
+      "title": "Jobs, Stages, và Tasks trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-joins/",
+      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-partition/",
+      "title": "Spark Partition"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
+      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-sql/",
+      "title": "Spark SQL & Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
+      "title": "Spark Tungsten Engine"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
+      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/",
+      "title": "Chandy-Lamport & Distributed Checkpointing (Flink)"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/watermark/",
+      "title": "Watermark - Cỗ Máy Thời Gian Của Streaming Engine"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/windowing/",
+      "title": "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/dimension-table/",
+      "title": "Bảng chiều - Dimension Table"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/",
+      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/fact-table/",
+      "title": "Bảng Sự kiện (Fact Table): Thiết kế Kỹ thuật số lượng lớn"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/grain/",
+      "title": "Grain (Độ mịn dữ liệu): Quyết Định Cốt Lõi Trong Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/inmon-methodology/",
+      "title": "Inmon Methodology - Corporate Information Factory"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
+      "title": "One Big Table (OBT)"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/snowflake-schema/",
+      "title": "Lược đồ bông tuyết - Snowflake Schema"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/sql-transformation/",
+      "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/star-schema/",
+      "title": "Lược đồ Hình sao (Star Schema)"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/surrogate-key/",
+      "title": "Khóa thay thế - Surrogate Key"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/dag/",
+      "title": "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
+      "title": "Lập hồ sơ dữ liệu - Data Profiling"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-quality/",
+      "title": "Kiến trúc Chất lượng Dữ liệu (Data Quality): Shift-Left, Contracts & Observability"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
+      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-testing/",
+      "title": "Kiểm thử chất lượng và Mạch dừng dữ liệu (Data Testing & Circuit Breaker)"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/",
+      "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
+      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/data-ownership/",
+      "title": "Quyền sở hữu dữ liệu (Data Ownership) & Data Mesh"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/finops-data-engineering/",
+      "title": "FinOps trong Data Engineering: Tối Ưu Chi Phí Tại Tầng Vật Lý"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/few-shot/",
+      "title": "Few-shot Prompting & In-Context Learning (System Architecture)"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/fine-tuning/",
+      "title": "LLM Fine-tuning: ZeRO, FSDP, LoRA và Các Rủi Ro Vận Hành"
+    },
+    {
+      "url": "/interview/overview/",
+      "title": "Ngân hàng Phỏng vấn (Interview)"
+    },
+    {
+      "url": "/interview/performance-tuning-qa/",
+      "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
+    },
+    {
+      "url": "/learning-paths/leadership-culture/on-call-survival-guide/",
+      "title": "On-call Survival Guide cho Data Engineering"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
+      "url": "/projects/e2e/kafka-spark-airflow/",
+      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
+    },
+    {
+      "url": "/projects/system-design/airbnb-dynamic-pricing/",
+      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-sql/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/lambda-architecture/",
+      "title": "Lambda & Kappa Architectures"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/",
+      "title": "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time Architecture)"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
+      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
+      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/table-format/",
+      "title": "Table Format (Định dạng Bảng)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/apache-spark/",
+      "title": "Apache Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/data-skew/",
+      "title": "Lệch dữ liệu (Data Skew)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
+      "title": "Xử lý phân tán - Distributed Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
+      "title": "Deep Dive: Adaptive Query Execution (AQE)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
+      "title": "Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
+      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
+      "title": "Mô hình thực thi Spark - Spark Execution Model"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-joins/",
+      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-partition/",
+      "title": "Spark Partition"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
+      "title": "Spark Tungsten Engine"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/",
+      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/circuit-breakers-data/",
+      "title": "Circuit Breakers & WAP Pattern trong Data Pipelines"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/unity-catalog/",
+      "title": "Unity Catalog"
+    },
+    {
+      "url": "/interview/spark-optimization-interview/",
+      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/projects/system-design/finops-architecture/",
+      "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
+    },
+    {
+      "url": "/projects/system-design/idempotency-in-data-pipelines/",
+      "title": "Design Pattern: Idempotency trong Data Pipelines"
+    },
+    {
+      "url": "/projects/system-design/netflix-recommendation-architecture/",
+      "title": "Case Study: Kiến trúc Recommendation tại Netflix"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-execution-model/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-joins/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-partition/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-mastery/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/",
+      "title": "RDD vs DataFrame vs Dataset: Ba tầng API của Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    }
+  ],
   "/images/4-compute-engines-batch/aqe-framework.png/": [
     {
       "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
       "title": "Deep Dive: Adaptive Query Execution (AQE)"
     }
   ],
+  "/concepts/3-storage-engines-formats/parquet-internals/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/learning-paths/specializations/cloud-data-engineer/",
+      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
+    }
+  ],
+  "/concepts/3-storage-engines-formats/file-formats-deep-dive/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/learning-paths/specializations/cloud-data-engineer/",
+      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
+    }
+  ],
+  "/concepts/3-storage-engines-formats/compression-algorithms/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
+      "title": "One Big Table (OBT)"
+    }
+  ],
+  "/projects/e2e/spark-data-lakehouse/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/projects/e2e/ecomlake/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/batch-processing/",
+      "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
+      "title": "Jobs, Stages, và Tasks trong Spark"
+    }
+  ],
+  "/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
+      "url": "/learning-paths/specializations/data-platform-engineer/",
+      "title": "Data Platform Engineer"
+    },
+    {
+      "url": "/projects/e2e/movie-analytics-pipeline/",
+      "title": "Movie Analytics Pipeline: Data Stack Hoàn Toàn Local Với DuckDB, dbt, Airflow"
+    }
+  ],
   "/images/4-compute-engines-batch/aqe-skew-join.png/": [
     {
       "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
       "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-cluster-managers/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-broadcast-serialization/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/data-skew/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/interview/spark-optimization-interview/",
+      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    },
+    {
+      "url": "/learning-paths/leadership-culture/on-call-survival-guide/",
+      "title": "On-call Survival Guide cho Data Engineering"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-fabric/",
+      "title": "Data Fabric Architecture"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
+      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
+      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
+      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-warehouse/",
+      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Columnar, và Thực thi Truy vấn"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/",
+      "title": "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time Architecture)"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
+      "title": "Data Transformation"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/etl/",
+      "title": "ETL (Extract, Transform, Load)"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/amazon-redshift/",
+      "title": "Amazon Redshift"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/azure-synapse/",
+      "title": "Azure Synapse Analytics: Kiến trúc MPP, Polaris Engine & Trade-offs"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/columnar-storage/",
+      "title": "Lưu trữ dạng Cột - Columnar Storage & Parquet"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compaction/",
+      "title": "Compaction"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
+      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
+      "title": "Liquid Clustering: Kẻ Hủy Diệt Partitioning & Z-Order"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/olap/",
+      "title": "Kiến trúc OLAP (Online Analytical Processing) Chuyên Sâu"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/partitioning/",
+      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/serverless-data/",
+      "title": "Xử lý Dữ liệu Không Máy Chủ - Serverless Data Processing"
+    },
+    {
+      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
+      "title": "Z-Order Deep Dive: Cấu Trúc Đa Chiều & Bài Toán Data Skipping"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/apache-spark/",
+      "title": "Apache Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/batch-processing/",
+      "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
+      "title": "Distributed Joins Mechanisms"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
+      "title": "Xử lý phân tán - Distributed Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/",
+      "title": "Kiến trúc MPP & Dremel"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/shuffle/",
+      "title": "Shuffle trong Spark và Kiến trúc Remote Shuffle Service (RSS)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
+      "title": "Deep Dive: Adaptive Query Execution (AQE)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
+      "title": "Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
+      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
+      "title": "Jobs, Stages, và Tasks trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-joins/",
+      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-partition/",
+      "title": "Spark Partition"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
+      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-sql/",
+      "title": "Spark SQL & Catalyst Optimizer"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
+      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/",
+      "title": "Chandy-Lamport & Distributed Checkpointing (Flink)"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/flink-backpressure/",
+      "title": "Kiến trúc Thực thi: Xử lý Backpressure trong Apache Flink"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/kafka-topics-partitions/",
+      "title": "Kafka Topics và Partitions"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/streaming-processing/",
+      "title": "Xử lý Thời gian thực (Streaming Processing)"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/inmon-methodology/",
+      "title": "Inmon Methodology - Corporate Information Factory"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/sql-transformation/",
+      "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/alerting-incident-response/",
+      "title": "Alerting & Incident Response: Từ Cảnh báo đến Post-mortem"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
+      "title": "Lập hồ sơ dữ liệu - Data Profiling"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
+      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/dataops/",
+      "title": "DataOps & Data Quality: Kiến trúc, Vận hành và Đánh đổi hệ thống"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
+      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/volume-anomalies/",
+      "title": "Data Observability: Phát hiện bất thường khối lượng (Volume Anomalies)"
+    },
+    {
+      "url": "/concepts/8-security-governance-finops/finops-data-engineering/",
+      "title": "FinOps trong Data Engineering: Tối Ưu Chi Phí Tại Tầng Vật Lý"
+    },
+    {
+      "url": "/interview/overview/",
+      "title": "Ngân hàng Phỏng vấn (Interview)"
+    },
+    {
+      "url": "/learning-paths/interview-prep/",
+      "title": "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/projects/e2e/kafka-spark-airflow/",
+      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
+    },
+    {
+      "url": "/projects/e2e/reddit-data-pipeline/",
+      "title": "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
+    },
+    {
+      "url": "/projects/e2e/showpulse-ticketmaster/",
+      "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-data-skew-salting/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/4-compute-engines-batch/spark-spill-to-disk/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/learning-paths/core-paths/middle-to-senior-de/",
+      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+    }
+  ],
+  "/concepts/5-stream-processing-realtime/streaming-processing/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/",
+      "title": "Persist, Cache & Storage Levels trong Spark"
+    },
+    {
+      "url": "/learning-paths/specializations/streaming-data-engineer/",
+      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/batch-processing/",
+      "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    }
+  ],
+  "/concepts/5-stream-processing-realtime/watermark/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/learning-paths/specializations/streaming-data-engineer/",
+      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
+      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
+      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/kappa-architecture/",
+      "title": "Kiến trúc Kappa (Kappa Architecture): Lấy Streaming Làm Cốt Lõi"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/leader-election/",
+      "title": "Bầu chọn Leader (Leader Election)"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/backfill/",
+      "title": "Backfill"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/change-data-capture/",
+      "title": "Change Data Capture (CDC)"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-extraction/",
+      "title": "Data Extraction & CDC"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/data-loading/",
+      "title": "Data Loading & Lakehouse Architecture"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/deduplication/",
+      "title": "Loại bỏ trùng lặp - Deduplication"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/incremental-load/",
+      "title": "Incremental Load"
+    },
+    {
+      "url": "/concepts/2-data-ingestion-integration/log-based-cdc-internals/",
+      "title": "Log-based CDC Internals"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/",
+      "title": "Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/flink-watermarks-late-data/",
+      "title": "Deep Dive: Watermarks & Late Data Handling"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/streaming-processing/",
+      "title": "Xử lý Thời gian thực (Streaming Processing)"
+    },
+    {
+      "url": "/concepts/5-stream-processing-realtime/windowing/",
+      "title": "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-quality-dimensions/",
+      "title": "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
+      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
+    },
+    {
+      "url": "/interview/overview/",
+      "title": "Ngân hàng Phỏng vấn (Interview)"
+    },
+    {
+      "url": "/projects/e2e/fabric-metadata-framework/",
+      "title": "Fabric Metadata-Driven Framework (FMD): Tự Động Hóa Pipeline Trong Microsoft Fabric"
+    },
+    {
+      "url": "/projects/system-design/lambda-vs-kappa-architecture/",
+      "title": "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakehouse"
+    }
+  ],
+  "/concepts/5-stream-processing-realtime/exactly-once-semantics/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/learning-paths/specializations/streaming-data-engineer/",
+      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    }
+  ],
+  "/interview/spark-optimization-interview/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/interview/overview/",
+      "title": "Ngân hàng Phỏng vấn (Interview)"
+    }
+  ],
+  "/concepts/5-stream-processing-realtime/event-time-processing-time/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/learning-paths/overview/",
+      "title": "Lộ trình học Data Engineering"
+    },
+    {
+      "url": "/learning-paths/specializations/streaming-data-engineer/",
+      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+    }
+  ],
+  "/concepts/1-distributed-systems-architecture/feature-store/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-engineering/",
+      "title": "Kỹ Thuật Dữ Liệu Toàn Tập (Data Engineering Architecture)"
+    },
+    {
+      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
+      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
+    },
+    {
+      "url": "/concepts/6-data-modeling-transformation/star-schema/",
+      "title": "Lược đồ Hình sao (Star Schema)"
+    },
+    {
+      "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/",
+      "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
+    },
+    {
+      "url": "/interview/overview/",
+      "title": "Ngân hàng Phỏng vấn (Interview)"
+    },
+    {
+      "url": "/projects/system-design/airbnb-dynamic-pricing/",
+      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
+    },
+    {
+      "url": "/projects/system-design/netflix-recommendation-architecture/",
+      "title": "Case Study: Kiến trúc Recommendation tại Netflix"
     }
   ],
   "/images/4-compute-engines-batch/tungsten-memory.png/": [
@@ -1253,6 +2647,10 @@
     {
       "url": "/concepts/4-compute-engines-batch/batch-processing/",
       "title": "Xử lý dữ liệu theo lô - Batch Processing"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
     },
     {
       "url": "/concepts/7-dataops-orchestration-quality/airflow-zombie-tasks/",
@@ -2933,6 +4331,10 @@
       "title": "Kiến trúc MPP & Dremel"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
       "url": "/concepts/6-data-modeling-transformation/fact-table/",
       "title": "Bảng Sự kiện (Fact Table): Thiết kế Kỹ thuật số lượng lớn"
     },
@@ -3535,12 +4937,6 @@
       "title": "Ngân hàng Phỏng vấn (Interview)"
     }
   ],
-  "/interview/spark-optimization-interview/": [
-    {
-      "url": "/interview/overview/",
-      "title": "Ngân hàng Phỏng vấn (Interview)"
-    }
-  ],
   "/interview/performance-tuning-qa/": [
     {
       "url": "/interview/overview/",
@@ -3683,6 +5079,10 @@
     {
       "url": "/concepts/4-compute-engines-batch/spark-joins/",
       "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
     },
     {
       "url": "/concepts/4-compute-engines-batch/spark-sql/",
@@ -4089,6 +5489,10 @@
     {
       "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/",
       "title": "Kiến trúc MPP & Dremel"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
     },
     {
       "url": "/concepts/6-data-modeling-transformation/data-vault-modeling/",
@@ -4959,236 +6363,6 @@
     {
       "url": "/projects/system-design/uber-log-analytics-case-study/",
       "title": "Case Study: Kiến trúc Log Analytics tại Uber"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/apache-spark/": [
-    {
-      "url": "/interview/pipeline-design-interview/",
-      "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
-    },
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    },
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/learning-paths/specializations/cloud-data-engineer/",
-      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
-    },
-    {
-      "url": "/projects/e2e/spark-data-lakehouse/",
-      "title": "Xây dựng Data Lakehouse với Apache Spark, MinIO & Airflow"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
-      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-engineering/",
-      "title": "Kỹ Thuật Dữ Liệu Toàn Tập (Data Engineering Architecture)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
-      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-loading/",
-      "title": "Data Loading & Lakehouse Architecture"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
-      "title": "Data Transformation"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/incremental-load/",
-      "title": "Incremental Load"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compaction/",
-      "title": "Compaction"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
-      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
-      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
-      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/partitioning/",
-      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/data-skew/",
-      "title": "Lệch dữ liệu (Data Skew)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
-      "title": "Distributed Joins Mechanisms"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/shuffle/",
-      "title": "Shuffle trong Spark và Kiến trúc Remote Shuffle Service (RSS)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
-      "title": "Deep Dive: Adaptive Query Execution (AQE)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
-      "title": "Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
-      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
-      "title": "Mô hình thực thi Spark - Spark Execution Model"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
-      "title": "Jobs, Stages, và Tasks trong Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-joins/",
-      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-partition/",
-      "title": "Spark Partition"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
-      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-sql/",
-      "title": "Spark SQL & Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
-      "title": "Spark Tungsten Engine"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
-      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/",
-      "title": "Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/grain/",
-      "title": "Grain (Độ mịn dữ liệu): Quyết Định Cốt Lõi Trong Dimensional Modeling"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
-      "title": "One Big Table (OBT)"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/star-schema/",
-      "title": "Lược đồ Hình sao (Star Schema)"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/anomaly-detection/",
-      "title": "Phát hiện bất thường - Anomaly Detection"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/dag/",
-      "title": "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
-      "title": "Lập hồ sơ dữ liệu - Data Profiling"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
-      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/data-classification/",
-      "title": "Data Classification: Kiến trúc Phân loại và Bảo vệ Dữ liệu Nhạy cảm"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/data-lineage/",
-      "title": "Kiến trúc Hệ thống Data Lineage: OpenLineage, Trade-offs & FinOps"
-    },
-    {
-      "url": "/concepts/9-genai-machine-learning/mlflow/",
-      "title": "Kiến trúc hệ thống MLflow: Tracking, Model Registry và Rủi ro vận hành"
-    },
-    {
-      "url": "/concepts/9-genai-machine-learning/model-serving/",
-      "title": "Phục vụ mô hình (Model Serving) & Kiến trúc GPU Inference"
-    },
-    {
-      "url": "/learning-paths/interview-prep/",
-      "title": "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
-    },
-    {
-      "url": "/learning-paths/specializations/streaming-data-engineer/",
-      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-    },
-    {
-      "url": "/projects/e2e/ecomlake/",
-      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    },
-    {
-      "url": "/projects/e2e/kafka-spark-airflow/",
-      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
-    },
-    {
-      "url": "/projects/e2e/reddit-data-pipeline/",
-      "title": "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
-    },
-    {
-      "url": "/projects/e2e/showpulse-ticketmaster/",
-      "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
-    },
-    {
-      "url": "/projects/e2e/streamify-pipeline/",
-      "title": "Streamify: Real-time Data Pipeline với Kafka, Spark và GCP"
-    },
-    {
-      "url": "/projects/system-design/airbnb-dynamic-pricing/",
-      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
-    },
-    {
-      "url": "/projects/system-design/finops-architecture/",
-      "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
-    },
-    {
-      "url": "/projects/system-design/idempotency-in-data-pipelines/",
-      "title": "Design Pattern: Idempotency trong Data Pipelines"
-    },
-    {
-      "url": "/projects/system-design/lambda-vs-kappa-architecture/",
-      "title": "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakehouse"
-    },
-    {
-      "url": "/projects/system-design/modern-vs-post-modern-data-stack/",
-      "title": "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
     }
   ],
   "/concepts/7-dataops-orchestration-quality/data-quality/": [
@@ -6315,12 +7489,20 @@
       "title": "Deep Dive: Adaptive Query Execution (AQE)"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
       "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
       "title": "Mô hình thực thi Spark - Spark Execution Model"
     },
     {
       "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
       "title": "Jobs, Stages, và Tasks trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
     },
     {
       "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
@@ -6875,546 +8057,6 @@
     {
       "url": "/projects/system-design/uber-log-analytics-case-study/",
       "title": "Case Study: Kiến trúc Log Analytics tại Uber"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/shuffle/": [
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    },
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
-      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
-      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-mesh/",
-      "title": "Data Mesh: Kiến trúc phi tập trung"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
-      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
-      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-warehouse/",
-      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Columnar, và Thực thi Truy vấn"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/file-formats/",
-      "title": "Định dạng Dữ liệu Data Lake: Parquet, ORC, Avro internals"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/storage-compute-decoupling/",
-      "title": "Tách biệt Storage và Compute (Storage-Compute Decoupling)"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/backfill/",
-      "title": "Backfill"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
-      "title": "Data Transformation"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/deduplication/",
-      "title": "Loại bỏ trùng lặp - Deduplication"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/amazon-redshift/",
-      "title": "Amazon Redshift"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/apache-iceberg/",
-      "title": "Apache Iceberg - Kiến trúc cốt lõi và Đánh đổi Hệ thống (System Trade-offs)"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/azure-synapse/",
-      "title": "Azure Synapse Analytics: Kiến trúc MPP, Polaris Engine & Trade-offs"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/bloom-filters-sstables/",
-      "title": "Internals: Bloom Filters, SSTables & LSM-Trees"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/clustering/",
-      "title": "Phân cụm Dữ liệu (Clustering) - Kiến trúc Vật lý & Đánh đổi Hệ thống"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage & Parquet"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compaction/",
-      "title": "Compaction"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
-      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/databricks-platform/",
-      "title": "Databricks Platform: System Architecture & Execution Engines"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/delta-lake/",
-      "title": "Delta Lake - Bảng dữ liệu giao dịch mở (Open Table Format)"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/delta-optimize-vacuum/",
-      "title": "Databricks Under The Hood: Kiến trúc Vật lý của OPTIMIZE, VACUUM & Liquid Clustering"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/google-bigquery/",
-      "title": "Google BigQuery - Phân Tích Kiến Trúc Máy Chủ Ảo (Serverless Data Warehouse)"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
-      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
-      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/partitioning/",
-      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/serverless-data/",
-      "title": "Xử lý Dữ liệu Không Máy Chủ - Serverless Data Processing"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
-      "title": "Z-Order Deep Dive: Cấu Trúc Đa Chiều & Bài Toán Data Skipping"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/apache-spark/",
-      "title": "Apache Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/data-skew/",
-      "title": "Lệch dữ liệu (Data Skew)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
-      "title": "Distributed Joins Mechanisms"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/",
-      "title": "Kiến trúc MPP & Dremel"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
-      "title": "Deep Dive: Adaptive Query Execution (AQE)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
-      "title": "Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
-      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
-      "title": "Mô hình thực thi Spark - Spark Execution Model"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
-      "title": "Jobs, Stages, và Tasks trong Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-joins/",
-      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-partition/",
-      "title": "Spark Partition"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
-      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-sql/",
-      "title": "Spark SQL & Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
-      "title": "Spark Tungsten Engine"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
-      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/",
-      "title": "Chandy-Lamport & Distributed Checkpointing (Flink)"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/watermark/",
-      "title": "Watermark - Cỗ Máy Thời Gian Của Streaming Engine"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/windowing/",
-      "title": "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/dimension-table/",
-      "title": "Bảng chiều - Dimension Table"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/",
-      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/fact-table/",
-      "title": "Bảng Sự kiện (Fact Table): Thiết kế Kỹ thuật số lượng lớn"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/grain/",
-      "title": "Grain (Độ mịn dữ liệu): Quyết Định Cốt Lõi Trong Dimensional Modeling"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/inmon-methodology/",
-      "title": "Inmon Methodology - Corporate Information Factory"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
-      "title": "One Big Table (OBT)"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/snowflake-schema/",
-      "title": "Lược đồ bông tuyết - Snowflake Schema"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/sql-transformation/",
-      "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/star-schema/",
-      "title": "Lược đồ Hình sao (Star Schema)"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/surrogate-key/",
-      "title": "Khóa thay thế - Surrogate Key"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/dag/",
-      "title": "DAG: Xương Sống Kiến Trúc Của Data Orchestration & Execution"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
-      "title": "Lập hồ sơ dữ liệu - Data Profiling"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-quality/",
-      "title": "Kiến trúc Chất lượng Dữ liệu (Data Quality): Shift-Left, Contracts & Observability"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
-      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-testing/",
-      "title": "Kiểm thử chất lượng và Mạch dừng dữ liệu (Data Testing & Circuit Breaker)"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/",
-      "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
-      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/data-ownership/",
-      "title": "Quyền sở hữu dữ liệu (Data Ownership) & Data Mesh"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/finops-data-engineering/",
-      "title": "FinOps trong Data Engineering: Tối Ưu Chi Phí Tại Tầng Vật Lý"
-    },
-    {
-      "url": "/concepts/9-genai-machine-learning/few-shot/",
-      "title": "Few-shot Prompting & In-Context Learning (System Architecture)"
-    },
-    {
-      "url": "/concepts/9-genai-machine-learning/fine-tuning/",
-      "title": "LLM Fine-tuning: ZeRO, FSDP, LoRA và Các Rủi Ro Vận Hành"
-    },
-    {
-      "url": "/interview/overview/",
-      "title": "Ngân hàng Phỏng vấn (Interview)"
-    },
-    {
-      "url": "/interview/performance-tuning-qa/",
-      "title": "Tối ưu hóa hiệu năng (Phỏng vấn) - Performance Tuning QA"
-    },
-    {
-      "url": "/learning-paths/leadership-culture/on-call-survival-guide/",
-      "title": "On-call Survival Guide cho Data Engineering"
-    },
-    {
-      "url": "/projects/e2e/ecomlake/",
-      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    },
-    {
-      "url": "/projects/e2e/kafka-spark-airflow/",
-      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
-    },
-    {
-      "url": "/projects/system-design/airbnb-dynamic-pricing/",
-      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/data-skew/": [
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    },
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/learning-paths/leadership-culture/on-call-survival-guide/",
-      "title": "On-call Survival Guide cho Data Engineering"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-fabric/",
-      "title": "Data Fabric Architecture"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-lifecycle/",
-      "title": "Data Lifecycle Management (DLM): Kiến Trúc Vòng Đời Dữ Liệu"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
-      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
-      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-warehouse/",
-      "title": "Kiến trúc Data Warehouse Chuyên Sâu: MPP, Columnar, và Thực thi Truy vấn"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/",
-      "title": "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time Architecture)"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/backfill/",
-      "title": "Backfill"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-transformation/",
-      "title": "Data Transformation"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/etl/",
-      "title": "ETL (Extract, Transform, Load)"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/amazon-redshift/",
-      "title": "Amazon Redshift"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/azure-synapse/",
-      "title": "Azure Synapse Analytics: Kiến trúc MPP, Polaris Engine & Trade-offs"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/columnar-storage/",
-      "title": "Lưu trữ dạng Cột - Columnar Storage & Parquet"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compaction/",
-      "title": "Compaction"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/compression-algorithms/",
-      "title": "Thuật toán nén dữ liệu - Compression Algorithms & Trade-offs"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/liquid-clustering-deep-dive/",
-      "title": "Liquid Clustering: Kẻ Hủy Diệt Partitioning & Z-Order"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/olap/",
-      "title": "Kiến trúc OLAP (Online Analytical Processing) Chuyên Sâu"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/partitioning/",
-      "title": "Phân vùng Dữ liệu (Partitioning) - Từ Hive-style đến Liquid Clustering"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/serverless-data/",
-      "title": "Xử lý Dữ liệu Không Máy Chủ - Serverless Data Processing"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/z-order-deep-dive/",
-      "title": "Z-Order Deep Dive: Cấu Trúc Đa Chiều & Bài Toán Data Skipping"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/apache-spark/",
-      "title": "Apache Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-joins-mechanisms/",
-      "title": "Distributed Joins Mechanisms"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/",
-      "title": "Kiến trúc MPP & Dremel"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/shuffle/",
-      "title": "Shuffle trong Spark và Kiến trúc Remote Shuffle Service (RSS)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
-      "title": "Deep Dive: Adaptive Query Execution (AQE)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
-      "title": "Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
-      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
-      "title": "Jobs, Stages, và Tasks trong Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-joins/",
-      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-partition/",
-      "title": "Spark Partition"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-spill-to-disk/",
-      "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-sql/",
-      "title": "Spark SQL & Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/",
-      "title": "Troubleshooting: Xử lý lỗi Out Of Memory (OOM) trong Spark"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/chandy-lamport-checkpointing/",
-      "title": "Chandy-Lamport & Distributed Checkpointing (Flink)"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/flink-backpressure/",
-      "title": "Kiến trúc Thực thi: Xử lý Backpressure trong Apache Flink"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/kafka-topics-partitions/",
-      "title": "Kafka Topics và Partitions"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/streaming-processing/",
-      "title": "Xử lý Thời gian thực (Streaming Processing)"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/inmon-methodology/",
-      "title": "Inmon Methodology - Corporate Information Factory"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/sql-transformation/",
-      "title": "SQL Transformation & dbt: Kiến trúc ELT, Pipeline DAG và Tối ưu Hiệu năng"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/alerting-incident-response/",
-      "title": "Alerting & Incident Response: Từ Cảnh báo đến Post-mortem"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-profiling/",
-      "title": "Lập hồ sơ dữ liệu - Data Profiling"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
-      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/dataops/",
-      "title": "DataOps & Data Quality: Kiến trúc, Vận hành và Đánh đổi hệ thống"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/root-cause-analysis/",
-      "title": "Phân tích nguyên nhân gốc rễ - Root Cause Analysis (RCA)"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/volume-anomalies/",
-      "title": "Data Observability: Phát hiện bất thường khối lượng (Volume Anomalies)"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/finops-data-engineering/",
-      "title": "FinOps trong Data Engineering: Tối Ưu Chi Phí Tại Tầng Vật Lý"
-    },
-    {
-      "url": "/interview/overview/",
-      "title": "Ngân hàng Phỏng vấn (Interview)"
-    },
-    {
-      "url": "/learning-paths/interview-prep/",
-      "title": "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
-    },
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/projects/e2e/kafka-spark-airflow/",
-      "title": "End-To-End Data Engineering: Kafka, Spark, Airflow, Postgres & Docker"
-    },
-    {
-      "url": "/projects/e2e/reddit-data-pipeline/",
-      "title": "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
-    },
-    {
-      "url": "/projects/e2e/showpulse-ticketmaster/",
-      "title": "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
     }
   ],
   "/concepts/1-distributed-systems-architecture/relational-database/": [
@@ -8257,6 +8899,10 @@
       "title": "Apache Parquet Internals: Physical Layout, Dremel & Execution Trade-offs"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/",
+      "title": "Spark Cluster Managers: Standalone, YARN, Kubernetes"
+    },
+    {
       "url": "/concepts/7-dataops-orchestration-quality/alerting-incident-response/",
       "title": "Alerting & Incident Response: Từ Cảnh báo đến Post-mortem"
     },
@@ -8767,6 +9413,14 @@
       "title": "Table Format (Định dạng Bảng)"
     },
     {
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/",
+      "title": "Broadcast Variables, Accumulators & Serialization trong Spark"
+    },
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
       "url": "/concepts/6-data-modeling-transformation/materialization/",
       "title": "Phương thức lưu trữ kết quả dbt - Materialization"
     },
@@ -8881,12 +9535,6 @@
       "title": "Văn hóa viết postmortem không đổ lỗi"
     }
   ],
-  "/concepts/4-compute-engines-batch/spark-data-skew-salting/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
   "/concepts/2-data-ingestion-integration/backpressure-handling/": [
     {
       "url": "/learning-paths/core-paths/middle-to-senior-de/",
@@ -8903,54 +9551,6 @@
     {
       "url": "/concepts/1-distributed-systems-architecture/push-pull-delivery/",
       "title": "Push vs Pull Architecture: System Design Trade-offs"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/spark-partition/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/projects/e2e/ecomlake/",
-      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/spark-joins/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/spark-execution-model/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
-  "/concepts/4-compute-engines-batch/troubleshooting-spark-oom/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/",
-      "title": "Jobs, Stages, và Tasks trong Spark"
     }
   ],
   "/concepts/3-storage-engines-formats/table-format/": [
@@ -9465,12 +10065,6 @@
       "title": "Xử lý sự cố Production (Phỏng vấn) - Production Incident QA"
     }
   ],
-  "/concepts/4-compute-engines-batch/spark-spill-to-disk/": [
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    }
-  ],
   "/concepts/1-distributed-systems-architecture/kappa-architecture/": [
     {
       "url": "/learning-paths/interview-prep/",
@@ -9801,116 +10395,6 @@
       "title": "Lộ trình học Data Engineering"
     }
   ],
-  "/concepts/5-stream-processing-realtime/event-time-processing-time/": [
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/learning-paths/specializations/streaming-data-engineer/",
-      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-    }
-  ],
-  "/concepts/5-stream-processing-realtime/watermark/": [
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/learning-paths/specializations/streaming-data-engineer/",
-      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-engineer-role/",
-      "title": "Vai trò Kỹ sư Dữ liệu (Staff Data Engineer Perspective)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-pipeline/",
-      "title": "Data Pipeline: Thiết kế Hệ thống Phân tán cho Dữ liệu Quy mô Lớn"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/kappa-architecture/",
-      "title": "Kiến trúc Kappa (Kappa Architecture): Lấy Streaming Làm Cốt Lõi"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/leader-election/",
-      "title": "Bầu chọn Leader (Leader Election)"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/backfill/",
-      "title": "Backfill"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/change-data-capture/",
-      "title": "Change Data Capture (CDC)"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-extraction/",
-      "title": "Data Extraction & CDC"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/data-loading/",
-      "title": "Data Loading & Lakehouse Architecture"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/deduplication/",
-      "title": "Loại bỏ trùng lặp - Deduplication"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/incremental-load/",
-      "title": "Incremental Load"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/log-based-cdc-internals/",
-      "title": "Log-based CDC Internals"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/",
-      "title": "Thời gian sự kiện và Thời gian xử lý - Event Time vs Processing Time"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/flink-watermarks-late-data/",
-      "title": "Deep Dive: Watermarks & Late Data Handling"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/streaming-processing/",
-      "title": "Xử lý Thời gian thực (Streaming Processing)"
-    },
-    {
-      "url": "/concepts/5-stream-processing-realtime/windowing/",
-      "title": "Windowing & State Management: Phân nhóm dữ liệu luồng thực chiến"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-quality-dimensions/",
-      "title": "Các chiều chất lượng dữ liệu - Data Quality Dimensions"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/data-reconciliation/",
-      "title": "Đối soát dữ liệu - Data Reconciliation trong Pipeline"
-    },
-    {
-      "url": "/interview/overview/",
-      "title": "Ngân hàng Phỏng vấn (Interview)"
-    },
-    {
-      "url": "/projects/e2e/fabric-metadata-framework/",
-      "title": "Fabric Metadata-Driven Framework (FMD): Tự Động Hóa Pipeline Trong Microsoft Fabric"
-    },
-    {
-      "url": "/projects/system-design/lambda-vs-kappa-architecture/",
-      "title": "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakehouse"
-    }
-  ],
-  "/concepts/5-stream-processing-realtime/exactly-once-semantics/": [
-    {
-      "url": "/learning-paths/overview/",
-      "title": "Lộ trình học Data Engineering"
-    },
-    {
-      "url": "/learning-paths/specializations/streaming-data-engineer/",
-      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-    }
-  ],
   "/concepts/6-data-modeling-transformation/one-big-table-obt/": [
     {
       "url": "/learning-paths/specializations/analytics-engineer/",
@@ -9953,12 +10437,6 @@
     {
       "url": "/projects/system-design/finops-architecture/",
       "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
-    }
-  ],
-  "/concepts/3-storage-engines-formats/parquet-internals/": [
-    {
-      "url": "/learning-paths/specializations/cloud-data-engineer/",
-      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
     }
   ],
   "/concepts/3-storage-engines-formats/serverless-data/": [
@@ -10031,26 +10509,10 @@
       "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
     }
   ],
-  "/concepts/3-storage-engines-formats/file-formats-deep-dive/": [
-    {
-      "url": "/learning-paths/specializations/cloud-data-engineer/",
-      "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
-    }
-  ],
   "/concepts/4-compute-engines-batch/mpp-architecture-dremel/": [
     {
       "url": "/learning-paths/specializations/cloud-data-engineer/",
       "title": "Cloud Data Engineer (Kỹ sư dữ liệu đám mây)"
-    },
-    {
-      "url": "/projects/e2e/movie-analytics-pipeline/",
-      "title": "Movie Analytics Pipeline: Data Stack Hoàn Toàn Local Với DuckDB, dbt, Airflow"
-    }
-  ],
-  "/concepts/7-dataops-orchestration-quality/airflow-celery-vs-k8s-executor/": [
-    {
-      "url": "/learning-paths/specializations/data-platform-engineer/",
-      "title": "Data Platform Engineer"
     },
     {
       "url": "/projects/e2e/movie-analytics-pipeline/",
@@ -10123,16 +10585,6 @@
     {
       "url": "/interview/pipeline-design-interview/",
       "title": "Thiết kế Data Pipeline (Phỏng vấn) - Pipeline Design Interview"
-    }
-  ],
-  "/concepts/5-stream-processing-realtime/streaming-processing/": [
-    {
-      "url": "/learning-paths/specializations/streaming-data-engineer/",
-      "title": "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/batch-processing/",
-      "title": "Xử lý dữ liệu theo lô - Batch Processing"
     }
   ],
   "/concepts/5-stream-processing-realtime/flink-rocksdb-state-backend/": [
@@ -10235,40 +10687,6 @@
     {
       "url": "/projects/e2e/ecomlake/",
       "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    }
-  ],
-  "/concepts/1-distributed-systems-architecture/feature-store/": [
-    {
-      "url": "/projects/e2e/ecomlake/",
-      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-engineering/",
-      "title": "Kỹ Thuật Dữ Liệu Toàn Tập (Data Engineering Architecture)"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/data-platform-architecture/",
-      "title": "Kiến trúc Nền tảng Dữ liệu - Data Platform Architecture"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/star-schema/",
-      "title": "Lược đồ Hình sao (Star Schema)"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/distribution-drift/",
-      "title": "Trôi dạt phân phối - Distribution Drift (Data Drift)"
-    },
-    {
-      "url": "/interview/overview/",
-      "title": "Ngân hàng Phỏng vấn (Interview)"
-    },
-    {
-      "url": "/projects/system-design/airbnb-dynamic-pricing/",
-      "title": "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
-    },
-    {
-      "url": "/projects/system-design/netflix-recommendation-architecture/",
-      "title": "Case Study: Kiến trúc Recommendation tại Netflix"
     }
   ],
   "/images/projects/e2e/fabric-metadata-framework/f446039a.png/": [
@@ -10563,104 +10981,6 @@
       "title": "Case Study: Kiến trúc Log Analytics tại Uber"
     }
   ],
-  "/concepts/4-compute-engines-batch/spark-sql/": [
-    {
-      "url": "/concepts/1-distributed-systems-architecture/lambda-architecture/",
-      "title": "Lambda & Kappa Architectures"
-    },
-    {
-      "url": "/concepts/1-distributed-systems-architecture/real-time-architecture/",
-      "title": "Kiến trúc hệ thống dữ liệu Thời gian thực (Real-time Architecture)"
-    },
-    {
-      "url": "/concepts/2-data-ingestion-integration/backfill/",
-      "title": "Backfill"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/iceberg-small-files-compaction/",
-      "title": "Troubleshooting: Vấn nạn Small Files & Tối ưu Compaction trong Apache Iceberg"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/medallion-architecture/",
-      "title": "Kiến trúc Medallion - Thực thi Vật lý và Đánh đổi Hệ thống"
-    },
-    {
-      "url": "/concepts/3-storage-engines-formats/table-format/",
-      "title": "Table Format (Định dạng Bảng)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/apache-spark/",
-      "title": "Apache Spark"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/data-skew/",
-      "title": "Lệch dữ liệu (Data Skew)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/distributed-processing/",
-      "title": "Xử lý phân tán - Distributed Processing"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/",
-      "title": "Deep Dive: Adaptive Query Execution (AQE)"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/",
-      "title": "Catalyst Optimizer"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-data-skew-salting/",
-      "title": "Troubleshooting: Chữa Data Skew bằng kỹ thuật Salting"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-execution-model/",
-      "title": "Mô hình thực thi Spark - Spark Execution Model"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-joins/",
-      "title": "Các loại Join trong Spark: Kiến trúc Vật lý và Đánh đổi"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-partition/",
-      "title": "Spark Partition"
-    },
-    {
-      "url": "/concepts/4-compute-engines-batch/spark-tungsten-engine/",
-      "title": "Spark Tungsten Engine"
-    },
-    {
-      "url": "/concepts/6-data-modeling-transformation/dimensional-modeling/",
-      "title": "Mô hình hóa dữ liệu đa chiều - Dimensional Modeling"
-    },
-    {
-      "url": "/concepts/7-dataops-orchestration-quality/circuit-breakers-data/",
-      "title": "Circuit Breakers & WAP Pattern trong Data Pipelines"
-    },
-    {
-      "url": "/concepts/8-security-governance-finops/unity-catalog/",
-      "title": "Unity Catalog"
-    },
-    {
-      "url": "/interview/spark-optimization-interview/",
-      "title": "Tối ưu hóa Spark (Phỏng vấn) - Spark Optimization Interview"
-    },
-    {
-      "url": "/learning-paths/core-paths/middle-to-senior-de/",
-      "title": "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
-    },
-    {
-      "url": "/projects/system-design/finops-architecture/",
-      "title": "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
-    },
-    {
-      "url": "/projects/system-design/idempotency-in-data-pipelines/",
-      "title": "Design Pattern: Idempotency trong Data Pipelines"
-    },
-    {
-      "url": "/projects/system-design/netflix-recommendation-architecture/",
-      "title": "Case Study: Kiến trúc Recommendation tại Netflix"
-    }
-  ],
   "/concepts/9-genai-machine-learning/token/": [
     {
       "url": "/concepts/1-distributed-systems-architecture/leader-election/",
@@ -10911,6 +11231,34 @@
       "title": "Tìm kiếm ngữ nghĩa (Semantic Search & Vector DB)"
     }
   ],
+  "/concepts/1-distributed-systems-architecture/file-formats/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    }
+  ],
+  "/concepts/9-genai-machine-learning/mlflow/": [
+    {
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/",
+      "title": "Spark Mastery: Bản đồ kiến thức Apache Spark từ A đến Z"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/evaluation-metric/",
+      "title": "Chỉ số đánh giá - Evaluation Metric & RAG Triad"
+    },
+    {
+      "url": "/concepts/9-genai-machine-learning/llm-as-a-judge/",
+      "title": "LLM làm Giám khảo (LLM-as-a-judge) - MLOps Thực Chiến"
+    },
+    {
+      "url": "/projects/e2e/ecomlake/",
+      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
+    },
+    {
+      "url": "/projects/system-design/modern-vs-post-modern-data-stack/",
+      "title": "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
+    }
+  ],
   "/concepts/7-dataops-orchestration-quality/anomaly-detection/": [
     {
       "url": "/concepts/5-stream-processing-realtime/event-time-processing-time/",
@@ -10969,12 +11317,6 @@
     {
       "url": "/interview/overview/",
       "title": "Ngân hàng Phỏng vấn (Interview)"
-    }
-  ],
-  "/concepts/3-storage-engines-formats/compression-algorithms/": [
-    {
-      "url": "/concepts/6-data-modeling-transformation/one-big-table-obt/",
-      "title": "One Big Table (OBT)"
     }
   ],
   "/concepts/7-dataops-orchestration-quality/sensors/": [
@@ -11235,24 +11577,6 @@
     {
       "url": "/concepts/9-genai-machine-learning/reranker/",
       "title": "Mô hình tái sắp xếp - Reranker"
-    }
-  ],
-  "/concepts/9-genai-machine-learning/mlflow/": [
-    {
-      "url": "/concepts/9-genai-machine-learning/evaluation-metric/",
-      "title": "Chỉ số đánh giá - Evaluation Metric & RAG Triad"
-    },
-    {
-      "url": "/concepts/9-genai-machine-learning/llm-as-a-judge/",
-      "title": "LLM làm Giám khảo (LLM-as-a-judge) - MLOps Thực Chiến"
-    },
-    {
-      "url": "/projects/e2e/ecomlake/",
-      "title": "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
-    },
-    {
-      "url": "/projects/system-design/modern-vs-post-modern-data-stack/",
-      "title": "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
     }
   ],
   "/concepts/3-storage-engines-formats/vector-store/": [
