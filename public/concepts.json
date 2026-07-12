@@ -1125,6 +1125,18 @@
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/mpp-architecture-dremel/"
     },
+    "Rdd Dataframe Dataset": {
+      "title": "RDD vs DataFrame vs Dataset trong Spark: chọn API nào, khi nào?",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/4-compute-engines-batch/rdd-dataframe-dataset/"
+    },
     "Shuffle": {
       "title": "Spark Shuffle Architecture & Remote Shuffle Service (RSS/Zeus) Uber",
       "category": "Khái niệm",
@@ -1149,6 +1161,18 @@
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/"
     },
+    "Spark Broadcast Serialization": {
+      "title": "Spark Broadcast Variables, Kryo Serialization và định dạng dữ liệu",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/4-compute-engines-batch/spark-broadcast-serialization/"
+    },
     "Spark Catalyst Optimizer": {
       "title": "Spark Catalyst Optimizer: RBO, CBO & Quá Trình Biên Dịch SQL",
       "category": "Khái niệm",
@@ -1160,6 +1184,19 @@
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-catalyst-optimizer/"
+    },
+    "Spark Cluster Managers": {
+      "title": "So sánh Spark Cluster Managers: Standalone vs YARN vs Kubernetes",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/4-compute-engines-batch/spark-cluster-managers/"
     },
     "Spark Data Skew Salting": {
       "title": "Spark Data Skew: Giải pháp Salting và AQE (Adaptive Query Execution)",
@@ -1209,6 +1246,19 @@
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-joins/"
     },
+    "Spark Mastery": {
+      "title": "Học hết Apache Spark: bản đồ kiến thức và lộ trình đọc theo chủ đề",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Middle",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/4-compute-engines-batch/spark-mastery/"
+    },
     "Spark Partition": {
       "title": "Spark Partition",
       "category": "Khái niệm",
@@ -1220,6 +1270,18 @@
       "aliases": [],
       "bullets": [],
       "url": "/concepts/4-compute-engines-batch/spark-partition/"
+    },
+    "Spark Persist Storage Levels": {
+      "title": "Spark persist() vs cache(): các Storage Level và khi nào dùng",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Middle",
+      "domains": [
+        "DE"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/4-compute-engines-batch/spark-persist-storage-levels/"
     },
     "Spark Spill To Disk": {
       "title": "Troubleshooting: Spark Spill to Disk & Unified Memory Tuning",
