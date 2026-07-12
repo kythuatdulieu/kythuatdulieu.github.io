@@ -131,7 +131,7 @@ Tại một số nền tảng, bản Clone không tự động thừa kế (inhe
 3. Tuyệt đối không dùng Shallow Clone làm phương án Backup / Disaster Recovery dài hạn thay cho Storage Snapshots thực thụ.
 
 ## Nguồn Tham Khảo (References)
-* [Snowflake Documentation: Cloning Considerations][https://docs.snowflake.com/en/user-guide/object-clone]
-* [Databricks: Shallow vs Deep Clone in Delta Lake][https://docs.databricks.com/en/delta/clone.html]
-* [Apache Iceberg: Branching and Tagging][https://iceberg.apache.org/docs/latest/branching/]
-* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data]](https://dataintensive.net/)
+* [Snowflake Documentation: Cloning Considerations](https://docs.snowflake.com/en/user-guide/object-clone)
+* [Databricks: Shallow vs Deep Clone in Delta Lake](https://docs.databricks.com/en/delta/clone.html)
+* [Apache Iceberg: Branching and Tagging](https://iceberg.apache.org/docs/latest/branching/)
+* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)

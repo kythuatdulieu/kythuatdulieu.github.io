@@ -53,7 +53,7 @@ graph TD
 *   **Compression Codec:** Sau khi các encoding hạng nhẹ đã loại bỏ triệt để sự dư thừa cấu trúc, một thuật toán "hạng nặng" [như Zstd, Snappy] mới được áp dụng lên Data Page đó để nén byte-level (thu nhỏ dung lượng file cuối cùng).
 
 :::tip
-**Performance Tip:** Để tối đa hóa tỉ lệ nén, hãy dùng `ORDER BY` (Sorting] hoặc `Z-ORDER` theo các cột có Cardinality thấp trước khi ghi (Write) ra Parquet. Việc này dồn các giá trị giống nhau nằm cạnh nhau, giúp RLE phát huy sức mạnh 100%, có thể giảm dung lượng file xuống còn 1/10 mà không tiêu tốn thêm bất kỳ chu kỳ CPU nào cho Codec nén.
+**Performance Tip:** Để tối đa hóa tỉ lệ nén, hãy dùng `ORDER BY` (Sorting) hoặc `Z-ORDER` theo các cột có Cardinality thấp trước khi ghi (Write) ra Parquet. Việc này dồn các giá trị giống nhau nằm cạnh nhau, giúp RLE phát huy sức mạnh 100%, có thể giảm dung lượng file xuống còn 1/10 mà không tiêu tốn thêm bất kỳ chu kỳ CPU nào cho Codec nén.
 :::
 
 ---
@@ -145,6 +145,6 @@ Bảng quyết định kiến trúc nhanh gọn dành cho Data Engineer:
 |" **Cold Data Archival (Glacier)** "| Parquet / CSV |" `Zstd` (Level 9+) hoặc `Gzip` "| Dữ liệu Write-Once, Read-Rarely. Tối ưu cực hạn chi phí lưu trữ phần cứng. |
 
 ## Nguồn Tham Khảo (References)
-*   [Zstandard - Real-time data compression algorithm (Meta Open Source]][https://facebook.github.io/zstd/]
-*   [Apache Parquet Format Specifications (File Format & Encoding]][https://parquet.apache.org/docs/file-format/]
-*   [Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval] - Martin Kleppmann](https://dataintensive.net/)
+*   [Zstandard - Real-time data compression algorithm (Meta Open Source)](https://facebook.github.io/zstd/)
+*   [Apache Parquet Format Specifications (File Format & Encoding)](https://parquet.apache.org/docs/file-format/)
+*   [Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval) - Martin Kleppmann](https://dataintensive.net/)

@@ -7,6 +7,7 @@ readingTime: "16 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Pipeline Design Interview - Thiết kế Data Pipeline hệ thống dữ liệu"
 metaDescription: "Thiết kế Data Pipeline trong phỏng vấn Data Engineering: idempotency, backfill, late-arriving data, CDC, WAP pattern và các trade-off giữa batch và streaming."
+domains: ["DE"]
 ---
 
 Vòng thiết kế [Data Pipeline](/concepts/1-distributed-systems-architecture/data-pipeline) — system design dành riêng cho dữ liệu — thường là vòng có trọng số cao nhất khi tuyển Data Engineer từ Mid trở lên. Lý do: nó là vòng duy nhất mô phỏng được công việc thật. Viết SQL hay tinh chỉnh Spark là kỹ năng; thiết kế một pipeline sống sót qua sự cố mới là nghề.

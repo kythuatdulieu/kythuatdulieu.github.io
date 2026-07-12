@@ -137,7 +137,7 @@ ALTER TABLE heavy_updates_table SET (autovacuum_vacuum_scale_factor = 0.01);
 
 ## 4. Nguồn Tham Khảo [References]
 
-1. **PostgreSQL Official Docs:** [Routine Vacuuming & Preventing Transaction ID Wraparound Failures][https://www.postgresql.org/docs/current/routine-vacuuming.html]
-2. **AWS Database Blog:** [Understanding autovacuum in Amazon RDS for PostgreSQL][https://aws.amazon.com/blogs/database/understanding-autovacuum-in-amazon-rds-for-postgresql-environments/]
-3. **Apache Iceberg Maintenance:** [Expire Snapshots & Remove Orphan Files](https://iceberg.apache.org/docs/latest/maintenance/]
+1. **PostgreSQL Official Docs:** [Routine Vacuuming & Preventing Transaction ID Wraparound Failures](https://www.postgresql.org/docs/current/routine-vacuuming.html)
+2. **AWS Database Blog:** [Understanding autovacuum in Amazon RDS for PostgreSQL](https://aws.amazon.com/blogs/database/understanding-autovacuum-in-amazon-rds-for-postgresql-environments/)
+3. **Apache Iceberg Maintenance:** [Expire Snapshots & Remove Orphan Files](https://iceberg.apache.org/docs/latest/maintenance/)
 4. **Sách chuyên ngành:** *Designing Data-Intensive Applications* (Martin Kleppmann) - MVCC and Storage Engines.

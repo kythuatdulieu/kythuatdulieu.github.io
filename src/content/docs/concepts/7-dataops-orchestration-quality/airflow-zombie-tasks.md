@@ -117,7 +117,7 @@ scheduler_zombie_task_threshold = 300
 
 [celery]
 # Rất quan trọng để tránh Memory Leak trên Celery Worker:
-# Bắt Worker phải restart (tạo process mới] sau khi chạy xong 100 tasks, 
+# Bắt Worker phải restart (tạo process mới) sau khi chạy xong 100 tasks, 
 # giúp giải phóng hoàn toàn RAM tích tụ.
 worker_autoscale = 16,8
 max_active_tasks_per_child = 100
@@ -146,7 +146,12 @@ flowchart TD
     end
 
     T1["Task D (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
-    T2["Task E (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
+    T2["Task E (Core Pipeline)"] -.->|"Wait (Xếp hàng vô vọng)"| Pool
+
+
+
+
+
 ```
 
 ### 2.1. Trade-off Giữa Các Cơ Chế Chờ Đợi (Waiting Mechanisms)
@@ -222,8 +227,8 @@ Hiểu thấu đáo về các cơ chế vật lý (Memory, Scheduler Loops, Conc
 
 ## 4. Nguồn Tham Khảo [References]
 
-1. [Apache Airflow Architecture Overview][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html]
-2. [Airflow Concepts: Pools & Concurrency][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/pools.html]
-3. [Deferrable Operators & Triggers - Airflow Docs][https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html]
-4. [Astronomer: Handling Zombie Tasks and Optimization][https://www.astronomer.io/docs/learn/]
-5. [Datadog: Monitoring Apache Airflow At Scale](https://www.datadoghq.com/blog/monitor-airflow-with-datadog/]
+1. [Apache Airflow Architecture Overview](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
+2. [Airflow Concepts: Pools & Concurrency](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/pools.html)
+3. [Deferrable Operators & Triggers - Airflow Docs](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html)
+4. [Astronomer: Handling Zombie Tasks and Optimization](https://www.astronomer.io/docs/learn/)
+5. [Datadog: Monitoring Apache Airflow At Scale](https://www.datadoghq.com/blog/monitor-airflow-with-datadog/)

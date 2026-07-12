@@ -141,7 +141,7 @@ Nếu có 100 User mở BI Dashboard cùng Refresh lúc 8h sáng, Redshift sẽ 
 ---
 
 ## 5. Nguồn Tham Khảo (References)
-1. **AWS Architecture:** [Amazon Redshift System Architecture][https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html]
+1. **AWS Architecture:** [Amazon Redshift System Architecture](https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html)
 2. **Sách chuyên môn:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Chương 3: Column-Oriented Storage.
-3. **AWS Big Data Blog:** [Amazon Redshift RA3 with Managed Storage][https://aws.amazon.com/blogs/big-data/use-amazon-redshift-ra3-with-managed-storage-in-your-modern-data-architecture/]
-4. **AWS AQUA:** [Advanced Query Accelerator (AQUA] for Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/dg/aqua-accelerator.html)
+3. **AWS Big Data Blog:** [Amazon Redshift RA3 with Managed Storage](https://aws.amazon.com/blogs/big-data/use-amazon-redshift-ra3-with-managed-storage-in-your-modern-data-architecture/)
+4. **AWS AQUA:** [Advanced Query Accelerator (AQUA) for Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/dg/aqua-accelerator.html)

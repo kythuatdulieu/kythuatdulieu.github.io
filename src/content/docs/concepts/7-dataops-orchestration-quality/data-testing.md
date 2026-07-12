@@ -135,7 +135,7 @@ def detect_volume_anomaly(daily_volume_series: pd.Series, threshold_z=3.0):
     z_scores = zscore[daily_volume_series]
     latest_z = z_scores.iloc[-1]
     
-    # Nếu dữ liệu lệch quá 3 độ lệch chuẩn (3 Sigma]
+    # Nếu dữ liệu lệch quá 3 độ lệch chuẩn (3 Sigma)
     if abs(latest_z) > threshold_z:
         trigger_pagerduty_alert(f"Volume anomaly detected! Z-Score: {latest_z}")
     else:
@@ -162,8 +162,8 @@ Tại đây, Data Engineer sẽ phân tích nguyên nhân gốc rễ. Sau khi k�
 
 ## Nguồn Tham Khảo (References)
 
-1. **Uber Engineering:** [Monitoring Data Quality at Scale with Statistical Modeling][https://www.uber.com/en-VN/blog/]
+1. **Uber Engineering:** [Monitoring Data Quality at Scale with Statistical Modeling](https://www.uber.com/en-VN/blog/)
 2. **Netflix Tech Blog:** *Whoops, the Numbers are Wrong! Scaling Data Quality @ Netflix*
-3. **Apache Iceberg / Project Nessie:** [Write-Audit-Publish Pattern for Data Lakes][https://projectnessie.org/features/wap/]
+3. **Apache Iceberg / Project Nessie:** [Write-Audit-Publish Pattern for Data Lakes](https://projectnessie.org/features/wap/)
 4. Sách: *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing - Cảnh báo và Quality)
-5. **dbt Best Practices:** [Data Testing Configuration & Incremental Tests](https://docs.getdbt.com/docs/build/data-tests]
+5. **dbt Best Practices:** [Data Testing Configuration & Incremental Tests](https://docs.getdbt.com/docs/build/data-tests)

@@ -4,6 +4,13 @@ description: Tổng quan các chủ đề, kiến trúc và kỹ thuật dùng t
 sidebar:
   label: Tổng quan
   order: 1
+tags: ["overview"]
+readingTime: "17 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Ngân hàng Phỏng vấn (Interview)"
+metaDescription: "Tổng quan các chủ đề, kiến trúc và kỹ thuật dùng trong phỏng vấn Data Engineering, kèm lộ trình đọc theo từng vòng phỏng vấn"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Quy trình phỏng vấn Data Engineer ở các công ty công nghệ (FAANG, Grab, Gojek, VNG...) đã hội tụ về một cấu trúc khá ổn định: một vòng SQL live coding, một vòng Python, một vòng system design cho dữ liệu, thường thêm một vòng chuyên sâu theo stack (Spark, Kafka) và một vòng behavioral. Điều đó có nghĩa là việc chuẩn bị có thể — và nên — được tổ chức theo đúng các vòng đó, thay vì học dàn trải.

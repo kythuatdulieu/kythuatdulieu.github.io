@@ -29,7 +29,10 @@ graph TD
     ALP -->|RBO: Rule-Based Optimizer| OLP["3. Optimized Logical Plan"]
     OLP -->|CBO: Cost-Based Optimizer| PP["4. Physical Plans (Nhiều phương án)"]
     PP -->|Chọn Cost thấp nhất| SPP["5. Selected Physical Plan"]
-    SPP -->|Tungsten WSCG| RDD["Thực thi trên RDD / Máy Ảo"]
+    SPP -->|Tungsten WSCG| RDD["Thực thi trên RDD / Máy Ảo"]
+
+
+
 ```
 
 ### Giai đoạn 1: Phân tích Cú pháp (Unresolved Logical Plan)
@@ -140,7 +143,7 @@ df_filtered.explain(mode="extended")
 
 1. **Leaf Nodes (Các node lá dưới cùng):** Tìm kiếm node `FileScan parquet`. Hãy để ý phần `PushedFilters`. 
    - Nếu bạn viết filter mà `PushedFilters` rỗng `[]`, có nghĩa là quy tắc Predicate Pushdown đã bị hỏng. 
-   - **Nguyên nhân phổ biến:** Bạn đang sử dụng Python UDF (User Defined Function] trong hàm `filter()`. Catalyst không thể chui vào code Python để hiểu logic nên nó vô hiệu hóa Pushdown. Bắt buộc phải Scan full table.
+   - **Nguyên nhân phổ biến:** Bạn đang sử dụng Python UDF (User Defined Function) trong hàm `filter()`. Catalyst không thể chui vào code Python để hiểu logic nên nó vô hiệu hóa Pushdown. Bắt buộc phải Scan full table.
    - **Cách fix:** Thay UDF bằng các hàm Spark SQL Native (`pyspark.sql.functions`).
 
 2. **Internal Nodes (Các node trung gian):** Tìm kiếm node `Exchange`. Node này đánh dấu một thao tác **Shuffle** (dữ liệu bay qua mạng lưới giữa các Worker).
@@ -162,7 +165,7 @@ df_filtered.explain(mode="extended")
 
 ## Nguồn Tham Khảo (References)
 
-- [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks Blog][https://www.databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html]
-- [Spark SQL: Relational Data Processing in Spark (SIGMOD 2015 - MIT & Stanford]][https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf]
-- [Cost Based Optimizer in Apache Spark 2.2 - Databricks](https://www.databricks.com/blog/2017/08/31/cost-based-optimizer-in-apache-spark-2-2.html]
+- [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks Blog](https://www.databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html)
+- [Spark SQL: Relational Data Processing in Spark (SIGMOD 2015 - MIT & Stanford)](https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf)
+- [Cost Based Optimizer in Apache Spark 2.2 - Databricks](https://www.databricks.com/blog/2017/08/31/cost-based-optimizer-in-apache-spark-2-2.html)
 - Cuốn sách: *Spark: The Definitive Guide* (O'Reilly).

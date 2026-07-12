@@ -118,6 +118,6 @@ peft_model.print_trainable_parameters()
 ---
 
 ## Nguồn Tham Khảo
-1. Hu, E. J., et al. (2021). [LoRA: Low-Rank Adaptation of Large Language Models][https://arxiv.org/abs/2106.09685].
-2. Dettmers, T., et al. (2023). [QLoRA: Efficient Finetuning of Quantized LLMs][https://arxiv.org/abs/2305.14314].
-3. [vLLM Documentation: LoRA support & Multi-tenant Serving](https://docs.vllm.ai/en/latest/]
+1. Hu, E. J., et al. (2021). [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685).
+2. Dettmers, T., et al. (2023). [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314).
+3. [vLLM Documentation: LoRA support & Multi-tenant Serving](https://docs.vllm.ai/en/latest/)

@@ -13,8 +13,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Generative AI (AI tạo sinh) là một nhánh của trí tuệ nhân tạo tập trung vào việc tạo ra nội dung mới như văn bản, hình ảnh, âm nhạc, mã nguồn, v.v., thay vì chỉ phân tích dữ liệu có sẵn.",
-    "references": null
+    "explanation_vi": "AI tạo sinh (Generative AI) là một bước tiến vượt bậc trong trí tuệ nhân tạo:\n- **Đáp án B đúng**: Generative AI được thiết kế đặc biệt để tạo ra các nội dung hoàn toàn mới (như văn bản, hình ảnh, âm nhạc, mã nguồn...) dựa trên dữ liệu mà nó đã được học, thay vì chỉ phân tích dữ liệu cũ.\n- **Đáp án A sai**: Đây là mô tả của mô hình hồi quy tuyến tính (Linear Regression) trong học máy truyền thống.\n- **Đáp án C sai**: Đây là định nghĩa của mạng thần kinh nhân tạo (Artificial Neural Networks - ANN).\n- **Đáp án D sai**: Đây là định nghĩa chung của học sâu (Deep Learning) và học máy (Machine Learning), tập trung vào cơ chế tự học chứ không nhấn mạnh vào mục tiêu tạo ra nội dung mới.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Introduction to Generative AI | Google Cloud",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview"
+      }
+    ],
+    "question_vi": "Định nghĩa của AI tạo sinh (generative AI) là gì?",
+    "options_vi": {
+      "A": "Một loại mô hình dự đoán ước tính mối quan hệ bằng cách khớp một đường thẳng vào dữ liệu quan sát được.",
+      "B": "Một loại trí tuệ nhân tạo có thể tạo ra nội dung và ý tưởng mới, bao gồm văn bản, hình ảnh, âm nhạc và mã nguồn.",
+      "C": "Một loại thuật toán học máy lấy cảm hứng từ bộ não con người, được cấu thành từ các nút liên kết với nhau.",
+      "D": "Một loại trí tuệ nhân tạo cho phép hệ thống tự động học hỏi và cải thiện bằng cách sử dụng mạng thần kinh nhân tạo và học sâu."
+    }
   },
   {
     "id": 2,
@@ -30,8 +42,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong ngữ cảnh Gen AI, một tác nhân AI (AI agent) có khả năng tự động phân tích các tình huống, lập kế hoạch, sử dụng các công cụ khác nhau và đưa ra quyết định độc lập để hoàn thành mục tiêu mà không cần sự giám sát hay can thiệp liên tục của con người.",
-    "references": null
+    "explanation_vi": "Trong kỷ nguyên của Generative AI, khái niệm AI Agent đóng vai trò rất quan trọng:\n- **Đáp án D đúng**: Tác nhân AI (AI agent) là một hệ thống tự trị có thể hiểu mục tiêu của người dùng, phân tích ngữ cảnh, tự chọn và sử dụng nhiều công cụ phù hợp (như tìm kiếm web, truy vấn cơ sở dữ liệu, chạy code) để tự động hoàn thành nhiệm vụ mà không cần con người can thiệp từng bước.\n- **Đáp án A sai**: Đây là vai trò của hạ tầng phần cứng (Compute resources như GPU/TPU).\n- **Đáp án B sai**: Đây là vai trò của các dịch vụ quản lý và lưu trữ dữ liệu (Database/Data storage).\n- **Đáp án C sai**: Đây là mô tả của các giao diện người dùng đơn giản (UI/UX).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Vertex AI Agent Builder Overview",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview"
+      }
+    ],
+    "question_vi": "Một công ty muốn sử dụng tác nhân AI (AI agent) để tự động hóa một số nhiệm vụ. Họ muốn mọi người hiểu các chức năng khác nhau của một tác nhân AI. Chức năng của một tác nhân AI trong ngữ cảnh AI tạo sinh (Gen AI) là gì?",
+    "options_vi": {
+      "A": "Cung cấp tài nguyên tính toán cần thiết để huấn luyện và vận hành các mô hình Gen AI.",
+      "B": "Lưu trữ và quản lý các tập dữ liệu lớn được sử dụng để huấn luyện và vận hành các mô hình Gen AI.",
+      "C": "Cung cấp một giao diện thân thiện với người dùng để tương tác với các mô hình Gen AI.",
+      "D": "Phân tích các tình huống, sử dụng nhiều công cụ và đưa ra quyết định sáng suốt mà không cần đầu vào liên tục từ con người."
+    }
   },
   {
     "id": 3,
@@ -47,8 +71,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "AI Agent (Tác nhân AI) được định nghĩa là một ứng dụng có khả năng học hỏi và tự động tìm cách đạt được mục tiêu đề ra dựa trên các thông tin đầu vào (inputs) và các công cụ (tools) có sẵn.",
-    "references": null
+    "explanation_vi": "Định nghĩa chuẩn về tác nhân AI (AI Agent):\n- **Đáp án A đúng**: AI Agent là một ứng dụng phần mềm có khả năng nhận biết môi trường xung quanh (inputs), sử dụng các công cụ được cung cấp (tools) để tự lập kế hoạch và thực hiện hành động nhằm đạt được mục tiêu cụ thể một cách độc lập.\n- **Đáp án B sai**: AI Agent là phần mềm/thuật toán tự động, không phải là con người.\n- **Đáp án C sai**: Giao diện người dùng chỉ hỗ trợ truyền tải câu lệnh và hiển thị kết quả chứ không trực tiếp suy luận hành động hay học cách đạt được mục tiêu.\n- **Đáp án D sai**: AI Agent là thành phần động và có khả năng tương tác, quyết định hành vi linh hoạt chứ không phải là thành phần tĩnh cung cấp thông tin cố định.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Build AI agents with Vertex AI Agent Builder",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview"
+      }
+    ],
+    "question_vi": "Định nghĩa của một tác nhân AI (AI agent) là gì?",
+    "options_vi": {
+      "A": "Một ứng dụng học cách đạt được mục tiêu dựa trên các thông tin đầu vào và các công cụ có sẵn cho nó.",
+      "B": "Chuyên gia là con người giám sát và quản lý hoạt động của một ứng dụng Gen AI.",
+      "C": "Một loại giao diện người dùng cho phép người dùng tương tác với một ứng dụng Gen AI.",
+      "D": "Một thành phần tĩnh của ứng dụng Gen AI cung cấp thông tin cho người dùng."
+    }
   },
   {
     "id": 4,
@@ -64,8 +100,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học tăng cường (Reinforcement learning) là phương pháp học máy dựa trên cơ chế thử và sai (trial and error), trong đó mô hình (hoặc tác nhân) học cách tối đa hóa điểm thưởng (phần thưởng tích lũy) thông qua các hành động tương tác với môi trường xung quanh.",
-    "references": null
+    "explanation_vi": "Phân tích phương pháp học máy phù hợp:\n- **Đáp án B đúng**: Học tăng cường (Reinforcement Learning) là phương pháp huấn luyện mô hình dựa trên tương tác trực tiếp với môi trường. Mô hình sẽ thực hiện các hành động thử và sai (trial and error) để tối đa hóa phần thưởng (điểm tích cực) và giảm thiểu hình phạt (điểm tiêu cực).\n- **Đáp án A sai**: Học không giám sát (Unsupervised Learning) được dùng để tìm cấu trúc ẩn trong dữ liệu chưa được gắn nhãn (như phân cụm), không hoạt động theo cơ chế thưởng/phạt.\n- **Đáp án C sai**: Học có giám sát (Supervised Learning) yêu cầu dữ liệu có sẵn nhãn đúng-sai để bắt chước, không thể tự học thông qua hành động trong thời gian thực trong trò chơi.\n- **Đáp án D sai**: Học sâu (Deep Learning) chỉ là một kỹ thuật sử dụng mạng thần kinh nhiều lớp. Mặc dù nó có thể được kết hợp với học tăng cường (Deep Reinforcement Learning), nhưng bản chất cơ chế thưởng/phạt mô tả trong đề bài là đặc trưng của học tăng cường.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Reinforcement Learning | Google Cloud Blog",
+        "url": "https://cloud.google.com/blog/products/ai-machine-learning/reinforcement-learning-on-google-cloud-platform"
+      }
+    ],
+    "question_vi": "Một công ty đang phát triển một nhân vật AI cho trò chơi điện tử. Nhân vật AI cần học cách di chuyển trong môi trường phức tạp và đưa ra quyết định để đạt được các mục tiêu nhất định trong trò chơi. Khi AI thực hiện các hành động dẫn đến kết quả tích cực như tìm thấy phần thưởng hoặc vượt qua chướng ngại vật, nó sẽ nhận được điểm tích cực. Khi thực hiện các hành động dẫn đến kết quả tiêu cực, như đâm vào tường hoặc mất tiến trình, nó nhận điểm tiêu cực. Thông qua quá trình thử và sai này, AI dần cải thiện khả năng chơi game hiệu quả của nhân vật. Công ty nên sử dụng loại học máy nào?",
+    "options_vi": {
+      "A": "Học không giám sát (Unsupervised learning)",
+      "B": "Học tăng cường (Reinforcement learning)",
+      "C": "Học có giám sát (Supervised learning)",
+      "D": "Học sâu (Deep learning)"
+    }
   },
   {
     "id": 5,
@@ -81,8 +129,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Google Cloud Document AI là dịch vụ chuyên dụng giúp tự động hóa việc trích xuất dữ liệu có cấu trúc từ các tài liệu như hóa đơn, đơn xin vay vốn, hợp đồng dưới dạng file quét (scanned documents) hoặc PDF, giúp tăng tốc độ xử lý và giảm thiểu sai sót thủ công.",
-    "references": null
+    "explanation_vi": "Giải pháp tự động hóa tài liệu của Google Cloud:\n- **Đáp án A đúng**: Document AI là nền tảng chuyên dụng của Google Cloud giúp đọc hiểu, phân tích cấu trúc và trích xuất thông tin từ các tài liệu kinh doanh (như hóa đơn, hồ sơ vay vốn, hợp đồng) dưới dạng PDF hay hình ảnh scan sang dạng dữ liệu có cấu trúc một cách chính xác.\n- **Đáp án B sai**: Natural Language API phân tích ý nghĩa ngữ nghĩa, cảm xúc của văn bản thuần túy chứ không hỗ trợ xử lý và trích xuất dữ liệu theo biểu mẫu bố cục hình ảnh tài liệu quét.\n- **Đáp án C sai**: Vision AI dùng cho việc nhận diện hình ảnh chung (nhận diện khuôn mặt, vật thể, OCR văn bản cơ bản) nhưng không có các parser thông minh chuyên dụng để trích xuất dữ liệu dạng khóa-giá trị (key-value pairs) của hồ sơ tài chính như Document AI.\n- **Đáp án D sai**: Dataflow là công cụ ETL để xử lý luồng dữ liệu (streaming/batch data processing), không phải là công cụ xử lý tài liệu bằng trí tuệ nhân tạo.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Document AI Overview | Google Cloud",
+        "url": "https://cloud.google.com/document-ai/docs/overview"
+      }
+    ],
+    "question_vi": "Một công ty dịch vụ tài chính nhận được số lượng lớn hồ sơ vay vốn hàng ngày dưới dạng tài liệu quét (scan) và file PDF với nhiều định dạng bố cục khác nhau. Quá trình trích xuất thông tin chính bằng tay tốn nhiều thời gian và dễ xảy ra sai sót. Điều này gây ra sự chậm trễ trong xử lý khoản vay và ảnh hưởng đến sự hài lòng của khách hàng. Công ty muốn tự động hóa việc trích xuất dữ liệu quan trọng này để nâng cao hiệu quả và độ chính xác. Họ nên sử dụng công cụ nào của Google Cloud?",
+    "options_vi": {
+      "A": "Document AI API",
+      "B": "Natural Language API",
+      "C": "Vision AI",
+      "D": "Dataflow"
+    }
   },
   {
     "id": 6,
@@ -98,8 +158,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học không giám sát (Unsupervised learning) là phương pháp học máy được sử dụng khi dữ liệu không có nhãn hoặc phân loại trước. Nó giúp tìm ra các cấu trúc ẩn, các nhóm tự nhiên (clustering) hoặc phát hiện bất thường (anomaly detection) dựa trên các thuộc tính của chính dữ liệu.",
-    "references": null
+    "explanation_vi": "Phân tích phương pháp học dựa trên đặc điểm dữ liệu:\n- **Đáp án D đúng**: Học không giám sát (Unsupervised Learning) được áp dụng khi dữ liệu đầu vào hoàn toàn không có nhãn hoặc danh mục xác định từ trước. Phương pháp này giúp mô hình tự khám phá các quy luật, phân nhóm (clustering) và phát hiện các mẫu dị thường (anomaly detection) dựa trên các đặc tính tự nhiên của dữ liệu cảm biến.\n- **Đáp án A sai**: Học sâu (Deep Learning) là một kiến trúc thuật toán (mạng thần kinh sâu), có thể áp dụng cho cả có giám sát lẫn không giám sát, chứ bản thân nó không quyết định cơ chế nhãn dữ liệu.\n- **Đáp án B sai**: Học tăng cường (Reinforcement Learning) yêu cầu một tác nhân tương tác với môi trường theo thời gian thực để nhận điểm thưởng/phạt, không dùng cho phân tích tập dữ liệu cảm biến tĩnh có sẵn.\n- **Đáp án C sai**: Học có giám sát (Supervised Learning) bắt buộc yêu cầu dữ liệu huấn luyện phải được gán nhãn trước (ví dụ nhãn 'bình thường' hoặc 'lỗi') để huấn luyện mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Anomaly detection on Google Cloud",
+        "url": "https://cloud.google.com/solutions/anomaly-detection"
+      }
+    ],
+    "question_vi": "Một đội ngũ nghiên cứu đã thu thập một tập dữ liệu lớn chứa các số đọc từ cảm biến của nhiều máy móc công nghiệp khác nhau. Tập dữ liệu này bao gồm các phép đo như nhiệt độ, áp suất, mức độ rung và dòng điện được ghi lại theo các khoảng thời gian đều đặn. Đội ngũ vẫn chưa gán bất kỳ nhãn hoặc danh mục nào cho các số đọc này và muốn xác định các dị thường tiềm ẩn, sự cố hoặc các nhóm hành vi tự nhiên của máy móc chỉ dựa trên dữ liệu cảm biến. Họ nên sử dụng loại học máy nào?",
+    "options_vi": {
+      "A": "Học sâu (Deep learning)",
+      "B": "Học tăng cường (Reinforcement learning)",
+      "C": "Học có giám sát (Supervised learning)",
+      "D": "Học không giám sát (Unsupervised learning)"
+    }
   },
   {
     "id": 7,
@@ -115,8 +187,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Google Cloud cung cấp một dải rộng các công cụ để thu thập và lưu trữ dữ liệu đa dạng bao gồm dữ liệu truyền phát (streaming data) qua Pub/Sub, dữ liệu phi cấu trúc qua Cloud Storage và dữ liệu có cấu trúc qua các dịch vụ cơ sở dữ liệu như Cloud SQL.",
-    "references": null
+    "explanation_vi": "Các dịch vụ tiếp nhận và lưu trữ dữ liệu của Google Cloud:\n- **Đáp án D đúng**: Để giải quyết việc thu thập và lưu trữ các loại dữ liệu đa dạng trong dự án ML, Google Cloud cung cấp các giải pháp chuyên biệt: Pub/Sub cho việc thu nhận dữ liệu truyền phát (streaming) thời gian thực, Cloud Storage cho dữ liệu phi cấu trúc và Cloud SQL cho cơ sở dữ liệu quan hệ có cấu trúc.\n- **Đáp án A sai**: BigQuery chủ yếu là kho lưu trữ phân tích dữ liệu quy mô lớn (Data Warehouse) chứ không phải là công cụ chính chuyên đảm nhận nhiệm vụ thu thập, tiếp nhận dữ liệu ban đầu từ nguồn thô.\n- **Đáp án B sai**: Ứng dụng Gemini là trợ lý AI phục vụ công việc và sáng tạo nội dung, không có chức năng thu thập dữ liệu hệ thống cho các dự án machine learning.\n- **Đáp án C sai**: Vertex AI là nền tảng quản lý vòng đời học máy (huấn luyện, triển khai mô hình), nó cần kết nối tới dữ liệu đã được lưu trữ sẵn trên Cloud Storage hoặc BigQuery chứ bản thân nó không phải dịch vụ thu nhận dữ liệu hạ tầng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Data ingestion options on Google Cloud",
+        "url": "https://cloud.google.com/architecture/ingesting-data-into-google-cloud"
+      }
+    ],
+    "question_vi": "Một công ty có một dự án học máy liên quan đến nhiều loại dữ liệu đa dạng như dữ liệu truyền phát (streaming data) và cơ sở dữ liệu có cấu trúc. Google Cloud hỗ trợ việc thu thập dữ liệu cho dự án này như thế nào?",
+    "options_vi": {
+      "A": "Thế mạnh của Google Cloud nằm ở các công cụ phân tích dữ liệu như BigQuery.",
+      "B": "Ứng dụng Gemini là công cụ chính của Google Cloud để thu thập dữ liệu trực tiếp.",
+      "C": "Google Cloud dựa vào Vertex AI để kết nối với dữ liệu bên ngoài.",
+      "D": "Google Cloud cung cấp các công cụ như Pub/Sub, Cloud Storage và Cloud SQL."
+    }
   },
   {
     "id": 8,
@@ -132,8 +216,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Security Command Center (SCC) là nền tảng quản lý rủi ro và bảo mật tập trung của Google Cloud, cung cấp khả năng hiển thị toàn diện về tình trạng bảo mật, phát hiện các mối đe dọa và cấu hình sai trên toàn bộ tài nguyên cloud, bao gồm cả các ứng dụng Generative AI.",
-    "references": null
+    "explanation_vi": "Hệ thống quản lý bảo mật tập trung trên Google Cloud:\n- **Đáp án C đúng**: Security Command Center (SCC) là giải pháp quản lý rủi ro và an ninh mạng tập trung của Google Cloud. Nó cung cấp cho các nhóm bảo mật một dashboard duy nhất để xem xét tình trạng cấu hình an toàn, phát hiện lỗ hổng và phát hiện các cuộc tấn công/mối đe dọa trên toàn bộ tài nguyên đám mây (bao gồm cả các dịch vụ Gen AI như Vertex AI).\n- **Đáp án A sai**: IAM chỉ tập trung vào quản lý người dùng, vai trò (roles) và quyền truy cập chi tiết vào tài nguyên (ai được quyền làm gì) chứ không phải nền tảng phát hiện đe dọa toàn diện.\n- **Đáp án B sai**: Các công cụ giám sát tải làm việc (ví dụ: Cloud Monitoring) dùng để theo dõi hiệu năng hệ thống (CPU, RAM, độ trễ), không phải công cụ chuyên dụng cho bảo mật.\n- **Đáp án D sai**: Đây là nguyên tắc thiết kế hạ tầng phần cứng và phần mềm nội bộ của Google để bảo đảm an toàn cho khách hàng, không phải là một dịch vụ phần mềm giám sát mà khách hàng cấu hình sử dụng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Security Command Center overview | Google Cloud",
+        "url": "https://cloud.google.com/security-command-center/docs/concepts-security-command-center-overview"
+      }
+    ],
+    "question_vi": "Một đội ngũ bảo mật cần một nền tảng tập trung để có được cái nhìn toàn diện về tình trạng bảo mật của tổ chức trên toàn bộ môi trường Google Cloud của họ, bao gồm cả các mối đe dọa tiềm ẩn đối với các triển khai AI tạo sinh. Dịch vụ bảo mật nào của Google Cloud được thiết kế riêng cho mục đích này?",
+    "options_vi": {
+      "A": "Identity and Access Management (Quản lý danh tính và quyền truy cập)",
+      "B": "Các công cụ giám sát tải làm việc (Workload monitoring tools)",
+      "C": "Security Command Center",
+      "D": "Cơ sở hạ tầng an toàn theo thiết kế (Secure-by-design infrastructure)"
+    }
   },
   {
     "id": 9,
@@ -149,8 +245,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Agent Assist là thành phần trong bộ giải pháp Customer Engagement của Google được thiết kế đặc biệt nhằm hỗ trợ các nhân viên chăm sóc khách hàng bằng cách đưa ra gợi ý, tài liệu tham khảo và câu trả lời theo thời gian thực trong cuộc hội thoại để tối ưu hóa hiệu suất làm việc.",
-    "references": null
+    "explanation_vi": "Phân biệt các công cụ hỗ trợ khách hàng của Google Cloud:\n- **Đáp án C đúng**: Agent Assist (Trợ lý nhân viên) được thiết kế riêng để đồng hành cùng các tổng đài viên (con người) trong thời gian thực. Nó phân tích cuộc gọi hoặc đoạn chat đang diễn ra để tự động gợi ý câu trả lời, tìm kiếm nhanh tài liệu nội bộ hỗ trợ đại lý mà không can thiệp hay thay thế hoàn toàn vai trò của con người.\n- **Đáp án A sai**: Contact Center as a Service (CCaaS) là một mô hình kiến trúc hạ tầng tổng đài trọn gói chứ không phải là một tính năng phần mềm trợ giúp chuyên biệt cho nhân viên.\n- **Đáp án B sai**: Conversational Insights là công cụ phân tích sau cuộc gọi để đánh giá xu hướng và chất lượng chăm sóc khách hàng, không hỗ trợ thời gian thực (in-the-moment).\n- **Đáp án D sai**: Conversational Agents (ví dụ Chatbots/Voicebots tự động dựa trên Dialogflow) chịu trách nhiệm tự trả lời và tự động hóa hoàn toàn cuộc trò chuyện với khách hàng mà không cần sự tham gia của tổng đài viên.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Agent Assist Overview | Google Cloud",
+        "url": "https://cloud.google.com/agent-assist/docs/overview"
+      }
+    ],
+    "question_vi": "Một tổ chức với đội ngũ nhân viên chăm sóc khách hàng trực tiếp muốn nâng cao hiệu suất của nhân viên và sự hài lòng của khách hàng trong các phiên hỗ trợ. Họ đang tìm kiếm một công cụ có thể hướng dẫn thời gian thực cho nhân viên, gợi ý thông tin hữu ích và tối ưu hóa quy trình hỗ trợ mà không tự động hóa hoàn toàn cuộc trò chuyện với khách hàng. Họ nên sử dụng thành phần nào trong bộ giải pháp Customer Engagement Suite của Google?",
+    "options_vi": {
+      "A": "Google Cloud Contact Center as a Service (Dịch vụ Trung tâm liên lạc đám mây)",
+      "B": "Thông tin chi tiết về hội thoại (Conversational Insights)",
+      "C": "Trợ lý nhân viên (Agent Assist)",
+      "D": "Tác nhân hội thoại (Conversational Agents)"
+    }
   },
   {
     "id": 10,
@@ -166,8 +274,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một đặc điểm nổi bật của Google Cloud là định hướng tập trung vào \"AI-first\", liên tục đổi mới sáng tạo, cập nhật nhanh chóng các mô hình và công cụ AI mới, đồng thời tích hợp rộng rãi các tính năng AI này trên toàn bộ hệ sinh thái dịch vụ đám mây của mình.",
-    "references": null
+    "explanation_vi": "Chiến lược Generative AI của Google Cloud:\n- **Đáp án B đúng**: Google Cloud theo đuổi triết lý 'AI-first', cam kết mang lại các công cụ cải tiến liên tục cho khách hàng. Các mô hình thế hệ mới (như Gemini) được cập nhật liên tục và tích hợp liền mạch trên toàn bộ danh mục dịch vụ từ cơ sở dữ liệu, an ninh bảo mật đến lập trình phát triển ứng dụng.\n- **Đáp án A sai**: Google Cloud hỗ trợ cả nền tảng mở (open platform) thông qua Vertex AI Model Garden, cho phép khách hàng lựa chọn hàng trăm mô hình nguồn mở khác nhau chứ không bắt buộc dùng công nghệ độc quyền, mã nguồn đóng.\n- **Đáp án C sai**: Việc bảo mật dữ liệu là cực kỳ nghiêm ngặt, nhưng các mô hình vẫn hỗ trợ kết nối mạng linh hoạt để lấy dữ liệu thời gian thực (Grounding) hoặc gọi API bên ngoài thông qua các thiết lập mạng an toàn chứ không cô lập tuyệt đối khỏi internet.\n- **Đáp án D sai**: Các tác nhân AI (AI agents) dù mạnh mẽ nhưng vẫn là công cụ cần cấu hình, tích hợp dữ liệu nghiệp vụ và giám sát để đảm bảo phản hồi chính xác và phù hợp với yêu cầu thực tế của doanh nghiệp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Gemini Enterprise Agent Platform | Google Cloud",
+        "url": "https://cloud.google.com/vertex-ai"
+      }
+    ],
+    "question_vi": "Một đặc điểm của Google Cloud với tư cách là một công ty về AI tạo sinh là gì?",
+    "options_vi": {
+      "A": "Google Cloud dựa vào các công nghệ AI độc quyền, mã nguồn đóng để mang lại lợi ích bảo mật tối đa.",
+      "B": "Google Cloud tập trung vào định hướng AI-first nhằm thúc đẩy đổi mới sáng tạo, với các bản cập nhật liên tục và sự tích hợp rộng rãi trên toàn bộ nền tảng của mình.",
+      "C": "Google Cloud đảm bảo rằng tất cả các mô hình AI tạo sinh và dữ liệu được bảo mật hoàn toàn và cô lập khỏi các mạng bên ngoài.",
+      "D": "Google Cloud cung cấp các tác nhân AI tự trị hoàn toàn, không yêu cầu bất kỳ cấu hình hoặc chi phí quản lý nào."
+    }
   },
   {
     "id": 11,
@@ -183,8 +303,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Gemini là một mô hình ngôn ngữ lớn (LLM) được thiết kế cho việc suy luận ngữ cảnh và tạo nội dung linh hoạt, có tính chất xác suất. Do đó, nó không phù hợp để làm công cụ quyết định tất định (deterministic) dựa trên các quy tắc cứng nhắc và nghiêm ngặt của hệ thống duyệt khoản vay.",
-    "references": null
+    "explanation_vi": "Tại sao LLM không phù hợp cho các quyết định logic tất định cứng nhắc:\n- **Đáp án B đúng**: Các mô hình Generative AI (như Gemini) là các mô hình mang tính chất xác suất (probabilistic). Chúng xuất sắc trong việc tóm tắt, sáng tạo nội dung và suy luận ngôn ngữ linh hoạt. Tuy nhiên, đối với một hệ thống ra quyết định tất định (deterministic) yêu cầu kết quả duyệt/từ chối 100% nhất quan theo quy tắc cứng nhắc (rule-based), việc sử dụng LLM sẽ dẫn đến rủi ro sai sót hoặc không đồng nhất (như ảo tưởng - hallucination).\n- **Đáp án A sai**: Chi pháp và độ phức tạp không phải lý do cốt lõi làm cho nó 'không phù hợp' về mặt nghiệp vụ.\n- **Đáp án C sai**: Gemini hoàn toàn có thể hiểu và làm việc với các bảng dữ liệu số, nhưng tính không tất định trong câu trả lời vẫn khiến nó không phù hợp làm công cụ quyết định cho các quy trình tài chính nghiêm ngặt.\n- **Đáp án D sai**: Gemini hoàn toàn có thể kết nối với các cơ sở dữ liệu tài chính thông qua cơ chế Gọi hàm (Function Calling) hoặc APIs.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Gemini Model Overview | Google Cloud",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview"
+      }
+    ],
+    "question_vi": "Một tổ chức tài chính chịu sự quản lý chặt chẽ muốn sử dụng Gemini làm công cụ ra quyết định cốt lõi cho hệ thống duyệt khoản vay, hệ thống này sẽ phê duyệt hoặc từ chối các đơn xin vay một cách tất định (deterministic) dựa trên một bộ tiêu chí nghiêm ngặt được xác định trước. Tại sao đây lại là một trường hợp sử dụng không phù hợp đối với Gemini?",
+    "options_vi": {
+      "A": "Triển khai Gemini cho kịch bản này sẽ quá đắt đỏ và phức tạp.",
+      "B": "Gemini được thiết kế để tạo nội dung và suy luận linh hoạt, chứ không phải để đưa ra các quyết định dựa trên quy tắc cứng nhắc.",
+      "C": "Gemini không được trang bị để xử lý dữ liệu số có cấu trúc phục vụ cho các đánh giá tài chính.",
+      "D": "Gemini không thể tích hợp với các cơ sở dữ liệu tài chính bắt buộc."
+    }
   },
   {
     "id": 12,
@@ -200,8 +332,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Vertex AI Agent Builder cho phép các tổ chức nhanh chóng xây dựng và triển khai các tác nhân AI (AI agents) tùy chỉnh có khả năng tìm kiếm, trả lời câu hỏi và tóm tắt thông tin trên tập tài liệu nội bộ (như tài liệu nghiên cứu y khoa) mà không đòi hỏi kỹ năng lập trình chuyên sâu.",
-    "references": null
+    "explanation_vi": "Lựa chọn giải pháp tối ưu cho việc trích xuất và hỏi đáp tài liệu:\n- **Đáp án A đúng**: Vertex AI Agent Builder cho phép tạo ra các tác nhân AI (AI agents) tùy chỉnh dựa trên dữ liệu nội bộ (ví dụ: các bài báo khoa học) một cách nhanh chóng với giao diện low-code/no-code. Tác nhân này có khả năng trả lời các câu hỏi phức tạp và tóm tắt thông tin từ kho tài liệu cho nhà nghiên cứu mà không cần lập trình nhiều.\n- **Đáp án B sai**: Vertex AI Search chỉ tập trung vào chức năng tìm kiếm thông tin thuần túy (tìm từ khóa), không tối ưu cho tương tác hội thoại hỏi đáp sâu sắc và linh hoạt như một tác nhân AI hoàn chỉnh.\n- **Đáp án C sai**: Gemini cho Google Workspace chỉ hỗ trợ các tác vụ cá nhân và văn phòng thông thường trên Drive/Docs, không được thiết kế làm một công cụ tìm kiếm và phân tích cơ sở tri thức khoa học khổng lồ ở cấp độ doanh nghiệp.\n- **Đáp án D sai**: AutoML được dùng để phân loại tài liệu vào các danh mục tĩnh (ví dụ: gán nhãn thuộc chủ đề Y học hay Sinh học), nó không có khả năng đọc hiểu để trả lời các câu hỏi bất kỳ của nhà nghiên cứu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Vertex AI Agent Builder | Google Cloud",
+        "url": "https://cloud.google.com/vertex-ai-agent-builder"
+      }
+    ],
+    "question_vi": "Bộ phận nghiên cứu và phát triển của một công ty dược phẩm dành nhiều thời gian để xem xét thủ công các bài báo khoa học mới nhằm xác định các mục tiêu phát triển thuốc tiềm năng. Họ cần một giải pháp có thể trả lời các câu hỏi về các tài liệu này và cung cấp thông tin tóm tắt cho các nhà nghiên cứu mà không đòi hỏi chuyên môn lập trình sâu rộng. Tổ chức đó nên làm gì?",
+    "options_vi": {
+      "A": "Sử dụng Vertex AI Agent Builder để tạo một tác nhân AI (AI agent) tùy chỉnh.",
+      "B": "Sử dụng Vertex AI Search để lập chỉ mục các bài báo và cho phép tìm kiếm dựa trên từ khóa.",
+      "C": "Sử dụng Gemini cho Google Workspace để tạo điều kiện thuận lợi cho việc cùng xem xét tài liệu.",
+      "D": "Sử dụng Vertex AI AutoML để huấn luyện một mô hình phân loại các bài báo vào các lĩnh vực nghiên cứu được xác định trước."
+    }
   },
   {
     "id": 13,
@@ -217,8 +361,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đối với đội ngũ phát triển chưa có nhiều kinh nghiệm về AI, việc sử dụng các mô hình đã được huấn luyện sẵn (pre-trained models) và các dịch vụ AI low-code hoặc no-code của Google Cloud là giải pháp tối ưu giúp họ xây dựng và triển khai ứng dụng Gen AI một cách nhanh chóng.",
-    "references": null
+    "explanation_vi": "Giải pháp triển khai nhanh Generative AI cho đội ngũ chưa có kinh nghiệm:\n- **Đáp án A đúng**: Đối với đội ngũ phát triển thiếu kinh nghiệm về khoa học dữ liệu và học máy, đồng thời chịu áp lực thời gian ra mắt nhanh (launch quickly), việc sử dụng các mô hình đã được huấn luyện sẵn (như Gemini) kết hợp cùng các công cụ low-code/no-code (như Agent Builder, Dialogflow CX) giúp họ bỏ qua quá trình tự huấn luyện mô hình phức tạp và đưa sản phẩm vào hoạt động ngay lập tức.\n- **Đáp án B sai**: Tiếp cận các công nghệ mới liên tục là tốt cho chiến lược dài hạn, nhưng không giải quyết ngay lập tức bài toán thiếu kinh nghiệm kỹ thuật để xây dựng và ra mắt nhanh trong thời điểm hiện tại.\n- **Đáp án C sai**: Tài liệu hướng dẫn giúp tăng trưởng kiến thức lâu dài của đội ngũ, không phải giải pháp công nghệ trực tiếp để đẩy nhanh tốc độ triển khai dự án lập tức.\n- **Đáp án D sai**: Tham gia cộng đồng chỉ mang tính chất hỗ trợ giải quyết sự cố hoặc chia sẻ kinh nghiệm chứ không thay thế được các công cụ kỹ thuật giúp xây dựng sản phẩm nhanh.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Vertex AI Agent Builder: Build AI agents fast",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview"
+      }
+    ],
+    "question_vi": "Đội ngũ phát triển của một công ty rất hào hứng bắt đầu xây dựng các giải pháp AI tạo sinh với Google Cloud, nhưng có kinh nghiệm hạn chế về phát triển AI. Họ cần ra mắt giải pháp Gen AI của mình một cách nhanh chóng. Lợi ích nào của Google Cloud sẽ giúp công ty đạt được mục tiêu của mình?",
+    "options_vi": {
+      "A": "Các mô hình đã được huấn luyện sẵn và các công cụ, dịch vụ AI low-code và no-code của Google Cloud.",
+      "B": "Sự tập trung của Google Cloud vào việc cải tiến liên tục giúp truy cập vào các công cụ, tính năng và thực tiễn tốt nhất về AI mới nhất.",
+      "C": "Các tài liệu đào tạo và hướng dẫn toàn diện của Google Cloud để giúp đỡ các nhà phát triển.",
+      "D": "Cộng đồng AI cộng tác và các diễn đàn hỗ trợ của Google Cloud kết nối các nhà phát triển với các chuyên gia AI."
+    }
   },
   {
     "id": 14,
@@ -234,8 +390,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Gemini là mô hình nền tảng đa phương thức (multimodal) linh hoạt của Google, có khả năng xử lý và tạo ra nhiều dạng nội dung khác nhau như văn bản (viết bài quảng cáo) và hình ảnh từ các câu lệnh (prompts), rất phù hợp cho đội ngũ marketing cần giải pháp đa năng.",
-    "references": null
+    "explanation_vi": "Để xây dựng một chiến dịch marketing đa dạng bao gồm cả bài viết (văn bản) và hình ảnh từ các câu lệnh (prompts), doanh nghiệp cần một mô hình nền tảng đa phương thức (multimodal) linh hoạt.\n\n*   **Gemini** là dòng mô hình đa phương thức tiên tiến nhất của Google, có khả năng hiểu, xử lý và tạo ra nhiều loại thông tin khác nhau bao gồm văn bản, hình ảnh, âm thanh, video và mã nguồn. Đây là lựa chọn tối ưu cho nhóm tiếp thị cần một giải pháp toàn diện và dễ tiếp cận mà không yêu cầu chuyên môn sâu về AI.\n*   **Gemma** là dòng mô hình mở (open models) gọn nhẹ, phù hợp cho việc tự lưu trữ và chạy trên thiết bị cục bộ, đòi hỏi lập trình viên có chuyên môn kỹ thuật để tinh chỉnh và tích hợp.\n*   **Veo** là mô hình chuyên biệt được tối ưu hóa cho việc tạo video chất lượng cao từ văn bản.\n*   **Imagen** là mô hình chuyên biệt cho việc tạo và chỉnh sửa hình ảnh từ văn bản, không hỗ trợ tạo văn bản hay viết bài báo.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Gemini models on Vertex AI overview",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models"
+      },
+      {
+        "title": "Vertex AI Foundation Models overview",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models"
+      }
+    ],
+    "question_vi": "Một nhóm tiếp thị (marketing) muốn sử dụng một mô hình nền tảng để tạo chiến dịch truyền thông xã hội và quảng cáo. Họ muốn viết bài và tạo hình ảnh từ văn bản. Họ không có kiến thức chuyên sâu về AI và cần một giải pháp linh hoạt. Họ nên sử dụng mô hình nền tảng nào của Google?",
+    "options_vi": {
+      "A": "Gemini",
+      "B": "Gemma",
+      "C": "Veo",
+      "D": "Imagen"
+    }
   },
   {
     "id": 15,
@@ -251,8 +423,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một tác nhân bảo mật (security agent) được thiết kế chuyên biệt để hỗ trợ văn phòng Giám đốc An ninh thông tin (CISO) thực hiện các tác vụ tự động hóa liên quan đến phân tích mối đe dọa, tóm tắt sự cố bảo mật và đề xuất các quy tắc phát hiện mã độc.",
-    "references": null
+    "explanation_vi": "Văn phòng CISO chịu trách nhiệm bảo vệ an toàn thông tin cho doanh nghiệp, đối phó với các mối đe dọa mạng và quản lý các sự cố bảo mật.\n\n*   **Tác nhân bảo mật (Security agent)** (như Gemini in Security Operations) được thiết kế và huấn luyện chuyên biệt trên các dữ liệu an ninh mạng để hỗ trợ tự động hóa việc tóm tắt thông tin các ca sự cố phức tạp, nghiên cứu nhanh về các mối đe dọa mới xuất hiện và tự động tạo các quy tắc phát hiện (detection rules) trong các hệ thống SIEM/SOAR.\n*   **Tác nhân dữ liệu (Data agent)**: Tập trung hỗ trợ người dùng phân tích, trực quan hóa và truy vấn dữ liệu kinh doanh nói chung.\n*   **Tác nhân chăm sóc khách hàng (Customer service agent)**: Được tối ưu hóa để trả lời câu hỏi và giải quyết khiếu nại của người dùng cuối.\n*   **Tác nhân lập trình (Code agent)**: Hỗ trợ các nhà phát triển viết mã, kiểm thử và tối ưu hóa phần mềm.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud Security AI Overview",
+        "url": "https://cloud.google.com/security/ai"
+      },
+      {
+        "title": "Gemini in Security Operations overview",
+        "url": "https://cloud.google.com/security/operations/detect/docs/gemini-overview"
+      }
+    ],
+    "question_vi": "Văn phòng của Giám đốc An ninh Thông tin (CISO) muốn sử dụng AI tạo sinh (gen AI) để tự động hóa các tác vụ như tóm tắt thông tin sự cố, nghiên cứu các mối đe dọa và thực hiện các hành động như tạo quy tắc phát hiện sự cố. Họ nên sử dụng tác nhân (agent) nào?",
+    "options_vi": {
+      "A": "Tác nhân dữ liệu (Data agent)",
+      "B": "Tác nhân bảo mật (Security agent)",
+      "C": "Tác nhân chăm sóc khách hàng (Customer service agent)",
+      "D": "Tác nhân lập trình (Code agent)"
+    }
   },
   {
     "id": 16,
@@ -268,8 +456,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Agent Assist giúp cải thiện hiệu quả của trung tâm chăm sóc khách hàng bằng cách cung cấp các gợi ý câu trả lời và tài liệu hỗ trợ theo thời gian thực cho nhân viên tư vấn trong lúc họ đang trò chuyện trực tiếp với khách hàng.",
-    "references": null
+    "explanation_vi": "Google Cloud Agent Assist là một sản phẩm thuộc bộ giải pháp Contact Center AI (CCAI) hướng đến hỗ trợ trực tiếp nhân viên tổng đài con người.\n\n*   **Agent Assist** hoạt động bằng cách lắng nghe cuộc gọi hoặc đọc đoạn chat trực tuyến, tự động phân tích ngữ cảnh để đề xuất câu trả lời, cung cấp các tài liệu hướng dẫn và biểu mẫu phản hồi theo thời gian thực cho nhân viên tư vấn trong lúc họ đang xử lý yêu cầu của khách hàng.\n*   **Lựa chọn A** mô tả vai trò của **Contact Center AI (CCAI) Insights**, công cụ chuyên dùng để phân tích dữ liệu lịch sử hội thoại sau cuộc gọi.\n*   **Lựa chọn C** mô tả vai trò của **CCAI Platform**, hạ tầng tổng đài đám mây đa kênh và tích hợp CRM.\n*   **Lựa chọn D** mô tả vai trò của **Dialogflow CX** hoặc **Vertex AI Agent Builder** dùng để phát triển các chatbot tự động hoàn toàn (virtual agents).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Agent Assist overview",
+        "url": "https://cloud.google.com/agent-assist/docs/basics"
+      },
+      {
+        "title": "Contact Center AI (CCAI) solutions",
+        "url": "https://cloud.google.com/contact-center-ai"
+      }
+    ],
+    "question_vi": "Giải pháp Agent Assist của Google Cloud giúp doanh nghiệp đạt được điều gì?",
+    "options_vi": {
+      "A": "Khả năng phân tích dữ liệu hội thoại để xác định cảm xúc của khách hàng, các chủ đề thảo luận phổ biến và thông tin chi tiết về hiệu suất của nhân viên cũng như trải nghiệm của khách hàng.",
+      "B": "Khả năng cung cấp hỗ trợ theo thời gian thực và đề xuất các câu trả lời cho các nhân viên chăm sóc khách hàng trực tiếp trong quá trình tương tác của họ.",
+      "C": "Cơ sở hạ tầng để cung cấp giải pháp trung tâm liên lạc cấp doanh nghiệp với hỗ trợ đa kênh, định tuyến và tích hợp với hệ thống CRM.",
+      "D": "Khả năng xây dựng và triển khai các tác nhân chatbot dạng xác định (deterministic) và tạo sinh (generative) để hỗ trợ khách hàng tự động."
+    }
   },
   {
     "id": 17,
@@ -285,8 +489,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Gemma là dòng mô hình ngôn ngữ mở (open-source), gọn nhẹ và hiệu năng cao do Google phát triển, cho phép các lập trình viên dễ dàng chạy thử nghiệm, tinh chỉnh (fine-tune) và vận hành trực tiếp trên phần cứng máy cá nhân hoặc máy có tài nguyên hạn chế.",
-    "references": null
+    "explanation_vi": "Yêu cầu đặt ra là một mô hình nguồn mở (open model), hiệu năng cao và có thể chạy được trên máy tính cục bộ của lập trình viên với nguồn tài nguyên giới hạn.\n\n*   **Gemma** là họ mô hình ngôn ngữ lớn nguồn mở (open models) gọn nhẹ và hiệu năng cao của Google, được xây dựng dựa trên cùng nghiên cứu và công nghệ tạo nên các mô hình Gemini. Gemma rất thích hợp cho việc triển khai, thử nghiệm và tinh chỉnh cục bộ trên phần cứng máy tính thông thường.\n*   **Gemini** là dòng mô hình thương mại đóng (proprietary models) cực mạnh của Google, hoạt động qua API đám mây và không thể tải trực tiếp file trọng số mô hình về máy cục bộ để chạy ngoại tuyến.\n*   **Imagen** là mô hình chuyên tạo và biên tập hình ảnh từ văn bản.\n*   **Veo** là mô hình chuyên tạo video chất lượng cao từ văn bản.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Gemma open models overview",
+        "url": "https://ai.google.dev/gemma"
+      },
+      {
+        "title": "Gemma models documentation",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models#gemma"
+      }
+    ],
+    "question_vi": "Một nhà phát triển phần mềm cần một mô hình ngôn ngữ lớn nguồn mở, hiệu quả cao, có thể được tinh chỉnh (fine-tune) trên máy cục bộ để thử nghiệm nhanh ứng dụng chatbot. Họ yêu cầu một mô hình mang lại hiệu suất tốt trong việc hiểu và tạo ngôn ngữ tự nhiên, đồng thời đủ nhẹ để chạy trên phần cứng hạn chế. Họ nên sử dụng dòng mô hình nào do Google phát triển?",
+    "options_vi": {
+      "A": "Gemma",
+      "B": "Imagen",
+      "C": "Gemini",
+      "D": "Veo"
+    }
   },
   {
     "id": 18,
@@ -302,8 +522,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Google Agentspace mang lại lợi ích kinh doanh cốt lõi là tăng cường năng suất và khả năng tương tác với dữ liệu của nhân viên nhờ vào các trợ lý AI thông minh cùng với các tính năng phân tích tài liệu nâng cao trên toàn hệ thống doanh nghiệp.",
-    "references": null
+    "explanation_vi": "Google Agentspace (hiện được tích hợp và phát triển thành một phần của Gemini Enterprise) là giải pháp trí tuệ nhân tạo dành cho doanh nghiệp.\n\n*   Lợi ích cốt lõi của **Agentspace** là giúp nhân viên tương tác hiệu quả với kho dữ liệu nội bộ khổng lồ thông qua các trợ lý AI. Nó cho phép tìm kiếm hợp nhất trên các hệ thống, tự động phân tích sâu các tài liệu phức tạp và tự động thực hiện các tác vụ đa bước để cải thiện năng suất lao động của doanh nghiệp.\n*   Các phương án khác (A, B, D) mô tả các khía cạnh chung về bảo mật hoặc cộng tác nhóm, vốn không phải là giá trị kinh doanh đặc thù hoặc trọng tâm của giải pháp tác nhân AI Agentspace.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Workspace Gemini Enterprise Agentspace Announcement",
+        "url": "https://blog.google/products/workspace/google-workspace-gemini-enterprise-agentspace/"
+      },
+      {
+        "title": "Gemini for Google Workspace Enterprise",
+        "url": "https://workspace.google.com/solutions/ai/"
+      }
+    ],
+    "question_vi": "Một công ty đang tìm hiểu Google Agentspace để cải thiện cách nhân viên tìm kiếm thông tin trên các hệ thống doanh nghiệp của họ và tự động hóa một số tác vụ nhất định. Lợi ích kinh doanh cốt lõi của việc sử dụng Agentspace là gì?",
+    "options_vi": {
+      "A": "Tăng cường giao tiếp và hợp tác theo thời gian thực giữa các thành viên trong nhóm.",
+      "B": "Kiểm soát chi tiết hơn đối với quyền truy cập và phân quyền của nhóm hỗ trợ đối với dữ liệu nhạy cảm.",
+      "C": "Cải thiện năng suất và tương tác dữ liệu bằng cách sử dụng các trợ lý AI và phân tích tài liệu nâng cao.",
+      "D": "Khả năng tương thích tốt hơn với các hệ thống phần mềm và cơ sở dữ liệu cũ (legacy)."
+    }
   },
   {
     "id": 19,
@@ -319,8 +555,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Identity and Access Management (IAM) của Google Cloud cung cấp khả năng kiểm soát truy cập chi tiết (granular control), cho phép quản trị viên xác định ai (hoặc ứng dụng nào) có quyền sử dụng và xem các tài nguyên AI tạo sinh cùng các tài nguyên liên quan.",
-    "references": null
+    "explanation_vi": "Việc kiểm soát chi tiết ai (hoặc ứng dụng nào) có quyền truy cập, sử dụng, chỉnh sửa và quản lý các tài nguyên trên nền tảng đám mây là chức năng cốt lõi của IAM.\n\n*   **Identity and Access Management (IAM)** của Google Cloud cung cấp khả năng cấp các vai trò (roles) và quyền hạn (permissions) chi tiết đến từng tài nguyên như Vertex AI models, Model Registry, hoặc các bucket lưu trữ dữ liệu huấn luyện AI tạo sinh.\n*   **Security Command Center (SCC)** là giải pháp quản lý rủi ro bảo mật và phát hiện các mối đe dọa trong môi trường Cloud, không phải hệ thống quản lý phân quyền người dùng.\n*   **Workload monitoring tools** dùng để giám sát trạng thái hoạt động của ứng dụng và cơ sở hạ tầng.\n*   **Secure-by-design infrastructure** là triết lý thiết kế cơ sở hạ tầng an toàn từ cấp độ phần cứng của Google.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud Identity and Access Management (IAM) Overview",
+        "url": "https://cloud.google.com/iam/docs/overview"
+      },
+      {
+        "title": "Vertex AI Access Control with IAM",
+        "url": "https://cloud.google.com/vertex-ai/docs/general/access-control"
+      }
+    ],
+    "question_vi": "Một tổ chức muốn kiểm soát chi tiết ai có thể sử dụng và xem các mô hình AI tạo sinh của họ cùng các tài nguyên liên quan trên Google Cloud. Giải pháp bảo mật nào của Google Cloud được thiết kế riêng cho mục đích này?",
+    "options_vi": {
+      "A": "Các công cụ giám sát khối lượng công việc (Workload monitoring tools).",
+      "B": "Cơ sở hạ tầng an toàn theo thiết kế (Secure-by-design infrastructure).",
+      "C": "Quản lý danh tính và quyền truy cập (Identity and Access Management - IAM).",
+      "D": "Trung tâm chỉ huy bảo mật (Security Command Center)."
+    }
   },
   {
     "id": 20,
@@ -336,8 +588,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Vertex AI là nền tảng máy học và trí tuệ nhân tạo toàn diện của Google Cloud, cung cấp đầy đủ cơ sở hạ tầng, công cụ phát triển, cùng các mô hình nền tảng được huấn luyện sẵn để xây dựng, triển khai và quản lý các giải pháp Gen AI.",
-    "references": null
+    "explanation_vi": "Để xây dựng một giải pháp AI tạo sinh hoàn chỉnh, doanh nghiệp cần một nền tảng chuyên dụng cung cấp cả hạ tầng điện toán tối ưu cho AI, các công cụ phát triển nhanh và truy cập trực tiếp vào thư viện mô hình được huấn luyện sẵn.\n\n*   **Vertex AI** là nền tảng AI/ML toàn diện của Google Cloud. Nó tích hợp sẵn Model Garden (nơi khám phá các mô hình như Gemini, Imagen, Gemma...), các API sẵn dùng cho sinh bản văn/hình ảnh, cùng các công cụ như Vertex AI Agent Builder giúp tạo các chatbot và công cụ tìm kiếm doanh nghiệp cực kỳ nhanh chóng.\n*   **BigQuery** là giải pháp kho dữ liệu doanh nghiệp dùng cho phân tích dữ liệu quy mô lớn.\n*   **Google Kubernetes Engine (GKE)** là môi trường quản lý các container ứng dụng chung, không tích hợp sẵn bộ công cụ và mô hình AI huấn luyện sẵn.\n*   **Google Cloud Storage** là dịch vụ lưu trữ đối tượng dạng tệp tĩnh.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Vertex AI platform overview",
+        "url": "https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform"
+      },
+      {
+        "title": "Generative AI on Vertex AI",
+        "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/overview"
+      }
+    ],
+    "question_vi": "Một công ty muốn có một nền tảng AI tạo sinh cung cấp cơ sở hạ tầng, các công cụ và các mô hình được huấn luyện sẵn cần thiết để xây dựng, triển khai và quản lý các giải pháp AI tạo sinh của họ. Công ty nên sử dụng dịch vụ nào của Google Cloud?",
+    "options_vi": {
+      "A": "BigQuery",
+      "B": "Google Kubernetes Engine (GKE)",
+      "C": "Google Cloud Storage",
+      "D": "Vertex AI"
+    }
   },
   {
     "id": 21,
@@ -353,8 +621,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một tác nhân học tập tùy chỉnh (customized learning agent) có khả năng tự động hóa và cá nhân hóa trải nghiệm học tập cho từng học sinh thông qua việc đánh giá kiến thức, đề xuất lộ trình và tạo các bài tập phù hợp với tiến độ riêng của từng cá nhân.",
-    "references": null
+    "explanation_vi": "Một giải pháp giáo dục cá nhân hóa thông minh cần có khả năng tự động đánh giá năng lực, tự lập lộ trình, tự soạn bài tập và liên tục theo dõi để thay đổi phương án giáo dục.\n\n*   **Tác nhân học tập tùy chỉnh (Customized learning agent)** là một thực thể AI chủ động, có thể thực hiện một chuỗi các tác vụ tự động: đánh giá, lập kế hoạch bài học, theo dõi tiến độ và điều chỉnh nội dung học tập theo thời gian thực dựa trên kết quả phản hồi của từng cá nhân.\n*   **LMS (Learning Management System)**: Chỉ là phần mềm quản lý việc phân phối nội dung học tập truyền thống và không có khả năng tự động hóa việc đưa ra các quyết định cá nhân hóa thông minh một cách độc lập.\n*   **Hệ thống đề xuất tài nguyên học tập**: Chỉ dừng lại ở việc gợi ý tài liệu, không thể tự tạo bài tập tùy chỉnh, cấu trúc bài học hay theo dõi tiến độ toàn diện.\n*   **LLM tinh chỉnh (Fine-tuned LLM)**: Chỉ là mô hình ngôn ngữ thô, chưa có các tích hợp logic để theo dõi tiến độ, cấu trúc bài học lâu dài hoặc kết nối với hệ thống dữ liệu mà không có framework tác nhân (agent framework).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Build generative AI agents with Vertex AI Agent Builder",
+        "url": "https://cloud.google.com/vertex-ai-agent-builder/docs/agent-builder-overview"
+      },
+      {
+        "title": "Introduction to AI Agents in Education",
+        "url": "https://cloud.google.com/blog/topics/training-certifications/ai-agents"
+      }
+    ],
+    "question_vi": "Một công ty muốn tạo ra một giải pháp giáo dục ứng dụng AI nhằm cung cấp trải nghiệm học tập cá nhân hóa cho học sinh. Nền tảng này sẽ đánh giá kiến thức của học sinh, đề xuất các tài liệu học tập phù hợp và tạo ra các bài tập cá nhân hóa. Ứng dụng cũng sẽ cung cấp cấu trúc cho các bài học và theo dõi tiến độ. Họ nên sử dụng loại giải pháp AI nào?",
+    "options_vi": {
+      "A": "Hệ thống quản lý học tập (LMS)",
+      "B": "Tác nhân học tập tùy chỉnh (Customized learning agent)",
+      "C": "Hệ thống đề xuất tài nguyên học tập ứng dụng AI",
+      "D": "Mô hình ngôn ngữ lớn được tinh chỉnh trên nội dung giáo dục"
+    }
   },
   {
     "id": 22,
@@ -370,8 +654,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Vertex AI Model Registry là kho lưu trữ tập trung của Google Cloud giúp quản lý các phiên bản mô hình máy học, theo dõi siêu dữ liệu của chúng và hỗ trợ triển khai nhanh chóng các mô hình này lên các môi trường ứng dụng thực tế.",
-    "references": null
+    "explanation_vi": "Trong quy trình phát triển và vận hành mô hình máy học (MLOps), việc quản lý tập trung các phiên bản mô hình là vô cùng quan trọng.\n\n*   **Vertex AI Model Registry** là kho quản lý mô hình tập trung được thiết kế riêng cho mục đích này. Nó cho phép lưu giữ nhiều phiên bản mô hình, lưu vết siêu dữ liệu (metadata), theo dõi lịch sử kiểm định chất lượng và hỗ trợ cơ chế triển khai (deployment) một chạm lên các Endpoint phục vụ dự đoán.\n*   **Cloud Storage** chỉ là kho lưu trữ file thô dạng nhị phân, không hỗ trợ theo dõi vòng đời, siêu dữ liệu hay tích hợp sẵn các tính năng phục vụ triển khai của Vertex AI.\n*   **Vertex AI Pipelines** dùng để tự động hóa và điều phối (orchestrate) toàn bộ quy trình làm việc (workflow) từ chuẩn bị dữ liệu đến huấn luyện, chứ không phải nơi quản lý lưu trữ mô hình.\n*   **BigQuery** là cơ sở dữ liệu phân tích dạng bảng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Vertex AI Model Registry overview",
+        "url": "https://cloud.google.com/vertex-ai/docs/model-registry/introduction"
+      },
+      {
+        "title": "Manage models in Vertex AI Model Registry",
+        "url": "https://cloud.google.com/vertex-ai/docs/model-registry/manage-models"
+      }
+    ],
+    "question_vi": "Một nhóm khoa học dữ liệu cần một vị trí tập trung và có tổ chức để lưu trữ các phiên bản mô hình khác nhau của họ, theo dõi siêu dữ liệu của chúng và dễ dàng triển khai chúng vào các ứng dụng tương ứng. Họ nên sử dụng dịch vụ nào của Google Cloud?",
+    "options_vi": {
+      "A": "Cloud Storage",
+      "B": "Vertex AI Pipelines",
+      "C": "BigQuery",
+      "D": "Model Registry (Vertex AI Model Registry)"
+    }
   },
   {
     "id": 23,
@@ -387,8 +687,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Việc phân tích hành vi mua sắm của khách hàng để tìm ra các nhóm tự nhiên (phân khúc khách hàng) mà không dựa trên bất kỳ nhãn định sẵn nào là một ví dụ điển hình của học không giám sát (unsupervised learning) sử dụng thuật toán phân cụm (clustering).",
-    "references": null
+    "explanation_vi": "Học máy không giám sát (Unsupervised learning) là phương pháp huấn luyện mô hình trên dữ liệu không được gán nhãn hoặc không có kết quả đầu ra định trước.\n\n*   **Phân tích hành vi mua sắm để tìm ra các nhóm phân cụm tự nhiên** là một ví dụ điển hình của học không giám sát bằng thuật toán phân cụm (Clustering). Thuật toán tự tìm ra các đặc điểm tương đồng trong dữ liệu của khách hàng để nhóm họ lại với nhau mà không cần con người gán nhãn nhóm trước.\n*   **Dự đoán việc gia hạn gói đăng ký** và **Nhận diện ảnh có danh mục gán nhãn** là các bài toán Phân loại (Classification) thuộc nhóm học máy có giám sát (Supervised learning).\n*   **Dự báo doanh số bán hàng** là bài toán Hồi quy (Regression) thuộc nhóm học máy có giám sát (Supervised learning).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Supervised and unsupervised learning on Google Cloud",
+        "url": "https://cloud.google.com/discover/what-is-unsupervised-learning"
+      },
+      {
+        "title": "Clustering in Machine Learning",
+        "url": "https://developers.google.com/machine-learning/clustering"
+      }
+    ],
+    "question_vi": "Đâu là một ví dụ về học máy không giám sát (unsupervised machine learning)?",
+    "options_vi": {
+      "A": "Dự đoán việc gia hạn gói đăng ký dựa trên dữ liệu trạng thái gia hạn trong quá khứ.",
+      "B": "Huấn luyện một hệ thống nhận diện hình ảnh sản phẩm bằng cách sử dụng các danh mục đã được gán nhãn.",
+      "C": "Phân tích hành vi mua sắm của khách hàng để tìm ra các nhóm phân cụm tự nhiên.",
+      "D": "Dự báo doanh số bán hàng bằng cách sử dụng dữ liệu lịch sử bán hàng và chi phí tiếp thị."
+    }
   },
   {
     "id": 24,
@@ -404,8 +720,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Google Agentspace giúp phá bỏ các rào cản thông tin (knowledge silos) trong các tổng công ty đa quốc gia bằng cách kết nối và tự động tìm kiếm, chia sẻ tri thức một cách liền mạch giữa các hệ thống nội bộ khác nhau.",
-    "references": null
+    "explanation_vi": "Rào cản thông tin (knowledge silos) xuất hiện khi các dữ liệu quan trọng bị cô lập ở các bộ phận hoặc hệ thống phần mềm khác nhau (như Slack, Drive, SharePoint, Confluence...).\n\n*   **Google Agentspace** được thiết kế đặc biệt để kết nối các nguồn thông tin bị cô lập này. Bằng cách sử dụng tính năng tìm kiếm hợp nhất thông minh của Gemini, nhân viên trên toàn cầu có thể truy vấn và chia sẻ tri thức một cách liền mạch, cộng tác hiệu quả hơn mà không bị ngăn cách bởi các rào cản hệ thống.\n*   Các phương án khác (A, C, D) không phải là các chức năng chính hay giá trị cốt lõi mà Google Agentspace mang lại.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Workspace Gemini Enterprise Agentspace Announcement",
+        "url": "https://blog.google/products/workspace/google-workspace-gemini-enterprise-agentspace/"
+      },
+      {
+        "title": "Gemini Enterprise - Enterprise-grade AI Search and Assistant",
+        "url": "https://workspace.google.com/solutions/ai/"
+      }
+    ],
+    "question_vi": "Một tập đoàn đa quốc gia lớn với các nhóm làm việc phân tán về mặt địa lý gặp khó khăn với các rào cản thông tin (knowledge silos) và việc tiếp cận thông tin nội bộ quan trọng không đồng nhất. Lợi ích kinh doanh chính của việc sử dụng Google Agentspace trong tình huống này là gì?",
+    "options_vi": {
+      "A": "Tự động hóa việc đánh giá hiệu suất của nhân viên bằng cách sử dụng AI.",
+      "B": "Chia sẻ tri thức và hợp tác liền mạch giữa các hệ thống nội bộ.",
+      "C": "Cải thiện quản lý cơ sở hạ tầng IT tại các văn phòng.",
+      "D": "Tăng cường mã hóa dữ liệu và tuân thủ cho các hoạt động truyền thông nội bộ."
+    }
   },
   {
     "id": 25,
@@ -421,7 +753,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Triển khai Google Agentspace tích hợp tính năng \"tìm kiếm doanh nghiệp hợp nhất\" kết hợp với tác nhân CRM giúp tự động hóa quá trình nghiên cứu khách hàng tiềm năng và nhập liệu trực tiếp vào hệ sinh thái CRM, giảm tải công việc thủ công cho đội ngũ bán hàng.",
-    "references": null
+    "explanation_vi": "Để giảm tải thời gian nghiên cứu và nhập liệu thủ công cho nhân viên bán hàng, công ty cần một giải pháp AI có khả năng vừa tìm kiếm dữ liệu đa nguồn (tìm kiếm hợp nhất), vừa tương tác trực tiếp để cập nhật vào hệ thống CRM thông qua cơ chế tác nhân (agent).\n\n*   **Triển khai Google Agentspace tích hợp CRM agent** cho phép tự động hóa toàn bộ quy trình: Tác nhân AI sẽ tự động thu thập và phân tích dữ liệu về khách hàng tiềm năng từ các tài liệu, email và báo cáo thông qua tìm kiếm doanh nghiệp hợp nhất, sau đó trực tiếp thực hiện hành động ghi thông tin vào CRM.\n*   **AutoML Natural Language** (phương án A) chỉ là công cụ phân tích văn bản đơn thuần, không thể tự động hóa việc tìm kiếm và điền biểu mẫu CRM thành một quy trình hoàn chỉnh.\n*   **Contact Center AI** (phương án B) được thiết kế cho việc hỗ trợ chăm sóc khách hàng và định tuyến cuộc gọi tổng đài, không thích hợp cho tác vụ nghiên cứu leads và nhập liệu CRM của đội sales.\n*   **Tích hợp nền tảng thông tin bán hàng** (phương án D) chỉ giúp làm giàu thông tin từ một nguồn có sẵn, không cung cấp khả năng tự động hóa linh hoạt và tìm kiếm tùy chỉnh giữa các nguồn nội bộ như Agentspace.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Workspace Gemini Enterprise Agentspace Announcement",
+        "url": "https://blog.google/products/workspace/google-workspace-gemini-enterprise-agentspace/"
+      },
+      {
+        "title": "Gemini Enterprise - AI Agents for Productivity",
+        "url": "https://workspace.google.com/solutions/ai/"
+      }
+    ],
+    "question_vi": "Đội ngũ bán hàng của một công ty mất nhiều thời gian để nghiên cứu khách hàng tiềm năng và nhập dữ liệu thủ công vào công cụ quản lý quan hệ khách hàng (CRM). Họ muốn nâng cao hiệu quả làm việc của đội ngũ để tập trung vào việc xây dựng mối quan hệ và chốt đơn hàng. Tổ chức nên làm gì?",
+    "options_vi": {
+      "A": "Phát triển một giải pháp AI tùy chỉnh bằng cách sử dụng Google Cloud AutoML Natural Language để phân tích các cuộc giao tiếp với khách hàng tiềm năng và tự động cập nhật CRM.",
+      "B": "Triển khai Contact Center AI của Google Cloud để đánh giá khách hàng tiềm năng và chuyển họ đến các đại diện bán hàng phù hợp.",
+      "C": "Triển khai tính năng \"tìm kiếm doanh nghiệp hợp nhất\" của Google Agentspace bao gồm một tác nhân CRM để tự động hóa việc nghiên cứu khách hàng tiềm năng và nhập dữ liệu.",
+      "D": "Tích hợp CRM với một nền tảng thông tin bán hàng phổ biến để tự động làm phong phú thông tin khách hàng tiềm năng."
+    }
   }
 ]

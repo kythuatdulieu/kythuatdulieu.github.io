@@ -146,6 +146,6 @@ Data Analyst thường tạo Index bừa bãi cho mọi cột có trong `WHERE` 
 
 ## Nguồn Tham Khảo (References)
 *   **Designing Data-Intensive Applications** - *Martin Kleppmann* (Chapter 3: Storage and Retrieval).
-*   [Databricks: Processing Petabytes of Data with Delta Lake (Z-Ordering]][https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-in-seconds-with-databricks-delta.html]
-*   [Apache Parquet Format - Bloom Filter Specifications][https://github.com/apache/parquet-format/blob/master/BloomFilter.md]
-*   [Uber Engineering - How Uber Uses RocksDB (LSM-Tree in production]](https://eng.uber.com/rocksdb/)
+*   [Databricks: Processing Petabytes of Data with Delta Lake (Z-Ordering)](https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-in-seconds-with-databricks-delta.html)
+*   [Apache Parquet Format - Bloom Filter Specifications](https://github.com/apache/parquet-format/blob/master/BloomFilter.md)
+*   [Uber Engineering - How Uber Uses RocksDB (LSM-Tree in production)](https://eng.uber.com/rocksdb/)

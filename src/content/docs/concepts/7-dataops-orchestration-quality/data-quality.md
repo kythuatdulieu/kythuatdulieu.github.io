@@ -120,8 +120,8 @@ Hàng triệu bản ghi phình to thành hàng tỷ bản ghi, dẫn đến **Ne
 Data Quality trong thời đại dữ liệu quy mô lớn đòi hỏi tư duy của một Kỹ sư Hệ thống thay vì chỉ là Business Analyst. Bạn không thể dựa vào các câu lệnh SQL đếm dòng thủ công. Thay vào đó, hãy thiết lập **Data Contracts** nghiêm ngặt tại nguồn (Shift-Left), áp dụng **Dead Letter Queues** để bảo vệ đường ống, và theo dõi tổng thể bằng các nền tảng **Data Observability** được hỗ trợ bởi Machine Learning để giảm thiểu Data Downtime tối đa.
 
 ## Nguồn Tham Khảo
-1. [Uber: Monitoring Data Quality at Scale with Statistical Modeling (DQM]][https://www.uber.com/en-US/blog/]
-2. [Monte Carlo: What is Data Observability?][https://www.montecarlodata.com/]
-3. [Data Contracts - The modern data architecture][https://datacontract.com/]
+1. [Uber: Monitoring Data Quality at Scale with Statistical Modeling (DQM)](https://www.uber.com/en-US/blog/)
+2. [Monte Carlo: What is Data Observability?](https://www.montecarlodata.com/)
+3. [Data Contracts - The modern data architecture](https://datacontract.com/)
 4. [Data Mesh at Netflix: Schema Validation & Event Integrity](https://netflixtechblog.com/)
 5. *Designing Data-Intensive Applications* - Martin Kleppmann (O'Reilly).

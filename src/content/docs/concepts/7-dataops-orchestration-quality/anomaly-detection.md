@@ -44,7 +44,10 @@ graph TD
         F -->|Anomaly Detected| G["Alert Aggregator\n(Circuit Breaker)"]
         G --> H["PagerDuty / Slack"]
         F -->|Normal| I["Metadata Store\n(Postgres/DynamoDB)"]
-    end
+    end
+
+
+
 ```
 
 **Luồng dữ liệu (Data Flow):**
@@ -112,7 +115,7 @@ def detect_zscore_anomaly(pdf: pd.DataFrame) -> pd.DataFrame:
     return pdf[['table_name', 'ds', 'actual_value', 'z_score', 'is_anomaly']]
 
 # 3. Kích hoạt phân tán
-# daily_metrics_df: DataFrame(table_name, ds, metric_value]
+# daily_metrics_df: DataFrame(table_name, ds, metric_value)
 # Dữ liệu được băm (Partition) theo table_name đẩy về các Worker
 anomaly_results_df = daily_metrics_df.groupby("table_name").apply(detect_zscore_anomaly)
 
@@ -150,8 +153,8 @@ Doanh nghiệp đang tăng trưởng tốt, lượng người dùng tăng 2% m�
 
 ## 5. Nguồn Tham Khảo (References)
 
-1. [Uber Engineering: D3 - An Automated System to Detect Data Drifts][https://www.uber.com/en-IT/blog/d3-an-automated-system-to-detect-data-drifts/]
-2. [Netflix TechBlog: Lessons from Building Observability Tools at Netflix][https://netflixtechblog.com/lessons-from-building-observability-tools-at-netflix-7e8b62854b73]
-3. Bài toán OOMKilled trong PySpark Pandas UDF: [Databricks Documentation][https://docs.databricks.com/en/spark/latest/spark-sql/udf-python-pandas.html]
+1. [Uber Engineering: D3 - An Automated System to Detect Data Drifts](https://www.uber.com/en-IT/blog/d3-an-automated-system-to-detect-data-drifts/)
+2. [Netflix TechBlog: Lessons from Building Observability Tools at Netflix](https://netflixtechblog.com/lessons-from-building-observability-tools-at-netflix-7e8b62854b73)
+3. Bài toán OOMKilled trong PySpark Pandas UDF: [Databricks Documentation](https://docs.databricks.com/en/spark/latest/spark-sql/udf-python-pandas.html)
 4. *Isolation Forest Algorithm for Anomaly Detection* - Towards Data Science / Scikit-learn Docs.
-5. [OpenObserve: Observability engineering blog](https://openobserve.ai/blog]
+5. [OpenObserve: Observability engineering blog](https://openobserve.ai/blog)

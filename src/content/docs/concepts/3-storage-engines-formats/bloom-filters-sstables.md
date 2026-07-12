@@ -31,7 +31,10 @@ graph TD
     A["Client Write"] --> B["Write-Ahead Log (WAL)"]
     A --> C("Active MemTable (RAM)")
     C -- "Reaches 64MB" --> D("Immutable MemTable (RAM)")
-    D -- "Background Flush" --> E["SSTable L0 on Disk"]
+    D -- "Background Flush" --> E["SSTable L0 on Disk"]
+
+
+
 ```
 
 ### 1.2. Giải phẫu SSTable (Sorted String Table)
@@ -78,7 +81,7 @@ sequenceDiagram
     BF-->>C: Bits: [1, 0, 1] -> DEFINITELY NOT
     Note over C,BF: Bỏ qua SSTable_1 [Zero Disk I/O]
     C->>BF: Check user_123 in SSTable_2
-    BF-->>C: Bits: [1, 1, 1] -> PROBABLY YES (or False Positive]
+    BF-->>C: Bits: [1, 1, 1] -> PROBABLY YES (or False Positive)
     C->>S: Disk I/O: Read Index & Data Block
     S-->>C: Return Data
 ```
@@ -143,7 +146,7 @@ Khi đọc lại với lệnh `SELECT * FROM users WHERE user_id = 123`, Spark E
 LSM-Trees được thiết kế tinh xảo để thống trị các Workload Write-Intensive. Sự kết hợp giữa bộ đệm trên RAM [MemTable], I/O Tuần tự (SSTables), quy trình dọn rác tàn nhẫn (Compaction), và lá chắn Toán học Xác suất (Bloom Filters) đã tạo nên một kiến trúc lưu trữ hoàn mỹ cho kỷ nguyên Big Data. Nắm vững các cấu hình vật lý của chúng không chỉ giúp hệ thống của bạn chạy nhanh hơn mà còn cứu bạn khỏi những đêm trực sự cố (OOM/Disk Treo) chết người.
 
 ## Nguồn Tham Khảo (References)
-*   [RocksDB Wiki - Bloom Filter Configuration][https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter]
-*   [RocksDB Wiki - LSM Tree Architecture & Leveled Compaction][https://github.com/facebook/rocksdb/wiki/Leveled-Compaction]
-*   [Designing Data-Intensive Applications (Chapter 3] - Martin Kleppmann][https://dataintensive.net/]
-*   [Apache Parquet Format Specifications (Bloom Filter]](https://parquet.apache.org/docs/file-format/bloomfilter/)
+*   [RocksDB Wiki - Bloom Filter Configuration](https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter)
+*   [RocksDB Wiki - LSM Tree Architecture & Leveled Compaction](https://github.com/facebook/rocksdb/wiki/Leveled-Compaction)
+*   [Designing Data-Intensive Applications (Chapter 3) - Martin Kleppmann](https://dataintensive.net/)
+*   [Apache Parquet Format Specifications (Bloom Filter)](https://parquet.apache.org/docs/file-format/bloomfilter/)

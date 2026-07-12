@@ -100,8 +100,8 @@ deduped_df = streaming_df \
 
 ## Nguồn Tham Khảo (References)
 
-1. [Databricks Documentation: Drop Duplicates with Watermark][https://docs.databricks.com/en/structured-streaming/delta-lake.html]
-2. [Snowflake Documentation: MERGE Command][https://docs.snowflake.com/en/sql-reference/sql/merge]
-3. [Exactly-Once Semantics in Apache Flink - Flink Documentation][https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/]
-4. [Data Engineering at Scale: Netflix Tech Blog](https://netflixtechblog.com/]
+1. [Databricks Documentation: Drop Duplicates with Watermark](https://docs.databricks.com/en/structured-streaming/delta-lake.html)
+2. [Snowflake Documentation: MERGE Command](https://docs.snowflake.com/en/sql-reference/sql/merge)
+3. [Exactly-Once Semantics in Apache Flink - Flink Documentation](https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/)
+4. [Data Engineering at Scale: Netflix Tech Blog](https://netflixtechblog.com/)
 5. **Designing Data-Intensive Applications** - Martin Kleppmann (Chapter 11: Stream Processing)

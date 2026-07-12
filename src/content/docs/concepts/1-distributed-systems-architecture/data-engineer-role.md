@@ -37,7 +37,9 @@ graph TD
         C["Junior/Mid"] -->|Writes| D["Individual ETL Pipelines"]
         E["Senior/Tech Lead"] -->|Owns| F["Project Architecture & Delivery"]
         G["Staff/Principal"] -->|Builds| H["Data Platform & Tech Strategy"]
-    end
+    end
+
+
 ```
 
 ---
@@ -155,5 +157,5 @@ Trong các Tech Unicorns (Uber, Netflix), vai trò này phân mảnh rất sâu:
 ## 6. Nguồn Tham Khảo (References)
 1. **Fundamentals of Data Engineering** - Joe Reis & Matt Housley (O'Reilly). Cuốn sách định nghĩa lại nghề Data Engineer hiện đại.
 2. **Designing Data-Intensive Applications** - Martin Kleppmann. Sách gối đầu giường về hệ thống phân tán.
-3. [The Rise of the Data Engineer][https://medium.com/@maximebeauchemin/the-rise-of-the-data-engineer-91be18f1e603] - Maxime Beauchemin (Tác giả Apache Airflow).
-4. [FinOps Foundation](https://www.finops.org/] - Cẩm nang quản trị chi phí Cloud ở quy mô Enterprise.
+3. [The Rise of the Data Engineer](https://medium.com/@maximebeauchemin/the-rise-of-the-data-engineer-91be18f1e603) - Maxime Beauchemin (Tác giả Apache Airflow).
+4. [FinOps Foundation](https://www.finops.org/) - Cẩm nang quản trị chi phí Cloud ở quy mô Enterprise.

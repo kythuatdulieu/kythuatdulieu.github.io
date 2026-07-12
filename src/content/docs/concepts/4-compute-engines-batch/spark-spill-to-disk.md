@@ -153,7 +153,7 @@ df_joined = df_transactions.join(
 
 ## 5. Nguồn Tham Khảo [References]
 
-1. [Databricks - Project Tungsten: Bringing Apache Spark Closer to Bare Metal][https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html]
-2. [Databricks - Apache Spark as a Compiler: Joining a Billion Rows per Second on a Laptop][https://www.databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html]
-3. [Xin Li - Spark Memory Management](https://0x0fff.com/spark-memory-management/]
+1. [Databricks - Project Tungsten: Bringing Apache Spark Closer to Bare Metal](https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html)
+2. [Databricks - Apache Spark as a Compiler: Joining a Billion Rows per Second on a Laptop](https://www.databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html)
+3. [Xin Li - Spark Memory Management](https://0x0fff.com/spark-memory-management/)
 4. Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.

@@ -9,6 +9,13 @@ prev:
 next:
   link: /learning-paths/core-paths/middle-to-senior-de/
   label: "Middle to Senior Data Engineer"
+tags: ["junior-to-middle", "dimensional-modeling", "airflow", "cdc", "data-testing", "learning-path"]
+readingTime: "11 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Junior to Middle Data Engineer (Kỹ sư dữ liệu thực chiến)"
+metaDescription: "Lộ trình từ pipeline cơ bản sang production: mô hình dữ liệu, orchestration, warehouse, CDC, test và backfill."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Ở cấp Junior, bạn chứng minh mình viết được pipeline. Ở cấp Middle, bạn chứng minh pipeline đó có thể sống trong production: chạy đúng lịch, chạy lại được, có test, có cảnh báo, có tài liệu, và không làm downstream mất niềm tin.
@@ -29,6 +36,19 @@ Chặng này nên học bằng cách xây một pipeline ELT hoàn chỉnh, khô
 Trước khi viết pipeline, hãy trả lời: mỗi dòng trong bảng đại diện cho điều gì? Kimball Group gọi đây là grain của fact table; nếu grain mơ hồ, số liệu downstream rất dễ sai dù SQL vẫn chạy thành công: [Fact Tables and Dimension Tables](https://www.kimballgroup.com/2003/01/fact-tables-and-dimension-tables/).
 
 Ví dụ bảng `fact_orders` có grain là “một dòng cho một order item”. Nếu sau đó bạn join với bảng payment ở grain “một dòng cho một payment attempt”, số tiền có thể bị nhân lên. Đây là lỗi rất phổ biến và rất khó phát hiện nếu chỉ nhìn tổng doanh thu.
+
+Nhìn bằng số cụ thể: order #123 có 3 items và 2 payment attempts (1 fail, 1 thành công). Join thẳng hai bảng theo `order_id` cho ra 3 × 2 = 6 dòng — doanh thu nhân đôi, số item nhân đôi, và tổng vẫn "trông hợp lý" nếu bạn không có số đối chứng. Phòng thủ chuẩn: aggregate payment về grain order *trước khi* join:
+
+```sql
+WITH payments_per_order AS (
+  SELECT order_id, SUM(amount) AS paid_amount     -- đưa về grain order
+  FROM raw_payments WHERE status = 'success'
+  GROUP BY order_id
+)
+SELECT o.*, p.paid_amount
+FROM fact_order_items o
+LEFT JOIN payments_per_order p USING (order_id);  -- join 1-1, không fan-out
+```
 
 Học theo thứ tự:
 

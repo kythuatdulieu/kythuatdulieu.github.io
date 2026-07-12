@@ -1,6 +1,14 @@
 ---
 title: "Hướng Dẫn Dự Án Data Engineering End-to-End: Reddit API, Airflow & Amazon Redshift"
 description: "Phân tích và xây dựng một dự án Data Engineering thực tế (End-to-End), thu thập dữ liệu từ Reddit API, điều phối bằng Apache Airflow, xử lý với AWS Glue và phân tích trên Amazon Redshift."
+difficulty: "Intermediate"
+tags: ["airflow", "redshift", "aws-glue", "s3", "elt", "data-skew", "idempotency", "e2e-project"]
+readingTime: "18 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Dự án E2E: Reddit API → Airflow → S3 → Glue → Redshift"
+metaDescription: "Pipeline ELT end-to-end: PRAW crawl Reddit, Airflow Celery điều phối, S3 landing zone, Glue transform sang Parquet, Redshift COPY với DISTKEY tối ưu chống data skew."
+domains: ["DE"]
+level: "Middle"
 ---
 
 Trong bài viết này, chúng ta sẽ đi sâu vào việc thiết kế và triển khai một kiến trúc Data Pipeline phân tán, một trong những project kinh điển giúp rèn luyện tư duy Data Engineering theo chuẩn FAANG. Hệ thống này sử dụng API của Reddit để lấy dữ liệu thô, sử dụng **Apache Airflow** để điều phối, và lưu trữ dữ liệu tại **Amazon Redshift** sau khi đã qua bước Transform bằng **AWS Glue** và **Amazon Athena**.
@@ -9,9 +17,19 @@ Dự án không chỉ tập trung vào việc ghép nối các công cụ lại 
 
 ## Kiến Trúc Tổng Thể (Architecture Diagram)
 
+```mermaid
+graph LR
+    R["Reddit API (PRAW)"] -->|Extract mỗi giờ| AF["Airflow + Celery Workers"]
+    AF -->|Dump raw CSV/JSON| S3R["S3 Landing Zone (raw/)"]
+    S3R --> GC["Glue Crawler (Schema Inference)"]
+    GC --> CAT["Glue Data Catalog"]
+    S3R -->|"Glue Job (PySpark)"| S3P["S3 processed/ (Parquet)"]
+    CAT -.-> ATH["Athena (ad-hoc SQL)"]
+    S3P -->|COPY| RS["Amazon Redshift"]
+    RS --> BI["Metabase / Tableau"]
+```
 
-
-Kiến trúc bên dưới mô phỏng mô hình **ELT (Extract, Load, Transform)**, tối ưu cho các hệ thống Cloud-native hiện đại. Thay vì Transform trực tiếp trong lúc kéo dữ liệu (ETL cổ điển), hệ thống dump thẳng raw data vào S3 (Data Lake) trước, đảm bảo an toàn dữ liệu và khả năng xử lý lại (replayability) trong trường hợp pipeline bị lỗi logic ở các bước sau.
+Kiến trúc bên dưới mô phỏng mô hình **[ELT](/concepts/2-data-ingestion-integration/elt/) (Extract, Load, Transform)**, tối ưu cho các hệ thống Cloud-native hiện đại. Thay vì Transform trực tiếp trong lúc kéo dữ liệu (ETL cổ điển), hệ thống dump thẳng raw data vào S3 (Data Lake) trước, đảm bảo an toàn dữ liệu và khả năng xử lý lại (replayability) trong trường hợp pipeline bị lỗi logic ở các bước sau.
 
 
 
@@ -67,9 +85,23 @@ Khi làm việc với các MPP (Massively Parallel Processing) Data Warehouse nh
 
 ## Chi Tiết Kỹ Thuật: Tính Tự Đồng Nhất (Idempotence)
 
-Một hệ thống FAANG-level phải đảm bảo tính **Idempotent** (chạy 1 lần hay 100 lần với cùng một tham số đầu vào đều cho ra đúng một kết quả, không bị nhân đôi dữ liệu).
+Một hệ thống FAANG-level phải đảm bảo tính **[Idempotent](/concepts/2-data-ingestion-integration/idempotency/)** (chạy 1 lần hay 100 lần với cùng một tham số đầu vào đều cho ra đúng một kết quả, không bị nhân đôi dữ liệu).
 - Trong Airflow, không bao giờ dùng `datetime.now()` trong code của Task. Luôn luôn dùng `{{ ds }}` hoặc `{{ data_interval_start }}` (các Airflow Macros). Điều này đảm bảo khi bạn **Backfill** (chạy lại dữ liệu của tháng trước), DAG vẫn hiểu nó đang fetch dữ liệu của khoảng thời gian trong quá khứ chứ không phải hiện tại.
-- Lệnh `COPY` vào Redshift không có khả năng tự update nếu trùng lặp (Upsert). Để giải quyết, hãy load dữ liệu vào một `staging_table` trong Redshift trước, sau đó dùng SQL `DELETE ... WHERE id IN (...)` ở bảng chính, rồi mới `INSERT INTO target_table SELECT * FROM staging_table`. Cơ chế này được gọi là **Staging Delete-Insert**, mô phỏng lại thao tác UPSERT trong Data Warehouse.
+- Lệnh `COPY` vào Redshift không có khả năng tự update nếu trùng lặp (Upsert). Để giải quyết, hãy load dữ liệu vào một `staging_table` trong Redshift trước, sau đó dùng SQL `DELETE ... WHERE id IN (...)` ở bảng chính, rồi mới `INSERT INTO target_table SELECT * FROM staging_table`. Cơ chế này được gọi là **Staging Delete-Insert**, mô phỏng lại thao tác UPSERT trong Data Warehouse:
+
+```sql
+BEGIN;
+CREATE TEMP TABLE stg_posts (LIKE reddit_posts);
+COPY stg_posts FROM 's3://reddit-data-lake/processed/dt=2026-07-10/'
+  IAM_ROLE 'arn:aws:iam::123456789012:role/RedshiftS3ReadRole' FORMAT AS PARQUET;
+
+DELETE FROM reddit_posts USING stg_posts
+  WHERE reddit_posts.post_id = stg_posts.post_id;   -- xóa bản cũ nếu rerun
+INSERT INTO reddit_posts SELECT * FROM stg_posts;
+COMMIT;   -- toàn bộ trong 1 transaction → rerun an toàn tuyệt đối
+```
+
+Bọc cả hai bước trong một transaction là chi tiết quyết định: nếu `INSERT` thất bại giữa chừng, `DELETE` cũng được rollback — không bao giờ rơi vào trạng thái "đã xóa mà chưa chèn". Xem thêm mẫu thiết kế đầy đủ tại [Idempotency in Data Pipelines](/projects/system-design/idempotency-in-data-pipelines/).
 
 ---
 

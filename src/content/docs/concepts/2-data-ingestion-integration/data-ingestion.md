@@ -173,7 +173,7 @@ resource "aws_dms_replication_task" "cdc_task" {
 ```
 
 ## 6. Nguồn Tham Khảo [References]
-- [AWS Database Blog: Stream changes from Amazon RDS for PostgreSQL using Amazon Kinesis Data Streams][https://aws.amazon.com/blogs/database/stream-changes-from-amazon-rds-for-postgresql-using-amazon-kinesis-data-streams-and-aws-lambda/]
-- [AWS Documentation: Using an Amazon Kinesis data stream as a target for AWS DMS][https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.Kinesis.html]
+- [AWS Database Blog: Stream changes from Amazon RDS for PostgreSQL using Amazon Kinesis Data Streams](https://aws.amazon.com/blogs/database/stream-changes-from-amazon-rds-for-postgresql-using-amazon-kinesis-data-streams-and-aws-lambda/)
+- [AWS Documentation: Using an Amazon Kinesis data stream as a target for AWS DMS](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.Kinesis.html)
 - Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
-- [Debezium Documentation: PostgreSQL Connector](https://debezium.io/documentation/reference/connectors/postgresql.html]
+- [Debezium Documentation: PostgreSQL Connector](https://debezium.io/documentation/reference/connectors/postgresql.html)

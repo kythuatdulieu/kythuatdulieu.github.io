@@ -77,7 +77,7 @@ class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
     next_agent: str
 
-# 2. Supervisor Node (Router]
+# 2. Supervisor Node (Router)
 def supervisor_node(state: AgentState):
     # Dùng LLM nhỏ/nhanh để định tuyến (LLM Tiering)
     router_prompt = "Dựa vào yêu cầu, chuyển cho ai: Coder hay Researcher? Chỉ trả về tên."
@@ -138,7 +138,7 @@ Giao quyền tự quyết cho AI gây ra rủi ro thảm họa nếu thiếu Gua
     from pydantic import BaseModel, Field, field_validator
 
     class DeleteRecordsSchema[BaseModel]:
-        ids: list[str] = Field(..., min_items=1]
+        ids: list[str] = Field(..., min_items=1)
         
         @field_validator('ids')
         @classmethod

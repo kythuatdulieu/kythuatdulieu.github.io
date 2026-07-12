@@ -127,6 +127,6 @@ CALL catalog.system.expire_snapshots(
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Delta Lake Docs: VACUUM and Safety Checks][https://docs.delta.io/latest/delta-utility.html#vacuum]
-* [Apache Iceberg: Snapshot Isolation and Time Travel](https://iceberg.apache.org/docs/latest/snapshots/]
+* [Delta Lake Docs: VACUUM and Safety Checks](https://docs.delta.io/latest/delta-utility.html#vacuum)
+* [Apache Iceberg: Snapshot Isolation and Time Travel](https://iceberg.apache.org/docs/latest/snapshots/)
 * *Designing Data-Intensive Applications (Chapter 3: SSTables, LSM-Trees và B-Trees)* - Martin Kleppmann.

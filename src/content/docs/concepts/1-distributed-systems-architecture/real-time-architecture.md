@@ -136,8 +136,8 @@ Nếu bài toán yêu cầu độ trễ < 1 giây (Ví dụ: Fraud Detection), b
 
 ## Nguồn Tham Khảo (References)
 
-1. [Questioning the Lambda Architecture][https://www.oreilly.com/radar/questioning-the-lambda-architecture/] - *Jay Kreps (O'Reilly Radar, 2014)*
-2. [The Log: What every software engineer should know about real-time data's unifying abstraction][https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying] - *Jay Kreps (LinkedIn)*
-3. [Apache Flink: State Management & RocksDB Tuning][https://flink.apache.org/2021/01/18/rescaling-flink-stateful-applications/] - *Flink Official Engineering Blog*
-4. [Kafka Tiered Storage (KIP-405]](https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage) - *Apache Kafka Confluence*
+1. [Questioning the Lambda Architecture](https://www.oreilly.com/radar/questioning-the-lambda-architecture/) - *Jay Kreps (O'Reilly Radar, 2014)*
+2. [The Log: What every software engineer should know about real-time data's unifying abstraction](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying) - *Jay Kreps (LinkedIn)*
+3. [Apache Flink: State Management & RocksDB Tuning](https://flink.apache.org/2021/01/18/rescaling-flink-stateful-applications/) - *Flink Official Engineering Blog*
+4. [Kafka Tiered Storage (KIP-405)](https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage) - *Apache Kafka Confluence*
 5. *Designing Data-Intensive Applications* - Martin Kleppmann (Part 2: Stream Processing)

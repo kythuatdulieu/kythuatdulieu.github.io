@@ -160,7 +160,7 @@ config:
 ---
 
 ## Nguồn Tham Khảo [References]
-* [Apache Airflow Architecture Overview][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html]
-* [Airflow Scheduler Internals & High Availability][https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html]
-* [Astronomer: Airflow Components and Architecture Tuning][https://docs.astronomer.io/learn/airflow-components]
-* [Designing Data-Intensive Applications (O'Reilly]](https://dataintensive.net/)
+* [Apache Airflow Architecture Overview](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
+* [Airflow Scheduler Internals & High Availability](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html)
+* [Astronomer: Airflow Components and Architecture Tuning](https://docs.astronomer.io/learn/airflow-components)
+* [Designing Data-Intensive Applications (O'Reilly)](https://dataintensive.net/)

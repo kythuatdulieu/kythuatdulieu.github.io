@@ -129,7 +129,7 @@ resource "databricks_cluster" "optimized_batch_cluster" {
 **Memory Overhead là gì?** Khi triển khai trên K8s, Container có thể bị OOMKilled dù JVM Heap vẫn còn trống. Nguyên nhân do Spark sử dụng bộ nhớ ngoài Heap [Off-heap] cho các operations liên quan đến mạng (NIO), giải nén Parquet bằng C++, hoặc chạy tiến trình Python (PySpark). Nếu tổng (JVM Heap + Off-heap) vượt quá Limit của Pod K8s, tiến trình sẽ bị hệ điều hành tiêu diệt.
 
 ## 5. Nguồn Tham Khảo (References)
-- [Apache Spark Official Documentation: Tuning Spark][https://spark.apache.org/docs/latest/tuning.html]
-- [Databricks: How Does Spark Execute A Query?][https://databricks.com/session_na21/how-does-spark-execute-a-query]
-- [AWS Big Data Blog: Best practices for successfully managing memory for Apache Spark applications on Amazon EMR](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/]
+- [Apache Spark Official Documentation: Tuning Spark](https://spark.apache.org/docs/latest/tuning.html)
+- [Databricks: How Does Spark Execute A Query?](https://databricks.com/session_na21/how-does-spark-execute-a-query)
+- [AWS Big Data Blog: Best practices for successfully managing memory for Apache Spark applications on Amazon EMR](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/)
 - Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.

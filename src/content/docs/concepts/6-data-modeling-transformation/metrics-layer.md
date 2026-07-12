@@ -170,8 +170,8 @@ Nếu cấu trúc dữ liệu thô thay đổi (chạy lịch sử Backfill dữ
 ---
 
 ## Nguồn Tham Khảo [References]
-* [The Headless BI Architecture - Cube.dev][https://cube.dev/blog/headless-bi]
-* [dbt Semantic Layer Documentation - MetricFlow][https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl]
-* [Airbnb Minerva: Metrics Infrastructure][https://medium.com/airbnb-engineering/how-airbnb-achieved-metric-consistency-at-scale-f23cc53dea70]
-* [Uber uMetric: A Unified Platform for Business Metrics](https://www.uber.com/en-VN/blog/umetric/]
+* [The Headless BI Architecture - Cube.dev](https://cube.dev/blog/headless-bi)
+* [dbt Semantic Layer Documentation - MetricFlow](https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl)
+* [Airbnb Minerva: Metrics Infrastructure](https://medium.com/airbnb-engineering/how-airbnb-achieved-metric-consistency-at-scale-f23cc53dea70)
+* [Uber uMetric: A Unified Platform for Business Metrics](https://www.uber.com/en-VN/blog/umetric/)
 * *Fundamentals of Data Engineering* - Joe Reis & Matt Housley.

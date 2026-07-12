@@ -173,7 +173,7 @@ Viết SQL Transformation không đơn giản là gõ `SELECT ... FROM ...`. Tro
 Bằng cách áp dụng **dbt** để kiến trúc DAG nhiều lớp, quản lý Incremental State thông minh, và thấu hiểu giới hạn vật lý của Engine (Spill-to-disk, Data Skew), Analytics Engineer có thể xây dựng những đường ống xử lý dữ liệu bền bỉ và tối ưu chi phí ở quy mô Petabyte.
 
 ## Nguồn Tham Khảo (References)
-* [dbt Best Practices: Structuring your project][https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview]
-* [Snowflake: Query Profile & Spill to Disk Optimization][https://docs.snowflake.com/en/user-guide/ui-query-profile]
-* [Databricks: Liquid Clustering for Delta Lake](https://docs.databricks.com/en/delta/clustering.html]
+* [dbt Best Practices: Structuring your project](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
+* [Snowflake: Query Profile & Spill to Disk Optimization](https://docs.snowflake.com/en/user-guide/ui-query-profile)
+* [Databricks: Liquid Clustering for Delta Lake](https://docs.databricks.com/en/delta/clustering.html)
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 10: Batch Processing).

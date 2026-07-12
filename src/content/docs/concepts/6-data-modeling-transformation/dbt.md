@@ -131,8 +131,8 @@ Tham số `--defer` là ma thuật của hệ thống. Nếu model con cần JOI
 
 ## Nguồn Tham Khảo (References)
 
-1. **dbt Labs Developer Hub:** [Incremental Models & Advanced Materializations][https://docs.getdbt.com/docs/build/incremental-models]
-2. **dbt Labs Blog:** [The Modern Data Stack & dbt Mesh Architecture][https://docs.getdbt.com/blog/dbt-mesh-architecture]
-3. **Databricks Engineering:** [Optimizing dbt on Databricks with Incremental Models][https://www.databricks.com/blog]
-4. **AWS Architecture Blog:** [Modernizing Data Architectures with dbt and Amazon Redshift](https://aws.amazon.com/blogs/architecture/]
+1. **dbt Labs Developer Hub:** [Incremental Models & Advanced Materializations](https://docs.getdbt.com/docs/build/incremental-models)
+2. **dbt Labs Blog:** [The Modern Data Stack & dbt Mesh Architecture](https://docs.getdbt.com/blog/dbt-mesh-architecture)
+3. **Databricks Engineering:** [Optimizing dbt on Databricks with Incremental Models](https://www.databricks.com/blog)
+4. **AWS Architecture Blog:** [Modernizing Data Architectures with dbt and Amazon Redshift](https://aws.amazon.com/blogs/architecture/)
 5. **Designing Data-Intensive Applications** - *Martin Kleppmann* (Lý thuyết về State, Idempotency và Late-arriving events).

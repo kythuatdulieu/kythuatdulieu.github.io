@@ -33,14 +33,18 @@ graph TD
     direction LR
     Z1("(1") --> Z2("(2")
     Z2 -->|BƯỚC NHẢY XA| Z3("(3")
-    Z3 --> Z4("(4")
+    Z3 --> Z4("(4")
+
+
     end
 
     subgraph hilbert["Hilbert Curve: Continuous Locality"]
     direction LR
     H1("(1") --> H2("(2")
     H2 -->|LIỀN KỀ| H3("(3")
-    H3 --> H4("(4")
+    H3 --> H4("(4")
+
+
     end
 ```
 
@@ -122,6 +126,6 @@ spark.databricks.delta.autoCompact.enabled auto
 Liquid Clustering là dấu chấm hết cho kỷ nguyên quản lý dữ liệu vật lý thủ công. Nó đẩy gánh nặng phân rã, tổ chức và cân bằng dữ liệu từ vai Data Engineer sang các thuật toán Metadata tự động (Hilbert Curve và Z-Cubes), tối ưu hóa triệt để chi phí Compute và I/O trên Cloud.
 
 ## Nguồn Tham Khảo
-1. [Databricks: Debunking 8 data layout myths][https://www.databricks.com/blog/debunking-8-data-layout-myths-why-liquid-clustering-outperforms-partitioning]
-2. [Databricks Delta Lake: Liquid Clustering Architecture](https://docs.delta.io/latest/delta-clustering.html]
+1. [Databricks: Debunking 8 data layout myths](https://www.databricks.com/blog/debunking-8-data-layout-myths-why-liquid-clustering-outperforms-partitioning)
+2. [Databricks Delta Lake: Liquid Clustering Architecture](https://docs.delta.io/latest/delta-clustering.html)
 3. *Designing Data-Intensive Applications* - Martin Kleppmann (Space-filling Curves).

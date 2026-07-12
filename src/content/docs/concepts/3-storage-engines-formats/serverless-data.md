@@ -128,7 +128,7 @@ Một điểm yếu chí tử của S3/GCS là lệnh liệt kê thư mục [Lis
 ---
 
 ## Nguồn Tham Khảo (References)
-1. **Google Cloud Blog:** [A deep dive into BigQuery architecture (Colossus, Borg, Dremel, Jupiter]][https://cloud.google.com/blog/products/data-analytics/a-deep-dive-into-bigquery-architecture]
-2. **AWS Blog:** [Top 10 Performance Tuning Tips for Amazon Athena][https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/]
+1. **Google Cloud Blog:** [A deep dive into BigQuery architecture (Colossus, Borg, Dremel, Jupiter)](https://cloud.google.com/blog/products/data-analytics/a-deep-dive-into-bigquery-architecture)
+2. **AWS Blog:** [Top 10 Performance Tuning Tips for Amazon Athena](https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/)
 3. **Sách Kinh Điển:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích kiến trúc Data Warehousing.
-4. **Apache Iceberg:** [Under the Hood Architecture](https://iceberg.apache.org/docs/latest/]
+4. **Apache Iceberg:** [Under the Hood Architecture](https://iceberg.apache.org/docs/latest/)

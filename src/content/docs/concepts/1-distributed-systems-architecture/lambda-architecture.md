@@ -31,7 +31,10 @@ graph TD
     B -->|"Precomputed Batch Views<br/>(100% Accurate)"| D["Serving Layer<br/>(Cassandra/Druid/ClickHouse)"]
     C -->|"Real-time Views<br/>(Approximation / Fast)"| D
     
-    D --> E["Query / Dashboard:<br/>Merge('Batch + Realtime')"]
+    D --> E["Query / Dashboard:<br/>Merge('Batch + Realtime')"]
+
+
+
 ```
 
 ### 1.1. Batch Layer (Tầng Chân Lý)
@@ -106,6 +109,6 @@ Ngày nay, ranh giới giữa Lambda và Kappa đang bị xóa nhòa bởi các 
 > **Takeaway cho Staff Engineer:** Không bao giờ mặc định chọn "Real-time" chỉ vì nó nghe ngầu. Sự phức tạp của hệ thống Streaming [Kafka/Flink] cao hơn Batch hàng chục lần. Hãy tính toán ROI (Return on Investment): Nếu Business không thể ra quyết định hành động trong vòng 5 giây, đừng tốn tiền xây hệ thống độ trễ 1 giây.
 
 ## Nguồn Tham Khảo (References)
-* [Questioning the Lambda Architecture - Jay Kreps][https://www.oreilly.com/radar/questioning-the-lambda-architecture/]
-* [Big Data: Principles and best practices of scalable realtime data systems - Nathan Marz][https://www.manning.com/books/big-data]
-* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data]](https://dataintensive.net/)
+* [Questioning the Lambda Architecture - Jay Kreps](https://www.oreilly.com/radar/questioning-the-lambda-architecture/)
+* [Big Data: Principles and best practices of scalable realtime data systems - Nathan Marz](https://www.manning.com/books/big-data)
+* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)

@@ -89,7 +89,7 @@ def evaluate_faithfulness(query: str, context: str, response: str) -> Evaluation
     [Retrieved Context]: {context}
     [LLM Response]: {response}
     
-    Bắt buộc phải lập luận từng bước (Reasoning] trước khi đưa ra điểm số.
+    Bắt buộc phải lập luận từng bước (Reasoning) trước khi đưa ra điểm số.
     """
 
     # 2. Gọi API và ép kiểu với response_format
@@ -105,7 +105,7 @@ def evaluate_faithfulness(query: str, context: str, response: str) -> Evaluation
 
 ---
 
-## 3. Rủi ro Vận hành (Operational Risks] & Thảm Họa
+## 3. Rủi ro Vận hành (Operational Risks) & Thảm Họa
 
 Việc cắm một API vào là xong chỉ có trong bài viết Tutorial. Thực tế Enterprise ẩn chứa những rủi ro cháy máy chủ:
 
@@ -143,7 +143,7 @@ Thay vì code lại vòng lặp Retry hay tính toán Toán học từ đầu, D
 ---
 
 ## Nguồn Tham Khảo (References)
-1. **Zheng et al. (Arxiv 2023):** [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena][https://arxiv.org/abs/2306.05685]
-2. **Databricks Engineering:** [Best Practices for LLM Evaluation of RAG Applications][https://www.databricks.com/blog/2023/09/12/best-practices-llm-evaluation-rag-applications]
-3. **OpenAI Documentation:** [Batch API for Asynchronous Workloads][https://platform.openai.com/docs/guides/batch]
-4. **DeepEval Official Docs:** [The Open-Source LLM Evaluation Framework](https://docs.confident-ai.com/]
+1. **Zheng et al. (Arxiv 2023):** [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
+2. **Databricks Engineering:** [Best Practices for LLM Evaluation of RAG Applications](https://www.databricks.com/blog/2023/09/12/best-practices-llm-evaluation-rag-applications)
+3. **OpenAI Documentation:** [Batch API for Asynchronous Workloads](https://platform.openai.com/docs/guides/batch)
+4. **DeepEval Official Docs:** [The Open-Source LLM Evaluation Framework](https://docs.confident-ai.com/)

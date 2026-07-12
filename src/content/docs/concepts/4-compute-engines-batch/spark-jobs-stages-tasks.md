@@ -125,7 +125,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "2000")
 Bằng cách hiểu rõ đường đi của dữ liệu qua các Task và Stage, bạn hoàn toàn làm chủ được mức độ Parallelism và làm dịu đi áp lực vật lý đặt lên hạ tầng Cluster của mình.
 
 ## 4. Nguồn Tham Khảo
-- [Apache Spark Core Concepts - Official Documentation][https://spark.apache.org/docs/latest/cluster-overview.html]
-- [Databricks Blog: Understanding your Spark application through UI][https://databricks.com/docs/en/spark/ui]
+- [Apache Spark Core Concepts - Official Documentation](https://spark.apache.org/docs/latest/cluster-overview.html)
+- [Databricks Blog: Understanding your Spark application through UI](https://databricks.com/docs/en/spark/ui)
 - Designing Data-Intensive Applications (Martin Kleppmann) - Phân tích về Batch Processing và MapReduce.
-- [Uber Engineering: Troubleshooting Spark OOM and Memory Management](https://www.uber.com/en-VN/blog/apache-spark-oom/]
+- [Uber Engineering: Troubleshooting Spark OOM and Memory Management](https://www.uber.com/en-VN/blog/apache-spark-oom/)

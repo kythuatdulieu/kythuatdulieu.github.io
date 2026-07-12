@@ -39,7 +39,10 @@ graph TD
     Root --> Branch2["Branch Node - Page 2"]
     Branch1 --> Leaf1["Leaf Node - Page 3: Khóa 1-10"]
     Branch1 --> Leaf2["Leaf Node - Page 4: Khóa 11-20"]
-    Branch2 --> Leaf3["Leaf Node - Page 5: Khóa 21-30"]
+    Branch2 --> Leaf3["Leaf Node - Page 5: Khóa 21-30"]
+
+
+
 ```
 
 **Tại sao In-place update lại đắt đỏ (The Write Penalty)?**
@@ -60,7 +63,11 @@ flowchart LR
     Client("(Client Application)") --> |1. Write| WAL["Write-Ahead Log (WAL)<br/>Disk - Sequential I/O"]
     Client --> |2. Write| MemTable["MemTable (RAM)<br/>Balanced Tree / SkipList"]
     MemTable --> |"3. Flush (When full)"| SST1["SSTable L0<br/>Disk - Immutable"]
-    SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged & Sorted"]
+    SST1 --> |4. Compaction| SST2["SSTable L1<br/>Disk - Merged & Sorted"]
+
+
+
+
 ```
 
 1. **Write-Ahead Log (WAL):** Dữ liệu đến được ghi nối tiếp vào cuối một file log trên đĩa. Thao tác này cực nhanh vì nó là Sequential I/O, mục đích duy nhất là để chống mất dữ liệu khi sập nguồn (Crash Recovery).
@@ -143,7 +150,7 @@ Việc hiểu sâu đến tầng vật lý giúp Data Engineer không chỉ ch�
 ---
 
 ## Nguồn Tham Khảo (References)
-*   [Designing Data-Intensive Applications - Chapter 3: Storage and Retrieval][https://dataintensive.net/]
-*   [RocksDB Tuning Guide - GitHub Wiki][https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide]
-*   [How we use RocksDB at Cloudflare][https://blog.cloudflare.com/how-we-use-rocksdb-at-cloudflare/]
-*   [ScyllaDB Architecture: LSM-Tree](https://docs.scylladb.com/stable/architecture/architecture-lsm.html]
+*   [Designing Data-Intensive Applications - Chapter 3: Storage and Retrieval](https://dataintensive.net/)
+*   [RocksDB Tuning Guide - GitHub Wiki](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide)
+*   [How we use RocksDB at Cloudflare](https://blog.cloudflare.com/how-we-use-rocksdb-at-cloudflare/)
+*   [ScyllaDB Architecture: LSM-Tree](https://docs.scylladb.com/stable/architecture/architecture-lsm.html)

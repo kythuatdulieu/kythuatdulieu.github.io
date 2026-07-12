@@ -88,7 +88,7 @@ WHEN NOT MATCHED THEN
 ```
 
 :::danger
-**Performance Trap (Bẫy Hiệu năng]:** Rất nhiều Kỹ sư ngây thơ dùng `MERGE INTO` chỉ với điều kiện `ON target.order_id = source.order_id`. Query Engine sẽ buộc phải quét lại **toàn bộ Petabyte Fact Table (Full Table Scan)** để tìm kiếm `order_id`. Bạn bắt buộc phải đính kèm **Partition Key** (thường là `date`) vào mệnh đề `ON` để giới hạn phạm vi quét (Pruning) xuống mức nhỏ nhất có thể.
+**Performance Trap (Bẫy Hiệu năng):** Rất nhiều Kỹ sư ngây thơ dùng `MERGE INTO` chỉ với điều kiện `ON target.order_id = source.order_id`. Query Engine sẽ buộc phải quét lại **toàn bộ Petabyte Fact Table (Full Table Scan)** để tìm kiếm `order_id`. Bạn bắt buộc phải đính kèm **Partition Key** (thường là `date`) vào mệnh đề `ON` để giới hạn phạm vi quét (Pruning) xuống mức nhỏ nhất có thể.
 :::
 
 ---
@@ -130,7 +130,7 @@ OPTIMIZE sales_fact ZORDER BY (campaign_id, store_id);
 *(Lưu ý FinOps: Quá trình Z-Order tốn rất nhiều Compute CPU để sắp xếp lại data. Chỉ nên cấu hình chạy vào giờ thấp điểm ban đêm).*
 
 ## Nguồn Tham Khảo (References)
-* [Databricks - What is a Medallion Architecture?][https://www.databricks.com/glossary/medallion-architecture]
-* [Snowflake - Understanding Micro-partitions and Automatic Clustering][https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions]
-* [The Data Warehouse Toolkit (Ralph Kimball] - Fact Table Techniques][https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/]
-* [Uber Engineering Blog - Apache Hudi Design for Analytical Data Lakes](https://eng.uber.com/hudi/]
+* [Databricks - What is a Medallion Architecture?](https://www.databricks.com/glossary/medallion-architecture)
+* [Snowflake - Understanding Micro-partitions and Automatic Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions)
+* [The Data Warehouse Toolkit (Ralph Kimball) - Fact Table Techniques](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/)
+* [Uber Engineering Blog - Apache Hudi Design for Analytical Data Lakes](https://eng.uber.com/hudi/)

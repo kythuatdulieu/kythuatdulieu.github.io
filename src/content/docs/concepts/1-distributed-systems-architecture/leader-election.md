@@ -33,7 +33,7 @@ Các hệ thống cơ sở hạ tầng chuẩn mực hiện nay (Kubernetes dùn
 ```mermaid
 stateDiagram-v2
     [*] --> Follower
-    Follower --> Candidate : Election Timeout\n(Không nhận được Heartbeat từ Leader]
+    Follower --> Candidate : Election Timeout\n(Không nhận được Heartbeat từ Leader)
     Candidate --> Candidate : Split Vote\n(Hết giờ bầu cử, bắt đầu nhiệm kỳ mới)
     Candidate --> Leader : Nhận được phiếu từ Quorum (Đa số)
     Leader --> Follower : Phát hiện node khác có Term cao hơn
@@ -152,7 +152,7 @@ Bầu chọn Leader trong hệ thống phân tán là một chiến trường kh
 
 ## Nguồn Tham Khảo (References)
 
-* [Designing Data-Intensive Applications - Martin Kleppmann (Chapter 8 & 9]][https://dataintensive.net/]
-* [In Search of an Understandable Consensus Algorithm (Raft Paper]][https://raft.github.io/raft.pdf]
-* [How to do distributed locking - Martin Kleppmann (Phân tích lỗi của thuật toán Redlock]][https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html]
-* [KIP-500: Replace ZooKeeper with a Self-Managed Metadata Quorum (KRaft]](https://cwiki.apache.org/confluence/display/KAFKA/KIP-500%3A+Replace+ZooKeeper+with+a+Self-Managed+Metadata+Quorum)
+* [Designing Data-Intensive Applications - Martin Kleppmann (Chapter 8 & 9)](https://dataintensive.net/)
+* [In Search of an Understandable Consensus Algorithm (Raft Paper)](https://raft.github.io/raft.pdf)
+* [How to do distributed locking - Martin Kleppmann (Phân tích lỗi của thuật toán Redlock)](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)
+* [KIP-500: Replace ZooKeeper with a Self-Managed Metadata Quorum (KRaft)](https://cwiki.apache.org/confluence/display/KAFKA/KIP-500%3A+Replace+ZooKeeper+with+a+Self-Managed+Metadata+Quorum)

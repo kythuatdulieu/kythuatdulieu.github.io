@@ -153,7 +153,7 @@ spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 
 ## Nguồn Tham Khảo [References]
 
-1.  [Databricks Blog: Photon Vectorized Query Engine][https://www.databricks.com/blog/2021/06/17/announcing-photon-public-preview-the-next-generation-query-engine-on-the-databricks-lakehouse-platform.html]
-2.  [Databricks Blog: Liquid Clustering][https://www.databricks.com/blog/2023/10/24/announcing-general-availability-liquid-clustering.html]
-3.  [Unity Catalog Architecture & Security](https://docs.databricks.com/en/data-governance/unity-catalog/index.html]
+1.  [Databricks Blog: Photon Vectorized Query Engine](https://www.databricks.com/blog/2021/06/17/announcing-photon-public-preview-the-next-generation-query-engine-on-the-databricks-lakehouse-platform.html)
+2.  [Databricks Blog: Liquid Clustering](https://www.databricks.com/blog/2023/10/24/announcing-general-availability-liquid-clustering.html)
+3.  [Unity Catalog Architecture & Security](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
 4.  *Designing Data-Intensive Applications* - Martin Kleppmann.

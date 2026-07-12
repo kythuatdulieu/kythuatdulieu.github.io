@@ -46,7 +46,9 @@ Mỗi vùng nhớ do Tungsten kiểm soát được quản lý bởi một **Pag
 ```mermaid
 graph LR
     A["Java Object \n (String, Int)"] -.->|GC Overhead, \n Cache Miss| JVM["JVM Heap Memory"]
-    B["Tungsten UnsafeRow \n (Binary Data)"] ==>|Direct Memory Access, \n No GC| OS["Off-Heap Memory"]
+    B["Tungsten UnsafeRow \n (Binary Data)"] ==>|Direct Memory Access, \n No GC| OS["Off-Heap Memory"]
+
+
 ```
 
 Bằng cách loại bỏ Object Header, một row dữ liệu qua Tungsten nhỏ gọn hơn rất nhiều. Hơn thế nữa, vì dữ liệu nằm ở Off-Heap memory [hoặc được nhúng trong một `byte[]` cực lớn trên Heap], JVM GC hoàn toàn "mù" trước lượng dữ liệu này. Chi phí dọn rác giảm xuống gần bằng 0.
@@ -161,7 +163,7 @@ Thay vì báo lỗi OOM, Tungsten được thiết kế để kích hoạt cơ c
 
 ## 7. Nguồn Tham Khảo (References)
 
-* [Project Tungsten: Bringing Apache Spark Closer to Bare Metal - Databricks Engineering Blog][https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html]
-* [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks][https://www.databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html]
-* [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016 - Stanford & MIT]](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
+* [Project Tungsten: Bringing Apache Spark Closer to Bare Metal - Databricks Engineering Blog](https://www.databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html)
+* [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks](https://www.databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html)
+* [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016 - Stanford & MIT)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
 * Sách *Spark: The Definitive Guide* (Bill Chambers, Matei Zaharia).

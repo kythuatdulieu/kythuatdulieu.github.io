@@ -1,6 +1,13 @@
 ---
 title: "Case Study: Kiến trúc Recommendation tại Netflix"
 description: "Phân tích chuyên sâu (Deep Dive) về kiến trúc Data Engineering, System Design và Machine Learning đứng sau hệ thống gợi ý trị giá tỷ đô của Netflix."
+tags: ["netflix", "recommendation", "architecture"]
+readingTime: "17 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Case Study: Kiến trúc Recommendation tại Netflix"
+metaDescription: "Phân tích chuyên sâu (Deep Dive) về kiến trúc Data Engineering, System Design và Machine Learning đứng sau hệ thống gợi ý trị giá tỷ đô của Netflix."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

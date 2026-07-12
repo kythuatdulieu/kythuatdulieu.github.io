@@ -141,6 +141,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "lake_lifecycle" {
 Để giải quyết tận gốc hạn chế của Data Lake thuần túy [Không có giao dịch ACID, không thể `UPDATE`/`DELETE` dễ dàng, Data Swamp], các Open Table Formats như **Apache Iceberg**, **Delta Lake** đã ra đời. Chúng bổ sung một lớp Transaction Log (Control Plane) nằm giữa S3 và Compute, định hình kỷ nguyên mới mang tên **Data Lakehouse**.
 
 ## Nguồn Tham Khảo (References)
-* [Martin Fowler: Data Lake][https://martinfowler.com/bliki/DataLake.html]
-* [AWS Architecture Blog: Data Lakes and Analytics](https://aws.amazon.com/blogs/architecture/]
+* [Martin Fowler: Data Lake](https://martinfowler.com/bliki/DataLake.html)
+* [AWS Architecture Blog: Data Lakes and Analytics](https://aws.amazon.com/blogs/architecture/)
 * *Designing Data-Intensive Applications* - Martin Kleppmann.

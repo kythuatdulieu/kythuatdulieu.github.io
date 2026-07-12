@@ -77,7 +77,7 @@ graph TD
 ```
 
 - **Ưu điểm tuyệt đối:** 
-  - Tác động I/O lên DB gần như vô hình (do chỉ đọc tuần tự các file log nhị phân].
+  - Tác động I/O lên DB gần như vô hình (do chỉ đọc tuần tự các file log nhị phân).
   - Độ trễ cực thấp (Sub-second latency).
   - Bắt được toàn bộ lịch sử thay đổi của 1 dòng dữ liệu (bao gồm cả Hard Deletes).
 - **Đánh đổi Hệ thống (Trade-off):** Kiến trúc trở nên cực kỳ phức tạp. Đòi hỏi đội ngũ phải có năng lực vận hành hệ thống phân tán (Kafka, ZooKeeper, KRaft) và phải đối mặt với các bài toán Message Delivery Semantics (At-least-once, Exactly-once).
@@ -199,8 +199,8 @@ resource "aws_dms_replication_task" "cdc_to_s3_lake" {
 
 ## Nguồn Tham Khảo (References)
 
-1. [Netflix TechBlog: DBLog - A Watermark Based Change-Data-Capture Framework][https://netflixtechblog.com/dblog-a-generic-change-data-capture-framework-699705b0d00]
-2. [Uber Engineering: Data Mesh and Ingestion at Scale][https://www.uber.com/en-US/blog/architecture-data-mesh/]
+1. [Netflix TechBlog: DBLog - A Watermark Based Change-Data-Capture Framework](https://netflixtechblog.com/dblog-a-generic-change-data-capture-framework-699705b0d00)
+2. [Uber Engineering: Data Mesh and Ingestion at Scale](https://www.uber.com/en-US/blog/architecture-data-mesh/)
 3. Thiết kế Hệ thống Dữ liệu Chuyên sâu (Designing Data-Intensive Applications - Martin Kleppmann) - Phân tích chi tiết về Replication Logs và CDC.
-4. [Airbyte Architecture: Open-source Data Integration Platform][https://airbyte.com/blog]
-5. [Debezium Official Documentation - PostgreSQL Connector](https://debezium.io/documentation/reference/stable/connectors/postgresql.html]
+4. [Airbyte Architecture: Open-source Data Integration Platform](https://airbyte.com/blog)
+5. [Debezium Official Documentation - PostgreSQL Connector](https://debezium.io/documentation/reference/stable/connectors/postgresql.html)

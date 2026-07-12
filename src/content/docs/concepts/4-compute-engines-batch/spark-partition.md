@@ -107,7 +107,7 @@ salted_fact = fact_df.withColumn("join_key_salted", concat(col("store_id"), lit(
 # 2. Bảng nhỏ (Dimension): Tạo Cartesian Product nhân 10 lần các dòng
 dim_df = spark.read.table("store_dim")
 # Tạo mảng [0, 1, ..., 9] và bùng nổ [explode] mỗi cửa hàng thành 10 phiên bản
-salt_array = array(*[lit(i] for i in range(SALT_BINS)])
+salt_array = array(*[lit(i) for i in range(SALT_BINS)])
 dim_exploded = dim_df.withColumn("salt_array", salt_array) \
                      .withColumn("salt", explode("salt_array"))
 salted_dim = dim_exploded.withColumn("join_key_salted", concat(col("store_id"), lit("_"), col("salt")))
@@ -136,6 +136,6 @@ spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes 256m
 ```
 
 ## 6. Nguồn Tham Khảo (References)
-- [Databricks: Adaptive Query Execution: Speeding Up Spark SQL at Runtime][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
-- [AWS Big Data Blog: Best practices for successfully managing memory for Apache Spark applications on Amazon EMR][https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/]
-- [Databricks Documentation: Optimize Skew Join](https://docs.databricks.com/en/optimizations/skew-join.html]
+- [Databricks: Adaptive Query Execution: Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+- [AWS Big Data Blog: Best practices for successfully managing memory for Apache Spark applications on Amazon EMR](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/)
+- [Databricks Documentation: Optimize Skew Join](https://docs.databricks.com/en/optimizations/skew-join.html)

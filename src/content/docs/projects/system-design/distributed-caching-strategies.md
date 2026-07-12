@@ -2,6 +2,12 @@
 title: "Design Pattern: Distributed Caching (Chiến Lược Cache Phân Tán)"
 description: "Cẩm nang chuyên sâu về Distributed Caching trong System Design: Cache-Aside, Write-Through, Write-Behind, xử lý Thundering Herd, Cache Avalanche, Penetration và Consistency."
 tags: ["System Design", "Caching", "Redis", "Architecture", "Data Engineering"]
+readingTime: "21 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Design Pattern: Distributed Caching (Chiến Lược Cache Phân Tán)"
+metaDescription: "Cẩm nang chuyên sâu về Distributed Caching trong System Design: Cache-Aside, Write-Through, Write-Behind, xử lý Thundering Herd, Cache Avalanche, Penetrati"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

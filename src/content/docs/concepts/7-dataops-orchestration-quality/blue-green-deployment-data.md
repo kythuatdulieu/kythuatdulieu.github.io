@@ -26,17 +26,20 @@ Thay vì ghi trực tiếp vào bảng đang phục vụ (Production), luồng d
 ```mermaid
 graph TD
     subgraph WRITE_OP ["1. WRITE (Staging/Green)"]
-        A["Kafka / S3 Raw Data"] -->|Spark / dbt ETL| B["(Uncommitted Snapshot / \n Staging Schema)"]
+        A["Kafka / S3 Raw Data"] -->|Spark / dbt ETL| B["(Uncommitted Snapshot / \n Staging Schema)"]
+
     end
 
     subgraph AUDIT ["2. AUDIT (Validation)"]
         B --> C{"Data Quality Tests \n dbt test / Great Expectations"}
-        C -- Fails --> D["Alert & Halt Pipeline. \n Prod is untouched!"]
+        C -- Fails --> D["Alert & Halt Pipeline. \n Prod is untouched!"]
+
     end
 
     subgraph PUBLISH ["3. PUBLISH (Production/Blue)"]
         C -- Passes --> E["Metadata Swap / \n Branch Merge"]
-        E --> F["(Production Table / View)"]
+        E --> F["(Production Table / View)"]
+
     end
     
     F -.->|Downstream Consumers| G["BI Dashboards / ML Models"]
@@ -149,8 +152,8 @@ Một DAG (Directed Acyclic Graph) tiêu chuẩn trong Airflow/Dagster triển k
 
 ## 5. Nguồn Tham Khảo (References)
 
-- [Netflix TechBlog: "Psyberg" - Data Processing at Netflix][https://netflixtechblog.com/]
-- [Apache Iceberg: Snapshot Isolation & Branching][https://iceberg.apache.org/docs/latest/branching/]
-- [Project Nessie - Git-Like Experience for Data Lakes][https://projectnessie.org/]
-- [DataOps Manifesto][https://dataopsmanifesto.org/]
-- [Zero-Copy Cloning in Snowflake](https://docs.snowflake.com/en/user-guide/object-clone]
+- [Netflix TechBlog: "Psyberg" - Data Processing at Netflix](https://netflixtechblog.com/)
+- [Apache Iceberg: Snapshot Isolation & Branching](https://iceberg.apache.org/docs/latest/branching/)
+- [Project Nessie - Git-Like Experience for Data Lakes](https://projectnessie.org/)
+- [DataOps Manifesto](https://dataopsmanifesto.org/)
+- [Zero-Copy Cloning in Snowflake](https://docs.snowflake.com/en/user-guide/object-clone)

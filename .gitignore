@@ -41,3 +41,11 @@ missing_classification.txt
 # Any other local scratch files
 scratch_*.js
 test_*.js
+
+# Quiz split files
+public/quizzes/*/questions/
+
+# Scratch and temp files
+inspect_output.txt
+examprepper_dp700_pages_1_24.xlsx
+downloaded_images/

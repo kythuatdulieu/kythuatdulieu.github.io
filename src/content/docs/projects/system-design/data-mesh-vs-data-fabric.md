@@ -1,6 +1,13 @@
 ---
 title: "Data Mesh vs Data Fabric: Cuộc Cách Mạng Về Thiết Kế Hệ Thống Dữ Liệu"
 description: "Phân tích chuyên sâu về System Design, kiến trúc, sự khác biệt và cách kết hợp giữa Data Mesh và Data Fabric trong hệ thống dữ liệu quy mô lớn (Large-Scale Data Engineering)."
+tags: ["data", "mesh", "data", "fabric"]
+readingTime: "18 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Data Mesh vs Data Fabric: Cuộc Cách Mạng Về Thiết Kế Hệ Thống Dữ Liệu"
+metaDescription: "Phân tích chuyên sâu về System Design, kiến trúc, sự khác biệt và cách kết hợp giữa Data Mesh và Data Fabric trong hệ thống dữ liệu quy mô lớn (Large-Scale"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

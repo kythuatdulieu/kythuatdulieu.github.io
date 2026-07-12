@@ -148,8 +148,8 @@ Hãy sử dụng mô hình **CQRS (Command Query Responsibility Segregation)** k
 
 ## Nguồn Tham Khảo (References)
 
-1. **Daniel Abadi (Original Blog):** [Problems with CAP, and Yahoo’s little known NoSQL system][http://dbmsmusings.blogspot.com/]
-2. **SOSP 2007 Paper:** [Dynamo: Amazon's Highly Available Key-value Store][https://www.allthingsdistributed.com/] - Bài báo định hình toàn bộ tư duy về PA/EL.
-3. **OSDI 2012 Paper:** [Spanner: Google’s Globally-Distributed Database][https://static.googleusercontent.com/] - Kỳ quan của kiến trúc PC/EC.
-4. **Apache Cassandra Docs:** [Architecture and Tunable Consistency](https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#tunable-consistency]
+1. **Daniel Abadi (Original Blog):** [Problems with CAP, and Yahoo’s little known NoSQL system](http://dbmsmusings.blogspot.com/)
+2. **SOSP 2007 Paper:** [Dynamo: Amazon's Highly Available Key-value Store](https://www.allthingsdistributed.com/) - Bài báo định hình toàn bộ tư duy về PA/EL.
+3. **OSDI 2012 Paper:** [Spanner: Google’s Globally-Distributed Database](https://static.googleusercontent.com/) - Kỳ quan của kiến trúc PC/EC.
+4. **Apache Cassandra Docs:** [Architecture and Tunable Consistency](https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#tunable-consistency)
 5. **Martin Kleppmann:** Sách *Designing Data-Intensive Applications* (O'Reilly).

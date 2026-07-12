@@ -192,8 +192,8 @@ Là một Staff Engineer, giá trị của bạn nằm ở việc thấu hiểu 
 
 ## 7. Nguồn Tham Khảo (References)
 
-1. **Databricks Blog:** [What is a Medallion Architecture?][https://www.databricks.com/glossary/medallion-architecture]
-2. **Netflix TechBlog**: [Data Mesh - A Data Movement and Processing Platform][https://netflixtechblog.com/]
-3. **Uber Engineering**: [Hudi: Uber's Open Source Data Lake][https://eng.uber.com/hoodie/] 
+1. **Databricks Blog:** [What is a Medallion Architecture?](https://www.databricks.com/glossary/medallion-architecture)
+2. **Netflix TechBlog**: [Data Mesh - A Data Movement and Processing Platform](https://netflixtechblog.com/)
+3. **Uber Engineering**: [Hudi: Uber's Open Source Data Lake](https://eng.uber.com/hoodie/) 
 4. **Designing Data-Intensive Applications** - Martin Kleppmann (O'Reilly). Phân tích chuyên sâu về Lambda vs Kappa.
-5. **AWS Well-Architected Framework**: [Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html]. Hướng dẫn vận hành và bảo mật dữ liệu cấp độ đám mây.
+5. **AWS Well-Architected Framework**: [Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html). Hướng dẫn vận hành và bảo mật dữ liệu cấp độ đám mây.

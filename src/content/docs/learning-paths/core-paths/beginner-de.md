@@ -1,6 +1,13 @@
 ---
 title: "Beginner Data Engineer (Kỹ sư dữ liệu nhập môn)"
 description: "Lộ trình nền tảng cho người mới bắt đầu Data Engineering: SQL, Python, Git, cơ sở dữ liệu và pipeline đầu tiên."
+tags: ["beginner", "sql", "python", "git", "learning-path"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Beginner Data Engineer: SQL, Python, Git và pipeline đầu tiên"
+metaDescription: "Lộ trình nền tảng cho người mới bắt đầu Data Engineering: SQL, Python, Git, cơ sở dữ liệu và pipeline đầu tiên."
+difficulty: "Beginner"
+domains: ["DE"]
 sidebar:
   order: 1
 next:
@@ -100,7 +107,16 @@ Yêu cầu tối thiểu:
 5. Đặt lịch bằng cron hoặc Task Scheduler.
 6. Viết README: input, output, cách chạy, cách kiểm tra.
 
-Đừng bỏ qua phần chạy lại. Hãy thử chạy cùng một ngày hai lần và đảm bảo kết quả không bị nhân đôi.
+Đừng bỏ qua phần chạy lại. Hãy thử chạy cùng một ngày hai lần và đảm bảo kết quả không bị nhân đôi. Kỹ thuật đơn giản nhất là dùng `ON CONFLICT` (upsert) theo khóa tự nhiên:
+
+```sql
+INSERT INTO weather_observations (city, observed_at, temp_c, humidity)
+VALUES (%(city)s, %(observed_at)s, %(temp_c)s, %(humidity)s)
+ON CONFLICT (city, observed_at)     -- khóa tự nhiên: 1 thành phố, 1 thời điểm
+DO UPDATE SET temp_c = EXCLUDED.temp_c, humidity = EXCLUDED.humidity;
+```
+
+Chạy 1 lần hay 10 lần, bảng vẫn đúng — đó là [idempotency](/concepts/2-data-ingestion-integration/idempotency/), khái niệm mà mọi vòng phỏng vấn Data Engineer đều hỏi theo cách nào đó.
 
 ## Checklist đọc concept
 

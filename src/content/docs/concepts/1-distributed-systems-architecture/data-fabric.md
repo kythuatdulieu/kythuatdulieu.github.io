@@ -52,7 +52,7 @@ graph TD
 ```
 
 ### 1.1. Control Plane: Active Metadata & Knowledge Graph
-Trái tim của Data Fabric là một **Knowledge Graph** (ví dụ: Neo4j, TigerGraph] kết nối Technical Metadata (Schema, Data Types), Business Metadata (Glossary, Ownership), và Operational Metadata (Query logs, Data Lineage).
+Trái tim của Data Fabric là một **Knowledge Graph** (ví dụ: Neo4j, TigerGraph) kết nối Technical Metadata (Schema, Data Types), Business Metadata (Glossary, Ownership), và Operational Metadata (Query logs, Data Lineage).
 
 Điều làm nên sự khác biệt là chữ **Active** (Chủ động). Các Data Catalog truyền thống (như Amundsen) chỉ thụ động chờ người dùng vào tra cứu. *Active Metadata* liên tục thu thập logs từ Query Engine, dùng Machine Learning (AI) phân tích hành vi, và *tự động* thực thi hành động (Active Data Engineering).
 
@@ -166,6 +166,6 @@ Dưới góc nhìn của một Staff Data Engineer, xây dựng Data Fabric khô
 Data Fabric rất tuyệt vời trong việc xóa nhòa ranh giới vật lý, nhưng hãy luôn cảnh giác với hóa đơn Network I/O ẩn đằng sau những câu truy vấn "Ảo hóa" tưởng chừng như vô hại của người dùng.
 
 ## Nguồn Tham Khảo [References]
-* [Trino: The Definitive Guide - O'Reilly][https://www.oreilly.com/library/view/trino-the-definitive/9781098107703/]
-* [Gartner: What Is a Data Fabric Design?][https://www.gartner.com/smarterwithgartner/data-fabric-architecture-is-key-to-modernizing-data-management-and-integration]
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/]
+* [Trino: The Definitive Guide - O'Reilly](https://www.oreilly.com/library/view/trino-the-definitive/9781098107703/)
+* [Gartner: What Is a Data Fabric Design?](https://www.gartner.com/smarterwithgartner/data-fabric-architecture-is-key-to-modernizing-data-management-and-integration)
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)

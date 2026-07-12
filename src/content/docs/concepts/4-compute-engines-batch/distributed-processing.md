@@ -65,7 +65,7 @@ graph TD
     end
 ```
 
-### 3.1. Map Phase (Narrow Transformations]
+### 3.1. Map Phase (Narrow Transformations)
 Các thao tác xử lý không yêu cầu trao đổi trạng thái mạng (`SELECT`, `WHERE`, `CAST`, `REGEX`). Quá trình này diễn ra song song hoàn toàn (Embarrassingly parallel). Executor đọc trực tiếp data blocks từ HDFS/S3 và tính toán ngay tại chỗ. Băng thông mạng không bị ảnh hưởng.
 
 ### 3.2. Shuffle Phase (Cơn ác mộng phân tán)
@@ -147,7 +147,7 @@ resource "aws_emr_cluster" "data_cluster" {
 
 ## Nguồn Tham Khảo
 
-*   [MapReduce: Simplified Data Processing on Large Clusters [Google Whitepaper 2004]][https://research.google.com/archive/mapreduce.html]
-*   [Resilient Distributed Datasets: A Fault-Tolerant Abstraction for In-Memory Cluster Computing (NSDI 2012]][https://cs.stanford.edu/~matei/papers/2012/nsdi_spark.pdf]
-*   [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog]](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+*   [MapReduce: Simplified Data Processing on Large Clusters (Google Whitepaper 2004)](https://research.google.com/archive/mapreduce.html)
+*   [Resilient Distributed Datasets: A Fault-Tolerant Abstraction for In-Memory Cluster Computing (NSDI 2012)](https://cs.stanford.edu/~matei/papers/2012/nsdi_spark.pdf)
+*   [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog)](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
 *   *Designing Data-Intensive Applications* - Chapter 10: Batch Processing, Martin Kleppmann.

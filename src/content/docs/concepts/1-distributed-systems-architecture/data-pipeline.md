@@ -54,7 +54,11 @@ graph TD
         
         Worker1 -->|Write I/O| S3_Clean
         Worker2 -->|Write I/O| S3_Clean
-    end
+    end
+
+
+
+
 ```
 
 ---
@@ -191,7 +195,7 @@ with DAG(
 
 ## 6. Nguồn Tham Khảo [References]
 
-1. **Uber Engineering Blog:** [Architecting Data Pipelines at Uber Scale][https://www.uber.com/blog/architecting-data-pipelines-uber-scale/] - Bài học về việc mở rộng theo chiều ngang cho hàng Petabyte dữ liệu bằng Kafka và Apache Hudi.
-2. **Netflix Tech Blog:** [Data Pipeline Evolution at Netflix][https://netflixtechblog.com/] - Hành trình chuyển đổi hệ thống xử lý phân tán từ Batch sang Streaming.
-3. **Jay Kreps:** [The Log: What every software engineer should know about real-time data's unifying abstraction](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying] - Bài viết huyền thoại về nền tảng tư duy Streaming.
+1. **Uber Engineering Blog:** [Architecting Data Pipelines at Uber Scale](https://www.uber.com/blog/architecting-data-pipelines-uber-scale/) - Bài học về việc mở rộng theo chiều ngang cho hàng Petabyte dữ liệu bằng Kafka và Apache Hudi.
+2. **Netflix Tech Blog:** [Data Pipeline Evolution at Netflix](https://netflixtechblog.com/) - Hành trình chuyển đổi hệ thống xử lý phân tán từ Batch sang Streaming.
+3. **Jay Kreps:** [The Log: What every software engineer should know about real-time data's unifying abstraction](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying) - Bài viết huyền thoại về nền tảng tư duy Streaming.
 4. **Designing Data-Intensive Applications (DDIA)** của Martin Kleppmann - "Kinh thánh" cho System Design và Hệ thống Phân tán (Replication, Partitioning, Consistency, Idempotency).

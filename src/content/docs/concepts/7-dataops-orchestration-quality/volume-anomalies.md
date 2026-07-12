@@ -66,7 +66,9 @@ graph TD
         ML -->|Alert| PagerDuty("PagerDuty / Slack")
         ML -->|Trigger| CB{"Circuit Breaker"}
         CB -->|Kill Job| DWH
-    end
+    end
+
+
 ```
 
 ---
@@ -144,8 +146,8 @@ Trong kiến trúc Data Lakehouse (Delta Lake / Apache Iceberg), một Volume Sp
 
 ## Nguồn Tham Khảo (References)
 
-1. [Databricks: Implementing Data Observability at Scale][https://www.databricks.com/blog/2021/09/23/data-observability-with-databricks.html]
-2. [Uber Engineering: Real-Time Data Pipeline Observability][https://www.uber.com/en-VN/blog/real-time-data-pipeline-observability/]
+1. [Databricks: Implementing Data Observability at Scale](https://www.databricks.com/blog/2021/09/23/data-observability-with-databricks.html)
+2. [Uber Engineering: Real-Time Data Pipeline Observability](https://www.uber.com/en-VN/blog/real-time-data-pipeline-observability/)
 3. *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing & Backpressure).
-4. [Monte Carlo: The 5 Pillars of Data Observability][https://www.montecarlodata.com/blog-what-is-data-observability/]
-5. [dbt-expectations Documentation](https://github.com/calogica/dbt-expectations]
+4. [Monte Carlo: The 5 Pillars of Data Observability](https://www.montecarlodata.com/blog-what-is-data-observability/)
+5. [dbt-expectations Documentation](https://github.com/calogica/dbt-expectations)

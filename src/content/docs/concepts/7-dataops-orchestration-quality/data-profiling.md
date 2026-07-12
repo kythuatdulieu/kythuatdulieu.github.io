@@ -60,7 +60,10 @@ graph TD
     end
     
     F --> G
-    F -.->|4. Circuit Breaker| H
+    F -.->|4. Circuit Breaker| H
+
+
+
 ```
 
 ### In-line vs. Out-of-band Profiling
@@ -152,7 +155,7 @@ Data Profiling không bao giờ là một bản báo cáo tĩnh [Static PDF] n�
 
 ## Nguồn Tham Khảo (References)
 
-1. **Monte Carlo Data:** [Data Profiling vs Data Observability: What's the Difference?][https://www.montecarlodata.com/]
-2. **AWS Big Data Blog:** [Test data quality at scale with Amazon Deequ][https://aws.amazon.com/blogs/big-data/test-data-quality-at-scale-with-deequ/]
-3. **Databricks:** [Delta Live Tables Data Quality and Expectations](https://docs.databricks.com/en/delta-live-tables/expectations.html]
+1. **Monte Carlo Data:** [Data Profiling vs Data Observability: What's the Difference?](https://www.montecarlodata.com/)
+2. **AWS Big Data Blog:** [Test data quality at scale with Amazon Deequ](https://aws.amazon.com/blogs/big-data/test-data-quality-at-scale-with-deequ/)
+3. **Databricks:** [Delta Live Tables Data Quality and Expectations](https://docs.databricks.com/en/delta-live-tables/expectations.html)
 4. Sách: *Designing Data-Intensive Applications* - Martin Kleppmann.

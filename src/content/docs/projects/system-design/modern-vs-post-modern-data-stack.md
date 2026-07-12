@@ -1,6 +1,13 @@
 ---
 title: "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
 description: "Khám phá sự tiến hóa từ Modern Data Stack (MDS) sang Post-Modern Data Stack, những điểm nghẽn kỹ thuật, chi phí, và các công nghệ đột phá như Open Table Formats (Iceberg), DuckDB, Data Contracts, và Lakehouse Architecture."
+tags: ["modern", "post", "modern", "data", "stack"]
+readingTime: "18 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Modern Data Stack vs Post-Modern Data Stack: Sự Chuyển Dịch Kiến Trúc Dữ Liệu Chuyên Sâu"
+metaDescription: "Khám phá sự tiến hóa từ Modern Data Stack (MDS) sang Post-Modern Data Stack, những điểm nghẽn kỹ thuật, chi phí, và các công nghệ đột phá như Open Table Fo"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

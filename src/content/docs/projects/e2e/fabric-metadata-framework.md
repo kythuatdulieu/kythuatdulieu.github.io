@@ -1,6 +1,14 @@
 ---
 title: "Fabric Metadata-Driven Framework (FMD): Tự Động Hóa Pipeline Trong Microsoft Fabric"
 description: "Khám phá Fabric Metadata-Driven Framework (FMD) - một giải pháp giúp tự động hóa và tiêu chuẩn hóa các luồng dữ liệu (Data Pipeline) theo hướng siêu dữ liệu (Metadata-Driven) trên nền tảng Microsoft Fabric."
+difficulty: "Intermediate"
+tags: ["microsoft-fabric", "metadata-driven", "medallion", "data-mesh", "orchestration", "delta-lake", "e2e-project"]
+readingTime: "15 mins"
+lastUpdated: 2026-07-11
+seoTitle: "FMD Framework: Pipeline Metadata-Driven trên Microsoft Fabric"
+metaDescription: "Phân tích Fabric Metadata-Driven Framework: bảng metadata điều khiển pipeline động, parameterized notebook, medallion architecture và triển khai Data Mesh theo Business Domain."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 # Fabric Metadata-Driven Framework (FMD)
@@ -42,6 +50,21 @@ Trái tim của hệ thống là một cơ sở dữ liệu (Fabric SQL Database
 - Các luật làm sạch và biến đổi dữ liệu (Cleansing Rules).
 - Tình trạng xử lý của từng thực thể (Load Statuses).
 
+Để hình dung cụ thể, việc onboard một bảng mới chỉ là một dòng INSERT vào bảng cấu hình — không viết pipeline nào cả:
+
+```sql
+INSERT INTO meta.entity_config
+  (source_system, source_schema, source_table, load_type,
+   watermark_column, target_lakehouse, is_active)
+VALUES
+  ('SQL_ERP', 'dbo', 'SalesOrders', 'INCREMENTAL',
+   'ModifiedDate', 'LH_Bronze_Sales', 1);
+```
+
+Lúc runtime, pipeline "khung" duy nhất thực hiện vòng lặp: `Lookup` đọc danh sách entity đang active → `ForEach` chạy song song (batch count cấu hình được) → mỗi vòng gọi `Copy Activity` với connection string, câu query watermark và đường dẫn đích đều được sinh động từ metadata. Mẫu watermark tăng dần (`WHERE ModifiedDate > @last_watermark`) chính là [Incremental Load](/concepts/2-data-ingestion-integration/incremental-load/) kinh điển — framework chỉ chuẩn hóa nó thành cấu hình.
+
+**Trade-off của metadata-driven:** cực mạnh khi có hàng trăm nguồn cùng mẫu (bảng SQL, file CSV), nhưng debug khó hơn pipeline viết tay — lỗi nằm trong dữ liệu cấu hình chứ không trong code, và các nguồn "dị dạng" (API phân trang phức tạp, schema thay đổi liên tục) vẫn phải viết notebook riêng. Quy tắc thực dụng: 80% nguồn chuẩn đi qua framework, 20% đặc thù viết tay, đừng cố nhét tất cả vào metadata.
+
 ![Metadata Overview](/images/projects/e2e/fabric-metadata-framework/b0fd2128.png)
 *Hình 2: Cấu trúc các bảng Metadata điều khiển toàn bộ luồng chạy của hệ thống*
 
@@ -52,8 +75,24 @@ FMD tích hợp chặt chẽ với kiến trúc huy chương của Microsoft Fab
 *Hình 3: Thiết kế Data Lakehouse tuân theo kiến trúc Medallion (Landing -> Bronze -> Silver -> Gold)*
 
 *   **Landing Zone / Bronze Layer:** Nơi dữ liệu thô (Raw) được kéo vào hệ thống một cách tự động thông qua các Copy Data Activities động, hỗ trợ đa dạng nguồn dữ liệu.
-*   **Silver Layer:** Sử dụng Fabric Notebooks (PySpark) được tham số hóa (Parameterized Notebooks) để chạy các rule làm sạch (Data Cleansing), khử trùng lặp và ghi dữ liệu thành định dạng Delta Lake chuẩn hóa.
-*   **Gold Layer:** Tạo các mô hình dữ liệu (Data Model) phục vụ sẵn sàng cho việc báo cáo qua PowerBI.
+*   **Silver Layer:** Sử dụng Fabric Notebooks (PySpark) được tham số hóa (Parameterized Notebooks) để chạy các rule làm sạch (Data Cleansing), khử trùng lặp và ghi dữ liệu thành định dạng [Delta Lake](/concepts/3-storage-engines-formats/delta-lake/) chuẩn hóa.
+*   **Gold Layer:** Tạo các mô hình dữ liệu (Data Model) phục vụ sẵn sàng cho việc báo cáo qua PowerBI — thường theo [Star Schema](/concepts/6-data-modeling-transformation/star-schema/), và tận dụng chế độ **Direct Lake** của Fabric: PowerBI đọc thẳng file Delta trong OneLake không cần import, đổi lại phải giữ bảng Gold được compaction tốt (`OPTIMIZE`) vì Direct Lake nhạy với small files.
+
+Một notebook Silver tham số hóa nhận cấu hình từ metadata trông như sau:
+
+```python
+# Parameters cell - Fabric truyền giá trị từ bảng meta.entity_config
+entity, cleansing_rules = "SalesOrders", ["trim_strings", "dedupe:order_id"]
+
+df = spark.read.format("delta").load(f"Tables/bronze_{entity}")
+for rule in cleansing_rules:
+    df = apply_rule(df, rule)          # rule engine dùng chung toàn framework
+(df.write.format("delta").mode("overwrite")
+   .option("mergeSchema", "true")      # schema evolution có kiểm soát
+   .save(f"Tables/silver_{entity}"))
+```
+
+Cùng một notebook phục vụ mọi entity — thêm nguồn mới không sinh thêm code phải bảo trì, chỉ sinh thêm một dòng metadata. So sánh với cách tiếp cận asset-based của Dagster trong bài [Software-Defined Assets](/concepts/7-dataops-orchestration-quality/software-defined-assets/).
 
 ### 2.3. Điều Phối Bằng Taskflow
 Thay vì dùng các hệ thống orchestration bên ngoài, FMD tận dụng sức mạnh điều phối ngay bên trong Fabric thông qua **Taskflow**. 
@@ -69,7 +108,7 @@ Nó hỗ trợ kích hoạt tuần tự (Sequential) hoặc song song (Parallel)
 
 Một tính năng cực kỳ mạnh mẽ của FMD là khả năng phân bổ theo **Business Domains**. FMD đã bổ sung tính năng *Business Domain Deployment*, giúp thiết lập một kiến trúc dạng **Data Mesh**.
 
-Cụ thể, FMD cung cấp module giúp tự động hóa quá trình sinh ra các Workspace riêng biệt trên Microsoft Fabric cho từng phòng ban (ví dụ: Sales, HR, Marketing). Mỗi Domain sẽ tự sở hữu hạ tầng Lakehouse của mình, tự quản lý dữ liệu đặc thù nhưng toàn bộ tiến trình vẫn tuân thủ theo các siêu dữ liệu quản trị tập trung (Centralized Governance).
+Cụ thể, FMD cung cấp module giúp tự động hóa quá trình sinh ra các Workspace riêng biệt trên Microsoft Fabric cho từng phòng ban (ví dụ: Sales, HR, Marketing). Mỗi Domain sẽ tự sở hữu hạ tầng Lakehouse của mình, tự quản lý dữ liệu đặc thù nhưng toàn bộ tiến trình vẫn tuân thủ theo các siêu dữ liệu quản trị tập trung (Centralized Governance) — đúng nguyên tắc "federated computational governance" của [Data Mesh](/concepts/1-distributed-systems-architecture/data-mesh/): phân quyền sở hữu dữ liệu nhưng chuẩn hóa cách vận hành.
 
 ![Workspace Overview](/images/projects/e2e/fabric-metadata-framework/a15e905e.png)
 *Hình 5: Chiến lược phân tách Workspaces giữa Admin (quản trị tập trung) và các Domain nghiệp vụ*
@@ -96,3 +135,12 @@ Nếu doanh nghiệp của bạn đang bắt đầu hành trình chuyển đổi
 - Triển khai mô hình phân quyền dữ liệu theo Data Mesh / Domains.
 
 > Khám phá cách cấu hình và triển khai chi tiết trên [Wiki của dự án FMD Framework gốc](https://github.com/edkreuk/FMD_FRAMEWORK/wiki).
+
+## Nguồn Tham Khảo
+
+- [FMD Framework - Erwin de Kreuk](https://github.com/edkreuk/FMD_FRAMEWORK) - Repo gốc của framework.
+- [Microsoft Fabric Documentation](https://learn.microsoft.com/en-us/fabric/) - Microsoft Learn.
+- [Data Factory in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-factory/) - Microsoft Learn.
+- [Direct Lake in Power BI](https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview) - Microsoft Learn.
+- [Medallion Architecture in Fabric](https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture) - Microsoft Learn.
+- [Data Mesh Principles and Logical Architecture - Zhamak Dehghani](https://martinfowler.com/articles/data-mesh-principles.html) - MartinFowler.com.

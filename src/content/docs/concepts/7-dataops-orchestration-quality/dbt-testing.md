@@ -163,8 +163,8 @@ Lệnh `dbt build` chạy xen kẽ (Run Model A -> Test Model A -> Run Model B).
 ---
 
 ## Nguồn Tham Khảo (References)
-- [Uber Engineering: Data Quality Monitor][https://www.uber.com/en-VN/blog/data-quality-monitor/]
-- [dbt Documentation: Unit testing][https://docs.getdbt.com/docs/build/unit-tests]
-- [dbt Packages: dbt_expectations][https://hub.getdbt.com/calogica/dbt_expectations/latest/]
-- [Great Expectations vs dbt Tests][https://greatexpectations.io/blog/]
-- [DataOps Manifesto](https://dataopsmanifesto.org/]
+- [Uber Engineering: Data Quality Monitor](https://www.uber.com/en-VN/blog/data-quality-monitor/)
+- [dbt Documentation: Unit testing](https://docs.getdbt.com/docs/build/unit-tests)
+- [dbt Packages: dbt_expectations](https://hub.getdbt.com/calogica/dbt_expectations/latest/)
+- [Great Expectations vs dbt Tests](https://greatexpectations.io/blog/)
+- [DataOps Manifesto](https://dataopsmanifesto.org/)

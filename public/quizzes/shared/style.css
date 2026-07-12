@@ -1648,3 +1648,27 @@ button {
   color: var(--sl-color-white);
   text-decoration: none;
 }
+
+.btn-show-answer {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+  font-family: inherit;
+}
+.btn-show-answer:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+}
+.btn-show-answer:active {
+  transform: translateY(0);
+}

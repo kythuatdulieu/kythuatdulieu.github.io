@@ -152,8 +152,8 @@ Tính toán Data Drift trên Big Data là một bài toán **cực kỳ tốn CP
 
 ## 6. Nguồn Tham Khảo
 
-1. **Evidently AI Blog:** [Data Drift Metrics: PSI, KL Divergence, and more][https://www.evidentlyai.com/blog]
+1. **Evidently AI Blog:** [Data Drift Metrics: PSI, KL Divergence, and more](https://www.evidentlyai.com/blog)
 2. **AWS Architecture Blog:** *Detecting data drift using Amazon SageMaker Clarify*.
 3. **Databricks Lakehouse Monitoring:** *Monitor data and AI assets* (Tích hợp Delta Catalog và Metrics Store).
 4. *Designing Machine Learning Systems* - Chip Huyen (O'Reilly). Chương 8: Data Distribution Shifts.
-5. Bài viết chuyên sâu về Toán học của Drift: [Understanding Population Stability Index (PSI]](https://mwouts.github.io/itables/)
+5. Bài viết chuyên sâu về Toán học của Drift: [Understanding Population Stability Index (PSI)](https://mwouts.github.io/itables/)

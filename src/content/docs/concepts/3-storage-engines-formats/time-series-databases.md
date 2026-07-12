@@ -103,7 +103,8 @@ flowchart TD
     A --> D["Mark 2 (Time: 10:10)"]
     
     B -->|Disk Pointer| E["Granule 0: Row 1-8192 (Nén lốm đốm)"]
-    C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
+    C -->|Disk Pointer| F["Granule 1: Row 8193-16384"]
+
 ```
 
 **Trade-offs [Chất dứt điểm High Cardinality]:**
@@ -123,8 +124,8 @@ Dành cho System Design Interview hoặc chọn Stack:
 
 ## Nguồn Tham Khảo (References)
 
-1. **Facebook Whitepaper:** [Gorilla: A Fast, Scalable, In-Memory Time Series Database (VLDB 2015]][https://www.vldb.org/pvldb/vol8/p1816-teller.pdf]
-2. **Netflix Tech Blog:** [Atlas: Netflix's Primary Telemetry Platform][https://netflixtechblog.com/]
-3. **InfluxData Docs:** [InfluxDB Storage Engine (TSM & TSI]][https://docs.influxdata.com/influxdb/v1.8/concepts/storage_engine/]
-4. **Timescale Docs:** [Hypertables and Chunks Architecture][https://docs.timescale.com/use-timescale/latest/hypertables/]
-5. **ClickHouse Docs:** [Sparse Primary Indexes and Data Skipping](https://clickhouse.com/docs/en/optimize/sparse-primary-indexes]
+1. **Facebook Whitepaper:** [Gorilla: A Fast, Scalable, In-Memory Time Series Database (VLDB 2015)](https://www.vldb.org/pvldb/vol8/p1816-teller.pdf)
+2. **Netflix Tech Blog:** [Atlas: Netflix's Primary Telemetry Platform](https://netflixtechblog.com/)
+3. **InfluxData Docs:** [InfluxDB Storage Engine (TSM & TSI)](https://docs.influxdata.com/influxdb/v1.8/concepts/storage_engine/)
+4. **Timescale Docs:** [Hypertables and Chunks Architecture](https://docs.timescale.com/use-timescale/latest/hypertables/)
+5. **ClickHouse Docs:** [Sparse Primary Indexes and Data Skipping](https://clickhouse.com/docs/en/optimize/sparse-primary-indexes)

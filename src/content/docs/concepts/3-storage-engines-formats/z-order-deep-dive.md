@@ -53,7 +53,9 @@ graph TD
     A["File 1: Min(0,0), Max(1,1)"] --> B["File 2: Min(2,0), Max(3,1)"]
     B --> C["File 3: Min(0,2), Max(1,3)"]
     C --> D["File 4: Min(2,2), Max(3,3)"]
-    end
+    end
+
+
 ```
 
 **Kết quả Kiến trúc (Architectural Outcome):** 
@@ -141,7 +143,7 @@ ALTER TABLE user_events SET TBLPROPERTIES (
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Databricks Blog: Processing Petabytes of Data with Databricks Delta (Z-Ordering]][https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-with-databricks-delta.html]
-* [Delta Lake Official Documentation: Data Skipping and Z-Ordering][https://docs.delta.io/latest/optimizations-oss.html#z-ordering-multi-dimensional-clustering]
-* [Wikipedia: Z-order curve (Morton space-filling curve]][https://en.wikipedia.org/wiki/Z-order_curve]
-* [Databricks: Liquid Clustering and Hilbert Curve](https://docs.databricks.com/en/delta/clustering.html]
+* [Databricks Blog: Processing Petabytes of Data with Databricks Delta (Z-Ordering)](https://www.databricks.com/blog/2018/07/31/processing-petabytes-of-data-with-databricks-delta.html)
+* [Delta Lake Official Documentation: Data Skipping and Z-Ordering](https://docs.delta.io/latest/optimizations-oss.html#z-ordering-multi-dimensional-clustering)
+* [Wikipedia: Z-order curve (Morton space-filling curve)](https://en.wikipedia.org/wiki/Z-order_curve)
+* [Databricks: Liquid Clustering and Hilbert Curve](https://docs.databricks.com/en/delta/clustering.html)

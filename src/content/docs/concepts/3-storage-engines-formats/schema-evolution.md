@@ -68,7 +68,9 @@ graph TD
     L1 -.-> F2
     L2 -.-> F1
     L2 -.-> F2
-    L3 -.-> F2
+    L3 -.-> F2
+
+
 ```
 
 **Cơ chế hoạt động ở tầng vật lý:**
@@ -156,7 +158,7 @@ Dù Engine hỗ trợ đọc gộp, nhưng I/O Efficiency giảm sút. CPU phả
 ---
 
 ## Nguồn Tham Khảo
-1. **Apache Iceberg Documentation:** [Schema Evolution in Iceberg][https://iceberg.apache.org/docs/latest/evolution/] (Giải thích cơ chế Unique Column ID).
-2. **Databricks Blog:** [Merge with Schema Evolution](https://docs.databricks.com/en/delta/update-schema.html] (Cú pháp SQL `MERGE WITH SCHEMA EVOLUTION`).
+1. **Apache Iceberg Documentation:** [Schema Evolution in Iceberg](https://iceberg.apache.org/docs/latest/evolution/) (Giải thích cơ chế Unique Column ID).
+2. **Databricks Blog:** [Merge with Schema Evolution](https://docs.databricks.com/en/delta/update-schema.html) (Cú pháp SQL `MERGE WITH SCHEMA EVOLUTION`).
 3. **Designing Data-Intensive Applications:** Martin Kleppmann (Chapter 4: Encoding and Evolution). Phân tích nền tảng về Forward/Backward Compatibility của Avro/Protobuf.
 4. **Confluent Schema Registry:** Best practices chặn rác từ lớp Kafka Streaming bằng Compatibility Rules.

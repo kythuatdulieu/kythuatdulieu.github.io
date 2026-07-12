@@ -45,7 +45,10 @@ graph TD
     D -->|Cắt bỏ đuôi dài| E{"Top-P (Nucleus)"}
     E -->|Cắt theo độ tự tự tin| F{"Min-P"}
     F --> G["Stochastic Sampling"]
-    G --> H["Output Token"]
+    G --> H["Output Token"]
+
+
+
 ```
 
 - **Top-K:** Cắt gọt cứng (Hard cutoff). Chỉ giữ lại K token có xác suất cao nhất. Tránh việc LLM chọn các token hoàn toàn vô nghĩa (vốn đã bị Temperature cao khuếch đại).
@@ -139,6 +142,6 @@ $\rightarrow$ Hàm `json.loads()` văng `JSONDecodeError`. Dagster/Airflow job t
 Hãy luôn coi Temperature không phải là một "thanh trượt cảm xúc", mà là một **van điều áp [Pressure Valve]** kiểm soát dòng chảy xác suất của Hệ thống Phân tán.
 
 ## Nguồn Tham Khảo
-1.  [vLLM Documentation: Sampling Parameters][https://docs.vllm.ai/en/latest/dev/sampling_params.html]
-2.  [Llama 3 Paper (Meta]: Decoding strategies and kernel nondeterminism][https://ai.meta.com/research/publications/llama-3/]
+1.  [vLLM Documentation: Sampling Parameters](https://docs.vllm.ai/en/latest/dev/sampling_params.html)
+2.  [Llama 3 Paper (Meta): Decoding strategies and kernel nondeterminism](https://ai.meta.com/research/publications/llama-3/)
 3.  [The Illustrated Word2vec and Text Generation - Jay Alammar](https://jalammar.github.io/)

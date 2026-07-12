@@ -161,7 +161,7 @@ Kiến trúc chuẩn mực (Enterprise Best Practice) hiện nay là một mô h
 ## Nguồn Tham Khảo (References)
 
 * Thiết kế Hệ thống Dữ liệu Chuyên sâu (Designing Data-Intensive Applications) - Martin Kleppmann (Chương phân tích Column-Oriented Storage).
-* [The Data Warehouse Toolkit - Ralph Kimball Group][https://www.kimballgroup.com/]
-* [Databricks: Data Modeling for the Lakehouse][https://www.databricks.com/discover/data-lakes/data-modeling]
-* [Fivetran: Star Schema vs. OBT][https://fivetran.com/blog/star-schema-vs-obt]
-* [BigQuery Architecture and Nested Data (Google Cloud Blog]](https://cloud.google.com/blog/products/data-analytics/)
+* [The Data Warehouse Toolkit - Ralph Kimball Group](https://www.kimballgroup.com/)
+* [Databricks: Data Modeling for the Lakehouse](https://www.databricks.com/discover/data-lakes/data-modeling)
+* [Fivetran: Star Schema vs. OBT](https://fivetran.com/blog/star-schema-vs-obt)
+* [BigQuery Architecture and Nested Data (Google Cloud Blog)](https://cloud.google.com/blog/products/data-analytics/)

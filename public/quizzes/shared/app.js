@@ -98,6 +98,7 @@
                 showVietnamese,
                 shuffleMode,
                 questionOrder: shuffleMode ? questionOrder : null,
+                currentIndex,
             };
             localStorage.setItem(STATE_KEY, JSON.stringify(state));
         } catch (e) { /* ignore */ }
@@ -115,6 +116,9 @@
             filterMode = 'all';
             if (state.questionOrder && shuffleMode) {
                 questionOrder = state.questionOrder;
+            }
+            if (state.currentIndex !== undefined) {
+                currentIndex = state.currentIndex;
             }
         } catch (e) { /* ignore */ }
     }
@@ -340,6 +344,61 @@
         });
     }
 
+    function renderQuestionText(element, text, imagesStr) {
+        element.replaceChildren();
+        if (!text) return;
+        
+        let images = [];
+        if (imagesStr) {
+            images = imagesStr.split(/[\n,]/).map(img => img.trim()).filter(Boolean);
+        }
+        
+        const segments = text.split('//IMG//');
+        segments.forEach((segment, idx) => {
+            appendFormattedText(element, segment);
+            if (idx < segments.length - 1 && images[idx]) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'question-image';
+                imgDiv.style.textAlign = 'center';
+                imgDiv.style.margin = '10px 0';
+                
+                const img = document.createElement('img');
+                img.src = images[idx];
+                img.alt = 'Hình ảnh câu hỏi';
+                img.style.maxWidth = '100%';
+                img.style.borderRadius = '8px';
+                img.style.border = '1px solid var(--border)';
+                
+                imgDiv.appendChild(img);
+                element.appendChild(imgDiv);
+            }
+        });
+        
+        // Fallback: If no //IMG// was found but images exist, render them at the bottom
+        if (segments.length <= 1 && images.length > 0) {
+            const containerDiv = document.createElement('div');
+            containerDiv.className = 'question-images-container';
+            containerDiv.style.marginTop = '15px';
+            images.forEach(imgUrl => {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'question-image';
+                imgDiv.style.textAlign = 'center';
+                imgDiv.style.margin = '10px 0';
+                
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.alt = 'Hình ảnh câu hỏi';
+                img.style.maxWidth = '100%';
+                img.style.borderRadius = '8px';
+                img.style.border = '1px solid var(--border)';
+                
+                imgDiv.appendChild(img);
+                containerDiv.appendChild(imgDiv);
+            });
+            element.appendChild(containerDiv);
+        }
+    }
+
     // ========================
     // Rendering
     // ========================
@@ -388,13 +447,24 @@
             }
         }
 
-        if (els.questionImageBox && els.questionImage) {
+        if (els.questionImageBox) {
+            els.questionImageBox.replaceChildren();
             if (q.image && showImage) {
-                els.questionImage.src = q.image;
+                const images = q.image.split(/[\n,]/).map(img => img.trim()).filter(Boolean);
+                images.forEach(imgUrl => {
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    img.alt = 'Hình ảnh câu hỏi';
+                    img.style.maxWidth = '100%';
+                    img.style.borderRadius = '8px';
+                    img.style.border = '1px solid var(--border)';
+                    img.style.margin = '10px auto';
+                    img.style.display = 'block';
+                    els.questionImageBox.appendChild(img);
+                });
                 els.questionImageBox.style.display = 'block';
             } else {
                 els.questionImageBox.style.display = 'none';
-                els.questionImage.removeAttribute('src');
             }
         }
 
@@ -406,14 +476,12 @@
         els.topicBadge.textContent = `Topic ${q.topic}`;
 
         // Question text
-        els.questionText.replaceChildren();
-        appendFormattedText(els.questionText, q.question);
+        renderQuestionText(els.questionText, q.question, q.image);
 
         // Vietnamese question text
         if (showVietnamese) {
             if (q.question_vi) {
-                els.questionTextVi.replaceChildren();
-                appendFormattedText(els.questionTextVi, q.question_vi);
+                renderQuestionText(els.questionTextVi, q.question_vi, q.image);
                 els.questionTextVi.style.display = 'block';
             } else {
                 els.questionTextVi.replaceChildren();
@@ -423,8 +491,7 @@
                 fetchTranslation(q.question).then(translated => {
                     q.question_vi = translated;
                     if (window.currentSelectionQId === q.id) {
-                        els.questionTextVi.replaceChildren();
-                        appendFormattedText(els.questionTextVi, translated);
+                        renderQuestionText(els.questionTextVi, translated, q.image);
                     }
                 });
             }
@@ -556,6 +623,32 @@
             els.optionsList.appendChild(submitBtn);
         }
 
+        // Render Show Answer button if no options are present
+        if (optionLetters.length === 0) {
+            const noOptDiv = document.createElement('div');
+            noOptDiv.className = 'no-options-container';
+            noOptDiv.style.marginTop = '1.5rem';
+            noOptDiv.style.textAlign = 'center';
+            
+            const showBtn = document.createElement('button');
+            showBtn.className = 'btn-show-answer';
+            showBtn.id = 'btnShowAnswer';
+            showBtn.textContent = 'Xem đáp án';
+            
+            if (answered) {
+                showBtn.style.display = 'none';
+            } else {
+                showBtn.addEventListener('click', () => {
+                    userAnswers[q.id] = 'VIEWED';
+                    updateScores();
+                    saveState();
+                    renderQuestion(false);
+                });
+            }
+            noOptDiv.appendChild(showBtn);
+            els.optionsList.appendChild(noOptDiv);
+        }
+
         // Explanation — shown after answering
         let explanationDiv = document.getElementById('explanationBox');
         if (!explanationDiv) {
@@ -568,11 +661,41 @@
         if (answered) {
             explanationDiv.replaceChildren();
 
-            if (q.explanation_vi) {
+            if (q.explanation_vi || q.answer_image) {
                 const title = document.createElement('div');
                 title.className = 'explanation-title';
                 title.textContent = '💡 Giải thích';
                 explanationDiv.appendChild(title);
+
+                if (q.answer_image) {
+                    const ansImgBox = document.createElement('div');
+                    ansImgBox.className = 'answer-image-box';
+                    ansImgBox.style.marginBottom = '1.5rem';
+                    ansImgBox.style.textAlign = 'center';
+                    
+                    const ansImgTitle = document.createElement('div');
+                    ansImgTitle.style.fontSize = '0.85rem';
+                    ansImgTitle.style.fontWeight = '600';
+                    ansImgTitle.style.color = 'var(--accent)';
+                    ansImgTitle.style.marginBottom = '0.5rem';
+                    ansImgTitle.style.textAlign = 'left';
+                    ansImgTitle.textContent = 'Đáp án đúng (Hình ảnh):';
+                    ansImgBox.appendChild(ansImgTitle);
+                    
+                    const ansImgs = q.answer_image.split(/[\n,]/).map(img => img.trim()).filter(Boolean);
+                    ansImgs.forEach(imgUrl => {
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.alt = 'Đáp án';
+                        img.style.maxWidth = '100%';
+                        img.style.borderRadius = '8px';
+                        img.style.border = '1px solid var(--border)';
+                        img.style.margin = '10px auto';
+                        img.style.display = 'block';
+                        ansImgBox.appendChild(img);
+                    });
+                    explanationDiv.appendChild(ansImgBox);
+                }
 
                 const contentContainer = document.createElement('div');
                 contentContainer.className = 'explanation-content';
@@ -700,6 +823,7 @@
             currentIndex++;
             showImage = false;
             renderQuestion();
+            saveState();
         }
     }
 
@@ -708,12 +832,14 @@
             currentIndex--;
             showImage = false;
             renderQuestion();
+            saveState();
         }
     }
 
     function goToQuestion(idx) {
         currentIndex = idx;
         renderQuestion();
+        saveState();
         closeGrid();
     }
 
@@ -736,7 +862,7 @@
         } else if (gridFilter === 'redo_incorrect') {
             indices = indices.filter(i => redoIncorrectIds.includes(questions[i].id));
         } else if (gridFilter === 'unanswered') {
-            indices = indices.filter(i => unansweredIds.includes(questions[i].id));
+            indices = indices.filter(i => userAnswers[questions[i].id] === undefined);
         }
 
         const filtered = getFilteredIndices();
@@ -1145,12 +1271,16 @@
             }
         }
 
-        // Theme người dùng đã chọn trên blog được ưu tiên hơn state cũ của quiz
-        // Site theme will be handled by reading-panel.js
-        applyShuffle();
-        renderQuestion();
-        updateScores();
-        renderGrid(filterMode);
+        // Initialize question order based on shuffleMode and loaded state
+        if (shuffleMode) {
+            if (!questionOrder || questionOrder.length !== questions.length) {
+                questionOrder = shuffleArray(questions.map((_, i) => i));
+                currentIndex = 0;
+            }
+        } else {
+            questionOrder = questions.map((_, i) => i);
+        }
+
         els.btnViToggle.classList.toggle('active', showVietnamese);
         els.toggleVi.checked = showVietnamese;
         els.btnShuffle.classList.toggle('active', shuffleMode);
@@ -1166,12 +1296,9 @@
         if (els.btnRedoIncorrect) els.btnRedoIncorrect.classList.toggle('active', filterMode === 'redo_incorrect');
         els.btnReviewUnanswered.classList.toggle('active', filterMode === 'unanswered');
 
-        if (!shuffleMode) {
-            questionOrder = questions.map((_, i) => i);
-        }
-
         updateScores();
         renderQuestion();
+        renderGrid(filterMode);
         bindEvents();
     }
 

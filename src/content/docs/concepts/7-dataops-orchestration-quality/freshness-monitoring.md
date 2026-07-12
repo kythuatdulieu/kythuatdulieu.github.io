@@ -30,7 +30,9 @@ flowchart LR
     A["Event Generated\n(User Clicks)"] -->|Ingestion Lag| B["Kafka/Kinesis"]
     B -->|Processing Time| C("Spark/Flink/dbt")
     C -->|Commit Time| D["(Iceberg/Delta Lake)"]
-    D -->|Query Wait| E["Dashboard BI"]
+    D -->|Query Wait| E["Dashboard BI"]
+
+
 ```
 
 ---
@@ -136,7 +138,7 @@ Các nền tảng Data Observability (như Monte Carlo, Databand) giải quyết
 - **Circuit Breakers (Cầu dao tự động):** Khi bảng Upstream bị trễ (SLA Miss), thay vì nhắm mắt chạy tiếp làm sai lệch toàn bộ Aggregated Tables bên dưới, hệ thống Orchestrator (Airflow/Dagster) phải tự động Short-circuit, chặn đứng (Skip) các DAG downstream để bảo vệ Data Integrity, cho đến khi vấn đề trễ hẹn được xử lý.
 
 ## Nguồn Tham Khảo (References)
-* [Monte Carlo: Data Observability & Freshness Monitoring][https://www.montecarlodata.com/blog-data-freshness/]
-* [dbt Documentation: Source data freshness][https://docs.getdbt.com/docs/build/sources#snapshotting-source-data-freshness]
-* [Uber Engineering: Building Uber's Data Quality Platform](https://www.uber.com/en-VN/blog/data-quality-platform/]
+* [Monte Carlo: Data Observability & Freshness Monitoring](https://www.montecarlodata.com/blog-data-freshness/)
+* [dbt Documentation: Source data freshness](https://docs.getdbt.com/docs/build/sources#snapshotting-source-data-freshness)
+* [Uber Engineering: Building Uber's Data Quality Platform](https://www.uber.com/en-VN/blog/data-quality-platform/)
 * *Designing Data-Intensive Applications* (Martin Kleppmann) - Chương 11: Stream Processing & Time reasoning.

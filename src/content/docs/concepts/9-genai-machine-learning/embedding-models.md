@@ -45,7 +45,7 @@ sequenceDiagram
     TEI Gateway-->>User B: Vector 2
 ```
 
-**Đánh đổi (Trade-off]:**
+**Đánh đổi (Trade-off):**
 -   **Tăng Throughput:** Phục vụ được hàng nghìn RPS với cùng 1 GPU.
 -   **Hy sinh Latency:** Request của User A thay vì được xử lý ngay, phải nằm đợi ở hàng đợi thêm 10ms.
 
@@ -81,7 +81,7 @@ print(f"Kích thước vector thực tế: {len(embedding_vector)}") # Output: 2
 
 :::tip
 **Best Practice cho MRL:** 
-Sử dụng chiến lược **Multi-stage Retrieval**. Bạn lưu vector 256 chiều vào RAM (Vector DB] để tìm kiếm nhanh (Shortlisting Top 100). Sau đó, bạn lấy 100 ID đó truy xuất vector gốc (3072 chiều) từ Disk/S3 để Rerank lại Top 10. Cách này đạt tốc độ của 256D và độ chính xác của 3072D.
+Sử dụng chiến lược **Multi-stage Retrieval**. Bạn lưu vector 256 chiều vào RAM (Vector DB) để tìm kiếm nhanh (Shortlisting Top 100). Sau đó, bạn lấy 100 ID đó truy xuất vector gốc (3072 chiều) từ Disk/S3 để Rerank lại Top 10. Cách này đạt tốc độ của 256D và độ chính xác của 3072D.
 :::
 
 ---
@@ -150,7 +150,7 @@ Bài toán tài chính (FinOps) của Embedding Models thường rơi vào cái 
 
 ## Nguồn Tham Khảo (References)
 
-1.  **Matryoshka Representation Learning (MRL):** [NeurIPS Paper][https://arxiv.org/abs/2205.13147]. Khái niệm cốt lõi về việc nén Semantic vào các chiều đầu tiên của Vector.
-2.  **Hugging Face Text Embeddings Inference (TEI):** [GitHub Repo](https://github.com/huggingface/text-embeddings-inference]. Công cụ chuẩn công nghiệp để host model.
+1.  **Matryoshka Representation Learning (MRL):** [NeurIPS Paper](https://arxiv.org/abs/2205.13147). Khái niệm cốt lõi về việc nén Semantic vào các chiều đầu tiên của Vector.
+2.  **Hugging Face Text Embeddings Inference (TEI):** [GitHub Repo](https://github.com/huggingface/text-embeddings-inference). Công cụ chuẩn công nghiệp để host model.
 3.  **Pinecone Architecture:** *Understanding HNSW and Vector Database Scale*.
 4.  **OpenAI Blog:** *New Embedding Models and API Updates (text-embedding-3)*.

@@ -87,7 +87,7 @@ async def batch_evaluation[prompts: list]:
         async with sem:
             return await evaluate_with_llm_as_a_judge(p)
             
-    tasks = [bounded_eval(p] for p in prompts]
+    tasks = [bounded_eval(p) for p in prompts]
     results = await asyncio.gather(*tasks)
     return results
 ```
@@ -149,8 +149,8 @@ resource "aws_ecs_service" "mlflow_server" {
 
 ## Nguồn Tham Khảo [References]
 
-1. [Ragas Framework: Automated Evaluation of Retrieval Augmented Generation][https://docs.ragas.io/en/latest/concepts/metrics/index.html]
-2. [TruLens: Evaluation and Tracking for LLM Apps (RAG Triad & Groundedness]][https://www.trulens.org/trulens_eval/getting_started/core_concepts/rag_triad/]
-3. [Databricks: MLflow Model Evaluation - Metrics and LLM as a Judge][https://mlflow.org/docs/latest/llms/llm-evaluate/index.html]
-4. [AWS Architecture Blog: Deploying MLflow with Amazon ECS](https://aws.amazon.com/blogs/machine-learning/deploying-mlflow-with-amazon-ecs/]
+1. [Ragas Framework: Automated Evaluation of Retrieval Augmented Generation](https://docs.ragas.io/en/latest/concepts/metrics/index.html)
+2. [TruLens: Evaluation and Tracking for LLM Apps (RAG Triad & Groundedness)](https://www.trulens.org/trulens_eval/getting_started/core_concepts/rag_triad/)
+3. [Databricks: MLflow Model Evaluation - Metrics and LLM as a Judge](https://mlflow.org/docs/latest/llms/llm-evaluate/index.html)
+4. [AWS Architecture Blog: Deploying MLflow with Amazon ECS](https://aws.amazon.com/blogs/machine-learning/deploying-mlflow-with-amazon-ecs/)
 5. *Designing Data-Intensive Applications* - Martin Kleppmann (Chương thảo luận về Retry, Backoff và Distributed Systems).

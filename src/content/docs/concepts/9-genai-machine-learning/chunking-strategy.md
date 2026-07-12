@@ -89,7 +89,7 @@ embeddings_model = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # 3. Bảo vệ hệ thống bằng Exponential Backoff with Jitter
 @retry[
-    wait=wait_random_exponential(multiplier=1, max=60], 
+    wait=wait_random_exponential(multiplier=1, max=60), 
     stop=stop_after_attempt(5),
     reraise=True
 )
@@ -100,16 +100,16 @@ def embed_batch_with_retry(texts: List[str]] -> List[List[float]]:
 def production_ingestion_pipeline(raw_documents: List[str], batch_size: int = 100]:
     all_chunks = []
     for doc in raw_documents:
-        all_chunks.extend(text_splitter.split_text(doc])
+        all_chunks.extend(text_splitter.split_text(doc))
         
     print(f"Total chunks created: {len(all_chunks)}")
     
     vectors = []
     # Batching để tiết kiệm I/O Network overhead
-    for i in range[0, len(all_chunks], batch_size):
+    for i in range[0, len(all_chunks), batch_size):
         batch = all_chunks[i : i + batch_size]
         try:
-            batch_embeddings = embed_batch_with_retry(batch]
+            batch_embeddings = embed_batch_with_retry(batch)
             vectors.extend(batch_embeddings)
             print(f"Successfully embedded batch {i//batch_size + 1}")
         except Exception as e:
@@ -122,6 +122,6 @@ def production_ingestion_pipeline(raw_documents: List[str], batch_size: int = 10
 ---
 
 ## Nguồn Tham Khảo
-* [Pinecone: Chunking Strategies for LLM Applications][https://www.pinecone.io/learn/chunking-strategies/]
-* [AWS Architecture: Parent Document Retriever in Bedrock][https://aws.amazon.com/blogs/machine-learning/]
-* [LangChain Documentation: RecursiveCharacterTextSplitter](https://python.langchain.com/v0.2/docs/how_to/recursive_text_splitter/]
+* [Pinecone: Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/)
+* [AWS Architecture: Parent Document Retriever in Bedrock](https://aws.amazon.com/blogs/machine-learning/)
+* [LangChain Documentation: RecursiveCharacterTextSplitter](https://python.langchain.com/v0.2/docs/how_to/recursive_text_splitter/)

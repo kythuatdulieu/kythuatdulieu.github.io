@@ -164,7 +164,7 @@ COMMIT;
 
 ## 6. Nguồn Tham Khảo (References)
 
-1. **Confluent Blog:** [The Transactional Outbox Pattern for Microservices][https://developer.confluent.io/patterns/data-integration/transactional-outbox/]
-2. **Saga Pattern:** [Microservices.io - Saga Pattern by Chris Richardson][https://microservices.io/patterns/data/saga.html]
-3. **Apache Kafka Documentation:** [Consumer Group Protocols and Rebalance](https://kafka.apache.org/documentation/]
+1. **Confluent Blog:** [The Transactional Outbox Pattern for Microservices](https://developer.confluent.io/patterns/data-integration/transactional-outbox/)
+2. **Saga Pattern:** [Microservices.io - Saga Pattern by Chris Richardson](https://microservices.io/patterns/data/saga.html)
+3. **Apache Kafka Documentation:** [Consumer Group Protocols and Rebalance](https://kafka.apache.org/documentation/)
 4. Tác giả Martin Kleppmann, sách *Designing Data-Intensive Applications* (Chương 11: Stream Processing).

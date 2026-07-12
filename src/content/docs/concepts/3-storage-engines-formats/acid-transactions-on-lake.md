@@ -127,8 +127,8 @@ Ghi Streaming dữ liệu 5 phút/lần sinh ra hàng vạn file Parquet chỉ v
 ---
 
 ## 5. Nguồn Tham Khảo (References)
-*   **Netflix Tech Blog:** [How Netflix uses Apache Iceberg][https://netflixtechblog.com/]
-*   **Databricks Documentation:** [Delta Lake Concurrency Control (OCC]][https://docs.databricks.com/en/optimizations/isolation-level.html]
-*   **Apache Iceberg Spec:** [Iceberg Table Spec & Metadata Hierarchy][https://iceberg.apache.org/spec/]
+*   **Netflix Tech Blog:** [How Netflix uses Apache Iceberg](https://netflixtechblog.com/)
+*   **Databricks Documentation:** [Delta Lake Concurrency Control (OCC)](https://docs.databricks.com/en/optimizations/isolation-level.html)
+*   **Apache Iceberg Spec:** [Iceberg Table Spec & Metadata Hierarchy](https://iceberg.apache.org/spec/)
 *   **Designing Data-Intensive Applications** - *Martin Kleppmann* (MVCC Concepts).
-*   **Onehouse Blog:** [Apache Hudi Architecture](https://hudi.apache.org/docs/concepts/]
+*   **Onehouse Blog:** [Apache Hudi Architecture](https://hudi.apache.org/docs/concepts/)

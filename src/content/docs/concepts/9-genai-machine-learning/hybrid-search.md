@@ -54,7 +54,7 @@ sequenceDiagram
 
 Vấn đề hóc búa nhất của Hybrid Search là: Điểm BM25 không bị giới hạn (từ `0` đến `+∞`), trong khi điểm Cosine Similarity của Dense Vector nằm trong khoảng `[0, 1]`. Làm sao cộng táo với cam?
 
-### 2.1. Reciprocal Rank Fusion (RRF] - Kẻ Thống Trị
+### 2.1. Reciprocal Rank Fusion (RRF) - Kẻ Thống Trị
 RRF là thuật toán mặc định của hầu hết các DB hiện đại (Elasticsearch, Pinecone, Redis). Nó hoàn toàn lờ đi điểm số tuyệt đối, và chỉ dùng **Thứ hạng (Rank)**.
 
 $$ RRF\_Score = \frac{"1"}{k + Rank_{"dense"}} + \frac{"1"}{k + Rank_{"sparse"}} $$
@@ -65,7 +65,7 @@ $$ RRF\_Score = \frac{"1"}{k + Rank_{"dense"}} + \frac{"1"}{k + Rank_{"sparse"}}
 
 ### 2.2. Weighted Fusion [Nội suy Tuyến tính]
 Chuẩn hóa điểm số về `[0, 1]` rồi dùng hằng số $\alpha$ để tinh chỉnh:
-$$ Final\_Score = \alpha \times Dense\_Score + (1 - \alpha] \times Sparse\_Score $$
+$$ Final\_Score = \alpha \times Dense\_Score + (1 - \alpha) \times Sparse\_Score $$
 
 -   **Systemic Trade-offs:**
     -   **Pros:** Cho phép Control tuyệt đối (ví dụ $\alpha=0.2$ để hệ thống nặng về Keyword search).

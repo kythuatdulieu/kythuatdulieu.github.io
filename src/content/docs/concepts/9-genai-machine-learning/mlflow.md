@@ -228,7 +228,7 @@ Mặc dù Batch Inference bằng Spark UDF cực kỳ mạnh mẽ, kiến trúc 
 
 ## Nguồn Tham Khảo (References)
 
-* [MLflow Architecture - Official Documentation][https://mlflow.org/docs/latest/tracking.html#tracking-server]
-* [Design of MLflow Model Registry][https://mlflow.org/docs/latest/model-registry.html]
+* [MLflow Architecture - Official Documentation](https://mlflow.org/docs/latest/tracking.html#tracking-server)
+* [Design of MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
 * Martin Kleppmann, *Designing Data-Intensive Applications*, Chapter 10: Batch Processing (áp dụng cho luồng Spark UDF inference).
-* [Databricks: Managed MLflow and The MLOps Lifecycle](https://www.databricks.com/product/managed-mlflow]
+* [Databricks: Managed MLflow and The MLOps Lifecycle](https://www.databricks.com/product/managed-mlflow)

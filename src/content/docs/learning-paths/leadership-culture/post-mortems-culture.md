@@ -1,6 +1,13 @@
 ---
 title: "Văn hóa viết postmortem không đổ lỗi"
 description: "Cách viết postmortem cho sự cố dữ liệu: tập trung vào học hỏi, timeline, tác động, nguyên nhân hệ thống và hành động phòng ngừa."
+tags: ["postmortem", "incident-response", "blameless", "engineering-culture"]
+readingTime: "9 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Văn hóa viết postmortem không đổ lỗi"
+metaDescription: "Cách viết postmortem cho sự cố dữ liệu: tập trung vào học hỏi, timeline, tác động, nguyên nhân hệ thống và hành động phòng ngừa."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Postmortem tốt không tìm người để trách. Nó giúp team hiểu hệ thống đã cho phép sự cố xảy ra như thế nào, vì sao phát hiện chậm, vì sao giảm tác động khó, và cần thay đổi gì để lần sau bớt đau hơn. Google SRE mô tả postmortem culture theo hướng học từ sự cố và cải thiện hệ thống thay vì tìm lỗi cá nhân: [Postmortem Culture](https://sre.google/sre-book/postmortem-culture/).
@@ -51,6 +58,23 @@ Action item yếu:
 Action item tốt:
 
 - “Thêm dry-run cho script backfill, in ra partition range và số dòng dự kiến trước khi ghi. Owner: Data Platform. Deadline: 2026-08-15. Kiểm chứng: backfill job không cho chạy nếu thiếu `--start-date` và `--end-date`.”
+
+## Ví dụ rút gọn: sự cố doanh thu trùng 2 lần
+
+Để thấy khác biệt giữa "nguyên nhân trực tiếp" và "nguyên nhân hệ thống", xét một sự cố có thật ở nhiều công ty:
+
+**Hiện tượng:** Sáng thứ Hai, doanh thu trên dashboard cao gấp đôi. **Nguyên nhân trực tiếp:** job load thứ Bảy timeout ở bước cuối nhưng đã ghi một phần; Airflow retry chạy lại toàn bộ, `INSERT` thêm lần nữa → trùng dữ liệu.
+
+Phân tích 5-whys đưa về nguyên nhân hệ thống:
+
+1. Vì sao trùng? — Job ghi bằng `INSERT INTO` thuần, không idempotent.
+2. Vì sao không idempotent? — Template pipeline của team không có mẫu MERGE/overwrite-partition sẵn.
+3. Vì sao không ai phát hiện suốt Chủ Nhật? — Chỉ có alert "job fail", không có alert "số liệu bất thường" ([volume anomaly](/concepts/7-dataops-orchestration-quality/volume-anomalies/)).
+4. Vì sao dashboard vẫn hiển thị số sai? — Không có quality gate giữa mart và BI.
+
+Action items tương ứng đi thẳng vào 4 tầng đó: thêm mẫu [idempotent write](/concepts/2-data-ingestion-integration/idempotency/) vào template (chặn tái diễn cho *mọi* pipeline, không chỉ pipeline này), thêm anomaly check số dòng ±30%, thêm test reconciliation chạy trước giờ dashboard được xem nhiều nhất. Đo lường sau 1 tháng: MTTD (thời gian phát hiện) giảm từ 36 giờ xuống dưới 1 giờ.
+
+Chú ý điểm mấu chốt: không một action item nào là "nhắc bạn X cẩn thận hơn" — tất cả đều là thay đổi hệ thống có thể kiểm chứng.
 
 ## Các lỗi postmortem thường gặp
 

@@ -43,7 +43,10 @@ flowchart TD
 
     CloudServices ==>|Chỉ đạo, Pruning & Lập kế hoạch| Compute
     Compute ==>|"Đọc/Ghi dữ liệu (Local SSD Cache miss)"| Storage
-    CloudServices -.->|Truy xuất Metadata min/max| Storage
+    CloudServices -.->|Truy xuất Metadata min/max| Storage
+
+
+
 ```
 
 ### 1.1. Lớp Storage (Centralized Persistent Storage)
@@ -158,7 +161,7 @@ Zero-Copy Cloning là một **Thao tác Metadata (Metadata-only Operation)**, ho
 ---
 
 ## Nguồn Tham Khảo
-* [The Snowflake Elastic Data Warehouse (SIGMOD 2016 Paper]][https://dl.acm.org/doi/10.1145/2882903.2903741] - Báo cáo kỹ thuật nguyên thủy về kiến trúc Multi-Cluster Shared-Data.
-* [Snowflake Documentation: Virtual Warehouses & Concurrency][https://docs.snowflake.com/en/user-guide/warehouses-overview]
-* [Snowflake Documentation: Understanding Micro-partitions and Data Clustering][https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions]
-* [Designing Data-Intensive Applications, Martin Kleppmann](https://dataintensive.net/] - Nền tảng về Columnar Storage và cơ chế Copy-on-Write.
+* [The Snowflake Elastic Data Warehouse (SIGMOD 2016 Paper)](https://dl.acm.org/doi/10.1145/2882903.2903741) - Báo cáo kỹ thuật nguyên thủy về kiến trúc Multi-Cluster Shared-Data.
+* [Snowflake Documentation: Virtual Warehouses & Concurrency](https://docs.snowflake.com/en/user-guide/warehouses-overview)
+* [Snowflake Documentation: Understanding Micro-partitions and Data Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions)
+* [Designing Data-Intensive Applications, Martin Kleppmann](https://dataintensive.net/) - Nền tảng về Columnar Storage và cơ chế Copy-on-Write.

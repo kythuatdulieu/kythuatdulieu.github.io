@@ -137,6 +137,6 @@ spark.conf.set("spark.sql.execution.arrow.maxRecordsPerBatch", "5000")
 
 ## 5. Nguồn Tham Khảo (References)
 
-* [Dynamic Executor Core Resizing in Spark - Uber Engineering Blog][https://www.uber.com/en-VN/blog/dynamic-executor-core-resizing-in-spark/]
-* [Tuning Spark - Apache Spark Official Documentation][https://spark.apache.org/docs/latest/tuning.html]
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
+* [Dynamic Executor Core Resizing in Spark - Uber Engineering Blog](https://www.uber.com/en-VN/blog/dynamic-executor-core-resizing-in-spark/)
+* [Tuning Spark - Apache Spark Official Documentation](https://spark.apache.org/docs/latest/tuning.html)
+* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)

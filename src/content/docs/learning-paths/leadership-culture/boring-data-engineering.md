@@ -1,6 +1,13 @@
 ---
 title: "Boring Data Engineering: khi SQL, cron và database vẫn là lựa chọn đúng"
 description: "Một góc nhìn thực tế về Boring Data Engineering: ưu tiên công cụ đơn giản, đáng tin, dễ vận hành trước khi thêm hệ thống phức tạp."
+tags: ["simplicity", "sql", "cron", "reliability", "engineering-culture"]
+readingTime: "9 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Boring Data Engineering: khi SQL, cron và database vẫn là lựa chọn đúng"
+metaDescription: "Một góc nhìn thực tế về Boring Data Engineering: ưu tiên công cụ đơn giản, đáng tin, dễ vận hành trước khi thêm hệ thống phức tạp."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 “Boring” trong Data Engineering không có nghĩa là cũ kỹ hay lười đổi mới. Nó nghĩa là ưu tiên những thứ dễ hiểu, dễ debug, dễ bàn giao và đã đủ tốt cho bài toán hiện tại. Chương “Simplicity” trong Google SRE Book cũng đặt simplicity như một yêu cầu vận hành, không phải sở thích thẩm mỹ: [Simplicity](https://sre.google/sre-book/simplicity/).
@@ -46,6 +53,22 @@ Cron phù hợp cho job nhỏ, ít phụ thuộc, dễ chạy lại. Google SRE 
 - Cấu hình được version control.
 
 Nếu job bắt đầu có nhiều dependency, backfill phức tạp, retry nhiều bước hoặc cần lineage, hãy chuyển sang Airflow/Dagster/Prefect.
+
+Một cron job "boring nhưng chuẩn production" chỉ dài hơn cron job cẩu thả vài dòng:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail                     # fail sớm, không nuốt lỗi
+exec 200>/var/lock/daily_load.lock
+flock -n 200 || exit 0                # lock chống chạy trùng khi job trước còn treo
+
+DS="${1:-$(date -d yesterday +%F)}"   # nhận ngày làm tham số → backfill được
+psql -v ds="$DS" -f load_orders.sql 2>&1 | tee -a "/var/log/etl/daily_load_$DS.log"
+
+curl -fsS "https://hc-ping.com/daily-load"   # dead-man switch: KHÔNG ping = alert
+```
+
+Bốn dòng guardrail (`set -euo pipefail`, `flock`, tham số ngày, dead-man ping) xử lý đúng bốn sự cố phổ biến nhất của cron: lỗi bị nuốt, chạy chồng, không backfill được, và chết im lặng không ai biết. Chi phí: 10 phút viết. Đây chính là tinh thần boring engineering — độ tin cậy đến từ kỷ luật nhỏ chứ không phải công cụ to.
 
 Liên quan trong site: [DAG](/concepts/7-dataops-orchestration-quality/dag/), [Orchestration](/concepts/7-dataops-orchestration-quality/orchestration/), [Backfill](/concepts/2-data-ingestion-integration/backfill/), [Data Lineage](/concepts/8-security-governance-finops/data-lineage/).
 

@@ -155,7 +155,7 @@ Với vai trò Staff Engineer, nguyên tắc vàng là: **"Mặc định hãy ch
 - Hệ thống **Push** yêu cầu sự bảo vệ nghiêm ngặt (Rate Limiter, Circuit Breaker) và các chiến lược Retry tinh vi (Exponential Backoff & Jitter) để tránh hệ thống tự huỷ diệt.
 
 ## Nguồn Tham Khảo
-* [Designing Data-Intensive Applications - Martin Kleppmann (O'Reilly]][https://dataintensive.net/]
-* [AWS Architecture Blog: Handling Traffic Spikes with SQS][https://aws.amazon.com/blogs/architecture/]
-* [Apache Kafka Documentation: Design and Implementation][https://kafka.apache.org/documentation/#design]
-* [Stripe Engineering: Webhooks Delivery at Scale](https://stripe.com/blog/webhooks-at-scale]
+* [Designing Data-Intensive Applications - Martin Kleppmann (O'Reilly)](https://dataintensive.net/)
+* [AWS Architecture Blog: Handling Traffic Spikes with SQS](https://aws.amazon.com/blogs/architecture/)
+* [Apache Kafka Documentation: Design and Implementation](https://kafka.apache.org/documentation/#design)
+* [Stripe Engineering: Webhooks Delivery at Scale](https://stripe.com/blog/webhooks-at-scale)

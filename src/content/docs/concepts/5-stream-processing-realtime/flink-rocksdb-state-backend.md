@@ -163,8 +163,8 @@ RocksDB là bài toán đánh đổi giữa **Hiệu năng Điện toán (CPU/La
 | **Khi nào sử dụng?** | State nhỏ (< 10GB), Session/Window ngắn, cần Ultra-low latency | **Phải dùng** khi đưa dự án Data Streaming lớn ra Production có State > 10GB |
 
 ## 7. Nguồn Tham Khảo (References)
-* [Apache Flink Official Documentation: State Backends][https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/]
-* [Apache Flink Official Documentation: Tuning RocksDB][https://nightlies.apache.org/flink/flink-docs-master/docs/ops/state/large_state_tuning/]
-* [Ververica Blog - Tuning RocksDB for Apache Flink][https://www.ververica.com/blog/stateful-stream-processing-apache-flink-state-backends]
-* [Facebook RocksDB Wiki: Tuning Guide](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide]
+* [Apache Flink Official Documentation: State Backends](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/)
+* [Apache Flink Official Documentation: Tuning RocksDB](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/state/large_state_tuning/)
+* [Ververica Blog - Tuning RocksDB for Apache Flink](https://www.ververica.com/blog/stateful-stream-processing-apache-flink-state-backends)
+* [Facebook RocksDB Wiki: Tuning Guide](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide)
 * Akidau, T., Chernyak, S., & Lax, R. (2018). *Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing*. O'Reilly Media.

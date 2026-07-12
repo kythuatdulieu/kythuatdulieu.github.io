@@ -50,7 +50,7 @@ graph LR
 ```
 
 ### 2.1. Catalyst Optimizer
-Catalyst là một cỗ máy tối ưu hóa quy trình (Query Optimizer] dựa trên Cây Logic (Tree-based rules).
+Catalyst là một cỗ máy tối ưu hóa quy trình (Query Optimizer) dựa trên Cây Logic (Tree-based rules).
 - **Predicate Pushdown:** Nếu bạn viết mã tải toàn bộ bảng 1 tỷ dòng sau đó gọi hàm `filter(col("date") > '2026-01-01')`, Catalyst sẽ tối ưu bằng cách đẩy (pushdown) cái filter này thẳng xuống tầng Storage (như Parquet, Delta Lake). Nó chỉ đọc đúng những file chứa dữ liệu năm 2026.
 - **Column Pruning:** Chỉ trích xuất đúng các cột mà truy vấn cần sử dụng thay vì đọc toàn bộ các cột (tối ưu cực mạnh cho định dạng cột như Parquet).
 - **Cost-Based Optimization (CBO):** Dựa trên thống kê dữ liệu, nếu nó thấy bạn đang JOIN một bảng 5TB với một bảng 10MB, nó sẽ không dại gì đi Shuffle bảng 5TB. Nó tự động chuyển sang **Broadcast Hash Join**.
@@ -100,7 +100,7 @@ df_large_skewed = df_large.withColumn(
 
 # 2. Xoá khoá gốc, nhân bản bảng nhỏ ra 10 lần (Explode)
 df_small_exploded = df_small.withColumn(
-    "salt_array", F.array[[F.lit(i] for i in range(10)])
+    "salt_array", F.array[[F.lit(i) for i in range(10)])
 ).withColumn(
     "salt", F.explode("salt_array")
 ).withColumn(
@@ -144,6 +144,6 @@ spec:
 
 ## Nguồn Tham Khảo
 
-*   [Deep Dive into Spark SQL’s Catalyst Optimizer [Databricks Blog]][https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html]
-*   [Project Tungsten: Bringing Apache Spark Closer to Bare Metal (Databricks Blog]][https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html]
-*   [Apache Spark Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html]
+*   [Deep Dive into Spark SQL’s Catalyst Optimizer (Databricks Blog)](https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html)
+*   [Project Tungsten: Bringing Apache Spark Closer to Bare Metal (Databricks Blog)](https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html)
+*   [Apache Spark Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html)

@@ -1,6 +1,13 @@
 ---
 title: "Design Pattern: Idempotency trong Data Pipelines"
 description: "Khám phá nguyên lý Idempotency (Lũy Đẳng) - nền tảng thiết yếu để xây dựng Data Pipelines chịu lỗi, tự phục hồi và đảm bảo tính chính xác của dữ liệu ở quy mô hàng Petabyte."
+tags: ["idempotency", "data", "pipelines"]
+readingTime: "15 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Design Pattern: Idempotency trong Data Pipelines"
+metaDescription: "Khám phá nguyên lý Idempotency (Lũy Đẳng) - nền tảng thiết yếu để xây dựng Data Pipelines chịu lỗi, tự phục hồi và đảm bảo tính chính xác của dữ liệu ở quy"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

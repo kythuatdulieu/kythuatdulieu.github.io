@@ -1,6 +1,13 @@
 ---
 title: "Làm Data Engineer ở Big Tech, công ty truyền thống và startup"
 description: "So sánh môi trường làm Data Engineer theo quy mô dữ liệu, ownership, quy trình, công nghệ, rủi ro và cách chọn nơi phù hợp."
+tags: ["career", "big-tech", "startup", "culture"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Data Engineer ở Big Tech, công ty truyền thống và startup"
+metaDescription: "So sánh môi trường làm Data Engineer theo quy mô dữ liệu, ownership, quy trình, công nghệ, rủi ro và cách chọn nơi phù hợp."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Cùng là Data Engineer, nhưng công việc ở Big Tech, công ty truyền thống và startup có thể rất khác nhau. Khác biệt không chỉ ở lượng dữ liệu. Khác biệt lớn hơn nằm ở mức độ chuẩn hóa, tốc độ thay đổi, ownership, chất lượng platform và cách tổ chức ra quyết định.
@@ -62,6 +69,18 @@ Bạn sẽ học:
 - Ưu tiên cái tạo giá trị tuần này thay vì kiến trúc hoàn hảo.
 
 Rủi ro lớn là thiếu chuẩn: không test, không ownership, không data contract, không runbook. Nếu không cẩn thận, nợ kỹ thuật dữ liệu sẽ lớn nhanh hơn sản phẩm.
+
+## Cùng một yêu cầu, ba thế giới khác nhau
+
+Thử lấy một yêu cầu quen thuộc: *"team growth muốn track funnel đăng ký user mới"*.
+
+**Ở Big Tech**, event schema phải đăng ký vào hệ thống tracking nội bộ, qua review về privacy (PII), có [data contract](/concepts/6-data-modeling-transformation/data-contract/) với producer, rồi dữ liệu tự chảy vào warehouse qua platform ingestion có sẵn. Bạn viết ít code, nhưng phải hiểu và thuyết phục được 3-4 hệ thống/team liên quan. Thời gian: vài tuần, phần lớn là quy trình — đổi lại kết quả gần như chắc chắn đúng và không sập.
+
+**Ở công ty truyền thống**, dữ liệu đăng ký nằm trong CRM đóng gói (không có event stream), bạn phải đàm phán lịch [CDC](/concepts/2-data-ingestion-integration/change-data-capture/) hoặc batch export với vendor, xin quyền qua security, và reconcile số liệu với báo cáo phòng kinh doanh đang có sẵn. Kỹ năng quyết định thành bại là stakeholder management chứ không phải code.
+
+**Ở startup**, bạn tự thêm tracking vào backend (hoặc cắm Segment/PostHog), tự dựng bảng trong warehouse, tự viết dashboard — xong trong 2-3 ngày. Nhanh và học được toàn trình, nhưng cũng chính bạn phải nhớ rằng cái schema quyết định trong 30 phút hôm nay sẽ là legacy mà chính bạn migrate sau 18 tháng.
+
+Bài học rút ra: **cùng một kỹ năng "làm pipeline" nhưng kỹ năng thứ hai được rèn hoàn toàn khác nhau** — quy trình ở Big Tech, đàm phán ở công ty truyền thống, ưu tiên hóa ở startup. Chọn môi trường chính là chọn kỹ năng thứ hai này.
 
 ## Chọn theo giai đoạn nghề nghiệp
 

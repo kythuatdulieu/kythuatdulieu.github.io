@@ -61,7 +61,10 @@ graph TD
     A["Input HDFS/S3 (Disk)"] -->|Map / Filter| B["Stage 1: RAM (RDD 1)"]
     B -->|Project| C("Stage 1: RAM (RDD 2)")
     C -.->|"Network Shuffle Boundary"| D("Stage 2: RAM (RDD 3)")
-    D -->|Aggregation| E["Output Data Lake (Disk)"]
+    D -->|Aggregation| E["Output Data Lake (Disk)"]
+
+
+
 ```
 
 ## 3. Giải phẫu Nút Thắt Hệ Thống (System Bottlenecks)
@@ -124,6 +127,6 @@ Khi so sánh giữa hệ thống Batch Processing và Streaming Processing, các
 ## Nguồn Tham Khảo (References)
 
 * Thiết kế Hệ thống Dữ liệu Chuyên sâu (Designing Data-Intensive Applications - Martin Kleppmann) - Phân tích chi tiết về kiến trúc Batch Processing và MapReduce.
-* [Apache Spark: A Unified Engine for Big Data Processing (CACM]][https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext]
-* [Troubleshooting Spark OOM and Memory Management - Uber Engineering][https://www.uber.com/en-VN/blog/apache-spark-oom/]
-* [AWS Architecture Blog - Cost Optimization with Amazon EMR and Spot Instances](https://aws.amazon.com/blogs/big-data/cost-optimization-with-amazon-emr-and-spot-instances/]
+* [Apache Spark: A Unified Engine for Big Data Processing (CACM)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
+* [Troubleshooting Spark OOM and Memory Management - Uber Engineering](https://www.uber.com/en-VN/blog/apache-spark-oom/)
+* [AWS Architecture Blog - Cost Optimization with Amazon EMR and Spot Instances](https://aws.amazon.com/blogs/big-data/cost-optimization-with-amazon-emr-and-spot-instances/)

@@ -41,7 +41,9 @@ graph TD
     F --> H
     G --> H
     
-    H --> I["(Vector Database - Pinecone / Milvus)"]
+    H --> I["(Vector Database - Pinecone / Milvus)"]
+
+
 ```
 
 ---
@@ -148,8 +150,8 @@ print(f"Thành công: {len(semantic_chunks)} semantic chunks.")
 
 ## 6. Nguồn Tham Khảo [References]
 
-1. **Pinecone Learning:** [Chunking Strategies for LLM Applications][https://www.pinecone.io/learn/chunking-strategies/]
-2. **Anthropic Research:** [Contextual Retrieval (Giải quyết bài toán mất ngữ cảnh đại từ]][https://www.anthropic.com/news/contextual-retrieval]
-3. **LangChain Docs:** [Document Transformers & Text Splitters][https://python.langchain.com/docs/modules/data_connection/document_transformers/]
-4. **LlamaIndex:** [Parent-Child Document Retriever (Small-to-Big Retrieval]][https://docs.llamaindex.ai/]
-5. **Stanford Research:** [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172]
+1. **Pinecone Learning:** [Chunking Strategies for LLM Applications](https://www.pinecone.io/learn/chunking-strategies/)
+2. **Anthropic Research:** [Contextual Retrieval (Giải quyết bài toán mất ngữ cảnh đại từ)](https://www.anthropic.com/news/contextual-retrieval)
+3. **LangChain Docs:** [Document Transformers & Text Splitters](https://python.langchain.com/docs/modules/data_connection/document_transformers/)
+4. **LlamaIndex:** [Parent-Child Document Retriever (Small-to-Big Retrieval)](https://docs.llamaindex.ai/)
+5. **Stanford Research:** [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)

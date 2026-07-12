@@ -154,7 +154,9 @@ graph LR
     subgraph Kien_truc_Push["Datasets / Assets"]
         JobA_Push["ETL Nguồn"] -->|Cập nhật| DS["(Dataset/Asset)"]
         DS -.->|Tự động Trigger| JobB_Push["Transform Job"]
-    end
+    end
+
+
 ```
 
 Trong mô hình Datasets/Assets, Job A sau khi chạy xong sẽ phát đi một tín hiệu cập nhật Logical Dataset. Job B khai báo phụ thuộc vào Dataset này sẽ **tự động được kích hoạt** bởi Scheduler. Bỏ qua hoàn toàn chi phí Polling và giải quyết triệt để Sensor Deadlock.
@@ -162,7 +164,7 @@ Trong mô hình Datasets/Assets, Job A sau khi chạy xong sẽ phát đi một 
 ---
 
 ## Nguồn Tham Khảo
-* [Apache Airflow Concepts - Sensors [Official Docs]][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/sensors.html]
-* [Deferrable Operators & Triggers (Airflow Docs]][https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html]
-* [Astronomer: Event-Driven Architecture with Airflow & AWS EventBridge][https://docs.astronomer.io/]
-* [Data-aware Scheduling - Airflow Datasets](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html]
+* [Apache Airflow Concepts - Sensors (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/sensors.html)
+* [Deferrable Operators & Triggers (Airflow Docs)](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html)
+* [Astronomer: Event-Driven Architecture with Airflow & AWS EventBridge](https://docs.astronomer.io/)
+* [Data-aware Scheduling - Airflow Datasets](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html)

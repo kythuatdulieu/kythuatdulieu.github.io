@@ -44,7 +44,9 @@ graph TD
     D -->|"Match (Khớp)"| F("(Pipeline Success - Stop)")
     D -->|"Mismatch (Lệch)"| E
     E -->|Isolate Bad Records| G["Quarantine Table (DLQ)"]
-    G -->|Alert Data Downtime| H["PagerDuty / Slack"]
+    G -->|Alert Data Downtime| H["PagerDuty / Slack"]
+
+
 ```
 
 ### 1.2. Kỹ thuật Hashing (MD5 / SHA-256) chống Cartesian Explosion
@@ -154,8 +156,8 @@ Data Reconciliation ở cấp độ Staff Engineer không chỉ là viết một
 
 ## 5. Nguồn Tham Khảo (References)
 
-1. [Netflix TechBlog: Maestro - Orchestrating the Data Pipeline][https://netflixtechblog.com/]
-2. [Datafold: The Ultimate Guide to Data Reconciliation][https://www.datafold.com/]
+1. [Netflix TechBlog: Maestro - Orchestrating the Data Pipeline](https://netflixtechblog.com/)
+2. [Datafold: The Ultimate Guide to Data Reconciliation](https://www.datafold.com/)
 3. *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing & Eventual Consistency).
-4. [Tricentis: The Data Engineering Lifecycle and Agentic AI in Reconciliation][https://www.tricentis.com/]
-5. [AWS Architecture Blog: Building robust ETL frameworks](https://aws.amazon.com/blogs/architecture/]
+4. [Tricentis: The Data Engineering Lifecycle and Agentic AI in Reconciliation](https://www.tricentis.com/)
+5. [AWS Architecture Blog: Building robust ETL frameworks](https://aws.amazon.com/blogs/architecture/)

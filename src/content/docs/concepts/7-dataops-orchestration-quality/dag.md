@@ -38,7 +38,8 @@ graph TD
     C -- Không --> E["Xây dựng DAG Object trong RAM"]
     D --> E
     E -->|Serialize| F["(Metadata DB)"]
-    F --> G["Scheduler ra quyết định chạy Task"]
+    F --> G["Scheduler ra quyết định chạy Task"]
+
 ```
 
 ### 1.2. Thảm họa "Scheduler Tax"
@@ -110,7 +111,9 @@ graph LR
     subgraph Stage 2: Wide Dependency
     C -->|Network Shuffle| D("GroupBy: City")
     D --> E("Write to Postgres")
-    end
+    end
+
+
 ```
 
 Kiến trúc này chia DAG thành các **Stages (Giai đoạn)** bị ngăn cách bởi **Shuffle Boundaries (Ranh giới xáo trộn)**:
@@ -147,7 +150,7 @@ DAG không chỉ là những mũi tên nối các hộp vuông trên giao diện
 
 ## Nguồn Tham Khảo
 
-1. **Netflix Tech Blog:** [Maestro: Netflix’s Workflow Orchestrator][https://netflixtechblog.com/] - Phân tích kiến trúc điều phối DAGs ở quy mô khổng lồ của Netflix.
-2. **Astronomer Blog (Airflow):** [7 Common Errors to Check When Writing Airflow DAGs][https://www.astronomer.io/blog/] - Cẩm nang tối ưu Scheduler Tax.
-3. **Databricks Engineering:** [Understanding Spark Execution: DAGs, Stages, and Shuffles](https://www.databricks.com/]
+1. **Netflix Tech Blog:** [Maestro: Netflix’s Workflow Orchestrator](https://netflixtechblog.com/) - Phân tích kiến trúc điều phối DAGs ở quy mô khổng lồ của Netflix.
+2. **Astronomer Blog (Airflow):** [7 Common Errors to Check When Writing Airflow DAGs](https://www.astronomer.io/blog/) - Cẩm nang tối ưu Scheduler Tax.
+3. **Databricks Engineering:** [Understanding Spark Execution: DAGs, Stages, and Shuffles](https://www.databricks.com/)
 4. Tác giả Martin Kleppmann, sách *Designing Data-Intensive Applications* (Chương Batch Processing & Dataflows).

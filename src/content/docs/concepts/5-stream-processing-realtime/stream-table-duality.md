@@ -44,7 +44,9 @@ flowchart TD
     MemTable -->|"Spill-to-disk (Chống OOM)"| RocksDB
     RocksDB -.->|"Ad-hoc Query / Join"| TableOut
     MemTable -- "Async flush" --> Changelog
-    Changelog -.->|"Replay (Fault Tolerance)"| MemTable
+    Changelog -.->|"Replay (Fault Tolerance)"| MemTable
+
+
 ```
 
 Dữ liệu mới đến sẽ đi vào bộ đệm trên RAM (MemTable). Khi MemTable đầy, nó sẽ xả xuống đĩa cứng (Spill-to-disk) dưới dạng SSTables (Sorted String Tables) của RocksDB. Table mà developer thao tác thực chất chỉ là giao diện truy vấn ảo (Virtual View) phủ lên trên cấu trúc vật lý này.
@@ -85,7 +87,7 @@ Apache Flink nâng tầm Stream-Table Duality thành khái niệm **Dynamic Tabl
 
 Tùy thuộc vào thao tác SQL (Ví dụ: Lọc vs. Gom nhóm), Flink sẽ tự động phát ra các loại Stream vật lý khác nhau để đồng bộ State:
 1. **Append-only Stream:** Nếu query không có cập nhật trạng thái (ví dụ `SELECT * FROM Stream WHERE amt > 100`), kết quả chỉ sinh ra dòng mới. Không cần State.
-2. **Retract Stream / Upsert Stream:** Nếu query có Aggregation (`GROUP BY`), khi một nhóm cập nhật giá trị từ 50 lên 150, Flink sẽ gửi một message mang cờ `[-] 50` [Retract - Thu hồi giá trị cũ] và một message mang cờ `[+] 150` (Insert - Chèn giá trị mới]. 
+2. **Retract Stream / Upsert Stream:** Nếu query có Aggregation (`GROUP BY`), khi một nhóm cập nhật giá trị từ 50 lên 150, Flink sẽ gửi một message mang cờ `[-] 50` [Retract - Thu hồi giá trị cũ] và một message mang cờ `[+] 150` (Insert - Chèn giá trị mới). 
 
 **Flink SQL Thực chiến kết nối với Debezium (CDC) -> Elasticsearch:**
 ```sql
@@ -189,6 +191,6 @@ Lưu trữ Table (State) trong các hệ thống Streaming là một con dao hai
 ## 5. Nguồn Tham Khảo (References)
 
 1. **Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing** - Tyler Akidau (O'Reilly). *Chương 1 & 2 phân tích kinh điển về nguyên lý Dòng và Bảng.*
-2. [Confluent Blog: Streams and Tables in Apache Kafka: Two Sides of the Same Coin][https://www.confluent.io/]
-3. [Apache Flink Architecture: Dynamic Tables][https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/table/concepts/dynamic_tables/]
-4. [Kafka Streams Architecture & State Management](https://docs.confluent.io/]
+2. [Confluent Blog: Streams and Tables in Apache Kafka: Two Sides of the Same Coin](https://www.confluent.io/)
+3. [Apache Flink Architecture: Dynamic Tables](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/table/concepts/dynamic_tables/)
+4. [Kafka Streams Architecture & State Management](https://docs.confluent.io/)

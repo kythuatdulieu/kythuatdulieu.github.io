@@ -116,6 +116,6 @@ resource "kubernetes_manifest" "qdrant_collection" {
 ---
 
 ## Nguồn Tham Khảo [References]
-* [Uber Engineering: Two-Tower Model Architecture][https://www.uber.com/en-VN/blog/two-tower-model-in-uber-eats/]
-* [Matryoshka Representation Learning (MRL] - Research Paper (arXiv:2205.13147)][https://arxiv.org/abs/2205.13147]
-* [Massive Text Embedding Benchmark (MTEB] Leaderboard](https://huggingface.co/spaces/mteb/leaderboard)
+* [Uber Engineering: Two-Tower Model Architecture](https://www.uber.com/en-VN/blog/two-tower-model-in-uber-eats/)
+* [Matryoshka Representation Learning (MRL) - Research Paper (arXiv:2205.13147)](https://arxiv.org/abs/2205.13147)
+* [Massive Text Embedding Benchmark (MTEB) Leaderboard](https://huggingface.co/spaces/mteb/leaderboard)

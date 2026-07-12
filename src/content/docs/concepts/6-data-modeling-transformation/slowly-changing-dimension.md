@@ -128,7 +128,7 @@ Không có kiến trúc nào là hoàn hảo. Việc triển khai SCD đòi hỏ
 3. **Data Integrity:** Bỏ qua việc tự viết SQL vòng lặp thủ công. Hãy sử dụng các framework chuẩn có sẵn tính năng ACID (như dbt snapshots, Delta Live Tables, Apache Iceberg) để đảm bảo an toàn cho dữ liệu lịch sử.
 
 ## 5. Nguồn Tham Khảo (References)
-* [dbt Documentation - Snapshots][https://docs.getdbt.com/docs/build/snapshots]
-* [AWS Big Data Blog - Implement Slowly Changing Dimensions Type-2 using Apache Iceberg][https://aws.amazon.com/blogs/big-data/implement-historical-record-lookup-and-slowly-changing-dimensions-type-2-using-apache-iceberg/]
-* [LakeOps Blog - Iceberg vs Delta Lake Trade-offs](https://www.lakeops.dev/blog/iceberg-delta-lake-tradeoffs]
+* [dbt Documentation - Snapshots](https://docs.getdbt.com/docs/build/snapshots)
+* [AWS Big Data Blog - Implement Slowly Changing Dimensions Type-2 using Apache Iceberg](https://aws.amazon.com/blogs/big-data/implement-historical-record-lookup-and-slowly-changing-dimensions-type-2-using-apache-iceberg/)
+* [LakeOps Blog - Iceberg vs Delta Lake Trade-offs](https://www.lakeops.dev/blog/iceberg-delta-lake-tradeoffs)
 * Designing Data-Intensive Applications - Martin Kleppmann (Phân tích về Storage I/O và Immutable Data).

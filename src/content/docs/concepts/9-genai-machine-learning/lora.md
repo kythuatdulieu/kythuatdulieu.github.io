@@ -38,7 +38,10 @@ graph TD
     W0 --> Sum("( + )")
     B --> Scaling["Scale: Alpha / Rank"]
     Scaling --> Sum
-    Sum --> H("Output h")
+    Sum --> H("Output h")
+
+
+
 ```
 
 ### Đánh đổi Hệ thống (Systemic Trade-offs)
@@ -149,7 +152,7 @@ LoRA giúp hạn chế "Quên thảm họa" tốt hơn so với Full Fine-Tuning
 
 ## Nguồn Tham Khảo (References)
 
-1. **Microsoft Research:** [LoRA: Low-Rank Adaptation of Large Language Models (Arxiv]][https://arxiv.org/abs/2106.09685]
-2. **University of Washington:** [QLoRA: Efficient Finetuning of Quantized LLMs (Arxiv]][https://arxiv.org/abs/2305.14314]
-3. **vLLM Official Docs:** [Using LoRA with vLLM for Multi-Tenant Serving][https://docs.vllm.ai/en/latest/models/lora.html]
-4. **HuggingFace Blog:** [Parameter-Efficient Fine-Tuning using PEFT](https://huggingface.co/blog/peft]
+1. **Microsoft Research:** [LoRA: Low-Rank Adaptation of Large Language Models (Arxiv)](https://arxiv.org/abs/2106.09685)
+2. **University of Washington:** [QLoRA: Efficient Finetuning of Quantized LLMs (Arxiv)](https://arxiv.org/abs/2305.14314)
+3. **vLLM Official Docs:** [Using LoRA with vLLM for Multi-Tenant Serving](https://docs.vllm.ai/en/latest/models/lora.html)
+4. **HuggingFace Blog:** [Parameter-Efficient Fine-Tuning using PEFT](https://huggingface.co/blog/peft)

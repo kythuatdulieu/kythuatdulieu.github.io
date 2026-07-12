@@ -1,6 +1,13 @@
 ---
 title: "Analytics Engineer (Kỹ sư phân tích dữ liệu)"
 description: "Lộ trình trở thành Analytics Engineer: dbt, SQL nâng cao, semantic layer, data contracts, CI/CD và metric đáng tin cậy."
+tags: ["analytics-engineer", "dbt", "sql", "metrics-layer", "data-contract", "learning-path"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Analytics Engineer (Kỹ sư phân tích dữ liệu)"
+metaDescription: "Lộ trình trở thành Analytics Engineer: dbt, SQL nâng cao, semantic layer, data contracts, CI/CD và metric đáng tin cậy."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Analytics Engineer là người biến dữ liệu thô trong warehouse thành lớp dữ liệu đáng tin để analyst, BI, product và leadership cùng dùng. Vai trò này không chỉ viết SQL. Công việc chính là chuẩn hóa business logic, metric, tài liệu, test và quy trình thay đổi.
@@ -39,6 +46,25 @@ Tập trung vào:
 
 Một câu hỏi hay trước khi tạo bảng mới: “Bảng này sẽ là nguồn sự thật cho quyết định nào?”
 
+Ví dụ một incremental model xử lý late-arriving data — mẫu code xuất hiện trong hầu hết codebase Analytics Engineering nghiêm túc:
+
+```sql
+-- models/marts/fct_orders.sql
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    incremental_strategy='merge'
+) }}
+SELECT order_id, customer_id, order_date, gross_amount
+FROM {{ ref('stg_orders') }}
+{% if is_incremental() %}
+  -- lùi 3 ngày để bắt đơn hàng về trễ (late-arriving)
+  WHERE order_date >= (SELECT MAX(order_date) - INTERVAL '3 days' FROM {{ this }})
+{% endif %}
+```
+
+Ba quyết định trong 12 dòng này đều là trade-off thật: `merge` thay vì `append` (chậm hơn nhưng idempotent khi rerun), lookback 3 ngày (quét thừa một ít đổi lấy không mất đơn về trễ), `unique_key` đặt đúng grain (order chứ không phải order item).
+
 Đọc trong site: [SQL Transformation](/concepts/6-data-modeling-transformation/sql-transformation/), [Materialization](/concepts/6-data-modeling-transformation/materialization/), [One Big Table](/concepts/6-data-modeling-transformation/one-big-table-obt/), [Star Schema](/concepts/6-data-modeling-transformation/star-schema/).
 
 ## 2. dbt như một quy trình kỹ thuật
@@ -53,6 +79,18 @@ Một project dbt đáng tin nên có:
 - `marts` là lớp business-friendly cho dashboard.
 - `tests` cho khóa, null, accepted values, relationship.
 - `exposures` hoặc documentation cho dashboard quan trọng.
+
+```mermaid
+flowchart LR
+    SRC["sources (freshness check)"] --> STG["staging (1:1, rename, cast)"]
+    STG --> INT["intermediate (logic phức tạp)"]
+    INT --> MART["marts (BI-ready)"]
+    MART --> EXP["exposures (dashboards)"]
+    TEST["tests + contracts"] -.chặn merge khi fail.-> STG
+    TEST -.-> MART
+```
+
+Ở mức chuyên nghiệp, project dbt chạy trong CI: mỗi pull request chỉ build và test những model bị ảnh hưởng (`dbt build --select state:modified+`), so sánh với manifest của production (Slim CI). Điều này biến "sửa một câu SQL" thành quy trình có review, có test gate — đúng nghĩa đưa software engineering vào analytics.
 
 Đọc trong site: [dbt](/concepts/6-data-modeling-transformation/dbt/), [dbt Models](/concepts/6-data-modeling-transformation/dbt-models/), [dbt Testing](/concepts/7-dataops-orchestration-quality/dbt-testing/), [Data Testing](/concepts/7-dataops-orchestration-quality/data-testing/).
 
@@ -117,3 +155,5 @@ Không cần bắt đầu quá nặng. Với team nhỏ, chỉ cần:
 - [Data contracts](https://docs.getdbt.com/docs/build/data-contracts) - dbt Labs.
 - [Fact Tables and Dimension Tables](https://www.kimballgroup.com/2003/01/fact-tables-and-dimension-tables/) - Kimball Group.
 - [DORA metrics](https://dora.dev/guides/dora-metrics/) - DORA.
+- [Incremental models](https://docs.getdbt.com/docs/build/incremental-models) - dbt Labs.
+- [Continuous integration (Slim CI)](https://docs.getdbt.com/docs/deploy/continuous-integration) - dbt Labs.

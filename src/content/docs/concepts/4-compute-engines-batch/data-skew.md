@@ -35,7 +35,10 @@ Khi Hash Function gặp phải các Key có tần suất xuất hiện khổng l
 graph LR
     A["Node 1: Key A, B, B"] -->|Shuffle Hash| C["Partition 0: Key A"]
     B["Node 2: Key B, C, B"] -->|Shuffle Hash| D["Partition 1: Key B, B, B, B, B, B..."]
-    E["Node 3: Key D, E, B"] -->|Shuffle Hash| F["Partition 2: Key C, D, E"]
+    E["Node 3: Key D, E, B"] -->|Shuffle Hash| F["Partition 2: Key C, D, E"]
+
+
+
 ```
 
 ### Hậu quả Cấp Hệ thống (Systemic Consequences)
@@ -153,7 +156,7 @@ WHERE t.user_id IS NOT NULL AND p.user_id IS NOT NULL;
 
 ## Nguồn Tham Khảo (References)
 
-- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog]][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
-- [Optimize Data Workloads Guide - Databricks][https://www.databricks.com/discover/pages/optimize-data-workloads-guide]
-- [Handling Data Skew in Apache Spark - Tư duy phân tán từ các Big Tech](https://www.uber.com/en-VN/blog/]
+- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog)](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+- [Optimize Data Workloads Guide - Databricks](https://www.databricks.com/discover/pages/optimize-data-workloads-guide)
+- [Handling Data Skew in Apache Spark - Tư duy phân tán từ các Big Tech](https://www.uber.com/en-VN/blog/)
 - *Designing Data-Intensive Applications* (Sách của Martin Kleppmann, chương Partitioning và Data Skew).

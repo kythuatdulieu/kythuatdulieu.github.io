@@ -162,7 +162,7 @@ Một Staff Data Engineer không bao giờ chờ hệ thống sập mới bắt 
 
 ## Nguồn Tham Khảo (References)
 
-* [Apache Flink Documentation: Network Flow Control and Backpressure][https://flink.apache.org/2019/07/23/flink-network-stack-2.html]
-* [Databricks: Understanding Spark Streaming Backpressure][https://www.databricks.com/blog/2015/11/12/introducing-backpressure-in-apache-spark.html]
-* [Netflix Tech Blog: Mantis - A Stream Processing System](https://netflixtechblog.com/]
+* [Apache Flink Documentation: Network Flow Control and Backpressure](https://flink.apache.org/2019/07/23/flink-network-stack-2.html)
+* [Databricks: Understanding Spark Streaming Backpressure](https://www.databricks.com/blog/2015/11/12/introducing-backpressure-in-apache-spark.html)
+* [Netflix Tech Blog: Mantis - A Stream Processing System](https://netflixtechblog.com/)
 * Sách *Designing Data-Intensive Applications* (Martin Kleppmann, Chương 11: Stream Processing - Flow Control).

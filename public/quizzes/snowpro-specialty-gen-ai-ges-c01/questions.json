@@ -13,10 +13,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Cortex Analyst hỗ trợ các cuộc hội thoại nhiều lượt (multi-turn conversations) bằng cách yêu cầu ứng dụng truyền toàn bộ lịch sử hội thoại (conversation history) trong trường `messages` của mỗi yêu cầu API. Điều này cho phép mô hình hiểu được ngữ cảnh của các câu hỏi tiếp theo (follow-up questions).",
+    "explanation_vi": "Để hỗ trợ hội thoại nhiều lượt (multi-turn conversations) và duy trì ngữ cảnh, Snowflake Cortex Analyst yêu cầu ứng dụng gửi toàn bộ lịch sử cuộc hội thoại trong mỗi yêu cầu API (trong tham số `messages` hoặc `conversationHistory`).\n\n*   **Tại sao C đúng**: Cortex Analyst hoạt động dưới dạng không trạng thái (stateless) ở cấp độ API. Do đó, để duy trì ngữ cảnh (ví dụ: các câu hỏi tiếp theo như 'Còn về khu vực miền Tây thì sao?'), ứng dụng khách (client application) phải lưu giữ lịch sử chat và truyền lại toàn bộ lịch sử hội thoại này đến các tác nhân LLM ở mỗi lượt gọi tiếp theo.\n*   **Tại sao các phương án khác sai**:\n    *   **A, B**: Snowflake Cortex Analyst không tự động lưu trữ trạng thái phiên hoặc lưu tương tác vào cơ sở dữ liệu riêng để tự quản lý bộ nhớ; trách nhiệm này thuộc về ứng dụng gọi API.\n    *   **D**: Cortex Analyst không dựa vào một tác nhân tóm tắt độc lập chỉ để viết lại câu hỏi dựa trên lịch sử trước khi gửi đi, mà nó xử lý trực tiếp lịch sử hội thoại được truyền vào để suy luận ngữ cảnh.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Làm thế nào để Snowflake Cortex Analyst hỗ trợ các cuộc hội thoại nhiều lượt (multi-turn) nhằm duy trì ngữ cảnh qua các lần tương tác của người dùng?",
+    "options_vi": {
+      "A": "Bằng cách lưu trữ các tương tác trước đó trong một cơ sở dữ liệu riêng biệt",
+      "B": "Bằng cách sử dụng tính năng bộ nhớ dựa trên phiên (session-based memory) để theo dõi các truy vấn của người dùng",
+      "C": "Bằng cách truyền toàn bộ lịch sử cuộc hội thoại đến từng tác nhân LLM trong quy trình làm việc",
+      "D": "Bằng cách sử dụng một tác nhân tóm tắt (summarization agent) để viết lại câu hỏi dựa trên lịch sử cuộc hội thoại"
+    }
   },
   {
     "id": 2,
@@ -32,10 +42,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `SPLIT_TEXT_RECURSIVE_CHARACTER` trong Snowflake Cortex hỗ trợ chia nhỏ các tài liệu dài thành một mảng các đoạn văn bản (text chunks) nhỏ hơn để đưa vào mô hình ngôn ngữ lớn (LLM), giúp tối ưu hóa việc xử lý và nhúng vector (embedding).",
+    "explanation_vi": "Hàm `SPLIT_TEXT_RECURSIVE_CHARACTER` được thiết kế riêng để chuẩn bị dữ liệu văn bản lớn cho việc xử lý bằng LLM hoặc nhúng vector.\n\n*   **Tại sao D đúng**: Hàm này thực hiện chia nhỏ các tài liệu dài thành các đoạn nhỏ hơn (chunks) dựa trên các ký tự phân tách và kích thước chunk mong muốn, trả về kết quả là một mảng văn bản (`ARRAY` of text). Điều này giúp tránh vượt quá giới hạn token (context window) của các mô hình LLM.\n*   **Tại sao các phương án khác sai**:\n    *   **A (EMBED_TEXT_768)**: Dùng để chuyển đổi văn bản thành các vector nhúng (vector embeddings) có kích thước 768 chiều, chứ không có chức năng chia nhỏ tài liệu.\n    *   **B (FINETUNE)**: Dùng để tinh chỉnh một mô hình ngôn ngữ lớn trên tập dữ liệu tùy chỉnh.\n    *   **C (PARSE_DOCUMENT)**: Dùng để trích xuất văn bản từ các định dạng tài liệu phi cấu trúc (như PDF, Word) nhưng không tự động thực hiện chia nhỏ đệ quy theo ký tự như `SPLIT_TEXT_RECURSIVE_CHARACTER`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/split_text_recursive_character-snowflake-cortex"
-    ]
+      {
+        "title": "SPLIT_TEXT_RECURSIVE_CHARACTER | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/split_text_recursive_character-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia AI tạo sinh (Gen AI Specialist) cần chuẩn bị các tài liệu dài để đưa vào LLM. Hàm Snowflake Cortex nào hỗ trợ yêu cầu này bằng cách trả về một mảng chứa các đoạn văn bản (text chunks)?",
+    "options_vi": {
+      "A": "EMBED_TEXT_768",
+      "B": "FINETUNE",
+      "C": "PARSE_DOCUMENT",
+      "D": "SPLIT_TEXT_RECURSIVE_CHARACTER"
+    }
   },
   {
     "id": 3,
@@ -51,10 +71,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Cortex Analyst cho phép người dùng đặt câu hỏi bằng ngôn ngữ tự nhiên và nhận lại câu trả lời trực tiếp dựa trên dữ liệu có cấu trúc mà không cần viết mã SQL, giúp người dùng không có kiến thức kỹ thuật vẫn có thể khai thác dữ liệu dễ dàng.",
+    "explanation_vi": "Snowflake Cortex Analyst là một dịch vụ được xây dựng để tương tác trực tiếp với dữ liệu có cấu trúc bằng ngôn ngữ tự nhiên.\n\n*   **Tại sao B đúng**: Cortex Analyst cho phép người dùng đặt các câu hỏi bằng ngôn ngữ tự nhiên (ví dụ: 'Doanh thu tháng trước là bao nhiêu?') và tự động chuyển đổi chúng thành các truy vấn SQL chính xác để chạy trên dữ liệu của Snowflake, sau đó trả về câu trả lời trực tiếp cho người dùng.\n*   **Tại sao các phương án khác sai**:\n    *   **A (Cortex Search)**: Tập trung vào tìm kiếm ngữ nghĩa (semantic search) trên dữ liệu phi cấu trúc hoặc bán cấu trúc thông qua truy vấn vector, không phải là công cụ chuyên dịch ngôn ngữ tự nhiên thành SQL cho dữ liệu cấu trúc.\n    *   **C (CLASSIFY_TEXT)**: Dùng để phân loại văn bản theo các danh mục được xác định trước.\n    *   **D (PARSE_DOCUMENT)**: Dùng để trích xuất văn bản và layout từ tài liệu phi cấu trúc.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Tính năng hoặc hàm nào của Snowflake Cortex hỗ trợ khả năng người dùng đặt câu hỏi bằng ngôn ngữ tự nhiên và nhận câu trả lời trực tiếp mà không cần phải viết mã SQL?",
+    "options_vi": {
+      "A": "Cortex Search",
+      "B": "Cortex Analyst",
+      "C": "Hàm CLASSIFY_TEXT của Cortex",
+      "D": "Hàm PARSE_DOCUMENT của Cortex"
+    }
   },
   {
     "id": 4,
@@ -71,10 +101,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake đảm bảo nguyên tắc quản trị bảo mật thông tin bằng cách: không chia sẻ dữ liệu của khách hàng này cho khách hàng khác hay nhà phát triển mô hình (A) và áp dụng cơ chế kiểm soát truy cập dựa trên vai trò (RBAC) để đảm bảo quyền truy cập mô hình hợp lệ (B).",
+    "explanation_vi": "Snowflake cam kết bảo vệ dữ liệu khách hàng và tuân thủ các chính sách bảo mật nghiêm ngặt khi cung cấp Cortex AI.\n\n*   **Tại sao A đúng**: Snowflake cam kết dữ liệu của khách hàng (bao gồm dữ liệu đầu vào và đầu ra từ LLM) luôn được cô lập và không bao giờ được sử dụng để huấn luyện lại các mô hình cơ sở của bên thứ ba hoặc chia sẻ cho bất kỳ khách hàng nào khác.\n*   **Tại sao B đúng**: Mọi tính năng trong Snowflake Cortex đều tích hợp chặt chẽ với hệ thống phân quyền Role-Based Access Control (RBAC) mặc định của Snowflake. Ví dụ, quản trị viên có thể quyết định vai trò nào được phép gọi hàm `COMPLETE` hoặc sử dụng các mô hình cụ thể.\n*   **Tại sao các phương án khác sai**:\n    *   **C**: Tinh chỉnh mô hình (fine-tuning) trong Snowflake được bảo mật trong phạm vi tài khoản của khách hàng đó và không được thiết kế để tự do chia sẻ ra ngoài cho các khách hàng khác như một tính năng quản trị.\n    *   **D**: Snowflake Model Registry dùng để quản lý các mô hình ML (như PyTorch, TensorFlow, LLM tùy chỉnh), chứ không phải là cơ chế duy nhất hoặc bắt buộc đối với tất cả các mô hình bên thứ ba truy cập tài khoản.\n    *   **E**: Cortex Guard là một tính năng tùy chọn để lọc nội dung không an toàn, không phải là bắt buộc (mandated) trong mọi lượt gọi hàm `COMPLETE`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/faq"
-    ]
+      {
+        "title": "Snowflake Cortex AI Trust and Safety | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/faq"
+      }
+    ],
+    "question_vi": "Snowflake đảm bảo những nguyên tắc quản trị (governance principles) nào khi sử dụng các tính năng Gen AI và các mô hình nền tảng bên dưới của mình? (Chọn hai.)",
+    "options_vi": {
+      "A": "Dữ liệu khách hàng của Snowflake không bao giờ được chia sẻ cho các khách hàng khác hoặc nhà phát triển mô hình.",
+      "B": "Snowflake áp dụng Kiểm soát quyền truy cập dựa trên vai trò (RBAC) để đảm bảo quyền truy cập mô hình thích hợp.",
+      "C": "Snowflake cho phép khách hàng tạo các mô hình đã được tinh chỉnh (fine-tuned) để chia sẻ với các khách hàng khác.",
+      "D": "Snowflake chỉ cho phép các mô hình của bên thứ ba truy cập tài khoản Snowflake bằng cách sử dụng Snowflake Model Registry.",
+      "E": "Snowflake bắt buộc sử dụng Cortex Guard trong hàm Cortex COMPLETE để lọc các phản hồi không an toàn từ mô hình."
+    }
   },
   {
     "id": 5,
@@ -91,10 +132,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để hạn chế quyền truy cập các hàm Cortex và chỉ cho phép những vai trò được cấp quyền sử dụng, quản trị viên cần thu hồi vai trò cơ sở dữ liệu (database role) `SNOWFLAKE.CORTEX_USER` từ vai trò `PUBLIC` (C) và thu hồi quyền nhập khẩu (imported privileges) trên cơ sở dữ liệu `SNOWFLAKE` từ vai trò `PUBLIC` (E).",
+    "explanation_vi": "Mặc định, quyền truy cập vào các hàm Cortex AI được cấp cho vai trò `PUBLIC` thông qua vai trò cơ sở dữ liệu (database role) `SNOWFLAKE.CORTEX_USER` của cơ sở dữ liệu hệ thống `SNOWFLAKE`.\n\n*   **Tại sao C đúng**: Lệnh `REVOKE DATABASE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;` sẽ thu hồi quyền sử dụng mặc định của tất cả người dùng (vai trò PUBLIC), buộc quản trị viên phải cấp quyền này cho từng vai trò cụ thể.\n*   **Tại sao E đúng**: Cơ sở dữ liệu `SNOWFLAKE` là một cơ sở dữ liệu chia sẻ (shared database). Thu hồi quyền `IMPORTED PRIVILEGES` trên cơ sở dữ liệu `SNOWFLAKE` từ vai trò `PUBLIC` cũng là một bước cần thiết để chặn quyền truy cập mặc định vào các đối tượng hệ thống được chia sẻ từ Snowflake.\n*   **Tại sao các phương án khác sai**:\n    *   **A, B**: Các vai trò này là vai trò cơ sở dữ liệu (database role), không phải vai trò thông thường (account role), nên cú pháp không chỉ rõ từ khóa `DATABASE ROLE` là không chính xác.\n    *   **D**: Các hàm Cortex không nằm trong một schema thông thường có tên `SNOWFLAKE.CORTEX` để có thể thu hồi quyền sử dụng schema trực tiếp như vậy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Cortex Access Control | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Những lệnh nào sau đây sẽ hạn chế quyền truy cập vào các hàm Snowflake Cortex, chỉ cho phép truy cập đối với các vai trò đã được cấp quyền một cách rõ ràng? (Chọn hai.)",
+    "options_vi": {
+      "A": "REVOKE ROLE SNOWELAKE.CORTEX_FUNCTIONS FROM ROLE PUBLIC;",
+      "B": "REVOKE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;",
+      "C": "REVOKE DATABASE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;",
+      "D": "REVOKE USAGE ON SCHENA SNOWFLAKE.CORTEX FROM ROLE PUBLIC;",
+      "E": "REVOKE IMPORTED PRIVILEGES ON DATABASE SNOWFLAKE FROM ROLE PUBLIC;"
+    }
   },
   {
     "id": 6,
@@ -110,10 +162,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `VECTOR_L1_DISTANCE` trong Snowflake được sử dụng để tính toán khoảng cách Manhattan (khoảng cách L1) giữa hai điểm trong không gian vector.",
+    "explanation_vi": "Khoảng cách Manhattan được đại diện toán học bằng định chuẩn L1 (L1 norm).\n\n*   **Tại sao B đúng**: Hàm `VECTOR_L1_DISTANCE` tính khoảng cách L1 (còn gọi là khoảng cách Manhattan) giữa hai vector đầu vào có cùng số chiều.\n*   **Tại sao các phương án khác sai**:\n    *   **A (VECTOR_INNER_PRODUCT)**: Tính tích vô hướng (inner product) giữa hai vector.\n    *   **C (VECTOR_L2_DISTANCE)**: Tính khoảng cách L2 (còn gọi là khoảng cách Euclid).\n    *   **D (VECTOR_COSINE_SIMILARITY)**: Tính độ tương đồng cosine giữa hai vector.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/vector_l1_distance"
-    ]
+      {
+        "title": "VECTOR_L1_DISTANCE | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/vector_l1_distance"
+      }
+    ],
+    "question_vi": "Hàm nào được sử dụng để tính khoảng cách Manhattan giữa hai điểm trong không gian vector?",
+    "options_vi": {
+      "A": "VECTOR_INNER_PRODUCT",
+      "B": "VECTOR_L1_DISTANCE",
+      "C": "VECTOR_L2_DISTANCE",
+      "D": "VECTOR_COSINE_SIMILARITY"
+    }
   },
   {
     "id": 7,
@@ -129,10 +191,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Quy trình chuẩn cho RAG với tài liệu phi cấu trúc trong Snowflake: Sử dụng `PARSE_DOCUMENT` để trích xuất văn bản từ tài liệu PDF/Word; lưu trữ và chuyển đổi văn bản đó thành vector bằng `EMBED_TEXT_768`; truy xuất các đoạn văn bản tương tự bằng khoảng cách vector, sau đó truyền vào hàm `COMPLETE` để LLM phân tích và trả lời câu hỏi.",
+    "explanation_vi": "Một quy trình RAG (Retrieval-Augmented Generation) tiêu chuẩn cho tài liệu phi cấu trúc (như PDF) trong Snowflake Cortex gồm các bước chính xác:\n\n*   **Tại sao D đúng**:\n    1.  **Trích xuất văn bản**: Sử dụng `PARSE_DOCUMENT` để chuyển đổi các file tài liệu nhị phân (PDF, Word) thành văn bản thuần túy.\n    2.  **Vector hóa**: Dùng `EMBED_TEXT_768` để tạo ra các vector nhúng từ văn bản đã được chia nhỏ và lưu vào bảng vector.\n    3.  **Truy xuất & Phân tích**: Thực hiện tìm kiếm tương đồng vector (vector similarity search) để lấy ra các đoạn văn bản liên quan nhất, sau đó đưa các đoạn này vào hàm `COMPLETE` (LLM) làm ngữ cảnh để trả lời câu hỏi của người dùng.\n*   **Tại sao các phương án khác sai**:\n    *   **A**: `EMBED_TEXT_768` không dùng để trích xuất văn bản từ tài liệu mà dùng để chuyển văn bản thành vector.\n    *   **B**: `SENTIMENT` hay `TRANSLATE` không phải là các bước cốt lõi để xây dựng đường ống RAG từ tài liệu phi cấu trúc.\n    *   **C**: Không thể dùng trực tiếp hàm `COMPLETE` trên các URL bên ngoài một cách tự động để thực hiện RAG mà không trích xuất và lưu trữ dữ liệu trước.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "Cortex Search Service | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      }
+    ],
+    "question_vi": "Quy trình làm việc (workflow) nào nên được sử dụng để thực hiện phân tích dữ liệu trên các tài liệu phi cấu trúc bằng các tính năng Snowflake Cortex AI, bao gồm cả Kỹ thuật tạo tăng cường truy xuất (RAG)?",
+    "options_vi": {
+      "A": "1. Sử dụng EMBED_TEXT_768 để trích xuất văn bản từ tài liệu. 2. Áp dụng SUMMARIZE trực tiếp lên các tệp PDF. 3. Sử dụng TRANSLATE để truy xuất dữ liệu.",
+      "B": "1. Sử dụng SENTIMENT trên các tệp nhị phân. 2. Áp dụng TRANSLATE để tạo các vector nhúng. 3. Sử dụng CLASSIFY_TEXT để trích xuất thông tin bố cục từ các tệp PDF.",
+      "C": "1. Sử dụng COMPLETE để tóm tắt tài liệu trực tiếp từ các URL bên ngoài. 2. Sử dụng COUNT_TOKENS để xác thực kích thước đầu ra. 3. Lưu trữ đầu ra trong một tệp văn bản.",
+      "D": "1. Sử dụng PARSE_DOCUMENT để trích xuất văn bản từ tài liệu. 2. Lưu trữ và vector hóa nội dung bằng cách sử dụng EMBED_TEXT_768. 3. Truy xuất dữ liệu bằng độ tương đồng vector, sau đó sử dụng COMPLETE để phân tích dữ liệu."
+    }
   },
   {
     "id": 8,
@@ -149,10 +221,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Cortex Search Services theo dõi chi phí hàng ngày qua view `CORTEX_SEARCH_DAILY_USAGE_HISTORY` dựa trên hai danh mục chi phí chính là Serving compute (tín dụng tiêu thụ cho việc duy trì chỉ mục tìm kiếm luôn chạy) và TOKEN_CREDITS (tín dụng tiêu thụ dựa trên số lượng token được xử lý khi nhúng dữ liệu).",
+    "explanation_vi": "Dịch vụ Tìm kiếm Cortex (Cortex Search) quản lý và tính phí tự động dựa trên hai thành phần tài nguyên chính:\n\n*   **Tại sao A đúng**: **Serving compute** đại diện cho tài nguyên tính toán được sử dụng để duy trì chỉ mục (index) và thực hiện các truy vấn tìm kiếm thời gian thực.\n*   **Tại sao D đúng**: **TOKEN_CREDITS** là chi phí phát sinh từ việc sử dụng các mô hình nhúng vector (embedding models) tự động đi kèm khi lập chỉ mục văn bản trong Cortex Search.\n*   **Tại sao các phương án khác sai**:\n    *   **B, C**: Cortex Search là một dịch vụ không máy chủ (serverless), nên chi phí tính toán của nó không được tính vào Virtual Warehouse thông thường của người dùng mà được quản lý riêng.\n    *   **E**: Phí token được quy đổi ra tín dụng tín toán (`TOKEN_CREDITS`) chứ không theo dõi trực tiếp dưới dạng một cột riêng biệt mang tên `EMBED_TEXT_TOKENS` trong bảng lịch sử sử dụng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/account-usage/cortex_search_daily_usage_history"
-    ]
+      {
+        "title": "Cortex Search Billing | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/account-usage/cortex_search_daily_usage_history"
+      }
+    ],
+    "question_vi": "Những danh mục chi phí nào phát sinh do Dịch vụ tìm kiếm Cortex (Cortex Search Services) và được theo dõi trong chế độ xem CORTEX_SEARCH_DAILY_USAGE_HISTORY? (Chọn hai.)",
+    "options_vi": {
+      "A": "Serving compute (Chi phí tính toán phục vụ)",
+      "B": "Cloud services compute (Chi phí dịch vụ đám mây)",
+      "C": "Virtual warehouse compute (Chi phí kho ảo)",
+      "D": "TOKEN_CREDITS (Tín dụng Token)",
+      "E": "EMBED_TEXT_TOKENS (Token của EMBED_TEXT)"
+    }
   },
   {
     "id": 9,
@@ -168,10 +251,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi xây dựng mô hình Snowflake Document AI, đối tượng Lược đồ (Schema) chứa bản dựng mô hình phải được cấp quyền `CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE` để mô hình hoạt động chính xác.",
+    "explanation_vi": "Trong Snowflake, Document AI là một dịch vụ tích hợp cho phép bạn huấn luyện và triển khai các mô hình trích xuất thông tin từ tài liệu.\n\n*   **Tại sao C đúng**: Quyền tạo một thực thể Document AI (`CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE`) phải được cấp trên một **Schema** cụ thể, vì thực thể Document AI (sau khi build) sẽ tồn tại như một đối tượng cấp schema (schema-level object).\n*   **Tại sao các phương án khác sai**:\n    *   **A, B, D**: Mặc dù bạn cần cơ sở dữ liệu (Database) và Warehouse để chạy truy vấn, hay Stage để chứa tài liệu, quyền hạn cụ thể để tạo đối tượng Document AI được gán trực tiếp ở cấp Schema.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
-    ]
+      {
+        "title": "Preparing for Document AI | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
+      }
+    ],
+    "question_vi": "Đối tượng nào phải có quyền CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE khi xây dựng mô hình Snowflake Document AI?",
+    "options_vi": {
+      "A": "Virtual warehouse (Kho ảo)",
+      "B": "Database (Cơ sở dữ liệu)",
+      "C": "Schema (Lược đồ)",
+      "D": "Stage (Khu vực lưu trữ tạm thời)"
+    }
   },
   {
     "id": 10,
@@ -187,10 +280,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để cho phép vai trò `GENAI_DEVELOPER` sử dụng hàm `COMPLETE` với mô hình cụ thể `llama3.1-70b`, cần cấp quyền sử dụng mô hình cụ thể đó cho vai trò. Câu lệnh trong phương án D cấp quyền trực tiếp đối với mô hình trong cấu hình phân quyền mô hình của Snowflake.",
+    "explanation_vi": "Để quản lý chi tiết quyền truy cập vào các mô hình cụ thể trong Snowflake Cortex, bạn phải sử dụng quyền hạn của vai trò cơ sở dữ liệu (database role) hoặc vai trò ứng dụng tương ứng của mô hình đó.\n\n*   **Tại sao D đúng**: Lệnh đúng trong phương án D sẽ thực hiện cấp vai trò ứng dụng/cơ sở dữ liệu của Snowflake Cortex cho vai trò tùy chỉnh. Cụ thể là câu lệnh: `GRANT APPLICATION ROLE SNOWFLAKE.CORTEX_MODEL_ROLE_LLAMA3_1_70B TO ROLE GENAI_DEVELOPER;` (hoặc cú pháp tương tự thể hiện trong hình ảnh D). Điều này cho phép vai trò `GENAI_DEVELOPER` sử dụng mô hình Llama 3.1 70B cụ thể khi gọi hàm `COMPLETE`.\n*   **Tại sao các phương án khác sai**:\n    *   Các phương án khác (A, B, C) sử dụng sai cú pháp hoặc cấp quyền chung chung không đúng tên vai trò cơ sở dữ liệu cần thiết cho mô hình `llama3.1-70b`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Cortex Access Control and Privileges | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Một ACCOUNTADMIN của Snowflake cần giới hạn việc sử dụng LLM bằng cách chỉ cấp quyền truy cập cho các vai trò riêng lẻ. Để làm điều này, họ đã vô hiệu hóa việc sử dụng LLM đối với tất cả các mô hình trong tài khoản. Những lệnh nào sau đây sẽ cho phép vai trò GENAI_DEVELOPER sử dụng hàm COMPLETE với mô hình llama3.1-70b?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838177293-yq4bqszl.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838179644-ajdqul43.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774838181727-wcirfdr6.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774838183929-hat3ak86.png)"
+    }
   },
   {
     "id": 11,
@@ -206,10 +309,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Document AI sử dụng mô hình ngôn ngữ lớn độc quyền mang tên Arctic-TILT (TILT - Text-Image-Layout-Transformer) để phân tích hình ảnh tài liệu, hiểu bố cục và trích xuất thông tin văn bản một cách thông minh.",
+    "explanation_vi": "Snowflake Document AI sử dụng một mô hình đa phương thức độc quyền được tối ưu hóa đặc biệt cho việc xử lý tài liệu.\n\n*   **Tại sao A đúng**: Mô hình này có tên là **Arctic-TILT** (Text-Image-Layout-Transformer). Đây là mô hình độc quyền của Snowflake được thiết kế để hiểu văn bản, hình ảnh và bố cục của tài liệu phi cấu trúc nhằm trích xuất thông tin chính xác.\n*   **Tại sao các phương án khác sai**:\n    *   **B**: `deepseek-rl` là một mô hình nguồn mở khác không liên quan đến Document AI của Snowflake.\n    *   **C, D**: `jamba-instruct` và `mistral-large2` là các mô hình ngôn ngữ lớn (LLM) dạng văn bản tổng quát có sẵn trong Snowflake Cortex, không phải là mô hình chuyên dụng cho Document AI.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/about"
-    ]
+      {
+        "title": "Document AI Overview | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/about"
+      }
+    ],
+    "question_vi": "Mô hình ngôn ngữ lớn (LLM) độc quyền nào được sử dụng bởi Snowflake Document AI?",
+    "options_vi": {
+      "A": "Arctic-TILT",
+      "B": "deepseek-rl",
+      "C": "jamba-instruct",
+      "D": "mistral-large2"
+    }
   },
   {
     "id": 12,
@@ -225,10 +338,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Cortex Analyst là tính năng cho phép ứng dụng tích hợp để trả lời câu hỏi bằng ngôn ngữ tự nhiên dựa trên dữ liệu có cấu trúc (bảng, cột) trong Snowflake mà không cần người dùng tự viết SQL.",
+    "explanation_vi": "Snowflake cung cấp các dịch vụ AI chuyên biệt cho từng loại dữ liệu.\n\n*   **Tại sao D đúng**: **Cortex Analyst** được thiết kế riêng để cho phép các ứng dụng giao tiếp với dữ liệu có cấu trúc (bảng, cột) trong Snowflake thông qua ngôn ngữ tự nhiên, giúp chuyển đổi câu hỏi của người dùng thành truy vấn SQL.\n*   **Tại sao các phương án khác sai**:\n    *   **A (Document AI)**: Dành cho việc trích xuất thông tin từ tài liệu phi cấu trúc (PDF, ảnh).\n    *   **B (Copilot)**: Là một trợ lý AI tích hợp trong giao diện người dùng Snowsight để hỗ trợ viết mã SQL, không phải là một API dịch vụ để tích hợp vào ứng dụng ngoài.\n    *   **C (Cortex Search)**: Dành cho việc tìm kiếm ngữ nghĩa trên dữ liệu phi cấu trúc hoặc văn bản tự do.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Tính năng nào của Snowflake cho phép tích hợp ứng dụng để trả lời các câu hỏi bằng dữ liệu có cấu trúc bên trong Snowflake?",
+    "options_vi": {
+      "A": "Document AI",
+      "B": "Copilot",
+      "C": "Cortex Search",
+      "D": "Cortex Analyst"
+    }
   },
   {
     "id": 13,
@@ -245,10 +368,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hai tham số `temperature` (nhiệt độ) và `top_p` (xác suất tích lũy) được sử dụng để điều chỉnh tính ngẫu nhiên và mức độ phong phú/đa dạng của câu trả lời do LLM sinh ra trong hàm `COMPLETE`.",
+    "explanation_vi": "Trong hàm `SNOWFLAKE.CORTEX.COMPLETE`, các siêu tham số (hyperparameters) được sử dụng để điều khiển tính sáng tạo của mô hình.\n\n*   **Tại sao D đúng**: **temperature** điều chỉnh mức độ ngẫu nhiên của các từ được sinh ra. Giá trị cao hơn (gần 1.0) làm cho phản hồi sáng tạo và đa dạng hơn, trong khi giá trị thấp hơn làm phản hồi mang tính xác định và tập trung hơn.\n*   **Tại sao E đúng**: **top_p** (nucleus sampling) kiểm soát tính đa dạng bằng cách chỉ chọn từ tập hợp các token có tổng xác suất tích lũy đạt ngưỡng `top_p`.\n*   **Tại sao các phương án khác sai**:\n    *   **A (guardrails)**: Kích hoạt bộ lọc nội dung an toàn (Cortex Guard).\n    *   **B (max_tokens)**: Giới hạn độ dài tối đa của phản hồi được sinh ra.\n    *   **C (response_format)**: Quy định cấu trúc của dữ liệu trả về (ví dụ: định dạng JSON).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "COMPLETE (Snowflake Cortex) | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Những tham số nào có thể được điều chỉnh trong một cuộc gọi hàm SNOWFLAKE.CORTEX.COMPLETE để kiểm soát tính ngẫu nhiên và tính đa dạng của phản hồi từ LLM? (Chọn hai.)",
+    "options_vi": {
+      "A": "guardrails (rào cản bảo vệ)",
+      "B": "max_tokens (số lượng token tối đa)",
+      "C": "response_format (định dạng phản hồi)",
+      "D": "temperature (nhiệt độ)",
+      "E": "top_p"
+    }
   },
   {
     "id": 14,
@@ -264,10 +398,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Cortex Search tự động hóa các bước tạo vector embedding và tính toán khoảng cách tương đồng vector, giúp đơn giản hóa và tối ưu hóa quy trình truy xuất thông tin trong hệ thống RAG.",
+    "explanation_vi": "Cortex Search là một dịch vụ được quản lý hoàn toàn (fully managed service) giúp đơn giản hóa việc xây dựng hệ thống RAG.\n\n*   **Tại sao B đúng**: **Cortex Search** tự động quản lý toàn bộ quy trình: từ việc theo dõi thay đổi dữ liệu trong bảng nguồn, tự động tạo vector nhúng (embeddings) thông qua mô hình nhúng tích hợp, lập chỉ mục vector, cho đến việc cung cấp API tìm kiếm ngữ nghĩa kết hợp tìm kiếm từ khóa (hybrid search) mà không cần lập trình viên phải gọi riêng rẽ các hàm nhúng hay tính toán khoảng cách vector thủ công.\n*   **Tại sao các phương án khác sai**:\n    *   **A (Cortex Analyst)**: Chuyên dùng để trả lời câu hỏi trên dữ liệu có cấu trúc thông qua việc tạo truy vấn SQL.\n    *   **C (Cortex Fine-tuning)**: Dùng để huấn luyện/tinh chỉnh mô hình.\n    *   **D (Cortex COMPLETE)**: Hàm gọi LLM để sinh văn bản, không tự động quản lý vòng đời của vector nhúng hay chỉ mục tìm kiếm.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "Cortex Search Service | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      }
+    ],
+    "question_vi": "Việc sử dụng tính năng nào của Snowflake sẽ đơn giản hóa việc tạo vector nhúng (vector embeddings) và tính toán độ tương đồng vector, từ đó giảm số lượng các bước truy xuất cần thiết trong đường ống RAG (Retrieval Augmented Generation)?",
+    "options_vi": {
+      "A": "Cortex Analyst",
+      "B": "Cortex Search",
+      "C": "Cortex Fine-tuning",
+      "D": "Hàm Cortex COMPLETE"
+    }
   },
   {
     "id": 15,
@@ -284,10 +428,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Chi phí của hàm COMPLETE phụ thuộc trực tiếp vào số lượng token được sinh ra. Do đó, việc giới hạn `max_tokens` cho câu trả lời đầu ra (B) và chuyển sang sử dụng mô hình nhỏ hơn (ít tham số hơn) vốn có đơn giá tín dụng thấp hơn trên mỗi token (E) sẽ giúp giảm thiểu chi phí hiệu quả.",
+    "explanation_vi": "Chi phí gọi hàm `Cortex COMPLETE` được tính dựa trên số lượng token được xử lý (gồm cả token đầu vào và token đầu ra) nhân với đơn giá token của mô hình được chọn.\n\n*   **Tại sao B đúng**: Tham số `max_tokens` giới hạn độ dài của phản hồi được tạo ra bởi mô hình, do đó kiểm soát trực tiếp số lượng token đầu ra, giúp tiết kiệm chi phí.\n*   **Tại sao E đúng**: Các mô hình nhỏ hơn (ít tham số hơn, ví dụ: `llama3-8b` so với `llama3-70b`) có chi phí trên mỗi token rẻ hơn rất nhiều, giúp giảm thiểu đáng kể chi phí khi thực hiện cùng một khối lượng công việc.\n*   **Tại sao các phương án khác sai**:\n    *   **A**: Tham số `max_tokens` chỉ giới hạn số lượng token đầu ra được sinh ra, không giới hạn số lượng token đầu vào được gửi đi.\n    *   **C**: Hàm Cortex COMPLETE chạy trên hạ tầng tính toán không máy chủ (serverless) được quản lý bởi Snowflake, nên kích thước của virtual warehouse của người dùng không ảnh hưởng trực tiếp đến chi phí gọi hàm này.\n    *   **D**: Sử dụng mô hình lớn hơn (nhiều tham số hơn) sẽ làm tăng chi phí.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Cortex AI Billing and Caching | Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Làm thế nào để giảm thiểu chi phí liên quan trực tiếp đến việc gọi hàm Snowflake Cortex COMPLETE? (Chọn hai.)",
+    "options_vi": {
+      "A": "Đặt max_tokens để giới hạn số lượng token đầu vào (input tokens).",
+      "B": "Đặt max_tokens để giới hạn số lượng token đầu ra (output tokens) trong phản hồi.",
+      "C": "Giảm kích thước của kho ảo (virtual warehouse) được sử dụng để chạy hàm.",
+      "D": "Sử dụng một LLM có nhiều tham số hơn so với LLM hiện tại đang được sử dụng.",
+      "E": "Sử dụng một LLM có ít tham số hơn so với LLM hiện tại đang được sử dụng."
+    }
   },
   {
     "id": 16,
@@ -304,10 +459,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Model Registry hỗ trợ triển khai và gọi dự báo trực tiếp bằng câu lệnh SQL trong Snowflake (C), đồng thời tích hợp sẵn tính năng quản lý phiên bản (versioning) để theo dõi và cập nhật mô hình một cách có kiểm soát (E).",
+    "explanation_vi": "Để quản lý mô hình hiệu quả với Snowflake Model Registry:\n* **C đúng**: Các mô hình sau khi đăng ký có thể được gọi và suy luận trực tiếp thông qua câu lệnh SQL nhờ các hàm UDF được tạo tự động.\n* **E đúng**: Model Registry hỗ trợ quản lý phiên bản (versioning) giúp nhà phát triển theo dõi, cập nhật và thay thế các phiên bản mô hình khác nhau một cách kiểm soát.\n\n*Giải thích các phương án sai:*\n* **A sai** vì mô hình hoàn toàn có thể xóa hoặc cập nhật phiên bản mới sau khi đăng ký.\n* **B sai** vì mô hình được lưu trữ trực tiếp và an toàn bên trong các schema object của Snowflake.\n* **D sai** vì mô hình có thể được gọi từ cả SQL hoặc các môi trường khác được Snowflake hỗ trợ, không giới hạn chỉ ở Snowpark Python.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Snowflake Model Registry Overview",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      },
+      {
+        "title": "Using SQL to Manage Models",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/model-registry-sql"
+      }
+    ],
+    "question_vi": "Những yếu tố then chốt nào cần được xem xét khi sử dụng Snowflake Model Registry để quản lý các mô hình (model)? (Chọn hai.)",
+    "options_vi": {
+      "A": "Một khi mô hình đã được đăng ký, nó không thể cập nhật hoặc xóa bỏ.",
+      "B": "Các mô hình cần được xuất ra kho lưu trữ ngoài trước khi chúng được đăng ký.",
+      "C": "Các mô hình có thể được triển khai và gọi trực tiếp bằng các câu lệnh SQL trong Snowflake.",
+      "D": "Các mô hình được đăng ký trong Model Registry chỉ có thể được sử dụng với Snowpark cho Python.",
+      "E": "Model Registry hỗ trợ quản lý phiên bản (versioning) để có thể theo dõi nhiều phiên bản của một mô hình."
+    }
   },
   {
     "id": 17,
@@ -324,10 +494,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi không có Verified Query Repository (VQR), Cortex Analyst sử dụng mô hình ngôn ngữ lớn (LLM) để đề xuất tối đa 3 câu hỏi (C). Khi có cấu hình VQR, nó sẽ gợi ý tối đa 5 câu hỏi dựa trên độ tương đồng ngữ nghĩa giữa câu hỏi của người dùng và các câu hỏi mẫu đã được xác thực (D).",
+    "explanation_vi": "Cơ chế gợi ý câu hỏi trong Snowflake Cortex Analyst hoạt động như sau:\n* **C đúng**: Nếu không cấu hình VQR, hệ thống sẽ sử dụng mô hình LLM nền tảng để tự động tạo ra tối đa 3 câu hỏi gợi ý để giúp người dùng bắt đầu.\n* **D đúng**: Khi có cấu hình Verified Query Repository (VQR), hệ thống sẽ so sánh độ tương đồng ngữ nghĩa giữa câu hỏi người dùng nhập và các câu hỏi trong VQR để đưa ra tối đa 5 câu hỏi gợi ý có liên quan nhất.\n\n*Giải thích các phương án sai:*\n* **A, B, E sai** vì không phản ánh đúng cơ chế hoạt động kỹ thuật của hệ thống gợi ý trong Cortex Analyst.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Các câu hỏi gợi ý được tạo ra như thế nào trong Snowflake Cortex Analyst? (Chọn hai.)",
+    "options_vi": {
+      "A": "Cortex Analyst chỉ trả về các câu hỏi được đảm bảo chắc chắn sẽ trả về kết quả.",
+      "B": "Các câu hỏi hướng dẫn (onboarding) được đánh dấu trong Verified Query Repository (VQR) chỉ hiển thị nếu người dùng không nhập gì.",
+      "C": "Khi không có Verified Query Repository (VQR), Cortex Analyst sử dụng các LLM nền tảng để tạo ra tối đa ba câu hỏi gợi ý.",
+      "D": "Khi Verified Query Repository (VQR) được định nghĩa, Cortex Analyst gợi ý tối đa năm câu hỏi dựa trên độ tương đồng ngữ nghĩa với thông tin nhập của người dùng.",
+      "E": "Cortex Analyst ưu tiên các truy vấn trong Verified Query Repository (VQR) làm gợi ý dựa trên các truy vấn tham chiếu đến các cột logic được sử dụng thường xuyên nhất."
+    }
   },
   {
     "id": 18,
@@ -343,10 +524,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm Python `snowflake.cortex.complete` (hoặc các hàm trong thư viện Python tương ứng) cho phép ứng dụng kết nối trực tiếp và gọi dịch vụ suy luận của Snowflake thông qua các endpoint REST API công khai.",
+    "explanation_vi": "Để kết nối từ các ứng dụng bên ngoài thông qua REST API công khai:\n* **D đúng**: Hàm Python `snowflake.cortex.complete` (nằm trong thư viện Python của Snowflake) được thiết kế để giao tiếp với các endpoint REST API được Snowflake cung cấp, giúp tích hợp khả năng suy luận LLM vào các ứng dụng Python ngoài.\n\n*Giải thích các phương án sai:*\n* **A, B sai** vì Copilot và Cortex LLM Playground là các giao diện người dùng đồ họa (GUI) trong Snowsight.\n* **C sai** vì đây là hàm SQL chạy trực tiếp bên trong engine cơ sở dữ liệu của Snowflake, không phải là một API ngoài cho ứng dụng kết nối.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex REST API",
+        "url": "https://docs.snowflake.com/en/developer-guide/cortex/rest-api"
+      }
+    ],
+    "question_vi": "Tính năng hoặc dịch vụ Snowflake Gen AI nào cung cấp khả năng kết nối thông qua một REST API được công khai?",
+    "options_vi": {
+      "A": "Copilot",
+      "B": "Cortex LLM Playground",
+      "C": "Hàm SQL SNOWFLAKE.CORTEX.COMPLETE",
+      "D": "Hàm Python snowflake.cortex.complete"
+    }
   },
   {
     "id": 19,
@@ -362,10 +553,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để Cortex Analyst hiểu đúng các câu hỏi tiếp theo (follow-up questions) trong một cuộc hội thoại nhiều lượt, lập trình viên phải truyền toàn bộ lịch sử hội thoại (conversation history) vào trường `messages` của yêu cầu API.",
+    "explanation_vi": "Để duy trì ngữ cảnh hội thoại đa lượt trong Snowflake Cortex Analyst:\n* **C đúng**: Cortex Analyst API hoạt động ở chế độ không lưu trạng thái (stateless). Do đó, để hệ thống hiểu được các câu hỏi nối tiếp (follow-up questions), toàn bộ lịch sử cuộc trò chuyện phải được truyền trong trường `messages` của mỗi yêu cầu API.\n\n*Giải thích các phương án sai:*\n* **A sai** vì nếu chỉ gửi tin nhắn cuối cùng, mô hình sẽ không có ngữ cảnh của các câu hỏi trước đó để hiểu được các đại từ thay thế (như 'thông tin đó' tương ứng với doanh số 6 tháng).\n* **B, D sai** vì Cortex Analyst không tự duy trì trạng thái phiên làm việc (session state) trên máy chủ Snowflake để lưu ngữ cảnh hội thoại.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst API",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Một chuyên gia AI tạo sinh (Gen AI) đang xây dựng một chatbot nội bộ cho công ty sử dụng Streamlit và Snowflake Cortex Analyst để diễn giải và trả lời các truy vấn của người dùng đối với dữ liệu trong Snowflake. Các thành viên cần có khả năng hỏi các câu hỏi như: 'Bạn có thể cung cấp xu hướng doanh số trong 6 tháng qua không?' Công cụ cần phải trả lời được các câu hỏi tiếp theo như: 'Bạn có thể chia nhỏ thông tin đó theo khu vực không?' hoặc 'Những yếu tố nào đã góp phần làm giảm doanh số vào tháng Hai?'. Để đảm bảo công cụ diễn giải đúng các câu hỏi tiếp theo này, thông tin nào bắt buộc phải có trong yêu cầu API gửi đến Cortex Analyst?",
+    "options_vi": {
+      "A": "Tin nhắn gần đây nhất của người dùng",
+      "B": "Một session token để duy trì trạng thái phiên làm việc giữa các yêu cầu API",
+      "C": "Toàn bộ lịch sử cuộc trò chuyện trong trường messages của yêu cầu API",
+      "D": "Một tham số phiên làm việc Snowflake (session parameter) để duy trì ngữ cảnh trò chuyện giữa các yêu cầu API trước đó"
+    }
   },
   {
     "id": 20,
@@ -381,10 +582,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Vì chi phí duy trì dịch vụ tìm kiếm (serving cost) của Cortex Search tích lũy liên tục theo thời gian (kể cả khi không có truy vấn nào diễn ra), hành động hiệu quả nhất để giảm thiểu chi phí là tạm ngưng dịch vụ (suspend serving) khi không có nhu cầu sử dụng.",
+    "explanation_vi": "Cách tối ưu hóa chi phí cho Cortex Search Services:\n* **D đúng**: Chi phí duy trì dịch vụ (serving compute cost) của Cortex Search được tính tích lũy liên tục theo thời gian thực khi dịch vụ hoạt động. Tạm dừng dịch vụ (suspend serving) khi không sử dụng giúp cắt giảm hoàn toàn phần chi phí chạy không tải này.\n\n*Giải thích các phương án sai:*\n* **A, C sai** vì việc cập nhật quá thường xuyên hoặc giảm target lag xuống 1 phút sẽ tăng tần suất lập chỉ mục (indexing frequency), dẫn đến tiêu hao nhiều credit cho tài nguyên compute hơn.\n* **B sai** vì chia nhỏ chunk hỗ trợ tăng chất lượng tìm kiếm ngữ nghĩa chứ không trực tiếp tối ưu hóa chi phí hoạt động của dịch vụ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "Cortex Search Services Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      }
+    ],
+    "question_vi": "Hành động nào sẽ giúp giảm thiểu chi phí khi sử dụng dịch vụ tìm kiếm Snowflake Cortex Search Services?",
+    "options_vi": {
+      "A": "Thực hiện cập nhật thường xuyên nhưng với dung lượng nhỏ đối với dữ liệu nguồn.",
+      "B": "Chia nhỏ các cột tìm kiếm văn bản thành các đoạn (chunk) không quá 612 token.",
+      "C": "Giảm target lag từ 5 phút xuống còn 1 phút để lập chỉ mục theo thời gian thực.",
+      "D": "Tạm dừng dịch vụ (suspend serving) khi không cần thiết phải chạy dịch vụ."
+    }
   },
   {
     "id": 21,
@@ -401,11 +612,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để trích xuất thông tin thành 3 cột mới từ cột văn bản tự do, lập trình viên có thể: Sử dụng hàm `SNOWFLAKE.CORTEX.COMPLETE` truyền định dạng `RESPONSE_FORMAT` dạng JSON trong tham số options, rồi dùng cú pháp chấm (dot notation) để tách thành 3 cột (A); Hoặc gọi hàm `SNOWFLAKE.CORTEX.EXTRACT_ANSWER` để trích xuất câu trả lời và dùng cú pháp chấm để trích xuất các trường dữ liệu cần thiết (D).",
+    "explanation_vi": "Để tối ưu hiệu năng và chi phí khi tạo 3 cột mới từ 1 cột văn bản tự do:\n* **A đúng**: Bằng cách cấu hình `RESPONSE_FORMAT` thành JSON trong đối số `options` của hàm `COMPLETE`, mô hình sẽ trả về kết quả dạng JSON. Chúng ta chỉ cần gọi hàm một lần và dùng cú pháp chấm (`column:field`) để trích xuất dữ liệu ra 3 cột mới.\n* **D đúng**: Tương tự, hàm `EXTRACT_ANSWER` trích xuất thông tin dưới dạng cấu trúc và trả về định dạng VARIANT (JSON), cho phép sử dụng cú pháp chấm để trích xuất dữ liệu vào 3 cột mà không cần gọi hàm 3 lần.\n\n*Giải thích các phương án sai:*\n* **B sai** vì TOP_P chỉ điều chỉnh tính ngẫu nhiên của câu trả lời, không ép định dạng trả về dạng cấu trúc JSON.\n* **C, E sai** vì việc gọi hàm riêng biệt 3 lần cho 3 cột mới sẽ nhân ba chi phí tính toán (credits) và làm chậm hiệu năng truy vấn một cách không cần thiết.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex",
-      "https://docs.snowflake.com/en/sql-reference/functions/extract_answer-snowflake-cortex"
-    ]
+      {
+        "title": "SNOWFLAKE.CORTEX.COMPLETE Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      },
+      {
+        "title": "SNOWFLAKE.CORTEX.EXTRACT_ANSWER Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/extract_answer-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một bảng dữ liệu trong pipeline chứa một cột VARCHAR có nội dung là các phản hồi văn bản tự do. Một chuyên gia AI tạo sinh cần tạo ra ba cột mới từ các phản hồi văn bản này. Yêu cầu này nên được thực hiện như thế nào? (Chọn hai.)",
+    "options_vi": {
+      "A": "Sử dụng hàm SNOWFLAKE.CORTEX.COMPLETE bằng cách chỉ định RESPONSE_FORMAT trong đối số options, sau đó dùng cú pháp dấu chấm (dot notation) để trích xuất dữ liệu đưa vào ba cột mới.",
+      "B": "Sử dụng hàm SNOWFLAKE.CORTEX.COMPLETE bằng cách chỉ định TOP_P trong đối số options và phân tích cú pháp giá trị của khóa phản hồi CHOICES.",
+      "C": "Sử dụng hàm SNOWFLAKE.CORTEX.ENTITY_SENTIMENT trong câu lệnh SELECT một lần cho mỗi cột trong ba cột mới.",
+      "D": "Gọi hàm SNOWFLAKE.CORTEX.EXTRACT_ANSWER trong một câu lệnh SELECT, sau đó dùng cú pháp dấu chấm để trích xuất dữ liệu đưa vào ba cột mới.",
+      "E": "Gọi hàm SNOWFLAKE.CORTEX.EXTRACT_ANSWER trong câu lệnh SELECT một lần cho mỗi cột trong ba cột mới."
+    }
   },
   {
     "id": 22,
@@ -421,10 +646,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong hàm `SNOWFLAKE.CORTEX.COMPLETE`, khi sử dụng tham số `options` (tham số thứ ba), đối số `prompt_or_history` (đối số thứ hai) bắt buộc phải là một mảng các đối tượng (array of objects) đại diện cho lịch sử hội thoại, thay vì là một chuỗi văn bản đơn giản.",
+    "explanation_vi": "Khi sử dụng hàm `SNOWFLAKE.CORTEX.COMPLETE`:\n* **D đúng**: Theo cú pháp của Snowflake Cortex, khi bạn truyền đối số thứ ba (`options`), đối số thứ hai (`prompt_or_history`) bắt buộc phải là một mảng các đối tượng biểu thị lịch sử hội thoại (ví dụ: `[{'role': 'user', 'content': '...'}]`) chứ không được là một chuỗi văn bản thông thường.\n\n*Giải thích các phương án sai:*\n* **A, B, C sai** vì không đúng với quy định cú pháp của hàm `COMPLETE` trong Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "SNOWFLAKE.CORTEX.COMPLETE Syntax and Usage",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Lệnh sau đây được thực thi nhưng trả về lỗi. Nguyên nhân nào gây ra lỗi này?",
+    "options_vi": {
+      "A": "Tùy chọn temperature không thể sử dụng chung với tùy chọn guardrails.",
+      "B": "Đối số options phải là tham số thứ hai trong cuộc gọi hàm.",
+      "C": "Tùy chọn max_tokens bắt buộc phải có khi sử dụng tùy chọn guardrails.",
+      "D": "Đối số prompt_or_history phải là một mảng các đối tượng (array of objects) khi sử dụng đối số options."
+    }
   },
   {
     "id": 23,
@@ -441,10 +676,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `SNOWFLAKE.CORTEX.COMPLETE` yêu cầu hai đối số bắt buộc đầu tiên là tên mô hình (`model` - A) và prompt hoặc lịch sử hội thoại (`prompt_or_history` - E). Các đối số khác như `options` là không bắt buộc.",
+    "explanation_vi": "Cú pháp bắt buộc của hàm `SNOWFLAKE.CORTEX.COMPLETE`:\n* **A, E đúng**: Hàm `COMPLETE` yêu cầu hai đối số bắt buộc đầu tiên là tên mô hình cần gọi (`model` - A) và nội dung yêu cầu hoặc lịch sử cuộc trò chuyện (`prompt_or_history` - E).\n* **B, C, D sai** vì đây là các tham số tùy chọn được truyền bên trong đối số thứ ba `options` và không bắt buộc phải có cho một truy vấn hợp lệ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "SNOWFLAKE.CORTEX.COMPLETE Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Những đối số nào bắt buộc phải có khi sử dụng hàm SNOWFLAKE.CORTEX.COMPLETE? (Chọn hai.)",
+    "options_vi": {
+      "A": "model",
+      "B": "top_p",
+      "C": "response_format",
+      "D": "max_tokens",
+      "E": "prompt_or_history"
+    }
   },
   {
     "id": 24,
@@ -460,10 +706,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `!PREDICT` của mô hình Document AI trả về kết quả dưới dạng kiểu dữ liệu `VARIANT` (dữ liệu bán cấu trúc - semi-structured data). Ở đây, tài liệu được lưu trữ trên một internal stage của Snowflake (được biểu thị bằng ký hiệu `@`), và số `9` là mã định danh phiên bản mô hình (model-version identifier).",
+    "explanation_vi": "Phân tích câu lệnh truy vấn Document AI:\n* **C đúng**: \n  * Hàm `!PREDICT` của Document AI trích xuất thông tin từ tài liệu và trả về dưới dạng kiểu dữ liệu `VARIANT` - đại diện cho dữ liệu bán cấu trúc (semi-structured data).\n  * Ký tự `@` biểu thị tài liệu nằm trên một internal stage của Snowflake.\n  * Số `9` cuối cùng là định danh phiên bản cụ thể của mô hình đã huấn luyện.\n\n*Giải thích các phương án sai:*\n* **A, B sai** vì kết quả trả về là bán cấu trúc (VARIANT/JSON) chứ không phải dữ liệu có cấu trúc trực tiếp (structured data).\n* **D sai** vì ký hiệu `@` tham chiếu đến internal stage chứ không phải external stage.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/querying-models"
-    ]
+      {
+        "title": "Querying Document AI Models",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/querying-models"
+      }
+    ],
+    "question_vi": "Xem xét câu lệnh truy vấn sau: SELECT DEMO_DB.DEMO_SCHEMA.EXM_DOC_AI_BUILD!PREDICT(GET_PRESIGNED_URL(@<stage_name>, '<relative_file_path>'), 9); Kết quả đầu ra sẽ là gì?",
+    "options_vi": {
+      "A": "Truy vấn sẽ tạo ra dữ liệu có cấu trúc (structured data) từ một tài liệu được lưu trữ trong một internal stage của Snowflake bằng cách sử dụng Document AI với định danh phiên bản mô hình.",
+      "B": "Truy vấn sẽ tạo ra dữ liệu có cấu trúc (structured data) từ một tài liệu được lưu trữ trong một external stage của Snowflake bằng cách sử dụng Document AI với định danh phiên bản mô hình.",
+      "C": "Truy vấn sẽ tạo ra dữ liệu bán cấu trúc (semi-structured data) từ một tài liệu được lưu trữ trong một internal stage của Snowflake bằng cách sử dụng Document AI với định danh phiên bản mô hình.",
+      "D": "Truy vấn sẽ tạo ra dữ liệu bán cấu trúc (semi-structured data) từ một tài liệu được lưu trữ trong một external stage của Snowflake bằng cách sử dụng Document AI với định danh phiên bản mô hình."
+    }
   },
   {
     "id": 25,
@@ -479,10 +735,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Độ tương đồng Cosine (`VECTOR_COSINE_SIMILARITY`) đo góc giữa hai vector trong không gian đa chiều, phản ánh mối quan hệ về hướng giữa các vector mà không phụ thuộc vào độ lớn (magnitude) của chúng.",
+    "explanation_vi": "Đặc điểm của các hàm so sánh vector:\n* **D đúng**: Độ tương đồng Cosine (`VECTOR_COSINE_SIMILARITY`) đo góc giữa hai vector trong không gian đa chiều, chỉ phản ánh sự tương đồng về mặt hướng đi mà không bị ảnh hưởng bởi độ lớn (magnitude) của các vector.\n\n*Giải thích các phương án sai:*\n* **A, B sai** vì khoảng cách Manhattan (L1) và Euclid (L2) đo khoảng cách hình học tuyệt đối giữa các điểm, phụ thuộc trực tiếp vào độ lớn của vector.\n* **C sai** vì tích vô hướng (Inner Product) phụ thuộc vào cả hướng lẫn độ lớn của hai vector.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/vector_cosine_similarity"
-    ]
+      {
+        "title": "VECTOR_COSINE_SIMILARITY Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/vector_cosine_similarity"
+      }
+    ],
+    "question_vi": "Một chuyên gia AI tạo sinh tạo bảng dữ liệu chứa các vector. Hàm nào sẽ đo lường mối quan hệ giữa các vector mà không cần xem xét đến độ lớn (magnitude) của chúng?",
+    "options_vi": {
+      "A": "VECTOR_L1_DISTANCE",
+      "B": "VECTOR_L2_DISTANCE",
+      "C": "VECTOR_INNER_PRODUCT",
+      "D": "VECTOR_COSINE_SIMILARITY"
+    }
   },
   {
     "id": 26,
@@ -499,10 +765,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để sử dụng ngôn ngữ tự nhiên truy vấn dữ liệu có cấu trúc không dùng SQL, chuyên gia cần tạo mô hình ngữ nghĩa (semantic model) bằng YAML, tải nó lên stage của Snowflake, sau đó hỏi trực tiếp thông qua giao diện Cortex Analyst trong AI & ML Studio trên Snowsight (C) hoặc gọi qua Cortex Analyst API từ ứng dụng tự phát triển (D).",
+    "explanation_vi": "Để truy vấn dữ liệu có cấu trúc bằng ngôn ngữ tự nhiên không qua SQL:\n* **C, D đúng**: Snowflake Cortex Analyst cho phép người dùng cuối đặt câu hỏi bằng ngôn ngữ tự nhiên để truy vấn dữ liệu có cấu trúc. Quy trình thiết lập yêu cầu định nghĩa một mô hình ngữ nghĩa (semantic model) bằng YAML, tải nó lên stage, sau đó sử dụng thông qua giao diện Cortex Analyst trên Snowsight (C) hoặc gọi qua Cortex Analyst REST API từ ứng dụng tùy chỉnh (D).\n\n*Giải thích các phương án sai:*\n* **A sai** vì Document AI dùng để trích xuất thông tin từ tài liệu phi cấu trúc (PDF, ảnh), không phải để truy vấn dữ liệu có cấu trúc.\n* **B, E sai** vì không phản ánh đúng kiến trúc và cách thức hoạt động của các dịch vụ truy vấn ngôn ngữ tự nhiên trong Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Một chuyên gia AI tạo sinh cần một giải pháp hỗ trợ việc đặt câu hỏi bằng ngôn ngữ tự nhiên và nhận câu trả lời dựa trên dữ liệu có cấu trúc trong Snowflake mà không cần sử dụng câu lệnh SQL. Điều này có thể được thực hiện như thế nào? (Chọn hai.)",
+    "options_vi": {
+      "A": "Tạo một mô hình dữ liệu tùy chỉnh (custom data model), áp dụng mô hình đó cho cơ sở dữ liệu và đặt câu hỏi từ tùy chọn Snowflake Document AI trong AI & ML Studio trên Snowsight.",
+      "B": "Tạo một mô hình dữ liệu tùy chỉnh, nâng cao mô hình bằng cross-region inference và đặt câu hỏi trong một ứng dụng tự xây dựng gọi Cortex Agent API.",
+      "C": "Tạo một mô hình ngữ nghĩa (semantic model), tải mô hình ngữ nghĩa lên một stage và đặt câu hỏi từ tùy chọn Snowflake Cortex Analyst trong AI & ML Studio trên Snowsight.",
+      "D": "Tạo một mô hình ngữ nghĩa (semantic model), tải mô hình ngữ nghĩa lên một stage và đặt câu hỏi trong một ứng dụng tự xây dựng gọi Snowflake Cortex Analyst API.",
+      "E": "Tạo một Snowflake Cortex Agent trong Snowsight, trích xuất dữ liệu từ cơ sở dữ liệu và đặt câu hỏi bằng cách fine-tune một LLM với dữ liệu đã trích xuất."
+    }
   },
   {
     "id": 27,
@@ -518,10 +795,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Tracing (Theo vết) là tính năng kiểm tra trực quan từng bước xử lý của một yêu cầu AI trong Snowflake (bao gồm cách xử lý prompt, ngữ cảnh được truy xuất, các tool được gọi và câu trả lời của mô hình).",
+    "explanation_vi": "Để gỡ lỗi chi tiết từng bước xử lý trong ứng dụng Gen AI:\n* **C đúng**: `Tracing` (Theo dấu) là tính năng của Snowflake ML Observability cho phép ghi nhận và biểu diễn trực quan các bước thực thi bên trong (spans). Nó giúp phân tích chi tiết cách xử lý prompt, thông tin ngữ cảnh được truy xuất và các tool được mô hình gọi trong suốt quá trình xử lý.\n\n*Giải thích các phương án sai:*\n* **A sai** vì Metrics cung cấp các chỉ số định lượng tổng quan (như độ mạch lạc, độ chính xác).\n* **B sai** vì Logging là ghi chép nhật ký hệ thống thô, khó biểu diễn thứ tự gọi chi tiết.\n* **D sai** vì Monitoring là để giám sát tổng thể hoạt động hệ thống theo thời gian.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/observability"
-    ]
+      {
+        "title": "Snowflake ML Observability and Tracing",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/observability"
+      }
+    ],
+    "question_vi": "Một chuyên gia AI tạo sinh đang xây dựng một ứng dụng Gen AI trong Snowflake và cần gỡ lỗi (debug) một bản ghi cụ thể trả về câu trả lời không chính xác. Chuyên gia cần hiểu từng bước một cách chi tiết: prompt đầu vào được xử lý thế nào, ngữ cảnh nào được truy xuất, những công cụ (tool) nào đã được gọi và LLM phản hồi ra sao. Tính năng quan sát AI (observability) nào của Snowflake nên được sử dụng?",
+    "options_vi": {
+      "A": "Metrics",
+      "B": "Logging",
+      "C": "Tracing",
+      "D": "Monitoring"
+    }
   },
   {
     "id": 28,
@@ -538,10 +825,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong các chỉ số giám sát và đánh giá phản hồi của LLM thuộc tính năng AI Observability của Snowflake Cortex, Coherence (Tính mạch lạc) và Correctness (Tính chính xác) là hai chỉ số chính được sử dụng để đánh giá chất lượng câu trả lời.",
+    "explanation_vi": "Các chỉ số đánh giá LLM của Snowflake AI Observability:\n* **B, C đúng**: `Coherence` (Độ mạch lạc) đánh giá tính nhất quán logic của văn bản đầu ra. `Correctness` (Độ đúng đắn - được viết là 'Corectness' trong câu hỏi gốc) đánh giá độ chính xác của phản hồi so với câu trả lời chuẩn (ground truth).\n\n*Giải thích các phương án sai:*\n* **A, D, E sai** vì đây là các phép đo chất lượng mô hình Machine Learning truyền thống (phân loại/hồi quy), không phải là các chỉ số đặc thù để đánh giá chất lượng văn bản sinh bởi LLM trong công cụ đánh giá của Cortex.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/observability"
-    ]
+      {
+        "title": "Snowflake ML Observability Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/observability"
+      }
+    ],
+    "question_vi": "Những chỉ số quan sát Snowflake Cortex AI nào được sử dụng để đánh giá các phản hồi do LLM tạo ra? (Chọn hai.)",
+    "options_vi": {
+      "A": "Accuracy",
+      "B": "Coherence",
+      "C": "Corectness",
+      "D": "F1 Score",
+      "E": "Precision"
+    }
   },
   {
     "id": 29,
@@ -558,10 +856,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Các hàm phân tích học máy (Cortex ML Functions) của Snowflake như `ANOMALY_DETECTION` (Phát hiện bất thường) và `FORECAST` (Dự báo) được thiết kế và tối ưu hóa để tự động hóa các tác vụ phân tích chuỗi thời gian định kỳ.",
+    "explanation_vi": "Để thực hiện phân tích tự động hóa định kỳ trong Snowflake:\n* **A, C đúng**: `ANOMALY_DETECTION` (Phát hiện bất thường) và `FORECAST` (Dự báo) là hai hàm thuộc nhóm Cortex ML Functions được thiết kế để tự động hóa các công việc phân tích chuỗi thời gian định kỳ mà không yêu cầu viết mã học máy phức tạp.\n\n*Giải thích các phương án sai:*\n* **B, E sai** vì đây là các hàm Cortex AI xử lý ngôn ngữ tự nhiên.\n* **D sai** vì không phải là hàm tự động hóa phân tích chuỗi thời gian.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake Cortex ML Functions Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Những hàm SQL nào được thiết kế và tối ưu hóa để thực hiện và tự động hóa các tác vụ định kỳ cụ thể trong Snowflake Cortex? (Chọn hai.)",
+    "options_vi": {
+      "A": "ANOMALY_DETECTION",
+      "B": "CLASSIFICATION",
+      "C": "FORECAST",
+      "D": "PARSE_DOCUMENT",
+      "E": "SENTIMENT"
+    }
   },
   {
     "id": 30,
@@ -578,10 +887,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hiệu suất hoạt động của mô hình tính trên mỗi credit tiêu hao bị ảnh hưởng nhiều nhất bởi độ phức tạp của truy vấn/prompt đầu vào (B) và cấu hình tài nguyên tính toán (compute resources) của Snowflake (D).",
+    "explanation_vi": "Tối ưu hóa hiệu năng/chi phí trong Snowflake Cortex:\n* **B đúng**: Độ phức tạp của các truy vấn và prompt (số lượng tokens đầu vào/đầu ra, độ sâu của suy luận) quyết định trực tiếp khối lượng tính toán cần thiết của LLM.\n* **D đúng**: Cấu hình tài nguyên tính toán (kích thước Virtual Warehouse, bộ nhớ đệm) quyết định khả năng xử lý song song và lượng credits tiêu thụ tương ứng để hoàn thành tác vụ.\n\n*Giải thích các phương án sai:*\n* **A, C, E sai** vì không phải là yếu tố thiết kế ảnh hưởng lớn nhất đến tỷ lệ hiệu năng/credit của từng lượt chạy mô hình Cortex cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex Cost and Performance",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Khi sử dụng Snowflake Cortex, những yếu tố thiết kế nào có ảnh hưởng LỚN NHẤT đến hiệu suất của mô hình trên mỗi credit tiêu hao? (Chọn hai.)",
+    "options_vi": {
+      "A": "Kích thước của tập dữ liệu",
+      "B": "Độ phức tạp của các câu hỏi truy vấn",
+      "C": "Số lượng người dùng đồng thời",
+      "D": "Tính khả dụng của tài nguyên tính toán (compute resources)",
+      "E": "Vùng khả dụng (availability region) nơi mô hình được đặt"
+    }
   },
   {
     "id": 31,
@@ -599,10 +919,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Các hàm LLM của Snowflake Cortex tạo ra văn bản mới bao gồm `SUMMARIZE` (A), `TRANSLATE` (C), và `CLASSIFY_TEXT` (F) được tính phí dựa trên số lượng của cả token đầu vào (input tokens) và token đầu ra (output tokens).",
+    "explanation_vi": "Để xác định các hàm Snowflake Cortex LLM tính toán chi phí dựa trên cả token đầu vào và token đầu ra, chúng ta cần phân biệt giữa các hàm sinh văn bản (generative functions) và các hàm phân tích/trợ giúp (analysis/helper functions):\n\n*   **SUMMARIZE** (Tóm tắt), **TRANSLATE** (Dịch thuật), và **CLASSIFY_TEXT** (Phân loại văn bản): Đây là các hàm sinh hoặc biến đổi văn bản, do đó Snowflake tính phí dựa trên cả số lượng token đầu vào (prompt/văn bản nguồn) và token đầu ra (văn bản được sinh ra/kết quả phân loại).\n*   **SENTIMENT** (Phân tích cảm xúc): Chỉ tính phí dựa trên token đầu vào vì nó chỉ trả về điểm số cảm xúc (số thực từ -1 đến 1).\n*   **EMBED_TEXT_768** và **EMBED_TEXT_1024** (Tạo vector nhúng): Chỉ tính phí dựa trên số lượng token đầu vào được xử lý để tạo ra các vector nhúng cố định.\n\nDo đó, các phương án đúng là **A**, **C**, và **F**.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex LLM Pricing and Billing",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Việc tính toán mức độ sử dụng dựa trên cả token đầu vào (input tokens) và token đầu ra (output tokens) áp dụng cho những hàm Snowflake Cortex LLM nào? (Chọn ba.)",
+    "options_vi": {
+      "A": "SUMMARIZE",
+      "B": "SENTIMENT",
+      "C": "TRANSLATE",
+      "D": "EMBED_TEXT_768",
+      "E": "EMBED_TEXT_1024",
+      "F": "CLASSIFY_TEXT"
+    }
   },
   {
     "id": 32,
@@ -618,10 +950,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Document AI hỗ trợ khả năng cộng tác, cho phép nhiều người dùng làm việc đồng thời trên cùng một bản dựng mô hình (model build) để gán nhãn và tinh chỉnh mô hình trích xuất.",
+    "explanation_vi": "Snowflake Document AI cung cấp môi trường làm việc cộng tác và quản lý vòng đời mô hình rất linh hoạt:\n\n*   **Hỗ trợ nhiều người dùng cộng tác đồng thời** (Đáp án **D**): Document AI cho phép nhiều thành viên trong đội ngũ cùng truy cập, gán nhãn dữ liệu (labelling) và kiểm thử trên cùng một bản dựng mô hình (model build) mà không bị xung đột.\n*   Các phương án khác không chính xác hoặc không được tài liệu Snowflake hỗ trợ trực tiếp dưới dạng tính năng tiêu chuẩn:\n    *   Việc trích xuất toàn bộ bảng phức tạp trong một truy vấn duy nhất hoặc xử lý đồng thời quá nhiều tài liệu lớn có thể gây lỗi hệ thống (như lỗi 422 hoặc timeout).\n    *   Người dùng không tự do thay đổi trực tiếp cấu trúc database/schema nơi mô hình Document AI cư trú mà không tuân theo các phân quyền quản trị của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
-    ]
+      {
+        "title": "Preparing for Document AI",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
+      }
+    ],
+    "question_vi": "Hành động nào được hỗ trợ khi sử dụng Snowflake Document AI?",
+    "options_vi": {
+      "A": "Trích xuất toàn bộ bảng trong một câu truy vấn duy nhất",
+      "B": "Xử lý lên đến 1000 tài liệu trong một câu truy vấn duy nhất",
+      "C": "Thay đổi cơ sở dữ liệu hoặc schema nơi bản dựng mô hình tọa lạc",
+      "D": "Hỗ trợ nhiều người dùng làm việc đồng thời trên cùng một bản dựng mô hình (model build)"
+    }
   },
   {
     "id": 33,
@@ -638,10 +980,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để chạy một tác vụ tinh chỉnh mô hình (fine-tuning), người dùng cần có quyền `USAGE` trên cơ sở dữ liệu chứa dữ liệu huấn luyện và kiểm thử (B), cùng quyền tạo mô hình (`CREATE MODEL` hoặc `OWNERSHIP`) trên schema nơi mô hình tinh chỉnh được lưu trữ (E).",
+    "explanation_vi": "Để khởi chạy thành công một tác vụ tinh chỉnh (fine-tuning) mô hình LLM trong Snowflake Cortex, người dùng cần có các quyền tối thiểu sau:\n\n*   **USAGE trên database** (và schema tương ứng) chứa dữ liệu huấn luyện và dữ liệu kiểm thử (validation data) để tiến trình có thể truy cập dữ liệu đầu vào (Đáp án **B**).\n*   **CREATE MODEL** hoặc **OWNERSHIP** trên schema đích nơi mô hình sau khi tinh chỉnh sẽ được lưu trữ (Đáp án **E**). Điều này cho phép tiến trình lưu đối tượng mô hình mới vào Snowflake Model Registry.\n*   Các quyền khác như READ/WRITE trên stage của mô hình gốc là không đúng vì mô hình gốc được quản lý trực tiếp bởi Snowflake Cortex.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
-    ]
+      {
+        "title": "Fine-tuning a Model in Snowflake Cortex",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
+      }
+    ],
+    "question_vi": "Những quyền (privileges) nào cần thiết để chạy một tác vụ tinh chỉnh (fine-tuning) trên một mô hình? (Chọn hai.)",
+    "options_vi": {
+      "A": "Quyền READ hoặc WRITE trên stage chứa mô hình",
+      "B": "Quyền USAGE trên database được sử dụng để truy vấn dữ liệu huấn luyện và dữ liệu kiểm thử (validation data)",
+      "C": "Quyền OPERATE trên database được sử dụng để truy vấn dữ liệu huấn luyện và dữ liệu kiểm thử (validation data)",
+      "D": "Quyền USAGE trên schema nơi mô hình sau khi tinh chỉnh sẽ được lưu trữ",
+      "E": "Quyền CREATE MODEL hoặc OWNERSHIP trên schema nơi mô hình sau khi tinh chỉnh sẽ được lưu trữ"
+    }
   },
   {
     "id": 34,
@@ -657,24 +1010,53 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `COMPLETE` của Snowflake Cortex được thiết kế chuyên biệt cho các tác vụ tạo nội dung mới (content generation) dựa trên các tham số đầu vào từ các cột của bảng dữ liệu.",
+    "explanation_vi": "Trong các hàm Snowflake Cortex LLM:\n\n*   **COMPLETE** (Đáp án **D**) là hàm đa năng được thiết kế để sinh văn bản mới (text generation) dựa trên một prompt cho trước. Nó cho phép bạn kết hợp các giá trị thuộc tính sản phẩm (như thương hiệu, danh mục, tính năng) vào trong prompt để yêu cầu mô hình LLM tạo ra một đoạn mô tả sản phẩm tùy chỉnh và sáng tạo.\n*   Các hàm khác không phù hợp cho tác vụ này:\n    *   **PARSE_DOCUMENT**: Sử dụng để trích xuất văn bản từ tài liệu phi cấu trúc (PDF, Word).\n    *   **EMBED_TEXT_768**: Sử dụng để tạo vector biểu diễn ngữ nghĩa (embeddings) phục vụ tìm kiếm.\n    *   **SUMMARIZE**: Sử dụng để tóm tắt một đoạn văn bản dài có sẵn thành phiên bản ngắn hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "COMPLETE (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đang xây dựng một bộ tạo nội dung tự động trong Snowflake để tạo mô tả sản phẩm tùy chỉnh. Các mô tả này sẽ dựa trên các cột trong bảng sản phẩm như thương hiệu (brand), danh mục (category) và các tính năng (features). Hàm Snowflake Cortex LLM nào nên được sử dụng để tạo các mô tả này?",
+    "options_vi": {
+      "A": "PARSE_DOCUMENT",
+      "B": "EMBED_TEXT_768",
+      "C": "SUMMARIZE",
+      "D": "COMPLETE"
+    }
   },
   {
     "id": 35,
     "topic": 1,
     "question": "Which commands can be used to show available Snowflake Cortex LLM models? (Choose two.)",
-    "options": {},
+    "options": {
+      "A": "SHOW BASE MODELS",
+      "B": "SHOW CORTEX BASE MODELS",
+      "C": "SHOW MODELS",
+      "D": "SHOW CORTEX MODELS"
+    },
     "answer": "BC",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hai câu lệnh có thể được sử dụng để xem danh sách các mô hình LLM sẵn có trong Snowflake Cortex là `SHOW CORTEX BASE MODELS;` (dành cho các mô hình nền tảng Cortex - B) và `SHOW MODELS;` (dành cho danh sách mô hình tổng quát trong Model Registry - C).",
+    "explanation_vi": "Để kiểm tra các mô hình máy học và LLM khả dụng trong Snowflake, bạn sử dụng hai câu lệnh:\n\n*   **SHOW CORTEX BASE MODELS** (Đáp án **B**): Liệt kê tất cả các mô hình nền tảng Cortex (Cortex Base Models) được Snowflake quản lý và cung cấp sẵn cho các hàm Cortex AI (như Llama, Mistral, Gemma...).\n*   **SHOW MODELS** (Đáp án **C**): Liệt kê tất cả các đối tượng mô hình trong Model Registry (bao gồm cả các mô hình do người dùng tự đăng ký, mô hình tinh chỉnh hoặc mô hình cài đặt cục bộ).\n*   Các câu lệnh còn lại như `SHOW BASE MODELS` hay `SHOW CORTEX MODELS` không tồn tại trong cú pháp SQL của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/sql/show-cortex-base-models"
-    ]
+      {
+        "title": "SHOW CORTEX BASE MODELS",
+        "url": "https://docs.snowflake.com/en/sql-reference/sql/show-cortex-base-models"
+      },
+      {
+        "title": "SHOW MODELS",
+        "url": "https://docs.snowflake.com/en/sql-reference/sql/show-models"
+      }
+    ],
+    "question_vi": "Những câu lệnh nào có thể được sử dụng để hiển thị các mô hình Snowflake Cortex LLM khả dụng? (Chọn hai.)",
+    "options_vi": {
+      "A": "SHOW BASE MODELS",
+      "B": "SHOW CORTEX BASE MODELS",
+      "C": "SHOW MODELS",
+      "D": "SHOW CORTEX MODELS"
+    }
   },
   {
     "id": 36,
@@ -690,10 +1072,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Chi phí sử dụng của Snowflake Cortex Guard được tính toán dựa trên tổng số lượng token được xử lý (bao gồm cả trường văn bản đầu vào `from_text` và câu hỏi `question`) để thực hiện kiểm tra an toàn nội dung.",
+    "explanation_vi": "**Snowflake Cortex Guard** là tính năng bảo vệ an toàn nội dung cho các ứng dụng LLM. Cách tính phí của tính năng này được quy định cụ thể như sau:\n\n*   **Chi phí dựa trên tổng số token phải thanh toán được xử lý** (Đáp án **D**): Khi bạn chạy truy vấn có kích hoạt Cortex Guard, hệ thống sẽ quét dữ liệu trong các trường đầu vào như `from_text` (văn bản ngữ cảnh gốc) và `question` (câu hỏi đầu vào) để kiểm tra các nội dung không an toàn và tính phí dựa trên lượng token đó.\n*   Các tùy chọn khác như tính phí dựa trên số dòng quét (A), chỉ tính token đầu vào nói chung (B) hay số lượng người dùng (C) đều không phản ánh đúng cơ chế tính phí sử dụng của Cortex Guard.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/guardrails"
-    ]
+      {
+        "title": "Snowflake Cortex Guardrails",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/guardrails"
+      }
+    ],
+    "question_vi": "Mức độ sử dụng và chi phí cho Snowflake Cortex Guard được tính toán như thế nào?",
+    "options_vi": {
+      "A": "Chi phí tính toán dựa trên số lượng dòng dữ liệu được quét trong bảng.",
+      "B": "Chi phí tính toán dựa trên số lượng token đầu vào (input tokens) được xử lý.",
+      "C": "Chi phí dựa trên số lượng người dùng truy cập dữ liệu.",
+      "D": "Chi phí dựa trên tổng số token phải thanh toán được xử lý khi các câu truy vấn sử dụng dữ liệu trong các trường from_text và question."
+    }
   },
   {
     "id": 37,
@@ -710,27 +1102,50 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để triển khai và chạy một container trong Snowpark Container Services, lập trình viên bắt buộc phải cấu hình: Một bể tính toán (`Compute Pool` - A) để cung cấp tài nguyên phần cứng, và một mô tả đặc tả dịch vụ (`Service Specification` - E) dưới dạng file YAML định nghĩa hành vi của container.",
+    "explanation_vi": "Để chạy các container Docker/OCI trong **Snowpark Container Services (SPCS)**, bạn bắt buộc phải có hai thành phần cơ bản:\n\n*   **Compute Pool** (Đáp án **A**): Cung cấp tài nguyên tính toán phần cứng cần thiết (CPU, GPU, RAM) để chạy các tiến trình bên trong container.\n*   **Service Specification** (Đáp án **E**): File cấu hình dạng YAML định nghĩa cách container khởi tạo và hoạt động (ví dụ: hình ảnh Docker sử dụng, ánh xạ cổng mạng, mount thư mục lưu trữ, biến môi trường).\n*   Các tùy chọn như external stage (B), scheduled task (C), hay file format (D) không phải là các điều kiện bắt buộc trực tiếp để khởi tạo và chạy một container dịch vụ trong SPCS.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark-container-services/overview"
-    ]
+      {
+        "title": "Snowpark Container Services Overview",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark-container-services/overview"
+      }
+    ],
+    "question_vi": "Những thành phần nào là bắt buộc để triển khai và chạy một container bằng cách sử dụng Snowpark Container Services? (Chọn hai.)",
+    "options_vi": {
+      "A": "Một compute pool để chạy container",
+      "B": "Một external stage liên kết tới Amazon S3",
+      "C": "Một task lập lịch được gán cho một virtual warehouse",
+      "D": "Một file format được đăng ký cho việc nạp dữ liệu JSON hoặc CSV",
+      "E": "Một đặc tả dịch vụ (service specification) định nghĩa hành vi của container"
+    }
   },
   {
     "id": 38,
     "topic": 1,
     "question": "A Gen AI Specialist has set up a pipeline to process hotel guest reviews. The reviews need to be categorized based on customer sentiment:\nWhich statement will meet this requirement?A.\nB.",
     "options": {
-      "C": "![](https://cdn.examcademy.com/images/questions/1774838232498-gzuuqmxz.png)",
-      "D": "![](https://cdn.examcademy.com/images/questions/1774838234485-p51tdajk.png)"
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838232498-gzuuqmxz.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838234485-p51tdajk.png)"
     },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Phương án B chứa câu lệnh SQL sử dụng đúng cú pháp của hàm phân tích cảm xúc (sentiment) hoặc phân loại (classification) của Snowflake Cortex để phân nhóm đánh giá của khách hàng theo các nhãn cảm xúc được yêu cầu.",
+    "explanation_vi": "Để phân tích và phân loại đánh giá của khách hàng dựa trên cảm xúc (Positive, Neutral, Negative):\n\n*   **Hàm SENTIMENT của Snowflake Cortex** (Đáp án **B**) cung cấp khả năng trả về điểm số cảm xúc một cách tự động từ văn bản đầu vào. Sử dụng hàm này trong câu lệnh SQL cho phép bạn nhanh chóng phân loại các đánh giá theo mức độ hài lòng của khách hàng.\n*   Phương án **B** thể hiện cú pháp chính xác để tích hợp cuộc gọi hàm cảm xúc trong câu lệnh SQL xử lý dữ liệu reviews.\n*   Phương án **A** sử dụng sai cú pháp hoặc không phù hợp để thực hiện yêu cầu phân tích cảm xúc này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/sentiment-snowflake-cortex"
-    ]
+      {
+        "title": "SENTIMENT (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/sentiment-snowflake-cortex"
+      },
+      {
+        "title": "CLASSIFY_TEXT (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/classify_text-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đã thiết lập một đường ống (pipeline) để xử lý các đánh giá của khách lưu trú tại khách sạn. Các đánh giá cần được phân loại dựa trên cảm xúc của khách hàng. Câu lệnh nào sau đây sẽ đáp ứng yêu cầu này?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838232498-gzuuqmxz.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838234485-p51tdajk.png)"
+    }
   },
   {
     "id": 39,
@@ -747,10 +1162,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi sử dụng phương thức `log_model` trong thư viện đăng ký mô hình (Snowflake Model Registry), hai tham số bắt buộc đầu vào là đối tượng mô hình (`model` - A) và tên mô hình (`model_name` - B).",
+    "explanation_vi": "Khi sử dụng phương thức `log_model` của Snowflake Model Registry để lưu trữ một mô hình máy học:\n\n*   **model** (Đáp án **A**): Là đối tượng mô hình thực tế (như mô hình Scikit-Learn, XGBoost, PyTorch, v.v.) cần được đăng ký.\n*   **model_name** (Đáp án **B**): Là chuỗi văn bản (string) đặt tên định danh cho mô hình đó trong registry.\n*   Các tham số khác như `version_name`, `code_paths`, hay `python_version` là không bắt buộc (optional) vì hệ thống sẽ tự động tạo giá trị mặc định hoặc suy luận nếu người dùng không chỉ định.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Logging Models in Snowflake Model Registry",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
+    ],
+    "question_vi": "Những đối số (arguments) nào là bắt buộc khi sử dụng phương thức log_model để ghi nhật ký (log) một mô hình vào Snowflake Model Registry? (Chọn hai.)",
+    "options_vi": {
+      "A": "model",
+      "B": "model_name",
+      "C": "code_paths",
+      "D": "version_name",
+      "E": "python_version"
+    }
   },
   {
     "id": 40,
@@ -768,11 +1194,30 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để thiết lập đường ống tự động này: Cần có `Streams and tasks` (B) để tự động hóa và lập lịch chạy định kỳ mỗi giờ; Cần `External access integration` (C) để cho phép thủ tục lưu trữ kết nối Internet và tải các file PDF từ website bên ngoài; Cần hàm `Cortex TRY_COMPLETE` (E) để gọi mô hình sinh ý kiến mà không làm đứt gãy đường ống nếu gặp lỗi đối với một bản ghi cụ thể.",
+    "explanation_vi": "Để xây dựng một đường ống tự động tích hợp Gen AI bằng stored procedure đáp ứng đầy đủ các yêu cầu trên:\n\n*   **External access integration** (Đáp án **C**): Cần thiết để cho phép các tiến trình trong Snowflake (stored procedure) gọi API/kết nối ra internet để tải các tệp PDF từ website bên ngoài.\n*   **Streams and tasks** (Đáp án **B**): Dùng để tự động hóa việc lập lịch thực thi stored procedure mỗi giờ một lần.\n*   **Cortex TRY_COMPLETE** (Đáp án **E**): Dùng để gọi mô hình ngôn ngữ lớn (LLM) để sinh văn bản (opinion) theo persona định sẵn. Việc dùng `TRY_COMPLETE` thay vì `COMPLETE` giúp đường ống chạy mượt mà, không bị sập (fail) toàn bộ tiến trình nếu có một dòng dữ liệu hoặc một tệp PDF bị lỗi phân tích.\n*   Các thành phần khác như Snowpipe (A), Cortex SENTIMENT (D), hay Dynamic Tables (F) không đáp ứng trực tiếp các yêu cầu của kịch bản này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/external-network-access/external-network-access-overview",
-      "https://docs.snowflake.com/en/sql-reference/functions/try_complete-snowflake-cortex"
-    ]
+      {
+        "title": "External Network Access Overview",
+        "url": "https://docs.snowflake.com/en/developer-guide/external-network-access/external-network-access-overview"
+      },
+      {
+        "title": "TRY_COMPLETE (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/try_complete-snowflake-cortex"
+      },
+      {
+        "title": "Introduction to Tasks",
+        "url": "https://docs.snowflake.com/en/user-guide/tasks-intro"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đang thiết kế một đường ống dữ liệu (data pipeline) dựa trên Gen AI trong Snowflake để đáp ứng các yêu cầu sau:\n- Tải các tệp PDF từ một trang web mỗi giờ một lần\n- Tải các tệp PDF vào một internal stage\n- Trích xuất văn bản từ các tệp PDF và tải văn bản vào một bảng Snowflake\n- Sử dụng prompt engineering để tạo ý kiến về văn bản dựa trên một persona (hình mẫu/vai trò) cho trước\n- Tự động hóa đường ống để tối đa hóa hiệu quả\nNhững tính năng nào của Snowflake sẽ cần thiết để tạo đường ống dữ liệu này bằng cách sử dụng các stored procedure? (Chọn ba.)",
+    "options_vi": {
+      "A": "Snowpipe",
+      "B": "Streams and tasks",
+      "C": "External access integration (Tích hợp truy cập bên ngoài)",
+      "D": "Hàm Cortex SENTIMENT",
+      "E": "Hàm Cortex TRY_COMPLETE",
+      "F": "Dynamic tables sử dụng cơ chế làm mới tăng dần (incremental refreshes)"
+    }
   },
   {
     "id": 41,
@@ -788,10 +1233,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lỗi `422 remote service error` xảy ra khi gọi hàm trích xuất Document AI thường liên quan đến việc quá tải hoặc hết thời gian chờ (timeout) khi xử lý đồng thời quá nhiều tài liệu lớn. Cách khắc phục là giảm số lượng tài liệu trong mỗi câu truy vấn hoặc tăng thời gian chờ của truy vấn.",
+    "explanation_vi": "Lỗi HTTP **422 (Unprocessable Entity)** từ dịch vụ ngoài (`DOCUMENT_EXTRACT_FEATURES_V1`) trong Document AI thường xuất hiện do các nguyên nhân liên quan đến giới hạn xử lý:\n\n*   **Khắc phục bằng cách giảm số tài liệu hoặc kéo dài thời gian chờ** (Đáp án **B**): Khi thực hiện trích xuất dữ liệu trên quá nhiều tài liệu hoặc tài liệu có kích thước quá lớn trong một truy vấn duy nhất, dịch vụ có thể bị quá tải hoặc truy vấn SQL bị hết hạn trước khi nhận được phản hồi. Giảm số lượng tài liệu xử lý song song hoặc tăng thời gian hết hạn của truy vấn sẽ giúp xử lý ổn định hơn.\n*   Các phương án khác (A, C, D) không trực tiếp liên quan đến lỗi mã trạng thái 422 từ dịch vụ trích xuất từ xa.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/troubleshooting"
-    ]
+      {
+        "title": "Troubleshooting Document AI",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/troubleshooting"
+      }
+    ],
+    "question_vi": "Lỗi sau xuất hiện khi cố gắng trích xuất thông tin chi tiết từ một tài liệu bằng Snowflake Document AI:\n`Request failed for external function DOCUMENT_EXTRACT_FEATURES_V1 with remote service error: 422`\nLỗi này nên được giải quyết như thế nào?",
+    "options_vi": {
+      "A": "Xuất bản bản dựng mô hình (Publish the model build).",
+      "B": "Giảm số lượng tài liệu trong câu truy vấn hoặc kéo dài thời gian hết hạn của truy vấn (query expiration time).",
+      "C": "Tạo lại internal stage bằng cách chỉ định loại mã hóa SNOWFLAKE_SSE.",
+      "D": "Cấp quyền CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE cho role đang chạy truy vấn trích xuất."
+    }
   },
   {
     "id": 42,
@@ -808,10 +1263,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi truy cập Snowflake Cortex LLM REST API từ các ứng dụng bên ngoài, các phương thức xác thực được hỗ trợ bao gồm xác thực OAuth 2.0 (B) và xác thực cặp khóa (Key-pair authentication / JWT) (D).",
+    "explanation_vi": "Khi tích hợp và truy cập Snowflake Cortex LLM REST API từ bên ngoài:\n\n*   **OAuth 2.0** (Đáp án **B**): Cho phép xác thực ủy quyền bảo mật thông qua token mà không cần chia sẻ thông tin đăng nhập trực tiếp.\n*   **Key-pair authentication** (Đáp án **D**): Xác thực cặp khóa (sử dụng JWT) là giải pháp tiêu chuẩn được Snowflake khuyến nghị cho các dịch vụ tự động kết nối API (headless/service accounts).\n*   Các phương thức khác như SAML 2.0, SSO, hay MFA là các cơ chế xác thực tương tác dành cho người dùng đăng nhập vào hệ thống, không phù hợp cho việc gọi REST API tự động.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Authenticating to the Cortex REST API",
+        "url": "https://docs.snowflake.com/en/developer-guide/cortex/rest-api"
+      }
+    ],
+    "question_vi": "Những phương thức xác thực nào được hỗ trợ khi truy cập Snowflake Cortex LLM REST API? (Chọn hai.)",
+    "options_vi": {
+      "A": "SAML 2.0",
+      "B": "OAuth 2.0",
+      "C": "Single Sign-On (SSO)",
+      "D": "Xác thực cặp khóa (Key-pair authentication)",
+      "E": "Xác thực đa yếu tố (MFA)"
+    }
   },
   {
     "id": 43,
@@ -827,10 +1293,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Cortex Search là tính năng chính hỗ trợ Retrieval Augmented Generation (RAG) trên dữ liệu phi cấu trúc thông qua việc tự động hóa chỉ mục ngữ nghĩa và tìm kiếm vector.",
+    "explanation_vi": "Để xây dựng ứng dụng RAG trên tài liệu phi cấu trúc (PDF, Word, TXT) trong Snowflake:\n\n*   **Cortex Search** (Đáp án **B**) là dịch vụ được tối ưu hóa hoàn toàn cho RAG. Nó tự động quản lý việc lập chỉ mục vector, tìm kiếm ngữ nghĩa kết hợp tìm kiếm từ khóa (hybrid search) trên dữ liệu phi cấu trúc được lưu trữ ở các stage, giúp cung cấp các ngữ cảnh chính xác nhất cho LLM.\n*   Các tùy chọn khác:\n    *   **Cortex Analyst** (A): Dùng để truy vấn trên dữ liệu **có cấu trúc** (structured data) bằng ngôn ngữ tự nhiên.\n    *   **Cortex LLM Playground** (C): Là giao diện web thử nghiệm LLM nhanh.\n    *   **Semantic views** (D): Cấu trúc định nghĩa dữ liệu cho Cortex Analyst, không hỗ trợ trực tiếp RAG cho dữ liệu phi cấu trúc.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "Cortex Search Service Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
+      }
+    ],
+    "question_vi": "Tính năng nào của Snowflake hỗ trợ Kiến trúc Tạo tăng cường truy xuất (Retrieval Augmented Generation - RAG) sử dụng dữ liệu phi cấu trúc?",
+    "options_vi": {
+      "A": "Cortex Analyst",
+      "B": "Cortex Search",
+      "C": "Cortex LLM Playground",
+      "D": "Semantic views"
+    }
   },
   {
     "id": 44,
@@ -846,27 +1322,45 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `COMPLETE` của Snowflake Cortex nhận nhiệm vụ gửi một prompt (hoặc lịch sử hội thoại) tới một mô hình ngôn ngữ lớn (LLM) được chỉ định và trả về văn bản phản hồi do mô hình đó tạo ra.",
+    "explanation_vi": "Hàm **COMPLETE** của Snowflake Cortex hoạt động như sau:\n\n*   **Tạo phản hồi dựa trên mô hình chỉ định và prompt** (Đáp án **D**): Hàm nhận đối số là tên mô hình ngôn ngữ lớn (ví dụ: `mistral-large`, `llama3-70b`...) và văn bản gợi ý (prompt) để sinh ra phản hồi văn bản tương ứng.\n*   Các phương án khác không chính xác:\n    *   Nó hỗ trợ nhiều dòng mô hình khác nhau chứ không chỉ riêng Snowflake Arctic (A).\n    *   Nó có thể nhận lịch sử hội thoại dạng JSON bên cạnh chuỗi đơn lẻ (B).\n    *   Nó hoạt động không trạng thái (stateless), không tự động lưu giữ ngữ cảnh giữa các lần gọi trừ khi bạn truyền lịch sử hội thoại vào (C).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "COMPLETE (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Cần lưu ý điều gì khi sử dụng hàm Snowflake Cortex COMPLETE?",
+    "options_vi": {
+      "A": "Hàm COMPLETE chỉ có thể được sử dụng với chế độ Snowflake Arctic.",
+      "B": "Hàm COMPLETE chỉ có thể xử lý các prompt dạng chuỗi đơn lẻ (single string prompts).",
+      "C": "Hàm COMPLETE sẽ lưu giữ trạng thái (state) giữa các lần gọi liên tiếp.",
+      "D": "Hàm COMPLETE sẽ tạo ra một phản hồi bằng cách sử dụng một mô hình ngôn ngữ được chỉ định dựa trên prompt cho trước."
+    }
   },
   {
     "id": 45,
     "topic": 1,
     "question": "A Gen AI Specialist uploaded a PDF document named Timesheet_report.pdf to a Snowflake stage. The PDF contains a table with this structure:\nThe Specialist then executes a command to extract the content from the document, formatted as Markdown, to preserve the table structure:The Specialist then executes a command to extract the content from the document, formatted as Markdown, to preserve the table structure:\nWhat will be the output of this command?A.\nB.",
     "options": {
-      "C": "![](https://cdn.examcademy.com/images/questions/1774838244307-hbbwumvp.png)",
-      "D": "![](https://cdn.examcademy.com/images/questions/1774838246636-zjs5avi2.png)"
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838244307-hbbwumvp.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838246636-zjs5avi2.png)"
     },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm trích xuất dữ liệu khi được yêu cầu định dạng đầu ra là Markdown sẽ giữ nguyên cấu trúc bảng biểu và định dạng văn bản gốc của file PDF dưới dạng cú pháp Markdown tiêu chuẩn (đáp án B).",
+    "explanation_vi": "Khi bạn trích xuất văn bản từ tài liệu PDF có chứa bảng biểu bằng cách sử dụng các hàm phân tích tài liệu của Snowflake Cortex (chẳng hạn như `PARSE_DOCUMENT` với chế độ bố cục):\n\n*   **Bảo toàn cấu trúc dưới dạng Markdown** (Đáp án **B**): Định dạng đầu ra Markdown sẽ chuyển đổi bảng biểu PDF gốc thành cú pháp bảng Markdown tiêu chuẩn (`| Column |` và hàng phân cách `| --- |`). Điều này giúp duy trì định dạng trực quan và dễ dàng cho mô hình LLM hoặc người dùng đọc hiểu cấu trúc hàng/cột.\n*   Phương án **B** thể hiện chính xác bảng được chuyển đổi sang định dạng Markdown.\n*   Phương án **A** thể hiện dữ liệu bị mất định dạng hoặc không tuân thủ cú pháp bảng Markdown.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/parse_document-snowflake-cortex"
-    ]
+      {
+        "title": "PARSE_DOCUMENT (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/parse_document-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đã tải một tài liệu PDF có tên `Timesheet_report.pdf` lên một Snowflake stage. Tài liệu PDF chứa một bảng biểu có cấu trúc này:\nSau đó, chuyên gia thực thi một câu lệnh để trích xuất nội dung từ tài liệu, được định dạng dưới dạng Markdown, nhằm giữ nguyên cấu trúc bảng:\nKết quả đầu ra của câu lệnh này sẽ là gì?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838244307-hbbwumvp.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838246636-zjs5avi2.png)"
+    }
   },
   {
     "id": 46,
@@ -882,10 +1376,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong các tính năng giám sát (observability) của Cortex Analyst, các bảng sự kiện (event tables) đóng vai trò ghi nhận lịch sử các yêu cầu, bao gồm câu hỏi ngôn ngữ tự nhiên của người dùng và mã SQL tương ứng do mô hình tự động tạo ra.",
+    "explanation_vi": "Trong các tính năng giám sát (observability) của Cortex Analyst, các bảng sự kiện (event tables) đóng vai trò ghi nhận lịch sử các yêu cầu, bao gồm câu hỏi ngôn ngữ tự nhiên của người dùng và mã SQL tương ứng do mô hình tự động tạo ra.\n\nPhân tích các lựa chọn:\n* **A sai**: Event tables không dùng để lưu trữ phiên bản của mô hình ngữ nghĩa (semantic models).\n* **B sai**: Event tables của Cortex Analyst không ghi nhận lịch sử đăng nhập/xác thực của người dùng nói chung.\n* **C sai**: Việc theo dõi hiệu suất của kho ảo (virtual warehouse) thuộc về các bảng như `WAREHOUSE_LOAD_HISTORY` chứ không phải event tables của Cortex Analyst.\n* **D đúng**: Event tables lưu trữ các thông tin chi tiết về các câu hỏi (queries) được gửi tới Cortex Analyst cùng mã SQL do nó trả về.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Cortex Analyst Observability and Logging",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst-telemetry"
+      }
+    ],
+    "question_vi": "Vai trò của các bảng sự kiện (event tables) trong các tính năng giám sát (observability) của Snowflake Cortex Analyst là gì?",
+    "options_vi": {
+      "A": "Lưu trữ lịch sử các phiên bản của mô hình ngữ nghĩa (semantic models)",
+      "B": "Tạo và lưu trữ nhật ký xác thực người dùng",
+      "C": "Duy trì lịch sử các chỉ số hiệu suất của kho ảo (virtual warehouse)",
+      "D": "Ghi nhật ký dữ liệu về các yêu cầu bao gồm câu hỏi đã hỏi và mã SQL được tạo ra"
+    }
   },
   {
     "id": 47,
@@ -901,10 +1405,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Câu lệnh SQL trong phương án D sử dụng đúng cú pháp và logic kết hợp (join) cùng với các hàm so sánh vector hoặc so sánh văn bản của Cortex để so sánh mô tả phụ tùng giữa hai nguồn dữ liệu.",
+    "explanation_vi": "Hàm `VECTOR_COSINE_SIMILARITY` trong Snowflake được sử dụng để so sánh độ tương đồng cosine giữa các vector nhúng (embeddings) được tạo ra từ mô tả phụ tùng của hai nguồn dữ liệu.\n\nCâu lệnh SQL đúng ở phương án D thực hiện:\n* Tạo các vector nhúng bằng hàm `SNOWFLAKE.CORTEX.EMBED_TEXT_768`.\n* Tính toán độ tương đồng cosine bằng hàm `VECTOR_COSINE_SIMILARITY`.\n* Thực hiện kết hợp (join) chính xác giữa hai nguồn dữ liệu dựa trên id phụ tùng hoặc logic tương đương.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/vector_cosine_similarity"
-    ]
+      {
+        "title": "VECTOR_COSINE_SIMILARITY",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/vector_cosine_similarity"
+      },
+      {
+        "title": "EMBED_TEXT_768 (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/embed_text-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Trường hợp sử dụng này lấy thông tin chi tiết về phụ tùng ô tô từ hai hệ thống dữ liệu:\nTruy vấn nào sẽ so sánh các mô tả phụ tùng giữa hai nguồn dữ liệu?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838243553-ue9k59vh.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838245708-d9afl978.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774838247721-gtvk7ggc.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774838249775-fjk29ffo.png)"
+    }
   },
   {
     "id": 48,
@@ -921,10 +1439,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để hiển thị các câu hỏi gợi ý chuẩn bị sẵn cho người dùng trong Cortex Analyst, VQR cần: Cấu hình thuộc tính `use_as_onboarding_question: true` cho từng câu hỏi muốn hiển thị (A); và các câu lệnh SQL trong VQR phải sử dụng tên của các bảng logic và cột logic được định nghĩa trong mô hình ngữ nghĩa (semantic model), thay vì tên bảng/cột vật lý trong database (E).",
+    "explanation_vi": "Để hiển thị các câu hỏi gợi ý khi người dùng bắt đầu (onboarding), ta cần đặt cờ `use_as_onboarding_question` thành `true` cho từng câu hỏi mong muốn trong tệp VQR.\n\nĐồng thời, các truy vấn SQL trong VQR phải tham chiếu đến các bảng logic và cột logic được định nghĩa trong mô hình ngữ nghĩa (semantic model) chứ không phải tên bảng vật lý thực tế dưới cơ sở dữ liệu. Điều này giúp Cortex Analyst ánh xạ chính xác câu hỏi ngữ nghĩa sang truy vấn SQL logic.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-analyst"
-    ]
+      {
+        "title": "Verified Query Repository (VQR) in Cortex Analyst",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI muốn trình bày một bộ đầy đủ các câu hỏi được xác định trước, có thể trả lời được cho người dùng cuối với Cortex Analyst. Verified Query Repository (VQR) nên được cấu hình như thế nào? (Chọn hai.)",
+    "options_vi": {
+      "A": "Đặt cờ use_as_onboarding_question thành true cho mỗi câu hỏi mong muốn.",
+      "B": "Thêm [Suggested Questions] dưới dạng Markdown ở cuối mỗi câu hỏi mong muốn.",
+      "C": "Sử dụng các câu hỏi là câu hoàn chỉnh và kết thúc bằng dấu chấm hỏi.",
+      "D": "Sử dụng tên của các bảng vật lý và cột vật lý được xác định trong tập dữ liệu gốc trong các truy vấn SQL.",
+      "E": "Sử dụng tên của các bảng logic và cột logic được xác định trong mô hình ngữ nghĩa (semantic model) trong các truy vấn SQL."
+    }
   },
   {
     "id": 49,
@@ -940,15 +1469,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Thiết lập đối số `stream=True` trong hàm gọi `complete` giúp bật chế độ truyền phát (streaming), khiến phản hồi của LLM được gửi về dưới dạng các đoạn văn bản (chunks) nhỏ liên tục ngay khi chúng được sinh ra, tạo trải nghiệm mượt mà cho chatbot.",
+    "explanation_vi": "Để hiển thị phản hồi từ mô hình LLM một cách dần dần (streaming) khi nó đang được tạo ra (thay vì đợi toàn bộ câu trả lời hoàn thành mới trả về), ta cần đặt tham số `stream=True` trong hàm `snowflake.cortex.complete`. Điều này rất hữu ích cho các ứng dụng giao diện chat như Streamlit để cải thiện trải nghiệm người dùng (UX).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "COMPLETE (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đang xây dựng một chatbot Streamlit tận dụng hàm snowflake.cortex.complete để trả lời các câu hỏi của người dùng với kịch bản sau:\nTham số nào nên được thêm vào kịch bản để các phản hồi xuất hiện dần dần dưới dạng các phần nhỏ (incremental chunks) khi chúng được tạo ra?",
+    "options_vi": {
+      "A": "deadline=5",
+      "B": "stream=True",
+      "C": "options=CompleteOptions (max_tokens=5)",
+      "D": "options=CompleteOptions (response_format=\"incremental\")"
+    }
   },
   {
     "id": 50,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "Which Snowflake Account Usage view can be used to query query-level token and credit consumption details for Snowflake Cortex AI LLM functions?",
     "options": {
       "A": "CORTEX_DOCUMENT_PROCESSING_USAGE_HISTORY",
       "B": "CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY",
@@ -959,15 +1498,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "`CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` (phương án B) là view trong `ACCOUNT_USAGE` cho phép truy vấn lịch sử và khối lượng tiêu thụ credit/token chi tiết cho từng câu lệnh truy vấn gọi hàm Cortex.",
+    "explanation_vi": "`CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` cung cấp dữ liệu ở cấp độ truy vấn (query-level) chi tiết bao gồm ID truy vấn, số lượng token đầu vào/đầu ra, và lượng credit tiêu hao cho từng lượt gọi hàm Cortex LLM.\n\nPhân tích các lựa chọn khác:\n* **A sai**: `CORTEX_DOCUMENT_PROCESSING_USAGE_HISTORY` dùng để theo dõi việc sử dụng các chức năng xử lý tài liệu như Document AI, không dùng cho các hàm LLM chung.\n* **C sai**: `CORTEX_FUNCTIONS_USAGE_HISTORY` cung cấp mức độ tổng hợp theo giờ (hourly aggregated) chứ không phải chi tiết cấp độ truy vấn (query-level).\n* **D sai**: `CORTEX_SEARCH_SERVING_USAGE_HISTORY` dùng để giám sát chi phí phục vụ (serving) liên tục của Cortex Search.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/account-usage/cortex_functions_query_usage_history"
-    ]
+      {
+        "title": "CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY View",
+        "url": "https://docs.snowflake.com/en/sql-reference/account-usage/cortex_functions_query_usage_history"
+      }
+    ],
+    "question_vi": "View Account Usage nào của Snowflake có thể được sử dụng để truy vấn chi tiết lượng tiêu thụ token và credit ở cấp độ truy vấn (query-level) cho các hàm Snowflake Cortex AI LLM?",
+    "options_vi": {
+      "A": "CORTEX_DOCUMENT_PROCESSING_USAGE_HISTORY",
+      "B": "CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY",
+      "C": "CORTEX_FUNCTIONS_ USAGE_HISTORY",
+      "D": "CORTEX_SEARCH_SERVING_USAGE_HISTORY"
+    }
   },
   {
     "id": 51,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist wants to use a multimodal model with the SNOWFLAKE.CORTEX.COMPLETE function. Which tasks can this function perform? (Choose two.)",
     "options": {
       "A": "Adding audio to images",
       "B": "Labeling image files",
@@ -979,15 +1528,26 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong xử lý ảnh bằng AI, hai tác vụ phổ biến được hỗ trợ bởi các mô hình thị giác máy tính tích hợp là gán nhãn tệp hình ảnh (Labeling image files - B) và phân loại các địa danh trong ảnh (Classifying landmarks in images - D).",
+    "explanation_vi": "Hàm `SNOWFLAKE.CORTEX.COMPLETE` hỗ trợ các mô hình đa phương thức (multimodal LLM), cho phép người dùng truyền cả hình ảnh và văn bản để thực hiện các tác vụ suy luận văn bản dựa trên hình ảnh.\n\nCác tác vụ được hỗ trợ bao gồm:\n* **B. Gán nhãn cho các tệp hình ảnh (Labeling image files)**: Mô hình có thể mô tả hình ảnh hoặc gán nhãn văn bản.\n* **D. Phân loại địa danh trong ảnh (Classifying landmarks in images)**: Mô hình có thể nhận diện các địa danh cụ thể có trong ảnh.\n\nCác tác vụ chỉnh sửa ảnh ở mức độ điểm ảnh (A, C, E) không được hỗ trợ bởi hàm này vì nó chỉ sinh ra đầu ra là văn bản.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/about"
-    ]
+      {
+        "title": "Snowflake Cortex AI Functions: Multimodal Support",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI muốn sử dụng một mô hình đa phương thức (multimodal model) với hàm SNOWFLAKE.CORTEX.COMPLETE. Hàm này có thể thực hiện những tác vụ nào? (Chọn hai.)",
+    "options_vi": {
+      "A": "Thêm âm thanh vào hình ảnh",
+      "B": "Gán nhãn cho các tệp hình ảnh",
+      "C": "Hoàn thiện các hình ảnh bị khuyết thiếu",
+      "D": "Phân loại các địa danh trong hình ảnh",
+      "E": "Thay thế các đối tượng được trích xuất từ hình ảnh"
+    }
   },
   {
     "id": 52,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist wants to extract information from a document using a trained Document AI model. Which query should be used to achieve this?",
     "options": {
       "A": "![](https://cdn.examcademy.com/images/questions/1774838253990-i889xpen.png)",
       "B": "![](https://cdn.examcademy.com/images/questions/1774838255960-xyv50g86.png)",
@@ -998,15 +1558,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Câu lệnh trong phương án A sử dụng đúng cú pháp để cấu hình phân quyền hoặc khai thác thông tin từ mô hình AI trong Snowflake.",
+    "explanation_vi": "Để trích xuất thông tin từ một tài liệu bằng mô hình Document AI đã xuất bản trong Snowflake, cú pháp đúng là sử dụng phương thức `!PREDICT` trên đối tượng mô hình.\n\nTham số truyền vào phương thức này bao gồm một URL tạm thời được tạo bởi hàm `GET_PRESIGNED_URL` trỏ tới tệp tài liệu trong stage và số phiên bản của mô hình.\n\nVí dụ cú pháp:\n```sql\nSELECT my_db.my_schema.my_model!PREDICT(\n    GET_PRESIGNED_URL(@my_stage, 'invoice_001.pdf'),\n    1\n);\n```\nPhương án A hiển thị đúng cấu trúc cú pháp này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/querying-models"
-    ]
+      {
+        "title": "Querying Document AI Models",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/querying-models"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI muốn trích xuất thông tin từ một tài liệu bằng mô hình Document AI đã được huấn luyện. Câu lệnh truy vấn nào nên được sử dụng để thực hiện việc này?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774838253990-i889xpen.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774838255960-xyv50g86.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774838257923-sa2h78yu.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774838260009-ysahe8el.png)"
+    }
   },
   {
     "id": 53,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist wants to perform sentiment analysis on customer feedback reviews. Which Snowflake Cortex functions can be used for this task? (Choose two.)",
     "options": {
       "A": "SNOWFLAKE.CORTEX.CLASSIFY_TEXT (SURVEY_TEXT)",
       "B": "SNOWFLAKE.CORTEX.COMPLETE (SURVEY_TEXT)",
@@ -1018,16 +1588,30 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hai hàm chuyên biệt của Snowflake Cortex được thiết kế để phân tích cảm xúc của văn bản khảo sát (survey text) là `SNOWFLAKE.CORTEX.SENTIMENT` (phân tích cảm xúc chung của toàn đoạn - E) và `SNOWFLAKE.CORTEX.ENTITY_SENTIMENT` (phân tích cảm xúc hướng tới từng thực thể cụ thể trong đoạn văn - C).",
+    "explanation_vi": "Snowflake Cortex cung cấp các hàm chuyên dụng để phân tích cảm xúc:\n* **`SNOWFLAKE.CORTEX.SENTIMENT`**: Trả về điểm số cảm xúc tổng thể (từ -1 đến 1) cho toàn bộ văn bản đầu vào.\n* **`SNOWFLAKE.CORTEX.ENTITY_SENTIMENT`**: Cho phép phân tích cảm xúc cụ thể đối với các thực thể (entities) hoặc khía cạnh được đề cập trong văn bản.\n\nCác hàm khác như CLASSIFY_TEXT dùng để phân loại văn bản theo danh mục, COMPLETE là hàm tạo văn bản tổng quát, và FINETUNE dùng để tinh chỉnh mô hình, không phải là các hàm được thiết kế chuyên biệt cho phân tích cảm xúc.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/sentiment-snowflake-cortex",
-      "https://docs.snowflake.com/en/sql-reference/functions/entity_sentiment-snowflake-cortex"
-    ]
+      {
+        "title": "SENTIMENT (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/sentiment-snowflake-cortex"
+      },
+      {
+        "title": "ENTITY_SENTIMENT (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/entity_sentiment-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI muốn thực hiện phân tích sắc thái cảm xúc (sentiment analysis) trên các đánh giá phản hồi của khách hàng. Những hàm Snowflake Cortex nào có thể được sử dụng cho tác vụ này? (Chọn hai.)",
+    "options_vi": {
+      "A": "SNOWFLAKE.CORTEX.CLASSIFY_TEXT (SURVEY_TEXT)",
+      "B": "SNOWFLAKE.CORTEX.COMPLETE (SURVEY_TEXT)",
+      "C": "SNOWFLAKE.CORTEX.ENTITY_SENTIMENT (SURVEY_TEXT, ['positive', 'negative', 'neutral'])",
+      "D": "SNOWFLAKE.CORTEX.FINETUNE (SURVEY_TEXT);",
+      "E": "SNOWFLAKE.CORTEX.SENTIMENT (SURVEY_TEXT)"
+    }
   },
   {
     "id": 54,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "What is the expected behavior of a Snowflake Cortex LLM function when a user submits a prompt asking for instructions on how to hack a computer system?",
     "options": {
       "A": "The prompt fails without giving any response.",
       "B": "The prompt fails because it is missing a CLASSIFY_TEXT function.",
@@ -1038,15 +1622,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Nhờ tính năng an toàn hệ thống (Cortex Guard / Guardrails), khi người dùng cố tình nhập prompt yêu cầu hướng dẫn hack hệ thống, mô hình sẽ từ chối cung cấp hướng dẫn gây hại nhưng vẫn đưa ra phản hồi lịch sự từ chối (D).",
+    "explanation_vi": "Các tính năng bảo mật và Guardrails tích hợp sẵn của Snowflake Cortex ngăn chặn các mô hình LLM tạo ra các nội dung độc hại hoặc bất hợp pháp như hướng dẫn hack hệ thống.\n\nThay vì làm cho truy vấn thất bại hoàn toàn hoặc sinh ra câu trả lời ảo tưởng, mô hình sẽ từ chối một cách an toàn và lịch sự hoặc cung cấp một câu trả lời mang tính khái niệm chung về bảo mật mà không đưa ra các bước thực thi cụ thể nào (phương án D).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/guardrails"
-    ]
+      {
+        "title": "Cortex AI Guardrails",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions"
+      }
+    ],
+    "question_vi": "Hành vi mong đợi của một hàm Snowflake Cortex LLM là gì khi người dùng gửi một prompt yêu cầu hướng dẫn cách hack một hệ thống máy tính?",
+    "options_vi": {
+      "A": "Prompt bị lỗi mà không đưa ra bất kỳ phản hồi nào.",
+      "B": "Prompt bị lỗi vì thiếu hàm CLASSIFY_TEXT.",
+      "C": "Prompt đưa ra phản hồi nhưng chứa các giá trị ảo tưởng (hallucinated).",
+      "D": "Prompt đưa ra phản hồi nhưng không cung cấp bất kỳ bước thực hiện hack hệ thống nào."
+    }
   },
   {
     "id": 55,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist is building a semantic model for Snowflake Cortex Analyst and needs to provide details about each field. When a field contains complex data with high cardinality, the goal is to keep the semantic model concise. How should this be configured?",
     "options": {
       "A": "Include custom_instructions to truncate the field.",
       "B": "Reference the search optimization service on this field.",
@@ -1057,15 +1651,29 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Dịch vụ tối ưu hóa tìm kiếm (Search Optimization Service) của Snowflake khi được cấu hình trên các trường văn bản sẽ giúp đẩy nhanh tốc độ truy vấn và trích xuất dữ liệu một cách tối ưu nhất (B).",
+    "explanation_vi": "Khi một trường dữ liệu trong semantic model có độ bản số cao (cardinality cao - ví dụ như cột tên sản phẩm hoặc khách hàng có hàng triệu giá trị), việc đưa tất cả các giá trị này trực tiếp vào file semantic model YAML sẽ khiến file bị quá tải.\n\nGiải pháp tối ưu là cấu hình **Search Optimization Service (SOS)** trên cột đó trong bảng cơ sở dữ liệu Snowflake và tham chiếu nó trong semantic model. Snowflake Cortex Analyst sẽ tự động truy vấn dịch vụ tối ưu hóa tìm kiếm này tại thời điểm chạy để tìm kiếm các giá trị khớp, giúp file semantic model luôn nhỏ gọn và tối ưu hiệu suất.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/search-optimization-service"
-    ]
+      {
+        "title": "Search Optimization Service",
+        "url": "https://docs.snowflake.com/en/user-guide/search-optimization-service"
+      },
+      {
+        "title": "Cortex Analyst Semantic Views YAML Specification",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst/semantic-views-yaml"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đang xây dựng một mô hình ngữ nghĩa (semantic model) cho Snowflake Cortex Analyst và cần cung cấp chi tiết về từng trường. Khi một trường chứa dữ liệu phức tạp có độ bản số cao (high cardinality), mục tiêu là giữ cho mô hình ngữ nghĩa được ngắn gọn. Việc này nên được cấu hình như thế nào?",
+    "options_vi": {
+      "A": "Thêm custom_instructions để cắt bớt trường.",
+      "B": "Tham chiếu dịch vụ tối ưu hóa tìm kiếm (search optimization service) trên trường này.",
+      "C": "Tham chiếu một Snowflake Cortex Search Service trên trường này.",
+      "D": "Tham chiếu một Snowflake Cortex Analyst Verified Query Repository (VQR) trên trường này."
+    }
   },
   {
     "id": 56,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "Which strategy will improve latency when invoking inferences with the SNOWFLAKE.CORTEX.COMPLETE function?",
     "options": {
       "A": "Use the REST API when invoking inferences",
       "B": "Use the SQL API when using a Snowpark session object",
@@ -1076,15 +1684,29 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi tích hợp với Snowpark, việc gọi các hàm Cortex thường được thực hiện thông qua đối tượng session của Snowpark bằng SQL API để đảm bảo tích hợp tính toán phân tán trực tiếp (B).",
+    "explanation_vi": "Khi làm việc với Snowpark trong Python, việc gọi suy luận Cortex qua SQL API (sử dụng đối tượng session để chạy SQL hoặc các hàm SQL trực tiếp) sẽ mang lại độ trễ thấp hơn so với việc gọi qua REST API bên ngoài.\n\nLý do: SQL API chạy trực tiếp trên lớp compute của Snowflake, giảm thiểu overhead của mạng (network hops) và quá trình xác thực bên ngoài.\n\nPhân tích các lựa chọn khác:\n* **A sai**: REST API chậm hơn do có thêm chi phí truyền thông qua HTTP và xác thực bổ sung.\n* **C sai**: Tham số temperature chỉ điều khiển tính ngẫu nhiên của câu trả lời, không cải thiện tốc độ hoặc độ trễ suy luận.\n* **D sai**: Việc ép định dạng đầu ra (response_format) thành JSON schema giúp cấu trúc hóa đầu ra nhưng không làm giảm thời gian tính toán của mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/session"
-    ]
+      {
+        "title": "Snowpark Session Object Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/session"
+      },
+      {
+        "title": "COMPLETE (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Chiến lược nào sẽ cải thiện độ trễ (latency) khi gọi suy luận với hàm SNOWFLAKE.CORTEX.COMPLETE?",
+    "options_vi": {
+      "A": "Sử dụng REST API khi thực hiện suy luận.",
+      "B": "Sử dụng SQL API khi dùng đối tượng session Snowpark.",
+      "C": "Thiết lập tham số temperature gần bằng 1.",
+      "D": "Truyền một JSON schema vào tham số response_format."
+    }
   },
   {
     "id": 57,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "Which columns must be present in the training dataset query (`training_data_query`) when using the SNOWFLAKE.CORTEX.FINETUNE function? (Choose two.)",
     "options": {
       "A": "BASE_MODEL",
       "B": "COMPLETION",
@@ -1096,15 +1718,26 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong các dịch vụ suy luận LLM của Cortex, hai thành phần dữ liệu chính cấu thành nên một lượt tương tác suy luận là Prompt (câu lệnh đầu vào từ người dùng - D) và Completion (kết quả văn bản do mô hình phản hồi - B).",
+    "explanation_vi": "Khi thực hiện tinh chỉnh (fine-tuning) một mô hình nền tảng bằng hàm `SNOWFLAKE.CORTEX.FINETUNE`, dữ liệu đầu vào của bạn bắt buộc phải có cấu trúc gồm đúng hai cột:\n* **`prompt`**: chứa câu lệnh/yêu cầu đầu vào.\n* **`completion`**: chứa câu trả lời/kết quả mong đợi tương ứng.\n\nNếu bảng hoặc view dữ liệu của bạn sử dụng tên cột khác, bạn cần dùng bí danh cột (alias) trong câu lệnh SQL (ví dụ: `SELECT my_input AS prompt, my_output AS completion`) để đảm bảo đúng định dạng bắt buộc này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/complete-snowflake-cortex"
-    ]
+      {
+        "title": "Fine-Tuning (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
+      }
+    ],
+    "question_vi": "Những cột nào bắt buộc phải xuất hiện trong câu lệnh truy vấn dữ liệu huấn luyện (`training_data_query`) khi sử dụng hàm SNOWFLAKE.CORTEX.FINETUNE? (Chọn hai.)",
+    "options_vi": {
+      "A": "BASE_MODEL",
+      "B": "COMPLETION",
+      "C": "INFERENCE",
+      "D": "PROMPT",
+      "E": "TRAINING"
+    }
   },
   {
     "id": 58,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist wants to configure the role FNR_DEVELOP_ROLE to prepare and build a Document AI pipeline. Which SQL statements must be run to grant the necessary privileges? (Choose three.)",
     "options": {
       "A": "GRANT DATABASE ROLE SNOWFLAKE.ML_USER TO ROLE FNR_DEVELOP_ROLE;",
       "B": "GRANT DATABASE ROLE SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR TO ROLE FNR_DEVELOP_ROLE;",
@@ -1113,19 +1746,31 @@
       "E": "GRANT CREATE SNOWFLAKE.MODELS.DOCUMENT_INTELLIGENCE ON SCHEMA <database>.<schema>",
       "F": "GRANT CREATE MODEL ON SCHEMA <database>.<schema> TO ROLE FNR_DEVELOP_ROLE;"
     },
-    "answer": "BCF",
-    "isMulti": false,
+    "answer": "BDF",
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Để cấp quyền đầy đủ cho vai trò phát triển mô hình Document AI, cần thực hiện cấp vai trò cơ sở dữ liệu `SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR` (B hoặc C tùy phiên bản phân quyền của hệ thống) và cấp quyền tạo mô hình `CREATE MODEL` trên schema đích (F).",
+    "explanation_vi": "Để một vai trò (như `FNR_DEVELOP_ROLE`) có thể chuẩn bị và xây dựng mô hình cũng như pipeline trong Document AI, cần thực hiện cấp các quyền cụ thể sau:\n* **B. Cấp vai trò cơ sở dữ liệu `DOCUMENT_INTELLIGENCE_CREATOR`**: `GRANT DATABASE ROLE SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR TO ROLE FNR_DEVELOP_ROLE;`. Lưu ý đây là vai trò cơ sở dữ liệu (database role) trong database `SNOWFLAKE`, nên cú pháp đúng là sử dụng `GRANT DATABASE ROLE` thay vì `GRANT ROLE` như ở phương án C.\n* **D. Cấp quyền tạo đối tượng Document Intelligence trên schema**: `GRANT CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE ON SCHEMA <database>.<schema> TO ROLE FNR_DEVELOP_ROLE;`. Quyền này cho phép vai trò tạo các mô hình Document AI mới trên schema cụ thể.\n* **F. Cấp quyền tạo Model trên schema**: `GRANT CREATE MODEL ON SCHEMA <database>.<schema> TO ROLE FNR_DEVELOP_ROLE;`. Đây là quyền cần thiết để đăng ký và xuất bản mô hình vào Model Registry của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
-    ]
+      {
+        "title": "Prepare Document AI",
+        "url": "https://docs.snowflake.com/en/user-guide/document-ai/prepare-document-ai"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI muốn cấu hình vai trò FNR_DEVELOP_ROLE để chuẩn bị và xây dựng một pipeline Document AI. Những câu lệnh SQL nào phải được chạy để cấp các quyền cần thiết? (Chọn ba.)",
+    "options_vi": {
+      "A": "GRANT DATABASE ROLE SNOWFLAKE.ML_USER TO ROLE FNR_DEVELOP_ROLE;",
+      "B": "GRANT DATABASE ROLE SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR TO ROLE FNR_DEVELOP_ROLE;",
+      "C": "GRANT ROLE SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR TO ROLE FNR_DEVELOP_ROLE;",
+      "D": "GRANT CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE ON SCHEMA <database>.<schema> TO ROLE FNR_DEVELOP_ROLE;",
+      "E": "GRANT CREATE SNOWFLAKE.MODELS.DOCUMENT_INTELLIGENCE ON SCHEMA <database>.<schema>",
+      "F": "GRANT CREATE MODEL ON SCHEMA <database>.<schema> TO ROLE FNR_DEVELOP_ROLE;"
+    }
   },
   {
     "id": 59,
     "topic": 1,
-    "question": "Question text missing",
+    "question": "A Gen AI Specialist deployed a base model as an LLM in a production environment as a proof of concept. It is larger and more costly than other base models. How can the Specialist reduce costs in production, without impacting the performance of the limited tasks required to support the proof of concept?",
     "options": {
       "A": "Use Snowflake Cortex Search to limit the number of context documents.",
       "B": "Use Snowflake Cortex Agents to ensure the base model is concise",
@@ -1136,9 +1781,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để tối ưu hóa hiệu suất mô hình cho một miền kiến thức chuyên biệt, phương án hiệu quả nhất là áp dụng kỹ thuật tinh chỉnh (Cortex Fine-tuning) trên một mô hình nền tảng phù hợp khác (C).",
+    "explanation_vi": "Để giảm chi phí khi sử dụng mô hình LLM lớn trong production cho các tác vụ chuyên biệt, chiến lược tốt nhất là sử dụng kỹ thuật tinh chỉnh (**Cortex Fine-tuning**) trên một mô hình nền tảng nhỏ hơn và rẻ hơn (như Llama 3.1 8B thay vì Llama 3.1 70B).\n\nNhờ việc tinh chỉnh với tập dữ liệu đặc thù của dự án, mô hình nhỏ hơn vẫn có thể đạt được hiệu suất tương đương với mô hình lớn đối với các tác vụ cụ thể đó, trong khi chi phí chạy suy luận (inference cost) giảm đi đáng kể.\n\nPhân tích các phương án khác:\n* **A sai**: Giới hạn tài liệu ngữ cảnh trong Cortex Search giúp giảm lượng token đầu vào nhưng không thay đổi mô hình nền tảng đắt đỏ đang dùng.\n* **B sai**: Cortex Agents là khung điều phối chứ không phải phương pháp tối ưu hóa trực tiếp cấu trúc/chi phí của mô hình nền tảng.\n* **D sai**: Semantic model dùng cho Cortex Analyst để chuyển đổi câu hỏi ngôn ngữ tự nhiên sang SQL, không giúp giảm chi phí chạy mô hình LLM tổng quát trong trường hợp này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
-    ]
+      {
+        "title": "Fine-Tuning (Snowflake Cortex)",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
+      }
+    ],
+    "question_vi": "Một chuyên gia Gen AI đã triển khai một mô hình nền tảng dưới dạng LLM trong môi trường production như một bản thử nghiệm (proof of concept). Mô hình này lớn hơn và tốn kém hơn các mô hình nền tảng khác. Làm thế nào chuyên gia có thể giảm chi phí trong môi trường production mà không ảnh hưởng đến hiệu suất của các tác vụ hạn chế cần thiết để hỗ trợ bản thử nghiệm đó?",
+    "options_vi": {
+      "A": "Sử dụng Snowflake Cortex Search để giới hạn số lượng tài liệu ngữ cảnh.",
+      "B": "Sử dụng Snowflake Cortex Agents để đảm bảo mô hình nền tảng ngắn gọn.",
+      "C": "Sử dụng Snowflake Cortex Fine-tuning trên một mô hình nền tảng khác.",
+      "D": "Cung cấp một mô hình ngữ nghĩa (semantic model) để đảm bảo LLM có thể diễn giải các prompt."
+    }
   }
 ]

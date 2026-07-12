@@ -1,6 +1,13 @@
 ---
 title: "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
 description: "Lộ trình ôn phỏng vấn Data Engineer theo bốn mảng: SQL, coding, system design dữ liệu và xử lý sự cố production."
+tags: ["interview", "sql", "system-design", "troubleshooting", "learning-path"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Interview Preparation (Chuẩn bị phỏng vấn Data Engineer)"
+metaDescription: "Lộ trình ôn phỏng vấn Data Engineer theo bốn mảng: SQL, coding, system design dữ liệu và xử lý sự cố production."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Phỏng vấn Data Engineer thường không kiểm tra bạn thuộc bao nhiêu công cụ. Họ muốn biết bạn có hiểu dữ liệu, code có chắc không, thiết kế pipeline có thực tế không, và khi production hỏng bạn có xử lý bình tĩnh không.
@@ -28,6 +35,26 @@ SQL là phần dễ bị đánh giá nhất vì kết quả đúng/sai rõ. Hãy
 - Reconciliation giữa hai nguồn.
 
 Khi giải, nói rõ grain trước. Ví dụ: “Em sẽ tạo một dòng cho mỗi user mỗi ngày trước, sau đó mới aggregate theo tuần.” Câu đó cho thấy bạn hiểu dữ liệu, không chỉ biết cú pháp.
+
+Hai pattern chiếm tỷ lệ ra đề cao nhất, nên viết được không cần nghĩ:
+
+```sql
+-- Pattern 1: Dedup giữ bản ghi mới nhất (xuất hiện ở ~50% vòng SQL)
+SELECT * FROM (
+  SELECT *, ROW_NUMBER() OVER (
+    PARTITION BY user_id ORDER BY updated_at DESC) AS rn
+  FROM user_events
+) t WHERE rn = 1;
+
+-- Pattern 2: Top-N per group
+SELECT * FROM (
+  SELECT *, DENSE_RANK() OVER (
+    PARTITION BY category ORDER BY revenue DESC) AS rk
+  FROM product_sales
+) t WHERE rk <= 3;
+```
+
+Và chuẩn bị trả lời câu hỏi nối tiếp gần như chắc chắn sẽ đến: *"vì sao dùng `ROW_NUMBER` mà không phải `RANK`/`DENSE_RANK`?"* (ROW_NUMBER không bao giờ trùng số → dedup an toàn; RANK nhảy số khi hòa; DENSE_RANK không nhảy — chọn theo việc bạn muốn xử lý tie thế nào). Luyện đầy đủ theo bài [SQL Interview Patterns](/interview/sql-interview-patterns/).
 
 Ôn trong site: [SQL Transformation](/concepts/6-data-modeling-transformation/sql-transformation/), [Grain](/concepts/6-data-modeling-transformation/grain/), [Fact Table](/concepts/6-data-modeling-transformation/fact-table/), [Slowly Changing Dimension](/concepts/6-data-modeling-transformation/slowly-changing-dimension/).
 

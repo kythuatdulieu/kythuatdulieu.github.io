@@ -35,7 +35,7 @@ Hệ thống Log-based CDC đóng vai trò như một **Replica node (bản sao)
 
 ## 2. Kiến Trúc End-to-End với Debezium và Kafka
 
-[Debezium](https://debezium.io/] là chuẩn công nghiệp (de-facto standard) cho CDC mã nguồn mở, thường chạy như một tập hợp các source connectors trên nền Apache Kafka Connect.
+[Debezium](https://debezium.io/) là chuẩn công nghiệp (de-facto standard) cho CDC mã nguồn mở, thường chạy như một tập hợp các source connectors trên nền Apache Kafka Connect.
 
 ### Luồng Hoạt Động (Data Flow)
 
@@ -164,9 +164,9 @@ Thiết kế hệ thống phân tán luôn là nghệ thuật của sự đánh 
 
 ## Nguồn Tham Khảo (References)
 
-1.  [Debezium Architecture Documentation][https://debezium.io/documentation/reference/architecture.html]
-2.  [PostgreSQL Logical Decoding Explained][https://www.postgresql.org/docs/current/logicaldecoding-explanation.html]
-3.  [AWS Architecture Blog: Real-time CDC pipelines with MSK and Debezium][https://aws.amazon.com/blogs/architecture/implementing-real-time-change-data-capture-with-debezium-for-amazon-aurora-postgresql-and-amazon-rds-for-postgresql/]
+1.  [Debezium Architecture Documentation](https://debezium.io/documentation/reference/architecture.html)
+2.  [PostgreSQL Logical Decoding Explained](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html)
+3.  [AWS Architecture Blog: Real-time CDC pipelines with MSK and Debezium](https://aws.amazon.com/blogs/architecture/implementing-real-time-change-data-capture-with-debezium-for-amazon-aurora-postgresql-and-amazon-rds-for-postgresql/)
 4.  Martin Kleppmann (2017), *Designing Data-Intensive Applications*, O'Reilly Media.
-5.  Uber Engineering Blog: [Uber’s Real-Time Data Intelligence Platform][https://www.uber.com/en-VN/blog/real-time-data-intelligence/]
-6.  Netflix TechBlog: [DBLog: A Watermark Based Change-Data-Capture Framework](https://netflixtechblog.com/dblog-a-generic-change-data-capture-framework-69351fb9099b]
+5.  Uber Engineering Blog: [Uber’s Real-Time Data Intelligence Platform](https://www.uber.com/en-VN/blog/real-time-data-intelligence/)
+6.  Netflix TechBlog: [DBLog: A Watermark Based Change-Data-Capture Framework](https://netflixtechblog.com/dblog-a-generic-change-data-capture-framework-69351fb9099b)

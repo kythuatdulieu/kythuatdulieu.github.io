@@ -35,7 +35,10 @@ graph TD
     D -->|"Cost-based Optimization (CBO)"| E["Physical Plans (Multiple Options)"]
     E --> F["Selected Physical Plan"]
     F -->|Tungsten Engine| G["Whole-Stage Code Generation"]
-    G --> H["RDDs / Bytecode Thực Thi"]
+    G --> H["RDDs / Bytecode Thực Thi"]
+
+
+
 ```
 
 1. **Analysis (Phân tích & Xác thực):** Chuyển từ *Unresolved* sang *Resolved Logical Plan*. Spark tra cứu Catalog (thường liên kết với Hive Metastore) để đảm bảo các bảng, cột có tồn tại và tương thích kiểu dữ liệu (Data types).
@@ -127,7 +130,7 @@ spark.sql("""
 
 ## 5. Nguồn Tham Khảo [References]
 
-* [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks Blog (2015]][https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html]
-* [Project Tungsten: Bringing Apache Spark Closer to Bare Metal - Databricks Blog][https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html]
-* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
+* [Deep Dive into Spark SQL's Catalyst Optimizer - Databricks Blog (2015)](https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html)
+* [Project Tungsten: Bringing Apache Spark Closer to Bare Metal - Databricks Blog](https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html)
+* [Adaptive Query Execution in Spark 3.0 - Databricks Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
 * Thiết kế Hệ thống Dữ liệu Chuyên sâu (Designing Data-Intensive Applications - Martin Kleppmann) - Phân tích lý thuyết về Data Skew, Hash Join & Partitioning.

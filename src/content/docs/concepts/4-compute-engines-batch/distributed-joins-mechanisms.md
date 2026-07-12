@@ -160,7 +160,7 @@ df_joined = df_fact.join(df_dim_exploded, "salted_client_id")
 
 ## Nguồn Tham Khảo
 
-*   [Apache Spark: A Unified Engine for Big Data Processing [CACM 2016]][https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext]
-*   [Uber Engineering Blog: Highly Scalable and Distributed Shuffle as a Service][https://www.uber.com/en-US/blog/ubers-highly-scalable-and-distributed-shuffle-as-a-service/]
-*   [Adaptive Query Execution in Spark 3.0 - Databricks Engineering Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
+*   [Apache Spark: A Unified Engine for Big Data Processing (CACM 2016)](https://cacm.acm.org/magazines/2016/11/209116-apache-spark/fulltext)
+*   [Uber Engineering Blog: Highly Scalable and Distributed Shuffle as a Service](https://www.uber.com/en-US/blog/ubers-highly-scalable-and-distributed-shuffle-as-a-service/)
+*   [Adaptive Query Execution in Spark 3.0 - Databricks Engineering Blog](https://databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
 *   *Designing Data-Intensive Applications* - Chapter 10: Batch Processing, Martin Kleppmann.

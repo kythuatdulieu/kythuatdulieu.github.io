@@ -39,7 +39,9 @@ flowchart TD
     E -->|"2. Auto Evolve (Tiến hóa)"| G["Thêm cột vào Metadata Log"]
     G --> D
     E -->|"3. Ignore (Phớt lờ)"| H["Drop cột mới, chỉ ghi cột cũ"]
-    H --> D
+    H --> D
+
+
 ```
 
 ---
@@ -195,8 +197,8 @@ Không có một phương pháp "Silver Bullet" nào cho Schema Drift. Một Sta
 
 ## 5. Nguồn Tham Khảo (References)
 
-* [Delta Lake: Schema Evolution and Enforcement][https://docs.delta.io/latest/delta-batch.html#update-table-schema]
-* [dbt Documentation: Model Contracts (Enforcing data shapes]][https://docs.getdbt.com/docs/collaborate/govern/model-contracts]
-* [Confluent Schema Registry Overview & Compatibility Modes][https://docs.confluent.io/platform/current/schema-registry/]
+* [Delta Lake: Schema Evolution and Enforcement](https://docs.delta.io/latest/delta-batch.html#update-table-schema)
+* [dbt Documentation: Model Contracts (Enforcing data shapes)](https://docs.getdbt.com/docs/collaborate/govern/model-contracts)
+* [Confluent Schema Registry Overview & Compatibility Modes](https://docs.confluent.io/platform/current/schema-registry/)
 * *Designing Data-Intensive Applications* - Martin Kleppmann (Chapter 4: Encoding and Evolution - Đọc để hiểu về Backward/Forward Compatibility).
-* [Data Contracts Architecture - Chad Sanderson](https://dataproducts.substack.com/]
+* [Data Contracts Architecture - Chad Sanderson](https://dataproducts.substack.com/)

@@ -109,7 +109,7 @@ Một Kỹ sư hệ thống xuất sắc không chỉ làm query chạy nhanh, m
 ---
 
 ## 5. Nguồn Tham Khảo (References)
-*   [The Snowflake Elastic Data Warehouse - SIGMOD 2016][https://dl.acm.org/doi/10.1145/2882903.2903741]
-*   [Google Dremel: Interactive Analysis of Web-Scale Datasets (BigQuery Engine]][https://research.google/pubs/pub36632/]
-*   [Amazon Redshift Deep Dive - Tuning and Best Practices][https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-techniques-for-amazon-redshift/]
-*   [MonetDB/X100: Hyper-Pipelining Query Execution (Vectorized Execution]](https://stratos.seas.harvard.edu/files/stratos/files/x100.pdf)
+*   [The Snowflake Elastic Data Warehouse - SIGMOD 2016](https://dl.acm.org/doi/10.1145/2882903.2903741)
+*   [Google Dremel: Interactive Analysis of Web-Scale Datasets (BigQuery Engine)](https://research.google/pubs/pub36632/)
+*   [Amazon Redshift Deep Dive - Tuning and Best Practices](https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-techniques-for-amazon-redshift/)
+*   [MonetDB/X100: Hyper-Pipelining Query Execution (Vectorized Execution)](https://stratos.seas.harvard.edu/files/stratos/files/x100.pdf)

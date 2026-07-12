@@ -78,7 +78,7 @@ public class ZeroCopyRouter {
             long count = fileChannel.size();
             
             // 3. ZERO-COPY EXECUTION: Gọi trực tiếp OS-level sendfile() under the hood
-            // Bỏ qua hoàn toàn việc tạo byte[] buffer trong JVM (Zero Heap Allocation]
+            // Bỏ qua hoàn toàn việc tạo byte[] buffer trong JVM (Zero Heap Allocation)
             long bytesTransferred = fileChannel.transferTo(position, count, socketChannel);
             
             System.out.println("Transferred " + bytesTransferred + " bytes directly via DMA.");
@@ -136,7 +136,7 @@ Sự tồn tại của Zero-Copy ảnh hưởng trực tiếp tới bài toán k
 - **Tối đa hóa năng lực 1 Node:** Nhờ Zero-Copy, một Broker đơn lẻ (với NVMe SSD) có thể đẩy 2-3 Gbps network traffic một cách nhẹ nhàng.
 
 ## Nguồn Tham Khảo (References)
-* **IBM Developer**: [Efficient data transfer through zero copy][https://developer.ibm.com/articles/j-zerocopy/] (Bài viết nền tảng kinh điển về system calls).
-* **Confluent Engineering**: [Kafka's Zero-Copy Architecture & Network Optimizations][https://www.confluent.io/blog/kafka-zero-copy-architecture/].
-* **Linux Man Pages**: [sendfile(2] — Linux manual page](https://man7.org/linux/man-pages/man2/sendfile.2.html).
+* **IBM Developer**: [Efficient data transfer through zero copy](https://developer.ibm.com/articles/j-zerocopy/) (Bài viết nền tảng kinh điển về system calls).
+* **Confluent Engineering**: [Kafka's Zero-Copy Architecture & Network Optimizations](https://www.confluent.io/blog/kafka-zero-copy-architecture/).
+* **Linux Man Pages**: [sendfile(2) — Linux manual page](https://man7.org/linux/man-pages/man2/sendfile.2.html).
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 11).

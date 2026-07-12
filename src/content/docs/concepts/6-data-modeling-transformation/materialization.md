@@ -148,8 +148,8 @@ models:
 ---
 
 ## Nguồn Tham Khảo
-* [dbt Documentation - Materializations][https://docs.getdbt.com/docs/build/materializations]
-* [Snowflake Documentation - Dynamic Tables][https://docs.snowflake.com/en/user-guide/dynamic-tables-about]
-* [Databricks Documentation - Delta Live Tables][https://docs.databricks.com/en/delta-live-tables/index.html]
+* [dbt Documentation - Materializations](https://docs.getdbt.com/docs/build/materializations)
+* [Snowflake Documentation - Dynamic Tables](https://docs.snowflake.com/en/user-guide/dynamic-tables-about)
+* [Databricks Documentation - Delta Live Tables](https://docs.databricks.com/en/delta-live-tables/index.html)
 * **Fundamentals of Data Engineering - Joe Reis & Matt Housley**
-* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/]
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)

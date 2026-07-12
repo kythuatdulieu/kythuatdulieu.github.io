@@ -131,7 +131,7 @@ models:
 -- models/marts/core/dim_product_denormalized.sql
 -- Chạy batch job vào ban đêm để gánh vác các phép JOIN đắt đỏ của Snowflake schema
 WITH product AS [
-    SELECT * FROM {{ ref('stg_dim_product'] }}
+    SELECT * FROM {{ ref('stg_dim_product') }}
 ),
 category AS (
     SELECT * FROM {{ ref('stg_dim_category') }}
@@ -153,8 +153,8 @@ Nhờ cách làm này, bạn giữ được ưu điểm chuẩn hóa ở khâu l
 
 ## 6. Nguồn Tham Khảo (References)
 
-* [Designing Data-Intensive Applications - Martin Kleppmann (O'Reilly]][https://dataintensive.net/]
-* [AWS Architecture Blog - Design Patterns for Amazon Redshift][https://aws.amazon.com/blogs/architecture/]
-* [ThoughtSpot Blog - Star Schema vs Snowflake Schema][https://www.thoughtspot.com/data-trends/data-modeling/star-schema-vs-snowflake-schema]
-* [Netflix Tech Blog: Data Engineering and Data Modeling at Scale][https://netflixtechblog.com/]
+* [Designing Data-Intensive Applications - Martin Kleppmann (O'Reilly)](https://dataintensive.net/)
+* [AWS Architecture Blog - Design Patterns for Amazon Redshift](https://aws.amazon.com/blogs/architecture/)
+* [ThoughtSpot Blog - Star Schema vs Snowflake Schema](https://www.thoughtspot.com/data-trends/data-modeling/star-schema-vs-snowflake-schema)
+* [Netflix Tech Blog: Data Engineering and Data Modeling at Scale](https://netflixtechblog.com/)
 * [Fundamentals of Data Engineering - Joe Reis & Matt Housley](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/)

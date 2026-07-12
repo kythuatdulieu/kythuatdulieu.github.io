@@ -106,7 +106,8 @@ Các hệ thống OLAP hiện đại (ClickHouse, Databricks Photon Engine) từ
 flowchart LR
     A["Mảng Age [Vector]: [25, 30, 22, 40]"] --> B["CPU L1 Cache"]
     B --> C{"SIMD Instruction:\n _mm256_add_epi32() \n (Cộng 8 số trong 1 Clock Cycle)"}
-    C --> D["Result Vector"]
+    C --> D["Result Vector"]
+
 ```
 
 **4. Late Materialization (Vật Chất Hóa Trễ):**
@@ -132,7 +133,7 @@ Hiểu sâu về cấu trúc vật lý Row/Column này là kỹ năng bắt bu�
 
 ## Nguồn Tham Khảo
 
-* [Designing Data-Intensive Applications - Martin Kleppmann (Chương 3: Storage and Retrieval]][https://dataintensive.net/]
-* [Apache Parquet - Columnar Storage Format][https://parquet.apache.org/docs/]
-* [Databricks Photon Engine: Vectorized Query Execution][https://databricks.com/product/photon]
-* [ClickHouse Architecture: Column-oriented database and Vectorization](https://clickhouse.com/docs/en/architecture/column-oriented]
+* [Designing Data-Intensive Applications - Martin Kleppmann (Chương 3: Storage and Retrieval)](https://dataintensive.net/)
+* [Apache Parquet - Columnar Storage Format](https://parquet.apache.org/docs/)
+* [Databricks Photon Engine: Vectorized Query Execution](https://databricks.com/product/photon)
+* [ClickHouse Architecture: Column-oriented database and Vectorization](https://clickhouse.com/docs/en/architecture/column-oriented)

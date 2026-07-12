@@ -68,7 +68,7 @@ xychart-beta
 
 ### 2.1. Code Thực chiến: Cấu hình Airflow Jitter & Fail-Fast
 
-Trong Apache Airflow, hãy bật cờ `retry_exponential_backoff`. Tuy nhiên, với các **Lỗi Cố định (Permanent Errors]** như sai mật khẩu (HTTP 401), thiếu quyền (403), hoặc SQL Syntax error, việc Retry là hoàn toàn vô nghĩa và lãng phí tài nguyên. Hệ thống cần áp dụng nguyên tắc **Fail-Fast** (Chết ngay lập tức).
+Trong Apache Airflow, hãy bật cờ `retry_exponential_backoff`. Tuy nhiên, với các **Lỗi Cố định (Permanent Errors)** như sai mật khẩu (HTTP 401), thiếu quyền (403), hoặc SQL Syntax error, việc Retry là hoàn toàn vô nghĩa và lãng phí tài nguyên. Hệ thống cần áp dụng nguyên tắc **Fail-Fast** (Chết ngay lập tức).
 
 ```python
 from datetime import timedelta
@@ -169,7 +169,7 @@ with DAG(
 
 ## Nguồn Tham Khảo (References)
 
-1.  [AWS Architecture Blog - Exponential Backoff And Jitter][https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/]
-2.  [Apache Airflow Documentation - Task Retries and SLAs][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html#retries]
-3.  [Google SRE Book - Service Level Objectives][https://sre.google/sre-book/service-level-objectives/]
-4.  [Netflix TechBlog - Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a]
+1.  [AWS Architecture Blog - Exponential Backoff And Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+2.  [Apache Airflow Documentation - Task Retries and SLAs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html#retries)
+3.  [Google SRE Book - Service Level Objectives](https://sre.google/sre-book/service-level-objectives/)
+4.  [Netflix TechBlog - Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)

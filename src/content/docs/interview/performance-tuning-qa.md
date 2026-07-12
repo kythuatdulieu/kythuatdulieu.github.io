@@ -7,6 +7,7 @@ readingTime: "13 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Performance Tuning QA - Phỏng vấn tối ưu hóa truy vấn dữ liệu"
 metaDescription: "Trả lời phỏng vấn tối ưu hiệu năng truy vấn: đọc EXPLAIN plan, partition pruning, indexing, COUNT DISTINCT xấp xỉ, và bài toán small files."
+domains: ["DE"]
 ---
 
 Một câu SQL chạy đúng trên vài nghìn dòng dữ liệu test không nói lên điều gì. Cũng câu đó trên bảng chục tỷ dòng có thể treo hàng giờ, chặn cả pipeline phía sau, và — trên warehouse tính tiền theo lượng dữ liệu quét — đốt tiền theo đúng nghĩa đen. Vòng Performance Tuning tồn tại để kiểm tra bạn có nhìn thấy trước những điều đó không, và đây thường là vòng phân định rõ nhất giữa Junior và Senior.

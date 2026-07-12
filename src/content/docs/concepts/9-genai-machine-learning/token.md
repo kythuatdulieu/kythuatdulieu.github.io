@@ -19,7 +19,7 @@ Mọi bài toán thiết kế kiến trúc hệ thống ứng dụng LLM (Large 
 
 ## 1. Kiến trúc Thực thi Vật lý (Physical Execution)
 
-Trong kiến trúc [Transformer](https://arxiv.org/abs/1706.03762], văn bản dạng chuỗi String thuần túy không thể trực tiếp truyền qua các lớp Multi-Head Attention. Quá trình Tokenization đóng vai trò là một Data Ingestion Layer siêu nhỏ, biến chuỗi String thành mảng các số nguyên (Integer IDs), sau đó tra cứu trong bảng Embedding Table để lấy ra Vector nhiều chiều tương ứng.
+Trong kiến trúc [Transformer](https://arxiv.org/abs/1706.03762), văn bản dạng chuỗi String thuần túy không thể trực tiếp truyền qua các lớp Multi-Head Attention. Quá trình Tokenization đóng vai trò là một Data Ingestion Layer siêu nhỏ, biến chuỗi String thành mảng các số nguyên (Integer IDs), sau đó tra cứu trong bảng Embedding Table để lấy ra Vector nhiều chiều tương ứng.
 
 ### Byte-Pair Encoding (BPE) & Thuật toán Nén
 Hầu hết các LLM hiện đại (GPT-4, Llama 3, Claude 3) đều sử dụng thuật toán nén dữ liệu **Byte-Pair Encoding (BPE)**. 
@@ -36,11 +36,13 @@ graph TD
     C -- Có --> D["Merge: Gộp Cặp Bytes thành một Sub-word ID mới"]
     D --> C
     C -- Không (Đạt Target Vocab Size) --> E["Trả về mảng Token IDs (Integers)"]
-    E --> F["Truyền vào LLM Embedding Layer"]
+    E --> F["Truyền vào LLM Embedding Layer"]
+
+
 ```
 
 ### Tiktoken: Tokenizer tốc độ cao
-Thư viện [`tiktoken`](https://github.com/openai/tiktoken] của OpenAI là một trong những Tokenizer nhanh nhất hiện nay, được viết bằng Rust (vượt qua các giới hạn GIL của Python). Dưới đây là cách sử dụng `tiktoken` trong luồng xử lý dữ liệu trước khi gọi API để thiết lập chốt chặn an toàn (Guardrails) nhằm tiết kiệm chi phí:
+Thư viện [`tiktoken`](https://github.com/openai/tiktoken) của OpenAI là một trong những Tokenizer nhanh nhất hiện nay, được viết bằng Rust (vượt qua các giới hạn GIL của Python). Dưới đây là cách sử dụng `tiktoken` trong luồng xử lý dữ liệu trước khi gọi API để thiết lập chốt chặn an toàn (Guardrails) nhằm tiết kiệm chi phí:
 
 ```python
 import tiktoken
@@ -140,7 +142,7 @@ Với cấu hình này, nếu một ứng dụng RAG nội bộ bị kẹt trong
 
 ## Nguồn Tham Khảo (References)
 
-1. [Attention Is All You Need (Vaswani et al., 2017]][https://arxiv.org/abs/1706.03762] - Nền tảng cốt lõi giải thích chi phí tính toán tỷ lệ thuận với $O(N^2)$ chiều dài chuỗi.
-2. [OpenAI Tiktoken Github Repository][https://github.com/openai/tiktoken] - Nơi chứa mã nguồn Tokenizer tốc độ cao viết bằng Rust.
-3. [FinOps Foundation: Introduction to AI/ML FinOps][https://www.finops.org/] - Nguyên lý quản trị chi phí Cloud và AI API.
-4. [LiteLLM Architecture & Routing](https://docs.litellm.ai/docs/routing] - Tài liệu hệ thống Proxy phân tải và quản lý vòng đời Token trong hệ thống Production.
+1. [Attention Is All You Need (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762) - Nền tảng cốt lõi giải thích chi phí tính toán tỷ lệ thuận với $O(N^2)$ chiều dài chuỗi.
+2. [OpenAI Tiktoken Github Repository](https://github.com/openai/tiktoken) - Nơi chứa mã nguồn Tokenizer tốc độ cao viết bằng Rust.
+3. [FinOps Foundation: Introduction to AI/ML FinOps](https://www.finops.org/) - Nguyên lý quản trị chi phí Cloud và AI API.
+4. [LiteLLM Architecture & Routing](https://docs.litellm.ai/docs/routing) - Tài liệu hệ thống Proxy phân tải và quản lý vòng đời Token trong hệ thống Production.

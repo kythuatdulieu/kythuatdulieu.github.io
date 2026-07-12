@@ -75,7 +75,7 @@ Apache Parquet (được thiết kế dựa trên báo cáo **Dremel** của Goo
 
 ```mermaid
 graph TD
-    File["Parquet File'] --> RG1['Row Group 0 (e.g. 100,000 rows]"]
+    File["Parquet File'] --> RG1['Row Group 0 (e.g. 100,000 rows)"]
     File --> RG2["Row Group 1 (e.g. 100,000 rows)"]
     File --> Footer["File Footer (Metadata)"]
     
@@ -110,7 +110,7 @@ Khi chạy `SELECT * FROM sales WHERE amount > 1000`:
 ### 3.2. Mã hóa siêu nhẹ (Lightweight Encoding)
 Bởi vì một cột chỉ chứa một kiểu dữ liệu duy nhất, hệ thống có thể áp dụng các thuật toán mã hóa (Encoding) siêu nhẹ nhưng cực kỳ hiệu quả, trước khi áp dụng thuật toán nén chung (như Snappy/Zstd).
 - **Run-Length Encoding (RLE):** Chuỗi `[US, US, US, VN, VN]` được nén thành `[US:3, VN:2]`.
-- **Dictionary Encoding:** Thay vì lưu hàng triệu chuỗi `Engineering`, hệ thống tạo từ điển `{0: 'Engineering'}` và lưu một mảng số nguyên `[0, 0, 0]`. Số nguyên nhỏ (Integer] chiếm cực ít RAM và giúp CPU tính toán nhanh hơn nhiều lần.
+- **Dictionary Encoding:** Thay vì lưu hàng triệu chuỗi `Engineering`, hệ thống tạo từ điển `{0: 'Engineering'}` và lưu một mảng số nguyên `[0, 0, 0]`. Số nguyên nhỏ (Integer) chiếm cực ít RAM và giúp CPU tính toán nhanh hơn nhiều lần.
 
 ### 3.3. CPU Cache Locality & Vectorized Execution (SIMD)
 - **CPU Cache Locality:** Vì dữ liệu cột nằm liền kề (contiguous) trên RAM, khi CPU truy xuất một giá trị, luồng dữ liệu tiếp theo sẽ được load trước (prefetch) vào L1/L2 Cache của CPU. Tỷ lệ Cache Miss cực thấp, giữ cho CPU luôn "bận rộn" tính toán thay vì phải chờ đợi (Stall) dữ liệu từ RAM.
@@ -141,7 +141,7 @@ Columnar Storage cực ghét các file nhỏ. Nếu bạn ingest dữ liệu str
 ---
 
 ## Nguồn Tham Khảo (References)
-* **Dremel Paper (Google Research):** [Dremel: Interactive Analysis of Web-Scale Datasets][https://research.google/pubs/dremel-interactive-analysis-of-web-scale-datasets/] - Nền tảng đằng sau Parquet và BigQuery.
-* **Databricks Engineering:** [What is Parquet? (Columnar Storage]][https://www.databricks.com/glossary/what-is-parquet]
+* **Dremel Paper (Google Research):** [Dremel: Interactive Analysis of Web-Scale Datasets](https://research.google/pubs/dremel-interactive-analysis-of-web-scale-datasets/) - Nền tảng đằng sau Parquet và BigQuery.
+* **Databricks Engineering:** [What is Parquet? (Columnar Storage)](https://www.databricks.com/glossary/what-is-parquet)
 * **Designing Data-Intensive Applications** - *Martin Kleppmann* (Chapter 3: Storage and Retrieval - Column-Oriented Storage).
-* [The Data Pelago: Vectorized Execution and Cache Locality](https://datapelago.ai/]
+* [The Data Pelago: Vectorized Execution and Cache Locality](https://datapelago.ai/)

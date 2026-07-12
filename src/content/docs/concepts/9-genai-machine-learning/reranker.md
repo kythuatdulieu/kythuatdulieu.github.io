@@ -60,7 +60,7 @@ Khi đưa Reranker lên Production, các kỹ sư thường đối mặt với h
 -   **Staff-Level Solution:** Thiết lập **Circuit Breaker** cứng: Không bao giờ đẩy quá $K=100$ tài liệu vào Reranker. Sử dụng kiến trúc Asynchronous Processing hoặc các mô hình thu gọn (Distilled Models) như *TinyBERT* nếu Latency là SLA tối thượng.
 
 ### 2.2. GPU CUDA OOMKilled
--   **Vấn đề:** Khi nối chuỗi `[CLS] Query [SEP] Doc [SEP]`, tổng token vượt quá `max_position_embeddings` (thường là 512]. Độ phức tạp của Self-Attention là bậc hai $O(L^2)$ theo độ dài chuỗi $L$. Nhét 100 tài liệu dài vào 1 Batch sẽ lập tức làm sập VRAM (CUDA OutOfMemoryError).
+-   **Vấn đề:** Khi nối chuỗi `[CLS] Query [SEP] Doc [SEP]`, tổng token vượt quá `max_position_embeddings` (thường là 512). Độ phức tạp của Self-Attention là bậc hai $O(L^2)$ theo độ dài chuỗi $L$. Nhét 100 tài liệu dài vào 1 Batch sẽ lập tức làm sập VRAM (CUDA OutOfMemoryError).
 -   **Khắc phục:** Bắt buộc phải cấu hình `truncation=True` và băm nhỏ (chunking) luồng Inference bằng Python Generator.
 
 ---
@@ -96,7 +96,7 @@ def chunked_rerank(query: str, docs: List[str], chunk_size: int = 50] -> List[Di
     for i in range(0, len(docs), chunk_size):
         chunk = docs[i:i + chunk_size]
         
-        # Gọi Cohere Rerank API (Mô hình đa ngữ English + API v3 mới nhất]
+        # Gọi Cohere Rerank API (Mô hình đa ngữ English + API v3 mới nhất)
         response = co.rerank(
             model="rerank-multilingual-v3.0",
             query=query,

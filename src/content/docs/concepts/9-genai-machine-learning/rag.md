@@ -109,7 +109,7 @@ async def embed_chunk_with_retry(chunk_text, client):
         return response.data[0].embedding
 
 async def process_chunks[chunks, client]:
-    tasks = [embed_chunk_with_retry(chunk, client] for chunk in chunks]
+    tasks = [embed_chunk_with_retry(chunk, client) for chunk in chunks]
     return await asyncio.gather(*tasks)
 ```
 
@@ -125,7 +125,7 @@ Việc áp dụng Advanced RAG đi kèm với một cái giá: **Thời gian và
 ---
 
 ## Nguồn Tham Khảo [References]
-* [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020]][https://arxiv.org/abs/2005.11401]
-* [Advanced RAG Techniques - LlamaIndex Documentation][https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/advanced_retrieval/]
-* [Vector Databases and Vector Search - Pinecone][https://www.pinecone.io/learn/vector-database/]
-* [Databricks: Building scalable Generative AI applications with Lakehouse](https://www.databricks.com/blog/building-genai-applications-lakehouse-architecture]
+* [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)](https://arxiv.org/abs/2005.11401)
+* [Advanced RAG Techniques - LlamaIndex Documentation](https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/advanced_retrieval/)
+* [Vector Databases and Vector Search - Pinecone](https://www.pinecone.io/learn/vector-database/)
+* [Databricks: Building scalable Generative AI applications with Lakehouse](https://www.databricks.com/blog/building-genai-applications-lakehouse-architecture)

@@ -131,7 +131,7 @@ resource "aws_rds_integration" "aurora_to_redshift" {
 
 ## 5. Nguồn Tham Khảo [References]
 
-*   [Designing Data-Intensive Applications][https://dataintensive.net/] - Martin Kleppmann.
-*   [AWS Architecture Blog: Zero-ETL integration between Amazon Aurora and Amazon Redshift][https://aws.amazon.com/blogs/big-data/create-a-zero-etl-integration-between-amazon-aurora-and-amazon-redshift/]
-*   [dbt Documentation: Reverse ETL][https://www.getdbt.com/blog/what-is-reverse-etl]
-*   [Netflix Tech Blog: Data Engineering at Scale](https://netflixtechblog.com/]
+*   [Designing Data-Intensive Applications](https://dataintensive.net/) - Martin Kleppmann.
+*   [AWS Architecture Blog: Zero-ETL integration between Amazon Aurora and Amazon Redshift](https://aws.amazon.com/blogs/big-data/create-a-zero-etl-integration-between-amazon-aurora-and-amazon-redshift/)
+*   [dbt Documentation: Reverse ETL](https://www.getdbt.com/blog/what-is-reverse-etl)
+*   [Netflix Tech Blog: Data Engineering at Scale](https://netflixtechblog.com/)
