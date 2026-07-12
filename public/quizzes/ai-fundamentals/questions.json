@@ -12,8 +12,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lập luận (AI reasoning) là một đặc tính cơ bản của trí tuệ nhân tạo, giúp hệ thống suy luận, rút ra kết luận và giải quyết vấn đề từ các dữ liệu và luật lệ sẵn có.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): Khả năng lập luận (AI reasoning)** là một đặc tính cốt lõi và nền tảng của trí tuệ nhân tạo. Lập luận cho phép các hệ thống AI xử lý thông tin, áp dụng các quy tắc logic, giải quyết các vấn đề phức tạp và rút ra kết luận hợp lý từ dữ liệu hoặc tiền đề sẵn có.\n* **Các phương án sai (A & B):** Mặc dù việc học hỏi (learning) và dự báo (predicting) là các thành phần quan trọng của học máy (Machine Learning), nhưng khả năng lập luận (reasoning) mới chính là thuộc tính trí tuệ cơ bản phân biệt AI thực sự với các hệ thống phân tích thống kê thông thường.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "IBM - What is Artificial Intelligence (AI)?",
+        "url": "https://www.ibm.com/topics/artificial-intelligence"
+      },
+      {
+        "title": "Microsoft Learn - Artificial Intelligence (AI) concepts",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/artificial-intelligence"
+      }
+    ],
+    "question_vi": "Đặc tính nào dưới đây là đặc tính cơ bản của trí tuệ nhân tạo (AI)?",
+    "options_vi": {
+      "A": "Học máy tự động (AI learning)",
+      "B": "Khả năng dự báo (AI predicting)",
+      "C": "Khả năng lập luận (AI reasoning)"
+    }
   },
   {
     "id": 2,
@@ -28,8 +43,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học máy (Machine Learning) là một lĩnh vực con của AI tập trung vào việc huấn luyện các mô hình dự báo từ dữ liệu đầu vào.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): Học máy (Machine learning)** là một lĩnh vực con của trí tuệ nhân tạo (AI), tập trung vào việc sử dụng dữ liệu và thuật toán để huấn luyện các mô hình dự báo hoặc đưa ra quyết định mà không cần lập trình rõ ràng.\n* **Các phương án sai:**\n  * **A. Hệ chuyên gia (Expert system):** Đây là một hệ thống AI thế hệ cũ hoạt động dựa trên các quy tắc logic tĩnh (rule-based) do con người định nghĩa sẵn, không tự huấn luyện mô hình dự báo từ dữ liệu.\n  * **B. Trí tuệ nhân tạo (Artificial intelligence):** Đây là khái niệm bao quát chung cho mọi công nghệ mô phỏng trí thông minh của con người, bao gồm cả Machine Learning và các phương pháp khác, do đó không phải là thuật ngữ cụ thể nhất cho việc huấn luyện mô hình từ dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "IBM - What is Machine Learning?",
+        "url": "https://www.ibm.com/topics/machine-learning"
+      },
+      {
+        "title": "Microsoft Learn - What is machine learning?",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/concept-powering-ai"
+      }
+    ],
+    "question_vi": "Lĩnh vực nào dưới đây huấn luyện một mô hình dự báo từ dữ liệu đầu vào?",
+    "options_vi": {
+      "A": "Hệ chuyên gia (Expert system)",
+      "B": "Trí tuệ nhân tạo (Artificial intelligence)",
+      "C": "Học máy (Machine learning)"
+    }
   },
   {
     "id": 3,
@@ -44,8 +74,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "XAI (Explainable AI - Trí tuệ nhân tạo có thể giải thích được) là thuật ngữ dùng để chỉ các phương pháp và kỹ thuật cho phép con người hiểu và tin tưởng vào kết quả và đầu ra được tạo ra bởi các thuật toán học máy, cụ thể là module giải thích cách hệ thống đạt được kết luận.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (A): Module giải thích cách hệ thống đạt được kết luận.** XAI là viết tắt của **Explainable AI (Trí tuệ nhân tạo có thể giải thích được)**. Đây là tập hợp các phương pháp giúp con người hiểu, tin cậy và quản lý hiệu quả các đầu ra được tạo ra bởi các thuật toán học máy hộp đen (black-box).\n* **Các phương án sai:**\n  * **B. Giao diện người dùng của một hệ thống AI:** XAI tập trung vào sự minh bạch của thuật toán bên trong chứ không phải thiết kế giao diện bên ngoài (UI).\n  * **C. Cơ sở tri thức của một hệ chuyên gia (Knowledge base):** Đây là thành phần lưu trữ thông tin/luật lệ trong các hệ chuyên gia cũ, không liên quan đến thuật ngữ XAI dùng trong các mô hình học máy hiện đại.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "IBM - What is Explainable AI (XAI)?",
+        "url": "https://www.ibm.com/topics/explainable-ai"
+      },
+      {
+        "title": "Google Cloud - Explainable AI",
+        "url": "https://cloud.google.com/explainable-ai"
+      }
+    ],
+    "question_vi": "Thuật ngữ XAI được sử dụng để chỉ điều nào sau đây?",
+    "options_vi": {
+      "A": "Module giải thích cách hệ thống đạt được kết luận",
+      "B": "Giao diện người dùng của một hệ thống AI",
+      "C": "Cơ sở tri thức của một hệ chuyên gia"
+    }
   },
   {
     "id": 4,
@@ -60,8 +105,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lấy mẫu thuận tiện (Convenience sampling) là phương pháp lấy mẫu phi xác suất dễ bị thiên vị (chệch) nhất vì nó chỉ chọn những mẫu dễ tiếp cận nhất mà không đảm bảo tính đại diện cho tổng thể.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (B): Chọn mẫu thuận tiện (Convenience).** Chọn mẫu thuận tiện là phương pháp phi xác suất thu thập dữ liệu từ những đối tượng dễ tiếp cận nhất xung quanh nghiên cứu viên. Do không sử dụng bất kỳ quy tắc hay tiêu chí ràng buộc nào, phương pháp này có nguy cơ thiên lệch (bias) cao nhất vì mẫu thử thường không có tính đại diện cho tổng thể.\n* **Các phương án sai:**\n  * **A. Chọn mẫu theo phán đoán (Judgment):** Nghiên cứu viên sử dụng chuyên môn để lựa chọn mẫu phù hợp nhất với mục tiêu nghiên cứu, giúp kiểm soát một phần tính đại diện.\n  * **C. Chọn mẫu định mức (Quota):** Thiết lập các hạn mức cụ thể cho các nhóm đối tượng (ví dụ: giới tính, độ tuổi) để đảm bảo phân bổ, giúp giảm bớt sự thiên lệch so với chọn mẫu thuận tiện.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Scribbr - Non-Probability Sampling Methods",
+        "url": "https://www.scribbr.com/methodology/non-probability-sampling/"
+      },
+      {
+        "title": "Laerd Statistics - Non-probability sampling",
+        "url": "https://statistics.laerd.com/statistical-guides/non-probability-sampling.php"
+      }
+    ],
+    "question_vi": "Phương pháp chọn mẫu phi xác suất nào sau đây dễ bị thiên lệch (chệch) CAO NHẤT?",
+    "options_vi": {
+      "A": "Chọn mẫu theo phán đoán (Judgment)",
+      "B": "Chọn mẫu thuận tiện (Convenience)",
+      "C": "Chọn mẫu định mức (Quota)"
+    }
   },
   {
     "id": 5,
@@ -76,8 +136,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Việc chia sẻ dữ liệu số của cá nhân mà không có sự đồng ý của họ là hành vi vi phạm quyền riêng tư (Privacy).",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (B): Quyền riêng tư (Privacy).** Quyền riêng tư dữ liệu liên quan đến quyền kiểm soát của cá nhân đối với thông tin cá nhân của họ được thu thập và chia sẻ như thế nào. Việc chia sẻ dữ liệu khi chưa có sự đồng ý của chủ sở hữu dữ liệu là sự vi phạm trực tiếp quyền riêng tư.\n* **Các phương án sai:**\n  * **A. Tính toàn vẹn (Integrity):** Đảm bảo dữ liệu chính xác, nhất quán và không bị chỉnh sửa trái phép trong suốt vòng đời.\n  * **C. Tính bảo mật (Security):** Liên quan đến các biện pháp bảo vệ dữ liệu khỏi sự truy cập và tấn công trái phép từ bên ngoài.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Trust Center - Privacy Principles",
+        "url": "https://www.microsoft.com/en-us/trust-center/privacy"
+      },
+      {
+        "title": "Google Safety Center - Privacy principles",
+        "url": "https://safety.google/principles/"
+      }
+    ],
+    "question_vi": "Khi một tổ chức yêu cầu một cá nhân tạo dữ liệu số cho một mục đích cụ thể, sau đó chia sẻ dữ liệu đó mà không có sự đồng ý của họ, thì hành vi này vi phạm điều nào sau đây?",
+    "options_vi": {
+      "A": "Tính toàn vẹn (Integrity)",
+      "B": "Quyền riêng tư (Privacy)",
+      "C": "Tính bảo mật (Security)"
+    }
   },
   {
     "id": 6,
@@ -92,8 +167,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Ưu tiên đạo đức và quyền riêng tư (Ethical and privacy prioritization) là yếu tố quản trị dữ liệu quan trọng nhất liên quan đến AI để đảm bảo AI được phát triển và sử dụng một cách có trách nhiệm.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (B): Ưu tiên đạo đức và quyền riêng tư.** Đối với AI, việc quản trị dữ liệu phải đặt đạo đức và quyền riêng tư lên hàng đầu để tránh các vấn đề về định kiến (bias), phân biệt đối xử và vi phạm bảo mật thông tin cá nhân của người dùng, giúp xây dựng lòng tin và tuân thủ pháp luật.\n* **Các phương án sai (A & C):** Giảm chi phí và cải thiện năng suất là các mục tiêu vận hành thông thường của doanh nghiệp, không phải yếu tố cốt lõi trong quản trị dữ liệu có trách nhiệm dành cho AI.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud - AI and ML Data Governance",
+        "url": "https://cloud.google.com/architecture/framework/security/data-governance-ai-ml"
+      },
+      {
+        "title": "Microsoft Azure - Responsible AI",
+        "url": "https://www.microsoft.com/en-us/ai/responsible-ai"
+      }
+    ],
+    "question_vi": "Yếu tố quản trị dữ liệu nào dưới đây là quan trọng NHẤT khi liên quan đến AI?",
+    "options_vi": {
+      "A": "Giảm thiểu chi phí và tài nguyên",
+      "B": "Ưu tiên đạo đức và quyền riêng tư",
+      "C": "Cải thiện hiệu quả và năng suất"
+    }
   },
   {
     "id": 7,
@@ -108,8 +198,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Nền tảng Quản lý Dữ liệu (DMP - Data Management Platform) chủ yếu thu thập và quản lý dữ liệu ẩn danh (như cookie, ID thiết bị) phục vụ quảng cáo, trong khi CDP (Customer Data Platform) thu thập dữ liệu định danh khách hàng cụ thể.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (A): Nền tảng quản lý dữ liệu (Data Management Platform - DMP).** DMP được thiết kế chủ yếu để thu thập, tối ưu hóa và phân đoạn dữ liệu ẩn danh (như cookie bên thứ ba, ID thiết bị) phục vụ cho các chiến dịch quảng cáo kỹ thuật số.\n* **Các phương án sai:**\n  * **B. Cookie của trang web:** Bản thân cookie là một tệp lưu trữ dữ liệu trên trình duyệt chứ không phải một hệ thống/nền tảng chuyên thu thập quản lý dữ liệu ẩn danh quy mô lớn.\n  * **C. Nền tảng dữ liệu khách hàng (Customer Data Platform - CDP):** CDP chuyên thu thập dữ liệu định danh của khách hàng cụ thể (first-party data như email, số điện thoại) để tạo hồ sơ khách hàng nhất quán.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Oracle - What is a Data Management Platform (DMP)?",
+        "url": "https://www.oracle.com/cx/marketing/data-management-platform/what-is-dmp/"
+      },
+      {
+        "title": "Adobe - CDP vs. DMP: Definition and differences",
+        "url": "https://business.adobe.com/blog/basics/cdp-vs-dmp"
+      }
+    ],
+    "question_vi": "Hệ thống nào dưới đây chuyên thu thập dữ liệu ẩn danh?",
+    "options_vi": {
+      "A": "Nền tảng quản lý dữ liệu (Data Management Platform)",
+      "B": "Cookie của trang web (Website cookies)",
+      "C": "Nền tảng dữ liệu khách hàng (Customer Data Platform)"
+    }
   },
   {
     "id": 8,
@@ -124,8 +229,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Việc kẻ xấu đánh cắp và kết hợp các dữ liệu về sức khỏe, tiếp thị và tài chính của một cá nhân có khả năng cao nhất dẫn đến việc tạo ra các danh tính giả (creation of false identities) hoặc giả mạo danh tính.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (B): tạo ra các danh tính giả (giả mạo danh tính).** Khi các dữ liệu nhạy cảm từ nhiều khía cạnh (y tế, tài chính, thông tin cá nhân) bị kẻ xấu kết hợp, chúng có thể dễ dàng tạo ra các danh tính giả mạo cực kỳ tinh vi để thực hiện hành vi lừa đảo hoặc đánh cắp danh tính (Identity Theft).\n* **Các phương án sai:**\n  * **A. Tiếp thị hướng đối tượng không chính xác:** Đây là vấn đề tối ưu quảng cáo thông thường, không phải hậu quả nguy hiểm của việc rò rỉ dữ liệu vào tay kẻ xấu.\n  * **C. Chẩn đoán y khoa sai sót:** Việc rò rỉ dữ liệu không trực tiếp can thiệp và làm thay đổi hệ thống chẩn đoán của bệnh viện.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "CISA - Identity Theft Prevention",
+        "url": "https://www.cisa.gov/news-events/news/identity-theft"
+      },
+      {
+        "title": "Federal Trade Commission (FTC) - Identity Theft",
+        "url": "https://www.identitytheft.gov/"
+      }
+    ],
+    "question_vi": "Dữ liệu sức khỏe, tiếp thị và tài chính bị rò rỉ rơi vào tay kẻ xấu có khả năng CAO NHẤT dẫn đến hậu quả nào dưới đây?",
+    "options_vi": {
+      "A": "tiếp thị hướng đối tượng không chính xác.",
+      "B": "tạo ra các danh tính giả (giả mạo danh tính).",
+      "C": "chẩn đoán y khoa sai sót."
+    }
   },
   {
     "id": 9,
@@ -140,8 +260,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Ma trận nhầm lẫn (Confusion matrix) là công cụ tốt nhất giúp nhà khoa học dữ liệu đánh giá độ chính xác của thuật toán phân loại, đặc biệt là khi bài toán có nhiều hơn hai lớp (multi-class).",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (B): Ma trận nhầm lẫn (Confusion matrix).** Đối với phân loại đa lớp, ma trận nhầm lẫn là công cụ trực quan hóa tốt nhất giúp nhà khoa học dữ liệu thấy rõ sự nhầm lẫn giữa từng cặp lớp dự báo và thực tế, từ đó tính toán chính xác các chỉ số Precision, Recall và F1-score.\n* **Các phương án sai:**\n  * **A. Hồi quy tuyến tính (Linear regression):** Thuật toán dành cho bài toán dự báo số liên tục (regression), không dùng để phân tích phân loại đa lớp.\n  * **C. K-NN:** Đây là thuật toán phân loại cụ thể (K-Nearest Neighbors) chứ không phải công cụ/kỹ thuật để đo lường độ chính xác.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Machine Learning - Confusion Matrix",
+        "url": "https://developers.google.com/machine-learning/crash-course/classification/confusion-matrix"
+      },
+      {
+        "title": "Microsoft Learn - Evaluate Automated ML Experiments",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/how-to-understand-automated-ml"
+      }
+    ],
+    "question_vi": "Trong trường hợp thuật toán phân loại có nhiều hơn hai lớp (multi-class), kỹ thuật nào giúp nhà khoa học dữ liệu đánh giá độ chính xác TỐT NHẤT?",
+    "options_vi": {
+      "A": "Hồi quy tuyến tính (Linear regression)",
+      "B": "Ma trận nhầm lẫn (Confusion matrix)",
+      "C": "K-NN"
+    }
   },
   {
     "id": 10,
@@ -156,8 +291,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trước khi áp dụng công nghệ AI, tổ chức cần phải xác định rõ vấn đề cụ thể mà AI có thể giải quyết (Identifying the problem AI can solve) để tránh lãng phí nguồn lực vào các giải pháp không thiết thực.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (A): Xác định vấn đề mà AI có thể giải quyết.** Bước quan trọng hàng đầu trước khi đầu tư bất kỳ dự án AI nào là xác định bài toán nghiệp vụ cụ thể cần giải quyết để tối ưu hóa nguồn lực và tránh lãng phí.\n* **Các phương án sai:**\n  * **B. Đảm bảo đào tạo AI:** Chỉ tiến hành đào tạo sau khi đã xác định được mục tiêu và bài toán cụ thể.\n  * **C. Xác định chỉ số KPI:** KPI chỉ có ý nghĩa khi đã xác định được vấn đề thực tế cần cải thiện ở bước A.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Cloud Adoption Framework - AI Strategy",
+        "url": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/strategy/specialize/ai"
+      },
+      {
+        "title": "Google Cloud - Executive Guide to AI",
+        "url": "https://cloud.google.com/find-a-partner/ai-executive-guide"
+      }
+    ],
+    "question_vi": "Điều nào sau đây cần được xem xét ĐẦU TIÊN trước khi áp dụng công nghệ AI?",
+    "options_vi": {
+      "A": "Xác định vấn đề mà AI có thể giải quyết",
+      "B": "Đảm bảo có sẵn các chương trình đào tạo về AI",
+      "C": "Xác định các chỉ số đánh giá hiệu quả công việc (KPI)"
+    }
   },
   {
     "id": 11,
@@ -172,8 +322,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Thuật ngữ 'chủ sở hữu dữ liệu' (data owner) có thể có nhiều định nghĩa khác nhau và chỉ có thể được xác định cụ thể tùy theo ngữ cảnh pháp lý hoặc cấu trúc tổ chức.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): chỉ có thể được định nghĩa dựa trên ngữ cảnh cụ thể.** Khái niệm 'chủ sở hữu dữ liệu' không có một định nghĩa duy nhất cố định mà phụ thuộc vào luật pháp bảo vệ dữ liệu (như GDPR), các hợp đồng thương mại, hoặc cơ cấu tổ chức bên trong doanh nghiệp.\n* **Các phương án sai (A & B):** Việc gắn khái niệm này mặc định cho tổ chức thu thập hay tổng hợp dữ liệu là không chính xác trong nhiều ngữ cảnh pháp lý bảo vệ quyền lợi của cá nhân tạo ra dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "AMA - Data Ownership in the Digital Age",
+        "url": "https://www.ama-assn.org/delivering-care/patient-support-advocacy/data-ownership-digital-age"
+      },
+      {
+        "title": "CISA - Data Governance Resources",
+        "url": "https://www.cisa.gov/resources-tools/publications/data-governance"
+      }
+    ],
+    "question_vi": "Thuật ngữ \"chủ sở hữu dữ liệu\" (data owner):",
+    "options_vi": {
+      "A": "được định nghĩa là tổ chức tổng hợp dữ liệu.",
+      "B": "được định nghĩa là tổ chức thu thập dữ liệu.",
+      "C": "chỉ có thể được định nghĩa dựa trên ngữ cảnh cụ thể."
+    }
   },
   {
     "id": 12,
@@ -188,8 +353,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Mất cân bằng lớp (Class imbalance) là một vấn đề lớn trong khai thác dữ liệu, khiến mô hình thiên lệch về phía lớp đa số và dẫn đến tỷ lệ lỗi cao đối với các lớp thiểu số.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (A): Mất cân bằng lớp (Class imbalance).** Khi tập dữ liệu huấn luyện có sự chênh lệch lớn giữa các lớp (ví dụ: 99% không gian lận, 1% gian lận), mô hình xu hướng bị thiên lệch và dự báo kém chính xác đối với lớp thiểu số, làm tăng tỷ lệ lỗi tổng thể của mô hình.\n* **Các phương án sai:**\n  * **B. Theo dõi kỹ thuật số:** Đây là phương pháp thu thập thông tin, không phải nguyên nhân trực tiếp gây lỗi mô hình từ phía dữ liệu huấn luyện.\n  * **C. Giảm chiều dữ liệu:** Đây là kỹ thuật tiền xử lý hữu ích nhằm giảm bớt số lượng thuộc tính dư thừa, giúp cải thiện hiệu suất thay vì tăng tỷ lệ lỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Machine Learning - Imbalanced Data Guidance",
+        "url": "https://developers.google.com/machine-learning/data-prep/construct/imbalanced-data"
+      },
+      {
+        "title": "Microsoft Learn - Handle Imbalanced Data in AML",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/v1/how-to-use-automated-ml-imbalanced-data"
+      }
+    ],
+    "question_vi": "Vấn đề lớn nào dưới đây trong khai thác dữ liệu có thể dẫn đến tỷ lệ lỗi cao hơn do dữ liệu huấn luyện được sử dụng?",
+    "options_vi": {
+      "A": "Mất cân bằng lớp (Class imbalance)",
+      "B": "Theo dõi kỹ thuật số (Digital tracking)",
+      "C": "Giảm chiều dữ liệu (Dimension reduction)"
+    }
   },
   {
     "id": 13,
@@ -204,8 +384,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Sử dụng AI để điều chỉnh giá cả và cá nhân hóa quảng cáo theo thời gian thực được định nghĩa là tiếp thị hướng đối tượng (Targeted marketing).",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): Tiếp thị hướng đối tượng (targeted marketing).** Tiếp thị hướng đối tượng tận dụng AI để phân tích dữ liệu người tiêu dùng và cá nhân hóa nội dung quảng cáo hoặc điều chỉnh giá bán phù hợp nhất với từng cá nhân theo thời gian thực nhằm tối đa tỷ lệ chuyển đổi.\n* **Các phương án sai:**\n  * **A. AI hành vi (behavioral AI):** Là phạm vi phân tích hành vi rộng hơn của con người/thực thể, không chỉ gói gọn trong quảng cáo và định giá bán lẻ.\n  * **B. Siêu trí tuệ (superintelligence):** Là khái niệm giả định về mức độ trí tuệ vượt trội hoàn toàn con người của AI trong tương lai.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "AWS - Personalize and Target Marketing Solution",
+        "url": "https://aws.amazon.com/personalize/"
+      },
+      {
+        "title": "IBM - Targeted Marketing and AI Personalization",
+        "url": "https://www.ibm.com/topics/personalization"
+      }
+    ],
+    "question_vi": "Việc sử dụng AI để điều chỉnh giá cả và cá nhân hóa quảng cáo theo thời gian thực được định nghĩa là:",
+    "options_vi": {
+      "A": "AI hành vi (behavioral AI).",
+      "B": "Siêu trí tuệ (superintelligence).",
+      "C": "Tiếp thị hướng đối tượng (targeted marketing)."
+    }
   },
   {
     "id": 14,
@@ -220,8 +415,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một chỉ số đo lường hiệu quả công việc (KPI) được định nghĩa và giới hạn phạm vi đúng chuẩn phải tuân theo tiêu chí SMART (cụ thể, đo lường được, có thời hạn). Lựa chọn C đáp ứng đầy đủ các yếu tố này: tăng doanh số bán hàng qua điện thoại thêm 15% (đo lường được) trong năm nay (thời gian rõ ràng).",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): Tăng doanh số bán hàng qua điện thoại thêm 15% trong năm nay.** Đây là một KPI đáp ứng đầy đủ tiêu chí **SMART**: hành động cụ thể (tăng doanh số qua điện thoại), mục tiêu có thể định lượng được (15%), và thời hạn rõ ràng (trong năm nay).\n* **Các phương án sai:**\n  * **A. Giảm khiếu nại:** Không thể đo lường một cách chính xác do thiếu mục tiêu số hóa cụ thể.\n  * **B. Tăng sự hài lòng trong tháng Năm:** Không đưa ra con số mục tiêu tăng cụ thể để đo lường.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "AWS - KPI Definition & Concept",
+        "url": "https://aws.amazon.com/what-is/kpi/"
+      },
+      {
+        "title": "Microsoft Learn - KPI Visualization in Power BI",
+        "url": "https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-kpis"
+      }
+    ],
+    "question_vi": "Lựa chọn nào sau đây là ví dụ về chỉ số đánh giá hiệu quả công việc (KPI) được định nghĩa và xác định phạm vi đúng chuẩn?",
+    "options_vi": {
+      "A": "Giảm khiếu nại của khách hàng.",
+      "B": "Tăng mức độ hài lòng của khách hàng trong tháng Năm.",
+      "C": "Tăng doanh số bán hàng qua điện thoại thêm 15% trong năm nay."
+    }
   },
   {
     "id": 15,
@@ -236,8 +446,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Công việc của nhân viên chăm sóc trẻ em (Daycare worker) đòi hỏi trí tuệ cảm xúc cao, khả năng tương tác xã hội linh hoạt và các kỹ năng chăm sóc thể chất phức tạp, do đó rất khó bị tự động hóa so với giao dịch viên ngân hàng hay thu ngân.",
-    "references": null
+    "explanation_vi": "**Giải thích:**\n\n* **Đáp án đúng (C): Nhân viên chăm sóc trẻ em (Daycare worker).** Công việc này đòi hỏi trí tuệ cảm xúc, sự nhạy cảm, kỹ năng tương tác xã hội linh hoạt và kỹ năng chăm sóc thể chất trong các môi trường phức tạp khó lường trước. Những kỹ năng này cực kỳ khó tự động hóa bằng công nghệ hiện tại.\n* **Các phương án sai:**\n  * **A. Giao dịch viên ngân hàng & B. Thu ngân:** Đây là những công việc lặp đi lặp lại có tính quy trình cố định cao, rất dễ bị tự động hóa bằng máy rút tiền thông minh, ứng dụng di động hoặc các quầy tự thanh toán.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "PwC - Impact of Automation on Jobs",
+        "url": "https://www.pwc.co.uk/services/economics/insights/will-robots-really-steal-our-jobs.html"
+      },
+      {
+        "title": "McKinsey - Automation, jobs, and the future of work",
+        "url": "https://www.mckinsey.com/featured-insights/future-of-work/jobs-lost-jobs-gained-what-the-future-of-work-will-mean-for-jobs-skills-and-wages"
+      }
+    ],
+    "question_vi": "Công việc nào sau đây được coi là có khả năng chống lại tự động hóa (khó bị thay thế bởi AI/robot)?",
+    "options_vi": {
+      "A": "Giao dịch viên ngân hàng (Teller)",
+      "B": "Thu ngân (Cashier)",
+      "C": "Nhân viên chăm sóc trẻ em (Daycare worker)"
+    }
   },
   {
     "id": 16,
@@ -252,8 +477,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giao diện người dùng (User interface) đóng vai trò là cầu nối trung gian giữa người vận hành và công cụ suy luận (inference engine) của hệ thống chuyên gia.",
-    "references": null
+    "explanation_vi": "Trong kiến trúc của một hệ thống chuyên gia (expert system), giao diện người dùng (**User interface**) đóng vai trò làm cầu nối trung gian, cho phép người vận hành tương tác, nhập câu hỏi hoặc dữ liệu và nhận kết quả từ công cụ suy luận (**inference engine**).\n\n* **Cơ sở tri thức (Knowledge base):** Là nơi lưu trữ các sự thật và quy tắc nghiệp vụ (luật if-then) phục vụ cho suy luận.\n* **Chatbot:** Là một ứng dụng hội thoại cụ thể, không phải là một thành phần kiến trúc tổng quát đóng vai trò trung gian trong hệ thống chuyên gia truyền thống.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is an Expert System? - IBM",
+        "url": "https://www.ibm.com/topics/expert-systems"
+      },
+      {
+        "title": "Architecture of Expert System - GeeksforGeeks",
+        "url": "https://www.geeksforgeeks.org/architecture-of-expert-system/"
+      }
+    ],
+    "question_vi": "Thành phần nào sau đây đóng vai trò là trung gian giữa người vận hành và công cụ suy luận (inference engine) của một hệ thống chuyên gia?",
+    "options_vi": {
+      "A": "Cơ sở tri thức (Knowledge base)",
+      "B": "Chatbot",
+      "C": "Giao diện người dùng (User interface)"
+    }
   },
   {
     "id": 17,
@@ -268,8 +508,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "AI ảnh hưởng tiêu cực đến những ứng viên mới gia nhập thị trường lao động bằng cách tự động hóa các công việc ở cấp độ khởi đầu (entry-level jobs), làm giảm cơ hội thực hành và tích lũy kinh nghiệm thực tế của họ.",
-    "references": null
+    "explanation_vi": "AI đang tự động hóa nhiều tác vụ lặp đi lặp lại ở cấp độ khởi đầu (**entry-level jobs**) như nhập liệu, hỗ trợ khách hàng cơ bản hoặc viết mã lập trình đơn giản. Điều này làm giảm đáng kể số lượng vị trí tuyển dụng dành cho sinh viên mới tốt nghiệp hoặc những người mới gia nhập thị trường lao động, hạn chế cơ hội để họ tích lũy kinh nghiệm thực tế ban đầu.\n\n* **Cạnh tranh toàn cầu (Global competitiveness)** và **Yêu cầu học vấn (Education requirements)** mặc dù có thay đổi nhưng không phải là tác động trực tiếp và tiêu cực nhất của AI đối với cơ hội việc làm ban đầu của người mới.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "How AI is changing entry-level jobs and early career pathways - World Economic Forum",
+        "url": "https://www.weforum.org/agenda/2024/05/ai-entry-level-jobs-career-pathways/"
+      },
+      {
+        "title": "How generative AI will reshape clinical trials and the entry-level job market - Brookings",
+        "url": "https://www.brookings.edu/articles/how-generative-ai-will-reshape-clinical-trials-and-the-entry-level-job-market/"
+      }
+    ],
+    "question_vi": "Trí tuệ nhân tạo (AI) ảnh hưởng tiêu cực như thế nào đến những ứng viên mới gia nhập thị trường lao động?",
+    "options_vi": {
+      "A": "Cạnh tranh toàn cầu trở nên quan trọng hơn.",
+      "B": "Yêu cầu về trình độ học vấn ngày càng tăng.",
+      "C": "Các công việc ở cấp độ khởi đầu (entry-level) đang bị tự động hóa."
+    }
   },
   {
     "id": 18,
@@ -284,8 +539,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hình thái học (Morphology) là nghiên cứu về cấu trúc và sự hình thành của từ ngữ, đây là một khía cạnh ngôn ngữ học cốt lõi được sử dụng trong xử lý ngôn ngữ tự nhiên (NLP) để phân tích từ tố.",
-    "references": null
+    "explanation_vi": "Trong ngôn ngữ học máy tính và NLP, **Hình thái học (Morphology)** là ngành nghiên cứu cấu trúc của từ và cách các từ được hình thành từ các đơn vị nghĩa nhỏ hơn (ngữ tố/morpheme). Đây là một khía cạnh cơ bản của ngôn ngữ mà các mô hình NLP phải xử lý (thông qua các kỹ thuật như Lemmatization hoặc Stemming).\n\n* **Dịch thuật (Translation)** và **Chính tả/Đọc viết (Dictation):** Là các ứng dụng hoặc nhiệm vụ cụ thể của NLP, không phải là một khía cạnh cấu trúc ngôn từ (linguistic aspect) như hình thái học.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Natural Language Processing (NLP)? - IBM",
+        "url": "https://www.ibm.com/topics/natural-language-processing"
+      },
+      {
+        "title": "Stemming and Lemmatization - IBM",
+        "url": "https://www.ibm.com/topics/stemming-lemmatization"
+      }
+    ],
+    "question_vi": "Xử lý ngôn ngữ tự nhiên (NLP) có thể bao gồm khía cạnh nào sau đây của ngôn từ/lời nói?",
+    "options_vi": {
+      "A": "Dịch thuật (Translation)",
+      "B": "Hình thái học (Morphology)",
+      "C": "Chính tả/Đọc viết (Dictation)"
+    }
   },
   {
     "id": 19,
@@ -300,8 +570,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "AI có thể giúp chống lại định kiến/thiên vị nhờ vào tính chất ra quyết định tự động (Automated decision making), giúp loại bỏ các yếu tố cảm tính và định kiến chủ quan của con người khi xử lý công việc.",
-    "references": null
+    "explanation_vi": "Bằng cách sử dụng **Ra quyết định tự động (Automated decision making)** dựa trên các thuật toán khách quan và dữ liệu nhất quán, AI có thể loại bỏ các định kiến chủ quan, cảm tính hoặc không nhất quán của con người trong quá trình đánh giá (ví dụ: tuyển dụng, duyệt hồ sơ tín dụng).\n\n* **Mã lập trình mạnh mẽ** và **Tuân thủ quy định** chỉ là điều kiện kỹ thuật và pháp lý hỗ trợ, không phải là phẩm chất vận hành cốt lõi trực tiếp giúp loại bỏ yếu tố định kiến con người như việc tự động hóa ra quyết định.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is bias in AI? - IBM",
+        "url": "https://www.ibm.com/topics/bias-in-ai"
+      },
+      {
+        "title": "AI Governance - IBM",
+        "url": "https://www.ibm.com/topics/ai-governance"
+      }
+    ],
+    "question_vi": "AI có thể hữu ích trong việc chống lại sự định kiến (bias) bằng cách tận dụng phẩm chất vốn có nào sau đây?",
+    "options_vi": {
+      "A": "Ra quyết định tự động (Automated decision making)",
+      "B": "Mã lập trình mạnh mẽ (Robust programming code)",
+      "C": "Tuân thủ quy định hiệu quả (Effective regulatory compliance)"
+    }
   },
   {
     "id": 20,
@@ -316,8 +601,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trí tuệ nhân tạo hiện nay (Narrow AI) vẫn thiếu trí tuệ nhân tạo tổng quát (AGI - khả năng hiểu, học và áp dụng kiến thức vào bất kỳ nhiệm vụ trí tuệ nào như con người).",
-    "references": null
+    "explanation_vi": "Hệ thống AI hiện nay hoạt động dưới dạng **Trí tuệ nhân tạo hẹp (Artificial Narrow Intelligence - ANI)**, tức là chỉ giỏi trong một miền cụ thể. Chúng hoàn toàn thiếu **Trí tuệ nhân tạo tổng quát (AGI)** – khả năng tự học hỏi, suy luận và áp dụng kiến thức vào bất kỳ nhiệm vụ trí tuệ nào tương tự như con người.\n\n* **Dữ liệu không thiên vị (Unbiased data):** Là một thách thức về chất lượng dữ liệu, không phải là một dạng trí tuệ mà hệ thống AI hướng tới.\n* **Trí tuệ miền cụ thể (Specific domain intelligence):** Là thứ mà AI hiện nay đã sở hữu và làm rất tốt.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Strong AI (Artificial General Intelligence)? - IBM",
+        "url": "https://www.ibm.com/topics/strong-ai"
+      },
+      {
+        "title": "What is Artificial Intelligence? - IBM",
+        "url": "https://www.ibm.com/topics/artificial-intelligence"
+      }
+    ],
+    "question_vi": "AI hiện tại còn thiếu đặc điểm nào sau đây?",
+    "options_vi": {
+      "A": "Trí tuệ nhân tạo tổng quát (Artificial general intelligence - AGI)",
+      "B": "Dữ liệu không thiên vị (Unbiased data)",
+      "C": "Trí tuệ miền cụ thể (Specific domain intelligence)"
+    }
   },
   {
     "id": 21,
@@ -332,8 +632,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Kết quả ngày càng khó dự đoán (Greater unpredictability of results) từ mã chương trình bị lỗi là mối lo ngại đạo đức lớn nhất, vì nó có thể dẫn đến các quyết định tự động không công bằng, sai lệch hoặc gây hại ngoài ý muốn.",
-    "references": null
+    "explanation_vi": "Trong AI, mã chương trình bị lỗi hoặc thuật toán không tối ưu có thể dẫn đến **Tính không thể dự đoán trước của kết quả (Greater unpredictability of results)**. Khi một hệ thống tự động đưa ra các quyết định không thể kiểm soát hoặc không thể dự đoán, nó có thể gây ra các hậu quả bất công, phân biệt đối xử hoặc nguy hại trực tiếp đến con người, tạo ra những vấn đề nghiêm trọng về đạo đức.\n\n* **Yêu cầu đào tạo bổ sung** và **Tăng chi phí** chỉ là các tổn thất về mặt nguồn lực và tài chính của doanh nghiệp, không trực tiếp dẫn đến mối quan ngại đạo đức xã hội như tính bất định của kết quả đầu ra.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is AI Ethics? - IBM",
+        "url": "https://www.ibm.com/topics/ai-ethics"
+      },
+      {
+        "title": "Enterprise AI Governance - IBM",
+        "url": "https://www.ibm.com/topics/ai-governance"
+      }
+    ],
+    "question_vi": "Kết quả nào sau đây là hệ quả đáng kể nhất từ mã chương trình bị lỗi có khả năng dẫn đến các mối quan ngại về đạo đức?",
+    "options_vi": {
+      "A": "Yêu cầu đào tạo bổ sung cho các nhà phát triển",
+      "B": "Tăng chi phí viết mã mới",
+      "C": "Tính không thể dự đoán trước của kết quả cao hơn (Greater unpredictability of results)"
+    }
   },
   {
     "id": 22,
@@ -348,8 +663,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Tăng cường dữ liệu (Data augmentation) giúp đa dạng hóa dữ liệu huấn luyện, từ đó hạn chế tối đa hiện tượng quá khớp (Overfitting), giúp mô hình tổng quát hóa tốt hơn trên dữ liệu mới.",
-    "references": null
+    "explanation_vi": "**Tăng cường dữ liệu (Data augmentation)** là kỹ thuật tạo ra các biến thể mới từ tập dữ liệu hiện có (ví dụ: xoay, lật, phóng to ảnh) để tăng quy mô và tính đa dạng của dữ liệu huấn luyện. Điều này giúp mô hình học được các đặc trưng tổng quát hơn, từ đó giảm thiểu nguy cơ **Quá khớp (Overfitting)** (hiện tượng mô hình học thuộc lòng dữ liệu huấn luyện nhưng dự đoán kém trên dữ liệu mới).\n\n* **Feature scaling** và **Normalization** là các kỹ thuật biến đổi phân phối dữ liệu số, không liên quan đến việc tạo thêm dữ liệu để chống quá khớp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Data Augmentation? - IBM",
+        "url": "https://www.ibm.com/topics/data-augmentation"
+      },
+      {
+        "title": "What is Overfitting? - IBM",
+        "url": "https://www.ibm.com/topics/overfitting"
+      }
+    ],
+    "question_vi": "Tăng cường dữ liệu (Data augmentation) giúp giảm thiểu tốt nhất nguy cơ nào sau đây?",
+    "options_vi": {
+      "A": "Chuẩn hóa tính năng (Feature scaling)",
+      "B": "Bình thường hóa dữ liệu (Normalization)",
+      "C": "Quá khớp (Overfitting)"
+    }
   },
   {
     "id": 23,
@@ -364,8 +694,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Cookie là ví dụ phổ biến nhất về việc thu thập dữ liệu người dùng trực tuyến một cách âm thầm và không có sự đồng ý rõ ràng trước đây để theo dõi hành vi duyệt web.",
-    "references": null
+    "explanation_vi": "**Cookies** là các tệp nhỏ được lưu trữ trên trình duyệt của người dùng để theo dõi hành vi, lịch sử duyệt web và sở thích. Trong quá khứ, cookies thường hoạt động ngầm (ẩn giấu) mà không có sự đồng thuận rõ ràng của người dùng, biến chúng thành công cụ thu thập dữ liệu không tự nguyện (non-consensual) phổ biến nhất trước khi các luật bảo mật như GDPR ra đời.\n\n* **CAPTCHA:** Là công cụ phân biệt người và máy, đôi khi dùng để gán nhãn dữ liệu nhưng mang tính tương tác rõ ràng.\n* **Job applications:** Người dùng chủ động cung cấp thông tin cá nhân khi nộp đơn xin việc.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What are cookies? - Cloudflare",
+        "url": "https://www.cloudflare.com/learning/privacy/what-are-cookies/"
+      },
+      {
+        "title": "Cookies and Internet Privacy - IBM",
+        "url": "https://www.ibm.com/topics/browser-fingerprinting"
+      }
+    ],
+    "question_vi": "Ví dụ đơn giản nhất về việc thu thập dữ liệu không tự nguyện, từng ẩn giấu trước đây và hiện đang phổ biến rộng rãi trên mạng là gì?",
+    "options_vi": {
+      "A": "CAPTCHA",
+      "B": "Hồ sơ xin việc (Job applications)",
+      "C": "Cookies"
+    }
   },
   {
     "id": 24,
@@ -380,8 +725,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "AI được dự báo sẽ thay thế các công việc đơn điệu, lặp đi lặp lại ở cấp độ khởi đầu (Entry-level monotonous jobs) do chúng dễ dàng được lập trình và tự động hóa.",
-    "references": null
+    "explanation_vi": "AI có khả năng tự động hóa cực kỳ hiệu quả đối với **Các công việc lặp đi lặp lại và đơn điệu ở cấp độ khởi đầu (Entry-level monotonous jobs)** (như nhập liệu, phân loại tài liệu cơ bản, trực tổng đài tự động). Những công việc này có quy trình rõ ràng và ít yêu cầu tư duy sáng tạo hay cảm xúc phức tạp.\n\n* **Công việc của chuyên gia (Expert jobs)** yêu cầu chuyên môn sâu và ra quyết định phức tạp.\n* **Dịch vụ con người (Human service sector)** yêu cầu sự thấu cảm, giao tiếp và kỹ năng xã hội cao mà AI khó thay thế hoàn toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "AI, Jobs, and the Future of Work - IBM",
+        "url": "https://www.ibm.com/blog/ai-jobs-skills/"
+      },
+      {
+        "title": "The Future of Jobs Report 2023 - World Economic Forum",
+        "url": "https://www.weforum.org/publications/the-future-of-jobs-report-2023/"
+      }
+    ],
+    "question_vi": "AI được dự báo sẽ thay thế loại công việc nào sau đây?",
+    "options_vi": {
+      "A": "Các công việc thường được thực hiện bởi các chuyên gia trong ngành",
+      "B": "Các công việc lặp đi lặp lại và đơn điệu ở cấp độ khởi đầu",
+      "C": "Các công việc trong lĩnh vực dịch vụ con người"
+    }
   },
   {
     "id": 25,
@@ -396,8 +756,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi hệ thống AI ngày càng tự chủ và có khả năng tự học không giám sát mạnh mẽ hơn, mối quan ngại lớn nhất là cách hệ thống này đối xử với con người (Its treatment of humans) nhằm bảo đảm an toàn và đạo đức.",
-    "references": null
+    "explanation_vi": "Khi hệ thống AI đạt mức tự chủ cao và học không giám sát (unsupervised learning), mối nguy hại lớn nhất thuộc về vấn đề **Căn chỉnh AI (AI Alignment)** và an toàn—cụ thể là **Cách nó đối xử với con người (Its treatment of humans)**. Nếu mục tiêu của AI không được căn chỉnh đồng điệu với lợi ích và sự sống còn của nhân loại, nó có thể đưa ra các hành vi gây hại không thể kiểm soát.\n\n* **Thị trường việc làm** và **Quyền riêng tư** là các mối quan ngại lớn, nhưng việc đảm bảo sự tồn tại và cách AI ứng xử/đối xử an toàn với con người mới là mối quan ngại sống còn, mang tính bao trùm nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is AI Ethics? - IBM",
+        "url": "https://www.ibm.com/topics/ai-ethics"
+      },
+      {
+        "title": "Agentic AI and Alignment - Microsoft Research",
+        "url": "https://www.microsoft.com/en-us/research/project/agentic-ai-and-alignment/"
+      }
+    ],
+    "question_vi": "Mối quan ngại LỚN NHẤT khi một hệ thống AI trở nên tự chủ hơn và mở rộng khả năng tự học không giám sát là gì?",
+    "options_vi": {
+      "A": "Cách nó đối xử với con người (Its treatment of humans)",
+      "B": "Tác động của nó đối với thị trường việc làm",
+      "C": "Sự xâm phạm quyền riêng tư của các cá nhân"
+    }
   },
   {
     "id": 26,
@@ -412,8 +787,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Robot nhấn các nút bấm trong nhà máy sản xuất (Robots pressing buttons in a manufacturing plant) là một ví dụ thực tế về lập kế hoạch chuyển động của robot (robotic motion planning) trong môi trường doanh nghiệp/công nghiệp.",
-    "references": null
+    "explanation_vi": "**Hoạch định chuyển động robot (Robotic motion planning)** là việc tính toán chuỗi các thao tác di chuyển vật lý của khớp và cánh tay robot từ điểm này sang điểm khác mà không va chạm. Ví dụ doanh nghiệp điển hình là **Robot nhấn các nút bấm hoặc lắp ráp linh kiện trong nhà máy sản xuất (manufacturing plant)**.\n\n* **Trợ lý kỹ thuật số (Digital assistants):** Là phần mềm ảo, không có chuyển động cơ học.\n* **Xe tự lái (Self-driving cars):** Thuộc về lĩnh vực điều hướng giao thông đường bộ tổng quát, không phải là ứng dụng cánh tay robot/thao tác vật lý trong môi trường sản xuất doanh nghiệp khép kín.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "NVIDIA Isaac Manipulator for Robotic Motion Planning",
+        "url": "https://developer.nvidia.com/isaac/manipulator"
+      },
+      {
+        "title": "BMW Group and AWS Evaluate Quantum for Trajectory Planning - AWS",
+        "url": "https://aws.amazon.com/blogs/quantum-computing/bmw-group-and-aws-evaluate-quantum-computing-for-robot-trajectory-planning/"
+      }
+    ],
+    "question_vi": "Ví dụ nào sau đây là ứng dụng thực tế trong doanh nghiệp của việc hoạch định chuyển động robot (robotic motion planning)?",
+    "options_vi": {
+      "A": "Các trợ lý kỹ thuật số tự động",
+      "B": "Robot nhấn các nút bấm trong một nhà máy sản xuất",
+      "C": "Xe tự lái"
+    }
   },
   {
     "id": 27,
@@ -428,8 +818,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học tính năng theo cấp bậc (Hierarchical feature learning) cho phép các mô hình deep learning tự động trích xuất các đặc trưng từ mức độ đơn giản đến phức tạp trực tiếp từ dữ liệu thô mà không cần định nghĩa thủ công.",
-    "references": null
+    "explanation_vi": "**Học đặc trưng phân cấp (Hierarchical feature learning)** cho phép mạng nơ-ron tự động trích xuất các đặc trưng từ mức độ đơn giản (như các cạnh, đường nét ở các tầng đầu) đến mức độ phức tạp (như hình dạng, đối tượng ở các tầng sâu hơn). Điều này giúp mô hình **tự học các mẫu phức tạp trực tiếp từ dữ liệu thô (raw data)** mà không cần con người thiết kế đặc trưng thủ công.\n\n* **Định nghĩa đặc trưng thủ công (Manual definition):** Đi ngược lại nguyên lý của học sâu (vốn tự động hóa quá trình này).\n* **Giảm nhu cầu nhãn (Reduce labeled data):** Không phải là lợi ích trực tiếp của tính phân cấp đặc trưng, mà phụ thuộc vào phương pháp học (như self-supervised learning).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Deep Learning? - IBM",
+        "url": "https://www.ibm.com/topics/deep-learning"
+      },
+      {
+        "title": "What are Convolutional Neural Networks? - IBM",
+        "url": "https://www.ibm.com/topics/convolutional-neural-networks"
+      }
+    ],
+    "question_vi": "Trong học sâu (deep learning), lợi ích CHÍNH của việc học đặc trưng phân cấp (hierarchical feature learning) là gì?",
+    "options_vi": {
+      "A": "Nó cho phép các mô hình định nghĩa các đặc trưng một cách thủ công.",
+      "B": "Nó làm giảm nhu cầu về dữ liệu được gán nhãn.",
+      "C": "Nó cho phép các mô hình tự học các mẫu phức tạp từ dữ liệu thô."
+    }
   },
   {
     "id": 28,
@@ -444,8 +849,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Thuật toán phân cụm (Clustering) nhóm các thực thể dữ liệu tương tự nhau thành các cụm mà không cần nhãn từ trước, rất hữu ích cho việc khám phá cấu trúc ẩn của các tập dữ liệu chưa biết.",
-    "references": null
+    "explanation_vi": "**Phân cụm (Clustering)** là thuật toán học không giám sát (unsupervised learning) dùng để nhóm các điểm dữ liệu tương tự lại với nhau mà không cần gán nhãn trước. Vì vậy, nó cực kỳ hữu ích cho **dữ liệu chưa biết (unknown data)** hoặc dữ liệu chưa được cấu trúc, giúp khám phá các cấu trúc nhóm ẩn một cách tự động.\n\n* **Phân loại (Classification):** Là thuật toán học có giám sát, bắt buộc phải biết trước các nhãn lớp.\n* **Phân vùng (Partitioning):** Là một thao tác chia dữ liệu kỹ thuật thông thường, không phải thuật toán phân tích khám phá mẫu học máy chuyên dụng cho dữ liệu chưa biết.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Unsupervised Learning? - IBM",
+        "url": "https://www.ibm.com/topics/unsupervised-learning"
+      },
+      {
+        "title": "Clustering in SPSS Modeler - IBM",
+        "url": "https://www.ibm.com/docs/en/spss-modeler/18.5.0?topic=models-clustering-nodes"
+      }
+    ],
+    "question_vi": "Thuật toán nào sau đây chia các thực thể dữ liệu thành các nhóm theo thời gian thực và đặc biệt có lợi cho dữ liệu chưa biết (unknown data)?",
+    "options_vi": {
+      "A": "Phân cụm (Clustering)",
+      "B": "Phân loại (Classification)",
+      "C": "Phân vùng (Partitioning)"
+    }
   },
   {
     "id": 29,
@@ -460,8 +880,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Quét hệ thống để tìm kiếm các mối đe dọa và điểm yếu bảo mật bằng công nghệ AI là hoạt động hỗ trợ cho lĩnh vực An ninh mạng (Cybersecurity).",
-    "references": null
+    "explanation_vi": "Quét hệ thống để phát hiện lỗ hổng, hành vi bất thường và các mối đe dọa bảo mật là ứng dụng cốt lõi của AI trong **An ninh mạng (Cybersecurity)**. Các hệ thống phòng thủ AI có thể phân tích hàng triệu sự kiện bảo mật mỗi giây để phát hiện và ngăn chặn các cuộc tấn công trước khi chúng gây hại.\n\n* **Siêu trí tuệ (Superintelligence):** Là khái niệm lý thuyết về thực thể AI thông minh hơn toàn bộ nhân loại.\n* **Tiếp thị (Marketing):** Tập trung vào khách hàng, doanh số và hành vi tiêu dùng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Cybersecurity? - IBM",
+        "url": "https://www.ibm.com/topics/cybersecurity"
+      },
+      {
+        "title": "Google Cloud Security Command Center",
+        "url": "https://cloud.google.com/security/security-command-center"
+      }
+    ],
+    "question_vi": "Tận dụng AI, việc xử lý dữ liệu để quét hệ thống nhằm phát hiện các mối đe dọa và điểm yếu sẽ hỗ trợ chức năng nào sau đây?",
+    "options_vi": {
+      "A": "An ninh mạng (Cybersecurity)",
+      "B": "Siêu trí tuệ (Superintelligence)",
+      "C": "Tiếp thị (Marketing)"
+    }
   },
   {
     "id": 30,
@@ -476,8 +911,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Thẻ điểm cân bằng (Balanced scorecard) là một công cụ báo cáo và quản lý chiến lược giúp các tổ chức phân bổ nguồn lực hợp lý dựa trên các mục tiêu và thước đo hiệu suất toàn diện.",
-    "references": null
+    "explanation_vi": "**Thẻ điểm cân bằng (Balanced scorecard - BSC)** là một công cụ báo cáo và quản trị chiến lược được sử dụng để theo dõi các chỉ số hiệu suất chính (KPIs) trên bốn khía cạnh (Tài chính, Khách hàng, Quy trình nội bộ, Học tập & Phát triển). Qua đó giúp doanh nghiệp đánh giá hiệu quả hoạt động và phân bổ nguồn lực hợp lý theo nhu cầu tổ chức.\n\n* **Quản trị (Governance):** Là cơ chế kiểm soát rộng lớn hơn, không phải là một công cụ báo cáo cụ thể.\n* **Trí tuệ doanh nghiệp (Business intelligence):** Là hệ thống thu thập, trực quan hóa và phân tích dữ liệu nói chung, trong khi Balanced Scorecard là một khung báo cáo đo lường cụ thể cho việc phân bổ mục tiêu và nhu cầu chiến lược.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Business Performance Management? - IBM",
+        "url": "https://www.ibm.com/topics/business-performance-management"
+      },
+      {
+        "title": "About Balanced Scorecards in Dynamics AX - Microsoft",
+        "url": "https://learn.microsoft.com/en-us/dynamicsax-2012/appuser-itpro/about-balanced-scorecards"
+      }
+    ],
+    "question_vi": "Thành phần nào sau đây được sử dụng như một công cụ báo cáo để cho phép phân bổ hợp lý các nhu cầu của tổ chức?",
+    "options_vi": {
+      "A": "Quản trị (Governance)",
+      "B": "Thẻ điểm cân bằng (Balanced scorecard)",
+      "C": "Trí tuệ doanh nghiệp (Business intelligence)"
+    }
   },
   {
     "id": 31,
@@ -492,8 +942,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong lĩnh vực y tế, việc phân tích bộ gen (Genomes) bằng AI giúp dự đoán nguy cơ mắc các bệnh di truyền hoặc bệnh lý phức tạp ở cá nhân.",
-    "references": null
+    "explanation_vi": "Phân tích bộ gen (Genome analysis) bằng các thuật toán AI giúp phát hiện các đột biến và mô hình di truyền để dự đoán sớm các nguy cơ bệnh lý trước khi triệu chứng xuất hiện.\n\n- **A. Phẫu thuật**: Phẫu thuật là phương pháp điều trị trực tiếp, không phải là nguồn dữ liệu phân tích phổ biến để dự báo bệnh tật diện rộng như bộ gen.\n- **B. Dữ liệu sinh học (Biodata)**: Mặc dù biodata cũng chứa thông tin sức khỏe nói chung, nhưng bộ gen (Genomes) là câu trả lời cụ thể và chính xác nhất cho việc lập bản đồ và dự đoán chính xác các bệnh di truyền.\n- **C. Bộ gen (Genomes)**: Phân tích bộ gen là ví dụ điển hình nhất trong y học chính xác (precision medicine) sử dụng AI học máy để dự báo trước các bệnh mãn tính hoặc di truyền.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Genomics Overview",
+        "url": "https://learn.microsoft.com/en-us/azure/genomics/overview-what-is-azure-genomics"
+      },
+      {
+        "title": "Google Cloud Life Sciences",
+        "url": "https://cloud.google.com/life-sciences"
+      }
+    ],
+    "question_vi": "Một ví dụ về việc sử dụng AI trong chăm sóc sức khỏe là phân tích yếu tố nào sau đây để dự đoán bệnh tật?",
+    "options_vi": {
+      "A": "Phẫu thuật",
+      "B": "Dữ liệu sinh học (Biodata)",
+      "C": "Bộ gen (Genomes)"
+    }
   },
   {
     "id": 32,
@@ -508,8 +973,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giáo dục và đào tạo liên tục (Continuous education) giúp người lao động cập nhật kỹ năng mới, chuyển đổi sang các công việc khó bị tự động hóa hơn để đối phó với tình trạng mất việc làm do AI.",
-    "references": null
+    "explanation_vi": "Giáo dục liên tục (Continuous education) và nâng cao kỹ năng (upskilling/reskilling) là giải pháp cốt lõi để người lao động thích ứng với sự thay đổi của thị trường lao động khi AI phát triển, giúp họ làm chủ các công cụ AI thay vì bị thay thế bởi chúng.\n\n- **A. Chăm sóc sức khỏe miễn phí**: Mặc dù là phúc lợi xã hội tốt, nhưng nó không giải quyết được vấn đề mất việc làm hay thiếu hụt kỹ năng trước sự tự động hóa của AI.\n- **B. Tạo dấu chân số**: Việc tạo dấu chân số (dữ liệu trực tuyến của cá nhân) không liên quan đến việc duy trì khả năng cạnh tranh hay việc làm của cá nhân trước AI.\n- **C. Giáo dục liên tục**: Đây là cách duy nhất giúp người lao động liên tục cập nhật kiến thức, kỹ năng số và tư duy sáng tạo để làm việc cùng hoặc giám sát các hệ thống AI.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Work Trend Index: Will AI Fix Work?",
+        "url": "https://www.microsoft.com/en-us/worklab/work-trend-index/will-ai-fix-work"
+      },
+      {
+        "title": "Microsoft Learn AI Skills Training",
+        "url": "https://learn.microsoft.com/en-us/training/"
+      }
+    ],
+    "question_vi": "Điều nào sau đây giúp đối phó với tình trạng mất việc làm do AI?",
+    "options_vi": {
+      "A": "Chăm sóc sức khỏe miễn phí",
+      "B": "Tạo dấu chân số (digital footprints)",
+      "C": "Giáo dục liên tục (Continuous education)"
+    }
   },
   {
     "id": 33,
@@ -524,8 +1004,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hệ thống chuyên gia (Expert system) chẩn đoán và gợi ý hướng điều trị dựa trên việc mô phỏng năng lực ra quyết định của các chuyên gia y tế.",
-    "references": null
+    "explanation_vi": "Một hệ thống chẩn đoán y tế tự động đưa ra các chẩn đoán và phương án điều trị dựa trên các quy tắc tri thức y học được lập trình sẵn là một ví dụ điển hình của **Hệ thống chuyên gia (Expert System)**.\n\n- **A. Hệ thống chuyên gia (Expert system)**: Đây là một chương trình máy tính mô phỏng khả năng đưa ra phán quyết và quyết định của một chuyên gia con người trong một lĩnh vực cụ thể (như y học, tài chính) dựa trên cơ sở tri thức (knowledge base) và công cụ suy diễn (inference engine).\n- **B. Lập luận theo thời gian (Temporal reasoning)**: Là một nhánh của AI tập trung vào việc mô tả và lập luận về thời gian và các sự kiện thay đổi theo thời gian, không đại diện cho toàn bộ hệ thống chẩn đoán y khoa như trên.\n- **C. Rô-bốt học (Robotics)**: Liên quan đến các thực thể vật lý hoạt động trong thế giới thực, không phải là ứng dụng phần mềm kiểm tra triệu chứng trực tuyến đơn thuần.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "IBM - What are Expert Systems?",
+        "url": "https://www.ibm.com/topics/expert-systems"
+      },
+      {
+        "title": "Azure Health Bot Documentation",
+        "url": "https://learn.microsoft.com/en-us/azure/health-bot/"
+      }
+    ],
+    "question_vi": "Một công cụ kiểm tra triệu chứng và cách điều trị trực tuyến dựa trên AI sử dụng các thuật toán để chẩn đoán và điều trị bệnh là ví dụ về loại AI nào?",
+    "options_vi": {
+      "A": "Hệ thống chuyên gia (Expert system)",
+      "B": "Lập luận theo thời gian (Temporal reasoning)",
+      "C": "Rô-bốt học (Robotics)"
+    }
   },
   {
     "id": 34,
@@ -540,8 +1035,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khoa học pháp y (Forensic science) là lĩnh vực chuyên môn sử dụng các kỹ thuật khoa học để mô phỏng tội phạm, phân tích chứng cứ và phát hiện các mô hình hành vi phạm tội.",
-    "references": null
+    "explanation_vi": "Khoa học pháp y (Forensic science) sử dụng các kiến thức và kỹ thuật khoa học phục vụ cho việc điều tra tội phạm, giúp mô phỏng hiện trường và phát hiện các mô hình/dấu vết phạm tội.\n\n- **A. Chuyên môn kinh doanh**: Phục vụ việc quản lý doanh nghiệp, tài chính và tiếp thị, không liên quan đến mô phỏng tội phạm.\n- **B. Khoa học pháp y**: Đây là lĩnh vực trực tiếp cung cấp các công cụ và phương pháp để tái dựng, mô phỏng các hành vi tội phạm, phân tích chứng cứ ngoại phạm và nhận diện quy luật hoạt động của tội phạm.\n- **C. Khoa học nhân văn**: Nghiên cứu về hành vi và văn hóa của con người nói chung ở cấp độ vĩ mô, không tập trung cụ thể vào việc mô phỏng hiện trường và phân tích chứng cứ kỹ thuật số/vật lý của tội phạm.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "How to automate forensic analysis on AWS",
+        "url": "https://aws.amazon.com/blogs/security/how-to-automate-forensic-analysis-on-aws/"
+      }
+    ],
+    "question_vi": "Lĩnh vực chuyên môn nào sau đây có thể được sử dụng để mô phỏng tội phạm và phát hiện các mô hình?",
+    "options_vi": {
+      "A": "Chuyên môn kinh doanh (Business expertise)",
+      "B": "Khoa học pháp y (Forensic science)",
+      "C": "Khoa học nhân văn (Human science)"
+    }
   },
   {
     "id": 35,
@@ -556,8 +1062,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giảm chiều dữ liệu (Dimension reduction) là quá trình chuyển đổi dữ liệu từ không gian nhiều chiều về không gian ít chiều hơn nhưng vẫn giữ lại các thuộc tính quan trọng của dữ liệu gốc.",
-    "references": null
+    "explanation_vi": "**Giảm chiều dữ liệu (Dimension reduction)** là một kỹ thuật quan trọng trong máy học, giúp đơn giản hóa dữ liệu nhiều chiều bằng cách chiếu nó sang không gian có ít chiều hơn nhưng vẫn giữ được các thông tin quan trọng nhất.\n\n- **A. Hồi quy (Regression)**: Là kỹ thuật học có giám sát để dự đoán giá trị liên tục, không phải là quá trình giảm số lượng đặc trưng/chiều dữ liệu.\n- **B. Giảm chiều dữ liệu**: Điển hình là các phương pháp như PCA (Principal Component Analysis) hoặc t-SNE, giúp loại bỏ nhiễu và các đặc trưng dư thừa.\n- **C. Tăng cường số chiều**: Là khái niệm ngược lại (thường dùng trong kernel tricks của SVM để đưa dữ liệu lên không gian nhiều chiều hơn nhằm phân tách tuyến tính), không giúp chuyển về không gian ít chiều hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Principal Component Analysis in Azure Machine Learning",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/principal-component-analysis"
+      }
+    ],
+    "question_vi": "Thuật ngữ nào được sử dụng để mô tả việc biến đổi dữ liệu có số chiều cao thành dữ liệu có số chiều thấp hơn trong khi vẫn giữ lại các thuộc tính có ý nghĩa của dữ liệu gốc?",
+    "options_vi": {
+      "A": "Hồi quy (Regression)",
+      "B": "Giảm chiều dữ liệu (Dimension reduction)",
+      "C": "Tăng cường số chiều (Dimension enhancement)"
+    }
   },
   {
     "id": 36,
@@ -572,8 +1089,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Việc xuyên tạc thông tin (Information distortion) thông qua deepfake hoặc tin giả do AI tạo ra có thể gây tổn hại nghiêm trọng đến danh dự và uy tín của một cá nhân.",
-    "references": null
+    "explanation_vi": "Sự xuyên tạc thông tin (Information distortion), đặc biệt là việc tạo ra deepfake (hình ảnh, video, âm thanh giả mạo) hoặc các tin tức sai lệch do AI tạo ra, có thể hủy hoại danh dự, uy tín và nhân phẩm của một cá nhân.\n\n- **A. Tăng cường các yêu cầu pháp lý**: Đây là vấn đề tuân thủ quy định của doanh nghiệp và tổ chức, không gây tổn hại trực tiếp đến nhân phẩm cá nhân.\n- **B. Thu thập thông tin cá nhân**: Đây là hành vi xâm phạm quyền riêng tư (privacy violation), bản thân nó chưa trực tiếp làm bôi nhọ hoặc biến đổi sai lệch danh dự cá nhân trừ khi thông tin đó bị bóp méo hoặc phát tán ác ý.\n- **C. Xuyên tạc thông tin**: Việc chỉnh sửa, làm giả mạo nội dung thông tin bằng AI (như deepfake) sẽ biến đổi hoàn toàn sự thật về một cá nhân, trực tiếp gây tổn hại nghiêm trọng đến danh dự và uy tín của họ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Responsible AI principles and approach",
+        "url": "https://www.microsoft.com/en-us/ai/responsible-ai"
+      },
+      {
+        "title": "Google AI Principles",
+        "url": "https://ai.google/responsibility/principles/"
+      }
+    ],
+    "question_vi": "Việc sử dụng AI có thể gây tổn hại đến nhân phẩm/danh dự của một cá nhân như thế nào?",
+    "options_vi": {
+      "A": "Tăng cường các yêu cầu pháp lý",
+      "B": "Thu thập thông tin cá nhân được đăng tải trên mạng xã hội",
+      "C": "Xuyên tạc thông tin (Information distortion)"
+    }
   },
   {
     "id": 37,
@@ -588,8 +1120,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hệ thống chuyên gia xây dựng cơ sở tri thức thông qua việc khai thác tri thức, mã hóa, kiểm thử và hợp nhất tri thức (Knowledge fusion) từ nhiều nguồn khác nhau.",
-    "references": null
+    "explanation_vi": "Trong quá trình xây dựng cơ sở tri thức của hệ thống chuyên gia, **Hợp nhất tri thức (Knowledge fusion)** là bước tích hợp và nhất quán hóa thông tin từ nhiều chuyên gia hoặc nguồn dữ liệu khác nhau để tạo ra một hệ thống đồng nhất.\n\n- **A. Trung tâm cuộc gọi**: Đây là kênh giao tiếp hoặc chăm sóc khách hàng, không thuộc quy trình xây dựng kỹ thuật của cơ sở tri thức.\n- **B. Hợp nhất tri thức**: Giúp giải quyết các xung đột và kết hợp các luồng tri thức rời rạc thành một cơ sở tri thức logic và hoàn chỉnh.\n- **C. Mô-đun đạo đức**: Mặc dù quan trọng đối với các hệ thống AI hiện đại, nhưng nó không phải là một bước kỹ thuật truyền thống trong quy trình tạo và kiểm thử cơ sở tri thức của hệ thống chuyên gia cổ điển.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "IBM - What is Artificial Intelligence?",
+        "url": "https://www.ibm.com/topics/artificial-intelligence"
+      }
+    ],
+    "question_vi": "Hệ thống chuyên gia sử dụng một cơ sở tri thức được tạo ra thông qua việc khai thác tri thức, mã hóa, kiểm thử và quy trình nào sau đây?",
+    "options_vi": {
+      "A": "Trung tâm cuộc gọi (Call centers)",
+      "B": "Hợp nhất tri thức (Knowledge fusion)",
+      "C": "Mô-đun đạo đức (Ethical modules)"
+    }
   },
   {
     "id": 38,
@@ -604,8 +1147,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Vấn đề mất cân bằng lớp xảy ra khi có số lượng mẫu không đồng đều (an unequal number of samples) giữa các phân lớp dữ liệu trong tập dữ liệu huấn luyện.",
-    "references": null
+    "explanation_vi": "**Mất cân bằng lớp (Class imbalance)** là hiện tượng số lượng mẫu dữ liệu của một hoặc một số lớp vượt trội hơn rất nhiều so với lớp khác trong tập dữ liệu huấn luyện.\n\n- **A. Có số lượng mẫu không đồng đều**: Ví dụ, trong bài toán phát hiện gian lận thẻ tín dụng, số giao dịch hợp lệ (99.9%) lớn hơn rất nhiều so với số giao dịch gian lận (0.1%). Điều này làm cho mô hình có xu hướng thiên vị lớp đa số.\n- **B. Thiếu chất lượng của các mẫu**: Đây là vấn đề về chất lượng dữ liệu (data quality/noise), không phải mất cân bằng số lượng lớp.\n- **C. Phương trình cân bằng phân cụm**: Đây là thuật ngữ giả lập, không liên quan đến định nghĩa của vấn đề mất cân bằng lớp trong học máy có giám sát.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud ML crash course: Imbalanced data",
+        "url": "https://developers.google.com/machine-learning/crash-course/imbalanced-data"
+      }
+    ],
+    "question_vi": "Vấn đề mất cân bằng lớp xảy ra khi nào?",
+    "options_vi": {
+      "A": "Có số lượng mẫu không đồng đều giữa các lớp.",
+      "B": "Thiếu chất lượng của các mẫu.",
+      "C": "Có một phương trình cân bằng phân cụm của các mẫu."
+    }
   },
   {
     "id": 39,
@@ -620,8 +1174,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một phương pháp phân cụm tốt khi nó tạo ra các cụm có độ tương đồng nội bộ cao (Intra-classes similarity), tức là các phần tử trong cùng một cụm rất giống nhau.",
-    "references": null
+    "explanation_vi": "Một thuật toán phân cụm (Clustering) tốt khi nó tối đa hóa độ tương đồng nội bộ lớp (high **intra-class** similarity/compactness) và tối thiểu hóa độ tương đồng giữa các lớp khác nhau (low **inter-class** similarity/high separation).\n\n- **A. Các phân hoạch (Partitions)**: Chỉ đơn thuần là việc chia dữ liệu thành các nhóm độc lập, không nói lên chất lượng tốt hay xấu của thuật toán.\n- **B. Sự tương đồng cao nội bộ cụm (Intra-classes)**: Đảm bảo các điểm dữ liệu nằm trong cùng một cụm có đặc điểm rất giống nhau (khoảng cách giữa các điểm trong cùng một cụm là nhỏ nhất).\n- **C. Sự tương đồng cao giữa các cụm (Inter-classes)**: Nếu các cụm rất giống nhau thì việc phân cụm không có ý nghĩa vì các cụm không được tách biệt rõ ràng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud - Clustering algorithms",
+        "url": "https://developers.google.com/machine-learning/clustering/clustering-algorithms"
+      }
+    ],
+    "question_vi": "Một phương pháp phân cụm được coi là tốt khi nó tạo ra kết quả nào sau đây?",
+    "options_vi": {
+      "A": "Các phân hoạch (Partitions)",
+      "B": "Sự tương đồng cao nội bộ cụm (Intra-classes)",
+      "C": "Sự tương đồng cao giữa các cụm (Inter-classes)"
+    }
   },
   {
     "id": 40,
@@ -636,8 +1201,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giảm thiểu chi phí (Cost reductions) là lý do phổ biến nhất thúc đẩy các doanh nghiệp tích hợp AI vào quy trình vận hành để đạt được lợi thế cạnh tranh.",
-    "references": null
+    "explanation_vi": "Động lực kinh doanh lớn nhất và phổ biến nhất hiện nay cho các doanh nghiệp khi triển khai AI là **Giảm thiểu chi phí (Cost reductions)** thông qua tự động hóa các tác vụ lặp đi lặp lại và tối ưu hóa quy trình vận hành.\n\n- **A. Giảm thiểu chi phí**: Giúp doanh nghiệp tối ưu hóa nguồn nhân lực, tăng năng suất, giảm sai sót thủ công, từ đó giảm đáng kể chi phí vận hành trực tiếp.\n- **B. Giảm thiểu rủi ro**: Mặc dù AI giúp dự báo rủi ro, nhưng đây không phải là lý do phổ biến hàng đầu so với việc tối ưu hóa chi phí vận hành hàng ngày.\n- **C. Tiếp thị hướng đối tượng**: Chỉ áp dụng chủ yếu cho bộ phận sales/marketing, trong khi giảm chi phí là lợi ích bao phủ toàn bộ mọi phòng ban doanh nghiệp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Azure - The Business Value of AI",
+        "url": "https://azure.microsoft.com/en-us/solutions/ai/"
+      }
+    ],
+    "question_vi": "Lý do PHỔ BIẾN NHẤT để các doanh nghiệp tích hợp AI nhằm đạt được lợi thế cạnh tranh là gì?",
+    "options_vi": {
+      "A": "Giảm thiểu chi phí (Cost reductions)",
+      "B": "Giảm thiểu rủi ro (Risk remediation)",
+      "C": "Tiếp thị hướng đối tượng (Targeted marketing)"
+    }
   },
   {
     "id": 41,
@@ -652,8 +1228,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giảng dạy trực tuyến (Online Instruction) là một ví dụ về công việc hiện có thể được hỗ trợ hoặc thực hiện bởi các hệ thống AI (như các gia sư ảo, hệ thống học tập thích ứng).",
-    "references": null
+    "explanation_vi": "**Hướng dẫn/Giảng dạy trực tuyến (Online Instruction)** hiện nay có thể được tự động hóa hoàn toàn hoặc hỗ trợ lớn bởi các hệ thống AI (như hệ thống gia sư thông minh, chatbot giảng dạy, trả lời câu hỏi tự động).\n\n- **A. Nhân viên đỗ xe hộ (Valet parking)**: Yêu cầu khả năng tương tác vật lý phức tạp với nhiều loại xe và môi trường đỗ xe thực tế, hiện tại AI tự hành chưa thể thực hiện dịch vụ này một cách phổ biến.\n- **B. Hướng dẫn trực tuyến**: AI có thể tiếp nhận câu hỏi của học viên, phân tích lộ trình học tập, giải thích kiến thức và chấm bài trực tuyến một cách tự động và liên tục 24/7.\n- **C. Lái máy bay thương mại**: Mặc dù có chế độ lái tự động (autopilot), việc vận hành một chuyến bay thương mại chở khách vẫn bắt buộc phải có phi công con người để xử lý các tình huống khẩn cấp và đảm bảo an toàn tuyệt đối theo luật hàng không quốc tế.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Education - AI in Education",
+        "url": "https://www.microsoft.com/en-us/education/ai-in-education"
+      }
+    ],
+    "question_vi": "Điều nào sau đây là ví dụ về một công việc hiện nay có thể được thực hiện bởi AI?",
+    "options_vi": {
+      "A": "Nhân viên đỗ xe hộ (Valet parking)",
+      "B": "Hướng dẫn/Giảng dạy trực tuyến (Online Instruction)",
+      "C": "Lái máy bay thương mại (Commercial flying)"
+    }
   },
   {
     "id": 42,
@@ -668,8 +1255,23 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trách nhiệm giải trình (Accountability) là mối quan tâm hàng đầu khi khung đạo đức của AI vẫn còn sơ khai, nhằm xác định ai sẽ chịu trách nhiệm cho các hành vi và quyết định sai sót của hệ thống AI.",
-    "references": null
+    "explanation_vi": "Mối quan ngại lớn nhất khi triển khai các hệ thống AI là **Trách nhiệm giải trình (Accountability)** – xác định rõ ai (nhà phát triển, người dùng, hay chính hệ thống) sẽ phải chịu trách nhiệm khi hệ thống AI đưa ra các quyết định sai lầm gây hậu quả nghiêm trọng.\n\n- **A. Trách nhiệm tài chính**: Là vấn đề bồi thường thiệt hại, nhưng để giải quyết được trách nhiệm tài chính thì trước hết phải xác định được chủ thể chịu trách nhiệm (thuộc về trách nhiệm giải trình).\n- **B. Trách nhiệm giải trình**: Đây là nguyên tắc cốt lõi trong mọi khung đạo đức AI (Responsible AI) nhằm đảm bảo các hệ thống AI được giám sát chặt chẽ và có thể truy cứu trách nhiệm khi có sự cố.\n- **C. Sở hữu trí tuệ**: Là tranh chấp về bản quyền dữ liệu huấn luyện hoặc sản phẩm do AI tạo ra, tuy quan trọng nhưng không mang tính sống còn về mặt đạo đức xã hội và nhân sinh bằng việc kiểm soát trách nhiệm hành vi của AI.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Responsible AI principles and approach",
+        "url": "https://www.microsoft.com/en-us/ai/responsible-ai"
+      },
+      {
+        "title": "Google Responsible AI Practices",
+        "url": "https://ai.google/responsibility/responsible-ai-practices/"
+      }
+    ],
+    "question_vi": "Mối quan quan ngại LỚN NHẤT hiện nay là gì khi khung đạo đức của AI vẫn đang ở giai đoạn sơ khai?",
+    "options_vi": {
+      "A": "Trách nhiệm tài chính (Financial responsibility)",
+      "B": "Trách nhiệm giải trình (Accountability)",
+      "C": "Sở hữu trí tuệ (Intellectual property)"
+    }
   },
   {
     "id": 43,
@@ -684,8 +1286,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học máy (Machine learning) có thể được định nghĩa một cách tổng quát là việc xây dựng một mô hình dự báo (predictive model) dựa trên việc phân tích dữ liệu lịch sử.",
-    "references": null
+    "explanation_vi": "Học máy (Machine learning) cho phép máy tính tự rút ra tri thức từ dữ liệu để xây dựng **một mô hình dự báo (predictive model)** thay vì lập trình cứng các quy tắc.\n\n- **A. Tập hợp các quy tắc được xác định trước**: Đây là định nghĩa của các hệ thống dựa trên quy tắc (rule-based systems) hoặc lập trình truyền thống.\n- **B. Một loại tự động hóa**: Tự động hóa là khái niệm rộng hơn, có thể dùng robot hoặc các đoạn mã kịch bản (scripts) đơn giản mà không cần đến học máy.\n- **C. Một mô hình dự báo**: Học máy học các quy luật từ dữ liệu quá khứ để tạo ra mô hình có khả năng dự đoán các kết quả mới chưa từng gặp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Microsoft Azure Cloud Dictionary - What is Machine Learning?",
+        "url": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-machine-learning/"
+      }
+    ],
+    "question_vi": "Học máy (Machine learning) có thể được định nghĩa là:",
+    "options_vi": {
+      "A": "một tập hợp các quy tắc được xác định trước.",
+      "B": "một loại tự động hóa.",
+      "C": "một mô hình dự báo."
+    }
   },
   {
     "id": 44,
@@ -700,8 +1313,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Kết hợp AI với dấu chân số (digital footprint) của cá nhân có thể tạo ra rủi ro lớn khi sử dụng các Mạng đối nghịch tạo (GAN - Generative Adversarial Networks) để tạo ra các hình ảnh, video hoặc giọng nói giả mạo cực kỳ chân thực (deepfakes).",
-    "references": null
+    "explanation_vi": "**Mạng đối nghịch tạo (GANs - Generative Adversarial Networks)** là thuật toán AI có khả năng tạo ra các hình ảnh, video (deepfakes) hoặc giọng nói giả mạo giống hệt người thật bằng cách phân tích và học hỏi từ các dấu chân kỹ thuật số (hình ảnh, video, bài đăng của cá nhân trên mạng xã hội).\n\n- **A. Kinh tế học mật mã (Cryptoeconomics)**: Liên quan đến blockchain và tiền mã hóa, không liên quan đến việc giả mạo thông tin cá nhân bằng AI.\n- **B. Mạng đối nghịch tạo (GANs)**: Gồm hai mạng (Generator và Discriminator) đấu tranh với nhau để tạo ra các dữ liệu giả lập có độ chân thực tối đa, dễ bị kẻ xấu lợi dụng để tạo deepfakes bôi nhọ hoặc lừa đảo.\n- **C. Watson**: Hệ thống AI của IBM được thiết kế cho các tác vụ trả lời câu hỏi và phân tích dữ liệu doanh nghiệp, không phải là một thuật toán tạo sinh đối nghịch.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "AWS - What is Generative AI?",
+        "url": "https://aws.amazon.com/what-is/generative-ai/"
+      }
+    ],
+    "question_vi": "Việc kết hợp AI với dấu chân kỹ thuật số của một cá nhân có thể gây ra rủi ro lớn do thuật toán nào sau đây?",
+    "options_vi": {
+      "A": "Kinh tế học mật mã (Cryptoeconomics)",
+      "B": "Mạng đối nghịch tạo (Generative adversarial networks)",
+      "C": "Hệ thống Watson"
+    }
   },
   {
     "id": 45,
@@ -716,247 +1340,483 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lấy mẫu theo cụm (Cluster sampling) là một phương pháp lấy mẫu xác suất phổ biến, trong đó tổng thể được chia thành các cụm và các cụm được chọn ngẫu nhiên.",
-    "references": null
+    "explanation_vi": "**Lấy mẫu theo cụm (Cluster sampling)** là một phương pháp lấy mẫu xác suất (probability sampling), trong đó tổng thể được chia thành các nhóm (cụm) riêng biệt, sau đó một số cụm được chọn ngẫu nhiên để tiến hành khảo sát toàn bộ hoặc một phần các phần tử trong cụm đó.\n\n- **A. Tỷ lệ lấy mẫu (Sampling fraction)**: Là tỷ số giữa cỡ mẫu và quy mô tổng thể, không phải là một phương pháp lấy mẫu.\n- **B. Lấy mẫu theo cụm**: Là phương pháp lấy mẫu xác suất hợp lệ (bên cạnh lấy mẫu ngẫu nhiên đơn giản, lấy mẫu hệ thống, lấy mẫu phân tầng).\n- **C. Lấy mẫu theo định kiến/chủ quan (Judgment sampling)**: Là phương pháp lấy mẫu phi xác suất (non-probability sampling), phụ thuộc hoàn toàn vào phán đoán chủ quan của người nghiên cứu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Google Cloud BigQuery - TABLESAMPLE clause",
+        "url": "https://cloud.google.com/bigquery/docs/table-sampling"
+      }
+    ],
+    "question_vi": "Phương pháp nào sau đây là một loại lấy mẫu xác suất?",
+    "options_vi": {
+      "A": "Tỷ lệ lấy mẫu (Sampling fraction)",
+      "B": "Lấy mẫu theo cụm (Cluster)",
+      "C": "Lấy mẫu theo định kiến/chủ quan (Judgment)"
+    }
   },
   {
     "id": 46,
     "topic": 1,
     "question": "Which of the following expert system components retrieves the information when a user queries the system?",
+    "question_vi": "Thành phần nào sau đây của hệ chuyên gia (expert system) thực hiện truy xuất thông tin khi người dùng truy vấn hệ thống?",
     "options": {
       "A": "Knowledge base",
       "B": "Inference engine",
       "C": "Explanation module"
     },
+    "options_vi": {
+      "A": "Cơ sở tri thức (Knowledge base)",
+      "B": "Bộ suy luận (Inference engine)",
+      "C": "Phân hệ giải thích (Explanation module)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Bộ suy luận (Inference engine) là thành phần áp dụng các quy tắc logic lên cơ sở tri thức để trích xuất hoặc suy luận ra câu trả lời khi người dùng truy vấn hệ thống.",
-    "references": null
+    "explanation_vi": "**Bộ suy luận (Inference engine)** là câu trả lời chính xác vì đây là thành phần cốt lõi đóng vai trò \"bộ não\" của hệ chuyên gia:\n- **Cơ sở tri thức (Knowledge base):** Chỉ đóng vai trò lưu trữ các tri thức, quy tắc (rules) và sự kiện được thu thập từ các chuyên gia. Nó là một cơ sở dữ liệu tĩnh và không tự thực hiện việc suy diễn hay truy xuất thông tin để trả lời câu hỏi.\n- **Bộ suy luận (Inference engine):** Thực hiện áp dụng các quy tắc logic (như lập luận tiến hoặc lập luận lùi) lên cơ sở tri thức để trích xuất thông tin, giải quyết vấn đề và đưa ra câu trả lời tương ứng với truy vấn của người dùng.\n- **Phân hệ giải thích (Explanation module):** Chịu trách nhiệm giải thích cho người dùng biết tại sao hệ thống lại đưa ra kết luận hoặc kết quả đó (giải thích tiến trình suy luận).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Expert Systems in Artificial Intelligence - GeeksforGeeks",
+        "url": "https://www.geeksforgeeks.org/expert-systems-in-artificial-intelligence/"
+      },
+      {
+        "title": "Expert Systems in AI - JavaTpoint",
+        "url": "https://www.javatpoint.com/expert-systems-in-artificial-intelligence"
+      }
+    ]
   },
   {
     "id": 47,
     "topic": 1,
     "question": "Which of the following can be used by organizations to detect possible anomalies in employee actions?",
+    "question_vi": "Công cụ nào sau đây có thể được các tổ chức sử dụng để phát hiện những bất thường có thể xảy ra trong hành động của nhân viên?",
     "options": {
       "A": "Deep neural networks",
       "B": "Confusion matrix",
       "C": "Behavioral AI"
     },
+    "options_vi": {
+      "A": "Mạng nơ-ron sâu (Deep neural networks)",
+      "B": "Ma trận nhầm lẫn (Confusion matrix)",
+      "C": "Trí tuệ nhân tạo phân tích hành vi (Behavioral AI)"
+    },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "AI hành vi (Behavioral AI) có thể được sử dụng để phân tích các thói quen, hành động thường ngày của nhân viên nhằm phát hiện những hành vi bất thường (anomalies) có khả năng gây rủi ro bảo mật.",
-    "references": null
+    "explanation_vi": "**Trí tuệ nhân tạo phân tích hành vi (Behavioral AI)** là lựa chọn chính xác nhất cho mục đích này:\n- **Trí tuệ nhân tạo phân tích hành vi (Behavioral AI):** Hoạt động bằng cách phân tích thói quen, hành vi và các mẫu tương tác hàng ngày của nhân viên trên hệ thống để thiết lập một \"đường cơ sở\" (baseline) hành vi bình thường. Từ đó, nó có thể phát hiện các hành động bất thường (anomalies) như đăng nhập bất thường, truy cập dữ liệu lạ để cảnh báo các nguy cơ bảo mật hoặc gian lận nội bộ.\n- **Mạng nơ-ron sâu (Deep neural networks):** Là cấu trúc thuật toán học máy nâng cao dùng cho nhiều nhiệm vụ khác nhau, nhưng không phải là một giải pháp trực tiếp hay một công cụ có sẵn được thiết kế riêng cho việc phân tích hành vi nhân viên trừ khi được phát triển chuyên biệt.\n- **Ma trận nhầm lẫn (Confusion matrix):** Là một công cụ đo lường hiệu năng của mô hình phân loại trong học máy, hoàn toàn không có chức năng phát hiện hành vi trực tiếp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Identify Insider Threats and Behavior Anomalies - Microsoft Purview",
+        "url": "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      },
+      {
+        "title": "User and Entity Behavior Analytics (UEBA) - Microsoft Azure",
+        "url": "https://learn.microsoft.com/en-us/azure/sentinel/identify-threats-with-entity-behavior-analytics"
+      }
+    ]
   },
   {
     "id": 48,
     "topic": 1,
     "question": "The R2 notation can range from 0-100%. An R2 value of 0.845 signifies which type of a relationship?",
+    "question_vi": "Chỉ số R2 (hệ số xác định) dao động từ 0 đến 100%. Giá trị R2 bằng 0,845 biểu thị loại mối quan hệ nào?",
     "options": {
       "A": "Neutral association",
       "B": "Positive linear association",
       "C": "Negative association"
     },
+    "options_vi": {
+      "A": "Mối tương quan trung lập (Neutral association)",
+      "B": "Mối tương quan tuyến tính tích cực (Positive linear association)",
+      "C": "Mối tương quan nghịch (Negative association)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giá trị R2 (hệ số xác định) bằng 0.845 biểu thị mối quan hệ tuyến tính đồng biến mạnh (Positive linear association) giữa các biến trong mô hình hồi quy tuyến tính.",
-    "references": null
+    "explanation_vi": "Giá trị R2 bằng 0,845 biểu thị **Mối tương quan tuyến tính tích cực (Positive linear association)**:\n- **Hệ số xác định R2 (R-squared):** Đo lường tỷ lệ biến thiên của biến phụ thuộc được giải thích bởi các biến độc lập trong một mô hình hồi quy. Giá trị R2 dao động từ 0 đến 1 (hoặc 0% đến 100%).\n- **R2 = 0,845 (84,5%):** Đây là một giá trị rất cao, cho thấy mô hình có sự ăn khớp tốt với dữ liệu thực tế và tồn tại một mối tương quan tuyến tính mạnh mẽ/tích cực giữa các biến được đo lường.\n- **Mối tương quan trung lập hoặc nghịch:** Không phản ánh đúng ý nghĩa của một giá trị R2 cao và tích cực trong việc giải thích độ khớp của mô hình hồi quy tuyến tính.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "RegressionMetrics Class (Microsoft.ML.Data) - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/dotnet/api/microsoft.ml.data.regressionmetrics?view=ml-dotnet"
+      },
+      {
+        "title": "Linear Regression - IBM Developer",
+        "url": "https://developer.ibm.com/articles/linear-regression-from-scratch/"
+      }
+    ]
   },
   {
     "id": 49,
     "topic": 1,
     "question": "Which of the following methods scales poorly with large data sets?",
+    "question_vi": "Phương pháp phân cụm nào sau đây có khả năng mở rộng kém (scales poorly) khi đối mặt với các tập dữ liệu lớn?",
     "options": {
       "A": "Fuzzy",
       "B": "Density-based",
       "C": "Hierarchical"
     },
+    "options_vi": {
+      "A": "Phân cụm mờ (Fuzzy clustering)",
+      "B": "Phân cụm dựa trên mật độ (Density-based clustering)",
+      "C": "Phân cụm phân cấp (Hierarchical clustering)"
+    },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Phân cụm phân cấp (Hierarchical clustering) có độ phức tạp tính toán và bộ nhớ rất cao (thường là bậc hai hoặc bậc ba theo số lượng mẫu), do đó có khả năng mở rộng kém (scales poorly) khi làm việc với các tập dữ liệu lớn.",
-    "references": null
+    "explanation_vi": "**Phân cụm phân cấp (Hierarchical clustering)** là thuật toán mở rộng kém nhất với dữ liệu lớn:\n- **Phân cụm phân cấp (Hierarchical clustering):** Thường có độ phức tạp thời gian là $O(N^3)$ hoặc ít nhất là $O(N^2)$ và độ phức tạp không gian là $O(N^2)$ (do cần tính toán và lưu trữ ma trận khoảng cách giữa tất cả các cặp điểm dữ liệu). Khi số lượng điểm dữ liệu $N$ lớn, thuật toán này sẽ tiêu tốn cực kỳ nhiều tài nguyên bộ nhớ và thời gian tính toán.\n- **Phân cụm mờ (Fuzzy clustering):** Dù có độ phức tạp nhất định nhưng có thể được tối ưu hóa tốt hơn nhiều so với phân cấp.\n- **Phân cụm dựa trên mật độ (Density-based clustering):** Ví dụ như DBSCAN có thể đạt hiệu năng tốt hơn đáng kể (độ phức tạp khoảng $O(N \\log N)$) khi kết hợp với các cấu trúc cây chỉ mục không gian (như R-tree, KD-tree).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Clustering - scikit-learn documentation",
+        "url": "https://scikit-learn.org/stable/modules/clustering.html"
+      },
+      {
+        "title": "Hierarchical Clustering - IBM Developer",
+        "url": "https://developer.ibm.com/articles/wa-hierarchical-clustering-algorithms/"
+      }
+    ]
   },
   {
     "id": 50,
     "topic": 1,
     "question": "Classification models are a form of which model type?",
+    "question_vi": "Các mô hình phân loại (Classification models) là một dạng của kiểu học máy nào?",
     "options": {
       "A": "Supervised learning",
       "B": "Reinforcement learning",
       "C": "Unsupervised learning"
     },
+    "options_vi": {
+      "A": "Học có giám sát (Supervised learning)",
+      "B": "Học tăng cường (Reinforcement learning)",
+      "C": "Học không giám sát (Unsupervised learning)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Các mô hình phân loại (Classification models) thuộc phương pháp học có giám sát (Supervised learning) vì chúng yêu cầu dữ liệu huấn luyện đã được gắn nhãn trước.",
-    "references": null
+    "explanation_vi": "Các mô hình phân loại là một dạng của **Học có giám sát (Supervised learning)**:\n- **Học có giám sát (Supervised learning):** Hoạt động bằng cách huấn luyện mô hình trên các cặp dữ liệu đầu vào và nhãn đầu ra đã biết trước (labeled data). Tác vụ phân loại (Classification) có mục tiêu dự đoán nhãn danh mục (category/class) cho các điểm dữ liệu mới dựa trên những gì đã học từ tập dữ liệu gán nhãn.\n- **Học không giám sát (Unsupervised learning):** Hoạt động trên dữ liệu không có nhãn, chủ yếu thực hiện các tác vụ như phân cụm (clustering) hoặc giảm chiều dữ liệu.\n- **Học tăng cường (Reinforcement learning):** Dựa trên việc tương tác với môi trường để học các hành động tối ưu thông qua hệ thống thưởng/phạt (reward/penalty), không thuộc dạng phân loại dữ liệu truyền thống.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Supervised Learning - Microsoft Azure",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/concept-machine-learning-types"
+      },
+      {
+        "title": "What is Supervised Learning? - IBM",
+        "url": "https://www.ibm.com/topics/supervised-learning"
+      }
+    ]
   },
   {
     "id": 51,
     "topic": 1,
     "question": "Which of the following ethical challenges is the use of AI MOST likely to present?",
+    "question_vi": "Thách thức đạo đức nào sau đây mà việc sử dụng AI có khả năng cao nhất sẽ gây ra?",
     "options": {
       "A": "Bias in content output",
       "B": "Unauthorized alteration of data",
       "C": "Data misuse"
     },
+    "options_vi": {
+      "A": "Sự thiên vị/định kiến trong nội dung đầu ra (Bias in content output)",
+      "B": "Thay đổi dữ liệu trái phép (Unauthorized alteration of data)",
+      "C": "Lạm dụng dữ liệu (Data misuse)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Định kiến trong nội dung đầu ra (Bias in content output) là thách thức đạo đức phổ biến nhất mà việc sử dụng AI mang lại, thường do dữ liệu huấn luyện chứa sẵn các thiên vị lịch sử.",
-    "references": null
+    "explanation_vi": "Thách thức đạo đức phổ biến và rõ rệt nhất hiện nay của AI chính là **Sự thiên vị/định kiến trong nội dung đầu ra (Bias in content output)**:\n- **Sự thiên vị trong nội dung đầu ra (Bias in content output):** Do các mô hình AI được huấn luyện trên lượng lớn dữ liệu lịch sử hoặc dữ liệu do con người tạo ra, chúng dễ dàng học và khuếch đại các định kiến xã hội (về giới tính, chủng tộc, nghề nghiệp) vốn có sẵn trong dữ liệu đầu vào. Đây là một vấn đề đạo đức hàng đầu trong phát triển AI có trách nhiệm (Responsible AI).\n- **Thay đổi dữ liệu trái phép (Unauthorized alteration of data):** Chủ yếu là vấn đề bảo mật an ninh mạng (cybersecurity), không phải là thách thức đạo đức đặc thù do bản chất thuật toán AI hoạt động.\n- **Lạm dụng dữ liệu (Data misuse):** Liên quan rộng rãi đến quyền riêng tư và quản trị dữ liệu của các tổ chức nói chung, không chỉ giới hạn hay bị gây ra chủ yếu bởi các mô hình AI.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Responsible AI principles - Microsoft Azure",
+        "url": "https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai"
+      },
+      {
+        "title": "What is AI Bias? - IBM",
+        "url": "https://www.ibm.com/topics/ai-bias"
+      }
+    ]
   },
   {
     "id": 52,
     "topic": 1,
     "question": "Which of the following logic types is BEST to use for an AI algorithm that determines whether drivers are stopping for red traffic lights?",
+    "question_vi": "Loại logic nào sau đây là TỐT NHẤT để sử dụng cho một thuật toán AI xác định xem tài xế có dừng lại khi gặp đèn đỏ hay không?",
     "options": {
       "A": "Spatiotemporal",
       "B": "Temporal",
       "C": "Boolean"
     },
+    "options_vi": {
+      "A": "Logic không-thời gian (Spatiotemporal)",
+      "B": "Logic thời gian (Temporal)",
+      "C": "Logic Boolean (Boolean)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Logic thời gian (Temporal logic) là lựa chọn phù hợp nhất cho thuật toán xác định xem người lái xe có dừng lại khi đèn đỏ hay không, vì bài toán cần phân tích chuỗi hành động diễn ra theo thời gian.",
-    "references": null
+    "explanation_vi": "**Logic thời gian (Temporal logic)** là lựa chọn tối ưu nhất cho bài toán này:\n- **Logic thời gian (Temporal logic):** Việc xác định một tài xế có dừng lại khi đèn đỏ hay không không chỉ dựa trên trạng thái tĩnh mà đòi hỏi phải theo dõi và kiểm chứng chuỗi các sự kiện diễn ra theo trình tự thời gian (ví dụ: \"Ngay khi đèn chuyển sang màu đỏ, xe phải giảm tốc độ và duy trì trạng thái dừng trong suốt khoảng thời gian đèn đỏ\"). Logic thời gian được sinh ra để mô tả các mệnh đề logic thay đổi theo thời gian như vậy.\n- **Logic không-thời gian (Spatiotemporal):** Có bao gồm cả yếu tố không gian, tuy nhiên tính chất cốt lõi của hành vi \"dừng xe khi đèn đỏ\" liên quan mật thiết đến sự phụ thuộc thời gian của các trạng thái. Trong lý thuyết đặc tả hệ thống giao thông thông minh, logic thời gian là công cụ đặc tả trực tiếp nhất.\n- **Logic Boolean:** Chỉ đưa ra các giá trị Đúng/Sai tĩnh, không thể diễn tả trực tiếp sự thay đổi liên tục của các trạng thái giao thông theo thời gian.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Temporal Logic - Stanford Encyclopedia of Philosophy",
+        "url": "https://plato.stanford.edu/entries/logic-temporal/"
+      },
+      {
+        "title": "Temporal Logic and Verification - Microsoft Research",
+        "url": "https://www.microsoft.com/en-us/research/publication/temporal-logic-and-verification/"
+      }
+    ]
   },
   {
     "id": 53,
     "topic": 1,
     "question": "Which type of data is MOST commonly augmented using techniques like pitch shifting and time stretching?",
+    "question_vi": "Loại dữ liệu nào sau đây PHỔ BIẾN NHẤT được tăng cường (augmented) bằng cách sử dụng các kỹ thuật như thay đổi cao độ (pitch shifting) và kéo giãn thời gian (time stretching)?",
     "options": {
       "A": "Text",
       "B": "Audio",
       "C": "Images"
     },
+    "options_vi": {
+      "A": "Văn bản (Text)",
+      "B": "Âm thanh (Audio)",
+      "C": "Hình ảnh (Images)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Pitch shifting (thay đổi cao độ) và time stretching (kéo giãn thời gian) là hai kỹ thuật tăng cường dữ liệu đặc thù dành riêng cho dữ liệu âm thanh (Audio).",
-    "references": null
+    "explanation_vi": "Kỹ thuật thay đổi cao độ (pitch shifting) và kéo giãn thời gian (time stretching) được dùng phổ biến nhất cho dữ liệu **Âm thanh (Audio)**:\n- **Âm thanh (Audio):** Thay đổi cao độ (pitch shifting - thay đổi tần số âm thanh nhưng giữ nguyên tốc độ) và kéo giãn thời gian (time stretching - thay đổi tốc độ phát nhưng giữ nguyên cao độ) là các phương pháp tăng cường dữ liệu âm thanh đặc thù, giúp mô hình nhận diện giọng nói hoặc âm thanh trở nên mạnh mẽ hơn với các tông giọng và tốc độ nói khác nhau.\n- **Văn bản (Text):** Thường sử dụng các kỹ thuật như thay thế từ đồng nghĩa, dịch ngược (back-translation).\n- **Hình ảnh (Images):** Thường sử dụng các kỹ thuật như lật ảnh, xoay ảnh, thay đổi độ sáng, cắt ảnh (cropping).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Audio Data Augmentation - PyTorch Tutorials",
+        "url": "https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html"
+      },
+      {
+        "title": "Data Augmentation for Audio - TensorFlow IO",
+        "url": "https://www.tensorflow.org/io/api_docs/python/tfio/audio"
+      }
+    ]
   },
   {
     "id": 54,
     "topic": 1,
     "question": "Which of the following is an example of the use of AI to assist consumers in finding new or old relationship connections?",
+    "question_vi": "Ví dụ nào sau đây thể hiện việc sử dụng AI để hỗ trợ người tiêu dùng tìm kiếm các mối quan hệ kết nối mới hoặc cũ?",
     "options": {
       "A": "Apps that use facial recognition",
       "B": "Apps that use a global positioning system (GPS)",
       "C": "Apps that look at possible connection proximity"
     },
+    "options_vi": {
+      "A": "Các ứng dụng sử dụng công nghệ nhận diện khuôn mặt (facial recognition)",
+      "B": "Các ứng dụng sử dụng hệ thống định vị toàn cầu (GPS)",
+      "C": "Các ứng dụng xem xét khoảng cách kết nối tiềm năng (proximity)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Ứng dụng sử dụng nhận dạng khuôn mặt (facial recognition) là ví dụ điển hình về việc dùng AI để giúp người dùng tìm kiếm và kết nối lại các mối quan hệ mới hoặc cũ dựa trên hình ảnh.",
-    "references": null
+    "explanation_vi": "**Các ứng dụng sử dụng công nghệ nhận diện khuôn mặt (facial recognition)** là một ví dụ rõ rệt về ứng dụng AI để kết nối mọi người:\n- **Nhận diện khuôn mặt (Facial recognition):** Sử dụng các thuật toán học sâu để quét, nhận diện và đối khớp các đặc điểm trên khuôn mặt trong hình ảnh. Điều này cho phép các mạng xã hội đề xuất kết nối hoặc gắn thẻ (tag) tự động những người quen cũ xuất hiện chung trong một bức ảnh, hoặc hỗ trợ tìm kiếm những người có điểm tương đồng.\n- **Hệ thống định vị GPS** và **Khoảng cách kết nối (Proximity):** Là các công nghệ định vị dựa trên phần cứng và dữ liệu địa lý cơ bản, không mang tính đặc thù của trí tuệ nhân tạo (AI).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Face Recognition - Microsoft Azure Cognitive Services",
+        "url": "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-identity"
+      },
+      {
+        "title": "Face Detection and Recognition Concept - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-face-detection"
+      }
+    ]
   },
   {
     "id": 55,
     "topic": 1,
     "question": "Which of the following is an example of video synthesis?",
+    "question_vi": "Ví dụ nào sau đây là một ví dụ về tổng hợp video (video synthesis)?",
     "options": {
       "A": "Object resolution",
       "B": "Face-swapping",
       "C": "Image classification"
     },
+    "options_vi": {
+      "A": "Phân giải đối tượng (Object resolution)",
+      "B": "Hoán đổi khuôn mặt (Face-swapping)",
+      "C": "Phân loại hình ảnh (Image classification)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hoán đổi khuôn mặt (Face-swapping) trong các video là một ví dụ điển hình về tổng hợp video (video synthesis), thường được tạo ra bằng các công nghệ Generative AI.",
-    "references": null
+    "explanation_vi": "**Hoán đổi khuôn mặt (Face-swapping)** là một ví dụ điển hình của tổng hợp video (video synthesis):\n- **Hoán đổi khuôn mặt (Face-swapping / Deepfake):** Đây là kỹ thuật sinh dữ liệu mới bằng cách thay thế khuôn mặt của một người trong video gốc bằng khuôn mặt của một người khác sao cho các biểu cảm và chuyển động khớp một cách tự nhiên. Tác vụ này đòi hỏi các mô hình generative AI (nhã GAN hoặc Diffusion Models) để tổng hợp hình ảnh mới trực tiếp vào video.\n- **Phân giải đối tượng (Object resolution)** và **Phân loại hình ảnh (Image classification):** Đều là các tác vụ phân tích, trích xuất thông tin hoặc phân loại dữ liệu hình ảnh/video có sẵn, không phải là quá trình sinh hay tổng hợp dữ liệu mới.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Neural Talking-Head Synthesis - NVIDIA Research",
+        "url": "https://developer.nvidia.com/blog/generating-photorealistic-videos-with-ai/"
+      },
+      {
+        "title": "Azure AI Speech Avatar and Video Synthesis - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/text-to-speech-avatar-overview"
+      }
+    ]
   },
   {
     "id": 56,
     "topic": 1,
     "question": "What is PowerShell?",
+    "question_vi": "PowerShell là gì?",
     "options": {
       "A": "Malware detection software",
       "B": "A team of sophisticated hackers",
       "C": "An advanced hacking tool"
     },
+    "options_vi": {
+      "A": "Phần mềm phát hiện mã độc (Malware detection software)",
+      "B": "Một nhóm tin tặc tinh vi (A team of sophisticated hackers)",
+      "C": "Một công cụ tấn công mạng nâng cao (An advanced hacking tool)"
+    },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "PowerShell tuy là một công cụ quản lý cấu hình và tự động hóa tác vụ của Microsoft, nhưng trong các bài kiểm tra bảo mật (như của ISACA), nó thường được xem như một công cụ tấn công nâng cao (advanced hacking tool) khi bị kẻ tấn công lợi dụng để thực thi mã độc và điều khiển hệ thống.",
-    "references": null
+    "explanation_vi": "Trong bối cảnh bảo mật và các bài thi kiểm tra về an ninh thông tin, PowerShell thường được coi là **Một công cụ tấn công mạng nâng cao (An advanced hacking tool)** do cách nó bị lạm dụng:\n- **Bản chất của PowerShell:** Ban đầu là một giải pháp tự động hóa tác vụ và quản lý cấu hình của Microsoft, bao gồm shell dòng lệnh và ngôn ngữ kịch bản mạnh mẽ.\n- **Tại sao coi là công cụ tấn công mạng (Hacking Tool):** Vì có các tính năng tương tác sâu với hệ thống Windows, các kẻ tấn công rất thường xuyên lợi dụng PowerShell để chạy mã độc trực tiếp trên bộ nhớ (fileless malware) hoặc thực hiện các kỹ thuật \"Living off the Land\" (lợi dụng công cụ hợp pháp của hệ điều hành để tấn công) nhằm tránh bị phát hiện bởi các phần mềm diệt virus.\n- **Phần mềm phát hiện mã độc** hoặc **Nhóm tin tặc:** Hoàn toàn sai lệch so với khái niệm của PowerShell.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is PowerShell? - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/powershell/scripting/overview"
+      },
+      {
+        "title": "PowerShell Security Best Practices - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/powershell/scripting/developer/security-best-practices"
+      }
+    ]
   },
   {
     "id": 57,
     "topic": 1,
     "question": "An organization wants to create measurements to determine the efficiency levels of organizational processes. What is the starting point to articulate the current state of the item to be measured?",
+    "question_vi": "Một tổ chức muốn thiết lập các thước đo để xác định mức độ hiệu quả của các quy trình trong tổ chức. Điểm khởi đầu để làm rõ trạng thái hiện tại của đối tượng cần đo lường là gì?",
     "options": {
       "A": "Lead indicator",
       "B": "Benchmark",
       "C": "Internal process perspective"
     },
+    "options_vi": {
+      "A": "Chỉ số dẫn dắt (Lead indicator)",
+      "B": "Điểm chuẩn/Điểm đối sánh (Benchmark)",
+      "C": "Góc nhìn quy trình nội bộ (Internal process perspective)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Điểm chuẩn (Benchmark) là điểm bắt đầu được sử dụng để xác định trạng thái hiện tại của quy trình cần đo lường, làm cơ sở để so sánh và cải tiến hiệu suất sau này.",
-    "references": null
+    "explanation_vi": "Điểm khởi đầu để xác định trạng thái hiện tại của một đối tượng cần đo lường chính là **Điểm chuẩn/Điểm đối sánh (Benchmark)**:\n- **Điểm chuẩn (Benchmark/Baseline):** Đóng vai trò là điểm tham chiếu hoặc mức hiệu suất cơ sở hiện tại. Trước khi có thể theo dõi sự cải thiện hoặc đo lường hiệu quả, tổ chức cần thiết lập điểm chuẩn này để biết rõ trạng thái hiện tại của quy trình đang nằm ở đâu.\n- **Chỉ số dẫn dắt (Lead indicator):** Là chỉ số mang tính dự báo, phản ánh các hành động đầu vào có khả năng ảnh hưởng đến kết quả tương lai, không phải là điểm xuất phát mô tả trạng thái hiện tại.\n- **Góc nhìn quy trình nội bộ (Internal process perspective):** Là một trong bốn khía cạnh của Thẻ điểm cân bằng (Balanced Scorecard), mang tính chất định hướng chiến lược tổng quát chứ không phải là một điểm xuất phát kỹ thuật đo lường cụ thể cho một chỉ số.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Benchmarking Process - American Society for Quality (ASQ)",
+        "url": "https://asq.org/quality-resources/benchmarking"
+      },
+      {
+        "title": "Key Performance Indicators (KPIs) - Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-key-performance-indicators"
+      }
+    ]
   },
   {
     "id": 58,
     "topic": 1,
     "question": "Which of the following is a practical example of AI natural language processing (NLP)?",
+    "question_vi": "Ví dụ nào sau đây là một ứng dụng thực tế của xử lý ngôn ngữ tự nhiên (NLP) bằng AI?",
     "options": {
       "A": "Siri on Apple devices",
       "B": "Roomba (automatic vacuum cleaner)",
       "C": "Red light cameras"
     },
+    "options_vi": {
+      "A": "Trợ lý ảo Siri trên các thiết bị Apple (Siri on Apple devices)",
+      "B": "Robot hút bụi tự động Roomba (Roomba)",
+      "C": "Camera phạt nguội vượt đèn đỏ (Red light cameras)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trợ lý ảo Siri trên các thiết bị Apple là một ví dụ thực tế phổ biến về xử lý ngôn ngữ tự nhiên (NLP) khi nó có thể hiểu và phản hồi lại giọng nói của con người.",
-    "references": null
+    "explanation_vi": "**Trợ lý ảo Siri trên các thiết bị Apple (Siri on Apple devices)** là ví dụ thực tế điển hình của NLP:\n- **Siri:** Sử dụng Xử lý ngôn ngữ tự nhiên (NLP) kết hợp với nhận dạng giọng nói để hiểu các câu hỏi và câu lệnh bằng ngôn ngữ tự nhiên từ người dùng, từ đó xử lý ngữ nghĩa và đưa ra câu trả lời hoặc thực hiện tác vụ phù hợp.\n- **Roomba:** Sử dụng các thuật toán định vị và lập bản đồ (SLAM) kết hợp với cảm biến vật lý để di chuyển làm sạch nhà cửa, thuộc lĩnh vực robotics.\n- **Camera phạt nguội:** Sử dụng thị giác máy tính (computer vision) để nhận diện phương tiện và biển số xe vượt đèn đỏ, không xử lý ngôn ngữ tự nhiên.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is Natural Language Processing? - IBM",
+        "url": "https://www.ibm.com/topics/natural-language-processing"
+      },
+      {
+        "title": "Natural Language Processing (NLP) - Google Cloud",
+        "url": "https://cloud.google.com/learn/what-is-natural-language-processing"
+      }
+    ]
   },
   {
     "id": 59,
     "topic": 1,
     "question": "Which of the following platforms collects first-party natural personal data and creates nodes or contextual relationships between the data?",
+    "question_vi": "Nền tảng nào sau đây thu thập dữ liệu cá nhân trực tiếp (first-party data) và tạo ra các nút (nodes) hoặc các mối quan hệ ngữ cảnh giữa các dữ liệu đó?",
     "options": {
       "A": "Customer data",
       "B": "Data management",
       "C": "Data Lake storage"
     },
+    "options_vi": {
+      "A": "Nền tảng dữ liệu khách hàng (Customer data platform)",
+      "B": "Quản lý dữ liệu (Data management)",
+      "C": "Kho lưu trữ Data Lake (Data Lake storage)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Nền tảng dữ liệu khách hàng (Customer Data Platform - ở đây ghi tắt là Customer data) là hệ thống thu thập dữ liệu cá nhân bên thứ nhất (first-party data) và tạo lập các mối quan hệ ngữ cảnh giữa các điểm dữ liệu để xây dựng hồ sơ khách hàng hợp nhất.",
-    "references": null
+    "explanation_vi": "Nền tảng thực hiện các chức năng này là **Nền tảng dữ liệu khách hàng (Customer Data Platform - CDP)**:\n- **Customer Data Platform (CDP):** Là một hệ thống quản lý dữ liệu đóng gói giúp thu thập dữ liệu khách hàng trực tiếp (first-party data) từ nhiều nguồn khác nhau, liên kết chúng lại để tạo ra một hồ sơ khách hàng duy nhất, thống nhất (single customer view) thông qua các nút mối quan hệ ngữ cảnh.\n- **Data Management Platform (DMP - Quản lý dữ liệu):** Chủ yếu thu thập dữ liệu ẩn danh từ bên thứ ba (third-party data) phục vụ mục đích quảng cáo ngắn hạn, không tập trung xây dựng mối quan hệ dữ liệu khách hàng cá nhân lâu dài.\n- **Data Lake storage:** Chỉ là kho lưu trữ dữ liệu thô (raw data) ở quy mô lớn, không có tính năng nghiệp vụ tự động kết nối và tạo ngữ cảnh hồ sơ khách hàng như CDP nếu không phát triển thêm các ứng dụng bên trên.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "What is a Customer Data Platform (CDP)? - Microsoft Dynamics 365",
+        "url": "https://dynamics.microsoft.com/en-us/ai/customer-insights/what-is-a-customer-data-platform/"
+      },
+      {
+        "title": "Customer Data Platform - Google Cloud",
+        "url": "https://cloud.google.com/solutions/customer-data-platform"
+      }
+    ]
   },
   {
     "id": 60,
     "topic": 1,
     "question": "Which of the following is an example of weaponizing AI?",
+    "question_vi": "Hành vi nào sau đây là một ví dụ về việc \"vũ khí hóa\" trí tuệ nhân tạo (weaponizing AI) trong các vấn đề xã hội/đạo đức?",
     "options": {
       "A": "Preventing individuals from driving without a driver's license",
       "B": "Preventing individuals from reproducing due to certain genetic markers",
       "C": "Using electric smart meters"
     },
+    "options_vi": {
+      "A": "Ngăn chặn các cá nhân lái xe khi không có bằng lái (Preventing individuals from driving without a driver's license)",
+      "B": "Ngăn chặn các cá nhân sinh sản dựa trên một số dấu chỉ di truyền nhất định (Preventing individuals from reproducing due to certain genetic markers)",
+      "C": "Sử dụng công tơ điện thông minh (Using electric smart meters)"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Ngăn cản các cá nhân sinh sản dựa trên các dấu hiệu di truyền (eugenics kỹ thuật số) là một ví dụ cực đoan về việc vũ khí hóa AI (weaponizing AI), vi phạm nghiêm trọng quyền con người và các nguyên tắc đạo đức.",
-    "references": null
+    "explanation_vi": "**Ngăn chặn các cá nhân sinh sản dựa trên một số dấu chỉ di truyền nhất định** là ví dụ điển hình của việc vũ khí hóa AI chống lại quyền con người:\n- **Vũ khí hóa AI (Weaponizing AI):** Đề cập đến việc sử dụng công nghệ AI để thực thi các mục đích có hại, kiểm soát cực đoan hoặc tước đoạt quyền tự do cơ bản của con người. Việc dùng AI phân tích gen để ngăn chặn quyền sinh sản của cá nhân là một hình thức can thiệp vô đạo đức nghiêm trọng (thuyết ưu sinh cưỡng chế).\n- **Ngăn chặn lái xe không bằng lái:** Là một biện pháp quản lý an toàn công cộng và pháp luật cơ bản nhằm đảm bảo an toàn giao thông, không cấu thành việc vũ khí hóa AI.\n- **Sử dụng công tơ điện thông minh:** Là ứng dụng giám sát tiêu thụ năng lượng dân dụng bình thường, hoàn toàn trung tính về mặt đạo đức xã hội.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Ethics of Artificial Intelligence - UNESCO",
+        "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+      },
+      {
+        "title": "Responsible AI Principles and Ethics - Microsoft",
+        "url": "https://www.microsoft.com/en-us/ai/responsible-ai"
+      }
+    ]
   }
 ]

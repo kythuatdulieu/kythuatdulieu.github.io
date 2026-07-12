@@ -45,7 +45,7 @@ Barrier đóng vai trò chia tách nghiêm ngặt không gian thời gian của 
 - Tất cả records nằm **trước** Barrier $N$ thuộc về bản Snapshot $N$.
 - Tất cả records nằm **sau** Barrier $N$ thuộc về bản Snapshot $N+1$.
 
-### 1.2. Barrier Alignment (Căn chỉnh Rào Chắn]
+### 1.2. Barrier Alignment (Căn chỉnh Rào Chắn)
 
 Sự phức tạp bùng nổ khi một Operator (như `Window` hoặc `Join`) nhận dữ liệu từ nhiều luồng khác nhau (ví dụ: sau một thao tác `keyBy` dẫn đến Network Shuffle). Flink bắt buộc phải thực hiện **Barrier Alignment** để đảm bảo tính nhất quán.
 
@@ -181,7 +181,7 @@ Việc sử dụng tính năng **Alignment Timeout** [`execution.checkpointing.a
 
 ## Nguồn Tham Khảo (References)
 
-1. [Apache Flink Architecture: Checkpointing - Official Docs][https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/stateful-stream-processing/]
-2. [Distributed Snapshots: Determining Global States of Distributed Systems - K. Mani Chandy, Leslie Lamport (1985]][https://lamport.azurewebsites.net/pubs/chandy.pdf]
-3. [Unaligned Checkpoints in Apache Flink - FLIP-76][https://cwiki.apache.org/confluence/display/FLINK/FLIP-76%3A+Unaligned+Checkpoints]
-4. [Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau](https://www.oreilly.com/]
+1. [Apache Flink Architecture: Checkpointing - Official Docs](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/stateful-stream-processing/)
+2. [Distributed Snapshots: Determining Global States of Distributed Systems - K. Mani Chandy, Leslie Lamport (1985)](https://lamport.azurewebsites.net/pubs/chandy.pdf)
+3. [Unaligned Checkpoints in Apache Flink - FLIP-76](https://cwiki.apache.org/confluence/display/FLINK/FLIP-76%3A+Unaligned+Checkpoints)
+4. [Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau](https://www.oreilly.com/)

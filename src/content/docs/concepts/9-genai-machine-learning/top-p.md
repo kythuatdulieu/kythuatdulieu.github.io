@@ -33,7 +33,9 @@ flowchart TD
     C -->|"Top-p (Nucleus)"| E["Cắt động theo Xác suất tích lũy (Dynamic Truncation)"]
     D --> F("Lấy mẫu ngẫu nhiên (Multinomial Sampling)")
     E --> F
-    F --> G("Trả về Next Token ID")
+    F --> G("Trả về Next Token ID")
+
+
 ```
 
 Các phương pháp đời đầu bộc lộ nhiều điểm yếu chí mạng ở quy mô sản xuất (Production):
@@ -87,7 +89,7 @@ def apply_top_p_sampling(logits: torch.Tensor, top_p: float = 0.9, filter_value:
     indices_to_remove = sorted_indices_to_remove.scatter(1, sorted_indices, sorted_indices_to_remove)
     logits[indices_to_remove] = filter_value # Ép Logits thành -Inf
     
-    # 6. Chuẩn hóa lại (Renormalize thông qua Softmax] và Sample
+    # 6. Chuẩn hóa lại (Renormalize thông qua Softmax) và Sample
     filtered_probs = F.softmax(logits, dim=-1)
     next_token = torch.multinomial(filtered_probs, num_samples=1)
     
@@ -167,7 +169,7 @@ Việc này cắt bỏ được hoàn toàn bước Sorting đắt đỏ, giúp 
 
 ## 5. Nguồn Tham Khảo (References)
 
-*   [The Curious Case of Neural Text Degeneration (Holtzman et al., 2019]][https://arxiv.org/abs/1904.09751] - Whitepaper kinh điển đề xuất phương pháp Nucleus Sampling.
-*   [Hugging Face - How to generate text: using different decoding methods][https://huggingface.co/blog/how-to-generate] - Bài phân tích trực quan về Sampling Pipeline.
-*   [vLLM Documentation: Generation Parameters][https://docs.vllm.ai/en/latest/dev/sampling_params.html] - Chi tiết kỹ thuật về các Sampling Kernels và cấu hình tối ưu độ trễ trong môi trường Production.
-*   [Attention Is All You Need (Vaswani et al., 2017]](https://arxiv.org/abs/1706.03762) - Kiến trúc cốt lõi sinh ra vector Logits trong các mô hình Transformer.
+*   [The Curious Case of Neural Text Degeneration (Holtzman et al., 2019)](https://arxiv.org/abs/1904.09751) - Whitepaper kinh điển đề xuất phương pháp Nucleus Sampling.
+*   [Hugging Face - How to generate text: using different decoding methods](https://huggingface.co/blog/how-to-generate) - Bài phân tích trực quan về Sampling Pipeline.
+*   [vLLM Documentation: Generation Parameters](https://docs.vllm.ai/en/latest/dev/sampling_params.html) - Chi tiết kỹ thuật về các Sampling Kernels và cấu hình tối ưu độ trễ trong môi trường Production.
+*   [Attention Is All You Need (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762) - Kiến trúc cốt lõi sinh ra vector Logits trong các mô hình Transformer.

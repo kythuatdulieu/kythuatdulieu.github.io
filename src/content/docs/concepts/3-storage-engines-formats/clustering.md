@@ -132,7 +132,7 @@ Các hệ thống như BigQuery, Snowflake giải quyết bằng tính năng **A
 ---
 
 ## Nguồn Tham Khảo [References]
-1. **Databricks:** [Liquid Clustering for Delta Lake][https://docs.databricks.com/en/delta/clustering.html]
-2. **Snowflake:** [Understanding Micro-partitions and Data Clustering][https://docs.snowflake.com/en/user-guide/tables-micro-partitions]
-3. **Delta Lake:** [Z-Ordering Multi-Dimensional Clustering](https://docs.delta.io/latest/optimizations-oss.html#z-ordering-multi-dimensional-clustering]
+1. **Databricks:** [Liquid Clustering for Delta Lake](https://docs.databricks.com/en/delta/clustering.html)
+2. **Snowflake:** [Understanding Micro-partitions and Data Clustering](https://docs.snowflake.com/en/user-guide/tables-micro-partitions)
+3. **Delta Lake:** [Z-Ordering Multi-Dimensional Clustering](https://docs.delta.io/latest/optimizations-oss.html#z-ordering-multi-dimensional-clustering)
 4. **Sách Kinh Điển:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Chương 3: Storage and Retrieval.

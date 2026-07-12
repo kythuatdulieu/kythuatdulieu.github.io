@@ -49,7 +49,11 @@ graph TD
     Combine --> C
     C -->|5. Advantage Estimation| PPO_Loss["Hàm Loss PPO"]
     PPO_Loss -->|6. Backward Pass| A
-    PPO_Loss -->|6. Backward Pass| C
+    PPO_Loss -->|6. Backward Pass| C
+
+
+
+
 ```
 
 *Bài toán Toán học về FinOps:* Nếu bạn Train một Model Llama-3 8B, bản thân trọng số (fp16) đã chiếm khoảng 16GB.
@@ -202,7 +206,7 @@ Các Framework hiện đại cấp Enterprise (như **OpenRLHF**) giải quyết
 
 ## Nguồn Tham Khảo (References)
 
-*   **InstructGPT Architecture:** [Training language models to follow instructions with human feedback (Ouyang et al., 2022]][https://arxiv.org/abs/2203.02155] - Whitepaper gốc định hình kiến trúc RLHF.
-*   **Direct Preference Optimization:** [DPO: Your Language Model is Secretly a Reward Model (Rafailov et al., 2023]][https://arxiv.org/abs/2305.18290] - Đột phá loại bỏ Pipeline PPO cồng kềnh.
-*   **Hệ thống Phân tán cho RLHF:** [DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales][https://arxiv.org/abs/2308.01320]
-*   **OpenRLHF Architecture (Ray + vLLM):** [OpenRLHF: An Easy-to-use, Scalable and High-performance RLHF Framework](https://github.com/OpenRLHF/OpenRLHF]
+*   **InstructGPT Architecture:** [Training language models to follow instructions with human feedback (Ouyang et al., 2022)](https://arxiv.org/abs/2203.02155) - Whitepaper gốc định hình kiến trúc RLHF.
+*   **Direct Preference Optimization:** [DPO: Your Language Model is Secretly a Reward Model (Rafailov et al., 2023)](https://arxiv.org/abs/2305.18290) - Đột phá loại bỏ Pipeline PPO cồng kềnh.
+*   **Hệ thống Phân tán cho RLHF:** [DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales](https://arxiv.org/abs/2308.01320)
+*   **OpenRLHF Architecture (Ray + vLLM):** [OpenRLHF: An Easy-to-use, Scalable and High-performance RLHF Framework](https://github.com/OpenRLHF/OpenRLHF)

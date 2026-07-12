@@ -1,6 +1,13 @@
 ---
 title: "Design Pattern: Rate Limiting cho Data APIs - System Design Chuyên Sâu"
 description: "Hướng dẫn toàn diện và thiết kế kiến trúc hệ thống Rate Limiting cho Data APIs, từ thuật toán cơ bản đến triển khai phân tán quy mô lớn với Redis, Lua Script và các mô hình đa tầng."
+tags: ["rate", "limiting", "data", "apis"]
+readingTime: "16 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Design Pattern: Rate Limiting cho Data APIs - System Design Chuyên Sâu"
+metaDescription: "Hướng dẫn toàn diện và thiết kế kiến trúc hệ thống Rate Limiting cho Data APIs, từ thuật toán cơ bản đến triển khai phân tán quy mô lớn với Redis, Lua Scri"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

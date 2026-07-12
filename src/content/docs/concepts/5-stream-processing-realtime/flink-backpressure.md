@@ -82,13 +82,15 @@ Trong cơ chế Checkpoint tiêu chuẩn (Aligned Checkpoint), các Checkpoint B
 graph TD
     subgraph Aligned_Checkpoint ["Aligned Checkpoint (Bị Block)"]
         direction LR
-        A1["Data 1"] --> B1["Data 2"] --> C1["(Barrier 1)"] --> D1["Data 3"]
+        A1["Data 1"] --> B1["Data 2"] --> C1["(Barrier 1)"] --> D1["Data 3"]
+
     end
     
     subgraph Unaligned_Checkpoint ["Unaligned Checkpoint (Vượt lên)"]
         direction LR
         C2["(Barrier 1)"] -.->|"Overtakes Data"| A2["Data 1"]
-        A2 --> B2["Data 2"] --> D2["Data 3"]
+        A2 --> B2["Data 2"] --> D2["Data 3"]
+
     end
 ```
 
@@ -193,8 +195,8 @@ env.java.opts.taskmanager: "-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:Initiating
 Backpressure trong Flink thể hiện sự chín muồi của một hệ thống xử lý phân tán: Khả năng tự thích ứng và bảo vệ bộ nhớ khỏi sự cố tràn RAM [OOM]. Bằng việc nắm vững cơ chế tiến hóa từ TCP Flow Control sang Credit-Based, kết hợp với các kỹ thuật vật lý tân tiến như Unaligned Checkpoints và Buffer Debloating, Staff Data Engineer hoàn toàn có thể thiết kế các cụm Flink ổn định với độ trễ xử lý siêu thấp bất chấp quy mô traffic đột biến.
 
 ## Nguồn Tham Khảo (References)
-*   [A Deep-Dive into Flink's Network Stack (Ververica / Flink Forward]][https://flink-forward.org/]
-*   [Handling Backpressure in Apache Flink (Ververica Engineering Blog]][https://www.ververica.com/blog/how-flink-handles-backpressure]
+*   [A Deep-Dive into Flink's Network Stack (Ververica / Flink Forward)](https://flink-forward.org/)
+*   [Handling Backpressure in Apache Flink (Ververica Engineering Blog)](https://www.ververica.com/blog/how-flink-handles-backpressure)
 *   **Sách Tham Khảo:** *Streaming Systems* - Tyler Akidau (Chapter: Flow Control and Checkpointing).
-*   [Apache Flink Official Docs: Checkpointing under Backpressure][https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpointing_under_backpressure/]
-*   [Apache Flink Official Docs: Buffer Debloating](https://nightlies.apache.org/flink/flink-docs-stable/docs/deployment/memory/network_memory/]
+*   [Apache Flink Official Docs: Checkpointing under Backpressure](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpointing_under_backpressure/)
+*   [Apache Flink Official Docs: Buffer Debloating](https://nightlies.apache.org/flink/flink-docs-stable/docs/deployment/memory/network_memory/)

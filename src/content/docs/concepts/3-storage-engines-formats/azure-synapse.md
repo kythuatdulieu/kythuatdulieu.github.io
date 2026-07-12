@@ -55,7 +55,7 @@ graph TD
     end
 ```
 
-*   **Control Node:** Não bộ của hệ thống. Chịu trách nhiệm nhận câu T-SQL, biên dịch qua Cost-Based Optimizer (CBO] thành Kế hoạch thực thi phân tán (Distributed Execution Plan) và điều phối công việc xuống các Compute Nodes.
+*   **Control Node:** Não bộ của hệ thống. Chịu trách nhiệm nhận câu T-SQL, biên dịch qua Cost-Based Optimizer (CBO) thành Kế hoạch thực thi phân tán (Distributed Execution Plan) và điều phối công việc xuống các Compute Nodes.
 *   **Compute Nodes:** Các công nhân xử lý dữ liệu. Số lượng Node phụ thuộc vào mức DWU bạn mua.
 *   **Data Movement Service (DMS - Nút thắt cổ chai):** DMS là dịch vụ điều phối việc di chuyển dữ liệu (Network Shuffle) giữa các Compute Nodes khi thực hiện các phép JOIN/GROUP BY phức tạp không nằm trên cùng một Node. Quá nhiều DMS Operations sẽ làm hệ thống chậm như rùa bò.
 *   **60 Distributions (Phân vùng vật lý cố định):** Bất kể bạn cấp phát bao nhiêu Compute Node, dữ liệu trong Synapse Dedicated Pool **luôn luôn được chia thành 60 Logical Distributions** (Vùng phân bổ). Các Compute Node sẽ chia nhau quản lý 60 vùng này (Ví dụ: Có 6 Compute Nodes thì mỗi Node quản lý 10 Distributions).
@@ -149,7 +149,7 @@ Việc am hiểu sự đánh đổi giữa Network Shuffle DMS, Data Skew và Te
 ---
 
 ## Nguồn Tham Khảo
-1. [Azure Synapse Analytics Dedicated SQL pool (MPP Architecture]][https://learn.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/massively-parallel-processing-mpp-architecture]
-2. [Polaris: The Distributed SQL Engine in Azure Synapse (VLDB Paper]][https://vldb.org/pvldb/vol13/p3204-saborit.pdf] - Chi tiết kỹ thuật về kiến trúc State/Compute Separation và Cell Abstraction.
-3. [Troubleshooting TempDB errors in Dedicated SQL Pool][https://learn.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-monitor#monitor-tempdb]
-4. [Azure Synapse Link for HTAP Analytics](https://learn.microsoft.com/en-us/azure/cosmos-db/synapse-link]
+1. [Azure Synapse Analytics Dedicated SQL pool (MPP Architecture)](https://learn.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/massively-parallel-processing-mpp-architecture)
+2. [Polaris: The Distributed SQL Engine in Azure Synapse (VLDB Paper)](https://vldb.org/pvldb/vol13/p3204-saborit.pdf) - Chi tiết kỹ thuật về kiến trúc State/Compute Separation và Cell Abstraction.
+3. [Troubleshooting TempDB errors in Dedicated SQL Pool](https://learn.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-monitor#monitor-tempdb)
+4. [Azure Synapse Link for HTAP Analytics](https://learn.microsoft.com/en-us/azure/cosmos-db/synapse-link)

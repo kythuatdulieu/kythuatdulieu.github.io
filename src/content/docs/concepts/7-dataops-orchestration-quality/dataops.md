@@ -42,7 +42,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      - name: Create PR Schema (Zero-copy clone]
+      - name: Create PR Schema (Zero-copy clone)
         run: |
           snowsql -q "CREATE SCHEMA pr_${{ github.event.pull_request.number }} CLONE prod_schema;"
           
@@ -130,9 +130,9 @@ Netflix, Uber và PayPal đã áp dụng **Data Mesh**, trong đó trách nhiệ
 ---
 
 ## Nguồn Tham Khảo (References)
-* [DataOps Manifesto][https://dataopsmanifesto.org/]
-* [Netflix Tech Blog: Data Mesh Architecture & Data Quality][https://netflixtechblog.com/]
-* [Designing Data-Intensive Applications - Martin Kleppmann][https://dataintensive.net/]
-* [The DataOps Cookbook - DataKitchen][https://datakitchen.io/dataops-cookbook/]
-* [Dagster: Software-Defined Assets][https://dagster.io/blog/software-defined-assets]
-* [dbt Labs: Defer & State Methodologies](https://docs.getdbt.com/reference/node-selection/defer]
+* [DataOps Manifesto](https://dataopsmanifesto.org/)
+* [Netflix Tech Blog: Data Mesh Architecture & Data Quality](https://netflixtechblog.com/)
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [The DataOps Cookbook - DataKitchen](https://datakitchen.io/dataops-cookbook/)
+* [Dagster: Software-Defined Assets](https://dagster.io/blog/software-defined-assets)
+* [dbt Labs: Defer & State Methodologies](https://docs.getdbt.com/reference/node-selection/defer)

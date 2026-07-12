@@ -910,6 +910,19 @@
       "bullets": [],
       "url": "/concepts/3-storage-engines-formats/partitioning/"
     },
+    "Row Based Storage": {
+      "title": "Row-based Storage: OLTP, B-Tree, LSM-Tree và Write-Ahead Logging",
+      "category": "Khái niệm",
+      "definition": "",
+      "level": "Junior",
+      "domains": [
+        "DE",
+        "Platform"
+      ],
+      "aliases": [],
+      "bullets": [],
+      "url": "/concepts/3-storage-engines-formats/row-based-storage/"
+    },
     "Schema Evolution": {
       "title": "Schema Evolution - Quản lý cấu trúc dữ liệu Data Lakehouse",
       "category": "Khái niệm",
@@ -2620,19 +2633,6 @@
       "aliases": [],
       "bullets": [],
       "url": "/concepts/9-genai-machine-learning/rlhf/"
-    },
-    "Row Based Storage": {
-      "title": "Row-based Storage: OLTP, B-Tree, LSM-Tree và Write-Ahead Logging",
-      "category": "Khái niệm",
-      "definition": "",
-      "level": "Junior",
-      "domains": [
-        "DE",
-        "Platform"
-      ],
-      "aliases": [],
-      "bullets": [],
-      "url": "/concepts/9-genai-machine-learning/row-based-storage/"
     },
     "Semantic Search": {
       "title": "Tìm kiếm ngữ nghĩa (Semantic Search) & Kiến trúc Vector Database",

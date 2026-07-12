@@ -143,7 +143,7 @@ Khi nào nên dừng Few-shot và chuyển sang Supervised Fine-Tuning (SFT)? K�
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Prompt Caching with Anthropic Claude][https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching]
-* [LangChain: Dynamic Few-Shot using Example Selectors][https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/]
-* [vLLM KV Cache Architecture and PagedAttention][https://blog.vllm.ai/2023/06/20/vllm.html]
-* [Language Models are Few-Shot Learners (GPT-3 Whitepaper]](https://arxiv.org/abs/2005.14165)
+* [Prompt Caching with Anthropic Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
+* [LangChain: Dynamic Few-Shot using Example Selectors](https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/)
+* [vLLM KV Cache Architecture and PagedAttention](https://blog.vllm.ai/2023/06/20/vllm.html)
+* [Language Models are Few-Shot Learners (GPT-3 Whitepaper)](https://arxiv.org/abs/2005.14165)

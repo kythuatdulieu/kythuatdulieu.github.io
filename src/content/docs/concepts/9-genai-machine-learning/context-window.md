@@ -124,8 +124,8 @@ resource "aws_bedrock_provisioned_model_throughput" "anthropic_claude_long_conte
 ---
 
 ## Nguồn Tham Khảo [References]
-*   [vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention][https://vllm.ai/]
-*   [Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023]][https://arxiv.org/abs/2307.03172]
-*   [Needle In A Haystack: Pressure Testing LLMs][https://github.com/gkamradt/LLMTest_NeedleInAHaystack]
-*   [RoPE: RoFormer: Enhanced Transformer with Rotary Position Embedding][https://arxiv.org/abs/2104.09864]
-*   [Mastering LLM Memory: The Key-Value Cache (Databricks Engineering Blog]](https://www.databricks.com/blog/mastering-llm-memory-key-value-cache)
+*   [vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention](https://vllm.ai/)
+*   [Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)](https://arxiv.org/abs/2307.03172)
+*   [Needle In A Haystack: Pressure Testing LLMs](https://github.com/gkamradt/LLMTest_NeedleInAHaystack)
+*   [RoPE: RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
+*   [Mastering LLM Memory: The Key-Value Cache (Databricks Engineering Blog)](https://www.databricks.com/blog/mastering-llm-memory-key-value-cache)

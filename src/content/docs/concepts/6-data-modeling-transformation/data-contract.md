@@ -205,5 +205,5 @@ Trong kỷ trúc Data Mesh hiện đại (như PayPal, Monzo hay Netflix đang �
 1. **Netflix Tech Blog:** *Data Contracts in Ads Engineering* - Giải thích cách Netflix sử dụng schema registry để cô lập hệ thống ad serving với event processing.
 2. **PayPal Engineering:** *Data Mesh Implementation* - Các bài toán đánh đổi giữa Domain Autonomy (Tự trị) và Interoperability (Khả năng tương tác) bằng Data Quanta.
 3. **Databricks Blog:** *Data Contracts for AI Reliability* - Xây dựng Declarative pipelines và chặn đứng Schema Drift bằng `datacontract.yaml`.
-4. **Open Data Contract Standard (ODCS):** Chuẩn hóa file YAML cho Data Contract tại [GitHub datacontract](https://github.com/datacontract].
+4. **Open Data Contract Standard (ODCS):** Chuẩn hóa file YAML cho Data Contract tại [GitHub datacontract](https://github.com/datacontract).
 5. **Designing Data-Intensive Applications** (Martin Kleppmann) - *Chương 4: Encoding and Evolution* (Sự tiến hóa và tương thích ngược của Data Schema).

@@ -7,6 +7,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Data Modeling Interview - Câu hỏi phỏng vấn thiết kế lược đồ dữ liệu"
 metaDescription: "Cách giải bài toán thiết kế mô hình dữ liệu trong phỏng vấn Data Engineer: quy trình 4 bước của Kimball, chọn grain, Star Schema, SCD và các lỗi thiết kế thường gặp."
+domains: ["DE"]
 ---
 
 Vòng phỏng vấn Data Modeling có một đặc điểm khác hẳn vòng SQL: không có đáp án đúng tuyệt đối. Người phỏng vấn đưa ra một mô hình kinh doanh quen thuộc — ứng dụng gọi xe, sàn thương mại điện tử, nền tảng đặt phòng — rồi yêu cầu bạn thiết kế lược đồ [Data Warehouse](/concepts/1-distributed-systems-architecture/data-warehouse) phục vụ phân tích. Thứ được chấm không phải bản vẽ cuối cùng, mà là chuỗi quyết định của bạn: chọn grain nào, denormalize đến đâu, lưu lịch sử ra sao, và bạn có nói được *tại sao* cho từng lựa chọn hay không.

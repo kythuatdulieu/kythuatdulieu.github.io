@@ -45,7 +45,9 @@ graph TD
     subgraph "Backfill Environment (Offline / Transient)"
         S3["S3 / GCS Cold Storage"] -->|"Batch Read (High Throughput)"| F2["Transient Backfill Cluster"]
         F2 -->|Static Partition Overwrite| DL
-    end
+    end
+
+
     
     DL -.->|Metadata Sync| C["Data Catalog (Glue/Hive)"]
 ```
@@ -166,7 +168,7 @@ Backfill là ngọn nguồn của những vụ sập hệ thống kinh điển n
 
 ## 5. Nguồn Tham Khảo (References)
 
-1. [Uber Engineering: Data Lake Processing with Apache Hudi][https://www.uber.com/en-VN/blog/hudi-meetup-2021/]
-2. [Netflix TechBlog: Maestro - Netflix’s Workflow Orchestrator][https://netflixtechblog.com/maestro-netflixs-workflow-orchestrator-15104dfc9497]
-3. [Databricks: Incremental Data Processing with Auto Loader](https://www.databricks.com/blog/2020/02/24/introducing-databricks-ingest-easy-data-ingestion-into-delta-lake.html]
+1. [Uber Engineering: Data Lake Processing with Apache Hudi](https://www.uber.com/en-VN/blog/hudi-meetup-2021/)
+2. [Netflix TechBlog: Maestro - Netflix’s Workflow Orchestrator](https://netflixtechblog.com/maestro-netflixs-workflow-orchestrator-15104dfc9497)
+3. [Databricks: Incremental Data Processing with Auto Loader](https://www.databricks.com/blog/2020/02/24/introducing-databricks-ingest-easy-data-ingestion-into-delta-lake.html)
 4. *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing - Idempotence & State Reconciliation).

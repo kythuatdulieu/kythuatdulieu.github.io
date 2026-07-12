@@ -131,7 +131,7 @@ print[result.technologies]
 
 ---
 
-## 4. Rủi ro Vận hành (Operational Risks] & Khắc phục
+## 4. Rủi ro Vận hành (Operational Risks) & Khắc phục
 
 Khi đưa LLM vào Data Pipeline (Ví dụ: Chấm điểm 1 triệu Review của người dùng mỗi đêm), những sự cố phân tán sau chắc chắn sẽ xảy ra:
 
@@ -160,8 +160,8 @@ Trong các hệ thống Agentic AI (AI tự động suy luận nhiều bước R
 ---
 
 ## 6. Nguồn Tham Khảo (References)
-1. **Google Research:** [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (Arxiv]][https://arxiv.org/abs/2201.11903]
-2. **Princeton University:** [ReAct: Synergizing Reasoning and Acting in Language Models (Arxiv]][https://arxiv.org/abs/2210.03629]
-3. **Stanford NLP:** [DSPy: Compiling Declarative Language Model Calls (Arxiv]][https://arxiv.org/abs/2310.03714]
-4. **OpenAI:** [Structured Outputs Architecture][https://platform.openai.com/docs/guides/structured-outputs]
-5. **Anthropic:** [Prompt Caching Mechanism](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching]
+1. **Google Research:** [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (Arxiv)](https://arxiv.org/abs/2201.11903)
+2. **Princeton University:** [ReAct: Synergizing Reasoning and Acting in Language Models (Arxiv)](https://arxiv.org/abs/2210.03629)
+3. **Stanford NLP:** [DSPy: Compiling Declarative Language Model Calls (Arxiv)](https://arxiv.org/abs/2310.03714)
+4. **OpenAI:** [Structured Outputs Architecture](https://platform.openai.com/docs/guides/structured-outputs)
+5. **Anthropic:** [Prompt Caching Mechanism](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)

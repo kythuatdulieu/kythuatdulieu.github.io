@@ -1,6 +1,13 @@
 ---
 title: "Case Study: Kiến trúc Log Analytics tại Uber"
 description: "Phân tích chuyên sâu kiến trúc Log Analytics tại Uber: Hành trình tiến hóa từ Hadoop chậm chạp đến hệ sinh thái Real-time OLAP xử lý PetaByte dữ liệu với Apache Kafka, Flink và Apache Pinot."
+tags: ["uber", "log", "analytics", "case", "study"]
+readingTime: "20 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Case Study: Kiến trúc Log Analytics tại Uber"
+metaDescription: "Phân tích chuyên sâu kiến trúc Log Analytics tại Uber: Hành trình tiến hóa từ Hadoop chậm chạp đến hệ sinh thái Real-time OLAP xử lý PetaByte dữ liệu với A"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

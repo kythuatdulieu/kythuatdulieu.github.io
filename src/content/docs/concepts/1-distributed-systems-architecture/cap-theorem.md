@@ -137,6 +137,6 @@ flowchart TD
 ---
 
 ## Nguồn Tham Khảo [References]
-- [Towards Robust Distributed Systems - Eric Brewer (2000]][https://people.eecs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf]
-- [Problems with CAP, and Yahoo’s little known NoSQL system (PACELC] - Daniel Abadi (2010)][http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html]
-- [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/] (Chương 9: Consistency and Consensus)
+- [Towards Robust Distributed Systems - Eric Brewer (2000)](https://people.eecs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf)
+- [Problems with CAP, and Yahoo’s little known NoSQL system (PACELC) - Daniel Abadi (2010)](http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html)
+- [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/) (Chương 9: Consistency and Consensus)

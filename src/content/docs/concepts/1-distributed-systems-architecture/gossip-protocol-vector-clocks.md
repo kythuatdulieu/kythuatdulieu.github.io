@@ -37,7 +37,7 @@ Khi hệ thống phân tán bị đứt mạng (Network Partition), hai khu vự
 
 1.  **Causality (Tính kế thừa tuyệt đối):** Nếu phiên bản $V_1$ có mọi bộ đếm (Counters) tại mọi Node $\ge V_2$, và có ít nhất 1 Node có bộ đếm lớn hơn hẳn, thì chứng tỏ $V_1$ sinh ra sau và kế thừa $V_2$. Hệ thống âm thầm ghi đè $V_1$ lên $V_2$ một cách an toàn.
 2.  **Concurrent (Xung đột song song):** Giả sử $V_1 = [NodeA:2, NodeB:1]$, và $V_2 = [NodeA:1, NodeB:2]$. 
-    *   Node A có biến động lớn hơn trong $V_1$ (2 > 1].
+    *   Node A có biến động lớn hơn trong $V_1$ (2 > 1).
     *   Node B lại có biến động lớn hơn trong $V_2$ (2 > 1).
     *   $\rightarrow$ Hệ thống cơ sở dữ liệu KHÔNG dám tự ý xóa bên nào cả. Nó giữ lại CẢ HAI bản ghi này, sinh ra trạng thái **Siblings** (Anh em song sinh). Sau đó, nó trả cả 2 bản ghi về cho Ứng dụng (Application Layer - Client) và bắt Client tự viết Code để trộn (Merge) chúng lại (Ví dụ: Lấy Union 2 giỏ hàng).
 
@@ -93,8 +93,8 @@ Gossip thuần túy tốn cực kỳ nhiều Băng Thông (Bandwidth) do trao đ
 ---
 
 ## 4. Nguồn Tham Khảo (References)
-1. **Bài báo nền tảng của Amazon:** [Dynamo: Amazon's Highly Available Key-value Store (SOSP 2007]][https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf]
-2. **Nguồn gốc Logical Clocks:** [Time, Clocks, and the Ordering of Events in a Distributed System - Leslie Lamport (1978]][https://lamport.azurewebsites.net/pubs/time-clocks.pdf]
-3. **Thuật toán SWIM:** [SWIM Protocol Paper - Cornell University][https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf]
-4. **Apache Cassandra Documentation:** [Cassandra Architecture: Gossip Protocol & LWW][https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#gossip]
-5. **Wikipedia:** [Vector clock][https://en.wikipedia.org/wiki/Vector_clock] và [Gossip protocol](https://en.wikipedia.org/wiki/Gossip_protocol]
+1. **Bài báo nền tảng của Amazon:** [Dynamo: Amazon's Highly Available Key-value Store (SOSP 2007)](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf)
+2. **Nguồn gốc Logical Clocks:** [Time, Clocks, and the Ordering of Events in a Distributed System - Leslie Lamport (1978)](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
+3. **Thuật toán SWIM:** [SWIM Protocol Paper - Cornell University](https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf)
+4. **Apache Cassandra Documentation:** [Cassandra Architecture: Gossip Protocol & LWW](https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#gossip)
+5. **Wikipedia:** [Vector clock](https://en.wikipedia.org/wiki/Vector_clock) và [Gossip protocol](https://en.wikipedia.org/wiki/Gossip_protocol)

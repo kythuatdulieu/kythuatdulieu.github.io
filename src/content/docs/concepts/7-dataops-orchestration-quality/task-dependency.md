@@ -146,7 +146,7 @@ Consumer không dùng Cron Schedule, mà dùng Dataset làm mồi kích hoạt.
 # DAG B (Consumer)
 with DAG(
     dag_id="transform_sales",
-    schedule=[sales_dataset], # Kích hoạt ngay khi dataset thay đổi (Just-In-Time]
+    schedule=[sales_dataset], # Kích hoạt ngay khi dataset thay đổi (Just-In-Time)
 ):
     ...
 ```
@@ -161,7 +161,7 @@ Mặc dù là chuẩn mực của Data Mesh (các team hoạt động độc l�
 ---
 
 ## Nguồn Tham Khảo
-* [Netflix TechBlog: Maestro - Data/ML Workflow Orchestrator at Netflix][https://netflixtechblog.com/maestro-netflixs-data-workflow-orchestrator-9ddb8e5140e6]
-* [Apache Airflow Docs: Datasets and Data-aware Scheduling][https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html]
-* [Apache Airflow Docs: TaskFlow API][https://airflow.apache.org/docs/apache-airflow/stable/tutorial/taskflow.html]
-* [Dagster: Software-Defined Assets (SDA]](https://dagster.io/blog/software-defined-assets)
+* [Netflix TechBlog: Maestro - Data/ML Workflow Orchestrator at Netflix](https://netflixtechblog.com/maestro-netflixs-data-workflow-orchestrator-9ddb8e5140e6)
+* [Apache Airflow Docs: Datasets and Data-aware Scheduling](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html)
+* [Apache Airflow Docs: TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial/taskflow.html)
+* [Dagster: Software-Defined Assets (SDA)](https://dagster.io/blog/software-defined-assets)

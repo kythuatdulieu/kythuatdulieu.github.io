@@ -13,10 +13,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `REGR_R2` trong SQL và Snowflake được sử dụng để tính hệ số xác định (R-squared / Coefficient of Determination) của mô hình hồi quy tuyến tính giữa hai cột số.",
+    "explanation_vi": "Hàm `REGR_R2` trong Snowflake tính toán hệ số xác định (thường ký hiệu là $R^2$ hoặc R-squared) cho mô hình hồi quy tuyến tính giữa biến phụ thuộc và biến độc lập.\n\n* **REGR_R2**: Trả về hệ số xác định ($R^2$) cho các cặp số không rỗng trong hai cột. Đây là chỉ số đo lường tỷ lệ biến thiên của biến phụ thuộc có thể giải thích được bằng biến độc lập.\n* **REGR_SLOPE**: Trả về hệ số góc (slope) của đường hồi quy tuyến tính.\n* **REGR_INTERCEPT**: Trả về điểm cắt trục tung (y-intercept) của đường hồi quy tuyến tính.\n* **REGR_SXY**: Trả về tổng các tích chéo của sai số lượng liên quan đến hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/regr_r2"
-    ]
+      {
+        "title": "REGR_R2 — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/regr_r2"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu (Data Scientist) muốn lấy hệ số xác định (coefficient of determination) cho hai cột trong một bảng. Hàm nào sau đây có thể được sử dụng cho việc đó?",
+    "options_vi": {
+      "A": "REGR_INTERCEPT",
+      "B": "REGR_SLOPE",
+      "C": "REGR_R2",
+      "D": "REGR_SXY"
+    }
   },
   {
     "id": 2,
@@ -32,10 +42,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để hạn chế quyền truy cập các hàm LLM của Cortex, cần thu hồi vai trò cơ sở dữ liệu (database role) `SNOWFLAKE.CORTEX_USER` khỏi vai trò `PUBLIC` bằng câu lệnh `REVOKE DATABASE ROLE`.",
+    "explanation_vi": "Quyền sử dụng các hàm Snowflake Cortex LLM được cấp thông qua vai trò cơ sở dữ liệu (database role) có tên là `SNOWFLAKE.CORTEX_USER`. Theo mặc định, vai trò này được cấp cho vai trò `PUBLIC` trong Snowflake.\n\n* **REVOKE DATABASE ROLE ... FROM ROLE PUBLIC (D)**: Đây là câu lệnh chính xác để thu hồi vai trò cơ sở dữ liệu `SNOWFLAKE.CORTEX_USER` khỏi vai trò `PUBLIC`, qua đó hạn chế quyền truy cập của người dùng thông thường đối với các hàm LLM.\n* **REVOKE ROLE (A)**: Không đúng vì `SNOWFLAKE.CORTEX_USER` là vai trò cơ sở dữ liệu (Database Role) chứ không phải vai trò tài khoản (Account Role). Cú pháp thu hồi vai trò cơ sở dữ liệu yêu cầu sử dụng từ khóa `DATABASE ROLE`.\n* **DROP DATABASE ROLE (B)** và **DROP ROLE (C)**: Không thể sử dụng vì đây là các vai trò hệ thống do Snowflake quản lý và sở hữu, người dùng không có quyền xóa chúng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex AI Privileges — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu phát hiện lượng sử dụng các hàm Snowflake Cortex LLM rất cao. Câu lệnh nào sau đây sẽ hạn chế quyền truy cập của người dùng?",
+    "options_vi": {
+      "A": "REVOKE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;",
+      "B": "DROP DATABASE ROLE SNOWFLAKE.CORTEX_USER;",
+      "C": "DROP ROLE SNOWFLAKE.CORTEX_USER;",
+      "D": "REVOKE DATABASE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;"
+    }
   },
   {
     "id": 3,
@@ -51,10 +71,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm SQL tích hợp sẵn `SNOWFLAKE.CORTEX.SUMMARIZE` cung cấp giải pháp có ít chi phí vận hành nhất (least operational overhead) để tóm tắt văn bản đánh giá của khách hàng mà không cần cài đặt container hay viết prompt phức tạp.",
+    "explanation_vi": "Để thực hiện tóm tắt văn bản với chi phí vận hành thấp nhất, sử dụng hàm được xây dựng sẵn `snowflake.cortex.summarize` là phương án tối ưu nhất.\n\n* **snowflake.cortex.summarize (A)**: Đây là một hàm SQL chuyên dụng, được quản lý hoàn toàn (fully managed) bởi Snowflake để tóm tắt văn bản mà không yêu cầu thiết lập cơ sở hạ tầng hay viết prompt phức tạp.\n* **snowflake.cortex.embed (B)**: Được dùng để tạo vector nhúng (embeddings) cho văn bản chứ không phải để tóm tắt.\n* **snowflake.cortex.complete (C)**: Có thể tóm tắt được bằng cách sử dụng mô hình LLM lớn, nhưng yêu cầu viết prompt tùy chỉnh và có chi phí xử lý và thiết kế cao hơn so với hàm chuyên dụng `summarize`.\n* **Snowpark Container Services (D)**: Yêu cầu tự triển khai và quản lý mô hình (như llama3.1-405b) trên container của riêng bạn, tốn kém rất nhiều tài nguyên và công sức vận hành.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/summarize-snowflake-cortex"
-    ]
+      {
+        "title": "SUMMARIZE (Snowflake Cortex) — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/summarize-snowflake-cortex"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu được giao nhiệm vụ thu thập bản tóm tắt của từng đánh giá từ khách hàng. Dữ liệu được lưu trữ trong một bảng Snowflake ở cột có tên là reviews. Họ nên thực hiện việc này như thế nào với chi phí vận hành ÍT NHẤT (LEAST operational overhead)?",
+    "options_vi": {
+      "A": "Sử dụng hàm SQL snowflake.cortex.summarize('reviews') để tóm tắt bằng cách dùng mô hình tóm tắt tích hợp sẵn.",
+      "B": "Sử dụng hàm SQL snowflake.cortex.embed('e5-base-v2', 'reviews') để tóm tắt bằng mô hình nhúng văn bản tích hợp sẵn.",
+      "C": "Sử dụng lệnh gọi hàm SQL snowflake.cortex.complete('llama3.1-405b', 'reviews') để tóm tắt bằng mô hình llama3.1-405b.",
+      "D": "Sử dụng Snowpark Container Services để triển khai mô hình llama3.1-405b từ Hugging Face Hub và gửi cột 'text_data' đến API của mô hình."
+    }
   },
   {
     "id": 4,
@@ -71,10 +101,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để giải quyết vấn đề quá khớp (overfitting) của mạng nơ-ron, hai kỹ thuật phổ biến được sử dụng là: áp dụng phương pháp chuẩn hóa (Regularization - A) để giảm độ phức tạp của trọng số, và triển khai dừng sớm (Early stopping - D) để ngừng huấn luyện khi hiệu suất trên tập validation bắt đầu giảm.",
+    "explanation_vi": "Quá khớp (Overfitting) xảy ra khi mô hình học quá kỹ các chi tiết và nhiễu trong tập dữ liệu huấn luyện, khiến hiệu suất dự báo giảm sút trên dữ liệu kiểm thử mới.\n\n* **Chuẩn hóa (Regularization - A)**: Thêm một thành phần phạt (penalty) vào hàm mất mát để hạn chế độ lớn của các trọng số mạng nơ-ron, giúp mô hình bớt phức tạp hơn và tổng quát hóa tốt hơn.\n* **Dừng sớm (Early stopping - D)**: Giám sát hiệu suất của mô hình trên tập validation trong quá trình huấn luyện và dừng lại ngay khi hiệu suất này bắt đầu giảm (mặc dù hiệu suất trên tập huấn luyện vẫn đang tăng).\n* **Hạ độ dốc (Gradient descent - B)** và **Thay đổi tốc độ học (Learning rate - C)** là các kỹ thuật tối ưu hóa quá trình huấn luyện chứ không trực tiếp giải quyết vấn đề quá khớp.\n* **Thêm các tính năng bổ sung (E)** thường làm tăng độ phức tạp của mô hình, có thể làm trầm trọng thêm tình trạng quá khớp thay vì giải quyết nó.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Modeling — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark-ml/index"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đã huấn luyện một mạng nơ-ron với 50 epoch. Sau khi huấn luyện, kết quả cho thấy độ chính xác cao trên dữ liệu huấn luyện nhưng lại khá thấp trên dữ liệu kiểm thử (ví dụ: vấn đề quá khớp - overfitting). Kỹ thuật nào sau đây sẽ giúp giải quyết vấn đề quá khớp? (Chọn hai.)",
+    "options_vi": {
+      "A": "Sử dụng chuẩn hóa (regularization).",
+      "B": "Sử dụng hạ độ dốc (gradient descent).",
+      "C": "Thay đổi tốc độ học (learning rate).",
+      "D": "Triển khai dừng sớm (early stopping).",
+      "E": "Thêm các tính năng bổ sung vào dữ liệu huấn luyện."
+    }
   },
   {
     "id": 5,
@@ -90,10 +131,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giá trị SHAP (Shapley Additive exPlanations) được sử dụng để giải thích đóng góp của từng tính năng (feature) vào kết quả dự báo của mô hình, giúp giải thích tại sao dự báo của mô hình được cải thiện.",
+    "explanation_vi": "Để giải thích *tại sao* kết quả dự báo của mô hình thay đổi hoặc cải thiện (tức là hiểu được mức độ đóng góp của từng tính năng/feature cụ thể vào kết quả đầu ra của mô hình), chúng ta sử dụng phương pháp giải thích mô hình như **SHAP (Shapley Additive exPlanations)**.\n\n* **SHAP (B)**: Tính toán đóng góp của từng tính năng đối với giá trị dự báo cụ thể của mô hình, giúp giải thích động lực bên trong của các mô hình hộp đen (như XGBoost, Random Forest).\n* **RMSE (C)** và **R2 (D)**: Là các độ đo hiệu suất (performance metrics) dùng để đánh giá mức độ sai lệch tổng thể của mô hình hồi quy chứ không giải thích *tại sao* hoặc thuộc tính nào tạo ra sự cải thiện đó.\n* **Khoảng tin cậy (A)**: Cho biết độ bất định xung quanh một ước lượng thống kê chứ không chỉ ra tầm quan trọng của các biến đầu vào đối với sự thay đổi hiệu năng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Model Explainability in Snowflake — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đã nhận thấy rằng mô hình đang tạo ra các dự báo chính xác hơn. Chỉ số nào nên được sử dụng để đánh giá lý do tại sao dự báo của mô hình được cải thiện?",
+    "options_vi": {
+      "A": "Khoảng tin cậy (Confidence intervals)",
+      "B": "Giá trị Shapley đóng góp bổ sung (SHAP - Shapley Additive exPlanations)",
+      "C": "Sai số bình phương trung bình gốc (RMSE - Root Mean Squared Error)",
+      "D": "R2 (Hệ số xác định)"
+    }
   },
   {
     "id": 6,
@@ -109,10 +160,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi một tác vụ (task) mới được tạo trong Snowflake, nó sẽ ở trạng thái tạm dừng (suspended) theo mặc định. Lập trình viên phải kích hoạt nó bằng lệnh `ALTER TASK ... RESUME` trước khi tác vụ có thể chạy theo lịch trình.",
+    "explanation_vi": "Khi một tác vụ (task) mới được tạo trong Snowflake bằng câu lệnh `CREATE TASK`, theo mặc định nó luôn ở trạng thái tạm dừng (`suspended`).\n\n* Để tác vụ bắt đầu chạy theo lịch trình (schedule) đã thiết lập, quản trị viên hoặc người sở hữu tác vụ phải thực thi lệnh kích hoạt: `ALTER TASK <tên_task> RESUME;`.\n* Các lý do khác như định dạng múi giờ hay sự không tương thích của `ALLOW_OVERLAPPING_EXECUTION` không phải là nguyên nhân khiến một tác vụ vừa tạo không chạy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/tasks-intro"
-    ]
+      {
+        "title": "Introduction to Tasks — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/tasks-intro"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đã thực thi câu lệnh để tạo một tác vụ (task). Tại sao tác vụ đó không chạy?",
+    "options_vi": {
+      "A": "Tác vụ chưa được thiết lập để tiếp tục (resume).",
+      "B": "Công việc cron phải được chỉ định theo múi giờ UTC.",
+      "C": "Câu lệnh SQL không hợp lệ để gọi một thủ tục lưu trữ (stored procedure).",
+      "D": "Câu lệnh ALLOW_OVERLAPPING_EXECUTION không hợp lệ khi đi kèm với một lịch trình cố định (SCHEDULE)."
+    }
   },
   {
     "id": 7,
@@ -128,10 +189,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đối với một tập dữ liệu mất cân bằng nghiêm trọng (như tỷ lệ rời bỏ chỉ chiếm 2%), chỉ số Độ chính xác tổng quan (Accuracy) sẽ rất dễ gây hiểu nhầm (misleading), vì một mô hình đoán tất cả khách hàng đều không rời bỏ vẫn đạt được độ chính xác 98%.",
+    "explanation_vi": "Đối với các tập dữ liệu mất cân bằng nghiêm trọng (imbalanced datasets) như trường hợp này (tỷ lệ churn chỉ là 2%), **Độ chính xác tổng quan (Accuracy)** là một chỉ số rất dễ gây hiểu nhầm.\n\n* **Độ chính xác tổng quan (Accuracy - A)**: Được tính bằng tổng số dự báo đúng chia cho tổng số mẫu. Nếu một mô hình đơn giản chỉ cần đoán mọi khách hàng đều \"không rời bỏ\" (0), mô hình đó vẫn đạt được độ chính xác lên tới 98%. Tuy nhiên, mô hình này hoàn toàn vô dụng vì không phát hiện được bất kỳ khách hàng nào rời bỏ (churn = 1).\n* **Precision (C)**, **Recall (D)** và **F-measure (B)**: Phục vụ tốt hơn cho dữ liệu mất cân bằng vì chúng tập trung trực tiếp vào lớp thiểu số (lớp tích cực/churn = 1) thay vì bị lấn át bởi lớp đa số (churn = 0).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu muốn xác định hồ sơ khách hàng có khả năng rời bỏ dịch vụ (churn) cho một công ty. Tập dữ liệu huấn luyện có 2% khách hàng rời bỏ và 98% không rời bỏ, và họ đặt giá trị 1 cho rời bỏ và 0 cho không rời bỏ. Sau đó, Nhà khoa học dữ liệu chạy mô hình trong Snowpark. Sau khi vẽ ma trận nhầm lẫn (confusion matrix), giá trị nào sau đây có thể gây hiểu nhầm về hiệu suất thực tế của mô hình do tập dữ liệu mất cân bằng?",
+    "options_vi": {
+      "A": "Độ chính xác tổng quan (Accuracy)",
+      "B": "Điểm F (F-measure / F1-score)",
+      "C": "Độ chuẩn xác (Precision)",
+      "D": "Độ nhạy (Recall)"
+    }
   },
   {
     "id": 8,
@@ -148,10 +219,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong các thuật toán được liệt kê, CART (Cây phân loại và hồi quy - B) và SVM (Máy vector hỗ trợ - E) là các thuật toán thuộc học máy có giám sát (supervised learning).",
+    "explanation_vi": "Học máy có giám sát (Supervised Learning) yêu cầu dữ liệu huấn luyện phải có nhãn đi kèm.\n\n* **CART (Classification and Regression Trees - B)**: Là thuật toán xây dựng cây quyết định (Decision Trees) cho các bài toán phân loại hoặc hồi quy, thuộc nhóm học có giám sát.\n* **SVM (Support Vector Machine - E)**: Là thuật toán máy vectơ hỗ trợ dùng cho bài toán phân loại và hồi quy có giám sát.\n* **Apriori (A)**: Là thuật toán học không giám sát dùng để khai phá luật kết hợp (association rules).\n* **K-Means (C)**: Là thuật toán phân cụm (clustering) không giám sát.\n* **PCA (Principal Component Analysis - D)**: Là phương pháp giảm chiều dữ liệu (dimensionality reduction) không giám sát.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Những thuật toán nào sau đây là ví dụ của học máy có giám sát (supervised learning)? (Chọn hai.)",
+    "options_vi": {
+      "A": "Apriori",
+      "B": "CART",
+      "C": "K-Means",
+      "D": "PCA",
+      "E": "SVM"
+    }
   },
   {
     "id": 9,
@@ -168,10 +250,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để thiết lập và xác thực một phiên kết nối (session) trong Snowpark Python, hai thông số tối thiểu bắt buộc phải có là Tài khoản (`account` - A) và Tên người dùng (`user` - D).",
+    "explanation_vi": "Khi kết nối với Snowflake thông qua Snowpark Python, đối tượng cấu hình kết nối yêu cầu các thông số xác thực cơ bản:\n\n* **account (A)**: Chỉ định định danh tài khoản Snowflake của bạn để hệ thống biết cần định tuyến yêu cầu kết nối đến đâu.\n* **user (D)**: Chỉ định tên người dùng đăng nhập tài khoản Snowflake để thực hiện xác thực.\n* Mặc dù các thông số như **database (B)**, **role (C)**, và **warehouse (E)** là rất hữu ích để thiết lập ngữ cảnh làm việc ngay sau khi kết nối, chúng không phải là bắt buộc ở bước xác thực ban đầu (nếu thiếu, Snowflake sẽ sử dụng các giá trị mặc định được cấu hình cho người dùng đó).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-session"
-    ]
+      {
+        "title": "Creating a Session for Snowpark Python — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-session"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu tạo một phiên (session) bằng Snowpark Python (gói snowflake-snowpark-python). Những tham số nào sau đây bắt buộc phải có để xác thực phiên kết nối? (Chọn hai.)",
+    "options_vi": {
+      "A": "Account (Tài khoản)",
+      "B": "Database (Cơ sở dữ liệu)",
+      "C": "Role (Vai trò)",
+      "D": "User (Tên người dùng)",
+      "E": "Virtual warehouse (Kho ảo)"
+    }
   },
   {
     "id": 10,
@@ -187,10 +280,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong thống kê, phương sai (variance) đo lường mức độ phân tán hoặc biến thiên của các điểm dữ liệu so với giá trị trung bình (`mean`).",
+    "explanation_vi": "Trong thống kê, phương sai (variance) là giá trị đo lường mức độ phân tán của các điểm dữ liệu xung quanh giá trị trung bình (`mean`) của chúng.\n\n* Công thức tính phương sai dựa trên tổng bình phương sai lệch của từng điểm dữ liệu so với giá trị trung bình chia cho tổng số điểm dữ liệu.\n* Do đó, phương sai đo lường sự biến thiên từ giá trị trung bình (`mean` - C) chứ không phải từ các đại lượng khác như giá trị nhỏ nhất (minimum), trung vị (median) hay yếu vị (mode).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/var_pop"
-    ]
+      {
+        "title": "VAR_POP — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/var_pop"
+      }
+    ],
+    "question_vi": "Phương sai (variance) đo lường điều gì trong thống kê?",
+    "options_vi": {
+      "A": "Mức độ biến thiên so với giá trị nhỏ nhất (minimum value)",
+      "B": "Mức độ biến thiên so với giá trị trung vị (median value)",
+      "C": "Mức độ biến thiên so với giá trị trung bình (mean value)",
+      "D": "Mức độ biến thiên so với giá trị yếu vị (mode value)"
+    }
   },
   {
     "id": 11,
@@ -207,10 +310,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi đăng ký một mô hình trong Snowflake Model Registry bằng phương thức `log_model`, các đối số bắt buộc bao gồm đối tượng mô hình (`model` - B) và tên phiên bản của mô hình (`version_name` - E).",
+    "explanation_vi": "Khi đăng ký (log) một mô hình vào Snowflake Model Registry sử dụng phương thức `log_model`, có hai đối số bắt buộc chính:\n\n* **model (B)**: Đối tượng mô hình máy học thực tế cần đăng ký (ví dụ: mô hình scikit-learn, XGBoost, PyTorch, v.v.).\n* **version_name (E)**: Chuỗi ký tự định danh phiên bản của mô hình đang được lưu trữ.\n* Các tham số khác như `model_name` là tùy chọn hoặc được chỉ định khi khởi tạo đối tượng registry/lớp cha, và `code_paths` hay `python_version` là không bắt buộc để phương thức hoạt động.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Snowflake Model Registry — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
+    ],
+    "question_vi": "Khi ghi nhật ký (log) một mô hình vào Snowflake Model Registry bằng phương thức log_model của registry, những đối số (arguments) nào sau đây là bắt buộc? (Chọn hai.)",
+    "options_vi": {
+      "A": "code_paths",
+      "B": "model",
+      "C": "model_name",
+      "D": "python_version",
+      "E": "version_name"
+    }
   },
   {
     "id": 12,
@@ -226,10 +340,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ hệ số (Coefficient plot) là công cụ trực quan hóa phù hợp nhất để thể hiện độ lớn và hướng ảnh hưởng của các hệ số hồi quy (coefficients) của từng tính năng đối với biến mục tiêu (điểm hài lòng của người dùng) trong mô hình hồi quy tuyến tính.",
+    "explanation_vi": "Trong mô hình hồi quy tuyến tính, ảnh hưởng của từng tính năng độc lập đối với biến mục tiêu (điểm hài lòng của người dùng) được đại diện bởi các hệ số hồi quy (regression coefficients).\n\n* **Coefficient plot (D)**: Là loại biểu đồ trực quan hóa trực tiếp các hệ số hồi quy cùng với khoảng tin cậy của chúng, giúp người xem dễ dàng thấy được tính năng nào có ảnh hưởng tích cực hoặc tiêu cực nhất và độ lớn của ảnh hưởng đó là bao nhiêu.\n* **Confusion matrix (A)**: Được dùng cho các mô hình phân loại (classification), không dùng cho hồi quy tuyến tính.\n* **Correlation matrix (B)**: Chỉ cho biết mối quan hệ tuyến tính đôi một giữa các tính năng chứ không thể hiện tác động đồng thời của chúng khi đưa vào mô hình hồi quy.\n* **Scatterplot (C)**: Hữu ích để xem phân bố của 2 biến nhưng không thể biểu diễn đồng thời tác động của nhiều tính năng đã được chuẩn hóa trong mô hình hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu cần trình bày kết quả từ mô hình hồi quy tuyến tính được sử dụng để ước lượng chất lượng trải nghiệm của người dùng. Mô hình đã thực hiện đo lường bằng cách sử dụng nhiều tính năng số đã được chuẩn hóa, sau đó áp dụng vào thang điểm hài lòng dạng số. Biểu đồ nào sau đây nên được sử dụng để thể hiện ảnh hưởng của từng tính năng đối với điểm hài lòng của người dùng?",
+    "options_vi": {
+      "A": "Ma trận nhầm lẫn (Confusion matrix)",
+      "B": "Ma trận tương quan (Correlation matrix)",
+      "C": "Biểu đồ phân tán (Scatterplot)",
+      "D": "Biểu đồ hệ số (Coefficient plot)"
+    }
   },
   {
     "id": 13,
@@ -245,10 +369,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Bằng cách thêm đường dẫn tệp mô hình trên stage vào tham số `IMPORTS` của UDF và tải tệp từ thư mục import trong mã nguồn UDF, người dùng có thể thay thế tệp mô hình cũ bằng tệp mới trên stage mà không cần phải định nghĩa lại (recreate) UDF.",
+    "explanation_vi": "Để tải các tệp phụ thuộc bên ngoài (như tệp mô hình máy học định dạng `.pkl`, `.joblib`) vào một Python UDF mà không cần tạo lại UDF khi tệp đó thay đổi:\n\n* Bạn cần thêm đường dẫn của tệp mô hình trên stage vào mệnh đề `IMPORTS` (ví dụ: `IMPORTS = ('@my_stage/my_model.joblib')`) khi định nghĩa UDF. Trong mã nguồn của UDF, bạn sẽ sử dụng thư viện chuẩn của Python để đọc tệp từ thư mục được import (được định vị qua `sys._xoptions['snowflake_import_directory']`).\n* Khi bạn tải lên một tệp mô hình mới trùng tên thay thế tệp cũ trên stage, UDF sẽ tự động load tệp mới đó vào lần chạy tiếp theo mà không cần phải thực thi lệnh `CREATE OR REPLACE FUNCTION` lại.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
-    ]
+      {
+        "title": "Designing UDFs — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu có một mô hình đã huấn luyện được lưu trữ dưới dạng một tệp trên một stage trong Snowflake. Bây giờ họ muốn sử dụng một Hàm do người dùng tự định nghĩa (UDF) bằng Python để tính điểm (scoring) dữ liệu trong Snowflake với mô hình đó. Một yêu cầu đặt ra là họ phải có thể thay thế tệp mô hình bằng một tệp mới mà không cần phải tạo lại UDF. Điều gì là cần thiết để hoàn thành yêu cầu này?",
+    "options_vi": {
+      "A": "Tải tệp mô hình bằng cách sử dụng đường dẫn đến tệp mô hình bao gồm stage và tên tệp trong mã nguồn UDF.",
+      "B": "Triển khai UDF bằng Snowpark cho Python và sử dụng đối tượng mô hình đã huấn luyện trực tiếp trong UDF.",
+      "C": "Cung cấp đường dẫn đến tệp mô hình bao gồm stage và tên tệp dưới dạng tham số đầu vào cho hàm và tải tệp đó trong UDF.",
+      "D": "Thêm đường dẫn đến tệp mô hình bao gồm stage và tên tệp vào tham số IMPORTS của UDF và tải tệp đó lên trong mã nguồn UDF."
+    }
   },
   {
     "id": 14,
@@ -264,10 +398,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm ngoại vi (External Function) trong Snowflake được gọi như một hàm SQL bình thường trong câu lệnh `SELECT` (không dùng từ khóa `CALL` vốn chỉ dành cho stored procedure). Vì hàm ngoại vi này được thiết kế để nhận một tài liệu JSON dạng đối tượng, đối số truyền vào cần được bọc bởi `OBJECT_CONSTRUCT(*)` (phương án D).",
+    "explanation_vi": "Trong Snowflake, việc gọi và lưu trữ kết quả từ hàm ngoại vi (External Function) tuân theo các nguyên tắc sau:\n\n* **Không sử dụng từ khóa `CALL` (B, C)**: Từ khóa `CALL` chỉ được sử dụng để gọi các thủ tục lưu trữ (Stored Procedures). Các hàm UDF thông thường và hàm ngoại vi được gọi trực tiếp bằng tên hàm trong câu lệnh `SELECT`.\n* **Sử dụng `OBJECT_CONSTRUCT(*)` (D)**: Nếu DDL của hàm ngoại vi được thiết kế để nhận một kiểu dữ liệu đối tượng (object/JSON) chứa các cột dữ liệu của khách hàng, hàm `OBJECT_CONSTRUCT(*)` sẽ tạo ra một đối tượng JSON từ tất cả các cột của bảng `CUSTOMER_DAILY` để truyền vào hàm `get_churn`. Việc chỉ truyền `*` thẳng vào hàm (như phương án A) sẽ không hợp lệ vì hàm ngoại vi chỉ nhận một đối số duy nhất kiểu Object thay vì danh sách các cột riêng lẻ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
-    ]
+      {
+        "title": "Calling an External Function — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/external-functions-calling"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu tại một công ty viễn thông muốn lưu trữ điểm số rời bỏ dịch vụ (churn scores) được tính toán bằng một hàm ngoại vi (external function) của Snowflake, được cấu hình để kết nối tới endpoint của mô hình. Các điều kiện môi trường như sau: Lệnh DDL tạo hàm ngoại vi, Bảng CUSTOMER_DAILY, Giá trị rời bỏ được lưu trữ trong một bảng mới tên là CUSTOMER_CHURN. Dựa trên các điều kiện môi trường đó, làm thế nào Nhà khoa học dữ liệu có thể lưu trữ vĩnh viễn điểm số rời bỏ từ hàm ngoại vi vào Snowflake?",
+    "options_vi": {
+      "A": "insert into customer_churn select cust_id, get_churn(*) as churn_score from customer_daily;",
+      "B": "insert into customer_churn select cust_id, call get_churn(object_construct(*)) as churn_score from customer_daily;",
+      "C": "insert into customer_churn select cust_id, call get_churn(*) as churn_score from customer_daily;",
+      "D": "insert into customer_churn select cust_id, get_churn(object_construct(*)) as churn_score from customer_daily;"
+    }
   },
   {
     "id": 15,
@@ -284,10 +428,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Snowflake Model Registry hỗ trợ việc gán thẻ phân loại (`Tags` - A) giúp tăng tính quản trị, và tính năng sao chép mô hình (`Model Copy` / Model Replication - D) giúp chuyển dịch mô hình một cách liền mạch giữa môi trường phát triển và sản xuất.",
+    "explanation_vi": "Snowflake Model Registry cung cấp các công cụ tích hợp sẵn giúp tổ chức và chuyển dịch mô hình qua các giai đoạn vòng đời:\n\n* **Tags (A)**: Cho phép gán các thẻ siêu dữ liệu (metadata tags) lên mô hình (ví dụ: gán nhãn `environment: production` hoặc `status: approved`), giúp dễ dàng tìm kiếm, kiểm soát quyền truy cập và phân loại mô hình trong hệ thống.\n* **Model Copy (D)**: Hỗ trợ sao chép (copy) hoặc di chuyển một mô hình/phiên bản mô hình giữa các cơ sở dữ liệu hoặc schema khác nhau trong cùng một tài khoản hoặc thậm chí giữa các tài khoản khác nhau để phục vụ quy trình CI/CD từ dev/staging sang production.\n* **Zero-copy clones (B)**, **Account replication (C)**, và **Time Travel (E)** là các tính năng nền tảng của Snowflake dùng cho bảng/cơ sở dữ liệu chứ không phải các tính năng tích hợp trực tiếp để quản lý vòng đời mô hình trong Model Registry một cách liền mạch.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Snowflake Model Registry — Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
+    ],
+    "question_vi": "Những tính năng nào sau đây có thể được sử dụng với Snowflake Model Registry để quản lý các mô hình một cách liền mạch từ giai đoạn phát triển đến sản xuất? (Chọn hai.)",
+    "options_vi": {
+      "A": "Thẻ phân loại (Tags)",
+      "B": "Bản sao không tốn dung lượng (Zero-copy clones)",
+      "C": "Sao chép tài khoản (Account replication)",
+      "D": "Sao chép mô hình (Model Copy)",
+      "E": "Du hành thời gian (Time Travel)"
+    }
   },
   {
     "id": 16,
@@ -305,10 +460,26 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Phân tích biểu đồ phụ thuộc riêng phần (Partial Dependency Plots) đối với dữ liệu nhà đất California cho thấy: thu nhập trung bình tăng làm tăng giá nhà mục tiêu (B); tuổi thọ của nhà tăng thì giá nhà mục tiêu giữ ở mức khá ổn định/hằng số (D); và mật độ cư trú trung bình tăng làm giảm giá nhà mục tiêu (E).",
+    "explanation_vi": "Biểu đồ phụ thuộc riêng phần (Partial Dependence Plots - PDP) hiển thị tác động biên của một hoặc hai đặc trưng đối với kết quả dự đoán của một mô hình học máy:\n\n* **Thu nhập trung bình (Median income)**: Biểu đồ (thường là `MedInc`) cho thấy xu hướng đi lên rõ rệt, nghĩa là khi thu nhập trung bình tăng thì giá nhà mục tiêu tăng. Do đó chọn **B**.\n* **Tuổi thọ của ngôi nhà (Age of the House)**: Đường biểu diễn (thường là `HouseAge`) phẳng hoặc biến động rất ít, cho thấy giá nhà mục tiêu khá ổn định khi tuổi thọ nhà thay đổi. Do đó chọn **D**.\n* **Mật độ cư trú trung bình (Average Occupancy)**: Đường biểu diễn (thường là `AveOccup`) dốc xuống đột ngột ở đoạn đầu rồi đi ngang, thể hiện xu hướng giảm giá nhà mục tiêu khi mật độ cư trú trung bình tăng. Do đó chọn **E**.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake Notebooks with scikit-learn",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight/notebooks-use"
+      },
+      {
+        "title": "Snowflake ML Modeling API",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu (Data Scientist) đang huấn luyện một mô hình. Họ sử dụng scikit-learn để tạo biểu đồ phụ thuộc riêng phần (partial dependency plot) bằng lệnh sau:\nCác biểu đồ sau đây được tạo ra làm kết quả:\nNhững phát biểu nào phản ánh đúng những gì được mô tả trong các biểu đồ? (Chọn ba.)",
+    "options_vi": {
+      "A": "Khi thu nhập trung bình (Median income) tăng, giá nhà mục tiêu giảm.",
+      "B": "Khi thu nhập trung bình (Median income) tăng, giá nhà mục tiêu tăng.",
+      "C": "Khi tuổi thọ của ngôi nhà (Age of the House) tăng, giá nhà mục tiêu giảm.",
+      "D": "Khi tuổi thọ của ngôi nhà (Age of the House) tăng, giá nhà mục tiêu giữ ở mức khá ổn định.",
+      "E": "Khi mật độ cư trú trung bình (Average Occupancy) tăng, giá nhà mục tiêu giảm.",
+      "F": "Khi mật độ cư trú trung bình (Average Occupancy) tăng, giá nhà mục tiêu tăng."
+    }
   },
   {
     "id": 17,
@@ -324,10 +495,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong ma trận tương quan của tập dữ liệu Boston Housing, cặp biến `RAD` (chỉ số tiếp cận đường cao tốc hướng tâm) và `TAX` (thuế suất tài sản) có hệ số tương quan rất cao (~0.91), do đó là ứng viên hàng đầu cho việc giảm bớt tính năng (feature reduction) nhằm tránh đa cộng tuyến.",
+    "explanation_vi": "Trong ma trận tương quan của tập dữ liệu Boston Housing:\n\n* Biến `RAD` (chỉ số tiếp cận đường cao tốc hướng tâm) và `TAX` (thuế suất tài sản) có hệ số tương quan rất cao (~0.91), đây là hệ số tương quan lớn nhất trong số các lựa chọn được đưa ra.\n* Khi hai biến có tương quan rất mạnh với nhau (hiện tượng đa cộng tuyến - multicollinearity), thông tin mà chúng cung cấp cho mô hình bị trùng lặp. Việc loại bỏ một trong hai biến hoặc kết hợp chúng thành một biến duy nhất có thể giúp giảm bớt số lượng đặc trưng (feature reduction) mà không làm mất đi nhiều thông tin hữu ích của mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Modeling API",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling"
+      }
+    ],
+    "question_vi": "Ma trận tương quan dưới đây được tạo ra khi thực hiện kỹ nghệ đặc trưng (feature engineering):\nSự kết hợp của các biến nào có tương quan MẠNH NHẤT và có thể giúp giảm bớt đặc trưng (feature reduction)?",
+    "options_vi": {
+      "A": "DIS và CRIM",
+      "B": "DIS và TAX",
+      "C": "RAD và TAX",
+      "D": "INDUS và CRIM"
+    }
   },
   {
     "id": 18,
@@ -343,10 +524,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm hệ thống `SYSTEM$STREAM_HAS_DATA` được sử dụng để kiểm tra xem một stream cụ thể có chứa dữ liệu thay đổi mới (chưa tiêu thụ) hay không, giúp tối ưu hóa việc chạy các tác vụ xử lý chỉ khi có dữ liệu mới.",
+    "explanation_vi": "* Hàm hệ thống `SYSTEM$STREAM_HAS_DATA` trong Snowflake được sử dụng để kiểm tra xem một stream cụ thể có chứa dữ liệu thay đổi chưa tiêu thụ (unconsumed change data) hay không.\n* Hàm này trả về giá trị kiểu BOOLEAN (`TRUE` hoặc `FALSE`).\n* Việc sử dụng hàm này trong các tác vụ lập lịch (Tasks) giúp ngăn chặn việc khởi chạy các tác vụ tính toán tốn kém khi không có dữ liệu mới cần xử lý, từ đó tối ưu chi phí sử dụng tài nguyên.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/system_stream_has_data"
-    ]
+      {
+        "title": "SYSTEM$STREAM_HAS_DATA Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/system_stream_has_data"
+      },
+      {
+        "title": "Introduction to Streams",
+        "url": "https://docs.snowflake.com/en/user-guide/streams-intro"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đang xây dựng một đường ống dữ liệu (data pipeline) cho mô hình dự đoán tỷ lệ khách hàng rời bỏ (customer churn model). Để tối ưu hóa việc xử lý hiệu quả cho mô hình, họ thêm một stream vào bảng khách hàng (customer table). Hàm nào sau đây nên được sử dụng để kiểm tra xem stream đó có chứa dữ liệu mới hoặc dữ liệu được cập nhật hay không?",
+    "options_vi": {
+      "A": "SYSTEM$STREAM_STATUS(‘MYSTREAM’)",
+      "B": "SYSTEM$STREAM_HAS_DATA(‘MYSTREAM')",
+      "C": "SYSTEM$STREAM_GET UPDATES (‘MYSTREAM’)",
+      "D": "SYSTEM$STREAM_GET_ TABLE_TIMESTAMP (‘MYSTREAM’)"
+    }
   },
   {
     "id": 19,
@@ -362,10 +557,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi truyền một giá trị `NULL` trong SQL Snowflake vào một hàm tự định nghĩa Python (Python UDF), giá trị này sẽ tự động được ánh xạ thành giá trị `None` trong Python.",
+    "explanation_vi": "* Khi thực thi một Hàm tự định nghĩa Python (Python UDF) trong Snowflake, Snowflake tự động chuyển đổi các kiểu dữ liệu SQL sang kiểu dữ liệu Python tương ứng.\n* Đối với mọi kiểu dữ liệu trong Snowflake (bao gồm cả kiểu dữ liệu chuỗi - VARCHAR/STRING), giá trị SQL `NULL` sẽ được chuyển đổi thành `None` trong Python.\n* Ngược lại, nếu Python UDF trả về giá trị `None`, Snowflake cũng sẽ chuyển đổi nó lại thành giá trị SQL `NULL` tương ứng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
-    ]
+      {
+        "title": "SQL-Python Data Type Mappings for UDFs",
+        "url": "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-designing"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu truyền một đối số SQL NULL vào một Hàm tự định nghĩa Python (Python UDF) với kiểu dữ liệu chuỗi (string) trong Snowflake. Giá trị Python nào sau đây sẽ được trả về sau khi chuyển đổi?",
+    "options_vi": {
+      "A": "1",
+      "B": "False",
+      "C": "None",
+      "D": "Một chuỗi rỗng"
+    }
   },
   {
     "id": 20,
@@ -381,10 +586,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Điều chỉnh siêu tham số (Hyperparameter tuning) là một bước nằm trong giai đoạn Huấn luyện mô hình (Model training) nhằm tìm ra tập hợp tham số tối ưu trước khi huấn luyện mô hình cuối cùng.",
+    "explanation_vi": "* **Điều chỉnh siêu tham số (Hyperparameter tuning)** là quá trình tìm kiếm tổ hợp các siêu tham số tối ưu (ví dụ: tốc độ học, độ sâu tối đa của cây, số lượng estimator...) giúp thuật toán đạt hiệu năng tốt nhất.\n* Quá trình này diễn ra song song và trực tiếp trong bước **Huấn luyện mô hình (Model training)**, vì mỗi lần thử nghiệm một cấu hình siêu tham số mới, mô hình cần được huấn luyện lại trên tập dữ liệu để đánh giá hiệu năng.\n* **Feature engineering** diễn ra trước khi huấn luyện; **Model validation** là đánh giá mô hình sau khi huấn luyện; **Model deployment** là đưa mô hình vào môi trường production.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Modeling Tuning",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling"
+      }
+    ],
+    "question_vi": "Bước nào trong vòng đời của học máy (machine learning lifecycle) bao gồm việc điều chỉnh siêu tham số (hyperparameter tuning)?",
+    "options_vi": {
+      "A": "Huấn luyện mô hình (Model training)",
+      "B": "Triển khai mô hình (Model deployment)",
+      "C": "Xác thực mô hình (Model validation)",
+      "D": "Kỹ nghệ đặc trưng (Feature engineering)"
+    }
   },
   {
     "id": 21,
@@ -400,10 +615,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi xuất hiện các giá trị ngoại lai cực lớn phía bên phải (nhiệt độ cao bất thường), phân phối dữ liệu sẽ bị lệch phải (right-skewed / skewness > 0). Đối với phân phối lệch phải, giá trị trung bình (Mean) sẽ lớn hơn số trung vị (Median). Do đó, thứ tự độ lớn đúng là Mean > Median > Skewness > 0.",
+    "explanation_vi": "* Khi cảm biến bị lỗi và tạo ra các giá trị đọc cực kỳ cao (các giá trị ngoại lai phía trên/bên phải), phân phối của dữ liệu sẽ bị kéo dài về phía bên phải. Đây gọi là hiện tượng **phân phối lệch phải (right-skewed / positively skewed)**.\n* Trong phân phối lệch phải, độ lệch (Skewness) sẽ lớn hơn 0 (Skewness > 0).\n* Do các giá trị ngoại lai cực lớn kéo giá trị trung bình (Mean) lên cao hơn, trong khi số trung vị (Median) ít bị ảnh hưởng bởi các giá trị ngoại lai hơn, ta luôn có mối quan hệ: **Mean > Median**.\n* Vì vậy, thứ tự độ lớn đúng là: **Mean > Median > Skewness > 0**.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một cảm biến thời tiết từ xa bị lỗi và tạo ra các số đọc nhiệt độ cao hơn nhiều so với phạm vi bình thường (khoảng 69,8°F hay 21°C). Bỏ qua các đơn vị đo, thứ tự độ lớn đúng của các phép đo chính này là gì?",
+    "options_vi": {
+      "A": "Mean > Median > Skewness > 0 (Phân phối lệch phải, giá trị trung bình lớn hơn số trung vị)",
+      "B": "Median > Mean > Skewness > 0 (Phân phối lệch phải, số trung vị lớn hơn giá trị trung bình)",
+      "C": "Mean > Median > 0 > Skewness (Phân phối lệch trái, giá trị trung bình lớn hơn số trung vị)",
+      "D": "Median > Mean > 0 > Skewness (Phân phối lệch trái, số trung vị lớn hơn giá trị trung bình)"
+    }
   },
   {
     "id": 22,
@@ -420,10 +645,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để giải quyết vấn đề mất cân bằng nhóm (Manhattan chiếm đa số lớn so với các quận khác), lập trình viên có thể áp dụng các kỹ thuật: Giảm mẫu lớp đa số (Undersample Manhattan - C) hoặc Tăng mẫu lớp thiểu số bằng thuật toán SMOTE (E) để cân bằng dữ liệu huấn luyện.",
+    "explanation_vi": "* Biểu đồ cho thấy quận Manhattan là điểm đến chiếm đa số vượt trội (lớp đa số - majority class), trong khi các quận khác như Brooklyn, Queens, Bronx... có số lượng chuyến đi rất ít (lớp thiểu số - minority classes). Đây là một bài toán mất cân bằng lớp nghiêm trọng.\n* **Undersample Manhattan (C)**: Giúp giảm bớt số lượng mẫu của lớp đa số (Manhattan) để tương quan tỷ lệ với các lớp khác, giúp mô hình không bị thiên lệch về Manhattan.\n* **SMOTE (E)**: Tạo ra các mẫu dữ liệu tổng hợp mới cho các lớp thiểu số (các quận ngoài Manhattan) một cách thông minh bằng cách nội suy giữa các điểm dữ liệu hiện có, giúp cải thiện khả năng nhận diện các lớp này của mô hình.\n* **Lưu ý**: Bootstrap (D) chỉ đơn thuần là lấy mẫu lặp lại có thay thế, dễ gây quá khớp (overfitting) hơn so với SMOTE.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Biểu đồ trong Snowsight cho dịch vụ chia sẻ xe đạp ở Thành phố New York hiển thị số lượng chuyến đi đến các quận đích:\nMột Nhà khoa học dữ liệu muốn xây dựng một bộ phân loại (classifier) dự đoán quận nào sẽ là điểm đến khả thi nhất khi chuyến đi bắt đầu. Kỹ thuật nào sau đây nên được sử dụng để xử lý vấn đề mất cân bằng lớp (class imbalance) được mô tả trong biểu đồ Snowsight? (Chọn hai.)",
+    "options_vi": {
+      "A": "Áp dụng các tham số chuẩn hóa (regularization).",
+      "B": "Gộp tất cả các lớp thiểu số thành một lớp duy nhất.",
+      "C": "Giảm mẫu (Undersample) dữ liệu của quận Manhattan khi huấn luyện.",
+      "D": "Sử dụng kỹ thuật bootstrapping để tổng hợp thêm dữ liệu cho các quận ngoài Manhattan.",
+      "E": "Sử dụng kỹ thuật SMOTE (Synthetic Minority Oversampling Technique) để tăng mẫu (oversample) cho các quận ngoài Manhattan khi huấn luyện."
+    }
   },
   {
     "id": 23,
@@ -441,10 +677,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Các hàm Cortex sinh văn bản mới gồm `SUMMARIZE` (A), `TRANSLATE` (C), và `CLASSIFY_TEXT` (F) đều tính phí trên cả số lượng token đầu vào (input tokens) và token đầu ra (output tokens).",
+    "explanation_vi": "* Trong mô hình tính phí của các hàm **Snowflake Cortex LLM**, lượng tài nguyên tiêu thụ được tính theo số lượng token (cả đầu vào và đầu ra tùy thuộc vào loại hàm).\n* Các hàm sinh hoặc xử lý văn bản có đầu ra là văn bản/nhãn như **SUMMARIZE (A)**, **TRANSLATE (C)**, và **CLASSIFY_TEXT (F)** sẽ tính phí trên cả số lượng token đầu vào (câu hỏi/văn bản gốc) và token đầu ra (kết quả tóm tắt, bản dịch hoặc nhãn phân loại).\n* Ngược lại, các hàm tạo nhúng (embedding) như **EMBED_TEXT_768 (D)** và **EMBED_TEXT_1024 (E)** chỉ tính phí trên số lượng token đầu vào được xử lý.\n* Hàm **SENTIMENT (B)** cũng chỉ tính toán trên văn bản đầu vào để cho ra một điểm số cảm xúc đơn lẻ và chỉ tính phí trên token đầu vào.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex AI Cost and Billing",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      }
+    ],
+    "question_vi": "Đối với những hàm Snowflake Cortex LLM nào thì cả token đầu vào (input tokens) và token đầu ra (output tokens) đều được tính phí? (Chọn ba.)",
+    "options_vi": {
+      "A": "SUMMARIZE",
+      "B": "SENTIMENT",
+      "C": "TRANSLATE",
+      "D": "EMBED_TEXT_768",
+      "E": "EMBED_TEXT_1024",
+      "F": "CLASSIFY_TEXT"
+    }
   },
   {
     "id": 24,
@@ -460,10 +708,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Cách hiệu quả nhất để tích hợp dữ liệu hồ dữ liệu (data lake) khổng lồ mà không sao chép dữ liệu là tạo các bảng ngoại vi (`External Tables` - D), cho phép truy vấn trực tiếp dữ liệu từ các tệp tin lưu trên data lake như các bảng thông thường trong database.",
+    "explanation_vi": "* **Bảng ngoại vi (External Tables - D)** cho phép bạn truy vấn dữ liệu được lưu trữ trong các tệp ở một giai đoạn bên ngoài (external stage) giống như thể dữ liệu đó nằm trong một bảng thông thường trong Snowflake.\n* Điều này giải quyết hoàn hảo yêu cầu không sao chép dữ liệu khổng lồ (hàng trăm TB) vào Snowflake nhưng vẫn cho phép truy vấn dữ liệu và truy cập siêu dữ liệu của các tệp tin trong hồ dữ liệu.\n* **Phương án A** yêu cầu di chuyển dữ liệu vào internal stage, vi phạm ràng buộc không sao chép dữ liệu.\n* **Phương án B** (truy vấn trực tiếp qua external stage bằng cách gọi trực tiếp tệp) ít hiệu quả hơn cho việc tổ chức dữ liệu dạng bảng và không tự động lưu trữ siêu dữ liệu một cách tối ưu dưới dạng cấu trúc bảng.\n* **Phương án C** (Sử dụng Snowpipe) là để tải dữ liệu liên tục vào bảng nội bộ của Snowflake, dẫn đến sao chép và nhân bản dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/tables-external-intro"
-    ]
+      {
+        "title": "Introduction to External Tables",
+        "url": "https://docs.snowflake.com/en/user-guide/tables-external-intro"
+      }
+    ],
+    "question_vi": "Nhóm nền tảng của một công ty muốn tích hợp hồ dữ liệu (data lake) hiện tại của họ với Snowflake. Hồ dữ liệu này có kích thước hàng trăm TB và nhóm không muốn sao chép hầu hết dữ liệu đó vào Snowflake. Một Nhà khoa học dữ liệu tại công ty muốn có thể truy vấn và truy cập siêu dữ liệu (metadata) của hồ dữ liệu. Đã có một external stage trong Snowflake tham chiếu đến vị trí của hồ dữ liệu. Cách hiệu quả nhất để tích hợp hồ dữ liệu hiện có vào môi trường Snowflake là gì?",
+    "options_vi": {
+      "A": "Di chuyển các tệp của hồ dữ liệu sang một internal stage trong Snowflake để cho phép truy cập siêu dữ liệu và dữ liệu từ hồ dữ liệu.",
+      "B": "Sử dụng external stage hiện có, tạo các câu lệnh SELECT có thể chạy theo yêu cầu, tham chiếu trực tiếp đến các tệp trong hồ dữ liệu.",
+      "C": "Tạo một PIPE cho mỗi bảng trong hồ dữ liệu để cho phép truy vấn theo yêu cầu các tệp của hồ dữ liệu bằng cách sử dụng dịch vụ Snowpipe.",
+      "D": "Tạo một bảng ngoại vi (external table) cho mỗi bảng tương ứng trong hồ dữ liệu để cho phép truy vấn dữ liệu được lưu trữ trong các tệp ở hồ dữ liệu giống như thể bảng đó nằm trong cơ sở dữ liệu."
+    }
   },
   {
     "id": 25,
@@ -479,10 +737,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Các thủ tục lưu trữ Snowpark Python (Stored Procedures) bắt buộc phải có đối số đầu tiên nhận đối tượng phiên làm việc (`Session` - B) để thực hiện các thao tác API của Snowpark.",
+    "explanation_vi": "* Khi viết một thủ tục lưu trữ (Stored Procedure) bằng Snowpark Python, hàm thực thi chính trong Python bắt buộc phải nhận đối tượng `snowflake.snowpark.Session` làm đối số đầu tiên.\n* Khi thủ tục lưu trữ được gọi, Snowflake sẽ tự động tạo và truyền đối tượng phiên làm việc (`session`) này vào hàm.\n* **Phương án A sai**: Thủ tục lưu trữ không bắt buộc phải trả về giá trị (có thể trả về None hoặc void).\n* **Phương án C sai**: Phương thức `process` là đặc trưng bắt buộc khi viết UDF dạng bảng (UDTFs) hoặc một số cấu trúc khác chứ không phải Stored Procedures.\n* **Phương án D sai**: Thủ tục lưu trữ Snowpark được thiết kế đặc biệt để chứa và thực thi các API Snowpark.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
-    ]
+      {
+        "title": "Writing Stored Procedures in Snowpark Python",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
+      }
+    ],
+    "question_vi": "Đặc điểm nào sau đây áp dụng cho thủ tục lưu trữ Snowpark Python (Snowpark Python stored procedures)?",
+    "options_vi": {
+      "A": "Chúng bắt buộc phải trả về một giá trị.",
+      "B": "Chúng cần có một đối tượng `session` làm đầu vào.",
+      "C": "Chúng bắt buộc phải chứa một phương thức `process`.",
+      "D": "Chúng không được chứa các lệnh gọi API của Snowpark."
+    }
   },
   {
     "id": 26,
@@ -499,10 +767,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để tăng hiệu năng chạy suy luận (model inference) trong Snowflake, lập trình viên nên sử dụng Hàm bảng tự định nghĩa (UDTF - D) để xử lý song song hoặc Hàm tự định nghĩa vector hóa (Vectorized UDF - E) để nhận đầu vào theo lô dạng Pandas DataFrame thay vì xử lý từng hàng (row-by-row).",
+    "explanation_vi": "* **Hàm tự định nghĩa vector hóa (Vectorized UDF - E)** cho phép Snowflake truyền dữ liệu đầu vào cho mã Python dưới dạng các lô (batches) sử dụng thư viện Pandas (như `pandas.DataFrame` hoặc `pandas.Series`) thay vì xử lý từng hàng đơn lẻ (row-by-row). Điều này giúp cải thiện đáng kể hiệu năng suy luận mô hình bằng cách tận dụng khả năng tính toán vector của các thư viện như NumPy, scikit-learn, TensorFlow.\n* **Hàm bảng tự định nghĩa (UDTF - D)** (đặc biệt là các hàm UDTF dạng end-of-partition hoặc xử lý dữ liệu theo lô) cho phép xử lý song song trên nhiều phân vùng dữ liệu và có thể sinh ra nhiều hàng kết quả từ mỗi lô dữ liệu đầu vào, rất hiệu quả cho việc chạy song song hóa suy luận mô hình hàng loạt (batch inference).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-vectorized"
-    ]
+      {
+        "title": "Vectorized Python UDFs",
+        "url": "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-vectorized"
+      },
+      {
+        "title": "Writing User-Defined Table Functions (UDTFs) in Python",
+        "url": "https://docs.snowflake.com/en/developer-guide/udf/python/udf-python-tabular-functions"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu muốn tăng hiệu năng suy luận mô hình (model inference) cho một mô hình đã được huấn luyện và triển khai trong môi trường production. Sử dụng công cụ nào sau đây sẽ hỗ trợ tác vụ này? (Chọn hai.)",
+    "options_vi": {
+      "A": "Imputation (Điền khuyết dữ liệu)",
+      "B": "Python bytecode",
+      "C": "Thư viện Cachetool",
+      "D": "Hàm bảng tự định nghĩa (User-Defined Table Function - UDTF)",
+      "E": "Hàm tự định nghĩa dạng vector hóa (Vectorized User-Defined Function - Vectorized UDF)"
+    }
   },
   {
     "id": 27,
@@ -519,10 +802,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trình kết nối Snowflake Connector cho Python cung cấp hai phương thức trên đối tượng Cursor để lấy dữ liệu trực tiếp dưới dạng Pandas DataFrame là `fetch_pandas_all()` (B - lấy toàn bộ) và `fetch_pandas_batches()` (C - lấy theo lô).",
+    "explanation_vi": "* Trình kết nối Snowflake Connector cho Python cung cấp các phương thức tích hợp sẵn trên đối tượng Cursor để tải kết quả truy vấn trực tiếp thành đối tượng Pandas DataFrame:\n  * **`fetch_pandas_all()` (B)**: Lấy toàn bộ kết quả của câu lệnh truy vấn và trả về dưới dạng một DataFrame duy nhất.\n  * **`fetch_pandas_batches()` (C)**: Trả về một trình lặp (iterator) tạo ra các lô Pandas DataFrame, rất hữu ích khi tập kết quả quá lớn không thể chứa hết trong bộ nhớ của client.\n* **`fetchall()` (A)** trả về danh sách các tuple truyền thống của Python chứ không phải Pandas DataFrame.\n* **`write_to_pandas()` (D)** là hàm độc lập dùng để ghi dữ liệu từ DataFrame vào bảng Snowflake (không phải phương thức của cursor để lấy dữ liệu ra).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
-    ]
+      {
+        "title": "Snowflake Connector for Python: Pandas Integration",
+        "url": "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
+      }
+    ],
+    "question_vi": "Mệnh đề Cursor nào sau đây nên được sử dụng để đưa dữ liệu vào một pandas DataFrame bằng cách sử dụng Snowflake Connector cho Python? (Chọn hai.)",
+    "options_vi": {
+      "A": "fetchall()",
+      "B": "fetch_pandas_all()",
+      "C": "fetch_pandas_batches()",
+      "D": "write_to_pandas()",
+      "E": "to_pandas()"
+    }
   },
   {
     "id": 28,
@@ -538,10 +832,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu thức SQL trong đáp án D sử dụng mệnh đề `CASE WHEN` hoặc các hàm điều kiện tương đương của Snowpark để chuyển đổi tên sản phẩm chính xác theo các quy tắc nghiệp vụ đã cho.",
+    "explanation_vi": "* Trong Snowpark Python, để xử lý các điều kiện rẽ nhánh phức tạp (tương đương với biểu thức `CASE WHEN` trong SQL), ta sử dụng kết hợp hàm `when()` và phương thức `.otherwise()` trên đối tượng cột:\n  * Hàm `when(condition, value)` dùng để chỉ định điều kiện đầu tiên và giá trị trả về nếu điều kiện đó đúng.\n  * Ta có thể liên kết tiếp các phương thức `.when()` để thực hiện các phép so sánh tiếp theo.\n  * Phương thức `.otherwise(value)` được gọi ở cuối chuỗi để thiết lập giá trị mặc định khi không có bất kỳ điều kiện nào phía trên được thỏa mãn (ở đây là `'Not P1'`).\n* Phương án D sử dụng đúng chuỗi liên kết các hàm `when()` và kết thúc bằng `.otherwise()` để thực hiện logic nghiệp vụ mong muốn.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
-    ]
+      {
+        "title": "Snowpark Python Functions Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
+      }
+    ],
+    "question_vi": "Câu lệnh nào sau đây sẽ thêm một cột dựa trên điều kiện dưới đây:\nMột Nhà khoa học dữ liệu muốn thay đổi 'Product 1' thành 'P1', 'Product 1A' thành 'P1A', và 'Product 1B' thành 'P1B'. Nếu không có điều kiện nào trong số đó được đáp ứng, bản ghi sẽ có giá trị là 'Not P1'.",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774852888937-usegyzy9.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774852891493-dm3pu5k5.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774852894256-hsdl26c7.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774852896743-2p8ihq5g.png)"
+    }
   },
   {
     "id": 29,
@@ -557,10 +861,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ phần dư rỗng (null residual plot) thể hiện rằng sai số có phương sai không đổi (homoscedasticity), tức là các điểm phần dư sẽ phân bố ngẫu nhiên và tạo thành một dải có độ rộng không đổi (constant width band) xung quanh đường tham chiếu 0.",
+    "explanation_vi": "* Trong phân tích hồi quy, **phần dư (residuals)** là sự chênh lệch giữa các giá trị thực tế và các giá trị được dự đoán bởi mô hình.\n* Một **biểu đồ phần dư rỗng (null residual plot)** hay còn gọi là biểu đồ không hiển thị bất kỳ mẫu hình/xu hướng đặc biệt nào (no pattern) chỉ ra rằng các giả định của hồi quy tuyến tính được thỏa mãn, đặc biệt là giả định về **phương sai sai số không đổi (homoscedasticity)**.\n* Trong trường hợp này, các điểm dữ liệu phần dư sẽ phân bố ngẫu nhiên xung quanh đường tham chiếu 0 (identity line) và tạo thành một dải có độ rộng không đổi (**constant width band**).\n* Nếu dải này có độ rộng tăng dần hoặc giảm dần (hình phễu), nó biểu thị hiện tượng phương sai thay đổi (heteroscedasticity), tức là giả định của mô hình hồi quy tuyến tính đã bị vi phạm.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Khi chạy một mô hình hồi quy (regression), các điểm tạo nên một biểu đồ phần dư rỗng (null residual plot) sẽ phân bố như thế nào xung quanh đường tham chiếu (identity line)?",
+    "options_vi": {
+      "A": "Một dải có độ rộng tăng dần",
+      "B": "Một dải có độ rộng giảm dần",
+      "C": "Một dải có độ rộng không đổi (constant width band)",
+      "D": "Một dải có độ rộng thay đổi (không cố định)"
+    }
   },
   {
     "id": 30,
@@ -576,10 +890,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để tiền xử lý cột dữ liệu phân loại (categorical) như tên các bang (`states` với 50 giá trị duy nhất) thành các đặc trưng dạng số cho mô hình, lớp tiền xử lý thích hợp nhất là `OneHotEncoder` (phương án C).",
+    "explanation_vi": "* Cột dữ liệu chứa tên các bang (`states` với 50 giá trị duy nhất) là kiểu dữ liệu phân loại danh nghĩa (nominal categorical data).\n* Để các mô hình học máy có thể hiểu và xử lý, các biến phân loại này cần được chuyển đổi thành các giá trị số thích hợp.\n* Lớp **`OneHotEncoder` (C)** trong gói tiền xử lý của Snowflake ML (`snowflake.ml.modeling.preprocessing.OneHotEncoder`) thực hiện mã hóa one-hot, biến mỗi bang trong số 50 bang thành một cột nhị phân mới (0 hoặc 1).\n* **Binarizer** (A) được sử dụng để phân ngưỡng (binarize) các giá trị số liên tục thành 0 hoặc 1 dựa trên một ngưỡng xác định.\n* **MinMaxScaler** (B) và **RobustScaler** (D) là các bộ tỷ lệ (scalers) dùng để chuẩn hóa và thay đổi thang đo của các đặc trưng dạng số liên tục, không dùng cho biến phân loại.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
-    ]
+      {
+        "title": "OneHotEncoder Reference (Snowflake ML)",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đang xây dựng một mô hình chiến dịch tiếp thị (marketing campaign model) sử dụng dữ liệu khách hàng tiềm năng (lead data). Dữ liệu thô có một cột chứa thông tin về bang (states) gồm 50 tên bang duy nhất. Lớp tiền xử lý (preprocessing class) nào sau đây nên được sử dụng để tạo ra các đặc trưng mới cho mô hình?",
+    "options_vi": {
+      "A": "snowflake.ml.modeling.preprocessing.Binarizer",
+      "B": "snowflake.ml.modeling.preprocessing.MinMaxScaler",
+      "C": "snowflake.ml.modeling.preprocessing.OneHotEncoder",
+      "D": "snowflake.ml.modeling.preprocessing.RobustScaler"
+    }
   },
   {
     "id": 31,
@@ -595,10 +919,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đối với bài toán phân loại phát hiện gian lận (fraud detection), hai chỉ số hồi quy R2 và MAE không thể sử dụng. Chỉ số `fbeta_score` (phương án C) là một chỉ số phân loại cho phép điều chỉnh trọng số giữa Precision (độ chính xác) và Recall (độ phủ), rất thích hợp để đánh giá mô hình phát hiện gian lận.",
+    "explanation_vi": "Để đánh giá hiệu suất của một mô hình phát hiện gian lận (bài toán phân loại nhị phân/đa lớp trong đó có sự mất cân bằng dữ liệu cực kỳ lớn giữa giao dịch bình thường và giao dịch gian lận):\n\n* **snowflake.ml.modeling.metrics.fbeta_score** (Đáp án **C**): Là thước đo phân loại kết hợp cả Precision (độ chính xác) và Recall (độ phủ), trong đó tham số beta cho phép cân đối tầm quan trọng giữa hai chỉ số này. Đây là lựa chọn tối ưu cho các bài toán mất cân bằng dữ liệu như phát hiện gian lận.\n* **r2_score** (Đáp án **B**) và **mean_absolute_error** (Đáp án **D**): Là các chỉ số dùng để đánh giá mô hình hồi quy (regression), không phù hợp cho bài toán phân loại giao dịch gian lận.\n* **d2_pinbal_score** (Đáp án **A**): Thường dùng trong hồi quy phân vị (quantile regression), không phù hợp.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
-    ]
+      {
+        "title": "Snowflake ML Modeling Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      },
+      {
+        "title": "fbeta_score API Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/api/snowflake.ml.modeling.metrics.fbeta_score"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đang xây dựng mô hình phát hiện gian lận cho một trang web mua sắm có số lượng giao dịch hàng ngày lớn. Đối với mỗi giao dịch, mô hình sẽ thực hiện một trong ba việc: đưa ra khuyến nghị phân loại nhị phân, chấm dứt giao dịch hoặc tiếp tục giao dịch. Hàm nào nên được sử dụng để đánh giá hiệu suất mô hình?",
+    "options_vi": {
+      "A": "snowflake-ml.modeling.metrics.d2_pinbal_score",
+      "B": "snowflake.ml.modeling.metrics.r2_score",
+      "C": "snowflake.ml.modeling.metrics.fbeta_score",
+      "D": "snowflake.ml.modeling-metrics.mean_absolute_error"
+    }
   },
   {
     "id": 32,
@@ -615,10 +953,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Phương trình của đường thẳng hồi quy tuyến tính phù hợp nhất có dạng y = mx + c. Để xác định phương trình này, ta cần tìm độ dốc `m` bằng hàm `REGR_SLOPE` (B) và điểm cắt trục tung `c` bằng hàm `REGR_INTERCEPT` (A).",
+    "explanation_vi": "Phương trình hồi quy tuyến tính đơn giản có dạng: **y = mx + c** (hoặc y = slope * x + intercept).\n\n* **REGR_SLOPE** (Đáp án **B**): Tính toán độ dốc (slope - ký hiệu `m`) của đường hồi quy tuyến tính phù hợp nhất.\n* **REGR_INTERCEPT** (Đáp án **A**): Tính toán điểm cắt trục tung (intercept - ký hiệu `c`) của đường hồi quy tuyến tính.\n* Các hàm còn lại như **REGR_SXX**, **REGR_SXY**, **REGR_SYY** tính toán các tổng bình phương sai lệch (sum of squares), là các đại lượng trung gian chứ không trực tiếp xác định phương trình đường thẳng hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/regr_slope"
-    ]
+      {
+        "title": "REGR_SLOPE",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/regr_slope"
+      },
+      {
+        "title": "REGR_INTERCEPT",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/regr_intercept"
+      }
+    ],
+    "question_vi": "Những hàm nào của Snowflake được sử dụng trong Hồi quy Tuyến tính để tìm phương trình của đường tiệm cận phù hợp nhất (đường tốt nhất)? (Chọn hai.)",
+    "options_vi": {
+      "A": "REGR_INTERCEPT",
+      "B": "REGR_SLOPE",
+      "C": "REGR_SXX",
+      "D": "REGR_SXY",
+      "E": "REGR_SYY"
+    }
   },
   {
     "id": 33,
@@ -635,10 +988,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong Snowpark DataFrame, để loại bỏ một cột (như cột “ssn”), ta có thể sử dụng phương thức `drop()` trực tiếp trên cột đó (A) hoặc sử dụng phương thức `select()` để chỉ chọn các cột còn lại (E).",
+    "explanation_vi": "Trong Snowpark Python API, để loại bỏ một hoặc nhiều cột khỏi DataFrame, chúng ta có hai cách tiếp cận chính:\n\n* **df.drop('ssn')** (Đáp án **A**): Hàm `drop` trả về một DataFrame mới loại bỏ cột được chỉ định (ở đây là 'ssn'). Đây là phương thức chuẩn và trực tiếp nhất.\n* **df.select('id', 'name', 'gender')** (Đáp án **E**): Thay vì xóa trực tiếp cột 'ssn', chúng ta có thể chọn tất cả các cột ngoại trừ cột 'ssn'. Điều này gián tiếp loại bỏ trường 'ssn'.\n* Các phương thức như `remove` (Đáp án **B**) hoặc `update` (Đáp án **C**) không tồn tại trên đối tượng Snowpark DataFrame để thực hiện thao tác xóa cột.\n* Lựa chọn **D** chứa lỗi cú pháp dấu chấm thay vì dấu phẩy (`“name”. “gender”`) và không có phương thức `.save()` trực tiếp như vậy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.drop"
-    ]
+      {
+        "title": "Snowpark DataFrame.drop",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.drop"
+      },
+      {
+        "title": "Snowpark DataFrame.select",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.select"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu cần loại bỏ trường “ssn” khỏi tập dữ liệu mà họ đang làm việc trên một DataFrame khách hàng trong Snowpark. Họ có thể sử dụng những hàm nào để hoàn thành việc này? (Chọn hai.)",
+    "options_vi": {
+      "A": "df.drop(“ssn”)",
+      "B": "df.remove(“ssn”)",
+      "C": "df.update(col(“ssn”).remove())",
+      "D": "df.select(“id”, “name”. “gender”).save()",
+      "E": "df_new = df.select(“id”, “name”, “gender”)"
+    }
   },
   {
     "id": 34,
@@ -654,10 +1022,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Gom nhóm dữ liệu tuổi liên tục thành các khoảng/khoang (bin ranges) tương ứng với các nhóm tuổi (như Youth, Junior, Adult) là kỹ thuật chia nhóm (binning), giúp chuẩn bị dữ liệu phù hợp với nhu cầu phân tích theo nhóm tuổi thay vì tuổi cụ thể.",
+    "explanation_vi": "Để chuyển đổi dữ liệu tuổi liên tục (ví dụ: 15, 25, 45 tuổi) thành các nhóm tuổi rời rạc (ví dụ: Youth, Junior, Adult), kỹ thuật chuẩn bị dữ liệu phù hợp nhất là **Binning** (phân khoảng dữ liệu).\n\n* **Nhóm dữ liệu vào các khoảng (bin) tương ứng với nhóm tuổi** (Đáp án **B**): Giúp chia nhỏ biến liên tục thành các khoảng cố định phù hợp với định nghĩa nhóm tuổi của doanh nghiệp, đáp ứng trực tiếp yêu cầu phân tích.\n* Phân cụm K-Means (Đáp án **A**) là thuật toán không giám sát tự động tìm cụm chứ không nhóm theo các nhóm tuổi có sẵn mà doanh nghiệp mong muốn.\n* Các lựa chọn **C** và **D** không phục vụ cho mục tiêu gom nhóm tuổi theo phân khúc nhân khẩu học nêu trên.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake Numeric Functions - WIDTH_BUCKET",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/width_bucket"
+      },
+      {
+        "title": "Snowpark Python API Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/index"
+      }
+    ],
+    "question_vi": "Một công ty quần áo muốn bổ sung trang phục mới dựa trên yêu cầu của khách hàng. Để ưu tiên các yêu cầu này, công ty thu thập các khảo sát nhân khẩu học của khách hàng bao gồm cả tuổi tác. Công ty không quan tâm đến độ tuổi cụ thể của khách hàng mà thay vào đó là nhóm tuổi của họ (ví dụ: Thanh thiếu niên, Trẻ em, Người lớn). Cách tiếp cận nào sẽ chuẩn bị dữ liệu cho việc phân tích?",
+    "options_vi": {
+      "A": "Sử dụng thuật toán K-Means để phân cụm dữ liệu.",
+      "B": "Nhóm dữ liệu vào các khoảng (bin) tương ứng với nhóm tuổi.",
+      "C": "Nhóm dữ liệu vào các khoảng (bin) tương ứng với độ tuổi cụ thể của khách hàng.",
+      "D": "Nhóm dữ liệu vào các khoảng (bin) tương ứng với từng sản phẩm đã mua."
+    }
   },
   {
     "id": 35,
@@ -673,10 +1055,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để tối ưu hóa chi phí hàng đầu (1st priority) và độ chính xác (2nd priority), việc tinh chỉnh (fine-tuning) một mô hình nền tảng nhỏ hơn như `mistral-7b` (A) sẽ tiêu thụ ít credit/token hơn nhiều so với mô hình lớn `mixtral-8x-7b` trong khi vẫn đạt được độ chính xác rất cao cho một tác vụ phân loại cụ thể.",
+    "explanation_vi": "Khi xây dựng ứng dụng LLM trong Snowflake Cortex với yêu cầu ưu tiên chi phí hàng đầu (cost optimization) và độ chính xác thứ hai (accuracy):\n\n* **Tinh chỉnh mô hình nhỏ hơn (mistral-7b)** (Đáp án **A**): Việc tinh chỉnh (fine-tuning) một mô hình nhỏ hơn như `mistral-7b` cho một tác vụ phân loại cụ thể giúp đạt được độ chính xác rất cao tương đương hoặc vượt trội so với các mô hình lớn hơn chưa tinh chỉnh. Hơn nữa, chi phí suy luận (inference cost) cho mỗi token của mô hình 7B nhỏ hơn nhiều so với mô hình lớn hơn như `mixtral-8x-7b`, giúp tiết kiệm chi phí tối đa khi chạy trên quy mô lớn.\n* Việc nhúng một lượng lớn dữ liệu huấn luyện vào Prompt (Few-shot prompting - Đáp án **C** và **D**) sẽ làm tăng đáng kể kích thước context window, dẫn đến chi phí token tăng cao cho mỗi lần suy luận, không tối ưu cho chi phí.\n* Tinh chỉnh mô hình lớn `mixtral-8x-7b` (Đáp án **B**) sẽ đắt hơn cả về chi phí huấn luyện lẫn suy luận so với `mistral-7b`.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
-    ]
+      {
+        "title": "Snowflake Cortex Fine-Tuning Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/cortex/fine-tuning"
+      },
+      {
+        "title": "Cortex Complete Function",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/complete-cortex"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu muốn xây dựng ứng dụng dựa trên LLM để phân loại các bản ghi âm cuộc gọi hỗ trợ khách hàng vào các danh mục đã được định nghĩa trước trong Snowflake. Có sẵn một tập dữ liệu lớn các bản ghi âm đã được gắn nhãn. Các danh mục dự kiến sẽ không thay đổi theo thời gian, nhưng quá trình suy luận (inference) sẽ cần chạy trên một lượng bản ghi cực kỳ lớn. Ưu tiên hàng đầu là tối ưu hóa chi phí, và ưu tiên thứ hai là độ chính xác. Nhà khoa học dữ liệu nên làm gì để đáp ứng các yêu cầu này?",
+    "options_vi": {
+      "A": "Sử dụng tập dữ liệu huấn luyện để tinh chỉnh (fine-tune) mô hình mistral-7b và chạy suy luận với hàm SNOWFLAKE.CORTEX.COMPLETE bằng mô hình đã tinh chỉnh.",
+      "B": "Sử dụng tập dữ liệu huấn luyện để tinh chỉnh (fine-tune) mô hình mixtral-8x-7b và chạy suy luận với hàm SNOWFLAKE.CORTEX.COMPLETE bằng mô hình đã tinh chỉnh.",
+      "C": "Sử dụng mô hình mixtral-8x-7b để chạy suy luận với hàm SNOWFLAKE.CORTEX.COMPLETE và đưa càng nhiều dữ liệu huấn luyện vào prompt càng tốt.",
+      "D": "Sử dụng mô hình mistral-7b để chạy suy luận với hàm SNOWFLAKE.CORTEX.COMPLETE và đưa càng nhiều dữ liệu huấn luyện vào prompt càng tốt."
+    }
   },
   {
     "id": 36,
@@ -692,10 +1088,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi thủ tục lưu trữ (stored procedure) cần trả về nhiều giá trị khác nhau (như các chỉ số đo lường accuracy, precision, recall), kiểu dữ liệu đầu ra phù hợp nhất là `VARIANT` (D) vì kiểu dữ liệu này hỗ trợ lưu cấu trúc JSON/bán cấu trúc.",
+    "explanation_vi": "Để một thủ tục lưu trữ (stored procedure) trong Snowflake có thể trả về một tập hợp nhiều chỉ số đo lường (chẳng hạn như accuracy, precision, recall) dưới dạng cấu trúc cặp khóa - giá trị (key-value) linh hoạt:\n\n* **VARIANT** (Đáp án **D**): Là kiểu dữ liệu bán cấu trúc (semi-structured) trong Snowflake có khả năng chứa các giá trị JSON, từ đó cho phép trả về nhiều giá trị/biến khác nhau trong một kết quả duy nhất một cách có tổ chức.\n* **Integer** (Đáp án **B**) và **String** (Đáp án **C**): Chỉ thích hợp cho các giá trị đơn lẻ.\n* **DataFrame** (Đáp án **A**): Không phải là một kiểu dữ liệu SQL hợp lệ trả về từ một stored procedure trong khai báo kiểu trả về (returns type) của Snowflake SQL (thủ tục lưu trữ trả về bảng sẽ sử dụng cú pháp `TABLE(...)` chứ không phải kiểu DataFrame trực tiếp).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
-    ]
+      {
+        "title": "Writing Stored Procedures in Python",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/python/stored-procedures"
+      },
+      {
+        "title": "Snowflake Variant Data Type",
+        "url": "https://docs.snowflake.com/en/sql-reference/data-types-semistructured"
+      }
+    ],
+    "question_vi": "Sau khi huấn luyện một mô hình bằng thủ tục lưu trữ (stored procedure), Nhà khoa học dữ liệu muốn đầu ra có nhiều hơn một biến để đánh giá các giá trị accuracy, precision và recall. Kiểu đầu ra của thủ tục lưu trữ nên là gì?",
+    "options_vi": {
+      "A": "DataFrame",
+      "B": "Integer",
+      "C": "String",
+      "D": "Variant"
+    }
   },
   {
     "id": 37,
@@ -711,10 +1121,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong Snowflake Model Registry, bí danh hệ thống `FIRST` (B) được sử dụng để tham chiếu đến phiên bản mô hình cũ nhất đã được đăng ký (dùng làm chuẩn đối sánh).",
+    "explanation_vi": "Trong Snowflake Model Registry, các phiên bản mô hình có thể được gán các bí danh hệ thống mặc định:\n\n* **FIRST** (Đáp án **B**): Là bí danh hệ thống trỏ đến phiên bản mô hình được đăng ký đầu tiên (cũ nhất), rất phù hợp để làm benchmark/đối sánh ban đầu.\n* **LAST** (Đáp án **D**): Trỏ đến phiên bản mô hình được đăng ký gần đây nhất.\n* **DEFAULT** (Đáp án **A**): Trỏ đến phiên bản mặc định được chỉ định cho các lượt gọi dự đoán.\n* **INITIAL** (Đáp án **C**): Không phải là một bí danh hệ thống được hỗ trợ chính thức.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Snowflake Model Registry Overview",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      },
+      {
+        "title": "Model Registry Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/reference"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu muốn so sánh hiệu suất mô hình giữa các phiên bản mô hình và sử dụng mô hình được huấn luyện ban đầu làm chuẩn đối sánh. Bí danh hệ thống (system alias) nào của Snowpark Model Registry mà Nhà khoa học dữ liệu có thể sử dụng để tham chiếu đến phiên bản cũ nhất của mô hình?",
+    "options_vi": {
+      "A": "DEFAULT",
+      "B": "FIRST",
+      "C": "INITIAL",
+      "D": "LAST"
+    }
   },
   {
     "id": 38,
@@ -730,10 +1154,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đường cong ROC biểu diễn mối quan hệ giữa Tỷ lệ dương tính thật (TPR) và Tỷ lệ dương tính giả (FPR) ở các ngưỡng phân loại khác nhau. Do đó, để vẽ thủ công đường cong này, chuyên gia cần thay đổi Ngưỡng phân loại (`Classification Threshold` - C).",
+    "explanation_vi": "Đường cong ROC (Receiver Operating Characteristic) biểu diễn mối quan hệ giữa Tỷ lệ dương tính thật (TPR / Sensitivity) và Tỷ lệ dương tính giả (FPR / 1 - Specificity) tại các mức ngưỡng phân loại khác nhau.\n\n* **Classification Threshold (Ngưỡng phân loại)** (Đáp án **C**): Bằng cách thay đổi ngưỡng này (ví dụ từ 0.0 đến 1.0), chúng ta sẽ thu được các cặp giá trị (FPR, TPR) tương ứng để vẽ nên đường cong ROC.\n* TPR (Đáp án **A**) và FPR (Đáp án **B**) là kết quả đầu ra của mô hình ứng với mỗi ngưỡng, chứ không phải tham số đầu vào được thay đổi chủ động.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Receiver Operating Characteristic (ROC)",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      },
+      {
+        "title": "Evaluating Classification Models",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Để vẽ thủ công biểu đồ Đặc trưng Hoạt động của Bộ thu nhận (ROC), Nhà khoa học dữ liệu sẽ phải thay đổi yếu tố nào mỗi lần trước khi chạy lại suy luận?",
+    "options_vi": {
+      "A": "Tỷ lệ Dương tính Thật (TPR)",
+      "B": "Tỷ lệ Dương tính Giả (FPR)",
+      "C": "Ngưỡng Phân loại (Classification Threshold)",
+      "D": "Ngưỡng Kiểm định (Validation Threshold)"
+    }
   },
   {
     "id": 39,
@@ -749,10 +1187,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để phân cụm khách hàng vào các nhóm tương đồng (peer groups) khi không có nhãn trước, ta sử dụng mô hình học không giám sát (unsupervised model). Sau đó, để phát hiện hành vi gian lận dựa trên các ví dụ giao dịch bình thường và bất thường, ta sử dụng mô hình học có giám sát (supervised model) (phương án B).",
+    "explanation_vi": "Quy trình phát hiện gian lận hai giai đoạn này bao gồm:\n\n* **Giai đoạn 1: Phân cụm nhóm tương đồng (Customer Segmentation)**: Vì ban đầu chúng ta không có nhãn sẵn cho các nhóm tương đồng của khách hàng, việc sử dụng **mô hình không giám sát (unsupervised model)** như K-Means là phương pháp chuẩn xác để tự động gom cụm khách hàng dựa trên đặc điểm mua sắm.\n* **Giai đoạn 2: Phát hiện bất thường/gian lận**: Khi đã có các nhóm tương đồng, chúng ta sử dụng dữ liệu lịch sử chứa các giao dịch bình thường và gian lận để huấn luyện một **mô hình có giám sát (supervised model)** nhằm phân loại chính xác các hành vi gian lận mới.\n* Do đó, phương án **B** là cách tiếp cận khoa học và phổ biến nhất cho bài toán này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake Machine Learning Functions",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      },
+      {
+        "title": "Anomaly Detection in Snowflake",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/anomaly-detection"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đang phát triển quy trình học máy hai giai đoạn để phát hiện gian lận. Quy trình này trước tiên cần nhóm các khách hàng có hành vi mua sắm tương tự nhau vào các nhóm tương đồng (peer groups), sau đó cố gắng phát hiện hành vi mua hàng bất thường so với nhóm tương đồng của khách hàng đó. Nhà khoa học dữ liệu nên làm gì?",
+    "options_vi": {
+      "A": "Sử dụng mô hình có giám sát để phân đoạn khách hàng vào các nhóm tương đồng. Sau đó, huấn luyện một mô hình có giám sát khác dựa trên dữ liệu đã gắn nhãn để thực hiện phát hiện gian lận trong từng nhóm tương đồng.",
+      "B": "Sử dụng mô hình không giám sát để phân đoạn khách hàng vào các nhóm tương đồng. Sau đó, sử dụng các ví dụ rút ra về giao dịch bình thường và bất thường để huấn luyện mô hình có giám sát phục vụ phát hiện gian lận.",
+      "C": "Sử dụng dữ liệu được gắn nhãn để huấn luyện các luật kết hợp nhằm phân đoạn khách hàng vào các nhóm tương đồng. Sau đó, huấn luyện một mô hình hồi quy không giám sát để phát hiện hành vi của khách hàng lệch khỏi hành vi trung bình trong nhóm tương đồng.",
+      "D": "Sử dụng mạng nơ-ron có hai lớp ẩn. Lớp đầu tiên sẽ gán một khách hàng cụ thể vào một nhóm tương đồng. Sau đó, lớp thứ hai sẽ thực hiện phát hiện bất thường trong nhóm tương đồng mà khách hàng đã được chỉ định."
+    }
   },
   {
     "id": 40,
@@ -768,10 +1220,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Sai số bình phương trung bình (`Mean squared error` - D) là chỉ số đo lường hiệu suất tiêu chuẩn cho bài toán hồi quy (regression), trong khi Precision, Recall và F1-score dành cho bài toán phân loại (classification).",
+    "explanation_vi": "Để đánh giá hiệu năng của mô hình hồi quy (regression model), chúng ta cần đo lường mức độ sai lệch giữa giá trị dự báo liên tục và giá trị thực tế:\n\n* **Mean squared error (MSE - Sai số bình phương trung bình)** (Đáp án **D**): Là chỉ số tiêu chuẩn cho bài toán hồi quy, tính trung bình bình phương sai số của các dự báo.\n* **Precision**, **Recall**, và **F1 score** (Đáp án **A, B, C**): Là các chỉ số đánh giá hiệu năng của mô hình phân loại (classification model), đo lường khả năng phân loại đúng các lớp rời rạc.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
-    ]
+      {
+        "title": "Mean Squared Error Metric in Snowflake",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/api/snowflake.ml.modeling.metrics.mean_squared_error"
+      },
+      {
+        "title": "Snowflake ML Modeling Metrics Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Chỉ số nào nên được sử dụng để kiểm tra hiệu quả của một mô hình hồi quy (regression model)?",
+    "options_vi": {
+      "A": "Điểm Precision",
+      "B": "Điểm Recall",
+      "C": "Điểm F1",
+      "D": "Sai số bình phương trung bình (Mean squared error)"
+    }
   },
   {
     "id": 41,
@@ -787,10 +1253,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đoạn mã chuyển đổi kiểu dữ liệu thực thi thành công và trả về giá trị số đã được chuyển đổi là 2 (C) theo đúng đặc tả của hàm chuyển đổi trong Snowpark.",
+    "explanation_vi": "Trong Snowpark Python API, việc thực hiện chuyển đổi kiểu dữ liệu thành công sẽ trả về giá trị sau khi chuyển đổi.\n\n* Với việc chuyển đổi thành công giá trị (ví dụ: chuyển đổi chuỗi `'2'` thành kiểu số nguyên), kết quả nhận được sẽ là **2** (Đáp án **C**).\n* Nếu sử dụng hàm `cast` và việc chuyển đổi không thể thực hiện được (ví dụ chuyển đổi chữ cái `'abc'` thành số nguyên), chương trình sẽ ném ra lỗi **SnowparkSQLException** (Đáp án **D**).\n* Nếu sử dụng hàm `try_cast` và chuyển đổi thất bại, kết quả sẽ là **Null** (Đáp án **A**).\n* Ở đây, kết quả đúng được xác định là 2, cho thấy quá trình chuyển đổi đã diễn ra thành công.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
-    ]
+      {
+        "title": "Snowpark functions.cast Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.functions.cast"
+      },
+      {
+        "title": "Snowpark functions.try_cast Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.functions.try_cast"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu thực thi đoạn mã sau để chuyển đổi giá trị từ kiểu dữ liệu này sang kiểu dữ liệu khác:\nKết quả đầu ra sẽ là gì?",
+    "options_vi": {
+      "A": "Null",
+      "B": "1",
+      "C": "2",
+      "D": "Lỗi SnowparkSQLException sẽ được trả về."
+    }
   },
   {
     "id": 42,
@@ -806,10 +1286,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đối với một mô hình hồi quy tuyến tính tốt, biểu đồ phần dư (residuals plot) phải phân bố hoàn toàn ngẫu nhiên và không có mẫu hình hay mối quan hệ nào rõ rệt. Nếu phát hiện ra bất kỳ mối quan hệ hay mẫu hình nào, điều đó có nghĩa là mô hình chưa nắm bắt tốt cấu trúc dữ liệu và không phải là một mô hình tốt (B).",
+    "explanation_vi": "Trong phân tích hồi quy tuyến tính, một trong những giả định quan trọng là phần dư (residuals) phải độc lập và có phân phối ngẫu nhiên xung quanh giá trị 0 (tức là không xuất hiện mẫu hình hay xu hướng nào khi vẽ biểu đồ với các giá trị dự báo).\n\n* **Vì xuất hiện mối quan hệ, mô hình hoạt động không tốt** (Đáp án **B**): Sự xuất hiện của xu hướng hoặc mẫu hình (chẳng hạn như hình phễu - heteroscedasticity hoặc dạng đường cong) trong biểu đồ phần dư chỉ ra rằng mô hình tuyến tính hiện tại chưa nắm bắt được hết các mối quan hệ phi tuyến tính trong dữ liệu, hoặc giả định của mô hình hồi quy tuyến tính đã bị vi phạm. Do đó, mô hình này không tốt.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Regression Analysis",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      },
+      {
+        "title": "Linear Regression in Snowflake",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/regr_slope"
+      }
+    ],
+    "question_vi": "Một nhóm Khoa học dữ liệu vẽ biểu đồ phân tán (scatterplot) giữa phần dư (residuals) và các giá trị dự báo trong mô hình hồi quy tuyến tính. Một thành viên phát hiện ra rằng có một mối quan hệ và một mẫu hình xuất hiện giữa các giá trị này. Kết luận nào sau đây có thể rút ra về mô hình hồi quy tuyến tính này?",
+    "options_vi": {
+      "A": "Vì xuất hiện mối quan hệ, mô hình hoạt động tốt.",
+      "B": "Vì xuất hiện mối quan hệ, mô hình hoạt động không tốt.",
+      "C": "Vì xuất hiện mối quan hệ, giá trị dự báo và phần dư cần phải được tính toán lại.",
+      "D": "Nên sử dụng một mô hình khác để xác nhận xem mối quan hệ và mẫu hình đó có chính xác hay không."
+    }
   },
   {
     "id": 43,
@@ -825,10 +1319,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đường cong ROC là biểu đồ thể hiện mối quan hệ giữa Tỷ lệ dương tính giả (False Positive Rate) trên trục hoành và Tỷ lệ dương tính thật (True Positive Rate) trên trục tung ở các ngưỡng phân loại khác nhau.",
+    "explanation_vi": "Đường cong ROC (Receiver Operating Characteristic) là một công cụ trực quan hóa hiệu năng của mô hình phân loại nhị phân.\n\n* **Biểu đồ tỷ lệ dương tính giả (FPR) so với tỷ lệ dương tính thật (TPR)** (Đáp án **C**): Đường cong này được vẽ bằng cách đặt False Positive Rate (FPR) trên trục hoành (X-axis) và True Positive Rate (TPR) trên trục tung (Y-axis) tương ứng với nhiều ngưỡng phân loại (thresholds) khác nhau.\n* Các phương án còn lại (A, B, D) định nghĩa sai lệch về các khái niệm thống kê khác như độ tương quan, xu hướng trung tâm hay hồi quy tuyến tính.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Understanding ROC in Snowflake ML",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      },
+      {
+        "title": "Binary Classification Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Phát biểu nào sau đây định nghĩa đúng về đường cong Đặc trưng Hoạt động của Bộ thu nhận (ROC)?",
+    "options_vi": {
+      "A": "Thước đo mức độ hữu ích của một thuộc tính và giá trị phân loại liên quan.",
+      "B": "Thước đo xu hướng trung tâm để thể hiện cách một điểm ngoại lệ liên quan đến một giá trị xác định.",
+      "C": "Biểu đồ biểu thị các giá trị của tỷ lệ dương tính giả (FPR) so với tỷ lệ dương tính thật (TPR) ở các ngưỡng khác nhau.",
+      "D": "Biểu đồ ánh xạ mối quan hệ tuyến tính giữa các biến đầu vào (x) và biến đầu ra (y)."
+    }
   },
   {
     "id": 44,
@@ -845,10 +1353,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để chạy dự báo bằng phiên bản mô hình đăng ký (`mv`), ta có thể gọi phương thức `mv.run(test_data, function_name=\"predict\")` (A) hoặc gọi trực tiếp phương thức `mv.predict(test_data)` (C).",
+    "explanation_vi": "Trong Python API của Snowflake Model Registry, đối tượng phiên bản mô hình được đăng ký (ở đây là `mv` - Model Version) hỗ trợ thực thi dự báo theo các cách sau:\n\n* **mv.predict(test_data)** (Đáp án **C**): Cách gọi trực tiếp, thuận tiện nhất và là phương thức mặc định để chạy suy luận trên dữ liệu đầu vào.\n* **mv.run(test_data, function_name=\"predict\")** (Đáp án **A**): Phương thức tổng quát hơn, cho phép chỉ định rõ tên hàm mục tiêu (ví dụ: `predict` hoặc `predict_proba`) để chạy suy luận.\n* Các câu lệnh SQL sử dụng toán tử gọi hàm mô hình `!` như trong đáp án B và D không đúng cú pháp gọi hàm mô hình SQL trực tiếp từ session khi chưa đăng ký làm UDF SQL, hoặc sai cú pháp tham chiếu.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
-    ]
+      {
+        "title": "Snowflake Model Registry - Model Version predict",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      },
+      {
+        "title": "Model Registry Reference API",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/reference"
+      }
+    ],
+    "question_vi": "Một mô hình được đăng ký vào Snowflake Model Registry bằng đoạn mã sau. Những câu lệnh gọi nào sẽ chạy dự báo với mô hình đó? (Chọn hai.)",
+    "options_vi": {
+      "A": "prediction_df = mv.run(test_data, function_name= “predict”)\nprediction_df.show()",
+      "B": "prediction_df =session.sql(“SELECT my_model!predict(t.feature1, t.feature2 ) FROM test_data t”).show()",
+      "C": "prediction_df = mv.predict(test_data)\nprediction_df.show()",
+      "D": "prediction_df =session.sql(“SELECT my_model!predict FROM test_data t”).show()",
+      "E": "prediction_df = mv.run(test_data, my_model)\nprediction_df.show()"
+    }
   },
   {
     "id": 45,
@@ -864,10 +1387,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong Feature Store của Snowpark, nếu tham số tần suất làm mới `refresh_freq` không được chỉ định, Snowflake sẽ tạo ra một khung nhìn (view) tĩnh thông thường thay vì một bảng động (dynamic table).",
+    "explanation_vi": "Trong Snowpark Feature Store, khi định nghĩa hoặc đăng ký một feature view:\n\n* **A view will be created (Một view sẽ được tạo)** (Đáp án **A**): Nếu không chỉ định tham số `refresh_freq` (tần suất làm mới), Snowflake mặc định sẽ tạo ra một view chuẩn (standard view) để truy vấn trực tiếp từ dữ liệu gốc mỗi khi được gọi.\n* Nếu chỉ định tham số `refresh_freq`, Snowflake sẽ tạo ra một **Dynamic Table** (Đáp án **D**) để tự động làm mới dữ liệu đặc trưng theo lịch trình đã đặt.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/feature-store/overview"
-    ]
+      {
+        "title": "Snowpark Feature Store Overview",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/feature-store/overview"
+      },
+      {
+        "title": "Creating a Feature View",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/feature-store/create-feature-view"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học dữ liệu đang tạo một view do Snowflake quản lý bằng cách sử dụng Snowpark Feature Store. Điều gì sẽ xảy ra nếu tham số refresh_freq KHÔNG được chỉ định?",
+    "options_vi": {
+      "A": "Một view (khung nhìn) sẽ được tạo.",
+      "B": "Một materialized view (khung nhìn cụ thể hóa) sẽ được tạo.",
+      "C": "Một table (bảng) sẽ được tạo.",
+      "D": "Một dynamic table (bảng động) sẽ được tạo."
+    }
   },
   {
     "id": 46,
@@ -883,9 +1420,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để dự báo doanh thu của tuần tới dựa trên chuỗi thời gian doanh thu hàng ngày trong 2 năm qua, mô hình chuỗi thời gian ARIMA (Autoregressive Integrated Moving Average - A) là lựa chọn chính xác.",
+    "question_vi": "Một nhà khoa học dữ liệu đang cố gắng dự báo tổng doanh thu cho tuần tới dựa trên dữ liệu tổng doanh thu hàng ngày của hai năm qua. Phương pháp nào nên được sử dụng?",
+    "options_vi": {
+      "A": "Mô hình ARIMA",
+      "B": "Thuật toán Eclat",
+      "C": "Phân cụm K-means",
+      "D": "Phân tích thành phần chính (PCA)"
+    },
+    "explanation_vi": "Để dự báo một biến liên tục theo thời gian (chuỗi thời gian) như tổng doanh thu dựa trên lịch sử dữ liệu của chính nó, mô hình ARIMA là lựa chọn phù hợp nhất.\n\n* **Mô hình ARIMA (Autoregressive Integrated Moving Average)**: Là phương pháp thống kê phổ biến được thiết kế chuyên biệt cho việc phân tích và dự báo dữ liệu chuỗi thời gian (time series forecasting).\n* **Thuật toán Eclat**: Được sử dụng để khai phá tập mục thường gặp (Frequent Itemset Mining) trong luật kết hợp, ví dụ như phân tích giỏ hàng (market basket analysis).\n* **Phân cụm K-means**: Là thuật toán học không giám sát dùng để nhóm các đối tượng tương tự nhau thành các cụm (clustering), không dùng để dự báo chuỗi thời gian.\n* **PCA (Principal Component Analysis)**: Là phương pháp giảm chiều dữ liệu (dimensionality reduction), giúp trích xuất các đặc trưng quan trọng chứ không trực tiếp dùng để dự báo tương lai.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/forecasting"
+      {
+        "title": "Introduction to Forecasting - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/forecasting"
+      }
     ]
   },
   {
@@ -902,9 +1449,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Sử dụng trực tiếp Sổ tay Snowflake (Snowflake Notebook) trong giao diện Snowsight là cách nhanh chóng và bảo mật nhất để đọc dữ liệu và phân tích bằng thư viện Pandas mà không cần tải dữ liệu ra máy cục bộ.",
+    "question_vi": "Một nhà khoa học dữ liệu cần thực hiện khám phá ban đầu trên dữ liệu mới bằng pandas. Phương pháp nào hiệu quả nhất để tải dữ liệu vào một pandas DataFrame?",
+    "options_vi": {
+      "A": "Unload dữ liệu ra một tệp trên máy cục bộ và sử dụng Snowpark để phân tích dữ liệu với pandas.",
+      "B": "Unload dữ liệu ra một tệp trên máy cục bộ và sử dụng Jupyter Notebook chạy trên máy cục bộ để phân tích dữ liệu với pandas.",
+      "C": "Unload dữ liệu ra một tệp trong một external stage và truy cập tệp đó thông qua một công cụ của bên thứ ba trên external stage.",
+      "D": "Sử dụng Snowflake Notebook trong Snowsight để phân tích dữ liệu với pandas."
+    },
+    "explanation_vi": "Sử dụng trực tiếp **Snowflake Notebooks trong Snowsight** là cách hiệu quả và bảo mật nhất để khám phá dữ liệu bằng pandas mà không cần di chuyển dữ liệu ra khỏi Snowflake.\n\n* **Snowflake Notebooks (D)** tích hợp sẵn môi trường Python và Snowpark ngay trong giao diện web của Snowflake. Bạn có thể dễ dàng chuyển đổi kết quả truy vấn SQL thành Snowpark DataFrame hoặc pandas DataFrame và phân tích trực tiếp trên tài nguyên được quản lý của Snowflake.\n* **Phương án A & B**: Yêu cầu phải unload dữ liệu ra máy cục bộ, điều này gây mất thời gian truyền dữ liệu (data transfer egress cost), tốn không gian lưu trữ và tiềm ẩn rủi ro bảo mật dữ liệu.\n* **Phương án C**: Việc di chuyển dữ liệu ra external stage rồi dùng công cụ bên thứ ba cũng phức tạp và kém hiệu quả hơn so với việc phân tích trực tiếp ngay trong giao diện gốc của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      {
+        "title": "Snowflake Notebooks - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      }
     ]
   },
   {
@@ -919,13 +1476,27 @@
       "E": "IFF"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Để chuyển đổi giá trị từ “Yes”/”No” thành 1/0 trực tiếp trong câu lệnh SELECT, quản trị viên có thể sử dụng hàm `DECODE` (D) hoặc hàm điều kiện `IFF` (E).",
+    "question_vi": "Một nhà khoa học dữ liệu có một cột trong bảng chứa các giá trị “Yes” và “No” và muốn chuyển đổi chúng thành 1 và 0. Việc chuyển đổi này phải là một phần của câu lệnh SELECT. Những hàm nào có thể được sử dụng để thực hiện việc này? (Chọn hai.)",
+    "options_vi": {
+      "A": "AS_BINARY",
+      "B": "AS_BOOLEAN",
+      "C": "COALESCE",
+      "D": "DECODE",
+      "E": "IFF"
+    },
+    "explanation_vi": "Để chuyển đổi các giá trị văn bản như \"Yes\" và \"No\" thành số 1 và 0 trực tiếp trong câu lệnh `SELECT` của Snowflake, hai hàm hữu ích nhất là:\n\n* **DECODE (D)**: Hoạt động tương tự như cấu trúc CASE WHEN hoặc một bảng tra cứu giá trị. Ví dụ: `DECODE(column_name, 'Yes', 1, 'No', 0, null)` sẽ chuyển \"Yes\" thành 1, \"No\" thành 0 và các giá trị khác thành null.\n* **IFF (E)**: Là phiên bản viết tắt của \"IF-THEN-ELSE\". Ví dụ: `IFF(column_name = 'Yes', 1, 0)` sẽ trả về 1 nếu biểu thức đúng (là \"Yes\") và 0 nếu biểu thức sai.\n\nCác hàm không phù hợp:\n* **AS_BINARY**: Dùng để ép kiểu (cast) một giá trị sang kiểu dữ liệu nhị phân (binary), không dùng để ánh xạ logic.\n* **AS_BOOLEAN**: Dùng để ép kiểu sang giá trị Boolean (True/False), không trả về trực tiếp giá trị số 1 và 0 theo yêu cầu.\n* **COALESCE**: Trả về giá trị không null đầu tiên trong danh sách tham số, không hỗ trợ ánh xạ điều kiện dạng Yes/No.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions/decode",
-      "https://docs.snowflake.com/en/sql-reference/functions/iff"
+      {
+        "title": "DECODE - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/decode"
+      },
+      {
+        "title": "IFF - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/iff"
+      }
     ]
   },
   {
@@ -942,9 +1513,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Học máy có giám sát (supervised learning) yêu cầu dữ liệu lịch sử đã được gán nhãn. Bài toán xây dựng mô hình dự báo xu hướng chi tiêu (propensity to spend) từ hành vi tiêu dùng trong quá khứ (B) là một ứng dụng điển hình của học máy có giám sát.",
+    "question_vi": "Trường hợp sử dụng nào phù hợp NHẤT với học máy có giám sát (supervised learning)?",
+    "options_vi": {
+      "A": "Sáng tạo tác phẩm nghệ thuật và âm nhạc mới cho chiến dịch marketing.",
+      "B": "Xây dựng mô hình dự báo xu hướng chi tiêu (propensity to spend) bằng dữ liệu lịch sử.",
+      "C": "Xác định phân khúc khách hàng cho chiến lược marketing.",
+      "D": "Phát hiện các bộ phận máy móc bị lỗi để bảo trì phòng ngừa."
+    },
+    "explanation_vi": "Học máy có giám sát (Supervised Learning) yêu cầu tập dữ liệu huấn luyện đã được gắn nhãn (labeled data) để mô hình học cách ánh xạ từ đầu vào đến đầu ra mong muốn.\n\n* **Xây dựng mô hình xu hướng chi tiêu (B)**: Sử dụng dữ liệu lịch sử (chứa thông tin khách hàng và nhãn thực tế họ đã chi tiêu bao nhiêu hoặc có chi tiêu hay không) để dự báo khả năng/xu hướng chi tiêu trong tương lai. Đây là bài toán phân loại (classification) hoặc hồi quy (regression) có giám sát kinh điển.\n* **Sáng tạo nghệ thuật/âm nhạc (A)**: Thuộc về Trí tuệ nhân tạo tạo sinh (Generative AI), thường sử dụng học không giám sát hoặc tự giám sát (self-supervised) trên các tập dữ liệu lớn.\n* **Phân khúc khách hàng (C)**: Là bài toán phân cụm (clustering), một dạng học không giám sát (unsupervised learning) vì không có nhãn phân khúc trước đó.\n* **Phát hiện bộ phận máy bị lỗi (D)**: Thường được giải quyết bằng các kỹ thuật phát hiện bất thường (anomaly detection) - một dạng học không giám sát hoặc bán giám sát, do dữ liệu về lỗi máy móc trong thực tế rất hiếm và khó gắn nhãn đầy đủ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      {
+        "title": "Snowflake Machine Learning - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/concepts/ml-overview"
+      }
     ]
   },
   {
@@ -959,12 +1540,23 @@
       "E": "options"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm Python `snowflake.cortex.complete` yêu cầu hai tham số bắt buộc đầu vào là tên mô hình (`model` - B) và câu lệnh truy vấn (`prompt` - C).",
+    "question_vi": "Một nhà khoa học dữ liệu đang sử dụng hàm snowflake.cortex.complete để tạo câu trả lời cho mô hình cơ sở tri thức của công ty. Những tham số nào là bắt buộc? (Chọn hai.)",
+    "options_vi": {
+      "A": "deadline",
+      "B": "model",
+      "C": "prompt",
+      "D": "session",
+      "E": "options"
+    },
+    "explanation_vi": "Khi sử dụng API Python `snowflake.cortex.Complete` (hoặc hàm SQL `SNOWFLAKE.CORTEX.COMPLETE`), hai đối số bắt buộc phải được cung cấp là:\n\n* **model (B)**: Tên của mô hình ngôn ngữ lớn (LLM) bạn muốn sử dụng (ví dụ: `'llama3.1-70b'`).\n* **prompt (C)**: Đoạn văn bản đầu vào hoặc danh sách các tin nhắn hội thoại mà bạn muốn mô hình phản hồi.\n\nCác tham số khác như `session`, `options`, `deadline` là tùy chọn (optional) chứ không bắt buộc phải cung cấp.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
+      {
+        "title": "snowflake.cortex.Complete - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark-ml/reference/latest/api/snowflake.cortex.Complete"
+      }
     ]
   },
   {
@@ -981,9 +1573,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Do số lượng cuộc gọi bất thường đã được gán nhãn trong quá khứ là quá nhỏ (không đủ để huấn luyện mô hình có giám sát), giải pháp đầu tiên là sử dụng thuật toán phân cụm không giám sát (Clustering - B) để Gom nhóm các cuộc gọi bình thường và phát hiện các cuộc gọi lệch nhóm (outliers) là cuộc gọi bất thường.",
+    "question_vi": "Một nhà khoa học dữ liệu đang phát triển một mô hình phát hiện thời gian thực cho một trung tâm cuộc gọi. Dữ liệu là bản ghi văn bản của các cuộc gọi trực tiếp giữa khách hàng và điện thoại viên. Mô hình cần xác định xem cuộc gọi có bất thường hay không để hệ thống có thể gửi cảnh báo ngay lập tức cho người giám sát. Số lượng cuộc gọi được xem xét và gắn nhãn lỗi trước đó chiếm tỷ lệ không đáng kể. Phương pháp nào nên được sử dụng ĐẦU TIÊN để phân tách các cuộc gọi bất thường?",
+    "options_vi": {
+      "A": "Xử lý tín hiệu âm thanh (Audio signal processing)",
+      "B": "Học không giám sát: Phân cụm (Unsupervised learning: Clustering)",
+      "C": "Học có giám sát: Phân khúc khách hàng (Supervised learning: Customer segmentation)",
+      "D": "Học có giám sát: Phân khúc điện thoại viên (Supervised learning: Call agent segmentation)"
+    },
+    "explanation_vi": "Khi dữ liệu lịch sử thiếu nhãn (chỉ có tỷ lệ cực kỳ nhỏ cuộc gọi được đánh dấu/gắn nhãn lỗi), chúng ta không thể huấn luyện một mô hình học máy có giám sát (supervised learning) hiệu quả. Do đó:\n\n* **Học không giám sát: Phân cụm (B)**: Là phương pháp phù hợp nhất để sử dụng ĐẦU TIÊN. Bằng cách gom cụm dữ liệu bản ghi (audio transcript) của các cuộc gọi, các cuộc gọi bình thường (chiếm đa số) sẽ tạo thành các cụm lớn có đặc điểm giống nhau. Những cuộc gọi bất thường (abnormal/outliers) sẽ nằm xa hoặc không thuộc về các cụm này, giúp dễ dàng nhận diện bất thường.\n* **Xử lý tín hiệu âm thanh (A)**: Đề bài nêu rõ dữ liệu đầu vào là văn bản bản dịch (audio transcript), không phải dạng sóng âm thanh thô, nên không dùng phương pháp này.\n* **Phương án C & D**: Đều là học có giám sát và không giải quyết trực tiếp bài toán phân tách cuộc gọi bất thường dựa trên hành vi/văn bản khi thiếu nhãn.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      {
+        "title": "Anomaly Detection - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/anomaly-detection"
+      }
     ]
   },
   {
@@ -1000,9 +1602,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Bảng động (Dynamic Tables - D) trong Snowflake là giải pháp tự động cập nhật dữ liệu một cách tăng trưởng (incremental) từ nhiều bảng nguồn dựa trên một câu lệnh truy vấn định nghĩa trước, giúp loại bỏ sự phức tạp khi tự viết mã điều phối bằng Streams và Tasks hay viết lệnh INSERT.",
+    "question_vi": "Một nhà khoa học dữ liệu cần xây dựng một tập dữ liệu sử dụng các cột từ nhiều bảng và duy trì việc cập nhật tự động dưới dạng tăng dần (incremental). Làm thế nào để thực hiện việc này mà không cần viết lệnh INSERT hoặc kiểm tra các thay đổi trong các bảng nguồn?",
+    "options_vi": {
+      "A": "Materialized views (Bản xem trực quan hóa)",
+      "B": "Views (Bản xem)",
+      "C": "Streams và tasks",
+      "D": "Dynamic tables (Bảng động)"
+    },
+    "explanation_vi": "Để tự động cập nhật dữ liệu một cách tăng dần (incremental) từ nhiều bảng nguồn mà không cần phải viết mã điều phối phức tạp, **Dynamic Tables (D)** là giải pháp tối ưu nhất.\n\n* **Dynamic Tables**: Cho phép bạn định nghĩa kết quả mong muốn bằng một câu lệnh truy vấn SQL (có thể thực hiện JOIN nhiều bảng). Snowflake sẽ tự động quản lý việc tính toán tăng dần và cập nhật dữ liệu định kỳ theo một khoảng thời gian (target lag) xác định mà người dùng không cần viết câu lệnh `INSERT`, `MERGE` hay quản lý thay đổi thủ công.\n* **Materialized Views**: Có giới hạn rất lớn trong Snowflake, chẳng hạn như chỉ hoạt động trên một bảng duy nhất (không hỗ trợ JOIN nhiều bảng).\n* **Views**: Chỉ là các định nghĩa logic, không lưu trữ dữ liệu vật lý nên không có việc cập nhật dữ liệu tăng dần.\n* **Streams and tasks**: Mặc dù có thể làm được việc cập nhật tăng dần, nhưng đòi hỏi lập trình viên phải tự viết mã kiểm tra thay đổi (Stream) và thủ tục xử lý để chèn/cập nhật dữ liệu (Task/INSERT/MERGE), đi ngược lại yêu cầu của đề bài.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/dynamic-tables-intro"
+      {
+        "title": "About Dynamic Tables - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/dynamic-tables-about"
+      }
     ]
   },
   {
@@ -1017,12 +1629,23 @@
       "E": "Create and call a User-Defined Function (UDF)."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Để thực thi mã nguồn biên dịch dạng tệp JAR (Java) trong Snowflake, lập trình viên cần tải tệp JAR lên một stage của Snowflake (B) và tạo một Hàm tự định nghĩa (Java UDF - E) trỏ tới tệp JAR này để gọi mã chạy dự báo.",
+    "question_vi": "Một tệp JAR nhị phân được xuất ra để chấm điểm (score) dữ liệu trong Snowflake. Những bước nào là cần thiết để đưa mã nguồn chấm điểm này vào hoạt động trong Snowflake? (Chọn hai.)",
+    "options_vi": {
+      "A": "Tạo và gọi một thủ tục lưu trữ (stored procedure).",
+      "B": "Tải tệp JAR vào một Snowflake stage.",
+      "C": "Tải tệp JAR vào một bảng dưới dạng cột VARIANT.",
+      "D": "Sử dụng một external function để gọi tệp JAR.",
+      "E": "Tạo và gọi một Hàm tự định nghĩa (User-Defined Function - UDF)."
+    },
+    "explanation_vi": "Để thực thi mã chấm điểm (scoring/prediction) được biên dịch dưới dạng tệp JAR (Java) trong Snowflake, quy trình chuẩn bao gồm hai bước chính:\n\n* **Tải tệp JAR vào một Snowflake stage (B)**: Bạn cần tải tệp JAR nhị phân lên một stage (internal stage) của Snowflake để Snowflake có thể truy cập vào mã nguồn đó.\n* **Tạo và gọi một User-Defined Function (E)**: Tạo một Java UDF trỏ tới tệp JAR đã tải lên stage trong mệnh đề `IMPORTS` và định nghĩa phương thức xử lý (handler method) để gọi hàm này khi chấm điểm dữ liệu trực tiếp trong các truy vấn SQL.\n\nCác lựa chọn khác:\n* **Thủ tục lưu trữ (A)**: Thường dùng cho các tác vụ quản trị, tự động hóa quy trình nghiệp vụ (chạy không trả về giá trị trực tiếp trên từng dòng như UDF), không tối ưu cho việc tính điểm dữ liệu trên các dòng dữ liệu bằng SQL.\n* **Bảng VARIANT (C)**: Không thể thực thi trực tiếp mã Java từ một cột VARIANT.\n* **External function (D)**: Dùng để gọi các API hoặc dịch vụ bên ngoài Snowflake (như AWS Lambda, Azure Functions), trong khi tệp JAR hoàn toàn có thể chạy nội bộ (in-database) bằng Java UDF của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction"
+      {
+        "title": "Creating Java UDFs - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-creating"
+      }
     ]
   },
   {
@@ -1039,23 +1662,48 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lớp tiền xử lý `StandardScaler` (A) trong bộ thư viện `snowflake.ml.modeling.preprocessing` được sử dụng để chuẩn hóa các đặc trưng số liên tục về dạng có trung bình bằng 0 và phương sai bằng 1 (Z-score normalization).",
+    "question_vi": "Một nhà khoa học dữ liệu muốn huấn luyện một mô hình học máy có giám sát trên một tập dữ liệu chứa nhiều đặc trưng số liên tục. Trong giai đoạn khám phá, nhà khoa học dữ liệu nhận thấy các đặc trưng có phân phối xấp xỉ chuẩn nhưng có trung bình và phương sai khác nhau giữa các đặc trưng. Nhà khoa học dữ liệu đã xây dựng pipeline tận dụng Snowpark ML. Lớp nào từ snowflake.ml.modeling.preprocessing nên được sử dụng để đưa các đặc trưng về dạng có trung bình bằng 0 và phương sai bằng 1?",
+    "options_vi": {
+      "A": "StandardScaler",
+      "B": "MinMaxScaler",
+      "C": "MaxAbsScaler",
+      "D": "Normalizer"
+    },
+    "explanation_vi": "Để chuyển đổi các đặc trưng số liên tục sao cho chúng có trung bình (mean) bằng 0 và phương sai (variance) bằng 1 (còn gọi là chuẩn hóa Z-score), lớp phù hợp nhất là **StandardScaler**.\n\n* **StandardScaler (A)**: Thực hiện chuẩn hóa dữ liệu bằng cách trừ đi giá trị trung bình và chia cho độ lệch chuẩn của từng đặc trưng. Điều này rất phù hợp khi dữ liệu có phân phối xấp xỉ chuẩn (normally distributed).\n* **MinMaxScaler (B)**: Co giãn dữ liệu về một khoảng cố định, thường là [0, 1], dựa trên giá trị tối thiểu và tối đa.\n* **MaxAbsScaler (C)**: Co giãn dữ liệu dựa trên giá trị tuyệt đối lớn nhất của cột, đưa dữ liệu về khoảng [-1, 1], thường dùng cho dữ liệu thưa thớt (sparse data).\n* **Normalizer (D)**: Chuẩn hóa các mẫu riêng lẻ (dòng) sao cho chúng có độ dài vector (norm) bằng 1, chứ không phải chuẩn hóa dựa trên trung bình và phương sai của toàn bộ cột đặc trưng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      {
+        "title": "StandardScaler - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing#standardscaler"
+      }
     ]
   },
   {
     "id": 55,
     "topic": 1,
-    "question": "A Data Scientist has trained a scikit-learn model called cf.Which snowflake.ml.registry Python code will register the model into the Snowpark Model Registry?",
-    "options": {},
+    "question": "A Data Scientist has trained a scikit-learn model called cf. Which snowflake.ml.registry Python code will register the model into the Snowpark Model Registry?",
+    "options": {
+      "A": "mv = reg.1og_model(cf, version_name=\"v1\", conda_dependencies=[\"scikit-learn\"], comment=\"My awesome ML model\", metrics={\"score\": 96}, sample_input_data=train_features)",
+      "B": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=\"scikit-learn\", comment=\"My awesome ML model\", metrics=(\"score\", 96), sample_input_data=train_features)",
+      "C": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=[\"scikit-learn\"], comment=\"My awesome ML model\", metrics={\"score\": 96}, sample_input_data=train_features)",
+      "D": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=(\"scikit-learn\"), comment=\"My awesome ML model\", metrics=[\"score\", 96], sample_input_data=train_features)"
+    },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đoạn mã Python trong phương án C sử dụng đúng phương thức `log_model` của đối tượng registry để đăng ký mô hình `cf` vào hệ thống Snowflake Model Registry.",
+    "question_vi": "Một nhà khoa học dữ liệu đã huấn luyện một mô hình scikit-learn có tên là cf. Đoạn mã Python snowflake.ml.registry nào sau đây sẽ đăng ký mô hình này vào Snowpark Model Registry?",
+    "options_vi": {
+      "A": "mv = reg.1og_model(cf, version_name=\"v1\", conda_dependencies=[\"scikit-learn\"], comment=\"My awesome ML model\", metrics={\"score\": 96}, sample_input_data=train_features)",
+      "B": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=\"scikit-learn\", comment=\"My awesome ML model\", metrics=(\"score\", 96), sample_input_data=train_features)",
+      "C": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=[\"scikit-learn\"], comment=\"My awesome ML model\", metrics={\"score\": 96}, sample_input_data=train_features)",
+      "D": "mv = reg.log_model(cf, version_name=\"v1\", conda_dependencies=(\"scikit-learn\"), comment=\"My awesome ML model\", metrics=[\"score\", 96], sample_input_data=train_features)"
+    },
+    "explanation_vi": "Phương án **C** sử dụng đúng cú pháp của thư viện `snowflake.ml.registry` để đăng ký mô hình:\n\n* Tên phương thức đúng là `log_model` (bắt đầu bằng chữ cái `l`, không phải số `1` như ở phương án A: `1og_model`).\n* `conda_dependencies` yêu cầu một danh sách các chuỗi (list of strings) như `[\"scikit-learn\"]`.\n* `metrics` yêu cầu một từ điển (dictionary) như `{\"score\": 96}` chứ không phải một tuple hay list.\n* `sample_input_data` được cung cấp để giúp định nghĩa chữ ký (signature) của mô hình nhằm kiểm tra dữ liệu đầu vào khi thực hiện suy luận (inference) sau này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      {
+        "title": "Model Registry - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
     ]
   },
   {
@@ -1070,12 +1718,23 @@
       "E": "A Notebook will keep its virtual warehouse active for 10 minutes after the last use of the websocket connection, if not closed."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi sử dụng Sổ tay Snowflake (Snowflake Notebooks): các ô tính toán chỉ hỗ trợ ngôn ngữ SQL và Python (A); đồng thời Sổ tay sẽ giữ cho kho tính toán (virtual warehouse) hoạt động trong vòng 10 phút sau khi kết nối websocket cuối cùng bị ngắt nếu người dùng không chủ động đóng lại (E).",
+    "question_vi": "Những lưu ý nào cần biết khi sử dụng Snowflake Notebooks? (Chọn hai.)",
+    "options_vi": {
+      "A": "Notebooks chỉ hỗ trợ các ô (cell) mã SQL và Python.",
+      "B": "Bản nháp Notebook được tự động lưu sau mỗi ba giây.",
+      "C": "Notebooks có thể được lập lịch với các công cụ bên thứ ba bằng cách sử dụng lệnh EXECUTE NOTEBOOK DB.SCHEMA.NOTEBOOK_NAME();.",
+      "D": "Trạng thái mặc định của một Notebook là được kết nối với một virtual warehouse để khi mở ra, các kết quả sẽ tự động được tạo.",
+      "E": "Một Notebook sẽ giữ cho virtual warehouse của nó hoạt động trong 10 phút sau lần sử dụng kết nối websocket cuối cùng, nếu không được đóng."
+    },
+    "explanation_vi": "Khi sử dụng Snowflake Notebooks, có hai điểm quan trọng cần lưu ý:\n\n* **Notebooks chỉ hỗ trợ SQL và Python (A)**: Hiện tại, các ô thực thi mã (cells) trong Snowflake Notebooks chỉ chấp nhận hai ngôn ngữ này để xử lý dữ liệu và tương tác trực tiếp với cơ sở dữ liệu.\n* **Warehouse duy trì hoạt động trong 10 phút (E)**: Nếu bạn mở một Notebook nhưng không tương tác và không đóng tab đó lại, Snowflake Notebook sẽ duy trì hoạt động của virtual warehouse liên kết với nó trong vòng 10 phút kể từ tín hiệu websocket cuối cùng. Điều này nhằm tối ưu hóa việc người dùng quay lại làm việc không bị gián đoạn, nhưng cũng cần lưu ý để tránh phát sinh chi phí credit ngoài ý muốn.\n\nCác phương án khác:\n* **B**: Bản nháp Notebook được tự động lưu nhưng chu kỳ lưu không cố định chính xác là mỗi 3 giây.\n* **C**: Không có lệnh trực tiếp SQL `EXECUTE NOTEBOOK` để kích hoạt lập lịch từ bên thứ ba theo cách này.\n* **D**: Notebook không tự động chạy lại các ô mã để tạo kết quả ngay khi mở, trừ khi có hành động kích hoạt chạy cụ thể từ phía người dùng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      {
+        "title": "About Snowflake Notebooks - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-notebooks"
+      }
     ]
   },
   {
@@ -1091,12 +1750,24 @@
       "F": "They display the probability that a parameter will fall between a pair of values around the mean."
     },
     "answer": "DEF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "Khoảng tin cậy (Confidence Intervals) giúp chuyên gia: áp dụng trong kiểm định giả thuyết và hồi quy (D); đo lường mức độ không chắc chắn hoặc chắc chắn của phương pháp lấy mẫu (E); và chỉ ra khoảng giá trị mà tham số tổng thể có xác suất cao sẽ rơi vào xung quanh giá trị trung bình (F).",
+    "question_vi": "Việc sử dụng các khoảng tin cậy (confidence intervals) trong phân tích dữ liệu giúp nhà khoa học dữ liệu diễn giải một mô hình như thế nào? (Chọn ba.)",
+    "options_vi": {
+      "A": "Chúng xác định các cột không quan trọng hoặc dư thừa có thể bị loại bỏ.",
+      "B": "Chúng cho thấy mức độ tương quan của từng biến độc lập với các biến độc lập khác.",
+      "C": "Chúng thường được xây dựng bằng cách sử dụng mức tin cậy 5% hoặc 95%.",
+      "D": "Chúng được sử dụng trong kiểm định giả thuyết và phân tích hồi quy.",
+      "E": "Chúng đo lường mức độ không chắc chắn hoặc chắc chắn trong một phương pháp lấy mẫu.",
+      "F": "Chúng hiển thị xác suất mà một tham số sẽ rơi vào giữa một cặp giá trị xung quanh giá trị trung bình."
+    },
+    "explanation_vi": "Khoảng tin cậy (Confidence Interval - CI) là một công cụ thống kê quan trọng giúp diễn giải mô hình học máy và phân tích dữ liệu:\n\n* **Được dùng trong kiểm định giả thuyết và phân tích hồi quy (D)**: Khoảng tin cậy cho hệ số hồi quy giúp xác định xem hệ số đó có ý nghĩa thống kê hay không (ví dụ: khoảng tin cậy của hệ số có chứa giá trị 0 hay không).\n* **Đo lường mức độ bất định trong phương pháp lấy mẫu (E)**: Khoảng tin cậy càng hẹp chứng tỏ ước lượng càng có độ chính xác cao và ít độ bất định (uncertainty).\n* **Hiển thị xác suất chứa tham số (F)**: Biểu thị xác suất (dưới góc độ tần suất) rằng tham số tổng thể cần ước lượng sẽ nằm trong khoảng giới hạn được tính toán xung quanh trung bình mẫu.\n\nCác lựa chọn khác không chính xác vì:\n* **A**: Khoảng tin cậy không dùng để trực tiếp xác định hay loại bỏ cột dư thừa (đó là vai trò của feature selection/importance).\n* **B**: Mối quan hệ giữa các biến độc lập với nhau được đo bằng hệ số tương quan (correlation) hoặc hiện tượng đa cộng tuyến (multicollinearity), không phải khoảng tin cậy.\n* **C**: Khoảng tin cậy thường dùng mức tin cậy phổ biến nhất là 90%, 95% hoặc 99% (không phải mức 5%).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      {
+        "title": "Forecasting Results and Prediction Intervals - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/forecasting#understanding-the-results"
+      }
     ]
   },
   {
@@ -1113,9 +1784,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Cách hiệu quả nhất để tính toán các chỉ số thống kê cộng dồn theo thời gian của khách hàng là sử dụng hàm cửa sổ (`Window Functions` - C) trong SQL, cho phép tính toán trực tiếp trên hạ tầng tính toán song song của Snowflake mà không cần đưa dữ liệu vào bộ nhớ máy ảo.",
+    "question_vi": "Một nhà khoa học dữ liệu muốn tích hợp phân tích gian lận chuyên sâu vào các giao dịch đang được nạp vào data pipeline. Một trong những đặc trưng họ muốn tạo là số lượng giao dịch của một khách hàng trong các khoảng thời gian: ngày cuối cùng, 7 ngày qua và năm ngoái. Cách HIỆU QUẢ NHẤT để xây dựng đặc trưng đó là gì?",
+    "options_vi": {
+      "A": "Viết câu lệnh SQL để truy xuất dữ liệu vào bộ nhớ và sử dụng mã Python để tính toán đặc trưng mới.",
+      "B": "Sao chép dữ liệu vào một bucket lưu trữ, tiền xử lý dữ liệu bằng công cụ bên ngoài và nạp lại vào Snowflake.",
+      "C": "Sử dụng các hàm cửa sổ (window functions) phân vùng (partition) theo khách hàng và sử dụng hàm tính tổng/đếm để tính số lượng giao dịch.",
+      "D": "Sử dụng DataFrame để nạp dữ liệu vào bộ nhớ, dùng các hàm Python để tính toán đặc trưng rồi ghi ngược lại vào một bảng."
+    },
+    "explanation_vi": "Cách hiệu quả nhất để thực hiện các phép tính toán tổng hợp (aggregation) dạng lũy kế hoặc lăn (sliding windows) theo thời gian là xử lý trực tiếp trong cơ sở dữ liệu (in-database) bằng các hàm SQL gốc.\n\n* **Sử dụng hàm cửa sổ (C)**: Cho phép tính toán các đặc trưng như số giao dịch trong 1 ngày, 7 ngày hay 1 năm qua bằng cách sử dụng mệnh đề `OVER (PARTITION BY customer_id ORDER BY transaction_time RANGE BETWEEN ...)` hoặc lọc theo khung thời gian. Việc này tận dụng tối đa công cụ tính toán song song, phân tán của Snowflake và tránh chi phí di chuyển dữ liệu (data movement).\n* **Phương án A, B & D**: Đều yêu cầu di chuyển dữ liệu (egress) ra ngoài Snowflake hoặc đưa một lượng dữ liệu lớn vào bộ nhớ (memory) của máy khách để xử lý bằng Python/công cụ ngoài. Điều này gây thắt nút cổ chai (bottleneck) về hiệu năng, tăng chi phí chuyển dữ liệu và tăng độ phức tạp trong vận hành.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/functions-analytic"
+      {
+        "title": "Window Functions - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions-analytic"
+      }
     ]
   },
   {
@@ -1132,15 +1813,25 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Cách đơn giản nhất để liên kết điểm chính xác với một phiên bản mô hình mà không mất nhiều công vận hành là truyền trực tiếp điểm số này dưới dạng một cặp khóa-giá trị (key-value metrics) khi gọi phương thức đăng ký mô hình (A).",
+    "question_vi": "Một nhà khoa học dữ liệu cần theo dõi độ chính xác dự báo của các phiên bản mô hình khác nhau trong Snowflake Model Registry. Làm thế nào để liên kết điểm chính xác với một phiên bản mô hình với ít công sức vận hành nhất?",
+    "options_vi": {
+      "A": "Thiết lập độ chính xác dự báo dưới dạng điểm số trong cặp khóa-giá trị (metrics) khi tạo một phiên bản mô hình.",
+      "B": "Tạo các thẻ (tags) định nghĩa trước cho độ chính xác dự báo và gắn thẻ các phiên bản mô hình bằng điểm chính xác.",
+      "C": "Tạo một chuỗi thời gian về độ chính xác dự báo bằng gói chuỗi thời gian của Snowpark ML để theo dõi chỉ số.",
+      "D": "Tạo một bảng Snowflake để theo dõi điểm số dự báo theo phiên bản mô hình. Sau đó ghi điểm số độ chính xác dự báo vào bảng sau khi đăng ký một phiên bản mô hình."
+    },
+    "explanation_vi": "Cách đơn giản nhất và tốn ít công sức vận hành nhất để lưu trữ và so sánh độ chính xác của các phiên bản mô hình trong Snowflake Model Registry là sử dụng tham số `metrics` có sẵn của phương thức đăng ký mô hình.\n\n* **Thiết lập dưới dạng cặp khóa-giá trị (A)**: Khi đăng ký mô hình bằng hàm `log_model()`, bạn có thể truyền trực tiếp một từ điển các chỉ số vào đối số `metrics` (ví dụ: `metrics={\"accuracy\": 0.95}`). Những chỉ số này sẽ được liên kết trực tiếp với phiên bản mô hình đó trong Registry và có thể dễ dàng truy vấn hoặc xem qua giao diện người dùng mà không cần tự tạo thêm bảng hay thẻ bổ sung.\n* **Phương án B, C & D**: Đều yêu cầu thiết lập bổ sung (như định nghĩa tags, viết mã chuỗi thời gian, hoặc tự tạo và duy trì bảng dữ liệu thủ công), làm tăng khối lượng công việc phát triển và vận hành không cần thiết.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      {
+        "title": "Model Registry - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview"
+      }
     ]
   },
   {
     "id": 60,
     "topic": 1,
-    "question": "A Data Scientist is creating a model that can predict the number of patients suffering from migraines. The following are the confusion matrix values:\nTrue Positive – 100 -\nFalse Positive – 20 -\nFalse Negative – 30 -\nTrue Negative – 150 -Which of the model’s key indicators is correct?",
+    "question": "A Data Scientist is creating a model that can predict the number of patients suffering from migraines. The following are the confusion matrix values:\nTrue Positive – 100\nFalse Positive – 20\nFalse Negative – 30\nTrue Negative – 150\nWhich of the model’s key indicators is correct?",
     "options": {
       "A": "Accuracy = 0.76",
       "B": "Recall = 0.83",
@@ -1151,9 +1842,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Từ các giá trị của ma trận nhầm lẫn: Độ chính xác dương tính (Precision) = TP / (TP + FP) = 100 / (100 + 20) = 100 / 120 = 0.833 (xấp xỉ 0.83). Do đó, chỉ số Precision = 0.83 (C) là chỉ số chính xác.",
+    "question_vi": "Một nhà khoa học dữ liệu đang tạo một mô hình có thể dự báo số lượng bệnh nhân bị chứng đau nửa đầu. Sau đây là các giá trị của ma trận nhầm lẫn (confusion matrix):\nTrue Positive (Dương tính thật) – 100\nFalse Positive (Dương tính giả) – 20\nFalse Negative (Âm tính giả) – 30\nTrue Negative (Âm tính thật) – 150\nChỉ số chính của mô hình nào dưới đây là đúng?",
+    "options_vi": {
+      "A": "Accuracy = 0.76",
+      "B": "Recall = 0.83",
+      "C": "Precision = 0.83",
+      "D": "Error rate = 0.24"
+    },
+    "explanation_vi": "Hãy tính toán từng chỉ số dựa trên các giá trị đã cho:\n\n* **Precision (Độ chính xác dương tính)**:\n  $$\\text{Precision} = \\frac{\\text{TP}}{\\text{TP} + \\text{FP}} = \\frac{100}{100 + 20} = \\frac{100}{120} \\approx 0.833 \\text{ (hoặc 83\\%)}$$\n  Do đó, **Precision = 0.83 (C)** là đáp án chính xác.\n\n* **Accuracy (Độ chính xác toàn cục)**:\n  $$\\text{Accuracy} = \\frac{\\text{TP} + \\text{TN}}{\\text{TP} + \\text{TN} + \\text{FP} + \\text{FN}} = \\frac{100 + 150}{100 + 150 + 20 + 30} = \\frac{250}{300} \\approx 0.833$$\n  (Phương án A ghi Accuracy = 0.76 là sai).\n\n* **Recall (Độ nhạy / Tỷ lệ tìm hồi)**:\n  $$\\text{Recall} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}} = \\frac{100}{100 + 30} = \\frac{100}{130} \\approx 0.769$$\n  (Phương án B ghi Recall = 0.83 là sai).\n\n* **Error Rate (Tỷ lệ lỗi)**:\n  $$\\text{Error Rate} = 1 - \\text{Accuracy} = 1 - 0.833 = 0.167$$\n  (Phương án D ghi Error rate = 0.24 là sai).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      {
+        "title": "Precision Score - Snowflake Documentation",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics#precision-score"
+      }
     ]
   },
   {
@@ -1170,10 +1871,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đoạn mã Python trong phương án A sử dụng đúng trình kết nối `snowflake.connector` để thực thi truy vấn và gọi hàm `fetch_pandas_all()` trên đối tượng cursor để tải kết quả trực tiếp thành một Pandas DataFrame.",
+    "explanation_vi": "Để truy vấn dữ liệu từ Snowflake trực tiếp vào một pandas DataFrame bằng Snowflake Python Connector, phương pháp tối ưu và được khuyên dùng là sử dụng phương thức `fetch_pandas_all()` hoặc `fetch_pandas_batches()` trên đối tượng cursor.\n\n* **A. Đúng**: Đoạn mã này sử dụng phương thức `cursor.execute(\"SELECT * FROM SALES\").fetch_pandas_all()`, phương thức này được thiết kế đặc biệt để tải toàn bộ tập kết quả trực tiếp thành một pandas DataFrame một cách hiệu quả.\n* **B, C, D. Sai**: Các phương thức khác hoặc không tồn tại hoặc không đúng cú pháp để tải dữ liệu trực tiếp thành pandas DataFrame từ cursor của Snowflake Python Connector.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
-    ]
+      {
+        "title": "Snowflake Python Connector: Retrieve Data into a Pandas DataFrame",
+        "url": "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-pandas"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu (Data Scientist) đang tạo một Jupyter notebook để phát triển mô hình. Nhà khoa học Dữ liệu muốn kết nối với Snowflake bằng Python Connector và tạo một pandas DataFrame sử dụng dữ liệu được truy vấn từ bảng SALES. Đoạn mã nào sau đây sẽ thực thi thành công và đổ dữ liệu vào DataFrame?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1774854271180-xgkzlxzk.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1774854273936-kz1n2vw2.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1774854276666-vx4cyr4a.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1774854279414-q9ymgetx.png)"
+    }
   },
   {
     "id": 62,
@@ -1189,10 +1900,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Hàm `approx_count_distinct()` trong thư viện hàm của Snowpark Python sử dụng thuật toán HyperLogLog để ước lượng nhanh số lượng giá trị duy nhất (distinct cardinality) của một cột mà không cần đếm chính xác, giúp tối ưu hóa hiệu năng trên tập dữ liệu lớn.",
+    "explanation_vi": "Trong Snowpark Python, hàm `approx_count_distinct` được sử dụng để ước lượng số lượng giá trị duy nhất của một cột bằng thuật toán HyperLogLog (HLL).\n\n* **A. approx_count_distinct() (Đúng)**: Sử dụng thuật toán HyperLogLog để trả về một giá trị ước lượng của số lượng giá trị duy nhất trong một cột. Phương pháp này rất hữu ích và nhanh chóng đối với các tập dữ liệu cực kỳ lớn.\n* **B, D. count_distinct() / countDistinct() (Sai)**: Các hàm này thực hiện đếm chính xác số lượng giá trị duy nhất, không sử dụng thuật toán ước lượng HyperLogLog.\n* **C. approx_percentile_estimate() (Sai)**: Hàm này được sử dụng để ước lượng phân vị (percentile) của một cột, không phải là đếm số lượng giá trị duy nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/functions"
-    ]
+      {
+        "title": "Snowpark Python API Reference - approx_count_distinct",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.functions.approx_count_distinct"
+      }
+    ],
+    "question_vi": "Hàm Python nào sử dụng HyperLogLog để trả về một giá trị ước lượng cho số lượng giá trị duy nhất (distinct cardinality) của đầu vào?",
+    "options_vi": {
+      "A": "approx_count_distinct()",
+      "B": "count_distinct()",
+      "C": "approx_percentile_estimate()",
+      "D": "countDistinct()"
+    }
   },
   {
     "id": 63,
@@ -1208,10 +1929,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi mô hình gặp hiện tượng trôi dữ liệu/trôi khái niệm (data drift/concept drift) dẫn đến suy giảm độ chính xác theo thời gian, chuyên gia cần thu thập dữ liệu gần đây đã được gán nhãn đại diện cho phân phối mới và huấn luyện một mô hình mới (D).",
+    "explanation_vi": "Sự suy giảm độ chính xác của mô hình sau vài tháng hoạt động trên môi trường production thường do hiện tượng trôi dữ liệu (data drift) hoặc trôi khái niệm (concept drift), khi phân phối của dữ liệu thực tế thay đổi so với dữ liệu huấn luyện ban đầu.\n\n* **D. Đúng**: Cách giải quyết tốt nhất là sử dụng dữ liệu mới thu thập từ thực tế (đã có nhãn thực tế) để xây dựng một tập dữ liệu huấn luyện mới mang tính đại diện cho phân phối hiện tại, sau đó huấn luyện lại mô hình trên tập dữ liệu mới này.\n* **A, B. Sai**: Việc tiếp tục huấn luyện trên tập dữ liệu ban đầu (cho dù thay đổi siêu tham số hay thuật toán) sẽ không giải quyết được vấn đề phân phối dữ liệu thực tế đã thay đổi.\n* **C. Sai**: Giảm mẫu dữ liệu ban đầu không giúp mô hình học được phân phối của dữ liệu mới trôi đi mà chỉ làm giảm lượng thông tin của dữ liệu cũ.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Observability: Monitoring model behavior over time",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark-ml/ml-observability"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đã huấn luyện một mô hình phân loại có giám sát (supervised classification model) trên dữ liệu huấn luyện được gán nhãn thủ công. Mô hình hoạt động tốt trên môi trường production trong vài tháng cho đến khi người dùng báo cáo về sự suy giảm độ chính xác của dự đoán. Người dùng đã chứng minh sự suy giảm này bằng cách thu thập một bộ dự đoán gần đây cùng với nhãn thực tế của chúng. Nhà khoa học Dữ liệu nên làm gì?",
+    "options_vi": {
+      "A": "Huấn luyện lại mô hình với dữ liệu huấn luyện ban đầu nhưng sử dụng các siêu tham số (hyperparameters) khác nhau.",
+      "B": "Khám phá các lớp mô hình khác nhau để giải thích sự thay đổi trong phân phối và huấn luyện mô hình với dữ liệu huấn luyện ban đầu.",
+      "C": "Giảm mẫu (downsample) dữ liệu huấn luyện ban đầu để giải thích sự trôi đặc trưng (feature drift) và huấn luyện một mô hình mới với tập con được thu thập của dữ liệu huấn luyện ban đầu.",
+      "D": "Sử dụng tập dữ liệu do người dùng thu thập để xây dựng một tập dữ liệu huấn luyện được gán nhãn đại diện mới và huấn luyện một mô hình mới với dữ liệu huấn luyện mới thu thập này."
+    }
   },
   {
     "id": 64,
@@ -1227,10 +1958,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Kiến trúc RAG (Retrieval Augmented Generation - Tạo sinh tăng cường truy xuất - B) là kiến trúc tối ưu nhất để xây dựng hệ thống trả lời câu hỏi dựa trên thư viện tài liệu nội bộ (như PDFs, wikis) được cập nhật liên tục.",
+    "explanation_vi": "Để xây dựng một hệ thống trả lời câu hỏi dựa trên thư viện tài liệu riêng tư lớn được cập nhật hàng ngày, kiến trúc tốt nhất là Retrieval Augmented Generation (RAG).\n\n* **B. Tạo sinh tăng cường truy xuất (RAG) - Đúng**: RAG kết hợp khả năng tìm kiếm thông tin (retrieval) từ cơ sở dữ liệu tri thức nội bộ với mô hình ngôn ngữ lớn (generation) để tạo ra câu trả lời chính xác, cập nhật liên tục mà không cần phải huấn luyện lại (retrain) hoặc tinh chỉnh (fine-tune) mô hình ngôn ngữ lớn hàng ngày.\n* **A. GAN (Sai)**: Thường dùng để tạo sinh hình ảnh hoặc dữ liệu giả lập.\n* **C. VAE (Sai)**: Thường dùng để giảm chiều dữ liệu hoặc tạo dữ liệu mới (không giám sát).\n* **D. CNN (Sai)**: Thường dùng cho các tác vụ thị giác máy tính như phân loại ảnh.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "Snowflake Cortex Search Documentation",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang xây dựng một hệ thống có thể trả lời các câu hỏi bằng ngôn ngữ tự nhiên dựa trên một thư viện tài liệu kỹ thuật lớn, riêng tư của công ty (ví dụ: các tệp PDF, wikis). Các tài liệu này được cập nhật hàng ngày. Nhà khoa học nên sử dụng kiến trúc nào?",
+    "options_vi": {
+      "A": "Mạng đối nghịch tạo sinh (Generative Adversarial Network - GAN)",
+      "B": "Tạo sinh tăng cường truy xuất (Retrieval Augmented Generation - RAG)",
+      "C": "Mạng tự mã hóa biến phân (Variational Autoencoder - VAE)",
+      "D": "Mạng thần kinh tích chập (Convolutional Neural Network - CNN)"
+    }
   },
   {
     "id": 65,
@@ -1246,10 +1987,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ phân tán (Scatterplot - D) là loại biểu đồ tốt nhất và phổ biến nhất trong Snowsight để trực quan hóa mối tương quan và mối quan hệ phân bố giữa hai cột dữ liệu số.",
+    "explanation_vi": "Biểu đồ phân tán (Scatterplot) là loại biểu đồ lý tưởng nhất để trực quan hóa mối quan hệ và sự tương quan giữa hai biến số lượng.\n\n* **D. Biểu đồ phân tán (Scatterplot) - Đúng**: Giúp hiển thị các điểm dữ liệu dựa trên hai trục tọa độ X và Y, từ đó dễ dàng quan sát được xu hướng và mức độ tương quan (thuận, nghịch hoặc không tương quan) giữa hai cột dữ liệu.\n* **A. Biểu đồ cột (Bar chart) - Sai**: Thích hợp để so sánh các giá trị giữa các danh mục khác nhau.\n* **B. Bản đồ nhiệt ô (Heat grid) - Sai**: Thích hợp để trực quan hóa mật độ hoặc tổng giá trị của hai biến phân loại.\n* **C. Biểu đồ đường (Line chart) - Sai**: Thích hợp để trực quan hóa xu hướng của dữ liệu theo thời gian hoặc một chuỗi liên tục.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ui-snowsight-dashboards"
-    ]
+      {
+        "title": "Visualizing Worksheet Data in Snowsight",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-visualizations"
+      }
+    ],
+    "question_vi": "Loại biểu đồ nào trong Snowsight Dashboards là tốt nhất để trực quan hóa mối tương quan giữa hai cột dữ liệu?",
+    "options_vi": {
+      "A": "Biểu đồ cột (Bar chart)",
+      "B": "Bản đồ nhiệt ô (Heat grid)",
+      "C": "Biểu đồ đường (Line chart)",
+      "D": "Biểu đồ phân tán (Scatterplot)"
+    }
   },
   {
     "id": 66,
@@ -1267,10 +2018,26 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Nếu không dùng Cortex Search, quy trình xây dựng RAG thủ công cần: sử dụng `EMBED_TEXT_768()` (B) để tạo vector nhúng cho tài liệu và câu hỏi; sử dụng `VECTOR_COSINE_SIMILARITY()` (F) để tính toán độ tương đồng và truy xuất các đoạn văn bản liên quan nhất; và sử dụng `COMPLETE()` (A) để LLM đọc ngữ cảnh đã truy xuất và tạo ra câu trả lời cuối cùng.",
+    "explanation_vi": "Khi xây dựng một ứng dụng RAG thủ công trong Snowflake (không sử dụng dịch vụ được quản lý Cortex Search), bạn cần thực hiện ba bước cốt lõi:\n\n* **B. SNOWFLAKE.CORTEX.EMBED_TEXT_768() - Đúng**: Được dùng để tạo các vector nhúng (embeddings) cho các đoạn văn bản từ tài liệu hướng dẫn và câu hỏi của người dùng để so sánh ngữ nghĩa.\n* **F. VECTOR_COSINE_SIMILARITY() - Đúng**: Được sử dụng để tính toán độ tương đồng cosine giữa vector nhúng của câu hỏi người dùng và vector nhúng của các đoạn tài liệu, nhằm tìm ra các đoạn thông tin liên quan nhất.\n* **A. SNOWFLAKE.CORTEX.COMPLETE() - Đúng**: Sau khi tìm được các đoạn văn bản liên quan, chúng sẽ được đưa vào làm ngữ cảnh (context) kèm câu hỏi để mô hình ngôn ngữ lớn (LLM) tạo ra câu trả lời đầy đủ bằng ngôn ngữ tự nhiên.\n* **C, D, E. Sai**: Các hàm `EXTRACT_ANSWER()`, `SENTIMENT()` và `SUMMARIZE()` là các mô hình chuyên biệt cho các tác vụ trích xuất câu trả lời trực tiếp, phân tích cảm xúc hoặc tóm tắt văn bản, không phải là các thành phần thiết yếu để xây dựng một đường ống (pipeline) RAG tiêu chuẩn.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-search"
-    ]
+      {
+        "title": "VECTOR_COSINE_SIMILARITY in Snowflake SQL Reference",
+        "url": "https://docs.snowflake.com/en/sql-reference/functions/vector-cosine-similarity"
+      },
+      {
+        "title": "Snowflake Cortex LLM Functions",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu được yêu cầu xây dựng một ứng dụng chat dựa trên kiến trúc Tạo sinh tăng cường truy xuất (RAG) sử dụng sách hướng dẫn của công ty. Những mô hình chuyên dụng hoặc hàm tổng quát nào sau đây nên được sử dụng nếu không dùng Snowflake Cortex Search? (Chọn ba.)",
+    "options_vi": {
+      "A": "SNOWFLAKE.CORTEX.COMPLETE()",
+      "B": "SNOWFLAKE.CORTEX.EMBED_TEXT_768()",
+      "C": "SNOWFLAKE.CORTEX.EXTRACT_ANSWER()",
+      "D": "SNOWFLAKE.CORTEX.SENTIMENT()",
+      "E": "SNOWFLAKE.CORTEX.SUMMARIZE()",
+      "F": "VECTOR_COSINE_SIMILARITY()"
+    }
   },
   {
     "id": 67,
@@ -1286,10 +2053,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Kết quả trả về 500 dòng (B) vì câu lệnh thực hiện phép kết nối hoặc truy vấn bảo toàn số lượng dòng của bảng đầu tiên (`table_A` có 500 dòng với `customer_id` duy nhất).",
+    "explanation_vi": "Dựa vào đề bài, chúng ta có các thông tin sau:\n- Bảng **table_A** có 500 dòng, mỗi dòng có `customer_id` duy nhất.\n- Bảng **table_B** có 2500 dòng, mỗi dòng có `customer_id` duy nhất.\n- Có 200 giá trị `customer_id` trùng khớp giữa hai bảng.\n\n* **B. 500 (Đúng)**: Trong trường hợp thực hiện một phép nối **LEFT JOIN** từ `table_A` (bảng bên trái, có 500 dòng) sang `table_B` (bảng bên phải) dựa trên cột `customer_id`:\n  * Đối với 200 dòng trong `table_A` có `customer_id` khớp với `table_B`, phép nối sẽ trả về đúng 200 dòng (do `customer_id` là duy nhất ở cả hai bảng).\n  * Đối với 300 dòng còn lại trong `table_A` không tìm thấy trong `table_B`, phép nối vẫn giữ lại các dòng này và điền giá trị `NULL` cho các cột của `table_B`.\n  * Tổng số dòng trả về của phép nối `LEFT JOIN` này sẽ bằng chính xác số dòng của bảng bên trái (`table_A`), tức là **500 dòng**.\n* **A, C, D. Sai**:\n  * Nếu là `INNER JOIN`, kết quả sẽ là 200 dòng.\n  * Nếu là `RIGHT JOIN` (từ `table_A` sang `table_B`), kết quả sẽ là 2500 dòng.\n  * Số lượng 2300 không tương ứng với bất kỳ phép nối tiêu chuẩn nào giữa hai bảng này.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/sql-reference/constructs/join"
-    ]
+      {
+        "title": "Working with Joins in Snowflake",
+        "url": "https://docs.snowflake.com/en/sql-reference/constructs/join"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang làm việc với một tập dữ liệu giao dịch khách hàng bán lẻ để phân tích được gọi là table_A. Tập dữ liệu này có 15 cột và 500 dòng, và cột customer_id chứa một giá trị duy nhất trong mỗi dòng.\nNhà khoa học cũng đang làm việc với một tập dữ liệu khác gọi là table_B. Tập dữ liệu này có 15 cột và 2500 dòng, và cột customer_id chứa một giá trị duy nhất trong mỗi dòng.\nCó 200 giá trị customer_id trong tập dữ liệu table_A khớp với các giá trị customer_id trong tập dữ liệu table_B.\nTruy vấn sau được thực thi:\n*(Lưu ý: Dựa trên đáp án là 500 dòng, truy vấn thực thi là một phép LEFT JOIN từ table_A sang table_B dựa trên customer_id, ví dụ: SELECT * FROM table_A LEFT JOIN table_B ON table_A.customer_id = table_B.customer_id. Do customer_id là duy nhất trong mỗi bảng, nên phép LEFT JOIN này sẽ giữ lại chính xác toàn bộ 500 dòng của table_A).*\nHỏi có bao nhiêu dòng sẽ được trả về?",
+    "options_vi": {
+      "A": "200",
+      "B": "500",
+      "C": "2300",
+      "D": "2500"
+    }
   },
   {
     "id": 68,
@@ -1305,10 +2082,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "API Pandas trên Snowflake (Snowpark pandas API - A) cho phép chạy các thao tác Pandas quen thuộc một cách phân tán trên cụm máy tính ảo của Snowflake, giúp xử lý các tập dữ liệu khổng lồ nhanh hơn nhiều so với chạy Pandas đơn luồng trên máy cục bộ.",
+    "explanation_vi": "Để xử lý và chuẩn bị dữ liệu quy mô lớn một cách nhanh nhất khi sử dụng cú pháp Pandas, giải pháp tối ưu nhất là tận dụng tính năng Pandas trên Snowflake (Modin-powered Snowpark pandas API).\n\n* **A. Sử dụng pandas trên Snowflake để cho phép tính toán phân tán trên một cụm máy - Đúng**: Snowpark pandas API cho phép bạn chạy mã Pandas nguyên bản trực tiếp trên Snowflake, nơi các truy vấn được biên dịch thành SQL chạy phân tán trên kiến trúc điện toán đám mây có khả năng mở rộng cao của Snowflake. Điều này giúp xử lý các tập dữ liệu lớn hơn nhiều so với bộ nhớ của máy đơn lẻ mà không cần thay đổi đáng kể cú pháp Pandas.\n* **B. Sai**: Snowflake Notebooks tự bản thân nó không làm cho mã Pandas thông thường chạy nhanh hơn trừ khi kết hợp với API phân tán của Snowpark.\n* **C. Sai**: Việc tải một tập dữ liệu khổng lồ về máy cục bộ qua Python Connector để xử lý bằng Pandas cục bộ sẽ gặp giới hạn về băng thông mạng, bộ nhớ RAM (single-node) và tốc độ xử lý CPU đơn luồng.\n* **D. Sai**: Việc tải (materialize) dữ liệu lớn thành một pandas DataFrame cục bộ trên Cloud Notebook vẫn sẽ đưa dữ liệu về bộ nhớ đơn nút (single node memory), gây tắc nghẽn hiệu năng.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/python/pandas-on-snowflake"
-    ]
+      {
+        "title": "Snowpark pandas API - Pandas on Snowflake",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/python/pandas-on-snowflake"
+      }
+    ],
+    "question_vi": "Làm thế nào để một Nhà khoa học Dữ liệu đảm bảo rằng việc chuẩn bị dữ liệu trên một tập dữ liệu rất lớn chạy mã pandas nhanh nhất có thể?",
+    "options_vi": {
+      "A": "Sử dụng pandas trên Snowflake để cho phép tính toán phân tán trên một cụm máy.",
+      "B": "Sử dụng pandas trong Snowflake Notebooks để thực thi các hoạt động ngay lập tức và lưu trữ hoàn toàn kết quả trong bộ nhớ.",
+      "C": "Sử dụng pandas trên máy cục bộ bằng Jupyter notebooks với Snowflake Connector cho Python để tải dữ liệu vào pandas.",
+      "D": "Sử dụng một Notebook được lưu trữ trên đám mây với Snowpark để tạo một phiên làm việc của người dùng (user session) và sau đó lưu dữ liệu thành một pandas DataFrame."
+    }
   },
   {
     "id": 69,
@@ -1326,24 +2113,51 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Dựa trên ma trận nhầm lẫn và các chỉ số đánh giá của mô hình phân loại: có 8 người bị dự báo sai là có vấn đề về tim (False Positives - B); tỷ lệ dự báo chính xác trong số các ca được dự báo mắc bệnh tim là 88.70% (Precision - C); và tỷ lệ phát hiện đúng số người thực tế mắc bệnh tim là 90.67% (Recall/Sensitivity - D).",
+    "explanation_vi": "Dựa vào ma trận nhầm lẫn (confusion matrix) và các chỉ số đo lường hiệu năng của mô hình phân loại nhị phân:\n\n* **B. 8 người đã bị dự đoán sai là có vấn đề về tim - Đúng**: Đây là số lượng mẫu Dương tính giả (False Positives - FP), tức là những người thực tế khỏe mạnh nhưng mô hình dự đoán là mắc bệnh.\n* **C. 88.70% số dự đoán có vấn đề về tim là chính xác - Đúng**: Đây là giá trị **Precision** (Độ chính xác dự đoán dương tính), được tính bằng công thức: $Precision = \\frac{TP}{TP + FP} = 88.70\\%$. Nó cho biết trong số tất cả những người được mô hình dự đoán mắc bệnh tim, có 88.70% thực sự mắc bệnh.\n* **D. 90.67% số người có vấn đề về tim thực tế đã được dự đoán chính xác - Đúng**: Đây là giá trị **Recall / Sensitivity** (Độ nhạy), được tính bằng công thức: $Recall = \\frac{TP}{TP + FN} = 90.67\\%$. Nó cho biết mô hình đã phát hiện thành công 90.67% số bệnh nhân thực sự mắc bệnh tim.\n* **A. Sai**: Con số 92.73% có thể là Accuracy (Độ chính xác tổng thể) hoặc chỉ số khác, không phải là tỷ lệ người mắc bệnh thực tế được dự đoán đúng (Recall là 90.67%).\n* **E. Sai**: Số người bị dự đoán sai là mắc bệnh tim là 8 (FP), không phải 13.\n* **F. Sai**: Không có thông tin hoặc cơ sở nào cho thấy tập dữ liệu cân bằng hoàn hảo giữa ca bệnh và ca khỏe mạnh.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Modeling Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Đây là kết quả của một mô hình phân loại được sử dụng để phát hiện các vấn đề về tim ở bệnh nhân:\n[Hình ảnh hoặc bảng ma trận nhầm lẫn của mô hình - Dựa trên các phương án đúng, ma trận nhầm lẫn có số ca dương tính giả (False Positives) là 8, độ chính xác dự đoán dương tính (Precision) là 88.70%, và độ nhạy/tỷ lệ phát hiện đúng (Recall/Sensitivity) là 90.67%].\nTừ kết quả này, có thể rút ra những kết luận nào? (Chọn ba.)",
+    "options_vi": {
+      "A": "92.73% số người có vấn đề về tim đã được dự đoán chính xác.",
+      "B": "8 người đã bị dự đoán sai là có vấn đề về tim (dương tính giả).",
+      "C": "88.70% số dự đoán có vấn đề về tim là chính xác (Precision).",
+      "D": "90.67% số người có vấn đề về tim thực tế đã được dự đoán chính xác (Recall).",
+      "E": "13 người đã bị dự đoán sai là có vấn đề về tim.",
+      "F": "Tập dữ liệu được sử dụng chứa số lượng ca dương tính và âm tính bằng nhau."
+    }
   },
   {
     "id": 70,
     "topic": 1,
     "question": "A Data Scientist wants to ask questions about the details of a sales chart inside a picture that was saved as an image.\nWhich function should the Scientist use to power a chat application?",
-    "options": {},
+    "options": {
+      "A": "SNOWFLAKE.CORTEX.EXTRACT_ANSWER()",
+      "B": "SNOWFLAKE.CORTEX.COMPLETE()",
+      "C": "SNOWFLAKE.CORTEX.SUMMARIZE()",
+      "D": "SNOWFLAKE.CORTEX.TRANSLATE()"
+    },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để hỏi đáp và phân tích các chi tiết trong hình ảnh đồ thị doanh số, nhà phát triển cần sử dụng một mô hình đa phương thức (multimodal LLM - hỗ trợ cả ảnh và chữ) có sẵn trong dịch vụ Snowflake Cortex (phương án B).",
+    "explanation_vi": "Để hỏi đáp và phân tích các chi tiết trong hình ảnh đồ thị doanh số, nhà phát triển cần sử dụng một mô hình đa phương thức (multimodal LLM - hỗ trợ cả ảnh và chữ) có sẵn trong dịch vụ Snowflake Cortex thông qua hàm `COMPLETE()` (phương án B).\n\n* **B. SNOWFLAKE.CORTEX.COMPLETE() - Đúng**: Hàm `COMPLETE` của Snowflake Cortex hỗ trợ các mô hình ngôn ngữ đa phương thức (vision-language models), cho phép gửi một hình ảnh (ví dụ: được lưu trong một Stage của Snowflake) cùng với một prompt văn bản yêu cầu phân tích các chi tiết trong hình ảnh đó.\n* **A. SNOWFLAKE.CORTEX.EXTRACT_ANSWER() - Sai**: Hàm này được thiết kế để trích xuất câu trả lời từ một đoạn văn bản thuần túy đã biết trước, không hỗ trợ dữ liệu hình ảnh trực tiếp.\n* **C. SNOWFLAKE.CORTEX.SUMMARIZE() - Sai**: Dùng để tóm tắt văn bản dài, không hỗ trợ phân tích hình ảnh đa phương thức.\n* **D. SNOWFLAKE.CORTEX.TRANSLATE() - Sai**: Dùng để dịch thuật văn bản giữa các ngôn ngữ, không hỗ trợ xử lý hình ảnh.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/cortex/cortex-caching-billing-privileges"
-    ]
+      {
+        "title": "Snowflake Cortex LLM Functions",
+        "url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu muốn đặt câu hỏi về các chi tiết của biểu đồ doanh số bên trong một bức ảnh được lưu dưới dạng hình ảnh.\nNhà khoa học nên sử dụng hàm nào để cung cấp năng lượng cho ứng dụng trò chuyện (chat application)?",
+    "options_vi": {
+      "A": "SNOWFLAKE.CORTEX.EXTRACT_ANSWER()",
+      "B": "SNOWFLAKE.CORTEX.COMPLETE()",
+      "C": "SNOWFLAKE.CORTEX.SUMMARIZE()",
+      "D": "SNOWFLAKE.CORTEX.TRANSLATE()"
+    }
   },
   {
     "id": 71,
@@ -1359,10 +2173,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Với cột dữ liệu có phân phối chuẩn (Gaussian distribution) và không biểu diễn tỷ lệ hay tỷ số, giá trị trung bình cộng (Arithmetic mean - D) là phương pháp gán thế (imputation) giá trị khuyết tối ưu và phổ biến nhất để duy trì phân phối của dữ liệu.",
+    "explanation_vi": "Đối với một biến số có phân phối chuẩn (Gaussian / Normal distribution) và dữ liệu không phải là tỷ số, tỷ lệ hay tốc độ (tính chất nhân), giá trị đại diện tốt nhất và phổ biến nhất để gán thế (impute) cho các giá trị khuyết thiếu (NULL) là **Trung bình cộng**.\n\n* **D. Trung bình cộng (Arithmetic mean) - Đúng**: Trung bình cộng là giá trị trung tâm của phân phối chuẩn, giúp bảo toàn tính chất thống kê của dữ liệu khi gán thế.\n* **A. Trung bình điều hòa (Harmonic mean) - Sai**: Thích hợp cho dữ liệu biểu diễn tỷ lệ hoặc tốc độ (ví dụ: km/h).\n* **C. Trung bình nhân (Geometric mean) - Sai**: Thích hợp cho dữ liệu có tính chất tích lũy/tăng trưởng theo cấp số nhân hoặc tỷ lệ phần trăm thay đổi.\n* **B. Độ lệch chuẩn (Standard deviation) - Sai**: Đây là thước đo độ phân tán của dữ liệu, không phải là một giá trị trung tâm dùng để gán thế cho các giá trị null.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Preprocessing API Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang điều tra một số giá trị null trong một cột cụ thể của tập dữ liệu. Sau một số phân tích khám phá, Nhà khoa học nhận thấy rằng phân phối của các giá trị tuân theo phân phối Gauss (phân phối chuẩn) và dữ liệu này không phải là thước đo tỷ lệ hay tỷ số không có tính chất nhân. Phương pháp nào Nhà khoa học nên sử dụng để thay thế các giá trị null trong cột đó?",
+    "options_vi": {
+      "A": "Trung bình điều hòa (Harmonic mean)",
+      "B": "Độ lệch chuẩn (Standard deviation)",
+      "C": "Trung bình nhân (Geometric mean)",
+      "D": "Trung bình cộng (Arithmetic mean)"
+    }
   },
   {
     "id": 72,
@@ -1379,10 +2203,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để chuẩn bị các biến phân loại (categorical variables) cho mô hình hồi quy logistic, ta cần chuyển chúng sang dạng số bằng cách: mã hóa một-nóng (One-hot encoding - D) hoặc mã hóa thứ tự (Ordinal encoding - E).",
+    "explanation_vi": "Khi xây dựng mô hình hồi quy logistic (và hầu hết các mô hình học máy dựa trên toán học khác), mô hình chỉ có thể xử lý dữ liệu dạng số. Do đó, các biến phân loại (dạng chữ/danh mục) cần được chuyển đổi sang dạng số thông qua các kỹ thuật tiền xử lý:\n\n* **D. Mã hóa một-nóng (One-hot encode) - Đúng**: Kỹ thuật này chuyển đổi biến phân loại thành nhiều cột nhị phân (0 và 1), mỗi cột đại diện cho một danh mục duy nhất. Trong Snowflake ML, bạn có thể sử dụng `OneHotEncoder`.\n* **E. Sử dụng mã hóa thứ tự (Ordinal encoding) - Đúng**: Kỹ thuật này gán một số nguyên duy nhất cho mỗi danh mục dựa trên một thứ tự xác định. Trong Snowflake ML, bạn có thể sử dụng `OrdinalEncoder`.\n* **A. Sai**: Biến phân loại dạng chuỗi ký tự (string) không thể được đưa trực tiếp vào mô hình hồi quy logistic.\n* **B. Sai**: Việc loại bỏ các biến không có ý nghĩa là một kỹ thuật lựa chọn đặc trưng (feature selection), không phải là phương pháp xử lý/mã hóa biến phân loại để đưa vào mô hình.\n* **C. Sai**: Ghi đè bằng giá trị null sẽ làm mất thông tin dữ liệu và khiến mô hình không thể học được.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
-    ]
+      {
+        "title": "Snowflake ML Preprocessing API Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      }
+    ],
+    "question_vi": "Có những cách nào để xử lý các biến phân loại (categorical variables) trong Snowflake khi thực hiện mô hình hồi quy logistic (logistic regression model)? (Chọn hai.)",
+    "options_vi": {
+      "A": "Để nguyên các biến phân loại như hiện tại.",
+      "B": "Loại bỏ các biến không có ý nghĩa.",
+      "C": "Ghi đè các biến bằng giá trị null.",
+      "D": "Mã hóa một-nóng (One-hot encode) biến phân loại.",
+      "E": "Sử dụng mã hóa thứ tự (Ordinal encoding) cho biến phân loại."
+    }
   },
   {
     "id": 73,
@@ -1398,10 +2233,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ đường (Line chart - C) là lựa chọn tối ưu trong Snowsight để trực quan hóa xu hướng biến đổi của doanh số bán hàng theo thời gian (từng tuần trong 12 tháng qua).",
+    "explanation_vi": "Đối với dữ liệu chuỗi thời gian (time series) biểu diễn sự thay đổi của doanh số bán sản phẩm theo tuần trong suốt 12 tháng, loại biểu đồ phù hợp nhất là biểu đồ đường.\n\n* **C. Biểu đồ đường (Line chart) - Đúng**: Thể hiện xu hướng tăng trưởng, suy giảm hoặc tính chu kỳ của doanh số theo thời gian một cách rõ ràng và liên tục nhất.\n* **A. Biểu đồ cột (Bar chart) - Sai**: Thích hợp để so sánh doanh số giữa các sản phẩm hoặc danh mục cụ thể hơn là hiển thị xu hướng chuỗi thời gian dài 52 tuần liên tục.\n* **B. Biểu đồ phân tán (Scatterplot) - Sai**: Thích hợp để quan sát sự phân bố hoặc mối tương quan giữa hai biến số lượng, không tối ưu cho chuỗi thời gian.\n* **D. Thẻ điểm (Scorecard) - Sai**: Chỉ hiển thị một giá trị tổng hợp đơn lẻ (như tổng doanh thu), không thể hiện được xu hướng qua từng tuần.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ui-snowsight-dashboards"
-    ]
+      {
+        "title": "Visualizing Worksheet Data in Snowsight",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-visualizations"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang khám phá một tập dữ liệu chuỗi thời gian (time series) từ một view. Trong Snowsight, loại biểu đồ nào Nhà khoa học nên sử dụng để xem xét doanh số bán sản phẩm theo từng tuần trong 12 tháng qua?",
+    "options_vi": {
+      "A": "Biểu đồ cột (Bar chart)",
+      "B": "Biểu đồ phân tán (Scatterplot)",
+      "C": "Biểu đồ đường (Line chart)",
+      "D": "Thẻ điểm (Scorecard)"
+    }
   },
   {
     "id": 74,
@@ -1417,10 +2262,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lỗi nhập nhằng cột (`ambiguous column`) xảy ra do cả hai DataFrame đều có cột `id`. Để khắc phục, ta cần chỉ định rõ nguồn gốc cột bằng cách dùng `df1[\"id\"]` và đặt bí danh `alias(\"df1_id\")` cho nó trước khi select (B).",
+    "explanation_vi": "Lỗi `ambiguous column 'ID'` (cột ID bị nhập nhằng) xảy ra vì cả `df1` và `df2` đều có cột `id`. Sau khi thực hiện phép join, DataFrame mới `new_df` chứa cả hai cột `id` đó. Khi bạn dùng `col(\"id\")` để select, Snowpark không biết bạn muốn lấy cột `id` từ `df1` hay `df2`.\n\n* **B. Đúng**: Phương pháp này chỉ rõ cột `id` cần lấy từ DataFrame gốc `df1` bằng cách chỉ định `df1[\"id\"]` và đặt lại tên mới (alias) là `\"df1_id\"` để tránh trùng lặp và nhập nhằng trong các bước xử lý sau.\n* **A. Sai**: `select(\"*\")` sẽ hiển thị toàn bộ các cột bao gồm cả hai cột `id` trùng nhau, nhưng nó không giải quyết được vấn đề nhập nhằng nếu bạn cần gọi cụ thể cột `id` đó sau này, và đề bài yêu cầu chọn các cột cụ thể.\n* **C. Sai**: `drop(\"id\")` sẽ xóa cột `id`, nhưng do tên cột bị nhập nhằng, việc drop có thể gây lỗi hoặc xóa cả hai cột `id` ngoài ý muốn.\n* **D. Sai**: Cú pháp `df1.id.as_(\"df1_id\")` không phải là cú pháp hợp lệ của Snowpark Python DataFrame (Snowpark sử dụng cú pháp dấu ngoặc vuông `df1[\"id\"]` hoặc hàm `col()` và phương thức `.alias()`).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.join"
-    ]
+      {
+        "title": "Snowpark DataFrame Join API Reference",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.join"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang làm việc với hai DataFrame trong Snowpark mà cả hai đều chứa một cột tên là id. Mục tiêu là kết nối (join) hai DataFrame này dựa trên cột id.\n`new_df = df1.join(df2, df1[\"id\"] == df2[\"id\"])`\nSau khi chạy đoạn mã sau:\n`new_df.select(col(\"id\"), col(\"name\"), col(\"country\")).show()`\nNhà khoa học nhận được lỗi này:\n`Error (1303): The reference to column 'ID' is ambiguous...`\nNhà khoa học nên sử dụng phương pháp nào để khắc phục lỗi này?",
+    "options_vi": {
+      "A": "`new_df.select(\"*\").show()`",
+      "B": "`new_df.select(df1[\"id\"].alias(\"df1_id\"), col(\"name\"), col(\"country\")).show()`",
+      "C": "`new_df.drop(\"id\").select(col(\"name\"), col(\"country\")).show()`",
+      "D": "`new_df.select(df1.id.as_(\"df1_id\"), df1.name, df2.country).show()`"
+    }
   },
   {
     "id": 75,
@@ -1437,10 +2292,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để đánh giá chất lượng của mô hình hồi quy tuyến tính (dự báo giá trị số liên tục), hai chỉ số phù hợp nhất cần theo dõi là Sai số bình phương trung bình (`MSE` - C) và Căn bậc hai sai số bình phương trung bình (`RMSE` - D).",
+    "explanation_vi": "Đối với các bài toán hồi quy (regression) như hồi quy tuyến tính (dự báo một giá trị số liên tục), các chỉ số đánh giá cần đo lường sự sai lệch giữa giá trị dự báo và giá trị thực tế:\n\n* **C. Sai số bình phương trung bình (MSE) - Đúng**: Tính trung bình bình phương của các khoảng sai số giữa dự báo và thực tế. Giá trị MSE càng nhỏ thì mô hình càng tốt.\n* **D. Căn bậc hai sai số bình phương trung bình (RMSE) - Đúng**: Là căn bậc hai của MSE, đưa sai số về cùng đơn vị đo với biến mục tiêu giúp dễ dàng diễn giải ý nghĩa thực tế.\n* **A, B, E. Sai**: Các chỉ số như `Accuracy`, `Precision`, `Recall` và `AUROC` là các chỉ số chuyên dùng để đánh giá hiệu năng của các mô hình phân loại (classification - dự báo nhãn danh mục), không áp dụng cho mô hình hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
-    ]
+      {
+        "title": "Snowflake ML Modeling Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Một Nhà khoa học Dữ liệu đang nghiên cứu một bài toán hồi quy tuyến tính (linear regression). Nhà khoa học nên xem xét các chỉ số nào để đánh giá mô hình học máy của họ? (Chọn hai.)",
+    "options_vi": {
+      "A": "Độ chính xác (Accuracy)",
+      "B": "Độ chính xác dự đoán dương tính (Precision) và Độ nhạy (Recall)",
+      "C": "Sai số bình phương trung bình (Mean Squared Error - MSE)",
+      "D": "Căn bậc hai sai số bình phương trung bình (Root Mean Squared Error - RMSE)",
+      "E": "Diện tích dưới đường cong đặc trưng hoạt động của bộ thu (AUROC)"
+    }
   },
   {
     "id": 76,
@@ -1456,10 +2322,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Dự báo giá nhà đất (một biến số liên tục) là bài toán hồi quy (`Regression` - D) điển hình trong học máy có giám sát.",
+    "explanation_vi": "Dự đoán giá bất động sản (một giá trị số liên tục) là bài toán hồi quy (**Regression**) trong học máy có giám sát.\n\n*   **D. Hồi quy (Regression)**: Được sử dụng khi biến mục tiêu cần dự đoán là một giá trị số liên tục hoặc có thứ tự (như giá nhà, nhiệt độ, doanh thu).\n*   **A. Phân loại (Classification)**: Dùng cho biến mục tiêu là nhãn danh mục rời rạc (ví dụ: dự đoán giao dịch có gian lận hay không, email là spam hay ham).\n*   **B. Phân cụm (Clustering)**: Là phương pháp học không giám sát nhằm gom nhóm các điểm dữ liệu tương đồng mà không có nhãn trước.\n*   **C. Học tăng cường (Reinforcement Learning)**: Dựa trên việc tối đa hóa phần thưởng thông qua việc tương tác thử - sai của tác nhân (agent) với môi trường.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Functions Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đang cố gắng dự đoán giá bất động sản trong khu vực.\nPhương pháp học máy nào mô tả đúng trường hợp sử dụng (use case) này?",
+    "options_vi": {
+      "A": "Phân loại (Classification)",
+      "B": "Phân cụm (Clustering)",
+      "C": "Học tăng cường (Reinforcement Learning)",
+      "D": "Hồi quy (Regression)"
+    }
   },
   {
     "id": 77,
@@ -1475,10 +2351,24 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để cung cấp đúng cấu trúc cột mà endpoint của mô hình yêu cầu mà không thay đổi bảng gốc, giải pháp đơn giản nhất là tạo một khung nhìn (view) chuyển đổi dữ liệu về dạng chuẩn của mô hình, sau đó sử dụng view đó cho hàm ngoại vi (C).",
+    "explanation_vi": "Khi các cột trong bảng Snowflake không khớp với định dạng/cột mà điểm cuối (endpoint) của mô hình học máy yêu cầu, giải pháp hiệu quả và phổ biến nhất là tạo một **View** (C) để ánh xạ, đổi tên hoặc biến đổi các cột của bảng gốc thành cấu trúc mà mô hình mong đợi. Sau đó, hàm ngoại vi sẽ truy vấn hoặc gọi trực tiếp từ View này.\n\n*   **C. Tạo một view chứa phiên bản đã biến đổi...**: Đây là phương án chính xác. View cho phép định hình lại dữ liệu (tên cột, kiểu dữ liệu, các phép tính toán đặc trưng) để phù hợp với định dạng đầu vào của mô hình mà không cần sao chép hay làm thay đổi dữ liệu vật lý của bảng gốc.\n*   **A. Thực hiện biến đổi đặc trưng ngay bên trong hàm ngoại vi**: Hàm ngoại vi trong Snowflake chỉ đóng vai trò trung gian gửi yêu cầu HTTP đến endpoint bên ngoài (API), bản thân nó không trực tiếp thực hiện logic biến đổi đặc trưng phức tạp của công cụ ML.\n*   **B. Thực hiện biến đổi đặc trưng bên trong câu lệnh clone**: Câu lệnh `CLONE` trong Snowflake chỉ sao chép siêu dữ liệu (metadata) của bảng mà không cho phép thực hiện các phép biến đổi đặc trưng phức tạp.\n*   **D. Tạo một User-Defined Function (UDF) và gọi bên trong hàm ngoại vi**: Mặc dù UDF có thể thực hiện một số phép biến đổi dữ liệu, việc gọi một UDF bên trong một hàm ngoại vi (external function) thường không tối ưu và phức tạp hơn nhiều so với việc chỉ cần gọi một view đã được định cấu hình sẵn với cấu trúc cột mong đợi.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/views-introduction"
-    ]
+      {
+        "title": "Introduction to Views",
+        "url": "https://docs.snowflake.com/en/user-guide/views-introduction"
+      },
+      {
+        "title": "Introduction to External Functions",
+        "url": "https://docs.snowflake.com/en/sql-reference/external-functions-introduction"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đã xây dựng và triển khai một mô hình đang được gọi bởi một hàm ngoại vi (external function). Quá trình biến đổi đặc trưng (feature engineering) cho mô hình được thực hiện trong một công cụ Học máy (ML). Khi hàm ngoại vi gọi mô hình trên dữ liệu Snowflake, nó bị lỗi vì các cột trong bảng Snowflake không khớp với các cột mà điểm cuối (endpoint) mong đợi.\nBước nào sau đây sẽ cho phép hàm ngoại vi hoạt động chính xác?",
+    "options_vi": {
+      "A": "Thực hiện biến đổi đặc trưng của công cụ ML ngay bên trong hàm ngoại vi.",
+      "B": "Nhân bản (clone) bảng và thực hiện biến đổi đặc trưng của công cụ ML bên trong câu lệnh clone.",
+      "C": "Tạo một view chứa phiên bản đã biến đổi của bảng gốc và gọi view đó trong hàm ngoại vi.",
+      "D": "Tạo một Hàm tự định nghĩa (UDF) để thực hiện biến đổi đặc trưng và gọi UDF đó bên trong hàm ngoại vi."
+    }
   },
   {
     "id": 78,
@@ -1496,10 +2386,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Ba phương pháp gán thế (imputation) tiêu chuẩn để xử lý các giá trị số bị khuyết là sử dụng giá trị trung bình (`Mean` - A), số trung vị (`Median` - B) hoặc yếu vị (`Mode` - C).",
+    "explanation_vi": "Khi xử lý các biến số bị thiếu (missing numerical variables) trong tiền xử lý dữ liệu học máy, các phương pháp gán giá trị (imputation) chuẩn và phổ biến nhất bao gồm:\n\n*   **A. Giá trị trung bình (Mean)**: Điền các giá trị bị thiếu bằng giá trị trung bình cộng của các điểm dữ liệu không bị thiếu trong thuộc tính đó. Phù hợp khi dữ liệu phân phối chuẩn và ít ngoại lai (outliers).\n*   **B. Trung vị (Median)**: Điền các giá trị bị thiếu bằng giá trị trung vị của cột. Đây là phương pháp tối ưu hơn khi dữ liệu có nhiều giá trị ngoại lai hoặc bị lệch (skewed).\n*   **C. Yếu vị / Giá trị xuất hiện nhiều nhất (Mode)**: Điền các giá trị bị thiếu bằng giá trị xuất hiện thường xuyên nhất trong cột. Phương pháp này có thể áp dụng cho cả biến số và biến phân loại (categorical).\n\nCác phương án khác không phải là phương pháp gán giá trị:\n*   **D. Tổng (Sum)**: Là phép cộng tất cả các giá trị, không dùng để gán thế cho một giá trị bị thiếu đơn lẻ.\n*   **E. Khoảng biến thiên (Range)**: Là hiệu số giữa giá trị lớn nhất và nhỏ nhất của thuộc tính.\n*   **F. Phương sai (Variance)**: Là thước đo mức độ phân tán của dữ liệu xung quanh giá trị trung bình.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Preprocessing",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/preprocessing"
+      }
+    ],
+    "question_vi": "Các phương pháp gán giá trị (imputation) chuẩn cho các biến số bị thiếu là gì? (Chọn ba.)",
+    "options_vi": {
+      "A": "Giá trị trung bình (Mean)",
+      "B": "Trung vị (Median)",
+      "C": "Yếu vị / Giá trị xuất hiện nhiều nhất (Mode)",
+      "D": "Tổng (Sum)",
+      "E": "Khoảng biến thiên (Range)",
+      "F": "Phương sai (Variance)"
+    }
   },
   {
     "id": 79,
@@ -1515,10 +2417,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Thao tác đúng để thiết lập kết nối bằng trình kết nối Snowflake Connector trong Python là import thư viện `snowflake.connector` và gọi hàm `snowflake.connector.connect()` (phương án D).",
+    "explanation_vi": "Để kết nối tới Snowflake bằng thư viện Python Connector chính thức của Snowflake, cú pháp chuẩn là import module `snowflake.connector` và gọi hàm `connect()` từ module đó.\n\n*   **D. Import through snowflake.connector and run snowflake.connector.connect()**: Đây là cú pháp chính xác.\n    ```python\n    import snowflake.connector\n    conn = snowflake.connector.connect(\n        user='...',\n        password='...',\n        account='...'\n    )\n    ```\n*   Các phương án khác (A, B, C) sử dụng sai tên module (`snowflake.connect`) hoặc gọi sai hàm liên kết (ví dụ: `snowflake.connect()`).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-example"
-    ]
+      {
+        "title": "Snowflake Python Connector Example",
+        "url": "https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-example"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đang xây dựng một mô hình trong công cụ học máy và muốn kết nối để sử dụng Snowflake Python Connector nhằm đọc dữ liệu từ Snowflake cho việc xây dựng mô hình.\nCách thích hợp để khởi tạo một kết nối tới Snowflake là gì?",
+    "options_vi": {
+      "A": "Import qua snowflake.connect và chạy snowflake.connect()",
+      "B": "Import qua snowflake.connector và chạy snowflake.connect()",
+      "C": "Import qua snowflake.connect và chạy snowflake.connect.connect()",
+      "D": "Import qua snowflake.connector và chạy snowflake.connector.connect()"
+    }
   },
   {
     "id": 80,
@@ -1534,10 +2446,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để đánh giá chất lượng dự báo của mô hình chuỗi thời gian đối với một biến liên tục (như doanh số), chỉ số đo lường sai số thực tế phù hợp nhất là `Mean Squared Error` (Sai số bình phương trung bình - C).",
+    "explanation_vi": "Để đánh giá mô hình dự báo chuỗi thời gian hoặc mô hình hồi quy nói chung với mục tiêu là biến số liên tục (ví dụ: dự báo doanh số), các chỉ số đo lường sai số dự báo trực tiếp là rất quan trọng.\n\n*   **C. Mean Squared Error (MSE - Sai số bình phương trung bình)**: Là chỉ số tiêu chuẩn dùng để đo lường mức độ chênh lệch bình phương giữa giá trị thực tế và giá trị dự báo. MSE phạt nặng các sai số lớn, là một chỉ số đánh giá hiệu năng mô hình liên tục rất phổ biến.\n*   **A. LogLoss (Mất mát Log)**: Là chỉ số dùng cho các mô hình phân loại (Classification), đặc biệt là phân loại nhị phân dựa trên xác suất, không dùng cho bài toán hồi quy liên tục.\n*   **B. R-squared (Hệ số xác định)**: Đo lường tỷ lệ phương sai của biến phụ thuộc có thể giải thích được bởi các biến độc lập trong mô hình. Mặc dù được sử dụng trong hồi quy, nó là một hệ số tỷ lệ giải thích (từ 0 đến 1) chứ không phải là thước đo sai số tuyệt đối/trực tiếp của dự báo chuỗi thời gian như MSE hay RMSE.\n*   **D. Residuals (Phần dư)**: Là sự khác biệt giữa các giá trị thực tế và dự báo cho từng điểm dữ liệu. Bản thân residuals là một mảng dữ liệu (không phải là một chỉ số đánh giá đơn lẻ - metric).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
-    ]
+      {
+        "title": "Snowflake ML Modeling Metrics",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling/metrics"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đã tạo ra một mô hình chuỗi thời gian (time series) để dự báo doanh số bán hàng dưới dạng một biến số liên tục.\nChỉ số nào nhà khoa học nên sử dụng để đánh giá mô hình?",
+    "options_vi": {
+      "A": "LogLoss",
+      "B": "R-squared",
+      "C": "Mean Squared Error",
+      "D": "Residuals"
+    }
   },
   {
     "id": 81,
@@ -1553,10 +2475,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ phần dư trong phương án A cho thấy các điểm sai số phân bố ngẫu nhiên và đều đặn quanh đường zero (homoscedasticity), cho thấy mô hình khớp tốt với dữ liệu hồi quy.",
+    "explanation_vi": "Một biểu đồ phần dư (residual plot) cho thấy mô hình hồi quy khớp tốt (good fit) khi các điểm phần dư phân bố ngẫu nhiên xung quanh trục hoành (đường $y = 0$).\n\n*   **A**: Biểu đồ này cho thấy các phần dư phân bố đều và ngẫu nhiên không theo một khuôn mẫu (pattern) cụ thể nào, thể hiện tính chất đồng phương sai (homoscedasticity) và tính phi hệ thống của sai số. Đây là dấu hiệu của một mô hình khớp tốt.\n*   **B, C, D**: Thể hiện các khuôn mẫu rõ ràng (chẳng hạn như đường cong parabol, xu hướng tăng dần hoặc hình phễu). Điều này cho thấy mô hình đã bỏ sót một số mối quan hệ phi tuyến hoặc gặp hiện tượng dị phương sai (heteroscedasticity), nghĩa là mô hình chưa khớp hoàn toàn tốt với cấu trúc dữ liệu thực tế.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Functions Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đã phát triển bốn mô hình hồi quy khác nhau và đang kiểm tra kết quả. Mỗi biểu đồ phần dư (residual plot) thuộc về một mô hình khác nhau.\nBiểu đồ phần dư nào dưới đây cho thấy mô hình khớp tốt (good fit)?",
+    "options_vi": {
+      "A": "![](https://cdn.examcademy.com/images/questions/1782936971671-708wfohp.png)",
+      "B": "![](https://cdn.examcademy.com/images/questions/1782936975054-2z6rp083.png)",
+      "C": "![](https://cdn.examcademy.com/images/questions/1782936978424-2zu023hs.png)",
+      "D": "![](https://cdn.examcademy.com/images/questions/1782936981783-fojdwbsv.png)"
+    }
   },
   {
     "id": 82,
@@ -1572,10 +2504,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Việc dự báo khả năng một thành viên hủy đăng ký thẻ thành viên (rời bỏ dịch vụ) dựa trên dữ liệu lịch sử của những người đã hủy và chưa hủy là bài toán Phân loại nhị phân (`Classification model` - D) thuộc học máy có giám sát.",
+    "explanation_vi": "Bài toán yêu cầu dự đoán khả năng hủy tư cách thành viên (rời bỏ chương trình - churn) dựa trên dữ liệu lịch sử có nhãn (khách hàng đã rời bỏ và khách hàng hiện tại). Đây là bài toán học có giám sát.\n\n*   **D. Học có giám sát: Mô hình phân loại (Classification model)**: Đây là phương án chính xác. Mục tiêu là phân loại khách hàng vào nhóm \"rời bỏ\" hay \"ở lại\" (hoặc dự đoán xác suất - score - thuộc về nhóm rời bỏ). Vì dữ liệu lịch sử đã có sẵn nhãn rõ ràng (trạng thái rời bỏ hay chưa), chúng ta sử dụng học có giám sát với mô hình phân loại.\n*   **A. Học không giám sát: Phân cụm (Clustering)**: Dùng để nhóm các khách hàng có đặc điểm tương đồng mà không dựa trên nhãn kết quả trước đó.\n*   **B. Học không giám sát: Phát hiện bất thường (Anomaly detection)**: Dùng để tìm các điểm dữ liệu bất thường hoặc hiếm gặp, không phù hợp cho việc chấm điểm rời bỏ hàng loạt dựa trên lịch sử nhãn hành vi thông thường.\n*   **C. Học có giám sát: Suy luận nhân quả (Causal inference)**: Dùng để đo lường tác động nhân quả của một hành động cụ thể (ví dụ: một chiến dịch quảng cáo làm tăng doanh số như thế nào), chứ không phải để chấm điểm xác suất rời bỏ chung.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Classification (ML Functions)",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/classification"
+      }
+    ],
+    "question_vi": "Một công ty muốn duy trì sự tham gia của khách hàng trong chương trình khách hàng thân thiết bằng cách sử dụng các chiến dịch tiếp thị hướng đối tượng cho những khách hàng có khả năng rời bỏ chương trình. Công ty có dữ liệu lịch sử khách hàng bao gồm hành vi mua sắm và tương tác tiếp thị của các khách hàng đã rời bỏ chương trình cũng như các thành viên hiện tại.\nMột nhà khoa học dữ liệu được yêu cầu gắn cho mỗi khách hàng hiện tại một điểm số thể hiện khả năng hủy tư cách thành viên của họ.\nLoại mô hình nào nên được xây dựng dựa trên dữ liệu này?",
+    "options_vi": {
+      "A": "Học không giám sát: Phân cụm (Clustering)",
+      "B": "Học không giám sát: Phát hiện bất thường (Anomaly detection)",
+      "C": "Học có giám sát: Suy luận nhân quả (Causal inference)",
+      "D": "Học có giám sát: Mô hình phân loại (Classification model)"
+    }
   },
   {
     "id": 83,
@@ -1591,10 +2533,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Phương án `snowpark_df.describe().toPandas()` (B) là giải pháp tối ưu nhất về mặt hiệu năng và độ mở rộng (scalable), vì các phép toán thống kê được tính toán song song trên Snowflake trước, và chỉ có bảng tóm tắt kết quả nhỏ gọn được chuyển về bộ nhớ dưới dạng Pandas DataFrame.",
+    "explanation_vi": "Khi làm việc với các tập dữ liệu lớn trong Snowflake, khả năng mở rộng (scalability) là yếu tố quyết định.\n\n*   **B. snowpark_df.describe().toPandas()**: Đây là phương pháp tối ưu nhất. Phương thức `describe()` của Snowpark DataFrame được thực thi trực tiếp trên công cụ tính toán phân tán của Snowflake (Snowflake's distributed execution engine). Phép tính toán thống kê (như count, mean, min, max, stddev) được đẩy xuống cơ sở dữ liệu (pushdown), giảm thiểu tối đa việc truyền tải dữ liệu lớn về client. Chỉ sau khi kết quả thống kê cơ bản nhỏ gọn được tính toán xong, `.toPandas()` mới được gọi để chuyển đổi kết quả thống kê đó thành một DataFrame pandas nhỏ nhằm hiển thị.\n*   **C, D**: Việc chuyển toàn bộ Snowpark DataFrame thành Pandas DataFrame bằng cách gọi `snowpark_df.toPandas()` trước khi tính toán thống kê sẽ kéo toàn bộ tập dữ liệu thô từ Snowflake về bộ nhớ cục bộ của client/driver. Điều này không thể mở rộng và sẽ gây ra lỗi cạn kiệt bộ nhớ (Out-Of-Memory - OOM) đối với các tập dữ liệu lớn.\n*   **A**: `info()` không phải là một phương thức khả dụng trên Snowpark DataFrame.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.describe"
-    ]
+      {
+        "title": "Snowpark DataFrame describe API",
+        "url": "https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/api/snowflake.snowpark.DataFrame.describe"
+      }
+    ],
+    "question_vi": "Phương pháp có khả năng mở rộng (scalable) TỐT NHẤT để khám phá các thống kê dữ liệu cơ bản như số lượng (count), trung bình (mean), giá trị lớn nhất (max) và độ lệch chuẩn (standard deviation) bằng cách sử dụng Snowpark và/hoặc pandas là gì?",
+    "options_vi": {
+      "A": "snowpark_df.info()",
+      "B": "snowpark_df.describe().toPandas()",
+      "C": "pandas_df = snowpark_df.toPandas()\npandas_df.info()",
+      "D": "pandas_df = snowpark_df.toPandas()\npandas_df.describe()"
+    }
   },
   {
     "id": 84,
@@ -1611,10 +2563,21 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi bôi đen một cột số trong bảng kết quả truy vấn trên Snowsight, Snowflake hiển thị các thông tin thống kê ngữ cảnh bao gồm: Biểu đồ tần suất (`Histogram` - A) và Tỷ lệ phần trăm giá trị khuyết (`Null Percentage` - C).",
+    "explanation_vi": "Khi bạn xem kết quả truy vấn trong giao diện Snowsight của Snowflake và chọn một cột số, bảng thống kê nhanh (column statistics) bên phải sẽ hiển thị các chỉ số phân tích dữ liệu trực quan tức thì.\n\nĐối với cột dạng số (numerical column), Snowsight hiển thị:\n1.  **Biểu đồ tần suất (Histogram)** (A) để hiển thị phân phối dữ liệu.\n2.  **Tỷ lệ phần trăm giá trị rỗng (Null Percentage)** (C) hoặc số lượng giá trị rỗng.\n3.  Các giá trị cơ bản khác như **Average**, **Sum**, **Min**, **Max**.\n\n*   **Median** (B), **Quartiles Ranges** (D), và **Standard Deviation** (E) không nằm trong số các chỉ số thống kê ngữ cảnh nhanh hiển thị trực tiếp mặc định của bảng kết quả Snowsight khi chọn cột.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ui-snowsight-query-results"
-    ]
+      {
+        "title": "Viewing Query Results in Snowsight",
+        "url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-query-results"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu làm việc trong giao diện Snowsight truy vấn một bảng và nhận về một tập kết quả. Khi họ bôi đen (hoặc chọn) một cột số, các thống kê tự động hiển thị thông tin ngữ cảnh về cột đó sẽ xuất hiện, bao gồm Tổng (Sum) và Trung bình (Average).\nNhững mục ngữ cảnh bổ sung nào khác được cung cấp? (Chọn hai.)",
+    "options_vi": {
+      "A": "Biểu đồ tần suất (Histogram)",
+      "B": "Trung vị (Median)",
+      "C": "Tỷ lệ phần trăm giá trị rỗng (Null Percentage)",
+      "D": "Khoảng tứ phân vị (Quartiles Ranges)",
+      "E": "Độ lệch chuẩn (Standard Deviation)"
+    }
   },
   {
     "id": 85,
@@ -1630,9 +2593,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu đồ phần dư có độ lan tỏa của sai số tăng dần theo các giá trị dự báo lớn hơn (tạo hình phễu) cho thấy sai số có phương sai thay đổi, đây là dấu hiệu của hiện tượng phương sai thay đổi (`heteroscedasticity` - C).",
+    "explanation_vi": "Hiện tượng độ phân tán của các phần dư (residuals) không đồng đều và thay đổi (ví dụ: tăng dần hoặc giảm dần tạo thành hình phễu) khi giá trị dự đoán tăng lên được gọi là **dị phương sai (heteroscedasticity)**.\n\n*   **C. Độ phân tán của phần dư tăng nhẹ... chỉ ra tính dị phương sai (heteroscedasticity)**: Đây là cách giải thích chính xác. Hiện tượng dị phương sai vi phạm giả định cơ bản của mô hình hồi quy tuyến tính bình thường tối thiểu (OLS) là các phần dư phải có phương sai không đổi (homoscedasticity - đồng phương sai).\n*   **A. ...chỉ ra tính đồng phương sai (homoscedasticity)**: Sai, vì homoscedasticity yêu cầu độ phân tán của phần dư phải không đổi trên toàn bộ dải giá trị dự báo.\n*   **B. Mối quan hệ của các biến không hoàn toàn tuyến tính**: Sai, hiện tượng phi tuyến tính thường được biểu thị bằng một hình mẫu dạng cong (như hình chữ U hoặc parabol) trên biểu đồ phần dư chứ không phải hình phễu (tăng độ phân tán).\n*   **D. Mối quan hệ thể hiện mối liên hệ tích cực**: Đây là mô tả của mối tương quan thuận (positive correlation) giữa hai biến số ban đầu, chứ không phải cách giải thích đặc tính của biểu đồ phần dư.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
-      "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
-    ]
+      {
+        "title": "Snowflake ML Functions Overview",
+        "url": "https://docs.snowflake.com/en/user-guide/ml-functions/overview"
+      }
+    ],
+    "question_vi": "Một nhà khoa học dữ liệu đang làm việc với một mô hình hồi quy, vẽ một biểu đồ và nhận được kết quả sau (biểu đồ phần dư có dạng phễu, độ phân tán của phần dư tăng dần theo các giá trị dự đoán tăng).\nNhà khoa học dữ liệu sẽ giải thích kết quả này như thế nào?",
+    "options_vi": {
+      "A": "Độ phân tán của phần dư tăng nhẹ khi các giá trị dự đoán cao hơn, điều này có thể chỉ ra tính đồng phương sai (homoscedasticity).",
+      "B": "Mối quan hệ của các biến có thể không hoàn toàn tuyến tính khi giá trị tăng lên.",
+      "C": "Độ phân tán của phần dư tăng nhẹ khi các giá trị dự đoán cao hơn, điều này có thể chỉ ra tính dị phương sai (heteroscedasticity).",
+      "D": "Mối quan hệ thể hiện mối liên hệ tích cực giữa hai biến khi giá trị tăng lên."
+    }
   }
 ]

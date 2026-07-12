@@ -142,8 +142,8 @@ Một Data Engineer/Staff Engineer xuất sắc phải biết cách kiên quyế
 
 ## Nguồn Tham Khảo (References)
 
-* [The Data Warehouse Toolkit - Ralph Kimball Group][https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/]
-* [Databricks: Data Modeling and Z-Ordering in Delta Lake][https://docs.databricks.com/en/delta/data-skipping.html]
-* [Netflix Tech Blog: Data Engineering at Scale][https://netflixtechblog.com/]
-* [AWS Architecture Blog: Real-time Analytics & Dimensional Modeling](https://aws.amazon.com/blogs/architecture/]
+* [The Data Warehouse Toolkit - Ralph Kimball Group](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/)
+* [Databricks: Data Modeling and Z-Ordering in Delta Lake](https://docs.databricks.com/en/delta/data-skipping.html)
+* [Netflix Tech Blog: Data Engineering at Scale](https://netflixtechblog.com/)
+* [AWS Architecture Blog: Real-time Analytics & Dimensional Modeling](https://aws.amazon.com/blogs/architecture/)
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Chương: Batch Processing & Physical Data Storage).

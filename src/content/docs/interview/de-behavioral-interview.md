@@ -7,6 +7,7 @@ readingTime: "10 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Data Engineer Behavioral Interview - Phỏng vấn hành vi và văn hóa"
 metaDescription: "Vượt qua vòng phỏng vấn hành vi cho Data Engineer: phương pháp STAR, xây dựng story bank, xử lý câu hỏi về xung đột và thất bại, kỹ năng làm việc với stakeholder."
+domains: ["DE"]
 ---
 
 Ứng viên kỹ thuật hay xem nhẹ vòng behavioral — và đó là lý do nhiều người giải được system design nhưng vẫn trượt. Ở các công ty lớn, vòng này có quyền phủ quyết ngang với các vòng kỹ thuật: một kỹ sư giỏi chuyên môn nhưng không lắng nghe phản hồi, không giải thích được công việc cho phòng ban khác, sẽ tạo chi phí cho cả đội nhiều hơn giá trị code của anh ta mang lại. Nhà tuyển dụng biết điều đó từ kinh nghiệm đắt giá, nên họ kiểm tra nó một cách có hệ thống.

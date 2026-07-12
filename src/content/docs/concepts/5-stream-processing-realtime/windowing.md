@@ -33,7 +33,9 @@ graph TD
     D1 -.->|Trigger Check| E("Trigger Evaluator")
     
     E -->|"Condition Met (Fire & Purge)"| F["Aggregation Function"]
-    F --> G["Downstream Output / Sink"]
+    F --> G["Downstream Output / Sink"]
+
+
 ```
 
 1. **Window Assigner (Bộ định tuyến):** Khi một sự kiện đi vào, Assigner sẽ quyết định nhét nó vào một hoặc nhiều Bucket (Cửa sổ). Nếu một sự kiện thuộc về nhiều cửa sổ, dữ liệu gốc không bị copy thành nhiều bản trên RAM, mà State Backend sẽ tạo ra nhiều Index points trỏ tới nó để tối ưu Disk I/O.
@@ -132,6 +134,6 @@ public TriggerResult onElement[Event element, long timestamp, TimeWindow window,
 ## Nguồn Tham Khảo (References)
 
 * **Streaming Systems** - Tyler Akidau (Sách gối đầu giường về Watermarks của kỹ sư Google).
-* [Apache Flink Architecture: Windows & Watermarks][https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/]
-* [Handling Late Data in Flink - Confluent Engineering Blogs][https://docs.confluent.io/]
-* [Uber Engineering: Real-time Data Processing with Flink](https://www.uber.com/en-VN/blog/data-engineering/]
+* [Apache Flink Architecture: Windows & Watermarks](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/)
+* [Handling Late Data in Flink - Confluent Engineering Blogs](https://docs.confluent.io/)
+* [Uber Engineering: Real-time Data Processing with Flink](https://www.uber.com/en-VN/blog/data-engineering/)

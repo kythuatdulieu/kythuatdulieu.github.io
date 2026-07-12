@@ -91,7 +91,7 @@ Một sai lầm cơ bản của Junior Engineer là đánh đồng Encoding (Mã
 Đây là vũ khí tối thượng cho các cột Categorical (Cardinality thấp).
 Thay vì ghi cứng chuỗi String `['VN', 'VN', 'SG', 'US', 'VN']` tốn dung lượng, Parquet thực hiện:
 1. Tạo một **Dictionary Page**: `{0: 'VN', 1: 'SG', 2: 'US'}`
-2. Lưu mảng chỉ mục [Index] vào **Data Page** bằng **Bit-Packing**: `[0, 0, 1, 2, 0]`. Vì từ điển chỉ có 3 phần tử (max index = 2], Parquet dùng đúng **2 bits** cho mỗi index. Tiết kiệm hàng chục lần so với lưu String nguyên bản (Mỗi String tốn vài Bytes).
+2. Lưu mảng chỉ mục [Index] vào **Data Page** bằng **Bit-Packing**: `[0, 0, 1, 2, 0]`. Vì từ điển chỉ có 3 phần tử (max index = 2), Parquet dùng đúng **2 bits** cho mỗi index. Tiết kiệm hàng chục lần so với lưu String nguyên bản (Mỗi String tốn vài Bytes).
 
 **Operational Risk (Dictionary Bloat):**
 - Nếu cột chứa UUID, SessionID (High Cardinality), kích thước từ điển sẽ bùng nổ.
@@ -176,7 +176,7 @@ spark.conf.set("spark.sql.parquet.columnarReaderBatchSize", "4096")
 ---
 
 ## Nguồn Tham Khảo
-* [Apache Parquet Format Specifications (Official GitHub]][https://github.com/apache/parquet-format]
-* [Dremel: Interactive Analysis of Web-Scale Datasets (Google Whitepaper, 2010]][https://research.google.com/pubs/pub36632.html] - Thuật toán đằng sau Encoding lồng nhau của Parquet.
-* [Databricks: Data Skipping and Z-Ordering Implementation][https://docs.databricks.com/en/delta/data-skipping.html]
-* [Designing Data-Intensive Applications - Martin Kleppmann (SSTables and LSM-Trees]](https://dataintensive.net/)
+* [Apache Parquet Format Specifications (Official GitHub)](https://github.com/apache/parquet-format)
+* [Dremel: Interactive Analysis of Web-Scale Datasets (Google Whitepaper, 2010)](https://research.google.com/pubs/pub36632.html) - Thuật toán đằng sau Encoding lồng nhau của Parquet.
+* [Databricks: Data Skipping and Z-Ordering Implementation](https://docs.databricks.com/en/delta/data-skipping.html)
+* [Designing Data-Intensive Applications - Martin Kleppmann (SSTables and LSM-Trees)](https://dataintensive.net/)

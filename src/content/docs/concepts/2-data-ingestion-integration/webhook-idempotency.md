@@ -168,7 +168,7 @@ Việc vận hành hệ thống Idempotency ở scale hàng ngàn requests/giây
 
 ## Nguồn Tham Khảo (References)
 
-1. [Stripe API Reference - Idempotent Requests][https://stripe.com/docs/api/idempotent_requests]
-2. [Implementing Stripe-like Idempotency Keys in Postgres (Brandur Blog]][https://brandur.org/idempotency-keys]
-3. [AWS Architecture Blog: Building Webhook Receivers with Idempotency](https://aws.amazon.com/blogs/architecture/]
+1. [Stripe API Reference - Idempotent Requests](https://stripe.com/docs/api/idempotent_requests)
+2. [Implementing Stripe-like Idempotency Keys in Postgres (Brandur Blog)](https://brandur.org/idempotency-keys)
+3. [AWS Architecture Blog: Building Webhook Receivers with Idempotency](https://aws.amazon.com/blogs/architecture/)
 4. *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing - Idempotence).

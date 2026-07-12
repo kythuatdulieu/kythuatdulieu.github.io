@@ -107,6 +107,6 @@ Thằng nào đứng Top ở cả 2 bảng sẽ trồi lên cao nhất.
 ---
 
 ## Nguồn Tham Khảo (References)
-* [HNSW (Hierarchical Navigable Small World] Algorithm Research Paper][https://arxiv.org/abs/1610.02415]
-* [Faiss: Billion-scale similarity search with GPUs][https://arxiv.org/abs/1702.08734] - Lý thuyết về IVF-PQ.
-* [Pinecone Learning: HNSW Indexing](https://www.pinecone.io/learn/series/faiss/hnsw/]
+* [HNSW (Hierarchical Navigable Small World) Algorithm Research Paper](https://arxiv.org/abs/1610.02415)
+* [Faiss: Billion-scale similarity search with GPUs](https://arxiv.org/abs/1702.08734) - Lý thuyết về IVF-PQ.
+* [Pinecone Learning: HNSW Indexing](https://www.pinecone.io/learn/series/faiss/hnsw/)

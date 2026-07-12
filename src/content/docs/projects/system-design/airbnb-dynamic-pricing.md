@@ -1,6 +1,13 @@
 ---
 title: "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
 description: "Phân tích chuyên sâu về kiến trúc hệ thống, Data Engineering pipeline, và Machine Learning đằng sau tính năng Smart Pricing của Airbnb. Một kiệt tác xử lý hàng tỷ điểm giá mỗi ngày."
+tags: ["airbnb", "dynamic", "pricing"]
+readingTime: "19 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Case Study: System Design & Data Engineering của Hệ thống Dynamic Pricing tại Airbnb"
+metaDescription: "Phân tích chuyên sâu về kiến trúc hệ thống, Data Engineering pipeline, và Machine Learning đằng sau tính năng Smart Pricing của Airbnb. Một kiệt tác xử lý "
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

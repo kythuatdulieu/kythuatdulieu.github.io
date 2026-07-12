@@ -6,6 +6,13 @@ sidebar:
 prev:
   link: /learning-paths/core-paths/junior-to-middle-de/
   label: "Junior to Middle Data Engineer"
+tags: ["middle-to-senior", "spark", "lakehouse", "observability", "design-doc", "learning-path"]
+readingTime: "11 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Middle to Senior Data Engineer (Kỹ sư dữ liệu cao cấp)"
+metaDescription: "Lộ trình lên Senior Data Engineer: hệ thống phân tán, Spark, lakehouse, observability, reliability và thiết kế kiến trúc."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Senior Data Engineer không được đánh giá bằng số tool biết dùng. Điểm khác biệt nằm ở khả năng nhìn pipeline như một hệ thống: dữ liệu lớn lên, schema đổi, job chậm dần, chi phí tăng, sự cố xảy ra ngoài giờ, và nhiều đội phụ thuộc vào cùng một bảng.
@@ -52,6 +59,18 @@ Thứ tự học nên là:
 6. Monitoring qua Spark UI.
 
 Một Senior không chỉ “tăng executor”. Senior hỏi: dữ liệu có đang được phân phối đều không, query có filter partition không, bảng dimension có đủ nhỏ để broadcast không, và output có tạo hàng nghìn file bé không.
+
+Bài kiểm tra nhanh mức Senior — đọc đoạn code này và chỉ ra 3 vấn đề trước khi chạy:
+
+```python
+df = spark.read.parquet("s3://lake/events/")          # (1) không filter partition
+result = df.join(dim_users, "user_id") \
+           .groupBy("country").agg(F.sum("amount"))
+result.repartition(1).write.parquet(out_path)          # (2) repartition(1) → 1 task ghi
+# (3) dim_users 50MB nhưng không broadcast → sort-merge join + full shuffle
+```
+
+Lời giải: thêm `.where(F.col("dt") == ds)` để partition pruning (giảm scan từ TB xuống GB); thay `repartition(1)` bằng `coalesce` với số hợp lý hoặc để AQE tự gộp; và `F.broadcast(dim_users)` để né shuffle bảng events. Ba dòng sửa, thường nhanh gấp 10-50 lần — không thêm một executor nào. Chi tiết từng kỹ thuật: [Spark Partition](/concepts/4-compute-engines-batch/spark-partition/), [Spark Joins](/concepts/4-compute-engines-batch/spark-joins/), [Shuffle](/concepts/4-compute-engines-batch/shuffle/).
 
 Đọc trong site: [Apache Spark](/concepts/4-compute-engines-batch/apache-spark/), [Spark Execution Model](/concepts/4-compute-engines-batch/spark-execution-model/), [Spark Jobs, Stages, Tasks](/concepts/4-compute-engines-batch/spark-jobs-stages-tasks/), [Spark Joins](/concepts/4-compute-engines-batch/spark-joins/), [Spark AQE](/concepts/4-compute-engines-batch/spark-aqe-adaptive-query/), [Troubleshooting Spark OOM](/concepts/4-compute-engines-batch/troubleshooting-spark-oom/).
 

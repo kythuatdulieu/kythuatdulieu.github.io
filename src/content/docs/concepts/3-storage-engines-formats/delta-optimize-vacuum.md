@@ -125,6 +125,6 @@ ALTER TABLE main.default.events ENABLE PREDICTIVE OPTIMIZATION;
 
 ## Nguồn Tham Khảo
 
-1.  [Databricks Official Docs: Liquid Clustering][https://docs.databricks.com/en/tables/clustering.html]
-2.  [Optimize and Z-Order Performance][https://docs.databricks.com/en/delta/optimize.html]
-3.  [Vacuum functionality and Delta Lake retention](https://docs.databricks.com/en/delta/vacuum.html]
+1.  [Databricks Official Docs: Liquid Clustering](https://docs.databricks.com/en/tables/clustering.html)
+2.  [Optimize and Z-Order Performance](https://docs.databricks.com/en/delta/optimize.html)
+3.  [Vacuum functionality and Delta Lake retention](https://docs.databricks.com/en/delta/vacuum.html)

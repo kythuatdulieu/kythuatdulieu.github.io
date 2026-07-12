@@ -156,6 +156,6 @@ Sự tách bạch giữa Business Logic [Nghiệp vụ] và Physical Optimizatio
 ---
 
 ## 5. Nguồn Tham Khảo
-- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog]][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
-- [Best practices for successfully managing memory for Apache Spark applications on Amazon EMR (AWS Blog]](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/)
+- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime (Databricks Blog)](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+- [Best practices for successfully managing memory for Apache Spark applications on Amazon EMR (AWS Blog)](https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/)
 - Thiết kế Hệ thống Dữ liệu Chuyên sâu (*Designing Data-Intensive Applications* - Martin Kleppmann, Chapter 10: Batch Processing).

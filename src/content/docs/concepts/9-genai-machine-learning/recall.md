@@ -146,8 +146,8 @@ hnsw_index:
 
 ## Nguồn Tham Khảo [References]
 
-*   **Pinecone:** [Precision and Recall in Information Retrieval & RAG][https://www.pinecone.io/learn/offline-evaluation/]
-*   **Milvus Engineering:** [Hybrid Search and Reranking for better RAG][https://milvus.io/docs/multi-vector-search.md]
-*   **Elasticsearch Docs:** [kNN search, HNSW and exact filtering][https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html]
+*   **Pinecone:** [Precision and Recall in Information Retrieval & RAG](https://www.pinecone.io/learn/offline-evaluation/)
+*   **Milvus Engineering:** [Hybrid Search and Reranking for better RAG](https://milvus.io/docs/multi-vector-search.md)
+*   **Elasticsearch Docs:** [kNN search, HNSW and exact filtering](https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html)
 *   **IBM Research:** [What is Candidate Generation?](https://www.ibm.com/topics/candidate-generation)
 *   *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích về Trade-offs trong lưu trữ và truy vấn thông tin.

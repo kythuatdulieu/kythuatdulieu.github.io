@@ -150,7 +150,7 @@ Trong môi trường Production, Dimension Table là nguyên nhân của vô s�
 ## Nguồn Tham Khảo (References)
 
 1. **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 3: Storage and Retrieval)
-2. [The Data Warehouse Toolkit - Ralph Kimball][https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/]
-3. [Databricks - Semantic Modeling & Slowly Changing Dimensions][https://databricks.com/blog/2021/06/09/how-to-implement-a-dimensional-data-warehouse-on-databricks-sql.html]
-4. [Efficient Upserts into Data Lakes with Databricks Delta][https://www.databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html]
-5. [Netflix Tech Blog - Data Engineering at Scale](https://netflixtechblog.com/]
+2. [The Data Warehouse Toolkit - Ralph Kimball](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/)
+3. [Databricks - Semantic Modeling & Slowly Changing Dimensions](https://databricks.com/blog/2021/06/09/how-to-implement-a-dimensional-data-warehouse-on-databricks-sql.html)
+4. [Efficient Upserts into Data Lakes with Databricks Delta](https://www.databricks.com/blog/2019/03/19/efficient-upserts-into-data-lakes-databricks-delta.html)
+5. [Netflix Tech Blog - Data Engineering at Scale](https://netflixtechblog.com/)

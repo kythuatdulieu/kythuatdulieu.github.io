@@ -33,7 +33,10 @@ graph TD
     C --> E["month=02/"]
     D --> F["part-0001.parquet"]
     D --> G["part-0002.parquet"]
-    E --> H["part-0001.parquet"]
+    E --> H["part-0001.parquet"]
+
+
+
 ```
 
 **Cơ chế hoạt động:**
@@ -181,7 +184,7 @@ Partitioning không chỉ đơn thuần là phân chia dữ liệu vào các fol
 ---
 
 ## Nguồn Tham Khảo
-* [Designing Data-Intensive Applications (Chapter 6: Partitioning]][https://dataintensive.net/]
-* [Apache Iceberg: Hidden Partitioning & Metadata Tree][https://iceberg.apache.org/docs/latest/partitioning/]
-* [Apache Spark: Adaptive Query Execution (AQE] and Skew Optimization][https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution]
-* [Databricks Blog: Debunking data layout myths - why Liquid Clustering outperforms partitioning](https://www.databricks.com/blog/debunking-8-data-layout-myths-why-liquid-clustering-outperforms-partitioning]
+* [Designing Data-Intensive Applications (Chapter 6: Partitioning)](https://dataintensive.net/)
+* [Apache Iceberg: Hidden Partitioning & Metadata Tree](https://iceberg.apache.org/docs/latest/partitioning/)
+* [Apache Spark: Adaptive Query Execution (AQE) and Skew Optimization](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)
+* [Databricks Blog: Debunking data layout myths - why Liquid Clustering outperforms partitioning](https://www.databricks.com/blog/debunking-8-data-layout-myths-why-liquid-clustering-outperforms-partitioning)

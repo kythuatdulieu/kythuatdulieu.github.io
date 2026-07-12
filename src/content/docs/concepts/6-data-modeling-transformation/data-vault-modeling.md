@@ -156,7 +156,7 @@ resource "dbt_cloud_job" "data_vault_daily_run" {
 
 ---
 
-## 4. Rủi ro Vận hành & Troubleshooting (Operational Risks]
+## 4. Rủi ro Vận hành & Troubleshooting (Operational Risks)
 
 Sử dụng Data Vault mà không hiểu rõ Physical Execution Layer sẽ dẫn đến thảm họa về Compute Cost (FinOps) và System Performance.
 
@@ -172,7 +172,8 @@ PIT Tables là kỹ thuật "Equi-Join" hóa các bảng Satellites. PIT lưu s�
 flowchart LR
     A["Hub Customer"] -->|Hash Key| B["PIT Customer"]
     B -->|HK + Exact LoadDate T1| C["Sat CRM"]
-    B -->|HK + Exact LoadDate T2| D["Sat Billing"]
+    B -->|HK + Exact LoadDate T2| D["Sat Billing"]
+
 ```
 
 *🚨 Incidents thực tế:* Tạo PIT table sai cách bằng cách `CROSS JOIN` bảng Hub với toàn bộ ngày trong `Date Dimension` sẽ tạo ra một bảng ma trận hàng nghìn tỷ dòng, đốt sạch Credit của Snowflake. Bạn bắt buộc phải dùng cấu trúc Incrementally Updated PIT kết hợp với Data Pruning.
@@ -194,6 +195,6 @@ Nhiều kỹ sư lo sợ hàm MD5 sinh ra Hash Collision. Thực tế, xác su�
 ## Nguồn Tham Khảo
 
 1. **Dan Linstedt** - *Building a Scalable Data Warehouse with Data Vault 2.0*. (Tác giả khai sinh ra Data Vault).
-2. [Databricks Engineering Blog: Data Vault 2.0 on Lakehouse][https://www.databricks.com/blog/2022/09/01/data-vault-modeling-databricks-lakehouse.html]
-3. [Databricks Glossary: Data Vault][https://www.databricks.com/glossary/data-vault]
-4. [AutomateDV (trước đây là dbtvault] Documentation](https://automate-dv.readthedocs.io/en/latest/)
+2. [Databricks Engineering Blog: Data Vault 2.0 on Lakehouse](https://www.databricks.com/blog/2022/09/01/data-vault-modeling-databricks-lakehouse.html)
+3. [Databricks Glossary: Data Vault](https://www.databricks.com/glossary/data-vault)
+4. [AutomateDV (trước đây là dbtvault) Documentation](https://automate-dv.readthedocs.io/en/latest/)

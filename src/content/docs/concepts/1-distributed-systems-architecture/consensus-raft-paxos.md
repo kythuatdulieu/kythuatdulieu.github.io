@@ -115,7 +115,7 @@ Ví dụ vĩ đại nhất của sự dịch chuyển sang thuật toán Raft tr
 ---
 
 ## Nguồn Tham Khảo (References)
-1. **Stanford University:** [In Search of an Understandable Consensus Algorithm (Raft] - Diego Ongaro, John Ousterhout][https://raft.github.io/raft.pdf]
-2. **Microsoft Research:** [The Part-Time Parliament (Original Paxos] - Leslie Lamport][https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf]
-3. **Confluent Blog / KIP-500:** [Replace ZooKeeper with a Self-Managed Metadata Quorum (KRaft]](https://cwiki.apache.org/confluence/display/KAFKA/KIP-500)
+1. **Stanford University:** [In Search of an Understandable Consensus Algorithm (Raft) - Diego Ongaro, John Ousterhout](https://raft.github.io/raft.pdf)
+2. **Microsoft Research:** [The Part-Time Parliament (Original Paxos) - Leslie Lamport](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)
+3. **Confluent Blog / KIP-500:** [Replace ZooKeeper with a Self-Managed Metadata Quorum (KRaft)](https://cwiki.apache.org/confluence/display/KAFKA/KIP-500)
 4. Sách *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 9: Consistency and Consensus).

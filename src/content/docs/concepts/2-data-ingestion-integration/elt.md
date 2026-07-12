@@ -166,7 +166,7 @@ Hệ thống ELT trong thực tế không bao giờ hoàn hảo. Dưới đây l
 ---
 
 ## 5. Nguồn Tham Khảo (References)
-* [What is a Data Lakehouse? (Databricks Blog]][https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html]
-* [Medallion Architecture (Databricks Glossary]][https://www.databricks.com/glossary/medallion-architecture]
-* [Designing Data-Intensive Applications (Martin Kleppmann]][https://dataintensive.net/]
-* [dbt Labs - The Analytics Engineering Guide](https://docs.getdbt.com/docs/analytics-engineering]
+* [What is a Data Lakehouse? (Databricks Blog)](https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html)
+* [Medallion Architecture (Databricks Glossary)](https://www.databricks.com/glossary/medallion-architecture)
+* [Designing Data-Intensive Applications (Martin Kleppmann)](https://dataintensive.net/)
+* [dbt Labs - The Analytics Engineering Guide](https://docs.getdbt.com/docs/analytics-engineering)

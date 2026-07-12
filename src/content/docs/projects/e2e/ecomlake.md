@@ -1,7 +1,14 @@
 ---
-lastUpdated: 2026-07-09
+lastUpdated: 2026-07-11
 title: "EcomLake: Hệ thống Data Lakehouse cho Thương Mại Điện Tử"
 description: "Dự án E2E xây dựng hệ thống Data Lakehouse phân tán sử dụng Spark, MinIO, Dagster, Delta Lake và MLflow cho bài toán thương mại điện tử."
+difficulty: "Intermediate"
+tags: ["data-lakehouse", "delta-lake", "spark", "dagster", "minio", "mlflow", "star-schema", "e2e-project"]
+readingTime: "18 mins"
+seoTitle: "Dự án EcomLake: Lakehouse với Spark, Delta Lake, Dagster, MLflow"
+metaDescription: "Xây dựng Data Lakehouse thương mại điện tử end-to-end: Spark standalone cluster, Delta Lake trên MinIO, Software-Defined Assets với Dagster, Spark Thrift Server và MLflow."
+domains: ["DE", "Platform"]
+level: "Middle"
 ---
 
 
@@ -48,6 +55,22 @@ Hệ thống sử dụng Dagster để định nghĩa Software-Defined Assets (S
 - **Data Lineage:** Theo dõi trực quan sự phụ thuộc giữa các bảng từ Bronze -> Silver -> Gold.
 - **Tái tính toán thông minh:** Chỉ kích hoạt lại các pipeline bị ảnh hưởng khi dữ liệu nguồn thay đổi, tối ưu hóa tài nguyên tính toán.
 
+Khác biệt triết lý so với Airflow: Airflow điều phối **task** (hàm chạy), Dagster điều phối **asset** (bảng dữ liệu tồn tại sau khi chạy). Một asset Silver được khai báo phụ thuộc trực tiếp vào asset Bronze:
+
+```python
+@asset(deps=[bronze_orders], compute_kind="spark")
+def silver_orders(context) -> None:
+    spark = get_spark_session()
+    (spark.read.format("delta").load("s3a://lakehouse/bronze/orders")
+        .dropDuplicates(["order_id"])
+        .withColumn("order_date", F.to_date("created_at"))
+        .write.format("delta").mode("overwrite")
+        .option("overwriteSchema", "true")
+        .save("s3a://lakehouse/silver/orders"))
+```
+
+Nhờ khai báo dependency ở mức asset, Dagster tự vẽ lineage, biết asset nào **stale** (nguồn đã đổi nhưng chưa tính lại) và hỗ trợ backfill theo partition mà không cần viết logic thủ công — xem chi tiết trong bài [Software-Defined Assets](/concepts/7-dataops-orchestration-quality/software-defined-assets/).
+
 ![Trạng thái thực thi Distributed Tasks trên Spark Cluster](/images/projects/e2e/ecomlake/cc5c5c1c.png)
 *Hình 4. Trạng thái thực thi Distributed Tasks trên Spark Cluster*
 
@@ -67,9 +90,12 @@ Hệ thống triển khai MinIO làm giải pháp lưu trữ nền tảng. Việ
 *Hình 6. Tổ chức dữ liệu tầng Gold (Star Schema)*
 
 **Cấu trúc dữ liệu:**
-Dữ liệu tại tầng Gold được tổ chức theo mô hình Star Schema (Fact & Dimension tables) để tối ưu cho các truy vấn phân tích (OLAP). Về mặt vật lý, dữ liệu được lưu trữ dưới định dạng Delta Lake (dựa trên Parquet + Transaction Log), đảm bảo:
-- **ACID Transactions:** Toàn vẹn dữ liệu khi ghi/đọc đồng thời.
+Dữ liệu tại tầng Gold được tổ chức theo mô hình [Star Schema](/concepts/6-data-modeling-transformation/star-schema/) (Fact & Dimension tables) để tối ưu cho các truy vấn phân tích (OLAP). Về mặt vật lý, dữ liệu được lưu trữ dưới định dạng [Delta Lake](/concepts/3-storage-engines-formats/delta-lake/) (dựa trên Parquet + Transaction Log), đảm bảo:
+- **ACID Transactions:** Toàn vẹn dữ liệu khi ghi/đọc đồng thời. Cơ chế bên dưới là `_delta_log/` — chuỗi file JSON commit tuần tự; hai writer đụng độ được giải quyết bằng [Optimistic Concurrency Control](/concepts/3-storage-engines-formats/delta-optimistic-concurrency/).
 - **Lưu trữ hướng cột (Columnar Storage):** Tối ưu hóa I/O và nén dữ liệu hiệu quả.
+- **Time Travel:** Query lại phiên bản cũ bằng `VERSION AS OF` — cứu tinh khi job ghi sai dữ liệu tầng Gold.
+
+Vận hành Delta trên MinIO có hai việc định kỳ bắt buộc, thường bị các dự án demo bỏ qua: `OPTIMIZE` (gom small files do nhiều lần ghi micro-batch) và `VACUUM` (dọn file mồ côi sau retention, mặc định 7 ngày) — phân tích đầy đủ tại [Delta OPTIMIZE & VACUUM](/concepts/3-storage-engines-formats/delta-optimize-vacuum/).
 
 ![Các Partition Files định dạng Parquet](/images/projects/e2e/ecomlake/aa3b246b.png)
 *Hình 7. Các Partition Files định dạng Parquet*
@@ -84,6 +110,8 @@ Dữ liệu tại tầng Gold được tổ chức theo mô hình Star Schema (F
 
 **Cơ chế tích hợp:**
 Hệ thống sử dụng Spark Thrift Server làm Gateway, cho phép các công cụ BI giao tiếp với Data Lakehouse qua giao thức JDBC chuẩn. Mọi truy vấn SQL từ người dùng được chuyển đổi thành Spark Jobs và thực thi phân tán, tận dụng sức mạnh xử lý của cụm.
+
+**Trade-off cần biết:** Thrift Server giữ một Spark application chạy thường trực và các query BI **chia sẻ chung pool executor** — một analyst chạy query nặng có thể chiếm hết slot của dashboard. Hai van an toàn tối thiểu: bật Fair Scheduler pool (`spark.scheduler.mode=FAIR`) để query ngắn không chết đói, và giới hạn kết quả trả về (Metabase row limit) tránh driver OOM do `collect` triệu dòng. Ở quy mô lớn hơn, đây là lý do các đội chuyển serving sang Trino/Presto hoặc [OLAP](/concepts/3-storage-engines-formats/olap/) engine chuyên dụng.
 
 #### Ứng Dụng Dữ Liệu và Báo Cáo
 ![Dashboard tổng hợp năng lực hệ thống](/images/projects/e2e/ecomlake/1948b093.png)
@@ -114,8 +142,24 @@ Hệ thống lưu trữ không chỉ mô hình cuối cùng mà cả toàn bộ 
 
 ---
 
-## 3. Kết Luận
+## 3. Rủi Ro Vận Hành & Nâng Cấp
+
+1. **Spark Standalone không có resource isolation thật sự** — mọi app chia executor tĩnh. Khi nhiều pipeline chạy đồng thời, nên chuyển sang K8s/YARN với dynamic allocation.
+2. **MinIO một node = mất dữ liệu khi hỏng đĩa.** Production cần distributed mode ≥4 node với erasure coding, hoặc chuyển thẳng lên S3.
+3. **Small files từ ghi micro-batch:** mỗi lần Dagster materialize asset là một loạt file Parquet mới. Lịch `OPTIMIZE` hằng đêm + `spark.sql.shuffle.partitions` hợp lý (mặc định 200 là quá nhiều cho dữ liệu vài GB) là bắt buộc — xem [Compaction](/concepts/3-storage-engines-formats/compaction/) và [Spark Partition](/concepts/4-compute-engines-batch/spark-partition/).
+4. **Training-Serving Skew đã xử lý đúng hướng** (serialize cả preprocessing pipeline vào MLflow), nhưng còn thiếu monitoring [distribution drift](/concepts/7-dataops-orchestration-quality/distribution-drift/) cho features đầu vào — bước tiếp theo tự nhiên là thêm [Feature Store](/concepts/1-distributed-systems-architecture/feature-store/).
+
+## 4. Kết Luận
 
 Kiến trúc EcomLake đã hiện thực hóa thành công mô hình Modern Data Lakehouse, giải quyết triệt để các thách thức của bài toán Big Data. Sự kết hợp chặt chẽ giữa Spark (Tính toán), MinIO (Lưu trữ), Dagster (Điều phối) và Metabase/Streamlit (BI) tạo nên một nền tảng dữ liệu thống nhất, mạnh mẽ và có khả năng mở rộng không giới hạn, phục vụ đắc lực cho cả nhu cầu Business Intelligence và Advanced Analytics.
 
 > Tham khảo chi tiết tại GitHub Repository: [EcomLake](https://github.com/kythuatdulieu/EcomLake)
+
+## Nguồn Tham Khảo
+
+- [Delta Lake Documentation](https://docs.delta.io/latest/index.html) - Linux Foundation.
+- [Dagster: Software-Defined Assets](https://docs.dagster.io/concepts/assets/software-defined-assets) - Dagster Labs.
+- [Spark Standalone Mode](https://spark.apache.org/docs/latest/spark-standalone.html) - Apache Software Foundation.
+- [Distributed Spark Thrift Server (JDBC/ODBC)](https://spark.apache.org/docs/latest/sql-distributed-sql-engine.html) - Apache Software Foundation.
+- [MLflow Documentation](https://mlflow.org/docs/latest/index.html) - Linux Foundation.
+- [MinIO Erasure Coding](https://min.io/docs/minio/linux/operations/concepts/erasure-coding.html) - MinIO.

@@ -137,7 +137,7 @@ serve.run(LLMDeployment.bind())
 
 ## 6. Nguồn Tham Khảo (References)
 
-1. **UC Berkeley Research:** [Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM Paper]][https://arxiv.org/abs/2309.06180]
-2. **Anyscale Blog:** [Continuous Batching for LLM Inference][https://www.anyscale.com/blog/continuous-batching-llm-inference]
-3. **NVIDIA Documentation:** [Triton Inference Server Architecture][https://github.com/triton-inference-server/server]
-4. **Ray Serve Official Docs:** [Scalable and Programmable Model Serving](https://docs.ray.io/en/latest/serve/index.html]
+1. **UC Berkeley Research:** [Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM Paper)](https://arxiv.org/abs/2309.06180)
+2. **Anyscale Blog:** [Continuous Batching for LLM Inference](https://www.anyscale.com/blog/continuous-batching-llm-inference)
+3. **NVIDIA Documentation:** [Triton Inference Server Architecture](https://github.com/triton-inference-server/server)
+4. **Ray Serve Official Docs:** [Scalable and Programmable Model Serving](https://docs.ray.io/en/latest/serve/index.html)

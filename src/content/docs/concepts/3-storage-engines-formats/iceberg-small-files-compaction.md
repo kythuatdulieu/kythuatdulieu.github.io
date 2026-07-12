@@ -53,7 +53,7 @@ graph TD
 
 :::danger
 **Query Planning Bottleneck:** 
-Trước khi thực thi bất kỳ query nào, Engine (Trino/Spark] phải đọc file Metadata để quyết định loại bỏ (Skip) các file không cần thiết dựa trên mệnh đề `WHERE` (Min/Max filtering). Nếu Manifest File phải lưu trữ metadata của hàng triệu Data Files, giai đoạn Query Planning có thể kéo dài hàng chục phút và làm tràn RAM của Spark Driver (lỗi `java.lang.OutOfMemoryError: Java heap space`).
+Trước khi thực thi bất kỳ query nào, Engine (Trino/Spark) phải đọc file Metadata để quyết định loại bỏ (Skip) các file không cần thiết dựa trên mệnh đề `WHERE` (Min/Max filtering). Nếu Manifest File phải lưu trữ metadata của hàng triệu Data Files, giai đoạn Query Planning có thể kéo dài hàng chục phút và làm tràn RAM của Spark Driver (lỗi `java.lang.OutOfMemoryError: Java heap space`).
 :::
 
 ---

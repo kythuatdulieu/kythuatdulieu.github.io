@@ -89,7 +89,7 @@ graph TD
 Làm sao Hudi Upsert đúng `user_123` mà không phải quét toàn bảng?
 
 1. **Bloom Filter Index (Default):** Nhúng trực tiếp màng lọc Bloom vào footer của file Parquet. Xác định nhanh file *có thể* chứa key. Tuy nhiên, nó sinh ra *False Positives* (báo có nhưng không có), gây dư thừa Disk Reads khi keys phân tán ngẫu nhiên.
-2. **Record Level Index (RLI):** Hudi duy trì một bảng Metadata ẩn chứa mapping `[Record Key -> File Group ID]`. Tốc độ tra cứu là $O(1]$. Khuyến nghị bắt buộc cho các bảng cực lớn.
+2. **Record Level Index (RLI):** Hudi duy trì một bảng Metadata ẩn chứa mapping `[Record Key -> File Group ID]`. Tốc độ tra cứu là $O(1)$. Khuyến nghị bắt buộc cho các bảng cực lớn.
 
 ---
 
@@ -147,6 +147,6 @@ df_cdc.write.format("hudi"). \
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Uber Engineering: Apache Hudi at Trillion-Record-Scale][https://www.uber.com/en-VN/blog/apache-hudi-trillion-record-data-lake/]
-* [Apache Hudi Docs: Concurrency Control (OCC vs MVCC]][https://hudi.apache.org/docs/concurrency_control]
-* [Introducing Multimodal Index in Apache Hudi](https://hudi.apache.org/blog/2023/11/01/multimodal-index/]
+* [Uber Engineering: Apache Hudi at Trillion-Record-Scale](https://www.uber.com/en-VN/blog/apache-hudi-trillion-record-data-lake/)
+* [Apache Hudi Docs: Concurrency Control (OCC vs MVCC)](https://hudi.apache.org/docs/concurrency_control)
+* [Introducing Multimodal Index in Apache Hudi](https://hudi.apache.org/blog/2023/11/01/multimodal-index/)

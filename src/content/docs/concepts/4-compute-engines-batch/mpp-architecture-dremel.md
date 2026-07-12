@@ -120,7 +120,7 @@ Dù BigQuery che giấu rất nhiều sự phức tạp của hạ tầng, Kỹ 
 
 ## Nguồn Tham Khảo
 
-- [Dremel: Interactive Analysis of Web-Scale Datasets (Google Whitepaper, VLDB 2010]][https://research.google/pubs/pub36632/]
-- [A Look at Dremel (Google Cloud Blog]][https://cloud.google.com/blog/products/data-analytics/a-look-at-dremel]
-- [BigQuery Under the Hood - Architecture (Google Cloud Official Docs]](https://cloud.google.com/bigquery/docs/architecture)
+- [Dremel: Interactive Analysis of Web-Scale Datasets (Google Whitepaper, VLDB 2010)](https://research.google/pubs/pub36632/)
+- [A Look at Dremel (Google Cloud Blog)](https://cloud.google.com/blog/products/data-analytics/a-look-at-dremel)
+- [BigQuery Under the Hood - Architecture (Google Cloud Official Docs)](https://cloud.google.com/bigquery/docs/architecture)
 - Designing Data-Intensive Applications (Martin Kleppmann) - Phân tích về Column-Oriented Storage.

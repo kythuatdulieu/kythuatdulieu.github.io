@@ -160,6 +160,6 @@ Từ Spark 3.2 trở lên, AQE bổ sung tính năng **Demote Broadcast Hash Joi
   Mỗi lần chạm ranh giới Shuffle, Executor phải Push dữ liệu Metrics cho Driver, sau đó Catalyst Optimizer phải chạy lại quá trình lập kế hoạch vật lý phức tạp. Với các đồ thị thực thi DAG (Directed Acyclic Graph) lớn có hàng ngàn Shuffle Stage, Overhead tính toán của Driver do AQE tạo ra có thể làm chậm Job đi vài phút. Dẫu vậy, so với hàng giờ đồng hồ mòn mỏi được cứu rỗi nhờ tránh Data Skew, sự đánh đổi này là hoàn toàn xứng đáng với giá trị mang lại.
 
 ## Nguồn Tham Khảo (References)
-- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime - Databricks][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
+- [Adaptive Query Execution: Speeding Up Spark SQL at Runtime - Databricks](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
 - Uber Engineering Blog, *Making Apache Spark Effortless for All of Uber*.
 - [Spark SQL Guide: Adaptive Query Execution](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)

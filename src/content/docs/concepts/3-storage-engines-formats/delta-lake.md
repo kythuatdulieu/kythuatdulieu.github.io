@@ -133,6 +133,6 @@ Nếu bạn chỉ JOIN bằng khóa chính (`user_id`), cơ chế quét của De
 ---
 
 ## Nguồn Tham Khảo
-1. **Databricks Engineering:** [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores (VLDB Paper]][https://www.databricks.com/wp-content/uploads/2020/08/p975-armbrust.pdf]
-2. **Delta Lake Documentation:** [Concurrency Control](https://docs.delta.io/latest/concurrency-control.html]
+1. **Databricks Engineering:** [Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores (VLDB Paper)](https://www.databricks.com/wp-content/uploads/2020/08/p975-armbrust.pdf)
+2. **Delta Lake Documentation:** [Concurrency Control](https://docs.delta.io/latest/concurrency-control.html)
 3. **Designing Data-Intensive Applications:** Martin Kleppmann - Chương 3 & 7 (Lý thuyết cơ bản về WAL và ACID).

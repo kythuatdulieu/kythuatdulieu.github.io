@@ -131,6 +131,6 @@ Việc xây dựng Multi-Layered Defense mang theo gánh nặng to lớn về ki
 Trong Data Engineering hiện đại, xử lý Hallucination không còn là công việc của AI Researcher ngồi tinh chỉnh Hyperparameters. Nó là một bài toán **Thiết kế Hệ thống Phân tán (Distributed Systems Design)**: bảo vệ Input, cung cấp Data chính xác (RAG), xác minh Output (Pydantic), và thiết kế cho sự thất bại (Graceful Degradation / Fallback) để không làm sập trải nghiệm người dùng cuối.
 
 ## Nguồn Tham Khảo
-1.  [NVIDIA NeMo Guardrails Documentation][https://github.com/NVIDIA/NeMo-Guardrails]
-2.  [Instructor: Structured Extraction in Python][https://python.useinstructor.com/]
-3.  [Mitigating LLM Hallucinations in Production - Engineering Practices](https://arxiv.org/abs/2311.05232]
+1.  [NVIDIA NeMo Guardrails Documentation](https://github.com/NVIDIA/NeMo-Guardrails)
+2.  [Instructor: Structured Extraction in Python](https://python.useinstructor.com/)
+3.  [Mitigating LLM Hallucinations in Production - Engineering Practices](https://arxiv.org/abs/2311.05232)

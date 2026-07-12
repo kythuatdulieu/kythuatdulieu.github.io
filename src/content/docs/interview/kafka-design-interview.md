@@ -7,6 +7,7 @@ readingTime: "14 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Kafka Design Interview - Câu hỏi phỏng vấn thiết kế hệ thống sự kiện"
 metaDescription: "Thiết kế hệ thống với Apache Kafka trong phỏng vấn System Design: chọn partition key, cấu hình acks, exactly-once semantics, consumer group và các trade-off đi kèm."
+domains: ["DE"]
 ---
 
 Trong vòng System Design cho Data Engineer hoặc Backend Engineer mức Mid/Senior, khoảnh khắc bạn vẽ một chiếc hộp ghi "Kafka" lên bảng là khoảnh khắc câu hỏi thật sự bắt đầu. Người phỏng vấn sẽ hỏi ngay: bao nhiêu partition? Partition key là gì? `acks` cấu hình ra sao? Nếu mạng chập chờn làm producer gửi lại, đơn hàng có bị ghi trùng không?

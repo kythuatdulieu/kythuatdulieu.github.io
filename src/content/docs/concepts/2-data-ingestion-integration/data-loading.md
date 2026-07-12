@@ -61,7 +61,7 @@ quadrantChart
 
 ## 3. Các Chiến Lược Nạp Dữ Liệu Thực Chiến
 
-### 3.1. Full Overwrite (Tải Toàn Bộ / Ghi Đè]
+### 3.1. Full Overwrite (Tải Toàn Bộ / Ghi Đè)
 **Cơ chế:** Xóa sạch dữ liệu (Truncate/Drop) ở bảng đích (Target Table) và thay thế bằng toàn bộ Dataset mới. 
 **Khi nào dùng:** Kích thước bảng nhỏ (Dimension tables < 1GB) hoặc logic Transform quá phức tạp để theo dõi sự thay đổi (CDC).
 
@@ -143,7 +143,7 @@ Dưới đây là các "Bài học xương máu" (Post-mortems) khi vận hành 
 
 ## Nguồn Tham Khảo (References)
 
-*   [Netflix Tech Blog: How We Build Apache Iceberg][https://netflixtechblog.com/]
-*   [Databricks Blog: Delta Lake vs. Parquet - ACID Transactions][https://databricks.com/blog/2019/04/24/delta-lake-open-source-storage-layer-for-data-lakes.html]
-*   [Uber Engineering: Apache Hudi - Streaming Ingestion](https://uber.com/blog/hudi/]
+*   [Netflix Tech Blog: How We Build Apache Iceberg](https://netflixtechblog.com/)
+*   [Databricks Blog: Delta Lake vs. Parquet - ACID Transactions](https://databricks.com/blog/2019/04/24/delta-lake-open-source-storage-layer-for-data-lakes.html)
+*   [Uber Engineering: Apache Hudi - Streaming Ingestion](https://uber.com/blog/hudi/)
 *   Cuốn sách kinh điển: *Designing Data-Intensive Applications* (Martin Kleppmann).

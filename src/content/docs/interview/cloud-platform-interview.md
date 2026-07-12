@@ -7,6 +7,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Cloud Platform Interview - Câu hỏi phỏng vấn Đám mây Data Engineer"
 metaDescription: "Phỏng vấn thiết kế hạ tầng dữ liệu trên cloud: chọn mức dịch vụ IaaS/PaaS/Serverless, tư duy FinOps, bảo mật IAM, và các bẫy chi phí egress, Redshift vs BigQuery."
+domains: ["DE"]
 ---
 
 Trên cloud, một quyết định thiết kế sai có hóa đơn đi kèm. Câu truy vấn BigQuery quét cả bảng thay vì một partition có thể tốn hàng nghìn USD trong vài phút; một bucket S3 mở public có thể làm lộ dữ liệu hàng triệu khách hàng. Vòng phỏng vấn Cloud Platform vì thế không kiểm tra bạn thuộc bao nhiêu tên dịch vụ AWS — nó kiểm tra xem mỗi lựa chọn của bạn có đi kèm ý thức về chi phí, bảo mật và độ tin cậy hay không.

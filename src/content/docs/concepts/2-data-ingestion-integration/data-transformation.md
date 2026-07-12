@@ -114,7 +114,7 @@ fact_skewed = fact_skewed.withColumn(
 
 # 2. Nhân bản bảng Dimension lên 10 lần (Explode) để khớp với mọi trường hợp Salt của Fact
 dim_df = dim_df.withColumn(
-    "salt", explode[array([lit(i] for i in range(10)]))
+    "salt", explode[array([lit(i) for i in range(10)]))
 ).withColumn(
     "salted_key", concat(col("tenant_id"), lit("_"), col("salt"))
 )
@@ -154,6 +154,6 @@ Data Transformation giỏi không bao giờ được phép làm sập (Fail-fast
 
 * **Fundamentals of Data Engineering** - Joe Reis & Matt Housley (Must-read về Data Architecture).
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Sách gối đầu giường về Replication, Partitioning & Batch Processing).
-* [The dbt Viewpoint - What is Data Transformation?][https://www.getdbt.com/analytics-engineering/transformation/]
-* [Databricks Blog - What is a Medallion Architecture?][https://www.databricks.com/glossary/medallion-architecture]
-* [Netflix Tech Blog - Handling Consumer Lag and Stateful Streaming](https://netflixtechblog.com/]
+* [The dbt Viewpoint - What is Data Transformation?](https://www.getdbt.com/analytics-engineering/transformation/)
+* [Databricks Blog - What is a Medallion Architecture?](https://www.databricks.com/glossary/medallion-architecture)
+* [Netflix Tech Blog - Handling Consumer Lag and Stateful Streaming](https://netflixtechblog.com/)

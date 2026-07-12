@@ -7,6 +7,7 @@ readingTime: "15 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Spark Optimization Interview - Câu hỏi phỏng vấn Data Engineer chuyên sâu"
 metaDescription: "Giải các bài toán tối ưu Apache Spark trong phỏng vấn Data Engineer: chẩn đoán OOM, xử lý data skew bằng salting và AQE, broadcast join, và cách đọc Spark UI."
+domains: ["DE"]
 ---
 
 Vòng phỏng vấn tối ưu [Apache Spark](/concepts/4-compute-engines-batch/apache-spark) hiếm khi hỏi lý thuyết trực diện. Đề bài thường là một sự cố: job đang chạy ổn bỗng sập vì tràn bộ nhớ (OOM), job chậm dần và hóa đơn cloud tăng theo, hoặc kịch bản kinh điển "99% task xong trong một phút, 1% treo hai tiếng". Người phỏng vấn muốn xem bạn chẩn đoán thế nào, mở Spark UI nhìn vào đâu, và đề xuất sửa với đầy đủ ý thức về cái giá của từng phương án.

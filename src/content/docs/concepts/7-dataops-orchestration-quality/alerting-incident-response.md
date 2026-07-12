@@ -43,7 +43,10 @@ graph TD
         AD -->|SLO Burn / Critical| P["PagerDuty / Opsgenie (Page)"]
         AD -->|Warning / High| TKT["Jira / ServiceNow (Ticket)"]
         AD -->|Info| SL["Slack / Teams (Log)"]
-    end
+    end
+
+
+
 ```
 
 ### Trade-off: Polling vs. Push-based Observability
@@ -176,7 +179,7 @@ Kỹ thuật "5 Tại Sao" (5 Whys) giúp đào sâu tận cùng nguyên nhân g
 
 ## Nguồn Tham Khảo [References]
 
-1. **Google SRE Book:** [Incident Response][https://sre.google/sre-book/incident-response/] & [Monitoring Distributed Systems][https://sre.google/sre-book/monitoring-distributed-systems/].
-2. **PagerDuty:** [Incident Response Documentation & Anti-Alert Fatigue][https://response.pagerduty.com/].
-3. **Uber Engineering Blog:** [Data Observability Framework](https://www.uber.com/en-VN/blog/data-observability-framework/] - Cách Uber quản lý chất lượng hàng Petabyte dữ liệu.
+1. **Google SRE Book:** [Incident Response](https://sre.google/sre-book/incident-response/) & [Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/).
+2. **PagerDuty:** [Incident Response Documentation & Anti-Alert Fatigue](https://response.pagerduty.com/).
+3. **Uber Engineering Blog:** [Data Observability Framework](https://www.uber.com/en-VN/blog/data-observability-framework/) - Cách Uber quản lý chất lượng hàng Petabyte dữ liệu.
 4. **Databricks:** *The Five Pillars of Data Observability* - Kiến trúc giám sát Data Lakehouse.

@@ -93,7 +93,11 @@ flowchart TD
     
     S3 -.->|"10-20ms Latency"| L2
     L2 -.->|"100μs Latency"| L1
-    L1 -.->|"Nanoseconds"| WH
+    L1 -.->|"Nanoseconds"| WH
+
+
+
+
 ```
 
 1. **Result Cache:** Nếu truy vấn giống hệt một truy vấn đã chạy trước đó và Data nền chưa thay đổi, hệ thống trả luôn kết quả từ Metadata Layer trong vòng 5 mili-giây. Compute Layer thậm chí không bị đánh thức.
@@ -183,8 +187,8 @@ Storage-Compute Decoupling không chỉ giải quyết bài toán giới hạn p
 
 ## Nguồn Tham Khảo [References]
 
-1. **Snowflake Architecture:** [The Snowflake Elastic Data Warehouse (SIGMOD 2016]][https://dl.acm.org/doi/10.1145/2882903.2903741]
-2. **Google Dremel (BigQuery):** [Interactive Analysis of Web-Scale Datasets (VLDB 2010]][https://research.google/pubs/pub36632/]
-3. **Delta Lake:** [High-Performance ACID Table Storage over Cloud Object Stores](https://www.vldb.org/pvldb/vol13/p3411-armbrust.pdf]
+1. **Snowflake Architecture:** [The Snowflake Elastic Data Warehouse (SIGMOD 2016)](https://dl.acm.org/doi/10.1145/2882903.2903741)
+2. **Google Dremel (BigQuery):** [Interactive Analysis of Web-Scale Datasets (VLDB 2010)](https://research.google/pubs/pub36632/)
+3. **Delta Lake:** [High-Performance ACID Table Storage over Cloud Object Stores](https://www.vldb.org/pvldb/vol13/p3411-armbrust.pdf)
 4. **Designing Data-Intensive Applications** - Martin Kleppmann (Part 2: Distributed Data). Sách kinh điển về kiến trúc phân tán.
 5. **FinOps Foundation:** Quản trị chi phí Egress và Data Transfer trên Cloud.

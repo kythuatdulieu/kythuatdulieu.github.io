@@ -46,7 +46,7 @@ graph TD
     lb --> disk3
 ```
 
--   **Metadata Fleet:** Lưu trữ ánh xạ giữa `Object Key` (ví dụ: `s3://bucket/data.parquet`] và vị trí vật lý của nó trên các Data Nodes. Nó là một Distributed Key-Value Store cực kỳ tốc độ cao, đảm nhận việc khóa (locking) và tính quán (consistency).
+-   **Metadata Fleet:** Lưu trữ ánh xạ giữa `Object Key` (ví dụ: `s3://bucket/data.parquet`) và vị trí vật lý của nó trên các Data Nodes. Nó là một Distributed Key-Value Store cực kỳ tốc độ cao, đảm nhận việc khóa (locking) và tính quán (consistency).
 -   **Storage Fleet:** Lưu trữ payload. Payload được ghi trực tiếp xuống Storage Fleet thành các chunk nhỏ mà không qua Metadata Fleet để tránh nghẽn cổ chai (Bottleneck).
 
 ### 1.1. Erasure Coding: Đạt 11 số 9 (119s) Độ bền mà không tốn kém
@@ -69,7 +69,7 @@ Từ cuối 2020, S3 chính thức hỗ trợ **Strong Read-After-Write Consiste
 Để làm được điều này mà không tăng độ trễ (latency), hệ thống Metadata của S3 phải triển khai các thuật toán đồng thuận (Consensus Protocols) kết hợp với các cơ chế Witness node và Time synchronization cực kỳ phức tạp để đảm bảo mọi node trong Metadata Fleet đều đồng ý với phiên bản mới nhất trước khi trả về HTTP `200 OK`. AWS đã gánh vác toàn bộ sự phức tạp (Complexity) thay cho Client.
 
 :::tip
-**Conditional Writes (Mới ra mắt T8/2024]:** 
+**Conditional Writes (Mới ra mắt T8/2024):** 
 AWS vừa cung cấp khả năng Conditional Writes (`Put-If-Absent`). Bạn có thể dùng Boto3 để yêu cầu S3 chỉ ghi file nếu file đó chưa tồn tại. Đây là "chén thánh" cho phép Delta Lake và Apache Iceberg thực hiện Optimistic Concurrency Control (OCC) trực tiếp trên S3 mà không cần DynamoDB.
 :::
 
@@ -163,7 +163,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "tiering" {
 ---
 
 ## Nguồn Tham Khảo
-1.  [Amazon S3 Strong Read-After-Write Consistency][https://aws.amazon.com/s3/consistency/] - AWS Official Documentation
-2.  [Amazon S3 Conditional Writes (2024]][https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/]
+1.  [Amazon S3 Strong Read-After-Write Consistency](https://aws.amazon.com/s3/consistency/) - AWS Official Documentation
+2.  [Amazon S3 Conditional Writes (2024)](https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/)
 3.  *Designing Data-Intensive Applications (Chapter 3: Storage and Retrieval)* - Martin Kleppmann
-4.  [Erasure Coding in Distributed Storage Systems](https://www.usenix.org/system/files/conference/atc12/atc12-final181.pdf] - USENIX Papers
+4.  [Erasure Coding in Distributed Storage Systems](https://www.usenix.org/system/files/conference/atc12/atc12-final181.pdf) - USENIX Papers

@@ -42,7 +42,10 @@ graph TD
     Header --- Row_Group_1
     Row_Group_1 --- RowGroupN
     RowGroupN --- Footer
-    C1 --> Column_Chunk_Structure
+    C1 --> Column_Chunk_Structure
+
+
+
 ```
 
 1. **Row Group (Block):** File được chia ngang thành các khối dữ liệu khổng lồ (ví dụ 128MB). Một Row Group chứa đầy đủ các cột cho một khoảng dòng nhất định (ví dụ 10 triệu dòng đầu tiên). **Khả năng phân tán:** Spark có thể cử 10 Worker, mỗi Worker đọc 1 Row Group hoàn toàn độc lập qua mạng.
@@ -143,7 +146,7 @@ Hiểu rõ File Formats là kỹ năng phân biệt giữa một Junior Data Eng
 ---
 
 ## Nguồn Tham Khảo (References)
-1. **Apache Parquet Format Specifications:** [GitHub - parquet-format][https://github.com/apache/parquet-format]
-2. **Databricks:** [The Small Files Problem and Delta Lake Optimization](https://docs.databricks.com/en/delta/tune-file-size.html]
+1. **Apache Parquet Format Specifications:** [GitHub - parquet-format](https://github.com/apache/parquet-format)
+2. **Databricks:** [The Small Files Problem and Delta Lake Optimization](https://docs.databricks.com/en/delta/tune-file-size.html)
 3. **Designing Data-Intensive Applications (DDIA):** Sách kinh điển của Martin Kleppmann (Part 1: Storage and Retrieval - Column-Oriented Storage).
 4. **ClickHouse CPU Vectorization:** Hiểu về sức mạnh của SIMD instructions trong Database xử lý phân tích.

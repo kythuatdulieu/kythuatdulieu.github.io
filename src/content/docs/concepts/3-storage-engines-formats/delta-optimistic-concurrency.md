@@ -126,7 +126,7 @@ Ví dụ: Job xử lý dữ liệu Châu Á và Châu Âu phải ghi vào hai Pa
 
 ## Nguồn Tham Khảo
 
-1.  [Databricks: Concurrency Control in Delta Lake][https://docs.delta.io/latest/concurrency-control.html]
-2.  [Databricks: What is Deletion Vectors in Delta Lake?][https://docs.databricks.com/en/delta/deletion-vectors.html]
-3.  [Amazon S3 Conditional Writes (2024]](https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/)
+1.  [Databricks: Concurrency Control in Delta Lake](https://docs.delta.io/latest/concurrency-control.html)
+2.  [Databricks: What is Deletion Vectors in Delta Lake?](https://docs.databricks.com/en/delta/deletion-vectors.html)
+3.  [Amazon S3 Conditional Writes (2024)](https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/)
 4.  *Designing Data-Intensive Applications (Chapter 7: Transactions & OCC)* - Martin Kleppmann.

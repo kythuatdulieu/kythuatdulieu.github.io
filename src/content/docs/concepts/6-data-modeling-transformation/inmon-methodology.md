@@ -49,7 +49,9 @@ graph TD
     ETL1 --> ODS
     ODS --> ETL2
     ETL2 --> EDW
-    EDW --> DM1 & DM2 & DM3
+    EDW --> DM1 & DM2 & DM3
+
+
 ```
 
 ### Các Component Cốt Lõi:
@@ -130,7 +132,7 @@ Sự khác biệt duy nhất là ngày nay chúng ta tận dụng "Schema-on-rea
 Corporate Information Factory (CIF) của Bill Inmon là một tuyệt tác về System Design. Bất chấp những thách thức về **ETL bottlenecks** hay chi phí tính toán mạng (Network Shuffle) khi thực hiện **Cascading Joins**, tư duy tổ chức dữ liệu theo chiều dọc (Top-Down) và bảo vệ "Phiên bản duy nhất của sự thật" [Single Version of the Truth] ở lõi hệ thống vẫn là tiêu chuẩn vàng (Gold Standard) cho các kỹ sư dữ liệu cấp cao khi thiết kế Data Platform quy mô Enterprise.
 
 ## 6. Nguồn Tham Khảo (References)
-* [Building the Data Warehouse (4th Edition] - W.H. Inmon][https://www.wiley.com/en-us/Building+the+Data+Warehouse%2C+4th+Edition-p-9780764599446]
-* [AWS Whitepapers: Data Warehousing Concepts][https://docs.aws.amazon.com/whitepapers/latest/building-data-lakes/data-warehousing-concepts.html]
+* [Building the Data Warehouse (4th Edition) - W.H. Inmon](https://www.wiley.com/en-us/Building+the+Data+Warehouse%2C+4th+Edition-p-9780764599446)
+* [AWS Whitepapers: Data Warehousing Concepts](https://docs.aws.amazon.com/whitepapers/latest/building-data-lakes/data-warehousing-concepts.html)
 * Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
-* [Databricks Academy - Data Modeling Strategies: Data Vault 2.0 and Lakehouse](https://www.databricks.com/discover/data-vault]
+* [Databricks Academy - Data Modeling Strategies: Data Vault 2.0 and Lakehouse](https://www.databricks.com/discover/data-vault)

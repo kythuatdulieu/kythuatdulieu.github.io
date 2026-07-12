@@ -124,7 +124,7 @@ Việc chọn thiết kế Surrogate Key phản ánh độ trưởng thành củ
 - Nếu bạn xây dựng hệ thống MPP phân tán hiện đại, ưu tiên tính Idempotency và độ ổn định của ELT Pipelines, **Deterministic Hashing** thông qua dbt (hoặc `FARM_FINGERPRINT` trên BigQuery) là con đường kỹ thuật tốt nhất (Engineering Best Practice). Đừng sợ chi phí lưu trữ của Hash String; các định dạng Columnar (Parquet, Snowflake micro-partitions) nén chuỗi lặp lại rất hiệu quả.
 
 ## 6. Nguồn Tham Khảo (References)
-* [Databricks Blog - Identity Columns to Generate Surrogate Keys][https://www.databricks.com/blog/2022/08/08/identity-columns-to-generate-surrogate-keys.html]
-* [dbt Labs - A complete guide to surrogate keys and why they matter][https://docs.getdbt.com/blog/guide-to-surrogate-keys]
-* [Google Cloud BigQuery Documentation: Hash Functions](https://cloud.google.com/bigquery/docs/reference/standard-sql/hash_functions]
+* [Databricks Blog - Identity Columns to Generate Surrogate Keys](https://www.databricks.com/blog/2022/08/08/identity-columns-to-generate-surrogate-keys.html)
+* [dbt Labs - A complete guide to surrogate keys and why they matter](https://docs.getdbt.com/blog/guide-to-surrogate-keys)
+* [Google Cloud BigQuery Documentation: Hash Functions](https://cloud.google.com/bigquery/docs/reference/standard-sql/hash_functions)
 * Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.

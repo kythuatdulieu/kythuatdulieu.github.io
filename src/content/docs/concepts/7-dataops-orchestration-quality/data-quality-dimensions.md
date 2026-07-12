@@ -120,7 +120,7 @@ Chạy hàng ngàn câu lệnh `SELECT COUNT(*)` mỗi giờ trên Cloud Data Wa
 3.  **Machine Learning-based Anomaly Detection:** Thay vì kỹ sư phải bảo trì thủ công 10,000 rules tĩnh (Static Rules), các nền tảng Data Observability (như Monte Carlo) sử dụng AI để tự động học hỏi (Profile) schema, volume và freshness. Hệ thống sẽ tự động gửi cảnh báo (Anomaly Alert) nếu số lượng bản ghi hôm nay rớt 30% so với trung bình 30 ngày qua. Điều này giúp giảm 80% công sức bảo trì code Data Quality.
 
 ## Nguồn Tham Khảo (References)
-* [Monte Carlo: Data Observability & Circuit Breakers][https://www.montecarlodata.com/blog-circuit-breakers-data-pipelines/]
-* [Apache Iceberg: Write-Audit-Publish (WAP] Pattern][https://iceberg.apache.org/docs/latest/branching/]
-* [dbt Labs & Great Expectations Integration][https://hub.getdbt.com/calogica/dbt_expectations/latest/]
-* [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/]
+* [Monte Carlo: Data Observability & Circuit Breakers](https://www.montecarlodata.com/blog-circuit-breakers-data-pipelines/)
+* [Apache Iceberg: Write-Audit-Publish (WAP) Pattern](https://iceberg.apache.org/docs/latest/branching/)
+* [dbt Labs & Great Expectations Integration](https://hub.getdbt.com/calogica/dbt_expectations/latest/)
+* [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/)

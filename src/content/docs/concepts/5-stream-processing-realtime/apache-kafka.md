@@ -124,7 +124,7 @@ Bạn bắt buộc phải tăng số lượng Partition trước. Nhưng việc 
 3. **Schema Registry:** Chốt chặn an toàn (Gatekeeper) định dạng Avro/Protobuf. Ép Producer và Consumer phải tuân thủ schema nghiêm ngặt, chặn đứng rủi ro "Poison Pill" [message rác làm sập downstream pipelines].
 
 ## Nguồn Tham Khảo (References)
-* [Apache Kafka Official Documentation - Design][https://kafka.apache.org/documentation/#design]
-* [Confluent: Why ZooKeeper Was Replaced with KRaft][https://www.confluent.io/blog/why-kafka-is-moving-to-kraft/]
-* [LinkedIn Engineering: Optimizing Kafka for the Cloud (Zero Copy]](https://engineering.linkedin.com/blog/topic/kafka)
+* [Apache Kafka Official Documentation - Design](https://kafka.apache.org/documentation/#design)
+* [Confluent: Why ZooKeeper Was Replaced with KRaft](https://www.confluent.io/blog/why-kafka-is-moving-to-kraft/)
+* [LinkedIn Engineering: Optimizing Kafka for the Cloud (Zero Copy)](https://engineering.linkedin.com/blog/topic/kafka)
 * *Designing Data-Intensive Applications* - Martin Kleppmann (Chương 11: Stream Processing).

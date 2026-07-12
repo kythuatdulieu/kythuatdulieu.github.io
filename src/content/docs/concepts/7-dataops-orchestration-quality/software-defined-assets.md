@@ -13,7 +13,7 @@ description: "Phân tích kiến trúc Software-Defined Assets (SDA). Sự dịc
 
 Lịch sử của Data Engineering đã chứng kiến nhiều sự dịch chuyển mô hình [Paradigm Shifts], từ ETL sang ELT, từ Batch sang Streaming. Hôm nay, chúng ta đang đứng trước một cuộc cách mạng mới ở tầng Điều phối (Orchestration): Sự dịch chuyển từ **Task-based Orchestration** (Điều phối dựa trên Tác vụ) sang **Asset-based Orchestration** (Điều phối dựa trên Tài sản).
 
-**Software-Defined Assets (SDA)** là khái niệm cốt lõi của sự dịch chuyển này, được thiết kế và phổ biến rộng rãi bởi framework [Dagster](https://dagster.io/]. SDA chuyển trọng tâm của Data Engineer từ việc định nghĩa *"Hệ thống phải chạy những hành động (Tasks) gì?"* sang *"Hệ thống cần tạo ra và duy trì những tài sản dữ liệu (Assets) nào?"*.
+**Software-Defined Assets (SDA)** là khái niệm cốt lõi của sự dịch chuyển này, được thiết kế và phổ biến rộng rãi bởi framework [Dagster](https://dagster.io/). SDA chuyển trọng tâm của Data Engineer từ việc định nghĩa *"Hệ thống phải chạy những hành động (Tasks) gì?"* sang *"Hệ thống cần tạo ra và duy trì những tài sản dữ liệu (Assets) nào?"*.
 
 Dưới góc nhìn của một Staff Data Engineer, SDA không chỉ là một tính năng của một công cụ mới. Nó là cách tiếp cận **Declarative (Khai báo)** áp dụng trực tiếp lên dữ liệu, biến Data Pipeline thành một cỗ máy tự phục hồi và tự bảo trì.
 
@@ -30,7 +30,11 @@ Trong mô hình này, bạn viết các đoạn mã **mệnh lệnh (imperative)
 graph LR
     A["Task: extract_api_events"] --> B["Task: upload_to_s3"]
     B --> C["Task: copy_into_snowflake"]
-    C --> D["Task: run_dbt_models"]
+    C --> D["Task: run_dbt_models"]
+
+
+
+
 ```
 
 *   **Lỗ hổng Kiến trúc (Architectural Flaw):** Orchestrator (ví dụ: Airflow) chỉ giám sát được *Trạng thái của Task* (Success, Failed, Retrying). Nó hoàn toàn **"mù" về Dữ liệu (Data Blind)**. Khi Task `run_dbt_models` thành công, Airflow không biết bảng nào vừa được cập nhật, dung lượng bao nhiêu, hay có bao nhiêu bản ghi bị null. Việc Debugging và truy xuất Data Lineage bắt buộc phải phụ thuộc vào các công cụ bên ngoài (ví dụ: DataHub, dbt docs, OpenLineage). Khi task fail, bạn phải tự suy luận xem dữ liệu ở hạ nguồn đã bị hỏng đến mức nào.
@@ -41,7 +45,10 @@ Thay vì ra lệnh cho hệ thống "làm việc A rồi làm việc B", bạn *
 ```mermaid
 graph LR
     A["(Asset: raw_api_events)<br/>S3 Parquet"] --> B["(Asset: stg_events)<br/>Snowflake Table"]
-    B --> C["(Asset: fct_daily_revenue)<br/>Snowflake Table"]
+    B --> C["(Asset: fct_daily_revenue)<br/>Snowflake Table"]
+
+
+
 ```
 
 *   **Bản chất hệ thống:** Orchestrator (Dagster) tự suy luận (infer) đồ thị thực thi (Execution Graph) dựa trên các dependencies được khai báo giữa các Assets. Dagster liên tục so sánh trạng thái hiện tại của dữ liệu với trạng thái được khai báo trong code, và tự tạo ra kế hoạch để "vật chất hóa" (materialize) các tài sản này.
@@ -88,7 +95,7 @@ def cleaned_transactions(context: AssetExecutionContext, raw_transactions: pd.Da
     return df
 ```
 
-Nhờ thiết kế Dependency Injection này, khi chạy ở môi trường `local`, `warehouse_io_manager` có thể được config là một `LocalFilesystemIOManager` (ghi ra file `.parquet` trên ổ cứng máy tính], còn ở `production`, nó được trỏ tới `SnowflakeIOManager`. 
+Nhờ thiết kế Dependency Injection này, khi chạy ở môi trường `local`, `warehouse_io_manager` có thể được config là một `LocalFilesystemIOManager` (ghi ra file `.parquet` trên ổ cứng máy tính), còn ở `production`, nó được trỏ tới `SnowflakeIOManager`. 
 
 Kết quả? Mọi logic biến đổi DataFrame có thể được **Unit Test 100% in-memory**, giải quyết một trong những bài toán khó nhất của Data Engineering: *Testability (Khả năng kiểm thử)*.
 
@@ -139,7 +146,7 @@ Tuy nhiên, kiến trúc khai báo này đòi hỏi một nền tảng Software 
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Dagster Official Docs: Software-Defined Assets Core Concepts][https://docs.dagster.io/concepts/assets/software-defined-assets]
-* [Dagster Blog: Airflow vs Dagster - A Paradigm Shift][https://dagster.io/blog/dagster-airflow]
-* [Dagster Docs: Decoupling I/O and Compute with IO Managers](https://docs.dagster.io/concepts/io-management/io-managers]
+* [Dagster Official Docs: Software-Defined Assets Core Concepts](https://docs.dagster.io/concepts/assets/software-defined-assets)
+* [Dagster Blog: Airflow vs Dagster - A Paradigm Shift](https://dagster.io/blog/dagster-airflow)
+* [Dagster Docs: Decoupling I/O and Compute with IO Managers](https://docs.dagster.io/concepts/io-management/io-managers)
 * Designing Data-Intensive Applications (M. Kleppmann) - *Chương 10: Batch Processing (Liên hệ về tư duy Input/Output không thay đổi - Immutable data processing)*

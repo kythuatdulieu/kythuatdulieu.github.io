@@ -48,7 +48,7 @@ graph LR
     subgraph Serve ["Consumption"]
         B -->|Pre-computed Tables| D["BI Tools (Looker)"]
         B -->|Reverse ETL| E["Operational Systems"]
-    end
+    end
 ```
 
 ---
@@ -87,7 +87,7 @@ Thay vì chạy Full-Refresh (Xóa bảng đi và tạo lại bằng cách selec
     unique_key='order_id',
     incremental_strategy='merge',
     cluster_by=['order_date']
-] }}
+) }}
 
 SELECT * FROM {{ ref('stg_orders') }}
 
@@ -108,8 +108,13 @@ Sự mệt mỏi với "Fragmented MDS" đang đẩy ngành công nghiệp theo 
 1. **Hợp Nhất [Consolidation]:** Các Vendor bắt đầu sáp nhập (Ví dụ: Fivetran và dbt Labs) hoặc tạo ra các nền tảng Data Platform All-in-one để giảm bớt chi phí quản lý (TCO).
 2. **Lakehouse (Iceberg/Delta):** Thoát khỏi sự giam cầm (Vendor Lock-in) của các Data Warehouse. Các hệ thống hiện đại lưu file Parquet mở với chuẩn Apache Iceberg trên Amazon S3, cho phép nhiều engine phân tán (Spark, Trino, Flink) cùng truy xuất đồng thời mà vẫn đảm bảo tính chất ACID.
 
+## Liên kết trong site
+
+Đào sâu từng mảnh ghép của MDS: [ELT](/concepts/2-data-ingestion-integration/elt/) vs [ETL](/concepts/2-data-ingestion-integration/etl/), [Storage-Compute Decoupling](/concepts/1-distributed-systems-architecture/storage-compute-decoupling/), [dbt](/concepts/6-data-modeling-transformation/dbt/), [Metrics Layer](/concepts/6-data-modeling-transformation/metrics-layer/) (giải bài toán phân mảnh ngữ nghĩa), [Lakehouse](/concepts/3-storage-engines-formats/lakehouse/), [FinOps](/concepts/8-security-governance-finops/finops-data-engineering/) và case study [Modern vs Post-Modern Data Stack](/projects/system-design/modern-vs-post-modern-data-stack/).
+
 ## Nguồn Tham Khảo
-* [The Modern Data Stack: Past, Present, and Future - a16z][https://a16z.com/2020/10/15/emerging-architectures-for-modern-data-infrastructure/]
-* [The Fragmented Modern Data Stack - Analytics Engineering][https://analyticsengineers.club/]
-* [dbt Best Practices: Materializations & Incremental Logic][https://docs.getdbt.com/docs/build/materializations]
-* [Snowflake Architecture: Micro-partitions and Data Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions.html]
+
+* [The Modern Data Stack: Past, Present, and Future - a16z](https://a16z.com/2020/10/15/emerging-architectures-for-modern-data-infrastructure/)
+* [The Fragmented Modern Data Stack - Analytics Engineering](https://analyticsengineers.club/)
+* [dbt Best Practices: Materializations & Incremental Logic](https://docs.getdbt.com/docs/build/materializations)
+* [Snowflake Architecture: Micro-partitions and Data Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions.html)

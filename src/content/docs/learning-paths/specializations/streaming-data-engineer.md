@@ -1,6 +1,13 @@
 ---
 title: "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
 description: "Lộ trình Streaming Data Engineer: Kafka, event-time, watermark, stateful processing, exactly-once, Flink/Spark Streaming và vận hành độ trễ thấp."
+tags: ["streaming", "kafka", "flink", "event-time", "exactly-once", "learning-path"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Streaming Data Engineer (Kỹ sư dữ liệu thời gian thực)"
+metaDescription: "Lộ trình Streaming Data Engineer: Kafka, event-time, watermark, stateful processing, exactly-once, Flink/Spark Streaming và vận hành độ trễ thấp."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Streaming Data Engineering xử lý dữ liệu khi sự kiện đang xảy ra, không đợi đến batch cuối ngày. Công việc này phù hợp với fraud detection, realtime dashboard, IoT, personalization, operational monitoring và các luồng cần phản ứng nhanh.
@@ -50,6 +57,26 @@ Trong batch, dữ liệu thường đã “nằm yên”. Trong streaming, dữ 
 | Processing-time | Thời điểm job xử lý event. |
 
 Nếu dùng processing-time cho mọi thứ, báo cáo realtime có thể sai khi mobile app offline gửi event muộn. Watermark giúp hệ thống nói rõ: “tôi chờ dữ liệu trễ tối đa bao lâu trước khi đóng window”.
+
+Toàn bộ tư duy đó gói trong vài dòng Flink SQL — đáng thuộc lòng vì nó xuất hiện trong hầu hết bài toán realtime aggregation:
+
+```sql
+CREATE TABLE transactions (
+    account_id STRING,
+    amount     DECIMAL(18,2),
+    event_time TIMESTAMP(3),
+    -- Watermark: chấp nhận trễ tối đa 30 giây theo event-time
+    WATERMARK FOR event_time AS event_time - INTERVAL '30' SECOND
+) WITH ('connector' = 'kafka', ...);
+
+SELECT account_id,
+       TUMBLE_START(event_time, INTERVAL '5' MINUTE) AS window_start,
+       SUM(amount) AS total_5m
+FROM transactions
+GROUP BY account_id, TUMBLE(event_time, INTERVAL '5' MINUTE);
+```
+
+Trade-off nằm trọn ở con số 30 giây: tăng lên thì kết quả đúng hơn (bắt được nhiều event trễ hơn) nhưng cửa sổ đóng muộn hơn → alert fraud chậm hơn; giảm xuống thì nhanh nhưng event trễ bị rơi (hoặc phải xử lý qua side-output). Không có giá trị đúng tuyệt đối — chỉ có giá trị phù hợp với SLA nghiệp vụ.
 
 Đọc trong site: [Event-time vs Processing-time](/concepts/5-stream-processing-realtime/event-time-processing-time/), [Watermark](/concepts/5-stream-processing-realtime/watermark/), [Flink Watermarks Late Data](/concepts/5-stream-processing-realtime/flink-watermarks-late-data/), [Windowing](/concepts/5-stream-processing-realtime/windowing/).
 

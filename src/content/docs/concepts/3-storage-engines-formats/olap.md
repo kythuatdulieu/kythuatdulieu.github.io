@@ -49,7 +49,9 @@ flowchart LR
     subgraph Vectorized["Vectorized Execution - Nhanh"]
         V1("[Vector: 8192 Rows]") ===> CPU2{"CPU + AVX-512 \n (1 Lệnh SIMD)"}
     end
-    Row_Based -.-> Vectorized
+    Row_Based -.-> Vectorized
+
+
 ```
 
 ---
@@ -79,7 +81,9 @@ graph TD
     service_idx1 --> g1
     service_idx2 --> g2
     service_idx3 --> g3
-    end
+    end
+
+
 ```
 
 *Cơ chế Query:* Khi User query `WHERE UserID = 2000`, ClickHouse dùng thuật toán Binary Search trên RAM để tìm ra giá trị nằm giữa Mark 2 và Mark 3. Nó sẽ lọc bỏ (Skip) hoàn toàn Granule 1 và 3, chỉ nạp Granule 2 từ đĩa cứng (Disk) lên RAM (Buffer) và thực hiện SIMD Scan.
@@ -147,7 +151,7 @@ Hệ thống OLAP phân tán (như Trino, Presto, Snowflake) cực kỳ nhạy c
 ---
 
 ## Nguồn Tham Khảo
-* [ClickHouse Architecture: A Fast Analytical Database][https://clickhouse.com/docs/en/architecture]
-* [Vectorized Execution and Late Materialization in Analytical Databases (Research]][https://ceur-ws.org/]
-* [Databricks Liquid Clustering vs Z-Ordering](https://docs.databricks.com/en/delta/clustering.html]
+* [ClickHouse Architecture: A Fast Analytical Database](https://clickhouse.com/docs/en/architecture)
+* [Vectorized Execution and Late Materialization in Analytical Databases (Research)](https://ceur-ws.org/)
+* [Databricks Liquid Clustering vs Z-Ordering](https://docs.databricks.com/en/delta/clustering.html)
 * *Designing Data-Intensive Applications* (Martin Kleppmann) - Chapter 3: Storage and Retrieval (Column-Oriented Storage).

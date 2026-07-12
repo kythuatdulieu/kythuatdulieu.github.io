@@ -129,6 +129,6 @@ Bloom Filter là cấu trúc dữ liệu xác suất giúp khẳng định chắ
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Apache Parquet Official Specs][https://parquet.apache.org/docs/]
-* [Confluent: Schema Evolution and Compatibility](https://docs.confluent.io/platform/current/schema-registry/avro.html]
+* [Apache Parquet Official Specs](https://parquet.apache.org/docs/)
+* [Confluent: Schema Evolution and Compatibility](https://docs.confluent.io/platform/current/schema-registry/avro.html)
 * *Designing Data-Intensive Applications (Chapter 3)* - Martin Kleppmann (Lý thuyết về Column-oriented storage).

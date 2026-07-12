@@ -3,34 +3,66 @@
     "id": 1,
     "topic": 1,
     "question": "You have an Azure subscription that includes two Azure Synapse Analytics workspaces named Workspace1 and Workspace2.\nYou use Workspace1 to develop new artifacts. You use Workspace2 to store production versions of artifacts.\nYou need to implement continuous integration.\nWhat should you do first in Synapse Studio?",
+    "question_vi": "Bạn có một đăng ký Azure bao gồm hai workspace Azure Synapse Analytics tên là Workspace1 và Workspace2.\nBạn sử dụng Workspace1 để phát triển các artifact mới. Bạn sử dụng Workspace2 để lưu trữ phiên bản production của các artifact.\nBạn cần triển khai tích hợp liên tục (continuous integration).\nBạn nên làm gì đầu tiên trong Synapse Studio?",
     "options": {
       "A": "Deploy an integration runtime.",
       "B": "For Workspace2, configure a Git repository.",
       "C": "For Workspace1, configure a Git repository.",
       "D": "Create a service principal."
     },
+    "options_vi": {
+      "A": "Triển khai một integration runtime.",
+      "B": "Cấu hình kho lưu trữ Git cho Workspace2.",
+      "C": "Cấu hình kho lưu trữ Git cho Workspace1.",
+      "D": "Tạo một service principal."
+    },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để triển khai tích hợp liên tục (CI/CD) trong Azure Synapse Analytics, bước đầu tiên là cấu hình kho lưu trữ Git (Git repository) cho workspace phát triển (Workspace1). Các thay đổi/artifact sẽ được phát triển và lưu vào Git từ Workspace1, sau đó qua các công cụ CI/CD (như Azure Pipelines hoặc GitHub Actions) để deploy sang workspace sản xuất (Workspace2). Do đó, cấu hình Git cho Workspace1 là việc cần làm đầu tiên.",
-    "references": null
+    "explanation_vi": "Trong Azure Synapse Analytics, quy trình triển khai CI/CD được thực hiện theo nguyên tắc:\n* **Workspace phát triển (Development workspace - Workspace1):** Chỉ có workspace phát triển mới cần được kết nối/cấu hình với kho lưu trữ Git (Azure DevOps hoặc GitHub). Tất cả các hoạt động phát triển, tạo nhánh (branch) và merge code sẽ diễn ra tại đây.\n* **Workspace sản xuất (Production workspace - Workspace2):** Workspace này hoạt động ở chế độ trực tiếp (Live mode) và không được kết nối trực tiếp với Git. Các thay đổi từ Workspace1 sẽ được publish ra các template ARM và được deploy tự động sang Workspace2 thông qua các pipeline CI/CD (Azure Pipelines hoặc GitHub Actions).\n\n**Giải thích chi tiết các lựa chọn:**\n* **C. Cấu hình kho lưu trữ Git cho Workspace1 (Đúng):** Đây là bước đầu tiên bắt buộc để bắt đầu theo dõi phiên bản và triển khai tích hợp liên tục từ môi trường phát triển (Workspace1).\n* **B. Cấu hình kho lưu trữ Git cho Workspace2 (Sai):** Môi trường sản xuất (Workspace2) không nên cấu hình kết nối trực tiếp với Git. Việc cập nhật Workspace2 phải được thực hiện thông qua Release Pipeline để đảm bảo tính nhất quán và quy trình kiểm soát chặt chẽ.\n* **A. Triển khai một integration runtime (Sai):** Integration Runtime (IR) dùng để cung cấp tài nguyên tính toán cho việc tích hợp dữ liệu, không phải là bước đầu tiên để thiết lập CI/CD.\n* **D. Tạo một service principal (Sai):** Mặc dù Service Principal có thể được dùng cho việc xác thực trong pipeline CI/CD ở các bước sau khi deploy, nhưng đây không phải là hành động đầu tiên cần thực hiện trực tiếp trong Synapse Studio để bắt đầu tích hợp mã nguồn với Git.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Continuous integration and delivery in Azure Synapse Analytics",
+        "url": "https://learn.microsoft.com/en-us/azure/synapse-analytics/cicd/continuous-integration-delivery"
+      },
+      {
+        "title": "Source control in Synapse Studio",
+        "url": "https://learn.microsoft.com/en-us/azure/synapse-analytics/cicd/source-control"
+      }
+    ]
   },
   {
     "id": 2,
     "topic": 1,
     "question": "You have an Azure Stream Analytics job that reads data from an Azure event hub.\nYou need to determine whether the job processes data as quickly as the data arrives or cannot keep up.\nWhich metric should you review?",
+    "question_vi": "Bạn có một job Azure Stream Analytics đọc dữ liệu từ một Azure Event Hub.\nBạn cần xác định xem job đó có xử lý dữ liệu nhanh bằng tốc độ dữ liệu đổ về hay không, hay đang bị chậm không kịp tiến độ.\nBạn nên xem xét chỉ số (metric) nào?",
     "options": {
       "A": "Backlogged Input Events",
       "B": "Late input Events",
       "C": "Input Sources Received",
       "D": "InputEventsLastPunctuationTime"
     },
+    "options_vi": {
+      "A": "Backlogged Input Events (Sự kiện đầu vào bị tồn đọng)",
+      "B": "Late input Events (Sự kiện đầu vào bị trễ)",
+      "C": "Input Sources Received (Nguồn đầu vào đã nhận)",
+      "D": "InputEventsLastPunctuationTime (Thời gian dấu phân cách sự kiện đầu vào cuối cùng)"
+    },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Chỉ số `Backlogged Input Events` (Sự kiện đầu vào bị tồn đọng) trong Azure Stream Analytics đo lường số lượng sự kiện đã nhận được từ nguồn dữ liệu (như Event Hub) nhưng chưa được xử lý bởi công việc Stream Analytics. Nếu chỉ số này tăng lên hoặc liên tục lớn hơn 0, điều đó có nghĩa là công việc Stream Analytics không xử lý kịp tốc độ dữ liệu đổ về (cannot keep up). Do đó, để xác định công việc có xử lý dữ liệu kịp hay không, ta cần xem xét chỉ số này.",
-    "references": null
+    "explanation_vi": "Trong Azure Stream Analytics, việc giám sát hiệu suất và khả năng xử lý của job là rất quan trọng:\n* **Backlogged Input Events (Sự kiện đầu vào bị tồn đọng):** Đây là chỉ số đo lường số lượng sự kiện đã được đọc từ nguồn đầu vào (ví dụ: Event Hub) nhưng chưa được xử lý bởi job Stream Analytics. Nếu chỉ số này lớn hơn 0 và liên tục tăng, điều đó có nghĩa là job của bạn không thể xử lý kịp tốc độ dữ liệu được gửi đến (cannot keep up).\n\n**Giải thích chi tiết các lựa chọn:**\n* **A. Backlogged Input Events (Đúng):** Cho biết số lượng sự kiện đang chờ được xử lý. Chỉ số này tăng cao là dấu hiệu rõ ràng của việc hệ thống bị nghẽn và không theo kịp tốc độ dữ liệu đầu vào.\n* **B. Late input Events (Sai):** Chỉ số này đo lường các sự kiện đến muộn hơn so với thời gian cấu hình trễ cho phép (late arrival window), không phản ánh việc job có xử lý kịp tốc độ dữ liệu hay không.\n* **C. Input Sources Received (Sai):** Chỉ số này liên quan đến việc nhận dữ liệu từ các nguồn, không đo lường hàng đợi xử lý dữ liệu của job.\n* **D. InputEventsLastPunctuationTime (Sai):** Chỉ số này hiển thị nhãn thời gian của dấu phân cách (punctuation) cuối cùng để chỉ ra tiến trình thời gian của luồng dữ liệu, không dùng để đo lường lượng công việc tồn đọng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Azure Stream Analytics monitoring data reference",
+        "url": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-monitoring-data-reference"
+      },
+      {
+        "title": "Analyze Stream Analytics job performance by using metrics",
+        "url": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-monitoring"
+      }
+    ]
   }
 ]

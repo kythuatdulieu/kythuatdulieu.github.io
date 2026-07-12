@@ -156,7 +156,7 @@ Nếu hệ thống của bạn sử dụng Snowflake hoặc Databricks Serverles
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Databricks: Five Best Practices for Data Modeling on Delta Lake][https://www.databricks.com/blog/2022/05/20/five-best-practices-for-data-modeling-on-delta-lake.html]
-* [Snowflake: Understanding Micro-partitions and Automatic Clustering][https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions]
-* [Netflix Tech Blog: Data Mesh & Dimensional Modeling Patterns][https://netflixtechblog.com/]
-* [dbt Labs: Star Schema vs OBT in modern cloud architectures](https://www.getdbt.com/blog/star-schema-vs-obt/]
+* [Databricks: Five Best Practices for Data Modeling on Delta Lake](https://www.databricks.com/blog/2022/05/20/five-best-practices-for-data-modeling-on-delta-lake.html)
+* [Snowflake: Understanding Micro-partitions and Automatic Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions)
+* [Netflix Tech Blog: Data Mesh & Dimensional Modeling Patterns](https://netflixtechblog.com/)
+* [dbt Labs: Star Schema vs OBT in modern cloud architectures](https://www.getdbt.com/blog/star-schema-vs-obt/)

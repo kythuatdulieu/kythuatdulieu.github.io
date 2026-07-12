@@ -1,6 +1,13 @@
 ---
 title: "Nghệ thuật viết Design Doc (RFC / Tech Spec)"
 description: "Cách viết design doc cho hệ thống dữ liệu: bối cảnh, mục tiêu, non-goals, phương án, trade-off, rollout, rollback và review."
+tags: ["design-doc", "rfc", "adr", "architecture", "engineering-culture"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Nghệ thuật viết Design Doc (RFC / Tech Spec)"
+metaDescription: "Cách viết design doc cho hệ thống dữ liệu: bối cảnh, mục tiêu, non-goals, phương án, trade-off, rollout, rollback và review."
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Design doc giúp team ra quyết định kỹ thuật trước khi code quá xa. Với Data Engineering, điều này đặc biệt quan trọng vì quyết định sai về warehouse, table format, orchestration, streaming hay governance có thể tạo chi phí trong nhiều năm. Sau khi quyết định đã được chốt, ADR là cách nhẹ hơn để lưu lại bối cảnh và trade-off cho người đến sau: [Architecture decision records](https://cloud.google.com/architecture/architecture-decision-records).
@@ -56,6 +63,28 @@ Order mart hiện rebuild toàn bảng mỗi đêm, mất 4 giờ và scan 8 TB 
 ```
 
 Non-goals rất quan trọng. Nó bảo vệ scope khỏi câu “tiện thể làm luôn”.
+
+Tiếp tục ví dụ trên, phần Rollout/Rollback — nơi phân biệt design doc "để duyệt" với design doc "để vận hành":
+
+```md
+## Rollout
+1. Tuần 1: chạy incremental song song với full rebuild (shadow mode),
+   so sánh reconciliation hằng ngày, ngưỡng lệch cho phép < 0.1%.
+2. Tuần 2: chuyển 2 dashboard nội bộ ít rủi ro sang bảng mới.
+3. Tuần 3: chuyển toàn bộ BI, giữ full rebuild ở chế độ weekly làm đối chứng.
+4. Tuần 6: tắt full rebuild nếu 3 tuần liên tiếp lệch = 0.
+
+## Rollback
+- Bảng cũ giữ nguyên tên; bảng mới đứng sau view `analytics.fct_orders`.
+- Rollback = đổi view về bảng cũ (1 câu SQL, < 1 phút, không mất dữ liệu).
+
+## Metrics
+- Runtime: 4h → mục tiêu < 45 phút (đo qua Airflow task duration).
+- Scan cost: 8 TB/đêm → mục tiêu < 500 GB/đêm.
+- Reconciliation: lệch < 0.1% (job so sánh tự động, alert nếu vượt).
+```
+
+Hai chi tiết đáng học: **shadow mode** (chạy song song, so số trước khi cắt chuyển — mọi migration dữ liệu nghiêm túc đều cần) và **rollback qua view** (đổi con trỏ thay vì đổi dữ liệu, biến quyết định rủi ro thành quyết định đảo ngược được trong 1 phút). Cùng tư tưởng với [Blue-Green Deployment cho dữ liệu](/concepts/7-dataops-orchestration-quality/blue-green-deployment-data/).
 
 ## Viết trade-off như kỹ sư
 

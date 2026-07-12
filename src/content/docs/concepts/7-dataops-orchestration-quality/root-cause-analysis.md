@@ -184,8 +184,8 @@ WHEN NOT MATCHED THEN
 *   **Storage Cost vs. Developer Velocity:** Lưu trữ dữ liệu thô (Raw JSON/Events) vĩnh viễn ở S3 (Data Lake) giúp việc khôi phục và chạy RCA cực kỳ dễ dàng khi phát hiện logic transform sai lầm trong quá khứ. Bạn đang đánh đổi chi phí lưu trữ (Storage Cost) để mua lại thời gian và sự an tâm cho đội ngũ Kỹ sư.
 
 ## Nguồn Tham Khảo (References)
-* [Databricks: What is Data Observability?][https://www.databricks.com/glossary/data-observability]
-* [AWS Architecture Blog: Troubleshooting Data Workloads][https://aws.amazon.com/blogs/architecture/]
-* [Uber Engineering: Data Quality at Uber][https://www.uber.com/en-VN/blog/data-quality-at-uber/]
+* [Databricks: What is Data Observability?](https://www.databricks.com/glossary/data-observability)
+* [AWS Architecture Blog: Troubleshooting Data Workloads](https://aws.amazon.com/blogs/architecture/)
+* [Uber Engineering: Data Quality at Uber](https://www.uber.com/en-VN/blog/data-quality-at-uber/)
 * Sách: *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích chuyên sâu về Idempotency và xử lý lỗi hệ thống phân tán.
-* [The DataOps Manifesto](https://dataopsmanifesto.org/]
+* [The DataOps Manifesto](https://dataopsmanifesto.org/)

@@ -36,7 +36,9 @@ graph LR
     A["Data Sources"] -->|Events| B["Kafka / Event Log (SSOT)"]
     B -->|Stream/Replay| C{"Stream Processor<br/>(Flink / Kafka Streams)"}
     C -->|Real-time Updates| D["(Serving Layer<br/>ClickHouse / Druid)"]
-    D --> E["Dashboards / APIs"]
+    D --> E["Dashboards / APIs"]
+
+
 ```
 
 ### Immutable Log & Vấn Đề Lưu Trữ (FinOps)
@@ -127,7 +129,7 @@ Kiến trúc Kappa buộc bạn phải thiết kế cơ chế **Allowed Lateness
 Với sự tiến bộ của Apache Flink và sự ra đời của các chuẩn Iceberg/Delta Lake, Streaming đang dần lấn át Batch. Kappa (hoặc các biến thể Lakehouse streaming) đang là thiết kế chuẩn mực (defacto) cho thập kỷ tới.
 
 ## Nguồn Tham Khảo
-* [Questioning the Lambda Architecture - Jay Kreps][https://www.oreilly.com/radar/questioning-the-lambda-architecture/]
-* [Apache Flink State Backends (RocksDB]][https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/]
-* [KIP-405: Kafka Tiered Storage][https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage]
+* [Questioning the Lambda Architecture - Jay Kreps](https://www.oreilly.com/radar/questioning-the-lambda-architecture/)
+* [Apache Flink State Backends (RocksDB)](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/)
+* [KIP-405: Kafka Tiered Storage](https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage)
 * [Streaming Systems: The What, Where, When, and How of Large-Scale Data Processing - Tyler Akidau](https://www.oreilly.com/library/view/streaming-systems/9781491983867/)

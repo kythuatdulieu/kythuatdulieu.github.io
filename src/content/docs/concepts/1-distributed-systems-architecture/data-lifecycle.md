@@ -191,7 +191,7 @@ Khi có yêu cầu xóa, hệ thống **KHÔNG CẦN chạm vào Data Lake**. B�
 ---
 
 ## Nguồn Tham Khảo
-* [Designing Data-Intensive Applications - Martin Kleppmann][https://dataintensive.net/]
-* [Uber Engineering - Data Platform Architecture][https://www.uber.com/en-VN/blog/engineering/]
-* [Netflix Tech Blog - Data Mesh & Lifecycle][https://netflixtechblog.com/]
-* [AWS Storage FinOps & Lifecycle Management](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html]
+* [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/)
+* [Uber Engineering - Data Platform Architecture](https://www.uber.com/en-VN/blog/engineering/)
+* [Netflix Tech Blog - Data Mesh & Lifecycle](https://netflixtechblog.com/)
+* [AWS Storage FinOps & Lifecycle Management](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)

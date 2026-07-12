@@ -1,6 +1,13 @@
 ---
 title: "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
 description: "Hướng dẫn toàn diện về FinOps: Từ tư duy thiết kế, quản lý vòng đời lưu trữ, tối ưu hóa truy vấn đến xây dựng hệ thống tự động cảnh báo chi phí (Cost Anomaly Detection) và Chargeback pipeline."
+tags: ["finops", "architecture"]
+readingTime: "21 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Thiết kế Kiến trúc tối ưu chi phí (FinOps) chuyên sâu cho Data Platform"
+metaDescription: "Hướng dẫn toàn diện về FinOps: Từ tư duy thiết kế, quản lý vòng đời lưu trữ, tối ưu hóa truy vấn đến xây dựng hệ thống tự động cảnh báo chi phí (Cost Anoma"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 
@@ -48,7 +55,10 @@ Theo FinOps Foundation, thực hành FinOps bao gồm ba giai đoạn liên tụ
 graph TD
     A["Inform: Visibility & Allocation"] -->|Identify Waste| B["Optimize: Rates & Usage"]
     B -->|Implement Controls| C["Operate: Continuous Improvement"]
-    C -->|New Insights| A
+    C -->|New Insights| A
+
+
+
 ```
 
 ---
@@ -94,7 +104,10 @@ flowchart LR
     C --> D[("Snowflake / BigQuery")]
     D -->|dbt transformations| E["Aggregated Cost Models"]
     E -->|Superset / Tableau| F["FinOps Dashboard"]
-    E -->|Slack Bot| G["Daily Cost Alerts to Teams"]
+    E -->|Slack Bot| G["Daily Cost Alerts to Teams"]
+
+
+
 ```
 
 **Mô tả quy trình:**
@@ -128,7 +141,10 @@ graph TD
     B --> D["Core Nodes: R5.2xlarge - On-Demand"]
     B --> E["Task Nodes: R5.4xlarge - 100% Spot Instances"]
     E -->|Scale out when load increases| E
-    E -->|Terminate when Spot is reclaimed| B
+    E -->|Terminate when Spot is reclaimed| B
+
+
+
 ```
 
 *Giải thích kiến trúc:* 

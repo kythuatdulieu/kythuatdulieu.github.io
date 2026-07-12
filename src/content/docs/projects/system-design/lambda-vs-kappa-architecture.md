@@ -1,6 +1,13 @@
 ---
 title: "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakehouse"
 description: "Phân tích chuyên sâu (Deep Dive) vào kiến trúc Lambda và Kappa trong Data Engineering. Khám phá các thiết kế hệ thống, quản lý state, reprocessing, tradeoff giữa độ trễ và tính chính xác, cùng xu hướng chuyển dịch của thế giới dữ liệu sang Data Lakehouse."
+tags: ["lambda", "kappa", "architecture"]
+readingTime: "21 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Kiến trúc Hệ thống: Chuyên sâu về Lambda, Kappa Architecture và Sự tiến hóa đến Data Lakeh"
+metaDescription: "Phân tích chuyên sâu (Deep Dive) vào kiến trúc Lambda và Kappa trong Data Engineering. Khám phá các thiết kế hệ thống, quản lý state, reprocessing, tradeof"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 

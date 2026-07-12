@@ -193,7 +193,7 @@ ON CONFLICT DO NOTHING;
 
 ## 5. Nguồn Tham Khảo (References)
 
-1. **Confluent Engineering Blog:** [Exactly-Once Semantics are Possible: Here’s How Apache Kafka Does it][https://www.confluent.io/]
-2. **Debezium Official Docs:** [Reliable Microservices Data Exchange With the Outbox Pattern][https://debezium.io/blog/]
+1. **Confluent Engineering Blog:** [Exactly-Once Semantics are Possible: Here’s How Apache Kafka Does it](https://www.confluent.io/)
+2. **Debezium Official Docs:** [Reliable Microservices Data Exchange With the Outbox Pattern](https://debezium.io/blog/)
 3. **Sách Kỹ Thuật:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Chapter 9: Consistency and Consensus (Giảng giải chi tiết về 2PC và Distributed Transactions).
-4. **Uber Engineering Blog:** [Reliable Processing with Apache Flink and Kafka](https://www.uber.com/en-VN/blog/]
+4. **Uber Engineering Blog:** [Reliable Processing with Apache Flink and Kafka](https://www.uber.com/en-VN/blog/)

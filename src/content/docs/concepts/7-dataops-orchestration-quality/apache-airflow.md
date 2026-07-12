@@ -158,7 +158,7 @@ pgbouncer:
 
 ## Nguồn Tham Khảo (References)
 
-1. [Apache Airflow Official Architecture Documentation][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html]
-2. [Astronomer Blog: Airflow 2.0 Scheduler HA and Performance][https://www.astronomer.io/blog/airflow-2-scheduler/]
-3. [Astronomer Blog: Understanding Kubernetes Executor][https://www.astronomer.io/blog/airflow-kubernetes-executor/]
-4. [Airbnb Engineering: Data Infrastructure at Airbnb](https://medium.com/airbnb-engineering/data-infrastructure-at-airbnb-8adfac34f190]
+1. [Apache Airflow Official Architecture Documentation](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
+2. [Astronomer Blog: Airflow 2.0 Scheduler HA and Performance](https://www.astronomer.io/blog/airflow-2-scheduler/)
+3. [Astronomer Blog: Understanding Kubernetes Executor](https://www.astronomer.io/blog/airflow-kubernetes-executor/)
+4. [Airbnb Engineering: Data Infrastructure at Airbnb](https://medium.com/airbnb-engineering/data-infrastructure-at-airbnb-8adfac34f190)

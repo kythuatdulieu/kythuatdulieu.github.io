@@ -118,8 +118,8 @@ Compaction ngốn rất nhiều RAM. Dưới đây là cách phòng tránh sự 
 ---
 
 ## Nguồn Tham Khảo (References)
-1. **Apache Iceberg Maintenance:** [Compaction & RewriteDataFiles][https://iceberg.apache.org/docs/latest/maintenance/]
+1. **Apache Iceberg Maintenance:** [Compaction & RewriteDataFiles](https://iceberg.apache.org/docs/latest/maintenance/)
 2. **Sách Kinh Điển:** *Designing Data-Intensive Applications* (Martin Kleppmann) - Phân tích chi tiết về kiến trúc SSTables và LSM-Trees.
-3. **Databricks:** [Liquid Clustering Documentation][https://docs.databricks.com/en/delta/clustering.html]
-4. **Wikipedia:** [Log-structured merge-tree (STCS vs LCS]][https://en.wikipedia.org/wiki/Log-structured_merge-tree]
-5. **Apache Hudi:** [Compaction Architecture (CoW vs MoR]](https://hudi.apache.org/docs/compaction/)
+3. **Databricks:** [Liquid Clustering Documentation](https://docs.databricks.com/en/delta/clustering.html)
+4. **Wikipedia:** [Log-structured merge-tree (STCS vs LCS)](https://en.wikipedia.org/wiki/Log-structured_merge-tree)
+5. **Apache Hudi:** [Compaction Architecture (CoW vs MoR)](https://hudi.apache.org/docs/compaction/)

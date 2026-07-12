@@ -127,7 +127,7 @@ Việc áp dụng Kimball mang lại những rủi ro vận hành (Operational R
 Ralph Kimball đã để lại một di sản vượt thời gian. Bất kể bạn đang sử dụng Hadoop cổ điển, Data Warehouse cục bộ hay Modern Data Lakehouse, việc thấu hiểu **Grain, Fact, Dimension và SCD** là kỹ năng "sống còn" để tổ chức dữ liệu một cách logic, ngăn chặn Data Platform của bạn trở thành một "Data Swamp" [Đầm lầy dữ liệu] hỗn loạn không ai dám dùng.
 
 ## Nguồn Tham Khảo (References)
-- [The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling - Ralph Kimball][https://www.amazon.com/Data-Warehouse-Toolkit-Definitive-Dimensional/dp/1118530802]
-- [Medallion Architecture by Databricks][https://www.databricks.com/glossary/medallion-architecture]
-- [dbt Labs: Snapshots and SCD Type 2][https://docs.getdbt.com/docs/build/snapshots]
-- [Data Vault vs Kimball vs Inmon - Modern Data Stack](https://www.scalefree.com/]
+- [The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling - Ralph Kimball](https://www.amazon.com/Data-Warehouse-Toolkit-Definitive-Dimensional/dp/1118530802)
+- [Medallion Architecture by Databricks](https://www.databricks.com/glossary/medallion-architecture)
+- [dbt Labs: Snapshots and SCD Type 2](https://docs.getdbt.com/docs/build/snapshots)
+- [Data Vault vs Kimball vs Inmon - Modern Data Stack](https://www.scalefree.com/)

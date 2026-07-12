@@ -110,7 +110,8 @@ graph TD
     H0 --> Data0["Data Block 0"]
     H0 --> Data1["Data Block 1"]
     H1 --> Data2["Data Block 2"]
-    H1 --> Data3["Data Block 3 (Corrupted)"]
+    H1 --> Data3["Data Block 3 (Corrupted)"]
+
 ```
 
 ### 4.3. Data Mesh và Zero-Trust Cross-Validation
@@ -126,6 +127,6 @@ Trong Kỹ thuật Dữ liệu Doanh nghiệp, trừ khi bạn làm việc với
 Tuy nhiên, việc thẩm thấu **Tư duy BFT** giúp Staff Engineer nhận thức một chân lý: *Không thể tin tưởng bất kỳ phần cứng hay mạng nội bộ nào 100%*. Luôn mã hóa, luôn băm dữ liệu (Hashing), dùng Merkle Trees, và thiết lập Data Contracts là cách chúng ta nhúng khả năng chịu lỗi Byzantine vào các kiến trúc Data Lakehouse tỷ đô.
 
 ## Nguồn Tham Khảo (References)
-- [Practical Byzantine Fault Tolerance - Miguel Castro, Barbara Liskov (1999]][https://pmg.csail.mit.edu/papers/osdi99.pdf]
-- [Dynamo: Amazon's Highly Available Key-value Store][https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf] (Phần Anti-entropy sử dụng Merkle Trees)
-- [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/] (Chương 8: The Trouble with Distributed Systems)
+- [Practical Byzantine Fault Tolerance - Miguel Castro, Barbara Liskov (1999)](https://pmg.csail.mit.edu/papers/osdi99.pdf)
+- [Dynamo: Amazon's Highly Available Key-value Store](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) (Phần Anti-entropy sử dụng Merkle Trees)
+- [Designing Data-Intensive Applications - Martin Kleppmann](https://dataintensive.net/) (Chương 8: The Trouble with Distributed Systems)

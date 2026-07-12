@@ -30,7 +30,10 @@ flowchart LR
     Broker -- Pull Task --> Worker2["Celery Worker 2 ('Concurrency: 16')"]
     
     Worker1 -- Write State --> DB[("Metadata DB\n(PostgreSQL)")]
-    Worker2 -- Write State --> DB
+    Worker2 -- Write State --> DB
+
+
+
 ```
 
 *Cấu hình `airflow.cfg` kinh điển:*
@@ -40,7 +43,7 @@ executor = CeleryExecutor
 parallelism = 1024
 
 [celery]
-# Bắt buộc phải có Broker (Redis] và Result Backend (DB)
+# Bắt buộc phải có Broker (Redis) và Result Backend (DB)
 broker_url = redis://redis:6379/0
 result_backend = db+postgresql://airflow:airflow@postgres/airflow
 worker_concurrency = 16 
@@ -61,7 +64,10 @@ flowchart TD
     end
     
     Pod1 -- Write State --> DB[("Metadata DB")]
-    Pod2 -- Write State --> DB
+    Pod2 -- Write State --> DB
+
+
+
 ```
 
 ---
@@ -150,7 +156,7 @@ with DAG('hybrid_execution_finops', start_date=datetime(2023,1,1), schedule_inte
 Kiến trúc Hybrid là biểu hiện rõ ràng nhất của tư duy FinOps: Không lãng phí Worker nhàn rỗi cấu hình "khủng", nhưng cũng không bắt hệ thống phải sinh Pod chậm chạp cho các task quá nhỏ bé.
 
 ## Nguồn Tham Khảo [References]
-* [Apache Airflow Core Concepts: Executors (Official Docs]][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html]
-* [Astronomer: Evaluating Airflow Executors - Reliability vs Performance][https://www.astronomer.io/blog/airflow-executors-explained/]
-* [Kubernetes OOMKilled (Exit Code 137] Troubleshooting][https://sysdig.com/blog/troubleshoot-kubernetes-oom/]
-* [Airflow 3 Multi-Executor Architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html#multiple-executors]
+* [Apache Airflow Core Concepts: Executors (Official Docs)](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html)
+* [Astronomer: Evaluating Airflow Executors - Reliability vs Performance](https://www.astronomer.io/blog/airflow-executors-explained/)
+* [Kubernetes OOMKilled (Exit Code 137) Troubleshooting](https://sysdig.com/blog/troubleshoot-kubernetes-oom/)
+* [Airflow 3 Multi-Executor Architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html#multiple-executors)

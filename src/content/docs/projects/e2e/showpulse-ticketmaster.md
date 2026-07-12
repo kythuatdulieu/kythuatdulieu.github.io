@@ -1,6 +1,13 @@
 ---
 title: "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
 description: "Hướng dẫn chi tiết xây dựng hệ thống dữ liệu thời gian thực (Real-time Data Pipeline) thu thập và xử lý dữ liệu sự kiện từ Ticketmaster bằng Kafka, Spark, Snowflake và dbt, áp dụng các best practices từ Netflix và Uber."
+tags: ["showpulse", "ticketmaster"]
+readingTime: "11 mins"
+lastUpdated: 2026-07-11
+seoTitle: "ShowPulse: End-to-End Data Pipeline với Ticketmaster, Kafka, Snowflake & dbt"
+metaDescription: "Hướng dẫn chi tiết xây dựng hệ thống dữ liệu thời gian thực (Real-time Data Pipeline) thu thập và xử lý dữ liệu sự kiện từ Ticketmaster bằng Kafka, Spark, "
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 ## 1. Giới Thiệu Dự Án (ShowPulse)

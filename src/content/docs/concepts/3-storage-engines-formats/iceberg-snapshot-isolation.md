@@ -37,7 +37,10 @@ graph TD
         D --> F["Data File 1 (.parquet)"]
         D --> G["Data File 2 (.parquet)"]
         E --> H["Data File 3 (.parquet)"]
-    end
+    end
+
+
+
 ```
 
 1. **Catalog Layer:** Trái tim của sự nhất quán. Nó lưu đúng một con trỏ [Pointer] duy nhất trỏ đến file Metadata hiện tại của bảng. Đây là nơi diễn ra các thao tác Atomic.
@@ -125,6 +128,6 @@ Nếu bước Audit thất bại, ta chỉ việc Drop nhánh `audit_etl_job_v1`
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Apache Iceberg Official Specs: Table Metadata][https://iceberg.apache.org/spec/#table-metadata]
-* [LakeFS: Write-Audit-Publish Pattern for Data Lakes](https://lakefs.io/blog/write-audit-publish/]
+* [Apache Iceberg Official Specs: Table Metadata](https://iceberg.apache.org/spec/#table-metadata)
+* [LakeFS: Write-Audit-Publish Pattern for Data Lakes](https://lakefs.io/blog/write-audit-publish/)
 * *Designing Data-Intensive Applications (Martin Kleppmann) - Chapter 7: Transactions & Concurrency Control*

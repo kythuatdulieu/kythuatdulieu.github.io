@@ -41,15 +41,18 @@ graph TD
         UQ --> BM_Q[BM25 / Keyword Engine]
         QE --> ANN[ANN Vector Search]
         
-        BM_Q -- Top K Keywords (Lexical] --> RRF["Reciprocal Rank Fusion (RRF)"]
+        BM_Q -- Top K Keywords (Lexical) --> RRF["Reciprocal Rank Fusion (RRF)"]
         ANN -- Top K Vectors [Semantic] --> RRF
         
         RRF --> RE[Cross-Encoder Reranker]
         RE --> FR[Final Results / RAG Context]
-    end
+    end
+
+
+
 ```
 
-**Sự Đánh Đổi (Trade-offs] của Hybrid Search:**
+**Sự Đánh Đổi (Trade-offs) của Hybrid Search:**
 - **Ưu điểm:** Khắc phục được yếu điểm của cả hai thế giới (Bắt được Context dài, và không bỏ sót Keyword chính xác).
 - **Nhược điểm (Latency Overhead):** Hệ thống phải thực thi 2 luồng truy vấn song song (Compute gấp đôi) cộng thêm thời gian chạy thuật toán trộn `RRF`. Reranker (nếu dùng) là một mô hình Neural Network cực nặng, có thể cộng thêm 100-200ms vào Latency tổng. Thiết kế hệ thống phải có Cache layer cực kỳ tốt (như Redis) đứng trước.
 
@@ -163,8 +166,8 @@ Làm Kỹ sư Hệ thống, bạn cần phải dự báo được lúc nào Clus
 
 ## Nguồn Tham Khảo (References)
 
-* [What is Semantic Search? (Pinecone]][https://www.pinecone.io/learn/semantic-search/]
-* [Vector Database Scaling and ANN indexing algorithms (Milvus Architecture]][https://milvus.io/blog]
-* [Qdrant Documentation: Hybrid Search & Product Quantization][https://qdrant.tech/documentation/]
-* [Billion-scale similarity search with GPUs (Amazon Science]](https://www.amazon.science/publications/billion-scale-similarity-search-with-gpus)
+* [What is Semantic Search? (Pinecone)](https://www.pinecone.io/learn/semantic-search/)
+* [Vector Database Scaling and ANN indexing algorithms (Milvus Architecture)](https://milvus.io/blog)
+* [Qdrant Documentation: Hybrid Search & Product Quantization](https://qdrant.tech/documentation/)
+* [Billion-scale similarity search with GPUs (Amazon Science)](https://www.amazon.science/publications/billion-scale-similarity-search-with-gpus)
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Tham khảo kiến trúc Storage and Retrieval)

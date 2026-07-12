@@ -55,7 +55,11 @@ graph LR
     end
 
     WAL -->|Logical Replication| Debezium
-    Debezium -->|JSON/Avro Events| Topic
+    Debezium -->|JSON/Avro Events| Topic
+
+
+
+
 ```
 
 ### Deep Dive: PostgreSQL WAL & Replication Slots
@@ -158,7 +162,7 @@ def api_request_with_backoff(url, max_retries=5):
             return response.json()
         elif response.status_code in [429, 502, 503, 504]:
             # Calculate exponential backoff with full jitter
-            temp = min(60, base_delay * (2 ** attempt])
+            temp = min(60, base_delay * (2 ** attempt))
             sleep_time = temp / 2 + random.uniform(0, temp / 2)
             time.sleep(sleep_time)
         else:
@@ -183,8 +187,8 @@ Trong môi trường Cloud (AWS/GCP), mọi Data Engineer đều phải mang tư
 ---
 
 ## Nguồn Tham Khảo (References)
-* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data]][https://dataintensive.net/]
-* [Debezium Architecture & Documentation][https://debezium.io/documentation/reference/stable/architecture.html]
-* [Pattern: Transactional outbox - Microservices.io][https://microservices.io/patterns/data/transactional-outbox.html]
-* [PostgreSQL Documentation: Logical Replication Slot & VACUUM Bloat][https://www.postgresql.org/docs/current/logicaldecoding-explanation.html]
-* [AWS Architecture Blog: Exponential Backoff and Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/]
+* [Designing Data-Intensive Applications - Martin Kleppmann (Part 2: Distributed Data)](https://dataintensive.net/)
+* [Debezium Architecture & Documentation](https://debezium.io/documentation/reference/stable/architecture.html)
+* [Pattern: Transactional outbox - Microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)
+* [PostgreSQL Documentation: Logical Replication Slot & VACUUM Bloat](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html)
+* [AWS Architecture Blog: Exponential Backoff and Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)

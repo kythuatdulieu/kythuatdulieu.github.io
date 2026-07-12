@@ -7,6 +7,7 @@ readingTime: "12 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Các dạng bài Python phỏng vấn Data Engineering"
 metaDescription: "Các dạng bài Python cốt lõi khi phỏng vấn Data Engineer: xử lý file lớn không tràn bộ nhớ, generator, set cho dedup O(1), flatten JSON lồng nhau và concurrency I/O."
+domains: ["DE"]
 ---
 
 Vòng live coding Python cho Data Engineer khác vòng của Software Engineer ở một điểm căn bản: đề bài mô phỏng công việc, không mô phỏng kỳ thi thuật toán. Thay vì quy hoạch động hay đồ thị, bạn sẽ gặp: file log 50GB trên máy 4GB RAM, JSON lồng nhau năm tầng cần đổ vào bảng phẳng, API phân trang cần thu thập hết mà không dựng một list khổng lồ trong bộ nhớ.

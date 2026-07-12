@@ -167,7 +167,7 @@ Không có một mô hình nào thống trị tuyệt đối. Lựa chọn kiế
 3. Chuyển sang **OBT (One Big Table)** hoặc Denormalized Views khi chạy các workload Machine Learning hoặc khi xử lý trên BigQuery nếu Join Cost quá đắt đỏ.
 
 ## Nguồn Tham Khảo
-- [Dimensional modeling in Amazon Redshift - AWS Architecture Blog][https://aws.amazon.com/blogs/architecture/dimensional-modeling-in-amazon-redshift/]
-- [Implementing a dimensional data warehouse with Databricks SQL - Databricks Blog][https://www.databricks.com/blog/2022/06/24/implementing-a-dimensional-data-warehouse-with-databricks-sql-part-1.html]
-- [Databricks Lakehouse Data Modeling: Myths, Truths, and Best Practices - Databricks Blog](https://www.databricks.com/blog/2022/05/20/databricks-lakehouse-data-modeling-myths-truths-and-best-practices.html]
+- [Dimensional modeling in Amazon Redshift - AWS Architecture Blog](https://aws.amazon.com/blogs/architecture/dimensional-modeling-in-amazon-redshift/)
+- [Implementing a dimensional data warehouse with Databricks SQL - Databricks Blog](https://www.databricks.com/blog/2022/06/24/implementing-a-dimensional-data-warehouse-with-databricks-sql-part-1.html)
+- [Databricks Lakehouse Data Modeling: Myths, Truths, and Best Practices - Databricks Blog](https://www.databricks.com/blog/2022/05/20/databricks-lakehouse-data-modeling-myths-truths-and-best-practices.html)
 - *The Data Warehouse Toolkit - Ralph Kimball*

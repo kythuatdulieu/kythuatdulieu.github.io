@@ -22,7 +22,7 @@ Dưới góc độ kỹ thuật hệ thống (Hardcore Engineering), chúng ta h
 Đưa một mô hình ML lên production không khó ở phần thuật toán, mà khó ở phần kỹ thuật dữ liệu.
 
 ### 1.1. Online-Offline Skew (Lệch pha môi trường - Training-Serving Skew)
-Nhà khoa học dữ liệu viết code Python/Pandas trên Jupyter: `df['click_rate'] = df['clicks'] / df['impressions'].fillna(0]`.
+Nhà khoa học dữ liệu viết code Python/Pandas trên Jupyter: `df['click_rate'] = df['clicks'] / df['impressions'].fillna(0)`.
 Kỹ sư Backend sau đó viết lại code đó trên Go/Java cho production API: `clickRate := float64(clicks) / math.Max(float64(impressions), 0.001)`.
 
 Chỉ một khác biệt siêu nhỏ trong cách xử lý phép chia cho số 0 (Divide by zero) cũng khiến đặc trưng (Feature) đầu vào ở Production khác hoàn toàn so với lúc huấn luyện. Lỗi ngầm (Silent failure) này khiến mô hình suy luận sai lệch dần theo thời gian mà hệ thống monitoring truyền thống (đo latency/throughput) không thể bắt được.
@@ -99,7 +99,7 @@ user = Entity(name="user", join_keys=["user_id"])
 user_stats_fv = FeatureView(
     name="user_transaction_stats",
     entities=[user],
-    ttl=timedelta(days=30], # Quan trọng: Dữ liệu quá 30 ngày sẽ bị xóa khỏi Online Store
+    ttl=timedelta(days=30), # Quan trọng: Dữ liệu quá 30 ngày sẽ bị xóa khỏi Online Store
     schema=[
         Field(name="daily_transactions", dtype=Int64),
         Field(name="total_spend", dtype=Float32),
@@ -133,7 +133,7 @@ Dùng Kafka + Flink để tính toán Sliding Windows [Tổng chi tiêu trong 1 
 ---
 
 ## Nguồn Tham Khảo
-*   [Feast Architecture Documentation][https://docs.feast.dev/getting-started/architecture-and-components]
-*   [Tecton - Point in Time Correctness & Data Leakage][https://www.tecton.ai/blog/point-in-time-correctness/]
-*   [Hopsworks Feature Store][https://www.hopsworks.ai/]
-*   [Uber Michelangelo: Machine Learning Platform](https://www.uber.com/en-VN/blog/michelangelo-machine-learning-platform/]
+*   [Feast Architecture Documentation](https://docs.feast.dev/getting-started/architecture-and-components)
+*   [Tecton - Point in Time Correctness & Data Leakage](https://www.tecton.ai/blog/point-in-time-correctness/)
+*   [Hopsworks Feature Store](https://www.hopsworks.ai/)
+*   [Uber Michelangelo: Machine Learning Platform](https://www.uber.com/en-VN/blog/michelangelo-machine-learning-platform/)

@@ -131,7 +131,7 @@ SET 'table.exec.state.ttl' = '24 h';
 Streaming Processing không chỉ là câu chuyện chuyển động tác tính toán từ "Chạy 1 ngày 1 lần" sang "Chạy ngay lập tức". Nó đòi hỏi Data Engineer phải tư duy lại toàn bộ về sự bất biến [Immutability], Trạng thái không thời gian (Time Domains) và khả năng chịu lỗi (Fault Tolerance) cực độ. Khi làm chủ được kiến trúc Streaming, bạn đang trao cho doanh nghiệp vũ khí mạnh mẽ nhất: **Ra quyết định phản xạ với thị trường ngay tại khoảnh khắc hiện tại.**
 
 ## Nguồn Tham Khảo (References)
-* **Streaming 101/102 (Tyler Akidau):** Nền tảng triết lý cốt lõi về Event Time vs Processing Time. [Link][https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/]
-* **Apache Flink Architecture:** Cơ chế Checkpointing, thuật toán Chandy-Lamport và quản lý State. [Link][https://nightlies.apache.org/flink/flink-docs-stable/]
-* **Exactly-Once Semantics (Confluent Blog):** Đi sâu vào kiến trúc Transactional API (2PC) của Kafka & Flink. [Link](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/]
+* **Streaming 101/102 (Tyler Akidau):** Nền tảng triết lý cốt lõi về Event Time vs Processing Time. [Link](https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101/)
+* **Apache Flink Architecture:** Cơ chế Checkpointing, thuật toán Chandy-Lamport và quản lý State. [Link](https://nightlies.apache.org/flink/flink-docs-stable/)
+* **Exactly-Once Semantics (Confluent Blog):** Đi sâu vào kiến trúc Transactional API (2PC) của Kafka & Flink. [Link](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
 * **Designing Data-Intensive Applications** - Martin Kleppmann (Chương 11: Stream Processing).

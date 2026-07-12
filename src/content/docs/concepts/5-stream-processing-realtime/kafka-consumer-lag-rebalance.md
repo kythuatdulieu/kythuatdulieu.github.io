@@ -35,7 +35,9 @@ graph LR
         E --> F["Offset 5: LEO"]
     end
     Consumer -- "Poll & Commit" --> C
-    Producer -- "Append" --> F
+    Producer -- "Append" --> F
+
+
 ```
 
 *Lag trong trường hợp trên = LEO (5) - Current Offset (2) = 3 messages.*
@@ -178,8 +180,8 @@ Nếu dùng stack **Prometheus + Grafana + Kafka Exporter**, hãy viết PromQL 
 
 ## Nguồn Tham Khảo (References)
 
-1. **[KIP-429: Kafka Consumer Incremental Cooperative Rebalancing][https://cwiki.apache.org/confluence/display/KAFKA/KIP-429%3A+Kafka+Consumer+Incremental+Cooperative+Rebalancing]** - Tài liệu thiết kế chính thức của Apache Kafka về cơ chế Rebalance mới, khắc phục sự cố Stop-The-World.
-2. **[KIP-345: Introduce static membership protocol to reduce consumer rebalances][https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances]** - Giải pháp cấu hình `group.instance.id` tối quan trọng cho K8s Deployments.
-3. **[LinkedIn Engineering: Burrow - Kafka Consumer Monitoring Reinvented][https://engineering.linkedin.com/blog/2015/06/burrow-kafka-consumer-monitoring-reinvented]** - Bài toán phân tích False Positives trong giám sát Lag và giải pháp thiết kế kiến trúc Burrow.
-4. **[Confluent Blog: Everything You Need to Know About Kafka Rebalance](https://www.confluent.io/blog/kafka-rebalance-protocol-static-membership/]** - Phân tích chi tiết vòng đời Rebalance Protocol.
+1. **[KIP-429: Kafka Consumer Incremental Cooperative Rebalancing](https://cwiki.apache.org/confluence/display/KAFKA/KIP-429%3A+Kafka+Consumer+Incremental+Cooperative+Rebalancing)** - Tài liệu thiết kế chính thức của Apache Kafka về cơ chế Rebalance mới, khắc phục sự cố Stop-The-World.
+2. **[KIP-345: Introduce static membership protocol to reduce consumer rebalances](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances)** - Giải pháp cấu hình `group.instance.id` tối quan trọng cho K8s Deployments.
+3. **[LinkedIn Engineering: Burrow - Kafka Consumer Monitoring Reinvented](https://engineering.linkedin.com/blog/2015/06/burrow-kafka-consumer-monitoring-reinvented)** - Bài toán phân tích False Positives trong giám sát Lag và giải pháp thiết kế kiến trúc Burrow.
+4. **[Confluent Blog: Everything You Need to Know About Kafka Rebalance](https://www.confluent.io/blog/kafka-rebalance-protocol-static-membership/)** - Phân tích chi tiết vòng đời Rebalance Protocol.
 5. **Designing Data-Intensive Applications (Martin Kleppmann)** - Chương 11: Stream Processing - Tổng quan kiến trúc của Log-based message brokers.

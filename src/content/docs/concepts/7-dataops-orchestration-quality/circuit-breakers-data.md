@@ -179,8 +179,8 @@ Dù Data Circuit Breaker và WAP là "viên đạn bạc" bảo vệ Data Wareho
 Data Circuit Breakers kết hợp cùng Write-Audit-Publish (WAP) pattern là nền tảng cốt lõi của một kiến trúc dữ liệu độ tin cậy cao (High-Reliability Data Architecture). Việc thiết lập các chốt chặn này đòi hỏi sự thấu hiểu sâu sắc về **Trade-offs** giữa Chi phí Compute, Tốc độ luân chuyển dữ liệu và Chất lượng dữ liệu, đánh dấu sự trưởng thành của một hệ thống DataOps chuẩn Enterprise.
 
 ## Nguồn Tham Khảo (References)
-* [Apache Iceberg Official Docs: Branching and Tagging][https://iceberg.apache.org/docs/latest/branching/]
-* [Netflix Tech Blog: Data Mesh - A Data Movement and Processing Platform][https://netflixtechblog.com/]
-* [Apache Airflow Official Docs: ShortCircuitOperator][https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html]
-* [dbt Labs: The dbt build command][https://docs.getdbt.com/reference/commands/build]
-* [Project Nessie - Git-like Experience for Data Lakes](https://projectnessie.org/]
+* [Apache Iceberg Official Docs: Branching and Tagging](https://iceberg.apache.org/docs/latest/branching/)
+* [Netflix Tech Blog: Data Mesh - A Data Movement and Processing Platform](https://netflixtechblog.com/)
+* [Apache Airflow Official Docs: ShortCircuitOperator](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html)
+* [dbt Labs: The dbt build command](https://docs.getdbt.com/reference/commands/build)
+* [Project Nessie - Git-like Experience for Data Lakes](https://projectnessie.org/)

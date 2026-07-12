@@ -7,6 +7,7 @@ readingTime: "15 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Các dạng bài SQL kinh điển trong phỏng vấn Data Engineer"
 metaDescription: "Tổng hợp các dạng bài SQL thường gặp nhất trong phỏng vấn kỹ sư dữ liệu: Window functions, CTE đệ quy, Self-join, Gaps & Islands — kèm cách tư duy và lời giải mẫu."
+domains: ["DE"]
 ---
 
 Hầu như mọi quy trình tuyển dụng Data Engineer, Data Analyst hay Analytics Engineer đều có một vòng live coding SQL. Điều thú vị là sau nhiều năm, đề thi ở vòng này gần như không đổi: vẫn xoay quanh chừng năm sáu dạng bài quen thuộc. Người ra đề không cần sáng tạo đề mới, vì các dạng này đã đủ để phân loại ứng viên — ai chỉ biết `SELECT`/`JOIN` cơ bản, ai thực sự làm việc với dữ liệu hằng ngày.

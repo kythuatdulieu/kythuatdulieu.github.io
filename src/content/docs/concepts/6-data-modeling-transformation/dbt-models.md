@@ -179,7 +179,7 @@ models:
 ---
 
 ## Nguồn Tham Khảo
-*   [dbt Best Practices: How we structure our dbt projects][https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview]
-*   [Snowflake Documentation: Dynamic Tables][https://docs.snowflake.com/]
-*   [Databricks Documentation: Delta Live Tables][https://docs.databricks.com/en/delta-live-tables/]
-*   [BigQuery Optimization for dbt - Google Cloud Architecture](https://cloud.google.com/architecture/bigquery-data-warehouse-dbt]
+*   [dbt Best Practices: How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
+*   [Snowflake Documentation: Dynamic Tables](https://docs.snowflake.com/)
+*   [Databricks Documentation: Delta Live Tables](https://docs.databricks.com/en/delta-live-tables/)
+*   [BigQuery Optimization for dbt - Google Cloud Architecture](https://cloud.google.com/architecture/bigquery-data-warehouse-dbt)

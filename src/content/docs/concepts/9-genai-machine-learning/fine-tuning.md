@@ -107,7 +107,7 @@ Chạy Cluster GPU ngốn hàng chục ngàn USD mỗi tháng:
 ---
 
 ## Nguồn Tham Khảo (References)
-* [DeepSpeed: ZeRO (Zero Redundancy Optimizer]][https://arxiv.org/abs/1910.02054]
-* [PyTorch FSDP (Fully Sharded Data Parallel]][https://pytorch.org/docs/stable/fsdp.html]
-* [QLoRA: Efficient Finetuning of Quantized LLMs][https://arxiv.org/abs/2305.14314]
-* [Direct Preference Optimization (DPO]](https://arxiv.org/abs/2305.18290)
+* [DeepSpeed: ZeRO (Zero Redundancy Optimizer)](https://arxiv.org/abs/1910.02054)
+* [PyTorch FSDP (Fully Sharded Data Parallel)](https://pytorch.org/docs/stable/fsdp.html)
+* [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314)
+* [Direct Preference Optimization (DPO)](https://arxiv.org/abs/2305.18290)

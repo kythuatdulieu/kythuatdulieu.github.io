@@ -1,6 +1,13 @@
 ---
 title: "Data Platform Engineer"
 description: "Lộ trình Data Platform Engineer: xây nền tảng dữ liệu tự phục vụ bằng Terraform, Kubernetes, orchestration, observability, security và developer experience."
+tags: ["data-platform", "terraform", "kubernetes", "devops", "observability", "learning-path"]
+readingTime: "10 mins"
+lastUpdated: 2026-07-11
+seoTitle: "Data Platform Engineer"
+metaDescription: "Lộ trình Data Platform Engineer: xây nền tảng dữ liệu tự phục vụ bằng Terraform, Kubernetes, orchestration, observability, security và developer experience"
+difficulty: "Intermediate"
+domains: ["DE"]
 ---
 
 Data Platform Engineer không chỉ viết pipeline cho một use case. Họ xây nền tảng để nhiều team tự tạo, chạy và vận hành pipeline an toàn hơn. Nếu Data Engineer là người xây đường ống, Data Platform Engineer là người làm hệ thống đường, biển báo, trạm kiểm soát và quy chuẩn thi công.
@@ -63,7 +70,21 @@ Terraform hữu ích vì biến hạ tầng thành code có version, review và 
 - Kubernetes namespace, secret reference, resource quota.
 - Monitoring dashboard và alert rule.
 
-Quy tắc thực tế: module nên che bớt độ phức tạp nhưng không giấu những quyết định quan trọng như retention, quyền truy cập và chi phí.
+Quy tắc thực tế: module nên che bớt độ phức tạp nhưng không giấu những quyết định quan trọng như retention, quyền truy cập và chi phí. Interface của một module tốt trông như thế này — người dùng chỉ khai báo quyết định, không khai báo chi tiết hạ tầng:
+
+```hcl
+module "orders_dataset" {
+  source        = "git::internal/modules/data-dataset?ref=v2.3"
+  name          = "orders"
+  owner_team    = "commerce-data"        # bắt buộc → alert & cost đi theo team
+  pii_level     = "high"                 # quyết định masking + audit tự động
+  retention_days = 730                   # quyết định lộ ra, không chôn trong module
+  readers       = ["analyst-role"]
+  writers       = ["etl-orders-sa"]
+}
+```
+
+Ba field `owner_team`, `pii_level`, `retention_days` là ví dụ của "quyết định phải lộ ra": chúng buộc người tạo dataset trả lời câu hỏi governance ngay lúc khai sinh tài nguyên, thay vì để đến audit cuối năm. Đó là cách platform mã hóa chính sách thành interface — hiệu quả hơn mọi tài liệu quy định.
 
 Đọc trong site: [Access Control](/concepts/8-security-governance-finops/access-control/), [Cloud Storage](/concepts/3-storage-engines-formats/cloud-storage/), [Cost Optimization](/concepts/8-security-governance-finops/cost-optimization/).
 

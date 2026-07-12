@@ -1,0 +1,543 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+export async function getStaticPaths() {
+  const manifestPath = path.resolve('./public/quizzes/manifest.json');
+  if (!fs.existsSync(manifestPath)) {
+    return [];
+  }
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  
+  const paths = [];
+  for (const q of manifest) {
+    const quizId = q.id;
+    const questionsPath = path.resolve(`./public/quizzes/${quizId}/questions.json`);
+    if (!fs.existsSync(questionsPath)) continue;
+    const questions = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
+    const arr = Array.isArray(questions) ? questions : questions.questions || [];
+    
+    arr.forEach((question, index) => {
+      const prevQuestion = arr[index - 1];
+      const nextQuestion = arr[index + 1];
+      paths.push({
+        params: { 
+          quizId, 
+          questionId: question.id.toString() 
+        },
+        props: { 
+          quizName: q.name,
+          question, 
+          questionIndex: index,
+          prevId: prevQuestion ? prevQuestion.id : null,
+          nextId: nextQuestion ? nextQuestion.id : null,
+          totalQuestions: arr.length
+        }
+      });
+    });
+  }
+  return paths;
+}
+
+const { quizId, questionId } = Astro.params;
+const { quizName, question, questionIndex, prevId, nextId, totalQuestions } = Astro.props;
+
+// Parse images
+let questionImages = [];
+if (question.image) {
+  if (Array.isArray(question.image)) {
+    questionImages = question.image;
+  } else {
+    questionImages = question.image.split(/[\n,]/).map(img => img.trim()).filter(Boolean);
+  }
+}
+
+// Normalize images to local paths relative to the quiz folder
+questionImages = questionImages.map(img => {
+  const filename = img.split('/').pop();
+  return `images/${filename}`;
+});
+
+let answerImage = null;
+if (question.answer_image) {
+  const filename = question.answer_image.split('/').pop();
+  answerImage = `images/${filename}`;
+}
+
+// Split question text by //IMG// placeholder
+const questionSegments = question.question ? question.question.split('//IMG//') : [];
+const questionSegmentsVi = question.question_vi ? question.question_vi.split('//IMG//') : [];
+---
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0B1XQQ61EY"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0B1XQQ61EY');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Câu hỏi {questionId} - {quizName}</title>
+  <meta name="description"
+    content={`Câu hỏi số ${questionId} trong bộ đề luyện thi ${quizName}. Xem câu hỏi song ngữ, đáp án và giải thích chi tiết.`}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/quizzes/shared/style.css">
+  
+  <style>
+    /* Bổ sung css tối ưu cho trang đơn câu hỏi */
+    .comments-section {
+      max-width: 800px;
+      margin: 3rem auto 7rem;
+      padding: 0 1.5rem;
+    }
+    
+    .quiz-container {
+      margin-bottom: 2rem;
+    }
+    
+    .nav-btn:disabled, .nav-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    
+    .back-quiz-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: color 0.2s ease;
+    }
+    
+    .back-quiz-link:hover {
+      color: var(--primary-hover);
+    }
+    
+    .btn-show-answer {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    }
+    .btn-show-answer:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+    }
+    .btn-show-answer:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="/" class="icon-btn home-btn" title="Về trang chủ" style="text-decoration: none; margin-right: 8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="home-text">Trang chủ</span>
+      </a>
+      <span class="quiz-title-header" style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title={quizName}>
+        {quizName}
+      </span>
+      <span class="question-counter" id="questionCounter">{questionIndex + 1} / {totalQuestions}</span>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" id="btnViToggle" title="Bật/Tắt Tiếng Việt">
+        <span class="btn-label">VI</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Quiz Content -->
+  <main class="quiz-container" style="padding-top: 80px;">
+    <div class="question-card" id="questionCard" style="max-width: 800px; margin: 0 auto;">
+      <a href={`/quizzes/${quizId}/index.html`} class="back-quiz-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Quay lại bộ đề
+      </a>
+
+      <!-- Question -->
+      <div class="question-header">
+        <span class="question-badge" id="questionBadge">Question #{questionId}</span>
+        <span class="topic-badge" id="topicBadge">Topic {question.topic}</span>
+        {question.page && (
+          <button class="icon-btn pdf-btn" id="btnPdf" data-page={question.page} title="Mở trang PDF gốc">PDF</button>
+        )}
+      </div>
+      
+      <div class="question-text" id="questionText">
+        {questionSegments.length > 0 ? (
+          questionSegments.map((segment, idx) => (
+            <>
+              <span style="white-space: pre-wrap;">{segment}</span>
+              {idx < questionSegments.length - 1 && questionImages[idx] && (
+                <div class="question-image" style="text-align: center; margin: 1rem 0;">
+                  <img src={`/quizzes/${quizId}/${questionImages[idx]}`} alt="Hình ảnh câu hỏi" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
+                </div>
+              )}
+            </>
+          ))
+        ) : (
+          question.question
+        )}
+      </div>
+
+      {question.question_vi && (
+        <div class="question-text-vi" id="questionTextVi" style="display:none; margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem;">
+          {questionSegmentsVi.length > 0 ? (
+            questionSegmentsVi.map((segment, idx) => (
+              <>
+                <span style="white-space: pre-wrap;">{segment}</span>
+                {idx < questionSegmentsVi.length - 1 && questionImages[idx] && (
+                  <div class="question-image" style="text-align: center; margin: 1rem 0;">
+                    <img src={`/quizzes/${quizId}/${questionImages[idx]}`} alt="Hình ảnh câu hỏi" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
+                  </div>
+                )}
+              </>
+            ))
+          ) : (
+            question.question_vi
+          )}
+        </div>
+      )}
+
+      {/* Fallback if no //IMG// was found but images exist */}
+      {questionSegments.length <= 1 && questionImages.length > 0 && (
+        <div class="question-image-container" style="margin-top: 1.5rem;">
+          {questionImages.map((img) => (
+            <div class="question-image" style="text-align: center; margin: 1rem 0;">
+              <img src={`/quizzes/${quizId}/${img}`} alt="Hình ảnh câu hỏi" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <!-- Options -->
+      <div class="options-list" id="optionsList" style="margin-top: 1.5rem;">
+        {Object.entries(question.options).map(([letter, text]) => (
+          <div class="option-item" data-letter={letter} style="cursor: pointer;">
+            <div class="option-letter">{letter}</div>
+            <div class="option-content">
+              <div class="option-text">{text}</div>
+              {question.options_vi && question.options_vi[letter] && (
+                <div class="option-text-vi" style="display: none;">{question.options_vi[letter]}</div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {Object.keys(question.options).length === 0 && (
+        <div class="no-options-container" style="margin-top: 1.5rem; text-align: center;">
+          <button class="btn-show-answer" id="btnShowAnswer">
+            Xem đáp án
+          </button>
+        </div>
+      )}
+
+      <!-- Explanation Box -->
+      <div class="explanation-box" id="explanationBox" style="display: none; margin-top: 2rem;">
+        <div class="explanation-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Giải thích & Tài liệu tham khảo</span>
+        </div>
+        
+        {answerImage && (
+          <div class="answer-image-box" style="margin-bottom: 1.5rem; text-align: center;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; text-align: left;">Đáp án đúng (Hình ảnh):</div>
+            <img src={`/quizzes/${quizId}/${answerImage}`} alt="Hình ảnh đáp án" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
+          </div>
+        )}
+
+        <div class="explanation-body" style="white-space: pre-wrap; font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary);">{question.explanation_vi || "Chưa có lời giải thích cụ thể cho câu hỏi này."}</div>
+        
+        {question.references && question.references.length > 0 && (
+          <div class="explanation-references" style="margin-top: 1.2rem; border-top: 1px solid var(--border); padding-top: 0.75rem;">
+            <h4 style="font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--accent); font-weight: 600;">Tài liệu tham khảo:</h4>
+            <ul style="list-style-type: none; padding-left: 0; font-size: 0.85rem; line-height: 1.6;">
+              {question.references.map((ref) => (
+                <li style="margin-bottom: 0.35rem;">
+                  🔗 <a href={ref.url} target="_blank" rel="noopener noreferrer" style="color: var(--sl-color-text-accent); text-decoration: none;">{ref.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  </main>
+
+  <!-- Navigation -->
+  <nav class="quiz-nav">
+    {prevId ? (
+      <a href={`/quizzes/${quizId}/question-${prevId}/`} class="nav-btn" title="Câu trước">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Trước</span>
+      </a>
+    ) : (
+      <button class="nav-btn" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Trước</span>
+      </button>
+    )}
+    
+    <a href={`/quizzes/${quizId}/index.html`} class="nav-btn grid-btn" style="text-decoration: none;" title="Luyện thi full bộ đề">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Luyện thi Full</span>
+    </a>
+    
+    {nextId ? (
+      <a href={`/quizzes/${quizId}/question-${nextId}/`} class="nav-btn" title="Câu sau">
+        <span>Sau</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    ) : (
+      <button class="nav-btn" disabled>
+        <span>Sau</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    )}
+  </nav>
+
+  <!-- Comments Section -->
+  <section class="comments-section">
+    <div id="utterances-container"></div>
+  </section>
+
+  <!-- Interactive JavaScript -->
+  <script is:inline define:vars={{ quizId, questionId, questionIndex, correctAnswer: question.answer }}>
+    (function() {
+      'use strict';
+
+      // Theme sync
+      try {
+        const theme = localStorage.getItem('dehb-theme');
+        if (theme) document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+
+      const STATE_KEY = `quiz_state_${quizId}_v1`;
+      
+      // DOM elements
+      const btnViToggle = document.getElementById('btnViToggle');
+      const questionTextVi = document.getElementById('questionTextVi');
+      const optionViTexts = document.querySelectorAll('.option-text-vi');
+      const optionItems = document.querySelectorAll('.option-item');
+      const explanationBox = document.getElementById('explanationBox');
+      const btnPdf = document.getElementById('btnPdf');
+
+      let state = {
+        userAnswers: {},
+        showVietnamese: false,
+        shuffleMode: false,
+        questionOrder: null,
+        currentIndex: 0
+      };
+
+      // Load state
+      try {
+        const saved = localStorage.getItem(STATE_KEY);
+        if (saved) {
+          state = JSON.parse(saved);
+        }
+      } catch (e) {}
+
+      // Apply initial settings
+      updateViVisibility(state.showVietnamese);
+      
+      const savedAnswer = state.userAnswers[questionId];
+      if (savedAnswer !== undefined) {
+        showResults(savedAnswer);
+      } else {
+        // Add click events to option items
+        optionItems.forEach(item => {
+          item.addEventListener('click', handleOptionClick);
+        });
+      }
+
+      const btnShowAnswer = document.getElementById('btnShowAnswer');
+      if (btnShowAnswer) {
+        if (savedAnswer !== undefined) {
+          btnShowAnswer.style.display = 'none';
+        } else {
+          btnShowAnswer.addEventListener('click', function() {
+            state.userAnswers[questionId] = 'VIEWED';
+            try {
+              localStorage.setItem(STATE_KEY, JSON.stringify(state));
+            } catch (err) {}
+            showResults('VIEWED');
+          });
+        }
+      }
+
+      if (btnPdf) {
+        btnPdf.addEventListener('click', function() {
+          const page = btnPdf.getAttribute('data-page');
+          const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
+          window.open(`../${pdfPath}#page=${page}`, '_blank');
+        });
+      }
+
+      // Handle Option Click
+      function handleOptionClick(e) {
+        const clickedItem = e.currentTarget;
+        if (clickedItem.classList.contains('disabled')) return;
+        
+        const selectedLetter = clickedItem.getAttribute('data-letter');
+        
+        // Save to state
+        state.userAnswers[questionId] = selectedLetter;
+        state.currentIndex = questionIndex; // Sync to load this question index in full mode
+        
+        try {
+          localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        } catch (err) {}
+
+        showResults(selectedLetter);
+      }
+
+      // Show Correct/Wrong colors and explanation
+      function showResults(selectedLetter) {
+        optionItems.forEach(item => {
+          item.classList.add('disabled');
+          item.removeEventListener('click', handleOptionClick);
+          
+          const letter = item.getAttribute('data-letter');
+          if (letter === correctAnswer) {
+            item.classList.add('correct-answer');
+          } else if (letter === selectedLetter) {
+            item.classList.add('wrong-answer');
+          }
+        });
+
+        const btnShowAnswer = document.getElementById('btnShowAnswer');
+        if (btnShowAnswer) {
+          btnShowAnswer.style.display = 'none';
+        }
+
+        // Show explanation
+        if (explanationBox) {
+          explanationBox.style.display = 'block';
+        }
+      }
+
+      // Toggle VI translation
+      if (btnViToggle) {
+        btnViToggle.addEventListener('click', function() {
+          state.showVietnamese = !state.showVietnamese;
+          updateViVisibility(state.showVietnamese);
+          try {
+            localStorage.setItem(STATE_KEY, JSON.stringify(state));
+          } catch (err) {}
+        });
+      }
+
+      function updateViVisibility(showVi) {
+        if (btnViToggle) {
+          if (showVi) {
+            btnViToggle.classList.add('active');
+          } else {
+            btnViToggle.classList.remove('active');
+          }
+        }
+        
+        if (questionTextVi) {
+          questionTextVi.style.display = showVi ? 'block' : 'none';
+        }
+        
+        optionViTexts.forEach(el => {
+          el.style.display = showVi ? 'block' : 'none';
+        });
+      }
+    })();
+  </script>
+
+  <!-- Utterances Comments Loader -->
+  <script is:inline>
+    (function() {
+      function loadUtterances() {
+        const container = document.getElementById('utterances-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        const script = document.createElement('script');
+        script.src = 'https://utteranc.es/client.js';
+        script.setAttribute('repo', 'kythuatdulieu/kythuatdulieu.github.io');
+        script.setAttribute('issue-term', 'pathname');
+        
+        const theme = document.documentElement.getAttribute('data-theme') || 'light';
+        script.setAttribute('theme', theme === 'dark' ? 'github-dark' : 'github-light');
+        script.setAttribute('crossorigin', 'anonymous');
+        script.async = true;
+        
+        container.appendChild(script);
+      }
+
+      requestAnimationFrame(() => {
+          loadUtterances();
+          
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                loadUtterances();
+              }
+            });
+          });
+          observer.observe(document.documentElement, { attributes: true });
+      });
+
+      document.addEventListener('astro:page-load', loadUtterances);
+    })();
+  </script>
+</body>
+
+</html>

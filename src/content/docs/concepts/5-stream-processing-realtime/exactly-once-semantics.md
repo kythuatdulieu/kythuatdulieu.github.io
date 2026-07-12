@@ -136,7 +136,7 @@ Kiến trúc sư Dữ liệu (Data Architect) cần nhớ một định luật: 
   - Lĩnh vực **Trending Topics, Log Analytics, Dashboard:** Hãy dùng At-least-once. Việc sai số 0.01% do duplicate hoàn toàn vô hình với người dùng, nhưng giúp tiết kiệm 50% chi phí Compute/Storage và đạt độ trễ vài mili-giây.
 
 ## Nguồn Tham Khảo (References)
-* [Confluent: Exactly-Once Semantics are Possible][https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/]
-* [Apache Flink: Fault Tolerance & Checkpointing][https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/]
+* [Confluent: Exactly-Once Semantics are Possible](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
+* [Apache Flink: Fault Tolerance & Checkpointing](https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/)
 * *Designing Data-Intensive Applications* - Martin Kleppmann (O'Reilly Media) - Chương 11.
-* [Databricks Structured Streaming Exactly-Once](https://docs.databricks.com/en/structured-streaming/delta-lake]
+* [Databricks Structured Streaming Exactly-Once](https://docs.databricks.com/en/structured-streaming/delta-lake)

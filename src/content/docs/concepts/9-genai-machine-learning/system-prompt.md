@@ -162,8 +162,8 @@ resource "aws_bedrock_guardrail" "data_engineering_bot" {
 ---
 
 ## Nguồn Tham Khảo (References)
-*   [AWS Architecture Blog: Building responsible Generative AI applications with Amazon Bedrock Guardrails][https://aws.amazon.com/blogs/machine-learning/build-responsible-ai-applications-with-amazon-bedrock-guardrails/]
-*   [vLLM: PagedAttention and Continuous Batching for High-Throughput LLM Serving][https://vllm.ai/]
-*   [Anthropic Claude: Prompt Caching Documentation (FinOps]][https://docs.anthropic.com/en/docs/prompt-caching]
-*   [OWASP Top 10 for Large Language Model Applications (LLM01: Prompt Injection]][https://genai.owasp.org/llm-top-10/]
-*   [Databricks: Optimizing LLM Serving Latency and Throughput](https://www.databricks.com/blog/optimizing-llm-serving-latency-and-throughput]
+*   [AWS Architecture Blog: Building responsible Generative AI applications with Amazon Bedrock Guardrails](https://aws.amazon.com/blogs/machine-learning/build-responsible-ai-applications-with-amazon-bedrock-guardrails/)
+*   [vLLM: PagedAttention and Continuous Batching for High-Throughput LLM Serving](https://vllm.ai/)
+*   [Anthropic Claude: Prompt Caching Documentation (FinOps)](https://docs.anthropic.com/en/docs/prompt-caching)
+*   [OWASP Top 10 for Large Language Model Applications (LLM01: Prompt Injection)](https://genai.owasp.org/llm-top-10/)
+*   [Databricks: Optimizing LLM Serving Latency and Throughput](https://www.databricks.com/blog/optimizing-llm-serving-latency-and-throughput)

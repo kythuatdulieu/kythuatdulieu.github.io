@@ -143,7 +143,7 @@ Tối ưu hóa NDCG luôn đòi hỏi sự đánh đổi khốc liệt:
 
 ## Nguồn Tham Khảo (References)
 *   **Manning, Raghavan, Schütze - Introduction to Information Retrieval** (Chương 8: Đánh giá trong IR - Sách gối đầu giường của mọi Kỹ sư Search). 
-*   **Netflix TechBlog:** [Offline Evaluation of Ranking][https://netflixtechblog.com/]
-*   **Stanford NLP:** [Lost in the Middle: How Language Models Use Long Contexts][https://arxiv.org/abs/2307.03172]
-*   **Ragas Documentation:** [RAG Evaluation Framework Metrics][https://docs.ragas.io/]
-*   **Pinecone:** [Two-Stage Retrieval & Reranking Architecture](https://www.pinecone.io/learn/series/rag/rerankers/]
+*   **Netflix TechBlog:** [Offline Evaluation of Ranking](https://netflixtechblog.com/)
+*   **Stanford NLP:** [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
+*   **Ragas Documentation:** [RAG Evaluation Framework Metrics](https://docs.ragas.io/)
+*   **Pinecone:** [Two-Stage Retrieval & Reranking Architecture](https://www.pinecone.io/learn/series/rag/rerankers/)

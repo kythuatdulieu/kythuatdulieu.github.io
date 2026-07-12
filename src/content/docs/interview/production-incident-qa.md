@@ -7,6 +7,7 @@ readingTime: "11 mins"
 lastUpdated: 2026-07-10
 seoTitle: "Production Incident QA - Phỏng vấn xử lý sự cố Data Engineering"
 metaDescription: "Xử lý sự cố hệ thống dữ liệu trong phỏng vấn Data Engineering: quy trình ứng phó 5 bước theo chuẩn SRE, Root Cause Analysis, blameless postmortem và SLA/SLO/SLI."
+domains: ["DE"]
 ---
 
 Vòng phỏng vấn xử lý sự cố kiểm tra một thứ mà không vòng nào khác chạm tới: bạn hành xử thế nào khi hệ thống đang cháy và mọi người đang chờ câu trả lời của bạn. Đề bài luôn là một tình huống: pipeline sập lúc nửa đêm, báo cáo doanh thu sai gấp đôi, Kafka ùn ứ. Thứ được chấm không phải kiến thức về công cụ — mà là trình tự hành động, cách giao tiếp, và việc bạn có phân biệt được "dập lửa" với "tìm nguyên nhân" hay không.

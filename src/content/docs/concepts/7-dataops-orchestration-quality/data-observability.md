@@ -57,7 +57,9 @@ graph TD
     B -.-> IS
     C -.-> IS
     IS -.->|Logs/Metadata| M
-    C -.->|SELECT sampling| D_Scan
+    C -.->|SELECT sampling| D_Scan
+
+
 ```
 
 ### Đánh đổi Hệ thống (Systemic Trade-offs)
@@ -170,8 +172,8 @@ Khi hệ thống Observability phát hiện độ trễ (Freshness alert) và Ai
 
 ## Nguồn Tham Khảo (References)
 
-1. [Monte Carlo: What is Data Observability?][https://www.montecarlodata.com/blog-what-is-data-observability/] - Định nghĩa và 5 trụ cột tiêu chuẩn ngành.
-2. [Databricks: Data Observability Glossary][https://www.databricks.com/glossary/data-observability] - Triển khai trên kiến trúc Lakehouse.
-3. [Great Expectations Official Docs][https://greatexpectations.io/] - Framework khai báo Data Quality.
+1. [Monte Carlo: What is Data Observability?](https://www.montecarlodata.com/blog-what-is-data-observability/) - Định nghĩa và 5 trụ cột tiêu chuẩn ngành.
+2. [Databricks: Data Observability Glossary](https://www.databricks.com/glossary/data-observability) - Triển khai trên kiến trúc Lakehouse.
+3. [Great Expectations Official Docs](https://greatexpectations.io/) - Framework khai báo Data Quality.
 4. *Designing Data-Intensive Applications* (Martin Kleppmann) - Tính ổn định và độ tin cậy của hệ thống.
-5. [Uber Engineering: Data Quality at Scale](https://www.uber.com/en-US/blog/data-quality-at-uber/] - Bài học thực chiến xử lý Alert Fatigue ở quy mô khổng lồ.
+5. [Uber Engineering: Data Quality at Scale](https://www.uber.com/en-US/blog/data-quality-at-uber/) - Bài học thực chiến xử lý Alert Fatigue ở quy mô khổng lồ.

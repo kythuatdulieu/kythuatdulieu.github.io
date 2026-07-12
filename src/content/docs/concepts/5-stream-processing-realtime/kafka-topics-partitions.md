@@ -154,7 +154,7 @@ resource "kafka_topic" "clickstream_events" {
 ---
 
 ## Nguồn Tham Khảo [References]
-*   [How to choose the number of topics/partitions in a Kafka cluster? - Confluent Blog][https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster/]
+*   [How to choose the number of topics/partitions in a Kafka cluster? - Confluent Blog](https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster/)
 *   **Kafka: The Definitive Guide (2nd Edition, O'Reilly)** - Gwen Shapira, Todd Palino et al.
-*   [Kafka: a Distributed Messaging System for Log Processing - LinkedIn Engineering][http://notes.stephenholiday.com/Kafka.pdf]
-*   [Kafka Zero-Copy Architecture - IBM Developer](https://developer.ibm.com/articles/j-zerocopy/]
+*   [Kafka: a Distributed Messaging System for Log Processing - LinkedIn Engineering](http://notes.stephenholiday.com/Kafka.pdf)
+*   [Kafka Zero-Copy Architecture - IBM Developer](https://developer.ibm.com/articles/j-zerocopy/)

@@ -152,6 +152,6 @@ resource "aws_iam_policy" "athena_readonly_for_llm" {
 ---
 
 ## Nguồn Tham Khảo
-* [Kojima et al. "Large Language Models are Zero-Shot Reasoners" [arXiv:2205.11916]][https://arxiv.org/abs/2205.11916]
-* [AWS Architecture Blog: Real-time Data Streaming with LLMs][https://aws.amazon.com/blogs/architecture/]
-* [Microsoft Presidio: Data Protection and Anonymization SDK](https://microsoft.github.io/presidio/]
+* [Kojima et al. "Large Language Models are Zero-Shot Reasoners" (arXiv:2205.11916)](https://arxiv.org/abs/2205.11916)
+* [AWS Architecture Blog: Real-time Data Streaming with LLMs](https://aws.amazon.com/blogs/architecture/)
+* [Microsoft Presidio: Data Protection and Anonymization SDK](https://microsoft.github.io/presidio/)

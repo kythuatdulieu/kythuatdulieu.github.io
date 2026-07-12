@@ -118,7 +118,7 @@ Trên AWS/GCP, Data Transfer luân chuyển giữa các Availability Zones (AZ) 
 ---
 
 ## Nguồn Tham Khảo (References)
-* [SWIM: Scalable Weakly-consistent Infection-style Process Group Membership Protocol][https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf]
-* [Phi Accrual Failure Detector (Naohiro Hayashibara et al.]][https://www.computer.org/csdl/proceedings-article/srds/2004/22390066/12OmNvT2y8G]
-* [Cassandra Architecture: Gossip Protocol][https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#gossip]
-* [HashiCorp Serf Gossip Internals](https://www.serf.io/docs/internals/gossip.html]
+* [SWIM: Scalable Weakly-consistent Infection-style Process Group Membership Protocol](https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf)
+* [Phi Accrual Failure Detector (Naohiro Hayashibara et al.)](https://www.computer.org/csdl/proceedings-article/srds/2004/22390066/12OmNvT2y8G)
+* [Cassandra Architecture: Gossip Protocol](https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html#gossip)
+* [HashiCorp Serf Gossip Internals](https://www.serf.io/docs/internals/gossip.html)

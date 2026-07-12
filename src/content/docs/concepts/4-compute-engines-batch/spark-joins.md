@@ -139,7 +139,7 @@ spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "2
 ```
 
 ## 4. Nguồn Tham Khảo [References]
-- [Databricks: Adaptive Query Execution - Speeding Up Spark SQL at Runtime][https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html]
-- [Databricks Documentation: Optimize Skew Join][https://docs.databricks.com/en/optimizations/skew-join.html]
+- [Databricks: Adaptive Query Execution - Speeding Up Spark SQL at Runtime](https://www.databricks.com/blog/2020/05/29/adaptive-query-execution-speeding-up-spark-sql-at-runtime.html)
+- [Databricks Documentation: Optimize Skew Join](https://docs.databricks.com/en/optimizations/skew-join.html)
 - Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
-- [AWS Big Data Blog: Best practices for memory management in Apache Spark](https://aws.amazon.com/blogs/big-data/optimize-memory-management-in-apache-spark-to-avoid-out-of-memory-issues/]
+- [AWS Big Data Blog: Best practices for memory management in Apache Spark](https://aws.amazon.com/blogs/big-data/optimize-memory-management-in-apache-spark-to-avoid-out-of-memory-issues/)
