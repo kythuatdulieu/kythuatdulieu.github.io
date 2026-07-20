@@ -417,30 +417,6 @@
                 element.appendChild(imgDiv);
             }
         });
-        
-        // Fallback: If no //IMG// was found but images exist, render them at the bottom
-        if (segments.length <= 1 && images.length > 0) {
-            const containerDiv = document.createElement('div');
-            containerDiv.className = 'question-images-container';
-            containerDiv.style.marginTop = '15px';
-            images.forEach(imgUrl => {
-                const imgDiv = document.createElement('div');
-                imgDiv.className = 'question-image';
-                imgDiv.style.textAlign = 'center';
-                imgDiv.style.margin = '10px 0';
-                
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.alt = 'Hình ảnh câu hỏi';
-                img.style.maxWidth = '100%';
-                img.style.borderRadius = '8px';
-                img.style.border = '1px solid var(--border)';
-                
-                imgDiv.appendChild(img);
-                containerDiv.appendChild(imgDiv);
-            });
-            element.appendChild(containerDiv);
-        }
     }
 
     // ========================
@@ -493,7 +469,7 @@
 
         if (els.questionImageBox) {
             els.questionImageBox.replaceChildren();
-            if (q.image && showImage) {
+            if (q.image && showImage && !(q.question && q.question.includes('//IMG//'))) {
                 const images = q.image.split(/[\n,]/).map(img => img.trim()).filter(Boolean);
                 images.forEach(imgUrl => {
                     const img = document.createElement('img');
@@ -520,12 +496,12 @@
         els.topicBadge.textContent = `Topic ${q.topic}`;
 
         // Question text
-        renderQuestionText(els.questionText, q.question, q.image);
+        renderQuestionText(els.questionText, q.question, showImage ? q.image : null);
 
         // Vietnamese question text
         if (showVietnamese) {
             if (q.question_vi) {
-                renderQuestionText(els.questionTextVi, q.question_vi, q.image);
+                renderQuestionText(els.questionTextVi, q.question_vi, showImage ? q.image : null);
                 els.questionTextVi.style.display = 'block';
             } else {
                 els.questionTextVi.replaceChildren();
@@ -535,7 +511,7 @@
                 fetchTranslation(q.question).then(translated => {
                     q.question_vi = translated;
                     if (window.currentSelectionQId === q.id) {
-                        renderQuestionText(els.questionTextVi, translated, q.image);
+                        renderQuestionText(els.questionTextVi, translated, showImage ? q.image : null);
                     }
                 });
             }
