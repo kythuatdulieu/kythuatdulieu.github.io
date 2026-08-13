@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaidLite from 'rehype-mermaid-lite';
@@ -51,6 +52,7 @@ export default defineConfig({
 		],
 	},
 	integrations: [
+		sitemap(),
 		starlight({
 			title: 'Sổ tay Kỹ thuật Dữ liệu',
 			defaultLocale: 'root',
