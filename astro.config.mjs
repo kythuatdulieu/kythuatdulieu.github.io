@@ -6,6 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaidLite from 'rehype-mermaid-lite';
 import { conceptCategories } from './src/config/categories.js';
+import { SITE_URL } from './src/config/seo.js';
 import { remarkAutoLink } from './src/plugins/remark-auto-link.js';
 import fs from 'fs';
 import path from 'path';
@@ -31,7 +32,7 @@ for (const [provider, items] of Object.entries(quizGroups)) {
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://kythuatdulieu.github.io',
+	site: SITE_URL,
 	trailingSlash: 'always',
 	// Redirect các slug bị gộp trong audit 2026-07 (giữ link cũ không gãy)
 	redirects: {
@@ -53,7 +54,14 @@ export default defineConfig({
 		],
 	},
 	integrations: [
-		sitemap(),
+		sitemap({
+			// Trang câu hỏi là các biến thể mỏng của bộ đề; giữ chúng crawlable
+			// nhưng không đưa vào sitemap để tập trung tín hiệu vào trang bộ đề.
+			filter: (page) => {
+				const pathname = new URL(page).pathname;
+				return !/^\/quizzes\/[^/]+\/question-\d+\/?$/.test(pathname);
+			}
+		}),
 		starlight({
 			title: 'Sổ tay Kỹ thuật Dữ liệu',
 			defaultLocale: 'root',

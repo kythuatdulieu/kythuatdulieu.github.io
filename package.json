@@ -6,6 +6,7 @@
     "dev": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
     "start": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
     "build": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build",
+    "check:seo": "node scripts/check_seo.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky"

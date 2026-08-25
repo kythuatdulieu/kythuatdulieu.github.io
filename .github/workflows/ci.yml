@@ -28,3 +28,9 @@ jobs:
 
     - name: Check Internal Links
       run: node scripts/check_broken_links.js
+
+    - name: Build site
+      run: npm run build
+
+    - name: Check SEO output
+      run: npm run check:seo

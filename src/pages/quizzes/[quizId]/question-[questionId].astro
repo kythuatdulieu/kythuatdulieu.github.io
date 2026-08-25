@@ -1,6 +1,7 @@
 ---
 import fs from 'node:fs';
 import path from 'node:path';
+import { SITE_LOCALE, SITE_NAME, toAbsoluteUrl } from '../../../config/seo.js';
 
 export async function getStaticPaths() {
   const manifestPath = path.resolve('./public/quizzes/manifest.json');
@@ -41,6 +42,9 @@ export async function getStaticPaths() {
 
 const { quizId, questionId } = Astro.params;
 const { quizName, question, questionIndex, prevId, nextId, totalQuestions } = Astro.props;
+const questionTitle = `Câu hỏi ${questionId} - ${quizName}`;
+const questionDescription = `Câu hỏi số ${questionId} trong bộ đề luyện thi ${quizName}. Xem câu hỏi song ngữ, đáp án và giải thích chi tiết.`;
+const canonicalUrl = toAbsoluteUrl(`/quizzes/${quizId}/question-${questionId}/`);
 
 // Parse images
 let questionImages = [];
@@ -184,9 +188,22 @@ function parseMarkdown(markdownText) {
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Câu hỏi {questionId} - {quizName}</title>
-  <meta name="description"
-    content={`Câu hỏi số ${questionId} trong bộ đề luyện thi ${quizName}. Xem câu hỏi song ngữ, đáp án và giải thích chi tiết.`}>
+  <title>{questionTitle}</title>
+  <meta name="description" content={questionDescription}>
+  <meta name="robots" content="noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href={canonicalUrl}>
+  <link rel="alternate" hreflang="vi" href={canonicalUrl}>
+  <link rel="alternate" hreflang="x-default" href={canonicalUrl}>
+  <meta name="theme-color" content="#0f172a">
+  <meta property="og:site_name" content={SITE_NAME}>
+  <meta property="og:locale" content={SITE_LOCALE}>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={questionTitle}>
+  <meta property="og:description" content={questionDescription}>
+  <meta property="og:url" content={canonicalUrl}>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content={questionTitle}>
+  <meta name="twitter:description" content={questionDescription}>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
