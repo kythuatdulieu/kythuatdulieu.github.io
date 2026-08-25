@@ -32,6 +32,7 @@ for (const [provider, items] of Object.entries(quizGroups)) {
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kythuatdulieu.github.io',
+	trailingSlash: 'always',
 	// Redirect các slug bị gộp trong audit 2026-07 (giữ link cũ không gãy)
 	redirects: {
 		'/concepts/9-genai-machine-learning/embedding-model/': '/concepts/9-genai-machine-learning/embedding-models/',
