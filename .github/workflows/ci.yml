@@ -24,7 +24,7 @@ jobs:
       run: npm install
 
     - name: Check Mermaid Syntax
-      run: node check_mermaid_syntax.js
+      run: node scripts/check_mermaid_syntax.js
 
     - name: Check Internal Links
       run: node scripts/check_broken_links.js

@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
-    "start": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
-    "build": "node generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build",
+    "dev": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
+    "start": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
+    "build": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky"

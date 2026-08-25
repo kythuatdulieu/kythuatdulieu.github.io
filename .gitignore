@@ -5,6 +5,12 @@ dist/
 
 # dependencies
 node_modules/
+.npm-cache/
+
+# local runtime artifacts
+__pycache__/
+*.py[cod]
+*.bak
 
 # logs
 npm-debug.log*

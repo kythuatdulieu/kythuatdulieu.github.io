@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const rootDir = path.join(__dirname, '..');
 
 function getFiles(dir, files = []) {
     const fileList = fs.readdirSync(dir);
@@ -15,8 +16,8 @@ function getFiles(dir, files = []) {
 }
 
 function updateGlossary() {
-    const conceptsDir = path.join(__dirname, 'src', 'content', 'docs', 'concepts');
-    const outPath = path.join(__dirname, 'public', 'concepts.json');
+    const conceptsDir = path.join(rootDir, 'src', 'content', 'docs', 'concepts');
+    const outPath = path.join(rootDir, 'public', 'concepts.json');
     
     if (!fs.existsSync(conceptsDir)) {
         console.warn('Concepts directory not found.');
@@ -41,7 +42,7 @@ function updateGlossary() {
 
     mdFiles.forEach(file => {
         const slug = path.basename(file, '.md');
-        const relPath = path.relative(path.join(__dirname, 'src', 'content', 'docs'), file);
+        const relPath = path.relative(path.join(rootDir, 'src', 'content', 'docs'), file);
         const urlPath = '/' + relPath.replace(/\.md$/, '/').replace(/\\/g, '/');
 
         let key = slug.replace(/-/g, ' ');
@@ -118,7 +119,7 @@ function updateGlossary() {
 // Update concepts.json before building backlinks
 updateGlossary();
 
-const docsDir = path.join(__dirname, 'src', 'content', 'docs');
+const docsDir = path.join(rootDir, 'src', 'content', 'docs');
 const files = getFiles(docsDir);
 
 const backlinks = {};
@@ -191,7 +192,7 @@ files.forEach(file => {
 
 // Also add implicit concept backlinks by reading concepts.json
 try {
-    const conceptsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'concepts.json'), 'utf8')).concepts;
+    const conceptsData = JSON.parse(fs.readFileSync(path.join(rootDir, 'public', 'concepts.json'), 'utf8')).concepts;
     const sortedKeys = Object.keys(conceptsData).sort((a, b) => b.length - a.length);
     const escapedKeys = sortedKeys.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
     const pattern = `(^|[^\\p{L}\\p{N}_])(${escapedKeys.join('|')})(?=[^\\p{L}\\p{N}_]|$)`;
@@ -240,5 +241,5 @@ try {
     console.error("Error processing implicit concepts for backlinks:", e);
 }
 
-fs.writeFileSync(path.join(__dirname, 'public', 'backlinks.json'), JSON.stringify(backlinks, null, 2));
+fs.writeFileSync(path.join(rootDir, 'public', 'backlinks.json'), JSON.stringify(backlinks, null, 2));
 console.log('Backlinks generated successfully.');

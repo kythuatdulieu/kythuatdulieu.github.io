@@ -1,1 +1,1 @@
-node check_mermaid_syntax.js
+node scripts/check_mermaid_syntax.js
