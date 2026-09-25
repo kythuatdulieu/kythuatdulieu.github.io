@@ -4607,7 +4607,7 @@
       "C": "Dùng `CTAS` tạo bảng dẫn xuất rồi lên lịch job propagate thay đổi.",
       "D": "Thêm nhánh ghi song song trong pipeline để cập nhật bảng sales với schema khác."
     },
-    "explanation_vi": "View chọn subset cột và alias tên đáp ứng nhu cầu chia sẻ dữ liệu mà không cần bản sao dữ liệu mới; đây là giải pháp đơn giản nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "Đáp án **A**. Tạo một view trên bảng marketing rồi chỉ đưa vào những cột đã được duyệt. Dùng alias để đổi các tên cột sang quy ước chung của nhóm Sales. Cách này xử lý đồng thời cả hai yêu cầu: giới hạn dữ liệu được chia sẻ và chuẩn hóa tên trường.\n\nMột view thông thường lưu định nghĩa truy vấn, không tạo thêm bản sao vật lý của các dòng dữ liệu. Vì vậy, giải pháp tránh phải duy trì đồng bộ một bảng thứ hai hoặc bổ sung job/pipeline. `DEEP CLONE`, `CTAS` và nhánh ghi song song đều tạo thêm dữ liệu hoặc quy trình vận hành cần theo dõi; chúng phức tạp hơn khi mục tiêu chỉ là chọn cột và đổi tên.\n\n*(Đáp án được đối chiếu với yêu cầu đề bài và tài liệu tạo view của Databricks.)*",
     "page": null,
     "image": "img/q_155.jpg",
     "references": [
@@ -8302,7 +8302,8 @@
         "title": "What are deletion vectors?",
         "url": "https://docs.databricks.com/en/tables/features/deletion-vectors"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 289,
@@ -8420,7 +8421,8 @@
         "title": "Use cluster-scoped init scripts",
         "url": "https://docs.databricks.com/en/init-scripts/cluster-scoped"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 293,
@@ -8590,7 +8592,8 @@
         "title": "Auto Loader binary file support",
         "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/any-file"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 299,

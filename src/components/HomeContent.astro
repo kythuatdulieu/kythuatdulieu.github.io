@@ -1,8 +1,5 @@
 ---
-// Trang chủ theo bản thiết kế "Trang chủ v6" (Thiết kế lại trang chủ handbook):
-// dải 4 lối vào full-width dưới header (Luyện chứng chỉ được highlight),
-// Mục lục 3 cột đánh màu theo domain, chips lọc gộp 1 hàng,
-// Mới cập nhật 2 cột kèm tag domain, footer band.
+// Trang chủ hướng người học: bắt đầu theo lộ trình, tra cứu kiến thức và luyện đề.
 import { getCollection } from 'astro:content';
 import { categories, domains as DOMAINS, levels as LEVELS } from '../config/taxonomy.js';
 import { quizMeta } from '../config/quizzes.js';
@@ -45,8 +42,8 @@ const cards = categories.map((cat, i) => {
   if (domainList.length === 0) domainList = DEFAULT_DOMAINS[cat.slug] || ['DE'];
   const links = inCat
     .slice()
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 8)
+    .sort((a, b) => a.data.title.localeCompare(b.data.title, 'vi'))
+    .slice(0, 4)
     .map((d) => ({ label: shortTitle(d.data.title), href: `/${d.slug}/` }));
   return {
     number: i + 1,
@@ -100,12 +97,46 @@ const updated = targetFolders.map(folder => {
 
 <div class="home not-content">
   <main class="home-main">
+    <section class="home-hero" aria-labelledby="home-heading">
+      <div class="hero-copy">
+        <p class="hero-kicker">SỔ TAY MỞ · DÀNH CHO NGƯỜI HỌC DATA</p>
+        <h1 id="home-heading">Học kỹ thuật dữ liệu bằng tiếng Việt</h1>
+        <p class="hero-description">Từ SQL, Python và hệ thống phân tán đến Spark, Kafka, lakehouse và data platform. Học theo lộ trình, hiểu qua ví dụ và tự kiểm tra bằng bộ đề thực hành.</p>
+        <div class="hero-actions">
+          <a class="hero-primary" href="/learning-paths/core-paths/beginner-de/">Bắt đầu học Data Engineering <span aria-hidden="true">→</span></a>
+          <a class="hero-secondary" href="/quizzes/">Luyện đề chứng chỉ</a>
+        </div>
+        <p class="hero-stats"><span><strong>{totalConcepts}</strong> bài kiến thức</span><span><strong>{quizCount}</strong> bộ đề</span><span>Miễn phí · đọc mở</span></p>
+      </div>
+      <aside class="hero-roadmap" aria-label="Lộ trình học gợi ý">
+        <span class="roadmap-label">LỘ TRÌNH GỢI Ý</span>
+        <ol>
+          <li><span>01</span><div><strong>Nắm nền tảng</strong><small>SQL · Python · Linux</small></div></li>
+          <li><span>02</span><div><strong>Xử lý dữ liệu</strong><small>Batch · Spark · Kafka</small></div></li>
+          <li><span>03</span><div><strong>Xây hệ thống</strong><small>Data lake · orchestration · quality</small></div></li>
+        </ol>
+        <a href="/learning-paths/overview/">Xem toàn bộ lộ trình <span aria-hidden="true">↗</span></a>
+      </aside>
+    </section>
+
+    <nav class="entry-grid" aria-label="Lối vào nội dung">
+      <a class="entry-card" href="/concepts/"><span class="entry-icon" aria-hidden="true">⌘</span><span><strong>Tra cứu kiến thức</strong><small>Khái niệm và công nghệ dữ liệu</small></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
+      <a class="entry-card entry-card-featured" href="/quizzes/"><span class="entry-icon" aria-hidden="true">✓</span><span><strong>Luyện chứng chỉ</strong><small>AWS · Azure · Databricks · GCP</small></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
+      <a class="entry-card" href="/projects/"><span class="entry-icon" aria-hidden="true">▧</span><span><strong>Làm dự án thực tế</strong><small>Pipeline đầu cuối và system design</small></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
+      <a class="entry-card" href="/interview/overview/"><span class="entry-icon" aria-hidden="true">◎</span><span><strong>Ôn phỏng vấn</strong><small>SQL · Spark · thiết kế pipeline</small></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
+    </nav>
+
     <div class="toc-head">
-      <h2 class="serif-h">Mục lục</h2>
+      <div><p class="section-kicker">BẢN ĐỒ KIẾN THỨC</p><h2 class="serif-h">Chọn chủ đề để học</h2></div>
       <div class="toc-actions">
-        <a href="/quizzes/" class="cert-btn" title="Bộ đề Databricks, AWS, Azure, GCP">🔥 Luyện thi Certificate</a>
         <a href="/concepts/" class="toc-link">Tất cả bài viết →</a>
       </div>
+    </div>
+
+    <div class="topic-tools">
+      <label for="category-search">Tìm chủ đề</label>
+      <input id="category-search" type="search" placeholder="Ví dụ: Spark, Kafka, SQL…" autocomplete="off" aria-controls="cat-grid">
+      <span id="category-count" aria-live="polite">{cards.length} nhóm kiến thức</span>
     </div>
 
 
@@ -117,7 +148,7 @@ const updated = targetFolders.map(folder => {
             <h3 class="cat-title"><a href={`/concepts/#${c.slug}`}>{c.title}</a></h3>
           </div>
           <div class="cat-links">
-            {c.links.map((l, idx) => <a class="ticker-item" href={l.href} style={idx >= 3 ? 'display: none;' : ''}>{l.label}</a>)}
+            {c.links.map((l) => <a class="ticker-item" href={l.href}>{l.label}</a>)}
             <a class="cat-all" href={`/concepts/#${c.slug}`}>Xem tất cả →</a>
           </div>
         </section>
@@ -173,6 +204,51 @@ const updated = targetFolders.map(folder => {
 
   /* ---- Khối chính ---- */
   .home-main { max-width: 1040px; margin: 0 auto; padding: var(--space-7, 3rem) 1.5rem var(--space-9, 6rem); }
+  .home-hero {
+    display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(260px, .8fr); gap: clamp(2rem, 6vw, 5rem);
+    align-items: center; padding: clamp(1.5rem, 4vw, 3.25rem); margin: 0 0 1.25rem;
+    border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: 1.5rem;
+    background: radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--sl-color-accent) 12%, transparent), transparent 55%), var(--surface-card, var(--sl-color-bg-nav));
+  }
+  .hero-kicker, .section-kicker, .roadmap-label { margin: 0 0 .75rem; color: var(--sl-color-text-accent); font-family: var(--font-mono); font-size: .72rem; font-weight: 700; letter-spacing: .1em; }
+  .home-hero h1 { max-width: 15ch; margin: 0; color: var(--text-heading, var(--sl-color-white)); font-size: clamp(2.3rem, 5vw, 3.65rem); font-weight: 750; letter-spacing: -.045em; line-height: 1.08; }
+  .hero-description { max-width: 56ch; margin: 1.25rem 0 0; color: var(--text-muted, var(--sl-color-gray-3)); font-size: clamp(1rem, 1.6vw, 1.12rem); line-height: 1.7; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.6rem; }
+  .hero-primary, .hero-secondary { min-height: 2.9rem; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .65rem 1rem; border: 1px solid var(--sl-color-accent); border-radius: 999px; font-size: .92rem; font-weight: 650; text-decoration: none; transition: transform .16s ease, background .16s ease; }
+  .hero-primary { background: var(--sl-color-accent); color: var(--sl-color-text-invert); }
+  .hero-primary:hover { transform: translateY(-1px); color: var(--sl-color-text-invert); }
+  .hero-secondary { color: var(--sl-color-text-accent); background: transparent; }
+  .hero-secondary:hover { background: var(--sl-color-accent-low); text-decoration: none; }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: .55rem 1.3rem; margin: 1.5rem 0 0; color: var(--text-faint, var(--sl-color-gray-4)); font-size: .8rem; }
+  .hero-stats strong { color: var(--text-body, var(--sl-color-text)); }
+  .hero-roadmap { padding: 1.25rem; border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: 1rem; background: color-mix(in srgb, var(--surface-card, var(--sl-color-bg-nav)) 88%, var(--sl-color-accent-low)); }
+  .roadmap-label { display: block; font-size: .66rem; }
+  .hero-roadmap ol { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .hero-roadmap li { display: flex; align-items: flex-start; gap: .8rem; padding: .85rem 0; border-bottom: 1px solid var(--border-default, var(--sl-color-hairline)); }
+  .hero-roadmap li > span { color: var(--sl-color-text-accent); font-family: var(--font-mono); font-size: .75rem; font-weight: 700; }
+  .hero-roadmap li div { display: grid; gap: .22rem; }
+  .hero-roadmap li strong { color: var(--text-body, var(--sl-color-text)); font-size: .9rem; }
+  .hero-roadmap li small { color: var(--text-faint, var(--sl-color-gray-4)); font-size: .78rem; }
+  .hero-roadmap > a { display: inline-flex; gap: .45rem; margin-top: .95rem; color: var(--sl-color-text-accent); font-size: .85rem; font-weight: 600; text-decoration: none; }
+  .entry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin: 0 0 3.25rem; }
+  .entry-card { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; align-items: center; gap: .65rem; min-height: 5rem; padding: .8rem; border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: .85rem; color: var(--text-body, var(--sl-color-text)); background: var(--surface-card, var(--sl-color-bg-nav)); text-decoration: none; transition: border-color .16s ease, transform .16s ease; }
+  .entry-card:hover { border-color: var(--sl-color-accent); transform: translateY(-2px); text-decoration: none; }
+  .entry-card-featured { border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-hairline)); background: color-mix(in srgb, var(--sl-color-accent-low) 40%, var(--surface-card, var(--sl-color-bg-nav))); }
+  .entry-icon { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: .7rem; color: var(--sl-color-text-accent); background: var(--sl-color-accent-low); font-size: 1.15rem; }
+  .entry-card > span:nth-child(2) { display: grid; gap: .28rem; min-width: 0; }
+  .entry-card strong { font-size: .84rem; line-height: 1.35; }
+  .entry-card small { color: var(--text-faint, var(--sl-color-gray-4)); font-size: .7rem; line-height: 1.4; }
+  .entry-arrow { color: var(--sl-color-text-accent); font-size: .9rem; }
+  .section-kicker { margin-bottom: .35rem; font-size: .65rem; }
+  .topic-tools { display: grid; grid-template-columns: auto minmax(220px, 420px) 1fr; align-items: center; gap: .75rem; margin: 1.15rem 0 1.5rem; }
+  .topic-tools label { color: var(--text-muted, var(--sl-color-gray-3)); font-size: .84rem; font-weight: 600; }
+  .topic-tools input { width: 100%; min-height: 2.7rem; padding: .6rem .85rem; border: 1px solid var(--border-default, var(--sl-color-hairline)); border-radius: .7rem; color: var(--text-body, var(--sl-color-text)); background: var(--surface-card, var(--sl-color-bg-nav)); font: inherit; font-size: .88rem; }
+  .topic-tools input:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+  #category-count { justify-self: end; color: var(--text-faint, var(--sl-color-gray-4)); font-size: .78rem; }
+  @media (max-width: 900px) { .entry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 720px) { .home-hero { grid-template-columns: 1fr; gap: 1.5rem; } .home-hero h1 { max-width: 18ch; } .topic-tools { grid-template-columns: 1fr auto; } .topic-tools input { grid-column: 1 / -1; grid-row: 2; } }
+  @media (max-width: 480px) { .home-main { padding-left: 1rem; padding-right: 1rem; } .entry-grid { gap: .5rem; } .entry-card { grid-template-columns: 1.8rem minmax(0, 1fr); gap: .5rem; padding: .65rem; } .entry-icon { width: 1.8rem; height: 1.8rem; } .entry-arrow { display: none; } .entry-card small { font-size: .67rem; } }
+  @media (prefers-reduced-motion: reduce) { .hero-primary, .hero-secondary, .entry-card { transition: none; } .hero-primary:hover, .entry-card:hover { transform: none; } }
   .serif-h {
     margin: 0; font-family: var(--font-serif); font-size: var(--text-xl, 1.75rem);
     font-weight: 600; letter-spacing: -0.015em; color: var(--text-heading, var(--sl-color-white));
@@ -320,67 +396,20 @@ const updated = targetFolders.map(folder => {
 
 <script is:inline>
   (function () {
-    const cats = document.querySelectorAll('.cat');
-    if (!cats.length) return;
-    
-    let currentCatIdx = 0;
-    let elapsed = 0;
-    let isHovering = false;
-    const intervalTime = 2500;
-    const tick = 100;
+    const input = document.getElementById('category-search');
+    const count = document.getElementById('category-count');
+    const cards = Array.from(document.querySelectorAll('.cat'));
+    if (!input || !count || !cards.length) return;
 
-    const grid = document.getElementById('cat-grid');
-    if (grid) {
-      grid.addEventListener('mouseenter', () => isHovering = true);
-      grid.addEventListener('mouseleave', () => isHovering = false);
-    }
-    
-    cats[currentCatIdx].classList.add('is-next');
-    
-    setInterval(() => {
-      if (isHovering) return;
-      
-      elapsed += tick;
-      if (elapsed >= intervalTime) {
-        elapsed = 0;
-        const cat = cats[currentCatIdx];
-        const catLinks = cat.querySelector('.cat-links');
-        
-        if (catLinks) {
-          const items = Array.from(catLinks.querySelectorAll('.ticker-item'));
-          
-          if (items.length > 3) {
-            const first = items[0];
-            const fourth = items[3];
-            const catAllBtn = catLinks.querySelector('.cat-all');
-            
-            first.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            first.style.opacity = '0';
-            first.style.transform = 'translateX(-10px)';
-            
-            setTimeout(() => {
-              first.style.display = 'none';
-              first.style.transform = 'none';
-              catLinks.insertBefore(first, catAllBtn);
-              
-              fourth.style.transition = 'none';
-              fourth.style.opacity = '0';
-              fourth.style.transform = 'translateX(10px)';
-              fourth.style.display = 'flex';
-              
-              void fourth.offsetWidth;
-              
-              fourth.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-              fourth.style.opacity = '1';
-              fourth.style.transform = 'none';
-            }, 300);
-          }
-        }
-        
-        cat.classList.remove('is-next');
-        currentCatIdx = (currentCatIdx + 1) % cats.length;
-        cats[currentCatIdx].classList.add('is-next');
-      }
-    }, tick);
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLocaleLowerCase('vi');
+      let visible = 0;
+      cards.forEach((card) => {
+        const matches = !query || card.textContent.toLocaleLowerCase('vi').includes(query);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      count.textContent = query ? `${visible}/${cards.length} nhóm kiến thức` : `${cards.length} nhóm kiến thức`;
+    });
   })();
 </script>

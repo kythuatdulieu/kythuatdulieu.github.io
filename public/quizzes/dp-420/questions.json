@@ -102,7 +102,7 @@
       "E": "a region being available"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi kết nối với một tài khoản phân phối toàn cầu, SDK tối ưu hóa kết nối dựa trên:\n\n*   **Tại sao chọn B và D là đúng?**\n    *   **B (regional latency):** SDK đo lường thời gian phản hồi (độ trễ mạng) từ máy khách đến các vùng chứa bản sao dữ liệu và định tuyến các truy vấn đến vùng có độ trễ thấp nhất để nâng cao hiệu năng.\n    *   **D (cấu hình PreferredLocations):** Người phát triển có thể xác định danh sách các vùng ưu tiên qua cấu hình chính sách kết nối trong SDK (như `PreferredLocations` hoặc `ApplicationPreferredRegions`). SDK sẽ chọn vùng hoạt động đầu tiên có trong danh sách này để định tuyến yêu cầu.\n*   **Tại sao các tùy chọn khác sai?**\n    *   **A và C (consistency level):** Mức độ nhất quán cấu hình chỉ quyết định cơ chế đồng bộ dữ liệu giữa các replica chứ không tham gia vào thuật toán định tuyến vật lý của SDK.\n    *   **E (vùng khả dụng):** Sự khả dụng của vùng chỉ là điều kiện cơ bản để thực hiện yêu cầu chứ không giúp tối ưu hóa việc định tuyến giữa các vùng đang chạy ổn định.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -309,7 +309,7 @@
       "E": "intermittent traffic"
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Chế độ Serverless của Azure Cosmos DB được thiết kế để tiết kiệm chi phí cho các loại tải công việc cụ thể:\n\n*   **Tại sao chọn B và E là đúng?**\n    *   **B (tỷ lệ lưu lượng trung bình so với lưu lượng đỉnh thấp):** Nếu lưu lượng truy cập trung bình thấp nhưng thỉnh thoảng xuất hiện các đỉnh bùng nổ ngắn hạn, Provisioned Throughput yêu cầu bạn phải cấu hình RU/s cao để phục vụ đỉnh bùng nổ, gây lãng phí chi phí khi rảnh rỗi. Serverless giúp bạn chỉ phải trả tiền cho số lượng yêu cầu thực tế phát sinh.\n    *   **E (lưu lượng truy cập ngắt quãng - intermittent traffic):** Đối với các ứng dụng hoạt động không liên tục (ví dụ: chỉ chạy ban ngày hoặc thỉnh thoảng mới có người dùng), Serverless giúp bạn không bị tính phí khi hệ thống ở trạng thái rảnh rỗi.\n*   **Tại sao các tùy chọn khác sai?**\n    *   **A (geo-distribution):** Serverless hiện tại không hỗ trợ tài khoản đa vùng phân phối địa lý.\n    *   **C (25 TB dữ liệu):** Các container serverless bị giới hạn dung lượng lưu trữ tối đa thấp hơn nhiều, không phù hợp với dữ liệu quy mô lớn 25 TB.\n    *   **D (high average-to-peak traffic ratio):** Tỷ lệ trung bình so với đỉnh cao cho thấy tải công việc ổn định, liên tục. Đối với loại tải này, Provisioned Throughput sẽ có chi phí rẻ hơn và hiệu năng tốt hơn so với Serverless.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1019,7 +1019,7 @@
       "F": "Configure the same lease container configuration for all the instances"
     },
     "answer": "ACF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để nhiều instance của một ứng dụng web cùng chia sẻ tải xử lý change feed của một container bằng cách sử dụng Change Feed Processor của Azure Cosmos DB SDK:\n* **Cấu hình cùng một tên bộ xử lý (processor name)** (Lựa chọn A): Để chúng được nhận diện thuộc cùng một nhóm logic (workflow).\n* **Cấu hình tên thực thể khác nhau cho từng thực thể (instance name)** (Lựa chọn C): Mỗi instance phải có một tên gọi duy nhất để thư viện phân bổ và chuyển giao quyền xử lý (lease) giữa các instance.\n* **Cấu hình cùng một thông tin container chứa lease (lease container)** (Lựa chọn F): Để tất cả các instance ghi nhận và đồng bộ hóa trạng thái phân vùng cùng nhau.\n\nDo đó, các hành động cần thực hiện là **A, C, F**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1139,7 +1139,7 @@
       "F": "Verify"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để cho phép Azure Cosmos DB sử dụng khóa do khách hàng quản lý (CMK) trong Azure Key Vault cho việc mã hóa dữ liệu, tài khoản Azure Cosmos DB yêu cầu 3 quyền cụ thể trên Key Vault:\n1. **Get**: Để lấy thông tin khóa.\n2. **Wrap Key**: Để mã hóa Khóa mã hóa dữ liệu (DEK).\n3. **Unwrap Key**: Để giải mã Khóa mã hóa dữ liệu (DEK).\n\nTrong các tùy chọn được cung cấp, **Wrap Key** (Lựa chọn A) và **Get** (Lựa chọn B) là hai quyền hợp lệ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1197,7 +1197,7 @@
       "D": "Queries will run cross-partition"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Nếu chọn `orderDate` (ngày đặt hàng) làm partition key:\n* **C (Sẽ luôn có một phân vùng bị nóng - hot partition)**: Đúng. Vì hệ thống tiếp nhận khoảng một triệu đơn hàng mỗi ngày, toàn bộ các đơn hàng được tạo trong ngày hôm nay sẽ có cùng giá trị partition key `orderDate`, dẫn đến việc ghi dữ liệu mới chỉ tập trung vào một phân vùng logic duy nhất tại thời điểm đó, tạo ra hot partition.\n* **D (Các truy vấn chạy cross-partition)**: Đúng. Khách hàng xem lịch sử đơn hàng của họ (thường truy vấn theo `customerId`). Vì đơn hàng của một khách hàng được đặt ở các ngày khác nhau, chúng sẽ có các giá trị `orderDate` khác nhau và phân tán ở nhiều phân vùng khác nhau. Do đó, truy vấn lịch sử đơn hàng theo khách hàng buộc phải quét qua nhiều phân vùng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1285,7 +1285,7 @@
       "E": "Associate a session token to the user account"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Mức độ nhất quán Session được áp dụng mặc định ở phạm vi kết nối của client. Nếu người dùng chuyển đổi thiết bị hoặc sử dụng các phiên ứng dụng khác nhau, ứng dụng sẽ khởi tạo các client mới và không tự động kế thừa Session Token cũ, dẫn đến mất tính nhất quán giữa các thiết bị.\n\nĐể giải quyết vấn đề này mà không thay đổi mức độ nhất quán của toàn bộ tài khoản (điều này sẽ ảnh hưởng đến 5 ứng dụng khác):\n* **Lựa chọn E (Liên kết một token phiên với tài khoản người dùng)**: Ta cần lưu trữ và liên kết Session Token phát sinh từ các thao tác ghi với tài khoản người dùng (ở cơ sở dữ liệu ngoài hoặc cache tập trung).\n* **Lựa chọn D (Cung cấp một token phiên đã lưu khi thực hiện các yêu cầu đọc)**: Khi người dùng thực hiện yêu cầu đọc từ bất kỳ thiết bị nào khác, ứng dụng sẽ lấy Session Token đã lưu đó và truyền vào tùy chọn yêu cầu để yêu cầu Cosmos DB trả về phiên bản dữ liệu tương ứng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1378,7 +1378,7 @@
       "E": "Change the consistency level of requests to strong."
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để sử dụng bộ đệm tích hợp (Integrated Cache) của Azure Cosmos DB, bạn cần cấu hình hai yếu tố:\n\n* **Cấu hình Endpoint Dedicated Gateway**: Bộ đệm tích hợp chỉ khả dụng thông qua Dedicated Gateway. Do đó, bạn phải sửa đổi endpoint kết nối của Client SDK sang Dedicated Gateway Endpoint dạng `*.sqlx.cosmos.azure.com` (**Đáp án C**).\n* **Mức độ nhất quán phù hợp**: Bộ đệm tích hợp chỉ hỗ trợ các yêu cầu đọc có mức độ nhất quán là **Session** hoặc **Eventual**. Các mức nhất quán khác như Strong, Bounded Staleness, và Consistent Prefix sẽ tự động bỏ qua bộ đệm và đi thẳng tới cơ sở dữ liệu backend. Vì vậy, ta cần thay đổi mức độ nhất quán của các yêu cầu từ Consistent Prefix sang Session (**Đáp án A**).\n* Lưu ý thêm là bạn cũng phải sử dụng chế độ kết nối **Gateway mode** (chứ không phải Direct mode) để đi qua Dedicated Gateway.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1645,7 +1645,7 @@
       "E": "In an Apache Spark pool in Azure Synapse, create a table that uses cosmos.oltp as the data source."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để chạy các tác vụ phân tích lớn (OLAP) mà hoàn toàn không ảnh hưởng đến hiệu suất giao dịch thời gian thực (OLTP) của các ứng dụng web:\n\n* Bạn cần bật **Azure Synapse Link** trên tài khoản và kích hoạt **Analytical Store (Kho lưu trữ phân tích)** trên các container của Cosmos DB (**Đáp án D**). Khi kích hoạt, dữ liệu giao dịch sẽ tự động đồng bộ sang một kho lưu trữ dạng cột tách biệt, không tiêu tốn RU giao dịch của hệ thống chính.\n* Khi chạy các tác vụ Apache Spark trên Azure Synapse, bạn cần tạo bảng liên kết trỏ tới kho lưu trữ phân tích này bằng cách cấu hình nguồn dữ liệu là **cosmos.olap** (**Đáp án A**), thay vì dùng `cosmos.oltp` (vốn sẽ truy vấn trực tiếp vào container giao dịch và làm hao hụt RU của web app).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1913,7 +1913,7 @@
       "D": "Configure the trigger for each function to use the same leaseCollectionPrefix"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi bạn thiết lập nhiều hàm Azure Functions cùng lắng nghe sự kiện Change Feed từ cùng một container nguồn (ở đây là `con-product`), mỗi hàm cần duy trì một trạng thái đọc độc lập để tránh xung đột dữ liệu và bỏ sót sự kiện.\n\n*   **Chia sẻ cùng một container lease (`leaseCollectionName` giống nhau - Lựa chọn B):** Để tiết kiệm chi phí và tránh việc phải tạo nhiều container chứa lease riêng biệt (mỗi container tối thiểu tiêu tốn 400 RU/s), Cosmos DB cho phép các hàm dùng chung một container lease duy nhất.\n*   **Phân biệt bằng tiền tố lease (`leaseCollectionPrefix` khác nhau - Lựa chọn A):** Nhằm ngăn chặn các hàm ghi đè dữ liệu trạng thái của nhau trong container lease dùng chung, bạn phải chỉ định một tiền tố khác nhau cho mỗi hàm. Điều này giúp Cosmos DB phân biệt được phân vùng logic nào đang được xử lý bởi hàm nào.\n\nDo đó, hai hành động đúng cần thực hiện là **A** và **B**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1942,7 +1942,7 @@
       "D": "static"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi lựa chọn một khóa phân vùng (partition key) tối ưu cho container trong Azure Cosmos DB, chúng ta cần cân nhắc các tiêu chí sau để giảm thiểu kích thước phân vùng vật lý và công sức bảo trì:\n\n*   **Độ phong phú cao (High Cardinality - Lựa chọn B):** Một khóa phân vùng có độ phong phú cao (chứa nhiều giá trị duy nhất khác nhau, ví dụ: `productId` thay vì `category`) sẽ giúp phân phối dữ liệu đều đặn hơn trên các phân vùng vật lý. Điều này giúp ngăn ngừa hiện tượng \"phân vùng nóng\" (hot partition) và giữ cho kích thước của mỗi phân vùng logic ở mức tối thiểu.\n*   **Tính chất tĩnh (Static - Lựa chọn D):** Azure Cosmos DB không cho phép thay đổi trực tiếp giá trị của khóa phân vùng trên tài liệu hiện có. Nếu muốn thay đổi khóa phân vùng, bạn phải xóa tài liệu cũ và tạo mới. Do đó, ưu tiên chọn một thuộc tính có giá trị tĩnh (không đổi hoặc cực kỳ ít thay đổi theo thời gian) sẽ giúp giảm thiểu tối đa các tác vụ ghi/xóa phức tạp và công sức bảo trì.\n\nDo đó, hai đặc tính cần ưu tiên lựa chọn là **High Cardinality** và **Static**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2002,7 +2002,7 @@
       "F": "Create an Azure Synapse pipeline."
     },
     "answer": "ABD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xây dựng một hệ thống đáp ứng đầy đủ cả 3 yêu cầu trên, chúng ta cần phối hợp các tính năng của Azure Cosmos DB và Azure Synapse Analytics:\n\n*   **Kích hoạt Azure Synapse Link (Lựa chọn A):** Đây là công nghệ phân tích lai HTAP cho phép đồng bộ hóa dữ liệu từ kho lưu trữ giao dịch (transactional store) sang kho lưu trữ phân tích (analytical store) theo thời gian thực mà không ảnh hưởng đến hiệu năng xử lý giao dịch.\n*   **Thiết lập `analyticalTTL` thành 6 tháng (Lựa chọn B):** Thiết lập `analyticalTTL` (Thời gian tồn tại của dữ liệu phân tích) trên container giúp chỉ giữ lại dữ liệu trong kho phân tích trong vòng 6 tháng gần nhất, tự động xóa các dữ liệu cũ hơn để tối ưu chi phí lưu trữ.\n*   **Tạo Azure Synapse Linked Service (Lựa chọn D):** Để thực hiện các truy vấn Spark và đảm bảo tiêu chí \"chỉ trả tiền cho tài nguyên tính toán khi chạy truy vấn\", bạn cần liên kết Cosmos DB với Azure Synapse Analytics thông qua Linked Service. Sau đó, bạn sử dụng Azure Synapse Serverless Spark Pools (hoặc Serverless SQL Pools) để truy vấn dữ liệu. Với mô hình Serverless này, bạn chỉ bị tính phí dựa trên lượng dữ liệu được quét trong quá trình chạy truy vấn cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2119,7 +2119,7 @@
       "E": "Increase the maximum throughput."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lỗi `HTTP 429` (Too Many Requests / Request Rate Too Large) xuất hiện khi ứng dụng gửi số lượng yêu cầu vượt quá băng thông (RU/s) đã được cấp phát cho container.\n\n*   **Tăng băng thông tối đa (Lựa chọn E):** Bằng cách tăng giới hạn throughput tối đa (RU/s) của container (thủ công hoặc thông qua cấu hình Autoscale), hệ thống sẽ có nhiều tài nguyên hơn để xử lý các truy vấn đồng thời, trực tiếp loại bỏ lỗi 429.\n*   **Thêm logic thử lại trong ứng dụng khách (Lựa chọn D):** Cosmos DB SDK hỗ trợ cơ chế tự động thử lại khi gặp lỗi 429 dựa trên thông tin thời gian chờ được trả về trong header phản hồi (`x-ms-retry-after-ms`). Việc cấu hình hoặc thêm logic xử lý thử lại (retry logic) trong mã nguồn ứng dụng sẽ giúp ứng dụng vượt qua các đỉnh tải ngắn hạn một cách êm ái mà không báo lỗi về cho người dùng cuối.\n*   **Tại sao các lựa chọn khác sai:**\n    *   Thay đổi mức độ nhất quán sang `Strong` (Lựa chọn A) thậm chí có thể làm tăng chi phí RU và tăng độ trễ.\n    *   Triggers (Lựa chọn B và C) là các logic thực thi trong cơ sở dữ liệu khi có thay đổi dữ liệu, không có tác dụng kiểm soát lưu lượng yêu cầu hay giảm tải RU cho các truy vấn đọc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2266,7 +2266,7 @@
       "E": "Add retry logic to App1."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Mã lỗi HTTP 429 (Too Many Requests / Request rate is large) xuất hiện khi số lượng Request Units (RU) tiêu thụ vượt quá mức throughput (RU/s) đã được cấu hình cho container. Hai cách khắc phục chuẩn bao gồm:\n\n* **D. Tăng throughput được cung cấp của Container1**: Tăng giới hạn RU/s giúp container xử lý được nhiều yêu cầu đồng thời hơn, trực tiếp loại bỏ lỗi 429 khi lưu lượng truy cập tăng đột biến.\n* **E. Thêm cơ chế thử lại (retry logic) vào App1**: Khi gặp lỗi 429, ứng dụng sẽ thực hiện cơ chế chờ đợi và thử lại (back-off and retry). Điều này cải thiện độ tin cậy đối với người dùng cuối vì ứng dụng tự xử lý lỗi tạm thời này thay vì hiển thị thông báo lỗi trực tiếp.\n* **Các lựa chọn khác không tối ưu**: Việc chia nhỏ yêu cầu hoặc giảm kích thước yêu cầu có thể ảnh hưởng đến thiết kế hoặc hiệu năng xử lý logic của ứng dụng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3034,7 +3034,7 @@
       "D": "Update connectionString."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi bật tính năng ghi nhiều vùng (multi-region writes) trên tài khoản Azure Cosmos DB, để ứng dụng sử dụng SDK tận dụng được tính năng này, bạn cần cấu hình:\n- **Set UseMultipleWriteLocations to True**: Cho phép SDK thực hiện ghi trực tiếp lên vùng ghi cục bộ thay vì định tuyến tất cả các yêu cầu ghi về một vùng chính duy nhất.\n- **Set ApplicationRegion to the name of the deployed region**: Chỉ định vùng gần nhất nơi ứng dụng khách đang chạy (ví dụ: `East US` hoặc `West US`) để SDK tự động phát hiện và định tuyến cả thao tác đọc và ghi đến vùng đó nhằm giảm thiểu độ trễ địa lý.\n\n*(Đáp án được gợi ý bởi AI)*",

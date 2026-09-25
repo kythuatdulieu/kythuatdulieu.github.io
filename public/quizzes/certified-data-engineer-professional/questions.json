@@ -2806,7 +2806,7 @@
       "E": "Overwrite the table instead of Merge."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -3062,7 +3062,7 @@
       "E": "Create init scripts on DBFS."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -3335,7 +3335,7 @@
       "E": "BUCKETING"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -3523,7 +3523,7 @@
       "E": "Move files to a volume and read with SQL editor"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -3541,7 +3541,7 @@
       "E": "Choose a compute instance with more network bandwidth."
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -3758,7 +3758,7 @@
       "E": "Create a single notebook that uses dbutils.notebook.run() to call each step in sequence. Define a job on this orchestrator notebook and configure retries and notifications at the notebook level."
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": null,

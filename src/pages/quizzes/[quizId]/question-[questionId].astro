@@ -306,9 +306,6 @@ function parseMarkdown(markdownText) {
       <div class="question-header">
         <span class="question-badge" id="questionBadge">Question #{questionId}</span>
         <span class="topic-badge" id="topicBadge">Topic {question.topic}</span>
-        {question.page && (
-          <button class="icon-btn pdf-btn" id="btnPdf" data-page={question.page} title="Mở trang PDF gốc">PDF</button>
-        )}
       </div>
       
       <div class="question-text" id="questionText">
@@ -491,7 +488,6 @@ function parseMarkdown(markdownText) {
       const optionViTexts = document.querySelectorAll('.option-text-vi');
       const optionItems = document.querySelectorAll('.option-item');
       const explanationBox = document.getElementById('explanationBox');
-      const btnPdf = document.getElementById('btnPdf');
 
       let state = {
         userAnswers: {},
@@ -535,14 +531,6 @@ function parseMarkdown(markdownText) {
             showResults('VIEWED');
           });
         }
-      }
-
-      if (btnPdf) {
-        btnPdf.addEventListener('click', function() {
-          const page = btnPdf.getAttribute('data-page');
-          const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
-          window.open(`../${pdfPath}#page=${page}`, '_blank');
-        });
       }
 
       // Handle Option Click

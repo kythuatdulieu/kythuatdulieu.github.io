@@ -1075,7 +1075,7 @@
       "E": "Loosely coupled microservices"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để chứng minh sự tuân thủ (compliance) với các khung quy chuẩn pháp lý và bảo mật (ví dụ: SOC 2, ISO 27001, HIPAA), công ty cần chứng minh các yếu tố an toàn cốt lõi bao gồm:\n* **Bảo vệ dữ liệu (C)**: Đảm bảo dữ liệu nhạy cảm được mã hóa cả khi truyền tải (in transit) và khi lưu trữ (at rest).\n* **Phát hiện mối đe dọa (B)**: Đảm bảo có các công cụ giám sát, ghi nhật ký (logging) và phát hiện các hành vi bất thường hoặc nỗ lực xâm nhập hệ thống.\n\n* **Các lựa chọn khác:**\n  * **Auto scaling**, **Cost optimization**, và **Loosely coupled microservices** là các tính năng phục vụ mục đích vận hành kỹ thuật, hiệu năng và kinh tế, không phải các chỉ số chính để đánh giá sự tuân thủ bảo mật pháp lý.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1164,7 +1164,7 @@
       "E": "Ensure that the model's inference time is within the accepted limits."
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xây dựng AI có trách nhiệm (Responsible AI) và loại bỏ thiên vị trong quyết định tài chính:\n* **Phát hiện sự mất cân bằng trong dữ liệu (A)**: Giúp công ty phát hiện sớm xem dữ liệu lịch sử có chứa các quyết định thiên vị đối với một nhóm đối tượng cụ thể hay không.\n* **Đánh giá hành vi mô hình để tăng tính minh bạch (C)**: Giúp các nhà phát triển giải thích rõ ràng lý do tại sao một khách hàng nhận được ưu đãi chiết khấu cụ thể, từ đó tạo dựng niềm tin và sự kiểm soát.\n\n* **Các lựa chọn khác:**\n  * **Chạy mô hình thường xuyên (B)** hoặc **Đảm bảo thời gian suy luận nhanh (E)** là yếu tố hạ tầng và hiệu năng kỹ thuật, không liên quan đến giảm thiểu thiên vị hay tính có trách nhiệm.\n  * **ROUGE (D)**: Là thước đo đánh giá chất lượng tóm tắt văn bản dựa trên việc so sánh với văn bản gốc, không đo lường độ thiên vị và không thể đảm bảo độ chính xác 100% cho quyết định tài chính.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1286,7 +1286,7 @@
       "E": "Amazon Rekognition"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để thực hiện phân tích cảm xúc từ các bài đánh giá văn bản:\n* **Amazon Comprehend (B)**: Là dịch vụ xử lý ngôn ngữ tự nhiên (NLP) được tích hợp sẵn khả năng phân tích cảm xúc (Sentiment Analysis) cực kỳ chính xác từ văn bản.\n* **Amazon Bedrock (D)**: Cung cấp các mô hình ngôn ngữ lớn (LLM) có thể thực hiện tốt các nhiệm vụ hiểu ngôn ngữ nâng cao bao gồm cả phân tích cảm xúc thông qua prompt.\n\n* **Các lựa chọn khác:**\n  * **Amazon Lex**: Dùng để xây dựng chatbot hội thoại có tính năng nhận diện ý định (intent).\n  * **Amazon Polly**: Dịch vụ chuyển văn bản thành giọng nói (Text-to-Speech).\n  * **Amazon Rekognition**: Dùng để phân tích hình ảnh và video chứ không dùng cho văn bản đánh giá.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1756,7 +1756,7 @@
       "E": "Apply prompt engineering techniques."
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "* **Đưa các chỉ số đánh giá tính công bằng (fairness metrics) (Đáp án A)** và **Sửa đổi dữ liệu huấn luyện để giảm thiểu sự thiên vị (bias) (Đáp án C)** là các hành động cốt lõi của nguyên tắc Phát triển AI có trách nhiệm (Responsible AI). Chúng giúp đảm bảo rằng mô hình không tạo ra các kết quả kỳ thị, thiên vị hoặc không công bằng đối với bất kỳ nhóm nhân khẩu học hoặc danh mục tài liệu đặc thù nào.\n* **Các lựa chọn khác không chính xác vì:**\n  * **Điều chỉnh nhiệt độ (B)** hay **áp dụng prompt engineering (E)** chỉ là điều chỉnh phong cách/độ đa dạng của phản hồi đầu ra, không giúp loại bỏ tận gốc sự thiên vị hệ thống hay tính thiếu công bằng của mô hình.\n  * **Tránh quá khớp (D)** là một kỹ thuật tối ưu hóa hiệu suất của mô hình học máy truyền thống, không thuộc danh mục các phương pháp cốt lõi để thúc đẩy tính có trách nhiệm và công bằng xã hội của hệ thống AI.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3626,7 +3626,7 @@
       "E": "Amazon S3 Standard"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Các lựa chọn cụ thể:\n* **A. AWS CloudTrail**: Đúng. AWS CloudTrail ghi lại tất cả các hoạt động API cho Amazon Bedrock, bao gồm cả các cuộc gọi API để quản lý và suy luận (data events), giúp kiểm vết hoạt động một cách an toàn.\n* **D. Amazon S3 Intelligent-Tiering**: Đúng. S3 Intelligent-Tiering tự động tối ưu hóa chi phí lưu trữ bằng cách di chuyển dữ liệu giữa các tầng truy cập (access tiers) khi mô hình truy cập thay đổi mà không phát sinh chi phí vận hành hay phí truy xuất, phù hợp cho việc lưu trữ dài hạn (5 năm) với chi phí thấp nhất.\n* **B. Amazon CloudWatch**: Sai. Mặc dù CloudWatch có thể lưu trữ log nhưng chi phí lưu trữ log dài hạn (5 năm) trong CloudWatch Logs cao hơn nhiều so với Amazon S3.\n* **C. AWS Audit Manager**: Sai. Đây là dịch vụ giúp kiểm toán liên tục việc sử dụng AWS để đơn giản hóa đánh giá rủi ro và tuân thủ các tiêu chuẩn công nghiệp, không dùng để ghi nhận và lưu trữ trực tiếp API logs.\n* **E. Amazon S3 Standard**: Sai. S3 Standard có chi phí lưu trữ cao hơn so với S3 Intelligent-Tiering đối với dữ liệu lưu trữ dài hạn ít khi truy cập.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4236,7 +4236,7 @@
       "E": "AWS CloudTrail"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để giám sát liên tục và đánh giá sự tuân thủ (compliance) đối với các quy định ngành và chính sách nội bộ:\n\n* **AWS Audit Manager (A):** Giúp tự động hóa việc thu thập bằng chứng để đánh giá xem các tài nguyên và quy trình AWS của bạn có tuân thủ các tiêu chuẩn ngành, chính sách nội bộ và quy định hay không.\n* **AWS Config (B):** Cho phép bạn liên tục giám sát và ghi lại các cấu hình tài nguyên AWS của mình, đồng thời tự động đánh giá các cấu hình này so với các cấu hình mong muốn (thông qua các quy tắc Config rules), từ đó giúp đảm bảo tính tuân thủ.\n\nCác tùy chọn khác:\n* **C sai:** Amazon Inspector là dịch vụ quản lý lỗ hổng bảo mật tự động quét các tài nguyên như EC2, ECR và Lambda để phát hiện các lỗ hổng phần mềm hoặc phơi nhiễm mạng vô ý, không tập trung vào đánh giá tuân thủ chính sách/quy trình.\n* **D sai:** Amazon CloudWatch là dịch vụ giám sát và quan sát để thu thập số liệu, log và cảnh báo hiệu năng hệ thống.\n* **E sai:** AWS CloudTrail ghi lại các hoạt động gọi API của tài khoản AWS để phục vụ kiểm toán bảo mật và truy vết hoạt động, nhưng bản thân nó không tự động đánh giá hoặc quản lý sự tuân thủ so với các tiêu chuẩn quy định như Audit Manager hay Config.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4445,7 +4445,7 @@
       "E": "Response generation for the user"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để cung cấp trải nghiệm gần như thời gian thực cho người dùng cuối khi họ truy vấn, các tác vụ tính toán nặng và không phụ thuộc vào câu hỏi thời gian thực của người dùng cần được thực hiện trước ở chế độ ngoại tuyến (offline batch processing).\n\n* **A. Tạo các vector nhúng (embeddings) cho nội dung (Đúng):** Nội dung mới xuất bản hàng ngày có thể được xử lý định kỳ theo lô để chuyển đổi thành vector nhúng trước khi người dùng gửi câu hỏi.\n* **C. Tạo chỉ mục tìm kiếm (Đúng):** Sau khi có vector nhúng cho nội dung, việc xây dựng và cập nhật chỉ mục tìm kiếm (search index) cũng được thực hiện ngoại tuyến để chuẩn bị cho việc truy vấn nhanh chóng sau này.\n* **B. Tạo các vector nhúng cho câu truy vấn của người dùng (Sai):** Việc này phải được thực hiện trực tuyến (online/real-time) ngay khi người dùng nhập câu hỏi.\n* **D. Truy xuất nội dung liên quan (Sai):** Bước này cần thực hiện theo thời gian thực để tìm ra tài liệu phù hợp nhất với câu hỏi hiện tại của người dùng.\n* **E. Tạo phản hồi cho người dùng (Sai):** Việc sinh câu trả lời bằng mô hình LLM cần diễn ra ngay lập tức sau khi có câu hỏi và tài liệu truy xuất được để phản hồi cho người dùng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4683,7 +4683,7 @@
       "E": "Religion"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Amazon Bedrock Guardrails cho phép người dùng định cấu hình các bộ lọc an toàn nội dung (Content Filters) để phát hiện và chặn đứng các nội dung độc hại trên 6 danh mục tiêu chuẩn.\n\n* **A. Thù ghét (Hate) (Đúng):** Lọc các ngôn từ kích động thù địch, xúc phạm các nhóm người.\n* **C. Bạo lực (Violence) (Đúng):** Lọc các hành vi bạo lực, mô tả cảnh đẫm máu hoặc tự hại.\n* **B, D, E (Sai):** Các chủ đề như Chính trị, Cờ bạc, Tôn giáo không nằm trong 6 danh mục lọc nội dung an toàn mặc định của Guardrails (các danh mục mặc định gồm: Hate, Insults, Sexual, Violence, Misconduct/Harming, và Prompt Attack). Tuy nhiên, người dùng có thể chặn các chủ đề này thông qua tính năng 'Denied Topics' (Chủ đề bị cấm) bằng cách mô tả chủ đề thủ công, chứ chúng không phải là các danh mục nội dung an toàn được phân loại sẵn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5400,7 +5400,7 @@
       "E": "Use Amazon CloudWatch logs and metrics."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo dữ liệu tinh chỉnh mô hình nền tảng được an toàn, riêng tư và lưu trữ trong Vùng AWS nguồn một cách tối ưu chi phí:\n\n* **Sử dụng API Amazon Bedrock (Đáp án B)**: Amazon Bedrock cho phép bạn tinh chỉnh các mô hình nền tảng một cách riêng tư. Dữ liệu của bạn được mã hóa và không bao giờ được sử dụng để đào tạo các mô hình cơ sở hoặc chia sẻ với bên thứ ba.\n* **Sử dụng AWS PrivateLink và VPC (Đáp án C)**: AWS PrivateLink thiết lập kết nối riêng tư giữa VPC của bạn và Amazon Bedrock mà không cần lưu lượng truy cập đi qua internet công cộng, giúp nâng cao tính bảo mật và đảm bảo dữ liệu không bị rò rỉ ra ngoài.\n* **Các tùy chọn khác (A, D)** yêu cầu hạ tầng tại chỗ (on-premises) hoặc Outposts, cực kỳ tốn kém và không đáp ứng tiêu chí tối ưu chi phí. **Tùy chọn E** (CloudWatch) dùng để giám sát hơn là trực tiếp bảo vệ tính riêng tư của dữ liệu truyền tải.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6493,7 +6493,7 @@
       "E": "Transparency"
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khía cạnh cốt lõi của AI có trách nhiệm (Responsible AI):\n\n* **Fairness (Sự công bằng)**: Tập trung vào việc đảm bảo hệ thống không phân biệt đối xử hoặc thiên vị đối với bất kỳ nhóm người nào (như tuổi tác, giới tính, chủng tộc, quốc tịch) trong các quyết định tuyển dụng nhân sự.\n* **Transparency (Tính minh bạch)**: Giúp nhân viên và các ứng viên hiểu rõ cách hệ thống đưa ra đánh giá, mô hình hoạt động như thế nào và dữ liệu nào được sử dụng, đảm bảo tính giải trình và tin cậy.\n* *Tolerance, Flexibility,* và *Open source* không nằm trong các khía cạnh cốt lõi định hình nên Responsible AI của AWS (gồm có: Fairness, Explainability, Privacy & Security, Safety, Professional Expertise, Transparency).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -8844,7 +8844,7 @@
       "E": "Configure AWS Identity and Access Management (IAM) for authentication."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Giải thích:\n* **A. Bật khóa AWS KMS cho chỉ mục Amazon Q Business Enterprise**: AWS KMS cung cấp cơ chế mã hóa dữ liệu tĩnh (encryption at rest) cho chỉ mục tìm kiếm của Amazon Q Business, đảm bảo dữ liệu nhạy cảm được bảo vệ an toàn.\n* **E. Cấu hình AWS IAM để xác thực**: Cấu hình IAM giúp kiểm soát quyền truy cập chi tiết (xác thực và phân quyền) cho các vai trò và người dùng được phép kết nối với ứng dụng Amazon Q Business, ngăn chặn việc truy cập trái phép.\n* **B, C, D**: Đều không giúp tăng cường bảo mật hoặc xác thực đúng cách cho dữ liệu nội bộ của Amazon Q Business (Amazon Inspector dùng quét lỗ hổng bảo mật máy chủ/ứng dụng, còn cho phép truy cập công khai sẽ làm lộ dữ liệu).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -9289,7 +9289,7 @@
       "E": "SageMaker Debugger"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo tính minh bạch và khả năng giải thích của mô hình học máy trên AWS, doanh nghiệp nên sử dụng kết hợp:\n\n* **SageMaker Model Cards (Lựa chọn A):** Giúp tăng tính minh bạch bằng cách ghi lại và lưu trữ các thông tin chi tiết về vòng đời mô hình, bao gồm mục đích sử dụng, dữ liệu huấn luyện, kết quả đánh giá và các hạn chế của mô hình.\n* **SageMaker Clarify (Lựa chọn C):** Cung cấp khả năng giải thích mô hình (explainability) bằng cách giúp các kỹ sư học máy hiểu rõ mức độ đóng góp của từng đặc trưng đầu vào (feature attribution) đối với kết quả dự đoán của mô hình, đồng thời phát hiện các thiên vị (bias) trong dữ liệu và mô hình.\n\nCác lựa chọn khác:\n* **SageMaker Pipelines (Lựa chọn B):** Dùng để tự động hóa quy trình CI/CD cho ML.\n* **SageMaker Model Monitor (Lựa chọn D):** Dùng để theo dõi sự trôi dạt dữ liệu (data drift) của mô hình trên môi trường production.\n* **SageMaker Debugger (Lựa chọn E):** Dùng để gỡ lỗi các vấn đề trong quá trình huấn luyện.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -11085,7 +11085,7 @@
       "E": "Run an Amazon SageMaker AI labeling job."
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Yêu cầu của đề bài là gán nhãn cho lượng lớn dữ liệu giao dịch mẫu không bảo mật để tinh chỉnh mô hình.\n\n* **Tại sao C và E đúng:**\n  * **E đúng:** **Amazon SageMaker Ground Truth** (được quản lý dưới dạng SageMaker AI labeling job) cung cấp dịch vụ quản lý gán nhãn dữ liệu toàn diện.\n  * **C đúng:** Vì dữ liệu không bảo mật, công ty có thể sử dụng nguồn lao động cộng đồng **Amazon Mechanical Turk** tích hợp trong SageMaker Ground Truth để tiết kiệm chi phí và tăng tốc độ gán nhãn bởi con người.\n* **Tại sao các phương án khác sai:**\n  * **A sai:** Batch inference chỉ chạy dự đoán từ mô hình cũ, không tạo ra dữ liệu gán nhãn chuẩn xác thực tế (ground truth) để làm mới mô hình.\n  * **B sai:** PyTorch Distributed dùng để phân tán tải huấn luyện mô hình lên nhiều thiết bị phần cứng, không phục vụ gán nhãn.\n  * **D sai:** OCR chỉ chuyển văn bản từ ảnh chụp sang dạng text, không thể gán nhãn ngữ nghĩa phân loại cho các giao dịch thẻ tín dụng.\n\n*(Đáp án được gợi ý bởi AI)*",

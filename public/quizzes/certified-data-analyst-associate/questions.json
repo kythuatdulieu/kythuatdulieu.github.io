@@ -3933,7 +3933,7 @@
       "E": "Include example queries that reflect how business users refer to the data in everyday language."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "AI/BI Genie trong Databricks sử dụng siêu dữ liệu (metadata) từ Unity Catalog và các chỉ dẫn bổ sung để dịch ngôn ngữ tự nhiên sang SQL một cách chính xác.\n\n- **Viết các hướng dẫn cụ thể (B)**: Cung cấp các định nghĩa về thuật ngữ kinh doanh (như region hay channel) và các quy tắc nghiệp vụ giúp Genie hiểu chính xác mối liên quan của chúng với các trường trong cơ sở dữ liệu.\n- **Thêm mô tả cho cột trong Unity Catalog (D)**: Genie trực tiếp sử dụng mô tả của bảng và cột (descriptions) trong Unity Catalog làm ngữ cảnh chính để hiểu ý nghĩa của từng cột dữ liệu, từ đó tạo ra các truy vấn chính xác hơn.\n- Các lựa chọn khác:\n  - **A, E** tuy có ích cho trải nghiệm hoặc lập luận chung nhưng không phải là hai tính năng cấu hình nền tảng tối ưu trực tiếp cho mô hình trong Genie Space để giảm mơ hồ.\n  - **C** (Thêm nhiều cột) thậm chí làm tăng độ nhiễu và làm cho Genie dễ bị nhầm lẫn hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4138,7 +4138,7 @@
       "E": "Photon leverages a columnar, vectorized execution engine for efficient scan and aggregation operations."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "**Photon** là động cơ thực thi vectơ hóa thế hệ mới của Databricks, được phát triển bằng ngôn ngữ C++ để tối ưu hóa hiệu năng phần cứng một cách triệt để.\n\n- **Tận dụng thực thi vectơ hóa theo cột (E)**: Khác với cơ chế xử lý dòng của Spark truyền thống, Photon xử lý dữ liệu theo dạng các lô cột (columnar batches). Cơ chế này kết hợp với các lệnh SIMD (Single Instruction, Multiple Data) của CPU giúp chạy các thao tác quét (scan) và tổng hợp (aggregation) nhanh hơn gấp nhiều lần.\n- **Sử dụng lớp bộ đệm transcoding (A)**: Photon chuyển đổi dữ liệu thô từ đĩa sang định dạng được tối ưu hóa riêng cho bộ nhớ cache và CPU, giúp tăng đáng kể hiệu năng đọc/quét dữ liệu.\n- Các lựa chọn khác:\n  - **B**: Photon xử lý theo cột và lô (vectorized/columnar), không phải từng dòng một (row-by-row) vì xử lý từng dòng sẽ làm giảm hiệu năng.\n  - **C**: Photon tối ưu hóa song song hóa trong nội bộ cluster hiện tại, không tự động phân phối truy vấn trên nhiều cluster khác nhau.\n  - **D**: Việc hợp nhất tệp nhỏ là nhiệm vụ của Delta Lake Auto-Compaction/Optimize chứ không phải của động cơ thực thi truy vấn Photon.\n\n*(Đáp án được gợi ý bởi AI)*",

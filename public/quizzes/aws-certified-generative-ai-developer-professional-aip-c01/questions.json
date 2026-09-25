@@ -12,7 +12,7 @@
       "F": "Set a high grounding score threshold."
     },
     "answer": "ADF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để triển khai các biện pháp kiểm soát an toàn và tuân thủ bằng cách sử dụng Amazon Bedrock Guardrails, công ty cần kết hợp các bước sau:\n\n* **A. Thêm các mẫu hội thoại rủi ro cao vào chính sách chặn chủ đề (denied topics guardrail)**: Điều này cho phép bạn định nghĩa cụ thể các chủ đề nhạy cảm hoặc không được phép nói chuyện (như tư vấn cổ phiếu hoặc cam kết lợi nhuận) để chặn chúng một cách chính xác.\n* **D. Thêm tên đối thủ cạnh tranh làm bộ lọc từ ngữ tùy chỉnh (custom word filters) và chặn cả đầu vào/đầu ra**: Đây là phương pháp hiệu quả nhất để ngăn chặn việc nhắc đến đối thủ bằng cách định nghĩa một danh sách từ ngữ tùy chỉnh và thiết lập hành động chặn (block) cho cả Prompt (input) và Response (output).\n* **F. Thiết lập ngưỡng điểm kiểm tra tính căn cứ (grounding score threshold) ở mức cao**: Giúp đảm bảo các câu trả lời của mô hình bám sát thông tin hướng dẫn tài chính chính thức của công ty (tránh hiện tượng ảo giác - hallucination).\n\n**Tại sao các phương án khác sai:**\n* **B, C**: Bộ lọc nội dung (Content filters) dùng để lọc các danh mục nội dung độc hại (như thù ghét, bạo lực, tình dục, lăng mạ), không dùng để cấu hình chặn chủ đề nghiệp vụ cụ thể hoặc tên riêng.\n* **E**: Thiết lập ngưỡng grounding thấp sẽ làm tăng nguy cơ mô hình đưa ra thông tin không chính xác hoặc không được chứng thực từ nguồn tài liệu tham khảo chính thức.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -147,7 +147,7 @@
       "E": "Create an Amazon Bedrock application inference profile that specifies an Amazon Nova Pro FM. Specify the output format for the response in the description. Include a tag for each of the input variables. Add the profile to the prompts node of the flow."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xử lý bốn đầu vào bắt buộc, đảm bảo định dạng văn bản đầu ra nhất quán và phát hiện ngôn từ bắt nạt mà không chặn tất cả các phản hồi:\n\n* **A đúng**: Sử dụng **Prompt Management** để định nghĩa cấu trúc prompt, định dạng đầu ra và khai báo bốn đầu vào dưới dạng biến (variables), sau đó tích hợp prompt này vào nút prompts của Amazon Bedrock Flows.\n* **D đúng**: Ngôn từ bắt nạt (bullying language) thuộc danh mục bộ lọc **Insults** trong content filters của Bedrock Guardrails. Bằng cách chọn hành động là **detect** (thay vì block), hệ thống sẽ chỉ phát hiện, gắn cờ và tạo thông báo mà không trực tiếp chặn câu trả lời trả về cho người dùng.\n\n**Tại sao các phương án khác sai:**\n* **B**: Đặt hành động là block sẽ chặn hoàn toàn các phản hồi, vi phạm yêu cầu \"không muốn chặn tất cả các phản hồi bị gắn cờ\".\n* **C**: Bộ định tuyến prompt (Prompt Router) dùng để định tuyến lưu lượng giữa các mô hình khác nhau chứ không dùng để cấu hình biến đầu vào và định dạng văn bản cho prompt.\n* **E**: Application inference profile dùng để tối ưu hóa hiệu năng và quản lý chi phí gọi mô hình, không dùng để cấu hình biến hoặc định dạng đầu ra cho prompt.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -583,7 +583,7 @@
       "E": "Prompt the Amazon Bedrock model to summarize each full document in one pass."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "**Giải thích:**\n\n*   **Lựa chọn A là đúng (lựa chọn thứ nhất):** Hướng dẫn Chain-of-Thought (CoT) buộc mô hình phân tích logic và thực hiện các bước lập luận trung gian, kiểm chứng thông tin trước khi đưa ra kết quả cuối cùng. Kỹ thuật này giúp giảm đáng kể hiện tượng ảo giác và cải thiện độ chính xác mà không tốn thêm tài nguyên huấn luyện mô hình.\n*   **Lựa chọn B là đúng (lựa chọn thứ hai):** RAG với Amazon Bedrock Knowledge Bases sử dụng kỹ thuật phân đoạn ngữ nghĩa và embedding giúp mô hình chỉ tập trung vào các đoạn dữ liệu liên quan được truy xuất từ tài liệu nguồn thực tế (grounding), từ đó hạn chế tối đa việc mô hình tự bịa đặt thông tin nằm ngoài tài liệu.\n*   **Lựa chọn C là sai:** Amazon Bedrock Guardrails không thể tự phát hiện hoặc chặn một cách hiệu quả các thông tin bịa đặt ngẫu nhiên chỉ bằng các mẫu khớp từ ngữ (pattern matching) thông thường, vì ảo giác không có cấu trúc cố định hoặc từ khóa đặc trưng.\n*   **Lựa chọn D là sai:** Tăng tham số `temperature` sẽ làm tăng tính ngẫu nhiên và sáng tạo của mô hình, điều này trực tiếp dẫn đến việc tăng khả năng xảy ra ảo giác.\n*   **Lựa chọn E là sai:** Yêu cầu mô hình tóm tắt toàn bộ tài liệu dài trong một lượt duy nhất bằng một prompt cơ bản là nguyên nhân chính dẫn đến ảo giác và quá tải ngữ cảnh (context window limitations), làm giảm độ chính xác của bản tóm tắt.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -817,7 +817,7 @@
       "F": "Use Amazon SageMaker Clarify to generate fairness and bias reports based on model scoring decisions that Amazon Bedrock makes."
     },
     "answer": "ABD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "**Giải thích:**\n\n*   **Lựa chọn A là đúng:** Amazon Textract có khả năng trích xuất văn bản và cấu trúc biểu mẫu từ các tài liệu tài chính được quét. Amazon Augmented AI (Amazon A2I) cung cấp một quy trình tích hợp sẵn để định tuyến các kết quả trích xuất có điểm tin cậy thấp đến con người đánh giá (human review) nhằm đảm bảo độ chính xác cao.\n*   **Lựa chọn B là đúng:** Sử dụng AWS Lambda để tiền xử lý loại bỏ thông tin PII nhạy cảm trước khi đưa vào mô hình AI là một biện pháp bảo mật quan trọng. Amazon Bedrock Guardrails giúp bảo vệ nội dung đầu ra của mô hình không vi phạm chính sách của ngân hàng. Các vai trò IAM cụ thể theo vùng giúp giới hạn việc truy cập và xử lý dữ liệu đúng theo vùng địa lý yêu cầu.\n*   **Lựa chọn D là đúng:** Để tuân thủ yêu cầu lưu trú dữ liệu (data residency) nghiêm ngặt, việc lưu trữ tài liệu trong các S3 bucket đặt tại Vùng AWS (Region) tương ứng của người nộp đơn, áp dụng các chính sách IAM chặt chẽ và sử dụng tính năng gắn thẻ đối tượng S3 (object tagging) giúp tạo điều kiện thuận lợi cho việc theo vết kiểm toán trong tương lai.\n*   **Lựa chọn C là sai:** Amazon Kendra và OpenSearch Service được sử dụng cho mục đích tìm kiếm thông tin ngữ nghĩa (search/retrieval) chứ không phải để trích xuất dữ liệu biểu mẫu có cấu trúc từ tài liệu quét vật lý giống như Amazon Textract.\n*   **Lựa chọn E là sai:** AWS Glue Data Quality và Step Functions tạo ra quy trình quá phức tạp và không giải quyết trực tiếp yêu cầu xử lý dữ liệu PII, bảo mật hoặc lưu trú dữ liệu theo vùng.\n*   **Lựa chọn F là sai:** SageMaker Clarify không hỗ trợ kiểm tra trực tiếp tính công bằng cho các dịch vụ suy luận được quản lý hoàn toàn của Amazon Bedrock theo thời gian thực một cách tự động mà không qua các bước huấn luyện/đánh giá mô hình trên SageMaker.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -981,7 +981,7 @@
       "E": "Extend the existing SCP to enable CRI for the eu.* inference profile."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để khắc phục lỗi SCP một cách chính xác mà vẫn đảm bảo tính an toàn dữ liệu và tuân thủ chính sách, chúng ta cần phối hợp hai hành động:\n\n* **B đúng (Mở rộng SCP cho profile suy luận cụ thể):** Lỗi `Explicit Deny` từ SCP xuất hiện vì chính sách kiểm soát dữ liệu hiện tại đang chặn cuộc gọi tài nguyên ở Vùng `eu-west-3`. Để kích hoạt suy luận chéo vùng (CRI) của Nova Pro trong phạm vi Châu Âu mà không vi phạm quy định, cần sửa đổi SCP để cho phép thao tác trên profile suy luận chéo vùng cụ thể của Châu Âu là `eu.amazon.nova-pro-v1:0`.\n* **D đúng (Xác thực quyền của vai trò IAM trên profile suy luận ở tất cả các Vùng hỗ trợ):** Người dùng (nhà phát triển) cần có quyền gọi trực tiếp profile suy luận `eu.amazon.nova-pro.v1:0` trên tất cả các Vùng AWS thuộc Châu Âu có khả năng phục vụ mô hình Nova Pro để việc định tuyến tải hoạt động trơn tru.\n\n**Giải thích các phương án sai:**\n* **A sai:** Cấp quyền quản trị (`AdministratorAccess`) quá rộng, vi phạm nguyên tắc đặc quyền tối thiểu (least privilege) và không giải quyết được lỗi chặn do SCP cấu hình ở cấp độ tài khoản tổ chức.\n* **C sai:** Kích hoạt quyền truy cập mô hình trực tiếp ở vùng `eu-west-3` không giải quyết được lỗi SCP từ tài khoản của nhà phát triển hoạt động ở vùng `eu-central-1` và vi phạm quy định bảo mật chỉ thao tác ở `eu-central-1`.\n* **E sai:** Sử dụng ký tự đại diện `eu.*` là quá rộng, không đảm bảo tính kiểm soát truy cập chính xác (precise access control) đối với riêng mô hình Nova Pro.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1140,7 +1140,7 @@
       "E": "Build a custom RAG pipeline by using Amazon Kendra and Amazon Bedrock. Use AWS Lambda to orchestrate tool invocations. Store the agent state in Amazon S3."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xây dựng một tác nhân lập luận có khả năng mở rộng tốt nhất và vận hành tối giản, sử dụng các tính năng mới được quản lý hoàn toàn là giải pháp lý tưởng:\n\n* **A đúng (Sử dụng Bedrock AgentCore):** Amazon Bedrock AgentCore là một nền tảng được quản lý hoàn toàn giúp xây dựng và vận hành các tác nhân AI ở quy mô lớn. Nó tích hợp sẵn khả năng quản lý bộ nhớ, phiên làm việc, bảo mật danh tính, xử lý sự kiện và khả năng quan sát.\n* **B đúng (Đăng ký hành động qua API Gateway và EventBridge):** Việc tích hợp REST API và Lambda làm các hành động (actions) trong AgentCore thông qua API Gateway và EventBridge giúp AgentCore trực tiếp gọi các API này mà không cần nhà phát triển phải viết các luồng điều phối tùy chỉnh phức tạp.\n\n**Giải thích các phương án sai:**\n* **C, D, E sai:** Các phương án này yêu cầu tự xây dựng và quản lý hạ tầng điều phối trạng thái, bộ nhớ và quyền truy cập thủ công thông qua ECS, Step Functions, DynamoDB, S3, v.v., làm tăng đáng kể độ phức tạp của mã nguồn và chi phí vận hành.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1171,7 +1171,7 @@
       "E": "Run an Amazon SageMaker AI notebook job on a schedule by using the fmevals or ragas framework to run evaluations that use the datasets in the S3 bucket. Write Python code in the notebook that makes direct InvokeModel API calls to the FMs and processes their responses for evaluation. Publish job status and results to Amazon CloudWatch Logs to measure the real world knowledge (RWK) score for text generation and toxicity for summarization as metrics for accuracy. Create a custom CloudWatch Logs Insights dashboard."
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Giải pháp này giúp tự động hóa quá trình đánh giá mô hình với chi phí vận hành tối thiểu:\n\n* **A đúng (Cấu hình S3 và CORS):** Các công việc đánh giá mô hình trong Amazon Bedrock yêu cầu quyền truy cập vào tập dữ liệu thử nghiệm được lưu trữ trong S3, bao gồm cả quyền truy cập IAM thích hợp và cấu hình chia sẻ tài nguyên chéo nguồn gốc (CORS).\n* **C đúng (Sử dụng dịch vụ đánh giá tích hợp sẵn của Bedrock):** Tận dụng tính năng Model Evaluation có sẵn của Amazon Bedrock giúp đo lường trực tiếp các chỉ số chính xác phổ biến (như RWK và BERT Score) thông qua các công việc đánh giá tự động mà không cần xây dựng hệ thống phân tích riêng. AWS Lambda được dùng để tự động hóa việc lập lịch và đẩy kết quả sang CloudWatch Logs để xây dựng dashboard Logs Insights.\n\n**Giải thích các phương án sai:**\n* **B sai:** Cấu hình VPC endpoint cho S3 không đáp ứng được yêu cầu CORS của dịch vụ đánh giá Bedrock khi truy xuất tài nguyên chéo.\n* **D, E sai:** Sử dụng SageMaker Clarify hoặc viết mã thủ công chạy fmevals/ragas trong SageMaker Notebook làm tăng đáng kể khối lượng công việc lập trình, tự quản lý cơ sở hạ tầng tính toán và bảo trì so với việc sử dụng dịch vụ Model Evaluation được quản lý hoàn toàn của Bedrock.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1355,7 +1355,7 @@
       "E": "Use AWS CloudFormation to create a custom Amazon Bedrock guardrail that has a mask filtering policy. Use stack sets to deploy the guardrail to each account in the organization."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để quản lý bảo mật tập trung cho toàn bộ tài khoản trong AWS Organizations:\n\n* **B đúng (Sử dụng SCP để ép buộc dùng mô hình được duyệt và guardrail):** SCP (Service Control Policy) cho phép thiết lập các rào cản quản trị tối cao từ tài khoản quản trị chính của tổ chức. Cấu hình SCP cho phép chỉ gọi các mô hình được duyệt và ép buộc người dùng phải chỉ định tham số `guardrailIdentifier` (sử dụng các khóa điều kiện IAM như `bedrock:GuardrailIdentifier`) trong các API gọi mô hình.\n* **E đúng (Triển khai chính sách ẩn thông tin qua CloudFormation Stack Sets):** Sử dụng chính sách lọc ẩn (mask filtering policy) giúp che dấu hoặc thay thế thông tin độc quyền trước khi gửi đến mô hình (tránh rò rỉ dữ liệu). CloudFormation Stack Sets giúp tự động tạo và phân phối đồng bộ guardrail này tới tất cả các tài khoản thành viên trong tổ chức.\n\n**Giải thích các phương án sai:**\n* **A, C sai:** Ranh giới quyền hạn IAM (permissions boundary) được thiết lập thủ công trên từng vai trò, không thể ép buộc tập trung ở cấp độ tổ chức như SCP và rất khó duy trì ở quy mô lớn.\n* **D sai:** Sử dụng chính sách lọc chặn (block) đối với thông tin độc quyền sẽ khiến toàn bộ yêu cầu của nhân viên bị chặn hoàn toàn nếu chứa từ khóa nhạy cảm, gây cản trở công việc. Phương án ẩn (mask) ở E là giải pháp phù hợp hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1716,7 +1716,7 @@
       "E": "Implement Amazon EventBridge rules to capture Amazon Bedrock model invocation events. Route token usage data to an Amazon Data Firehose delivery stream that targets Amazon OpenSearch Serverless. Use OpenSearch dashboards to analyze usage patterns."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đáp ứng các yêu cầu về khả năng quan sát (observability) chi tiết và cảnh báo lượng tiêu thụ token trong Amazon Bedrock với chi phí vận hành thấp nhất:\n\n* **Cảnh báo và biểu đồ chỉ số gốc (Metric & Alarms):** Lựa chọn **C** là chính xác vì Amazon Bedrock tự động xuất bản (publish) các chỉ số (metrics) như `InputTokenCount`, `OutputTokenCount` và `InvocationCount` lên Amazon CloudWatch dưới không gian tên `AWS/Bedrock`. Việc thiết lập bảng điều khiển CloudWatch và cấu hình cảnh báo (CloudWatch Alarms) dựa trên các chỉ số này tốn rất ít công vận hành và hoạt động theo thời gian thực.\n* **Phân tích nhật ký cuộc gọi chi tiết (Invocation Logs Analysis):** Lựa chọn **B** là chính xác vì khi bật tính năng ghi nhật ký gọi mô hình (*model invocation logging*) của Amazon Bedrock sang CloudWatch Logs, chúng ta có thể sử dụng *Amazon CloudWatch Logs Insights* để chạy các câu truy vấn phân tích sâu (ví dụ: tính toán tổng số token theo từng ứng dụng, định danh ứng dụng dựa trên siêu dữ liệu đi kèm) và đưa các kết quả truy vấn này trực tiếp vào dashboard CloudWatch để giám sát liên tục.\n\n**Tại sao các phương án khác sai:**\n\n* **A:** Sử dụng Amazon QuickSight yêu cầu thiết lập luồng ETL dữ liệu từ CloudWatch sang S3/Athena và trả phí bản quyền cho QuickSight, làm tăng đáng kể chi phí vận hành và không mang tính thời gian thực tức thì.\n* **D:** Không có tính năng tích hợp trực tiếp zero-ETL nguyên bản giữa Amazon Bedrock và Amazon Managed Grafana để lấy dữ liệu token.\n* **E:** Thiết lập EventBridge, Firehose và OpenSearch Serverless đòi hỏi cấu hình và duy trì nhiều dịch vụ trung gian, dẫn đến chi phí quản lý hạ tầng lớn hơn nhiều so với việc sử dụng CloudWatch Logs Insights có sẵn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2007,7 +2007,7 @@
       "E": "Use Amazon SageMaker JumpStart to host and invoke the FMs."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Chi tiết giải thích lựa chọn đúng và sai:\n\n* **B đúng**: Yêu cầu về \"consistent high-throughput access for batch processing\" (truy cập thông lượng cao nhất quán để xử lý hàng loạt) được giải đáp tốt nhất bằng cách sử dụng **Provisioned Throughput** trong Amazon Bedrock, cung cấp các đơn vị mô hình được chỉ định riêng để duy trì hiệu suất ổn định dưới tải nặng mà không bị ảnh hưởng bởi giới hạn tốc độ chia sẻ (on-demand limits).\n* **C đúng**: Yêu cầu về \"hybrid deployment patterns and run workloads across cloud and on-premises infrastructure\" (mô hình triển khai hỗn hợp và chạy trên cả cloud lẫn on-premises) được đáp ứng nhờ **Amazon SageMaker Neo** và triển khai biên (edge/on-premises). SageMaker Neo cho phép tối ưu hóa và biên dịch mô hình để chạy trên các thiết bị phần cứng tại chỗ (edge devices), kết hợp với AWS Lambda để điều phối luồng suy luận hỗn hợp.\n* **A không chính xác**: Điểm cuối không đồng bộ (asynchronous endpoints) thường được sử dụng cho các yêu cầu có thời gian xử lý dài và kích thước payload lớn, không phải cho suy luận thời gian thực với độ trễ thấp (real-time low-latency).\n* **D không chính xác**: Amazon Bedrock On-Demand xử lý lưu lượng lớn thông qua hạn ngạch dịch vụ thay vì cấu hình auto-scaling trực tiếp từ phía người dùng.\n* **E không chính xác**: SageMaker JumpStart chỉ là hub để khám phá và triển khai mô hình, bản thân nó không trực tiếp giải quyết vấn đề triển khai biên hỗn hợp trên on-premises hoặc đảm bảo thông lượng cao nhất quán một cách tối ưu.\n\n*(Đáp án được gợi ý bởi AI)*",

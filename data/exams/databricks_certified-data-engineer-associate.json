@@ -19,7 +19,7 @@
     },
     {
       "id": 2,
-      "question": "A data engineer is working with two tables. Each of these tables is displayed below in its entirety.\nThe data engineer runs the following query to join these tables together:\nWhich of the following will be returned by the above query?",
+      "question": "A data engineer is working with two tables, each shown in full.\n\n**sales** (customer_id, spend, units):\n(a1, 28.94, 7), (a3, 874.12, 23), (a4, 8.99, 1)\n\n**favorite_stores** (customer_id, store_id):\n(a1, s1), (a2, s1), (a4, s2)\n\nThe data engineer runs this query:\n`SELECT sales.customer_id, sales.spend, favorite_stores.store_id FROM sales LEFT JOIN favorite_stores ON sales.customer_id = favorite_stores.customer_id`\n\nWhich result is returned?",
       "choices": {
         "A": "![](/images/quizzes/certified-data-engineer-associate/1774280608652-j5dsu9n5.png)",
         "B": "![](/images/quizzes/certified-data-engineer-associate/1774280610772-2diqdrsy.png)",
@@ -28,7 +28,14 @@
         "E": "![](/images/quizzes/certified-data-engineer-associate/1774280617500-umcaa0gj.png)"
       },
       "correctAnswer": "C",
-      "explanation_vi": "Truy vấn thực hiện phép nối (JOIN) giữa hai bảng dựa trên khóa chung. Kết quả của phép nối khớp các dòng có giá trị khóa tương ứng từ cả hai bảng để tạo thành bảng kết quả C."
+      "explanation_vi": "Đáp án **C**. Đây là `LEFT JOIN` với `sales` ở bên trái, nên kết quả giữ lại mọi khách hàng trong `sales` và ghép thông tin cửa hàng khi `customer_id` khớp.\n\n- `a1` khớp với `favorite_stores`, vì vậy `store_id = s1`.\n- `a3` không có dòng tương ứng ở bảng cửa hàng nhưng vẫn được giữ lại; `store_id` vì thế là `NULL`.\n- `a4` khớp với `s2`.\n- `a2` chỉ có trong `favorite_stores`, nên bị loại vì không có trong bảng bên trái `sales`.\n\nCâu lệnh chỉ chọn `customer_id`, `spend` và `store_id`, vì vậy cột `units` không xuất hiện trong kết quả. Đây là đúng ngữ nghĩa của `LEFT JOIN`: giữ mọi dòng bên trái, điền `NULL` cho cột bên phải khi không có kết quả khớp.\n\n*(Đáp án được đối chiếu theo truy vấn và dữ liệu trong đề; tài liệu tham khảo bên dưới.)*",
+      "question_vi": "Một kỹ sư dữ liệu đang làm việc với hai bảng, mỗi bảng được hiển thị đầy đủ.\n\n**sales** (customer_id, spend, units):\n(a1, 28.94, 7), (a3, 874.12, 23), (a4, 8.99, 1)\n\n**favorite_stores** (customer_id, store_id):\n(a1, s1), (a2, s1), (a4, s2)\n\nKỹ sư chạy truy vấn:\n`SELECT sales.customer_id, sales.spend, favorite_stores.store_id FROM sales LEFT JOIN favorite_stores ON sales.customer_id = favorite_stores.customer_id`\n\nKết quả nào được trả về?",
+      "references": [
+        {
+          "title": "JOIN - Databricks SQL Reference",
+          "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-qry-select-join.html"
+        }
+      ]
     },
     {
       "id": 3,

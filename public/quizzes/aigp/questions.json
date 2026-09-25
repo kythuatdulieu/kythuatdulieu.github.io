@@ -296,7 +296,7 @@
       "E": "The quality of the training data."
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Phân tích đáp án:\n- **Đáp án đúng: A, C, E (Độ phức tạp của mô hình, Khối lượng dữ liệu, Chất lượng dữ liệu).** Ba yếu tố kỹ thuật chính làm tăng thời gian huấn luyện mô hình AI là:\n  - **Độ phức tạp của mô hình (A):** Mô hình có hàng tỷ tham số (như LLM) yêu cầu nhiều vòng tính toán lan truyền xuôi và ngược.\n  - **Khối lượng dữ liệu (C):** Càng nhiều dữ liệu thì thời gian duyệt qua toàn bộ tập dữ liệu (epochs) càng dài.\n  - **Chất lượng dữ liệu (E):** Dữ liệu chất lượng kém hoặc chưa được chuẩn hóa yêu cầu nhiều thời gian để làm sạch, xử lý trước và gắn nhãn, đồng thời có thể khiến mô hình hội tụ chậm hơn trong quá trình huấn luyện.\n- **Các đáp án sai (B, D):** Quản trị AI (B) và Số lượng bên liên quan (D) là các yếu tố quy trình và tổ chức quản lý, không ảnh hưởng trực tiếp đến thời gian tính toán kỹ thuật khi chạy thuật toán huấn luyện mô hình AI.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1524,7 +1524,7 @@
       "E": "Primary responsibility for regulatory compliance."
     },
     "answer": "BCE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Nhà phát triển mô hình AI độc quyền (proprietary model developer) đóng vai trò chủ chốt trong việc tạo ra mô hình và chịu các trách nhiệm cốt lõi sau:\n\n* **Thiết kế đạo đức (B) và Kiểm thử đạo đức (C):** Đảm bảo mô hình được thiết kế từ đầu (by design) để giảm thiểu định kiến, tôn trọng quyền riêng tư và phải trải qua các bước kiểm thử đạo đức nghiêm ngặt trước khi phát hành.\n* **Tuân thủ quy định pháp lý (E):** Đảm bảo mô hình tuân thủ đầy đủ các quy định và tiêu chuẩn kỹ thuật đối với sản phẩm khi đưa ra thị trường (tương tự trách nhiệm của nhà cung cấp - Provider - theo EU AI Act).\n* **Tại sao không chọn A và D:** Ghi chép nhật ký hệ thống khi vận hành và quản lý hiệu suất kỹ thuật trong môi trường thực tế thường là trách nhiệm chung hoặc trách nhiệm chính của bên triển khai/sử dụng (deployer/user), phụ thuộc vào cách tích hợp mô hình vào hệ thống nghiệp vụ cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2648,7 +2648,7 @@
       "E": "They eliminate concerns about the data used to generate outputs."
     },
     "answer": "ABC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Phân tích chi tiết các lựa chọn:\n\n* **Đáp án A, B, C đúng**:\n    * **A (Convenient to adopt)**: Các công cụ AI công cộng trả phí (như tài khoản doanh nghiệp) có thể triển khai ngay lập tức mà không đòi hỏi hạ tầng kỹ thuật tự phát triển phức tạp.\n    * **B (Additional privacy and security)**: Các phiên bản trả phí thường đi kèm với các điều khoản bảo mật nâng cao, ví dụ cam kết không sử dụng dữ liệu đầu vào của người dùng để tái huấn luyện mô hình.\n    * **C (Frequent enhancements)**: Nhà cung cấp liên tục tung ra các bản cập nhật tính năng mới để duy trì lợi thế cạnh tranh thương mại.\n* **Đáp án D, E sai**:\n    * Các mô hình AI tạo sinh thương mại phần lớn là độc quyền, khép kín và không minh bạch (*black-box*) về cấu trúc hoặc cách ra quyết định (D).\n    * Việc trả phí không giúp loại bỏ hoàn toàn các rủi ro pháp lý liên quan đến bản quyền dữ liệu huấn luyện hoặc các thông tin sai lệch do AI tạo ra (E).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4556,7 +4556,7 @@
       "E": "Biases and limitations in an AI model often originate from biases and limitations present in its training data."
     },
     "answer": "ADE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tính phụ thuộc dữ liệu (data dependency) phản ánh mối quan hệ nhân quả và sự phụ thuộc chặt chẽ của các mô hình học máy vào dữ liệu mà chúng được cung cấp:\n\n*   **Phân tích các phương án đúng (A, D, E):**\n    *   **A đúng:** Hiệu suất (performance) của mô hình AI phụ thuộc trực tiếp vào chất lượng, khối lượng và tính đại diện của dữ liệu huấn luyện.\n    *   **D đúng:** Kiến trúc và tham số của mô hình học máy cần phải điều chỉnh phù hợp dựa trên các đặc trưng, kiểu dữ liệu và phân phối của dữ liệu huấn luyện.\n    *   **E đúng:** Định kiến của mô hình thường xuất phát trực tiếp từ các định kiến lịch sử hoặc sự mất cân bằng trong dữ liệu đầu vào (nguyên lý \"dữ liệu rác vào, kết quả rác ra\").\n*   **Phân tích các phương án sai (B, C):**\n    *   **B sai:** Các kỹ thuật tăng cường quyền riêng tư (privacy-enhancing technologies - PETs) là giải pháp bảo mật và tuân thủ pháp luật, không phải là nguyên tắc cốt lõi mô tả tính phụ thuộc dữ liệu của mô hình.\n    *   **C sai:** Việc có tập dữ liệu lớn chất lượng cao làm tăng hiệu suất của mô hình nhưng không làm giảm đi tính phụ thuộc dữ liệu của nó; thực tế là mô hình vẫn hoàn toàn phụ thuộc vào tập dữ liệu đó để suy luận chính xác.\n\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5214,7 +5214,7 @@
       "E": "Federated learning."
     },
     "answer": "ABE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Công nghệ tăng cường quyền riêng tư (Privacy-Enhancing Technologies - PETs) là các biện pháp kỹ thuật và phương pháp giúp bảo vệ quyền riêng tư của dữ liệu cá nhân khi xử lý hoặc phát triển các hệ thống AI.\n\n* **A (Minh giảm dữ liệu)**: Hạn chế thu thập và sử dụng dữ liệu ở mức tối thiểu cần thiết để huấn luyện mô hình.\n* **B (Ẩn danh hóa)**: Chuyển đổi dữ liệu cá nhân sao cho chủ thể dữ liệu không còn có thể bị nhận dạng, giúp huấn luyện mô hình an toàn mà không vi phạm quyền riêng tư.\n* **E (Học liên kết)**: Cho phép huấn luyện mô hình AI phân tán trên nhiều thiết bị hoặc máy chủ cục bộ mà không cần tập trung dữ liệu thô về một nơi, giúp bảo mật dữ liệu gốc.\n\n*Các phương án khác không phải là PETs:*\n* **C (Sơ đồ hóa dữ liệu)**: Là một hoạt động quản trị dữ liệu nhằm kiểm kê dòng chảy dữ liệu, không phải công nghệ bảo vệ quyền riêng tư.\n* **D (Làm sạch dữ liệu)**: Là kỹ thuật tiền xử lý dữ liệu để loại bỏ nhiễu hoặc lỗi nhằm tăng độ chính xác của mô hình, không phải công nghệ tăng cường quyền riêng tư.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5348,7 +5348,7 @@
       "E": "Superintelligence."
     },
     "answer": "BDE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Quản trị AI cần tập trung vào các đặc tính **độc nhất (unique characteristics)** của AI vốn phân biệt nó với phần mềm truyền thống.\n\n* **B, D, E là đáp án đúng (các đặc tính NGOẠI TRỪ)**:\n  * **Tự động hóa (Automation)** và **Tốc độ & quy mô (Speed and scale)** không phải là các đặc tính độc nhất của AI. Các hệ thống phần mềm truyền thống (như hệ quản trị cơ sở dữ liệu, các tập lệnh bash script) cũng có khả năng tự động hóa và chạy ở tốc độ/quy mô cực kỳ lớn.\n  * **Siêu trí tuệ (Superintelligence)** là một khái niệm lý thuyết và giả định trong tương lai, không phải là một đặc tính thực tế của các hệ thống AI đang được triển khai hiện nay để cần đưa vào các quy trình quản trị thực tế.\n\n*Các đặc tính độc nhất thực sự của AI bao gồm:*\n* **Tính tự chủ (Autonomy - A)**: Khả năng tự đưa ra quyết định hoặc hành động mà không cần sự can thiệp trực tiếp của con người.\n* **Tính thích ứng (Adaptability - C)**: Khả năng tự học hỏi, tự cải thiện và thay đổi hành vi dựa trên dữ liệu mới mà không cần lập trình lại.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5449,7 +5449,7 @@
       "E": "Regulatory compliance."
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Theo các khung quản lý và Đạo luật AI của EU (EU AI Act), nghĩa vụ đối với một hệ thống AI được phân chia rõ ràng giữa nhà cung cấp (provider) và bên triển khai (deployer):\n\n* **Nghĩa vụ của bên triển khai (Deployer)** bao gồm:\n  * **Kiểm thử đạo đức (A)** trong môi trường vận hành thực tế.\n  * Giám sát **Hiệu suất kỹ thuật (C)** của hệ thống trong suốt quá trình hoạt động.\n  * Đảm bảo **Tuân thủ quy định pháp luật (E)** tại địa phương nơi vận hành.\n* **Các nghĩa vụ của nhà phát triển/nhà cung cấp (Provider)** bao gồm:\n  * **Thiết kế đạo đức (B)** hệ thống ngay từ đầu.\n  * Viết và lưu trữ **Tài liệu hệ thống (D)** đầy đủ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6309,7 +6309,7 @@
       "E": "Federated learning."
     },
     "answer": "ABE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Ảo giác là một thách thức lớn trong việc áp dụng mô hình ngôn ngữ lớn vào các lĩnh vực nhạy cảm cần độ chính xác cao.\n\n* **D là đáp án đúng**: Ảo giác (hallucination) là thuật ngữ mô tả hiện tượng các mô hình ngôn ngữ lớn (LLM) tạo ra văn bản trông có vẻ rất thuyết phục, trôi chảy và mạch lạc, nhưng thực chất thông tin bên trong lại hoàn toàn sai lệch thực tế, không có căn cứ hoặc vô nghĩa. Điều này xảy ra do mô hình hoạt động dựa trên xác suất thống kê của các từ tiếp theo chứ không thực sự hiểu biết thực tế khách quan.\n* **A sai**: Đây là lỗi tràn bộ nhớ (Out of Memory - OOM), không liên quan đến ảo giác nội dung.\n* **B sai**: Lây nhiễm mã độc là vấn đề bảo mật hệ điều hành/phần mềm thông thường.\n* **C sai**: Dịch đa ngôn ngữ là một tính năng dịch thuật (translation capability) hữu ích của LLM.\n\n*(Đáp án được gợi ý bởi AI)*",

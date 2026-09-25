@@ -4436,7 +4436,7 @@
       "E": "Decrease the batch size argument in your transformation."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "- **Vì sao các phương án A và D đúng**:\n  - **A (interleave)**: Cho phép tải và xử lý song song các tệp dữ liệu đầu vào từ nhiều luồng khác nhau cùng một lúc, giảm thiểu độ trễ I/O khi đọc dữ liệu từ Cloud Storage.\n  - **D (prefetch)**: Giúp chồng chéo (overlap) thời gian thực thi của khâu tiền xử lý dữ liệu trên CPU với thời gian huấn luyện mô hình trên TPU. Đặt `prefetch` bằng với kích thước batch huấn luyện đảm bảo TPU luôn có sẵn dữ liệu của lô tiếp theo ngay khi hoàn thành lô hiện tại, loại bỏ thời gian chờ của TPU.\n- **Vì sao các phương án khác sai**:\n  - **B**: Việc giảm tham số `repeat` chỉ làm giảm số lượng kỷ nguyên (epochs) huấn luyện chứ không giải quyết được vấn đề nghẽn cổ chai I/O/CPU ở khâu chuẩn bị dữ liệu đầu vào.\n  - **C**: Tăng kích thước bộ đệm `shuffle` thực chất làm tăng mức sử dụng bộ nhớ CPU và thời gian khởi tạo ban đầu, không giúp tăng tốc truyền tải dữ liệu vào TPU.\n  - **E**: Giảm `batch size` sẽ làm giảm hiệu suất khai thác phần cứng song song cực mạnh của TPU, thậm chí có thể khiến TPU bị đói dữ liệu nhiều hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4868,7 +4868,7 @@
       "E": "Decrease the maximum number of trials during subsequent training phases."
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tối ưu hóa thời gian chạy Hyperparameter Tuning trên Vertex AI (AI Platform) mà không mất đi hiệu năng tìm kiếm tốt:\n\n*   **Đặt early stopping thành TRUE (C)**: Tính năng dừng sớm tự động giám sát các thử nghiệm đang chạy. Nếu một thử nghiệm cho thấy hiệu năng kém hơn hẳn so với các cấu hình trước đó, hệ thống sẽ dừng nó sớm để giải phóng tài nguyên cho các thử nghiệm tiếp theo.\n*   **Giảm số lượng thử nghiệm tối đa (max trials) ở các giai đoạn sau (E)**: Trong các giai đoạn tiếp theo của quá trình huấn luyện, nhờ vào thông tin thu thập được từ các lần chạy trước, không gian tìm kiếm đã được thu hẹp nên ta có thể giảm bớt tổng số lượt thử nghiệm cần thiết để tiết kiệm thời gian.\n*   **Tại sao các phương án khác không phù hợp**:\n    *   **Giảm parallel trials (A)**: Thực tế sẽ làm tăng thời gian hoàn thành tổng thể vì các thử nghiệm phải chạy tuần tự.\n    *   **Giảm phạm vi dấu phẩy động quá nhiều (B)**: Có thể bỏ sót vùng không gian chứa siêu tham số tối ưu tốt nhất.\n    *   **Chuyển sang random search (D)**: Tìm kiếm ngẫu nhiên kém hiệu quả hơn tìm kiếm Bayes (Bayesian optimization) vì nó không học từ các thử nghiệm trước đó để chọn điểm thử tiếp theo tốt hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -8182,7 +8182,7 @@
       "E": "Redeploy the model, and provide a label explaining the model's behavior to users."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi dữ liệu bị mất cân bằng lớp và không thể thu thập thêm dữ liệu, ta cần áp dụng các kỹ thuật xử lý dữ liệu và thuật toán để cải thiện công bằng:\n\n*   **Tại sao đáp án B đúng:** Bằng cách thêm một mục tiêu phụ hoặc hàm phạt (loss penalty) đối với các lỗi xảy ra trên lớp thiểu số, mô hình sẽ được định hướng để tối thiểu hóa lỗi trên các nhóm thiểu số này thay vì chỉ tập trung vào lớp đa số.\n*   **Tại sao đáp án D đúng:** Các phương pháp xử lý dữ liệu truyền thống như tăng mẫu (upsampling) cho lớp thiểu số hoặc gán trọng số lớn hơn (reweighting) cho các mẫu dữ liệu của lớp thiểu số trong hàm mất mát sẽ giúp mô hình có xu hướng học tốt hơn các nhóm phụ bị yếu thế.\n*   **Tại sao các đáp án khác sai:**\n    *   **A:** Việc xóa bỏ dữ liệu của các nhóm hoạt động tốt sẽ làm giảm độ chính xác tổng thể của mô hình một cách vô lý.\n    *   **C:** Xóa các đặc trưng tương quan với lớp đa số có thể làm hỏng khả năng dự báo chung của mô hình.\n    *   **E:** Việc chỉ đưa ra nhãn giải thích không trực tiếp giải quyết vấn đề hiệu năng kém và thiên lệch của mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",

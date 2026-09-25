@@ -213,7 +213,7 @@
       "D": "DAX Studio"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **A** và **B** đúng:\nĐể ngăn các nhà phát triển báo cáo sử dụng các thước đo ngầm định (implicit measures - ví dụ: tự động cộng dồn các cột số khi kéo thả vào visual), ta cần bật thuộc tính 'Discourage Implicit Measures' (Không khuyến khích thước đo ngầm định) trong mô hình dữ liệu. Hai công cụ chính cho phép cấu hình thuộc tính này là:\n1. **Power BI Desktop** (Lựa chọn A): Cấu hình trực tiếp trong phần cài đặt mô hình (Model view).\n2. **Tabular Editor** (Lựa chọn B): Một công cụ bên ngoài phổ biến dùng để chỉnh sửa siêu dữ liệu của mô hình dữ liệu Power BI / Analysis Services và cấu hình thuộc tính này ở cấp độ Model.\n\nTại sao các phương án khác sai:\n- **SSMS** (C) và **DAX Studio** (D) là các công cụ dùng để truy vấn, quản trị và tối ưu hóa câu lệnh DAX/SQL chứ không hỗ trợ giao diện chỉnh sửa thuộc tính Discourage Implicit Measures.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -274,7 +274,7 @@
       "E": "Use the delta format."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **D** và **E** đúng:\nSQL analytics endpoint của Fabric Lakehouse chỉ hỗ trợ truy vấn các bảng ở định dạng **Delta Lake** được lưu trữ trong thư mục **Tables** của Lakehouse. Do đó, để có thể truy vấn trực tiếp các tệp dữ liệu bán lẻ nằm trong Amazon S3 thông qua SQL endpoint (mà không cần sao chép dữ liệu):\n1. Dữ liệu trên Amazon S3 phải ở định dạng **Delta** (Lựa chọn E).\n2. Bạn phải tạo OneLake shortcut trỏ tới thư mục S3 này trong phần **Tables** của Lakehouse (Lựa chọn D).\n\nTại sao các phương án khác sai:\n- Nếu tạo shortcut trong phần Files (A), dữ liệu sẽ chỉ hiển thị ở dạng tệp tin thô trong OneLake và không tự động được đăng ký vào SQL metastore để truy vấn bằng T-SQL qua SQL endpoint.\n- Định dạng Parquet (B) và CSV (C) không tự động tương thích trực tiếp với SQL analytics endpoint nếu không được nạp hoặc khai báo dưới định dạng Delta.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -596,7 +596,7 @@
       "D": "Replace TotalSalesAmount with a measure."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **A** và **D** đúng:\n- **A**: Cột dữ liệu chứa cả Ngày và Giờ (DateTime) có số lượng giá trị duy nhất (cardinality) cực kỳ cao. Khi nén dữ liệu bằng VertiPaq (Import mode), thuộc tính có độ trùng lặp thấp sẽ chiếm nhiều dung lượng bộ nhớ và làm chậm quá trình làm mới. Việc tách cột `OrderDateTime` thành hai cột riêng biệt (một cột Ngày và một cột Giờ) giúp giảm đáng kể cardinality của mỗi cột, từ đó tăng hiệu quả nén dữ liệu và giảm bộ nhớ.\n- **D**: Việc thay thế các cột lưu trữ sẵn tổng tiền bằng các thước đo (measures) giúp giảm không gian lưu trữ của mô hình dữ liệu. Measures được tính toán động tại thời điểm người dùng tương tác trực quan (on-the-fly) thay vì lưu trữ vật lý trong bộ nhớ RAM, giúp giảm dung lượng mô hình Orders với 100 triệu hàng.\n\nTại sao các phương án khác sai:\n- **B**: Việc thay thế một cột số bằng một cột tính toán (calculated column) thực tế làm tăng mức sử dụng bộ nhớ vì calculated columns vẫn chiếm không gian lưu trữ vật lý trong RAM.\n- **C**: Việc chuyển đổi kiểu dữ liệu số (`Quantity`) sang kiểu chuỗi văn bản (`Text`) sẽ làm giảm hiệu suất nén của VertiPaq (thường nén số tốt hơn nén chuỗi) và làm chậm các phép toán tính toán tổng hợp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -625,7 +625,7 @@
       "D": "PySpark"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **C** và **D** đúng:\nTrong môi trường Fabric notebook, hai ngôn ngữ chính được hỗ trợ để làm việc với dữ liệu Spark và thực hiện chạy các tác vụ chấm điểm mô hình học máy (model scoring) bằng hàm `PREDICT` là Spark SQL và PySpark. Hàm `PREDICT` hỗ trợ tích hợp trực tiếp trong các câu lệnh truy vấn Spark SQL hoặc các đoạn mã PySpark để tải mô hình MLflow đã đăng ký và thực hiện dự đoán phân tán trên quy mô lớn.\n\nTại sao các phương án khác sai:\n- **A** (T-SQL): Hỗ trợ hàm `PREDICT` trong Fabric Warehouse hoặc SQL Endpoint, tuy nhiên đề bài yêu cầu thực hiện cụ thể trong \"Fabric notebook\" nơi Spark SQL và PySpark là các ngôn ngữ được sử dụng chính.\n- **B** (DAX): Là ngôn ngữ truy vấn dùng cho các semantic model (Power BI) và không được hỗ trợ để chạy trực tiếp trên Spark trong Fabric notebook nhằm mục đích chạy hàm `PREDICT` cho mô hình học máy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -654,7 +654,7 @@
       "D": "Insert new records when the natural key is a new value in the table."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **A** và **D** đúng:\nSlowly Changing Dimension (SCD) Type 1 là kỹ thuật thiết kế bảng chiều trong đó các giá trị mới sẽ ghi đè lên dữ liệu cũ và không lưu lại lịch sử thay đổi. Do đó:\n- **A**: Khi mã khóa tự nhiên (natural key) đã tồn tại nhưng các thuộc tính không phải khóa (non-key attributes) có sự thay đổi, ta tiến hành cập nhật (UPDATE) trực tiếp các hàng này để lưu thông tin mới nhất.\n- **D**: Khi gặp một mã khóa tự nhiên mới (chưa tồn tại trong bảng chiều), ta tiến hành thêm mới (INSERT) bản ghi đó vào bảng chiều.\n\nTại sao các phương án khác sai:\n- **B & C**: Việc chèn thêm hàng mới khi khóa đã tồn tại hoặc cập nhật ngày kết thúc hiệu lực (effective end date) là đặc trưng của SCD Type 2 (nhằm lưu giữ lịch sử thay đổi theo thời gian), không phải của SCD Type 1.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -712,7 +712,7 @@
       "D": "Query the DISCOVER_MEMORYGRANT dynamic management view (DMV)."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **B** và **C** đúng:\n- **B**: VertiPaq Analyzer (tích hợp trong DAX Studio hoặc Tabular Editor) là công cụ chuyên sâu hàng đầu dùng để phân tích mô hình lưu trữ cột, giúp chỉ ra chi tiết dung lượng bộ nhớ của từng cột dữ liệu và trạng thái tải của chúng.\n- **C**: Trong chế độ Direct Lake, các cột dữ liệu được tải vào RAM một cách động khi có truy vấn yêu cầu. Bằng cách truy vấn bảng xem hệ thống động (DMV) `$System.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS`, bạn có thể kiểm tra danh sách chính xác các phân đoạn cột (column segments) nào đang được nạp vào bộ nhớ RAM tại thời điểm đó.\n\nTại sao các phương án khác sai:\n- **A**: Tính năng 'Analyze in Excel' chỉ hỗ trợ người dùng tạo PivotTable kết nối tới model để kéo thả báo cáo trực quan, không cung cấp thông tin kỹ thuật về các cột đang được tải trong bộ nhớ.\n- **D**: DMV `DISCOVER_MEMORYGRANT` chỉ cho biết lượng bộ nhớ cấp phát cho việc thực thi một truy vấn cụ thể, không chi tiết đến từng cột dữ liệu được nạp của bảng Direct Lake.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1973,7 +1973,7 @@
       "E": "Enable the Users can create Fabric items option for specific security groups."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "- **B và E là đúng**: Dựa trên yêu cầu thiết lập Proof of Concept (PoC) trong Case Study:\n  - Cần hạn chế tối đa việc các người dùng khác trong tổ chức truy cập hoặc tạo các tài nguyên Fabric trước khi PoC hoàn thành. Do đó, cần cấu hình các tùy chọn cho phép tạo tài nguyên Fabric (`Users can create Fabric items`) và dùng thử các tính năng trả phí của Fabric (`Users can try Microsoft Fabric paid features`) cho một nhóm bảo mật cụ thể (như nhóm AnalyticsTeam/DataEngineers...) thay vì toàn bộ tổ chức (organization).\n- **A là sai**: Bật tính năng dùng thử cho toàn bộ tổ chức sẽ vi phạm yêu cầu chỉ cho phép nhóm quản trị và nhóm PoC nhìn thấy các tài nguyên Fabric.\n- **C là sai**: Cài đặt cho phép người dùng khách Azure AD truy cập không liên quan đến việc cho phép nhóm dự án nội bộ thử nghiệm các tính năng Fabric.\n- **D là sai**: Loại trừ các nhóm cụ thể không tối ưu bằng việc chỉ định chính xác nhóm bảo mật được phép tham gia PoC (theo nguyên tắc Least Privilege).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2116,7 +2116,7 @@
       "E": "an effective start date and time"
     },
     "answer": "CDE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "- **C, D và E là đúng**: Trong một mô hình dữ liệu Star Schema, khi thiết kế một bảng kích thước (dimension table) để theo dõi lịch sử thay đổi của khách hàng theo chuẩn Slowly Changing Dimension Type 2 (SCD Type 2), bạn cần thêm các cột kỹ thuật (không có sẵn ở nguồn) để quản lý lịch sử:\n  - Một khóa thay thế (surrogate key - D) đóng vai trò là khóa chính duy nhất cho mỗi phiên bản bản ghi của một khách hàng.\n  - Ngày/giờ bắt đầu có hiệu lực (effective start date and time - E) và Ngày/giờ kết thúc hiệu lực (effective end date and time - C) để xác định khoảng thời gian mà phiên bản bản ghi đó có giá trị.\n- **A là sai**: Khóa ngoại (foreign key) thuộc về bảng sự kiện (fact table), không nằm trong bảng kích thước.\n- **B là sai**: Khóa tự nhiên (natural key) là khóa nghiệp vụ có sẵn từ hệ thống nguồn, không phải là cột mới cần thêm vào.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2226,7 +2226,7 @@
       "E": "Microsoft SQL Server Management Studio (SSMS)"
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tạo và quản lý các phân vùng (partitions) cho các bảng dữ liệu cực kỳ lớn trong một semantic model thông qua kết nối XMLA (yêu cầu dung lượng Premium hoặc Fabric), hai công cụ hỗ trợ trực tiếp tính năng này là:\n\n- **Tabular Editor** (Lựa chọn A): Cho phép kết nối với XMLA endpoint của semantic model và tạo, chỉnh sửa cấu trúc phân vùng trực quan.\n- **Microsoft SQL Server Management Studio (SSMS)** (Lựa chọn E): Hỗ trợ kết nối vào XMLA endpoint của workspace và thực hiện quản lý phân vùng thông qua các câu lệnh TMSL (Tabular Model Scripting Language) hoặc giao diện điều khiển.\n\n**Tại sao các lựa chọn khác sai:**\n- **DAX Studio** (Lựa chọn B): Dùng để viết và tối ưu hóa truy vấn DAX, không hỗ trợ chỉnh sửa metadata phân vùng.\n- **Microsoft Power BI Desktop** (Lựa chọn C): Không hỗ trợ quản lý thủ công các phân vùng trực tiếp (chỉ hỗ trợ cấu hình Incremental Refresh tự động).\n- **Microsoft Power BI service** (Lựa chọn D): Không có tính năng giao diện người dùng trực tiếp để chỉnh sửa/phân chia các phân vùng thủ công.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2261,7 +2261,7 @@
       "E": "the certificate thumbprint"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi tạo OneLake shortcut kết nối tới một Amazon S3 bucket trong Microsoft Fabric, bạn cần cấu hình thông tin xác thực bằng cách sử dụng thông tin tài khoản IAM user của AWS. Các giá trị bắt buộc là:\n\n- **Access key ID** (Lựa chọn D): Đóng vai trò như tên tài khoản để định danh.\n- **Secret access key** (Lựa chọn B): Đóng vai trò là khóa bảo mật/mật khẩu đi kèm để xác thực kết nối.\n\n**Tại sao các lựa chọn khác sai:**\n- **SAS token** (Lựa chọn A) được sử dụng để xác thực kết nối đến Azure Blob Storage/ADLS Gen2, không dùng cho AWS S3.\n- **Access ID** (Lựa chọn C) và **Certificate thumbprint** (Lựa chọn E) không phải là tham số xác thực được hỗ trợ cho kết nối Amazon S3 trong Fabric shortcut.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2586,7 +2586,7 @@
       "E": "SECURITY POLICY"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để triển khai Bảo mật cấp dòng (Row-Level Security - RLS) trực tiếp trong công cụ SQL của Fabric Warehouse hoặc SQL Analytics Endpoint, bạn cần xây dựng hai đối tượng cơ sở dữ liệu sau:\n\n1. **FUNCTION** (Lựa chọn D): Một hàm định giá trị bảng nội tuyến (inline table-valued function) chứa logic kiểm tra điều kiện truy cập (ví dụ: đối chiếu hàm `USER_NAME()` với trường lưu thông tin định danh trong bảng).\n2. **SECURITY POLICY** (Lựa chọn E): Một chính sách bảo mật để áp dụng hàm lọc nói trên vào bảng đích (Table1).\n\n**Tại sao các lựa chọn khác sai:**\n- **Database role** (Lựa chọn A), **Stored procedure** (Lựa chọn B) và **Constraint** (Lựa chọn C) không nằm trong cơ chế định nghĩa và thực thi RLS của T-SQL.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2889,7 +2889,7 @@
       "D": "Users can synchronize workspace items with their Git repositories"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **C** và **D** đúng:\n\n* **Đồng bộ hóa Git trong Fabric**: Để người dùng có thể đồng bộ hóa và commit các thay đổi từ Workspace lên kho lưu trữ Git (như Azure DevOps), quản trị viên cần bật hai cấu hình ở cấp Tenant:\n  1. **Users can create Fabric items** (Lựa chọn C): Cho phép người dùng tạo và chỉnh sửa các đối tượng Fabric trong workspace.\n  2. **Users can synchronize workspace items with their Git repositories** (Lựa chọn D): Cấp quyền cho người dùng đồng bộ hóa các đối tượng trong workspace với kho lưu trữ Git của họ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3303,7 +3303,7 @@
       "D": "Save Model1 in Power BI Desktop as a PBIP file."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **A** và **D** đúng:\n\n* **Lưu dưới dạng tệp PBIP (Power BI Project - Lựa chọn D)** sẽ chia nhỏ mô hình dữ liệu thành các tệp văn bản TMDL (Tabular Model Definition Language) có cấu trúc thư mục rõ ràng. Điều này cho phép mở và chỉnh sửa định nghĩa bằng VS Code, cũng như dễ dàng so sánh sự khác biệt (diff) giữa các phiên bản qua mã nguồn.\n* **Kích hoạt Git integration cho Workspace1 (Lựa chọn A)** cho phép đồng bộ hóa các tệp PBIP này từ máy cục bộ lên kho chứa Git (như Azure DevOps), giúp quản lý mã nguồn, theo dõi thay đổi và khôi phục (revert) về các phiên bản cũ hơn khi cần.\n* Tệp PBIT (B) là tệp mẫu, không hỗ trợ lưu cấu trúc dự án mở để so sánh mã nguồn hoặc tích hợp Git.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3337,7 +3337,7 @@
       "E": "Disable the ShippedDate relationship between the tables."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **A** và **D** đúng:\n\n* Để tránh ảnh hưởng đến các báo cáo hiện có (đang lọc theo mối quan hệ chính `OrderDate`), mối quan hệ thứ hai trên cột `ShippedDate` phải được tạo ở trạng thái **không hoạt động (inactive)**. Vì vậy, ta cần bật/tạo mối quan hệ này trong mô hình (Lựa chọn A).\n* Để lọc dữ liệu theo ngày giao hàng (`ShippedDate`) trong các phép tính của báo cáo mới, ta sử dụng hàm **USERELATIONSHIP** (Lựa chọn D) bên trong hàm `CALCULATE` để tạm thời kích hoạt mối quan hệ không hoạt động này cho phép tính cụ thể đó.\n* Các phương án khác như `CROSSFILTER` (C) dùng để thay đổi hướng lọc, `RELATEDTABLE` (B) dùng để lấy các hàng liên quan trong bảng con, không dùng để giải quyết bài toán đa vai trò (role-playing dimension).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3397,7 +3397,7 @@
       "E": "For the SalesAmount column, select Transformation number column - Standard, select Add, and then set the value to 90."
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tại sao **C** và **D** đúng:\n\n* Để tính tổng số tiền bán hàng theo danh mục cho các giao dịch thuộc quý trước trong giao diện Visual Query Editor:\n  1. Lọc cột ngày giao dịch bằng cách nhấp vào cột `TransactionDate`, chọn **Filter rows** và đặt bộ lọc là **last quarter** (Lựa chọn C) để chỉ giữ lại dữ liệu của quý trước.\n  2. Gom nhóm kết quả bằng cách chọn cột `ProductCategory`, nhấp vào **Group by** và cấu hình hàm tính tổng (`Sum`) trên cột `SalesAmount` (Lựa chọn D).\n* Các thao tác khác như xóa trùng lặp (A), giữ 90 dòng đầu (B), hay cộng thêm 90 (E) không liên quan đến việc lọc theo khoảng thời gian 'quý trước' hoặc tính tổng doanh thu theo nhóm.\n\n*(Đáp án được gợi ý bởi AI)*",

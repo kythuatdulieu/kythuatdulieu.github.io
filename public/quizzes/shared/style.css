@@ -349,6 +349,17 @@ button {
   color: var(--text-muted);
 }
 
+.score-item.reviewed .score-icon,
+.score-item.reviewed .score-value,
+.score-item.reviewed .score-label {
+  color: var(--sl-color-text-accent);
+}
+
+.score-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
 .score-progress {
   flex: 1;
   height: 4px;
@@ -1068,6 +1079,12 @@ button {
   background: var(--incorrect-bg);
   border-color: var(--incorrect-border);
   color: var(--incorrect);
+}
+
+.grid-item.answered-reviewed {
+  background: var(--sl-color-accent-low);
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-text-accent);
 }
 
 /* ===================================

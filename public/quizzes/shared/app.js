@@ -45,7 +45,6 @@
         questionText: $('questionText'),
         questionTextVi: $('questionTextVi'),
         optionsList: $('optionsList'),
-        btnPdf: $('btnPdf'),
         btnImage: $('btnImage'),
         questionImageBox: $('questionImageBox'),
         questionImage: $('questionImage'),
@@ -53,6 +52,7 @@
         scoreCorrect: $('scoreCorrect'),
         scoreIncorrect: $('scoreIncorrect'),
         scoreUnanswered: $('scoreUnanswered'),
+        scoreReviewed: $('scoreReviewed'),
         progressBar: $('progressBar'),
         btnPrev: $('btnPrev'),
         btnNext: $('btnNext'),
@@ -127,24 +127,51 @@
     // ========================
     // Scoring
     // ========================
+    function canonicalAnswer(value, options = {}) {
+        const raw = String(value || '').trim().toUpperCase();
+        if (!raw) return '';
+        const parts = raw.includes(',')
+            ? raw.split(',').map(part => part.trim()).filter(Boolean)
+            : [...raw.replace(/\s+/g, '')];
+        const optionKeys = new Set(Object.keys(options));
+        if (optionKeys.size && parts.some(part => !optionKeys.has(part))) return raw;
+        return [...new Set(parts)].sort().join(',');
+    }
+
+    function isGradableQuestion(q) {
+        return Boolean(q.options && Object.keys(q.options).length && q.answer);
+    }
+
+    function isCorrectAnswer(q, answer) {
+        return isGradableQuestion(q) && answer === q.answer;
+    }
+
+    function isIncorrectAnswer(q, answer) {
+        return isGradableQuestion(q) && answer !== undefined && answer !== q.answer;
+    }
+
     function getCounts() {
-        let correct = 0, incorrect = 0, unanswered = 0;
+        let correct = 0, incorrect = 0, unanswered = 0, reviewed = 0;
         questions.forEach(q => {
-            if (userAnswers[q.id] !== undefined) {
-                if (userAnswers[q.id] === q.answer) correct++;
+            if (!isGradableQuestion(q)) {
+                if (userAnswers[q.id] === 'VIEWED') reviewed++;
+                else unanswered++;
+            } else if (userAnswers[q.id] !== undefined) {
+                if (isCorrectAnswer(q, userAnswers[q.id])) correct++;
                 else incorrect++;
             } else {
                 unanswered++;
             }
         });
-        return { correct, incorrect, unanswered };
+        return { correct, incorrect, unanswered, reviewed };
     }
 
     function updateScores() {
-        const { correct, incorrect, unanswered } = getCounts();
+        const { correct, incorrect, unanswered, reviewed } = getCounts();
         els.scoreCorrect.textContent = correct;
         els.scoreIncorrect.textContent = incorrect;
         els.scoreUnanswered.textContent = unanswered;
+        if (els.scoreReviewed) els.scoreReviewed.textContent = reviewed;
 
         els.statCorrect.textContent = correct;
         els.statIncorrect.textContent = incorrect;
@@ -157,7 +184,7 @@
         if (els.countRedoIncorrect) els.countRedoIncorrect.textContent = incorrect;
         els.countUnanswered.textContent = unanswered;
 
-        const answered = correct + incorrect;
+        const answered = correct + incorrect + reviewed;
         const pct = questions.length > 0 ? (answered / questions.length) * 100 : 0;
         els.progressBar.style.width = pct + '%';
     }
@@ -168,9 +195,9 @@
     function getFilteredIndices() {
         let indices = [...questionOrder];
         if (filterMode === 'correct') {
-            indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
+            indices = indices.filter(i => isCorrectAnswer(questions[i], userAnswers[questions[i].id]));
         } else if (filterMode === 'incorrect') {
-            indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+            indices = indices.filter(i => isIncorrectAnswer(questions[i], userAnswers[questions[i].id]));
         } else if (filterMode === 'redo_incorrect') {
             indices = indices.filter(i => redoIncorrectIds.includes(questions[i].id));
         } else if (filterMode === 'unanswered') {
@@ -445,19 +472,6 @@
         const q = questions[qIdx];
         const userAns = userAnswers[q.id];
         const answered = userAns !== undefined;
-
-        if (els.btnPdf) {
-            if (q.page) {
-                els.btnPdf.style.display = '';
-                els.btnPdf.disabled = false;
-                const pdfPath = encodeURI('Certified Data Engineer Professional_Answers_new.pdf');
-                els.btnPdf.onclick = () => window.open(`${pdfPath}#page=${q.page}`, '_blank');
-            } else {
-                els.btnPdf.style.display = 'none';
-                els.btnPdf.disabled = true;
-                els.btnPdf.onclick = null;
-            }
-        }
 
         if (els.btnImage) {
             if (q.image) {
@@ -876,9 +890,9 @@
 
         let indices = [...questionOrder];
         if (gridFilter === 'correct') {
-            indices = indices.filter(i => userAnswers[questions[i].id] === questions[i].answer);
+            indices = indices.filter(i => isCorrectAnswer(questions[i], userAnswers[questions[i].id]));
         } else if (gridFilter === 'incorrect') {
-            indices = indices.filter(i => userAnswers[questions[i].id] !== undefined && userAnswers[questions[i].id] !== questions[i].answer);
+            indices = indices.filter(i => isIncorrectAnswer(questions[i], userAnswers[questions[i].id]));
         } else if (gridFilter === 'redo_incorrect') {
             indices = indices.filter(i => redoIncorrectIds.includes(questions[i].id));
         } else if (gridFilter === 'unanswered') {
@@ -895,8 +909,10 @@
 
             const posInFiltered = filtered.indexOf(qOrderIdx);
 
-            if (userAnswers[q.id] !== undefined) {
-                if (userAnswers[q.id] === q.answer) {
+            if (!isGradableQuestion(q) && userAnswers[q.id] === 'VIEWED') {
+                btn.classList.add('answered-reviewed');
+            } else if (userAnswers[q.id] !== undefined && isGradableQuestion(q)) {
+                if (isCorrectAnswer(q, userAnswers[q.id])) {
                     btn.classList.add('answered-correct');
                 } else {
                     btn.classList.add('answered-incorrect');
@@ -1021,7 +1037,7 @@
     function handleRedoIncorrect() {
         // Lấy danh sách ID các câu đang sai
         redoIncorrectIds = questions
-            .filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.answer)
+            .filter(q => isIncorrectAnswer(q, userAnswers[q.id]))
             .map(q => q.id);
             
         if (redoIncorrectIds.length === 0) {
@@ -1058,7 +1074,7 @@
     }
 
     function resetIncorrect() {
-        const toReset = questions.filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.answer);
+        const toReset = questions.filter(q => isIncorrectAnswer(q, userAnswers[q.id]));
         if (toReset.length === 0) {
             showToast('Không có câu sai nào để reset');
             return;
@@ -1073,7 +1089,7 @@
     }
 
     function resetCorrect() {
-        const toReset = questions.filter(q => userAnswers[q.id] === q.answer);
+        const toReset = questions.filter(q => isCorrectAnswer(q, userAnswers[q.id]));
         if (toReset.length === 0) {
             showToast('Không có câu đúng nào để reset');
             return;
@@ -1229,7 +1245,7 @@
                 items.forEach(q => {
                     const o = document.createElement('option');
                     o.value = q.id;
-                    o.textContent = q.vi ? q.name + ' — tiếng Việt' : q.name;
+                    o.textContent = q.vi ? q.name + ' — song ngữ' : q.viCoverage > 0 ? `${q.name} — ${q.viCoverage}% tiếng Việt` : `${q.name} — English`;
                     og.appendChild(o);
                 });
                 sel.appendChild(og);
@@ -1244,15 +1260,9 @@
     async function init() {
         try {
             const normalizeQ = q => {
-                let ans = q.answer || '';
-                let isMulti = q.isMulti;
-                if (ans.length > 1 && !ans.includes(',')) {
-                    ans = ans.split('').join(',');
-                }
-                if (ans.includes(',')) {
-                    isMulti = true;
-                }
-                return { ...q, answer: ans, isMulti };
+                const options = q.options && typeof q.options === 'object' ? q.options : {};
+                const answer = Object.keys(options).length ? canonicalAnswer(q.answer, options) : String(q.answer || '').trim();
+                return { ...q, answer, isMulti: answer.includes(',') };
             };
             
             if (typeof QUESTIONS_DATA !== 'undefined') {
@@ -1272,6 +1282,13 @@
         questionOrder = questions.map((_, i) => i);
         
         loadState();
+
+        // Chuẩn hóa cả đáp án đã lưu trước đây (ví dụ "C, E" hoặc "E,C").
+        questions.forEach(q => {
+            if (isGradableQuestion(q) && userAnswers[q.id] !== undefined) {
+                userAnswers[q.id] = canonicalAnswer(userAnswers[q.id], q.options);
+            }
+        });
 
         // Kiểm tra xem bộ đề này có dữ liệu tiếng Việt hay không
         const hasVi = questions.some(q => q.question_vi || (q.options_vi && Object.keys(q.options_vi).length > 0) || q.explanation_vi);

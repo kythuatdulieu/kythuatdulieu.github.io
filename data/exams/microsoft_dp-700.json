@@ -617,15 +617,49 @@
     },
     {
       "id": 47,
-      "question": "You have a Fabric workspace that contains a lakehouse and a semantic model named Model1.\nYou use a notebook named Notebook1 to ingest and transform data from an external data source.\nYou need to execute Notebook1 as part of a data pipeline named Pipeline1. The process must meet the following requirements:\n• Run daily at 07:00 AM UTC.• Attempt to retry Notebook1 twice if the notebook fails.• After Notebook1 executes successfully, refresh Model1.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
-      "choices": {},
-      "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (chẳng hạn như cú pháp biểu thức không có dấu nháy `@pipeline().parameters.param1` hoặc `@int(pipeline().parameters.param1)`) là chính xác. Trong Fabric Data Pipeline, khi viết các biểu thức để trả về giá trị kiểu số nguyên (int) cho các tham số đầu vào, ta cần sử dụng ký tự `@` ở đầu để hệ thống biên dịch đó là một biểu thức động thay vì một chuỗi văn bản thuần túy (string), và không bao quanh biểu thức bằng dấu ngoặc kép. Lưu ý rằng có sự dịch chuyển trong cơ sở dữ liệu: câu hỏi số 47 thực tế tương ứng với câu hỏi số 48 này.",
-      "references": []
+      "question": "You have a Fabric workspace that contains a lakehouse and a semantic model named Model1.\nYou use a notebook named Notebook1 to ingest and transform data from an external data source.\nYou need to execute Notebook1 as part of a data pipeline named Pipeline1. The process must meet these requirements:\n• Run daily at 07:00 AM UTC.\n• Attempt to retry Notebook1 twice if the notebook fails.\n• After Notebook1 executes successfully, refresh Model1.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+      "choices": {
+        "A": "Set the Retry setting of the Notebook activity to 2.",
+        "B": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using an On completion condition.",
+        "C": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using the On success condition.",
+        "D": "Set the Retry setting of the Semantic model refresh activity to 2.",
+        "E": "From the Schedule settings of Notebook1, set the time zone to UTC.",
+        "F": "From the Schedule settings of Pipeline1, set the time zone to UTC."
+      },
+      "correctAnswer": "A,C,F",
+      "explanation_vi": "Đáp án **A, C và F**.\n\n1. Đặt `Retry = 2` trên **Notebook activity**. Giá trị này cho phép hai lần thử lại sau lần chạy đầu tiên nếu notebook lỗi. Đặt Retry cho hoạt động làm mới mô hình (D) không xử lý lỗi ở Notebook1.\n2. Thêm **Semantic model refresh activity** sau Notebook activity và nối bằng **On success**. Điều kiện này chỉ chạy bước làm mới nếu notebook thành công. `On completion` (B) chạy sau khi notebook kết thúc bất kể thành công hay thất bại, nên không đáp ứng yêu cầu.\n3. Đặt lịch chạy hằng ngày lúc 07:00 và múi giờ UTC trong **Schedule settings của Pipeline1**. Pipeline là nơi điều phối cả notebook lẫn bước làm mới; cài lịch cho riêng Notebook1 (E) không đặt lịch cho quy trình pipeline này.\n\nTài liệu Microsoft xác nhận Pipeline1 có thể được lập lịch theo tần suất, giờ bắt đầu và múi giờ; Notebook activity hỗ trợ số lần retry; và Semantic model refresh activity có thể chạy trong pipeline.\n\n*(Đáp án được đối chiếu với yêu cầu đề và tài liệu Microsoft Fabric.)*",
+      "references": [
+        {
+          "title": "Activity retries in Microsoft Fabric Data Factory",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-retries"
+        },
+        {
+          "title": "Run, schedule, or use events to trigger a pipeline",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+        },
+        {
+          "title": "Pipeline canvas dependencies",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-canvas-experience"
+        },
+        {
+          "title": "Semantic model refresh activity",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity"
+        }
+      ],
+      "isMulti": true,
+      "question_vi": "Bạn có một workspace Fabric chứa lakehouse và semantic model tên là Model1. Bạn dùng notebook Notebook1 để nạp và biến đổi dữ liệu từ nguồn bên ngoài.\n\nBạn cần chạy Notebook1 trong data pipeline Pipeline1 với các yêu cầu:\n- Chạy hằng ngày lúc 07:00 UTC.\n- Thử chạy lại Notebook1 hai lần nếu notebook thất bại.\n- Chỉ sau khi Notebook1 chạy thành công mới làm mới Model1.\n\nCần thực hiện ba thao tác nào? Mỗi lựa chọn đúng là một phần của lời giải.",
+      "options_vi": {
+        "A": "Đặt Retry của Notebook activity thành 2.",
+        "B": "Đặt Semantic model refresh sau Notebook và nối hai activity bằng điều kiện On completion (khi hoàn tất).",
+        "C": "Đặt Semantic model refresh sau Notebook và nối hai activity bằng điều kiện On success (khi thành công).",
+        "D": "Đặt Retry của Semantic model refresh activity thành 2.",
+        "E": "Trong cài đặt Schedule của Notebook1, chọn múi giờ UTC.",
+        "F": "Trong cài đặt Schedule của Pipeline1, chọn múi giờ UTC."
+      }
     },
     {
       "id": 48,
-      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1.\nYou plan to create a data pipeline named Pipeline1 to ingest data into Lakehouse1. You will use a parameter named param1 to pass an external value into Pipeline1. The param1 parameter has a data type of int.\nYou need to ensure that the pipeline expression returns param1 as an int value.\nHow should you specify the parameter value?",
+      "question": "You need to develop an orchestration solution in Microsoft Fabric that loads each item one after another. The solution must be scheduled to run every 15 minutes. Which type of item should you use?",
       "choices": {
         "A": "notebook",
         "B": "warehouse",
@@ -633,8 +667,19 @@
         "D": "data pipeline"
       },
       "correctAnswer": "D",
-      "explanation_vi": "Lựa chọn D (data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to develop an orchestration solution in Fabric that will load each item one after the other. The solution must be scheduled to run every 15 minutes. Which type of item should you use?'\n- Trong Fabric, để lập lịch chạy định kỳ và phối hợp (orchestrate) chạy tuần tự nhiều loại đối tượng khác nhau (Dataflow Gen2, Spark Notebook, các hoạt động tải dữ liệu), Data Pipeline là công cụ phù hợp nhất.",
-      "references": []
+      "explanation_vi": "Đáp án **D (data pipeline)**. Pipeline là thành phần điều phối trong Fabric: có thể sắp xếp các activity phụ thuộc nhau để chạy lần lượt và đặt lịch chạy. Notebook dùng để viết và chạy mã xử lý dữ liệu; warehouse lưu trữ/truy vấn dữ liệu; Dataflow Gen2 dùng cho luồng biến đổi dữ liệu. Ba loại này không thay thế pipeline khi cần điều phối nhiều bước theo lịch.\n\n*(Đáp án được đối chiếu với tài liệu Microsoft về pipeline, schedule và activity.)*",
+      "references": [
+        {
+          "title": "Data Factory pipeline overview",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/data-factory-overview"
+        },
+        {
+          "title": "Run, schedule, or use events to trigger a pipeline",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+        }
+      ],
+      "question_vi": "Bạn cần xây dựng giải pháp điều phối trong Microsoft Fabric để lần lượt nạp từng mục. Giải pháp phải được lập lịch chạy mỗi 15 phút. Nên dùng loại mục nào?",
+      "isMulti": false
     },
     {
       "id": 49,

@@ -368,7 +368,7 @@
       "E": "The label data can be positive or negative."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Hồi quy Poisson (Poisson regression) là phương pháp hồi quy được thiết kế riêng để mô hình hóa dữ liệu đếm (count data) - số lần một sự kiện xảy ra trong một khoảng thời gian/không gian nhất định. Do đó, nhãn dữ liệu (biến mục tiêu) phải thỏa mãn hai điều kiện sau:\n\n*   **Phải là số nguyên (Whole numbers) - Lựa chọn B:** Vì số lần đếm sự kiện chỉ có thể nhận các giá trị nguyên rời rạc (ví dụ: $0, 1, 2...$ cuộc gọi), không thể nhận giá trị thập phân.\n*   **Phải là giá trị dương/không âm (Positive value) - Lựa chọn D:** Số lần cuộc gọi diễn ra không thể là số âm ($< 0$), do đó giá trị của biến mục tiêu phải luôn lớn hơn hoặc bằng không.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -457,7 +457,7 @@
       "E": "Add an additional dense layer with 64 input units."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Hiện tượng quá khớp (overfitting) xảy ra khi mô hình học quá kỹ các chi tiết và nhiễu trong tập dữ liệu huấn luyện, dẫn đến khả năng tổng quát hóa kém trên dữ liệu mới. Để giảm overfitting, chúng ta có các giải pháp sau:\n\n*   **Thêm điều chuẩn L1/L2 (L1/L2 regularization) (Chọn B)**: Điều chuẩn L1/L2 giới hạn độ lớn của các trọng số (weights) trong mạng nơ-ron bằng cách thêm một lượng phạt vào hàm mất mát, giúp mô hình đơn giản hơn và giảm thiểu overfitting.\n*   **Sử dụng tăng cường dữ liệu huấn luyện (training data augmentation) (Chọn C)**: Tăng cường dữ liệu giúp tạo ra nhiều biến thể khác nhau từ dữ liệu sẵn có (ví dụ: xoay, lật, phóng to/thu nhỏ ảnh), làm phong phú thêm tập huấn luyện, giúp mô hình học được các đặc trưng bất biến và nâng cao khả năng tổng quát hóa.\n*   *Các lựa chọn sai*:\n    *   Thêm lớp dense (lớp liên kết đầy đủ) (A, E) sẽ làm tăng số lượng tham số của mô hình, khiến mạng phức tạp hơn và dễ bị overfitting hơn.\n    *   Giảm lượng dữ liệu huấn luyện (D) thường sẽ làm trầm trọng thêm hiện tượng overfitting vì mô hình có ít ví dụ để học hỏi hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -548,7 +548,7 @@
       "E": "Hidden layer specification"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng mô-đun **Tune Model Hyperparameters** để tinh chỉnh siêu tham số (hyperparameter sweep) cho mô hình nơ-ron hai lớp (Two-Class Neural Network), bạn chỉ có thể chọn tinh chỉnh các tham số thuộc dạng giá trị số hoặc danh sách các giá trị rời rạc mà thuật toán chấp nhận thông qua cấu hình tham số.\n\n*   **Learning Rate (Tốc độ học) (Chọn B)** và **Number of learning iterations (Số lần lặp học tập) (Chọn D)** là hai siêu tham số dạng số chuẩn có sẵn trong Two-Class Neural Network để quét và tinh chỉnh phạm vi giá trị nhằm tìm ra cấu hình tối ưu nhất cho độ chính xác.\n*   *Các lựa chọn sai*:\n    *   **Hidden layer specification** (E) và **The type of the normalizer** (C) xác định kiến trúc cấu trúc tổng thể của mạng và không phải là các siêu tham số định lượng có thể được quét tự động bằng Sweep theo cách thông thường.\n    *   **Number of hidden nodes** (A) chỉ có thể cấu hình được nếu đặc tả lớp ẩn được đặt thành 'Fully connected case', nhưng bản thân nó là một phần thuộc cấu hình kiến trúc chứ không nằm trong tập siêu tham số quét trực tiếp của mô-đun Tune Model Hyperparameters cho mạng nơ-ron này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -608,7 +608,7 @@
       "E": "Windows 10 64-bit Professional"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để cài đặt và chạy Docker Desktop trên Windows sử dụng Hyper-V (hoặc WSL 2), hệ thống của người tham dự cần đáp ứng một số yêu cầu phần cứng và phần mềm cụ thể:\n\n*   **Windows 10 64-bit Professional (Chọn E)**: Docker Desktop yêu cầu phiên bản hệ điều hành 64-bit và các tính năng ảo hóa cấp hệ điều hành (như Hyper-V) vốn chỉ được hỗ trợ đầy đủ trên các bản Windows Pro, Enterprise hoặc Education (không hỗ trợ bản Home trong các cấu hình cũ sử dụng Hyper-V trực tiếp).\n*   **BIOS-enabled virtualization (Chọn C)**: Tính năng ảo hóa phần cứng (Intel VT-x hoặc AMD-V) phải được kích hoạt trong thiết lập BIOS/UEFI của thiết bị để Hyper-V hoặc nền tảng ảo hóa khác có thể hoạt động.\n*   *Các lựa chọn sai*:\n    *   Microsoft Hardware-Assisted Virtualization Detection Tool (A) chỉ là một công cụ kiểm tra xem máy có hỗ trợ ảo hóa hay không, không phải là thành phần tiên quyết cần cài đặt để chạy Docker.\n    *   Kitematic (B) là một giao diện đồ họa cũ để quản lý các container Docker và hiện tại đã bị khai tử/tích hợp vào Docker Desktop.\n    *   VirtualBox (D) không bắt buộc và Docker Desktop trên Windows sử dụng trực tiếp Hyper-V hoặc WSL 2 thay vì chạy qua máy ảo VirtualBox như phiên bản Docker Toolbox cũ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -848,7 +848,7 @@
       "E": "Summarize Data"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tạo bản tóm tắt thống kê chứa các thông tin như p-value và unique count cho các cột trong tập dữ liệu:\n\n*   **Summarize Data (Chọn E)**: Đây là mô-đun sẵn có trong Azure ML Studio được thiết kế đặc biệt để tạo báo cáo thống kê mô tả cơ bản cho các cột trong tập dữ liệu đầu vào. Báo cáo này bao gồm các chỉ số như số lượng giá trị duy nhất (unique value count), giá trị lớn nhất, nhỏ nhất, trung bình, phân vị và các thống kê liên quan khác.\n*   **Execute Python Script (Chọn C)**: Cho phép bạn viết mã lệnh Python tùy chỉnh sử dụng các thư viện như `pandas` hoặc `scipy.stats` để tự do tính toán bất kỳ chỉ số thống kê nâng cao nào, bao gồm cả số lượng giá trị duy nhất (`df[col].nunique()`) và kiểm định giả thuyết để tính giá trị p (p-value).\n*   *Các lựa chọn sai*:\n    *   **Compute Linear Correlation** (A) chỉ tính toán hệ số tương quan tuyến tính giữa các cột số mà không cung cấp số lượng giá trị duy nhất hoặc p-value riêng lẻ cho mỗi đặc trưng.\n    *   **Export Count Table** (B) và **Convert to Indicator Values** (D) là các bước xử lý biến đổi dữ liệu, không dùng để xuất ra báo cáo tóm tắt các chỉ số thống kê mô tả yêu cầu trong đề bài.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -883,7 +883,7 @@
       "E": "Build Counting Transform"
     },
     "answer": "ABC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Quy trình xác định và xử lý các giá trị ngoại lai (outliers) bao gồm ba bước chính tương ứng với ba mô-đun:\n\n* **A. Create Scatterplot (Tạo biểu đồ phân tán) - Đúng**: Giúp trực quan hóa dữ liệu để nhanh chóng nhận diện các điểm dữ liệu bất thường (outliers) nằm xa cụm chính.\n* **B. Summarize Data (Tóm tắt dữ liệu) - Đúng**: Giúp định lượng các giá trị ngoại lai bằng cách tính toán các thống kê mô tả cơ bản như giá trị tối thiểu, tối đa, trung bình và các phân vị (percentiles).\n* **C. Clip Values (Cắt giảm giá trị) - Đúng**: Được sử dụng để loại bỏ hoặc điều chỉnh các giá trị ngoại lai bằng cách cắt chúng về một ngưỡng giới hạn trên/dưới xác định.\n* **D, E - Sai**: `Replace Discrete Values` và `Build Counting Transform` không hỗ trợ trực tiếp cho việc trực quan hóa, định lượng hoặc cắt giảm giá trị ngoại lai.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1096,7 +1096,7 @@
       "E": "Specify a tag named accuracy with the accuracy metric as a value when registering the model, and only register subsequent models if their accuracy is higher than the accuracy tag value of the currently registered model."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để so sánh hiệu năng giữa mô hình mới huấn luyện và mô hình hiện tại trước khi quyết định đăng ký phiên bản mới, ta cần lưu trữ giá trị độ chính xác của mô hình đã đăng ký dưới dạng metadata để dễ dàng truy vấn qua SDK:\n\n* **D. Sử dụng thuộc tính (property) - Đúng**: Bạn có thể gắn một thuộc tính (key-value pair bất biến) đại diện cho độ chính xác vào mô hình khi đăng ký. Đoạn mã huấn luyện lại sẽ truy vấn mô hình hiện tại, đọc thuộc tính này để so sánh.\n* **E. Sử dụng thẻ (tag) - Đúng**: Tương tự như thuộc tính, thẻ (tag - key-value pair có thể thay đổi) cho phép bạn lưu trữ các thông tin đánh giá mô hình và truy vấn để so sánh trước khi đăng ký mô hình mới.\n* **A, B, C - Sai**: Không giúp so sánh hiệu năng để quyết định có đăng ký mô hình mới hay không.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1127,7 +1127,7 @@
       "E": "Bulk Copy Program (BCP)"
     },
     "answer": "BCD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tải dữ liệu lên Azure Blob Storage, chúng ta có các công cụ và thư viện hỗ trợ chuyên dụng sau:\n\n* **B. AzCopy - Đúng**: Công cụ dòng lệnh hiệu năng cao được thiết kế riêng để sao chép dữ liệu đến và đi từ Azure Storage.\n* **C. Tập lệnh Python (Python script) - Đúng**: Sử dụng thư viện SDK của Azure Storage cho Python (`azure-storage-blob`) để tải dữ liệu lên thông qua mã lập trình.\n* **D. Azure Storage Explorer - Đúng**: Ứng dụng giao diện đồ họa trực quan (GUI) đa nền tảng giúp dễ dàng quản lý tài nguyên lưu trữ và tải tệp lên Azure Blob Storage.\n* **A, E - Sai**: `Bulk Insert` và `BCP` là các công cụ dành riêng cho việc chèn dữ liệu hàng loạt vào cơ sở dữ liệu quan hệ (như SQL Server / Azure SQL Database), không dùng cho Azure Blob Storage.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1277,7 +1277,7 @@
       "F": "a Root Mean Square Error value that is high"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Đối với mô hình hồi quy (Regression), các chỉ số đánh giá quan trọng bao gồm:\n\n* **A. Giá trị Root Mean Square Error (RMSE) thấp - Đúng**: RMSE đo lường độ lệch trung bình giữa giá trị dự báo và giá trị thực tế. RMSE càng thấp chứng tỏ mô hình dự báo càng chính xác.\n* **D. Giá trị R-Squared gần bằng 1 - Đúng**: Hệ số xác định R-Squared ($R^2$) biểu thị tỷ lệ biến động của biến phụ thuộc được giải thích bởi mô hình hồi quy. Giá trị này nằm trong khoảng $[0, 1]$, càng gần 1 chứng tỏ mô hình càng phù hợp tốt với dữ liệu thực tế.\n* **B, F - Sai**: RMSE cao và R-Squared gần 0 thể hiện mô hình dự báo kém.\n* **C, E - Sai**: F1 score là chỉ số đánh giá mô hình phân loại (Classification), không áp dụng cho mô hình hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1475,7 +1475,7 @@
       "E": "Scatter plot"
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xác định các giá trị ngoại lai trong dữ liệu:\n\n*   **Box plot** (Lựa chọn B) là biểu đồ tiêu chuẩn để biểu diễn phân phối dữ liệu qua các phân vị và làm nổi bật các điểm dữ liệu nằm ngoài khoảng râu dưới dạng các điểm ngoại lai riêng biệt.\n*   **Scatter plot** (Lựa chọn E) biểu diễn mối quan hệ giữa hai biến liên tục, giúp dễ dàng nhận biết các điểm dữ liệu đứng riêng lẻ, xa khỏi cụm phân phối chính.\n*   Các tùy chọn còn lại như biểu đồ Venn, đường cong ROC hay sơ đồ rừng ngẫu nhiên không hỗ trợ trực quan hóa để phát hiện giá trị ngoại lai trực tiếp từ dữ liệu gốc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1658,7 +1658,7 @@
       "D": "Random sampling"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Các siêu tham số đầu vào bao gồm một phân phối liên tục cho `learning_rate` (từ 0.001 đến 0.1) và một phân phối rời rạc cho `batch_size` (16, 32 hoặc 64). Yêu cầu đặt ra là không áp dụng chính sách dừng sớm (no early termination policy).\n\n*   **Random sampling (Lấy mẫu ngẫu nhiên)** (Lựa chọn D) hỗ trợ cả phân phối liên tục và rời rạc, đồng thời hỗ trợ cả việc áp dụng hoặc không áp dụng chính sách dừng sớm.\n*   **Bayesian sampling (Lấy mẫu Bayes)** (Lựa chọn C) hỗ trợ cả không gian tham số liên tục lẫn rời rạc. Một đặc điểm quan trọng của Bayesian sampling trong Azure ML là **không hỗ trợ** bất kỳ chính sách dừng sớm nào, điều này hoàn toàn đáp ứng yêu cầu của đề bài.\n*   **Grid sampling (Lấy mẫu lưới)** (Lựa chọn B) chỉ hỗ trợ các giá trị siêu tham số rời rạc hoặc dạng lựa chọn hữu hạn (discrete hyperparameters), không hỗ trợ phân phối liên tục cho `learning_rate` trừ khi bạn chuyển nó thành dạng lưới rời rạc cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1688,7 +1688,7 @@
       "E": "Use the get_output() method of the run object to retrieve the experiment run logs."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để khắc phục sự cố thử nghiệm thất bại và xem logs chạy thử nghiệm:\n\n*   **get_details_with_logs()** (Lựa chọn B) là phương thức trên đối tượng Run trong SDK để lấy ra chi tiết lượt chạy kèm theo nội dung nhật ký lỗi chi tiết.\n*   **Azure Machine Learning studio** (Lựa chọn D) cung cấp giao diện trực quan để người dùng kiểm tra các tệp nhật ký trực tiếp trong tab **Outputs + logs** của lượt chạy tương ứng.\n*   `get_metrics()` (Lựa chọn A) chỉ lấy về các chỉ số do người dùng ghi lại, không lấy log hệ thống.\n*   `get_output()` (Lựa chọn E) dùng để tải mô hình hoặc kết quả đầu ra.\n*   Các tệp nhật ký được tạo ra trong container thực thi trên Azure Compute, không nằm trong thư mục thử nghiệm cục bộ (Lựa chọn C).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1750,7 +1750,7 @@
       "E": "Use the Automated Machine Learning user interface to train a model."
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Dựa trên sự phân biệt giữa phiên bản **Basic** và **Enterprise** của Azure Machine Learning trước đây:\n\n*   **Compute Instance** (Lựa chọn A) có sẵn trên phiên bản Basic để các nhà khoa học dữ liệu chạy code trong Jupyter notebook.\n*   Các tính năng không mã nguồn (no-code) đồ họa trực quan như kéo thả **Designer** (Lựa chọn C) và giao diện đồ họa **Automated Machine Learning (AutoML) UI** (Lựa chọn E) là các tính năng được tích hợp trong phiên bản Enterprise nâng cao.\n*   *Lưu ý: Hiện nay, Microsoft đã hợp nhất phiên bản Basic và Enterprise thành một phiên bản Workspace duy nhất chứa toàn bộ các tính năng này.*\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1781,7 +1781,7 @@
       "E": "The sum of distances between centroids reaches a maximum."
     },
     "answer": "ACD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Thuật toán phân cụm K-means dừng quá trình lặp khi thỏa mãn một trong các điều kiện dừng (hội tụ hoặc giới hạn) sau:\n\n- **A. Các tâm cụm không thay đổi giữa các vòng lặp (Centroids do not change between iterations)**: Đây là điều kiện hội tụ hoàn hảo, khi các điểm dữ liệu không còn bị phân lại cụm và vị trí của các tâm cụm đã hoàn toàn cố định.\n- **C. Tổng bình phương phần dư (RSS) giảm xuống dưới một ngưỡng (The residual sum of squares falls below a threshold)**: RSS đo lường tổng bình phương khoảng cách từ các điểm dữ liệu đến tâm cụm tương ứng. Khi sai số này đủ nhỏ, thuật toán xem như đã đạt độ chính xác yêu cầu.\n- **D. Một số lượng vòng lặp cố định được thực hiện (A fixed number of iterations is executed)**: Đây là điều kiện dừng giới hạn để đảm bảo thuật toán không bị lặp vô hạn nếu gặp dữ liệu khó hội tụ.\n\nCác lựa chọn khác không đúng vì:\n- RSS tăng lên (B) không phải là điều kiện dừng vì K-means là thuật toán tối ưu hóa nhằm giảm thiểu RSS.\n- Tổng khoảng cách giữa các tâm cụm đạt cực đại (E) không được sử dụng làm tiêu chuẩn để dừng thuật toán.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2028,7 +2028,7 @@
       "E": "Run the refresh_state() method of the BatchCompute class in the Python SDK."
     },
     "answer": "ABC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để định cấu hình lại số lượng nút tối thiểu (min_nodes) và tối đa (max_nodes) của một cụm tính toán `AmlCompute` trong Azure Machine Learning, ta có thể dùng 3 cách chính thống sau:\n\n1. **A. Sử dụng Azure Machine Learning studio**: Truy cập giao diện Studio, vào phần Compute -> Compute clusters, chọn cụm tính toán cần thay đổi và nhấn nút Edit để cập nhật các tham số này.\n2. **B. Chạy phương thức `update` của lớp `AmlCompute` trong Python SDK**: Đoạn mã SDK cho phép gọi hàm `AmlCompute.update(min_nodes=0, max_nodes=8)` để cấu hình lại tài nguyên từ chương trình Python.\n3. **C. Sử dụng Azure portal**: Cho phép truy cập trực tiếp vào tài nguyên cụm máy tính tính toán bên dưới nhóm tài nguyên của bạn trên Portal để cấu hình lại các thông số co giãn.\n\nCác lựa chọn khác không chính xác vì:\n- Azure Machine Learning designer (D) dùng để thiết kế luồng huấn luyện mô hình bằng giao diện kéo thả, không hỗ trợ cấu hình hạ tầng.\n- Phương thức `refresh_state()` (E) dùng để làm mới trạng thái hiện tại của đối tượng cụm tính toán trong SDK chứ không dùng để cập nhật giá trị thuộc tính mới.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2141,7 +2141,7 @@
       "F": "Remove the Apply SQL Transformation module from the data flow."
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để điều chỉnh pipeline suy luận thời gian thực (inference pipeline) sao cho khách hàng không cần gửi kèm nhãn `price` khi gọi dịch vụ web, và trả về giá dự đoán thực tế (bằng cách lấy lũy thừa mũ `EXP` của nhãn đã được chấm điểm dưới dạng logarit), bạn cần thực hiện 3 chỉnh sửa sau:\n\n1. **E. Loại bỏ mô-đun Apply Math Operation thay thế price bằng logarit tự nhiên**: Vì dữ liệu đầu vào thực tế từ client khi suy luận sẽ không có cột `price`, việc cố gắng tính toán toán học trên một cột không tồn tại sẽ gây lỗi cho luồng chạy.\n2. **C. Thêm một mô-đun Select Columns trước mô-đun Score Model để chọn tất cả các cột ngoại trừ price**: Score Model cần dữ liệu đầu vào khớp với các đặc trưng huấn luyện nhưng không cần chứa cột nhãn thực tế (`price`).\n3. **A. Kết nối đầu ra của Apply SQL Transformation với mô-đun Web Service Output**: Mô-đun Apply SQL Transformation tính toán lũy thừa mũ (EXP) để chuyển kết quả từ dạng logarit về dạng giá trị thực tế của ô tô. Đầu ra của mô-đun này phải được kết nối trực tiếp với điểm cuối output của dịch vụ web (`Web Service Output`) để trả về kết quả dự đoán đúng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2173,7 +2173,7 @@
       "E": "Run Python code that uses the Azure ML SDK library and calls the Workspace.get method with name, subscription_id, and resource_group parameters."
     },
     "answer": "ABC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tạo mới một workspace Azure Machine Learning trong một Azure subscription chưa có tài nguyên, bạn có thể thực hiện thông qua 3 cách hợp lệ sau:\n\n1. **A. Sử dụng Python SDK (`Workspace.create`)**: Viết một tập lệnh Python gọi phương thức `Workspace.create`. Nếu nhóm tài nguyên (resource group) chỉ định chưa tồn tại, SDK cũng sẽ tự động khởi tạo nhóm tài nguyên đó.\n2. **B (hoặc D). Truy cập Azure Machine Learning studio (hoặc Azure Portal) để tạo trực tiếp**: Sử dụng giao diện đồ họa trực quan trên trình duyệt để khởi tạo.\n3. **C. Sử dụng CLI với phần mở rộng Azure Machine Learning**: Chạy lệnh `az group create` để tạo nhóm tài nguyên trước, sau đó chạy lệnh `az ml workspace create` để tạo workspace liên kết với nhóm tài nguyên đó.\n\nLựa chọn khác không đúng vì:\n- Phương thức `Workspace.get()` (E) dùng để tải thông tin của một workspace đã tồn tại sẵn trong hệ thống chứ không thể dùng để khởi tạo mới.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2399,7 +2399,7 @@
       "E": "The key for the endpoint."
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để các ứng dụng khách bên ngoài có thể gửi yêu cầu và nhận kết quả dự đoán từ điểm cuối dịch vụ thời gian thực đã triển khai, các nhà phát triển ứng dụng cần hai thông tin cơ bản:\n1. **URL của điểm cuối (Endpoint URL - C)**: Địa chỉ REST API để ứng dụng gửi dữ liệu đầu vào.\n2. **Khóa xác thực (Key - E)**: Sử dụng để chứng thực quyền truy cập hợp lệ (Authentication) khi gửi yêu cầu tới API.\n\n- Các thông tin khác như tên cụm AKS (A), tên pipeline (B) hay mã lượt chạy (D) là các tài nguyên quản lý nội bộ của Azure Machine Learning, không cần thiết và không thể dùng để trực tiếp gọi REST API từ ứng dụng khách.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2544,7 +2544,7 @@
       "E": "score(mini_batch)"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng lớp **ParallelRunStep** để thực hiện tác vụ suy luận hàng loạt (batch inferencing) phân tán trong Azure Machine Learning, kịch bản Python (inference script) bắt buộc phải định nghĩa hai hàm sau:\n1. **`init()` (lựa chọn D)**: Hàm này được gọi một lần duy nhất khi tiến trình bắt đầu trên mỗi node tính toán, thường dùng để tải mô hình học máy từ registry vào bộ nhớ hoặc khởi tạo tài nguyên dùng chung.\n2. **`run(mini_batch)` (lựa chọn A)**: Hàm này được gọi lặp đi lặp lại cho mỗi nhóm dữ liệu nhỏ (mini-batch) được chia từ nguồn dữ liệu đầu vào để thực thi dự đoán và trả về kết quả.\n\n- Các hàm khác như `main()` (B), `batch()` (C) hay `score(mini_batch)` (E) không phải là các hàm giao diện chuẩn được gọi bởi ParallelRunStep của Azure ML.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2576,7 +2576,7 @@
       "F": "Add code to the bird_classifier_train.py script to calculate the validation accuracy of the model and log it as a float value with the key accuracy."
     },
     "answer": "ADF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để cấu hình Hyperdrive tối ưu hóa siêu tham số dựa trên tiêu chí độ chính xác tốt nhất, bạn cần thực hiện 3 hành động sau:\n1. **Đặt `primary_metric_name` thành `'accuracy'` (lựa chọn D)**: Để báo cho Hyperdrive biết chỉ số cần theo dõi là độ chính xác.\n2. **Đặt `primary_metric_goal` thành `PrimaryMetricGoal.MAXIMIZE` (lựa chọn A)**: Vì mục tiêu của bạn là tìm mô hình có độ chính xác cao nhất (tối đa hóa).\n3. **Thêm mã ghi nhận chỉ số vào kịch bản huấn luyện (lựa chọn F)**: Trong script `bird_classifier_train.py`, bạn phải tính toán độ chính xác trên tập kiểm định (validation accuracy) và ghi nhận nó bằng cách sử dụng phương thức của Azure ML run: `run.log('accuracy', val_accuracy)` để Hyperdrive có thể thu thập dữ liệu này từ mỗi lượt chạy thử nghiệm.\n\n- Các hành động B, C, E liên quan đến việc tối thiểu hóa (minimize) hàm mất mát (loss), điều này không đúng với yêu cầu tối ưu hóa điểm độ chính xác (accuracy score).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2819,7 +2819,7 @@
       "E": "Set the outputs property of each step in the pipeline to True."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Mặc định trong Azure Machine Learning Pipeline, hệ thống sẽ sử dụng bộ nhớ đệm (caching) để bỏ qua việc tính toán lại các bước nếu như mã nguồn, cấu hình đầu vào và tham số của bước đó không thay đổi. Để bắt buộc các bước chạy lại từ đầu:\n- **Cách 1**: Thiết lập `allow_reuse=False` trên từng bước (step) trong pipeline (lựa chọn **C**). Tham số `allow_reuse` chỉ định liệu bước này có thể tái sử dụng kết quả trước đó hay không. Đặt nó thành `False` sẽ buộc bước đó luôn luôn phải chạy lại.\n- **Cách 2**: Thiết lập thuộc tính `regenerate_outputs=True` khi đệ trình (submit) hoặc khởi chạy đối tượng pipeline run (lựa chọn **B**). Cấu hình này sẽ ghi đè và buộc toàn bộ các bước trong pipeline phải tính toán lại mà không dùng bộ nhớ đệm.\n\nCác tùy chọn còn lại không chính xác:\n- Sử dụng datastore khác (A), khởi động lại cụm tính toán (D) hay cấu hình thuộc tính `outputs` không tồn tại (E) không kiểm soát cơ chế tái sử dụng bộ nhớ đệm của các bước trong pipeline.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3219,7 +3219,7 @@
       "E": "Use accuracy as the evaluation metric of the model"
     },
     "answer": "ABD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để giải quyết vấn đề mất cân bằng dữ liệu (data imbalance) trong phân loại nhị phân, các giải pháp chuẩn bao gồm:\n1. **Áp dụng hình phạt cho lỗi phân loại (Penalize the classification - Lựa chọn A):** Gán trọng số lỗi (class weights) cao hơn cho lớp thiểu số khi huấn luyện mô hình.\n2. **Lấy mẫu lại tập dữ liệu (Resample the dataset - Lựa chọn B):** Giảm số lượng mẫu của lớp đa số (undersampling) hoặc tăng số lượng mẫu của lớp thiểu số (oversampling).\n3. **Tạo các mẫu dữ liệu nhân tạo (Generate synthetic samples - Lựa chọn D):** Ví dụ như thuật toán SMOTE (Synthetic Minority Over-sampling Technique) để sinh ra dữ liệu nhân tạo đại diện cho lớp thiểu số.\n\n* **Tại sao các lựa chọn khác sai:**\n  * **C:** Chuẩn hóa đặc trưng (Normalization) giúp các thuật toán hội tụ nhanh hơn nhưng không thay đổi phân phối số lượng mẫu giữa các lớp.\n  * **E:** Sử dụng chỉ số Accuracy cho tập dữ liệu mất cân bằng là không phù hợp vì mô hình có thể dự đoán tất cả là lớp đa số và vẫn đạt Accuracy rất cao mà không học được lớp thiểu số.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3250,7 +3250,7 @@
       "E": "coefficient of determination"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Trong bài toán phân loại nhị phân (binary classification), chúng ta sử dụng các chỉ số đo lường hiệu suất phân loại như:\n- **Precision (Lựa chọn B):** Độ chuẩn xác tỉ lệ dự báo dương tính chính xác.\n- **Accuracy (Lựa chọn C):** Độ chính xác tổng thể trên toàn bộ mẫu dữ liệu.\n\n* **Tại sao các lựa chọn khác sai:**\n  * **A, D, E (Relative Absolute Error, Mean Absolute Error, Coefficient of Determination):** Đây là các chỉ số đánh giá hiệu suất cho bài toán hồi quy (regression), không áp dụng cho bài toán phân loại nhị phân.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3305,7 +3305,7 @@
       "D": "Truncation selection"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đáp ứng yêu cầu đánh giá dựa trên hiệu suất của tất cả các lượt chạy trước đó và tránh so sánh chỉ với lượt chạy tốt nhất:\n1. **Median stopping policy (Lựa chọn A):** Chính sách này dừng các lượt chạy có hiệu suất kém hơn giá trị trung vị (median) của hiệu suất các lượt chạy trước đó tại cùng một khoảng thời gian chạy.\n2. **Truncation selection policy (Lựa chọn D):** Chính sách này sẽ hủy một tỷ lệ phần trăm cụ thể (ví dụ: 10% hoặc 20%) các lượt chạy có hiệu suất kém nhất tại mỗi khoảng thời gian đánh giá, dựa trên hiệu suất của tất cả các lượt chạy.\n\n* **Tại sao các lựa chọn khác sai:**\n  * **Bandit policy (B):** So sánh hiệu suất của lượt chạy hiện tại với lượt chạy tốt nhất tính đến thời điểm hiện tại (dựa trên một khoảng chênh lệch cho phép), do đó vi phạm điều kiện tránh so sánh với lượt chạy tốt nhất.\n  * **Default (C):** Không áp dụng chính sách dừng sớm nào, nghĩa là tất cả các lượt chạy sẽ chạy đến khi hoàn tất, không đáp ứng yêu cầu dừng sớm.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3360,7 +3360,7 @@
       "E": "a uniform expression for batch_size"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để định cấu hình không gian tìm kiếm siêu tham số trong Hyperdrive:\n1. **learning_rate:** Đề bài yêu cầu lấy bất kỳ giá trị liên tục nào nằm trong khoảng từ 0.001 đến 0.1. Phân phối phù hợp nhất cho các tham số liên tục này là phân phối đều (`uniform`), cụ thể là `uniform(0.001, 0.1)` (Lựa chọn B).\n2. **batch_size:** Đề bài yêu cầu các giá trị rời rạc cụ thể là 16, 32 hoặc 64. Biểu thức phù hợp để chỉ định một tập hợp các giá trị rời rạc là biểu thức lựa chọn (`choice`), cụ thể là `choice(16, 32, 64)` (Lựa chọn D).\n\n* **Tại sao các lựa chọn khác sai:**\n  * **A:** `choice` không phù hợp cho `learning_rate` vì nó yêu cầu *bất kỳ* giá trị nào trong khoảng, thay vì một danh sách rời rạc cố định.\n  * **C & E:** Phân phối chuẩn (`normal`) hoặc phân phối đều (`uniform`) không dùng để định nghĩa một tập hợp hữu hạn các tùy chọn rời rạc như `batch_size` ở đây.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3852,7 +3852,7 @@
       "E": "run.get_all_logs(destination='./runlogs')"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Giải thích chi tiết:\n\n- **Yêu cầu bài toán**: Bạn cần thực hiện hành động tải xuống (download) cả các tệp tin sản phẩm đầu ra (output artifacts) và toàn bộ tệp nhật ký (logs) của một lượt chạy (`Run`).\n- **Phân tích các phương thức**:\n  - **`run.download_files(output_directory=...)`** (Đáp án D): Phương thức này tải xuống tất cả các tệp tin lưu trữ trong thư mục đầu ra của lượt chạy (ví dụ như các file mô hình `.pkl`, đồ thị lưu lại) về thư mục cục bộ được chỉ định.\n  - **`run.get_all_logs(destination=...)`** (Đáp án E): Phương thức này tải cụ thể toàn bộ tệp tin log của hệ thống và quá trình chạy (ví dụ: `70_driver_log.txt`, logs của container) về thư mục cục bộ được chỉ định.\n  - `run.get_details()`: Chỉ trả về thông tin chi tiết dạng từ điển về trạng thái lượt chạy, không tải file.\n  - `run.get_file_names()`: Chỉ trả về danh sách tên các tệp tin đính kèm trong lượt chạy, không tải chúng về.\n  - `run.get_metrics()`: Chỉ lấy về các giá trị số hoặc chuỗi đã ghi nhận bằng `run.log()`.\n- **Kết luận**: Chọn **D** và **E** là hai phương thức đáp ứng yêu cầu tải file đầu ra và logs về máy.\n\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4577,7 +4577,7 @@
       "D": "Remove all comments and functions from the Python script"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để chuyển đổi mã nguồn từ Jupyter Notebook sang script Python phục vụ môi trường production và dễ bảo trì, bạn nên thực hiện hai hành động **A** và **C**.\n\n*   **Tái cấu trúc thành các hàm (chọn A):** Notebook thường chứa mã lệnh tuần tự dạng script thô. Việc đóng gói mã nguồn thành các hàm giúp tăng tính tái sử dụng, dễ kiểm thử (unit testing) và dễ phát hiện lỗi.\n*   **Định nghĩa một hàm main() (chọn C):** Giúp xác định rõ ràng điểm bắt đầu của chương trình (entry point) khi chạy script, hỗ trợ việc truyền tham số từ dòng lệnh hoặc phối hợp với các pipeline tự động.\n-   **Tại sao B sai:** Việc lưu mỗi hàm ra một tệp riêng lẻ sẽ tạo ra quá nhiều tệp tin nhỏ lẻ, làm phức tạp hóa quá trình import và tăng chi phí quản lý dự án.\n-   **Tại sao D sai:** Loại bỏ chú thích và hàm sẽ biến mã nguồn thành một khối lệnh thô sơ, cực kỳ khó đọc hiểu và bảo trì.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4671,7 +4671,7 @@
       "D": "details = run.get_details()"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để lấy thông tin về nhánh Git đang hoạt động của lượt chạy (run), bạn cần thực hiện hai bước sau:\n\n* **Bước 1 (Chọn D)**: Gọi phương thức `run.get_details()`, phương thức này trả về một từ điển chứa thông tin cấu hình và trạng thái của lượt chạy.\n* **Bước 2 (Chọn B)**: Truy cập vào thuộc tính chứa tên nhánh Git thông qua khóa `'azureml.git.branch'` trong từ điển `properties` của kết quả nhận được (`details.properties['azureml.git.branch']`).\n\n**Giải thích các phương án khác:**\n* **A**: `run.get_environment()` trả về định nghĩa môi trường chạy chứ không chứa thông tin chi tiết về Git.\n* **C**: `azureml.git.commit` trả về mã băm commit (commit hash) hiện tại, không phải là tên nhánh (branch).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4859,7 +4859,7 @@
       "E": "![](https://cdn.examcademy.com/images/questions/1774336700690-c951x9nl.png)"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để giám sát tiến trình thực thi của một pipeline run (`pipeline_run`) được gửi qua Azure Machine Learning SDK v1, bạn có hai cách tiếp cận lập trình phổ biến:\n\n* **Cách 1 (Chọn D)**: Sử dụng widget `RunDetails` từ thư viện `azureml.widgets` trong Jupyter Notebook để có giao diện đồ họa tương tác hiển thị trạng thái của từng bước trong pipeline:\n  ```python\n  from azureml.widgets import RunDetails\n  RunDetails(pipeline_run).show()\n  ```\n* **Cách 2 (Chọn E)**: Gọi phương thức `wait_for_completion` của đối tượng `pipeline_run` để chặn tiến trình hiện tại và hiển thị log đầu ra trực tiếp trên console:\n  ```python\n  pipeline_run.wait_for_completion(show_output=True)\n  ```\n\n**Giải thích các phương án khác:**\n* **B**: Tab Inference Clusters dùng để quản lý các tài nguyên tính toán phục vụ suy luận thời gian thực (như AKS), không dùng để theo dõi tiến trình chạy của một pipeline cụ thể.\n* **C**: Activity log trong Azure portal ghi lại các hoạt động quản lý cấp tài nguyên Azure (control plane), không hiển thị chi tiết log hay tiến trình thực thi nội bộ của từng bước trong Machine Learning Pipeline.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5184,7 +5184,7 @@
       "E": "Azure Data Lake Storage Gen2"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Trong Azure Machine Learning designer, thành phần **Import Data** hỗ trợ tải dữ liệu từ các nguồn dữ liệu bên ngoài vào pipeline. Hai nguồn dữ liệu hợp lệ trong các tùy chọn là:\n\n* **URL qua HTTP (URL via HTTP)**: Nhập dữ liệu trực tiếp từ một đường dẫn web công khai.\n* **Bộ lưu trữ Azure Blob thông qua một datastore đã đăng ký (Azure Blob storage container through a registered datastore)**: Sử dụng dữ liệu được lưu trữ trong Azure Blob thông qua một datastore đã được đăng ký trong workspace.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5460,7 +5460,7 @@
       "E": "Compute target"
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi triển khai một mô hình MLflow cho suy luận theo lô (batch inference) trong Azure Machine Learning, bạn có thể triển khai không cần viết code (no-code deployment). Hai thành phần thiết yếu cần thiết lập cho batch deployment này là **Model files** (các tệp tin mô hình MLflow) và **Compute target** (mục tiêu tính toán để thực hiện việc chấm điểm).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5545,7 +5545,7 @@
       "E": "Azure Container Instances"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để kiểm thử (testing) mô hình học máy với chi phí tối thiểu:\n- **Local web service (Dịch vụ web cục bộ - D)**: Chạy trực tiếp trên máy tính cục bộ hoặc Compute Instance đang hoạt động mà không phát sinh thêm chi phí phần cứng mới. Đây là lựa chọn lý tưởng nhất để nhanh chóng kiểm thử và gỡ lỗi (debug).\n- **Azure Container Instances (ACI - E)**: Là dịch vụ container serverless giá rẻ của Azure, phù hợp cho việc kiểm thử mô hình với lượng tải thấp mà không cần thiết lập hạ tầng phức tạp và đắt tiền như AKS (Azure Kubernetes Service).\n\nCác tùy chọn khác:\n- **Azure Machine Learning Kubernetes / AKS (A)**: Thường dành cho môi trường production tải cao, chi phí lớn.\n- **Azure Databricks (B)**: Dành cho xử lý dữ liệu lớn, rất tốn kém cho việc kiểm thử suy luận mô hình đơn giản.\n- **Remote VM (C)**: Máy ảo từ xa yêu cầu chi phí duy trì liên tục và cấu hình thủ công phức tạp hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6037,7 +6037,7 @@
       "D": "Azure Machine Learning compute clusters"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để triển khai một mô hình hỗ trợ GPU dưới dạng một dịch vụ web phục vụ suy luận thời gian thực (real-time web service), Azure Machine Learning hỗ trợ hai mục tiêu tính toán chính:\n\n*   **Azure Kubernetes Service (AKS) (Phương án A):** Đây là mục tiêu tính toán được khuyến nghị cho môi trường sản xuất (production) có quy mô lớn, hỗ trợ đầy đủ các VM có GPU (như dòng NC, ND, NV) cùng các tính năng tự động co giãn và tính sẵn sàng cao.\n*   **Azure Container Instances (ACI) (Phương án B):** Thích hợp cho việc thử nghiệm nhanh hoặc chạy tải công việc nhỏ. Ở một số khu vực hỗ trợ, bạn có thể triển khai container có GPU trên ACI.\n*   **Local web service** và **compute clusters** (dùng cho huấn luyện/train job chứ không dùng làm web service thời gian thực trực tiếp) không phù hợp cho yêu cầu này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6241,7 +6241,7 @@
       "E": "LogUniform"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Trong Azure Machine Learning, phương pháp lấy mẫu Bayesian (Bayesian sampling) có những hạn chế về các kiểu phân phối tham số mà thuật toán có thể tối ưu hóa.\n\n*   Bayesian sampling chỉ hỗ trợ các kiểu phân phối **`choice`**, **`uniform`**, và **`quniform`** (hoặc `loguniform` tùy phiên bản SDK).\n*   Trong các phương án được cung cấp, **Uniform** (Phương án A) và **Choice** (Phương án B) là hai phân phối hợp lệ được hỗ trợ.\n*   Các phân phối như `Normal` hay `QNormal` không được hỗ trợ cho phương pháp lấy mẫu này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6330,7 +6330,7 @@
       "E": "Change the current kernel."
     },
     "answer": "BCE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đặt lại trạng thái (clear/reset state) của một notebook tương tác trong Azure Machine Learning Studio (xóa toàn bộ các biến trong bộ nhớ và khởi chạy lại phiên làm việc):\n\n1.  **Change the compute (Phương án B):** Chuyển notebook sang một Compute Instance khác sẽ buộc hệ thống phải khởi tạo lại toàn bộ runtime session mới cho notebook.\n2.  **Reset the compute (Phương án C):** Thực hiện đặt lại/khởi động lại (restart) Compute Instance hiện tại sẽ giải phóng bộ nhớ RAM và làm mới môi trường chạy.\n3.  **Change the current kernel (Phương án E):** Thay đổi nhân (kernel) thực thi (ví dụ chuyển từ Python 3.8 sang Python 3.10 hoặc ngược lại) sẽ tắt kernel cũ và khởi chạy một kernel mới hoàn toàn sạch biến.\n\n*   *Lưu ý:* Việc chỉ dừng kernel (`Stop the current kernel`) sẽ tạm ngưng thực thi chứ không tự động khởi chạy lại trạng thái làm việc mới cho notebook ngay lập tức; điều hướng đến phần khác của workspace cũng không ảnh hưởng đến trạng thái của kernel đang chạy ngầm.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6530,7 +6530,7 @@
       "D": "StepRun"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để chạy một tập lệnh Python như một bước trong quy trình xử lý dữ liệu (pipeline) của Azure Machine Learning, tùy thuộc vào phiên bản SDK được sử dụng:\n\n* **`PythonScriptStep`** (SDK v1): Lớp này được sử dụng trong Azure ML SDK v1 để định nghĩa một bước chạy Python script trong một Azure ML Pipeline.\n* **`CommandStep`** (SDK v2): Lớp này hoặc hàm `command` được sử dụng trong Azure ML SDK v2 để định nghĩa một bước thực thi một lệnh CLI (ví dụ: `python train.py`), cho phép chạy bất kỳ tập lệnh Python nào.\n* **`AutoMLStep`**: Dùng để chạy một tác vụ Automated Machine Learning trong pipeline, không dùng để chạy một tập lệnh Python tùy ý.\n* **`StepRun`**: Đại diện cho phiên chạy (run) của một bước trong pipeline sau khi nó được gửi đi thực thi, chứ không phải là lớp dùng để định nghĩa bước đó trong thiết kế pipeline.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6560,7 +6560,7 @@
       "E": "BuildContext class in Python SDK v2"
     },
     "answer": "BCD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để thay đổi cấu hình (số lượng node tối thiểu và tối đa) của một Azure Machine Learning Compute Cluster, chúng ta có thể sử dụng các công cụ quản trị hệ thống sau:\n\n* **`MLClient` class in Python SDK v2**: Cho phép tương tác và cập nhật cấu hình hạ tầng tính toán từ mã Python thông qua các phương thức của `ml_client.compute`.\n* **Azure Machine Learning studio**: Cung cấp giao diện đồ họa (UI) thân thiện để người dùng chỉnh sửa cấu hình compute cluster trực tiếp trên trình duyệt.\n* **Azure CLI ml extension v2**: Cho phép thực hiện thay đổi thông qua dòng lệnh bằng cách chạy các lệnh cập nhật (ví dụ: `az ml compute update`).\n* **Azure Machine Learning designer**: Là công cụ kéo thả để xây dựng pipeline huấn luyện mô hình học máy, không có chức năng cấu hình hoặc chỉnh sửa tài nguyên compute.\n* **BuildContext**: Được sử dụng để thiết lập ngữ cảnh build các docker image hoặc môi trường, không có nhiệm vụ thay đổi quy mô cluster.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6702,7 +6702,7 @@
       "D": "mlflow.log_param"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi ghi nhận nhiều chỉ số trong một vòng lặp huấn luyện, việc gửi từng chỉ số đơn lẻ bằng các cuộc gọi mạng riêng biệt sẽ làm tăng đáng kể độ trễ và giảm hiệu năng. Để tối ưu hóa hiệu năng, ta cần gửi các chỉ số theo lô (batch):\n\n* **`mlflow.log_metrics`**: Cho phép truyền một dictionary chứa nhiều cặp chỉ số `key: value` để ghi nhận cùng một lúc trong một yêu cầu duy nhất.\n* **`MLflowClient.log_batch`**: Cho phép ghi nhận đồng thời cả metrics, parameters, và tags theo lô thông qua đối tượng Client của MLflow.\n* Các phương thức như `mlflow.log_metric` và `mlflow.log_param` chỉ hỗ trợ ghi nhận một chỉ số hoặc một tham số đơn lẻ, không tối ưu cho việc ghi nhận số lượng lớn chỉ số cùng lúc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6943,7 +6943,7 @@
       "E": "frequency"
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Trong Azure Machine Learning Python SDK v2, khi cấu hình một lịch trình lặp lại (RecurrenceTrigger), hai thuộc tính bắt buộc phải định nghĩa để thiết lập chu kỳ lặp lại là:\n\n- **frequency**: Xác định đơn vị thời gian lặp lại (ví dụ: `day`, `week`, `hour`, `minute`).\n- **interval**: Xác định tần suất lặp lại dựa trên đơn vị tần suất đã chọn (ví dụ: `interval=2` và `frequency='week'` nghĩa là mỗi 2 tuần chạy một lần).\n- Các thuộc tính khác như `start_time` hay `time_zone` là các cấu hình tùy chọn bổ sung chứ không bắt buộc để tạo nên cấu trúc chu kỳ cơ bản của lịch trình lặp lại.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -7339,7 +7339,7 @@
       "E": "direct"
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi cấu hình dữ liệu đầu ra (outputs) cho một job trong Azure Machine Learning Python SDK v2, các chế độ ghi nhận dữ liệu được hỗ trợ bao gồm:\n\n- **rw_mount** (Read-Write Mount): Gắn kết hệ thống lưu trữ đích vào compute target với quyền đọc và ghi dữ liệu trực tiếp theo thời gian thực.\n- **upload**: Dữ liệu sẽ được ghi tạm vào compute target và tự động tải lên (upload) hệ thống lưu trữ đích khi job hoàn thành.\n- **direct**: Truyền trực tiếp URI của storage dưới dạng chuỗi và code tự xử lý xác thực và đọc ghi dữ liệu.\n\nNgược lại, các chế độ **ro_mount** (chỉ đọc) và **download** (tải xuống trước khi chạy job) chỉ áp dụng cho dữ liệu đầu vào (inputs), không dùng cho đầu ra (outputs).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -7592,7 +7592,7 @@
       "E": "max_instances"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tạo một cụm tính toán persistent (`AmlCompute`) trong Azure Machine Learning bằng Python SDK v2 với cấu hình tối giản nhất, bạn bắt buộc phải xác định hai tham số quan trọng nhất là:\n\n1. **name (D)**: Định danh duy nhất cho cụm tính toán trong workspace.\n2. **size (A)**: Xác định loại kích thước máy ảo (VM Size) để sử dụng (ví dụ: `Standard_DS3_v2`).\n\nCác tham số khác như `max_instances` là tùy chọn (sẽ có giá trị mặc định nếu bỏ qua) và `win_instances` không phải là thuộc tính hợp lệ của `AmlCompute`.\n\nVí dụ cấu hình tối giản:\n```python\nfrom azure.ai.ml.entities import AmlCompute\n\ncompute_cluster = AmlCompute(\n    name=\"cpu-cluster\",\n    size=\"Standard_DS3_v2\"\n)\n```\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -7766,7 +7766,7 @@
       "E": "Access token"
     },
     "answer": "ABE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Các tham số cần thiết để đính kèm Azure Databricks compute là **Workspace name** (A), **Compute name** (B), và **Access token** (E).\n\n- **Workspace name**: Tên của Azure Databricks workspace cần kết nối.\n- **Compute name**: Tên đại diện duy nhất mà bạn muốn đặt cho tài nguyên tính toán này trong Azure Machine Learning workspace.\n- **Access token**: Personal Access Token (PAT) được tạo từ Azure Databricks để xác thực và cấp quyền cho Azure ML truy cập vào cụm Databricks tính toán.\n- Các tùy chọn như Workspace resource ID và Workspace user credentials không phải là thông số trực tiếp cần thiết để thực hiện thao tác đính kèm tài nguyên này thông qua SDK/CLI.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -7796,7 +7796,7 @@
       "D": "causal"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Hai thành phần cần thêm vào là **counterfactuals** (B) và **causal** (D).\n\n- **Counterfactuals (Phân tích phản thực tế)**: Giúp trả lời câu hỏi 'Cần thay đổi tối thiểu những yếu tố/đặc trưng nào ở đầu vào để mô hình đưa ra kết quả dự đoán mong muốn khác?' (ví dụ: cần tăng thu nhập lên bao nhiêu để được duyệt khoản vay). Điều này giải quyết yêu cầu *Determine what must be done to get a desirable outcome*.\n- **Causal (Phân tích nguyên nhân)**: Tập trung vào việc ước tính tác động nhân quả trực tiếp của các biến can thiệp lên kết quả đầu ra quan tâm (outcome of interest), giúp xác định các yếu tố có ảnh hưởng trực tiếp thực sự chứ không chỉ là tương quan thuần túy. Điều này giải quyết yêu cầu *Identify the features that have the most direct effect on your outcome of interest*.\n- **Error analysis** (Phân tích lỗi) được dùng để xác định các phân đoạn dữ liệu có tỷ lệ lỗi cao.\n- **Explanation** (Giải thích mô hình - Feature Importance) chỉ ra các đặc trưng quan trọng đóng góp vào dự đoán chung của mô hình nhưng không trực tiếp chỉ ra cách hành động để đạt kết quả mong muốn hoặc mối quan hệ nhân quả trực tiếp.\n\n*(Đáp án được gợi ý bởi AI)*",

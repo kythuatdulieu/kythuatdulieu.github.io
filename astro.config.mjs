@@ -16,7 +16,7 @@ const quizGroups = {};
 for (const q of quizManifest) {
 	if (!quizGroups[q.provider]) quizGroups[q.provider] = [];
 	quizGroups[q.provider].push({
-		label: q.name + (q.vi ? ' (song ngữ)' : ''),
+		label: q.name + (q.vi ? ' (song ngữ)' : q.viCoverage > 0 ? ` (${q.viCoverage}% tiếng Việt)` : ' (English)'),
 		link: `/quizzes/${q.id}/index.html?v=1`,
 		attrs: { target: '_blank', rel: 'noopener noreferrer' }
 	});
