@@ -2,7 +2,7 @@
   {
     "id": 1,
     "topic": 1,
-    "question": "An upstream source writes Parquet data as hourly batches to directories named with the current date. A nightly batch job runs the following code to ingest all data from the previous day as indicated by the date variable:\nAssume that the fields customer_id and order_id serve as a composite key to uniquely identify each order.If the upstream system is known to occasionally produce duplicate entries for a single order hours apart, which statement is correct?",
+    "question": "A nightly job reads every Parquet file from the previous day. Before writing to the Delta table orders, it calls dropDuplicates([\"customer_id\", \"order_id\"]) on the rows read for that run, then writes with mode(\"append\"). The two fields form the order's composite key. The source can emit the same order more than once, hours apart. Which statement is correct?",
     "options": {
       "A": "Each write to the orders table will only contain unique records, and only those records without duplicates in the target table will be written.",
       "B": "Each write to the orders table will only contain unique records, but newly written records may have duplicates already present in the target table.",
@@ -14,31 +14,65 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án B.** dropDuplicates với hai cột customer_id và order_id chỉ khử trùng các dòng trong DataFrame đang xử lý. Sau đó, mode(\"append\") nối các dòng còn lại vào cuối bảng orders. Bước append không dò khóa để so sánh với các hàng đã ghi từ lần chạy trước.\n\n**Ví dụ:** đơn hàng 42 xuất hiện trong lô đọc đêm nay hai lần; dropDuplicates giữ một dòng. Nếu bảng orders đã có đơn hàng 42 từ lần nạp trước, dòng vừa giữ vẫn được thêm vào và bảng có hai bản ghi cùng khóa. Việc chạy lại cùng lô cũng có thể tạo tình huống đó.\n\n**Loại trừ từng phương án:**\n- **A sai:** append không lọc dữ liệu theo những dòng đã có trong bảng đích.\n- **B đúng:** dữ liệu đầu vào của riêng lần chạy là duy nhất, nhưng khóa vẫn có thể trùng với dữ liệu đích.\n- **C sai:** append không cập nhật hay ghi đè dòng đã khớp khóa.\n- **D sai:** Delta không tự từ chối mọi khóa trùng nếu bảng không có ràng buộc phù hợp; thao tác append thường vẫn thêm dòng.\n- **E sai:** dropDuplicates không tự gộp DataFrame mới với toàn bộ bảng đích.\n\nNếu cần bảo đảm duy nhất giữa nhiều lô, hãy khử trùng dữ liệu nguồn rồi dùng MERGE theo cả hai cột khóa. Chỉ dùng WHEN NOT MATCHED THEN INSERT để bỏ qua khóa đã có; nếu bản ghi cũ cần được sửa, phải định nghĩa thêm hành động WHEN MATCHED. MERGE xử lý trùng giữa nguồn và đích, còn các bản ghi trùng ngay trong nguồn vẫn cần được xử lý trước.",
+    "references": [
+      {
+        "title": "Upsert into a Delta Lake table using merge",
+        "url": "https://docs.databricks.com/gcp/en/delta/merge"
+      },
+      {
+        "title": "Best practices: Delta Lake",
+        "url": "https://docs.databricks.com/aws/en/delta/best-practices"
+      }
+    ],
+    "question_vi": "Job chạy mỗi đêm đọc tất cả tệp Parquet của ngày hôm trước. Trước khi ghi vào bảng Delta orders, job gọi dropDuplicates([\"customer_id\", \"order_id\"]) trên các dòng của lần chạy đó, rồi ghi với mode(\"append\"). Hai trường này tạo thành khóa ghép của đơn hàng. Nguồn đôi khi phát cùng một đơn hàng nhiều lần cách nhau vài giờ. Phát biểu nào đúng?",
+    "options_vi": {
+      "A": "Mỗi lần ghi chỉ có các dòng duy nhất, đồng thời tự bỏ mọi dòng đã có trong bảng đích.",
+      "B": "Mỗi lần ghi loại trùng trong dữ liệu của lần chạy đó, nhưng vẫn có thể thêm dòng trùng với dữ liệu đã có trong bảng đích.",
+      "C": "Mỗi lần ghi loại trùng trong dữ liệu của lần chạy đó và ghi đè các dòng cùng khóa đã có trong bảng đích.",
+      "D": "Mỗi lần ghi loại trùng trong dữ liệu của lần chạy đó; nếu bảng đích đã có khóa này thì thao tác sẽ lỗi.",
+      "E": "Mỗi lần ghi tự khử trùng trên hợp của dữ liệu mới và dữ liệu cũ, bảo đảm bảng đích không còn dòng trùng."
+    }
   },
   {
     "id": 2,
     "topic": 1,
-    "question": "An hourly batch job is configured to ingest data files from a cloud object storage container where each batch represent all records produced by the source system in a given hour. The batch job to process these records into the Lakehouse is sufficiently delayed to ensure no late-arriving data is missed. The user_id field represents a unique key for the data, which has the following schema: user_id BIGINT, username STRING, user_utc STRING, user_region STRING, last_login BIGINT, auto_pay BOOLEAN, last_updated BIGINTNew records are all ingested into a table named account_history which maintains a full record of all data in the same schema as the source. The next table in the system is named account_current and is implemented as a Type 1 table representing the most recent value for each unique user_id.Assuming there are millions of user accounts and tens of thousands of records processed hourly, which implementation can be used to efficiently update the described account_current table as part of each hourly batch job?",
+    "question": "An hourly batch job receives a DataFrame named hourly_batch. Each row has user_id, username, user_region, last_login, auto_pay, and last_updated. user_id is the stable unique key; a batch can contain more than one update for the same user, and the greatest last_updated value is the newest update. account_history retains all ingested records. account_current must contain exactly the latest row per user (Type 1). There are millions of users and tens of thousands of new rows per hour. Which implementation is the most efficient and correct?",
     "options": {
-      "A": "Use Auto Loader to subscribe to new files in the account_history directory; configure a Structured Streaming trigger once job to batch update newly detected files into the account_current table.",
-      "B": "Overwrite the account_current table with each batch using the results of a query against the account_history table grouping by user_id and filtering for the max value of last_updated.",
-      "C": "Filter records in account_history using the last_updated field and the most recent hour processed, as well as the max last_iogin by user_id write a merge statement to update or insert the most recent value for each user_id.",
-      "D": "Use Delta Lake version history to get the difference between the latest version of account_history and one version prior, then write these records to account_current.",
-      "E": "Filter records in account_history using the last_updated field and the most recent hour processed, making sure to deduplicate on username; write a merge statement to update or insert the most recent value for each username."
+      "A": "Use Auto Loader to subscribe to new files in account_history and trigger a batch update of account_current once per job run.",
+      "B": "Recompute account_current every hour by scanning all of account_history and selecting the row with the greatest last_updated for each user_id.",
+      "C": "Select the hourly_batch row with the greatest last_updated for each user_id, then MERGE into account_current on user_id, updating matches and inserting new users.",
+      "D": "Use Delta version history to compare the latest and previous versions of account_history, then copy those changes into account_current.",
+      "E": "Deduplicate the hourly batch by username and MERGE into account_current using username as the key."
     },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án C.** account_current là bảng Type 1: mỗi user_id chỉ còn một hàng biểu diễn trạng thái mới nhất, không lưu các phiên bản cũ. Vì job đã nhận riêng lô mới hourly_batch, có thể chỉ xử lý hàng chục nghìn dòng đó thay vì tính lại từ hàng triệu bản ghi lịch sử.\n\n**Thứ tự xử lý:** trước tiên chọn một dòng cho mỗi user_id trong lô, lấy dòng có last_updated lớn nhất; tiếp theo MERGE theo user_id. Nếu đã có user, cập nhật các cột bằng bản mới; nếu chưa có, chèn hàng mới. Khử trùng nguồn trước MERGE để tránh nhiều hàng nguồn cùng khớp một hàng đích và để kết quả không phụ thuộc thứ tự bản ghi.\n\n**Loại trừ từng phương án:**\n- **A sai:** Auto Loader giúp phát hiện tệp mới, nhưng tự nó không xác định hàng Type 1 mới nhất theo khóa và không thay thế logic upsert.\n- **B có thể tạo kết quả đúng nhưng kém hiệu quả:** mỗi giờ phải quét lại toàn bộ lịch sử, dù chỉ có một phần nhỏ dữ liệu mới.\n- **C đúng:** tận dụng lô tăng thêm, loại nhiều phiên bản của cùng người dùng trong lô, rồi cập nhật hoặc chèn theo khóa ổn định.\n- **D sai:** chênh lệch giữa hai phiên bản bảng không phải hợp đồng dữ liệu của job; cách này dễ bỏ sót khi có lần ghi khác hoặc job chạy lại.\n- **E sai:** username có thể đổi và không được xác định là duy nhất; ghép theo đó có thể tạo hai hàng cho cùng user_id hoặc gộp nhầm người dùng.\n\nMERGE không tự chọn hàng mới nhất nếu nguồn có nhiều bản ghi cùng khóa. Hãy chọn hàng có last_updated lớn nhất trước, rồi chỉ cập nhật khi bản nguồn mới hơn hàng đang có nếu dữ liệu đến muộn có thể xuất hiện.",
+    "references": [
+      {
+        "title": "Upsert into a Delta Lake table using merge",
+        "url": "https://docs.databricks.com/gcp/en/delta/merge"
+      },
+      {
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
+      }
+    ],
+    "question_vi": "Một job chạy theo giờ nhận DataFrame hourly_batch. Mỗi dòng có user_id, username, user_region, last_login, auto_pay và last_updated. user_id là khóa định danh ổn định; một lô có thể chứa nhiều lần cập nhật của cùng người dùng, và last_updated lớn nhất là bản cập nhật mới nhất. account_history lưu toàn bộ bản ghi đã nạp. account_current cần giữ đúng dòng mới nhất cho mỗi người dùng theo Type 1. Có hàng triệu tài khoản và hàng chục nghìn dòng mới mỗi giờ. Cách triển khai nào vừa đúng vừa hiệu quả nhất?",
+    "options_vi": {
+      "A": "Dùng Auto Loader theo dõi tệp mới trong account_history rồi kích hoạt cập nhật account_current theo lô mỗi lần job chạy.",
+      "B": "Mỗi giờ quét toàn bộ account_history và chọn dòng có last_updated lớn nhất cho từng user_id để tính lại account_current.",
+      "C": "Với mỗi user_id, chọn dòng có last_updated lớn nhất trong hourly_batch, rồi MERGE vào account_current theo user_id: cập nhật người dùng đã có và thêm người dùng mới.",
+      "D": "Dùng lịch sử phiên bản Delta để so sánh hai phiên bản gần nhất của account_history rồi sao chép các thay đổi sang account_current.",
+      "E": "Khử trùng lô theo username rồi MERGE vào account_current, dùng username làm khóa."
+    }
   },
   {
     "id": 3,
     "topic": 1,
-    "question": "A junior data engineer has been asked to develop a streaming data pipeline with a grouped aggregation using DataFrame df. The pipeline needs to calculate the average humidity and average temperature for each non-overlapping five-minute interval. Events are recorded once per minute per device.Streaming DataFrame df has the following schema:\"device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT\"Code block:\nChoose the response that correctly fills in the blank within the code block to complete this task.",
+    "question": "A junior data engineer is building a Structured Streaming aggregation from DataFrame df. The schema is device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT. For each fixed, non-overlapping five-minute interval, the pipeline must calculate average temperature and humidity across the events in that interval. In df.groupBy(____), which expression supplies the time-window grouping key?",
     "options": {
       "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
       "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
@@ -50,13 +84,30 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án B.** Hàm window gom timestamp vào các khoảng thời gian cố định. Với độ dài năm phút và không truyền slideDuration, Spark tạo tumbling windows: các khoảng liên tiếp không chồng lấp, chẳng hạn [10:00, 10:05) và [10:05, 10:10). Gắn kết quả window vào groupBy khiến các sự kiện có thời điểm khác nhau trong cùng khoảng được tổng hợp cùng nhau.\n\nSau khi nhóm theo cửa sổ, pipeline có thể tính avg(temp) và avg(humidity). Vì đề không yêu cầu tách theo thiết bị, các giá trị trong cùng cửa sổ được tính chung trên mọi device_id. Nếu cần trung bình riêng từng thiết bị, hãy nhóm thêm device_id.\n\n**Loại trừ:**\n- **A sai:** to_interval không tạo khóa cửa sổ cho Structured Streaming.\n- **B đúng:** window trên event_time với thời lượng năm phút tạo đúng các khoảng không chồng lấp cần dùng.\n- **C sai:** nhóm theo timestamp gốc sẽ tạo nhóm theo từng thời điểm chính xác, không gom cả khoảng năm phút.\n- **D sai:** độ dài mười phút không đáp ứng yêu cầu năm phút.\n- **E sai:** lag lấy giá trị ở hàng trước theo thứ tự, không phân bucket thời gian để aggregate.\n\nTrong pipeline thực tế, phép aggregate có trạng thái nên cần xem xét watermark để giới hạn thời gian chờ sự kiện đến muộn và dung lượng state. Watermark không đổi kích thước cửa sổ; nó kiểm soát việc giữ trạng thái và khi nào kết quả được chốt.",
+    "references": [
+      {
+        "title": "pyspark.sql.functions.window",
+        "url": "https://spark.apache.org/docs/3.5.6/api/python/reference/pyspark.sql/api/pyspark.sql.functions.window.html"
+      },
+      {
+        "title": "What is stateful streaming?",
+        "url": "https://docs.databricks.com/gcp/en/structured-streaming/stateful-streaming"
+      }
+    ],
+    "question_vi": "Một kỹ sư dữ liệu mới đang xây dựng phép tổng hợp Structured Streaming từ DataFrame df. Schema gồm device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT. Với mỗi khoảng năm phút cố định, không chồng lấp, pipeline cần tính nhiệt độ và độ ẩm trung bình từ các sự kiện trong khoảng đó. Trong df.groupBy(____), biểu thức nào tạo khóa nhóm theo cửa sổ thời gian?",
+    "options_vi": {
+      "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
+      "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
+      "C": "\"event_time\"",
+      "D": "window(\"event_time\", \"10 minutes\").alias(\"time\")",
+      "E": "lag(\"event_time\", \"10 minutes\").alias(\"time\")"
+    }
   },
   {
     "id": 4,
     "topic": 1,
-    "question": "The data engineering team maintains a table of aggregate statistics through batch nightly updates. This includes total sales for the previous day alongside totals and averages for a variety of time periods including the 7 previous days, year-to-date, and quarter-to-date. This table is named store_saies_summary and the schema is as follows:\nThe table daily_store_sales contains all the information needed to update store_sales_summary. The schema for this table is: store_id INT, sales_date DATE, total_sales FLOATIf daily_store_sales is implemented as a Type 1 table and the total_sales column might be adjusted after manual data auditing, which approach is the safest to generate accurate reports in the store_sales_summary table?",
+    "question": "Each night, a batch job builds store_sales_summary from daily_store_sales, which contains one current Type 1 row per store_id and sales_date. The summary contains daily totals plus rolling seven-day, year-to-date, and quarter-to-date totals and averages. Auditing can correct an older daily_store_sales.total_sales value after it was first loaded. Which approach is safest for keeping all summary periods accurate?",
     "options": {
       "A": "Implement the appropriate aggregate logic as a batch read against the daily_store_sales table and overwrite the store_sales_summary table with each Update.",
       "B": "Implement the appropriate aggregate logic as a batch read against the daily_store_sales table and append new rows nightly to the store_sales_summary table.",
@@ -68,13 +119,30 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án A.** daily_store_sales là bảng Type 1 nên chỉ giữ giá trị hiện tại cho mỗi ngày. Nếu kiểm toán sửa doanh số của ngày cũ, các tổng bảy ngày, từ đầu quý và từ đầu năm có thể đều đổi. Tính lại toàn bộ summary từ nguồn hiện hành mỗi đêm rồi ghi đè giúp các kỳ đó phản ánh cùng một trạng thái dữ liệu.\n\n**Vì sao ghi đè phù hợp:** phép tổng hợp batch đọc nguồn đã cập nhật, tính lại các nhóm theo cửa hàng và thời gian, rồi thay nội dung bảng kết quả bằng kết quả mới. Nếu một ngày cũ thay đổi, đóng góp cũ không còn trong summary vì toàn bộ kết quả được tái tạo.\n\n**Loại trừ:**\n- **A đúng:** tái tính từ nguồn Type 1 hiện tại rồi thay bảng kết quả, nên không cộng lặp và không giữ tổng cũ đã lỗi thời.\n- **B sai:** append sẽ giữ các tổng từ những đêm trước và thêm tổng mới, dễ tạo kết quả bị đếm lặp.\n- **C có thể làm được nhưng không an toàn nhất nếu thiếu chi tiết:** upsert cần khóa nhóm rõ ràng và phải tính lại mọi nhóm chịu ảnh hưởng của bản sửa; chỉ upsert kết quả ngày mới sẽ để các cửa sổ tích lũy sai.\n- **D sai:** Structured Streaming không cần thiết cho job batch chạy đêm và cũng không tự xử lý các khoảng tổng hợp.\n- **E sai:** Change Data Feed cho biết hàng nào đổi, nhưng pipeline vẫn phải tính đóng góp cũ và mới rồi cập nhật mọi cửa sổ bị ảnh hưởng. Việc đó phức tạp hơn yêu cầu.\n\nNếu bảng nguồn lớn đến mức không thể tính lại toàn bộ, có thể xây dựng cơ chế incremental có kiểm tra mọi kỳ chịu ảnh hưởng. Với đề bài hiện tại, tính lại rồi overwrite ưu tiên tính đúng và dễ kiểm chứng.",
+    "references": [
+      {
+        "title": "Tutorial: Create and manage Delta Lake tables",
+        "url": "https://docs.databricks.com/aws/en/delta/tutorial"
+      },
+      {
+        "title": "Selectively overwrite data with Delta Lake",
+        "url": "https://docs.databricks.com/aws/en/delta/selective-overwrite"
+      }
+    ],
+    "question_vi": "Mỗi đêm, một job batch tạo store_sales_summary từ daily_store_sales; bảng nguồn giữ một dòng Type 1 hiện hành cho mỗi store_id và sales_date. Bảng tổng hợp có tổng doanh số theo ngày, tổng bảy ngày gần nhất, từ đầu năm và từ đầu quý, cùng các giá trị trung bình. Kiểm toán có thể sửa total_sales của một ngày cũ sau lần nạp đầu. Cách nào an toàn nhất để mọi kỳ tổng hợp luôn chính xác?",
+    "options_vi": {
+      "A": "Đọc theo lô bảng daily_store_sales, tính lại các tổng cần thiết rồi ghi đè toàn bộ store_sales_summary mỗi đêm.",
+      "B": "Đọc theo lô bảng daily_store_sales, tính tổng rồi thêm các dòng mới vào store_sales_summary mỗi đêm.",
+      "C": "Đọc theo lô bảng daily_store_sales, tính tổng rồi upsert các kết quả vào store_sales_summary.",
+      "D": "Đọc daily_store_sales bằng Structured Streaming rồi dùng upsert để cập nhật store_sales_summary.",
+      "E": "Dùng Structured Streaming theo dõi Change Data Feed của daily_store_sales và áp dụng từng thay đổi vào các tổng."
+    }
   },
   {
     "id": 5,
     "topic": 1,
-    "question": "Review the following error traceback:\nWhich statement describes the error being raised?",
+    "question": "A DataFrame has a column named heartrate. A query tries to select heartrateheartrateheartrate, and Spark returns the error condition UNRESOLVED_COLUMN with the message that this name cannot be resolved. Which statement describes the error?",
     "options": {
       "A": "The code executed was PySpark but was executed in a Scala notebook.",
       "B": "There is no column in the table named heartrateheartrateheartrate",
@@ -86,13 +154,26 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án B.** UNRESOLVED_COLUMN cho biết engine không tìm thấy cột, biến hoặc tham số có tên được tham chiếu trong biểu thức. Ở đây schema có heartrate nhưng câu truy vấn yêu cầu heartrateheartrateheartrate; tên bị lặp nên không khớp với trường nào.\n\n**Cách phân biệt nhanh:** lỗi được nêu rõ là UNRESOLVED_COLUMN, do đó hãy kiểm tra chính tả và schema trước. Nếu cột tồn tại nhưng biểu thức nhân hai kiểu dữ liệu không tương thích, Spark sẽ báo lỗi phân tích hoặc kiểu dữ liệu khác. Lỗi hiện tại xảy ra ở bước phân giải tên, trước khi phép tính trên cột được thực hiện.\n\n**Loại trừ:**\n- **A sai:** thông báo không nói gì về ngôn ngữ notebook; khác Scala/Python thường dẫn đến lỗi cú pháp hoặc tên hàm khác.\n- **B đúng:** tên cột đang được tham chiếu không tồn tại trong DataFrame.\n- **C sai:** đề không có phép nhân và thông báo không phải lỗi kiểu Column.\n- **D sai:** đây cũng không phải phép toán giữa DataFrame; vấn đề là tên trường.\n- **E sai:** khi tên cột hợp lệ, Spark/PySpark cho phép tham chiếu cột theo cú pháp tương ứng; ở đây tên được đưa vào vẫn sai.\n\nTrong notebook, kiểm tra df.columns hoặc schema trước khi xử lý. Khi đọc stack trace Databricks, ưu tiên error condition như UNRESOLVED_COLUMN thay vì đoán từ các dòng nội bộ của Catalyst; phần văn bản chi tiết có thể khác giữa các phiên bản.",
+    "references": [
+      {
+        "title": "UNRESOLVED_COLUMN error condition",
+        "url": "https://docs.databricks.com/aws/en/error-messages/unresolved-column-error-class"
+      }
+    ],
+    "question_vi": "Một DataFrame có cột tên heartrate. Truy vấn cố chọn cột heartrateheartrateheartrate và Spark trả về lỗi UNRESOLVED_COLUMN, cho biết không thể phân giải tên này. Phát biểu nào mô tả đúng lỗi?",
+    "options_vi": {
+      "A": "Mã PySpark được chạy trong notebook Scala.",
+      "B": "Bảng/DataFrame không có cột tên heartrateheartrateheartrate.",
+      "C": "Có lỗi kiểu dữ liệu vì không thể nhân một đối tượng Column.",
+      "D": "Có lỗi kiểu dữ liệu vì không thể nhân một đối tượng DataFrame.",
+      "E": "Có lỗi cú pháp vì cột heartrate chưa được chuyển thành đối tượng Column."
+    }
   },
   {
     "id": 6,
     "topic": 1,
-    "question": "A junior data engineer is working to implement logic for a Lakehouse table named silver_device_recordings. The source data contains 100 unique fields in a highly nested JSON structure.The silver_device_recordings table will be used downstream to power several production monitoring dashboards and a production model. At present, 45 of the 100 fields are being used in at least one of these applications.The data engineer is trying to determine the best approach for dealing with schema declaration given the highly-nested structure of the data and the numerous fields.Which of the following accurately presents information about Delta Lake and Databricks that may impact their decision-making process?",
+    "question": "A deeply nested JSON source has 100 fields. Only 45 fields currently feed production dashboards or a model, and downstream consumers depend on stable types. Which statement about schema declaration in Databricks and Delta Lake is accurate?",
     "options": {
       "A": "The Tungsten encoding used by Databricks is optimized for storing string data; newly-added native support for querying JSON strings means that string types are always most efficient.",
       "B": "Because Delta Lake uses Parquet for data storage, data types can be easily evolved by just modifying file footer information in place.",
@@ -104,49 +185,100 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án D.** Khi dashboard và mô hình phụ thuộc vào cấu trúc ổn định, schema tường minh xác định tên, kiểu và cấu trúc mà pipeline phải cung cấp. Delta Lake kiểm tra schema khi ghi; dữ liệu không tương thích có thể bị từ chối hoặc cần chuyển đổi rõ ràng. Đây là cơ sở tốt hơn cho hợp đồng dữ liệu có thể kiểm soát.\n\nSuy luận schema hữu ích để khám phá nhanh dữ liệu, nhưng nó dựa trên dữ liệu quan sát được và không biết yêu cầu nghiệp vụ của downstream. Ví dụ, chuỗi \"00123\" có thể là mã định danh chứ không phải số để tính toán. Việc chọn trường còn sử dụng cũng giúp tránh mang 55 trường không cần thiết qua mọi bước, nhưng đáp án đang hỏi lợi ích của việc khai báo kiểu.\n\n**Loại trừ:**\n- **A sai:** Tungsten thuộc engine thực thi và biểu diễn bộ nhớ; nó không làm cho mọi trường JSON dạng chuỗi trở thành lựa chọn tốt nhất.\n- **B sai:** không nên sửa footer Parquet để đổi kiểu tùy tiện. Delta quản lý schema và transaction log, đồng thời xác thực thao tác ghi.\n- **C sai:** chi phí kỹ thuật phụ thuộc bối cảnh; nhận định này không trả lời cách schema ảnh hưởng độ tin cậy.\n- **D đúng:** schema tường minh đặt kỳ vọng kiểu dữ liệu và cho phép Delta kiểm tra dữ liệu ghi có phù hợp hay không.\n- **E sai:** inference không biết kiểu mà ứng dụng phía sau mong muốn và không bảo đảm luôn suy ra đúng.\n\nSchema enforcement chỉ kiểm tra cấu trúc và kiểu mà schema quy định; nó không tự chứng minh dữ liệu đúng nghiệp vụ. Nếu cần, bổ sung NOT NULL, CHECK constraints hoặc expectations cho các quy tắc như giá trị đo phải nằm trong phạm vi hợp lệ.",
+    "references": [
+      {
+        "title": "Schema enforcement",
+        "url": "https://docs.databricks.com/aws/en/tables/schema-enforcement"
+      },
+      {
+        "title": "Configure schema inference and evolution in Auto Loader",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
+      }
+    ],
+    "question_vi": "Nguồn JSON lồng sâu có 100 trường. Hiện chỉ 45 trường được dùng cho dashboard production hoặc mô hình, và các hệ thống phía sau phụ thuộc vào kiểu dữ liệu ổn định. Nhận định nào về khai báo schema trong Databricks và Delta Lake là chính xác?",
+    "options_vi": {
+      "A": "Tungsten tối ưu để lưu chuỗi, vì vậy giữ mọi trường JSON dưới dạng STRING luôn hiệu quả nhất.",
+      "B": "Vì Delta Lake lưu dữ liệu bằng Parquet nên có thể đổi kiểu dữ liệu dễ dàng chỉ bằng cách sửa metadata footer của tệp.",
+      "C": "Chi phí nhân công viết code luôn lớn nhất, vì vậy tự động khai báo schema phải là ưu tiên trong mọi lần di chuyển dữ liệu.",
+      "D": "Khai báo kiểu dữ liệu có chủ đích giúp xác lập hợp đồng rõ ràng; Delta có thể kiểm tra dữ liệu ghi vào có tuân thủ schema hay không.",
+      "E": "Suy luận và tiến hóa schema bảo đảm kiểu được suy luận luôn trùng với kiểu mà hệ thống phía sau yêu cầu."
+    }
   },
   {
     "id": 7,
     "topic": 1,
-    "question": "A nightly job ingests data into a Delta Lake table using the following code:\nThe next step in the pipeline requires a function that returns an object that can be used to manipulate new records that have not yet been processed to the next table in the pipeline.Which code snippet completes this function definition?def new_records():",
+    "question": "The bronze Delta table is append-only: each nightly ingestion appends new rows, and downstream code should receive a streaming DataFrame of newly committed rows to transform into the next table. Which implementation should new_records() return?",
     "options": {
       "A": "return spark.readStream.table(\"bronze\")",
-      "B": "return spark.readStream.load(\"bronze\")",
-      "D": "return spark.read.option(\"readChangeFeed\", \"true\").table (\"bronze\")",
-      "C": "![](https://cdn.examcademy.com/images/questions/1774273386270-33eot61c.png)",
-      "E": "![](https://cdn.examcademy.com/images/questions/1774273388491-su808z6o.png)"
+      "B": "return spark.read.table(\"bronze\")",
+      "C": "return spark.readStream.load(\"bronze\")",
+      "D": "return spark.read.option(\"readChangeFeed\", \"true\").table(\"bronze\")",
+      "E": "return spark.table(\"bronze\").writeStream"
     },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án A — spark.readStream.table(\"bronze\").** readStream khai báo một nguồn streaming; table(\"bronze\") trỏ nguồn đó tới bảng đã đăng ký. Với Delta table append-only, Structured Streaming theo dõi các commit và xử lý dữ liệu mới theo tiến độ đã lưu trong checkpoint khi pipeline chạy.\n\n**Phân biệt nguồn với sink:** hàm được hỏi phải trả DataFrame để bước sau biến đổi. Nó chưa khởi động truy vấn ghi; writeStream được dùng ở bước cuối khi định nghĩa sink và checkpoint.\n\n**Loại trừ:**\n- **A đúng:** đọc bảng theo chế độ streaming và trả streaming DataFrame.\n- **B sai:** read.table tạo batch DataFrame đọc snapshot, không theo dõi các lần ghi mới.\n- **C sai:** readStream.load dùng đường dẫn hoặc nguồn dữ liệu; chuỗi \"bronze\" ở đây không chỉ định tên bảng đã đăng ký.\n- **D sai:** thiếu readStream nên đây là lần đọc batch; CDF phù hợp khi cần xử lý cập nhật/xóa ở cấp hàng, còn đề bài chỉ cần dữ liệu append mới.\n- **E sai:** spark.table tạo batch DataFrame, còn writeStream là DataStreamWriter cho đầu ra chứ không phải DataFrame đầu vào.\n\nTrong production, bảng nguồn cần đáp ứng giả định append-only hoặc pipeline phải xử lý rõ cập nhật/xóa. Cần cấu hình checkpoint bền vững ở truy vấn ghi để Spark khôi phục tiến độ sau khi job chạy lại.",
+    "references": [
+      {
+        "title": "Query streaming data",
+        "url": "https://docs.databricks.com/gcp/en/query/streaming"
+      },
+      {
+        "title": "table (DataStreamReader)",
+        "url": "https://docs.databricks.com/aws/en/pyspark/reference/classes/datastreamreader/table"
+      }
+    ],
+    "question_vi": "Bảng Delta bronze chỉ ghi nối thêm: mỗi đêm ingestion thêm các dòng mới, và bước sau cần một streaming DataFrame gồm các dòng vừa được commit để biến đổi sang bảng kế tiếp. Hàm new_records() nên trả về biểu thức nào?",
+    "options_vi": {
+      "A": "return spark.readStream.table(\"bronze\")",
+      "B": "return spark.read.table(\"bronze\")",
+      "C": "return spark.readStream.load(\"bronze\")",
+      "D": "return spark.read.option(\"readChangeFeed\", \"true\").table(\"bronze\")",
+      "E": "return spark.table(\"bronze\").writeStream"
+    }
   },
   {
     "id": 8,
     "topic": 1,
-    "question": "A junior data engineer has configured a workload that posts the following JSON to the Databricks REST API endpoint 2.0/jobs/create.\nAssuming that all configurations and referenced resources are available, which statement describes the result of executing this workload three times?",
+    "question": "A workload sends the same job definition three times to the Databricks Jobs API 2.0 endpoint POST /api/2.0/jobs/create. The payload contains the job name \"Ingest new data\" and a notebook task, but no schedule. Which statement describes the result?",
     "options": {
-      "A": "Three new jobs named \"Ingest new data\" will be defined in the workspace, and they will each run once daily.",
-      "B": "The logic defined in the referenced notebook will be executed three times on new clusters with the configurations of the provided cluster ID.",
-      "C": "Three new jobs named \"Ingest new data\" will be defined in the workspace, but no jobs will be executed.",
-      "D": "One new job named \"Ingest new data\" will be defined in the workspace, but it will not be executed.",
-      "E": "The logic defined in the referenced notebook will be executed three times on the referenced existing all purpose cluster."
+      "A": "Three new jobs are created, and each immediately runs the notebook on a new cluster.",
+      "B": "One job is created because the API deduplicates requests with the same name, and the notebook runs three times.",
+      "C": "Three job definitions with the same name are created in the workspace, but no runs are started.",
+      "D": "One job definition is created, but the endpoint does not save jobs without a schedule.",
+      "E": "No job is created; the create endpoint runs the notebook once on an existing all-purpose cluster."
     },
     "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án C.** Endpoint jobs/create lưu một job definition: tên, task và các thiết lập chạy. Gửi request ba lần sẽ tạo ba job riêng dù tên hiển thị giống nhau; tên không phải khóa idempotency. Payload không khai báo lịch, và thao tác create cũng không tự chạy task.\n\nĐể chạy ngay một job đã lưu, cần gọi endpoint run-now với job_id. Nếu muốn gửi một workload chạy một lần mà không tạo job definition lưu lại, Jobs API có endpoint runs/submit.\n\n**Loại trừ:**\n- **A sai:** create không tự khởi chạy notebook; request cũng không yêu cầu một run cho mỗi lần tạo.\n- **B sai:** API không tự gộp job chỉ vì chúng có cùng tên.\n- **C đúng:** mỗi POST tạo một job definition, còn bước khởi chạy độc lập.\n- **D sai:** schedule là tùy chọn; có thể tạo job thủ công hoặc chỉ chạy khi được kích hoạt sau này.\n- **E sai:** create lưu job, không phải API submit một lần chạy trên cluster dùng chung.\n\nCần phân biệt ba thao tác: create lưu định nghĩa, run-now kích hoạt job đã lưu, còn runs/submit nộp một lần chạy không cần job đã lưu. Phân biệt này cũng giúp tránh vô tình tạo nhiều bản job khi một client retry request.",
+    "references": [
+      {
+        "title": "Jobs API 2.0",
+        "url": "https://docs.databricks.com/aws/en/reference/jobs-2.0-api"
+      },
+      {
+        "title": "Job API reference",
+        "url": "https://docs.databricks.com/api/jobs/v2/job"
+      }
+    ],
+    "question_vi": "Một workload gửi cùng định nghĩa job ba lần tới endpoint POST /api/2.0/jobs/create của Databricks Jobs API 2.0. Payload có tên job \"Ingest new data\" và một notebook task nhưng không có lịch chạy. Điều gì xảy ra?",
+    "options_vi": {
+      "A": "Tạo ba job mới cùng tên và mỗi job lập tức chạy notebook trên một cluster mới.",
+      "B": "Tạo một job; API tự gộp các yêu cầu trùng tên và chạy notebook ba lần.",
+      "C": "Tạo ba job definition cùng tên trong workspace, nhưng không khởi chạy run nào.",
+      "D": "Tạo một job definition nhưng endpoint create không lưu job nếu không có lịch chạy.",
+      "E": "Không tạo job; endpoint create chỉ chạy notebook một lần trên all-purpose cluster có sẵn."
+    }
   },
   {
     "id": 9,
     "topic": 1,
-    "question": "A Spark job is taking longer than expected. Using the Spark UI, a data engineer notes that the Min, Median, and Max Durations for tasks in a particular stage show the minimum and median time to complete a task as roughly the same, but the max duration for a task to be roughly 100 times as long as the minimum.Which situation is causing increased duration of the overall job?",
+    "question": "A Spark stage is much slower than expected. In Spark UI, the minimum and median task durations are similar, but the maximum task duration is about 100 times larger. Which condition most likely explains the long stage duration?",
     "options": {
       "A": "Task queueing resulting from improper thread pool assignment.",
       "B": "Spill resulting from attached volume storage being too small.",
@@ -158,26 +290,56 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án D — data skew.** Một Spark stage thường chờ tất cả task của stage hoàn thành. Nếu hầu hết task chạy nhanh nhưng một task mất lâu hơn 100 lần, partition của task đó có khả năng chứa lượng dữ liệu hoặc công việc lớn bất thường. Task straggler giữ cả stage lại dù phần lớn executor đã rảnh.\n\n**Cách xác nhận:** mở chi tiết stage, so sánh phân bố duration, input records/bytes và shuffle read giữa các task. Nếu chỉ vài task có dữ liệu hoặc thời gian lớn vượt trội, đó là dấu hiệu skew. Giải pháp có thể gồm xử lý skew join, tăng khả năng chia partition hoặc salting khóa nóng khi phù hợp với logic.\n\n**Loại trừ:**\n- **A sai:** xếp hàng compute không thường tạo phân bố mà median vẫn nhanh trong khi chỉ một task cực chậm.\n- **B sai:** spill liên quan áp lực bộ nhớ và thường quan sát được qua chỉ số spill; attached volume không phải mô tả chuẩn của nguyên nhân trong đề.\n- **C sai:** vấn đề mạng diện rộng thường ảnh hưởng nhiều task hoặc node, không chỉ một partition đơn lẻ.\n- **D đúng:** chênh lệch cực lớn giữa max và median là dấu hiệu điển hình của một vài task xử lý nhiều dữ liệu hơn.\n- **E sai:** credential lỗi thường gây lỗi truy cập hoặc thất bại đọc, không giải thích một task hợp lệ chạy lâu hơn các task khác.\n\nĐừng kết luận chỉ từ một con số: hãy xem cùng lúc phân bố task, shuffle và spill. Chênh lệch 100 lần trong đề là dấu hiệu rất mạnh của task bị skew.",
+    "references": [
+      {
+        "title": "Skew and spill",
+        "url": "https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page"
+      }
+    ],
+    "question_vi": "Một stage Spark chạy lâu hơn dự kiến. Trong Spark UI, thời lượng task nhỏ nhất và trung vị gần bằng nhau, nhưng task lâu nhất mất khoảng 100 lần. Tình trạng nào có khả năng cao nhất giải thích vì sao stage kéo dài?",
+    "options_vi": {
+      "A": "Các task phải xếp hàng do gán thread pool không phù hợp.",
+      "B": "Dữ liệu bị spill vì attached volume không đủ dung lượng.",
+      "C": "Độ trễ mạng do một số node của cluster ở khác vùng với nguồn dữ liệu.",
+      "D": "Data skew khiến một số ít partition nhận nhiều dữ liệu hơn hẳn các partition còn lại.",
+      "E": "Lỗi xác thực credential khi đọc dữ liệu từ hệ thống bên ngoài."
+    }
   },
   {
     "id": 10,
     "topic": 1,
-    "question": "A junior data engineer on your team has implemented the following code block.\nThe view new_events contains a batch of records with the same schema as the events Delta table. The event_id field serves as a unique key for this table.When this query is executed, what will happen with new records that have the same event_id as an existing record?",
+    "question": "A batch view new_events has the same schema as the Delta table events, and event_id is the key. The code runs this merge: MERGE INTO events AS target USING new_events AS source ON target.event_id = source.event_id WHEN NOT MATCHED THEN INSERT *. What happens to a source row whose event_id already exists in events?",
     "options": {
-      "A": "They are merged.",
-      "B": "They are ignored.",
-      "C": "They are updated.",
-      "D": "They are inserted.",
-      "E": "They are deleted."
+      "A": "The target row is updated with source values.",
+      "B": "No matched clause runs, so the existing target row is unchanged.",
+      "C": "A new row with the same event_id is inserted.",
+      "D": "The target row is deleted.",
+      "E": "The MERGE statement fails because WHEN MATCHED is required."
     },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": null,
-    "references": null
+    "explanation_vi": "**Đáp án B.** Điều kiện ON tìm các cặp dòng có cùng event_id. MERGE chỉ khai báo hành động WHEN NOT MATCHED, tức là chèn những dòng nguồn không tìm thấy hàng đích tương ứng. Với khóa đã tồn tại, dòng nguồn thuộc trường hợp matched, nhưng không có hành động WHEN MATCHED nên hàng đích giữ nguyên.\n\n**Ví dụ:** events đã có event_id 500 với status \"received\"; new_events có event_id 500 với status \"processed\". Lệnh này không cập nhật status thành processed vì không có nhánh WHEN MATCHED THEN UPDATE. Chỉ event_id mới, chưa có trong bảng đích, mới được chèn.\n\n**Loại trừ:**\n- **A sai:** muốn cập nhật cần khai báo WHEN MATCHED THEN UPDATE SET ... hoặc UPDATE SET *.\n- **B đúng:** dòng khớp không đổi khi statement không có nhánh xử lý matched.\n- **C sai:** INSERT chỉ gắn với WHEN NOT MATCHED, nên dòng khớp không được chèn bởi nhánh này.\n- **D sai:** không có nhánh DELETE.\n- **E sai:** WHEN MATCHED không bắt buộc; có thể dùng MERGE chỉ để chèn dòng chưa tồn tại.\n\nLệnh này ngăn chèn lại khóa đã có trong đích, nhưng không tự khử các bản sao nằm nhiều lần trong new_events. Nếu nguồn có thể chứa nhiều hàng cùng event_id, hãy chọn một hàng hoặc khử trùng trước MERGE để kết quả rõ ràng.",
+    "references": [
+      {
+        "title": "MERGE INTO",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into"
+      },
+      {
+        "title": "Upsert into a Delta Lake table using merge",
+        "url": "https://docs.databricks.com/gcp/en/delta/merge"
+      }
+    ],
+    "question_vi": "View batch new_events có cùng schema với bảng Delta events, và event_id là khóa. Mã chạy MERGE sau: MERGE INTO events AS target USING new_events AS source ON target.event_id = source.event_id WHEN NOT MATCHED THEN INSERT *. Điều gì xảy ra với dòng nguồn có event_id đã tồn tại trong events?",
+    "options_vi": {
+      "A": "Dòng đích được cập nhật bằng các giá trị từ nguồn.",
+      "B": "Không có nhánh xử lý dòng khớp nào chạy, nên dòng đích hiện có được giữ nguyên.",
+      "C": "Chèn thêm một dòng mới có cùng event_id.",
+      "D": "Xóa dòng đích.",
+      "E": "MERGE thất bại vì bắt buộc phải có WHEN MATCHED."
+    }
   },
   {
     "id": 11,
