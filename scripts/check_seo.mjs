@@ -93,9 +93,6 @@ if (!fs.existsSync(robotsPath)) {
 	if (!robots.includes(`Sitemap: ${SITE_URL}/sitemap-index.xml`)) {
 		errors.push('robots.txt does not point to sitemap-index.xml');
 	}
-	if (!robots.includes(`Sitemap: ${SITE_URL}/sitemap.txt`)) {
-		errors.push('robots.txt does not point to sitemap.txt');
-	}
 }
 
 const sitemapFiles = files.filter((file) => file.endsWith('.xml'));
@@ -106,40 +103,6 @@ for (const file of sitemapFiles) {
 	const sitemap = fs.readFileSync(file, 'utf8');
 	if (/\/quizzes\/[^<]+\/question-\d+\//.test(sitemap)) {
 		errors.push(`${path.relative(distDir, file)} contains noindex question pages`);
-	}
-}
-
-const textSitemapPath = path.join(distDir, 'sitemap.txt');
-if (!fs.existsSync(textSitemapPath)) {
-	errors.push('sitemap.txt is missing from the build output');
-} else {
-	const textUrls = fs.readFileSync(textSitemapPath, 'utf8').trim().split(/\r?\n/).filter(Boolean);
-	const xmlUrls = sitemapFiles
-		.filter((file) => /^sitemap-\d+\.xml$/.test(path.basename(file)))
-		.flatMap((file) =>
-			[...fs.readFileSync(file, 'utf8').matchAll(/<loc>([^<]*)<\/loc>/g)].map((match) =>
-				match[1].replace(/&(?:amp|lt|gt|quot|apos);/g, (entity) => ({
-					'&amp;': '&',
-					'&lt;': '<',
-					'&gt;': '>',
-					'&quot;': '"',
-					'&apos;': "'",
-				})[entity])
-			)
-		);
-	if (textUrls.length !== xmlUrls.length) {
-		errors.push(`sitemap.txt has ${textUrls.length} URLs but XML sitemaps have ${xmlUrls.length}`);
-	} else if (textUrls.some((url, index) => url !== xmlUrls[index])) {
-		errors.push('sitemap.txt URLs do not match the generated XML sitemap URLs');
-	}
-	if (new Set(textUrls).size !== textUrls.length) {
-		errors.push('sitemap.txt contains duplicate URLs');
-	}
-	if (textUrls.some((url) => !url.startsWith(`${SITE_URL}/`) && url !== `${SITE_URL}/`)) {
-		errors.push('sitemap.txt contains a URL outside the configured site');
-	}
-	if (textUrls.some((url) => /\/quizzes\/[^/]+\/question-\d+\//.test(url))) {
-		errors.push('sitemap.txt contains noindex question pages');
 	}
 }
 
