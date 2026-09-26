@@ -221,7 +221,7 @@
     },
     {
       "id": 11,
-      "question": "Your company has a sales department that uses two Fabric workspaces named Workspace1 and Workspace2.The company decides to implement a domain strategy to organize the workspaces.You need to ensure that a user can perform the following tasks:Create a new domain for the sales department.Create two subdomains: one for the east region and one for the west region.Assign Workspace1 to the east region subdomain.Assign Workspace2 to the west region subdomain.The solution must follow the principle of least privilege.Which role should you assign to the user?",
+      "question": "Your company has a sales department that uses two Microsoft Fabric workspaces: Workspace1 and Workspace2. The company wants to organize the workspaces by using domains. A user must create a domain for Sales, create East and West subdomains, and assign Workspace1 to East and Workspace2 to West. Which role should you assign to the user to complete all these tasks with the least privilege?",
       "choices": {
         "A": "workspace Admin",
         "B": "domain admin",
@@ -229,12 +229,21 @@
         "D": "Fabric admin"
       },
       "correctAnswer": "D",
-      "explanation_vi": "Lựa chọn D (Fabric admin) là chính xác vì theo nguyên tắc phân quyền của Microsoft Fabric, chỉ có vai trò Quản trị viên Fabric (Fabric administrator) mới có quyền tạo mới một Domain (miền) ở cấp độ Tenant. Sau khi Domain Sales được tạo, quản trị viên có thể chỉ định Domain Admin để tạo các subdomain hoặc gán workspace, nhưng để bắt đầu quy trình này (tạo domain mới), người dùng bắt buộc phải là Fabric Admin.\n- Các vai trò A (workspace Admin), B (domain admin), và C (domain contributor) đều không có đủ thẩm quyền để tạo một domain mới ở cấp độ cao nhất của hệ thống Fabric.",
-      "references": []
+      "explanation_vi": "**Đáp án D — Fabric admin.** Câu hỏi có nhiều bước, nhưng bước quyết định là **tạo một domain cấp cao mới**. API quản trị Fabric yêu cầu người gọi phải là Fabric administrator để tạo domain. Domain admin có thể quản lý domain đã tồn tại, tạo subdomain và gán workspace; domain contributor chỉ có thể gán những workspace mà họ quản trị vào domain được ủy quyền. Workspace admin chỉ quản lý phạm vi workspace, không có quyền tạo domain ở cấp tenant.\n\nVì thế, trong bốn lựa chọn, Fabric admin là vai trò duy nhất bao phủ toàn bộ chuỗi thao tác, nên cũng là đáp án tối thiểu **trong các vai trò được đề xuất**. Trong vận hành thực tế, quyền Fabric admin rất rộng: có thể giao quyền Domain admin sau khi tạo domain để người đó quản lý East/West và giao Domain contributor cho các workspace admin cần tự gán workspace.\n\n- **A — Workspace Admin:** quản lý Workspace1/Workspace2 nhưng không thể tạo domain cấp tenant hay subdomain.\n- **B — Domain admin:** làm được việc bên trong một domain đã có, nhưng không tạo domain Sales mới từ đầu.\n- **C — Domain contributor:** không tạo domain hoặc subdomain; chỉ gán workspace mà họ là admin vào domain được phân quyền.\n- **D — Fabric admin:** tạo được domain mới và có quyền quản trị cần cho các bước tiếp theo.",
+      "references": [
+        {
+          "title": "Create domain - Microsoft Fabric REST API (Admin)",
+          "url": "https://learn.microsoft.com/en-us/rest/api/fabric/admin/domains/create-domain"
+        },
+        {
+          "title": "Domains in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/governance/domains"
+        }
+      ]
     },
     {
       "id": 12,
-      "question": "You have a Fabric capacity that contains a workspace named Workspace1. Workspace1 contains a lakehouse named Lakehouse1, a data pipeline, a notebook, and several Microsoft Power BI reports.A user named User1 wants to use SQL to analyze the data in Lakehouse1.You need to configure access for User1. The solution must meet the following requirements:Provide User1 with read access to the table data in Lakehouse1.Prevent User1 from using Apache Spark to query the underlying files in Lakehouse1.Prevent User1 from accessing other items in Workspace1.What should you do?",
+      "question": "A Fabric capacity contains Workspace1, which has Lakehouse1, a data pipeline, a notebook, and several Power BI reports. User1 needs to analyze Lakehouse1 table data with SQL. User1 must not query the underlying files with Apache Spark or access the other items in Workspace1. What should you do?",
       "choices": {
         "A": "Share Lakehouse1 with User1 directly and select Read all SQL endpoint data.",
         "B": "Assign User1 the Viewer role for Workspace1. Share Lakehouse1 with User1 and select Read all SQL endpoint data.",
@@ -242,35 +251,62 @@
         "D": "Assign User1 the Member role for Workspace1. Share Lakehouse1 with User1 and select Read all SQL endpoint data."
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (Share Lakehouse1 with User1 directly and select Read all SQL endpoint data) là chính xác vì:\n- Việc chia sẻ trực tiếp (Share) Lakehouse1 mà không thêm User1 vào các vai trò của Workspace1 (như Member hay Viewer) sẽ giúp đáp ứng yêu cầu ngăn người dùng truy cập các item khác trong workspace.\n- Việc chọn quyền \"Read all SQL endpoint data\" (đọc toàn bộ dữ liệu điểm cuối SQL) cho phép người dùng chạy các truy vấn T-SQL trên SQL Analytics Endpoint của Lakehouse, nhưng không cấp quyền đọc tệp gốc thông qua Apache Spark (quyền này cần \"Read all Apache Spark data\").\n- Lựa chọn B và D cấp vai trò ở cấp workspace (Viewer/Member), khiến User1 có thể xem/truy cập các item khác trong Workspace1.\n- Lựa chọn C chỉ cấp quyền Build báo cáo trên default semantic model, không tập trung vào quyền truy vấn trực tiếp qua SQL endpoint.",
-      "references": []
+      "explanation_vi": "**Đáp án A — chia sẻ riêng Lakehouse1 và chỉ bật quyền đọc dữ liệu qua SQL endpoint.** Đề bài đặt ra ba ranh giới: User1 đọc được các bảng, không đọc được file qua Spark, và không nhìn thấy các item khác trong workspace. Chia sẻ trực tiếp Lakehouse1 giữ quyền ở đúng một item; không cần thêm User1 vào workspace.\n\nTrong hộp thoại Share, quyền **Read all SQL endpoint data** cho phép chạy truy vấn T-SQL trên các bảng của Lakehouse1. Quyền này tách biệt với **Read all Apache Spark data**: quyền Spark/OneLake không được cấp, nên User1 không thể dùng Spark để đọc các file nền. SQL analytics endpoint của lakehouse vốn là bề mặt truy vấn T-SQL chỉ đọc, phù hợp với yêu cầu phân tích mà không cho sửa bảng.\n\n- **A đúng:** chỉ chia sẻ Lakehouse1, cấp đường đọc SQL cần thiết và không cấp quyền Spark hay membership ở workspace.\n- **B sai:** Viewer vẫn xem được tất cả nội dung trong Workspace1, gồm pipeline, notebook và reports; điều đó vi phạm yêu cầu chỉ truy cập Lakehouse1.\n- **C sai:** Build trên semantic model cho phép tạo nội dung/report dựa trên model mặc định; nó không thay thế quyền đọc dữ liệu bảng trực tiếp qua SQL analytics endpoint.\n- **D sai:** Member có thể xem, sửa và chia sẻ toàn bộ nội dung workspace; phạm vi lớn hơn nhiều so với một lakehouse và vi phạm least privilege.\n\nMẹo phân biệt: SQL `ReadData` và Spark/OneLake `ReadAll` là hai quyền riêng; cấp quyền SQL không tự cấp quyền Spark.",
+      "references": [
+        {
+          "title": "Lakehouse sharing and permission management - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+        },
+        {
+          "title": "What is the SQL analytics endpoint for a lakehouse?",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+        }
+      ]
     },
     {
       "id": 13,
-      "question": "You have an Azure Data Lake Storage Gen2 account named storage1 and an Amazon S3 bucket named storage2.You have the Delta Parquet files shown in the following table.\nYou have a Fabric workspace named Workspace1 that has the cache for shortcuts enabled. Workspace1 contains a lakehouse named Lakehouse1. Lakehouse1 has the following shortcuts:A shortcut to ProductFile aliased as ProductsA shortcut to StoreFile aliased as StoresA shortcut to TripsFile aliased as TripsThe data from which shortcuts will be retrieved from the cache?",
+      "question": "You have an Azure Data Lake Storage Gen2 account named storage1 and an Amazon S3 bucket named storage2. The Delta Parquet files are: ProductFile.parquet in storage1 (50 MB), TripsFile.parquet in storage2 (2 GB), and StoreFile.parquet in storage2 (25 MB). A Fabric workspace named Workspace1 has shortcut caching enabled and contains Lakehouse1. Its shortcuts point to ProductFile as Products, StoreFile as Stores, and TripsFile as Trips. After the first read, before the cache retention period expires, which shortcuts can serve the second read from the cache?",
       "choices": {
         "A": "Trips and Stores only",
-        "B": "Products and Store only",
+        "B": "Products and Stores only",
         "C": "Stores only",
         "D": "Products only",
         "E": "Products, Stores, and Trips"
       },
       "correctAnswer": "C",
-      "explanation_vi": "Lựa chọn C (Stores only) là chính xác. Tính năng Shortcut Caching của Microsoft Fabric được thiết kế để lưu trữ cục bộ dữ liệu từ các nguồn lưu trữ đám mây ngoài Azure (cross-cloud) như Amazon S3 và Google Cloud Storage nhằm giảm chi phí truyền tải dữ liệu (egress cost) và cải thiện hiệu năng. Đối với các nguồn dữ liệu gốc trong Azure như Azure Data Lake Storage Gen2 (ADLS Gen2), Fabric không thực hiện cache qua tính năng này vì chúng là nguồn gốc Azure nội bộ. Do đó, chỉ có shortcut \"Stores\" (trỏ tới Amazon S3) được lấy dữ liệu từ cache, còn \"Products\" và \"Trips\" (trỏ tới ADLS Gen2) thì không.",
-      "references": []
+      "explanation_vi": "**Đáp án C — chỉ Stores.** Câu hỏi hỏi lần đọc thứ hai có thể nhận dữ liệu từ cache nào; để được cache, shortcut phải trỏ tới nguồn được hỗ trợ và từng tệp phải không vượt quá 1 GB. Microsoft hiện liệt kê S3 và GCS trong các nguồn hỗ trợ caching; ADLS Gen2 không nằm trong danh sách này. Tệp lớn hơn 1 GB cũng không được cache.\n\nÁp dụng lần lượt vào bảng trong đề:\n- **Products → ProductFile.parquet:** nằm ở ADLS Gen2 (`storage1`), 50 MB. Tệp nhỏ nhưng nguồn ADLS Gen2 không được shortcut caching hỗ trợ, nên không đủ điều kiện.\n- **Trips → TripsFile.parquet:** nằm ở S3 (`storage2`), nhưng dung lượng 2 GB, vượt giới hạn 1 GB cho mỗi tệp nên không được cache.\n- **Stores → StoreFile.parquet:** nằm ở S3 và chỉ 25 MB. Nguồn được hỗ trợ, tệp dưới giới hạn; sau lần đọc đầu và trước khi hết thời hạn lưu giữ, lần đọc tiếp theo có thể lấy từ cache.\n\nVì vậy chỉ **Stores** thỏa mãn đồng thời cả điều kiện nguồn và kích thước.\n\n- **A sai:** bao gồm Trips, nhưng tệp 2 GB vượt ngưỡng.\n- **B sai:** bao gồm Products, nhưng Products nằm trên ADLS Gen2.\n- **D sai:** Products không đủ điều kiện, đồng thời đáp án còn bỏ sót Stores.\n- **E sai:** gồm cả Products lẫn Trips, hai shortcut đều không đủ điều kiện.",
+      "references": [
+        {
+          "title": "Unify data sources with OneLake shortcuts - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+        }
+      ]
     },
     {
       "id": 14,
-      "question": "You have a Fabric workspace named Workspace1 that contains a warehouse named DW1 and a data pipeline named Pipeline1.You plan to add a user named User3 to Workspace1.You need to ensure that User3 can perform the following actions:View all the items in Workspace1.Update the tables in DW1.The solution must follow the principle of least privilege.You already assigned the appropriate object-level permissions to DW1.Which workspace role should you assign to User3?",
+      "question": "Workspace1 contains a Fabric warehouse named DW1 and a data pipeline named Pipeline1. User3 needs to view every item in Workspace1 and update tables in DW1. The required object-level permissions on DW1 have already been assigned. Following least privilege, which workspace role should you assign to User3?",
       "choices": {
         "A": "Admin",
         "B": "Member",
         "C": "Viewer",
         "D": "Contributor"
       },
-      "correctAnswer": "D",
-      "explanation_vi": "Lựa chọn D (Contributor) là chính xác theo nguyên tắc cấp quyền tối thiểu (least privilege).\n- Vai trò Contributor trong Fabric workspace cho phép người dùng xem tất cả các item trong workspace (đáp ứng yêu cầu \"View all the items in Workspace1\").\n- Đồng thời, khi kết hợp với các quyền cấp đối tượng (object-level permissions) đã được gán sẵn trong Warehouse DW1, người dùng có vai trò Contributor có thể thực hiện cập nhật bảng trong DW1.\n- Vai trò Viewer (C) không cho phép thực hiện bất kỳ hành động chỉnh sửa nào đối với workspace items.\n- Các vai trò Member (B) và Admin (A) cấp quá nhiều đặc quyền không cần thiết (chẳng hạn như quản lý quyền truy cập workspace, xóa workspace), vi phạm nguyên tắc phân quyền tối thiểu.",
-      "references": []
+      "correctAnswer": "C",
+      "explanation_vi": "**Đáp án C — Viewer.** Có hai lớp quyền đang phối hợp: workspace role quyết định User3 nhìn thấy được phạm vi nội dung nào; object-level/SQL permissions quyết định User3 được làm gì với bảng cụ thể trong DW1. Đề bài đã nói quyền thao tác trên các bảng DW1 được cấp riêng. Vì vậy, để nhìn thấy mọi item trong Workspace1, Viewer là đủ; quyền cập nhật bảng đến từ grant đã có trên DW1, không cần nâng User3 lên quyền sửa toàn workspace.\n\nViewer tự nó **không** cho phép sửa workspace items hay ghi dữ liệu. Nhưng nó cho phép xem toàn bộ nội dung workspace và, cùng với quyền kết nối/SQL cùng grant UPDATE đã cấp cho đúng bảng, cho phép thực hiện thao tác dữ liệu cần thiết. Đây là lý do câu hỏi nhấn mạnh rằng object-level permissions đã được gán trước.\n\n- **A — Admin:** ngoài việc xem và sửa nội dung, còn quản lý workspace và quyền truy cập; vượt xa nhu cầu.\n- **B — Member:** có thể xem, sửa, chia sẻ toàn bộ nội dung workspace; không cần thiết khi quyền cập nhật đã giới hạn ở cấp bảng.\n- **C — Viewer:** phạm vi xem đủ rộng để thấy mọi item, còn quyền ghi vẫn được cấp riêng ở DW1; đây là tổ hợp ít quyền nhất.\n- **D — Contributor:** cho phép sửa mọi nội dung trong workspace, rộng hơn quyền cập nhật bảng DW1 cần thiết.\n\nMấu chốt là không nhầm quyền sửa *nội dung workspace* với quyền SQL thao tác trên *một bảng cụ thể*.",
+      "references": [
+        {
+          "title": "Permission model in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/security/permission-model"
+        },
+        {
+          "title": "Secure your Fabric Data Warehouse",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security"
+        },
+        {
+          "title": "SQL granular permissions in Fabric Data Warehouse",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+        }
+      ]
     },
     {
       "id": 15,
@@ -521,7 +557,7 @@
     },
     {
       "id": 27,
-      "question": "Case Study -This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview. Company Overview -Contoso, Ltd. is an online retail company that wants to modernize its analytics platform by moving to Fabric. The company plans to begin using Fabric for marketing analytics.\nOverview. IT Structure -The company’s IT department has a team of data analysts and a team of data engineers that use analytics systems.The data engineers perform the ingestion, transformation, and loading of data. They prefer to use Python or SQL to transform the data.The data analysts query data and create semantic models and reports. They are qualified to write queries in Power Query and T-SQL.\nExisting Environment. Fabric -Contoso has an F64 capacity named Cap1. All Fabric users are allowed to create items.Contoso has two workspaces named WorkspaceA and WorkspaceB that currently use Pro license mode.Existing Environment. Source SystemsContoso has a point of sale (POS) system named POS1 that uses an instance of SQL Server on Azure Virtual Machines in the same Microsoft Entra tenant as Fabric. The host virtual machine is on a private virtual network that has public access blocked. POS1 contains all the sales transactions that were processed on the company’s website.The company has a software as a service (SaaS) online marketing app named MAR1. MAR1 has seven entities. The entities contain data that relates to email open rates and interaction rates, as well as website interactions. The data can be exported from MAR1 by calling REST APIs. Each entity has a different endpoint.Contoso has been using MAR1 for one year. Data from prior years is stored in Parquet files in an Amazon Simple Storage Service (Amazon S3) bucket. There are 12 files that range in size from 300 MB to 900 MB and relate to email interactions.Existing Environment. Product DataPOS1 contains a product list and related data. The data comes from the following three tables:\nProducts -\nProductCategories -\nProductSubcategories -In the data, products are related to product subcategories, and subcategories are related to product categories.\nExisting Environment. Azure -Contoso has a Microsoft Entra tenant that has the following mail-enabled security groups:DataAnalysts: Contains the data analystsDataEngineers: Contains the data engineersContoso has an Azure subscription.The company has an existing Azure DevOps organization and creates a new project for repositories that relate to Fabric.Existing Environment. User ProblemsThe VP of marketing at Contoso requires analysis on the effectiveness of different types of email content. It typically takes a week to manually compile and analyze the data. Contoso wants to reduce the time to less than one day by using Fabric.The data engineering team has successfully exported data from MAR1. The team experiences transient connectivity errors, which causes the data exports to fail.\nRequirements. Planned Changes -Contoso plans to create the following two lakehouses:Lakehouse1: Will store both raw and cleansed data from the sourcesLakehouse2: Will serve data in a dimensional model to users for analytical queriesAdditional items will be added to facilitate data ingestion and transformation.Contoso plans to use Azure Repos for source control in Fabric.Requirements. Technical RequirementsThe new lakehouses must follow a medallion architecture by using the following three layers: bronze, silver, and gold. There will be extensive data cleansing required to populate the MAR1 data in the silver layer, including deduplication, the handling of missing values, and the standardizing of capitalization.Each layer must be fully populated before moving on to the next layer. If any step in populating the lakehouses fails, an email must be sent to the data engineers.Data imports must run simultaneously, when possible.The use of email data from the Amazon S3 bucket must meet the following requirements:Minimize egress costs associated with cross-cloud data access.Prevent saving a copy of the raw data in the lakehouses.Items that relate to data ingestion must meet the following requirements:The items must be source controlled alongside other workspace items.Ingested data must land in the bronze layer of Lakehouse1 in the Delta format.No changes other than changes to the file formats must be implemented before the data lands in the bronze layer.Development effort must be minimized and a built-in connection must be used to import the source data.In the event of a connectivity error, the ingestion processes must attempt the connection again.Lakehouses, data pipelines, and notebooks must be stored in WorkspaceA. Semantic models, reports, and dataflows must be stored in WorkspaceB.Once a week, old files that are no longer referenced by a Delta table log must be removed.Requirements. Data TransformationIn the POS1 product data, ProductID values are unique. The product dimension in the gold layer must include only active products from product list. Active products are identified by an IsActive value of 1.Some product categories and subcategories are NOT assigned to any product. They are NOT analytically relevant and must be omitted from the product dimension in the gold layer.\nRequirements. Data Security -Security in Fabric must meet the following requirements:The data engineers must have read and write access to all the lakehouses, including the underlying files.The data analysts must only have read access to the Delta tables in the gold layer.The data analysts must NOT have access to the data in the bronze and silver layers.The data engineers must be able to commit changes to source control in WorkspaceA.You need to schedule the population of the medallion layers to meet the technical requirements.What should you do?",
+      "question": "Contoso is building a medallion architecture in Fabric with Bronze, Silver, and Gold layers. Source imports should run in parallel whenever possible, but each layer must finish completely before the next layer begins. If any ingestion or transformation step fails, the data engineers must receive an email. You need to schedule the population of the layers. What should you do?",
       "choices": {
         "A": "Schedule a data pipeline that calls other data pipelines.",
         "B": "Schedule a notebook.",
@@ -529,68 +565,122 @@
         "D": "Schedule multiple data pipelines."
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (Schedule a data pipeline that calls other data pipelines) là chính xác vì đáp ứng đầy đủ các yêu cầu kỹ thuật: \n1. Chạy các tiến trình nhập dữ liệu đồng thời khi có thể: Pipeline chính có thể gọi song song nhiều pipeline con (activities chạy song song).\n2. Yêu cầu tuần tự của các lớp: Sử dụng cơ chế ràng buộc (dependencies) trong pipeline chính để đảm bảo lớp Bronze chạy xong mới đến Silver và Gold.\n3. Gửi email nếu có bất kỳ bước nào lỗi: Pipeline có thể tích hợp Office 365 Outlook activity để gửi thông báo email khi gặp lỗi (on failure).\n- Các lựa chọn khác như chạy notebook hay Spark job đơn lẻ khó quản lý việc gọi song song các pipeline con và thiết lập cơ chế thông báo lỗi tập trung, còn nhiều pipeline độc lập (D) khó đồng bộ việc phân lớp tuần tự.",
-      "references": []
+      "explanation_vi": "**Đáp án A — lập lịch một pipeline điều phối, pipeline này gọi các pipeline con.** Pipeline cha là một điểm vào duy nhất cho lịch chạy; bên trong nó, các Invoke pipeline activity gọi phần nhập/biến đổi được tách thành những pipeline con. Các nhánh nguồn độc lập có thể chạy song song. Sau đó, dependency chỉ cho phép Silver bắt đầu khi toàn bộ hoạt động Bronze liên quan thành công, và Gold bắt đầu khi Silver hoàn tất. Cấu hình nhánh On failure để gửi thông báo bằng Office 365 Outlook activity; cần gắn cảnh báo vào từng hoạt động cần theo dõi để một lỗi riêng lẻ cũng kích hoạt email.\n\nCách này đồng thời giải quyết ba yêu cầu: chạy song song khi không có phụ thuộc, chặn lớp sau cho đến khi lớp trước hoàn tất, và có một luồng xử lý lỗi có thể giám sát. Pipeline cha được schedule; các pipeline con được gọi theo dependency.\n\n- **A đúng:** một pipeline điều phối gom lịch, song song hóa các bước độc lập, đặt dependency Bronze → Silver → Gold và gọi nhánh báo lỗi.\n- **B sai:** có thể schedule notebook, nhưng tự viết logic điều phối nhiều pipeline, dependency giữa các lớp và thông báo lỗi sẽ tốn thêm công sức.\n- **C sai:** Spark job phù hợp để lập lịch workload Spark; nó không phải công cụ orchestration thuận tiện cho nhiều pipeline và hoạt động Outlook theo yêu cầu.\n- **D sai:** các pipeline có lịch riêng không tự bảo đảm mọi Bronze hoàn tất trước Silver, Silver trước Gold; cũng khó tạo một điểm kiểm soát lỗi tập trung.\n\nTrong pipeline, các dependency thành công dùng để tạo thứ tự; các activity không phụ thuộc nhau có thể chạy song song. Office 365 Outlook activity có thể gửi email theo nhánh lỗi.",
+      "references": [
+        {
+          "title": "Invoke pipeline activity - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity"
+        },
+        {
+          "title": "Office 365 Outlook activity - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/outlook-activity"
+        },
+        {
+          "title": "Create alerts for pipeline runs - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+        }
+      ]
     },
     {
       "id": 28,
-      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You change project to extend.\nDoes this meet the goal?",
+      "question": "A KQL database contains two tables with millions of rows. Stream has EventTime (datetime), DeviceId (string), EventType (string), Payload (dynamic), and SourceIp (string). Reference has DeviceId (string), Region (string), Owner (string), and Notes (string). The query below returns recent events that have a matching device:\n\nStream\n| join kind=innerunique (Reference) on DeviceId\n| where EventTime > ago(7d)\n| project EventTime, DeviceId, EventType, Region\n\nYou need to reduce the query's runtime. Solution: Replace project with extend, keeping the same output-column expressions. Does this meet the goal?",
       "choices": {
         "A": "Yes",
         "B": "No"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (No) là chính xác. Việc thay đổi toán tử `project` thành `extend` không giúp giảm thời gian chạy của truy vấn KQL trong trường hợp này. Toán tử `project` dùng để chọn và đổi tên cột đầu ra (giảm số cột, tối ưu bộ nhớ), trong khi `extend` thêm các cột mới vào schema hiện tại mà không loại bỏ các cột không cần thiết. Do đó, việc thay đổi này không giúp giảm lượng dữ liệu xử lý hay tăng tốc độ truy vấn join, thậm chí có thể làm tăng lượng dữ liệu lưu chuyển nếu giữ lại các cột dư thừa.",
-      "references": []
+      "explanation_vi": "**Đáp án B — Không.** Trong truy vấn này, `project` chỉ giữ bốn cột cần trả về; nó loại Payload, SourceIp, Owner và Notes khỏi kết quả. `extend` tạo hoặc tính thêm cột nhưng giữ lại các cột đầu vào khác. Nếu thay `project` bằng `extend`, kết quả vẫn mang theo các cột dư, nên không giảm lượng dữ liệu cần truyền/giữ và có thể làm kết quả rộng hơn.\n\nKhi mục tiêu là tối ưu, hãy dùng `project` để giữ lại đúng các cột cần thiết, đặc biệt trước khi xử lý dữ liệu lớn.\n\n- **A — Yes sai:** thay operator không lọc thêm dòng; dùng extend còn giữ các cột không cần.\n- **B — No đúng:** thay đổi này không giảm khối lượng truy vấn và có thể làm tăng dữ liệu đầu ra.",
+      "references": [
+        {
+          "title": "Best practices for KQL queries - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/best-practices?view=microsoft-fabric"
+        }
+      ]
     },
     {
       "id": 29,
-      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You move the filter to line 02.\nDoes this meet the goal?",
+      "question": "A KQL database contains two tables with millions of rows. Stream has EventTime (datetime), DeviceId (string), EventType (string), Payload (dynamic), and SourceIp (string). Reference has DeviceId (string), Region (string), Owner (string), and Notes (string). The query below returns recent events that have a matching device:\n\nStream\n| join kind=innerunique (Reference) on DeviceId\n| where EventTime > ago(7d)\n| project EventTime, DeviceId, EventType, Region\n\nYou need to reduce the query's runtime. Solution: Move the where filter to line 2, immediately after Stream and before the join. Does this meet the goal?",
       "choices": {
         "A": "Yes",
         "B": "No"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (Yes) là chính xác. Trong KQL, quy tắc tối ưu hóa truy vấn quan trọng nhất khi thực hiện phép Join là áp dụng bộ lọc (filter - toán tử `where`) càng sớm càng tốt trước khi thực hiện phép Join. Việc di chuyển bộ lọc lên dòng 02 (ngay sau bảng nguồn Stream trước khi join với Reference) giúp giảm đáng kể số lượng dòng cần tham gia vào phép toán Join có chi phí cao, từ đó giảm thời gian thực thi truy vấn một cách hiệu quả.",
-      "references": []
+      "explanation_vi": "**Đáp án A — Có.** `EventTime` chỉ thuộc bảng Stream, nên điều kiện `where EventTime > ago(7d)` có thể chạy ngay trên Stream trước phép join. Khi chỉ giữ các sự kiện bảy ngày gần nhất, số dòng tham gia join với Reference giảm; join phải so khớp ít dữ liệu hơn. Đây là quy tắc tối ưu KQL cơ bản: lọc dữ liệu sớm để các operator phía sau xử lý ít dòng hơn.\n\nĐặt bộ lọc trước join giữ nguyên ý nghĩa của truy vấn vì điều kiện chỉ kiểm tra cột từ Stream, không phụ thuộc việc có tìm thấy dòng khớp trong Reference hay không.\n\n- **A — Yes đúng:** lọc Stream trước phép join làm giảm đầu vào của operator tốn kém.\n- **B — No sai:** không cần đợi sau join để kiểm tra một cột chỉ có ở bảng Stream.",
+      "references": [
+        {
+          "title": "Best practices for KQL queries - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/best-practices?view=microsoft-fabric"
+        }
+      ]
     },
     {
       "id": 30,
-      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You change the join type to kind=outer.\nDoes this meet the goal?",
+      "question": "A KQL database contains two tables with millions of rows. Stream has EventTime (datetime), DeviceId (string), EventType (string), Payload (dynamic), and SourceIp (string). Reference has DeviceId (string), Region (string), Owner (string), and Notes (string). The query below returns recent events that have a matching device:\n\nStream\n| join kind=innerunique (Reference) on DeviceId\n| where EventTime > ago(7d)\n| project EventTime, DeviceId, EventType, Region\n\nYou need to reduce the query's runtime. Solution: Change the join flavor from innerunique to fullouter. Does this meet the goal?",
       "choices": {
         "A": "Yes",
         "B": "No"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (No) là chính xác. Việc thay đổi kiểu join sang `kind=outer` (left outer join hoặc full outer join) không giúp giảm thời gian chạy truy vấn. Phép join outer yêu cầu giữ lại tất cả các dòng từ một hoặc cả hai phía kể cả khi không có kết quả khớp, khiến kích thước tập kết quả và lượng tính toán lớn hơn so với phép inner join mặc định. Để tối ưu phép join giữa bảng Stream (millions of rows) và Reference trong KQL, giải pháp hiệu quả là lọc sớm dữ liệu hoặc sử dụng lookup operator/broadcast join nếu bảng tham chiếu nhỏ, chứ không phải thay đổi sang outer join.",
-      "references": []
+      "explanation_vi": "**Đáp án B — Không.** `innerunique` trả các dòng khớp và loại trùng phía trái theo khóa trước khi join. `fullouter` còn giữ cả những dòng không có đối tác ở một trong hai bảng, điền giá trị null cho phía không khớp. Vì vậy nó đổi ý nghĩa kết quả và có thể làm tập kết quả lớn hơn; đây không phải cách giảm thời gian truy vấn khi yêu cầu chỉ cần các dòng khớp.\n\nLưu ý cú pháp: KQL dùng các kiểu cụ thể như `leftouter`, `rightouter` và `fullouter`; `outer` đứng riêng không phải tên kiểu join. Nếu muốn tối ưu, hãy giảm dữ liệu trước join, đặt bảng nhỏ ở phía trái khi phù hợp, hoặc chọn `lookup`/broadcast theo kích thước dữ liệu — không đổi kiểu join để mong truy vấn chạy nhanh hơn.\n\n- **A — Yes sai:** fullouter có thể phải giữ thêm các dòng không khớp và không giảm dữ liệu được join.\n- **B — No đúng:** kiểu join mới vừa thay kết quả, vừa không phải tối ưu hóa tốc độ cho trường hợp này.",
+      "references": [
+        {
+          "title": "KQL join operator - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/kql-quick-reference?view=microsoft-fabric"
+        },
+        {
+          "title": "Best practices for KQL queries - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/best-practices?view=microsoft-fabric"
+        }
+      ]
     },
     {
       "id": 31,
-      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.You have a KQL database that contains two tables named Stream and Reference. Stream contains streaming data in the following format.\nReference contains reference data in the following format.\nBoth tables contain millions of rows.You have the following KQL queryset.\nYou need to reduce how long it takes to run the KQL queryset.Solution: You add the make_list() function to the output columns.\nDoes this meet the goal?",
+      "question": "A KQL database contains two tables with millions of rows. Stream has EventTime (datetime), DeviceId (string), EventType (string), Payload (dynamic), and SourceIp (string). Reference has DeviceId (string), Region (string), Owner (string), and Notes (string). The query below returns recent events that have a matching device:\n\nStream\n| join kind=innerunique (Reference) on DeviceId\n| where EventTime > ago(7d)\n| project EventTime, DeviceId, EventType, Region\n\nYou need to reduce the query's runtime. Solution: Replace the final projection with summarize EventTypes=make_list(EventType) by DeviceId. Does this meet the goal?",
       "choices": {
         "A": "Yes",
         "B": "No"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (No) là chính xác. Hàm `make_list()` trong KQL được sử dụng để gom nhóm các giá trị thành một mảng động (dynamic array), đây là một hàm tổng hợp dữ liệu chứ không có tác dụng tối ưu hóa hiệu năng truy vấn hay giảm thời gian thực thi của phép Join giữa hai bảng có hàng triệu dòng. Thực tế, việc gom nhóm này có thể làm tăng mức tiêu thụ bộ nhớ và thời gian xử lý của truy vấn.",
-      "references": []
+      "explanation_vi": "**Đáp án B — Không.** `make_list(EventType)` là hàm tổng hợp: nó gom các giá trị EventType thành một mảng dynamic cho mỗi DeviceId và phải được dùng cùng `summarize`. Với hàng triệu dòng, engine vẫn phải đọc/join đầu vào rồi nhóm các dòng theo DeviceId và xây dựng mảng; việc này thêm công việc và có thể cần nhiều bộ nhớ. Nó đổi kết quả từ một dòng cho mỗi sự kiện thành một dòng chứa mảng cho mỗi thiết bị, chứ không làm truy vấn gốc chạy nhanh hơn.\n\n- **A — Yes sai:** make_list không phải bộ lọc hay chỉ dẫn giảm dữ liệu đầu vào; nó là phép tổng hợp sau khi các dòng đã được xử lý.\n- **B — No đúng:** phép nhóm và tạo mảng không đạt mục tiêu giảm thời gian trong truy vấn này.",
+      "references": [
+        {
+          "title": "make_list() aggregation function - Kusto",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/make-list-aggregation-function?view=microsoft-fabric"
+        },
+        {
+          "title": "Best practices for KQL queries - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/best-practices?view=microsoft-fabric"
+        }
+      ]
     },
     {
       "id": 32,
-      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Lakehouse1 contains a Delta table named Table1.You analyze Table1 and discover that Table1 contains 2,000 Parquet files of 1 MB each.You need to minimize how long it takes to query Table1.What should you do?",
+      "question": "You have a Fabric workspace with a lakehouse named Lakehouse1. Lakehouse1 contains a Delta table named Table1 with 2,000 Parquet files of 1 MB each. You need to minimize the time required to query Table1. What should you do?",
       "choices": {
         "A": "Disable V-Order and run the OPTIMIZE command.",
         "B": "Disable V-Order and run the VACUUM command.",
         "C": "Run the OPTIMIZE and VACUUM commands."
       },
       "correctAnswer": "C",
-      "explanation_vi": "Lựa chọn C (Run the OPTIMIZE and VACUUM commands) là chính xác. Bảng Delta chứa quá nhiều tệp nhỏ (2.000 tệp kích thước chỉ 1 MB) sẽ gặp phải vấn đề 'small file problem', gây chậm hiệu năng truy vấn do chi phí đọc/ghi siêu dữ liệu quá cao. Lệnh `OPTIMIZE` thực hiện nén (compaction) các tệp nhỏ này thành các tệp Parquet lớn hơn để cải thiện tốc độ đọc dữ liệu. Lệnh `VACUUM` sẽ thực hiện xóa bỏ vật lý các tệp nhỏ cũ đã bị thay thế (sau khi lệnh OPTIMIZE chạy xong và các tệp mới được tạo) để giải phóng dung lượng OneLake. Không nên tắt V-Order vì V-Order là tính năng tối ưu hóa lưu trữ mặc định cực kỳ quan trọng của Fabric dành cho Direct Lake và các engine truy vấn.",
-      "references": []
+      "explanation_vi": "**Đáp án C — chạy OPTIMIZE rồi VACUUM.** Bảng có khoảng 2 GB dữ liệu nhưng bị chia thành 2.000 tệp nhỏ. Mỗi lần quét phải xử lý nhiều tệp và metadata hơn cần thiết. `OPTIMIZE` gom các tệp Parquet nhỏ đang được bảng sử dụng thành ít tệp lớn hơn; đây là bước trực tiếp giúp giảm overhead khi đọc bảng. Sau đó `VACUUM` có thể xóa các tệp cũ đã bị thay thế nếu chúng không còn được tham chiếu và đã quá thời hạn lưu giữ. `VACUUM` chủ yếu thu hồi dung lượng lưu trữ, tự nó không làm các tệp đang hoạt động đọc nhanh hơn.\n\n**Vì sao các lựa chọn khác không phù hợp bằng?**\n- **A:** `OPTIMIZE` có ích, nhưng tắt V-Order không phải yêu cầu để nén tệp. V-Order tối ưu bố cục Parquet cho các lần đọc; tắt nó có thể giảm chi phí ghi nhưng làm giảm lợi ích đọc ở workload phù hợp.\n- **B:** `VACUUM` chỉ dọn tệp không còn được bảng tham chiếu; nó không gom 2.000 tệp nhỏ đang hoạt động.\n- **C:** Kết hợp compaction trước và dọn các tệp cũ sau; trong ba lựa chọn, đây là phương án vừa xử lý small-file overhead vừa thu hồi các tệp đã thay thế.",
+      "references": [
+        {
+          "title": "Tune file size and compact small files",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size"
+        },
+        {
+          "title": "VACUUM Delta tables",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+        },
+        {
+          "title": "Optimize Delta Lake tables with V-Order in Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+        }
+      ]
     },
     {
       "id": 33,
-      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1. Data is loaded daily into Warehouse1 by using data pipelines and stored procedures.You discover that the daily data load takes longer than expected.You need to monitor Warehouse1 to identify the names of users that are actively running queries.Which view should you use?",
+      "question": "You have a Fabric workspace with a warehouse named Warehouse1. Data pipelines and stored procedures load data into it daily, and the load is taking longer than expected. You need to identify the login names associated with users actively running queries. Which view should you inspect?",
       "choices": {
         "A": "sys.dm_exec_connections",
         "B": "sys.dm_exec_requests",
@@ -599,12 +689,17 @@
         "E": "sys.dm_exec_sessions"
       },
       "correctAnswer": "E",
-      "explanation_vi": "Lựa chọn E (sys.dm_exec_sessions) là chính xác. Trong Microsoft Fabric Warehouse, chế độ xem quản lý động `sys.dm_exec_sessions` cung cấp thông tin chi tiết về tất cả các phiên kết nối (sessions) đang hoạt động, bao gồm thông tin xác thực danh tính người dùng (`login_name`), thời gian kết nối, trạng thái phiên, và cấu hình môi trường của từng phiên truy cập. Điều này giúp người quản trị xác định chính xác tên người dùng đang tích cực chạy các truy vấn. \n- `sys.dm_exec_connections` hiển thị thông tin về các kết nối vật lý (như địa chỉ IP), không trực quan bằng session.\n- `sys.dm_exec_requests` hiển thị thông tin về các yêu cầu đang thực thi hiện tại, nhưng để lấy đầy đủ ngữ cảnh phiên và tên user thì `sys.dm_exec_sessions` (chứa cột `login_name`) là phù hợp nhất.\n- `queryinsights` là các bảng lưu trữ lịch sử thống kê truy vấn dài hoặc truy vấn chạy thường xuyên, không theo dõi thời gian thực các phiên đang chạy hiện tại.",
-      "references": []
+      "explanation_vi": "**Đáp án E — `sys.dm_exec_sessions`.** DMV này có thông tin của từng session, trong đó có `login_name`, `session_id` và trạng thái session. Vì câu hỏi cần tên người dùng, đây là view có danh tính đăng nhập. Để xác định chính xác session nào hiện có một request đang thực thi, trong truy vấn giám sát thực tế hãy JOIN `sys.dm_exec_sessions` với `sys.dm_exec_requests` theo `session_id` rồi lọc các request đang chạy. Trong các lựa chọn đơn lẻ, sessions cung cấp tên người dùng; requests cung cấp chi tiết request/query.\n\n**Phân biệt các lựa chọn:**\n- **A — `sys.dm_exec_connections`:** thông tin kết nối mạng/transport; không phải view chính để lấy login name của session.\n- **B — `sys.dm_exec_requests`:** cho biết request hiện hành và trạng thái/thời lượng của truy vấn, nhưng cần ghép với session để lấy danh tính người dùng.\n- **C và D — `queryinsights`:** cung cấp thông tin phân tích về truy vấn dài/chạy thường xuyên, không phải danh sách session đang hoạt động tại thời điểm kiểm tra.\n- **E:** chứa `login_name`; ghép thêm requests nếu cần ràng buộc đúng các truy vấn đang thực thi.",
+      "references": [
+        {
+          "title": "Monitor a Fabric data warehouse with DMVs",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/monitor-using-dmv"
+        }
+      ]
     },
     {
       "id": 34,
-      "question": "You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table in a lakehouse.You need to remove files that are older than seven days and are no longer in use.Which command should you run?",
+      "question": "You have a Fabric workspace with an eventstream that writes events to a lakehouse table. You need to remove unreferenced Delta data files that are older than seven days. Which command should you run?",
       "choices": {
         "A": "VACUUM",
         "B": "COMPUTE",
@@ -612,12 +707,17 @@
         "D": "CLONE"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (VACUUM) là chính xác. Trong định dạng bảng Delta (được sử dụng trong Lakehouse của Fabric), khi dữ liệu được cập nhật hoặc xóa, các tệp cũ vẫn được giữ lại để phục vụ tính năng Time Travel (truy vấn ngược thời gian). Để dọn dẹp và xóa vĩnh viễn các tệp dữ liệu cũ đã lỗi thời không còn được sử dụng nữa (trong trường hợp này là cũ hơn 7 ngày), lệnh `VACUUM` được sử dụng để tối ưu dung lượng lưu trữ OneLake.",
-      "references": []
+      "explanation_vi": "**Đáp án A — `VACUUM`.** Khi UPDATE, DELETE, MERGE hoặc OPTIMIZE thay thế tệp, các tệp cũ có thể không còn được Delta log tham chiếu nhưng vẫn nằm trong OneLake. `VACUUM` xóa vật lý các tệp không còn được tham chiếu khi chúng đã quá thời hạn retention; mặc định của Delta là bảy ngày. Lệnh này không xóa các tệp đang tạo trạng thái hiện hành của bảng. Nếu cần time travel hoặc có reader chạy lâu, phải giữ retention phù hợp trước khi dọn.\n\n**Vì sao các lựa chọn khác không đúng?**\n- **B — COMPUTE:** không phải lệnh Delta Lake để dọn tệp cũ.\n- **C — OPTIMIZE:** gom/viết lại tệp đang được bảng sử dụng để cải thiện layout; các tệp bị thay thế vẫn cần `VACUUM` mới được xóa vật lý.\n- **D — CLONE:** tạo bản sao bảng, không phải lệnh dọn các tệp không còn được tham chiếu.\n- **A:** là lệnh thực hiện cleanup theo retention threshold.",
+      "references": [
+        {
+          "title": "VACUUM Delta tables",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+        }
+      ]
     },
     {
       "id": 35,
-      "question": "You have a Fabric warehouse named DW1 that loads data by using a data pipeline named Pipeline1. Pipeline1 uses a Copy data activity with a dynamic SQL source. Pipeline1 is scheduled to run every 15 minutes.You discover that Pipeline1 keeps failing.You need to identify which SQL query was executed when the pipeline failed.What should you do?",
+      "question": "You have a Fabric warehouse named DW1 and a pipeline named Pipeline1. Its Copy data activity uses a dynamic SQL source and runs every 15 minutes, but the pipeline keeps failing. Where should you look to find the SQL query supplied to the failed Copy activity?",
       "choices": {
         "A": "From Monitoring hub, select the latest failed run of Pipeline1, and then view the output JSON.",
         "B": "From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON.",
@@ -625,12 +725,21 @@
         "D": "From Real-time hub, select Fabric events, and then review the details of Microsoft. Fabric.ItemUpdateFailed."
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON) là chính xác. Trong Data Pipeline của Fabric, các hoạt động (activities) như Copy Data nhận các tham số đầu vào động (dynamic parameters/SQL query). Truy vấn SQL động được tính toán và gửi tới cơ sở dữ liệu nguồn sẽ được ghi nhận chi tiết trong tệp JSON đầu vào (input JSON) của hoạt động đó trong lịch sử chạy. Xem JSON đầu ra (output JSON) chỉ hiển thị kết quả chạy, số lượng dòng đọc/ghi hoặc chi tiết thông báo lỗi chứ không hiển thị nguyên bản câu truy vấn SQL động đã được biên dịch để gửi đi. Real-time hub không phải là công cụ chính để gỡ lỗi lịch sử chạy chi tiết của các hoạt động trong Data Pipeline.",
-      "references": []
+      "explanation_vi": "**Đáp án B — input JSON của Copy data activity.** Mở Monitoring hub, chọn lần chạy Pipeline1 thất bại gần nhất, chọn đúng activity Copy data rồi xem phần input. Input ghi cấu hình đầu vào và giá trị đã được phân giải cho activity, bao gồm truy vấn động được gửi làm SQL source. Output chủ yếu cho biết trạng thái thực thi, số dòng đọc/ghi và lỗi trả về; nó không phải nơi chuẩn để kiểm tra cấu hình truy vấn đầu vào.\n\n**Vì sao các lựa chọn khác không đúng?**\n- **A:** Output hữu ích để xem kết quả và lỗi sau chạy, nhưng truy vấn/configuration được cung cấp cho Copy activity nằm trong input.\n- **C:** Real-Time hub phát sự kiện ở mức item/workspace; sự kiện ItemReadFailed không thay thế chi tiết input của một pipeline activity.\n- **D:** ItemUpdateFailed là sự kiện cập nhật item, không phải nơi tra SQL nguồn của Copy activity.\n- **B:** Monitoring hub giữ run/activity details; input JSON cho thấy các tham số và query đã dùng.",
+      "references": [
+        {
+          "title": "Monitor pipeline runs",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitor-pipeline-runs"
+        },
+        {
+          "title": "Monitor copy activity runs",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitor-copy-activity"
+        }
+      ]
     },
     {
       "id": 36,
-      "question": "You have a Fabric notebook named Notebook1 that has been executing successfully for the last week.During the last run, Notebook1executed nine jobs.You need to view the jobs in a timeline chart.What should you use?",
+      "question": "You have a Fabric notebook named Notebook1. During its latest application run, it executed nine Spark jobs. You need to inspect those jobs in a timeline chart. What should you use?",
       "choices": {
         "A": "Real-Time hub",
         "B": "Monitoring hub",
@@ -638,13 +747,26 @@
         "D": "Spark History Server",
         "E": "the run series from the details of the application run"
       },
-      "correctAnswer": "E",
-      "explanation_vi": "Lựa chọn E (the run series from the details of the application run) là chính xác. Trong Microsoft Fabric, khi xem chi tiết kết quả thực thi của một ứng dụng Spark (Spark application run details) đối với một notebook, tab 'Run series' cung cấp giao diện trực quan biểu đồ thời gian (timeline chart) hiển thị chi tiết tiến trình chạy và phân bổ thời gian của các Spark jobs riêng lẻ (trong trường hợp này là 9 jobs), giúp nhà phát triển dễ dàng phân tích hiệu năng và phát hiện các bottleneck. Các lựa chọn như Spark History Server hoặc Monitoring Hub cung cấp thông tin tổng quan hoặc dạng log chi tiết, nhưng không tích hợp sẵn biểu đồ timeline trực quan tiện lợi cho các jobs trong session cụ thể như chức năng 'Run series'.",
-      "references": []
+      "correctAnswer": "D",
+      "explanation_vi": "**Đáp án D — Spark History Server.** Câu hỏi nói về chín Spark job bên trong **một lần chạy ứng dụng cụ thể** và muốn xem timeline của chúng. Spark History Server/Spark UI cho phép mở application run, xem tab Jobs và theo dõi thứ tự, thời lượng cùng trạng thái các job trên timeline; từ đó có thể lần tiếp tới stage/task khi cần điều tra.\n\n**Vì sao các lựa chọn khác không khớp?**\n- **A — Real-Time hub:** theo dõi sự kiện/item của Fabric, không hiển thị timeline các Spark job nội bộ của notebook run.\n- **B — Monitoring hub:** hữu ích để theo dõi lần chạy pipeline/notebook và trạng thái tổng thể, nhưng không phải giao diện chi tiết timeline của Spark jobs.\n- **C — Job history:** có thể cho danh sách hoặc trạng thái job, nhưng không phải giao diện Spark timeline được mô tả.\n- **E — Run series:** so sánh xu hướng giữa nhiều lần chạy ứng dụng (ví dụ thời lượng qua các run), không phân rã chín job trong một lần chạy.\n- **D:** Spark History Server là nơi mở chi tiết Spark application và xem timeline job của chính lần chạy đó.",
+      "references": [
+        {
+          "title": "Apache Spark History Server",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-history-server"
+        },
+        {
+          "title": "Spark detail monitoring",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring"
+        },
+        {
+          "title": "Monitor a Spark application run series",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-monitor-run-series"
+        }
+      ]
     },
     {
       "id": 37,
-      "question": "You are developing a data pipeline named Pipeline1.You need to add a Copy data activity that will copy data from a Snowflake data source to a Fabric warehouse.What should you configure?",
+      "question": "You are developing a Fabric data pipeline named Pipeline1. A Copy data activity will copy data from a Snowflake source to a Fabric warehouse. Which setting should you configure for this connector combination?",
       "choices": {
         "A": "Degree of copy parallelism",
         "B": "Fault tolerance",
@@ -652,12 +774,21 @@
         "D": "Enable logging"
       },
       "correctAnswer": "C",
-      "explanation_vi": "Lựa chọn C (Enable staging) là chính xác. Khi sao chép dữ liệu từ nguồn Snowflake sang Fabric Warehouse bằng Copy data activity, hệ thống yêu cầu hoặc khuyến nghị cấu hình cơ chế lưu trữ tạm thời (staging). Quá trình này sẽ tải dữ liệu từ Snowflake lên một vùng lưu trữ tạm thời (chẳng hạn như Azure Blob hoặc ADLS Gen2 nội bộ của workspace), sau đó sử dụng lệnh `COPY` hiệu năng cao để nạp trực tiếp vào Warehouse. Điều này giúp tối ưu hóa băng thông, tránh các lỗi tương thích về định dạng dữ liệu và đảm bảo tốc độ ghi tối đa. Các cấu hình khác không phải là điều kiện kỹ thuật cấu hình nền tảng bắt buộc để thực hiện Copy từ Snowflake sang Warehouse như Staging.",
-      "references": []
+      "explanation_vi": "**Đáp án C — bật staging.** Với luồng Snowflake → Fabric Warehouse, staged copy dùng một vùng lưu trữ trung gian tương thích để vận chuyển dữ liệu rồi nạp vào Warehouse bằng đường bulk-load phù hợp. Cấu hình này giải quyết yêu cầu về đường truyền/định dạng giữa hai connector và thường cho throughput tốt hơn so với cố truyền trực tiếp theo cách không được hỗ trợ. Chọn staging location và quyền truy cập phù hợp với workspace; staging là tạm thời, không phải bảng đích cuối.\n\n**Vì sao các lựa chọn khác không phải thiết lập chính được hỏi?**\n- **A — Degree of copy parallelism:** điều chỉnh số luồng/đơn vị copy để cân bằng tốc độ và tải nguồn, nhưng không chọn cơ chế trung gian cần cho tổ hợp connector này.\n- **B — Fault tolerance:** quy định cách xử lý một số lỗi dữ liệu trong quá trình copy; không thay đổi đường truyền từ Snowflake sang Warehouse.\n- **D — Logging:** bổ sung thông tin giám sát/diagnostics, không giúp connector dùng staged bulk transfer.\n- **C:** staging cho phép ghi dữ liệu vào vùng trung gian rồi nạp hiệu quả vào Fabric Warehouse.",
+      "references": [
+        {
+          "title": "Snowflake connector for Copy activity",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/connector-snowflake-copy-activity"
+        },
+        {
+          "title": "Copy activity in Data Factory for Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity"
+        }
+      ]
     },
     {
       "id": 38,
-      "question": "You have a Fabric workspace named Workspace1 that contains a data pipeline named Pipeline1 and a lakehouse named Lakehouse1.You have a deployment pipeline named deployPipeline1 that deploys Workspace1 to Workspace2.You restructure Workspace1 by adding a folder named Folder1 and moving Pipeline1 to Folder1.You use deployPipeline1 to deploy Workspace1 to Workspace2.What occurs to Workspace2?",
+      "question": "You have Workspace1 with Pipeline1 and Lakehouse1, and a deployment pipeline that deploys it to Workspace2. You create Folder1 in Workspace1 and move Pipeline1 into it, then deploy again. What happens in Workspace2?",
       "choices": {
         "A": "Folder1 is created, Pipeline1 moves to Folder1, and Lakehouse1 is deployed.",
         "B": "Only Pipeline1 and Lakehouse1 are deployed.",
@@ -665,8 +796,13 @@
         "D": "Only Folder1 is created and Pipeline1 moves to Folder1."
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (Folder1 is created, Pipeline1 moves to Folder1, and Lakehouse1 is deployed) là chính xác. Trong Microsoft Fabric deployment pipeline, cấu trúc thư mục (folders) trong workspace được đồng bộ hóa tự động trong quá trình triển khai. Khi bạn tạo `Folder1` và di chuyển `Pipeline1` vào đó ở workspace nguồn (Workspace1), rồi chạy đường ống triển khai sang Workspace2, thư mục `Folder1` mới sẽ được tạo tự động ở Workspace2, `Pipeline1` ở Workspace2 sẽ được di chuyển tương ứng vào trong `Folder1`, và `Lakehouse1` sẽ được triển khai/cập nhật bình thường sang Workspace2 mà không bị ảnh hưởng cấu trúc (chúng vẫn ở ngoài thư mục nếu bạn không di chuyển chúng ở nguồn).",
-      "references": []
+      "explanation_vi": "**Đáp án A.** Khi deployment pipeline triển khai các item của Workspace1, item Pipeline1 được cập nhật theo đường dẫn thư mục mới. Nếu Folder1 chưa tồn tại trong workspace đích, quá trình triển khai tạo thư mục đó rồi đặt Pipeline1 vào bên trong. Lakehouse1 không được chuyển khỏi root ở workspace nguồn nên vẫn được triển khai ở root Workspace2. Việc di chuyển pipeline không tự kéo các item khác vào cùng thư mục.\n\n**Vì sao các lựa chọn khác không đúng?**\n- **B:** Bỏ sót việc tạo Folder1 ở workspace đích và vị trí mới của Pipeline1.\n- **C:** Lakehouse1 không được chuyển vào Folder1 ở nguồn, nên không có lý do gì để đích tự chuyển nó.\n- **D:** Bỏ sót Lakehouse1; item đó vẫn thuộc workspace cần triển khai.\n- **A:** phản ánh đúng cả thư mục mới, vị trí Pipeline1 và Lakehouse1 giữ ở root. Hỗ trợ folder trong deployment pipeline đang được Microsoft đánh dấu Preview; hành vi cần được xác nhận theo trạng thái tính năng của tenant.",
+      "references": [
+        {
+          "title": "Deployment pipelines process",
+          "url": "https://learn.microsoft.com/en-us/power-bi/create-reports/deployment-pipelines-process"
+        }
+      ]
     },
     {
       "id": 39,
@@ -732,14 +868,19 @@
     },
     {
       "id": 42,
-      "question": "Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.\nYou have an Azure key vault named KeyVault1 that contains secrets.\nYou have a Fabric workspace named Workspace1. Workspace contains a notebook named Notebook1 that performs the following tasks:\n• Loads stage data to the target tables in a lakehouse• Triggers the refresh of a semantic model\nYou plan to add functionality to Notebook1 that will use the Fabric API to monitor the semantic model refreshes.\nYou need to retrieve the registered application ID and secret from KeyVault1 to generate the authentication token.\nSolution: You use the following code segment:\nUse notebookutils.credentials.getSecret and specify the key vault URL and key vault secret.\nDoes this meet the goal?",
+      "question": "Case study: Workspace1 contains Notebook1, which loads staged data into lakehouse tables and triggers a semantic model refresh. You need to extend the notebook to monitor refreshes through the Fabric API. The registered application ID and client secret are stored as separate secrets in KeyVault1.\nProposed solution: Call `notebookutils.credentials.getSecret` with the Key Vault URL and each secret name to retrieve both values.\nDoes this meet the goal?",
       "choices": {
         "A": "Yes",
         "B": "No"
       },
-      "correctAnswer": "B",
-      "explanation_vi": "Để truy xuất thông tin bí mật (secret) từ Azure Key Vault trong Fabric Notebook, hàm `notebookutils.credentials.getSecret` yêu cầu tham số là URL của Key Vault và tên của secret (secret name) cần lấy, chứ không phải là bản thân giá trị bí mật (key vault secret). Việc truyền sai tham số hoặc cấu hình không chính xác sẽ dẫn đến lỗi và không đạt được mục tiêu.",
-      "references": []
+      "correctAnswer": "A",
+      "explanation_vi": "**Đáp án A — Có.** `notebookutils.credentials.getSecret(keyVaultUrl, secretName)` nhận URL đầy đủ của Azure Key Vault và **tên** secret, rồi trả về giá trị của secret đó. Vì Application ID và client secret được lưu riêng, notebook gọi hàm hai lần—mỗi lần với tên secret tương ứng—để lấy cả hai giá trị trước khi tạo token bằng thư viện xác thực phù hợp.\n\nCần cấp cho danh tính chạy notebook quyền đọc (`Get`) trên Key Vault và các secret. Hàm `getSecret` chỉ lấy giá trị; riêng nó không tạo token Fabric, nhưng đề bài hỏi liệu có lấy được hai credential để bước kế tiếp tạo token hay không.\n\n**Vì sao B sai?** Bỏ qua một trong hai giá trị hoặc truyền giá trị secret thay cho tên secret sẽ không khớp chữ ký hàm. Với URL Key Vault cùng secret name, đây là phương thức được Fabric cung cấp để đọc secret trong notebook.",
+      "references": [
+        {
+          "title": "NotebookUtils credentials utilities for Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-credentials"
+        }
+      ]
     },
     {
       "id": 43,
@@ -962,7 +1103,7 @@
     },
     {
       "id": 54,
-      "question": "You are implementing a medallion architecture in a Fabric lakehouse.\nYou plan to create a dimension table that will contain the following columns:\n• ID• CustomerCode• CustomerName• CustomerAddress• CustomerLocation• ValidFrom• ValidTo\nYou need to ensure that the table supports the analysis of historical sales data by customer location at the time of each sale.\nWhich type of slowly changing dimension (SCD) should you use?",
+      "question": "You are implementing a medallion architecture in a Fabric lakehouse. A customer dimension has ID, CustomerCode, CustomerName, CustomerAddress, CustomerLocation, ValidFrom, and ValidTo columns. Sales analysts must report a customer’s location as it was when each sale occurred. Which slowly changing dimension (SCD) type should you use?",
       "choices": {
         "A": "Type 2",
         "B": "Type 0",
@@ -970,12 +1111,17 @@
         "D": "Type 3"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Giải thích:\n- **Type 2 SCD (Slowly Changing Dimension Type 2)**: Đây là lựa chọn đúng. Yêu cầu đề bài là bảng chiều (dimension table) phải hỗ trợ phân tích dữ liệu bán hàng lịch sử theo vị trí của khách hàng tại thời điểm mỗi giao dịch bán hàng diễn ra (historical sales data by customer location at the time of each sale). Type 2 SCD hoạt động bằng cách tạo ra một hàng mới trong bảng khi có sự thay đổi thuộc tính (ví dụ: địa chỉ/vị trí khách hàng thay đổi), đồng thời sử dụng các trường định nghĩa khoảng thời gian hiệu lực như `ValidFrom` (Có hiệu lực từ) và `ValidTo` (Có hiệu lực đến) để theo dõi lịch sử. Điều này giúp liên kết chính xác giao dịch bán hàng trong quá khứ với địa điểm của khách hàng tại thời điểm đó.\n- **Type 0 SCD**: Giữ nguyên giá trị ban đầu và không bao giờ thay đổi, do đó không hỗ trợ cập nhật lịch sử vị trí của khách hàng.\n- **Type 1 SCD**: Ghi đè trực tiếp lên giá trị cũ. Nếu vị trí khách hàng thay đổi, thông tin cũ sẽ bị mất và toàn bộ các giao dịch trong lịch sử sẽ bị gán sai cho vị trí mới, không đáp ứng yêu cầu phân tích lịch sử.\n- **Type 3 SCD**: Theo dõi thay đổi bằng cách thêm cột mới (ví dụ: `PreviousLocation`), chỉ lưu giữ được giá trị hiện tại và một giá trị gần nhất trước đó, không phù hợp cho việc phân tích lịch sử lâu dài với nhiều thay đổi.",
-      "references": []
+      "explanation_vi": "**Đáp án A — SCD Type 2.** Khi thuộc tính cần theo dõi (ở đây là CustomerLocation) thay đổi, Type 2 thêm một phiên bản dòng mới thay vì ghi đè dòng cũ. `ValidFrom` và `ValidTo` xác định khoảng thời gian mỗi phiên bản có hiệu lực; giao dịch bán hàng được nối với phiên bản có khoảng hiệu lực chứa ngày bán. Nhờ vậy báo cáo lịch sử vẫn dùng vị trí khách hàng tại thời điểm giao dịch, kể cả sau nhiều lần chuyển địa điểm.\n\n**Vì sao các loại khác không đáp ứng yêu cầu?**\n- **Type 0:** giữ giá trị ban đầu và không cập nhật thuộc tính; không ghi lại các vị trí mới theo khoảng thời gian.\n- **Type 1:** ghi đè giá trị cũ, làm mất vị trí lịch sử nên các báo cáo trước đây có thể bị diễn giải lại theo địa chỉ hiện tại.\n- **Type 3:** thường giữ giá trị hiện tại và một cột giá trị trước đó; không lưu đầy đủ chuỗi lịch sử nhiều lần thay đổi.\n- **Type 2:** tạo các phiên bản có thời gian hiệu lực, phù hợp với phân tích “as of” ngày bán.",
+      "references": [
+        {
+          "title": "Slowly changing dimension type 2 in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/slowly-changing-dimension-type-two"
+        }
+      ]
     },
     {
       "id": 55,
-      "question": "You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table named Table1 in a lakehouse. The streaming data is sourced from motorway sensors and represents the speed of cars.\nYou need to add a transformation to EventStream1 to average the car speeds. The speeds must be grouped by non-overlapping and contiguous time intervals of one minute. Each event must belong to exactly one window.\nWhich windowing function should you use?",
+      "question": "A Fabric Eventstream writes motorway sensor events to a lakehouse table. You need to calculate average car speed in fixed, one-minute intervals that are contiguous and non-overlapping, so each event belongs to exactly one interval. Which windowing function should you use?",
       "choices": {
         "A": "sliding",
         "B": "hopping",
@@ -983,25 +1129,35 @@
         "D": "session"
       },
       "correctAnswer": "C",
-      "explanation_vi": "Giải thích:\n- **Tumbling window (Cửa sổ nhào lộn)**: Đây là lựa chọn đúng. Tumbling windows đại diện cho một chuỗi các khoảng thời gian không chồng lấn lên nhau (non-overlapping), liên tục (contiguous) và có kích thước cố định. Đề bài yêu cầu gom nhóm tốc độ xe theo các khoảng thời gian 1 phút không chồng lấn, liên tục và mỗi sự kiện (event) chỉ được thuộc về duy nhất một cửa sổ. Cửa sổ Tumbling hoàn toàn đáp ứng các điều kiện này.\n- **Hopping window (Cửa sổ nhảy)**: Các cửa sổ này có thể chồng lấn lên nhau tùy thuộc vào kích thước bước nhảy (hop size) nhỏ hơn kích thước cửa sổ (window size), dẫn đến một sự kiện có thể thuộc nhiều cửa sổ khác nhau.\n- **Sliding window (Cửa sổ trượt)**: Cửa sổ trượt di chuyển liên tục theo thời gian thực mỗi khi có sự kiện mới xuất hiện, có tính chất chồng lấn mạnh mẽ.\n- **Session window (Cửa sổ phiên)**: Nhóm các sự kiện dựa trên khoảng thời gian không hoạt động (inactivity gap). Các cửa sổ phiên có kích thước không cố định và phụ thuộc vào hành vi của luồng dữ liệu, không phù hợp với yêu cầu cố định 1 phút.",
-      "references": []
+      "explanation_vi": "**Đáp án C — Tumbling window.** Tumbling chia thời gian thành các cửa sổ có độ dài cố định, nối tiếp nhau và không giao nhau. Với cửa sổ một phút, sự kiện ở mỗi thời điểm chỉ nằm trong đúng một bucket; có thể nhóm theo cửa sổ rồi tính `AVG(speed)`.\n\n**Phân biệt các loại cửa sổ:**\n- **A — Sliding:** cửa sổ trượt liên tục, thường chồng lấn khi cập nhật theo từng sự kiện/thời điểm.\n- **B — Hopping:** cửa sổ độ dài cố định nhưng bắt đầu theo bước nhảy riêng; nếu hop nhỏ hơn window size thì các cửa sổ chồng lấn và một event có thể được tính nhiều lần.\n- **C — Tumbling:** khoảng cố định một phút, liên tục, không chồng lấn; khớp cả ba điều kiện.\n- **D — Session:** gom sự kiện theo hoạt động và khoảng thời gian im lặng; độ dài thay đổi theo luồng chứ không cố định từng phút.",
+      "references": [
+        {
+          "title": "Process events using a SQL operator in Fabric Eventstreams",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor"
+        }
+      ]
     },
     {
       "id": 56,
-      "question": "You have a Fabric warehouse named DW1 that contains a Type 2 slowly changing dimension (SCD) dimension table named DimCustomer. DimCustomer contains 100 columns and 20 million rows. The columns are of various data types, including int, varchar, date, and varbinary.\nYou need to identify incoming changes to the table and update the records when there is a change. The solution must minimize resource consumption.\nWhat should you use to identify changes to attributes?",
+      "question": "You are implementing a Type 2 SCD load for a Fabric warehouse. The target dimension DimCustomer has 100 columns and 20 million rows, with mixed data types. Each target row already stores a hash of the tracked attributes, and the incoming source batch is much smaller. You need to detect changed attributes while minimizing comparisons. What should you use?",
       "choices": {
-        "A": "a hash function to compare the attributes in the source table.",
-        "B": "a direct attributes comparison across the attributes in the DimCustomer table.",
-        "C": "a direct attributes comparison for the attributes in the source table.",
-        "D": "a hash function to compare the attributes in the DimCustomer table."
+        "A": "Compute a hash of the tracked attributes in each incoming source row and compare it with the stored target hash.",
+        "B": "Compare every tracked source and target attribute directly, column by column.",
+        "C": "Compare the source attributes with one another to identify changes.",
+        "D": "Recompute a hash over every tracked attribute in all 20 million target rows for each batch."
       },
       "correctAnswer": "A",
-      "explanation_vi": "Giải thích:\n- **Sử dụng hàm băm (hash function) để so sánh các thuộc tính trong bảng nguồn (A)**: Đây là lựa chọn đúng. Bảng `DimCustomer` có kích thước rất lớn (20 triệu dòng, 100 cột). Việc so sánh trực tiếp từng thuộc tính (column-by-column comparison) của 100 cột trên 20 triệu dòng sẽ tiêu tốn cực kỳ nhiều tài nguyên tính toán và thời gian. Thay vào đó, tính toán một giá trị băm (ví dụ: MD5, SHA-256 hoặc HASHBYTES trong SQL) đại diện cho toàn bộ các thuộc tính của dòng ở bảng nguồn và so sánh với giá trị băm ở bảng đích là giải pháp tối ưu nhất, giảm thiểu tối đa việc sử dụng tài nguyên (minimize resource consumption).\n- **So sánh thuộc tính trực tiếp (B và C)**: Đều yêu cầu quét và so sánh chi tiết từng cột trong số 100 cột giữa nguồn và đích, gây quá tải bộ nhớ và làm chậm hiệu năng đáng kể.\n- **Hàm băm so sánh các thuộc tính trong DimCustomer (D)**: Để so sánh sự thay đổi, ta cần tính toán hàm băm ở nguồn để đối chiếu với đích, việc chỉ so sánh các thuộc tính nội bộ trong bảng đích không giúp phát hiện thay đổi từ nguồn gửi tới.",
-      "references": []
+      "explanation_vi": "**Đáp án A.** Hash đích đã được lưu sẵn, nên chỉ cần tính fingerprint ổn định cho các thuộc tính được theo dõi trên những dòng đến trong lô nguồn rồi đối chiếu với hash của dòng DimCustomer tương ứng theo business key. Thay vì xây dựng biểu thức so sánh nhiều cột và kiểu dữ liệu cho mỗi bản ghi, phép so sánh hash gọn hơn; đồng thời tránh quét/tính lại hash cho toàn bộ 20 triệu dòng đích ở mỗi lần nạp. Khi hash khác, xử lý dòng đó như thay đổi Type 2 và tạo phiên bản mới.\n\nHash phải được tạo từ cùng danh sách cột, cùng quy tắc chuẩn hóa NULL/kiểu dữ liệu và một cách serialize không nhập nhằng ở cả hai phía. Va chạm hash có xác suất thấp nhưng không bằng 0; với yêu cầu kiểm toán nghiêm ngặt, có thể xác minh các cột khi hash khác.\n\n**Vì sao các lựa chọn khác kém phù hợp?**\n- **B:** cần biểu thức so sánh từng thuộc tính qua nhiều cột, làm logic phức tạp và tốn hơn so với fingerprint đã lưu.\n- **C:** so sánh các cột trong cùng dòng nguồn không cho biết dòng đó khác phiên bản tương ứng trong bảng đích hay không.\n- **D:** tính lại hash trên toàn bộ target 20 triệu dòng mỗi batch gây công việc lớn, dù target đã có hash lưu sẵn.\n- **A:** chỉ tính hash cho dữ liệu mới và so sánh với fingerprint đích đã lưu.",
+      "references": [
+        {
+          "title": "Slowly changing dimension type 2 in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/slowly-changing-dimension-type-two"
+        }
+      ]
     },
     {
       "id": 57,
-      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1.\nWhile monitoring Warehouse1, you discover that query performance has degraded during the last 60 minutes.\nYou need to isolate all the queries that were run during the last 60 minutes. The results must include the username of the users that submitted the queries and the query statements.\nWhat should you use?",
+      "question": "A Fabric warehouse named Warehouse1 has had degraded query performance during the last 60 minutes. You need to find every query run in that period, including the submitting username and SQL statement. What should you use?",
       "choices": {
         "A": "the Microsoft Fabric Capacity Metrics app",
         "B": "views from the queryinsights schema",
@@ -1009,12 +1165,17 @@
         "D": "the sys.dm_exec_requests dynamic management view"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Các view từ schema queryinsights (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric Synapse Data Warehouse, schema `queryinsights` cung cấp các view hệ thống (như `queryinsights.exec_requests_history`) chứa thông tin chi tiết về các câu lệnh SQL đã chạy, thời gian thực thi, mã lỗi, tên người dùng (username) gửi truy vấn và nội dung câu lệnh truy vấn đầy đủ. Đây là công cụ tích hợp sẵn để phân tích hiệu năng và debug lỗi trong vòng 60 phút qua.\n- **Microsoft Fabric Capacity Metrics app (A)**: Ứng dụng này dùng để giám sát việc sử dụng tài nguyên CPU, bộ nhớ và CU (Capacity Units) của toàn bộ Capacity, không hiển thị trực tiếp nội dung câu lệnh SQL chi tiết hoặc username của từng câu lệnh chạy trong warehouse.\n- **Query activity (C)**: Không phải là một đối tượng hoặc công cụ hệ thống chuẩn cung cấp thông tin chi tiết cấu trúc như yêu cầu.\n- **sys.dm_exec_requests (D)**: View quản trị động (DMV) này chỉ hiển thị các truy vấn đang hoạt động (active/running) tại thời điểm gọi lệnh, không lưu giữ lịch sử các truy vấn đã hoàn thành hoặc thất bại trong vòng 60 phút qua.",
-      "references": []
+      "explanation_vi": "**Đáp án B — các view `queryinsights`.** `queryinsights.exec_requests_history` lưu lịch sử các lần thực thi, có thời điểm bắt đầu, login name, câu lệnh/query text và các chỉ số thực thi. Lọc `start_time` từ 60 phút trước sẽ cô lập đúng khoảng thời gian; Query Insights giữ dữ liệu lịch sử lâu hơn mức cần thiết cho yêu cầu này.\n\n**Vì sao các lựa chọn khác không cung cấp đủ lịch sử và chi tiết?**\n- **A — Capacity Metrics:** tập trung vào mức tiêu thụ capacity/CU theo workload, không phải danh sách query statement kèm username cho từng lần chạy.\n- **C — Query activity:** không phải view lịch sử truy vấn có schema/cột được xác định cho mục tiêu này.\n- **D — `sys.dm_exec_requests`:** cho các request đang hoạt động tại lúc truy vấn DMV; không bao gồm đầy đủ truy vấn đã kết thúc trong 60 phút trước đó.\n- **B:** queryinsights cung cấp lịch sử, câu lệnh và login name để điều tra hồi cứu.",
+      "references": [
+        {
+          "title": "Query Insights in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+        }
+      ]
     },
     {
       "id": 58,
-      "question": "You have a Fabric workspace that contains a semantic model named Model1.\nYou need to monitor the refresh history of Model1 and visualize the refresh history in a chart.\nWhat should you use?",
+      "question": "A Fabric workspace contains a semantic model named Model1. You need to retrieve its refresh history and turn that history into a chart. Which tool should you use?",
       "choices": {
         "A": "the refresh history from the settings of Model1",
         "B": "a notebook",
@@ -1022,8 +1183,17 @@
         "D": "a data pipeline"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Sử dụng Notebook (B)**: Đây là lựa chọn đúng. Để theo dõi lịch sử làm mới (refresh history) của một Semantic Model trong Fabric và trực quan hóa lịch sử đó dưới dạng biểu đồ (chart), chúng ta cần khả năng lập trình để gọi API của Power BI (hoặc Fabric REST API) lấy lịch sử làm mới dưới dạng JSON, sau đó xử lý dữ liệu và vẽ biểu đồ bằng các thư viện Python như `pandas`, `matplotlib`, hoặc `seaborn`. Notebook trong Fabric là môi trường lý tưởng nhất hỗ trợ cả việc lấy dữ liệu qua code và hiển thị trực quan biểu đồ trực tiếp.\n- **Refresh history từ cài đặt của Model (A)**: Chỉ hiển thị danh sách lịch sử làm mới dưới dạng bảng đơn giản trong giao diện web Power BI, không có tính năng trực quan hóa dữ liệu thành biểu đồ.\n- **Dataflow Gen2 (C) và Data Pipeline (D)**: Có thể được sử dụng để điều phối hoặc tải dữ liệu nhưng không hỗ trợ sẵn các công cụ trực quan hóa biểu đồ tương tác trực tiếp như môi trường Notebook.",
-      "references": []
+      "explanation_vi": "**Đáp án B — Notebook.** Dùng Power BI/Fabric REST API lấy lịch sử refresh của semantic model dưới dạng dữ liệu có cấu trúc, sau đó xử lý và vẽ biểu đồ ngay trong Fabric notebook. Notebook hỗ trợ gọi API bằng Python, phân tích JSON và hiển thị chart bằng tính năng tích hợp hoặc thư viện phù hợp; cần cấp token/quyền API cho danh tính gọi.\n\n**Vì sao các lựa chọn khác chưa đủ?**\n- **A:** trang Settings có lịch sử refresh để xem từng lần chạy, nhưng giao diện này không cung cấp bước lập biểu đồ tùy chỉnh theo yêu cầu.\n- **C — Dataflow Gen2:** dùng để nạp/biến đổi dữ liệu; không phải nơi tương tác trực tiếp với REST API rồi tạo biểu đồ lịch sử.\n- **D — Data pipeline:** phù hợp điều phối refresh/task, nhưng bản thân pipeline không phải giao diện phân tích và biểu đồ lịch sử.\n- **B:** notebook kết hợp API để lấy dữ liệu với code và chart để trực quan hóa.",
+      "references": [
+        {
+          "title": "Get refresh history for a semantic model (Power BI REST API)",
+          "url": "https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/get-refresh-history"
+        },
+        {
+          "title": "Notebook visualization in Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-visualization"
+        }
+      ]
     },
     {
       "id": 59,
@@ -1049,7 +1219,7 @@
     },
     {
       "id": 60,
-      "question": "Case Study -\nThis is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.\nTo answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.\nAt the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.\nTo start the case study -To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.\nOverview -\nLitware, Inc. is a publishing company that has an online bookstore and several retail bookstores worldwide. Litware also manages an online advertising business for the authors it represents.\nExisting Environment. Fabric Environment\nLitware has a Fabric workspace named Workspace1. High concurrency is enabled for Workspace1.\nThe company has a data engineering team that uses Python for data processing.\nExisting Environment. Data Processing\nThe retail bookstores send sales data at the end of each business day, while the online bookstore constantly provides logs and sales data to a central enterprise resource planning (ERP) system.\nLitware implements a medallion architecture by using the following three layers: bronze, silver, and gold. The sales data is ingested from the ERP system as Parquet files that land in the Files folder in a lakehouse. Notebooks are used to transform the files in a Delta table for the bronze and silver layers. The gold layer is in a warehouse that has V-Order disabled.\nLitware has image files of book covers in Azure Blob Storage. The files are loaded into the Files folder.\nExisting Environment. Sales Data\nMonth-end sales data is processed on the first calendar day of each month. Data that is older than one month never changes.\nIn the source system, the sales data refreshes every six hours starting at midnight each day.\nThe sales data is captured in a Dataflow Gen1 dataflow. When the dataflow runs, new and historical data is captured. The dataflow captures the following fields of the source:\n• Sales Date• Author• Price• Units• SKU\nA table named AuthorSales stores the sales data that relates to each author. The table contains a column named AuthorEmail. Authors authenticate to a guest Fabric tenant by using their email address.\nExisting Environment. Security Groups\nLitware has the following security groups:\n• Sales• Fabric Admins• Streaming Admins\nExisting Environment. Performance Issues\nBusiness users perform ad-hoc queries against the warehouse. The business users indicate that reports against the warehouse sometimes run for two hours and fail to load as expected. Upon further investigation, the data engineering team receives the following error message when the reports fail to load: “The SQL query failed while running.”\nThe data engineering team wants to debug the issue and find queries that cause more than one failure.\nWhen the authors have new book releases, there is often an increase in sales activity. This increase slows the data ingestion process.\nThe company’s sales team reports that during the last month, the sales data has NOT been up-to-date when they arrive at work in the morning.\nRequirements. Planned Changes -\nLitware recently signed a contract to receive book reviews. The provider of the reviews exposes the data in Amazon Simple Storage Service (Amazon S3) buckets.\nLitware plans to manage Search Engine Optimization (SEO) for the authors. The SEO data will be streamed from a REST API.\nRequirements. Version Control -\nLitware plans to implement a version control solution in Fabric that will use GitHub integration and follow the principle of least privilege.\nRequirements. Governance Requirements\nTo control data platform costs, the data platform must use only Fabric services and items. Additional Azure resources must NOT be provisioned.\nRequirements. Data Requirements -\nLitware identifies the following data requirements:\n• Process the SEO data in near-real-time (NRT).• Make the book reviews available in the lakehouse without making a copy of the data.• When a new book cover image arrives in the Files folder, process the image as soon as possible.\nWhat should you recommend that the data engineering team use to ingest the SEO data?",
+      "question": "Case study: Litware needs to ingest SEO events emitted by a REST service and process them near real time. The publisher can send events to a supported custom endpoint in Fabric. The solution must use Fabric items only and cannot provision extra Azure resources. Which Fabric item should the data engineering team use to ingest the events?",
       "choices": {
         "A": "an eventstream",
         "B": "Apache Spark Structured Streaming",
@@ -1057,8 +1227,17 @@
         "D": "a KQL queryset"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Giải thích:\n- **Eventstream (A)**: Đây là lựa chọn đúng. Theo yêu cầu của dự án Litware, dữ liệu SEO cần được xử lý ở thời gian cận thực (Near-Real-Time - NRT) và được truyền phát từ một REST API. Trong Microsoft Fabric, Eventstream là một công cụ không code/ít code (low-code) được thiết kế đặc biệt để thu thập, chuyển đổi và định tuyến luồng dữ liệu thời gian thực từ các nguồn khác nhau (bao gồm cả các REST API) đến các đích như Lakehouse hay KQL Database.\n- **Apache Spark Structured Streaming (B)**: Mặc dù có thể xử lý dữ liệu streaming nhưng yêu cầu nỗ lực phát triển (development effort) lớn hơn bằng việc viết mã nguồn Python/Scala và quản lý tài nguyên Spark liên tục, không tối ưu về mặt chi phí và công sức so với Eventstream.\n- **Streaming dataset (C)**: Là công nghệ Power BI cũ hơn, bị giới hạn về khả năng biến đổi dữ liệu nâng cao và tích hợp sâu với hồ dữ liệu (OneLake/Lakehouse).\n- **KQL Queryset (D)**: Là công cụ dùng để truy vấn và phân tích dữ liệu trong KQL Database bằng ngôn ngữ Kusto (KQL), không phải là công cụ để thu thập/ingest dữ liệu từ nguồn ngoài.",
-      "references": []
+      "explanation_vi": "**Đáp án A — Eventstream.** Eventstream là item Real-Time Intelligence trong Fabric để nhận sự kiện liên tục, xử lý/biến đổi chúng và định tuyến tới đích như Lakehouse hoặc Eventhouse mà không cần dựng thêm Azure streaming resource. Custom endpoint của Eventstream nhận dữ liệu từ publisher qua các giao thức được hỗ trợ, gồm Event Hubs/AMQP/Kafka.\n\n**Lưu ý về REST:** Eventstream không tự polling một REST URL bất kỳ. Publisher/adapter phải đọc hoặc nhận dữ liệu từ REST service rồi gửi event tới custom endpoint của Eventstream. Đề đã nêu bên phát có thể gửi tới endpoint này, nên đáp án phù hợp là Eventstream.\n\n**Vì sao các lựa chọn khác không phù hợp bằng?**\n- **B — Spark Structured Streaming:** có thể xử lý luồng bằng mã, nhưng cần thiết kế source/publisher và quản lý Spark job; đây không phải đường ingest low-code được mô tả khi có Eventstream endpoint.\n- **C — Streaming dataset:** là hướng streaming phục vụ Power BI cũ, không phải item Fabric phù hợp để ingest và định tuyến dữ liệu vào lakehouse.\n- **D — KQL queryset:** dùng để viết/truy vấn KQL trên dữ liệu đã có; nó không phải nguồn tiếp nhận event.\n- **A:** Eventstream nhận event từ custom endpoint và xử lý gần thời gian thực ngay trong Fabric.",
+      "references": [
+        {
+          "title": "Microsoft Fabric Eventstreams overview",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+        },
+        {
+          "title": "Add a custom endpoint or custom app source to an eventstream",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-source-custom-app"
+        }
+      ]
     },
     {
       "id": 61,
@@ -1191,9 +1370,25 @@
         "C": "a Python script",
         "D": "a database project"
       },
-      "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Deployment pipeline (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, các đường ống triển khai (deployment pipelines) cung cấp khả năng tự động hóa việc di chuyển các thành phần (như Warehouse) giữa các môi trường (ví dụ: từ Workspace phát triển sang Workspace kiểm thử/sản xuất). Khi thực hiện quá trình này, Deployment pipeline sẽ tự động thực hiện các bước kiểm tra sự phụ thuộc (dependency check) để phát hiện các tham chiếu không hợp lệ hoặc thiếu đối tượng liên quan (invalid references), giúp giảm thiểu tối đa công sức phát triển (minimize development effort).\n- **Database project (D)**: Dự án cơ sở dữ liệu (SQL Database Project) trong Azure Data Studio/VS Code là một công cụ mạnh mẽ để thực hiện phân tích tĩnh (static analysis) và biên dịch mã SQL để tìm lỗi tham chiếu. Tuy nhiên, nó yêu cầu lập trình viên phải thiết lập dự án, kết nối source control và cấu hình biên dịch phức tạp, tốn nhiều công sức phát triển hơn so với tính năng kéo-thả trực quan có sẵn của Deployment pipeline trong Fabric.\n- **Python script (C) và dbt project (A)**: Đòi hỏi nỗ lực viết mã nguồn và triển khai hạ tầng kiểm thử tùy chỉnh rất lớn.",
-      "references": []
+      "correctAnswer": "D",
+      "explanation_vi": "**Đề bài hỏi gì?** Cần phát hiện tham chiếu SQL bị thiếu hoặc không hợp lệ trong warehouse trước khi triển khai sang workspace khác, đồng thời muốn có chẩn đoán cụ thể mà không tự viết bộ kiểm tra.\n\n**Đáp án D — Database project.** Khi build một SQL Database Project, DacFx kiểm tra cú pháp và các tham chiếu giữa đối tượng SQL, chẳng hạn view tham chiếu tới bảng hoặc cột không tồn tại. Lỗi build chỉ rõ đối tượng gây lỗi để bạn sửa trước khi tạo hoặc publish gói triển khai. Đây là chức năng có sẵn của project nên ít công sức hơn so với tự viết công cụ kiểm tra. Việc này kiểm tra tham chiếu tĩnh trong schema; nó không thay thế kiểm tra chất lượng dữ liệu như tìm bản ghi mồ côi.\n\n- **A — dbt project:** có thể kiểm tra mô hình và phụ thuộc trong một dự án dbt đã cấu hình, nhưng đề bài nói về các tham chiếu SQL của Fabric Warehouse; SQL Database Project có quy trình build/DacFx trực tiếp cho schema đó.\n- **B — Deployment pipeline:** dùng để so sánh và triển khai schema giữa các workspace. Nó không phải lựa chọn trực tiếp để build project và báo lỗi tham chiếu SQL trước khi có môi trường đích.\n- **C — Python:** cần tự viết và duy trì logic phân tích SQL hoặc kiểm tra metadata, nên tốn công hơn và dễ bỏ sót trường hợp.",
+      "references": [
+        {
+          "title": "What are SQL database projects? - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/sql/tools/sql-database-projects/sql-database-projects?view=sql-server-ver17"
+        },
+        {
+          "title": "Deploy a warehouse using pipelines - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/deploy-pipelines"
+        }
+      ],
+      "question_vi": "Bạn có workspace Fabric Workspace1 chứa warehouse Warehouse1 và dự định triển khai warehouse này sang workspace mới Workspace2. Trước khi triển khai, bạn cần kiểm tra xem định nghĩa SQL trong Warehouse1 có tham chiếu không hợp lệ hay không, với ít công sức phát triển và thông tin lỗi đủ chi tiết. Nên dùng công cụ nào?",
+      "options_vi": {
+        "A": "Dự án dbt",
+        "B": "Deployment pipeline (đường ống triển khai)",
+        "C": "Tập lệnh Python",
+        "D": "Database project (dự án cơ sở dữ liệu SQL)"
+      }
     },
     {
       "id": 68,
@@ -1205,25 +1400,53 @@
         "D": "a shortcut"
       },
       "correctAnswer": "D",
-      "explanation_vi": "Giải thích:\n- **Shortcut (D)**: Đây là lựa chọn đúng. Microsoft Dataverse hỗ trợ tính năng liên kết trực tiếp với Microsoft Fabric (Link to Fabric). Tính năng này tự động tạo ra các đường tắt (shortcuts) trỏ thẳng tới dữ liệu Dataverse lưu trữ trong Azure Synapse Link mà không cần sao chép vật lý dữ liệu (zero-copy), giúp tối ưu hóa hiệu năng, giảm chi phí lưu trữ và giảm thiểu tối đa công sức lập trình.\n- **Mirroring (B)**: Dùng để sao chép liên tục dữ liệu từ các cơ sở dữ liệu bên ngoài (như Azure SQL, Cosmos DB, Snowflake) vào Fabric dưới dạng Delta Parquet, không phải là cơ chế tối ưu nhất cho Dataverse vốn đã hỗ trợ sẵn OneLake Shortcut.\n- **Dataflow Gen2 (C) và Data Pipeline (A)**: Đều yêu cầu thiết lập các tiến trình ETL để trích xuất và ghi bản sao dữ liệu vào Lakehouse, làm tăng độ trễ và tốn tài nguyên quản lý.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Cần đưa dữ liệu Dataverse của ứng dụng Power Apps vào phạm vi sử dụng trong Fabric, với kết nối tích hợp sẵn.\n\n**Đáp án D — Shortcut.** Tính năng Link to Microsoft Fabric của Dataverse tạo các OneLake shortcut tới những bảng trong Dataverse Managed Lake. Shortcut cho phép Fabric đọc dữ liệu mà không cần tự dựng một quy trình ETL sao chép riêng. Shortcut Dataverse là chỉ đọc; quyền truy cập phụ thuộc thông tin xác thực được cấu hình và quyền trên nguồn.\n\n- **A — Data pipeline:** phù hợp khi cần thiết kế quy trình sao chép hoặc điều phối, nhưng không cần cho kết nối Dataverse trực tiếp đã có.\n- **B — Mirroring:** là một cơ chế nhập/đồng bộ cho các nguồn được hỗ trợ, nhưng câu hỏi nhắm tới tích hợp Dataverse–Fabric vốn tạo shortcut.\n- **C — Dataflow Gen2:** có thể biến đổi và nạp dữ liệu bằng Power Query, nhưng đòi hỏi cấu hình dataflow thay vì dùng liên kết trực tiếp.",
+      "references": [
+        {
+          "title": "Create a Dataverse shortcut - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/create-dataverse-shortcut"
+        },
+        {
+          "title": "Link your Dataverse environment to Microsoft Fabric - Power Apps",
+          "url": "https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric"
+        }
+      ],
+      "question_vi": "Bạn có ứng dụng Power Apps App1 lưu dữ liệu trong Microsoft Dataverse. Bạn cần truy cập dữ liệu của App1 từ Microsoft Fabric. Nên dùng gì?",
+      "options_vi": {
+        "A": "Data pipeline (đường ống dữ liệu)",
+        "B": "Mirroring (nhân bản dữ liệu)",
+        "C": "Dataflow Gen2",
+        "D": "Shortcut (lối tắt OneLake)"
+      }
     },
     {
       "id": 69,
-      "question": "You have a Fabric workspace named Workspace1 that contains three notebooks named notebook_01, notebook_02, and notebook_03.\nYou are building a new notebook in Workspace1 that will contain the following Directed Acyclic Graph (DAG) definition.\nYou need to modify the DAG definition to meet the following requirements:\n• Ensure that notebook_01 and notebook_02 run in parallel.• Ensure that notebook_02 only runs after the execution of notebook_03 is complete.\nHow should you modify the DAG definition?",
+      "question": "You are writing a Fabric notebook that calls notebookutils.notebook.runMultiple() to run notebook_01, notebook_02, and notebook_03. You need notebook_01 and notebook_02 to be eligible to run in parallel, and notebook_02 must not start until notebook_03 has completed. Which DAG configuration meets both requirements?",
       "choices": {
-        "A": "Create a second DAG definition. Move notebook_03 and notebook_02 to the new DAG definition.",
-        "B": "Move the notebook_03 declaration to the top of the DAG definition. Add a concurrency to notebook_02 and notebook_01.",
-        "C": "Create two stages in the DAG definition. Add notebook_03 to the first stage. Add notebook_01 and notebook_02 to the second stage.",
-        "D": "Move the declaration of notebook_03 to the top of the DAG definition. Add a new stage that contains notebook_01 and notebook_02."
+        "A": "Add notebook_03 to the dependencies of notebook_02, and leave notebook_01 without a dependency on notebook_02.",
+        "B": "Make notebook_01 depend on notebook_02, and make notebook_02 depend on notebook_03.",
+        "C": "Set concurrency to 1 and declare the notebooks in the order notebook_03, notebook_02, notebook_01.",
+        "D": "Run notebook_02 and notebook_03 in parallel in a separate runMultiple() call."
       },
-      "correctAnswer": "C",
-      "explanation_vi": "Giải thích:\n- **Tạo 2 giai đoạn (stages) trong định nghĩa DAG. Đưa notebook_03 vào giai đoạn đầu tiên, đưa notebook_01 và notebook_02 vào giai đoạn thứ hai (C)**: Đây là lựa chọn đúng. Hàm chạy nhiều notebook trong Fabric (`notebookutils.notebook.runMultiple()`) sử dụng cấu trúc Đồ thị có hướng không chu trình (DAG) được biểu diễn qua JSON. Để cấu hình `notebook_02` chỉ chạy sau khi `notebook_03` hoàn thành, đồng thời cho phép `notebook_01` và `notebook_02` chạy song song (parallel), ta chia DAG thành 2 giai đoạn kế tiếp nhau (stages). Giai đoạn 1 chứa `notebook_03`. Giai đoạn 2 chứa `notebook_01` và `notebook_02` chạy đồng thời và giai đoạn này được cấu hình phụ thuộc vào sự hoàn thành của Giai đoạn 1.\n- **Các phương án khác (A, B, D)**: Không tuân thủ đúng cú pháp định nghĩa giai đoạn song song và phụ thuộc tuần tự của `runMultiple` trong Fabric Notebook.",
-      "references": []
+      "correctAnswer": "A",
+      "explanation_vi": "**Đề bài hỏi gì?** Hai notebook 01 và 02 không được phụ thuộc lẫn nhau để bộ điều phối có thể chạy chúng đồng thời; riêng notebook 02 phải chờ notebook 03.\n\n**Đáp án A.** Trong DAG của `notebookutils.notebook.runMultiple()`, mỗi activity có thể khai báo `dependencies`. Khi `notebook_02` phụ thuộc vào `notebook_03`, bộ điều phối chờ activity 03 hoàn tất rồi mới khởi chạy 02. `notebook_01` không phụ thuộc vào 02 nên hai activity 01 và 02 không bị ràng buộc tuần tự; notebook 01 có thể chạy song song với notebook 03 hoặc notebook 02 tùy thời điểm và tài nguyên Spark.\n\n- **B sai:** tạo chuỗi 03 → 02 → 01, khiến 01 phải chờ 02 thay vì chạy song song với 02.\n- **C sai:** concurrency bằng 1 buộc từng notebook chạy nối tiếp; thứ tự khai báo không thay thế quan hệ phụ thuộc trong DAG.\n- **D sai:** cấu hình đó cho phép 02 chạy cùng lúc với 03, nên không bảo đảm 02 đợi 03 hoàn thành.",
+      "references": [
+        {
+          "title": "NotebookUtils notebook run and orchestration - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+        }
+      ],
+      "question_vi": "Bạn đang viết notebook Fabric gọi `notebookutils.notebook.runMultiple()` để chạy `notebook_01`, `notebook_02` và `notebook_03`. Bạn cần `notebook_01` và `notebook_02` có thể chạy song song, đồng thời `notebook_02` chỉ được bắt đầu sau khi `notebook_03` hoàn tất. Cấu hình DAG nào đáp ứng cả hai yêu cầu?",
+      "options_vi": {
+        "A": "Thêm `notebook_03` vào danh sách phụ thuộc của `notebook_02`, đồng thời không đặt `notebook_01` phụ thuộc vào `notebook_02`.",
+        "B": "Đặt `notebook_01` phụ thuộc vào `notebook_02` và `notebook_02` phụ thuộc vào `notebook_03`.",
+        "C": "Đặt concurrency bằng 1 và khai báo lần lượt `notebook_03`, `notebook_02`, `notebook_01`.",
+        "D": "Chạy `notebook_02` và `notebook_03` song song trong một lần gọi `runMultiple()` riêng."
+      }
     },
     {
       "id": 70,
-      "question": "You have a Fabric workspace named Workspace1 that is connected to a GitHub repository named repo1. Workspace1 contains the items shown in the following table.\nYou modify Semanticmodel1, Semanticmodel2, and Report2.\nYou need to commit the changes to repo1.\nWhat is the minimum number of commits you should perform?",
+      "question": "Workspace1 is connected to a GitHub repository named repo1. You modify three workspace items: Semanticmodel1, Semanticmodel2, and Report2. You need to commit all three changes to repo1. What is the minimum number of commits required?",
       "choices": {
         "A": "1",
         "B": "2",
@@ -1231,21 +1454,57 @@
         "D": "4"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Giải thích:\n- **1 (A)**: Đây là lựa chọn đúng. Trong tính năng tích hợp Git (Git integration) của Microsoft Fabric, khi bạn thực hiện các thay đổi đối với nhiều tài nguyên trong workspace (như thay đổi `Semanticmodel1`, `Semanticmodel2`, và `Report2`), hệ thống sẽ liệt kê tất cả các mục bị thay đổi trong bảng điều khiển Source Control. Bạn có thể chọn tất cả các mục này và nhấn nút Commit một lần duy nhất để lưu toàn bộ các thay đổi vào nhánh Git dưới dạng một commit đơn lẻ. Số lượng commit tối thiểu cần thực hiện là 1.\n- **Các lựa chọn khác (2, 3, 4)**: Không phải là số lượng tối thiểu vì bạn không bắt buộc phải tách riêng từng tài nguyên thành các commit độc lập.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Cần đưa ba thay đổi của ba item trong một workspace vào repository và hỏi số commit tối thiểu.\n\n**Đáp án A — 1 commit.** Fabric Git integration liệt kê các item đã sửa trong Source control. Bạn có thể chọn nhiều item cùng lúc rồi commit chúng trong một thao tác; một commit có thể chứa cả Semanticmodel1, Semanticmodel2 và Report2.\n\n- **B — 2, C — 3, D — 4:** đều không phải số tối thiểu. Không có yêu cầu phải tách mỗi item thành commit riêng; số commit phụ thuộc cách nhóm thay đổi, và một commit đã đủ cho cả ba.",
+      "references": [
+        {
+          "title": "Get started with Git integration - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+        },
+        {
+          "title": "Git integration process - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process"
+        }
+      ],
+      "question_vi": "Workspace1 được kết nối với repository GitHub repo1. Bạn sửa ba item trong workspace: Semanticmodel1, Semanticmodel2 và Report2. Bạn cần commit cả ba thay đổi vào repo1. Số commit tối thiểu cần thực hiện là bao nhiêu?",
+      "options_vi": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      }
     },
     {
       "id": 71,
-      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Lakehouse1 contains a table named Table1.\nYou need to ensure that a user named User1 can view only specific rows in Table1.\nWhat should you do first?",
+      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Lakehouse1 contains a table named Table1. You need to configure row-level security so that User1 can see only rows that meet a filter condition. What should you create first?",
       "choices": {
-        "A": "Create a security predicate.",
-        "B": "Create a function.",
-        "C": "Create a security policy.",
-        "D": "Grant User1 the SELECT permission for Table1."
+        "A": "A security policy.",
+        "B": "An inline table-valued function that defines the filter predicate.",
+        "C": "A SQL view over Table1.",
+        "D": "A SELECT permission for User1 on Table1."
       },
-      "correctAnswer": "D",
-      "explanation_vi": "Giải thích:\n- **Cấp quyền SELECT cho User1 trên Table1 trước (D)**: Đây là lựa chọn đúng. Để áp dụng chính sách Bảo mật cấp dòng (Row-Level Security - RLS) đối với một người dùng truy vấn bảng dữ liệu trong Lakehouse (thông qua SQL analytics endpoint), trước hết người dùng đó phải có quyền đọc dữ liệu cơ bản trên bảng (quyền `SELECT`). Nếu không được cấp quyền `SELECT`, hệ thống sẽ từ chối truy cập ngay lập tức ở mức độ phân quyền đối tượng (object-level security), và chính sách bảo mật cấp dòng (được thực thi ở bước sau) sẽ không thể hoạt động. Do đó, đây là hành động cần thực hiện đầu tiên.\n- **Tạo hàm (B) và Tạo chính sách bảo mật (C / A)**: Là các bước tiếp theo trong cấu hình kỹ thuật của RLS, nhưng sẽ vô nghĩa nếu bản thân tài khoản người dùng chưa được cấp quyền SELECT để truy vấn bảng.",
-      "references": []
+      "correctAnswer": "B",
+      "explanation_vi": "**Đề bài hỏi gì?** Đề bài hỏi bước đầu tiên để triển khai row-level security (RLS) cho bảng Lakehouse, sao cho mỗi truy vấn của User1 chỉ trả về các dòng được phép.\n\n**Đáp án B — tạo hàm table-valued nội tuyến làm filter predicate.** Trong SQL analytics endpoint ở chế độ bảo mật SQL, hàm này biểu diễn điều kiện theo người dùng hoặc ngữ cảnh thực thi. Sau đó security policy gắn hàm đó với Table1 bằng `ADD FILTER PREDICATE`. Vì vậy cần định nghĩa hàm trước khi policy có thể tham chiếu tới nó. Đây là cấu hình RLS trên SQL analytics endpoint; Lakehouse cũng có tùy chọn OneLake security nếu muốn quản trị quyền tập trung ở OneLake.\n\n- **A — Security policy:** policy là bước tiếp theo; nó cần hàm predicate đã tồn tại để gắn vào bảng.\n- **C — View:** view có thể lọc dữ liệu trong truy vấn, nhưng không tự áp dụng RLS bắt buộc cho mọi truy cập vào bảng.\n- **D — SELECT permission:** quyền đọc cần thiết để người dùng truy vấn dữ liệu trong mô hình SQL, nhưng tự nó không giới hạn các dòng. Nó không thay thế hàm predicate và security policy.",
+      "references": [
+        {
+          "title": "Implement row-level security in Fabric Data Warehouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tutorial-row-level-security"
+        },
+        {
+          "title": "Row-level security in Fabric Data Warehouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+        },
+        {
+          "title": "OneLake security roles: create and manage - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+        }
+      ],
+      "question_vi": "Bạn có workspace Fabric chứa lakehouse Lakehouse1 với bảng Table1. Bạn cần cấu hình bảo mật cấp dòng để User1 chỉ xem được các dòng thỏa điều kiện lọc. Trước tiên cần tạo gì?",
+      "options_vi": {
+        "A": "Một security policy (chính sách bảo mật).",
+        "B": "Một hàm table-valued nội tuyến định nghĩa điều kiện lọc (predicate).",
+        "C": "Một SQL view trên Table1.",
+        "D": "Quyền SELECT cho User1 trên Table1."
+      }
     },
     {
       "id": 72,
@@ -1257,8 +1516,24 @@
         "D": "Viewer"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Contributor (B)**: Đây là lựa chọn đúng. Trong các vai trò của Workspace Microsoft Fabric, vai trò **Contributor** (Người đóng góp) là vai trò có đặc quyền tối thiểu (least privilege) cho phép người dùng tạo, chỉnh sửa và xóa các mục (như lakehouse, notebook, pipeline, report) trong workspace.\n- **Viewer (D)**: Chỉ cho phép xem nội dung trong workspace, không thể tạo mới các mục.\n- **Member (A) và Admin (C)**: Đều có quyền tạo mục mới, nhưng đi kèm các quyền hạn quản trị nâng cao không cần thiết như chia sẻ workspace, thay đổi vai trò thành viên, hoặc xóa workspace, vi phạm nguyên tắc đặc quyền tối thiểu.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** User1 cần tạo item trong workspace, nhưng chỉ được cấp vai trò có ít quyền nhất đáp ứng việc đó.\n\n**Đáp án B — Contributor.** Trong Fabric, Contributor có thể tạo và sửa item trong workspace. Đây là mức vai trò thấp nhất trong bốn vai trò workspace có quyền tạo item.\n\n- **D — Viewer:** chỉ xem nội dung; không được tạo hoặc sửa item.\n- **A — Member:** cũng tạo và sửa được item, nhưng có thêm quyền chia sẻ và quản lý thành viên cấp thấp hơn, vượt quá nhu cầu.\n- **C — Admin:** có quyền quản lý workspace và quyền truy cập, rộng hơn đáng kể so với việc chỉ tạo item.",
+      "references": [
+        {
+          "title": "Roles in workspaces in Microsoft Fabric - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+        },
+        {
+          "title": "Permission model - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/security/permission-model"
+        }
+      ],
+      "question_vi": "Bạn có workspace Fabric Workspace1 chứa một lakehouse và tenant Microsoft Entra có người dùng User1. Bạn cần cho User1 quyền tạo item trong Workspace1 theo nguyên tắc đặc quyền tối thiểu. Nên gán vai trò workspace nào?",
+      "options_vi": {
+        "A": "Member (Thành viên)",
+        "B": "Contributor (Người đóng góp)",
+        "C": "Admin (Quản trị viên)",
+        "D": "Viewer (Người xem)"
+      }
     },
     {
       "id": 73,
@@ -1268,8 +1543,18 @@
         "B": "No"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **No (B)**: Đây là lựa chọn đúng. Phương án đề xuất sử dụng hàm `notebookutils.credentials.putSecret` để lấy thông tin mã định danh ứng dụng và mật khẩu (secret) từ Key Vault. Tuy nhiên, hàm `putSecret` được dùng để lưu trữ hoặc cập nhật thông tin bí mật (nếu có hỗ trợ), chứ không phải để truy xuất (retrieve) thông tin. Để lấy thông tin bí mật từ Key Vault, hàm chính xác phải là `getSecret`. Hơn nữa, việc chỉ định tên của một dịch vụ liên kết (linked service) thay cho tên của secret cần lấy là không đúng cú pháp tham số của hàm `getSecret` trong Fabric. Do đó giải pháp này không đáp ứng mục tiêu.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Notebook cần đọc application ID và client secret đã lưu trong Azure Key Vault để xác thực với API. Câu hỏi kiểm tra xem `putSecret` có phải thao tác đọc secret hay không.\n\n**Đáp án B — Không.** `notebookutils.credentials.putSecret` ghi hoặc cập nhật một secret trong Key Vault và cần cả tên secret lẫn giá trị mới. Nó không lấy secret ra để tạo token. Để đọc, dùng `notebookutils.credentials.getSecret(keyVaultUrl, secretName)` cho từng secret, chẳng hạn gọi riêng cho application ID và client secret. Tên linked service không thay thế tham số `secretName` trong API này. Notebook cũng cần quyền Get đối với các secret tương ứng; `putSecret` yêu cầu quyền Set.\n\n- **A — Có:** sai vì dùng API ghi secret thay cho API đọc và truyền bộ tham số không phù hợp với chữ ký hàm. Dù notebook có thể gọi Fabric API sau đó, bước lấy thông tin xác thực vẫn chưa được thực hiện đúng.",
+      "references": [
+        {
+          "title": "NotebookUtils credentials utilities for Fabric - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-credentials"
+        }
+      ],
+      "question_vi": "Lưu ý: Đây là một câu trong nhóm câu hỏi dùng chung một tình huống; mỗi câu có một giải pháp riêng và sau khi trả lời sẽ không thể quay lại câu này. Bạn có Key Vault Azure KeyVault1 chứa các secret và workspace Fabric Workspace1 có Notebook1. Notebook1 nạp dữ liệu vào các bảng đích trong lakehouse, làm mới semantic model, rồi sẽ dùng Fabric API để theo dõi trạng thái làm mới. Notebook cần lấy application ID và client secret đã đăng ký trong KeyVault1 để tạo token xác thực. Giải pháp đề xuất là gọi `notebookutils.credentials.putSecret`, truyền URL của Key Vault và tên linked service. Giải pháp có đáp ứng mục tiêu không?",
+      "options_vi": {
+        "A": "Có",
+        "B": "Không"
+      }
     },
     {
       "id": 74,
@@ -1303,12 +1588,28 @@
         "D": "Switch Workspace1 to the feature1 branch and refresh the workspace."
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Từ Workspace1, chọn Source control, sau đó chọn Updates (B)**: Đây là lựa chọn đúng. Khi các thay đổi trên nhánh `feature1` đã được merge vào nhánh chính (`main`) ở môi trường Git bên ngoài (ví dụ: Azure DevOps hoặc GitHub), Workspace1 (đang được kết nối với nhánh `main`) sẽ nhận biết được sự khác biệt giữa nội dung hiện tại của workspace và nhánh Git. Hệ thống sẽ hiển thị thông báo có các bản cập nhật mới trên bảng điều khiển Source Control. Bằng cách chọn **Updates** (hoặc Update All), Fabric sẽ đồng bộ và tải các thay đổi mới nhất từ nhánh `main` vào workspace mà không cần phải cấu hình lại hay ngắt kết nối.\n- **Ngắt kết nối và kết nối lại (A)**: Tốn nhiều công sức và thao tác thủ công không cần thiết.\n- **Chọn Commit (C)**: Sẽ cố gắng ghi đè nội dung hiện tại của workspace lên nhánh Git, có thể gây mất mát các thay đổi đã được merge ở Git.\n- **Chuyển workspace sang feature1 (D)**: Nhánh `feature1` là nhánh tạm thời và đã được merge, việc chuyển sang nhánh này không đúng với quy trình làm việc trên nhánh chính.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Workspace1 vẫn theo dõi nhánh main; thay đổi đã được merge vào main ở Git. Cần lấy commit mới đó vào workspace.\n\n**Đáp án B — Source control → Updates.** Khi nhánh được kết nối có commit mới, Fabric hiển thị các cập nhật đến từ Git. Chọn Updates rồi Update all để đồng bộ Lakehouse1 và các item bị thay đổi vào Workspace1.\n\n- **A:** ngắt rồi kết nối lại là thao tác thừa; Git integration đã có lệnh cập nhật.\n- **C — Commit:** đẩy thay đổi từ workspace lên Git, tức sai chiều đồng bộ trong tình huống này.\n- **D:** chuyển về feature1 không cần thiết vì thay đổi đã được merge vào main và workspace cần tiếp tục theo dõi main.",
+      "references": [
+        {
+          "title": "Get started with Git integration - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+        },
+        {
+          "title": "Git integration process - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process"
+        }
+      ],
+      "question_vi": "Workspace Fabric Workspace1 chứa lakehouse Lakehouse1 và đang kết nối với nhánh main trong Git. Bạn tạo nhánh feature1, sửa Lakehouse1 trên nhánh đó rồi merge các thay đổi vào main. Bạn cần đưa thay đổi đã merge vào Workspace1 với ít thao tác nhất. Nên làm gì?",
+      "options_vi": {
+        "A": "Ngắt kết nối Workspace1 khỏi Git rồi kết nối lại với nhánh main.",
+        "B": "Trong Workspace1, mở Source control rồi chọn Updates.",
+        "C": "Trong Workspace1, mở Source control rồi chọn Commit.",
+        "D": "Chuyển Workspace1 sang nhánh feature1 rồi làm mới workspace."
+      }
     },
     {
       "id": 76,
-      "question": "You have an Azure subscription that contains a blob storage account named sa1. sa1 contains two files named File1.csv and File2.csv.\nYou have a Fabric tenant that contains the items shown in the following table.\nYou need to configure Pipeline1 to perform the following actions:\n• At 2 PM each day, process File1.csv and load the file into flh1.• At 5 PM each day, process File2.csv and load the file into flh1.\nThe solution must minimize development effort.\nWhat should you use?",
+      "question": "An Azure subscription contains a blob storage account sa1 with File1.csv and File2.csv. Fabric contains a data pipeline named Pipeline1 and a lakehouse named flh1. Pipeline1 must load File1.csv into flh1 every day at 2 PM and File2.csv into flh1 every day at 5 PM, with minimal development effort. What should you configure?",
       "choices": {
         "A": "a data pipeline trigger",
         "B": "a data pipeline schedule",
@@ -1316,8 +1617,20 @@
         "D": "an activator"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Lịch trình chạy pipeline (data pipeline schedule) (B)**: Đây là lựa chọn đúng. Để thiết lập Pipeline1 chạy xử lý dữ liệu vào các khung giờ cố định lặp lại hàng ngày (chạy File1.csv lúc 2 PM và File2.csv lúc 5 PM) với công sức phát triển ít nhất, tính năng Lịch trình (Schedule) tích hợp sẵn trong cấu hình của Data Pipeline là giải pháp tối ưu. Chúng ta có thể cấu hình hai lịch trình chạy hàng ngày (daily schedule) khác nhau trên cùng một pipeline và truyền tham số tên file tương ứng.\n- **Data pipeline trigger (A)**: Fabric Data Pipeline hỗ trợ các trigger hướng sự kiện (event-based triggers), nhưng đối với các tác vụ chạy theo giờ cố định thì Schedule đơn giản và dễ cấu hình hơn nhiều.\n- **Job definition (C)**: Apache Spark Job Definition được dùng để chạy các mã Spark chạy ngầm, không hỗ trợ điều phối trực quan và lập lịch linh hoạt cho Data Pipeline.\n- **Activator (D)**: Dùng để giám sát dữ liệu và kích hoạt hành động dựa trên điều kiện ngưỡng dữ liệu (thay đổi trạng thái), không phải là công cụ lập lịch thời gian tĩnh tối giản cho pipeline.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Cần chạy cùng một pipeline vào hai giờ cố định mỗi ngày, đồng thời chọn đúng file ở từng lần chạy.\n\n**Đáp án B — nhiều schedule cho data pipeline.** Fabric cho phép gắn nhiều lịch vào một pipeline. Tạo lịch hằng ngày lúc 14:00 và lịch thứ hai lúc 17:00; khai báo tham số pipeline cho tên file và đặt giá trị tương ứng trong từng lịch (`File1.csv` hoặc `File2.csv`). Pipeline dùng tham số đó trong đường dẫn nguồn rồi nạp vào cùng lakehouse flh1.\n\n- **A — Event trigger:** chạy khi có sự kiện như file mới đến; đề bài yêu cầu giờ chạy cố định, không phải đợi sự kiện.\n- **C — Job definition:** dành cho công việc Spark, không phải cách gọn nhất để điều phối pipeline copy dữ liệu này.\n- **D — Activator:** theo dõi điều kiện hoặc sự kiện dữ liệu để kích hoạt hành động, không thay thế hai lịch chạy theo giờ đã định.",
+      "references": [
+        {
+          "title": "Run, schedule, or use events to trigger a pipeline - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+        }
+      ],
+      "question_vi": "Một Azure subscription có tài khoản Blob Storage sa1 chứa File1.csv và File2.csv. Fabric có data pipeline Pipeline1 và lakehouse flh1. Mỗi ngày Pipeline1 phải nạp File1.csv vào flh1 lúc 14:00 và File2.csv vào flh1 lúc 17:00, với ít công sức phát triển nhất. Bạn nên cấu hình gì?",
+      "options_vi": {
+        "A": "Trigger theo sự kiện cho data pipeline",
+        "B": "Các lịch chạy (schedule) cho data pipeline",
+        "C": "Job definition (định nghĩa công việc Spark)",
+        "D": "Activator (bộ kích hoạt)"
+      }
     },
     {
       "id": 77,
@@ -1329,21 +1642,45 @@
         "D": "To Pipeline1, add an activity to invoke a SQL script."
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Đối với Dataflow1, thiết lập Update method thành Replace (B)**: Đây là lựa chọn đúng. Khi cấu hình đích đến (Destination) cho một truy vấn trong Dataflow Gen2 (như nạp dữ liệu vào Lakehouse1), thuộc tính **Update method** (Phương thức cập nhật) cho phép chọn giữa **Append** (Thêm dữ liệu mới vào cuối bảng) và **Replace** (Xóa sạch dữ liệu cũ trong bảng đích và ghi đè toàn bộ dữ liệu mới). Việc đặt thành Replace đảm bảo luôn thực hiện nạp dữ liệu đầy đủ (full data load) một cách tự động và tối ưu nhất về mặt hiệu năng mà không cần viết thêm mã lệnh hay hoạt động xóa dữ liệu thủ công.\n- **Thay đổi pipeline template (A)**: Không tác động trực tiếp đến cấu hình ghi của Dataflow.\n- **Thêm data preview (C)**: Chỉ dùng để xem trước dữ liệu trong quá trình thiết kế, không ảnh hưởng đến chế độ nạp dữ liệu khi chạy thực tế.\n- **Thêm hoạt động chạy script SQL vào Pipeline1 (D)**: Yêu cầu viết thêm mã lệnh SQL để xóa bảng trước khi chạy Dataflow, làm tăng độ phức tạp và thời gian thực thi của luồng.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Mỗi lần làm mới cần nạp lại toàn bộ kết quả vào bảng đích, không nối trùng dữ liệu cũ hoặc thêm một bước xóa thủ công.\n\n**Đáp án B — chọn Update method = Replace.** Với data destination của Dataflow Gen2, Replace bỏ dữ liệu hiện có trong đích rồi ghi dữ liệu do lần refresh hiện tại trả về. Đây là chế độ phù hợp cho full load nếu truy vấn Dataflow trả về toàn bộ tập dữ liệu cần giữ.\n\n- **A:** pipeline template không đặt chính sách ghi của data destination trong Dataflow.\n- **C:** data preview chỉ giúp xem kết quả trong lúc thiết kế; không điều khiển hành vi refresh.\n- **D:** SQL script bổ sung thao tác và thời gian thực thi, trong khi data destination đã hỗ trợ Replace.",
+      "references": [
+        {
+          "title": "Dataflow Gen2 data destinations and managed settings - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-data-destinations-and-managed-settings"
+        }
+      ],
+      "question_vi": "Bạn có workspace Fabric chứa lakehouse Lakehouse1, Dataflow Gen2 Dataflow1 và pipeline Pipeline1. Dataflow1 nạp dữ liệu vào Lakehouse1. Bạn cần mỗi lần chạy Dataflow1 đều thay toàn bộ dữ liệu đích bằng kết quả đầy đủ mới nhất và giảm thời gian nạp. Nên làm gì?",
+      "options_vi": {
+        "A": "Thay đổi các mẫu pipeline.",
+        "B": "Đặt Update method của Dataflow1 thành Replace (Thay thế).",
+        "C": "Thêm bản xem trước dữ liệu vào Dataflow1.",
+        "D": "Thêm hoạt động chạy SQL script vào Pipeline1."
+      }
     },
     {
       "id": 78,
-      "question": "You have a Fabric lakehouse that contains the resources shown in the following table.\nYou need to use a notebook to query for customers in the United States and load the filtered data into USCustomers. The solution must minimize the number of scripts used.\nWhich statement should you use?",
+      "question": "In a Fabric notebook, a Spark DataFrame named customers has already been filtered to contain only customers in the United States. You need to create or replace a managed Lakehouse table named USCustomers by using the fewest statements. Which statement should you use?",
       "choices": {
         "A": "customers.write.format(\"parquet\").mode(\"append\").saveAsTable(\"USCustomers\")",
         "B": "customers.write.format(\"delta\").mode(\"overwrite\").save(\"Tables/USCustomers\")",
         "C": "customers.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"USCustomers\")",
-        "D": "customers.write. format(\"parquet\").mode(\"append\").save(\"Tables/USCustomers\")"
+        "D": "customers.write.format(\"parquet\").mode(\"append\").save(\"Tables/USCustomers\")"
       },
       "correctAnswer": "C",
-      "explanation_vi": "Giải thích:\n- **customers.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"USCustomers\") (C)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, định dạng lưu trữ mặc định và tối ưu cho các bảng (Tables) trong Lakehouse is **Delta**. Sử dụng phương thức `.saveAsTable(\"USCustomers\")` sẽ ghi dữ liệu dưới dạng Delta và tự động đăng ký bảng này vào metastore của Lakehouse, giúp bảng xuất hiện trong mục Tables để truy vấn trực tiếp bằng SQL. Chế độ `.mode(\"overwrite\")` được dùng để ghi đè dữ liệu cũ trong bảng `USCustomers`.\n- **Lưu bằng phương thức `.save()` (B, D)**: Chỉ ghi các tệp dữ liệu vào thư mục tương ứng trong OneLake mà không tự động đăng ký bảng vào danh mục quản lý của Lakehouse.\n- **Định dạng parquet (A, D)**: Mặc dù Delta dựa trên Parquet, nhưng Fabric khuyên dùng định dạng `delta` để tận dụng toàn bộ các tính năng của Delta Lake (như ACID transactions, time travel, V-Order).",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** DataFrame đã được lọc sẵn. Cần lưu nó thành bảng Lakehouse tên USCustomers, dùng định dạng bảng của Fabric và thay nội dung cũ nếu bảng đã tồn tại.\n\n**Đáp án C.** `format(\"delta\")` ghi bảng theo Delta Lake; `mode(\"overwrite\")` thay nội dung đích bằng dữ liệu hiện tại; `saveAsTable(\"USCustomers\")` ghi và đăng ký bảng trong Lakehouse metastore. Ba mục tiêu được thực hiện trong một lệnh.\n\n- **A:** `append` nối các hàng vào bảng hiện có, nên refresh lặp lại có thể tạo dữ liệu trùng; định dạng Parquet cũng không phải lựa chọn chuẩn cho bảng Lakehouse cần truy vấn như Delta.\n- **B:** `save(\"Tables/USCustomers\")` ghi vào đường dẫn thay vì dùng thao tác `saveAsTable` để đăng ký managed table theo cách được hỏi.\n- **D:** vừa ghi Parquet theo đường dẫn thay vì tạo bảng Delta được quản lý, vừa dùng `append` nên không thay thế dữ liệu cũ.",
+      "references": [
+        {
+          "title": "Use a notebook to load data into your lakehouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-notebook-load-data"
+        }
+      ],
+      "question_vi": "Trong notebook Fabric, DataFrame Spark `customers` đã được lọc để chỉ còn khách hàng ở Hoa Kỳ. Bạn cần tạo mới hoặc thay thế bảng Lakehouse được quản lý tên `USCustomers` bằng ít câu lệnh nhất. Nên dùng câu lệnh nào?",
+      "options_vi": {
+        "A": "`customers.write.format(\"parquet\").mode(\"append\").saveAsTable(\"USCustomers\")`",
+        "B": "`customers.write.format(\"delta\").mode(\"overwrite\").save(\"Tables/USCustomers\")`",
+        "C": "`customers.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"USCustomers\")`",
+        "D": "`customers.write.format(\"parquet\").mode(\"append\").save(\"Tables/USCustomers\")`"
+      }
     },
     {
       "id": 79,
@@ -1355,8 +1692,24 @@
         "D": "Select the entry for the pipeline execution, and then select the output."
       },
       "correctAnswer": "B",
-      "explanation_vi": "Giải thích:\n- **Chọn bản ghi chạy notebook, sau đó xem ảnh chụp nhanh mục (view the item snapshot) (B)**: Đây là lựa chọn đúng. Trong Microsoft Fabric, khi một Notebook chạy như một phần của Data Pipeline bị thất bại, bạn có thể vào mục Giám sát (Monitor) hoặc lịch sử chạy của Pipeline để xem chi tiết. Để biết chính xác lỗi xảy ra ở ô lệnh (cell) nào của Notebook, bạn nhấp vào hoạt động chạy notebook tương ứng và chọn **View item snapshot**. Tính năng này sẽ mở ra một phiên bản notebook tĩnh ghi lại trạng thái thực thi tại thời điểm chạy lỗi, hiển thị rõ ràng kết quả đầu ra và thông tin lỗi của từng ô lệnh.\n- **Xem logs (A)**: Logs của Spark cung cấp thông tin hệ thống chi tiết nhưng rất khó đọc và khó xác định trực quan ô lệnh cụ thể bị lỗi so với giao diện snapshot.\n- **Xem activity run (C) hoặc pipeline output (D)**: Chỉ cung cấp thông tin tổng quan ở mức độ pipeline (như trạng thái lỗi của toàn bộ hoạt động chạy notebook), không đi sâu vào chi tiết từng ô lệnh bên trong notebook.",
-      "references": []
+      "explanation_vi": "**Đề bài hỏi gì?** Bạn đã biết pipeline thất bại ở hoạt động notebook; cần khoanh vùng cell cụ thể bên trong notebook tại lần chạy đó.\n\n**Đáp án B — mở item snapshot của lần chạy notebook.** Snapshot giữ lại nội dung notebook và tham số tại thời điểm thực thi. Mở snapshot liên quan trong chi tiết ứng dụng Spark để xem phiên bản notebook được chạy và đối chiếu trạng thái/lỗi theo cell; điều này tránh nhầm với phiên bản notebook đã bị sửa sau sự cố.\n\n- **A — Logs:** hữu ích khi cần thông điệp lỗi hoặc stack trace chi tiết, nhưng không phải lựa chọn trực quan để xem notebook đúng phiên bản đã chạy theo từng cell.\n- **C — Activity run:** cho biết trạng thái của hoạt động trong pipeline, nhưng chỉ dừng ở mức điều phối.\n- **D — Pipeline output:** cho biết output/trạng thái chạy của pipeline và hoạt động; không mở nội dung snapshot của notebook để định vị cell.",
+      "references": [
+        {
+          "title": "Apache Spark application detail monitoring - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring"
+        },
+        {
+          "title": "Troubleshoot Spark errors in Microsoft Fabric - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark"
+        }
+      ],
+      "question_vi": "Workspace Fabric có data pipeline Pipeline1 và notebook Notebook1. Pipeline1 có hoạt động chạy Notebook1 và được lên lịch chạy mỗi 10 phút. Bạn nhận được cảnh báo rằng hoạt động notebook bị lỗi và cần xác định lỗi xảy ra ở cell nào. Trong Monitor của Fabric, nên làm gì?",
+      "options_vi": {
+        "A": "Chọn bản ghi thực thi notebook rồi mở logs.",
+        "B": "Chọn bản ghi thực thi notebook rồi xem item snapshot (ảnh chụp item tại thời điểm chạy).",
+        "C": "Chọn bản ghi thực thi pipeline rồi mở activity run.",
+        "D": "Chọn bản ghi thực thi pipeline rồi xem output."
+      }
     }
   ]
 }
