@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
     "start": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro dev",
-    "build": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build",
+    "build": "node scripts/generate_backlinks.cjs && node scripts/generate_quiz_manifest.mjs && astro build && node scripts/generate_sitemap_txt.mjs",
     "check:seo": "node scripts/check_seo.mjs",
     "check:quizzes": "node scripts/check_quiz_content.mjs",
     "preview": "astro preview",
